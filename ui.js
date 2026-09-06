@@ -57,14 +57,14 @@ function shopPage(){if(!shopItems.length)generateShop();return `<div class="card
 function refreshShop(){if(state.gold<1000)return alert("金幣不足。");state.gold-=1000;generateShop();save();render()}
 function buyItem(i){let it=shopItems[i];if(!it)return;if(state.gold<it.buy)return alert("金幣不足。");state.gold-=it.buy;state.inventory.push(it);shopItems.splice(i,1);save();render()}
 function settingsPage(){
- let s=state.settings;return `<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">長按標題可開啟管理功能。</div>
+ let s=state.settings;return `<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
  <h3 style="margin-top:22px">自動出售</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">不可自動出售</span></div>
  <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div><div class="setting-row"><label><input id="fastBattle" type="checkbox" ${s.fastBattle?"checked":""}> 快速戰鬥</label></div><div class="setting-row"><label><input id="fullLog" type="checkbox" ${s.fullLog?"checked":""}> 顯示完整單場戰鬥紀錄</label></div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div><div class="controls"><button class="btn" onclick="exportSave()">匯出存檔</button><label class="btn">匯入存檔<input type="file" accept=".json" hidden onchange="importSave(event)"></label></div>
  ${state.gm?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
 }
 function wireSettings(){
- let title=document.getElementById("settingsTitle");if(title){let t;title.onpointerdown=()=>{t=setTimeout(openGMModal,3000)};title.onpointerup=title.onpointerleave=()=>clearTimeout(t)}
+ let title=document.getElementById("settingsTitle");if(title){title.onclick=(ev)=>{if(ev.detail===3)openGMModal()}}
  document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
  ["keepUpgrade","fastBattle","fullLog"].forEach(id=>{let el=document.getElementById(id);if(el)el.onchange=()=>{state.settings[id]=el.checked;save()}});
 }
