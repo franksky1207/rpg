@@ -30,6 +30,7 @@ linear-gradient(rgba(12,13,17,.55),rgba(12,13,17,.88)),radial-gradient(circle at
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;border-bottom:1px solid #2b3038;text-align:left}th{color:#cdbb90}.right{text-align:right}
 .setting-row{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px 0;border-bottom:1px solid #292e36}.setting-row label{display:flex;gap:8px;align-items:center}
 .danger-zone{border:1px solid #713f3f;background:#271616;padding:14px;border-radius:10px;margin-top:18px}.gm{border:1px dashed #b18a4b;background:#201b12;padding:14px;border-radius:10px;margin-top:18px}
+.gm button[onclick="rest()"],.gm button[onclick="gmSim(100)"],.gm button[onclick="gmSim(1000)"]{display:none!important}.gm h3:has(+ .controls button[onclick^="gmSim("]){display:none!important}.gm #gmResult{display:none!important}
 .notice{border-left:3px solid var(--gold);background:#1b1914;padding:10px 12px;margin:10px 0;color:#ded1b3}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:20;padding:18px}.modal.show{display:flex}.modal-box{width:min(430px,100%);background:#171b22;border:1px solid #705f3e;border-radius:12px;padding:18px}.modal input{width:100%;padding:11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff;margin:10px 0}
 .bottom-nav{display:none}
