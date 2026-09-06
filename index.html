@@ -31,7 +31,7 @@
 <div class="modal" id="riskModal">
   <div class="modal-box risk-box">
     <h3>⚠ 低血量警告</h3>
-    <p id="riskMessage" class="muted">目前 HP 已低於 30%。若戰敗，將損失 EXP，並可能遺失裝備。</p>
+    <p id="riskMessage" class="muted">目前 HP 已低於 50%。若戰敗，將損失 EXP，並可能遺失裝備。</p>
     <div class="controls">
       <button id="riskContinueBtn" class="btn primary" onclick="continueRiskBattle()">仍要繼續戰鬥</button>
       <button id="riskStopBtn" class="btn" onclick="stopContinuousBattle()" style="display:none">結束連續戰鬥</button>
@@ -42,9 +42,40 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-7"></script>
+<script src="ui.js?v=20260906-8"></script>
 <script>
 (()=>{
+  const RISK_HP_RATIO=0.5;
+
+  window.lowHp=function(){
+    const s=equippedStats();
+    return s.hp>0&&state.hp/s.hp<RISK_HP_RATIO;
+  };
+
+  window.adventureStatus=function(){
+    const s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<50;
+    return `<div class="card" style="margin-bottom:16px">
+      <div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div>
+      <div style="margin-top:12px;${low?"color:#ff8585;font-weight:700":""}">HP ${state.hp} / ${s.hp}${low?"　⚠ 戰敗會損失 EXP，並可能遺失裝備":""}<div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div>
+      <div style="margin-top:10px">EXP ${state.level>=50?"MAX":state.exp+" / "+need}<div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div>
+    </div>`;
+  };
+
+  window.showRiskModal=function(mode,remaining=0){
+    riskMode=mode;
+    const modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn"),stopBtn=document.getElementById("riskStopBtn");
+    if(mode==="continuous"){
+      if(msg)msg.innerHTML=`目前 HP 已低於 50%。連續戰鬥已暫停，尚有 <b>${remaining}</b> 場。<br>若繼續後戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+      if(continueBtn)continueBtn.textContent=`繼續剩餘 ${remaining} 場`;
+      if(stopBtn)stopBtn.style.display="inline-block";
+    }else{
+      if(msg)msg.innerHTML=`目前 HP 已低於 50%。<br>若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+      if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
+      if(stopBtn)stopBtn.style.display="none";
+    }
+    if(modal)modal.classList.add("show");
+  };
+
   function pinBattleLogToBottom(){
     const log=document.getElementById("battleLog");
     if(!log)return;
@@ -60,6 +91,7 @@
     new MutationObserver(pinBattleLogToBottom).observe(main,{childList:true,subtree:true,characterData:true});
   }
   window.addEventListener("load",pinBattleLogToBottom);
+  if(typeof render==="function")render();
 })();
 </script>
 </body>
