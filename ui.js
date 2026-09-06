@@ -1,6 +1,8 @@
 let selectedBattleCount=1;
 let pendingBattleCount=1;
 let adventureScreen="maps";
+let riskMode="initial";
+let pendingContinuousBattle=null;
 
 function renderNav(){
  let h=navs.map(([k,n])=>`<button class="${view===k?"active":""}" onclick="go('${k}')">${n}</button>`).join("");
@@ -11,6 +13,7 @@ function render(){
  renderNav();normalizeHP();
  let fn={home:homePage,adventure:adventurePage,character:characterPage,inventory:inventoryPage,shop:shopPage,settings:settingsPage}[view];
  document.getElementById("main").innerHTML=fn();wireSettings();
+ if(view==="adventure"&&adventureScreen==="battle"&&battleLogs.length)setTimeout(scrollBattleLogToBottom,0);
 }
 function qualityLegend(){return `<div class="muted" style="margin:6px 0 12px">裝備品質（低 → 高）：<span class="q-common">普通</span> → <span class="q-uncommon">優良</span> → <span class="q-rare">稀有</span> → <span class="q-epic">史詩</span> → <span class="q-legendary">傳說</span> → <span class="q-mythic">神話</span></div>`}
 
@@ -93,50 +96,92 @@ function selectMap(i){enterMap(i)}
 function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;battleLogs=[];render()}
 
 function lowHp(){let s=equippedStats();return s.hp>0&&state.hp/s.hp<.30}
+function scrollBattleLogToBottom(){let log=document.getElementById("battleLog");if(log)log.scrollTop=log.scrollHeight}
+function showRiskModal(mode,remaining=0){
+ riskMode=mode;
+ let modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn"),stopBtn=document.getElementById("riskStopBtn");
+ if(mode==="continuous"){
+   if(msg)msg.innerHTML=`目前 HP 已低於 30%。連續戰鬥已暫停，尚有 <b>${remaining}</b> 場。<br>若繼續後戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+   if(continueBtn)continueBtn.textContent=`繼續剩餘 ${remaining} 場`;
+   if(stopBtn)stopBtn.style.display="inline-block";
+ }else{
+   if(msg)msg.innerHTML=`目前 HP 已低於 30%。<br>若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+   if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
+   if(stopBtn)stopBtn.style.display="none";
+ }
+ if(modal)modal.classList.add("show");
+}
 function startBattles(){
  if(battleBusy)return;
  let count=+(document.getElementById("battleCount")?.value||1);
  if(lowHp()){
    pendingBattleCount=count;
-   document.getElementById("riskModal").classList.add("show");
+   pendingContinuousBattle=null;
+   showRiskModal("initial");
    return;
  }
  runBattles(count);
 }
-function closeRiskModal(){document.getElementById("riskModal").classList.remove("show")}
-function continueRiskBattle(){let count=pendingBattleCount;closeRiskModal();runBattles(count)}
-function riskRest(){closeRiskModal();rest()}
+function closeRiskModal(){let m=document.getElementById("riskModal");if(m)m.classList.remove("show")}
+function continueRiskBattle(){
+ closeRiskModal();
+ if(riskMode==="continuous"&&pendingContinuousBattle){let ctx=pendingContinuousBattle;pendingContinuousBattle=null;runBattles(ctx.remaining,ctx);return}
+ let count=pendingBattleCount;runBattles(count);
+}
+function stopContinuousBattle(){
+ if(!pendingContinuousBattle)return closeRiskModal();
+ let ctx=pendingContinuousBattle;pendingContinuousBattle=null;closeRiskModal();
+ ctx.summary.push(`連續戰鬥已手動結束。`);
+ ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
+ battleLogs=ctx.summary;save();render();
+}
+function riskRest(){
+ if(riskMode==="continuous"&&pendingContinuousBattle){
+   let ctx=pendingContinuousBattle;pendingContinuousBattle=null;
+   ctx.summary.push(`因低血量返回城鎮，連續戰鬥已結束。`);
+   ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
+   battleLogs=ctx.summary;
+ }
+ closeRiskModal();state.hp=equippedStats().hp;save();render();
+}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateLogs(logs,kind){
  let log=document.getElementById("battleLog");if(!log)return;
  log.innerHTML="";
  let delay=kind==="boss"?280:kind==="elite"?220:160;
- for(let line of logs){log.insertAdjacentHTML("beforeend",`<div>${line}</div>`);log.scrollTop=log.scrollHeight;await sleep(delay)}
+ for(let line of logs){log.insertAdjacentHTML("beforeend",`<div>${line}</div>`);scrollBattleLogToBottom();await sleep(delay)}
+ scrollBattleLogToBottom();
 }
-async function runBattles(count){
+async function runBattles(count,ctx=null){
  if(battleBusy)return;battleBusy=true;
- let summary=[],wins=0,totalXp=0,totalGold=0,drops=0;
- for(let i=1;i<=count;i++){
-   let r=fightOnce(selectedMap,selectedEnemy);
-   if(!r.ok){summary.push(r.reason);break}
-   if(count===1){
+ if(!ctx)ctx={summary:[],wins:0,totalXp:0,totalGold:0,drops:0,originalCount:count,completed:0,remaining:count};
+ for(let local=1;local<=count;local++){
+   let roundNo=ctx.completed+1,r=fightOnce(selectedMap,selectedEnemy);
+   if(!r.ok){ctx.summary.push(r.reason);break}
+   if(ctx.originalCount===1){
      battleLogs=r.logs.slice();render();await animateLogs(r.logs,r.e.kind);
+     if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.drops++}
    }else if(r.win){
-     wins++;totalXp+=r.xp;totalGold+=r.gold;if(r.item)drops++;
-     summary.push(`第 ${i} 場：勝利${r.item?`，${r.sold?"裝備自動出售":"掉落 "+itemHtmlPlain(r.item)}`:""}`);
-     battleLogs=summary.slice();render();
+     ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.drops++;
+     ctx.summary.push(`第 ${roundNo} 場：勝利${r.item?`，${r.sold?"裝備自動出售":"掉落 "+itemHtmlPlain(r.item)}`:""}`);
+     battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();
      await sleep(r.e.kind==="elite"?800:500);
    }else{
-     summary.push(`第 ${i} 場：戰敗，連續戰鬥中止。`);
-     summary.push(...r.logs.slice(-3));
-     battleLogs=summary.slice();render();
+     ctx.summary.push(`第 ${roundNo} 場：戰敗，連續戰鬥中止。`);
+     ctx.summary.push(...r.logs.slice(-3));
+     battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();
+     ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
      break;
    }
+   ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
    if(!r.win)break;
+   if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){
+     pendingContinuousBattle=ctx;battleBusy=false;save();battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();showRiskModal("continuous",ctx.remaining);return;
+   }
  }
- if(count>1)summary.push(`結算：勝利 ${wins}/${count}，EXP +${totalXp}，金幣 +${totalGold}，掉落 ${drops} 件。`);
- if(count>1)battleLogs=summary;
- save();battleBusy=false;render();
+ if(ctx.originalCount>1)ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
+ if(ctx.originalCount>1)battleLogs=ctx.summary;
+ save();battleBusy=false;render();scrollBattleLogToBottom();
 }
 
 function characterPage(){let s=equippedStats();return `<div class="grid">${sideCharacter()}<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">最大 HP<b>${s.hp}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><h3 style="margin-top:18px">裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}：${itemHtml(state.equipment[t])}</div>`).join("")}</div></div>`}
@@ -226,6 +271,6 @@ function gmSim(n){
 }
 function exportSave(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
 function importSave(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.level)throw 0;state=x;save();location.reload()}catch(e){alert("存檔格式不正確。")}};r.readAsText(f)}
-function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";save();view="home";render()}}
+function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";pendingContinuousBattle=null;save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
 load();render();
