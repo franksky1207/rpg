@@ -51,7 +51,7 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-10"></script>
+<script src="ui.js?v=20260906-11"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
@@ -82,6 +82,35 @@
       if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
     }
     if(modal)modal.classList.add("show");
+  };
+
+  window.shopPage=function(){
+    ensureShop();
+    const cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
+    const rows=state.shop.items.map((it,i)=>{
+      const current=state.equipment[it.type];
+      const itemScore=equipmentScore(it);
+      const currentScore=current?equipmentScore(current):null;
+      const diff=current?itemScore-currentScore:itemScore;
+      const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備";
+      const diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
+      const currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">分數 ${currentScore}</div>`:`<span class="muted">無</span>`;
+      return `<tr>
+        <td>${itemHtml(it,true)}</td>
+        <td>${statLine(it)}</td>
+        <td><div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">商品分數 ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div></td>
+        <td>${it.buy.toLocaleString()}</td>
+        <td><button class="btn" onclick="buyItem(${i})">購買</button></td>
+      </tr>`;
+    }).join("");
+    return `<div class="card"><h2>商店</h2>
+      <div class="notice">商店商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div>
+      <div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>
+      ${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}
+      <span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div>
+      <div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">死亡時遺失的裝備會暫存在此，可用金幣贖回。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>贖回價格</th><th></th></tr></thead><tbody>${lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${x.cost.toLocaleString()}</td><td><button class="btn" onclick="redeemGear(${i})">贖回</button></td></tr>`).join("")}</tbody></table></div>`:""}
+    </div>`;
   };
 
   const originalFightOnce=window.fightOnce;
