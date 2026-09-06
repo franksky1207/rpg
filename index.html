@@ -49,7 +49,7 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-16"></script>
+<script src="ui.js?v=20260906-17"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
@@ -187,6 +187,10 @@
     if(riskMode==="continuous"&&pendingContinuousBattle){pendingResultAfterRest=pendingContinuousBattle;pendingContinuousBattle=null;}
     closeRiskModal();state.hp=equippedStats().hp;save();render();
     if(pendingResultAfterRest){const ctx=pendingResultAfterRest;pendingResultAfterRest=null;setTimeout(()=>showBattleResult(ctx),0);}
+  };
+
+  window.gmHtml=function(){
+    return `<div class="gm"><h3>管理／GM 模式</h3><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">+10,000 金幣</button><button class="btn" onclick="gmUnlock()">解鎖全部地圖</button><button class="btn" onclick="gmGear(3)">產生史詩裝</button><button class="btn" onclick="gmGear(4)">產生傳說裝</button><button class="btn" onclick="gmGear(5)">產生神話裝</button><button class="btn" onclick="gmBoss()">重生目前 Boss</button><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
   };
 
   window.wireSettings=function(){
