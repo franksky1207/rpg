@@ -46,7 +46,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
   .bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;z-index:9;background:#0c1015;border-top:1px solid #493f2d;padding:7px 5px calc(7px + env(safe-area-inset-bottom));gap:4px}
   .bottom-nav button{font-size:12px;padding:9px 3px}.log{height:220px}.stats{grid-template-columns:1fr 1fr}
   main:has(.enemy-list)>div>.card:first-child{position:sticky;top:57px;z-index:4;margin:0 -4px 12px!important;padding:10px 12px;box-shadow:0 8px 22px rgba(0,0,0,.45)}
-  main:has(.enemy-list)>div>.card:first-child>.stats{display:none}
+  main:has(.enemy-list)>div>.card:first-child>.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:2px}
+  main:has(.enemy-list)>div>.card:first-child>.stats .stat{padding:6px 8px;font-size:12px}
+  main:has(.enemy-list)>div>.card:first-child>.stats .stat b{display:inline;margin-left:6px;font-size:14px}
   main:has(.enemy-list)>div>.card:first-child>div:last-child{display:none}
   main:has(.enemy-list)>div>.card:first-child .bar{height:10px}
   main:has(.enemy-list)>div>.card:first-child>div{margin-top:7px!important}
