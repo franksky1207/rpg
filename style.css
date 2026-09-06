@@ -49,7 +49,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
   main:has(.enemy-list)>div>.card:first-child>.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:2px}
   main:has(.enemy-list)>div>.card:first-child>.stats .stat{padding:6px 8px;font-size:12px}
   main:has(.enemy-list)>div>.card:first-child>.stats .stat b{display:inline;margin-left:6px;font-size:14px}
-  main:has(.enemy-list)>div>.card:first-child>div:last-child{display:none}
+  main:has(.enemy-list)>div>.card:first-child>div:last-child{display:block}
   main:has(.enemy-list)>div>.card:first-child .bar{height:10px}
   main:has(.enemy-list)>div>.card:first-child>div{margin-top:7px!important}
 
