@@ -49,11 +49,13 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-15"></script>
+<script src="ui.js?v=20260906-16"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
   let pendingResultAfterRest=null;
+  let gmTapCount=0;
+  let gmTapTimer=null;
 
   window.lowHp=function(){
     const s=equippedStats();
@@ -185,6 +187,28 @@
     if(riskMode==="continuous"&&pendingContinuousBattle){pendingResultAfterRest=pendingContinuousBattle;pendingContinuousBattle=null;}
     closeRiskModal();state.hp=equippedStats().hp;save();render();
     if(pendingResultAfterRest){const ctx=pendingResultAfterRest;pendingResultAfterRest=null;setTimeout(()=>showBattleResult(ctx),0);}
+  };
+
+  window.wireSettings=function(){
+    const title=document.getElementById("settingsTitle");
+    if(title){
+      title.onclick=()=>{
+        gmTapCount++;
+        clearTimeout(gmTapTimer);
+        if(gmTapCount>=3){
+          gmTapCount=0;
+          openGMModal();
+          return;
+        }
+        gmTapTimer=setTimeout(()=>{gmTapCount=0;},1000);
+      };
+      title.style.touchAction="manipulation";
+      title.style.userSelect="none";
+      title.style.webkitUserSelect="none";
+    }
+    document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
+    const keep=document.getElementById("keepUpgrade");
+    if(keep)keep.onchange=()=>{state.settings.keepUpgrade=keep.checked;save()};
   };
 
   window.runBattles=async function(count,ctx=null){
