@@ -4,6 +4,7 @@ function renderNav(){
 }
 function go(v){view=v;render()}
 function render(){renderNav();normalizeHP();let fn={home:homePage,adventure:adventurePage,character:characterPage,inventory:inventoryPage,shop:shopPage,settings:settingsPage}[view];document.getElementById("main").innerHTML=fn();wireSettings()}
+function qualityLegend(){return `<div class="muted" style="margin:6px 0 12px">裝備品質（低 → 高）：<span class="q-common">普通</span> → <span class="q-uncommon">優良</span> → <span class="q-rare">稀有</span> → <span class="q-epic">史詩</span> → <span class="q-legendary">傳說</span> → <span class="q-mythic">神話</span></div>`}
 function sideCharacter(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,pct=state.level<50?Math.min(100,state.exp/need*100):100;
  return `<div class="card"><h3>角色資訊</h3><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">攻擊<b>${s.atk}</b></div><div class="stat">防禦<b>${s.def}</b></div></div>
@@ -13,12 +14,24 @@ function sideCharacter(){
  <div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
 }
 function homePage(){return `<div class="grid">${sideCharacter()}<div class="card hero"><div class="muted">傳統、單純、純文字</div><h2>冒險者，歡迎回城</h2><p class="muted">打怪、升級、換裝，然後挑戰更強的敵人。</p><div class="hero-actions"><button class="btn primary" onclick="go('adventure')">前往冒險</button><button class="btn ok" onclick="rest()">休息・恢復全部 HP</button><button class="btn blue" onclick="go('inventory')">整理背包</button></div></div></div>`}
+function adventureStatus(){
+ let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<30;
+ return `<div class="card" style="margin-bottom:16px">
+   <div class="stats">
+     <div class="stat">等級<b>Lv.${state.level}</b></div>
+     <div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div>
+   </div>
+   <div style="margin-top:12px;${low?"color:#ff8585;font-weight:700":""}">HP ${state.hp} / ${s.hp}${low?"　⚠ 建議回城休息":""}<div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div>
+   <div style="margin-top:10px">EXP ${state.level>=50?"MAX":state.exp+" / "+need}<div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div>
+ </div>`;
+}
 function adventurePage(){
  selectedMap=Math.min(selectedMap,state.unlockedMap);let map=MAPS[selectedMap],e=monsterObj(selectedMap,selectedEnemy);let maxBattles=state.level<=10?5:state.level<=20?10:state.level<=30?15:state.level<=40?20:25;
  let opts=[1,5,10,15,20,25].filter(x=>x===1||x<=maxBattles).map(x=>`<button onclick="setBattleCount(${x},this)" data-bc="${x}" class="${x===1?"active":""}">${x===1?"單場":x+" 場"}</button>`).join("");
  return `<div class="grid"><div class="card map-list"><h3>地圖</h3>${MAPS.map((m,i)=>`<button class="${i===selectedMap?"active":""} ${i>state.unlockedMap?"locked":""}" ${i>state.unlockedMap?"disabled":""} onclick="selectMap(${i})">${i+1}. ${m.name}<div class="muted">Lv.${m.min}～${m.max}</div></button>`).join("")}</div>
- <div><div class="card"><h2>${map.name} <span class="muted">Lv.${map.min}～${map.max}</span></h2><div class="enemy-list">${map.enemies.map((x,i)=>{let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})">${mo.name} Lv.${mo.level}${badge}<div class="muted">HP ${mo.hp}　攻擊 ${mo.atk}　防禦 ${mo.def}</div></button>`}).join("")}</div>
- ${e.kind==="boss"?`<div class="notice">${state.level<map.max?`需要 Lv.${map.max} 才能挑戰 Boss。`:`Boss 再次挑戰條件：擊敗 8 隻非 Boss 敵人（${canBoss(selectedMap)?"可挑戰":state.bossProgress[selectedMap]+"/8"}）`}</div>`:""}
+ <div>${adventureStatus()}<div class="card"><h2>${map.name} <span class="muted">Lv.${map.min}～${map.max}</span></h2><div class="enemy-list">${map.enemies.map((x,i)=>{let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span><span class="badge">Boss 計數</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})">${mo.name} Lv.${mo.level}${badge}<div class="muted">HP ${mo.hp}　攻擊 ${mo.atk}　防禦 ${mo.def}</div></button>`}).join("")}</div>
+ ${state.bossKilled[selectedMap]?`<div class="notice">Boss 重生進度：${state.bossProgress[selectedMap]}/8 菁英。只有擊敗本地圖的菁英怪才會計數。</div>`:""}
+ ${e.kind==="boss"?`<div class="notice">${state.level<map.max?`需要 Lv.${map.max} 才能挑戰 Boss。`:`Boss 再次挑戰條件：同地圖擊敗 8 隻菁英怪（${canBoss(selectedMap)?"可挑戰":state.bossProgress[selectedMap]+"/8 菁英"}）`}</div>`:""}
  <h3>連續戰鬥</h3><div class="seg" id="battleSeg">${opts}</div><input type="hidden" id="battleCount" value="1"><div class="controls"><button class="btn primary" onclick="startBattles()">開始戰鬥</button><button class="btn ok" onclick="rest()">回城休息</button></div></div>
  <div class="card" style="margin-top:16px"><h3>戰鬥紀錄</h3><div class="log">${battleLogs.length?battleLogs.map(x=>`<div>${x}</div>`).join(""):`<div class="muted">尚未進行戰鬥。</div>`}</div></div></div></div>`;
 }
@@ -38,11 +51,11 @@ async function startBattles(){
  if(count>1)battleLogs.push(`結算：勝利 ${wins}/${count}，EXP +${totalXp}，金幣 +${totalGold}，掉落 ${drops} 件。`);
  save();battleBusy=false;render();
 }
-function characterPage(){let s=equippedStats();return `<div class="grid">${sideCharacter()}<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">最大 HP<b>${s.hp}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><h3 style="margin-top:18px">裝備</h3>${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}：${itemHtml(state.equipment[t])}</div>`).join("")}</div></div>`}
+function characterPage(){let s=equippedStats();return `<div class="grid">${sideCharacter()}<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">最大 HP<b>${s.hp}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><h3 style="margin-top:18px">裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}：${itemHtml(state.equipment[t])}</div>`).join("")}</div></div>`}
 function inventoryPage(){
  let items=state.inventory.slice().sort((a,b)=>b.q-a.q||b.level-a.level);let sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
- return `<div class="grid"><div class="card"><h3>目前裝備</h3>${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${it.locked?"🔒 ":""}${itemHtml(it,true)}</td><td>${it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品"}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
+ return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${it.locked?"🔒 ":""}${itemHtml(it,true)}</td><td>${it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品"}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
 }
 function compareHtml(it){let old=state.equipment[it.type],diff=equipmentScore(it)-equipmentScore(old);return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old)}</div><div><div class="muted">新裝備</div>${itemHtml(it)}</div><div><div class="muted">整體比較</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()">出售</button><button class="btn" onclick="toggleLock()">${it.locked?"解除鎖定":"鎖定"}</button></div></div>`}
 function selectItem(id){selectedItem=id;render()}
