@@ -17,7 +17,7 @@ function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0}}
 function newState(){return {
  saveVersion:SAVE_VERSION,level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,
  equipment:{weapon:null,armor:null,accessory:null},inventory:[],
- mapProgress:blankMapProgress(),bossProgress:Array(10).fill(8),bossKilled:Array(10).fill(false),
+ mapProgress:blankMapProgress(),bossProgress:Array(10).fill(0),bossLocked:Array(10).fill(false),bossKilled:Array(10).fill(false),
  lostGear:[],shop:newShopState(),
  settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false
 }}
@@ -26,7 +26,8 @@ function load(){
  try{let raw=localStorage.getItem(SAVE_KEY);state=raw?JSON.parse(raw):newState()}catch(e){state=newState()}
  if(!state.saveVersion)state.saveVersion=SAVE_VERSION;
  if(!state.mapProgress)state.mapProgress=blankMapProgress();
- if(!state.bossProgress)state.bossProgress=Array(10).fill(8);
+ if(!state.bossProgress)state.bossProgress=Array(10).fill(0);
+ if(!state.bossLocked)state.bossLocked=Array(10).fill(false);
  if(!state.bossKilled)state.bossKilled=Array(10).fill(false);
  if(!state.lostGear)state.lostGear=[];
  if(!state.shop)state.shop=newShopState();
@@ -95,12 +96,13 @@ function goldReward(e){let mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;return c
 function enemyUnlocked(mapIdx,eIdx){
  if(eIdx===0)return true;
  let p=state.mapProgress[mapIdx]||[0,0,0,0];
- if(eIdx===1)return p[0]>=5;
- if(eIdx===2)return p[1]>=5;
- if(eIdx===3)return p[2]>=5;
+ if(eIdx===1)return p[0]>=10;
+ if(eIdx===2)return p[1]>=10;
+ if(eIdx===3)return p[2]>=10;
  if(eIdx===4){
+   if(state.bossLocked?.[mapIdx])return false;
    if(state.bossKilled[mapIdx])return true;
-   return p[3]>=5&&state.level>=MAPS[mapIdx].max;
+   return p[3]>=10&&state.level>=MAPS[mapIdx].max;
  }
  return false;
 }
@@ -110,12 +112,12 @@ function progressEnemyKill(mapIdx,eIdx){
  let p=state.mapProgress[mapIdx];
  p[eIdx]=Math.min(999,p[eIdx]+1);
 }
-function canBoss(mapIdx){
- if(!enemyUnlocked(mapIdx,4))return false;
- if(!state.bossKilled[mapIdx])return true;
- return state.bossProgress[mapIdx]>=8;
+function canBoss(mapIdx){return enemyUnlocked(mapIdx,4)&&!state.bossLocked?.[mapIdx]}
+function addProgress(mapIdx,enemyKind){
+ if(enemyKind!=="elite"||!state.bossLocked?.[mapIdx])return;
+ state.bossProgress[mapIdx]=Math.min(10,(state.bossProgress[mapIdx]||0)+1);
+ if(state.bossProgress[mapIdx]>=10)state.bossLocked[mapIdx]=false;
 }
-function addProgress(mapIdx,enemyKind){if(state.bossKilled[mapIdx]&&enemyKind==="elite")state.bossProgress[mapIdx]=Math.min(8,state.bossProgress[mapIdx]+1)}
 
 function addItem(it){
  if(!it)return {kept:false,sold:0};
@@ -148,11 +150,12 @@ function applyDeathPenalty(logs){
 }
 
 function fightOnce(mapIdx,eIdx){
- if(!enemyUnlocked(mapIdx,eIdx))return {ok:false,reason:"這隻怪物尚未解鎖。"};
- let e=monsterObj(mapIdx,eIdx);
- if(e.kind==="boss"&&!canBoss(mapIdx)){
-   return {ok:false,reason:state.bossKilled[mapIdx]?`Boss 尚未重生，目前菁英進度 ${state.bossProgress[mapIdx]}/8。`:"Boss 尚未達成挑戰條件。"};
+ if(!enemyUnlocked(mapIdx,eIdx)){
+   if(eIdx===4&&state.bossLocked?.[mapIdx])return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
+   return {ok:false,reason:"這隻怪物尚未解鎖。"};
  }
+ let e=monsterObj(mapIdx,eIdx);
+ if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
  let ps=equippedStats(),ehp=e.hp,php=state.hp,logs=[],turn=0;
  while(php>0&&ehp>0&&turn<200){
    turn++;let pd=calcDamage(ps.atk,e.def);ehp-=pd;logs.push(`你攻擊${e.name}，造成 ${pd} 點傷害。`);
@@ -162,13 +165,18 @@ function fightOnce(mapIdx,eIdx){
  state.hp=Math.max(0,php);
  if(php<=0){
    logs.push(`你被${e.name}擊敗。`);
+   if(e.kind==="boss"){
+     state.bossLocked[mapIdx]=true;
+     state.bossProgress[mapIdx]=0;
+     logs.push(`Boss 再挑戰已鎖定：需再擊敗本地圖菁英怪 10 隻。`);
+   }
    let penalty=applyDeathPenalty(logs);
    save(false);return {ok:true,win:false,logs,e,penalty};
  }
  let xp=expReward(e),gold=goldReward(e);state.gold+=gold;gainExp(xp,logs);
  if(e.kind==="boss"){
    let first=!state.bossKilled[mapIdx];
-   state.bossKilled[mapIdx]=true;state.bossProgress[mapIdx]=0;
+   state.bossKilled[mapIdx]=true;state.bossLocked[mapIdx]=false;state.bossProgress[mapIdx]=0;
    if(first&&mapIdx<9){
      state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);
      freeShopRefresh(mapIdx+1);
@@ -179,13 +187,13 @@ function fightOnce(mapIdx,eIdx){
  }
  let it=dropItem(e,mapIdx),ir=addItem(it);
  logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
- if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===5)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
- if(e.kind==="normal"&&eIdx===2&&state.mapProgress[mapIdx][2]===5)logs.push(`菁英敵人已出現：${MAPS[mapIdx].enemies[3][0]}。`);
- if(e.kind==="elite"&&!state.bossKilled[mapIdx]&&state.mapProgress[mapIdx][3]>=5){
+ if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===10)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
+ if(e.kind==="normal"&&eIdx===2&&state.mapProgress[mapIdx][2]===10)logs.push(`菁英敵人已出現：${MAPS[mapIdx].enemies[3][0]}。`);
+ if(e.kind==="elite"&&!state.bossKilled[mapIdx]&&!state.bossLocked[mapIdx]&&state.mapProgress[mapIdx][3]>=10){
    logs.push(state.level>=MAPS[mapIdx].max?`Boss 已出現：${MAPS[mapIdx].enemies[4][0]}。`:`菁英進度完成；達到 Lv.${MAPS[mapIdx].max} 後 Boss 才會出現。`);
  }
- if(e.kind==="elite"&&state.bossKilled[mapIdx]&&state.bossProgress[mapIdx]<8)logs.push(`Boss 重生進度：${state.bossProgress[mapIdx]}/8 菁英。`);
- if(e.kind==="elite"&&state.bossKilled[mapIdx]&&state.bossProgress[mapIdx]>=8)logs.push(`Boss 已重新出現，可以再次挑戰。`);
+ if(e.kind==="elite"&&state.bossLocked[mapIdx])logs.push(`Boss 再挑戰進度：${state.bossProgress[mapIdx]}/10 菁英。`);
+ if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
  if(it)logs.push(`${ir.sold?`自動出售 ${itemHtmlPlain(it)}，金幣 +${ir.sold}`:`獲得裝備 ${itemHtmlPlain(it)}`}`);
  save(false);return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold};
 }
@@ -225,4 +233,26 @@ function redeemLostGear(i){
  let lost=state.lostGear[i];if(!lost)return {ok:false,reason:"找不到這件遺失裝備。"};
  if(state.gold<lost.cost)return {ok:false,reason:"金幣不足。"};
  state.gold-=lost.cost;state.inventory.push(lost.item);state.lostGear.splice(i,1);save(false);return {ok:true,item:lost.item};
+}
+
+function syncProgressRuleUI(){
+ try{
+   const max=state.level<=5?1:state.level<=20?5:state.level<=35?10:15;
+   document.querySelectorAll(".count-card").forEach(btn=>{
+     const n=btn.textContent.includes("單場")?1:parseInt(btn.textContent,10)||1;
+     btn.style.display=n<=max?"":"none";
+   });
+   if(typeof selectedBattleCount!=="undefined"&&selectedBattleCount>max)selectedBattleCount=max;
+   const notice=document.querySelector(".prepare-main .notice");
+   if(notice&&typeof selectedMap!=="undefined"){
+     const p=state.mapProgress[selectedMap]||[0,0,0,0],map=MAPS[selectedMap];
+     const bossText=state.bossLocked?.[selectedMap]?`需再擊敗菁英 ${state.bossProgress[selectedMap]||0}/10`:state.bossKilled[selectedMap]?"已擊敗・可再次挑戰":enemyUnlocked(selectedMap,4)?"可挑戰":"未出現";
+     const html=`<b>地圖推進</b><br>${map.enemies[0][0]}：${Math.min(10,p[0])}/10　｜　${map.enemies[1][0]}：${enemyUnlocked(selectedMap,1)?Math.min(10,p[1])+"/10":"未出現"}　｜　${map.enemies[2][0]}：${enemyUnlocked(selectedMap,2)?Math.min(10,p[2])+"/10":"未出現"}　｜　${map.enemies[3][0]}：${enemyUnlocked(selectedMap,3)?Math.min(10,p[3])+"/10":"未出現"}　｜　${map.enemies[4][0]}：${bossText}`;
+     if(notice.dataset.ruleHtml!==html){notice.dataset.ruleHtml=html;notice.innerHTML=html;}
+   }
+ }catch(e){}
+}
+if(typeof MutationObserver!=="undefined"){
+ const main=document.getElementById("main");
+ if(main){new MutationObserver(syncProgressRuleUI).observe(main,{childList:true,subtree:true});setTimeout(syncProgressRuleUI,0);}
 }
