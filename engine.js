@@ -2,9 +2,9 @@ const navs=[["adventure","冒險"],["character","角色"],["inventory","背包"]
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false, shopItems=[];
 
 function ceil(n){return Math.ceil(n)}
-function baseHP(l){return ceil(100+12*(l-1))}
-function baseATK(l){return ceil(10+2.2*(l-1))}
-function baseDEF(l){return ceil(5+1.2*(l-1))}
+function baseHP(l){return ceil(110+12*(l-1))}
+function baseATK(l){return ceil(15+2.2*(l-1))}
+function baseDEF(l){return ceil(7+1.2*(l-1))}
 function monsterBase(l){return {hp:ceil(60+16*l),atk:ceil(10+2.35*l),def:ceil(3+.9*l)}}
 function sameExp(l){return ceil(25+4*l)}
 function expNeed(l){return ceil(sameExp(l)*(4.5+.35*l+.023*l*l))}
