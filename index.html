@@ -18,6 +18,7 @@
 <main id="main"></main>
 </div>
 <div class="bottom-nav" id="bottomNav"></div>
+
 <div class="modal" id="passwordModal">
   <div class="modal-box">
     <h3>管理功能</h3>
@@ -26,8 +27,21 @@
     <div class="controls"><button class="btn" onclick="closeGMModal()">取消</button><button class="btn primary" onclick="unlockGM()">進入</button></div>
   </div>
 </div>
-<script src="data.js?v=20260906-3"></script>
-<script src="engine.js?v=20260906-3"></script>
-<script src="ui.js?v=20260906-3"></script>
+
+<div class="modal" id="riskModal">
+  <div class="modal-box risk-box">
+    <h3>⚠ 低血量警告</h3>
+    <p>目前 HP 已低於 30%。</p>
+    <p class="muted">若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。</p>
+    <div class="controls">
+      <button class="btn primary" onclick="continueRiskBattle()">仍要繼續戰鬥</button>
+      <button class="btn ok" onclick="riskRest()">回城休息</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js?v=20260906-4"></script>
+<script src="engine.js?v=20260906-4"></script>
+<script src="ui.js?v=20260906-4"></script>
 </body>
 </html>
