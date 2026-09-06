@@ -34,7 +34,6 @@
     <p id="riskMessage" class="muted">目前 HP 已低於 50%。若戰敗，將損失 EXP，並可能遺失裝備。</p>
     <div class="controls">
       <button id="riskContinueBtn" class="btn primary" onclick="continueRiskBattle()">仍要繼續戰鬥</button>
-      <button id="riskStopBtn" class="btn" onclick="stopContinuousBattle()" style="display:none">結束連續戰鬥</button>
       <button class="btn ok" onclick="riskRest()">回城休息</button>
     </div>
   </div>
@@ -42,7 +41,7 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-8"></script>
+<script src="ui.js?v=20260906-9"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
@@ -63,15 +62,13 @@
 
   window.showRiskModal=function(mode,remaining=0){
     riskMode=mode;
-    const modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn"),stopBtn=document.getElementById("riskStopBtn");
+    const modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn");
     if(mode==="continuous"){
       if(msg)msg.innerHTML=`目前 HP 已低於 50%。連續戰鬥已暫停，尚有 <b>${remaining}</b> 場。<br>若繼續後戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
       if(continueBtn)continueBtn.textContent=`繼續剩餘 ${remaining} 場`;
-      if(stopBtn)stopBtn.style.display="inline-block";
     }else{
       if(msg)msg.innerHTML=`目前 HP 已低於 50%。<br>若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
       if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
-      if(stopBtn)stopBtn.style.display="none";
     }
     if(modal)modal.classList.add("show");
   };
