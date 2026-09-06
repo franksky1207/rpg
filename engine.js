@@ -64,7 +64,7 @@ function calcDamage(atk,def){return Math.max(1,ceil((atk-def*.55)*(.95+Math.rand
 function expReward(e){let mul=e.kind==="boss"?8:e.kind==="elite"?3:1;return ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level))}
 function goldReward(e){let mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;return ceil(goldBase(e.level)*mul)}
 function canBoss(mapIdx){let bossLv=MAPS[mapIdx].max;if(state.level<bossLv)return false;return !state.bossKilled[mapIdx]||state.bossProgress[mapIdx]>=8}
-function addProgress(mapIdx){if(state.bossKilled[mapIdx])state.bossProgress[mapIdx]=Math.min(8,state.bossProgress[mapIdx]+1)}
+function addProgress(mapIdx,enemyKind){if(state.bossKilled[mapIdx]&&enemyKind==="elite")state.bossProgress[mapIdx]=Math.min(8,state.bossProgress[mapIdx]+1)}
 function addItem(it){
  if(!it)return {kept:false,sold:0};
  let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);
@@ -79,7 +79,7 @@ function gainExp(n,logs){
 }
 function fightOnce(mapIdx,eIdx){
  let e=monsterObj(mapIdx,eIdx);
- if(e.kind==="boss"&&!canBoss(mapIdx)){let bossLv=MAPS[mapIdx].max;return {ok:false,reason:state.level<bossLv?`需要 Lv.${bossLv} 才能挑戰 Boss。`:`Boss 尚未重生，目前進度 ${state.bossProgress[mapIdx]}/8。`};}
+ if(e.kind==="boss"&&!canBoss(mapIdx)){let bossLv=MAPS[mapIdx].max;return {ok:false,reason:state.level<bossLv?`需要 Lv.${bossLv} 才能挑戰 Boss。`:`Boss 尚未重生，目前菁英進度 ${state.bossProgress[mapIdx]}/8。`};}
  let ps=equippedStats(),ehp=e.hp,php=state.hp,logs=[],turn=0;
  while(php>0&&ehp>0&&turn<200){
    turn++;let pd=calcDamage(ps.atk,e.def);ehp-=pd;logs.push(`你攻擊${e.name}，造成 ${pd} 點傷害。`);
@@ -92,9 +92,11 @@ function fightOnce(mapIdx,eIdx){
  if(e.kind==="boss"){
    state.bossKilled[mapIdx]=true;state.bossProgress[mapIdx]=0;
    if(mapIdx<9&&!state.bossKilled[mapIdx+1])state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);
- }else addProgress(mapIdx);
+ }else addProgress(mapIdx,e.kind);
  let it=dropItem(e,mapIdx),ir=addItem(it);
  logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
+ if(e.kind==="elite"&&state.bossKilled[mapIdx]&&state.bossProgress[mapIdx]<8)logs.push(`Boss 重生進度：${state.bossProgress[mapIdx]}/8 菁英。`);
+ if(e.kind==="elite"&&state.bossKilled[mapIdx]&&state.bossProgress[mapIdx]>=8)logs.push(`Boss 已重新出現，可以再次挑戰。`);
  if(it)logs.push(`${ir.sold?`自動出售 ${itemHtmlPlain(it)}，金幣 +${ir.sold}`:`獲得裝備 ${itemHtmlPlain(it)}`}`);
  save(false);return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold};
 }
