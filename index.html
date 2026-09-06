@@ -49,7 +49,7 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-13"></script>
+<script src="ui.js?v=20260906-14"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
@@ -104,7 +104,6 @@
   window.discardLostGear=function(i){
     const lost=state.lostGear?.[i];
     if(!lost)return;
-    if(!confirm(`確定放棄 ${itemHtmlPlain(lost.item)}？\n放棄後將永久刪除，無法再贖回。`))return;
     state.lostGear.splice(i,1);save();render();
   };
 
