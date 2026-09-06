@@ -51,12 +51,13 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
   main:has(.enemy-list)>div>.card:first-child .bar{height:10px}
   main:has(.enemy-list)>div>.card:first-child>div{margin-top:7px!important}
 
-  .mobile-battle-count{position:fixed;left:0;right:170px;bottom:calc(62px + env(safe-area-inset-bottom));z-index:12;height:64px;display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:5px;overflow-x:auto;background:#10141a;border-top:1px solid #493f2d;padding:8px 6px 8px 10px;scrollbar-width:none;pointer-events:auto}
-  .mobile-battle-count::-webkit-scrollbar{display:none}
-  .mobile-battle-count button{flex:0 0 auto;padding:9px 10px;pointer-events:auto}
-  .mobile-battle-title{display:none}
-  .normal-battle-controls{position:fixed;right:0;bottom:calc(62px + env(safe-area-inset-bottom));z-index:12;width:170px;height:64px;margin:0!important;display:grid!important;grid-template-columns:1fr;gap:5px;align-items:center;background:#10141a;border-top:1px solid #493f2d;padding:8px;pointer-events:auto}
-  .normal-battle-controls .btn{padding:9px 5px;white-space:nowrap}
-  .normal-battle-controls .btn.ok{display:none}
-  .boss-battle-controls{position:fixed;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom));z-index:12;height:64px;margin:0!important;display:grid!important;grid-template-columns:1fr 1fr;gap:8px;align-items:center;background:#10141a;border-top:1px solid #493f2d;padding:8px 10px;pointer-events:auto}
+  #battleSeg{position:fixed!important;left:0!important;right:170px!important;bottom:calc(62px + env(safe-area-inset-bottom))!important;z-index:12!important;height:64px!important;display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:5px!important;overflow-x:auto!important;background:#10141a!important;border-top:1px solid #493f2d!important;padding:8px 6px 8px 10px!important;scrollbar-width:none;pointer-events:auto!important;visibility:visible!important;opacity:1!important}
+  #battleSeg::-webkit-scrollbar{display:none}
+  #battleSeg button{flex:0 0 auto!important;padding:9px 10px!important;pointer-events:auto!important;display:block!important;visibility:visible!important;opacity:1!important}
+  #battleSeg + #battleCount + .controls{position:fixed!important;right:0!important;bottom:calc(62px + env(safe-area-inset-bottom))!important;z-index:12!important;width:170px!important;height:64px!important;margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:5px!important;align-items:center!important;background:#10141a!important;border-top:1px solid #493f2d!important;padding:8px!important;pointer-events:auto!important}
+  #battleSeg + #battleCount + .controls .btn{padding:9px 5px!important;white-space:nowrap}
+  #battleSeg + #battleCount + .controls .btn.ok{display:none!important}
+  h3:has(+ #battleSeg){display:none!important}
+
+  .controls:has(+ #battleCount[value="1"]){position:fixed!important;left:0!important;right:0!important;bottom:calc(62px + env(safe-area-inset-bottom))!important;z-index:12!important;height:64px!important;margin:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;align-items:center!important;background:#10141a!important;border-top:1px solid #493f2d!important;padding:8px 10px!important;pointer-events:auto!important}
 }
