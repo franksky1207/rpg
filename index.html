@@ -42,6 +42,25 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-6"></script>
+<script src="ui.js?v=20260906-7"></script>
+<script>
+(()=>{
+  function pinBattleLogToBottom(){
+    const log=document.getElementById("battleLog");
+    if(!log)return;
+    const pin=()=>{log.scrollTop=log.scrollHeight;};
+    requestAnimationFrame(()=>{
+      pin();
+      requestAnimationFrame(pin);
+    });
+    setTimeout(pin,60);
+  }
+  const main=document.getElementById("main");
+  if(main){
+    new MutationObserver(pinBattleLogToBottom).observe(main,{childList:true,subtree:true,characterData:true});
+  }
+  window.addEventListener("load",pinBattleLogToBottom);
+})();
+</script>
 </body>
 </html>
