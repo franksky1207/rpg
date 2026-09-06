@@ -39,23 +39,21 @@
   </div>
 </div>
 
-<div class="modal" id="lostGearModal">
+<div class="modal" id="battleResultModal">
   <div class="modal-box">
-    <h3>⚠ 裝備遺失</h3>
-    <p>你在戰敗後遺失了以下裝備：</p>
-    <div id="lostGearDetail" class="item"></div>
-    <p class="muted">此裝備已移至商店的「遺失裝備贖回」，之後可前往商店查看並贖回。</p>
-    <div class="controls"><button class="btn primary" onclick="closeLostGearModal()">知道了</button></div>
+    <h3 id="battleResultTitle">戰鬥結算</h3>
+    <div id="battleResultDetail"></div>
+    <div class="controls"><button class="btn primary" onclick="closeBattleResultModal()">確認</button></div>
   </div>
 </div>
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-11"></script>
+<script src="ui.js?v=20260906-12"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
-  let pendingLostGear=null;
+  let pendingResultAfterRest=null;
 
   window.lowHp=function(){
     const s=equippedStats();
@@ -66,7 +64,7 @@
     const s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<50;
     return `<div class="card" style="margin-bottom:16px">
       <div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div>
-      <div style="margin-top:12px;${low?"color:#ff8585;font-weight:700":""}">HP ${state.hp} / ${s.hp}${low?"　⚠ 戰敗會損失 EXP，並可能遺失裝備":""}<div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div>
+      <div style="margin-top:12px;${low?"color:#ff8585;font-weight:700":""}">HP ${state.hp} / ${s.hp}${low?"　⚠ 低血量":""}<div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div>
       <div style="margin-top:10px">EXP ${state.level>=50?"MAX":state.exp+" / "+need}<div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div>
     </div>`;
   };
@@ -88,77 +86,107 @@
     ensureShop();
     const cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
     const rows=state.shop.items.map((it,i)=>{
-      const current=state.equipment[it.type];
-      const itemScore=equipmentScore(it);
-      const currentScore=current?equipmentScore(current):null;
-      const diff=current?itemScore-currentScore:itemScore;
-      const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備";
-      const diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
+      const current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?itemScore-currentScore:itemScore;
+      const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備",diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
       const currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">分數 ${currentScore}</div>`:`<span class="muted">無</span>`;
-      return `<tr>
-        <td>${itemHtml(it,true)}</td>
-        <td>${statLine(it)}</td>
-        <td><div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">商品分數 ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div></td>
-        <td>${it.buy.toLocaleString()}</td>
-        <td><button class="btn" onclick="buyItem(${i})">購買</button></td>
-      </tr>`;
+      return `<tr><td>${itemHtml(it,true)}</td><td>${statLine(it)}</td><td><div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">商品分數 ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div></td><td>${it.buy.toLocaleString()}</td><td><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`;
     }).join("");
-    return `<div class="card"><h2>商店</h2>
-      <div class="notice">商店商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div>
-      <div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>
-      ${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}
-      <span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div>
-      <div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
-      ${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">死亡時遺失的裝備會暫存在此，可用金幣贖回。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>贖回價格</th><th></th></tr></thead><tbody>${lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${x.cost.toLocaleString()}</td><td><button class="btn" onclick="redeemGear(${i})">贖回</button></td></tr>`).join("")}</tbody></table></div>`:""}
+    return `<div class="card"><h2>商店</h2><div class="notice">商店商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">死亡時遺失的裝備會暫存在此，可用金幣贖回。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>贖回價格</th><th></th></tr></thead><tbody>${lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${x.cost.toLocaleString()}</td><td><button class="btn" onclick="redeemGear(${i})">贖回</button></td></tr>`).join("")}</tbody></table></div>`:""}</div>`;
+  };
+
+  function combatPanelHtml(e){
+    const ps=equippedStats(),playerPct=ps.hp?state.hp/ps.hp*100:0;
+    return `<div class="card" style="margin-top:16px" id="combatPanel">
+      <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b id="combatEnemyName">${e.name} Lv.${e.level}</b><span id="combatEnemyHp">HP ${e.hp} / ${e.hp}</span></div><div class="bar" style="height:16px;margin-top:6px"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div>
+      <div id="combatMessage" style="text-align:center;min-height:28px;color:#e5cf9a;font-weight:700;margin:10px 0">準備戰鬥</div>
+      <div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>你・Lv.${state.level}</b><span id="combatPlayerHp">HP ${state.hp} / ${ps.hp}</span></div><div class="bar" style="height:16px;margin-top:6px"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div>
     </div>`;
+  }
+
+  window.adventureBattlePage=function(){
+    selectedMap=Math.min(selectedMap,state.unlockedMap);
+    let highest=highestUnlockedEnemy(selectedMap);if(selectedEnemy>highest)selectedEnemy=highest;
+    const map=MAPS[selectedMap],e=monsterObj(selectedMap,selectedEnemy);
+    let maxBattles=state.level<=10?5:state.level<=20?10:state.level<=30?15:state.level<=40?20:25;
+    if(selectedBattleCount>maxBattles)selectedBattleCount=maxBattles;
+    const opts=[1,5,10,15,20,25].filter(x=>x===1||x<=maxBattles).map(x=>`<button onclick="setBattleCount(${x},this)" data-bc="${x}" class="${x===selectedBattleCount?"active":""}">${x===1?"單場":x+" 場"}</button>`).join("");
+    const battleControls=e.kind==="boss"?`<div class="controls"><button class="btn primary" onclick="startBattles()">挑戰 Boss</button><button class="btn ok" onclick="rest()">回城休息</button></div><input type="hidden" id="battleCount" value="1">`:`<h3 style="margin-top:18px">連續戰鬥</h3><div class="seg" id="battleSeg">${opts}</div><input type="hidden" id="battleCount" value="${selectedBattleCount}"><div class="controls"><button class="btn primary" onclick="startBattles()">開始戰鬥</button><button class="btn ok" onclick="rest()">回城休息</button></div>`;
+    const enemyButtons=map.enemies.map((x,i)=>{if(!enemyUnlocked(selectedMap,i))return "";const mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span><span class="badge">Boss 計數</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})">${mo.name} Lv.${mo.level}${badge}<div class="muted">HP ${mo.hp}　攻擊 ${mo.atk}　防禦 ${mo.def}</div></button>`;}).join("");
+    return `<div>${adventureStatus()}<div class="card"><div class="controls" style="margin-top:0;margin-bottom:12px"><button class="btn" onclick="backToMaps()">← 返回冒險地圖</button></div><h2>${map.name} <span class="muted">Lv.${map.min}～${map.max}</span></h2>${mapProgressHtml(selectedMap)}<h3 style="margin-top:18px">選擇怪物</h3><div class="enemy-list">${enemyButtons}</div>${state.bossKilled[selectedMap]?`<div class="notice">Boss 重生進度：${state.bossProgress[selectedMap]}/8 菁英。只有擊敗本地圖的菁英怪才會計數。</div>`:""}${e.kind==="boss"&&state.bossKilled[selectedMap]?`<div class="notice">Boss 再次挑戰條件：同地圖擊敗 8 隻菁英怪（${canBoss(selectedMap)?"可挑戰":state.bossProgress[selectedMap]+"/8 菁英"}）</div>`:""}${combatPanelHtml(e)}${battleControls}</div></div>`;
   };
 
-  const originalFightOnce=window.fightOnce;
-  if(typeof originalFightOnce==="function"){
-    window.fightOnce=function(...args){
-      const result=originalFightOnce(...args);
-      if(result?.penalty?.dropped)pendingLostGear=result.penalty.dropped;
-      return result;
-    };
+  function setCombatHp(enemyHp,enemyMax,playerHp,playerMax,message){
+    const eb=document.getElementById("combatEnemyBar"),eh=document.getElementById("combatEnemyHp"),pb=document.getElementById("combatPlayerBar"),ph=document.getElementById("combatPlayerHp"),msg=document.getElementById("combatMessage");
+    if(eb)eb.style.width=`${Math.max(0,Math.min(100,enemyHp/enemyMax*100))}%`;
+    if(eh)eh.textContent=`HP ${Math.max(0,enemyHp)} / ${enemyMax}`;
+    if(pb)pb.style.width=`${Math.max(0,Math.min(100,playerHp/playerMax*100))}%`;
+    if(ph)ph.textContent=`HP ${Math.max(0,playerHp)} / ${playerMax}`;
+    if(msg)msg.textContent=message;
   }
 
-  window.closeLostGearModal=function(){
-    const modal=document.getElementById("lostGearModal");
-    if(modal)modal.classList.remove("show");
+  async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
+    let ehp=enemyMax,php=startPlayerHp;
+    setCombatHp(ehp,enemyMax,php,playerMax,roundText?`${roundText}・開始戰鬥`:"開始戰鬥");
+    await sleep(120);
+    for(const line of r.logs){
+      let m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
+      if(m){ehp=Math.max(0,ehp-(+m[1]));setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?180:120);continue;}
+      m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
+      if(m){php=Math.max(0,php-(+m[1]));setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?180:120);}
+    }
+    setCombatHp(ehp,enemyMax,php,playerMax,r.win?"戰鬥勝利！":"戰敗！");
+    await sleep(180);
+  }
+
+  function dropListHtml(items){
+    if(!items.length)return `<div class="muted">裝備：無</div>`;
+    return `<div style="margin-top:10px"><b>裝備</b>${items.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${statLine(x.item)}${x.sold?`　・自動出售 +${x.sold} 金幣`:""}</div></div>`).join("")}</div>`;
+  }
+
+  function showBattleResult(ctx,defeat=null){
+    const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
+    if(!title||!detail||!modal)return;
+    if(defeat){
+      title.textContent="戰鬥失敗";
+      const lost=defeat.penalty?.dropped;
+      detail.innerHTML=`<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}<div class="muted">${statLine(lost)}</div></div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+    }else{
+      title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥勝利";
+      detail.innerHTML=`${ctx.originalCount>1?`<div class="item"><b>勝利 ${ctx.wins} / ${ctx.originalCount} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
+    }
+    modal.classList.add("show");
+  }
+
+  window.closeBattleResultModal=function(){const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show")};
+
+  window.riskRest=function(){
+    if(riskMode==="continuous"&&pendingContinuousBattle){pendingResultAfterRest=pendingContinuousBattle;pendingContinuousBattle=null;}
+    closeRiskModal();state.hp=equippedStats().hp;save();render();
+    if(pendingResultAfterRest){const ctx=pendingResultAfterRest;pendingResultAfterRest=null;setTimeout(()=>showBattleResult(ctx),0);}
   };
 
-  function showPendingLostGear(){
-    if(!pendingLostGear||battleBusy)return;
-    const it=pendingLostGear;
-    pendingLostGear=null;
-    const typeName=it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品";
-    const detail=document.getElementById("lostGearDetail");
-    if(detail)detail.innerHTML=`<div><b>${typeName}</b></div>${itemHtml(it)}<div class="muted" style="margin-top:6px">${statLine(it)}</div>`;
-    const modal=document.getElementById("lostGearModal");
-    if(modal)modal.classList.add("show");
-  }
+  window.runBattles=async function(count,ctx=null){
+    if(battleBusy)return;battleBusy=true;
+    if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count};
+    let defeat=null;
+    for(let local=1;local<=count;local++){
+      const roundNo=ctx.completed+1,psBefore=equippedStats(),startPlayerHp=state.hp,eBefore=monsterObj(selectedMap,selectedEnemy),r=fightOnce(selectedMap,selectedEnemy);
+      if(!r.ok){alert(r.reason);break;}
+      await animateFight(r,startPlayerHp,psBefore.hp,eBefore.hp,ctx.originalCount>1?`第 ${roundNo} / ${ctx.originalCount} 場`:"");
+      if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});}
+      else defeat=r;
+      ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
+      save();render();
+      if(!r.win)break;
+      if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){
+        pendingContinuousBattle=ctx;battleBusy=false;showRiskModal("continuous",ctx.remaining);return;
+      }
+      if(ctx.remaining>0)await sleep(r.e.kind==="elite"?220:140);
+    }
+    battleBusy=false;save();render();
+    setTimeout(()=>showBattleResult(ctx,defeat),0);
+  };
 
-  function pinBattleLogToBottom(){
-    const log=document.getElementById("battleLog");
-    if(!log)return;
-    const pin=()=>{log.scrollTop=log.scrollHeight;};
-    requestAnimationFrame(()=>{
-      pin();
-      requestAnimationFrame(pin);
-    });
-    setTimeout(pin,60);
-  }
-  const main=document.getElementById("main");
-  if(main){
-    new MutationObserver(()=>{
-      pinBattleLogToBottom();
-      setTimeout(showPendingLostGear,0);
-    }).observe(main,{childList:true,subtree:true,characterData:true});
-  }
-  window.addEventListener("load",()=>{
-    pinBattleLogToBottom();
-    showPendingLostGear();
-  });
   if(typeof render==="function")render();
 })();
 </script>
