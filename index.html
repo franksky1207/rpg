@@ -39,12 +39,23 @@
   </div>
 </div>
 
+<div class="modal" id="lostGearModal">
+  <div class="modal-box">
+    <h3>⚠ 裝備遺失</h3>
+    <p>你在戰敗後遺失了以下裝備：</p>
+    <div id="lostGearDetail" class="item"></div>
+    <p class="muted">此裝備已移至商店的「遺失裝備贖回」，之後可前往商店查看並贖回。</p>
+    <div class="controls"><button class="btn primary" onclick="closeLostGearModal()">知道了</button></div>
+  </div>
+</div>
+
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-9"></script>
+<script src="ui.js?v=20260906-10"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
+  let pendingLostGear=null;
 
   window.lowHp=function(){
     const s=equippedStats();
@@ -73,6 +84,31 @@
     if(modal)modal.classList.add("show");
   };
 
+  const originalFightOnce=window.fightOnce;
+  if(typeof originalFightOnce==="function"){
+    window.fightOnce=function(...args){
+      const result=originalFightOnce(...args);
+      if(result?.penalty?.dropped)pendingLostGear=result.penalty.dropped;
+      return result;
+    };
+  }
+
+  window.closeLostGearModal=function(){
+    const modal=document.getElementById("lostGearModal");
+    if(modal)modal.classList.remove("show");
+  };
+
+  function showPendingLostGear(){
+    if(!pendingLostGear||battleBusy)return;
+    const it=pendingLostGear;
+    pendingLostGear=null;
+    const typeName=it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品";
+    const detail=document.getElementById("lostGearDetail");
+    if(detail)detail.innerHTML=`<div><b>${typeName}</b></div>${itemHtml(it)}<div class="muted" style="margin-top:6px">${statLine(it)}</div>`;
+    const modal=document.getElementById("lostGearModal");
+    if(modal)modal.classList.add("show");
+  }
+
   function pinBattleLogToBottom(){
     const log=document.getElementById("battleLog");
     if(!log)return;
@@ -85,9 +121,15 @@
   }
   const main=document.getElementById("main");
   if(main){
-    new MutationObserver(pinBattleLogToBottom).observe(main,{childList:true,subtree:true,characterData:true});
+    new MutationObserver(()=>{
+      pinBattleLogToBottom();
+      setTimeout(showPendingLostGear,0);
+    }).observe(main,{childList:true,subtree:true,characterData:true});
   }
-  window.addEventListener("load",pinBattleLogToBottom);
+  window.addEventListener("load",()=>{
+    pinBattleLogToBottom();
+    showPendingLostGear();
+  });
   if(typeof render==="function")render();
 })();
 </script>
