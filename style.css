@@ -42,7 +42,25 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
   main:has(.enemy-list)>div>.card:nth-child(2)>h2{grid-column:2;grid-row:2}
 }
 @media(max-width:760px){
-  header nav{display:none}.brand h1{font-size:20px}.grid,.grid3{grid-template-columns:1fr}.app{padding-bottom:78px}main{padding:12px}.hero{min-height:260px}.hero h2{font-size:27px}
+  header nav{display:none}.brand h1{font-size:20px}.grid,.grid3{grid-template-columns:1fr}.app{padding-bottom:148px}main{padding:12px}.hero{min-height:260px}.hero h2{font-size:27px}
   .bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;z-index:9;background:#0c1015;border-top:1px solid #493f2d;padding:7px 5px calc(7px + env(safe-area-inset-bottom));gap:4px}
   .bottom-nav button{font-size:12px;padding:9px 3px}.log{height:220px}.stats{grid-template-columns:1fr 1fr}
+
+  /* 冒險戰鬥：頂部固定雙方血量，其他頁面不受影響 */
+  main:has(.enemy-list)>div>.card:first-child{position:sticky;top:57px;z-index:4;margin:0 -4px 12px!important;padding:10px 12px;box-shadow:0 8px 22px rgba(0,0,0,.45)}
+  main:has(.enemy-list)>div>.card:first-child>.stats{display:none}
+  main:has(.enemy-list)>div>.card:first-child>div:last-child{display:none}
+  main:has(.enemy-list)>div>.card:first-child .bar{height:10px}
+  main:has(.enemy-list)>div>.card:first-child>div{margin-top:7px!important}
+
+  /* 冒險戰鬥：底部固定場數與戰鬥按鈕，位於主導覽列上方 */
+  main:has(.enemy-list)>div>.card:nth-child(2)>.seg{position:fixed;left:0;right:188px;bottom:62px;z-index:8;height:62px;display:flex;flex-wrap:nowrap;align-items:center;gap:5px;overflow-x:auto;background:#10141a;border-top:1px solid #493f2d;padding:8px 6px 8px 10px;scrollbar-width:none}
+  main:has(.enemy-list)>div>.card:nth-child(2)>.seg::-webkit-scrollbar{display:none}
+  main:has(.enemy-list)>div>.card:nth-child(2)>.seg button{flex:0 0 auto;padding:9px 10px}
+  main:has(.enemy-list)>div>.card:nth-child(2)>h3:has(+ .seg){display:none}
+  main:has(.enemy-list)>div>.card:nth-child(2)>.seg~.controls:last-of-type{position:fixed;right:0;bottom:62px;z-index:8;width:188px;height:62px;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:5px;align-items:center;background:#10141a;border-top:1px solid #493f2d;padding:8px 8px 8px 4px}
+  main:has(.enemy-list)>div>.card:nth-child(2)>.seg~.controls:last-of-type .btn{padding:9px 5px;white-space:nowrap}
+
+  /* Boss 沒有場數選擇，戰鬥按鈕列直接佔滿底部 */
+  main:has(.enemy-list)>div>.card:nth-child(2)>.controls:last-of-type:not(:has(~ .controls)){position:fixed;left:0;right:0;bottom:62px;z-index:8;height:62px;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;background:#10141a;border-top:1px solid #493f2d;padding:8px 10px}
 }
