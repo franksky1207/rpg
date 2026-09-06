@@ -31,10 +31,10 @@
 <div class="modal" id="riskModal">
   <div class="modal-box risk-box">
     <h3>⚠ 低血量警告</h3>
-    <p>目前 HP 已低於 30%。</p>
-    <p class="muted">若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。</p>
+    <p id="riskMessage" class="muted">目前 HP 已低於 30%。若戰敗，將損失 EXP，並可能遺失裝備。</p>
     <div class="controls">
-      <button class="btn primary" onclick="continueRiskBattle()">仍要繼續戰鬥</button>
+      <button id="riskContinueBtn" class="btn primary" onclick="continueRiskBattle()">仍要繼續戰鬥</button>
+      <button id="riskStopBtn" class="btn" onclick="stopContinuousBattle()" style="display:none">結束連續戰鬥</button>
       <button class="btn ok" onclick="riskRest()">回城休息</button>
     </div>
   </div>
@@ -42,6 +42,6 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260906-4"></script>
-<script src="ui.js?v=20260906-5"></script>
+<script src="ui.js?v=20260906-6"></script>
 </body>
 </html>
