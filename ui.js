@@ -3,6 +3,9 @@ let pendingBattleCount=1;
 let adventureScreen="maps";
 let riskMode="initial";
 let pendingContinuousBattle=null;
+let pendingResultAfterRest=null;
+let combatRound=1;
+let combatTotal=1;
 
 function compactMobileDom(){
  const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
@@ -25,7 +28,6 @@ function render(){
  renderNav();normalizeHP();
  let fn={home:homePage,adventure:adventurePage,character:characterPage,inventory:inventoryPage,shop:shopPage,settings:settingsPage}[view];
  document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
- if(view==="adventure"&&adventureScreen==="battle"&&battleLogs.length)setTimeout(scrollBattleLogToBottom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
 function homeBackHtml(){return `<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`}
@@ -88,95 +90,109 @@ function adventurePreparePage(){
  let enemies=map.enemies.map((x,i)=>{if(!enemyUnlocked(selectedMap,i))return "";let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`;}).join("");
  return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 style="margin-top:18px">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
 }
-function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat"&&typeof adventureCombatPage==="function")return adventureCombatPage();return adventurePreparePage()}
+function adventureCombatPage(){
+ let e=monsterObj(selectedMap,selectedEnemy),s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
+ return `<section class="combat-screen"><div class="combat-head">${combatTotal>1?`第 ${combatRound} / ${combatTotal} 場`:`單場戰鬥`}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;
+}
+function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()}
 
-function lowHp(){let s=equippedStats();return s.hp>0&&state.hp/s.hp<.30}
-function scrollBattleLogToBottom(){let log=document.getElementById("battleLog");if(log)log.scrollTop=log.scrollHeight}
+function lowHp(){let s=equippedStats();return s.hp>0&&state.hp/s.hp<.5}
+function closeRiskModal(){let m=document.getElementById("riskModal");if(m)m.classList.remove("show")}
 function showRiskModal(mode,remaining=0){
  riskMode=mode;
- let modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn"),stopBtn=document.getElementById("riskStopBtn");
+ let modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn");
  if(mode==="continuous"){
-   if(msg)msg.innerHTML=`目前 HP 已低於 30%。連續戰鬥已暫停，尚有 <b>${remaining}</b> 場。<br>若繼續後戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
-   if(continueBtn)continueBtn.textContent=`繼續剩餘 ${remaining} 場`;
-   if(stopBtn)stopBtn.style.display="inline-block";
+  if(msg)msg.innerHTML=`目前 HP 已低於 50%。連續戰鬥已暫停，尚有 <b>${remaining}</b> 場。<br>若繼續後戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+  if(continueBtn)continueBtn.textContent=`繼續剩餘 ${remaining} 場`;
  }else{
-   if(msg)msg.innerHTML=`目前 HP 已低於 30%。<br>若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
-   if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
-   if(stopBtn)stopBtn.style.display="none";
+  if(msg)msg.innerHTML=`目前 HP 已低於 50%。<br>若戰敗，將損失目前等級升級所需 EXP 的 10%，並有 30% 機率遺失目前裝備中的 1 件。`;
+  if(continueBtn)continueBtn.textContent="仍要繼續戰鬥";
  }
  if(modal)modal.classList.add("show");
 }
+function beginCombat(count){combatRound=1;combatTotal=count;adventureScreen="combat";render();setTimeout(()=>runBattles(count),60)}
 function startBattles(){
  if(battleBusy)return;
- let count=+(document.getElementById("battleCount")?.value||1);
- if(lowHp()){
-   pendingBattleCount=count;
-   pendingContinuousBattle=null;
-   showRiskModal("initial");
-   return;
- }
- runBattles(count);
+ let e=monsterObj(selectedMap,selectedEnemy),count=e.kind==="boss"?1:selectedBattleCount;
+ if(lowHp()){pendingBattleCount=count;pendingContinuousBattle=null;showRiskModal("initial");return}
+ beginCombat(count);
 }
-function closeRiskModal(){let m=document.getElementById("riskModal");if(m)m.classList.remove("show")}
 function continueRiskBattle(){
  closeRiskModal();
- if(riskMode==="continuous"&&pendingContinuousBattle){let ctx=pendingContinuousBattle;pendingContinuousBattle=null;runBattles(ctx.remaining,ctx);return}
- let count=pendingBattleCount;runBattles(count);
+ if(riskMode==="continuous"&&pendingContinuousBattle){let ctx=pendingContinuousBattle;pendingContinuousBattle=null;adventureScreen="combat";render();setTimeout(()=>runBattles(ctx.remaining,ctx),60);return}
+ beginCombat(pendingBattleCount||1);
 }
-function stopContinuousBattle(){
- if(!pendingContinuousBattle)return closeRiskModal();
- let ctx=pendingContinuousBattle;pendingContinuousBattle=null;closeRiskModal();
- ctx.summary.push(`連續戰鬥已手動結束。`);
- ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
- battleLogs=ctx.summary;save();render();
+function setCombatHp(enemyHp,enemyMax,playerHp,playerMax,message){
+ let eb=document.getElementById("combatEnemyBar"),eh=document.getElementById("combatEnemyHp"),pb=document.getElementById("combatPlayerBar"),ph=document.getElementById("combatPlayerHp"),msg=document.getElementById("combatMessage");
+ if(eb)eb.style.width=`${Math.max(0,Math.min(100,enemyHp/enemyMax*100))}%`;
+ if(eh)eh.textContent=`${Math.max(0,enemyHp)} / ${enemyMax}`;
+ if(pb)pb.style.width=`${Math.max(0,Math.min(100,playerHp/playerMax*100))}%`;
+ if(ph)ph.textContent=`${Math.max(0,playerHp)} / ${playerMax}`;
+ if(msg)msg.textContent=message;
 }
-function riskRest(){
- if(riskMode==="continuous"&&pendingContinuousBattle){
-   let ctx=pendingContinuousBattle;pendingContinuousBattle=null;
-   ctx.summary.push(`因低血量返回城鎮，連續戰鬥已結束。`);
-   ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
-   battleLogs=ctx.summary;
- }
- closeRiskModal();state.hp=equippedStats().hp;save();render();
+function flashDamage(target,amount){
+ let card=document.getElementById(target==="enemy"?"combatEnemyCard":"combatPlayerCard"),dmg=document.getElementById(target==="enemy"?"combatEnemyDamage":"combatPlayerDamage");
+ if(card){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260)}
+ if(dmg){dmg.textContent=`-${amount}`;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show")}
+}
+function attackMotion(attacker){
+ let card=document.getElementById(attacker==="player"?"combatPlayerCard":"combatEnemyCard");
+ if(card){card.classList.remove("attacking");void card.offsetWidth;card.classList.add("attacking");setTimeout(()=>card.classList.remove("attacking"),340)}
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-async function animateLogs(logs,kind){
- let log=document.getElementById("battleLog");if(!log)return;
- log.innerHTML="";
- let delay=kind==="boss"?280:kind==="elite"?220:160;
- for(let line of logs){log.insertAdjacentHTML("beforeend",`<div>${line}</div>`);scrollBattleLogToBottom();await sleep(delay)}
- scrollBattleLogToBottom();
+async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
+ let ehp=enemyMax,php=startPlayerHp;
+ setCombatHp(ehp,enemyMax,php,playerMax,roundText?`${roundText}・開始戰鬥`:"開始戰鬥");
+ await sleep(180);
+ for(let line of r.logs){
+  let m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
+  if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashDamage("enemy",m[1]);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
+  m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
+  if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashDamage("player",m[1]);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190)}
+ }
+ setCombatHp(ehp,enemyMax,php,playerMax,r.win?"戰鬥勝利！":"戰敗！");
+ await sleep(250);
+}
+function dropListHtml(items){
+ if(!items.length)return `<div class="muted">裝備：無</div>`;
+ return `<div style="margin-top:10px"><b>裝備</b>${items.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${statLine(x.item)}${x.sold?`　・自動出售 +${x.sold} 金幣`:""}</div></div>`).join("")}</div>`;
+}
+function showBattleResult(ctx,defeat=null){
+ let title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
+ if(!title||!detail||!modal)return;
+ if(defeat){
+  title.textContent="戰鬥失敗";
+  let lost=defeat.penalty?.dropped;
+  detail.innerHTML=`<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}<div class="muted">${statLine(lost)}</div></div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+ }else{
+  title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥勝利";
+  detail.innerHTML=`${ctx.originalCount>1?`<div class="item"><b>勝利 ${ctx.wins} / ${ctx.originalCount} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
+ }
+ modal.classList.add("show");
+}
+function closeBattleResultModal(){let modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");adventureScreen="prepare";render()}
+function riskRest(){
+ if(riskMode==="continuous"&&pendingContinuousBattle){pendingResultAfterRest=pendingContinuousBattle;pendingContinuousBattle=null}
+ closeRiskModal();state.hp=equippedStats().hp;adventureScreen="prepare";save();render();
+ if(pendingResultAfterRest){let ctx=pendingResultAfterRest;pendingResultAfterRest=null;setTimeout(()=>showBattleResult(ctx),0)}
 }
 async function runBattles(count,ctx=null){
- if(battleBusy)return;battleBusy=true;
- if(!ctx)ctx={summary:[],wins:0,totalXp:0,totalGold:0,drops:0,originalCount:count,completed:0,remaining:count};
+ if(battleBusy)return;
+ battleBusy=true;
+ if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count};
+ let defeat=null;
  for(let local=1;local<=count;local++){
-   let roundNo=ctx.completed+1,r=fightOnce(selectedMap,selectedEnemy);
-   if(!r.ok){ctx.summary.push(r.reason);break}
-   if(ctx.originalCount===1){
-     battleLogs=r.logs.slice();render();await animateLogs(r.logs,r.e.kind);
-     if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.drops++}
-   }else if(r.win){
-     ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.drops++;
-     ctx.summary.push(`第 ${roundNo} 場：勝利${r.item?`，${r.sold?"裝備自動出售":"掉落 "+itemHtmlPlain(r.item)}`:""}`);
-     battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();
-     await sleep(r.e.kind==="elite"?800:500);
-   }else{
-     ctx.summary.push(`第 ${roundNo} 場：戰敗，連續戰鬥中止。`);
-     ctx.summary.push(...r.logs.slice(-3));
-     battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();
-     ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
-     break;
-   }
-   ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
-   if(!r.win)break;
-   if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){
-     pendingContinuousBattle=ctx;battleBusy=false;save();battleLogs=ctx.summary.slice();render();scrollBattleLogToBottom();showRiskModal("continuous",ctx.remaining);return;
-   }
+  combatRound=ctx.completed+1;combatTotal=ctx.originalCount;adventureScreen="combat";render();await sleep(60);
+  let psBefore=equippedStats(),startPlayerHp=state.hp,eBefore=monsterObj(selectedMap,selectedEnemy),r=fightOnce(selectedMap,selectedEnemy);
+  if(!r.ok){alert(r.reason);break}
+  await animateFight(r,startPlayerHp,psBefore.hp,eBefore.hp,ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"");
+  if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.items.push({item:r.item,sold:r.sold||0})}else defeat=r;
+  ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);save();
+  if(!r.win)break;
+  if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){render();pendingContinuousBattle=ctx;battleBusy=false;showRiskModal("continuous",ctx.remaining);return}
+  if(ctx.remaining>0)await sleep(r.e.kind==="elite"?220:140);
  }
- if(ctx.originalCount>1)ctx.summary.push(`結算：勝利 ${ctx.wins}/${ctx.originalCount}，EXP +${ctx.totalXp}，金幣 +${ctx.totalGold}，掉落 ${ctx.drops} 件。`);
- if(ctx.originalCount>1)battleLogs=ctx.summary;
- save();battleBusy=false;render();scrollBattleLogToBottom();
+ battleBusy=false;save();render();setTimeout(()=>showBattleResult(ctx,defeat),0);
 }
 
 function characterPage(){
