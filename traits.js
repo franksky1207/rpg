@@ -40,7 +40,10 @@ function applyMonsterTraits(enemy,traitIds){
  e.dodge=round1(Math.max(0,Math.min(MAX_DODGE_RATE,e.dodge)));
  return e;
 }
-function createMonsterEncounter(mapIdx,eIdx){return applyMonsterTraits(baseMonsterObj(mapIdx,eIdx),rollMonsterTraits(baseMonsterObj(mapIdx,eIdx).kind))}
+function createMonsterEncounter(mapIdx,eIdx){
+ let base=baseMonsterObj(mapIdx,eIdx);
+ return applyMonsterTraits(base,rollMonsterTraits(base.kind));
+}
 function previewKey(mapIdx,eIdx){return `${mapIdx}:${eIdx}`}
 function getPreviewEncounter(mapIdx,eIdx){
  let k=previewKey(mapIdx,eIdx);if(!monsterPreviewCache[k])monsterPreviewCache[k]=createMonsterEncounter(mapIdx,eIdx);return monsterPreviewCache[k];
@@ -51,7 +54,7 @@ function traitTagsHtml(traits){
  return `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<span title="${t.desc}" style="display:inline-block;border:1px solid ${t.border};color:${t.color};background:#10141a;padding:2px 6px;border-radius:999px;font-size:11px;line-height:1.35">${t.name}</span>`}).join("")}</div>`;
 }
 
-function monsterObj(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)}
+window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
 
 function enterMap(i){
  if(i>state.unlockedMap)return;
