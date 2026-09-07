@@ -6,6 +6,8 @@ let pendingContinuousBattle=null;
 let pendingResultAfterRest=null;
 let combatRound=1;
 let combatTotal=1;
+let gmTapCount=0;
+let gmTapTimer=null;
 
 function compactMobileDom(){
  const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
@@ -238,21 +240,35 @@ function selectItem(id){selectedItem=id;render()}
 function equipSelected(){let i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;let it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
 function sellSelected(){let i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;let it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=it.sell;selectedItem=null;save();render()}
 
+function makeShopItems(mapIdx=currentShopMap()){
+ let m=MAPS[mapIdx],arr=[];
+ for(let i=0;i<3;i++){
+  let lv=Math.max(m.min,Math.min(m.max,state.level+Math.floor(Math.random()*3)-1));
+  let r=Math.random()*100,q=r<48?0:r<82?1:r<96?2:r<99.3?3:4;
+  arr.push(makeItem(lv,mapIdx,"normal",q));
+ }
+ return arr;
+}
 function shopCooldownText(){
  let left=Math.max(0,(state.shop.resetAvailableAt||0)-Date.now());if(!left)return "可重置";
  let m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);return `${m} 分 ${String(s).padStart(2,"0")} 秒`;
 }
+function compareGearHtml(it,label="商品分數"){
+ let current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?itemScore-currentScore:itemScore;
+ let diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備";
+ let diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
+ let currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">分數 ${currentScore}</div>`:`<span class="muted">無</span>`;
+ return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">${label} ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
+}
+function discardLostGear(i){let lost=state.lostGear?.[i];if(!lost)return;state.lostGear.splice(i,1);save();render()}
 function shopPage(){
- ensureShop();let cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7;
- let lost=state.lostGear||[];
- return `<div class="card"><h2>商店</h2>
- <div class="notice">商店商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div>
- <div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>
- ${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}
- <span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div>
- <div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>價格</th><th></th></tr></thead><tbody>${state.shop.items.map((it,i)=>`<tr><td>${itemHtml(it,true)}</td><td>${statLine(it)}</td><td>${it.buy.toLocaleString()}</td><td><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("")}</tbody></table></div>
- ${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">死亡時遺失的裝備會暫存在此，可用金幣贖回。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>贖回價格</th><th></th></tr></thead><tbody>${lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${x.cost.toLocaleString()}</td><td><button class="btn" onclick="redeemGear(${i})">贖回</button></td></tr>`).join("")}</tbody></table></div>`:""}
- </div>`;
+ ensureShop();
+ if(state.shop.items.length>3){state.shop.items=state.shop.items.slice(0,3);save(false)}
+ let cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
+ let rows=state.shop.items.map((it,i)=>`<tr><td>${itemHtml(it,true)}</td><td>${statLine(it)}</td><td>${compareGearHtml(it,"商品分數")}</td><td>${it.buy.toLocaleString()}</td><td><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("");
+ let lostRows=lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${compareGearHtml(x.item,"遺失裝備分數")}</td><td>${x.cost.toLocaleString()}</td><td><div class="controls" style="margin-top:0"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
+ let body=`<div class="card"><h2>商店</h2><div class="notice">商店每次只提供 3 件裝備。商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${lostRows}</tbody></table></div>`:""}</div>`;
+ return wrapFunctionPage(body);
 }
 function refreshShop(){let r=paidShopRefresh();if(!r.ok)return alert(r.reason);save();render()}
 function buyItem(i){let r=shopPurchase(i);if(!r.ok)return alert(r.reason);save();render()}
@@ -260,18 +276,26 @@ function manualResetShopPrice(){let r=resetShopPrice();if(!r.ok)return alert(r.r
 function redeemGear(i){let r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();render()}
 
 function settingsPage(){
- let s=state.settings;return `<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
+ let s=state.settings;
+ let body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
  <h3 style="margin-top:22px">自動出售</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">不可自動出售</span></div>
  <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div><div class="controls"><button class="btn" onclick="exportSave()">匯出存檔</button><label class="btn">匯入存檔<input type="file" accept=".json" hidden onchange="importSave(event)"></label></div>
  ${state.gm?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
+ return wrapFunctionPage(body);
 }
 function wireSettings(){
- let title=document.getElementById("settingsTitle");if(title){title.onclick=(ev)=>{if(ev.detail===3)openGMModal()}}
+ let title=document.getElementById("settingsTitle");
+ if(title){
+  title.onclick=()=>{gmTapCount++;clearTimeout(gmTapTimer);if(gmTapCount>=3){gmTapCount=0;openGMModal();return}gmTapTimer=setTimeout(()=>{gmTapCount=0},1000)};
+  title.style.touchAction="manipulation";
+  title.style.userSelect="none";
+  title.style.webkitUserSelect="none";
+ }
  document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
- let el=document.getElementById("keepUpgrade");if(el)el.onchange=()=>{state.settings.keepUpgrade=el.checked;save()};
+ let keep=document.getElementById("keepUpgrade");if(keep)keep.onchange=()=>{state.settings.keepUpgrade=keep.checked;save()};
 }
-function gmHtml(){return `<div class="gm"><h3>管理／GM 模式</h3><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">+10,000 金幣</button><button class="btn" onclick="rest()">補滿 HP</button><button class="btn" onclick="gmUnlock()">解鎖全部地圖</button><button class="btn" onclick="gmGear(3)">產生史詩裝</button><button class="btn" onclick="gmGear(4)">產生傳說裝</button><button class="btn" onclick="gmGear(5)">產生神話裝</button><button class="btn" onclick="gmBoss()">重生目前 Boss</button></div><h3 style="margin-top:16px">模擬測試</h3><div class="controls"><button class="btn blue" onclick="gmSim(100)">模擬 100 場</button><button class="btn blue" onclick="gmSim(1000)">模擬 1,000 場</button><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div><div id="gmResult" class="notice">模擬不會修改正式存檔。</div></div>`}
+function gmHtml(){return `<div class="gm"><h3>管理／GM 模式</h3><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">+10,000 金幣</button><button class="btn" onclick="gmUnlock()">解鎖全部地圖</button><button class="btn" onclick="gmGear(3)">產生史詩裝</button><button class="btn" onclick="gmGear(4)">產生傳說裝</button><button class="btn" onclick="gmGear(5)">產生神話裝</button><button class="btn" onclick="gmBoss()">重生目前 Boss</button><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`}
 function rest(){state.hp=equippedStats().hp;save();render()}
 function openGMModal(){document.getElementById("passwordModal").classList.add("show");document.getElementById("gmPassword").focus()}
 function closeGMModal(){document.getElementById("passwordModal").classList.remove("show")}
@@ -284,7 +308,7 @@ function gmBoss(){state.bossKilled[selectedMap]=true;state.bossProgress[selected
 function gmSim(n){
  let e=monsterObj(selectedMap,selectedEnemy),ps=equippedStats(),wins=0,hpRemain=0,turns=0;
  for(let k=0;k<n;k++){let php=ps.hp,ehp=e.hp,t=0;while(php>0&&ehp>0&&t<200){t++;ehp-=calcDamage(ps.atk,e.def);if(ehp<=0)break;php-=calcDamage(e.atk,ps.def)}if(php>0){wins++;hpRemain+=php/ps.hp*100}turns+=t}
- document.getElementById("gmResult").innerHTML=`${e.name} × ${n.toLocaleString()} 場<br>勝率：${(wins/n*100).toFixed(1)}%<br>勝利時平均剩餘 HP：${wins?(hpRemain/wins).toFixed(1):0}%<br>平均回合：${(turns/n).toFixed(1)}`;
+ let result=document.getElementById("gmResult");if(result)result.innerHTML=`${e.name} × ${n.toLocaleString()} 場<br>勝率：${(wins/n*100).toFixed(1)}%<br>勝利時平均剩餘 HP：${wins?(hpRemain/wins).toFixed(1):0}%<br>平均回合：${(turns/n).toFixed(1)}`;
 }
 function exportSave(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
 function importSave(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.level)throw 0;state=x;save();location.reload()}catch(e){alert("存檔格式不正確。")}};r.readAsText(f)}
