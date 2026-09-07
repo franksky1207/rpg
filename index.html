@@ -49,7 +49,7 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260907-2"></script>
-<script src="ui.js?v=20260907-1030"></script>
+<script src="ui.js?v=20260907-1045"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
@@ -62,33 +62,7 @@
 
   window.lowHp=function(){const s=equippedStats();return s.hp>0&&state.hp/s.hp<RISK_HP_RATIO;};
 
-  function playerStatusHtml(){
-    const s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<50;
-    return `<div class="card player-status-card"><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line ${low?"q-mythic":""}"><div class="status-label"><span>HP${low?"　⚠ 低血量":""}</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
-  }
-
-  window.adventureMapPage=function(){return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="map-grid">${MAPS.map((m,i)=>{const locked=i>state.unlockedMap,status=mapStatusText(i),cleared=state.bossKilled[i];return `<button class="map-card ${locked?"locked":""} ${cleared?"cleared":""}" ${locked?"disabled":""} onclick="enterMap(${i})"><b>${i+1}. ${m.name}</b><div class="muted">Lv.${m.min}～${m.max}</div><div class="map-status">${status}</div></button>`;}).join("")}</div></section>`;};
-
-  window.enterMap=function(i){if(i>state.unlockedMap)return;selectedMap=i;selectedEnemy=0;selectedBattleCount=1;adventureScreen="prepare";render();};
-  window.backToMaps=function(){adventureScreen="maps";render();};
-  window.setBattleCount=function(n,el){selectedBattleCount=n;document.querySelectorAll(".count-card").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active");};
-  window.selectEnemy=function(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;const e=monsterObj(selectedMap,selectedEnemy);if(e.kind==="boss")selectedBattleCount=1;render();};
-
-  function progressFoldHtml(mapIdx){return `<details class="map-progress-fold" ${window.innerWidth>760?"open":""}><summary>地圖推進</summary>${mapProgressHtml(mapIdx)}</details>`;}
-
-  window.adventurePreparePage=function(){
-    selectedMap=Math.min(selectedMap,state.unlockedMap);
-    const highest=highestUnlockedEnemy(selectedMap);if(selectedEnemy>highest)selectedEnemy=highest;
-    const map=MAPS[selectedMap],e=monsterObj(selectedMap,selectedEnemy);
-    const maxBattles=state.level<=5?1:state.level<=20?5:state.level<=35?10:15;
-    if(selectedBattleCount>maxBattles)selectedBattleCount=maxBattles;
-    const counts=e.kind==="boss"?[1]:[1,5,10,15].filter(x=>x<=maxBattles);
-    const enemies=map.enemies.map((x,i)=>{if(!enemyUnlocked(selectedMap,i))return "";const mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`;}).join("");
-    return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${progressFoldHtml(selectedMap)}<h3 style="margin-top:18px">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
-  };
-
   window.adventureCombatPage=function(){const e=monsterObj(selectedMap,selectedEnemy),s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;return `<section class="combat-screen"><div class="combat-head">${combatTotal>1?`第 ${combatRound} / ${combatTotal} 場`:`單場戰鬥`}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;};
-  window.adventurePage=function(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage();};
 
   function beginCombat(count){combatRound=1;combatTotal=count;adventureScreen="combat";render();setTimeout(()=>runBattles(count),60);}
   window.startBattles=function(){if(battleBusy)return;const e=monsterObj(selectedMap,selectedEnemy),count=e.kind==="boss"?1:selectedBattleCount;if(lowHp()){pendingBattleCount=count;pendingContinuousBattle=null;showRiskModal("initial");return;}beginCombat(count);};
