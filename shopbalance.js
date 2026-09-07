@@ -1,4 +1,4 @@
-// 商店平衡：提高實用品質，並保證 3 件商品中至少 1 件對準目前最弱裝備槽位。
+// 商店平衡：提高實用品質；第 1 件對準最弱槽位、第 2 件對準次弱槽位、第 3 件隨機。
 function shopQualityRoll(){
  let r=Math.random()*100;
  if(r<25)return 0;      // 普通 25%
@@ -8,19 +8,20 @@ function shopQualityRoll(){
  return 4;              // 傳說 2%，神話 0%
 }
 
-function weakestEquipmentType(){
- let rows=EQUIPMENT_TYPES.map(type=>({type,score:equipmentScore(state.equipment[type])}));
- let min=Math.min(...rows.map(x=>x.score));
- let tied=rows.filter(x=>x.score===min);
- return tied[Math.floor(Math.random()*tied.length)].type;
+function weakestEquipmentTypes(){
+ return EQUIPMENT_TYPES
+  .map(type=>({type,score:equipmentScore(state.equipment[type]),tie:Math.random()}))
+  .sort((a,b)=>a.score-b.score||a.tie-b.tie)
+  .map(x=>x.type);
 }
 
 makeShopItems=function(mapIdx=currentShopMap()){
- let m=MAPS[mapIdx],arr=[],weakest=weakestEquipmentType();
+ let m=MAPS[mapIdx],arr=[],ranked=weakestEquipmentTypes();
  for(let i=0;i<3;i++){
   let lv=Math.max(m.min,Math.min(m.max,state.level+Math.floor(Math.random()*3)-1));
   let q=shopQualityRoll();
-  arr.push(makeItem(lv,mapIdx,"normal",q,i===0?weakest:null));
+  let forcedType=i===0?ranked[0]:i===1?ranked[1]:null;
+  arr.push(makeItem(lv,mapIdx,"normal",q,forcedType));
  }
  return arr;
 };
