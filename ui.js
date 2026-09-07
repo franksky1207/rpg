@@ -80,7 +80,6 @@ function adventureMapPage(){
 function enterMap(i){if(i>state.unlockedMap)return;selectedMap=i;selectedEnemy=0;selectedBattleCount=1;adventureScreen="prepare";render()}
 function backToMaps(){adventureScreen="maps";render()}
 function setBattleCount(n,el){selectedBattleCount=n;document.querySelectorAll(".count-card").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active")}
-function selectMap(i){enterMap(i)}
 function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;let e=monsterObj(selectedMap,selectedEnemy);if(e.kind==="boss")selectedBattleCount=1;render()}
 function adventurePreparePage(){
  selectedMap=Math.min(selectedMap,state.unlockedMap);
@@ -90,7 +89,7 @@ function adventurePreparePage(){
  if(selectedBattleCount>maxBattles)selectedBattleCount=maxBattles;
  let counts=e.kind==="boss"?[1]:[1,5,10,15].filter(x=>x<=maxBattles);
  let enemies=map.enemies.map((x,i)=>{if(!enemyUnlocked(selectedMap,i))return "";let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`;}).join("");
- return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 style="margin-top:18px">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
+ return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 class="battle-count-title">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
 }
 function adventureCombatPage(){
  let e=monsterObj(selectedMap,selectedEnemy),s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
@@ -199,9 +198,9 @@ async function runBattles(count,ctx=null){
 
 function characterPage(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
- let stats=`<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
- let equips=`<div class="card"><h3>目前裝備</h3>${qualityLegend()}<div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
- return wrapFunctionPage(`<div style="display:grid;gap:16px">${stats}${equips}</div>`);
+ let stats=`<div class="card character-stats-card"><h2>角色</h2><div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ let equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}<div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
+ return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
 function inventoryContent(){
  let items=state.inventory.slice().sort((a,b)=>b.q-a.q||b.level-a.level),sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
@@ -305,11 +304,6 @@ function gmGold(){state.gold+=10000;save();render()}
 function gmUnlock(){state.unlockedMap=9;save();render()}
 function gmGear(q){let mi=Math.min(9,Math.floor((state.level-1)/5));state.inventory.push(makeItem(state.level,mi,"normal",q));save();render()}
 function gmBoss(){state.bossKilled[selectedMap]=true;state.bossProgress[selectedMap]=8;save();render()}
-function gmSim(n){
- let e=monsterObj(selectedMap,selectedEnemy),ps=equippedStats(),wins=0,hpRemain=0,turns=0;
- for(let k=0;k<n;k++){let php=ps.hp,ehp=e.hp,t=0;while(php>0&&ehp>0&&t<200){t++;ehp-=calcDamage(ps.atk,e.def);if(ehp<=0)break;php-=calcDamage(e.atk,ps.def)}if(php>0){wins++;hpRemain+=php/ps.hp*100}turns+=t}
- let result=document.getElementById("gmResult");if(result)result.innerHTML=`${e.name} × ${n.toLocaleString()} 場<br>勝率：${(wins/n*100).toFixed(1)}%<br>勝利時平均剩餘 HP：${wins?(hpRemain/wins).toFixed(1):0}%<br>平均回合：${(turns/n).toFixed(1)}`;
-}
 function exportSave(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
 function importSave(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.level)throw 0;state=x;save();location.reload()}catch(e){alert("存檔格式不正確。")}};r.readAsText(f)}
 function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";pendingContinuousBattle=null;save();view="home";render()}}
