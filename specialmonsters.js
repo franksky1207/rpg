@@ -52,7 +52,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"ancient_guardian",name:"古代守衛",weight:12,
-  hpMul:1.24,atkMul:1.05,defMul:1.18,
+  hpMul:1.28,atkMul:1.08,defMul:1.20,
   critMode:"scale",critScale:.30,critAdd:2,critCap:8,
   dodgeMode:"scale",dodgeScale:.10,dodgeAdd:0,dodgeCap:2,
   description:"從古老遺跡中甦醒的守衛。沒有多少財寶，但擊敗如此古老而強大的存在能帶來大量經驗。",
@@ -86,7 +86,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"collector",name:"收藏家",weight:9,
-  hpMul:1.05,atkMul:1.00,defMul:1.00,
+  hpMul:1.12,atkMul:1.08,defMul:1.05,
   critMode:"scale",critScale:.50,critAdd:3,critCap:12,
   dodgeMode:"scale",dodgeScale:.50,dodgeAdd:2,dodgeCap:10,
   description:"喜歡收集各式裝備的怪異存在。擊敗後可以一次取得兩件它收藏的裝備。",
