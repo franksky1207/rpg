@@ -7,9 +7,9 @@ const SPECIAL_TIERS={
   dodgeScale:.30,dodgeAdd:0,dodgeCap:5
  },
  mid:{
-  hpMul:.80,atkMul:.84,defMul:.73,
-  critScale:.63,critAdd:4,critCap:18,
-  dodgeScale:.65,dodgeAdd:3,dodgeCap:15
+  hpMul:.95,atkMul:1.05,defMul:.82,
+  critScale:.80,critAdd:6,critCap:24,
+  dodgeScale:.80,dodgeAdd:4,dodgeCap:20
  },
  high:{
   hpMul:1.05,atkMul:1.22,defMul:.90,
