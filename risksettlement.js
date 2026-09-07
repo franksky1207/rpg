@@ -6,16 +6,15 @@
  function stageUpgradeCount(ctx){
   return getStageItems(ctx).filter(x=>{
    if(!x?.item||x.sold)return false;
-   const current=state.equipment?.[x.item.type]||null;
-   return equipmentScore(x.item)>equipmentScore(current);
+   return typeof isActualGearUpgrade==="function"?isActualGearUpgrade(x.item):equipmentScore(x.item)>equipmentScore(state.equipment?.[x.item.type]||null);
   }).length;
  }
  function stageDropListHtml(ctx){
   const items=getStageItems(ctx);
   if(!items.length)return `<div class="muted" style="margin-top:10px">裝備：無</div>`;
   return `<div style="margin-top:10px"><b>裝備掉落 ${items.length} 件</b>${items.map(x=>{
-   const it=x.item,current=state.equipment?.[it.type]||null;
-   const upgrade=!x.sold&&equipmentScore(it)>equipmentScore(current);
+   const it=x.item;
+   const upgrade=!x.sold&&(typeof isActualGearUpgrade==="function"?isActualGearUpgrade(it):equipmentScore(it)>equipmentScore(state.equipment?.[it.type]||null));
    return `<div class="item">${itemHtml(it,true)}${gearAbilityHtml(it,true)}${upgrade?`<div class="q-uncommon"><b>★ 可提升目前裝備</b></div>`:""}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`;
   }).join("")}</div>`;
  }
