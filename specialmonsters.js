@@ -1,11 +1,26 @@
 const SPECIAL_ENCOUNTER_RATE=0.08;
 
+const SPECIAL_TIERS={
+ low:{
+  hpMul:.55,atkMul:.45,defMul:.55,
+  critScale:.25,critAdd:0,critCap:5,
+  dodgeScale:.30,dodgeAdd:0,dodgeCap:5
+ },
+ mid:{
+  hpMul:.80,atkMul:.84,defMul:.73,
+  critScale:.63,critAdd:4,critCap:18,
+  dodgeScale:.65,dodgeAdd:3,dodgeCap:15
+ },
+ high:{
+  hpMul:1.05,atkMul:1.22,defMul:.90,
+  critScale:1,critAdd:8,critCap:30,
+  dodgeScale:1,dodgeAdd:5,dodgeCap:25
+ }
+};
+
 const SPECIAL_MONSTERS=[
  {
-  id:"gold_slime",name:"黃金史萊姆",weight:18,
-  hpMul:.55,atkMul:.45,defMul:.55,
-  critMode:"scale",critScale:.25,critAdd:0,critCap:5,
-  dodgeMode:"scale",dodgeScale:.30,dodgeAdd:0,dodgeCap:5,
+  id:"gold_slime",name:"黃金史萊姆",tier:"low",weight:18,
   description:"全身散發金色光芒的罕見史萊姆。戰力很低，但體內累積了大量財寶。",
   effects:[
    {type:"expMultiplier",value:.5},
@@ -14,10 +29,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"mimic",name:"寶箱怪",weight:14,
-  hpMul:1.15,atkMul:1.15,defMul:1.10,
-  critMode:"scale",critScale:.60,critAdd:5,critCap:16,
-  dodgeMode:"scale",dodgeScale:.30,dodgeAdd:2,dodgeCap:8,
+  id:"mimic",name:"寶箱怪",tier:"high",weight:14,
   description:"偽裝成寶箱等待獵物靠近的魔物。擊敗後必定能取得一件至少稀有品質的裝備。",
   effects:[
    {type:"guaranteedDrop"},
@@ -25,10 +37,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"reaper",name:"死神",weight:4,
-  hpMul:1.05,atkMul:1.22,defMul:.90,
-  critMode:"scale",critScale:1,critAdd:8,critCap:30,
-  dodgeMode:"scale",dodgeScale:1,dodgeAdd:5,dodgeCap:25,
+  id:"reaper",name:"死神",tier:"high",weight:4,
   description:"極少出現的死亡化身。擁有遠高於一般敵人的殺傷力，但擊敗它能獲得極為豐厚的報酬。",
   effects:[
    {type:"expMultiplier",value:4},
@@ -38,10 +47,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"lucky_rabbit",name:"幸運兔",weight:16,
-  hpMul:.50,atkMul:.40,defMul:.50,
-  critMode:"fixed",critValue:0,
-  dodgeMode:"scale",dodgeScale:.70,dodgeAdd:8,dodgeCap:20,
+  id:"lucky_rabbit",name:"幸運兔",tier:"low",weight:16,
   description:"被冒險者視為幸運象徵的稀有生物。雖然不一定帶著珍品，但擊敗後一定能找到裝備。",
   effects:[
    {type:"expMultiplier",value:.8},
@@ -51,10 +57,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"ancient_guardian",name:"古代守衛",weight:12,
-  hpMul:1.26,atkMul:1.06,defMul:1.18,
-  critMode:"scale",critScale:.30,critAdd:2,critCap:8,
-  dodgeMode:"scale",dodgeScale:.10,dodgeAdd:0,dodgeCap:2,
+  id:"ancient_guardian",name:"古代守衛",tier:"low",weight:12,
   description:"從古老遺跡中甦醒的守衛。沒有多少財寶，但擊敗如此古老而強大的存在能帶來大量經驗。",
   effects:[
    {type:"expMultiplier",value:4},
@@ -62,10 +65,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"relic_guardian",name:"遺物守衛",weight:12,
-  hpMul:1.16,atkMul:1.07,defMul:1.13,
-  critMode:"scale",critScale:.40,critAdd:3,critCap:10,
-  dodgeMode:"scale",dodgeScale:.30,dodgeAdd:0,dodgeCap:6,
+  id:"relic_guardian",name:"遺物守衛",tier:"mid",weight:12,
   description:"守護古代裝備的特殊敵人。其攜帶的遺物往往會補足冒險者目前最薄弱的裝備部位。",
   effects:[
    {type:"guaranteedDrop"},
@@ -74,10 +74,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"bandit_king",name:"盜賊王",weight:9,
-  hpMul:1.00,atkMul:1.27,defMul:.82,
-  critMode:"scale",critScale:.80,critAdd:7,critCap:22,
-  dodgeMode:"scale",dodgeScale:.80,dodgeAdd:5,dodgeCap:18,
+  id:"bandit_king",name:"盜賊王",tier:"mid",weight:9,
   description:"洗劫商隊與冒險者的頭目。擊敗他不只能奪回大量金幣，還能取得能降低商店刷新成本的資源。",
   effects:[
    {type:"goldMultiplier",value:2.5},
@@ -85,10 +82,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"collector",name:"收藏家",weight:9,
-  hpMul:1.12,atkMul:1.06,defMul:1.06,
-  critMode:"scale",critScale:.50,critAdd:3,critCap:12,
-  dodgeMode:"scale",dodgeScale:.50,dodgeAdd:2,dodgeCap:10,
+  id:"collector",name:"收藏家",tier:"mid",weight:9,
   description:"喜歡收集各式裝備的怪異存在。擊敗後可以一次取得兩件它收藏的裝備。",
   effects:[
    {type:"guaranteedDrop"},
@@ -97,10 +91,7 @@ const SPECIAL_MONSTERS=[
   ]
  },
  {
-  id:"mysterious_traveler",name:"神秘旅人",weight:6,
-  hpMul:1.08,atkMul:1.05,defMul:1.03,
-  critMode:"scale",critScale:.60,critAdd:4,critCap:15,
-  dodgeMode:"scale",dodgeScale:.60,dodgeAdd:3,dodgeCap:13,
+  id:"mysterious_traveler",name:"神秘旅人",tier:"high",weight:6,
   description:"沒有人知道這名旅人究竟從哪裡來。擊敗他後，可能獲得財富、知識，或者珍貴遺物。",
   effects:[
    {type:"randomReward",options:[
@@ -142,11 +133,14 @@ function rollSpecialMonster(){
  return SPECIAL_MONSTERS[SPECIAL_MONSTERS.length-1]||null;
 }
 
-function specialRateFromPlayer(value,special,prefix,maxCap){
- if(special[`${prefix}Mode`]==="fixed")return Math.max(0,Math.min(maxCap,Number(special[`${prefix}Value`])||0));
- let scale=Number(special[`${prefix}Scale`]);if(!Number.isFinite(scale))scale=1;
- let add=Number(special[`${prefix}Add`]);if(!Number.isFinite(add))add=0;
- let cap=Number(special[`${prefix}Cap`]);if(!Number.isFinite(cap))cap=maxCap;
+function specialTierConfig(special){
+ return SPECIAL_TIERS[special?.tier]||SPECIAL_TIERS.low;
+}
+
+function specialRateFromPlayer(value,config,prefix,maxCap){
+ let scale=Number(config?.[`${prefix}Scale`]);if(!Number.isFinite(scale))scale=1;
+ let add=Number(config?.[`${prefix}Add`]);if(!Number.isFinite(add))add=0;
+ let cap=Number(config?.[`${prefix}Cap`]);if(!Number.isFinite(cap))cap=maxCap;
  return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));
 }
 
@@ -174,7 +168,7 @@ function specialBaseEnemyFromPlayer(snapshot){
 
 function buildSpecialMonsterFromPlayer(playerStats,special,level=1){
  if(!special)return null;
- const player=createSpecialPlayerSnapshot(playerStats),base=specialBaseEnemyFromPlayer(player);
+ const player=createSpecialPlayerSnapshot(playerStats),base=specialBaseEnemyFromPlayer(player),tier=specialTierConfig(special);
  return {
   name:special.name,
   level:Math.max(1,Math.min(50,Math.floor(Number(level)||1))),
@@ -182,27 +176,30 @@ function buildSpecialMonsterFromPlayer(playerStats,special,level=1){
   style:"special",
   specialId:special.id,
   special:true,
+  tier:special.tier||"low",
   description:special.description,
-  hp:Math.max(1,Math.ceil(base.hp*special.hpMul)),
-  atk:Math.max(1,Math.ceil(base.damage*special.atkMul+player.def*.55)),
-  def:Math.max(0,Math.ceil(base.def*special.defMul)),
-  crit:specialRateFromPlayer(player.crit,special,"crit",MAX_CRIT_RATE),
-  dodge:specialRateFromPlayer(player.dodge,special,"dodge",MAX_DODGE_RATE),
+  hp:Math.max(1,Math.ceil(base.hp*tier.hpMul)),
+  atk:Math.max(1,Math.ceil(base.damage*tier.atkMul+player.def*.55)),
+  def:Math.max(0,Math.ceil(base.def*tier.defMul)),
+  crit:specialRateFromPlayer(player.crit,tier,"crit",MAX_CRIT_RATE),
+  dodge:specialRateFromPlayer(player.dodge,tier,"dodge",MAX_DODGE_RATE),
   playerSnapshot:player
  };
 }
 
 function buildSpecialMonster(baseEnemy,special){
  if(!baseEnemy||!special)return null;
+ const tier=specialTierConfig(special);
  return {
   ...baseEnemy,
   name:special.name,
   specialId:special.id,
   special:true,
+  tier:special.tier||"low",
   description:special.description,
-  hp:Math.max(1,Math.ceil(baseEnemy.hp*special.hpMul)),
-  atk:Math.max(1,Math.ceil(baseEnemy.atk*special.atkMul)),
-  def:Math.max(0,Math.ceil(baseEnemy.def*special.defMul))
+  hp:Math.max(1,Math.ceil(baseEnemy.hp*tier.hpMul)),
+  atk:Math.max(1,Math.ceil(baseEnemy.atk*tier.atkMul)),
+  def:Math.max(0,Math.ceil(baseEnemy.def*tier.defMul))
  };
 }
 
