@@ -30,7 +30,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
 @keyframes playerAttackDesktop{0%,100%{transform:translateX(0)}50%{transform:translateX(52px)}}@keyframes enemyAttackDesktop{0%,100%{transform:translateX(0)}50%{transform:translateX(-52px)}}@keyframes hitShake{0%,100%{transform:translateX(0)}30%{transform:translateX(-9px)}60%{transform:translateX(9px)}}@keyframes damagePop{0%{opacity:0;transform:translate(-50%,-20%)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,-95%)}}
 .function-page>.back-home{margin-bottom:14px}
 .function-page>div[style*="display:grid"]>.card:first-child .grid3{grid-template-columns:repeat(2,1fr)}
-.function-page>div[style*="display:grid"]>.card:first-child .grid3>.stat:nth-child(3){display:none}
 @media(max-width:900px){.menu-grid{grid-template-columns:repeat(3,1fr)}.map-grid{grid-template-columns:repeat(3,1fr)}.prepare-layout{grid-template-columns:1fr}.player-status-card{position:static}.count-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){
   .brand{padding:11px 14px}.brand h1{font-size:20px}.status{font-size:11px}main{padding:10px 12px 24px}.grid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.home-screen{min-height:calc(100vh - 82px);justify-content:flex-start;padding-top:14px}.home-title{margin-bottom:14px}.home-title h2{font-size:27px}.menu-grid{grid-template-columns:repeat(2,1fr);gap:9px}.menu-card{min-height:110px;padding:14px}.menu-card b{font-size:19px}.map-grid{grid-template-columns:repeat(2,1fr);gap:9px}.map-card{min-height:106px;padding:12px}
