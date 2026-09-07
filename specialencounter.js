@@ -30,23 +30,7 @@
  }
 
  function specialFight(enemy){
-  const ps=equippedStats();let ehp=enemy.hp,php=state.hp,logs=[],turn=0;
-  while(php>0&&ehp>0&&turn<200){
-   turn++;
-   if(Math.random()*100<(enemy.dodge||0))logs.push(`${enemy.name}閃避了你的攻擊。`);
-   else{
-    let pd=calcDamage(ps.atk,enemy.def),crit=Math.random()*100<ps.crit;
-    if(crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
-    ehp-=pd;logs.push(crit?`你攻擊${enemy.name}，暴擊造成 ${pd} 點傷害。`:`你攻擊${enemy.name}，造成 ${pd} 點傷害。`);
-   }
-   if(ehp<=0)break;
-   if(Math.random()*100<ps.dodge){logs.push(`${enemy.name}攻擊你，你閃避了攻擊。`);continue}
-   let ed=calcDamage(enemy.atk,ps.def),enemyCrit=Math.random()*100<(enemy.crit||0);
-   if(enemyCrit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);
-   php-=ed;logs.push(enemyCrit?`${enemy.name}攻擊你，暴擊造成 ${ed} 點傷害。`:`${enemy.name}攻擊你，造成 ${ed} 點傷害。`);
-  }
-  state.hp=Math.max(0,php);
-  return {win:php>0,logs,e:enemy};
+  return specialFightCore(enemy);
  }
 
  async function animateSpecialFight(r,startPlayerHp,playerMax,enemyMax){
@@ -96,7 +80,7 @@
    body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${result.drops.length?result.drops.map(x=>`<div class="item">${itemHtml(x.item,true)}${gearAbilityHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
   }else{
    const lost=result.penalty?.dropped;
-   body+=`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+   body+=`${result.turnLimit?`<div class="notice"><b>✦ ${special.name} 挑戰中止</b><div class="muted" style="margin-top:5px">戰鬥超過 200 回合仍未分出勝負，本次不視為死亡，也不套用死亡懲罰。</div></div>`:`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div>`}<div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
   }
   detail.innerHTML=body;
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
@@ -114,17 +98,21 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:rewardCtx,drops:[],xp:0,gold:0,shopDown:0,penalty:null};
+  const result={win:r.win,turnLimit:!!r.turnLimit,rewardContext:rewardCtx,drops:[],xp:0,gold:0,shopDown:0,penalty:null};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
    result.xp=ceil(baseXp*(rewardCtx.expMultiplier||1));
    result.gold=ceil(baseGold*(rewardCtx.goldMultiplier||1));
    state.gold+=result.gold;gainExp(result.xp,[]);
-   const items=gmSpecialMakeDrops(rewardCtx,dropLevel,selectedMap);
+   const items=specialMakeDrops(rewardCtx,dropLevel,selectedMap);
    result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
-   result.shopDown=gmSpecialApplyShopDiscount(rewardCtx.shopRefreshDown);
-  }else result.penalty=applyDeathPenalty([]);
+   result.shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
+  }else if(r.turnLimit){
+   result.penalty={expLost:0,dropped:null};
+  }else{
+   result.penalty=applyDeathPenalty([]);
+  }
   save();
   showSpecialResult(ctx,special,result);
  }
