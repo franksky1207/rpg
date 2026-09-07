@@ -1,5 +1,6 @@
 const navs=[["adventure","冒險"],["character","角色"],["inventory","背包"],["shop","商店"],["settings","設定"]];
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
+let upgradeDropNoticePending=false;
 
 function ceil(n){return Math.ceil(n)}
 function baseHP(l){return ceil(110+12*(l-1))}
@@ -122,9 +123,15 @@ function addProgress(mapIdx,enemyKind){
 function addItem(it){
  if(!it)return {kept:false,sold:0};
  let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);
- if(it.q===5||(state.settings.keepUpgrade&&upgrade)){state.inventory.push(it);return {kept:true,sold:0}}
+ if(it.q===5||(state.settings.keepUpgrade&&upgrade)){
+   state.inventory.push(it);
+   if(upgrade)upgradeDropNoticePending=true;
+   return {kept:true,sold:0};
+ }
  if(it.q<=4&&state.settings.autoSell[it.q]){state.gold+=it.sell;return {kept:false,sold:it.sell}}
- state.inventory.push(it);return {kept:true,sold:0};
+ state.inventory.push(it);
+ if(upgrade)upgradeDropNoticePending=true;
+ return {kept:true,sold:0};
 }
 function gainExp(n,logs){
  state.exp+=n;let ups=0;
@@ -252,7 +259,17 @@ function syncProgressRuleUI(){
    }
  }catch(e){}
 }
+function syncUpgradeDropNotice(){
+ try{
+   const modal=document.getElementById("battleResultModal"),detail=document.getElementById("battleResultDetail");
+   if(!modal||!detail||!modal.classList.contains("show")||!upgradeDropNoticePending)return;
+   if(!detail.querySelector(".upgrade-drop-notice"))detail.insertAdjacentHTML("beforeend",`<div class="notice upgrade-drop-notice" style="margin-top:12px"><b>有可提升目前裝備的掉落，可前往背包查看。</b></div>`);
+   upgradeDropNoticePending=false;
+ }catch(e){}
+}
 if(typeof MutationObserver!=="undefined"){
  const main=document.getElementById("main");
  if(main){new MutationObserver(syncProgressRuleUI).observe(main,{childList:true,subtree:true});setTimeout(syncProgressRuleUI,0);}
+ const resultModal=document.getElementById("battleResultModal");
+ if(resultModal){new MutationObserver(syncUpgradeDropNotice).observe(resultModal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true});}
 }
