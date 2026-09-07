@@ -44,13 +44,9 @@ function homePage(){
  </section>`;
 }
 
-function adventureStatus(){
- let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<30;
- return `<div class="card" style="margin-bottom:16px">
-   <div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div>
-   <div style="margin-top:12px;${low?"color:#ff8585;font-weight:700":""}">HP ${state.hp} / ${s.hp}${low?"　⚠ 戰敗會損失 EXP，並可能遺失裝備":""}<div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div>
-   <div style="margin-top:10px">EXP ${state.level>=50?"MAX":state.exp+" / "+need}<div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div>
- </div>`;
+function playerStatusHtml(){
+ let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<50;
+ return `<div class="card player-status-card"><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line ${low?"q-mythic":""}"><div class="status-label"><span>HP${low?"　⚠ 低血量":""}</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
 }
 function mapProgressHtml(mapIdx){
  let p=state.mapProgress[mapIdx]||[0,0,0,0],map=MAPS[mapIdx];
@@ -75,43 +71,24 @@ function mapStatusText(i){
  return state.level>=MAPS[i].max?"Boss 可挑戰":"等待達到 Boss 等級";
 }
 function adventureMapPage(){
- return `<div>${adventureStatus()}<div class="card"><h2>冒險地圖</h2><p class="muted">選擇要前往的地圖。進入後才會顯示怪物與戰鬥紀錄。</p>
- <div class="map-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:14px">${MAPS.map((m,i)=>{
-   let locked=i>state.unlockedMap,status=mapStatusText(i);
-   return `<button class="${locked?"locked":""}" ${locked?"disabled":""} onclick="enterMap(${i})" style="min-height:96px">
-     <b>${i+1}. ${m.name}</b><div class="muted" style="margin-top:4px">Lv.${m.min}～${m.max}</div><div style="margin-top:9px;color:${locked?"#777":state.bossKilled[i]?"#72c982":"#e5cf9a"}">${status}</div>
-   </button>`;
- }).join("")}</div></div></div>`;
+ return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="map-grid">${MAPS.map((m,i)=>{let locked=i>state.unlockedMap,status=mapStatusText(i),cleared=state.bossKilled[i];return `<button class="map-card ${locked?"locked":""} ${cleared?"cleared":""}" ${locked?"disabled":""} onclick="enterMap(${i})"><b>${i+1}. ${m.name}</b><div class="muted">Lv.${m.min}～${m.max}</div><div class="map-status">${status}</div></button>`;}).join("")}</div></section>`;
 }
-function adventureBattlePage(){
+function enterMap(i){if(i>state.unlockedMap)return;selectedMap=i;selectedEnemy=0;selectedBattleCount=1;adventureScreen="prepare";render()}
+function backToMaps(){adventureScreen="maps";render()}
+function setBattleCount(n,el){selectedBattleCount=n;document.querySelectorAll(".count-card").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active")}
+function selectMap(i){enterMap(i)}
+function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;let e=monsterObj(selectedMap,selectedEnemy);if(e.kind==="boss")selectedBattleCount=1;render()}
+function adventurePreparePage(){
  selectedMap=Math.min(selectedMap,state.unlockedMap);
  let highest=highestUnlockedEnemy(selectedMap);if(selectedEnemy>highest)selectedEnemy=highest;
  let map=MAPS[selectedMap],e=monsterObj(selectedMap,selectedEnemy);
- let maxBattles=state.level<=10?5:state.level<=20?10:state.level<=30?15:state.level<=40?20:25;
+ let maxBattles=state.level<=5?1:state.level<=20?5:state.level<=35?10:15;
  if(selectedBattleCount>maxBattles)selectedBattleCount=maxBattles;
- let opts=[1,5,10,15,20,25].filter(x=>x===1||x<=maxBattles).map(x=>`<button onclick="setBattleCount(${x},this)" data-bc="${x}" class="${x===selectedBattleCount?"active":""}">${x===1?"單場":x+" 場"}</button>`).join("");
- let battleControls=e.kind==="boss"
-  ? `<div class="controls"><button class="btn primary" onclick="startBattles()">挑戰 Boss</button><button class="btn ok" onclick="rest()">回城休息</button></div><input type="hidden" id="battleCount" value="1">`
-  : `<h3>連續戰鬥</h3><div class="seg" id="battleSeg">${opts}</div><input type="hidden" id="battleCount" value="${selectedBattleCount}"><div class="controls"><button class="btn primary" onclick="startBattles()">開始戰鬥</button><button class="btn ok" onclick="rest()">回城休息</button></div>`;
- let enemyButtons=map.enemies.map((x,i)=>{
-   if(!enemyUnlocked(selectedMap,i))return "";
-   let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span><span class="badge">Boss 計數</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";
-   return `<button class="${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})">${mo.name} Lv.${mo.level}${badge}<div class="muted">HP ${mo.hp}　攻擊 ${mo.atk}　防禦 ${mo.def}</div></button>`;
- }).join("");
- return `<div>${adventureStatus()}<div class="card"><div class="controls" style="margin-top:0;margin-bottom:12px"><button class="btn" onclick="backToMaps()">← 返回冒險地圖</button></div><h2>${map.name} <span class="muted">Lv.${map.min}～${map.max}</span></h2>
- ${mapProgressHtml(selectedMap)}
- <h3 style="margin-top:18px">選擇怪物</h3><div class="enemy-list">${enemyButtons}</div>
- ${state.bossKilled[selectedMap]?`<div class="notice">Boss 重生進度：${state.bossProgress[selectedMap]}/8 菁英。只有擊敗本地圖的菁英怪才會計數。</div>`:""}
- ${e.kind==="boss"&&state.bossKilled[selectedMap]?`<div class="notice">Boss 再次挑戰條件：同地圖擊敗 8 隻菁英怪（${canBoss(selectedMap)?"可挑戰":state.bossProgress[selectedMap]+"/8 菁英"}）</div>`:""}
- ${battleControls}</div>
- <div class="card" style="margin-top:16px"><h3>戰鬥紀錄</h3><div class="log" id="battleLog">${battleLogs.length?battleLogs.map(x=>`<div>${x}</div>`).join(""):`<div class="muted">尚未進行戰鬥。</div>`}</div></div></div>`;
+ let counts=e.kind==="boss"?[1]:[1,5,10,15].filter(x=>x<=maxBattles);
+ let enemies=map.enemies.map((x,i)=>{if(!enemyUnlocked(selectedMap,i))return "";let mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`;}).join("");
+ return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 style="margin-top:18px">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
 }
-function adventurePage(){return adventureScreen==="maps"?adventureMapPage():adventureBattlePage()}
-function enterMap(i){if(i>state.unlockedMap)return;selectedMap=i;selectedEnemy=0;battleLogs=[];adventureScreen="battle";render()}
-function backToMaps(){adventureScreen="maps";battleLogs=[];render()}
-function setBattleCount(n,el){selectedBattleCount=n;document.getElementById("battleCount").value=n;document.querySelectorAll("#battleSeg button").forEach(b=>b.classList.remove("active"));el.classList.add("active")}
-function selectMap(i){enterMap(i)}
-function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;battleLogs=[];render()}
+function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat"&&typeof adventureCombatPage==="function")return adventureCombatPage();return adventurePreparePage()}
 
 function lowHp(){let s=equippedStats();return s.hp>0&&state.hp/s.hp<.30}
 function scrollBattleLogToBottom(){let log=document.getElementById("battleLog");if(log)log.scrollTop=log.scrollHeight}
