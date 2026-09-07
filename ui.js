@@ -16,8 +16,9 @@ function compactMobileDom(){
 }
 
 function renderNav(){
- let h=navs.map(([k,n])=>`<button class="${view===k?"active":""}" onclick="go('${k}')">${n}</button>`).join("");
- document.getElementById("topNav").innerHTML=h;document.getElementById("bottomNav").innerHTML=h;
+ const top=document.getElementById("topNav"),bottom=document.getElementById("bottomNav");
+ if(top)top.innerHTML="";
+ if(bottom)bottom.innerHTML="";
 }
 function go(v){if(v==="adventure")adventureScreen="maps";view=v;render()}
 function render(){
@@ -27,16 +28,21 @@ function render(){
  if(view==="adventure"&&adventureScreen==="battle"&&battleLogs.length)setTimeout(scrollBattleLogToBottom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
+function homeBackHtml(){return `<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`}
+function wrapFunctionPage(html){return `<div class="function-page">${homeBackHtml()}${html}</div>`}
 
-function sideCharacter(){
- let s=equippedStats(),need=state.level<50?expNeed(state.level):0,pct=state.level<50?Math.min(100,state.exp/need*100):100;
- return `<div class="card"><h3>角色資訊</h3><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">攻擊<b>${s.atk}</b></div><div class="stat">防禦<b>${s.def}</b></div></div>
- <div style="margin-top:12px">HP ${state.hp} / ${s.hp}<div class="bar"><span class="hp" style="width:${state.hp/s.hp*100}%"></span></div></div>
- <div style="margin-top:10px">EXP ${state.level>=50?"MAX":state.exp+" / "+need}<div class="bar"><span class="xp" style="width:${pct}%"></span></div></div>
- <h3 style="margin-top:18px">目前裝備</h3>
- <div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
+function homePage(){
+ return `<section class="home-screen">
+  <div class="home-title"><h2>純文字 RPG</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
+  <div class="menu-grid">
+   <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>選擇地圖並挑戰怪物</span></button>
+   <button class="menu-card" onclick="go('character')"><b>角色</b><span>查看能力與目前裝備</span></button>
+   <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備與出售道具</span></button>
+   <button class="menu-card" onclick="go('shop')"><b>商店</b><span>購買裝備與贖回遺失裝備</span></button>
+   <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
+  </div>
+ </section>`;
 }
-function homePage(){return `<div class="grid">${sideCharacter()}<div class="card hero"><div class="muted">傳統、單純、純文字</div><h2>冒險者，歡迎回城</h2><p class="muted">打怪、升級、換裝，然後挑戰更強的敵人。</p><div class="hero-actions"><button class="btn primary" onclick="go('adventure')">前往冒險</button><button class="btn ok" onclick="rest()">休息・恢復全部 HP</button><button class="btn blue" onclick="go('inventory')">整理背包</button></div></div></div>`}
 
 function adventureStatus(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100,low=hpPct<30;
@@ -196,12 +202,18 @@ async function runBattles(count,ctx=null){
  save();battleBusy=false;render();scrollBattleLogToBottom();
 }
 
-function characterPage(){let s=equippedStats();return `<div class="grid">${sideCharacter()}<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">最大 HP<b>${s.hp}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><h3 style="margin-top:18px">裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}：${itemHtml(state.equipment[t])}</div>`).join("")}</div></div>`}
-function inventoryPage(){
+function characterPage(){
+ let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
+ let stats=`<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ let equips=`<div class="card"><h3>目前裝備</h3>${qualityLegend()}<div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
+ return wrapFunctionPage(`<div style="display:grid;gap:16px">${stats}${equips}</div>`);
+}
+function inventoryContent(){
  let items=state.inventory.slice().sort((a,b)=>b.q-a.q||b.level-a.level),sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
  return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
  <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}<div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品"}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
 }
+function inventoryPage(){return wrapFunctionPage(inventoryContent())}
 function equipBestAll(){
  let changed=0;
  ["weapon","armor","accessory"].forEach(type=>{
