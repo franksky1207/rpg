@@ -49,63 +49,6 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260907-2"></script>
-<script src="ui.js?v=20260907-1128"></script>
-<script>
-(()=>{
-  const legacySettingsPage=window.settingsPage;
-  let gmTapCount=0;
-  let gmTapTimer=null;
-
-  window.makeShopItems=function(mapIdx=currentShopMap()){
-    const m=MAPS[mapIdx],arr=[];
-    for(let i=0;i<3;i++){
-      const lv=Math.max(m.min,Math.min(m.max,state.level+Math.floor(Math.random()*3)-1));
-      const r=Math.random()*100,q=r<48?0:r<82?1:r<96?2:r<99.3?3:4;
-      arr.push(makeItem(lv,mapIdx,"normal",q));
-    }
-    return arr;
-  };
-  if(state.shop?.items?.length>3){state.shop.items=state.shop.items.slice(0,3);save(false);}
-
-  function compareGearHtml(it,label="商品分數"){
-    const current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?itemScore-currentScore:itemScore;
-    const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備";
-    const diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
-    const currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">分數 ${currentScore}</div>`:`<span class="muted">無</span>`;
-    return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">${label} ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
-  }
-
-  window.discardLostGear=function(i){
-    const lost=state.lostGear?.[i];if(!lost)return;
-    state.lostGear.splice(i,1);save();render();
-  };
-
-  window.shopPage=function(){
-    ensureShop();
-    const cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
-    const rows=state.shop.items.map((it,i)=>`<tr><td>${itemHtml(it,true)}</td><td>${statLine(it)}</td><td>${compareGearHtml(it,"商品分數")}</td><td>${it.buy.toLocaleString()}</td><td><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("");
-    const lostRows=lost.map((x,i)=>`<tr><td>${itemHtml(x.item,true)}</td><td>${statLine(x.item)}</td><td>${compareGearHtml(x.item,"遺失裝備分數")}</td><td>${x.cost.toLocaleString()}</td><td><div class="controls" style="margin-top:0"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
-    const body=`<div class="card"><h2>商店</h2><div class="notice">商店每次只提供 3 件裝備。商品會保存在存檔中，重新整理頁面不會更換。刷新價格會逐次提高；每購買 1 件裝備，刷新價格下降一階。</div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div style="overflow:auto;margin-top:10px"><table><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div style="overflow:auto"><table><thead><tr><th>裝備</th><th>能力</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${lostRows}</tbody></table></div>`:""}</div>`;
-    return wrapFunctionPage(body);
-  };
-
-  window.gmHtml=function(){return `<div class="gm"><h3>管理／GM 模式</h3><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">+10,000 金幣</button><button class="btn" onclick="gmUnlock()">解鎖全部地圖</button><button class="btn" onclick="gmGear(3)">產生史詩裝</button><button class="btn" onclick="gmGear(4)">產生傳說裝</button><button class="btn" onclick="gmGear(5)">產生神話裝</button><button class="btn" onclick="gmBoss()">重生目前 Boss</button><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;};
-
-  window.settingsPage=function(){return wrapFunctionPage(legacySettingsPage());};
-  window.wireSettings=function(){
-    const title=document.getElementById("settingsTitle");
-    if(title){
-      title.onclick=()=>{gmTapCount++;clearTimeout(gmTapTimer);if(gmTapCount>=3){gmTapCount=0;openGMModal();return;}gmTapTimer=setTimeout(()=>{gmTapCount=0;},1000);};
-      title.style.touchAction="manipulation";
-      title.style.userSelect="none";
-      title.style.webkitUserSelect="none";
-    }
-    document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
-    const keep=document.getElementById("keepUpgrade");if(keep)keep.onchange=()=>{state.settings.keepUpgrade=keep.checked;save()};
-  };
-
-  render();
-})();
-</script>
+<script src="ui.js?v=20260907-1132"></script>
 </body>
 </html>
