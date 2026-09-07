@@ -35,7 +35,7 @@
  }
 
  window.specialMakeDrops=function(ctx,level,mapIdx){
-  const chance=ctx?.dropChance==null?.25:ctx.dropChance;
+  const chance=ctx?.dropChance==null?0.25:ctx.dropChance;
   if(Math.random()>chance)return [];
   const count=Math.max(1,ctx?.dropCount||1),drops=[];
   for(let i=0;i<count;i++){
