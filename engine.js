@@ -9,6 +9,9 @@ const AFFIX_POOLS={
  shoes:["dodge","def","hp"],
  accessory:["crit","atk","hp","dodge"]
 };
+const MAX_CRIT_RATE=30;
+const MAX_DODGE_RATE=25;
+const CRIT_DAMAGE_MULTIPLIER=1.5;
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
 let upgradeDropNoticePending=false;
 
@@ -64,7 +67,8 @@ function load(){
 function save(show=true){localStorage.setItem(SAVE_KEY,JSON.stringify(state));if(show){let e=document.getElementById("saveStatus");if(e){e.textContent="已自動存檔";setTimeout(()=>e.textContent="本機自動存檔",900)}}}
 function equippedStats(){
  let x={hp:baseHP(state.level),atk:baseATK(state.level),def:baseDEF(state.level),crit:0,dodge:0};
- EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});return x;
+ EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});
+ x.crit=round1(Math.min(MAX_CRIT_RATE,x.crit));x.dodge=round1(Math.min(MAX_DODGE_RATE,x.dodge));return x;
 }
 function normalizeHP(){let m=equippedStats().hp;state.hp=Math.min(state.hp??m,m)}
 function equipmentScore(it){if(!it)return -1;return round1((it.atk||0)*5+(it.def||0)*5+(it.hp||0)+(it.crit||0)*12+(it.dodge||0)*12)}
@@ -215,8 +219,12 @@ function fightOnce(mapIdx,eIdx){
  if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
  let ps=equippedStats(),ehp=e.hp,php=state.hp,logs=[],turn=0;
  while(php>0&&ehp>0&&turn<200){
-   turn++;let pd=calcDamage(ps.atk,e.def);ehp-=pd;logs.push(`你攻擊${e.name}，造成 ${pd} 點傷害。`);
+   turn++;
+   let pd=calcDamage(ps.atk,e.def),crit=Math.random()*100<ps.crit;
+   if(crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
+   ehp-=pd;logs.push(crit?`你攻擊${e.name}，暴擊造成 ${pd} 點傷害。`:`你攻擊${e.name}，造成 ${pd} 點傷害。`);
    if(ehp<=0)break;
+   if(Math.random()*100<ps.dodge){logs.push(`${e.name}攻擊你，你閃避了攻擊。`);continue}
    let ed=calcDamage(e.atk,ps.def);php-=ed;logs.push(`${e.name}攻擊你，造成 ${ed} 點傷害。`);
  }
  state.hp=Math.max(0,php);
