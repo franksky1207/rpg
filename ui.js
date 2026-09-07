@@ -198,19 +198,19 @@ async function runBattles(count,ctx=null){
 
 function characterPage(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
- let stats=`<div class="card character-stats-card"><h2>角色</h2><div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
- let equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}<div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
+ let stats=`<div class="card character-stats-card"><h2>角色</h2><div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ let equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item">${equipmentTypeLabel(t)}：${itemHtml(state.equipment[t],true)}</div>`).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
 function inventoryContent(){
  let items=state.inventory.slice().sort((a,b)=>b.q-a.q||b.level-a.level),sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
- return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${["weapon","armor","accessory"].map(t=>`<div class="item">${t==="weapon"?"武器":t==="armor"?"防具":"飾品"}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}<div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${it.type==="weapon"?"武器":it.type==="armor"?"防具":"飾品"}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
+ return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item">${equipmentTypeLabel(t)}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}<div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
 }
 function inventoryPage(){return wrapFunctionPage(inventoryContent())}
 function equipBestAll(){
  let changed=0;
- ["weapon","armor","accessory"].forEach(type=>{
+ EQUIPMENT_TYPES.forEach(type=>{
    let current=state.equipment[type],best=current,bestScore=equipmentScore(current);
    state.inventory.filter(it=>it.type===type).forEach(it=>{let sc=equipmentScore(it);if(sc>bestScore){best=it;bestScore=sc}});
    if(best&&best!==current){
@@ -239,15 +239,6 @@ function selectItem(id){selectedItem=id;render()}
 function equipSelected(){let i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;let it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
 function sellSelected(){let i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;let it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=it.sell;selectedItem=null;save();render()}
 
-function makeShopItems(mapIdx=currentShopMap()){
- let m=MAPS[mapIdx],arr=[];
- for(let i=0;i<3;i++){
-  let lv=Math.max(m.min,Math.min(m.max,state.level+Math.floor(Math.random()*3)-1));
-  let r=Math.random()*100,q=r<48?0:r<82?1:r<96?2:r<99.3?3:4;
-  arr.push(makeItem(lv,mapIdx,"normal",q));
- }
- return arr;
-}
 function shopCooldownText(){
  let left=Math.max(0,(state.shop.resetAvailableAt||0)-Date.now());if(!left)return "可重置";
  let m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);return `${m} 分 ${String(s).padStart(2,"0")} 秒`;
@@ -264,6 +255,8 @@ function shopStatHtml(it){
  if(it.atk)rows.push(`攻擊 +${it.atk}`);
  if(it.def)rows.push(`防禦 +${it.def}`);
  if(it.hp)rows.push(`HP +${it.hp}`);
+ if(it.crit)rows.push(`暴擊 +${it.crit}%`);
+ if(it.dodge)rows.push(`閃避 +${it.dodge}%`);
  return `<div class="shop-stat-list">${rows.map(x=>`<div>${x}</div>`).join("")}</div>`;
 }
 function discardLostGear(i){let lost=state.lostGear?.[i];if(!lost)return;state.lostGear.splice(i,1);save();render()}
