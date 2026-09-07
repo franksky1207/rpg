@@ -15,7 +15,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"mimic",name:"寶箱怪",weight:14,
-  hpMul:1.10,atkMul:1.05,defMul:1.05,
+  hpMul:1.15,atkMul:1.15,defMul:1.10,
   critMode:"scale",critScale:.60,critAdd:5,critCap:16,
   dodgeMode:"scale",dodgeScale:.30,dodgeAdd:2,dodgeCap:8,
   description:"偽裝成寶箱等待獵物靠近的魔物。擊敗後必定能取得一件至少稀有品質的裝備。",
@@ -26,7 +26,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"reaper",name:"死神",weight:4,
-  hpMul:1.10,atkMul:1.35,defMul:.95,
+  hpMul:1.05,atkMul:1.22,defMul:.90,
   critMode:"scale",critScale:1,critAdd:8,critCap:30,
   dodgeMode:"scale",dodgeScale:1,dodgeAdd:5,dodgeCap:25,
   description:"極少出現的死亡化身。擁有遠高於一般敵人的殺傷力，但擊敗它能獲得極為豐厚的報酬。",
@@ -52,7 +52,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"ancient_guardian",name:"古代守衛",weight:12,
-  hpMul:1.15,atkMul:.90,defMul:1.10,
+  hpMul:1.20,atkMul:.98,defMul:1.15,
   critMode:"scale",critScale:.30,critAdd:2,critCap:8,
   dodgeMode:"scale",dodgeScale:.10,dodgeAdd:0,dodgeCap:2,
   description:"從古老遺跡中甦醒的守衛。沒有多少財寶，但擊敗如此古老而強大的存在能帶來大量經驗。",
@@ -63,7 +63,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"relic_guardian",name:"遺物守衛",weight:12,
-  hpMul:1.05,atkMul:.90,defMul:1.05,
+  hpMul:1.12,atkMul:1.00,defMul:1.10,
   critMode:"scale",critScale:.40,critAdd:3,critCap:10,
   dodgeMode:"scale",dodgeScale:.30,dodgeAdd:0,dodgeCap:6,
   description:"守護古代裝備的特殊敵人。其攜帶的遺物往往會補足冒險者目前最薄弱的裝備部位。",
@@ -75,7 +75,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"bandit_king",name:"盜賊王",weight:9,
-  hpMul:.90,atkMul:1.10,defMul:.75,
+  hpMul:.95,atkMul:1.20,defMul:.80,
   critMode:"scale",critScale:.80,critAdd:7,critCap:22,
   dodgeMode:"scale",dodgeScale:.80,dodgeAdd:5,dodgeCap:18,
   description:"洗劫商隊與冒險者的頭目。擊敗他不只能奪回大量金幣，還能取得能降低商店刷新成本的資源。",
@@ -86,7 +86,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"collector",name:"收藏家",weight:9,
-  hpMul:.90,atkMul:.85,defMul:.85,
+  hpMul:1.00,atkMul:.95,defMul:.95,
   critMode:"scale",critScale:.50,critAdd:3,critCap:12,
   dodgeMode:"scale",dodgeScale:.50,dodgeAdd:2,dodgeCap:10,
   description:"喜歡收集各式裝備的怪異存在。擊敗後可以一次取得兩件它收藏的裝備。",
@@ -98,7 +98,7 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"mysterious_traveler",name:"神秘旅人",weight:6,
-  hpMul:.95,atkMul:.90,defMul:.90,
+  hpMul:1.05,atkMul:1.00,defMul:1.00,
   critMode:"scale",critScale:.60,critAdd:4,critCap:15,
   dodgeMode:"scale",dodgeScale:.60,dodgeAdd:3,dodgeCap:13,
   description:"沒有人知道這名旅人究竟從哪裡來。擊敗他後，可能獲得財富、知識，或者珍貴遺物。",
