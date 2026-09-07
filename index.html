@@ -49,49 +49,16 @@
 
 <script src="data.js?v=20260906-4"></script>
 <script src="engine.js?v=20260907-2"></script>
-<script src="ui.js?v=20260906-17"></script>
+<script src="ui.js?v=20260907-1030"></script>
 <script>
 (()=>{
   const RISK_HP_RATIO=0.5;
-  const legacyInventoryPage=window.inventoryPage;
   const legacySettingsPage=window.settingsPage;
   let pendingResultAfterRest=null;
   let gmTapCount=0;
   let gmTapTimer=null;
   let combatRound=1;
   let combatTotal=1;
-
-  window.qualityLegend=function(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`};
-
-  window.renderNav=function(){
-    const top=document.getElementById("topNav"),bottom=document.getElementById("bottomNav");
-    if(top)top.innerHTML="";
-    if(bottom)bottom.innerHTML="";
-  };
-
-  function homeBackHtml(){return `<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`;}
-  function wrapFunctionPage(html){return `<div class="function-page">${homeBackHtml()}${html}</div>`;}
-
-  window.homePage=function(){
-    return `<section class="home-screen">
-      <div class="home-title"><h2>純文字 RPG</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
-      <div class="menu-grid">
-        <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>選擇地圖並挑戰怪物</span></button>
-        <button class="menu-card" onclick="go('character')"><b>角色</b><span>查看能力與目前裝備</span></button>
-        <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備與出售道具</span></button>
-        <button class="menu-card" onclick="go('shop')"><b>商店</b><span>購買裝備與贖回遺失裝備</span></button>
-        <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
-      </div>
-    </section>`;
-  };
-
-  window.characterPage=function(){
-    const s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
-    const stats=`<div class="card"><h2>角色</h2><div class="grid3"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
-    const equips=`<div class="card"><h3>目前裝備</h3>${qualityLegend()}<div class="item">武器：${itemHtml(state.equipment.weapon,true)}</div><div class="item">防具：${itemHtml(state.equipment.armor,true)}</div><div class="item">飾品：${itemHtml(state.equipment.accessory,true)}</div></div>`;
-    return wrapFunctionPage(`<div style="display:grid;gap:16px">${stats}${equips}</div>`);
-  };
-  window.inventoryPage=function(){return wrapFunctionPage(legacyInventoryPage());};
 
   window.lowHp=function(){const s=equippedStats();return s.hp>0&&state.hp/s.hp<RISK_HP_RATIO;};
 
