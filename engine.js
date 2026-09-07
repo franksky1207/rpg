@@ -32,7 +32,7 @@ function formatStatValue(stat,value){return `${STAT_LABELS[stat]||stat} +${value
 function blankMapProgress(){return Array.from({length:10},()=>[0,0,0,0])}
 function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0}}
 function newState(){return {
- saveVersion:SAVE_VERSION,level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,
+ saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,
  equipment:{weapon:null,helmet:null,armor:null,shoes:null,accessory:null},inventory:[],
  mapProgress:blankMapProgress(),bossProgress:Array(10).fill(0),bossLocked:Array(10).fill(false),bossKilled:Array(10).fill(false),
  lostGear:[],shop:newShopState(),
@@ -42,6 +42,7 @@ function newState(){return {
 function load(){
  try{let raw=localStorage.getItem(SAVE_KEY);state=raw?JSON.parse(raw):newState()}catch(e){state=newState()}
  let loadedVersion=state.saveVersion||1;
+ if(typeof state.playerName!=="string"||!state.playerName.trim())state.playerName="玩家";
  if(!state.equipment||typeof state.equipment!=="object")state.equipment={};
  EQUIPMENT_TYPES.forEach(type=>{if(!(type in state.equipment))state.equipment[type]=null});
  if(!Array.isArray(state.inventory))state.inventory=[];
@@ -300,23 +301,6 @@ function redeemLostGear(i){
  state.gold-=lost.cost;state.inventory.push(lost.item);state.lostGear.splice(i,1);save(false);return {ok:true,item:lost.item};
 }
 
-function syncProgressRuleUI(){
- try{
-   const max=state.level<=5?1:state.level<=20?5:state.level<=35?10:15;
-   document.querySelectorAll(".count-card").forEach(btn=>{
-     const n=btn.textContent.includes("單場")?1:parseInt(btn.textContent,10)||1;
-     btn.style.display=n<=max?"":"none";
-   });
-   if(typeof selectedBattleCount!=="undefined"&&selectedBattleCount>max)selectedBattleCount=max;
-   const notice=document.querySelector(".prepare-main .notice");
-   if(notice&&typeof selectedMap!=="undefined"){
-     const p=state.mapProgress[selectedMap]||[0,0,0,0],map=MAPS[selectedMap];
-     const bossText=state.bossLocked?.[selectedMap]?`需再擊敗菁英 ${state.bossProgress[selectedMap]||0}/10`:state.bossKilled[selectedMap]?"已擊敗・可再次挑戰":enemyUnlocked(selectedMap,4)?"可挑戰":"未出現";
-     const html=`<b>地圖推進</b><br>${map.enemies[0][0]}：${Math.min(10,p[0])}/10　｜　${map.enemies[1][0]}：${enemyUnlocked(selectedMap,1)?Math.min(10,p[1])+"/10":"未出現"}　｜　${map.enemies[2][0]}：${enemyUnlocked(selectedMap,2)?Math.min(10,p[2])+"/10":"未出現"}　｜　${map.enemies[3][0]}：${enemyUnlocked(selectedMap,3)?Math.min(10,p[3])+"/10":"未出現"}　｜　${map.enemies[4][0]}：${bossText}`;
-     if(notice.dataset.ruleHtml!==html){notice.dataset.ruleHtml=html;notice.innerHTML=html;}
-   }
- }catch(e){}
-}
 function syncUpgradeDropNotice(){
  try{
    const modal=document.getElementById("battleResultModal"),detail=document.getElementById("battleResultDetail");
@@ -326,8 +310,6 @@ function syncUpgradeDropNotice(){
  }catch(e){}
 }
 if(typeof MutationObserver!=="undefined"){
- const main=document.getElementById("main");
- if(main){new MutationObserver(syncProgressRuleUI).observe(main,{childList:true,subtree:true});setTimeout(syncProgressRuleUI,0);}
  const resultModal=document.getElementById("battleResultModal");
  if(resultModal){new MutationObserver(syncUpgradeDropNotice).observe(resultModal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true});}
 }
