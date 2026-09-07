@@ -21,7 +21,7 @@ function gmSpecialBatchResultHtml(special,summary){
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
   <div class="stat">死亡掉裝次數<b>${summary.deathDrops}</b></div>
  </div>
- <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div><div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div>${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${travelerRows?`<div class="muted" style="margin-top:6px">神秘旅人獎勵分布：${travelerRows}</div>`:""}</div>`;
+ <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div>${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${travelerRows?`<div class="muted" style="margin-top:6px">神秘旅人獎勵分布：${travelerRows}</div>`:""}</div>`;
 }
 
 async function gmStartSpecialBattle(){
@@ -32,13 +32,13 @@ async function gmStartSpecialBattle(){
 
  const snapshot=JSON.stringify(state);
  const upgradeSnapshot=upgradeDropNoticePending;
- const level=Math.max(1,Math.min(50,state.level));
+ const level=clampGameLevel(state.level);
  const mapIdx=gmSpecialMapForLevel(level);
  const playerSnapshot=equippedStats();
  const playerMax=playerSnapshot.hp;
  battleBusy=true;gmSpecialTestActive=true;gmSpecialTestMonster=special;
 
- const summary={count,wins:0,losses:0,totalXp:0,totalGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
+ const summary={count,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
 
  for(let i=0;i<count;i++){
   state=JSON.parse(snapshot);
@@ -52,10 +52,13 @@ async function gmStartSpecialBattle(){
    summary.winHpTotal+=Math.max(0,state.hp);
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
-   const xp=ceil(baseXp*(ctx.expMultiplier||1));
+   const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
+   const xpPay=specialExpPayout(xpRaw,[]);
    const gold=ceil(baseGold*(ctx.goldMultiplier||1));
-   summary.totalXp+=xp;summary.totalGold+=gold;
-   state.gold+=gold;gainExp(xp,[]);
+   summary.totalXp+=xpPay.xp;
+   summary.convertedGold+=xpPay.convertedGold;
+   summary.totalGold+=gold+xpPay.convertedGold;
+   state.gold+=gold;
    const items=gmSpecialMakeDrops(ctx,level,mapIdx);
    summary.dropCount+=items.length;
    items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
