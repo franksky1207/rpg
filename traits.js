@@ -11,6 +11,7 @@ const MONSTER_TRAIT_IDS=Object.keys(MONSTER_TRAITS);
 const baseMonsterObj=monsterObj;
 let monsterPreviewCache={};
 let currentCombatEncounter=null;
+let inventoryFromAdventure=false;
 
 function traitCountForKind(kind){
  let r=Math.random()*100;
@@ -51,10 +52,25 @@ function getPreviewEncounter(mapIdx,eIdx){
 function clearPreviewEncounter(mapIdx,eIdx){delete monsterPreviewCache[previewKey(mapIdx,eIdx)]}
 function traitTagsHtml(traits){
  if(!traits?.length)return "";
- return `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<span title="${t.desc}" style="display:inline-block;border:1px solid ${t.border};color:${t.color};background:#10141a;padding:2px 6px;border-radius:999px;font-size:11px;line-height:1.35">${t.name}</span>`}).join("")}</div>`;
+ return `<div class="trait-tags">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<span title="${t.desc}" style="border-color:${t.border};color:${t.color}">${t.name}</span>`}).join("")}</div>`;
+}
+function traitDetailsHtml(traits){
+ if(!traits?.length)return "";
+ return `<div class="trait-details">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<div class="trait-detail-row"><span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span><span class="trait-detail-desc">${t.desc}</span></div>`}).join("")}</div>`;
 }
 
 window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
+
+const baseGoForAdventureInventory=go;
+go=function(v){inventoryFromAdventure=false;return baseGoForAdventureInventory(v)};
+function openAdventureInventory(){inventoryFromAdventure=true;view="inventory";render()}
+function backToAdventureFromInventory(){inventoryFromAdventure=false;view="adventure";adventureScreen="prepare";render()}
+const baseInventoryPageForAdventure=inventoryPage;
+inventoryPage=function(){
+ let html=baseInventoryPageForAdventure();
+ if(!inventoryFromAdventure)return html;
+ return html.replace(`onclick="go('home')"`,`onclick="backToAdventureFromInventory()"`).replace("← 返回主頁","← 返回冒險");
+};
 
 function enterMap(i){
  if(i>state.unlockedMap)return;
@@ -74,14 +90,13 @@ function adventurePreparePage(){
  let enemies=map.enemies.map((x,i)=>{
   if(!enemyUnlocked(selectedMap,i))return "";
   let mo=getPreviewEncounter(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";
-  let extra=[];if(mo.crit)extra.push(`暴擊 ${mo.crit}%`);if(mo.dodge)extra.push(`閃避 ${mo.dodge}%`);
-  return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}${traitTagsHtml(mo.traits)}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}${extra.length?`　${extra.join("　")}`:""}</div></button>`;
+  return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><b>${mo.name} Lv.${mo.level}</b>${badge}${traitDetailsHtml(mo.traits)}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`;
  }).join("");
- return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 class="battle-count-title">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
+ return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div>${mapProgressHtml(selectedMap)}<h3 class="battle-count-title">戰鬥次數</h3><div class="count-grid">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn blue" onclick="openAdventureInventory()">背包</button><button class="btn ok" onclick="rest()">回城休息</button></div></div></div></section>`;
 }
 function adventureCombatPage(){
  let e=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy),s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
- return `<section class="combat-screen"><div class="combat-head">${combatTotal>1?`第 ${combatRound} / ${combatTotal} 場`:`單場戰鬥`}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traitTagsHtml(e.traits)}<div class="muted" style="margin-top:7px">暴擊 ${e.crit||0}%　閃避 ${e.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;
+ return `<section class="combat-screen"><div class="combat-head">${combatTotal>1?`第 ${combatRound} / ${combatTotal} 場`:`單場戰鬥`}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traitDetailsHtml(e.traits)}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;
 }
 
 function fightOnce(mapIdx,eIdx,encounter=null){
