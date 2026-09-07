@@ -50,10 +50,6 @@ function getPreviewEncounter(mapIdx,eIdx){
  let k=previewKey(mapIdx,eIdx);if(!monsterPreviewCache[k])monsterPreviewCache[k]=createMonsterEncounter(mapIdx,eIdx);return monsterPreviewCache[k];
 }
 function clearPreviewEncounter(mapIdx,eIdx){delete monsterPreviewCache[previewKey(mapIdx,eIdx)]}
-function traitTagsHtml(traits){
- if(!traits?.length)return "";
- return `<div class="trait-tags">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<span title="${t.desc}" style="border-color:${t.border};color:${t.color}">${t.name}</span>`}).join("")}</div>`;
-}
 function traitDetailsHtml(traits){
  if(!traits?.length)return "";
  return `<div class="trait-details">${traits.map(id=>{let t=MONSTER_TRAITS[id];return `<div class="trait-detail-row"><span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span><span class="trait-detail-desc">${t.desc}</span></div>`}).join("")}</div>`;
@@ -169,17 +165,6 @@ async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
 
 function beginCombat(count){
  combatRound=1;combatTotal=count;currentCombatEncounter=getPreviewEncounter(selectedMap,selectedEnemy);adventureScreen="combat";render();setTimeout(()=>runBattles(count),60);
-}
-function startBattles(){
- if(battleBusy)return;
- let e=getPreviewEncounter(selectedMap,selectedEnemy),count=e.kind==="boss"?1:selectedBattleCount;
- if(lowHp()){pendingBattleCount=count;pendingContinuousBattle=null;showRiskModal("initial");return}
- beginCombat(count);
-}
-function continueRiskBattle(){
- closeRiskModal();
- if(riskMode==="continuous"&&pendingContinuousBattle){let ctx=pendingContinuousBattle;pendingContinuousBattle=null;currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);adventureScreen="combat";render();setTimeout(()=>runBattles(ctx.remaining,ctx),60);return}
- beginCombat(pendingBattleCount||1);
 }
 async function runBattles(count,ctx=null){
  if(battleBusy)return;
