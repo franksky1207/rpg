@@ -8,6 +8,7 @@ let combatRound=1;
 let combatTotal=1;
 let gmTapCount=0;
 let gmTapTimer=null;
+let inventoryFilter="all";
 
 function compactMobileDom(){
  const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
@@ -34,6 +35,11 @@ function render(){
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
 function homeBackHtml(){return `<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`}
 function wrapFunctionPage(html){return `<div class="function-page">${homeBackHtml()}${html}</div>`}
+function gearAbilityHtml(it,withScore=false){
+ if(!it)return `<span class="muted">無</span>`;
+ let rows=itemAbilityLines(it),body=rows.map(r=>`<div>${r.kind==="main"?`<span class="muted">主能力</span> `:r.kind==="affix"?`<span class="muted">詞條</span> `:""}${r.text}</div>`).join("");
+ return `<div class="shop-stat-list">${body}${withScore?`<div class="muted" style="margin-top:5px">評分 ${equipmentScore(it)}</div>`:""}</div>`;
+}
 
 function homePage(){
  return `<section class="home-screen">
@@ -156,7 +162,7 @@ async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
 }
 function dropListHtml(items){
  if(!items.length)return `<div class="muted">裝備：無</div>`;
- return `<div style="margin-top:10px"><b>裝備</b>${items.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${statLine(x.item)}${x.sold?`　・自動出售 +${x.sold} 金幣`:""}</div></div>`).join("")}</div>`;
+ return `<div style="margin-top:10px"><b>裝備</b>${items.map(x=>`<div class="item">${itemHtml(x.item,true)}${gearAbilityHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join("")}</div>`;
 }
 function showBattleResult(ctx,defeat=null){
  let title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
@@ -164,7 +170,7 @@ function showBattleResult(ctx,defeat=null){
  if(defeat){
   title.textContent="戰鬥失敗";
   let lost=defeat.penalty?.dropped;
-  detail.innerHTML=`<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}<div class="muted">${statLine(lost)}</div></div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+  detail.innerHTML=`<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
  }else{
   title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥勝利";
   detail.innerHTML=`${ctx.originalCount>1?`<div class="item"><b>勝利 ${ctx.wins} / ${ctx.originalCount} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
@@ -199,13 +205,16 @@ async function runBattles(count,ctx=null){
 function characterPage(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<50?Math.min(100,state.exp/need*100):100;
  let stats=`<div class="card character-stats-card"><h2>角色</h2><div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=50?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
- let equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item">${equipmentTypeLabel(t)}：${itemHtml(state.equipment[t],true)}</div>`).join("")}</div>`;
+ let equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
+function setInventoryFilter(v){inventoryFilter=v;selectedItem=null;render()}
 function inventoryContent(){
- let items=state.inventory.slice().sort((a,b)=>b.q-a.q||b.level-a.level),sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
- return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item">${equipmentTypeLabel(t)}<br>${itemHtml(state.equipment[t])}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}<div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${statLine(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted">背包是空的。</div>`}</div></div>`;
+ let items=state.inventory.filter(it=>inventoryFilter==="all"||it.type===inventoryFilter).slice().sort((a,b)=>equipmentScore(b)-equipmentScore(a)||b.q-a.q||b.level-a.level);
+ let sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
+ let filterOptions=`<option value="all" ${inventoryFilter==="all"?"selected":""}>全部</option>${EQUIPMENT_TYPES.map(t=>`<option value="${t}" ${inventoryFilter===t?"selected":""}>${equipmentTypeLabel(t)}</option>`).join("")}`;
+ return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2>${qualityLegend()}<div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${it.sell}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
 }
 function inventoryPage(){return wrapFunctionPage(inventoryContent())}
 function equipBestAll(){
@@ -232,8 +241,8 @@ function sellLowerAll(){
  alert(`已出售 ${targets.length} 件裝備，獲得 ${total.toLocaleString()} 金幣。`);
 }
 function compareHtml(it){
- let old=state.equipment[it.type],diff=equipmentScore(it)-equipmentScore(old);
- return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old)}</div><div><div class="muted">新裝備</div>${itemHtml(it)}</div><div><div class="muted">整體比較</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()">出售</button></div></div>`;
+ let old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=old?newScore-oldScore:newScore;
+ return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()">出售</button></div></div>`;
 }
 function selectItem(id){selectedItem=id;render()}
 function equipSelected(){let i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;let it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
@@ -243,30 +252,22 @@ function shopCooldownText(){
  let left=Math.max(0,(state.shop.resetAvailableAt||0)-Date.now());if(!left)return "可重置";
  let m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);return `${m} 分 ${String(s).padStart(2,"0")} 秒`;
 }
-function compareGearHtml(it,label="商品分數"){
- let current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?itemScore-currentScore:itemScore;
+function compareGearHtml(it,label="商品評分"){
+ let current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?round1(itemScore-currentScore):itemScore;
  let diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備";
  let diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
- let currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">分數 ${currentScore}</div>`:`<span class="muted">無</span>`;
+ let currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">評分 ${currentScore}</div>`:`<span class="muted">無</span>`;
  return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">${label} ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
 }
-function shopStatHtml(it){
- let rows=[];
- if(it.atk)rows.push(`攻擊 +${it.atk}`);
- if(it.def)rows.push(`防禦 +${it.def}`);
- if(it.hp)rows.push(`HP +${it.hp}`);
- if(it.crit)rows.push(`暴擊 +${it.crit}%`);
- if(it.dodge)rows.push(`閃避 +${it.dodge}%`);
- return `<div class="shop-stat-list">${rows.map(x=>`<div>${x}</div>`).join("")}</div>`;
-}
+function shopStatHtml(it){return gearAbilityHtml(it,false)}
 function discardLostGear(i){let lost=state.lostGear?.[i];if(!lost)return;state.lostGear.splice(i,1);save();render()}
 function shopPage(){
  ensureShop();
  if(state.shop.items.length>3){state.shop.items=state.shop.items.slice(0,3);save(false)}
  let cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
- let rows=state.shop.items.map((it,i)=>`<tr><td data-label="商品" class="shop-item-cell">${itemHtml(it,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(it)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(it,"商品分數")}</td><td data-label="價格" class="shop-price-cell">${it.buy.toLocaleString()}</td><td class="shop-action-cell"><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("");
- let lostRows=lost.map((x,i)=>`<tr><td data-label="裝備" class="shop-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(x.item)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(x.item,"遺失裝備分數")}</td><td data-label="贖回價格" class="shop-price-cell">${x.cost.toLocaleString()}</td><td class="shop-action-cell"><div class="controls shop-row-actions"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
- let body=`<div class="card"><h2>商店</h2><div class="notice"><div>• 刷新越多次，價格越高；買裝備可降低刷新價格。</div><div>• 最高 12,800，可重置回 100，冷卻 1 小時。</div><div>• 首次解鎖新地圖時免費刷新；商店不會出現神話裝備。</div></div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div class="shop-table-wrap"><table class="shop-table"><thead><tr><th>商品</th><th>能力</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="shop-table-wrap"><table class="shop-table lost-gear-table"><thead><tr><th>裝備</th><th>能力</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${lostRows}</tbody></table></div>`:""}</div>`;
+ let rows=state.shop.items.map((it,i)=>`<tr><td data-label="商品" class="shop-item-cell">${itemHtml(it,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(it)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(it,"商品評分")}</td><td data-label="價格" class="shop-price-cell">${it.buy.toLocaleString()}</td><td class="shop-action-cell"><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("");
+ let lostRows=lost.map((x,i)=>`<tr><td data-label="裝備" class="shop-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(x.item)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(x.item,"遺失裝備評分")}</td><td data-label="贖回價格" class="shop-price-cell">${x.cost.toLocaleString()}</td><td class="shop-action-cell"><div class="controls shop-row-actions"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
+ let body=`<div class="card"><h2>商店</h2><div class="notice"><div>• 刷新越多次，價格越高；買裝備可降低刷新價格。</div><div>• 最高 12,800，可重置回 100，冷卻 1 小時。</div><div>• 首次解鎖新地圖時免費刷新；商店不會出現神話裝備。</div></div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div class="shop-table-wrap"><table class="shop-table"><thead><tr><th>商品</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="shop-table-wrap"><table class="shop-table lost-gear-table"><thead><tr><th>裝備</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${lostRows}</tbody></table></div>`:""}</div>`;
  return wrapFunctionPage(body);
 }
 function refreshShop(){let r=paidShopRefresh();if(!r.ok)return alert(r.reason);save();render()}
@@ -306,6 +307,6 @@ function gmGear(q){let mi=Math.min(9,Math.floor((state.level-1)/5));state.invent
 function gmBoss(){state.bossKilled[selectedMap]=true;state.bossProgress[selectedMap]=8;save();render()}
 function exportSave(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
 function importSave(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.level)throw 0;state=x;save();location.reload()}catch(e){alert("存檔格式不正確。")}};r.readAsText(f)}
-function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";pendingContinuousBattle=null;save();view="home";render()}}
+function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";pendingContinuousBattle=null;inventoryFilter="all";save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
 load();render();
