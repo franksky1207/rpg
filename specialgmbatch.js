@@ -1,21 +1,20 @@
 const baseGmHtmlForSpecialBatch=gmHtml;
-const baseGmStartSpecialBattleSingle=gmStartSpecialBattle;
 
 gmHtml=function(){
  const html=baseGmHtmlForSpecialBatch();
  return html.replace(
   '<button class="btn primary" onclick="gmStartSpecialBattle()">開始測試</button>',
-  '<label>測試次數<br><input id="gmSpecialTestCount" class="btn" type="number" min="1" max="100" value="1" style="width:90px"></label><button class="btn primary" onclick="gmStartSpecialBattle()">開始測試</button>'
+  '<button class="btn primary" onclick="gmStartSpecialBattle()">開始測試（100 次）</button>'
  );
 };
 
 function gmSpecialBatchResultHtml(special,summary){
  const qualityRows=summary.qualityCounts.map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
  const travelerRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
- return `<div class="notice"><b>GM 沙盒批次測試</b><div class="muted" style="margin-top:5px">以下 ${summary.count} 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
+ return `<div class="notice"><b>GM 沙盒批次測試</b><div class="muted" style="margin-top:5px">以下 100 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
  <div class="notice" style="margin-top:10px"><b>✦ ${special.name}</b></div>
  <div class="stats" style="margin-top:10px">
-  <div class="stat">測試次數<b>${summary.count}</b></div>
+  <div class="stat">測試次數<b>100</b></div>
   <div class="stat">勝利<b>${summary.wins}</b></div>
   <div class="stat">失敗<b>${summary.losses}</b></div>
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
@@ -27,10 +26,7 @@ function gmSpecialBatchResultHtml(special,summary){
 
 async function gmStartSpecialBattle(){
  if(battleBusy)return;
- const countRaw=Number(document.getElementById("gmSpecialTestCount")?.value||1);
- const count=Math.max(1,Math.min(100,Math.floor(countRaw)));
- if(count===1)return baseGmStartSpecialBattleSingle();
-
+ const count=100;
  const id=document.getElementById("gmSpecialMonster")?.value,special=getSpecialMonsterById(id);
  if(!special)return alert("找不到特殊怪資料。");
 
@@ -83,7 +79,7 @@ async function gmStartSpecialBattle(){
  gmSpecialTestUpgradeNoticeSnapshot=upgradeSnapshot;
 
  const modal=document.getElementById("battleResultModal"),title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail");
- if(title)title.textContent="特殊怪批次測試";
+ if(title)title.textContent="特殊怪 100 次測試結果";
  if(detail)detail.innerHTML=gmSpecialBatchResultHtml(special,summary);
  const btn=modal?.querySelector(".controls .btn.primary");if(btn)btn.onclick=gmCloseSpecialResult;
  if(modal)modal.classList.add("show");
