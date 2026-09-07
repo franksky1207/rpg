@@ -132,6 +132,7 @@
  async function maybeHandleSpecialEncounter(ctx){
   const baseEnemy=monsterObj(selectedMap,selectedEnemy);
   if(baseEnemy?.kind==="boss")return false;
+  if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
   const s=equippedStats();
   if(!s.hp||state.hp/s.hp<.30)return false;
   if(Math.random()>=SPECIAL_ENCOUNTER_RATE)return false;
