@@ -7,7 +7,8 @@ let gmSpecialTestUpgradeNoticeSnapshot=false;
 const baseGmHtmlForSpecialTest=gmHtml;
 gmHtml=function(){
  const base=baseGmHtmlForSpecialTest();
- const options=SPECIAL_MONSTERS.map(x=>`<option value="${x.id}">${x.name}</option>`).join("");
+ const tierLabel={low:"低",mid:"中",high:"高"};
+ const options=SPECIAL_MONSTERS.map(x=>`<option value="${x.id}">${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");
  return `${base}<div class="gm" style="margin-top:14px"><h3>特殊怪測試</h3><div class="muted">選擇特殊怪後會依目前角色的實際能力直接生成並進入測試戰鬥，不經過自然遭遇機率。GM 測試為沙盒模式，戰鬥中的 HP、EXP、金幣、裝備、背包、商店等變化會在離開結算後全部還原。</div><div class="controls" style="margin-top:10px;align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn">${options}</select></label><button class="btn primary" onclick="gmStartSpecialBattle()">開始測試</button></div></div>`;
 };
 
