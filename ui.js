@@ -4,6 +4,17 @@ let adventureScreen="maps";
 let riskMode="initial";
 let pendingContinuousBattle=null;
 
+function compactMobileDom(){
+ const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
+ document.querySelectorAll(".map-progress-fold").forEach(el=>{if(!mobile)el.open=true});
+ if(mobile){
+  document.querySelectorAll(".enemy-meta").forEach(el=>{
+   let m=el.textContent.match(/HP\s*(\d+).*攻擊\s*(\d+).*防禦\s*(\d+)/s);
+   if(m)el.textContent=`HP ${m[1]}　ATK ${m[2]}　DEF ${m[3]}`;
+  });
+ }
+}
+
 function renderNav(){
  let h=navs.map(([k,n])=>`<button class="${view===k?"active":""}" onclick="go('${k}')">${n}</button>`).join("");
  document.getElementById("topNav").innerHTML=h;document.getElementById("bottomNav").innerHTML=h;
@@ -12,10 +23,10 @@ function go(v){if(v==="adventure")adventureScreen="maps";view=v;render()}
 function render(){
  renderNav();normalizeHP();
  let fn={home:homePage,adventure:adventurePage,character:characterPage,inventory:inventoryPage,shop:shopPage,settings:settingsPage}[view];
- document.getElementById("main").innerHTML=fn();wireSettings();
+ document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
  if(view==="adventure"&&adventureScreen==="battle"&&battleLogs.length)setTimeout(scrollBattleLogToBottom,0);
 }
-function qualityLegend(){return `<div class="muted" style="margin:6px 0 12px">裝備品質（低 → 高）：<span class="q-common">普通</span> → <span class="q-uncommon">優良</span> → <span class="q-rare">稀有</span> → <span class="q-epic">史詩</span> → <span class="q-legendary">傳說</span> → <span class="q-mythic">神話</span></div>`}
+function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
 
 function sideCharacter(){
  let s=equippedStats(),need=state.level<50?expNeed(state.level):0,pct=state.level<50?Math.min(100,state.exp/need*100):100;
@@ -36,15 +47,16 @@ function adventureStatus(){
  </div>`;
 }
 function mapProgressHtml(mapIdx){
- let p=state.mapProgress[mapIdx],map=MAPS[mapIdx];
+ let p=state.mapProgress[mapIdx]||[0,0,0,0],map=MAPS[mapIdx];
+ let bossText=state.bossLocked?.[mapIdx]?`需再擊敗菁英 ${state.bossProgress[mapIdx]||0}/10`:state.bossKilled[mapIdx]?"已擊敗・可再次挑戰":enemyUnlocked(mapIdx,4)?"可挑戰":"未出現";
  let rows=[
-  `${map.enemies[0][0]}：${Math.min(5,p[0])}/5`,
-  `${map.enemies[1][0]}：${enemyUnlocked(mapIdx,1)?Math.min(5,p[1])+"/5":"未出現"}`,
-  `${map.enemies[2][0]}：${enemyUnlocked(mapIdx,2)?Math.min(5,p[2])+"/5":"未出現"}`,
-  `${map.enemies[3][0]}：${enemyUnlocked(mapIdx,3)?Math.min(5,p[3])+"/5":"未出現"}`,
-  `${map.enemies[4][0]}：${state.bossKilled[mapIdx]?"已擊敗":enemyUnlocked(mapIdx,4)?"可挑戰":"未出現"}`
+  `${map.enemies[0][0]}：${Math.min(10,p[0])}/10`,
+  `${map.enemies[1][0]}：${enemyUnlocked(mapIdx,1)?Math.min(10,p[1])+"/10":"未出現"}`,
+  `${map.enemies[2][0]}：${enemyUnlocked(mapIdx,2)?Math.min(10,p[2])+"/10":"未出現"}`,
+  `${map.enemies[3][0]}：${enemyUnlocked(mapIdx,3)?Math.min(10,p[3])+"/10":"未出現"}`,
+  `${map.enemies[4][0]}：${bossText}`
  ];
- return `<div class="notice"><b>地圖推進</b><br>${rows.join("　｜　")}</div>`;
+ return `<details class="map-progress-fold"><summary>地圖推進</summary><div class="notice">${rows.join("　｜　")}</div></details>`;
 }
 function mapStatusText(i){
  if(i>state.unlockedMap)return "未解鎖";
