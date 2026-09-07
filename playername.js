@@ -44,8 +44,4 @@ settingsPage=function(){
  return html.replace('<h3 style="margin-top:22px">遊戲設定</h3>',`<h3 style="margin-top:22px">遊戲設定</h3>${block}`);
 };
 
-if(!state.playerName||!String(state.playerName).trim()){
- state.playerName="玩家";
- save(false);
-}
 render();
