@@ -137,11 +137,12 @@ function setCombatHp(enemyHp,enemyMax,playerHp,playerMax,message){
  if(ph)ph.textContent=`${Math.max(0,playerHp)} / ${playerMax}`;
  if(msg)msg.textContent=message;
 }
-function flashDamage(target,amount){
+function flashCombatText(target,text){
  let card=document.getElementById(target==="enemy"?"combatEnemyCard":"combatPlayerCard"),dmg=document.getElementById(target==="enemy"?"combatEnemyDamage":"combatPlayerDamage");
  if(card){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260)}
- if(dmg){dmg.textContent=`-${amount}`;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show")}
+ if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show")}
 }
+function flashDamage(target,amount){flashCombatText(target,`-${amount}`)}
 function attackMotion(attacker){
  let card=document.getElementById(attacker==="player"?"combatPlayerCard":"combatEnemyCard");
  if(card){card.classList.remove("attacking");void card.offsetWidth;card.classList.add("attacking");setTimeout(()=>card.classList.remove("attacking"),340)}
@@ -152,8 +153,12 @@ async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
  setCombatHp(ehp,enemyMax,php,playerMax,roundText?`${roundText}・開始戰鬥`:"開始戰鬥");
  await sleep(180);
  for(let line of r.logs){
-  let m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
+  let m=line.match(/^你攻擊.+，暴擊造成 (\d+) 點傷害。$/);
+  if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`暴擊！你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?300:220);continue}
+  m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
   if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashDamage("enemy",m[1]);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
+  m=line.match(/^.+攻擊你，你閃避了攻擊。$/);
+  if(m){attackMotion("enemy");await sleep(120);flashCombatText("player","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`你閃避了${r.e.name}的攻擊`);await sleep(r.e.kind==="boss"?260:190);continue}
   m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
   if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashDamage("player",m[1]);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190)}
  }
