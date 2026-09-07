@@ -77,7 +77,7 @@
   let body=priorRewardsHtml(ctx);
   if(result.win){
    const rewardLabel=result.rewardContext?.randomReward?.label;
-   body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${result.drops.length?result.drops.map(x=>`<div class="item">${itemHtml(x.item,true)}${gearAbilityHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
+   body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${result.drops.length?result.drops.map(x=>`<div class="item">${itemHtml(x.item,true)}${gearAbilityHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
   }else{
    const lost=result.penalty?.dropped;
    body+=`${result.turnLimit?`<div class="notice"><b>✦ ${special.name} 挑戰中止</b><div class="muted" style="margin-top:5px">戰鬥超過 200 回合仍未分出勝負，本次不視為死亡，也不套用死亡懲罰。</div></div>`:`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div>`}<div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
@@ -90,7 +90,7 @@
  async function fightFormalSpecial(ctx,special){
   const playerSnapshot=equippedStats();
   state.hp=playerSnapshot.hp;
-  const level=Math.max(1,Math.min(50,state.level));
+  const level=clampGameLevel(state.level);
   const map=MAPS[selectedMap],dropLevel=Math.max(map.min,Math.min(map.max,level));
   const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level),rewardCtx=getSpecialRewardContext(special);
   adventureScreen="combat";
@@ -98,13 +98,16 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,turnLimit:!!r.turnLimit,rewardContext:rewardCtx,drops:[],xp:0,gold:0,shopDown:0,penalty:null};
+  const result={win:r.win,turnLimit:!!r.turnLimit,rewardContext:rewardCtx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
-   result.xp=ceil(baseXp*(rewardCtx.expMultiplier||1));
+   const xpRaw=ceil(baseXp*(rewardCtx.expMultiplier||1));
+   const xpPay=specialExpPayout(xpRaw,[]);
+   result.xp=xpPay.xp;
+   result.convertedGold=xpPay.convertedGold;
    result.gold=ceil(baseGold*(rewardCtx.goldMultiplier||1));
-   state.gold+=result.gold;gainExp(result.xp,[]);
+   state.gold+=result.gold;
    const items=specialMakeDrops(rewardCtx,dropLevel,selectedMap);
    result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
    result.shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
