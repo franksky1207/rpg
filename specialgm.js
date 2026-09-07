@@ -85,7 +85,7 @@ function gmSpecialResultHtml(special,result){
  }
  const drops=result.drops||[];
  const rewardLabel=result.rewardContext?.randomReward?.label;
- return `${sandbox}<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${result.xp}</b></div><div class="stat">金幣<b>+${result.gold}</b></div></div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${drops.length?drops.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${x.sold?`自動出售 +${x.sold} 金幣`:"測試掉落"}</div></div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
+ return `${sandbox}<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${result.xp}</b></div><div class="stat">金幣<b>+${result.gold}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${drops.length?drops.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${x.sold?`自動出售 +${x.sold} 金幣`:"測試掉落"}</div></div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
 }
 function gmRestoreSpecialSandbox(){
  if(gmSpecialTestStateSnapshot){
@@ -107,7 +107,7 @@ async function gmStartSpecialBattle(){
  gmSpecialTestStateSnapshot=JSON.stringify(state);
  gmSpecialTestUpgradeNoticeSnapshot=upgradeDropNoticePending;
  battleBusy=true;gmSpecialTestActive=true;gmSpecialTestMonster=special;
- const level=Math.max(1,Math.min(50,state.level)),mapIdx=gmSpecialMapForLevel(level),playerSnapshot=equippedStats();
+ const level=clampGameLevel(state.level),mapIdx=gmSpecialMapForLevel(level),playerSnapshot=equippedStats();
  const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level),ctx=getSpecialRewardContext(special);
  gmSpecialTestReward=ctx;
  state.hp=playerSnapshot.hp;
@@ -115,13 +115,16 @@ async function gmStartSpecialBattle(){
  await sleep(120);
  const startHp=state.hp,playerMax=playerSnapshot.hp,r=gmSpecialFight(enemy);
  await animateFight(r,startHp,playerMax,enemy.hp,"");
- let result={win:r.win,rewardContext:ctx,drops:[],xp:0,gold:0,shopDown:0,penalty:null};
+ let result={win:r.win,rewardContext:ctx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
  if(r.win){
   const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
   const baseGold=goldBase(level);
-  result.xp=ceil(baseXp*(ctx.expMultiplier||1));
+  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
+  const xpPay=specialExpPayout(xpRaw,[]);
+  result.xp=xpPay.xp;
+  result.convertedGold=xpPay.convertedGold;
   result.gold=ceil(baseGold*(ctx.goldMultiplier||1));
-  state.gold+=result.gold;gainExp(result.xp,[]);
+  state.gold+=result.gold;
   const items=gmSpecialMakeDrops(ctx,level,mapIdx);
   result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
   result.shopDown=gmSpecialApplyShopDiscount(ctx.shopRefreshDown);
