@@ -1,10 +1,19 @@
 const navs=[["adventure","冒險"],["character","角色"],["inventory","背包"],["shop","商店"],["settings","設定"]];
 const EQUIPMENT_TYPES=["weapon","helmet","armor","shoes","accessory"];
 const EQUIPMENT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
+const STAT_LABELS={atk:"攻擊",def:"防禦",hp:"HP",crit:"暴擊",dodge:"閃避"};
+const AFFIX_POOLS={
+ weapon:["atk","crit","hp"],
+ helmet:["hp","def","dodge"],
+ armor:["def","hp","dodge"],
+ shoes:["dodge","def","hp"],
+ accessory:["crit","atk","hp","dodge"]
+};
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
 let upgradeDropNoticePending=false;
 
 function ceil(n){return Math.ceil(n)}
+function round1(n){return Math.round(n*10)/10}
 function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
@@ -16,6 +25,7 @@ function goldBase(l){return ceil(6+4*l)}
 function sellBase(l){return ceil(12+8*l)}
 function qClass(q){return "q-"+QUALITY[q].k}
 function equipmentTypeLabel(type){return EQUIPMENT_LABELS[type]||type}
+function formatStatValue(stat,value){return `${STAT_LABELS[stat]||stat} +${value}${stat==="crit"||stat==="dodge"?"%":""}`}
 function blankMapProgress(){return Array.from({length:10},()=>[0,0,0,0])}
 function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0}}
 function newState(){return {
@@ -28,7 +38,7 @@ function newState(){return {
 
 function load(){
  try{let raw=localStorage.getItem(SAVE_KEY);state=raw?JSON.parse(raw):newState()}catch(e){state=newState()}
- if(!state.saveVersion)state.saveVersion=1;
+ let loadedVersion=state.saveVersion||1;
  if(!state.equipment||typeof state.equipment!=="object")state.equipment={};
  EQUIPMENT_TYPES.forEach(type=>{if(!(type in state.equipment))state.equipment[type]=null});
  if(!Array.isArray(state.inventory))state.inventory=[];
@@ -44,6 +54,7 @@ function load(){
  if(!state.settings)state.settings=newState().settings;
  if(!Array.isArray(state.settings.autoSell))state.settings.autoSell=[false,false,false,false,false];
  if(typeof state.settings.keepUpgrade!=="boolean")state.settings.keepUpgrade=true;
+ if(loadedVersion<4)state.shop.items=[];
  state.saveVersion=SAVE_VERSION;
  selectedMap=Math.min(state.unlockedMap,9);
  normalizeHP();
@@ -56,7 +67,7 @@ function equippedStats(){
  EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});return x;
 }
 function normalizeHP(){let m=equippedStats().hp;state.hp=Math.min(state.hp??m,m)}
-function equipmentScore(it){if(!it)return -1;if(it.type==="weapon")return it.atk||0;if(it.type==="armor")return (it.def||0)*5+(it.hp||0);return (it.atk||0)*5+(it.def||0)*5+(it.hp||0)}
+function equipmentScore(it){if(!it)return -1;return round1((it.atk||0)*5+(it.def||0)*5+(it.hp||0)+(it.crit||0)*12+(it.dodge||0)*12)}
 function qualityRoll(kind){
  let r=Math.random()*100,c=0,arr;
  if(kind==="boss")arr=[0,45,35,15,4.5,.5];
@@ -64,15 +75,38 @@ function qualityRoll(kind){
  else arr=[50,30,15,4,.9,.1];
  for(let i=0;i<arr.length;i++){c+=arr[i];if(r<c)return i}return 0;
 }
+function affixCount(q){if(q===0)return 0;if(q===1)return 1;if(q===2)return Math.random()<.5?1:2;if(q===3)return 2;if(q===4)return Math.random()<.5?2:3;return 3}
+function mainStatForType(type){return type==="weapon"?"atk":type==="helmet"?"hp":type==="armor"?"def":type==="shoes"?"dodge":"crit"}
+function mainStatValue(type,level,m){
+ if(type==="weapon")return ceil((3+1.55*level)*m);
+ if(type==="helmet")return ceil((8+2.5*level)*m);
+ if(type==="armor")return ceil((1+.65*level)*m);
+ if(type==="shoes")return round1((1+.12*level)*m);
+ return round1((1+.12*level)*m);
+}
+function affixStatValue(stat,level,m){
+ if(stat==="atk")return ceil((1+.45*level)*m);
+ if(stat==="def")return ceil((.5+.20*level)*m);
+ if(stat==="hp")return ceil((3+.9*level)*m);
+ if(stat==="crit"||stat==="dodge")return round1((.5+.04*level)*m);
+ return 0;
+}
+function addItemStat(it,stat,value){it[stat]=round1((it[stat]||0)+value)}
+function rollAffixes(type,level,q,m){
+ let pool=AFFIX_POOLS[type]||[],count=affixCount(q),used={},out=[];
+ for(let i=0;i<count;i++){
+   let choices=pool.filter(stat=>(used[stat]||0)<2);if(!choices.length)break;
+   let stat=choices[Math.floor(Math.random()*choices.length)],value=affixStatValue(stat,level,m);
+   used[stat]=(used[stat]||0)+1;out.push({stat,value});
+ }
+ return out;
+}
 function makeItem(level,mapIdx,kind="normal",forcedQ=null,forcedType=null){
  let q=forcedQ??qualityRoll(kind),type=forcedType??EQUIPMENT_TYPES[Math.floor(Math.random()*EQUIPMENT_TYPES.length)];
  let baseNames=MAPS[mapIdx].gear,name=baseNames[Math.max(0,EQUIPMENT_TYPES.indexOf(type))]||baseNames[0],m=QUALITY[q].m;
- let it={id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,level,q,type};
- if(type==="weapon")it.atk=ceil((3+1.55*level)*m);
- if(type==="helmet"){it.def=ceil((.7+.35*level)*m);it.hp=ceil((7+2*level)*m)}
- if(type==="armor"){it.def=ceil((1+.55*level)*m);it.hp=ceil((8+2.8*level)*m)}
- if(type==="shoes"){it.def=ceil((.5+.28*level)*m);it.hp=ceil((4+1.4*level)*m)}
- if(type==="accessory"){it.atk=ceil((.8+.32*level)*m);it.def=ceil((.4+.2*level)*m);it.hp=ceil((4+1.2*level)*m)}
+ let mainStat=mainStatForType(type),mainValue=mainStatValue(type,level,m),affixes=rollAffixes(type,level,q,m);
+ let it={id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,level,q,type,mainStat:{stat:mainStat,value:mainValue},affixes};
+ addItemStat(it,mainStat,mainValue);affixes.forEach(a=>addItemStat(it,a.stat,a.value));
  it.sell=ceil(sellBase(level)*QUALITY[q].sm);it.buy=ceil(it.sell*3.5);return it;
 }
 function dropItem(enemy,mapIdx){
@@ -83,6 +117,14 @@ function dropItem(enemy,mapIdx){
 }
 function itemHtml(it,compact=false){if(!it)return `<span class="muted">無</span>`;return `<span class="${qClass(it.q)}">【${QUALITY[it.q].n}】${it.name} Lv.${it.level}</span>${compact?"":`<div class="muted">${statLine(it)}</div>`}`}
 function statLine(it){return [it.atk?`攻擊 +${it.atk}`:"",it.def?`防禦 +${it.def}`:"",it.hp?`HP +${it.hp}`:"",it.crit?`暴擊 +${it.crit}%`:"",it.dodge?`閃避 +${it.dodge}%`:""].filter(Boolean).join("　")}
+function itemAbilityLines(it){
+ if(!it)return [];
+ if(it.mainStat&&Array.isArray(it.affixes)){
+   let rows=[{kind:"main",text:formatStatValue(it.mainStat.stat,it.mainStat.value)}];
+   it.affixes.forEach(a=>rows.push({kind:"affix",text:formatStatValue(a.stat,a.value)}));return rows;
+ }
+ return [{kind:"legacy",text:statLine(it)}];
+}
 
 function monsterObj(mapIdx,eIdx){
  let d=MAPS[mapIdx].enemies[eIdx],b=monsterBase(d[1]),kind=d[2],style=d[3];
