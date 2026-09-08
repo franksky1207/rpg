@@ -60,6 +60,7 @@ function gmResetShopPrice(){
  state.shop.resetAvailableAt=0;
  save(false);render();
 }
+function gmResetShop(){gmResetShopPrice()}
 function gmHeal(){state.hp=equippedStats().hp;save();render()}
 function gmClearInventory(){
  if(!state.inventory.length){alert("背包目前是空的。");return}
