@@ -18,6 +18,7 @@
 
   let progress=finiteNonNegative(target.dungeon.progress,0);
   let attempts=Math.floor(finiteNonNegative(target.dungeon.attempts,0));
+  let points=Math.floor(finiteNonNegative(target.dungeon.points,0));
   const converted=Math.floor((progress+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
   if(converted>0){
    attempts+=converted;
@@ -26,6 +27,7 @@
 
   target.dungeon.progress=roundProgress(Math.max(0,progress));
   target.dungeon.attempts=attempts;
+  target.dungeon.points=points;
   return target.dungeon;
  }
 
@@ -82,10 +84,18 @@
   };
  };
 
+ window.addDungeonPoints=function(amount){
+  const dungeon=normalizeDungeonState(state);
+  if(!dungeon)return {added:0,points:0};
+  const added=Math.floor(finiteNonNegative(amount,0));
+  dungeon.points+=added;
+  return {added,points:dungeon.points};
+ };
+
  window.awardDungeonProgressForBattle=function(params={}){
   const added=calculateDungeonBattleProgress(params);
   if(added<=0){
-   const dungeon=normalizeDungeonState(state)||{progress:0,attempts:0};
+   const dungeon=normalizeDungeonState(state)||{progress:0,attempts:0,points:0};
    return {added:0,gainedAttempts:0,progress:dungeon.progress,attempts:dungeon.attempts};
   }
   return addDungeonProgress(added);
