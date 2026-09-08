@@ -1,6 +1,6 @@
 (function(){
  const DUNGEON_UNLOCKS={bounty:5,arena:15,tower:25};
- const DUNGEON_IMPLEMENTED={bounty:true,arena:true,tower:false};
+ const DUNGEON_IMPLEMENTED={bounty:true,arena:true,tower:true};
 
  function injectDungeonStyles(){
   if(document.getElementById("dungeon-ui-styles"))return;
@@ -82,7 +82,7 @@
     <div class="dungeon-mode-list">
       ${card("bounty","懸賞戰","隨機挑戰一名依你目前實力生成的強敵。",DUNGEON_UNLOCKS.bounty)}
       ${card("arena","競技場","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}
-      ${card("tower","試煉塔","逐層挑戰越來越強的敵人。",DUNGEON_UNLOCKS.tower)}
+      ${card("tower","虛空幻境","逐層挑戰越來越強的敵人。",DUNGEON_UNLOCKS.tower)}
     </div>
   </div>`;
  }
@@ -90,6 +90,7 @@
  window.openDungeonMode=function(mode){
   if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();
   if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();
+  if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();
  };
 
  function ensureHomeDungeonCard(main){
@@ -129,6 +130,11 @@
   if(view==="dungeon-arena"){
    normalizeHP();
    document.getElementById("main").innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";
+   if(typeof renderNav==="function")renderNav();
+   return;
+  }
+  if(view==="dungeon-void-mirage"){
+   document.getElementById("main").innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";
    if(typeof renderNav==="function")renderNav();
    return;
   }
