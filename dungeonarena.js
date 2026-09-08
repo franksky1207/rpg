@@ -5,7 +5,7 @@
   {id:"extreme",name:"極限競技場",stagePoints:[50,70,95],clearBonus:105,totalPoints:320}
  ];
  const ARENA_STAGE_NAMES=["第一戰","第二戰","第三戰"];
- const ARENA_ENEMY_NAMES=["競技場鬥士","競技場戰士","競技場勇士"];
+ const ARENA_ENEMY_NAMES=["基礎模擬單元","戰術強化單元","極限測試平台"];
 
  const ARENA_STAGE_CONFIGS={
   normal:[
@@ -72,7 +72,7 @@
   const idx=Math.max(0,Math.min(2,Number(stageIndex)||0));
   const cfg=stages[idx]||stages[0];
   let enemy={
-   name:ARENA_ENEMY_NAMES[idx]||"競技場敵人",
+   name:ARENA_ENEMY_NAMES[idx]||"模擬對手",
    level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,
    hp:Math.max(1,ceil(base.hp*cfg.hpMul)),
    atk:Math.max(1,ceil(base.damage*cfg.damageMul+p.def*.55)),
@@ -188,7 +188,7 @@
   const s=equippedStats(),stage=arenaState.stage,d=arenaState.difficulty;
   const previous=arenaState.history.length?`<div class="arena-carry">上一戰通過，HP 保留：${state.hp} / ${s.hp}</div>`:"";
   const currentReward=d?.stagePoints?.[stage]||0;
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"競技場敵人"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} 副本積分${stage===2?`　｜　三戰全通再 +${d.clearBonus}`:""}</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} 副本積分${stage===2?`　｜　三戰全通再 +${d.clearBonus}`:""}</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
  }
  function combatHtml(){
   const e=arenaState.enemy,s=equippedStats(),d=arenaState.difficulty,stage=arenaState.stage;
