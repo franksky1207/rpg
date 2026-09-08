@@ -86,18 +86,18 @@
   const configs=typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs():[];
   const cfg=configs.find(x=>x.id===difficultyId),player=createSpecialPlayerSnapshot(equippedStats());
   if(!cfg)return alert("找不到競技場資料。");
-  const reached=[100,0,0],wins=[0,0,0],timeouts=[0,0,0];
-  let totalPoints=0,clearHpTotal=0,clearTurns=0,totalTurns=0;
+  const reached=[100,0,0],wins=[0,0,0];
+  let totalPoints=0,clearHpTotal=0,totalTurns=0;
   for(let run=0;run<100;run++){
-   let hp=player.hp,points=0,cleared=true,runTurns=0;
+   let hp=player.hp,points=0,cleared=true;
    for(let stage=0;stage<3;stage++){
     if(stage>0)reached[stage]++;
     const enemy=buildArenaEnemyForDebug(difficultyId,stage,player,state.level);
-    const r=simulateFight(player,enemy,hp);runTurns+=r.turns;totalTurns+=r.turns;
+    const r=simulateFight(player,enemy,hp);totalTurns+=r.turns;
     if(r.win){wins[stage]++;hp=r.hp;points+=Number(cfg.stagePoints?.[stage])||0;}
-    else{if(r.turnLimit)timeouts[stage]++;cleared=false;break;}
+    else{cleared=false;break;}
    }
-   if(cleared){points+=Number(cfg.clearBonus)||0;clearHpTotal+=hp;clearTurns+=runTurns;}
+   if(cleared){points+=Number(cfg.clearBonus)||0;clearHpTotal+=hp;}
    totalPoints+=points;
   }
   const clearCount=wins[2],avgPoints=round1(totalPoints/100),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/100);
@@ -114,7 +114,7 @@
     <div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div>
     <div class="stat">平均總回合<b>${avgTurns}</b></div>
    </div>
-   <div class="muted" style="margin-top:8px">各戰 timeout：${timeouts[0]} / ${timeouts[1]} / ${timeouts[2]}　｜　玩家基準：${playerLine(player)}</div>
+   <div class="muted" style="margin-top:8px">玩家基準：${playerLine(player)}</div>
   </div>`);
  };
 
