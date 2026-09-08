@@ -8,6 +8,7 @@ function gmHtml(){
    <button class="btn" onclick="gmGold()">指定金幣</button>
    <button class="btn" onclick="gmUnlock()">解鎖全部地圖與怪物</button>
    <button class="btn blue" onclick="gmRefreshShop()">刷新商店</button>
+   <button class="btn blue" onclick="gmResetShopPrice()">重置商店</button>
    <button class="btn" onclick="gmHeal()">補滿 HP</button>
    <button class="btn danger" onclick="gmClearInventory()">清空背包</button>
   </div>
@@ -53,6 +54,12 @@ function gmCreateGear(){
 }
 
 function gmRefreshShop(){freeShopRefresh(currentShopMap());save(false);render()}
+function gmResetShopPrice(){
+ if(!state.shop||typeof state.shop!=="object")state.shop=newShopState();
+ state.shop.refreshIndex=0;
+ state.shop.resetAvailableAt=0;
+ save(false);render();
+}
 function gmHeal(){state.hp=equippedStats().hp;save();render()}
 function gmClearInventory(){
  if(!state.inventory.length){alert("背包目前是空的。");return}
