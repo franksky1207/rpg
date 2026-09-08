@@ -22,7 +22,7 @@
  function bountyTraitCount(tierId){
   if(tierId==="high")return 1;
   if(tierId==="danger")return Math.random()<.5?1:2;
-  return Math.random()<.7?0:1;
+  return Math.random()<.5?0:1;
  }
  function rollBountyTraits(tierId){
   const pool=(typeof MONSTER_TRAIT_IDS!=="undefined"?MONSTER_TRAIT_IDS:Object.keys(MONSTER_TRAITS||{})).slice();
