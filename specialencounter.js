@@ -29,9 +29,7 @@
   return `<section class="combat-screen"><div class="combat-head">⚠ 特殊遭遇</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${state.playerName||"玩家"} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard" style="border-color:#c99b45;box-shadow:0 0 22px rgba(201,155,69,.22);background:linear-gradient(180deg,rgba(201,155,69,.10),rgba(0,0,0,0))"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">✦ ${special.name} Lv.${enemy.level}</h2><div class="muted" style="margin:8px 0 5px">${special.description}</div><div class="muted" style="margin-bottom:12px">暴擊 ${enemy.crit||0}%　閃避 ${enemy.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${enemy.hp} / ${enemy.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">特殊戰鬥開始</div></section>`;
  }
 
- function specialFight(enemy){
-  return specialFightCore(enemy);
- }
+ function specialFight(enemy){return specialFightCore(enemy);}
 
  async function animateSpecialFight(r,startPlayerHp,playerMax,enemyMax){
   let ehp=enemyMax,php=startPlayerHp;
@@ -138,26 +136,5 @@
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
-
- runBattles=async function(count,ctx=null){
-  if(battleBusy)return;
-  battleBusy=true;
-  if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count};
-  let defeat=null;
-  for(let local=1;local<=count;local++){
-   if(await maybeHandleSpecialEncounter(ctx)){battleBusy=false;save();return;}
-   combatRound=ctx.completed+1;combatTotal=ctx.originalCount;adventureScreen="combat";render();await sleep(60);
-   let psBefore=equippedStats(),startPlayerHp=state.hp,eBefore=monsterObj(selectedMap,selectedEnemy),r=fightOnce(selectedMap,selectedEnemy);
-   if(!r.ok){alert(r.reason);break}
-   await animateFight(r,startPlayerHp,psBefore.hp,eBefore.hp,ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"");
-   if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;if(r.item)ctx.items.push({item:r.item,sold:r.sold||0})}else defeat=r;
-   ctx.completed++;ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);save();
-   if(!r.win)break;
-   if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){render();pendingContinuousBattle=ctx;battleBusy=false;showRiskModal("continuous",ctx.remaining);return}
-   if(ctx.remaining>0)await sleep(r.e.kind==="elite"?220:140);
-  }
-  battleBusy=false;save();render();setTimeout(()=>showBattleResult(ctx,defeat),0);
- };
-
  ensureSpecialEncounterModal();
 })();
