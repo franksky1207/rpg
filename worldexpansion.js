@@ -91,5 +91,13 @@
  document.title="文明戰線";
  const brand=document.getElementById("brandTitle");if(brand)brand.textContent="文明戰線";
 
+ // ui.js 在本檔之前已經完成首次 load/render，所以現有存檔要在本次頁面載入就立即遷移。
+ if(typeof state!=="undefined"&&state){
+  normalizeWorldState(state);
+  selectedMap=Math.max(0,Math.min(state.unlockedMap,MAP_COUNT-1));
+  save(false);
+ }
+ setTimeout(()=>{if(typeof render==="function")render();},0);
+
  window.normalizeWorldSaveState=normalizeWorldState;
 })();
