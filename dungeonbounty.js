@@ -1,6 +1,6 @@
 (function(){
  const BOUNTY_TIERS=[
-  {id:"normal",name:"普通懸賞",weight:60,points:80,hpMul:.95,damageMul:.92,defMul:.85,critScale:.5,critAdd:0,critCap:10,dodgeScale:.5,dodgeAdd:0,dodgeCap:8},
+  {id:"normal",name:"普通懸賞",weight:60,points:80,hpMul:1.00,damageMul:1.00,defMul:.88,critScale:.5,critAdd:0,critCap:10,dodgeScale:.5,dodgeAdd:0,dodgeCap:8},
   {id:"high",name:"高級懸賞",weight:30,points:120,hpMul:1.03,damageMul:1.06,defMul:.90,critScale:.8,critAdd:3,critCap:20,dodgeScale:.8,dodgeAdd:2,dodgeCap:18},
   {id:"danger",name:"危險懸賞",weight:10,points:180,hpMul:1.08,damageMul:1.10,defMul:.92,critScale:1,critAdd:5,critCap:28,dodgeScale:1,dodgeAdd:3,dodgeCap:22}
  ];
