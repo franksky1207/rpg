@@ -7,6 +7,7 @@ function gmHtml(){
    <button class="btn" onclick="gmLevel()">指定等級</button>
    <button class="btn" onclick="gmGold()">指定金幣</button>
    <button class="btn" onclick="gmUnlock()">解鎖全部地圖與怪物</button>
+   <button class="btn" onclick="gmRestoreLevelWorld()">回復現有等級地圖與怪物</button>
    <button class="btn blue" onclick="gmRefreshShop()">刷新商店</button>
    <button class="btn blue" onclick="gmResetShopPrice()">重置商店</button>
    <button class="btn" onclick="gmHeal()">補滿 HP</button>
@@ -39,6 +40,39 @@ function gmUnlock(){
  state.bossProgress=Array(count).fill(10);
  state.bossLocked=Array(count).fill(false);
  state.bossKilled=Array(count).fill(true);
+ save();render();
+}
+
+function gmRestoreLevelWorld(){
+ const count=MAPS.length;
+ const level=Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(state.level)||1)));
+ const currentMap=Math.max(0,Math.min(count-1,Math.floor((level-1)/5)));
+ const mapProgress=Array.from({length:count},()=>[0,0,0,0]);
+ const bossProgress=Array(count).fill(0);
+ const bossLocked=Array(count).fill(false);
+ const bossKilled=Array(count).fill(false);
+
+ for(let i=0;i<currentMap;i++){
+  mapProgress[i]=[10,10,10,10];
+  bossKilled[i]=true;
+ }
+
+ const map=MAPS[currentMap];
+ if(map){
+  const p=mapProgress[currentMap];
+  if(level>=Number(map.enemies?.[1]?.[1]||Infinity))p[0]=10;
+  if(level>=Number(map.enemies?.[2]?.[1]||Infinity))p[1]=10;
+  if(level>=Number(map.enemies?.[3]?.[1]||Infinity))p[2]=10;
+  if(level>=Number(map.enemies?.[4]?.[1]||Infinity))p[3]=10;
+ }
+
+ state.unlockedMap=currentMap;
+ state.mapProgress=mapProgress;
+ state.bossProgress=bossProgress;
+ state.bossLocked=bossLocked;
+ state.bossKilled=bossKilled;
+ selectedMap=currentMap;
+ if(typeof highestUnlockedEnemy==="function")selectedEnemy=highestUnlockedEnemy(currentMap);
  save();render();
 }
 
