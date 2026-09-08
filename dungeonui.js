@@ -156,4 +156,8 @@
    return `${base}<div class="gm dungeon-gm" style="margin-top:14px"><h3>副本進度測試</h3><div class="muted">只測試副本次數累積核心；不會進入真正副本。</div><div class="notice dungeon-gm-status" style="margin-top:10px">目前：${formatDungeonProgress(d.progress)}%　／　可挑戰 ${formatDungeonAttempts(d.attempts)} 次</div><div class="controls dungeon-gm-actions" style="margin-top:10px"><button class="btn" onclick="gmDungeonAddProgress(10)">進度 +10%</button><button class="btn" onclick="gmDungeonAddProgress(100)">進度 +100%</button><button class="btn" onclick="gmDungeonAddProgress(250)">進度 +250%</button><button class="btn" onclick="gmDungeonAddAttempt()">次數 +1</button><button class="btn" onclick="gmDungeonClearProgress()">進度歸零</button><button class="btn danger" onclick="gmDungeonResetAll()">副本資料全重置</button></div><div class="item dungeon-debug-box" style="margin-top:14px"><b>副本 Debug</b><div class="muted" style="margin-top:5px">先選地圖，再選該地圖的怪物；未來增加地圖時也不會讓怪物清單無限變長。</div><div class="controls dungeon-debug-controls" style="margin-top:10px"><label>地圖<br><select id="gmDungeonMap" class="btn dungeon-debug-select" onchange="gmDungeonChangeMap()">${gmDungeonMapOptions()}</select></label><label>怪物<br><select id="gmDungeonMonster" class="btn dungeon-debug-select" onchange="gmDungeonChangeEnemy()">${gmDungeonEnemyOptions(dungeonDebugMap)}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div></div></div>`;
   };
  }
+
+ // ui.js 在本檔之前已經做過一次初始 render；所有副本 UI wrapper 安裝完成後補畫一次，
+ // 確保首次進站與重新整理時，首頁就直接顯示副本進度／可挑戰次數。
+ if(typeof render==="function")render();
 })();
