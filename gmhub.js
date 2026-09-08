@@ -42,11 +42,16 @@
   const result=typeof getArenaGmDebugHtml==="function"?getArenaGmDebugHtml():"";
   return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力，模擬 100 次完整三連戰；不扣副本次數、不增加副本積分、不修改正式 HP 或其他資料。</div><div class="controls"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場 ×100</button></div><div id="gmArenaDebugResult" style="margin-top:12px">${result}</div>`;
  }
+ function voidMirageTestHtml(){
+  const result=typeof getVoidMirageGmDebugHtml==="function"?getVoidMirageGmDebugHtml():"";
+  const next=typeof getVoidMirageNextFloor==="function"?getVoidMirageNextFloor():1;
+  return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力測試，但虛空幻境敵人仍只依樓層生成。指定起始樓層後會每層滿血一路打到第一次失敗；不扣副本次數、不增加正式積分、不修改正式樓層進度。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageDebugResult" style="margin-top:12px">${result}</div>`;
+ }
 
  function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
  function hubHtml(){
   const manage=gmHubTab==="manage";
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${manage?`${section("一般管理",generalManagementHtml(),true)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("特殊怪測試",specialTestHtml(),true)}${section("副本進度／刷怪測試",dungeonProgressTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${manage?`${section("一般管理",generalManagementHtml(),true)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("特殊怪測試",specialTestHtml(),true)}${section("副本進度／刷怪測試",dungeonProgressTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
 
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
