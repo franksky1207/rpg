@@ -1,4 +1,7 @@
 (function(){
+ let dungeonDebugMap=0;
+ let dungeonDebugEnemy=0;
+
  function installDungeonResponsiveStyles(){
   if(document.getElementById("dungeonResponsiveStyles"))return;
   const style=document.createElement("style");
@@ -7,7 +10,7 @@
    .dungeon-status,.dungeon-result,.dungeon-gm-status{overflow-wrap:anywhere;word-break:break-word}
    .dungeon-debug-controls{align-items:end}
    .dungeon-debug-controls label{min-width:0;max-width:100%}
-   .dungeon-debug-select{display:block;max-width:min(100%,680px);min-width:280px;width:auto}
+   .dungeon-debug-select{display:block;max-width:min(100%,420px);min-width:220px;width:auto}
    .dungeon-gm-actions .btn{white-space:normal}
    #battleResultModal .modal-box,#riskModal .modal-box{max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain}
    #battleResultDetail{overflow-wrap:anywhere;word-break:break-word}
@@ -86,24 +89,42 @@
   const d=dungeonState();d.progress=0;d.attempts=0;
   refreshAfterDungeonGm("副本測試資料已全部歸零。");
  };
- function gmDungeonMonsterOptions(){
-  return MAPS.map((map,mapIdx)=>{
-   const rows=map.enemies.map((e,eIdx)=>{
-    const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";
-    return `<option value="${mapIdx}:${eIdx}">${mapIdx+1}. ${map.name}｜${kind}｜${e[0]} Lv.${e[1]}</option>`;
-   }).join("");
-   return rows;
+
+ function gmDungeonMapOptions(){
+  return MAPS.map((map,mapIdx)=>`<option value="${mapIdx}" ${mapIdx===dungeonDebugMap?"selected":""}>${mapIdx+1}. ${map.name}（Lv.${map.min}～${map.max}）</option>`).join("");
+ }
+ function gmDungeonEnemyOptions(mapIdx){
+  const safeMap=Math.max(0,Math.min(MAPS.length-1,Number(mapIdx)||0));
+  return MAPS[safeMap].enemies.map((e,eIdx)=>{
+   const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";
+   return `<option value="${eIdx}" ${eIdx===dungeonDebugEnemy?"selected":""}>${kind}｜${e[0]} Lv.${e[1]}</option>`;
   }).join("");
  }
+ window.gmDungeonChangeMap=function(){
+  const mapSelect=document.getElementById("gmDungeonMap");
+  const enemySelect=document.getElementById("gmDungeonMonster");
+  if(!mapSelect||!enemySelect)return;
+  dungeonDebugMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));
+  dungeonDebugEnemy=0;
+  enemySelect.innerHTML=gmDungeonEnemyOptions(dungeonDebugMap);
+  enemySelect.value="0";
+ };
+ window.gmDungeonChangeEnemy=function(){
+  const enemySelect=document.getElementById("gmDungeonMonster");
+  if(!enemySelect)return;
+  const max=Math.max(0,(MAPS[dungeonDebugMap]?.enemies?.length||1)-1);
+  dungeonDebugEnemy=Math.max(0,Math.min(max,Number(enemySelect.value)||0));
+ };
  window.gmDungeonDebug=function(){
   const d=dungeonState();
   const level=Math.max(1,Math.floor(Number(state.level)||1));
   const playerBaseHp=baseHP(level);
   const ps=equippedStats();
-  const raw=document.getElementById("gmDungeonMonster")?.value||"0:0";
-  const [mapIdxRaw,eIdxRaw]=raw.split(":").map(Number);
-  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number.isInteger(mapIdxRaw)?mapIdxRaw:0));
-  const eIdx=Math.max(0,Math.min(MAPS[mapIdx].enemies.length-1,Number.isInteger(eIdxRaw)?eIdxRaw:0));
+  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number(document.getElementById("gmDungeonMap")?.value)||dungeonDebugMap||0));
+  const maxEnemy=Math.max(0,MAPS[mapIdx].enemies.length-1);
+  const eIdx=Math.max(0,Math.min(maxEnemy,Number(document.getElementById("gmDungeonMonster")?.value)||0));
+  dungeonDebugMap=mapIdx;
+  dungeonDebugEnemy=eIdx;
   let enemy=null;
   try{enemy=monsterObj(mapIdx,eIdx);}catch(e){}
   if(!enemy)return alert(`副本 Debug\n目前累積：${formatDungeonProgress(d.progress)}%\n可挑戰次數：${d.attempts}\n目前沒有可計算的怪物。`);
@@ -119,7 +140,10 @@
   gmHtml=function(){
    const base=baseGmHtmlForDungeon();
    const d=dungeonState();
-   return `${base}<div class="gm dungeon-gm" style="margin-top:14px"><h3>副本進度測試</h3><div class="muted">只測試副本次數累積核心；不會進入真正副本。</div><div class="notice dungeon-gm-status" style="margin-top:10px">目前：${formatDungeonProgress(d.progress)}%　／　可挑戰 ${formatDungeonAttempts(d.attempts)} 次</div><div class="controls dungeon-gm-actions" style="margin-top:10px"><button class="btn" onclick="gmDungeonAddProgress(10)">進度 +10%</button><button class="btn" onclick="gmDungeonAddProgress(100)">進度 +100%</button><button class="btn" onclick="gmDungeonAddProgress(250)">進度 +250%</button><button class="btn" onclick="gmDungeonAddAttempt()">次數 +1</button><button class="btn" onclick="gmDungeonClearProgress()">進度歸零</button><button class="btn danger" onclick="gmDungeonResetAll()">副本資料全重置</button></div><div class="item dungeon-debug-box" style="margin-top:14px"><b>副本 Debug</b><div class="muted" style="margin-top:5px">可直接選擇全部主地圖怪物，不必先到冒險頁選怪。</div><div class="controls dungeon-debug-controls" style="margin-top:10px"><label>怪物<br><select id="gmDungeonMonster" class="btn dungeon-debug-select">${gmDungeonMonsterOptions()}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div></div></div>`;
+   dungeonDebugMap=Math.max(0,Math.min(MAPS.length-1,dungeonDebugMap));
+   const maxEnemy=Math.max(0,MAPS[dungeonDebugMap].enemies.length-1);
+   dungeonDebugEnemy=Math.max(0,Math.min(maxEnemy,dungeonDebugEnemy));
+   return `${base}<div class="gm dungeon-gm" style="margin-top:14px"><h3>副本進度測試</h3><div class="muted">只測試副本次數累積核心；不會進入真正副本。</div><div class="notice dungeon-gm-status" style="margin-top:10px">目前：${formatDungeonProgress(d.progress)}%　／　可挑戰 ${formatDungeonAttempts(d.attempts)} 次</div><div class="controls dungeon-gm-actions" style="margin-top:10px"><button class="btn" onclick="gmDungeonAddProgress(10)">進度 +10%</button><button class="btn" onclick="gmDungeonAddProgress(100)">進度 +100%</button><button class="btn" onclick="gmDungeonAddProgress(250)">進度 +250%</button><button class="btn" onclick="gmDungeonAddAttempt()">次數 +1</button><button class="btn" onclick="gmDungeonClearProgress()">進度歸零</button><button class="btn danger" onclick="gmDungeonResetAll()">副本資料全重置</button></div><div class="item dungeon-debug-box" style="margin-top:14px"><b>副本 Debug</b><div class="muted" style="margin-top:5px">先選地圖，再選該地圖的怪物；未來增加地圖時也不會讓怪物清單無限變長。</div><div class="controls dungeon-debug-controls" style="margin-top:10px"><label>地圖<br><select id="gmDungeonMap" class="btn dungeon-debug-select" onchange="gmDungeonChangeMap()">${gmDungeonMapOptions()}</select></label><label>怪物<br><select id="gmDungeonMonster" class="btn dungeon-debug-select" onchange="gmDungeonChangeEnemy()">${gmDungeonEnemyOptions(dungeonDebugMap)}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div></div></div>`;
   };
  }
 })();
