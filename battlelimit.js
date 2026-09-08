@@ -23,15 +23,16 @@
    php-=ed;logs.push(enemyCrit?`${e.name}攻擊你，暴擊造成 ${ed} 點傷害。`:`${e.name}攻擊你，造成 ${ed} 點傷害。`);
   }
   state.hp=Math.max(0,php);
+  const combatEndHp=state.hp;
   if(php<=0){
    logs.push(`你被${e.name}擊敗。`);
    if(e.kind==="boss"){state.bossLocked[mapIdx]=true;state.bossProgress[mapIdx]=0;logs.push(`Boss 再挑戰已鎖定：需再擊敗本地圖菁英怪 10 隻。`)}
-   let penalty=applyDeathPenalty(logs);save(false);return {ok:true,win:false,logs,e,penalty};
+   let penalty=applyDeathPenalty(logs);save(false);return {ok:true,win:false,logs,e,penalty,combatEndHp};
   }
   if(ehp>0){
    logs.push(`戰鬥超過 ${TURN_LIMIT} 回合，未能分出勝負，本次挑戰結束。`);
    save(false);
-   return {ok:true,win:false,logs,e,penalty:{expLost:0,dropped:null},turnLimit:true};
+   return {ok:true,win:false,logs,e,penalty:{expLost:0,dropped:null},turnLimit:true,combatEndHp};
   }
   let xp=expReward(e),gold=goldReward(e);state.gold+=gold;gainExp(xp,logs);
   if(e.kind==="boss"){
@@ -46,6 +47,6 @@
   if(e.kind==="elite"&&state.bossLocked[mapIdx])logs.push(`Boss 再挑戰進度：${state.bossProgress[mapIdx]}/10 菁英。`);
   if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
   if(it)logs.push(`${ir.sold?`自動出售 ${itemHtmlPlain(it)}，金幣 +${ir.sold}`:`獲得裝備 ${itemHtmlPlain(it)}`}`);
-  save(false);return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold};
+  save(false);return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold,combatEndHp};
  };
 })();
