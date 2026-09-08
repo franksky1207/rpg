@@ -106,7 +106,7 @@
 <script src="shopbalance.js?v=20260907-2052"></script>
 <script src="gearupgrade.js?v=20260908-0710"></script>
 <script src="specialmonsters.js?v=20260908-0645"></script>
-<script src="dungeonbounty.js?v=20260908-2048"></script>
+<script src="dungeonbounty.js?v=20260908-2200"></script>
 <script src="levelcap.js?v=20260908-0752"></script>
 <script src="specialgm.js?v=20260908-0721"></script>
 <script src="specialcore.js?v=20260908-0701"></script>
@@ -471,9 +471,9 @@ Lv39 菁英熔核巨人是曾用來人工驗證公式的高負擔案例。
 再次進入等同全新進場，會再次扣 1 次並重新生成。
 
 出現率：
-- 普通 60%
-- 高級 30%
-- 危險 10%
+- 普通 45%
+- 高級 35%
+- 危險 20%
 
 積分：
 - 普通 80
@@ -497,7 +497,7 @@ DEF ×0.88
 閃避：玩家閃避×0.5，+0，上限8%
 特性：固定 1 個
 積分：80
-權重：60
+權重：45
 ```
 
 ### 高級懸賞
@@ -509,7 +509,7 @@ DEF ×0.90
 閃避：玩家閃避×0.8，+2，上限18%
 特性：固定 1 個
 積分：120
-權重：30
+權重：35
 ```
 
 ### 危險懸賞
@@ -521,7 +521,7 @@ DEF ×0.92
 閃避：玩家閃避×1.0，+3，上限22%
 特性：50% 1 個 / 50% 2 個
 積分：180
-權重：10
+權重：20
 ```
 
 玩家實測近期大致：
@@ -710,7 +710,7 @@ gmResetShopPrice()
 - bounty unlock Lv5
 - arena Lv15、tower Lv25 卡片可見但尚未實作
 - bounty 正式進場立即扣 1 次
-- bounty 隨機 tier 60/30/10
+- bounty 隨機 tier 45/35/20
 - bounty 勝利加 80/120/180，失敗 0
 - bounty 普通／高級至少 1 trait；危險 1～2 trait
 - GM dungeon direct assignment 可 normalize 100%+
