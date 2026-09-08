@@ -1,6 +1,6 @@
 (function(){
  const DUNGEON_UNLOCKS={bounty:5,arena:15,tower:25};
- const DUNGEON_IMPLEMENTED={bounty:false,arena:false,tower:false};
+ const DUNGEON_IMPLEMENTED={bounty:true,arena:false,tower:false};
 
  function injectDungeonStyles(){
   if(document.getElementById("dungeon-ui-styles"))return;
@@ -15,8 +15,9 @@
   .dungeon-mode-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}.dungeon-mode-card{background:linear-gradient(180deg,#1d1928,#14111c);border:1px solid #5c5270;border-radius:14px;padding:16px;min-height:230px;display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,.2)}
   .dungeon-mode-card h3{margin:0;color:#d7c1ee;font-family:Georgia,"Noto Serif TC",serif}.dungeon-mode-card p{color:#d6cce3;line-height:1.65;flex:1}.dungeon-mode-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.dungeon-unlock-label{font-size:12px;color:#a99db8;white-space:nowrap}.dungeon-cost{font-size:13px;color:#b8aec6;margin:10px 0 12px}.dungeon-mode-card.locked{opacity:.52}.dungeon-entry-btn{width:100%;background:#30283d;border-color:#6d5a82;color:#eadcff}.dungeon-entry-btn:not(:disabled):hover{background:#3a2f49}.dungeon-entry-btn:disabled{cursor:not-allowed;filter:none;opacity:.68}
   .dungeon-mode-bounty{background:linear-gradient(180deg,#241b2f,#1b1724);border-color:#8a5fb0}.dungeon-mode-bounty h3{color:#c7a6e8}.dungeon-mode-bounty .dungeon-entry-btn{background:#6e4a91;border-color:#8a5fb0;color:#fff}.dungeon-mode-bounty .dungeon-entry-btn:not(:disabled):hover{background:#8159a8}
-  .dungeon-bounty-shell{background:#1b1724;color:#f4eff9}.dungeon-bounty-card{background:#241b2f;border:2px solid #8a5fb0;color:#f2e9ff}.dungeon-bounty-title{color:#c7a6e8}.dungeon-bounty-reward{color:#e6c979}.dungeon-bounty-tag-normal{color:#7891a8}.dungeon-bounty-tag-high{color:#a56ac4}.dungeon-bounty-tag-danger{color:#c45f73}
-  @media(max-width:760px){.dungeon-status-card,.dungeon-status-card.no-points{grid-template-columns:1fr;margin-bottom:10px}.dungeon-status-card>div{flex-direction:row;justify-content:space-between;align-items:center}.dungeon-mode-list{grid-template-columns:1fr;gap:10px}.dungeon-mode-card{min-height:0;padding:14px}.dungeon-summary-grid{grid-template-columns:1fr 1fr}.dungeon-page-shell{padding-bottom:10px}}
+  .dungeon-bounty-shell{background:#1b1724;color:#f4eff9;border-radius:16px;padding:18px}.dungeon-bounty-card{background:#241b2f;border:2px solid #8a5fb0;color:#f2e9ff}.dungeon-bounty-title{color:#c7a6e8;font-size:22px;font-weight:800;text-align:center;letter-spacing:.05em}.dungeon-bounty-reward{color:#e6c979}.dungeon-bounty-tag-normal{color:#7891a8}.dungeon-bounty-tag-high{color:#a56ac4}.dungeon-bounty-tag-danger{color:#c45f73}.dungeon-bounty-tier{text-align:center;font-weight:800;margin:12px 0 4px}.dungeon-bounty-ready-card,.dungeon-bounty-result-card{max-width:620px;margin:0 auto;text-align:center;padding:24px}.dungeon-bounty-ready-card h2,.dungeon-bounty-result-card h2{color:#f2e9ff;margin:8px 0 12px}.dungeon-bounty-traits{color:#d6cce3;margin:8px 0 14px}.dungeon-bounty-ready-actions,.dungeon-bounty-result-actions{justify-content:center}.dungeon-bounty-start-btn{background:#6e4a91;border-color:#8a5fb0;color:#fff}.dungeon-bounty-start-btn:hover{background:#8159a8}.dungeon-bounty-start-btn:disabled{opacity:.55;cursor:not-allowed}.dungeon-bounty-result-line{margin:9px 0;color:#d6cce3}
+  .dungeon-bounty-combat{background:linear-gradient(180deg,#1b1724,#14111c);border:1px solid #5b4f70;border-radius:16px;padding:16px}.dungeon-bounty-combat .combat-head{color:#c7a6e8}.dungeon-bounty-enemy{background:linear-gradient(180deg,#241b2f,#17121f)!important;border-color:#8a5fb0!important;box-shadow:0 18px 44px rgba(61,34,79,.35)}.dungeon-bounty-enemy h2{color:#f2e9ff}.dungeon-bounty-player{background:linear-gradient(180deg,#1b1a29,#11131b)!important;border-color:#5b5fa8!important}.dungeon-bounty-vs{color:#aeb7ff}.dungeon-bounty-message{color:#c7a6e8}
+  @media(max-width:760px){.dungeon-status-card,.dungeon-status-card.no-points{grid-template-columns:1fr;margin-bottom:10px}.dungeon-status-card>div{flex-direction:row;justify-content:space-between;align-items:center}.dungeon-mode-list{grid-template-columns:1fr;gap:10px}.dungeon-mode-card{min-height:0;padding:14px}.dungeon-summary-grid{grid-template-columns:1fr 1fr}.dungeon-page-shell{padding-bottom:10px}.dungeon-bounty-shell{padding:10px}.dungeon-bounty-ready-card,.dungeon-bounty-result-card{padding:18px 14px}.dungeon-bounty-title{font-size:20px}.dungeon-bounty-combat{padding:10px}}
   @media(max-width:420px){.dungeon-summary-grid{grid-template-columns:1fr}.dungeon-mode-head{display:block}.dungeon-unlock-label{display:block;margin-top:4px}}
   `;
   document.head.appendChild(style);
@@ -53,7 +54,7 @@
    const implemented=!!DUNGEON_IMPLEMENTED[key];
    const canEnter=unlocked&&implemented&&d.attempts>0;
    let buttonLabel="尚未解鎖";
-   if(unlocked&&!implemented)buttonLabel=key==="bounty"?"下一批開放":"尚未開放";
+   if(unlocked&&!implemented)buttonLabel="尚未開放";
    else if(unlocked&&implemented&&d.attempts<=0)buttonLabel="挑戰次數不足";
    else if(canEnter)buttonLabel=`進入${title}`;
    return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}">
@@ -85,7 +86,7 @@
  }
 
  window.openDungeonMode=function(mode){
-  if(!DUNGEON_IMPLEMENTED[mode])return;
+  if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();
  };
 
  function ensureHomeDungeonCard(main){
@@ -113,6 +114,12 @@
   if(view==="dungeon"){
    normalizeHP();
    document.getElementById("main").innerHTML=dungeonHomeHtml();
+   if(typeof renderNav==="function")renderNav();
+   return;
+  }
+  if(view==="dungeon-bounty"){
+   normalizeHP();
+   document.getElementById("main").innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";
    if(typeof renderNav==="function")renderNav();
    return;
   }
