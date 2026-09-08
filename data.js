@@ -1,5 +1,5 @@
 const SAVE_KEY="frank_text_rpg_save";
-const SAVE_VERSION=4;
+const SAVE_VERSION=5;
 const GM_PASSWORD="franksky";
 const QUALITY=[
   {k:"common",n:"普通",m:1,sm:1},
