@@ -8,6 +8,7 @@
   style.id="dungeonResponsiveStyles";
   style.textContent=`
    .dungeon-status,.dungeon-result,.dungeon-gm-status{overflow-wrap:anywhere;word-break:break-word}
+   .dungeon-home-status{max-width:680px;margin:0 auto 18px}
    .dungeon-debug-controls{align-items:end}
    .dungeon-debug-controls label{min-width:0;max-width:100%}
    .dungeon-debug-select{display:block;max-width:min(100%,420px);min-width:220px;width:auto}
@@ -16,6 +17,7 @@
    #battleResultDetail{overflow-wrap:anywhere;word-break:break-word}
    @media(max-width:760px){
     .dungeon-status,.dungeon-result{font-size:13px;line-height:1.55;padding:8px 10px}
+    .dungeon-home-status{margin-bottom:12px}
     .dungeon-gm-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
     .dungeon-gm-actions .btn{width:100%;min-width:0;padding-left:9px;padding-right:9px}
     .dungeon-debug-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
@@ -44,9 +46,9 @@
   return Number.isInteger(x)?String(x):x.toFixed(2).replace(/0+$/,"" ).replace(/\.$/,"");
  }
  function formatDungeonAttempts(n){return Math.floor(Number(n)||0).toLocaleString();}
- function dungeonStatusHtml(){
+ function dungeonStatusHtml(extraClass=""){
   const d=dungeonState();
-  return `<div class="notice dungeon-status" style="margin-top:10px"><div><b>副本次數累積進度</b>　${formatDungeonProgress(d.progress)}%</div><div style="margin-top:5px"><b>副本可挑戰次數</b>　${formatDungeonAttempts(d.attempts)} 次</div></div>`;
+  return `<div class="notice dungeon-status ${extraClass}" style="margin-top:10px"><div><b>副本次數累積進度</b>　${formatDungeonProgress(d.progress)}%</div><div style="margin-top:5px"><b>副本可挑戰次數</b>　${formatDungeonAttempts(d.attempts)} 次</div></div>`;
  }
  window.dungeonBattleResultHtml=function(ctx){
   const added=Number(ctx?.totalDungeonProgress)||0;
@@ -54,6 +56,14 @@
   const d=dungeonState();
   return `<div class="notice dungeon-result" style="margin-top:10px"><b>副本次數累積</b><div style="margin-top:5px">本次戰鬥進度 +${formatDungeonProgress(added)}%${gained?`　／　副本可挑戰次數 +${formatDungeonAttempts(gained)}`:""}</div><div class="muted" style="margin-top:5px">目前累積 ${formatDungeonProgress(d.progress)}%　／　可挑戰 ${formatDungeonAttempts(d.attempts)} 次</div></div>`;
  };
+
+ if(typeof homePage==="function"){
+  const baseHomePage=homePage;
+  homePage=function(){
+   const html=baseHomePage();
+   return html.replace('<div class="menu-grid">',`${dungeonStatusHtml("dungeon-home-status")}<div class="menu-grid">`);
+  };
+ }
 
  if(typeof playerStatusHtml==="function"){
   const basePlayerStatusHtml=playerStatusHtml;
