@@ -14,14 +14,14 @@
    {hpMul:.78,damageMul:.76,defMul:.82,critScale:.45,critAdd:0,critCap:9,dodgeScale:.40,dodgeAdd:0,dodgeCap:8,traitMode:"one"}
   ],
   hard:[
-   {hpMul:.62,damageMul:.61,defMul:.79,critScale:.40,critAdd:0,critCap:8,dodgeScale:.35,dodgeAdd:0,dodgeCap:7,traitMode:"one"},
-   {hpMul:.68,damageMul:.66,defMul:.82,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
-   {hpMul:.76,damageMul:.73,defMul:.85,critScale:.70,critAdd:2,critCap:16,dodgeScale:.65,dodgeAdd:1,dodgeCap:14,traitMode:"hard3"}
+   {hpMul:.64,damageMul:.63,defMul:.80,critScale:.40,critAdd:0,critCap:8,dodgeScale:.35,dodgeAdd:0,dodgeCap:7,traitMode:"one"},
+   {hpMul:.71,damageMul:.69,defMul:.83,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
+   {hpMul:.80,damageMul:.77,defMul:.86,critScale:.70,critAdd:2,critCap:16,dodgeScale:.65,dodgeAdd:1,dodgeCap:14,traitMode:"hard3"}
   ],
   extreme:[
-   {hpMul:.66,damageMul:.64,defMul:.81,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
-   {hpMul:.75,damageMul:.72,defMul:.85,critScale:.75,critAdd:2,critCap:18,dodgeScale:.70,dodgeAdd:1,dodgeCap:15,traitMode:"extreme2"},
-   {hpMul:.86,damageMul:.82,defMul:.88,critScale:.90,critAdd:3,critCap:23,dodgeScale:.85,dodgeAdd:2,dodgeCap:20,traitMode:"extreme3"}
+   {hpMul:.63,damageMul:.61,defMul:.80,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
+   {hpMul:.70,damageMul:.67,defMul:.83,critScale:.75,critAdd:2,critCap:18,dodgeScale:.70,dodgeAdd:1,dodgeCap:15,traitMode:"extreme2"},
+   {hpMul:.80,damageMul:.75,defMul:.86,critScale:.90,critAdd:3,critCap:23,dodgeScale:.85,dodgeAdd:2,dodgeCap:20,traitMode:"extreme3"}
   ]
  };
 
