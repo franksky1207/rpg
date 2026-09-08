@@ -16,8 +16,13 @@
   return r;
  };
 
+ function normalResultTitle(){
+  const title=document.getElementById("battleResultTitle")?.textContent||"";
+  return title==="戰鬥勝利"||title==="連續戰鬥結算"||title==="連續戰鬥階段結算";
+ }
+
  function appendNormalConversionNote(){
-  if(normalConvertedTotal<=0)return;
+  if(normalConvertedTotal<=0||!normalResultTitle())return;
   const modal=document.getElementById("battleResultModal"),detail=document.getElementById("battleResultDetail");
   if(!modal?.classList.contains("show")||!detail)return;
   if(detail.querySelector("[data-normal-exp-conversion]"))return;
