@@ -52,22 +52,32 @@
   const d=dungeonState();d.progress=0;d.attempts=0;
   refreshAfterDungeonGm("副本測試資料已全部歸零。");
  };
+ function gmDungeonMonsterOptions(){
+  return MAPS.map((map,mapIdx)=>{
+   const rows=map.enemies.map((e,eIdx)=>{
+    const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";
+    return `<option value="${mapIdx}:${eIdx}">${mapIdx+1}. ${map.name}｜${kind}｜${e[0]} Lv.${e[1]}</option>`;
+   }).join("");
+   return rows;
+  }).join("");
+ }
  window.gmDungeonDebug=function(){
   const d=dungeonState();
   const level=Math.max(1,Math.floor(Number(state.level)||1));
   const playerBaseHp=baseHP(level);
   const ps=equippedStats();
+  const raw=document.getElementById("gmDungeonMonster")?.value||"0:0";
+  const [mapIdxRaw,eIdxRaw]=raw.split(":").map(Number);
+  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number.isInteger(mapIdxRaw)?mapIdxRaw:0));
+  const eIdx=Math.max(0,Math.min(MAPS[mapIdx].enemies.length-1,Number.isInteger(eIdxRaw)?eIdxRaw:0));
   let enemy=null;
-  try{
-   enemy=typeof getPreviewEncounter==="function"?getPreviewEncounter(selectedMap,selectedEnemy):null;
-   if(!enemy)enemy=monsterObj(selectedMap,selectedEnemy);
-  }catch(e){}
+  try{enemy=monsterObj(mapIdx,eIdx);}catch(e){}
   if(!enemy)return alert(`副本 Debug\n目前累積：${formatDungeonProgress(d.progress)}%\n可挑戰次數：${d.attempts}\n目前沒有可計算的怪物。`);
   const enemyPart=(enemy.hp/playerBaseHp)*1.5;
   const minProgress=typeof calculateDungeonBattleProgress==="function"?calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:enemy.hp,playerLevel:level,playerMaxHp:ps.hp,startHp:ps.hp,endHp:ps.hp}):enemyPart;
   const nearDeathEnd=Math.max(1,Math.floor(ps.hp*.01));
   const nearDeathProgress=typeof calculateDungeonBattleProgress==="function"?calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:enemy.hp,playerLevel:level,playerMaxHp:ps.hp,startHp:ps.hp,endHp:nearDeathEnd}):enemyPart+3.96;
-  alert(`副本 Debug\n怪物：${enemy.name} Lv.${enemy.level}\n敵人最大 HP：${enemy.hp}\n玩家基礎 HP：${playerBaseHp}\n玩家實際最大 HP：${ps.hp}\n\nHP 負擔部分：${formatDungeonProgress(enemyPart)}%\n無損勝利：約 ${formatDungeonProgress(minProgress)}%\n接近殘血勝：約 ${formatDungeonProgress(nearDeathProgress)}%\n\n目前累積：${formatDungeonProgress(d.progress)}%\n可挑戰次數：${Math.floor(Number(d.attempts)||0)} 次`);
+  alert(`副本 Debug\n地圖：${MAPS[mapIdx].name}\n怪物：${enemy.name} Lv.${enemy.level}\n類型：${enemy.kind==="boss"?"Boss":enemy.kind==="elite"?"菁英":"普通"}\n敵人最大 HP：${enemy.hp}\n玩家等級：Lv.${level}\n玩家基礎 HP：${playerBaseHp}\n玩家實際最大 HP：${ps.hp}\n\nHP 負擔部分：${formatDungeonProgress(enemyPart)}%\n無損勝利：約 ${formatDungeonProgress(minProgress)}%\n接近殘血勝：約 ${formatDungeonProgress(nearDeathProgress)}%\n\n目前累積：${formatDungeonProgress(d.progress)}%\n可挑戰次數：${Math.floor(Number(d.attempts)||0)} 次`);
  };
 
  if(typeof gmHtml==="function"){
@@ -75,7 +85,7 @@
   gmHtml=function(){
    const base=baseGmHtmlForDungeon();
    const d=dungeonState();
-   return `${base}<div class="gm" style="margin-top:14px"><h3>副本進度測試</h3><div class="muted">只測試副本次數累積核心；不會進入真正副本。</div><div class="notice" style="margin-top:10px">目前：${formatDungeonProgress(d.progress)}%　／　可挑戰 ${Math.floor(Number(d.attempts)||0)} 次</div><div class="controls" style="margin-top:10px"><button class="btn" onclick="gmDungeonAddProgress(10)">進度 +10%</button><button class="btn" onclick="gmDungeonAddProgress(100)">進度 +100%</button><button class="btn" onclick="gmDungeonAddProgress(250)">進度 +250%</button><button class="btn" onclick="gmDungeonAddAttempt()">次數 +1</button><button class="btn" onclick="gmDungeonClearProgress()">進度歸零</button><button class="btn danger" onclick="gmDungeonResetAll()">副本資料全重置</button><button class="btn blue" onclick="gmDungeonDebug()">副本 Debug</button></div></div>`;
+   return `${base}<div class="gm" style="margin-top:14px"><h3>副本進度測試</h3><div class="muted">只測試副本次數累積核心；不會進入真正副本。</div><div class="notice" style="margin-top:10px">目前：${formatDungeonProgress(d.progress)}%　／　可挑戰 ${Math.floor(Number(d.attempts)||0)} 次</div><div class="controls" style="margin-top:10px"><button class="btn" onclick="gmDungeonAddProgress(10)">進度 +10%</button><button class="btn" onclick="gmDungeonAddProgress(100)">進度 +100%</button><button class="btn" onclick="gmDungeonAddProgress(250)">進度 +250%</button><button class="btn" onclick="gmDungeonAddAttempt()">次數 +1</button><button class="btn" onclick="gmDungeonClearProgress()">進度歸零</button><button class="btn danger" onclick="gmDungeonResetAll()">副本資料全重置</button></div><div class="item" style="margin-top:14px"><b>副本 Debug</b><div class="muted" style="margin-top:5px">可直接選擇全部主地圖怪物，不必先到冒險頁選怪。</div><div class="controls" style="margin-top:10px;align-items:end"><label>怪物<br><select id="gmDungeonMonster" class="btn">${gmDungeonMonsterOptions()}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div></div></div>`;
   };
  }
 })();
