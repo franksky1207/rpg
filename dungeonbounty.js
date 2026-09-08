@@ -5,9 +5,9 @@
   {id:"danger",name:"危險懸賞",weight:20,points:180,hpMul:1.08,damageMul:1.10,defMul:.92,critScale:1,critAdd:5,critCap:28,dodgeScale:1,dodgeAdd:3,dodgeCap:22}
  ];
  const BOUNTY_NAMES={
-  normal:["荒野獵犬","鐵殼巨蟲","黑霧遊魂","裂牙獸","腐木守衛"],
-  high:["血牙獵手","深淵戰獸","黑鐵執行者","腐化守衛","暴風魔狼"],
-  danger:["腐化巨獸","災厄獵殺者","深淵暴君","赤血魔將","終末獸王"]
+  normal:["武裝逃逸者","非法改裝兵","黑市護衛","走私突擊手","失控安保機"],
+  high:["裝甲追緝犯","戰區破壞手","非法火力平台","禁區滲透指揮","深空走私艦長"],
+  danger:["都市級威脅體","殲滅協議載體","戰爭失控核心","軌道破壞平台","深空封鎖母艦"]
  };
  let bountyState={phase:"idle",tier:null,enemy:null,result:null,startHp:0,playerMaxHp:0};
 
