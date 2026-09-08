@@ -1,5 +1,6 @@
 (function(){
  let bountyDebugHtml="";
+ let arenaDebugHtml="";
  let dungeonDebugMap=0;
  let dungeonDebugEnemy=0;
 
@@ -14,48 +15,28 @@
   const progress=Number(document.getElementById("gmDungeonProgress")?.value);
   const attempts=Math.floor(Number(document.getElementById("gmDungeonAttempts")?.value));
   const points=Math.floor(Number(document.getElementById("gmDungeonPoints")?.value));
-  if(!Number.isFinite(progress)||progress<0||!Number.isFinite(attempts)||attempts<0||!Number.isFinite(points)||points<0){
-   alert("請輸入 0 以上的數字。");
-   return;
-  }
-  const d=dungeonState();
-  d.progress=progress;
-  d.attempts=attempts;
-  d.points=points;
-  ensureDungeonProgressState();
-  save();
-  render();
+  if(!Number.isFinite(progress)||progress<0||!Number.isFinite(attempts)||attempts<0||!Number.isFinite(points)||points<0){alert("請輸入 0 以上的數字。");return;}
+  const d=dungeonState();d.progress=progress;d.attempts=attempts;d.points=points;ensureDungeonProgressState();save();render();
  };
 
  window.gmDungeonChangeMap=function(){
   const mapSelect=document.getElementById("gmDungeonMap"),enemySelect=document.getElementById("gmDungeonMonster");
   if(!mapSelect||!enemySelect)return;
-  dungeonDebugMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));
-  dungeonDebugEnemy=0;
+  dungeonDebugMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));dungeonDebugEnemy=0;
   const map=MAPS[dungeonDebugMap];
-  enemySelect.innerHTML=map.enemies.map((e,eIdx)=>{
-   const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";
-   return `<option value="${eIdx}">${kind}｜${e[0]} Lv.${e[1]}</option>`;
-  }).join("");
+  enemySelect.innerHTML=map.enemies.map((e,eIdx)=>{const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";return `<option value="${eIdx}">${kind}｜${e[0]} Lv.${e[1]}</option>`;}).join("");
   enemySelect.value="0";
  };
-
  window.gmDungeonChangeEnemy=function(){
-  const enemySelect=document.getElementById("gmDungeonMonster");
-  if(!enemySelect)return;
+  const enemySelect=document.getElementById("gmDungeonMonster");if(!enemySelect)return;
   dungeonDebugEnemy=Math.max(0,Math.min(MAPS[dungeonDebugMap].enemies.length-1,Number(enemySelect.value)||0));
  };
-
  window.gmDungeonDebug=function(){
-  const d=dungeonState();
-  const level=Math.max(1,Math.floor(Number(state.level)||1));
-  const playerBaseHp=baseHP(level),ps=equippedStats();
+  const d=dungeonState(),level=Math.max(1,Math.floor(Number(state.level)||1)),playerBaseHp=baseHP(level),ps=equippedStats();
   const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number(document.getElementById("gmDungeonMap")?.value)||dungeonDebugMap||0));
   const eIdx=Math.max(0,Math.min(MAPS[mapIdx].enemies.length-1,Number(document.getElementById("gmDungeonMonster")?.value)||0));
-  dungeonDebugMap=mapIdx;
-  dungeonDebugEnemy=eIdx;
-  let enemy=null;
-  try{enemy=monsterObj(mapIdx,eIdx);}catch(e){}
+  dungeonDebugMap=mapIdx;dungeonDebugEnemy=eIdx;
+  let enemy=null;try{enemy=monsterObj(mapIdx,eIdx);}catch(e){}
   if(!enemy)return alert("目前沒有可計算的怪物。");
   const enemyPart=(enemy.hp/playerBaseHp)*1.5;
   const minProgress=calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:enemy.hp,playerLevel:level,playerMaxHp:ps.hp,startHp:ps.hp,endHp:ps.hp});
@@ -66,61 +47,77 @@
 
  function traitDetail(enemy){
   if(!enemy?.traits?.length)return "無";
-  return enemy.traits.map(id=>{
-   const t=MONSTER_TRAITS?.[id];
-   return t?`${t.name}（${t.desc}）`:id;
-  }).join("、");
+  return enemy.traits.map(id=>{const t=MONSTER_TRAITS?.[id];return t?`${t.name}（${t.desc}）`:id;}).join("、");
  }
  function playerLine(p){return `HP ${p.hp}　ATK ${p.atk}　DEF ${p.def}　暴擊 ${p.crit}%　閃避 ${p.dodge}%`;}
  function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
- function showDebug(html){
-  bountyDebugHtml=html;
-  const box=document.getElementById("gmBountyDebugResult");
-  if(box)box.innerHTML=html;
- }
+ function showBountyDebug(html){bountyDebugHtml=html;const box=document.getElementById("gmBountyDebugResult");if(box)box.innerHTML=html;}
+ function showArenaDebug(html){arenaDebugHtml=html;const box=document.getElementById("gmArenaDebugResult");if(box)box.innerHTML=html;}
 
  window.gmPreviewBounty=function(tierId){
-  const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());
-  const enemy=buildBountyEnemyForDebug(tierId,player,state.level);
+  const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats()),enemy=buildBountyEnemyForDebug(tierId,player,state.level);
   if(!tier||!enemy)return alert("找不到懸賞資料。");
-  showDebug(`<div class="notice"><b>${tier.name}・${enemy.name}</b><div class="muted" style="margin-top:6px">玩家：${playerLine(player)}</div><div class="muted" style="margin-top:4px">怪物：${enemyLine(enemy)}</div><div class="muted" style="margin-top:4px">特性：${traitDetail(enemy)}</div><div class="muted" style="margin-top:4px">獎勵：${tier.points} 副本積分</div></div>`);
+  showBountyDebug(`<div class="notice"><b>${tier.name}・${enemy.name}</b><div class="muted" style="margin-top:6px">玩家：${playerLine(player)}</div><div class="muted" style="margin-top:4px">怪物：${enemyLine(enemy)}</div><div class="muted" style="margin-top:4px">特性：${traitDetail(enemy)}</div><div class="muted" style="margin-top:4px">獎勵：${tier.points} 副本積分</div></div>`);
  };
-
- function simulateBountyFight(player,enemy){
-  let php=player.hp,ehp=enemy.hp,turn=0;
+ function simulateFight(player,enemy,startHp=player.hp){
+  let php=Math.max(0,Number(startHp)||0),ehp=enemy.hp,turn=0;
   while(php>0&&ehp>0&&turn<200){
    turn++;
-   if(Math.random()*100>=enemy.dodge){
-    let pd=calcDamage(player.atk,enemy.def);
-    if(Math.random()*100<player.crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
-    ehp-=pd;
-   }
+   if(Math.random()*100>=enemy.dodge){let pd=calcDamage(player.atk,enemy.def);if(Math.random()*100<player.crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);ehp-=pd;}
    if(ehp<=0)break;
    if(Math.random()*100<player.dodge)continue;
    const enemyAtk=enemy.berserk&&ehp/enemy.hp<.5?ceil(enemy.atk*1.20):enemy.atk;
-   let ed=calcDamage(enemyAtk,player.def);
-   if(Math.random()*100<enemy.crit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);
-   php-=ed;
+   let ed=calcDamage(enemyAtk,player.def);if(Math.random()*100<enemy.crit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);php-=ed;
   }
   return {win:ehp<=0,turnLimit:php>0&&ehp>0,hp:Math.max(0,php),turns:turn};
  }
-
  window.gmSimulateBounty100=function(tierId){
-  const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());
-  if(!tier)return alert("找不到懸賞資料。");
+  const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());if(!tier)return alert("找不到懸賞資料。");
   const summary={wins:0,losses:0,timeouts:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<100;i++){
-   const enemy=buildBountyEnemyForDebug(tierId,player,state.level);
-   const r=simulateBountyFight(player,enemy);
-   summary.totalTurns+=r.turns;
-   if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
-   else{summary.losses++;if(r.turnLimit)summary.timeouts++;}
+   const enemy=buildBountyEnemyForDebug(tierId,player,state.level),r=simulateFight(player,enemy);
+   summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}else{summary.losses++;if(r.turnLimit)summary.timeouts++;}
   }
-  const winRate=round1(summary.wins);
-  const avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0;
-  const avgTurns=round1(summary.totalTurns/100);
-  showDebug(`<div class="notice"><b>${tier.name}・100 次模擬</b><div class="stats" style="margin-top:10px"><div class="stat">勝利<b>${summary.wins}</b></div><div class="stat">失敗<b>${summary.losses}</b></div><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div><div class="stat">200 回合未決<b>${summary.timeouts}</b></div></div><div class="muted" style="margin-top:8px">玩家基準：${playerLine(player)}</div></div>`);
+  const winRate=round1(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/100);
+  showBountyDebug(`<div class="notice"><b>${tier.name}・100 次模擬</b><div class="stats" style="margin-top:10px"><div class="stat">勝利<b>${summary.wins}</b></div><div class="stat">失敗<b>${summary.losses}</b></div><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div><div class="stat">200 回合未決<b>${summary.timeouts}</b></div></div><div class="muted" style="margin-top:8px">玩家基準：${playerLine(player)}</div></div>`);
+ };
+
+ window.gmSimulateArena100=function(difficultyId){
+  const configs=typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs():[];
+  const cfg=configs.find(x=>x.id===difficultyId),player=createSpecialPlayerSnapshot(equippedStats());
+  if(!cfg)return alert("找不到競技場資料。");
+  const reached=[100,0,0],wins=[0,0,0],timeouts=[0,0,0];
+  let totalPoints=0,clearHpTotal=0,clearTurns=0,totalTurns=0;
+  for(let run=0;run<100;run++){
+   let hp=player.hp,points=0,cleared=true,runTurns=0;
+   for(let stage=0;stage<3;stage++){
+    if(stage>0)reached[stage]++;
+    const enemy=buildArenaEnemyForDebug(difficultyId,stage,player,state.level);
+    const r=simulateFight(player,enemy,hp);runTurns+=r.turns;totalTurns+=r.turns;
+    if(r.win){wins[stage]++;hp=r.hp;points+=Number(cfg.stagePoints?.[stage])||0;}
+    else{if(r.turnLimit)timeouts[stage]++;cleared=false;break;}
+   }
+   if(cleared){points+=Number(cfg.clearBonus)||0;clearHpTotal+=hp;clearTurns+=runTurns;}
+   totalPoints+=points;
+  }
+  const clearCount=wins[2],avgPoints=round1(totalPoints/100),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/100);
+  const conditional=(stage)=>reached[stage]?round1(wins[stage]/reached[stage]*100):0;
+  showArenaDebug(`<div class="notice"><b>${cfg.name}・100 次完整三連戰</b>
+   <div class="stats" style="margin-top:10px">
+    <div class="stat">第1戰通過<b>${wins[0]}%</b></div>
+    <div class="stat">第2戰到達<b>${reached[1]}%</b></div>
+    <div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div>
+    <div class="stat">第3戰到達<b>${reached[2]}%</b></div>
+    <div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div>
+    <div class="stat">全通率<b>${clearCount}%</b></div>
+    <div class="stat">平均積分<b>${avgPoints}</b></div>
+    <div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div>
+    <div class="stat">平均總回合<b>${avgTurns}</b></div>
+   </div>
+   <div class="muted" style="margin-top:8px">各戰 timeout：${timeouts[0]} / ${timeouts[1]} / ${timeouts[2]}　｜　玩家基準：${playerLine(player)}</div>
+  </div>`);
  };
 
  window.getBountyGmDebugHtml=function(){return bountyDebugHtml;};
+ window.getArenaGmDebugHtml=function(){return arenaDebugHtml;};
 })();
