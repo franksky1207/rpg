@@ -19,6 +19,8 @@
    .gm-hub-body{padding:14px}
    .gm-hub-body .item{margin-top:0}
    .gm-hub-body input,.gm-hub-body select{max-width:100%}
+   .gm-hub .btn.gm-create{background:#8a641f;border-color:#c99a43;color:#fff3cf}
+   .gm-hub .btn.gm-create:hover{background:#9b7227;border-color:#ddb05b}
    .gm-hub-close{margin-top:14px}
    .gm-hub-note{margin-bottom:10px}
    @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}}
@@ -56,21 +58,21 @@
    <button class="btn danger" onclick="gmClearInventory()">清空背包</button>
   </div>
   <div class="item" style="margin-top:12px"><b>商店管理</b><div class="controls"><button class="btn blue" onclick="gmRefreshShop()">刷新商店</button><button class="btn" onclick="gmResetShop()">重置商店（100 金幣）</button></div></div>
-  <div class="item" style="margin-top:12px"><b>產生裝備</b><div class="controls" style="align-items:end"><label>品質<br><select id="gmGearQuality" class="btn">${g.quality}</select></label><label>等級<br><select id="gmGearLevel" class="btn">${g.level}</select></label><label>部位<br><select id="gmGearType" class="btn">${g.type}</select></label><button class="btn primary" onclick="gmCreateGear()">產生裝備</button></div></div>`;
+  <div class="item" style="margin-top:12px"><b>產生裝備</b><div class="controls" style="align-items:end"><label>品質<br><select id="gmGearQuality" class="btn">${g.quality}</select></label><label>等級<br><select id="gmGearLevel" class="btn">${g.level}</select></label><label>部位<br><select id="gmGearType" class="btn">${g.type}</select></label><button class="btn gm-create" onclick="gmCreateGear()">產生裝備</button></div></div>`;
  }
  function dungeonManagementHtml(){
   const d=dungeonStateSafe();
   return `<div class="notice gm-hub-note">目前：${Math.round((Number(d.progress)||0)*100)/100}%　／　${Math.floor(Number(d.attempts)||0)} 次　／　${Math.floor(Number(d.points)||0)} 積分</div>
-  <div class="controls" style="align-items:end"><label>副本次數累積進度 %<br><input id="gmDungeonProgress" type="number" min="0" step="0.01" value="${d.progress}" style="width:170px"></label><label>副本可挑戰次數<br><input id="gmDungeonAttempts" type="number" min="0" step="1" value="${d.attempts}" style="width:150px"></label><label>副本積分<br><input id="gmDungeonPoints" type="number" min="0" step="1" value="${d.points}" style="width:150px"></label><button class="btn primary" onclick="gmApplyDungeonValues()">套用</button></div>`;
+  <div class="controls" style="align-items:end"><label>副本次數累積進度 %<br><input id="gmDungeonProgress" type="number" min="0" step="0.01" value="${d.progress}" style="width:170px"></label><label>副本可挑戰次數<br><input id="gmDungeonAttempts" type="number" min="0" step="1" value="${d.attempts}" style="width:150px"></label><label>副本積分<br><input id="gmDungeonPoints" type="number" min="0" step="1" value="${d.points}" style="width:150px"></label><button class="btn blue" onclick="gmApplyDungeonValues()">套用</button></div>`;
  }
  function specialTestHtml(){
-  return `<div class="muted gm-hub-note">依目前角色實際能力生成。GM 測試為沙盒模式，離開結算後會還原正式資料。</div><div class="controls" style="align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn">${specialOptions()}</select></label><button class="btn primary" onclick="gmStartSpecialBattle()">開始測試（100 次）</button></div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力生成。GM 測試為沙盒模式，離開結算後會還原正式資料。</div><div class="controls" style="align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn">${specialOptions()}</select></label><button class="btn blue" onclick="gmStartSpecialBattle()">開始測試（100 次）</button></div>`;
  }
  function dungeonProgressTestHtml(){
   return `<div class="muted gm-hub-note">測試主地圖怪物會產生多少副本次數累積進度，不會進入真正副本。</div><div class="controls dungeon-debug-controls" style="align-items:end"><label>地圖<br><select id="gmDungeonMap" class="btn dungeon-debug-select" onchange="gmHubChangeDungeonMap()">${dungeonMapOptions()}</select></label><label>怪物<br><select id="gmDungeonMonster" class="btn dungeon-debug-select">${dungeonEnemyOptions(0)}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div>`;
  }
  function bountyTestHtml(){
-  return `<div class="muted gm-hub-note">依目前角色能力生成；不扣副本次數、不改正式角色資料。</div><div class="controls"><button class="btn" onclick="gmPreviewBounty('normal')">生成普通懸賞</button><button class="btn" onclick="gmPreviewBounty('high')">生成高級懸賞</button><button class="btn" onclick="gmPreviewBounty('danger')">生成危險懸賞</button></div><div class="controls" style="margin-top:10px"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞 ×100</button></div><div id="gmBountyDebugResult" style="margin-top:12px"></div>`;
+  return `<div class="muted gm-hub-note">依目前角色能力生成；不扣副本次數、不改正式角色資料。</div><div class="controls"><button class="btn gm-create" onclick="gmPreviewBounty('normal')">生成普通懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('high')">生成高級懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('danger')">生成危險懸賞</button></div><div class="controls" style="margin-top:10px"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞 ×100</button></div><div id="gmBountyDebugResult" style="margin-top:12px"></div>`;
  }
 
  function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
