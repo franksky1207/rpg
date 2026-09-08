@@ -1,6 +1,6 @@
 (function(){
  const DUNGEON_UNLOCKS={bounty:5,arena:15,tower:25};
- const DUNGEON_IMPLEMENTED={bounty:true,arena:false,tower:false};
+ const DUNGEON_IMPLEMENTED={bounty:true,arena:true,tower:false};
 
  function injectDungeonStyles(){
   if(document.getElementById("dungeon-ui-styles"))return;
@@ -87,6 +87,7 @@
 
  window.openDungeonMode=function(mode){
   if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();
+  if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();
  };
 
  function ensureHomeDungeonCard(main){
@@ -120,6 +121,12 @@
   if(view==="dungeon-bounty"){
    normalizeHP();
    document.getElementById("main").innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";
+   if(typeof renderNav==="function")renderNav();
+   return;
+  }
+  if(view==="dungeon-arena"){
+   normalizeHP();
+   document.getElementById("main").innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";
    if(typeof renderNav==="function")renderNav();
    return;
   }
