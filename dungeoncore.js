@@ -88,7 +88,8 @@
     continue;
    }
 
-   let ed=calcDamage(Number(enemy.atk)||1,ps.def);
+   const enemyAtk=enemy.berserk&&ehp/Math.max(1,Number(enemy.hp)||1)<.5?ceil((Number(enemy.atk)||1)*1.20):(Number(enemy.atk)||1);
+   let ed=calcDamage(enemyAtk,ps.def);
    const enemyCrit=Math.random()*100<(Number(enemy.crit)||0);
    if(enemyCrit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);
    php-=ed;
