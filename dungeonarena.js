@@ -14,9 +14,9 @@
    {hpMul:.78,damageMul:.76,defMul:.82,critScale:.45,critAdd:0,critCap:9,dodgeScale:.40,dodgeAdd:0,dodgeCap:8,traitMode:"one"}
   ],
   hard:[
-   {hpMul:.63,damageMul:.62,defMul:.80,critScale:.40,critAdd:0,critCap:8,dodgeScale:.35,dodgeAdd:0,dodgeCap:7,traitMode:"one"},
-   {hpMul:.69,damageMul:.67,defMul:.82,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
-   {hpMul:.77,damageMul:.74,defMul:.85,critScale:.70,critAdd:2,critCap:16,dodgeScale:.65,dodgeAdd:1,dodgeCap:14,traitMode:"hard3"}
+   {hpMul:.64,damageMul:.62,defMul:.80,critScale:.40,critAdd:0,critCap:8,dodgeScale:.35,dodgeAdd:0,dodgeCap:7,traitMode:"one"},
+   {hpMul:.70,damageMul:.68,defMul:.83,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
+   {hpMul:.78,damageMul:.75,defMul:.85,critScale:.70,critAdd:2,critCap:16,dodgeScale:.65,dodgeAdd:1,dodgeCap:14,traitMode:"hard3"}
   ],
   extreme:[
    {hpMul:.63,damageMul:.61,defMul:.80,critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
