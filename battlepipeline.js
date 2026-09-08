@@ -20,7 +20,9 @@
  runBattles=async function(count,ctx=null){
   if(battleBusy)return;
   battleBusy=true;
-  if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count};
+  if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count,totalDungeonProgress:0,gainedDungeonAttempts:0};
+  if(typeof ctx.totalDungeonProgress!=="number")ctx.totalDungeonProgress=0;
+  if(typeof ctx.gainedDungeonAttempts!=="number")ctx.gainedDungeonAttempts=0;
   let defeat=null;
 
   for(let local=1;local<=count;local++){
@@ -38,11 +40,25 @@
    render();
    await sleep(60);
 
-   const psBefore=equippedStats(),startPlayerHp=state.hp;
+   const psBefore=equippedStats(),startPlayerHp=state.hp,playerLevelBefore=state.level;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
    if(!r.ok){alert(r.reason);break}
 
    await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"");
+
+   const dungeonResult=typeof awardDungeonProgressForBattle==="function"?awardDungeonProgressForBattle({
+    source:"main",
+    win:r.win===true,
+    enemyMaxHp:encounter.hp,
+    playerLevel:playerLevelBefore,
+    playerMaxHp:psBefore.hp,
+    startHp:startPlayerHp,
+    endHp:typeof r.combatEndHp==="number"?r.combatEndHp:state.hp
+   }):null;
+   if(dungeonResult){
+    ctx.totalDungeonProgress+=Number(dungeonResult.added)||0;
+    ctx.gainedDungeonAttempts+=Number(dungeonResult.gainedAttempts)||0;
+   }
 
    if(r.win){
     ctx.wins++;
