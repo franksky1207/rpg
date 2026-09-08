@@ -55,7 +55,8 @@
 
  function priorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
-  return `<div class="notice" style="margin-bottom:10px"><b>原連續戰鬥已提前結束</b><div class="muted" style="margin-top:5px">已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣與裝備均保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">前段 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">前段金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}`;
+  const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
+  return `<div class="notice" style="margin-bottom:10px"><b>原連續戰鬥已提前結束</b><div class="muted" style="margin-top:5px">已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣、裝備與副本進度均保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">前段 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">前段金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
  }
 
  function showSkipSettlement(ctx){
@@ -63,7 +64,8 @@
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(!title||!detail||!modal)return;
   title.textContent="特殊遭遇已略過";
-  detail.innerHTML=`<div class="notice"><b>已完成 ${ctx.completed} / ${ctx.originalCount} 場</b><div class="muted" style="margin-top:5px">未知特殊遭遇已略過，剩餘戰鬥取消；以下獎勵已保留。</div></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">金幣<b>+${ctx.totalGold||0}</b></div></div>${dropListHtml(ctx.items||[])}`;
+  const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
+  detail.innerHTML=`<div class="notice"><b>已完成 ${ctx.completed} / ${ctx.originalCount} 場</b><div class="muted" style="margin-top:5px">未知特殊遭遇已略過，剩餘戰鬥取消；以下獎勵與副本進度已保留。</div></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">金幣<b>+${ctx.totalGold||0}</b></div></div>${dropListHtml(ctx.items||[])}${dungeon}`;
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
   modal.classList.add("show");
  }
