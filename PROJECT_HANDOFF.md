@@ -2,7 +2,9 @@
 
 > **最高原則：GitHub `main` branch 的實際程式碼永遠是唯一真實來源。**
 >
-> 本文件是給下一個 ChatGPT／後續開發對話使用的「快速承接層」。若本文與 `main` 實際程式碼衝突，**一律以 `main` 為準**；接手後應先讀本文，再重新讀取要修改的正式檔案。
+> 本文件是給下一個 ChatGPT／後續開發對話使用的「快速承接層」。若本文與 `main` 實際程式碼衝突，**一律以 `main` 為準**。接手後應先讀本文，再重新讀取本次要修改的正式檔案與 `index.html` 實際載入順序。
+>
+> 本文件已依 2026-09-09 最新 `main` 重新整理，舊交接內容中與目前程式衝突的 Lv50、10 張地圖、舊 UI wrapper、舊 GM UI、舊連續戰鬥與舊奇幻地圖等資訊已移除或修正。
 
 ---
 
@@ -13,80 +15,146 @@
 - 正式分支：`main`
 - GitHub Pages：`https://franksky1207.github.io/rpg/`
 - 技術：純前端 HTML / CSS / JavaScript + `localStorage`
-- `SAVE_KEY="frank_text_rpg_save"`
-- `SAVE_VERSION=7`
-- 目前正式 `MAX_LEVEL=100`
+- `SAVE_KEY = "frank_text_rpg_save"`
+- `SAVE_VERSION = 7`
+- `MAX_LEVEL = 100`
 - GM 密碼：`franksky`
-- 必須同時支援桌機與手機
+- 正式世界：Lv1～100、20 張地圖
+- 必須同時支援桌機與手機；使用者會以 iPhone Safari 與桌機實際測試
 
 遊戲核心方向：**傳統、簡單、文字型 RPG**。
-只保留：打怪、升級、金幣、裝備、地圖、Boss、副本、特殊怪、GM 管理／測試。
-目前不要主動加入：職業、技能樹、複雜任務、大量劇情、多角色、PvP、排行榜、登入／每日系統等。
+目前主要系統：打怪、升級、金幣、裝備、地圖、Boss、副本、特殊怪、商店、GM 管理／測試。
+
+目前不要主動加入：職業、技能樹、複雜任務、大量劇情、多角色、PvP、排行榜、登入／每日系統等，除非使用者之後明確要求。
 
 世界規劃：
-- Lv1～50：地球戰爭
-- Lv51～100：太陽系戰爭
-- 未來規劃 Lv101～150：銀河系戰爭
-- 之後仍可延伸更高等級
+- Lv1～50：地球戰爭（已完成）
+- Lv51～100：太陽系戰爭（已完成）
+- Lv101～150：銀河系戰爭（規劃中，**尚未實作**）
 
 ---
 
-## 2. 給下一個 ChatGPT 的操作規範（非常重要）
+## 2. 給下一個 ChatGPT 的操作規範（必讀）
 
 ### 2.1 執行語意
 
 如果使用者說：
 - 「做」
 - 「修改」
-- 「修」
+- 「修正」
 - 「執行」
-- 「第一批／第二批／第三批／第四批」
-- 「可以」且上下文已是明確執行內容
+- 「第 1 批／第 2 批／第 3 批」
+- 「可以」且上下文已經明確是在要求執行
 
-→ **可以直接修改 GitHub `main`，不需要再要求使用者手動貼程式碼。**
+→ **可以直接修改 GitHub `main`，不需要再要求使用者貼程式碼，也不需要重複確認已經講清楚的內容。**
 
 如果使用者說：
 - 「先不要改」
 - 「先建議」
 - 「先討論」
-- 「你覺得呢」
+- 「你覺得如何／你覺得呢」
 
-→ 只討論，不寫入 GitHub。
+→ **只能討論，不得寫入 GitHub。**
 
 ### 2.2 每次修改流程
 
-1. 修改前先重新抓 `main` 的相關檔案。
-2. 確認目前真正正式來源在哪裡，避免憑舊對話印象直接改。
-3. 優先**直接修改正式來源**。
-4. 不要為同一功能另做第二套公式、第二套 GM 邏輯、第二套裝備判斷。
-5. 修改後重新讀取關鍵變更檔案確認。
-6. `.js` / `.css` 有修改時，必須同步更新 `index.html` 的 `?v=` cache-bust。
-7. GitHub 修改完成不等於瀏覽器真機測試完成；Pages 實際操作仍由使用者測。
-8. 重要功能完成後，更新本文件。
+1. **修改前先重新抓目前 `main` 的相關檔案。**
+2. 同時檢查 `index.html` 的實際 script load order；不要只看函式第一次出現在哪裡。
+3. 找出目前真正的正式來源與最後有效覆蓋。
+4. 優先直接修改正式來源。
+5. **不要額外新增 wrapper、fallback、alias、第二套公式、第二套 GM 邏輯或第二套 UI 產生器來繞過正式來源。**
+6. 若發現舊程式已完全失效且沒有 consumer，應直接刪除，而不是留著當「備用」。
+7. 修改後重新抓取修改過的檔案確認內容與 SHA。
+8. `.js` / `.css` 有修改時，必須同步更新 `index.html` 對應 `?v=` cache-bust。
+9. 更新 `index.html` 後，再重新讀一次確認載入路徑與版本正確。
+10. GitHub 寫入完成不代表真機測試完成；Pages 實際 UI／Safari 行為仍由使用者最後測試。
+11. 重要系統或架構修改後，應同步更新本 `PROJECT_HANDOFF.md`。
 
 ### 2.3 架構原則
 
 - **main 是唯一真實來源。**
-- classic `<script>` 頂層 `let/const` 可能互撞；新增獨立模組時優先 IIFE。
-- script load order 是架構的一部分，不可隨意重排。
-- `ui.js` 歷史上曾因大改造成整頁空白；一般情況下避免大範圍重寫。
-- 但若某功能的正式來源本來就在核心檔案，且使用者要求「不要多繞路」，應直接修正式函式，不要新增 `newXXX()` + override。
-- **裝備系統尤其禁止保留舊公式 fallback、新舊格式判斷、wrapper 疊舊函式。**
-- 現在使用者願意在重大裝備改版後重置，因此不需要為已淘汰的舊裝備格式額外保留 migration。
+- classic `<script>` 的 load order 是架構的一部分。
+- 頂層 `let/const` 可能互撞；獨立模組通常使用 IIFE。
+- 不要看到舊檔名或舊交接描述就假設它仍有效；先看 `index.html` 是否還載入，以及後面是否有正式覆蓋。
+- 現在最重要的方向是「單一正式來源」，避免再次發生前面改對、後面舊檔又蓋回去的問題。
+- 裝備、戰鬥、怪物特性、GM 模擬尤其禁止再複製公式。
+- 若要清理現有 wrapper，必須先確認它是否仍負責正式功能（例如 `levelcap.js`、`dungeonui.js`、`traitlock.js`、`traitdrop.js`、`gearupgrade.js` 目前仍有有效責任，不能因為看到 wrapper 就直接刪）。
 
 ---
 
-## 3. Lv1～100 世界正式結構
+## 3. 目前 `index.html` 正式載入架構
+
+2026-09-09 最新 `main` 已不再載入：
+- `battleflow.js`
+- `playername.js`
+- `level100.js`
+- `worldexpansion.js`
+- `uifix.js`
+- 更早已刪除：`specialgm.js`、`battlelimit.js`、`risksettlement.js`
+
+目前主要載入順序（以 `index.html` 實際內容為準）：
+
+```text
+data.js
+worldmaps-earth.js
+worldmaps-solar.js
+engine.js
+combatcore.js
+dungeonprogress.js
+dungeoncore.js
+ui.js
+settlementui.js
+balance.js
+traits.js
+traitlock.js
+traitdrop.js
+gmtools.js
+shopbalance.js
+gearupgrade.js
+specialmonsters.js
+dungeonbounty.js
+dungeonarena.js
+dungeonvoid.js
+dungeonvoidui.js
+levelcap.js
+specialcore.js
+specialgmbatch.js
+dungeongm.js
+gmhub.js
+dungeonvoidgmmanage.js
+dungeonvoidgmui.js
+level100balance.js
+specialencounter.js
+battlepipeline.js
+specialguide.js
+levelcapresult.js
+dungeonui.js
+adventureprogressui.js
+```
+
+重要理解：
+- `data.js` 現在只放 SAVE／品質與 `MAPS=[]`，不再放舊奇幻地圖。
+- `worldmaps-earth.js` + `worldmaps-solar.js` 是正式 20 張地圖來源。
+- `engine.js` 是核心狀態、裝備、獎勵、商店等基礎來源。
+- `balance.js` 後載入後正式覆蓋主線 `monsterBase()` / `monsterObj()` 的怪物平衡。
+- `level100balance.js` 後載入後正式覆蓋 `expNeed()`。
+- `traits.js` 是怪物特性正式核心；`traitlock.js` 再處理主線預覽特性持久化。
+- `combatcore.js` 是正式共用戰鬥核心。
+- `ui.js` 現在直接承擔主線冒險正式 UI，不再依靠舊 playername／battleflow／level100／worldexpansion／uifix 補丁。
+
+---
+
+## 4. Lv1～100 正式世界
 
 每 5 級 1 張地圖；每張固定：
 - 3 隻普通怪
 - 1 隻菁英
 - 1 隻 Boss
 
-共：
+總計：
 - 20 張地圖
-- 100 隻主線怪物
-- 每張地圖 5 種對應裝備名稱
+- 100 隻主線怪
+- 每張地圖 5 個裝備名稱（對應 5 部位）
 
 ### 地球戰爭 Lv1～50
 
@@ -114,120 +182,184 @@
 19. 外太陽系邊境 Lv91～95
 20. 太陽系終極戰線 Lv96～100
 
-正式怪物／裝備名稱一律以：
+怪物／裝備名稱一律以：
 - `worldmaps-earth.js`
 - `worldmaps-solar.js`
 
-為準，不要從舊 `data.js` 的歷史地圖名稱推斷正式內容。
+為準。
+
+`data.js` 裡舊「新手平原／幽暗森林／魔王領域」等奇幻地圖已正式刪除。
+
+### 世界狀態與舊存檔
+
+`engine.js` 已正式用 `MAPS.length` 建立：
+- `mapProgress`
+- `bossProgress`
+- `bossLocked`
+- `bossKilled`
+
+舊存檔若陣列較短，`normalizeWorldState()` 會補齊目前 20 張地圖所需資料，不會再靠 `worldexpansion.js` 補丁。
 
 ---
 
-## 4. 玩家、主線怪、傷害
+## 5. 玩家與主線怪正式能力
 
-### 玩家基礎能力
+### 5.1 玩家基礎能力
 
 ```js
-baseHP(l)=ceil(110+12*(l-1))
-baseATK(l)=ceil(15+2.2*(l-1))
-baseDEF(l)=ceil(7+1.2*(l-1))
+baseHP(l)  = ceil(110 + 12*(l-1))
+baseATK(l) = ceil(15 + 2.2*(l-1))
+baseDEF(l) = ceil(7 + 1.2*(l-1))
 ```
 
-### 主線怪正式有效基礎（`balance.js`）
+玩家裝備後能力：
+- HP / ATK / DEF 直接加總
+- crit / dodge 直接加總並最低限制 0
+- **玩家 crit / dodge 沒有 30% 硬上限**
+
+### 5.2 主線怪正式基礎（`balance.js`）
 
 ```js
-hp=ceil(62+16.2*l)
-atk=ceil(10.5+2.45*l)
-def=ceil(3.2+.92*l)
+hp  = ceil(62 + 16.2*l)
+atk = ceil(10.5 + 2.45*l)
+def = ceil(3.2 + 0.92*l)
 ```
 
 階段倍率 HP / ATK / DEF：
-- 第1普通：1.00 / 1.00 / 1.00
-- 第2普通：1.12 / 1.10 / 1.08
-- 第3普通：1.30 / 1.22 / 1.16
+- 第 1 普通：1.00 / 1.00 / 1.00
+- 第 2 普通：1.12 / 1.10 / 1.08
+- 第 3 普通：1.30 / 1.22 / 1.16
 - 菁英：1.62 / 1.36 / 1.24
 - Boss：2.12 / 1.48 / 1.30
 
-怪物 style：
-- tank：HP ×1.25、ATK ×0.9
-- attack：HP ×0.85、ATK ×1.2
+style：
+- `tank`：HP ×1.25、ATK ×0.90
+- `attack`：HP ×0.85、ATK ×1.20
 
-傷害公式：
+### 5.3 傷害與暴擊
 
 ```js
-max(1,ceil((atk-def*.55)*random(.95~1.05)))
+calcDamage(atk,def)
+= max(1, ceil((atk - def*0.55) * random(0.95~1.05)))
 ```
 
-暴擊傷害：1.5×。
+- 暴擊倍率：`1.5×`
+- 每次傷害最低 1
+- 正式共用常數：`CRIT_DAMAGE_MULTIPLIER = 1.5`
+- 怪物暴擊上限：30%
+- 怪物閃避上限：30%
 
 ---
 
-## 5. EXP 與獎勵
+## 6. 正式共用戰鬥核心
 
-### EXP
+正式核心：`combatcore.js -> runCombatCore(player, enemy, startHp, options)`。
 
-`sameExp(l)=ceil(25+4*l)`。
+此核心目前被：
+- 主線
+- 副本
+- 特殊怪
+- GM 戰鬥模擬
 
-正式永久曲線在 `level100balance.js`：
+共用。
+
+重要規則：
+- **沒有 200 回合上限。**
+- 舊 `battlelimit.js` 已刪除。
+- 舊 `traits.js` 裡那套 200 回合 `fightOnce()` 已清除。
+- `VOID_MIRAGE_GM_SIM_LIMIT = 10000` 是「GM 最多連續模擬樓層數」的安全限制，**不是戰鬥回合上限，不要誤刪。**
+- `options.logs=false` 供 GM 無動畫批量模擬。
+- 主線傳 `mainlineLogs:true`，保留主線動畫 parser 需要的閃避文字格式。
+
+`combatcore.js` 的 `fightOnce()` 負責主線 settlement：
+- 勝利 EXP／金幣
+- 主線進度
+- Boss 解鎖下一地圖
+- 掉落
+- 死亡懲罰
+- Boss 戰敗重新鎖定
+
+副本與特殊怪則各自保留模式 settlement wrapper，但戰鬥計算共用 `runCombatCore()`。
+
+---
+
+## 7. EXP、金幣與滿等
+
+### 7.1 EXP 基礎
 
 ```js
-const x=Math.pow(level-1,1.8);
-const mid=Math.pow(64,1.8);
-factor=5+195*(x/(x+mid));
-expNeed(level)=ceil(sameExp(level)*factor);
+sameExp(l) = ceil(25 + 4*l)
 ```
 
-同級普通怪約需擊殺：
-- Lv1：5
-- Lv10：約10.5
-- Lv20：約24.7
-- Lv30：約42.8
-- Lv40：約61.7
-- Lv50：約79.5
-- Lv60：約95.4
-- Lv75：約115.2
-- Lv100：約138.9
-- 高等漸近約200隻
-
-等級差 EXP 倍率：
-- 怪高玩家 ≥5：1.3
-- +3～4：1.2
-- +1～2：1.1
-- 同級：1
-- -1～-2：0.9
-- -3～-5：0.6
+等級差倍率：
+- 怪高玩家 ≥5：1.30
+- +3～4：1.20
+- +1～2：1.10
+- 同級：1.00
+- -1～-2：0.90
+- -3～-5：0.60
 - -6～-10：0.25
-- < -10：0.05
+- 低超過 10 級：0.05
 
-怪物種類 EXP 倍率：普通1／菁英2／Boss5。
+種類倍率：
+- 普通：1
+- 菁英：2
+- Boss：5
 
-### 金幣
+### 7.2 永久 EXP 曲線（正式有效來源：`level100balance.js`）
 
 ```js
-goldBase(l)=ceil(6+4*l)
+x   = (level-1)^1.8
+mid = 64^1.8
+factor = 5 + 195 * x/(x+mid)
+expNeed(level) = ceil(sameExp(level) * factor)
 ```
 
-種類倍率：普通1／菁英2.5／Boss6。
+設計意義：
+- Lv1 同級普通怪約 5 隻升級
+- 隨等級提高逐步變難
+- 高等級漸近約 200 隻同級普通怪，不會無限爆增
+
+`window.level100ExpFactor` 目前仍存在，但只是 `expProgressionFactor` 的相容 alias；不要把它誤認為第二套 EXP 公式。
+
+### 7.3 金幣
+
+```js
+goldBase(l) = ceil(6 + 4*l)
+```
+
+種類倍率：
+- 普通：1
+- 菁英：2.5
+- Boss：6
+
+### 7.4 滿等 Lv100
+
+- `MAX_LEVEL=100` 已在 `engine.js` 正式核心化。
+- `level100.js` 已刪除。
+- Lv100 不再累積 EXP。
+- 主線與特殊怪在玩家戰鬥開始時已滿等時，該場原本 EXP 會 **1:1 轉成金幣**。
+- `levelcap.js` 負責這個滿等轉換；它現在不再設定 Lv50，也不再覆蓋 `gainExp()` / `applyDeathPenalty()`。
+- `levelcapresult.js` 負責在主線結算顯示「滿等 EXP 轉金幣」資訊。
 
 ---
 
-## 6. 裝備系統 —— 2026-09-09 最新正式基準
+## 8. 裝備系統最新正式基準
 
-這一節非常重要，舊裝備公式已淘汰。
+### 8.1 品質
 
-### 6.1 品質
+| 品質 | q | 能力倍率 | 出售倍率 |
+|---|---:|---:|---:|
+| 普通 | 0 | 1.00 | 1.0 |
+| 優良 | 1 | 1.15 | 1.4 |
+| 稀有 | 2 | 1.35 | 2.0 |
+| 史詩 | 3 | 1.60 | 3.2 |
+| 傳說 | 4 | 1.95 | 5.0 |
+| 神話 | 5 | 2.40 | 8.0 |
 
-品質：
-- 普通 q0：倍率1
-- 優良 q1：1.15
-- 稀有 q2：1.35
-- 史詩 q3：1.6
-- 傳說 q4：1.95
-- 神話 q5：2.4
+神話不可自動出售。
 
-出售倍率：1 / 1.4 / 2 / 3.2 / 5 / 8。
-神話永不自動出售。
-
-### 6.2 正式部位
+### 8.2 五個部位
 
 ```js
 EQUIPMENT_TYPES=["weapon","helmet","armor","shoes","accessory"]
@@ -237,22 +369,19 @@ EQUIPMENT_TYPES=["weapon","helmet","armor","shoes","accessory"]
 - 武器：ATK
 - 頭盔：HP
 - 鎧甲：DEF
-- 鞋子：**HP**（舊制主閃避已淘汰）
-- 飾品：**暴擊**
+- 鞋子：HP
+- 飾品：暴擊
 
-### 6.3 ATK / DEF / HP 主能力
+### 8.3 主能力公式
 
 ```js
-weapon = ceil((3+1.55*level)*qualityMultiplier)
-helmet = ceil((8+2.5*level)*qualityMultiplier)
-armor  = ceil((1+0.65*level)*qualityMultiplier)
-shoes  = ceil((8+2.5*level)*qualityMultiplier)
+weapon = ceil((3 + 1.55*level) * qualityMultiplier)
+helmet = ceil((8 + 2.5*level) * qualityMultiplier)
+armor  = ceil((1 + 0.65*level) * qualityMultiplier)
+shoes  = ceil((8 + 2.5*level) * qualityMultiplier)
 ```
 
-鞋子目前與頭盔使用同一套 HP 主能力公式。
-
-### 6.4 飾品主暴擊（只看品質，不看裝備 Lv）
-
+飾品主暴擊只看品質、不看裝備 Lv：
 - 普通：1～2%
 - 優良：2～3%
 - 稀有：3～5%
@@ -260,11 +389,8 @@ shoes  = ceil((8+2.5*level)*qualityMultiplier)
 - 傳說：7～9%
 - 神話：9～10%
 
-區間內抽**整數百分比**。
+### 8.4 詞條池
 
-### 6.5 一般詞條
-
-詞條池：
 - 武器：ATK / 暴擊 / HP
 - 頭盔：HP / DEF / 閃避
 - 鎧甲：DEF / HP / 閃避
@@ -274,611 +400,749 @@ shoes  = ceil((8+2.5*level)*qualityMultiplier)
 詞條數：
 - 普通：0
 - 優良：1
-- 稀有：50% 1條 / 50% 2條
+- 稀有：50% 1 條 / 50% 2 條
 - 史詩：2
-- 傳說：50% 2條 / 50% 3條
+- 傳說：50% 2 條 / 50% 3 條
 - 神話：3
 
-**同一件裝備的詞條禁止重複。**
-`rollAffixes()` 目前直接從 pool `splice()` 抽走，舊 `(used[stat]||0)<2` 已移除。
+**同一件裝備詞條不重複**；`rollAffixes()` 直接從 pool `splice()`。
 
-ATK / DEF / HP 詞條仍隨 Lv + 品質成長：
+ATK / DEF / HP 詞條：
 
 ```js
-ATK = ceil((1+0.45*level)*m)
-DEF = ceil((0.5+0.20*level)*m)
-HP  = ceil((3+0.9*level)*m)
+ATK = ceil((1 + 0.45*level) * m)
+DEF = ceil((0.5 + 0.20*level) * m)
+HP  = ceil((3 + 0.9*level) * m)
 ```
 
-暴擊／閃避詞條**不再跟 Lv 成長**，只依品質：
-- 普通：沒有詞條
+暴擊／閃避詞條只依品質、不依裝備 Lv：
 - 優良：1%
 - 稀有：1～2%
 - 史詩：2～3%
 - 傳說：3～4%
 - 神話：4～5%
 
-舊 `.04*level`、舊鞋／飾 `.12*level` 都不應再出現。
-
-### 6.6 暴擊／閃避自然來源上限概念
-
-裝備來源理論最大：
-- 暴擊：武器暴擊詞條5 + 飾品主暴10 + 飾品暴擊詞條5 = **20%**
-- 閃避：頭盔5 + 鎧甲5 + 鞋5 + 飾品5 = **20%**
-
-未來 VIP 規劃（尚未實作）：
-- V0～V20
-- 每級 +0.5% 暴擊、+0.5% 閃避
-- V20 再 +10% / +10%
-
-所以未來玩家自然理論值：20%裝備 +10%VIP = 30%。
-
-**玩家端目前 `equippedStats()` 不做舊 30/25 硬截斷。**
-只做 >=0 的正常化，讓未來 VIP 可自然疊加。
-
-### 6.7 怪物安全 cap 與玩家分離
-
-目前怪物端獨立使用：
+### 8.5 裝備評分（正式比較標準）
 
 ```js
-MONSTER_MAX_CRIT_RATE=30
-MONSTER_MAX_DODGE_RATE=30
+rateWeight = 20 + 0.5*itemLevel
+score = ATK*5 + DEF*5 + HP
+      + crit*rateWeight
+      + dodge*rateWeight
 ```
 
-用途是怪物安全上限，不等於玩家上限。
-特殊怪、懸賞、競技場、虛空幻境、怪物特性都應使用怪物專用 cap，不要重新拿它去截玩家。
-
-### 6.8 正式裝備評分（唯一公式）
-
-```text
-Score =
-ATK × 5
-+ DEF × 5
-+ HP
-+ 暴擊 × (20 + 0.5 × 裝備Lv)
-+ 閃避 × (20 + 0.5 × 裝備Lv)
-```
-
-暴擊與閃避同權重，且權重隨 item level 成長。
-
-這一套 `equipmentScore()` 是整個遊戲唯一正式裝備比較公式，應用於：
-- 是否為升級裝
-- 自動保留升級裝
+`gearupgrade.js` 目前以這個 `equipmentScore()` 做：
+- 是否是真正升級
 - 一鍵裝備較強裝備
-- 一鍵出售較低裝備
-- 背包排序／比較
-- 商店比較
-- 遺失裝備比較
-- 「可提升」提示
-- 特殊怪弱勢部位判斷
-- 任何 GM 若需要裝備評分的地方
+- 一鍵賣出較低／同評分裝備
+- 判定「若新裝備更強就自動保留」
 
-`gearupgrade.js` 已移除舊 `projectedStats()/combatValue()` 另一套戰力公式。
+### 8.6 掉落
 
-### 6.9 裝備舊制清理狀態
+主線掉落率：
+- 普通：25%
+- 菁英：60%
+- Boss：100%
 
-已刻意清掉：
-- 舊鞋子主閃避公式
-- 舊飾品主暴擊隨 Lv 公式
-- 舊暴／閃詞條隨 Lv 公式
-- 同詞條可重複兩次邏輯
-- 舊裝備 `legacy` 顯示 fallback
-- `worldexpansion.js` 的舊裝備名稱 migration
-- `level100.js` 對 `gmCreateGear()` 的後載入覆寫
+裝備 Lv offset：
+- 普通：`[-2,-1,0,0,+1]`
+- 菁英：`[-1,0,0,+1]`
+- Boss：`[-1,0,0,+1,+2]`
+- 最終 clamp 到 `1～MAX_LEVEL`
 
-不要再為舊裝備格式加回 fallback；若測試需要，直接重置存檔。
+有特性的主線怪由 `traitdrop.js` 接手掉落：
+- 1 特性：成功掉裝後 15% 機率品質 +1
+- 2 特性：成功掉裝後 30% 機率品質 +1
+- 神話不再升階
+- **舊 Lv50 掉裝上限 Bug 已修正為 `MAX_LEVEL`**
 
 ---
 
-## 7. 怪物特性
+## 9. 商店
 
-7種：
+正式刷新成本：
+
+```text
+100 → 200 → 400 → 800 → 1600 → 3200 → 6400 → 12800
+```
+
+- 到 12800 後可重置回 100
+- 重置冷卻 1 小時
+- 買一件商品會讓刷新價格下降 1 級
+- 首次解鎖新地圖會免費刷新
+- 商店不會出神話
+- 商店一次 3 件
+
+`shopbalance.js` 正式品質：
+- 普通 25%
+- 優良 40%
+- 稀有 25%
+- 史詩 8%
+- 傳說 2%
+- 神話 0%
+
+商店三件部位：
+- 第 1 件：目前最弱部位
+- 第 2 件：目前次弱部位
+- 第 3 件：隨機部位
+
+「最弱」以 `equipmentScore()` 判斷。
+
+死亡遺失裝備：
+- 穿戴裝備有 30% 機率隨機掉一件
+- 放進商店「遺失裝備贖回」
+- 贖回價：`ceil(item.buy * 2)`
+- 可永久放棄
+
+---
+
+## 10. 主線地圖推進與 Boss
+
+每張地圖：前三普通、菁英、Boss。
+
+解鎖流程：
+- 第 1 怪打 10 隻 → 第 2 怪
+- 第 2 怪打 10 隻 → 第 3 怪
+- 第 3 怪打 10 隻 → 菁英
+- 菁英進度到 10 且角色達地圖最大等級 → Boss 出現
+
+Boss：
+- 第一次勝利會解鎖下一張地圖並免費刷新下一地圖商店
+- Boss 勝利後可再次挑戰
+- Boss 戰敗：Boss 重新鎖定，需再擊敗該地圖菁英 10 隻才能重開
+- 最後一張地圖不會再解鎖不存在的第 21 張地圖
+
+主線怪卡現在直接顯示：
+- 名稱／等級
+- 菁英／Boss badge
+- 特性
+- HP / ATK / DEF
+- 目前 `x/10` 進度
+- Boss 等級不足／Boss 再挑戰規則說明
+
+舊 `mapProgressHtml()` 摺疊進度區已不再是正式冒險頁呈現方式；進度直接整合進怪物卡。
+
+---
+
+## 11. 主線連續戰鬥（2026-09-09 最新規則）
+
+### 11.1 解鎖表
+
+```js
+Lv1  -> 單場
+Lv6  -> 5 場
+Lv11 -> 10 場
+Lv16 -> 15 場
+Lv21 -> 20 場
+Lv26 -> 25 場
+```
+
+所以：
+- Lv1～5：1
+- Lv6～10：1 / 5
+- Lv11～15：1 / 5 / 10
+- Lv16～20：1 / 5 / 10 / 15
+- Lv21～25：1 / 5 / 10 / 15 / 20
+- Lv26～100：1 / 5 / 10 / 15 / 20 / 25
+
+Boss 永遠只允許單場。
+
+### 11.2 下一階段提示
+
+未滿 Lv26 時，戰鬥次數區下方顯示下一個解鎖，例如：
+
+```text
+Lv.11 將開放 10 場
+Lv.21 將開放 20 場
+```
+
+Lv26 已開放 25 場後提示消失；Boss 不顯示連戰下一階段提示。
+
+### 11.3 UI
+
+- 桌機：目前可用按鈕在同一橫列，依數量等分。
+- 手機：目前可用按鈕也保持同一橫列，最多 6 格，不改成直向堆疊。
+- 不顯示尚未解鎖的灰色按鈕。
+
+### 11.4 連戰回血規則
+
+主線連續戰鬥現在是「便利功能」，不是累積 HP 生存挑戰：
+
+1. 開始整批戰鬥前補滿 HP。
+2. 每場勝利後，**下一場開始前補滿 HP**。
+3. 副本進度必須先用本場真實 `startHp` / `combatEndHp` 計算，再回血。
+4. 任一場戰敗立即終止整批，剩餘場次取消。
+5. 戰敗照正常死亡懲罰。
+6. 戰敗後補滿 HP，返回同地圖的怪物／戰鬥次數準備畫面。
+7. 前面已完成場次的 EXP、金幣、裝備與副本進度保留。
+
+舊 `<30% HP` 暫停、風險 modal、繼續／休息／階段重啟流程已正式刪除；不要重建。
+
+`battlepipeline.js` 是目前正式連戰流程。
+
+---
+
+## 12. 怪物特性正式單一核心
+
+正式資料：`traits.js`
+
+7 種特性：
 - 強壯：HP +20%
 - 兇猛：ATK +15%
 - 堅硬：DEF +20%
 - 迅捷：閃避 +8%
 - 致命：暴擊 +8%
-- 狂暴：HP <50% 後 ATK +20%
+- 狂暴：HP 低於 50% 時 ATK +20%
 - 巨體：HP +30%、ATK +5%、閃避 -5%
 
-主線特性數：
-- Boss：15% 0條 / 55% 1條 / 30% 2條
-- 菁英：35 / 50 / 15
-- 普通：70 / 25 / 5
-
-怪物特性後暴／閃以怪物專用 `MONSTER_MAX_*` 做安全限制。
-
----
-
-## 8. 主線推進與冒險 UI
-
-主線每張地圖：
-- 前4隻怪每隻需要 10 次擊殺推進
-- Boss 解鎖另受角色等級與 Boss 重挑戰規則限制
-
-`adventureprogressui.js` 已把舊的「地圖推進折疊區」概念改掉：
-- 進度直接顯示在目前可見怪物卡片上
-- 不再另外使用舊 progress fold 作為主要呈現
-
-GM 有「指定解鎖到等級關卡」：
-- 輸入 target Lv
-- target 以前視為已完成
-- target 本身保持「剛開始」
-- target 若為 5 的倍數，代表 Boss 已出現但未擊殺（仍受角色等級顯示規則約束）
-- 不修改角色等級／EXP／金幣／裝備／副本資料
-
----
-
-## 9. 副本共通系統
-
-正式用語：
-- 副本次數累積進度
-- 副本可挑戰次數
-- 副本積分
+正式套用函式：
 
 ```js
-state.dungeon={progress:0,attempts:0,points:0}
+applyMonsterTraits(enemy, traitIds)
 ```
 
-每滿100%換1次挑戰，overflow 保留；attempts 可囤。
+重要：
+- 會保留敵人原本的 crit / dodge，再加特性。
+- 最後 monster crit / dodge clamp 到 0～30%。
+- 主線、懸賞、競技場、虛空幻境現在共用這一套，不再各寫一份特性效果公式。
 
-主線勝利取得副本進度：
+主線特性數量機率：
+- 普通：70% 0 特性、25% 1、5% 2
+- 菁英：35% 0、50% 1、15% 2
+- Boss：15% 0、55% 1、30% 2
 
-```text
-(敵人最大HP / 玩家該場開始等級 baseHP) * 1.5%
-+ 本場實際損血率 * 4%
-```
-
-敗北、timeout、特殊怪、真正副本不給副本進度。
-
-共通副本規則：
-- 進場消耗1次
-- 不給主線 EXP／金幣／一般裝備
-- 不影響主線 kill／Boss／地圖進度
-- 副本死亡不吃主線死亡懲罰
-- 結束後預設滿血
-- 200回合保護由 `dungeoncore.js`
-
-解鎖：
-- 懸賞戰 Lv5
-- 競技場 Lv15
-- 虛空幻境 Lv25
+`traitlock.js` 會把主線預覽到的 traits 存在 `state.monsterTraitPreview`，避免重 render 就洗掉同一隻怪的預覽特性；真正打完後會清掉對應 preview。
 
 ---
 
-## 10. 懸賞戰 —— 平衡凍結
+## 13. 副本共通系統
 
-Lv5 解鎖。
-
-出現率：
-- 普通45%
-- 高級35%
-- 危險20%
-
-積分：80 / 120 / 180。
-
-正式名稱：
-- 普通：武裝逃逸者／非法改裝兵／黑市護衛／走私突擊手／失控安保機
-- 高級：裝甲追緝犯／戰區破壞手／非法火力平台／禁區滲透指揮／深空走私艦長
-- 危險：都市級威脅體／殲滅協議載體／戰爭失控核心／軌道破壞平台／深空封鎖母艦
-
-目前平衡已多輪測試，除非使用者明確重開，**不要主動改平衡**。
-
-怪物暴／閃由玩家能力縮放，但有各 tier 自己 cap，再套怪物安全 cap。
-
----
-
-## 11. 競技場 —— 平衡接受
-
-Lv15 解鎖；三場之間不回血。
-
-敵名：
-- 基礎模擬單元
-- 戰術強化單元
-- 極限測試平台
-
-積分：
-- 普通 30 / 40 / 50 +40 =160
-- 困難 40 / 55 / 70 +65 =230
-- 極限 50 / 70 / 95 +105 =320
-
-目前平衡已接受，除非使用者明確要求，不要無理由調整。
-
----
-
-## 12. 特殊怪
-
-正式名稱：
-- 稀有資源聚合體
-- 誘餌補給艙
-- 終止協議單元
-- 機率增幅信標
-- 封存警戒機
-- 裝備保全單元
-- 黑市武裝頭目
-- 戰利品回收者
-- 流動交易代理人
-
-特殊怪能力主要由玩家實際能力動態建立，暴／閃已使用怪物專用上限。
-
-GM 可進行特殊怪 ×100 沙盒測試，不修改正式角色資料。
-
----
-
-## 13. 虛空幻境 —— 正式可玩
-
-Lv25 解鎖，無限樓層。
-
-### 13.1 核心能力
-
-敵人不看玩家等級／能力，只看樓層 `F`：
+正式副本狀態：
 
 ```js
-E = 24 + F / 10
-HP  = ceil((62 + 16.2 * E) * 2.40)
-ATK = ceil((10.5 + 2.45 * E) * 2.15)
-DEF = ceil((3.2 + 0.92 * E) * 2.65)
+state.dungeon = {
+  progress,
+  attempts,
+  points
+}
 ```
 
-- 基礎暴擊10%
-- 基礎閃避8%
-- 普通層1個特性
-- 每10層 Boss 2個不同特性
-- 特性後再套怪物安全 cap
-- 失敗後重打同層，特性重新抽
+### 13.1 副本次數累積進度
 
-### 13.2 首通積分
+只有 **主線勝利** 會加：
 
 ```js
-points = round(15 + 1.75 * sqrt(floor - 1))
-if (floor % 10 === 0) points *= 2
+敵人HP部分 = (enemyMaxHp / playerBaseHp) * 1.5
+受傷部分   = ((startHp - endHp) / playerMaxHp) * 4
+總增加     = 敵人HP部分 + 受傷部分
 ```
 
-只在首次成功通過該層時發放。
+- 只計算 `source="main"` 且 `win=true`
+- 每累積 100% → 自動轉成 1 次副本可挑戰次數
+- 連戰每場都先算實際受傷，再回血，因此不會把受傷部分洗成 0
 
-### 13.3 正式流程
+### 13.2 副本 run 共通規則
 
-- `state.dungeon.voidMirage.highestCleared` 記錄最高通關樓層
-- 1 次副本可挑戰次數 = 1 次完整爬塔
+`dungeoncore.js`：
+- `beginDungeonRun({cost:1})`：扣 1 次、進場補滿 HP
+- `finishDungeonRun()`：預設結束後補滿 HP
+- `dungeonFightCore()`：薄 wrapper，戰鬥直接呼叫 `runCombatCore()`
+
+副本首頁目前解鎖：
+- 懸賞戰：Lv5
+- 競技場：Lv15
+- 虛空幻境：Lv25
+
+---
+
+## 14. 懸賞戰
+
+解鎖 Lv5；每次消耗 1 副本次數。
+
+敵人依「目前玩家實際能力快照」動態生成，不是固定主線公式。
+
+共同基底 `specialBaseEnemyFromPlayer()`：
+
+```js
+def = ceil(playerATK * 0.45)
+playerHit = max(1, playerATK - def*0.55)
+baseHP = ceil(playerHit * 6)
+baseDamage = playerHP / 8
+```
+
+三種懸賞：
+
+### 普通懸賞
+- 出現權重 45
+- 積分 80
+- HP ×1.00
+- damage ×1.00
+- DEF ×0.88
+- 1 個特性
+
+### 高級懸賞
+- 權重 35
+- 積分 120
+- HP ×1.03
+- damage ×1.06
+- DEF ×0.90
+- 1 個特性
+
+### 危險懸賞
+- 權重 20
+- 積分 180
+- HP ×1.08
+- damage ×1.10
+- DEF ×0.92
+- 50% 1 特性 / 50% 2 特性
+
+crit / dodge 依玩家實際 crit / dodge 經各 tier scale / add / cap 計算，再套共用怪物特性，最後仍受怪物 30% 上限。
+
+敵人 level 使用 `clampGameLevel()`，舊 Lv50 metadata 限制已修正。
+
+---
+
+## 15. 競技場
+
+解鎖 Lv15；每次消耗 1 副本次數。
+
+規則：
+- 三戰連續
+- **場與場之間不回血**
+- 每戰敵人仍依玩家實際能力快照生成
+- 通過每戰取得階段積分；三戰全通再加 bonus
+
+### 積分
+
+普通：
+- 30 + 40 + 50
+- 全通 bonus +40
+- 總計 160
+
+困難：
+- 40 + 55 + 70
+- bonus +65
+- 總計 230
+
+極限：
+- 50 + 70 + 95
+- bonus +105
+- 總計 320
+
+### 正式階段倍率
+
+普通：
+- 戰1 HP .60 / damage .60 / DEF .78
+- 戰2 .69 / .68 / .80
+- 戰3 .78 / .76 / .82
+
+困難：
+- 戰1 .64 / .62 / .80
+- 戰2 .70 / .68 / .83
+- 戰3 .78 / .75 / .85
+
+極限：
+- 戰1 .63 / .61 / .80
+- 戰2 .70 / .67 / .83
+- 戰3 .80 / .75 / .86
+
+特性數量依各 stage `traitMode` 決定，實際效果統一走 `applyMonsterTraits()`。
+
+敵人 level 使用 `clampGameLevel()`，舊 Lv50 限制已修正。
+
+---
+
+## 16. 虛空幻境
+
+解鎖 Lv25；每次進場消耗 1 副本次數。
+
+核心規則：
+- 無限樓層
 - 從 `highestCleared + 1` 開始
-- 每層開始前滿血
-- 勝利：存進度、給首通分、滿血、下一層
-- 敗北／200回合未決：本次結束
-- 可強制退出；已取得樓層與積分保留，不退次數
+- **每層開始前完全補滿 HP**
+- 每層勝利後也補滿 HP，再進下一層
+- 普通樓層固定 1 特性
+- 每 10 層為 Boss 樓層，固定 2 個不重複特性
+- 可要求「本層結束後強制退出」
+- 首通才推進 highestCleared 與給積分
 
-### 13.4 UI
+等效強度：
 
-正式 UI 由 `dungeonvoidui.js` + `uifix.js` 等目前載入層共同呈現。
-目前使用者已接受手機版虛空 UI。
+```js
+equivalentPower(floor) = 24 + floor/10
+```
 
-### 13.5 GM
+基礎能力：
 
-已有：
-- 查看指定樓層能力
-- 從指定樓層連續爬塔模擬
-- 虛空樓層管理（重設／移動／爬樓並依規則給分）
+```js
+HP  = ceil((62 + 16.2*e) * 2.40)
+ATK = ceil((10.5 + 2.45*e) * 2.15)
+DEF = ceil((3.2 + 0.92*e) * 2.65)
+crit = 10
+dodge = 8
+```
 
-相關：
-- `dungeonvoidgmmanage.js`
-- `dungeonvoidgmui.js`
-- `dungeongm.js`
-- `gmhub.js`
+再套 `applyMonsterTraits()`。
+
+首通積分：
+
+```js
+points = round(15 + 1.75*sqrt(floor-1))
+```
+
+Boss 樓層 ×2。
+
+`dungeonvoidui.js` 現在已直接包含原本 `uifix.js` 才負責的正式功能：
+- 玩家名稱
+- 玩家 HP / ATK / DEF / 暴擊 / 閃避顯示
+- 強制退出按鈕位置
+- 手機版緊湊布局
+
+因此 `uifix.js` 已刪除且不應重建。
 
 ---
 
-## 14. 裝備掉落與戰鬥結算 UI
+## 17. 特殊怪
 
-`settlementui.js` 是目前正式的「簡潔掉落清單」共用來源。
+正式遭遇機率：
 
-主線／風險／特殊結算掉落列表目前原則：
-- 只顯示裝備名稱／品質／等級
-- 自動出售顯示金幣
-- 不在結算逐件顯示完整能力／評分／升級標記
-- 整體「有可提升裝備」提示仍保留
+```js
+SPECIAL_ENCOUNTER_RATE = 0.08
+```
 
-`risksettlement.js` 與 `specialencounter.js` 會委派到共用結算呈現。
+共 9 種：
+1. 稀有資源聚合體
+2. 誘餌補給艙
+3. 終止協議單元
+4. 機率增幅信標
+5. 封存警戒機
+6. 裝備保全單元
+7. 黑市武裝頭目
+8. 戰利品回收者
+9. 流動交易代理人
 
-**死亡遺失裝備**與**商店贖回／比較**仍保留完整裝備能力與評分，不跟掉落簡化一起刪。
+特殊怪也依玩家能力快照生成，tier 分 low / mid / high。
 
-舊 `settlementuifix.js` 已刪除，不要重新加 MutationObserver 類補丁。
+重要正式基底與特殊獎勵效果都在 `specialmonsters.js`；戰鬥薄 wrapper 在 `specialcore.js`。
+
+特殊怪可有：
+- EXP 倍率
+- 金幣倍率
+- 必掉／不掉
+- 指定品質表
+- 最低品質
+- 一次多件
+- 優先補弱部位
+- 商店刷新價格下降
+- 流動交易代理人隨機財富／知識／裝備獎勵
+
+特殊怪 level 使用 `clampGameLevel()`，舊 Lv50 限制已修正。
+
+主線連戰每場開始前都會跑 before-fight hook；若觸發特殊遭遇，原連戰會依特殊遭遇流程提前處理，不應另外做第二個特殊怪觸發器。
 
 ---
 
-## 15. GM Hub —— 目前正式狀態
+## 18. 玩家名稱與 UI 正式來源
 
-頂層頁籤：
-- 管理
-- 測試
+玩家名稱：
+- `state.playerName`
+- 預設「玩家」
+- 最多 12 字
+- 空白儲存會恢復「玩家」
 
-`GM_UI_GUIDE.md` 為視覺規範。
+目前已直接整合進 `ui.js`，並被懸賞／競技場／虛空 UI 使用。
 
-### 管理
+舊 `playername.js` 已刪除。
 
-已支援：
-- 指定等級 Lv1～100
+遊戲名稱「文明戰線」也已直接寫入 `index.html` / `ui.js`，舊 `worldexpansion.js` 的 `replace("純文字 RPG","文明戰線")` 已刪除。
+
+---
+
+## 19. GM 管理與測試
+
+### 19.1 GM 入口
+
+設定頁連點「設定」標題 3 下 → 密碼 modal → `franksky`。
+
+正式 GM UI 來源：`gmhub.js`。
+
+`gmtools.js` **不再保存另一份舊 `gmHtml()`**；之前雙 GM UI 造成的覆蓋風險已清理。
+
+### 19.2 管理頁
+
+一般管理：
+- 指定等級（1～MAX_LEVEL）
 - 指定金幣
-- 指定解鎖到等級關卡
+- 指定主線攻略到哪個等級關卡
 - 補滿 HP
-- 清空背包
-- 商店刷新／重置
-- 副本進度／次數／積分直接設定
-- 虛空幻境樓層管理
+- 清空背包（不動穿戴）
+- 刷新商店
+- 重置商店刷新價格
+- 產生裝備
 
-### 產生裝備
+產生裝備目前預設：
+- 品質：**傳說**
+- 等級：目前角色等級
+- 部位選單順序：**全部**、武器、頭盔、鎧甲、鞋子、飾品
+- 「全部」會一次用正式 `makeItem()` 各產 1 件五部位裝備
 
-欄位：
-- 品質
-- 等級
-- 部位
+副本管理：
+- 指定副本進度 %
+- 指定副本可挑戰次數
+- 指定副本積分
 
-部位包含：
-- 武器
-- 頭盔
-- 鎧甲
-- 鞋子
-- 飾品
-- **全部**
+### 19.3 共用 GM 測試基礎
 
-選「全部」時：
-- 一次生成 5 件
-- 同品質、同等級
-- 各自對應五部位
-- 直接進背包
-- 不自動穿上
-- **全部直接呼叫正式 `makeItem()`**
-- 不存在 GM 專用第二套裝備算法
-
-### 測試
-
-已有：
-- 特殊怪測試（含 ×100）
-- 副本進度 Debug
-- 懸賞生成／×100
-- 競技場 ×100
-- 虛空幻境單層／連續爬塔
-
-不需要為裝備額外做複雜統計測試；使用者偏好直接 GM 生裝 + 實際測。
-
----
-
-## 16. 手機／桌機 UI 最新修正
-
-### 16.1 hover 假雙框
-
-iPhone Safari 曾因 `:hover` 殘留，在冒險怪物卡造成「真正 selected + 另一個假金框」。
-
-現在 hover 限制為：
-
-```css
-@media (hover:hover) and (pointer:fine) { ... }
+```js
+GM_TEST_RUNS = 100
 ```
 
-所以只有真正有滑鼠的裝置套 hover；手機只看 `.active`。
+適用：
+- 特殊怪
+- 地圖怪
+- 懸賞
+- 競技場
 
-### 16.2 禁止雙擊放大、保留雙指縮放
+虛空幻境不是固定 100 次測試。
 
-全頁 `html, body` 已套：
+GM sandbox：
+- `gmCreateSandboxSnapshot()`
+- `gmResetSandbox()`
+- `gmRestoreSandbox()`
 
-```css
-touch-action: manipulation;
-```
+目的：批量測試不修改正式角色資料。
 
-目的：
-- 手機任一位置快速雙擊不要觸發 Safari double-tap zoom
-- 正常單指捲動保留
-- **雙指 pinch zoom 保留**
-- 沒有使用 `user-scalable=no`
+共同獎勵 HTML：`gmRewardSummaryHtml()`。
 
-### 16.3 手機一般要求
+同步批量測試結束後避免整頁 `render()`，結果直接寫回目前 GM 區塊，避免畫面閃爍與選項重置。
 
-- 不可水平溢出
-- Modal 可垂直捲動
-- input/select 不超寬
-- 長文字可換行
-- iPhone safe area 保留
-- 冒險準備頁手機下方有固定戰鬥次數與操作區
+### 19.4 特殊怪 GM ×100
 
----
+- dropdown 選 9 種特殊怪
+- 頁面記憶目前選擇；重新載入才回第一隻
+- 統計：
+  - 勝率
+  - 勝利平均剩餘 HP
+  - 死亡掉裝次數
+  - 模擬獎勵合計（EXP／金幣／品質分布等）
+- 使用正式 `specialFightCore()`、`specialMakeDrops()`、`specialApplyShopDiscount()`
+- 舊 `specialgm.js` 已刪除
 
-## 17. 現存 wrapper／相容層：哪些可以存在、哪些不要新增
+### 19.5 地圖怪 GM ×100
 
-本專案歷史上有不少後載入相容層。
-目前仍存在且有用途的例如：
-- `level100.js`：將舊核心的 Lv50 邏輯延伸到 Lv100
-- `worldexpansion.js`：將世界進度結構校正為目前 20 張地圖
-- `level100balance.js`：覆蓋 EXP 曲線
-- `balance.js`：主怪正式平衡
-- 一些 dungeon／UI module 的路由與後載入包裝
+舊「副本進度／刷怪測試」已正式改為「地圖怪測試」。
 
-**不要把「不要 wrapper」理解成整個 repo 必須一次重構。**
-真正禁止的是：為剛改完的正式裝備規則又建立第二套舊／新雙軌。
+- 選地圖
+- 選怪物
+- 地圖改變時怪物重設為第一隻
+- 直接用正式主線怪生成、戰鬥、獎勵、掉落、死亡懲罰
+- 統計同特殊怪：勝率／勝利平均剩餘 HP／死亡掉裝次數＋模擬獎勵
 
-裝備這次已清理成：
-- 正式 `mainStatValue()`
-- 正式 `affixStatValue()`
-- 正式 `rollAffixes()`
-- 正式 `equipmentScore()`
-- GM 直接 `makeItem()`
+### 19.6 懸賞 GM ×100
 
-未來若改裝備，直接改這些正式來源。
+三按鈕：
+- 普通懸賞測試（100 次）
+- 高級懸賞測試（100 次）
+- 危險懸賞測試（100 次）
 
----
+統計只保留：
+- 勝率
+- 勝利平均剩餘 HP
+- 平均回合
 
-## 18. world/save 相容現況
+桌機 3 欄；手機垂直。
 
-`worldexpansion.js` 現在仍會校正：
-- `mapProgress`
-- `bossProgress`
-- `bossLocked`
-- `bossKilled`
-- `unlockedMap`
+### 19.7 競技場 GM ×100
 
-以支援 20 張世界地圖。
+三按鈕：
+- 普通
+- 困難
+- 極限
 
-但**舊裝備名稱 migration 已移除**。
-`itemAbilityLines()` 的舊裝備 legacy fallback 也已移除。
+每次模擬完整三連戰，統計 9 項：
+- 第 1 戰通過
+- 第 2 戰到達
+- 第 2 戰條件通過
+- 第 3 戰到達
+- 第 3 戰條件通過
+- 全通率
+- 平均積分
+- 全通平均剩餘 HP
+- 平均總回合
 
-因此重大裝備改版測試建議：**直接重置存檔，從 Lv1 開始。**
+### 19.8 虛空幻境 GM
 
----
+功能：
+- 指定樓層「查看單層能力」
+- 指定起始樓層「從此層連續爬塔」
 
-## 19. 關鍵檔案職責
+爬塔結果保留 8 張統計卡：
+- 起始樓層
+- 成功層數
+- 最後成功樓層
+- 停止／失敗樓層
+- 本次總積分
+- 平均每層積分
+- 平均戰鬥回合
+- 最後成功剩餘 HP
 
-- `data.js`：SAVE_KEY／SAVE_VERSION／品質與舊基礎資料容器
-- `worldmaps-earth.js`：Lv1～50 正式世界資料
-- `worldmaps-solar.js`：Lv51～100 正式世界資料
-- `engine.js`：核心玩家／裝備／戰鬥／商店等基礎正式函式
-- `balance.js`：主線怪正式平衡
-- `traits.js`：怪物特性
-- `gearupgrade.js`：所有裝備升級／最佳／出售較弱等比較，統一使用 `equipmentScore()`
-- `level100.js`：Lv100 相容層；目前不再覆寫 `gmCreateGear()`
-- `worldexpansion.js`：20 地圖世界狀態校正與跨地圖解鎖
-- `level100balance.js`：永久 EXP 曲線
-- `ui.js`：主 UI 核心，避免無必要大改
-- `adventureprogressui.js`：主線怪物卡進度呈現
-- `settlementui.js`：共用簡潔掉落列表
-- `risksettlement.js`：風險戰鬥結算整合
-- `specialencounter.js`：特殊遭遇正式流程／結算整合
-- `specialmonsters.js`：特殊怪能力生成
-- `specialcore.js`：特殊怪正式戰鬥核心
-- `specialgm.js` / `specialgmbatch.js`：特殊怪 GM 沙盒與 ×100
-- `dungeonprogress.js`：副本進度／次數／積分
-- `dungeoncore.js`：副本共通進場／結束／戰鬥核心
-- `dungeonbounty.js`：懸賞戰
-- `dungeonarena.js`：競技場
-- `dungeonvoid.js`：虛空幻境核心
-- `dungeonvoidui.js`：虛空正式 UI／動畫
-- `dungeongm.js`：副本測試 Debug
-- `dungeonvoidgmmanage.js`：虛空 GM 樓層管理
-- `dungeonvoidgmui.js`：虛空 GM 管理 UI
-- `gmtools.js`：GM 一般管理 + 正式裝備生成
-- `gmhub.js`：GM Hub 最終整合
-- `dungeonui.js`：副本首頁／入口／路由
-- `uifix.js`：後段 UI 修正
-- `style.css`：全域桌機／手機樣式；含 hover 限制與 touch-action
-- `GM_UI_GUIDE.md`：GM 視覺規範
+`VOID_MIRAGE_GM_SIM_LIMIT=10000` 保留，代表最多模擬樓層數，不是回合限制。
 
 ---
 
-## 20. 目前 `index.html` 正式載入順序與 cache 版本（2026-09-09）
+## 20. 這個對話期間完成的重要 Bug 修正／清理
 
-CSS：
-```text
-style.css?v=20260909-1758
-dungeonarena.css?v=20260908-2245
-```
+### 20.1 連戰 Lv37 仍只有 15 場
 
-JS：
-```text
-data.js?v=20260908-2247b2
-worldmaps-earth.js?v=20260908-2247b2
-worldmaps-solar.js?v=20260908-2247b2
-engine.js?v=20260909-1535
-dungeonprogress.js?v=20260908-1937
-dungeoncore.js?v=20260908-1958
-ui.js?v=20260907-2033
-settlementui.js?v=20260909-1015
-balance.js?v=20260907-2033
-traits.js?v=20260909-1515
-traitlock.js?v=20260907-2033
-battlelimit.js?v=20260908-1341
-playername.js?v=20260907-2033
-battleflow.js?v=20260907-2033
-traitdrop.js?v=20260907-2033
-gmtools.js?v=20260909-1515
-shopbalance.js?v=20260907-2052
-gearupgrade.js?v=20260909-1450
-specialmonsters.js?v=20260909-1515
-dungeonbounty.js?v=20260909-1515
-dungeonarena.js?v=20260909-1515
-dungeonvoid.js?v=20260909-1515
-dungeonvoidui.js?v=20260909-0732
-levelcap.js?v=20260908-0752
-specialgm.js?v=20260908-0721
-specialcore.js?v=20260908-0701
-specialgmbatch.js?v=20260908-0721
-dungeongm.js?v=20260909-0750
-gmhub.js?v=20260909-1515
-dungeonvoidgmmanage.js?v=20260909-0915
-dungeonvoidgmui.js?v=20260909-0915
-level100.js?v=20260909-1535
-worldexpansion.js?v=20260909-1535
-level100balance.js?v=20260908-2325
-risksettlement.js?v=20260909-1015
-specialencounter.js?v=20260909-1015
-battlepipeline.js?v=20260908-1341
-specialguide.js?v=20260908-0047
-levelcapresult.js?v=20260908-0803
-dungeonui.js?v=20260909-0732
-adventureprogressui.js?v=20260909-0928
-uifix.js?v=20260909-0901
-```
+症狀：
+- `ui.js` 已改 25 場，但手機、桌機都仍只顯示到 15 場。
 
-**不要僅因文件寫了這些版本就假設仍最新；下一個對話一定先重新抓 `index.html`。**
+根因：
+- 後載入的舊 `traits.js` 還完整重寫 `adventurePreparePage()`，裡面保留舊 `[1,5,10,15]` 解鎖規則。
 
----
+修正：
+- 舊規則刪除。
+- 最終把冒險正式 UI 收斂到 `ui.js`。
+- `traits.js` 不再重寫戰鬥次數 UI。
 
-## 21. 重要踩雷／不要回復的舊行為
+### 20.2 `traits.js` 還藏著舊 200 回合戰鬥
 
-- 不要把玩家閃避重新 cap 在 25%。
-- 不要讓玩家和怪物共用同一個暴／閃上限語意。
-- 不要把鞋子主能力改回閃避。
-- 不要讓暴擊／閃避詞條重新跟裝備 Lv 成長。
-- 不要允許同件裝備同詞條重複。
-- 不要恢復舊 `combatValue()` 第二套裝備比較。
-- 不要在 `level100.js` 再覆寫一套 GM 裝備生成。
-- 不要為舊裝備格式加 migration / fallback。
-- 不要恢復 `settlementuifix.js` MutationObserver 類補丁。
-- 不要把手機 hover 套回所有觸控裝置。
-- 不要用 `user-scalable=no` 禁止雙指縮放。
-- 200回合曾有假勝利問題；不可恢復。
-- `dungeonui.js` 後段主動 render／路由整合有歷史用途，改前先查。
-- 懸賞、競技場平衡已測過，除非使用者明確要求，不要擅自重算。
+同一次檢查發現 `traits.js` 仍有舊 `fightOnce()`／`runBattles()` 與 200 回合限制、低血量流程殘留。
 
----
+修正：全部刪除；正式戰鬥回到 `combatcore.js` + `battlepipeline.js`。
 
-## 22. 尚未實作／未定案
+### 20.3 GM 產生裝備改了卻沒生效
 
-### 尚未實作
-- 副本積分商店
-- 副本積分抽獎
-- VIP 系統
-- Lv101～150 銀河系戰爭
-- 更高等世界
+根因：
+- `gmtools.js` 的舊 `gmHtml()` 被後載入 `gmhub.js` 的另一套 GM UI 蓋掉。
 
-### VIP 目前只確定的部分
-- V0～V20
-- 每級 +0.5% 暴擊
-- 每級 +0.5% 閃避
-- V20 = +10% / +10%
+修正：
+- GM 裝備預設「傳說」與「全部」順序改到真正有效的 `gmhub.js`。
+- 後續第 1 批清理已把 `gmtools.js` 的舊 `gmHtml()` 整段刪除。
 
-VIP 的 HP／ATK／DEF／掉寶等其他加成**尚未定案**，不要自行沿用早期「每級 +10%」想法。
+### 20.4 Lv50 歷史限制
+
+已修正：
+- `engine.js` 核心 `MAX_LEVEL=100`
+- 世界陣列讀 `MAPS.length`
+- 主線裝備 Lv 上限用 `MAX_LEVEL`
+- 懸賞敵人 level 不再卡 50
+- 競技場敵人 level 不再卡 50
+- 特殊怪 level 不再卡 50
+- 特性怪掉裝 `traitdrop.js` 不再卡 50
+
+### 20.5 舊奇幻地圖
+
+`data.js` 原本仍保存 10 張舊奇幻地圖，但實際被地球地圖覆蓋。
+
+修正：正式刪除，只留下 `MAPS=[]`，由兩支 world map 檔載入。
+
+### 20.6 舊多層 UI 補丁
+
+已正式刪除：
+- `battleflow.js`
+- `playername.js`
+- `level100.js`
+- `worldexpansion.js`
+- `uifix.js`
+
+相應功能已搬進正式來源，不是直接丟功能。
+
+### 20.7 舊低血量連戰
+
+已刪：
+- `<30% HP` 暫停
+- risk modal
+- `lowHp()`
+- `showRiskModal()`
+- `continueRiskBattle()`
+- `riskRest()`
+- `risksettlement.js`
+
+### 20.8 共用怪物特性
+
+懸賞／競技場／虛空原本各自複製一套七特性效果。
+
+修正：全部改用 `traits.js -> applyMonsterTraits()`。
 
 ---
 
-## 23. 新對話建議第一句
+## 21. 目前仍存在、但不要誤判為垃圾的正式層
 
-可直接貼：
+三批清理後仍有一些後載入 wrapper／覆蓋，**它們目前仍有正式責任**：
 
-> 這是《文明戰線》網頁遊戲專案，GitHub repository：`franksky1207/rpg`，正式分支：`main`。請先連接 GitHub，讀取 `PROJECT_HANDOFF.md`，再重新檢查目前 `main` 的實際程式碼，以 `main` 為唯一正式基準。這是持續開發專案；之後我若說「做、修改、修、執行、第一批、第二批」等明確執行指令，可以直接修改 GitHub main。每次修改前先抓最新相關檔案，修改後重新驗證；JS/CSS 修改要更新 `index.html` cache-bust。優先直接修改正式來源，不要新增舊新雙軌、fallback 或重複公式。現在先不要修改任何東西，先完成專案承接後告訴我目前狀態。
+- `balance.js`：正式主線怪平衡，覆蓋 `engine.js` 基底怪公式。
+- `level100balance.js`：正式 EXP 曲線，覆蓋 `engine.js` 舊基底 `expNeed()`。
+- `traitlock.js`：讓主線預覽 traits 固定／可存檔。
+- `traitdrop.js`：特性怪品質升階掉落。
+- `shopbalance.js`：正式商店品質與弱部位邏輯。
+- `gearupgrade.js`：正式裝備評分升級判斷與批量裝備／出售。
+- `levelcap.js`：Lv100 EXP 轉金幣。
+- `levelcapresult.js`：主線滿等轉換結算提示。
+- `dungeonui.js`：副本頁面的正式 route／首頁／冒險側欄副本狀態整合。
+- `settlementui.js`：主線結算擴充。
+- `adventureprogressui.js`：目前已縮成**純怪物卡進度樣式注入**，不再覆蓋 `adventurePreparePage()`。
+
+未來若要繼續「核心化」這些檔案，可以討論，但**沒有使用者要求時不要為了漂亮而大規模重構。**
 
 ---
 
-## 24. 接手完成的判準
+## 22. 尚未完成／未實作項目
 
-下一個 ChatGPT 在正式開始改功能前，至少應掌握：
+目前明確尚未完成：
 
-1. main 是唯一真實來源。
-2. 目前 Lv1～100 / 20 地圖。
-3. 最新裝備品質制暴／閃規則。
-4. 鞋主 HP、飾品主暴擊品質區間。
-5. 唯一 `equipmentScore()` 公式。
-6. 玩家無舊 25% 閃避 cap，怪物另有 30/30 安全 cap。
-7. GM 產裝支援「全部」且直接走 `makeItem()`。
-8. 虛空幻境、懸賞、競技場、特殊怪目前狀態。
-9. `adventureprogressui.js`、`settlementui.js` 等近期 UI 架構。
-10. 手機 hover 假雙框與雙擊放大已修。
-11. 裝備舊 migration / fallback 已清除。
-12. 修改 JS/CSS 必須 cache-bust。
+1. **跨裝置雲端存檔**：目前只有 `localStorage`；手機與桌機不能自動共用存檔。
+2. **Lv101～150 銀河系戰爭**：只有方向，尚未加入地圖、怪物、裝備與等級上限。
+3. **VIP 系統**：曾討論過 V0～V20 與暴擊／閃避加成概念，但目前 `main` 沒有實作，不可當成正式規則。
+4. `adventureprogressui.js`、`gmhub.js`、`dungeonui.js`、`dungeonvoidui.js` 仍有 JS 動態注入 CSS；目前功能正常，是否搬回 CSS 檔屬未來可選清理，不是必要修正。
+5. 目前沒有登入、Firebase、Google 試算表存檔、排行榜、多人功能。
 
-只要以上重新從 `main` 核對無誤，就可以像本對話一樣繼續直接開發。
+除此之外，不要從舊對話自行推測「待辦」。以使用者下一步指示與 `main` 為準。
+
+---
+
+## 23. 真機驗證重點
+
+重大改動後，建議至少檢查：
+
+### 主線
+- Lv7：單場＋5場，底下顯示 Lv11 開 10場
+- Lv16：開到15場，顯示 Lv21 開20場
+- Lv26+：1/5/10/15/20/25 六個同排，提示消失
+- Boss：只單場
+- 連戰每勝一場後下一場滿血
+- 戰敗立即終止並回準備頁
+
+### 裝備
+- 5 部位主能力正確
+- 同件詞條不重複
+- 飾品主暴擊與 crit/dodge 詞條不隨 Lv 異常成長
+- Lv51～100 特性怪可以掉 Lv50 以上裝備
+
+### GM
+- 產生裝備預設傳說
+- 部位第一個是「全部」
+- 特殊／地圖怪／懸賞／競技場測試不修改正式資料
+- 測試結果不因整頁 render 閃掉
+
+### 副本
+- 主線勝利才加副本進度
+- 懸賞／競技場／虛空各扣 1 次
+- 競技場三戰不回血
+- 虛空每層回血、每 10 層雙特性
+
+---
+
+# 24. 下一個對話如何接手（標準指令）
+
+下一個 ChatGPT 接手時，應把以下內容視為標準操作指令：
+
+> 你正在接手 GitHub `franksky1207/rpg` 的《文明戰線》專案。請先讀 `PROJECT_HANDOFF.md`，但不要把它當成最終真相；**GitHub `main` 實際程式碼才是唯一真實來源。**
+>
+> 每次要修改前，先重新讀 `index.html` 與相關正式檔案，確認最後有效來源與 script load order。修改時優先改正式來源，不要另做 wrapper、fallback、第二套公式、第二套 GM 邏輯或相容層；如果確認某段舊程式已完全失效且沒有 consumer，應直接刪除。
+>
+> 使用者如果說「先討論／先不要改／你覺得如何」，只能分析與建議，不能寫 GitHub；如果使用者說「做／修改／修正／執行／第 X 批」，且需求已明確，就直接修改 `main`。
+>
+> 修改後必須重新讀取修改檔確認；只要有 `.js` / `.css` 變更，就同步更新 `index.html` 對應 cache-bust `?v=`，並再確認 `index.html`。不要宣稱真機已測過，除非使用者實際回報。
+>
+> 特別注意：主線戰鬥核心是 `combatcore.js` + `battlepipeline.js`；主線冒險正式 UI 已集中在 `ui.js`；怪物特性正式效果集中在 `traits.js -> applyMonsterTraits()`；正式主線怪平衡看 `balance.js`；正式 EXP 曲線看 `level100balance.js`；GM 正式 UI 看 `gmhub.js`；不要重新建立已刪除的 `battleflow.js`、`playername.js`、`level100.js`、`worldexpansion.js`、`uifix.js`、`risksettlement.js`、`battlelimit.js`、`specialgm.js`，除非使用者明確要求全新設計。
