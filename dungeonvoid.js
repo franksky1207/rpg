@@ -202,11 +202,11 @@
   const enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
   if(!enemy.isBossFloor)voidMirageRun.previousRegularName=enemy.name;
   voidMirageRun.phase="fighting";voidMirageRun.lastEnemy=enemy;
-  const result=typeof dungeonFightCore==="function"?dungeonFightCore(enemy):{win:false,invalid:true,turnLimit:false,logs:["副本戰鬥核心未載入。"],e:enemy,combatEndHp:state.hp,turns:0};
+  const result=typeof dungeonFightCore==="function"?dungeonFightCore(enemy):{win:false,invalid:true,logs:["副本戰鬥核心未載入。"],e:enemy,combatEndHp:state.hp,turns:0};
   voidMirageRun.lastResult=result;
   voidMirageRun.totalTurns+=Math.max(0,Math.floor(Number(result.turns)||0));
   if(!result.win){
-   const reason=result.turnLimit?"timeout":"defeat";
+   const reason="defeat";
    const final=finishRun(reason,{failedFloor:floor});
    return {ok:true,win:false,ended:true,reason,floor,enemy,result,playerMaxHp,gained:0,run:final};
   }
