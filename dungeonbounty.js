@@ -71,7 +71,7 @@
 
  window.getBountyTierConfig=function(id){const t=BOUNTY_TIERS.find(x=>x.id===id);return t?{...t}:null;};
  window.getBountyTierConfigs=function(){return BOUNTY_TIERS.map(x=>({...x}));};
- window.buildBountyEnemyForDebug=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIERS.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
+ window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIERS.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
 
  window.enterBountyDungeon=function(){
@@ -183,5 +183,5 @@
   </section>`;
  }
 
- window.getBountyDebugSnapshot=function(){return bountyState.enemy?{tier:{...bountyState.tier},enemy:{...bountyState.enemy}}:null;};
+ window.getBountyTestSnapshot=function(){return bountyState.enemy?{tier:{...bountyState.tier},enemy:{...bountyState.enemy}}:null;};
 })();
