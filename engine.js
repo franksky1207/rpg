@@ -28,12 +28,16 @@ const ACCESSORY_CRIT_RANGES=[
 const MONSTER_MAX_CRIT_RATE=30;
 const MONSTER_MAX_DODGE_RATE=30;
 const CRIT_DAMAGE_MULTIPLIER=1.5;
+const MAX_LEVEL=100;
+window.MAX_LEVEL=MAX_LEVEL;
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
 let upgradeDropNoticePending=false;
 
 function ceil(n){return Math.ceil(n)}
 function round1(n){return Math.round(n*10)/10}
 function randomInt(min,max){return min+Math.floor(Math.random()*(max-min+1))}
+function clampGameLevel(level){return Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(level)||1)))}
+window.clampGameLevel=clampGameLevel;
 function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
@@ -46,12 +50,28 @@ function sellBase(l){return ceil(12+8*l)}
 function qClass(q){return "q-"+QUALITY[q].k}
 function equipmentTypeLabel(type){return EQUIPMENT_LABELS[type]||type}
 function formatStatValue(stat,value){return `${STAT_LABELS[stat]||stat} +${value}${stat==="crit"||stat==="dodge"?"%":""}`}
-function blankMapProgress(){return Array.from({length:10},()=>[0,0,0,0])}
+function blankMapProgress(){return Array.from({length:MAPS.length},()=>[0,0,0,0])}
+function fitWorldArray(arr,fill){
+ const out=Array.isArray(arr)?arr.slice(0,MAPS.length):[];
+ while(out.length<MAPS.length)out.push(typeof fill==="function"?fill(out.length):fill);
+ return out;
+}
+function normalizeWorldState(target){
+ if(!target||typeof target!=="object")return target;
+ target.mapProgress=fitWorldArray(target.mapProgress,()=>[0,0,0,0]).map(x=>Array.isArray(x)?[Number(x[0])||0,Number(x[1])||0,Number(x[2])||0,Number(x[3])||0]:[0,0,0,0]);
+ target.bossProgress=fitWorldArray(target.bossProgress,0).map(x=>Math.max(0,Number(x)||0));
+ target.bossLocked=fitWorldArray(target.bossLocked,false).map(Boolean);
+ target.bossKilled=fitWorldArray(target.bossKilled,false).map(Boolean);
+ target.unlockedMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(target.unlockedMap)||0)));
+ for(let i=0;i<MAPS.length-1;i++)if(target.bossKilled[i])target.unlockedMap=Math.max(target.unlockedMap,i+1);
+ return target;
+}
+window.normalizeWorldSaveState=normalizeWorldState;
 function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0}}
 function newState(){return {
  saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,
  equipment:{weapon:null,helmet:null,armor:null,shoes:null,accessory:null},inventory:[],
- mapProgress:blankMapProgress(),bossProgress:Array(10).fill(0),bossLocked:Array(10).fill(false),bossKilled:Array(10).fill(false),
+ mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),
  lostGear:[],shop:newShopState(),
  settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false
 }}
@@ -59,14 +79,12 @@ function newState(){return {
 function load(){
  try{let raw=localStorage.getItem(SAVE_KEY);state=raw?JSON.parse(raw):newState()}catch(e){state=newState()}
  let loadedVersion=state.saveVersion||1;
+ state.level=clampGameLevel(state.level);
  if(typeof state.playerName!=="string"||!state.playerName.trim())state.playerName="玩家";
  if(!state.equipment||typeof state.equipment!=="object")state.equipment={};
  EQUIPMENT_TYPES.forEach(type=>{if(!(type in state.equipment))state.equipment[type]=null});
  if(!Array.isArray(state.inventory))state.inventory=[];
- if(!state.mapProgress)state.mapProgress=blankMapProgress();
- if(!state.bossProgress)state.bossProgress=Array(10).fill(0);
- if(!state.bossLocked)state.bossLocked=Array(10).fill(false);
- if(!state.bossKilled)state.bossKilled=Array(10).fill(false);
+ normalizeWorldState(state);
  if(!state.lostGear)state.lostGear=[];
  if(!state.shop)state.shop=newShopState();
  if(!Array.isArray(state.shop.items))state.shop.items=[];
@@ -77,7 +95,7 @@ function load(){
  if(typeof state.settings.keepUpgrade!=="boolean")state.settings.keepUpgrade=true;
  if(loadedVersion<4)state.shop.items=[];
  state.saveVersion=SAVE_VERSION;
- selectedMap=Math.min(state.unlockedMap,9);
+ selectedMap=Math.max(0,Math.min(state.unlockedMap,MAPS.length-1));
  normalizeHP();
  ensureShop();
  save(false);
@@ -143,7 +161,7 @@ function makeItem(level,mapIdx,kind="normal",forcedQ=null,forcedType=null){
 function dropItem(enemy,mapIdx){
  let chance=enemy.kind==="boss"?1:enemy.kind==="elite"?.6:.25;if(Math.random()>chance)return null;
  let offset=enemy.kind==="boss"?[-1,0,0,1,2]:enemy.kind==="elite"?[-1,0,0,1]:[-2,-1,0,0,1];
- let lv=Math.max(1,Math.min(50,enemy.level+offset[Math.floor(Math.random()*offset.length)]));
+ let lv=Math.max(1,Math.min(MAX_LEVEL,enemy.level+offset[Math.floor(Math.random()*offset.length)]));
  return makeItem(lv,mapIdx,enemy.kind);
 }
 function itemHtml(it,compact=false){if(!it)return `<span class="muted">無</span>`;return `<span class="${qClass(it.q)}">【${QUALITY[it.q].n}】${it.name} Lv.${it.level}</span>${compact?"":`<div class="muted">${statLine(it)}</div>`}`}
@@ -212,13 +230,13 @@ function addItem(it){
  if(upgrade)upgradeDropNoticePending=true;
  return {kept:true,sold:0};
 }
-function gainExp(n,logs){
- state.exp+=n;let ups=0;
- while(state.level<50&&state.exp>=expNeed(state.level)){state.exp-=expNeed(state.level);state.level++;ups++;state.hp=equippedStats().hp;logs.push(`升級！你到達 Lv.${state.level}，HP 已完全恢復。`)}
- if(state.level>=50)state.exp=0;return ups;
+function gainExp(n,logs=[]){
+ state.exp+=Math.max(0,Number(n)||0);let ups=0;
+ while(state.level<MAX_LEVEL&&state.exp>=expNeed(state.level)){state.exp-=expNeed(state.level);state.level++;ups++;state.hp=equippedStats().hp;logs.push(`升級！你到達 Lv.${state.level}，HP 已完全恢復。`)}
+ if(state.level>=MAX_LEVEL)state.exp=0;return ups;
 }
-function applyDeathPenalty(logs){
- let loss=state.level>=50?0:ceil(expNeed(state.level)*.10),actual=Math.min(state.exp,loss);
+function applyDeathPenalty(logs=[]){
+ let loss=state.level>=MAX_LEVEL?0:ceil(expNeed(state.level)*.10),actual=Math.min(state.exp,loss);
  state.exp=Math.max(0,state.exp-loss);
  let dropped=null;
  let worn=EQUIPMENT_TYPES.map(slot=>[slot,state.equipment[slot]]).filter(([,it])=>!!it);
@@ -235,62 +253,10 @@ function applyDeathPenalty(logs){
  return {expLost:actual,dropped};
 }
 
-function fightOnce(mapIdx,eIdx){
- if(!enemyUnlocked(mapIdx,eIdx)){
-   if(eIdx===4&&state.bossLocked?.[mapIdx])return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
-   return {ok:false,reason:"這隻怪物尚未解鎖。"};
- }
- let e=monsterObj(mapIdx,eIdx);
- if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
- let ps=equippedStats(),ehp=e.hp,php=state.hp,logs=[],turn=0;
- while(php>0&&ehp>0&&turn<200){
-   turn++;
-   let pd=calcDamage(ps.atk,e.def),crit=Math.random()*100<ps.crit;
-   if(crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
-   ehp-=pd;logs.push(crit?`你攻擊${e.name}，暴擊造成 ${pd} 點傷害。`:`你攻擊${e.name}，造成 ${pd} 點傷害。`);
-   if(ehp<=0)break;
-   if(Math.random()*100<ps.dodge){logs.push(`${e.name}攻擊你，你閃避了攻擊。`);continue}
-   let ed=calcDamage(e.atk,ps.def);php-=ed;logs.push(`${e.name}攻擊你，造成 ${ed} 點傷害。`);
- }
- state.hp=Math.max(0,php);
- if(php<=0){
-   logs.push(`你被${e.name}擊敗。`);
-   if(e.kind==="boss"){
-     state.bossLocked[mapIdx]=true;
-     state.bossProgress[mapIdx]=0;
-     logs.push(`Boss 再挑戰已鎖定：需再擊敗本地圖菁英怪 10 隻。`);
-   }
-   let penalty=applyDeathPenalty(logs);
-   save(false);return {ok:true,win:false,logs,e,penalty};
- }
- let xp=expReward(e),gold=goldReward(e);state.gold+=gold;gainExp(xp,logs);
- if(e.kind==="boss"){
-   let first=!state.bossKilled[mapIdx];
-   state.bossKilled[mapIdx]=true;state.bossLocked[mapIdx]=false;state.bossProgress[mapIdx]=0;
-   if(first&&mapIdx<9){
-     state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);
-     freeShopRefresh(mapIdx+1);
-   }
- }else{
-   progressEnemyKill(mapIdx,eIdx);
-   addProgress(mapIdx,e.kind);
- }
- let it=dropItem(e,mapIdx),ir=addItem(it);
- logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
- if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===10)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
- if(e.kind==="normal"&&eIdx===2&&state.mapProgress[mapIdx][2]===10)logs.push(`菁英敵人已出現：${MAPS[mapIdx].enemies[3][0]}。`);
- if(e.kind==="elite"&&!state.bossKilled[mapIdx]&&!state.bossLocked[mapIdx]&&state.mapProgress[mapIdx][3]>=10){
-   logs.push(state.level>=MAPS[mapIdx].max?`Boss 已出現：${MAPS[mapIdx].enemies[4][0]}。`:`菁英進度完成；達到 Lv.${MAPS[mapIdx].max} 後 Boss 才會出現。`);
- }
- if(e.kind==="elite"&&state.bossLocked[mapIdx])logs.push(`Boss 再挑戰進度：${state.bossProgress[mapIdx]}/10 菁英。`);
- if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
- if(it)logs.push(`${ir.sold?`自動出售 ${itemHtmlPlain(it)}，金幣 +${ir.sold}`:`獲得裝備 ${itemHtmlPlain(it)}`}`);
- save(false);return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold};
-}
 function itemHtmlPlain(it){return `【${QUALITY[it.q].n}】${it.name} Lv.${it.level}`}
 
 const SHOP_REFRESH_COSTS=[100,200,400,800,1600,3200,6400,12800];
-function currentShopMap(){return Math.min(state.unlockedMap,Math.floor((state.level-1)/5),9)}
+function currentShopMap(){return Math.max(0,Math.min(state.unlockedMap,Math.floor((state.level-1)/5),MAPS.length-1))}
 function makeShopItems(mapIdx=currentShopMap()){
  let m=MAPS[mapIdx],arr=[];
  for(let i=0;i<3;i++){
