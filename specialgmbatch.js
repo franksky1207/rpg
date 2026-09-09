@@ -1,6 +1,8 @@
 let gmSpecialBatchSelectedId=(typeof SPECIAL_MONSTERS!=="undefined"&&SPECIAL_MONSTERS[0])?SPECIAL_MONSTERS[0].id:"";
 let gmSpecialBatchResult=null;
 
+function gmSpecialMapForLevel(level){return Math.max(0,Math.min(9,Math.floor((level-1)/5)));}
+
 function gmSpecialBatchResultHtml(special,summary){
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
  const extraRows=`${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
@@ -35,23 +37,21 @@ async function gmStartSpecialBattle(){
  const button=document.getElementById("gmSpecialBatchStartBtn");
  if(button){button.disabled=true;button.textContent="測試中…";}
 
- const snapshot=JSON.stringify(state);
- const upgradeSnapshot=upgradeDropNoticePending;
+ const sandbox=gmCreateSandboxSnapshot();
  const level=clampGameLevel(state.level);
  const mapIdx=gmSpecialMapForLevel(level);
  const playerSnapshot=equippedStats();
  const playerMax=playerSnapshot.hp;
- battleBusy=true;gmSpecialTestActive=true;gmSpecialTestMonster=special;
+ battleBusy=true;
 
  const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
 
  for(let i=0;i<GM_TEST_RUNS;i++){
-  state=JSON.parse(snapshot);
-  upgradeDropNoticePending=upgradeSnapshot;
+  gmResetSandbox(sandbox);
   state.hp=playerMax;
   const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level);
   const ctx=getSpecialRewardContext(special);
-  const r=gmSpecialFight(enemy);
+  const r=specialFightCore(enemy);
   if(r.win){
    summary.wins++;
    summary.winHpTotal+=Math.max(0,state.hp);
@@ -64,10 +64,10 @@ async function gmStartSpecialBattle(){
    summary.convertedGold+=xpPay.convertedGold;
    summary.totalGold+=gold+xpPay.convertedGold;
    state.gold+=gold;
-   const items=gmSpecialMakeDrops(ctx,level,mapIdx);
+   const items=specialMakeDrops(ctx,level,mapIdx);
    summary.dropCount+=items.length;
    items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
-   summary.shopDown+=gmSpecialApplyShopDiscount(ctx.shopRefreshDown);
+   summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
    if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
   }else{
    summary.losses++;
@@ -79,13 +79,8 @@ async function gmStartSpecialBattle(){
  summary.winRate=round1(summary.wins/GM_TEST_RUNS*100);
  summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/playerMax*100):0;
 
- state=JSON.parse(snapshot);
- upgradeDropNoticePending=upgradeSnapshot;
- save(false);
+ gmRestoreSandbox(sandbox);
  battleBusy=false;
- gmSpecialTestActive=false;
- gmSpecialTestMonster=null;
- gmSpecialTestReward=null;
  gmSpecialBatchResult={special,summary};
 
  const result=document.getElementById("gmSpecialBatchResult");
