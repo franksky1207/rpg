@@ -72,15 +72,13 @@
   const button=document.getElementById("gmMapMonsterStartBtn");
   setTestButton(button,true,`開始測試（${GM_TEST_RUNS} 次）`);
 
-  const snapshot=JSON.stringify(state);
-  const upgradeSnapshot=upgradeDropNoticePending;
+  const sandbox=gmCreateSandboxSnapshot();
   const player=createSpecialPlayerSnapshot(equippedStats());
   const summary={wins:0,losses:0,winHpTotal:0,deathDrops:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0)};
   battleBusy=true;
 
   for(let i=0;i<GM_TEST_RUNS;i++){
-   state=JSON.parse(snapshot);
-   upgradeDropNoticePending=upgradeSnapshot;
+   gmResetSandbox(sandbox);
    state.hp=player.hp;
    let enemy=null;
    try{enemy=typeof createMonsterEncounter==="function"?createMonsterEncounter(mapIdx,eIdx):monsterObj(mapIdx,eIdx);}catch(e){}
@@ -105,9 +103,7 @@
 
   summary.winRate=testPercent(summary.wins);
   summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0;
-  state=JSON.parse(snapshot);
-  upgradeDropNoticePending=upgradeSnapshot;
-  save(false);
+  gmRestoreSandbox(sandbox);
   battleBusy=false;
   mapMonsterTestHtml=mapMonsterResultHtml(mapIdx,eIdx,summary);
   showTestResult("gmMapMonsterTestResult",mapMonsterTestHtml);
