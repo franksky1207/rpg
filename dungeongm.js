@@ -174,7 +174,6 @@
     <div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div>
     <div class="stat">平均總回合<b>${avgTurns}</b></div>
    </div>
-   <div class="muted" style="margin-top:8px">玩家基準：${playerLine(player)}</div>
   </div>`);
  };
 
