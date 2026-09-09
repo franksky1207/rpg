@@ -17,9 +17,9 @@
    .gm-hub-body{padding:14px}.gm-hub-body .item{margin-top:0}.gm-hub-body input,.gm-hub-body select{max-width:100%}
    .gm-hub .btn.gm-create{background:#8a641f;border-color:#c99a43;color:#fff3cf}.gm-hub .btn.gm-create:hover{background:#9b7227;border-color:#ddb05b}
    .gm-hub-close{margin-top:14px}.gm-hub-note{margin-bottom:10px}
-   .gm-bounty-test-controls,.gm-arena-test-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
-   .gm-bounty-test-controls .btn,.gm-arena-test-controls .btn{width:100%;white-space:normal}
-   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}.gm-bounty-test-controls,.gm-arena-test-controls{grid-template-columns:1fr}.gm-bounty-test-controls .btn,.gm-arena-test-controls .btn{padding:10px 12px}}
+   .gm-test-button-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+   .gm-test-button-grid .btn{width:100%;white-space:normal}
+   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}.gm-test-button-grid{grid-template-columns:1fr}.gm-test-button-grid .btn{padding:10px 12px}}
   `;
   document.head.appendChild(style);
  }
@@ -44,25 +44,25 @@
  function dungeonManagementHtml(){const d=dungeonStateSafe();return `<div class="notice gm-hub-note">目前：${Math.round((Number(d.progress)||0)*100)/100}%　／　${Math.floor(Number(d.attempts)||0)} 次　／　${Math.floor(Number(d.points)||0)} 積分</div><div class="controls" style="align-items:end"><label>副本次數累積進度 %<br><input id="gmDungeonProgress" type="number" min="0" step="0.01" value="${d.progress}" style="width:170px"></label><label>副本可挑戰次數<br><input id="gmDungeonAttempts" type="number" min="0" step="1" value="${d.attempts}" style="width:150px"></label><label>副本積分<br><input id="gmDungeonPoints" type="number" min="0" step="1" value="${d.points}" style="width:150px"></label><button class="btn blue" onclick="gmApplyDungeonValues()">套用</button></div>`;}
  function specialTestHtml(){
   const result=(typeof gmSpecialBatchResultHtml==="function"&&typeof gmSpecialBatchResult!=="undefined"&&gmSpecialBatchResult)?gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary):"";
-  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定特殊怪模擬 100 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="margin-top:10px;align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn" onchange="gmSetSpecialBatchSelected(this.value)">${specialOptions()}</select></label><button id="gmSpecialBatchStartBtn" class="btn blue" onclick="gmStartSpecialBattle()">開始測試（100 次）</button></div><div id="gmSpecialBatchResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定特殊怪模擬 ${GM_TEST_RUNS} 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="margin-top:10px;align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn" onchange="gmSetSpecialBatchSelected(this.value)">${specialOptions()}</select></label><button id="gmSpecialBatchStartBtn" class="btn blue" onclick="gmStartSpecialBattle()">開始測試（${GM_TEST_RUNS} 次）</button></div><div id="gmSpecialBatchResult" style="margin-top:12px">${result}</div>`;
  }
  function mapMonsterTestHtml(){
   const s=mapMonsterSelection();
   const result=typeof getMapMonsterGmTestHtml==="function"?getMapMonsterGmTestHtml():"";
-  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定主線地圖怪模擬 100 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>地圖<br><select id="gmMapMonsterMap" class="btn" onchange="gmMapMonsterChangeMap()">${mapMonsterMapOptions()}</select></label><label>怪物<br><select id="gmMapMonsterEnemy" class="btn" onchange="gmMapMonsterChangeEnemy()">${mapMonsterEnemyOptions(s.mapIdx)}</select></label><button id="gmMapMonsterStartBtn" class="btn blue" onclick="gmStartMapMonsterTest()">開始測試（100 次）</button></div><div id="gmMapMonsterTestResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定主線地圖怪模擬 ${GM_TEST_RUNS} 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>地圖<br><select id="gmMapMonsterMap" class="btn" onchange="gmMapMonsterChangeMap()">${mapMonsterMapOptions()}</select></label><label>怪物<br><select id="gmMapMonsterEnemy" class="btn" onchange="gmMapMonsterChangeEnemy()">${mapMonsterEnemyOptions(s.mapIdx)}</select></label><button id="gmMapMonsterStartBtn" class="btn blue" onclick="gmStartMapMonsterTest()">開始測試（${GM_TEST_RUNS} 次）</button></div><div id="gmMapMonsterTestResult" style="margin-top:12px">${result}</div>`;
  }
  function bountyTestHtml(){
   const result=typeof getBountyGmTestHtml==="function"?getBountyGmTestHtml():"";
-  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定懸賞模擬 100 次。GM 測試為沙盒模式，不扣副本次數、不修改正式角色資料。</div><div class="gm-bounty-test-controls"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞測試（100 次）</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞測試（100 次）</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞測試（100 次）</button></div><div id="gmBountyTestResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定懸賞模擬 ${GM_TEST_RUNS} 次。GM 測試為沙盒模式，不扣副本次數、不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞測試（${GM_TEST_RUNS} 次）</button></div><div id="gmBountyTestResult" style="margin-top:12px">${result}</div>`;
  }
  function arenaTestHtml(){
-  const result=typeof getArenaGmDebugHtml==="function"?getArenaGmDebugHtml():"";
-  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定競技場模擬 100 次完整三連戰。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="gm-arena-test-controls"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場測試（100 次）</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場測試（100 次）</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場測試（100 次）</button></div><div id="gmArenaDebugResult" style="margin-top:12px">${result}</div>`;
+  const result=typeof getArenaGmTestHtml==="function"?getArenaGmTestHtml():"";
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定競技場模擬 ${GM_TEST_RUNS} 次完整三連戰。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場測試（${GM_TEST_RUNS} 次）</button></div><div id="gmArenaTestResult" style="margin-top:12px">${result}</div>`;
  }
  function voidMirageTestHtml(){
-  const result=typeof getVoidMirageGmDebugHtml==="function"?getVoidMirageGmDebugHtml():"";
+  const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"";
   const next=typeof getVoidMirageNextFloor==="function"?getVoidMirageNextFloor():1;
-  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定起始樓層進行虛空幻境測試。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageDebugResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定起始樓層進行虛空幻境測試。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;
  }
 
  function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
