@@ -1,6 +1,5 @@
 (function(){
- // Lv1～100 擴充・第1批：解除原 Lv50 硬上限。
- // 地圖仍維持目前 10 張；第2批再擴成 20 張。
+ // Lv1～100 擴充：解除原 Lv50 硬上限。
  window.MAX_LEVEL=100;
 
  window.clampGameLevel=function(level){
@@ -38,29 +37,6 @@
   state.hp=equippedStats().hp;
   save();render();
  };
-
- // GM 產生裝備改支援到 MAX_LEVEL；第2批地圖擴充前，高於50級暫用目前最後一張地圖的裝備名稱。
- gmCreateGear=function(){
-  const q=Number(document.getElementById("gmGearQuality")?.value);
-  const level=Number(document.getElementById("gmGearLevel")?.value);
-  const type=document.getElementById("gmGearType")?.value;
-  if(!Number.isInteger(q)||q<0||q>=QUALITY.length)return;
-  if(!Number.isInteger(level)||level<1||level>MAX_LEVEL)return;
-  if(!EQUIPMENT_TYPES.includes(type))return;
-  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Math.floor((level-1)/5)));
-  state.inventory.push(makeItem(level,mapIdx,"normal",q,type));
-  save();render();
- };
-
- // GM Hub 的裝備等級下拉由 50 擴到 MAX_LEVEL，不動其餘 GM UI。
- if(typeof gmHtml==="function"){
-  const baseGmHtmlForLevel100=gmHtml;
-  gmHtml=function(){
-   let html=baseGmHtmlForLevel100();
-   const options=Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`;}).join("");
-   return html.replace(/(<select id="gmGearLevel"[^>]*>)[\s\S]*?(<\/select>)/,`$1${options}$2`);
-  };
- }
 
  // 這些模式本身以角色實際能力縮放；此處只把 Debug / metadata 的等級解除50封頂。
  if(typeof buildBountyEnemyForDebug==="function"){
