@@ -150,11 +150,9 @@ function itemHtml(it,compact=false){if(!it)return `<span class="muted">無</span
 function statLine(it){return [it.atk?`攻擊 +${it.atk}`:"",it.def?`防禦 +${it.def}`:"",it.hp?`HP +${it.hp}`:"",it.crit?`暴擊 +${it.crit}%`:"",it.dodge?`閃避 +${it.dodge}%`:""].filter(Boolean).join("　")}
 function itemAbilityLines(it){
  if(!it)return [];
- if(it.mainStat&&Array.isArray(it.affixes)){
-   let rows=[{kind:"main",text:formatStatValue(it.mainStat.stat,it.mainStat.value)}];
-   it.affixes.forEach(a=>rows.push({kind:"affix",text:formatStatValue(a.stat,a.value)}));return rows;
- }
- return [{kind:"legacy",text:statLine(it)}];
+ let rows=[{kind:"main",text:formatStatValue(it.mainStat.stat,it.mainStat.value)}];
+ it.affixes.forEach(a=>rows.push({kind:"affix",text:formatStatValue(a.stat,a.value)}));
+ return rows;
 }
 
 function monsterObj(mapIdx,eIdx){
