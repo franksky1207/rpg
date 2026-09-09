@@ -38,24 +38,6 @@
   save();render();
  };
 
- // 這些模式本身以角色實際能力縮放；此處只把 Debug / metadata 的等級解除50封頂。
- if(typeof buildBountyEnemyForDebug==="function"){
-  const baseBountyDebugForLevel100=buildBountyEnemyForDebug;
-  window.buildBountyEnemyForDebug=function(tierId,playerStats=null,level=null){
-   const e=baseBountyDebugForLevel100(tierId,playerStats,level);
-   if(e)e.level=clampGameLevel(level??state.level);
-   return e;
-  };
- }
- if(typeof buildArenaEnemyForDebug==="function"){
-  const baseArenaDebugForLevel100=buildArenaEnemyForDebug;
-  window.buildArenaEnemyForDebug=function(difficultyId,stageIndex,stats=null,level=null){
-   const e=baseArenaDebugForLevel100(difficultyId,stageIndex,stats,level);
-   if(e)e.level=clampGameLevel(level??state.level);
-   return e;
-  };
- }
-
  // levelcap.js 先載入並建立滿等邏輯；MAX_LEVEL 在本檔改為100後，其動態判斷會直接跟著生效。
  // 再包一次特殊怪 builder，確保顯示 / metadata 也可到 Lv100。
  if(typeof buildSpecialMonsterFromPlayer==="function"){
