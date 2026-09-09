@@ -19,11 +19,11 @@ function monsterObj(mapIdx,eIdx){
  if(style==="tank"){b.hp=ceil(b.hp*1.15);b.atk=ceil(b.atk*.95)}
  if(style==="attack"){b.hp=ceil(b.hp*.92);b.atk=ceil(b.atk*1.10)}
  const stage=[
-  {hp:1.00,atk:1.00,def:1.00},
-  {hp:1.08,atk:1.07,def:1.05},
-  {hp:1.16,atk:1.14,def:1.10},
-  {hp:1.32,atk:1.25,def:1.15},
-  {hp:1.48,atk:1.31,def:1.20}
+  {hp:1.15,atk:1.12,def:1.08},
+  {hp:1.25,atk:1.20,def:1.12},
+  {hp:1.35,atk:1.28,def:1.16},
+  {hp:1.42,atk:1.32,def:1.18},
+  {hp:1.48,atk:1.30,def:1.18}
  ][eIdx]||{hp:1,atk:1,def:1};
  b.hp=ceil(b.hp*stage.hp);b.atk=ceil(b.atk*stage.atk);b.def=ceil(b.def*stage.def);
  return {name:d[0],level:d[1],kind,style,...b};
