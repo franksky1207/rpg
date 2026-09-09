@@ -171,7 +171,7 @@ function buildSpecialMonsterFromPlayer(playerStats,special,level=1){
  const player=createSpecialPlayerSnapshot(playerStats),base=specialBaseEnemyFromPlayer(player),tier=specialTierConfig(special);
  return {
   name:special.name,
-  level:Math.max(1,Math.min(50,Math.floor(Number(level)||1))),
+  level:clampGameLevel(level),
   kind:"special",
   style:"special",
   specialId:special.id,
