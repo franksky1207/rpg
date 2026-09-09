@@ -88,7 +88,7 @@
    state.bossKilled[mapIdx]=true;
    state.bossLocked[mapIdx]=false;
    state.bossProgress[mapIdx]=0;
-   if(first&&mapIdx<9){state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);freeShopRefresh(mapIdx+1);}
+   if(first&&mapIdx<MAPS.length-1){state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);freeShopRefresh(mapIdx+1);}
   }else{
    progressEnemyKill(mapIdx,eIdx);
    addProgress(mapIdx,e.kind);
