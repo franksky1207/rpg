@@ -9,6 +9,22 @@ const AFFIX_POOLS={
  shoes:["dodge","def","hp"],
  accessory:["crit","atk","hp","dodge"]
 };
+const AFFIX_RATE_RANGES=[
+ [0,0],
+ [1,1],
+ [1,2],
+ [2,3],
+ [3,4],
+ [4,5]
+];
+const ACCESSORY_CRIT_RANGES=[
+ [1,2],
+ [2,3],
+ [3,5],
+ [5,7],
+ [7,9],
+ [9,10]
+];
 const MAX_CRIT_RATE=30;
 const MAX_DODGE_RATE=25;
 const CRIT_DAMAGE_MULTIPLIER=1.5;
@@ -17,6 +33,7 @@ let upgradeDropNoticePending=false;
 
 function ceil(n){return Math.ceil(n)}
 function round1(n){return Math.round(n*10)/10}
+function randomInt(min,max){return min+Math.floor(Math.random()*(max-min+1))}
 function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
@@ -81,35 +98,38 @@ function qualityRoll(kind){
  for(let i=0;i<arr.length;i++){c+=arr[i];if(r<c)return i}return 0;
 }
 function affixCount(q){if(q===0)return 0;if(q===1)return 1;if(q===2)return Math.random()<.5?1:2;if(q===3)return 2;if(q===4)return Math.random()<.5?2:3;return 3}
-function mainStatForType(type){return type==="weapon"?"atk":type==="helmet"?"hp":type==="armor"?"def":type==="shoes"?"dodge":"crit"}
-function mainStatValue(type,level,m){
+function mainStatForType(type){return type==="weapon"?"atk":type==="helmet"?"hp":type==="armor"?"def":type==="shoes"?"hp":"crit"}
+function mainStatValue(type,level,m,q){
  if(type==="weapon")return ceil((3+1.55*level)*m);
  if(type==="helmet")return ceil((8+2.5*level)*m);
  if(type==="armor")return ceil((1+.65*level)*m);
- if(type==="shoes")return round1((1+.12*level)*m);
- return round1((1+.12*level)*m);
+ if(type==="shoes")return ceil((8+2.5*level)*m);
+ const range=ACCESSORY_CRIT_RANGES[q]||ACCESSORY_CRIT_RANGES[0];
+ return randomInt(range[0],range[1]);
 }
-function affixStatValue(stat,level,m){
+function affixStatValue(stat,level,m,q){
  if(stat==="atk")return ceil((1+.45*level)*m);
  if(stat==="def")return ceil((.5+.20*level)*m);
  if(stat==="hp")return ceil((3+.9*level)*m);
- if(stat==="crit"||stat==="dodge")return round1((.5+.04*level)*m);
+ if(stat==="crit"||stat==="dodge"){
+  const range=AFFIX_RATE_RANGES[q]||AFFIX_RATE_RANGES[0];
+  return randomInt(range[0],range[1]);
+ }
  return 0;
 }
 function addItemStat(it,stat,value){it[stat]=round1((it[stat]||0)+value)}
 function rollAffixes(type,level,q,m){
- let pool=AFFIX_POOLS[type]||[],count=affixCount(q),used={},out=[];
+ let pool=(AFFIX_POOLS[type]||[]).slice(),count=Math.min(affixCount(q),pool.length),out=[];
  for(let i=0;i<count;i++){
-   let choices=pool.filter(stat=>(used[stat]||0)<2);if(!choices.length)break;
-   let stat=choices[Math.floor(Math.random()*choices.length)],value=affixStatValue(stat,level,m);
-   used[stat]=(used[stat]||0)+1;out.push({stat,value});
+   let n=Math.floor(Math.random()*pool.length),stat=pool.splice(n,1)[0],value=affixStatValue(stat,level,m,q);
+   out.push({stat,value});
  }
  return out;
 }
 function makeItem(level,mapIdx,kind="normal",forcedQ=null,forcedType=null){
  let q=forcedQ??qualityRoll(kind),type=forcedType??EQUIPMENT_TYPES[Math.floor(Math.random()*EQUIPMENT_TYPES.length)];
  let baseNames=MAPS[mapIdx].gear,name=baseNames[Math.max(0,EQUIPMENT_TYPES.indexOf(type))]||baseNames[0],m=QUALITY[q].m;
- let mainStat=mainStatForType(type),mainValue=mainStatValue(type,level,m),affixes=rollAffixes(type,level,q,m);
+ let mainStat=mainStatForType(type),mainValue=mainStatValue(type,level,m,q),affixes=rollAffixes(type,level,q,m);
  let it={id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,level,q,type,mainStat:{stat:mainStat,value:mainValue},affixes};
  addItemStat(it,mainStat,mainValue);affixes.forEach(a=>addItemStat(it,a.stat,a.value));
  it.sell=ceil(sellBase(level)*QUALITY[q].sm);it.buy=ceil(it.sell*3.5);return it;
