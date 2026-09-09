@@ -23,7 +23,7 @@
  }
 
  function specialOptions(){const tierLabel={low:"低",mid:"中",high:"高"};return SPECIAL_MONSTERS.map(x=>`<option value="${x.id}">${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");}
- function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join(""),level:Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`;}).join(""),type:EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")};}
+ function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join(""),level:Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`;}).join(""),type:EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")+`<option value="all">全部</option>`};}
  function dungeonMapOptions(){return MAPS.map((map,i)=>`<option value="${i}">${i+1}. ${map.chapter?map.chapter+"｜":""}${map.name}（Lv.${map.min}～${map.max}）</option>`).join("");}
  function dungeonEnemyOptions(mapIdx=0){const i=Math.max(0,Math.min(MAPS.length-1,Number(mapIdx)||0));return MAPS[i].enemies.map((e,j)=>`<option value="${j}">${e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通"}｜${e[0]} Lv.${e[1]}</option>`).join("");}
  function dungeonStateSafe(){return typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():(state.dungeon||{progress:0,attempts:0,points:0});}
