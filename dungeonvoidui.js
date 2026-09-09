@@ -34,7 +34,6 @@
  function averagePoints(run){return run?.cleared?round1((Number(run.points)||0)/run.cleared):0;}
  function reasonText(reason){
   if(reason==="defeat")return "挑戰失敗";
-  if(reason==="timeout")return "超過回合上限";
   if(reason==="exit")return "已強制退出";
   return "本次挑戰結束";
  }
