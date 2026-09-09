@@ -89,7 +89,11 @@ function equippedStats(){
  x.crit=round1(Math.min(MAX_CRIT_RATE,x.crit));x.dodge=round1(Math.min(MAX_DODGE_RATE,x.dodge));return x;
 }
 function normalizeHP(){let m=equippedStats().hp;state.hp=Math.min(state.hp??m,m)}
-function equipmentScore(it){if(!it)return -1;return round1((it.atk||0)*5+(it.def||0)*5+(it.hp||0)+(it.crit||0)*12+(it.dodge||0)*12)}
+function equipmentScore(it){
+ if(!it)return -1;
+ const level=Math.max(1,Math.floor(Number(it.level)||1)),rateWeight=20+.5*level;
+ return round1((it.atk||0)*5+(it.def||0)*5+(it.hp||0)+(it.crit||0)*rateWeight+(it.dodge||0)*rateWeight);
+}
 function qualityRoll(kind){
  let r=Math.random()*100,c=0,arr;
  if(kind==="boss")arr=[0,45,35,15,4.5,.5];
