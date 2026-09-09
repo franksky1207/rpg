@@ -81,9 +81,4 @@
   if(turnLimit)logs.push(`戰鬥超過 ${SPECIAL_TURN_LIMIT} 回合，未能分出勝負，本次挑戰結束。`);
   return {win:ehp<=0,turnLimit,logs,e:enemy};
  };
-
- // GM 測試沿用同一套正式特殊怪核心，避免正式機制反向依賴 GM 模組。
- if(typeof window.gmSpecialMakeDrops==="function")window.gmSpecialMakeDrops=window.specialMakeDrops;
- if(typeof window.gmSpecialApplyShopDiscount==="function")window.gmSpecialApplyShopDiscount=window.specialApplyShopDiscount;
- if(typeof window.gmSpecialFight==="function")window.gmSpecialFight=window.specialFightCore;
 })();
