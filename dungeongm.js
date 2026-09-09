@@ -19,6 +19,7 @@
  function showBountyTest(html){bountyTestHtml=html;showTestResult("gmBountyTestResult",html);}
  function showArenaTest(html){arenaTestHtml=html;showTestResult("gmArenaTestResult",html);}
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);}
+ function simulateFight(player,enemy,startHp=player.hp){return runCombatCore(player,enemy,startHp,{logs:false});}
 
  window.gmApplyDungeonValues=function(){
   const progress=Number(document.getElementById("gmDungeonProgress")?.value);
@@ -112,18 +113,6 @@
   setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
  };
 
- function simulateFight(player,enemy,startHp=player.hp){
-  let php=Math.max(0,Number(startHp)||0),ehp=enemy.hp,turn=0;
-  while(php>0&&ehp>0&&turn<200){
-   turn++;
-   if(Math.random()*100>=enemy.dodge){let pd=calcDamage(player.atk,enemy.def);if(Math.random()*100<player.crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);ehp-=pd;}
-   if(ehp<=0)break;
-   if(Math.random()*100<player.dodge)continue;
-   const enemyAtk=enemy.berserk&&ehp/enemy.hp<.5?ceil(enemy.atk*1.20):enemy.atk;
-   let ed=calcDamage(enemyAtk,player.def);if(Math.random()*100<enemy.crit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);php-=ed;
-  }
-  return {win:ehp<=0,turnLimit:php>0&&ehp>0,hp:Math.max(0,php),turns:turn};
- }
  window.gmSimulateBounty100=function(tierId){
   const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());if(!tier)return alert("找不到懸賞資料。");
   const summary={wins:0,totalTurns:0,winHpTotal:0};
