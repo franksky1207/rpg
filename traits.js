@@ -37,8 +37,8 @@ function applyMonsterTraits(enemy,traitIds){
   if(id==="berserk")e.berserk=true;
   if(id==="giant"){e.hp=ceil(e.hp*1.30);e.atk=ceil(e.atk*1.05);e.dodge-=5;}
  });
- e.crit=round1(Math.max(0,Math.min(MAX_CRIT_RATE,e.crit)));
- e.dodge=round1(Math.max(0,Math.min(MAX_DODGE_RATE,e.dodge)));
+ e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,e.crit)));
+ e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,e.dodge)));
  return e;
 }
 function createMonsterEncounter(mapIdx,eIdx){
