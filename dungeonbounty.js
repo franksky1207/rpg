@@ -40,8 +40,8 @@
    if(id==="berserk")e.berserk=true;
    if(id==="giant"){e.hp=ceil(e.hp*1.30);e.atk=ceil(e.atk*1.05);e.dodge=round1((e.dodge||0)-5);}
   });
-  e.crit=round1(Math.max(0,Math.min(MAX_CRIT_RATE,e.crit||0)));
-  e.dodge=round1(Math.max(0,Math.min(MAX_DODGE_RATE,e.dodge||0)));
+  e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,e.crit||0)));
+  e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,e.dodge||0)));
   return e;
  }
  function buildBountyEnemy(tier,playerStats=null,level=null){
@@ -56,8 +56,8 @@
    hp:Math.max(1,ceil(base.hp*tier.hpMul)),
    atk:Math.max(1,ceil(base.damage*tier.damageMul+p.def*.55)),
    def:Math.max(0,ceil(base.def*tier.defMul)),
-   crit:rateFromPlayer(p.crit,tier.critScale,tier.critAdd,tier.critCap,MAX_CRIT_RATE),
-   dodge:rateFromPlayer(p.dodge,tier.dodgeScale,tier.dodgeAdd,tier.dodgeCap,MAX_DODGE_RATE),
+   crit:rateFromPlayer(p.crit,tier.critScale,tier.critAdd,tier.critCap,MONSTER_MAX_CRIT_RATE),
+   dodge:rateFromPlayer(p.dodge,tier.dodgeScale,tier.dodgeAdd,tier.dodgeCap,MONSTER_MAX_DODGE_RATE),
    playerSnapshot:p
   };
   enemy=applyBountyTraits(enemy,rollBountyTraits(tier.id));
