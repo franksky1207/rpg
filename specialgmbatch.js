@@ -16,28 +16,28 @@ function gmSpecialBatchResultHtml(special,summary){
  <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div>${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}</div>`;
 }
 
-function gmRenderSpecialBatchInline(){
- const select=document.getElementById("gmSpecialMonster");
- if(!select)return;
- if(getSpecialMonsterById(gmSpecialBatchSelectedId))select.value=gmSpecialBatchSelectedId;
- let result=document.getElementById("gmSpecialBatchResult");
- if(result)result.remove();
- if(!gmSpecialBatchResult)return;
- const body=select.closest(".gm-hub-body")||select.parentElement?.parentElement;
- if(!body)return;
- result=document.createElement("div");
- result.id="gmSpecialBatchResult";
- result.style.marginTop="12px";
- result.innerHTML=gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary);
- body.appendChild(result);
+function gmSetSpecialBatchSelected(id){
+ const special=getSpecialMonsterById(id);
+ if(!special)return;
+ const changed=gmSpecialBatchSelectedId!==special.id;
+ gmSpecialBatchSelectedId=special.id;
+ if(changed){
+  gmSpecialBatchResult=null;
+  const result=document.getElementById("gmSpecialBatchResult");
+  if(result)result.innerHTML="";
+ }
 }
 
 async function gmStartSpecialBattle(){
  if(battleBusy)return;
  const count=100;
- const id=document.getElementById("gmSpecialMonster")?.value,special=getSpecialMonsterById(id);
+ const select=document.getElementById("gmSpecialMonster");
+ const id=select?.value,special=getSpecialMonsterById(id);
  if(!special)return alert("找不到特殊怪資料。");
  gmSpecialBatchSelectedId=special.id;
+
+ const button=document.getElementById("gmSpecialBatchStartBtn");
+ if(button){button.disabled=true;button.textContent="測試中…";}
 
  const snapshot=JSON.stringify(state);
  const upgradeSnapshot=upgradeDropNoticePending;
@@ -93,7 +93,9 @@ async function gmStartSpecialBattle(){
  gmSpecialTestStateSnapshot=null;
  gmSpecialTestUpgradeNoticeSnapshot=upgradeSnapshot;
  gmSpecialBatchResult={special,summary};
- view="settings";
- render();
- setTimeout(gmRenderSpecialBatchInline,0);
+
+ const result=document.getElementById("gmSpecialBatchResult");
+ if(result)result.innerHTML=gmSpecialBatchResultHtml(special,summary);
+ if(select)select.value=gmSpecialBatchSelectedId;
+ if(button){button.disabled=false;button.textContent="開始測試（100 次）";}
 }
