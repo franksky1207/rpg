@@ -2,15 +2,15 @@ let gmSpecialBatchSelectedId=(typeof SPECIAL_MONSTERS!=="undefined"&&SPECIAL_MON
 let gmSpecialBatchResult=null;
 
 function gmSpecialBatchResultHtml(special,summary){
- const qualityRows=summary.qualityCounts.map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
- return `<div class="notice"><b>${special.name}・100 次模擬</b><div class="muted" style="margin-top:5px">以下 100 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
+ const extraRows=`${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
+ return `<div class="notice"><b>${special.name}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">以下 ${GM_TEST_RUNS} 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
  <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
   <div class="stat">死亡掉裝次數<b>${summary.deathDrops}</b></div>
  </div>
- <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div>${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}</div>`;
+ ${gmRewardSummaryHtml(summary,extraRows)}`;
 }
 
 function gmSetSpecialBatchSelected(id){
@@ -27,7 +27,6 @@ function gmSetSpecialBatchSelected(id){
 
 async function gmStartSpecialBattle(){
  if(battleBusy)return;
- const count=100;
  const select=document.getElementById("gmSpecialMonster");
  const id=select?.value,special=getSpecialMonsterById(id);
  if(!special)return alert("找不到特殊怪資料。");
@@ -44,9 +43,9 @@ async function gmStartSpecialBattle(){
  const playerMax=playerSnapshot.hp;
  battleBusy=true;gmSpecialTestActive=true;gmSpecialTestMonster=special;
 
- const summary={count,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
+ const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
 
- for(let i=0;i<count;i++){
+ for(let i=0;i<GM_TEST_RUNS;i++){
   state=JSON.parse(snapshot);
   upgradeDropNoticePending=upgradeSnapshot;
   state.hp=playerMax;
@@ -77,7 +76,7 @@ async function gmStartSpecialBattle(){
   }
  }
 
- summary.winRate=round1(summary.wins/count*100);
+ summary.winRate=round1(summary.wins/GM_TEST_RUNS*100);
  summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/playerMax*100):0;
 
  state=JSON.parse(snapshot);
@@ -87,12 +86,10 @@ async function gmStartSpecialBattle(){
  gmSpecialTestActive=false;
  gmSpecialTestMonster=null;
  gmSpecialTestReward=null;
- gmSpecialTestStateSnapshot=null;
- gmSpecialTestUpgradeNoticeSnapshot=upgradeSnapshot;
  gmSpecialBatchResult={special,summary};
 
  const result=document.getElementById("gmSpecialBatchResult");
  if(result)result.innerHTML=gmSpecialBatchResultHtml(special,summary);
  if(select)select.value=gmSpecialBatchSelectedId;
- if(button){button.disabled=false;button.textContent="開始測試（100 次）";}
+ if(button){button.disabled=false;button.textContent=`開始測試（${GM_TEST_RUNS} 次）`;}
 }
