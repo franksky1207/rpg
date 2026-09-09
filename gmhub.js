@@ -28,8 +28,9 @@
   return SPECIAL_MONSTERS.map(x=>`<option value="${x.id}" ${x.id===selected?"selected":""}>${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");
  }
  function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join(""),level:Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`;}).join(""),type:EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")+`<option value="all">全部</option>`};}
- function dungeonMapOptions(){return MAPS.map((map,i)=>`<option value="${i}">${i+1}. ${map.chapter?map.chapter+"｜":""}${map.name}（Lv.${map.min}～${map.max}）</option>`).join("");}
- function dungeonEnemyOptions(mapIdx=0){const i=Math.max(0,Math.min(MAPS.length-1,Number(mapIdx)||0));return MAPS[i].enemies.map((e,j)=>`<option value="${j}">${e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通"}｜${e[0]} Lv.${e[1]}</option>`).join("");}
+ function mapMonsterSelection(){return typeof getMapMonsterGmSelection==="function"?getMapMonsterGmSelection():{mapIdx:0,eIdx:0};}
+ function mapMonsterMapOptions(){const s=mapMonsterSelection();return MAPS.map((map,i)=>`<option value="${i}" ${i===s.mapIdx?"selected":""}>${i+1}. ${map.chapter?map.chapter+"｜":""}${map.name}（Lv.${map.min}～${map.max}）</option>`).join("");}
+ function mapMonsterEnemyOptions(mapIdx=0){const i=Math.max(0,Math.min(MAPS.length-1,Number(mapIdx)||0)),s=mapMonsterSelection();return MAPS[i].enemies.map((e,j)=>`<option value="${j}" ${i===s.mapIdx&&j===s.eIdx?"selected":""}>${e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通"}｜${e[0]} Lv.${e[1]}</option>`).join("");}
  function dungeonStateSafe(){return typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():(state.dungeon||{progress:0,attempts:0,points:0});}
 
  function generalManagementHtml(){
@@ -43,7 +44,11 @@
   const result=(typeof gmSpecialBatchResultHtml==="function"&&typeof gmSpecialBatchResult!=="undefined"&&gmSpecialBatchResult)?gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary):"";
   return `<div class="muted gm-hub-note">依目前角色實際能力生成。GM 測試為沙盒模式，離開結算後會還原正式資料；目前角色 Lv.${state.level}。</div><div class="controls" style="margin-top:10px;align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn" onchange="gmSetSpecialBatchSelected(this.value)">${specialOptions()}</select></label><button id="gmSpecialBatchStartBtn" class="btn blue" onclick="gmStartSpecialBattle()">開始測試（100 次）</button></div><div id="gmSpecialBatchResult" style="margin-top:12px">${result}</div>`;
  }
- function dungeonProgressTestHtml(){return `<div class="muted gm-hub-note">可直接測試全部 ${MAPS.length} 張主地圖怪物會產生多少副本次數累積進度，不會進入真正副本。</div><div class="controls dungeon-debug-controls" style="align-items:end"><label>地圖<br><select id="gmDungeonMap" class="btn dungeon-debug-select" onchange="gmHubChangeDungeonMap()">${dungeonMapOptions()}</select></label><label>怪物<br><select id="gmDungeonMonster" class="btn dungeon-debug-select">${dungeonEnemyOptions(0)}</select></label><button class="btn blue" onclick="gmDungeonDebug()">查看 Debug</button></div>`;}
+ function mapMonsterTestHtml(){
+  const s=mapMonsterSelection();
+  const result=typeof getMapMonsterGmTestHtml==="function"?getMapMonsterGmTestHtml():"";
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定主線地圖怪模擬 100 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>地圖<br><select id="gmMapMonsterMap" class="btn" onchange="gmMapMonsterChangeMap()">${mapMonsterMapOptions()}</select></label><label>怪物<br><select id="gmMapMonsterEnemy" class="btn" onchange="gmMapMonsterChangeEnemy()">${mapMonsterEnemyOptions(s.mapIdx)}</select></label><button id="gmMapMonsterStartBtn" class="btn blue" onclick="gmStartMapMonsterTest()">開始測試（100 次）</button></div><div id="gmMapMonsterTestResult" style="margin-top:12px">${result}</div>`;
+ }
  function bountyTestHtml(){const result=typeof getBountyGmDebugHtml==="function"?getBountyGmDebugHtml():"";return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力生成；不扣副本次數、不改正式角色資料。</div><div class="controls"><button class="btn gm-create" onclick="gmPreviewBounty('normal')">生成普通懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('high')">生成高級懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('danger')">生成危險懸賞</button></div><div class="controls" style="margin-top:10px"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞 ×100</button></div><div id="gmBountyDebugResult" style="margin-top:12px">${result}</div>`;}
  function arenaTestHtml(){
   const result=typeof getArenaGmDebugHtml==="function"?getArenaGmDebugHtml():"";
@@ -58,11 +63,10 @@
  function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
  function hubHtml(){
   const manage=gmHubTab==="manage";
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${manage?`${section("一般管理",generalManagementHtml(),true)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("特殊怪測試",specialTestHtml(),true)}${section("副本進度／刷怪測試",dungeonProgressTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${manage?`${section("一般管理",generalManagementHtml(),true)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("特殊怪測試",specialTestHtml(),true)}${section("地圖怪測試",mapMonsterTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
 
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
- window.gmHubChangeDungeonMap=function(){const map=document.getElementById("gmDungeonMap"),enemy=document.getElementById("gmDungeonMonster");if(!map||!enemy)return;enemy.innerHTML=dungeonEnemyOptions(map.value);enemy.value="0";if(typeof gmDungeonChangeMap==="function")gmDungeonChangeMap();};
  gmHtml=function(){installGmHubStyles();return hubHtml();};
  installGmHubStyles();
 })();
