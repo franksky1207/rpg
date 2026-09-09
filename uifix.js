@@ -9,6 +9,7 @@
   s.id="ui-fix-styles";
   s.textContent=`
    .void-top-exit{margin:6px 0 10px!important}.void-top-exit .void-exit-btn{width:100%;max-width:520px}
+   .void-player-meta{color:#b9d4da;font-size:13px;line-height:1.6;margin:5px 0 2px}
    @media(max-width:760px){
     .void-panel{padding:7px!important}.void-title{font-size:18px!important;margin-bottom:6px!important}
     .void-stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;margin-bottom:6px!important}
@@ -16,10 +17,10 @@
     .void-subtitle{margin:0 0 6px!important;font-size:12px!important}
     .void-combat{padding:7px!important;border-radius:11px!important;min-height:0!important}
     .void-combat .combat-head{margin-bottom:5px!important;font-size:13px!important}
-    .void-combat .combat-arena{gap:5px!important;min-height:0!important;flex:0 0 auto!important}
-    .void-combat .combatant{padding:8px!important;min-height:0!important;border-radius:10px!important}
-    .void-combat .combatant h2{font-size:18px!important;margin:3px 0 6px!important}.void-vs{font-size:17px!important;margin:1px 0!important;line-height:1!important}
-    .void-floor-badge{padding:2px 7px!important;margin-bottom:3px!important;font-size:11px!important}.void-traits{margin:2px 0 4px!important;font-size:12px!important}.void-enemy-meta{margin:2px 0!important;font-size:11px!important;line-height:1.35!important}.void-reward{font-size:13px!important;margin:2px 0!important}
+    .void-combat .combat-arena{gap:6px!important;min-height:0!important;flex:0 0 auto!important;grid-template-rows:auto 30px auto!important;align-items:stretch!important}
+    .void-combat .combatant{padding:8px!important;min-height:0!important;border-radius:10px!important;justify-content:center!important}
+    .void-combat .combatant h2{font-size:18px!important;margin:3px 0 6px!important}.void-vs{font-size:17px!important;margin:0!important;line-height:30px!important;align-self:center!important}
+    .void-floor-badge{padding:2px 7px!important;margin-bottom:3px!important;font-size:11px!important}.void-traits{margin:2px 0 4px!important;font-size:12px!important}.void-enemy-meta,.void-player-meta{margin:2px 0!important;font-size:11px!important;line-height:1.35!important}.void-reward{font-size:13px!important;margin:2px 0!important}
     .void-combat .big-hp{margin-top:5px!important}.void-combat .status-label{font-size:12px!important;margin-bottom:3px!important}.void-combat .bar{height:10px!important}.void-message{font-size:12px!important;min-height:0!important;margin-top:5px!important;padding:5px!important}
     .void-top-exit{margin:4px 0 6px!important}.void-top-exit .void-exit-btn{padding:9px 10px!important;font-size:14px!important}
    }
@@ -40,6 +41,18 @@
     const actions=btn.closest(".void-actions");
     if(actions&&!actions.classList.contains("void-top-exit"))actions.classList.add("void-top-exit");
     if(actions&&combat.parentNode===actions.parentNode&&actions.nextElementSibling!==combat)combat.parentNode.insertBefore(actions,combat);
+   }
+   const playerCard=document.getElementById("voidPlayerCard");
+   if(playerCard&&typeof equippedStats==="function"){
+    const ps=equippedStats();
+    let meta=playerCard.querySelector(".void-player-meta");
+    if(!meta){
+     meta=document.createElement("div");
+     meta.className="void-player-meta";
+     const h2=playerCard.querySelector("h2");
+     if(h2)h2.insertAdjacentElement("afterend",meta);else playerCard.prepend(meta);
+    }
+    meta.innerHTML=`HP ${ps.hp}　ATK ${ps.atk}　DEF ${ps.def}<br>暴擊 ${ps.crit}%　閃避 ${ps.dodge}%`;
    }
   }
  }
