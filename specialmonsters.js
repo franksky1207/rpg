@@ -150,8 +150,8 @@ function createSpecialPlayerSnapshot(stats){
   hp:Math.max(1,Math.ceil(Number(s.hp)||1)),
   atk:Math.max(1,Math.ceil(Number(s.atk)||1)),
   def:Math.max(0,Math.ceil(Number(s.def)||0)),
-  crit:Math.max(0,Math.min(MAX_CRIT_RATE,Number(s.crit)||0)),
-  dodge:Math.max(0,Math.min(MAX_DODGE_RATE,Number(s.dodge)||0))
+  crit:round1(Math.max(0,Number(s.crit)||0)),
+  dodge:round1(Math.max(0,Number(s.dodge)||0))
  };
 }
 
@@ -171,7 +171,7 @@ function buildSpecialMonsterFromPlayer(playerStats,special,level=1){
  const player=createSpecialPlayerSnapshot(playerStats),base=specialBaseEnemyFromPlayer(player),tier=specialTierConfig(special);
  return {
   name:special.name,
-  level:Math.max(1,Math.min(50,Math.floor(Number(level)||1))),
+  level:Math.max(1,Math.min(50,Math.floor(Number(level)||1)),),
   kind:"special",
   style:"special",
   specialId:special.id,
@@ -181,8 +181,8 @@ function buildSpecialMonsterFromPlayer(playerStats,special,level=1){
   hp:Math.max(1,Math.ceil(base.hp*tier.hpMul)),
   atk:Math.max(1,Math.ceil(base.damage*tier.atkMul+player.def*.55)),
   def:Math.max(0,Math.ceil(base.def*tier.defMul)),
-  crit:specialRateFromPlayer(player.crit,tier,"crit",MAX_CRIT_RATE),
-  dodge:specialRateFromPlayer(player.dodge,tier,"dodge",MAX_DODGE_RATE),
+  crit:specialRateFromPlayer(player.crit,tier,"crit",MONSTER_MAX_CRIT_RATE),
+  dodge:specialRateFromPlayer(player.dodge,tier,"dodge",MONSTER_MAX_DODGE_RATE),
   playerSnapshot:player
  };
 }
