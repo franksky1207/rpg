@@ -17,7 +17,8 @@
    .gm-hub-body{padding:14px}.gm-hub-body .item{margin-top:0}.gm-hub-body input,.gm-hub-body select{max-width:100%}
    .gm-hub .btn.gm-create{background:#8a641f;border-color:#c99a43;color:#fff3cf}.gm-hub .btn.gm-create:hover{background:#9b7227;border-color:#ddb05b}
    .gm-hub-close{margin-top:14px}.gm-hub-note{margin-bottom:10px}
-   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}}
+   .gm-bounty-test-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.gm-bounty-test-controls .btn{width:100%;white-space:normal}
+   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}.gm-bounty-test-controls{grid-template-columns:1fr}.gm-bounty-test-controls .btn{padding:10px 12px}}
   `;
   document.head.appendChild(style);
  }
@@ -49,7 +50,10 @@
   const result=typeof getMapMonsterGmTestHtml==="function"?getMapMonsterGmTestHtml():"";
   return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定主線地圖怪模擬 100 次。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>地圖<br><select id="gmMapMonsterMap" class="btn" onchange="gmMapMonsterChangeMap()">${mapMonsterMapOptions()}</select></label><label>怪物<br><select id="gmMapMonsterEnemy" class="btn" onchange="gmMapMonsterChangeEnemy()">${mapMonsterEnemyOptions(s.mapIdx)}</select></label><button id="gmMapMonsterStartBtn" class="btn blue" onclick="gmStartMapMonsterTest()">開始測試（100 次）</button></div><div id="gmMapMonsterTestResult" style="margin-top:12px">${result}</div>`;
  }
- function bountyTestHtml(){const result=typeof getBountyGmDebugHtml==="function"?getBountyGmDebugHtml():"";return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力生成；不扣副本次數、不改正式角色資料。</div><div class="controls"><button class="btn gm-create" onclick="gmPreviewBounty('normal')">生成普通懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('high')">生成高級懸賞</button><button class="btn gm-create" onclick="gmPreviewBounty('danger')">生成危險懸賞</button></div><div class="controls" style="margin-top:10px"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞 ×100</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞 ×100</button></div><div id="gmBountyDebugResult" style="margin-top:12px">${result}</div>`;}
+ function bountyTestHtml(){
+  const result=typeof getBountyGmTestHtml==="function"?getBountyGmTestHtml():"";
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定懸賞模擬 100 次。GM 測試為沙盒模式，不扣副本次數、不修改正式角色資料。</div><div class="gm-bounty-test-controls"><button class="btn blue" onclick="gmSimulateBounty100('normal')">普通懸賞測試（100 次）</button><button class="btn blue" onclick="gmSimulateBounty100('high')">高級懸賞測試（100 次）</button><button class="btn blue" onclick="gmSimulateBounty100('danger')">危險懸賞測試（100 次）</button></div><div id="gmBountyTestResult" style="margin-top:12px">${result}</div>`;
+ }
  function arenaTestHtml(){
   const result=typeof getArenaGmDebugHtml==="function"?getArenaGmDebugHtml():"";
   return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力，模擬 100 次完整三連戰；不扣副本次數、不增加副本積分、不修改正式 HP 或其他資料。</div><div class="controls"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場 ×100</button></div><div id="gmArenaDebugResult" style="margin-top:12px">${result}</div>`;
