@@ -132,7 +132,7 @@
   const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());if(!tier)return alert("找不到懸賞資料。");
   const summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){
-   const enemy=buildBountyEnemyForDebug(tierId,player,state.level),r=simulateFight(player,enemy);
+   const enemy=buildBountyEnemyForTest(tierId,player,state.level),r=simulateFight(player,enemy);
    summary.totalTurns+=r.turns;
    if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
   }
@@ -150,7 +150,7 @@
    let hp=player.hp,points=0,cleared=true;
    for(let stage=0;stage<3;stage++){
     if(stage>0)reached[stage]++;
-    const enemy=buildArenaEnemyForDebug(difficultyId,stage,player,state.level);
+    const enemy=buildArenaEnemyForTest(difficultyId,stage,player,state.level);
     const r=simulateFight(player,enemy,hp);totalTurns+=r.turns;
     if(r.win){wins[stage]++;hp=r.hp;points+=Number(cfg.stagePoints?.[stage])||0;}
     else{cleared=false;break;}
