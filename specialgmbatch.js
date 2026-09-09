@@ -1,7 +1,7 @@
 let gmSpecialBatchSelectedId=(typeof SPECIAL_MONSTERS!=="undefined"&&SPECIAL_MONSTERS[0])?SPECIAL_MONSTERS[0].id:"";
 let gmSpecialBatchResult=null;
 
-function gmSpecialMapForLevel(level){return Math.max(0,Math.min(9,Math.floor((level-1)/5)));}
+function gmSpecialMapForLevel(level){return Math.max(0,Math.min(MAPS.length-1,Math.floor((level-1)/5)));}
 
 function gmSpecialBatchResultHtml(special,summary){
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
