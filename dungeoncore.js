@@ -1,5 +1,4 @@
 (function(){
- const DUNGEON_TURN_LIMIT=200;
  let activeDungeonRun=null;
 
  function dungeonState(){
@@ -60,53 +59,15 @@
  };
 
  window.dungeonFightCore=function(enemy){
-  if(!enemy||typeof enemy!=="object")return {win:false,turnLimit:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp};
-
-  const ps=equippedStats();
-  let ehp=Math.max(1,Number(enemy.hp)||1);
-  let php=Math.max(0,Number(state.hp)||0);
-  const logs=[];
-  let turn=0;
-
-  while(php>0&&ehp>0&&turn<DUNGEON_TURN_LIMIT){
-   turn++;
-
-   if(Math.random()*100<(Number(enemy.dodge)||0)){
-    logs.push(`${enemy.name||"副本敵人"}閃避了你的攻擊。`);
-   }else{
-    let pd=calcDamage(ps.atk,Number(enemy.def)||0);
-    const crit=Math.random()*100<ps.crit;
-    if(crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
-    ehp-=pd;
-    logs.push(crit?`你攻擊${enemy.name||"副本敵人"}，暴擊造成 ${pd} 點傷害。`:`你攻擊${enemy.name||"副本敵人"}，造成 ${pd} 點傷害。`);
-   }
-
-   if(ehp<=0)break;
-
-   if(Math.random()*100<ps.dodge){
-    logs.push(`${enemy.name||"副本敵人"}攻擊你，你閃避了攻擊。`);
-    continue;
-   }
-
-   const enemyAtk=enemy.berserk&&ehp/Math.max(1,Number(enemy.hp)||1)<.5?ceil((Number(enemy.atk)||1)*1.20):(Number(enemy.atk)||1);
-   let ed=calcDamage(enemyAtk,ps.def);
-   const enemyCrit=Math.random()*100<(Number(enemy.crit)||0);
-   if(enemyCrit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);
-   php-=ed;
-   logs.push(enemyCrit?`${enemy.name||"副本敵人"}攻擊你，暴擊造成 ${ed} 點傷害。`:`${enemy.name||"副本敵人"}攻擊你，造成 ${ed} 點傷害。`);
-  }
-
-  state.hp=Math.max(0,php);
-  const turnLimit=php>0&&ehp>0;
-  if(turnLimit)logs.push(`戰鬥超過 ${DUNGEON_TURN_LIMIT} 回合，未能分出勝負，本次挑戰結束。`);
-
+  if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
+  const combat=runCombatCore(equippedStats(),enemy,state.hp);
+  state.hp=combat.hp;
   return {
-   win:ehp<=0,
-   turnLimit,
-   logs,
+   win:combat.win,
+   logs:combat.logs,
    e:enemy,
    combatEndHp:state.hp,
-   turns:turn
+   turns:combat.turns
   };
  };
 })();
