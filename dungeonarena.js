@@ -39,25 +39,9 @@
   return 1;
  }
  function rollArenaTraits(mode){
-  const pool=(typeof MONSTER_TRAIT_IDS!=="undefined"?MONSTER_TRAIT_IDS:Object.keys(MONSTER_TRAITS||{})).slice();
-  const count=traitCount(mode),out=[];
+  const pool=MONSTER_TRAIT_IDS.slice(),count=traitCount(mode),out=[];
   for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   return out;
- }
- function applyArenaTraits(enemy,traitIds){
-  const e={...enemy,traits:traitIds.slice(),berserk:false};
-  traitIds.forEach(id=>{
-   if(id==="strong")e.hp=ceil(e.hp*1.20);
-   if(id==="ferocious")e.atk=ceil(e.atk*1.15);
-   if(id==="hard")e.def=ceil(e.def*1.20);
-   if(id==="swift")e.dodge=round1((e.dodge||0)+8);
-   if(id==="deadly")e.crit=round1((e.crit||0)+8);
-   if(id==="berserk")e.berserk=true;
-   if(id==="giant"){e.hp=ceil(e.hp*1.30);e.atk=ceil(e.atk*1.05);e.dodge=round1((e.dodge||0)-5);}
-  });
-  e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,e.crit||0)));
-  e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,e.dodge||0)));
-  return e;
  }
  function arenaTraitNames(enemy){
   if(!enemy?.traits?.length)return "無";
@@ -71,7 +55,7 @@
   const stages=ARENA_STAGE_CONFIGS[difficultyId]||ARENA_STAGE_CONFIGS.normal;
   const idx=Math.max(0,Math.min(2,Number(stageIndex)||0));
   const cfg=stages[idx]||stages[0];
-  let enemy={
+  const enemy={
    name:ARENA_ENEMY_NAMES[idx]||"模擬對手",
    level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,
    hp:Math.max(1,ceil(base.hp*cfg.hpMul)),
@@ -79,9 +63,9 @@
    def:Math.max(0,ceil(base.def*cfg.defMul)),
    crit:rateFromPlayer(p.crit,cfg.critScale,cfg.critAdd,cfg.critCap,MONSTER_MAX_CRIT_RATE),
    dodge:rateFromPlayer(p.dodge,cfg.dodgeScale,cfg.dodgeAdd,cfg.dodgeCap,MONSTER_MAX_DODGE_RATE),
-   traits:[],berserk:false,playerSnapshot:p
+   playerSnapshot:p
   };
-  return applyArenaTraits(enemy,rollArenaTraits(cfg.traitMode));
+  return applyMonsterTraits(enemy,rollArenaTraits(cfg.traitMode));
  }
 
  window.getArenaDifficultyConfigs=function(){return ARENA_DIFFICULTIES.map(d=>({...d,stagePoints:d.stagePoints.slice(),stages:(ARENA_STAGE_CONFIGS[d.id]||[]).map(x=>({...x}))}));};
@@ -192,7 +176,7 @@
  }
  function combatHtml(){
   const e=arenaState.enemy,s=equippedStats(),d=arenaState.difficulty,stage=arenaState.stage;
-  return `<section class="combat-screen arena-combat"><div class="combat-head arena-combat-head">【競技場】 ${d?.name||""}・${ARENA_STAGE_NAMES[stage]}</div><div class="arena-progress-wrap">${progressStrip()}</div><div class="combat-arena"><div class="combatant player arena-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div><div class="combat-vs arena-vs">VS</div><div class="combatant enemy arena-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="${difficultyClass(d?.id)} arena-combat-tier">${d?.name||""}</div><h2 id="combatEnemyName">${e.name}</h2><div class="arena-traits">特性：${arenaTraitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message arena-message" id="combatMessage">準備戰鬥</div></section>`;
+  return `<section class="combat-screen arena-combat"><div class="combat-head arena-combat-head">【競技場】 ${d?.name||""}・${ARENA_STAGE_NAMES[stage]}</div><div class="arena-progress-wrap">${progressStrip()}</div><div class="combat-arena"><div class="combatant player arena-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div><div class="combat-vs arena-vs">VS</div><div class="combatant enemy arena-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="${difficultyClass(d?.id)} arena-combat-tier">${d?.name||""}</div><h2 id="combatEnemyName">${e.name}</h2><div class="arena-traits">特性：${arenaTraitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message arena-message" id="combatMessage">準備戰鬥</div></section>`;
  }
  function resultHtml(){
   const d=ensureDungeonProgressState(),r=arenaState.result||{},diff=arenaState.difficulty;
