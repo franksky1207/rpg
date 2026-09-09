@@ -6,8 +6,7 @@ function gmHtml(){
   <div class="controls">
    <button class="btn" onclick="gmLevel()">指定等級</button>
    <button class="btn" onclick="gmGold()">指定金幣</button>
-   <button class="btn" onclick="gmUnlock()">解鎖全部地圖與怪物</button>
-   <button class="btn" onclick="gmRestoreLevelWorld()">回復現有等級地圖與怪物</button>
+   <button class="btn" onclick="gmSetWorldProgress()">指定解鎖到等級關卡</button>
    <button class="btn blue" onclick="gmRefreshShop()">刷新商店</button>
    <button class="btn blue" onclick="gmResetShopPrice()">重置商店</button>
    <button class="btn" onclick="gmHeal()">補滿 HP</button>
@@ -33,38 +32,33 @@ function gmGold(){
  state.gold=n;save();render();
 }
 
-function gmUnlock(){
- const count=MAPS.length;
- state.unlockedMap=Math.max(0,count-1);
- state.mapProgress=Array.from({length:count},()=>[10,10,10,10]);
- state.bossProgress=Array(count).fill(10);
- state.bossLocked=Array(count).fill(false);
- state.bossKilled=Array(count).fill(true);
- save();render();
-}
+function gmSetWorldProgress(){
+ const raw=prompt(`指定目前攻略到哪個等級關卡（1～${MAX_LEVEL}）`,state.level);
+ if(raw===null)return;
+ const target=Math.floor(Number(raw));
+ if(!Number.isFinite(target)||target<1||target>MAX_LEVEL){alert(`請輸入 1～${MAX_LEVEL} 的整數。`);return}
 
-function gmRestoreLevelWorld(){
  const count=MAPS.length;
- const level=Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(state.level)||1)));
- const currentMap=Math.max(0,Math.min(count-1,Math.floor((level-1)/5)));
+ const currentMap=Math.max(0,Math.min(count-1,Math.floor((target-1)/5)));
+ const currentEnemy=(target-1)%5;
  const mapProgress=Array.from({length:count},()=>[0,0,0,0]);
  const bossProgress=Array(count).fill(0);
  const bossLocked=Array(count).fill(false);
  const bossKilled=Array(count).fill(false);
 
+ // 指定等級以前的地圖全部正式完成；指定等級本身維持「剛開始」。
  for(let i=0;i<currentMap;i++){
   mapProgress[i]=[10,10,10,10];
   bossKilled[i]=true;
  }
 
- const map=MAPS[currentMap];
- if(map){
-  const p=mapProgress[currentMap];
-  if(level>=Number(map.enemies?.[1]?.[1]||Infinity))p[0]=10;
-  if(level>=Number(map.enemies?.[2]?.[1]||Infinity))p[1]=10;
-  if(level>=Number(map.enemies?.[3]?.[1]||Infinity))p[2]=10;
-  if(level>=Number(map.enemies?.[4]?.[1]||Infinity))p[3]=10;
- }
+ // 同一張地圖內，指定怪物以前的怪物全部完成。
+ const p=mapProgress[currentMap];
+ if(currentEnemy>=1)p[0]=10;
+ if(currentEnemy>=2)p[1]=10;
+ if(currentEnemy>=3)p[2]=10;
+ if(currentEnemy>=4)p[3]=10;
+ // currentEnemy===4 時即 Boss 已出現但尚未擊敗；Boss 本身沒有 0/10 進度。
 
  state.unlockedMap=currentMap;
  state.mapProgress=mapProgress;
@@ -72,8 +66,13 @@ function gmRestoreLevelWorld(){
  state.bossLocked=bossLocked;
  state.bossKilled=bossKilled;
  selectedMap=currentMap;
- if(typeof highestUnlockedEnemy==="function")selectedEnemy=highestUnlockedEnemy(currentMap);
+ selectedEnemy=currentEnemy;
+ selectedBattleCount=1;
  save();render();
+
+ if(currentEnemy===4&&state.level<target){
+  alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
+ }
 }
 
 function gmCreateGear(){
