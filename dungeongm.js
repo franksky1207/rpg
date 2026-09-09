@@ -1,13 +1,24 @@
 (function(){
  let bountyTestHtml="";
- let arenaDebugHtml="";
- let voidMirageDebugHtml="";
+ let arenaTestHtml="";
+ let voidMirageTestHtml="";
  let mapMonsterTestHtml="";
  let mapTestMap=0;
  let mapTestEnemy=0;
  const VOID_MIRAGE_GM_SIM_LIMIT=10000;
 
  function dungeonState(){return ensureDungeonProgressState();}
+ function testPercent(value,total=GM_TEST_RUNS){return total?round1(value/total*100):0;}
+ function showTestResult(id,html){const box=document.getElementById(id);if(box)box.innerHTML=html;}
+ function setTestButton(button,busy,label){if(!button)return;button.disabled=busy;button.textContent=busy?"測試中…":label;}
+ function traitDetail(enemy){
+  if(!enemy?.traits?.length)return "無";
+  return enemy.traits.map(id=>{const t=MONSTER_TRAITS?.[id];return t?`${t.name}（${t.desc}）`:id;}).join("、");
+ }
+ function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
+ function showBountyTest(html){bountyTestHtml=html;showTestResult("gmBountyTestResult",html);}
+ function showArenaTest(html){arenaTestHtml=html;showTestResult("gmArenaTestResult",html);}
+ function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);}
 
  window.gmApplyDungeonValues=function(){
   const progress=Number(document.getElementById("gmDungeonProgress")?.value);
@@ -19,8 +30,7 @@
 
  function clearMapMonsterTest(){
   mapMonsterTestHtml="";
-  const box=document.getElementById("gmMapMonsterTestResult");
-  if(box)box.innerHTML="";
+  showTestResult("gmMapMonsterTestResult","");
  }
  window.gmMapMonsterChangeMap=function(){
   const mapSelect=document.getElementById("gmMapMonsterMap"),enemySelect=document.getElementById("gmMapMonsterEnemy");
@@ -43,14 +53,13 @@
 
  function mapMonsterResultHtml(mapIdx,eIdx,summary){
   const map=MAPS[mapIdx],base=map.enemies[eIdx];
-  const qualityRows=summary.qualityCounts.map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
-  return `<div class="notice"><b>${map.name}｜${base[0]}・100 次模擬</b><div class="muted" style="margin-top:5px">以下 100 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
+  return `<div class="notice"><b>${map.name}｜${base[0]}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">以下 ${GM_TEST_RUNS} 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
    <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat">勝率<b>${summary.winRate}%</b></div>
     <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
     <div class="stat">死亡掉裝次數<b>${summary.deathDrops}</b></div>
    </div>
-   <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div></div>`;
+   ${gmRewardSummaryHtml(summary)}`;
  }
 
  window.gmStartMapMonsterTest=function(){
@@ -61,7 +70,7 @@
   mapTestMap=mapIdx;mapTestEnemy=eIdx;
 
   const button=document.getElementById("gmMapMonsterStartBtn");
-  if(button){button.disabled=true;button.textContent="測試中…";}
+  setTestButton(button,true,`開始測試（${GM_TEST_RUNS} 次）`);
 
   const snapshot=JSON.stringify(state);
   const upgradeSnapshot=upgradeDropNoticePending;
@@ -69,7 +78,7 @@
   const summary={wins:0,losses:0,winHpTotal:0,deathDrops:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0)};
   battleBusy=true;
 
-  for(let i=0;i<100;i++){
+  for(let i=0;i<GM_TEST_RUNS;i++){
    state=JSON.parse(snapshot);
    upgradeDropNoticePending=upgradeSnapshot;
    state.hp=player.hp;
@@ -94,29 +103,18 @@
    }
   }
 
-  summary.winRate=round1(summary.wins);
+  summary.winRate=testPercent(summary.wins);
   summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0;
   state=JSON.parse(snapshot);
   upgradeDropNoticePending=upgradeSnapshot;
   save(false);
   battleBusy=false;
   mapMonsterTestHtml=mapMonsterResultHtml(mapIdx,eIdx,summary);
-  const box=document.getElementById("gmMapMonsterTestResult");
-  if(box)box.innerHTML=mapMonsterTestHtml;
+  showTestResult("gmMapMonsterTestResult",mapMonsterTestHtml);
   if(mapSelect)mapSelect.value=String(mapTestMap);
   if(enemySelect)enemySelect.value=String(mapTestEnemy);
-  if(button){button.disabled=false;button.textContent="開始測試（100 次）";}
+  setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
  };
-
- function traitDetail(enemy){
-  if(!enemy?.traits?.length)return "無";
-  return enemy.traits.map(id=>{const t=MONSTER_TRAITS?.[id];return t?`${t.name}（${t.desc}）`:id;}).join("、");
- }
- function playerLine(p){return `HP ${p.hp}　ATK ${p.atk}　DEF ${p.def}　暴擊 ${p.crit}%　閃避 ${p.dodge}%`;}
- function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
- function showBountyTest(html){bountyTestHtml=html;const box=document.getElementById("gmBountyTestResult");if(box)box.innerHTML=html;}
- function showArenaDebug(html){arenaDebugHtml=html;const box=document.getElementById("gmArenaDebugResult");if(box)box.innerHTML=html;}
- function showVoidMirageDebug(html){voidMirageDebugHtml=html;const box=document.getElementById("gmVoidMirageDebugResult");if(box)box.innerHTML=html;}
 
  function simulateFight(player,enemy,startHp=player.hp){
   let php=Math.max(0,Number(startHp)||0),ehp=enemy.hp,turn=0;
@@ -133,22 +131,22 @@
  window.gmSimulateBounty100=function(tierId){
   const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());if(!tier)return alert("找不到懸賞資料。");
   const summary={wins:0,totalTurns:0,winHpTotal:0};
-  for(let i=0;i<100;i++){
+  for(let i=0;i<GM_TEST_RUNS;i++){
    const enemy=buildBountyEnemyForDebug(tierId,player,state.level),r=simulateFight(player,enemy);
    summary.totalTurns+=r.turns;
    if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
   }
-  const winRate=round1(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/100);
-  showBountyTest(`<div class="notice"><b>${tier.name}・100 次模擬</b><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
+  const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
+  showBountyTest(`<div class="notice"><b>${tier.name}・${GM_TEST_RUNS} 次模擬</b><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  window.gmSimulateArena100=function(difficultyId){
   const configs=typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs():[];
   const cfg=configs.find(x=>x.id===difficultyId),player=createSpecialPlayerSnapshot(equippedStats());
   if(!cfg)return alert("找不到競技場資料。");
-  const reached=[100,0,0],wins=[0,0,0];
+  const reached=[GM_TEST_RUNS,0,0],wins=[0,0,0];
   let totalPoints=0,clearHpTotal=0,totalTurns=0;
-  for(let run=0;run<100;run++){
+  for(let run=0;run<GM_TEST_RUNS;run++){
    let hp=player.hp,points=0,cleared=true;
    for(let stage=0;stage<3;stage++){
     if(stage>0)reached[stage]++;
@@ -160,16 +158,16 @@
    if(cleared){points+=Number(cfg.clearBonus)||0;clearHpTotal+=hp;}
    totalPoints+=points;
   }
-  const clearCount=wins[2],avgPoints=round1(totalPoints/100),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/100);
-  const conditional=(stage)=>reached[stage]?round1(wins[stage]/reached[stage]*100):0;
-  showArenaDebug(`<div class="notice"><b>${cfg.name}・100 次完整三連戰</b>
+  const clearCount=wins[2],avgPoints=round1(totalPoints/GM_TEST_RUNS),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/GM_TEST_RUNS);
+  const conditional=(stage)=>testPercent(wins[stage],reached[stage]);
+  showArenaTest(`<div class="notice"><b>${cfg.name}・${GM_TEST_RUNS} 次完整三連戰</b>
    <div class="stats" style="margin-top:10px">
-    <div class="stat">第1戰通過<b>${wins[0]}%</b></div>
-    <div class="stat">第2戰到達<b>${reached[1]}%</b></div>
+    <div class="stat">第1戰通過<b>${testPercent(wins[0])}%</b></div>
+    <div class="stat">第2戰到達<b>${testPercent(reached[1])}%</b></div>
     <div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div>
-    <div class="stat">第3戰到達<b>${reached[2]}%</b></div>
+    <div class="stat">第3戰到達<b>${testPercent(reached[2])}%</b></div>
     <div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div>
-    <div class="stat">全通率<b>${clearCount}%</b></div>
+    <div class="stat">全通率<b>${testPercent(clearCount)}%</b></div>
     <div class="stat">平均積分<b>${avgPoints}</b></div>
     <div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div>
     <div class="stat">平均總回合<b>${avgTurns}</b></div>
@@ -188,7 +186,7 @@
   const base=typeof voidMirageBaseStats==="function"?voidMirageBaseStats(floor):null;
   const enemy=buildVoidMirageEnemy(floor);
   const boss=!!enemy.isBossFloor;
-  showVoidMirageDebug(`<div class="notice"><b>虛空幻境・第 ${floor} 層${boss?"（雙特性關卡）":""}</b>
+  showVoidMirageTest(`<div class="notice"><b>虛空幻境・第 ${floor} 層${boss?"（雙特性關卡）":""}</b>
    <div class="muted" style="margin-top:7px">名稱：${enemy.name}</div>
    ${base?`<div class="muted" style="margin-top:4px">基礎能力：${enemyLine(base)}</div>`:""}
    <div class="muted" style="margin-top:4px">本次特性後：${enemyLine(enemy)}</div>
@@ -221,7 +219,7 @@
   const avgTurns=cleared?round1(totalTurns/cleared):0;
   const lastHpPct=cleared?round1(lastWinHp/player.hp*100):0;
   const stopFloor=hitSafetyLimit?floor:(failedEnemy?.floor||floor);
-  showVoidMirageDebug(`<div class="notice"><b>虛空幻境・從第 ${startFloor} 層連續爬塔</b>
+  showVoidMirageTest(`<div class="notice"><b>虛空幻境・從第 ${startFloor} 層連續爬塔</b>
    <div class="stats" style="margin-top:10px">
     <div class="stat">起始樓層<b>${startFloor}</b></div>
     <div class="stat">成功層數<b>${cleared}</b></div>
@@ -236,6 +234,6 @@
  };
 
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
- window.getArenaGmDebugHtml=function(){return arenaDebugHtml;};
- window.getVoidMirageGmDebugHtml=function(){return voidMirageDebugHtml;};
+ window.getArenaGmTestHtml=function(){return arenaTestHtml;};
+ window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
 })();
