@@ -62,7 +62,7 @@
  function voidMirageTestHtml(){
   const result=typeof getVoidMirageGmDebugHtml==="function"?getVoidMirageGmDebugHtml():"";
   const next=typeof getVoidMirageNextFloor==="function"?getVoidMirageNextFloor():1;
-  return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力測試，但虛空幻境敵人仍只依樓層生成。指定起始樓層後會每層滿血一路打到第一次失敗；不扣副本次數、不增加正式積分、不修改正式樓層進度。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageDebugResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定起始樓層進行虛空幻境測試。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageDebugResult" style="margin-top:12px">${result}</div>`;
  }
 
  function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
