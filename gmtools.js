@@ -19,9 +19,9 @@ function gmRewardSummaryHtml(summary,extraRows=""){
 }
 
 function gmHtml(){
- const qualityOptions=QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join("");
+ const qualityOptions=QUALITY.map((q,i)=>`<option value="${i}" ${i===4?"selected":""}>${q.n}</option>`).join("");
  const levelOptions=Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`}).join("");
- const typeOptions=EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")+`<option value="all">全部</option>`;
+ const typeOptions=`<option value="all">全部</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
  return `<div class="gm"><h3>管理／GM 模式</h3>
   <div class="controls">
    <button class="btn" onclick="gmLevel()">指定等級</button>
