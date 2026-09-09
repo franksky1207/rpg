@@ -1,6 +1,4 @@
 (function(){
- const SPECIAL_TURN_LIMIT=200;
-
  function qualityFromTable(table){
   if(!Array.isArray(table)||!table.length)return qualityRoll("normal");
   let total=table.reduce((a,n)=>a+Math.max(0,Number(n)||0),0);
@@ -54,31 +52,14 @@
  };
 
  window.specialFightCore=function(enemy){
-  const ps=equippedStats();
-  let ehp=enemy.hp,php=state.hp,logs=[],turn=0;
-  while(php>0&&ehp>0&&turn<SPECIAL_TURN_LIMIT){
-   turn++;
-   if(Math.random()*100<(enemy.dodge||0)){
-    logs.push(`${enemy.name}閃避了你的攻擊。`);
-   }else{
-    let pd=calcDamage(ps.atk,enemy.def),crit=Math.random()*100<ps.crit;
-    if(crit)pd=ceil(pd*CRIT_DAMAGE_MULTIPLIER);
-    ehp-=pd;
-    logs.push(crit?`你攻擊${enemy.name}，暴擊造成 ${pd} 點傷害。`:`你攻擊${enemy.name}，造成 ${pd} 點傷害。`);
-   }
-   if(ehp<=0)break;
-   if(Math.random()*100<ps.dodge){
-    logs.push(`${enemy.name}攻擊你，你閃避了攻擊。`);
-    continue;
-   }
-   let ed=calcDamage(enemy.atk,ps.def),enemyCrit=Math.random()*100<(enemy.crit||0);
-   if(enemyCrit)ed=ceil(ed*CRIT_DAMAGE_MULTIPLIER);
-   php-=ed;
-   logs.push(enemyCrit?`${enemy.name}攻擊你，暴擊造成 ${ed} 點傷害。`:`${enemy.name}攻擊你，造成 ${ed} 點傷害。`);
-  }
-  state.hp=Math.max(0,php);
-  const turnLimit=php>0&&ehp>0;
-  if(turnLimit)logs.push(`戰鬥超過 ${SPECIAL_TURN_LIMIT} 回合，未能分出勝負，本次挑戰結束。`);
-  return {win:ehp<=0,turnLimit,logs,e:enemy};
+  const combat=runCombatCore(equippedStats(),enemy,state.hp);
+  state.hp=combat.hp;
+  return {
+   win:combat.win,
+   logs:combat.logs,
+   e:enemy,
+   combatEndHp:state.hp,
+   turns:combat.turns
+  };
  };
 })();
