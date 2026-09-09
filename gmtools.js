@@ -1,3 +1,10 @@
+const GM_TEST_RUNS=100;
+
+function gmRewardSummaryHtml(summary,extraRows=""){
+ const qualityRows=(summary.qualityCounts||[]).map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
+ return `<div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${(summary.totalXp||0).toLocaleString()}　金幣 +${(summary.totalGold||0).toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount||0} 件：${qualityRows}</div>${extraRows}</div>`;
+}
+
 function gmHtml(){
  const qualityOptions=QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join("");
  const levelOptions=Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`}).join("");
