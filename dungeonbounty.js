@@ -19,36 +19,17 @@
   for(const t of BOUNTY_TIERS){r-=t.weight;if(r<0)return t;}
   return BOUNTY_TIERS[0];
  }
- function bountyTraitCount(tierId){
-  if(tierId==="danger")return Math.random()<.5?1:2;
-  return 1;
- }
+ function bountyTraitCount(tierId){return tierId==="danger"?(Math.random()<.5?1:2):1;}
  function rollBountyTraits(tierId){
-  const pool=(typeof MONSTER_TRAIT_IDS!=="undefined"?MONSTER_TRAIT_IDS:Object.keys(MONSTER_TRAITS||{})).slice();
-  const count=bountyTraitCount(tierId),out=[];
+  const pool=MONSTER_TRAIT_IDS.slice(),count=bountyTraitCount(tierId),out=[];
   for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   return out;
- }
- function applyBountyTraits(enemy,traitIds){
-  const e={...enemy,traits:traitIds.slice(),berserk:false};
-  traitIds.forEach(id=>{
-   if(id==="strong")e.hp=ceil(e.hp*1.20);
-   if(id==="ferocious")e.atk=ceil(e.atk*1.15);
-   if(id==="hard")e.def=ceil(e.def*1.20);
-   if(id==="swift")e.dodge=round1((e.dodge||0)+8);
-   if(id==="deadly")e.crit=round1((e.crit||0)+8);
-   if(id==="berserk")e.berserk=true;
-   if(id==="giant"){e.hp=ceil(e.hp*1.30);e.atk=ceil(e.atk*1.05);e.dodge=round1((e.dodge||0)-5);}
-  });
-  e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,e.crit||0)));
-  e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,e.dodge||0)));
-  return e;
  }
  function buildBountyEnemy(tier,playerStats=null,level=null){
   const p=createSpecialPlayerSnapshot(playerStats||equippedStats());
   const base=specialBaseEnemyFromPlayer(p);
   const names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
-  let enemy={
+  const enemy={
    name:names[Math.floor(Math.random()*names.length)],
    level:clampGameLevel(level??state.level),
    kind:"dungeon-bounty",
@@ -60,8 +41,7 @@
    dodge:rateFromPlayer(p.dodge,tier.dodgeScale,tier.dodgeAdd,tier.dodgeCap,MONSTER_MAX_DODGE_RATE),
    playerSnapshot:p
   };
-  enemy=applyBountyTraits(enemy,rollBountyTraits(tier.id));
-  return enemy;
+  return applyMonsterTraits(enemy,rollBountyTraits(tier.id));
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
  function traitNames(enemy){
@@ -106,7 +86,7 @@
   return `<section class="combat-screen dungeon-bounty-combat">
    <div class="combat-head dungeon-bounty-title">【懸賞戰】 ${bountyState.tier.name}</div>
    <div class="combat-arena">
-    <div class="combatant player dungeon-bounty-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>玩家 Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div>
+    <div class="combatant player dungeon-bounty-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div>
     <div class="combat-vs dungeon-bounty-vs">VS</div>
     <div class="combatant enemy dungeon-bounty-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="${tierClass(bountyState.tier.id)} dungeon-bounty-tier">${bountyState.tier.name}</div><h2 id="combatEnemyName">${e.name}</h2><div class="dungeon-bounty-traits">特性：${traitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
    </div>
