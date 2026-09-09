@@ -4,9 +4,10 @@
 function monsterBase(l){
  const level=Math.max(1,Math.floor(Number(l)||1));
  const extra=Math.max(0,level-20);
- const hpGrowth=1+extra*.016;
- const atkGrowth=1+extra*.012;
- const defGrowth=1+extra*.006;
+ // Lv20 後採前中期加速、後期遞減的飽和成長，避免高等級無限線性膨脹。
+ const hpGrowth=1+(2.7*extra)/(extra+100);
+ const atkGrowth=1+(1.6548387097*extra)/(extra+67.0967741935);
+ const defGrowth=1+(1.26*extra)/(extra+64);
  return {
   hp:ceil((62+16.2*level)*hpGrowth),
   atk:ceil((10.5+2.45*level)*atkGrowth),
