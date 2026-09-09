@@ -81,8 +81,8 @@
    if(id==="berserk")e.berserk=true;
    if(id==="giant"){e.hp=Math.ceil(e.hp*1.30);e.atk=Math.ceil(e.atk*1.05);e.dodge=round1((e.dodge||0)-5);}
   });
-  e.crit=round1(Math.max(0,Math.min(MAX_CRIT_RATE,Number(e.crit)||0)));
-  e.dodge=round1(Math.max(0,Math.min(MAX_DODGE_RATE,Number(e.dodge)||0)));
+  e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,Number(e.crit)||0)));
+  e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,Number(e.dodge)||0)));
   return e;
  }
  function firstClearPoints(floor){
