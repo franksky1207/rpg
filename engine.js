@@ -25,8 +25,8 @@ const ACCESSORY_CRIT_RANGES=[
  [7,9],
  [9,10]
 ];
-const MAX_CRIT_RATE=30;
-const MAX_DODGE_RATE=25;
+const MONSTER_MAX_CRIT_RATE=30;
+const MONSTER_MAX_DODGE_RATE=30;
 const CRIT_DAMAGE_MULTIPLIER=1.5;
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
 let upgradeDropNoticePending=false;
@@ -86,7 +86,9 @@ function save(show=true){localStorage.setItem(SAVE_KEY,JSON.stringify(state));if
 function equippedStats(){
  let x={hp:baseHP(state.level),atk:baseATK(state.level),def:baseDEF(state.level),crit:0,dodge:0};
  EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});
- x.crit=round1(Math.min(MAX_CRIT_RATE,x.crit));x.dodge=round1(Math.min(MAX_DODGE_RATE,x.dodge));return x;
+ x.crit=round1(Math.max(0,Number(x.crit)||0));
+ x.dodge=round1(Math.max(0,Number(x.dodge)||0));
+ return x;
 }
 function normalizeHP(){let m=equippedStats().hp;state.hp=Math.min(state.hp??m,m)}
 function equipmentScore(it){
