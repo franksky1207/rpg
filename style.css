@@ -4,7 +4,7 @@
   --common:#b8b8b8;--uncommon:#65c96a;--rare:#5da9ff;--epic:#bb77ff;--legendary:#ff9f43;--mythic:#ff5252;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:radial-gradient(circle at top,#1b1b22 0,#0b0e13 45%);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif}
+html,body{margin:0;background:radial-gradient(circle at top,#1b1b22 0,#0b0e13 45%);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;touch-action:manipulation}
 button,input,select{font:inherit}.app{max-width:1200px;margin:auto;min-height:100vh}
 header{position:sticky;top:0;z-index:10;background:rgba(11,14,19,.94);backdrop-filter:blur(8px);border-bottom:1px solid #3a3428}
 .brand{display:flex;align-items:center;justify-content:space-between;padding:16px 18px}.brand h1{margin:0;color:#f2d28a;font-family:Georgia,"Noto Serif TC",serif;letter-spacing:.08em;font-size:24px;cursor:pointer}.status{font-size:13px;color:var(--muted)}
