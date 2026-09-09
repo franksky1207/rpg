@@ -1,7 +1,7 @@
 function gmHtml(){
  const qualityOptions=QUALITY.map((q,i)=>`<option value="${i}" ${i===3?"selected":""}>${q.n}</option>`).join("");
  const levelOptions=Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`}).join("");
- const typeOptions=EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
+ const typeOptions=EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")+`<option value="all">全部</option>`;
  return `<div class="gm"><h3>管理／GM 模式</h3>
   <div class="controls">
    <button class="btn" onclick="gmLevel()">指定等級</button>
@@ -81,9 +81,10 @@ function gmCreateGear(){
  const type=document.getElementById("gmGearType")?.value;
  if(!Number.isInteger(q)||q<0||q>=QUALITY.length)return;
  if(!Number.isInteger(level)||level<1||level>MAX_LEVEL)return;
- if(!EQUIPMENT_TYPES.includes(type))return;
+ const types=type==="all"?EQUIPMENT_TYPES.slice():EQUIPMENT_TYPES.includes(type)?[type]:[];
+ if(!types.length)return;
  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Math.floor((level-1)/5)));
- state.inventory.push(makeItem(level,mapIdx,"normal",q,type));
+ types.forEach(slot=>state.inventory.push(makeItem(level,mapIdx,"normal",q,slot)));
  save();render();
 }
 
