@@ -18,32 +18,6 @@ function gmRewardSummaryHtml(summary,extraRows=""){
  return `<div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${(summary.totalXp||0).toLocaleString()}　金幣 +${(summary.totalGold||0).toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount||0} 件：${qualityRows}</div>${extraRows}</div>`;
 }
 
-function gmHtml(){
- const qualityOptions=QUALITY.map((q,i)=>`<option value="${i}" ${i===4?"selected":""}>${q.n}</option>`).join("");
- const levelOptions=Array.from({length:MAX_LEVEL},(_,i)=>{const lv=i+1;return `<option value="${lv}" ${lv===state.level?"selected":""}>Lv.${lv}</option>`}).join("");
- const typeOptions=`<option value="all">全部</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
- return `<div class="gm"><h3>管理／GM 模式</h3>
-  <div class="controls">
-   <button class="btn" onclick="gmLevel()">指定等級</button>
-   <button class="btn" onclick="gmGold()">指定金幣</button>
-   <button class="btn" onclick="gmSetWorldProgress()">指定解鎖到等級關卡</button>
-   <button class="btn blue" onclick="gmRefreshShop()">刷新商店</button>
-   <button class="btn blue" onclick="gmResetShopPrice()">重置商店</button>
-   <button class="btn" onclick="gmHeal()">補滿 HP</button>
-   <button class="btn danger" onclick="gmClearInventory()">清空背包</button>
-  </div>
-  <div class="item" style="margin-top:14px"><b>產生裝備</b>
-   <div class="controls" style="align-items:end">
-    <label>品質<br><select id="gmGearQuality" class="btn">${qualityOptions}</select></label>
-    <label>等級<br><select id="gmGearLevel" class="btn">${levelOptions}</select></label>
-    <label>部位<br><select id="gmGearType" class="btn">${typeOptions}</select></label>
-    <button class="btn primary" onclick="gmCreateGear()">產生裝備</button>
-   </div>
-  </div>
-  <div class="controls" style="margin-top:14px"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div>
- </div>`;
-}
-
 function gmGold(){
  const raw=prompt("指定金幣（0 以上）",state.gold);
  if(raw===null)return;
