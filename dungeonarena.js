@@ -55,8 +55,8 @@
    if(id==="berserk")e.berserk=true;
    if(id==="giant"){e.hp=ceil(e.hp*1.30);e.atk=ceil(e.atk*1.05);e.dodge=round1((e.dodge||0)-5);}
   });
-  e.crit=round1(Math.max(0,Math.min(MAX_CRIT_RATE,e.crit||0)));
-  e.dodge=round1(Math.max(0,Math.min(MAX_DODGE_RATE,e.dodge||0)));
+  e.crit=round1(Math.max(0,Math.min(MONSTER_MAX_CRIT_RATE,e.crit||0)));
+  e.dodge=round1(Math.max(0,Math.min(MONSTER_MAX_DODGE_RATE,e.dodge||0)));
   return e;
  }
  function arenaTraitNames(enemy){
@@ -77,8 +77,8 @@
    hp:Math.max(1,ceil(base.hp*cfg.hpMul)),
    atk:Math.max(1,ceil(base.damage*cfg.damageMul+p.def*.55)),
    def:Math.max(0,ceil(base.def*cfg.defMul)),
-   crit:rateFromPlayer(p.crit,cfg.critScale,cfg.critAdd,cfg.critCap,MAX_CRIT_RATE),
-   dodge:rateFromPlayer(p.dodge,cfg.dodgeScale,cfg.dodgeAdd,cfg.dodgeCap,MAX_DODGE_RATE),
+   crit:rateFromPlayer(p.crit,cfg.critScale,cfg.critAdd,cfg.critCap,MONSTER_MAX_CRIT_RATE),
+   dodge:rateFromPlayer(p.dodge,cfg.dodgeScale,cfg.dodgeAdd,cfg.dodgeCap,MONSTER_MAX_DODGE_RATE),
    traits:[],berserk:false,playerSnapshot:p
   };
   return applyArenaTraits(enemy,rollArenaTraits(cfg.traitMode));
