@@ -3,8 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>文明戰線</title>
-<link rel="stylesheet" href="style.css?v=20260909-2156">
+<script>
+(function(){
+ const build="20260909-2205";
+ const url=new URL(location.href);
+ if(url.searchParams.get("build")!==build){
+  url.searchParams.set("build",build);
+  location.replace(url.toString());
+ }
+})();
+</script>
+<link rel="stylesheet" href="style.css?v=20260909-2205">
 <link rel="stylesheet" href="dungeonarena.css?v=20260908-2245">
 </head>
 <body>
@@ -44,7 +57,7 @@
 <script src="combatcore.js?v=20260909-2115"></script>
 <script src="dungeonprogress.js?v=20260908-1937"></script>
 <script src="dungeoncore.js?v=20260909-2105"></script>
-<script src="ui.js?v=20260909-2156"></script>
+<script src="ui.js?v=20260909-2205"></script>
 <script src="settlementui.js?v=20260909-1015"></script>
 <script src="balance.js?v=20260907-2033"></script>
 <script src="traits.js?v=20260909-1515"></script>
