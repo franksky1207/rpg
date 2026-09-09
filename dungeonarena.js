@@ -85,7 +85,7 @@
  }
 
  window.getArenaDifficultyConfigs=function(){return ARENA_DIFFICULTIES.map(d=>({...d,stagePoints:d.stagePoints.slice(),stages:(ARENA_STAGE_CONFIGS[d.id]||[]).map(x=>({...x}))}));};
- window.buildArenaEnemyForDebug=function(difficultyId,stageIndex,stats=null,level=null){return difficultyById(difficultyId)?buildArenaEnemy(difficultyId,stageIndex,stats,level):null;};
+ window.buildArenaEnemyForTest=function(difficultyId,stageIndex,stats=null,level=null){return difficultyById(difficultyId)?buildArenaEnemy(difficultyId,stageIndex,stats,level):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
 
  function resetArenaState(){arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0};}
