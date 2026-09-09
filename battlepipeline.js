@@ -71,23 +71,23 @@
 
    ctx.completed++;
    ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
-   save();
    clearPreviewEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=null;
 
-   if(!r.win)break;
-
-   if(ctx.originalCount>1&&ctx.remaining>0&&lowHp()){
-    render();
-    pendingContinuousBattle=ctx;
-    battleBusy=false;
-    showRiskModal("continuous",ctx.remaining);
-    return;
+   if(!r.win){
+    state.hp=equippedStats().hp;
+    adventureScreen="prepare";
+    save();
+    break;
    }
 
    if(ctx.remaining>0){
+    state.hp=equippedStats().hp;
+    save(false);
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
     await sleep(r.e.kind==="elite"?220:140);
+   }else{
+    save();
    }
   }
 
