@@ -80,7 +80,7 @@
    body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}${settlementDropListHtml(result.drops,{title:"特殊獎勵",emptyText:"本次沒有裝備掉落。",showCount:false,marginTop:12})}`;
   }else{
    const lost=result.penalty?.dropped;
-   body+=`${result.turnLimit?`<div class="notice"><b>✦ ${special.name} 挑戰中止</b><div class="muted" style="margin-top:5px">戰鬥超過 200 回合仍未分出勝負，本次不視為死亡，也不套用死亡懲罰。</div></div>`:`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div>`}<div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+   body+=`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
   }
   detail.innerHTML=body;
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
@@ -98,7 +98,7 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,turnLimit:!!r.turnLimit,rewardContext:rewardCtx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
+  const result={win:r.win,rewardContext:rewardCtx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
@@ -111,8 +111,6 @@
    const items=specialMakeDrops(rewardCtx,dropLevel,selectedMap);
    result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
    result.shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
-  }else if(r.turnLimit){
-   result.penalty={expLost:0,dropped:null};
   }else{
    result.penalty=applyDeathPenalty([]);
   }
