@@ -50,7 +50,7 @@
   const names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
   let enemy={
    name:names[Math.floor(Math.random()*names.length)],
-   level:Math.max(1,Math.min(50,Math.floor(Number(level)||state.level||1))),
+   level:clampGameLevel(level??state.level),
    kind:"dungeon-bounty",
    bountyTier:tier.id,
    hp:Math.max(1,ceil(base.hp*tier.hpMul)),
