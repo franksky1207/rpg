@@ -1,17 +1,15 @@
 // 主線怪物正式平衡。
 // 目標：同區後段開始形成刷裝壓力；高品質裝備可多推進約一張圖，但不應跨越多張圖穩定碾壓。
+// 長期設計：怪物與玩家／裝備皆採線性等級成長，避免高等級飽和或指數失控，預留 Lv200／Lv300 以上擴等。
 // 只調整主線怪物基礎成長、style 與階段倍率，不改獎勵、掉落、裝備公式或特性機率。
 function monsterBase(l){
  const level=Math.max(1,Math.floor(Number(l)||1));
- const extra=Math.max(0,level-20);
- // Lv20 後採前中期加速、後期遞減的飽和成長，避免高等級無限線性膨脹。
- const hpGrowth=1+(2.7*extra)/(extra+100);
- const atkGrowth=1+(1.6548387097*extra)/(extra+67.0967741935);
- const defGrowth=1+(1.26*extra)/(extra+64);
+ // 以一般「稀有＋史詩＋少量傳說」混裝玩家為主基準；全傳說視為偏強上限。
+ // 基礎怪物斜率略低於玩家整套裝備成長，實際再由 stage／style／traits 形成戰鬥壓力。
  return {
-  hp:ceil((62+16.2*level)*hpGrowth),
-  atk:ceil((10.5+2.45*level)*atkGrowth),
-  def:ceil((3.2+.92*level)*defGrowth)
+  hp:ceil(55+24*level),
+  atk:ceil(9+4.2*level),
+  def:ceil(2.5+2.0*level)
  };
 }
 
