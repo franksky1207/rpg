@@ -202,14 +202,14 @@
   if(!startFloor)return alert("請輸入 1 以上的起始樓層。");
   if(typeof buildVoidMirageEnemy!=="function")return alert("虛空幻境資料尚未載入。");
   const player=createSpecialPlayerSnapshot(equippedStats());
-  let floor=startFloor,cleared=0,totalPoints=0,totalTurns=0,lastWinHp=player.hp,lastWinFloor=startFloor-1,previousName="",failedEnemy=null,failedResult=null;
+  let floor=startFloor,cleared=0,totalPoints=0,totalTurns=0,lastWinHp=player.hp,lastWinFloor=startFloor-1,previousName="",failedEnemy=null;
   let hitSafetyLimit=false;
   while(cleared<VOID_MIRAGE_GM_SIM_LIMIT){
    const enemy=buildVoidMirageEnemy(floor,{previousName});
    if(!enemy.isBossFloor)previousName=enemy.name;
    const r=simulateFight(player,enemy,player.hp);
    totalTurns+=r.turns;
-   if(!r.win){failedEnemy=enemy;failedResult=r;break;}
+   if(!r.win){failedEnemy=enemy;break;}
    cleared++;
    lastWinFloor=floor;
    lastWinHp=r.hp;
@@ -221,7 +221,6 @@
   const avgTurns=cleared?round1(totalTurns/cleared):0;
   const lastHpPct=cleared?round1(lastWinHp/player.hp*100):0;
   const stopFloor=hitSafetyLimit?floor:(failedEnemy?.floor||floor);
-  const stopText=hitSafetyLimit?`已達 GM 安全上限 ${VOID_MIRAGE_GM_SIM_LIMIT} 層，尚未失敗`:(failedResult?.turnLimit?"200 回合未決":"戰敗");
   showVoidMirageDebug(`<div class="notice"><b>虛空幻境・從第 ${startFloor} 層連續爬塔</b>
    <div class="stats" style="margin-top:10px">
     <div class="stat">起始樓層<b>${startFloor}</b></div>
@@ -233,10 +232,6 @@
     <div class="stat">平均戰鬥回合<b>${avgTurns}</b></div>
     <div class="stat">最後成功剩餘 HP<b>${cleared?`${lastWinHp}（${lastHpPct}%）`:"—"}</b></div>
    </div>
-   <div class="muted" style="margin-top:8px">停止原因：${stopText}</div>
-   ${failedEnemy?`<div class="muted" style="margin-top:4px">失敗敵人：${failedEnemy.name}｜${enemyLine(failedEnemy)}｜特性：${traitDetail(failedEnemy)}</div>`:""}
-   <div class="muted" style="margin-top:4px">玩家基準：Lv.${state.level}｜${playerLine(player)}</div>
-   <div class="muted" style="margin-top:4px">測試規則：每層滿血開始；只跑這一次連續爬塔，不扣副本次數、不加正式積分、不改正式樓層進度。</div>
   </div>`);
  };
 
