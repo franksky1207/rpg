@@ -12,46 +12,11 @@ function healBeforeBattle(){
  save(false);
 }
 
-function lowHp(){
- let s=equippedStats();
- return s.hp>0&&state.hp/s.hp<.30;
-}
-
 function startBattles(){
  if(battleBusy)return;
- let e=getPreviewEncounter(selectedMap,selectedEnemy),count=e.kind==="boss"?1:selectedBattleCount;
- pendingContinuousBattle=null;
+ const e=getPreviewEncounter(selectedMap,selectedEnemy),count=e.kind==="boss"?1:selectedBattleCount;
  healBeforeBattle();
  beginCombat(count);
-}
-
-function showRiskModal(mode,remaining=0){
- riskMode=mode;
- let modal=document.getElementById("riskModal"),msg=document.getElementById("riskMessage"),continueBtn=document.getElementById("riskContinueBtn"),abandonBtn=modal?.querySelector(".controls .btn.ok");
- let ctx=pendingContinuousBattle,done=ctx?.completed||0,total=ctx?.originalCount||(done+remaining);
- if(msg)msg.innerHTML=`目前 HP 已低於 30%，連續戰鬥已暫停。<br>已完成 <b>${done} / ${total}</b> 場。回血並重新戰鬥會補滿 HP，並從第 1 場重新開始原本的 ${total} 場；已取得的 EXP、金幣與裝備會保留。`;
- if(continueBtn)continueBtn.textContent="回血並重新戰鬥";
- if(abandonBtn)abandonBtn.textContent="放棄戰鬥";
- if(modal)modal.classList.add("show");
-}
-
-function continueRiskBattle(){
- closeRiskModal();
- let count=pendingContinuousBattle?.originalCount||selectedBattleCount||1;
- pendingContinuousBattle=null;
- pendingResultAfterRest=null;
- healBeforeBattle();
- beginCombat(count);
-}
-
-function riskRest(){
- closeRiskModal();
- pendingContinuousBattle=null;
- pendingResultAfterRest=null;
- currentCombatEncounter=null;
- healBeforeBattle();
- adventureScreen="prepare";
- render();
 }
 
 render();
