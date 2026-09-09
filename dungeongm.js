@@ -2,15 +2,11 @@
  let bountyDebugHtml="";
  let arenaDebugHtml="";
  let voidMirageDebugHtml="";
- let dungeonDebugMap=0;
- let dungeonDebugEnemy=0;
+ let mapMonsterTestHtml="";
+ let mapTestMap=0;
+ let mapTestEnemy=0;
  const VOID_MIRAGE_GM_SIM_LIMIT=10000;
 
- function formatProgress(n){
-  const x=Math.round((Number(n)||0)*100)/100;
-  return Number.isInteger(x)?String(x):x.toFixed(2).replace(/0+$/,"" ).replace(/\.$/,"");
- }
- function formatAttempts(n){return Math.floor(Number(n)||0).toLocaleString();}
  function dungeonState(){return ensureDungeonProgressState();}
 
  window.gmApplyDungeonValues=function(){
@@ -21,30 +17,95 @@
   const d=dungeonState();d.progress=progress;d.attempts=attempts;d.points=points;ensureDungeonProgressState();save();render();
  };
 
- window.gmDungeonChangeMap=function(){
-  const mapSelect=document.getElementById("gmDungeonMap"),enemySelect=document.getElementById("gmDungeonMonster");
+ function clearMapMonsterTest(){
+  mapMonsterTestHtml="";
+  const box=document.getElementById("gmMapMonsterTestResult");
+  if(box)box.innerHTML="";
+ }
+ window.gmMapMonsterChangeMap=function(){
+  const mapSelect=document.getElementById("gmMapMonsterMap"),enemySelect=document.getElementById("gmMapMonsterEnemy");
   if(!mapSelect||!enemySelect)return;
-  dungeonDebugMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));dungeonDebugEnemy=0;
-  const map=MAPS[dungeonDebugMap];
+  mapTestMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));
+  mapTestEnemy=0;
+  const map=MAPS[mapTestMap];
   enemySelect.innerHTML=map.enemies.map((e,eIdx)=>{const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";return `<option value="${eIdx}">${kind}｜${e[0]} Lv.${e[1]}</option>`;}).join("");
   enemySelect.value="0";
+  clearMapMonsterTest();
  };
- window.gmDungeonChangeEnemy=function(){
-  const enemySelect=document.getElementById("gmDungeonMonster");if(!enemySelect)return;
-  dungeonDebugEnemy=Math.max(0,Math.min(MAPS[dungeonDebugMap].enemies.length-1,Number(enemySelect.value)||0));
+ window.gmMapMonsterChangeEnemy=function(){
+  const enemySelect=document.getElementById("gmMapMonsterEnemy");
+  if(!enemySelect)return;
+  mapTestEnemy=Math.max(0,Math.min(MAPS[mapTestMap].enemies.length-1,Number(enemySelect.value)||0));
+  clearMapMonsterTest();
  };
- window.gmDungeonDebug=function(){
-  const d=dungeonState(),level=Math.max(1,Math.floor(Number(state.level)||1)),playerBaseHp=baseHP(level),ps=equippedStats();
-  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number(document.getElementById("gmDungeonMap")?.value)||dungeonDebugMap||0));
-  const eIdx=Math.max(0,Math.min(MAPS[mapIdx].enemies.length-1,Number(document.getElementById("gmDungeonMonster")?.value)||0));
-  dungeonDebugMap=mapIdx;dungeonDebugEnemy=eIdx;
-  let enemy=null;try{enemy=monsterObj(mapIdx,eIdx);}catch(e){}
-  if(!enemy)return alert("目前沒有可計算的怪物。");
-  const enemyPart=(enemy.hp/playerBaseHp)*1.5;
-  const minProgress=calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:enemy.hp,playerLevel:level,playerMaxHp:ps.hp,startHp:ps.hp,endHp:ps.hp});
-  const nearDeathEnd=Math.max(1,Math.floor(ps.hp*.01));
-  const nearDeathProgress=calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:enemy.hp,playerLevel:level,playerMaxHp:ps.hp,startHp:ps.hp,endHp:nearDeathEnd});
-  alert(`副本 Debug\n地圖：${MAPS[mapIdx].name}\n怪物：${enemy.name} Lv.${enemy.level}\n類型：${enemy.kind==="boss"?"Boss":enemy.kind==="elite"?"菁英":"普通"}\n敵人最大 HP：${enemy.hp}\n玩家等級：Lv.${level}\n玩家基礎 HP：${playerBaseHp}\n玩家實際最大 HP：${ps.hp}\n\nHP 負擔部分：${formatProgress(enemyPart)}%\n無損勝利：約 ${formatProgress(minProgress)}%\n接近殘血勝：約 ${formatProgress(nearDeathProgress)}%\n\n目前累積：${formatProgress(d.progress)}%\n可挑戰次數：${formatAttempts(d.attempts)} 次`);
+ window.getMapMonsterGmSelection=function(){return {mapIdx:mapTestMap,eIdx:mapTestEnemy};};
+ window.getMapMonsterGmTestHtml=function(){return mapMonsterTestHtml;};
+
+ function mapMonsterResultHtml(mapIdx,eIdx,summary){
+  const map=MAPS[mapIdx],base=map.enemies[eIdx];
+  const qualityRows=summary.qualityCounts.map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
+  return `<div class="notice"><b>${map.name}｜${base[0]}・100 次模擬</b><div class="muted" style="margin-top:5px">以下 100 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
+   <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div class="stat">勝率<b>${summary.winRate}%</b></div>
+    <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
+    <div class="stat">死亡掉裝次數<b>${summary.deathDrops}</b></div>
+   </div>
+   <div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${summary.totalXp.toLocaleString()}　金幣 +${summary.totalGold.toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount} 件：${qualityRows}</div></div>`;
+ }
+
+ window.gmStartMapMonsterTest=function(){
+  if(battleBusy)return;
+  const mapSelect=document.getElementById("gmMapMonsterMap"),enemySelect=document.getElementById("gmMapMonsterEnemy");
+  const mapIdx=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect?.value)||0));
+  const eIdx=Math.max(0,Math.min(MAPS[mapIdx].enemies.length-1,Number(enemySelect?.value)||0));
+  mapTestMap=mapIdx;mapTestEnemy=eIdx;
+
+  const button=document.getElementById("gmMapMonsterStartBtn");
+  if(button){button.disabled=true;button.textContent="測試中…";}
+
+  const snapshot=JSON.stringify(state);
+  const upgradeSnapshot=upgradeDropNoticePending;
+  const player=createSpecialPlayerSnapshot(equippedStats());
+  const summary={wins:0,losses:0,winHpTotal:0,deathDrops:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0)};
+  battleBusy=true;
+
+  for(let i=0;i<100;i++){
+   state=JSON.parse(snapshot);
+   upgradeDropNoticePending=upgradeSnapshot;
+   state.hp=player.hp;
+   let enemy=null;
+   try{enemy=typeof createMonsterEncounter==="function"?createMonsterEncounter(mapIdx,eIdx):monsterObj(mapIdx,eIdx);}catch(e){}
+   if(!enemy)continue;
+   const r=simulateFight(player,enemy,player.hp);
+   if(r.win){
+    summary.wins++;
+    summary.winHpTotal+=r.hp;
+    const xp=Math.max(0,Math.ceil(Number(expReward(enemy))||0));
+    const gold=Math.max(0,Math.ceil(Number(goldReward(enemy))||0));
+    if(state.level>=MAX_LEVEL){summary.convertedGold+=xp;summary.totalGold+=gold+xp;}
+    else{summary.totalXp+=xp;summary.totalGold+=gold;}
+    const item=dropItem(enemy,mapIdx);
+    if(item){summary.dropCount++;summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;}
+   }else{
+    summary.losses++;
+    state.hp=0;
+    const penalty=applyDeathPenalty([]);
+    if(penalty?.dropped)summary.deathDrops++;
+   }
+  }
+
+  summary.winRate=round1(summary.wins);
+  summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0;
+  state=JSON.parse(snapshot);
+  upgradeDropNoticePending=upgradeSnapshot;
+  save(false);
+  battleBusy=false;
+  mapMonsterTestHtml=mapMonsterResultHtml(mapIdx,eIdx,summary);
+  const box=document.getElementById("gmMapMonsterTestResult");
+  if(box)box.innerHTML=mapMonsterTestHtml;
+  if(mapSelect)mapSelect.value=String(mapTestMap);
+  if(enemySelect)enemySelect.value=String(mapTestEnemy);
+  if(button){button.disabled=false;button.textContent="開始測試（100 次）";}
  };
 
  function traitDetail(enemy){
