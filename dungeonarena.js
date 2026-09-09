@@ -28,7 +28,7 @@
  let arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0};
 
  function difficultyById(id){return ARENA_DIFFICULTIES.find(x=>x.id===id)||null;}
- function clampLevel(v){return Math.max(1,Math.min(50,Math.floor(Number(v)||1)));}
+ function clampLevel(v){return clampGameLevel(v);}
  function rateFromPlayer(value,scale,add,cap,maxCap){return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));}
  function traitCount(mode){
   if(mode==="normal1")return Math.random()<.70?0:1;
