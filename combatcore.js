@@ -18,7 +18,7 @@
    turns++;
 
    if(Math.random()*100<numberOr(e.dodge,0)){
-    if(logs)logs.push(`${name}閃避了你的攻擊。`);
+    if(logs)logs.push(options.mainlineLogs?`你攻擊${name}，${name}閃避了攻擊。`:`${name}閃避了你的攻擊。`);
    }else{
     let damage=calcDamage(numberOr(p.atk,0),numberOr(e.def,0));
     const crit=Math.random()*100<numberOr(p.crit,0);
@@ -62,7 +62,7 @@
   if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
 
   const ps=equippedStats();
-  const combat=runCombatCore(ps,e,state.hp);
+  const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true});
   state.hp=combat.hp;
   const combatEndHp=state.hp;
   const logs=combat.logs;
