@@ -30,7 +30,7 @@
 
  function generalManagementHtml(){
   const g=gearOptions();
-  return `<div class="notice gm-hub-note">目前世界：Lv1～${MAX_LEVEL}　／　${MAPS.length} 張地圖</div><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">指定金幣</button><button class="btn" onclick="gmUnlock()">解鎖全部地圖與怪物</button><button class="btn" onclick="gmRestoreLevelWorld()">回復現有等級地圖與怪物</button><button class="btn" onclick="gmHeal()">補滿 HP</button><button class="btn danger" onclick="gmClearInventory()">清空背包</button></div>
+  return `<div class="notice gm-hub-note">目前世界：Lv1～${MAX_LEVEL}　／　${MAPS.length} 張地圖</div><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button><button class="btn" onclick="gmGold()">指定金幣</button><button class="btn" onclick="gmSetWorldProgress()">指定解鎖到等級關卡</button><button class="btn" onclick="gmHeal()">補滿 HP</button><button class="btn danger" onclick="gmClearInventory()">清空背包</button></div>
   <div class="item" style="margin-top:12px"><b>商店管理</b><div class="controls"><button class="btn blue" onclick="gmRefreshShop()">刷新商店</button><button class="btn" onclick="gmResetShop()">重置商店（100 金幣）</button></div></div>
   <div class="item" style="margin-top:12px"><b>產生裝備</b><div class="controls" style="align-items:end"><label>品質<br><select id="gmGearQuality" class="btn">${g.quality}</select></label><label>等級<br><select id="gmGearLevel" class="btn">${g.level}</select></label><label>部位<br><select id="gmGearType" class="btn">${g.type}</select></label><button class="btn gm-create" onclick="gmCreateGear()">產生裝備</button></div></div>`;
  }
