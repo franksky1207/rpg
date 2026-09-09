@@ -18,6 +18,17 @@ function gmRewardSummaryHtml(summary,extraRows=""){
  return `<div class="notice" style="margin-top:10px"><b>模擬獎勵合計</b><div style="margin-top:6px">EXP +${(summary.totalXp||0).toLocaleString()}　金幣 +${(summary.totalGold||0).toLocaleString()}</div>${summary.convertedGold?`<div class="muted" style="margin-top:6px">其中滿等 EXP 轉換金幣：+${summary.convertedGold.toLocaleString()}</div>`:""}<div class="muted" style="margin-top:6px">裝備掉落 ${summary.dropCount||0} 件：${qualityRows}</div>${extraRows}</div>`;
 }
 
+function gmLevel(){
+ const raw=prompt(`指定等級（1～${MAX_LEVEL}）`,state.level);
+ if(raw===null)return;
+ const n=Math.floor(Number(raw));
+ if(!Number.isFinite(n)){alert("請輸入有效等級。");return;}
+ state.level=clampGameLevel(n);
+ state.exp=0;
+ state.hp=equippedStats().hp;
+ save();render();
+}
+
 function gmGold(){
  const raw=prompt("指定金幣（0 以上）",state.gold);
  if(raw===null)return;
@@ -40,19 +51,16 @@ function gmSetWorldProgress(){
  const bossLocked=Array(count).fill(false);
  const bossKilled=Array(count).fill(false);
 
- // 指定等級以前的地圖全部正式完成；指定等級本身維持「剛開始」。
  for(let i=0;i<currentMap;i++){
   mapProgress[i]=[10,10,10,10];
   bossKilled[i]=true;
  }
 
- // 同一張地圖內，指定怪物以前的怪物全部完成。
  const p=mapProgress[currentMap];
  if(currentEnemy>=1)p[0]=10;
  if(currentEnemy>=2)p[1]=10;
  if(currentEnemy>=3)p[2]=10;
  if(currentEnemy>=4)p[3]=10;
- // currentEnemy===4 時即 Boss 已出現但尚未擊敗；Boss 本身沒有 0/10 進度。
 
  state.unlockedMap=currentMap;
  state.mapProgress=mapProgress;
@@ -64,9 +72,7 @@ function gmSetWorldProgress(){
  selectedBattleCount=1;
  save();render();
 
- if(currentEnemy===4&&state.level<target){
-  alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
- }
+ if(currentEnemy===4&&state.level<target)alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
 }
 
 function gmCreateGear(){
