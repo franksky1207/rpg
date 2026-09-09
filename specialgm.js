@@ -1,16 +1,6 @@
 let gmSpecialTestActive=false;
 let gmSpecialTestMonster=null;
 let gmSpecialTestReward=null;
-let gmSpecialTestStateSnapshot=null;
-let gmSpecialTestUpgradeNoticeSnapshot=false;
-
-const baseGmHtmlForSpecialTest=gmHtml;
-gmHtml=function(){
- const base=baseGmHtmlForSpecialTest();
- const tierLabel={low:"低",mid:"中",high:"高"};
- const options=SPECIAL_MONSTERS.map(x=>`<option value="${x.id}">${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");
- return `${base}<div class="gm" style="margin-top:14px"><h3>特殊怪測試</h3><div class="muted">選擇特殊怪後會依目前角色的實際能力直接生成並進入測試戰鬥，不經過自然遭遇機率。GM 測試為沙盒模式，戰鬥中的 HP、EXP、金幣、裝備、背包、商店等變化會在離開結算後全部還原。</div><div class="controls" style="margin-top:10px;align-items:end"><label>特殊怪<br><select id="gmSpecialMonster" class="btn">${options}</select></label><button class="btn primary" onclick="gmStartSpecialBattle()">開始測試</button></div></div>`;
-};
 
 function gmSpecialMapForLevel(level){return Math.max(0,Math.min(9,Math.floor((level-1)/5)));}
 function gmSpecialQualityFromTable(table){
@@ -72,69 +62,4 @@ function gmSpecialFight(enemy){
  }
  state.hp=Math.max(0,php);
  return {win:php>0,logs,e:enemy};
-}
-function gmSpecialBattlePage(enemy,special){
- const s=equippedStats(),hpPct=s.hp?state.hp/s.hp*100:0;
- return `<section class="combat-screen"><div class="combat-head">⚠ 特殊遭遇</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${state.playerName||"玩家"} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard" style="border-color:#c99b45;box-shadow:0 0 22px rgba(201,155,69,.22);background:linear-gradient(180deg,rgba(201,155,69,.10),rgba(0,0,0,0))"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">✦ ${special.name} Lv.${enemy.level}</h2><div class="muted" style="margin:8px 0 5px">${special.description}</div><div class="muted" style="margin-bottom:12px">暴擊 ${enemy.crit||0}%　閃避 ${enemy.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${enemy.hp} / ${enemy.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">特殊戰鬥開始</div></section>`;
-}
-function gmSpecialResultHtml(special,result){
- const sandbox=`<div class="notice" style="margin-bottom:10px"><b>GM 沙盒測試</b><div class="muted" style="margin-top:5px">以下為本次測試結果；按下確認後，所有角色與遊戲資料都會還原為測試前狀態。</div></div>`;
- if(!result.win){
-  const lost=result.penalty?.dropped;
-  return `${sandbox}<div class="notice"><b>特殊遭遇失敗</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP 損失<b>${result.penalty?.expLost||0}</b></div><div class="stat">裝備遺失<b>${lost?itemHtmlPlain(lost):"無"}</b></div></div>`;
- }
- const drops=result.drops||[];
- const rewardLabel=result.rewardContext?.randomReward?.label;
- return `${sandbox}<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${result.xp}</b></div><div class="stat">金幣<b>+${result.gold}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}<div style="margin-top:12px"><b>特殊獎勵</b>${drops.length?drops.map(x=>`<div class="item">${itemHtml(x.item,true)}<div class="muted">${x.sold?`自動出售 +${x.sold} 金幣`:"測試掉落"}</div></div>`).join(""):`<div class="muted" style="margin-top:6px">本次沒有裝備掉落。</div>`}</div>`;
-}
-function gmRestoreSpecialSandbox(){
- if(gmSpecialTestStateSnapshot){
-  state=JSON.parse(gmSpecialTestStateSnapshot);
-  upgradeDropNoticePending=gmSpecialTestUpgradeNoticeSnapshot;
-  gmSpecialTestStateSnapshot=null;
-  save(false);
- }
-}
-function gmCloseSpecialResult(){
- const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
- gmRestoreSpecialSandbox();
- gmSpecialTestActive=false;gmSpecialTestMonster=null;gmSpecialTestReward=null;view="settings";render();
-}
-async function gmStartSpecialBattle(){
- if(battleBusy)return;
- const id=document.getElementById("gmSpecialMonster")?.value,special=getSpecialMonsterById(id);
- if(!special)return alert("找不到特殊怪資料。");
- gmSpecialTestStateSnapshot=JSON.stringify(state);
- gmSpecialTestUpgradeNoticeSnapshot=upgradeDropNoticePending;
- battleBusy=true;gmSpecialTestActive=true;gmSpecialTestMonster=special;
- const level=clampGameLevel(state.level),mapIdx=gmSpecialMapForLevel(level),playerSnapshot=equippedStats();
- const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level),ctx=getSpecialRewardContext(special);
- gmSpecialTestReward=ctx;
- state.hp=playerSnapshot.hp;
- document.getElementById("main").innerHTML=gmSpecialBattlePage(enemy,special);
- await sleep(120);
- const startHp=state.hp,playerMax=playerSnapshot.hp,r=gmSpecialFight(enemy);
- await animateFight(r,startHp,playerMax,enemy.hp,"");
- let result={win:r.win,rewardContext:ctx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
- if(r.win){
-  const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
-  const baseGold=goldBase(level);
-  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
-  const xpPay=specialExpPayout(xpRaw,[]);
-  result.xp=xpPay.xp;
-  result.convertedGold=xpPay.convertedGold;
-  result.gold=ceil(baseGold*(ctx.goldMultiplier||1));
-  state.gold+=result.gold;
-  const items=gmSpecialMakeDrops(ctx,level,mapIdx);
-  result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
-  result.shopDown=gmSpecialApplyShopDiscount(ctx.shopRefreshDown);
- }else{
-  result.penalty=applyDeathPenalty([]);
- }
- battleBusy=false;
- const modal=document.getElementById("battleResultModal"),title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail");
- if(title)title.textContent=r.win?"特殊遭遇完成":"特殊遭遇失敗";
- if(detail)detail.innerHTML=gmSpecialResultHtml(special,result);
- const btn=modal?.querySelector(".controls .btn.primary");if(btn)btn.onclick=gmCloseSpecialResult;
- if(modal)modal.classList.add("show");
 }
