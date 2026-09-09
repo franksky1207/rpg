@@ -59,8 +59,6 @@
   state.inventory.push(makeItem(state.level,mi,"normal",q));save();render();
  };
 
- if(typeof gmSpecialMapForLevel==="function")gmSpecialMapForLevel=function(level){return Math.max(0,Math.min(MAP_COUNT-1,Math.floor((clampGameLevel(level)-1)/5)));};
-
  const baseHomePageForWorld=homePage;
  homePage=function(){return baseHomePageForWorld().replace("純文字 RPG","文明戰線");};
  document.title="文明戰線";
