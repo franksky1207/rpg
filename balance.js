@@ -4,9 +4,9 @@
 function monsterBase(l){
  const level=Math.max(1,Math.floor(Number(l)||1));
  const extra=Math.max(0,level-20);
- const hpGrowth=1+extra*.009;
- const atkGrowth=1+extra*.007;
- const defGrowth=1+extra*.004;
+ const hpGrowth=1+extra*.016;
+ const atkGrowth=1+extra*.012;
+ const defGrowth=1+extra*.006;
  return {
   hp:ceil((62+16.2*level)*hpGrowth),
   atk:ceil((10.5+2.45*level)*atkGrowth),
@@ -20,10 +20,10 @@ function monsterObj(mapIdx,eIdx){
  if(style==="attack"){b.hp=ceil(b.hp*.92);b.atk=ceil(b.atk*1.10)}
  const stage=[
   {hp:1.00,atk:1.00,def:1.00},
-  {hp:1.10,atk:1.08,def:1.06},
-  {hp:1.20,atk:1.16,def:1.11},
-  {hp:1.38,atk:1.28,def:1.17},
-  {hp:1.60,atk:1.36,def:1.22}
+  {hp:1.08,atk:1.07,def:1.05},
+  {hp:1.16,atk:1.14,def:1.10},
+  {hp:1.32,atk:1.25,def:1.15},
+  {hp:1.48,atk:1.31,def:1.20}
  ][eIdx]||{hp:1,atk:1,def:1};
  b.hp=ceil(b.hp*stage.hp);b.atk=ceil(b.atk*stage.atk);b.def=ceil(b.def*stage.def);
  return {name:d[0],level:d[1],kind,style,...b};
