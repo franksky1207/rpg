@@ -9,7 +9,8 @@
   const e=enemy&&typeof enemy==="object"?enemy:{};
   const name=String(e.name||options.enemyName||"敵人");
   const logs=options.logs===false?null:[];
-  let php=Math.max(0,numberOr(startHp,startHp==null?numberOr(p.hp,0):0));
+  const initialHp=startHp==null?numberOr(p.hp,0):numberOr(startHp,0);
+  let php=Math.max(0,initialHp);
   let ehp=Math.max(1,numberOr(e.hp,1));
   const enemyMaxHp=ehp;
   let turns=0;
