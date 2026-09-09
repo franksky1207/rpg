@@ -17,8 +17,9 @@
    .gm-hub-body{padding:14px}.gm-hub-body .item{margin-top:0}.gm-hub-body input,.gm-hub-body select{max-width:100%}
    .gm-hub .btn.gm-create{background:#8a641f;border-color:#c99a43;color:#fff3cf}.gm-hub .btn.gm-create:hover{background:#9b7227;border-color:#ddb05b}
    .gm-hub-close{margin-top:14px}.gm-hub-note{margin-bottom:10px}
-   .gm-bounty-test-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.gm-bounty-test-controls .btn{width:100%;white-space:normal}
-   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}.gm-bounty-test-controls{grid-template-columns:1fr}.gm-bounty-test-controls .btn{padding:10px 12px}}
+   .gm-bounty-test-controls,.gm-arena-test-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+   .gm-bounty-test-controls .btn,.gm-arena-test-controls .btn{width:100%;white-space:normal}
+   @media(max-width:760px){.gm-hub{padding:12px}.gm-hub-tabs{position:sticky;top:58px;z-index:5;background:#17140f;padding:4px 0}.gm-hub-section>summary{padding:12px}.gm-hub-body{padding:11px}.gm-hub-body .controls{gap:7px}.gm-hub-body .controls>.btn,.gm-hub-body .controls>label{max-width:100%}.gm-bounty-test-controls,.gm-arena-test-controls{grid-template-columns:1fr}.gm-bounty-test-controls .btn,.gm-arena-test-controls .btn{padding:10px 12px}}
   `;
   document.head.appendChild(style);
  }
@@ -56,7 +57,7 @@
  }
  function arenaTestHtml(){
   const result=typeof getArenaGmDebugHtml==="function"?getArenaGmDebugHtml():"";
-  return `<div class="muted gm-hub-note">依目前 Lv.${state.level} 角色實際能力，模擬 100 次完整三連戰；不扣副本次數、不增加副本積分、不修改正式 HP 或其他資料。</div><div class="controls"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場 ×100</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場 ×100</button></div><div id="gmArenaDebugResult" style="margin-top:12px">${result}</div>`;
+  return `<div class="muted gm-hub-note">依目前角色實際能力，針對指定競技場模擬 100 次完整三連戰。GM 測試為沙盒模式，不修改正式角色資料。</div><div class="gm-arena-test-controls"><button class="btn blue" onclick="gmSimulateArena100('normal')">普通競技場測試（100 次）</button><button class="btn blue" onclick="gmSimulateArena100('hard')">困難競技場測試（100 次）</button><button class="btn blue" onclick="gmSimulateArena100('extreme')">極限競技場測試（100 次）</button></div><div id="gmArenaDebugResult" style="margin-top:12px">${result}</div>`;
  }
  function voidMirageTestHtml(){
   const result=typeof getVoidMirageGmDebugHtml==="function"?getVoidMirageGmDebugHtml():"";
