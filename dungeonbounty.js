@@ -161,7 +161,7 @@
   if(result.win){gained=bountyState.tier.points;addDungeonPoints(gained);}
   const combatEndHp=result.combatEndHp;
   finishDungeonRun();
-  bountyState.result={win:result.win,turnLimit:result.turnLimit,gained,turns:result.turns,combatEndHp};
+  bountyState.result={win:result.win,gained,turns:result.turns,combatEndHp};
   bountyState.phase="result";
   battleBusy=false;
   render();
@@ -169,7 +169,7 @@
 
  function bountyResultHtml(){
   const d=ensureDungeonProgressState(),r=bountyState.result||{};
-  const title=r.win?"懸賞完成":r.turnLimit?"懸賞未完成":"懸賞失敗";
+  const title=r.win?"懸賞完成":"懸賞失敗";
   return `<section class="dungeon-bounty-shell dungeon-page-shell">
    <div class="dungeon-bounty-card card dungeon-bounty-result-card">
     <div class="dungeon-bounty-title">${title}</div>
