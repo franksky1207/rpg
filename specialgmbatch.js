@@ -5,10 +5,7 @@ function gmSpecialBatchResultHtml(special,summary){
  const qualityRows=summary.qualityCounts.map((n,i)=>n?`<span class="${qClass(i)}">${QUALITY[i].n} ${n}</span>`:"").filter(Boolean).join("　")||"無";
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
  return `<div class="notice"><b>${special.name}・100 次模擬</b><div class="muted" style="margin-top:5px">以下 100 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
- <div class="stats" style="margin-top:10px">
-  <div class="stat">測試次數<b>100</b></div>
-  <div class="stat">勝利<b>${summary.wins}</b></div>
-  <div class="stat">失敗<b>${summary.losses}</b></div>
+ <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
   <div class="stat">死亡掉裝次數<b>${summary.deathDrops}</b></div>
