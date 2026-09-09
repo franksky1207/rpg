@@ -1,5 +1,5 @@
 (function(){
- let bountyDebugHtml="";
+ let bountyTestHtml="";
  let arenaDebugHtml="";
  let voidMirageDebugHtml="";
  let mapMonsterTestHtml="";
@@ -114,15 +114,10 @@
  }
  function playerLine(p){return `HP ${p.hp}　ATK ${p.atk}　DEF ${p.def}　暴擊 ${p.crit}%　閃避 ${p.dodge}%`;}
  function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
- function showBountyDebug(html){bountyDebugHtml=html;const box=document.getElementById("gmBountyDebugResult");if(box)box.innerHTML=html;}
+ function showBountyTest(html){bountyTestHtml=html;const box=document.getElementById("gmBountyTestResult");if(box)box.innerHTML=html;}
  function showArenaDebug(html){arenaDebugHtml=html;const box=document.getElementById("gmArenaDebugResult");if(box)box.innerHTML=html;}
  function showVoidMirageDebug(html){voidMirageDebugHtml=html;const box=document.getElementById("gmVoidMirageDebugResult");if(box)box.innerHTML=html;}
 
- window.gmPreviewBounty=function(tierId){
-  const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats()),enemy=buildBountyEnemyForDebug(tierId,player,state.level);
-  if(!tier||!enemy)return alert("找不到懸賞資料。");
-  showBountyDebug(`<div class="notice"><b>${tier.name}・${enemy.name}</b><div class="muted" style="margin-top:6px">玩家：${playerLine(player)}</div><div class="muted" style="margin-top:4px">怪物：${enemyLine(enemy)}</div><div class="muted" style="margin-top:4px">特性：${traitDetail(enemy)}</div><div class="muted" style="margin-top:4px">獎勵：${tier.points} 副本積分</div></div>`);
- };
  function simulateFight(player,enemy,startHp=player.hp){
   let php=Math.max(0,Number(startHp)||0),ehp=enemy.hp,turn=0;
   while(php>0&&ehp>0&&turn<200){
@@ -137,13 +132,14 @@
  }
  window.gmSimulateBounty100=function(tierId){
   const tier=getBountyTierConfig(tierId),player=createSpecialPlayerSnapshot(equippedStats());if(!tier)return alert("找不到懸賞資料。");
-  const summary={wins:0,losses:0,timeouts:0,totalTurns:0,winHpTotal:0};
+  const summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<100;i++){
    const enemy=buildBountyEnemyForDebug(tierId,player,state.level),r=simulateFight(player,enemy);
-   summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}else{summary.losses++;if(r.turnLimit)summary.timeouts++;}
+   summary.totalTurns+=r.turns;
+   if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
   }
   const winRate=round1(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/100);
-  showBountyDebug(`<div class="notice"><b>${tier.name}・100 次模擬</b><div class="stats" style="margin-top:10px"><div class="stat">勝利<b>${summary.wins}</b></div><div class="stat">失敗<b>${summary.losses}</b></div><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div><div class="stat">200 回合未決<b>${summary.timeouts}</b></div></div><div class="muted" style="margin-top:8px">玩家基準：${playerLine(player)}</div></div>`);
+  showBountyTest(`<div class="notice"><b>${tier.name}・100 次模擬</b><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  window.gmSimulateArena100=function(difficultyId){
@@ -245,7 +241,7 @@
   </div>`);
  };
 
- window.getBountyGmDebugHtml=function(){return bountyDebugHtml;};
+ window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getArenaGmDebugHtml=function(){return arenaDebugHtml;};
  window.getVoidMirageGmDebugHtml=function(){return voidMirageDebugHtml;};
 })();
