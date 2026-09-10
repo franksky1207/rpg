@@ -34,16 +34,28 @@
   return target.dungeon;
  }
 
+ function initializeVipHpIfNeeded(){
+  if(!state||state.vipInitialized===true)return;
+  const baseMax=Math.max(1,equippedStats().hp);
+  const current=Math.max(0,Number(state.hp)||0);
+  const ratio=Math.max(0,Math.min(1,current/baseMax));
+  const vipMax=Math.max(1,playerCombatStats().hp);
+  state.hp=current>=baseMax?vipMax:Math.max(0,Math.min(vipMax,Math.round(vipMax*ratio)));
+  state.vipInitialized=true;
+ }
+
  const baseNewState=newState;
  newState=function(){
   const next=baseNewState();
   normalizeDungeonState(next);
+  next.vipInitialized=true;
   return next;
  };
 
  const baseLoad=load;
  load=function(){
   baseLoad();
+  initializeVipHpIfNeeded();
   normalizeDungeonState(state);
   state.saveVersion=SAVE_VERSION;
   save(false);
