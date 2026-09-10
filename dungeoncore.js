@@ -3,10 +3,11 @@
 
  function dungeonState(){
   if(typeof ensureDungeonProgressState==="function")return ensureDungeonProgressState();
-  if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0,points:0};
-  if(!Number.isFinite(Number(state.dungeon.points))||Number(state.dungeon.points)<0)state.dungeon.points=0;
+  if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0};
   return state.dungeon;
  }
+
+ function currentVipPoints(){return Math.max(0,Math.floor(Number(state.vipPoints)||0));}
 
  function fullHeal(){
   state.hp=playerCombatStats().hp;
@@ -39,7 +40,7 @@
    ok:true,
    run:{...activeDungeonRun},
    attempts:dungeon.attempts,
-   points:dungeon.points,
+   points:currentVipPoints(),
    hp:state.hp
   };
  };
@@ -55,7 +56,7 @@
   activeDungeonRun=null;
   save(false);
   const dungeon=dungeonState();
-  return {ok:true,run:ended,hp:state.hp,attempts:dungeon?.attempts||0,points:dungeon?.points||0};
+  return {ok:true,run:ended,hp:state.hp,attempts:dungeon?.attempts||0,points:currentVipPoints()};
  };
 
  window.dungeonFightCore=function(enemy){
