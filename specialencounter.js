@@ -25,7 +25,7 @@
  };
 
  function specialBattlePage(enemy,special){
-  const s=equippedStats(),hpPct=s.hp?state.hp/s.hp*100:0;
+  const s=playerCombatStats(),hpPct=s.hp?state.hp/s.hp*100:0;
   return `<section class="combat-screen"><div class="combat-head">⚠ 特殊遭遇</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${state.playerName||"玩家"} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard" style="border-color:#c99b45;box-shadow:0 0 22px rgba(201,155,69,.22);background:linear-gradient(180deg,rgba(201,155,69,.10),rgba(0,0,0,0))"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">✦ ${special.name} Lv.${enemy.level}</h2><div class="muted" style="margin:8px 0 5px">${special.description}</div><div class="muted" style="margin-bottom:12px">暴擊 ${enemy.crit||0}%　閃避 ${enemy.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${enemy.hp} / ${enemy.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">特殊戰鬥開始</div></section>`;
  }
 
@@ -88,11 +88,12 @@
  }
 
  async function fightFormalSpecial(ctx,special){
-  const playerSnapshot=equippedStats();
+  const enemyScalingSnapshot=equippedStats();
+  const playerSnapshot=playerCombatStats(enemyScalingSnapshot);
   state.hp=playerSnapshot.hp;
   const level=clampGameLevel(state.level);
   const map=MAPS[selectedMap],dropLevel=Math.max(map.min,Math.min(map.max,level));
-  const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level),rewardCtx=getSpecialRewardContext(special);
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),rewardCtx=getSpecialRewardContext(special);
   adventureScreen="combat";
   document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
   await sleep(120);
@@ -122,14 +123,14 @@
   const baseEnemy=monsterObj(selectedMap,selectedEnemy);
   if(baseEnemy?.kind==="boss")return false;
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
-  const s=equippedStats();
+  const s=playerCombatStats();
   if(!s.hp||state.hp/s.hp<.30)return false;
   if(Math.random()>=SPECIAL_ENCOUNTER_RATE)return false;
   const challenge=await askSpecialEncounter();
   if(!challenge){showSkipSettlement(ctx);return true;}
   const special=rollSpecialMonster();
   if(!special)return false;
-  state.hp=equippedStats().hp;
+  state.hp=playerCombatStats().hp;
   save(false);
   await fightFormalSpecial(ctx,special);
   return true;
