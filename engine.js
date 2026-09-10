@@ -30,7 +30,8 @@ const MONSTER_MAX_DODGE_RATE=30;
 const CRIT_DAMAGE_MULTIPLIER=1.5;
 const MAX_LEVEL=100;
 const VIP_MAX_LEVEL=20;
-const VIP_STAT_RATE_PER_LEVEL=.02;
+const VIP_HP_ATK_RATE_PER_LEVEL=.01;
+const VIP_DEF_RATE_PER_LEVEL=.005;
 const VIP_RATE_STAT_PER_LEVEL=.5;
 window.MAX_LEVEL=MAX_LEVEL;
 window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;
@@ -137,11 +138,12 @@ function equippedStats(){
 function playerCombatStats(baseStats=null,vipLevel=null){
  const base=baseStats&&typeof baseStats==="object"?baseStats:equippedStats();
  const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(vipLevel??state?.vipLevel)||0)));
- const mul=1+VIP_STAT_RATE_PER_LEVEL*lv;
+ const hpAtkMul=1+VIP_HP_ATK_RATE_PER_LEVEL*lv;
+ const defMul=1+VIP_DEF_RATE_PER_LEVEL*lv;
  return {
-  hp:Math.max(1,ceil((Number(base.hp)||1)*mul)),
-  atk:Math.max(1,ceil((Number(base.atk)||1)*mul)),
-  def:Math.max(0,ceil((Number(base.def)||0)*mul)),
+  hp:Math.max(1,ceil((Number(base.hp)||1)*hpAtkMul)),
+  atk:Math.max(1,ceil((Number(base.atk)||1)*hpAtkMul)),
+  def:Math.max(0,ceil((Number(base.def)||0)*defMul)),
   crit:round1(Math.max(0,Number(base.crit)||0)+VIP_RATE_STAT_PER_LEVEL*lv),
   dodge:round1(Math.max(0,Number(base.dodge)||0)+VIP_RATE_STAT_PER_LEVEL*lv)
  };
