@@ -52,7 +52,7 @@
   const f=floorNumber(floor);let points=Math.round(15+1.75*Math.sqrt(Math.max(0,f-1)));if(isBossFloor(f))points*=2;return points;
  }
  function buildEnemy(floor,options={}){
-  const f=floorNumber(floor),boss=isBossFloor(floor),base=baseStats(f);
+  const f=floorNumber(floor),boss=isBossFloor(f),base=baseStats(f);
   const name=boss?bossNameForFloor(f):regularName(options.previousName);
   const ids=Array.isArray(options.traits)?options.traits.slice(0,boss?2:1):rollTraits(f);
   return applyMonsterTraits({name,floor:f,kind:"dungeon-void-mirage",isBossFloor:boss,...base,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,firstClearPoints:firstClearPoints(f)},ids);
@@ -62,8 +62,8 @@
   if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0,points:0};
   return state.dungeon;
  }
- function fullHeal(){state.hp=equippedStats().hp;}
- function runPlayerStats(){return voidMirageRun?.playerSnapshot||createSpecialPlayerSnapshot(equippedStats());}
+ function fullHeal(){state.hp=playerCombatStats().hp;}
+ function runPlayerStats(){return voidMirageRun?.playerSnapshot||createSpecialPlayerSnapshot(playerCombatStats());}
  function runFullHeal(){state.hp=runPlayerStats().hp;}
  function voidMirageFightCore(enemy){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
@@ -131,7 +131,7 @@
   if(!voidMirageRun?.active)return {ok:false,reason:"no_active_run",run:runSnapshot()};
   if(voidMirageRun.exitRequested&&voidMirageRun.phase!=="fighting")return {ok:true,ended:true,run:finishRun("exit")};
   if(!voidMirageRun.runStarted){
-   const player=createSpecialPlayerSnapshot(equippedStats());
+   const player=createSpecialPlayerSnapshot(playerCombatStats());
    const started=beginDungeonRun({mode:"void-mirage",cost:1});
    if(!started.ok){voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=started.reason||"start_failed";if(typeof save==="function")save(false);return {ok:false,...started,run:runSnapshot()};}
    voidMirageRun.playerSnapshot=player;
