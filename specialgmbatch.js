@@ -22,11 +22,7 @@ function gmSetSpecialBatchSelected(id){
  if(!special)return;
  const changed=gmSpecialBatchSelectedId!==special.id;
  gmSpecialBatchSelectedId=special.id;
- if(changed){
-  gmSpecialBatchResult=null;
-  const result=document.getElementById("gmSpecialBatchResult");
-  if(result)result.innerHTML="";
- }
+ if(changed){gmSpecialBatchResult=null;const result=document.getElementById("gmSpecialBatchResult");if(result)result.innerHTML="";}
 }
 
 async function gmStartSpecialBattle(){
@@ -35,66 +31,41 @@ async function gmStartSpecialBattle(){
  const id=select?.value,special=getSpecialMonsterById(id);
  if(!special)return alert("找不到特殊怪資料。");
  gmSpecialBatchSelectedId=special.id;
-
- const button=document.getElementById("gmSpecialBatchStartBtn");
- if(button){button.disabled=true;button.textContent="測試中…";}
+ const button=document.getElementById("gmSpecialBatchStartBtn");if(button){button.disabled=true;button.textContent="測試中…";}
 
  const sandbox=gmCreateSandboxSnapshot();
- const level=clampGameLevel(state.level);
- const mapIdx=gmSpecialMapForLevel(level);
+ const level=clampGameLevel(state.level),mapIdx=gmSpecialMapForLevel(level);
  const enemyScalingSnapshot=createSpecialPlayerSnapshot(equippedStats());
  const playerSnapshot=typeof gmTestPlayerStats==="function"?gmTestPlayerStats(enemyScalingSnapshot):createSpecialPlayerSnapshot(playerCombatStats(enemyScalingSnapshot,gmSpecialTestVip()));
  const playerMax=playerSnapshot.hp;
  battleBusy=true;
-
  const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{}};
 
- function grant(ctx){
-  const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
-  const baseGold=goldBase(level);
-  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
-  const xpPay=specialExpPayout(xpRaw,[]);
-  const gold=ceil(baseGold*(ctx.goldMultiplier||1));
-  summary.totalXp+=xpPay.xp;
-  summary.convertedGold+=xpPay.convertedGold;
-  summary.totalGold+=gold+xpPay.convertedGold;
-  state.gold+=gold;
-  const items=specialMakeDrops(ctx,level,mapIdx);
-  summary.dropCount+=items.length;
+ function grant(ctx,baseXp,baseGold){
+  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1)),xpPay=specialExpPayout(xpRaw,[]),gold=ceil(baseGold*(ctx.goldMultiplier||1));
+  summary.totalXp+=xpPay.xp;summary.convertedGold+=xpPay.convertedGold;summary.totalGold+=gold+xpPay.convertedGold;state.gold+=gold;
+  const items=specialMakeDrops(ctx,level,mapIdx);summary.dropCount+=items.length;
   items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
   summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
   if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
  }
 
  for(let i=0;i<GM_TEST_RUNS;i++){
-  gmResetSandbox(sandbox);
-  state.vipLevel=gmSpecialTestVip();
-  state.hp=playerMax;
-  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level);
-  const r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false});
-  state.hp=r.hp;
+  gmResetSandbox(sandbox);state.vipLevel=gmSpecialTestVip();state.hp=playerMax;
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false});state.hp=r.hp;
   if(r.win){
-   summary.wins++;
-   summary.winHpTotal+=Math.max(0,state.hp);
-   grant(getSpecialRewardContext(special));
-   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special));}
+   summary.wins++;summary.winHpTotal+=Math.max(0,state.hp);
+   const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level)),baseGold=goldBase(level);
+   grant(getSpecialRewardContext(special),baseXp,baseGold);
+   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special),baseXp,baseGold);}
   }else{
-   summary.losses++;
-   const penalty=applyDeathPenalty([]);
-   if(penalty?.dropped)summary.deathDrops++;
-   if(penalty?.protectedByVip20)summary.vip20Protected++;
+   summary.losses++;const penalty=applyDeathPenalty([]);if(penalty?.dropped)summary.deathDrops++;if(penalty?.protectedByVip20)summary.vip20Protected++;
   }
  }
 
  summary.winRate=round1(summary.wins/GM_TEST_RUNS*100);
  summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/playerMax*100):0;
-
- gmRestoreSandbox(sandbox);
- battleBusy=false;
- gmSpecialBatchResult={special,summary};
-
- const result=document.getElementById("gmSpecialBatchResult");
- if(result)result.innerHTML=gmSpecialBatchResultHtml(special,summary);
- if(select)select.value=gmSpecialBatchSelectedId;
- if(button){button.disabled=false;button.textContent=`開始測試（${GM_TEST_RUNS} 次）`;}
+ gmRestoreSandbox(sandbox);battleBusy=false;gmSpecialBatchResult={special,summary};
+ const result=document.getElementById("gmSpecialBatchResult");if(result)result.innerHTML=gmSpecialBatchResultHtml(special,summary);
+ if(select)select.value=gmSpecialBatchSelectedId;if(button){button.disabled=false;button.textContent=`開始測試（${GM_TEST_RUNS} 次）`;}
 }
