@@ -62,7 +62,7 @@
   const e=encounter||createMonsterEncounter(mapIdx,eIdx);
   if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
 
-  const ps=equippedStats();
+  const ps=playerCombatStats();
   const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true});
   state.hp=combat.hp;
   const combatEndHp=state.hp;
