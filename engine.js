@@ -32,7 +32,7 @@ const MAX_LEVEL=100;
 const VIP_MAX_LEVEL=20;
 const VIP_HP_ATK_RATE_PER_LEVEL=.005;
 const VIP_DEF_RATE_PER_LEVEL=.0025;
-const VIP_RATE_STAT_PER_LEVEL=.5;
+const VIP_RATE_STAT_PER_LEVEL=.25;
 window.MAX_LEVEL=MAX_LEVEL;
 window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;
 let state, view="home", selectedMap=0, selectedEnemy=0, selectedItem=null, battleLogs=[], battleBusy=false;
