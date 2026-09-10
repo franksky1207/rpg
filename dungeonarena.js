@@ -25,7 +25,7 @@
   ]
  };
 
- let arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0};
+ let arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};
 
  function difficultyById(id){return ARENA_DIFFICULTIES.find(x=>x.id===id)||null;}
  function clampLevel(v){return clampGameLevel(v);}
@@ -49,12 +49,13 @@
  }
  function difficultyClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
 
- function buildArenaEnemy(difficultyId,stageIndex,stats=null,level=null){
+ function buildArenaEnemy(difficultyId,stageIndex,stats=null,level=null,options={}){
   const p=createSpecialPlayerSnapshot(stats||equippedStats());
   const base=specialBaseEnemyFromPlayer(p);
   const stages=ARENA_STAGE_CONFIGS[difficultyId]||ARENA_STAGE_CONFIGS.normal;
   const idx=Math.max(0,Math.min(2,Number(stageIndex)||0));
   const cfg=stages[idx]||stages[0];
+  const traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(cfg.traitMode);
   const enemy={
    name:ARENA_ENEMY_NAMES[idx]||"模擬對手",
    level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,
@@ -65,14 +66,21 @@
    dodge:rateFromPlayer(p.dodge,cfg.dodgeScale,cfg.dodgeAdd,cfg.dodgeCap,MONSTER_MAX_DODGE_RATE),
    playerSnapshot:p
   };
-  return applyMonsterTraits(enemy,rollArenaTraits(cfg.traitMode));
+  return applyMonsterTraits(enemy,traits);
  }
 
  window.getArenaDifficultyConfigs=function(){return ARENA_DIFFICULTIES.map(d=>({...d,stagePoints:d.stagePoints.slice(),stages:(ARENA_STAGE_CONFIGS[d.id]||[]).map(x=>({...x}))}));};
  window.buildArenaEnemyForTest=function(difficultyId,stageIndex,stats=null,level=null){return difficultyById(difficultyId)?buildArenaEnemy(difficultyId,stageIndex,stats,level):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
 
- function resetArenaState(){arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0};}
+ function resetArenaState(){arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};}
+ function arenaPlayerStats(){return arenaState.playerSnapshot||createSpecialPlayerSnapshot(equippedStats());}
+ function arenaFightCore(enemy){
+  const player=arenaPlayerStats();
+  const combat=runCombatCore(player,enemy,state.hp);
+  state.hp=combat.hp;
+  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
+ }
 
  window.openArenaDungeon=function(){
   if((Number(state.level)||1)<15){view="dungeon";render();return;}
@@ -81,9 +89,8 @@
  window.startArenaDungeon=function(difficultyId){
   if((Number(state.level)||1)<15)return;
   const difficulty=difficultyById(difficultyId);if(!difficulty)return;
-  const started=beginDungeonRun({mode:"arena",cost:1});
-  if(!started.ok){view="dungeon";render();return;}
-  arenaState={phase:"ready",difficulty,stage:0,enemy:buildArenaEnemy(difficulty.id,0),result:null,history:[],gainedPoints:0,startHp:state.hp,playerMaxHp:equippedStats().hp};
+  if(!canStartDungeonRun(1)){view="dungeon";render();return;}
+  arenaState={phase:"ready",difficulty,stage:0,enemy:buildArenaEnemy(difficulty.id,0),result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};
   view="dungeon-arena";render();
  };
 
@@ -96,7 +103,19 @@
 
  window.startArenaStageFight=function(){
   if(arenaState.phase!=="ready"||!arenaState.enemy||battleBusy)return;
-  arenaState.phase="combat";arenaState.startHp=state.hp;arenaState.playerMaxHp=equippedStats().hp;render();
+  if(!arenaState.runStarted){
+   const previewTraits=Array.isArray(arenaState.enemy.traits)?arenaState.enemy.traits.slice():[];
+   const player=createSpecialPlayerSnapshot(equippedStats());
+   const started=beginDungeonRun({mode:"arena",cost:1});
+   if(!started.ok){view="dungeon";resetArenaState();render();return;}
+   arenaState.playerSnapshot=player;
+   arenaState.runStarted=true;
+   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,player,state.level,{traits:previewTraits});
+  }
+  arenaState.phase="combat";
+  arenaState.startHp=state.hp;
+  arenaState.playerMaxHp=arenaPlayerStats().hp;
+  render();
   setTimeout(runArenaFight,80);
  };
  window.runArenaStage=window.startArenaStageFight;
@@ -134,7 +153,7 @@
   if(battleBusy)return;
   battleBusy=true;
   const stageIndex=arenaState.stage,enemy=arenaState.enemy,startHp=arenaState.startHp,playerMax=arenaState.playerMaxHp;
-  const result=dungeonFightCore(enemy);
+  const result=arenaFightCore(enemy);
   await animateArena(result,startHp,playerMax);
   let stagePoints=0;
   if(result.win)stagePoints=awardStagePoints(stageIndex);
@@ -142,7 +161,7 @@
 
   if(result.win&&stageIndex<2){
    arenaState.stage=stageIndex+1;
-   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage);
+   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage,arenaPlayerStats(),state.level);
    arenaState.result={type:"stage_win",stage:stageIndex,stagePoints};
    arenaState.phase="ready";
    save(false);
@@ -163,13 +182,13 @@
   return `<div class="arena-progress-strip">${[0,1,2].map(i=>`<div class="arena-progress-step ${i<arenaState.stage?"done":i===arenaState.stage?"current":""}"><span>${i+1}</span>${ARENA_STAGE_NAMES[i]}</div>`).join("")}</div>`;
  }
  function readyHtml(){
-  const s=equippedStats(),stage=arenaState.stage,d=arenaState.difficulty;
+  const s=arenaPlayerStats(),stage=arenaState.stage,d=arenaState.difficulty;
   const previous=arenaState.history.length?`<div class="arena-carry">上一戰通過，HP 保留：${state.hp} / ${s.hp}</div>`:"";
   const currentReward=d?.stagePoints?.[stage]||0;
   return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} 副本積分</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
  }
  function combatHtml(){
-  const e=arenaState.enemy,s=equippedStats(),d=arenaState.difficulty,stage=arenaState.stage;
+  const e=arenaState.enemy,s=arenaPlayerStats(),d=arenaState.difficulty,stage=arenaState.stage;
   return `<section class="combat-screen arena-combat"><div class="combat-head arena-combat-head">【競技場】 ${d?.name||""}・${ARENA_STAGE_NAMES[stage]}</div><div class="arena-progress-wrap">${progressStrip()}</div><div class="combat-arena"><div class="combatant player arena-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div><div class="combat-vs arena-vs">VS</div><div class="combatant enemy arena-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="${difficultyClass(d?.id)} arena-combat-tier">${d?.name||""}</div><h2 id="combatEnemyName">${e.name}</h2><div class="arena-traits">特性：${arenaTraitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message arena-message" id="combatMessage">準備戰鬥</div></section>`;
  }
  function resultHtml(){
@@ -181,5 +200,5 @@
  }
 
  window.renderArenaDungeon=function(){if(arenaState.phase==="select")return selectionHtml();if(arenaState.phase==="combat")return combatHtml();if(arenaState.phase==="result")return resultHtml();return readyHtml();};
- window.getArenaCoreState=function(){return {phase:arenaState.phase,difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
+ window.getArenaCoreState=function(){return {phase:arenaState.phase,difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,runStarted:arenaState.runStarted,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
 })();
