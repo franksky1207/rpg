@@ -87,31 +87,52 @@
   modal.classList.add("show");
  }
 
+ function grantSpecialReward(rewardCtx,baseXp,baseGold,dropLevel,mapIdx){
+  const xpRaw=ceil(baseXp*(rewardCtx.expMultiplier||1));
+  const xpPay=specialExpPayout(xpRaw,[]);
+  const gold=ceil(baseGold*(rewardCtx.goldMultiplier||1));
+  state.gold+=gold;
+  const items=specialMakeDrops(rewardCtx,dropLevel,mapIdx);
+  const drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
+  const shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
+  return {rewardContext:rewardCtx,xp:xpPay.xp,convertedGold:xpPay.convertedGold,gold,drops,shopDown};
+ }
+
  async function fightFormalSpecial(ctx,special){
   const enemyScalingSnapshot=equippedStats();
   const playerSnapshot=playerCombatStats(enemyScalingSnapshot);
   state.hp=playerSnapshot.hp;
   const level=clampGameLevel(state.level);
   const map=MAPS[selectedMap],dropLevel=Math.max(map.min,Math.min(map.max,level));
-  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),rewardCtx=getSpecialRewardContext(special);
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level);
+  const firstRewardCtx=getSpecialRewardContext(special);
   adventureScreen="combat";
   document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:rewardCtx,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
+  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
-   const xpRaw=ceil(baseXp*(rewardCtx.expMultiplier||1));
-   const xpPay=specialExpPayout(xpRaw,[]);
-   result.xp=xpPay.xp;
-   result.convertedGold=xpPay.convertedGold;
-   result.gold=ceil(baseGold*(rewardCtx.goldMultiplier||1));
-   state.gold+=result.gold;
-   const items=specialMakeDrops(rewardCtx,dropLevel,selectedMap);
-   result.drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
-   result.shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
+   const first=grantSpecialReward(firstRewardCtx,baseXp,baseGold,dropLevel,selectedMap);
+   result.xp+=first.xp;
+   result.convertedGold+=first.convertedGold;
+   result.gold+=first.gold;
+   result.drops.push(...first.drops);
+   result.shopDown+=first.shopDown;
+
+   if((state.vipLevel||0)>=10&&Math.random()<.10){
+    const bonusCtx=getSpecialRewardContext(special);
+    const bonus=grantSpecialReward(bonusCtx,baseXp,baseGold,dropLevel,selectedMap);
+    result.vip10Triggered=true;
+    result.bonusRewardContext=bonusCtx;
+    result.xp+=bonus.xp;
+    result.convertedGold+=bonus.convertedGold;
+    result.gold+=bonus.gold;
+    result.drops.push(...bonus.drops);
+    result.shopDown+=bonus.shopDown;
+   }
   }else{
    result.penalty=applyDeathPenalty([]);
   }
@@ -125,7 +146,8 @@
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
   const s=playerCombatStats();
   if(!s.hp||state.hp/s.hp<.30)return false;
-  if(Math.random()>=SPECIAL_ENCOUNTER_RATE)return false;
+  const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6?.02:0);
+  if(Math.random()>=encounterRate)return false;
   const challenge=await askSpecialEncounter();
   if(!challenge){showSkipSettlement(ctx);return true;}
   const special=rollSpecialMonster();
