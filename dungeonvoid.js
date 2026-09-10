@@ -79,7 +79,10 @@
   if(!voidMirageRun)return null;
   voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=String(reason||"ended");
   if(extra.failedFloor)voidMirageRun.failedFloor=floorNumber(extra.failedFloor);
-  if(voidMirageRun.runStarted&&typeof finishDungeonRun==="function")finishDungeonRun();else{fullHeal();if(typeof save==="function")save(false);}
+  if(voidMirageRun.runStarted){
+   if(typeof finishDungeonRun==="function")finishDungeonRun();
+   else{fullHeal();if(typeof save==="function")save(false);}
+  }else if(typeof save==="function")save(false);
   return runSnapshot();
  }
  function recordClearAndPoints(floor){
@@ -130,7 +133,7 @@
   if(!voidMirageRun.runStarted){
    const player=createSpecialPlayerSnapshot(equippedStats());
    const started=beginDungeonRun({mode:"void-mirage",cost:1});
-   if(!started.ok){voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=started.reason||"start_failed";return {ok:false,...started,run:runSnapshot()};}
+   if(!started.ok){voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=started.reason||"start_failed";if(typeof save==="function")save(false);return {ok:false,...started,run:runSnapshot()};}
    voidMirageRun.playerSnapshot=player;
    voidMirageRun.runStarted=true;
   }
