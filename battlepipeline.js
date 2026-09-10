@@ -64,7 +64,8 @@
     ctx.wins++;
     ctx.totalXp+=r.xp;
     ctx.totalGold+=r.gold;
-    if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
+    if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
+    else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
    }else{
     defeat=r;
    }
