@@ -1,8 +1,8 @@
 (function(){
  const ARENA_DIFFICULTIES=[
-  {id:"normal",name:"普通競技場",stagePoints:[30,40,50],clearBonus:40,totalPoints:160},
-  {id:"hard",name:"困難競技場",stagePoints:[40,55,70],clearBonus:65,totalPoints:230},
-  {id:"extreme",name:"極限競技場",stagePoints:[50,70,95],clearBonus:105,totalPoints:320}
+  {id:"normal",name:"普通競技場",stagePoints:[25,35,120],totalPoints:180},
+  {id:"hard",name:"困難競技場",stagePoints:[35,45,200],totalPoints:280},
+  {id:"extreme",name:"極限競技場",stagePoints:[40,60,320],totalPoints:420}
  ];
  const ARENA_STAGE_NAMES=["第一戰","第二戰","第三戰"];
  const ARENA_ENEMY_NAMES=["基礎模擬單元","戰術強化單元","極限測試平台"];
@@ -93,12 +93,6 @@
   arenaState.gainedPoints+=points;
   return points;
  }
- function awardClearBonus(){
-  const bonus=Math.floor(Number(arenaState.difficulty?.clearBonus)||0);
-  if(bonus>0)addDungeonPoints(bonus);
-  arenaState.gainedPoints+=bonus;
-  return bonus;
- }
 
  window.startArenaStageFight=function(){
   if(arenaState.phase!=="ready"||!arenaState.enemy||battleBusy)return;
@@ -142,18 +136,18 @@
   const stageIndex=arenaState.stage,enemy=arenaState.enemy,startHp=arenaState.startHp,playerMax=arenaState.playerMaxHp;
   const result=dungeonFightCore(enemy);
   await animateArena(result,startHp,playerMax);
-  let stagePoints=0,clearBonus=0;
-  if(result.win){stagePoints=awardStagePoints(stageIndex);if(stageIndex===2)clearBonus=awardClearBonus();}
-  arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,stagePoints,clearBonus,enemy:{...enemy}});
+  let stagePoints=0;
+  if(result.win)stagePoints=awardStagePoints(stageIndex);
+  arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,stagePoints,enemy:{...enemy}});
 
   if(result.win&&stageIndex<2){
    arenaState.stage=stageIndex+1;
    arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage);
-   arenaState.result={type:"stage_win",stage:stageIndex,stagePoints,clearBonus:0};
+   arenaState.result={type:"stage_win",stage:stageIndex,stagePoints};
    arenaState.phase="ready";
    save(false);
   }else{
-   arenaState.result={type:result.win?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,stagePoints,clearBonus};
+   arenaState.result={type:result.win?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,stagePoints};
    arenaState.phase="result";
    finishDungeonRun();
   }
@@ -162,7 +156,7 @@
 
  function selectionHtml(){
   const d=ensureDungeonProgressState();
-  const cards=ARENA_DIFFICULTIES.map(x=>`<button class="arena-difficulty-card ${difficultyClass(x.id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaDungeon('${x.id}')`:"void(0)"}"><b>${x.name}</b><span>三戰全通 ${x.totalPoints} 積分</span><small>${x.stagePoints.join(" + ")}，全通額外 +${x.clearBonus}</small></button>`).join("");
+  const cards=ARENA_DIFFICULTIES.map(x=>`<button class="arena-difficulty-card ${difficultyClass(x.id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaDungeon('${x.id}')`:"void(0)"}"><b>${x.name}</b><span>三戰全通 ${x.totalPoints} 積分</span><small>${x.stagePoints.join(" + ")}</small></button>`).join("");
   return `<div class="function-page dungeon-page-shell arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-subtitle">三場連續戰鬥，場與場之間不回血</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次</div><div class="arena-difficulty-grid">${cards}</div></section></div>`;
  }
  function progressStrip(){
@@ -172,7 +166,7 @@
   const s=equippedStats(),stage=arenaState.stage,d=arenaState.difficulty;
   const previous=arenaState.history.length?`<div class="arena-carry">上一戰通過，HP 保留：${state.hp} / ${s.hp}</div>`:"";
   const currentReward=d?.stagePoints?.[stage]||0;
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} 副本積分${stage===2?`　｜　三戰全通再 +${d.clearBonus}`:""}</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} 副本積分</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
  }
  function combatHtml(){
   const e=arenaState.enemy,s=equippedStats(),d=arenaState.difficulty,stage=arenaState.stage;
@@ -183,7 +177,7 @@
   const title=r.type==="clear"?"競技場三戰完成":"競技場挑戰失敗";
   const cleared=arenaState.history.filter(x=>x.win).length;
   const rows=arenaState.history.map((h,i)=>`<div class="arena-result-row"><span>${ARENA_STAGE_NAMES[i]}</span><span>${h.win?`通過　+${h.stagePoints||0}`:"失敗"}</span></div>`).join("");
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||""}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div>${r.type==="clear"?`<div class="arena-clear-bonus">三戰全通獎勵：+${r.clearBonus||0}</div>`:""}<div class="arena-total-earned">本次獲得副本積分：<strong>${arenaState.gainedPoints}</strong></div><div class="arena-current-points">目前副本積分：${d.points}</div><div class="arena-current-points">剩餘可挑戰次數：${d.attempts} 次</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="openArenaDungeon()">再次選擇競技場</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||""}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div><div class="arena-total-earned">本次獲得副本積分：<strong>${arenaState.gainedPoints}</strong></div><div class="arena-current-points">目前副本積分：${d.points}</div><div class="arena-current-points">剩餘可挑戰次數：${d.attempts} 次</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="openArenaDungeon()">再次選擇競技場</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
  }
 
  window.renderArenaDungeon=function(){if(arenaState.phase==="select")return selectionHtml();if(arenaState.phase==="combat")return combatHtml();if(arenaState.phase==="result")return resultHtml();return readyHtml();};
