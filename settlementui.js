@@ -23,9 +23,7 @@
   document.head.appendChild(style);
  }
 
- function normalizeItems(items){
-  return Array.isArray(items)?items.filter(x=>x&&x.item):[];
- }
+ function normalizeItems(items){return Array.isArray(items)?items.filter(x=>x&&x.item):[];}
 
  window.settlementDropListHtml=function(items,options={}){
   injectSettlementUiStyles();
@@ -40,8 +38,16 @@
  };
 
  if(typeof window.dropListHtml==="function"){
-  window.dropListHtml=function(items){
-   return settlementDropListHtml(items,{title:"裝備",emptyText:"裝備：無",showCount:false,marginTop:10});
+  window.dropListHtml=function(items){return settlementDropListHtml(items,{title:"裝備",emptyText:"裝備：無",showCount:false,marginTop:10});};
+ }
+
+ if(typeof window.showBattleResult==="function"){
+  const baseShowBattleResult=window.showBattleResult;
+  window.showBattleResult=function(ctx,defeat=null){
+   baseShowBattleResult(ctx,defeat);
+   const detail=document.getElementById("battleResultDetail");
+   const extra=typeof vipEventsHtml==="function"?vipEventsHtml(ctx,defeat):"";
+   if(detail&&extra)detail.insertAdjacentHTML("beforeend",extra);
   };
  }
 
