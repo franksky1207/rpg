@@ -25,7 +25,7 @@
 
  function dungeonSafe(){
   if(typeof ensureDungeonProgressState==="function")return ensureDungeonProgressState();
-  return state.dungeon||{progress:0,attempts:0,points:0};
+  return state.dungeon||{progress:0,attempts:0};
  }
  function progressSafe(){
   if(typeof ensureVoidMirageState==="function")return ensureVoidMirageState()||{highestCleared:0};
@@ -39,7 +39,7 @@
  function reasonText(reason){if(reason==="defeat")return "挑戰失敗";if(reason==="exit")return "已強制退出";return "本次挑戰結束";}
  function statsHtml(run,floorOverride=null){
   const progress=progressSafe(),floor=floorOverride||run?.currentFloor||Math.max(1,(progress.highestCleared||0)+1);
-  return `<div class="void-stats"><div class="void-stat"><span>目前挑戰樓層</span><strong>第 ${floor} 層</strong></div><div class="void-stat"><span>最高通過樓層</span><strong>第 ${progress.highestCleared||0} 層</strong></div><div class="void-stat"><span>本次突破</span><strong>${run?.cleared||0} 層</strong></div><div class="void-stat"><span>本次積分</span><strong>${run?.points||0}</strong></div></div>`;
+  return `<div class="void-stats"><div class="void-stat"><span>目前挑戰樓層</span><strong>第 ${floor} 層</strong></div><div class="void-stat"><span>最高通過樓層</span><strong>第 ${progress.highestCleared||0} 層</strong></div><div class="void-stat"><span>本次突破</span><strong>${run?.cleared||0} 層</strong></div><div class="void-stat"><span>本次 VIP 積分</span><strong>${run?.points||0}</strong></div></div>`;
  }
 
  function idleHtml(){
@@ -48,14 +48,14 @@
  }
 
  function combatHtml(fr,run){
-  const e=fr.enemy,s=equippedStats(),floor=fr.floor,boss=e?.isBossFloor;
+  const e=fr.enemy,s=run?.playerSnapshot||playerCombatStats(),floor=fr.floor,boss=e?.isBossFloor;
   const exitLabel=voidUi.exitAfterFloor?"本層結束後將退出":"強制退出虛空幻境";
-  return `<section class="void-shell"><div class="card void-panel"><div class="void-title">【虛空幻境】</div>${statsHtml(run,floor)}<div class="void-subtitle">平均每層積分：${averagePoints(run)}</div><div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">第 ${floor} 層・自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="void-player-meta">HP ${s.hp}　ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"虛空幻境"}・第 ${floor} 層</div><h2>${e.name}</h2><div class="void-traits">特性：${traitNames(e)}</div><div class="void-enemy-meta">HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="void-reward">首通積分 +${fr.gained||e.firstClearPoints||0}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel"><div class="void-title">【虛空幻境】</div>${statsHtml(run,floor)}<div class="void-subtitle">平均每層 VIP 積分：${averagePoints(run)}</div><div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">第 ${floor} 層・自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="void-player-meta">HP ${s.hp}　ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"虛空幻境"}・第 ${floor} 層</div><h2>${e.name}</h2><div class="void-traits">特性：${traitNames(e)}</div><div class="void-enemy-meta">HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="void-reward">首通 VIP 積分 +${fr.gained||e.firstClearPoints||0}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
  }
 
  function resultHtml(run){
   const d=dungeonSafe(),p=progressSafe(),cleared=run?.cleared||0,total=run?.points||0,failed=run?.failedFloor?`第 ${run.failedFloor} 層`:"—",canAgain=Number(state.level)>=25&&(d.attempts||0)>0;
-  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-result-reason">${reasonText(run?.endedReason)}</div><h2>本次挑戰完成</h2><div class="void-result-grid"><div><span>本次成功突破</span><strong>${cleared} 層</strong></div><div><span>最高通過樓層</span><strong>第 ${p.highestCleared||0} 層</strong></div><div><span>本次總積分</span><strong>${total}</strong></div><div><span>平均每層積分</span><strong>${averagePoints(run)}</strong></div><div><span>失敗樓層</span><strong>${failed}</strong></div><div><span>平均戰鬥回合</span><strong>${run?.averageTurns||0}</strong></div></div><div class="muted">目前副本積分：${d.points||0}　｜　剩餘可挑戰次數：${d.attempts||0} 次</div><div class="void-actions"><button class="btn dungeon-entry-btn" ${canAgain?"":"disabled"} onclick="${canAgain?"enterVoidMirageDungeon()":"void(0)"}">${canAgain?"再次進入虛空幻境":"挑戰次數不足"}</button><button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-result-reason">${reasonText(run?.endedReason)}</div><h2>本次挑戰完成</h2><div class="void-result-grid"><div><span>本次成功突破</span><strong>${cleared} 層</strong></div><div><span>最高通過樓層</span><strong>第 ${p.highestCleared||0} 層</strong></div><div><span>本次總 VIP 積分</span><strong>${total}</strong></div><div><span>平均每層 VIP 積分</span><strong>${averagePoints(run)}</strong></div><div><span>失敗樓層</span><strong>${failed}</strong></div><div><span>平均戰鬥回合</span><strong>${run?.averageTurns||0}</strong></div></div><div class="muted">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}　｜　剩餘可挑戰次數：${d.attempts||0} 次</div><div class="void-actions"><button class="btn dungeon-entry-btn" ${canAgain?"":"disabled"} onclick="${canAgain?"enterVoidMirageDungeon()":"void(0)"}">${canAgain?"再次進入虛空幻境":"挑戰次數不足"}</button><button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
  }
 
  window.renderVoidMirageDungeon=function(){
@@ -80,7 +80,7 @@
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
  async function animateFloor(fr){
-  const result=fr.result,e=fr.enemy,playerMax=fr.playerMaxHp||equippedStats().hp;let ehp=e.hp,php=playerMax;
+  const result=fr.result,e=fr.enemy,playerMax=fr.playerMaxHp||playerCombatStats().hp;let ehp=e.hp,php=playerMax;
   const logs=result?.logs||[],delay=logs.length>90?14:logs.length>50?24:45;
   setHpUi(ehp,e.hp,php,playerMax,"開始戰鬥");await sleep(100);
   for(const line of logs){
@@ -92,7 +92,7 @@
    if(line.includes("你閃避了攻擊")){pulse("player","閃避");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
    setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);
   }
-  if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破，首通積分 +${fr.gained||0}`);
+  if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破，首通 VIP 積分 +${fr.gained||0}`);
  }
 
  async function autoClimb(){
