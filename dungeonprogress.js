@@ -18,7 +18,8 @@
 
   let progress=finiteNonNegative(target.dungeon.progress,0);
   let attempts=Math.floor(finiteNonNegative(target.dungeon.attempts,0));
-  let points=Math.floor(finiteNonNegative(target.dungeon.points,0));
+  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,target.dungeon.points));
+  let points=vipPoints;
   const converted=Math.floor((progress+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
   if(converted>0){
    attempts+=converted;
@@ -28,6 +29,8 @@
   target.dungeon.progress=roundProgress(Math.max(0,progress));
   target.dungeon.attempts=attempts;
   target.dungeon.points=points;
+  target.vipPoints=points;
+  if(typeof normalizeVipState==="function")normalizeVipState(target);
   return target.dungeon;
  }
 
@@ -88,8 +91,10 @@
   const dungeon=normalizeDungeonState(state);
   if(!dungeon)return {added:0,points:0};
   const added=Math.floor(finiteNonNegative(amount,0));
-  dungeon.points+=added;
-  return {added,points:dungeon.points};
+  const result=typeof addVipPoints==="function"?addVipPoints(added):{added,points:(state.vipPoints||0)+added};
+  state.vipPoints=Math.floor(finiteNonNegative(result.points,0));
+  dungeon.points=state.vipPoints;
+  return {added:result.added??added,points:state.vipPoints,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
  };
 
  window.awardDungeonProgressForBattle=function(params={}){
