@@ -91,7 +91,11 @@
   const dungeon=normalizeDungeonState(state);
   if(!dungeon)return {added:0,points:0};
   const added=Math.floor(finiteNonNegative(amount,0));
+  const activeRun=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null;
+  const lockCarryHp=activeRun?.mode==="arena";
+  const hpBefore=state.hp;
   const result=typeof addVipPoints==="function"?addVipPoints(added):{added,points:(state.vipPoints||0)+added};
+  if(lockCarryHp)state.hp=hpBefore;
   state.vipPoints=Math.floor(finiteNonNegative(result.points,0));
   dungeon.points=state.vipPoints;
   return {added:result.added??added,points:state.vipPoints,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
