@@ -41,7 +41,6 @@ window.clampGameLevel=clampGameLevel;
 function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
-function monsterBase(l){return {hp:ceil(60+16*l),atk:ceil(10+2.35*l),def:ceil(3+.9*l)}}
 function sameExp(l){return ceil(25+4*l)}
 function expNeed(l){return ceil(sameExp(l)*(4.5+.35*l+.023*l*l))}
 function expLevelFactor(ml,pl){let d=ml-pl;if(d>=5)return 1.3;if(d>=3)return 1.2;if(d>=1)return 1.1;if(d===0)return 1;if(d>=-2)return .9;if(d>=-5)return .6;if(d>=-10)return .25;return .05}
@@ -173,20 +172,6 @@ function itemAbilityLines(it){
  return rows;
 }
 
-function monsterObj(mapIdx,eIdx){
- let d=MAPS[mapIdx].enemies[eIdx],b=monsterBase(d[1]),kind=d[2],style=d[3];
- if(style==="tank"){b.hp=ceil(b.hp*1.25);b.atk=ceil(b.atk*.9)}
- if(style==="attack"){b.hp=ceil(b.hp*.85);b.atk=ceil(b.atk*1.2)}
- const stage=[
-  {hp:1,atk:1,def:1},
-  {hp:1.12,atk:1.10,def:1.08},
-  {hp:1.28,atk:1.20,def:1.15},
-  {hp:1.60,atk:1.30,def:1.22},
-  {hp:2.05,atk:1.35,def:1.28}
- ][eIdx]||{hp:1,atk:1,def:1};
- b.hp=ceil(b.hp*stage.hp);b.atk=ceil(b.atk*stage.atk);b.def=ceil(b.def*stage.def);
- return {name:d[0],level:d[1],kind,style,...b};
-}
 function calcDamage(atk,def){return Math.max(1,ceil((atk-def*.55)*(.95+Math.random()*.1)))}
 function expReward(e){let mul=e.kind==="boss"?5:e.kind==="elite"?2:1;return ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level))}
 function goldReward(e){let mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;return ceil(goldBase(e.level)*mul)}
