@@ -62,6 +62,17 @@ function vipLevelFromPoints(points){
  const p=Math.max(0,Math.floor(Number(points)||0));
  return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Math.sqrt(p/1000))));
 }
+function vipBonusStats(level=null){
+ const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(level??state?.vipLevel)||0)));
+ return {
+  level:lv,
+  hp:round1(lv*VIP_HP_ATK_RATE_PER_LEVEL*100),
+  atk:round1(lv*VIP_HP_ATK_RATE_PER_LEVEL*100),
+  def:round1(lv*VIP_DEF_RATE_PER_LEVEL*100),
+  crit:round1(lv*VIP_RATE_STAT_PER_LEVEL),
+  dodge:round1(lv*VIP_RATE_STAT_PER_LEVEL)
+ };
+}
 function normalizeVipState(target){
  if(!target||typeof target!=="object")return target;
  const legacyPoints=Number(target?.dungeon?.points);
@@ -75,6 +86,7 @@ function normalizeVipState(target){
 }
 window.vipThreshold=vipThreshold;
 window.vipLevelFromPoints=vipLevelFromPoints;
+window.vipBonusStats=vipBonusStats;
 window.normalizeVipState=normalizeVipState;
 function blankMapProgress(){return Array.from({length:MAPS.length},()=>[0,0,0,0])}
 function fitWorldArray(arr,fill){
@@ -137,15 +149,13 @@ function equippedStats(){
 }
 function playerCombatStats(baseStats=null,vipLevel=null){
  const base=baseStats&&typeof baseStats==="object"?baseStats:equippedStats();
- const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(vipLevel??state?.vipLevel)||0)));
- const hpAtkMul=1+VIP_HP_ATK_RATE_PER_LEVEL*lv;
- const defMul=1+VIP_DEF_RATE_PER_LEVEL*lv;
+ const bonus=vipBonusStats(vipLevel);
  return {
-  hp:Math.max(1,ceil((Number(base.hp)||1)*hpAtkMul)),
-  atk:Math.max(1,ceil((Number(base.atk)||1)*hpAtkMul)),
-  def:Math.max(0,ceil((Number(base.def)||0)*defMul)),
-  crit:round1(Math.max(0,Number(base.crit)||0)+VIP_RATE_STAT_PER_LEVEL*lv),
-  dodge:round1(Math.max(0,Number(base.dodge)||0)+VIP_RATE_STAT_PER_LEVEL*lv)
+  hp:Math.max(1,ceil((Number(base.hp)||1)*(1+bonus.hp/100))),
+  atk:Math.max(1,ceil((Number(base.atk)||1)*(1+bonus.atk/100))),
+  def:Math.max(0,ceil((Number(base.def)||0)*(1+bonus.def/100))),
+  crit:round1(Math.max(0,Number(base.crit)||0)+bonus.crit),
+  dodge:round1(Math.max(0,Number(base.dodge)||0)+bonus.dodge)
  };
 }
 window.playerCombatStats=playerCombatStats;
@@ -281,19 +291,24 @@ function gainExp(n,logs=[]){
 function applyDeathPenalty(logs=[]){
  let loss=state.level>=MAX_LEVEL?0:ceil(expNeed(state.level)*.10),actual=Math.min(state.exp,loss);
  state.exp=Math.max(0,state.exp-loss);
- let dropped=null;
- let worn=EQUIPMENT_TYPES.map(slot=>[slot,state.equipment[slot]]).filter(([,it])=>!!it);
- if(worn.length&&Math.random()<.30){
-   let [slot,it]=worn[Math.floor(Math.random()*worn.length)];
-   state.equipment[slot]=null;
-   dropped=it;
-   state.lostGear.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),item:it,cost:ceil(it.buy*2),lostAt:Date.now()});
+ let dropped=null,protectedByVip20=false;
+ const worn=EQUIPMENT_TYPES.map(slot=>[slot,state.equipment[slot]]).filter(([,it])=>!!it);
+ const lossRoll=worn.length&&Math.random()<.30;
+ if(lossRoll){
+   if((state.vipLevel||0)>=20){
+     protectedByVip20=true;
+   }else{
+     const [slot,it]=worn[Math.floor(Math.random()*worn.length)];
+     state.equipment[slot]=null;
+     dropped=it;
+     state.lostGear.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),item:it,cost:ceil(it.buy*2),lostAt:Date.now()});
+   }
  }
  state.hp=playerCombatStats().hp;
  logs.push(`死亡懲罰：EXP -${actual}${loss>actual?`（目前 EXP 已扣至 0）`:""}。`);
  if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。可前往商店贖回。`);
  else logs.push(`本次沒有遺失裝備。`);
- return {expLost:actual,dropped};
+ return {expLost:actual,dropped,protectedByVip20};
 }
 
 function itemHtmlPlain(it){return `【${QUALITY[it.q].n}】${it.name} Lv.${it.level}`}
