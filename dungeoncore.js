@@ -9,7 +9,7 @@
  }
 
  function fullHeal(){
-  state.hp=equippedStats().hp;
+  state.hp=playerCombatStats().hp;
  }
 
  window.canStartDungeonRun=function(cost=1){
@@ -60,7 +60,7 @@
 
  window.dungeonFightCore=function(enemy){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
-  const combat=runCombatCore(equippedStats(),enemy,state.hp);
+  const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
   state.hp=combat.hp;
   return {
    win:combat.win,
