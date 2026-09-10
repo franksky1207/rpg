@@ -20,7 +20,7 @@ function monsterObj(mapIdx,eIdx){
  const stage=[
   {hp:1.22,atk:1.17,def:1.10},
   {hp:1.31,atk:1.24,def:1.14},
-  {hp:1.39,atk:1.31,def:1.17},
+  {hp:1.34,atk:1.28,def:1.15},
   {hp:1.39,atk:1.29,def:1.17},
   {hp:1.44,atk:1.27,def:1.17}
  ][eIdx]||{hp:1,atk:1,def:1};
