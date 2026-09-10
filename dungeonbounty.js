@@ -83,7 +83,7 @@
  };
 
  function bountyCombatHtml(){
-  const e=bountyState.enemy,s=equippedStats();
+  const e=bountyState.enemy,s=playerCombatStats();
   return `<section class="combat-screen dungeon-bounty-combat">
    <div class="combat-head dungeon-bounty-title">【懸賞戰】 ${bountyState.tier.name}</div>
    <div class="combat-arena">
@@ -99,13 +99,14 @@
   if(bountyState.phase!=="ready"||!bountyState.enemy||!bountyState.tier||battleBusy)return;
   const previewName=bountyState.enemy.name;
   const previewTraits=Array.isArray(bountyState.enemy.traits)?bountyState.enemy.traits.slice():[];
-  const playerStats=equippedStats();
+  const enemyScalingStats=equippedStats();
+  const combatStats=playerCombatStats(enemyScalingStats);
   const started=beginDungeonRun({mode:"bounty",cost:1});
   if(!started.ok){view="dungeon";render();return;}
-  bountyState.enemy=buildBountyEnemy(bountyState.tier,playerStats,state.level,{name:previewName,traits:previewTraits});
+  bountyState.enemy=buildBountyEnemy(bountyState.tier,enemyScalingStats,state.level,{name:previewName,traits:previewTraits});
   bountyState.phase="combat";
   bountyState.startHp=state.hp;
-  bountyState.playerMaxHp=playerStats.hp;
+  bountyState.playerMaxHp=combatStats.hp;
   render();
   setTimeout(runBountyFight,80);
  };
