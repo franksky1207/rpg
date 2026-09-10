@@ -12,6 +12,14 @@
   return Math.round((Number(value)||0)*1000000)/1000000;
  }
 
+ function vipDungeonProgressMultiplier(){
+  const lv=Math.max(0,Math.floor(Number(state?.vipLevel)||0));
+  if(lv>=12)return 1.20;
+  if(lv>=4)return 1.10;
+  return 1;
+ }
+ window.vipDungeonProgressMultiplier=vipDungeonProgressMultiplier;
+
  function normalizeDungeonState(target){
   if(!target||typeof target!=="object")return null;
   if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={};
@@ -78,7 +86,8 @@
 
   const enemyHpPart=(enemyMaxHp/playerBaseHp)*ENEMY_HP_PROGRESS_RATE;
   const damagePart=damageRate*DAMAGE_PROGRESS_RATE;
-  return roundProgress(Math.max(0,enemyHpPart+damagePart));
+  const baseProgress=Math.max(0,enemyHpPart+damagePart);
+  return roundProgress(baseProgress*vipDungeonProgressMultiplier());
  };
 
  window.addDungeonProgress=function(amount){
