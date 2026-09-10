@@ -40,7 +40,7 @@
    render();
    await sleep(60);
 
-   const psBefore=equippedStats(),startPlayerHp=state.hp,playerLevelBefore=state.level;
+   const psBefore=playerCombatStats(),startPlayerHp=state.hp,playerLevelBefore=state.level;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
    if(!r.ok){alert(r.reason);break}
 
@@ -75,14 +75,14 @@
    currentCombatEncounter=null;
 
    if(!r.win){
-    state.hp=equippedStats().hp;
+    state.hp=playerCombatStats().hp;
     adventureScreen="prepare";
     save();
     break;
    }
 
    if(ctx.remaining>0){
-    state.hp=equippedStats().hp;
+    state.hp=playerCombatStats().hp;
     save(false);
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
     await sleep(r.e.kind==="elite"?220:140);
