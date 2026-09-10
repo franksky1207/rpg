@@ -25,12 +25,14 @@
   for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   return out;
  }
- function buildBountyEnemy(tier,playerStats=null,level=null){
+ function buildBountyEnemy(tier,playerStats=null,level=null,options={}){
   const p=createSpecialPlayerSnapshot(playerStats||equippedStats());
   const base=specialBaseEnemyFromPlayer(p);
   const names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
+  const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
+  const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier.id);
   const enemy={
-   name:names[Math.floor(Math.random()*names.length)],
+   name,
    level:clampGameLevel(level??state.level),
    kind:"dungeon-bounty",
    bountyTier:tier.id,
@@ -41,7 +43,7 @@
    dodge:rateFromPlayer(p.dodge,tier.dodgeScale,tier.dodgeAdd,tier.dodgeCap,MONSTER_MAX_DODGE_RATE),
    playerSnapshot:p
   };
-  return applyMonsterTraits(enemy,rollBountyTraits(tier.id));
+  return applyMonsterTraits(enemy,traits);
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
  function traitNames(enemy){
@@ -56,10 +58,9 @@
 
  window.enterBountyDungeon=function(){
   if(state.level<5)return;
-  const started=beginDungeonRun({mode:"bounty",cost:1});
-  if(!started.ok){view="dungeon";render();return;}
+  if(!canStartDungeonRun(1)){view="dungeon";render();return;}
   const tier=rollTier();
-  bountyState={phase:"ready",tier,enemy:buildBountyEnemy(tier),result:null,startHp:state.hp,playerMaxHp:equippedStats().hp};
+  bountyState={phase:"ready",tier,enemy:buildBountyEnemy(tier),result:null,startHp:0,playerMaxHp:0};
   view="dungeon-bounty";
   render();
  };
@@ -95,10 +96,16 @@
  }
 
  window.startBountyFight=function(){
-  if(bountyState.phase!=="ready"||!bountyState.enemy||battleBusy)return;
+  if(bountyState.phase!=="ready"||!bountyState.enemy||!bountyState.tier||battleBusy)return;
+  const previewName=bountyState.enemy.name;
+  const previewTraits=Array.isArray(bountyState.enemy.traits)?bountyState.enemy.traits.slice():[];
+  const playerStats=equippedStats();
+  const started=beginDungeonRun({mode:"bounty",cost:1});
+  if(!started.ok){view="dungeon";render();return;}
+  bountyState.enemy=buildBountyEnemy(bountyState.tier,playerStats,state.level,{name:previewName,traits:previewTraits});
   bountyState.phase="combat";
   bountyState.startHp=state.hp;
-  bountyState.playerMaxHp=equippedStats().hp;
+  bountyState.playerMaxHp=playerStats.hp;
   render();
   setTimeout(runBountyFight,80);
  };
