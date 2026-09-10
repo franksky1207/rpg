@@ -146,7 +146,7 @@
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
   const s=playerCombatStats();
   if(!s.hp||state.hp/s.hp<.30)return false;
-  const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6?.02:0);
+  const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
   if(Math.random()>=encounterRate)return false;
   const challenge=await askSpecialEncounter();
   if(!challenge){showSkipSettlement(ctx);return true;}
