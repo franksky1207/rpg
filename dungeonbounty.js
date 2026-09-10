@@ -76,7 +76,7 @@
       <div class="${tierClass(b.tier.id)} dungeon-bounty-tier">${b.tier.name}</div>
       <h2>${b.enemy.name}</h2>
       <div class="dungeon-bounty-traits">特性：${traitNames(b.enemy)}</div>
-      <div class="dungeon-bounty-reward">獎勵：${b.tier.points} 副本積分</div>
+      <div class="dungeon-bounty-reward">獎勵：${b.tier.points} VIP 積分</div>
       <div class="controls dungeon-bounty-ready-actions"><button class="btn dungeon-bounty-start-btn" onclick="startBountyFight()">開始挑戰</button></div>
     </div>
   </section>`;
@@ -163,8 +163,8 @@
     <div class="dungeon-bounty-title">${title}</div>
     <div class="${tierClass(bountyState.tier.id)} dungeon-bounty-tier">${bountyState.tier.name}</div>
     <h2>${bountyState.enemy.name}</h2>
-    <div class="dungeon-bounty-result-line">本次獲得副本積分：<strong class="dungeon-bounty-reward">${r.gained||0}</strong></div>
-    <div class="dungeon-bounty-result-line">目前副本積分：${d.points}</div>
+    <div class="dungeon-bounty-result-line">本次獲得 VIP 積分：<strong class="dungeon-bounty-reward">${r.gained||0}</strong></div>
+    <div class="dungeon-bounty-result-line">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div>
     <div class="dungeon-bounty-result-line">剩餘可挑戰次數：${d.attempts} 次</div>
     <div class="controls dungeon-bounty-result-actions"><button class="btn dungeon-bounty-start-btn" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?"enterBountyDungeon()":"void(0)"}">${d.attempts>0?"再次進入懸賞戰":"挑戰次數不足"}</button><button class="btn" onclick="go('dungeon')">返回副本</button></div>
    </div>
