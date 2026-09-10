@@ -2,11 +2,13 @@ let gmSpecialBatchSelectedId=(typeof SPECIAL_MONSTERS!=="undefined"&&SPECIAL_MON
 let gmSpecialBatchResult=null;
 
 function gmSpecialMapForLevel(level){return Math.max(0,Math.min(MAPS.length-1,Math.floor((level-1)/5)));}
+function gmSpecialTestVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
+function gmSpecialVipLabel(){return typeof gmTestVipLabel==="function"?gmTestVipLabel():`VIP${gmSpecialTestVip()}`;}
 
 function gmSpecialBatchResultHtml(special,summary){
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
- const extraRows=`${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
- return `<div class="notice"><b>${special.name}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">以下 ${GM_TEST_RUNS} 次戰鬥皆以測試開始前完全相同的角色狀態獨立進行；正式角色資料未變更。</div></div>
+ const extraRows=`${summary.vip10Triggers?`<div class="muted" style="margin-top:6px">VIP10 第二次特殊獎勵：${summary.vip10Triggers} 次</div>`:""}${summary.vip20Protected?`<div class="muted" style="margin-top:6px">VIP20 成功保護裝備：${summary.vip20Protected} 次</div>`:""}${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
+ return `<div class="notice"><b>${special.name}・${gmSpecialVipLabel()}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">敵人生成不含 VIP；玩家戰鬥與 VIP10／VIP20 規則使用本次測試 VIP。正式角色資料未變更。</div></div>
  <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -40,39 +42,47 @@ async function gmStartSpecialBattle(){
  const sandbox=gmCreateSandboxSnapshot();
  const level=clampGameLevel(state.level);
  const mapIdx=gmSpecialMapForLevel(level);
- const playerSnapshot=equippedStats();
+ const enemyScalingSnapshot=createSpecialPlayerSnapshot(equippedStats());
+ const playerSnapshot=typeof gmTestPlayerStats==="function"?gmTestPlayerStats(enemyScalingSnapshot):createSpecialPlayerSnapshot(playerCombatStats(enemyScalingSnapshot,gmSpecialTestVip()));
  const playerMax=playerSnapshot.hp;
  battleBusy=true;
 
- const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,winHpTotal:0,randomRewards:{}};
+ const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{}};
+
+ function grant(ctx){
+  const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
+  const baseGold=goldBase(level);
+  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
+  const xpPay=specialExpPayout(xpRaw,[]);
+  const gold=ceil(baseGold*(ctx.goldMultiplier||1));
+  summary.totalXp+=xpPay.xp;
+  summary.convertedGold+=xpPay.convertedGold;
+  summary.totalGold+=gold+xpPay.convertedGold;
+  state.gold+=gold;
+  const items=specialMakeDrops(ctx,level,mapIdx);
+  summary.dropCount+=items.length;
+  items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
+  summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
+  if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
+ }
 
  for(let i=0;i<GM_TEST_RUNS;i++){
   gmResetSandbox(sandbox);
+  state.vipLevel=gmSpecialTestVip();
   state.hp=playerMax;
-  const enemy=buildSpecialMonsterFromPlayer(playerSnapshot,special,level);
-  const ctx=getSpecialRewardContext(special);
-  const r=specialFightCore(enemy);
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level);
+  const r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false});
+  state.hp=r.hp;
   if(r.win){
    summary.wins++;
    summary.winHpTotal+=Math.max(0,state.hp);
-   const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
-   const baseGold=goldBase(level);
-   const xpRaw=ceil(baseXp*(ctx.expMultiplier||1));
-   const xpPay=specialExpPayout(xpRaw,[]);
-   const gold=ceil(baseGold*(ctx.goldMultiplier||1));
-   summary.totalXp+=xpPay.xp;
-   summary.convertedGold+=xpPay.convertedGold;
-   summary.totalGold+=gold+xpPay.convertedGold;
-   state.gold+=gold;
-   const items=specialMakeDrops(ctx,level,mapIdx);
-   summary.dropCount+=items.length;
-   items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
-   summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
-   if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
+   grant(getSpecialRewardContext(special));
+   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special));}
   }else{
    summary.losses++;
    const penalty=applyDeathPenalty([]);
    if(penalty?.dropped)summary.deathDrops++;
+   if(penalty?.protectedByVip20)summary.vip20Protected++;
   }
  }
 
