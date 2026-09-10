@@ -27,18 +27,12 @@
 
  function dungeonStateSafe(){
   if(typeof ensureDungeonProgressState==="function")return ensureDungeonProgressState();
-  if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0,points:0};
+  if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0};
   if(!Number.isFinite(Number(state.dungeon.progress))||Number(state.dungeon.progress)<0)state.dungeon.progress=0;
   if(!Number.isFinite(Number(state.dungeon.attempts))||Number(state.dungeon.attempts)<0)state.dungeon.attempts=0;
-  if(!Number.isFinite(Number(state.dungeon.points))||Number(state.dungeon.points)<0)state.dungeon.points=0;
   return state.dungeon;
  }
  function formatDungeonProgress(v){const n=Number(v)||0;return `${Math.round(n*100)/100}%`;}
- function normalizeVipPointLabels(root){
-  if(!root||typeof document.createTreeWalker!=="function")return;
-  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-  nodes.forEach(n=>{if(n.nodeValue?.includes("副本積分"))n.nodeValue=n.nodeValue.replaceAll("副本積分","VIP 積分");});
- }
 
  window.dungeonStatusHtml=function(id="dungeon-status",includePoints=true){
   const d=dungeonStateSafe();
@@ -81,16 +75,16 @@
   injectDungeonStyles();
   const main=document.getElementById("main");
   if(view==="dungeon"){
-   normalizeHP();main.innerHTML=dungeonHomeHtml();if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
+   normalizeHP();main.innerHTML=dungeonHomeHtml();if(typeof renderNav==="function")renderNav();return;
   }
   if(view==="dungeon-bounty"){
-   normalizeHP();main.innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
+   normalizeHP();main.innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";if(typeof renderNav==="function")renderNav();return;
   }
   if(view==="dungeon-arena"){
-   normalizeHP();main.innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
+   normalizeHP();main.innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";if(typeof renderNav==="function")renderNav();return;
   }
   if(view==="dungeon-void-mirage"){
-   main.innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
+   main.innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";if(typeof renderNav==="function")renderNav();return;
   }
   baseRender();
   if(!main)return;
