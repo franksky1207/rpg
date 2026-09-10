@@ -1,6 +1,6 @@
 (function(){
  window.gmTestVipLevel=0;
- function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0));}
+ function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
  window.gmSetTestVipLevel=function(value){
   window.gmTestVipLevel=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(value)||0)));
   const info=document.getElementById("gmTestVipInfo");if(info)info.textContent=gmTestVipLabel();
