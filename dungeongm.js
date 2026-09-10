@@ -140,7 +140,7 @@
     if(r.win){wins[stage]++;hp=r.hp;points+=Number(cfg.stagePoints?.[stage])||0;}
     else{cleared=false;break;}
    }
-   if(cleared){points+=Number(cfg.clearBonus)||0;clearHpTotal+=hp;}
+   if(cleared)clearHpTotal+=hp;
    totalPoints+=points;
   }
   const clearCount=wins[2],avgPoints=round1(totalPoints/GM_TEST_RUNS),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/GM_TEST_RUNS);
@@ -166,7 +166,7 @@
  }
  window.gmPreviewVoidMirageFloor=function(){
   const floor=gmVoidFloorValue();
-  if(!floor)return alert("請輸入 1 以上的樓層。");
+  if(!floor)return alert("請輸入 1 以上的起始樓層。");
   if(typeof buildVoidMirageEnemy!=="function")return alert("虛空幻境資料尚未載入。");
   const base=typeof voidMirageBaseStats==="function"?voidMirageBaseStats(floor):null;
   const enemy=buildVoidMirageEnemy(floor);
