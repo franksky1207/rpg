@@ -30,8 +30,8 @@ const MONSTER_MAX_DODGE_RATE=30;
 const CRIT_DAMAGE_MULTIPLIER=1.5;
 const MAX_LEVEL=100;
 const VIP_MAX_LEVEL=20;
-const VIP_HP_ATK_RATE_PER_LEVEL=.005;
-const VIP_DEF_RATE_PER_LEVEL=.0025;
+const VIP_HP_ATK_PERCENT_PER_LEVEL=.5;
+const VIP_DEF_PERCENT_PER_LEVEL=.25;
 const VIP_RATE_STAT_PER_LEVEL=.25;
 window.MAX_LEVEL=MAX_LEVEL;
 window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;
@@ -66,9 +66,9 @@ function vipBonusStats(level=null){
  const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(level??state?.vipLevel)||0)));
  return {
   level:lv,
-  hp:lv*VIP_HP_ATK_RATE_PER_LEVEL*100,
-  atk:lv*VIP_HP_ATK_RATE_PER_LEVEL*100,
-  def:lv*VIP_DEF_RATE_PER_LEVEL*100,
+  hp:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,
+  atk:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,
+  def:lv*VIP_DEF_PERCENT_PER_LEVEL,
   crit:lv*VIP_RATE_STAT_PER_LEVEL,
   dodge:lv*VIP_RATE_STAT_PER_LEVEL
  };
