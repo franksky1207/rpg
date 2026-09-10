@@ -25,7 +25,7 @@
   ]
  };
 
- let arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};
+ let arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,runStarted:false};
 
  function difficultyById(id){return ARENA_DIFFICULTIES.find(x=>x.id===id)||null;}
  function clampLevel(v){return clampGameLevel(v);}
@@ -73,8 +73,12 @@
  window.buildArenaEnemyForTest=function(difficultyId,stageIndex,stats=null,level=null){return difficultyById(difficultyId)?buildArenaEnemy(difficultyId,stageIndex,stats,level):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
 
- function resetArenaState(){arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};}
- function arenaPlayerStats(){return arenaState.playerSnapshot||createSpecialPlayerSnapshot(equippedStats());}
+ function resetArenaState(){arenaState={phase:"select",difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,runStarted:false};}
+ function arenaEnemyScalingStats(){return arenaState.enemyScalingSnapshot||createSpecialPlayerSnapshot(equippedStats());}
+ function arenaPlayerStats(){
+  if(arenaState.playerSnapshot)return arenaState.playerSnapshot;
+  return createSpecialPlayerSnapshot(playerCombatStats(equippedStats(),state.vipLevel));
+ }
  function arenaFightCore(enemy){
   const player=arenaPlayerStats();
   const combat=runCombatCore(player,enemy,state.hp);
@@ -90,7 +94,7 @@
   if((Number(state.level)||1)<15)return;
   const difficulty=difficultyById(difficultyId);if(!difficulty)return;
   if(!canStartDungeonRun(1)){view="dungeon";render();return;}
-  arenaState={phase:"ready",difficulty,stage:0,enemy:buildArenaEnemy(difficulty.id,0),result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,runStarted:false};
+  arenaState={phase:"ready",difficulty,stage:0,enemy:buildArenaEnemy(difficulty.id,0),result:null,history:[],gainedPoints:0,startHp:0,playerMaxHp:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,runStarted:false};
   view="dungeon-arena";render();
  };
 
@@ -105,12 +109,17 @@
   if(arenaState.phase!=="ready"||!arenaState.enemy||battleBusy)return;
   if(!arenaState.runStarted){
    const previewTraits=Array.isArray(arenaState.enemy.traits)?arenaState.enemy.traits.slice():[];
-   const player=createSpecialPlayerSnapshot(equippedStats());
+   const enemyScaling=createSpecialPlayerSnapshot(equippedStats());
+   const vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0));
+   const player=createSpecialPlayerSnapshot(playerCombatStats(enemyScaling,vipLevel));
    const started=beginDungeonRun({mode:"arena",cost:1});
    if(!started.ok){view="dungeon";resetArenaState();render();return;}
+   arenaState.enemyScalingSnapshot=enemyScaling;
+   arenaState.vipLevelSnapshot=vipLevel;
    arenaState.playerSnapshot=player;
    arenaState.runStarted=true;
-   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,player,state.level,{traits:previewTraits});
+   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,enemyScaling,state.level,{traits:previewTraits});
+   state.hp=player.hp;
   }
   arenaState.phase="combat";
   arenaState.startHp=state.hp;
@@ -161,7 +170,7 @@
 
   if(result.win&&stageIndex<2){
    arenaState.stage=stageIndex+1;
-   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage,arenaPlayerStats(),state.level);
+   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage,arenaEnemyScalingStats(),state.level);
    arenaState.result={type:"stage_win",stage:stageIndex,stagePoints};
    arenaState.phase="ready";
    save(false);
@@ -200,5 +209,5 @@
  }
 
  window.renderArenaDungeon=function(){if(arenaState.phase==="select")return selectionHtml();if(arenaState.phase==="combat")return combatHtml();if(arenaState.phase==="result")return resultHtml();return readyHtml();};
- window.getArenaCoreState=function(){return {phase:arenaState.phase,difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,runStarted:arenaState.runStarted,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
+ window.getArenaCoreState=function(){return {phase:arenaState.phase,difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,enemyScalingSnapshot:arenaState.enemyScalingSnapshot?{...arenaState.enemyScalingSnapshot}:null,vipLevelSnapshot:arenaState.vipLevelSnapshot||0,runStarted:arenaState.runStarted,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
 })();
