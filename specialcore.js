@@ -52,7 +52,7 @@
  };
 
  window.specialFightCore=function(enemy){
-  const combat=runCombatCore(equippedStats(),enemy,state.hp);
+  const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
   state.hp=combat.hp;
   return {
    win:combat.win,
