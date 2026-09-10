@@ -93,15 +93,26 @@
    progressEnemyKill(mapIdx,eIdx);
    addProgress(mapIdx,e.kind);
   }
+
+  const items=[];
   const it=dropItem(e,mapIdx),ir=addItem(it);
+  if(it)items.push({item:it,sold:ir.sold||0});
+  if(e.kind==="boss"&&(state.vipLevel||0)>=16&&Math.random()<.15){
+   const extra=dropItem(e,mapIdx);
+   if(extra){
+    const extraResult=addItem(extra);
+    items.push({item:extra,sold:extraResult.sold||0,vip16Extra:true});
+   }
+  }
+
   logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
   if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===10)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
   if(e.kind==="normal"&&eIdx===2&&state.mapProgress[mapIdx][2]===10)logs.push(`菁英敵人已出現：${MAPS[mapIdx].enemies[3][0]}。`);
   if(e.kind==="elite"&&!state.bossKilled[mapIdx]&&!state.bossLocked[mapIdx]&&state.mapProgress[mapIdx][3]>=10)logs.push(state.level>=MAPS[mapIdx].max?`Boss 已出現：${MAPS[mapIdx].enemies[4][0]}。`:`菁英進度完成；達到 Lv.${MAPS[mapIdx].max} 後 Boss 才會出現。`);
   if(e.kind==="elite"&&state.bossLocked[mapIdx])logs.push(`Boss 再挑戰進度：${state.bossProgress[mapIdx]}/10 菁英。`);
   if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
-  if(it)logs.push(`${ir.sold?`自動出售 ${itemHtmlPlain(it)}，金幣 +${ir.sold}`:`獲得裝備 ${itemHtmlPlain(it)}`}`);
+  items.forEach(row=>logs.push(`${row.sold?`自動出售 ${itemHtmlPlain(row.item)}，金幣 +${row.sold}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`));
   save(false);
-  return {ok:true,win:true,logs,e,xp,gold,item:it,sold:ir.sold,combatEndHp,turns:combat.turns};
+  return {ok:true,win:true,logs,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,combatEndHp,turns:combat.turns};
  };
 })();
