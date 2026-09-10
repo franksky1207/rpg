@@ -33,10 +33,11 @@
   if(!Number.isFinite(Number(state.dungeon.points))||Number(state.dungeon.points)<0)state.dungeon.points=0;
   return state.dungeon;
  }
-
- function formatDungeonProgress(v){
-  const n=Number(v)||0;
-  return `${Math.round(n*100)/100}%`;
+ function formatDungeonProgress(v){const n=Number(v)||0;return `${Math.round(n*100)/100}%`;}
+ function normalizeVipPointLabels(root){
+  if(!root||typeof document.createTreeWalker!=="function")return;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(n=>{if(n.nodeValue?.includes("副本積分"))n.nodeValue=n.nodeValue.replaceAll("副本積分","VIP 積分");});
  }
 
  window.dungeonStatusHtml=function(id="dungeon-status",includePoints=true){
@@ -44,47 +45,18 @@
   return `<div id="${id}" class="dungeon-status-card${includePoints?"":" no-points"}">
     <div><span class="muted">副本次數累積進度</span><strong>${formatDungeonProgress(d.progress)}</strong></div>
     <div><span class="muted">副本可挑戰次數</span><strong>${d.attempts} 次</strong></div>
-    ${includePoints?`<div><span class="muted">副本積分</span><strong>${d.points}</strong></div>`:""}
+    ${includePoints?`<div><span class="muted">VIP 狀態</span><strong>${typeof vipStatusText==="function"?vipStatusText():`VIP${state.vipLevel||0}`}</strong></div>`:""}
   </div>`;
  };
 
  function dungeonHomeHtml(){
-  const d=dungeonStateSafe();
-  const lv=Math.max(1,Number(state.level)||1);
+  const d=dungeonStateSafe(),lv=Math.max(1,Number(state.level)||1);
   const card=(key,title,desc,need)=>{
-   const unlocked=lv>=need;
-   const implemented=!!DUNGEON_IMPLEMENTED[key];
-   const canEnter=unlocked&&implemented&&d.attempts>0;
-   let buttonLabel="尚未解鎖";
-   if(unlocked&&!implemented)buttonLabel="尚未開放";
-   else if(unlocked&&implemented&&d.attempts<=0)buttonLabel="挑戰次數不足";
-   else if(canEnter)buttonLabel=`進入${title}`;
-   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}">
-     <div class="dungeon-mode-head">
-       <h3>${title}</h3>
-       <span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span>
-     </div>
-     <p>${desc}</p>
-     <div class="dungeon-cost">消耗：1 次副本可挑戰次數</div>
-     <button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button>
-   </section>`;
+   const unlocked=lv>=need,implemented=!!DUNGEON_IMPLEMENTED[key],canEnter=unlocked&&implemented&&d.attempts>0;
+   let buttonLabel="尚未解鎖";if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&implemented&&d.attempts<=0)buttonLabel="挑戰次數不足";else if(canEnter)buttonLabel=`進入${title}`;
+   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><h3>${title}</h3><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div><p>${desc}</p><div class="dungeon-cost">消耗：1 次副本可挑戰次數</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
   };
-
-  return `<div class="function-page dungeon-page-shell">
-    <div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>
-    <section class="card dungeon-summary-panel">
-      <h2>副本</h2>
-      <div class="dungeon-summary-grid">
-        <div><span class="muted">可挑戰次數</span><strong>${d.attempts} 次</strong></div>
-        <div><span class="muted">副本積分</span><strong>${d.points}</strong></div>
-      </div>
-    </section>
-    <div class="dungeon-mode-list">
-      ${card("bounty","懸賞戰","隨機挑戰一名依你目前實力生成的強敵。",DUNGEON_UNLOCKS.bounty)}
-      ${card("arena","競技場","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}
-      ${card("tower","虛空幻境","逐層挑戰越來越強的敵人。",DUNGEON_UNLOCKS.tower)}
-    </div>
-  </div>`;
+  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><section class="card dungeon-summary-panel"><h2>副本</h2><div class="dungeon-summary-grid"><div><span class="muted">可挑戰次數</span><strong>${d.attempts} 次</strong></div><div><span class="muted">VIP 狀態</span><strong>${typeof vipStatusText==="function"?vipStatusText():`VIP${state.vipLevel||0}`}</strong></div></div></section><div class="dungeon-mode-list">${card("bounty","懸賞戰","隨機挑戰一名依你目前實力生成的強敵。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","逐層挑戰越來越強的敵人。",DUNGEON_UNLOCKS.tower)}</div></div>`;
  }
 
  window.openDungeonMode=function(mode){
@@ -94,69 +66,44 @@
  };
 
  function ensureHomeDungeonCard(main){
-  const menu=main?.querySelector(".menu-grid");
-  if(!menu)return;
+  const menu=main?.querySelector(".menu-grid");if(!menu)return;
   if(!menu.querySelector('[data-dungeon-home-card="1"]')){
-   const adventure=menu.querySelector(".menu-card");
-   const wrap=document.createElement("div");
-   wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰特殊副本並獲得副本積分</span></button>`;
-   const card=wrap.firstElementChild;
-   if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);
+   const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰特殊副本並獲得 VIP 積分</span></button>`;
+   const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);
   }
  }
 
  const basePlayerStatusHtml=playerStatusHtml;
- playerStatusHtml=function(){
-  const html=basePlayerStatusHtml();
-  if(view==="adventure"&&adventureScreen==="prepare")return `<div class="prepare-sidebar">${html}${dungeonStatusHtml("dungeon-adventure-status",false)}</div>`;
-  return html;
- };
+ playerStatusHtml=function(){const html=basePlayerStatusHtml();if(view==="adventure"&&adventureScreen==="prepare")return `<div class="prepare-sidebar">${html}${dungeonStatusHtml("dungeon-adventure-status",false)}</div>`;return html;};
 
  const baseRender=render;
  render=function(){
   injectDungeonStyles();
+  const main=document.getElementById("main");
   if(view==="dungeon"){
-   normalizeHP();
-   document.getElementById("main").innerHTML=dungeonHomeHtml();
-   if(typeof renderNav==="function")renderNav();
-   return;
+   normalizeHP();main.innerHTML=dungeonHomeHtml();if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
   }
   if(view==="dungeon-bounty"){
-   normalizeHP();
-   document.getElementById("main").innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";
-   if(typeof renderNav==="function")renderNav();
-   return;
+   normalizeHP();main.innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
   }
   if(view==="dungeon-arena"){
-   normalizeHP();
-   document.getElementById("main").innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";
-   if(typeof renderNav==="function")renderNav();
-   return;
+   normalizeHP();main.innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
   }
   if(view==="dungeon-void-mirage"){
-   document.getElementById("main").innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";
-   if(typeof renderNav==="function")renderNav();
-   return;
+   main.innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";if(typeof renderNav==="function")renderNav();normalizeVipPointLabels(main);return;
   }
   baseRender();
-  const main=document.getElementById("main");
   if(!main)return;
   if(view==="home"){
    ensureHomeDungeonCard(main);
    const menu=main.querySelector(".menu-grid");
-   if(menu&&!main.querySelector("#dungeon-home-status"))menu.insertAdjacentHTML("beforebegin",dungeonStatusHtml("dungeon-home-status",true));
+   if(menu&&typeof vipHomeCardHtml==="function"&&!main.querySelector(".vip-home-card"))menu.insertAdjacentHTML("beforebegin",vipHomeCardHtml());
+   if(menu&&!main.querySelector("#dungeon-home-status"))menu.insertAdjacentHTML("beforebegin",dungeonStatusHtml("dungeon-home-status",false));
   }
  };
 
  const baseGo=go;
- go=function(v){
-  if(v==="dungeon"){
-   view="dungeon";
-   render();
-   return;
-  }
-  baseGo(v);
- };
+ go=function(v){if(v==="dungeon"){view="dungeon";render();return;}baseGo(v);};
 
  injectDungeonStyles();
  if(typeof render==="function")render();
