@@ -66,11 +66,11 @@ function vipBonusStats(level=null){
  const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(level??state?.vipLevel)||0)));
  return {
   level:lv,
-  hp:round1(lv*VIP_HP_ATK_RATE_PER_LEVEL*100),
-  atk:round1(lv*VIP_HP_ATK_RATE_PER_LEVEL*100),
-  def:round1(lv*VIP_DEF_RATE_PER_LEVEL*100),
-  crit:round1(lv*VIP_RATE_STAT_PER_LEVEL),
-  dodge:round1(lv*VIP_RATE_STAT_PER_LEVEL)
+  hp:lv*VIP_HP_ATK_RATE_PER_LEVEL*100,
+  atk:lv*VIP_HP_ATK_RATE_PER_LEVEL*100,
+  def:lv*VIP_DEF_RATE_PER_LEVEL*100,
+  crit:lv*VIP_RATE_STAT_PER_LEVEL,
+  dodge:lv*VIP_RATE_STAT_PER_LEVEL
  };
 }
 function normalizeVipState(target){
