@@ -26,8 +26,8 @@
 
   let progress=finiteNonNegative(target.dungeon.progress,0);
   let attempts=Math.floor(finiteNonNegative(target.dungeon.attempts,0));
-  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,target.dungeon.points));
-  let points=vipPoints;
+  const legacyPoints=finiteNonNegative(target.dungeon.points,0);
+  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,legacyPoints));
   const converted=Math.floor((progress+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
   if(converted>0){
    attempts+=converted;
@@ -36,8 +36,9 @@
 
   target.dungeon.progress=roundProgress(Math.max(0,progress));
   target.dungeon.attempts=attempts;
-  target.dungeon.points=points;
-  target.vipPoints=points;
+  target.vipPoints=vipPoints;
+  // 舊存檔／舊模組相容鏡像；正式積分來源以 state.vipPoints 為準。
+  target.dungeon.points=vipPoints;
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   return target.dungeon;
  }
@@ -113,7 +114,7 @@
   if(!dungeon)return {added:0,points:0};
   const added=Math.floor(finiteNonNegative(amount,0));
   const activeRun=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null;
-  const lockCarryHp=activeRun?.mode==="arena";
+  const lockCarryHp=activeRun?.mode==="arena"||activeRun?.mode==="void-mirage";
   const hpBefore=state.hp;
   const result=typeof addVipPoints==="function"?addVipPoints(added):{added,points:(state.vipPoints||0)+added};
   if(lockCarryHp)state.hp=hpBefore;
@@ -125,7 +126,7 @@
  window.awardDungeonProgressForBattle=function(params={}){
   const added=calculateDungeonBattleProgress(params);
   if(added<=0){
-   const dungeon=normalizeDungeonState(state)||{progress:0,attempts:0,points:0};
+   const dungeon=normalizeDungeonState(state)||{progress:0,attempts:0};
    return {added:0,gainedAttempts:0,progress:dungeon.progress,attempts:dungeon.attempts};
   }
   return addDungeonProgress(added);
