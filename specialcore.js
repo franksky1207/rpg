@@ -20,6 +20,7 @@
   rows.sort((a,b)=>a.score-b.score);
   return rows.map(x=>x.type);
  }
+ window.weakEquipmentTypes=weakEquipmentTypes;
 
  function dropType(ctx){
   if(!ctx?.weakSlotDrop)return null;
