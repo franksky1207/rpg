@@ -8,7 +8,7 @@ function gmSpecialVipLabel(){return typeof gmTestVipLabel==="function"?gmTestVip
 function gmSpecialBatchResultHtml(special,summary){
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
  const extraRows=`${summary.vip10Triggers?`<div class="muted" style="margin-top:6px">VIP10 第二次特殊獎勵：${summary.vip10Triggers} 次</div>`:""}${summary.vip20Protected?`<div class="muted" style="margin-top:6px">VIP20 成功保護裝備：${summary.vip20Protected} 次</div>`:""}${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
- return `<div class="notice"><b>${special.name}・${gmSpecialVipLabel()}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">敵人生成不含 VIP；玩家戰鬥與 VIP10／VIP20 規則使用本次測試 VIP。正式角色資料未變更。</div></div>
+ return `<div class="notice"><b>${special.name}・${gmSpecialVipLabel()}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">敵人生成不含 VIP；玩家戰鬥與 VIP10／VIP20 規則使用本次測試 VIP，戰鬥同時套用本次測試專精。正式角色資料未變更。</div></div>
  <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -52,7 +52,7 @@ async function gmStartSpecialBattle(){
 
  for(let i=0;i<GM_TEST_RUNS;i++){
   gmResetSandbox(sandbox);state.vipLevel=gmSpecialTestVip();state.hp=playerMax;
-  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false});state.hp=r.hp;
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false,useTestSpecializations:true});state.hp=r.hp;
   if(r.win){
    summary.wins++;summary.winHpTotal+=Math.max(0,state.hp);
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level)),baseGold=goldBase(level);
