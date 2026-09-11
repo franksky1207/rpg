@@ -7,14 +7,19 @@
   drain:{text:"汲取！",className:"drain"},
   crit:{text:"暴擊！",className:"crit"},
   dodge:{text:"閃避！",className:"dodge"},
-  berserk:{text:"狂暴！",className:"berserk"}
+  berserk:{text:"狂暴！",className:"berserk"},
+  heal:{text:"",className:"heal"}
  };
  let presentation=null;
+ let lastLogs=[];
  let floatSerial=0;
 
  function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function combatScreen(){return document.querySelector("#main .combat-screen");}
- function combatCard(target){return document.getElementById(target==="player"?"combatPlayerCard":"combatEnemyCard");}
+ function combatCard(target){
+  return document.getElementById(target==="player"?"combatPlayerCard":"combatEnemyCard")||document.getElementById(target==="player"?"voidPlayerCard":"voidEnemyCard");
+ }
+ function logRowsHtml(logs){const rows=Array.isArray(logs)?logs:[];return rows.length?rows.map(line=>`<div class="combat-log-line">${escapeHtml(line)}</div>`).join(""):`<div class="combat-log-empty">沒有戰鬥紀錄。</div>`;}
 
  function installStyles(){
   if(document.getElementById("combatFxStyles"))return;
@@ -25,11 +30,11 @@
    .combat-fx-pop{position:absolute;top:18%;transform:translate(-50%,0);font-size:22px;font-weight:900;letter-spacing:.05em;white-space:nowrap;opacity:0;pointer-events:none;text-shadow:0 2px 7px #000,0 0 12px rgba(0,0,0,.8);animation:combatFxPop .72s ease-out forwards;z-index:7}
    .combat-fx-pop.initiative{color:#FFD54A}.combat-fx-pop.combo{color:#FF8A3D}.combat-fx-pop.penetration{color:#B56CFF}.combat-fx-pop.counter{color:#FF5252}.combat-fx-pop.drain{color:#4CD964}.combat-fx-pop.crit{color:#4FD6FF}.combat-fx-pop.dodge{color:#B8F4FF}.combat-fx-pop.berserk{color:#FF7043}.combat-fx-pop.heal{color:#7CFF8E;font-size:18px}
    @keyframes combatFxPop{0%{opacity:0;transform:translate(-50%,10px) scale(.82)}18%{opacity:1;transform:translate(-50%,-2px) scale(1.08)}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-58px) scale(1)}}
-   .combat-log-panel{margin:10px auto 0;width:min(760px,100%);border:1px solid #393f49;border-radius:10px;background:#10141a;overflow:hidden}
+   .combat-log-panel{margin:10px auto 0;width:min(760px,100%);border:1px solid #393f49;border-radius:10px;background:#10141a;overflow:hidden;text-align:left}
    .combat-log-panel>summary{cursor:pointer;list-style:none;padding:9px 12px;color:#bdb7aa;font-size:13px;font-weight:700;background:#151a21;user-select:none}
    .combat-log-panel>summary::-webkit-details-marker{display:none}.combat-log-panel>summary::before{content:"▶";display:inline-block;margin-right:7px;font-size:10px;transition:transform .15s ease}.combat-log-panel[open]>summary::before{transform:rotate(90deg)}
    .combat-log-scroll{max-height:180px;overflow-y:auto;padding:8px 11px;border-top:1px solid #2b3038;font-size:12px;line-height:1.55;color:#aaa69d;overscroll-behavior:contain;scrollbar-gutter:stable}
-   .combat-log-line{padding:2px 0;border-bottom:1px dotted rgba(255,255,255,.045)}.combat-log-line:last-child{border-bottom:0}.combat-log-empty{color:#777d86}
+   .combat-log-line{padding:2px 0;border-bottom:1px dotted rgba(255,255,255,.045)}.combat-log-line:last-child{border-bottom:0}.combat-log-empty{color:#777d86}.result-combat-log{margin-top:12px}
    @media(max-width:760px){.combat-fx-pop{font-size:18px;top:14%}.combat-fx-pop.heal{font-size:16px}.combat-log-panel{margin-top:7px}.combat-log-panel>summary{padding:8px 10px;font-size:12px}.combat-log-scroll{max-height:135px;padding:7px 9px;font-size:11px}}
   `;
   document.head.appendChild(style);
@@ -49,12 +54,23 @@
  window.ensureCombatExtras=ensureCombatExtras;
 
  window.setCombatLog=function(logs){
+  lastLogs=Array.isArray(logs)?logs.slice():[];
   if(!ensureCombatExtras())return;
   const box=document.getElementById("combatLogContent");if(!box)return;
-  const rows=Array.isArray(logs)?logs:[];
-  box.innerHTML=rows.length?rows.map(line=>`<div class="combat-log-line">${escapeHtml(line)}</div>`).join(""):`<div class="combat-log-empty">沒有戰鬥紀錄。</div>`;
-  box.scrollTop=box.scrollHeight;
+  box.innerHTML=logRowsHtml(lastLogs);box.scrollTop=box.scrollHeight;
  };
+
+ function injectResultLog(){
+  if(!lastLogs.length||combatScreen())return;
+  let host=null;
+  const modal=document.getElementById("battleResultModal");
+  if(modal?.classList.contains("show"))host=document.getElementById("battleResultDetail");
+  if(!host)host=document.querySelector(".dungeon-bounty-result-card,.arena-result-panel");
+  if(!host){const reason=document.querySelector(".void-result .void-result-reason");if(reason)host=reason.closest(".void-result");}
+  if(!host||host.querySelector(".result-combat-log"))return;
+  const details=document.createElement("details");details.className="combat-log-panel result-combat-log";details.innerHTML=`<summary>戰鬥紀錄</summary><div class="combat-log-scroll">${logRowsHtml(lastLogs)}</div>`;host.appendChild(details);
+  const box=details.querySelector(".combat-log-scroll");if(box)box.scrollTop=box.scrollHeight;
+ }
 
  function spawnFx(target,kind,text=null,delay=0){
   const cfg=FX_LABELS[kind]||{text:String(text||""),className:kind||""};
@@ -76,9 +92,9 @@
  function emitPrelude(events,target){
   let delay=0;
   for(const evt of events){
-   if(evt.type==="combo"){spawnFx(target,"combo",null,delay);delay+=65;}
-   else if(evt.type==="counter"){spawnFx(target,"counter",null,delay);delay+=65;}
-   else if(evt.type==="berserk"){spawnFx("enemy","berserk",null,delay);delay+=65;}
+   if(evt.type==="combo"){spawnFx(target,"combo",null,delay);delay+=85;}
+   else if(evt.type==="counter"){spawnFx(target,"counter",null,delay);delay+=85;}
+   else if(evt.type==="berserk"){spawnFx("enemy","berserk",null,delay);delay+=85;}
   }
   return delay;
  }
@@ -99,14 +115,14 @@
    spawnFx(target,"dodge",null,delay);
    return;
   }
-  if(match.initiative){spawnFx(target,"initiative",null,delay);delay+=65;}
-  if(match.penetration){spawnFx(target,"penetration",null,delay);delay+=65;}
-  if(match.crit){spawnFx(target,"crit",null,delay);delay+=65;}
+  if(match.initiative){spawnFx(target,"initiative",null,delay);delay+=85;}
+  if(match.penetration){spawnFx(target,"penetration",null,delay);delay+=85;}
+  if(match.crit){spawnFx(target,"crit",null,delay);delay+=85;}
   const next=p.events[p.index];
   if(next?.type==="drain"){
    p.index++;
    spawnFx("player","drain",null,delay);
-   if(Number(next.healed)>0)spawnFx("player","drain",`+${next.healed} HP`,delay+70);
+   if(Number(next.healed)>0)spawnFx("player","heal",`+${next.healed} HP`,delay+85);
   }
  }
 
@@ -114,7 +130,7 @@
   const el=event.target;
   if(!(el instanceof Element)||!el.classList.contains("combat-damage"))return;
   if(event.animationName!=="damagePop")return;
-  const target=el.id==="combatPlayerDamage"?"player":el.id==="combatEnemyDamage"?"enemy":null;
+  const target=(el.id==="combatPlayerDamage"||el.id==="voidPlayerDamage")?"player":(el.id==="combatEnemyDamage"||el.id==="voidEnemyDamage")?"enemy":null;
   if(target)consumeForPulse(target,el.textContent||"");
  },true);
 
@@ -135,8 +151,10 @@
 
  const baseRender=typeof render==="function"?render:null;
  if(baseRender){
-  render=function(){const out=baseRender.apply(this,arguments);ensureCombatExtras();return out;};
+  render=function(){const out=baseRender.apply(this,arguments);ensureCombatExtras();setTimeout(injectResultLog,0);return out;};
  }
+ const modal=document.getElementById("battleResultModal");
+ if(modal&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(injectResultLog,0)).observe(modal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true});
 
  ensureCombatExtras();
 })();
