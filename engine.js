@@ -58,7 +58,7 @@ function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>
 function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
- return {saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ return {saveVersion:SAVE_VERSION,introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
 }
 
 function load(){
