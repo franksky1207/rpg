@@ -40,6 +40,20 @@
   return useTest?clampSpecializationLevel(window.gmTestSpecializations?.[key]):formalLevel(key);
  };
  window.specializationLevelsSnapshot=function(useTest=false){return Object.fromEntries(SPECIALIZATION_KEYS.map(key=>[key,window.specializationLevel(key,useTest)]));};
+ window.specializationPercentBonus=function(key,useTest=false){
+  const lv=window.specializationLevel(key,useTest);
+  if(key==="training"||key==="scavenge"||key==="appraisal")return lv*5;
+  if(key==="initiative")return lv*2;
+  if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv;
+  return 0;
+ };
+ window.specializationMultiplier=function(key,useTest=false){return 1+window.specializationPercentBonus(key,useTest)/100;};
+ window.specializationAdjustedExp=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("training",useTest)));};
+ window.specializationAdjustedGold=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("scavenge",useTest)));};
+ window.specializationSellValue=function(item,useTest=false){
+  const base=Math.max(0,Math.floor(Number(item?.sell)||0));
+  return Math.max(0,Math.ceil(base*window.specializationMultiplier("appraisal",useTest)));
+ };
 
  function effectLines(key,lv){
   if(key==="training")return [`EXP +${lv*5}%`];
@@ -80,14 +94,59 @@
   const test=mode==="test";
   return `<div class="gm-specialization-grid">${SPECIALIZATION_KEYS.map(key=>{const value=test?window.specializationLevel(key,true):formalLevel(key);return `<label><span>${SPECIALIZATION_DEFS[key].name}</span><select class="btn" id="gmSpec-${mode}-${key}" ${test?`onchange="gmSetTestSpecialization('${key}',this.value)"`:""}>${levelOptions(value)}</select></label>`;}).join("")}</div>`;
  }
+ function gmTestEconomyLabel(){
+  const exp=window.specializationPercentBonus("training",true),gold=window.specializationPercentBonus("scavenge",true),sell=window.specializationPercentBonus("appraisal",true);
+  return `測試效果：EXP +${exp}%　／　怪物金幣 +${gold}%　／　裝備售價 +${sell}%`;
+ }
  window.gmSpecializationManagementHtml=function(){ensureSpecializationState();return `<div class="muted gm-hub-note">直接修改玩家正式專精等級，套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
  window.gmApplySpecializations=function(){
   ensureSpecializationState();
   SPECIALIZATION_KEYS.forEach(key=>{const el=document.getElementById(`gmSpec-manage-${key}`);if(el)state.specializations[key]=clampSpecializationLevel(el.value);});
   save();render();alert("專精等級已更新。");
  };
- window.gmSetTestSpecialization=function(key,value){if(!SPECIALIZATION_DEFS[key])return;window.gmTestSpecializations[key]=clampSpecializationLevel(value);};
- window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}`;};
+ window.gmSetTestSpecialization=function(key,value){
+  if(!SPECIALIZATION_DEFS[key])return;
+  window.gmTestSpecializations[key]=clampSpecializationLevel(value);
+  const info=document.getElementById("gmSpecEconomyInfo");if(info)info.textContent=gmTestEconomyLabel();
+ };
+ window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
+
+ function installEconomyHooks(){
+  const baseExpReward=expReward;
+  expReward=function(enemy){return window.specializationAdjustedExp(baseExpReward(enemy),false);};
+  const baseGoldReward=goldReward;
+  goldReward=function(enemy){return window.specializationAdjustedGold(baseGoldReward(enemy),false);};
+
+  const baseAddItem=addItem;
+  addItem=function(item){
+   if(!item)return baseAddItem(item);
+   const originalSell=item.sell;
+   item.sell=window.specializationSellValue(item,false);
+   try{return baseAddItem(item);}finally{item.sell=originalSell;}
+  };
+
+  const baseSellLowerAll=sellLowerAll;
+  sellLowerAll=function(){
+   const originals=new Map();
+   state.inventory.forEach(item=>{originals.set(item,item.sell);item.sell=window.specializationSellValue(item,false);});
+   try{return baseSellLowerAll();}finally{state.inventory.forEach(item=>{if(originals.has(item))item.sell=originals.get(item);});}
+  };
+
+  const baseSellSelected=sellSelected;
+  sellSelected=function(){
+   const item=state.inventory.find(x=>x.id===selectedItem);
+   if(!item)return baseSellSelected();
+   const originalSell=item.sell;item.sell=window.specializationSellValue(item,false);
+   try{return baseSellSelected();}finally{if(state.inventory.includes(item))item.sell=originalSell;}
+  };
+
+  const baseInventoryContent=inventoryContent;
+  inventoryContent=function(){
+   const originals=new Map();
+   state.inventory.forEach(item=>{originals.set(item,item.sell);item.sell=window.specializationSellValue(item,false);});
+   try{return baseInventoryContent();}finally{state.inventory.forEach(item=>{if(originals.has(item))item.sell=originals.get(item);});}
+  };
+ }
 
  function installStyles(){
   if(document.getElementById("specializationStyles"))return;
@@ -122,6 +181,7 @@
 
  installStyles();
  if(ensureSpecializationState())save(false);
+ installEconomyHooks();
  const baseRender=render;
  render=function(){
   ensureSpecializationState();
