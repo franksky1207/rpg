@@ -16,32 +16,39 @@
  ]);
  let specialPacingActive=false;
 
+ function mainFlowSleep(ms){
+  const n=Math.max(0,Number(ms)||0);
+  if(typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("main"))return window.backgroundProgressSleep(n,"main");
+  return baseSleep(n);
+ }
+
  window.sleep=function(ms){
   const n=Number(ms)||0;
-  return baseSleep(specialPacingActive?(SPECIAL_DELAY_MAP.get(n)??n):n);
+  const paced=specialPacingActive?(SPECIAL_DELAY_MAP.get(n)??n):n;
+  return mainFlowSleep(paced);
  };
 
  window.animateFight=async function(r,startPlayerHp,playerMax,enemyMax,roundText=""){
   let ehp=enemyMax,php=startPlayerHp;
   const actionDelay=r?.e?.kind==="boss"?MAIN_BOSS_DELAY:MAIN_NORMAL_DELAY;
   setCombatHp(ehp,enemyMax,php,playerMax,roundText?`${roundText}・開始戰鬥`:"開始戰鬥");
-  await baseSleep(MAIN_START_DELAY);
+  await mainFlowSleep(MAIN_START_DELAY);
   for(const line of r.logs){
    let m=line.match(/^你攻擊.+，暴擊造成 (\d+) 點傷害。$/);
-   if(m){attackMotion("player");await baseSleep(MAIN_WINDUP_DELAY);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`暴擊！你造成 ${m[1]} 點傷害`);await baseSleep(actionDelay);continue}
+   if(m){attackMotion("player");await mainFlowSleep(MAIN_WINDUP_DELAY);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`暴擊！你造成 ${m[1]} 點傷害`);await mainFlowSleep(actionDelay);continue}
    m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
-   if(m){attackMotion("player");await baseSleep(MAIN_WINDUP_DELAY);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await baseSleep(actionDelay);continue}
+   if(m){attackMotion("player");await mainFlowSleep(MAIN_WINDUP_DELAY);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await mainFlowSleep(actionDelay);continue}
    m=line.match(/^你攻擊.+，.+閃避了攻擊。$/);
-   if(m){attackMotion("player");await baseSleep(MAIN_WINDUP_DELAY);flashCombatText("enemy","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}閃避了你的攻擊`);await baseSleep(MAIN_NORMAL_DELAY);continue}
+   if(m){attackMotion("player");await mainFlowSleep(MAIN_WINDUP_DELAY);flashCombatText("enemy","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}閃避了你的攻擊`);await mainFlowSleep(MAIN_NORMAL_DELAY);continue}
    m=line.match(/^.+攻擊你，暴擊造成 (\d+) 點傷害。$/);
-   if(m){attackMotion("enemy");await baseSleep(MAIN_WINDUP_DELAY);php=Math.max(0,php-(+m[1]));flashCombatText("player",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}暴擊造成 ${m[1]} 點傷害`);await baseSleep(actionDelay);continue}
+   if(m){attackMotion("enemy");await mainFlowSleep(MAIN_WINDUP_DELAY);php=Math.max(0,php-(+m[1]));flashCombatText("player",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}暴擊造成 ${m[1]} 點傷害`);await mainFlowSleep(actionDelay);continue}
    m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
-   if(m){attackMotion("enemy");await baseSleep(MAIN_WINDUP_DELAY);php=Math.max(0,php-(+m[1]));flashCombatText("player",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await baseSleep(actionDelay);continue}
+   if(m){attackMotion("enemy");await mainFlowSleep(MAIN_WINDUP_DELAY);php=Math.max(0,php-(+m[1]));flashCombatText("player",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await mainFlowSleep(actionDelay);continue}
    m=line.match(/^.+攻擊你，你閃避了攻擊。$/);
-   if(m){attackMotion("enemy");await baseSleep(MAIN_WINDUP_DELAY);flashCombatText("player","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`你閃避了${r.e.name}的攻擊`);await baseSleep(MAIN_NORMAL_DELAY)}
+   if(m){attackMotion("enemy");await mainFlowSleep(MAIN_WINDUP_DELAY);flashCombatText("player","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`你閃避了${r.e.name}的攻擊`);await mainFlowSleep(MAIN_NORMAL_DELAY)}
   }
   setCombatHp(ehp,enemyMax,php,playerMax,r.win?"戰鬥勝利！":"戰敗！");
-  await baseSleep(MAIN_END_DELAY);
+  await mainFlowSleep(MAIN_END_DELAY);
  };
 
  if(typeof window.maybeHandleSpecialEncounter==="function"){
