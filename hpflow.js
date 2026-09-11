@@ -23,4 +23,8 @@
   const count=e.kind==="boss"?1:selectedBattleCount;
   beginCombat(count);
  };
+
+ // 新版規則下，非戰鬥狀態應維持滿 HP；同時把舊存檔殘留的低 HP 校正掉。
+ restorePlayerHp({save:false});
+ save(false);
 })();
