@@ -43,7 +43,7 @@
 
  function idleHtml(){
   const d=dungeonSafe(),p=progressSafe(),next=Math.max(1,(p.highestCleared||0)+1);
-  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><h2>第 ${next} 層</h2><div class="muted">進入後會自動逐層挑戰；每層開始前完全恢復 HP，直到戰敗或強制退出。</div><div class="muted" style="margin-top:14px">剩餘可挑戰次數：${d.attempts||0} 次</div><div class="void-actions"><button class="btn" onclick="go('dungeon')">返回副本</button></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><h2>第 ${next} 層</h2><div class="muted">進入後會自動逐層挑戰；每層戰鬥結束後完全恢復 HP，再進入下一層，直到戰敗或強制退出。</div><div class="muted" style="margin-top:14px">剩餘可挑戰次數：${d.attempts||0} 次</div><div class="void-actions"><button class="btn" onclick="go('dungeon')">返回副本</button></div></div></section>`;
  }
 
  function combatHtml(fr,run){
