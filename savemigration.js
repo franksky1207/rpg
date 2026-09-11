@@ -52,14 +52,15 @@
    return;
   }
   const source=target.offline;
-  const rawTime=Number(source.lastSettledAt);
+  const rawTime=source.lastSettledAt==null?NaN:Number(source.lastSettledAt);
   source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
-  const map=Number(source.farmMap),enemy=Number(source.farmEnemy);
+  const map=source.farmMap==null?NaN:Number(source.farmMap),enemy=source.farmEnemy==null?NaN:Number(source.farmEnemy);
   source.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
   source.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
   const avg=Number(source.avgBattleMs);
   source.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   source.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(source.sampleCount)||0)));
+  if(source.sampleCount<=0||source.avgBattleMs<=0||source.farmMap==null||source.farmEnemy==null){source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;}
  }
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
