@@ -71,7 +71,7 @@
   return `<section class="specialization-card"><div class="specialization-card-head"><b>${def.name}</b><span>Lv.${lv} / ${SPECIALIZATION_MAX_LEVEL}</span></div><div class="specialization-effect">${effectLines(key,lv).map(x=>`<div>${x}</div>`).join("")}</div><div class="specialization-cost">${maxed?"已達最高等級":`${cost.toLocaleString()} 金幣`}</div><button class="btn specialization-upgrade" ${maxed||!enough?"disabled":""} onclick="upgradeSpecialization('${key}')">${maxed?"已滿級":"升級"}</button></section>`;
  }
  function specializationGuideHtml(){
-  return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。升到第 n 級需消耗 1,000 × n² 金幣；升級後永久保留。</div>${SPECIALIZATION_KEYS.map(key=>{const d=SPECIALIZATION_DEFS[key];return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;
+  return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。</div>${SPECIALIZATION_KEYS.map(key=>{const d=SPECIALIZATION_DEFS[key];return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;
  }
  function specializationPage(){
   ensureSpecializationState();
