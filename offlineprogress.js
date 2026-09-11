@@ -14,14 +14,15 @@
   const t=now();
   if(!isObject(state.offline))state.offline={};
   const o=state.offline;
-  const rawTime=Number(o.lastSettledAt);
+  const rawTime=o.lastSettledAt==null?NaN:Number(o.lastSettledAt);
   o.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=t?Math.floor(rawTime):t;
-  const map=Number(o.farmMap),enemy=Number(o.farmEnemy);
+  const map=o.farmMap==null?NaN:Number(o.farmMap),enemy=o.farmEnemy==null?NaN:Number(o.farmEnemy);
   o.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
   const avg=Number(o.avgBattleMs);
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0));
+  if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
   return o;
  }
  function checkpoint(ts=now(),persist=true){
@@ -36,10 +37,7 @@
  }
  function resolveFarmTarget(){
   const o=ensureOfflineState();
-  if(legalFarmTarget(o.farmMap,o.farmEnemy))return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs||DEFAULT_BATTLE_MS};
-  for(let m=Math.min(MAPS.length-1,Math.max(0,Math.floor(Number(state.unlockedMap)||0)));m>=0;m--){
-   for(let e=3;e>=0;e--)if(legalFarmTarget(m,e))return {map:m,enemy:e,avgBattleMs:DEFAULT_BATTLE_MS};
-  }
+  if(o.sampleCount>0&&o.avgBattleMs>0&&legalFarmTarget(o.farmMap,o.farmEnemy))return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs};
   return null;
  }
  function formatDuration(ms){
@@ -151,7 +149,7 @@
  function installHeartbeat(){
   if(heartbeatTimer)clearInterval(heartbeatTimer);
   heartbeatTimer=setInterval(()=>{
-   if(document.visibilityState!=="hidden"&&(!document.hasFocus||document.hasFocus()))checkpoint(now(),true);
+   if(document.visibilityState!=="hidden"&&(typeof document.hasFocus!=="function"||document.hasFocus()))checkpoint(now(),true);
   },HEARTBEAT_MS);
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")onHidden();else onVisible();});
   window.addEventListener("pagehide",onHidden);
