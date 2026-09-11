@@ -68,8 +68,9 @@
  function voidMirageFightCore(enemy){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp);
-  state.hp=combat.hp;
-  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
+  const combatEndHp=combat.hp;
+  state.hp=combatEndHp;
+  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp,turns:combat.turns};
  }
  function runSnapshot(){
   if(!voidMirageRun)return null;
@@ -137,7 +138,7 @@
    voidMirageRun.playerSnapshot=player;
    voidMirageRun.runStarted=true;
   }
-  const floor=voidMirageRun.currentFloor;runFullHeal();
+  const floor=voidMirageRun.currentFloor;
   const playerMaxHp=runPlayerStats().hp,enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
   if(!enemy.isBossFloor)voidMirageRun.previousRegularName=enemy.name;
   voidMirageRun.phase="fighting";voidMirageRun.lastEnemy=enemy;
