@@ -73,6 +73,7 @@
     ctx.totalGold+=r.gold;
     if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
     else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
+    if(typeof window.recordOfflineMainBattleSample==="function")window.recordOfflineMainBattleSample(r,selectedMap,selectedEnemy);
    }else defeat=r;
 
    ctx.completed++;
