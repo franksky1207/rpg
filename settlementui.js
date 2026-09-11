@@ -16,6 +16,7 @@
    .settlement-equip-control{margin-top:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
    .settlement-equip-control .btn{padding:7px 11px}
    .settlement-upgrade-delta{color:#76d587;font-weight:700}
+   .settlement-swap-sold{margin-top:6px;color:#d8c49a;font-size:12px}
    #gameIntroModal .modal-box{max-width:520px}
    .game-intro-title{color:#f0d494;margin-bottom:12px}
    .game-intro-copy{line-height:1.8;color:#e6e0d5}
@@ -73,12 +74,23 @@
   if(actualUpgradeDelta(item)<=0){syncSettlementEquipControls();return;}
   const old=state.equipment[item.type]||null;
   state.inventory.splice(index,1);
-  if(old)state.inventory.push(old);
   state.equipment[item.type]=item;
+  let handled=null;
+  if(old){
+   if(typeof handleUnequippedItem==="function")handled=handleUnequippedItem(old);
+   else{state.inventory.push(old);handled={kept:true,sold:0,item:old};}
+  }
   normalizeHP();
   selectedItem=null;
   save(false);
   syncSettlementEquipControls();
+  row.querySelector(".settlement-swap-sold")?.remove();
+  if(handled?.sold){
+   const note=document.createElement("div");
+   note.className="settlement-swap-sold";
+   note.textContent=`換下裝備已自動出售 +${handled.sold} 金幣`;
+   row.appendChild(note);
+  }
  };
 
  window.settlementDropListHtml=function(items,options={}){
