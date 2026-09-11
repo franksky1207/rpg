@@ -1,5 +1,6 @@
 (function(){
  const OFFLINE_MAX_MS=12*60*60*1000;
+ const OFFLINE_MIN_MS=60*1000;
  const OFFLINE_EXP_RATE=.70;
  const OFFLINE_GOLD_RATE=.70;
  const OFFLINE_GEAR_RATE=.50;
@@ -64,6 +65,10 @@
  }
  function offlineSellValue(item){return typeof specializationSellValue==="function"?specializationSellValue(item):Math.max(0,Math.floor(Number(item?.sell)||0));}
  function normalizeOfflineDrop(item){if(item&&typeof item==="object"&&typeof item.locked!=="boolean")item.locked=false;return item;}
+ function expSnapshot(){
+  const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));
+  return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1))};
+ }
 
  function normalizePending(raw){
   if(!isObject(raw))return null;
@@ -72,7 +77,7 @@
   const elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0));
   const maxBattles=Math.max(0,Math.floor(elapsedUsed/avg));
   const battles=Math.max(0,Math.min(maxBattles,Math.floor(Number(raw.battles)||0)));
-  if(!legalFarmTarget(map,enemy)||battles<1)return null;
+  if(elapsedRaw<OFFLINE_MIN_MS||!legalFarmTarget(map,enemy)||battles<1)return null;
   return {map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
  }
  function buildPendingSettlement(){
@@ -81,6 +86,7 @@
   if(existing)return existing;
   o.pendingSettlement=null;
   const elapsedRaw=Math.max(0,t-o.lastSettledAt),elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
+  if(elapsedRaw<OFFLINE_MIN_MS){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}
   const target=resolveFarmTarget();
   if(!target){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}
   const avg=Math.max(600,Math.min(60000,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
@@ -96,7 +102,7 @@
  async function grantOfflineRewards(pending,enemy){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));
   let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;
-  const levelBefore=state.level;
+  const levelBefore=state.level,expBefore=expSnapshot();
   const bestByType=new Map(),mythics=[];
   let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0;
 
@@ -156,6 +162,7 @@
    directGold,
    convertedGold,
    levelsGained:Math.max(0,state.level-levelBefore),
+   expProgress:{before:expBefore,after:expSnapshot()},
    gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}
   };
  }
@@ -163,17 +170,17 @@
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
    const style=document.createElement("style");style.id="offline-reward-styles";
-   style.textContent=`#offlineRewardModal .modal-box{width:min(520px,100%);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;overflow:hidden}#offlineRewardDetail{min-height:0;overflow:auto;overscroll-behavior:contain}.offline-reward-title{color:#f0d494;margin-top:0}.offline-reward-summary{line-height:1.65}.offline-reward-meta{margin-top:10px;color:#c9b98f;font-size:13px}.offline-gear-list{margin-top:10px;border:1px solid #343a43;border-radius:10px;padding:9px;background:#10151b}.offline-gear-row{padding:7px 0;border-top:1px solid #2c323a}.offline-gear-row:first-child{border-top:0;padding-top:0}#offlineCalculatingModal .modal-box{width:min(360px,100%);text-align:center}#offlineCalculatingModal .muted{line-height:1.6}`;
+   style.textContent=`body.offline-result-open{overflow:hidden}#offlineRewardPage{position:fixed;inset:0;z-index:10000;display:none;overflow:auto;background:linear-gradient(180deg,#090d12 0%,#111820 100%);padding:max(20px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));box-sizing:border-box}#offlineRewardPage.show{display:block}.offline-page-shell{width:min(760px,100%);min-height:100%;margin:0 auto;display:flex;flex-direction:column;justify-content:center}.offline-page-card{border:1px solid #38424e;border-radius:18px;background:#121920;box-shadow:0 18px 60px rgba(0,0,0,.38);padding:24px}.offline-page-title{text-align:center;color:#f0d494;font-size:clamp(25px,5vw,36px);margin:0}.offline-page-welcome{text-align:center;color:#aeb9c5;margin-top:7px}.offline-duration{text-align:center;font-size:clamp(24px,6vw,40px);font-weight:800;margin:14px 0 22px;color:#fff}.offline-section{border:1px solid #303a45;border-radius:14px;background:#0e141a;padding:16px;margin-top:12px}.offline-section-title{font-weight:800;color:#d9e0e8;font-size:15px}.offline-battle-count{font-size:30px;font-weight:850;margin-top:6px}.offline-enemy-line{color:#c4ced8;margin-top:5px;line-height:1.5}.offline-reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.offline-reward-card{border:1px solid #3a4551;border-radius:14px;background:#0d1319;padding:18px;text-align:center;min-width:0}.offline-reward-label{font-size:14px;color:#aeb9c5;font-weight:700}.offline-reward-value{font-size:clamp(27px,5vw,38px);font-weight:900;margin-top:5px;overflow-wrap:anywhere}.offline-exp-progress{margin-top:10px;color:#c8d1da;font-size:14px;line-height:1.45}.offline-exp-progress .arrow{display:block;color:#8f9aa6;line-height:1.15}.offline-gear-summary{margin-top:8px;font-weight:700;line-height:1.6}.offline-gear-list{margin-top:10px;border-top:1px solid #303841;padding-top:4px}.offline-gear-row{padding:10px 0;border-bottom:1px solid #2c333b}.offline-gear-row:last-child{border-bottom:0;padding-bottom:2px}.offline-limit-note{text-align:center;color:#8f9aa6;font-size:13px;line-height:1.5;margin-top:14px}.offline-enter-controls{margin-top:18px}.offline-enter-controls .btn{width:100%;min-height:48px;font-size:16px;font-weight:800}#offlineCalculatingModal{z-index:10001}#offlineCalculatingModal .modal-box{width:min(360px,100%);text-align:center}#offlineCalculatingModal .muted{line-height:1.6}@media(max-width:560px){.offline-page-shell{justify-content:flex-start}.offline-page-card{padding:18px 14px;border-radius:14px}.offline-reward-grid{grid-template-columns:1fr}.offline-duration{margin-bottom:16px}.offline-section{padding:14px}.offline-battle-count{font-size:27px}}`;
    document.head.appendChild(style);
   }
-  if(!document.getElementById("offlineRewardModal")){
-   const modal=document.createElement("div");modal.className="modal";modal.id="offlineRewardModal";
-   modal.innerHTML=`<div class="modal-box"><h3 class="offline-reward-title">離線收益</h3><div id="offlineRewardDetail"></div><div class="controls"><button class="btn primary" onclick="closeOfflineRewardModal()">確認</button></div></div>`;
-   document.body.appendChild(modal);
+  if(!document.getElementById("offlineRewardPage")){
+   const page=document.createElement("div");page.id="offlineRewardPage";
+   page.innerHTML=`<div class="offline-page-shell"><div class="offline-page-card"><h2 class="offline-page-title">離線收益結算</h2><div class="offline-page-welcome">歡迎回來</div><div id="offlineRewardDetail"></div><div class="offline-enter-controls"><button class="btn primary" onclick="closeOfflineRewardModal()">領取並進入遊戲</button></div></div></div>`;
+   document.body.appendChild(page);
   }
   if(!document.getElementById("offlineCalculatingModal")){
    const modal=document.createElement("div");modal.className="modal";modal.id="offlineCalculatingModal";
-   modal.innerHTML=`<div class="modal-box"><h3 class="offline-reward-title">整理離線收益</h3><div class="muted">正在結算離線期間的 EXP、金幣與裝備。</div></div>`;
+   modal.innerHTML=`<div class="modal-box"><h3 style="color:#f0d494;margin-top:0">整理離線收益</h3><div class="muted">正在結算離線期間的 EXP、金幣與裝備。</div></div>`;
    document.body.appendChild(modal);
   }
  }
@@ -181,22 +188,30 @@
  function offlineGearHtml(gear){
   if(!gear)return "";
   const kept=[...(gear.keptOrdinary||[]),...(gear.mythics||[])];
-  const keptHtml=kept.length?`<div class="offline-gear-list">${kept.map(item=>`<div class="offline-gear-row">${itemHtml(item,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}</div>`).join("")}</div>`:`<div class="muted" style="margin-top:7px">本次沒有保留裝備。</div>`;
-  const sold=gear.soldCount>0?`<div class="muted" style="margin-top:7px">較弱裝備自動整理出售 ${gear.soldCount} 件，金幣 +${gear.soldGold.toLocaleString()}</div>`:"";
-  return `<div class="notice" style="margin-top:12px"><b>離線裝備</b><div class="muted" style="margin-top:5px">掉落效率 50%；同部位一般裝備只保留最強且優於目前裝備者，神話裝備全部保留。</div>${keptHtml}${sold}</div>`;
+  const keptHtml=kept.length?`<div class="offline-gear-list">${kept.map(item=>`<div class="offline-gear-row">${itemHtml(item,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}</div>`).join("")}</div>`:`<div class="muted" style="margin-top:8px">本次沒有留下裝備。</div>`;
+  return `<div class="offline-section"><div class="offline-section-title">裝備</div><div class="offline-gear-summary">共取得 ${gear.droppedCount.toLocaleString()} 件　自動出售 ${gear.soldCount.toLocaleString()} 件</div>${keptHtml}</div>`;
+ }
+ function expProgressHtml(progress){
+  if(!progress?.before||!progress?.after)return "";
+  const before=progress.before,after=progress.after;
+  return `<div class="offline-exp-progress"><div>Lv.${before.level}　${before.exp.toLocaleString()} / ${before.need.toLocaleString()}</div><span class="arrow">↓</span><div>Lv.${after.level}　${after.exp.toLocaleString()} / ${after.need.toLocaleString()}</div></div>`;
  }
  function showOfflineResult(result){
   if(!result)return;
   ensureOfflineModals();
-  const detail=document.getElementById("offlineRewardDetail"),modal=document.getElementById("offlineRewardModal");
-  if(!detail||!modal)return;
-  const enemy=result.enemyName?`<div class="offline-reward-meta">離線刷怪：${result.enemyName}</div>`:"";
-  const capNote=result.elapsedRaw>OFFLINE_MAX_MS?`<div class="muted" style="margin-top:8px">本次離線超過 12 小時，僅計算前 12 小時。</div>`:"";
-  const converted=result.convertedGold>0?`<div class="muted" style="margin-top:7px">其中滿等 EXP 轉換金幣 +${result.convertedGold.toLocaleString()}</div>`:"";
-  detail.innerHTML=`<div class="offline-reward-summary">離線 ${formatDuration(result.elapsedUsed)}，等效完成 <b>${result.battles.toLocaleString()}</b> 場主線刷怪。</div><div class="stats" style="margin-top:12px"><div class="stat">EXP<b>+${result.totalXp.toLocaleString()}</b></div><div class="stat">金幣<b>+${result.totalGold.toLocaleString()}</b></div></div>${converted}${offlineGearHtml(result.gear)}${enemy}${capNote}`;
-  modal.classList.add("show");
+  const detail=document.getElementById("offlineRewardDetail"),page=document.getElementById("offlineRewardPage");
+  if(!detail||!page)return;
+  const enemyLevel=Math.max(1,Math.floor(Number(result.enemyLevel)||1));
+  const capNote=result.elapsedRaw>OFFLINE_MAX_MS?`<div class="offline-limit-note">本次離線超過 12 小時，僅計算前 12 小時。</div>`:`<div class="offline-limit-note">離線收益最多計算 12 小時</div>`;
+  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div></div>${offlineGearHtml(result.gear)}${capNote}`;
+  document.body.classList.add("offline-result-open");
+  page.classList.add("show");
  }
- window.closeOfflineRewardModal=function(){document.getElementById("offlineRewardModal")?.classList.remove("show");};
+ window.closeOfflineRewardModal=function(){
+  document.getElementById("offlineRewardPage")?.classList.remove("show");
+  document.body.classList.remove("offline-result-open");
+  if(typeof render==="function")render();
+ };
 
  window.recordOfflineMainBattleSample=function(result,mapIdx,enemyIdx){
   if(result?.win!==true||result?.e?.kind==="boss")return false;
@@ -226,7 +241,7 @@
   await yieldThread();
   try{
    const rewards=await grantOfflineRewards(pending,enemy);
-   const result={elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:enemy.name||"主線敵人",...rewards};
+   const result={elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:enemy.name||"主線敵人",enemyLevel:enemy.level,...rewards};
    const o=ensureOfflineState();
    o.pendingSettlement=null;
    o.lastSettledAt=now();
