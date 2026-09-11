@@ -102,7 +102,7 @@
    }
   }
 
-  return {
+  const result={
    win:ehp<=0,
    hp:Math.max(0,php),
    enemyHp:Math.max(0,ehp),
@@ -111,6 +111,8 @@
    events,
    e:enemy
   };
+  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
+  return result;
  };
 
  fightOnce=function(mapIdx,eIdx,encounter=null){
