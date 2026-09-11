@@ -14,7 +14,7 @@
   return equipmentScore(state.equipment[type]);
  };
 
- addItem=function(it){
+ addItem=function(it,options={}){
   if(!it)return {kept:false,sold:0};
   const upgrade=isActualGearUpgrade(it);
   if(it.q===5||(state.settings.keepUpgrade&&upgrade)){
@@ -23,8 +23,9 @@
    return {kept:true,sold:0};
   }
   if(it.q<=4&&state.settings.autoSell[it.q]){
-   state.gold+=it.sell;
-   return {kept:false,sold:it.sell};
+   const sold=specializationSellValue(it,options.useTestSpecializations===true);
+   state.gold+=sold;
+   return {kept:false,sold};
   }
   state.inventory.push(it);
   if(upgrade)upgradeDropNoticePending=true;
@@ -65,7 +66,7 @@
    return equipmentScore(it)<=equipmentScore(current);
   });
   if(!targets.length)return alert("沒有可出售的較低或同評分裝備。");
-  const total=targets.reduce((a,it)=>a+(it.sell||0),0);
+  const total=targets.reduce((a,it)=>a+specializationSellValue(it),0);
   if(!confirm(`將出售 ${targets.length} 件較低或同評分裝備，共獲得 ${total.toLocaleString()} 金幣。確定出售嗎？`))return;
   const ids=new Set(targets.map(it=>it.id));
   state.inventory=state.inventory.filter(it=>!ids.has(it.id));
