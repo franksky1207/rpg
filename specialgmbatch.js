@@ -39,13 +39,17 @@ async function gmStartSpecialBattle(){
  const playerSnapshot=typeof gmTestPlayerStats==="function"?gmTestPlayerStats(enemyScalingSnapshot):createSpecialPlayerSnapshot(playerCombatStats(enemyScalingSnapshot,gmSpecialTestVip()));
  const playerMax=playerSnapshot.hp;
  battleBusy=true;
- const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
+ const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,totalSellValue:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
 
  function grant(ctx,baseXp,baseGold){
   const xpRaw=ceil(baseXp*(ctx.expMultiplier||1)),xpPay=specialExpPayout(xpRaw,[]),gold=ceil(baseGold*(ctx.goldMultiplier||1));
   summary.totalXp+=xpPay.xp;summary.convertedGold+=xpPay.convertedGold;summary.totalGold+=gold+xpPay.convertedGold;state.gold+=gold;
   const items=specialMakeDrops(ctx,level,mapIdx);summary.dropCount+=items.length;
-  items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;addItem(item)});
+  items.forEach(item=>{
+   summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;
+   summary.totalSellValue+=specializationSellValue(item,true);
+   addItem(item,{useTestSpecializations:true});
+  });
   summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
   if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
  }
@@ -56,8 +60,8 @@ async function gmStartSpecialBattle(){
   if(r.win){
    summary.wins++;summary.winHpTotal+=Math.max(0,state.hp);
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level)),baseGold=goldBase(level);
-   grant(getSpecialRewardContext(special),baseXp,baseGold);
-   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special),baseXp,baseGold);}
+   grant(getSpecialRewardContext(special,true),baseXp,baseGold);
+   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special,true),baseXp,baseGold);}
   }else{
    summary.losses++;const penalty=applyDeathPenalty([]);if(penalty?.dropped)summary.deathDrops++;if(penalty?.protectedByVip20)summary.vip20Protected++;
   }
