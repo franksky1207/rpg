@@ -56,7 +56,10 @@
  function priorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
   const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
-  return `<div class="notice" style="margin-bottom:10px"><b>原連續戰鬥已提前結束</b><div class="muted" style="margin-top:5px">已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣、裝備與副本進度均保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">前段 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">前段金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
+  const interrupted=Number(ctx.remaining)>0;
+  const heading=interrupted?"原連續戰鬥已提前結束":"主線戰鬥已完成";
+  const note=interrupted?`已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣、裝備與副本進度均保留。`:`已完成 ${ctx.completed} / ${ctx.originalCount} 場；主線取得的 EXP、金幣、裝備與副本進度均已保留。`;
+  return `<div class="notice" style="margin-bottom:10px"><b>${heading}</b><div class="muted" style="margin-top:5px">${note}</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">主線 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">主線金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
  }
 
  function showSkipSettlement(ctx){
@@ -65,7 +68,9 @@
   if(!title||!detail||!modal)return;
   title.textContent="特殊遭遇已略過";
   const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
-  detail.innerHTML=`<div class="notice"><b>已完成 ${ctx.completed} / ${ctx.originalCount} 場</b><div class="muted" style="margin-top:5px">未知特殊遭遇已略過，剩餘戰鬥取消；以下獎勵與副本進度已保留。</div></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">金幣<b>+${ctx.totalGold||0}</b></div></div>${dropListHtml(ctx.items||[])}${dungeon}`;
+  const interrupted=Number(ctx.remaining)>0;
+  const note=interrupted?"未知特殊遭遇已略過，剩餘戰鬥取消；以下獎勵與副本進度已保留。":"未知特殊遭遇已略過；主線戰鬥已完成，以下獎勵與副本進度均已保留。";
+  detail.innerHTML=`<div class="notice"><b>已完成 ${ctx.completed} / ${ctx.originalCount} 場</b><div class="muted" style="margin-top:5px">${note}</div></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">金幣<b>+${ctx.totalGold||0}</b></div></div>${dropListHtml(ctx.items||[])}${dungeon}`;
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
   modal.classList.add("show");
  }
@@ -145,8 +150,9 @@
   showSpecialResult(ctx,special,result);
  }
 
- async function maybeHandleSpecialEncounter(ctx){
-  const baseEnemy=monsterObj(selectedMap,selectedEnemy);
+ async function maybeHandleSpecialEncounter(ctx,mainResult=null){
+  if(mainResult?.win!==true)return false;
+  const baseEnemy=mainResult.e||monsterObj(selectedMap,selectedEnemy);
   if(baseEnemy?.kind==="boss")return false;
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
   const s=playerCombatStats();
