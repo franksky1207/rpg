@@ -73,7 +73,8 @@
   }
   flow.instantSkips=0;
   if(isBackground()){
-   if(flow.hiddenAt==null)flow.hiddenAt=now();
+   // 背景中若剛好進到下一個等待點，從這個等待點重新計時；不把同步運算時間當成可跳過動畫的額度。
+   flow.hiddenAt=now();
    return new Promise(resolve=>{flow.sleeper={remaining,dueAt:0,timer:null,resolve};});
   }
   return new Promise(resolve=>{
