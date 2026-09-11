@@ -1,5 +1,6 @@
 (function(){
  const BACKGROUND_CREDIT_RATE=.96;
+ const INFINITE_BACKGROUND_MAX_MS=12*60*60*1000;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
@@ -8,6 +9,28 @@
  function now(){return Date.now();}
  function isBackground(){return pageHidden||windowBlurred;}
  function activeFor(kind=null){return !!flow&&(!kind||flow.kind===kind);}
+ function isInfiniteMainCount(count,ctx=null){
+  const marker=window.INFINITE_BATTLE_COUNT||"infinite";
+  return count===marker||count==="infinite"||ctx?.infinite===true;
+ }
+ function flowOptions(kind,options={}){
+  const mode=String(options?.mode||"");
+  const infinite=kind==="main"&&mode==="infinite";
+  return {mode:infinite?"infinite":"finite",maxBackgroundMs:infinite?INFINITE_BACKGROUND_MAX_MS:null};
+ }
+ function configureExistingFlow(kind,options={}){
+  if(!flow||flow.kind!==kind)return;
+  const next=flowOptions(kind,options);
+  if(next.mode==="infinite"&&flow.mode!=="infinite"){
+   flow.mode="infinite";
+   flow.maxBackgroundMs=INFINITE_BACKGROUND_MAX_MS;
+   flow.backgroundElapsedUsed=Math.max(0,Number(flow.backgroundElapsedUsed)||0);
+  }
+ }
+ function remainingBackgroundAllowance(){
+  if(!flow||!Number.isFinite(Number(flow.maxBackgroundMs)))return Infinity;
+  return Math.max(0,Number(flow.maxBackgroundMs)-(Number(flow.backgroundElapsedUsed)||0));
+ }
  function clearSleeperTimer(){if(flow?.sleeper?.timer){clearTimeout(flow.sleeper.timer);flow.sleeper.timer=null;}}
  function resolveSleeper(){
   if(!flow?.sleeper)return;
@@ -34,23 +57,29 @@
  }
  function leaveBackground(){
   if(!flow||flow.hiddenAt==null)return;
-  const elapsed=Math.max(0,now()-flow.hiddenAt);flow.hiddenAt=null;
+  const rawElapsed=Math.max(0,now()-flow.hiddenAt);flow.hiddenAt=null;
+  const allowed=Math.min(rawElapsed,remainingBackgroundAllowance());
+  if(Number.isFinite(Number(flow.maxBackgroundMs)))flow.backgroundElapsedUsed=(Number(flow.backgroundElapsedUsed)||0)+allowed;
   if(flow.sleeper){
-   const used=Math.min(elapsed,Math.max(0,flow.sleeper.remaining));
+   const used=Math.min(allowed,Math.max(0,flow.sleeper.remaining));
    flow.sleeper.remaining=Math.max(0,flow.sleeper.remaining-used);
-   flow.credit+=Math.max(0,elapsed-used)*BACKGROUND_CREDIT_RATE;
+   flow.credit+=Math.max(0,allowed-used)*BACKGROUND_CREDIT_RATE;
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
-  }else flow.credit+=elapsed*BACKGROUND_CREDIT_RATE;
+  }else flow.credit+=allowed*BACKGROUND_CREDIT_RATE;
  }
  function syncBackgroundState(){if(isBackground())enterBackground();else leaveBackground();}
 
- window.backgroundProgressStart=function(kind){
+ window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
-  if(flow&&flow.kind===nextKind)return {kind:flow.kind,credit:flow.credit};
+  if(flow&&flow.kind===nextKind){
+   configureExistingFlow(nextKind,options);
+   return {kind:flow.kind,mode:flow.mode,credit:flow.credit};
+  }
   if(flow)window.backgroundProgressStop(flow.kind);
-  flow={kind:nextKind,credit:0,hiddenAt:null,sleeper:null,instantSkips:0};
+  const config=flowOptions(nextKind,options);
+  flow={kind:nextKind,mode:config.mode,maxBackgroundMs:config.maxBackgroundMs,backgroundElapsedUsed:0,credit:0,hiddenAt:null,sleeper:null,instantSkips:0};
   if(isBackground())flow.hiddenAt=now();
-  return {kind:flow.kind,credit:0};
+  return {kind:flow.kind,mode:flow.mode,credit:0};
  };
  window.backgroundProgressStop=function(kind=null){
   if(!flow||kind&&flow.kind!==kind)return false;
@@ -82,7 +111,11 @@
    scheduleSleeper();
   });
  };
- window.backgroundProgressSnapshot=function(){return flow?{kind:flow.kind,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper}:null;};
+ window.backgroundProgressSnapshot=function(){
+  if(!flow)return null;
+  const capped=Number.isFinite(Number(flow.maxBackgroundMs));
+  return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:capped?Number(flow.maxBackgroundMs):null};
+ };
 
  document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncBackgroundState();});
  window.addEventListener("blur",()=>{windowBlurred=true;syncBackgroundState();});
@@ -93,7 +126,8 @@
  const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
  if(baseBeginCombat){
   const wrappedBeginCombat=function(count,...args){
-   if(Number(count)>1)window.backgroundProgressStart("main");
+   const infinite=isInfiniteMainCount(count);
+   if(infinite||Number(count)>1)window.backgroundProgressStart("main",{mode:infinite?"infinite":"finite"});
    return baseBeginCombat.call(this,count,...args);
   };
   window.beginCombat=wrappedBeginCombat;
@@ -103,8 +137,10 @@
  const baseRunBattles=typeof window.runBattles==="function"?window.runBattles:null;
  if(baseRunBattles){
   const wrappedRunBattles=async function(count,...args){
-   const useBackground=Number(count)>1;
-   if(useBackground)window.backgroundProgressStart("main");
+   const ctx=args[0]&&typeof args[0]==="object"?args[0]:null;
+   const infinite=isInfiniteMainCount(count,ctx);
+   const useBackground=infinite||Number(count)>1;
+   if(useBackground)window.backgroundProgressStart("main",{mode:infinite?"infinite":"finite"});
    try{return await baseRunBattles.call(this,count,...args);}
    finally{if(useBackground)window.backgroundProgressStop("main");}
   };
