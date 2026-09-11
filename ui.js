@@ -276,7 +276,12 @@ function compareGearHtml(it,label="商品評分"){
  return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">${label} ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
 }
 function shopStatHtml(it){return gearAbilityHtml(it,false)}
-function discardLostGear(i){const lost=state.lostGear?.[i];if(!lost)return;state.lostGear.splice(i,1);save();render()}
+function discardLostGear(i){
+ const lost=state.lostGear?.[i];if(!lost)return;
+ const label=lost.item?itemHtmlPlain(lost.item):"這件遺失裝備";
+ if(!confirm(`確定永久放棄 ${label} 嗎？放棄後無法復原。`))return;
+ state.lostGear.splice(i,1);save();render();
+}
 function shopPage(){
  ensureShop();
  if(state.shop.items.length>3){state.shop.items=state.shop.items.slice(0,3);save(false)}
@@ -313,7 +318,80 @@ function openGMModal(){document.getElementById("passwordModal").classList.add("s
 function closeGMModal(){document.getElementById("passwordModal").classList.remove("show")}
 function unlockGM(){if(document.getElementById("gmPassword").value===GM_PASSWORD){state.gm=true;save();closeGMModal();render()}else alert("密碼錯誤。")}
 function exportSave(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
-function importSave(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.level)throw 0;state=x;save();location.reload()}catch(e){alert("存檔格式不正確。")}};r.readAsText(f)}
+function normalizeSaveItem(it,forcedType=null){
+ if(!it||typeof it!=="object"||Array.isArray(it))return null;
+ const type=forcedType||it.type;if(!EQUIPMENT_TYPES.includes(type))return null;
+ const q=Math.max(0,Math.min(QUALITY.length-1,Math.floor(Number(it.q)||0)));
+ const level=clampGameLevel(it.level);
+ const out={...it,type,q,level};
+ out.id=typeof it.id==="string"&&it.id?it.id:Date.now().toString(36)+Math.random().toString(36).slice(2);
+ out.name=typeof it.name==="string"&&it.name.trim()?it.name.trim().slice(0,80):"未知裝備";
+ ["hp","atk","def","crit","dodge"].forEach(k=>{const n=Number(it[k]);out[k]=Number.isFinite(n)&&n>0?round1(n):0});
+ const mainStat=(it.mainStat&&STAT_LABELS[it.mainStat.stat])?it.mainStat.stat:mainStatForType(type);
+ const mainValue=Number(it.mainStat?.value);
+ out.mainStat={stat:mainStat,value:Number.isFinite(mainValue)&&mainValue>=0?round1(mainValue):round1(out[mainStat]||0)};
+ out.affixes=Array.isArray(it.affixes)?it.affixes.filter(a=>a&&STAT_LABELS[a.stat]&&Number.isFinite(Number(a.value))&&Number(a.value)>=0).map(a=>({stat:a.stat,value:round1(Number(a.value))})):[];
+ const sell=Number(it.sell),buy=Number(it.buy);
+ out.sell=Number.isFinite(sell)&&sell>=0?Math.floor(sell):ceil(sellBase(level)*QUALITY[q].sm);
+ out.buy=Number.isFinite(buy)&&buy>=0?Math.floor(buy):ceil(out.sell*3.5);
+ return out;
+}
+function isImportableSave(x){
+ if(!x||typeof x!=="object"||Array.isArray(x))return false;
+ const level=Number(x.level);if(!Number.isFinite(level)||level<1)return false;
+ return "saveVersion" in x||"equipment" in x||"inventory" in x||"mapProgress" in x;
+}
+function normalizeSaveState(target){
+ if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
+ target.level=clampGameLevel(target.level);
+ const exp=Number(target.exp),gold=Number(target.gold),hp=Number(target.hp);
+ target.exp=target.level>=MAX_LEVEL?0:(Number.isFinite(exp)&&exp>=0?Math.floor(exp):0);
+ target.gold=Number.isFinite(gold)&&gold>=0?Math.floor(gold):0;
+ target.hp=Number.isFinite(hp)&&hp>=0?Math.floor(hp):baseHP(target.level);
+ const name=typeof target.playerName==="string"?target.playerName.trim():"";target.playerName=(name||"玩家").slice(0,12);
+ if(!target.equipment||typeof target.equipment!=="object"||Array.isArray(target.equipment))target.equipment={};
+ EQUIPMENT_TYPES.forEach(type=>{target.equipment[type]=normalizeSaveItem(target.equipment[type],type)});
+ target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).map(it=>normalizeSaveItem(it)).filter(Boolean);
+ target.lostGear=(Array.isArray(target.lostGear)?target.lostGear:[]).map(x=>{
+  if(!x||typeof x!=="object")return null;
+  const item=normalizeSaveItem(x.item);if(!item)return null;
+  const cost=Number(x.cost),lostAt=Number(x.lostAt);
+  return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost:Number.isFinite(cost)&&cost>=0?Math.floor(cost):ceil(item.buy*2),lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
+ }).filter(Boolean);
+ if(!target.shop||typeof target.shop!=="object"||Array.isArray(target.shop))target.shop=newShopState();
+ target.shop.items=(Array.isArray(target.shop.items)?target.shop.items:[]).map(it=>normalizeSaveItem(it)).filter(Boolean).slice(0,3);
+ target.shop.refreshIndex=Math.max(0,Math.min(7,Math.floor(Number(target.shop.refreshIndex)||0)));
+ const resetAt=Number(target.shop.resetAvailableAt);target.shop.resetAvailableAt=Number.isFinite(resetAt)&&resetAt>=0?resetAt:0;
+ if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+ const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,5):[];while(auto.length<5)auto.push(false);target.settings.autoSell=auto.map(Boolean);
+ target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
+ target.settings.dark=typeof target.settings.dark==="boolean"?target.settings.dark:true;
+ target.gm=target.gm===true;
+ if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
+ if(typeof normalizeVipState==="function")normalizeVipState(target);
+ target.saveVersion=SAVE_VERSION;
+ return target;
+}
+function normalizeCurrentSaveState(){
+ state=normalizeSaveState(state);
+ if(typeof ensureSpecializationState==="function")ensureSpecializationState();
+ if(typeof ensureDungeonProgressState==="function")ensureDungeonProgressState();
+ if(typeof ensureVoidMirageState==="function")ensureVoidMirageState();
+ normalizeHP();
+ return state;
+}
+function importSave(ev){
+ const input=ev.target,f=input.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const x=JSON.parse(r.result);if(!isImportableSave(x))throw 0;
+   if(!confirm("匯入存檔會覆蓋目前的遊戲進度。確定要繼續嗎？")){input.value="";return;}
+   state=x;normalizeCurrentSaveState();save(false);location.reload();
+  }catch(e){input.value="";alert("存檔格式不正確。");}
+ };
+ r.readAsText(f);
+}
 function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";inventoryFilter="all";inventoryFromAdventure=false;save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
-load();render();
+load();normalizeCurrentSaveState();save(false);render();
