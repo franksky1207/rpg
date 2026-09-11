@@ -5,22 +5,12 @@
   return state.hp;
  };
 
- // 匯入舊存檔時保留原始版本判斷，避免 normalize 先升版後跳過舊商店初始化規則。
- if(typeof window.normalizeSaveState==="function"){
+ // 匯入與後續正規化一律走集中式 migrateSave；實際 migration 規則只放在 savemigration.js。
+ if(typeof window.normalizeSaveState==="function"&&typeof window.migrateSave==="function"){
   const baseNormalizeSaveState=window.normalizeSaveState;
   window.normalizeSaveState=function(target){
    const sourceVersion=Math.max(1,Math.floor(Number(target?.saveVersion)||1));
-   const sourceShop=target?.shop;
-   const hadInitialized=!!sourceShop&&typeof sourceShop==="object"&&!Array.isArray(sourceShop)&&typeof sourceShop.initialized==="boolean";
-   const normalized=baseNormalizeSaveState(target);
-   if(!normalized.shop||typeof normalized.shop!=="object"||Array.isArray(normalized.shop))normalized.shop=newShopState();
-   if(sourceVersion<4){
-    normalized.shop.items=[];
-    normalized.shop.initialized=false;
-   }else if(!hadInitialized){
-    normalized.shop.initialized=Array.isArray(normalized.shop.items)&&normalized.shop.items.length>0;
-   }
-   return normalized;
+   return window.migrateSave(target,sourceVersion,baseNormalizeSaveState,target);
   };
  }
 
@@ -43,7 +33,8 @@
   beginCombat(count);
  };
 
- // 新版規則下，非戰鬥狀態應維持滿 HP；同時把舊存檔殘留的低 HP 校正掉。
+ // 新版規則下，非戰鬥狀態應維持滿 HP；同時把目前存檔正式提升到最新 schema。
+ if(typeof window.normalizeSaveState==="function")state=window.normalizeSaveState(state);
  restorePlayerHp({save:false});
  save(false);
 })();
