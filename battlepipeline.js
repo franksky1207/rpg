@@ -115,6 +115,8 @@
    }else save();
   }
 
+  currentCombatEncounter=null;
+  if(typeof clearPreviewEncounter==="function")clearPreviewEncounter(selectedMap,selectedEnemy);
   battleBusy=false;
   window.activeMainBattleContext=null;
   save();
