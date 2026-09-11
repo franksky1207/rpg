@@ -1,28 +1,37 @@
 (function(){
- let encounterResolver=null;
-
- function ensureSpecialEncounterModal(){
-  if(document.getElementById("specialEncounterModal"))return;
+ function ensureSpecialEncounterAlert(){
+  if(document.getElementById("specialEncounterAlert"))return;
+  const style=document.createElement("style");
+  style.id="special-encounter-alert-styles";
+  style.textContent=`
+   #specialEncounterAlert{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(3,6,10,.82);opacity:0;pointer-events:none;transition:opacity .16s ease;backdrop-filter:blur(3px)}
+   #specialEncounterAlert.show{opacity:1}
+   .special-alert-card{width:min(620px,92vw);padding:28px 24px;text-align:center;border:1px solid #c99b45;border-radius:16px;background:radial-gradient(circle at 50% 25%,rgba(201,155,69,.20),rgba(17,20,25,.96) 62%);box-shadow:0 0 34px rgba(201,155,69,.34),inset 0 0 26px rgba(201,155,69,.08);transform:scale(.94);animation:specialEncounterPulse .82s ease-in-out both}
+   .special-alert-title{font-size:clamp(30px,6vw,48px);font-weight:900;letter-spacing:.06em;color:#ffd36f;text-shadow:0 0 18px rgba(255,193,67,.42)}
+   .special-alert-sub{margin-top:10px;font-size:clamp(15px,2.8vw,19px);color:#e8dcc0;letter-spacing:.08em}
+   .special-alert-name{margin-top:13px;font-size:clamp(20px,4vw,30px);font-weight:800;color:#fff2c2}
+   @keyframes specialEncounterPulse{0%{transform:scale(.92);filter:brightness(.75)}35%{transform:scale(1.025);filter:brightness(1.18)}70%{transform:scale(.995);filter:brightness(1)}100%{transform:scale(1);filter:brightness(1)}}
+   @media(max-width:760px){#specialEncounterAlert{padding:14px}.special-alert-card{padding:24px 16px}}
+  `;
+  document.head.appendChild(style);
   const el=document.createElement("div");
-  el.className="modal";
-  el.id="specialEncounterModal";
-  el.innerHTML=`<div class="modal-box"><h3>⚠ 未知特殊遭遇</h3><div class="muted">你察覺到一股不同尋常的氣息。要挑戰這場未知遭遇嗎？</div><div class="controls" style="margin-top:14px"><button class="btn primary" onclick="specialEncounterChoose(true)">挑戰</button><button class="btn ok" onclick="specialEncounterChoose(false)">略過</button></div></div>`;
+  el.id="specialEncounterAlert";
+  el.innerHTML=`<div class="special-alert-card"><div class="special-alert-title">⚠ 特殊遭遇！</div><div class="special-alert-sub">偵測到異常敵影</div><div class="special-alert-name" id="specialEncounterAlertName"></div></div>`;
   document.body.appendChild(el);
  }
 
- function askSpecialEncounter(){
-  ensureSpecialEncounterModal();
-  return new Promise(resolve=>{
-   encounterResolver=resolve;
-   document.getElementById("specialEncounterModal")?.classList.add("show");
-  });
+ async function showSpecialEncounterAlert(special){
+  ensureSpecialEncounterAlert();
+  const el=document.getElementById("specialEncounterAlert"),name=document.getElementById("specialEncounterAlertName");
+  if(name)name.textContent=`「${special?.name||"未知特殊怪"}」出現！`;
+  if(!el)return;
+  el.classList.remove("show");
+  void el.offsetWidth;
+  el.classList.add("show");
+  await sleep(850);
+  el.classList.remove("show");
+  await sleep(140);
  }
-
- window.specialEncounterChoose=function(challenge){
-  document.getElementById("specialEncounterModal")?.classList.remove("show");
-  const resolve=encounterResolver;encounterResolver=null;
-  if(resolve)resolve(!!challenge);
- };
 
  function specialBattlePage(enemy,special){
   const s=playerCombatStats(),hpPct=s.hp?state.hp/s.hp*100:0;
@@ -60,19 +69,6 @@
   const heading=interrupted?"原連續戰鬥已提前結束":"主線戰鬥已完成";
   const note=interrupted?`已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣、裝備與副本進度均保留。`:`已完成 ${ctx.completed} / ${ctx.originalCount} 場；主線取得的 EXP、金幣、裝備與副本進度均已保留。`;
   return `<div class="notice" style="margin-bottom:10px"><b>${heading}</b><div class="muted" style="margin-top:5px">${note}</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">主線 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">主線金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
- }
-
- function showSkipSettlement(ctx){
-  if(!ctx?.completed){adventureScreen="prepare";render();return;}
-  const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-  if(!title||!detail||!modal)return;
-  title.textContent="特殊遭遇已略過";
-  const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
-  const interrupted=Number(ctx.remaining)>0;
-  const note=interrupted?"未知特殊遭遇已略過，剩餘戰鬥取消；以下獎勵與副本進度已保留。":"未知特殊遭遇已略過；主線戰鬥已完成，以下獎勵與副本進度均已保留。";
-  detail.innerHTML=`<div class="notice"><b>已完成 ${ctx.completed} / ${ctx.originalCount} 場</b><div class="muted" style="margin-top:5px">${note}</div></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">金幣<b>+${ctx.totalGold||0}</b></div></div>${dropListHtml(ctx.items||[])}${dungeon}`;
-  const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
-  modal.classList.add("show");
  }
 
  function showSpecialResult(ctx,special,result){
@@ -159,16 +155,15 @@
   if(!s.hp||state.hp/s.hp<.30)return false;
   const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
   if(Math.random()>=encounterRate)return false;
-  const challenge=await askSpecialEncounter();
-  if(!challenge){showSkipSettlement(ctx);return true;}
   const special=rollSpecialMonster();
   if(!special)return false;
   state.hp=playerCombatStats().hp;
   save(false);
+  await showSpecialEncounterAlert(special);
   await fightFormalSpecial(ctx,special);
   return true;
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
- ensureSpecialEncounterModal();
+ ensureSpecialEncounterAlert();
 })();
