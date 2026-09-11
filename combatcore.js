@@ -40,7 +40,8 @@
    const penetration=spec.penetration>0&&Math.random()*100<spec.penetration;
    const effectiveDef=numberOr(e.def,0)*(penetration?.75:1);
    let damage=calcDamage(numberOr(p.atk,0),effectiveDef);
-   if(initiative&&spec.initiative>0)damage=ceil(damage*(1+spec.initiative*.02));
+   const initiativeApplied=initiative&&spec.initiative>0;
+   if(initiativeApplied)damage=ceil(damage*(1+spec.initiative*.02));
    const crit=Math.random()*100<numberOr(p.crit,0);
    if(crit)damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
    damage=Math.max(1,ceil(damage*scale));
@@ -48,7 +49,7 @@
    const before=Math.max(0,ehp);
    const actualDamage=Math.min(before,damage);
    ehp-=damage;
-   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,penetration,initiative:!!initiative});
+   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,penetration,initiative:initiativeApplied});
    if(logs)logs.push(crit?`你攻擊${name}，暴擊造成 ${damage} 點傷害。`:`你攻擊${name}，造成 ${damage} 點傷害。`);
 
    if(spec.drain>0&&actualDamage>0&&Math.random()*100<spec.drain){
