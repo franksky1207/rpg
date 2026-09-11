@@ -5,8 +5,6 @@
   penetration:{text:"穿透！",className:"penetration"},
   counter:{text:"反擊！",className:"counter"},
   drain:{text:"汲取！",className:"drain"},
-  crit:{text:"暴擊！",className:"crit"},
-  dodge:{text:"閃避！",className:"dodge"},
   berserk:{text:"狂暴！",className:"berserk"},
   heal:{text:"",className:"heal"}
  };
@@ -29,7 +27,8 @@
   style.textContent=`
    .combat-fx-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:6}
    .combat-fx-pop{position:absolute;top:18%;transform:translate(-50%,0);font-size:22px;font-weight:900;letter-spacing:.05em;white-space:nowrap;opacity:0;pointer-events:none;text-shadow:0 2px 7px #000,0 0 12px rgba(0,0,0,.8);animation:combatFxPop .72s ease-out forwards;z-index:7}
-   .combat-fx-pop.initiative{color:#FFD54A}.combat-fx-pop.combo{color:#FF8A3D}.combat-fx-pop.penetration{color:#B56CFF}.combat-fx-pop.counter{color:#FF5252}.combat-fx-pop.drain{color:#4CD964}.combat-fx-pop.crit{color:#4FD6FF}.combat-fx-pop.dodge{color:#B8F4FF}.combat-fx-pop.berserk{color:#FF7043}.combat-fx-pop.heal{color:#7CFF8E;font-size:18px}
+   .combat-fx-pop.initiative{color:#FFD54A}.combat-fx-pop.combo{color:#FF8A3D}.combat-fx-pop.penetration{color:#B56CFF}.combat-fx-pop.counter{color:#FF5252}.combat-fx-pop.drain{color:#4CD964}.combat-fx-pop.berserk{color:#FF7043}.combat-fx-pop.heal{color:#7CFF8E;font-size:18px}
+   .combat-damage.dodge-text{color:#B8F4FF}
    @keyframes combatFxPop{0%{opacity:0;transform:translate(-50%,10px) scale(.82)}18%{opacity:1;transform:translate(-50%,-2px) scale(1.08)}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-58px) scale(1)}}
    .combat-log-panel{margin:10px auto 0;width:min(760px,100%);border:1px solid #393f49;border-radius:10px;background:#10141a;overflow:hidden;text-align:left}
    .combat-log-panel>summary{cursor:pointer;list-style:none;padding:9px 12px;color:#bdb7aa;font-size:13px;font-weight:700;background:#151a21;user-select:none}
@@ -113,13 +112,9 @@
   }
   if(!match)return;
   let delay=emitPrelude(pre,target);
-  if(match.type==="dodge"){
-   spawnFx(target,"dodge",null,delay);
-   return;
-  }
+  if(match.type==="dodge")return;
   if(match.initiative){spawnFx(target,"initiative",null,delay);delay+=85;}
   if(match.penetration){spawnFx(target,"penetration",null,delay);delay+=85;}
-  if(match.crit){spawnFx(target,"crit",null,delay);delay+=85;}
   const next=p.events[p.index];
   if(next?.type==="drain"){
    p.index++;
@@ -139,8 +134,13 @@
   const el=event.target;
   if(!(el instanceof Element)||!el.classList.contains("combat-damage"))return;
   if(event.animationName!=="damagePop")return;
+  el.classList.toggle("dodge-text",String(el.textContent||"").includes("閃避"));
   const target=(el.id==="combatPlayerDamage"||el.id==="voidPlayerDamage")?"player":(el.id==="combatEnemyDamage"||el.id==="voidEnemyDamage")?"enemy":null;
   if(target)consumeForPulse(target,el.textContent||"");
+ },true);
+ document.addEventListener("animationend",event=>{
+  const el=event.target;
+  if(el instanceof Element&&el.classList.contains("combat-damage")&&event.animationName==="damagePop")el.classList.remove("dodge-text");
  },true);
 
  const modal=document.getElementById("battleResultModal");
