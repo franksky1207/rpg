@@ -52,15 +52,15 @@
    clearPreviewEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=null;
 
+   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
+   else state.hp=playerCombatStats().hp;
+
    if(!r.win){
-    if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
-    else state.hp=playerCombatStats().hp;
     adventureScreen="prepare";
     save();
     break;
    }
 
-   // 先保留本場真實戰後 HP 給特殊遭遇舊條件使用；未觸發特殊遭遇時，再於本場結束點回滿 HP。
    save(false);
    let specialOutcome=false;
    if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r);
@@ -78,9 +78,6 @@
     }
     continue;
    }
-
-   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
-   else state.hp=playerCombatStats().hp;
 
    if(ctx.remaining>0){
     save(false);
