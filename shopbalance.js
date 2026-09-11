@@ -25,3 +25,18 @@ makeShopItems=function(mapIdx=currentShopMap()){
  }
  return arr;
 };
+
+// 商店刷新價格達 12,800 後，冷卻倒數在商店頁即時更新；時間到自動解鎖重置按鈕。
+(function installShopResetCooldownTicker(){
+ function sync(){
+  if(typeof view==="undefined"||view!=="shop")return;
+  if(!state?.shop||(state.shop.refreshIndex||0)<7)return;
+  const button=Array.from(document.querySelectorAll("button")).find(el=>el.getAttribute("onclick")==="manualResetShopPrice()");
+  if(!button)return;
+  const ready=canResetShopPrice();
+  button.disabled=!ready;
+  button.textContent=ready?"重置刷新價格":`重置刷新價格（${shopCooldownText()}）`;
+ }
+ setInterval(sync,1000);
+ setTimeout(sync,0);
+})();
