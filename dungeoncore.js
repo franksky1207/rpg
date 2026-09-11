@@ -13,15 +13,24 @@
   state.hp=playerCombatStats().hp;
  }
 
+ function runSnapshot(run){return run?{...run}:null;}
+ function persistActiveRun(dungeon,run){
+  if(!dungeon)return;
+  dungeon.activeRun=run?runSnapshot(run):null;
+ }
+
  window.canStartDungeonRun=function(cost=1){
   const dungeon=dungeonState();
   const need=Math.max(1,Math.floor(Number(cost)||1));
-  return !!dungeon&&dungeon.attempts>=need;
+  return !activeDungeonRun&&!!dungeon&&dungeon.attempts>=need;
  };
 
  window.beginDungeonRun=function(options={}){
   const dungeon=dungeonState();
   const cost=Math.max(1,Math.floor(Number(options.cost)||1));
+  if(activeDungeonRun){
+   return {ok:false,reason:"run_already_active",cost,attempts:dungeon?.attempts||0,run:runSnapshot(activeDungeonRun)};
+  }
   if(!dungeon||dungeon.attempts<cost){
    return {ok:false,reason:"insufficient_attempts",cost,attempts:dungeon?.attempts||0};
   }
@@ -34,11 +43,12 @@
    cost,
    startedAt:Date.now()
   };
+  persistActiveRun(dungeon,activeDungeonRun);
   save(false);
 
   return {
    ok:true,
-   run:{...activeDungeonRun},
+   run:runSnapshot(activeDungeonRun),
    attempts:dungeon.attempts,
    points:currentVipPoints(),
    hp:state.hp
@@ -46,16 +56,17 @@
  };
 
  window.getActiveDungeonRun=function(){
-  return activeDungeonRun?{...activeDungeonRun}:null;
+  return runSnapshot(activeDungeonRun);
  };
 
  window.finishDungeonRun=function(options={}){
   const heal=options.heal!==false;
   if(heal)fullHeal();
-  const ended=activeDungeonRun?{...activeDungeonRun}:null;
+  const ended=runSnapshot(activeDungeonRun);
   activeDungeonRun=null;
-  save(false);
   const dungeon=dungeonState();
+  persistActiveRun(dungeon,null);
+  save(false);
   return {ok:true,run:ended,hp:state.hp,attempts:dungeon?.attempts||0,points:currentVipPoints()};
  };
 
