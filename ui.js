@@ -77,7 +77,7 @@ function homePage(){
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
    <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備與出售道具</span></button>
    <button class="menu-card" onclick="go('shop')"><b>商店</b><span>購買裝備與贖回遺失裝備</span></button>
-   <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法、系統、戰鬥與各項規則</span></button>
+   <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法與規則</span></button>
    <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
   </div>
  </section>`;
