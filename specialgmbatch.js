@@ -56,9 +56,10 @@ async function gmStartSpecialBattle(){
 
  for(let i=0;i<GM_TEST_RUNS;i++){
   gmResetSandbox(sandbox);state.vipLevel=gmSpecialTestVip();state.hp=playerMax;
-  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false,useTestSpecializations:true});state.hp=r.hp;
+  const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level),r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false,useTestSpecializations:true}),combatEndHp=Math.max(0,Number(r.hp)||0);
+  state.hp=combatEndHp;
   if(r.win){
-   summary.wins++;summary.winHpTotal+=Math.max(0,state.hp);
+   summary.wins++;summary.winHpTotal+=combatEndHp;
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level)),baseGold=goldBase(level);
    grant(getSpecialRewardContext(special,true),baseXp,baseGold);
    if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special,true),baseXp,baseGold);}
