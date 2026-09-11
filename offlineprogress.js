@@ -220,6 +220,7 @@
   if(!pending)return;
   const enemy=farmEnemyObject(pending);
   if(!enemy){const o=ensureOfflineState();o.pendingSettlement=null;o.lastSettledAt=now();if(baseSave)baseSave(false);return;}
+  const rollbackSnapshot=JSON.stringify(state);
   offlineSettlementBusy=true;
   setCalculatingVisible(true);
   await yieldThread();
@@ -237,6 +238,11 @@
   }catch(err){
    console.error("Offline settlement failed",err);
    setCalculatingVisible(false);
+   try{
+    state=JSON.parse(rollbackSnapshot);
+    if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
+    if(typeof render==="function")render();
+   }catch(rollbackError){console.error("Offline rollback failed",rollbackError);location.reload();return;}
    alert("離線收益整理發生錯誤；本次區段已保留，重新整理後會再次嘗試結算。");
   }finally{offlineSettlementBusy=false;}
  }
