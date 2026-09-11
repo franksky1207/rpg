@@ -10,7 +10,9 @@
  function currentVipPoints(){return Math.max(0,Math.floor(Number(state.vipPoints)||0));}
 
  function fullHeal(){
+  if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
   state.hp=playerCombatStats().hp;
+  return state.hp;
  }
 
  function runSnapshot(run){return run?{...run}:null;}
@@ -36,7 +38,6 @@
   }
 
   dungeon.attempts-=cost;
-  fullHeal();
   activeDungeonRun={
    id:Date.now().toString(36)+Math.random().toString(36).slice(2),
    mode:String(options.mode||"dungeon"),
@@ -73,13 +74,14 @@
  window.dungeonFightCore=function(enemy){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],events:[],e:enemy||null,combatEndHp:state.hp,turns:0};
   const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
-  state.hp=combat.hp;
+  const combatEndHp=combat.hp;
+  state.hp=combatEndHp;
   return {
    win:combat.win,
    logs:combat.logs,
    events:combat.events||[],
    e:enemy,
-   combatEndHp:state.hp,
+   combatEndHp,
    turns:combat.turns
   };
  };
