@@ -1,6 +1,5 @@
 (function(){
  const OFFLINE_MAX_MS=12*60*60*1000;
- const OFFLINE_MIN_MS=60*1000;
  const OFFLINE_EXP_RATE=.70;
  const OFFLINE_GOLD_RATE=.70;
  const DEFAULT_BATTLE_MS=1800;
@@ -45,7 +44,9 @@
   const h=Math.floor(total/60),m=total%60;
   if(h>0&&m>0)return `${h} 小時 ${m} 分`;
   if(h>0)return `${h} 小時`;
-  return `${Math.max(1,m)} 分`;
+  if(total>0)return `${total} 分`;
+  const seconds=Math.max(1,Math.floor(ms/1000));
+  return `${seconds} 秒`;
  }
  function farmEnemyObject(target){
   try{
@@ -130,7 +131,6 @@
   const elapsedRaw=Math.max(0,t-o.lastSettledAt);
   const elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
   o.lastSettledAt=t;
-  if(elapsedUsed<OFFLINE_MIN_MS){save(false);return;}
   const target=resolveFarmTarget();
   if(!target){save(false);return;}
   const enemy=farmEnemyObject(target);
