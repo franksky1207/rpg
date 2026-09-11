@@ -62,33 +62,29 @@
   await sleep(250);
  }
 
- function priorRewardsHtml(ctx){
+ function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
   const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
-  const interrupted=Number(ctx.remaining)>0;
-  const heading=interrupted?"原連續戰鬥已提前結束":"主線戰鬥已完成";
-  const note=interrupted?`已完成 ${ctx.completed} / ${ctx.originalCount} 場；先前取得的 EXP、金幣、裝備與副本進度均保留。`:`已完成 ${ctx.completed} / ${ctx.originalCount} 場；主線取得的 EXP、金幣、裝備與副本進度均已保留。`;
-  return `<div class="notice" style="margin-bottom:10px"><b>${heading}</b><div class="muted" style="margin-top:5px">${note}</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">主線 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">主線金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
+  return `<div class="notice" style="margin-bottom:10px"><b>主線戰鬥</b><div class="muted" style="margin-top:5px">已完成 ${ctx.completed} / ${ctx.originalCount} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">主線 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">主線金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
  }
 
  function showSpecialResult(ctx,special,result){
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(!title||!detail||!modal)return;
   title.textContent=result.win?"特殊遭遇完成":"特殊遭遇失敗";
-  let body=priorRewardsHtml(ctx);
-  if(result.win){
-   const rewardLabel=result.rewardContext?.randomReward?.label;
-   body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">神秘旅人獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:10px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}${settlementDropListHtml(result.drops,{title:"特殊獎勵",emptyText:"本次沒有裝備掉落。",showCount:false,marginTop:12})}`;
-   if(result.vip10Triggered){
-    const bonusLabel=result.bonusRewardContext?.randomReward?.label;
-    body+=`<div class="vip-event">【VIP10】特殊獎勵再次發動！${bonusLabel?`<div class="muted" style="margin-top:4px">第二次獎勵：${bonusLabel}</div>`:""}</div>`;
-   }
+  if(typeof mainBattleSettlementHtml==="function"&&typeof specialEncounterSettlementHtml==="function"){
+   detail.innerHTML=mainBattleSettlementHtml(ctx,{interrupted:!result.win})+specialEncounterSettlementHtml(ctx);
   }else{
-   const lost=result.penalty?.dropped;
-   body+=`<div class="notice"><b>✦ ${special.name} 挑戰失敗</b></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
-   if(result.penalty?.protectedByVip20)body+=`<div class="vip-event">【VIP20】裝備受到保護，本次死亡沒有遺失裝備。</div>`;
+   let body=fallbackPriorRewardsHtml(ctx);
+   if(result.win){
+    const rewardLabel=result.rewardContext?.randomReward?.label;
+    body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>`;
+   }else{
+    const lost=result.penalty?.dropped;
+    body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+   }
+   detail.innerHTML=body;
   }
-  detail.innerHTML=body;
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
   modal.classList.add("show");
  }
