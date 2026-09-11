@@ -15,6 +15,17 @@
   const q=Math.floor(Number(item.q));
   return q>=0&&q<=4&&state?.settings?.autoSell?.[q]===true;
  };
+ window.handleUnequippedItem=function(item,options={}){
+  if(!item)return {kept:false,sold:0,item:null};
+  normalizeLockFlag(item);
+  if(shouldAutoSellItem(item)){
+   const sold=specializationSellValue(item,options.useTestSpecializations===true);
+   state.gold+=sold;
+   return {kept:false,sold,item};
+  }
+  state.inventory.push(item);
+  return {kept:true,sold:0,item};
+ };
 
  if(typeof window.makeItem==="function"){
   const baseMakeItem=window.makeItem;
@@ -72,6 +83,43 @@
   window.compareHtml=function(it){
    const old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=round1(old?newScore-oldScore:newScore),locked=it.locked===true;
    return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn ${locked?"ok":""}" onclick="toggleSelectedItemLock()">${locked?"🔒 已鎖定｜點擊解鎖":"🔓 鎖定裝備"}</button><button class="btn" onclick="sellSelected()" ${locked?"disabled":""}>出售</button></div>${locked?`<div class="muted" style="margin-top:7px">此裝備已鎖定，不會被手動出售、一鍵出售或自動出售。</div>`:""}</div>`;
+  };
+ }
+
+ if(typeof window.equipSelected==="function"){
+  window.equipSelected=function(){
+   const i=state.inventory.findIndex(x=>x.id===selectedItem);
+   if(i<0)return;
+   const item=state.inventory.splice(i,1)[0],old=state.equipment[item.type]||null;
+   state.equipment[item.type]=item;
+   if(old)handleUnequippedItem(old);
+   normalizeHP();
+   selectedItem=null;
+   save();
+   render();
+  };
+ }
+
+ if(typeof window.equipBestAll==="function"){
+  window.equipBestAll=function(){
+   let changed=0,soldCount=0,soldGold=0;
+   EQUIPMENT_TYPES.forEach(type=>{
+    const current=state.equipment[type];let best=current,bestScore=equipmentScore(current);
+    state.inventory.filter(it=>it.type===type).forEach(it=>{const sc=equipmentScore(it);if(sc>bestScore){best=it;bestScore=sc}});
+    if(best&&best!==current){
+     const idx=state.inventory.findIndex(it=>it.id===best.id);
+     if(idx>=0){
+      state.inventory.splice(idx,1);
+      state.equipment[type]=best;
+      if(current){const handled=handleUnequippedItem(current);if(handled.sold){soldCount++;soldGold+=handled.sold;}}
+      changed++;
+     }
+    }
+   });
+   normalizeHP();selectedItem=null;save();render();
+   if(!changed)return alert("目前裝備已是最佳。");
+   const soldText=soldCount?`\n換下裝備自動出售 ${soldCount} 件，獲得 ${soldGold.toLocaleString()} 金幣。`:"";
+   alert(`已更換 ${changed} 件較強裝備。${soldText}`);
   };
  }
 
