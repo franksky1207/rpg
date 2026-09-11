@@ -1,4 +1,5 @@
 (function(){
+ const BACKGROUND_CREDIT_RATE=.96;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
@@ -37,9 +38,9 @@
   if(flow.sleeper){
    const used=Math.min(elapsed,Math.max(0,flow.sleeper.remaining));
    flow.sleeper.remaining=Math.max(0,flow.sleeper.remaining-used);
-   flow.credit+=Math.max(0,elapsed-used);
+   flow.credit+=Math.max(0,elapsed-used)*BACKGROUND_CREDIT_RATE;
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
-  }else flow.credit+=elapsed;
+  }else flow.credit+=elapsed*BACKGROUND_CREDIT_RATE;
  }
  function syncBackgroundState(){if(isBackground())enterBackground();else leaveBackground();}
 
@@ -87,6 +88,16 @@
  window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncBackgroundState();});
  window.addEventListener("pagehide",()=>{pageHidden=true;syncBackgroundState();});
  window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncBackgroundState();});
+
+ const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
+ if(baseBeginCombat){
+  const wrappedBeginCombat=function(count,...args){
+   if(Number(count)>1)window.backgroundProgressStart("main");
+   return baseBeginCombat.call(this,count,...args);
+  };
+  window.beginCombat=wrappedBeginCombat;
+  try{beginCombat=wrappedBeginCombat;}catch(e){}
+ }
 
  const baseRunBattles=typeof window.runBattles==="function"?window.runBattles:null;
  if(baseRunBattles){
