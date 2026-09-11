@@ -89,7 +89,7 @@
    <div class="combat-arena">
     <div class="combatant player dungeon-bounty-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%"></span></div></div></div>
     <div class="combat-vs dungeon-bounty-vs">VS</div>
-    <div class="combatant enemy dungeon-bounty-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="${tierClass(bountyState.tier.id)} dungeon-bounty-tier">${bountyState.tier.name}</div><h2 id="combatEnemyName">${e.name}</h2><div class="dungeon-bounty-traits">特性：${traitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
+    <div class="combatant enemy dungeon-bounty-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name}</h2><div class="dungeon-bounty-traits">特性：${traitNames(e)}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
    </div>
    <div class="combat-message dungeon-bounty-message" id="combatMessage">準備戰鬥</div>
   </section>`;
