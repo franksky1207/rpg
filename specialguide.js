@@ -36,7 +36,7 @@
 
  function sgGuideHtml(){
   const rate=Math.round((Number(SPECIAL_ENCOUNTER_RATE)||0)*1000)/10;
-  return `<details class="card" style="margin-top:14px"><summary style="cursor:pointer"><b>✦ 特殊遭遇說明</b></summary><div class="notice" style="margin-top:12px"><b>特殊遭遇規則</b><div class="muted" style="margin-top:6px">一般怪與菁英戰鬥後，每場約有 ${rate}% 機率觸發特殊遭遇；Boss 不會觸發。HP 低於 30% 時不會出現；若目前怪物等級比玩家低 10 級以上，也不會觸發。特殊遭遇會先回滿 HP 並自動進入戰鬥；勝利後繼續原本剩餘連戰，失敗則立即結束本次連戰。</div></div><div style="margin-top:12px"><b>特殊怪</b>${sgMonsterListHtml()}</div></details>`;
+  return `<details class="card" style="margin-top:14px"><summary style="cursor:pointer"><b>✦ 特殊遭遇說明</b></summary><div class="notice" style="margin-top:12px"><b>特殊遭遇規則</b><div class="muted" style="margin-top:6px">一般怪與菁英戰鬥後，每場約有 ${rate}% 機率觸發特殊遭遇；Boss 不會觸發。若目前怪物等級比玩家低 10 級以上，也不會觸發。主線每場戰鬥結束後會回滿 HP；觸發特殊遭遇時會自動進入戰鬥。特殊戰鬥結束後也會回滿 HP；勝利後繼續原本剩餘連戰，失敗則立即結束本次連戰。</div></div><div style="margin-top:12px"><b>特殊怪</b>${sgMonsterListHtml()}</div></details>`;
  }
 
  const sgBaseAdventurePreparePage=adventurePreparePage;
