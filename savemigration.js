@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=8;
+ const SAVE_SCHEMA_VERSION=Math.max(1,Math.floor(Number(SAVE_VERSION)||8));
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
