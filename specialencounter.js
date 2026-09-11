@@ -103,7 +103,6 @@
  async function fightFormalSpecial(ctx,special){
   const enemyScalingSnapshot=equippedStats();
   const playerSnapshot=playerCombatStats(enemyScalingSnapshot);
-  state.hp=playerSnapshot.hp;
   const level=clampGameLevel(state.level);
   const map=MAPS[selectedMap],dropLevel=Math.max(map.min,Math.min(map.max,level));
   const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level);
@@ -138,6 +137,8 @@
   }else{
    result.penalty=applyDeathPenalty([]);
   }
+  if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
+  else state.hp=playerCombatStats().hp;
   save();
   return result;
  }
@@ -147,14 +148,10 @@
   const baseEnemy=mainResult.e||monsterObj(selectedMap,selectedEnemy);
   if(baseEnemy?.kind==="boss")return false;
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
-  const s=playerCombatStats();
-  if(!s.hp||state.hp/s.hp<.30)return false;
   const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
   if(Math.random()>=encounterRate)return false;
   const special=rollSpecialMonster();
   if(!special)return false;
-  state.hp=playerCombatStats().hp;
-  save(false);
   await showSpecialEncounterAlert(special);
   const result=await fightFormalSpecial(ctx,special);
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
