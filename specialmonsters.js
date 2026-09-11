@@ -226,8 +226,10 @@ function applySpecialEffectsToContext(ctx,effects){
  return ctx;
 }
 
-function getSpecialRewardContext(special){
+function getSpecialRewardContext(special,useTestSpecializations=false){
  let ctx=createSpecialRewardContext();
  if(special)applySpecialEffectsToContext(ctx,special.effects||[]);
+ ctx.expMultiplier=(Number(ctx.expMultiplier)||1)*specializationMultiplier("training",useTestSpecializations);
+ ctx.goldMultiplier=(Number(ctx.goldMultiplier)||1)*specializationMultiplier("scavenge",useTestSpecializations);
  return ctx;
 }
