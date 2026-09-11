@@ -107,23 +107,22 @@
 
  window.startArenaStageFight=function(){
   if(arenaState.phase!=="ready"||!arenaState.enemy||battleBusy)return;
-  if(!arenaState.runStarted){
-   const previewTraits=Array.isArray(arenaState.enemy.traits)?arenaState.enemy.traits.slice():[];
-   const enemyScaling=createSpecialPlayerSnapshot(equippedStats());
-   const vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0));
-   const player=createSpecialPlayerSnapshot(playerCombatStats(enemyScaling,vipLevel));
-   const started=beginDungeonRun({mode:"arena",cost:1});
-   if(!started.ok){view="dungeon";resetArenaState();render();return;}
-   arenaState.enemyScalingSnapshot=enemyScaling;
-   arenaState.vipLevelSnapshot=vipLevel;
-   arenaState.playerSnapshot=player;
-   arenaState.runStarted=true;
-   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,enemyScaling,state.level,{traits:previewTraits});
-   state.hp=player.hp;
-  }
+  const previewTraits=Array.isArray(arenaState.enemy.traits)?arenaState.enemy.traits.slice():[];
+  const enemyScaling=createSpecialPlayerSnapshot(equippedStats());
+  const vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0));
+  const player=createSpecialPlayerSnapshot(playerCombatStats(enemyScaling,vipLevel));
+  const started=beginDungeonRun({mode:"arena",cost:1});
+  if(!started.ok){view="dungeon";resetArenaState();render();return;}
+  arenaState.enemyScalingSnapshot=enemyScaling;
+  arenaState.vipLevelSnapshot=vipLevel;
+  arenaState.playerSnapshot=player;
+  arenaState.runStarted=true;
+  arenaState.stage=0;
+  arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,enemyScaling,state.level,{traits:previewTraits});
+  state.hp=player.hp;
   arenaState.phase="combat";
   arenaState.startHp=state.hp;
-  arenaState.playerMaxHp=arenaPlayerStats().hp;
+  arenaState.playerMaxHp=player.hp;
   render();
   setTimeout(runArenaFight,80);
  };
@@ -161,25 +160,37 @@
  async function runArenaFight(){
   if(battleBusy)return;
   battleBusy=true;
-  const stageIndex=arenaState.stage,enemy=arenaState.enemy,startHp=arenaState.startHp,playerMax=arenaState.playerMaxHp;
-  const result=arenaFightCore(enemy);
-  await animateArena(result,startHp,playerMax);
-  let stagePoints=0;
-  if(result.win)stagePoints=awardStagePoints(stageIndex);
-  arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,stagePoints,enemy:{...enemy}});
+  try{
+   while(arenaState.phase==="combat"&&arenaState.enemy){
+    const stageIndex=arenaState.stage,enemy=arenaState.enemy,startHp=state.hp,playerMax=arenaPlayerStats().hp;
+    arenaState.startHp=startHp;
+    arenaState.playerMaxHp=playerMax;
+    const result=arenaFightCore(enemy);
+    await animateArena(result,startHp,playerMax);
+    let stagePoints=0;
+    if(result.win)stagePoints=awardStagePoints(stageIndex);
+    arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,stagePoints,enemy:{...enemy}});
 
-  if(result.win&&stageIndex<2){
-   arenaState.stage=stageIndex+1;
-   arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage,arenaEnemyScalingStats(),state.level);
-   arenaState.result={type:"stage_win",stage:stageIndex,stagePoints};
-   arenaState.phase="ready";
-   save(false);
-  }else{
-   arenaState.result={type:result.win?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,stagePoints};
-   arenaState.phase="result";
-   finishDungeonRun();
+    if(!result.win||stageIndex>=2){
+     arenaState.result={type:result.win?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,stagePoints};
+     arenaState.phase="result";
+     finishDungeonRun();
+     render();
+     break;
+    }
+
+    save(false);
+    arenaState.stage=stageIndex+1;
+    arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,arenaState.stage,arenaEnemyScalingStats(),state.level);
+    arenaState.result=null;
+    arenaState.startHp=state.hp;
+    arenaState.playerMaxHp=playerMax;
+    render();
+    await sleep(450);
+   }
+  }finally{
+   battleBusy=false;
   }
-  battleBusy=false;render();
  }
 
  function selectionHtml(){
@@ -191,10 +202,8 @@
   return `<div class="arena-progress-strip">${[0,1,2].map(i=>`<div class="arena-progress-step ${i<arenaState.stage?"done":i===arenaState.stage?"current":""}"><span>${i+1}</span>${ARENA_STAGE_NAMES[i]}</div>`).join("")}</div>`;
  }
  function readyHtml(){
-  const s=arenaPlayerStats(),stage=arenaState.stage,d=arenaState.difficulty;
-  const previous=arenaState.history.length?`<div class="arena-carry">上一戰通過，HP 保留：${state.hp} / ${s.hp}</div>`:"";
-  const currentReward=d?.stagePoints?.[stage]||0;
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">${ARENA_STAGE_NAMES[stage]}</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div>${previous}<div class="arena-reward-line">本戰勝利：+${currentReward} VIP 積分</div><div class="arena-earned">本次已取得：${arenaState.gainedPoints} VIP 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始${ARENA_STAGE_NAMES[stage]}</button></div></section></div>`;
+  const s=arenaPlayerStats(),d=arenaState.difficulty;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">三戰挑戰</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">第一戰特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div><div class="arena-carry">開始後將自動連續進行三戰，場間不回血。</div><div class="arena-earned">全通可獲得：${d?.totalPoints||0} VIP 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始三戰</button></div></section></div>`;
  }
  function combatHtml(){
   const e=arenaState.enemy,s=arenaPlayerStats(),d=arenaState.difficulty,stage=arenaState.stage;
