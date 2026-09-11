@@ -7,6 +7,12 @@
    #battleResultModal .modal-box{max-height:calc(100dvh - 24px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
    #battleResultModal #battleResultDetail{min-height:0!important;overflow:auto!important;overscroll-behavior:contain;padding-right:2px}
    #battleResultModal>.modal-box>.controls{flex:0 0 auto!important;margin-top:10px!important}
+   .settlement-section{margin-top:12px;padding:12px;border:1px solid #343a43;border-radius:11px;background:#10151b}
+   .settlement-section:first-child{margin-top:0}
+   .settlement-section-title{font-size:17px;font-weight:800;color:#f0d494;margin-bottom:9px}
+   .settlement-special-entry{margin-top:10px;padding-top:10px;border-top:1px solid #2c323a}
+   .settlement-special-entry:first-of-type{margin-top:0;padding-top:0;border-top:0}
+   .settlement-special-name{font-weight:800;color:#ffe2a0}
    .settlement-drop-wrap{margin-top:10px}
    .settlement-drop-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
    .settlement-drop-scroll{height:210px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #323740;border-radius:10px;background:#0f1319;padding:7px;scrollbar-gutter:stable}
@@ -25,6 +31,7 @@
    @media(max-width:760px){
     #battleResultModal{padding:10px!important}
     #battleResultModal .modal-box{max-height:calc(100dvh - 20px)!important;padding:14px!important}
+    .settlement-section{padding:10px}
     .settlement-drop-scroll{height:190px;padding:6px}
     .settlement-drop-row{padding:7px 8px}
     #gameIntroModal{padding:12px!important}
@@ -109,16 +116,38 @@
   }).join("")}</div></div>`;
  };
 
- function preservedMainRewardsHtml(ctx){
+ function mainBattleSectionHtml(ctx,options={}){
   const wins=Math.max(0,Math.floor(Number(ctx?.wins)||0));
-  if(wins<=0)return "";
   const total=Math.max(wins,Math.floor(Number(ctx?.originalCount)||wins));
   const progress=round2(ctx?.totalDungeonProgress);
   const attempts=Math.max(0,Math.floor(Number(ctx?.gainedDungeonAttempts)||0));
   const drops=normalizeItems(ctx?.items);
+  const interrupted=options.interrupted===true;
+  const note=interrupted?`已完成 ${wins} / ${total} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。`:`勝利 ${wins} / ${total} 場`;
   const dungeon=progress>0||attempts>0?`<div class="notice" style="margin-top:10px">副本進度 +${progress}${attempts>0?`　｜　可挑戰次數 +${attempts}`:""}</div>`:"";
-  return `<div class="notice" style="margin-bottom:10px"><b>失敗前已勝利 ${wins} / ${total} 場</b><div class="muted" style="margin-top:5px">前段戰鬥已取得的 EXP、金幣、裝備與副本進度均已保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">前段 EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">前段金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"前段裝備",emptyText:"",showCount:true,marginTop:10}):""}${dungeon}`;
+  return `<div class="settlement-section"><div class="settlement-section-title">主線戰鬥</div><div class="notice"><b>${note}</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"主線裝備",emptyText:"",showCount:true,marginTop:10}):`<div class="muted" style="margin-top:10px">本次沒有主線裝備掉落。</div>`}${dungeon}</div>`;
  }
+ window.mainBattleSettlementHtml=mainBattleSectionHtml;
+
+ function specialEntryHtml(entry,index,total){
+  const special=entry?.special||{},result=entry?.result||{},name=special.name||"未知特殊怪";
+  const prefix=total>1?`特殊遭遇 ${index+1}｜`:"";
+  if(result.win){
+   const rewardLabel=result.rewardContext?.randomReward?.label;
+   const bonusLabel=result.bonusRewardContext?.randomReward?.label;
+   return `<div class="settlement-special-entry"><div class="settlement-special-name">${prefix}✦ ${name} 擊破</div>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}<div class="stats" style="margin-top:9px"><div class="stat">特殊 EXP<b>+${Number(result.xp)||0}</b></div><div class="stat">特殊金幣<b>+${Number(result.gold)||0}</b></div>${result.convertedGold?`<div class="stat">滿等 EXP 轉金幣<b>+${result.convertedGold}</b></div>`:""}</div>${result.shopDown?`<div class="notice" style="margin-top:9px">商店刷新價格降低 ${result.shopDown} 級。</div>`:""}${settlementDropListHtml(result.drops,{title:"特殊裝備",emptyText:"本次沒有特殊裝備掉落。",showCount:true,marginTop:10})}${result.vip10Triggered?`<div class="vip-event">【VIP10】特殊獎勵再次發動！${bonusLabel?`<div class="muted" style="margin-top:4px">第二次獎勵：${bonusLabel}</div>`:""}</div>`:""}</div>`;
+  }
+  const lost=result.penalty?.dropped;
+  return `<div class="settlement-special-entry"><div class="settlement-special-name">${prefix}✦ ${name} 挑戰失敗</div><div class="notice" style="margin-top:9px">本次連續戰鬥立即結束。</div><div class="item" style="margin-top:9px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:9px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(lost,true):""}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:9px">本次沒有遺失裝備。</div>`}${result.penalty?.protectedByVip20?`<div class="vip-event">【VIP20】裝備受到保護，本次死亡沒有遺失裝備。</div>`:""}</div>`;
+ }
+ function specialEncounterSectionHtml(ctx){
+  const entries=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters.filter(x=>x?.result):[];
+  if(!entries.length)return "";
+  return `<div class="settlement-section"><div class="settlement-section-title">特殊遭遇</div>${entries.map((entry,index)=>specialEntryHtml(entry,index,entries.length)).join("")}</div>`;
+ }
+ window.specialEncounterSettlementHtml=specialEncounterSectionHtml;
+
+ function preservedMainRewardsHtml(ctx){return mainBattleSectionHtml(ctx,{interrupted:true});}
 
  if(typeof window.dropListHtml==="function"){
   window.dropListHtml=function(items){return settlementDropListHtml(items,{title:"裝備",emptyText:"裝備：無",showCount:false,marginTop:10});};
@@ -127,10 +156,17 @@
  if(typeof window.showBattleResult==="function"){
   const baseShowBattleResult=window.showBattleResult;
   window.showBattleResult=function(ctx,defeat=null){
-   baseShowBattleResult(ctx,defeat);
-   const detail=document.getElementById("battleResultDetail");
-   const preserved=defeat?preservedMainRewardsHtml(ctx):"";
-   if(detail&&preserved)detail.insertAdjacentHTML("afterbegin",preserved);
+   const specials=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters.filter(x=>x?.result):[];
+   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
+   if(!defeat&&specials.length&&title&&detail&&modal){
+    title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥結算";
+    detail.innerHTML=mainBattleSectionHtml(ctx)+specialEncounterSectionHtml(ctx);
+    modal.classList.add("show");
+   }else{
+    baseShowBattleResult(ctx,defeat);
+    const preserved=defeat?preservedMainRewardsHtml(ctx):"";
+    if(detail&&preserved)detail.insertAdjacentHTML("afterbegin",preserved);
+   }
    const extra=typeof vipEventsHtml==="function"?vipEventsHtml(ctx,defeat):"";
    if(detail&&extra)detail.insertAdjacentHTML("beforeend",extra);
    if(typeof upgradeDropNoticePending!=="undefined")upgradeDropNoticePending=false;
