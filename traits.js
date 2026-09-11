@@ -63,7 +63,7 @@ function traitDetailsHtml(traits){
 function combatTraitBadgesHtml(traits){
  if(!traits?.length)return "";
  const badges=traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span>`:"";}).filter(Boolean).join("");
- return badges?`<div class="combat-trait-badges" style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px">${badges}</div>`:"";
+ return badges?`<div class="combat-trait-badges" style="display:flex;justify-content:flex-start;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px;text-align:left">${badges}</div>`:"";
 }
 
 const baseAdventureCombatPage=typeof adventureCombatPage==="function"?adventureCombatPage:null;
