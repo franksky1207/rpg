@@ -14,15 +14,17 @@
 
  function blankSpecializations(){return Object.fromEntries(SPECIALIZATION_KEYS.map(key=>[key,0]));}
  function clampSpecializationLevel(value){return Math.max(0,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(value)||0)));}
- function ensureSpecializationState(){
-  if(!state.specializations||typeof state.specializations!=="object")state.specializations={};
+ function normalizeSpecializationState(target){
+  if(!target||typeof target!=="object")return false;
+  if(!target.specializations||typeof target.specializations!=="object")target.specializations={};
   let changed=false;
   SPECIALIZATION_KEYS.forEach(key=>{
-   const value=clampSpecializationLevel(state.specializations[key]);
-   if(state.specializations[key]!==value){state.specializations[key]=value;changed=true;}
+   const value=clampSpecializationLevel(target.specializations[key]);
+   if(target.specializations[key]!==value){target.specializations[key]=value;changed=true;}
   });
   return changed;
  }
+ function ensureSpecializationState(){return normalizeSpecializationState(state);}
  function specializationUpgradeCost(targetLevel){
   const lv=Math.max(1,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(targetLevel)||1)));
   return 1000*lv*lv;
@@ -32,6 +34,8 @@
  window.SPECIALIZATION_MAX_LEVEL=SPECIALIZATION_MAX_LEVEL;
  window.SPECIALIZATION_KEYS=SPECIALIZATION_KEYS.slice();
  window.SPECIALIZATION_DEFS=SPECIALIZATION_DEFS;
+ window.createBlankSpecializations=blankSpecializations;
+ window.normalizeSpecializationState=normalizeSpecializationState;
  window.ensureSpecializationState=ensureSpecializationState;
  window.specializationUpgradeCost=specializationUpgradeCost;
  window.gmTestSpecializations=blankSpecializations();
@@ -111,53 +115,6 @@
  };
  window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
 
- function installEconomyHooks(){
-  const baseExpReward=expReward;
-  expReward=function(enemy){return window.specializationAdjustedExp(baseExpReward(enemy),false);};
-  const baseGoldReward=goldReward;
-  goldReward=function(enemy){return window.specializationAdjustedGold(baseGoldReward(enemy),false);};
-
-  if(typeof getSpecialRewardContext==="function"){
-   const baseSpecialRewardContext=getSpecialRewardContext;
-   getSpecialRewardContext=function(special){
-    const ctx=baseSpecialRewardContext(special);
-    ctx.expMultiplier=(Number(ctx.expMultiplier)||1)*window.specializationMultiplier("training",false);
-    ctx.goldMultiplier=(Number(ctx.goldMultiplier)||1)*window.specializationMultiplier("scavenge",false);
-    return ctx;
-   };
-  }
-
-  const baseAddItem=addItem;
-  addItem=function(item){
-   if(!item)return baseAddItem(item);
-   const originalSell=item.sell;
-   item.sell=window.specializationSellValue(item,false);
-   try{return baseAddItem(item);}finally{item.sell=originalSell;}
-  };
-
-  const baseSellLowerAll=sellLowerAll;
-  sellLowerAll=function(){
-   const originals=new Map();
-   state.inventory.forEach(item=>{originals.set(item,item.sell);item.sell=window.specializationSellValue(item,false);});
-   try{return baseSellLowerAll();}finally{state.inventory.forEach(item=>{if(originals.has(item))item.sell=originals.get(item);});}
-  };
-
-  const baseSellSelected=sellSelected;
-  sellSelected=function(){
-   const item=state.inventory.find(x=>x.id===selectedItem);
-   if(!item)return baseSellSelected();
-   const originalSell=item.sell;item.sell=window.specializationSellValue(item,false);
-   try{return baseSellSelected();}finally{if(state.inventory.includes(item))item.sell=originalSell;}
-  };
-
-  const baseInventoryContent=inventoryContent;
-  inventoryContent=function(){
-   const originals=new Map();
-   state.inventory.forEach(item=>{originals.set(item,item.sell);item.sell=window.specializationSellValue(item,false);});
-   try{return baseInventoryContent();}finally{state.inventory.forEach(item=>{if(originals.has(item))item.sell=originals.get(item);});}
-  };
- }
-
  function installStyles(){
   if(document.getElementById("specializationStyles"))return;
   const style=document.createElement("style");style.id="specializationStyles";style.textContent=`
@@ -169,39 +126,5 @@
   `;document.head.appendChild(style);
  }
 
- function makeHomeCard(){const wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card specialization-home-card" onclick="go('specialization')"><b>專精</b><span>消耗金幣提升永久能力</span></button>`;return wrap.firstElementChild;}
- function arrangeHomeMenu(){
-  if(view!=="home")return;
-  const menu=document.querySelector("#main .menu-grid");if(!menu)return;
-  let spec=menu.querySelector(".specialization-home-card");if(!spec){spec=makeHomeCard();menu.appendChild(spec);}
-  const find=name=>Array.from(menu.children).find(el=>(el.getAttribute("onclick")||"").includes(`go('${name}')`));
-  const order=[find("adventure"),find("character"),spec,find("dungeon"),find("inventory"),find("shop"),find("settings")].filter(Boolean);
-  order.forEach(el=>menu.appendChild(el));
- }
- function gmSection(title,body,mode){const d=document.createElement("details");d.className="gm-hub-section specialization-gm-section";d.dataset.specializationGm=mode;d.innerHTML=`<summary>${title}</summary><div class="gm-hub-body">${body}</div>`;return d;}
- function injectGmSection(){
-  const hub=document.querySelector("#main .gm-hub");if(!hub)return;
-  const active=hub.querySelector(".gm-hub-tab.active")?.textContent?.trim();
-  const mode=active==="測試"?"test":"manage";
-  if(hub.querySelector(`[data-specialization-gm="${mode}"]`))return;
-  const el=gmSection(mode==="test"?"專精測試":"專精管理",mode==="test"?window.gmSpecializationTestHtml():window.gmSpecializationManagementHtml(),mode);
-  const sections=hub.querySelectorAll(".gm-hub-section");
-  if(mode==="manage"&&sections[0])sections[0].after(el);else if(sections[0])hub.insertBefore(el,sections[0]);else hub.appendChild(el);
- }
-
  installStyles();
- if(ensureSpecializationState())save(false);
- installEconomyHooks();
- const baseRender=render;
- render=function(){
-  ensureSpecializationState();
-  if(view==="specialization"){
-   if(typeof renderNav==="function")renderNav();
-   normalizeHP();
-   const main=document.getElementById("main");if(main)main.innerHTML=specializationPage();
-   return;
-  }
-  baseRender();arrangeHomeMenu();injectGmSection();
- };
- render();
 })();
