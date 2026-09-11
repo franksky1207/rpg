@@ -117,7 +117,7 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null};
+  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
@@ -143,7 +143,7 @@
    result.penalty=applyDeathPenalty([]);
   }
   save();
-  showSpecialResult(ctx,special,result);
+  return result;
  }
 
  async function maybeHandleSpecialEncounter(ctx,mainResult=null){
@@ -160,8 +160,11 @@
   state.hp=playerCombatStats().hp;
   save(false);
   await showSpecialEncounterAlert(special);
-  await fightFormalSpecial(ctx,special);
-  return true;
+  const result=await fightFormalSpecial(ctx,special);
+  if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
+  ctx.specialEncounters.push({special,result});
+  if(!result.win)showSpecialResult(ctx,special,result);
+  return {triggered:true,win:result.win,special,result};
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
