@@ -68,7 +68,7 @@
   mapTestMap=mapIdx;mapTestEnemy=eIdx;
   const button=document.getElementById("gmMapMonsterStartBtn");setTestButton(button,true,`開始測試（${GM_TEST_RUNS} 次）`);
   const sandbox=gmCreateSandboxSnapshot(),basePlayer=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(basePlayer);
-  const summary={wins:0,losses:0,winHpTotal:0,deathDrops:0,vip20Protected:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0)};
+  const summary={wins:0,losses:0,winHpTotal:0,deathDrops:0,vip20Protected:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,totalSellValue:0,qualityCounts:Array(QUALITY.length).fill(0)};
   battleBusy=true;
   for(let i=0;i<GM_TEST_RUNS;i++){
    gmResetSandbox(sandbox);state.vipLevel=testVip();state.hp=player.hp;
@@ -77,11 +77,11 @@
    const r=simulateFight(player,enemy,player.hp);
    if(r.win){
     summary.wins++;summary.winHpTotal+=r.hp;
-    const xp=Math.max(0,Math.ceil(Number(expReward(enemy))||0)),gold=Math.max(0,Math.ceil(Number(goldReward(enemy))||0));
+    const xp=Math.max(0,Math.ceil(Number(expReward(enemy,true))||0)),gold=Math.max(0,Math.ceil(Number(goldReward(enemy,true))||0));
     if(state.level>=MAX_LEVEL){summary.convertedGold+=xp;summary.totalGold+=gold+xp;}else{summary.totalXp+=xp;summary.totalGold+=gold;}
     const drops=[];const first=dropItem(enemy,mapIdx);if(first)drops.push(first);
     if(enemy.kind==="boss"&&testVip()>=16&&Math.random()<.15){const extra=dropItem(enemy,mapIdx);if(extra)drops.push(extra);}
-    drops.forEach(item=>{summary.dropCount++;summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;});
+    drops.forEach(item=>{summary.dropCount++;summary.totalSellValue+=specializationSellValue(item,true);summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;});
    }else{
     summary.losses++;state.hp=0;const penalty=applyDeathPenalty([]);if(penalty?.dropped)summary.deathDrops++;if(penalty?.protectedByVip20)summary.vip20Protected++;
    }
