@@ -191,14 +191,14 @@
  function selectionHtml(){
   const d=ensureDungeonProgressState();
   const cards=ARENA_DIFFICULTIES.map(x=>`<button class="arena-difficulty-card ${difficultyClass(x.id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaDungeon('${x.id}')`:"void(0)"}"><b>${x.name}</b><span>三戰全通 ${x.totalPoints} VIP 積分</span><small>${x.stagePoints.join(" + ")}</small></button>`).join("");
-  return `<div class="function-page dungeon-page-shell arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-subtitle">三場連續戰鬥，場與場之間不回血</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次</div><div class="arena-difficulty-grid">${cards}</div></section></div>`;
+  return `<div class="function-page dungeon-page-shell arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次</div><div class="arena-difficulty-grid">${cards}</div></section></div>`;
  }
  function progressStrip(){
   return `<div class="arena-progress-strip">${[0,1,2].map(i=>`<div class="arena-progress-step ${i<arenaState.stage?"done":i===arenaState.stage?"current":""}"><span>${i+1}</span>${ARENA_STAGE_NAMES[i]}</div>`).join("")}</div>`;
  }
  function readyHtml(){
-  const s=arenaPlayerStats(),d=arenaState.difficulty;
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">三戰挑戰</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">第一戰特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-player-hp">目前 HP：<strong>${state.hp} / ${s.hp}</strong></div><div class="arena-carry">開始後將自動連續進行三戰，場間不回血。</div><div class="arena-earned">全通可獲得：${d?.totalPoints||0} VIP 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始三戰</button></div></section></div>`;
+  const d=arenaState.difficulty;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-ready-panel"><div class="arena-title">${d?.name||"競技場"}</div>${progressStrip()}<div class="arena-stage-label">三戰挑戰</div><h2>${arenaState.enemy?.name||"模擬對手"}</h2><div class="arena-traits">第一戰特性：${arenaTraitNames(arenaState.enemy)}</div><div class="arena-carry">開始後將自動連續進行三戰，場間不回血。</div><div class="arena-earned">全通可獲得：${d?.totalPoints||0} VIP 積分</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="startArenaStageFight()">開始三戰</button></div></section></div>`;
  }
  function combatHtml(){
   const e=arenaState.enemy,s=arenaPlayerStats(),d=arenaState.difficulty,stage=arenaState.stage;
