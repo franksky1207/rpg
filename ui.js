@@ -55,7 +55,7 @@ function renderNav(){
 function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";view=v;render()}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();
- const fn={home:homePage,adventure:adventurePage,character:characterPage,specialization:specializationPage,inventory:inventoryPage,shop:shopPage,settings:settingsPage}[view]||homePage;
+ const fn={home:homePage,adventure:adventurePage,character:characterPage,specialization:specializationPage,inventory:inventoryPage,shop:shopPage,guide:gameGuidePage,settings:settingsPage}[view]||homePage;
  document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
@@ -77,6 +77,7 @@ function homePage(){
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
    <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備與出售道具</span></button>
    <button class="menu-card" onclick="go('shop')"><b>商店</b><span>購買裝備與贖回遺失裝備</span></button>
+   <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法、系統、戰鬥與各項規則</span></button>
    <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
   </div>
  </section>`;
