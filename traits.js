@@ -66,18 +66,6 @@ function combatTraitBadgesHtml(traits){
  return badges?`<div class="combat-trait-badges" style="display:flex;align-self:stretch;width:100%;justify-content:flex-start;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px;text-align:left">${badges}</div>`:"";
 }
 
-const baseAdventureCombatPage=typeof adventureCombatPage==="function"?adventureCombatPage:null;
-if(baseAdventureCombatPage){
- adventureCombatPage=function(){
-  const e=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy);
-  let html=baseAdventureCombatPage();
-  const badges=combatTraitBadgesHtml(e?.traits);
-  html=html.replace(/<h2 id="combatEnemyName">.*?<\/h2>/,`<h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${badges}`);
-  html=html.replace(/<span id="combatEnemyHp">.*?<\/span>/,`<span id="combatEnemyHp">${e.hp} / ${e.hp}</span>`);
-  return html;
- };
-}
-
 window.applyMonsterTraits=applyMonsterTraits;
 window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
 window.resetMonsterPreviewCache=resetMonsterPreviewCache;
