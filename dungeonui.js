@@ -61,10 +61,10 @@
 
  function ensureHomeDungeonCard(main){
   const menu=main?.querySelector(".menu-grid");if(!menu)return;
-  if(!menu.querySelector('[data-dungeon-home-card="1"]')){
-   const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰副本獲得 VIP 積分</span></button>`;
-   const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);
-  }
+  const existing=Array.from(menu.querySelectorAll(".menu-card")).find(el=>(el.getAttribute("onclick")||"").includes("go('dungeon')"));
+  if(existing){existing.dataset.dungeonHomeCard="1";return;}
+  const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰副本獲得 VIP 積分</span></button>`;
+  const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);
  }
 
  const basePlayerStatusHtml=playerStatusHtml;
