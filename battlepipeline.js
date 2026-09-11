@@ -2,9 +2,10 @@
  runBattles=async function(count,ctx=null){
   if(battleBusy)return;
   battleBusy=true;
-  if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count,totalDungeonProgress:0,gainedDungeonAttempts:0};
+  if(!ctx)ctx={wins:0,totalXp:0,totalGold:0,items:[],originalCount:count,completed:0,remaining:count,totalDungeonProgress:0,gainedDungeonAttempts:0,specialEncounters:[]};
   if(typeof ctx.totalDungeonProgress!=="number")ctx.totalDungeonProgress=0;
   if(typeof ctx.gainedDungeonAttempts!=="number")ctx.gainedDungeonAttempts=0;
+  if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   let defeat=null;
 
   for(let local=1;local<=count;local++){
@@ -58,12 +59,23 @@
     break;
    }
 
-   // 特殊遭遇只在主線勝利完成後檢查，且使用該場實際戰鬥結果判斷資格。
+   // 特殊遭遇只在主線勝利完成後檢查。勝利後回到原連戰，失敗才終止本次連戰。
    save(false);
-   if(typeof maybeHandleSpecialEncounter==="function"&&await maybeHandleSpecialEncounter(ctx,r)){
-    battleBusy=false;
-    save();
-    return;
+   let specialOutcome=false;
+   if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r);
+   if(specialOutcome?.triggered){
+    if(!specialOutcome.win){
+     battleBusy=false;
+     save();
+     return;
+    }
+    if(ctx.remaining>0){
+     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
+     await sleep(r.e.kind==="elite"?220:140);
+    }else{
+     save();
+    }
+    continue;
    }
 
    if(ctx.remaining>0){
