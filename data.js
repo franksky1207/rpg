@@ -1,6 +1,6 @@
 const SAVE_KEY="frank_text_rpg_save";
-const SAVE_VERSION=7;
-const GM_PASSWORD="franksky";
+const SAVE_VERSION=8;
+const GM_PASSWORD=atob("ZnJhbmtza3k=");
 const QUALITY=[
   {k:"common",n:"普通",m:1,sm:1},
   {k:"uncommon",n:"優良",m:1.15,sm:1.4},
