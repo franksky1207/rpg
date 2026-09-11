@@ -9,6 +9,7 @@
  function now(){return Date.now();}
  function isBackground(){return pageHidden||windowBlurred;}
  function activeFor(kind=null){return !!flow&&(!kind||flow.kind===kind);}
+ function hasBackgroundCap(){return !!flow&&flow.maxBackgroundMs!=null&&Number.isFinite(Number(flow.maxBackgroundMs));}
  function isInfiniteMainCount(count,ctx=null){
   const marker=window.INFINITE_BATTLE_COUNT||"infinite";
   return count===marker||count==="infinite"||ctx?.infinite===true;
@@ -28,7 +29,7 @@
   }
  }
  function remainingBackgroundAllowance(){
-  if(!flow||!Number.isFinite(Number(flow.maxBackgroundMs)))return Infinity;
+  if(!hasBackgroundCap())return Infinity;
   return Math.max(0,Number(flow.maxBackgroundMs)-(Number(flow.backgroundElapsedUsed)||0));
  }
  function clearSleeperTimer(){if(flow?.sleeper?.timer){clearTimeout(flow.sleeper.timer);flow.sleeper.timer=null;}}
@@ -59,7 +60,7 @@
   if(!flow||flow.hiddenAt==null)return;
   const rawElapsed=Math.max(0,now()-flow.hiddenAt);flow.hiddenAt=null;
   const allowed=Math.min(rawElapsed,remainingBackgroundAllowance());
-  if(Number.isFinite(Number(flow.maxBackgroundMs)))flow.backgroundElapsedUsed=(Number(flow.backgroundElapsedUsed)||0)+allowed;
+  if(hasBackgroundCap())flow.backgroundElapsedUsed=(Number(flow.backgroundElapsedUsed)||0)+allowed;
   if(flow.sleeper){
    const used=Math.min(allowed,Math.max(0,flow.sleeper.remaining));
    flow.sleeper.remaining=Math.max(0,flow.sleeper.remaining-used);
@@ -113,8 +114,7 @@
  };
  window.backgroundProgressSnapshot=function(){
   if(!flow)return null;
-  const capped=Number.isFinite(Number(flow.maxBackgroundMs));
-  return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:capped?Number(flow.maxBackgroundMs):null};
+  return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:hasBackgroundCap()?Number(flow.maxBackgroundMs):null};
  };
 
  document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncBackgroundState();});
