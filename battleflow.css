@@ -1,0 +1,9 @@
+.infinite-stop-wrap{display:flex;justify-content:center;margin-top:12px}
+.infinite-stop-wrap .btn{min-width:180px}
+.count-grid.infinite-enabled{gap:6px}
+@media(max-width:760px){
+ .count-grid.infinite-enabled{gap:3px}
+ .count-grid.infinite-enabled .count-card{padding-left:1px;padding-right:1px;font-size:12px}
+ .infinite-stop-wrap{margin-top:8px;padding-bottom:8px}
+ .infinite-stop-wrap .btn{min-width:160px;padding:9px 12px}
+}
