@@ -1,22 +1,4 @@
 (function(){
- const beforeFightHooks=[];
-
- window.registerBattleBeforeFightHook=function(fn){
-  if(typeof fn!=="function"||beforeFightHooks.includes(fn))return;
-  beforeFightHooks.push(fn);
- };
-
- async function runBeforeFightHooks(ctx){
-  for(const hook of beforeFightHooks){
-   if(await hook(ctx))return true;
-  }
-  return false;
- }
-
- if(typeof window.maybeHandleSpecialEncounter==="function"){
-  registerBattleBeforeFightHook(window.maybeHandleSpecialEncounter);
- }
-
  runBattles=async function(count,ctx=null){
   if(battleBusy)return;
   battleBusy=true;
@@ -26,12 +8,6 @@
   let defeat=null;
 
   for(let local=1;local<=count;local++){
-   if(await runBeforeFightHooks(ctx)){
-    battleBusy=false;
-    save();
-    return;
-   }
-
    let encounter=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy)||createMonsterEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=encounter;
    combatRound=ctx.completed+1;
@@ -80,6 +56,14 @@
     adventureScreen="prepare";
     save();
     break;
+   }
+
+   // 特殊遭遇只在主線勝利完成後檢查，且使用該場實際戰鬥結果判斷資格。
+   save(false);
+   if(typeof maybeHandleSpecialEncounter==="function"&&await maybeHandleSpecialEncounter(ctx,r)){
+    battleBusy=false;
+    save();
+    return;
    }
 
    if(ctx.remaining>0){
