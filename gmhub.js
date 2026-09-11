@@ -29,7 +29,7 @@
  }
 
  window.gmTestSpecializationLabel=function(){
-  const get=key=>typeof specializationPercentBonus==="function"?specializationPercentBonus(key,true):0;
+  const get=key=>specializationPercentBonus(key,true);
   return `專精｜先制傷害 +${get("initiative")}%｜連擊率 ${get("combo")}%｜穿透率 ${get("penetration")}%｜反擊率 ${get("counter")}%｜汲取率 ${get("drain")}%`;
  };
  window.gmTestSummaryHtml=function(title,runLabel,vipText,specText=null){
@@ -67,7 +67,9 @@
  function hubHtml(){
   const manage=gmHubTab==="manage";
   const testVip=manage?"":(typeof gmTestVipControlHtml==="function"?gmTestVipControlHtml():"");
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testVip}${manage?`${section("一般管理",generalManagementHtml(),true)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("特殊怪測試",specialTestHtml(),true)}${section("地圖怪測試",mapMonsterTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  const specManage=gmSpecializationManagementHtml();
+  const specTest=gmSpecializationTestHtml();
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testVip}${manage?`${section("一般管理",generalManagementHtml(),true)}${section("專精管理",specManage,false)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("專精測試",specTest,false)}${section("特殊怪測試",specialTestHtml(),true)}${section("地圖怪測試",mapMonsterTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
 
  window.gmResetVip=function(){
