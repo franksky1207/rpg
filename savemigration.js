@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=Math.max(1,Math.floor(Number(SAVE_VERSION)||8));
+ const SAVE_SCHEMA_VERSION=Math.max(1,Math.floor(Number(SAVE_VERSION)||9));
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
@@ -44,6 +44,23 @@
   if(!isObject(target.dungeon.voidMirage))target.dungeon.voidMirage={};
   target.dungeon.voidMirage.highestCleared=Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0));
  }
+ function normalizeOffline(target,version){
+  if(!isObject(target))return;
+  const now=Date.now();
+  if(version<9||!isObject(target.offline)){
+   target.offline={lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0};
+   return;
+  }
+  const source=target.offline;
+  const rawTime=Number(source.lastSettledAt);
+  source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
+  const map=Number(source.farmMap),enemy=Number(source.farmEnemy);
+  source.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
+  source.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
+  const avg=Number(source.avgBattleMs);
+  source.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
+  source.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(source.sampleCount)||0)));
+ }
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
@@ -73,6 +90,7 @@
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
   normalizeVoidMirage(target);
+  normalizeOffline(target,version);
 
   if(!isObject(target.shop))target.shop=typeof newShopState==="function"?newShopState():{items:[],refreshIndex:0,resetAvailableAt:0,initialized:false};
   if(!Array.isArray(target.shop.items))target.shop.items=[];
