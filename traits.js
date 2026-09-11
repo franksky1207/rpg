@@ -60,6 +60,23 @@ function traitDetailsHtml(traits){
  if(!traits?.length)return "";
  return `<div class="trait-details">${traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<div class="trait-detail-row"><span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span><span class="trait-detail-desc">${t.desc}</span></div>`:"";}).join("")}</div>`;
 }
+function combatTraitBadgesHtml(traits){
+ if(!traits?.length)return "";
+ const badges=traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span>`:"";}).filter(Boolean).join("");
+ return badges?`<div class="combat-trait-badges" style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px">${badges}</div>`:"";
+}
+
+const baseAdventureCombatPage=typeof adventureCombatPage==="function"?adventureCombatPage:null;
+if(baseAdventureCombatPage){
+ adventureCombatPage=function(){
+  const e=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy);
+  let html=baseAdventureCombatPage();
+  const badges=combatTraitBadgesHtml(e?.traits);
+  html=html.replace(/<h2 id="combatEnemyName">.*?<\/h2>/,`<h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${badges}`);
+  html=html.replace(/<span id="combatEnemyHp">.*?<\/span>/,`<span id="combatEnemyHp">${e.hp} / ${e.hp}</span>`);
+  return html;
+ };
+}
 
 window.applyMonsterTraits=applyMonsterTraits;
 window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
