@@ -24,6 +24,7 @@
  }
 
  function normalizeItems(items){return Array.isArray(items)?items.filter(x=>x&&x.item):[];}
+ function round2(value){return Math.round((Number(value)||0)*100)/100;}
 
  window.settlementDropListHtml=function(items,options={}){
   injectSettlementUiStyles();
@@ -37,6 +38,17 @@
   return `<div class="settlement-drop-wrap" style="margin-top:${marginTop}px"><div class="settlement-drop-head"><b>${heading}</b></div><div class="settlement-drop-scroll">${rows.map(x=>`<div class="settlement-drop-row">${itemHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join("")}</div></div>`;
  };
 
+ function preservedMainRewardsHtml(ctx){
+  const wins=Math.max(0,Math.floor(Number(ctx?.wins)||0));
+  if(wins<=0)return "";
+  const total=Math.max(wins,Math.floor(Number(ctx?.originalCount)||wins));
+  const progress=round2(ctx?.totalDungeonProgress);
+  const attempts=Math.max(0,Math.floor(Number(ctx?.gainedDungeonAttempts)||0));
+  const drops=normalizeItems(ctx?.items);
+  const dungeon=progress>0||attempts>0?`<div class="notice" style="margin-top:10px">副本進度 +${progress}${attempts>0?`　｜　可挑戰次數 +${attempts}`:""}</div>`:"";
+  return `<div class="notice" style="margin-bottom:10px"><b>失敗前已勝利 ${wins} / ${total} 場</b><div class="muted" style="margin-top:5px">前段戰鬥已取得的 EXP、金幣、裝備與副本進度均已保留。</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">前段 EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">前段金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"前段裝備",emptyText:"",showCount:true,marginTop:10}):""}${dungeon}`;
+ }
+
  if(typeof window.dropListHtml==="function"){
   window.dropListHtml=function(items){return settlementDropListHtml(items,{title:"裝備",emptyText:"裝備：無",showCount:false,marginTop:10});};
  }
@@ -46,6 +58,8 @@
   window.showBattleResult=function(ctx,defeat=null){
    baseShowBattleResult(ctx,defeat);
    const detail=document.getElementById("battleResultDetail");
+   const preserved=defeat?preservedMainRewardsHtml(ctx):"";
+   if(detail&&preserved)detail.insertAdjacentHTML("afterbegin",preserved);
    const extra=typeof vipEventsHtml==="function"?vipEventsHtml(ctx,defeat):"";
    if(detail&&extra)detail.insertAdjacentHTML("beforeend",extra);
   };
