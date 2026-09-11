@@ -5,6 +5,25 @@
   return state.hp;
  };
 
+ // 匯入舊存檔時保留原始版本判斷，避免 normalize 先升版後跳過舊商店初始化規則。
+ if(typeof window.normalizeSaveState==="function"){
+  const baseNormalizeSaveState=window.normalizeSaveState;
+  window.normalizeSaveState=function(target){
+   const sourceVersion=Math.max(1,Math.floor(Number(target?.saveVersion)||1));
+   const sourceShop=target?.shop;
+   const hadInitialized=!!sourceShop&&typeof sourceShop==="object"&&!Array.isArray(sourceShop)&&typeof sourceShop.initialized==="boolean";
+   const normalized=baseNormalizeSaveState(target);
+   if(!normalized.shop||typeof normalized.shop!=="object"||Array.isArray(normalized.shop))normalized.shop=newShopState();
+   if(sourceVersion<4){
+    normalized.shop.items=[];
+    normalized.shop.initialized=false;
+   }else if(!hadInitialized){
+    normalized.shop.initialized=Array.isArray(normalized.shop.items)&&normalized.shop.items.length>0;
+   }
+   return normalized;
+  };
+ }
+
  window.playerStatusHtml=function(){
   const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
   return `<div class="card player-status-card"><div style="font-size:18px;font-weight:700;color:#f0d494;margin-bottom:9px">${playerNameHtml()}</div><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line"><div class="status-label"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
