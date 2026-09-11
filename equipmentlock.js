@@ -9,6 +9,11 @@
   (state?.lostGear||[]).forEach(x=>normalizeLockFlag(x?.item));
   (state?.shop?.items||[]).forEach(normalizeLockFlag);
  }
+ function restoreAfterEquipmentChange(){
+  if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
+  state.hp=playerCombatStats().hp;
+  return state.hp;
+ }
  window.isGearLocked=function(item){return item?.locked===true;};
  window.shouldAutoSellItem=function(item){
   if(!item||item.locked===true||Number(item.q)===5)return false;
@@ -93,7 +98,7 @@
    const item=state.inventory.splice(i,1)[0],old=state.equipment[item.type]||null;
    state.equipment[item.type]=item;
    if(old)handleUnequippedItem(old);
-   normalizeHP();
+   restoreAfterEquipmentChange();
    selectedItem=null;
    save();
    render();
@@ -116,10 +121,20 @@
      }
     }
    });
-   normalizeHP();selectedItem=null;save();render();
+   restoreAfterEquipmentChange();selectedItem=null;save();render();
    if(!changed)return alert("目前裝備已是最佳。");
    const soldText=soldCount?`\n換下裝備自動出售 ${soldCount} 件，獲得 ${soldGold.toLocaleString()} 金幣。`:"";
    alert(`已更換 ${changed} 件較強裝備。${soldText}`);
+  };
+ }
+
+ if(typeof window.equipSettlementDrop==="function"){
+  const baseEquipSettlementDrop=window.equipSettlementDrop;
+  window.equipSettlementDrop=function(...args){
+   const result=baseEquipSettlementDrop(...args);
+   restoreAfterEquipmentChange();
+   save(false);
+   return result;
   };
  }
 
