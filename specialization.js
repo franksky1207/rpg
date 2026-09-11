@@ -117,6 +117,16 @@
   const baseGoldReward=goldReward;
   goldReward=function(enemy){return window.specializationAdjustedGold(baseGoldReward(enemy),false);};
 
+  if(typeof getSpecialRewardContext==="function"){
+   const baseSpecialRewardContext=getSpecialRewardContext;
+   getSpecialRewardContext=function(special){
+    const ctx=baseSpecialRewardContext(special);
+    ctx.expMultiplier=(Number(ctx.expMultiplier)||1)*window.specializationMultiplier("training",false);
+    ctx.goldMultiplier=(Number(ctx.goldMultiplier)||1)*window.specializationMultiplier("scavenge",false);
+    return ctx;
+   };
+  }
+
   const baseAddItem=addItem;
   addItem=function(item){
    if(!item)return baseAddItem(item);
