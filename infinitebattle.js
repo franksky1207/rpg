@@ -37,19 +37,23 @@
   const buttons=Array.from(grid.querySelectorAll(".count-card"));
   buttons.forEach((btn,index)=>{
    const count=counts[index];if(count==null)return;
-   btn.textContent=battleCountLabel(count);
+   const label=battleCountLabel(count);
+   if(btn.textContent!==label)btn.textContent=label;
    btn.onclick=()=>setBattleCount(count,btn);
   });
-  if(counts.includes(INFINITE_COUNT))grid.classList.add("infinite-enabled");
+  if(counts.includes(INFINITE_COUNT)&&!grid.classList.contains("infinite-enabled"))grid.classList.add("infinite-enabled");
   const next=document.querySelector(".battle-count-next");
   const unlock=e.kind==="boss"?null:nextBattleCountUnlock(state.level);
-  if(next&&unlock?.count===INFINITE_COUNT)next.textContent=`Lv.${unlock.level} 將開放無限連戰`;
+  if(next&&unlock?.count===INFINITE_COUNT){
+   const text=`Lv.${unlock.level} 將開放無限連戰`;
+   if(next.textContent!==text)next.textContent=text;
+  }
  }
  function enhanceCombat(){
   if(view!=="adventure"||adventureScreen!=="combat"||!infiniteActive())return;
   const screen=document.querySelector(".combat-screen");if(!screen)return;
-  const head=screen.querySelector(".combat-head");
-  if(head)head.textContent=`無限連戰・第 ${Math.max(1,Number(combatRound)||1)} 場`;
+  const head=screen.querySelector(".combat-head"),headText=`無限連戰・第 ${Math.max(1,Number(combatRound)||1)} 場`;
+  if(head&&head.textContent!==headText)head.textContent=headText;
   if(screen.querySelector("#infiniteBattleStopBtn"))return;
   const requested=window.activeMainBattleContext?.exitRequested===true;
   const wrap=document.createElement("div");wrap.className="infinite-stop-wrap";
