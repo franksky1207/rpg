@@ -13,6 +13,7 @@
  function setTestButton(button,busy,label){if(!button)return;button.disabled=busy;button.textContent=busy?"測試中…":label;}
  function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
  function vipLabel(){return typeof gmTestVipLabel==="function"?gmTestVipLabel():`VIP${testVip()}`;}
+ function testSummary(title,runLabel){return gmTestSummaryHtml(title,runLabel,vipLabel());}
  function testPlayer(base=null){return typeof gmTestPlayerStats==="function"?gmTestPlayerStats(base):createSpecialPlayerSnapshot(playerCombatStats(base||equippedStats(),testVip()));}
  function traitDetail(enemy){
   if(!enemy?.traits?.length)return "無";
@@ -49,7 +50,7 @@
 
  function mapMonsterResultHtml(mapIdx,eIdx,summary){
   const map=MAPS[mapIdx],base=map.enemies[eIdx];
-  return `<div class="notice"><b>${map.name}｜${base[0]}・${vipLabel()}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">敵人使用不含 VIP 的角色基準；玩家戰鬥使用本次測試 VIP 與專精。正式角色資料未變更。</div></div>
+  return `<div class="notice">${testSummary(`${map.name}｜${base[0]}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人使用不含 VIP 的角色基準；玩家戰鬥使用本次測試 VIP 與專精。正式角色資料未變更。</div></div>
    <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat">勝率<b>${summary.winRate}%</b></div>
     <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -96,7 +97,7 @@
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){const enemy=buildBountyEnemyForTest(tierId,base,state.level),r=simulateFight(player,enemy);summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}}
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
-  showBountyTest(`<div class="notice"><b>${tier.name}・${vipLabel()}・${GM_TEST_RUNS} 次模擬</b><div class="muted" style="margin-top:5px">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
+  showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  window.gmSimulateArena100=function(difficultyId){
@@ -113,7 +114,7 @@
    if(cleared)clearHpTotal+=hp;totalPoints+=points;
   }
   const clearCount=wins[2],avgPoints=round1(totalPoints/GM_TEST_RUNS),avgClearHp=clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,avgTurns=round1(totalTurns/GM_TEST_RUNS),conditional=stage=>testPercent(wins[stage],reached[stage]);
-  showArenaTest(`<div class="notice"><b>${cfg.name}・${vipLabel()}・${GM_TEST_RUNS} 次完整三連戰</b><div class="muted" style="margin-top:5px">敵人生成不含 VIP；玩家三戰鎖定本次測試 VIP 能力並套用測試專精；每個新敵人都重新獲得一次先制。</div><div class="stats" style="margin-top:10px"><div class="stat">第1戰通過<b>${testPercent(wins[0])}%</b></div><div class="stat">第2戰到達<b>${testPercent(reached[1])}%</b></div><div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div><div class="stat">第3戰到達<b>${testPercent(reached[2])}%</b></div><div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div><div class="stat">全通率<b>${testPercent(clearCount)}%</b></div><div class="stat">平均積分<b>${avgPoints}</b></div><div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div><div class="stat">平均總回合<b>${avgTurns}</b></div></div></div>`);
+  showArenaTest(`<div class="notice">${testSummary(cfg.name,`${GM_TEST_RUNS} 次完整三連戰`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家三戰鎖定本次測試 VIP 能力並套用測試專精；每個新敵人都重新獲得一次先制。</div><div class="stats" style="margin-top:10px"><div class="stat">第1戰通過<b>${testPercent(wins[0])}%</b></div><div class="stat">第2戰到達<b>${testPercent(reached[1])}%</b></div><div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div><div class="stat">第3戰到達<b>${testPercent(reached[2])}%</b></div><div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div><div class="stat">全通率<b>${testPercent(clearCount)}%</b></div><div class="stat">平均積分<b>${avgPoints}</b></div><div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div><div class="stat">平均總回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  function gmVoidFloorValue(){const raw=Number(document.getElementById("gmVoidMirageFloor")?.value);return Number.isFinite(raw)&&raw>=1?Math.floor(raw):null;}
@@ -129,7 +130,7 @@
   while(cleared<VOID_MIRAGE_GM_SIM_LIMIT){const enemy=buildVoidMirageEnemy(floor,{previousName});if(!enemy.isBossFloor)previousName=enemy.name;const r=simulateFight(player,enemy,player.hp);totalTurns+=r.turns;if(!r.win){failedEnemy=enemy;break;}cleared++;lastWinFloor=floor;lastWinHp=r.hp;totalPoints+=typeof voidMirageFirstClearPoints==="function"?voidMirageFirstClearPoints(floor):Number(enemy.firstClearPoints)||0;floor++;}
   if(cleared>=VOID_MIRAGE_GM_SIM_LIMIT)hitSafetyLimit=true;
   const avgPoints=cleared?round1(totalPoints/cleared):0,avgTurns=cleared?round1(totalTurns/cleared):0,lastHpPct=cleared?round1(lastWinHp/player.hp*100):0,stopFloor=hitSafetyLimit?floor:(failedEnemy?.floor||floor);
-  showVoidMirageTest(`<div class="notice"><b>虛空幻境・${vipLabel()}・從第 ${startFloor} 層連續爬塔</b><div class="stats" style="margin-top:10px"><div class="stat">起始樓層<b>${startFloor}</b></div><div class="stat">成功層數<b>${cleared}</b></div><div class="stat">最後成功樓層<b>${cleared?lastWinFloor:"—"}</b></div><div class="stat">停止／失敗樓層<b>${stopFloor}</b></div><div class="stat">本次總積分<b>${totalPoints}</b></div><div class="stat">平均每層積分<b>${avgPoints}</b></div><div class="stat">平均戰鬥回合<b>${avgTurns}</b></div><div class="stat">最後成功剩餘 HP<b>${cleared?`${lastWinHp}（${lastHpPct}%）`:"—"}</b></div></div></div>`);
+  showVoidMirageTest(`<div class="notice">${testSummary("虛空幻境",`從第 ${startFloor} 層連續爬塔`)}<div class="stats" style="margin-top:10px"><div class="stat">起始樓層<b>${startFloor}</b></div><div class="stat">成功層數<b>${cleared}</b></div><div class="stat">最後成功樓層<b>${cleared?lastWinFloor:"—"}</b></div><div class="stat">停止／失敗樓層<b>${stopFloor}</b></div><div class="stat">本次總積分<b>${totalPoints}</b></div><div class="stat">平均每層積分<b>${avgPoints}</b></div><div class="stat">平均戰鬥回合<b>${avgTurns}</b></div><div class="stat">最後成功剩餘 HP<b>${cleared?`${lastWinHp}（${lastHpPct}%）`:"—"}</b></div></div></div>`);
  };
 
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
