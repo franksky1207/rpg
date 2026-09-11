@@ -3,66 +3,35 @@
  const unlocks=typeof BATTLE_COUNT_UNLOCKS!=="undefined"?BATTLE_COUNT_UNLOCKS:null;
  if(Array.isArray(unlocks)&&!unlocks.some(x=>x?.count===INFINITE_COUNT))unlocks.push({level:31,count:INFINITE_COUNT});
  window.INFINITE_BATTLE_COUNT=INFINITE_COUNT;
+ window.infinite=INFINITE_COUNT;
 
- function injectStyles(){
-  if(document.getElementById("infinite-battle-styles"))return;
-  const style=document.createElement("style");
-  style.id="infinite-battle-styles";
-  style.textContent=`
-   .infinite-stop-wrap{display:flex;justify-content:center;margin-top:12px}
-   .infinite-stop-wrap .btn{min-width:180px}
-   .count-grid.infinite-enabled{gap:6px}
-   @media(max-width:760px){
-    .count-grid.infinite-enabled{gap:3px}
-    .count-grid.infinite-enabled .count-card{padding-left:1px;padding-right:1px;font-size:12px}
-    .infinite-stop-wrap{margin-top:8px;padding-bottom:8px}
-    .infinite-stop-wrap .btn{min-width:160px;padding:9px 12px}
-   }
-  `;
-  document.head.appendChild(style);
- }
- function battleCountLabel(count){
-  if(count===INFINITE_COUNT)return "∞";
-  const n=Math.max(1,Math.floor(Number(count)||1));
-  return `${n}場`;
- }
  function infiniteActive(){
   return window.activeMainBattleContext?.infinite===true||combatTotal===0||combatTotal===INFINITE_COUNT;
  }
- function enhancePrepare(){
-  if(view!=="adventure"||adventureScreen!=="prepare")return;
-  const grid=document.querySelector(".count-grid");if(!grid)return;
-  const e=monsterObj(selectedMap,selectedEnemy);
-  const counts=e.kind==="boss"?[1]:battleCountsForLevel(state.level);
-  const buttons=Array.from(grid.querySelectorAll(".count-card"));
-  buttons.forEach((btn,index)=>{
-   const count=counts[index];if(count==null)return;
-   const label=battleCountLabel(count);
-   if(btn.textContent!==label)btn.textContent=label;
-   btn.onclick=()=>setBattleCount(count,btn);
-  });
-  if(counts.includes(INFINITE_COUNT)&&!grid.classList.contains("infinite-enabled"))grid.classList.add("infinite-enabled");
-  const next=document.querySelector(".battle-count-next");
-  const unlock=e.kind==="boss"?null:nextBattleCountUnlock(state.level);
-  if(next&&unlock?.count===INFINITE_COUNT){
-   const text=`Lv.${unlock.level} 將開放無限連戰`;
-   if(next.textContent!==text)next.textContent=text;
-  }
+
+ if(typeof adventurePreparePage==="function"){
+  const baseAdventurePreparePage=adventurePreparePage;
+  adventurePreparePage=function(){
+   let html=baseAdventurePreparePage();
+   html=html.replace(/>infinite 場<\/button>/g,">∞</button>");
+   html=html.replace("Lv.31 將開放 infinite 場","Lv.31 將開放無限連戰");
+   html=html.replace('class="count-grid" style="--battle-count-columns:7"','class="count-grid infinite-enabled" style="--battle-count-columns:7"');
+   return html;
+  };
  }
- function enhanceCombat(){
-  if(view!=="adventure"||adventureScreen!=="combat"||!infiniteActive())return;
-  const screen=document.querySelector(".combat-screen");if(!screen)return;
-  const head=screen.querySelector(".combat-head"),headText=`無限連戰・第 ${Math.max(1,Number(combatRound)||1)} 場`;
-  if(head&&head.textContent!==headText)head.textContent=headText;
-  if(screen.querySelector("#infiniteBattleStopBtn"))return;
-  const requested=window.activeMainBattleContext?.exitRequested===true;
-  const wrap=document.createElement("div");wrap.className="infinite-stop-wrap";
-  wrap.innerHTML=`<button id="infiniteBattleStopBtn" class="btn danger" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連戰"}</button>`;
-  const btn=wrap.querySelector("button");
-  if(btn)btn.onclick=()=>{if(typeof window.requestInfiniteBattleStop==="function"&&window.requestInfiniteBattleStop()){btn.disabled=true;btn.textContent="本場結束後停止";}};
-  screen.appendChild(wrap);
+
+ if(typeof adventureCombatPage==="function"){
+  const baseAdventureCombatPage=adventureCombatPage;
+  adventureCombatPage=function(){
+   let html=baseAdventureCombatPage();
+   if(!infiniteActive())return html;
+   const round=Math.max(1,Number(combatRound)||1),requested=window.activeMainBattleContext?.exitRequested===true;
+   html=html.replace(/<div class="combat-head">.*?<\/div>/,`<div class="combat-head">無限連戰・第 ${round} 場</div>`);
+   const stop=`<div class="infinite-stop-wrap"><button id="infiniteBattleStopBtn" class="btn danger" onclick="requestInfiniteBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連戰"}</button></div>`;
+   const end=html.lastIndexOf("</section>");
+   return end>=0?html.slice(0,end)+stop+html.slice(end):html+stop;
+  };
  }
- function enhance(){injectStyles();enhancePrepare();enhanceCombat();}
 
  const baseMainSettlement=typeof window.mainBattleSettlementHtml==="function"?window.mainBattleSettlementHtml:null;
  if(baseMainSettlement){
@@ -85,17 +54,9 @@
     const wins=Math.max(0,Math.floor(Number(ctx?.wins)||0));
     const notice=detail?.querySelector(".settlement-section .notice b");
     if(notice)notice.textContent=defeat?`已完成 ${wins} 場，無限連戰已結束；已取得的獎勵與副本進度均保留。`:`完成 ${wins} 場`;
-    else if(!defeat){
-     const row=detail?.querySelector(".item b");
-     if(row)row.textContent=`完成 ${wins} 場`;
-    }
+    else if(!defeat){const row=detail?.querySelector(".item b");if(row)row.textContent=`完成 ${wins} 場`;}
    }
    return result;
   };
  }
-
- const main=document.getElementById("main");
- if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>queueMicrotask(enhance)).observe(main,{childList:true,subtree:true});
- injectStyles();
- setTimeout(enhance,0);
 })();
