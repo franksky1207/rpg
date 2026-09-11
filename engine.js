@@ -108,6 +108,7 @@ window.normalizeWorldSaveState=normalizeWorldState;
 function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0}}
 function newState(){return {
  saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,
+ specializations:createBlankSpecializations(),
  equipment:{weapon:null,helmet:null,armor:null,shoes:null,accessory:null},inventory:[],
  mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),
  lostGear:[],shop:newShopState(),
@@ -124,6 +125,7 @@ function load(){
  if(!Array.isArray(state.inventory))state.inventory=[];
  normalizeWorldState(state);
  normalizeVipState(state);
+ ensureSpecializationState();
  if(!state.lostGear)state.lostGear=[];
  if(!state.shop)state.shop=newShopState();
  if(!Array.isArray(state.shop.items))state.shop.items=[];
@@ -241,8 +243,16 @@ function itemAbilityLines(it){
 }
 
 function calcDamage(atk,def){return Math.max(1,ceil((atk-def*.55)*(.95+Math.random()*.1)))}
-function expReward(e){let mul=e.kind==="boss"?5:e.kind==="elite"?2:1;return ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level))}
-function goldReward(e){let mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;return ceil(goldBase(e.level)*mul)}
+function expReward(e,useTestSpecializations=false){
+ const mul=e.kind==="boss"?5:e.kind==="elite"?2:1;
+ const base=ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level));
+ return specializationAdjustedExp(base,useTestSpecializations);
+}
+function goldReward(e,useTestSpecializations=false){
+ const mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;
+ const base=ceil(goldBase(e.level)*mul);
+ return specializationAdjustedGold(base,useTestSpecializations);
+}
 
 function enemyUnlocked(mapIdx,eIdx){
  if(eIdx===0)return true;
@@ -270,7 +280,7 @@ function addProgress(mapIdx,enemyKind){
  if(state.bossProgress[mapIdx]>=10)state.bossLocked[mapIdx]=false;
 }
 
-function addItem(it){
+function addItem(it,options={}){
  if(!it)return {kept:false,sold:0};
  let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);
  if(it.q===5||(state.settings.keepUpgrade&&upgrade)){
@@ -278,7 +288,11 @@ function addItem(it){
    if(upgrade)upgradeDropNoticePending=true;
    return {kept:true,sold:0};
  }
- if(it.q<=4&&state.settings.autoSell[it.q]){state.gold+=it.sell;return {kept:false,sold:it.sell}}
+ if(it.q<=4&&state.settings.autoSell[it.q]){
+   const sold=specializationSellValue(it,options.useTestSpecializations===true);
+   state.gold+=sold;
+   return {kept:false,sold};
+ }
  state.inventory.push(it);
  if(upgrade)upgradeDropNoticePending=true;
  return {kept:true,sold:0};
