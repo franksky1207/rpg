@@ -28,8 +28,6 @@
   const t=now();flow.hiddenAt=t;
   if(flow.sleeper){
    clearSleeperTimer();
-   flow.sleeper.remaining=Math.max(0,flow.sleeper.dueAt?t-flow.sleeper.dueAt+flow.sleeper.remaining:flow.sleeper.remaining);
-   // 上式只為保留 timer 被清除前尚未等待的時間；以下以 dueAt 重新校正。
    if(flow.sleeper.dueAt)flow.sleeper.remaining=Math.max(0,flow.sleeper.dueAt-t);
   }
  }
@@ -43,9 +41,7 @@
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
   }else flow.credit+=elapsed;
  }
- function syncBackgroundState(){
-  if(isBackground())enterBackground();else leaveBackground();
- }
+ function syncBackgroundState(){if(isBackground())enterBackground();else leaveBackground();}
 
  window.backgroundProgressStart=function(kind){
   const nextKind=String(kind||"");if(!nextKind)return null;
