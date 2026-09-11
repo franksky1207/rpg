@@ -5,14 +5,18 @@
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
  let windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;
+ let environmentBackground=pageHidden||windowBlurred;
+ const environmentListeners=new Set();
+ const pageHideListeners=new Set();
 
  function now(){return Date.now();}
- function isBackground(){return pageHidden||windowBlurred;}
+ function isBackground(){return environmentBackground;}
  function activeFor(kind=null){return !!flow&&(!kind||flow.kind===kind);}
  function hasBackgroundCap(){return !!flow&&flow.maxBackgroundMs!=null&&Number.isFinite(Number(flow.maxBackgroundMs));}
- function isInfiniteMainCount(count,ctx=null){
+ function mainBattleMode(count,ctx=null){
   const marker=window.INFINITE_BATTLE_COUNT||"infinite";
-  return count===marker||count==="infinite"||ctx?.infinite===true;
+  if(count===marker||count==="infinite"||ctx?.infinite===true)return "infinite";
+  return Number(count)>1?"finite":"single";
  }
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
@@ -68,7 +72,26 @@
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
   }else flow.credit+=allowed*BACKGROUND_CREDIT_RATE;
  }
- function syncBackgroundState(){if(isBackground())enterBackground();else leaveBackground();}
+ function syncEnvironment(source="unknown"){
+  const next=pageHidden||windowBlurred;
+  if(next===environmentBackground)return;
+  environmentBackground=next;
+  if(next)enterBackground();else leaveBackground();
+  environmentListeners.forEach(listener=>{try{listener(next,source);}catch(e){console.error(e);}});
+ }
+
+ window.backgroundProgressOnEnvironmentChange=function(listener){
+  if(typeof listener!=="function")return ()=>{};
+  environmentListeners.add(listener);
+  return ()=>environmentListeners.delete(listener);
+ };
+ window.backgroundProgressOnPageHide=function(listener){
+  if(typeof listener!=="function")return ()=>{};
+  pageHideListeners.add(listener);
+  return ()=>pageHideListeners.delete(listener);
+ };
+ window.backgroundProgressEnvironmentIsBackground=function(){return isBackground();};
+ window.backgroundProgressMainBattleMode=mainBattleMode;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
@@ -103,7 +126,6 @@
   }
   flow.instantSkips=0;
   if(isBackground()){
-   // 背景中若剛好進到下一個等待點，從這個等待點重新計時；不把同步運算時間當成可跳過動畫的額度。
    flow.hiddenAt=now();
    return new Promise(resolve=>{flow.sleeper={remaining,dueAt:0,timer:null,resolve};});
   }
@@ -117,17 +139,20 @@
   return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:hasBackgroundCap()?Number(flow.maxBackgroundMs):null};
  };
 
- document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncBackgroundState();});
- window.addEventListener("blur",()=>{windowBlurred=true;syncBackgroundState();});
- window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncBackgroundState();});
- window.addEventListener("pagehide",()=>{pageHidden=true;syncBackgroundState();});
- window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncBackgroundState();});
+ document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncEnvironment("visibilitychange");});
+ window.addEventListener("blur",()=>{windowBlurred=true;syncEnvironment("blur");});
+ window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
+ window.addEventListener("pagehide",()=>{
+  pageHidden=true;syncEnvironment("pagehide");
+  pageHideListeners.forEach(listener=>{try{listener();}catch(e){console.error(e);}});
+ });
+ window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");});
 
  const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
  if(baseBeginCombat){
   const wrappedBeginCombat=function(count,...args){
-   const infinite=isInfiniteMainCount(count);
-   if(infinite||Number(count)>1)window.backgroundProgressStart("main",{mode:infinite?"infinite":"finite"});
+   const mode=mainBattleMode(count);
+   if(mode!=="single")window.backgroundProgressStart("main",{mode});
    return baseBeginCombat.call(this,count,...args);
   };
   window.beginCombat=wrappedBeginCombat;
@@ -138,9 +163,8 @@
  if(baseRunBattles){
   const wrappedRunBattles=async function(count,...args){
    const ctx=args[0]&&typeof args[0]==="object"?args[0]:null;
-   const infinite=isInfiniteMainCount(count,ctx);
-   const useBackground=infinite||Number(count)>1;
-   if(useBackground)window.backgroundProgressStart("main",{mode:infinite?"infinite":"finite"});
+   const mode=mainBattleMode(count,ctx),useBackground=mode!=="single";
+   if(useBackground)window.backgroundProgressStart("main",{mode});
    try{return await baseRunBattles.call(this,count,...args);}
    finally{if(useBackground)window.backgroundProgressStop("main");}
   };
