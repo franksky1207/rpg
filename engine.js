@@ -54,7 +54,12 @@ function normalizeWorldState(target){
 }
 window.normalizeWorldSaveState=normalizeWorldState;
 function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0,initialized:false}}
-function newState(){return {saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:baseHP(1),gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment:{weapon:null,helmet:null,armor:null,shoes:null,accessory:null},inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false}}
+function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,makeItem(1,0,"normal",0,type)]))}
+function newState(){
+ const equipment=starterEquipment();
+ const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
+ return {saveVersion:SAVE_VERSION,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+}
 
 function load(){
  let hadRaw=false;
