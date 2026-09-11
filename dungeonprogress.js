@@ -41,6 +41,7 @@
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   return dungeon;
  }
+ window.normalizeDungeonSaveState=normalizeDungeonState;
 
  function initializeVipHpIfNeeded(){
   if(!state||state.vipInitialized===true)return;
