@@ -1,8 +1,8 @@
 (function(){
  const BOUNTY_TIERS=[
-  {id:"normal",name:"普通懸賞",weight:45,points:80,hpMul:1.00,damageMul:1.00,defMul:.88,critScale:.5,critAdd:0,critCap:10,dodgeScale:.5,dodgeAdd:0,dodgeCap:8},
-  {id:"high",name:"高級懸賞",weight:35,points:120,hpMul:1.03,damageMul:1.03,defMul:.90,critScale:.7,critAdd:2,critCap:20,dodgeScale:.7,dodgeAdd:1,dodgeCap:18},
-  {id:"danger",name:"危險懸賞",weight:20,points:180,hpMul:1.08,damageMul:1.06,defMul:.92,critScale:.85,critAdd:3,critCap:28,dodgeScale:.85,dodgeAdd:2,dodgeCap:22}
+  {id:"normal",name:"普通懸賞",weight:45,points:80,goldMult:5,gearCount:2,hpMul:1.00,damageMul:1.00,defMul:.88,critScale:.5,critAdd:0,critCap:10,dodgeScale:.5,dodgeAdd:0,dodgeCap:8},
+  {id:"high",name:"高級懸賞",weight:35,points:120,goldMult:8,gearCount:3,hpMul:1.03,damageMul:1.03,defMul:.90,critScale:.7,critAdd:2,critCap:20,dodgeScale:.7,dodgeAdd:1,dodgeCap:18},
+  {id:"danger",name:"危險懸賞",weight:20,points:180,goldMult:12,gearCount:5,hpMul:1.08,damageMul:1.06,defMul:.92,critScale:.85,critAdd:3,critCap:28,dodgeScale:.85,dodgeAdd:2,dodgeCap:22}
  ];
  const BOUNTY_NAMES={
   normal:["武裝逃逸者","非法改裝兵","黑市護衛","走私突擊手","失控安保機"],
@@ -50,6 +50,33 @@
   if(!enemy?.traits?.length)return "無";
   return enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");
  }
+ function bountyMapIndex(level){
+  const lv=clampGameLevel(level);
+  const exact=MAPS.findIndex(m=>lv>=m.min&&lv<=m.max);
+  if(exact>=0)return exact;
+  for(let i=MAPS.length-1;i>=0;i--)if(lv>=MAPS[i].min)return i;
+  return 0;
+ }
+ function bountyGoldReward(tier){
+  const normalGold=goldReward({kind:"normal",level:clampGameLevel(state.level)});
+  return Math.max(0,Math.floor(normalGold*Math.max(1,Number(tier?.goldMult)||1)));
+ }
+ function bountyDropSource(enemy){
+  return {kind:"normal",level:clampGameLevel(state.level),traits:Array.isArray(enemy?.traits)?enemy.traits.slice():[]};
+ }
+ function guaranteedBountyItem(enemy,mapIdx){
+  const source=bountyDropSource(enemy);
+  let item=null;
+  while(!item)item=dropItem(source,mapIdx);
+  return item;
+ }
+ function bountyRewardPreviewHtml(tier){
+  return `<div class="dungeon-bounty-reward-grid"><div><span>VIP 積分</span><strong>${tier.points}</strong></div><div><span>金幣</span><strong>${bountyGoldReward(tier).toLocaleString()}</strong></div><div><span>裝備</span><strong>${tier.gearCount} 件</strong></div></div>`;
+ }
+ function bountyLootHtml(items){
+  if(!Array.isArray(items)||!items.length)return "";
+  return `<div class="dungeon-bounty-loot-list">${items.map(row=>`<div class="dungeon-bounty-loot-row"><span>${itemHtml(row.item,true)}</span><span class="${row.sold?"muted":"dungeon-bounty-reward"}">${row.sold?`自動出售 +${row.sold.toLocaleString()}`:"保留"}</span></div>`).join("")}</div>`;
+ }
 
  window.getBountyTierConfig=function(id){const t=BOUNTY_TIERS.find(x=>x.id===id);return t?{...t}:null;};
  window.getBountyTierConfigs=function(){return BOUNTY_TIERS.map(x=>({...x}));};
@@ -76,7 +103,7 @@
       <div class="${tierClass(b.tier.id)} dungeon-bounty-tier">${b.tier.name}</div>
       <h2>${b.enemy.name}</h2>
       <div class="dungeon-bounty-traits">特性：${traitNames(b.enemy)}</div>
-      <div class="dungeon-bounty-reward">獎勵：${b.tier.points} VIP 積分</div>
+      ${bountyRewardPreviewHtml(b.tier)}
       <div class="controls dungeon-bounty-ready-actions"><button class="btn dungeon-bounty-start-btn" onclick="startBountyFight()">開始挑戰</button></div>
     </div>
   </section>`;
@@ -145,11 +172,25 @@
   const startHp=bountyState.startHp,playerMax=bountyState.playerMaxHp;
   const result=dungeonFightCore(bountyState.enemy);
   await animateBounty(result,startHp,playerMax);
-  let gained=0;
-  if(result.win){gained=bountyState.tier.points;addDungeonPoints(gained);}
+  let gained=0,rewardGold=0,soldGold=0,rewardItems=[];
+  if(result.win){
+   const tier=bountyState.tier;
+   gained=tier.points;
+   addDungeonPoints(gained);
+   rewardGold=bountyGoldReward(tier);
+   state.gold+=rewardGold;
+   const mapIdx=bountyMapIndex(state.level);
+   for(let i=0;i<tier.gearCount;i++){
+    const item=guaranteedBountyItem(bountyState.enemy,mapIdx);
+    const handled=addItem(item);
+    const sold=Math.max(0,Number(handled?.sold)||0);
+    soldGold+=sold;
+    rewardItems.push({item,sold,kept:handled?.kept===true});
+   }
+  }
   const combatEndHp=result.combatEndHp;
   finishDungeonRun();
-  bountyState.result={win:result.win,gained,turns:result.turns,combatEndHp};
+  bountyState.result={win:result.win,gained,rewardGold,soldGold,rewardItems,turns:result.turns,combatEndHp};
   bountyState.phase="result";
   battleBusy=false;
   render();
@@ -158,12 +199,14 @@
  function bountyResultHtml(){
   const d=ensureDungeonProgressState(),r=bountyState.result||{};
   const title=r.win?"懸賞完成":"懸賞失敗";
+  const items=Array.isArray(r.rewardItems)?r.rewardItems:[];
+  const kept=items.filter(x=>!x.sold).length,sold=items.filter(x=>!!x.sold).length;
   return `<section class="dungeon-bounty-shell dungeon-page-shell">
    <div class="dungeon-bounty-card card dungeon-bounty-result-card">
     <div class="dungeon-bounty-title">${title}</div>
     <div class="${tierClass(bountyState.tier.id)} dungeon-bounty-tier">${bountyState.tier.name}</div>
     <h2>${bountyState.enemy.name}</h2>
-    <div class="dungeon-bounty-result-line">本次獲得 VIP 積分：<strong class="dungeon-bounty-reward">${r.gained||0}</strong></div>
+    ${r.win?`<div class="dungeon-bounty-reward-grid"><div><span>VIP 積分</span><strong>+${r.gained||0}</strong></div><div><span>懸賞金幣</span><strong>+${Number(r.rewardGold||0).toLocaleString()}</strong></div><div><span>裝備</span><strong>${items.length} 件</strong><small>保留 ${kept}・出售 ${sold}</small></div></div>${r.soldGold?`<div class="dungeon-bounty-result-line">自動出售所得：+${Number(r.soldGold).toLocaleString()} 金幣</div>`:""}${bountyLootHtml(items)}`:`<div class="dungeon-bounty-result-line">本次沒有獲得獎勵。</div>`}
     <div class="dungeon-bounty-result-line">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div>
     <div class="dungeon-bounty-result-line">剩餘可挑戰次數：${d.attempts} 次</div>
     <div class="controls dungeon-bounty-result-actions"><button class="btn dungeon-bounty-start-btn" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?"enterBountyDungeon()":"void(0)"}">${d.attempts>0?"再次進入懸賞戰":"挑戰次數不足"}</button><button class="btn" onclick="go('dungeon')">返回副本</button></div>
