@@ -78,27 +78,23 @@
   render();
  };
 
- // 背包裝備操作由本模組統一負責，不再依賴其他模組先覆寫再補丁。
- compareHtml=function(it){
+ window.equipmentCompareHtml=function(it){
   const old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=round1(old?newScore-oldScore:newScore),locked=it.locked===true;
   return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn ${locked?"ok":""}" onclick="toggleSelectedItemLock()">${locked?"🔒 已鎖定｜點擊解鎖":"🔓 鎖定裝備"}</button><button class="btn" onclick="sellSelected()" ${locked?"disabled":""}>出售</button></div>${locked?`<div class="muted" style="margin-top:7px">此裝備已鎖定，不會被手動出售、一鍵出售或自動出售。</div>`:""}</div>`;
  };
- window.compareHtml=compareHtml;
 
- equipSelected=function(){
+ window.equipmentEquipSelected=function(){
   const i=state.inventory.findIndex(x=>x.id===selectedItem);
-  if(i<0)return;
+  if(i<0)return {changed:false};
   const item=state.inventory.splice(i,1)[0],old=state.equipment[item.type]||null;
   state.equipment[item.type]=item;
-  if(old)handleUnequippedItem(old);
+  const handled=old?handleUnequippedItem(old):null;
   restoreAfterEquipmentChange();
   selectedItem=null;
-  save();
-  render();
+  return {changed:true,item,old,handled};
  };
- window.equipSelected=equipSelected;
 
- equipBestAll=function(){
+ window.equipmentEquipBestAll=function(){
   let changed=0,soldCount=0,soldGold=0;
   EQUIPMENT_TYPES.forEach(type=>{
    const current=state.equipment[type];let best=current,bestScore=equipmentScore(current);
@@ -113,51 +109,46 @@
     }
    }
   });
-  restoreAfterEquipmentChange();selectedItem=null;save();render();
-  if(!changed)return alert("目前裝備已是最佳。");
-  const soldText=soldCount?`\n換下裝備自動出售 ${soldCount} 件，獲得 ${soldGold.toLocaleString()} 金幣。`:"";
-  alert(`已更換 ${changed} 件較強裝備。${soldText}`);
- };
- window.equipBestAll=equipBestAll;
-
- sellSelected=function(){
-  const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;
-  const item=state.inventory[i];
-  if(item.locked===true)return alert("這件裝備已鎖定，請先解鎖後再出售。");
-  if(Number(item.q)===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;
-  state.inventory.splice(i,1);
-  state.gold+=specializationSellValue(item);
+  restoreAfterEquipmentChange();
   selectedItem=null;
-  save();render();
+  return {changed,soldCount,soldGold};
  };
- window.sellSelected=sellSelected;
 
- sellLowerAll=function(){
+ window.equipmentSellSelected=function(options={}){
+  const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return {ok:false,reason:"missing"};
+  const item=state.inventory[i];
+  if(item.locked===true)return {ok:false,reason:"locked",item};
+  if(Number(item.q)===5&&options.confirmMythic!==true)return {ok:false,reason:"mythic",item};
+  state.inventory.splice(i,1);
+  const sold=specializationSellValue(item);
+  state.gold+=sold;
+  selectedItem=null;
+  return {ok:true,item,sold};
+ };
+
+ window.equipmentLowerSalePreview=function(){
   const targets=state.inventory.filter(item=>{
    if(item?.locked===true||Number(item.q)===5)return false;
    const current=state.equipment[item.type];
    return !!current&&equipmentScore(item)<=equipmentScore(current);
   });
-  if(!targets.length)return alert("沒有可出售的未鎖定較低裝備。");
-  const total=targets.reduce((sum,item)=>sum+specializationSellValue(item),0);
-  if(!confirm(`將出售 ${targets.length} 件未鎖定的較低或同能力裝備，共獲得 ${total.toLocaleString()} 金幣。確定出售嗎？`))return;
-  const ids=new Set(targets.map(item=>item.id));
+  return {targets,total:targets.reduce((sum,item)=>sum+specializationSellValue(item),0)};
+ };
+ window.equipmentSellLowerAll=function(preview=null){
+  const data=preview?.targets?preview:equipmentLowerSalePreview();
+  const ids=new Set(data.targets.map(item=>item.id));
   state.inventory=state.inventory.filter(item=>!ids.has(item.id));
-  state.gold+=total;
+  state.gold+=data.total;
   selectedItem=null;
-  save();render();
-  alert(`已出售 ${targets.length} 件裝備，獲得 ${total.toLocaleString()} 金幣。`);
+  return {count:data.targets.length,total:data.total};
  };
- window.sellLowerAll=sellLowerAll;
 
- discardLostGear=function(i){
-  const lost=state.lostGear?.[i];if(!lost)return;
-  if(lost.item?.locked===true)return alert("這件遺失裝備仍處於鎖定狀態；請先贖回並解鎖後再放棄。");
-  const label=lost.item?itemHtmlPlain(lost.item):"這件遺失裝備";
-  if(!confirm(`確定永久放棄 ${label} 嗎？放棄後無法復原。`))return;
-  state.lostGear.splice(i,1);save();render();
+ window.equipmentDiscardLostGear=function(i){
+  const lost=state.lostGear?.[i];if(!lost)return {ok:false,reason:"missing"};
+  if(lost.item?.locked===true)return {ok:false,reason:"locked",lost};
+  state.lostGear.splice(i,1);
+  return {ok:true,lost};
  };
- window.discardLostGear=discardLostGear;
 
  // 結算頁由 settlementui.js 建立；這裡只補上統一的換裝後滿血規則。
  if(typeof window.equipSettlementDrop==="function"){
