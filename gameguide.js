@@ -75,6 +75,6 @@
  window.gameGuidePage=function(){
   const current=activeCategory();
   const tabs=GUIDE_CATEGORIES.map(x=>`<button class="guide-category ${x.id===current.id?"active":""}" onclick="setGameGuideCategory('${x.id}')">${x.label}</button>`).join("");
-  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">查看玩法、系統、戰鬥與各項規則。此頁只說明玩家需要知道的規則，不公開內部計算公式。</div></div><div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
+  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">查看玩法、系統、戰鬥與各項規則。</div></div><div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
  };
 })();
