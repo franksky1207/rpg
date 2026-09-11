@@ -1,6 +1,6 @@
 (function(){
  let voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
- const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("void")?window.backgroundProgressSleep(ms,"void"):new Promise(resolve=>setTimeout(resolve,ms));
 
  function injectStyles(){
   if(document.getElementById("void-mirage-ui-styles"))return;
@@ -107,13 +107,18 @@
     if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
     await sleep(350);
    }
-  }finally{voidUi.running=false;}
+  }finally{
+   voidUi.running=false;
+   if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
+  }
  }
 
  window.enterVoidMirageDungeon=function(){
   if(voidUi.running)return;
   const started=typeof beginVoidMirageRun==="function"?beginVoidMirageRun():{ok:false};if(!started.ok){view="dungeon";render();return;}
-  voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};view="dungeon-void-mirage";render();setTimeout(autoClimb,100);
+  if(typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
+  voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};view="dungeon-void-mirage";render();
+  if(typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(autoClimb);else setTimeout(autoClimb,100);
  };
  window.requestVoidMirageExitUI=function(){
   if(voidUi.phase==="result")return;voidUi.exitAfterFloor=true;
