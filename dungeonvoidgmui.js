@@ -27,7 +27,7 @@
     <div class="controls" style="margin-top:10px;align-items:end">
      <label>從目前層數爬到<br><input id="gmVoidClimbFloor" type="number" min="${current}" step="1" value="${current}" style="width:170px"></label>
      <button class="btn gm-create" onclick="gmClimbVoidMirageToFloor()">推進並取得積分</button>
-     <span class="muted">指定層數不可低於目前第 ${current} 層；會把目前層到指定層視為已通過並加入首通積分。</span>
+     <span class="muted">指定層數不可低於目前第 ${current} 層；會把目前層到指定層視為已通過並加入各層對應的 VIP 積分。</span>
     </div>
    </div>`;
   return html.slice(0,bodyEnd)+block+html.slice(bodyEnd);
