@@ -58,6 +58,7 @@
   return {
    win:combat.win,
    logs:combat.logs,
+   events:combat.events||[],
    e:enemy,
    combatEndHp:state.hp,
    turns:combat.turns
