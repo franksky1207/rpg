@@ -60,12 +60,13 @@
  };
 
  window.dungeonFightCore=function(enemy){
-  if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
+  if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],events:[],e:enemy||null,combatEndHp:state.hp,turns:0};
   const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
   state.hp=combat.hp;
   return {
    win:combat.win,
    logs:combat.logs,
+   events:combat.events||[],
    e:enemy,
    combatEndHp:state.hp,
    turns:combat.turns
