@@ -13,6 +13,7 @@
  let presentation=null;
  let lastLogs=[];
  let floatSerial=0;
+ let resultLogTimer=null;
 
  function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function combatScreen(){return document.querySelector("#main .combat-screen");}
@@ -71,6 +72,7 @@
   const details=document.createElement("details");details.className="combat-log-panel result-combat-log";details.innerHTML=`<summary>戰鬥紀錄</summary><div class="combat-log-scroll">${logRowsHtml(lastLogs)}</div>`;host.appendChild(details);
   const box=details.querySelector(".combat-log-scroll");if(box)box.scrollTop=box.scrollHeight;
  }
+ function queueResultLog(){clearTimeout(resultLogTimer);resultLogTimer=setTimeout(injectResultLog,0);}
 
  function spawnFx(target,kind,text=null,delay=0){
   const cfg=FX_LABELS[kind]||{text:String(text||""),className:kind||""};
@@ -126,6 +128,13 @@
   }
  }
 
+ window.prepareCombatPresentation=function(result,options={}){
+  if(!combatScreen()||options.logs===false){if(!combatScreen())presentation=null;return;}
+  ensureCombatExtras();
+  presentation={events:Array.isArray(result?.events)?result.events.slice():[],index:0};
+  window.setCombatLog(result?.logs||[]);
+ };
+
  document.addEventListener("animationstart",event=>{
   const el=event.target;
   if(!(el instanceof Element)||!el.classList.contains("combat-damage"))return;
@@ -134,27 +143,10 @@
   if(target)consumeForPulse(target,el.textContent||"");
  },true);
 
- const baseRunCombatCore=window.runCombatCore;
- if(typeof baseRunCombatCore==="function"){
-  window.runCombatCore=function(player,enemy,startHp=null,options={}){
-   const result=baseRunCombatCore(player,enemy,startHp,options);
-   if(combatScreen()&&options.logs!==false){
-    ensureCombatExtras();
-    presentation={events:Array.isArray(result?.events)?result.events.slice():[],index:0};
-    window.setCombatLog(result?.logs||[]);
-   }else if(!combatScreen()){
-    presentation=null;
-   }
-   return result;
-  };
- }
-
- const baseRender=typeof render==="function"?render:null;
- if(baseRender){
-  render=function(){const out=baseRender.apply(this,arguments);ensureCombatExtras();setTimeout(injectResultLog,0);return out;};
- }
  const modal=document.getElementById("battleResultModal");
- if(modal&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(injectResultLog,0)).observe(modal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true});
+ if(modal&&typeof MutationObserver!=="undefined")new MutationObserver(queueResultLog).observe(modal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true});
+ const main=document.getElementById("main");
+ if(main&&typeof MutationObserver!=="undefined")new MutationObserver(queueResultLog).observe(main,{childList:true,subtree:true});
 
- ensureCombatExtras();
+ installStyles();
 })();
