@@ -2,6 +2,7 @@
  function arenaDifficultyLabel(id){return id==="extreme"?"高難":id==="hard"?"中難":"低難";}
  function arenaDifficultyDesc(id){return id==="extreme"?"最高風險・晉升評估基準":id==="hard"?"收益較高・具明顯風險":"穩定挑戰・安全收益";}
  function arenaDifficultyClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
+ function arenaRankLabel(rank){return typeof getArenaRankName==="function"?getArenaRankName(rank):`${WORLD_REGIONS?.[rank-1]?.name||`第${rank}區`}階`;}
  function arenaNextRegionName(rank){const region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[rank]:null;return region?.name||`第 ${rank+1} 區域`;}
  function assessmentCopy(a){
   if(!a)return {tone:"neutral",title:"尚未評估",detail:"以目前高難進行 500 次完整三連戰模擬。"};
@@ -13,12 +14,14 @@
   return {tone:a.clears>=450?"ready":"neutral",title:`${a.clears} / ${a.runs}（${a.rate}%）`,detail:a.clears>=450?"已達晉升標準。":"尚未達 450 次全通，可在戰力提升後再次評估。"};
  }
  function buildArenaRankPanel(a){
-  const copy=assessmentCopy(a),rank=a?.rank||1,cap=a?.unlockedCap||1,max=a?.maxRank||1;
-  const next=rank<max?`<div class="arena-next-map">下一階：${rank+1}・${arenaNextRegionName(rank)}${rank>=cap?"　<span>尚未由主線解鎖</span>":""}</div>`:"<div class="arena-next-map">目前已達競技場最高階</div>";
+  const copy=assessmentCopy(a),rank=a?.rank||1,cap=a?.unlockedCap||3,max=a?.maxRank||1;
+  const nextRank=rank+1;
+  const next=rank<max?`<div class="arena-next-map">下一階：${arenaRankLabel(nextRank)}${rank>=cap?`　<span>需先解鎖主線第 ${nextRank} 區域</span>`:""}</div>`:"<div class="arena-next-map">目前已達競技場最高階</div>";
   const pct=a?.hasResult?Math.max(0,Math.min(100,Number(a.rate)||0)):0;
   const assessDisabled=!!a?.promotionReady||rank>=max;
   const promoteDisabled=!a?.canPromote;
-  return `<section class="arena-rank-dashboard"><div class="arena-rank-hero"><div><span class="arena-rank-kicker">目前競技場階級</span><strong>${a?.rankName||`第${rank}階`}</strong></div><div class="arena-rank-count"><b>${rank}</b><span>/ ${cap}</span><small>主線開放上限</small></div></div><div class="arena-map-cap">目前競技場最高可達：第 ${cap} 階（由主線第 ${cap} 區域解鎖）</div>${next}<div class="arena-assessment-box ${copy.tone}"><div class="arena-assessment-head"><b>晉升評估</b><strong>${copy.title}</strong></div><div class="arena-assessment-bar"><span style="width:${pct}%"></span></div><p>${copy.detail}</p><div class="arena-assessment-actions"><button class="btn" ${assessDisabled?"disabled":""} onclick="${assessDisabled?"void(0)":"assessArenaPromotion()"}">進行 500 次評估</button><button class="btn primary" ${promoteDisabled?"disabled":""} onclick="${promoteDisabled?"void(0)":"promoteArenaRank()"}">晉升下一階</button></div></div></section>`;
+  const capSource=cap<=3?"Lv15 開放競技場後，前三階為基礎開放":"第 4 階起依主線區域解鎖；目前主線已開放至第 "+cap+"區域";
+  return `<section class="arena-rank-dashboard"><div class="arena-rank-hero"><div><span class="arena-rank-kicker">目前競技場階級</span><strong>${arenaRankLabel(rank)}</strong></div><div class="arena-rank-count"><b>${rank}</b><span>/ ${cap}</span><small>目前可達上限</small></div></div><div class="arena-map-cap">目前競技場最高可達：第 ${cap} 階・${arenaRankLabel(cap)}</div><div class="arena-map-cap">${capSource}</div>${next}<div class="arena-assessment-box ${copy.tone}"><div class="arena-assessment-head"><b>晉升評估</b><strong>${copy.title}</strong></div><div class="arena-assessment-bar"><span style="width:${pct}%"></span></div><p>${copy.detail}</p><div class="arena-assessment-actions"><button class="btn" ${assessDisabled?"disabled":""} onclick="${assessDisabled?"void(0)":"assessArenaPromotion()"}">進行 500 次評估</button><button class="btn primary" ${promoteDisabled?"disabled":""} onclick="${promoteDisabled?"void(0)":"promoteArenaRank()"}">晉升下一階</button></div></div></section>`;
  }
  function enhanceArenaSelection(main){
   const grid=main.querySelector(".arena-difficulty-grid");if(!grid)return;
@@ -40,7 +43,7 @@
   const panel=main.querySelector(".arena-ready-panel");if(!panel||panel.dataset.playerUi==="1")return;
   panel.dataset.playerUi="1";
   const id=core?.difficulty?.id||"normal",label=arenaDifficultyLabel(id);
-  const title=panel.querySelector(".arena-title");if(title)title.textContent=core?.rankName||"競技場";
+  const title=panel.querySelector(".arena-title");if(title)title.textContent=arenaRankLabel(core?.rank||1);
   panel.querySelector(".arena-stage-label")?.insertAdjacentHTML("beforebegin",`<div class="arena-ready-meta"><span>${label}</span><b>${arenaDifficultyDesc(id)}</b></div>`);
   const carry=panel.querySelector(".arena-carry");if(carry)carry.textContent="每輪固定進行三戰，三戰之間不回血；若選連續挑戰，新一輪才會重新滿血。";
   const actions=panel.querySelector(".arena-actions");if(actions)actions.insertAdjacentHTML("beforebegin",`<div class="arena-mode-help"><div><b>單次挑戰</b><span>完成這一輪後進入結算</span></div><div><b>連續挑戰</b><span>自動開始下一輪，死亡、次數不足或手動停止時結算</span></div></div>`);
@@ -48,7 +51,7 @@
  function enhanceArenaCombat(main,core){
   const screen=main.querySelector(".arena-combat");if(!screen)return;
   const id=core?.difficulty?.id||"normal",label=arenaDifficultyLabel(id),head=screen.querySelector(".arena-combat-head");
-  if(head)head.textContent=`【競技場】 ${core?.rankName||""}・${label}・第 ${(Number(core?.stage)||0)+1} 戰${core?.continuous?"・連續挑戰":""}`;
+  if(head)head.textContent=`【競技場】 ${arenaRankLabel(core?.rank||1)}・${label}・第 ${(Number(core?.stage)||0)+1} 戰${core?.continuous?"・連續挑戰":""}`;
   const tier=screen.querySelector(".arena-combat-tier");if(tier)tier.textContent=label;
   if(core?.continuous&&!screen.querySelector(".arena-live-summary")){
    const runs=Number(core?.summary?.runs)||0,clears=Number(core?.summary?.fullClears)||0;
@@ -59,7 +62,7 @@
   const panel=main.querySelector(".arena-result-panel");if(!panel||panel.dataset.playerUi==="1")return;
   panel.dataset.playerUi="1";
   const id=core?.difficulty?.id||"normal",label=arenaDifficultyLabel(id),diff=panel.querySelector(".arena-result-difficulty");
-  if(diff)diff.textContent=`${core?.rankName||""}・${label}`;
+  if(diff)diff.textContent=`${arenaRankLabel(core?.rank||1)}・${label}`;
   if(core?.continuous){
    const title=panel.querySelector(".arena-title");if(title)title.textContent="競技場連續挑戰總結算";
    const reason=Array.from(panel.querySelectorAll(".arena-current-points")).find(el=>el.textContent.includes("停止原因"));if(reason)reason.classList.add("arena-stop-reason");
@@ -94,7 +97,7 @@
  }
  function enhanceDungeonHome(main){
   const bounty=main.querySelector(".dungeon-mode-bounty p");if(bounty)bounty.textContent="隨機挑戰依目前實力生成的強敵，可選單次或連續挑戰，主打高 EXP、高金幣與多裝備。";
-  const arena=main.querySelector(".dungeon-mode-arena p");if(arena)arena.textContent="以競技場階級挑戰低、中、高三種難度；高難達成晉升評估後可提升階級。";
+  const arena=main.querySelector(".dungeon-mode-arena p");if(arena)arena.textContent="Lv15 開放競技場後先提供前三階；第4階起需推進對應主線區域。每階可挑戰低、中、高三種難度。";
  }
  function enhance(){
   const main=document.getElementById("main");if(!main)return;
