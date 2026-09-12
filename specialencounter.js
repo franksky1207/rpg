@@ -92,9 +92,11 @@
  }
 
  function grantSpecialReward(rewardCtx,baseXp,baseGold,dropLevel,mapIdx){
-  const xpRaw=ceil(baseXp*(rewardCtx.expMultiplier||1));
+  const xpBase=ceil(baseXp*(rewardCtx.expMultiplier||1));
+  const xpRaw=typeof specializationAdjustedExp==="function"?specializationAdjustedExp(xpBase):xpBase;
   const xpPay=specialExpPayout(xpRaw,[]);
-  const gold=ceil(baseGold*(rewardCtx.goldMultiplier||1));
+  const goldBaseReward=ceil(baseGold*(rewardCtx.goldMultiplier||1));
+  const gold=typeof specializationAdjustedGold==="function"?specializationAdjustedGold(goldBaseReward):goldBaseReward;
   state.gold+=gold;
   const items=specialMakeDrops(rewardCtx,dropLevel,mapIdx);
   const drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
