@@ -54,7 +54,6 @@
   const p=progressState();arena.activeRank=null;arena.rank=p.assessmentRank;
  }
 
- const baseOpenArena=typeof window.openArenaDungeon==="function"?window.openArenaDungeon:null;
  window.promoteArenaRank=function(){
   const arena=arenaState(),p=progressState();
   const assessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
@@ -74,7 +73,6 @@
   const nextAssessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
   return {ok:true,...(nextAssessment||{})};
  };
- window.openArenaDungeon=function(){clearActiveRank();return baseOpenArena?baseOpenArena():undefined;};
 
  window.getArenaWindowState=progressState;
  window.getArenaProgressState=progressState;
