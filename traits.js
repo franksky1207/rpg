@@ -65,9 +65,33 @@ function combatTraitBadgesHtml(traits){
  const badges=traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<span class="trait-detail-name" style="border-color:${t.border};color:${t.color};font-size:inherit;font-weight:700;padding:3px 10px;line-height:1.25">${t.name}</span>`:"";}).filter(Boolean).join("");
  return badges?`<div class="combat-trait-badges" style="display:flex;align-self:stretch;width:100%;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px;text-align:left;font-size:1.5em;font-weight:700">${badges}</div>`:"";
 }
+function dungeonCombatTraitIdsFromText(text){
+ const names=String(text||"").replace(/^.*?特性[：:]\s*/,"").split(/[、,，\s]+/).filter(Boolean);
+ return names.map(name=>MONSTER_TRAIT_IDS.find(id=>MONSTER_TRAITS[id]?.name===name)).filter(Boolean);
+}
+function syncDungeonCombatTraitBadges(root=document){
+ const scope=root?.querySelectorAll?root:document;
+ scope.querySelectorAll(".combat-screen .dungeon-bounty-traits,.combat-screen .arena-traits,.combat-screen .void-traits").forEach(el=>{
+  if(el.dataset.combatTraitBadges==="1")return;
+  const ids=dungeonCombatTraitIdsFromText(el.textContent);
+  if(!ids.length)return;
+  el.innerHTML=combatTraitBadgesHtml(ids);
+  el.dataset.combatTraitBadges="1";
+  el.style.margin="0";
+  el.style.fontSize="inherit";
+ }
+ );
+}
 
 window.applyMonsterTraits=applyMonsterTraits;
+window.combatTraitBadgesHtml=combatTraitBadgesHtml;
+window.syncDungeonCombatTraitBadges=syncDungeonCombatTraitBadges;
 window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
 window.resetMonsterPreviewCache=resetMonsterPreviewCache;
 
+if(typeof MutationObserver!=="undefined"){
+ new MutationObserver(()=>syncDungeonCombatTraitBadges()).observe(document.body,{childList:true,subtree:true});
+}
+
 render();
+syncDungeonCombatTraitBadges();
