@@ -2,6 +2,7 @@
  const DUNGEON_PROGRESS_THRESHOLD=100;
  const ENEMY_HP_PROGRESS_RATE=1.5;
  const DAMAGE_PROGRESS_RATE=4;
+ const ARENA_POSITION_MODEL_VERSION=1;
 
  function finiteNonNegative(value,fallback=0){
   const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;
@@ -29,21 +30,18 @@
   const hasHighest=Number.isFinite(Number(source.highestArenaUnlocked))&&Number(source.highestArenaUnlocked)>=1;
   const hasWindowStart=Number.isFinite(Number(source.windowStart))&&Number(source.windowStart)>=1;
   const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1));
+  const positionModelCompatible=Math.floor(Number(source.positionModelVersion)||0)===ARENA_POSITION_MODEL_VERSION;
   let highestArenaUnlocked;
   let assessmentCompatible=false;
   if(hasHighest){
    highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));
-   // In the sequential system assessment data belongs to highestArenaUnlocked.
-   // source.rank may temporarily be a lower visible arena while the player is fighting it.
-   assessmentCompatible=true;
+   assessmentCompatible=positionModelCompatible;
   }else if(hasWindowStart){
-   // The temporary three-card window system advanced windowStart by one per promotion.
-   // Map that promotion count to the new sequential unlock count: 1 -> only arena 1, 2 -> arenas 1-2, etc.
    highestArenaUnlocked=Math.floor(Number(source.windowStart));
    assessmentCompatible=false;
   }else{
    highestArenaUnlocked=legacyRank;
-   assessmentCompatible=true;
+   assessmentCompatible=false;
   }
   highestArenaUnlocked=Math.max(1,Math.min(maxRank,cap,highestArenaUnlocked));
   const visibleStart=Math.max(1,highestArenaUnlocked-2);
@@ -52,6 +50,7 @@
   const runs=assessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
   const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   dungeon.arena={
+   positionModelVersion:ARENA_POSITION_MODEL_VERSION,
    highestArenaUnlocked,
    activeRank,
    rank:activeRank||highestArenaUnlocked,
