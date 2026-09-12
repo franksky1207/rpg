@@ -18,7 +18,7 @@
   let value="尚未評估",detail="";
   if(a?.promotionReady){value=`${a.rate}%`;detail="戰力評估已通過；等下一競技場對應主線區域開放後即可解鎖。";}
   else if(a?.stale){value=`${a.rate}%`;detail="目前裝備、VIP 或戰鬥專精已變化，可重新評估。";}
-  else if(a?.hasResult){value=`${a.rate}%`;detail=a.rate>=90?"已達解鎖標準。":"尚未達解鎖標準，可提升戰力後重新評估。";}
+  else if(a?.hasResult){value=`${a.rate}%`;detail=a.rate>=97?"已達解鎖標準。":"尚未達解鎖標準，可提升戰力後重新評估。";}
   else if(assessmentRunning){value=`評估中 ${assessmentProgress}/500`;detail="正在進行戰力評估。";}
   return `<div class="arena-dual-card ${assessmentTone(a)}"><div class="arena-dual-head"><span>① 戰力評估</span><strong>${value}</strong></div><div class="arena-dual-target">目前最高：${target}</div><div class="arena-dual-bar"><span style="width:${assessmentRunning?Math.max(0,Math.min(100,assessmentProgress/5)):pct}%"></span></div>${detail?`<p>${detail}</p>`:""}</div>`;
  }
@@ -68,7 +68,7 @@
  function unlockPanelHtml(a,p){
   if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
   const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 90%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
+  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
  }
  function venueCard(rank,p,d){
   const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
