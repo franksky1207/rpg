@@ -42,7 +42,7 @@
   const conditional=i=>pct(s.wins[i],s.reached[i]);
   const vipText=typeof gmTestVipLabel==="function"?gmTestVipLabel():`VIP${testVip()}`;
   const specText=typeof gmTestSpecializationLabel==="function"?gmTestSpecializationLabel():"套用目前 GM 測試專精";
-  const qualified=assessment&&s.clearCount>=450;
+  const qualified=assessment&&s.clearCount>=485;
   return `<div class="notice"><div class="gm-test-summary"><div class="gm-test-summary-title">${venueName(s.rank)}・${positionLabel(s.positionId)}算法・${s.runs} 次完整三連戰</div><div class="gm-test-summary-line">全通積分：${s.cfg.totalPoints}</div><div class="gm-test-summary-line">${vipText}</div><div class="gm-test-summary-line">${specText}</div></div><div class="muted gm-test-context">HP／ATK／DEF 依競技場階層；暴擊、閃避與特性依位置。積分則依目前三格進度與位置一起調整。</div>${assessment?`<div class="notice" style="margin-top:10px;border-left-color:${qualified?"#6eaa78":"#d0ad63"}"><b>正式戰力評估：${s.clearCount} / 500（${pct(s.clearCount,500)}%）・${qualified?"通過":"未通過"}</b><div class="muted">正式解鎖下一個競技場時，仍需對應主線區域已開放。</div></div>`:""}<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(135px,1fr))"><div class="stat">第1戰通過<b>${pct(s.wins[0],s.runs)}%</b></div><div class="stat">第2戰到達<b>${pct(s.reached[1],s.runs)}%</b></div><div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div><div class="stat">第3戰到達<b>${pct(s.reached[2],s.runs)}%</b></div><div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div><div class="stat">全通率<b>${pct(s.clearCount,s.runs)}%</b></div><div class="stat">平均積分<b>${s.avgPoints}</b></div><div class="stat">全通平均剩餘 HP<b>${s.avgClearHp}%</b></div><div class="stat">平均總回合<b>${s.avgTurns}</b></div></div></div>`;
  }
  window.gmArena5Run100=function(){
@@ -65,7 +65,7 @@
   if(button){button.disabled=false;button.textContent="500 次正式戰力評估";}
  };
  function arenaGmBody(){
-  return `<div class="muted gm-hub-note">競技場名稱固定依主線區域。100次測試可自由指定位置算法；積分會同步使用目前正式的三格推進規則。</div><div class="controls" style="align-items:end"><label>競技場<br><select id="gmArenaRank5" class="btn">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">例如 1／2／3 顯示時積分為 180／300／420；推進成 2／3／4 後會一起提高為 310／430／550。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
+  return `<div class="muted gm-hub-note">競技場名稱固定依主線區域。100次測試可自由指定位置算法；積分會同步使用目前正式的三格推進規則。</div><div class="controls" style="align-items:end"><label>競技場<br><select id="gmArenaRank5" class="btn">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">正式評估需至少 97% 全通；積分測試沿用目前正式的三格推進規則。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
  }
  function enhanceArenaGm(){
   if(!state?.gm)return;
