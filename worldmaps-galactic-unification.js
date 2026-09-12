@@ -11,5 +11,5 @@
   {chapter:"銀河統合戰爭",name:"星海終極戰線",min:491,max:495,gear:["星海決勝刃","終戰統帥盔","星海主戰甲","星海折躍靴","星海戰爭權柄"],enemies:[["終戰星海兵",491,"normal","attack"],["星海滅界兵器",492,"normal","balanced"],["星海殲滅機",493,"normal","attack"],["終極戰爭巨像",494,"elite","tank"],["星海終戰司令",495,"boss","tank"]]},
   {chapter:"銀河統合戰爭",name:"銀河統合決戰區",min:496,max:500,gear:["銀河終戰刃","文明統御盔","文明終戰甲","銀河躍遷靴","銀河主控核心"],enemies:[["銀河聯軍星兵",496,"normal","balanced"],["銀河統合戰體",497,"normal","attack"],["星海文明終結體",498,"normal","balanced"],["銀河最高統帥",499,"elite","tank"],["銀河征服中樞",500,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("galactic-unification",REGION_MAPS);
 })();
