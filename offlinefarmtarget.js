@@ -14,40 +14,32 @@
  function writeCheckpoint(ts=now()){
   try{localStorage.setItem(CHECKPOINT_KEY,String(Math.max(0,Math.floor(Number(ts)||now()))));}catch(e){}
  }
- function hasMainlineHistory(){
-  if(Array.isArray(state?.mapProgress)&&state.mapProgress.some(row=>Array.isArray(row)&&row.some(v=>(Number(v)||0)>0)))return true;
-  if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return true;
-  return false;
- }
- function targetExists(map,enemy){
-  if(!Number.isInteger(map)||map<0||map>=MAPS.length||!Number.isInteger(enemy)||enemy<0||enemy>3)return false;
-  try{const monster=monsterObj(map,enemy);return !!monster&&monster.kind!=="boss";}catch(e){return false;}
+ function targetInfo(map,enemy){
+  if(!Number.isInteger(map)||map<0||map>=MAPS.length||!Number.isInteger(enemy)||enemy<0||enemy>3)return null;
+  try{
+   const monster=monsterObj(map,enemy);
+   if(!monster||monster.kind==="boss")return null;
+   return {map,enemy,level:Math.max(1,Math.floor(Number(monster.level)||1))};
+  }catch(e){return null;}
  }
  function validStoredTarget(o){
   if(!isObject(o))return false;
   const map=Number(o.farmMap),enemy=Number(o.farmEnemy),avg=Number(o.avgBattleMs),samples=Number(o.sampleCount);
-  return targetExists(map,enemy)&&Number.isFinite(avg)&&avg>=600&&avg<=60000&&Number.isFinite(samples)&&samples>=1;
+  return !!targetInfo(map,enemy)&&Number.isFinite(avg)&&avg>=600&&avg<=60000&&Number.isFinite(samples)&&samples>=1;
  }
- function defeatedFallback(){
-  const maxMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(state?.unlockedMap)||0)));
-  for(let map=maxMap;map>=0;map--){
-   const p=Array.isArray(state?.mapProgress?.[map])?state.mapProgress[map]:[];
-   for(let enemy=3;enemy>=0;enemy--){
+ function highestDefeatedTarget(){
+  if(!Array.isArray(state?.mapProgress))return null;
+  let best=null;
+  for(let map=0;map<Math.min(MAPS.length,state.mapProgress.length);map++){
+   const p=Array.isArray(state.mapProgress[map])?state.mapProgress[map]:[];
+   for(let enemy=0;enemy<=3;enemy++){
     if((Number(p[enemy])||0)<=0)continue;
-    if(targetExists(map,enemy))return {map,enemy};
+    const info=targetInfo(map,enemy);
+    if(!info)continue;
+    if(!best||info.level>best.level||(info.level===best.level&&(info.map>best.map||(info.map===best.map&&info.enemy>best.enemy))))best=info;
    }
   }
-  return null;
- }
- function legalFallback(){
-  if(!hasMainlineHistory())return null;
-  const maxMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(state?.unlockedMap)||0)));
-  for(let map=maxMap;map>=0;map--){
-   for(let enemy=3;enemy>=0;enemy--){
-    try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy)&&targetExists(map,enemy))return {map,enemy};}catch(e){}
-   }
-  }
-  return null;
+  return best;
  }
  if(!state)return;
  if(!isObject(state.offline))state.offline={};
@@ -56,13 +48,17 @@
   const current=Number(state.offline.lastSettledAt);
   if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
  }
- if(!validStoredTarget(state.offline)&&hasMainlineHistory()){
-  const target=defeatedFallback()||legalFallback();
-  if(target){
-   state.offline.farmMap=target.map;
-   state.offline.farmEnemy=target.enemy;
-   state.offline.avgBattleMs=FALLBACK_BATTLE_MS;
-   state.offline.sampleCount=1;
+ const storedValid=validStoredTarget(state.offline);
+ const highest=highestDefeatedTarget();
+ if(highest){
+  const current=storedValid?targetInfo(Number(state.offline.farmMap),Number(state.offline.farmEnemy)):null;
+  if(!current||highest.level>current.level||(highest.level===current.level&&(highest.map!==current.map||highest.enemy!==current.enemy))){
+   const keepAvg=storedValid?Math.max(600,Math.min(60000,Math.round(Number(state.offline.avgBattleMs)||FALLBACK_BATTLE_MS))):FALLBACK_BATTLE_MS;
+   const keepSamples=storedValid?Math.max(1,Math.min(20,Math.floor(Number(state.offline.sampleCount)||1))):1;
+   state.offline.farmMap=highest.map;
+   state.offline.farmEnemy=highest.enemy;
+   state.offline.avgBattleMs=keepAvg;
+   state.offline.sampleCount=keepSamples;
   }
  }
  if(typeof save==="function")save(false);
