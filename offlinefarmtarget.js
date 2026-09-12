@@ -4,15 +4,35 @@
  const CHECKPOINT_INTERVAL_MS=60*1000;
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function now(){return Date.now();}
+ function makeCheckpointId(){
+  try{if(globalThis.crypto&&typeof globalThis.crypto.randomUUID==="function")return globalThis.crypto.randomUUID();}catch(e){}
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+ }
+ function ensureCheckpointId(){
+  if(!isObject(state.offline))state.offline={};
+  const current=typeof state.offline.checkpointId==="string"?state.offline.checkpointId.trim():"";
+  if(current)return current;
+  const id=makeCheckpointId();state.offline.checkpointId=id;return id;
+ }
  function readCheckpoint(){
   try{
-   const value=Number(localStorage.getItem(CHECKPOINT_KEY));
-   const t=now();
-   return Number.isFinite(value)&&value>0&&value<=t?Math.floor(value):null;
+   const raw=localStorage.getItem(CHECKPOINT_KEY);if(!raw)return null;
+   const t=now(),id=ensureCheckpointId();
+   let parsed=null;
+   try{parsed=JSON.parse(raw);}catch(e){parsed=null;}
+   if(isObject(parsed)){
+    const value=Number(parsed.ts),storedId=typeof parsed.id==="string"?parsed.id:"";
+    return storedId===id&&Number.isFinite(value)&&value>0&&value<=t?Math.floor(value):null;
+   }
+   const legacy=Number(raw);
+   return Number.isFinite(legacy)&&legacy>0&&legacy<=t?Math.floor(legacy):null;
   }catch(e){return null;}
  }
  function writeCheckpoint(ts=now()){
-  try{localStorage.setItem(CHECKPOINT_KEY,String(Math.max(0,Math.floor(Number(ts)||now()))));}catch(e){}
+  try{
+   const payload={id:ensureCheckpointId(),ts:Math.max(0,Math.floor(Number(ts)||now()))};
+   localStorage.setItem(CHECKPOINT_KEY,JSON.stringify(payload));
+  }catch(e){}
  }
  function targetInfo(map,enemy){
   if(!Number.isInteger(map)||map<0||map>=MAPS.length||!Number.isInteger(enemy)||enemy<0||enemy>3)return null;
@@ -43,22 +63,21 @@
  }
  if(!state)return;
  if(!isObject(state.offline))state.offline={};
+ ensureCheckpointId();
  const persistedCheckpoint=readCheckpoint();
  if(persistedCheckpoint!=null){
   const current=Number(state.offline.lastSettledAt);
-  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
+  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint>current)state.offline.lastSettledAt=persistedCheckpoint;
  }
  const storedValid=validStoredTarget(state.offline);
  const highest=highestDefeatedTarget();
  if(highest){
   const current=storedValid?targetInfo(Number(state.offline.farmMap),Number(state.offline.farmEnemy)):null;
   if(!current||highest.level>current.level||(highest.level===current.level&&(highest.map!==current.map||highest.enemy!==current.enemy))){
-   const keepAvg=storedValid?Math.max(600,Math.min(60000,Math.round(Number(state.offline.avgBattleMs)||FALLBACK_BATTLE_MS))):FALLBACK_BATTLE_MS;
-   const keepSamples=storedValid?Math.max(1,Math.min(20,Math.floor(Number(state.offline.sampleCount)||1))):1;
    state.offline.farmMap=highest.map;
    state.offline.farmEnemy=highest.enemy;
-   state.offline.avgBattleMs=keepAvg;
-   state.offline.sampleCount=keepSamples;
+   state.offline.avgBattleMs=FALLBACK_BATTLE_MS;
+   state.offline.sampleCount=1;
   }
  }
  if(typeof save==="function")save(false);
