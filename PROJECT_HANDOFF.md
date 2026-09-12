@@ -290,11 +290,43 @@ S3: hp .78 / damage .73 / def .82
 
 ---
 
-## 7. 世界資料與命名檢查
+## 7. 世界資料、固定註冊與命名檢查
 
 `WORLD_REGIONS` 固定10區、每區50級／10張地圖。
 
-`worldnamingrules.js` 可檢查：
+### 第四批已整理：固定 region 註冊
+
+`data.js` 現在提供唯一正式入口：
+
+```text
+registerRegionMaps(regionId, regionMaps)
+```
+
+十支 `worldmaps-*.js` 全部透過固定 `region id` 註冊，不再直接操作 `MAPS.push()` 或 `MAPS.splice()`。
+
+正式行為：
+- 每個 region 只能寫入 `WORLD_REGIONS` 指定的 `mapStart～mapEnd` 固定位置。
+- 每區必須剛好10張。
+- 每張地圖在註冊當下即檢查 chapter、5級範圍與預期位置。
+- 同一區重複載入時只覆寫自己的固定10格，不會重複 append。
+- 不同區若嘗試寫到同一 index，會直接報錯。
+- 因此地圖 index 不再由 `push / splice` 的當下陣列長度決定，降低 script 順序調整或重複載入造成錯位／刪除後段地圖的風險。
+
+`validateWorldMapRegistration()` 負責檢查：
+- 10區是否全數註冊
+- 每區固定10張
+- 100個 map slot 是否完整
+- 每個 slot 的 chapter 是否屬於正確 region
+
+`worldmapregistrycheck.js` 在十區載入完成後執行上述檢查，結果放在：
+
+```text
+window.WORLD_MAP_REGISTRATION_REPORT
+```
+
+若有硬錯誤會輸出 console error。
+
+`worldnamingrules.js` 繼續負責內容層完整性與命名檢查：
 - 100張地圖是否連續
 - 每張5級
 - 每區10張
@@ -303,7 +335,11 @@ S3: hp .78 / damage .73 / def .82
 - chapter 對應
 - 重名／近似名／詞彙密度
 
-目前十個 `worldmaps-*.js` 還混用 `splice / push` 註冊方式，正常載入順序可運作，但後續地圖架構整理應統一成單一 `registerRegionMaps()` 類型入口。
+### 地圖舊存檔原則
+
+本批**沒有改變 map index**，仍維持既有0～99對應，因此舊存檔的 `mapProgress / bossProgress / bossLocked / bossKilled / unlockedMap` 不需要額外 migration。
+
+現行世界進度仍以 map index 為永久身分；未來若要「重新排序既有地圖」或「在中間插入新地圖」，仍需另做 schema migration，不能只改 `WORLD_REGIONS` 或註冊位置。
 
 ---
 
@@ -322,7 +358,7 @@ S3: hp .78 / damage .73 / def .82
 1. **規則與舊資料清理**：97%正式化、assessmentRuleVersion、移除舊玩家競技場 UI、更新 handoff。✅ 已完成
 2. **競技場架構整理**：移除舊450 assessment、收斂物理三維與位置算法、減少 assessment/window wrapper。✅ 已完成
 3. **懸賞戰核心整理**：移除 ready UI workaround、精確獎勵不再於核心玩家頁生成。✅ 已完成
-4. **地圖架構整理**：統一十區地圖註冊與完整性驗證。
+4. **地圖架構整理**：統一十區固定註冊與完整性驗證。✅ 已完成
 5. **存檔／載入／全專案收尾**：收斂 load pipeline、全 repo 舊引用／語法／載入順序健檢。
 
 ---
@@ -334,4 +370,5 @@ S3: hp .78 / damage .73 / def .82
 - 玩家競技場沒有第二層低／中／高難度選擇，也不顯示位置文字。
 - 競技場 HP／ATK／DEF 只看 Rank＋共通 Stage profile；位置只影響暴擊、閃避與特性。
 - 玩家懸賞不公開權重、品質機率與戰前精確獎勵；連續模式中間不回到挑戰模式選擇頁，只在停止時總結算。
+- 十區主線地圖只透過 `registerRegionMaps()` 固定註冊，不再直接 `push / splice`。
 - 發生異常時，先完整自我檢查整條程式鏈，再修根因，不先猜補丁。
