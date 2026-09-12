@@ -6,6 +6,8 @@
  const OFFLINE_GEAR_RATE=.10;
  const OFFLINE_DUNGEON_RATE=.10;
  const DEFAULT_BATTLE_MS=1800;
+ const REAL_BATTLE_MIN_MS=100;
+ const REAL_BATTLE_MAX_MS=600000;
  const HEARTBEAT_MS=60*1000;
  const HEARTBEAT_PERSIST_MS=5*60*1000;
  const YIELD_EVERY=750;
@@ -30,6 +32,7 @@
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
+  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
  }
@@ -43,9 +46,19 @@
   if(!Number.isInteger(m)||m<0||m>=MAPS.length||!Number.isInteger(e)||e<0||e>3)return false;
   try{const monster=monsterObj(m,e);return !!monster&&monster.kind!=="boss";}catch(err){return false;}
  }
+ function realBattleAverageMs(o){
+  const rows=Array.isArray(o?.battleSamples)?o.battleSamples:[];
+  if(!rows.length)return 0;
+  let total=0,count=0;
+  rows.forEach(row=>{const ms=Number(row?.adjustedMs);if(Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}});
+  return count?Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(total/count))):0;
+ }
  function resolveFarmTarget(){
   const o=ensureOfflineState();
-  if(o.sampleCount>0&&o.avgBattleMs>0&&legalFarmTarget(o.farmMap,o.farmEnemy))return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs};
+  if(!legalFarmTarget(o.farmMap,o.farmEnemy))return null;
+  const realAvg=realBattleAverageMs(o);
+  if(realAvg>0)return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:realAvg};
+  if(o.sampleCount>0&&o.avgBattleMs>0)return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs};
   return null;
  }
  function formatDuration(ms){
@@ -73,7 +86,7 @@
  function normalizePending(raw){
   if(!isObject(raw))return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
-  const avg=Math.max(600,Math.min(60000,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS)));
+  const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0));
   const battles=Math.max(0,Math.min(Math.floor(elapsedUsed/avg),Math.floor(Number(raw.battles)||0)));
   if(elapsedRaw<OFFLINE_MIN_MS||!legalFarmTarget(map,enemy)||battles<1)return null;
@@ -89,7 +102,7 @@
   const target=resolveFarmTarget();
   if(!target)return null;
   const elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
-  const avg=Math.max(600,Math.min(60000,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
+  const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const battles=Math.max(0,Math.floor(elapsedUsed/avg));
   if(battles<1)return null;
   const pending={map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
