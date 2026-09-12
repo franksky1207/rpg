@@ -19,8 +19,9 @@
   const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
   if(!regions.length)return 1;
   const unlockedMap=Math.max(0,Math.floor(Number(target?.unlockedMap)||0));
-  let count=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;
-  return Math.max(1,Math.min(regions.length,count||1));
+  const unlockedRegions=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;
+  const baseArenaRanks=Math.min(3,regions.length);
+  return Math.max(baseArenaRanks,Math.min(regions.length,unlockedRegions||1));
  }
  function normalizeArenaProgress(dungeon,target){
   const source=dungeon.arena&&typeof dungeon.arena==="object"&&!Array.isArray(dungeon.arena)?dungeon.arena:{};
