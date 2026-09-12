@@ -107,7 +107,7 @@
 
  function combatSpecSnapshot(){
   const out={};
-  COMBAT_SPEC_KEYS.forEach(key=>{out[key]=typeof specializationLevel==="function"?Math.max(0,Math.floor(Number(specializationLevel(key))||0):0;});
+  COMBAT_SPEC_KEYS.forEach(key=>{out[key]=typeof specializationLevel==="function"?Math.max(0,Math.floor(Number(specializationLevel(key))||0)):0;});
   return out;
  }
  function assessmentSignature(rank,difficultyId){
