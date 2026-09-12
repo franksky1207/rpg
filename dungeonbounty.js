@@ -96,6 +96,8 @@
   bountyState.result=null;
   bountyState.phase="transition";
  }
+ const sleep=ms=>bountyState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"bounty"):new Promise(r=>setTimeout(r,ms));
+ function stopBountyBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("bounty");}
  function beginBountyRound(){
   if(!bountyState.enemy||!bountyState.tier||battleBusy)return false;
   const previewName=bountyState.enemy.name;
@@ -108,7 +110,7 @@
   bountyState.startHp=state.hp;
   bountyState.playerMaxHp=combatStats.hp;
   render();
-  setTimeout(runBountyFight,80);
+  sleep(80).then(runBountyFight);
   return true;
  }
 
@@ -153,7 +155,11 @@
   bountyState.continuous=continuous===true;
   bountyState.stopRequested=false;
   bountyState.summary=newContinuousSummary();
-  if(!beginBountyRound()){view="dungeon";render();}
+  if(bountyState.continuous&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("bounty",{mode:"continuous"});
+  if(!beginBountyRound()){
+   stopBountyBackground();
+   view="dungeon";render();
+  }
  };
  window.requestBountyContinuousStop=function(){
   if(!bountyState.continuous||bountyState.phase!=="combat")return;
@@ -174,7 +180,6 @@
   if(card&&text!=="閃避"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
- const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  async function animateBounty(result,startHp,playerMax){
   let ehp=result.e.hp,php=startHp;
   const delay=result.logs.length>80?25:result.logs.length>40?45:90;
@@ -218,11 +223,15 @@
   if(!result.win)bountyState.summary.stopReason="death";
   else if(bountyState.stopRequested)bountyState.summary.stopReason="manual";
   else if(d.attempts<=0)bountyState.summary.stopReason="attempts";
-  if(bountyState.summary.stopReason){bountyState.phase="result";render();return;}
+  if(bountyState.summary.stopReason){
+   stopBountyBackground();
+   bountyState.phase="result";render();return;
+  }
 
   prepareNextBounty();
   await sleep(300);
   if(!beginBountyRound()){
+   stopBountyBackground();
    bountyState.summary.stopReason="attempts";
    bountyState.phase="result";
    render();
