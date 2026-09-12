@@ -11,5 +11,5 @@
   {chapter:"星際邊疆",name:"星際難民航路",min:191,max:195,gear:["航路衛刃","難民艦戰盔","長航生存甲","遠航推進靴","航路導航標"],enemies:[["航路掠奪兵",191,"normal","attack"],["追擊無人機",192,"normal","balanced"],["流亡武裝體",193,"normal","attack"],["封鎖戰艦",194,"elite","tank"],["航路封鎖者",195,"boss","tank"]]},
   {chapter:"星際邊疆",name:"邊疆霸權戰場",min:196,max:200,gear:["邊疆霸主刃","遠征主控盔","邊疆霸權甲","霸權突進靴","邊疆統帥權印"],enemies:[["終戰遠征兵",196,"normal","balanced"],["邊疆霸權戰體",197,"normal","attack"],["邊疆攻城泰坦",198,"normal","balanced"],["遠域戰將",199,"elite","tank"],["邊疆戰爭霸主",200,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("frontier",REGION_MAPS);
 })();
