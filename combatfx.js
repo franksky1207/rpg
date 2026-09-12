@@ -10,11 +10,29 @@
  };
  let presentation=null;
  let floatSerial=0;
+ let syncingPlayerHp=false;
 
  function combatScreen(){return document.querySelector("#main .combat-screen");}
  function combatCard(target){
   return document.getElementById(target==="player"?"combatPlayerCard":"combatEnemyCard")||document.getElementById(target==="player"?"voidPlayerCard":"voidEnemyCard");
  }
+ function playerHpElements(){
+  const text=document.getElementById("combatPlayerHp")||document.getElementById("voidPlayerHp");
+  const bar=document.getElementById("combatPlayerBar")||document.getElementById("voidPlayerBar");
+  return {text,bar};
+ }
+ function syncPlayerHpDom(){
+  const p=presentation;if(!p||!combatScreen())return;
+  const {text,bar}=playerHpElements();if(!text&&!bar)return;
+  const hp=Math.max(0,Math.min(p.playerMaxHp,p.playerHp)),label=`${hp} / ${p.playerMaxHp}`,width=`${Math.max(0,Math.min(100,hp/p.playerMaxHp*100))}%`;
+  syncingPlayerHp=true;
+  try{
+   if(text&&text.textContent!==label)text.textContent=label;
+   if(bar&&bar.style.width!==width)bar.style.width=width;
+  }finally{syncingPlayerHp=false;}
+ }
+ window.syncCombatPresentationPlayerHp=syncPlayerHpDom;
+ window.getCombatPresentationPlayerHp=function(){return presentation?presentation.playerHp:null;};
 
  function installStyles(){
   if(document.getElementById("combatFxStyles"))return;
@@ -37,6 +55,7 @@
   ["player","enemy"].forEach(target=>{
    const card=combatCard(target);if(card&&!card.querySelector(".combat-fx-layer")){const layer=document.createElement("div");layer.className="combat-fx-layer";card.appendChild(layer);}
   });
+  syncPlayerHpDom();
   return true;
  }
  window.ensureCombatExtras=ensureCombatExtras;
@@ -80,21 +99,27 @@
   }
   if(!match)return;
   let delay=emitPrelude(pre,target);
-  if(match.type==="dodge")return;
+  if(match.type==="dodge"){syncPlayerHpDom();return;}
+  if(target==="player"&&match.actor==="enemy")p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(match.actualDamage)||0)));
   if(match.initiative){spawnFx(target,"initiative",null,delay);delay+=85;}
   if(match.penetration){spawnFx(target,"penetration",null,delay);delay+=85;}
   const next=p.events[p.index];
   if(next?.type==="drain"){
    p.index++;
+   const healed=Math.max(0,Math.floor(Number(next.healed)||0));
+   if(healed>0)p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
    spawnFx("player","drain",null,delay);
-   if(Number(next.healed)>0)spawnFx("player","heal",`+${next.healed} HP`,delay+85);
+   if(healed>0)spawnFx("player","heal",`+${healed} HP`,delay+85);
   }
+  syncPlayerHpDom();
  }
 
  window.prepareCombatPresentation=function(result,options={}){
-  if(!combatScreen()||options.logs===false){if(!combatScreen())presentation=null;return;}
-  ensureCombatExtras();
-  presentation={events:Array.isArray(result?.events)?result.events.slice():[],index:0};
+  if(options.logs===false){presentation=null;return;}
+  const maxHp=Math.max(1,Math.floor(Number(result?.playerMaxHp)||1));
+  const startHp=Math.max(0,Math.min(maxHp,Math.floor(Number(result?.playerStartHp)||maxHp)));
+  presentation={events:Array.isArray(result?.events)?result.events.slice():[],index:0,playerHp:startHp,playerMaxHp:maxHp};
+  if(combatScreen())ensureCombatExtras();
  };
 
  document.addEventListener("animationstart",event=>{
@@ -109,6 +134,13 @@
   const el=event.target;
   if(el instanceof Element&&el.classList.contains("combat-damage")&&event.animationName==="damagePop")el.classList.remove("dodge-text");
  },true);
+
+ const hpObserver=new MutationObserver(mutations=>{
+  if(syncingPlayerHp||!presentation||!combatScreen())return;
+  const ids=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar"]);
+  if(mutations.some(m=>ids.has(m.target?.id)))queueMicrotask(syncPlayerHpDom);
+ });
+ hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
  installStyles();
 })();
