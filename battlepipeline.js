@@ -1,5 +1,6 @@
 (function(){
  const CONTINUOUS_COUNT="continuous";
+ const REAL_BATTLE_SAMPLE_LIMIT=20;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
@@ -8,6 +9,36 @@
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
+ function realBattleSampleMultiplier(playerLevel,enemyLevel){
+  const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
+  if(gap<=3)return 1;
+  if(gap<=6)return 1.10;
+  if(gap<=10)return 1.25;
+  if(gap<=15)return 1.50;
+  return 2;
+ }
+ function beginRealBattleTiming(encounter,playerLevel,mapIdx,enemyIdx){
+  if(!encounter||encounter.kind==="boss")return null;
+  if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
+  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind:encounter.kind==="elite"?"elite":"normal",map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),unsubscribe:null};
+  if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
+  return token;
+ }
+ function finishRealBattleTiming(token,result){
+  if(!token)return false;
+  if(typeof token.unsubscribe==="function")token.unsubscribe();
+  if(token.interrupted||result?.win!==true||result?.e?.kind==="boss")return false;
+  if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return false;
+  const actualMs=Math.round(Date.now()-token.startedAt);
+  if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return false;
+  const multiplier=realBattleSampleMultiplier(token.playerLevel,token.enemyLevel);
+  const adjustedMs=Math.max(100,Math.round(actualMs*multiplier));
+  if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
+  const samples=Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[];
+  samples.push({actualMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier,recordedAt:Date.now()});
+  state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
+  return true;
+ }
 
  window.requestContinuousBattleStop=function(){
   const ctx=window.activeMainBattleContext;
@@ -46,16 +77,19 @@
    currentCombatEncounter=encounter;
    combatRound=ctx.completed+1;
    combatTotal=ctx.continuous?0:ctx.originalCount;
+   const playerLevelBefore=state.level;
+   const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
    adventureScreen="combat";
    render();
    await sleep(60);
 
-   const psBefore=playerCombatStats(),startPlayerHp=state.hp,playerLevelBefore=state.level;
+   const psBefore=playerCombatStats(),startPlayerHp=state.hp;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
-   if(!r.ok){alert(r.reason);break}
+   if(!r.ok){if(typeof realBattleTiming?.unsubscribe==="function")realBattleTiming.unsubscribe();alert(r.reason);break}
 
    const roundLabel=ctx.continuous?`連續戰鬥・第 ${combatRound} 場`:ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"";
    await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
+   finishRealBattleTiming(realBattleTiming,r);
 
    const dungeonResult=typeof awardDungeonProgressForBattle==="function"?awardDungeonProgressForBattle({
     source:"main",
