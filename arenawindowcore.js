@@ -43,13 +43,6 @@
    maxRank:maxArenaRank()
   };
  }
- function withAssessmentRank(fn){
-  const arena=arenaState();if(!arena||typeof fn!=="function")return null;
-  const p=progressState(),previousActive=arena.activeRank;
-  arena.activeRank=null;arena.rank=p.assessmentRank;
-  try{return fn();}
-  finally{arena.activeRank=previousActive;arena.rank=previousActive||p.assessmentRank;}
- }
  function selectVisibleRank(rank){
   const arena=arenaState(),p=progressState(),r=clampRank(rank);
   if(!arena||!p.visibleRanks.includes(r))return false;
@@ -61,23 +54,13 @@
   const p=progressState();arena.activeRank=null;arena.rank=p.assessmentRank;
  }
 
- const baseAssessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus:null;
- const baseAssessPromotion=typeof window.assessArenaPromotion==="function"?window.assessArenaPromotion:null;
  const baseOpenArena=typeof window.openArenaDungeon==="function"?window.openArenaDungeon:null;
- window.getArenaAssessmentStatus=function(){
-  const base=baseAssessment?withAssessmentRank(()=>baseAssessment()):{};
-  const p=progressState();
-  return {...base,...p,rank:p.assessmentRank,rankName:typeof getArenaRankName==="function"?getArenaRankName(p.assessmentRank):base.rankName,canPromote:p.canPromote};
- };
- window.assessArenaPromotion=function(){
-  if(!baseAssessPromotion)return {...window.getArenaAssessmentStatus(),reason:"unavailable"};
-  return withAssessmentRank(()=>baseAssessPromotion());
- };
  window.promoteArenaRank=function(){
   const arena=arenaState(),p=progressState();
-  if(!arena||p.atFinalWindow)return {ok:false,reason:"max-arena",...window.getArenaAssessmentStatus()};
-  if(!p.combatReady)return {ok:false,reason:"combat-not-qualified",...window.getArenaAssessmentStatus()};
-  if(!p.regionReady)return {ok:false,reason:"region-locked",...window.getArenaAssessmentStatus()};
+  const assessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
+  if(!arena||p.atFinalWindow)return {ok:false,reason:"max-arena",...(assessment||{})};
+  if(!p.combatReady)return {ok:false,reason:"combat-not-qualified",...(assessment||{})};
+  if(!p.regionReady)return {ok:false,reason:"region-locked",...(assessment||{})};
   arena.highestArenaUnlocked=clampRank(p.highestArenaUnlocked+1);
   arena.activeRank=null;
   arena.rank=arena.highestArenaUnlocked;
@@ -88,7 +71,8 @@
   save(false);
   if(view==="dungeon-arena"&&typeof openArenaDungeon==="function")openArenaDungeon();
   else if(typeof render==="function")render();
-  return {ok:true,...window.getArenaAssessmentStatus()};
+  const nextAssessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
+  return {ok:true,...(nextAssessment||{})};
  };
  window.openArenaDungeon=function(){clearActiveRank();return baseOpenArena?baseOpenArena():undefined;};
 
