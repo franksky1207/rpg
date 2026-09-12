@@ -3,7 +3,7 @@
  const ASSESS_CLEAR_TARGET=485;
  const ASSESS_BATCH_SIZE=10;
  const COMBAT_SPEC_KEYS=["initiative","combo","penetration","counter","drain"];
- const POSITION_IDS=["normal","hard","extreme"];
+ const POSITION_TEMPLATE_IDS=["normal","hard","extreme"];
  const POSITION_LABELS={normal:"低",hard:"中",extreme:"高"};
 
  function clampRank(value){
@@ -26,20 +26,20 @@
   const start=Math.max(1,highest-2);
   return Math.max(0,Math.min(2,r-start));
  }
- function positionDifficultyId(rank){return POSITION_IDS[positionIndexForRank(rank)]||"normal";}
- function positionLabel(rank){return POSITION_LABELS[positionDifficultyId(rank)]||"低";}
+ function positionTemplateId(rank){return POSITION_TEMPLATE_IDS[positionIndexForRank(rank)]||"normal";}
+ function positionLabel(rank){return POSITION_LABELS[positionTemplateId(rank)]||"低";}
 
  function combatSpecSnapshot(){
   const out={};
   COMBAT_SPEC_KEYS.forEach(key=>{out[key]=typeof specializationLevel==="function"?Math.max(0,Math.floor(Number(specializationLevel(key))||0)):0;});
   return out;
  }
- function assessmentSignature(rank,difficultyId){
+ function assessmentSignature(rank,positionId){
   const base=createSpecialPlayerSnapshot(equippedStats());
   const vip=Math.max(0,Math.floor(Number(state?.vipLevel)||0));
   return JSON.stringify({
    rank:clampRank(rank),
-   positionDifficulty:difficultyId,
+   positionDifficulty:positionId,
    level:typeof clampGameLevel==="function"?clampGameLevel(state?.level):Math.max(1,Math.floor(Number(state?.level)||1)),
    base:{hp:base.hp,atk:base.atk,def:base.def,crit:base.crit,dodge:base.dodge},
    vip,
@@ -62,10 +62,10 @@
   return ready;
  }
  function currentAssessmentRank(){return clampRank(arenaProgress().assessmentRank||arenaProgress().highestArenaUnlocked||1);}
- function simulateFullRun(rank,difficultyId,baseStats,playerStats){
+ function simulateFullRun(rank,positionId,baseStats,playerStats){
   let hp=playerStats.hp;
   for(let stage=0;stage<3;stage++){
-   const enemy=window.buildArenaEnemyForTest(difficultyId,stage,baseStats,state.level,rank);
+   const enemy=window.buildArenaEnemyForTest(positionId,stage,baseStats,state.level,rank);
    if(!enemy)return false;
    const result=window.runCombatCore(playerStats,enemy,hp,{logs:false});
    hp=result.hp;
@@ -76,8 +76,8 @@
  function assessmentStatus(){
   const arena=assessmentArena();
   const rank=currentAssessmentRank();
-  const difficultyId=positionDifficultyId(rank);
-  const signature=assessmentSignature(rank,difficultyId);
+  const positionId=positionTemplateId(rank);
+  const signature=assessmentSignature(rank,positionId);
   const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0)));
   const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0)));
   const hasResult=runs===ASSESS_RUNS&&typeof arena?.lastCheckSignature==="string"&&!!arena.lastCheckSignature;
@@ -87,7 +87,8 @@
   return {
    rank,
    rankName:typeof getArenaRankName==="function"?getArenaRankName(rank):`第${rank}階`,
-   positionDifficultyId:difficultyId,
+   positionTemplateId:positionId,
+   positionDifficultyId:positionId,
    positionLabel:positionLabel(rank),
    runs,
    clears,
@@ -109,11 +110,11 @@
   if(rank>=maxRank)return {early:{...assessmentStatus(),reason:"max-rank"}};
   syncPromotionReady(arena);
   if(arena.promotionReady===true)return {early:{...assessmentStatus(),reason:"already-ready"}};
-  const difficultyId=positionDifficultyId(rank);
+  const positionId=positionTemplateId(rank);
   const base=createSpecialPlayerSnapshot(equippedStats());
   const player=createSpecialPlayerSnapshot(playerCombatStats(base,state.vipLevel));
-  const signature=assessmentSignature(rank,difficultyId);
-  return {rank,difficultyId,base,player,signature};
+  const signature=assessmentSignature(rank,positionId);
+  return {rank,positionId,base,player,signature};
  }
  function finishAssessment(ctx,clears){
   const arena=assessmentArena();
@@ -132,7 +133,7 @@
   const ctx=assessmentContext();
   if(ctx.early)return ctx.early;
   let clears=0;
-  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(ctx.rank,ctx.difficultyId,ctx.base,ctx.player))clears++;
+  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player))clears++;
   return finishAssessment(ctx,clears);
  };
  window.assessArenaPromotionAsync=function(onProgress=null){
@@ -143,7 +144,7 @@
    function step(){
     try{
      const end=Math.min(ASSESS_RUNS,completed+ASSESS_BATCH_SIZE);
-     for(;completed<end;completed++)if(simulateFullRun(ctx.rank,ctx.difficultyId,ctx.base,ctx.player))clears++;
+     for(;completed<end;completed++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player))clears++;
      if(typeof onProgress==="function")onProgress({completed,total:ASSESS_RUNS,clears});
      if(completed<ASSESS_RUNS){setTimeout(step,0);return;}
      resolve(finishAssessment(ctx,clears));
@@ -153,7 +154,8 @@
   });
  };
 
- window.getArenaPositionDifficultyId=positionDifficultyId;
+ window.getArenaPositionTemplateId=positionTemplateId;
+ window.getArenaPositionDifficultyId=positionTemplateId;
  window.getArenaPositionLabel=positionLabel;
  window.getArenaPositionIndex=positionIndexForRank;
 })();
