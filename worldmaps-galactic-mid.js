@@ -11,5 +11,5 @@
   {chapter:"銀河中域",name:"霸權核心領地",min:341,max:345,gear:["霸權斷星刃","主宰冠盔","主宰王權甲","霸域穿梭靴","霸域統御中樞"],enemies:[["霸權禁衛",341,"normal","attack"],["主宰戰機",342,"normal","balanced"],["霸權執行體",343,"normal","attack"],["霸權巨艦",344,"elite","tank"],["霸權主宰者",345,"boss","tank"]]},
   {chapter:"銀河中域",name:"中域霸權核心",min:346,max:350,gear:["中域統御刃","銀河統帥盔","中域主戰甲","中域統御靴","中域統御權限"],enemies:[["終戰軍團兵",346,"normal","balanced"],["帝國霸權禁衛",347,"normal","attack"],["中域霸權要塞",348,"normal","balanced"],["銀河重裝統帥",349,"elite","tank"],["中域霸權執政官",350,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("galactic-mid",REGION_MAPS);
 })();
