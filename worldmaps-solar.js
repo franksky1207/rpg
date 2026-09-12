@@ -11,5 +11,5 @@
   {chapter:"太陽系戰爭",name:"外太陽系邊境",min:91,max:95,gear:["深空切界刃","遠域探勘盔","深空生存甲","遠日推進靴","深空航標"],enemies:[["邊境巡弋者",91,"normal","balanced"],["深空獵兵",92,"normal","attack"],["遠日防衛體",93,"normal","tank"],["黑域追擊艦",94,"elite","attack"],["外域守門者",95,"boss","tank"]]},
   {chapter:"太陽系戰爭",name:"太陽系終極戰線",min:96,max:100,gear:["日耀終戰刃","恆星戰術盔","太陽系主戰甲","終極躍遷靴","太陽系主控核心"],enemies:[["終戰星兵",96,"normal","attack"],["高階殲滅機",97,"normal","balanced"],["太陽系主控兵器",98,"normal","tank"],["恆星級戰將",99,"elite","balanced"],["太陽系征服中樞",100,"boss","tank"]]}
  ];
- MAPS.splice(10,Math.max(0,MAPS.length-10),...SOLAR_MAPS);
+ registerRegionMaps("solar",SOLAR_MAPS);
 })();
