@@ -2,9 +2,9 @@
 
 > **最高原則：GitHub `main` 的實際程式碼永遠是唯一真實來源。**
 >
-> 本文件只是跨對話承接層。若本文、歷史對話、記憶、舊規格、舊截圖或先前回答與 `main` 衝突，一律以目前 `main` 為準。
+> 本文件只是跨對話承接層。若本文、歷史對話、記憶、舊規格、舊截圖或先前回答與目前 `main` 衝突，一律以重新讀取到的 `main` 實際程式碼為準。
 
-更新日期：**2026-09-11**。
+更新日期：**2026-09-12**。
 
 ---
 
@@ -15,17 +15,21 @@
 - 遊戲名稱：**文明戰線**
 - 技術：純前端 HTML / CSS / JavaScript + `localStorage`
 - `SAVE_KEY = "frank_text_rpg_save"`
-- `SAVE_VERSION = 8`
+- `data.js` 仍保留 legacy `SAVE_VERSION = 9`
+- **目前正式存檔 schema：v10**，由 `savemigration.js` 的 `SAVE_SCHEMA_VERSION = 10` 提供；`engine.js` 的 `currentSaveVersion()` 優先使用此值
 - `MAX_LEVEL = 100`
 - `VIP_MAX_LEVEL = 20`
 - `SPECIALIZATION_MAX_LEVEL = 30`
 - 正式世界：20 張地圖、Lv1～100
-- 桌機、手機皆支援；iPhone Safari 是重要真機環境，但 GitHub 寫入成功不能視為已完成 Safari 真機驗證。
+- 桌機、手機皆支援；iPhone Safari 是重要真機環境
 
 定位：**簡單、傳統、文字型 RPG**。
 
 正式主要系統：
 - 主線冒險
+- 1 / 5 / 10 / 15 / 20 / 25 / 無限連戰
+- 背景持續戰鬥
+- 離線收益
 - 裝備／品質／主能力／詞條／評分
 - 裝備鎖定、自動出售、一鍵換裝、一鍵出售
 - 7 種怪物特性
@@ -43,88 +47,42 @@
 
 ---
 
-## 2. 下一個 ChatGPT 的修改規範
+## 2. 下一個 ChatGPT 的硬性操作規範
 
-1. **修改前一定重新讀目前 `main` 的相關正式檔案與 `index.html`。** 不可只靠這份 handoff 或聊天記憶。
-2. 使用者說「做／修改／修正／執行／做吧／好」且需求已明確時，可以直接修改 GitHub `main`。
-3. 使用者說「先不要改／先討論／先建議／你覺得／先想想」時，只能分析，**不得寫 GitHub**。
-4. 優先修改真正的正式來源；**不要再額外建立 wrapper、fallback、第二套公式、第二套 UI 或 alias 來蓋舊程式**，除非現有架構真的無法安全直接改。
-5. 每個 `.js` / `.css` 修改後，都必須同步更新 `index.html` 對應 cache-bust。
-6. 修改完成後重新讀回**每個修改檔**；若有 JS/CSS 變更，再重新讀完整 `index.html` 確認載入順序與 cache-bust。
-7. 涉及公式、狀態或跨模組流程時，修改前先搜尋引用點，避免只改其中一份。
-8. GitHub API 回報成功只代表 `main` 已寫入；除非使用者實際回報，不可宣稱 GitHub Pages、桌機瀏覽器或 iPhone Safari 已真機驗證。
-9. 新需求若與本 handoff 衝突，以重新讀到的 `main` 為準，並在下一次更新 handoff 時修正本文件。
+1. **任何修改前，一定先重新讀目前 GitHub `main` 的相關正式檔案，並重新讀完整 `index.html`。** 不可只靠本文件或聊天記憶。
+2. 涉及公式、狀態、UI 共用函式、load/save、戰鬥流程或跨檔案行為時，修改前先搜尋引用點，確認真正正式來源。
+3. 使用者說「先不要改／先討論／先分析／先檢查／你覺得／先想想」時，只能分析，**不得寫 GitHub**。
+4. 使用者明確說「做／修改／修正／執行／開始／做吧／好，修改」且需求已明確時，可以直接修改 GitHub `main`，不用再二次確認。
+5. 優先直接修改**正式來源**；不要額外新增 wrapper、fallback、第二套公式、第二套 UI、第二套狀態或 alias 去蓋舊程式。現有專案已因多層後載入 wrapper 產生過衝突，新增功能應避免繼續擴大。
+6. 每個 `.js` / `.css` 修改後，都必須同步更新 `index.html` 對應的 cache-bust query。
+7. 修改完成後，重新讀回**所有被修改的檔案**；若有 JS/CSS 變更，再重新讀完整 `index.html`，確認載入順序與 cache-bust。
+8. 修改多檔後，盡量 compare 變更，確認只有預期檔案與預期差異。
+9. GitHub API 回報成功只代表 `main` 已寫入；除非使用者實際回報，不可宣稱 GitHub Pages、桌機瀏覽器或 iPhone Safari 已真機驗證。
+10. 新需求若與本 handoff 衝突，以重新讀到的 `main` 為準，並在下一次更新 handoff 時同步修正本文。
 
 ---
 
-## 3. 目前 `index.html` 正式載入順序
+## 3. 目前 `index.html` 正式載入順序與 cache-bust
+
+目前完整載入順序：
 
 ```text
-data.js
-worldmaps-earth.js
-worldmaps-solar.js
-engine.js
-specialization.js
-combatcore.js
-dungeonprogress.js
-savemigration.js
-dungeoncore.js
-gameguide.js
-ui.js
-hpflow.js
-vipui.js
-settlementui.js
-balance.js
-traits.js
-traitlock.js
-traitdrop.js
-gmtools.js
-shopbalance.js
-gearupgrade.js
-equipmentlock.js
-specialmonsters.js
-dungeonbounty.js
-dungeonarena.js
-dungeonvoid.js
-dungeonvoidui.js
-levelcap.js
-specialcore.js
-vipgm.js
-specialgmbatch.js
-dungeongm.js
-gmhub.js
-dungeonvoidgmmanage.js
-dungeonvoidgmui.js
-level100balance.js
-specialencounter.js
-combatpacing.js
-battlepipeline.js
-specialguide.js
-levelcapresult.js
-dungeonui.js
-adventureprogressui.js
-combatfx.js
-```
-
-目前 cache-bust（以 `index.html` 為準）：
-
-```text
-data.js?v=20260911-2335-savev8
+data.js?v=20260912-0015-offline1
 worldmaps-earth.js?v=20260908-2247b2
 worldmaps-solar.js?v=20260908-2247b2
-engine.js?v=20260911-1905-introgear
+engine.js?v=20260912-1205-expv10
 specialization.js?v=20260911-1745-stability12
 combatcore.js?v=20260911-1045-speccleanup
-dungeonprogress.js?v=20260911-2335-savev8
-savemigration.js?v=20260911-2335-savev8
+dungeonprogress.js?v=20260912-1205-expv10
+savemigration.js?v=20260912-1205-expv10
 dungeoncore.js?v=20260911-2055-postheal2
-gameguide.js?v=20260911-2115-postheal3
-ui.js?v=20260911-1605-uipolish1
+gameguide.js?v=20260912-0845-offline10
+ui.js?v=20260912-1220-expv10import
 hpflow.js?v=20260911-2335-savev8
 vipui.js?v=20260910-2245-vipcleanup
 settlementui.js?v=20260911-2145-specialflow3
 balance.js?v=20260910-0850
-traits.js?v=20260909-2245
+traits.js?v=20260912-1255-directdungeontraits1
 traitlock.js?v=20260907-2033
 traitdrop.js?v=20260910-1910-vip3
 gmtools.js?v=20260911-1045-speccleanup
@@ -132,62 +90,63 @@ shopbalance.js?v=20260911-1620-shopcooldown
 gearupgrade.js?v=20260911-2355-refactor3
 equipmentlock.js?v=20260911-2355-refactor3
 specialmonsters.js?v=20260911-1045-speccleanup
-dungeonbounty.js?v=20260911-1605-uipolish1
-dungeonarena.js?v=20260911-1605-uipolish1
+dungeonbounty.js?v=20260912-1255-directdungeontraits1
+dungeonarena.js?v=20260912-1255-directdungeontraits1
 dungeonvoid.js?v=20260911-2055-postheal2
-dungeonvoidui.js?v=20260911-2115-postheal3
+dungeonvoidui.js?v=20260912-1255-directdungeontraits1
 levelcap.js?v=20260909-2305
 specialcore.js?v=20260911-0818-spec3
-vipgm.js?v=20260910-2245-vipcleanup
+vipgm.js?v=20260912-0010-currentstatus1
 specialgmbatch.js?v=20260911-2055-postheal2
 dungeongm.js?v=20260911-1045-speccleanup
 gmhub.js?v=20260911-1045-speccleanup
 dungeonvoidgmmanage.js?v=20260909-0915
 dungeonvoidgmui.js?v=20260911-1645-voiduipolish
-level100balance.js?v=20260908-2325
-specialencounter.js?v=20260911-2055-postheal2
-combatpacing.js?v=20260911-1945-combatspeed1
-battlepipeline.js?v=20260911-2055-postheal2
+level100balance.js?v=20260912-1205-expv10
+specialencounter.js?v=20260912-0215-flowopt2
+combatpacing.js?v=20260912-0015-offline1
+battlepipeline.js?v=20260912-0015-offline1
+infinitebattle.js?v=20260912-0205-flowopt1
+backgroundprogress.js?v=20260912-0205-flowopt1
+offlinefarmtarget.js?v=20260912-1235-checkpointisolation1
+offlineprogress.js?v=20260912-0940-syntaxfix1
 specialguide.js?v=20260911-2115-postheal3
 levelcapresult.js?v=20260908-0803
-dungeonui.js?v=20260911-1045-speccleanup
+dungeonui.js?v=20260912-2245-bountyreward1
 adventureprogressui.js?v=20260909-2245
 combatfx.js?v=20260911-1415-nobattlelog
 ```
 
 重要依賴：
-- `gameguide.js` 在 `ui.js` 前。
-- `savemigration.js` 在 `ui.js` 真正執行 `load()` 前安裝 load migration。
-- `hpflow.js` 在 `ui.js` 後，現階段仍負責部分正式 UI／回血 override 與匯入 migration 接線。
-- `gearupgrade.js` 在 `equipmentlock.js` 前；目前 `gearupgrade.js` 只保留評分／升級判斷工具，正式裝備異動由 `equipmentlock.js` 最終負責。
-- `combatpacing.js` 在特殊遭遇後、主線 pipeline 前調整動畫節奏。
+- `savemigration.js` 在 `ui.js` 真正執行 `load()` 前載入。
+- `hpflow.js` 在 `ui.js` 後，現在仍覆寫部分 UI／開戰回血行為與 migration 接線。
+- `traits.js` 必須早於三種副本，因副本直接呼叫 `applyMonsterTraits()` 與 `combatTraitBadgesHtml()`。
+- `infinitebattle.js` 在主線 pipeline 後加入 Lv31 無限連戰。
+- `backgroundprogress.js` 在無限連戰後包裝主線／虛空背景時間推進。
+- `offlinefarmtarget.js` 再建立／校正離線刷怪目標與 checkpoint。
+- `offlineprogress.js` 最後接離線結算與 heartbeat。
 - `combatfx.js` 最後載入，只做 presentation，不應改戰鬥數值。
 
 ---
 
 ## 4. 世界、主線與推進
 
-每張地圖 5 級，固定：
-- 普通怪 1
-- 普通怪 2
-- 普通怪 3
-- 菁英
-- Boss
+每張地圖固定 5 個敵人：普通怪1、普通怪2、普通怪3、菁英、Boss。
 
-正式推進：
+正式主線推進：
 
 ```text
-普通1 ×10 → 普通2 ×10 → 普通3 ×10 → 菁英 ×10 → 達該圖最高等級 → Boss
+普通1 ×10 → 普通2 ×10 → 普通3 ×10 → 菁英 ×10 → 達本圖最高等級 → Boss
 ```
 
 Boss：
 - 固定單場。
 - 第一次勝利解鎖下一張地圖。
-- 第一次勝利同時對新地圖做一次免費商店刷新。
+- 首勝同時對新地圖做一次免費商店刷新。
 - 已擊敗 Boss 可再次挑戰。
-- Boss 戰敗會鎖定，`bossProgress=0`；需重新擊敗本圖菁英 10 次才能再次挑戰。
+- Boss 戰敗後 `bossProgress=0` 並進入鎖定；需重新擊敗本圖菁英 10 次才可再挑戰。
 
-連戰解鎖：
+連戰解鎖目前是：
 
 ```text
 Lv1   → 1 場
@@ -195,11 +154,17 @@ Lv6   → 5 場
 Lv11  → 10 場
 Lv16  → 15 場
 Lv21  → 20 場
-Lv26+ → 25 場
+Lv26  → 25 場
+Lv31+ → 無限連戰（∞）
 Boss  → 永遠 1 場
 ```
 
-主線連戰中途死亡：前面已拿到的 EXP、金幣、掉落與副本進度全部保留；剩餘連戰取消。
+無限連戰：
+- `infinitebattle.js` 把 `"infinite"` 加入 `BATTLE_COUNT_UNLOCKS`。
+- 戰鬥畫面顯示「無限連戰・第 N 場」。
+- 玩家可按「停止連戰」；實際在本場結束後停止。
+- 已完成場次的 EXP／金幣／裝備／副本進度都保留。
+- 戰敗同樣結束無限連戰並保留此前收益。
 
 ---
 
@@ -213,16 +178,40 @@ baseATK(l) = ceil(15 + 2.2*(l-1))
 baseDEF(l) = ceil(7 + 1.2*(l-1))
 ```
 
-EXP／金幣：
+### 正式 EXP 曲線（2026-09-12 最新）
+
+`engine.js` 是唯一正式來源：
 
 ```js
+const EXP_CURVE = {
+  killMin: 5,
+  killRange: 495,
+  scale: 142
+};
+
 sameExp(l) = ceil(25 + 4*l)
-expNeed(l) = ceil(sameExp(l) * (4.5 + 0.35*l + 0.023*l*l))
-goldBase(l)= ceil(6 + 4*l)
-sellBase(l)= ceil(12 + 8*l)
+expProgressionFactor(l)
+= 5 + 495 * (1 - exp(-(l-1)/142))
+
+expNeed(l)
+= ceil(sameExp(l) * expProgressionFactor(l))
 ```
 
-怪物等級差 EXP 倍率 `expLevelFactor(monsterLevel, playerLevel)`：
+意義：
+- 同級普通怪的「理論升級需求隻數」從 Lv1 的約 5 隻逐漸增加。
+- 長期漸近上限約 500 隻同級普通怪。
+- `MAX_LEVEL` 目前仍是 100，所以 Lv100 並未接近 500 隻上限。
+- `level100balance.js` **不再保存第二份 EXP 常數，也不再覆寫 `expNeed()`**；只保留 `level100ExpFactor` alias 與 `sameLevelNormalKillsToLevel()` 查詢工具。
+
+怪物 EXP 倍率：
+
+```text
+普通 ×1
+菁英 ×2
+Boss ×5
+```
+
+怪物與玩家等級差 `expLevelFactor(monsterLevel, playerLevel)`：
 
 ```text
 差 >= +5 → 1.30
@@ -235,6 +224,19 @@ sellBase(l)= ceil(12 + 8*l)
 更低     → 0.05
 ```
 
+實戰訓練專精：每級 EXP +5%，Lv30 = +150% = 基礎 ×2.5。
+
+金幣：
+
+```js
+goldBase(l) = ceil(6 + 4*l)
+普通 ×1
+菁英 ×2.5
+Boss ×6
+```
+
+金幣目前不做玩家／怪物等級差衰減。
+
 傷害：
 
 ```js
@@ -246,17 +248,86 @@ calcDamage(atk, def)
 
 Lv100：
 - 不再累積 EXP。
-- 若一場一般／菁英／Boss 戰鬥**開始時已經 Lv100**，該場原 EXP 以 1:1 轉成金幣。
-- 特殊怪使用 `specialExpPayout()`，滿等同樣 1:1 轉金幣。
-- 玩家說明用語是「在下一等級階段開放前」。
+- 一般／菁英／Boss 若開戰時已 Lv100，原本 EXP 以 1:1 轉金幣。
+- 特殊怪用 `specialExpPayout()`，滿等同樣 1:1 轉金幣。
 
 ---
 
-## 6. 主線怪物正式平衡公式
+## 6. EXP 曲線最近重要修正
+
+近期曾發生：
+- `engine.js` 已改新 EXP 公式，但後載入的 `level100balance.js` 又重新指定 `expNeed()`，造成 runtime 顯示仍使用舊曲線。
+- 典型症狀：Lv68 升級需求顯示 31,636，而正式公式應是另一數值。
+
+已修正：
+- `expNeed()` 現在只由 `engine.js` 提供。
+- `level100balance.js` 不得再覆寫正式 EXP。
+- 之後再調 EXP，應只改 `engine.js` 的 `EXP_CURVE`；不要另建第二套曲線常數。
+
+2026-09-12 又將高等漸近目標從 250 隻調成 500 隻：
+- 舊 v9 曲線：`5 + 245*(1-e^(-(L-1)/142))`
+- 現 v10 曲線：`5 + 495*(1-e^(-(L-1)/142))`
+
+---
+
+## 7. Save Schema v10 與 EXP 百分比 migration
+
+正式 schema 來源：`savemigration.js`：
+
+```js
+SAVE_SCHEMA_VERSION = 10
+```
+
+`engine.js`：
+
+```js
+currentSaveVersion()
+```
+
+會優先讀 `window.SAVE_SCHEMA_VERSION`，所以目前正式新存檔與 normalize 後存檔皆為 v10。
+
+### v9 → v10 EXP 進度保留
+
+因 500 隻曲線提高升級需求，v9 舊存檔不直接保留原始 EXP 數字，而是保留當級的**升級百分比**：
+
+```text
+oldProgress = oldExp / oldV9ExpNeed(level)
+newExp      = round(newV10ExpNeed(level) * oldProgress)
+```
+
+- 百分比限制在 0～100%。
+- 新 EXP 上限限制為 `newNeed - 1`。
+- Lv100 直接 EXP=0。
+- v9 舊曲線公式只存在 `savemigration.js` 的 `legacyExpNeedV9()`，用途只限一次性 migration，不得拿來當 runtime 正式公式。
+- 本機載入與匯入 JSON 都走相同 migration 核心。
+
+### 其他 migration
+
+集中處理：
+- world map progress
+- VIP／舊 `dungeon.points → vipPoints`
+- specializations
+- dungeon progress／attempts／activeRun
+- void `highestCleared`
+- shop legacy 初始化
+- `introSeen`
+- 裝備 `locked`
+- legacy gear metadata
+- offline state
+
+離線 migration：
+- `< v9` 或沒有合法 `offline`：從目前時間建立新的 offline state，不會回溯到幾個月前算離線。
+- v9+：正規化 `lastSettledAt / farmMap / farmEnemy / avgBattleMs / sampleCount`。
+
+### 現有技術細節
+
+`data.js` 目前仍寫 `SAVE_VERSION=9`，但 runtime 正式 schema 已是 v10；下一個對話不要誤判為目前只有 v9。若未來整理，可把 legacy constant 一併收斂，但修改前要檢查所有引用。
+
+---
+
+## 8. 主線怪物正式平衡公式
 
 正式來源：`balance.js`。
-
-基礎：
 
 ```js
 monsterBase(level) = {
@@ -273,7 +344,7 @@ tank   → HP ×1.15，ATK ×0.95
 attack → HP ×0.92，ATK ×1.10
 ```
 
-同圖 5 階段倍率：
+同圖倍率：
 
 ```text
 第1怪：HP 1.22 / ATK 1.17 / DEF 1.10
@@ -283,28 +354,24 @@ attack → HP ×0.92，ATK ×1.10
 Boss ：HP 1.44 / ATK 1.27 / DEF 1.17
 ```
 
-平衡哲學保持：主線是成長／刷資源／刷裝備，不因 VIP／專精自動再次膨脹怪物。
+平衡哲學：主線是成長／刷資源／刷裝備，不因 VIP／專精自動再次膨脹怪物。
 
 ---
 
-## 7. 裝備系統
+## 9. 裝備系統
 
-部位：
-
-```text
-weapon / helmet / armor / shoes / accessory
-```
+部位：`weapon / helmet / armor / shoes / accessory`。
 
 主要能力：
-- 武器：ATK
-- 頭盔：HP
-- 鎧甲：DEF
-- 鞋子：HP
-- 飾品：Crit
+- 武器 ATK
+- 頭盔 HP
+- 鎧甲 DEF
+- 鞋子 HP
+- 飾品 Crit
 
 品質：普通／優良／稀有／史詩／傳說／神話。
 
-品質能力倍率 `m`：
+品質能力倍率：
 
 ```text
 普通 1.00
@@ -315,7 +382,7 @@ weapon / helmet / armor / shoes / accessory
 神話 2.40
 ```
 
-售價倍率 `sm`：
+售價倍率：
 
 ```text
 普通 1
@@ -326,45 +393,6 @@ weapon / helmet / armor / shoes / accessory
 神話 8
 ```
 
-基礎售價／購買價：
-
-```js
-sell = ceil(sellBase(level) * QUALITY[q].sm)
-buy  = ceil(sell * 3.5)
-```
-
-主要能力公式：
-
-```text
-武器 ATK：ceil((3 + 1.55*level) * qualityMultiplier)
-頭盔 HP ：ceil((8 + 2.5*level) * qualityMultiplier)
-鎧甲 DEF：ceil((1 + 0.65*level) * qualityMultiplier)
-鞋子 HP ：ceil((8 + 2.5*level) * qualityMultiplier)
-飾品 Crit：依品質固定區間隨機
-```
-
-飾品 Crit 區間：
-
-```text
-普通 1~2
-優良 2~3
-稀有 3~5
-史詩 5~7
-傳說 7~9
-神話 9~10
-```
-
-詞條數：
-
-```text
-普通 0
-優良 1
-稀有 1~2
-史詩 2
-傳說 2~3
-神話 3
-```
-
 裝備評分：
 
 ```js
@@ -372,98 +400,55 @@ rateWeight = 20 + 0.5*itemLevel
 score = ATK*5 + DEF*5 + HP + Crit*rateWeight + Dodge*rateWeight
 ```
 
+主線裝備掉落等級：
+
+```text
+普通：怪物等級 + [-2,-1,0,0,+1]
+菁英：怪物等級 + [-1,0,0,+1]
+Boss：怪物等級 + [-1,0,0,+1,+2]
+```
+
+仍受 `MAX_LEVEL` 限制。
+
 ---
 
-## 8. 裝備取得、鎖定、出售與近期重構
+## 10. 裝備取得、鎖定與出售
 
-目前正式責任分工：
+正式責任目前仍分散於 `engine.js`、`gearupgrade.js`、`equipmentlock.js`。
 
-### `gearupgrade.js`
-只保留：
-- `gearActualDelta()`
-- `isActualGearUpgrade()`
-- `actualEquipmentContribution()`
-- `weakestEquipmentTypes()`
+`gearupgrade.js` 只保留評分／升級判斷工具，不應再改裝備 state。
 
-**不再重寫 `addItem / equipBestAll / sellLowerAll`。**
-
-### `equipmentlock.js`
-目前是裝備資料異動的最終正式層，負責：
+`equipmentlock.js` 目前負責：
 - `locked` 正規化
+- 鎖定 UI
 - `isGearLocked()`
 - `shouldAutoSellItem()`
 - `handleUnequippedItem()`
 - 正式 `addItem()`
-- 手動換裝
-- 一鍵裝備最佳裝備
-- 手動出售
+- 手動換裝／出售
+- 一鍵裝備較強裝備
 - 一鍵出售較低／同能力裝備
-- 遺失裝備放棄保護
-- 鎖定 UI
+- 遺失裝備保護
 - 換裝後滿血
 
 規則：
-- 神話裝備**永不自動出售**。
-- `locked=true` 的裝備不會被自動出售、一鍵出售、手動出售。
-- 神話仍可手動出售，但必須二次確認。
-- 開啟「若新裝備比目前裝備強，自動保留」時，評分更高掉落會優先保留。
-- 換下來的舊裝備會走 `handleUnequippedItem()`；若符合自動出售品質且未鎖定，直接轉金幣。
-- 一鍵裝備最佳裝備也使用同一套換下裝備處理。
-- 所有非戰鬥換裝後，會依新最大 HP 回滿，避免換了 HP 裝後出現 `500/550` 再低血開戰。
-- 結算頁「立即裝備」也會在換裝後回滿；目前這部分仍由 `equipmentlock.js` 對 `settlementui.js` 的入口做一層後處理，屬尚待收斂的技術債。
-
-鑑價專精實際售價一律走：
-
-```js
-specializationSellValue(item, useTestSpecializations=false)
-```
+- 神話永不自動出售。
+- `locked=true` 不會被自動出售、一鍵出售、手動出售。
+- 神話可手動出售，但要二次確認。
+- 換下裝備依正式自動出售規則處理。
+- 鑑價專精的所有真正出售應走 `specializationSellValue()`。
 
 ---
 
-## 9. 新角色與開場
+## 11. 新角色與開場
 
-`newState()` 現在會直接給新角色一整套 **Lv1 普通裝備**，五個部位都有。
+`newState()` 直接給 Lv1 普通五件套。
 
-新角色：`introSeen=false`；由 `settlementui.js` 建立開場 modal。
-
-舊存檔若不存在 `introSeen`，Save v8 migration 會視為 `true`，避免老玩家升版後重新看到第一次開場。
+新角色 `introSeen=false`；舊存檔缺欄位會 migration 成 `true`，避免老玩家升版後看到新手開場。
 
 ---
 
-## 10. 主線掉裝與品質升階
-
-基礎掉裝率：
-
-```text
-普通 25%
-菁英 60%
-Boss 100%
-```
-
-VIP2：在上述掉落率上 +5 個百分點，最高 100%。
-
-基礎品質表 `qualityRoll()`：
-
-```text
-普通怪：普通50 / 優良30 / 稀有15 / 史詩4 / 傳說0.9 / 神話0.1
-菁英  ：普通35 / 優良35 / 稀有20 / 史詩8 / 傳說1.8 / 神話0.2
-Boss  ：普通0  / 優良45 / 稀有35 / 史詩15 / 傳說4.5 / 神話0.5
-```
-
-主線品質升階來源彼此獨立：
-- 1 trait：15% 機率 +1 品質
-- 2 traits：30% 機率 +1 品質
-- VIP14：5% 機率 +1 品質
-- Boss + VIP18：10% 機率 +1 品質
-- 神話封頂；只記錄實際成功提升的階數。
-
-VIP8：15% 機率把掉落部位指定為目前最弱裝備部位。
-
-VIP16：Boss 有 15% 機率額外再掉 1 件裝備。
-
----
-
-## 11. 怪物特性
+## 12. 怪物特性正式資料與最新 UI
 
 7 種：
 
@@ -477,25 +462,76 @@ VIP16：Boss 有 15% 機率額外再掉 1 件裝備。
 巨體 giant      → HP +30%、ATK +5%、Dodge -5 個百分點
 ```
 
-怪物 Crit / Dodge 最終上限皆為 30%。
+怪物 Crit / Dodge 最終上限皆 30%。
 
-主線 trait 數量機率：
+主線 trait 數量：
 
 ```text
-普通：0 trait 70%、1 trait 25%、2 traits 5%
-菁英：0 trait 35%、1 trait 50%、2 traits 15%
-Boss：0 trait 15%、1 trait 55%、2 traits 30%
+普通：0 70%、1 25%、2 5%
+菁英：0 35%、1 50%、2 15%
+Boss：0 15%、1 55%、2 30%
 ```
 
-`traitlock.js`／預覽 cache 用來避免 re-render 洗主線 traits。
+### 戰鬥中的特性顯示
+
+`traits.js` 正式共用：
+
+```js
+combatTraitBadgesHtml(traits)
+```
+
+目前戰鬥中使用同一套**大型彩色標籤**：
+- 主線
+- 懸賞
+- 競技場
+- 虛空幻境
+
+準備／預覽畫面仍可使用較小的文字或詳細說明。
+
+近期已移除舊補丁：
+- `dungeonCombatTraitIdsFromText()`
+- `syncDungeonCombatTraitBadges()`
+- `MutationObserver` 全頁掃 DOM
+
+三種副本現在直接把 `enemy.traits` 傳給 `combatTraitBadgesHtml()`，不再從中文文字反解析 trait。
 
 ---
 
-## 12. VIP 系統
+## 13. 主線掉裝與品質升階
+
+基礎掉裝率：
+
+```text
+普通 25%
+菁英 60%
+Boss 100%
+```
+
+VIP2：上述掉落率 +5 個百分點，最高100%。
+
+品質基礎表：
+
+```text
+普通怪：普通50 / 優良30 / 稀有15 / 史詩4 / 傳說0.9 / 神話0.1
+菁英  ：普通35 / 優良35 / 稀有20 / 史詩8 / 傳說1.8 / 神話0.2
+Boss  ：普通0  / 優良45 / 稀有35 / 史詩15 / 傳說4.5 / 神話0.5
+```
+
+品質升階來源獨立：
+- 1 trait：15% 機率 +1
+- 2 traits：30% 機率 +1
+- VIP14：5% 機率 +1
+- Boss + VIP18：10% 機率 +1
+- 神話封頂
+
+VIP8：15% 優先目前最弱裝備槽。
+VIP16：Boss 15% 額外再掉1件。
+
+---
+
+## 14. VIP 系統
 
 VIP0～20。
-
-門檻：
 
 ```js
 vipThreshold(level) = 1000 * level^2
@@ -511,7 +547,7 @@ Crit +0.25 個百分點
 Dodge +0.25 個百分點
 ```
 
-偶數 VIP 特權：
+偶數特權：
 
 ```text
 VIP2  主線裝備掉落率 +5 個百分點
@@ -526,48 +562,38 @@ VIP18 Boss 掉落 10% 品質 +1
 VIP20 死亡不遺失裝備；EXP 懲罰仍存在
 ```
 
-VIP 等級只會往上解鎖；降低目前積分不會自動降已解鎖 VIP 等級。GM 有獨立「重置 VIP」功能。
+VIP 等級只升不降；降低積分不會自動降已解鎖等級。GM 有重置 VIP。
 
 ---
 
-## 13. 專精系統
+## 15. 專精系統
 
-8 項、Lv0～30，金幣永久升級，沒有材料、失敗或重置機制。
+8 項、Lv0～30，永久金幣升級。
 
-升級到目標等級 `n` 的成本：
+升到目標等級 `n`：
 
 ```js
-1000 * n^2
+cost = 1000 * n^2
 ```
-
-玩家說明不公開成本公式。
 
 8 項：
 
 ```text
-實戰訓練 training     → 每級 EXP +5%
-搜刮技巧 scavenge     → 每級怪物直接金幣 +5%
-鑑價技巧 appraisal    → 每級裝備售價 +5%
-先制技巧 initiative   → 每級第一擊傷害 +2%
-連擊技巧 combo        → 每級連擊率 +1%；追加攻擊 50%，可再次連擊
-穿透技巧 penetration  → 每級穿透率 +1%；觸發時忽略敵人 25% DEF
-反擊技巧 counter      → 每級反擊率 +1%；反擊傷害 40%
-汲取技巧 drain        → 每級汲取率 +1%；回復本次實際傷害 10%
+training     實戰訓練 → 每級 EXP +5%
+scavenge     搜刮技巧 → 每級怪物直接金幣 +5%
+appraisal    鑑價技巧 → 每級裝備售價 +5%
+initiative   先制技巧 → 每級第一擊傷害 +2%
+combo        連擊技巧 → 每級連擊率 +1%；追加攻擊50%，可再連擊
+penetration  穿透技巧 → 每級穿透率 +1%；觸發忽略敵人25% DEF
+counter      反擊技巧 → 每級反擊率 +1%；反擊傷害40%
+drain        汲取技巧 → 每級汲取率 +1%；回復本次實際傷害10%
 ```
 
-戰鬥細節：
-- 先制是「每名敵人的第一次玩家主動正常攻擊」。
-- 連擊可連鎖。
-- 穿透可作用於 normal／combo／counter。
-- 反擊只在敵人真的造成有效傷害且玩家仍存活時判定。
-- counter 本身可暴擊／穿透／汲取／再觸發 combo；不會遞迴觸發 counter。
-- 汲取以 `actualDamage` 計算，且不能超過最大 HP。
-
-穩定性：專精升級有短暫 action lock，且確認後再次檢查升級前等級與金幣，避免快速連點重複升級／扣款。
+專精升級有 action lock，確認後再次檢查等級與金幣，避免快速連點重複扣款。
 
 ---
 
-## 14. 共用戰鬥核心與 structured events
+## 16. 共用戰鬥核心、回血與死亡
 
 正式核心：
 
@@ -575,86 +601,21 @@ VIP 等級只會往上解鎖；降低目前積分不會自動降已解鎖 VIP �
 runCombatCore(player, enemy, startHp, options)
 ```
 
-回傳至少包含：
-- `win`
-- `hp`（真實戰鬥結束 HP）
-- `enemyHp`
-- `turns`
-- `logs`
-- `events`
-- `e`
+回傳至少：`win / hp / enemyHp / turns / logs / events / e`。
 
-structured events 已有：
-- `attack`
-- `dodge`
-- `combo`
-- `counter`
-- `drain`
-- `berserk`
+structured events 已有：`attack / dodge / combo / counter / drain / berserk`。
 
-**玩家可見的持久戰鬥紀錄已取消。**
+玩家可見持久 logs 已取消；但多個動畫仍解析 `logs` regex，所以底層 logs 目前不能直接刪除。
 
-但主線、特殊怪、懸賞、競技場、虛空的多個動畫流程仍解析 `logs` regex，所以底層 `logs` 暫時不能直接刪除。
+回血規則：
+- 主線每場戰後回滿。
+- 特殊怪勝敗後回滿。
+- 懸賞整場結束回滿。
+- 競技場三戰**場間不回血**，整組結束後回滿。
+- 虛空每層勝利後回滿，再進下一層；整趟結束也回滿。
+- 非戰鬥換裝後回滿新的最大 HP。
 
-`combatfx.js` 只負責浮字 presentation：先制、連擊、穿透、反擊、汲取、狂暴、回血等，不應改核心數值。
-
----
-
-## 15. 戰鬥動畫節奏
-
-`combatpacing.js` 是 presentation-only。
-
-主線目前：
-
-```text
-開始 120ms
-出手 windup 70ms
-普通動作 115ms
-Boss 動作 160ms
-結束 170ms
-```
-
-特殊戰鬥在 `maybeHandleSpecialEncounter()` 期間把原動畫 sleep 做映射：
-
-```text
-180 → 120
-120 → 70
-190 → 115
-220 → 135
-250 → 170
-```
-
-特殊遭遇警報本身 `850 + 140ms` 不受這個映射影響。
-
----
-
-## 16. 統一回血規則（2026-09-11 最新）
-
-正式玩家體感規則：
-
-**除了競技場三連戰場間之外，戰鬥完成後角色會恢復到滿 HP。**
-
-目前實作：
-- 主線／Boss：每一場主線打完、先保存真實 `combatEndHp` 與副本進度資料，再 `restorePlayerHp()`；下一場自然滿血。
-- 特殊怪：特殊戰鬥勝敗後回滿。
-- 懸賞：整個單場 run 結束由 `finishDungeonRun()` 回滿。
-- 競技場：第1→第2→第3場**場間不回血**；整組全通或失敗後才 `finishDungeonRun()` 回滿。
-- 虛空：每層勝利後 `runFullHeal()`，再進下一層；整趟失敗／退出最後也透過副本結束流程保證滿血。
-- 舊存檔載入時，`hpflow.js` 會把非戰鬥狀態校正成目前最大 HP。
-- 非戰鬥換裝後會回滿新的最大 HP。
-
-已刪除的舊規則：
-- 特殊遭遇「主線戰後 HP 低於 30% 不觸發」已完全取消。
-- 玩家按鈕正式顯示「開始戰鬥／挑戰 Boss」，不是「回血並開始戰鬥」。
-- 虛空玩家規則是「每層**戰後**回血」，不是「每層開始前回血」。
-
-重要安全原則：
-- 需要統計真實戰後血量時，必須使用 `combatEndHp` 或 `runCombatCore().hp`，**不能在回血後讀 `state.hp`**。
-- GM 平均剩餘 HP、主線副本進度等都必須遵守這條。
-
----
-
-## 17. 死亡懲罰
+需要統計真實戰後 HP 時，必須保存 `combatEndHp` 或直接讀 `runCombatCore().hp`，不可讀已回血後的 `state.hp`。
 
 死亡 EXP 懲罰：
 
@@ -663,130 +624,40 @@ loss = ceil(expNeed(state.level) * 0.10)
 actual = min(state.exp, loss)
 ```
 
-非 VIP20：
-- 每次死亡對目前穿戴裝備有 30% 機率遺失 1 件。
-- 遺失後進入 `state.lostGear`。
-- 贖回價格：`ceil(item.buy * 2)`。
-
-VIP20：若原本抽中掉裝，改為 `protectedByVip20=true`，不掉裝。
-
-目前 `applyDeathPenalty()` 自己仍會補滿 HP，外層主線／特殊流程也有統一戰後回血，因此這裡存在**重複但目前安全**的回血責任，列入待整理技術債。
-
-`gainExp()` 升級時目前也會補滿 HP；在戰後回血規則下同樣屬重複但安全。
+非 VIP20：每次死亡對目前穿戴裝備有30%機率遺失1件，進 `state.lostGear`；贖回價 `ceil(item.buy*2)`。
 
 ---
 
-## 18. 特殊遭遇最新流程
+## 17. 特殊遭遇
 
-基礎遭遇率：`8%`；VIP6 後 `10%`。
-
-每次符合條件的主線勝利後都可獨立檢查，所以一次 25 連戰理論上可以觸發**多次**特殊遭遇；不可偷加「每次指令最多一次」限制。
+基礎遭遇率 8%；VIP6 後 10%。
 
 資格：
-- 主線該場必須勝利。
+- 該場主線勝利。
 - Boss 不觸發。
-- 若 `玩家等級 - 主線怪等級 >= 10`，不觸發。
-- **沒有 HP 30% 條件。**
+- 玩家等級比怪物高10級以上不觸發。
+- **沒有 HP30% 條件。**
+
+一次連戰可觸發多次特殊遭遇，不可加「每次指令最多一次」限制。
 
 流程：
 
 ```text
-主線戰鬥勝利
-→ 記錄主線戰後真實 HP / 副本進度 / 主線獎勵
-→ 主線戰後回滿 HP
+主線勝利
+→ 保存真實戰後資料與主線獎勵
+→ 主線戰後回滿
 → 判斷特殊遭遇
-→ 若觸發：顯示明顯警報
-→ 自動進特殊戰鬥（沒有略過、沒有手動確認挑戰）
-→ 特殊勝利：戰後回滿 → 繼續剩餘主線連戰
-→ 特殊失敗：死亡懲罰 → 戰後回滿 → 本次整段連戰立即結束
+→ 顯示警報
+→ 自動特殊戰鬥
+→ 勝利：回滿並繼續主線
+→ 失敗：死亡懲罰、回滿、整段連戰立即停止
 ```
 
-警報：
-- `⚠ 特殊遭遇！`
-- `偵測到異常敵影`
-- `「特殊怪名稱」出現！`
+9 種特殊怪與獎勵結構維持既有正式設定；若要修改，先讀 `specialmonsters.js / specialencounter.js / specialcore.js`。
 
 ---
 
-## 19. 9 種特殊怪正式資料
-
-基礎權重：
-
-```text
-稀有資源聚合體 18
-誘餌補給艙     14
-終止協議單元    4
-機率增幅信標   16
-封存警戒機     12
-裝備保全單元   12
-黑市武裝頭目    9
-戰利品回收者    9
-流動交易代理人  6
-```
-
-主要獎勵：
-
-```text
-稀有資源聚合體：EXP ×0.5、金幣 ×6、不掉裝
-誘餌補給艙：必掉裝；品質表 [0,0,65,27,7,1]
-終止協議單元：EXP ×4、金幣 ×4、必掉裝；品質表 [0,0,0,65,30,5]
-機率增幅信標：EXP ×0.8、金幣 ×0.8、必掉裝、一般怪品質表
-封存警戒機：EXP ×4、金幣 ×0.5
-裝備保全單元：必掉裝、弱部位優先 70/30、品質表 [10,35,35,16,4,0]
-黑市武裝頭目：金幣 ×2.5、商店刷新價格降低 1 級
-戰利品回收者：必掉 2 件、一般怪品質表
-流動交易代理人：財富（金幣 ×5）／知識（EXP ×5）／裝備（必掉且至少稀有）三選一
-```
-
-特殊怪基礎敵人由玩家**不含 VIP 的裝備基準**建立，再依 tier 加倍率；VIP／專精不拿來反向膨脹敵人。
-
-基礎：
-
-```js
-baseDef       = ceil(playerAtk * 0.45)
-playerHit     = max(1, playerAtk - baseDef*0.55)
-baseHP        = ceil(playerHit * 6)
-baseDamage    = playerHP / 8
-```
-
-Tier：
-
-```text
-low ：HP .55 / Damage .45 / DEF .55；低 Crit/Dodge
-mid ：HP 1.00 / Damage 1.15 / DEF .86；較高 Crit/Dodge
-high：HP 1.05 / Damage 1.22 / DEF .90；最高 Crit/Dodge
-```
-
-特殊怪獎勵 EXP／金幣仍會套用測試或正式 training／scavenge 專精。
-
-VIP10 每次特殊怪勝利有 10% 機率取得**另一套重新 roll 的完整特殊獎勵**，不是把第一份單純乘二。
-
----
-
-## 20. 主線＋特殊遭遇結算 UI
-
-`settlementui.js`：
-- 戰鬥結算 modal 可捲動，適配手機高度。
-- 主線掉落放在可捲動裝備清單。
-- 若掉落比目前同槽裝備強，可直接「立即裝備」。
-- 換下裝備若符合自動出售條件，結算頁會顯示「換下裝備已自動出售 +X 金幣」。
-
-當一次主線指令內有特殊遭遇時，最後正式結算拆成：
-
-```text
-主線戰鬥
-特殊遭遇
-```
-
-`ctx.specialEncounters` 會逐筆列出，所以同一個 25 連戰發生多次特殊怪時，每一隻都會個別顯示。
-
-特殊怪失敗時立即顯示結算；畫面會同時保留前面主線收益與此前已成功的特殊遭遇資料。
-
-目前刻意沒有「總收益」聚合卡，避免自動出售、即時換裝等情況讓總額語意混亂。
-
----
-
-## 21. 商店最新規則
+## 18. 商店
 
 刷新成本：
 
@@ -794,36 +665,18 @@ VIP10 每次特殊怪勝利有 10% 機率取得**另一套重新 roll 的完整�
 100 → 200 → 400 → 800 → 1600 → 3200 → 6400 → 12800
 ```
 
-- 最高 12,800。
-- 到最高階可手動重置回 100；冷卻 1 小時。
-- 冷卻依裝置 `Date.now()`，商店頁每秒更新倒數，到點自動解鎖重置按鈕。
-- 買 1 件商品後刷新成本降低 1 級。
-- 首次解鎖新地圖會免費刷新新地圖商品。
-- 每次刷新 3 件。
+- 最高12,800。
+- 最高階可手動重置回100，冷卻1小時。
+- 購買1件商品後刷新成本降低1級。
+- 首次解鎖新地圖免費刷新。
+- 每次刷新3件。
 - 商店不出神話。
-- 第 1 件對準最弱裝備槽、第 2 件對準次弱槽、第 3 件隨機。
-
-商店品質：
-
-```text
-普通 25%
-優良 40%
-稀有 25%
-史詩 8%
-傳說 2%
-神話 0%
-```
-
-重要修正：
-- 商店只在第一次建立／舊版 migration 時自動產生初始商品。
-- 正常買光 3 件後保持空商店，**不免費補貨**。
-- reload 也不會因商品為 0 件免費補貨。
-- 付費刷新／購買／贖回／刷新價格重置共用短暫 mutation lock，防快速雙擊重複交易。
-- 永久放棄遺失裝備前會 confirm；已鎖定的遺失裝備不能直接放棄。
+- 買光保持空商店，reload 不免費補貨。
+- transaction lock 防止快速雙擊重複交易。
 
 ---
 
-## 22. 副本進度正式公式
+## 19. 副本進度
 
 解鎖：
 
@@ -833,103 +686,54 @@ VIP10 每次特殊怪勝利有 10% 機率取得**另一套重新 roll 的完整�
 虛空 Lv25
 ```
 
-只有**主線勝利**增加副本進度。
-
-每 100 progress 自動轉 1 次挑戰次數。
-
-單場主線進度：
+只有主線勝利增加正式副本進度；每100 progress 轉1次挑戰次數。
 
 ```js
 damageRate = clamp((startHp - combatEndHp) / playerMaxHp, 0, 1)
 progress = (enemyMaxHp/playerBaseHp * 1.5 + damageRate * 4) * vipMultiplier
 ```
 
-其中 `playerBaseHp = baseHP(playerLevel)`。
+`playerBaseHp = baseHP(playerLevel)`。
 
 VIP multiplier：
 
 ```text
-VIP0~3   → 1.00
-VIP4~11  → 1.10
-VIP12+   → 1.20
+VIP0~3  → 1.00
+VIP4~11 → 1.10
+VIP12+  → 1.20
 ```
-
-注意：進度必須吃真實 `combatEndHp`，不能吃戰後已回滿的 `state.hp`。
 
 ---
 
-## 23. 副本 lifecycle 與中斷安全
+## 20. 懸賞戰（2026-09-12 最新獎勵版）
 
-正式共用核心：`dungeoncore.js`。
+單場；ready 不扣次數，按開始才 `beginDungeonRun(cost=1)`。
 
-```js
-canStartDungeonRun(cost)
-beginDungeonRun({mode,cost})
-getActiveDungeonRun()
-finishDungeonRun({heal})
-dungeonFightCore(enemy)
+Tier：
+
+```text
+普通懸賞：45%｜VIP積分80｜金幣 ×5 ｜保證裝備2件
+高級懸賞：35%｜VIP積分120｜金幣 ×8 ｜保證裝備3件
+危險懸賞：20%｜VIP積分180｜金幣 ×12｜保證裝備5件
 ```
 
-真正開始 run 時才扣次數並寫入：
+這裡的金幣基準是角色目前等級的普通怪 `goldReward()` 再乘 tier 倍率。
 
-```js
-state.dungeon.activeRun = {
-  id,
-  mode,
-  cost,
-  startedAt
-}
-```
+懸賞：
+- **不給 EXP**。
+- 勝利給 VIP 積分、懸賞金幣、保證件數裝備。
+- 保證裝備透過正式 `dropItem()`／`addItem()` 路徑，不另外造第二套裝備系統。
+- 裝備來源視為 normal kind；trait 可影響正式 trait drop quality 升階邏輯。
+- 結算顯示保留／自動出售與出售金幣。
+- 戰鬥結束 `finishDungeonRun()` 回滿。
 
-同一 runtime 已存在 active run 時不能再次開始，防快速連點重複扣次數。
-
-正常結束：清 runtime + persisted marker；預設 `finishDungeonRun()` 會回滿 HP。
-
-若頁面 reload／瀏覽器中斷後仍有 persisted `activeRun`：
-- 視為上次副本已放棄。
-- 已扣挑戰次數不退。
-- HP 回滿。
-- marker 清除。
+特性：普通／高級固定1 trait；危險 50%一特性、50%兩特性。
 
 ---
 
-## 24. 懸賞戰
+## 21. 競技場
 
-單場；進 ready 不扣次數，按「開始挑戰」後才 `beginDungeonRun(cost=1)`。
-
-Tier 抽取權重／積分：
-
-```text
-普通 45% → 80 VIP 積分
-高級 35% → 120 VIP 積分
-危險 20% → 180 VIP 積分
-```
-
-正式 scaling（相對特殊戰共用 player-base enemy）：
-
-```text
-普通：HP 1.00 / Damage 1.00 / DEF .88
-高級：HP 1.03 / Damage 1.03 / DEF .90
-危險：HP 1.08 / Damage 1.06 / DEF .92
-```
-
-一般為 1 trait；危險懸賞 50% 一特性、50% 兩特性。
-
-懸賞不給一般主線 EXP／金幣；勝利只給對應 VIP 積分。
-
-戰鬥結束後 `finishDungeonRun()` 回滿 HP。
-
----
-
-## 25. 競技場
-
-流程：
-
-```text
-選難度 → 確認頁 → 開始三戰 → 第一戰 → 自動第二戰 → 自動第三戰 → 一次結算
-```
-
-任一戰失敗立即結束。
+流程：選難度 → ready → 自動三戰 → 一次結算。
 
 積分：
 
@@ -939,184 +743,234 @@ Tier 抽取權重／積分：
 極限 [40,60,320] = 420
 ```
 
-核心特色：
-- 三戰之間**不回血**。
-- 三戰結束／中途失敗後才回滿 HP。
-- 真正開始時才扣 1 次。
-- 開始時鎖定玩家 combat snapshot、VIP 等級 snapshot、敵人 scaling snapshot。
-- 第一戰沿用 ready 預覽 traits；第2／3戰重新 roll traits。
-- 每個新敵人都重新取得一次先制。
-- 每擊敗一戰就立即取得該 stage VIP 積分；後續失敗不追回前面積分。
+規則：
+- 三戰場間不回血。
+- 任一戰失敗立即結束。
+- 真正開始才扣1次。
+- 開始時鎖玩家 combat snapshot／VIP snapshot／敵人 scaling snapshot。
+- 第一戰沿用 ready traits；第2、3戰重新 roll。
+- 每一戰通過立即取得該 stage VIP 積分；後續失敗不追回。
+- 戰鬥中的 traits 直接用 `combatTraitBadgesHtml()`。
 
 ---
 
-## 26. 虛空幻境
+## 22. 虛空幻境
 
-正式檔：`dungeonvoid.js` + `dungeonvoidui.js`。
+正式檔：`dungeonvoid.js + dungeonvoidui.js`。
 
-解鎖 Lv25。
-
-規則：
+- Lv25 解鎖。
 - 從 `highestCleared + 1` 開始。
-- 進入 ready 不扣次數；第一層真正開戰才扣 1 次。
+- 第一層真正開戰才扣1次。
 - 整趟鎖玩家 snapshot。
-- 一般層 1 trait。
-- 每 10 層 Boss，2 traits。
-- 每層勝利後回滿 HP，再進下一層。
-- 可要求「本層結束後退出」。
-- 戰敗／退出後整趟結束並回滿 HP。
+- 一般層1 trait；每10層 Boss 2 traits。
+- 每層勝利後完全回血。
+- 可要求本層結束後退出。
+- 戰敗／退出後整趟結束並回滿。
+- 戰鬥 traits 直接用 `combatTraitBadgesHtml()`。
 
 固定基礎：
 
 ```text
-Base Crit  = 10%
-Base Dodge = 8%
-HP multiplier  = 2.40
-ATK multiplier = 2.15
-DEF multiplier = 2.65
+Base Crit 10%
+Base Dodge 8%
+HP ×2.40
+ATK ×2.15
+DEF ×2.65
 ```
-
-樓層等效 power：
 
 ```js
 e = 24 + floor/10
-```
-
-基礎敵人：
-
-```js
 HP  = ceil((62 + 16.2*e) * 2.40)
 ATK = ceil((10.5 + 2.45*e) * 2.15)
 DEF = ceil((3.2 + 0.92*e) * 2.65)
-```
-
-每層 VIP 積分：
-
-```js
 points = round(15 + 1.75*sqrt(floor-1))
-Boss floor ×2
+Boss floor points ×2
 ```
-
-玩家端目前只強調：目前樓層、本次突破、本次 VIP 積分；不展示 GM 分析型平均數據。
-
-玩家可見文案不使用「首通」；內部 `firstClearPoints / highestCleared` 等變數名稱保留。
 
 ---
 
-## 27. 遊戲說明與 UI 資訊瘦身
+## 23. 背景戰鬥系統
 
-首頁功能順序：
+正式檔：`backgroundprogress.js`。
+
+「背景」定義：頁面仍開著，但 tab/app 切換、視窗失焦、手機切到背景或螢幕關閉等，JS runtime 尚存在的情況。
+
+用途：
+- 多場主線連戰
+- 無限主線連戰
+- 虛空自動爬塔
+
+核心方式：
+- 前景正常 `sleep()`。
+- 進背景時計算經過時間，回前景時轉成 progress credit，快速消化本來需要等待的動畫時間。
+- `BACKGROUND_CREDIT_RATE = 0.96`。
+- 無限主線的背景累積上限為12小時。
+- 有 `visibilitychange / blur / focus / pagehide / pageshow` 監控。
+
+注意：背景系統與「真正關閉頁面後的離線收益」是兩套不同機制。
+
+---
+
+## 24. 離線收益系統
+
+正式檔：
+- `offlinefarmtarget.js`
+- `offlineprogress.js`
+
+### 基本規則
+
+```text
+最低離線時間：1 分鐘
+最多計算：12 小時
+EXP 比例：在線正式獎勵的 10%
+金幣比例：在線正式獎勵的 10%
+裝備抽取節奏比例：10%
+副本進度比例：正式主線進度的 10%
+```
+
+離線不會：
+- 自動推主線地圖
+- 自動打 Boss
+- 自動觸發特殊遭遇
+- 自動進副本
+
+### 離線刷怪目標
+
+- 只用玩家**確實打贏過的非 Boss 主線怪**。
+- 載入時掃 `state.mapProgress`，自動選歷史上已擊敗過的最高等級非 Boss 怪；同級時偏後面的地圖／敵人。
+- 不會給完全沒打過主線的新角色硬塞 Map0 fallback。
+- 線上實際勝利會呼叫 `recordOfflineMainBattleSample()` 記錄 farm target 與預估戰鬥時間。
+- 平均戰鬥時間限制 600～60000ms，最多累積20個 sample。
+- 如果載入時自動切到更高等的 farm target，**不再沿用上一隻怪的平均時間**；改回預設1800ms、sampleCount=1，之後再由新怪實戰採樣更新。
+
+### 離線裝備處理
+
+- 神話全部保留。
+- 非神話每個部位只保留本次離線取得中最強的候選。
+- 候選只有比目前穿戴裝備強才保留；其餘自動出售。
+- 出售套用鑑價專精。
+
+### 離線副本進度
+
+- 使用正式 `calculateDungeonBattleProgress()`，再乘 `OFFLINE_DUNGEON_RATE=.10`。
+- 仍會吃正式 VIP4／VIP12 副本進度倍率。
+- 每100進度仍會轉成挑戰次數。
+
+### 離線結算 UI
+
+完整全頁式、手機優先：
+
+```text
+整理離線收益
+→ 離線收益結算頁
+→ 顯示離線時間
+→ 戰鬥場次 / Lv.X 怪物 × N
+→ EXP +N（含前後 Lv/EXP）
+→ 金幣 +N
+→ 副本進度
+→ 裝備：共取得 / 自動出售 / 留下裝備
+→ 領取並進入遊戲
+```
+
+超過12小時會明確寫「僅計算前12小時」。
+
+---
+
+## 25. 離線 checkpoint、pendingSettlement 與安全性
+
+### 每份存檔隔離 checkpoint
+
+獨立 localStorage key：
+
+```text
+frank_text_rpg_offline_checkpoint
+```
+
+目前格式：
+
+```js
+{ id: checkpointId, ts: timestamp }
+```
+
+`checkpointId` 存在 `state.offline.checkpointId`。
+
+只有 id 與目前存檔一致的 structured checkpoint 才可使用，避免本機舊 checkpoint 汙染匯入的另一份存檔。
+
+舊版單純數字 checkpoint 仍可相容一次，之後會被新版 JSON 格式覆蓋。
+
+checkpoint 只在比 `state.offline.lastSettledAt` **更新**時往前校正，不再把時間往更早拉長。
+
+### pendingSettlement 防重複
+
+離線結算先建立並存入 `state.offline.pendingSettlement`，再發獎勵。
+
+結算時：
+- `offlineSettlementBusy=true`
+- 暫停一般 save wrapper 寫入
+- 完成後清 pending、更新 `lastSettledAt` 再存
+- 若中途出錯，rollback state；pending 區段保留，reload 後可重算
+
+目的：避免「算到一半已存一部分獎勵，重整後又再領一次」。
+
+### heartbeat
+
+`offlineprogress.js`：
+- 每分鐘更新前景 checkpoint。
+- 每5分鐘實際 persist 一次正式 save。
+- 頁面進背景／pagehide 時也做 checkpoint。
+
+`offlinefarmtarget.js` 另有每分鐘獨立 localStorage checkpoint。
+
+目前兩套時間保活機制共存且功能可用；屬之後可收斂的技術債，但不要未經分析一次大改。
+
+---
+
+## 26. 離線系統近期重要 bug 修正歷程
+
+已處理：
+- 初版關閉數分鐘回來沒有離線結算。
+- 缺／非法 farm target 會把 timestamp 吃掉，導致離線區段消失。
+- 加入最高已擊敗非 Boss fallback。
+- 增加獨立 checkpoint，解決真正關閉頁面後 state 最後時間未即時落盤的問題。
+- 初次 checkpoint 修正後曾一次回算8小時以上造成大量升級，因此把離線 EXP／金幣／裝備／副本全部降為10%。
+- 修正 `offlineprogress.js` 一次缺右括號造成整個檔案 parse fail。
+- 修正最高已擊敗怪的 farm target 持久化。
+- 修正 checkpoint 可能把 `lastSettledAt` 拉到更舊時間。
+- checkpoint 現在與存檔 `checkpointId` 隔離。
+- 切換到更高等 farm target 時重設 `avgBattleMs`，不再沿用上一隻怪速度。
+
+使用者曾實測確認離線結算頁已正常出現，且可顯示戰鬥場次、EXP、金幣、副本進度、裝備。
+
+---
+
+## 27. 遊戲說明與 UI
+
+首頁順序：
 
 ```text
 冒險｜角色｜專精｜副本｜背包｜商店｜遊戲說明｜設定
 ```
 
-`gameguide.js` 6 類：
-- 冒險入門
-- 角色與裝備
-- 戰鬥與怪物
-- 特殊怪
-- 副本與 VIP
-- 成長與功能
+玩家端戰鬥持久 logs 已移除，只保留動畫與浮字。
 
-桌機：左側分類／右側內容。
-手機：分類按鈕橫向捲動。
+主線戰鬥中的怪物 traits 是大型彩色標籤；三種副本已統一。
 
-近期已完成的文字／資訊精簡：
-- 玩家端持久戰鬥 logs 全部移除，只保留動畫／浮字。
-- 冒險按鈕正式顯示「開始戰鬥／挑戰 Boss」。
-- 冒險頁不再顯示「⚠ 低血量」作為正式 runtime UI（目前舊字串仍存在於 `ui.js` 原始函式，但會被 `hpflow.js` 後載入版本取代，見技術債）。
-- 特殊遭遇不再說明 HP30% 限制。
-- 競技場 ready 不顯示無意義的目前 HP；「三戰不回血」只在開始前明確提醒。
-- 懸賞移除重複難度標籤。
-- 背包品質圖例避免同頁重複。
-- 商店常駐說明縮成必要規則，其餘放遊戲說明。
-- 虛空移除玩家端平均回合、平均積分等 GM 性質資訊。
-- 虛空文字改為「每層戰鬥結束後完全恢復 HP，再進入下一層」。
+離線收益為 full-page overlay，不混在一般 battle result modal。
 
 ---
 
-## 28. Save Schema v8 與舊存檔 migration
+## 28. GM 管理中心
 
-目前 `SAVE_VERSION = 8`。
+入口：設定頁標題連點3次 → 密碼。
 
-新增正式 migration 檔：`savemigration.js`。
+GM Hub 有「管理／測試」兩大分頁。
 
-核心入口：
-
-```js
-migrateSave(rawState, fromVersion, normalizer, sourceRaw)
-```
-
-目的：保留**原始存檔版本**與原始欄位狀態，再正規化，避免先把舊存檔寫成最新版後失去 migration 判斷依據。
-
-目前集中處理：
-- world map progress
-- VIP／舊 `dungeon.points → vipPoints`
-- specializations
-- dungeon progress／attempts／activeRun
-- void `highestCleared`
-- shop legacy 初始化
-- `introSeen`
-- 裝備 `locked`
-- legacy gear metadata
-
-商店舊檔：
-- `< v4`：舊商品清掉、`initialized=false`，由新版商店重新產生合法商品。
-- `v4+` 但沒有 `shop.initialized`：有商品 → initialized；無商品 → 未初始化，重新建立。
-- 原本已有 boolean `initialized` 則保留。
-
-舊裝備 migration：
-- 沒有 `locked` → `false`。
-- 沒有 `mainStat` 時依裝備部位補主要能力。
-- 沒有／空 `affixes` 時，用裝備實際總能力減掉主要能力，盡量還原其他舊能力為詞條。
-- 套用於已裝備、背包、遺失裝備、商店商品。
-
-`introSeen`：舊存檔缺欄位 → `true`；新角色仍由 `newState()` 建立 `false`。
-
-本機 load 與匯入 JSON 都已接到同一 migration 核心。
-
----
-
-## 29. 本機存檔安全
-
-正式仍是純前端 `localStorage`；沒有帳號、後端或跨裝置自動同步。
-
-`ui.js` 仍有：
-- `normalizeSaveItem()`
-- `normalizeSaveState()`
-- `normalizeCurrentSaveState()`
-- `isImportableSave()`
-
-`hpflow.js` 目前把 `normalizeSaveState()` 接到 `migrateSave()`。
-
-匯入至少要求：
-- JSON 是物件。
-- level 有效且 >=1。
-- 存在正式存檔識別欄位之一。
-- 覆蓋前 confirm。
-- migration／normalize → save → reload。
-
-`save()` 已 catch `localStorage.setItem()` 例外；失敗時頁首顯示「存檔失敗」，不讓例外直接中斷遊戲流程。
-
-純前端無法真正防止：
-- 玩家自行修改 localStorage／匯出 JSON。
-- 玩家修改裝置時間影響商店 1 小時冷卻。
-
----
-
-## 30. GM 管理中心
-
-入口：設定頁標題連點 3 次 → 管理密碼。
-
-GM Hub 有管理／測試兩大分頁。
-
-一般管理包含：
+一般管理：
 - 指定角色等級
 - 指定金幣
 - 指定主線解鎖到某等級關卡
 - 補滿 HP
-- 清空背包（需 confirm）
+- 清空背包（confirm）
 - 刷新商店
 - 重置商店刷新價格
 - 指定品質／等級／部位產生裝備
@@ -1125,155 +979,131 @@ GM Hub 有管理／測試兩大分頁。
 - VIP 重置
 - 虛空進度管理
 
-GM 測試 VIP：
-- `VIP0~20` 可選。
-- 只保留在本次頁面 runtime；reload 後回 VIP0。
-- 敵人生成原則仍是不含測試 VIP；玩家戰鬥才套測試 VIP。
+GM 測試 VIP：VIP0～20，runtime-only，reload 後回預設，不污染正式角色。
 
-GM 測試專精：
-- 8 項可獨立設 Lv0~30。
-- 僅 runtime，不污染正式 state。
-- reload 後回 Lv0。
+GM 測試專精：8項可獨立 Lv0～30，runtime-only。
+
+GM Hub 目前會顯示目前世界 Lv1～MAX_LEVEL／地圖數量，副本摘要會顯示 progress、次數、VIP 等級、VIP 積分。
 
 ---
 
-## 31. GM 戰鬥模擬
+## 29. GM 戰鬥模擬
 
 `GM_TEST_RUNS = 100`。
 
-正式模擬：
-- 指定主線地圖怪 ×100
+可測：
+- 指定主線怪 ×100
 - 指定特殊怪 ×100
 - 普通／高級／危險懸賞各 ×100
 - 普通／困難／極限競技場各 ×100 完整三連戰
 - 虛空指定樓層預覽
-- 虛空從指定樓層連續爬塔模擬；安全上限 10,000 層
+- 虛空從指定樓層爬塔模擬；安全上限10,000層
 
-沙盒：
-- `gmCreateSandboxSnapshot()` 備份正式 `state`。
-- 每輪可 reset sandbox。
-- 測試後 `gmRestoreSandbox()` 恢復正式資料並 save。
-- 測試 VIP／專精不應污染正式角色。
+測試沙盒會備份正式 `state`，測試後恢復，測試 VIP／專精不應污染正式資料。
 
-GM 平均剩餘 HP 的正式安全原則：
-- 主線怪、懸賞、競技場、虛空直接使用 `runCombatCore()` 該場回傳 HP。
-- 特殊怪批次明確先保存 `combatEndHp`，再做死亡懲罰／回血。
-- **不可用戰後已被補滿的 `state.hp` 統計平均剩餘血量。**
+平均剩餘 HP 必須使用真實 combat 結果，不可使用戰後已回滿的 `state.hp`。
 
-特殊怪 GM 結果：勝率、勝利平均剩餘 HP、死亡掉裝、VIP10 第二次獎勵次數、VIP20 保護次數、EXP／金幣／滿等轉金幣、掉裝品質、測試鑑價售價、隨機獎勵分布等。
-
-主線怪 GM：勝率、勝利平均剩餘 HP、死亡掉裝、VIP20 保護、模擬 EXP／金幣／裝備。
-
-懸賞 GM：勝率、勝利平均剩餘 HP、平均回合。
-
-競技場 GM：各戰到達率／條件通過率、全通率、平均積分、全通平均剩餘 HP、平均總回合。
-
-虛空 GM：指定樓層能力／traits／積分預覽；爬塔可看可突破樓層、停止樓層、總積分、平均積分、平均回合、最後勝利剩餘 HP 等。
+懸賞 GM 的正式獎勵資料若要新增統計，要以目前「VIP積分＋金幣倍率＋保證裝備件數、無EXP」的新規則為準，不能再沿用舊交接檔的「只有VIP積分」敘述。
 
 ---
 
-## 32. 近期重要 bug 修正與穩定性修正
+## 30. 目前仍存在的技術債／尚未完成項目
 
-### 戰鬥／回血
-- 開戰前回血改成戰後回血。
-- 刪除特殊遭遇 HP<30% 條件。
-- 虛空改成層後回血。
-- 競技場維持唯一主要場間不回血玩法。
-- 主線副本 progress 與 GM 平均 HP 均保留真實 `combatEndHp`。
-
-### 特殊遭遇
-- 取消「略過／手動挑戰」。
-- 改成明顯警報後自動戰鬥。
-- 特殊勝利後回主線剩餘連戰。
-- 特殊失敗立即中止連戰。
-- 同一連戰可有多次特殊遭遇。
-- 主線＋特殊結算分區顯示。
-
-### 裝備／出售
-- 新增裝備鎖定。
-- 鎖定裝備不受自動出售、一鍵出售、手動出售影響。
-- 換下裝備統一走自動出售規則。
-- 一鍵最佳裝備也使用相同規則。
-- 修正 `gearupgrade.js` 後載入覆蓋 `equipmentlock.js` 邏輯的衝突；現在 `gearupgrade.js` 不再寫裝備狀態。
-- 修正換上更高 HP 裝備後只 `normalizeHP()` 導致非滿血開下一戰；現在非戰鬥換裝後回滿。
-
-### 商店
-- 買光不免費補貨。
-- reload 不免費補貨。
-- 快速連點交易鎖。
-- 1 小時冷卻即時倒數。
-- 舊匯入缺 `shop.initialized` 的 migration 洞已補。
-
-### 存檔
-- Save Schema 升 v8。
-- 新增集中 `savemigration.js`。
-- 舊裝備 metadata 補齊。
-- `locked / introSeen / VIP / 專精 / 副本 / 虛空 / shop` 進 migration 管線。
-- `localStorage` 寫入失敗安全處理。
-
-### 專精／副本快速操作
-- 專精升級防雙擊重複扣款。
-- 副本 active run guard 防重複扣次數。
-- 商店 transaction lock 防第二筆交易。
-
-### 玩家介面
-- 玩家端戰鬥 logs 移除。
-- 戰鬥動畫加快。
-- 結算 UI 手機可捲動。
-- 主線／特殊收益分區。
-- 新角色完整 Lv1 普通裝＋第一次開場。
-
----
-
-## 33. 目前仍未完成／技術債（重要）
-
-以下不是目前已知致命 bug，但下一個對話接手時要知道：
+以下不是目前已知致命 bug，但下一個對話應知道：
 
 ### A. `ui.js` 與 `hpflow.js` 尚未真正合併
-`ui.js` 原始內容仍存在：
+
+`ui.js` 原始內容仍有：
 - `⚠ 低血量`
 - 「回血並開始戰鬥」
 - 「回血並挑戰 Boss」
 - `healBeforeBattle()`
-- 舊 `startBattles()` 開戰前回血
+- 原始 `startBattles()` 開戰前回血
 
-目前真正 runtime 行為是被後載入 `hpflow.js` 取代：
+runtime 被後載入 `hpflow.js` 改成：
 - 不顯示低血量警告
-- 按鈕顯示「開始戰鬥／挑戰 Boss」
-- `startBattles()` 不先回血
+- 「開始戰鬥／挑戰 Boss」
+- 開戰前不回血，改戰後回滿
 
-**下一次若整理這塊，應直接把正式新版寫回 `ui.js`，再刪除 `hpflow.js` 對 UI 的 override；不要再加第三層 wrapper。**
+若整理，應直接把正式新版寫回 `ui.js`，再移除對應 wrapper，不要加第三層。
 
-### B. 回血責任仍有重複
-目前：
-- `applyDeathPenalty()` 自己回滿 HP
-- `gainExp()` 升級時自己回滿 HP
-- 主線 pipeline／特殊／副本外層又有統一戰後回血
+### B. 現有 wrapper 仍偏多
 
-目前因 `combatEndHp` 先保存，所以功能安全；但責任不夠單一。
+目前仍有：
+- `hpflow.js` 包 `normalizeSaveState / adventurePreparePage / startBattles`
+- `infinitebattle.js` 包 `adventurePreparePage / adventureCombatPage / showBattleResult`
+- `backgroundprogress.js` 包 `beginCombat / runBattles`
+- `offlineprogress.js` 包 `save`
+- `savemigration.js` 包 `load`
+- `equipmentlock.js` 仍有多個 UI／裝備入口 override
 
-下一次若整理，建議讓獎勵／死亡懲罰只改獎勵與懲罰，**戰鬥流程的正式結束點統一負責回血**。修改前必須先檢查所有呼叫點。
+這些是歷史累積。未來新增功能不要再用「後載入再蓋一次」當第一選擇。
 
-### C. 裝備系統仍有少量後載入 override
-雖然 `gearupgrade.js` 已去狀態修改，`equipmentlock.js` 仍會：
-- 覆寫公開 `compareHtml / equipSelected / equipBestAll / sellSelected / sellLowerAll / discardLostGear`
-- 對 `settlementui.js` 的 `equipSettlementDrop()` 再包一層換裝後回血
-- 對 `itemHtml()` 包鎖頭顯示
+### C. `data.js SAVE_VERSION=9` 與正式 schema v10 名稱不一致
 
-這已比之前乾淨很多，但若要進一步整理，應把正式資料核心與正式 UI 直接合入來源，而不是新增更多 wrapper。
+功能目前正確，因 `currentSaveVersion()` 優先 `SAVE_SCHEMA_VERSION=10`；但閱讀程式容易誤判。若整理，先搜尋所有 SAVE_VERSION 使用點再收斂。
 
-### D. 戰鬥動畫仍依賴 logs regex
-structured `events` 已有，但懸賞／競技場／虛空／部分特殊動畫仍解析文字 logs。未來可逐步改成 events，但目前不可直接刪 core logs。
+### D. 回血責任有重複
 
-### E. 部分 CSS 仍由 JS 動態注入
-例如 VIP、專精、裝備鎖定、特殊警報、結算、虛空等。沒有 UI bug 時不要為了漂亮一次大搬家；若要整理應分批。
+`applyDeathPenalty()`、`gainExp()` 與外層戰鬥流程仍有部分重複回血責任。現在因真實 `combatEndHp` 先保存所以安全，但責任不單一。
 
-### F. 沒有自動化瀏覽器／iPhone Safari 真機回歸
-目前多數驗證是 GitHub main 靜態回讀與程式邏輯檢查。若使用者回報裝置問題，再針對真機現象處理。
+### E. 戰鬥動畫仍依賴 logs regex
+
+structured events 已存在，但主線／特殊／懸賞／競技場／虛空仍有文字 log regex 動畫。不可直接刪 core logs。
+
+### F. 離線系統有 state heartbeat + 獨立 localStorage checkpoint 兩套時間保活
+
+目前已解決資料隔離與舊時間回拉問題，但架構仍可日後收斂成單一 checkpoint API。沒有實際 bug 時不要一次重寫。
+
+### G. 部分 CSS 仍由 JS 動態注入
+
+例如 VIP、專精、裝備鎖定、特殊警報、結算、虛空、離線結算等。沒有 UI 問題時不要只為整理一次大搬家。
+
+### H. 沒有自動化瀏覽器／iPhone Safari 真機回歸
+
+GitHub 靜態檢查不能等同 Pages 或真機驗證。
 
 ---
 
-## 34. 平衡哲學（不要自行破壞）
+## 31. 2026-09-12 本輪對話已完成修改摘要
+
+本輪已完成並已進 `main`：
+
+1. **背景持續戰鬥**：tab/app 切背景後回前景可依經過時間消化戰鬥動畫，無限主線背景上限12小時。
+2. **Lv31 無限連戰**：新增∞選項、本場後停止、收益保留、專用結算文字。
+3. **完整離線收益系統**：1分鐘起算、最多12小時、10% EXP／金幣／裝備／副本進度、全頁結算 UI。
+4. **離線 farm target**：最高已擊敗非 Boss 怪、自動實戰時間採樣、目標切換重設1800ms。
+5. **離線 pendingSettlement / rollback / heartbeat**：降低重複領獎與中途失敗風險。
+6. **離線 checkpoint 修正**：獨立 checkpoint、每份存檔 `checkpointId` 隔離、只採用較新的 checkpoint。
+7. **懸賞獎勵重做**：普通80/×5/2件；高級120/×8/3件；危險180/×12/5件；無EXP。
+8. **怪物特性戰鬥文字放大與上色**。
+9. **副本特性 UI 正式共用**：懸賞／競技場／虛空直接呼叫 `combatTraitBadgesHtml()`；移除 MutationObserver 掃 DOM 補丁。
+10. **EXP 曲線先修正後調整**：移除 `level100balance.js` 對 `expNeed()` 的覆寫；正式曲線集中 `engine.js`。
+11. **EXP 高等漸近上限改為500隻**：`5 + 495*(1-e^(-(L-1)/142))`。
+12. **Save Schema v10**：v9 → v10 以升級百分比遷移 EXP，避免曲線變更讓老玩家百分比大幅倒退。
+13. **EXP 單一正式來源**：`level100balance.js` 不再重複保存 5/495/142。
+14. **匯入存檔也走 v10 migration**：`normalizeCurrentSaveState()` 會依 sourceVersion 正式遷移。
+
+---
+
+## 32. 近期重要 bug 修正總表
+
+- 修正 EXP 新公式被後載入 `level100balance.js` 舊公式覆寫。
+- 修正離線數分鐘不出現結算。
+- 修正沒有 farm target 時誤吃離線 timestamp。
+- 修正 checkpoint 初版可能回算過長離線。
+- 修正離線比例過高，統一下調成10%。
+- 修正離線 `offlineprogress.js` syntax parse error。
+- 修正離線目標沒有升級到最高已擊敗非 Boss。
+- 修正離線 target 變更沿用舊怪 `avgBattleMs`。
+- 修正 structured checkpoint 可能污染另一份匯入存檔。
+- 修正 checkpoint 把 `lastSettledAt` 往舊時間拉。
+- 修正副本 trait 顯示靠 DOM MutationObserver 與中文文字反解析的補丁架構。
+- 修正 EXP 曲線改版時舊玩家只保留 raw EXP、升級百分比大幅下降；v9→v10 現改保留百分比。
+
+---
+
+## 33. 平衡哲學
 
 ```text
 主線 = 成長、刷資源、刷裝備
@@ -1284,81 +1114,62 @@ structured `events` 已有，但懸賞／競技場／虛空／部分特殊動畫
 原則：
 - 不因 VIP／專精變強就自動補強主線。
 - 不因 VIP／專精變強就自動補強特殊怪。
-- 懸賞／競技場若未來過度被玩家碾壓，優先考慮新增更高難度，不要回頭把舊三檔全部膨脹。
+- 懸賞／競技場若未來過度被碾壓，優先新增更高難度，不要把既有難度全部膨脹。
 - 虛空本身無限爬高，可自然承接角色變強。
+- EXP 平衡用「實際分鐘／級」評估，不只看 raw EXP 數字。使用者實測在線約24隻普通怪／分鐘，可作未來平衡參考，但實際 runtime 回報優先。
 
 ---
 
-## 35. 建議回歸檢查清單
+## 34. 建議回歸檢查清單
 
-### 主線
-- 推進 10/10/10/10
-- Boss 等級門檻
-- Boss 首勝解圖＋免費刷新
-- Boss 失敗鎖定／10 菁英解鎖
-- 1／5／10／15／20／25 連戰
-- 主線每場戰後回滿
-- 主線 progress 使用戰後 HP 快照
-- 中途死亡前面收益保留
+### 主線／無限／背景
+- 1/5/10/15/20/25/∞ 解鎖
+- Boss 永遠單場
+- 無限停止為本場後停止
+- 無限戰敗與主動停止都保留此前收益
+- 前景／背景切換不重複戰鬥、不遺失收益
+- 無限背景上限12小時
 
-### 特殊遭遇
-- 普通／菁英勝利後機率判定
-- Boss 不觸發
-- 高怪 10 級以上不觸發
-- **沒有 HP30% 條件**
-- 警報 → 自動開打
-- 特殊勝利 → 回滿 → 繼續主線
-- 特殊失敗 → 結算 → 中止主線
-- 同一連戰多次特殊遭遇
-- VIP10 第二套獎勵
+### EXP / Save v10
+- 新角色 schema=10
+- 現有 v9 存檔升 v10 後等級不變、EXP 百分比大致保持
+- v9 匯入 JSON 也會做百分比 migration
+- `level100balance.js` 不得覆寫 `expNeed()`
+- Lv100 EXP 行為正確
 
-### 裝備／出售
-- 鎖定不會被手動／自動／一鍵出售
-- 神話不自動出售
-- 神話手動出售 confirm
-- 一鍵最佳換下舊裝走自動出售
-- 結算立即裝備
-- 換 HP 裝後維持滿血
-- 鑑價專精套用所有真正出售
+### 離線
+- <1分鐘不結算
+- ≥1分鐘完整結算
+- >12小時只算前12小時
+- 目標是最高已擊敗非 Boss
+- 切換 farm target 後 avg=1800ms 起算
+- EXP／金幣／裝備／副本皆10%
+- 神話全留、普通裝每槽只留最強且需強於穿戴
+- pendingSettlement 中途失敗不重複發獎
+- 匯入另一份存檔不吃本機舊 structured checkpoint
 
-### 商店
-- 初始 3 件
-- 買光後保持 0 件
-- reload 不補免費商品
-- 刷新回 3 件
-- 刷新價格階梯
-- 購買降 1 級
-- 12,800 → 1 小時重置
-- 交易快速雙擊只做一次
+### traits
+- 主線戰鬥大型彩色 badge
+- 懸賞戰鬥同樣 badge
+- 競技場戰鬥同樣 badge
+- 虛空戰鬥同樣 badge
+- ready／預覽畫面維持較小資訊版
+- `traits.js` 無 MutationObserver dungeon sync 補丁
 
-### 副本
-- ready 不誤扣
-- 真正開始只扣一次
-- 中斷 marker reload 後清掉、不退款、回滿
-- 懸賞單場戰後回滿
-- 競技場三戰場間不回血、整組後回滿
-- 虛空每層戰後回滿
-- 虛空退出／失敗後回滿
-
-### 存檔 v8
-- 新角色
-- v7 正常升 v8
-- `<v4` 商店 migration
-- 缺 `shop.initialized`
-- 缺 `locked`
-- 缺 `introSeen`
-- 缺專精／VIP／dungeon／void 欄位
-- 舊裝備無 `mainStat / affixes`
-- 無效 JSON／取消覆蓋
-- localStorage 寫入失敗
+### 懸賞
+- 普通80分／×5金幣／2件
+- 高級120分／×8金幣／3件
+- 危險180分／×12金幣／5件
+- 無EXP
+- 自動出售與保留統計正確
 
 ### GM
-- 正式資料不被測試污染
 - 測試 VIP／專精只在 runtime
-- 主線／特殊／懸賞／競技場／虛空平均剩餘 HP 都讀真實戰鬥結果，不讀回血後 `state.hp`
+- 測試不污染正式 state
+- 主線／特殊／懸賞／競技場／虛空平均剩餘 HP 讀真實 combat result
 
 ---
 
-## 36. 下一個對話如何接手（標準指令）
+## 35. 下一個對話如何接手（標準指令）
 
-> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新讀取目前 GitHub `main` 的 `index.html` 與本次需求相關正式程式碼；**`main` 是唯一真實來源**，不要只依賴交接檔或舊聊天。先比對交接檔是否仍與程式一致，再開始處理需求。使用者若說「先討論／先不要改」，只能分析，不得寫入；若明確說「做／修改／執行」，可直接修改 `main`。修改前先搜尋引用點，優先改正式來源，不新增不必要 wrapper／fallback／第二套公式；JS/CSS 修改必須同步 bump `index.html` cache-bust。修改後重新讀回所有修改檔與 `index.html`，並清楚區分「GitHub main 靜態確認」與「實際瀏覽器／iPhone Safari 真機驗證」。
+> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新讀取目前 GitHub `main` 的**完整 `index.html`**與本次需求相關正式程式碼；**`main` 是唯一真實來源**，不要只依賴交接檔、記憶或舊聊天。先比對交接檔是否仍與程式一致，再處理需求。使用者若說「先討論／先不要改／先檢查」，只能分析，不得寫入；若明確說「做／修改／執行／開始」，可直接修改 `main`。修改前先搜尋所有引用點，優先改正式來源，不新增不必要 wrapper／fallback／第二套公式／第二套 UI；JS/CSS 修改必須同步 bump `index.html` cache-bust。修改後重新讀回所有修改檔與完整 `index.html`，必要時 compare commits，並清楚區分「GitHub main 靜態確認」與「實際 Pages／桌機／iPhone Safari 真機驗證」。
