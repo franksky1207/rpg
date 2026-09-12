@@ -127,13 +127,7 @@ VIP最高20。每級 HP/ATK +0.5%、DEF +0.25%、暴擊/閃避 +0.25%；VIP20合
 
 玩家 UI / guide 不公開 Tier 權重與品質百分比，也不顯示戰前精確 EXP／金幣／裝備件數預覽。
 
-懸賞可選單次／連續：
-- 一場＝一個連續單位。
-- 每場真正開始前才扣1次副本次數。
-- 每場結束後回滿HP。
-- 停止：死亡、次數不足、手動停止。
-- 手動停止在目前這場打完後生效。
-- 連續中間不跳完整結算，最後總結算。
+懸賞可選單次／連續：一場＝一個連續單位；每場真正開始前才扣1次副本次數；每場結束後回滿HP；死亡、次數不足、手動停止會結束；手動停止在目前這場打完後生效。
 
 ---
 
@@ -154,148 +148,131 @@ VIP最高20。每級 HP/ATK +0.5%、DEF +0.25%、暴擊/閃避 +0.25%；VIP20合
 9. 銀河核心戰爭競技場
 10. 銀河統合戰爭競技場
 
-`getArenaVenueName(rank)` 是目前玩家／GM正式競技場名稱來源。
+`getArenaVenueName(rank)` 是玩家／GM正式名稱來源。`arenaranklabels.js` 的「區域名＋階」只屬舊相容層。
 
-舊「地球戰爭階／太陽系戰爭階」等命名已不是目前玩家-facing主要制度名稱；`arenaranklabels.js` 仍可能保留相容 API。
+## 8.2 逐個解鎖，不再使用三格視窗晉升
 
-## 8.2 三競技場視窗
-
-競技場 Lv15 開放後，玩家首頁一次顯示**連續3個不同競技場**。
-
-正式視窗：
-
-```text
-1～3
-2～4
-3～5
-4～6
-5～7
-6～8
-7～9
-8～10
-```
-
-初始顯示：
-- 地球戰爭競技場
-- 太陽系戰爭競技場
-- 近星戰爭競技場
-
-晉升一次後顯示：
-- 太陽系戰爭競技場
-- 近星戰爭競技場
-- 星際邊疆競技場
-
-最後視窗為第8～10個。
+Lv15 開放競技場時，**只有第1個地球戰爭競技場已解鎖**。
 
 永久進度主要欄位：
 
 ```text
-state.dungeon.arena.windowStart
+state.dungeon.arena.highestArenaUnlocked
 ```
 
-`windowStart=1` → 顯示1～3；`windowStart=2` → 顯示2～4。
-
-`state.dungeon.arena.rank` 暫時保留作相容／目前目標欄位。不要再把它理解成舊制度的「玩家單一階級」。
-
-`activeRank` 是玩家目前點選並正在準備／挑戰的競技場；它不是永久晉升進度。
-
-## 8.3 玩家選場流程
-
-首頁三張卡＝三個不同競技場，不是低／中／高難。
-
-玩家操作：
+初始：
 
 ```text
-選擇競技場 → 選低／中／高難 → 準備 → 三連戰
+highestArenaUnlocked = 1
 ```
 
-玩家可挑戰目前視窗內任一競技場。
+每成功解鎖下一個競技場：
 
-`arenaplayerflow2.js` 負責正式玩家三競技場選場與第二層難度選擇；正式敵人／戰鬥仍走 `dungeonarena.js`，沒有第二套公式。
+```text
+highestArenaUnlocked += 1
+```
 
-## 8.4 雙評估晉升
+舊 `windowStart` 制度已退場；不要再把 `windowStart` 當正式永久進度。
 
-每一個三競技場視窗要通過兩道評估，才可往後推一格。
+`state.dungeon.arena.rank` 暫時保留底層相容／目前戰鬥或評估目標使用。
+`activeRank` 是玩家這次實際點選並正在準備／挑戰的競技場，不是永久進度。
 
-### ① 戰力評估
+## 8.3 解鎖下一個競技場：兩個條件缺一不可
 
-永遠評估**目前視窗最右邊的競技場**。
+要解鎖第 `N+1` 個競技場，必須同時滿足：
+
+```text
+目前最高已解鎖競技場（第N個）的高難500次全通率 >= 90%
+AND
+主線第N+1區域已解鎖
+```
+
+正式門檻：
+- 高難500次完整三連戰。
+- 至少450次全通。
+- `clearCount >= 450` 才算戰力通過。
+- 主線條件從第2個競技場開始就有效，沒有「前3個免主線」例外。
 
 例：
-- 視窗1～3 → 評估第3個近星戰爭競技場
-- 視窗2～4 → 評估第4個星際邊疆競技場
-- 視窗5～7 → 評估第7個銀河中域競技場
+- 開第2個太陽系戰爭競技場：第1個高難≥450/500 + 主線第2區已解鎖。
+- 開第3個近星戰爭競技場：第2個高難≥450/500 + 主線第3區已解鎖。
+- 開第4個星際邊疆競技場：第3個高難≥450/500 + 主線第4區已解鎖。
+- 一路同理至第10個。
+
+戰力達標後 `promotionReady=true`，資格可保留；如果主線條件尚未達成，先不解鎖下一個，等主線區域開放後即可手動解鎖。
+
+## 8.4 戰力評估永遠評估目前最高已解鎖競技場
+
+例：
+- 只開第1個 → 評估地球戰爭競技場。
+- 已開到第2個 → 評估太陽系戰爭競技場。
+- 已開到第7個 → 評估銀河中域競技場。
 
 評估規則：
 - 固定高難。
 - 模擬500次完整三連戰。
-- `clearCount >= 450`，即至少90%，戰力評估通過。
 - 每次滿血開始，三戰殘血連續。
 - 模擬不扣副本次數、不給VIP積分、不改正式HP。
-- 敵人用玩家基礎＋裝備快照，不含VIP／專精；玩家端套正式VIP＋戰鬥專精。
-- 戰力通過後 `promotionReady=true`，資格保留至本視窗真正晉升。
+- 敵人用玩家基礎＋裝備快照，不含VIP／戰鬥專精。
+- 玩家端套正式VIP＋戰鬥專精。
+- 裝備／VIP／戰鬥專精改變後，尚未取得資格時可重新評估。
 
-### ② 區域評估
+解鎖下一個後：
+- `highestArenaUnlocked += 1`
+- 新的最高競技場成為下一次戰力評估目標。
+- `promotionReady=false`
+- 清空 `lastCheckSignature / lastCheckRuns / lastCheckClearCount`
 
-檢查**下一個要進入畫面的競技場**所對應主線區域是否已解鎖。
+## 8.5 首頁只顯示最近最多3個已解鎖競技場
 
-例：視窗1～3：
-- 戰力目標＝第3個近星戰爭競技場
-- 下一個＝第4個星際邊疆競技場
-- 區域評估＝主線第4區「星際邊疆」是否解鎖
-
-只有：
-
-```text
-戰力評估通過 AND 區域評估通過
-```
-
-才可把視窗1～3推成2～4。
-
-主線前三區不需要拿來限制初始三張卡；真正第一次區域門檻就是第4區。
-
-## 8.5 晉升後狀態
-
-晉升不是舊式 `Rank1 → Rank2`，而是：
+顯示規則：
 
 ```text
-windowStart += 1
+visibleStart = max(1, highestArenaUnlocked - 2)
+visibleEnd   = highestArenaUnlocked
 ```
 
-晉升後：
-- 視窗整體往後一格。
-- 戰力評估目標改成新的最右競技場。
-- `promotionReady=false`。
-- 清空 `lastCheckSignature / lastCheckRuns / lastCheckClearCount`。
-- 重新評估新的最右競技場。
+因此：
+- 已開1個 → 顯示1
+- 已開2個 → 顯示1、2
+- 已開3個 → 顯示1、2、3
+- 已開4個 → 顯示2、3、4；第1個消失
+- 已開5個 → 顯示3、4、5
+- …
+- 已開10個 → 顯示8、9、10
 
-## 8.6 舊存檔轉換
+玩家只能從目前畫面上的已解鎖競技場進入挑戰。
 
-`dungeonprogress.js` 會補 `windowStart`。
+## 8.6 玩家操作流程
 
-舊資料大致映射：
-- 舊 Rank1～2 → 新視窗1～3，舊評估不沿用。
-- 舊 Rank3 → 新視窗1～3，評估目標仍是第3個，可在相容條件成立時保留評估。
-- 舊 Rank4 → 新視窗2～4。
-- 舊 Rank5 → 新視窗3～5。
-- 依此類推。
+```text
+選擇目前顯示的競技場 → 選低／中／高難 → 準備 → 三連戰
+```
 
-原則：只有舊評估目標與新視窗最右目標一致時才保留，避免把舊資格錯套到別的競技場。
+`arenaplayerflow2.js` 負責正式玩家選場、難度第二層與解鎖條件 UI；正式敵人／戰鬥仍走 `dungeonarena.js`，沒有第二套怪物或戰鬥公式。
 
-## 8.7 每個競技場都有低／中／高難
+## 8.7 舊存檔轉換
+
+`dungeonprogress.js` 正規化規則：
+- 已有 `highestArenaUnlocked`：直接以它為新正式進度，再受目前主線可達區域上限夾住。
+- 暫時版 `windowStart` 存檔：把 `windowStart` 視為「已完成幾次逐步推進後的最高解鎖序號」。因此 `windowStart=1` 轉成只開第1個；`windowStart=2` 轉成已開到第2個，以此類推。
+- 更早、沒有 `windowStart` 的舊 Rank 存檔：以舊 `rank` 當最高已解鎖競技場。
+- 從暫時 `windowStart` 制度遷移時，舊戰力評估不沿用，避免把原本最右卡的評估錯套到新的最高已解鎖競技場。
+
+## 8.8 每個競技場都有低／中／高難
 
 內部 difficulty id：
 - `normal` = 低難
 - `hard` = 中難
 - `extreme` = 高難
 
-舊內部 name 可能仍保留普通／困難／極限相容字串，但玩家首頁三張卡不再是這三種難度。
+舊內部 name 可能仍保留「普通競技場／困難競技場／極限競技場」字串作相容；玩家正式 UI 顯示低／中／高。
 
 每輪固定三戰，三戰間不回血；任一戰失敗即該輪失敗。每個新敵人可重新觸發先制。
 
-## 8.8 Rank HP / 傷害 / DEF
+## 8.9 競技場序號壓力公式
 
-競技場序號仍作為敵人壓力 Rank。令 `R = 競技場序號`：
+令 `R = 競技場序號`：
 
 ```text
 RankHp     = 1 + 0.05*(R-1)
@@ -312,42 +289,9 @@ EnemyDEF = BaseEnemyDEF(P) × difficultyDef[stage] × RankDef
 
 `P` 是玩家基礎＋裝備快照，不含VIP、不含戰鬥專精。
 
-## 8.9 暴擊／閃避固定，不隨競技場序號增長
+暴擊／閃避與特性只跟低中高難度走，不隨競技場序號增加。最高高難上限仍為 crit23 / dodge20；特性最高2個。
 
-低難：
-- S1 crit×0.25 cap5；dodge×0.20 cap4
-- S2 crit×0.35 cap7；dodge×0.30 cap6
-- S3 crit×0.45 cap9；dodge×0.40 cap8
-
-中難：
-- S1 crit×0.40 cap8；dodge×0.35 cap7
-- S2 crit×0.55+1 cap12；dodge×0.50+1 cap10
-- S3 crit×0.70+2 cap16；dodge×0.65+1 cap14
-
-高難：
-- S1 crit×0.55+1 cap12；dodge×0.50+1 cap10
-- S2 crit×0.75+2 cap18；dodge×0.70+1 cap15
-- S3 crit×0.90+3 cap23；dodge×0.85+2 cap20
-
-第1～10個競技場都相同；未來擴充也不要自行提高暴閃。
-
-## 8.10 特性
-
-特性只跟低／中／高難走，不隨競技場序號：
-- 低S1：70%0 /30%1
-- 低S2：50%0 /50%1
-- 低S3：固定1
-- 中S1/S2：固定1
-- 中S3：75%1 /25%2
-- 高S1：固定1
-- 高S2：60%1 /40%2
-- 高S3：50%1 /50%2
-
-最高2特性。
-
-## 8.11 VIP積分
-
-令 `R = 競技場序號`：
+## 8.10 VIP積分
 
 ```text
 低難 = 180 + 130*(R-1)
@@ -369,9 +313,9 @@ EnemyDEF = BaseEnemyDEF(P) × difficultyDef[stage] × RankDef
 
 三戰積分依第1個競技場原比例一起放大。
 
-## 8.12 單次／連續挑戰
+## 8.11 單次／連續挑戰
 
-任一可見競技場、任一低中高難都可選單次／連續。
+任一目前顯示的已解鎖競技場、任一低中高難都可選單次／連續。
 
 - 一個完整三連戰＝一輪。
 - 連續模式鎖定開始時選定的競技場序號＋難度。
@@ -386,30 +330,27 @@ EnemyDEF = BaseEnemyDEF(P) × difficultyDef[stage] × RankDef
 ## 9. GM競技場測試
 
 `arenagm5.js` 正式GM畫面：
-- 可直接選第1～10個任一競技場，不受玩家目前三競技場視窗或主線限制。
+- 可直接選第1～10個任一競技場，不受玩家已解鎖競技場數或主線限制。
 - 下拉顯示正式名稱，例如「第3個｜近星戰爭競技場」。
 - 低／中／高難任選。
 - 100次完整三連戰。
 - 500次**戰力評估**固定高難，450/500達標。
-- GM500次只代表戰力門檻，不代表正式玩家可晉升；正式玩家還要區域評估。
+- GM500次只代表戰力門檻；正式玩家還必須滿足下一競技場對應主線區域已解鎖。
 - 使用GM測試VIP＋測試專精。
 - 敵人不含VIP/專精。
-- 顯示各戰通過／到達率、全通率、平均積分、全通平均HP、平均總回合。
 - 沙盒測試不扣副本次數、不給正式VIP積分、不修改正式promotionReady。
-
-舊 `dungeongm.js` 的競技場測試函式仍可保留相容，不要誤認為正式GM介面仍採舊制度。
 
 ---
 
 ## 10. 遊戲說明
 
-`gameguidearena5.js` 正式玩家說明目前應呈現：
+`gameguidearena5.js` 正式玩家說明應呈現：
 - 十個「區域名＋競技場」。
-- 一次顯示連續3個競技場。
-- 初始1～3，晉升後2～4，最後8～10。
+- Lv15只開地球戰爭競技場。
+- 逐個解鎖下一個競技場。
+- 每次都要求：目前最高競技場高難500次≥450 + 下一競技場對應主線區域已開。
+- 首頁最多顯示最近3個已解鎖競技場。
 - 點競技場後再選低／中／高難。
-- 雙評估：最右競技場高難500次≥450 + 下一競技場對應主線區域已開。
-- 雙評估通過後視窗往後推一格。
 - 單次／連續挑戰。
 - VIP積分公式。
 
@@ -419,65 +360,58 @@ EnemyDEF = BaseEnemyDEF(P) × difficultyDef[stage] × RankDef
 
 ## 11. 重要檔案
 
-- `dungeonprogress.js`：副本進度、arena永久狀態、windowStart正規化與舊存檔轉換
+- `dungeonprogress.js`：副本進度、`highestArenaUnlocked` 正規化、主線可解鎖競技場上限、舊存檔轉換
 - `dungeoncore.js`：副本 begin/finish run
 - `dungeonbounty.js`：懸賞核心＋連續流程
 - `dungeonarena.js`：競技場正式敵人公式、低中高難、500次模擬底層、正式戰鬥、連續流程
-- `arenawindowcore.js`：三競技場視窗、activeRank、雙評估、視窗晉升核心
-- `arenaplayerflow2.js/.css`：玩家三競技場選擇、第二層難度選擇、雙評估UI
-- `arenaranklabels.js`：舊Rank名稱相容層，不是目前競技場正式命名主來源
+- `arenawindowcore.js`：目前最高競技場、最近3個可見競技場、activeRank、戰力＋主線解鎖條件核心；檔名保留歷史名稱
+- `arenaplayerflow2.js/.css`：玩家選場、第二層難度、解鎖條件UI
+- `arenaranklabels.js`：舊Rank名稱相容層
 - `dungeonplayerui.js/.css`：較早玩家副本presentation layer，仍與新版flow共同載入
 - `arenagm5.js`：正式競技場GM沙盒測試
 - `gameguidearena5.js`：新版競技場／懸賞guide patch
 - `gmhub.js` / `dungeongm.js`：GM hub與原測試核心
 
-JS/CSS變更需同步更新 `index.html` cache-bust。
-
 ---
 
 ## 12. 已知技術債與不要誤判
 
-1. `dungeonarena.js` 內部 `ARENA_DIFFICULTY_BASES` 仍有「普通競技場／困難競技場／極限競技場」字串，屬底層歷史命名；玩家首頁正式三張卡已由 `arenaplayerflow2.js` 改成三個不同競技場。
-2. `dungeonarena.js` 內部仍以 `rank` 表示競技場序號與敵人強度；永久晉升進度不要看單一rank，要看 `windowStart`。
-3. `arenaranklabels.js` 的「區域名＋階」是前一版相容層；目前正式競技場名稱使用 `getArenaVenueName()` 的「區域名＋競技場」。
-4. `dungeonplayerui.js` 是前一版presentation layer，新三競技場流程由後載入的 `arenaplayerflow2.js` 接管選場與雙評估畫面。
-5. `dungeongm.js` 舊競技場100次函式仍存在；正式GM畫面由 `arenagm5.js`。
-6. `gameguide.js` 舊副本文字可能仍存在；正式guide由 `gameguidearena5.js`替換。
-7. `ui.js`仍可能保留舊battle-count設定；正式主線玩家由`continuousbattle.js` override為單場／連續。
-8. `specialencounter.js` / `battlepipeline.js`仍可能有舊infinite相容命名。
-9. presentation layer不得複製正式怪物／戰鬥公式；敵人數值仍以`dungeonarena.js` / `buildArenaEnemyForTest()`為準。
+1. `dungeonarena.js` 內部 `ARENA_DIFFICULTY_BASES` 仍有「普通競技場／困難競技場／極限競技場」字串，屬底層歷史命名。
+2. `dungeonarena.js` 內部仍以 `rank` 表示競技場序號與敵人強度；永久解鎖進度要看 `highestArenaUnlocked`。
+3. `arenawindowcore.js` 檔名仍叫 window core，但正式制度已不是三格視窗晉升，而是逐個解鎖＋最近3個顯示。
+4. `arenaranklabels.js` 的「區域名＋階」是舊相容層；目前正式競技場名稱使用 `getArenaVenueName()`。
+5. `dungeonplayerui.js` 是較早 presentation layer；正式選場與解鎖UI由後載入的 `arenaplayerflow2.js` 接管。
+6. `dungeongm.js` 舊競技場100次函式仍存在；正式GM畫面由 `arenagm5.js`。
+7. `gameguide.js` 舊副本文字可能仍存在；正式guide由 `gameguidearena5.js` 替換。
+8. `ui.js`仍可能保留舊battle-count設定；正式主線玩家由`continuousbattle.js` override為單場／連續。
+9. `specialencounter.js` / `battlepipeline.js`仍可能有舊infinite相容命名。
+10. presentation layer不得複製正式怪物／戰鬥公式；敵人數值仍以`dungeonarena.js` / `buildArenaEnemyForTest()`為準。
 
 ---
 
-## 13. 最近三批競技場重構
+## 13. 最新競技場制度變更
 
-### 第一批：核心與存檔
-- 新增 `windowStart`。
-- 三競技場視窗1～3→2～4→…→8～10。
-- 最右競技場為500次戰力評估目標。
-- 下一競技場對應主線區域為第二道評估。
-- 舊Rank存檔安全映射。
+前一版短暫採用「初始顯示1～3、最右90%、雙評估後整組2～4」制度，使用者認為不直觀，已正式撤回。
 
-### 第二批：玩家UI與操作流程
-- 新增 `arenaplayerflow2.js/.css`。
-- 首頁三張卡改成三個不同競技場。
-- 點入某競技場後再選低／中／高難。
-- 正式戰鬥鎖定玩家選到的競技場序號。
-- 雙評估UI與手機版。
+最新唯一有效版本：
 
-### 第三批：GM / guide / handoff
-- GM正式名稱改成十個競技場。
-- GM500次改稱戰力評估，明示區域評估是另一道門。
-- guide改成三競技場視窗＋雙評估。
-- handoff更新為本文件。
+```text
+Lv15只開第1個
+第1個90% + 主線第2區已開 -> 解鎖第2個
+第2個90% + 主線第3區已開 -> 解鎖第3個
+第3個90% + 主線第4區已開 -> 解鎖第4個，同時首頁第1個消失
+之後同理
+```
+
+首頁永遠顯示最近最多3個已解鎖競技場。
 
 ---
 
 ## 14. 驗證狀態
 
 截至本次更新：
-- GitHub `main` 寫入與靜態回讀完成。
-- 最近三批均有 commit range 檢查。
+- GitHub `main` 程式已改成逐個解鎖制度。
+- 靜態回讀與 commit compare 應在每次修改後完成。
 - **尚未實際完成 GitHub Pages／桌機瀏覽器／iPhone Safari 的完整 runtime 驗證。**
 
 下一個對話承接時，先讀 `PROJECT_HANDOFF.md`，再重新讀：
