@@ -34,7 +34,7 @@
   return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`selectArenaVenueForDifficulty(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><span>低／中／高難三種挑戰</span><small>${points}</small></button>`;
  }
  function venueSelectionHtml(){
-  const d=ensureDungeonProgressState(),p=getArenaProgressState?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
+  const d=ensureDungeonProgressState(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
   const cards=p.visibleRanks.map(rank=>venueCard(rank,p,d)).join("");
   const visibleText=p.visibleRanks.length===1?"目前只開放 1 個競技場":`目前顯示最近 ${p.visibleRanks.length} 個已解鎖競技場`;
   return `<div class="function-page dungeon-page-shell arena-shell arena-venue-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次・${visibleText}</div>${unlockPanelHtml(a,p)}<div class="arena-venue-grid">${cards}</div></section></div>`;
