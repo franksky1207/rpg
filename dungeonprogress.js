@@ -24,7 +24,8 @@
   return Math.max(1,Math.min(regions.length,unlockedRegions||1));
  }
  function normalizeArenaProgress(dungeon,target){
-  const source=dungeon.arena&&typeof dungeon.arena==="object"&&!Array.isArray(dungeon.arena)?dungeon.arena:{};
+  if(!dungeon.arena||typeof dungeon.arena!=="object"||Array.isArray(dungeon.arena))dungeon.arena={};
+  const source=dungeon.arena;
   const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
   const maxRank=Math.max(1,regions.length||1),cap=Math.max(1,Math.min(maxRank,unlockedArenaRankCap(target)));
   const hasHighest=Number.isFinite(Number(source.highestArenaUnlocked))&&Number(source.highestArenaUnlocked)>=1;
@@ -49,7 +50,7 @@
   const activeRank=activeRaw>=visibleStart&&activeRaw<=highestArenaUnlocked?activeRaw:null;
   const runs=assessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
   const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
-  dungeon.arena={
+  const normalized={
    positionModelVersion:ARENA_POSITION_MODEL_VERSION,
    highestArenaUnlocked,
    activeRank,
@@ -59,7 +60,9 @@
    lastCheckRuns:runs,
    lastCheckClearCount:clears
   };
-  return dungeon.arena;
+  Object.keys(source).forEach(key=>{if(!(key in normalized))delete source[key];});
+  Object.assign(source,normalized);
+  return source;
  }
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
 
