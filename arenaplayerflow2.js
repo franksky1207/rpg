@@ -44,7 +44,9 @@
  window.startArenaVenue=function(rank){
   const r=Math.floor(Number(rank)||0),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState();
   if(!p.visibleRanks.includes(r)||typeof selectArenaVenueRank!=="function"||!selectArenaVenueRank(r))return;
-  if(typeof baseStartArenaDungeon==="function")baseStartArenaDungeon(positionId(r));
+  const id=positionId(r);
+  if(typeof prepareArenaPointRun==="function")prepareArenaPointRun(r,id);
+  if(typeof baseStartArenaDungeon==="function")baseStartArenaDungeon(id);
  };
  window.openArenaDungeon=function(){if(typeof clearArenaVenueSelection==="function")clearArenaVenueSelection();return typeof baseOpenArenaDungeon==="function"?baseOpenArenaDungeon():undefined;};
  window.renderArenaDungeon=function(){
@@ -56,14 +58,17 @@
  function enhanceActiveArenaNames(){
   if(view!=="dungeon-arena")return;
   const main=document.getElementById("main"),core=typeof getArenaCoreState==="function"?getArenaCoreState():null;if(!main||!core||core.phase==="select")return;
-  const name=venueName(core.rank),label=challengeLabel(core.rank);
+  const name=venueName(core.rank),label=challengeLabel(core.rank),cfg=typeof getArenaPointConfig==="function"?getArenaPointConfig(core.rank,core.difficulty?.id||positionId(core.rank)):null;
   if(core.phase==="ready"){
    const title=main.querySelector(".arena-ready-panel .arena-title");if(title)title.textContent=name;
+   const earned=main.querySelector(".arena-earned");if(earned&&cfg)earned.textContent=`全通可獲得：${cfg.totalPoints} VIP 積分`;
   }else if(core.phase==="combat"){
    const head=main.querySelector(".arena-combat-head");if(head)head.textContent=`【競技場】 ${name}・第 ${(Number(core.stage)||0)+1} 戰${core.continuous?"・連續挑戰":""}`;
    const tier=main.querySelector(".arena-combat-tier");if(tier)tier.textContent=label;
   }else if(core.phase==="result"){
    const diff=main.querySelector(".arena-result-difficulty");if(diff)diff.textContent=`${name}・${label}`;
+   const actual=typeof getArenaAwardedPoints==="function"?getArenaAwardedPoints():null;
+   if(actual!=null){const total=main.querySelector(".arena-total-earned strong");if(total)total.textContent=String(actual);}
   }
  }
  const baseRender=render;
