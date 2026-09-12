@@ -16,7 +16,7 @@
  function buildArenaRankPanel(a){
   const copy=assessmentCopy(a),rank=a?.rank||1,cap=a?.unlockedCap||3,max=a?.maxRank||1;
   const nextRank=rank+1;
-  const next=rank<max?`<div class="arena-next-map">下一階：${arenaRankLabel(nextRank)}${rank>=cap?`　<span>需先解鎖主線第 ${nextRank} 區域</span>`:""}</div>`:"<div class="arena-next-map">目前已達競技場最高階</div>";
+  const next=rank<max?`<div class="arena-next-map">下一階：${arenaRankLabel(nextRank)}${rank>=cap?`　<span>需先解鎖主線第 ${nextRank} 區域</span>`:""}</div>`:`<div class="arena-next-map">目前已達競技場最高階</div>`;
   const pct=a?.hasResult?Math.max(0,Math.min(100,Number(a.rate)||0)):0;
   const assessDisabled=!!a?.promotionReady||rank>=max;
   const promoteDisabled=!a?.canPromote;
