@@ -1,8 +1,6 @@
 (function(){
  function maxArenaRank(){return Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
- function maxWindowStart(){return Math.max(1,maxArenaRank()-2);}
  function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1)));}
- function clampWindowStart(value){return Math.max(1,Math.min(maxWindowStart(),Math.floor(Number(value)||1)));}
  function arenaVenueName(rank){
   const r=clampRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;
   return `${region?.name||`第${r}區`}競技場`;
@@ -10,26 +8,28 @@
  function arenaState(){
   const dungeon=typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():state?.dungeon;
   if(!dungeon||typeof dungeon!=="object")return null;
-  if(!dungeon.arena||typeof dungeon.arena!=="object")dungeon.arena={windowStart:1,activeRank:null,rank:Math.min(3,maxArenaRank()),promotionReady:false,lastCheckSignature:null,lastCheckRuns:0,lastCheckClearCount:0};
+  if(!dungeon.arena||typeof dungeon.arena!=="object")dungeon.arena={highestArenaUnlocked:1,activeRank:null,rank:1,promotionReady:false,lastCheckSignature:null,lastCheckRuns:0,lastCheckClearCount:0};
   return dungeon.arena;
  }
- function unlockedCap(){
+ function regionUnlockedCap(){
   if(typeof unlockedArenaRankCapForState==="function")return clampRank(unlockedArenaRankCapForState(state));
-  return Math.min(3,maxArenaRank());
+  return 1;
  }
- function windowState(){
+ function progressState(){
   const arena=arenaState();
-  const start=clampWindowStart(arena?.windowStart||1),end=clampRank(Math.min(maxArenaRank(),start+2));
-  const visible=[];for(let rank=start;rank<=end;rank++)visible.push(rank);
-  const nextRank=end<maxArenaRank()?end+1:null;
-  const cap=unlockedCap();
+  const highest=clampRank(arena?.highestArenaUnlocked||1);
+  const start=Math.max(1,highest-2),visible=[];
+  for(let rank=start;rank<=highest;rank++)visible.push(rank);
+  const nextRank=highest<maxArenaRank()?highest+1:null;
+  const cap=regionUnlockedCap();
   const combatReady=arena?.promotionReady===true;
   const regionReady=nextRank==null?true:nextRank<=cap;
   return {
+   highestArenaUnlocked:highest,
    windowStart:start,
-   windowEnd:end,
-   assessmentRank:end,
-   assessmentName:arenaVenueName(end),
+   windowEnd:highest,
+   assessmentRank:highest,
+   assessmentName:arenaVenueName(highest),
    visibleRanks:visible,
    visibleArenas:visible.map(rank=>({rank,name:arenaVenueName(rank)})),
    nextRank,
@@ -38,26 +38,27 @@
    combatReady,
    regionReady,
    canPromote:nextRank!=null&&combatReady&&regionReady,
+   canUnlockNext:nextRank!=null&&combatReady&&regionReady,
    atFinalWindow:nextRank==null,
    maxRank:maxArenaRank()
   };
  }
  function withAssessmentRank(fn){
   const arena=arenaState();if(!arena||typeof fn!=="function")return null;
-  const w=windowState(),previousActive=arena.activeRank,previousRank=arena.rank;
-  arena.activeRank=null;arena.rank=w.assessmentRank;
+  const p=progressState(),previousActive=arena.activeRank;
+  arena.activeRank=null;arena.rank=p.assessmentRank;
   try{return fn();}
-  finally{arena.activeRank=previousActive;arena.rank=previousActive||w.assessmentRank;if(previousRank&&previousActive==null)arena.rank=w.assessmentRank;}
+  finally{arena.activeRank=previousActive;arena.rank=previousActive||p.assessmentRank;}
  }
  function selectVisibleRank(rank){
-  const arena=arenaState(),w=windowState(),r=clampRank(rank);
-  if(!arena||!w.visibleRanks.includes(r))return false;
+  const arena=arenaState(),p=progressState(),r=clampRank(rank);
+  if(!arena||!p.visibleRanks.includes(r))return false;
   arena.activeRank=r;arena.rank=r;
   return true;
  }
  function clearActiveRank(){
   const arena=arenaState();if(!arena)return;
-  const w=windowState();arena.activeRank=null;arena.rank=w.assessmentRank;
+  const p=progressState();arena.activeRank=null;arena.rank=p.assessmentRank;
  }
 
  const baseAssessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus:null;
@@ -65,21 +66,21 @@
  const baseOpenArena=typeof window.openArenaDungeon==="function"?window.openArenaDungeon:null;
  window.getArenaAssessmentStatus=function(){
   const base=baseAssessment?withAssessmentRank(()=>baseAssessment()):{};
-  const w=windowState();
-  return {...base,...w,rank:w.assessmentRank,rankName:typeof getArenaRankName==="function"?getArenaRankName(w.assessmentRank):base.rankName,canPromote:w.canPromote};
+  const p=progressState();
+  return {...base,...p,rank:p.assessmentRank,rankName:typeof getArenaRankName==="function"?getArenaRankName(p.assessmentRank):base.rankName,canPromote:p.canPromote};
  };
  window.assessArenaPromotion=function(){
   if(!baseAssessPromotion)return {...window.getArenaAssessmentStatus(),reason:"unavailable"};
   return withAssessmentRank(()=>baseAssessPromotion());
  };
  window.promoteArenaRank=function(){
-  const arena=arenaState(),w=windowState();
-  if(!arena||w.atFinalWindow)return {ok:false,reason:"max-window",...window.getArenaAssessmentStatus()};
-  if(!w.combatReady)return {ok:false,reason:"combat-not-qualified",...window.getArenaAssessmentStatus()};
-  if(!w.regionReady)return {ok:false,reason:"region-locked",...window.getArenaAssessmentStatus()};
-  arena.windowStart=clampWindowStart(w.windowStart+1);
+  const arena=arenaState(),p=progressState();
+  if(!arena||p.atFinalWindow)return {ok:false,reason:"max-arena",...window.getArenaAssessmentStatus()};
+  if(!p.combatReady)return {ok:false,reason:"combat-not-qualified",...window.getArenaAssessmentStatus()};
+  if(!p.regionReady)return {ok:false,reason:"region-locked",...window.getArenaAssessmentStatus()};
+  arena.highestArenaUnlocked=clampRank(p.highestArenaUnlocked+1);
   arena.activeRank=null;
-  arena.rank=clampRank(arena.windowStart+2);
+  arena.rank=arena.highestArenaUnlocked;
   arena.promotionReady=false;
   arena.lastCheckSignature=null;
   arena.lastCheckRuns=0;
@@ -91,11 +92,13 @@
  };
  window.openArenaDungeon=function(){clearActiveRank();return baseOpenArena?baseOpenArena():undefined;};
 
- window.getArenaWindowState=windowState;
- window.getArenaVisibleRanks=function(){return windowState().visibleRanks.slice();};
- window.getArenaAssessmentRank=function(){return windowState().assessmentRank;};
+ window.getArenaWindowState=progressState;
+ window.getArenaProgressState=progressState;
+ window.getArenaVisibleRanks=function(){return progressState().visibleRanks.slice();};
+ window.getArenaAssessmentRank=function(){return progressState().assessmentRank;};
+ window.getArenaHighestUnlocked=function(){return progressState().highestArenaUnlocked;};
  window.getArenaVenueName=arenaVenueName;
- window.isArenaRankVisible=function(rank){return windowState().visibleRanks.includes(clampRank(rank));};
+ window.isArenaRankVisible=function(rank){return progressState().visibleRanks.includes(clampRank(rank));};
  window.selectArenaVenueRank=selectVisibleRank;
  window.clearArenaVenueSelection=clearActiveRank;
 })();
