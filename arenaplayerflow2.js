@@ -3,11 +3,16 @@
  let assessmentProgress=0;
 
  function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${WORLD_REGIONS?.[rank-1]?.name||`第${rank}區`}競技場`;}
- function positionId(rank){return typeof getArenaPositionDifficultyId==="function"?getArenaPositionDifficultyId(rank):"normal";}
- function difficultyClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
+ function positionId(rank){
+  if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
+  if(typeof getArenaPositionDifficultyId==="function")return getArenaPositionDifficultyId(rank);
+  return "normal";
+ }
+ function positionClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
  function assessmentTone(a){if(a?.promotionReady)return "ready";if(a?.stale)return "warn";return "neutral";}
  function configForRank(rank){
-  const id=positionId(rank),configs=typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs(rank):[];
+  const id=positionId(rank);
+  const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs(rank):[];
   return configs.find(x=>x.id===id)||configs[0]||null;
  }
  function combatAssessmentHtml(a,p){
@@ -70,7 +75,7 @@
  function venueCard(rank,p,d){
   const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
   const pointText=cfg?`三戰全通 ${cfg.totalPoints} VIP 積分`:"三戰挑戰";
-  return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${difficultyClass(id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
+  return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${positionClass(id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
  }
  window.renderArenaVenueSelectionHtml=function(){
   const d=ensureDungeonProgressState(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
