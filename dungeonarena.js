@@ -193,6 +193,7 @@
 
  window.openArenaDungeon=function(){
   if((Number(state.level)||1)<15){view="dungeon";render();return;}
+  if(typeof clearArenaVenueSelection==="function")clearArenaVenueSelection();
   resetArenaState();view="dungeon-arena";render();
  };
  window.startArenaDungeon=function(difficultyId){
@@ -301,6 +302,7 @@
  }
 
  function selectionHtml(){
+  if(typeof window.renderArenaVenueSelectionHtml==="function")return window.renderArenaVenueSelectionHtml();
   const d=ensureDungeonProgressState();
   return `<div class="function-page dungeon-page-shell arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次</div><div class="notice">競技場選擇介面載入中。</div></section></div>`;
  }
