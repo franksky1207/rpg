@@ -16,7 +16,7 @@
 
  function clampRank(value){
   const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  return Math.max(1,Math.min(max,Math.floor(Number(value)||1));
+  return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
  }
  function arenaProgress(){
   if(typeof getArenaProgressState==="function")return getArenaProgressState();
