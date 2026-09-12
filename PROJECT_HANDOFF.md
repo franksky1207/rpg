@@ -217,6 +217,8 @@ S2: hp .69 / damage .64 / def .80
 S3: hp .78 / damage .73 / def .82
 ```
 
+`dungeonarena.js` 現在直接以 `ARENA_PHYSICAL_STAGE_PROFILE` 作為正式玩家戰鬥與 GM／評估測試共用的三維來源；`normal / hard / extreme` 的 stage config 只保留暴擊、閃避與特性。已移除「正式戰鬥先用舊 difficulty 三維、測試再靠後載入 wrapper 正規化」的雙重路徑。
+
 暴擊／閃避／特性依位置；最高約 crit23 / dodge20，特性最多2個。
 
 ## 5.6 VIP積分：整組視窗推進
@@ -253,21 +255,30 @@ S3: hp .78 / damage .73 / def .82
 
 ## 6. 競技場正式檔案責任
 
-- `dungeonprogress.js`：副本永久進度、競技場存檔正規化、assessmentRuleVersion
-- `dungeonarena.js`：競技場底層三戰核心、正式視窗積分 config；仍含部分舊 difficulty／assessment 相容程式
-- `arenapositioncore.js`：正式位置模型、物理三維正規化、97%戰力評估
-- `arenawindowcore.js`：最高競技場、最近3個、主線條件、解鎖
-- `arenaplayerflow2.js/.css`：唯一正式玩家競技場頁面
+- `dungeonprogress.js`：副本永久進度、競技場存檔正規化、`assessmentRuleVersion`
+- `dungeonarena.js`：**唯一正式三戰戰鬥核心**；共通 HP／ATK／DEF 三戰物理 profile、位置暴閃／特性 template、正式視窗積分 config、單次／連續流程
+- `arenapositioncore.js`：位置判定（左／中／右）與 **97% 戰力評估**；不再負責覆寫／正規化正式戰鬥三維
+- `arenawindowcore.js`：最高競技場、最近3個、主線條件、解鎖；已移除舊評估 wrapper 暫時切換全域 rank 的做法
+- `arenaplayerflow2.js/.css`：唯一正式玩家競技場選擇頁面與戰力評估 UI
 - `arenagm5.js`：正式 GM 競技場測試
 - `gameguidearena5.js`：正式玩家說明
 - `arenaranklabels.js`：名稱相容層
 - `dungeonplayerui.js`：只保留懸賞與副本首頁 enhancement，不再介入正式競技場 UI
 
-### 競技場已知技術債（後續整理）
+### 第二批已清理項目
 
-1. `dungeonarena.js` 還保留歷史 `normal/hard/extreme` 名稱字串與舊 450/500 assessment fallback；正式 runtime 已由新版接管，但後續應移除重複規則。
-2. `arenawindowcore.js` 的評估 wrapper 仍會暫時切換全域 arena rank；後續應改為明確傳入 rank / position，避免依賴 state 暫時變更。
-3. `dungeonarena.js` 舊 HP／ATK／DEF difficulty template 仍會由 `arenapositioncore.js` runtime 正規化，後續應收斂為單一來源。
+1. `dungeonarena.js` 的舊 `450/500` assessment、舊同步晉升判定與舊 `promoteArenaRank()` 已移除；正式評估只存在於 `arenapositioncore.js`，門檻485/500。
+2. `dungeonarena.js` 不再含「普通競技場／困難競技場／極限競技場」正式顯示名稱；三個 internal id 的 config 名稱統一回區域競技場名稱。
+3. 舊三難度玩家 selection UI 已移除；base select 只保留安全 fallback，正式玩家頁由 `arenaplayerflow2.js` 唯一接管。
+4. HP／ATK／DEF 的位置差異已從核心移除；正式戰鬥、GM測試與500次評估使用同一組物理 profile。
+5. `arenapositioncore.js` 的 `normalizeArenaPhysicalStats` 與 `buildArenaEnemyForTest` 後載入 wrapper 已刪除。
+6. `arenawindowcore.js` 不再包裝／暫時切換 assessment rank；位置評估直接依 `getArenaProgressState().assessmentRank` 取得最高競技場。
+
+### 競技場剩餘技術債
+
+- `normal / hard / extreme` 名稱仍保留作 internal position id，部分函式名仍叫 `difficulty*`，屬相容 API 命名，不是玩家難度制度。
+- `arenaranklabels.js` 仍是歷史名稱相容 wrapper；後續全域整理時可評估是否併回單一命名來源。
+- `arenaplayerflow2.js` 仍以後載入方式接管 base select renderer；目前已無舊玩家三難度功能，但未來可再把 select renderer 入口正式參數化。
 
 ---
 
@@ -300,8 +311,8 @@ S3: hp .78 / damage .73 / def .82
 
 ## 9. 後續技術債整理順序
 
-1. **規則與舊資料清理**：97%正式化、assessmentRuleVersion、移除舊玩家競技場 UI、更新 handoff。（本批）
-2. **競技場架構整理**：收斂舊 assessment/difficulty、減少 wrapper、評估改參數式。
+1. **規則與舊資料清理**：97%正式化、assessmentRuleVersion、移除舊玩家競技場 UI、更新 handoff。✅ 已完成
+2. **競技場架構整理**：移除舊450 assessment、收斂物理三維與位置算法、減少 assessment/window wrapper。✅ 已完成
 3. **懸賞戰核心整理**：移除 ready UI workaround、精確獎勵不再於核心玩家頁生成。
 4. **地圖架構整理**：統一十區地圖註冊與完整性驗證。
 5. **存檔／載入／全專案收尾**：收斂 load pipeline、全 repo 舊引用／語法／載入順序健檢。
@@ -313,5 +324,6 @@ S3: hp .78 / damage .73 / def .82
 - GitHub `main` 永遠優先於本文件。
 - 玩家競技場正式門檻只有 **97%（485/500）**。
 - 玩家競技場沒有第二層低／中／高難度選擇，也不顯示位置文字。
+- 競技場 HP／ATK／DEF 只看 Rank＋共通 Stage profile；位置只影響暴擊、閃避與特性。
 - 玩家懸賞不公開權重、品質機率與戰前精確獎勵。
 - 發生異常時，先完整自我檢查整條程式鏈，再修根因，不先猜補丁。
