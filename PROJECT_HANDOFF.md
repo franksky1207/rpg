@@ -76,6 +76,8 @@ window.LAST_SAVE_LOAD_REPORT
 
 包含 sourceVersion、targetVersion、是否有 raw save、是否 JSON parse 失敗、是否恢復中斷副本等資訊。
 
+`runtimediag.js` 的可視診斷框已移除，不再常駐玩家頁面；未來只有真的需要除錯時才臨時加入診斷工具。
+
 ---
 
 ## 3. 世界與主線
