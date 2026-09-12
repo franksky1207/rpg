@@ -3,6 +3,9 @@
  const ENEMY_HP_PROGRESS_RATE=1.5;
  const DAMAGE_PROGRESS_RATE=4;
  const ARENA_POSITION_MODEL_VERSION=1;
+ const ARENA_ASSESSMENT_RULE_VERSION=2;
+ const ARENA_ASSESS_RUNS=500;
+ const ARENA_ASSESS_CLEAR_TARGET=485;
 
  function finiteNonNegative(value,fallback=0){
   const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;
@@ -39,24 +42,25 @@
    assessmentCompatible=positionModelCompatible;
   }else if(hasWindowStart){
    highestArenaUnlocked=Math.floor(Number(source.windowStart));
-   assessmentCompatible=false;
   }else{
    highestArenaUnlocked=legacyRank;
-   assessmentCompatible=false;
   }
   highestArenaUnlocked=Math.max(1,Math.min(maxRank,cap,highestArenaUnlocked));
   const visibleStart=Math.max(1,highestArenaUnlocked-2);
   const activeRaw=Math.floor(Number(source.activeRank)||0);
   const activeRank=activeRaw>=visibleStart&&activeRaw<=highestArenaUnlocked?activeRaw:null;
-  const runs=assessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
+  const runs=assessmentCompatible?Math.max(0,Math.min(ARENA_ASSESS_RUNS,Math.floor(Number(source.lastCheckRuns)||0))):0;
   const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
+  const signature=assessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null;
+  const promotionReady=!!signature&&runs===ARENA_ASSESS_RUNS&&clears>=ARENA_ASSESS_CLEAR_TARGET;
   const normalized={
    positionModelVersion:ARENA_POSITION_MODEL_VERSION,
+   assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,
    highestArenaUnlocked,
    activeRank,
    rank:activeRank||highestArenaUnlocked,
-   promotionReady:assessmentCompatible&&source.promotionReady===true,
-   lastCheckSignature:assessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
+   promotionReady,
+   lastCheckSignature:signature,
    lastCheckRuns:runs,
    lastCheckClearCount:clears
   };
