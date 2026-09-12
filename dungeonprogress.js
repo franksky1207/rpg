@@ -20,30 +20,41 @@
   if(!regions.length)return 1;
   const unlockedMap=Math.max(0,Math.floor(Number(target?.unlockedMap)||0));
   const unlockedRegions=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;
-  const baseArenaRanks=Math.min(3,regions.length);
-  return Math.max(baseArenaRanks,Math.min(regions.length,unlockedRegions||1));
+  return Math.max(1,Math.min(regions.length,unlockedRegions||1));
  }
  function normalizeArenaProgress(dungeon,target){
   const source=dungeon.arena&&typeof dungeon.arena==="object"&&!Array.isArray(dungeon.arena)?dungeon.arena:{};
   const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
   const maxRank=Math.max(1,regions.length||1),cap=Math.max(1,Math.min(maxRank,unlockedArenaRankCap(target)));
-  const maxWindowStart=Math.max(1,maxRank-2),maxAllowedStart=Math.max(1,Math.min(maxWindowStart,cap-2));
+  const hasHighest=Number.isFinite(Number(source.highestArenaUnlocked))&&Number(source.highestArenaUnlocked)>=1;
   const hasWindowStart=Number.isFinite(Number(source.windowStart))&&Number(source.windowStart)>=1;
   const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1));
-  let windowStart=hasWindowStart?Math.floor(Number(source.windowStart)):legacyRank>=3?legacyRank-2:1;
-  windowStart=Math.max(1,Math.min(maxAllowedStart,windowStart));
-  const assessmentRank=Math.max(1,Math.min(maxRank,windowStart+2));
+  let highestArenaUnlocked;
+  let assessmentCompatible=false;
+  if(hasHighest){
+   highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));
+   assessmentCompatible=legacyRank===highestArenaUnlocked;
+  }else if(hasWindowStart){
+   // The temporary three-card window system advanced windowStart by one per promotion.
+   // Map that promotion count to the new sequential unlock count: 1 -> only arena 1, 2 -> arenas 1-2, etc.
+   highestArenaUnlocked=Math.floor(Number(source.windowStart));
+   assessmentCompatible=false;
+  }else{
+   highestArenaUnlocked=legacyRank;
+   assessmentCompatible=true;
+  }
+  highestArenaUnlocked=Math.max(1,Math.min(maxRank,cap,highestArenaUnlocked));
+  const visibleStart=Math.max(1,highestArenaUnlocked-2);
   const activeRaw=Math.floor(Number(source.activeRank)||0);
-  const activeRank=activeRaw>=windowStart&&activeRaw<=assessmentRank?activeRaw:null;
-  const legacyAssessmentCompatible=hasWindowStart||legacyRank>=3&&legacyRank===assessmentRank;
-  const runs=legacyAssessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
-  const clears=legacyAssessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
+  const activeRank=activeRaw>=visibleStart&&activeRaw<=highestArenaUnlocked?activeRaw:null;
+  const runs=assessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
+  const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   dungeon.arena={
-   windowStart,
+   highestArenaUnlocked,
    activeRank,
-   rank:activeRank||assessmentRank,
-   promotionReady:legacyAssessmentCompatible&&source.promotionReady===true,
-   lastCheckSignature:legacyAssessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
+   rank:activeRank||highestArenaUnlocked,
+   promotionReady:assessmentCompatible&&source.promotionReady===true,
+   lastCheckSignature:assessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
    lastCheckRuns:runs,
    lastCheckClearCount:clears
   };
