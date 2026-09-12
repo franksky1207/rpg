@@ -11,5 +11,5 @@
   {chapter:"近星戰爭",name:"近星文明遺址",min:141,max:145,gear:["遠古星刃","遺址密封盔","近星遺物甲","遺跡躍遷靴","古星文明鑰核"],enemies:[["遺址警戒體",141,"normal","attack"],["古星自律兵器",142,"normal","balanced"],["文明防衛機",143,"normal","attack"],["遠古戰鬥巨像",144,"elite","tank"],["近星遺址中樞",145,"boss","tank"]]},
   {chapter:"近星戰爭",name:"近星封鎖航域",min:146,max:150,gear:["星航封鎖刃","星航主控盔","近星主戰甲","封鎖曲率靴","星航封鎖中樞"],enemies:[["近星決戰兵",146,"normal","balanced"],["曲率殲擊機",147,"normal","attack"],["近星主控兵器",148,"normal","balanced"],["星航戰將",149,"elite","tank"],["近星航域支配者",150,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("nearstar",REGION_MAPS);
 })();
