@@ -33,7 +33,7 @@
  function mapOptionsForRegion(regionIndex,selectedMap=mapTestMap){
   const region=regionAt(regionIndex);if(!region)return "";
   const start=Math.max(0,region.mapStart),end=Math.min(MAPS.length-1,region.mapEnd);
-  const selected=Math.max(start,Math.min(end,Math.floor(Number(selectedMap)||start));
+  const selected=Math.max(start,Math.min(end,Math.floor(Number(selectedMap)||start)));
   let html="";for(let i=start;i<=end;i++){const map=MAPS[i];if(map)html+=`<option value="${i}" ${i===selected?"selected":""}>${i+1}. ${map.name}（Lv.${map.min}～${map.max}）</option>`;}return html;
  }
  function enemyOptionsForMap(mapIdx,selectedEnemy=mapTestEnemy){
