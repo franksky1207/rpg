@@ -372,11 +372,16 @@ function normalizeSaveState(target){
  target.gm=target.gm===true;
  if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
  if(typeof normalizeVipState==="function")normalizeVipState(target);
- target.saveVersion=SAVE_VERSION;
+ target.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
  return target;
 }
 function normalizeCurrentSaveState(){
- state=normalizeSaveState(state);
+ const sourceVersion=Math.max(1,Math.floor(Number(state?.saveVersion)||1));
+ let sourceRaw=null;
+ try{sourceRaw=JSON.parse(JSON.stringify(state));}catch(e){sourceRaw=state;}
+ const schemaVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
+ if(typeof migrateSave==="function"&&sourceVersion<schemaVersion)state=migrateSave(state,sourceVersion,normalizeSaveState,sourceRaw);
+ else state=normalizeSaveState(state);
  if(typeof ensureSpecializationState==="function")ensureSpecializationState();
  if(typeof ensureDungeonProgressState==="function")ensureDungeonProgressState();
  if(typeof ensureVoidMirageState==="function")ensureVoidMirageState();
