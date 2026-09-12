@@ -11,5 +11,5 @@
   {chapter:"銀河核心戰爭",name:"星河霸權決戰線",min:441,max:445,gear:["霸權斷界刃","星河統御盔","星河征服甲","霸權征途靴","星河霸權權柄"],enemies:[["霸權禁衛兵",441,"normal","attack"],["星河征戰體",442,"normal","balanced"],["銀河戰爭機",443,"normal","attack"],["星河征服母艦",444,"elite","tank"],["星河霸權司令",445,"boss","tank"]]},
   {chapter:"銀河核心戰爭",name:"銀河核心王戰區",min:446,max:450,gear:["核心王戰刃","銀河主控盔","核心終戰甲","王座決戰靴","銀河核心權柄"],enemies:[["終戰核心兵",446,"normal","balanced"],["星河王權戰體",447,"normal","attack"],["銀河核心巨構體",448,"normal","balanced"],["核心重裝元帥",449,"elite","tank"],["銀河核心支配中樞",450,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("core-war",REGION_MAPS);
 })();
