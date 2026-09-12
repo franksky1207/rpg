@@ -33,7 +33,9 @@
   let assessmentCompatible=false;
   if(hasHighest){
    highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));
-   assessmentCompatible=legacyRank===highestArenaUnlocked;
+   // In the sequential system assessment data belongs to highestArenaUnlocked.
+   // source.rank may temporarily be a lower visible arena while the player is fighting it.
+   assessmentCompatible=true;
   }else if(hasWindowStart){
    // The temporary three-card window system advanced windowStart by one per promotion.
    // Map that promotion count to the new sequential unlock count: 1 -> only arena 1, 2 -> arenas 1-2, etc.
