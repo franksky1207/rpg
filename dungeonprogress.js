@@ -25,14 +25,22 @@
  }
  function normalizeArenaProgress(dungeon,target){
   const source=dungeon.arena&&typeof dungeon.arena==="object"&&!Array.isArray(dungeon.arena)?dungeon.arena:{};
-  const cap=unlockedArenaRankCap(target);
-  const rank=Math.max(1,Math.min(cap,Math.floor(Number(source.rank)||1)));
-  const runs=Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0)));
-  const clears=Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0)));
+  const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
+  const maxRank=Math.max(1,regions.length||1),cap=Math.max(1,Math.min(maxRank,unlockedArenaRankCap(target)));
+  const maxWindowStart=Math.max(1,maxRank-2),maxAllowedStart=Math.max(1,Math.min(maxWindowStart,cap-2));
+  const hasWindowStart=Number.isFinite(Number(source.windowStart))&&Number(source.windowStart)>=1;
+  const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1));
+  let windowStart=hasWindowStart?Math.floor(Number(source.windowStart)):legacyRank>=3?legacyRank-2:1;
+  windowStart=Math.max(1,Math.min(maxAllowedStart,windowStart));
+  const assessmentRank=Math.max(1,Math.min(maxRank,windowStart+2));
+  const legacyAssessmentCompatible=hasWindowStart||legacyRank>=3&&legacyRank===assessmentRank;
+  const runs=legacyAssessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
+  const clears=legacyAssessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   dungeon.arena={
-   rank,
-   promotionReady:source.promotionReady===true,
-   lastCheckSignature:typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
+   windowStart,
+   rank:assessmentRank,
+   promotionReady:legacyAssessmentCompatible&&source.promotionReady===true,
+   lastCheckSignature:legacyAssessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
    lastCheckRuns:runs,
    lastCheckClearCount:clears
   };
