@@ -33,12 +33,15 @@
   let windowStart=hasWindowStart?Math.floor(Number(source.windowStart)):legacyRank>=3?legacyRank-2:1;
   windowStart=Math.max(1,Math.min(maxAllowedStart,windowStart));
   const assessmentRank=Math.max(1,Math.min(maxRank,windowStart+2));
+  const activeRaw=Math.floor(Number(source.activeRank)||0);
+  const activeRank=activeRaw>=windowStart&&activeRaw<=assessmentRank?activeRaw:null;
   const legacyAssessmentCompatible=hasWindowStart||legacyRank>=3&&legacyRank===assessmentRank;
   const runs=legacyAssessmentCompatible?Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0))):0;
   const clears=legacyAssessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   dungeon.arena={
    windowStart,
-   rank:assessmentRank,
+   activeRank,
+   rank:activeRank||assessmentRank,
    promotionReady:legacyAssessmentCompatible&&source.promotionReady===true,
    lastCheckSignature:legacyAssessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
    lastCheckRuns:runs,
