@@ -1,5 +1,6 @@
 (function(){
  const SAVE_SCHEMA_VERSION=10;
+ const SAVE_LOAD_PIPELINE_VERSION=1;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
@@ -77,8 +78,12 @@
   source.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(source.sampleCount)||0)));
   if(source.sampleCount<=0||source.avgBattleMs<=0||source.farmMap==null||source.farmEnemy==null){source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;}
  }
+ function cloneJson(value){
+  try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}
+ }
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
+ window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
   let target=isObject(rawState)?rawState:(typeof newState==="function"?newState():{});
   const source=isObject(sourceRaw)?sourceRaw:target;
@@ -125,21 +130,34 @@
   return target;
  };
 
- const baseLoad=typeof window.load==="function"?window.load:null;
- if(baseLoad){
-  window.load=function(){
-   let rawSnapshot=null,sourceVersion=SAVE_SCHEMA_VERSION;
-   try{
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,1);}
-   }catch(e){rawSnapshot=null;}
-   baseLoad();
-   const normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
-   state=window.migrateSave(state,sourceVersion,normalizer,rawSnapshot);
-   selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
-   if(typeof normalizeHP==="function")normalizeHP();
-   if(typeof ensureShop==="function")ensureShop();
-   if(typeof save==="function")save(false);
+ // 正式 runtime 唯一 load pipeline：先保留原始 snapshot，全部 migration/normalize 完成後才寫回 localStorage。
+ window.load=function(){
+  let rawSnapshot=null,sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false;
+  try{
+   const raw=localStorage.getItem(SAVE_KEY);
+   hadRaw=!!raw;
+   if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,1);}
+  }catch(e){rawSnapshot=null;parseFailed=true;}
+
+  const seed=isObject(rawSnapshot)?(cloneJson(rawSnapshot)||rawSnapshot):(typeof newState==="function"?newState():{});
+  const normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
+  state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
+
+  const dungeonFinalize=typeof window.finalizeDungeonLoadedState==="function"?window.finalizeDungeonLoadedState():null;
+  selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
+  if(typeof normalizeHP==="function")normalizeHP();
+  if(typeof ensureShop==="function")ensureShop();
+  state.saveVersion=SAVE_SCHEMA_VERSION;
+  if(typeof save==="function")save(false);
+
+  window.LAST_SAVE_LOAD_REPORT={
+   pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,
+   hadRaw,
+   parseFailed,
+   sourceVersion,
+   targetVersion:SAVE_SCHEMA_VERSION,
+   recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true
   };
- }
+  return state;
+ };
 })();
