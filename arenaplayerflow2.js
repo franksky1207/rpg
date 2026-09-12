@@ -1,7 +1,4 @@
 (function(){
- const baseRenderArenaDungeon=window.renderArenaDungeon;
- const baseStartArenaDungeon=window.startArenaDungeon;
- const baseOpenArenaDungeon=window.openArenaDungeon;
  let assessmentRunning=false;
  let assessmentProgress=0;
 
@@ -68,42 +65,22 @@
  function unlockPanelHtml(a,p){
   if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
   const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
+  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" onclick="runArenaAssessmentFromUi(this)" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" onclick="runArenaUnlockFromUi(this)" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
  }
  function venueCard(rank,p,d){
   const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
   const pointText=cfg?`三戰全通 ${cfg.totalPoints} VIP 積分`:"三戰挑戰";
   return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${difficultyClass(id)}" ${d.attempts>0?"":"disabled"} onclick="${d.attempts>0?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
  }
- function venueSelectionHtml(){
+ window.renderArenaVenueSelectionHtml=function(){
   const d=ensureDungeonProgressState(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
   const cards=p.visibleRanks.map(rank=>venueCard(rank,p,d)).join("");
   const visibleText=p.visibleRanks.length===1?"目前只開放 1 個競技場":`目前顯示最近 ${p.visibleRanks.length} 個已解鎖競技場`;
   return `<div class="function-page dungeon-page-shell arena-shell arena-venue-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次・${visibleText}</div>${unlockPanelHtml(a,p)}<div class="arena-venue-grid">${cards}</div></section></div>`;
- }
- function bindArenaUiActions(){
-  if(view!=="dungeon-arena")return;
-  const assessBtn=document.getElementById("arenaAssessBtn");
-  if(assessBtn&&!assessBtn.disabled)assessBtn.onclick=function(){window.runArenaAssessmentFromUi(this);};
-  const unlockBtn=document.getElementById("arenaUnlockBtn");
-  if(unlockBtn&&!unlockBtn.disabled)unlockBtn.onclick=function(){window.runArenaUnlockFromUi(this);};
- }
+ };
  window.startArenaVenue=function(rank){
   const r=Math.floor(Number(rank)||0),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState();
   if(!p.visibleRanks.includes(r)||typeof selectArenaVenueRank!=="function"||!selectArenaVenueRank(r))return;
-  if(typeof baseStartArenaDungeon==="function")baseStartArenaDungeon(positionId(r));
+  if(typeof startArenaDungeon==="function")startArenaDungeon(positionId(r));
  };
- window.openArenaDungeon=function(){if(typeof clearArenaVenueSelection==="function")clearArenaVenueSelection();return typeof baseOpenArenaDungeon==="function"?baseOpenArenaDungeon():undefined;};
- window.renderArenaDungeon=function(){const core=typeof getArenaCoreState==="function"?getArenaCoreState():null;if(core?.phase==="select")return venueSelectionHtml();return typeof baseRenderArenaDungeon==="function"?baseRenderArenaDungeon():"";};
- function enhanceActiveArenaNames(){
-  if(view!=="dungeon-arena")return;
-  const main=document.getElementById("main"),core=typeof getArenaCoreState==="function"?getArenaCoreState():null;if(!main||!core||core.phase==="select")return;
-  const name=venueName(core.rank);
-  if(core.phase==="ready"){const title=main.querySelector(".arena-ready-panel .arena-title");if(title)title.textContent=name;}
-  else if(core.phase==="combat"){const head=main.querySelector(".arena-combat-head");if(head)head.textContent=`【競技場】 ${name}・第 ${(Number(core.stage)||0)+1} 戰${core.continuous?"・連續挑戰":""}`;const tier=main.querySelector(".arena-combat-tier");if(tier)tier.textContent="競技場對手";}
-  else if(core.phase==="result"){const diff=main.querySelector(".arena-result-difficulty");if(diff)diff.textContent=name;}
- }
- const baseRender=render;
- render=function(){const out=baseRender();bindArenaUiActions();enhanceActiveArenaNames();return out;};
- window.refreshArenaPlayerFlow2=function(){bindArenaUiActions();enhanceActiveArenaNames();};
 })();
