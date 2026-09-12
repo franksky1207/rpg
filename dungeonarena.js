@@ -68,9 +68,18 @@
   const second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));
   return [first,second,Math.max(0,target-first-second)];
  }
+ function pointWindowHighest(rank){
+  const r=clampArenaRank(rank);
+  if(typeof getArenaProgressState==="function"){
+   const p=getArenaProgressState();
+   if(Array.isArray(p?.visibleRanks)&&p.visibleRanks.includes(r))return clampArenaRank(p.highestArenaUnlocked||r);
+  }
+  return r;
+ }
+ function arenaPointOffset(rank){return ARENA_POINT_STEP*Math.max(0,pointWindowHighest(rank)-3);}
  function difficultyForRank(base,rank){
   if(!base)return null;
-  const r=clampArenaRank(rank),totalPoints=base.rank1Total+ARENA_POINT_STEP*(r-1);
+  const r=clampArenaRank(rank),totalPoints=base.rank1Total+arenaPointOffset(r);
   return {id:base.id,name:base.name,rank:r,rankName:arenaRankName(r),stagePoints:scaleStagePoints(base.stageWeights,totalPoints),totalPoints};
  }
  function difficultyById(id,rank=currentArenaRank()){
