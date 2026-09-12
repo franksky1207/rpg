@@ -13,7 +13,8 @@ const VIP_MAX_LEVEL=20;
 const VIP_HP_ATK_PERCENT_PER_LEVEL=.5;
 const VIP_DEF_PERCENT_PER_LEVEL=.25;
 const VIP_RATE_STAT_PER_LEVEL=.25;
-window.MAX_LEVEL=MAX_LEVEL;window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;
+const EXP_CURVE=Object.freeze({killMin:5,killRange:495,scale:142});
+window.MAX_LEVEL=MAX_LEVEL;window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;window.EXP_CURVE=EXP_CURVE;
 let state,view="home",selectedMap=0,selectedEnemy=0,selectedItem=null,battleLogs=[],battleBusy=false;
 let upgradeDropNoticePending=false;
 let shopMutationBusy=false;
@@ -21,13 +22,17 @@ let shopMutationBusy=false;
 function ceil(n){return Math.ceil(n)}
 function round1(n){return Math.round(n*10)/10}
 function randomInt(min,max){return min+Math.floor(Math.random()*(max-min+1))}
+function currentSaveVersion(){return Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||Number(SAVE_VERSION)||1))}
+window.currentSaveVersion=currentSaveVersion;
 function clampGameLevel(level){return Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(level)||1)))}
 window.clampGameLevel=clampGameLevel;
 function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
 function sameExp(l){return ceil(25+4*l)}
-function expNeed(l){return ceil(sameExp(l)*(5+495*(1-Math.exp(-(l-1)/142))))}
+function expProgressionFactor(level){const l=Math.max(1,Math.floor(Number(level)||1));return EXP_CURVE.killMin+EXP_CURVE.killRange*(1-Math.exp(-(l-1)/EXP_CURVE.scale))}
+window.expProgressionFactor=expProgressionFactor;
+function expNeed(l){return ceil(sameExp(l)*expProgressionFactor(l))}
 function expLevelFactor(ml,pl){let d=ml-pl;if(d>=5)return 1.3;if(d>=3)return 1.2;if(d>=1)return 1.1;if(d===0)return 1;if(d>=-2)return .9;if(d>=-5)return .6;if(d>=-10)return .25;return .05}
 function goldBase(l){return ceil(6+4*l)}
 function sellBase(l){return ceil(12+8*l)}
@@ -58,7 +63,7 @@ function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>
 function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
- return {saveVersion:SAVE_VERSION,introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ return {saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
 }
 
 function load(){
@@ -71,7 +76,7 @@ function load(){
  if(typeof state.shop.initialized!=="boolean")state.shop.initialized=hadRaw&&loadedVersion>=4;
  if(!state.settings)state.settings=newState().settings;if(!Array.isArray(state.settings.autoSell))state.settings.autoSell=[false,false,false,false,false];if(typeof state.settings.keepUpgrade!=="boolean")state.settings.keepUpgrade=true;
  if(loadedVersion<4){state.shop.items=[];state.shop.initialized=false}
- state.saveVersion=SAVE_VERSION;selectedMap=Math.max(0,Math.min(state.unlockedMap,MAPS.length-1));normalizeHP();ensureShop();save(false);
+ state.saveVersion=currentSaveVersion();selectedMap=Math.max(0,Math.min(state.unlockedMap,MAPS.length-1));normalizeHP();ensureShop();save(false);
 }
 function save(show=true){
  try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(err){const e=document.getElementById("saveStatus");if(e)e.textContent="存檔失敗";console.error("Save failed",err);return false}
