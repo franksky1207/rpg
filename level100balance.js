@@ -2,7 +2,7 @@
  // EXP 正式公式以 engine.js 的 expNeed() 為唯一來源。
  // 此檔只保留查詢／測試用輔助函式，避免再次覆寫正式升級需求。
  const EXP_KILL_MIN=5;
- const EXP_KILL_RANGE=245;
+ const EXP_KILL_RANGE=495;
  const EXP_KILL_SCALE=142;
 
  window.expProgressionFactor=function(level){
