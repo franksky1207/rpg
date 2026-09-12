@@ -8,7 +8,7 @@
 
 ---
 
-## 1. 專案基本資料
+## 1. 專案基本資料與開發原則
 
 - Repository：`franksky1207/rpg`
 - 正式分支：`main`
@@ -23,7 +23,31 @@
 - 世界：10 大區域、100 張主線地圖、Lv1～500
 - 桌面與手機都要支援；iPhone Safari 是重要真機環境
 
-修改規範：先讀 `main`、先搜尋引用、使用者未明確授權不得改；JS/CSS 修改後要更新 `index.html` cache-bust；修改後回讀與 compare。GitHub 寫入成功不等於 GitHub Pages／iPhone Safari runtime 已驗證。
+### 修改規範
+
+1. 修改前先重新讀 `main` 相關檔案與完整 `index.html`。
+2. 先搜尋跨檔案引用、後載入 override / wrapper、狀態與存檔欄位，再決定修改位置。
+3. 使用者未明確授權不得寫入 repo；若使用者說「先不要修改／先分析」，只能檢查。
+4. 修改 JS / CSS 後必須更新 `index.html` cache-bust。
+5. 修改後重新讀取變更檔案與完整 `index.html`，再 compare base→head，確認沒有意外檔案。
+6. GitHub 寫入成功不等於 GitHub Pages、瀏覽器或 iPhone Safari runtime 已驗證，必須明確區分。
+
+### 異常處理最高原則
+
+**未來只要發生功能異常，不得先以局部猜測方式疊加補丁。**
+
+必須先自我檢查該問題涉及的完整程式鏈，包括：
+- 核心函式與實際執行版本
+- 所有呼叫來源
+- state 狀態流與物件參照
+- 存檔正規化／migration
+- `index.html` 載入順序
+- 後載入 override / wrapper
+- render / DOM 事件鏈
+- 跨檔案引用與舊實作殘留
+- runtime / syntax error
+
+確認真正根因後才修改。若新邏輯已正式取代舊邏輯，應優先移除或封存舊路徑，不應永久依賴載入順序把舊實作蓋住。
 
 ---
 
@@ -43,32 +67,60 @@
 
 每區10張地圖，共100張，Lv1～500。
 
-主線正式玩家模式只有：
+正式玩家主線模式只有：
 - 單場戰鬥
 - 連續戰鬥
 
-Boss 永遠單場。Lv500後 EXP 1:1 轉金幣；Lv500死亡不扣EXP，但裝備遺失規則照常，除非VIP20。
+Boss 永遠單場。Lv500後 EXP 1:1 轉金幣；Lv500死亡不扣 EXP，但裝備遺失照常，除非 VIP20。
+
+世界 UI：最高已解鎖區域預設展開；舊區域可折疊；未到達區域不顯示；折疊狀態只保留本次 session。
+
+舊存檔的 `mapProgress / bossProgress / bossLocked / bossKilled` 會依目前 `MAPS.length` 正規化延長。現行世界進度仍以 map index 為永久身分，未來若要重排既有地圖需特別處理 migration。
 
 ---
 
-## 3. 副本
+## 3. 副本共通
 
 - Lv5：懸賞戰
 - Lv15：競技場
 - Lv25：虛空幻境
 
-副本次數由主線戰鬥累積副本進度取得。
-
-### 懸賞戰
-定位：高 EXP、高金幣、多裝備。玩家UI不公開內部權重與精確掉落機率。支援單次／連續；每場真正開始前才扣次數，每場結束回滿HP。
+副本次數由主線戰鬥累積副本進度取得。每次正式副本 round 真正開始前才扣次數。
 
 ---
 
-# 4. 競技場：最新唯一有效制度
+## 4. 懸賞戰
 
-## 4.1 正式名稱
+定位：**高 EXP、高金幣、多裝備**。
 
-競技場共有10個，正式名稱永遠是「主線區域名稱＋競技場」：
+內部三種懸賞：
+- 普通：權重45%，EXP×5、金幣×5、2件裝備
+- 高級：權重35%，EXP×8、金幣×8、3件裝備
+- 危險：權重20%，EXP×12、金幣×12、5件裝備
+
+正式玩家 UI 不公開上述權重、品質機率或戰前精確獎勵數字，只呈現「高 EXP・高金幣・多裝備」。
+
+品質基礎權重：稀有60%、史詩35%、傳說4.5%、神話0.5%。特性升階、VIP14、VIP8 可影響裝備；VIP18不套用懸賞品質。
+
+支援：
+- 單次挑戰
+- 連續挑戰
+
+連續規則：
+- 一場懸賞＝一輪
+- 下一輪真正開始時才再扣1次
+- 每輪結束後回滿 HP
+- 死亡、次數不足或手動停止時結束
+- 手動停止會完成目前場次後停止
+- 最後只出一次總結算
+
+目前技術債：`bountycontinuousui.js` 仍用 UI 層遮住連續模式中間的 ready 畫面；`dungeonbounty.js` 仍會生成精確獎勵預覽，再由 `dungeonplayerui.js` 移除。這兩項預定在後續懸賞核心整理時收回核心。
+
+---
+
+# 5. 競技場：最新唯一有效制度
+
+## 5.1 正式名稱
 
 1. 地球戰爭競技場
 2. 太陽系戰爭競技場
@@ -81,9 +133,9 @@ Boss 永遠單場。Lv500後 EXP 1:1 轉金幣；Lv500死亡不扣EXP，但裝�
 9. 銀河核心戰爭競技場
 10. 銀河統合戰爭競技場
 
-**不要把正式競技場命名成普通／困難／極限。** `normal / hard / extreme` 只保留作底層位置模板相容 id。
+玩家介面**不得**把正式競技場命名成普通／困難／極限。`normal / hard / extreme` 僅為底層位置模板相容 id。
 
-## 4.2 逐個解鎖＋最近最多3個
+## 5.2 逐個解鎖＋最近最多3個
 
 永久進度：
 
@@ -91,76 +143,90 @@ Boss 永遠單場。Lv500後 EXP 1:1 轉金幣；Lv500死亡不扣EXP，但裝�
 state.dungeon.arena.highestArenaUnlocked
 ```
 
-Lv15 剛開放時只有第1個。
+Lv15 剛開放時只有第1個競技場。
 
-顯示規則：
-
+顯示：
 ```text
-已開1個 → 1
-已開2個 → 1 2
-已開3個 → 1 2 3
-已開4個 → 2 3 4
-已開5個 → 3 4 5
+1
+1 2
+1 2 3
+2 3 4
+3 4 5
 ...
-已開10個 → 8 9 10
+8 9 10
 ```
 
 玩家只能挑戰目前可見的最近最多3個競技場。
 
-## 4.3 位置算法
+## 5.3 解鎖條件
 
-正式玩家沒有第二層「低／中／高難」選擇。玩家直接點區域競技場進準備頁。
-
-目前可見競技場由左至右：
+解鎖第 `N+1` 個競技場必須同時：
 
 ```text
-左 → 低位置算法（internal normal）
-中 → 中位置算法（internal hard）
-右 → 高位置算法（internal extreme）
+目前最高競技場戰力評估通過
+AND
+主線第 N+1 區域已解鎖
 ```
 
-只開1個時第1個是低；開2個時是低／中；開3個以上固定低／中／高。
+沒有「前三階自動開放」或「前三區免主線」例外。
 
-同一競技場會隨新競技場解鎖而從右→中→左。例如第3個：123時高、234時中、345時低。
+## 5.4 戰力評估
 
-## 4.4 HP／ATK／DEF 與暴閃／特性分離
-
-`arenapositioncore.js` 是正式位置模型 overlay。
-
-HP／ATK／DEF：只看實際競技場 Rank，位置不改變三維。
-
-共通三戰物理基準：
+正式門檻：
 
 ```text
-S1: hp .60 / damage .57 / def .78
-S2: hp .69 / damage .64 / def .80
-S3: hp .78 / damage .73 / def .82
+500 次完整三連戰
+至少 485 次全通
+= 97% 才合格
 ```
 
-Rank倍率：
+第1個最高時套低位置算法，第2個最高時套中位置算法，第3個以上最高時套高位置算法；位置只影響暴擊／閃避／特性，不影響 Rank 的 HP／ATK／DEF。
 
+評估採 Safari 友善的非同步分批執行，每批10次。未達97%可反覆重新評估；一旦達標，`promotionReady=true`，評估按鈕停用。若下一區主線尚未開，資格保留到可解鎖為止。
+
+### 評估舊存檔規則
+
+`dungeonprogress.js`：
+- `positionModelVersion = 1`
+- `assessmentRuleVersion = 2`
+- 新評估規則只承認有完整證據的結果：500次＋有效 signature＋至少485次全通。
+- 舊存檔若只有 `promotionReady=true`，但沒有完整500次評估資料，不再保留資格。
+- 舊完整結果若低於485次全通，改為未通過。
+- 已解鎖的 `highestArenaUnlocked` 不因此倒退。
+
+## 5.5 位置算法與物理三維
+
+目前可見競技場由左至右內部分別套：
+- 左：低位置算法（internal `normal`）
+- 中：中位置算法（internal `hard`）
+- 右：高位置算法（internal `extreme`）
+
+玩家 UI 不顯示「目前位置：低／中／高」。
+
+HP／ATK／DEF 只看實際競技場 Rank：
 ```text
 RankHp     = 1 + 0.05*(R-1)
 RankDamage = 1 + 0.015*(R-1)
 RankDef    = 1 + 0.03*(R-1)
 ```
 
-暴擊／閃避／怪物特性則只依左／中／右位置模板。最高仍為 crit23 / dodge20，特性最多2個。
-
-## 4.5 VIP積分：整組視窗往前時一起提高
-
-**這是目前最新正式規則，取代舊的「每個Rank各自套低中高公式」。**
-
-初始123：
-
+正式三戰物理基準：
 ```text
-左 180
-中 300
-右 420
+S1: hp .60 / damage .57 / def .78
+S2: hp .69 / damage .64 / def .80
+S3: hp .78 / damage .73 / def .82
 ```
 
-每當整組競技場往前推一格，三個位置的全通積分全部 +130：
+暴擊／閃避／特性依位置；最高約 crit23 / dodge20，特性最多2個。
 
+## 5.6 VIP積分：整組視窗推進
+
+初始123：
+```text
+180 / 300 / 420
+```
+
+第4個解鎖、整組變234後才第一次全體+130：
 ```text
 123 → 180 / 300 / 420
 234 → 310 / 430 / 550
@@ -172,139 +238,80 @@ RankDef    = 1 + 0.03*(R-1)
 8910 → 1090 / 1210 / 1330
 ```
 
-因此同一競技場移動位置時，積分也會更新。例如第3個競技場：
-- 123時在右 → 420
-- 234時在中 → 430
-- 345時在左 → 440
+目前正式積分來源在 `dungeonarena.js` 的 `pointWindowHighest()` / `arenaPointOffset()` / `difficultyForRank()`，玩家卡片、正式戰鬥與結算皆吃同一組 config。
 
-正式積分來源在 `arenapositioncore.js`：
-- `getArenaPointTotalForRankPosition(rank, positionId)`
-- `getArenaPointConfig(rank, positionId)`
-
-三戰分段積分沿原位置 template 的 stageWeights 比例拆分。
-
-`arenapositioncore.js` 會同步接管：
-- 玩家卡片全通積分
-- 正式戰鬥實際 VIP 積分入帳
-- 準備頁全通積分
-- 單次結算
-- 連續挑戰總積分
-- GM測試積分
-
-`dungeonarena.js` 內舊 `rank1Total + 130*(R-1)` 仍可存在作歷史相容底層，不是目前正式玩家積分模型。
-
-## 4.6 解鎖下一個競技場
-
-要解鎖第 `N+1` 個競技場，必須同時：
-
-```text
-目前最高競技場戰力評估通過
-AND
-主線第 N+1 區域已解鎖
-```
-
-沒有前三區免主線例外。
-
-目的：想取得更高競技場與更高 VIP 積分，必須持續推主線，不能停在低等／低區域就一路解鎖高積分競技場。
-
-戰力評估規則：500次完整三連戰，至少90%全通。第1個最高時用低位置、第2個最高時用中位置、第3個以上最高都在右側，用高位置。
-
-戰力達標後 `promotionReady=true`；若主線尚未開，資格保留。解鎖下一個後清空本次評估資料，新最高競技場成為下一個評估目標。
-
-## 4.7 單次／連續挑戰
-
-玩家直接點可見區域競技場 → 準備頁 → 單次或連續。
+## 5.7 單次／連續
 
 - 一個完整三連戰＝一輪
 - 三戰內不回血
-- 新一輪重新滿血
+- 新一輪才重新滿血
 - 下一輪真正開始前才扣次數
-- 失敗、次數不足、手動停止會結束
+- 失敗、次數不足或手動停止會結束
 - 手動停止完成目前整輪後才停
 
 ---
 
-## 5. 玩家介面與遊戲說明
+## 6. 競技場正式檔案責任
 
-`arenaplayerflow2.js`：
-- 卡片正式名稱只用區域競技場名稱
-- 不再顯示第二層低中高選單
-- 卡片顯示「穩定挑戰／進階挑戰／最高挑戰」
-- 卡片直接顯示目前正確的三戰全通 VIP 積分
-- 首頁簡短說明：競技場隨主線逐步解鎖，最多顯示最近3個；越右側挑戰與積分越高
-- 解鎖條件簡化為「戰力評估通過＋對應主線區域已開放」
-
-`gameguidearena5.js` 玩家說明採精簡版，不公開過多內部公式／暴閃上限／特性機率，只說明：
-- 十大區域競技場
-- 主線＋戰力雙門檻
-- 最近最多3個
-- 越右挑戰越高
-- 整組往前時積分一起提高
-- 三戰制與單次／連續
-
----
-
-## 6. GM競技場測試
-
-`arenagm5.js`：
-- 可選第1～10個正式區域競技場
-- 另選左位（低）／中位（中）／右位（高）位置算法
-- 100次完整三連戰可自由測 Rank＋位置
-- 500次正式評估自動使用該Rank正常作為最高競技場時的位置
-- GM積分同步使用正式移動視窗積分模型
-- GM測試不扣正式副本次數、不給正式VIP積分、不修改正式promotionReady
-
----
-
-## 7. 存檔／遷移
-
-`dungeonprogress.js`：
-- `highestArenaUnlocked` 是正式競技場進度
-- `positionModelVersion = 1`
-- 舊制度第一次載入位置模型時，舊戰力評估資格清空，但已解鎖競技場進度不倒退
-- `activeRank` 只是目前玩家點選的可見競技場
-
----
-
-## 8. 重要檔案
-
-- `dungeonprogress.js`：副本進度、競技場永久進度與遷移
-- `dungeonarena.js`：舊底層競技場三連戰／相容 difficulty template
-- `arenapositioncore.js`：**正式位置模型、物理三維正規化、積分模型、正式入帳、500次評估**
+- `dungeonprogress.js`：副本永久進度、競技場存檔正規化、assessmentRuleVersion
+- `dungeonarena.js`：競技場底層三戰核心、正式視窗積分 config；仍含部分舊 difficulty／assessment 相容程式
+- `arenapositioncore.js`：正式位置模型、物理三維正規化、97%戰力評估
 - `arenawindowcore.js`：最高競技場、最近3個、主線條件、解鎖
-- `arenaplayerflow2.js/.css`：正式玩家競技場 UI
-- `arenagm5.js`：正式 GM 競技場沙盒
-- `gameguidearena5.js`：正式玩家說明 patch
-- `arenaranklabels.js`：舊名稱相容層
-- `dungeonplayerui.js` / `dungeongm.js`：較早相容層，正式呈現由後載入新版覆寫
+- `arenaplayerflow2.js/.css`：唯一正式玩家競技場頁面
+- `arenagm5.js`：正式 GM 競技場測試
+- `gameguidearena5.js`：正式玩家說明
+- `arenaranklabels.js`：名稱相容層
+- `dungeonplayerui.js`：只保留懸賞與副本首頁 enhancement，不再介入正式競技場 UI
+
+### 競技場已知技術債（後續整理）
+
+1. `dungeonarena.js` 還保留歷史 `normal/hard/extreme` 名稱字串與舊 450/500 assessment fallback；正式 runtime 已由新版接管，但後續應移除重複規則。
+2. `arenawindowcore.js` 的評估 wrapper 仍會暫時切換全域 arena rank；後續應改為明確傳入 rank / position，避免依賴 state 暫時變更。
+3. `dungeonarena.js` 舊 HP／ATK／DEF difficulty template 仍會由 `arenapositioncore.js` runtime 正規化，後續應收斂為單一來源。
 
 ---
 
-## 9. 已知技術債
+## 7. 世界資料與命名檢查
 
-1. `dungeonarena.js` 仍有 `normal/hard/extreme` 與「普通／困難／極限競技場」歷史字串，非正式玩家名稱。
-2. `dungeonarena.js` 原本的 HP/ATK/DEF difficulty multipliers 會在正式 runtime 被 `arenapositioncore.js` 正規化。
-3. `dungeonarena.js` 原本的 Rank積分表屬舊底層；正式積分由 `arenapositioncore.js` 接管。
-4. `arenawindowcore.js`、`arenaplayerflow2.js` 檔名保留歷史命名。
-5. `gameguide.js`、`dungeongm.js` 可仍有舊文字／舊測試；正式呈現由新版 patch 接管。
-6. `ui.js` 仍可能保留舊 battle-count 設定；正式主線由 `continuousbattle.js` override。
+`WORLD_REGIONS` 固定10區、每區50級／10張地圖。
+
+`worldnamingrules.js` 可檢查：
+- 100張地圖是否連續
+- 每張5級
+- 每區10張
+- 每張5件裝備／5隻怪
+- 怪物 normal/elite/boss 順序
+- chapter 對應
+- 重名／近似名／詞彙密度
+
+目前十個 `worldmaps-*.js` 還混用 `splice / push` 註冊方式，正常載入順序可運作，但後續地圖架構整理應統一成單一 `registerRegionMaps()` 類型入口。
 
 ---
 
-## 10. 驗證狀態
+## 8. 存檔與載入
 
-截至本次更新：
-- GitHub `main` 修改後需完成靜態回讀與 commit compare。
-- **尚未完成 GitHub Pages／桌面瀏覽器／iPhone Safari 的完整 runtime 驗證。**
+正式 schema：`SAVE_SCHEMA_VERSION = 10`。
 
-下一個對話承接時，先讀本文件，再重新讀：
-- `dungeonprogress.js`
-- `dungeonarena.js`
-- `arenapositioncore.js`
-- `arenawindowcore.js`
-- `arenaplayerflow2.js`
-- `arenagm5.js`
-- `gameguidearena5.js`
-- 完整 `index.html`
+`normalizeWorldSaveState()` 會把舊世界陣列配合目前100張地圖延長；`normalizeDungeonSaveState()` 負責副本與競技場進度；`savemigration.js` 再做正式 schema migration。
 
-以 `main` 為唯一真實來源。
+目前 `engine.js → dungeonprogress.js → savemigration.js` 存在多層 `load()` wrapper，依賴 `index.html` 載入順序。功能目前正常，但屬後續全域整理項目，不應在局部 bug 時隨意再疊新的 load wrapper。
+
+---
+
+## 9. 後續技術債整理順序
+
+1. **規則與舊資料清理**：97%正式化、assessmentRuleVersion、移除舊玩家競技場 UI、更新 handoff。（本批）
+2. **競技場架構整理**：收斂舊 assessment/difficulty、減少 wrapper、評估改參數式。
+3. **懸賞戰核心整理**：移除 ready UI workaround、精確獎勵不再於核心玩家頁生成。
+4. **地圖架構整理**：統一十區地圖註冊與完整性驗證。
+5. **存檔／載入／全專案收尾**：收斂 load pipeline、全 repo 舊引用／語法／載入順序健檢。
+
+---
+
+## 10. 目前重要提醒
+
+- GitHub `main` 永遠優先於本文件。
+- 玩家競技場正式門檻只有 **97%（485/500）**。
+- 玩家競技場沒有第二層低／中／高難度選擇，也不顯示位置文字。
+- 玩家懸賞不公開權重、品質機率與戰前精確獎勵。
+- 發生異常時，先完整自我檢查整條程式鏈，再修根因，不先猜補丁。
