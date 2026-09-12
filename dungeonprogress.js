@@ -100,10 +100,11 @@
  window.normalizeDungeonSaveState=normalizeDungeonState;
 
  function initializeVipHpIfNeeded(){
-  if(!state||state.vipInitialized===true)return;
+  if(!state||state.vipInitialized===true)return false;
   const baseMax=Math.max(1,equippedStats().hp),current=Math.max(0,Number(state.hp)||0),ratio=Math.max(0,Math.min(1,current/baseMax)),vipMax=Math.max(1,playerCombatStats().hp);
   state.hp=current>=baseMax?vipMax:Math.max(0,Math.min(vipMax,Math.round(vipMax*ratio)));
   state.vipInitialized=true;
+  return true;
  }
  function recoverInterruptedDungeonRun(){
   const dungeon=normalizeDungeonState(state);if(!dungeon?.activeRun)return false;
@@ -114,14 +115,14 @@
 
  const baseNewState=newState;
  newState=function(){const next=baseNewState();normalizeDungeonState(next);next.vipInitialized=true;return next;};
- const baseLoad=load;
- load=function(){
-  baseLoad();
-  initializeVipHpIfNeeded();
+
+ // 正式 load/migration 由 savemigration.js 統一負責；本檔只提供載入後副本收尾。
+ window.finalizeDungeonLoadedState=function(){
+  const vipHpInitialized=initializeVipHpIfNeeded();
   normalizeDungeonState(state);
-  recoverInterruptedDungeonRun();
+  const recoveredInterruptedRun=recoverInterruptedDungeonRun();
   state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
-  save(false);
+  return {vipHpInitialized,recoveredInterruptedRun,dungeon:state.dungeon};
  };
 
  window.ensureDungeonProgressState=function(){return normalizeDungeonState(state);};
