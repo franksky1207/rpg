@@ -11,5 +11,5 @@
   {chapter:"銀河邊境",name:"邊境文明戰場",min:291,max:295,gear:["文明裂星刃","邊境王冠盔","文明重戰甲","星域突進靴","邊境統御核"],enemies:[["文明聯軍兵",291,"normal","attack"],["邊境征戰體",292,"normal","balanced"],["星海戰機群",293,"normal","attack"],["文明攻城艦",294,"elite","tank"],["邊境文明霸主",295,"boss","tank"]]},
   {chapter:"銀河邊境",name:"銀河邊境裁決區",min:296,max:300,gear:["邊境裁決刃","銀河遠征盔","邊境裁定甲","裁決航行靴","邊境裁決權限"],enemies:[["終戰文明兵",296,"normal","balanced"],["遠古星海禁衛",297,"normal","attack"],["銀河邊境鎮壓體",298,"normal","balanced"],["遠域霸權將軍",299,"elite","tank"],["銀河邊境裁定者",300,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("galactic-frontier",REGION_MAPS);
 })();
