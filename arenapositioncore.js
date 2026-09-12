@@ -4,6 +4,8 @@
  const COMBAT_SPEC_KEYS=["initiative","combo","penetration","counter","drain"];
  const POSITION_IDS=["normal","hard","extreme"];
  const POSITION_LABELS={normal:"低",hard:"中",extreme:"高"};
+ const POSITION_BASE_POINTS={normal:180,hard:300,extreme:420};
+ const ARENA_POINT_STEP=130;
 
  // HP / ATK / DEF use one common three-stage physical profile.
  // Arena rank then applies the formal rank multipliers. Position does not alter these three stats.
@@ -32,13 +34,18 @@
   const r=clampRank(rank),visible=arenaProgress().visibleRanks||[];
   const idx=visible.indexOf(r);
   if(idx>=0)return Math.max(0,Math.min(2,idx));
-  // Non-player / compatibility fallback: relative to the current highest visible arena.
   const highest=clampRank(arenaProgress().highestArenaUnlocked||r);
   const start=Math.max(1,highest-2);
   return Math.max(0,Math.min(2,r-start));
  }
  function positionDifficultyId(rank){return POSITION_IDS[positionIndexForRank(rank)]||"normal";}
  function positionLabel(rank){return POSITION_LABELS[positionDifficultyId(rank)]||"低";}
+ function pointTotalForRankPosition(rank,difficultyId){
+  const r=clampRank(rank),idx=Math.max(0,POSITION_IDS.indexOf(difficultyId));
+  const id=POSITION_IDS[idx]||"normal";
+  const windowStart=Math.max(1,r-idx);
+  return (POSITION_BASE_POINTS[id]||180)+ARENA_POINT_STEP*(windowStart-1);
+ }
 
  function rankScale(rank){
   const n=clampRank(rank)-1;
@@ -59,8 +66,6 @@
   return enemy;
  }
 
- // Every formal arena combat uses the common physical profile above.
- // Crit / dodge / traits remain those produced by the position difficulty template.
  const baseRunCombatCore=window.runCombatCore;
  if(typeof baseRunCombatCore==="function"){
   window.runCombatCore=function(player,enemy,startHp=null,options={}){
@@ -69,7 +74,6 @@
   };
  }
 
- // Make GM / assessment test enemies expose the same physical stats before combat too.
  const baseBuildArenaEnemyForTest=window.buildArenaEnemyForTest;
  if(typeof baseBuildArenaEnemyForTest==="function"){
   window.buildArenaEnemyForTest=function(difficultyId,stageIndex,stats=null,level=null,rank=null){
@@ -77,8 +81,6 @@
   };
  }
 
- // Formal player challenge ignores a manually supplied low/mid/high choice.
- // The visible slot decides the template: left=low, middle=mid, right=high.
  const baseStartArenaDungeon=window.startArenaDungeon;
  if(typeof baseStartArenaDungeon==="function"){
   window.startArenaDungeon=function(_difficultyId){
@@ -173,5 +175,6 @@
  window.getArenaPositionDifficultyId=positionDifficultyId;
  window.getArenaPositionLabel=positionLabel;
  window.getArenaPositionIndex=positionIndexForRank;
+ window.getArenaPointTotalForRankPosition=pointTotalForRankPosition;
  window.normalizeArenaPhysicalStats=normalizeArenaPhysicalStats;
 })();
