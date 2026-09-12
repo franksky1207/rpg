@@ -1,10 +1,18 @@
 (function(){
  const FALLBACK_BATTLE_MS=1800;
+ const CHECKPOINT_KEY="frank_text_rpg_offline_checkpoint";
+ const CHECKPOINT_INTERVAL_MS=60*1000;
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
- function hasMainlineHistory(){
-  if(Array.isArray(state?.mapProgress)&&state.mapProgress.some(row=>Array.isArray(row)&&row.some(v=>(Number(v)||0)>0)))return true;
-  if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return true;
-  return false;
+ function now(){return Date.now();}
+ function readCheckpoint(){
+  try{
+   const value=Number(localStorage.getItem(CHECKPOINT_KEY));
+   const t=now();
+   return Number.isFinite(value)&&value>0&&value<=t?Math.floor(value):null;
+  }catch(e){return null;}
+ }
+ function writeCheckpoint(ts=now()){
+  try{localStorage.setItem(CHECKPOINT_KEY,String(Math.max(0,Math.floor(Number(ts)||now()))));}catch(e){}
  }
  function validStoredTarget(o){
   if(!isObject(o))return false;
@@ -31,16 +39,32 @@
     try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy))return {map,enemy};}catch(e){}
    }
   }
-  return null;
+  return MAPS.length?{map:0,enemy:0}:null;
  }
- if(!state||!hasMainlineHistory())return;
+ if(!state)return;
  if(!isObject(state.offline))state.offline={};
- if(validStoredTarget(state.offline))return;
- const target=defeatedFallback()||legalFallback();
- if(!target)return;
- state.offline.farmMap=target.map;
- state.offline.farmEnemy=target.enemy;
- state.offline.avgBattleMs=FALLBACK_BATTLE_MS;
- state.offline.sampleCount=1;
+ const persistedCheckpoint=readCheckpoint();
+ if(persistedCheckpoint!=null){
+  const current=Number(state.offline.lastSettledAt);
+  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
+ }
+ if(!validStoredTarget(state.offline)){
+  const target=defeatedFallback()||legalFallback();
+  if(target){
+   state.offline.farmMap=target.map;
+   state.offline.farmEnemy=target.enemy;
+   state.offline.avgBattleMs=FALLBACK_BATTLE_MS;
+   state.offline.sampleCount=1;
+  }
+ }
  if(typeof save==="function")save(false);
+ writeCheckpoint();
+ const timer=setInterval(()=>{
+  const hidden=document.visibilityState==="hidden";
+  if(!hidden)writeCheckpoint();
+ },CHECKPOINT_INTERVAL_MS);
+ window.addEventListener("pagehide",()=>writeCheckpoint(),{capture:true});
+ window.addEventListener("beforeunload",()=>writeCheckpoint(),{capture:true});
+ window.addEventListener("pageshow",()=>{if(document.visibilityState!=="hidden")writeCheckpoint();});
+ window.addEventListener("unload",()=>{clearInterval(timer);writeCheckpoint();},{capture:true});
 })();
