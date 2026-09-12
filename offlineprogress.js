@@ -41,7 +41,7 @@
  function legalFarmTarget(mapIdx,enemyIdx){
   const m=Number(mapIdx),e=Number(enemyIdx);
   if(!Number.isInteger(m)||m<0||m>=MAPS.length||!Number.isInteger(e)||e<0||e>3)return false;
-  try{return typeof enemyUnlocked==="function"&&enemyUnlocked(m,e);}catch(err){return false;}
+  try{const monster=monsterObj(m,e);return !!monster&&monster.kind!=="boss";}catch(err){return false;}
  }
  function resolveFarmTarget(){
   const o=ensureOfflineState();
