@@ -28,7 +28,7 @@
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
   const avg=Number(o.avgBattleMs);
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
-  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0));
+  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
