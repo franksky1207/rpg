@@ -1,6 +1,7 @@
 (function(){
  const ASSESS_RUNS=500;
  const ASSESS_CLEAR_TARGET=450;
+ const ASSESS_BATCH_SIZE=10;
  const COMBAT_SPEC_KEYS=["initiative","combo","penetration","counter","drain"];
  const POSITION_IDS=["normal","hard","extreme"];
  const POSITION_LABELS={normal:"低",hard:"中",extreme:"高"};
@@ -16,7 +17,7 @@
 
  function clampRank(value){
   const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
+  return Math.max(1,Math.min(max,Math.floor(Number(value)||1));
  }
  function arenaProgress(){
   if(typeof getArenaProgressState==="function")return getArenaProgressState();
@@ -43,7 +44,7 @@
  }
  function normalizeArenaPhysicalStats(enemy){
   if(!enemy||enemy.kind!=="dungeon-arena"||!enemy.playerSnapshot||typeof specialBaseEnemyFromPlayer!=="function")return enemy;
-  const idx=Math.max(0,Math.min(2,Math.floor(Number(enemy.arenaStage)||0)));
+  const idx=Math.max(0,Math.min(2,Math.floor(Number(enemy.arenaStage)||0));
   const profile=PHYSICAL_STAGE_PROFILE[idx]||PHYSICAL_STAGE_PROFILE[0];
   const p=enemy.playerSnapshot;
   const base=specialBaseEnemyFromPlayer(p);
@@ -101,8 +102,8 @@
   const rank=currentAssessmentRank();
   const difficultyId=positionDifficultyId(rank);
   const signature=assessmentSignature(rank,difficultyId);
-  const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0)));
-  const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0)));
+  const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0));
+  const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0));
   const hasResult=runs===ASSESS_RUNS&&typeof arena?.lastCheckSignature==="string"&&!!arena.lastCheckSignature;
   const maxRank=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
   const unlockedCap=typeof getArenaUnlockedRankCap==="function"?clampRank(getArenaUnlockedRankCap()):rank;
@@ -123,27 +124,55 @@
    canPromote:arena?.promotionReady===true&&rank<unlockedCap&&rank<maxRank
   };
  }
-
- window.getArenaAssessmentStatus=assessmentStatus;
- window.assessArenaPromotion=function(){
+ function assessmentContext(){
   const arena=assessmentArena();
   const rank=currentAssessmentRank();
   const maxRank=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  if(!arena)return {...assessmentStatus(),reason:"unavailable"};
-  if(rank>=maxRank)return {...assessmentStatus(),reason:"max-rank"};
-  if(arena.promotionReady===true)return {...assessmentStatus(),reason:"already-ready"};
+  if(!arena)return {early:{...assessmentStatus(),reason:"unavailable"}};
+  if(rank>=maxRank)return {early:{...assessmentStatus(),reason:"max-rank"}};
+  if(arena.promotionReady===true)return {early:{...assessmentStatus(),reason:"already-ready"}};
   const difficultyId=positionDifficultyId(rank);
   const base=createSpecialPlayerSnapshot(equippedStats());
   const player=createSpecialPlayerSnapshot(playerCombatStats(base,state.vipLevel));
-  let clears=0;
-  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(rank,difficultyId,base,player))clears++;
+  const signature=assessmentSignature(rank,difficultyId);
+  return {rank,difficultyId,base,player,signature};
+ }
+ function finishAssessment(ctx,clears){
+  const arena=assessmentArena();
+  if(!arena)return {...assessmentStatus(),reason:"unavailable"};
   arena.lastCheckRuns=ASSESS_RUNS;
-  arena.lastCheckClearCount=clears;
-  arena.lastCheckSignature=assessmentSignature(rank,difficultyId);
-  arena.promotionReady=clears>=ASSESS_CLEAR_TARGET;
+  arena.lastCheckClearCount=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(clears)||0));
+  arena.lastCheckSignature=ctx.signature;
+  arena.promotionReady=arena.lastCheckClearCount>=ASSESS_CLEAR_TARGET;
   save(false);
   if(typeof render==="function")render();
   return {...assessmentStatus(),reason:arena.promotionReady?"qualified":"not-qualified"};
+ }
+
+ window.getArenaAssessmentStatus=assessmentStatus;
+ window.assessArenaPromotion=function(){
+  const ctx=assessmentContext();
+  if(ctx.early)return ctx.early;
+  let clears=0;
+  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(ctx.rank,ctx.difficultyId,ctx.base,ctx.player))clears++;
+  return finishAssessment(ctx,clears);
+ };
+ window.assessArenaPromotionAsync=function(onProgress=null){
+  const ctx=assessmentContext();
+  if(ctx.early)return Promise.resolve(ctx.early);
+  let completed=0,clears=0;
+  return new Promise((resolve,reject)=>{
+   function step(){
+    try{
+     const end=Math.min(ASSESS_RUNS,completed+ASSESS_BATCH_SIZE);
+     for(;completed<end;completed++)if(simulateFullRun(ctx.rank,ctx.difficultyId,ctx.base,ctx.player))clears++;
+     if(typeof onProgress==="function")onProgress({completed,total:ASSESS_RUNS,clears});
+     if(completed<ASSESS_RUNS){setTimeout(step,0);return;}
+     resolve(finishAssessment(ctx,clears));
+    }catch(err){reject(err);}
+   }
+   setTimeout(step,0);
+  });
  };
 
  window.getArenaPositionDifficultyId=positionDifficultyId;
