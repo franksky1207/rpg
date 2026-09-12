@@ -16,7 +16,6 @@
  const RANK_HP_STEP=.05;
  const RANK_DAMAGE_STEP=.015;
  const RANK_DEF_STEP=.03;
- let arenaAwardedPoints=0;
 
  function clampRank(value){
   const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
@@ -94,69 +93,9 @@
   };
  }
 
- const baseGetArenaDifficultyConfigs=window.getArenaDifficultyConfigs;
- if(typeof baseGetArenaDifficultyConfigs==="function"){
-  window.getArenaDifficultyConfigs=function(rank=null){
-   return baseGetArenaDifficultyConfigs(rank).map(cfg=>{
-    const pc=pointConfig(cfg.rank||rank||1,cfg.id);
-    return {...cfg,totalPoints:pc.totalPoints,stagePoints:pc.stagePoints};
-   });
-  };
- }
-
- const baseGetArenaCoreState=window.getArenaCoreState;
- const baseAddDungeonPoints=window.addDungeonPoints;
- if(typeof baseAddDungeonPoints==="function"){
-  window.addDungeonPoints=function(amount){
-   const run=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null;
-   const core=typeof baseGetArenaCoreState==="function"?baseGetArenaCoreState():null;
-   if(run?.mode==="arena"&&core?.phase==="combat"&&core?.difficulty){
-    const pc=pointConfig(core.rank,core.difficulty.id),stage=Math.max(0,Math.min(2,Math.floor(Number(core.stage)||0)));
-    const corrected=Math.floor(Number(pc.stagePoints[stage])||0);
-    arenaAwardedPoints+=corrected;
-    return baseAddDungeonPoints(corrected);
-   }
-   return baseAddDungeonPoints(amount);
-  };
- }
-
- if(typeof baseGetArenaCoreState==="function"){
-  window.getArenaCoreState=function(){
-   const core=baseGetArenaCoreState();
-   if(!core?.difficulty)return core;
-   const pc=pointConfig(core.rank,core.difficulty.id);
-   core.difficulty={...core.difficulty,totalPoints:pc.totalPoints,stagePoints:pc.stagePoints.slice()};
-   if(Array.isArray(core.history))core.history=core.history.map(h=>({...h,stagePoints:h.win?pc.stagePoints[Math.max(0,Math.min(2,Math.floor(Number(h.stage)||0)))]:0}));
-   core.gainedPoints=arenaAwardedPoints;
-   if(core.summary)core.summary={...core.summary,totalPoints:arenaAwardedPoints};
-   return core;
-  };
- }
-
- const baseRenderArenaDungeon=window.renderArenaDungeon;
- if(typeof baseRenderArenaDungeon==="function"){
-  window.renderArenaDungeon=function(){
-   let html=baseRenderArenaDungeon();
-   const core=typeof window.getArenaCoreState==="function"?window.getArenaCoreState():null;
-   if(!core?.difficulty||typeof html!=="string")return html;
-   const pc=core.difficulty;
-   if(core.phase==="ready")html=html.replace(/全通可獲得：\d+ VIP 積分/,`全通可獲得：${pc.totalPoints} VIP 積分`);
-   if(core.phase==="result"){
-    if(core.continuous)html=html.replace(/總獲得 VIP 積分：<strong>\d+<\/strong>/,`總獲得 VIP 積分：<strong>${arenaAwardedPoints}</strong>`);
-    else{
-     let passedIndex=0;
-     html=html.replace(/通過　\+\d+/g,()=>`通過　+${pc.stagePoints[passedIndex++]||0}`);
-     html=html.replace(/本次獲得 VIP 積分：<strong>\d+<\/strong>/,`本次獲得 VIP 積分：<strong>${arenaAwardedPoints}</strong>`);
-    }
-   }
-   return html;
-  };
- }
-
  const baseStartArenaDungeon=window.startArenaDungeon;
  if(typeof baseStartArenaDungeon==="function"){
   window.startArenaDungeon=function(_difficultyId){
-   arenaAwardedPoints=0;
    const rank=typeof getArenaCurrentRank==="function"?getArenaCurrentRank():arenaProgress().assessmentRank;
    return baseStartArenaDungeon(positionDifficultyId(rank));
   };
