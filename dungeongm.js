@@ -24,6 +24,23 @@
  function showArenaTest(html){arenaTestHtml=html;showTestResult("gmArenaTestResult",html);}
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);}
  function simulateFight(player,enemy,startHp=player.hp){return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true});}
+ function regionIndexForMap(mapIdx){
+  const idx=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0)));
+  const found=WORLD_REGIONS.findIndex(region=>idx>=region.mapStart&&idx<=region.mapEnd);
+  return found>=0?found:0;
+ }
+ function regionAt(index){return WORLD_REGIONS[Math.max(0,Math.min(WORLD_REGIONS.length-1,Math.floor(Number(index)||0)))]||WORLD_REGIONS[0];}
+ function mapOptionsForRegion(regionIndex,selectedMap=mapTestMap){
+  const region=regionAt(regionIndex);if(!region)return "";
+  const start=Math.max(0,region.mapStart),end=Math.min(MAPS.length-1,region.mapEnd);
+  const selected=Math.max(start,Math.min(end,Math.floor(Number(selectedMap)||start));
+  let html="";for(let i=start;i<=end;i++){const map=MAPS[i];if(map)html+=`<option value="${i}" ${i===selected?"selected":""}>${i+1}. ${map.name}（Lv.${map.min}～${map.max}）</option>`;}return html;
+ }
+ function enemyOptionsForMap(mapIdx,selectedEnemy=mapTestEnemy){
+  const i=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0))),map=MAPS[i];if(!map)return "";
+  const selected=Math.max(0,Math.min(map.enemies.length-1,Math.floor(Number(selectedEnemy)||0)));
+  return map.enemies.map((e,eIdx)=>{const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";return `<option value="${eIdx}" ${eIdx===selected?"selected":""}>${kind}｜${e[0]} Lv.${e[1]}</option>`;}).join("");
+ }
 
  window.gmApplyDungeonValues=function(){
   const progress=Number(document.getElementById("gmDungeonProgress")?.value);
@@ -36,21 +53,31 @@
  };
 
  function clearMapMonsterTest(){mapMonsterTestHtml="";showTestResult("gmMapMonsterTestResult","");}
+ window.gmMapMonsterChangeRegion=function(){
+  const regionSelect=document.getElementById("gmMapMonsterRegion"),mapSelect=document.getElementById("gmMapMonsterMap"),enemySelect=document.getElementById("gmMapMonsterEnemy");
+  if(!regionSelect||!mapSelect||!enemySelect)return;
+  const regionIndex=Math.max(0,Math.min(WORLD_REGIONS.length-1,Math.floor(Number(regionSelect.value)||0))),region=regionAt(regionIndex);if(!region)return;
+  mapTestMap=mapTestMap>=region.mapStart&&mapTestMap<=region.mapEnd?mapTestMap:region.mapStart;
+  mapTestEnemy=Math.max(0,Math.min((MAPS[mapTestMap]?.enemies?.length||1)-1,mapTestEnemy));
+  mapSelect.innerHTML=mapOptionsForRegion(regionIndex,mapTestMap);mapSelect.value=String(mapTestMap);
+  enemySelect.innerHTML=enemyOptionsForMap(mapTestMap,mapTestEnemy);enemySelect.value=String(mapTestEnemy);clearMapMonsterTest();
+ };
  window.gmMapMonsterChangeMap=function(){
   const mapSelect=document.getElementById("gmMapMonsterMap"),enemySelect=document.getElementById("gmMapMonsterEnemy");
   if(!mapSelect||!enemySelect)return;
-  mapTestMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));mapTestEnemy=0;
-  const map=MAPS[mapTestMap];
-  enemySelect.innerHTML=map.enemies.map((e,eIdx)=>{const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";return `<option value="${eIdx}">${kind}｜${e[0]} Lv.${e[1]}</option>`;}).join("");
-  enemySelect.value="0";clearMapMonsterTest();
+  mapTestMap=Math.max(0,Math.min(MAPS.length-1,Number(mapSelect.value)||0));
+  mapTestEnemy=Math.max(0,Math.min((MAPS[mapTestMap]?.enemies?.length||1)-1,mapTestEnemy));
+  enemySelect.innerHTML=enemyOptionsForMap(mapTestMap,mapTestEnemy);enemySelect.value=String(mapTestEnemy);clearMapMonsterTest();
  };
  window.gmMapMonsterChangeEnemy=function(){const enemySelect=document.getElementById("gmMapMonsterEnemy");if(!enemySelect)return;mapTestEnemy=Math.max(0,Math.min(MAPS[mapTestMap].enemies.length-1,Number(enemySelect.value)||0));clearMapMonsterTest();};
- window.getMapMonsterGmSelection=function(){return {mapIdx:mapTestMap,eIdx:mapTestEnemy};};
+ window.getMapMonsterGmSelection=function(){return {regionIdx:regionIndexForMap(mapTestMap),mapIdx:mapTestMap,eIdx:mapTestEnemy};};
+ window.getMapMonsterGmMapOptions=function(regionIdx,mapIdx=mapTestMap){return mapOptionsForRegion(regionIdx,mapIdx);};
+ window.getMapMonsterGmEnemyOptions=function(mapIdx,eIdx=mapTestEnemy){return enemyOptionsForMap(mapIdx,eIdx);};
  window.getMapMonsterGmTestHtml=function(){return mapMonsterTestHtml;};
 
  function mapMonsterResultHtml(mapIdx,eIdx,summary){
-  const map=MAPS[mapIdx],base=map.enemies[eIdx];
-  return `<div class="notice">${testSummary(`${map.name}｜${base[0]}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人使用不含 VIP 的角色基準；玩家戰鬥使用本次測試 VIP 與專精。正式角色資料未變更。</div></div>
+  const map=MAPS[mapIdx],base=map.enemies[eIdx],region=WORLD_REGIONS[regionIndexForMap(mapIdx)];
+  return `<div class="notice">${testSummary(`${region?.name?region.name+"｜":""}${map.name}｜${base[0]}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人使用不含 VIP 的角色基準；玩家戰鬥使用本次測試 VIP 與專精。正式角色資料未變更。</div></div>
    <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat">勝率<b>${summary.winRate}%</b></div>
     <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
