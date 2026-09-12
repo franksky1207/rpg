@@ -11,5 +11,5 @@
   {chapter:"地球戰爭",name:"全球指揮中心",min:41,max:45,gear:["禁衛脈衝刃","中樞禁衛盔","指揮級複合甲","戰略機動靴","戰場指揮模組"],enemies:[["中樞警衛兵",41,"normal","balanced"],["戰術無人機群",42,"normal","attack"],["精銳動力甲兵",43,"normal","tank"],["黑甲執行官",44,"elite","attack"],["全球戰區司令",45,"boss","balanced"]]},
   {chapter:"地球戰爭",name:"地球決戰區",min:46,max:50,gear:["終戰斷界刃","終戰主控盔","征服者重甲","最終突擊靴","地球主控權限"],enemies:[["終戰突擊兵",46,"normal","attack"],["高階戰鬥機甲",47,"normal","balanced"],["戰爭人工智慧體",48,"normal","tank"],["終局戰區將軍",49,"elite","balanced"],["地球征服核心",50,"boss","tank"]]}
  ];
- MAPS.splice(0,Math.min(10,MAPS.length),...EARTH_MAPS);
+ registerRegionMaps("earth",EARTH_MAPS);
 })();
