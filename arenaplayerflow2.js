@@ -68,7 +68,7 @@
  function unlockPanelHtml(a,p){
   if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
   const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 90%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button class="btn" ${assessDisabled?"disabled":""} onclick="${assessDisabled?"void(0)":"runArenaAssessmentFromUi(this)"}">${assessLabel}</button><button class="btn primary" ${p.canUnlockNext?"":"disabled"} onclick="${p.canUnlockNext?"runArenaUnlockFromUi(this)":"void(0)"}">解鎖 ${p.nextName}</button></div></section>`;
+  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 90%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
  }
  function venueCard(rank,p,d){
   const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
@@ -80,6 +80,13 @@
   const cards=p.visibleRanks.map(rank=>venueCard(rank,p,d)).join("");
   const visibleText=p.visibleRanks.length===1?"目前只開放 1 個競技場":`目前顯示最近 ${p.visibleRanks.length} 個已解鎖競技場`;
   return `<div class="function-page dungeon-page-shell arena-shell arena-venue-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">競技場</div><div class="arena-attempts">目前可挑戰次數：<strong>${d.attempts}</strong> 次・${visibleText}</div>${unlockPanelHtml(a,p)}<div class="arena-venue-grid">${cards}</div></section></div>`;
+ }
+ function bindArenaUiActions(){
+  if(view!=="dungeon-arena")return;
+  const assessBtn=document.getElementById("arenaAssessBtn");
+  if(assessBtn&&!assessBtn.disabled)assessBtn.onclick=function(){window.runArenaAssessmentFromUi(this);};
+  const unlockBtn=document.getElementById("arenaUnlockBtn");
+  if(unlockBtn&&!unlockBtn.disabled)unlockBtn.onclick=function(){window.runArenaUnlockFromUi(this);};
  }
  window.startArenaVenue=function(rank){
   const r=Math.floor(Number(rank)||0),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState();
@@ -97,6 +104,6 @@
   else if(core.phase==="result"){const diff=main.querySelector(".arena-result-difficulty");if(diff)diff.textContent=name;}
  }
  const baseRender=render;
- render=function(){const out=baseRender();enhanceActiveArenaNames();return out;};
- window.refreshArenaPlayerFlow2=enhanceActiveArenaNames;
+ render=function(){const out=baseRender();bindArenaUiActions();enhanceActiveArenaNames();return out;};
+ window.refreshArenaPlayerFlow2=function(){bindArenaUiActions();enhanceActiveArenaNames();};
 })();
