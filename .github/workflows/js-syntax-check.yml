@@ -1,7 +1,7 @@
 name: JS Syntax Check
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
 
 jobs:
