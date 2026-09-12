@@ -7,21 +7,14 @@ let gmTapTimer=null;
 let inventoryFilter="all";
 let inventoryFromAdventure=false;
 
-const BATTLE_COUNT_UNLOCKS=[
- {level:1,count:1},
- {level:6,count:5},
- {level:11,count:10},
- {level:16,count:15},
- {level:21,count:20},
- {level:26,count:25}
-];
-function battleCountsForLevel(level){
- const lv=Math.max(1,Math.floor(Number(level)||1));
- return BATTLE_COUNT_UNLOCKS.filter(x=>lv>=x.level).map(x=>x.count);
-}
-function nextBattleCountUnlock(level){
- const lv=Math.max(1,Math.floor(Number(level)||1));
- return BATTLE_COUNT_UNLOCKS.find(x=>x.level>lv)||null;
+const CONTINUOUS_BATTLE_COUNT="continuous";
+window.CONTINUOUS_BATTLE_COUNT=CONTINUOUS_BATTLE_COUNT;
+function battleModesForEnemy(enemy){return enemy?.kind==="boss"?[1]:[1,CONTINUOUS_BATTLE_COUNT]}
+function battleModeLabel(mode){return mode===CONTINUOUS_BATTLE_COUNT?"連續戰鬥":"單場"}
+function setBattleMode(mode,el){
+ selectedBattleCount=mode===CONTINUOUS_BATTLE_COUNT?CONTINUOUS_BATTLE_COUNT:1;
+ document.querySelectorAll(".count-card").forEach(b=>b.classList.remove("active"));
+ if(el)el.classList.add("active");
 }
 function currentPlayerName(){
  const name=typeof state?.playerName==="string"?state.playerName.trim():"";
@@ -106,7 +99,6 @@ function enterMap(i){
  selectedMap=i;selectedEnemy=0;selectedBattleCount=1;adventureScreen="prepare";render();
 }
 function backToMaps(){adventureScreen="maps";render()}
-function setBattleCount(n,el){selectedBattleCount=n;document.querySelectorAll(".count-card").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active")}
 function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;const e=monsterObj(selectedMap,selectedEnemy);if(e.kind==="boss")selectedBattleCount=1;render()}
 function enemyProgressValue(mapIdx,enemyIdx){
  const p=state.mapProgress?.[mapIdx]||[0,0,0,0];
@@ -136,24 +128,27 @@ function adventurePreparePage(){
  selectedMap=Math.min(selectedMap,state.unlockedMap);
  const highest=highestUnlockedEnemy(selectedMap);if(selectedEnemy>highest)selectedEnemy=highest;
  const map=MAPS[selectedMap],e=monsterObj(selectedMap,selectedEnemy);
- const counts=e.kind==="boss"?[1]:battleCountsForLevel(state.level);
- if(!counts.includes(selectedBattleCount))selectedBattleCount=counts[counts.length-1]||1;
- const nextUnlock=e.kind==="boss"?null:nextBattleCountUnlock(state.level);
- const nextUnlockHtml=nextUnlock?`<div class="battle-count-next">Lv.${nextUnlock.level} 將開放 ${nextUnlock.count} 場</div>`:"";
+ const modes=battleModesForEnemy(e);
+ if(!modes.includes(selectedBattleCount))selectedBattleCount=1;
  const enemies=map.enemies.map((x,i)=>{
   if(!enemyUnlocked(selectedMap,i))return "";
   const mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";
   const traits=typeof traitDetailsHtml==="function"?traitDetailsHtml(mo.traits):"";
   return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><div class="enemy-card-top"><div class="enemy-card-title"><b>${mo.name} Lv.${mo.level}</b>${badge}</div>${enemyProgressHtml(selectedMap,i)}</div>${traits}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div>${enemyNoteHtml(selectedMap,i)}</button>`;
  }).join("");
- return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><h3 class="battle-count-title">戰鬥次數</h3><div class="battle-count-panel"><div class="count-grid" style="--battle-count-columns:${counts.length}">${counts.map(n=>`<button class="count-card ${n===selectedBattleCount?"active":""}" onclick="setBattleCount(${n},this)">${n===1?"單場":n+" 場"}</button>`).join("")}</div>${nextUnlockHtml}</div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"回血並挑戰 Boss":"回血並開始戰鬥"}</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
+ const modeButtons=modes.map(mode=>`<button class="count-card ${mode===selectedBattleCount?"active":""}" onclick="setBattleMode(${mode===CONTINUOUS_BATTLE_COUNT?`'${CONTINUOUS_BATTLE_COUNT}'`:1},this)">${battleModeLabel(mode)}</button>`).join("");
+ return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><h3 class="battle-count-title">戰鬥模式</h3><div class="battle-count-panel"><div class="count-grid" style="--battle-count-columns:${modes.length}">${modeButtons}</div></div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"回血並挑戰 Boss":"回血並開始戰鬥"}</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
 }
 function adventureCombatPage(){
  const activeEncounter=typeof currentCombatEncounter!=="undefined"&&currentCombatEncounter?currentCombatEncounter:null;
  const e=activeEncounter||(typeof getPreviewEncounter==="function"?getPreviewEncounter(selectedMap,selectedEnemy):monsterObj(selectedMap,selectedEnemy));
  const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
  const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
- return `<section class="combat-screen"><div class="combat-head">${combatTotal>1?`第 ${combatRound} / ${combatTotal} 場`:`單場戰鬥`}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;
+ const continuous=window.activeMainBattleContext?.continuous===true||combatTotal===0||combatTotal===CONTINUOUS_BATTLE_COUNT;
+ const requested=window.activeMainBattleContext?.exitRequested===true;
+ const head=continuous?`連續戰鬥・第 ${Math.max(1,Number(combatRound)||1)} 場`:`單場戰鬥`;
+ const stop=continuous?`<div class="continuous-stop-wrap"><button id="continuousBattleStopBtn" class="btn danger" onclick="requestContinuousBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
+ return `<section class="combat-screen"><div class="combat-head">${head}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
 }
 function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()}
 
@@ -214,13 +209,14 @@ function dropListHtml(items){
 function showBattleResult(ctx,defeat=null){
  const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
  if(!title||!detail||!modal)return;
+ const continuous=ctx?.continuous===true;
  if(defeat){
   title.textContent="戰鬥失敗";
   const lost=defeat.penalty?.dropped;
-  detail.innerHTML=`<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+  detail.innerHTML=`${continuous?`<div class="notice"><b>已完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場，連續戰鬥已結束；已取得的獎勵與副本進度均保留。</b></div>`:""}<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
  }else{
-  title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥勝利";
-  detail.innerHTML=`${ctx.originalCount>1?`<div class="item"><b>勝利 ${ctx.wins} / ${ctx.originalCount} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
+  title.textContent=continuous?"連續戰鬥結算":"戰鬥勝利";
+  detail.innerHTML=`${continuous?`<div class="item"><b>完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
  }
  modal.classList.add("show");
 }
