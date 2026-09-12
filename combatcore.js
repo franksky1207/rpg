@@ -107,6 +107,8 @@
    win:ehp<=0,
    hp:Math.max(0,php),
    enemyHp:Math.max(0,ehp),
+   playerStartHp:Math.max(0,initialHp),
+   playerMaxHp,
    turns,
    logs:logs||[],
    events,
