@@ -5,15 +5,7 @@
   return state.hp;
  };
 
- // 匯入與後續正規化一律走集中式 migrateSave；實際 migration 規則只放在 savemigration.js。
- if(typeof window.normalizeSaveState==="function"&&typeof window.migrateSave==="function"){
-  const baseNormalizeSaveState=window.normalizeSaveState;
-  window.normalizeSaveState=function(target){
-   const sourceVersion=Math.max(1,Math.floor(Number(target?.saveVersion)||1));
-   return window.migrateSave(target,sourceVersion,baseNormalizeSaveState,target);
-  };
- }
-
+ // 正式 load/migration pipeline 已集中於 savemigration.js；本檔只負責 HP 規則與戰鬥入口。
  window.playerStatusHtml=function(){
   const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
   return `<div class="card player-status-card"><div style="font-size:18px;font-weight:700;color:#f0d494;margin-bottom:9px">${playerNameHtml()}</div><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line"><div class="status-label"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
@@ -33,8 +25,7 @@
   beginCombat(count);
  };
 
- // 新版規則下，非戰鬥狀態應維持滿 HP；同時把目前存檔正式提升到最新 schema。
- if(typeof window.normalizeSaveState==="function")state=window.normalizeSaveState(state);
+ // 新版規則下，非戰鬥狀態維持滿 HP；不再在此重跑 migration。
  restorePlayerHp({save:false});
  save(false);
 })();
