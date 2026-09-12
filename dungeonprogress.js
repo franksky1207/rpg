@@ -26,10 +26,14 @@
   const source=dungeon.arena&&typeof dungeon.arena==="object"&&!Array.isArray(dungeon.arena)?dungeon.arena:{};
   const cap=unlockedArenaRankCap(target);
   const rank=Math.max(1,Math.min(cap,Math.floor(Number(source.rank)||1)));
+  const runs=Math.max(0,Math.min(500,Math.floor(Number(source.lastCheckRuns)||0)));
+  const clears=Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0)));
   dungeon.arena={
    rank,
    promotionReady:source.promotionReady===true,
-   lastCheckSignature:typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null
+   lastCheckSignature:typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null,
+   lastCheckRuns:runs,
+   lastCheckClearCount:clears
   };
   return dungeon.arena;
  }
