@@ -168,6 +168,8 @@
   state.hp=combat.hp;
   return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
  }
+ const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));
+ function stopArenaBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("arena");}
  function beginArenaRound(options={}){
   const preservePreview=options.preservePreview===true;
   const previewTraits=preservePreview&&Array.isArray(arenaState.enemy?.traits)?arenaState.enemy.traits.slice():null;
@@ -187,7 +189,7 @@
   state.hp=player.hp;
   arenaState.phase="combat";
   render();
-  setTimeout(runArenaFight,80);
+  sleep(80).then(runArenaFight);
   return true;
  }
 
@@ -218,7 +220,11 @@
   arenaState.stopRequested=false;
   arenaState.summary=newContinuousSummary();
   arenaState.gainedPoints=0;
-  if(!beginArenaRound({preservePreview:true})){view="dungeon";resetArenaState();render();}
+  if(arenaState.continuous&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("arena",{mode:"continuous"});
+  if(!beginArenaRound({preservePreview:true})){
+   stopArenaBackground();
+   view="dungeon";resetArenaState();render();
+  }
  };
  window.requestArenaContinuousStop=function(){
   if(!arenaState.continuous||arenaState.phase!=="combat")return;
@@ -239,7 +245,6 @@
   if(card&&text!=="閃避"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
- const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  async function animateArena(result,startHp,playerMax){
   let ehp=result.e.hp,php=startHp;
   const delay=result.logs.length>80?20:result.logs.length>40?40:75;
@@ -279,9 +284,15 @@
       if(!fullClear)arenaState.summary.stopReason="death";
       else if(arenaState.stopRequested)arenaState.summary.stopReason="manual";
       else if(d.attempts<=0)arenaState.summary.stopReason="attempts";
-      if(arenaState.summary.stopReason){arenaState.phase="result";render();break;}
+      if(arenaState.summary.stopReason){
+       stopArenaBackground();
+       arenaState.phase="result";render();break;
+      }
       await sleep(300);
-      if(!beginArenaRound({preservePreview:false})){arenaState.summary.stopReason="attempts";arenaState.phase="result";render();break;}
+      if(!beginArenaRound({preservePreview:false})){
+       stopArenaBackground();
+       arenaState.summary.stopReason="attempts";arenaState.phase="result";render();break;
+      }
       break;
      }
      arenaState.phase="result";
@@ -329,7 +340,7 @@
   const title=r.type==="clear"?"競技場三戰完成":"競技場挑戰失敗";
   const cleared=arenaState.history.filter(x=>x.win).length;
   const rows=arenaState.history.map((h,i)=>`<div class="arena-result-row"><span>${ARENA_STAGE_NAMES[i]}</span><span>${h.win?`通過　+${h.stagePoints||0}`:"失敗"}</span></div>`).join("");
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div><div class="arena-total-earned">本次獲得 VIP 積分：<strong>${arenaState.gainedPoints}</strong></div><div class="arena-current-points">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class="arena-current-points">剩餘可挑戰次數：${d.attempts} 次</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="openArenaDungeon()">再次選擇競技場</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div><div class="arena-total-earned">本次獲得 VIP 積分：<strong>${arenaState.gainedPoints}</strong></div><div class="arena-current-points">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0}</div><div class="arena-current-points">剩餘可挑戰次數：${d.attempts} 次</div><div class="controls arena-actions"><button class="btn arena-start-btn" onclick="openArenaDungeon()">再次選擇競技場</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
  }
 
  window.renderArenaDungeon=function(){if(arenaState.phase==="select")return selectionHtml();if(arenaState.phase==="combat")return combatHtml();if(arenaState.phase==="result")return resultHtml();return readyHtml();};
