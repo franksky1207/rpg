@@ -24,21 +24,27 @@
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal"}
  function traitNames(enemy){return !enemy?.traits?.length?"無":enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、")}
  function bountyMapIndex(level){const lv=clampGameLevel(level),exact=MAPS.findIndex(m=>lv>=m.min&&lv<=m.max);if(exact>=0)return exact;for(let i=MAPS.length-1;i>=0;i--)if(lv>=MAPS[i].min)return i;return 0}
- function bountyBaseExp(){return sameExp(clampGameLevel(state.level))}
+ function bountyBaseExp(){return expReward({kind:"normal",level:clampGameLevel(state.level)})}
  function bountyExpReward(tier){return Math.max(0,Math.floor(bountyBaseExp()*Math.max(1,Number(tier?.expMult)||1)))}
  function bountyGoldReward(tier){const normalGold=goldReward({kind:"normal",level:clampGameLevel(state.level)});return Math.max(0,Math.floor(normalGold*Math.max(1,Number(tier?.goldMult)||1)))}
  function rollBountyQuality(){let r=Math.random()*100,c=0;for(let i=0;i<BOUNTY_QUALITY_WEIGHTS.length;i++){c+=BOUNTY_QUALITY_WEIGHTS[i];if(r<c)return i}return 2}
- function bountyItem(enemy,mapIdx){const level=clampGameLevel(enemy?.level??state.level),offset=[-2,-1,0,0,1],lv=Math.max(1,Math.min(MAX_LEVEL,level+offset[Math.floor(Math.random()*offset.length)]));return makeItem(lv,mapIdx,"normal",rollBountyQuality())}
+ function bountyItem(enemy,mapIdx){
+  const level=clampGameLevel(enemy?.level??state.level),offset=[-2,-1,0,0,1],lv=Math.max(1,Math.min(MAX_LEVEL,level+offset[Math.floor(Math.random()*offset.length)]));
+  let q=rollBountyQuality();
+  const traitCount=Array.isArray(enemy?.traits)?Math.min(2,enemy.traits.length):0,traitChance=traitCount===2?.30:traitCount===1?.15:0;
+  if(traitChance>0&&Math.random()<traitChance&&q<5)q++;
+  if((state.vipLevel||0)>=14&&Math.random()<.05&&q<5)q++;
+  let forcedType=null;
+  if((state.vipLevel||0)>=8&&Math.random()<.15&&typeof weakEquipmentTypes==="function"){const order=weakEquipmentTypes();forcedType=order[0]||null}
+  return makeItem(lv,mapIdx,"normal",q,forcedType)
+ }
  function bountyRewardPreviewHtml(tier){return `<div class="dungeon-bounty-reward-grid"><div><span>EXP</span><strong>${bountyExpReward(tier).toLocaleString()}</strong></div><div><span>金幣</span><strong>${bountyGoldReward(tier).toLocaleString()}</strong></div><div><span>裝備</span><strong>${tier.gearCount} 件</strong><small>最低稀有品質</small></div></div>`}
  function bountyLootHtml(items){if(!Array.isArray(items)||!items.length)return "";return `<div class="dungeon-bounty-loot-list">${items.map(row=>`<div class="dungeon-bounty-loot-row"><span>${itemHtml(row.item,true)}</span><span class="${row.sold?"muted":"dungeon-bounty-reward"}">${row.sold?`自動出售 +${row.sold.toLocaleString()}`:"保留"}</span></div>`).join("")}</div>`}
  function applyBountyExp(rawExp){
   const amount=Math.max(0,Math.floor(Number(rawExp)||0)),beforeLevel=state.level,beforeExp=state.exp||0;
-  if(typeof gainExp==="function"){
-   const result=gainExp(amount);
-   return {raw:amount,beforeLevel,beforeExp,afterLevel:state.level,afterExp:state.exp||0,convertedGold:Math.max(0,Math.floor(Number(result?.convertedGold)||0))};
-  }
-  if(state.level>=MAX_LEVEL){const convertedGold=amount;state.gold+=convertedGold;return {raw:amount,beforeLevel,beforeExp,afterLevel:state.level,afterExp:state.exp||0,convertedGold}}
-  state.exp=(state.exp||0)+amount;while(state.level<MAX_LEVEL&&state.exp>=expNeed(state.level)){state.exp-=expNeed(state.level);state.level++}if(state.level>=MAX_LEVEL)state.exp=0;return {raw:amount,beforeLevel,beforeExp,afterLevel:state.level,afterExp:state.exp||0,convertedGold:0}
+  const payout=typeof specialExpPayout==="function"?specialExpPayout(amount,[]):null;
+  if(!payout){if(state.level>=MAX_LEVEL)state.gold+=amount;else gainExp(amount)}
+  return {raw:amount,beforeLevel,beforeExp,afterLevel:state.level,afterExp:state.exp||0,convertedGold:Math.max(0,Math.floor(Number(payout?.convertedGold)||0))}
  }
  function currentExpText(){return state.level>=MAX_LEVEL?"MAX":`${Math.floor(Number(state.exp)||0).toLocaleString()} / ${expNeed(state.level).toLocaleString()}`}
 
