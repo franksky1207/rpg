@@ -62,8 +62,8 @@ function traitDetailsHtml(traits){
 }
 function combatTraitBadgesHtml(traits){
  if(!traits?.length)return "";
- const badges=traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<span class="trait-detail-name" style="border-color:${t.border};color:${t.color}">${t.name}</span>`:"";}).filter(Boolean).join("");
- return badges?`<div class="combat-trait-badges" style="display:flex;align-self:stretch;width:100%;justify-content:flex-start;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 10px;text-align:left">${badges}</div>`:"";
+ const badges=traits.map(id=>{const t=MONSTER_TRAITS[id];return t?`<span class="trait-detail-name" style="border-color:${t.border};color:${t.color};font-size:inherit;font-weight:700;padding:3px 10px;line-height:1.25">${t.name}</span>`:"";}).filter(Boolean).join("");
+ return badges?`<div class="combat-trait-badges" style="display:flex;align-self:stretch;width:100%;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px;text-align:left;font-size:1.5em;font-weight:700">${badges}</div>`:"";
 }
 
 window.applyMonsterTraits=applyMonsterTraits;
