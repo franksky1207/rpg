@@ -11,5 +11,5 @@
   {chapter:"銀河核心外圍",name:"核心戰爭前哨",min:391,max:395,gear:["核心裂星刃","前哨禁衛盔","核心主戰甲","核心相位靴","核心戰術模組"],enemies:[["核心星兵",391,"normal","attack"],["前哨巡弋艦",392,"normal","balanced"],["核心戰術體",393,"normal","attack"],["重裝核心艦",394,"elite","tank"],["核心戰爭司令",395,"boss","tank"]]},
   {chapter:"銀河核心外圍",name:"銀河核心門戶",min:396,max:400,gear:["核心門斷界刃","銀河門衛盔","門域重裝甲","時空穿越靴","銀河核心門鑰"],enemies:[["核心門守衛",396,"normal","balanced"],["時空攔截體",397,"normal","attack"],["銀河門禁衛",398,"normal","balanced"],["核心門堡壘體",399,"elite","tank"],["銀河核心守門者",400,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("core-outer",REGION_MAPS);
 })();
