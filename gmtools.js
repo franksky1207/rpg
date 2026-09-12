@@ -25,7 +25,7 @@ function gmLevel(){
  if(!Number.isFinite(n)){alert("請輸入有效等級。");return;}
  state.level=clampGameLevel(n);
  state.exp=0;
- state.hp=equippedStats().hp;
+ state.hp=playerCombatStats().hp;
  save();render();
 }
 
@@ -96,7 +96,7 @@ function gmResetShopPrice(){
  save(false);render();
 }
 function gmResetShop(){gmResetShopPrice()}
-function gmHeal(){state.hp=equippedStats().hp;save();render()}
+function gmHeal(){state.hp=playerCombatStats().hp;save();render()}
 function gmClearInventory(){
  if(!state.inventory.length){alert("背包目前是空的。");return}
  if(!confirm(`確定要清空背包中的 ${state.inventory.length} 件裝備嗎？\n目前穿戴中的裝備不會受到影響。`))return;
