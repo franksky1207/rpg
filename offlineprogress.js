@@ -11,7 +11,6 @@
  const baseSave=typeof save==="function"?save:null;
  let heartbeatTimer=null;
  let lastHeartbeatPersist=Date.now();
- let offlineResultPending=null;
  let offlineSettlementBusy=false;
 
  function now(){return Date.now();}
@@ -28,7 +27,7 @@
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
   const avg=Number(o.avgBattleMs);
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
-  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0));
+  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
@@ -49,19 +48,14 @@
   return null;
  }
  function formatDuration(ms){
-  const total=Math.max(0,Math.floor(ms/60000));
-  const h=Math.floor(total/60),m=total%60;
+  const total=Math.max(0,Math.floor(ms/60000)),h=Math.floor(total/60),m=total%60;
   if(h>0&&m>0)return `${h} 小時 ${m} 分`;
   if(h>0)return `${h} 小時`;
   if(total>0)return `${total} 分`;
   return `${Math.max(1,Math.floor(ms/1000))} 秒`;
  }
  function farmEnemyObject(target){
-  try{
-   const full=monsterObj(target.map,target.enemy);
-   if(full?.kind==="boss")return null;
-   return full;
-  }catch(e){return null;}
+  try{const full=monsterObj(target.map,target.enemy);return full?.kind==="boss"?null:full;}catch(e){return null;}
  }
  function offlineSellValue(item){return typeof specializationSellValue==="function"?specializationSellValue(item):Math.max(0,Math.floor(Number(item?.sell)||0));}
  function normalizeOfflineDrop(item){if(item&&typeof item==="object"&&typeof item.locked!=="boolean")item.locked=false;return item;}
@@ -69,14 +63,12 @@
   const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));
   return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1))};
  }
-
  function normalizePending(raw){
   if(!isObject(raw))return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
   const avg=Math.max(600,Math.min(60000,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0));
-  const maxBattles=Math.max(0,Math.floor(elapsedUsed/avg));
-  const battles=Math.max(0,Math.min(maxBattles,Math.floor(Number(raw.battles)||0)));
+  const battles=Math.max(0,Math.min(Math.floor(elapsedUsed/avg),Math.floor(Number(raw.battles)||0)));
   if(elapsedRaw<OFFLINE_MIN_MS||!legalFarmTarget(map,enemy)||battles<1)return null;
   return {map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
  }
@@ -85,27 +77,25 @@
   const existing=normalizePending(o.pendingSettlement);
   if(existing)return existing;
   o.pendingSettlement=null;
-  const elapsedRaw=Math.max(0,t-o.lastSettledAt),elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
+  const elapsedRaw=Math.max(0,t-o.lastSettledAt);
   if(elapsedRaw<OFFLINE_MIN_MS){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}
   const target=resolveFarmTarget();
-  if(!target){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}
+  if(!target)return null;
+  const elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
   const avg=Math.max(600,Math.min(60000,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const battles=Math.max(0,Math.floor(elapsedUsed/avg));
-  o.lastSettledAt=t;
-  if(battles<1){if(baseSave)baseSave(false);return null;}
+  if(battles<1)return null;
   const pending={map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
   o.pendingSettlement=pending;
   if(baseSave)baseSave(false);
   return pending;
  }
-
  async function grantOfflineRewards(pending,enemy){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));
   let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;
-  const levelBefore=state.level,expBefore=expSnapshot();
+  const expBefore=expSnapshot();
   const bestByType=new Map(),mythics=[];
   let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0;
-
   function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);}
   function consider(item){
    item=normalizeOfflineDrop(item);if(!item)return;
@@ -114,12 +104,8 @@
    const type=item.type;
    if(!EQUIPMENT_TYPES.includes(type)){sell(item);return;}
    const previous=bestByType.get(type);
-   if(!previous||equipmentScore(item)>equipmentScore(previous)){
-    if(previous)sell(previous);
-    bestByType.set(type,item);
-   }else sell(item);
+   if(!previous||equipmentScore(item)>equipmentScore(previous)){if(previous)sell(previous);bestByType.set(type,item);}else sell(item);
   }
-
   for(let i=0;i<count;i++){
    goldCarry+=Math.max(0,Number(goldReward(enemy))||0)*OFFLINE_GOLD_RATE;
    const xpValue=Math.max(0,Number(expReward(enemy))||0)*OFFLINE_EXP_RATE;
@@ -129,44 +115,24 @@
     const grant=Math.floor(xpCarry);
     if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}
    }
-
    if(Math.random()<OFFLINE_GEAR_RATE){
     eligibleRolls++;
     let encounter=null;
     try{encounter=typeof createMonsterEncounter==="function"?createMonsterEncounter(pending.map,pending.enemy):monsterObj(pending.map,pending.enemy);}catch(e){encounter=null;}
-    if(encounter&&encounter.kind!=="boss"){
-     const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;
-     if(item)consider(item);
-    }
+    if(encounter&&encounter.kind!=="boss"){const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;if(item)consider(item);}
    }
-
    if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
-
   const keptOrdinary=[];
-  bestByType.forEach((item,type)=>{
-   const current=state.equipment?.[type]||null;
-   if(equipmentScore(item)>equipmentScore(current))keptOrdinary.push(item);
-   else sell(item);
-  });
+  bestByType.forEach((item,type)=>{const current=state.equipment?.[type]||null;if(equipmentScore(item)>equipmentScore(current))keptOrdinary.push(item);else sell(item);});
   keptOrdinary.forEach(item=>state.inventory.push(item));
   mythics.forEach(item=>state.inventory.push(item));
   if(keptOrdinary.length)upgradeDropNoticePending=true;
-
   const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);
   state.gold+=directGold+convertedGold+soldGold;
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  return {
-   totalXp,
-   totalGold:directGold+convertedGold+soldGold,
-   directGold,
-   convertedGold,
-   levelsGained:Math.max(0,state.level-levelBefore),
-   expProgress:{before:expBefore,after:expSnapshot()},
-   gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}
-  };
+  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
  }
-
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
    const style=document.createElement("style");style.id="offline-reward-styles";
@@ -207,34 +173,24 @@
   document.body.classList.add("offline-result-open");
   page.classList.add("show");
  }
- window.closeOfflineRewardModal=function(){
-  document.getElementById("offlineRewardPage")?.classList.remove("show");
-  document.body.classList.remove("offline-result-open");
-  if(typeof render==="function")render();
- };
-
+ window.closeOfflineRewardModal=function(){document.getElementById("offlineRewardPage")?.classList.remove("show");document.body.classList.remove("offline-result-open");if(typeof render==="function")render();};
  window.recordOfflineMainBattleSample=function(result,mapIdx,enemyIdx){
   if(result?.win!==true||result?.e?.kind==="boss")return false;
   const map=Math.floor(Number(mapIdx)),enemy=Math.floor(Number(enemyIdx));
   if(!legalFarmTarget(map,enemy))return false;
   const estimate=typeof window.estimateMainBattleDurationMs==="function"?Number(window.estimateMainBattleDurationMs(result)):0;
   const sample=Math.max(600,Math.min(60000,Math.round(Number.isFinite(estimate)&&estimate>0?estimate:DEFAULT_BATTLE_MS)));
-  const o=ensureOfflineState();
-  const same=o.farmMap===map&&o.farmEnemy===enemy&&o.avgBattleMs>0&&o.sampleCount>0;
-  if(same){
-   const nextCount=Math.min(20,o.sampleCount+1);
-   o.avgBattleMs=Math.round(o.avgBattleMs+(sample-o.avgBattleMs)/nextCount);
-   o.sampleCount=nextCount;
-  }else{o.farmMap=map;o.farmEnemy=enemy;o.avgBattleMs=sample;o.sampleCount=1;}
+  const o=ensureOfflineState(),same=o.farmMap===map&&o.farmEnemy===enemy&&o.avgBattleMs>0&&o.sampleCount>0;
+  if(same){const nextCount=Math.min(20,o.sampleCount+1);o.avgBattleMs=Math.round(o.avgBattleMs+(sample-o.avgBattleMs)/nextCount);o.sampleCount=nextCount;}
+  else{o.farmMap=map;o.farmEnemy=enemy;o.avgBattleMs=sample;o.sampleCount=1;}
   o.lastSettledAt=now();
   return true;
  };
-
  async function settleOfflineOnLoad(){
   const pending=buildPendingSettlement();
   if(!pending)return;
   const enemy=farmEnemyObject(pending);
-  if(!enemy){const o=ensureOfflineState();o.pendingSettlement=null;o.lastSettledAt=now();if(baseSave)baseSave(false);return;}
+  if(!enemy)return;
   const rollbackSnapshot=JSON.stringify(state);
   offlineSettlementBusy=true;
   setCalculatingVisible(true);
@@ -242,42 +198,22 @@
   try{
    const rewards=await grantOfflineRewards(pending,enemy);
    const result={elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:enemy.name||"主線敵人",enemyLevel:enemy.level,...rewards};
-   const o=ensureOfflineState();
-   o.pendingSettlement=null;
-   o.lastSettledAt=now();
+   const o=ensureOfflineState();o.pendingSettlement=null;o.lastSettledAt=now();
    if(baseSave)baseSave(false);
-   offlineResultPending=result;
-   setCalculatingVisible(false);
-   showOfflineResult(offlineResultPending);
-   offlineResultPending=null;
+   setCalculatingVisible(false);showOfflineResult(result);
   }catch(err){
-   console.error("Offline settlement failed",err);
-   setCalculatingVisible(false);
-   try{
-    state=JSON.parse(rollbackSnapshot);
-    if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
-    if(typeof render==="function")render();
-   }catch(rollbackError){console.error("Offline rollback failed",rollbackError);location.reload();return;}
+   console.error("Offline settlement failed",err);setCalculatingVisible(false);
+   try{state=JSON.parse(rollbackSnapshot);if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();if(typeof render==="function")render();}catch(rollbackError){console.error("Offline rollback failed",rollbackError);location.reload();return;}
    alert("離線收益整理發生錯誤；本次區段已保留，重新整理後會再次嘗試結算。");
   }finally{offlineSettlementBusy=false;}
  }
-
  function installSaveWrapper(){
   if(!baseSave)return;
-  const wrapped=function(show=true){
-   if(offlineSettlementBusy)return true;
-   checkpoint(now(),false);
-   return baseSave(show);
-  };
+  const wrapped=function(show=true){if(offlineSettlementBusy)return true;checkpoint(now(),false);return baseSave(show);};
   try{save=wrapped;}catch(e){}
   window.save=wrapped;
  }
- function persistForegroundCheckpoint(){
-  if(offlineSettlementBusy)return;
-  checkpoint(now(),false);
-  if(baseSave)baseSave(false);
-  lastHeartbeatPersist=now();
- }
+ function persistForegroundCheckpoint(){if(offlineSettlementBusy)return;checkpoint(now(),false);if(baseSave)baseSave(false);lastHeartbeatPersist=now();}
  function installHeartbeat(){
   if(heartbeatTimer)clearInterval(heartbeatTimer);
   heartbeatTimer=setInterval(()=>{
@@ -290,7 +226,6 @@
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
-
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
 })();
