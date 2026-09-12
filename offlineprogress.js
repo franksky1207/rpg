@@ -1,9 +1,10 @@
 (function(){
  const OFFLINE_MAX_MS=12*60*60*1000;
  const OFFLINE_MIN_MS=60*1000;
- const OFFLINE_EXP_RATE=.70;
- const OFFLINE_GOLD_RATE=.70;
- const OFFLINE_GEAR_RATE=.50;
+ const OFFLINE_EXP_RATE=.10;
+ const OFFLINE_GOLD_RATE=.10;
+ const OFFLINE_GEAR_RATE=.10;
+ const OFFLINE_DUNGEON_RATE=.10;
  const DEFAULT_BATTLE_MS=1800;
  const HEARTBEAT_MS=60*1000;
  const HEARTBEAT_PERSIST_MS=5*60*1000;
@@ -27,7 +28,7 @@
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
   const avg=Number(o.avgBattleMs);
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
-  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
+  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
@@ -63,6 +64,12 @@
   const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));
   return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1))};
  }
+ function offlineDungeonProgressForBattle(enemy){
+  if(typeof calculateDungeonBattleProgress!=="function")return 0;
+  const playerLevel=clampGameLevel(state.level),playerMaxHp=Math.max(1,baseHP(playerLevel));
+  const normal=calculateDungeonBattleProgress({source:"main",win:true,enemyMaxHp:Math.max(0,Number(enemy?.hp)||0),playerLevel,playerMaxHp,startHp:playerMaxHp,endHp:playerMaxHp});
+  return Math.max(0,Number(normal)||0)*OFFLINE_DUNGEON_RATE;
+ }
  function normalizePending(raw){
   if(!isObject(raw))return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
@@ -92,7 +99,7 @@
  }
  async function grantOfflineRewards(pending,enemy){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));
-  let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;
+  let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0,totalDungeonProgress=0;
   const expBefore=expSnapshot();
   const bestByType=new Map(),mythics=[];
   let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0;
@@ -115,6 +122,7 @@
     const grant=Math.floor(xpCarry);
     if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}
    }
+   totalDungeonProgress+=offlineDungeonProgressForBattle(enemy);
    if(Math.random()<OFFLINE_GEAR_RATE){
     eligibleRolls++;
     let encounter=null;
@@ -128,10 +136,11 @@
   keptOrdinary.forEach(item=>state.inventory.push(item));
   mythics.forEach(item=>state.inventory.push(item));
   if(keptOrdinary.length)upgradeDropNoticePending=true;
+  const dungeonResult=typeof addDungeonProgress==="function"?addDungeonProgress(totalDungeonProgress):{added:0,gainedAttempts:0};
   const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);
   state.gold+=directGold+convertedGold+soldGold;
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
+  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},dungeonProgress:{added:Math.max(0,Number(dungeonResult?.added)||0),gainedAttempts:Math.max(0,Math.floor(Number(dungeonResult?.gainedAttempts)||0))},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
  }
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
@@ -146,7 +155,7 @@
   }
   if(!document.getElementById("offlineCalculatingModal")){
    const modal=document.createElement("div");modal.className="modal";modal.id="offlineCalculatingModal";
-   modal.innerHTML=`<div class="modal-box"><h3 style="color:#f0d494;margin-top:0">整理離線收益</h3><div class="muted">正在結算離線期間的 EXP、金幣與裝備。</div></div>`;
+   modal.innerHTML=`<div class="modal-box"><h3 style="color:#f0d494;margin-top:0">整理離線收益</h3><div class="muted">正在結算離線期間的 EXP、金幣、裝備與副本進度。</div></div>`;
    document.body.appendChild(modal);
   }
  }
@@ -162,6 +171,12 @@
   const before=progress.before,after=progress.after;
   return `<div class="offline-exp-progress"><div>Lv.${before.level}　${before.exp.toLocaleString()} / ${before.need.toLocaleString()}</div><span class="arrow">↓</span><div>Lv.${after.level}　${after.exp.toLocaleString()} / ${after.need.toLocaleString()}</div></div>`;
  }
+ function formatProgress(value){const n=Math.max(0,Number(value)||0);return Number(n.toFixed(2)).toLocaleString();}
+ function offlineDungeonHtml(progress){
+  if(!progress)return "";
+  const gained=Math.max(0,Math.floor(Number(progress.gainedAttempts)||0));
+  return `<div class="offline-section"><div class="offline-section-title">副本進度</div><div class="offline-gear-summary">+${formatProgress(progress.added)}${gained>0?`　獲得 ${gained} 次挑戰`:""}</div></div>`;
+ }
  function showOfflineResult(result){
   if(!result)return;
   ensureOfflineModals();
@@ -169,7 +184,7 @@
   if(!detail||!page)return;
   const enemyLevel=Math.max(1,Math.floor(Number(result.enemyLevel)||1));
   const capNote=result.elapsedRaw>OFFLINE_MAX_MS?`<div class="offline-limit-note">本次離線超過 12 小時，僅計算前 12 小時。</div>`:`<div class="offline-limit-note">離線收益最多計算 12 小時</div>`;
-  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div></div>${offlineGearHtml(result.gear)}${capNote}`;
+  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div></div>${offlineDungeonHtml(result.dungeonProgress)}${offlineGearHtml(result.gear)}${capNote}`;
   document.body.classList.add("offline-result-open");
   page.classList.add("show");
  }
