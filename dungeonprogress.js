@@ -64,7 +64,7 @@
   initializeVipHpIfNeeded();
   normalizeDungeonState(state);
   recoverInterruptedDungeonRun();
-  state.saveVersion=SAVE_VERSION;
+  state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
   save(false);
  };
 
