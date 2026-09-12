@@ -12,13 +12,16 @@
   return html;
  }
  function positionOptions(){return `<option value="normal">左位（低）</option><option value="hard">中位（中）</option><option value="extreme" selected>右位（高）</option>`;}
- function formalAssessmentPosition(rank){return rank<=1?"normal":rank===2?"hard":"extreme";}
+ function formalAssessmentPosition(rank){
+  if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
+  return rank<=1?"normal":rank===2?"hard":"extreme";
+ }
  function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
  function testPlayer(base){return typeof gmTestPlayerStats==="function"?gmTestPlayerStats(base):createSpecialPlayerSnapshot(playerCombatStats(base,testVip()));}
  function pct(v,n){return n?round1(v/n*100):0;}
  function positionLabel(id){return id==="extreme"?"右位（高）":id==="hard"?"中位（中）":"左位（低）";}
  function simulate(rank,positionId,runs){
-  const configs=typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs(rank):[];
+  const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs(rank):[];
   const cfg=configs.find(x=>x.id===positionId);if(!cfg)return null;
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base);
   const reached=[runs,0,0],wins=[0,0,0];
