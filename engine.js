@@ -27,7 +27,7 @@ function baseHP(l){return ceil(110+12*(l-1))}
 function baseATK(l){return ceil(15+2.2*(l-1))}
 function baseDEF(l){return ceil(7+1.2*(l-1))}
 function sameExp(l){return ceil(25+4*l)}
-function expNeed(l){return ceil(sameExp(l)*(4.5+.35*l+.023*l*l))}
+function expNeed(l){return ceil(sameExp(l)*(5+245*(1-Math.exp(-(l-1)/142))))}
 function expLevelFactor(ml,pl){let d=ml-pl;if(d>=5)return 1.3;if(d>=3)return 1.2;if(d>=1)return 1.1;if(d===0)return 1;if(d>=-2)return .9;if(d>=-5)return .6;if(d>=-10)return .25;return .05}
 function goldBase(l){return ceil(6+4*l)}
 function sellBase(l){return ceil(12+8*l)}
