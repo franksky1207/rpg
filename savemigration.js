@@ -2,6 +2,7 @@
  const SAVE_SCHEMA_VERSION=10;
  const SAVE_LOAD_PIPELINE_VERSION=1;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
+ const OFFLINE_REAL_SAMPLE_LIMIT=20;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -60,11 +61,22 @@
   if(!isObject(target.dungeon.voidMirage))target.dungeon.voidMirage={};
   target.dungeon.voidMirage.highestCleared=Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0));
  }
+ function normalizeRealBattleSamples(source){
+  const rows=Array.isArray(source?.battleSamples)?source.battleSamples:[];
+  source.battleSamples=rows.map(row=>{
+   if(!isObject(row))return null;
+   const actualMs=Math.round(Number(row.actualMs)),adjustedMs=Math.round(Number(row.adjustedMs));
+   const playerLevel=Math.max(1,Math.floor(Number(row.playerLevel)||1)),enemyLevel=Math.max(1,Math.floor(Number(row.enemyLevel)||1));
+   const multiplier=Number(row.multiplier),map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
+   if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000||!Number.isFinite(adjustedMs)||adjustedMs<100||adjustedMs>600000)return null;
+   return {actualMs,adjustedMs,playerLevel,enemyLevel,kind:row.kind==="elite"?"elite":"normal",map,enemy,multiplier:Number.isFinite(multiplier)&&multiplier>=1?multiplier:1,recordedAt};
+  }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
+ }
  function normalizeOffline(target,version){
   if(!isObject(target))return;
   const now=Date.now();
   if(version<9||!isObject(target.offline)){
-   target.offline={lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0};
+   target.offline={lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[]};
    return;
   }
   const source=target.offline;
@@ -77,6 +89,7 @@
   source.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   source.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(source.sampleCount)||0)));
   if(source.sampleCount<=0||source.avgBattleMs<=0||source.farmMap==null||source.farmEnemy==null){source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;}
+  normalizeRealBattleSamples(source);
  }
  function cloneJson(value){
   try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}
