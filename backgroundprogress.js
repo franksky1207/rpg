@@ -20,7 +20,7 @@
  }
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
-  const continuous=kind==="main"&&mode==="continuous";
+  const continuous=mode==="continuous";
   return {mode:continuous?"continuous":"finite",maxBackgroundMs:continuous?CONTINUOUS_BACKGROUND_MAX_MS:null};
  }
  function configureExistingFlow(kind,options={}){
