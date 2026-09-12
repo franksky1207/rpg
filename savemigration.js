@@ -1,11 +1,26 @@
 (function(){
- const SAVE_SCHEMA_VERSION=Math.max(1,Math.floor(Number(SAVE_VERSION)||9));
+ const SAVE_SCHEMA_VERSION=10;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function sourceVersionOf(value,fallback=1){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=1?n:fallback;}
  function defaultMainStat(type){return typeof mainStatForType==="function"?mainStatForType(type):(type==="weapon"?"atk":type==="helmet"||type==="shoes"?"hp":type==="armor"?"def":"crit");}
+ function legacySameExpV9(level){const l=Math.max(1,Math.floor(Number(level)||1));return Math.ceil(25+4*l);}
+ function legacyExpNeedV9(level){
+  const l=Math.max(1,Math.floor(Number(level)||1));
+  return Math.ceil(legacySameExpV9(l)*(5+245*(1-Math.exp(-(l-1)/142))));
+ }
+ function migrateExpProgress(target,version,source){
+  if(version!==9||!isObject(target)||!isObject(source))return;
+  const level=Math.max(1,Math.floor(Number(target.level)||Number(source.level)||1));
+  if(typeof MAX_LEVEL==="number"&&level>=MAX_LEVEL){target.exp=0;return;}
+  const oldNeed=Math.max(1,legacyExpNeedV9(level));
+  const oldExp=finiteNonNegative(source.exp,0);
+  const progress=Math.max(0,Math.min(1,oldExp/oldNeed));
+  const newNeed=typeof expNeed==="function"?Math.max(1,Math.floor(Number(expNeed(level))||1)):oldNeed;
+  target.exp=Math.max(0,Math.min(newNeed-1,Math.round(newNeed*progress)));
+ }
 
  function prepareLegacyItem(item,forcedType=null){
   if(!isObject(item))return item;
@@ -84,6 +99,7 @@
 
   const normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);
+  migrateExpProgress(target,version,source);
 
   prepareAllGear(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
