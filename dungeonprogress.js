@@ -29,7 +29,7 @@
   const maxRank=Math.max(1,regions.length||1),cap=Math.max(1,Math.min(maxRank,unlockedArenaRankCap(target)));
   const hasHighest=Number.isFinite(Number(source.highestArenaUnlocked))&&Number(source.highestArenaUnlocked)>=1;
   const hasWindowStart=Number.isFinite(Number(source.windowStart))&&Number(source.windowStart)>=1;
-  const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1));
+  const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1)));
   const positionModelCompatible=Math.floor(Number(source.positionModelVersion)||0)===ARENA_POSITION_MODEL_VERSION;
   let highestArenaUnlocked;
   let assessmentCompatible=false;
