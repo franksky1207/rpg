@@ -14,6 +14,11 @@
  function writeCheckpoint(ts=now()){
   try{localStorage.setItem(CHECKPOINT_KEY,String(Math.max(0,Math.floor(Number(ts)||now()))));}catch(e){}
  }
+ function hasMainlineHistory(){
+  if(Array.isArray(state?.mapProgress)&&state.mapProgress.some(row=>Array.isArray(row)&&row.some(v=>(Number(v)||0)>0)))return true;
+  if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return true;
+  return false;
+ }
  function validStoredTarget(o){
   if(!isObject(o))return false;
   const map=Number(o.farmMap),enemy=Number(o.farmEnemy),avg=Number(o.avgBattleMs),samples=Number(o.sampleCount);
@@ -33,13 +38,14 @@
   return null;
  }
  function legalFallback(){
+  if(!hasMainlineHistory())return null;
   const maxMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(state?.unlockedMap)||0)));
   for(let map=maxMap;map>=0;map--){
    for(let enemy=3;enemy>=0;enemy--){
     try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy))return {map,enemy};}catch(e){}
    }
   }
-  return MAPS.length?{map:0,enemy:0}:null;
+  return null;
  }
  if(!state)return;
  if(!isObject(state.offline))state.offline={};
@@ -48,7 +54,7 @@
   const current=Number(state.offline.lastSettledAt);
   if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
  }
- if(!validStoredTarget(state.offline)){
+ if(!validStoredTarget(state.offline)&&hasMainlineHistory()){
   const target=defeatedFallback()||legalFallback();
   if(target){
    state.offline.farmMap=target.map;
