@@ -2,6 +2,7 @@
  const baseRenderArenaDungeon=window.renderArenaDungeon;
  const baseStartArenaDungeon=window.startArenaDungeon;
  const baseOpenArenaDungeon=window.openArenaDungeon;
+ let assessmentRunning=false;
 
  function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${WORLD_REGIONS?.[rank-1]?.name||`第${rank}區`}競技場`;}
  function positionId(rank){return typeof getArenaPositionDifficultyId==="function"?getArenaPositionDifficultyId(rank):"normal";}
@@ -25,10 +26,26 @@
   const nextRegion=WORLD_REGIONS?.[p.nextRank-1]?.name||`第${p.nextRank}區域`;
   return `<div class="arena-dual-card ${p.regionReady?"ready":"locked"}"><div class="arena-dual-head"><span>② 主線條件</span><strong>${p.regionReady?"已達成":"未達成"}</strong></div><div class="arena-dual-target">下一個：${p.nextName}</div><p>${p.regionReady?`主線第 ${p.nextRank} 區域「${nextRegion}」已解鎖。`:`需先解鎖主線第 ${p.nextRank} 區域「${nextRegion}」。`}</p></div>`;
  }
+ window.runArenaAssessmentFromUi=function(button){
+  if(assessmentRunning)return;
+  if(typeof window.assessArenaPromotion!=="function"){
+   alert("戰力評估功能尚未載入。");
+   return;
+  }
+  assessmentRunning=true;
+  if(button){button.disabled=true;button.textContent="評估中…";}
+  setTimeout(function(){
+   try{window.assessArenaPromotion();}
+   finally{
+    assessmentRunning=false;
+    if(typeof render==="function")render();
+   }
+  },30);
+ };
  function unlockPanelHtml(a,p){
   if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
-  const assessDisabled=a?.promotionReady;
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 90%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button class="btn" ${assessDisabled?"disabled":""} onclick="${assessDisabled?"void(0)":"assessArenaPromotion()"}">戰力評估</button><button class="btn primary" ${p.canUnlockNext?"":"disabled"} onclick="${p.canUnlockNext?"promoteArenaRank()":"void(0)"}">解鎖 ${p.nextName}</button></div></section>`;
+  const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?"評估中…":"戰力評估";
+  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 90%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button class="btn" ${assessDisabled?"disabled":""} onclick="${assessDisabled?"void(0)":"runArenaAssessmentFromUi(this)"}">${assessLabel}</button><button class="btn primary" ${p.canUnlockNext?"":"disabled"} onclick="${p.canUnlockNext?"promoteArenaRank()":"void(0)"}">解鎖 ${p.nextName}</button></div></section>`;
  }
  function venueCard(rank,p,d){
   const id=positionId(rank),pos=positionLabel(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
