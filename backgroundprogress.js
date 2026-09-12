@@ -1,6 +1,6 @@
 (function(){
  const BACKGROUND_CREDIT_RATE=.96;
- const INFINITE_BACKGROUND_MAX_MS=12*60*60*1000;
+ const CONTINUOUS_BACKGROUND_MAX_MS=12*60*60*1000;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
@@ -14,21 +14,21 @@
  function activeFor(kind=null){return !!flow&&(!kind||flow.kind===kind);}
  function hasBackgroundCap(){return !!flow&&flow.maxBackgroundMs!=null&&Number.isFinite(Number(flow.maxBackgroundMs));}
  function mainBattleMode(count,ctx=null){
-  const marker=window.INFINITE_BATTLE_COUNT||"infinite";
-  if(count===marker||count==="infinite"||ctx?.infinite===true)return "infinite";
-  return Number(count)>1?"finite":"single";
+  const marker=window.CONTINUOUS_BATTLE_COUNT||"continuous";
+  if(count===marker||count==="continuous"||ctx?.continuous===true)return "continuous";
+  return "single";
  }
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
-  const infinite=kind==="main"&&mode==="infinite";
-  return {mode:infinite?"infinite":"finite",maxBackgroundMs:infinite?INFINITE_BACKGROUND_MAX_MS:null};
+  const continuous=kind==="main"&&mode==="continuous";
+  return {mode:continuous?"continuous":"finite",maxBackgroundMs:continuous?CONTINUOUS_BACKGROUND_MAX_MS:null};
  }
  function configureExistingFlow(kind,options={}){
   if(!flow||flow.kind!==kind)return;
   const next=flowOptions(kind,options);
-  if(next.mode==="infinite"&&flow.mode!=="infinite"){
-   flow.mode="infinite";
-   flow.maxBackgroundMs=INFINITE_BACKGROUND_MAX_MS;
+  if(next.mode==="continuous"&&flow.mode!=="continuous"){
+   flow.mode="continuous";
+   flow.maxBackgroundMs=CONTINUOUS_BACKGROUND_MAX_MS;
    flow.backgroundElapsedUsed=Math.max(0,Number(flow.backgroundElapsedUsed)||0);
   }
  }
