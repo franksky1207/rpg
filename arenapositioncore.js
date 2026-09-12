@@ -17,7 +17,7 @@
 
  function clampRank(value){
   const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  return Math.max(1,Math.min(max,Math.floor(Number(value)||1));
+  return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
  }
  function arenaProgress(){
   if(typeof getArenaProgressState==="function")return getArenaProgressState();
@@ -44,7 +44,7 @@
  }
  function normalizeArenaPhysicalStats(enemy){
   if(!enemy||enemy.kind!=="dungeon-arena"||!enemy.playerSnapshot||typeof specialBaseEnemyFromPlayer!=="function")return enemy;
-  const idx=Math.max(0,Math.min(2,Math.floor(Number(enemy.arenaStage)||0));
+  const idx=Math.max(0,Math.min(2,Math.floor(Number(enemy.arenaStage)||0)));
   const profile=PHYSICAL_STAGE_PROFILE[idx]||PHYSICAL_STAGE_PROFILE[0];
   const p=enemy.playerSnapshot;
   const base=specialBaseEnemyFromPlayer(p);
@@ -102,8 +102,8 @@
   const rank=currentAssessmentRank();
   const difficultyId=positionDifficultyId(rank);
   const signature=assessmentSignature(rank,difficultyId);
-  const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0));
-  const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0));
+  const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0)));
+  const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0)));
   const hasResult=runs===ASSESS_RUNS&&typeof arena?.lastCheckSignature==="string"&&!!arena.lastCheckSignature;
   const maxRank=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
   const unlockedCap=typeof getArenaUnlockedRankCap==="function"?clampRank(getArenaUnlockedRankCap()):rank;
@@ -141,7 +141,7 @@
   const arena=assessmentArena();
   if(!arena)return {...assessmentStatus(),reason:"unavailable"};
   arena.lastCheckRuns=ASSESS_RUNS;
-  arena.lastCheckClearCount=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(clears)||0));
+  arena.lastCheckClearCount=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(clears)||0)));
   arena.lastCheckSignature=ctx.signature;
   arena.promotionReady=arena.lastCheckClearCount>=ASSESS_CLEAR_TARGET;
   save(false);
