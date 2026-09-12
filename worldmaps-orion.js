@@ -11,5 +11,5 @@
   {chapter:"獵戶臂戰爭",name:"星區霸權領域",min:241,max:245,gear:["霸權制衡刃","統御戰盔","星區霸權甲","霸權越界靴","星區霸權權印"],enemies:[["霸權星兵",241,"normal","attack"],["統御戰鬥機",242,"normal","balanced"],["星區禁衛",243,"normal","attack"],["霸權重裝艦",244,"elite","tank"],["星區最高督戰官",245,"boss","tank"]]},
   {chapter:"獵戶臂戰爭",name:"獵戶臂主戰場",min:246,max:250,gear:["旋臂決勝刃","旋臂主控盔","獵戶主戰甲","旋臂決勝靴","旋臂戰略中樞"],enemies:[["獵戶決戰兵",246,"normal","balanced"],["旋臂禁制戰體",247,"normal","attack"],["旋臂殲滅巨兵",248,"normal","balanced"],["旋臂戰將",249,"elite","tank"],["獵戶臂最高統帥",250,"boss","attack"]]}
  ];
- MAPS.push(...REGION_MAPS);
+ registerRegionMaps("orion",REGION_MAPS);
 })();
