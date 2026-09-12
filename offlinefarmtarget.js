@@ -19,12 +19,14 @@
   if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return true;
   return false;
  }
+ function targetExists(map,enemy){
+  if(!Number.isInteger(map)||map<0||map>=MAPS.length||!Number.isInteger(enemy)||enemy<0||enemy>3)return false;
+  try{const monster=monsterObj(map,enemy);return !!monster&&monster.kind!=="boss";}catch(e){return false;}
+ }
  function validStoredTarget(o){
   if(!isObject(o))return false;
   const map=Number(o.farmMap),enemy=Number(o.farmEnemy),avg=Number(o.avgBattleMs),samples=Number(o.sampleCount);
-  if(!Number.isInteger(map)||map<0||map>=MAPS.length||!Number.isInteger(enemy)||enemy<0||enemy>3)return false;
-  if(!Number.isFinite(avg)||avg<600||avg>60000||!Number.isFinite(samples)||samples<1)return false;
-  try{return typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy);}catch(e){return false;}
+  return targetExists(map,enemy)&&Number.isFinite(avg)&&avg>=600&&avg<=60000&&Number.isFinite(samples)&&samples>=1;
  }
  function defeatedFallback(){
   const maxMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(state?.unlockedMap)||0)));
@@ -32,7 +34,7 @@
    const p=Array.isArray(state?.mapProgress?.[map])?state.mapProgress[map]:[];
    for(let enemy=3;enemy>=0;enemy--){
     if((Number(p[enemy])||0)<=0)continue;
-    try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy))return {map,enemy};}catch(e){}
+    if(targetExists(map,enemy))return {map,enemy};
    }
   }
   return null;
@@ -42,7 +44,7 @@
   const maxMap=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(state?.unlockedMap)||0)));
   for(let map=maxMap;map>=0;map--){
    for(let enemy=3;enemy>=0;enemy--){
-    try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy))return {map,enemy};}catch(e){}
+    try{if(typeof enemyUnlocked==="function"&&enemyUnlocked(map,enemy)&&targetExists(map,enemy))return {map,enemy};}catch(e){}
    }
   }
   return null;
