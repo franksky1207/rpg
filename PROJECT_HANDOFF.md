@@ -112,9 +112,17 @@ Boss 永遠單場。Lv500後 EXP 1:1 轉金幣；Lv500死亡不扣 EXP，但裝�
 - 每輪結束後回滿 HP
 - 死亡、次數不足或手動停止時結束
 - 手動停止會完成目前場次後停止
+- 中間場次不出單次／連續選擇頁與單場結算
 - 最後只出一次總結算
 
-目前技術債：`bountycontinuousui.js` 仍用 UI 層遮住連續模式中間的 ready 畫面；`dungeonbounty.js` 仍會生成精確獎勵預覽，再由 `dungeonplayerui.js` 移除。這兩項預定在後續懸賞核心整理時收回核心。
+### 第三批已整理項目
+
+1. `dungeonbounty.js` 已把連續模式中間流程正式改成 `combat → finishDungeonRun → transition → beginDungeonRun → combat`；正常流程不在 transition 階段 render，因此玩家直接一場接下一場。
+2. 若 transition 的300ms等待期間因其他原因觸發 render，只顯示「準備下一場」，不會出現單次／連續挑戰按鈕。
+3. `bountycontinuousui.js` 已刪除，`index.html` 也不再載入該 workaround。
+4. 戰前 ready 頁不再生成精確 EXP／金幣／裝備件數 preview；`dungeonbounty.js` 核心直接只輸出「高 EXP・高金幣・多裝備」與模式說明。
+5. `dungeonplayerui.js` 不再修改懸賞 ready/combat/result DOM，只保留副本首頁簡介 enhancement。
+6. 連續挑戰的已完成場數／勝場狀態與 `dungeon-continuous-result` class 已由 `dungeonbounty.js` 核心直接輸出。
 
 ---
 
@@ -263,7 +271,7 @@ S3: hp .78 / damage .73 / def .82
 - `arenagm5.js`：正式 GM 競技場測試
 - `gameguidearena5.js`：正式玩家說明
 - `arenaranklabels.js`：名稱相容層
-- `dungeonplayerui.js`：只保留懸賞與副本首頁 enhancement，不再介入正式競技場 UI
+- `dungeonplayerui.js`：目前只保留副本首頁文字 enhancement，不再介入正式競技場或懸賞戰內頁
 
 ### 第二批已清理項目
 
@@ -313,7 +321,7 @@ S3: hp .78 / damage .73 / def .82
 
 1. **規則與舊資料清理**：97%正式化、assessmentRuleVersion、移除舊玩家競技場 UI、更新 handoff。✅ 已完成
 2. **競技場架構整理**：移除舊450 assessment、收斂物理三維與位置算法、減少 assessment/window wrapper。✅ 已完成
-3. **懸賞戰核心整理**：移除 ready UI workaround、精確獎勵不再於核心玩家頁生成。
+3. **懸賞戰核心整理**：移除 ready UI workaround、精確獎勵不再於核心玩家頁生成。✅ 已完成
 4. **地圖架構整理**：統一十區地圖註冊與完整性驗證。
 5. **存檔／載入／全專案收尾**：收斂 load pipeline、全 repo 舊引用／語法／載入順序健檢。
 
@@ -325,5 +333,5 @@ S3: hp .78 / damage .73 / def .82
 - 玩家競技場正式門檻只有 **97%（485/500）**。
 - 玩家競技場沒有第二層低／中／高難度選擇，也不顯示位置文字。
 - 競技場 HP／ATK／DEF 只看 Rank＋共通 Stage profile；位置只影響暴擊、閃避與特性。
-- 玩家懸賞不公開權重、品質機率與戰前精確獎勵。
+- 玩家懸賞不公開權重、品質機率與戰前精確獎勵；連續模式中間不回到挑戰模式選擇頁，只在停止時總結算。
 - 發生異常時，先完整自我檢查整條程式鏈，再修根因，不先猜補丁。
