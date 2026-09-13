@@ -36,18 +36,22 @@
     gap:16px;
   }
 
-  /* Void: compact the battle vertically and spread player/enemy across desktop width. */
+  /* Void: override the generic full-screen combat sizing on desktop. */
   #main .void-shell{
     max-width:1120px;
   }
   #main .void-panel:not(.void-result){
     padding:18px 22px;
   }
-  #main .void-combat{
+  #main .void-combat.combat-screen{
+    min-height:0!important;
+    height:auto;
+    flex:none;
     padding:14px 18px 16px;
   }
   #main .void-combat .combat-arena{
-    min-height:0;
+    flex:none;
+    min-height:0!important;
     display:grid;
     grid-template-columns:minmax(300px,1fr) 72px minmax(300px,1fr);
     align-items:center;
