@@ -8,6 +8,7 @@
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=600000;
+ const CLOCK_ROLLBACK_TOLERANCE_MS=5*60*1000;
  const HEARTBEAT_MS=60*1000;
  const HEARTBEAT_PERSIST_MS=5*60*1000;
  const YIELD_EVERY=750;
@@ -25,6 +26,10 @@
   const o=state.offline;
   const rawTime=o.lastSettledAt==null?NaN:Number(o.lastSettledAt);
   o.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=t?Math.floor(rawTime):t;
+  const maxObserved=Number(o.maxObservedWallClock);
+  o.maxObservedWallClock=Number.isFinite(maxObserved)&&maxObserved>=0?Math.floor(maxObserved):Math.max(o.lastSettledAt,t);
+  const lockUntil=Number(o.timeLockUntil);
+  o.timeLockUntil=Number.isFinite(lockUntil)&&lockUntil>0?Math.floor(lockUntil):0;
   const map=o.farmMap==null?NaN:Number(o.farmMap),enemy=o.farmEnemy==null?NaN:Number(o.farmEnemy);
   o.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
@@ -36,9 +41,39 @@
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
  }
+ function wallClockGuard(o,t=now()){
+  const maxObserved=Math.max(0,Math.floor(Number(o.maxObservedWallClock)||0));
+  const lockUntil=Math.max(0,Math.floor(Number(o.timeLockUntil)||0));
+  if(t+CLOCK_ROLLBACK_TOLERANCE_MS<maxObserved){
+   o.timeLockUntil=Math.max(lockUntil,maxObserved);
+   o.pendingSettlement=null;
+   o.lastSettledAt=t;
+   return {blocked:true,released:false,until:o.timeLockUntil};
+  }
+  if(lockUntil>0){
+   if(t<lockUntil){
+    o.pendingSettlement=null;
+    o.lastSettledAt=t;
+    return {blocked:true,released:false,until:lockUntil};
+   }
+   o.timeLockUntil=0;
+   o.pendingSettlement=null;
+   o.lastSettledAt=t;
+   o.maxObservedWallClock=Math.max(maxObserved,t);
+   return {blocked:false,released:true,until:0};
+  }
+  if(t<maxObserved){
+   o.pendingSettlement=null;
+   o.lastSettledAt=t;
+   return {blocked:true,released:false,until:maxObserved};
+  }
+  o.maxObservedWallClock=Math.max(maxObserved,t);
+  return {blocked:false,released:false,until:0};
+ }
  function checkpoint(ts=now(),persist=false){
-  const o=ensureOfflineState();
-  o.lastSettledAt=Math.max(0,Math.floor(Number(ts)||now()));
+  const t=Math.max(0,Math.floor(Number(ts)||now())),o=ensureOfflineState();
+  wallClockGuard(o,t);
+  o.lastSettledAt=t;
   if(persist&&baseSave)baseSave(false);
  }
  function legalFarmTarget(mapIdx,enemyIdx){
@@ -95,7 +130,8 @@
   return {map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
  }
  function buildPendingSettlement(){
-  const o=ensureOfflineState(),t=now();
+  const o=ensureOfflineState(),t=now(),clock=wallClockGuard(o,t);
+  if(clock.blocked||clock.released){if(baseSave)baseSave(false);return null;}
   const existing=normalizePending(o.pendingSettlement);
   if(existing)return existing;
   o.pendingSettlement=null;
@@ -216,7 +252,7 @@
   try{
    const rewards=await grantOfflineRewards(pending,enemy);
    const result={elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:enemy.name||"主線敵人",enemyLevel:enemy.level,...rewards};
-   const o=ensureOfflineState();o.pendingSettlement=null;o.lastSettledAt=now();
+   const o=ensureOfflineState(),t=now();o.pendingSettlement=null;o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);
    if(baseSave)baseSave(false);
    setCalculatingVisible(false);showOfflineResult(result);
   }catch(err){
