@@ -1,0 +1,44 @@
+name: Fix inventory background selector
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-inventory-background-selector.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix inventory selector and cache bust
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          css=Path('backgrounds.css')
+          s=css.read_text()
+          old='#main>.function-page:has(>.grid > .card table)'
+          new='#main>.function-page:has(>.grid)'
+          count=s.count(old)
+          if count != 4:
+              raise SystemExit(f'expected 4 inventory selectors, found {count}')
+          s=s.replace(old,new)
+          css.write_text(s)
+
+          idx=Path('index.html')
+          t=idx.read_text()
+          old_cache='backgrounds.css?v=20260913-inventory-shop1'
+          new_cache='backgrounds.css?v=20260913-inventory-shop2'
+          if t.count(old_cache) != 1:
+              raise SystemExit('unexpected backgrounds.css cache token')
+          idx.write_text(t.replace(old_cache,new_cache))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add backgrounds.css index.html
+          git commit -m 'Fix desktop inventory background selector'
+          git push
