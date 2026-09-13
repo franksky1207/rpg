@@ -5,9 +5,23 @@
 .home-screen::after{z-index:-1;background:linear-gradient(180deg,rgba(5,10,18,.42),rgba(5,10,18,.58))}
 .home-screen .home-title h2{text-shadow:0 3px 18px rgba(0,0,0,.9)}
 .home-screen .home-title .muted{text-shadow:0 2px 10px rgba(0,0,0,.95);color:#d2d6dd}
-.home-screen .menu-card{background:linear-gradient(180deg,rgba(22,29,39,.88),rgba(10,15,22,.90));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
+
+/* Home UI surface hierarchy: menu cards show more scenery; information cards stay steadier. */
+.home-screen .menu-card{background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.80));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 12px 28px rgba(0,0,0,.24)}
+.home-screen .menu-card span{color:#e3e7ed;text-shadow:0 1px 6px rgba(0,0,0,.72)}
+.home-screen .vip-home-card{background:linear-gradient(180deg,rgba(33,27,16,.88),rgba(21,18,12,.90));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 8px 24px rgba(0,0,0,.22),0 0 22px rgba(220,169,64,.08)}
+.home-screen .vip-home-card .muted{color:#d2c9b8}
+#dungeon-home-status{background:rgba(23,25,34,.86);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+#dungeon-home-status>div{background:rgba(16,18,26,.88)}
+#dungeon-home-status .muted{color:#d5d2df}
+#dungeon-home-status strong{color:#eeeaf7}
+
 @media(max-width:760px){
  .home-screen::before,.home-screen::after{top:-14px;bottom:-24px}
  .home-screen::before{background-image:var(--home-mobile-bg-image,none);background-position:center center}
  .home-screen::after{background:linear-gradient(180deg,rgba(5,10,18,.45),rgba(5,10,18,.63))}
+ .home-screen .menu-card{background:linear-gradient(180deg,rgba(22,29,39,.82),rgba(10,15,22,.85));box-shadow:0 10px 24px rgba(0,0,0,.25)}
+ .home-screen .vip-home-card{background:linear-gradient(180deg,rgba(33,27,16,.92),rgba(21,18,12,.94))}
+ #dungeon-home-status{background:rgba(23,25,34,.91)}
+ #dungeon-home-status>div{background:rgba(16,18,26,.93)}
 }
