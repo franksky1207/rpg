@@ -7,6 +7,13 @@
   -webkit-backdrop-filter:blur(2px);
   box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
 }
+#main>.home-screen .vip-home-card{
+  background:linear-gradient(180deg,rgba(49,39,20,.56),rgba(28,23,14,.62));
+  border-color:rgba(174,132,59,.82);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,230,170,.04);
+}
 .map-screen .map-card{
   background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
   border-color:rgba(122,137,154,.76);
@@ -91,6 +98,10 @@
     background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
     border-color:rgba(126,141,159,.78);
     box-shadow:0 8px 20px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  #main>.home-screen .vip-home-card{
+    background:linear-gradient(180deg,rgba(49,39,20,.56),rgba(28,23,14,.62));
+    border-color:rgba(180,137,63,.84);
   }
   .prepare-screen .player-status-card,
   .prepare-screen .prepare-main{
