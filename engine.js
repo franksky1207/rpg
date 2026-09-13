@@ -66,18 +66,34 @@ function newState(){
  return {saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
 }
 
-function load(){
- let hadRaw=false;
- try{let raw=localStorage.getItem(SAVE_KEY);hadRaw=!!raw;state=raw?JSON.parse(raw):newState()}catch(e){state=newState()}
- let loadedVersion=state.saveVersion||1;
- state.level=clampGameLevel(state.level);if(typeof state.playerName!=="string"||!state.playerName.trim())state.playerName="玩家";
- if(!state.equipment||typeof state.equipment!=="object")state.equipment={};EQUIPMENT_TYPES.forEach(type=>{if(!(type in state.equipment))state.equipment[type]=null});if(!Array.isArray(state.inventory))state.inventory=[];
- normalizeWorldState(state);normalizeVipState(state);ensureSpecializationState();if(!state.lostGear)state.lostGear=[];if(!state.shop)state.shop=newShopState();if(!Array.isArray(state.shop.items))state.shop.items=[];if(typeof state.shop.refreshIndex!=="number")state.shop.refreshIndex=0;if(typeof state.shop.resetAvailableAt!=="number")state.shop.resetAvailableAt=0;
- if(typeof state.shop.initialized!=="boolean")state.shop.initialized=hadRaw&&loadedVersion>=4;
- if(!state.settings)state.settings=newState().settings;if(!Array.isArray(state.settings.autoSell))state.settings.autoSell=[false,false,false,false,false];if(typeof state.settings.keepUpgrade!=="boolean")state.settings.keepUpgrade=true;
- if(loadedVersion<4){state.shop.items=[];state.shop.initialized=false}
- state.saveVersion=currentSaveVersion();selectedMap=Math.max(0,Math.min(state.unlockedMap,MAPS.length-1));normalizeHP();ensureShop();save(false);
+/* Core field normalizer used by the formal migration pipeline in savemigration.js. */
+function normalizeSaveState(target){
+ if(!target||typeof target!=="object"||Array.isArray(target))target={};
+ target.level=clampGameLevel(target.level);
+ if(typeof target.playerName!=="string"||!target.playerName.trim())target.playerName="玩家";else target.playerName=target.playerName.trim().slice(0,12);
+ target.exp=Math.max(0,Math.floor(Number(target.exp)||0));
+ target.gold=Math.max(0,Math.floor(Number(target.gold)||0));
+ if(!target.equipment||typeof target.equipment!=="object"||Array.isArray(target.equipment))target.equipment={};
+ EQUIPMENT_TYPES.forEach(type=>{if(!(type in target.equipment))target.equipment[type]=null});
+ if(!Array.isArray(target.inventory))target.inventory=[];
+ normalizeWorldState(target);
+ normalizeVipState(target);
+ if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
+ if(!Array.isArray(target.lostGear))target.lostGear=[];
+ if(!target.shop||typeof target.shop!=="object"||Array.isArray(target.shop))target.shop=newShopState();
+ if(!Array.isArray(target.shop.items))target.shop.items=[];
+ target.shop.refreshIndex=Math.max(0,Math.min(7,Math.floor(Number(target.shop.refreshIndex)||0)));
+ target.shop.resetAvailableAt=Math.max(0,Math.floor(Number(target.shop.resetAvailableAt)||0));
+ if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+ const autoSell=Array.isArray(target.settings.autoSell)?target.settings.autoSell:[];
+ target.settings.autoSell=Array.from({length:5},(_,i)=>Boolean(autoSell[i]));
+ if(typeof target.settings.keepUpgrade!=="boolean")target.settings.keepUpgrade=true;
+ if(typeof target.settings.dark!=="boolean")target.settings.dark=true;
+ target.gm=target.gm===true;
+ return target;
 }
+window.normalizeSaveState=normalizeSaveState;
+
 function save(show=true){
  try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(err){const e=document.getElementById("saveStatus");if(e)e.textContent="存檔失敗";console.error("Save failed",err);return false}
  if(show){let e=document.getElementById("saveStatus");if(e){e.textContent="已自動存檔";setTimeout(()=>e.textContent="本機自動存檔",900)}}return true;
