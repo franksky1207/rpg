@@ -1,0 +1,25 @@
+/* Desktop-only adventure prepare / monster-selection background. */
+@media(min-width:761px){
+  body.prepare-background-active::before,
+  body.prepare-background-active::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+  }
+  body.prepare-background-active::before{
+    z-index:0;
+    background-image:url("assets/bg-prepare-desktop.webp?v=20260913-preparebg-desktop1");
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-color:#0b0e13;
+  }
+  body.prepare-background-active::after{
+    z-index:0;
+    background:linear-gradient(180deg,rgba(5,10,18,.34) 0%,rgba(5,10,18,.42) 48%,rgba(5,10,18,.52) 100%);
+  }
+  body.prepare-background-active .app{position:relative;z-index:1}
+  body.prepare-background-active #main .prepare-screen{background:none!important}
+  body.prepare-background-active #main .prepare-screen .page-title{text-shadow:0 2px 12px rgba(0,0,0,.95)}
+}
