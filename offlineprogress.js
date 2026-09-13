@@ -59,8 +59,9 @@
   const latest=rows.length?rows[rows.length-1]:null;
   const map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy));
   const realAvg=realBattleAverageMs(o);
-  if(realAvg<=0||!legalFarmTarget(map,enemy))return null;
-  return {map,enemy,avgBattleMs:realAvg};
+  if(realAvg>0&&legalFarmTarget(map,enemy))return {map,enemy,avgBattleMs:realAvg};
+  if(o.sampleCount>0&&o.avgBattleMs>0&&legalFarmTarget(o.farmMap,o.farmEnemy))return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs};
+  return null;
  }
  function formatDuration(ms){
   const total=Math.max(0,Math.floor(ms/60000)),h=Math.floor(total/60),m=total%60;
