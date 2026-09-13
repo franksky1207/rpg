@@ -9,7 +9,7 @@
   }
   body.prepare-background-active::before{
     z-index:0;
-    background-image:url("assets/bg-prepare-desktop.webp?v=20260913-preparebg-desktop1");
+    background-image:var(--prepare-bg-image,none);
     background-size:cover;
     background-position:center center;
     background-repeat:no-repeat;
