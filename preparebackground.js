@@ -1,8 +1,16 @@
 (()=>{
  const mq=window.matchMedia("(min-width:761px)");
  if(!mq.matches)return;
- const version="20260913-preparebg-desktop4";
- const parts=[1,2,3,4,5,6].map(i=>`assets/bg-prepare-desktop-fast-${String(i).padStart(2,"0")}.b64?v=${version}`);
+ const version="20260913-preparebg-desktop5";
+ const parts=[
+  `assets/bg-prepare-desktop-fast-01a.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-01b.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-02.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-03.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-04.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-05.b64?v=${version}`,
+  `assets/bg-prepare-desktop-fast-06.b64?v=${version}`
+ ];
  Promise.all(parts.map(url=>fetch(url,{cache:"force-cache"}).then(r=>{
   if(!r.ok)throw new Error(`Desktop prepare background asset ${r.status}`);
   return r.text();
