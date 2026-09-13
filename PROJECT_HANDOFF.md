@@ -5,7 +5,6 @@
 > 若本文、歷史對話、舊截圖、舊規格或先前 ChatGPT 的敘述與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。
 
 更新日期：**2026-09-13**
-本次整理前 `main` HEAD：`9bd2dbee663bb73fd2f540a40a53bf310a59bcbf`
 
 ---
 
@@ -42,17 +41,9 @@ data.js
 → backgroundprogress.js / offlinefarmtarget.js / offlineprogress.js
 → dungeonplayerui.js / arenaplayerflow2.js
 → adventureprogressui.js / combatfx.js / runtimeintegrity.js
-→ homebackground.js / battlebackground.js / mapbackground.js
 ```
 
-正式額外 CSS：
-
-```text
-homebackground.css
-battlebackground.css
-mapbackground.css
-dungeondesktoppolish.css
-```
+`backgroundprogress.js` 的「background」是**頁面切到背景／失焦時的戰鬥與離線補償機制**，不是圖片背景系統，不可誤刪。
 
 `runtimediag.js` 已刪除，不再常駐顯示診斷框。
 
@@ -66,7 +57,7 @@ dungeondesktoppolish.css
 2. 同時重新讀完整 `index.html`，確認 script / CSS 實際載入順序與 cache-bust。
 3. 先查跨檔案引用、state、save migration、normalize、後載入 override / wrapper、render / DOM 綁定，再決定修改位置。
 4. 不可只根據本交接檔、聊天記憶或過去 commit 猜目前程式。
-5. 視覺／背景問題要先確認實際 DOM class 與容器高度來源。
+5. 視覺／背景問題要先確認實際 DOM class、renderer、容器高度與手機 Safari 行為。
 
 ## 2.2 使用者授權語意
 
@@ -194,10 +185,6 @@ Boss 永遠只跑單場。
 - 已取得獎勵與副本進度保留
 - 最後顯示連續戰鬥總結算
 
-### 重要最新更正
-
-**主線「單場／連續」模式、準備頁與戰鬥頁已正式收回 `ui.js`。**
-
 目前 `ui.js` 原生定義：
 
 ```text
@@ -209,9 +196,7 @@ setBattleMode(mode)
 
 一般／菁英顯示「單場、連續戰鬥」；Boss 只顯示單場。
 
-`continuousbattle.js` **不再接管主線模式 UI**，目前只保留連續戰鬥結算相容層；待 `settlementui.js` 原生完整辨識 `ctx.continuous` 後即可考慮刪除。
-
-舊交接中「`ui.js` 還有 1/5/10/15/20/25 場正式 renderer，由 `continuousbattle.js` 後載入接管」的描述已失效。
+`continuousbattle.js` 不再接管主線模式 UI，目前只保留連續戰鬥結算相容層。
 
 ---
 
@@ -423,8 +408,6 @@ totalPoints = positionBase + windowOffset
 
 單次／連續：一完整三連戰＝一輪；三戰內 HP 連續；下一輪滿血；下一輪開始前再扣次數；任一戰失敗該輪結束；手動停止於目前整輪結束後生效；最後統一總結算。
 
-已修重要問題：arena normalize 改為原地 `Object.assign()` 保持物件參照、積分改為 visible window 邏輯、90%→97%、三維收斂至 `dungeonarena.js`、舊三難度玩家 UI 已移除。
-
 ---
 
 # 10. 虛空幻境
@@ -452,15 +435,7 @@ DEF = ceil((3.2 + 0.92 × E) × 2.65)
 - 一個 run 開始扣 1 次副本；run 內持續向上
 - 每層通關後回滿該 run 鎖定 snapshot 的 HP
 
-GM 支援重置樓層、指定樓層、模擬推進與補首次通關積分；挑戰進行中禁止 GM 樓層管理。
-
-### 最新 UI 狀態
-
-**桌機版虛空戰鬥畫面上下留白問題已由使用者實機確認解決。**
-
-因此舊交接中「虛空桌機 UI 尚未完成／下一步要查高度來源」已失效，不再列為待辦。
-
-手機版虛空先前已確認正常。
+桌機版虛空戰鬥畫面上下留白問題已由使用者實機確認解決；手機版先前亦確認正常。
 
 ---
 
@@ -515,7 +490,9 @@ migration 完成前不會先把舊 raw 存檔寫成新版。
 
 # 13. 背景執行、離線與時間防護
 
-`backgroundprogress.js`：背景補償 credit rate 0.96；單次背景最多計 12 小時；用 visibilitychange / blur / focus / pagehide / pageshow；主線連續、懸賞連續、競技場連續、虛空可用 `backgroundProgressSleep()`。
+此章「背景」指瀏覽器背景執行，不是圖片背景。
+
+`backgroundprogress.js`：背景補償 credit rate 0.96；連續模式背景最多計 12 小時；用 visibilitychange / blur / focus / pagehide / pageshow；主線連續、懸賞連續、競技場連續、虛空可用 `backgroundProgressSleep()`。
 
 `offlineprogress.js`：EXP／金幣／裝備 roll／副本進度皆 10%；最短離線 1 分鐘；最長 12 小時。
 
@@ -527,7 +504,7 @@ migration 完成前不會先把舊 raw 存檔寫成新版。
 
 # 14. Runtime 自我檢查
 
-`runtimeintegrity.js` 最後載入，不顯示玩家 UI，建立：
+`runtimeintegrity.js` 最後階段載入，不顯示玩家 UI，建立：
 
 ```text
 window.PROJECT_RUNTIME_REPORT
@@ -548,25 +525,113 @@ window.PROJECT_RUNTIME_REPORT
 
 ---
 
-# 15. 視覺重整最新基準
+# 15. 圖片背景系統：2026-09-13 全面重置後唯一有效基準
 
-統一風格：**科幻戰略風＋宇宙史詩風**。
+統一美術方向仍為：**科幻戰略風＋宇宙史詩風**。
 
 主色：深藍、黑、鐵灰、銀灰、科技藍；輔以紫藍、能量紫、青藍、少量金色。
 
 避免過亮、過度霓虹、卡通／兒童感、純寫實軍武、現代都市感、過度雜亂、電影海報感、圖片內大字／Logo。
 
-背景圖預設 16:9、適合 `background-size:cover`、同時考慮桌機與手機直式裁切、中央保留 UI 安全區。
+背景圖預設 16:9、適合 `background-size: cover`，並分桌機與手機素材處理。
 
-已完成：
+## 15.1 新正式資料夾
 
-1. 首頁背景：`homebackground.css/js` + 4 段 Base64；桌機／手機已實機確認。
-2. 主線一般／菁英戰鬥背景：`battlebackground.css/js` + 12 段 Base64；桌機／iPhone 已確認。
-3. 冒險地圖整頁背景：`mapbackground.css/js` + 6 段 Base64；固定 viewport 背景，桌機／手機與收合行為已確認。
+原始素材庫：
 
-Base64 圖片標準流程：壓 WebP → 拆成約 7～10KB 小段 → JS join → `new Image()` probe → 成功才設定 CSS variable。不要再使用單一超長 `.b64`。
+```text
+assets/backgrounds-source/
+```
 
-後續背景圖一定先看實際 renderer / DOM / 高度行為，再決定掛 viewport、頁面或區塊。
+用途：使用者手動上傳原始 JPG／PNG 等素材。可以是 2～3MB 以上原圖，不直接作遊戲 runtime 最終資產。
+
+正式遊戲背景資產：
+
+```text
+assets/backgrounds/
+```
+
+用途：放壓縮／最佳化後的正式遊戲背景，原則上使用正常圖片檔，例如 WebP，不再拆成文字片段。
+
+兩套資料夾目前都已建立以下分類：
+
+```text
+home
+adventure-map
+prepare
+battle-main
+dungeon-home
+dungeon-bounty
+dungeon-bounty-battle
+dungeon-arena
+dungeon-arena-battle
+dungeon-void
+dungeon-void-battle
+character
+inventory-shop
+guide-settings
+```
+
+## 15.2 目前實際狀態
+
+目前已上傳且保留的第一張原圖：
+
+```text
+assets/backgrounds-source/home/desktop.png
+```
+
+目前**尚未把任何新圖片背景接回遊戲 runtime**。
+
+因此現在 GitHub Pages 正常狀態應是：主畫面、冒險地圖、prepare、主線戰鬥等都沒有先前那批圖片背景。
+
+`assets/backgrounds/` 各分類目前只有 `.gitkeep`，等待後續逐張正式建立。
+
+## 15.3 已永久淘汰的舊背景方法
+
+以下舊方法已從 `main` 移除，不得重新使用：
+
+```text
+assets/bg-*.b64
+Base64 chunk 拆段
+JS fetch 多段文字後 join
+new Image() probe 後塞 CSS variable
+--home-bg-image
+--home-mobile-bg-image
+--battle-bg-image
+--battle-mobile-bg-image
+--map-bg-image
+--map-mobile-bg-image
+--prepare-bg-image
+body.map-background-active
+舊背景專用 MutationObserver
+```
+
+下列舊背景專用檔案已刪除：
+
+```text
+homebackground.js
+homebackground.css
+battlebackground.js
+battlebackground.css
+mapbackground.js
+mapbackground.css
+preparebackground.js
+preparebackground.css
+```
+
+`index.html` 也已移除對上述 8 個檔案的載入。
+
+舊的 `assets/bg-main-*`、`assets/bg-map-*`、`assets/bg-battle-*`、`assets/bg-prepare-*`、測試分段檔及殘缺 `bg-prepare-desktop.webp` 都已刪除。
+
+## 15.4 新背景接入原則
+
+1. 從 `assets/backgrounds-source/<screen>/desktop.*` 或 `mobile.*` 取原始素材。
+2. 正式 runtime 圖片放入 `assets/backgrounds/<screen>/`。
+3. 不再建立 Base64 分段檔。
+4. 不再沿用舊 `homebackground/mapbackground/battlebackground/preparebackground` 模組。
+5. 新系統要從乾淨架構重新設計，必要時統一使用單一背景 manager／CSS，而不是每頁再堆一套 loader。
+6. 每個畫面接入前先重新確認實際 renderer、DOM class、桌機／手機裁切與 iPhone Safari 行為。
+7. 一次只接一個畫面並做 base→head compare。
 
 ---
 
@@ -581,7 +646,7 @@ Base64 圖片標準流程：壓 WebP → 拆成約 7～10KB 小段 → JS join �
 - 虛空：桌機戰鬥畫面上下留白問題已解決。
 - 手機版副本整體維持原本合理版型。
 
-因此**副本桌機 UI 這一批目前視為完成**。
+因此副本桌機 UI 這一批目前視為完成。
 
 ---
 
@@ -591,49 +656,30 @@ Base64 圖片標準流程：壓 WebP → 拆成約 7～10KB 小段 → JS join �
 2. `normal / hard / extreme` 在競技場只代表 internal position template；`arenaplayerflow2.js` 仍是後載入玩家 UI 層，若重構應收斂 renderer，避免再疊第三層 wrapper。
 3. `engine.js` base `load()` 是 fallback；正式 load 以 `savemigration.js` 為準。
 4. 世界 map index 是永久身分，改順序／插圖必須 schema migration。
-5. 第1～3張背景目前仍是 Base64 chunk 技術方案；日後若有可靠二進位寫入方式，可整理成正常 `.webp`，但必須先確認 Pages 路徑與真機 cache。
 
 已移除的舊技術債：
 
-- 「主線仍有 1/5/10/15/20/25 正式 renderer」：已不是目前 main 狀態。
-- 「桌機虛空 UI 尚未解」：已由使用者確認解決。
+- 舊 Base64 chunk 圖片背景架構已完整移除。
+- 舊圖片背景 CSS variables、body active class、MutationObserver loader 已移除。
+- 舊 `homebackground/battlebackground/mapbackground/preparebackground` 模組已移除。
+- 主線舊 1/5/10/15/20/25 場 renderer 已不是目前 main 狀態。
+- 桌機虛空 UI 尚未解的舊待辦已完成。
 
 ---
 
-# 18. 2026-09-13 靜態 smoke check 狀態
+# 18. 2026-09-13 背景系統重置後 smoke check
 
-本次重新讀取 `main` 並檢查：
+已重新檢查 `main`：
 
-- 完整 `index.html` 載入順序仍完整。
-- `ui.js` 正式提供單場／連續主線模式；Boss 限單場。
-- `continuousbattle.js` 與 `ui.js` 的最新責任分工一致：前者只剩結算相容。
-- 100 張地圖固定 registry 架構仍存在。
-- `savemigration.js` schema 10 / pipeline 1 正式 load 邏輯仍存在。
-- 競技場 500/485 評估、最近 3 個視窗、Rank 物理倍率核心仍存在。
-- `runtimeintegrity.js` 仍在最後階段載入並檢查世界、存檔 schema、必要函式與 arena object reference。
-- 首頁／主線戰鬥／冒險地圖背景資產檔與 loader 仍存在於 repo。
-- `dungeondesktoppolish.css` 仍在 `index.html` 載入。
+- `assets/` 根層只保留新的 `backgrounds-source/` 與 `backgrounds/` 兩套背景資產架構。
+- repo tree 不再存在舊 `assets/bg-*` 分段背景檔。
+- `index.html` 不再載入舊 8 個背景 JS/CSS。
+- repo 不再存在 `homebackground.*`、`battlebackground.*`、`mapbackground.*`、`preparebackground.*`。
+- 程式碼搜尋不再找到 `.b64`、`data:image/webp`、舊 `bg-*` 路徑、`map-background-active` 或舊圖片 CSS variable。
+- `backgroundprogress.js` 保留，因為它屬於頁面背景執行／離線進度，不是圖片背景 loader。
+- `assets/backgrounds-source/home/desktop.png` 是目前唯一正式保留的已上傳原始背景素材，尚未接入 runtime。
 
-**此處是程式碼／檔案層級的靜態 smoke check，不等同瀏覽器 runtime 自動化測試。**
-
-使用者目前已實機確認的 UI／視覺項目：首頁背景、主線戰鬥背景、冒險地圖背景（含桌機／手機與收合）、桌機懸賞、桌機競技場、桌機虛空。
-
-若要做真正完整 runtime smoke test，仍建議在 GitHub Pages + 桌面瀏覽器 + iPhone Safari 快速跑：
-
-```text
-舊存檔載入
-新遊戲
-主線單場
-主線連續＋手動停
-懸賞單次
-懸賞連續＋手動停
-競技場評估
-競技場解鎖
-競技場單次／連續
-虛空幻境
-GM 管理／沙盒測試
-匯出／匯入存檔
-```
+此處是程式碼／檔案層級靜態檢查，不等同瀏覽器自動化測試；但使用者已實機確認目前遊戲畫面不再顯示舊圖片背景。
 
 ---
 
@@ -657,7 +703,7 @@ ui.js
 battlepipeline.js
   主線正式 battle pipeline
 continuousbattle.js
-  主線連續戰鬥「結算相容層」；不再是模式 UI 正式來源
+  主線連續戰鬥結算相容層；不再是模式 UI 正式來源
 dungeonprogress.js
   副本進度、attempt、arena save normalize、load 後副本 finalizer
 dungeoncore.js
@@ -677,25 +723,23 @@ arenagm5.js
 dungeonvoid.js
   虛空幻境正式核心
 dungeonvoidui.js
-  虛空玩家 UI / 動態樣式；桌機版型問題已實機確認解決
+  虛空玩家 UI / 動態樣式
 savemigration.js
   正式唯一 runtime save migration / load pipeline
 backgroundprogress.js
-  背景 continuous credit / page visibility flow
-offlinefarmtarget.js
+  頁面背景執行 continuous credit / page visibility flow；不是圖片背景
+ offlinefarmtarget.js
   真實主線樣本與 offline farm target
 offlineprogress.js
   離線結算／時鐘防護／reward UI
 runtimeintegrity.js
-  背景 runtime integrity report
-homebackground.css/js
-  第1張首頁背景
-battlebackground.css/js
-  第2張主線戰鬥背景
-mapbackground.css/js
-  第3張冒險地圖整頁背景
-dungeondesktoppolish.css
-  桌機副本 UI 修飾；懸賞／競技場／虛空目前均已確認
+  runtime integrity report
+assets/backgrounds-source/
+  原始圖片素材庫；由使用者手動上傳
+assets/backgrounds/
+  未來正式 runtime 圖片資產庫
+ dungeondesktoppolish.css
+  桌機副本 UI 修飾
 index.html
   最終實際載入順序與 cache-bust
 ```
