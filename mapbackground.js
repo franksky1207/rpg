@@ -1,5 +1,5 @@
 (()=>{
- const parts=[1,2,3].map(n=>`assets/bg-map-fix-${String(n).padStart(2,"0")}.b64?v=20260913-mapbg4`);
+ const parts=Array.from({length:6},(_,i)=>`assets/bg-map-reupload-${String(i+1).padStart(2,"0")}.b64?v=20260913-mapbg5`);
  let bgUrl="";
  function apply(){
   if(!bgUrl)return;
@@ -15,12 +15,15 @@
   return r.text();
  }))).then(chunks=>{
   const data=chunks.join("").replace(/\s+/g,"");
-  bgUrl=`url("data:image/webp;base64,${data}")`;
   const probe=new Image();
-  probe.onload=()=>apply();
+  probe.onload=()=>{
+   bgUrl=`url("data:image/webp;base64,${data}")`;
+   apply();
+  };
   probe.onerror=()=>console.warn("Adventure map background decode failed");
   probe.src=`data:image/webp;base64,${data}`;
-  new MutationObserver(apply).observe(document.getElementById("main"),{childList:true,subtree:true});
+  const main=document.getElementById("main");
+  if(main)new MutationObserver(apply).observe(main,{childList:true,subtree:true});
   window.addEventListener("resize",apply,{passive:true});
  }).catch(err=>console.warn("Adventure map background failed to load",err));
 })();
