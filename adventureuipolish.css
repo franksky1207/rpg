@@ -34,9 +34,10 @@
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
 }
+/* Batch 3: dense information surfaces stay readable without becoming opaque. */
 .prepare-screen .player-status-card .stat{
-  background:rgba(16,20,26,.80);
-  border-color:rgba(92,104,118,.72);
+  background:rgba(16,20,26,.72);
+  border-color:rgba(96,110,126,.76);
 }
 .prepare-screen .player-status-card .muted,
 .prepare-screen .prepare-main .muted{color:#d6d9df}
@@ -48,8 +49,8 @@
   box-shadow:0 8px 22px rgba(0,0,0,.16);
 }
 .prepare-screen #dungeon-adventure-status>div{
-  background:rgba(16,18,26,.80);
-  border-color:rgba(86,91,112,.70);
+  background:rgba(16,18,26,.72);
+  border-color:rgba(92,99,121,.74);
 }
 .prepare-screen #dungeon-adventure-status .muted{color:#d5d2df}
 .prepare-screen #dungeon-adventure-status strong{color:#eeeaf7}
@@ -68,6 +69,12 @@
 .prepare-screen .enemy-meta{
   color:#d9dde4;
   text-shadow:0 1px 5px rgba(0,0,0,.55);
+}
+.prepare-screen .trait-detail-name{
+  background:rgba(16,20,26,.68);
+  border-color:rgba(111,123,139,.76);
+  backdrop-filter:blur(1px);
+  -webkit-backdrop-filter:blur(1px);
 }
 .prepare-screen .trait-detail-desc,
 .prepare-screen .enemy-card-note{color:#d4d2cc}
@@ -88,7 +95,8 @@
   -webkit-backdrop-filter:blur(2px);
 }
 .prepare-screen .map-progress-fold .notice{
-  background:rgba(27,25,20,.80);
+  background:rgba(27,25,20,.72);
+  border-color:rgba(145,133,98,.74);
   color:#e6ddc9;
 }
 
@@ -108,9 +116,9 @@
     background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
     border-color:rgba(126,141,159,.78);
   }
-  .prepare-screen .player-status-card .stat{background:rgba(16,20,26,.86)}
+  .prepare-screen .player-status-card .stat{background:rgba(16,20,26,.72)}
   .prepare-screen #dungeon-adventure-status{background:rgba(23,25,34,.40)}
-  .prepare-screen #dungeon-adventure-status>div{background:rgba(16,18,26,.86)}
+  .prepare-screen #dungeon-adventure-status>div{background:rgba(16,18,26,.72)}
   .prepare-screen .enemy-card{
     background:linear-gradient(180deg,rgba(26,32,41,.54),rgba(17,21,27,.60));
     border-color:rgba(123,139,157,.78);
@@ -119,6 +127,7 @@
     background:linear-gradient(180deg,rgba(48,40,25,.58),rgba(31,27,20,.62));
     border-color:rgba(223,187,108,.94);
   }
+  .prepare-screen .trait-detail-name{background:rgba(16,20,26,.68)}
   .prepare-screen .count-card{
     background:linear-gradient(180deg,rgba(27,33,42,.54),rgba(17,21,27,.60));
     border-color:rgba(123,139,157,.74);
@@ -128,7 +137,7 @@
     border-color:rgba(223,187,108,.92);
   }
   .prepare-screen .map-progress-fold summary{background:rgba(23,25,18,.58)}
-  .prepare-screen .map-progress-fold .notice{background:rgba(27,25,20,.86)}
+  .prepare-screen .map-progress-fold .notice{background:rgba(27,25,20,.72)}
   #prepareMobileControlsPortal{
     position:static!important;
     min-height:0!important;
