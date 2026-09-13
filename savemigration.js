@@ -1,6 +1,7 @@
 (function(){
  const SAVE_SCHEMA_VERSION=10;
- const SAVE_LOAD_PIPELINE_VERSION=1;
+ const SAVE_LOAD_PIPELINE_VERSION=2;
+ const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const OFFLINE_REAL_SAMPLE_LIMIT=20;
  const NORMAL_BATTLE_GAP_MS=140;
@@ -16,14 +17,15 @@
   return Math.ceil(legacySameExpV9(l)*(5+245*(1-Math.exp(-(l-1)/142))));
  }
  function migrateExpProgress(target,version,source){
-  if(version!==9||!isObject(target)||!isObject(source))return;
+  if(version>LEGACY_EXP_LAST_VERSION||!isObject(target)||!isObject(source))return false;
   const level=Math.max(1,Math.floor(Number(target.level)||Number(source.level)||1));
-  if(typeof MAX_LEVEL==="number"&&level>=MAX_LEVEL){target.exp=0;return;}
+  if(typeof MAX_LEVEL==="number"&&level>=MAX_LEVEL){target.exp=0;return true;}
   const oldNeed=Math.max(1,legacyExpNeedV9(level));
   const oldExp=finiteNonNegative(source.exp,0);
   const progress=Math.max(0,Math.min(1,oldExp/oldNeed));
   const newNeed=typeof expNeed==="function"?Math.max(1,Math.floor(Number(expNeed(level))||1)):oldNeed;
   target.exp=Math.max(0,Math.min(newNeed-1,Math.round(newNeed*progress)));
+  return true;
  }
 
  function prepareLegacyItem(item,forcedType=null){
@@ -138,7 +140,7 @@
 
   const normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);
-  migrateExpProgress(target,version,source);
+  const expProgressMigrated=migrateExpProgress(target,version,source);
 
   prepareAllGear(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
@@ -161,6 +163,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated};
   return target;
  };
 
@@ -190,6 +193,7 @@
    parseFailed,
    sourceVersion,
    targetVersion:SAVE_SCHEMA_VERSION,
+   expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true
   };
   return state;
