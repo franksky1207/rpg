@@ -76,12 +76,15 @@
 
  function mainBattleSectionHtml(ctx,options={}){
   const wins=Math.max(0,Math.floor(Number(ctx?.wins)||0));
-  const total=Math.max(wins,Math.floor(Number(ctx?.originalCount)||wins));
+  const continuous=ctx?.continuous===true;
+  const total=continuous?null:Math.max(wins,Math.floor(Number(ctx?.originalCount)||wins));
   const progress=round2(ctx?.totalDungeonProgress);
   const attempts=Math.max(0,Math.floor(Number(ctx?.gainedDungeonAttempts)||0));
   const drops=normalizeItems(ctx?.items);
   const interrupted=options.interrupted===true;
-  const note=interrupted?`已完成 ${wins} / ${total} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。`:`勝利 ${wins} / ${total} 場`;
+  const note=continuous
+   ?(interrupted?`已完成 ${wins} 場，連續戰鬥已結束；已取得的獎勵與副本進度均保留。`:`完成 ${wins} 場`)
+   :(interrupted?`已完成 ${wins} / ${total} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。`:`勝利 ${wins} / ${total} 場`);
   const dungeon=progress>0||attempts>0?`<div class="notice" style="margin-top:10px">副本進度 +${progress}${attempts>0?`　｜　可挑戰次數 +${attempts}`:""}</div>`:"";
   return `<div class="settlement-section"><div class="settlement-section-title">主線戰鬥</div><div class="notice"><b>${note}</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"主線裝備",emptyText:"",showCount:true,marginTop:10}):`<div class="muted" style="margin-top:10px">本次沒有主線裝備掉落。</div>`}${dungeon}</div>`;
  }
@@ -117,7 +120,7 @@
    const specials=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters.filter(x=>x?.result):[];
    const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
    if(!defeat&&specials.length&&title&&detail&&modal){
-    title.textContent=ctx.originalCount>1?"連續戰鬥結算":"戰鬥結算";
+    title.textContent=ctx?.continuous===true?"連續戰鬥結算":"戰鬥結算";
     detail.innerHTML=mainBattleSectionHtml(ctx)+specialEncounterSectionHtml(ctx);
     modal.classList.add("show");
    }else{
