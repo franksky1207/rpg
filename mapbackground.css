@@ -24,7 +24,7 @@ body.map-background-active #main .map-screen .page-title{text-shadow:0 2px 12px 
 body.map-background-active #main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.86),rgba(10,15,22,.89));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 body.map-background-active #main .map-screen .map-card{background:linear-gradient(180deg,rgba(24,31,42,.86),rgba(10,15,22,.89))}
 @media(max-width:760px){
-  body.map-background-active::before{background-position:50% center}
+  body.map-background-active::before{background-position:58% 42%}
   body.map-background-active::after{background:linear-gradient(180deg,rgba(5,10,18,.44) 0%,rgba(5,10,18,.54) 48%,rgba(5,10,18,.64) 100%)}
   body.map-background-active #main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.90),rgba(10,15,22,.92))}
 }
