@@ -63,14 +63,19 @@
 }
 .modal .muted{color:#d1d5dc}
 
-/* Main battle settlement sits over the restored prepare screen so its background remains visible. */
+/* Main battle settlement is a standalone full-screen surface using the same artwork as the prepare screen. */
 #battleResultModal{
-  background:rgba(0,0,0,.38);
-  backdrop-filter:blur(1px);
-  -webkit-backdrop-filter:blur(1px);
+  background-image:
+    linear-gradient(180deg,rgba(5,10,18,.36),rgba(5,10,18,.58)),
+    url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
+  background-position:center center,center center;
+  background-size:cover,cover;
+  background-repeat:no-repeat,no-repeat;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
 }
 #battleResultModal .modal-box{
-  background:linear-gradient(180deg,rgba(23,27,34,.90),rgba(15,19,25,.93));
+  background:linear-gradient(180deg,rgba(23,27,34,.91),rgba(15,19,25,.94));
 }
 
 /* Battle settlement: stable outer modal, slightly lighter nested sections. */
@@ -158,10 +163,12 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
     background:linear-gradient(180deg,rgba(23,27,34,.96),rgba(15,19,25,.97));
   }
   #battleResultModal{
-    background:rgba(0,0,0,.42);
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.38),rgba(5,10,18,.60)),
+      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
   }
   #battleResultModal .modal-box{
-    background:linear-gradient(180deg,rgba(23,27,34,.93),rgba(15,19,25,.95));
+    background:linear-gradient(180deg,rgba(23,27,34,.94),rgba(15,19,25,.96));
   }
   #battleResultModal .settlement-section{background:rgba(16,21,27,.94)}
   #battleResultModal .settlement-section .stat,
