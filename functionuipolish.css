@@ -1,0 +1,95 @@
+/* General function-page surface hierarchy.
+   Outer containers stay lighter than dense information cards nested inside them. */
+.function-page .card{
+  background:linear-gradient(180deg,rgba(23,28,36,.66),rgba(17,21,27,.70));
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+}
+.function-page .muted{color:#d4d7dd}
+
+/* Dense information surfaces remain steadier for readability. */
+.function-page .stat,
+.function-page .item{
+  background:rgba(16,20,26,.88);
+}
+.function-page .item.selected{
+  background:rgba(43,36,22,.90);
+}
+.function-page .notice{
+  background:rgba(27,25,20,.88);
+  color:#e6ddc9;
+}
+
+/* Character / inventory / shop retain clear nested-card hierarchy. */
+.function-page .character-stats-card .stat,
+.function-page .character-equipment-card .item,
+.function-page .grid>.card .item{
+  background:rgba(16,20,26,.88);
+}
+.function-page table th{color:#dfd0aa}
+
+/* Specialization: outer panel is light; individual skills and guide stay stable. */
+.function-page.specialization-page .specialization-panel{
+  background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.67));
+}
+.function-page.specialization-page .specialization-card{
+  background:linear-gradient(180deg,rgba(24,29,37,.86),rgba(16,20,26,.89));
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.function-page.specialization-page .specialization-guide{
+  background:rgba(18,22,28,.86);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.function-page.specialization-page .specialization-card-head span,
+.function-page.specialization-page .specialization-cost{
+  color:#d2cec4;
+}
+
+/* Guide: the large article panel is an outer shell; category controls remain readable. */
+.function-page.guide-page .guide-content.card{
+  background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.67));
+}
+.function-page.guide-page .guide-category{
+  background:rgba(23,27,34,.86);
+  color:#e1dacb;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.function-page.guide-page .guide-category.active{
+  background:rgba(52,43,27,.90);
+}
+.function-page.guide-page .guide-item-body{color:#e0dbd0}
+
+/* Mobile shop rows become inner information cards, not outer shells. */
+@media(max-width:760px){
+  .function-page .card{
+    background:linear-gradient(180deg,rgba(23,28,36,.74),rgba(17,21,27,.78));
+  }
+  .function-page .stat,
+  .function-page .item,
+  .function-page .character-stats-card .stat,
+  .function-page .character-equipment-card .item,
+  .function-page .grid>.card .item{
+    background:rgba(16,20,26,.93);
+  }
+  .function-page .item.selected{background:rgba(43,36,22,.94)}
+  .function-page .notice{background:rgba(27,25,20,.92)}
+  .function-page .shop-table tr{
+    background:rgba(16,20,26,.93);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+  .function-page.specialization-page .specialization-panel,
+  .function-page.guide-page .guide-content.card{
+    background:linear-gradient(180deg,rgba(23,28,36,.70),rgba(17,21,27,.75));
+  }
+  .function-page.specialization-page .specialization-card,
+  .function-page.specialization-page .specialization-guide{
+    background:rgba(18,22,28,.92);
+  }
+  .function-page.guide-page .guide-category{background:rgba(23,27,34,.92)}
+  .function-page.guide-page .guide-category.active{background:rgba(52,43,27,.94)}
+}
