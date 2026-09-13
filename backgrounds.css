@@ -796,3 +796,68 @@
     -webkit-backdrop-filter:blur(2px);
   }
 }
+
+
+/* dungeon-void-battle background v1 */
+@media (min-width:761px){
+  #main>.void-shell:has(.void-combat){
+    width:100vw;
+    max-width:none!important;
+    min-height:calc(100vh - 57px)!important;
+    min-height:calc(100dvh - 57px)!important;
+    margin-top:-18px;
+    margin-bottom:-40px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:30px;
+    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
+    padding-bottom:52px;
+    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
+    background-image:
+      linear-gradient(180deg,rgba(5,8,14,.18),rgba(12,5,20,.46)),
+      url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.void-shell:has(.void-combat)>.void-panel{
+    max-width:1120px;
+    margin-left:auto;
+    margin-right:auto;
+    background:linear-gradient(180deg,rgba(16,33,41,.70),rgba(12,21,26,.80));
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+  }
+  #main>.void-shell:has(.void-combat) .combatant{
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+  }
+}
+
+@media (max-width:760px){
+  #main>.void-shell:has(.void-combat){
+    width:100vw;
+    max-width:none;
+    min-height:calc(100vh - 52px);
+    min-height:calc(100dvh - 52px);
+    margin-top:-10px;
+    margin-bottom:-24px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:18px;
+    padding-right:12px;
+    padding-bottom:28px;
+    padding-left:12px;
+    background-image:
+      linear-gradient(180deg,rgba(5,8,14,.20),rgba(12,5,20,.50)),
+      url("assets/backgrounds/dungeon-void-battle/mobile.webp?v=20260914-dungeon-void-battle-mobile1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.void-shell:has(.void-combat)>.void-panel{
+    background:linear-gradient(180deg,rgba(16,33,41,.72),rgba(12,21,26,.82));
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+}

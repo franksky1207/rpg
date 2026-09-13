@@ -32,7 +32,7 @@
   }
 
   /* Void battle: keep the compact battle layout, but do not constrain the result shell. */
-  html body #main .void-shell:not(:has(.void-result-grid)){
+  html body #main .void-shell:not(:has(.void-result-grid)):not(:has(.void-combat)){
     max-width:1120px;
     min-height:0!important;
   }
