@@ -1,8 +1,8 @@
 /* General function-page surface hierarchy.
    Outer containers stay lighter than dense information cards nested inside them. */
 .function-page .card{
-  background:linear-gradient(180deg,rgba(23,28,36,.56),rgba(17,21,27,.62));
-  border-color:rgba(123,137,154,.74);
+  background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
+  border-color:rgba(123,137,154,.76);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
@@ -42,8 +42,8 @@
 
 /* Specialization: outer panel is light; individual skills and guide stay stable. */
 .function-page.specialization-page .specialization-panel{
-  background:linear-gradient(180deg,rgba(23,28,36,.54),rgba(17,21,27,.60));
-  border-color:rgba(123,137,154,.76);
+  background:linear-gradient(180deg,rgba(23,28,36,.36),rgba(17,21,27,.42));
+  border-color:rgba(123,137,154,.78);
 }
 .function-page.specialization-page .specialization-card{
   background:linear-gradient(180deg,rgba(24,29,37,.70),rgba(16,20,26,.76));
@@ -65,8 +65,8 @@
 
 /* Guide: the large article panel is an outer shell; category controls remain readable. */
 .function-page.guide-page .guide-content.card{
-  background:linear-gradient(180deg,rgba(23,28,36,.54),rgba(17,21,27,.60));
-  border-color:rgba(123,137,154,.76);
+  background:linear-gradient(180deg,rgba(23,28,36,.36),rgba(17,21,27,.42));
+  border-color:rgba(123,137,154,.78);
 }
 .function-page.guide-page .guide-category{
   background:rgba(23,27,34,.72);
@@ -85,10 +85,10 @@
 }
 .function-page.guide-page .guide-item-body{color:#e0dbd0}
 
-/* Mobile shop rows become inner information cards, not outer shells. */
+/* Mobile uses the same transparency baseline as desktop; inner information cards stay denser. */
 @media(max-width:760px){
   .function-page .card{
-    background:linear-gradient(180deg,rgba(23,28,36,.64),rgba(17,21,27,.70));
+    background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
     border-color:rgba(126,141,159,.78);
   }
   .function-page .stat,
@@ -113,7 +113,7 @@
   }
   .function-page.specialization-page .specialization-panel,
   .function-page.guide-page .guide-content.card{
-    background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.68));
+    background:linear-gradient(180deg,rgba(23,28,36,.36),rgba(17,21,27,.42));
     border-color:rgba(126,141,159,.80);
   }
   .function-page.specialization-page .specialization-card{
