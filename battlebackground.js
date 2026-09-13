@@ -12,9 +12,7 @@
    probe.src=src;
   }).catch(err=>console.warn(`${label} battle background failed to load`,err));
  }
- const version="20260913-battlebg-mobile1";
+ const version="20260913-battlebg-stable1";
  const desktopParts=Array.from({length:12},(_,i)=>`assets/bg-battle-test-${String(i+1).padStart(2,"0")}.b64?v=${version}`);
- const mobileParts=Array.from({length:6},(_,i)=>`assets/bg-battle-mobile-${String(i+1).padStart(2,"0")}.b64?v=${version}`);
  loadBattleBackground(desktopParts,"--battle-bg-image","Desktop");
- loadBattleBackground(mobileParts,"--battle-mobile-bg-image","Mobile");
 })();
