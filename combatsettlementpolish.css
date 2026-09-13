@@ -63,6 +63,16 @@
 }
 .modal .muted{color:#d1d5dc}
 
+/* Main battle settlement sits over the restored prepare screen so its background remains visible. */
+#battleResultModal{
+  background:rgba(0,0,0,.38);
+  backdrop-filter:blur(1px);
+  -webkit-backdrop-filter:blur(1px);
+}
+#battleResultModal .modal-box{
+  background:linear-gradient(180deg,rgba(23,27,34,.90),rgba(15,19,25,.93));
+}
+
 /* Battle settlement: stable outer modal, slightly lighter nested sections. */
 #battleResultModal .settlement-section{
   background:rgba(16,21,27,.89);
@@ -146,6 +156,12 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
 
   .modal .modal-box{
     background:linear-gradient(180deg,rgba(23,27,34,.96),rgba(15,19,25,.97));
+  }
+  #battleResultModal{
+    background:rgba(0,0,0,.42);
+  }
+  #battleResultModal .modal-box{
+    background:linear-gradient(180deg,rgba(23,27,34,.93),rgba(15,19,25,.95));
   }
   #battleResultModal .settlement-section{background:rgba(16,21,27,.94)}
   #battleResultModal .settlement-section .stat,
