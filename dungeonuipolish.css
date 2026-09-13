@@ -40,14 +40,18 @@
   border-color:rgba(94,143,158,.80);
 }
 
-/* Bounty: large outer surfaces are highly transparent; dense reward/loot cards use the high-info tier. */
+/* Bounty: card material lives here; backgrounds.css only provides the scene and width positioning. */
+#main .dungeon-bounty-card{
+  background:linear-gradient(180deg,rgba(48,34,62,.38),rgba(27,23,36,.44));
+  border-color:rgba(149,112,172,.78);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 14px 32px rgba(40,22,54,.22),inset 0 1px 0 rgba(255,255,255,.04);
+}
 #main .dungeon-bounty-ready-card,
 #main .dungeon-bounty-result-card{
   background:linear-gradient(180deg,rgba(48,34,62,.38),rgba(27,23,36,.44))!important;
   border-color:rgba(149,112,172,.78)!important;
-  backdrop-filter:blur(3px);
-  -webkit-backdrop-filter:blur(3px);
-  box-shadow:0 14px 32px rgba(40,22,54,.22),inset 0 1px 0 rgba(255,255,255,.04);
 }
 #main .dungeon-bounty-combat>.controls{justify-content:center}
 #main .dungeon-bounty-positioning{
@@ -183,6 +187,10 @@
     border-color:rgba(99,149,165,.82);
   }
 
+  #main .dungeon-bounty-card{
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
   #main .dungeon-bounty-ready-card,
   #main .dungeon-bounty-result-card{
     background:linear-gradient(180deg,rgba(48,34,62,.38),rgba(27,23,36,.44))!important;
