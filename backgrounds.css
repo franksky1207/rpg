@@ -158,7 +158,7 @@
     box-shadow:0 12px 28px rgba(0,0,0,.24);
   }
 
-  #main>.function-page:has(>.grid > .card table),
+  #main>.function-page:has(>.grid),
   #main>.function-page:has(>.card .shop-table-wrap){
     width:100vw;
     min-height:calc(100vh - 57px);
@@ -178,7 +178,7 @@
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
-  #main>.function-page:has(>.grid > .card table) .card,
+  #main>.function-page:has(>.grid) .card,
   #main>.function-page:has(>.card .shop-table-wrap) .card{
     background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
     backdrop-filter:blur(3px);
@@ -343,7 +343,7 @@
     box-shadow:0 8px 20px rgba(0,0,0,.24);
   }
 
-  #main>.function-page:has(>.grid > .card table),
+  #main>.function-page:has(>.grid),
   #main>.function-page:has(>.card .shop-table-wrap){
     width:100vw;
     min-height:calc(100vh - 52px);
@@ -363,7 +363,7 @@
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
-  #main>.function-page:has(>.grid > .card table) .card,
+  #main>.function-page:has(>.grid) .card,
   #main>.function-page:has(>.card .shop-table-wrap) .card{
     background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
     backdrop-filter:blur(2px);
