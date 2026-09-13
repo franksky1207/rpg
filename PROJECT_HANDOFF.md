@@ -946,7 +946,7 @@ dungeon-arena-battle
   競技場戰鬥
 
 dungeon-void
-  虛空結算頁 בלבד；沒有另外做虛空主頁背景
+  只套虛空結算頁；沒有另外做虛空主頁背景
 
 dungeon-void-battle
   虛空戰鬥
