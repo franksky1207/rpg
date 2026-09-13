@@ -1,14 +1,25 @@
-/* Unified image-background layer. New system only: assets/backgrounds/. */
+/* Unified image-background layer. New system only: assets/backgrounds/.
+   Baseline: image backgrounds fill the full viewport; page content stays centered. */
 @media (min-width:761px){
   #main>.home-screen{
+    width:100vw;
+    min-height:calc(100vh - 57px);
+    min-height:calc(100dvh - 57px);
+    margin-top:-18px;
+    margin-bottom:-40px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:42px;
+    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
+    padding-bottom:64px;
+    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
+    border-radius:0;
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.30),rgba(5,10,18,.46)),
-      url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop2");
+      url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
-    border-radius:16px;
-    padding:24px;
   }
   #main>.home-screen .home-title h2{
     text-shadow:0 3px 18px rgba(0,0,0,.9);
