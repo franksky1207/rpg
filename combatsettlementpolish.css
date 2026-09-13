@@ -62,7 +62,7 @@
   box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Generic modal: the most stable surface tier. */
+/* Generic modal: retained for batch 4. */
 .modal{
   background:rgba(0,0,0,.70);
   backdrop-filter:blur(2px);
@@ -93,22 +93,41 @@
   box-shadow:0 22px 64px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Battle settlement: stable outer modal, slightly lighter nested sections. */
+/* Batch 3: settlement information stays readable while revealing the scene behind it. */
 #battleResultModal .settlement-section{
-  background:rgba(16,21,27,.76);
-  border-color:rgba(105,119,135,.72);
+  background:rgba(16,21,27,.70);
+  border-color:rgba(110,124,141,.76);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 #battleResultModal .settlement-section .stat,
 #battleResultModal .settlement-section .item,
 #battleResultModal .settlement-drop-scroll{
-  background:rgba(15,19,25,.84);
-  border-color:rgba(83,96,111,.72);
+  background:rgba(15,19,25,.74);
+  border-color:rgba(90,103,119,.76);
 }
 #battleResultModal .settlement-drop-row .muted{color:#d1d5dc}
+#battleResultModal .vip-event{
+  background:linear-gradient(180deg,rgba(105,75,22,.72),rgba(56,39,14,.68))!important;
+  border-color:rgba(165,124,52,.84)!important;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+#battleResultModal .vip-event.chain{
+  background:linear-gradient(180deg,rgba(113,73,23,.74),rgba(63,39,16,.70))!important;
+  border-color:rgba(212,138,40,.88)!important;
+}
 
-/* VIP detail modal keeps its gold identity while following the heavy-info tier. */
+/* Special encounter attention card: high-attention tier, but no longer nearly opaque. */
+body #specialEncounterAlert .special-alert-card{
+  background:radial-gradient(circle at 50% 25%,rgba(201,155,69,.20),rgba(17,20,25,.74) 62%)!important;
+  border-color:rgba(201,155,69,.90)!important;
+  box-shadow:0 0 30px rgba(201,155,69,.28),inset 0 0 22px rgba(201,155,69,.07)!important;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+
+/* VIP detail modal keeps its gold identity and remains reserved for batch 4. */
 #vipDetailModal .vip-detail-head{
   background:rgba(28,23,14,.92);
   backdrop-filter:blur(2px);
@@ -130,7 +149,7 @@
   background:rgba(18,22,28,.92);
 }
 
-/* Offline return settlement: heavy information page with nested stable cards. */
+/* Offline return settlement remains intentionally opaque; it has no scene background to reveal. */
 html body #offlineRewardPage{
   background:linear-gradient(180deg,rgba(9,13,18,.94) 0%,rgba(17,24,32,.96) 100%);
   backdrop-filter:blur(4px);
@@ -204,14 +223,14 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
     border-color:rgba(134,147,163,.84);
   }
   #battleResultModal .settlement-section{
-    background:rgba(16,21,27,.82);
-    border-color:rgba(109,123,140,.76);
+    background:rgba(16,21,27,.70);
+    border-color:rgba(112,127,144,.78);
   }
   #battleResultModal .settlement-section .stat,
   #battleResultModal .settlement-section .item,
   #battleResultModal .settlement-drop-scroll{
-    background:rgba(15,19,25,.88);
-    border-color:rgba(87,100,116,.76);
+    background:rgba(15,19,25,.74);
+    border-color:rgba(92,106,122,.78);
   }
 
   #vipDetailModal .vip-detail-head{background:rgba(28,23,14,.95)}
