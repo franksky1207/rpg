@@ -3,10 +3,14 @@
 
 /* Main-line / special encounter combat cards. */
 #main>.combat-screen .combatant{
-  background:linear-gradient(180deg,rgba(25,31,40,.87),rgba(10,15,22,.89));
+  background:linear-gradient(180deg,rgba(25,31,40,.76),rgba(10,15,22,.80));
+  border-color:rgba(122,138,156,.76);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 16px 36px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.04);
 }
+#main>.combat-screen .combatant.player{border-color:rgba(91,132,179,.84)}
+#main>.combat-screen .combatant.enemy{border-color:rgba(166,88,88,.86)}
 #main>.combat-screen .combat-head,
 #main>.combat-screen .combat-message{
   text-shadow:0 2px 10px rgba(0,0,0,.95);
@@ -66,7 +70,7 @@
 /* Main battle settlement is a standalone full-screen surface using the same artwork as the prepare screen. */
 #battleResultModal{
   background-image:
-    linear-gradient(180deg,rgba(5,10,18,.36),rgba(5,10,18,.58)),
+    linear-gradient(180deg,rgba(5,10,18,.24),rgba(5,10,18,.46)),
     url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
   background-position:center center,center center;
   background-size:cover,cover;
@@ -75,19 +79,23 @@
   -webkit-backdrop-filter:none;
 }
 #battleResultModal .modal-box{
-  background:linear-gradient(180deg,rgba(23,27,34,.91),rgba(15,19,25,.94));
+  background:linear-gradient(180deg,rgba(23,27,34,.78),rgba(15,19,25,.84));
+  border-color:rgba(130,142,157,.80);
+  box-shadow:0 22px 64px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 /* Battle settlement: stable outer modal, slightly lighter nested sections. */
 #battleResultModal .settlement-section{
-  background:rgba(16,21,27,.89);
+  background:rgba(16,21,27,.76);
+  border-color:rgba(105,119,135,.72);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 #battleResultModal .settlement-section .stat,
 #battleResultModal .settlement-section .item,
 #battleResultModal .settlement-drop-scroll{
-  background:rgba(15,19,25,.93);
+  background:rgba(15,19,25,.84);
+  border-color:rgba(83,96,111,.72);
 }
 #battleResultModal .settlement-drop-row .muted{color:#d1d5dc}
 
@@ -139,8 +147,12 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
 
 @media(max-width:760px){
   #main>.combat-screen .combatant{
-    background:linear-gradient(180deg,rgba(25,31,40,.90),rgba(10,15,22,.92));
+    background:linear-gradient(180deg,rgba(25,31,40,.82),rgba(10,15,22,.86));
+    border-color:rgba(126,142,160,.80);
   }
+  #main>.combat-screen .combatant.player{border-color:rgba(97,139,188,.88)}
+  #main>.combat-screen .combatant.enemy{border-color:rgba(174,94,94,.90)}
+
   #main .dungeon-bounty-combat{
     background:linear-gradient(180deg,rgba(34,27,44,.72),rgba(20,17,28,.77));
   }
@@ -164,16 +176,23 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
   }
   #battleResultModal{
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.38),rgba(5,10,18,.60)),
+      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
       url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
   }
   #battleResultModal .modal-box{
-    background:linear-gradient(180deg,rgba(23,27,34,.94),rgba(15,19,25,.96));
+    background:linear-gradient(180deg,rgba(23,27,34,.84),rgba(15,19,25,.88));
+    border-color:rgba(134,147,163,.82);
   }
-  #battleResultModal .settlement-section{background:rgba(16,21,27,.94)}
+  #battleResultModal .settlement-section{
+    background:rgba(16,21,27,.82);
+    border-color:rgba(109,123,140,.76);
+  }
   #battleResultModal .settlement-section .stat,
   #battleResultModal .settlement-section .item,
-  #battleResultModal .settlement-drop-scroll{background:rgba(15,19,25,.96)}
+  #battleResultModal .settlement-drop-scroll{
+    background:rgba(15,19,25,.88);
+    border-color:rgba(87,100,116,.76);
+  }
 
   #vipDetailModal .vip-detail-head{background:rgba(28,23,14,.95)}
   #vipDetailModal .vip-bonus-grid>div,
