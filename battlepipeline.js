@@ -42,7 +42,7 @@
   const adjustedMs=Math.max(100,Math.round(cycleMs*token.multiplier));
   if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
   const samples=Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[];
-  samples.push({actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier,recordedAt:Date.now()});
+  samples.push({actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
  }
