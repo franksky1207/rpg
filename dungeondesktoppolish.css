@@ -31,8 +31,8 @@
     gap:16px;
   }
 
-  /* Void: explicitly defeat the generic combat-screen viewport-height rules. */
-  html body #main .void-shell{
+  /* Void battle: keep the compact battle layout, but do not constrain the result shell. */
+  html body #main .void-shell:not(:has(.void-result-grid)){
     max-width:1120px;
     min-height:0!important;
   }
