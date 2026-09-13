@@ -77,14 +77,8 @@
 }
 .modal .muted{color:#d1d5dc}
 
-/* Main battle settlement is a standalone full-screen surface using the same artwork as the prepare screen. */
+/* Main battle settlement scene is owned by backgrounds.css; this file owns only its glass UI. */
 #battleResultModal{
-  background-image:
-    linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
-    url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
-  background-position:center center,center center;
-  background-size:cover,cover;
-  background-repeat:no-repeat,no-repeat;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
 }
@@ -232,11 +226,6 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
   .modal .modal-box{
     background:linear-gradient(180deg,rgba(23,27,34,.62),rgba(15,19,25,.68));
     border-color:rgba(116,129,145,.82);
-  }
-  #battleResultModal{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
   }
   #battleResultModal .modal-box{
     background:linear-gradient(180deg,rgba(23,27,34,.40),rgba(15,19,25,.46));
