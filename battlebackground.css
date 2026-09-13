@@ -1,0 +1,13 @@
+/* Main-line battle background: isolated from other game screens. */
+#main>.combat-screen{position:relative;isolation:isolate}
+#main>.combat-screen::before,#main>.combat-screen::after{content:"";position:absolute;top:-18px;bottom:-40px;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
+#main>.combat-screen::before{z-index:-2;background-image:var(--battle-bg-image,none);background-size:cover;background-position:center center;background-repeat:no-repeat;background-color:#0b0e13}
+#main>.combat-screen::after{z-index:-1;background:linear-gradient(180deg,rgba(5,10,18,.34) 0%,rgba(5,10,18,.46) 42%,rgba(5,10,18,.58) 100%)}
+#main>.combat-screen .combat-head,#main>.combat-screen .combat-message{text-shadow:0 2px 10px rgba(0,0,0,.95)}
+#main>.combat-screen .combatant{background:linear-gradient(180deg,rgba(25,31,40,.87),rgba(10,15,22,.89));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+@media(max-width:760px){
+ #main>.combat-screen::before,#main>.combat-screen::after{top:-14px;bottom:-24px}
+ #main>.combat-screen::before{background-position:50% center}
+ #main>.combat-screen::after{background:linear-gradient(180deg,rgba(5,10,18,.40) 0%,rgba(5,10,18,.52) 45%,rgba(5,10,18,.66) 100%)}
+ #main>.combat-screen .combatant{background:linear-gradient(180deg,rgba(25,31,40,.90),rgba(10,15,22,.92))}
+}
