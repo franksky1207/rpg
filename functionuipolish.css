@@ -25,77 +25,77 @@
   color:#e6ddc9;
 }
 
-/* Character / inventory / shop retain clear nested-card hierarchy. */
-.function-page .character-stats-card .stat,
+/* Character equipment and inventory rows are large visual cards, so reveal more scenery. */
 .function-page .character-equipment-card .item,
 .function-page .grid>.card .item{
+  background:rgba(16,20,26,.60);
+  border-color:rgba(102,116,132,.76);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 6px 16px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.03);
+}
+.function-page .character-stats-card .stat{
   background:rgba(16,20,26,.80);
   border-color:rgba(91,104,119,.72);
 }
+.function-page .character-equipment-card .item.selected,
+.function-page .grid>.card .item.selected{
+  background:rgba(43,36,22,.62);
+  border-color:rgba(211,175,98,.88);
+}
 .function-page table th{color:#dfd0aa}
-.function-page .shop-table-wrap{
-  border-radius:10px;
-}
-.function-page .shop-table td{
-  border-color:rgba(77,89,103,.58);
-}
+.function-page .shop-table-wrap{border-radius:10px}
+.function-page .shop-table td{border-color:rgba(77,89,103,.58)}
 
-/* Specialization: outer panel is light; individual skills and guide stay stable. */
+/* Specialization: outer panel is light; individual skill cards use the general-card tier. */
 .function-page.specialization-page .specialization-panel{
   background:linear-gradient(180deg,rgba(23,28,36,.36),rgba(17,21,27,.42));
   border-color:rgba(123,137,154,.78);
 }
 .function-page.specialization-page .specialization-card{
-  background:linear-gradient(180deg,rgba(24,29,37,.70),rgba(16,20,26,.76));
-  border-color:rgba(118,133,151,.74);
+  background:linear-gradient(180deg,rgba(24,29,37,.54),rgba(16,20,26,.60));
+  border-color:rgba(118,133,151,.76);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
-  box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.03);
+  box-shadow:0 8px 22px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.03);
 }
 .function-page.specialization-page .specialization-guide{
-  background:rgba(18,22,28,.72);
-  border-color:rgba(114,126,142,.72);
+  background:rgba(18,22,28,.58);
+  border-color:rgba(114,126,142,.74);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 .function-page.specialization-page .specialization-card-head span,
-.function-page.specialization-page .specialization-cost{
-  color:#d2cec4;
-}
+.function-page.specialization-page .specialization-cost{color:#d2cec4}
 
-/* Guide: the large article panel is an outer shell; category controls remain readable. */
+/* Guide: category controls are general interactive cards. */
 .function-page.guide-page .guide-content.card{
   background:linear-gradient(180deg,rgba(23,28,36,.36),rgba(17,21,27,.42));
   border-color:rgba(123,137,154,.78);
 }
 .function-page.guide-page .guide-category{
-  background:rgba(23,27,34,.72);
-  border-color:rgba(116,129,145,.72);
+  background:rgba(23,27,34,.56);
+  border-color:rgba(116,129,145,.76);
   color:#e1dacb;
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
-  box-shadow:0 6px 16px rgba(0,0,0,.13);
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
 }
 .function-page.guide-page .guide-category.active{
-  background:rgba(52,43,27,.78);
-  border-color:rgba(211,174,96,.88);
+  background:rgba(52,43,27,.62);
+  border-color:rgba(211,174,96,.90);
 }
-.function-page.guide-page .guide-item{
-  border-color:rgba(75,87,101,.62);
-}
+.function-page.guide-page .guide-item{border-color:rgba(75,87,101,.62)}
 .function-page.guide-page .guide-item-body{color:#e0dbd0}
 
-/* Mobile uses the same transparency baseline as desktop; inner information cards stay denser. */
+/* Mobile follows the same transparency baseline as desktop. */
 @media(max-width:760px){
   .function-page .card{
     background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
     border-color:rgba(126,141,159,.78);
   }
   .function-page .stat,
-  .function-page .item,
-  .function-page .character-stats-card .stat,
-  .function-page .character-equipment-card .item,
-  .function-page .grid>.card .item{
+  .function-page .item{
     background:rgba(16,20,26,.86);
     border-color:rgba(96,110,126,.76);
   }
@@ -103,6 +103,17 @@
     background:rgba(43,36,22,.88);
     border-color:rgba(211,175,98,.88);
   }
+  .function-page .character-equipment-card .item,
+  .function-page .grid>.card .item{
+    background:rgba(16,20,26,.60);
+    border-color:rgba(102,116,132,.78);
+  }
+  .function-page .character-equipment-card .item.selected,
+  .function-page .grid>.card .item.selected{
+    background:rgba(43,36,22,.62);
+    border-color:rgba(216,179,101,.90);
+  }
+  .function-page .character-stats-card .stat{background:rgba(16,20,26,.86)}
   .function-page .notice{background:rgba(27,25,20,.86)}
   .function-page .shop-table tr{
     background:rgba(16,20,26,.86);
@@ -117,19 +128,19 @@
     border-color:rgba(126,141,159,.80);
   }
   .function-page.specialization-page .specialization-card{
-    background:linear-gradient(180deg,rgba(24,29,37,.76),rgba(16,20,26,.82));
-    border-color:rgba(123,139,157,.78);
+    background:linear-gradient(180deg,rgba(24,29,37,.54),rgba(16,20,26,.60));
+    border-color:rgba(123,139,157,.80);
   }
   .function-page.specialization-page .specialization-guide{
-    background:rgba(18,22,28,.80);
-    border-color:rgba(119,132,149,.76);
+    background:rgba(18,22,28,.58);
+    border-color:rgba(119,132,149,.78);
   }
   .function-page.guide-page .guide-category{
-    background:rgba(23,27,34,.80);
-    border-color:rgba(121,135,152,.76);
+    background:rgba(23,27,34,.56);
+    border-color:rgba(121,135,152,.78);
   }
   .function-page.guide-page .guide-category.active{
-    background:rgba(52,43,27,.84);
+    background:rgba(52,43,27,.62);
     border-color:rgba(216,179,101,.90);
   }
 }
