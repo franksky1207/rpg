@@ -1,0 +1,81 @@
+/* Static component styles formerly injected by JavaScript.
+   JavaScript owns DOM and behavior; CSS owns presentation. */
+
+/* VIP home card, VIP event messages and VIP detail modal. */
+.vip-home-card{max-width:680px;margin:0 auto 16px;padding:13px 14px;border:1px solid #9f7834;border-radius:12px;background:linear-gradient(180deg,#211b10,#15120c);box-shadow:0 0 22px rgba(220,169,64,.08)}
+.vip-home-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.vip-home-value{font-size:18px;font-weight:850;color:#f2cf77;text-shadow:0 0 10px rgba(242,207,119,.22)}
+.vip-btn{background:#6c4d18!important;border-color:#b88a38!important;color:#fff0be!important}
+.vip-btn:hover{background:#805d1e!important}
+.vip-event{margin-top:10px;padding:9px 11px;border:1px solid #9b7430;border-radius:9px;background:linear-gradient(180deg,rgba(105,75,22,.32),rgba(56,39,14,.24));color:#f4d77e;font-weight:800;text-shadow:0 0 9px rgba(244,215,126,.18)}
+.vip-event.chain{border-color:#d48a28;color:#ffd98a;box-shadow:0 0 18px rgba(222,142,41,.16)}
+#vipDetailModal .modal-box{max-width:720px;max-height:calc(100dvh - 24px);overflow:auto}
+.vip-detail-head{border:1px solid #8a692f;border-radius:11px;padding:13px;background:#1c170e;margin-bottom:12px}
+.vip-detail-level{font-size:22px;font-weight:900;color:#f2cf77}
+.vip-detail-note{margin-top:7px;color:#bdb39b;font-size:13px;line-height:1.5}
+.vip-bonus-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:10px}
+.vip-bonus-grid>div{background:#121317;border:1px solid #3b3a35;border-radius:8px;padding:8px;text-align:center}
+.vip-bonus-grid span{display:block;color:#a9a59a;font-size:12px}
+.vip-bonus-grid b{display:block;margin-top:3px;color:#f0d494}
+.vip-perk-list{display:grid;gap:7px}
+.vip-perk-row{border:1px solid #3a3c42;border-radius:9px;padding:10px 11px;background:#13161b;display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center}
+.vip-perk-row .vip-perk-level{font-weight:850}
+.vip-perk-row.unlocked{border-color:#9f7834;background:linear-gradient(180deg,#2b2111,#21190d);box-shadow:inset 0 0 0 1px rgba(244,211,126,.05),0 0 14px rgba(220,169,64,.08)}
+.vip-perk-row.unlocked .vip-perk-level{color:#ffd77a}
+.vip-perk-row.unlocked .vip-perk-threshold{color:#c8b47f}
+.vip-perk-row.next{border:2px solid #d49a32;background:#13161b;box-shadow:none}
+.vip-perk-row.next .vip-perk-level{color:#ffd77a}
+.vip-perk-row.next .vip-perk-threshold{color:#b9a36d}
+.vip-perk-row.locked{opacity:.5}
+.vip-perk-threshold{font-size:11px;color:#96938a;margin-top:2px}
+
+/* Main battle settlement and first-run intro modal. */
+#battleResultModal .modal-box{max-height:calc(100dvh - 24px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+#battleResultModal #battleResultDetail{min-height:0!important;overflow:auto!important;overscroll-behavior:contain;padding-right:2px}
+#battleResultModal>.modal-box>.controls{flex:0 0 auto!important;margin-top:10px!important}
+.settlement-section{margin-top:12px;padding:12px;border:1px solid #343a43;border-radius:11px;background:#10151b}
+.settlement-section:first-child{margin-top:0}
+.settlement-section-title{font-size:17px;font-weight:800;color:#f0d494;margin-bottom:9px}
+.settlement-special-entry{margin-top:10px;padding-top:10px;border-top:1px solid #2c323a}
+.settlement-special-entry:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.settlement-special-name{font-weight:800;color:#ffe2a0}
+.settlement-drop-wrap{margin-top:10px}
+.settlement-drop-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+.settlement-drop-scroll{height:210px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #323740;border-radius:10px;background:#0f1319;padding:7px;scrollbar-gutter:stable}
+.settlement-drop-row{padding:8px 9px;border-bottom:1px solid #292e36;line-height:1.35}
+.settlement-drop-row:last-child{border-bottom:0}
+.settlement-drop-row .muted{margin-top:3px;font-size:12px}
+.settlement-equip-control{margin-top:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.settlement-equip-control .btn{padding:7px 11px}
+.settlement-upgrade-delta{color:#76d587;font-weight:700}
+.settlement-swap-sold{margin-top:6px;color:#d8c49a;font-size:12px}
+#gameIntroModal .modal-box{max-width:520px}
+.game-intro-title{color:#f0d494;margin-bottom:12px}
+.game-intro-copy{line-height:1.8;color:#e6e0d5}
+.game-intro-gear{margin-top:14px;padding:10px 12px;border:1px solid #4a4232;border-radius:9px;background:#12161c;color:#d8c49a}
+#gameIntroModal .controls{margin-top:18px;justify-content:flex-end}
+
+/* Special encounter alert. */
+#specialEncounterAlert{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(3,6,10,.82);opacity:0;pointer-events:none;transition:opacity .16s ease;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#specialEncounterAlert.show{opacity:1}
+.special-alert-card{width:min(620px,92vw);padding:28px 24px;text-align:center;border:1px solid #c99b45;border-radius:16px;background:radial-gradient(circle at 50% 25%,rgba(201,155,69,.20),rgba(17,20,25,.96) 62%);box-shadow:0 0 34px rgba(201,155,69,.34),inset 0 0 26px rgba(201,155,69,.08);transform:scale(.94);animation:specialEncounterPulse .82s ease-in-out both}
+.special-alert-title{font-size:clamp(30px,6vw,48px);font-weight:900;letter-spacing:.06em;color:#ffd36f;text-shadow:0 0 18px rgba(255,193,67,.42)}
+.special-alert-sub{margin-top:10px;font-size:clamp(15px,2.8vw,19px);color:#e8dcc0;letter-spacing:.08em}
+.special-alert-name{margin-top:13px;font-size:clamp(20px,4vw,30px);font-weight:800;color:#fff2c2}
+@keyframes specialEncounterPulse{0%{transform:scale(.92);filter:brightness(.75)}35%{transform:scale(1.025);filter:brightness(1.18)}70%{transform:scale(.995);filter:brightness(1)}100%{transform:scale(1);filter:brightness(1)}}
+
+@media(max-width:760px){
+  .vip-home-card{margin-bottom:10px}
+  .vip-bonus-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .vip-perk-row{grid-template-columns:78px 1fr;padding:9px}
+  .vip-home-row{align-items:stretch}
+  .vip-home-row .vip-btn{width:100%}
+  #battleResultModal{padding:10px!important}
+  #battleResultModal .modal-box{max-height:calc(100dvh - 20px)!important;padding:14px!important}
+  .settlement-section{padding:10px}
+  .settlement-drop-scroll{height:190px;padding:6px}
+  .settlement-drop-row{padding:7px 8px}
+  #gameIntroModal{padding:12px!important}
+  #specialEncounterAlert{padding:14px}
+  .special-alert-card{padding:24px 16px}
+}
