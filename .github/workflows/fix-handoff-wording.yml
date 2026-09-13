@@ -1,0 +1,35 @@
+name: Fix handoff wording
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-handoff-wording.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('PROJECT_HANDOFF.md')
+          s=p.read_text()
+          old='虛空結算頁 בלבד；沒有另外做虛空主頁背景'
+          new='只套虛空結算頁；沒有另外做虛空主頁背景'
+          if old not in s:
+              raise SystemExit('target wording not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PROJECT_HANDOFF.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Fix handoff void background wording'
+          git push
