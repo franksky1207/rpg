@@ -559,3 +559,59 @@
     -webkit-backdrop-filter:blur(2px);
   }
 }
+
+
+/* dungeon-bounty-battle background v1 */
+@media (min-width:761px){
+  #main>.combat-screen.dungeon-bounty-combat{
+    width:100vw;
+    min-height:calc(100vh - 57px);
+    min-height:calc(100dvh - 57px);
+    margin-top:-18px;
+    margin-bottom:-40px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:30px;
+    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
+    padding-bottom:52px;
+    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.22),rgba(5,10,18,.48)),
+      url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.combat-screen.dungeon-bounty-combat .combatant{
+    background:linear-gradient(180deg,rgba(24,25,37,.72),rgba(13,15,24,.82));
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+  }
+}
+
+@media (max-width:760px){
+  #main>.combat-screen.dungeon-bounty-combat{
+    width:100vw;
+    min-height:calc(100vh - 52px);
+    min-height:calc(100dvh - 52px);
+    margin-top:-10px;
+    margin-bottom:-24px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:18px;
+    padding-right:12px;
+    padding-bottom:28px;
+    padding-left:12px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.24),rgba(5,10,18,.52)),
+      url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.combat-screen.dungeon-bounty-combat .combatant{
+    background:linear-gradient(180deg,rgba(24,25,37,.74),rgba(13,15,24,.84));
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+}
