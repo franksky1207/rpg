@@ -15,7 +15,7 @@
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     border-radius:0;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.30),rgba(5,10,18,.46)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
       url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -52,7 +52,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.30),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -81,7 +81,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.30),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -92,7 +92,7 @@
   }
   #main>.prepare-screen .player-status-card,
   #main>.prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
     box-shadow:0 12px 28px rgba(0,0,0,.24);
@@ -111,7 +111,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.24),rgba(5,10,18,.48)),
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
       url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -141,7 +141,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -149,7 +149,12 @@
   }
   #main>.function-page:has(>.character-layout) .character-stats-card,
   #main>.function-page:has(>.character-layout) .character-equipment-card,
-  #main>.specialization-page .specialization-panel,
+  #main>.specialization-page .specialization-panel{
+    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+    box-shadow:0 12px 28px rgba(0,0,0,.24);
+  }
   #main>.specialization-page .specialization-card,
   #main>.specialization-page .specialization-guide{
     background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
@@ -172,7 +177,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -180,7 +185,7 @@
   }
   #main>.function-page:has(>.grid) .card,
   #main>.function-page:has(>.card .shop-table-wrap) .card{
-    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
     box-shadow:0 12px 28px rgba(0,0,0,.24);
@@ -201,7 +206,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
       url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -238,7 +243,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -266,7 +271,7 @@
     padding-right:12px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -277,7 +282,7 @@
   }
   #main>.prepare-screen .player-status-card,
   #main>.prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
     box-shadow:0 8px 20px rgba(0,0,0,.24);
@@ -296,7 +301,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.24),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
       url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -326,7 +331,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -334,7 +339,12 @@
   }
   #main>.function-page:has(>.character-layout) .character-stats-card,
   #main>.function-page:has(>.character-layout) .character-equipment-card,
-  #main>.specialization-page .specialization-panel,
+  #main>.specialization-page .specialization-panel{
+    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.24);
+  }
   #main>.specialization-page .specialization-card,
   #main>.specialization-page .specialization-guide{
     background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
@@ -357,7 +367,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -365,7 +375,7 @@
   }
   #main>.function-page:has(>.grid) .card,
   #main>.function-page:has(>.card .shop-table-wrap) .card{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
     box-shadow:0 8px 20px rgba(0,0,0,.24);
@@ -388,7 +398,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -396,7 +406,7 @@
   }
   #main>.guide-page .guide-content,
   #main>.function-page:has(#settingsTitle)>.card{
-    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
     box-shadow:0 12px 28px rgba(0,0,0,.24);
@@ -418,7 +428,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -426,7 +436,7 @@
   }
   #main>.guide-page .guide-content,
   #main>.function-page:has(#settingsTitle)>.card{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
+    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
     box-shadow:0 8px 20px rgba(0,0,0,.24);
@@ -450,7 +460,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-home/desktop.webp?v=20260913-dungeon-home-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -462,7 +472,11 @@
     margin-left:auto;
     margin-right:auto;
   }
-  #main>.dungeon-page-shell .dungeon-status-card,
+  #main>.dungeon-page-shell .dungeon-status-card{
+    background-color:rgba(18,16,26,.40);
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+  }
   #main>.dungeon-page-shell .dungeon-mode-card{
     background-color:rgba(18,16,26,.82);
     backdrop-filter:blur(3px);
@@ -485,13 +499,17 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-home/mobile.webp?v=20260913-dungeon-home-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
-  #main>.dungeon-page-shell .dungeon-status-card,
+  #main>.dungeon-page-shell .dungeon-status-card{
+    background-color:rgba(18,16,26,.40);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
   #main>.dungeon-page-shell .dungeon-mode-card{
     background-color:rgba(18,16,26,.84);
     backdrop-filter:blur(2px);
@@ -516,7 +534,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.26),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-bounty/desktop.webp?v=20260913-dungeon-bounty-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -526,7 +544,7 @@
     max-width:760px;
     margin-left:auto;
     margin-right:auto;
-    background:linear-gradient(180deg,rgba(36,27,47,.78),rgba(20,17,28,.86));
+    background:linear-gradient(180deg,rgba(36,27,47,.38),rgba(20,17,28,.44));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
   }
@@ -547,14 +565,14 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.26),rgba(5,10,18,.54)),
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-bounty/mobile.webp?v=20260913-dungeon-bounty-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
   #main>.dungeon-bounty-shell.dungeon-page-shell>.dungeon-bounty-card{
-    background:linear-gradient(180deg,rgba(36,27,47,.78),rgba(20,17,28,.86));
+    background:linear-gradient(180deg,rgba(36,27,47,.38),rgba(20,17,28,.44));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
   }
@@ -576,7 +594,7 @@
     padding-bottom:52px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.22),rgba(5,10,18,.48)),
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
       url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -603,7 +621,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,10,18,.24),rgba(5,10,18,.52)),
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
       url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -633,7 +651,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(6,10,17,.24),rgba(8,9,15,.50)),
+      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
       url("assets/backgrounds/dungeon-arena/desktop.webp?v=20260914-dungeon-arena-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -646,7 +664,7 @@
     margin-right:auto;
   }
   #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
-    background:linear-gradient(180deg,rgba(40,34,24,.64),rgba(20,19,17,.74));
+    background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
   }
@@ -667,14 +685,14 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(6,10,17,.24),rgba(8,9,15,.52)),
+      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
       url("assets/backgrounds/dungeon-arena/mobile.webp?v=20260914-dungeon-arena-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
   #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
-    background:linear-gradient(180deg,rgba(40,34,24,.72),rgba(20,19,17,.80));
+    background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
   }
@@ -696,7 +714,7 @@
     padding-bottom:52px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(6,10,17,.20),rgba(8,9,15,.46)),
+      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
       url("assets/backgrounds/dungeon-arena-battle/desktop.webp?v=20260914-dungeon-arena-battle-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -723,7 +741,7 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(6,10,17,.22),rgba(8,9,15,.50)),
+      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
       url("assets/backgrounds/dungeon-arena-battle/mobile.webp?v=20260914-dungeon-arena-battle-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -753,7 +771,7 @@
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,8,14,.22),rgba(12,5,20,.52)),
+      linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
       url("assets/backgrounds/dungeon-void/desktop.webp?v=20260914-dungeon-void-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -763,7 +781,7 @@
     max-width:680px;
     margin-left:auto;
     margin-right:auto;
-    background:linear-gradient(180deg,rgba(19,36,45,.68),rgba(13,23,29,.78));
+    background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
   }
@@ -784,14 +802,14 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,8,14,.24),rgba(12,5,20,.54)),
+      linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
       url("assets/backgrounds/dungeon-void/mobile.webp?v=20260914-dungeon-void-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
   #main>.void-shell:has(.void-result-grid)>.void-result{
-    background:linear-gradient(180deg,rgba(19,36,45,.74),rgba(13,23,29,.82));
+    background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
   }
@@ -814,7 +832,7 @@
     padding-bottom:52px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
-      linear-gradient(180deg,rgba(5,8,14,.18),rgba(12,5,20,.46)),
+      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
       url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1");
     background-position:center center,center center;
     background-size:cover,cover;
@@ -824,7 +842,7 @@
     max-width:1120px;
     margin-left:auto;
     margin-right:auto;
-    background:linear-gradient(180deg,rgba(16,33,41,.70),rgba(12,21,26,.80));
+    background:linear-gradient(180deg,rgba(16,33,41,.32),rgba(12,21,26,.40));
     backdrop-filter:blur(3px);
     -webkit-backdrop-filter:blur(3px);
   }
@@ -849,14 +867,14 @@
     padding-bottom:28px;
     padding-left:12px;
     background-image:
-      linear-gradient(180deg,rgba(5,8,14,.20),rgba(12,5,20,.50)),
+      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
       url("assets/backgrounds/dungeon-void-battle/mobile.webp?v=20260914-dungeon-void-battle-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
   }
   #main>.void-shell:has(.void-combat)>.void-panel{
-    background:linear-gradient(180deg,rgba(16,33,41,.72),rgba(12,21,26,.82));
+    background:linear-gradient(180deg,rgba(16,33,41,.32),rgba(12,21,26,.40));
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
   }
