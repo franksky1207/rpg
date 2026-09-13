@@ -1,23 +1,27 @@
 /* General function-page surface hierarchy.
    Outer containers stay lighter than dense information cards nested inside them. */
 .function-page .card{
-  background:linear-gradient(180deg,rgba(23,28,36,.66),rgba(17,21,27,.70));
+  background:linear-gradient(180deg,rgba(23,28,36,.56),rgba(17,21,27,.62));
+  border-color:rgba(123,137,154,.74);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
-  box-shadow:0 12px 30px rgba(0,0,0,.16);
+  box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
 }
 .function-page .muted{color:#d4d7dd}
 
 /* Dense information surfaces remain steadier for readability. */
 .function-page .stat,
 .function-page .item{
-  background:rgba(16,20,26,.88);
+  background:rgba(16,20,26,.80);
+  border-color:rgba(91,104,119,.72);
 }
 .function-page .item.selected{
-  background:rgba(43,36,22,.90);
+  background:rgba(43,36,22,.82);
+  border-color:rgba(205,169,94,.84);
 }
 .function-page .notice{
-  background:rgba(27,25,20,.88);
+  background:rgba(27,25,20,.80);
+  border-color:rgba(137,126,94,.70);
   color:#e6ddc9;
 }
 
@@ -25,21 +29,32 @@
 .function-page .character-stats-card .stat,
 .function-page .character-equipment-card .item,
 .function-page .grid>.card .item{
-  background:rgba(16,20,26,.88);
+  background:rgba(16,20,26,.80);
+  border-color:rgba(91,104,119,.72);
 }
 .function-page table th{color:#dfd0aa}
+.function-page .shop-table-wrap{
+  border-radius:10px;
+}
+.function-page .shop-table td{
+  border-color:rgba(77,89,103,.58);
+}
 
 /* Specialization: outer panel is light; individual skills and guide stay stable. */
 .function-page.specialization-page .specialization-panel{
-  background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.67));
+  background:linear-gradient(180deg,rgba(23,28,36,.54),rgba(17,21,27,.60));
+  border-color:rgba(123,137,154,.76);
 }
 .function-page.specialization-page .specialization-card{
-  background:linear-gradient(180deg,rgba(24,29,37,.86),rgba(16,20,26,.89));
+  background:linear-gradient(180deg,rgba(24,29,37,.70),rgba(16,20,26,.76));
+  border-color:rgba(118,133,151,.74);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.03);
 }
 .function-page.specialization-page .specialization-guide{
-  background:rgba(18,22,28,.86);
+  background:rgba(18,22,28,.72);
+  border-color:rgba(114,126,142,.72);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
@@ -50,46 +65,71 @@
 
 /* Guide: the large article panel is an outer shell; category controls remain readable. */
 .function-page.guide-page .guide-content.card{
-  background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.67));
+  background:linear-gradient(180deg,rgba(23,28,36,.54),rgba(17,21,27,.60));
+  border-color:rgba(123,137,154,.76);
 }
 .function-page.guide-page .guide-category{
-  background:rgba(23,27,34,.86);
+  background:rgba(23,27,34,.72);
+  border-color:rgba(116,129,145,.72);
   color:#e1dacb;
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 6px 16px rgba(0,0,0,.13);
 }
 .function-page.guide-page .guide-category.active{
-  background:rgba(52,43,27,.90);
+  background:rgba(52,43,27,.78);
+  border-color:rgba(211,174,96,.88);
+}
+.function-page.guide-page .guide-item{
+  border-color:rgba(75,87,101,.62);
 }
 .function-page.guide-page .guide-item-body{color:#e0dbd0}
 
 /* Mobile shop rows become inner information cards, not outer shells. */
 @media(max-width:760px){
   .function-page .card{
-    background:linear-gradient(180deg,rgba(23,28,36,.74),rgba(17,21,27,.78));
+    background:linear-gradient(180deg,rgba(23,28,36,.64),rgba(17,21,27,.70));
+    border-color:rgba(126,141,159,.78);
   }
   .function-page .stat,
   .function-page .item,
   .function-page .character-stats-card .stat,
   .function-page .character-equipment-card .item,
   .function-page .grid>.card .item{
-    background:rgba(16,20,26,.93);
+    background:rgba(16,20,26,.86);
+    border-color:rgba(96,110,126,.76);
   }
-  .function-page .item.selected{background:rgba(43,36,22,.94)}
-  .function-page .notice{background:rgba(27,25,20,.92)}
+  .function-page .item.selected{
+    background:rgba(43,36,22,.88);
+    border-color:rgba(211,175,98,.88);
+  }
+  .function-page .notice{background:rgba(27,25,20,.86)}
   .function-page .shop-table tr{
-    background:rgba(16,20,26,.93);
+    background:rgba(16,20,26,.86);
+    border-color:rgba(96,110,126,.76);
     backdrop-filter:blur(2px);
     -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 7px 18px rgba(0,0,0,.15);
   }
   .function-page.specialization-page .specialization-panel,
   .function-page.guide-page .guide-content.card{
-    background:linear-gradient(180deg,rgba(23,28,36,.70),rgba(17,21,27,.75));
+    background:linear-gradient(180deg,rgba(23,28,36,.62),rgba(17,21,27,.68));
+    border-color:rgba(126,141,159,.80);
   }
-  .function-page.specialization-page .specialization-card,
+  .function-page.specialization-page .specialization-card{
+    background:linear-gradient(180deg,rgba(24,29,37,.76),rgba(16,20,26,.82));
+    border-color:rgba(123,139,157,.78);
+  }
   .function-page.specialization-page .specialization-guide{
-    background:rgba(18,22,28,.92);
+    background:rgba(18,22,28,.80);
+    border-color:rgba(119,132,149,.76);
   }
-  .function-page.guide-page .guide-category{background:rgba(23,27,34,.92)}
-  .function-page.guide-page .guide-category.active{background:rgba(52,43,27,.94)}
+  .function-page.guide-page .guide-category{
+    background:rgba(23,27,34,.80);
+    border-color:rgba(121,135,152,.76);
+  }
+  .function-page.guide-page .guide-category.active{
+    background:rgba(52,43,27,.84);
+    border-color:rgba(216,179,101,.90);
+  }
 }
