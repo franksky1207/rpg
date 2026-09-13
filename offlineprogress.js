@@ -201,7 +201,7 @@
   }
   if(!document.getElementById("offlineRewardPage")){
    const page=document.createElement("div");page.id="offlineRewardPage";
-   page.innerHTML=`<div class="offline-page-shell"><div class="offline-page-card"><h2 class="offline-page-title">離線收益結算</h2><div class="offline-page-welcome">歡迎回來</div><div id="offlineRewardDetail"></div><div class="offline-enter-controls"><button class="btn primary" onclick="closeOfflineRewardModal()">領取並進入遊戲</button></div></div></div>`;
+   page.innerHTML=`<div class="offline-page-shell"><div class="offline-page-card"><h2 class="offline-page-title">離線收益結算</h2><div class="offline-page-welcome">歡迎回來</div><div id="offlineRewardDetail"></div><div class="offline-enter-controls"><button class="btn primary" onclick="closeOfflineRewardModal()">進入遊戲</button></div></div></div>`;
    document.body.appendChild(page);
   }
   if(!document.getElementById("offlineCalculatingModal")){
