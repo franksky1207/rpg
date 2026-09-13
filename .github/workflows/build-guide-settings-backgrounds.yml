@@ -1,0 +1,126 @@
+name: Build guide settings backgrounds
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-guide-settings-backgrounds.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Convert backgrounds and wire guide/settings
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          jobs=[
+              ('assets/backgrounds-source/guide-settings/desktop.png','assets/backgrounds/guide-settings/desktop.webp',1536),
+              ('assets/backgrounds-source/guide-settings/mobile.png','assets/backgrounds/guide-settings/mobile.webp',1080),
+          ]
+          for src_s,dst_s,max_w in jobs:
+              src=Path(src_s); dst=Path(dst_s)
+              if not src.exists():
+                  raise SystemExit(f'missing source: {src}')
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              im=Image.open(src).convert('RGB')
+              if im.width>max_w:
+                  h=round(im.height*max_w/im.width)
+                  im=im.resize((max_w,h),Image.Resampling.LANCZOS)
+              im.save(dst,'WEBP',quality=72,method=6)
+              print(src,im.size,'->',dst,dst.stat().st_size,'bytes')
+
+          css=Path('backgrounds.css')
+          s=css.read_text()
+          marker='/* guide-settings background v1 */'
+          if marker not in s:
+              s += r'''
+
+/* guide-settings background v1 */
+@media (min-width:761px){
+  #main>.guide-page,
+  #main>.function-page:has(#settingsTitle){
+    width:100vw;
+    min-height:calc(100vh - 57px);
+    min-height:calc(100dvh - 57px);
+    margin-top:-18px;
+    margin-bottom:-40px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:36px;
+    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
+    padding-bottom:64px;
+    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.guide-page .guide-content,
+  #main>.function-page:has(#settingsTitle)>.card{
+    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
+    backdrop-filter:blur(3px);
+    -webkit-backdrop-filter:blur(3px);
+    box-shadow:0 12px 28px rgba(0,0,0,.24);
+  }
+}
+
+@media (max-width:760px){
+  #main>.guide-page,
+  #main>.function-page:has(#settingsTitle){
+    width:100vw;
+    min-height:calc(100vh - 52px);
+    min-height:calc(100dvh - 52px);
+    margin-top:-10px;
+    margin-bottom:-24px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:20px;
+    padding-right:12px;
+    padding-bottom:28px;
+    padding-left:12px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),
+      url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.guide-page .guide-content,
+  #main>.function-page:has(#settingsTitle)>.card{
+    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.24);
+  }
+}
+'''
+              css.write_text(s)
+
+          idx=Path('index.html')
+          t=idx.read_text()
+          old='backgrounds.css?v=20260913-inventory-shop2'
+          new='backgrounds.css?v=20260913-guide-settings1'
+          if old not in t:
+              raise SystemExit('unexpected backgrounds.css cache token')
+          idx.write_text(t.replace(old,new,1))
+          PY
+      - name: Commit optimized backgrounds and wiring
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f assets/backgrounds/guide-settings/desktop.webp assets/backgrounds/guide-settings/mobile.webp
+          git add backgrounds.css index.html
+          git commit -m 'Add guide and settings backgrounds'
+          git push
