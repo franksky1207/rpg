@@ -1,6 +1,6 @@
-.continuous-stop-wrap,.infinite-stop-wrap{display:flex;justify-content:center;margin-top:12px}
-.continuous-stop-wrap .btn,.infinite-stop-wrap .btn{min-width:180px}
+.continuous-stop-wrap{display:flex;justify-content:center;margin-top:12px}
+.continuous-stop-wrap .btn{min-width:180px}
 @media(max-width:760px){
- .continuous-stop-wrap,.infinite-stop-wrap{margin-top:8px;padding-bottom:8px}
- .continuous-stop-wrap .btn,.infinite-stop-wrap .btn{min-width:160px;padding:9px 12px}
+ .continuous-stop-wrap{margin-top:8px;padding-bottom:8px}
+ .continuous-stop-wrap .btn{min-width:160px;padding:9px 12px}
 }
