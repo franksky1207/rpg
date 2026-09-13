@@ -39,3 +39,42 @@
     text-shadow:0 1px 6px rgba(0,0,0,.72);
   }
 }
+
+@media (max-width:760px){
+  #main>.home-screen{
+    width:100vw;
+    min-height:calc(100vh - 52px);
+    min-height:calc(100dvh - 52px);
+    margin-top:-10px;
+    margin-bottom:-24px;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding-top:24px;
+    padding-right:12px;
+    padding-bottom:28px;
+    padding-left:12px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),
+      url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+  #main>.home-screen .home-title h2{
+    text-shadow:0 3px 16px rgba(0,0,0,.92);
+  }
+  #main>.home-screen .home-title .muted{
+    color:#e1e5eb;
+    text-shadow:0 2px 9px rgba(0,0,0,.95);
+  }
+  #main>.home-screen .menu-card{
+    background:linear-gradient(180deg,rgba(22,29,39,.72),rgba(10,15,22,.82));
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.24);
+  }
+  #main>.home-screen .menu-card span{
+    color:#e3e7ed;
+    text-shadow:0 1px 5px rgba(0,0,0,.72);
+  }
+}
