@@ -1,6 +1,8 @@
 (function(){
  const CONTINUOUS_COUNT="continuous";
  const REAL_BATTLE_SAMPLE_LIMIT=20;
+ const NORMAL_BATTLE_GAP_MS=140;
+ const ELITE_BATTLE_GAP_MS=220;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
@@ -12,15 +14,19 @@
  function realBattleSampleMultiplier(playerLevel,enemyLevel){
   const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
   if(gap<=3)return 1;
-  if(gap<=6)return 1.10;
-  if(gap<=10)return 1.25;
-  if(gap<=15)return 1.50;
-  return 2;
+  if(gap<=6)return 1.30;
+  if(gap<=10)return 1.60;
+  if(gap<=15)return 2;
+  return null;
  }
  function beginRealBattleTiming(encounter,playerLevel,mapIdx,enemyIdx){
   if(!encounter||encounter.kind==="boss")return null;
+  const multiplier=realBattleSampleMultiplier(playerLevel,encounter.level);
+  if(multiplier==null)return null;
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
-  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind:encounter.kind==="elite"?"elite":"normal",map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),unsubscribe:null};
+  if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return null;
+  const kind=encounter.kind==="elite"?"elite":"normal";
+  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS,unsubscribe:null};
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
   return token;
  }
@@ -29,13 +35,14 @@
   if(typeof token.unsubscribe==="function")token.unsubscribe();
   if(token.interrupted||result?.win!==true||result?.e?.kind==="boss")return false;
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return false;
+  if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return false;
   const actualMs=Math.round(Date.now()-token.startedAt);
   if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return false;
-  const multiplier=realBattleSampleMultiplier(token.playerLevel,token.enemyLevel);
-  const adjustedMs=Math.max(100,Math.round(actualMs*multiplier));
+  const cycleMs=actualMs+token.gapMs;
+  const adjustedMs=Math.max(100,Math.round(cycleMs*token.multiplier));
   if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
   const samples=Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[];
-  samples.push({actualMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier,recordedAt:Date.now()});
+  samples.push({actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
  }
@@ -140,7 +147,7 @@
     if(shouldStopContinuous(ctx))break;
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-     await sleep(r.e.kind==="elite"?220:140);
+     await sleep(r.e.kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
     }else save();
     continue;
    }
@@ -149,7 +156,7 @@
    if(hasMoreBattles(ctx)){
     save(false);
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-    await sleep(r.e.kind==="elite"?220:140);
+    await sleep(r.e.kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
    }else save();
   }
 
