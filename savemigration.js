@@ -3,6 +3,8 @@
  const SAVE_LOAD_PIPELINE_VERSION=1;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const OFFLINE_REAL_SAMPLE_LIMIT=20;
+ const NORMAL_BATTLE_GAP_MS=140;
+ const ELITE_BATTLE_GAP_MS=220;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -61,27 +63,46 @@
   if(!isObject(target.dungeon.voidMirage))target.dungeon.voidMirage={};
   target.dungeon.voidMirage.highestCleared=Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0));
  }
+ function sampleMultiplier(playerLevel,enemyLevel){
+  const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
+  if(gap<=3)return 1;
+  if(gap<=6)return 1.30;
+  if(gap<=10)return 1.60;
+  if(gap<=15)return 2;
+  return null;
+ }
  function normalizeRealBattleSamples(source){
   const rows=Array.isArray(source?.battleSamples)?source.battleSamples:[];
   source.battleSamples=rows.map(row=>{
    if(!isObject(row))return null;
-   const actualMs=Math.round(Number(row.actualMs)),adjustedMs=Math.round(Number(row.adjustedMs));
+   const actualMs=Math.round(Number(row.actualMs));
    const playerLevel=Math.max(1,Math.floor(Number(row.playerLevel)||1)),enemyLevel=Math.max(1,Math.floor(Number(row.enemyLevel)||1));
-   const multiplier=Number(row.multiplier),map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
-   if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000||!Number.isFinite(adjustedMs)||adjustedMs<100||adjustedMs>600000)return null;
-   return {actualMs,adjustedMs,playerLevel,enemyLevel,kind:row.kind==="elite"?"elite":"normal",map,enemy,multiplier:Number.isFinite(multiplier)&&multiplier>=1?multiplier:1,recordedAt};
+   const multiplier=sampleMultiplier(playerLevel,enemyLevel);
+   if(multiplier==null||!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return null;
+   const kind=row.kind==="elite"?"elite":"normal";
+   const cycleMs=actualMs+(kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
+   const adjustedMs=Math.max(100,Math.round(cycleMs*multiplier));
+   const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
+   return {actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
   }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
  }
  function normalizeOffline(target,version){
   if(!isObject(target))return;
   const now=Date.now();
   if(version<9||!isObject(target.offline)){
-   target.offline={lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[]};
+   target.offline={lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[],maxObservedWallClock:now,timeLockUntil:0};
    return;
   }
   const source=target.offline;
   const rawTime=source.lastSettledAt==null?NaN:Number(source.lastSettledAt);
   source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
+  const priorMax=Number(source.maxObservedWallClock);
+  const observedCandidates=[now];
+  if(Number.isFinite(priorMax)&&priorMax>=0)observedCandidates.push(priorMax);
+  if(Number.isFinite(rawTime)&&rawTime>=0)observedCandidates.push(rawTime);
+  source.maxObservedWallClock=Math.floor(Math.max(...observedCandidates));
+  const lockUntil=Number(source.timeLockUntil);
+  source.timeLockUntil=Number.isFinite(lockUntil)&&lockUntil>0?Math.floor(lockUntil):0;
   const map=source.farmMap==null?NaN:Number(source.farmMap),enemy=source.farmEnemy==null?NaN:Number(source.farmEnemy);
   source.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
   source.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
