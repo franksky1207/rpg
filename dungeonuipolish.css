@@ -3,8 +3,8 @@
 
 /* Shared dungeon status: light outer shell, stable inner stats. */
 #main .dungeon-page-shell .dungeon-status-card{
-  background:rgba(23,25,34,.54);
-  border-color:rgba(126,132,154,.74);
+  background:rgba(23,25,34,.40);
+  border-color:rgba(126,132,154,.76);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 8px 24px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
@@ -40,11 +40,11 @@
   border-color:rgba(94,143,158,.76);
 }
 
-/* Bounty: purple outer surfaces stay lighter; reward/loot details remain stable. */
+/* Bounty: large outer surfaces are highly transparent; reward/loot details stay stable for later batches. */
 #main .dungeon-bounty-ready-card,
 #main .dungeon-bounty-result-card{
-  background:linear-gradient(180deg,rgba(48,34,62,.56),rgba(27,23,36,.62))!important;
-  border-color:rgba(149,112,172,.76)!important;
+  background:linear-gradient(180deg,rgba(48,34,62,.38),rgba(27,23,36,.44))!important;
+  border-color:rgba(149,112,172,.78)!important;
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 14px 32px rgba(40,22,54,.22),inset 0 1px 0 rgba(255,255,255,.04);
@@ -64,10 +64,10 @@
 #main .dungeon-bounty-reward-grid span{color:#cec4d8}
 #main .dungeon-bounty-reward-grid small{color:#bdb2c9}
 
-/* Arena: gold-brown outer panels, stable information cards inside. */
+/* Arena: large gold-brown outer panel is highly transparent; inner information cards stay stable. */
 #main .arena-panel{
-  background:linear-gradient(180deg,rgba(40,34,24,.54),rgba(20,19,17,.60));
-  border-color:rgba(154,132,92,.74);
+  background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
+  border-color:rgba(154,132,92,.76);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 16px 36px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.03);
@@ -115,10 +115,10 @@
 #main .arena-venue-card small,
 #main .arena-venue-difficulty small{color:#c2b9a9}
 
-/* Void: cyan outer panel, stable floor/result information cards. Combat surfaces are reserved for batch 4. */
+/* Void: large cyan outer panel is highly transparent; inner floor/result cards stay stable. */
 #main .void-panel{
-  background:linear-gradient(180deg,rgba(19,36,45,.54),rgba(13,23,29,.60));
-  border-color:rgba(91,139,153,.74);
+  background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
+  border-color:rgba(91,139,153,.76);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 16px 36px rgba(10,38,47,.20),inset 0 1px 0 rgba(255,255,255,.03);
@@ -139,9 +139,10 @@
 }
 #main .void-result-grid span{color:#adc2c7}
 
+/* Mobile uses the same large-panel transparency baseline as desktop. */
 @media(max-width:760px){
   #main .dungeon-page-shell .dungeon-status-card{
-    background:rgba(23,25,34,.62);
+    background:rgba(23,25,34,.40);
     border-color:rgba(130,137,160,.78);
   }
   #main .dungeon-page-shell .dungeon-status-card>div{background:rgba(16,18,26,.86)}
@@ -164,7 +165,7 @@
 
   #main .dungeon-bounty-ready-card,
   #main .dungeon-bounty-result-card{
-    background:linear-gradient(180deg,rgba(48,34,62,.64),rgba(27,23,36,.70))!important;
+    background:linear-gradient(180deg,rgba(48,34,62,.38),rgba(27,23,36,.44))!important;
     border-color:rgba(154,119,177,.80)!important;
   }
   #main .dungeon-bounty-positioning{background:rgba(30,23,39,.80)}
@@ -172,7 +173,7 @@
   #main .dungeon-bounty-loot-row{background:rgba(23,18,31,.86)}
 
   #main .arena-panel{
-    background:linear-gradient(180deg,rgba(40,34,24,.62),rgba(20,19,17,.68));
+    background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
     border-color:rgba(160,137,96,.78);
   }
   #main .arena-dual-assessment{background:rgba(21,19,15,.64)}
@@ -192,7 +193,7 @@
   #main .dungeon-mode-help>div{background:rgba(23,22,19,.86)}
 
   #main .void-panel{
-    background:linear-gradient(180deg,rgba(19,36,45,.62),rgba(13,23,29,.68));
+    background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
     border-color:rgba(96,145,160,.78);
   }
   #main .void-stat,
