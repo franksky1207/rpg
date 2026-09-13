@@ -1,4 +1,4 @@
-/* Main-menu background test: isolated from the rest of the game UI. */
+/* Main-menu background: desktop and mobile use separate source images. */
 .home-screen{position:relative;isolation:isolate}
 .home-screen::before,.home-screen::after{content:"";position:absolute;top:-18px;bottom:-40px;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
 .home-screen::before{z-index:-2;background-image:var(--home-bg-image,none);background-size:cover;background-position:center center;background-repeat:no-repeat;background-color:#0b0e13}
@@ -8,6 +8,6 @@
 .home-screen .menu-card{background:linear-gradient(180deg,rgba(22,29,39,.88),rgba(10,15,22,.90));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
 @media(max-width:760px){
  .home-screen::before,.home-screen::after{top:-14px;bottom:-24px}
- .home-screen::before{background-position:52% center}
+ .home-screen::before{background-image:var(--home-mobile-bg-image,none);background-position:center center}
  .home-screen::after{background:linear-gradient(180deg,rgba(5,10,18,.45),rgba(5,10,18,.63))}
 }
