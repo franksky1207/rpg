@@ -1,9 +1,30 @@
-/* Adventure map background: isolated from other screens. */
-#main .map-screen{position:relative;border-radius:16px;padding:14px;background-color:#0b0e13}
-#main .map-screen .page-title{text-shadow:0 2px 12px rgba(0,0,0,.95)}
-#main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.88),rgba(10,15,22,.90));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
-#main .map-screen .map-card{background:linear-gradient(180deg,rgba(24,31,42,.88),rgba(10,15,22,.90))}
+/* Adventure map background: fixed to the viewport so folding regions never shifts or rescales the image. */
+body.map-background-active::before,
+body.map-background-active::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+body.map-background-active::before{
+  z-index:0;
+  background-image:var(--map-bg-image,none);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-color:#0b0e13;
+}
+body.map-background-active::after{
+  z-index:0;
+  background:linear-gradient(180deg,rgba(5,10,18,.40) 0%,rgba(5,10,18,.48) 48%,rgba(5,10,18,.58) 100%);
+}
+body.map-background-active .app{position:relative;z-index:1}
+body.map-background-active #main .map-screen{background:none!important;border-radius:0;padding:0}
+body.map-background-active #main .map-screen .page-title{text-shadow:0 2px 12px rgba(0,0,0,.95)}
+body.map-background-active #main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.86),rgba(10,15,22,.89));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+body.map-background-active #main .map-screen .map-card{background:linear-gradient(180deg,rgba(24,31,42,.86),rgba(10,15,22,.89))}
 @media(max-width:760px){
- #main .map-screen{padding:10px}
- #main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.91),rgba(10,15,22,.93))}
+  body.map-background-active::before{background-position:50% center}
+  body.map-background-active::after{background:linear-gradient(180deg,rgba(5,10,18,.44) 0%,rgba(5,10,18,.54) 48%,rgba(5,10,18,.64) 100%)}
+  body.map-background-active #main .map-screen .world-region{background:linear-gradient(180deg,rgba(22,28,38,.90),rgba(10,15,22,.92))}
 }
