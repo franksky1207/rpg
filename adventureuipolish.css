@@ -64,12 +64,6 @@
   .prepare-screen .prepare-main{
     background:linear-gradient(180deg,rgba(23,28,36,.74),rgba(17,21,27,.78));
   }
-  /* Keep viewport-fixed battle controls truly fixed on iOS Safari.
-     backdrop-filter on this ancestor creates a fixed-position containing block. */
-  .prepare-screen .prepare-main{
-    backdrop-filter:none;
-    -webkit-backdrop-filter:none;
-  }
   .prepare-screen .player-status-card .stat{
     background:rgba(16,20,26,.93);
   }
@@ -96,5 +90,12 @@
   }
   .prepare-screen .map-progress-fold .notice{
     background:rgba(27,25,20,.92);
+  }
+  #prepareMobileControlsPortal{
+    position:static!important;
+    min-height:0!important;
+    height:0!important;
+    padding:0!important;
+    margin:0!important;
   }
 }
