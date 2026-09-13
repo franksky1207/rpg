@@ -1,23 +1,28 @@
-/* Adventure non-combat UI surfaces: transparent enough for scenery, stable enough for dense information. */
-/* Outer-shell rule: wrappers are lighter than the information cards nested inside them. */
-.map-screen .map-card{
-  background:linear-gradient(180deg,rgba(24,31,40,.60),rgba(13,18,25,.66));
-  border-color:rgba(122,137,154,.72);
+/* Adventure non-combat UI surfaces: background-forward glass hierarchy. */
+/* Batch 2: general interactive cards use the same transparency baseline on desktop and mobile. */
+#main>.home-screen .menu-card{
+  background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
+  border-color:rgba(122,137,154,.76);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
-  box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
 }
-.map-screen .map-card.cleared{border-color:rgba(91,145,103,.82)}
-.map-screen .map-card.locked{border-color:rgba(105,112,122,.46)}
+.map-screen .map-card{
+  background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
+  border-color:rgba(122,137,154,.76);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.map-screen .map-card.cleared{border-color:rgba(91,145,103,.84)}
+.map-screen .map-card.locked{border-color:rgba(105,112,122,.50)}
 .map-screen .map-card b,
-.map-screen .map-status{
-  text-shadow:0 1px 7px rgba(0,0,0,.78);
-}
+.map-screen .map-status{text-shadow:0 1px 7px rgba(0,0,0,.78)}
 
 .prepare-screen .player-status-card,
 .prepare-screen .prepare-main{
-  background:linear-gradient(180deg,rgba(23,28,36,.58),rgba(17,21,27,.64));
-  border-color:rgba(123,137,154,.74);
+  background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
+  border-color:rgba(123,137,154,.76);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
@@ -27,12 +32,10 @@
   border-color:rgba(92,104,118,.72);
 }
 .prepare-screen .player-status-card .muted,
-.prepare-screen .prepare-main .muted{
-  color:#d6d9df;
-}
+.prepare-screen .prepare-main .muted{color:#d6d9df}
 .prepare-screen #dungeon-adventure-status{
-  background:rgba(23,25,34,.56);
-  border-color:rgba(122,126,151,.70);
+  background:rgba(23,25,34,.40);
+  border-color:rgba(122,126,151,.72);
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 8px 22px rgba(0,0,0,.16);
@@ -44,38 +47,36 @@
 .prepare-screen #dungeon-adventure-status .muted{color:#d5d2df}
 .prepare-screen #dungeon-adventure-status strong{color:#eeeaf7}
 .prepare-screen .enemy-card{
-  background:linear-gradient(180deg,rgba(26,32,41,.68),rgba(17,21,27,.74));
-  border-color:rgba(118,133,151,.72);
+  background:linear-gradient(180deg,rgba(26,32,41,.54),rgba(17,21,27,.60));
+  border-color:rgba(118,133,151,.76);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
   box-shadow:0 8px 20px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.03);
 }
 .prepare-screen .enemy-card.active{
-  background:linear-gradient(180deg,rgba(48,40,25,.74),rgba(31,27,20,.78));
+  background:linear-gradient(180deg,rgba(48,40,25,.58),rgba(31,27,20,.62));
   border-color:rgba(218,181,103,.92);
-  box-shadow:0 8px 22px rgba(0,0,0,.20),0 0 0 1px rgba(208,173,99,.10);
+  box-shadow:0 8px 22px rgba(0,0,0,.18),0 0 0 1px rgba(208,173,99,.10);
 }
 .prepare-screen .enemy-meta{
   color:#d9dde4;
   text-shadow:0 1px 5px rgba(0,0,0,.55);
 }
 .prepare-screen .trait-detail-desc,
-.prepare-screen .enemy-card-note{
-  color:#d4d2cc;
-}
+.prepare-screen .enemy-card-note{color:#d4d2cc}
 .prepare-screen .count-card{
-  background:linear-gradient(180deg,rgba(27,33,42,.64),rgba(17,21,27,.70));
-  border-color:rgba(118,133,151,.68);
+  background:linear-gradient(180deg,rgba(27,33,42,.54),rgba(17,21,27,.60));
+  border-color:rgba(118,133,151,.72);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 .prepare-screen .count-card.active{
-  background:linear-gradient(180deg,rgba(54,45,25,.72),rgba(35,30,20,.76));
+  background:linear-gradient(180deg,rgba(54,45,25,.58),rgba(35,30,20,.62));
   border-color:rgba(218,181,103,.90);
 }
 .prepare-screen .map-progress-fold summary{
-  background:rgba(23,25,18,.72);
-  border-color:rgba(137,126,94,.72);
+  background:rgba(23,25,18,.58);
+  border-color:rgba(137,126,94,.74);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
@@ -85,47 +86,38 @@
 }
 
 @media(max-width:760px){
+  #main>.home-screen .menu-card,
   .map-screen .map-card{
-    background:linear-gradient(180deg,rgba(24,31,40,.66),rgba(13,18,25,.72));
-    border-color:rgba(126,141,159,.76);
-    box-shadow:0 8px 20px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
+    background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
+    border-color:rgba(126,141,159,.78);
+    box-shadow:0 8px 20px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
   }
   .prepare-screen .player-status-card,
   .prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(23,28,36,.64),rgba(17,21,27,.70));
+    background:linear-gradient(180deg,rgba(23,28,36,.38),rgba(17,21,27,.44));
     border-color:rgba(126,141,159,.78);
   }
-  .prepare-screen .player-status-card .stat{
-    background:rgba(16,20,26,.86);
-  }
-  .prepare-screen #dungeon-adventure-status{
-    background:rgba(23,25,34,.64);
-  }
-  .prepare-screen #dungeon-adventure-status>div{
-    background:rgba(16,18,26,.86);
-  }
+  .prepare-screen .player-status-card .stat{background:rgba(16,20,26,.86)}
+  .prepare-screen #dungeon-adventure-status{background:rgba(23,25,34,.40)}
+  .prepare-screen #dungeon-adventure-status>div{background:rgba(16,18,26,.86)}
   .prepare-screen .enemy-card{
-    background:linear-gradient(180deg,rgba(26,32,41,.74),rgba(17,21,27,.80));
-    border-color:rgba(123,139,157,.76);
+    background:linear-gradient(180deg,rgba(26,32,41,.54),rgba(17,21,27,.60));
+    border-color:rgba(123,139,157,.78);
   }
   .prepare-screen .enemy-card.active{
-    background:linear-gradient(180deg,rgba(48,40,25,.80),rgba(31,27,20,.84));
+    background:linear-gradient(180deg,rgba(48,40,25,.58),rgba(31,27,20,.62));
     border-color:rgba(223,187,108,.94);
   }
   .prepare-screen .count-card{
-    background:linear-gradient(180deg,rgba(27,33,42,.70),rgba(17,21,27,.76));
-    border-color:rgba(123,139,157,.72);
+    background:linear-gradient(180deg,rgba(27,33,42,.54),rgba(17,21,27,.60));
+    border-color:rgba(123,139,157,.74);
   }
   .prepare-screen .count-card.active{
-    background:linear-gradient(180deg,rgba(54,45,25,.78),rgba(35,30,20,.82));
+    background:linear-gradient(180deg,rgba(54,45,25,.58),rgba(35,30,20,.62));
     border-color:rgba(223,187,108,.92);
   }
-  .prepare-screen .map-progress-fold summary{
-    background:rgba(23,25,18,.78);
-  }
-  .prepare-screen .map-progress-fold .notice{
-    background:rgba(27,25,20,.86);
-  }
+  .prepare-screen .map-progress-fold summary{background:rgba(23,25,18,.58)}
+  .prepare-screen .map-progress-fold .notice{background:rgba(27,25,20,.86)}
   #prepareMobileControlsPortal{
     position:static!important;
     min-height:0!important;
