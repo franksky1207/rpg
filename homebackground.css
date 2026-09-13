@@ -11,7 +11,9 @@
 .home-screen .menu-card span{color:#e3e7ed;text-shadow:0 1px 6px rgba(0,0,0,.72)}
 .home-screen .vip-home-card{background:linear-gradient(180deg,rgba(33,27,16,.88),rgba(21,18,12,.90));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 8px 24px rgba(0,0,0,.22),0 0 22px rgba(220,169,64,.08)}
 .home-screen .vip-home-card .muted{color:#d2c9b8}
-#dungeon-home-status{background:rgba(23,25,34,.86);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+
+/* Outer-shell rule: wrappers stay lighter than the information cards inside them. */
+#dungeon-home-status{background:rgba(23,25,34,.64);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);box-shadow:0 8px 24px rgba(0,0,0,.14)}
 #dungeon-home-status>div{background:rgba(16,18,26,.88)}
 #dungeon-home-status .muted{color:#d5d2df}
 #dungeon-home-status strong{color:#eeeaf7}
@@ -22,6 +24,6 @@
  .home-screen::after{background:linear-gradient(180deg,rgba(5,10,18,.45),rgba(5,10,18,.63))}
  .home-screen .menu-card{background:linear-gradient(180deg,rgba(22,29,39,.82),rgba(10,15,22,.85));box-shadow:0 10px 24px rgba(0,0,0,.25)}
  .home-screen .vip-home-card{background:linear-gradient(180deg,rgba(33,27,16,.92),rgba(21,18,12,.94))}
- #dungeon-home-status{background:rgba(23,25,34,.91)}
+ #dungeon-home-status{background:rgba(23,25,34,.72)}
  #dungeon-home-status>div{background:rgba(16,18,26,.93)}
 }
