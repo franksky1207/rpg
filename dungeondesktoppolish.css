@@ -36,37 +36,47 @@
     gap:16px;
   }
 
-  /* Void: override the generic full-screen combat sizing on desktop. */
-  #main .void-shell{
+  /* Void: explicitly defeat the generic combat-screen viewport-height rules. */
+  html body #main .void-shell{
     max-width:1120px;
-  }
-  #main .void-panel:not(.void-result){
-    padding:18px 22px;
-  }
-  #main .void-combat.combat-screen{
     min-height:0!important;
-    height:auto;
-    flex:none;
+  }
+  html body #main .void-shell .void-panel:not(.void-result){
+    padding:18px 22px;
+    min-height:0!important;
+    height:auto!important;
+  }
+  html body #main .void-shell .void-combat.combat-screen{
+    display:block!important;
+    min-height:0!important;
+    height:auto!important;
+    flex:none!important;
     padding:14px 18px 16px;
   }
-  #main .void-combat .combat-arena{
-    flex:none;
-    min-height:0!important;
-    display:grid;
-    grid-template-columns:minmax(300px,1fr) 72px minmax(300px,1fr);
-    align-items:center;
-    gap:18px;
-    padding:16px 0 10px;
+  html body #main .void-shell .void-combat .combat-head{
+    margin-bottom:8px!important;
   }
-  #main .void-combat .combatant{
-    min-height:230px;
+  html body #main .void-shell .void-combat .combat-arena{
+    display:grid!important;
+    grid-template-columns:minmax(300px,1fr) 72px minmax(300px,1fr)!important;
+    grid-template-rows:auto!important;
+    align-items:center!important;
+    gap:18px!important;
+    padding:8px 0!important;
+    min-height:0!important;
+    height:auto!important;
+    flex:0 0 auto!important;
+  }
+  html body #main .void-shell .void-combat .combatant{
+    min-height:230px!important;
+    height:auto!important;
     justify-content:center;
   }
-  #main .void-combat .void-vs{
+  html body #main .void-shell .void-combat .void-vs{
     align-self:center;
-    margin:0;
+    margin:0!important;
   }
-  #main .void-message{
-    margin-top:8px;
+  html body #main .void-shell .void-message{
+    margin-top:8px!important;
   }
 }
