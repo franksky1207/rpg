@@ -1,19 +1,6 @@
 (function(){
  function ensureSpecialEncounterAlert(){
   if(document.getElementById("specialEncounterAlert"))return;
-  const style=document.createElement("style");
-  style.id="special-encounter-alert-styles";
-  style.textContent=`
-   #specialEncounterAlert{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(3,6,10,.82);opacity:0;pointer-events:none;transition:opacity .16s ease;backdrop-filter:blur(3px)}
-   #specialEncounterAlert.show{opacity:1}
-   .special-alert-card{width:min(620px,92vw);padding:28px 24px;text-align:center;border:1px solid #c99b45;border-radius:16px;background:radial-gradient(circle at 50% 25%,rgba(201,155,69,.20),rgba(17,20,25,.96) 62%);box-shadow:0 0 34px rgba(201,155,69,.34),inset 0 0 26px rgba(201,155,69,.08);transform:scale(.94);animation:specialEncounterPulse .82s ease-in-out both}
-   .special-alert-title{font-size:clamp(30px,6vw,48px);font-weight:900;letter-spacing:.06em;color:#ffd36f;text-shadow:0 0 18px rgba(255,193,67,.42)}
-   .special-alert-sub{margin-top:10px;font-size:clamp(15px,2.8vw,19px);color:#e8dcc0;letter-spacing:.08em}
-   .special-alert-name{margin-top:13px;font-size:clamp(20px,4vw,30px);font-weight:800;color:#fff2c2}
-   @keyframes specialEncounterPulse{0%{transform:scale(.92);filter:brightness(.75)}35%{transform:scale(1.025);filter:brightness(1.18)}70%{transform:scale(.995);filter:brightness(1)}100%{transform:scale(1);filter:brightness(1)}}
-   @media(max-width:760px){#specialEncounterAlert{padding:14px}.special-alert-card{padding:24px 16px}}
-  `;
-  document.head.appendChild(style);
   const el=document.createElement("div");
   el.id="specialEncounterAlert";
   el.innerHTML=`<div class="special-alert-card"><div class="special-alert-title">⚠ 特殊遭遇！</div><div class="special-alert-sub">偵測到異常敵影</div><div class="special-alert-name" id="specialEncounterAlertName"></div></div>`;
