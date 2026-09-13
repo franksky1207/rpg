@@ -1,5 +1,18 @@
 /* Adventure non-combat UI surfaces: background-forward glass hierarchy. */
-/* Batch 2: general interactive cards use the same transparency baseline on desktop and mobile. */
+/* Scene-adjacent text treatment belongs here; backgrounds.css owns only the artwork layer. */
+#main>.home-screen .home-title h2{text-shadow:0 3px 18px rgba(0,0,0,.90)}
+#main>.home-screen .home-title .muted{
+  color:#d9dde4;
+  text-shadow:0 2px 10px rgba(0,0,0,.95);
+}
+#main>.home-screen .menu-card span{
+  color:#e3e7ed;
+  text-shadow:0 1px 6px rgba(0,0,0,.72);
+}
+#main>.map-screen .page-title,
+#main>.prepare-screen .page-title{text-shadow:0 3px 18px rgba(0,0,0,.90)}
+
+/* General interactive cards use the same transparency baseline on desktop and mobile. */
 #main>.home-screen .menu-card{
   background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
   border-color:rgba(122,137,154,.76);
@@ -34,7 +47,7 @@
   -webkit-backdrop-filter:blur(3px);
   box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
 }
-/* Batch 3: dense information surfaces stay readable without becoming opaque. */
+/* Dense information surfaces stay readable without becoming opaque. */
 .prepare-screen .player-status-card .stat{
   background:rgba(16,20,26,.72);
   border-color:rgba(96,110,126,.76);
@@ -101,6 +114,15 @@
 }
 
 @media(max-width:760px){
+  #main>.home-screen .home-title h2{text-shadow:0 3px 16px rgba(0,0,0,.92)}
+  #main>.home-screen .home-title .muted{
+    color:#e1e5eb;
+    text-shadow:0 2px 9px rgba(0,0,0,.95);
+  }
+  #main>.home-screen .menu-card span{text-shadow:0 1px 5px rgba(0,0,0,.72)}
+  #main>.map-screen .page-title,
+  #main>.prepare-screen .page-title{text-shadow:0 3px 16px rgba(0,0,0,.92)}
+
   #main>.home-screen .menu-card,
   .map-screen .map-card{
     background:linear-gradient(180deg,rgba(24,31,40,.54),rgba(13,18,25,.60));
