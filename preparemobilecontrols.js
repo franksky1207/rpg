@@ -4,7 +4,7 @@
  function portalPrepareControls(){
   clearPortal();
   const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
-  if(!mobile||window.view!=="adventure"||window.adventureScreen!=="prepare")return;
+  if(!mobile)return;
   const panel=document.querySelector("#main .prepare-screen .battle-count-panel");
   const actions=document.querySelector("#main .prepare-screen .prepare-actions");
   if(!panel||!actions)return;
