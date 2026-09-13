@@ -1,13 +1,10 @@
 /* Desktop-only dungeon layout polish. Mobile presentation intentionally unchanged. */
 @media (min-width:761px){
-  /* Bounty: remove the redundant purple slab behind the actual content card. */
+  /* Bounty: background/layout is now owned by backgrounds.css; keep only card sizing here. */
   #main .dungeon-bounty-shell.dungeon-page-shell{
-    max-width:900px;
-    background:transparent;
     border:0;
     border-radius:0;
     box-shadow:none;
-    padding:0;
   }
   #main .dungeon-bounty-ready-card,
   #main .dungeon-bounty-result-card{
