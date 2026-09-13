@@ -1,0 +1,104 @@
+name: Wire guide settings backgrounds
+
+on:
+  push:
+    paths:
+      - '.github/workflows/wire-guide-settings-backgrounds.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add guide and settings background CSS
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          css=Path('backgrounds.css')
+          s=css.read_text()
+          marker='/* guide-settings background v1 */'
+          if marker not in s:
+              lines=[
+                  '',
+                  marker,
+                  '@media (min-width:761px){',
+                  '  #main>.guide-page,',
+                  '  #main>.function-page:has(#settingsTitle){',
+                  '    width:100vw;',
+                  '    min-height:calc(100vh - 57px);',
+                  '    min-height:calc(100dvh - 57px);',
+                  '    margin-top:-18px;',
+                  '    margin-bottom:-40px;',
+                  '    margin-left:calc(50% - 50vw);',
+                  '    margin-right:calc(50% - 50vw);',
+                  '    padding-top:36px;',
+                  '    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));',
+                  '    padding-bottom:64px;',
+                  '    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));',
+                  '    background-image:',
+                  '      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.50)),',
+                  '      url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1");',
+                  '    background-position:center center,center center;',
+                  '    background-size:cover,cover;',
+                  '    background-repeat:no-repeat,no-repeat;',
+                  '  }',
+                  '  #main>.guide-page .guide-content,',
+                  '  #main>.function-page:has(#settingsTitle)>.card{',
+                  '    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));',
+                  '    backdrop-filter:blur(3px);',
+                  '    -webkit-backdrop-filter:blur(3px);',
+                  '    box-shadow:0 12px 28px rgba(0,0,0,.24);',
+                  '  }',
+                  '}',
+                  '',
+                  '@media (max-width:760px){',
+                  '  #main>.guide-page,',
+                  '  #main>.function-page:has(#settingsTitle){',
+                  '    width:100vw;',
+                  '    min-height:calc(100vh - 52px);',
+                  '    min-height:calc(100dvh - 52px);',
+                  '    margin-top:-10px;',
+                  '    margin-bottom:-24px;',
+                  '    margin-left:calc(50% - 50vw);',
+                  '    margin-right:calc(50% - 50vw);',
+                  '    padding-top:20px;',
+                  '    padding-right:12px;',
+                  '    padding-bottom:28px;',
+                  '    padding-left:12px;',
+                  '    background-image:',
+                  '      linear-gradient(180deg,rgba(5,10,18,.28),rgba(5,10,18,.52)),',
+                  '      url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");',
+                  '    background-position:center center,center center;',
+                  '    background-size:cover,cover;',
+                  '    background-repeat:no-repeat,no-repeat;',
+                  '  }',
+                  '  #main>.guide-page .guide-content,',
+                  '  #main>.function-page:has(#settingsTitle)>.card{',
+                  '    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));',
+                  '    backdrop-filter:blur(2px);',
+                  '    -webkit-backdrop-filter:blur(2px);',
+                  '    box-shadow:0 8px 20px rgba(0,0,0,.24);',
+                  '  }',
+                  '}',
+                  ''
+              ]
+              css.write_text(s+'\n'.join(lines))
+
+          idx=Path('index.html')
+          t=idx.read_text()
+          old='backgrounds.css?v=20260913-inventory-shop2'
+          new='backgrounds.css?v=20260913-guide-settings1'
+          if old not in t:
+              raise SystemExit('unexpected backgrounds.css cache token')
+          idx.write_text(t.replace(old,new,1))
+          PY
+      - name: Commit wiring
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add backgrounds.css index.html
+          git commit -m 'Wire guide and settings backgrounds'
+          git push
