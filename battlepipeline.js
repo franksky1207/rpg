@@ -7,7 +7,7 @@
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
-  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,totalDungeonProgress:0,gainedDungeonAttempts:0,specialEncounters:[],continuous,exitRequested:false,infinite:continuous};
+  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,totalDungeonProgress:0,gainedDungeonAttempts:0,specialEncounters:[],continuous,exitRequested:false};
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
@@ -51,20 +51,16 @@
   const ctx=window.activeMainBattleContext;
   if(!battleBusy||ctx?.continuous!==true)return false;
   ctx.exitRequested=true;
-  const btn=document.getElementById("continuousBattleStopBtn")||document.getElementById("infiniteBattleStopBtn");
+  const btn=document.getElementById("continuousBattleStopBtn");
   if(btn){btn.disabled=true;btn.textContent="本場結束後停止";}
   return true;
  };
- // 舊特殊遭遇畫面仍可能呼叫這個名稱；僅保留 runtime 相容，不再作為正式模式。
- window.requestInfiniteBattleStop=function(){return window.requestContinuousBattleStop();};
 
  runBattles=async function(count,ctx=null){
   if(battleBusy)return;
   battleBusy=true;
   if(!ctx)ctx=createBattleContext(count);
   ctx.continuous=isContinuousCount(count,ctx);
-  // 特殊遭遇舊畫面只讀取 ctx.infinite；不寫入存檔，待該畫面日後直接收斂。
-  ctx.infinite=ctx.continuous;
   if(ctx.continuous){ctx.originalCount=null;ctx.remaining=null;}
   else{
    ctx.originalCount=Math.max(1,Math.floor(Number(ctx.originalCount??count)||1));
