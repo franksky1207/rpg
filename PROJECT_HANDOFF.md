@@ -5,6 +5,7 @@
 > 若本文、歷史對話、舊截圖、舊規格或先前 ChatGPT 的敘述與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。
 
 更新日期：**2026-09-13**
+本次交接整理前 `main` HEAD：`e224d869227099ffd05ff8e67871d4049e29ee3c`
 
 ---
 
@@ -22,9 +23,9 @@
 - `VIP_MAX_LEVEL = 20`
 - `SPECIALIZATION_MAX_LEVEL = 30`
 - 世界：10 大區域、100 張主線地圖、Lv1～500
-- 桌面版與手機版都必須支援；**iPhone Safari 是重要真機環境**
+- 桌面版與手機版都必須支援；**iPhone Safari 是重要真機環境**。
 
-目前 `index.html` 正式載入順序的重要骨架為：
+目前 `index.html` 的正式載入骨架：
 
 ```text
 data.js
@@ -37,9 +38,20 @@ data.js
 → savemigration.js
 → dungeoncore.js
 → UI / VIP / Traits / GM / 副本
-→ battlepipeline.js / continuousbattle.js / offline
+→ battlepipeline.js / continuousbattle.js
+→ backgroundprogress.js / offlinefarmtarget.js / offlineprogress.js
 → dungeonplayerui.js / arenaplayerflow2.js
-→ runtimeintegrity.js（最後）
+→ adventureprogressui.js / combatfx.js / runtimeintegrity.js
+→ homebackground.js / battlebackground.js / mapbackground.js
+```
+
+目前正式 CSS 還額外載入：
+
+```text
+homebackground.css
+battlebackground.css
+mapbackground.css
+dungeondesktoppolish.css
 ```
 
 `runtimediag.js` 已刪除，不再常駐顯示診斷框。
@@ -51,22 +63,24 @@ data.js
 ## 2.1 修改前
 
 1. **每次修改前先重新讀取 `main` 的相關檔案。**
-2. **同時重新讀完整 `index.html`**，確認實際 script / CSS 載入順序與 cache-bust。
+2. **同時重新讀完整 `index.html`**，確認 script / CSS 實際載入順序與 cache-bust。
 3. 先搜尋跨檔案引用、state 欄位、save migration、normalize、後載入 override / wrapper、render / DOM 綁定，再決定真正修改位置。
 4. 不可只根據本交接檔、聊天記憶或過去 commit 猜目前程式。
+5. 若是視覺／背景問題，修改前先看**實際畫面結構與 DOM class**，不要先假設背景應該掛在哪一層。
 
 ## 2.2 使用者授權語意
 
 - 使用者說：**「先討論」「先分析」「先不要修改」「先檢查」** → **不能改 GitHub**，只能檢查、分析、提出方案。
-- 使用者說：**「做」「修改」「修正」「執行」「開始」「第 X 批」** → 視為已授權，可直接修改 GitHub `main`。
+- 使用者說：**「做」「修改」「修正」「執行」「開始」「第 X 批」「上傳到遊戲網頁」** → 視為已授權，可直接修改 GitHub `main`。
 - 不要在使用者已明確授權後重複要求確認。
 
 ## 2.3 修改原則
 
-1. **優先修改正式來源，不要再額外做 wrapper、fallback、第二套公式或 UI 遮罩。**
+1. **優先修改正式來源，不要額外做 wrapper、fallback、第二套公式或第二套 UI 規則。**
 2. 若新制度已正式取代舊制度，優先刪除／收斂舊路徑，而不是永遠靠後載入覆蓋。
-3. 只為真正需要的相容性保留舊 API 名稱；必須在交接檔標清楚它只是相容層，不是正式制度。
+3. 只為真正需要的相容性保留舊 API 名稱；必須清楚標記它只是相容層，不是正式制度。
 4. 不要為了「看起來乾淨」而一次大改無關系統；先確認完整程式鏈，再修根因。
+5. **異常時不得連續猜原因、一直叫使用者重整。** 先自我檢查完整鏈再修改。
 
 ## 2.4 修改後
 
@@ -78,7 +92,7 @@ data.js
 
 ## 2.5 異常處理最高原則
 
-**未來只要發生功能異常，不得先猜原因、不得先疊局部補丁。**
+**只要發生功能異常，不得先猜原因、不得先疊局部補丁。**
 
 必須先自我檢查該問題涉及的完整程式鏈，包括：
 
@@ -90,6 +104,7 @@ data.js
 - `index.html` 載入順序
 - 後載入 override / wrapper
 - render / DOM 事件鏈
+- CSS specificity / viewport / flex / min-height 等實際版型規則
 - 舊函式／舊常數／舊制度殘留
 - runtime / syntax error
 
@@ -109,7 +124,7 @@ BaseATK(L) = ceil(15 + 2.2 × (L - 1))
 BaseDEF(L) = ceil(7 + 1.2 × (L - 1))
 ```
 
-怪物暴擊／閃避正式上限常數：
+怪物暴擊／閃避正式上限：
 
 ```text
 MONSTER_MAX_CRIT_RATE  = 30
@@ -129,6 +144,14 @@ expNeed(L)
 = ceil(sameExp(L) × expProgressionFactor(L))
 ```
 
+`EXP_CURVE`：
+
+```text
+killMin   = 5
+killRange = 495
+scale     = 142
+```
+
 等級差 EXP multiplier：
 
 ```text
@@ -142,15 +165,13 @@ expNeed(L)
 更低：0.05
 ```
 
-Lv500 後 EXP 不再累積；可轉換的 EXP 由正式特殊 payout 流程 1:1 轉為金幣。
+Lv500 後 EXP 不再累積；可轉換 EXP 由正式 payout 流程 **1:1 轉為金幣**。
 
 ---
 
 # 4. 世界、100 張地圖與主線
 
 ## 4.1 十大區域
-
-`WORLD_REGIONS` 正式固定：
 
 1. 地球戰爭 Lv1～50（map 0～9）
 2. 太陽系戰爭 Lv51～100（10～19）
@@ -165,9 +186,9 @@ Lv500 後 EXP 不再累積；可轉換的 EXP 由正式特殊 payout 流程 1:1 
 
 每區 10 張地圖，每張 5 級，共 100 張。
 
-## 4.2 第四批已完成：固定地圖註冊
+## 4.2 固定地圖註冊
 
-`data.js` 現在唯一正式入口：
+`data.js` 正式入口：
 
 ```text
 registerRegionMaps(regionId, regionMaps)
@@ -175,22 +196,22 @@ registerRegionMaps(regionId, regionMaps)
 
 十支 `worldmaps-*.js` 全部使用固定 region id 註冊，不再直接 `MAPS.push()` / `MAPS.splice()`。
 
-正式規則：
+規則：
 
 - 每區只能寫到 `WORLD_REGIONS` 指定的 `mapStart～mapEnd`
 - 每區必須剛好 10 張
-- 註冊當下檢查 chapter
-- 註冊當下檢查每張地圖必須剛好 5 級
+- 註冊時檢查 chapter
+- 註冊時檢查每張地圖剛好 5 級
 - 同區重複載入只覆寫自己的固定 10 格
-- 不同區若搶同一 map index 會直接報錯
+- 不同區搶同一 map index 會直接報錯
 
-`validateWorldMapRegistration()` 檢查固定註冊完整性；`worldmapregistrycheck.js` 在十區載完後產生：
+`validateWorldMapRegistration()` 檢查固定註冊完整性；`worldmapregistrycheck.js` 產生：
 
 ```text
 window.WORLD_MAP_REGISTRATION_REPORT
 ```
 
-`worldnamingrules.js` 再做第二層資料完整性／命名檢查，包括：
+`worldnamingrules.js` 再檢查：
 
 - 100 張地圖連續
 - 每張 5 級
@@ -201,9 +222,9 @@ window.WORLD_MAP_REGISTRATION_REPORT
 - chapter 對應
 - 重名、近似名、詞彙密度
 
-## 4.3 舊存檔與 map index
+## 4.3 存檔與 map index
 
-本次地圖擴充／註冊整理**沒有改既有 map index**，仍為 0～99，因此舊：
+目前世界進度仍以 map index 為永久身分：
 
 ```text
 unlockedMap
@@ -213,61 +234,35 @@ bossLocked
 bossKilled
 ```
 
-可直接由 `normalizeWorldSaveState()` 延長／修正，不需要另外搬移索引。
-
-**重要限制：目前世界進度仍以 map index 當永久身分。**
-
-未來若要：
-
-- 重新排序既有地圖
-- 在中間插入新地圖
-- 改變某區原有 map index
-
-必須做正式 schema migration，不能只改地圖檔。
+100 張仍是 0～99。若未來要重新排序、在中間插圖或改既有 index，必須做正式 schema migration。
 
 ## 4.4 主線 UI / 戰鬥模式
 
-正式玩家主線模式只有：
+正式玩家主線只有：
 
 - 單場戰鬥
 - 連續戰鬥
 
 Boss 永遠只跑單場。
 
-`continuousbattle.js` 會把舊 `BATTLE_COUNT_UNLOCKS` runtime 改成：
-
-```text
-Lv1：單場
-Lv1：連續戰鬥
-```
-
 連續主線：
 
-- 一場一場持續戰鬥
-- 每場結束後回滿 HP
-- 玩家可按「停止連續戰鬥」
-- 停止要求在目前這一場結束後生效
+- 每場結束回滿 HP
+- 可按「停止連續戰鬥」
+- 停止在目前這一場結束後生效
 - 死亡時結束
 - 已取得獎勵與副本進度保留
 - 最後顯示連續戰鬥總結算
 
-### 主線尚存技術債
+### 技術債
 
-`ui.js` 實體原始碼仍保留舊的：
-
-```text
-1 / 5 / 10 / 15 / 20 / 25 場
-```
-
-battle-count base renderer；正式玩家 runtime 由 `continuousbattle.js` 後載入覆蓋成「單場／連續」。
-
-這不是目前功能 bug，但屬明確歷史技術債。若未來要清理，必須先完整檢查 `ui.js → battlepipeline.js → continuousbattle.js → specialencounter.js`，不要直接刪常數。
+`ui.js` 實體原始碼仍保留舊 `1 / 5 / 10 / 15 / 20 / 25 場` base renderer；正式 runtime 由 `continuousbattle.js` 後載入改為單場／連續。未來若整理，需先查完整 `ui.js → battlepipeline.js → continuousbattle.js → specialencounter.js`。
 
 ---
 
 # 5. VIP 系統
 
-## 5.1 VIP 等級與能力
+## 5.1 等級與能力
 
 ```text
 VIP threshold(level) = 1000 × level²
@@ -284,7 +279,7 @@ DEF +0.25%
 閃避 +0.25%
 ```
 
-已解鎖 VIP 等級不會因 VIP 積分降低而下降；`normalizeVipState()` 會保留歷史最高等級。
+已解鎖 VIP 等級不會因積分降低而下降；`normalizeVipState()` 保留歷史最高等級。
 
 ## 5.2 偶數級特權
 
@@ -299,13 +294,13 @@ DEF +0.25%
 - VIP18：主線 Boss 掉落 10% 品質 +1
 - VIP20：死亡不遺失裝備
 
-懸賞戰的特殊規則：VIP8、VIP14 可作用；VIP18 不套用懸賞品質。
+懸賞特殊規則：VIP8、VIP14 可作用；VIP18 不套用懸賞品質。
 
 ---
 
 # 6. 專精系統
 
-每項最高 Lv30；升到目標等級 `N` 的價格：
+每項最高 Lv30；升到目標等級 `N`：
 
 ```text
 1000 × N² 金幣
@@ -317,12 +312,12 @@ DEF +0.25%
 - 搜刮技巧：每級怪物金幣 +5%
 - 鑑價技巧：每級裝備售價 +5%
 - 先制技巧：每級第一擊傷害 +2%
-- 連擊技巧：每級連擊率 +1%；追加攻擊傷害 50%，且追加攻擊可再次連擊
+- 連擊技巧：每級連擊率 +1%；追加攻擊 50%，且追加攻擊可再次連擊
 - 穿透技巧：每級穿透率 +1%；觸發時忽略 25% 防禦
 - 反擊技巧：每級反擊率 +1%；反擊傷害 40%
 - 汲取技巧：每級汲取率 +1%；觸發時回復本次實際傷害 10%
 
-GM 有正式專精管理與「測試專精」兩套；測試值只存在目前網頁工作階段，重新整理回 Lv0，不寫正式角色。
+GM 有正式專精管理與工作階段限定「測試專精」；測試值重新整理後回 Lv0，不寫正式角色。
 
 ---
 
@@ -333,8 +328,6 @@ GM 有正式專精管理與「測試專精」兩套；測試值只存在目前�
 - Lv5：懸賞戰
 - Lv15：競技場
 - Lv25：虛空幻境
-
-副本次數由主線勝利累積副本進度取得。
 
 ## 7.1 副本進度公式
 
@@ -368,29 +361,21 @@ VIP12～20：×1.20
 state.dungeon.activeRun
 ```
 
-正式副本 round 真正開始時才由 `beginDungeonRun()` 扣次數並寫 marker；`finishDungeonRun()` 清 marker並依規則回血。
+正式 round 真正開始時才 `beginDungeonRun()` 扣次數並寫 marker；`finishDungeonRun()` 清 marker並依規則回血。
 
-若網頁在正式副本 run 中斷，下一次 load 會由 `finalizeDungeonLoadedState()` 偵測 activeRun，回滿 HP 並清除 marker，避免卡死。
+若網頁在正式副本 run 中斷，下次 load 由 `finalizeDungeonLoadedState()` 偵測 activeRun，回滿 HP 並清 marker。
 
 ---
 
 # 8. 懸賞戰：最新正式制度
 
-## 8.1 定位
-
-玩家只看到：
+玩家只公開：
 
 > **高 EXP・高金幣・多裝備**
 
-玩家 UI 不公開：
+不公開 tier 機率、品質精確機率、戰前精確 EXP／金幣／件數。
 
-- 三種懸賞抽選權重
-- 裝備品質精確機率
-- 戰前精確 EXP
-- 戰前精確金幣
-- 戰前精確裝備件數
-
-## 8.2 內部 tier
+## 8.1 內部 tier
 
 ```text
 普通懸賞：45%
@@ -427,64 +412,20 @@ DEF ×0.92
 神話 0.5%
 ```
 
-懸賞敵人由不含 VIP 的裝備基礎能力生成；玩家正式戰鬥能力再套 VIP／戰鬥專精。
+敵人由**不含 VIP 的裝備基礎能力**生成；玩家正式戰鬥再套 VIP／戰鬥專精。
 
-## 8.3 單次／連續
+## 8.2 單次／連續
 
-支援：
-
-- 單次挑戰
-- 連續挑戰
-
-一場懸賞＝一個正式 dungeon round。
-
-連續正式流程：
-
-```text
-combat
-→ finishDungeonRun
-→ transition
-→ 下一場真正開始前 beginDungeonRun
-→ combat
-```
-
-規則：
-
-- 下一場真正開始時才消耗下一次副本次數
-- 每場結束後回滿 HP
-- 死亡停止
-- 次數不足停止
-- 手動停止在目前這一場結束後生效
-- 中間場次不顯示單場／連續選擇頁
+- 一場懸賞＝一個正式 dungeon round
+- 下一場真正開始前才再扣 1 次
+- 每場結束回滿 HP
+- 死亡／次數不足停止
+- 手動停止在目前一場結束後生效
+- 連續中間場次不顯示單次／連續選擇頁
 - 中間場次不顯示單場結算
-- 最後只顯示一次總結算
+- 最後統一總結算
 
-總結算包含：
-
-- runs
-- wins
-- EXP
-- 金幣
-- 滿等 EXP 轉換金幣
-- 自動出售金幣
-- 裝備總數
-- 保留／售出數
-- 停止原因
-
-## 8.4 本對話重要懸賞修正
-
-先前連續懸賞每打一場會短暫 render `ready`，因此玩家看到「單次挑戰／連續挑戰」頁面。
-
-最終修法不是繼續遮 UI，而是第三批直接修正式核心：
-
-- `prepareNextBounty()` 進 `transition`
-- 正常連續流程中不 render ready 選單
-- 若 transition 期間因其他原因 render，只顯示「準備下一場」
-- `bountycontinuousui.js` 已刪除
-
-同一批也把精確戰前獎勵 preview 從 `dungeonbounty.js` 正式核心移除，不再先產生再由 `dungeonplayerui.js` DOM 刪除。
-
-`dungeonplayerui.js` 現在只負責副本首頁簡介 enhancement，不再介入懸賞 ready / combat / result。
+歷史 bug 已修：`prepareNextBounty()` 使用 `transition`，不再中間 render ready 選單；`bountycontinuousui.js` 已刪除；精確戰前獎勵 preview 已從核心移除。
 
 ---
 
@@ -503,9 +444,7 @@ combat
 9. 銀河核心戰爭競技場
 10. 銀河統合戰爭競技場
 
-**玩家介面不得把正式競技場叫「普通／困難／極限」。**
-
-`normal / hard / extreme` 目前只保留為 internal position template id。
+玩家介面不得把正式競技場叫「普通／困難／極限」。`normal / hard / extreme` 只保留為 internal position template id。
 
 ## 9.2 逐個解鎖＋最近最多3個
 
@@ -514,8 +453,6 @@ combat
 ```text
 state.dungeon.arena.highestArenaUnlocked
 ```
-
-Lv15 初次開放只有第1個競技場。
 
 可見視窗：
 
@@ -532,11 +469,7 @@ Lv15 初次開放只有第1個競技場。
 8 9 10
 ```
 
-玩家只能選目前 visibleRanks 內的競技場。
-
-## 9.3 解鎖下一個競技場
-
-必須同時：
+解鎖下一個必須同時：
 
 ```text
 目前最高競技場戰力評估通過
@@ -544,27 +477,7 @@ AND
 下一個競技場所對應主線區域已解鎖
 ```
 
-沒有「前三階自動開放」或「前三區免主線」例外。
-
-成功解鎖後：
-
-- `highestArenaUnlocked +1`
-- activeRank 清空
-- promotionReady 清空
-- 上次 assessment signature / runs / clears 清空
-- 新最高競技場成為下一次評估目標
-
-## 9.4 戰力評估：97%
-
-正式唯一門檻：
-
-```text
-500 次完整三連戰
-至少 485 次全通
-= 97% 才合格
-```
-
-正式 async 評估：
+## 9.3 戰力評估：97%
 
 ```text
 ASSESS_RUNS = 500
@@ -572,93 +485,30 @@ ASSESS_CLEAR_TARGET = 485
 ASSESS_BATCH_SIZE = 10
 ```
 
-Safari 友善：每批10次，`setTimeout(step, 0)` 讓出 event loop。
+即 500 次完整三連戰至少 485 次全通。每批 10 次，`setTimeout(step,0)` 對 Safari 讓出 event loop。
 
-未達97%可反覆重新評估，所以邊界戰力可以「再拚一次」。一旦某次達標：
+評估 signature 包含 rank、position id、玩家等級、不含 VIP 的基礎 HP/ATK/DEF/crit/dodge、VIP level、五項戰鬥專精。裝備、VIP、戰鬥專精改變時舊結果可 stale。
 
-```text
-promotionReady = true
-```
-
-玩家評估按鈕停用，資格保留到下一主線區域開放／成功解鎖為止。
-
-評估 signature 會包含：
-
-- arena rank
-- position difficulty id
-- player level
-- 不含 VIP 的基礎 HP / ATK / DEF / crit / dodge
-- VIP level
-- 五項戰鬥專精
-
-如果裝備、VIP 或戰鬥專精改變，舊結果可被判定 stale，玩家可重新評估。
-
-## 9.5 舊競技場存檔規則
-
-`dungeonprogress.js`：
+存檔版本：
 
 ```text
 positionModelVersion = 1
 assessmentRuleVersion = 2
 ```
 
-只承認：
+只有完整 500 次、有 signature、clears>=485 才保留 `promotionReady=true`。已解鎖 `highestArenaUnlocked` 不倒退。
 
-```text
-500 次完整結果
-+ 有效 lastCheckSignature
-+ clears >= 485
-```
-
-才能保留 `promotionReady=true`。
-
-舊存檔只有 `promotionReady=true`、但沒有完整500次證據者，資格會被清除。
-
-舊完整結果若只有 450～484 次全通，同樣不再視為合格。
-
-**已經解鎖的 `highestArenaUnlocked` 不因此倒退。**
-
-## 9.6 位置算法
-
-目前 visibleRanks 由左到右內部對應：
-
-```text
-左：normal（低位置算法）
-中：hard（中位置算法）
-右：extreme（高位置算法）
-```
-
-但**玩家 UI 不顯示「低／中／高位置」文字**。
-
-最高競技場在早期：
-
-```text
-只有 arena1：以低位置算法評估
-只有 arena1/2：arena2 以中位置算法評估
-arena3 以上：最高 arena 以高位置算法評估
-```
-
-位置只影響：
-
-- 暴擊
-- 閃避
-- 特性
-
-不影響同 Rank 的 HP／ATK／DEF。
-
-## 9.7 競技場 HP / ATK / DEF
+## 9.4 三維／位置算法
 
 Rank multiplier：
 
 ```text
-R = 實際競技場 Rank
-
 RankHp     = 1 + 0.05  × (R - 1)
 RankDamage = 1 + 0.015 × (R - 1)
 RankDef    = 1 + 0.03  × (R - 1)
 ```
 
-共通三戰物理 profile：
+三戰共通 profile：
 
 ```text
 S1：HP ×0.60 / Damage ×0.57 / DEF ×0.78
@@ -666,41 +516,28 @@ S2：HP ×0.69 / Damage ×0.64 / DEF ×0.80
 S3：HP ×0.78 / Damage ×0.73 / DEF ×0.82
 ```
 
-敵人正式公式：
+正式敵人：
 
 ```text
-EnemyHP
-= BaseEnemyHP(P) × StageHp × RankHp
-
-EnemyDamageComponent
-= BaseEnemyDamage(P) × StageDamage × RankDamage
-
-EnemyATK
-= ceil(EnemyDamageComponent + P.def × 0.55)
-
-EnemyDEF
-= BaseEnemyDEF(P) × StageDef × RankDef
+EnemyHP = BaseEnemyHP(P) × StageHp × RankHp
+EnemyDamageComponent = BaseEnemyDamage(P) × StageDamage × RankDamage
+EnemyATK = ceil(EnemyDamageComponent + P.def × 0.55)
+EnemyDEF = BaseEnemyDEF(P) × StageDef × RankDef
 ```
 
-`P` 為不含 VIP 的玩家裝備／基礎 snapshot；玩家正式戰鬥則套 VIP 與戰鬥專精。
+`P` 為不含 VIP 的玩家基礎 snapshot；玩家正式戰鬥再套 VIP／戰鬥專精。
 
-第二批整理後：**正式玩家戰鬥、GM測試、500次評估都直接共用 `dungeonarena.js` 的 `ARENA_PHYSICAL_STAGE_PROFILE`。**
+位置只影響 crit / dodge / trait，不影響同 Rank 三維。
 
-舊「正式戰鬥吃 difficulty 三維，測試再被 wrapper 正規化」雙重來源已移除。
+## 9.5 暴擊／閃避／特性
 
-## 9.8 暴擊／閃避／特性
-
-Rank 本身不增加 crit / dodge；位置 template 決定暴閃與 trait。
-
-上限大致：
+最高大致：
 
 ```text
-低位置最高：約 crit 9 / dodge 8
-中位置最高：約 crit 16 / dodge 14
-高位置最高：約 crit 23 / dodge 20
+低位置：約 crit 9 / dodge 8
+中位置：約 crit 16 / dodge 14
+高位置：約 crit 23 / dodge 20
 ```
-
-特性最多 2 個。
 
 traitMode：
 
@@ -713,9 +550,9 @@ extreme2：60% 1 / 40% 2
 extreme3：50% 1 / 50% 2
 ```
 
-## 9.9 VIP 積分：整個三格視窗推進
+## 9.6 VIP 積分視窗推進
 
-正式 internal position base：
+internal position base：
 
 ```text
 normal  = 180
@@ -723,19 +560,14 @@ hard    = 300
 extreme = 420
 ```
 
-**前三個競技場本身不額外加130。只有最高已解鎖競技場到4之後，整個三格視窗每推進一格，三個位置才一起 +130。**
-
-正式公式：
+最高已解鎖競技場到4之後，整個三格視窗每推進一格，三個位置一起 +130：
 
 ```text
-windowOffset
-= 130 × max(0, highestVisibleArena - 3)
-
-totalPoints
-= positionBase + windowOffset
+windowOffset = 130 × max(0, highestVisibleArena - 3)
+totalPoints = positionBase + windowOffset
 ```
 
-正式 visible progression：
+正式 progression：
 
 ```text
 1          → 180
@@ -750,111 +582,33 @@ totalPoints
 8 / 9 / 10 → 1090 / 1210 / 1330
 ```
 
-正式來源：
+玩家 guide 不列精確 progression；GM 可以顯示。
 
-```text
-dungeonarena.js
-pointWindowHighest()
-arenaPointOffset()
-difficultyForRank()
-```
+## 9.7 單次／連續
 
-玩家卡片、ready、每戰實際發放、單次結果、連續總結算、GM config 都吃同一套 config。
-
-**玩家遊戲說明不得列上面這組精確積分 progression。**
-
-玩家 guide 只用概念說法：
-
-> 競技場越往後推進，可獲得的 VIP 積分也會提高。
-
-GM 可以顯示精確積分。
-
-## 9.10 單次／連續競技場
-
-一個完整三連戰＝一輪。
-
-- 三戰內 HP 連續，不回血
+- 一完整三連戰＝一輪
+- 三戰內 HP 連續、不回血
 - 下一輪重新滿血
-- 下一輪真正開始前才再扣1次
+- 下一輪真正開始前才再扣 1 次
 - 任一戰失敗即該輪失敗
-- 死亡停止
-- 次數不足停止
+- 死亡／次數不足停止
 - 手動停止在目前整輪結束後生效
-- 連續模式最後統一總結算
+- 連續最後統一總結算
 
-## 9.11 玩家 UI 行為
+## 9.8 重要已修 bug
 
-競技場選擇頁：
-
-- 顯示目前最高已解鎖競技場
-- 顯示 ①戰力評估 + ②主線條件
-- 明確寫「97%」
-- 500次 async 評估時顯示 `評估中 n/500`
-- 最多顯示最近3張競技場卡片
-- 卡片顯示「三戰全通 X VIP 積分」
-- 不顯示低／中／高位置字樣
-- 正式名稱一律用主線區域競技場名
-
-`arenaplayerflow2.js` 目前仍是後載入接管 base `renderArenaDungeon()` 的正式玩家 UI 層；這屬尚存相容架構，不是目前功能 bug。
-
-## 9.12 本對話重要競技場 bug 修正
-
-### A. 解鎖按鈕按了沒反應
-
-根因：舊 `normalizeArenaProgress()` 曾用：
-
-```text
-dungeon.arena = {...}
-```
-
-直接替換物件。
-
-`promoteArenaRank()` 先取得舊 arena 參照，之後另一層 normalize 換成新物件，導致修改寫在 detached object，save 時正式 state 沒變。
-
-正式修法：`normalizeArenaProgress()` 現在**保留原 `dungeon.arena` 物件 identity，原地 `Object.assign()`**。
-
-此修正後使用者曾實際確認競技場可依序解鎖到第3個。
-
-### B. 競技場積分顯示 180 / 430 / 680
-
-根因：舊公式依 rank 本身：
-
-```text
-base + 130 × (rank - 1)
-```
-
-錯把前三個競技場直接當作已推進視窗。
-
-正式修正為「highest visible window 從4開始才 +130」，得到 180 / 300 / 420。
-
-### C. 90% → 97%
-
-正式門檻改為 485/500，並加入 `assessmentRuleVersion = 2` 處理舊 `promotionReady`。
-
-### D. 正式戰鬥與 GM／評估三維不一致
-
-第二批完整檢查發現：正式玩家戰鬥仍曾使用低／中／高各自不同 HP／ATK／DEF；只有測試層被後載入 wrapper 正規化。
-
-正式修法：三維直接收回 `dungeonarena.js` 單一 `ARENA_PHYSICAL_STAGE_PROFILE`，位置只保留暴閃／特性。
-
-### E. 舊競技場 UI／wrapper 清理
-
-已完成：
-
-- 舊 450/500 assessment 從 `dungeonarena.js` 移除
-- 舊玩家「普通／困難／極限」選擇 UI 移除
-- `dungeonplayerui.js` 不再介入正式競技場內頁
-- `arenapositioncore.js` 不再 wrapper `buildArenaEnemyForTest()` 正規化三維
-- `arenawindowcore.js` 不再暫時改全域 rank 做評估
-- `arenaranklabels.js` 已刪除
+- `normalizeArenaProgress()` 不再替換 `dungeon.arena` 物件，改原地 `Object.assign()`，修掉 promotion 寫入 detached object。
+- 積分由錯誤 `base +130×(rank-1)` 改成 highest visible window 從4開始才加。
+- 90% → 97%，正式 485/500。
+- 正式戰鬥／GM／評估三維收斂成 `dungeonarena.js` 單一 `ARENA_PHYSICAL_STAGE_PROFILE`。
+- 舊玩家「普通／困難／極限」選擇 UI 移除。
+- `arenaranklabels.js` 已刪除。
 
 ---
 
 # 10. 虛空幻境
 
-開放等級：Lv25。
-
-核心常數：
+開放 Lv25。
 
 ```text
 Base crit  = 10
@@ -864,54 +618,32 @@ ATK multiplier = 2.15
 DEF multiplier = 2.65
 ```
 
-樓層等價強度：
-
 ```text
 EquivalentPower(F) = 24 + F / 10
-```
 
-基礎三維：
-
-```text
 HP  = ceil((62 + 16.2 × E) × 2.40)
 ATK = ceil((10.5 + 2.45 × E) × 2.15)
 DEF = ceil((3.2 + 0.92 × E) × 2.65)
 ```
 
-每10層為 Boss；普通樓 1 個特性，Boss 樓 2 個特性。
+- 每10層 Boss
+- 普通樓 1 特性，Boss 2 特性
+- 首次通關積分：`round(15 + 1.75 × sqrt(F - 1))`
+- Boss 樓積分再 ×2
+- 正式進度：`state.dungeon.voidMirage.highestCleared`
+- 只在剛好挑戰 `highestCleared + 1` 首次通關時推進並發積分
+- 一個 run 開始時扣1次副本；run 內持續向上挑戰
+- 每層通關後回滿本 run 鎖定 snapshot 的 HP
 
-首次通關積分：
-
-```text
-round(15 + 1.75 × sqrt(F - 1))
-```
-
-Boss 樓再 ×2。
-
-正式進度：
-
-```text
-state.dungeon.voidMirage.highestCleared
-```
-
-只在「剛好挑戰 highestCleared + 1」首次通關時推進並發積分。
-
-虛空幻境一個 run 開始時扣1次副本；run 內持續向上挑戰。每通過一層會回滿本 run 鎖定玩家 snapshot 的 HP。
-
-GM 支援：
-
-- 重置樓層
-- 直接移動到指定樓層（最高已通過 = target-1）
-- 模擬推進到指定樓層並補上首次通關積分
-- 挑戰進行中禁止直接用 GM 樓層管理
+GM 支援：重置樓層、直接移動到指定樓層、模擬推進並補首次通關積分；挑戰進行中禁止 GM 樓層管理。
 
 ---
 
 # 11. GM 系統：目前正式功能
 
-GM 從設定頁隱藏入口進入；密碼來源仍定義在 `data.js`，不要在交接檔另建立第二份密碼來源。
+GM 從設定頁隱藏入口進入；密碼來源仍定義在 `data.js`，不要在交接檔另建第二份密碼來源。
 
-`gmhub.js` 有「管理」與「測試」概念；手機版也有對應 responsive UI。
+`gmhub.js` 分「管理」與「測試」，手機有 responsive UI。
 
 ## 11.1 正式角色／世界管理
 
@@ -928,107 +660,54 @@ GM 從設定頁隱藏入口進入；密碼來源仍定義在 `data.js`，不要�
 
 ## 11.2 副本／VIP 管理
 
-GM 可直接設定：
-
 - 副本進度
 - 副本可挑戰次數
 - VIP 積分
 - 重置 VIP（等級＋積分）
 
-注意：單純調低 VIP 積分不會降低已解鎖 VIP 等級；若要回 VIP0 要用正式重置功能。
+單純調低積分不會降低已解鎖 VIP；回 VIP0 必須使用正式重置。
 
 ## 11.3 專精管理與測試
 
-- 正式管理：直接指定玩家 8 項專精等級並存檔
-- 測試專精：只存在目前工作階段，不改正式角色
+- 正式管理：直接指定玩家 8 項專精並存檔
+- 測試專精：只存在本工作階段
 - 測試 VIP：VIP0～20，工作階段限定
-- 「目前狀態」可把正式玩家目前 VIP＋專精複製到 GM 測試狀態
+- 「目前狀態」可把正式 VIP＋專精複製到 GM 測試狀態
 
-## 11.4 主線怪測試
+## 11.4 主線怪／特殊怪／懸賞／競技場測試
 
-GM 可不受玩家正式解鎖進度限制，選：
+主線怪測試可跨所有已實作區域，不受正式解鎖限制，沙盒跑 100 次，整理：勝率、勝利平均剩餘 HP、死亡掉裝／VIP20、EXP、金幣、滿等 EXP 轉金幣、掉落品質、測試鑑價售價。
 
-```text
-區域 → 地圖 → 怪物
-```
+特殊怪可指定後跑 100 次沙盒。
 
-執行 100 次沙盒模擬，會整理：
+懸賞有普通／高級／危險三個 100 次測試按鈕；敵人生成用不含 VIP 基礎能力，玩家模擬使用測試 VIP＋測試專精。
 
-- 勝率
-- 勝利平均剩餘 HP
-- 死亡掉裝次數
-- VIP20 保護
-- EXP / 金幣
-- 滿等 EXP 轉金幣
-- 掉落數與品質
-- 測試鑑價專精下的售價總和
+`arenagm5.js` 支援：
 
-測試使用 sandbox snapshot，結束後恢復正式 state。
+1. 100 次完整三連戰：Rank1～10、左／中／右位置算法
+2. 500 次正式戰力評估：Rank1低位置、Rank2中位置、Rank3+高位置；485/500 才通過
 
-## 11.5 特殊怪測試
-
-可指定特殊怪進行 100 次沙盒模擬；不修改正式角色資料。
-
-## 11.6 懸賞測試
-
-三個按鈕分別測：
-
-- 普通懸賞
-- 高級懸賞
-- 危險懸賞
-
-各跑 100 次。
-
-敵人生成用不含 VIP 的基礎玩家能力；玩家模擬使用 GM 測試 VIP＋測試專精。
-
-輸出勝率、勝利剩餘 HP、平均回合等。
-
-## 11.7 競技場 GM5
-
-`arenagm5.js` 是目前正式競技場測試 UI。
-
-支援：
-
-1. **100 次完整三連戰**
-   - 任選 arena Rank 1～10
-   - 任選左／中／右位置算法
-   - 使用正式積分 config
-
-2. **500 次正式戰力評估**
-   - Rank1 自動用低位置
-   - Rank2 自動用中位置
-   - Rank3+ 自動用高位置
-   - 485 / 500 才判定通過
-
-GM 可以顯示精確積分範例；玩家 guide 不顯示。
-
-## 11.8 虛空幻境 GM
-
-除了樓層管理，也保留虛空幻境測試／UI 管理工具；正式樓層資料以 `dungeonvoid.js` 為唯一來源。
+虛空另有樓層管理與測試 UI；正式樓層資料以 `dungeonvoid.js` 為唯一來源。
 
 ---
 
 # 12. 正式存檔／載入 pipeline
-
-## 12.1 schema
 
 ```text
 SAVE_SCHEMA_VERSION = 10
 SAVE_LOAD_PIPELINE_VERSION = 1
 ```
 
-`data.js` 的 `SAVE_VERSION = 9` 只保留 legacy／fallback 用途，不是正式 schema。
+`data.js SAVE_VERSION = 9` 只保留 legacy／fallback。
 
-## 12.2 第五批後正式 runtime load
-
-`window.load` 現在由 `savemigration.js` 正式接管：
+正式 `window.load` 由 `savemigration.js` 接管：
 
 ```text
 讀 localStorage raw
 → 保留 rawSnapshot / sourceVersion
 → clone working state
 → migrateSave()
-→ UI/gear normalize
+→ gear / UI normalize
 → 世界 normalize
 → VIP normalize
 → 專精 normalize
@@ -1038,172 +717,471 @@ SAVE_LOAD_PIPELINE_VERSION = 1
 → finalizeDungeonLoadedState()
 → 恢復中斷副本
 → selectedMap / HP / shop normalize
-→ 設 saveVersion = 10
+→ saveVersion = 10
 → 最後才 save(false)
 ```
 
-重要原則：**舊 raw 存檔在 migration 完成以前，不會先被寫回新版 `saveVersion`。**
+重要：**migration 完成前不會先把舊 raw 存檔寫成新版 saveVersion。**
 
-這修正了舊架構中「base load 可能先把 localStorage 標成新版，再做正式 migration」的風險。
+migration 目前處理：舊裝備 mainStat/affix、shop、v9 EXP 比例轉換、世界100張陣列、VIP、專精、副本／競技場、虛空、offline。
 
-## 12.3 各檔責任
-
-- `engine.js`：保留基礎／fallback `load()`、newState、核心 state helper
-- `savemigration.js`：正式 runtime 唯一 load / migration pipeline
-- `dungeonprogress.js`：不再 wrapper `load()`；只做副本 normalize + `finalizeDungeonLoadedState()`
-- `hpflow.js`：不再 wrapper `normalizeSaveState()`／重跑 migration；只負責 HP 規則與主線戰鬥入口
-- `ui.js`：匯入存檔的防禦性 `normalizeSaveState()` / `normalizeCurrentSaveState()`；需要 schema migration 時呼叫正式 `migrateSave()`
-
-## 12.4 migration 內容
-
-目前會處理：
-
-- 舊裝備 mainStat / affix 補齊
-- shop 舊版本初始化
-- v9 EXP 進度比例轉到新 EXP 曲線
-- 世界100張陣列延長
-- VIP
-- 專精
-- 副本／競技場
-- 虛空幻境
-- offline state
-
-## 12.5 診斷報告
-
-`LAST_SAVE_LOAD_REPORT`：
+診斷：
 
 ```text
-pipelineVersion
-hadRaw
-parseFailed
-sourceVersion
-targetVersion
-recoveredInterruptedDungeonRun
+window.LAST_SAVE_LOAD_REPORT
 ```
+
+包含 pipelineVersion / hadRaw / parseFailed / sourceVersion / targetVersion / recoveredInterruptedDungeonRun。
 
 ---
 
-# 13. Runtime 自我檢查
+# 13. 背景執行、離線與時間防護
 
-`runtimeintegrity.js` 在 `index.html` 最後載入，不顯示任何玩家 UI。
+## 13.1 Background progress
 
-會建立：
+`backgroundprogress.js`：
+
+- 背景補償 credit rate：`0.96`
+- 連續背景最多計 12 小時
+- 用 `visibilitychange / blur / focus / pagehide / pageshow` 判斷背景狀態
+- 主線連續、懸賞連續、競技場連續、虛空可用 `backgroundProgressSleep()`
+- 不是單場就建立 background flow；完成後停止
+
+## 13.2 Offline reward
+
+`offlineprogress.js` 正式基準：
+
+```text
+EXP 10%
+金幣 10%
+裝備 roll 10%
+副本進度 10%
+最短離線 1 分鐘
+最長計算 12 小時
+```
+
+實際戰鬥速度樣本：
+
+- 最多保留最近 20 筆真實前景主線勝利樣本
+- normal 額外 cycle gap +140ms
+- elite 額外 cycle gap +220ms
+- 玩家高於敵人等級差的速度倍率：
+
+```text
+0～3：×1.00
+4～6：×1.30
+7～10：×1.60
+11～15：×2.00
+16+：不採樣
+```
+
+背景 catch-up credit 的戰鬥不應拿來污染真實速度樣本。
+
+時間防護：
+
+- `maxObservedWallClock`
+- `timeLockUntil`
+- 時鐘倒退容忍 5 分鐘
+- 遇到明顯倒退會封鎖離線結算直到系統時間追上
+- `pendingSettlement` 用於避免結算被中斷／重入
+- 大量模擬每 750 次讓出 event loop
+
+離線保留裝備策略：非神話每部位只保留最佳候選，再與穿戴比較；神話全部保留，其餘自動出售。
+
+---
+
+# 14. Runtime 自我檢查
+
+`runtimeintegrity.js` 最後載入，不顯示玩家 UI，建立：
 
 ```text
 window.PROJECT_RUNTIME_REPORT
 ```
 
-目前檢查：
+檢查：
 
-- `MAPS.length` 是否符合 WORLD_REGIONS
-- `WORLD_MAP_REGISTRATION_REPORT` 是否通過
-- `WORLD_NAMING_REPORT` 是否有硬錯
-- 必要函式是否存在
+- `MAPS.length` 與 WORLD_REGIONS
+- `WORLD_MAP_REGISTRATION_REPORT`
+- `WORLD_NAMING_REPORT`
+- 必要函式
 - `SAVE_SCHEMA_VERSION === 10`
 - `SAVE_LOAD_PIPELINE_VERSION === 1`
-- `state.saveVersion` 是否一致
+- `state.saveVersion`
 - `dungeon.arena` normalize 是否保持物件參照
 
-有錯寫 console error；只有 warning 則 console warn。
-
-可視 `runtimediag.js` 已移除。未來若 Safari／runtime 再出難定位問題，才臨時加診斷 UI；問題解決後應再移除，不要永久常駐玩家頁。
+有錯 console error；只有 warning 則 console warn。
 
 ---
 
-# 14. 本對話五批架構整理：已全部完成
+# 15. 視覺重整：目前最新正式方向
 
-## 第1批：規則與舊資料
+## 15.1 統一美術基準
 
-完成：
+整體固定：
 
-- 競技場 90% → 97%
-- 450/500 → 485/500
-- `assessmentRuleVersion = 2`
-- 舊無證據 `promotionReady` 清理
-- 舊玩家競技場 UI 清除
-- 異常處理「先查完整鏈」正式納入規範
+> **科幻戰略風＋宇宙史詩風**
 
-## 第2批：競技場核心
+主色：深藍、黑、鐵灰、銀灰、科技藍；輔以紫藍、能量紫、青藍、少量金色。
 
-完成：
+避免：
 
-- 舊 450 assessment 移除
-- 正式三維收回 `dungeonarena.js`
-- 位置只管暴閃／特性
-- 移除測試層三維 wrapper
-- 移除 assessment 暫時改全域 rank
-- 舊玩家三難度制度正式退出
+- 過亮
+- 過度霓虹
+- 卡通／兒童感
+- 純寫實軍武
+- 現代都市感
+- 過度雜亂
+- 電影海報式構圖
+- 圖片內大字／Logo
 
-## 第3批：懸賞核心
+背景圖必須：
 
-完成：
+- 預設 16:9
+- 適合 CSS `background-size: cover`
+- 同時考慮桌機與手機直式裁切
+- 中央保留 UI 安全區
+- 關鍵主體不要全部堆在左右極端
+- 讓 UI 長時間閱讀仍舒服
 
-- 連續懸賞中間不再回 ready 挑戰模式頁
-- 最後才一次總結算
-- `bountycontinuousui.js` 刪除
-- 戰前精確獎勵 preview 從核心移除
-- `dungeonplayerui.js` 不再二次修改懸賞內頁
+## 15.2 第1～3張已完成
 
-## 第4批：地圖架構
+### 第1張：主畫面背景
 
-完成：
+用途：**首頁／主畫面**。
 
-- 十區統一 `registerRegionMaps()`
-- 移除 worldmaps 的直接 push / splice 註冊
-- 新增固定 slot 完整性檢查
-- 100 張 map index 保持不變，舊存檔無需額外搬移
+目前正式檔案：
 
-## 第5批：存檔／全域收尾
+```text
+homebackground.css
+homebackground.js
+assets/bg-main-test-1.b64
+assets/bg-main-test-2.b64
+assets/bg-main-test-3.b64
+assets/bg-main-test-4.b64
+```
 
-完成：
+`homebackground.js` 讀 4 段 Base64，拼成 `data:image/webp;base64,...` 設到 `--home-bg-image`。
 
-- `savemigration.js` 成為正式唯一 runtime migration pipeline
-- `dungeonprogress.js` 不再 wrapper load
-- `hpflow.js` 不再 wrapper migration
-- 避免 migration 完成前先覆寫 saveVersion
-- `arenaranklabels.js` 刪除
-- 新增 `runtimeintegrity.js`
-- `runtimediag.js` 後續已再刪除，不常駐診斷框
+CSS 用 `.home-screen::before / ::after` 做背景與暗色遮罩；手機 `background-position:52% center`。
+
+已由使用者實際看過，桌機／手機可用。
+
+### 第2張：主線一般／菁英戰鬥背景
+
+用途：**主線一般與菁英戰鬥**。
+
+目前正式檔案：
+
+```text
+battlebackground.css
+battlebackground.js
+assets/bg-battle-test-01.b64 ～ bg-battle-test-12.b64
+```
+
+JS 讀 12 段 Base64。CSS 只套 `#main > .combat-screen`，玩家／敵人卡片有半透明深色底。
+
+桌機與 iPhone 真機已確認：中央戰鬥空間與手機裁切都良好。
+
+### 第3張：冒險地圖整頁背景
+
+**正式用途已重新定義為「整個冒險地圖頁面背景」，不是某一個區域背景。**
+
+目前正式檔案：
+
+```text
+mapbackground.css
+mapbackground.js
+assets/bg-map-reupload-01.b64 ～ bg-map-reupload-06.b64
+```
+
+`mapbackground.js`：
+
+- 讀 6 段 Base64
+- join 後先用 `new Image()` probe 是否可解碼
+- 解碼成功才設定 `--map-bg-image`
+- 用 `MutationObserver` 監看 `#main`，當 `.map-screen` 存在時在 body 加 `map-background-active`
+
+`mapbackground.css`：
+
+- 背景固定在 `body.map-background-active::before`
+- `position:fixed; inset:0`
+- 因此收合／展開區域不會重新縮放背景
+- `.map-screen` 本身設透明
+- 區域／卡片維持半透明深色
+- 手機目前 `background-position:58% 42%`
+
+這一版已由使用者實機確認背景能鋪整頁，收合不再導致背景跳動。
+
+## 15.3 第3張曾遇到的問題與正式經驗
+
+### A. 一開始完全不顯示
+
+真正根因不是單純 cache：**Base64 單檔過長曾被截斷，組出的 WebP 不完整。**
+
+解法：
+
+- 重新壓 WebP
+- 重新產 Base64
+- 拆成多個小段
+- 上傳後核對每段與總長度
+- JS join
+- `Image()` probe 成功才套用
+
+### B. 背景只在方框內，收合時圖片會變
+
+根因：背景直接掛在高度會變動的 `.map-screen`，`background-size:cover` 每次都重新計算裁切。
+
+解法：改成**固定 viewport 背景**，由 body class 控制顯示，內容高度變化不再影響背景。
+
+### C. 手機裁切中央較空
+
+改過 `background-position`，目前 58% 42%；實機差異有限，但可接受。結論：手機 `cover` 只能小修，真正要在**生圖構圖階段**就預留中央直式安全區。
 
 ---
 
-# 15. 已知尚未完成／需保留警覺的項目
+# 16. 背景圖之後的標準工作流程
 
-這些不是目前已確認 bug，但下一個 ChatGPT 必須知道：
+這段是後續最重要的視覺工作規範。
 
-## 15.1 主線舊 battle-count base renderer
+## 16.1 先看介面，再決定生什麼圖
 
-`ui.js` 還有歷史 1/5/10/15/20/25 battle-count 程式；正式 runtime 由 `continuousbattle.js` 改成單場／連續。
+不要「先有一張圖，再找地方塞」。正式流程：
 
-未來可整理，但**不要未檢查整條主線戰鬥鏈就直接刪。**
+```text
+實際介面截圖
+→ 判斷是否真的需要背景
+→ 判斷背景應掛 viewport / 頁面 / 固定區塊 / 戰鬥區
+→ 再決定圖片用途
+→ 才寫生圖指令
+```
 
-## 15.2 競技場相容命名
+如果頁面有收合、列表長度變化、動態 render，優先考慮 viewport／整頁固定背景，不要把 cover 背景綁在會改高度的容器。
 
-`normal / hard / extreme` 和部分 `difficulty*` 函式名仍保留，現在只表示 position template，相容用途，不是玩家三難度。
+## 16.2 生圖指令必備內容
 
-## 15.3 競技場玩家 UI 仍是後載入接管
+每張指令一次寫完整，不要叫使用者再補句子。至少包含：
 
-`arenaplayerflow2.js` 仍 wrapper `render()` / `renderArenaDungeon()` 來接管正式玩家競技場頁。
+- 科幻戰略＋宇宙史詩
+- 深色、高質感、成熟、耐看
+- 深藍／黑／鐵灰／銀灰／科技藍
+- 可少量紫藍／青藍／金色
+- 不要過亮／過霓虹／卡通／現代都市／電影海報
+- 不要文字／Logo
+- 16:9
+- 適合 `background-size:cover`
+- 桌機＋手機直式裁切
+- 中央保留 UI 空間
+- 重要元素不要全部靠左右邊緣
 
-目前正常，但如果未來再重構 UI，應優先把正式 renderer 入口參數化／單一化，而不是再加第三層 wrapper。
+不同用途再補：
 
-## 15.4 engine base load 仍存在
+- 首頁：中央乾淨，主體多放左右／上方
+- 戰鬥：中下區保留角色卡片＋VS
+- 系統頁：背景結構要穩，不依賴內容高度
 
-`engine.js` 的 base `load()` 仍保留作 fallback；正式 runtime 最終由後載入 `savemigration.js` 覆蓋。
+## 16.3 上傳前先讀 main 的實際 DOM／CSS
 
-不要誤以為 engine base load 是目前正式 migration 來源。
+使用者說「上傳到遊戲網頁」後，先做：
 
-## 15.5 地圖 index 仍是永久身分
+1. 讀相關 renderer
+2. 確認真正輸出的 class
+3. 看是否會 re-render
+4. 看是否有後載入 CSS / wrapper
+5. 決定背景該掛哪層
 
-100張目前安全；但若日後要重新排序／中間插圖，必須正式 migration。
+確認後才上傳，避免第3張曾經的錯誤定位。
 
-## 15.6 真機完整 smoke test
+## 16.4 圖片處理與 GitHub 上傳
 
-本對話多次 GitHub 寫入、回讀與 compare 已完成；競技場舊 identity bug 修正後曾由使用者實際確認可解鎖。
+目前 connector 寫二進位不方便，因此暫用 Base64 文字資產。建議測試版：
 
-但五批大整理全部完成後，**尚未在本對話完成一輪完整 GitHub Pages + 桌面瀏覽器 + iPhone Safari 全系統 smoke test**。
+- 先壓 WebP
+- 約 960×540（可依畫面需求略調）
+- quality 約 80～85
+- Base64 拆小段，建議每段約 7～10KB 文字
+- 檔名固定有序，例如 `bg-dungeon-01.b64`、`02`、`03`
 
-建議下一次大功能前至少快速驗證：
+**不要再使用一個超長 `.b64`。**
+
+## 16.5 上傳後完整性檢查
+
+通知使用者重整前，必須先確認：
+
+- 每一段檔案都存在
+- 段數正確
+- 每段長度合理
+- 總 Base64 長度與本地原始值一致（若本地可得）
+- JS 路徑與段數一致
+- `Image()` probe 能成功解碼（適用這類 data URL 流程）
+- CSS selector 真正命中目前 DOM
+- `index.html` cache-bust 已更新
+- compare 只包含預期修改
+
+**不要只因 GitHub create/update 成功，就叫使用者重整測試。**
+
+## 16.6 背景 CSS 保持獨立
+
+目前已有：
+
+```text
+homebackground.css
+battlebackground.css
+mapbackground.css
+```
+
+之後背景仍優先用獨立檔，例如：
+
+```text
+dungeonbackground.css
+specialbattlebackground.css
+```
+
+但前提是這真的是正式畫面規則，不要因為 selector 沒搞清楚就再疊一層補丁。
+
+## 16.7 實機調整
+
+桌機與手機至少分開考慮 `background-position`。但原則是：**生圖先做裁切安全，CSS 只小修，不拿 CSS 救錯誤構圖。**
+
+使用者傳實機截圖後，先判斷是：
+
+- 圖本身問題
+- 背景掛錯層
+- 版型問題
+- 遮罩／位置問題
+
+不要混在一起修。
+
+---
+
+# 17. 副本桌機 UI 整理：本對話最新狀態
+
+使用者提供了副本入口、懸賞、競技場、虛空的桌機與手機截圖後，確認：
+
+- 手機版整體其實已經合理，**目前這批只調桌機版**。
+- 桌機懸賞 ready/result 原本主卡後還包一層大紫底，難看。
+- 桌機競技場內容區偏窄、四周太空。
+- 桌機虛空戰鬥上下留白過多。
+
+目前新增獨立：
+
+```text
+dungeondesktoppolish.css
+```
+
+並只在 `@media (min-width:761px)` 生效。
+
+## 17.1 已確認有效
+
+### 懸賞
+
+桌機移除 `.dungeon-bounty-shell.dungeon-page-shell` 的多餘紫色大底，保留真正內容卡。
+
+### 競技場
+
+桌機放寬 `.arena-shell / .arena-panel`，ready/result 也調整 max-width。
+
+**使用者已回報：懸賞和競技場好了。**
+
+## 17.2 虛空仍未完成
+
+目前 `dungeondesktoppolish.css` 已嘗試對桌機虛空強制：
+
+- `.void-combat.combat-screen` `display:block !important`
+- `min-height:0 !important`
+- `height:auto !important`
+- `flex:none !important`
+- `.combat-arena` 變三欄：玩家 / VS / 敵人
+- 取消 flex 撐高
+
+`index.html` cache-bust 現為：
+
+```text
+dungeondesktoppolish.css?v=20260913-dungeon-desktop3
+```
+
+**但使用者實機重整多次後，虛空桌機畫面仍幾乎相同，上下空白仍在。**
+
+因此這是目前明確未完成項目。
+
+### 下一步正確作法
+
+不要再盲目加第四層 CSS override。
+
+應先完整檢查：
+
+```text
+style.css 的 .combat-screen / .combat-arena
+→ dungeonvoidui.js 實際輸出結構
+→ dungeonvoidui.js 動態 injectStyles()
+→ dungeondesktoppolish.css specificity / 生效順序
+→ 實際 computed layout 的高度來源
+```
+
+若確認通用 `.combat-screen` 結構本身就是根因，**優先直接修改 `dungeonvoidui.js` 的正式桌機 layout／class 結構**，讓虛空不要再繼承主線「撐滿 viewport」的戰鬥版型，而不是再加更多外部 wrapper。
+
+手機版虛空目前看起來正常，不應一起改壞。
+
+---
+
+# 18. 已完成的大型架構整理
+
+先前五批均完成：
+
+1. 規則／舊資料：競技場 97%、485/500、舊 promotion 清理
+2. 競技場核心：三維單一來源、位置只管暴閃／特性、舊三難度退出
+3. 懸賞核心：連續 transition、最後總結算、刪舊 bounty wrapper、移除戰前精確 preview
+4. 地圖架構：十區固定 `registerRegionMaps()`、固定 slot 檢查
+5. 存檔／全域收尾：`savemigration.js` 唯一 runtime migration、`runtimeintegrity.js`、刪除常駐診斷框
+
+本對話另外完成：
+
+- 第1張首頁背景
+- 第2張主線戰鬥背景
+- 第3張冒險地圖整頁背景
+- 第3張多次修正：Base64 完整性、viewport 固定背景、手機裁切
+- 桌機懸賞多餘紫底移除
+- 桌機競技場寬度整理
+- 虛空桌機版型仍待解決
+
+---
+
+# 19. 已知尚未完成／技術債
+
+## 19.1 主線舊 battle-count base renderer
+
+`ui.js` 還有歷史 1/5/10/15/20/25；正式 runtime 由 `continuousbattle.js` 改為單場／連續。未完整檢查鏈前不要直接刪。
+
+## 19.2 競技場相容命名／玩家 UI 接管
+
+`normal / hard / extreme` 只代表 internal position template。`arenaplayerflow2.js` 仍後載入接管正式玩家 UI；若重構，應收斂 renderer，不要再疊第三層 wrapper。
+
+## 19.3 engine base load
+
+`engine.js` base `load()` 仍保留 fallback；正式 runtime 以 `savemigration.js` 為準。
+
+## 19.4 map index 永久身分
+
+若未來改順序／插入地圖，必須正式 migration。
+
+## 19.5 Base64 圖片資產是暫時的技術方案
+
+目前第1～3張背景都以 Base64 chunk 文字檔載入。這可用，但 repo 結構較繁瑣。若日後有可靠的二進位資產寫入方式，可整理成正常單一 `.webp` 並改 CSS 直接引用；**整理前先確認真機 cache 與 Pages 路徑，不要在背景仍持續調整時急著搬。**
+
+## 19.6 虛空桌機 UI
+
+目前明確未解：桌機虛空戰鬥上下空白太多；`dungeon-desktop3` 外部 CSS 覆蓋未在實機產生預期效果。下一步應查 source-level layout，不要再猜。
+
+## 19.7 全系統 smoke test
+
+本對話已真機驗證：
+
+- 首頁背景
+- 主線戰鬥背景
+- 冒險地圖背景（桌機／手機）
+- 冒險地圖收合背景不再跳
+- 桌機懸賞／競技場 UI 改善
+
+但仍沒有完成一次全系統 GitHub Pages + 桌面 + iPhone Safari smoke test。建議大功能前快速驗證：
 
 ```text
 舊存檔載入
@@ -1222,11 +1200,11 @@ GM 管理／沙盒測試
 
 ---
 
-# 16. 最重要的正式來源對照
+# 20. 最重要的正式來源對照
 
 ```text
 data.js
-  世界 region / QUALITY / 固定 map registry
+  世界 region / QUALITY / 固定 map registry / legacy save version
 
 worldmaps-*.js
   100 張正式主線資料
@@ -1276,11 +1254,35 @@ arenagm5.js
 dungeonvoid.js
   虛空幻境正式核心
 
+dungeonvoidui.js
+  虛空玩家 UI / 動態樣式；目前桌機版型未完成修正
+
 savemigration.js
   正式唯一 runtime save migration / load pipeline
 
+backgroundprogress.js
+  背景 continuous credit / page visibility flow
+
+offlinefarmtarget.js
+  真實主線樣本與 offline farm target
+
+offlineprogress.js
+  離線結算／時鐘防護／reward UI
+
 runtimeintegrity.js
   背景 runtime integrity report
+
+homebackground.css/js
+  第1張首頁背景
+
+battlebackground.css/js
+  第2張主線戰鬥背景
+
+mapbackground.css/js
+  第3張冒險地圖整頁背景
+
+dungeondesktoppolish.css
+  桌機副本 UI 修飾；懸賞／競技場有效，虛空仍待解
 
 index.html
   最終實際載入順序與 cache-bust
@@ -1288,14 +1290,14 @@ index.html
 
 ---
 
-# 17. 下一個對話如何接手
+# 21. 下一個對話如何接手
 
-下一個對話開始時，建議使用者直接貼這句：
+下一個對話開始時，建議直接貼：
 
-> **讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 `main` 的實際程式碼與完整 `index.html`，完整承接《文明戰線》專案。以 GitHub `main` 為唯一真實來源；若交接檔與實碼衝突，以實碼為準。現在先不要修改，先告訴我你已承接到哪些最新系統、規則、公式、已知技術債與操作原則。**
+> **讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 `main` 的實際程式碼與完整 `index.html`，完整承接《文明戰線》專案。以 GitHub `main` 為唯一真實來源；若交接檔與實碼衝突，以實碼為準。現在先不要修改，先告訴我你已承接到哪些最新系統、規則、公式、GM功能、UI／背景圖狀態、已知 bug、尚未完成項目與操作原則。**
 
 若下一個對話接著要直接修改，再由使用者明確說：
 
-> **「做／修改／修正／執行」**
+> **「做／修改／修正／執行／開始／上傳到遊戲網頁」**
 
 才開始寫入 GitHub `main`。
