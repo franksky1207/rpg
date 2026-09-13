@@ -37,7 +37,7 @@ jobs:
           PY
       - name: Commit optimized background
         run: |
-          if git diff --quiet -- assets/backgrounds/home/desktop.webp; then
+          if [ -z "$(git status --porcelain -- assets/backgrounds/home/desktop.webp)" ]; then
             echo 'No background change needed.'
             exit 0
           fi
