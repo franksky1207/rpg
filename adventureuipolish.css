@@ -1,0 +1,76 @@
+/* Adventure non-combat UI surfaces: transparent enough for scenery, stable enough for dense information. */
+.prepare-screen .player-status-card,
+.prepare-screen .prepare-main{
+  background:linear-gradient(180deg,rgba(23,28,36,.86),rgba(17,21,27,.90));
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 12px 30px rgba(0,0,0,.20);
+}
+.prepare-screen .player-status-card .stat{
+  background:rgba(16,20,26,.88);
+}
+.prepare-screen .player-status-card .muted,
+.prepare-screen .prepare-main .muted{
+  color:#d6d9df;
+}
+.prepare-screen .enemy-card{
+  background:linear-gradient(180deg,rgba(26,32,41,.80),rgba(17,21,27,.84));
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.prepare-screen .enemy-card.active{
+  background:linear-gradient(180deg,rgba(48,40,25,.86),rgba(31,27,20,.88));
+}
+.prepare-screen .enemy-meta{
+  color:#d9dde4;
+  text-shadow:0 1px 5px rgba(0,0,0,.55);
+}
+.prepare-screen .trait-detail-desc,
+.prepare-screen .enemy-card-note{
+  color:#d4d2cc;
+}
+.prepare-screen .count-card{
+  background:linear-gradient(180deg,rgba(27,33,42,.76),rgba(17,21,27,.80));
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.prepare-screen .count-card.active{
+  background:linear-gradient(180deg,rgba(54,45,25,.84),rgba(35,30,20,.87));
+}
+.prepare-screen .map-progress-fold summary{
+  background:rgba(23,25,18,.84);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.prepare-screen .map-progress-fold .notice{
+  background:rgba(27,25,20,.88);
+  color:#e6ddc9;
+}
+
+@media(max-width:760px){
+  .prepare-screen .player-status-card,
+  .prepare-screen .prepare-main{
+    background:linear-gradient(180deg,rgba(23,28,36,.91),rgba(17,21,27,.93));
+  }
+  .prepare-screen .player-status-card .stat{
+    background:rgba(16,20,26,.93);
+  }
+  .prepare-screen .enemy-card{
+    background:linear-gradient(180deg,rgba(26,32,41,.86),rgba(17,21,27,.89));
+  }
+  .prepare-screen .enemy-card.active{
+    background:linear-gradient(180deg,rgba(48,40,25,.90),rgba(31,27,20,.92));
+  }
+  .prepare-screen .count-card{
+    background:linear-gradient(180deg,rgba(27,33,42,.83),rgba(17,21,27,.86));
+  }
+  .prepare-screen .count-card.active{
+    background:linear-gradient(180deg,rgba(54,45,25,.89),rgba(35,30,20,.91));
+  }
+  .prepare-screen .map-progress-fold summary{
+    background:rgba(23,25,18,.89);
+  }
+  .prepare-screen .map-progress-fold .notice{
+    background:rgba(27,25,20,.92);
+  }
+}
