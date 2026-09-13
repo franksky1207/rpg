@@ -1,45 +1,4 @@
 (function(){
- function injectSettlementUiStyles(){
-  if(document.getElementById("settlement-ui-styles"))return;
-  const style=document.createElement("style");
-  style.id="settlement-ui-styles";
-  style.textContent=`
-   #battleResultModal .modal-box{max-height:calc(100dvh - 24px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-   #battleResultModal #battleResultDetail{min-height:0!important;overflow:auto!important;overscroll-behavior:contain;padding-right:2px}
-   #battleResultModal>.modal-box>.controls{flex:0 0 auto!important;margin-top:10px!important}
-   .settlement-section{margin-top:12px;padding:12px;border:1px solid #343a43;border-radius:11px;background:#10151b}
-   .settlement-section:first-child{margin-top:0}
-   .settlement-section-title{font-size:17px;font-weight:800;color:#f0d494;margin-bottom:9px}
-   .settlement-special-entry{margin-top:10px;padding-top:10px;border-top:1px solid #2c323a}
-   .settlement-special-entry:first-of-type{margin-top:0;padding-top:0;border-top:0}
-   .settlement-special-name{font-weight:800;color:#ffe2a0}
-   .settlement-drop-wrap{margin-top:10px}
-   .settlement-drop-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
-   .settlement-drop-scroll{height:210px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #323740;border-radius:10px;background:#0f1319;padding:7px;scrollbar-gutter:stable}
-   .settlement-drop-row{padding:8px 9px;border-bottom:1px solid #292e36;line-height:1.35}
-   .settlement-drop-row:last-child{border-bottom:0}
-   .settlement-drop-row .muted{margin-top:3px;font-size:12px}
-   .settlement-equip-control{margin-top:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-   .settlement-equip-control .btn{padding:7px 11px}
-   .settlement-upgrade-delta{color:#76d587;font-weight:700}
-   .settlement-swap-sold{margin-top:6px;color:#d8c49a;font-size:12px}
-   #gameIntroModal .modal-box{max-width:520px}
-   .game-intro-title{color:#f0d494;margin-bottom:12px}
-   .game-intro-copy{line-height:1.8;color:#e6e0d5}
-   .game-intro-gear{margin-top:14px;padding:10px 12px;border:1px solid #4a4232;border-radius:9px;background:#12161c;color:#d8c49a}
-   #gameIntroModal .controls{margin-top:18px;justify-content:flex-end}
-   @media(max-width:760px){
-    #battleResultModal{padding:10px!important}
-    #battleResultModal .modal-box{max-height:calc(100dvh - 20px)!important;padding:14px!important}
-    .settlement-section{padding:10px}
-    .settlement-drop-scroll{height:190px;padding:6px}
-    .settlement-drop-row{padding:7px 8px}
-    #gameIntroModal{padding:12px!important}
-   }
-  `;
-  document.head.appendChild(style);
- }
-
  function normalizeItems(items){return Array.isArray(items)?items.filter(x=>x&&x.item):[];}
  function round2(value){return Math.round((Number(value)||0)*100)/100;}
  function encodedItemId(item){return encodeURIComponent(String(item?.id||""));}
@@ -101,7 +60,6 @@
  };
 
  window.settlementDropListHtml=function(items,options={}){
-  injectSettlementUiStyles();
   const rows=normalizeItems(items);
   const title=options.title==null?"裝備":String(options.title);
   const emptyText=options.emptyText==null?"裝備：無":String(options.emptyText);
@@ -203,6 +161,5 @@
   window.resetGame=function(){baseResetGame();setTimeout(maybeShowIntro,0);};
  }
 
- injectSettlementUiStyles();
  setTimeout(maybeShowIntro,0);
 })();
