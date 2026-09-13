@@ -1,7 +1,23 @@
-/* Unified image-background layer. New system only: assets/backgrounds/.
-   Baseline: image backgrounds fill the full viewport; page content stays centered. */
+/* Formal image-background owner.
+   This file only controls scene artwork, viewport coverage, overlays and the layout positioning
+   required by those full-width backgrounds. UI card materials belong to the polish stylesheets. */
+
 @media (min-width:761px){
-  #main>.home-screen{
+  #main>.home-screen,
+  #main>.map-screen,
+  #main>.prepare-screen,
+  #main>.combat-screen,
+  #main>.function-page:has(>.character-layout),
+  #main>.specialization-page,
+  #main>.function-page:has(>.grid),
+  #main>.function-page:has(>.card .shop-table-wrap),
+  #main>.guide-page,
+  #main>.function-page:has(#settingsTitle),
+  #main>.dungeon-page-shell,
+  #main>.dungeon-bounty-shell.dungeon-page-shell,
+  #main>.function-page.dungeon-page-shell.arena-shell,
+  #main>.void-shell:has(.void-result-grid),
+  #main>.void-shell:has(.void-combat){
     width:100vw;
     min-height:calc(100vh - 57px);
     min-height:calc(100dvh - 57px);
@@ -9,462 +25,60 @@
     margin-bottom:-40px;
     margin-left:calc(50% - 50vw);
     margin-right:calc(50% - 50vw);
-    padding-top:42px;
+    padding-top:36px;
     padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
     padding-bottom:64px;
     padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+
+  #main>.home-screen{
+    padding-top:42px;
     border-radius:0;
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
       url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.home-screen .home-title h2{
-    text-shadow:0 3px 18px rgba(0,0,0,.9);
-  }
-  #main>.home-screen .home-title .muted{
-    color:#d9dde4;
-    text-shadow:0 2px 10px rgba(0,0,0,.95);
-  }
-  #main>.home-screen .menu-card{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.80));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-  #main>.home-screen .menu-card span{
-    color:#e3e7ed;
-    text-shadow:0 1px 6px rgba(0,0,0,.72);
-  }
-
   #main>.map-screen{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.map-screen .page-title{
-    text-shadow:0 3px 18px rgba(0,0,0,.9);
-  }
-  #main>.map-screen .map-card{
-    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-
   #main>.prepare-screen{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.prepare-screen .page-title{
-    text-shadow:0 3px 18px rgba(0,0,0,.9);
-  }
-  #main>.prepare-screen .player-status-card,
-  #main>.prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-
   #main>.combat-screen{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
       url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.combat-screen .combat-head{
-    text-shadow:0 3px 18px rgba(0,0,0,.92);
-  }
-  #main>.combat-screen .combatant{
-    background:linear-gradient(180deg,rgba(22,29,39,.72),rgba(10,15,22,.80));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-
   #main>.function-page:has(>.character-layout),
   #main>.specialization-page{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.function-page:has(>.character-layout) .character-stats-card,
-  #main>.function-page:has(>.character-layout) .character-equipment-card,
-  #main>.specialization-page .specialization-panel{
-    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-  #main>.specialization-page .specialization-card,
-  #main>.specialization-page .specialization-guide{
-    background:linear-gradient(180deg,rgba(22,29,39,.76),rgba(10,15,22,.84));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-
   #main>.function-page:has(>.grid),
   #main>.function-page:has(>.card .shop-table-wrap){
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.function-page:has(>.grid) .card,
-  #main>.function-page:has(>.card .shop-table-wrap) .card{
-    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-}
-
-@media (max-width:760px){
-  #main>.home-screen{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:24px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
-      url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.home-screen .home-title h2{
-    text-shadow:0 3px 16px rgba(0,0,0,.92);
-  }
-  #main>.home-screen .home-title .muted{
-    color:#e1e5eb;
-    text-shadow:0 2px 9px rgba(0,0,0,.95);
-  }
-  #main>.home-screen .menu-card{
-    background:linear-gradient(180deg,rgba(22,29,39,.72),rgba(10,15,22,.82));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-  #main>.home-screen .menu-card span{
-    color:#e3e7ed;
-    text-shadow:0 1px 5px rgba(0,0,0,.72);
-  }
-
-  #main>.map-screen{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.map-screen .page-title{
-    text-shadow:0 3px 16px rgba(0,0,0,.92);
-  }
-  #main>.map-screen .map-card{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-
-  #main>.prepare-screen{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.prepare-screen .page-title{
-    text-shadow:0 3px 16px rgba(0,0,0,.92);
-  }
-  #main>.prepare-screen .player-status-card,
-  #main>.prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-
-  #main>.combat-screen{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.combat-screen .combat-head{
-    text-shadow:0 3px 16px rgba(0,0,0,.92);
-  }
-  #main>.combat-screen .combatant{
-    background:linear-gradient(180deg,rgba(22,29,39,.70),rgba(10,15,22,.82));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-
-  #main>.function-page:has(>.character-layout),
-  #main>.specialization-page{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.function-page:has(>.character-layout) .character-stats-card,
-  #main>.function-page:has(>.character-layout) .character-equipment-card,
-  #main>.specialization-page .specialization-panel{
-    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-  #main>.specialization-page .specialization-card,
-  #main>.specialization-page .specialization-guide{
-    background:linear-gradient(180deg,rgba(22,29,39,.74),rgba(10,15,22,.84));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-
-  #main>.function-page:has(>.grid),
-  #main>.function-page:has(>.card .shop-table-wrap){
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.function-page:has(>.grid) .card,
-  #main>.function-page:has(>.card .shop-table-wrap) .card{
-    background:linear-gradient(180deg,rgba(22,29,39,.38),rgba(10,15,22,.44));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-}
-
-/* guide-settings background v1 */
-@media (min-width:761px){
   #main>.guide-page,
   #main>.function-page:has(#settingsTitle){
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.guide-page .guide-content,
-  #main>.function-page:has(#settingsTitle)>.card{
-    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-    box-shadow:0 12px 28px rgba(0,0,0,.24);
-  }
-}
-
-@media (max-width:760px){
-  #main>.guide-page,
-  #main>.function-page:has(#settingsTitle){
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.guide-page .guide-content,
-  #main>.function-page:has(#settingsTitle)>.card{
-    background:linear-gradient(180deg,rgba(22,29,39,.36),rgba(10,15,22,.42));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.24);
-  }
-}
-
-
-/* dungeon-home background v1 */
-@media (min-width:761px){
   #main>.dungeon-page-shell{
-    width:100vw;
     max-width:none;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-home/desktop.webp?v=20260913-dungeon-home-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
   #main>.dungeon-page-shell>.back-home,
   #main>.dungeon-page-shell>.dungeon-mode-list{
@@ -472,190 +86,22 @@
     margin-left:auto;
     margin-right:auto;
   }
-  #main>.dungeon-page-shell .dungeon-status-card{
-    background-color:rgba(18,16,26,.40);
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-  #main>.dungeon-page-shell .dungeon-mode-card{
-    background-color:rgba(18,16,26,.82);
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-}
-
-@media (max-width:760px){
-  #main>.dungeon-page-shell{
-    width:100vw;
-    max-width:none;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-home/mobile.webp?v=20260913-dungeon-home-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.dungeon-page-shell .dungeon-status-card{
-    background-color:rgba(18,16,26,.40);
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-  #main>.dungeon-page-shell .dungeon-mode-card{
-    background-color:rgba(18,16,26,.84);
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-bounty background v1 */
-@media (min-width:761px){
   #main>.dungeon-bounty-shell.dungeon-page-shell{
-    width:100vw;
     max-width:none;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/dungeon-bounty/desktop.webp?v=20260913-dungeon-bounty-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
   #main>.dungeon-bounty-shell.dungeon-page-shell>.dungeon-bounty-card{
     max-width:760px;
     margin-left:auto;
     margin-right:auto;
-    background:linear-gradient(180deg,rgba(36,27,47,.38),rgba(20,17,28,.44));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
   }
-}
-
-@media (max-width:760px){
-  #main>.dungeon-bounty-shell.dungeon-page-shell{
-    width:100vw;
-    max-width:none;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-bounty/mobile.webp?v=20260913-dungeon-bounty-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.dungeon-bounty-shell.dungeon-page-shell>.dungeon-bounty-card{
-    background:linear-gradient(180deg,rgba(36,27,47,.38),rgba(20,17,28,.44));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-bounty-battle background v1 */
-@media (min-width:761px){
-  #main>.combat-screen.dungeon-bounty-combat{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:30px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:52px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.combat-screen.dungeon-bounty-combat .combatant{
-    background:linear-gradient(180deg,rgba(24,25,37,.72),rgba(13,15,24,.82));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-}
-
-@media (max-width:760px){
-  #main>.combat-screen.dungeon-bounty-combat{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:18px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.combat-screen.dungeon-bounty-combat .combatant{
-    background:linear-gradient(180deg,rgba(24,25,37,.74),rgba(13,15,24,.84));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-arena background v1 */
-@media (min-width:761px){
   #main>.function-page.dungeon-page-shell.arena-shell{
-    width:100vw;
     max-width:none;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
       url("assets/backgrounds/dungeon-arena/desktop.webp?v=20260914-dungeon-arena-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
   #main>.function-page.dungeon-page-shell.arena-shell>.back-home,
   #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
@@ -663,134 +109,75 @@
     margin-left:auto;
     margin-right:auto;
   }
-  #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
-    background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-}
-
-@media (max-width:760px){
-  #main>.function-page.dungeon-page-shell.arena-shell{
-    width:100vw;
-    max-width:none;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
-      url("assets/backgrounds/dungeon-arena/mobile.webp?v=20260914-dungeon-arena-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
-    background:linear-gradient(180deg,rgba(40,34,24,.36),rgba(20,19,17,.42));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-arena-battle background v1 */
-@media (min-width:761px){
-  #main>.combat-screen.arena-combat{
-    width:100vw;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:30px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:52px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
-      url("assets/backgrounds/dungeon-arena-battle/desktop.webp?v=20260914-dungeon-arena-battle-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.combat-screen.arena-combat .combatant{
-    background:linear-gradient(180deg,rgba(30,29,26,.70),rgba(15,15,15,.82));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-}
-
-@media (max-width:760px){
-  #main>.combat-screen.arena-combat{
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:18px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
-      url("assets/backgrounds/dungeon-arena-battle/mobile.webp?v=20260914-dungeon-arena-battle-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.combat-screen.arena-combat .combatant{
-    background:linear-gradient(180deg,rgba(30,29,26,.74),rgba(15,15,15,.84));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-void result background v1 */
-@media (min-width:761px){
   #main>.void-shell:has(.void-result-grid){
-    width:100vw;
     max-width:none!important;
-    min-height:calc(100vh - 57px);
-    min-height:calc(100dvh - 57px);
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:36px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:64px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
     background-image:
       linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
       url("assets/backgrounds/dungeon-void/desktop.webp?v=20260914-dungeon-void-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
   #main>.void-shell:has(.void-result-grid)>.void-result{
     max-width:680px;
     margin-left:auto;
     margin-right:auto;
-    background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
+  }
+  #main>.void-shell:has(.void-combat){
+    max-width:none!important;
+    min-height:calc(100vh - 57px)!important;
+    min-height:calc(100dvh - 57px)!important;
+    padding-top:30px;
+    padding-bottom:52px;
+    background-image:
+      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
+      url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1");
+  }
+  #main>.void-shell:has(.void-combat)>.void-panel{
+    max-width:1120px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  #main>.combat-screen.dungeon-bounty-combat{
+    padding-top:30px;
+    padding-bottom:52px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
+      url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1");
+  }
+  #main>.combat-screen.arena-combat{
+    padding-top:30px;
+    padding-bottom:52px;
+    background-image:
+      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
+      url("assets/backgrounds/dungeon-arena-battle/desktop.webp?v=20260914-dungeon-arena-battle-desktop1");
+  }
+
+  #battleResultModal{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
+      url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
   }
 }
 
 @media (max-width:760px){
-  #main>.void-shell:has(.void-result-grid){
+  #main>.home-screen,
+  #main>.map-screen,
+  #main>.prepare-screen,
+  #main>.combat-screen,
+  #main>.function-page:has(>.character-layout),
+  #main>.specialization-page,
+  #main>.function-page:has(>.grid),
+  #main>.function-page:has(>.card .shop-table-wrap),
+  #main>.guide-page,
+  #main>.function-page:has(#settingsTitle),
+  #main>.dungeon-page-shell,
+  #main>.dungeon-bounty-shell.dungeon-page-shell,
+  #main>.function-page.dungeon-page-shell.arena-shell,
+  #main>.void-shell:has(.void-result-grid),
+  #main>.void-shell:has(.void-combat){
     width:100vw;
-    max-width:none!important;
     min-height:calc(100vh - 52px);
     min-height:calc(100dvh - 52px);
     margin-top:-10px;
@@ -801,81 +188,101 @@
     padding-right:12px;
     padding-bottom:28px;
     padding-left:12px;
+    background-position:center center,center center;
+    background-size:cover,cover;
+    background-repeat:no-repeat,no-repeat;
+  }
+
+  #main>.home-screen{
+    padding-top:24px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
+      url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1");
+  }
+  #main>.map-screen{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1");
+  }
+  #main>.prepare-screen{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
+  }
+  #main>.combat-screen{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
+      url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1");
+  }
+  #main>.function-page:has(>.character-layout),
+  #main>.specialization-page{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1");
+  }
+  #main>.function-page:has(>.grid),
+  #main>.function-page:has(>.card .shop-table-wrap){
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1");
+  }
+  #main>.guide-page,
+  #main>.function-page:has(#settingsTitle){
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");
+  }
+  #main>.dungeon-page-shell{
+    max-width:none;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/dungeon-home/mobile.webp?v=20260913-dungeon-home-mobile1");
+  }
+  #main>.dungeon-bounty-shell.dungeon-page-shell{
+    max-width:none;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
+      url("assets/backgrounds/dungeon-bounty/mobile.webp?v=20260913-dungeon-bounty-mobile1");
+  }
+  #main>.function-page.dungeon-page-shell.arena-shell{
+    max-width:none;
+    background-image:
+      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
+      url("assets/backgrounds/dungeon-arena/mobile.webp?v=20260914-dungeon-arena-mobile1");
+  }
+  #main>.void-shell:has(.void-result-grid){
+    max-width:none!important;
     background-image:
       linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
       url("assets/backgrounds/dungeon-void/mobile.webp?v=20260914-dungeon-void-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
   }
-  #main>.void-shell:has(.void-result-grid)>.void-result{
-    background:linear-gradient(180deg,rgba(19,36,45,.36),rgba(13,23,29,.42));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
-  }
-}
-
-
-/* dungeon-void-battle background v1 */
-@media (min-width:761px){
   #main>.void-shell:has(.void-combat){
-    width:100vw;
-    max-width:none!important;
-    min-height:calc(100vh - 57px)!important;
-    min-height:calc(100dvh - 57px)!important;
-    margin-top:-18px;
-    margin-bottom:-40px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:30px;
-    padding-right:max(24px,calc((100vw - 1200px)/2 + 18px));
-    padding-bottom:52px;
-    padding-left:max(24px,calc((100vw - 1200px)/2 + 18px));
-    background-image:
-      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
-      url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
-  #main>.void-shell:has(.void-combat)>.void-panel{
-    max-width:1120px;
-    margin-left:auto;
-    margin-right:auto;
-    background:linear-gradient(180deg,rgba(16,33,41,.32),rgba(12,21,26,.40));
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-  #main>.void-shell:has(.void-combat) .combatant{
-    backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);
-  }
-}
-
-@media (max-width:760px){
-  #main>.void-shell:has(.void-combat){
-    width:100vw;
     max-width:none;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
     padding-top:18px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
     background-image:
       linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
       url("assets/backgrounds/dungeon-void-battle/mobile.webp?v=20260914-dungeon-void-battle-mobile1");
+  }
+
+  #main>.combat-screen.dungeon-bounty-combat{
+    padding-top:18px;
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
+      url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1");
+  }
+  #main>.combat-screen.arena-combat{
+    padding-top:18px;
+    background-image:
+      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
+      url("assets/backgrounds/dungeon-arena-battle/mobile.webp?v=20260914-dungeon-arena-battle-mobile1");
+  }
+
+  #battleResultModal{
+    background-image:
+      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
+      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
     background-position:center center,center center;
     background-size:cover,cover;
     background-repeat:no-repeat,no-repeat;
-  }
-  #main>.void-shell:has(.void-combat)>.void-panel{
-    background:linear-gradient(180deg,rgba(16,33,41,.32),rgba(12,21,26,.40));
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
   }
 }
