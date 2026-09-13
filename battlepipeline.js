@@ -165,6 +165,7 @@
   battleBusy=false;
   window.activeMainBattleContext=null;
   save();
+  adventureScreen="prepare";
   render();
   setTimeout(()=>showBattleResult(ctx,defeat),0);
  };
