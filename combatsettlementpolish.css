@@ -1,78 +1,79 @@
 /* Final UI surface pass: combat, modal and settlement readability.
-   Combat shells may reveal scenery; combatant cards and settlement information remain stable. */
+   Background art is the primary visual; UI stays legible through glass surfaces, borders and text shadow. */
 
 /* Main-line / special encounter combat cards. */
 #main>.combat-screen .combatant{
-  background:linear-gradient(180deg,rgba(25,31,40,.76),rgba(10,15,22,.80));
-  border-color:rgba(122,138,156,.76);
+  background:linear-gradient(180deg,rgba(25,31,40,.58),rgba(10,15,22,.64));
+  border-color:rgba(122,138,156,.80);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
-  box-shadow:0 16px 36px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
-#main>.combat-screen .combatant.player{border-color:rgba(91,132,179,.84)}
-#main>.combat-screen .combatant.enemy{border-color:rgba(166,88,88,.86)}
+#main>.combat-screen .combatant.player{border-color:rgba(91,132,179,.88)}
+#main>.combat-screen .combatant.enemy{border-color:rgba(166,88,88,.90)}
 #main>.combat-screen .combat-head,
 #main>.combat-screen .combat-message{
   text-shadow:0 2px 10px rgba(0,0,0,.95);
 }
 
-/* Dungeon combat: backgrounds.css owns the scene image. Do not overwrite the outer-shell background here. */
+/* Dungeon combat: backgrounds.css owns the scene image. Never overwrite the outer-shell background here. */
 #main .dungeon-bounty-combat,
 #main .arena-combat{
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
 }
 #main .dungeon-bounty-player{
-  background:linear-gradient(180deg,rgba(27,26,41,.72),rgba(17,19,27,.78))!important;
-  border-color:rgba(106,124,164,.82)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(27,26,41,.58),rgba(17,19,27,.64))!important;
+  border-color:rgba(106,124,164,.86)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 #main .dungeon-bounty-enemy{
-  background:linear-gradient(180deg,rgba(36,27,47,.72),rgba(23,18,31,.78))!important;
-  border-color:rgba(157,106,176,.84)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(36,27,47,.60),rgba(23,18,31,.66))!important;
+  border-color:rgba(157,106,176,.88)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 #main .arena-player{
-  background:linear-gradient(180deg,rgba(28,34,39,.72),rgba(17,21,25,.78))!important;
-  border-color:rgba(112,137,151,.82)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(28,34,39,.58),rgba(17,21,25,.64))!important;
+  border-color:rgba(112,137,151,.86)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 #main .arena-enemy{
-  background:linear-gradient(180deg,rgba(40,33,23,.72),rgba(23,20,16,.78))!important;
-  border-color:rgba(171,142,91,.86)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(40,33,23,.60),rgba(23,20,16,.66))!important;
+  border-color:rgba(171,142,91,.90)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Void background image lives on the outer void shell; keep the inner combat glass light. */
+/* Void background image lives on the outer void shell; keep the inner combat glass especially light. */
 #main .void-combat{
-  background:linear-gradient(180deg,rgba(16,33,41,.34),rgba(12,21,26,.42));
-  border-color:rgba(87,132,145,.58);
+  background:linear-gradient(180deg,rgba(16,33,41,.26),rgba(12,21,26,.34));
+  border-color:rgba(87,132,145,.64);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 #main .void-player{
-  background:linear-gradient(180deg,rgba(24,35,43,.72),rgba(16,22,27,.78))!important;
-  border-color:rgba(93,138,153,.84)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(24,35,43,.58),rgba(16,22,27,.64))!important;
+  border-color:rgba(93,138,153,.88)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 #main .void-enemy{
-  background:linear-gradient(180deg,rgba(22,49,58,.72),rgba(15,32,39,.78))!important;
-  border-color:rgba(85,154,169,.86)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(22,49,58,.60),rgba(15,32,39,.66))!important;
+  border-color:rgba(85,154,169,.90)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Generic modal: retained for batch 4. */
+/* Generic modal: show the current page through the overlay instead of replacing it with a dark slab. */
 .modal{
-  background:rgba(0,0,0,.70);
+  background:rgba(0,0,0,.38);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 .modal .modal-box{
-  background:linear-gradient(180deg,rgba(23,27,34,.94),rgba(15,19,25,.96));
-  backdrop-filter:blur(5px);
-  -webkit-backdrop-filter:blur(5px);
-  box-shadow:0 22px 64px rgba(0,0,0,.42);
+  background:linear-gradient(180deg,rgba(23,27,34,.62),rgba(15,19,25,.68));
+  border-color:rgba(112,124,139,.80);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  box-shadow:0 18px 48px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);
 }
 .modal .muted{color:#d1d5dc}
 
@@ -93,7 +94,7 @@
   box-shadow:0 22px 64px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Batch 3: settlement information stays readable while revealing the scene behind it. */
+/* Settlement information tier. */
 #battleResultModal .settlement-section{
   background:rgba(16,21,27,.70);
   border-color:rgba(110,124,141,.76);
@@ -118,7 +119,12 @@
   border-color:rgba(212,138,40,.88)!important;
 }
 
-/* Special encounter attention card: high-attention tier, but no longer nearly opaque. */
+/* Special encounter overlay/card: retain warning emphasis without hiding the current battle scene. */
+body #specialEncounterAlert{
+  background:rgba(3,6,10,.34);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
 body #specialEncounterAlert .special-alert-card{
   background:radial-gradient(circle at 50% 25%,rgba(201,155,69,.20),rgba(17,20,25,.74) 62%)!important;
   border-color:rgba(201,155,69,.90)!important;
@@ -127,26 +133,37 @@ body #specialEncounterAlert .special-alert-card{
   -webkit-backdrop-filter:blur(2px);
 }
 
-/* VIP detail modal keeps its gold identity and remains reserved for batch 4. */
+/* VIP detail follows the modal glass tier while keeping gold identity. */
+#vipDetailModal .modal-box{
+  border-color:rgba(176,137,63,.86);
+}
 #vipDetailModal .vip-detail-head{
-  background:rgba(28,23,14,.92);
+  background:rgba(28,23,14,.68);
+  border-color:rgba(154,116,52,.82);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
 }
 #vipDetailModal .vip-bonus-grid>div,
 #vipDetailModal .vip-perk-row{
-  background:rgba(18,19,23,.93);
+  background:rgba(18,19,23,.72);
+  border-color:rgba(83,84,83,.74);
 }
 #vipDetailModal .vip-perk-row.unlocked{
-  background:linear-gradient(180deg,rgba(43,33,17,.93),rgba(33,25,13,.95));
+  background:linear-gradient(180deg,rgba(43,33,17,.72),rgba(33,25,13,.74));
+  border-color:rgba(159,120,52,.86);
+}
+#vipDetailModal .vip-perk-row.next{
+  background:rgba(18,19,23,.72);
+  border-color:rgba(212,154,50,.94);
 }
 #vipDetailModal .vip-detail-note,
 #vipDetailModal .vip-bonus-grid span,
 #vipDetailModal .vip-perk-threshold{color:#cfc8b9}
 
-/* Intro modal follows the same stable modal material. */
+/* Intro modal nested gear uses the same dense-information tier. */
 #gameIntroModal .game-intro-gear{
-  background:rgba(18,22,28,.92);
+  background:rgba(18,22,28,.72);
+  border-color:rgba(91,104,119,.76);
 }
 
 /* Offline return settlement remains intentionally opaque; it has no scene background to reveal. */
@@ -173,45 +190,48 @@ html body #offlineRewardPage .offline-enemy-line,
 html body #offlineRewardPage .offline-exp-progress{color:#d1d8e0}
 html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
 
+/* Mobile deliberately uses the same transparency values as desktop. */
 @media(max-width:760px){
   #main>.combat-screen .combatant{
-    background:linear-gradient(180deg,rgba(25,31,40,.82),rgba(10,15,22,.86));
-    border-color:rgba(126,142,160,.80);
+    background:linear-gradient(180deg,rgba(25,31,40,.58),rgba(10,15,22,.64));
+    border-color:rgba(126,142,160,.82);
   }
-  #main>.combat-screen .combatant.player{border-color:rgba(97,139,188,.88)}
-  #main>.combat-screen .combatant.enemy{border-color:rgba(174,94,94,.90)}
+  #main>.combat-screen .combatant.player{border-color:rgba(97,139,188,.90)}
+  #main>.combat-screen .combatant.enemy{border-color:rgba(174,94,94,.92)}
 
   #main .dungeon-bounty-player{
-    background:linear-gradient(180deg,rgba(27,26,41,.80),rgba(17,19,27,.84))!important;
-    border-color:rgba(111,131,173,.86)!important;
+    background:linear-gradient(180deg,rgba(27,26,41,.58),rgba(17,19,27,.64))!important;
+    border-color:rgba(111,131,173,.88)!important;
   }
   #main .dungeon-bounty-enemy{
-    background:linear-gradient(180deg,rgba(36,27,47,.80),rgba(23,18,31,.84))!important;
-    border-color:rgba(164,112,184,.88)!important;
+    background:linear-gradient(180deg,rgba(36,27,47,.60),rgba(23,18,31,.66))!important;
+    border-color:rgba(164,112,184,.90)!important;
   }
   #main .arena-player{
-    background:linear-gradient(180deg,rgba(28,34,39,.80),rgba(17,21,25,.84))!important;
-    border-color:rgba(118,144,159,.86)!important;
+    background:linear-gradient(180deg,rgba(28,34,39,.58),rgba(17,21,25,.64))!important;
+    border-color:rgba(118,144,159,.88)!important;
   }
   #main .arena-enemy{
-    background:linear-gradient(180deg,rgba(40,33,23,.80),rgba(23,20,16,.84))!important;
-    border-color:rgba(179,149,96,.90)!important;
+    background:linear-gradient(180deg,rgba(40,33,23,.60),rgba(23,20,16,.66))!important;
+    border-color:rgba(179,149,96,.92)!important;
   }
   #main .void-combat{
-    background:linear-gradient(180deg,rgba(16,33,41,.42),rgba(12,21,26,.50));
-    border-color:rgba(92,140,154,.64);
+    background:linear-gradient(180deg,rgba(16,33,41,.26),rgba(12,21,26,.34));
+    border-color:rgba(92,140,154,.66);
   }
   #main .void-player{
-    background:linear-gradient(180deg,rgba(24,35,43,.80),rgba(16,22,27,.84))!important;
-    border-color:rgba(99,146,162,.88)!important;
+    background:linear-gradient(180deg,rgba(24,35,43,.58),rgba(16,22,27,.64))!important;
+    border-color:rgba(99,146,162,.90)!important;
   }
   #main .void-enemy{
-    background:linear-gradient(180deg,rgba(22,49,58,.80),rgba(15,32,39,.84))!important;
-    border-color:rgba(91,162,178,.90)!important;
+    background:linear-gradient(180deg,rgba(22,49,58,.60),rgba(15,32,39,.66))!important;
+    border-color:rgba(91,162,178,.92)!important;
   }
 
+  .modal{background:rgba(0,0,0,.38)}
   .modal .modal-box{
-    background:linear-gradient(180deg,rgba(23,27,34,.96),rgba(15,19,25,.97));
+    background:linear-gradient(180deg,rgba(23,27,34,.62),rgba(15,19,25,.68));
+    border-color:rgba(116,129,145,.82);
   }
   #battleResultModal{
     background-image:
@@ -233,12 +253,13 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
     border-color:rgba(92,106,122,.78);
   }
 
-  #vipDetailModal .vip-detail-head{background:rgba(28,23,14,.95)}
+  #vipDetailModal .vip-detail-head{background:rgba(28,23,14,.68)}
   #vipDetailModal .vip-bonus-grid>div,
-  #vipDetailModal .vip-perk-row{background:rgba(18,19,23,.96)}
+  #vipDetailModal .vip-perk-row{background:rgba(18,19,23,.72)}
   #vipDetailModal .vip-perk-row.unlocked{
-    background:linear-gradient(180deg,rgba(43,33,17,.96),rgba(33,25,13,.97));
+    background:linear-gradient(180deg,rgba(43,33,17,.72),rgba(33,25,13,.74));
   }
+  #vipDetailModal .vip-perk-row.next{background:rgba(18,19,23,.72)}
 
   html body #offlineRewardPage{
     background:linear-gradient(180deg,rgba(9,13,18,.96) 0%,rgba(17,24,32,.97) 100%);
