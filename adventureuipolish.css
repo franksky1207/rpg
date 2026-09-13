@@ -1,10 +1,11 @@
 /* Adventure non-combat UI surfaces: transparent enough for scenery, stable enough for dense information. */
+/* Outer-shell rule: wrappers are lighter than the information cards nested inside them. */
 .prepare-screen .player-status-card,
 .prepare-screen .prepare-main{
-  background:linear-gradient(180deg,rgba(23,28,36,.86),rgba(17,21,27,.90));
+  background:linear-gradient(180deg,rgba(23,28,36,.66),rgba(17,21,27,.70));
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
-  box-shadow:0 12px 30px rgba(0,0,0,.20);
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
 }
 .prepare-screen .player-status-card .stat{
   background:rgba(16,20,26,.88);
@@ -13,6 +14,17 @@
 .prepare-screen .prepare-main .muted{
   color:#d6d9df;
 }
+.prepare-screen #dungeon-adventure-status{
+  background:rgba(23,25,34,.64);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 8px 22px rgba(0,0,0,.13);
+}
+.prepare-screen #dungeon-adventure-status>div{
+  background:rgba(16,18,26,.88);
+}
+.prepare-screen #dungeon-adventure-status .muted{color:#d5d2df}
+.prepare-screen #dungeon-adventure-status strong{color:#eeeaf7}
 .prepare-screen .enemy-card{
   background:linear-gradient(180deg,rgba(26,32,41,.80),rgba(17,21,27,.84));
   backdrop-filter:blur(2px);
@@ -50,10 +62,16 @@
 @media(max-width:760px){
   .prepare-screen .player-status-card,
   .prepare-screen .prepare-main{
-    background:linear-gradient(180deg,rgba(23,28,36,.91),rgba(17,21,27,.93));
+    background:linear-gradient(180deg,rgba(23,28,36,.74),rgba(17,21,27,.78));
   }
   .prepare-screen .player-status-card .stat{
     background:rgba(16,20,26,.93);
+  }
+  .prepare-screen #dungeon-adventure-status{
+    background:rgba(23,25,34,.72);
+  }
+  .prepare-screen #dungeon-adventure-status>div{
+    background:rgba(16,18,26,.93);
   }
   .prepare-screen .enemy-card{
     background:linear-gradient(180deg,rgba(26,32,41,.86),rgba(17,21,27,.89));
