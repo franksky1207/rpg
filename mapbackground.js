@@ -22,10 +22,3 @@
   if(main)new MutationObserver(sync).observe(main,{childList:true,subtree:true});
  }).catch(err=>console.warn("Adventure map background failed to load",err));
 })();
-
-(()=>{
- const s=document.createElement("script");
- s.src="battlebackgroundmobilefix.js?v=20260913-battlebg-layer1";
- s.defer=true;
- document.body.appendChild(s);
-})();
