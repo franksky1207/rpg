@@ -14,7 +14,7 @@
   }
   #main>.prepare-screen::before{
     z-index:-2;
-    background-image:url("https://raw.githubusercontent.com/franksky1207/rpg/main/assets/bg-prepare-desktop.webp?v=20260913-preparebg-desktop3");
+    background-image:var(--prepare-bg-image,none);
     background-size:cover;
     background-position:center center;
     background-repeat:no-repeat;
