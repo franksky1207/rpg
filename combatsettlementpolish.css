@@ -99,28 +99,28 @@
 }
 
 /* Offline return settlement: heavy information page with nested stable cards. */
-#offlineRewardPage{
+html body #offlineRewardPage{
   background:linear-gradient(180deg,rgba(9,13,18,.94) 0%,rgba(17,24,32,.96) 100%);
   backdrop-filter:blur(4px);
   -webkit-backdrop-filter:blur(4px);
 }
-#offlineRewardPage .offline-page-card{
+html body #offlineRewardPage .offline-page-card{
   background:linear-gradient(180deg,rgba(18,25,32,.88),rgba(13,19,25,.91));
   backdrop-filter:blur(5px);
   -webkit-backdrop-filter:blur(5px);
   box-shadow:0 18px 60px rgba(0,0,0,.34);
 }
-#offlineRewardPage .offline-section{
+html body #offlineRewardPage .offline-section{
   background:rgba(14,20,26,.92);
 }
-#offlineRewardPage .offline-reward-card{
+html body #offlineRewardPage .offline-reward-card{
   background:rgba(13,19,25,.94);
 }
-#offlineRewardPage .offline-page-welcome,
-#offlineRewardPage .offline-reward-label,
-#offlineRewardPage .offline-enemy-line,
-#offlineRewardPage .offline-exp-progress{color:#d1d8e0}
-#offlineRewardPage .offline-limit-note{color:#b6c0ca}
+html body #offlineRewardPage .offline-page-welcome,
+html body #offlineRewardPage .offline-reward-label,
+html body #offlineRewardPage .offline-enemy-line,
+html body #offlineRewardPage .offline-exp-progress{color:#d1d8e0}
+html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
 
 @media(max-width:760px){
   #main>.combat-screen .combatant{
@@ -159,12 +159,12 @@
     background:linear-gradient(180deg,rgba(43,33,17,.96),rgba(33,25,13,.97));
   }
 
-  #offlineRewardPage{
+  html body #offlineRewardPage{
     background:linear-gradient(180deg,rgba(9,13,18,.96) 0%,rgba(17,24,32,.97) 100%);
   }
-  #offlineRewardPage .offline-page-card{
+  html body #offlineRewardPage .offline-page-card{
     background:linear-gradient(180deg,rgba(18,25,32,.92),rgba(13,19,25,.94));
   }
-  #offlineRewardPage .offline-section{background:rgba(14,20,26,.95)}
-  #offlineRewardPage .offline-reward-card{background:rgba(13,19,25,.97)}
+  html body #offlineRewardPage .offline-section{background:rgba(14,20,26,.95)}
+  html body #offlineRewardPage .offline-reward-card{background:rgba(13,19,25,.97)}
 }
