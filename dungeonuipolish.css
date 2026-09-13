@@ -1,0 +1,176 @@
+/* Dungeon non-combat UI surface hierarchy.
+   Outer shells are lighter than nested information cards, while each dungeon keeps its own accent identity. */
+
+/* Shared dungeon status: light outer shell, stable inner stats. */
+#main .dungeon-page-shell .dungeon-status-card{
+  background:rgba(23,25,34,.62);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 8px 24px rgba(0,0,0,.13);
+}
+#main .dungeon-page-shell .dungeon-status-card>div{
+  background:rgba(16,18,26,.88);
+}
+#main .dungeon-page-shell .dungeon-status-card .muted{color:#d5d2df}
+#main .dungeon-page-shell .dungeon-status-card strong{color:#eeeaf7}
+
+/* Dungeon home entry cards: medium transparency, preserve each mode color identity. */
+#main .dungeon-page-shell .dungeon-mode-card{
+  background:linear-gradient(180deg,rgba(29,25,40,.76),rgba(20,17,28,.80));
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 12px 28px rgba(0,0,0,.17);
+}
+#main .dungeon-page-shell .dungeon-mode-card p{color:#e1d9ea}
+#main .dungeon-page-shell .dungeon-unlock-label,
+#main .dungeon-page-shell .dungeon-cost{color:#cfc5da}
+#main .dungeon-page-shell .dungeon-mode-bounty{
+  background:linear-gradient(180deg,rgba(46,32,59,.78),rgba(27,23,36,.82));
+}
+#main .dungeon-page-shell .dungeon-mode-arena{
+  background:linear-gradient(180deg,rgba(40,34,24,.78),rgba(21,20,18,.82));
+}
+#main .dungeon-page-shell .dungeon-mode-tower{
+  background:linear-gradient(180deg,rgba(21,35,43,.78),rgba(17,25,31,.82));
+}
+
+/* Bounty: purple outer surfaces stay lighter; reward/loot details remain stable. */
+#main .dungeon-bounty-ready-card,
+#main .dungeon-bounty-result-card{
+  background:linear-gradient(180deg,rgba(48,34,62,.66),rgba(27,23,36,.71))!important;
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 14px 32px rgba(40,22,54,.18);
+}
+#main .dungeon-bounty-positioning{
+  background:rgba(30,23,39,.84);
+}
+#main .dungeon-bounty-positioning span,
+#main .dungeon-bounty-result-line{color:#ddd4e6}
+#main .dungeon-bounty-reward-grid>div,
+#main .dungeon-bounty-loot-row{
+  background:rgba(23,18,31,.88);
+}
+#main .dungeon-bounty-reward-grid span{color:#cec4d8}
+#main .dungeon-bounty-reward-grid small{color:#bdb2c9}
+
+/* Arena: gold-brown outer panels, stable information cards inside. */
+#main .arena-panel{
+  background:linear-gradient(180deg,rgba(40,34,24,.64),rgba(20,19,17,.69));
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 16px 36px rgba(0,0,0,.18);
+}
+#main .arena-subtitle,
+#main .arena-earned,
+#main .arena-current-points,
+#main .arena-window-sub{color:#d1c7b5}
+#main .arena-attempts,
+#main .arena-difficulty-card,
+#main .arena-assessment-box,
+#main .arena-rank-hero,
+#main .arena-dual-card,
+#main .arena-venue-card,
+#main .arena-venue-difficulty,
+#main .arena-mode-help>div,
+#main .dungeon-mode-help>div{
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+#main .arena-attempts{background:rgba(23,22,19,.88)}
+#main .arena-difficulty-card{background:rgba(24,23,20,.86)}
+#main .arena-rank-hero{background:linear-gradient(135deg,rgba(43,36,25,.86),rgba(23,21,18,.89))}
+#main .arena-assessment-box{background:rgba(23,22,19,.87)}
+#main .arena-assessment-box.ready{background:rgba(23,29,23,.88)}
+#main .arena-assessment-box.warn{background:rgba(33,27,18,.88)}
+#main .arena-dual-assessment{
+  background:rgba(21,19,15,.66);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+#main .arena-dual-card{background:rgba(23,22,19,.88)}
+#main .arena-dual-card.ready{background:rgba(22,29,22,.89)}
+#main .arena-dual-card.warn{background:rgba(33,26,18,.89)}
+#main .arena-dual-card.locked{background:rgba(33,22,23,.89)}
+#main .arena-venue-card{background:linear-gradient(180deg,rgba(27,24,18,.86),rgba(18,17,15,.89))}
+#main .arena-venue-difficulty{background:rgba(23,22,19,.88)}
+#main .arena-mode-help>div,
+#main .dungeon-mode-help>div{background:rgba(23,22,19,.88)}
+#main .arena-difficulty-card small,
+#main .arena-assessment-box p,
+#main .arena-dual-card p,
+#main .arena-venue-card>span,
+#main .arena-venue-card small,
+#main .arena-venue-difficulty small{color:#c2b9a9}
+
+/* Void: cyan outer panel, stable floor/result information cards. Combat surfaces are reserved for batch 5. */
+#main .void-panel{
+  background:linear-gradient(180deg,rgba(19,36,45,.64),rgba(13,23,29,.69));
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  box-shadow:0 16px 36px rgba(10,38,47,.16);
+}
+#main .void-panel .muted{color:#c9dde1}
+#main .void-stat{
+  background:rgba(12,23,28,.88);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+#main .void-stat span{color:#aec4c9}
+#main .void-result-grid>div{
+  background:rgba(13,25,31,.88);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+#main .void-result-grid span{color:#adc2c7}
+
+@media(max-width:760px){
+  #main .dungeon-page-shell .dungeon-status-card{background:rgba(23,25,34,.70)}
+  #main .dungeon-page-shell .dungeon-status-card>div{background:rgba(16,18,26,.93)}
+
+  #main .dungeon-page-shell .dungeon-mode-card{
+    background:linear-gradient(180deg,rgba(29,25,40,.83),rgba(20,17,28,.86));
+  }
+  #main .dungeon-page-shell .dungeon-mode-bounty{
+    background:linear-gradient(180deg,rgba(46,32,59,.84),rgba(27,23,36,.87));
+  }
+  #main .dungeon-page-shell .dungeon-mode-arena{
+    background:linear-gradient(180deg,rgba(40,34,24,.84),rgba(21,20,18,.87));
+  }
+  #main .dungeon-page-shell .dungeon-mode-tower{
+    background:linear-gradient(180deg,rgba(21,35,43,.84),rgba(17,25,31,.87));
+  }
+
+  #main .dungeon-bounty-ready-card,
+  #main .dungeon-bounty-result-card{
+    background:linear-gradient(180deg,rgba(48,34,62,.74),rgba(27,23,36,.79))!important;
+  }
+  #main .dungeon-bounty-positioning{background:rgba(30,23,39,.91)}
+  #main .dungeon-bounty-reward-grid>div,
+  #main .dungeon-bounty-loot-row{background:rgba(23,18,31,.93)}
+
+  #main .arena-panel{
+    background:linear-gradient(180deg,rgba(40,34,24,.72),rgba(20,19,17,.77));
+  }
+  #main .arena-dual-assessment{background:rgba(21,19,15,.74)}
+  #main .arena-attempts,
+  #main .arena-difficulty-card,
+  #main .arena-assessment-box,
+  #main .arena-rank-hero,
+  #main .arena-dual-card,
+  #main .arena-venue-card,
+  #main .arena-venue-difficulty,
+  #main .arena-mode-help>div,
+  #main .dungeon-mode-help>div{background-color:rgba(23,22,19,.93)}
+  #main .arena-assessment-box.ready,
+  #main .arena-dual-card.ready{background:rgba(22,29,22,.93)}
+  #main .arena-assessment-box.warn,
+  #main .arena-dual-card.warn{background:rgba(33,27,18,.93)}
+  #main .arena-dual-card.locked{background:rgba(33,22,23,.93)}
+
+  #main .void-panel{
+    background:linear-gradient(180deg,rgba(19,36,45,.72),rgba(13,23,29,.77));
+  }
+  #main .void-stat,
+  #main .void-result-grid>div{background:rgba(13,25,31,.93)}
+}
