@@ -10,6 +10,9 @@
   #main .dungeon-bounty-result-card{
     max-width:720px;
   }
+  #main .dungeon-bounty-combat>.controls{
+    justify-content:center;
+  }
 
   /* Arena: use desktop width better while keeping the existing hierarchy. */
   #main .arena-shell{
