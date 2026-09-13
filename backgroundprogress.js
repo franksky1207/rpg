@@ -91,6 +91,7 @@
   return ()=>pageHideListeners.delete(listener);
  };
  window.backgroundProgressEnvironmentIsBackground=function(){return isBackground();};
+ window.backgroundProgressHasCatchUpCredit=function(kind=null){return activeFor(kind)&&flow.hiddenAt==null&&!isBackground()&&Number(flow.credit)>0;};
  window.backgroundProgressMainBattleMode=mainBattleMode;
 
  window.backgroundProgressStart=function(kind,options={}){
