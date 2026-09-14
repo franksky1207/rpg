@@ -11,6 +11,12 @@
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function sourceVersionOf(value,fallback=1){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=1?n:fallback;}
  function defaultMainStat(type){return typeof mainStatForType==="function"?mainStatForType(type):(type==="weapon"?"atk":type==="helmet"||type==="shoes"?"hp":type==="armor"?"def":"crit");}
+ function cleanupLegacyDungeonFields(target){
+  if(!isObject(target?.dungeon))return false;
+  let removed=false;
+  ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(target.dungeon,key)){delete target.dungeon[key];removed=true;}});
+  return removed;
+ }
  function legacySameExpV9(level){const l=Math.max(1,Math.floor(Number(level)||1));return Math.ceil(25+4*l);}
  function legacyExpNeedV9(level){
   const l=Math.max(1,Math.floor(Number(level)||1));
@@ -120,6 +126,7 @@
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
+ window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
   let target=isObject(rawState)?rawState:(typeof newState==="function"?newState():{});
   const source=isObject(sourceRaw)?sourceRaw:target;
@@ -138,6 +145,7 @@
    target.shop.initialized=false;
   }
 
+  const legacyDungeonFieldsRemoved=cleanupLegacyDungeonFields(target);
   const normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);
   const expProgressMigrated=migrateExpProgress(target,version,source);
@@ -148,6 +156,7 @@
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
+  cleanupLegacyDungeonFields(target);
   normalizeVoidMirage(target);
   normalizeOffline(target,version);
 
@@ -164,7 +173,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved};
   return target;
  };
 
@@ -196,6 +205,7 @@
    sourceVersion,
    targetVersion:SAVE_SCHEMA_VERSION,
    expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
+   legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true
   };
   return state;
