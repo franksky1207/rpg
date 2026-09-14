@@ -6,6 +6,7 @@
  const VOID_MIRAGE_HP_MULTIPLIER=2.40;
  const VOID_MIRAGE_ATK_MULTIPLIER=2.15;
  const VOID_MIRAGE_DEF_MULTIPLIER=2.65;
+ const VOID_MIRAGE_START_OFFSET=100;
 
  const VOID_MIRAGE_REGULAR_NAMES=[
   "虛影獵手","幻境遊魂","裂隙行者","異相戰影","迷界殘像",
@@ -19,14 +20,20 @@
  let lastRegularName="";
  let voidMirageRun=null;
 
- function floorNumber(value){return Math.max(1,Math.floor(Number(value)||1));}
+ function maxFloor(){return Math.max(1,Math.floor(Number(window.VOID_MIRAGE_MAX_FLOOR)||5000));}
+ function floorNumber(value){return Math.max(1,Math.min(maxFloor(),Math.floor(Number(value)||1)));}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function normalizeVoidMirageState(target){
   if(!target||typeof target!=="object")return null;
-  if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={progress:0,attempts:0,points:0};
-  if(!target.dungeon.voidMirage||typeof target.dungeon.voidMirage!=="object")target.dungeon.voidMirage={};
-  target.dungeon.voidMirage.highestCleared=Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0));
+  if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={};
+  if(!target.dungeon.voidMirage||typeof target.dungeon.voidMirage!=="object"||Array.isArray(target.dungeon.voidMirage))target.dungeon.voidMirage={};
+  target.dungeon.voidMirage.highestCleared=Math.max(0,Math.min(maxFloor(),Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0))));
   return target.dungeon.voidMirage;
+ }
+ function historicalHighest(){const s=normalizeVoidMirageState(state);return Math.max(0,Math.floor(Number(s?.highestCleared)||0));}
+ function startFloorFromHistory(highest=historicalHighest()){
+  const h=Math.max(0,Math.min(maxFloor(),Math.floor(Number(highest)||0)));
+  return Math.max(1,Math.min(maxFloor(),h-VOID_MIRAGE_START_OFFSET));
  }
  function equivalentPower(floor){return 24+floorNumber(floor)/10;}
  function baseStats(floor){
@@ -48,19 +55,11 @@
   for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   return out;
  }
- function firstClearPoints(floor){
-  const f=floorNumber(floor);let points=Math.round(15+1.75*Math.sqrt(Math.max(0,f-1)));if(isBossFloor(f))points*=2;return points;
- }
  function buildEnemy(floor,options={}){
   const f=floorNumber(floor),boss=isBossFloor(f),base=baseStats(f);
   const name=boss?bossNameForFloor(f):regularName(options.previousName);
   const ids=Array.isArray(options.traits)?options.traits.slice(0,boss?2:1):rollTraits(f);
-  return applyMonsterTraits({name,floor:f,kind:"dungeon-void-mirage",isBossFloor:boss,...base,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,firstClearPoints:firstClearPoints(f)},ids);
- }
- function currentDungeon(){
-  if(typeof ensureDungeonProgressState==="function")return ensureDungeonProgressState();
-  if(!state.dungeon||typeof state.dungeon!=="object")state.dungeon={progress:0,attempts:0,points:0};
-  return state.dungeon;
+  return applyMonsterTraits({name,floor:f,kind:"dungeon-void-mirage",isBossFloor:boss,...base,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE},ids);
  }
  function fullHeal(){state.hp=playerCombatStats().hp;}
  function runPlayerStats(){return voidMirageRun?.playerSnapshot||createSpecialPlayerSnapshot(playerCombatStats());}
@@ -68,36 +67,37 @@
  function voidMirageFightCore(enemy){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp);
-  const combatEndHp=combat.hp;
-  state.hp=combatEndHp;
-  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp,turns:combat.turns};
+  state.hp=combat.hp;
+  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
  }
+ function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function runSnapshot(){
   if(!voidMirageRun)return null;
-  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,points:voidMirageRun.points,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:voidMirageRun.playerSnapshot?{...voidMirageRun.playerSnapshot}:null,lastEnemy:voidMirageRun.lastEnemy?{...voidMirageRun.lastEnemy,traits:(voidMirageRun.lastEnemy.traits||[]).slice()}:null,lastResult:voidMirageRun.lastResult?{...voidMirageRun.lastResult,logs:(voidMirageRun.lastResult.logs||[]).slice()}:null};
+  const daily=dailyStatus();
+  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:voidMirageRun.playerSnapshot?{...voidMirageRun.playerSnapshot}:null,lastEnemy:voidMirageRun.lastEnemy?{...voidMirageRun.lastEnemy,traits:(voidMirageRun.lastEnemy.traits||[]).slice()}:null,lastResult:voidMirageRun.lastResult?{...voidMirageRun.lastResult,logs:(voidMirageRun.lastResult.logs||[]).slice()}:null,historicalHighest:historicalHighest(),dailyHighest:daily.highestFloor||0,dailyClaimed:daily.claimed===true,dailyReward:daily.reward||0,maxFloor:maxFloor()};
  }
  function finishRun(reason,extra={}){
   if(!voidMirageRun)return null;
   voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=String(reason||"ended");
   if(extra.failedFloor)voidMirageRun.failedFloor=floorNumber(extra.failedFloor);
-  if(voidMirageRun.runStarted){
-   if(typeof finishDungeonRun==="function")finishDungeonRun();
-   else{fullHeal();if(typeof save==="function")save(false);}
-  }else if(typeof save==="function")save(false);
+  if(voidMirageRun.runStarted)fullHeal();
+  if(typeof save==="function")save(false);
   return runSnapshot();
  }
- function recordClearAndPoints(floor){
-  const s=normalizeVoidMirageState(state),f=floorNumber(floor);if(!s)return {advanced:false,highestCleared:0,nextFloor:1,gained:0};
-  const before=s.highestCleared;let gained=0;
-  if(f===before+1){s.highestCleared=f;gained=firstClearPoints(f);if(typeof addDungeonPoints==="function")addDungeonPoints(gained);else currentDungeon().points=Math.floor(finiteNonNegative(currentDungeon().points,0))+gained;}
+ function recordClear(floor){
+  const s=normalizeVoidMirageState(state),f=floorNumber(floor);if(!s)return {advanced:false,highestCleared:0,nextFloor:1,dailyHighest:0,reachedMax:false};
+  const before=s.highestCleared;
+  if(f>before)s.highestCleared=f;
+  const daily=typeof recordVoidMirageDailyFloor==="function"?recordVoidMirageDailyFloor(f):dailyStatus();
   if(typeof save==="function")save(false);
-  return {advanced:s.highestCleared>before,highestCleared:s.highestCleared,nextFloor:s.highestCleared+1,gained};
+  return {advanced:s.highestCleared>before,highestCleared:s.highestCleared,nextFloor:Math.min(maxFloor(),f+1),dailyHighest:daily.highestFloor||0,reachedMax:f>=maxFloor()};
  }
  const yieldControl=()=>new Promise(resolve=>setTimeout(resolve,0));
 
  window.VOID_MIRAGE_NAME=VOID_MIRAGE_NAME;
  window.VOID_MIRAGE_UNLOCK_LEVEL=VOID_MIRAGE_UNLOCK_LEVEL;
- window.getVoidMirageConfig=function(){return {name:VOID_MIRAGE_NAME,unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,hpMultiplier:VOID_MIRAGE_HP_MULTIPLIER,atkMultiplier:VOID_MIRAGE_ATK_MULTIPLIER,defMultiplier:VOID_MIRAGE_DEF_MULTIPLIER,regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),bossNames:VOID_MIRAGE_BOSS_NAMES.slice()};};
+ window.VOID_MIRAGE_START_OFFSET=VOID_MIRAGE_START_OFFSET;
+ window.getVoidMirageConfig=function(){return {name:VOID_MIRAGE_NAME,unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,maxFloor:maxFloor(),startOffset:VOID_MIRAGE_START_OFFSET,dailyRewardPerFloor:2,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,hpMultiplier:VOID_MIRAGE_HP_MULTIPLIER,atkMultiplier:VOID_MIRAGE_ATK_MULTIPLIER,defMultiplier:VOID_MIRAGE_DEF_MULTIPLIER,regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),bossNames:VOID_MIRAGE_BOSS_NAMES.slice()};};
  window.ensureVoidMirageState=function(){return normalizeVoidMirageState(state);};
  window.canEnterVoidMirage=function(){return Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;};
  window.voidMirageEquivalentPower=equivalentPower;
@@ -105,20 +105,21 @@
  window.isVoidMirageBossFloor=isBossFloor;
  window.voidMirageBossNameForFloor=bossNameForFloor;
  window.rollVoidMirageTraits=rollTraits;
- window.voidMirageFirstClearPoints=firstClearPoints;
  window.buildVoidMirageEnemy=buildEnemy;
- window.getVoidMirageNextFloor=function(){const s=normalizeVoidMirageState(state);return Math.max(1,(s?.highestCleared||0)+1);};
- window.recordVoidMirageClear=function(floor){const r=recordClearAndPoints(floor);return {highestCleared:r.highestCleared,nextFloor:r.nextFloor,advanced:r.advanced,gained:r.gained};};
+ window.getVoidMirageHistoricalHighest=historicalHighest;
+ window.getVoidMirageStartFloor=function(){return startFloorFromHistory();};
+ window.getVoidMirageNextFloor=function(){return startFloorFromHistory();};
+ window.voidMirageStartFloorFromHistory=startFloorFromHistory;
+ window.voidMirageFirstClearPoints=function(){return 0;};
+ window.recordVoidMirageClear=function(floor){const r=recordClear(floor);return {...r,gained:0};};
 
  window.beginVoidMirageRun=function(){
   if(Number(state?.level||0)<VOID_MIRAGE_UNLOCK_LEVEL)return {ok:false,reason:"level_locked",unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL};
   if(voidMirageRun?.active)return {ok:false,reason:"already_active",run:runSnapshot()};
-  if(typeof beginDungeonRun!=="function"||typeof canStartDungeonRun!=="function")return {ok:false,reason:"dungeon_core_missing"};
-  if(!canStartDungeonRun(1))return {ok:false,reason:"insufficient_attempts",cost:1,attempts:currentDungeon().attempts};
-  const startFloor=window.getVoidMirageNextFloor();
-  voidMirageRun={active:true,phase:"ready",startFloor,currentFloor:startFloor,lastClearedFloor:startFloor-1,cleared:0,points:0,totalTurns:0,exitRequested:false,endedReason:"",failedFloor:0,lastEnemy:null,lastResult:null,previousRegularName:lastRegularName||"",playerSnapshot:null,runStarted:false};
+  const startFloor=startFloorFromHistory();
+  voidMirageRun={active:true,phase:"ready",startFloor,currentFloor:startFloor,lastClearedFloor:startFloor-1,cleared:0,totalTurns:0,exitRequested:false,endedReason:"",failedFloor:0,lastEnemy:null,lastResult:null,previousRegularName:lastRegularName||"",playerSnapshot:null,runStarted:false};
   if(typeof save==="function")save(false);
-  return {ok:true,run:runSnapshot(),attempts:currentDungeon().attempts,points:currentDungeon().points};
+  return {ok:true,run:runSnapshot()};
  };
 
  window.requestVoidMirageExit=function(){
@@ -133,23 +134,21 @@
   if(voidMirageRun.exitRequested&&voidMirageRun.phase!=="fighting")return {ok:true,ended:true,run:finishRun("exit")};
   if(!voidMirageRun.runStarted){
    const player=createSpecialPlayerSnapshot(playerCombatStats());
-   const started=beginDungeonRun({mode:"void-mirage",cost:1});
-   if(!started.ok){voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=started.reason||"start_failed";if(typeof save==="function")save(false);return {ok:false,...started,run:runSnapshot()};}
-   voidMirageRun.playerSnapshot=player;
-   voidMirageRun.runStarted=true;
+   voidMirageRun.playerSnapshot=player;voidMirageRun.runStarted=true;state.hp=player.hp;
   }
-  const floor=voidMirageRun.currentFloor;
-  const playerMaxHp=runPlayerStats().hp,enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
+  const floor=floorNumber(voidMirageRun.currentFloor),playerMaxHp=runPlayerStats().hp,enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
   if(!enemy.isBossFloor)voidMirageRun.previousRegularName=enemy.name;
   voidMirageRun.phase="fighting";voidMirageRun.lastEnemy=enemy;
   const result=voidMirageFightCore(enemy);
   voidMirageRun.lastResult=result;voidMirageRun.totalTurns+=Math.max(0,Math.floor(Number(result.turns)||0));
-  if(!result.win){const reason="defeat",final=finishRun(reason,{failedFloor:floor});return {ok:true,win:false,ended:true,reason,floor,enemy,result,playerMaxHp,gained:0,run:final};}
-  const clear=recordClearAndPoints(floor);
-  voidMirageRun.cleared+=clear.advanced?1:0;voidMirageRun.points+=clear.gained;voidMirageRun.lastClearedFloor=floor;voidMirageRun.currentFloor=clear.nextFloor;voidMirageRun.phase="between";runFullHeal();
+  if(!result.win){const final=finishRun("defeat",{failedFloor:floor});return {ok:true,win:false,ended:true,reason:"defeat",floor,enemy,result,playerMaxHp,gained:0,run:final};}
+  const clear=recordClear(floor);
+  voidMirageRun.cleared++;voidMirageRun.lastClearedFloor=floor;voidMirageRun.phase="between";runFullHeal();
+  if(clear.reachedMax){const final=finishRun("max-floor");return {ok:true,win:true,ended:true,reason:"max-floor",floor,enemy,result,playerMaxHp,gained:0,run:final};}
+  voidMirageRun.currentFloor=floor+1;
   if(typeof save==="function")save(false);
-  if(voidMirageRun.exitRequested){const final=finishRun("exit");return {ok:true,win:true,ended:true,reason:"exit",floor,enemy,result,playerMaxHp,gained:clear.gained,run:final};}
-  return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,gained:clear.gained,run:runSnapshot()};
+  if(voidMirageRun.exitRequested){const final=finishRun("exit");return {ok:true,win:true,ended:true,reason:"exit",floor,enemy,result,playerMaxHp,gained:0,run:final};}
+  return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,gained:0,run:runSnapshot()};
  };
 
  window.runVoidMirageAuto=async function(options={}){
