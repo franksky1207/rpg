@@ -4,7 +4,7 @@
 >
 > 若本文件、歷史對話、舊截圖、舊規格、舊 commit 或任何記憶內容與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。
 
-更新日期：**2026-09-14**
+更新日期：**2026-09-15**
 
 ---
 
@@ -39,6 +39,7 @@
 5. 任何存檔結構改動都必須同步檢查 `data.js`、`savemigration.js`、`ui.js`、`runtimeintegrity.js`。
 6. 桌機與手機 UI 必須一起檢查。
 7. 裝備規則特別注意：神話裝備只禁止**自動出售**；未鎖定神話仍可被玩家手動出售／一鍵出售，不得誤加全面保護。
+8. 正式功能完成整併後，優先移除 late override／過渡 wrapper，避免同一頁面或結算存在兩套正式來源。
 
 ---
 
@@ -68,6 +69,7 @@
 - `shopretirement.js` 過渡層已刪除。
 - 正式新存檔不含 `state.shop`。
 - Schema 12 migration 會把舊存檔中的 `shop` 欄位視為退休資料並移除。
+- Runtime Integrity 內有 v11 → v12 migration probe，會實際驗證舊 `shop` 被移除而 `lostGear` 的 id、價格、時間與裝備 id 完整保留。
 - 正式 runtime 不應存在 `newShopState`、`ensureShop`、`paidShopRefresh`、`freeShopRefresh`、`shopPurchase`、`resetShopPrice`、`specialApplyShopDiscount` 等舊商店 API。
 
 原本與背包共用的 `assets/backgrounds/inventory-shop/` 美術資產**保留**，但現在只作為背包背景使用；資料夾名稱是歷史命名，不代表商店仍存在。
@@ -98,6 +100,13 @@
 
 贖回核心使用獨立的 lost-gear mutation lock，不依賴任何商店功能。
 
+2026-09-15 結構優化後：
+
+- 贖回 UI 已正式整併進 `ui.js`。
+- `inventoryredemption.js` late override 已刪除。
+- 首頁、背包與 `render()` 不再有第二套覆蓋來源。
+- `inventoryredemption.css` 保留，作為背包遺失裝備贖回區的正式樣式檔。
+
 ---
 
 # 6. 九大特殊怪與黑市情報
@@ -117,6 +126,13 @@ VIP6：特殊遭遇率 +2%，所以 VIP6+ 為 10%。
 8. 戰利品回收者：必掉 2 件，品質使用一般表。
 9. 流動交易代理人：隨機財富（金幣×5）、知識（EXP×5）或裝備（至少稀有）。
 
+## 特殊怪獎勵計算正式規則
+
+- `getSpecialRewardContext()` 只負責特殊怪本身的倍率／掉落效果，不提前套用專精。
+- `specialRewardExpAmount()` 與 `specialRewardGoldAmount()` 是正式 payout 計算入口。
+- 實戰訓練與搜刮技巧只在 payout 層各套用**一次**，不得重複乘算。
+- Runtime Integrity 有公式 probe，會檢查特殊怪 EXP／金幣專精只套用一次。
+
 ## 黑市情報正式規則
 
 - 擊敗黑市武裝頭目後：`state.pendingBlackMarketEncounter = true`。
@@ -125,9 +141,17 @@ VIP6：特殊遭遇率 +2%，所以 VIP6+ 為 10%。
 - 等級差不符合特殊遭遇條件時不消耗。
 - 戰敗不消耗。
 - 強制抽選排除 `bandit_king` 本身，因此不會由此效果連續抽到黑市武裝頭目。
-- 真正觸發時才清除 pending 狀態並存檔。
+- 黑市情報會在被強制觸發的特殊戰鬥**完成後**才清除並存檔；若警告／戰鬥中途重新整理或關閉頁面，情報仍會保留，避免獎勵被白白消耗。
 - 關閉／重新載入遊戲後，尚未使用的黑市情報會保留。
+- `pendingBlackMarketEncounter` 是正式持久狀態 boolean；`normalizePersistentFlags()` 同時加入 new-state normalizer 與 migration/load normalization。
 - VIP10 對黑市武裝頭目若發動「獎勵再次發動」，**只再給一次黑市金幣獎勵，不會再給第二份黑市情報**。
+- VIP10 第二份黑市金幣與第一份使用同一個 `specialRewardGoldAmount()` 公式，因此套用搜刮技巧後兩份金額規則完全一致。
+
+2026-09-15 結構優化後：
+
+- 黑市情報結算提示已直接整併進 `settlementui.js`。
+- `blackmarketsettlement.js` late wrapper 已刪除。
+- `specialguide.js` 已移除退休的 `shopRefreshDown` 分支。
 
 ---
 
@@ -229,13 +253,18 @@ VIP6：特殊遭遇率 +2%，所以 VIP6+ 為 10%。
 - `GAME_GUIDE_VERSION = 8`。
 - 遊戲說明不得再出現商店商品、商店刷新、Boss 免費刷新商店、前往商店贖回、黑市降低商店費用等舊規則。
 - 正式死亡／特殊戰敗文字都應指向背包的「遺失裝備贖回」。
+- 正式 `newState()` normalizer 數量目前為 **4**：VIP、每日、正式副本狀態、持久旗標（黑市情報）。
 - Runtime Integrity 應檢查：
   - Save schema 12
   - fresh state 不含 `shop`
+  - fresh state 的 `pendingBlackMarketEncounter === false`
   - loaded state 不含 `shop`
   - 舊商店 API 不存在
+  - v11 → v12 migration 能移除 `shop` 並完整保留 `lostGear`
   - 黑市武裝頭目金幣倍率 2.5
   - 黑市武裝頭目沒有任何 shop 類型 effect
+  - 特殊怪 EXP／金幣專精只套用一次
+  - 黑市 VIP10 第二份金幣使用與第一份相同公式
   - `pendingBlackMarketEncounter` 為 boolean
   - Game Guide v8 且沒有舊商店規則文字
   - 既有世界、VIP、專精、每日、副本與虛空檢查維持通過
@@ -257,6 +286,9 @@ VIP6：特殊遭遇率 +2%，所以 VIP6+ 為 10%。
 - `state.shop`
 - `shopbalance.js`
 - `shopretirement.js`
+- `inventoryredemption.js`（贖回 UI 已正式整併至 `ui.js`）
+- `blackmarketsettlement.js`（黑市提示已正式整併至 `settlementui.js`）
+- `shopRefreshDown`
 - 舊共享副本 `progress / attempts / activeRun / points`
 - 舊 VIP `1000 × Lv²`
 - 專精 Lv30 上限
