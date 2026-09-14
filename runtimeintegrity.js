@@ -47,13 +47,13 @@
  if(clock?.textContent?.includes("臺灣時間"))fail("DAILY_CLOCK_LABEL","時鐘不應顯示「臺灣時間」文字");
  if(!clock?.textContent?.includes("每日凌晨 0 點重置"))fail("DAILY_RESET_LABEL","缺少固定的每日凌晨 0 點重置文字");
 
- if(Number(window.GAME_GUIDE_VERSION)!==6)fail("GUIDE_VERSION",`遊戲說明版本應為 6，實際 ${window.GAME_GUIDE_VERSION}`);
+ if(Number(window.GAME_GUIDE_VERSION)!==7)fail("GUIDE_VERSION",`遊戲說明版本應為 7，實際 ${window.GAME_GUIDE_VERSION}`);
  if(window.GAME_GUIDE_ARENA_V6!==true)fail("GUIDE_LATE_OVERRIDE","舊競技場說明覆蓋檔未停用");
  const guideText=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES.flatMap(c=>c.items||[]).flat().join(" "):"";
- const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","2500 × VIP 等級²","最高 Lv60","VIP 積分 +10%","VIP 積分總加成提升為 +20%"];
+ const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成"];
  guideRequired.forEach(text=>{if(!guideText.includes(text))fail("GUIDE_REQUIRED_TEXT",`遊戲說明缺少新版規則：${text}`);});
- const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度"];
- guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含舊規則：${text}`);});
+ const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100"];
+ guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含過度詳細或舊規則：${text}`);});
  if(typeof gmHtml==="function"){
   const gmText=String(gmHtml());
   ["副本次數累積進度","副本可挑戰次數","GM 測試不扣副本次數","推進並取得積分"].forEach(text=>{if(gmText.includes(text))fail("GM_LEGACY_TEXT",`GM 介面仍含舊規則：${text}`);});
