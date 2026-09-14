@@ -7,7 +7,7 @@
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
-  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,totalDungeonProgress:0,gainedDungeonAttempts:0,specialEncounters:[],continuous,exitRequested:false};
+  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],continuous,exitRequested:false};
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
@@ -66,8 +66,6 @@
    ctx.originalCount=Math.max(1,Math.floor(Number(ctx.originalCount??count)||1));
    ctx.remaining=Math.max(0,Math.floor(Number(ctx.remaining??ctx.originalCount)||0));
   }
-  if(typeof ctx.totalDungeonProgress!=="number")ctx.totalDungeonProgress=0;
-  if(typeof ctx.gainedDungeonAttempts!=="number")ctx.gainedDungeonAttempts=0;
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.exitRequested=ctx.exitRequested===true;
   window.activeMainBattleContext=ctx;
@@ -94,20 +92,6 @@
    await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
    finishRealBattleTiming(realBattleTiming,r);
 
-   const dungeonResult=typeof awardDungeonProgressForBattle==="function"?awardDungeonProgressForBattle({
-    source:"main",
-    win:r.win===true,
-    enemyMaxHp:encounter.hp,
-    playerLevel:playerLevelBefore,
-    playerMaxHp:psBefore.hp,
-    startHp:startPlayerHp,
-    endHp:typeof r.combatEndHp==="number"?r.combatEndHp:state.hp
-   }):null;
-   if(dungeonResult){
-    ctx.totalDungeonProgress+=Number(dungeonResult.added)||0;
-    ctx.gainedDungeonAttempts+=Number(dungeonResult.gainedAttempts)||0;
-   }
-
    if(r.win){
     ctx.wins++;
     ctx.totalXp+=r.xp;
@@ -125,7 +109,6 @@
    else state.hp=playerCombatStats().hp;
 
    if(!r.win){
-    adventureScreen="prepare";
     save();
     break;
    }
