@@ -75,10 +75,9 @@ const SPECIAL_MONSTERS=[
  },
  {
   id:"bandit_king",name:"黑市武裝頭目",tier:"mid",weight:9,
-  description:"控制非法物資流通與武裝掠奪行動的黑市頭目。擊敗後可回收大量金幣，並取得降低商店刷新成本的資源。",
+  description:"控制非法物資流通與武裝掠奪行動的黑市頭目。擊敗後可回收大量金幣，並從其情報網鎖定另一個特殊目標。",
   effects:[
-   {type:"goldMultiplier",value:2.5},
-   {type:"shopRefreshDown",value:1}
+   {type:"goldMultiplier",value:2.5}
   ]
  },
  {
@@ -125,12 +124,14 @@ const SPECIAL_EFFECT_HANDLERS={
 
 function getSpecialMonsterById(id){return SPECIAL_MONSTERS.find(x=>x.id===id)||null;}
 
-function rollSpecialMonster(){
- let total=SPECIAL_MONSTERS.reduce((sum,x)=>sum+Math.max(0,x.weight||0),0);
+function rollSpecialMonster(excludedIds=null){
+ const excluded=new Set(Array.isArray(excludedIds)?excludedIds:excludedIds?[excludedIds]:[]);
+ const pool=SPECIAL_MONSTERS.filter(x=>!excluded.has(x.id));
+ let total=pool.reduce((sum,x)=>sum+Math.max(0,x.weight||0),0);
  if(total<=0)return null;
  let r=Math.random()*total;
- for(let x of SPECIAL_MONSTERS){r-=Math.max(0,x.weight||0);if(r<0)return x;}
- return SPECIAL_MONSTERS[SPECIAL_MONSTERS.length-1]||null;
+ for(let x of pool){r-=Math.max(0,x.weight||0);if(r<0)return x;}
+ return pool[pool.length-1]||null;
 }
 
 function specialTierConfig(special){
