@@ -1,0 +1,47 @@
+name: Inventory Mythic Bulk Sell
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inventory-mythic-bulk-sell.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Allow mythic items in manual bulk sell
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('ui.js')
+          s = p.read_text()
+          old = 'const targets=state.inventory.filter(it=>{if(it.q===5)return false;const current=state.equipment[it.type];if(!current)return false;return equipmentScore(it)<=equipmentScore(current)});'
+          new = 'const targets=state.inventory.filter(it=>{const current=state.equipment[it.type];if(!current)return false;return equipmentScore(it)<=equipmentScore(current)});'
+          if old not in s:
+              raise SystemExit('Expected sellLowerAll source not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          p = Path('index.html')
+          s = p.read_text()
+          old = '<script src="ui.js?v=20260914-maintenance1"></script>'
+          new = '<script src="ui.js?v=20260914-inventory-mythic-sell1"></script>'
+          if old not in s:
+              raise SystemExit('Expected ui.js cache tag not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ui.js index.html
+          git commit -m 'Allow mythic gear in manual bulk sell'
+          git push origin main
