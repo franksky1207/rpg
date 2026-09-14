@@ -2,7 +2,6 @@
  const baseNewState=window.newState;
  const baseMigrateSave=window.migrateSave;
  const baseSave=window.save;
- const baseEnsureShop=window.ensureShop;
 
  if(typeof baseNewState==="function"){
   window.newState=function(){
@@ -22,29 +21,20 @@
 
  if(typeof baseSave==="function"){
   window.save=function(show=true){
-   if(!state||typeof state!=="object")return baseSave(show);
-   const hadShop=Object.prototype.hasOwnProperty.call(state,"shop");
-   const runtimeShop=state.shop;
-   if(hadShop)delete state.shop;
-   const ok=baseSave(show);
-   if(hadShop)state.shop=runtimeShop;
-   return ok;
+   if(state&&typeof state==="object"&&Object.prototype.hasOwnProperty.call(state,"shop"))delete state.shop;
+   return baseSave(show);
   };
  }
 
- // Phase 1 compatibility shell: the old shop page remains until the UI-removal batch.
- // Normal loading never recreates state.shop; only actually entering the legacy shop view
- // receives a runtime-only object, and save() strips it before persistence.
+ // The shop UI is retired. Legacy callers must not recreate runtime shop state.
  window.ensureShop=function(){
-  if(!state||typeof state!=="object")return;
-  if(typeof view==="undefined"||view!=="shop")return;
-  if(!state.shop||typeof state.shop!=="object")state.shop={items:[],refreshIndex:0,resetAvailableAt:0,initialized:false};
-  if(typeof baseEnsureShop==="function")baseEnsureShop();
+  if(state&&typeof state==="object"&&Object.prototype.hasOwnProperty.call(state,"shop"))delete state.shop;
+  return false;
  };
 
- // Boss first-clear no longer refreshes shop stock. The legacy call remains harmless until
- // combatcore is physically cleaned in the final retirement pass.
+ // Boss first-clear no longer refreshes shop stock. Kept temporarily as a harmless retired API
+ // until the final source-cleanup batch removes the old call site and legacy shop functions.
  window.freeShopRefresh=function(){return false;};
 
- window.SHOP_CORE_RETIREMENT_PHASE1=true;
+ window.SHOP_CORE_RETIREMENT_PHASE2=true;
 })();
