@@ -1,7 +1,6 @@
 (function(){
  const DAILY_OFFSET_MS=8*60*60*1000;
  const DEFAULT_DAILY_LIMITS=Object.freeze({bounty:20,arena:20});
- const VOID_MAX_FLOOR=5000;
 
  function finiteInt(value,fallback=0){
   const n=Math.floor(Number(value));
@@ -35,7 +34,7 @@
   if(!daily.voidMirage||typeof daily.voidMirage!=="object"||Array.isArray(daily.voidMirage))daily.voidMirage={highestFloor:0,claimed:false};
   daily.bounty.used=finiteInt(daily.bounty.used,0);
   daily.arena.used=finiteInt(daily.arena.used,0);
-  daily.voidMirage.highestFloor=Math.max(0,Math.min(VOID_MAX_FLOOR,finiteInt(daily.voidMirage.highestFloor,0)));
+  daily.voidMirage.highestFloor=finiteInt(daily.voidMirage.highestFloor,0);
   daily.voidMirage.claimed=daily.voidMirage.claimed===true;
   return daily;
  }
@@ -66,7 +65,7 @@
  }
  function voidMirageDailyStatus(){
   const daily=ensureDailyState(),row=daily?.voidMirage||{highestFloor:0,claimed:false};
-  const highestFloor=Math.max(0,Math.min(VOID_MAX_FLOOR,finiteInt(row.highestFloor,0)));
+  const highestFloor=finiteInt(row.highestFloor,0);
   const claimed=row.claimed===true;
   const baseReward=highestFloor*2;
   const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
@@ -76,7 +75,7 @@
  function recordVoidMirageDailyFloor(floor){
   const daily=ensureDailyState();
   if(!daily?.voidMirage)return voidMirageDailyStatus();
-  const f=Math.max(1,Math.min(VOID_MAX_FLOOR,finiteInt(floor,1)));
+  const f=Math.max(1,finiteInt(floor,1));
   if(f>daily.voidMirage.highestFloor)daily.voidMirage.highestFloor=f;
   return voidMirageDailyStatus();
  }
@@ -94,7 +93,6 @@
 
  window.DAILY_TIMEZONE_OFFSET_MINUTES=480;
  window.DAILY_DUNGEON_LIMITS=DEFAULT_DAILY_LIMITS;
- window.VOID_MIRAGE_MAX_FLOOR=VOID_MAX_FLOOR;
  window.gameDailyDateKey=gameDailyDateKey;
  window.blankDailyState=blankDailyState;
  window.normalizeDailyState=normalizeDailyState;
