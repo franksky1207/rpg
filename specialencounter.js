@@ -55,7 +55,7 @@
  function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
   const dungeon=typeof dungeonBattleResultHtml==="function"?dungeonBattleResultHtml(ctx):"";
-  const progressText=ctx?.continuous===true?`已完成 ${ctx.completed} 場，連續戰鬥已結束；已取得的獎勵與副本進度均保留。`:`已完成 ${ctx.completed} / ${ctx.originalCount} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。`;
+  const progressText=ctx?.continuous===true?`已完成 ${ctx.completed} 場，連續戰鬥已結束；已取得的獎勵均保留。`:`已完成 ${ctx.completed} / ${ctx.originalCount} 場，剩餘連戰已取消；已取得的獎勵均保留。`;
   return `<div class="notice" style="margin-bottom:10px"><b>主線戰鬥</b><div class="muted" style="margin-top:5px">${progressText}</div></div><div class="stats" style="margin-bottom:10px"><div class="stat">主線 EXP<b>+${ctx.totalXp||0}</b></div><div class="stat">主線金幣<b>+${ctx.totalGold||0}</b></div></div>${ctx.items?.length?dropListHtml(ctx.items):""}${dungeon}`;
  }
 
@@ -72,7 +72,7 @@
     body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}${result.blackMarketIntelGranted?`<div class="muted" style="margin-top:5px">取得黑市情報：下一次符合條件的主線勝利後，必定觸發另一個特殊遭遇。</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>`;
    }else{
     const lost=result.penalty?.dropped;
-    body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+    body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至背包的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
    }
    detail.innerHTML=body;
   }
@@ -89,8 +89,7 @@
   state.gold+=gold;
   const items=specialMakeDrops(rewardCtx,dropLevel,mapIdx);
   const drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
-  const shopDown=specialApplyShopDiscount(rewardCtx.shopRefreshDown);
-  return {rewardContext:rewardCtx,xp:xpPay.xp,convertedGold:xpPay.convertedGold,gold,drops,shopDown};
+  return {rewardContext:rewardCtx,xp:xpPay.xp,convertedGold:xpPay.convertedGold,gold,drops};
  }
 
  async function fightFormalSpecial(ctx,special){
@@ -105,7 +104,7 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
+  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
@@ -114,7 +113,6 @@
    result.convertedGold+=first.convertedGold;
    result.gold+=first.gold;
    result.drops.push(...first.drops);
-   result.shopDown+=first.shopDown;
 
    if(special.id==="bandit_king"){
     state.pendingBlackMarketEncounter=true;
@@ -137,7 +135,6 @@
      result.convertedGold+=bonus.convertedGold;
      result.gold+=bonus.gold;
      result.drops.push(...bonus.drops);
-     result.shopDown+=bonus.shopDown;
     }
    }
   }else{
