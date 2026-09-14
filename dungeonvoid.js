@@ -20,20 +20,19 @@
  let lastRegularName="";
  let voidMirageRun=null;
 
- function maxFloor(){return Math.max(1,Math.floor(Number(window.VOID_MIRAGE_MAX_FLOOR)||5000));}
- function floorNumber(value){return Math.max(1,Math.min(maxFloor(),Math.floor(Number(value)||1)));}
+ function floorNumber(value){return Math.max(1,Math.floor(Number(value)||1));}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function normalizeVoidMirageState(target){
   if(!target||typeof target!=="object")return null;
   if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={};
   if(!target.dungeon.voidMirage||typeof target.dungeon.voidMirage!=="object"||Array.isArray(target.dungeon.voidMirage))target.dungeon.voidMirage={};
-  target.dungeon.voidMirage.highestCleared=Math.max(0,Math.min(maxFloor(),Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0))));
+  target.dungeon.voidMirage.highestCleared=Math.max(0,Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0)));
   return target.dungeon.voidMirage;
  }
  function historicalHighest(){const s=normalizeVoidMirageState(state);return Math.max(0,Math.floor(Number(s?.highestCleared)||0));}
  function startFloorFromHistory(highest=historicalHighest()){
-  const h=Math.max(0,Math.min(maxFloor(),Math.floor(Number(highest)||0)));
-  return Math.max(1,Math.min(maxFloor(),h-VOID_MIRAGE_START_OFFSET));
+  const h=Math.max(0,Math.floor(Number(highest)||0));
+  return Math.max(1,h-VOID_MIRAGE_START_OFFSET);
  }
  function equivalentPower(floor){return 24+floorNumber(floor)/10;}
  function baseStats(floor){
@@ -74,7 +73,7 @@
  function runSnapshot(){
   if(!voidMirageRun)return null;
   const daily=dailyStatus();
-  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:voidMirageRun.playerSnapshot?{...voidMirageRun.playerSnapshot}:null,lastEnemy:voidMirageRun.lastEnemy?{...voidMirageRun.lastEnemy,traits:(voidMirageRun.lastEnemy.traits||[]).slice()}:null,lastResult:voidMirageRun.lastResult?{...voidMirageRun.lastResult,logs:(voidMirageRun.lastResult.logs||[]).slice()}:null,historicalHighest:historicalHighest(),dailyHighest:daily.highestFloor||0,dailyClaimed:daily.claimed===true,dailyReward:daily.reward||0,maxFloor:maxFloor()};
+  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:voidMirageRun.playerSnapshot?{...voidMirageRun.playerSnapshot}:null,lastEnemy:voidMirageRun.lastEnemy?{...voidMirageRun.lastEnemy,traits:(voidMirageRun.lastEnemy.traits||[]).slice()}:null,lastResult:voidMirageRun.lastResult?{...voidMirageRun.lastResult,logs:(voidMirageRun.lastResult.logs||[]).slice()}:null,historicalHighest:historicalHighest(),dailyHighest:daily.highestFloor||0,dailyClaimed:daily.claimed===true,dailyReward:daily.reward||0};
  }
  function finishRun(reason,extra={}){
   if(!voidMirageRun)return null;
@@ -85,19 +84,19 @@
   return runSnapshot();
  }
  function recordClear(floor){
-  const s=normalizeVoidMirageState(state),f=floorNumber(floor);if(!s)return {advanced:false,highestCleared:0,nextFloor:1,dailyHighest:0,reachedMax:false};
+  const s=normalizeVoidMirageState(state),f=floorNumber(floor);if(!s)return {advanced:false,highestCleared:0,nextFloor:1,dailyHighest:0};
   const before=s.highestCleared;
   if(f>before)s.highestCleared=f;
   const daily=typeof recordVoidMirageDailyFloor==="function"?recordVoidMirageDailyFloor(f):dailyStatus();
   if(typeof save==="function")save(false);
-  return {advanced:s.highestCleared>before,highestCleared:s.highestCleared,nextFloor:Math.min(maxFloor(),f+1),dailyHighest:daily.highestFloor||0,reachedMax:f>=maxFloor()};
+  return {advanced:s.highestCleared>before,highestCleared:s.highestCleared,nextFloor:f+1,dailyHighest:daily.highestFloor||0};
  }
  const yieldControl=()=>new Promise(resolve=>setTimeout(resolve,0));
 
  window.VOID_MIRAGE_NAME=VOID_MIRAGE_NAME;
  window.VOID_MIRAGE_UNLOCK_LEVEL=VOID_MIRAGE_UNLOCK_LEVEL;
  window.VOID_MIRAGE_START_OFFSET=VOID_MIRAGE_START_OFFSET;
- window.getVoidMirageConfig=function(){return {name:VOID_MIRAGE_NAME,unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,maxFloor:maxFloor(),startOffset:VOID_MIRAGE_START_OFFSET,dailyRewardPerFloor:2,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,hpMultiplier:VOID_MIRAGE_HP_MULTIPLIER,atkMultiplier:VOID_MIRAGE_ATK_MULTIPLIER,defMultiplier:VOID_MIRAGE_DEF_MULTIPLIER,regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),bossNames:VOID_MIRAGE_BOSS_NAMES.slice()};};
+ window.getVoidMirageConfig=function(){return {name:VOID_MIRAGE_NAME,unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,startOffset:VOID_MIRAGE_START_OFFSET,dailyRewardPerFloor:2,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,hpMultiplier:VOID_MIRAGE_HP_MULTIPLIER,atkMultiplier:VOID_MIRAGE_ATK_MULTIPLIER,defMultiplier:VOID_MIRAGE_DEF_MULTIPLIER,regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),bossNames:VOID_MIRAGE_BOSS_NAMES.slice()};};
  window.ensureVoidMirageState=function(){return normalizeVoidMirageState(state);};
  window.canEnterVoidMirage=function(){return Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;};
  window.voidMirageEquivalentPower=equivalentPower;
@@ -143,9 +142,7 @@
   voidMirageRun.lastResult=result;voidMirageRun.totalTurns+=Math.max(0,Math.floor(Number(result.turns)||0));
   if(!result.win){const final=finishRun("defeat",{failedFloor:floor});return {ok:true,win:false,ended:true,reason:"defeat",floor,enemy,result,playerMaxHp,gained:0,run:final};}
   const clear=recordClear(floor);
-  voidMirageRun.cleared++;voidMirageRun.lastClearedFloor=floor;voidMirageRun.phase="between";runFullHeal();
-  if(clear.reachedMax){const final=finishRun("max-floor");return {ok:true,win:true,ended:true,reason:"max-floor",floor,enemy,result,playerMaxHp,gained:0,run:final};}
-  voidMirageRun.currentFloor=floor+1;
+  voidMirageRun.cleared++;voidMirageRun.lastClearedFloor=floor;voidMirageRun.currentFloor=clear.nextFloor;voidMirageRun.phase="between";runFullHeal();
   if(typeof save==="function")save(false);
   if(voidMirageRun.exitRequested){const final=finishRun("exit");return {ok:true,win:true,ended:true,reason:"exit",floor,enemy,result,playerMaxHp,gained:0,run:final};}
   return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,gained:0,run:runSnapshot()};
