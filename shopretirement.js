@@ -32,10 +32,12 @@
   };
  }
 
- // Phase 1 compatibility shell: the shop page still exists until the UI-removal batch,
- // so rebuild a runtime-only shop object when that old page asks for one. It is never persisted.
+ // Phase 1 compatibility shell: the old shop page remains until the UI-removal batch.
+ // Normal loading never recreates state.shop; only actually entering the legacy shop view
+ // receives a runtime-only object, and save() strips it before persistence.
  window.ensureShop=function(){
   if(!state||typeof state!=="object")return;
+  if(typeof view==="undefined"||view!=="shop")return;
   if(!state.shop||typeof state.shop!=="object")state.shop={items:[],refreshIndex:0,resetAvailableAt:0,initialized:false};
   if(typeof baseEnsureShop==="function")baseEnsureShop();
  };
