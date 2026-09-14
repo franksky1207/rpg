@@ -48,7 +48,7 @@ function renderNav(){
 function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";view=v;render()}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();
- const fn={home:homePage,adventure:adventurePage,character:characterPage,specialization:specializationPage,inventory:inventoryPage,shop:shopPage,guide:gameGuidePage,settings:settingsPage}[view]||homePage;
+ const fn={home:homePage,adventure:adventurePage,character:characterPage,specialization:specializationPage,inventory:inventoryPage,guide:gameGuidePage,settings:settingsPage}[view]||homePage;
  document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
@@ -57,7 +57,7 @@ function wrapFunctionPage(html){return `<div class="function-page">${homeBackHtm
 function gearAbilityHtml(it,withScore=false){
  if(!it)return `<span class="muted">無</span>`;
  const rows=itemAbilityLines(it),body=rows.map(r=>`<div>${r.kind==="main"?`<span class="muted">主能力</span> `:r.kind==="affix"?`<span class="muted">詞條</span> `:""}${r.text}</div>`).join("");
- return `<div class="shop-stat-list">${body}${withScore?`<div class="muted" style="margin-top:5px">評分 ${equipmentScore(it)}</div>`:""}</div>`;
+ return `<div class="gear-stat-list">${body}${withScore?`<div class="muted" style="margin-top:5px">評分 ${equipmentScore(it)}</div>`:""}</div>`;
 }
 
 function homePage(){
@@ -68,8 +68,7 @@ function homePage(){
    <button class="menu-card" onclick="go('character')"><b>角色</b><span>查看能力與目前裝備</span></button>
    <button class="menu-card" onclick="go('specialization')"><b>專精</b><span>消耗金幣提升永久能力</span></button>
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
-   <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備與出售道具</span></button>
-   <button class="menu-card" onclick="go('shop')"><b>商店</b><span>購買裝備與贖回遺失裝備</span></button>
+   <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備、出售與贖回遺失裝備</span></button>
    <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法與規則</span></button>
    <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
   </div>
@@ -213,7 +212,7 @@ function showBattleResult(ctx,defeat=null){
  if(defeat){
   title.textContent="戰鬥失敗";
   const lost=defeat.penalty?.dropped;
-  detail.innerHTML=`${continuous?`<div class="notice"><b>已完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場，連續戰鬥已結束；已取得的獎勵與副本進度均保留。</b></div>`:""}<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+  detail.innerHTML=`${continuous?`<div class="notice"><b>已完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場，連續戰鬥已結束；已取得的獎勵均保留。</b></div>`:""}<div class="item"><b>EXP 損失：${defeat.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至背包的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
  }else{
   title.textContent=continuous?"連續戰鬥結算":"戰鬥勝利";
   detail.innerHTML=`${continuous?`<div class="item"><b>完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
@@ -263,36 +262,12 @@ function compareHtml(it){
 function selectItem(id){selectedItem=id;render()}
 function equipSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
 function sellSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=specializationSellValue(it);selectedItem=null;save();render()}
-
-function shopCooldownText(){
- const left=Math.max(0,(state.shop.resetAvailableAt||0)-Date.now());if(!left)return "可重置";
- const m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);return `${m} 分 ${String(s).padStart(2,"0")} 秒`;
-}
-function compareGearHtml(it,label="商品評分"){
- const current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?round1(itemScore-currentScore):itemScore;
- const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備",diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
- const currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">評分 ${currentScore}</div>`:`<span class="muted">無</span>`;
- return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">${label} ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
-}
-function shopStatHtml(it){return gearAbilityHtml(it,false)}
 function discardLostGear(i){
  const lost=state.lostGear?.[i];if(!lost)return;
  const label=lost.item?itemHtmlPlain(lost.item):"這件遺失裝備";
  if(!confirm(`確定永久放棄 ${label} 嗎？放棄後無法復原。`))return;
  state.lostGear.splice(i,1);save();render();
 }
-function shopPage(){
- ensureShop();
- if(state.shop.items.length>3){state.shop.items=state.shop.items.slice(0,3);save(false)}
- const cost=shopRefreshCost(),maxed=(state.shop.refreshIndex||0)>=7,lost=state.lostGear||[];
- const rows=state.shop.items.map((it,i)=>`<tr><td data-label="商品" class="shop-item-cell">${itemHtml(it,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(it)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(it,"商品評分")}</td><td data-label="價格" class="shop-price-cell">${it.buy.toLocaleString()}</td><td class="shop-action-cell"><button class="btn" onclick="buyItem(${i})">購買</button></td></tr>`).join("");
- const lostRows=lost.map((x,i)=>`<tr><td data-label="裝備" class="shop-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="shop-stats-cell">${shopStatHtml(x.item)}</td><td data-label="比較" class="shop-compare-cell">${compareGearHtml(x.item,"遺失裝備評分")}</td><td data-label="贖回價格" class="shop-price-cell">${x.cost.toLocaleString()}</td><td class="shop-action-cell"><div class="controls shop-row-actions"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
- const body=`<div class="card"><h2>商店</h2><div class="notice"><div>• 最高刷新價格 12,800；可重置回 100，冷卻 1 小時。</div><div>• 購買裝備可降低刷新價格。</div></div><div class="controls"><button class="btn" onclick="refreshShop()">刷新商店（${cost.toLocaleString()}）</button>${maxed?`<button class="btn blue" onclick="manualResetShopPrice()" ${canResetShopPrice()?"":"disabled"}>重置刷新價格${canResetShopPrice()?"":"（"+shopCooldownText()+"）"}</button>`:""}<span class="muted">持有金幣：${state.gold.toLocaleString()}</span></div><div class="shop-table-wrap"><table class="shop-table"><thead><tr><th>商品</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${lost.length?`<h3 style="margin-top:24px">遺失裝備贖回</h3><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="shop-table-wrap"><table class="shop-table lost-gear-table"><thead><tr><th>裝備</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${lostRows}</tbody></table></div>`:""}</div>`;
- return wrapFunctionPage(body);
-}
-function refreshShop(){const r=paidShopRefresh();if(!r.ok)return alert(r.reason);save();render()}
-function buyItem(i){const r=shopPurchase(i);if(!r.ok)return alert(r.reason);save();render()}
-function manualResetShopPrice(){const r=resetShopPrice();if(!r.ok)return alert(r.reason);save();render()}
 function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();render()}
 
 function settingsPage(){
@@ -357,10 +332,8 @@ function normalizeSaveState(target){
   const cost=Number(x.cost),lostAt=Number(x.lostAt);
   return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost:Number.isFinite(cost)&&cost>=0?Math.floor(cost):ceil(item.buy*2),lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
- if(!target.shop||typeof target.shop!=="object"||Array.isArray(target.shop))target.shop=newShopState();
- target.shop.items=(Array.isArray(target.shop.items)?target.shop.items:[]).map(it=>normalizeSaveItem(it)).filter(Boolean).slice(0,3);
- target.shop.refreshIndex=Math.max(0,Math.min(7,Math.floor(Number(target.shop.refreshIndex)||0)));
- const resetAt=Number(target.shop.resetAvailableAt);target.shop.resetAvailableAt=Number.isFinite(resetAt)&&resetAt>=0?resetAt:0;
+ if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
+ target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,5):[];while(auto.length<5)auto.push(false);target.settings.autoSell=auto.map(Boolean);
  target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
