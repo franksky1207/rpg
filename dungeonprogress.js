@@ -50,7 +50,6 @@
   delete dungeon.activeRun;
   delete dungeon.points;
   normalizeArenaProgress(dungeon,target);
-  if(typeof normalizeVipState==="function")normalizeVipState(target);
   return dungeon;
  }
  window.normalizeDungeonSaveState=normalizeDungeonState;
@@ -62,8 +61,8 @@
   state.vipInitialized=true;
   return true;
  }
- const baseNewState=newState;
- newState=function(){const next=baseNewState();normalizeDungeonState(next);next.vipInitialized=true;return next;};
+ function normalizeFreshDungeonState(target){normalizeDungeonState(target);target.vipInitialized=true;return target;}
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshDungeonState);
 
  window.finalizeDungeonLoadedState=function(){
   const vipHpInitialized=initializeVipHpIfNeeded();
@@ -73,7 +72,6 @@
  };
  window.ensureDungeonProgressState=function(){return normalizeDungeonState(state);};
  window.addDungeonPoints=function(amount){
-  normalizeDungeonState(state);
   const baseAdded=Math.floor(finiteNonNegative(amount,0));
   const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
   const adjusted=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseAdded):Math.floor(baseAdded*multiplier);
