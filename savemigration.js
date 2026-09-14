@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=11;
+ const SAVE_SCHEMA_VERSION=12;
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
@@ -16,6 +16,12 @@
   let removed=false;
   ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(target.dungeon,key)){delete target.dungeon[key];removed=true;}});
   return removed;
+ }
+ function cleanupRetiredShopState(target){
+  if(!isObject(target))return false;
+  if(!Object.prototype.hasOwnProperty.call(target,"shop"))return false;
+  delete target.shop;
+  return true;
  }
  function legacySameExpV9(level){const l=Math.max(1,Math.floor(Number(level)||1));return Math.ceil(25+4*l);}
  function legacyExpNeedV9(level){
@@ -62,7 +68,6 @@
   if(isObject(target.equipment))EQUIPMENT_TYPES.forEach(type=>prepareLegacyItem(target.equipment[type],type));
   if(Array.isArray(target.inventory))target.inventory.forEach(item=>prepareLegacyItem(item));
   if(Array.isArray(target.lostGear))target.lostGear.forEach(entry=>prepareLegacyItem(entry?.item));
-  if(isObject(target.shop)&&Array.isArray(target.shop.items))target.shop.items.forEach(item=>prepareLegacyItem(item));
  }
 
  function normalizeVoidMirage(target){
@@ -127,27 +132,21 @@
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
+ window.cleanupRetiredShopState=cleanupRetiredShopState;
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
   let target=isObject(rawState)?rawState:(typeof newState==="function"?newState():{});
   const source=isObject(sourceRaw)?sourceRaw:target;
   const version=sourceVersionOf(fromVersion??source.saveVersion,1);
-  const sourceShop=isObject(source.shop)?source.shop:null;
-  const shopHadInitialized=!!sourceShop&&typeof sourceShop.initialized==="boolean";
-  const shopInitializedValue=shopHadInitialized?sourceShop.initialized:false;
   const introWasBoolean=typeof source.introSeen==="boolean";
   const introValue=introWasBoolean?source.introSeen:true;
 
   prepareAllGear(target);
   if(!introWasBoolean)target.introSeen=true;
-  if(version<4){
-   if(!isObject(target.shop))target.shop={};
-   target.shop.items=[];
-   target.shop.initialized=false;
-  }
-
+  const retiredShopStateRemoved=cleanupRetiredShopState(target);
   const legacyDungeonFieldsRemoved=cleanupLegacyDungeonFields(target);
   const normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);
+  cleanupRetiredShopState(target);
   const expProgressMigrated=migrateExpProgress(target,version,source);
 
   prepareAllGear(target);
@@ -157,23 +156,14 @@
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
   cleanupLegacyDungeonFields(target);
+  cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
   normalizeOffline(target,version);
-
-  if(!isObject(target.shop))target.shop=typeof newShopState==="function"?newShopState():{items:[],refreshIndex:0,resetAvailableAt:0,initialized:false};
-  if(!Array.isArray(target.shop.items))target.shop.items=[];
-  if(version<4){
-   target.shop.items=[];
-   target.shop.initialized=false;
-  }else if(shopHadInitialized){
-   target.shop.initialized=shopInitializedValue;
-  }else{
-   target.shop.initialized=target.shop.items.length>0;
-  }
+  target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved};
   return target;
  };
 
@@ -194,7 +184,7 @@
   if(typeof ensureDailyState==="function")ensureDailyState();
   selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
   if(typeof normalizeHP==="function")normalizeHP();
-  if(typeof ensureShop==="function")ensureShop();
+  cleanupRetiredShopState(state);
   state.saveVersion=SAVE_SCHEMA_VERSION;
   if(typeof save==="function")save(false);
 
@@ -206,6 +196,7 @@
    targetVersion:SAVE_SCHEMA_VERSION,
    expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
    legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
+   retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true
   };
   return state;
