@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=10;
+ const SAVE_SCHEMA_VERSION=11;
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
@@ -146,6 +146,7 @@
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
+  if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
   normalizeVoidMirage(target);
   normalizeOffline(target,version);
@@ -181,6 +182,7 @@
   state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
 
   const dungeonFinalize=typeof window.finalizeDungeonLoadedState==="function"?window.finalizeDungeonLoadedState():null;
+  if(typeof ensureDailyState==="function")ensureDailyState();
   selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
   if(typeof normalizeHP==="function")normalizeHP();
   if(typeof ensureShop==="function")ensureShop();
