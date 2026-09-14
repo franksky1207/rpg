@@ -1,0 +1,10 @@
+body.background-preloading{overflow:hidden;background:#070b12}
+body.background-preloading>.app,body.background-preloading>.bottom-nav{visibility:hidden;opacity:0}
+#backgroundPreloadScreen{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;background:#070b12;color:#e8e0d0;opacity:1;transition:opacity .18s ease}
+#backgroundPreloadScreen.done{opacity:0;pointer-events:none}
+.background-preload-box{width:min(320px,76vw);text-align:center}
+.background-preload-title{font-size:26px;font-weight:850;letter-spacing:.12em;color:#f0d494}
+.background-preload-status{margin-top:14px;font-size:13px;color:#aaa49a;font-variant-numeric:tabular-nums}
+.background-preload-track{height:4px;margin-top:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.10)}
+.background-preload-bar{height:100%;width:0;border-radius:inherit;background:#d8c08b;transition:width .12s linear}
+body.background-preload-complete>.app,body.background-preload-complete>.bottom-nav{visibility:visible;opacity:1}
