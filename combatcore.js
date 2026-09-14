@@ -3,8 +3,10 @@
   const n=Number(value);
   return Number.isFinite(n)?n:fallback;
  }
- function specLevel(key,useTest=false){
-  return typeof window.specializationLevel==="function"?Math.max(0,Number(window.specializationLevel(key,useTest))||0):0;
+ function specBonus(key,useTest=false){
+  if(typeof window.specializationPercentBonus==="function")return Math.max(0,Number(window.specializationPercentBonus(key,useTest))||0);
+  if(typeof window.specializationLevel==="function")return Math.max(0,Number(window.specializationLevel(key,useTest))||0);
+  return 0;
  }
 
  window.runCombatCore=function(player,enemy,startHp=null,options={}){
@@ -15,11 +17,11 @@
   const events=[];
   const useTest=options.useTestSpecializations===true;
   const spec={
-   initiative:specLevel("initiative",useTest),
-   combo:specLevel("combo",useTest),
-   penetration:specLevel("penetration",useTest),
-   counter:specLevel("counter",useTest),
-   drain:specLevel("drain",useTest)
+   initiative:specBonus("initiative",useTest),
+   combo:specBonus("combo",useTest),
+   penetration:specBonus("penetration",useTest),
+   counter:specBonus("counter",useTest),
+   drain:specBonus("drain",useTest)
   };
   const initialHp=startHp==null?numberOr(p.hp,0):numberOr(startHp,0);
   const playerMaxHp=Math.max(1,numberOr(p.hp,1));
@@ -41,7 +43,7 @@
    const effectiveDef=numberOr(e.def,0)*(penetration?.75:1);
    let damage=calcDamage(numberOr(p.atk,0),effectiveDef);
    const initiativeApplied=initiative&&spec.initiative>0;
-   if(initiativeApplied)damage=ceil(damage*(1+spec.initiative*.02));
+   if(initiativeApplied)damage=ceil(damage*(1+spec.initiative/100));
    const crit=Math.random()*100<numberOr(p.crit,0);
    if(crit)damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
    damage=Math.max(1,ceil(damage*scale));
