@@ -7,7 +7,6 @@
   EQUIPMENT_TYPES.forEach(type=>normalizeLockFlag(state?.equipment?.[type]));
   (state?.inventory||[]).forEach(normalizeLockFlag);
   (state?.lostGear||[]).forEach(x=>normalizeLockFlag(x?.item));
-  (state?.shop?.items||[]).forEach(normalizeLockFlag);
  }
  function restoreAfterEquipmentChange(){
   if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
@@ -133,7 +132,6 @@
   state.lostGear.splice(i,1);return {ok:true,lost};
  };
 
- // 公開 UI 入口只做確認、提示、存檔與 render；裝備資料異動都交給上面的 equipment* 核心。
  compareHtml=function(it){return equipmentCompareHtml(it)};
  window.compareHtml=compareHtml;
  equipSelected=function(){
