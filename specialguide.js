@@ -15,7 +15,6 @@
    case "qualitySource": return effect.value==="normal"?"使用一般怪品質掉落表":"使用特殊掉落來源";
    case "dropCount": return `一次掉落 ${Math.max(1,Math.floor(Number(effect.value)||1))} 件裝備`;
    case "weakSlotDrop": return "優先補強目前較弱的裝備部位";
-   case "shopRefreshDown": return `商店刷新價格降低 ${Math.max(0,Math.floor(Number(effect.value)||0))} 級`;
    case "randomReward": {
     const labels=(Array.isArray(effect.options)?effect.options:[]).map(x=>x?.label).filter(Boolean);
     return labels.length?`隨機獎勵：${labels.join("／")}`:"隨機特殊獎勵";
