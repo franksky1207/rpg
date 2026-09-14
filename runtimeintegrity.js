@@ -9,8 +9,8 @@
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields",
-  "registerNewStateNormalizer","getNewStateNormalizerCount",
+  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields","cleanupRetiredShopState",
+  "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
@@ -26,10 +26,12 @@
  retiredDungeonRunApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_DUNGEON_RUN_API",`舊共享副本流程 ${name} 不應再存在`);});
  const retiredVoidApis=["getVoidMirageNextFloor","voidMirageFirstClearPoints"];
  retiredVoidApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_VOID_API",`舊虛空相容函式 ${name} 不應再存在`);});
+ const retiredShopApis=["newShopState","currentShopMap","makeShopItems","ensureShop","shopRefreshCost","paidShopRefresh","freeShopRefresh","shopPurchase","canResetShopPrice","resetShopPrice","specialApplyShopDiscount"];
+ retiredShopApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_SHOP_API",`已退休商店函式 ${name} 不應再存在`);});
  if(typeof window.VOID_MIRAGE_GM_UI_V2!=="undefined")fail("LEGACY_VOID_GM_MARKER","已退休的虛空 GM UI 標記不應再載入");
 
- if(Number(SAVE_VERSION)!==11)fail("SAVE_VERSION",`SAVE_VERSION 應為 11，實際 ${SAVE_VERSION}`);
- if(Number(window.SAVE_SCHEMA_VERSION)!==11)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 11，實際 ${window.SAVE_SCHEMA_VERSION}`);
+ if(Number(SAVE_VERSION)!==12)fail("SAVE_VERSION",`SAVE_VERSION 應為 12，實際 ${SAVE_VERSION}`);
+ if(Number(window.SAVE_SCHEMA_VERSION)!==12)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 12，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
  if(Number(window.VIP_PROGRESSION_VERSION)!==12)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 12，實際 ${window.VIP_PROGRESSION_VERSION}`);
  if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
@@ -55,6 +57,7 @@
   if(!fresh?.daily||fresh.daily.bounty?.used!==0||fresh.daily.arena?.used!==0)fail("NEW_STATE_DAILY","newState 未正確建立每日副本狀態",fresh?.daily);
   if(!fresh?.dungeon?.arena)fail("NEW_STATE_DUNGEON","newState 未正確建立競技場持久狀態",fresh?.dungeon);
   if(fresh?.vipPoints!==0||fresh?.vipLevel!==0)fail("NEW_STATE_VIP","newState VIP 初始狀態異常",{vipPoints:fresh?.vipPoints,vipLevel:fresh?.vipLevel});
+  if(Object.prototype.hasOwnProperty.call(fresh,"shop"))fail("NEW_STATE_SHOP","newState 不應再含退休的 shop 欄位");
   ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(fresh?.dungeon||{},key))fail("NEW_STATE_LEGACY_DUNGEON",`newState 不應含舊副本欄位 ${key}`);});
  }
  if(typeof window.normalizeDailyState==="function"){
@@ -70,12 +73,12 @@
  if(clock?.textContent?.includes("臺灣時間"))fail("DAILY_CLOCK_LABEL","時鐘不應顯示「臺灣時間」文字");
  if(!clock?.textContent?.includes("每日凌晨 0 點重置"))fail("DAILY_RESET_LABEL","缺少固定的每日凌晨 0 點重置文字");
 
- if(Number(window.GAME_GUIDE_VERSION)!==7)fail("GUIDE_VERSION",`遊戲說明版本應為 7，實際 ${window.GAME_GUIDE_VERSION}`);
+ if(Number(window.GAME_GUIDE_VERSION)!==8)fail("GUIDE_VERSION",`遊戲說明版本應為 8，實際 ${window.GAME_GUIDE_VERSION}`);
  if(window.GAME_GUIDE_ARENA_V6!==true)fail("GUIDE_LATE_OVERRIDE","舊競技場說明覆蓋檔未停用");
  const guideText=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES.flatMap(c=>c.items||[]).flat().join(" "):"";
- const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成"];
+ const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報"];
  guideRequired.forEach(text=>{if(!guideText.includes(text))fail("GUIDE_REQUIRED_TEXT",`遊戲說明缺少新版規則：${text}`);});
- const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100"];
+ const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100","免費刷新一次新地圖的商店","前往商店花費金幣贖回","降低目前商店刷新費用","商店會提供"];
  guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含過度詳細或舊規則：${text}`);});
  if(typeof gmHtml==="function"){
   const gmText=String(gmHtml());
@@ -84,8 +87,18 @@
  }
 
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
+ if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
+ if(state&&typeof state.pendingBlackMarketEncounter!=="boolean")fail("BLACK_MARKET_INTEL_STATE","pendingBlackMarketEncounter 應 normalize 為 boolean",state.pendingBlackMarketEncounter);
  if(state?.dungeon){
   ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(state.dungeon,key))fail("LEGACY_DUNGEON_STATE",`state.dungeon 不應再含舊欄位 ${key}`);});
+ }
+ const blackMarket=typeof getSpecialMonsterById==="function"?getSpecialMonsterById("bandit_king"):null;
+ if(!blackMarket)fail("BLACK_MARKET_MONSTER","找不到黑市武裝頭目正式定義");
+ else{
+  const effects=Array.isArray(blackMarket.effects)?blackMarket.effects:[];
+  const gold=effects.find(x=>x?.type==="goldMultiplier");
+  if(Number(gold?.value)!==2.5)fail("BLACK_MARKET_GOLD","黑市武裝頭目金幣倍率應為 2.5",effects);
+  if(effects.some(x=>String(x?.type||"").toLowerCase().includes("shop")))fail("BLACK_MARKET_SHOP_EFFECT","黑市武裝頭目不應再含商店效果",effects);
  }
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
