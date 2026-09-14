@@ -64,6 +64,33 @@
   row.used=used+need;
   return {ok:true,used:row.used,remaining:Math.max(0,limit-row.used),limit};
  }
+ function voidMirageDailyStatus(){
+  const daily=ensureDailyState(),row=daily?.voidMirage||{highestFloor:0,claimed:false};
+  const highestFloor=Math.max(0,Math.min(VOID_MAX_FLOOR,finiteInt(row.highestFloor,0)));
+  const claimed=row.claimed===true;
+  const baseReward=highestFloor*2;
+  const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
+  const reward=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseReward):Math.floor(baseReward*multiplier);
+  return {highestFloor,claimed,baseReward,reward,multiplier,canClaim:highestFloor>0&&!claimed};
+ }
+ function recordVoidMirageDailyFloor(floor){
+  const daily=ensureDailyState();
+  if(!daily?.voidMirage)return voidMirageDailyStatus();
+  const f=Math.max(1,Math.min(VOID_MAX_FLOOR,finiteInt(floor,1)));
+  if(f>daily.voidMirage.highestFloor)daily.voidMirage.highestFloor=f;
+  return voidMirageDailyStatus();
+ }
+ function claimVoidMirageDailyReward(){
+  const status=voidMirageDailyStatus();
+  if(status.claimed)return {ok:false,reason:"already_claimed",...status};
+  if(status.highestFloor<=0)return {ok:false,reason:"no_daily_record",...status};
+  if(typeof addDungeonPoints!=="function")return {ok:false,reason:"vip_point_system_missing",...status};
+  const result=addDungeonPoints(status.baseReward);
+  const daily=ensureDailyState();
+  daily.voidMirage.claimed=true;
+  if(typeof save==="function")save(false);
+  return {ok:true,highestFloor:status.highestFloor,baseReward:status.baseReward,awarded:Math.max(0,Math.floor(Number(result?.added)||0)),points:Math.max(0,Math.floor(Number(state?.vipPoints)||0)),claimed:true,multiplier:status.multiplier,canClaim:false};
+ }
 
  window.DAILY_TIMEZONE_OFFSET_MINUTES=480;
  window.DAILY_DUNGEON_LIMITS=DEFAULT_DAILY_LIMITS;
@@ -76,6 +103,9 @@
  window.dailyDungeonStatus=dailyDungeonStatus;
  window.dailyDungeonRemaining=dailyDungeonRemaining;
  window.consumeDailyDungeonUse=consumeDailyDungeonUse;
+ window.voidMirageDailyStatus=voidMirageDailyStatus;
+ window.recordVoidMirageDailyFloor=recordVoidMirageDailyFloor;
+ window.claimVoidMirageDailyReward=claimVoidMirageDailyReward;
 
  const baseNewState=newState;
  newState=function(){
