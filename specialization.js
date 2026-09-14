@@ -1,15 +1,15 @@
 (function(){
- const SPECIALIZATION_MAX_LEVEL=30;
+ const SPECIALIZATION_MAX_LEVEL=60;
  const SPECIALIZATION_KEYS=["training","scavenge","appraisal","initiative","combo","penetration","counter","drain"];
  const SPECIALIZATION_DEFS={
-  training:{name:"實戰訓練",perLevel:"每級 EXP +5%",desc:"提升擊敗怪物取得的經驗值。"},
-  scavenge:{name:"搜刮技巧",perLevel:"每級怪物金幣 +5%",desc:"提升怪物直接掉落的金幣。"},
-  appraisal:{name:"鑑價技巧",perLevel:"每級裝備售價 +5%",desc:"提升出售裝備取得的金幣。"},
-  initiative:{name:"先制技巧",perLevel:"每級第一擊傷害 +2%",desc:"提升每場戰鬥第一次主動攻擊的傷害。"},
-  combo:{name:"連擊技巧",perLevel:"每級連擊率 +1%",desc:"攻擊時有機率追加一次 50% 傷害的攻擊，追加攻擊可再次觸發連擊。"},
-  penetration:{name:"穿透技巧",perLevel:"每級穿透率 +1%",desc:"攻擊時有機率忽略敵人 25% 防禦。"},
-  counter:{name:"反擊技巧",perLevel:"每級反擊率 +1%",desc:"受到敵人有效攻擊後有機率立即反擊，反擊造成 40% 傷害。"},
-  drain:{name:"汲取技巧",perLevel:"每級汲取率 +1%",desc:"造成傷害時有機率回復生命，觸發時回復本次實際傷害的 10%。"}
+  training:{name:"實戰訓練",perLevel:"每級 EXP +2.5%",desc:"提升擊敗怪物取得的經驗值。"},
+  scavenge:{name:"搜刮技巧",perLevel:"每級怪物金幣 +2.5%",desc:"提升怪物直接掉落的金幣。"},
+  appraisal:{name:"鑑價技巧",perLevel:"每級裝備售價 +2.5%",desc:"提升出售裝備取得的金幣。"},
+  initiative:{name:"先制技巧",perLevel:"每級第一擊傷害 +1%",desc:"提升每場戰鬥第一次主動攻擊的傷害。"},
+  combo:{name:"連擊技巧",perLevel:"每級連擊率 +0.5%",desc:"攻擊時有機率追加一次 50% 傷害的攻擊，追加攻擊可再次觸發連擊。"},
+  penetration:{name:"穿透技巧",perLevel:"每級穿透率 +0.5%",desc:"攻擊時有機率忽略敵人 25% 防禦。"},
+  counter:{name:"反擊技巧",perLevel:"每級反擊率 +0.5%",desc:"受到敵人有效攻擊後有機率立即反擊，反擊造成 40% 傷害。"},
+  drain:{name:"汲取技巧",perLevel:"每級汲取率 +0.5%",desc:"造成傷害時有機率回復生命，觸發時回復本次實際傷害的 10%。"}
  };
  let upgradeActionBusy=false;
 
@@ -36,13 +36,13 @@
  window.gmTestSpecializations=blankSpecializations();
  window.specializationLevel=function(key,useTest=false){if(!SPECIALIZATION_DEFS[key])return 0;return useTest?clampSpecializationLevel(window.gmTestSpecializations?.[key]):formalLevel(key);};
  window.specializationLevelsSnapshot=function(useTest=false){return Object.fromEntries(SPECIALIZATION_KEYS.map(key=>[key,window.specializationLevel(key,useTest)]));};
- window.specializationPercentBonus=function(key,useTest=false){const lv=window.specializationLevel(key,useTest);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*5;if(key==="initiative")return lv*2;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv;return 0;};
+ window.specializationPercentBonus=function(key,useTest=false){const lv=window.specializationLevel(key,useTest);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;};
  window.specializationMultiplier=function(key,useTest=false){return 1+window.specializationPercentBonus(key,useTest)/100;};
  window.specializationAdjustedExp=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("training",useTest)));};
  window.specializationAdjustedGold=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("scavenge",useTest)));};
  window.specializationSellValue=function(item,useTest=false){const base=Math.max(0,Math.floor(Number(item?.sell)||0));return Math.max(0,Math.ceil(base*window.specializationMultiplier("appraisal",useTest)));};
 
- function effectLines(key,lv){if(key==="training")return [`EXP +${lv*5}%`];if(key==="scavenge")return [`怪物金幣 +${lv*5}%`];if(key==="appraisal")return [`裝備售價 +${lv*5}%`];if(key==="initiative")return [`第一擊傷害 +${lv*2}%`];if(key==="combo")return [`連擊率 ${lv}%`,`追加傷害 50%`];if(key==="penetration")return [`穿透率 ${lv}%`,`忽略防禦 25%`];if(key==="counter")return [`反擊率 ${lv}%`,`反擊傷害 40%`];if(key==="drain")return [`汲取率 ${lv}%`,`回復傷害 10%`];return [];}
+ function effectLines(key,lv){if(key==="training")return [`EXP +${lv*2.5}%`];if(key==="scavenge")return [`怪物金幣 +${lv*2.5}%`];if(key==="appraisal")return [`裝備售價 +${lv*2.5}%`];if(key==="initiative")return [`第一擊傷害 +${lv}%`];if(key==="combo")return [`連擊率 ${lv*.5}%`,`追加傷害 50%`];if(key==="penetration")return [`穿透率 ${lv*.5}%`,`忽略防禦 25%`];if(key==="counter")return [`反擊率 ${lv*.5}%`,`反擊傷害 40%`];if(key==="drain")return [`汲取率 ${lv*.5}%`,`回復傷害 10%`];return [];}
  function specializationCard(key){const def=SPECIALIZATION_DEFS[key],lv=formalLevel(key),maxed=lv>=SPECIALIZATION_MAX_LEVEL,cost=maxed?0:specializationUpgradeCost(lv+1),enough=maxed||state.gold>=cost;return `<section class="specialization-card"><div class="specialization-card-head"><b>${def.name}</b><span>Lv.${lv} / ${SPECIALIZATION_MAX_LEVEL}</span></div><div class="specialization-effect">${effectLines(key,lv).map(x=>`<div>${x}</div>`).join("")}</div><div class="specialization-cost">${maxed?"已達最高等級":`${cost.toLocaleString()} 金幣`}</div><button class="btn specialization-upgrade" ${maxed||!enough?"disabled":""} onclick="upgradeSpecialization('${key}')">${maxed?"已滿級":"升級"}</button></section>`;}
  function specializationGuideHtml(){return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。</div>${SPECIALIZATION_KEYS.map(key=>{const d=SPECIALIZATION_DEFS[key];return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;}
  function specializationPage(){ensureSpecializationState();return `<div class="function-page specialization-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card specialization-panel"><div class="specialization-title-row"><h2>專精</h2><div class="specialization-gold">金幣 <b>${state.gold.toLocaleString()}</b></div></div>${specializationGuideHtml()}<div class="specialization-grid">${SPECIALIZATION_KEYS.map(specializationCard).join("")}</div></div></div>`;}
