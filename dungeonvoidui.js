@@ -139,6 +139,15 @@
  };
  window.claimVoidMirageRewardUI=function(){
   if(voidUi.running)return;
+  const daily=dailySafe();
+  if(!daily.canClaim){
+   voidUi.message=daily.claimed?"今日虛空獎勵已領取。":"今天尚未突破任何樓層，暫無可領獎勵。";
+   render();
+   return;
+  }
+  const reward=Math.max(0,Math.floor(Number(daily.reward)||0));
+  const confirmed=confirm(`確定要領取今日虛空 VIP 獎勵嗎？\n\n今日獎勵：${reward.toLocaleString()} VIP\n領取後今日不可再次領取。`);
+  if(!confirmed)return;
   const result=typeof claimVoidMirageDailyReward==="function"?claimVoidMirageDailyReward():{ok:false,reason:"reward_system_missing"};
   if(result.ok)voidUi.message=`已領取今日虛空獎勵：+${Number(result.awarded||0).toLocaleString()} VIP 積分。`;
   else if(result.reason==="already_claimed")voidUi.message="今日虛空獎勵已領取。";
