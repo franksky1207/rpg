@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="style.css?v=20260914-maintenance1">
 <link rel="stylesheet" href="componentstyles.css?v=20260914-maintenance1">
 <link rel="stylesheet" href="backgrounds.css?v=20260914-maintenance1">
+<link rel="stylesheet" href="backgroundpreload.css?v=20260914-background-preload1">
 <link rel="stylesheet" href="guide.css?v=20260914-maintenance1">
 <link rel="stylesheet" href="dungeonarena.css?v=20260914-maintenance1">
 <link rel="stylesheet" href="dungeonplayerui.css?v=20260914-maintenance1">
@@ -19,7 +20,14 @@
 <link rel="stylesheet" href="dungeonuipolish.css?v=20260914-maintenance1">
 <link rel="stylesheet" href="combatsettlementpolish.css?v=20260914-maintenance1">
 </head>
-<body>
+<body class="background-preloading">
+<div id="backgroundPreloadScreen" role="status" aria-live="polite">
+  <div class="background-preload-box">
+    <div class="background-preload-title">文明戰線</div>
+    <div class="background-preload-status" id="backgroundPreloadStatus">準備遊戲中…</div>
+    <div class="background-preload-track"><div class="background-preload-bar" id="backgroundPreloadBar"></div></div>
+  </div>
+</div>
 <div class="app">
 <header>
   <div class="brand">
@@ -118,5 +126,6 @@
 <script src="adventureprogressui.js?v=20260914-maintenance1"></script>
 <script src="combatfx.js?v=20260914-maintenance1"></script>
 <script src="runtimeintegrity.js?v=20260914-guide-simplify1"></script>
+<script src="backgroundpreload.js?v=20260914-background-preload1"></script>
 </body>
 </html>
