@@ -29,7 +29,7 @@
  }
  function dailySafe(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function startFloor(){return typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():Math.max(1,(progressSafe().highestCleared||0)-100);}
- function reasonText(reason){if(reason==="defeat")return "挑戰失敗";if(reason==="exit")return "已強制退出";if(reason==="max-floor")return "已達虛空最高層";return "本次挑戰結束";}
+ function reasonText(reason){if(reason==="defeat")return "挑戰失敗";if(reason==="exit")return "已強制退出";return "本次挑戰結束";}
  function rewardLabel(daily){
   if(daily.claimed)return "今日已領取";
   if(daily.highestFloor<=0)return "尚無可領獎勵";
@@ -51,8 +51,8 @@
  }
 
  function idleHtml(){
-  const p=progressSafe(),daily=dailySafe(),start=startFloor(),max=Math.max(1,Math.floor(Number(window.VOID_MIRAGE_MAX_FLOOR)||5000));
-  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-stats"><div class="void-stat"><span>歷史最高</span><strong>第 ${Number(p.highestCleared||0).toLocaleString()} 層</strong></div><div class="void-stat"><span>挑戰起點</span><strong>第 ${Number(start).toLocaleString()} 層</strong></div><div class="void-stat"><span>當日最高</span><strong>第 ${Number(daily.highestFloor||0).toLocaleString()} 層</strong></div><div class="void-stat"><span>今日可領 VIP</span><strong>${daily.claimed?"已領取":Number(daily.reward||0).toLocaleString()}</strong></div></div><div class="muted">每次挑戰從歷史最高紀錄前 100 層開始，最低第 1 層；最高第 ${max.toLocaleString()} 層。每層戰後完全恢復 HP，可重複挑戰。</div>${claimLineHtml(daily)}${voidUi.message?`<div class="notice" style="margin-top:10px">${voidUi.message}</div>`:""}<div class="void-actions"><button class="btn dungeon-entry-btn" onclick="startVoidMirageChallengeUI()">開始挑戰</button>${claimButtonHtml(daily)}<button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
+  const p=progressSafe(),daily=dailySafe(),start=startFloor();
+  return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-stats"><div class="void-stat"><span>歷史最高</span><strong>第 ${Number(p.highestCleared||0).toLocaleString()} 層</strong></div><div class="void-stat"><span>挑戰起點</span><strong>第 ${Number(start).toLocaleString()} 層</strong></div><div class="void-stat"><span>當日最高</span><strong>第 ${Number(daily.highestFloor||0).toLocaleString()} 層</strong></div><div class="void-stat"><span>今日可領 VIP</span><strong>${daily.claimed?"已領取":Number(daily.reward||0).toLocaleString()}</strong></div></div><div class="muted">每次挑戰從歷史最高紀錄前 100 層開始，最低第 1 層。每層戰後完全恢復 HP，可重複挑戰。</div>${claimLineHtml(daily)}${voidUi.message?`<div class="notice" style="margin-top:10px">${voidUi.message}</div>`:""}<div class="void-actions"><button class="btn dungeon-entry-btn" onclick="startVoidMirageChallengeUI()">開始挑戰</button>${claimButtonHtml(daily)}<button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
  }
 
  function combatHtml(fr,run){
@@ -63,7 +63,7 @@
  }
 
  function resultHtml(run){
-  const progress=progressSafe(),daily=dailySafe(),cleared=run?.cleared||0,isExit=run?.endedReason==="exit",isMax=run?.endedReason==="max-floor",endFloor=isExit?(run?.lastClearedFloor||run?.startFloor||0):isMax?(run?.lastClearedFloor||window.VOID_MIRAGE_MAX_FLOOR||5000):(run?.failedFloor||0),endLabel=isExit?"退出樓層":isMax?"最高到達":"失敗樓層",endText=endFloor?`第 ${Number(endFloor).toLocaleString()} 層`:"—",nextStart=startFloor();
+  const progress=progressSafe(),daily=dailySafe(),cleared=run?.cleared||0,isExit=run?.endedReason==="exit",endFloor=isExit?(run?.lastClearedFloor||run?.startFloor||0):(run?.failedFloor||0),endLabel=isExit?"退出樓層":"失敗樓層",endText=endFloor?`第 ${Number(endFloor).toLocaleString()} 層`:"—",nextStart=startFloor();
   return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-result-reason">${reasonText(run?.endedReason)}</div><h2>本次挑戰完成</h2><div class="void-result-grid"><div><span>本次突破</span><strong>${Number(cleared).toLocaleString()} 層</strong></div><div><span>${endLabel}</span><strong>${endText}</strong></div><div><span>歷史最高</span><strong>第 ${Number(progress.highestCleared||0).toLocaleString()} 層</strong></div><div><span>當日最高</span><strong>第 ${Number(daily.highestFloor||0).toLocaleString()} 層</strong></div><div><span>下次挑戰起點</span><strong>第 ${Number(nextStart).toLocaleString()} 層</strong></div><div><span>今日可領 VIP</span><strong>${daily.claimed?"已領取":Number(daily.reward||0).toLocaleString()}</strong></div></div>${claimLineHtml(daily)}${voidUi.message?`<div class="notice" style="margin-top:10px">${voidUi.message}</div>`:""}<div class="muted" style="margin-top:10px">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0).toLocaleString()}</div><div class="void-actions"><button class="btn dungeon-entry-btn" onclick="startVoidMirageChallengeUI()">再次挑戰</button>${claimButtonHtml(daily)}<button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
  }
 
