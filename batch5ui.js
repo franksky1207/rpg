@@ -42,6 +42,7 @@
    <div class="muted" style="margin-top:9px">虛空挑戰起點目前為第 ${s.start.toLocaleString()} 層；當日最高對應目前可領 ${s.reward.toLocaleString()} VIP。若當日最高高於歷史最高，套用時會自動把歷史最高同步提高。</div>
    <div class="controls"><button class="btn blue" onclick="gmApplyDungeonValues()">套用副本／VIP資料</button><button class="btn" onclick="gmResetDailyDungeonState()">重置今日副本資料</button><button class="btn danger" onclick="gmResetVoidMirageFloor()">重置虛空紀錄</button><button class="btn danger" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>`;
  }
+ window.gmDungeonManagementHtml=dungeonManagementHtml;
  window.gmApplyDungeonValues=function(){
   if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return;}
   const points=finiteInt(document.getElementById("gmDungeonPoints")?.value),bounty=finiteInt(document.getElementById("gmBountyDailyUsed")?.value,0,20),arena=finiteInt(document.getElementById("gmArenaDailyUsed")?.value,0,20),highest=finiteInt(document.getElementById("gmVoidHistoricalHighest")?.value),dailyHighest=finiteInt(document.getElementById("gmVoidDailyHighest")?.value),claimed=document.getElementById("gmVoidDailyClaimed")?.value==="1";
@@ -56,15 +57,6 @@
   const fresh=typeof blankDailyState==="function"?blankDailyState(typeof gameDailyDateKey==="function"?gameDailyDateKey():daily.dateKey):{dateKey:daily.dateKey,bounty:{used:0},arena:{used:0},voidMirage:{highestFloor:0,claimed:false}};
   Object.assign(daily,fresh);if(typeof save==="function")save(false);if(typeof render==="function")render();
  };
-
- if(typeof gmHtml==="function"){
-  const baseGmHtml=gmHtml;
-  gmHtml=function(){
-   let html=baseGmHtml(),marker='<summary>副本管理</summary><div class="gm-hub-body">',start=html.indexOf(marker);
-   if(start>=0){const bodyStart=start+marker.length,end=html.indexOf('</div></details>',bodyStart);if(end>=0)html=html.slice(0,bodyStart)+dungeonManagementHtml()+html.slice(end);}
-   return html.replaceAll("GM 測試不扣副本次數","GM 測試不扣今日懸賞額度");
-  };
- }
 
  installStyles();ensureClock();tickClock();setInterval(tickClock,1000);
  window.BATCH5_UI_READY=true;
