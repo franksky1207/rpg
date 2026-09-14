@@ -3,13 +3,14 @@
   if(document.getElementById("specialEncounterAlert"))return;
   const el=document.createElement("div");
   el.id="specialEncounterAlert";
-  el.innerHTML=`<div class="special-alert-card"><div class="special-alert-title">⚠ 特殊遭遇！</div><div class="special-alert-sub">偵測到異常敵影</div><div class="special-alert-name" id="specialEncounterAlertName"></div></div>`;
+  el.innerHTML=`<div class="special-alert-card"><div class="special-alert-title">⚠ 特殊遭遇！</div><div class="special-alert-sub" id="specialEncounterAlertSub">偵測到異常敵影</div><div class="special-alert-name" id="specialEncounterAlertName"></div></div>`;
   document.body.appendChild(el);
  }
 
- async function showSpecialEncounterAlert(special){
+ async function showSpecialEncounterAlert(special,blackMarketForced=false){
   ensureSpecialEncounterAlert();
-  const el=document.getElementById("specialEncounterAlert"),name=document.getElementById("specialEncounterAlertName");
+  const el=document.getElementById("specialEncounterAlert"),name=document.getElementById("specialEncounterAlertName"),sub=document.getElementById("specialEncounterAlertSub");
+  if(sub)sub.textContent=blackMarketForced?"黑市情報生效・鎖定特殊目標":"偵測到異常敵影";
   if(name)name.textContent=`「${special?.name||"未知特殊怪"}」出現！`;
   if(!el)return;
   el.classList.remove("show");
@@ -68,7 +69,7 @@
    let body=fallbackPriorRewardsHtml(ctx);
    if(result.win){
     const rewardLabel=result.rewardContext?.randomReward?.label;
-    body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>`;
+    body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}${result.blackMarketIntelGranted?`<div class="muted" style="margin-top:5px">取得黑市情報：下一次符合條件的主線勝利後，必定觸發另一個特殊遭遇。</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>`;
    }else{
     const lost=result.penalty?.dropped;
     body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至商店的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
@@ -104,7 +105,7 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,penalty:null,combatEndHp:r.combatEndHp};
+  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,shopDown:0,blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
@@ -114,6 +115,11 @@
    result.gold+=first.gold;
    result.drops.push(...first.drops);
    result.shopDown+=first.shopDown;
+
+   if(special.id==="bandit_king"){
+    state.pendingBlackMarketEncounter=true;
+    result.blackMarketIntelGranted=true;
+   }
 
    if((state.vipLevel||0)>=10&&Math.random()<.10){
     const bonusCtx=getSpecialRewardContext(special);
@@ -140,16 +146,25 @@
   const baseEnemy=mainResult.e||monsterObj(selectedMap,selectedEnemy);
   if(baseEnemy?.kind==="boss")return false;
   if(state.level-(Number(baseEnemy?.level)||0)>=10)return false;
-  const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
-  if(Math.random()>=encounterRate)return false;
-  const special=rollSpecialMonster();
+
+  const forcedByBlackMarket=state.pendingBlackMarketEncounter===true;
+  if(!forcedByBlackMarket){
+   const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
+   if(Math.random()>=encounterRate)return false;
+  }
+
+  const special=rollSpecialMonster(forcedByBlackMarket?["bandit_king"]:null);
   if(!special)return false;
-  await showSpecialEncounterAlert(special);
+  if(forcedByBlackMarket){
+   state.pendingBlackMarketEncounter=false;
+   save(false);
+  }
+  await showSpecialEncounterAlert(special,forcedByBlackMarket);
   const result=await fightFormalSpecial(ctx,special);
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
-  ctx.specialEncounters.push({special,result});
+  ctx.specialEncounters.push({special,result,forcedByBlackMarket});
   if(!result.win)showSpecialResult(ctx,special,result);
-  return {triggered:true,win:result.win,special,result};
+  return {triggered:true,win:result.win,special,result,forcedByBlackMarket};
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
