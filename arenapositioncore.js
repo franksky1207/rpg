@@ -8,11 +8,11 @@
 
  function clampRank(value){
   const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
+  return Math.max(1,Math.min(max,Math.floor(Number(value)||1));
  }
  function arenaProgress(){
   if(typeof getArenaProgressState==="function")return getArenaProgressState();
-  const d=typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():state?.dungeon;
+  const d=typeof ensureDungeonState==="function"?ensureDungeonState():state?.dungeon;
   const highest=clampRank(d?.arena?.highestArenaUnlocked||d?.arena?.rank||1);
   const start=Math.max(1,highest-2),visible=[];
   for(let r=start;r<=highest;r++)visible.push(r);
@@ -47,7 +47,7 @@
   });
  }
  function assessmentArena(){
-  const d=typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():state?.dungeon;
+  const d=typeof ensureDungeonState==="function"?ensureDungeonState():state?.dungeon;
   return d?.arena||null;
  }
  function syncPromotionReady(arena){
