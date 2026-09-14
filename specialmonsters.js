@@ -112,7 +112,6 @@ const SPECIAL_EFFECT_HANDLERS={
  qualitySource(ctx,effect){ctx.qualitySource=effect.value;},
  dropCount(ctx,effect){ctx.dropCount=Math.max(1,Math.floor(effect.value||1));},
  weakSlotDrop(ctx,effect){ctx.weakSlotDrop={primary:effect.primary??70,secondary:effect.secondary??30};},
- shopRefreshDown(ctx,effect){ctx.shopRefreshDown=(ctx.shopRefreshDown||0)+Math.max(0,Math.floor(effect.value||0));},
  randomReward(ctx,effect){
   let options=Array.isArray(effect.options)?effect.options:[];
   if(!options.length)return;
@@ -214,7 +213,6 @@ function createSpecialRewardContext(){
   qualityTable:null,
   qualitySource:null,
   weakSlotDrop:null,
-  shopRefreshDown:0,
   randomReward:null
  };
 }
