@@ -10,14 +10,18 @@
 
  const required=[
   "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonProgressState",
+  "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonRemaining","consumeDailyDungeonUse",
+  "vipDungeonPointMultiplier","adjustVipDungeonPoints",
   "enterBountyDungeon","renderBountyDungeon",
   "getArenaProgressState","getArenaAssessmentStatus","registerRegionMaps"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`必要函式 ${name} 未載入`);});
 
- if(Number(SAVE_VERSION)!==10)fail("SAVE_VERSION",`SAVE_VERSION 應為 10，實際 ${SAVE_VERSION}`);
- if(Number(window.SAVE_SCHEMA_VERSION)!==10)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 10，實際 ${window.SAVE_SCHEMA_VERSION}`);
+ if(Number(SAVE_VERSION)!==11)fail("SAVE_VERSION",`SAVE_VERSION 應為 11，實際 ${SAVE_VERSION}`);
+ if(Number(window.SAVE_SCHEMA_VERSION)!==11)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 11，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
+ if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
+ if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
@@ -26,6 +30,10 @@
   const arenaRef=state.dungeon.arena;
   window.ensureDungeonProgressState();
   if(state.dungeon.arena!==arenaRef)fail("ARENA_REFERENCE","競技場 normalize 重新替換了 arena 物件參照");
+ }
+ if(state&&typeof window.ensureDailyState==="function"){
+  const daily=window.ensureDailyState();
+  if(!daily||daily.dateKey!==window.gameDailyDateKey())fail("DAILY_STATE","每日狀態日期未正確同步",daily);
  }
 
  const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
