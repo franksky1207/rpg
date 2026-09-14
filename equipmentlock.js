@@ -114,7 +114,7 @@
  };
  window.equipmentLowerSalePreview=function(){
   const targets=state.inventory.filter(item=>{
-   if(item?.locked===true||Number(item.q)===5)return false;
+   if(item?.locked===true)return false;
    const current=state.equipment[item.type];
    return !!current&&equipmentScore(item)<=equipmentScore(current);
   });
