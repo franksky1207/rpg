@@ -11,9 +11,12 @@
  const required=[
   "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonProgressState",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
+  "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
   "enterBountyDungeon","renderBountyDungeon",
-  "getArenaProgressState","getArenaAssessmentStatus","getArenaBaseTotalPoints","registerRegionMaps"
+  "getArenaProgressState","getArenaAssessmentStatus","getArenaBaseTotalPoints",
+  "ensureVoidMirageState","getVoidMirageStartFloor","voidMirageStartFloorFromHistory","beginVoidMirageRun","fightNextVoidMirageFloor","renderVoidMirageDungeon",
+  "registerRegionMaps"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`必要函式 ${name} 未載入`);});
 
@@ -24,6 +27,12 @@
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
+ if(Number(window.VOID_MIRAGE_MAX_FLOOR)!==5000)fail("VOID_MAX_FLOOR",`虛空幻境最高層應為 5000，實際 ${window.VOID_MIRAGE_MAX_FLOOR}`);
+ if(Number(window.VOID_MIRAGE_START_OFFSET)!==100)fail("VOID_START_OFFSET",`虛空幻境起始回退應為 100 層，實際 ${window.VOID_MIRAGE_START_OFFSET}`);
+ if(typeof window.voidMirageStartFloorFromHistory==="function"){
+  const checks=[[80,1],[850,750],[2500,2400],[4000,3900],[5000,4900]];
+  checks.forEach(([highest,expected])=>{const actual=window.voidMirageStartFloorFromHistory(highest);if(Number(actual)!==expected)fail("VOID_START_FLOOR",`歷史最高 ${highest} 時起始層應為 ${expected}，實際 ${actual}`);});
+ }
  if(typeof window.getArenaBaseTotalPoints==="function"){
   const checks=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
   checks.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS",`競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
@@ -40,6 +49,8 @@
  if(state&&typeof window.ensureDailyState==="function"){
   const daily=window.ensureDailyState();
   if(!daily||daily.dateKey!==window.gameDailyDateKey())fail("DAILY_STATE","每日狀態日期未正確同步",daily);
+  const voidDaily=typeof window.voidMirageDailyStatus==="function"?window.voidMirageDailyStatus():null;
+  if(!voidDaily||Number(voidDaily.highestFloor)<0||Number(voidDaily.highestFloor)>5000)fail("VOID_DAILY_STATE","虛空幻境當日最高層狀態異常",voidDaily);
  }
 
  const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
