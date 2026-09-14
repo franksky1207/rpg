@@ -2,14 +2,15 @@
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
- const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1),0):0;
+ const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1,0):0;
 
  if(!Array.isArray(MAPS)||MAPS.length!==expectedMaps)fail("WORLD_MAP_COUNT",`MAPS 應為 ${expectedMaps} 張，實際 ${Array.isArray(MAPS)?MAPS.length:"非陣列"}`);
  if(window.WORLD_MAP_REGISTRATION_REPORT?.passed!==true)fail("WORLD_MAP_REGISTRY","世界地圖固定註冊檢查未通過",window.WORLD_MAP_REGISTRATION_REPORT?.errors||null);
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonProgressState","dungeonFightCore",
+  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonProgressState","dungeonFightCore","cleanupLegacyDungeonFields",
+  "registerNewStateNormalizer","getNewStateNormalizerCount",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
@@ -27,8 +28,10 @@
  if(Number(SAVE_VERSION)!==11)fail("SAVE_VERSION",`SAVE_VERSION 應為 11，實際 ${SAVE_VERSION}`);
  if(Number(window.SAVE_SCHEMA_VERSION)!==11)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 11，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
+ if(Number(window.VIP_PROGRESSION_VERSION)!==12)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 12，實際 ${window.VIP_PROGRESSION_VERSION}`);
  if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
  if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(20))!==1000000)fail("VIP20_THRESHOLD",`VIP20 門檻應為 1,000,000，實際 ${window.vipThreshold(20)}`);
+ if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(1))!==2500)fail("VIP1_THRESHOLD",`VIP1 門檻應為 2,500，實際 ${window.vipThreshold(1)}`);
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
@@ -42,6 +45,20 @@
  if(typeof window.getArenaBaseTotalPoints==="function"){
   const checks=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
   checks.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS",`競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
+ }
+ if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==3)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 3 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
+ if(typeof newState==="function"){
+  const fresh=newState();
+  if(!fresh?.daily||fresh.daily.bounty?.used!==0||fresh.daily.arena?.used!==0)fail("NEW_STATE_DAILY","newState 未正確建立每日副本狀態",fresh?.daily);
+  if(!fresh?.dungeon?.arena)fail("NEW_STATE_DUNGEON","newState 未正確建立競技場持久狀態",fresh?.dungeon);
+  if(fresh?.vipPoints!==0||fresh?.vipLevel!==0)fail("NEW_STATE_VIP","newState VIP 初始狀態異常",{vipPoints:fresh?.vipPoints,vipLevel:fresh?.vipLevel});
+  ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(fresh?.dungeon||{},key))fail("NEW_STATE_LEGACY_DUNGEON",`newState 不應含舊副本欄位 ${key}`);});
+ }
+ if(typeof window.normalizeDailyState==="function"){
+  const key=typeof window.gameDailyDateKey==="function"?window.gameDailyDateKey():"";
+  const probe={daily:{dateKey:key,bounty:{used:999},arena:{used:999},voidMirage:{highestFloor:0,claimed:false}}};
+  window.normalizeDailyState(probe);
+  if(probe.daily.bounty.used!==20||probe.daily.arena.used!==20)fail("DAILY_NORMALIZE_CLAMP","每日次數 normalizer 應直接限制在 20",probe.daily);
  }
  if(window.BATCH5_UI_READY!==true)fail("BATCH5_UI","第五批共用 UI 未完成載入");
  if(window.VOID_MIRAGE_GM_UI_V2!==true)fail("VOID_GM_UI","虛空 GM 舊版介面未停用");
