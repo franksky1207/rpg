@@ -19,6 +19,9 @@
    voidMirage:{highestFloor:0,claimed:false}
   };
  }
+ function dailyDungeonLimit(mode){
+  return Math.max(0,Math.floor(Number(DEFAULT_DAILY_LIMITS[mode])||0));
+ }
  function normalizeDailyState(target,timestamp=Date.now()){
   if(!target||typeof target!=="object")return null;
   const key=gameDailyDateKey(timestamp);
@@ -32,8 +35,8 @@
   if(!daily.bounty||typeof daily.bounty!=="object"||Array.isArray(daily.bounty))daily.bounty={used:0};
   if(!daily.arena||typeof daily.arena!=="object"||Array.isArray(daily.arena))daily.arena={used:0};
   if(!daily.voidMirage||typeof daily.voidMirage!=="object"||Array.isArray(daily.voidMirage))daily.voidMirage={highestFloor:0,claimed:false};
-  daily.bounty.used=finiteInt(daily.bounty.used,0);
-  daily.arena.used=finiteInt(daily.arena.used,0);
+  daily.bounty.used=Math.min(dailyDungeonLimit("bounty"),finiteInt(daily.bounty.used,0));
+  daily.arena.used=Math.min(dailyDungeonLimit("arena"),finiteInt(daily.arena.used,0));
   daily.voidMirage.highestFloor=finiteInt(daily.voidMirage.highestFloor,0);
   daily.voidMirage.claimed=daily.voidMirage.claimed===true;
   return daily;
@@ -46,9 +49,6 @@
   if(mode==="bounty")return daily?.bounty||null;
   if(mode==="arena")return daily?.arena||null;
   return null;
- }
- function dailyDungeonLimit(mode){
-  return Math.max(0,Math.floor(Number(DEFAULT_DAILY_LIMITS[mode])||0));
  }
  function dailyDungeonStatus(mode){
   const row=modeState(mode),limit=dailyDungeonLimit(mode),used=row?Math.min(limit,finiteInt(row.used,0)):0;
@@ -104,11 +104,5 @@
  window.voidMirageDailyStatus=voidMirageDailyStatus;
  window.recordVoidMirageDailyFloor=recordVoidMirageDailyFloor;
  window.claimVoidMirageDailyReward=claimVoidMirageDailyReward;
-
- const baseNewState=newState;
- newState=function(){
-  const next=baseNewState();
-  normalizeDailyState(next);
-  return next;
- };
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeDailyState);
 })();
