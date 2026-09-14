@@ -1,13 +1,4 @@
 (function(){
- let lostGearMutationBusy=false;
-
- function claimLostGearMutation(){
-  if(lostGearMutationBusy)return false;
-  lostGearMutationBusy=true;
-  setTimeout(()=>{lostGearMutationBusy=false;},250);
-  return true;
- }
-
  function lostGearCompareHtml(it){
   const current=state.equipment[it.type];
   const itemScore=equipmentScore(it);
@@ -64,30 +55,10 @@
   return `<div class="function-page inventory-page">${back}${inventoryContent()}</div>`;
  };
 
- redeemLostGear=function(i){
-  const lost=state.lostGear?.[i];
-  if(!lost)return {ok:false,reason:"找不到這件遺失裝備。"};
-  if(state.gold<lost.cost)return {ok:false,reason:"金幣不足。"};
-  if(!claimLostGearMutation())return {ok:true,ignored:true};
-  state.gold-=lost.cost;
-  state.inventory.push(lost.item);
-  state.lostGear.splice(i,1);
-  save(false);
-  return {ok:true,item:lost.item};
- };
-
  redeemGear=function(i){
   const r=redeemLostGear(i);
   if(!r.ok)return alert(r.reason);
   save();render();
- };
-
- go=function(v){
-  inventoryFromAdventure=false;
-  if(v==="shop")v="home";
-  if(v==="adventure")adventureScreen="maps";
-  view=v;
-  render();
  };
 
  render=function(){
@@ -96,7 +67,6 @@
   document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
  };
 
- if(view==="shop")view="home";
  render();
- window.INVENTORY_REDEMPTION_UI_VERSION=1;
+ window.INVENTORY_REDEMPTION_UI_VERSION=2;
 })();
