@@ -30,6 +30,7 @@
  function finiteInt(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):null;}
  function gmDaily(){return typeof ensureDailyState==="function"?ensureDailyState():state.daily;}
  function gmVoidInfo(){return typeof getVoidMirageGmManageInfo==="function"?getVoidMirageGmManageInfo():{highestCleared:0,startFloor:1,dailyHighest:0,claimed:false,reward:0};}
+ function voidRunActive(){try{return typeof getVoidMirageRunSnapshot==="function"&&getVoidMirageRunSnapshot()?.active===true;}catch(e){return false;}}
  function gmStatus(){
   const daily=gmDaily()||{},bounty=Math.max(0,Math.min(20,Math.floor(Number(daily?.bounty?.used)||0))),arena=Math.max(0,Math.min(20,Math.floor(Number(daily?.arena?.used)||0))),info=gmVoidInfo();
   return {vip:Math.max(0,Math.floor(Number(state?.vipLevel)||0)),points:Math.max(0,Math.floor(Number(state?.vipPoints)||0)),bounty,arena,highest:Math.max(0,Math.floor(Number(info.highestCleared)||0)),start:Math.max(1,Math.floor(Number(info.startFloor)||1)),dailyHighest:Math.max(0,Math.floor(Number(info.dailyHighest)||0)),claimed:info.claimed===true,reward:Math.max(0,Math.floor(Number(info.reward)||0))};
@@ -42,6 +43,7 @@
    <div class="controls"><button class="btn blue" onclick="gmApplyDungeonValues()">套用副本／VIP資料</button><button class="btn" onclick="gmResetDailyDungeonState()">重置今日副本資料</button><button class="btn danger" onclick="gmResetVoidMirageFloor()">重置虛空紀錄</button><button class="btn danger" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>`;
  }
  window.gmApplyDungeonValues=function(){
+  if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return;}
   const points=finiteInt(document.getElementById("gmDungeonPoints")?.value),bounty=finiteInt(document.getElementById("gmBountyDailyUsed")?.value,0,20),arena=finiteInt(document.getElementById("gmArenaDailyUsed")?.value,0,20),highest=finiteInt(document.getElementById("gmVoidHistoricalHighest")?.value),dailyHighest=finiteInt(document.getElementById("gmVoidDailyHighest")?.value),claimed=document.getElementById("gmVoidDailyClaimed")?.value==="1";
   if([points,bounty,arena,highest,dailyHighest].some(v=>v==null)){alert("請輸入有效的 0 以上整數；懸賞與競技場範圍為 0～20。");return;}
   state.vipPoints=points;if(typeof normalizeVipState==="function")normalizeVipState(state);
