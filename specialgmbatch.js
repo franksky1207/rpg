@@ -7,8 +7,8 @@ function gmSpecialVipLabel(){return typeof gmTestVipLabel==="function"?gmTestVip
 
 function gmSpecialBatchResultHtml(special,summary){
  const rewardRows=Object.entries(summary.randomRewards).map(([name,n])=>`${name} ${n}`).join("　");
- const extraRows=`${summary.vip10Triggers?`<div class="muted" style="margin-top:6px">VIP10 第二次特殊獎勵：${summary.vip10Triggers} 次</div>`:""}${summary.vip20Protected?`<div class="muted" style="margin-top:6px">VIP20 成功保護裝備：${summary.vip20Protected} 次</div>`:""}${summary.shopDown?`<div class="muted" style="margin-top:6px">商店刷新價格共降低 ${summary.shopDown} 級（僅模擬）</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
- return `<div class="notice">${gmTestSummaryHtml(special.name,`${GM_TEST_RUNS} 次模擬`,summary.testVipLabel,summary.testSpecLabel)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥與 VIP10／VIP20 規則使用本次測試 VIP，戰鬥同時套用本次測試專精。正式角色資料未變更。</div></div>
+ const extraRows=`${summary.vip10Triggers?`<div class="muted" style="margin-top:6px">VIP10 第二次特殊獎勵：${summary.vip10Triggers} 次</div>`:""}${summary.vip20Protected?`<div class="muted" style="margin-top:6px">VIP20 成功保護裝備：${summary.vip20Protected} 次</div>`:""}${rewardRows?`<div class="muted" style="margin-top:6px">獎勵分布：${rewardRows}</div>`:""}`;
+ return `<div class="notice">${gmTestSummaryHtml(special.name,`${GM_TEST_RUNS} 次模擬`,summary.testVipLabel,summary.testSpecLabel)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥與 VIP10／VIP20 規則使用本次測試 VIP，戰鬥與特殊獎勵同時套用本次測試專精。正式角色資料未變更。</div></div>
  <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
   <div class="stat">勝率<b>${summary.winRate}%</b></div>
   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -39,10 +39,10 @@ async function gmStartSpecialBattle(){
  const playerSnapshot=typeof gmTestPlayerStats==="function"?gmTestPlayerStats(enemyScalingSnapshot):createSpecialPlayerSnapshot(playerCombatStats(enemyScalingSnapshot,gmSpecialTestVip()));
  const playerMax=playerSnapshot.hp;
  battleBusy=true;
- const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,totalSellValue:0,qualityCounts:Array(QUALITY.length).fill(0),shopDown:0,deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
+ const summary={count:GM_TEST_RUNS,wins:0,losses:0,totalXp:0,totalGold:0,convertedGold:0,dropCount:0,totalSellValue:0,qualityCounts:Array(QUALITY.length).fill(0),deathDrops:0,vip20Protected:0,vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
 
  function grant(ctx,baseXp,baseGold){
-  const xpRaw=ceil(baseXp*(ctx.expMultiplier||1)),xpPay=specialExpPayout(xpRaw,[]),gold=ceil(baseGold*(ctx.goldMultiplier||1));
+  const xpRaw=specialRewardExpAmount(baseXp,ctx,true),xpPay=specialExpPayout(xpRaw,[]),gold=specialRewardGoldAmount(baseGold,ctx,true);
   summary.totalXp+=xpPay.xp;summary.convertedGold+=xpPay.convertedGold;summary.totalGold+=gold+xpPay.convertedGold;state.gold+=gold;
   const items=specialMakeDrops(ctx,level,mapIdx);summary.dropCount+=items.length;
   items.forEach(item=>{
@@ -50,8 +50,11 @@ async function gmStartSpecialBattle(){
    summary.totalSellValue+=specializationSellValue(item,true);
    addItem(item,{useTestSpecializations:true});
   });
-  summary.shopDown+=specialApplyShopDiscount(ctx.shopRefreshDown);
   if(ctx.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
+ }
+ function grantBlackMarketGoldOnly(ctx,baseGold){
+  const gold=specialRewardGoldAmount(baseGold,ctx,true);
+  summary.totalGold+=gold;state.gold+=gold;
  }
 
  for(let i=0;i<GM_TEST_RUNS;i++){
@@ -61,8 +64,13 @@ async function gmStartSpecialBattle(){
   if(r.win){
    summary.wins++;summary.winHpTotal+=combatEndHp;
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level)),baseGold=goldBase(level);
-   grant(getSpecialRewardContext(special,true),baseXp,baseGold);
-   if(gmSpecialTestVip()>=10&&Math.random()<.10){summary.vip10Triggers++;grant(getSpecialRewardContext(special,true),baseXp,baseGold);}
+   const firstCtx=getSpecialRewardContext(special);
+   grant(firstCtx,baseXp,baseGold);
+   if(gmSpecialTestVip()>=10&&Math.random()<.10){
+    summary.vip10Triggers++;
+    if(special.id==="bandit_king")grantBlackMarketGoldOnly(firstCtx,baseGold);
+    else grant(getSpecialRewardContext(special),baseXp,baseGold);
+   }
   }else{
    summary.losses++;const penalty=applyDeathPenalty([]);if(penalty?.dropped)summary.deathDrops++;if(penalty?.protectedByVip20)summary.vip20Protected++;
   }
