@@ -9,7 +9,7 @@
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields","cleanupRetiredShopState",
+  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields","cleanupRetiredShopState","normalizePersistentFlags",
   "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
@@ -18,7 +18,7 @@
   "getArenaProgressState","getArenaAssessmentStatus","getArenaBaseTotalPoints",
   "ensureVoidMirageState","getVoidMirageStartFloor","voidMirageStartFloorFromHistory","beginVoidMirageRun","fightNextVoidMirageFloor","renderVoidMirageDungeon",
   "gmSetVoidMirageState","gmDungeonManagementHtml","gmApplyDungeonValues","gmResetDailyDungeonState","gmPreviewVoidMirageFloor","gmSimulateVoidMirageClimb","gmSimulateArena100",
-  "registerRegionMaps"
+  "registerRegionMaps","specialRewardExpAmount","specialRewardGoldAmount"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`必要函式 ${name} 未載入`);});
 
@@ -51,13 +51,14 @@
   const checks=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
   checks.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS",`競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
  }
- if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==3)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 3 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
+ if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 4 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
  if(typeof newState==="function"){
   const fresh=newState();
   if(!fresh?.daily||fresh.daily.bounty?.used!==0||fresh.daily.arena?.used!==0)fail("NEW_STATE_DAILY","newState 未正確建立每日副本狀態",fresh?.daily);
   if(!fresh?.dungeon?.arena)fail("NEW_STATE_DUNGEON","newState 未正確建立競技場持久狀態",fresh?.dungeon);
   if(fresh?.vipPoints!==0||fresh?.vipLevel!==0)fail("NEW_STATE_VIP","newState VIP 初始狀態異常",{vipPoints:fresh?.vipPoints,vipLevel:fresh?.vipLevel});
   if(Object.prototype.hasOwnProperty.call(fresh,"shop"))fail("NEW_STATE_SHOP","newState 不應再含退休的 shop 欄位");
+  if(fresh.pendingBlackMarketEncounter!==false)fail("NEW_STATE_BLACK_MARKET","newState 應正式建立 pendingBlackMarketEncounter=false",fresh.pendingBlackMarketEncounter);
   ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(fresh?.dungeon||{},key))fail("NEW_STATE_LEGACY_DUNGEON",`newState 不應含舊副本欄位 ${key}`);});
  }
  if(typeof window.normalizeDailyState==="function"){
@@ -65,6 +66,37 @@
   const probe={daily:{dateKey:key,bounty:{used:999},arena:{used:999},voidMirage:{highestFloor:0,claimed:false}}};
   window.normalizeDailyState(probe);
   if(probe.daily.bounty.used!==20||probe.daily.arena.used!==20)fail("DAILY_NORMALIZE_CLAMP","每日次數 normalizer 應直接限制在 20",probe.daily);
+ }
+ if(typeof window.migrateSave==="function"&&typeof newState==="function"&&typeof window.normalizeSaveState==="function"){
+  const priorReport=window.LAST_SAVE_MIGRATION_REPORT;
+  try{
+   const probe=newState();
+   const item=JSON.parse(JSON.stringify(probe.equipment?.weapon));
+   probe.saveVersion=11;
+   probe.shop={items:[],refreshIndex:7,resetAvailableAt:123,initialized:true};
+   probe.lostGear=[{id:"runtime-migration-probe",item,cost:123,lostAt:456}];
+   const raw=JSON.parse(JSON.stringify(probe));
+   const migrated=window.migrateSave(probe,11,window.normalizeSaveState,raw);
+   if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v12 migration 未移除 shop");
+   const lost=migrated.lostGear?.find(x=>x?.id==="runtime-migration-probe");
+   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v12 migration 未完整保留 lostGear",lost);
+   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v12 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
+  }catch(error){fail("MIGRATION_PROBE","v11 → v12 migration 回歸測試執行失敗",String(error));}
+  window.LAST_SAVE_MIGRATION_REPORT=priorReport;
+ }
+ if(typeof window.specialRewardGoldAmount==="function"&&typeof window.specializationAdjustedGold==="function"){
+  const ctx={goldMultiplier:2.5};
+  const actual=window.specialRewardGoldAmount(100,ctx);
+  const expected=window.specializationAdjustedGold(250);
+  if(actual!==expected)fail("SPECIAL_GOLD_SPECIALIZATION_ONCE",`特殊怪金幣專精應只套用一次，預期 ${expected}，實際 ${actual}`);
+  const bonus=window.specialRewardGoldAmount(100,ctx);
+  if(bonus!==actual)fail("BLACK_MARKET_VIP10_GOLD",`黑市 VIP10 第二份金幣應與第一份相同，第一份 ${actual}、第二份 ${bonus}`);
+ }
+ if(typeof window.specialRewardExpAmount==="function"&&typeof window.specializationAdjustedExp==="function"){
+  const ctx={expMultiplier:4};
+  const actual=window.specialRewardExpAmount(100,ctx);
+  const expected=window.specializationAdjustedExp(400);
+  if(actual!==expected)fail("SPECIAL_EXP_SPECIALIZATION_ONCE",`特殊怪 EXP 專精應只套用一次，預期 ${expected}，實際 ${actual}`);
  }
  if(window.BATCH5_UI_READY!==true)fail("BATCH5_UI","第五批共用 UI 未完成載入");
  const clock=document.getElementById("gameDailyClock"),clockTime=document.getElementById("gameDailyClockTime");
