@@ -6,7 +6,7 @@
   return `${region?.name||`第${r}區`}競技場`;
  }
  function arenaState(){
-  const dungeon=typeof ensureDungeonProgressState==="function"?ensureDungeonProgressState():state?.dungeon;
+  const dungeon=typeof ensureDungeonState==="function"?ensureDungeonState():state?.dungeon;
   if(!dungeon||typeof dungeon!=="object")return null;
   if(!dungeon.arena||typeof dungeon.arena!=="object")dungeon.arena={highestArenaUnlocked:1,activeRank:null,rank:1,promotionReady:false,lastCheckSignature:null,lastCheckRuns:0,lastCheckClearCount:0};
   return dungeon.arena;
