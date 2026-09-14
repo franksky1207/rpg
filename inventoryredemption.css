@@ -1,0 +1,22 @@
+.gear-stat-list{display:grid;gap:3px}
+.inventory-page>.lost-gear-card{margin-top:16px}
+.lost-gear-table-wrap{overflow:auto;margin-top:10px;border-radius:10px}
+.lost-gear-table td{vertical-align:top;border-color:rgba(77,89,103,.58)}
+.lost-gear-row-actions{margin-top:0}
+.lost-gear-price-cell{white-space:nowrap}
+
+@media(max-width:760px){
+ .inventory-page>.lost-gear-card{margin-top:10px;padding:12px}
+ .lost-gear-table-wrap{overflow:visible;margin-top:12px}
+ .lost-gear-table,.lost-gear-table tbody,.lost-gear-table tr,.lost-gear-table td{display:block;width:100%}
+ .lost-gear-table thead{display:none}
+ .lost-gear-table tr{background:rgba(16,20,26,.72);border:1px solid rgba(96,110,126,.76);border-radius:12px;padding:12px;margin-bottom:10px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 7px 18px rgba(0,0,0,.13)}
+ .lost-gear-table td{border:0;padding:6px 0}
+ .lost-gear-table td[data-label]::before{content:attr(data-label);display:block;color:var(--muted);font-size:12px;margin-bottom:3px}
+ .lost-gear-item-cell{font-size:16px}
+ .lost-gear-stats-cell,.lost-gear-compare-cell{line-height:1.55}
+ .lost-gear-price-cell{font-size:17px;color:#f0d494}
+ .lost-gear-action-cell{padding-top:10px!important;border-top:1px solid #2b3038!important;margin-top:4px}
+ .lost-gear-row-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .lost-gear-row-actions .btn{width:100%}
+}
