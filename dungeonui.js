@@ -69,7 +69,7 @@
  }
 
  const basePlayerStatusHtml=playerStatusHtml;
- playerStatusHtml=function(){const html=basePlayerStatusHtml();if(view==="adventure"&&adventureScreen==="prepare")return `<div class="prepare-sidebar">${html}${dungeonStatusHtml("dungeon-adventure-status",false)}</div>`;return html;};
+ playerStatusHtml=function(){const html=basePlayerStatusHtml();if(view==="adventure"&&adventureScreen==="prepare")return `<div class="prepare-sidebar">${html}</div>`;return html;};
 
  const baseRender=render;
  render=function(){
@@ -93,7 +93,6 @@
    ensureHomeDungeonCard(main);
    const menu=main.querySelector(".menu-grid");
    if(menu&&typeof vipHomeCardHtml==="function"&&!main.querySelector(".vip-home-card"))menu.insertAdjacentHTML("beforebegin",vipHomeCardHtml());
-   if(menu&&!main.querySelector("#dungeon-home-status"))menu.insertAdjacentHTML("beforebegin",dungeonStatusHtml("dungeon-home-status",false));
   }
  };
 
