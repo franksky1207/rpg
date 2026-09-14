@@ -24,7 +24,7 @@
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);}
  function simulateFight(player,enemy,startHp=player.hp){return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true});}
  function regionIndexForMap(mapIdx){
-  const idx=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0));
+  const idx=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0)));
   const found=WORLD_REGIONS.findIndex(region=>idx>=region.mapStart&&idx<=region.mapEnd);
   return found>=0?found:0;
  }
@@ -32,12 +32,12 @@
  function mapOptionsForRegion(regionIndex,selectedMap=mapTestMap){
   const region=regionAt(regionIndex);if(!region)return "";
   const start=Math.max(0,region.mapStart),end=Math.min(MAPS.length-1,region.mapEnd);
-  const selected=Math.max(start,Math.min(end,Math.floor(Number(selectedMap)||start));
+  const selected=Math.max(start,Math.min(end,Math.floor(Number(selectedMap)||start)));
   let html="";for(let i=start;i<=end;i++){const map=MAPS[i];if(map)html+=`<option value="${i}" ${i===selected?"selected":""}>${i+1}. ${map.name}（Lv.${map.min}～${map.max}）</option>`;}return html;
  }
  function enemyOptionsForMap(mapIdx,selectedEnemy=mapTestEnemy){
   const i=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0))),map=MAPS[i];if(!map)return "";
-  const selected=Math.max(0,Math.min(map.enemies.length-1,Math.floor(Number(selectedEnemy)||0));
+  const selected=Math.max(0,Math.min(map.enemies.length-1,Math.floor(Number(selectedEnemy)||0)));
   return map.enemies.map((e,eIdx)=>{const kind=e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通";return `<option value="${eIdx}" ${eIdx===selected?"selected":""}>${kind}｜${e[0]} Lv.${e[1]}</option>`;}).join("");
  }
 
