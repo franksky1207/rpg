@@ -206,5 +206,5 @@
  injectLockStyles();normalizeAllGearLocks();save(false);
  const main=document.getElementById("main");
  if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(enhanceEquippedLockControls,0)).observe(main,{childList:true,subtree:true});
- render();setTimeout(enhanceEquippedLockControls,0);
+ setTimeout(enhanceEquippedLockControls,0);
 })();
