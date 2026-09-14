@@ -47,7 +47,6 @@
   const points=finiteInt(document.getElementById("gmDungeonPoints")?.value),bounty=finiteInt(document.getElementById("gmBountyDailyUsed")?.value,0,20),arena=finiteInt(document.getElementById("gmArenaDailyUsed")?.value,0,20),highest=finiteInt(document.getElementById("gmVoidHistoricalHighest")?.value),dailyHighest=finiteInt(document.getElementById("gmVoidDailyHighest")?.value),claimed=document.getElementById("gmVoidDailyClaimed")?.value==="1";
   if([points,bounty,arena,highest,dailyHighest].some(v=>v==null)){alert("請輸入有效的 0 以上整數；懸賞與競技場範圍為 0～20。");return;}
   state.vipPoints=points;if(typeof normalizeVipState==="function")normalizeVipState(state);
-  if(typeof ensureDungeonProgressState==="function"){const d=ensureDungeonProgressState();if(d)d.points=state.vipPoints;}
   const daily=gmDaily();if(daily){daily.bounty.used=bounty;daily.arena.used=arena;}
   const historical=Math.max(highest,dailyHighest);
   if(typeof gmSetVoidMirageState==="function")gmSetVoidMirageState(historical,dailyHighest,claimed);else{if(state?.dungeon?.voidMirage)state.dungeon.voidMirage.highestCleared=historical;if(daily?.voidMirage){daily.voidMirage.highestFloor=dailyHighest;daily.voidMirage.claimed=claimed;}if(typeof save==="function")save(false);if(typeof render==="function")render();}
@@ -61,9 +60,9 @@
  if(typeof gmHtml==="function"){
   const baseGmHtml=gmHtml;
   gmHtml=function(){
-   const html=baseGmHtml(),marker='<summary>副本管理</summary><div class="gm-hub-body">',start=html.indexOf(marker);if(start<0)return html;
-   const bodyStart=start+marker.length,end=html.indexOf('</div></details>',bodyStart);if(end<0)return html;
-   return html.slice(0,bodyStart)+dungeonManagementHtml()+html.slice(end);
+   let html=baseGmHtml(),marker='<summary>副本管理</summary><div class="gm-hub-body">',start=html.indexOf(marker);
+   if(start>=0){const bodyStart=start+marker.length,end=html.indexOf('</div></details>',bodyStart);if(end>=0)html=html.slice(0,bodyStart)+dungeonManagementHtml()+html.slice(end);}
+   return html.replaceAll("GM 測試不扣副本次數","GM 測試不扣今日懸賞額度");
   };
  }
 
