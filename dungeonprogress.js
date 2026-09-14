@@ -11,12 +11,9 @@
   const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;
  }
  function roundProgress(value){return Math.round((Number(value)||0)*1000000)/1000000;}
- function vipDungeonProgressMultiplier(){
-  const lv=Math.max(0,Math.floor(Number(state?.vipLevel)||0));
-  if(lv>=12)return 1.20;
-  if(lv>=4)return 1.10;
-  return 1;
- }
+
+ // v11 起 VIP4 / VIP12 不再提高舊副本進度；此函式暫留給第二批移除舊進度機制前的相容橋接。
+ function vipDungeonProgressMultiplier(){return 1;}
  window.vipDungeonProgressMultiplier=vipDungeonProgressMultiplier;
 
  function unlockedArenaRankCap(target){
@@ -76,8 +73,7 @@
   const dungeon=target.dungeon;
   let progress=finiteNonNegative(dungeon.progress,0);
   let attempts=Math.floor(finiteNonNegative(dungeon.attempts,0));
-  const legacyPoints=finiteNonNegative(dungeon.points,0);
-  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,legacyPoints));
+  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,0));
   const converted=Math.floor((progress+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
   if(converted>0){attempts+=converted;progress-=converted*DUNGEON_PROGRESS_THRESHOLD;}
   dungeon.progress=roundProgress(Math.max(0,progress));
@@ -139,12 +135,15 @@
   return {added:roundProgress(added),gainedAttempts,progress:dungeon.progress,attempts:dungeon.attempts};
  };
  window.addDungeonPoints=function(amount){
-  const dungeon=normalizeDungeonState(state);if(!dungeon)return {added:0,points:0};
-  const added=Math.floor(finiteNonNegative(amount,0)),activeRun=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null,lockCarryHp=activeRun?.mode==="arena"||activeRun?.mode==="void-mirage",hpBefore=state.hp;
-  const result=typeof addVipPoints==="function"?addVipPoints(added):{added,points:(state.vipPoints||0)+added};
+  const dungeon=normalizeDungeonState(state);if(!dungeon)return {added:0,baseAdded:0,points:0,multiplier:1};
+  const baseAdded=Math.floor(finiteNonNegative(amount,0));
+  const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
+  const adjusted=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseAdded):Math.floor(baseAdded*multiplier);
+  const activeRun=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null,lockCarryHp=activeRun?.mode==="arena"||activeRun?.mode==="void-mirage",hpBefore=state.hp;
+  const result=typeof addVipPoints==="function"?addVipPoints(adjusted):{added:adjusted,points:(state.vipPoints||0)+adjusted};
   if(lockCarryHp)state.hp=hpBefore;
   state.vipPoints=Math.floor(finiteNonNegative(result.points,0));dungeon.points=state.vipPoints;
-  return {added:result.added??added,points:state.vipPoints,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
+  return {added:result.added??adjusted,baseAdded,points:state.vipPoints,multiplier,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
  };
  window.awardDungeonProgressForBattle=function(params={}){
   const added=calculateDungeonBattleProgress(params);
