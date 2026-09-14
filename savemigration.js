@@ -23,6 +23,11 @@
   delete target.shop;
   return true;
  }
+ function normalizePersistentFlags(target){
+  if(!isObject(target))return target;
+  target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
+  return target;
+ }
  function legacySameExpV9(level){const l=Math.max(1,Math.floor(Number(level)||1));return Math.ceil(25+4*l);}
  function legacyExpNeedV9(level){
   const l=Math.max(1,Math.floor(Number(level)||1));
@@ -133,6 +138,8 @@
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
+ window.normalizePersistentFlags=normalizePersistentFlags;
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePersistentFlags);
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
   let target=isObject(rawState)?rawState:(typeof newState==="function"?newState():{});
   const source=isObject(sourceRaw)?sourceRaw:target;
@@ -159,7 +166,7 @@
   cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
   normalizeOffline(target,version);
-  target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
+  normalizePersistentFlags(target);
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
@@ -167,7 +174,6 @@
   return target;
  };
 
- // 正式 runtime 唯一 load pipeline：先保留原始 snapshot，全部 migration/normalize 完成後才寫回 localStorage。
  window.load=function(){
   let rawSnapshot=null,sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false;
   try{
@@ -185,6 +191,7 @@
   selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
   if(typeof normalizeHP==="function")normalizeHP();
   cleanupRetiredShopState(state);
+  normalizePersistentFlags(state);
   state.saveVersion=SAVE_SCHEMA_VERSION;
   if(typeof save==="function")save(false);
 
