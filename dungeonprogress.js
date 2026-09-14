@@ -70,7 +70,9 @@
   state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
   return {vipHpInitialized,recoveredInterruptedRun:false,dungeon:state.dungeon};
  };
- window.ensureDungeonProgressState=function(){return normalizeDungeonState(state);};
+ window.ensureDungeonState=function(){return normalizeDungeonState(state);};
+ // 舊名稱僅保留相容性；新程式一律使用 ensureDungeonState。
+ window.ensureDungeonProgressState=window.ensureDungeonState;
  window.addDungeonPoints=function(amount){
   const baseAdded=Math.floor(finiteNonNegative(amount,0));
   const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
