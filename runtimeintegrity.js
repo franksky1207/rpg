@@ -2,7 +2,7 @@
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
- const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1),0):0;
+ const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1,0):0;
 
  if(!Array.isArray(MAPS)||MAPS.length!==expectedMaps)fail("WORLD_MAP_COUNT",`MAPS 應為 ${expectedMaps} 張，實際 ${Array.isArray(MAPS)?MAPS.length:"非陣列"}`);
  if(window.WORLD_MAP_REGISTRATION_REPORT?.passed!==true)fail("WORLD_MAP_REGISTRY","世界地圖固定註冊檢查未通過",window.WORLD_MAP_REGISTRATION_REPORT?.errors||null);
@@ -16,7 +16,7 @@
   "enterBountyDungeon","renderBountyDungeon",
   "getArenaProgressState","getArenaAssessmentStatus","getArenaBaseTotalPoints",
   "ensureVoidMirageState","getVoidMirageStartFloor","voidMirageStartFloorFromHistory","beginVoidMirageRun","fightNextVoidMirageFloor","renderVoidMirageDungeon",
-  "gmSetVoidMirageState","gmApplyDungeonValues","gmResetDailyDungeonState",
+  "gmSetVoidMirageState","gmDungeonManagementHtml","gmApplyDungeonValues","gmResetDailyDungeonState","gmPreviewVoidMirageFloor","gmSimulateVoidMirageClimb","gmSimulateArena100",
   "registerRegionMaps"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`必要函式 ${name} 未載入`);});
@@ -29,6 +29,7 @@
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
  if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
  if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(20))!==1000000)fail("VIP20_THRESHOLD",`VIP20 門檻應為 1,000,000，實際 ${window.vipThreshold(20)}`);
+ if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
@@ -59,7 +60,8 @@
  guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含過度詳細或舊規則：${text}`);});
  if(typeof gmHtml==="function"){
   const gmText=String(gmHtml());
-  ["副本次數累積進度","副本可挑戰次數","GM 測試不扣副本次數","推進並取得積分"].forEach(text=>{if(gmText.includes(text))fail("GM_LEGACY_TEXT",`GM 介面仍含舊規則：${text}`);});
+  ["副本次數累積進度","副本可挑戰次數","GM 測試不扣副本次數","推進並取得積分","首通積分","平均每層積分"].forEach(text=>{if(gmText.includes(text))fail("GM_LEGACY_TEXT",`GM 介面仍含舊規則：${text}`);});
+  ["今日懸賞","今日競技場","虛空歷史最高","虛空當日最高"].forEach(text=>{if(!gmText.includes(text))fail("GM_CURRENT_TEXT",`GM 介面缺少新版副本資料：${text}`);});
  }
 
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
