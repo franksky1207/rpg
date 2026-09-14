@@ -1,6 +1,5 @@
 (function(){
  function normalizeItems(items){return Array.isArray(items)?items.filter(x=>x&&x.item):[];}
- function round2(value){return Math.round((Number(value)||0)*100)/100;}
  function encodedItemId(item){return encodeURIComponent(String(item?.id||""));}
  function decodedItemId(value){try{return decodeURIComponent(String(value||""));}catch(e){return "";}}
  function inventoryItemById(id){return state.inventory?.find(it=>String(it?.id)===String(id))||null;}
@@ -78,15 +77,12 @@
   const wins=Math.max(0,Math.floor(Number(ctx?.wins)||0));
   const continuous=ctx?.continuous===true;
   const total=continuous?null:Math.max(wins,Math.floor(Number(ctx?.originalCount)||wins));
-  const progress=round2(ctx?.totalDungeonProgress);
-  const attempts=Math.max(0,Math.floor(Number(ctx?.gainedDungeonAttempts)||0));
   const drops=normalizeItems(ctx?.items);
   const interrupted=options.interrupted===true;
   const note=continuous
-   ?(interrupted?`已完成 ${wins} 場，連續戰鬥已結束；已取得的獎勵與副本進度均保留。`:`完成 ${wins} 場`)
-   :(interrupted?`已完成 ${wins} / ${total} 場，剩餘連戰已取消；已取得的獎勵與副本進度均保留。`:`勝利 ${wins} / ${total} 場`);
-  const dungeon=progress>0||attempts>0?`<div class="notice" style="margin-top:10px">副本進度 +${progress}${attempts>0?`　｜　可挑戰次數 +${attempts}`:""}</div>`:"";
-  return `<div class="settlement-section"><div class="settlement-section-title">主線戰鬥</div><div class="notice"><b>${note}</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"主線裝備",emptyText:"",showCount:true,marginTop:10}):`<div class="muted" style="margin-top:10px">本次沒有主線裝備掉落。</div>`}${dungeon}</div>`;
+   ?(interrupted?`已完成 ${wins} 場，連續戰鬥已結束；已取得的獎勵均保留。`:`完成 ${wins} 場`)
+   :(interrupted?`已完成 ${wins} / ${total} 場，剩餘連戰已取消；已取得的獎勵均保留。`:`勝利 ${wins} / ${total} 場`);
+  return `<div class="settlement-section"><div class="settlement-section-title">主線戰鬥</div><div class="notice"><b>${note}</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${Number(ctx?.totalXp)||0}</b></div><div class="stat">金幣<b>+${Number(ctx?.totalGold)||0}</b></div></div>${drops.length?settlementDropListHtml(drops,{title:"主線裝備",emptyText:"",showCount:true,marginTop:10}):`<div class="muted" style="margin-top:10px">本次沒有主線裝備掉落。</div>`}</div>`;
  }
  window.mainBattleSettlementHtml=mainBattleSectionHtml;
 
