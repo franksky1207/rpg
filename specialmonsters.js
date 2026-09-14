@@ -113,9 +113,9 @@ const SPECIAL_EFFECT_HANDLERS={
  dropCount(ctx,effect){ctx.dropCount=Math.max(1,Math.floor(effect.value||1));},
  weakSlotDrop(ctx,effect){ctx.weakSlotDrop={primary:effect.primary??70,secondary:effect.secondary??30};},
  randomReward(ctx,effect){
-  let options=Array.isArray(effect.options)?effect.options:[];
+  const options=Array.isArray(effect.options)?effect.options:[];
   if(!options.length)return;
-  let chosen=options[Math.floor(Math.random()*options.length)];
+  const chosen=options[Math.floor(Math.random()*options.length)];
   ctx.randomReward={id:chosen.id,label:chosen.label};
   applySpecialEffectsToContext(ctx,chosen.effects||[]);
  }
@@ -126,10 +126,10 @@ function getSpecialMonsterById(id){return SPECIAL_MONSTERS.find(x=>x.id===id)||n
 function rollSpecialMonster(excludedIds=null){
  const excluded=new Set(Array.isArray(excludedIds)?excludedIds:excludedIds?[excludedIds]:[]);
  const pool=SPECIAL_MONSTERS.filter(x=>!excluded.has(x.id));
- let total=pool.reduce((sum,x)=>sum+Math.max(0,x.weight||0),0);
+ const total=pool.reduce((sum,x)=>sum+Math.max(0,x.weight||0),0);
  if(total<=0)return null;
  let r=Math.random()*total;
- for(let x of pool){r-=Math.max(0,x.weight||0);if(r<0)return x;}
+ for(const x of pool){r-=Math.max(0,x.weight||0);if(r<0)return x;}
  return pool[pool.length-1]||null;
 }
 
@@ -218,17 +218,15 @@ function createSpecialRewardContext(){
 }
 
 function applySpecialEffectsToContext(ctx,effects){
- for(let effect of effects||[]){
-  let handler=SPECIAL_EFFECT_HANDLERS[effect?.type];
+ for(const effect of effects||[]){
+  const handler=SPECIAL_EFFECT_HANDLERS[effect?.type];
   if(handler)handler(ctx,effect);
  }
  return ctx;
 }
 
-function getSpecialRewardContext(special,useTestSpecializations=false){
- let ctx=createSpecialRewardContext();
+function getSpecialRewardContext(special){
+ const ctx=createSpecialRewardContext();
  if(special)applySpecialEffectsToContext(ctx,special.effects||[]);
- ctx.expMultiplier=(Number(ctx.expMultiplier)||1)*specializationMultiplier("training",useTestSpecializations);
- ctx.goldMultiplier=(Number(ctx.goldMultiplier)||1)*specializationMultiplier("scavenge",useTestSpecializations);
  return ctx;
 }
