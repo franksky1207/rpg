@@ -133,7 +133,7 @@ function adventurePreparePage(){
   if(!enemyUnlocked(selectedMap,i))return "";
   const mo=monsterObj(selectedMap,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"";
   const traits=typeof traitDetailsHtml==="function"?traitDetailsHtml(mo.traits):"";
-  return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><div class="enemy-card-top"><div class="enemy-card-title"><b>${mo.name} Lv.${mo.level}</b>${badge}</div>${enemyProgressHtml(selectedMap,i)}</div>${traits}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div>${enemyNoteHtml(selectedMap,i)}</button>`;
+  return `<button class="enemy-card ${i===selectedEnemy?"active":""}" onclick="selectEnemy(${i})"><div class="enemy-card-top"><div class="enemy-card-title"><b>${mo.name} Lv.${mo.level}</b>${badge}</div>${traits}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div>${enemyNoteHtml(selectedMap,i)}</button>`;
  }).join("");
  const modeButtons=modes.map(mode=>`<button class="count-card ${mode===selectedBattleCount?"active":""}" onclick="setBattleMode(${mode===CONTINUOUS_BATTLE_COUNT?`'${CONTINUOUS_BATTLE_COUNT}'`:1},this)">${battleModeLabel(mode)}</button>`).join("");
  return `<section class="prepare-screen"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><h3 class="battle-count-title">戰鬥模式</h3><div class="battle-count-panel"><div class="count-grid" style="--battle-count-columns:${modes.length}">${modeButtons}</div></div><div class="prepare-actions"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"回血並挑戰 Boss":"回血並開始戰鬥"}</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
@@ -228,16 +228,29 @@ function characterPage(){
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
 function setInventoryFilter(v){inventoryFilter=v;selectedItem=null;render()}
+function lostGearCompareHtml(it){
+ const current=state.equipment[it.type],itemScore=equipmentScore(it),currentScore=current?equipmentScore(current):null,diff=current?round1(itemScore-currentScore):itemScore;
+ const diffText=current?`${diff>0?"+":""}${diff}`:"目前無裝備",diffColor=!current?"#e5cf9a":diff>0?"#76d587":diff<0?"#e27474":"#ccc";
+ const currentHtml=current?`${itemHtml(current,true)}<div class="muted" style="margin-top:4px">評分 ${currentScore}</div>`:`<span class="muted">無</span>`;
+ return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">遺失裝備評分 ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
+}
+function lostGearSectionHtml(){
+ const lost=Array.isArray(state.lostGear)?state.lostGear:[];
+ if(!lost.length)return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="muted">目前沒有遺失裝備。</div></div>`;
+ const rows=lost.map((x,i)=>`<tr><td data-label="裝備" class="lost-gear-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="lost-gear-stats-cell">${gearAbilityHtml(x.item,false)}</td><td data-label="比較" class="lost-gear-compare-cell">${lostGearCompareHtml(x.item)}</td><td data-label="贖回價格" class="lost-gear-price-cell">${x.cost.toLocaleString()}</td><td class="lost-gear-action-cell"><div class="controls lost-gear-row-actions"><button class="btn" onclick="redeemGear(${i})">贖回</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`).join("");
+ return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="lost-gear-table-wrap"><table class="lost-gear-table"><thead><tr><th>裝備</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
 function inventoryContent(){
  const items=state.inventory.filter(it=>inventoryFilter==="all"||it.type===inventoryFilter).slice().sort((a,b)=>equipmentScore(b)-equipmentScore(a)||b.q-a.q||b.level-a.level);
  const sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
  const filterOptions=`<option value="all" ${inventoryFilter==="all"?"selected":""}>全部</option>${EQUIPMENT_TYPES.map(t=>`<option value="${t}" ${inventoryFilter===t?"selected":""}>${equipmentTypeLabel(t)}</option>`).join("")}`;
- return `<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
+ const main=`<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
  <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${specializationSellValue(it)}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
+ return `${main}${lostGearSectionHtml()}`;
 }
 function inventoryPage(){
  const back=inventoryFromAdventure?`<div class="back-home"><button class="btn back-btn" onclick="backToAdventureFromInventory()">← 返回冒險</button></div>`:homeBackHtml();
- return `<div class="function-page">${back}${inventoryContent()}</div>`;
+ return `<div class="function-page inventory-page">${back}${inventoryContent()}</div>`;
 }
 function equipBestAll(){
  let changed=0;
@@ -333,7 +346,7 @@ function normalizeSaveState(target){
   return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost:Number.isFinite(cost)&&cost>=0?Math.floor(cost):ceil(item.buy*2),lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
- target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
+ if(typeof normalizePersistentFlags==="function")normalizePersistentFlags(target);else target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,5):[];while(auto.length<5)auto.push(false);target.settings.autoSell=auto.map(Boolean);
  target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
