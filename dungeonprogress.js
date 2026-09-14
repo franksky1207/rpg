@@ -1,21 +1,10 @@
 (function(){
- const DUNGEON_PROGRESS_THRESHOLD=100;
- const ENEMY_HP_PROGRESS_RATE=1.5;
- const DAMAGE_PROGRESS_RATE=4;
  const ARENA_POSITION_MODEL_VERSION=1;
  const ARENA_ASSESSMENT_RULE_VERSION=2;
  const ARENA_ASSESS_RUNS=500;
  const ARENA_ASSESS_CLEAR_TARGET=485;
 
- function finiteNonNegative(value,fallback=0){
-  const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;
- }
- function roundProgress(value){return Math.round((Number(value)||0)*1000000)/1000000;}
-
- // v11 起 VIP4 / VIP12 不再提高舊副本進度；此函式暫留給第二批移除舊進度機制前的相容橋接。
- function vipDungeonProgressMultiplier(){return 1;}
- window.vipDungeonProgressMultiplier=vipDungeonProgressMultiplier;
-
+ function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function unlockedArenaRankCap(target){
   const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
   if(!regions.length)return 1;
@@ -34,14 +23,9 @@
   const positionModelCompatible=Math.floor(Number(source.positionModelVersion)||0)===ARENA_POSITION_MODEL_VERSION;
   let highestArenaUnlocked;
   let assessmentCompatible=false;
-  if(hasHighest){
-   highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));
-   assessmentCompatible=positionModelCompatible;
-  }else if(hasWindowStart){
-   highestArenaUnlocked=Math.floor(Number(source.windowStart));
-  }else{
-   highestArenaUnlocked=legacyRank;
-  }
+  if(hasHighest){highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));assessmentCompatible=positionModelCompatible;}
+  else if(hasWindowStart)highestArenaUnlocked=Math.floor(Number(source.windowStart));
+  else highestArenaUnlocked=legacyRank;
   highestArenaUnlocked=Math.max(1,Math.min(maxRank,cap,highestArenaUnlocked));
   const visibleStart=Math.max(1,highestArenaUnlocked-2);
   const activeRaw=Math.floor(Number(source.activeRank)||0);
@@ -50,17 +34,7 @@
   const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   const signature=assessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null;
   const promotionReady=!!signature&&runs===ARENA_ASSESS_RUNS&&clears>=ARENA_ASSESS_CLEAR_TARGET;
-  const normalized={
-   positionModelVersion:ARENA_POSITION_MODEL_VERSION,
-   assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,
-   highestArenaUnlocked,
-   activeRank,
-   rank:activeRank||highestArenaUnlocked,
-   promotionReady,
-   lastCheckSignature:signature,
-   lastCheckRuns:runs,
-   lastCheckClearCount:clears
-  };
+  const normalized={positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,highestArenaUnlocked,activeRank,rank:activeRank||highestArenaUnlocked,promotionReady,lastCheckSignature:signature,lastCheckRuns:runs,lastCheckClearCount:clears};
   Object.keys(source).forEach(key=>{if(!(key in normalized))delete source[key];});
   Object.assign(source,normalized);
   return source;
@@ -69,27 +43,13 @@
 
  function normalizeDungeonState(target){
   if(!target||typeof target!=="object")return null;
-  if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={};
+  if(!target.dungeon||typeof target.dungeon!=="object"||Array.isArray(target.dungeon))target.dungeon={};
   const dungeon=target.dungeon;
-  let progress=finiteNonNegative(dungeon.progress,0);
-  let attempts=Math.floor(finiteNonNegative(dungeon.attempts,0));
-  const vipPoints=Math.floor(finiteNonNegative(target.vipPoints,0));
-  const converted=Math.floor((progress+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
-  if(converted>0){attempts+=converted;progress-=converted*DUNGEON_PROGRESS_THRESHOLD;}
-  dungeon.progress=roundProgress(Math.max(0,progress));
-  dungeon.attempts=attempts;
-  target.vipPoints=vipPoints;
-  dungeon.points=vipPoints;
+  delete dungeon.progress;
+  delete dungeon.attempts;
+  delete dungeon.activeRun;
+  delete dungeon.points;
   normalizeArenaProgress(dungeon,target);
-  const marker=dungeon.activeRun;
-  if(marker&&typeof marker==="object"&&!Array.isArray(marker)){
-   dungeon.activeRun={
-    id:typeof marker.id==="string"?marker.id:"",
-    mode:typeof marker.mode==="string"?marker.mode:"dungeon",
-    cost:Math.max(1,Math.floor(Number(marker.cost)||1)),
-    startedAt:Math.max(0,Number(marker.startedAt)||0)
-   };
-  }else dungeon.activeRun=null;
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   return dungeon;
  }
@@ -102,52 +62,23 @@
   state.vipInitialized=true;
   return true;
  }
- function recoverInterruptedDungeonRun(){
-  const dungeon=normalizeDungeonState(state);if(!dungeon?.activeRun)return false;
-  state.hp=playerCombatStats().hp;
-  dungeon.activeRun=null;
-  return true;
- }
-
  const baseNewState=newState;
  newState=function(){const next=baseNewState();normalizeDungeonState(next);next.vipInitialized=true;return next;};
 
- // 正式 load/migration 由 savemigration.js 統一負責；本檔只提供載入後副本收尾。
  window.finalizeDungeonLoadedState=function(){
   const vipHpInitialized=initializeVipHpIfNeeded();
   normalizeDungeonState(state);
-  const recoveredInterruptedRun=recoverInterruptedDungeonRun();
   state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
-  return {vipHpInitialized,recoveredInterruptedRun,dungeon:state.dungeon};
+  return {vipHpInitialized,recoveredInterruptedRun:false,dungeon:state.dungeon};
  };
-
  window.ensureDungeonProgressState=function(){return normalizeDungeonState(state);};
- window.calculateDungeonBattleProgress=function(params={}){
-  if(params.source!=="main"||params.win!==true)return 0;
-  const enemyMaxHp=finiteNonNegative(params.enemyMaxHp,0),playerLevel=Math.max(1,Math.floor(Number(params.playerLevel)||Number(state?.level)||1)),playerBaseHp=Math.max(1,baseHP(playerLevel)),playerMaxHp=Math.max(1,finiteNonNegative(params.playerMaxHp,playerBaseHp)),startHp=Math.max(0,finiteNonNegative(params.startHp,0)),endHp=Math.max(0,finiteNonNegative(params.endHp,0));
-  const damageRate=Math.max(0,Math.min(1,(startHp-endHp)/playerMaxHp));
-  return roundProgress(Math.max(0,(enemyMaxHp/playerBaseHp)*ENEMY_HP_PROGRESS_RATE+damageRate*DAMAGE_PROGRESS_RATE)*vipDungeonProgressMultiplier());
- };
- window.addDungeonProgress=function(amount){
-  const dungeon=normalizeDungeonState(state);if(!dungeon)return {added:0,gainedAttempts:0,progress:0,attempts:0};
-  const added=finiteNonNegative(amount,0),total=dungeon.progress+added,gainedAttempts=Math.floor((total+1e-9)/DUNGEON_PROGRESS_THRESHOLD);
-  dungeon.progress=roundProgress(Math.max(0,total-gainedAttempts*DUNGEON_PROGRESS_THRESHOLD));dungeon.attempts+=gainedAttempts;
-  return {added:roundProgress(added),gainedAttempts,progress:dungeon.progress,attempts:dungeon.attempts};
- };
  window.addDungeonPoints=function(amount){
-  const dungeon=normalizeDungeonState(state);if(!dungeon)return {added:0,baseAdded:0,points:0,multiplier:1};
+  normalizeDungeonState(state);
   const baseAdded=Math.floor(finiteNonNegative(amount,0));
   const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
   const adjusted=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseAdded):Math.floor(baseAdded*multiplier);
-  const activeRun=typeof getActiveDungeonRun==="function"?getActiveDungeonRun():null,lockCarryHp=activeRun?.mode==="arena"||activeRun?.mode==="void-mirage",hpBefore=state.hp;
   const result=typeof addVipPoints==="function"?addVipPoints(adjusted):{added:adjusted,points:(state.vipPoints||0)+adjusted};
-  if(lockCarryHp)state.hp=hpBefore;
-  state.vipPoints=Math.floor(finiteNonNegative(result.points,0));dungeon.points=state.vipPoints;
+  state.vipPoints=Math.floor(finiteNonNegative(result.points,0));
   return {added:result.added??adjusted,baseAdded,points:state.vipPoints,multiplier,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
- };
- window.awardDungeonProgressForBattle=function(params={}){
-  const added=calculateDungeonBattleProgress(params);
-  if(added<=0){const dungeon=normalizeDungeonState(state)||{progress:0,attempts:0};return {added:0,gainedAttempts:0,progress:dungeon.progress,attempts:dungeon.attempts};}
-  return addDungeonProgress(added);
  };
 })();
