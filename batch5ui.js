@@ -22,8 +22,9 @@
   const key=gameDailyDateKey();if(key===lastDateKey)return;lastDateKey=key;
   if(typeof ensureDailyState==="function")ensureDailyState();
   if(typeof save==="function")save(false);
+  const busy=typeof battleBusy!=="undefined"&&battleBusy===true;
   const bgActive=typeof window.backgroundProgressIsActive==="function"&&(window.backgroundProgressIsActive("void")||window.backgroundProgressIsActive("arena")||window.backgroundProgressIsActive("bounty"));
-  if(!window.battleBusy&&!bgActive&&typeof render==="function")render();
+  if(!busy&&!bgActive&&typeof render==="function")render();
  }
 
  function finiteInt(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):null;}
