@@ -68,7 +68,7 @@
  function difficultyById(id,rank=currentArenaRank()){const base=ARENA_POSITION_BASES.find(x=>x.id===id)||null;return difficultyForRank(base,rank);}
  function arenaDifficultyConfigs(rank=currentArenaRank()){const r=clampArenaRank(rank);return ARENA_POSITION_BASES.map(base=>{const d=difficultyForRank(base,r),positionStages=ARENA_POSITION_STAGE_CONFIGS[d.id]||ARENA_POSITION_STAGE_CONFIGS.normal;return {...d,stages:positionStages.map((position,i)=>({...ARENA_PHYSICAL_STAGE_PROFILE[i],...position}))};});}
  function newContinuousSummary(){return {runs:0,fullClears:0,failedRuns:0,totalPoints:0,stopReason:null};}
- function createArenaState(overrides={}){return {phase:"select",rank:1,difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,roundPoints:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,continuous:false,stopRequested:false,summary:newContinuousSummary(),...overrides};}
+ function createArenaState(overrides={}){return {phase:"select",rank:1,difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,roundPoints:0,roundBasePoints:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,continuous:false,stopRequested:false,summary:newContinuousSummary(),...overrides};}
  let arenaState=createArenaState();
 
  function clampLevel(v){return clampGameLevel(v);}
@@ -106,18 +106,19 @@
   if(!use.ok)return false;
   save(false);
   const preservePreview=options.preservePreview===true,previewTraits=preservePreview&&Array.isArray(arenaState.enemy?.traits)?arenaState.enemy.traits.slice():null,enemyScaling=createSpecialPlayerSnapshot(equippedStats()),vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0)),player=createSpecialPlayerSnapshot(playerCombatStats(enemyScaling,vipLevel));
-  arenaState.enemyScalingSnapshot=enemyScaling;arenaState.vipLevelSnapshot=vipLevel;arenaState.playerSnapshot=player;arenaState.stage=0;arenaState.roundPoints=0;arenaState.history=[];arenaState.result=null;arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,enemyScaling,state.level,{traits:previewTraits||undefined,rank:arenaState.rank});state.hp=player.hp;arenaState.phase="combat";render();sleep(80).then(runArenaFight);return true;
+  arenaState.enemyScalingSnapshot=enemyScaling;arenaState.vipLevelSnapshot=vipLevel;arenaState.playerSnapshot=player;arenaState.stage=0;arenaState.roundPoints=0;arenaState.roundBasePoints=0;arenaState.history=[];arenaState.result=null;arenaState.enemy=buildArenaEnemy(arenaState.difficulty.id,0,enemyScaling,state.level,{traits:previewTraits||undefined,rank:arenaState.rank});state.hp=player.hp;arenaState.phase="combat";render();sleep(80).then(runArenaFight);return true;
  }
 
  window.openArenaDungeon=function(){if((Number(state.level)||1)<15){view="dungeon";render();return;}if(typeof clearArenaVenueSelection==="function")clearArenaVenueSelection();resetArenaState();view="dungeon-arena";render();};
  window.startArenaDungeon=function(difficultyId){if((Number(state.level)||1)<15)return;const rank=currentArenaRank(),difficulty=difficultyById(difficultyId,rank);if(!difficulty)return;if(dailyStatus().remaining<=0){view="dungeon-arena";resetArenaState();render();return;}arenaState=createArenaState({phase:"ready",rank,difficulty,enemy:buildArenaEnemy(difficulty.id,0,null,null,{rank})});view="dungeon-arena";render();};
 
- function awardStagePoints(stageIndex){
-  const basePoints=Math.floor(Number(arenaState.difficulty?.stagePoints?.[stageIndex])||0);
-  const awarded=basePoints>0&&typeof addDungeonPoints==="function"?addDungeonPoints(basePoints):{added:basePoints,baseAdded:basePoints};
+ function collectStageBasePoints(stageIndex){const basePoints=Math.max(0,Math.floor(Number(arenaState.difficulty?.stagePoints?.[stageIndex])||0));arenaState.roundBasePoints+=basePoints;return basePoints;}
+ function creditRoundPoints(){
+  const base=Math.max(0,Math.floor(Number(arenaState.roundBasePoints)||0));
+  const awarded=base>0&&typeof addDungeonPoints==="function"?addDungeonPoints(base):{added:base,baseAdded:base};
   const actual=Math.max(0,Math.floor(Number(awarded?.added)||0));
-  arenaState.gainedPoints+=actual;arenaState.roundPoints+=actual;
-  return {base:basePoints,actual};
+  arenaState.roundPoints=actual;arenaState.gainedPoints+=actual;
+  return {base,actual};
  }
 
  window.startArenaStageFight=function(continuous=false){if(arenaState.phase!=="ready"||!arenaState.enemy||battleBusy||dailyStatus().remaining<=0)return;arenaState.continuous=continuous===true;arenaState.stopRequested=false;arenaState.summary=newContinuousSummary();arenaState.gainedPoints=0;if(arenaState.continuous&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("arena",{mode:"continuous"});if(!beginArenaRound({preservePreview:true})){stopArenaBackground();view="dungeon-arena";resetArenaState();render();}};
@@ -134,14 +135,14 @@
    while(arenaState.phase==="combat"&&arenaState.enemy){
     const stageIndex=arenaState.stage,enemy=arenaState.enemy,startHp=state.hp,playerMax=arenaPlayerStats().hp,result=arenaFightCore(enemy);
     await animateArena(result,startHp,playerMax);
-    let pointResult={base:0,actual:0};if(result.win)pointResult=awardStagePoints(stageIndex);
-    arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,stagePoints:pointResult.actual,baseStagePoints:pointResult.base,enemy:{...enemy}});
+    const baseStagePoints=result.win?collectStageBasePoints(stageIndex):0;
+    arenaState.history.push({stage:stageIndex,win:!!result.win,startHp,endHp:result.combatEndHp,turns:result.turns,baseStagePoints,enemy:{...enemy}});
     if(!result.win||stageIndex>=2){
-     const fullClear=!!result.win&&stageIndex>=2;
-     arenaState.result={type:fullClear?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,stagePoints:pointResult.actual};
+     const fullClear=!!result.win&&stageIndex>=2,credited=creditRoundPoints();
+     arenaState.result={type:fullClear?"clear":"defeat",stage:stageIndex,combatEndHp:result.combatEndHp,turns:result.turns,basePoints:credited.base,points:credited.actual};
      healAfterRound();
      if(arenaState.continuous){
-      arenaState.summary.runs++;if(fullClear)arenaState.summary.fullClears++;else arenaState.summary.failedRuns++;arenaState.summary.totalPoints+=arenaState.roundPoints;
+      arenaState.summary.runs++;if(fullClear)arenaState.summary.fullClears++;else arenaState.summary.failedRuns++;arenaState.summary.totalPoints+=credited.actual;
       const ds=dailyStatus();
       if(!fullClear)arenaState.summary.stopReason="death";else if(arenaState.stopRequested)arenaState.summary.stopReason="manual";else if(ds.remaining<=0)arenaState.summary.stopReason="daily-limit";
       if(arenaState.summary.stopReason){stopArenaBackground();arenaState.phase="result";render();break;}
@@ -170,10 +171,10 @@
  function continuousResultHtml(){const diff=arenaState.difficulty,s=arenaState.summary,ds=dailyStatus();return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">競技場連續挑戰結算</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class="arena-clear-count">共完成：${s.runs} 輪・全通 ${s.fullClears} 輪・失敗 ${s.failedRuns} 輪</div><div class="arena-total-earned">總獲得 VIP 積分：<strong>${s.totalPoints}</strong></div><div class="arena-current-points">停止原因：${stopReasonText(s.stopReason)}</div><div class="arena-current-points">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class="arena-current-points">今日競技場：${ds.used} / ${ds.limit}・剩餘 ${ds.remaining} 輪</div><div class="controls arena-actions"><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;}
  function resultHtml(){
   if(arenaState.continuous)return continuousResultHtml();
-  const r=arenaState.result||{},diff=arenaState.difficulty,ds=dailyStatus(),title=r.type==="clear"?"競技場三戰完成":"競技場挑戰失敗",cleared=arenaState.history.filter(x=>x.win).length,rows=arenaState.history.map((h,i)=>`<div class="arena-result-row"><span>${ARENA_STAGE_NAMES[i]}</span><span>${h.win?`通過　+${h.stagePoints||0}`:"失敗"}</span></div>`).join("");
-  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div><div class="arena-total-earned">本次獲得 VIP 積分：<strong>${arenaState.gainedPoints}</strong></div><div class="arena-current-points">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class="arena-current-points">今日競技場：${ds.used} / ${ds.limit}・剩餘 ${ds.remaining} 輪</div><div class="controls arena-actions"><button class="btn arena-start-btn" ${ds.remaining>0?"":"disabled"} onclick="${ds.remaining>0?"openArenaDungeon()":"void(0)"}">${ds.remaining>0?"再次選擇競技場":"今日競技場次數已用完"}</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
+  const r=arenaState.result||{},diff=arenaState.difficulty,ds=dailyStatus(),title=r.type==="clear"?"競技場三戰完成":"競技場挑戰失敗",cleared=arenaState.history.filter(x=>x.win).length,rows=arenaState.history.map((h,i)=>`<div class="arena-result-row"><span>${ARENA_STAGE_NAMES[i]}</span><span>${h.win?`通過　基礎 +${h.baseStagePoints||0}`:"失敗"}</span></div>`).join("");
+  return `<div class="function-page dungeon-page-shell arena-shell"><section class="arena-panel arena-result-panel"><div class="arena-title">${title}</div><div class="${difficultyClass(diff?.id)} arena-result-difficulty">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class="arena-clear-count">已通過：${cleared} / 3 戰</div><div class="arena-result-list">${rows}</div><div class="arena-total-earned">本次獲得 VIP 積分：<strong>${arenaState.roundPoints}</strong></div><div class="arena-current-points">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class="arena-current-points">今日競技場：${ds.used} / ${ds.limit}・剩餘 ${ds.remaining} 輪</div><div class="controls arena-actions"><button class="btn arena-start-btn" ${ds.remaining>0?"":"disabled"} onclick="${ds.remaining>0?"openArenaDungeon()":"void(0)"}">${ds.remaining>0?"再次選擇競技場":"今日競技場次數已用完"}</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></section></div>`;
  }
 
  window.renderArenaDungeon=function(){if(arenaState.phase==="select")return selectionHtml();if(arenaState.phase==="combat")return combatHtml();if(arenaState.phase==="result")return resultHtml();return readyHtml();};
- window.getArenaCoreState=function(){const assessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;return {phase:arenaState.phase,rank:arenaState.rank,rankName:arenaRankName(arenaState.rank),difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,roundPoints:arenaState.roundPoints,continuous:arenaState.continuous,stopRequested:arenaState.stopRequested,summary:{...arenaState.summary},daily:dailyStatus(),playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,enemyScalingSnapshot:arenaState.enemyScalingSnapshot?{...arenaState.enemyScalingSnapshot}:null,vipLevelSnapshot:arenaState.vipLevelSnapshot||0,assessment,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
+ window.getArenaCoreState=function(){const assessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;return {phase:arenaState.phase,rank:arenaState.rank,rankName:arenaRankName(arenaState.rank),difficulty:arenaState.difficulty?{...arenaState.difficulty,stagePoints:arenaState.difficulty.stagePoints.slice()}:null,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,roundPoints:arenaState.roundPoints,roundBasePoints:arenaState.roundBasePoints,continuous:arenaState.continuous,stopRequested:arenaState.stopRequested,summary:{...arenaState.summary},daily:dailyStatus(),playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,enemyScalingSnapshot:arenaState.enemyScalingSnapshot?{...arenaState.enemyScalingSnapshot}:null,vipLevelSnapshot:arenaState.vipLevelSnapshot||0,assessment,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};
 })();
