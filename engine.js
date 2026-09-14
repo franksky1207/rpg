@@ -18,12 +18,17 @@ window.MAX_LEVEL=MAX_LEVEL;window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;window.EXP_CURVE=E
 let state,view="home",selectedMap=0,selectedEnemy=0,selectedItem=null,battleLogs=[],battleBusy=false;
 let upgradeDropNoticePending=false;
 let shopMutationBusy=false;
+let vipThreshold=null,vipLevelFromPoints=null,normalizeVipState=null;
+const newStateNormalizers=[];
 
 function ceil(n){return Math.ceil(n)}
 function round1(n){return Math.round(n*10)/10}
 function randomInt(min,max){return min+Math.floor(Math.random()*(max-min+1))}
 function currentSaveVersion(){return Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||Number(SAVE_VERSION)||1))}
 window.currentSaveVersion=currentSaveVersion;
+function registerNewStateNormalizer(fn){if(typeof fn!=="function"||newStateNormalizers.includes(fn))return false;newStateNormalizers.push(fn);return true}
+window.registerNewStateNormalizer=registerNewStateNormalizer;
+window.getNewStateNormalizerCount=function(){return newStateNormalizers.length;};
 function clampGameLevel(level){return Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(level)||1)))}
 window.clampGameLevel=clampGameLevel;
 function baseHP(l){return ceil(110+12*(l-1))}
@@ -39,15 +44,8 @@ function sellBase(l){return ceil(12+8*l)}
 function qClass(q){return "q-"+QUALITY[q].k}
 function equipmentTypeLabel(type){return EQUIPMENT_LABELS[type]||type}
 function formatStatValue(stat,value){return `${STAT_LABELS[stat]||stat} +${value}${stat==="crit"||stat==="dodge"?"%":""}`}
-function vipThreshold(level){const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(level)||0)));return 1000*lv*lv}
-function vipLevelFromPoints(points){const p=Math.max(0,Math.floor(Number(points)||0));return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Math.sqrt(p/1000))))}
 function vipBonusStats(level=null){const lv=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(level??state?.vipLevel)||0)));return {level:lv,hp:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,atk:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,def:lv*VIP_DEF_PERCENT_PER_LEVEL,crit:lv*VIP_RATE_STAT_PER_LEVEL,dodge:lv*VIP_RATE_STAT_PER_LEVEL}}
-function normalizeVipState(target){
- if(!target||typeof target!=="object")return target;
- const legacyPoints=Number(target?.dungeon?.points),ownPoints=Number(target.vipPoints),points=Number.isFinite(ownPoints)&&ownPoints>=0?Math.floor(ownPoints):(Number.isFinite(legacyPoints)&&legacyPoints>=0?Math.floor(legacyPoints):0),storedLevel=Number(target.vipLevel),unlocked=Number.isFinite(storedLevel)&&storedLevel>=0?Math.floor(storedLevel):0;
- target.vipPoints=points;target.vipLevel=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.max(unlocked,vipLevelFromPoints(points))));return target;
-}
-window.vipThreshold=vipThreshold;window.vipLevelFromPoints=vipLevelFromPoints;window.vipBonusStats=vipBonusStats;window.normalizeVipState=normalizeVipState;
+window.vipBonusStats=vipBonusStats;
 function blankMapProgress(){return Array.from({length:MAPS.length},()=>[0,0,0,0])}
 function fitWorldArray(arr,fill){const out=Array.isArray(arr)?arr.slice(0,MAPS.length):[];while(out.length<MAPS.length)out.push(typeof fill==="function"?fill(out.length):fill);return out}
 function normalizeWorldState(target){
@@ -63,7 +61,9 @@ function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>
 function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
- return {saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ newStateNormalizers.forEach(normalizer=>{const normalized=normalizer(next);if(normalized&&typeof normalized==="object")next=normalized;});
+ return next;
 }
 
 function save(show=true){
@@ -73,7 +73,7 @@ function save(show=true){
 function equippedStats(){let x={hp:baseHP(state.level),atk:baseATK(state.level),def:baseDEF(state.level),crit:0,dodge:0};EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});x.crit=round1(Math.max(0,Number(x.crit)||0));x.dodge=round1(Math.max(0,Number(x.dodge)||0));return x}
 function playerCombatStats(baseStats=null,vipLevel=null){const base=baseStats&&typeof baseStats==="object"?baseStats:equippedStats(),bonus=vipBonusStats(vipLevel);return {hp:Math.max(1,ceil((Number(base.hp)||1)*(1+bonus.hp/100))),atk:Math.max(1,ceil((Number(base.atk)||1)*(1+bonus.atk/100))),def:Math.max(0,ceil((Number(base.def)||0)*(1+bonus.def/100))),crit:round1(Math.max(0,Number(base.crit)||0)+bonus.crit),dodge:round1(Math.max(0,Number(base.dodge)||0)+bonus.dodge)}}
 window.playerCombatStats=playerCombatStats;
-function addVipPoints(amount){normalizeVipState(state);const added=Math.max(0,Math.floor(Number(amount)||0)),beforeMax=playerCombatStats().hp,beforeHp=Math.max(0,Math.min(beforeMax,Number(state.hp)||0)),ratio=beforeMax>0?beforeHp/beforeMax:1,wasFull=beforeHp>=beforeMax;state.vipPoints+=added;const nextLevel=vipLevelFromPoints(state.vipPoints),levelBefore=state.vipLevel;if(nextLevel>state.vipLevel)state.vipLevel=nextLevel;const afterMax=playerCombatStats().hp;if(state.vipLevel>levelBefore&&afterMax!==beforeMax)state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));return {added,points:state.vipPoints,level:state.vipLevel,levelsGained:Math.max(0,state.vipLevel-levelBefore)}}
+function addVipPoints(amount){if(typeof normalizeVipState==="function")normalizeVipState(state);else{state.vipPoints=Math.max(0,Math.floor(Number(state.vipPoints)||0));state.vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0))}const added=Math.max(0,Math.floor(Number(amount)||0)),beforeMax=playerCombatStats().hp,beforeHp=Math.max(0,Math.min(beforeMax,Number(state.hp)||0)),ratio=beforeMax>0?beforeHp/beforeMax:1,wasFull=beforeHp>=beforeMax;state.vipPoints+=added;const nextLevel=typeof vipLevelFromPoints==="function"?vipLevelFromPoints(state.vipPoints):state.vipLevel,levelBefore=state.vipLevel;if(nextLevel>state.vipLevel)state.vipLevel=nextLevel;const afterMax=playerCombatStats().hp;if(state.vipLevel>levelBefore&&afterMax!==beforeMax)state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));return {added,points:state.vipPoints,level:state.vipLevel,levelsGained:Math.max(0,state.vipLevel-levelBefore)}}
 window.addVipPoints=addVipPoints;
 function normalizeHP(){let m=playerCombatStats().hp;state.hp=Math.max(0,Math.min(Number.isFinite(Number(state.hp))?Number(state.hp):m,m))}
 function equipmentScore(it){if(!it)return -1;const level=Math.max(1,Math.floor(Number(it.level)||1)),rateWeight=20+.5*level;return round1((it.atk||0)*5+(it.def||0)*5+(it.hp||0)+(it.crit||0)*rateWeight+(it.dodge||0)*rateWeight)}
