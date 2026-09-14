@@ -80,12 +80,21 @@
   modal.classList.add("show");
  }
 
+ function specialRewardExpAmount(baseXp,rewardCtx,useTestSpecializations=false){
+  const effectBase=ceil((Number(baseXp)||0)*(Number(rewardCtx?.expMultiplier)||1));
+  return typeof specializationAdjustedExp==="function"?specializationAdjustedExp(effectBase,useTestSpecializations):effectBase;
+ }
+ function specialRewardGoldAmount(baseGold,rewardCtx,useTestSpecializations=false){
+  const effectBase=ceil((Number(baseGold)||0)*(Number(rewardCtx?.goldMultiplier)||1));
+  return typeof specializationAdjustedGold==="function"?specializationAdjustedGold(effectBase,useTestSpecializations):effectBase;
+ }
+ window.specialRewardExpAmount=specialRewardExpAmount;
+ window.specialRewardGoldAmount=specialRewardGoldAmount;
+
  function grantSpecialReward(rewardCtx,baseXp,baseGold,dropLevel,mapIdx){
-  const xpBase=ceil(baseXp*(rewardCtx.expMultiplier||1));
-  const xpRaw=typeof specializationAdjustedExp==="function"?specializationAdjustedExp(xpBase):xpBase;
+  const xpRaw=specialRewardExpAmount(baseXp,rewardCtx);
   const xpPay=specialExpPayout(xpRaw,[]);
-  const goldBaseReward=ceil(baseGold*(rewardCtx.goldMultiplier||1));
-  const gold=typeof specializationAdjustedGold==="function"?specializationAdjustedGold(goldBaseReward):goldBaseReward;
+  const gold=specialRewardGoldAmount(baseGold,rewardCtx);
   state.gold+=gold;
   const items=specialMakeDrops(rewardCtx,dropLevel,mapIdx);
   const drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
@@ -122,8 +131,7 @@
    if((state.vipLevel||0)>=10&&Math.random()<.10){
     result.vip10Triggered=true;
     if(special.id==="bandit_king"){
-     const bonusGoldBase=ceil(baseGold*2.5);
-     const bonusGold=typeof specializationAdjustedGold==="function"?specializationAdjustedGold(bonusGoldBase):bonusGoldBase;
+     const bonusGold=specialRewardGoldAmount(baseGold,firstRewardCtx);
      state.gold+=bonusGold;
      result.gold+=bonusGold;
      result.bonusRewardContext={blackMarketGoldOnly:true};
@@ -160,12 +168,12 @@
 
   const special=rollSpecialMonster(forcedByBlackMarket?["bandit_king"]:null);
   if(!special)return false;
+  await showSpecialEncounterAlert(special,forcedByBlackMarket);
+  const result=await fightFormalSpecial(ctx,special);
   if(forcedByBlackMarket){
    state.pendingBlackMarketEncounter=false;
    save(false);
   }
-  await showSpecialEncounterAlert(special,forcedByBlackMarket);
-  const result=await fightFormalSpecial(ctx,special);
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.specialEncounters.push({special,result,forcedByBlackMarket});
   if(!result.win)showSpecialResult(ctx,special,result);
