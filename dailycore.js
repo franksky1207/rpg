@@ -51,14 +51,15 @@
  function dailyDungeonLimit(mode){
   return Math.max(0,Math.floor(Number(DEFAULT_DAILY_LIMITS[mode])||0));
  }
- function dailyDungeonRemaining(mode){
-  const row=modeState(mode),limit=dailyDungeonLimit(mode);
-  return row?Math.max(0,limit-finiteInt(row.used,0)):0;
+ function dailyDungeonStatus(mode){
+  const row=modeState(mode),limit=dailyDungeonLimit(mode),used=row?Math.min(limit,finiteInt(row.used,0)):0;
+  return {mode:String(mode||""),used,remaining:Math.max(0,limit-used),limit};
  }
+ function dailyDungeonRemaining(mode){return dailyDungeonStatus(mode).remaining;}
  function consumeDailyDungeonUse(mode,amount=1){
   const row=modeState(mode),limit=dailyDungeonLimit(mode),need=Math.max(1,finiteInt(amount,1));
   if(!row||limit<=0)return {ok:false,reason:"unsupported_daily_mode",used:0,remaining:0,limit};
-  const used=finiteInt(row.used,0);
+  const used=Math.min(limit,finiteInt(row.used,0));
   if(used+need>limit)return {ok:false,reason:"daily_limit",used,remaining:Math.max(0,limit-used),limit};
   row.used=used+need;
   return {ok:true,used:row.used,remaining:Math.max(0,limit-row.used),limit};
@@ -72,6 +73,7 @@
  window.normalizeDailyState=normalizeDailyState;
  window.ensureDailyState=ensureDailyState;
  window.dailyDungeonLimit=dailyDungeonLimit;
+ window.dailyDungeonStatus=dailyDungeonStatus;
  window.dailyDungeonRemaining=dailyDungeonRemaining;
  window.consumeDailyDungeonUse=consumeDailyDungeonUse;
 
