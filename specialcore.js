@@ -44,14 +44,6 @@
   return drops;
  };
 
- window.specialApplyShopDiscount=function(levels){
-  const n=Math.max(0,Math.floor(levels||0));
-  if(!n)return 0;
-  const before=state.shop.refreshIndex||0;
-  state.shop.refreshIndex=Math.max(0,before-n);
-  return before-state.shop.refreshIndex;
- };
-
  window.specialFightCore=function(enemy){
   const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
   state.hp=combat.hp;
