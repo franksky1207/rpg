@@ -1,4 +1,4 @@
-const navs=[["adventure","冒險"],["character","角色"],["inventory","背包"],["shop","商店"],["settings","設定"]];
+const navs=[["adventure","冒險"],["character","角色"],["inventory","背包"],["settings","設定"]];
 const EQUIPMENT_TYPES=["weapon","helmet","armor","shoes","accessory"];
 const EQUIPMENT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
 const STAT_LABELS={atk:"攻擊",def:"防禦",hp:"HP",crit:"暴擊",dodge:"閃避"};
@@ -17,7 +17,7 @@ const EXP_CURVE=Object.freeze({killMin:5,killRange:495,scale:142});
 window.MAX_LEVEL=MAX_LEVEL;window.VIP_MAX_LEVEL=VIP_MAX_LEVEL;window.EXP_CURVE=EXP_CURVE;
 let state,view="home",selectedMap=0,selectedEnemy=0,selectedItem=null,battleLogs=[],battleBusy=false;
 let upgradeDropNoticePending=false;
-let shopMutationBusy=false;
+let lostGearMutationBusy=false;
 let vipThreshold=null,vipLevelFromPoints=null,normalizeVipState=null;
 const newStateNormalizers=[];
 
@@ -56,12 +56,11 @@ function normalizeWorldState(target){
  for(let i=0;i<MAPS.length-1;i++)if(target.bossKilled[i])target.unlockedMap=Math.max(target.unlockedMap,i+1);return target;
 }
 window.normalizeWorldSaveState=normalizeWorldState;
-function newShopState(){return {items:[],refreshIndex:0,resetAvailableAt:0,initialized:false}}
 function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,makeItem(1,0,"normal",0,type)]))}
 function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
- let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],shop:newShopState(),settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
  newStateNormalizers.forEach(normalizer=>{const normalized=normalizer(next);if(normalized&&typeof normalized==="object")next=normalized;});
  return next;
 }
@@ -100,21 +99,10 @@ function canBoss(mapIdx){return enemyUnlocked(mapIdx,4)&&!state.bossLocked?.[map
 function addProgress(mapIdx,enemyKind){if(enemyKind!=="elite"||!state.bossLocked?.[mapIdx])return;state.bossProgress[mapIdx]=Math.min(10,(state.bossProgress[mapIdx]||0)+1);if(state.bossProgress[mapIdx]>=10)state.bossLocked[mapIdx]=false}
 function addItem(it,options={}){if(!it)return {kept:false,sold:0};let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);if(it.q===5||(state.settings.keepUpgrade&&upgrade)){state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0}}if(it.q<=4&&state.settings.autoSell[it.q]){const sold=specializationSellValue(it,options.useTestSpecializations===true);state.gold+=sold;return {kept:false,sold}}state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0}}
 function gainExp(n,logs=[]){state.exp+=Math.max(0,Number(n)||0);let ups=0;while(state.level<MAX_LEVEL&&state.exp>=expNeed(state.level)){state.exp-=expNeed(state.level);state.level++;ups++;state.hp=playerCombatStats().hp;logs.push(`升級！你到達 Lv.${state.level}，HP 已完全恢復。`)}if(state.level>=MAX_LEVEL)state.exp=0;return ups}
-function applyDeathPenalty(logs=[]){let loss=state.level>=MAX_LEVEL?0:ceil(expNeed(state.level)*.10),actual=Math.min(state.exp,loss);state.exp=Math.max(0,state.exp-loss);let dropped=null,protectedByVip20=false;const worn=EQUIPMENT_TYPES.map(slot=>[slot,state.equipment[slot]]).filter(([,it])=>!!it),lossRoll=worn.length&&Math.random()<.30;if(lossRoll){if((state.vipLevel||0)>=20)protectedByVip20=true;else{const [slot,it]=worn[Math.floor(Math.random()*worn.length)];state.equipment[slot]=null;dropped=it;state.lostGear.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),item:it,cost:ceil(it.buy*2),lostAt:Date.now()})}}state.hp=playerCombatStats().hp;logs.push(`死亡懲罰：EXP -${actual}${loss>actual?`（目前 EXP 已扣至 0）`:""}。`);if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。可前往商店贖回。`);else logs.push(`本次沒有遺失裝備。`);return {expLost:actual,dropped,protectedByVip20}}
+function applyDeathPenalty(logs=[]){let loss=state.level>=MAX_LEVEL?0:ceil(expNeed(state.level)*.10),actual=Math.min(state.exp,loss);state.exp=Math.max(0,state.exp-loss);let dropped=null,protectedByVip20=false;const worn=EQUIPMENT_TYPES.map(slot=>[slot,state.equipment[slot]]).filter(([,it])=>!!it),lossRoll=worn.length&&Math.random()<.30;if(lossRoll){if((state.vipLevel||0)>=20)protectedByVip20=true;else{const [slot,it]=worn[Math.floor(Math.random()*worn.length)];state.equipment[slot]=null;dropped=it;state.lostGear.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),item:it,cost:ceil(it.buy*2),lostAt:Date.now()})}}state.hp=playerCombatStats().hp;logs.push(`死亡懲罰：EXP -${actual}${loss>actual?`（目前 EXP 已扣至 0）`:""}。`);if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。可前往背包的「遺失裝備贖回」取回。`);else logs.push(`本次沒有遺失裝備。`);return {expLost:actual,dropped,protectedByVip20}}
 function itemHtmlPlain(it){return `【${QUALITY[it.q].n}】${it.name} Lv.${it.level}`}
-
-const SHOP_REFRESH_COSTS=[100,200,400,800,1600,3200,6400,12800];
-function currentShopMap(){return Math.max(0,Math.min(state.unlockedMap,Math.floor((state.level-1)/5),MAPS.length-1))}
-function makeShopItems(mapIdx=currentShopMap()){let m=MAPS[mapIdx],arr=[];for(let i=0;i<3;i++){let lv=Math.max(m.min,Math.min(m.max,state.level+Math.floor(Math.random()*3)-1));let r=Math.random()*100,q=r<48?0:r<82?1:r<96?2:r<99.3?3:4;arr.push(makeItem(lv,mapIdx,"normal",q))}return arr}
-function ensureShop(){if(state.shop.initialized!==true){state.shop.items=makeShopItems();state.shop.initialized=true}}
-function shopRefreshCost(){return SHOP_REFRESH_COSTS[Math.min(7,state.shop.refreshIndex||0)]}
-function claimShopMutation(){if(shopMutationBusy)return false;shopMutationBusy=true;setTimeout(()=>{shopMutationBusy=false},250);return true}
-function paidShopRefresh(){let cost=shopRefreshCost();if(state.gold<cost)return {ok:false,reason:"金幣不足。"};if(!claimShopMutation())return {ok:true,ignored:true};state.gold-=cost;state.shop.items=makeShopItems();state.shop.initialized=true;state.shop.refreshIndex=Math.min(7,(state.shop.refreshIndex||0)+1);save(false);return {ok:true}}
-function freeShopRefresh(mapIdx=currentShopMap()){state.shop.items=makeShopItems(mapIdx);state.shop.initialized=true;save(false)}
-function shopPurchase(i){let it=state.shop.items[i];if(!it)return {ok:false,reason:"商品不存在。"};if(state.gold<it.buy)return {ok:false,reason:"金幣不足。"};if(!claimShopMutation())return {ok:true,ignored:true};state.gold-=it.buy;state.inventory.push(it);state.shop.items.splice(i,1);state.shop.refreshIndex=Math.max(0,(state.shop.refreshIndex||0)-1);save(false);return {ok:true,it}}
-function canResetShopPrice(){return (state.shop.refreshIndex||0)>=7&&Date.now()>=(state.shop.resetAvailableAt||0)}
-function resetShopPrice(){if((state.shop.refreshIndex||0)<7)return {ok:false,reason:"刷新價格尚未達 12,800。"};let now=Date.now(),at=state.shop.resetAvailableAt||0;if(now<at)return {ok:false,reason:"重置功能仍在冷卻中。"};if(!claimShopMutation())return {ok:true,ignored:true};state.shop.refreshIndex=0;state.shop.resetAvailableAt=now+60*60*1000;save(false);return {ok:true}}
-function redeemLostGear(i){let lost=state.lostGear[i];if(!lost)return {ok:false,reason:"找不到這件遺失裝備。"};if(state.gold<lost.cost)return {ok:false,reason:"金幣不足。"};if(!claimShopMutation())return {ok:true,ignored:true};state.gold-=lost.cost;state.inventory.push(lost.item);state.lostGear.splice(i,1);save(false);return {ok:true,item:lost.item}}
+function claimLostGearMutation(){if(lostGearMutationBusy)return false;lostGearMutationBusy=true;setTimeout(()=>{lostGearMutationBusy=false},250);return true}
+function redeemLostGear(i){let lost=state.lostGear[i];if(!lost)return {ok:false,reason:"找不到這件遺失裝備。"};if(state.gold<lost.cost)return {ok:false,reason:"金幣不足。"};if(!claimLostGearMutation())return {ok:true,ignored:true};state.gold-=lost.cost;state.inventory.push(lost.item);state.lostGear.splice(i,1);save(false);return {ok:true,item:lost.item}}
 
 function syncUpgradeDropNotice(){try{const modal=document.getElementById("battleResultModal"),detail=document.getElementById("battleResultDetail");if(!modal||!detail||!modal.classList.contains("show")||!upgradeDropNoticePending)return;if(!detail.querySelector(".upgrade-drop-notice"))detail.insertAdjacentHTML("beforeend",`<div class="notice upgrade-drop-notice" style="margin-top:12px"><b>有可提升目前裝備的掉落，可前往背包查看。</b></div>`);upgradeDropNoticePending=false}catch(e){}}
 if(typeof MutationObserver!=="undefined"){const resultModal=document.getElementById("battleResultModal");if(resultModal){new MutationObserver(syncUpgradeDropNotice).observe(resultModal,{attributes:true,attributeFilter:["class"],childList:true,subtree:true})}}
