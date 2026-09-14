@@ -122,15 +122,23 @@
    }
 
    if((state.vipLevel||0)>=10&&Math.random()<.10){
-    const bonusCtx=getSpecialRewardContext(special);
-    const bonus=grantSpecialReward(bonusCtx,baseXp,baseGold,dropLevel,selectedMap);
     result.vip10Triggered=true;
-    result.bonusRewardContext=bonusCtx;
-    result.xp+=bonus.xp;
-    result.convertedGold+=bonus.convertedGold;
-    result.gold+=bonus.gold;
-    result.drops.push(...bonus.drops);
-    result.shopDown+=bonus.shopDown;
+    if(special.id==="bandit_king"){
+     const bonusGoldBase=ceil(baseGold*2.5);
+     const bonusGold=typeof specializationAdjustedGold==="function"?specializationAdjustedGold(bonusGoldBase):bonusGoldBase;
+     state.gold+=bonusGold;
+     result.gold+=bonusGold;
+     result.bonusRewardContext={blackMarketGoldOnly:true};
+    }else{
+     const bonusCtx=getSpecialRewardContext(special);
+     const bonus=grantSpecialReward(bonusCtx,baseXp,baseGold,dropLevel,selectedMap);
+     result.bonusRewardContext=bonusCtx;
+     result.xp+=bonus.xp;
+     result.convertedGold+=bonus.convertedGold;
+     result.gold+=bonus.gold;
+     result.drops.push(...bonus.drops);
+     result.shopDown+=bonus.shopDown;
+    }
    }
   }else{
    result.penalty=applyDeathPenalty([]);
