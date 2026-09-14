@@ -1,0 +1,54 @@
+name: Void Floor Display
+
+on:
+  push:
+    paths:
+      - '.github/workflows/void-floor-display.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add current void floor to dungeon card
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('dungeonui.js')
+          s = p.read_text()
+
+          old = '.dungeon-mode-card h3{margin:0;color:#d7c1ee;font-family:Georgia,"Noto Serif TC",serif}.dungeon-mode-card p{color:#d6cce3;line-height:1.65;flex:1}.dungeon-mode-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.dungeon-mode-reward{margin-top:5px;color:#e6c979;font-size:12px;font-weight:700;line-height:1.4}.dungeon-unlock-label{font-size:12px;color:#a99db8;white-space:nowrap}'
+          new = '.dungeon-mode-card h3{margin:0;color:#d7c1ee;font-family:Georgia,"Noto Serif TC",serif}.dungeon-mode-card p{color:#d6cce3;line-height:1.65;flex:1}.dungeon-mode-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.dungeon-mode-reward{margin-top:5px;color:#e6c979;font-size:12px;font-weight:700;line-height:1.4}.dungeon-current-floor{margin:14px 0 0;color:#8fe8ff;font-size:14px;font-weight:700;line-height:1.5}.dungeon-unlock-label{font-size:12px;color:#a99db8;white-space:nowrap}'
+          if old not in s:
+              raise SystemExit('Expected dungeon style source not found')
+          s = s.replace(old, new, 1)
+
+          old = '   const unlocked=lv>=need,implemented=!!DUNGEON_IMPLEMENTED[key],canEnter=unlocked&&implemented&&d.attempts>0;\n   let buttonLabel="尚未解鎖";if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&implemented&&d.attempts<=0)buttonLabel="挑戰次數不足";else if(canEnter)buttonLabel=`進入${title}`;\n   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div><p>${desc}</p><div class="dungeon-cost">消耗：1 次副本可挑戰次數</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode(\'${key}\')`:"void(0)"}">${buttonLabel}</button></section>`;'
+          new = '   const unlocked=lv>=need,implemented=!!DUNGEON_IMPLEMENTED[key],canEnter=unlocked&&implemented&&d.attempts>0;\n   let buttonLabel="尚未解鎖";if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&implemented&&d.attempts<=0)buttonLabel="挑戰次數不足";else if(canEnter)buttonLabel=`進入${title}`;\n   const currentFloor=unlocked&&key==="tower"&&typeof getVoidMirageNextFloor==="function"?Math.max(1,Math.floor(Number(getVoidMirageNextFloor())||1)):null;\n   const currentFloorHtml=currentFloor?`<div class="dungeon-current-floor">目前層數：第 ${currentFloor.toLocaleString()} 層</div>`:"";\n   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">消耗：1 次副本可挑戰次數</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode(\'${key}\')`:"void(0)"}">${buttonLabel}</button></section>`;'
+          if old not in s:
+              raise SystemExit('Expected dungeon card source not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          p = Path('index.html')
+          s = p.read_text()
+          old = '<script src="dungeonui.js?v=20260914-maintenance1"></script>'
+          new = '<script src="dungeonui.js?v=20260914-void-floor1"></script>'
+          if old not in s:
+              raise SystemExit('Expected dungeonui cache tag not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dungeonui.js index.html
+          git commit -m 'Show current void floor on dungeon card'
+          git push origin main
