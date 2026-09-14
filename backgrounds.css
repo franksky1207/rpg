@@ -10,7 +10,6 @@
   #main>.function-page:has(>.character-layout),
   #main>.specialization-page,
   #main>.function-page:has(>.grid),
-  #main>.function-page:has(>.card .shop-table-wrap),
   #main>.guide-page,
   #main>.function-page:has(#settingsTitle),
   #main>.dungeon-page-shell,
@@ -62,8 +61,7 @@
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1");
   }
-  #main>.function-page:has(>.grid),
-  #main>.function-page:has(>.card .shop-table-wrap){
+  #main>.function-page:has(>.grid){
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1");
@@ -169,7 +167,6 @@
   #main>.function-page:has(>.character-layout),
   #main>.specialization-page,
   #main>.function-page:has(>.grid),
-  #main>.function-page:has(>.card .shop-table-wrap),
   #main>.guide-page,
   #main>.function-page:has(#settingsTitle),
   #main>.dungeon-page-shell,
@@ -220,8 +217,7 @@
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1");
   }
-  #main>.function-page:has(>.grid),
-  #main>.function-page:has(>.card .shop-table-wrap){
+  #main>.function-page:has(>.grid){
     background-image:
       linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
       url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1");
