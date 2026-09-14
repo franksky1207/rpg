@@ -9,7 +9,7 @@
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonProgressState","dungeonFightCore","cleanupLegacyDungeonFields",
+  "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields",
   "registerNewStateNormalizer","getNewStateNormalizerCount",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
@@ -24,6 +24,9 @@
 
  const retiredDungeonRunApis=["canStartDungeonRun","beginDungeonRun","getActiveDungeonRun","finishDungeonRun"];
  retiredDungeonRunApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_DUNGEON_RUN_API",`舊共享副本流程 ${name} 不應再存在`);});
+ const retiredVoidApis=["getVoidMirageNextFloor","voidMirageFirstClearPoints"];
+ retiredVoidApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_VOID_API",`舊虛空相容函式 ${name} 不應再存在`);});
+ if(typeof window.VOID_MIRAGE_GM_UI_V2!=="undefined")fail("LEGACY_VOID_GM_MARKER","已退休的虛空 GM UI 標記不應再載入");
 
  if(Number(SAVE_VERSION)!==11)fail("SAVE_VERSION",`SAVE_VERSION 應為 11，實際 ${SAVE_VERSION}`);
  if(Number(window.SAVE_SCHEMA_VERSION)!==11)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 11，實際 ${window.SAVE_SCHEMA_VERSION}`);
@@ -61,7 +64,6 @@
   if(probe.daily.bounty.used!==20||probe.daily.arena.used!==20)fail("DAILY_NORMALIZE_CLAMP","每日次數 normalizer 應直接限制在 20",probe.daily);
  }
  if(window.BATCH5_UI_READY!==true)fail("BATCH5_UI","第五批共用 UI 未完成載入");
- if(window.VOID_MIRAGE_GM_UI_V2!==true)fail("VOID_GM_UI","虛空 GM 舊版介面未停用");
  const clock=document.getElementById("gameDailyClock"),clockTime=document.getElementById("gameDailyClockTime");
  if(!clock||!clockTime)fail("DAILY_CLOCK","主介面每日時鐘未建立");
  else if(!/^\d{2}:\d{2}:\d{2}$/.test(clockTime.textContent||""))fail("DAILY_CLOCK_FORMAT",`時鐘格式異常：${clockTime.textContent||""}`);
@@ -88,9 +90,9 @@
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
 
- if(state?.dungeon?.arena&&typeof window.ensureDungeonProgressState==="function"){
+ if(state?.dungeon?.arena&&typeof window.ensureDungeonState==="function"){
   const arenaRef=state.dungeon.arena;
-  window.ensureDungeonProgressState();
+  window.ensureDungeonState();
   if(state.dungeon.arena!==arenaRef)fail("ARENA_REFERENCE","競技場 normalize 重新替換了 arena 物件參照");
  }
  if(state&&typeof window.ensureDailyState==="function"){
