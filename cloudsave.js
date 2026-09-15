@@ -1,5 +1,5 @@
 (function(){
- const CLOUD_SAVE_VERSION=1;
+ const CLOUD_SAVE_VERSION=2;
  const TABLE="game_saves";
  const LOCAL_META_KEY="civilization_frontline_local_save_meta_v1";
  const LOCAL_OWNER_KEY="civilization_frontline_local_owner_v1";
@@ -50,7 +50,7 @@
   const mismatch=ownerMismatch();
   const cloud=cloudMeta===undefined?null:cloudMeta;
   const cloudEmpty=cloudMeta===undefined?"正在讀取雲端資訊…":"尚未建立雲端存檔";
-  return `<section id="civilizationCloudSaveSettings" class="civilization-cloud-save-settings"><h3>雲端存檔</h3><div class="muted cloud-save-intro">雲端存檔只會在你按下按鈕時手動傳輸，不會自動同步。</div>${mismatch?`<div class="cloud-save-warning">這台裝置目前的本機存檔屬於另一個登入帳號。為避免誤覆蓋，暫時禁止上傳；你仍可下載目前帳號的雲端存檔來覆蓋本機。</div>`:""}<div class="cloud-save-compare">${rowHtml("本機存檔",local,"尚無本機存檔")}${rowHtml("雲端存檔",cloud,cloudEmpty)}</div><div id="civilizationCloudSaveStatus" class="cloud-save-status" hidden></div><div class="cloud-save-actions"><button id="civilizationCloudRefresh" type="button" class="btn" onclick="civilizationCloudRefresh()">重新整理雲端資訊</button><button id="civilizationCloudUpload" type="button" class="btn blue" onclick="civilizationCloudUpload()" ${mismatch?"disabled":""}>上傳本機存檔</button><button id="civilizationCloudDownload" type="button" class="btn primary" onclick="civilizationCloudDownload()" ${cloudMeta?"":"disabled"}>下載雲端存檔</button></div><div class="muted cloud-save-note">下載雲端存檔會覆蓋這台裝置目前的本機進度；下載時會重設離線計時起點，避免把跨裝置傳輸時間誤算成離線收益。</div></section>`;
+  return `<section id="civilizationCloudSaveSettings" class="civilization-cloud-save-settings"><h3>雲端存檔</h3><div class="muted cloud-save-intro">雲端存檔只會在你按下按鈕時手動傳輸，不會自動同步。</div>${mismatch?`<div class="cloud-save-warning">這台裝置目前的本機存檔屬於另一個登入帳號。為避免誤覆蓋，暫時禁止上傳；你仍可下載目前帳號的雲端存檔來覆蓋本機。</div>`:""}<div class="cloud-save-compare">${rowHtml("本機存檔",local,"尚無本機存檔")}${rowHtml("雲端存檔",cloud,cloudEmpty)}</div><div id="civilizationCloudSaveStatus" class="cloud-save-status" hidden></div><div class="cloud-save-actions"><button id="civilizationCloudUpload" type="button" class="btn blue" onclick="civilizationCloudUpload()" ${mismatch?"disabled":""}>上傳本機存檔</button><button id="civilizationCloudDownload" type="button" class="btn primary" onclick="civilizationCloudDownload()" ${cloudMeta?"":"disabled"}>下載雲端存檔</button></div><div class="muted cloud-save-note">下載雲端存檔會覆蓋這台裝置目前的本機進度；下載時會重設離線計時起點，避免把跨裝置傳輸時間誤算成離線收益。</div></section>`;
  }
  function mount(){
   const account=document.getElementById("civilizationAccountSettings");
@@ -72,7 +72,7 @@
  }
  function setBusy(next){
   cloudBusy=!!next;
-  ["civilizationCloudRefresh","civilizationCloudUpload","civilizationCloudDownload"].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=cloudBusy||(id==="civilizationCloudUpload"&&ownerMismatch())||(id==="civilizationCloudDownload"&&!cloudMeta);});
+  ["civilizationCloudUpload","civilizationCloudDownload"].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=cloudBusy||(id==="civilizationCloudUpload"&&ownerMismatch())||(id==="civilizationCloudDownload"&&!cloudMeta);});
  }
  function errorText(error){
   const raw=String(error?.message||error||"").trim();
@@ -163,7 +163,6 @@
  function initialize(){
   installSaveWrapper();ensureLocalIdentity();
   window.civilizationCloudSave={version:CLOUD_SAVE_VERSION,mount,refreshMeta,upload,download,localSnapshot,getCloudMeta:()=>cloudMeta};
-  window.civilizationCloudRefresh=refreshMeta;
   window.civilizationCloudUpload=upload;
   window.civilizationCloudDownload=download;
   mount();
