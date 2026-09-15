@@ -34,7 +34,8 @@
  const baseGmHtml=window.gmHtml;
  if(typeof baseGmHtml==="function")window.gmHtml=function(){
   let html=baseGmHtml();
-  if(!html.includes('gmHubSwitch(\'manage\')')||!html.includes('gm-hub-tab active'))return html;
+  const manageActive=`class="gm-hub-tab active" onclick="gmHubSwitch('manage')"`;
+  if(!html.includes(manageActive))return html;
   const marker='<details class="gm-hub-section"><summary>副本管理</summary>';
   const block=section(window.gmEnhancementManagementHtml());
   return html.includes(marker)?html.replace(marker,block+marker):html.replace('<div class="controls gm-hub-close">',block+'<div class="controls gm-hub-close">');
