@@ -41,7 +41,12 @@
   if(typeof window.enhancementStoneSettlementSummaryHtml!=="function")fail("SETTLEMENT_REWARD_UI","戰鬥強化石結算顯示 API 未載入");
   else{
    const html=window.enhancementStoneSettlementSummaryHtml(ctx);
-   if(!html.includes("打怪掉落")||!html.includes("AUTO 出售")||!html.includes("基礎強化石 +5")||!html.includes("進階強化石 +1"))fail("SETTLEMENT_REWARD_CONTENT","戰鬥強化石結算來源顯示異常");
+   if(!html.includes("enhancement-stone-summary-row")||!html.includes("基礎強化石")||!html.includes("+6")||!html.includes("進階強化石")||!html.includes("+1"))fail("SETTLEMENT_REWARD_CONTENT","戰鬥強化石全寬摘要顯示異常");
+   if(html.includes("打怪掉落")||html.includes("AUTO 出售"))fail("SETTLEMENT_REWARD_DUPLICATE_SOURCE","戰鬥強化石摘要不應再重複顯示來源說明");
+   const basicOnly={enhancementRewards:window.blankBattleEnhancementRewards()};
+   window.addBattleEnhancementReward(basicOnly,"battle",{basic:3,advanced:0});
+   const basicHtml=window.enhancementStoneSettlementSummaryHtml(basicOnly);
+   if(!basicHtml.includes("基礎強化石")||!basicHtml.includes("+3")||basicHtml.includes("進階強化石"))fail("SETTLEMENT_REWARD_SINGLE_TYPE","單一基礎強化石獎勵不應顯示空的進階欄位");
   }
  }
  window.ENHANCEMENT_FINAL_INTEGRITY={passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
