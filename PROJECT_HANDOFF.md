@@ -26,6 +26,7 @@
 - `CIVILIZATION_AUTH_VERSION = 6`
 - `CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`
 - `CIVILIZATION_CLOUD_SAVE_VERSION = 2`
+- `CLOUD_SAVE_GUIDE_VERSION = 2`
 - `ACCOUNT_CLOUD_INTEGRITY_VERSION = 6`
 - 世界：10 大區域、100 張主線地圖、Lv1～500
 - 桌面版＋手機版；iPhone Safari 是重要真機環境。
@@ -39,18 +40,20 @@
 
 1. 修改前一定重新讀取 GitHub `main` 的相關實際檔案，不能只靠 handoff 或聊天記憶。
 2. 涉及載入順序、wrapper、全域函式時，重新檢查完整 `index.html`。
-3. 使用者說「先討論／先不要修改／先檢查」時禁止寫入 GitHub。
-4. 使用者明確說「做／修改／執行／第 N 批」時，可直接修改 `main`。
-5. 修改完成後要重新讀取修改後的 `main`，確認內容、載入順序與相依性。
-6. JS/CSS 正式改動後同步更新 `index.html` cache-bust；同名背景 WebP 重製時同步 bump `backgrounds.css` URL query。
-7. 不做需求以外的順手重構，不偷偷改平衡、離線目標或存檔語意。
-8. 優先修改真正正式 owner；不要新增 late wrapper、第二套公式、DOM 文字解析或第二套結算。
+3. 使用者說「先討論／先不要修改／先檢查」時，禁止寫入 GitHub。
+4. 使用者明確說「做／修改／執行／第 N 批」時，可直接修改 GitHub `main`，不必再次詢問是否要執行。
+5. 修改完成後要重新讀取修改後的 `main`，確認內容、載入順序與相依性；不可只相信寫入工具回傳成功。
+6. JS / CSS 正式改動後同步更新 `index.html` cache-bust；同名背景 WebP 重製時同步 bump `backgrounds.css` URL query。
+7. 不做需求以外的順手重構，不偷偷改平衡、離線目標、存檔語意或玩家流程。
+8. 優先修改真正正式 owner；不要新增 late wrapper、fallback、DOM 文字解析、第二套公式或第二套結算。
 9. 存檔結構改動要同步檢查 `data.js`、`savemigration.js`、normalizer、`runtimeintegrity.js` 與舊存檔相容性。
 10. 桌機與手機 UI 一起檢查。
 11. 神話裝備只禁止 **AUTO 自動出售**；未鎖定神話仍可手動單件確認出售，也可符合玩家主動的一鍵出售條件。
 12. 一次性 GitHub Actions workflow 若只做資產轉換，輸出驗證進 `main` 後應刪除 workflow，但保留 source 母圖。
 13. 帳號／雲端功能不得引入自動同步語意；上傳與下載都必須由玩家主動操作，並在覆蓋前顯示本機／雲端時間、Lv、EXP。
 14. Supabase 前端只能使用 Publishable key；不得把 Secret key／service_role 放進 repo 或前端。
+15. 帳號 gate 與設定頁帳號區塊不得恢復持續掃描整個 `#main` 的 `MutationObserver`；曾實際造成桌機與手機主畫面嚴重卡頓。
+16. 不可把已退休的 JSON 檔案匯入／匯出重新當成正式玩家搬移流程。
 
 ---
 
@@ -61,9 +64,9 @@
 - 普通怪／菁英怪依進度解鎖。
 - 普通怪、菁英怪與 Boss 都可選擇單場或連續戰鬥；三者共用同一套主線 continuous pipeline、停止按鈕與結算。
 - `ui.js` 是正式主線戰鬥入口 owner：`startBattles()` 讀取 `selectedBattleCount`、執行 `healBeforeBattle()`，再把同一個 count 傳給 `beginCombat(count)`；`hpflow.js` 不再覆寫主線 UI 或戰鬥入口。
-- `CONTINUOUS_BATTLE_COUNT = "continuous"` 由 `ui.js` 統一提供；`battlepipeline.js` 只讀取這個正式 marker，不再維護第二份字串常數。
-- `combatpacing.js` 是主線場間節奏 owner，`MAIN_BATTLE_PACING_VERSION = 1`；`mainBattleGapMs(kind)` 正式提供 normal 140ms、elite 220ms、Boss 140ms，`battlepipeline.js` 不再維護第二份 gap 常數。
-- Boss 首次擊敗會解鎖下一張地圖；若當時使用連續戰鬥，仍留在原本地圖繼續挑戰同一隻 Boss，不自動跳圖。
+- `CONTINUOUS_BATTLE_COUNT = "continuous"` 由 `ui.js` 統一提供；`battlepipeline.js` 只讀取這個正式 marker，不維護第二份字串常數。
+- `combatpacing.js` 是主線場間節奏 owner，`MAIN_BATTLE_PACING_VERSION = 1`；`mainBattleGapMs(kind)` 正式提供 normal 140ms、elite 220ms、Boss 140ms。
+- Boss 首次擊敗會解鎖下一張地圖；若使用連續戰鬥，仍留在原本地圖繼續挑戰同一隻 Boss，不自動跳圖。
 - Boss 戰敗會立即停止連續戰鬥、鎖定再挑戰並把 `bossProgress` 歸零；需重新擊敗該地圖菁英 10 隻才會再次出現。
 - Boss 不觸發特殊怪，也不消耗黑市情報。
 - Boss 連戰不使用 `backgroundprogress.js` 的主線背景 catch-up；切到背景分頁不會補算 Boss 場次。
@@ -127,8 +130,7 @@
 - Boss、不合條件或戰敗不消耗情報。
 - VIP10 若黑市頭目獎勵重複發動，只重複金幣，不給第二份情報。
 - `blackmarketsettlement.js` 已退休，提示已整併 `settlementui.js`。
-
-特殊怪與副本**不直接掉落強化石**，但其掉落裝備若實際 AUTO 出售，仍依正式裝備出售規則取得出售強化石，並可納入戰鬥結算摘要。
+- 特殊怪與副本不直接掉落強化石；若其掉落裝備實際被出售，仍可依正式裝備出售規則取得強化石。
 
 ---
 
@@ -143,7 +145,18 @@ VIP：
 - VIP10 特殊怪獎勵 10% 再發動。
 - VIP20 防止死亡裝備遺失，EXP 懲罰仍依規則。
 
-8 種專精、各 Lv60：training、scavenge、appraisal、initiative、combo、penetration、counter、drain。升級到目標 level 的費用為 `1000 × level²`。
+8 種專精、各 Lv60：
+
+- `training`
+- `scavenge`
+- `appraisal`
+- `initiative`
+- `combo`
+- `penetration`
+- `counter`
+- `drain`
+
+升級到目標 level 的費用為 `1000 × level²`。
 
 ---
 
@@ -153,7 +166,7 @@ VIP：
 
 - 懸賞：Lv5 解鎖，每日最多 20 場真正開始的戰鬥。
 - 競技場：Lv15 解鎖，每日最多 20 輪，每輪 3 戰，中間不回血。
-- 虛空幻境：Lv25 解鎖，無最高層；起始 `max(1, 歷史最高-100)`；每10層 Boss；每日基礎獎勵＝當日最高層×2 VIP積分，每日只能領一次。
+- 虛空幻境：Lv25 解鎖，無最高層；起始 `max(1, 歷史最高-100)`；每 10 層 Boss；每日基礎獎勵＝當日最高層×2 VIP積分，每日只能領一次。
 - 主線與離線收益不增加副本額度／進度。
 - 副本怪物不直接掉強化石。
 
@@ -193,7 +206,7 @@ state.enhancement = {
 正式 owner：`enhancementrewards.js`＋`combatcore.js`。
 
 - normal：1 基礎。
-- elite：70% 1 基礎、30% 2 基礎。
+- elite：70% 1 基礎、30% 2 基礎；理論期望值 1.3。
 - boss：1 進階。
 - 資格：`playerLevel - monsterLevel < 10`。
 - 玩家高於怪物 10 級（含）以上時不掉強化石，只抑制石頭，不影響其他獎勵。
@@ -210,35 +223,27 @@ state.enhancement = {
 - `addItem()`／`handleUnequippedItem()` 回傳實際已發放的 `enhancementStones`；戰鬥／UI 只統計與顯示，不重新按品質計算或二次 grant。
 - 批次出售使用 `enhancementStoneSaleRewards()`／`grantEnhancementStoneSaleRewards()`。
 - `EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION = 2`。
-- `enhancementrewardintegration.js` 已退休並刪除，不得恢復第二層出售 grant。
 
 ## 9.5 戰鬥結算
 
-- `battlepipeline.js` 的 context 正式累積 `battle` 與 `autoSale` 兩類強化石摘要。
+- `battlepipeline.js` context 正式累積 battle 與 autoSale 兩類強化石摘要。
 - `settlementui.js` 顯示單一全寬「強化石獎勵」橫列。
-- 不再顯示重複的「打怪掉落」「AUTO 出售」第二層說明。
-- 單一種類只顯示實際取得的石頭；若同一輪不同來源同時得到基礎＋進階，兩者在同一橫列顯示。
+- 不重複顯示第二層「打怪掉落」「AUTO 出售」說明。
+- 同一輪若同時得到基礎＋進階，兩者在同一橫列顯示。
 - 戰鬥結算立即換裝後若舊裝 AUTO 出售，因為這筆出售發生在原結算產生之後，仍會另外提示金幣與石頭。
 
-## 9.6 強化 UI 正式 owner
+## 9.6 強化 UI 與舊存檔
 
 - 首頁「強化」入口與 `view="enhancement"` render route 已正式整併 `ui.js`。
-- `enhancementnav.js` 已刪除。
-- `enhancementui.js` 正式負責頁面、五張欄位卡、確認 modal、實際主能力預覽與強化原子扣款。
-- 強化成功後不跳第二個成功 alert，直接重新 render 最新數值。
-- 五張卡桌機版維持相同寬度；第五張不跨滿整列；手機維持單欄。
-- 強化頁 CSS 已移至 `functionuipolish.css`，不再由 `enhancementui.js` 注入 `<style>`。
+- `enhancementui.js` 負責頁面、五張欄位卡、確認 modal、實際主能力預覽與強化原子扣款。
+- 強化成功後不跳第二個成功 alert，直接 render 最新數值。
+- 五張卡桌機維持相同寬度；手機單欄。
+- 強化頁 CSS 已移至 `functionuipolish.css`。
 - `ENHANCEMENT_UI_VERSION = 4`。
-- `enhancementfinalize.js` 已刪除；「實際主能力」確認列已直接整併 `enhancementui.js`。
-
-## 9.7 舊存檔相容
-
-- Save Schema 仍為 12，本輪優化沒有改存檔語意，所以不升版。
-- `engine.js -> newState()` 已直接建立 enhancement 初始資料，不再由 enhancement wrapper 補。
-- 正式 migration pipeline 直接呼叫 `normalizeEnhancementState()`。
-- `normalizeEnhancementState()` 會把石頭正規化為非負整數、五欄等級 clamp 0～20，並補齊舊存檔缺少的 enhancement。
-- 正式 newState normalizer count 維持 4。
-- `enhancementmigration.js` 現在只負責 enhancement 存檔相容性 probe，不再重複測整套平衡／戰鬥規則。
+- Save Schema 仍為 12；本輪沒有改存檔語意。
+- `engine.js -> newState()` 直接建立 enhancement 初始資料。
+- migration pipeline 直接呼叫 `normalizeEnhancementState()`。
+- `normalizeEnhancementState()` 會正規化石頭為非負整數、五欄 clamp 0～20，並補齊舊存檔缺少的 enhancement。
 
 ---
 
@@ -248,81 +253,109 @@ state.enhancement = {
 - EXP／金幣／裝備約在線 10%。
 - 離線主線強化石效率為正式理論產量的 5%。
 - 離線合法目標不含 Boss，因此戰鬥部分不取得進階石。
-- 若玩家最後進行的是 Boss 戰鬥，Boss 不會覆蓋有效離線刷怪目標；離線收益會沿用最近一次有效的普通怪或菁英怪戰鬥紀錄。
-- `offlineEnhancementStoneReward()` 只呼叫 `expectedMainlineEnhancementStoneReward()` 取得正式理論值，再套 5%；`offlineprogress.js` 不再手寫菁英 EV 1.3。
+- 若玩家最後進行的是 Boss，Boss 不覆蓋有效離線刷怪目標；離線收益沿用最近一次有效的普通怪／菁英怪戰鬥紀錄。
+- `offlineEnhancementStoneReward()` 只呼叫 `expectedMainlineEnhancementStoneReward()` 取得正式理論值，再套 5%；不手寫第二份 elite EV。
 - 整段離線先合計理論量，再 floor；不是每場先 floor。
 - 使用與在線相同的 10 級差資格。
-- 離線出售裝備的石頭使用正式 `enhancementStoneSaleReward()` 並用 `mergeEnhancementStoneRewards()` 累積。
+- 離線出售裝備的石頭使用正式 `enhancementStoneSaleReward()` 並以共用 merge API 累積。
 - `OFFLINE_ENHANCEMENT_PIPELINE_VERSION = 3`。
-- 舊 `enhancementoffline.js` DOM Observer／文字解析 workaround 已退休，不得恢復。
-- `resolveFarmTarget()` 仍優先最新合法 `battleSamples`，再 fallback `farmMap/farmEnemy`；不是自動搜尋最高已解鎖非 Boss。
-- **雲端下載例外：**下載雲端存檔時會把 `offline.lastSettledAt`／`maxObservedWallClock` 重設為下載當下，並清除舊 pending settlement，避免把跨裝置等待時間重複算成離線收益。
+- `resolveFarmTarget()` 優先最新合法 `battleSamples`，再 fallback `farmMap/farmEnemy`；不是自動搜尋最高已解鎖非 Boss。
+- **雲端下載例外：**下載雲端存檔時會把 `offline.lastSettledAt`／`offline.maxObservedWallClock` 重設為下載當下、`timeLockUntil=0`，並清除舊 `pendingSettlement`，避免跨裝置等待時間被誤算或重複發放。
 
 ---
 
-# 11. GM 管理與測試（含強化）
+# 11. GM 管理與測試
 
-強化 GM 已正式整併，不再使用 `enhancementgm.js`：
-
-- `gmhub.js` 直接提供「強化管理」與「強化測試」區塊。
+- 設定頁標題連續點擊 3 次可開啟管理功能入口；實際管理密碼不應寫進 handoff。
+- `gmhub.js` 是 GM Hub 正式 owner之一，包含強化管理與測試區。
 - 強化管理可直接設定五欄正式 +0～+20，不消耗／不改目前強化石。
 - `vipgm.js` 正式持有 GM 測試強化狀態與測試玩家快照。
 - `gmTestEnhancementLevels` 只存在本頁工作階段，重新整理回 +0。
 - 單一「目前狀態」按鈕同步正式 VIP、8 種專精、5 欄強化到測試狀態。
 - `gmTestEnhancedEquippedStats()` 使用正式 `equippedStatsWithEnhancementLevels(levels)`，不複製第二套強化公式。
 - `gmTestPlayerStats()` 正式整合測試 VIP＋專精＋強化。
-- GM 強化 grid CSS 已移到 `functionuipolish.css`，不再 JS 注入 enhancement GM styles。
+- GM 強化 grid CSS 已移到 `functionuipolish.css`。
 - `GM_ENHANCEMENT_TEST_PIPELINE_VERSION = 4`。
 - `GM_ENHANCEMENT_HUB_VERSION = 4`。
-- `enhancementgm.js` 已刪除。
 
 ---
 
 # 12. 遊戲說明與完整性檢查
 
 - `GAME_GUIDE_VERSION = 10`。
-- 「冒險入門」正式說明普通怪、菁英怪與 Boss 都可單場／連續戰鬥。
+- 「冒險入門」說明普通怪、菁英怪、Boss 都可單場／連續戰鬥。
 - Boss 說明包含：首殺解鎖下一張地圖、連戰可留在原地繼續刷王、戰敗立即停止並需重新擊敗菁英 10 隻。
-- 「特殊遭遇」仍明確說明 Boss 不會觸發特殊怪。
-- 「離線收益」新增獨立備註區塊，說明 Boss 不作為離線刷怪目標；若最後進行 Boss 戰鬥，沿用最近一次有效的普通怪／菁英怪紀錄。
-- 「角色與裝備」目前只保留兩個強化相關項目：
-  - 裝備欄位強化：說明五欄永久強化、更換／遺失不消失、正式最高 +20。
-  - 強化石：說明可由主線、部分裝備出售、離線取得；離線只少量基礎石；10級差限制；特殊怪與副本不直接掉石。
-- 原本獨立的「離線強化石」項目已併入「強化石」。
-- 玩家指南不再列每級2.5%、每種怪幾顆、出售幾顆、離線5%等過細計算規格；這些仍保留在程式／handoff 技術規則中。
-- `CLOUD_SAVE_GUIDE_VERSION = 2`；遊戲說明另有「帳號與雲端存檔」區塊，明確說明手動上傳／下載、覆蓋風險、跨裝置流程與離線收益規則。
-- 換裝置的重要提醒使用原文字顏色與字體，只以框線、留白與警示符號提高辨識度。
+- 「特殊遭遇」明確說明 Boss 不會觸發特殊怪。
+- 「離線收益」說明 Boss 不作為離線刷怪目標，並沿用最近普通／菁英有效紀錄。
+- `CLOUD_SAVE_GUIDE_VERSION = 2`；遊戲說明另有「帳號與雲端存檔」區塊，說明手動上傳／下載、覆蓋風險、跨裝置流程與離線收益規則。
+- 換裝置重要提醒使用原文字顏色與字體，只以框線、留白與警示符號提高辨識度。
 
-完整性檢查現在分四層：
+完整性檢查目前分四層：
 
-1. `enhancementmigration.js`：只驗新舊存檔與 enhancement normalization 相容性，輸出 `ENHANCEMENT_INTEGRITY_REPORT`。
-2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI owner、GM owner、指南與戰鬥摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
-3. `bosscontinuousintegrity.js`：`BOSS_CONTINUOUS_INTEGRITY_VERSION = 4`；集中驗證 Boss 單場／連戰共用模式、`ui.js` 戰鬥入口 ownership、10 隻菁英重開 Boss 的實際 state probe、停止連戰 request／pipeline 邊界、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算、Guide v10、統一 continuous marker 與共用 battle gap owner，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
+1. `enhancementmigration.js`：舊／新存檔與 enhancement normalization 相容性，輸出 `ENHANCEMENT_INTEGRITY_REPORT`。
+2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI、GM、指南與摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
+3. `bosscontinuousintegrity.js`：`BOSS_CONTINUOUS_INTEGRITY_VERSION = 4`；驗證主線 Boss 單場／連戰共用模式、10 隻菁英重開 Boss、停止邊界、特殊怪排除、background catch-up 排除、離線 Boss 排除、共用 marker／pacing owner 等，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
 4. `accountcloudintegrity.js`：`ACCOUNT_CLOUD_INTEGRITY_VERSION = 6`；驗證 Auth v6、統一 Auth mode renderer v1、Cloud Save v2、Cloud Guide v2、登入／登出／忘記密碼／recovery session refresh、上傳／下載 API，以及舊 JSON 匯入／匯出 API、UI、退休 wrapper 都已不存在，輸出 `ACCOUNT_CLOUD_INTEGRITY_REPORT`。
 
-`runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。帳號／雲端完整性目前由獨立的 `ACCOUNT_CLOUD_INTEGRITY_REPORT` 補充，不改既有 Save Schema。
+`runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查形成 `PROJECT_RUNTIME_REPORT`。帳號／雲端完整性目前仍由獨立的 `ACCOUNT_CLOUD_INTEGRITY_REPORT` 補充，不改 Save Schema。
 
-已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`、`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION`、`LEGACY_FILE_SAVE_RETIRED_VERSION`。現在直接以正式 owner API／行為 probe／版本與結構做回歸檢查。
+已退休歷史 marker 包含：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`、`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION`、`LEGACY_FILE_SAVE_RETIRED_VERSION`。
 
 ---
 
-# 13A. Supabase 帳號與手動雲端存檔（2026-09-16）
+# 13. Supabase 帳號與手動雲端存檔
 
-## 13A.1 帳號
+## 13.1 帳號 Auth
 
-- `supabaseauth.js` 是帳號 owner；`CIVILIZATION_AUTH_VERSION = 6`、`CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`。
-- 使用 Supabase Email + Password Auth；Email 驗證開啟、匿名登入關閉、密碼至少 8 字元。
-- 帳號 gate 的四種狀態：登入、建立帳號、忘記密碼、設定新密碼，統一由 `AUTH_MODES + renderAuthMode()` 控制欄位顯示、按鈕文字、required 與 autocomplete，避免多套 UI 狀態邏輯分散。
-- 建立帳號需要「密碼＋再次輸入密碼」；一般登入只需要 Email＋密碼。
-- 登入頁提供「忘記密碼？」；輸入註冊 Email 後以 `resetPasswordForEmail()` 寄送 recovery 信，點信件連結回遊戲後進入「設定新密碼」，使用 `updateUser({password})` 更新，再重新讀取正式 session。
-- recovery 已處理常見「連結過期／無效」「session 已失效」「新密碼與舊密碼相同」等繁中錯誤訊息；完成後只清理 Auth recovery 相關 URL 參數，不粗暴清掉其他 query。
-- `persistSession:true`、`autoRefreshToken:true`、`detectSessionInUrl:true`；同一裝置成功登入後會維持登入，只有主動登出才回到登入／建立帳號 gate。
-- 設定頁會顯示目前登入 Email 與「登出」。登出使用 local scope，只結束這台裝置 session，不刪本機遊戲進度，也不自動登出其他裝置。
-- 帳號 gate 與設定頁帳號區塊不得使用持續 `MutationObserver` 掃整個 `#main`；曾因這種做法造成桌機／手機主畫面卡住，已改成 render hook。
+正式 project：`civilization-frontline`。
 
-## 13A.2 Supabase Database
+Auth 設定基準：
 
-正式 project：`civilization-frontline`，前端使用 Publishable key；不得使用 Secret key／service_role。
+- Email provider ON
+- User signups ON
+- Confirm email ON
+- Anonymous OFF
+- 密碼至少 8 字元
+- Site URL／Redirect URL 指向 GitHub Pages 正式遊戲網址
+
+`supabaseauth.js` 是帳號正式 owner：
+
+- `CIVILIZATION_AUTH_VERSION = 6`
+- `CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`
+- 使用 Supabase Email + Password Auth。
+- `persistSession:true`
+- `autoRefreshToken:true`
+- `detectSessionInUrl:true`
+- 同一裝置登入成功後維持 session，只有主動登出才回登入 gate。
+- 登出使用 `scope:"local"`，只結束這台裝置，不刪本機遊戲進度，也不自動登出其他裝置。
+- 設定頁顯示目前登入 Email 與「登出」。
+
+帳號 gate 四種狀態統一由 `AUTH_MODES + renderAuthMode()` 管理：
+
+- login：Email＋密碼
+- signup：Email＋密碼＋再次輸入密碼
+- forgot：Email，寄送重設密碼信
+- recovery：新密碼＋再次輸入新密碼
+
+忘記密碼／Recovery：
+
+- 登入頁有「忘記密碼？」。
+- `resetPasswordForEmail()` 寄送 recovery 信。
+- 點信件連結回遊戲後進入「設定新密碼」。
+- 使用 `updateUser({password})` 更新後，再以 `getSession()` 重新取得正式 session。
+- recovery 狀態以 `civilization_frontline_password_recovery_v1` sessionStorage flag 輔助維持。
+- 完成後只清除 Auth recovery 相關 URL 參數，不把其他 query 一起清掉。
+- 常見錯誤已繁中化：登入失敗、Email 未驗證、重複註冊、密碼過短、rate limit、Email 格式錯誤、recovery token 過期／無效、session 失效、新密碼與舊密碼相同。
+- 忘記密碼寄送結果使用中性訊息，不直接暴露某 Email 是否已註冊。
+
+重要 Auth bug 修正：
+
+- 曾經以持續 `MutationObserver` 監看 `#main`，造成桌機／手機主畫面嚴重卡頓；已移除，現在使用 render hook。使用者已實測確認卡頓消失，禁止恢復廣域持續 Observer。
+- 登入畫面的「再次輸入密碼」曾因 `.civilization-auth-form label{display:block}` 蓋掉 browser `[hidden]` 行為而錯誤顯示；`supabaseauth.css` 已加入 `.civilization-auth-form [hidden]{display:none!important}`。使用者已實測確認修正。
+
+## 13.2 Supabase Database
+
+前端只使用 Publishable key；**不得使用 Secret key／service_role**。
 
 `public.game_saves`：
 
@@ -335,129 +368,143 @@ state.enhancement = {
 - `level` int8 NOT NULL default 1
 - `exp` int8 NOT NULL default 0
 
-RLS 開啟，Realtime 關閉。SELECT / INSERT / UPDATE / DELETE 四個 authenticated policy 都限制 `(select auth.uid()) = user_id`。
+Backend 規則：
 
-## 13A.3 手動雲端搬移
+- RLS ON
+- Realtime OFF
+- Data API ON
+- SELECT / INSERT / UPDATE / DELETE 四個 authenticated policy 都限制目前 `auth.uid()` 只能讀寫自己的 `user_id`。
 
-- `cloudsave.js` 是雲端傳輸 owner；`CIVILIZATION_CLOUD_SAVE_VERSION = 2`。
-- **絕不自動同步。**登入／恢復 session 時不自動下載、不自動上傳。
-- 設定頁只提供兩個玩家操作：
-  - 「上傳本機存檔」
-  - 「下載雲端存檔」
-- 已移除玩家可見的「重新整理雲端資訊」按鈕；程式仍會在需要時自行重新讀取雲端 metadata。
-- 比較資訊只顯示：存檔時間、Lv、EXP；不顯示 revision。
-- 上傳前重新查雲端 metadata，再顯示本機／雲端摘要與覆蓋確認；使用 `upsert(..., {onConflict:"user_id"})`，每帳號一列。
-- 下載前重新讀取完整 `save_data` 與 metadata，再顯示覆蓋確認；成功後寫回本機並 reload。
-- 本機顯示時間使用獨立 metadata key `civilization_frontline_local_save_meta_v1`，不為此改 Save Schema。
-- 本機帳號所有者使用 `civilization_frontline_local_owner_v1`。若本機存檔已綁 A 帳號卻登入 B，禁止把 A 的本機進度上傳到 B；仍可下載 B 的雲端存檔覆蓋本機，下載成功後改綁 B。
-- 2026-09-16 使用者已在正式頁實測：雲端上傳成功，雲端下載可正確覆蓋並載入。
+## 13.3 手動雲端搬移
 
-## 13A.4 離線收益與跨裝置
+`cloudsave.js` 是正式雲端傳輸 owner；`CIVILIZATION_CLOUD_SAVE_VERSION = 2`。
 
-- 下載雲端存檔時，`offline.lastSettledAt` 與 `offline.maxObservedWallClock` 重設為下載當下，`timeLockUntil=0`，並清除舊 pending settlement。
-- 因此「原裝置上傳後 → 新裝置下載前」的等待時間**不補發離線收益**。
-- 正式玩家流程：**原裝置開遊戲 → 完成當次離線收益結算 → 上傳本機存檔 → 新裝置登入同帳號 → 比對時間／Lv／EXP → 下載雲端存檔。**
-- 遊戲說明已用明顯但不改字色／字體的框線提醒：「換裝置前，請先在原裝置開啟遊戲並完成當次離線收益結算，再上傳本機存檔到雲端。」
+正式原則：**本機與雲端分離，只手動搬移，絕不自動同步。**
 
-## 13A.5 舊檔案匯入／匯出
+設定頁只提供：
 
-- 玩家設定頁的舊「匯出存檔／匯入存檔」已正式從 `ui.js` 移除，不再只是隱藏或 wrapper 攔截。
-- 舊 `exportSave()`、`importSave()`、只供檔案匯入驗證的 `isImportableSave()` 已刪除。
-- `legacysaveretirement.js` 已正式刪除，`index.html` 不再載入；歷史 `LEGACY_FILE_SAVE_RETIRED_VERSION` marker 不得恢復。
-- `normalizeSaveItem()`、`normalizeSaveState()`、`normalizeCurrentSaveState()` 仍保留，因為它們是本機舊存檔與雲端下載後 migration／normalization 的正式共用能力，不屬於舊檔案匯入功能。
-- 不得重新把 JSON 檔案匯入／匯出當成正式玩家流程；跨裝置正式方式只有 Supabase 手動雲端上傳／下載。
+- 「上傳本機存檔」
+- 「下載雲端存檔」
 
-## 13A.6 帳號／雲端三批正式化（2026-09-16）
+不提供玩家可見的「重新整理雲端資訊」按鈕；程式會在需要時自行刷新 metadata。
 
-- 第 1 批：舊 JSON 匯入／匯出從 `ui.js` 正式刪除，移除 `legacysaveretirement.js`，Integrity 改為檢查舊 API／UI／wrapper 必須不存在。
-- 第 2 批：帳號四種 mode 收斂為單一 renderer，補 recovery 常見繁中錯誤、精細 URL 清理與正式 session refresh；Auth 升到 v6。
-- 第 3 批：`ACCOUNT_CLOUD_INTEGRITY_VERSION` 升到 6，更新 `PROJECT_HANDOFF.md` 與最終 cache-bust；不改 Save Schema、雲端傳輸語意、離線收益規則或遊戲平衡。
+玩家可見比較資訊只顯示：
+
+- 存檔時間
+- Lv
+- EXP
+
+`revision` 只做內部版本控制，不顯示。
+
+上傳流程：
+
+- 先重新查詢目前雲端 metadata。
+- 顯示本機／雲端的時間、Lv、EXP 覆蓋確認。
+- 執行本機 `save(false)`。
+- 以 clone 後的目前 state 作為 `save_data`。
+- 明確寫入 `updated_at`。
+- `upsert(...,{onConflict:"user_id"})`，每個帳號固定一列。
+- 有既有雲端資料時 `revision + 1`，否則從 1 開始。
+
+下載流程：
+
+- 重新讀取完整 `save_data, updated_at, level, exp, revision`。
+- 覆蓋前顯示本機／雲端時間、Lv、EXP。
+- 保留覆蓋前 state clone 作 recovery safety。
+- 對下載 state 執行正式 normalization／migration。
+- 綁定目前帳號為本機 save owner。
+- `save(false)` 後 reload。
+
+本機額外 metadata：
+
+- 存檔時間 key：`civilization_frontline_local_save_meta_v1`
+- 本機帳號 owner key：`civilization_frontline_local_owner_v1`
+
+跨帳號保護：
+
+- 若本機存檔已綁 A 帳號，而目前登入 B，禁止把 A 的本機進度上傳到 B。
+- 仍可下載 B 的雲端存檔覆蓋本機；下載成功後本機 owner 改綁 B。
+
+`cloudsave.js` 目前會 wrapper 全域 `save()` 以維護獨立本機存檔時間 metadata；這是刻意避免升 Save Schema 的相容設計。若未來要重構，必須另開專門批次，不能在無關功能中順手拆。
+
+## 13.4 雲端下載與離線收益
+
+下載雲端存檔時，會：
+
+- `offline.lastSettledAt = 下載當下`
+- `offline.maxObservedWallClock = 下載當下`
+- `timeLockUntil = 0`
+- 清除舊 `pendingSettlement`
+
+因此「原裝置上傳後 → 新裝置下載前」的等待時間**不補發離線收益**。
+
+正式換裝置流程：
+
+**原裝置開遊戲 → 完成當次離線收益結算 → 上傳本機存檔 → 新裝置登入同帳號 → 比對時間／Lv／EXP → 下載雲端存檔。**
+
+`cloudsaveguide.js` 已以明顯但不改字色／字體的框線提醒這件事。
+
+## 13.5 舊 JSON 檔案匯入／匯出已正式退休
+
+這部分目前已是「真正刪除」，不是隱藏：
+
+- 設定頁舊「匯出存檔／匯入存檔」已直接從 `ui.js` 移除。
+- `exportSave()` 已刪除。
+- `importSave()` 已刪除。
+- 只供檔案匯入驗證的 `isImportableSave()` 已刪除。
+- `legacysaveretirement.js` 已刪除。
+- `index.html` 不再載入該 wrapper。
+- `LEGACY_FILE_SAVE_RETIRED_VERSION` 已退休，Integrity 反而要求它不得存在。
+
+仍保留：
+
+- `normalizeSaveItem()`
+- `normalizeSaveState()`
+- `normalizeCurrentSaveState()`
+
+因為這些仍是本機舊存檔與雲端下載後 migration／normalization 的正式共用能力，不屬於舊檔案匯入功能。
+
+跨裝置正式方式只有 Supabase 手動雲端上傳／下載。
+
+## 13.6 帳號／雲端本輪三批正式化
+
+第 1 批：
+
+- 舊 JSON 匯入／匯出從 `ui.js` 正式刪除。
+- 刪除 `legacysaveretirement.js`。
+- Integrity 改為檢查舊 API／UI／wrapper 必須不存在。
+
+第 2 批：
+
+- 帳號 login / signup / forgot / recovery 四種 mode 收斂為單一 renderer。
+- 補 recovery 常見繁中錯誤。
+- recovery URL 改成精細清理。
+- 更新密碼後重新取得正式 session，不再自己拼 session 副本。
+- Auth 升到 v6。
+
+第 3 批：
+
+- `ACCOUNT_CLOUD_INTEGRITY_VERSION` 升到 6。
+- Integrity 追加 Auth version、mode renderer、recovery refresh 與 legacy wrapper absence 檢查。
+- 更新 handoff 與 cache-bust。
+- Save Schema、雲端手動搬移語意、離線收益規則、遊戲平衡都未改動。
+
+## 13.7 使用者實測狀態
+
+2026-09-16 使用者已在正式頁實測並確認：
+
+- 帳號登入／建立帳號 UI 可用。
+- 移除廣域 MutationObserver 後，桌機／手機卡頓問題消失。
+- 登入頁「再次輸入密碼」錯誤顯示問題已修正。
+- 雲端上傳成功。
+- 雲端下載可正確覆蓋並載入。
+- 忘記密碼入口已出現，recovery 流程可進入使用。
+
+這些屬於使用者真機／正式頁實測；不得誤寫成模型已做瀏覽器 runtime 測試。
 
 ---
 
-# 13. 強化四批正式化（2026-09-15）
-
-## 第 1 批：核心 owner 正式化
-
-- enhancement 初始 state 直接進 `newState()`。
-- enhancement normalization 直接進正式 migration pipeline。
-- `rawEquippedStats()`／`equippedStatsWithEnhancementLevels()`／`equippedStats()` 正式化。
-- 移除 `newState()`、`migrateSave()`、`equippedStats()` 的 enhancement late wrapper。
-
-## 第 2 批：強化石取得與出售資料流
-
-- 主線掉石正式進 `combatcore.js`。
-- 出售發石集中 `equipmentlock.js`。
-- 單件／一鍵／AUTO／換裝 AUTO 共用 sale reward API。
-- 戰鬥摘要直接使用實際發放回傳值，不重算、不 double grant。
-- `enhancementrewardintegration.js` 刪除。
-
-## 第 3 批：離線與線上理論產量共用
-
-- 菁英 70/30 機率表集中 `enhancementrewards.js`。
-- `expectedMainlineEnhancementStoneReward()` 成為唯一理論產量來源。
-- 離線移除手寫 `1.3`，只套正式期望值 ×5%。
-
-## 第 4 批：UI／GM／舊檔／Integrity 收尾
-
-- 強化 route 正式進 `ui.js`。
-- 確認 modal 實際主能力列正式進 `enhancementui.js`。
-- enhancement CSS／GM enhancement grid CSS 移到 `functionuipolish.css`。
-- GM 強化狀態正式進 `vipgm.js`，管理／測試 UI 正式進 `gmhub.js`。
-- 指南精簡並合併離線強化石項目。
-- Integrity 拆成存檔相容 probe＋集中 enhancement integration probe。
-- 刪除 `enhancementnav.js`、`enhancementgm.js`、`enhancementfinalize.js`。
-
-## Boss 連戰三批正式化（2026-09-15）
-
-### 第 1 批：主線核心共用
-
-- `ui.js` 移除 Boss 只能單場的三個限制，Boss 正式使用既有 continuous pipeline。
-- Boss 戰敗沿用原 `bossLocked=true`、`bossProgress=0` 與死亡懲罰；pipeline 在該場失敗後立即停止。
-- Boss 保留特殊怪硬排除。
-- `backgroundprogress.js` 新增 Boss 主線背景補進度排除，避免切背景時自動補刷 Boss。
-- Save Schema 不變。
-
-### 第 2 批：Guide／玩家說明
-
-- `GAME_GUIDE_VERSION` 升為 10。
-- Boss 與戰鬥模式文字改為可單場／連續。
-- 離線收益補上 Boss 排除與沿用最近普通／菁英有效紀錄的備註區塊。
-- Guide 備註只用排版／邊框／淡背景區隔，不另外改文字顏色。
-
-### 第 3 批：Integrity／交接
-
-- 新增 `bosscontinuousintegrity.js`。
-- `index.html` 在 `runtimeintegrity.js` 前載入 Boss 專屬 Integrity。
-- `runtimeintegrity.js` 正式要求 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，並把 Guide 基準更新到 v10。
-- `PROJECT_HANDOFF.md` 正式更新 Boss 連戰、背景／離線排除、Guide v10 與 Integrity 規則。
-
-## Boss 連戰後續 A/B 架構優化（2026-09-15）
-
-### 第 1 批：入口 owner 收斂
-
-- `ui.js` 成為唯一 `startBattles()` owner，戰前回血與 battle mode 傳遞都在同一入口。
-- `hpflow.js` 移除 `playerStatusHtml()`、`adventurePreparePage()`、`startBattles()` late override，只保留 HP 共用 API。
-- 準備畫面正式文案直接回到 `ui.js`，不再以 `.replace()` patch HTML。
-
-### 第 2 批：行為 Integrity 強化
-
-- `bosscontinuousintegrity.js` 增加 0→9→10 隻菁英重開 Boss 的 state probe，並在測試後還原玩家狀態。
-- 補上非菁英不得推進、10/10 capped、停止連戰 request、單場拒絕 stop、pipeline 三個停止邊界等檢查。
-- 不再依賴 HP flow 修補 marker 來判定 Boss 連戰是否正確。
-
-### 第 3 批：共用 marker／pacing／舊 marker 收尾
-
-- `CONTINUOUS_BATTLE_COUNT` 維持 `ui.js` 單一 owner，`battlepipeline.js` 只讀取正式 marker。
-- 主線場間 gap 集中到 `combatpacing.js -> mainBattleGapMs(kind)`；normal/Boss 140ms、elite 220ms，`battlepipeline.js` 不再複製常數。
-- `MAIN_BATTLE_PACING_VERSION = 1`。
-- `HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION` 正式退休並從 `hpflow.js` 移除。
-- Boss Integrity 升到 v4，新增 marker／pacing owner 與舊 marker absence 檢查。
-- Save Schema、戰鬥平衡、Boss 獎勵、離線規則均未改動。
-
----
-
-# 14. 正式背景圖製作與預載 SOP
+# 14. 背景圖製作與預載 SOP
 
 原始母圖：
 
@@ -471,38 +518,29 @@ assets/backgrounds-source/<功能名稱>/
 assets/backgrounds/<功能名稱>/
 ```
 
-強化頁：
-
-```text
-assets/backgrounds-source/enhancement/desktop.PNG
-assets/backgrounds-source/enhancement/mobile.PNG
-            ↓
-assets/backgrounds/enhancement/desktop.webp
-assets/backgrounds/enhancement/mobile.webp
-```
-
 正式轉換規格：GitHub Actions、Ubuntu runner、Python 3.12、Pillow、RGB、Desktop 最大寬1536、Mobile最大寬1080、LANCZOS、WebP quality=72、method=6。
 
 - 正式場景背景 URL 統一由 `backgrounds.css` 管理。
 - `backgrounds-source` 只保存母圖，不作 Runtime 背景。
 - `backgroundpreload.js` 掃描目前 viewport 有效 CSS media rules，只預載 `/assets/backgrounds/`、排除 `/backgrounds-source/`，使用 `Set` 去重與 `new Image()`，最多等 12 秒。
-- 強化正式 selector：`#main>.enhancement-page`。
 - 同名 WebP 重製後必須 bump `backgrounds.css` URL query。
 - 一次性轉換 workflow 成功、驗證、輸出進 main 後刪除；source 母圖保留。
 
 ---
 
-# 15. 目前仍可再優化，但不要順手亂改
+# 15. 目前仍可再優化，但不是未完成功能
 
-本輪 enhancement A/B 優先度整理已完成。仍存在的其他專案級技術債不代表強化功能有錯：
+目前帳號＋雲端功能沒有待完成的功能需求；剩下主要是架構型技術債，除非使用者明確指定，否則不要順手改：
 
-- `offlineprogress.js` 本身仍含 inline offline modal styles，這是既有離線 UI 架構，不是 enhancement wrapper。
-- `gmhub.js` 本身仍以 JS 建立 GM Hub 通用 styles，這是 GM Hub 既有 ownership；本輪只把 enhancement 專屬 grid CSS 移出 enhancement JS。
-- `enhancementcombat.js` 仍保留相容 helper 名稱，但不再覆寫正式 `equippedStats()` owner。
-- `backgroundprogress.js` 仍以 wrapper 方式接主線背景執行補償；目前 Boss 已正式排除，若未來重構應另開範圍，不要在一般功能修改中順手拆。
-- `cloudsave.js` 目前以 wrapper 方式延伸 `save()` 來維護獨立的本機存檔時間 metadata；這是刻意避免升 Save Schema 的相容設計，不要在無關修改中拆掉。
-- `cloudsaveguide.js` 目前仍是遊戲指南的帳號／雲端 extension；玩家行為已穩定，若未來要併回 `gameguide.js` 應另開專門批次。
-- 真機瀏覽器行為仍以實測為重要依據；若出現 stale JS/CSS／背景，先檢查 cache-bust，再考慮其他原因。
+- `cloudsave.js` 仍以 wrapper 方式延伸 `save()` 來維護獨立的本機存檔時間 metadata；這是刻意避免升 Save Schema 的相容設計。
+- `cloudsaveguide.js` 仍是對 `gameGuidePage()` 的相容 extension。若未來要 owner 收斂，可另開專門批次把內容整併到 `gameguide.js`，保持玩家行為完全不變。
+- `offlineprogress.js` 仍含 inline offline modal styles，屬既有離線 UI 架構。
+- `gmhub.js` 仍以 JS 建立部分 GM Hub 通用 styles，屬既有 ownership。
+- `specialization.js` 目前仍含部分 specialization UI inline style 建立邏輯；這不是本輪帳號／雲端問題。
+- `backgroundprogress.js` 仍以 wrapper 方式接主線背景執行補償；Boss 已正式排除，未來若重構應獨立開範圍。
+- 真機瀏覽器行為仍以實測為重要依據；若出現 stale JS/CSS／背景，先檢查 cache-bust，再判斷其他原因。
+
+**已失效的舊技術債描述：**`legacysaveretirement.js` 已刪除，不再是待收斂 extension；不可再把它列為仍存在的 wrapper。
 
 ---
 
@@ -523,18 +561,19 @@ assets/backgrounds/enhancement/mobile.webp
 - `enhancementnav.js`。
 - `enhancementgm.js`。
 - `enhancementfinalize.js`。
-- 強化 UI／GM 以 JS 注入專屬 CSS 的做法。
+- 強化 UI／GM 以 JS 注入專屬 enhancement CSS 的做法。
 - GM 自己複製一套強化主能力公式的做法。
 - 出售強化石多層 wrapper 重複 grant 的做法。
 - Boss 固定只能單場挑戰的舊規則。
 - `hpflow.js` 覆寫 `startBattles()`／`adventurePreparePage()`／`playerStatusHtml()` 的舊做法。
 - `HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION` 歷史修補 marker。
 - `battlepipeline.js` 自己維護第二份 `"continuous"` marker 或 normal／elite 場間 gap 常數的做法。
-- 玩家可見的 JSON 檔案「匯出存檔／匯入存檔」正式搬移流程；`exportSave()`、`importSave()`、`isImportableSave()` 與 `legacysaveretirement.js` 都已退休／刪除；跨裝置改用 Supabase 手動雲端上傳／下載。
-- `LEGACY_FILE_SAVE_RETIRED_VERSION` 歷史退休 marker。
+- 玩家可見的 JSON 檔案「匯出存檔／匯入存檔」正式搬移流程。
+- `exportSave()`、`importSave()`、`isImportableSave()`。
+- `legacysaveretirement.js` 與 `LEGACY_FILE_SAVE_RETIRED_VERSION`。
 - 登入後自動下載、自動上傳、背景自動同步或以雲端直接覆蓋本機的做法。
 - 玩家可見的「重新整理雲端資訊」按鈕。
-- 帳號 gate 使用持續 `MutationObserver` 掃描整個 `#main` 的舊做法。
+- 帳號 gate／設定頁以持續廣域 `MutationObserver` 掃描 `#main` 的做法。
 
 ---
 
@@ -544,4 +583,4 @@ assets/backgrounds/enhancement/mobile.webp
 
 > **讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 GitHub `main` 的實際相關程式碼與 `index.html` 載入順序，完整承接《文明戰線》專案。`main` 是唯一真實來源；若 handoff 與 main 衝突，以 main 為準。現在先不要修改。**
 
-若直接要求修改，也先讀 handoff＋相關 main，再依第2節規範執行，不需要使用者重新解釋已寫入 handoff 的正式規則。
+若下一個對話直接要求修改，也必須先讀 handoff＋相關 `main`，再依第 2 節規範執行，不需要使用者重新解釋已寫入 handoff 的正式規則。
