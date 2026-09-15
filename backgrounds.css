@@ -10,6 +10,7 @@
   #main>.function-page:has(>.character-layout),
   #main>.specialization-page,
   #main>.function-page:has(>.grid),
+  #main>.enhancement-page,
   #main>.guide-page,
   #main>.function-page:has(#settingsTitle),
   #main>.dungeon-page-shell,
@@ -33,130 +34,27 @@
     background-repeat:no-repeat,no-repeat;
   }
 
-  #main>.home-screen{
-    padding-top:42px;
-    border-radius:0;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
-      url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3");
-  }
-  #main>.map-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1");
-  }
-  #main>.prepare-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
-  }
-  #main>.combat-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1");
-  }
-  #main>.function-page:has(>.character-layout),
-  #main>.specialization-page{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1");
-  }
-  #main>.function-page:has(>.grid){
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1");
-  }
-  #main>.guide-page,
-  #main>.function-page:has(#settingsTitle){
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1");
-  }
-  #main>.dungeon-page-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-home/desktop.webp?v=20260913-dungeon-home-desktop1");
-  }
-  #main>.dungeon-page-shell>.back-home,
-  #main>.dungeon-page-shell>.dungeon-mode-list{
-    max-width:900px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #main>.dungeon-bounty-shell.dungeon-page-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-bounty/desktop.webp?v=20260913-dungeon-bounty-desktop1");
-  }
-  #main>.dungeon-bounty-shell.dungeon-page-shell>.dungeon-bounty-card{
-    max-width:760px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #main>.function-page.dungeon-page-shell.arena-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
-      url("assets/backgrounds/dungeon-arena/desktop.webp?v=20260914-dungeon-arena-desktop1");
-  }
-  #main>.function-page.dungeon-page-shell.arena-shell>.back-home,
-  #main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{
-    max-width:1020px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #main>.void-shell:has(.void-result-grid){
-    max-width:none!important;
-    background-image:
-      linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
-      url("assets/backgrounds/dungeon-void/desktop.webp?v=20260914-dungeon-void-desktop1");
-  }
-  #main>.void-shell:has(.void-result-grid)>.void-result{
-    max-width:680px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #main>.void-shell:has(.void-combat){
-    max-width:none!important;
-    min-height:calc(100vh - 57px)!important;
-    min-height:calc(100dvh - 57px)!important;
-    padding-top:30px;
-    padding-bottom:52px;
-    background-image:
-      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
-      url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1");
-  }
-  #main>.void-shell:has(.void-combat)>.void-panel{
-    max-width:1120px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  #main>.combat-screen.dungeon-bounty-combat{
-    padding-top:30px;
-    padding-bottom:52px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1");
-  }
-  #main>.combat-screen.arena-combat{
-    padding-top:30px;
-    padding-bottom:52px;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
-      url("assets/backgrounds/dungeon-arena-battle/desktop.webp?v=20260914-dungeon-arena-battle-desktop1");
-  }
-
-  #battleResultModal{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
+  #main>.home-screen{padding-top:42px;border-radius:0;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3")}
+  #main>.map-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1")}
+  #main>.prepare-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1")}
+  #main>.combat-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1")}
+  #main>.function-page:has(>.character-layout),#main>.specialization-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1")}
+  #main>.function-page:has(>.grid){background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1")}
+  #main>.enhancement-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/enhancement/desktop.webp?v=20260915-enhancement-desktop1")}
+  #main>.guide-page,#main>.function-page:has(#settingsTitle){background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/guide-settings/desktop.webp?v=20260913-guide-settings-desktop1")}
+  #main>.dungeon-page-shell{max-width:none;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/dungeon-home/desktop.webp?v=20260913-dungeon-home-desktop1")}
+  #main>.dungeon-page-shell>.back-home,#main>.dungeon-page-shell>.dungeon-mode-list{max-width:900px;margin-left:auto;margin-right:auto}
+  #main>.dungeon-bounty-shell.dungeon-page-shell{max-width:none;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/dungeon-bounty/desktop.webp?v=20260913-dungeon-bounty-desktop1")}
+  #main>.dungeon-bounty-shell.dungeon-page-shell>.dungeon-bounty-card{max-width:760px;margin-left:auto;margin-right:auto}
+  #main>.function-page.dungeon-page-shell.arena-shell{max-width:none;background-image:linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),url("assets/backgrounds/dungeon-arena/desktop.webp?v=20260914-dungeon-arena-desktop1")}
+  #main>.function-page.dungeon-page-shell.arena-shell>.back-home,#main>.function-page.dungeon-page-shell.arena-shell>.arena-panel{max-width:1020px;margin-left:auto;margin-right:auto}
+  #main>.void-shell:has(.void-result-grid){max-width:none!important;background-image:linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),url("assets/backgrounds/dungeon-void/desktop.webp?v=20260914-dungeon-void-desktop1")}
+  #main>.void-shell:has(.void-result-grid)>.void-result{max-width:680px;margin-left:auto;margin-right:auto}
+  #main>.void-shell:has(.void-combat){max-width:none!important;min-height:calc(100vh - 57px)!important;min-height:calc(100dvh - 57px)!important;padding-top:30px;padding-bottom:52px;background-image:linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),url("assets/backgrounds/dungeon-void-battle/desktop.webp?v=20260914-dungeon-void-battle-desktop1")}
+  #main>.void-shell:has(.void-combat)>.void-panel{max-width:1120px;margin-left:auto;margin-right:auto}
+  #main>.combat-screen.dungeon-bounty-combat{padding-top:30px;padding-bottom:52px;background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/dungeon-bounty-battle/desktop.webp?v=20260913-dungeon-bounty-battle-desktop1")}
+  #main>.combat-screen.arena-combat{padding-top:30px;padding-bottom:52px;background-image:linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),url("assets/backgrounds/dungeon-arena-battle/desktop.webp?v=20260914-dungeon-arena-battle-desktop1")}
+  #battleResultModal{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1");background-position:center center,center center;background-size:cover,cover;background-repeat:no-repeat,no-repeat}
 }
 
 @media (max-width:760px){
@@ -167,6 +65,7 @@
   #main>.function-page:has(>.character-layout),
   #main>.specialization-page,
   #main>.function-page:has(>.grid),
+  #main>.enhancement-page,
   #main>.guide-page,
   #main>.function-page:has(#settingsTitle),
   #main>.dungeon-page-shell,
@@ -174,111 +73,22 @@
   #main>.function-page.dungeon-page-shell.arena-shell,
   #main>.void-shell:has(.void-result-grid),
   #main>.void-shell:has(.void-combat){
-    width:100vw;
-    min-height:calc(100vh - 52px);
-    min-height:calc(100dvh - 52px);
-    margin-top:-10px;
-    margin-bottom:-24px;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-    padding-top:20px;
-    padding-right:12px;
-    padding-bottom:28px;
-    padding-left:12px;
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
+    width:100vw;min-height:calc(100vh - 52px);min-height:calc(100dvh - 52px);margin-top:-10px;margin-bottom:-24px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding-top:20px;padding-right:12px;padding-bottom:28px;padding-left:12px;background-position:center center,center center;background-size:cover,cover;background-repeat:no-repeat,no-repeat
   }
-
-  #main>.home-screen{
-    padding-top:24px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),
-      url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1");
-  }
-  #main>.map-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1");
-  }
-  #main>.prepare-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
-  }
-  #main>.combat-screen{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1");
-  }
-  #main>.function-page:has(>.character-layout),
-  #main>.specialization-page{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1");
-  }
-  #main>.function-page:has(>.grid){
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1");
-  }
-  #main>.guide-page,
-  #main>.function-page:has(#settingsTitle){
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1");
-  }
-  #main>.dungeon-page-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-home/mobile.webp?v=20260913-dungeon-home-mobile1");
-  }
-  #main>.dungeon-bounty-shell.dungeon-page-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),
-      url("assets/backgrounds/dungeon-bounty/mobile.webp?v=20260913-dungeon-bounty-mobile1");
-  }
-  #main>.function-page.dungeon-page-shell.arena-shell{
-    max-width:none;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),
-      url("assets/backgrounds/dungeon-arena/mobile.webp?v=20260914-dungeon-arena-mobile1");
-  }
-  #main>.void-shell:has(.void-result-grid){
-    max-width:none!important;
-    background-image:
-      linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),
-      url("assets/backgrounds/dungeon-void/mobile.webp?v=20260914-dungeon-void-mobile1");
-  }
-  #main>.void-shell:has(.void-combat){
-    max-width:none;
-    padding-top:18px;
-    background-image:
-      linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),
-      url("assets/backgrounds/dungeon-void-battle/mobile.webp?v=20260914-dungeon-void-battle-mobile1");
-  }
-
-  #main>.combat-screen.dungeon-bounty-combat{
-    padding-top:18px;
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),
-      url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1");
-  }
-  #main>.combat-screen.arena-combat{
-    padding-top:18px;
-    background-image:
-      linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),
-      url("assets/backgrounds/dungeon-arena-battle/mobile.webp?v=20260914-dungeon-arena-battle-mobile1");
-  }
-
-  #battleResultModal{
-    background-image:
-      linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),
-      url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");
-    background-position:center center,center center;
-    background-size:cover,cover;
-    background-repeat:no-repeat,no-repeat;
-  }
+  #main>.home-screen{padding-top:24px;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1")}
+  #main>.map-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1")}
+  #main>.prepare-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1")}
+  #main>.combat-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1")}
+  #main>.function-page:has(>.character-layout),#main>.specialization-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1")}
+  #main>.function-page:has(>.grid){background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/inventory-shop/mobile.webp?v=20260913-inventory-shop-mobile1")}
+  #main>.enhancement-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/enhancement/mobile.webp?v=20260915-enhancement-mobile1")}
+  #main>.guide-page,#main>.function-page:has(#settingsTitle){background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/guide-settings/mobile.webp?v=20260913-guide-settings-mobile1")}
+  #main>.dungeon-page-shell{max-width:none;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/dungeon-home/mobile.webp?v=20260913-dungeon-home-mobile1")}
+  #main>.dungeon-bounty-shell.dungeon-page-shell{max-width:none;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/dungeon-bounty/mobile.webp?v=20260913-dungeon-bounty-mobile1")}
+  #main>.function-page.dungeon-page-shell.arena-shell{max-width:none;background-image:linear-gradient(180deg,rgba(6,10,17,.10),rgba(8,9,15,.20)),url("assets/backgrounds/dungeon-arena/mobile.webp?v=20260914-dungeon-arena-mobile1")}
+  #main>.void-shell:has(.void-result-grid){max-width:none!important;background-image:linear-gradient(180deg,rgba(5,8,14,.10),rgba(12,5,20,.22)),url("assets/backgrounds/dungeon-void/mobile.webp?v=20260914-dungeon-void-mobile1")}
+  #main>.void-shell:has(.void-combat){max-width:none;padding-top:18px;background-image:linear-gradient(180deg,rgba(5,8,14,.08),rgba(12,5,20,.18)),url("assets/backgrounds/dungeon-void-battle/mobile.webp?v=20260914-dungeon-void-battle-mobile1")}
+  #main>.combat-screen.dungeon-bounty-combat{padding-top:18px;background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/dungeon-bounty-battle/mobile.webp?v=20260913-dungeon-bounty-battle-mobile1")}
+  #main>.combat-screen.arena-combat{padding-top:18px;background-image:linear-gradient(180deg,rgba(6,10,17,.08),rgba(8,9,15,.18)),url("assets/backgrounds/dungeon-arena-battle/mobile.webp?v=20260914-dungeon-arena-battle-mobile1")}
+  #battleResultModal{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1");background-position:center center,center center;background-size:cover,cover;background-repeat:no-repeat,no-repeat}
 }
