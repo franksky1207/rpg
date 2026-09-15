@@ -53,9 +53,15 @@
 - 10 區、100 張地圖、Lv1～500。
 - 地圖由 `registerRegionMaps()` 依固定 region/index 註冊，不依 script push 順序決定位置。
 - 普通怪／菁英怪依進度解鎖。
-- Boss 固定單場挑戰；首次擊敗解鎖下一張地圖。
-- Boss 戰敗後鎖定再挑戰，需重新擊敗該地圖菁英 10 隻。
+- 普通怪、菁英怪與 Boss 都可選擇單場或連續戰鬥；三者共用同一套主線 continuous pipeline、停止按鈕與結算。
+- Boss 首次擊敗會解鎖下一張地圖；若當時使用連續戰鬥，仍留在原本地圖繼續挑戰同一隻 Boss，不自動跳圖。
+- Boss 戰敗會立即停止連續戰鬥、鎖定再挑戰並把 `bossProgress` 歸零；需重新擊敗該地圖菁英 10 隻才會再次出現。
+- Boss 不觸發特殊怪，也不消耗黑市情報。
+- Boss 連戰不使用 `backgroundprogress.js` 的主線背景 catch-up；切到背景分頁不會補算 Boss 場次。
+- Boss 不會成為離線收益刷怪目標。
 - 商店已退休，Boss 首殺沒有商店刷新副作用。
+- `MAIN_BOSS_CONTINUOUS_VERSION = 1`。
+- `BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION = 1`。
 
 正式基礎能力：
 
@@ -233,6 +239,7 @@ state.enhancement = {
 - EXP／金幣／裝備約在線 10%。
 - 離線主線強化石效率為正式理論產量的 5%。
 - 離線合法目標不含 Boss，因此戰鬥部分不取得進階石。
+- 若玩家最後進行的是 Boss 戰鬥，Boss 不會覆蓋有效離線刷怪目標；離線收益會沿用最近一次有效的普通怪或菁英怪戰鬥紀錄。
 - `offlineEnhancementStoneReward()` 只呼叫 `expectedMainlineEnhancementStoneReward()` 取得正式理論值，再套 5%；`offlineprogress.js` 不再手寫菁英 EV 1.3。
 - 整段離線先合計理論量，再 floor；不是每場先 floor。
 - 使用與在線相同的 10 級差資格。
@@ -263,19 +270,24 @@ state.enhancement = {
 
 # 12. 遊戲說明與完整性檢查
 
-- `GAME_GUIDE_VERSION = 9`。
+- `GAME_GUIDE_VERSION = 10`。
+- 「冒險入門」正式說明普通怪、菁英怪與 Boss 都可單場／連續戰鬥。
+- Boss 說明包含：首殺解鎖下一張地圖、連戰可留在原地繼續刷王、戰敗立即停止並需重新擊敗菁英 10 隻。
+- 「特殊遭遇」仍明確說明 Boss 不會觸發特殊怪。
+- 「離線收益」新增獨立備註區塊，說明 Boss 不作為離線刷怪目標；若最後進行 Boss 戰鬥，沿用最近一次有效的普通怪／菁英怪紀錄。
 - 「角色與裝備」目前只保留兩個強化相關項目：
   - 裝備欄位強化：說明五欄永久強化、更換／遺失不消失、正式最高 +20。
   - 強化石：說明可由主線、部分裝備出售、離線取得；離線只少量基礎石；10級差限制；特殊怪與副本不直接掉石。
 - 原本獨立的「離線強化石」項目已併入「強化石」。
 - 玩家指南不再列每級2.5%、每種怪幾顆、出售幾顆、離線5%等過細計算規格；這些仍保留在程式／handoff 技術規則中。
 
-完整性檢查現在分兩層：
+完整性檢查現在分三層：
 
 1. `enhancementmigration.js`：只驗新舊存檔與 enhancement normalization 相容性，輸出 `ENHANCEMENT_INTEGRITY_REPORT`。
 2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI owner、GM owner、指南與戰鬥摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
+3. `bosscontinuousintegrity.js`：集中驗證 Boss 單場／連戰共用模式、取消舊單場強制、戰敗鎖王／歸零、連戰死亡停止、同目標續戰、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算與 Guide v10 文案，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
 
-`runtimeintegrity.js` 繼續要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。
+`runtimeintegrity.js` 繼續形成全專案 `PROJECT_RUNTIME_REPORT`；Boss 連戰另有專屬 `BOSS_CONTINUOUS_INTEGRITY` 報告，並在 `runtimeintegrity.js` 前載入，便於同一頁面檢查兩份結果。
 
 已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`。現在直接以正式 UI version／DOM style absence／owner API 做回歸檢查。
 
@@ -313,6 +325,29 @@ state.enhancement = {
 - 指南精簡並合併離線強化石項目。
 - Integrity 拆成存檔相容 probe＋集中 enhancement integration probe。
 - 刪除 `enhancementnav.js`、`enhancementgm.js`、`enhancementfinalize.js`。
+
+## Boss 連戰三批正式化（2026-09-15）
+
+### 第 1 批：主線核心共用
+
+- `ui.js` 移除 Boss 只能單場的三個限制，Boss 正式使用既有 continuous pipeline。
+- Boss 戰敗沿用原 `bossLocked=true`、`bossProgress=0` 與死亡懲罰；pipeline 在該場失敗後立即停止。
+- Boss 保留特殊怪硬排除。
+- `backgroundprogress.js` 新增 Boss 主線背景補進度排除，避免切背景時自動補刷 Boss。
+- Save Schema 不變。
+
+### 第 2 批：Guide／玩家說明
+
+- `GAME_GUIDE_VERSION` 升為 10。
+- Boss 與戰鬥模式文字改為可單場／連續。
+- 離線收益補上 Boss 排除與沿用最近普通／菁英有效紀錄的備註區塊。
+- Guide 備註只用排版／邊框／淡背景區隔，不另外改文字顏色。
+
+### 第 3 批：Integrity／交接
+
+- 新增 `bosscontinuousintegrity.js`。
+- `index.html` 在 `runtimeintegrity.js` 前載入 Boss 專屬 Integrity。
+- `PROJECT_HANDOFF.md` 正式更新 Boss 連戰、背景／離線排除、Guide v10 與 Integrity 規則。
 
 ---
 
@@ -382,6 +417,7 @@ assets/backgrounds/enhancement/mobile.webp
 - 強化 UI／GM 以 JS 注入專屬 CSS 的做法。
 - GM 自己複製一套強化主能力公式的做法。
 - 出售強化石多層 wrapper 重複 grant 的做法。
+- Boss 固定只能單場挑戰的舊規則。
 
 ---
 
