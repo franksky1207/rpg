@@ -67,6 +67,7 @@
   if(!basicHtml.includes("基礎強化石")||!basicHtml.includes("+3")||basicHtml.includes("進階強化石"))fail("ENHANCEMENT_REWARD_SINGLE_TYPE","單一基礎強化石獎勵顯示異常",basicHtml);
  }
  if(window.ENHANCEMENT_FINAL_INTEGRITY?.passed!==true)fail("ENHANCEMENT_FINAL_INTEGRITY","強化專屬回歸檢查未通過",window.ENHANCEMENT_FINAL_INTEGRITY?.errors||null);
+ if(window.BOSS_CONTINUOUS_INTEGRITY?.passed!==true)fail("BOSS_CONTINUOUS_INTEGRITY","Boss 連戰專屬回歸檢查未通過",window.BOSS_CONTINUOUS_INTEGRITY?.errors||null);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
@@ -133,12 +134,12 @@
  if(clock?.textContent?.includes("臺灣時間"))fail("DAILY_CLOCK_LABEL","時鐘不應顯示「臺灣時間」文字");
  if(!clock?.textContent?.includes("每日凌晨 0 點重置"))fail("DAILY_RESET_LABEL","缺少固定的每日凌晨 0 點重置文字");
 
- if(Number(window.GAME_GUIDE_VERSION)!==8)fail("GUIDE_VERSION",`遊戲說明版本應為 8，實際 ${window.GAME_GUIDE_VERSION}`);
+ if(Number(window.GAME_GUIDE_VERSION)!==10)fail("GUIDE_VERSION",`遊戲說明版本應為 10，實際 ${window.GAME_GUIDE_VERSION}`);
  if(window.GAME_GUIDE_ARENA_V6!==true)fail("GUIDE_LATE_OVERRIDE","舊競技場說明覆蓋檔未停用");
  const guideText=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES.flatMap(c=>c.items||[]).flat().join(" "):"";
- const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報","裝備欄位強化","玩家高於怪物 10 級（含）以上時不會掉落強化石","離線刷普通怪或菁英怪可取得理論基礎強化石的 5%"];
+ const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報","裝備欄位強化","玩家高於怪物 10 級（含）以上時，主線戰鬥將不再掉落強化石","Boss 可選擇單場或連續戰鬥","普通怪、菁英怪與 Boss 都可以選擇","Boss 不會觸發","離線收益不會以 Boss 作為刷怪目標","最近一次有效的普通怪或菁英怪戰鬥紀錄"];
  guideRequired.forEach(text=>{if(!guideText.includes(text))fail("GUIDE_REQUIRED_TEXT",`遊戲說明缺少新版規則：${text}`);});
- const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100","免費刷新一次新地圖的商店","前往商店花費金幣贖回","降低目前商店刷新費用","商店會提供"];
+ const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100","免費刷新一次新地圖的商店","前往商店花費金幣贖回","降低目前商店刷新費用","商店會提供","Boss 固定只能單場挑戰","Boss 每次只能單場挑戰","離線刷普通怪或菁英怪可取得理論基礎強化石的 5%"];
  guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含過度詳細或舊規則：${text}`);});
  if(typeof gmHtml==="function"){
   const gmText=String(gmHtml());
