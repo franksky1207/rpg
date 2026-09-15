@@ -5,14 +5,13 @@
  const ELITE_BATTLE_GAP_MS=220;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function blankEnhancementRewards(){return {battle:{basic:0,advanced:0},autoSale:{basic:0,advanced:0}};}
- function mergeReward(a,b){return typeof mergeEnhancementStoneRewards==="function"?mergeEnhancementStoneRewards(a,b):{basic:Math.max(0,Math.floor(Number(a?.basic)||0))+Math.max(0,Math.floor(Number(b?.basic)||0)),advanced:Math.max(0,Math.floor(Number(a?.advanced)||0))+Math.max(0,Math.floor(Number(b?.advanced)||0))};}
  function ensureEnhancementRewards(ctx){
   if(!ctx.enhancementRewards||typeof ctx.enhancementRewards!=="object")ctx.enhancementRewards=blankEnhancementRewards();
-  ctx.enhancementRewards.battle=mergeReward({basic:0,advanced:0},ctx.enhancementRewards.battle);
-  ctx.enhancementRewards.autoSale=mergeReward({basic:0,advanced:0},ctx.enhancementRewards.autoSale);
+  ctx.enhancementRewards.battle=mergeEnhancementStoneRewards({basic:0,advanced:0},ctx.enhancementRewards.battle);
+  ctx.enhancementRewards.autoSale=mergeEnhancementStoneRewards({basic:0,advanced:0},ctx.enhancementRewards.autoSale);
   return ctx.enhancementRewards;
  }
- function addContextEnhancementReward(ctx,key,reward){const summary=ensureEnhancementRewards(ctx);summary[key]=mergeReward(summary[key],reward);return summary[key];}
+ function addContextEnhancementReward(ctx,key,reward){const summary=ensureEnhancementRewards(ctx);summary[key]=mergeEnhancementStoneRewards(summary[key],reward);return summary[key];}
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
