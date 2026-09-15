@@ -73,7 +73,12 @@
  }
  function mountAccountSettings(){
   if(!currentSession)return;
-  if(document.getElementById("civilizationAccountSettings"))return;
+  const existing=document.getElementById("civilizationAccountSettings");
+  if(existing){
+   const emailNode=existing.querySelector(".civilization-account-email");
+   if(emailNode)emailNode.textContent=currentSession?.user?.email||"未取得 Email";
+   return;
+  }
   const title=document.getElementById("settingsTitle");
   if(!title)return;
   const card=title.closest(".card");
