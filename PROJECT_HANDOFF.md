@@ -4,7 +4,7 @@
 >
 > 若本文件、歷史對話、舊截圖、舊規格、舊 commit、模型記憶或任何摘要與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。本文件是交接索引與目前規則摘要，不可取代實際程式碼檢查。
 
-更新日期：**2026-09-15**
+更新日期：**2026-09-16**
 
 ---
 
@@ -13,7 +13,7 @@
 - Repository：`franksky1207/rpg`
 - 正式分支：`main`
 - 遊戲名稱：**文明戰線**
-- 架構：純前端 HTML / CSS / JavaScript + `localStorage`
+- 架構：純前端 HTML / CSS / JavaScript + `localStorage` + Supabase Auth / Database
 - 正式存檔 key：`frank_text_rpg_save`
 - `SAVE_VERSION = 12`
 - `SAVE_SCHEMA_VERSION = 12`
@@ -23,9 +23,11 @@
 - `VIP_MAX_LEVEL = 20`
 - `SPECIALIZATION_MAX_LEVEL = 60`
 - `ENHANCEMENT_MAX_LEVEL = 20`
+- `CIVILIZATION_AUTH_VERSION = 4`
+- `CIVILIZATION_CLOUD_SAVE_VERSION = 2`
 - 世界：10 大區域、100 張主線地圖、Lv1～500
 - 桌面版＋手機版；iPhone Safari 是重要真機環境。
-- 目前只有本機存檔，沒有雲端跨裝置同步。
+- 正式存檔策略：**每台裝置平常仍使用自己的本機存檔；Supabase 雲端只提供玩家主動上傳／下載的跨裝置搬移，不做自動同步、不在登入時自動覆蓋本機。**
 
 `backgroundprogress.js` 的 background 指瀏覽器進入背景／失焦後的執行補償，**不是圖片背景 loader**。正式圖片背景預載是 `backgroundpreload.js`。
 
@@ -45,6 +47,8 @@
 10. 桌機與手機 UI 一起檢查。
 11. 神話裝備只禁止 **AUTO 自動出售**；未鎖定神話仍可手動單件確認出售，也可符合玩家主動的一鍵出售條件。
 12. 一次性 GitHub Actions workflow 若只做資產轉換，輸出驗證進 `main` 後應刪除 workflow，但保留 source 母圖。
+13. 帳號／雲端功能不得引入自動同步語意；上傳與下載都必須由玩家主動操作，並在覆蓋前顯示本機／雲端時間、Lv、EXP。
+14. Supabase 前端只能使用 Publishable key；不得把 Secret key／service_role 放進 repo 或前端。
 
 ---
 
@@ -250,6 +254,7 @@ state.enhancement = {
 - `OFFLINE_ENHANCEMENT_PIPELINE_VERSION = 3`。
 - 舊 `enhancementoffline.js` DOM Observer／文字解析 workaround 已退休，不得恢復。
 - `resolveFarmTarget()` 仍優先最新合法 `battleSamples`，再 fallback `farmMap/farmEnemy`；不是自動搜尋最高已解鎖非 Boss。
+- **雲端下載例外：**下載雲端存檔時會把 `offline.lastSettledAt`／`maxObservedWallClock` 重設為下載當下，並清除舊 pending settlement，避免把跨裝置等待時間重複算成離線收益。
 
 ---
 
@@ -283,16 +288,77 @@ state.enhancement = {
   - 強化石：說明可由主線、部分裝備出售、離線取得；離線只少量基礎石；10級差限制；特殊怪與副本不直接掉石。
 - 原本獨立的「離線強化石」項目已併入「強化石」。
 - 玩家指南不再列每級2.5%、每種怪幾顆、出售幾顆、離線5%等過細計算規格；這些仍保留在程式／handoff 技術規則中。
+- `CLOUD_SAVE_GUIDE_VERSION = 2`；遊戲說明另有「帳號與雲端存檔」區塊，明確說明手動上傳／下載、覆蓋風險、跨裝置流程與離線收益規則。
+- 換裝置的重要提醒使用原文字顏色與字體，只以框線、留白與警示符號提高辨識度。
 
-完整性檢查現在分三層：
+完整性檢查現在分四層：
 
 1. `enhancementmigration.js`：只驗新舊存檔與 enhancement normalization 相容性，輸出 `ENHANCEMENT_INTEGRITY_REPORT`。
 2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI owner、GM owner、指南與戰鬥摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
 3. `bosscontinuousintegrity.js`：`BOSS_CONTINUOUS_INTEGRITY_VERSION = 4`；集中驗證 Boss 單場／連戰共用模式、`ui.js` 戰鬥入口 ownership、10 隻菁英重開 Boss 的實際 state probe、停止連戰 request／pipeline 邊界、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算、Guide v10、統一 continuous marker 與共用 battle gap owner，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
+4. `accountcloudintegrity.js`：`ACCOUNT_CLOUD_INTEGRITY_VERSION = 2`；驗證 Auth v4、Cloud Save v2、Cloud Guide v2、舊檔案匯入／匯出退休、上傳／下載／登出 API 與 auth API，輸出 `ACCOUNT_CLOUD_INTEGRITY_REPORT`。
 
-`runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。
+`runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。帳號／雲端完整性目前由獨立的 `ACCOUNT_CLOUD_INTEGRITY_REPORT` 補充，不改既有 Save Schema。
 
 已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`、`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION`。現在直接以正式 owner API／行為 probe／版本與結構做回歸檢查。
+
+---
+
+# 13A. Supabase 帳號與手動雲端存檔（2026-09-16）
+
+## 13A.1 帳號
+
+- `supabaseauth.js` 是帳號 owner；`CIVILIZATION_AUTH_VERSION = 4`。
+- 使用 Supabase Email + Password Auth；Email 驗證開啟、匿名登入關閉、密碼至少 8 字元。
+- 建立帳號需要「密碼＋再次輸入密碼」；一般登入只需要 Email＋密碼。
+- `persistSession:true`、`autoRefreshToken:true`、`detectSessionInUrl:true`；同一裝置成功登入後會維持登入，只有主動登出才回到登入／建立帳號 gate。
+- 設定頁會顯示目前登入 Email 與「登出」。登出使用 local scope，只結束這台裝置 session，不刪本機遊戲進度，也不自動登出其他裝置。
+- 帳號 gate 與設定頁帳號區塊不得使用持續 `MutationObserver` 掃整個 `#main`；曾因這種做法造成桌機／手機主畫面卡住，已改成 render hook。
+
+## 13A.2 Supabase Database
+
+正式 project：`civilization-frontline`，前端使用 Publishable key；不得使用 Secret key／service_role。
+
+`public.game_saves`：
+
+- `id` int8 PK
+- `created_at` timestamptz default `now()`
+- `user_id` uuid NOT NULL UNIQUE，FK → `auth.users.id`，delete cascade
+- `save_data` jsonb NOT NULL
+- `revision` int8 NOT NULL default 1（內部欄位，不顯示給玩家）
+- `updated_at` timestamptz NOT NULL default `now()`
+- `level` int8 NOT NULL default 1
+- `exp` int8 NOT NULL default 0
+
+RLS 開啟，Realtime 關閉。SELECT / INSERT / UPDATE / DELETE 四個 authenticated policy 都限制 `(select auth.uid()) = user_id`。
+
+## 13A.3 手動雲端搬移
+
+- `cloudsave.js` 是雲端傳輸 owner；`CIVILIZATION_CLOUD_SAVE_VERSION = 2`。
+- **絕不自動同步。**登入／恢復 session 時不自動下載、不自動上傳。
+- 設定頁只提供兩個玩家操作：
+  - 「上傳本機存檔」
+  - 「下載雲端存檔」
+- 已移除玩家可見的「重新整理雲端資訊」按鈕；程式仍會在需要時自行重新讀取雲端 metadata。
+- 比較資訊只顯示：存檔時間、Lv、EXP；不顯示 revision。
+- 上傳前重新查雲端 metadata，再顯示本機／雲端摘要與覆蓋確認；使用 `upsert(..., {onConflict:"user_id"})`，每帳號一列。
+- 下載前重新讀取完整 `save_data` 與 metadata，再顯示覆蓋確認；成功後寫回本機並 reload。
+- 本機顯示時間使用獨立 metadata key `civilization_frontline_local_save_meta_v1`，不為此改 Save Schema。
+- 本機帳號所有者使用 `civilization_frontline_local_owner_v1`。若本機存檔已綁 A 帳號卻登入 B，禁止把 A 的本機進度上傳到 B；仍可下載 B 的雲端存檔覆蓋本機，下載成功後改綁 B。
+- 2026-09-16 使用者已在正式頁實測：雲端上傳成功，雲端下載可正確覆蓋並載入。
+
+## 13A.4 離線收益與跨裝置
+
+- 下載雲端存檔時，`offline.lastSettledAt` 與 `offline.maxObservedWallClock` 重設為下載當下，`timeLockUntil=0`，並清除舊 pending settlement。
+- 因此「原裝置上傳後 → 新裝置下載前」的等待時間**不補發離線收益**。
+- 正式玩家流程：**原裝置開遊戲 → 完成當次離線收益結算 → 上傳本機存檔 → 新裝置登入同帳號 → 比對時間／Lv／EXP → 下載雲端存檔。**
+- 遊戲說明已用明顯但不改字色／字體的框線提醒：「換裝置前，請先在原裝置開啟遊戲並完成當次離線收益結算，再上傳本機存檔到雲端。」
+
+## 13A.5 舊檔案匯入／匯出
+
+- 玩家設定頁的舊「匯出存檔／匯入存檔」已退休，不再作為正式搬移方式。
+- `legacysaveretirement.js` 目前負責把舊控制從設定頁移除，並把意外呼叫導向「請改用雲端存檔」提示。
+- 不得重新把 JSON 檔案匯入／匯出當成正式玩家流程；若未來要清理架構，可另批把退休邏輯直接整併 `ui.js` 後刪除相容 wrapper。
 
 ---
 
@@ -421,6 +487,8 @@ assets/backgrounds/enhancement/mobile.webp
 - `gmhub.js` 本身仍以 JS 建立 GM Hub 通用 styles，這是 GM Hub 既有 ownership；本輪只把 enhancement 專屬 grid CSS 移出 enhancement JS。
 - `enhancementcombat.js` 仍保留相容 helper 名稱，但不再覆寫正式 `equippedStats()` owner。
 - `backgroundprogress.js` 仍以 wrapper 方式接主線背景執行補償；目前 Boss 已正式排除，若未來重構應另開範圍，不要在一般功能修改中順手拆。
+- `cloudsave.js` 目前以 wrapper 方式延伸 `save()` 來維護獨立的本機存檔時間 metadata；這是刻意避免升 Save Schema 的相容設計，不要在無關修改中拆掉。
+- `cloudsaveguide.js` 與 `legacysaveretirement.js` 目前是帳號／雲端功能的相容 extension；若未來要 owner 收斂，應另開專門清理批次並保持玩家行為完全不變。
 - 真機瀏覽器行為仍以實測為重要依據；若出現 stale JS/CSS／背景，先檢查 cache-bust，再考慮其他原因。
 
 ---
@@ -449,6 +517,9 @@ assets/backgrounds/enhancement/mobile.webp
 - `hpflow.js` 覆寫 `startBattles()`／`adventurePreparePage()`／`playerStatusHtml()` 的舊做法。
 - `HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION` 歷史修補 marker。
 - `battlepipeline.js` 自己維護第二份 `"continuous"` marker 或 normal／elite 場間 gap 常數的做法。
+- 玩家可見的 JSON 檔案「匯出存檔／匯入存檔」正式搬移流程；跨裝置改用 Supabase 手動雲端上傳／下載。
+- 登入後自動下載、自動上傳、背景自動同步或以雲端直接覆蓋本機的做法。
+- 玩家可見的「重新整理雲端資訊」按鈕。
 
 ---
 
