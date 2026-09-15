@@ -3,9 +3,10 @@
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const marker=window.CONTINUOUS_BATTLE_COUNT||"continuous";
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
- window.BOSS_CONTINUOUS_INTEGRITY_VERSION=1;
+ window.BOSS_CONTINUOUS_INTEGRITY_VERSION=2;
 
  if(Number(window.MAIN_BOSS_CONTINUOUS_VERSION)!==1)fail("BOSS_CONTINUOUS_VERSION",`MAIN_BOSS_CONTINUOUS_VERSION 應為 1，實際 ${window.MAIN_BOSS_CONTINUOUS_VERSION}`);
+ if(Number(window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION)!==1)fail("BOSS_HP_FLOW_FIX_VERSION",`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION 應為 1，實際 ${window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION}`);
  if(typeof battleModesForEnemy!=="function")fail("BOSS_BATTLE_MODE_API","battleModesForEnemy 未載入");
  else{
   const sets={boss:battleModesForEnemy({kind:"boss"}),elite:battleModesForEnemy({kind:"elite"}),normal:battleModesForEnemy({kind:"normal"})};
@@ -16,11 +17,11 @@
  const selectEnemySource=src(typeof selectEnemy==="function"?selectEnemy:null);
  if(!selectEnemySource)fail("BOSS_SELECT_ENEMY_API","selectEnemy 未載入");
  else if(/kind\s*===?\s*["']boss["']/.test(selectEnemySource)&&/selectedBattleCount\s*=\s*1/.test(selectEnemySource))fail("BOSS_SELECT_FORCE_SINGLE","切換 Boss 不應再強制 selectedBattleCount=1");
- const startBattlesSource=src(typeof startBattles==="function"?startBattles:null);
- if(!startBattlesSource)fail("BOSS_START_BATTLES_API","startBattles 未載入");
+ const startBattlesSource=src(window.startBattles);
+ if(!startBattlesSource)fail("BOSS_START_BATTLES_API","正式 window.startBattles 未載入");
  else{
-  if(!/selectedBattleCount/.test(startBattlesSource))fail("BOSS_START_MODE_OWNER","startBattles 應直接使用 selectedBattleCount",startBattlesSource);
-  if(/kind\s*===?\s*["']boss["']\s*\?\s*1/.test(startBattlesSource))fail("BOSS_START_FORCE_SINGLE","startBattles 不應再把 Boss 強制改成單場");
+  if(!/selectedBattleCount/.test(startBattlesSource))fail("BOSS_START_MODE_OWNER","正式 startBattles 應直接使用 selectedBattleCount",startBattlesSource);
+  if(/kind\s*===?\s*["']boss["']/.test(startBattlesSource)||/[?]\s*1\s*:\s*selectedBattleCount/.test(startBattlesSource))fail("BOSS_START_FORCE_SINGLE","正式 startBattles 不應再依 Boss 強制改成單場",startBattlesSource);
  }
 
  const fightSource=src(typeof fightOnce==="function"?fightOnce:null);
@@ -85,5 +86,5 @@
  if(!adventureGuideText.includes("離線收益不會以 Boss 作為刷怪目標")||!adventureGuideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
  if(!adventureGuideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
 
- window.BOSS_CONTINUOUS_INTEGRITY={version:1,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
+ window.BOSS_CONTINUOUS_INTEGRITY={version:2,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
