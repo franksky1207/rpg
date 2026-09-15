@@ -20,4 +20,10 @@
 .civilization-auth-submit:hover{filter:brightness(1.08)}
 .civilization-auth-submit:disabled{opacity:.55;cursor:default;filter:none}
 .civilization-auth-note{margin-top:17px;color:#8fa0b0;font-size:13px;line-height:1.6;text-align:center}
-@media(max-width:560px){.civilization-auth-gate{padding-left:12px;padding-right:12px}.civilization-auth-shell{align-items:flex-start;padding-top:5vh;box-sizing:border-box}.civilization-auth-card{padding:22px 16px;border-radius:14px}.civilization-auth-brand{font-size:28px}.civilization-auth-tabs{margin-top:20px}}
+.civilization-account-settings{margin-top:22px;padding-top:20px;border-top:1px solid #303944}
+.civilization-account-settings h3{margin:0 0 12px}
+.civilization-account-row{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #343e49;border-radius:11px;background:#0f161d;padding:14px}
+.civilization-account-label{font-size:13px;color:#91a0af;margin-bottom:4px}
+.civilization-account-email{font-weight:800;overflow-wrap:anywhere}
+.civilization-account-note{margin-top:8px;line-height:1.55}
+@media(max-width:560px){.civilization-auth-gate{padding-left:12px;padding-right:12px}.civilization-auth-shell{align-items:flex-start;padding-top:5vh;box-sizing:border-box}.civilization-auth-card{padding:22px 16px;border-radius:14px}.civilization-auth-brand{font-size:28px}.civilization-auth-tabs{margin-top:20px}.civilization-account-row{align-items:flex-start;flex-direction:column}.civilization-account-row .btn{width:100%}}
