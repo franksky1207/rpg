@@ -3,10 +3,9 @@
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const marker=window.CONTINUOUS_BATTLE_COUNT||"continuous";
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
- window.BOSS_CONTINUOUS_INTEGRITY_VERSION=2;
+ window.BOSS_CONTINUOUS_INTEGRITY_VERSION=3;
 
  if(Number(window.MAIN_BOSS_CONTINUOUS_VERSION)!==1)fail("BOSS_CONTINUOUS_VERSION",`MAIN_BOSS_CONTINUOUS_VERSION 應為 1，實際 ${window.MAIN_BOSS_CONTINUOUS_VERSION}`);
- if(Number(window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION)!==1)fail("BOSS_HP_FLOW_FIX_VERSION",`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION 應為 1，實際 ${window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION}`);
  if(typeof battleModesForEnemy!=="function")fail("BOSS_BATTLE_MODE_API","battleModesForEnemy 未載入");
  else{
   const sets={boss:battleModesForEnemy({kind:"boss"}),elite:battleModesForEnemy({kind:"elite"}),normal:battleModesForEnemy({kind:"normal"})};
@@ -21,6 +20,8 @@
  if(!startBattlesSource)fail("BOSS_START_BATTLES_API","正式 window.startBattles 未載入");
  else{
   if(!/selectedBattleCount/.test(startBattlesSource))fail("BOSS_START_MODE_OWNER","正式 startBattles 應直接使用 selectedBattleCount",startBattlesSource);
+  if(!/healBeforeBattle\s*\(\s*\)/.test(startBattlesSource))fail("BOSS_START_HEAL_OWNER","正式 startBattles 應在 ui.js 入口先執行 healBeforeBattle",startBattlesSource);
+  if(!/beginCombat\s*\(\s*count\s*\)/.test(startBattlesSource))fail("BOSS_START_BEGIN_COMBAT","正式 startBattles 應把同一個 count 傳入 beginCombat",startBattlesSource);
   if(/kind\s*===?\s*["']boss["']/.test(startBattlesSource)||/[?]\s*1\s*:\s*selectedBattleCount/.test(startBattlesSource))fail("BOSS_START_FORCE_SINGLE","正式 startBattles 不應再依 Boss 強制改成單場",startBattlesSource);
  }
 
@@ -31,11 +32,54 @@
   if(!/bossProgress\s*\[\s*mapIdx\s*\]\s*=\s*0/.test(fightSource))fail("BOSS_DEFEAT_PROGRESS_RESET","Boss 戰敗仍應把重開進度歸零");
   if(!/bossKilled\s*\[\s*mapIdx\s*\]\s*=\s*true/.test(fightSource)||!/unlockedMap\s*=\s*Math\.max\(state\.unlockedMap,mapIdx\+1\)/.test(fightSource.replace(/\s+/g,"")))fail("BOSS_FIRST_CLEAR_UNLOCK","Boss 首殺仍應只解鎖下一張地圖，不改變目前戰鬥目標");
  }
+
+ if(typeof addProgress!=="function")fail("BOSS_REOPEN_PROGRESS_API","addProgress 未載入");
+ else if(!state||!Array.isArray(state.bossLocked)||!Array.isArray(state.bossProgress)||!state.bossLocked.length)fail("BOSS_REOPEN_PROGRESS_STATE","Boss 重開進度狀態不可用");
+ else{
+  const mapIdx=0,oldLocked=state.bossLocked[mapIdx],oldProgress=state.bossProgress[mapIdx];
+  try{
+   state.bossLocked[mapIdx]=true;
+   state.bossProgress[mapIdx]=0;
+   addProgress(mapIdx,"normal");
+   if(state.bossProgress[mapIdx]!==0||state.bossLocked[mapIdx]!==true)fail("BOSS_REOPEN_NON_ELITE","非菁英勝利不得增加 Boss 重開進度",{locked:state.bossLocked[mapIdx],progress:state.bossProgress[mapIdx]});
+   for(let i=0;i<9;i++)addProgress(mapIdx,"elite");
+   if(state.bossProgress[mapIdx]!==9||state.bossLocked[mapIdx]!==true)fail("BOSS_REOPEN_NINE_ELITES","9 隻菁英後 Boss 應仍鎖定且進度為 9/10",{locked:state.bossLocked[mapIdx],progress:state.bossProgress[mapIdx]});
+   addProgress(mapIdx,"elite");
+   if(state.bossProgress[mapIdx]!==10||state.bossLocked[mapIdx]!==false)fail("BOSS_REOPEN_TEN_ELITES","第 10 隻菁英後 Boss 應解鎖且進度為 10/10",{locked:state.bossLocked[mapIdx],progress:state.bossProgress[mapIdx]});
+   addProgress(mapIdx,"elite");
+   if(state.bossProgress[mapIdx]!==10||state.bossLocked[mapIdx]!==false)fail("BOSS_REOPEN_CAP","Boss 解鎖後重開進度不得繼續增加",{locked:state.bossLocked[mapIdx],progress:state.bossProgress[mapIdx]});
+  }finally{
+   state.bossLocked[mapIdx]=oldLocked;
+   state.bossProgress[mapIdx]=oldProgress;
+  }
+ }
+
  const pipelineSource=src(typeof runBattles==="function"?runBattles:null);
  if(!pipelineSource)fail("BOSS_CONTINUOUS_PIPELINE_API","runBattles 未載入");
  else{
   if(!/if\s*\(\s*!r\.win\s*\)/.test(pipelineSource)||!/break/.test(pipelineSource))fail("BOSS_DEFEAT_STOPS_CONTINUOUS","主線連戰戰敗後應立即停止");
   if(!/currentCombatEncounter\s*=\s*createMonsterEncounter\(selectedMap,selectedEnemy\)/.test(pipelineSource))fail("BOSS_CONTINUOUS_SAME_TARGET","連戰下一場應繼續目前 selectedMap／selectedEnemy");
+  const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
+  if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
+ }
+
+ if(typeof window.requestContinuousBattleStop!=="function")fail("BOSS_CONTINUOUS_STOP_API","requestContinuousBattleStop 未載入");
+ else{
+  const oldBusy=battleBusy,oldCtx=window.activeMainBattleContext;
+  try{
+   const ctx={continuous:true,exitRequested:false};
+   battleBusy=true;
+   window.activeMainBattleContext=ctx;
+   const accepted=window.requestContinuousBattleStop();
+   if(accepted!==true||ctx.exitRequested!==true)fail("BOSS_CONTINUOUS_STOP_REQUEST","連戰停止要求應只標記 exitRequested，交由本場結束後停止",{accepted,exitRequested:ctx.exitRequested});
+   const single={continuous:false,exitRequested:false};
+   window.activeMainBattleContext=single;
+   const rejected=window.requestContinuousBattleStop();
+   if(rejected!==false||single.exitRequested!==false)fail("BOSS_SINGLE_STOP_REJECTED","單場戰鬥不得接受連戰停止要求",{rejected,exitRequested:single.exitRequested});
+  }finally{
+   battleBusy=oldBusy;
+   window.activeMainBattleContext=oldCtx;
+  }
  }
 
  if(typeof window.mainlineEnhancementStoneReward!=="function")fail("BOSS_MAINLINE_STONE_API","主線強化石獎勵 API 未載入");
@@ -86,5 +130,5 @@
  if(!adventureGuideText.includes("離線收益不會以 Boss 作為刷怪目標")||!adventureGuideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
  if(!adventureGuideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
 
- window.BOSS_CONTINUOUS_INTEGRITY={version:2,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
+ window.BOSS_CONTINUOUS_INTEGRITY={version:3,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
