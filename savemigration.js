@@ -160,6 +160,7 @@
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
+  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
   cleanupLegacyDungeonFields(target);
