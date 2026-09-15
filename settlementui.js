@@ -6,19 +6,13 @@
  function equippedItemById(id){return EQUIPMENT_TYPES.map(type=>state.equipment?.[type]).find(it=>it&&String(it.id)===String(id))||null;}
  function stoneText(reward){return typeof enhancementStoneRewardText==="function"?enhancementStoneRewardText(reward):"";}
  function mergeRewards(...rewards){return typeof mergeEnhancementStoneRewards==="function"?mergeEnhancementStoneRewards(...rewards):rewards.reduce((sum,reward)=>({basic:sum.basic+Math.max(0,Math.floor(Number(reward?.basic)||0)),advanced:sum.advanced+Math.max(0,Math.floor(Number(reward?.advanced)||0))}),{basic:0,advanced:0});}
- function rewardStatsHtml(reward,label="強化石"){
-  const r=mergeRewards(reward),parts=[];
-  if(r.basic)parts.push(`<div class="stat">${label}・基礎<b>+${r.basic}</b></div>`);
-  if(r.advanced)parts.push(`<div class="stat">${label}・進階<b>+${r.advanced}</b></div>`);
-  return parts.join("");
- }
  function battleEnhancementSummaryHtml(ctx){
   const battle=mergeRewards(ctx?.enhancementRewards?.battle),autoSale=mergeRewards(ctx?.enhancementRewards?.autoSale),total=mergeRewards(battle,autoSale);
   if(!total.basic&&!total.advanced)return "";
-  const rows=[];
-  if(battle.basic||battle.advanced)rows.push(`<div class="muted">打怪掉落：${stoneText(battle)}</div>`);
-  if(autoSale.basic||autoSale.advanced)rows.push(`<div class="muted">AUTO 出售：${stoneText(autoSale)}</div>`);
-  return `<div class="notice" style="margin-top:10px"><b>強化石獎勵</b><div class="stats" style="margin-top:8px">${rewardStatsHtml(total)}</div>${rows.join("")}</div>`;
+  const rewards=[];
+  if(total.basic)rewards.push(`<span class="enhancement-stone-summary-value"><span class="muted">基礎強化石</span><b>+${total.basic}</b></span>`);
+  if(total.advanced)rewards.push(`<span class="enhancement-stone-summary-value"><span class="muted">進階強化石</span><b>+${total.advanced}</b></span>`);
+  return `<div class="notice enhancement-stone-summary" style="margin-top:10px"><div class="enhancement-stone-summary-row" style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;width:100%"><b>強化石獎勵</b><div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">${rewards.join("")}</div></div></div>`;
  }
  function actualUpgradeDelta(item){
   if(!item)return 0;
@@ -85,8 +79,8 @@
   if(!rows.length)return `<div class="muted" style="margin-top:${marginTop}px">${emptyText}</div>`;
   const heading=showCount?`${title} ${rows.length} 件`:title;
   return `<div class="settlement-drop-wrap" style="margin-top:${marginTop}px"><div class="settlement-drop-head"><b>${heading}</b></div><div class="settlement-drop-scroll">${rows.map(x=>{
-   const item=x.item,sold=Number(x.sold)||0,id=encodedItemId(item),saleStoneText=sold&&typeof enhancementStoneSaleReward==="function"?stoneText(enhancementStoneSaleReward(item)):"";
-   return `<div class="settlement-drop-row" data-settlement-item="${id}">${itemHtml(item,true)}${!sold&&typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}${sold?`<div class="muted">自動出售 +${sold} 金幣${saleStoneText?`｜${saleStoneText}`:""}</div>`:`<div class="settlement-equip-control">${equipControlHtml(item)}</div>`}</div>`;
+   const item=x.item,sold=Number(x.sold)||0,id=encodedItemId(item);
+   return `<div class="settlement-drop-row" data-settlement-item="${id}">${itemHtml(item,true)}${!sold&&typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}${sold?`<div class="muted">自動出售 +${sold} 金幣</div>`:`<div class="settlement-equip-control">${equipControlHtml(item)}</div>`}</div>`;
   }).join("")}</div></div>`;
  };
 
