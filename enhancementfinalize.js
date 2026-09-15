@@ -22,6 +22,13 @@
  const sum=Array.from({length:20},(_,i)=>enhancementUpgradeCost(i+1)).reduce((a,c)=>({basic:a.basic+c.basic,advanced:a.advanced+c.advanced}),{basic:0,advanced:0});if(sum.basic!==21000||sum.advanced!==1050)fail("COST_TOTAL","單欄累積成本異常");
  if(enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
  const saleLegend=enhancementStoneSaleReward({q:4}),saleMythic=enhancementStoneSaleReward({q:5});if(saleLegend.basic!==5||saleMythic.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
+ if(typeof window.enhancementStoneSaleRewards!=="function"||typeof window.grantEnhancementStoneSaleRewards!=="function"||typeof window.grantMainlineEnhancementStoneReward!=="function")fail("REWARD_GRANT_API","正式強化石批次出售／主線發放 API 未完整載入");
+ else{
+  const saleBatch=window.enhancementStoneSaleRewards([{q:4},{q:4},{q:5},{q:3}]);
+  if(saleBatch.basic!==10||saleBatch.advanced!==1)fail("SALE_BATCH_REWARD","批次出售強化石合併異常");
+ }
+ if(Number(window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("MAINLINE_OWNER","主線強化石應由 combatcore.js 正式發放");
+ if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("EQUIPMENT_OWNER","出售／換裝強化石應由 equipmentlock.js 正式處理");
  if(Math.abs(enhancedMainStatValue(100,20)-150)>1e-9)fail("MAIN_STAT","+20 主能力倍率異常");
  if(typeof window.rawEquippedStats!=="function"||typeof window.equippedStatsWithEnhancementLevels!=="function")fail("COMBAT_OWNER","engine.js 正式強化能力 API 未載入");
  else{
