@@ -59,7 +59,12 @@
   window.addBattleEnhancementReward(rewardCtx,"battle",{basic:1,advanced:1});
   window.addBattleEnhancementReward(rewardCtx,"autoSale",{basic:5,advanced:0});
   const rewardHtml=window.enhancementStoneSettlementSummaryHtml(rewardCtx);
-  if(!rewardHtml.includes("打怪掉落")||!rewardHtml.includes("AUTO 出售")||!rewardHtml.includes("基礎強化石 +5")||!rewardHtml.includes("進階強化石 +1"))fail("ENHANCEMENT_REWARD_SETTLEMENT","戰鬥強化石來源結算顯示異常",rewardHtml);
+  if(!rewardHtml.includes("enhancement-stone-summary-row")||!rewardHtml.includes("基礎強化石")||!rewardHtml.includes("+6")||!rewardHtml.includes("進階強化石")||!rewardHtml.includes("+1"))fail("ENHANCEMENT_REWARD_SETTLEMENT","戰鬥強化石全寬摘要顯示異常",rewardHtml);
+  if(rewardHtml.includes("打怪掉落")||rewardHtml.includes("AUTO 出售"))fail("ENHANCEMENT_REWARD_DUPLICATE_SOURCE","戰鬥強化石結算不應重複顯示來源說明",rewardHtml);
+  const basicOnly={enhancementRewards:window.blankBattleEnhancementRewards()};
+  window.addBattleEnhancementReward(basicOnly,"battle",{basic:3,advanced:0});
+  const basicHtml=window.enhancementStoneSettlementSummaryHtml(basicOnly);
+  if(!basicHtml.includes("基礎強化石")||!basicHtml.includes("+3")||basicHtml.includes("進階強化石"))fail("ENHANCEMENT_REWARD_SINGLE_TYPE","單一基礎強化石獎勵顯示異常",basicHtml);
  }
  if(window.ENHANCEMENT_FINAL_INTEGRITY?.passed!==true)fail("ENHANCEMENT_FINAL_INTEGRITY","強化專屬回歸檢查未通過",window.ENHANCEMENT_FINAL_INTEGRITY?.errors||null);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
