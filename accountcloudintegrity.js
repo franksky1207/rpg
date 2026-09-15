@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  window.ACCOUNT_CLOUD_INTEGRITY_VERSION=VERSION;
  function run(){
   const issues=[];
@@ -12,10 +12,11 @@
   if(typeof window.civilizationAccountLogout!=="function")issues.push("logout-api");
   if(typeof window.civilizationForgotPassword!=="function")issues.push("forgot-password-ui");
   const auth=window.civilizationAuth;
-  if(!auth||typeof auth.getUser!=="function"||typeof auth.signOut!=="function")issues.push("auth-api");
+  if(!auth||Number(auth.version||0)<6||typeof auth.getUser!=="function"||typeof auth.signOut!=="function")issues.push("auth-api");
   if(!auth||typeof auth.sendPasswordReset!=="function"||typeof auth.updateRecoveredPassword!=="function"||typeof auth.refreshCurrentSession!=="function")issues.push("password-recovery-api");
   if(Number(auth?.modeRendererVersion||0)<1)issues.push("auth-mode-renderer-api");
   if(typeof window.exportSave==="function"||typeof window.importSave==="function")issues.push("legacy-file-save-api-present");
+  if(typeof window.LEGACY_FILE_SAVE_RETIRED_VERSION!=="undefined")issues.push("legacy-retirement-wrapper-present");
   if(typeof window.settingsPage==="function"){
    const source=String(window.settingsPage);
    if(source.includes("exportSave")||source.includes("importSave")||source.includes("匯出存檔")||source.includes("匯入存檔"))issues.push("legacy-file-save-ui-present");
