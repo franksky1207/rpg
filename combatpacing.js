@@ -19,6 +19,9 @@
  ]);
  let specialPacingActive=false;
 
+ window.MAIN_BATTLE_PACING_VERSION=1;
+ window.mainBattleGapMs=function(kind){return kind==="elite"?MAIN_ELITE_GAP:MAIN_NORMAL_GAP;};
+
  function mainFlowSleep(ms){
   const n=Math.max(0,Number(ms)||0);
   if(typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("main"))return window.backgroundProgressSleep(n,"main");
@@ -31,7 +34,7 @@
   const events=Array.isArray(r.events)?r.events:[];
   let actions=events.filter(ev=>ev&&(ev.type==="attack"||ev.type==="dodge")).length;
   if(!actions)actions=Math.max(1,Math.floor(Number(r.turns)||1));
-  const gap=r?.e?.kind==="elite"?MAIN_ELITE_GAP:MAIN_NORMAL_GAP;
+  const gap=window.mainBattleGapMs(r?.e?.kind);
   return MAIN_PRE_DELAY+MAIN_START_DELAY+actions*(MAIN_WINDUP_DELAY+actionDelay)+MAIN_END_DELAY+gap;
  };
 
