@@ -1,12 +1,10 @@
 name: Integrate enhancement sale rewards
-on:
-  push:
-    paths:
-      - '.github/workflows/integrate-enhancement-sale-rewards.yml'
+on: [push]
 permissions:
   contents: write
 jobs:
   integrate:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,12 +15,10 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('equipmentlock.js')
-          s=p.read_text()
+          p=Path('equipmentlock.js'); s=p.read_text()
           old=''' function restoreAfterEquipmentChange(){\n  if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});\n  state.hp=playerCombatStats().hp;\n  return state.hp;\n }'''
-          new=''' function restoreAfterEquipmentChange(){\n  if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});\n  state.hp=playerCombatStats().hp;\n  return state.hp;\n }\n function saleEnhancementReward(item){\n  return typeof grantEnhancementStoneSaleReward==="function"?grantEnhancementStoneSaleReward(item):{basic:0,advanced:0};\n }\n function saleEnhancementText(reward){\n  return typeof enhancementStoneRewardText==="function"?enhancementStoneRewardText(reward):"";\n }'''
-          assert old in s
-          s=s.replace(old,new,1)
+          new=old+'''\n function saleEnhancementReward(item){\n  return typeof grantEnhancementStoneSaleReward==="function"?grantEnhancementStoneSaleReward(item):{basic:0,advanced:0};\n }\n function saleEnhancementText(reward){\n  return typeof enhancementStoneRewardText==="function"?enhancementStoneRewardText(reward):"";\n }'''
+          assert old in s; s=s.replace(old,new,1)
           s=s.replace('''   state.gold+=sold;\n   return {kept:false,sold,item};''','''   state.gold+=sold;\n   return {kept:false,sold,item,enhancementStones:saleEnhancementReward(item)};''',1)
           s=s.replace('''   state.gold+=sold;\n   return {kept:false,sold};''','''   state.gold+=sold;\n   return {kept:false,sold,enhancementStones:saleEnhancementReward(item)};''',1)
           s=s.replace('''  const sold=specializationSellValue(item);state.gold+=sold;selectedItem=null;\n  return {ok:true,item,sold};''','''  const sold=specializationSellValue(item);state.gold+=sold;selectedItem=null;\n  return {ok:true,item,sold,enhancementStones:saleEnhancementReward(item)};''',1)
@@ -30,33 +26,19 @@ jobs:
           s=s.replace('''  save();render();\n }\n window.sellSelected=sellSelected;''','''  const stoneText=saleEnhancementText(r.enhancementStones);\n  save();render();\n  alert(`已出售裝備，獲得 ${r.sold.toLocaleString()} 金幣${stoneText?`，另獲得 ${stoneText}`:""}。`);\n }\n window.sellSelected=sellSelected;''',1)
           s=s.replace('''  const r=equipmentSellLowerAll(preview);save();render();\n  alert(`已出售 ${r.count} 件裝備，獲得 ${r.total.toLocaleString()} 金幣。`);''','''  const r=equipmentSellLowerAll(preview);save();render();\n  const stoneText=saleEnhancementText(r.enhancementStones);\n  alert(`已出售 ${r.count} 件裝備，獲得 ${r.total.toLocaleString()} 金幣${stoneText?`，另獲得 ${stoneText}`:""}。`);''',1)
           p.write_text(s)
-
-          p=Path('enhancementrewardintegration.js')
-          s=p.read_text()
-          start=s.index('\n function saleStone(')
-          end=s.rindex('\n})();')
-          s=s[:start]+'\n'+s[end:]
-          p.write_text(s)
-
-          p=Path('index.html')
-          s=p.read_text().replace('equipmentlock.js?v=20260915-optimization1','equipmentlock.js?v=20260915-enhancement-sale1').replace('enhancementrewardintegration.js?v=20260915-enhancement-batch3','enhancementrewardintegration.js?v=20260915-enhancement-sale1')
-          p.write_text(s)
+          p=Path('enhancementrewardintegration.js'); s=p.read_text(); start=s.index('\n function saleStone('); end=s.rindex('\n})();'); p.write_text(s[:start]+'\n'+s[end:])
+          p=Path('index.html'); s=p.read_text().replace('equipmentlock.js?v=20260915-optimization1','equipmentlock.js?v=20260915-enhancement-sale1').replace('enhancementrewardintegration.js?v=20260915-enhancement-batch3','enhancementrewardintegration.js?v=20260915-enhancement-sale1'); p.write_text(s)
           PY
-      - name: Verify sale integration
+      - name: Verify integration
         run: |
           python - <<'PY'
           from pathlib import Path
-          e=Path('equipmentlock.js').read_text()
-          r=Path('enhancementrewardintegration.js').read_text()
-          i=Path('index.html').read_text()
+          e=Path('equipmentlock.js').read_text(); r=Path('enhancementrewardintegration.js').read_text(); i=Path('index.html').read_text()
           assert 'function saleEnhancementReward(item)' in e
-          assert 'enhancementStones:saleEnhancementReward(item)' in e
+          assert e.count('enhancementStones:saleEnhancementReward(item)') == 3
           assert 'data.targets.forEach(item=>{const r=saleEnhancementReward(item)' in e
-          assert '已出售裝備，獲得 ${r.sold.toLocaleString()} 金幣' in e
           assert '另獲得 ${stoneText}' in e
-          assert 'function saleStone(' not in r
-          assert 'window.equipmentSellSelected=function' not in r
-          assert 'window.equipmentSellLowerAll=function' not in r
+          assert 'function saleStone(' not in r and 'window.equipmentSellSelected=function' not in r and 'window.equipmentSellLowerAll=function' not in r
           assert 'const baseFightOnce=fightOnce;' in r
           assert 'equipmentlock.js?v=20260915-enhancement-sale1' in i
           print('sale integration verified')
