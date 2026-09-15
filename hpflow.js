@@ -18,12 +18,12 @@
    .replace("回血並開始戰鬥","開始戰鬥");
  };
 
+ // 主線入口統一尊重 UI 選擇的單場／連續模式；Boss 不再於 HP flow 被強制改回單場。
  window.startBattles=function(){
   if(battleBusy)return;
-  const e=typeof getPreviewEncounter==="function"?getPreviewEncounter(selectedMap,selectedEnemy):monsterObj(selectedMap,selectedEnemy);
-  const count=e.kind==="boss"?1:selectedBattleCount;
-  beginCombat(count);
+  beginCombat(selectedBattleCount);
  };
+ window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION=1;
 
  // 新版規則下，非戰鬥狀態維持滿 HP；不再在此重跑 migration。
  restorePlayerHp({save:false});
