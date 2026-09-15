@@ -114,6 +114,12 @@
   const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));
   return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1))};
  }
+ function offlineEnhancementStoneReward(enemy,battleCount,playerLevel){
+  const count=Math.max(0,Math.floor(Number(battleCount)||0));
+  if(!enemy||count<1||typeof expectedMainlineEnhancementStoneReward!=="function")return {basic:0,advanced:0};
+  const expected=expectedMainlineEnhancementStoneReward(enemy,playerLevel);
+  return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:0};
+ }
  function normalizePending(raw){
   if(!isObject(raw))return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
@@ -148,8 +154,8 @@
   let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;
   const expBefore=expSnapshot();
   const bestByType=new Map(),mythics=[];
-  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0,saleBasicStones=0,saleAdvancedStones=0;
-  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);if(typeof enhancementStoneSaleReward==="function"){const r=enhancementStoneSaleReward(item);saleBasicStones+=Math.max(0,Math.floor(Number(r?.basic)||0));saleAdvancedStones+=Math.max(0,Math.floor(Number(r?.advanced)||0));}}
+  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0,saleStones=normalizeEnhancementStoneReward(null);
+  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);saleStones=mergeEnhancementStoneRewards(saleStones,enhancementStoneSaleReward(item));}
   function consider(item){
    item=normalizeOfflineDrop(item);if(!item)return;
    droppedCount++;
@@ -183,14 +189,11 @@
   if(keptOrdinary.length)upgradeDropNoticePending=true;
   const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);
   state.gold+=directGold+convertedGold+soldGold;
-  let battleBasicStones=0;
-  if(enemy?.kind!=="boss"&&typeof enhancementStoneEligible==="function"&&enhancementStoneEligible(settlementPlayerLevel,enemy.level)){
-   const theoretical=count*(enemy.kind==="elite"?1.3:1);
-   battleBasicStones=Math.floor(theoretical*OFFLINE_ENHANCEMENT_STONE_RATE);
-  }
-  if(typeof addEnhancementStones==="function"&&(battleBasicStones||saleBasicStones||saleAdvancedStones))addEnhancementStones(battleBasicStones+saleBasicStones,saleAdvancedStones);
+  const battleStones=offlineEnhancementStoneReward(enemy,count,settlementPlayerLevel);
+  const totalStones=mergeEnhancementStoneRewards(battleStones,saleStones);
+  if(totalStones.basic||totalStones.advanced)addEnhancementStones(totalStones.basic,totalStones.advanced);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleBasicStones,saleBasic:saleBasicStones,saleAdvanced:saleAdvancedStones,totalBasic:battleBasicStones+saleBasicStones,totalAdvanced:saleAdvancedStones},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
+  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleStones.basic,saleBasic:saleStones.basic,saleAdvanced:saleStones.advanced,totalBasic:totalStones.basic,totalAdvanced:totalStones.advanced},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
  }
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
@@ -277,6 +280,8 @@
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
+ window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
+ window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
 })();
