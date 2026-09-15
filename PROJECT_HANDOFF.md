@@ -54,6 +54,9 @@
 - 地圖由 `registerRegionMaps()` 依固定 region/index 註冊，不依 script push 順序決定位置。
 - 普通怪／菁英怪依進度解鎖。
 - 普通怪、菁英怪與 Boss 都可選擇單場或連續戰鬥；三者共用同一套主線 continuous pipeline、停止按鈕與結算。
+- `ui.js` 是正式主線戰鬥入口 owner：`startBattles()` 讀取 `selectedBattleCount`、執行 `healBeforeBattle()`，再把同一個 count 傳給 `beginCombat(count)`；`hpflow.js` 不再覆寫主線 UI 或戰鬥入口。
+- `CONTINUOUS_BATTLE_COUNT = "continuous"` 由 `ui.js` 統一提供；`battlepipeline.js` 只讀取這個正式 marker，不再維護第二份字串常數。
+- `combatpacing.js` 是主線場間節奏 owner，`MAIN_BATTLE_PACING_VERSION = 1`；`mainBattleGapMs(kind)` 正式提供 normal 140ms、elite 220ms、Boss 140ms，`battlepipeline.js` 不再維護第二份 gap 常數。
 - Boss 首次擊敗會解鎖下一張地圖；若當時使用連續戰鬥，仍留在原本地圖繼續挑戰同一隻 Boss，不自動跳圖。
 - Boss 戰敗會立即停止連續戰鬥、鎖定再挑戰並把 `bossProgress` 歸零；需重新擊敗該地圖菁英 10 隻才會再次出現。
 - Boss 不觸發特殊怪，也不消耗黑市情報。
@@ -285,11 +288,11 @@ state.enhancement = {
 
 1. `enhancementmigration.js`：只驗新舊存檔與 enhancement normalization 相容性，輸出 `ENHANCEMENT_INTEGRITY_REPORT`。
 2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI owner、GM owner、指南與戰鬥摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
-3. `bosscontinuousintegrity.js`：集中驗證 Boss 單場／連戰共用模式、取消舊單場強制、戰敗鎖王／歸零、連戰死亡停止、同目標續戰、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算與 Guide v10 文案，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
+3. `bosscontinuousintegrity.js`：`BOSS_CONTINUOUS_INTEGRITY_VERSION = 4`；集中驗證 Boss 單場／連戰共用模式、`ui.js` 戰鬥入口 ownership、10 隻菁英重開 Boss 的實際 state probe、停止連戰 request／pipeline 邊界、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算、Guide v10、統一 continuous marker 與共用 battle gap owner，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
 
 `runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。
 
-已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`。現在直接以正式 UI version／DOM style absence／owner API 做回歸檢查。
+已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`、`HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION`。現在直接以正式 owner API／行為 probe／版本與結構做回歸檢查。
 
 ---
 
@@ -350,6 +353,29 @@ state.enhancement = {
 - `runtimeintegrity.js` 正式要求 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，並把 Guide 基準更新到 v10。
 - `PROJECT_HANDOFF.md` 正式更新 Boss 連戰、背景／離線排除、Guide v10 與 Integrity 規則。
 
+## Boss 連戰後續 A/B 架構優化（2026-09-15）
+
+### 第 1 批：入口 owner 收斂
+
+- `ui.js` 成為唯一 `startBattles()` owner，戰前回血與 battle mode 傳遞都在同一入口。
+- `hpflow.js` 移除 `playerStatusHtml()`、`adventurePreparePage()`、`startBattles()` late override，只保留 HP 共用 API。
+- 準備畫面正式文案直接回到 `ui.js`，不再以 `.replace()` patch HTML。
+
+### 第 2 批：行為 Integrity 強化
+
+- `bosscontinuousintegrity.js` 增加 0→9→10 隻菁英重開 Boss 的 state probe，並在測試後還原玩家狀態。
+- 補上非菁英不得推進、10/10 capped、停止連戰 request、單場拒絕 stop、pipeline 三個停止邊界等檢查。
+- 不再依賴 HP flow 修補 marker 來判定 Boss 連戰是否正確。
+
+### 第 3 批：共用 marker／pacing／舊 marker 收尾
+
+- `CONTINUOUS_BATTLE_COUNT` 維持 `ui.js` 單一 owner，`battlepipeline.js` 只讀取正式 marker。
+- 主線場間 gap 集中到 `combatpacing.js -> mainBattleGapMs(kind)`；normal/Boss 140ms、elite 220ms，`battlepipeline.js` 不再複製常數。
+- `MAIN_BATTLE_PACING_VERSION = 1`。
+- `HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION` 正式退休並從 `hpflow.js` 移除。
+- Boss Integrity 升到 v4，新增 marker／pacing owner 與舊 marker absence 檢查。
+- Save Schema、戰鬥平衡、Boss 獎勵、離線規則均未改動。
+
 ---
 
 # 14. 正式背景圖製作與預載 SOP
@@ -394,6 +420,7 @@ assets/backgrounds/enhancement/mobile.webp
 - `offlineprogress.js` 本身仍含 inline offline modal styles，這是既有離線 UI 架構，不是 enhancement wrapper。
 - `gmhub.js` 本身仍以 JS 建立 GM Hub 通用 styles，這是 GM Hub 既有 ownership；本輪只把 enhancement 專屬 grid CSS 移出 enhancement JS。
 - `enhancementcombat.js` 仍保留相容 helper 名稱，但不再覆寫正式 `equippedStats()` owner。
+- `backgroundprogress.js` 仍以 wrapper 方式接主線背景執行補償；目前 Boss 已正式排除，若未來重構應另開範圍，不要在一般功能修改中順手拆。
 - 真機瀏覽器行為仍以實測為重要依據；若出現 stale JS/CSS／背景，先檢查 cache-bust，再考慮其他原因。
 
 ---
@@ -419,6 +446,9 @@ assets/backgrounds/enhancement/mobile.webp
 - GM 自己複製一套強化主能力公式的做法。
 - 出售強化石多層 wrapper 重複 grant 的做法。
 - Boss 固定只能單場挑戰的舊規則。
+- `hpflow.js` 覆寫 `startBattles()`／`adventurePreparePage()`／`playerStatusHtml()` 的舊做法。
+- `HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION` 歷史修補 marker。
+- `battlepipeline.js` 自己維護第二份 `"continuous"` marker 或 normal／elite 場間 gap 常數的做法。
 
 ---
 
