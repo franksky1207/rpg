@@ -245,6 +245,7 @@
    try{
     await updateRecoveredPassword(password);
     clearRecoveryState();
+    setBusy(false);
     setStatus("密碼已更新完成，正在進入遊戲…","success");
     setTimeout(()=>notifySignedIn(currentSession),700);
    }catch(error){setStatus(authMessage(error),"error");setBusy(false);}
