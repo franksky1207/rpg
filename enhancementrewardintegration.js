@@ -1,18 +1,25 @@
 (function(){
+ function mergeRewards(...rewards){return typeof mergeEnhancementStoneRewards==="function"?mergeEnhancementStoneRewards(...rewards):rewards.reduce((sum,reward)=>({basic:sum.basic+Math.max(0,Math.floor(Number(reward?.basic)||0)),advanced:sum.advanced+Math.max(0,Math.floor(Number(reward?.advanced)||0))}),{basic:0,advanced:0});}
+ function hasReward(reward){return typeof hasEnhancementStoneReward==="function"?hasEnhancementStoneReward(reward):Math.max(0,Math.floor(Number(reward?.basic)||0))>0||Math.max(0,Math.floor(Number(reward?.advanced)||0))>0;}
+
  const baseFightOnce=fightOnce;
  fightOnce=function(...args){
   const playerLevelBefore=Math.max(1,Math.floor(Number(state.level)||1));
   const result=baseFightOnce(...args);
   if(result?.ok===true&&result?.win===true&&result?.e){
-   const reward=mainlineEnhancementStoneReward(result.e,playerLevelBefore);
-   if(reward.basic||reward.advanced){addEnhancementStones(reward.basic,reward.advanced);result.enhancementStones=reward;const text=enhancementStoneRewardText(reward);if(text)result.logs?.push(`獲得 ${text}。`);}
-   (result.items||[]).forEach(row=>{if(!row?.sold||!row.item)return;const sr=enhancementStoneSaleReward(row.item);const text=enhancementStoneRewardText(sr);if(text)result.logs?.push(`出售裝備另獲得 ${text}。`);});
+   const battleReward=mainlineEnhancementStoneReward(result.e,playerLevelBefore);
+   if(hasReward(battleReward)){
+    addEnhancementStones(battleReward.basic,battleReward.advanced);
+    result.enhancementStones=battleReward;
+   }
+   const autoSaleReward=(result.items||[]).reduce((sum,row)=>row?.sold&&row.item?mergeRewards(sum,enhancementStoneSaleReward(row.item)):sum,{basic:0,advanced:0});
+   if(hasReward(autoSaleReward))result.saleEnhancementStones=autoSaleReward;
   }
   return result;
  };
  window.fightOnce=fightOnce;
 
- // equipmentlock.js 已正式負責所有出售發獎；此處只補單件手動出售的玩家可見訊息。
+ // equipmentlock.js 正式負責所有出售發獎；此處只讓單件手動出售使用共用強化石顯示格式。
  if(typeof window.sellSelected==="function"){
   window.sellSelected=function(){
    let r=equipmentSellSelected();
