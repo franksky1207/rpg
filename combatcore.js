@@ -128,6 +128,7 @@
   const e=encounter||createMonsterEncounter(mapIdx,eIdx);
   if(e.kind==="boss"&&!canBoss(mapIdx))return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
 
+  const playerLevelBefore=Math.max(1,Math.floor(Number(state.level)||1));
   const ps=playerCombatStats();
   const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true});
   state.hp=combat.hp;
@@ -161,15 +162,21 @@
   }
 
   const items=[];
+  let saleEnhancementStones={basic:0,advanced:0};
   const it=dropItem(e,mapIdx),ir=addItem(it);
-  if(it)items.push({item:it,sold:ir.sold||0});
+  if(it){
+   items.push({item:it,sold:ir.sold||0});
+   saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,ir.enhancementStones);
+  }
   if(e.kind==="boss"&&(state.vipLevel||0)>=16&&Math.random()<.15){
    const extra=dropItem(e,mapIdx);
    if(extra){
     const extraResult=addItem(extra);
     items.push({item:extra,sold:extraResult.sold||0,vip16Extra:true});
+    saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,extraResult.enhancementStones);
    }
   }
+  const enhancementStones=grantMainlineEnhancementStoneReward(e,playerLevelBefore);
 
   logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
   if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===10)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
@@ -179,6 +186,8 @@
   if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
   items.forEach(row=>logs.push(`${row.sold?`自動出售 ${itemHtmlPlain(row.item)}，金幣 +${row.sold}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`));
   save(false);
-  return {ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,combatEndHp,turns:combat.turns};
+  return {ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns};
  };
+ window.fightOnce=fightOnce;
+ window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION=2;
 })();
