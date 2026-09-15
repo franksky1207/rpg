@@ -22,5 +22,27 @@
  if(enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
  const saleLegend=enhancementStoneSaleReward({q:4}),saleMythic=enhancementStoneSaleReward({q:5});if(saleLegend.basic!==5||saleMythic.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
  if(Math.abs(enhancedMainStatValue(100,20)-150)>1e-9)fail("MAIN_STAT","+20 主能力倍率異常");
+
+ if(typeof window.normalizeEnhancementStoneReward!=="function"||typeof window.mergeEnhancementStoneRewards!=="function"||typeof window.enhancementStoneRewardText!=="function")fail("REWARD_HELPERS","強化石共用正規化／合併／顯示 API 未完整載入");
+ else{
+  const normalized=window.normalizeEnhancementStoneReward({basic:5.9,advanced:-3});
+  if(normalized.basic!==5||normalized.advanced!==0)fail("REWARD_NORMALIZE","強化石獎勵正規化異常");
+  const merged=window.mergeEnhancementStoneRewards({basic:1,advanced:0},{basic:5,advanced:1});
+  if(merged.basic!==6||merged.advanced!==1)fail("REWARD_MERGE","強化石獎勵合併異常");
+  const text=window.enhancementStoneRewardText(merged);
+  if(!text.includes("基礎強化石 +6")||!text.includes("進階強化石 +1"))fail("REWARD_TEXT","強化石共用顯示文字異常");
+ }
+ if(typeof window.blankBattleEnhancementRewards!=="function"||typeof window.addBattleEnhancementReward!=="function")fail("BATTLE_REWARD_SUMMARY","戰鬥強化石摘要 API 未載入");
+ else{
+  const ctx={enhancementRewards:window.blankBattleEnhancementRewards()};
+  window.addBattleEnhancementReward(ctx,"battle",{basic:1,advanced:1});
+  window.addBattleEnhancementReward(ctx,"autoSale",{basic:5,advanced:0});
+  if(ctx.enhancementRewards.battle.basic!==1||ctx.enhancementRewards.battle.advanced!==1||ctx.enhancementRewards.autoSale.basic!==5)fail("BATTLE_REWARD_ACCUMULATE","戰鬥強化石來源累積異常");
+  if(typeof window.enhancementStoneSettlementSummaryHtml!=="function")fail("SETTLEMENT_REWARD_UI","戰鬥強化石結算顯示 API 未載入");
+  else{
+   const html=window.enhancementStoneSettlementSummaryHtml(ctx);
+   if(!html.includes("打怪掉落")||!html.includes("AUTO 出售")||!html.includes("基礎強化石 +5")||!html.includes("進階強化石 +1"))fail("SETTLEMENT_REWARD_CONTENT","戰鬥強化石結算來源顯示異常");
+  }
+ }
  window.ENHANCEMENT_FINAL_INTEGRITY={passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
