@@ -5,24 +5,8 @@
   return state.hp;
  };
 
- // 正式 load/migration pipeline 已集中於 savemigration.js；本檔只負責 HP 規則與戰鬥入口。
- window.playerStatusHtml=function(){
-  const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
-  return `<div class="card player-status-card"><div style="font-size:18px;font-weight:700;color:#f0d494;margin-bottom:9px">${playerNameHtml()}</div><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line"><div class="status-label"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
- };
-
- const baseAdventurePreparePage=window.adventurePreparePage;
- window.adventurePreparePage=function(){
-  return baseAdventurePreparePage()
-   .replace("回血並挑戰 Boss","挑戰 Boss")
-   .replace("回血並開始戰鬥","開始戰鬥");
- };
-
- // 主線入口統一尊重 UI 選擇的單場／連續模式；Boss 不再於 HP flow 被強制改回單場。
- window.startBattles=function(){
-  if(battleBusy)return;
-  beginCombat(selectedBattleCount);
- };
+ // 正式 load/migration pipeline 已集中於 savemigration.js；本檔只負責 HP 共用規則，不再覆寫主線 UI／戰鬥入口。
+ // 相容標記暫時保留，Boss continuous 的正式入口 owner 已回到 ui.js。
  window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION=1;
 
  // 新版規則下，非戰鬥狀態維持滿 HP；不再在此重跑 migration。
