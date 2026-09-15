@@ -1,0 +1,74 @@
+name: Integrate offline enhancement rewards
+on:
+  push:
+    paths:
+      - '.github/workflows/integrate-offline-enhancement.yml'
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Integrate enhancement rewards into offline core
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('offlineprogress.js')
+          s=p.read_text()
+          s=s.replace(' const OFFLINE_GEAR_RATE=.10;\n', ' const OFFLINE_GEAR_RATE=.10;\n const OFFLINE_ENHANCEMENT_STONE_RATE=.05;\n')
+          s=s.replace('  const count=Math.max(0,Math.floor(Number(pending.battles)||0));\n  let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;\n', '  const count=Math.max(0,Math.floor(Number(pending.battles)||0));\n  const settlementPlayerLevel=Math.max(1,Math.floor(Number(state.level)||1));\n  let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;\n')
+          s=s.replace('  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0;\n  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);}\n', '  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0,saleBasicStones=0,saleAdvancedStones=0;\n  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);if(typeof enhancementStoneSaleReward==="function"){const r=enhancementStoneSaleReward(item);saleBasicStones+=Math.max(0,Math.floor(Number(r?.basic)||0));saleAdvancedStones+=Math.max(0,Math.floor(Number(r?.advanced)||0));}}\n')
+          old='  const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);\n  state.gold+=directGold+convertedGold+soldGold;\n  if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;\n  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};\n'
+          new='  const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);\n  state.gold+=directGold+convertedGold+soldGold;\n  let battleBasicStones=0;\n  if(enemy?.kind!=="boss"&&typeof enhancementStoneEligible==="function"&&enhancementStoneEligible(settlementPlayerLevel,enemy.level)){\n   const theoretical=count*(enemy.kind==="elite"?1.3:1);\n   battleBasicStones=Math.floor(theoretical*OFFLINE_ENHANCEMENT_STONE_RATE);\n  }\n  if(typeof addEnhancementStones==="function"&&(battleBasicStones||saleBasicStones||saleAdvancedStones))addEnhancementStones(battleBasicStones+saleBasicStones,saleAdvancedStones);\n  if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;\n  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleBasicStones,saleBasic:saleBasicStones,saleAdvanced:saleAdvancedStones,totalBasic:battleBasicStones+saleBasicStones,totalAdvanced:saleAdvancedStones},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};\n'
+          if old not in s: raise SystemExit('reward return anchor not found')
+          s=s.replace(old,new)
+          old='  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div></div>${offlineGearHtml(result.gear)}${capNote}`;\n'
+          new='  const enhancement=result.enhancement||{battleBasic:0,saleBasic:0,saleAdvanced:0,totalBasic:0,totalAdvanced:0};\n  const stoneSaleParts=[enhancement.saleBasic?`基礎強化石 +${enhancement.saleBasic.toLocaleString()}`:"",enhancement.saleAdvanced?`進階強化石 +${enhancement.saleAdvanced.toLocaleString()}`:""].filter(Boolean);\n  const stoneSaleNote=stoneSaleParts.length?`<div class="muted" style="margin-top:8px">離線出售裝備另獲得 ${stoneSaleParts.join("、")}</div>`:"";\n  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div><div class="offline-reward-card"><div class="offline-reward-label">基礎強化石</div><div class="offline-reward-value">+${Math.max(0,Number(enhancement.battleBasic)||0).toLocaleString()}</div><div class="muted" style="margin-top:6px">離線戰鬥收益 5%</div></div></div>${offlineGearHtml(result.gear)}${stoneSaleNote}${capNote}`;\n'
+          if old not in s: raise SystemExit('result html anchor not found')
+          s=s.replace(old,new)
+          s=s.replace(' installSaveWrapper();\n settleOfflineOnLoad().finally(()=>installHeartbeat());\n})();', ' window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;\n installSaveWrapper();\n settleOfflineOnLoad().finally(()=>installHeartbeat());\n})();')
+          p.write_text(s)
+
+          idx=Path('index.html')
+          t=idx.read_text()
+          old='<script src="enhancementoffline.js?v=20260915-enhancement-batch3"></script>'
+          if old not in t: raise SystemExit('enhancementoffline script anchor not found')
+          t=t.replace(old,'')
+          t=t.replace('offlineprogress.js?v=20260914-batch2','offlineprogress.js?v=20260915-enhancement-offline1')
+          idx.write_text(t)
+
+          Path('enhancementoffline.js').unlink()
+          Path('.github/workflows/integrate-offline-enhancement.yml').unlink()
+          PY
+      - name: Verify integration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('offlineprogress.js').read_text()
+          i=Path('index.html').read_text()
+          checks={
+            'rate': 'OFFLINE_ENHANCEMENT_STONE_RATE=.05' in s,
+            'level snapshot': 'settlementPlayerLevel' in s,
+            'elite EV': 'enemy.kind==="elite"?1.3:1' in s,
+            'single floor': 'Math.floor(theoretical*OFFLINE_ENHANCEMENT_STONE_RATE)' in s,
+            'sale rewards': 'saleAdvancedStones' in s and 'enhancementStoneSaleReward' in s,
+            'result UI': '離線戰鬥收益 5%' in s,
+            'old observer removed': not Path('enhancementoffline.js').exists(),
+            'old script removed': 'enhancementoffline.js' not in i,
+            'new cache key': 'offlineprogress.js?v=20260915-enhancement-offline1' in i,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('verification failed: '+', '.join(bad))
+          print('All offline enhancement integration checks passed.')
+          PY
+      - name: Commit formal integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Integrate enhancement rewards into offline settlement'
+          git push
