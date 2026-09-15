@@ -9,7 +9,8 @@ let inventoryFromAdventure=false;
 
 const CONTINUOUS_BATTLE_COUNT="continuous";
 window.CONTINUOUS_BATTLE_COUNT=CONTINUOUS_BATTLE_COUNT;
-function battleModesForEnemy(enemy){return enemy?.kind==="boss"?[1]:[1,CONTINUOUS_BATTLE_COUNT]}
+window.MAIN_BOSS_CONTINUOUS_VERSION=1;
+function battleModesForEnemy(enemy){return [1,CONTINUOUS_BATTLE_COUNT]}
 function battleModeLabel(mode){return mode===CONTINUOUS_BATTLE_COUNT?"連續戰鬥":"單場"}
 function setBattleMode(mode,el){
  selectedBattleCount=mode===CONTINUOUS_BATTLE_COUNT?CONTINUOUS_BATTLE_COUNT:1;
@@ -99,7 +100,7 @@ function enterMap(i){
  selectedMap=i;selectedEnemy=0;selectedBattleCount=1;adventureScreen="prepare";render();
 }
 function backToMaps(){adventureScreen="maps";render()}
-function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;const e=monsterObj(selectedMap,selectedEnemy);if(e.kind==="boss")selectedBattleCount=1;render()}
+function selectEnemy(i){if(!enemyUnlocked(selectedMap,i))return;selectedEnemy=i;render()}
 function enemyProgressValue(mapIdx,enemyIdx){
  const p=state.mapProgress?.[mapIdx]||[0,0,0,0];
  if(enemyIdx<3)return Math.min(10,Math.max(0,Math.floor(Number(p[enemyIdx])||0)));
@@ -155,8 +156,7 @@ function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();i
 function healBeforeBattle(){state.hp=playerCombatStats().hp;save(false)}
 function startBattles(){
  if(battleBusy)return;
- const e=typeof getPreviewEncounter==="function"?getPreviewEncounter(selectedMap,selectedEnemy):monsterObj(selectedMap,selectedEnemy);
- const count=e.kind==="boss"?1:selectedBattleCount;
+ const count=selectedBattleCount;
  healBeforeBattle();beginCombat(count);
 }
 function beginCombat(count){
