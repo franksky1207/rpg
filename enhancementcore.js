@@ -17,14 +17,10 @@
  function normalizeEnhancementState(target){
   if(!target||typeof target!=="object")return target;
   const source=target.enhancement&&typeof target.enhancement==="object"&&!Array.isArray(target.enhancement)?target.enhancement:{};
-  const rawLevels=source.levels&&typeof source.levels==="object"&&!Array.isArray(source.levels)?source.levels:{};
+  const rawLevels=source.levels&&typeof source.levels==="object"&&!Array.isArray(source.levels.levels)?source.levels:{};
   const levels=blankLevels();
   SLOTS.forEach(type=>{levels[type]=clampWhole(rawLevels[type],0,MAX_LEVEL);});
-  target.enhancement={
-   basicStones:normalizeCount(source.basicStones),
-   advancedStones:normalizeCount(source.advancedStones),
-   levels
-  };
+  target.enhancement={basicStones:normalizeCount(source.basicStones),advancedStones:normalizeCount(source.advancedStones),levels};
   return target;
  }
  function enhancementLevel(target,type){
@@ -38,10 +34,7 @@
   const n=clampWhole(targetLevel,1,MAX_LEVEL);
   return {basic:BASIC_COST_PER_TARGET_LEVEL*n,advanced:ADVANCED_COST_PER_TARGET_LEVEL*n};
  }
- function enhancedMainStatValue(rawValue,level){
-  const raw=Math.max(0,Number(rawValue)||0);
-  return raw*enhancementMultiplier(level);
- }
+ function enhancedMainStatValue(rawValue,level){return Math.max(0,Number(rawValue)||0)*enhancementMultiplier(level);}
 
  window.ENHANCEMENT_MAX_LEVEL=MAX_LEVEL;
  window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL=BONUS_PERCENT_PER_LEVEL;
@@ -53,4 +46,10 @@
  window.enhancementMultiplier=enhancementMultiplier;
  window.enhancementUpgradeCost=enhancementUpgradeCost;
  window.enhancedMainStatValue=enhancedMainStatValue;
+
+ // 強化是正式持久資料，但不占用 newState normalizer 名額；包裝既有 newState 建立預設值。
+ if(typeof window.newState==="function"){
+  const baseNewState=window.newState;
+  window.newState=function(){return normalizeEnhancementState(baseNewState());};
+ }
 })();
