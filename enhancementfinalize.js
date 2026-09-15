@@ -15,6 +15,7 @@
  // 強化專屬回歸檢查，保留在獨立報告避免干擾既有 Runtime Integrity 正式報告。
  const errors=[];
  const fail=(code,message)=>errors.push({code,message});
+ if(window.ENHANCEMENT_INTEGRITY_REPORT?.passed!==true)fail("CORE_INTEGRITY","強化核心／存檔正式化檢查未通過");
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("MAX_LEVEL","強化上限不是 20");
  if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("BONUS","每級強化不是 2.5%");
  const c20=enhancementUpgradeCost(20);if(c20.basic!==2000||c20.advanced!==100)fail("COST20","+20 成本異常");
@@ -22,6 +23,16 @@
  if(enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
  const saleLegend=enhancementStoneSaleReward({q:4}),saleMythic=enhancementStoneSaleReward({q:5});if(saleLegend.basic!==5||saleMythic.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
  if(Math.abs(enhancedMainStatValue(100,20)-150)>1e-9)fail("MAIN_STAT","+20 主能力倍率異常");
+ if(typeof window.rawEquippedStats!=="function"||typeof window.equippedStatsWithEnhancementLevels!=="function")fail("COMBAT_OWNER","engine.js 正式強化能力 API 未載入");
+ else{
+  try{
+   const raw=window.rawEquippedStats();
+   const zero=window.equippedStatsWithEnhancementLevels(Object.fromEntries((window.ENHANCEMENT_SLOTS||[]).map(type=>[type,0])));
+   ["hp","atk","def","crit","dodge"].forEach(stat=>{if(Math.abs((Number(raw?.[stat])||0)-(Number(zero?.[stat])||0))>1e-9)fail("COMBAT_ZERO_LEVEL",`+0 強化不應改變 ${stat}`);});
+   const maxed=window.equippedStatsWithEnhancementLevels(Object.fromEntries((window.ENHANCEMENT_SLOTS||[]).map(type=>[type,20])));
+   ["hp","atk","def","crit","dodge"].forEach(stat=>{if((Number(maxed?.[stat])||0)+1e-9<(Number(raw?.[stat])||0))fail("COMBAT_MAX_LEVEL",`+20 強化不應降低 ${stat}`);});
+  }catch(error){fail("COMBAT_PROBE",`正式強化能力計算測試失敗：${String(error)}`);}
+ }
  if(window.ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED!==true)fail("SUCCESS_ALERT","強化成功後不應再跳出第二個成功提示視窗");
  if(window.ENHANCEMENT_UI_UNIFORM_GRID!==true)fail("UNIFORM_GRID","桌機版五個強化欄位應維持相同卡片寬度");
  const uiStyle=document.getElementById("enhancement-ui-styles")?.textContent||"";
