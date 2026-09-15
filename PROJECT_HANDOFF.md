@@ -287,7 +287,7 @@ state.enhancement = {
 2. `enhancementintegrity.js`：集中驗證強化核心、成本、掉石、出售、離線、戰鬥能力、UI owner、GM owner、指南與戰鬥摘要，輸出 `ENHANCEMENT_FINAL_INTEGRITY`。
 3. `bosscontinuousintegrity.js`：集中驗證 Boss 單場／連戰共用模式、取消舊單場強制、戰敗鎖王／歸零、連戰死亡停止、同目標續戰、Boss 特殊怪排除、background catch-up 排除、離線不產生 Boss 進階石、共用結算與 Guide v10 文案，輸出 `BOSS_CONTINUOUS_INTEGRITY`。
 
-`runtimeintegrity.js` 繼續形成全專案 `PROJECT_RUNTIME_REPORT`；Boss 連戰另有專屬 `BOSS_CONTINUOUS_INTEGRITY` 報告，並在 `runtimeintegrity.js` 前載入，便於同一頁面檢查兩份結果。
+`runtimeintegrity.js` 會要求 `ENHANCEMENT_FINAL_INTEGRITY.passed === true` 與 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，再和全專案世界、Save12、VIP、專精、每日、副本、虛空、退休商店、特殊怪 payout、Guide v10 等檢查一起形成 `PROJECT_RUNTIME_REPORT`。
 
 已移除歷史 marker：`ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED`、`ENHANCEMENT_UI_UNIFORM_GRID`。現在直接以正式 UI version／DOM style absence／owner API 做回歸檢查。
 
@@ -347,6 +347,7 @@ state.enhancement = {
 
 - 新增 `bosscontinuousintegrity.js`。
 - `index.html` 在 `runtimeintegrity.js` 前載入 Boss 專屬 Integrity。
+- `runtimeintegrity.js` 正式要求 `BOSS_CONTINUOUS_INTEGRITY.passed === true`，並把 Guide 基準更新到 v10。
 - `PROJECT_HANDOFF.md` 正式更新 Boss 連戰、背景／離線排除、Guide v10 與 Integrity 規則。
 
 ---
