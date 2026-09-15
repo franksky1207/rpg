@@ -16,7 +16,7 @@
 
  window.gmSetTestEnhancement=function(type,value){if(!slots().includes(type))return;window.gmTestEnhancementLevels[type]=clampLevel(value);const info=document.getElementById("gmEnhancementTestInfo");if(info)info.textContent=testSummary();};
  window.gmUseCurrentEnhancementTestStatus=function(){ensure();slots().forEach(type=>{const lv=typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):clampLevel(state?.enhancement?.levels?.[type]);window.gmTestEnhancementLevels[type]=lv;const el=document.getElementById(`gmEnhance-test-${type}`);if(el)el.value=String(lv);});const info=document.getElementById("gmEnhancementTestInfo");if(info)info.textContent=testSummary();};
- window.gmEnhancementTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的五個裝備欄位強化測試等級；只改測試快照，不消耗強化石、不修改正式角色資料，重新整理後回到 +0。</div>${grid("test")}<div class="controls" style="margin-top:10px"><button class="btn blue" type="button" onclick="gmUseCurrentEnhancementTestStatus()">目前狀態</button><span id="gmEnhancementTestInfo" class="muted">${testSummary()}</span></div>`;};
+ window.gmEnhancementTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的五個裝備欄位強化測試等級；只改測試快照，不消耗強化石、不修改正式角色資料，重新整理後回到 +0。</div>${grid("test")}<div id="gmEnhancementTestInfo" class="muted" style="margin-top:10px">${testSummary()}</div>`;};
  window.gmTestEnhancementLevel=function(type){return testLevel(type);};
  window.gmTestEnhancedEquippedStats=function(){
   const base=typeof window.rawEquippedStats==="function"?window.rawEquippedStats():equippedStats();
@@ -24,7 +24,15 @@
   slots().forEach(type=>{const item=state?.equipment?.[type];if(!item?.mainStat)return;const stat=item.mainStat.stat,raw=Math.max(0,Number(item.mainStat.value)||0),delta=(typeof window.enhancedMainStatValue==="function"?window.enhancedMainStatValue(raw,testLevel(type)):raw)-raw;if(stat in out)out[stat]=(Number(out[stat])||0)+delta;});
   out.crit=Math.round((Number(out.crit)||0)*10)/10;out.dodge=Math.round((Number(out.dodge)||0)*10)/10;return out;
  };
- window.gmTestPlayerStatsWithEnhancement=function(){const vip=Math.max(0,Math.floor(Number(window.gmTestVipLevel)||0));const base=window.gmTestEnhancedEquippedStats();return createSpecialPlayerSnapshot(playerCombatStats(base,vip));};
+ window.gmTestPlayerStatsWithEnhancement=function(){const vip=Math.max(0,Math.min(Number(window.VIP_MAX_LEVEL)||20,Math.floor(Number(window.gmTestVipLevel)||0)));const base=window.gmTestEnhancedEquippedStats();return createSpecialPlayerSnapshot(playerCombatStats(base,vip));};
+
+ // 單一「目前狀態」同步 VIP、專精、強化；沿用 VIP GM 原按鈕，不新增第二顆。
+ const baseUseCurrentTestStatus=window.gmUseCurrentTestStatus;
+ window.gmUseCurrentTestStatus=function(){if(typeof baseUseCurrentTestStatus==="function")baseUseCurrentTestStatus();window.gmUseCurrentEnhancementTestStatus();};
+
+ // 所有既有 GM 戰鬥測試都經 gmTestPlayerStats 取得玩家快照；在此統一接入測試強化。
+ window.gmTestPlayerStats=function(){return window.gmTestPlayerStatsWithEnhancement();};
+ window.gmTestEnhancementLabel=function(){return testSummary();};
 
  function installStyles(){if(document.getElementById("enhancementGmStyles"))return;const style=document.createElement("style");style.id="enhancementGmStyles";style.textContent=`.gm-enhancement-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:10px}.gm-enhancement-grid label{display:flex;flex-direction:column;gap:5px;color:#d8c49a;font-size:13px}.gm-enhancement-grid select{width:100%}@media(max-width:760px){.gm-enhancement-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}`;document.head.appendChild(style);}
 
