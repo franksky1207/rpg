@@ -150,7 +150,8 @@
    }catch(applyError){if(previous)state=previous;throw applyError;}
    setStatus("雲端存檔已下載完成，正在重新載入遊戲…","success");
    setTimeout(()=>location.reload(),250);
-  }catch(error){renderOnly();setStatus(errorText(error),"error");setBusy(false);}
+  }catch(error){renderOnly();setStatus(errorText(error),"error");}
+  finally{setBusy(false);}
  }
  function installSaveWrapper(){
   if(saveWrapped||typeof window.save!=="function")return;
