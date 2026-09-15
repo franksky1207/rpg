@@ -6,6 +6,7 @@
 .civilization-auth-brand{text-align:center;font-size:32px;line-height:1.15;font-weight:900;letter-spacing:.04em;color:#f0d494}
 .civilization-auth-subtitle{text-align:center;margin-top:7px;color:#9fb0c1;font-size:14px}
 .civilization-auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0 18px}
+.civilization-auth-tabs[hidden]{display:none!important}
 .civilization-auth-tab{min-height:44px;border:1px solid #3a4857;border-radius:10px;background:#111a23;color:#b9c5d1;font-weight:800;font-size:15px;cursor:pointer}
 .civilization-auth-tab.active{border-color:#6d8bab;background:#172637;color:#fff}
 .civilization-auth-tab:disabled{opacity:.55;cursor:default}
@@ -14,12 +15,19 @@
 .civilization-auth-form [hidden]{display:none!important}
 .civilization-auth-form input{width:100%;box-sizing:border-box;margin-top:7px;min-height:46px;border:1px solid #3b4856;border-radius:10px;background:#0b1219;color:#fff;padding:10px 12px;font-size:16px;outline:none}
 .civilization-auth-form input:focus{border-color:#7895b4;box-shadow:0 0 0 2px rgba(120,149,180,.16)}
+.civilization-auth-mode-note{margin:-4px 0 8px;color:#9fb0c1;font-size:14px;line-height:1.6}
+.civilization-auth-link{display:block;margin:9px 0 0 auto;padding:2px 0;border:0;background:transparent;color:#b9c9da;font-size:14px;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.civilization-auth-link:hover{color:#fff}
+.civilization-auth-link:disabled{opacity:.55;cursor:default}
 .civilization-auth-status{margin-top:14px;border:1px solid #374655;border-radius:10px;background:#101923;padding:11px 12px;line-height:1.55;font-size:14px}
 .civilization-auth-status[data-type="error"]{border-color:#7b4242;background:#211414;color:#f2b9b9}
 .civilization-auth-status[data-type="success"]{border-color:#3f6e56;background:#102018;color:#bce2c8}
 .civilization-auth-submit{width:100%;min-height:48px;margin-top:16px;border:1px solid #6c86a0;border-radius:10px;background:#27415a;color:#fff;font-size:16px;font-weight:900;cursor:pointer}
 .civilization-auth-submit:hover{filter:brightness(1.08)}
 .civilization-auth-submit:disabled{opacity:.55;cursor:default;filter:none}
+.civilization-auth-secondary{width:100%;min-height:44px;margin-top:9px;border:1px solid #3a4857;border-radius:10px;background:#111a23;color:#c5d0db;font-size:15px;font-weight:800;cursor:pointer}
+.civilization-auth-secondary:hover{filter:brightness(1.08)}
+.civilization-auth-secondary:disabled{opacity:.55;cursor:default;filter:none}
 .civilization-auth-note{margin-top:17px;color:#8fa0b0;font-size:13px;line-height:1.6;text-align:center}
 .civilization-account-settings{margin-top:22px;padding-top:20px;border-top:1px solid #303944}
 .civilization-account-settings h3{margin:0 0 12px}
