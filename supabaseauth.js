@@ -1,11 +1,12 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=1;
+ const AUTH_VERSION=2;
  let client=null;
  let currentSession=null;
  let mode="login";
  let busy=false;
+ let settingsObserver=null;
 
  window.CIVILIZATION_AUTH_REQUIRED=true;
  window.CIVILIZATION_AUTH_VERSION=AUTH_VERSION;
@@ -66,11 +67,37 @@
   el.hidden=true;
   document.body.classList.remove("auth-gate-open");
  }
+ function accountSettingsHtml(){
+  const email=escapeHtml(currentSession?.user?.email||"未取得 Email");
+  return `<section id="civilizationAccountSettings" class="civilization-account-settings"><h3>帳號</h3><div class="civilization-account-row"><div><div class="civilization-account-label">目前登入</div><div class="civilization-account-email">${email}</div></div><button type="button" class="btn danger" onclick="civilizationAccountLogout()">登出</button></div><div class="muted civilization-account-note">登出只會結束這台裝置的登入狀態，不會刪除目前本機遊戲進度。雲端存檔上傳／下載會在後續功能提供。</div></section>`;
+ }
+ function mountAccountSettings(){
+  if(!currentSession)return;
+  if(document.getElementById("civilizationAccountSettings"))return;
+  const title=document.getElementById("settingsTitle");
+  if(!title)return;
+  const card=title.closest(".card");
+  if(!card)return;
+  const danger=card.querySelector(".danger-zone");
+  const holder=document.createElement("div");
+  holder.innerHTML=accountSettingsHtml();
+  const section=holder.firstElementChild;
+  if(!section)return;
+  if(danger)danger.before(section);else card.appendChild(section);
+ }
+ function installSettingsObserver(){
+  if(settingsObserver||typeof MutationObserver==="undefined")return;
+  const target=document.getElementById("main")||document.body;
+  settingsObserver=new MutationObserver(()=>mountAccountSettings());
+  settingsObserver.observe(target,{childList:true,subtree:true});
+  mountAccountSettings();
+ }
  function notifySignedIn(session){
   currentSession=session||null;
   window.civilizationAuthSession=currentSession;
   if(currentSession){
    hideGate();
+   mountAccountSettings();
    window.dispatchEvent(new CustomEvent("civilization-auth-ready",{detail:{session:currentSession}}));
   }else showGate();
  }
@@ -142,6 +169,30 @@
   if(passwordEl()){passwordEl().value="";passwordEl().setAttribute("autocomplete","current-password");}
   if(confirmEl())confirmEl().value="";
  }
+ async function signOutLocal(){
+  if(!client)return {ok:false,error:new Error("帳號服務尚未初始化。")};
+  try{
+   const {error}=await client.auth.signOut({scope:"local"});
+   if(error)throw error;
+   currentSession=null;
+   window.civilizationAuthSession=null;
+   showGate();
+   applyMode("login");
+   if(emailEl())emailEl().value="";
+   if(passwordEl())passwordEl().value="";
+   if(confirmEl())confirmEl().value="";
+   setStatus("已登出。","success");
+   return {ok:true};
+  }catch(error){return {ok:false,error};}
+ }
+ window.civilizationAccountLogout=async function(){
+  if(busy)return;
+  if(!confirm("確定要登出這台裝置嗎？本機遊戲進度不會因此刪除。"))return;
+  const button=document.querySelector("#civilizationAccountSettings .btn.danger");
+  if(button){button.disabled=true;button.textContent="登出中…";}
+  const result=await signOutLocal();
+  if(!result.ok){if(button){button.disabled=false;button.textContent="登出";}alert(authMessage(result.error));}
+ };
 
  async function initialize(){
   renderGate();showGate();
@@ -156,9 +207,13 @@
    getClient:()=>client,
    getSession:()=>currentSession,
    getUser:()=>currentSession?.user||null,
+   getEmail:()=>currentSession?.user?.email||"",
+   signOut:signOutLocal,
    showGate,
-   hideGate
+   hideGate,
+   mountAccountSettings
   };
+  installSettingsObserver();
   client.auth.onAuthStateChange((_event,session)=>notifySignedIn(session));
   try{
    const {data,error}=await client.auth.getSession();
