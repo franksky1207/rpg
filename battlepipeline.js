@@ -4,10 +4,19 @@
  const NORMAL_BATTLE_GAP_MS=140;
  const ELITE_BATTLE_GAP_MS=220;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
+ function blankEnhancementRewards(){return {battle:{basic:0,advanced:0},autoSale:{basic:0,advanced:0}};}
+ function mergeReward(a,b){return typeof mergeEnhancementStoneRewards==="function"?mergeEnhancementStoneRewards(a,b):{basic:Math.max(0,Math.floor(Number(a?.basic)||0))+Math.max(0,Math.floor(Number(b?.basic)||0)),advanced:Math.max(0,Math.floor(Number(a?.advanced)||0))+Math.max(0,Math.floor(Number(b?.advanced)||0))};}
+ function ensureEnhancementRewards(ctx){
+  if(!ctx.enhancementRewards||typeof ctx.enhancementRewards!=="object")ctx.enhancementRewards=blankEnhancementRewards();
+  ctx.enhancementRewards.battle=mergeReward({basic:0,advanced:0},ctx.enhancementRewards.battle);
+  ctx.enhancementRewards.autoSale=mergeReward({basic:0,advanced:0},ctx.enhancementRewards.autoSale);
+  return ctx.enhancementRewards;
+ }
+ function addContextEnhancementReward(ctx,key,reward){const summary=ensureEnhancementRewards(ctx);summary[key]=mergeReward(summary[key],reward);return summary[key];}
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
-  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],continuous,exitRequested:false};
+  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],enhancementRewards:blankEnhancementRewards(),continuous,exitRequested:false};
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
@@ -47,6 +56,9 @@
   return true;
  }
 
+ window.blankBattleEnhancementRewards=blankEnhancementRewards;
+ window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
+ window.addBattleEnhancementReward=addContextEnhancementReward;
  window.requestContinuousBattleStop=function(){
   const ctx=window.activeMainBattleContext;
   if(!battleBusy||ctx?.continuous!==true)return false;
@@ -60,6 +72,7 @@
   if(battleBusy)return;
   battleBusy=true;
   if(!ctx)ctx=createBattleContext(count);
+  ensureEnhancementRewards(ctx);
   ctx.continuous=isContinuousCount(count,ctx);
   if(ctx.continuous){ctx.originalCount=null;ctx.remaining=null;}
   else{
@@ -96,6 +109,8 @@
     ctx.wins++;
     ctx.totalXp+=r.xp;
     ctx.totalGold+=r.gold;
+    addContextEnhancementReward(ctx,"battle",r.enhancementStones);
+    addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);
     if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
     else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
    }else defeat=r;
