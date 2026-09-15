@@ -1,12 +1,12 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=2;
+ const AUTH_VERSION=3;
  let client=null;
  let currentSession=null;
  let mode="login";
  let busy=false;
- let settingsObserver=null;
+ let renderHookInstalled=false;
 
  window.CIVILIZATION_AUTH_REQUIRED=true;
  window.CIVILIZATION_AUTH_VERSION=AUTH_VERSION;
@@ -90,11 +90,17 @@
   if(!section)return;
   if(danger)danger.before(section);else card.appendChild(section);
  }
- function installSettingsObserver(){
-  if(settingsObserver||typeof MutationObserver==="undefined")return;
-  const target=document.getElementById("main")||document.body;
-  settingsObserver=new MutationObserver(()=>mountAccountSettings());
-  settingsObserver.observe(target,{childList:true,subtree:true});
+ function installRenderHook(){
+  if(renderHookInstalled||typeof window.render!=="function")return;
+  const baseRender=window.render;
+  const wrapped=function(...args){
+   const result=baseRender.apply(this,args);
+   mountAccountSettings();
+   return result;
+  };
+  window.render=wrapped;
+  try{render=wrapped;}catch(e){}
+  renderHookInstalled=true;
   mountAccountSettings();
  }
  function notifySignedIn(session){
@@ -218,7 +224,7 @@
    hideGate,
    mountAccountSettings
   };
-  installSettingsObserver();
+  installRenderHook();
   client.auth.onAuthStateChange((_event,session)=>notifySignedIn(session));
   try{
    const {data,error}=await client.auth.getSession();
