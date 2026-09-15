@@ -19,10 +19,8 @@
  window.gmEnhancementTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的五個裝備欄位強化測試等級；只改測試快照，不消耗強化石、不修改正式角色資料，重新整理後回到 +0。</div>${grid("test")}<div id="gmEnhancementTestInfo" class="muted" style="margin-top:10px">${testSummary()}</div>`;};
  window.gmTestEnhancementLevel=function(type){return testLevel(type);};
  window.gmTestEnhancedEquippedStats=function(){
-  const base=typeof window.rawEquippedStats==="function"?window.rawEquippedStats():equippedStats();
-  const out={...base};
-  slots().forEach(type=>{const item=state?.equipment?.[type];if(!item?.mainStat)return;const stat=item.mainStat.stat,raw=Math.max(0,Number(item.mainStat.value)||0),delta=(typeof window.enhancedMainStatValue==="function"?window.enhancedMainStatValue(raw,testLevel(type)):raw)-raw;if(stat in out)out[stat]=(Number(out[stat])||0)+delta;});
-  out.crit=Math.round((Number(out.crit)||0)*10)/10;out.dodge=Math.round((Number(out.dodge)||0)*10)/10;return out;
+  const levels=Object.fromEntries(slots().map(type=>[type,testLevel(type)]));
+  return typeof window.equippedStatsWithEnhancementLevels==="function"?window.equippedStatsWithEnhancementLevels(levels):(typeof window.rawEquippedStats==="function"?window.rawEquippedStats():equippedStats());
  };
  window.gmTestPlayerStatsWithEnhancement=function(){const vip=Math.max(0,Math.min(Number(window.VIP_MAX_LEVEL)||20,Math.floor(Number(window.gmTestVipLevel)||0)));const base=window.gmTestEnhancedEquippedStats();return createSpecialPlayerSnapshot(playerCombatStats(base,vip));};
 
