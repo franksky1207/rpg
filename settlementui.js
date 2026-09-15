@@ -132,10 +132,9 @@
  if(typeof window.showBattleResult==="function"){
   const baseShowBattleResult=window.showBattleResult;
   window.showBattleResult=function(ctx,defeat=null){
-   const specials=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters.filter(x=>x?.result):[];
    const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-   if(!defeat&&specials.length&&title&&detail&&modal){
-    title.textContent=ctx?.continuous===true?"連續戰鬥結算":"戰鬥結算";
+   if(!defeat&&title&&detail&&modal){
+    title.textContent=ctx?.continuous===true?"連續戰鬥結算":"戰鬥勝利";
     detail.innerHTML=mainBattleSectionHtml(ctx)+specialEncounterSectionHtml(ctx);
     modal.classList.add("show");
    }else{
