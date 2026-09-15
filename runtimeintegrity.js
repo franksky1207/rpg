@@ -39,6 +39,13 @@
  if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(1))!==2500)fail("VIP1_THRESHOLD",`VIP1 門檻應為 2,500，實際 ${window.vipThreshold(1)}`);
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
+ if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
+ if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("ENHANCEMENT_RATE",`強化每級主能力應為 2.5%，實際 ${window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL}`);
+ if(typeof window.enhancementUpgradeCost!=="function"||window.enhancementUpgradeCost(20)?.basic!==2000||window.enhancementUpgradeCost(20)?.advanced!==100)fail("ENHANCEMENT_COST20","強化 +20 成本應為基礎 2000、進階 100");
+ if(typeof window.enhancementStoneEligible!=="function"||window.enhancementStoneEligible(115,105)!==false||window.enhancementStoneEligible(115,106)!==true)fail("ENHANCEMENT_LEVEL_GAP","強化石 10 級差邊界異常");
+ if(typeof window.enhancementStoneSaleReward!=="function"||window.enhancementStoneSaleReward({q:4})?.basic!==5||window.enhancementStoneSaleReward({q:5})?.advanced!==1)fail("ENHANCEMENT_SALE_REWARD","傳說／神話出售強化石規則異常");
+ if(typeof window.equippedStatsWithEnhancementLevels!=="function")fail("ENHANCEMENT_STATS_API","指定強化等級能力計算 API 未載入");
+ if(typeof window.gmTestEnhancedEquippedStats!=="function"||typeof window.gmUseCurrentEnhancementTestStatus!=="function")fail("ENHANCEMENT_GM_API","GM 強化測試 API 未載入");
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
@@ -108,7 +115,7 @@
  if(Number(window.GAME_GUIDE_VERSION)!==8)fail("GUIDE_VERSION",`遊戲說明版本應為 8，實際 ${window.GAME_GUIDE_VERSION}`);
  if(window.GAME_GUIDE_ARENA_V6!==true)fail("GUIDE_LATE_OVERRIDE","舊競技場說明覆蓋檔未停用");
  const guideText=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES.flatMap(c=>c.items||[]).flat().join(" "):"";
- const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報"];
+ const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報","裝備欄位強化","玩家高於怪物 10 級（含）以上時不會掉落強化石","離線刷普通怪或菁英怪可取得理論基礎強化石的 5%"];
  guideRequired.forEach(text=>{if(!guideText.includes(text))fail("GUIDE_REQUIRED_TEXT",`遊戲說明缺少新版規則：${text}`);});
  const guideLegacy=["EXP、金幣、裝備與副本進度","副本需要消耗挑戰次數","下一個尚未通過的樓層","每突破一層即可取得該層的 VIP 積分","每一種最高 Lv30","VIP4：提升副本進度取得速度","VIP12：進一步提升副本進度取得速度","第1～3階為 50／100／150","2500 × VIP 等級²","每級 EXP +2.5%","最高為 12,800","重置回 100","免費刷新一次新地圖的商店","前往商店花費金幣贖回","降低目前商店刷新費用","商店會提供"];
  guideLegacy.forEach(text=>{if(guideText.includes(text))fail("GUIDE_LEGACY_TEXT",`遊戲說明仍含過度詳細或舊規則：${text}`);});

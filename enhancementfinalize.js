@@ -12,15 +12,6 @@
   if(lines){const row=document.createElement("div");row.innerHTML=`<span>實際主能力</span><b>${format(a)} → ${format(b)}</b>`;lines.insertBefore(row,lines.children[2]||null);}
  };
 
- // 在「角色與裝備」說明頁直接補入強化規則，不建立第二套導覽狀態。
- const baseGuide=window.gameGuidePage;
- window.gameGuidePage=function(){
-  let html=baseGuide();
-  if(!html.includes("<h3>角色與裝備</h3>"))return html;
-  const extra=`<div class="guide-item"><h4>裝備欄位強化</h4><div>武器、頭盔、鎧甲、鞋子、飾品五個欄位都可永久強化至 +20；每級只提高目前裝備原始主能力 2.5%，+20 共提高 50%。強化屬於欄位，更換或戰敗遺失裝備都不會失去強化等級，裝備評分也不計入強化值。</div></div><div class="guide-item"><h4>強化石</h4><div>普通怪固定掉落基礎強化石，菁英怪掉落 1～2 顆基礎強化石，Boss 固定掉落進階強化石；玩家高於怪物 10 級（含）以上時不會掉落強化石。傳說裝備出售時另得 5 顆基礎強化石，神話裝備手動出售時另得 1 顆進階強化石。特殊怪與副本不掉落強化石。</div></div><div class="guide-item"><h4>離線強化石</h4><div>符合等級差條件時，離線刷普通怪或菁英怪可取得理論基礎強化石的 5%，整段離線收益合計後再取整數；離線不會取得進階強化石。</div></div>`;
-  return html.replace('</div></section></div></div>',`${extra}</div></section></div></div>`);
- };
-
  // 強化專屬回歸檢查，保留在獨立報告避免干擾既有 Runtime Integrity 正式報告。
  const errors=[];
  const fail=(code,message)=>errors.push({code,message});
