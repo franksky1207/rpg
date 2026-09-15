@@ -4,10 +4,9 @@
  function decodedItemId(value){try{return decodeURIComponent(String(value||""));}catch(e){return "";}}
  function inventoryItemById(id){return state.inventory?.find(it=>String(it?.id)===String(id))||null;}
  function equippedItemById(id){return EQUIPMENT_TYPES.map(type=>state.equipment?.[type]).find(it=>it&&String(it.id)===String(id))||null;}
- function stoneText(reward){return typeof enhancementStoneRewardText==="function"?enhancementStoneRewardText(reward):"";}
- function mergeRewards(...rewards){return typeof mergeEnhancementStoneRewards==="function"?mergeEnhancementStoneRewards(...rewards):rewards.reduce((sum,reward)=>({basic:sum.basic+Math.max(0,Math.floor(Number(reward?.basic)||0)),advanced:sum.advanced+Math.max(0,Math.floor(Number(reward?.advanced)||0))}),{basic:0,advanced:0});}
+ function stoneText(reward){return enhancementStoneRewardText(reward);}
  function battleEnhancementSummaryHtml(ctx){
-  const battle=mergeRewards(ctx?.enhancementRewards?.battle),autoSale=mergeRewards(ctx?.enhancementRewards?.autoSale),total=mergeRewards(battle,autoSale);
+  const battle=mergeEnhancementStoneRewards(ctx?.enhancementRewards?.battle),autoSale=mergeEnhancementStoneRewards(ctx?.enhancementRewards?.autoSale),total=mergeEnhancementStoneRewards(battle,autoSale);
   if(!total.basic&&!total.advanced)return "";
   const rewards=[];
   if(total.basic)rewards.push(`<span class="enhancement-stone-summary-value"><span class="muted">基礎強化石</span><b>+${total.basic}</b></span>`);
