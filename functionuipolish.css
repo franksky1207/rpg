@@ -98,6 +98,50 @@
 .function-page.guide-page .guide-item{border-color:rgba(75,87,101,.62)}
 .function-page.guide-page .guide-item-body{color:#e0dbd0}
 
+/* Enhancement page: formal stylesheet owner. */
+.enhance-shell{max-width:1120px;margin:0 auto}
+.enhance-summary{margin-bottom:14px}
+.enhance-title{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.enhance-title h2{margin:0 0 5px}
+.enhance-progress{white-space:nowrap;color:#cdbb90}
+.enhance-progress b{color:#f0d494}
+.enhance-resources{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.enhance-resources>div{background:#10161d;border:1px solid #3c4651;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between}
+.enhance-resources span{color:#aeb9c5}
+.enhance-resources b{color:#f0d494;font-size:18px}
+.enhance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.enhance-slot-card{background:linear-gradient(180deg,#171d25,#0f141a);border:1px solid #424c58;border-radius:13px;padding:15px}
+.enhance-slot-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.enhance-slot-head h3{margin:0;color:#f0d494}
+.enhance-slot-head strong{font-size:18px;color:#dce8f4}
+.enhance-effect{margin:13px 0;padding:9px 10px;background:#0c1218;border-radius:8px}
+.enhance-effect b{color:#7fc8ff}
+.enhance-effect span{color:#8fa0b1}
+.enhance-item{margin-bottom:8px}
+.enhance-stat-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0}
+.enhance-stat-row span{color:#9eaab6}
+.enhance-stat-row.current b{color:#dce8f4}
+.enhance-stat-row.next b{color:#86d99a}
+.enhance-empty{padding:13px 0}
+.enhance-cost{display:flex;gap:12px;flex-wrap:wrap;margin:13px 0 9px;padding-top:10px;border-top:1px solid #303944;color:#c5cdd6}
+.enhance-cost span:first-child{color:#f0d494}
+.enhance-action{width:100%}
+.enhance-action:disabled{opacity:.45}
+.enhance-max{text-align:center;margin-top:13px;padding:10px;border:1px solid #4b5945;border-radius:8px;color:#9fd59b}
+.enhancement-confirm-box{max-width:430px}
+.enhancement-confirm-box h3{color:#f0d494}
+.enhance-confirm-question{margin-bottom:13px}
+.enhance-confirm-question b{color:#f0d494;margin-left:4px}
+.enhance-confirm-lines{border:1px solid #39434e;border-radius:10px;padding:8px 12px;background:#0f151b}
+.enhance-confirm-lines>div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #29313a}
+.enhance-confirm-lines>div:last-child{border-bottom:0}
+.enhance-confirm-lines span{color:#aeb9c5}
+
+/* GM enhancement controls use the formal page stylesheet instead of JS injection. */
+.gm-enhancement-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:10px}
+.gm-enhancement-grid label{display:flex;flex-direction:column;gap:5px;color:#d8c49a;font-size:13px}
+.gm-enhancement-grid select{width:100%}
+
 /* Mobile follows the same transparency baseline as desktop. */
 @media(max-width:760px){
   .function-page .card{
@@ -148,4 +192,12 @@
     background:rgba(52,43,27,.62);
     border-color:rgba(216,179,101,.90);
   }
+  .enhance-summary{padding:12px}
+  .enhance-title{display:block}
+  .enhance-progress{margin-top:10px}
+  .enhance-resources{grid-template-columns:1fr;gap:7px}
+  .enhance-grid{grid-template-columns:1fr;gap:9px}
+  .enhance-slot-card{padding:12px}
+  .enhance-cost{gap:7px 12px;font-size:13px}
+  .gm-enhancement-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 }
