@@ -13,6 +13,12 @@
   state.hp=playerCombatStats().hp;
   return state.hp;
  }
+ function saleEnhancementReward(item){
+  return typeof grantEnhancementStoneSaleReward==="function"?grantEnhancementStoneSaleReward(item):{basic:0,advanced:0};
+ }
+ function saleEnhancementText(reward){
+  return typeof enhancementStoneRewardText==="function"?enhancementStoneRewardText(reward):"";
+ }
  window.restoreAfterEquipmentChange=restoreAfterEquipmentChange;
  window.isGearLocked=function(item){return item?.locked===true;};
  window.shouldAutoSellItem=function(item){
@@ -26,7 +32,7 @@
   if(shouldAutoSellItem(item)){
    const sold=specializationSellValue(item,options.useTestSpecializations===true);
    state.gold+=sold;
-   return {kept:false,sold,item};
+   return {kept:false,sold,item,enhancementStones:saleEnhancementReward(item)};
   }
   state.inventory.push(item);
   return {kept:true,sold:0,item};
@@ -44,7 +50,7 @@
   if(shouldAutoSellItem(item)){
    const sold=specializationSellValue(item,options.useTestSpecializations===true);
    state.gold+=sold;
-   return {kept:false,sold};
+   return {kept:false,sold,enhancementStones:saleEnhancementReward(item)};
   }
   state.inventory.push(item);
   if(upgrade)upgradeDropNoticePending=true;
@@ -109,7 +115,7 @@
   if(Number(item.q)===5&&options.confirmMythic!==true)return {ok:false,reason:"mythic",item};
   state.inventory.splice(i,1);
   const sold=specializationSellValue(item);state.gold+=sold;selectedItem=null;
-  return {ok:true,item,sold};
+  return {ok:true,item,sold,enhancementStones:saleEnhancementReward(item)};
  };
  window.equipmentLowerSalePreview=function(){
   const targets=state.inventory.filter(item=>{
@@ -124,7 +130,9 @@
   const ids=new Set(data.targets.map(item=>item.id));
   state.inventory=state.inventory.filter(item=>!ids.has(item.id));
   state.gold+=data.total;selectedItem=null;
-  return {count:data.targets.length,total:data.total};
+  let basic=0,advanced=0;
+  data.targets.forEach(item=>{const r=saleEnhancementReward(item);basic+=Math.max(0,Math.floor(Number(r?.basic)||0));advanced+=Math.max(0,Math.floor(Number(r?.advanced)||0));});
+  return {count:data.targets.length,total:data.total,enhancementStones:{basic,advanced}};
  };
  window.equipmentDiscardLostGear=function(i){
   const lost=state.lostGear?.[i];if(!lost)return {ok:false,reason:"missing"};
@@ -162,7 +170,8 @@
   if(!preview.targets.length)return alert("沒有可出售的未鎖定較低裝備。");
   if(!confirm(`將出售 ${preview.targets.length} 件未鎖定的較低或同能力裝備，共獲得 ${preview.total.toLocaleString()} 金幣。確定出售嗎？`))return;
   const r=equipmentSellLowerAll(preview);save();render();
-  alert(`已出售 ${r.count} 件裝備，獲得 ${r.total.toLocaleString()} 金幣。`);
+  const stoneText=saleEnhancementText(r.enhancementStones);
+  alert(`已出售 ${r.count} 件裝備，獲得 ${r.total.toLocaleString()} 金幣${stoneText?`，另獲得 ${stoneText}`:""}。`);
  };
  window.sellLowerAll=sellLowerAll;
  discardLostGear=function(i){
