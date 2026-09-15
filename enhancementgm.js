@@ -4,6 +4,7 @@
  function clampLevel(value){return Math.max(0,Math.min(Number(window.ENHANCEMENT_MAX_LEVEL)||20,Math.floor(Number(value)||0)));}
  function levelOptions(value){const max=Number(window.ENHANCEMENT_MAX_LEVEL)||20;return Array.from({length:max+1},(_,i)=>`<option value="${i}" ${i===value?"selected":""}>+${i}</option>`).join("");}
  function ensure(){if(typeof window.normalizeEnhancementState==="function")window.normalizeEnhancementState(state);}
+ function section(body){return `<details class="gm-hub-section"><summary>強化管理</summary><div class="gm-hub-body">${body}</div></details>`;}
 
  window.gmEnhancementManagementHtml=function(){
   ensure();
@@ -28,5 +29,15 @@
    @media(max-width:760px){.gm-enhancement-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
   `;document.head.appendChild(style);
  }
+
+ // gmhub.js 已完成正式 GM 介面；在其後只對「管理」頁插入同型態區塊，不碰測試頁。
+ const baseGmHtml=window.gmHtml;
+ if(typeof baseGmHtml==="function")window.gmHtml=function(){
+  let html=baseGmHtml();
+  if(!html.includes('gmHubSwitch(\'manage\')')||!html.includes('gm-hub-tab active'))return html;
+  const marker='<details class="gm-hub-section"><summary>副本管理</summary>';
+  const block=section(window.gmEnhancementManagementHtml());
+  return html.includes(marker)?html.replace(marker,block+marker):html.replace('<div class="controls gm-hub-close">',block+'<div class="controls gm-hub-close">');
+ };
  installStyles();
 })();
