@@ -13,8 +13,11 @@
   if(enemy.kind==="normal")return {basic:1,advanced:0};
   return {basic:0,advanced:0};
  }
+ function grantMainlineReward(enemy,playerLevel=null){const r=mainlineReward(enemy,playerLevel);return addStones(r.basic,r.advanced);}
  function saleReward(item){const q=Math.floor(Number(item?.q));return q===4?{basic:5,advanced:0}:q===5?{basic:0,advanced:1}:{basic:0,advanced:0};}
- function grantSaleReward(item){const r=saleReward(item);return addStones(r.basic,r.advanced);}
+ function saleRewards(items){return addRewards(...(Array.isArray(items)?items:[]).map(saleReward));}
+ function grantSaleRewards(items){const r=saleRewards(items);return addStones(r.basic,r.advanced);}
+ function grantSaleReward(item){return grantSaleRewards(item?[item]:[]);}
  function rewardText(reward){const r=normalizeReward(reward),parts=[];if(r.basic)parts.push(`基礎強化石 +${r.basic}`);if(r.advanced)parts.push(`進階強化石 +${r.advanced}`);return parts.join("、");}
  window.ENHANCEMENT_STONE_LEVEL_GAP_LIMIT=LEVEL_GAP_LIMIT;
  window.normalizeEnhancementStoneReward=normalizeReward;
@@ -23,7 +26,10 @@
  window.addEnhancementStones=addStones;
  window.enhancementStoneEligible=eligible;
  window.mainlineEnhancementStoneReward=mainlineReward;
+ window.grantMainlineEnhancementStoneReward=grantMainlineReward;
  window.enhancementStoneSaleReward=saleReward;
+ window.enhancementStoneSaleRewards=saleRewards;
  window.grantEnhancementStoneSaleReward=grantSaleReward;
+ window.grantEnhancementStoneSaleRewards=grantSaleRewards;
  window.enhancementStoneRewardText=rewardText;
 })();
