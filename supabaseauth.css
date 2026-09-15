@@ -11,6 +11,7 @@
 .civilization-auth-tab:disabled{opacity:.55;cursor:default}
 .civilization-auth-form h2{margin:0 0 16px;font-size:21px;color:#eef3f7}
 .civilization-auth-form label{display:block;margin-top:13px;color:#cbd5df;font-size:14px;font-weight:700}
+.civilization-auth-form [hidden]{display:none!important}
 .civilization-auth-form input{width:100%;box-sizing:border-box;margin-top:7px;min-height:46px;border:1px solid #3b4856;border-radius:10px;background:#0b1219;color:#fff;padding:10px 12px;font-size:16px;outline:none}
 .civilization-auth-form input:focus{border-color:#7895b4;box-shadow:0 0 0 2px rgba(120,149,180,.16)}
 .civilization-auth-status{margin-top:14px;border:1px solid #374655;border-radius:10px;background:#101923;padding:11px 12px;line-height:1.55;font-size:14px}
