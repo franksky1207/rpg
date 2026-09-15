@@ -5,9 +5,9 @@
    ["主線地圖","主線由多個區域與地圖組成，隨角色成長逐步向後推進。每張地圖都有普通怪、菁英怪與 Boss，完成目前地圖後會逐步開啟後續戰區。"],
    ["地圖探索","主線採逐步探索方式。尚未到達的地圖不會提前顯示；首次擊敗目前地圖 Boss 後才會開啟下一張地圖。已經探索過的舊地圖會永久保留，可以隨時返回刷怪或再次挑戰 Boss。進入新的大區域後，舊區域會預設收合，也可以手動展開。"],
    ["地圖推進","依序擊敗普通怪與菁英怪各 10 次，並達到該地圖最高等級後，即可挑戰 Boss。"],
-   ["Boss","Boss 每次只能單場挑戰。首次擊敗 Boss 會解鎖下一張地圖。已擊敗的 Boss 可以再次挑戰；如果挑戰 Boss 失敗，必須再擊敗該地圖菁英怪 10 次才能重新挑戰。"],
-   ["戰鬥模式","主線從一開始就可選擇「單場戰鬥」或「連續戰鬥」。連續戰鬥會持續挑戰目前選擇的敵人，直到戰敗或玩家要求停止；停止時會在目前這一場結束後離開。Boss 固定只能單場挑戰。"],
-   ["離線收益","關閉遊戲超過 1 分鐘後，重新進入時可獲得少量 EXP、金幣與裝備；最多計算 12 小時。離線收益不會增加懸賞或競技場的每日額度，也不會直接取得 VIP 積分。若想更有效率地升級與取得裝備，建議保持在線進行戰鬥。"],
+   ["Boss","Boss 可選擇單場或連續戰鬥。首次擊敗 Boss 會解鎖下一張地圖，之後仍可留在原地持續挑戰。若挑戰 Boss 失敗，連續戰鬥會立即停止，且必須再擊敗該地圖菁英怪 10 次才能重新挑戰。"],
+   ["戰鬥模式","普通怪、菁英怪與 Boss 都可以選擇「單場戰鬥」或「連續戰鬥」。連續戰鬥會持續挑戰目前選擇的敵人，直到戰敗或玩家要求停止；玩家要求停止時，會在目前這一場結束後離開。"],
+   ["離線收益","關閉遊戲超過 1 分鐘後，重新進入遊戲時可獲得少量 EXP、金幣、裝備與符合條件的離線強化石收益，最多計算 12 小時。離線收益不會增加懸賞或競技場的每日額度，也不會直接取得 VIP 積分。若想更有效率地升級、取得裝備與資源，仍建議保持在線進行戰鬥。<div class=\"guide-note\"><b>備註：</b>離線收益不會以 Boss 作為刷怪目標。若玩家最後進行的是 Boss 戰鬥，系統會沿用最近一次有效的普通怪或菁英怪戰鬥紀錄來計算離線收益。</div>"],
    ["目前等級上限","目前角色等級上限為 Lv500。Lv1～499 都可以正常累積 EXP 並升級；到達 Lv500 後不再繼續累積 EXP，原本可取得的 EXP 會轉換為金幣。角色仍可繼續挑戰主線、Boss、特殊怪與副本，也能繼續取得裝備、金幣、VIP 積分並提升專精。"]
   ]},
   {id:"gear",label:"角色與裝備",items:[
@@ -73,7 +73,7 @@
  let activeGuideCategory="adventure";
  function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=9;
+ window.GAME_GUIDE_VERSION=10;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
