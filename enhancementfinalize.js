@@ -27,8 +27,30 @@
   const saleBatch=window.enhancementStoneSaleRewards([{q:4},{q:4},{q:5},{q:3}]);
   if(saleBatch.basic!==10||saleBatch.advanced!==1)fail("SALE_BATCH_REWARD","批次出售強化石合併異常");
  }
+ if(typeof window.expectedMainlineEnhancementStoneReward!=="function")fail("EXPECTED_REWARD_API","主線理論強化石產量 API 未載入");
+ else{
+  const normalExpected=window.expectedMainlineEnhancementStoneReward({kind:"normal",level:100},100);
+  const eliteExpected=window.expectedMainlineEnhancementStoneReward({kind:"elite",level:100},100);
+  const bossExpected=window.expectedMainlineEnhancementStoneReward({kind:"boss",level:100},100);
+  const blockedExpected=window.expectedMainlineEnhancementStoneReward({kind:"elite",level:100},110);
+  if(normalExpected.basic!==1||normalExpected.advanced!==0)fail("EXPECTED_NORMAL","普通怪理論強化石產量異常");
+  if(Math.abs(eliteExpected.basic-1.3)>1e-9||eliteExpected.advanced!==0)fail("EXPECTED_ELITE","菁英怪理論強化石產量異常");
+  if(bossExpected.basic!==0||bossExpected.advanced!==1)fail("EXPECTED_BOSS","Boss 理論強化石產量異常");
+  if(blockedExpected.basic!==0||blockedExpected.advanced!==0)fail("EXPECTED_LEVEL_GAP","理論強化石產量未遵守 10 級差規則");
+ }
  if(Number(window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("MAINLINE_OWNER","主線強化石應由 combatcore.js 正式發放");
  if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("EQUIPMENT_OWNER","出售／換裝強化石應由 equipmentlock.js 正式處理");
+ if(Number(window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION)!==3||typeof window.offlineEnhancementStoneReward!=="function")fail("OFFLINE_OWNER","離線強化石應使用共用理論產量 API");
+ else{
+  const normalOffline=window.offlineEnhancementStoneReward({kind:"normal",level:100},20,100);
+  const eliteOffline=window.offlineEnhancementStoneReward({kind:"elite",level:100},100,100);
+  const blockedOffline=window.offlineEnhancementStoneReward({kind:"elite",level:100},100,110);
+  const bossOffline=window.offlineEnhancementStoneReward({kind:"boss",level:100},100,100);
+  if(normalOffline.basic!==1||normalOffline.advanced!==0)fail("OFFLINE_NORMAL","普通怪離線強化石 5% 結算異常");
+  if(eliteOffline.basic!==6||eliteOffline.advanced!==0)fail("OFFLINE_ELITE","菁英怪離線強化石理論產量結算異常");
+  if(blockedOffline.basic!==0||blockedOffline.advanced!==0)fail("OFFLINE_LEVEL_GAP","離線強化石未遵守 10 級差規則");
+  if(bossOffline.advanced!==0)fail("OFFLINE_ADVANCED","離線不得取得進階強化石");
+ }
  if(Math.abs(enhancedMainStatValue(100,20)-150)>1e-9)fail("MAIN_STAT","+20 主能力倍率異常");
  if(typeof window.rawEquippedStats!=="function"||typeof window.equippedStatsWithEnhancementLevels!=="function")fail("COMBAT_OWNER","engine.js 正式強化能力 API 未載入");
  else{
