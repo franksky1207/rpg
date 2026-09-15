@@ -1,8 +1,7 @@
 (function(){
- const CONTINUOUS_COUNT="continuous";
+ const CONTINUOUS_COUNT=window.CONTINUOUS_BATTLE_COUNT;
  const REAL_BATTLE_SAMPLE_LIMIT=20;
- const NORMAL_BATTLE_GAP_MS=140;
- const ELITE_BATTLE_GAP_MS=220;
+ const battleGapMs=window.mainBattleGapMs;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function blankEnhancementRewards(){return {battle:{basic:0,advanced:0},autoSale:{basic:0,advanced:0}};}
  function ensureEnhancementRewards(ctx){
@@ -34,7 +33,7 @@
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return null;
   const kind=encounter.kind==="elite"?"elite":"normal";
-  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS,unsubscribe:null};
+  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:battleGapMs(kind),unsubscribe:null};
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
   return token;
  }
@@ -140,7 +139,7 @@
     if(shouldStopContinuous(ctx))break;
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-     await sleep(r.e.kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
+     await sleep(battleGapMs(r.e.kind));
     }else save();
     continue;
    }
@@ -149,7 +148,7 @@
    if(hasMoreBattles(ctx)){
     save(false);
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-    await sleep(r.e.kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
+    await sleep(battleGapMs(r.e.kind));
    }else save();
   }
 
