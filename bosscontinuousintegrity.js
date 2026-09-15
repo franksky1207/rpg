@@ -77,12 +77,13 @@
  if(Number(window.GAME_GUIDE_VERSION)!==10)fail("BOSS_GUIDE_VERSION",`GAME_GUIDE_VERSION 應為 10，實際 ${window.GAME_GUIDE_VERSION}`);
  const categories=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES:[];
  const adventure=categories.find(x=>x?.id==="adventure");
- const guideText=Array.isArray(adventure?.items)?adventure.items.map(x=>`${x?.[0]||""} ${x?.[1]||""}`).join("\n"):"";
- if(!guideText.includes("Boss 可選擇單場或連續戰鬥"))fail("BOSS_GUIDE_CONTINUOUS","遊戲說明應明確說明 Boss 可單場或連續戰鬥");
- if(guideText.includes("Boss 固定只能單場")||guideText.includes("Boss 每次只能單場"))fail("BOSS_GUIDE_LEGACY_SINGLE","遊戲說明不應殘留 Boss 只能單場舊規則");
- if(!guideText.includes("Boss 不會觸發"))fail("BOSS_GUIDE_SPECIAL_EXCLUDED","遊戲說明應保留 Boss 不觸發特殊怪");
- if(!guideText.includes("離線收益不會以 Boss 作為刷怪目標")||!guideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
- if(!guideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
+ const adventureGuideText=Array.isArray(adventure?.items)?adventure.items.map(x=>`${x?.[0]||""} ${x?.[1]||""}`).join("\n"):"";
+ const allGuideText=categories.flatMap(x=>Array.isArray(x?.items)?x.items:[]).map(x=>`${x?.[0]||""} ${x?.[1]||""}`).join("\n");
+ if(!adventureGuideText.includes("Boss 可選擇單場或連續戰鬥"))fail("BOSS_GUIDE_CONTINUOUS","遊戲說明應明確說明 Boss 可單場或連續戰鬥");
+ if(allGuideText.includes("Boss 固定只能單場")||allGuideText.includes("Boss 每次只能單場"))fail("BOSS_GUIDE_LEGACY_SINGLE","遊戲說明不應殘留 Boss 只能單場舊規則");
+ if(!allGuideText.includes("Boss 不會觸發"))fail("BOSS_GUIDE_SPECIAL_EXCLUDED","遊戲說明應保留 Boss 不觸發特殊怪");
+ if(!adventureGuideText.includes("離線收益不會以 Boss 作為刷怪目標")||!adventureGuideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
+ if(!adventureGuideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
 
  window.BOSS_CONTINUOUS_INTEGRITY={version:1,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
