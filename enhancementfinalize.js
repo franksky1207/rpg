@@ -1,9 +1,5 @@
 (function(){
- // 專屬強化工坊背景：目前直接使用保留的高品質原圖，桌機/手機分流。
- const style=document.createElement("style");
- style.id="enhancement-final-styles";
- style.textContent=`@media(min-width:761px){#main>.enhancement-page{width:100vw;min-height:calc(100dvh - 57px);margin-top:-18px;margin-bottom:-40px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:36px max(24px,calc((100vw - 1200px)/2 + 18px)) 64px;background-image:linear-gradient(180deg,rgba(5,10,18,.18),rgba(5,10,18,.28)),url("assets/backgrounds-source/enhancement/desktop.PNG?v=20260915-enhancement1");background-position:center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}}@media(max-width:760px){#main>.enhancement-page{width:100vw;min-height:calc(100dvh - 52px);margin-top:-10px;margin-bottom:-24px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:20px 12px 28px;background-image:linear-gradient(180deg,rgba(5,10,18,.20),rgba(5,10,18,.32)),url("assets/backgrounds-source/enhancement/mobile.PNG?v=20260915-enhancement1");background-position:center top;background-size:cover;background-repeat:no-repeat}}`;
- document.head.appendChild(style);
+ // 強化頁背景由 backgrounds.css 統一管理，與其他正式背景共同進入 backgroundpreload.js 預載流程。
 
  // 強化確認補上目前裝備的實際主能力變化；原始確認流程仍負責最終原子檢查與扣款。
  const baseOpen=window.openEnhancementConfirm;
