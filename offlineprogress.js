@@ -4,6 +4,7 @@
  const OFFLINE_EXP_RATE=.10;
  const OFFLINE_GOLD_RATE=.10;
  const OFFLINE_GEAR_RATE=.10;
+ const OFFLINE_ENHANCEMENT_STONE_RATE=.05;
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
@@ -143,11 +144,12 @@
  }
  async function grantOfflineRewards(pending,enemy){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));
+  const settlementPlayerLevel=Math.max(1,Math.floor(Number(state.level)||1));
   let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0;
   const expBefore=expSnapshot();
   const bestByType=new Map(),mythics=[];
-  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0;
-  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);}
+  let eligibleRolls=0,droppedCount=0,soldCount=0,soldGold=0,saleBasicStones=0,saleAdvancedStones=0;
+  function sell(item){if(!item)return;soldCount++;soldGold+=offlineSellValue(item);if(typeof enhancementStoneSaleReward==="function"){const r=enhancementStoneSaleReward(item);saleBasicStones+=Math.max(0,Math.floor(Number(r?.basic)||0));saleAdvancedStones+=Math.max(0,Math.floor(Number(r?.advanced)||0));}}
   function consider(item){
    item=normalizeOfflineDrop(item);if(!item)return;
    droppedCount++;
@@ -181,8 +183,14 @@
   if(keptOrdinary.length)upgradeDropNoticePending=true;
   const directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);
   state.gold+=directGold+convertedGold+soldGold;
+  let battleBasicStones=0;
+  if(enemy?.kind!=="boss"&&typeof enhancementStoneEligible==="function"&&enhancementStoneEligible(settlementPlayerLevel,enemy.level)){
+   const theoretical=count*(enemy.kind==="elite"?1.3:1);
+   battleBasicStones=Math.floor(theoretical*OFFLINE_ENHANCEMENT_STONE_RATE);
+  }
+  if(typeof addEnhancementStones==="function"&&(battleBasicStones||saleBasicStones||saleAdvancedStones))addEnhancementStones(battleBasicStones+saleBasicStones,saleAdvancedStones);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
+  return {totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleBasicStones,saleBasic:saleBasicStones,saleAdvanced:saleAdvancedStones,totalBasic:battleBasicStones+saleBasicStones,totalAdvanced:saleAdvancedStones},gear:{eligibleRolls,droppedCount,soldCount,soldGold,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
  }
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
@@ -220,7 +228,10 @@
   if(!detail||!page)return;
   const enemyLevel=Math.max(1,Math.floor(Number(result.enemyLevel)||1));
   const capNote=result.elapsedRaw>OFFLINE_MAX_MS?`<div class="offline-limit-note">本次離線超過 12 小時，僅計算前 12 小時。</div>`:`<div class="offline-limit-note">離線收益最多計算 12 小時</div>`;
-  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div></div>${offlineGearHtml(result.gear)}${capNote}`;
+  const enhancement=result.enhancement||{battleBasic:0,saleBasic:0,saleAdvanced:0,totalBasic:0,totalAdvanced:0};
+  const stoneSaleParts=[enhancement.saleBasic?`基礎強化石 +${enhancement.saleBasic.toLocaleString()}`:"",enhancement.saleAdvanced?`進階強化石 +${enhancement.saleAdvanced.toLocaleString()}`:""].filter(Boolean);
+  const stoneSaleNote=stoneSaleParts.length?`<div class="muted" style="margin-top:8px">離線出售裝備另獲得 ${stoneSaleParts.join("、")}</div>`:"";
+  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div><div class="offline-reward-card"><div class="offline-reward-label">基礎強化石</div><div class="offline-reward-value">+${Math.max(0,Number(enhancement.battleBasic)||0).toLocaleString()}</div><div class="muted" style="margin-top:6px">離線戰鬥收益 5%</div></div></div>${offlineGearHtml(result.gear)}${stoneSaleNote}${capNote}`;
   document.body.classList.add("offline-result-open");
   page.classList.add("show");
  }
@@ -265,6 +276,7 @@
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
+ window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
 })();
