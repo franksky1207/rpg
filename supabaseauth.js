@@ -1,7 +1,7 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=3;
+ const AUTH_VERSION=4;
  let client=null;
  let currentSession=null;
  let mode="login";
@@ -18,6 +18,7 @@
  function emailEl(){return document.getElementById("civilizationAuthEmail");}
  function passwordEl(){return document.getElementById("civilizationAuthPassword");}
  function confirmEl(){return document.getElementById("civilizationAuthPasswordConfirm");}
+ function mountCloudSave(){try{window.civilizationCloudSave?.mount?.();}catch(e){console.error("Cloud save mount failed",e);}}
 
  function authMessage(error){
   const raw=String(error?.message||error||"").trim();
@@ -69,7 +70,7 @@
  }
  function accountSettingsHtml(){
   const email=escapeHtml(currentSession?.user?.email||"未取得 Email");
-  return `<section id="civilizationAccountSettings" class="civilization-account-settings"><h3>帳號</h3><div class="civilization-account-row"><div><div class="civilization-account-label">目前登入</div><div class="civilization-account-email">${email}</div></div><button type="button" class="btn danger" onclick="civilizationAccountLogout()">登出</button></div><div class="muted civilization-account-note">登出只會結束這台裝置的登入狀態，不會刪除目前本機遊戲進度。雲端存檔上傳／下載會在後續功能提供。</div></section>`;
+  return `<section id="civilizationAccountSettings" class="civilization-account-settings"><h3>帳號</h3><div class="civilization-account-row"><div><div class="civilization-account-label">目前登入</div><div class="civilization-account-email">${email}</div></div><button type="button" class="btn danger" onclick="civilizationAccountLogout()">登出</button></div><div class="muted civilization-account-note">登出只會結束這台裝置的登入狀態，不會刪除目前本機遊戲進度。</div></section>`;
  }
  function mountAccountSettings(){
   if(!currentSession)return;
@@ -77,6 +78,7 @@
   if(existing){
    const emailNode=existing.querySelector(".civilization-account-email");
    if(emailNode)emailNode.textContent=currentSession?.user?.email||"未取得 Email";
+   mountCloudSave();
    return;
   }
   const title=document.getElementById("settingsTitle");
@@ -89,6 +91,7 @@
   const section=holder.firstElementChild;
   if(!section)return;
   if(danger)danger.before(section);else card.appendChild(section);
+  mountCloudSave();
  }
  function installRenderHook(){
   if(renderHookInstalled||typeof window.render!=="function")return;
@@ -133,7 +136,7 @@
     <div id="civilizationAuthStatus" class="civilization-auth-status" hidden aria-live="polite"></div>
     <button id="civilizationAuthSubmit" type="submit" class="civilization-auth-submit">登入</button>
    </form>
-   <div class="civilization-auth-note">此裝置登入成功後會保持登入。遊戲進度目前仍只儲存在本機，本階段不會自動上傳或下載雲端存檔。</div>
+   <div class="civilization-auth-note">此裝置登入成功後會保持登入。遊戲進度不會自動上傳或下載雲端存檔。</div>
   </div></div>`;
   document.body.appendChild(wrap);
   wrap.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.addEventListener("click",()=>applyMode(btn.dataset.authMode)));
