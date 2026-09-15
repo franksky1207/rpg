@@ -46,6 +46,22 @@
  if(typeof window.enhancementStoneSaleReward!=="function"||window.enhancementStoneSaleReward({q:4})?.basic!==5||window.enhancementStoneSaleReward({q:5})?.advanced!==1)fail("ENHANCEMENT_SALE_REWARD","傳說／神話出售強化石規則異常");
  if(typeof window.equippedStatsWithEnhancementLevels!=="function")fail("ENHANCEMENT_STATS_API","指定強化等級能力計算 API 未載入");
  if(typeof window.gmTestEnhancedEquippedStats!=="function"||typeof window.gmUseCurrentEnhancementTestStatus!=="function")fail("ENHANCEMENT_GM_API","GM 強化測試 API 未載入");
+ if(typeof window.normalizeEnhancementStoneReward!=="function"||typeof window.mergeEnhancementStoneRewards!=="function"||typeof window.enhancementStoneRewardText!=="function")fail("ENHANCEMENT_REWARD_HELPERS","強化石共用獎勵 API 未完整載入");
+ else{
+  const rewardProbe=window.mergeEnhancementStoneRewards({basic:1,advanced:0},{basic:5,advanced:1});
+  if(rewardProbe.basic!==6||rewardProbe.advanced!==1)fail("ENHANCEMENT_REWARD_MERGE","強化石共用合併異常",rewardProbe);
+  const rewardText=window.enhancementStoneRewardText(rewardProbe);
+  if(!rewardText.includes("基礎強化石 +6")||!rewardText.includes("進階強化石 +1"))fail("ENHANCEMENT_REWARD_TEXT","強化石共用文字格式異常",rewardText);
+ }
+ if(typeof window.blankBattleEnhancementRewards!=="function"||typeof window.addBattleEnhancementReward!=="function"||typeof window.enhancementStoneSettlementSummaryHtml!=="function")fail("ENHANCEMENT_REWARD_PIPELINE","戰鬥強化石摘要／結算 API 未完整載入");
+ else{
+  const rewardCtx={enhancementRewards:window.blankBattleEnhancementRewards()};
+  window.addBattleEnhancementReward(rewardCtx,"battle",{basic:1,advanced:1});
+  window.addBattleEnhancementReward(rewardCtx,"autoSale",{basic:5,advanced:0});
+  const rewardHtml=window.enhancementStoneSettlementSummaryHtml(rewardCtx);
+  if(!rewardHtml.includes("打怪掉落")||!rewardHtml.includes("AUTO 出售")||!rewardHtml.includes("基礎強化石 +5")||!rewardHtml.includes("進階強化石 +1"))fail("ENHANCEMENT_REWARD_SETTLEMENT","戰鬥強化石來源結算顯示異常",rewardHtml);
+ }
+ if(window.ENHANCEMENT_FINAL_INTEGRITY?.passed!==true)fail("ENHANCEMENT_FINAL_INTEGRITY","強化專屬回歸檢查未通過",window.ENHANCEMENT_FINAL_INTEGRITY?.errors||null);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
