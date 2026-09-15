@@ -60,7 +60,8 @@ function starterEquipment(){return Object.fromEntries(EQUIPMENT_TYPES.map(type=>
 function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
- let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ const enhancement={basicStones:0,advancedStones:0,levels:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,0]))};
+ let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),enhancement,equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
  newStateNormalizers.forEach(normalizer=>{const normalized=normalizer(next);if(normalized&&typeof normalized==="object")next=normalized;});
  return next;
 }
@@ -69,7 +70,25 @@ function save(show=true){
  try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(err){const e=document.getElementById("saveStatus");if(e)e.textContent="存檔失敗";console.error("Save failed",err);return false}
  if(show){let e=document.getElementById("saveStatus");if(e){e.textContent="已自動存檔";setTimeout(()=>e.textContent="本機自動存檔",900)}}return true;
 }
-function equippedStats(){let x={hp:baseHP(state.level),atk:baseATK(state.level),def:baseDEF(state.level),crit:0,dodge:0};EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});x.crit=round1(Math.max(0,Number(x.crit)||0));x.dodge=round1(Math.max(0,Number(x.dodge)||0));return x}
+function rawEquippedStats(){let x={hp:baseHP(state.level),atk:baseATK(state.level),def:baseDEF(state.level),crit:0,dodge:0};EQUIPMENT_TYPES.map(type=>state.equipment[type]).filter(Boolean).forEach(it=>{x.hp+=it.hp||0;x.atk+=it.atk||0;x.def+=it.def||0;x.crit+=it.crit||0;x.dodge+=it.dodge||0});x.crit=round1(Math.max(0,Number(x.crit)||0));x.dodge=round1(Math.max(0,Number(x.dodge)||0));return x}
+function equippedStatsWithEnhancementLevels(levelSource=null){
+ const out={...rawEquippedStats()};
+ EQUIPMENT_TYPES.forEach(type=>{
+  const item=state.equipment?.[type];
+  if(!item)return;
+  const stat=item.mainStat?.stat,raw=Math.max(0,Number(item.mainStat?.value)||0);
+  if(!raw||!["hp","atk","def","crit","dodge"].includes(stat))return;
+  const level=levelSource&&typeof levelSource==="object"?Math.max(0,Math.min(Number(window.ENHANCEMENT_MAX_LEVEL)||20,Math.floor(Number(levelSource[type])||0))):(typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):0);
+  const enhanced=typeof window.enhancedMainStatValue==="function"?window.enhancedMainStatValue(raw,level):raw;
+  out[stat]+=Math.max(0,enhanced-raw);
+ });
+ out.hp=Math.max(0,Number(out.hp)||0);out.atk=Math.max(0,Number(out.atk)||0);out.def=Math.max(0,Number(out.def)||0);out.crit=round1(Math.max(0,Number(out.crit)||0));out.dodge=round1(Math.max(0,Number(out.dodge)||0));
+ return out;
+}
+function equippedStats(){return equippedStatsWithEnhancementLevels(null)}
+window.rawEquippedStats=rawEquippedStats;
+window.equippedStats=equippedStats;
+window.equippedStatsWithEnhancementLevels=equippedStatsWithEnhancementLevels;
 function playerCombatStats(baseStats=null,vipLevel=null){const base=baseStats&&typeof baseStats==="object"?baseStats:equippedStats(),bonus=vipBonusStats(vipLevel);return {hp:Math.max(1,ceil((Number(base.hp)||1)*(1+bonus.hp/100))),atk:Math.max(1,ceil((Number(base.atk)||1)*(1+bonus.atk/100))),def:Math.max(0,ceil((Number(base.def)||0)*(1+bonus.def/100))),crit:round1(Math.max(0,Number(base.crit)||0)+bonus.crit),dodge:round1(Math.max(0,Number(base.dodge)||0)+bonus.dodge)}}
 window.playerCombatStats=playerCombatStats;
 function addVipPoints(amount){if(typeof normalizeVipState==="function")normalizeVipState(state);else{state.vipPoints=Math.max(0,Math.floor(Number(state.vipPoints)||0));state.vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0))}const added=Math.max(0,Math.floor(Number(amount)||0)),beforeMax=playerCombatStats().hp,beforeHp=Math.max(0,Math.min(beforeMax,Number(state.hp)||0)),ratio=beforeMax>0?beforeHp/beforeMax:1,wasFull=beforeHp>=beforeMax;state.vipPoints+=added;const nextLevel=typeof vipLevelFromPoints==="function"?vipLevelFromPoints(state.vipPoints):state.vipLevel,levelBefore=state.vipLevel;if(nextLevel>state.vipLevel)state.vipLevel=nextLevel;const afterMax=playerCombatStats().hp;if(state.vipLevel>levelBefore&&afterMax!==beforeMax)state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));return {added,points:state.vipPoints,level:state.vipLevel,levelsGained:Math.max(0,state.vipLevel-levelBefore)}}
