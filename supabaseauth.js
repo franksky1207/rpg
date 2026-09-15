@@ -1,8 +1,15 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=5;
+ const AUTH_VERSION=6;
  const RECOVERY_FLAG="civilization_frontline_password_recovery_v1";
+ const AUTH_MODE_RENDERER_VERSION=1;
+ const AUTH_MODES={
+  login:{title:"登入帳號",submit:"登入",tabs:true,email:true,password:true,confirm:false,forgot:true,back:false,note:"",passwordAutocomplete:"current-password"},
+  signup:{title:"建立帳號",submit:"建立帳號",tabs:true,email:true,password:true,confirm:true,forgot:false,back:false,note:"",passwordAutocomplete:"new-password"},
+  forgot:{title:"忘記密碼",submit:"寄送重設密碼信",tabs:true,email:true,password:false,confirm:false,forgot:false,back:true,note:"輸入建立帳號時使用的 Email，我們會寄送重設密碼連結。",passwordAutocomplete:"current-password"},
+  recovery:{title:"設定新密碼",submit:"更新密碼",tabs:false,email:false,password:true,confirm:true,forgot:false,back:false,note:"請輸入新的密碼兩次。更新完成後會直接回到遊戲。",passwordAutocomplete:"new-password"}
+ };
  let client=null;
  let currentSession=null;
  let mode="login";
@@ -14,6 +21,7 @@
 
  window.CIVILIZATION_AUTH_REQUIRED=true;
  window.CIVILIZATION_AUTH_VERSION=AUTH_VERSION;
+ window.CIVILIZATION_AUTH_MODE_RENDERER_VERSION=AUTH_MODE_RENDERER_VERSION;
 
  function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function gate(){return document.getElementById("civilizationAuthGate");}
@@ -28,12 +36,16 @@
   const raw=String(error?.message||error||"").trim();
   if(!raw)return "發生未知錯誤，請稍後再試。";
   const lower=raw.toLowerCase();
+  const code=String(error?.code||"").toLowerCase();
   if(lower.includes("invalid login credentials"))return "Email 或密碼不正確。";
   if(lower.includes("email not confirmed"))return "此 Email 尚未完成驗證，請先到信箱點擊驗證連結。";
   if(lower.includes("user already registered"))return "這個 Email 已經建立過帳號，請改用登入。";
   if(lower.includes("password should be at least")||lower.includes("password")&&lower.includes("characters"))return "密碼至少需要 8 個字元。";
   if(lower.includes("rate limit")||lower.includes("too many requests"))return "操作過於頻繁，請稍後再試。";
   if(lower.includes("unable to validate email")||lower.includes("invalid email"))return "Email 格式不正確。";
+  if(code==="otp_expired"||lower.includes("otp expired")||lower.includes("token has expired")||lower.includes("expired or is invalid"))return "重設密碼連結已過期或無效，請返回登入頁重新寄送重設密碼信。";
+  if(code==="session_not_found"||lower.includes("auth session missing")||lower.includes("session missing"))return "重設密碼工作階段已失效，請返回登入頁重新寄送重設密碼信。";
+  if(lower.includes("same password")||lower.includes("different from the old password"))return "新密碼不能與原本密碼相同，請改用另一組密碼。";
   return raw;
  }
 
@@ -54,37 +66,10 @@
   if(back)back.disabled=busy;
   tabs.forEach(btn=>btn.disabled=busy);
  }
- function applyMode(next){
-  if(recoveryActive&&next!=="recovery")return enterRecoveryMode();
-  mode=next==="signup"?"signup":next==="forgot"?"forgot":"login";
-  document.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.classList.toggle("active",btn.dataset.authMode===mode));
-  const title=document.getElementById("civilizationAuthFormTitle");
-  const submit=document.getElementById("civilizationAuthSubmit");
-  const emailWrap=document.getElementById("civilizationAuthEmailWrap");
-  const passwordWrap=document.getElementById("civilizationAuthPasswordWrap");
-  const confirmWrap=document.getElementById("civilizationAuthConfirmWrap");
-  const forgot=document.getElementById("civilizationAuthForgot");
-  const back=document.getElementById("civilizationAuthBackLogin");
-  const note=document.getElementById("civilizationAuthModeNote");
-  if(title)title.textContent=mode==="signup"?"建立帳號":mode==="forgot"?"忘記密碼":"登入帳號";
-  if(submit)submit.textContent=mode==="signup"?"建立帳號":mode==="forgot"?"寄送重設密碼信":"登入";
-  if(emailWrap)emailWrap.hidden=false;
-  if(passwordWrap)passwordWrap.hidden=mode==="forgot";
-  if(confirmWrap)confirmWrap.hidden=mode!=="signup";
-  if(forgot)forgot.hidden=mode!=="login";
-  if(back)back.hidden=mode!=="forgot";
-  if(note){note.hidden=mode!=="forgot";note.textContent="輸入建立帳號時使用的 Email，我們會寄送重設密碼連結。";}
-  if(passwordEl()){
-   passwordEl().required=mode!=="forgot";
-   passwordEl().setAttribute("autocomplete",mode==="signup"?"new-password":"current-password");
-  }
-  if(confirmEl())confirmEl().required=mode==="signup";
-  setStatus("");
- }
- function enterRecoveryMode(){
-  recoveryActive=true;
-  try{sessionStorage.setItem(RECOVERY_FLAG,"1");}catch(e){}
-  mode="recovery";
+ function renderAuthMode(next,options={}){
+  const resolved=AUTH_MODES[next]?next:"login";
+  const config=AUTH_MODES[resolved];
+  mode=resolved;
   const tabs=document.getElementById("civilizationAuthTabs");
   const title=document.getElementById("civilizationAuthFormTitle");
   const submit=document.getElementById("civilizationAuthSubmit");
@@ -94,25 +79,35 @@
   const forgot=document.getElementById("civilizationAuthForgot");
   const back=document.getElementById("civilizationAuthBackLogin");
   const note=document.getElementById("civilizationAuthModeNote");
-  if(tabs)tabs.hidden=true;
-  if(title)title.textContent="設定新密碼";
-  if(submit)submit.textContent="更新密碼";
-  if(emailWrap)emailWrap.hidden=true;
-  if(passwordWrap)passwordWrap.hidden=false;
-  if(confirmWrap)confirmWrap.hidden=false;
-  if(forgot)forgot.hidden=true;
-  if(back)back.hidden=true;
-  if(note){note.hidden=false;note.textContent="請輸入新的密碼兩次。更新完成後會直接回到遊戲。";}
-  if(passwordEl()){
-   passwordEl().required=true;
-   passwordEl().value="";
-   passwordEl().setAttribute("autocomplete","new-password");
+  if(tabs)tabs.hidden=!config.tabs;
+  document.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.classList.toggle("active",config.tabs&&btn.dataset.authMode===resolved));
+  if(title)title.textContent=options.title||config.title;
+  if(submit)submit.textContent=config.submit;
+  if(emailWrap)emailWrap.hidden=!config.email;
+  if(passwordWrap)passwordWrap.hidden=!config.password;
+  if(confirmWrap)confirmWrap.hidden=!config.confirm;
+  if(forgot)forgot.hidden=!config.forgot;
+  if(back)back.hidden=!config.back;
+  if(note){note.hidden=!config.note;note.textContent=config.note;}
+  const password=passwordEl();
+  if(password){password.required=config.password;password.setAttribute("autocomplete",config.passwordAutocomplete);}
+  const confirmation=confirmEl();
+  if(confirmation)confirmation.required=config.confirm;
+  if(options.clearStatus!==false)setStatus("");
+ }
+ function applyMode(next){
+  if(recoveryActive&&next!=="recovery"){enterRecoveryMode();return;}
+  renderAuthMode(next);
+ }
+ function enterRecoveryMode(){
+  const entering=mode!=="recovery";
+  recoveryActive=true;
+  try{sessionStorage.setItem(RECOVERY_FLAG,"1");}catch(e){}
+  renderAuthMode("recovery");
+  if(entering){
+   if(passwordEl())passwordEl().value="";
+   if(confirmEl())confirmEl().value="";
   }
-  if(confirmEl()){
-   confirmEl().required=true;
-   confirmEl().value="";
-  }
-  setStatus("");
   showGate();
  }
  function showGate(){
@@ -167,7 +162,7 @@
   currentSession=session||null;
   window.civilizationAuthSession=currentSession;
   if(currentSession){
-   if(recoveryActive){showGate();enterRecoveryMode();return;}
+   if(recoveryActive){enterRecoveryMode();return;}
    hideGate();
    mountAccountSettings();
    window.dispatchEvent(new CustomEvent("civilization-auth-ready",{detail:{session:currentSession}}));
@@ -202,7 +197,7 @@
   document.body.appendChild(wrap);
   wrap.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.addEventListener("click",()=>applyMode(btn.dataset.authMode)));
   formEl()?.addEventListener("submit",handleSubmit);
-  if(recoveryActive)enterRecoveryMode();else applyMode("login");
+  if(recoveryActive)enterRecoveryMode();else renderAuthMode("login");
  }
 
  function resetRedirectUrl(){return `${location.origin}${location.pathname}`;}
@@ -214,13 +209,26 @@
  function clearRecoveryState(){
   recoveryActive=false;
   try{sessionStorage.removeItem(RECOVERY_FLAG);}catch(e){}
-  try{history.replaceState({},document.title,location.pathname);}catch(e){}
+  try{
+   const url=new URL(location.href);
+   ["code","type","token","token_hash","error","error_code","error_description"].forEach(key=>url.searchParams.delete(key));
+   url.hash="";
+   history.replaceState({},document.title,`${url.pathname}${url.search}`);
+  }catch(e){}
  }
  async function updateRecoveredPassword(password){
   if(!client)throw new Error("帳號服務尚未初始化。");
   const {data,error}=await client.auth.updateUser({password});
   if(error)throw error;
-  if(data?.user&&currentSession)currentSession={...currentSession,user:data.user};
+  return data?.user||null;
+ }
+ async function refreshCurrentSession(){
+  if(!client)return null;
+  const {data,error}=await client.auth.getSession();
+  if(error)throw error;
+  currentSession=data?.session||null;
+  window.civilizationAuthSession=currentSession;
+  return currentSession;
  }
  async function handleSubmit(event){
   event.preventDefault();
@@ -245,9 +253,11 @@
    try{
     await updateRecoveredPassword(password);
     clearRecoveryState();
+    const session=await refreshCurrentSession();
+    if(!session)throw new Error("Auth session missing");
     setBusy(false);
     setStatus("密碼已更新完成，正在進入遊戲…","success");
-    setTimeout(()=>notifySignedIn(currentSession),700);
+    setTimeout(()=>notifySignedIn(session),700);
    }catch(error){setStatus(authMessage(error),"error");setBusy(false);}
    return;
   }
@@ -273,16 +283,9 @@
   finally{setBusy(false);}
  }
  function applyModeAfterSignup(email){
-  mode="login";
-  document.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.classList.toggle("active",btn.dataset.authMode==="login"));
-  const title=document.getElementById("civilizationAuthFormTitle"),submit=document.getElementById("civilizationAuthSubmit"),confirmWrap=document.getElementById("civilizationAuthConfirmWrap"),forgot=document.getElementById("civilizationAuthForgot");
-  if(title)title.textContent="完成 Email 驗證後登入";
-  if(submit)submit.textContent="登入";
-  if(confirmWrap)confirmWrap.hidden=true;
-  if(forgot)forgot.hidden=false;
-  if(confirmEl())confirmEl().required=false;
+  renderAuthMode("login",{title:"完成 Email 驗證後登入",clearStatus:false});
   if(emailEl())emailEl().value=email;
-  if(passwordEl()){passwordEl().value="";passwordEl().setAttribute("autocomplete","current-password");}
+  if(passwordEl())passwordEl().value="";
   if(confirmEl())confirmEl().value="";
  }
  async function signOutLocal(){
@@ -293,9 +296,8 @@
    currentSession=null;
    window.civilizationAuthSession=null;
    clearRecoveryState();
-   const tabs=document.getElementById("civilizationAuthTabs");if(tabs)tabs.hidden=false;
    showGate();
-   applyMode("login");
+   renderAuthMode("login");
    if(emailEl())emailEl().value="";
    if(passwordEl())passwordEl().value="";
    if(confirmEl())confirmEl().value="";
@@ -303,12 +305,8 @@
    return {ok:true};
   }catch(error){return {ok:false,error};}
  }
- window.civilizationForgotPassword=function(){if(!busy&&!recoveryActive)applyMode("forgot");};
- window.civilizationBackToLogin=function(){
-  if(busy||recoveryActive)return;
-  const tabs=document.getElementById("civilizationAuthTabs");if(tabs)tabs.hidden=false;
-  applyMode("login");
- };
+ window.civilizationForgotPassword=function(){if(!busy&&!recoveryActive)renderAuthMode("forgot");};
+ window.civilizationBackToLogin=function(){if(!busy&&!recoveryActive)renderAuthMode("login");};
  window.civilizationAccountLogout=async function(){
   if(busy)return;
   if(!confirm("確定要登出這台裝置嗎？本機遊戲進度不會因此刪除。"))return;
@@ -328,6 +326,7 @@
   window.civilizationSupabase=client;
   window.civilizationAuth={
    version:AUTH_VERSION,
+   modeRendererVersion:AUTH_MODE_RENDERER_VERSION,
    getClient:()=>client,
    getSession:()=>currentSession,
    getUser:()=>currentSession?.user||null,
@@ -335,6 +334,7 @@
    signOut:signOutLocal,
    sendPasswordReset,
    updateRecoveredPassword,
+   refreshCurrentSession,
    showGate,
    hideGate,
    mountAccountSettings
@@ -350,9 +350,8 @@
    notifySignedIn(session);
   });
   try{
-   const {data,error}=await client.auth.getSession();
-   if(error)throw error;
-   notifySignedIn(data?.session||null);
+   const session=await refreshCurrentSession();
+   notifySignedIn(session);
   }catch(error){
    currentSession=null;window.civilizationAuthSession=null;showGate();setStatus(authMessage(error),"error");
   }
