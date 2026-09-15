@@ -22,6 +22,10 @@
  if(enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
  const saleLegend=enhancementStoneSaleReward({q:4}),saleMythic=enhancementStoneSaleReward({q:5});if(saleLegend.basic!==5||saleMythic.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
  if(Math.abs(enhancedMainStatValue(100,20)-150)>1e-9)fail("MAIN_STAT","+20 主能力倍率異常");
+ if(window.ENHANCEMENT_UI_SUCCESS_ALERT_DISABLED!==true)fail("SUCCESS_ALERT","強化成功後不應再跳出第二個成功提示視窗");
+ if(window.ENHANCEMENT_UI_UNIFORM_GRID!==true)fail("UNIFORM_GRID","桌機版五個強化欄位應維持相同卡片寬度");
+ const uiStyle=document.getElementById("enhancement-ui-styles")?.textContent||"";
+ if(/\.enhance-slot-card:last-child\s*\{[^}]*grid-column\s*:\s*1\s*\/\s*-1/i.test(uiStyle))fail("LAST_CARD_SPAN","第五個強化欄位不應跨滿兩欄");
 
  if(typeof window.normalizeEnhancementStoneReward!=="function"||typeof window.mergeEnhancementStoneRewards!=="function"||typeof window.enhancementStoneRewardText!=="function")fail("REWARD_HELPERS","強化石共用正規化／合併／顯示 API 未完整載入");
  else{
