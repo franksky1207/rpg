@@ -1,12 +1,16 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=4;
+ const AUTH_VERSION=5;
+ const RECOVERY_FLAG="civilization_frontline_password_recovery_v1";
  let client=null;
  let currentSession=null;
  let mode="login";
  let busy=false;
  let renderHookInstalled=false;
+ let recoveryActive=false;
+
+ try{recoveryActive=sessionStorage.getItem(RECOVERY_FLAG)==="1"||/[#?&]type=recovery(?:&|$)/.test(location.hash+location.search);}catch(e){}
 
  window.CIVILIZATION_AUTH_REQUIRED=true;
  window.CIVILIZATION_AUTH_VERSION=AUTH_VERSION;
@@ -42,21 +46,74 @@
  function setBusy(next){
   busy=!!next;
   const submit=document.getElementById("civilizationAuthSubmit");
+  const forgot=document.getElementById("civilizationAuthForgot");
+  const back=document.getElementById("civilizationAuthBackLogin");
   const tabs=document.querySelectorAll("[data-auth-mode]");
   if(submit)submit.disabled=busy;
+  if(forgot)forgot.disabled=busy;
+  if(back)back.disabled=busy;
   tabs.forEach(btn=>btn.disabled=busy);
  }
  function applyMode(next){
-  mode=next==="signup"?"signup":"login";
+  if(recoveryActive&&next!=="recovery")return enterRecoveryMode();
+  mode=next==="signup"?"signup":next==="forgot"?"forgot":"login";
   document.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.classList.toggle("active",btn.dataset.authMode===mode));
   const title=document.getElementById("civilizationAuthFormTitle");
   const submit=document.getElementById("civilizationAuthSubmit");
+  const emailWrap=document.getElementById("civilizationAuthEmailWrap");
+  const passwordWrap=document.getElementById("civilizationAuthPasswordWrap");
   const confirmWrap=document.getElementById("civilizationAuthConfirmWrap");
-  if(title)title.textContent=mode==="signup"?"建立帳號":"登入帳號";
-  if(submit)submit.textContent=mode==="signup"?"建立帳號":"登入";
+  const forgot=document.getElementById("civilizationAuthForgot");
+  const back=document.getElementById("civilizationAuthBackLogin");
+  const note=document.getElementById("civilizationAuthModeNote");
+  if(title)title.textContent=mode==="signup"?"建立帳號":mode==="forgot"?"忘記密碼":"登入帳號";
+  if(submit)submit.textContent=mode==="signup"?"建立帳號":mode==="forgot"?"寄送重設密碼信":"登入";
+  if(emailWrap)emailWrap.hidden=false;
+  if(passwordWrap)passwordWrap.hidden=mode==="forgot";
   if(confirmWrap)confirmWrap.hidden=mode!=="signup";
+  if(forgot)forgot.hidden=mode!=="login";
+  if(back)back.hidden=mode!=="forgot";
+  if(note){note.hidden=mode!=="forgot";note.textContent="輸入建立帳號時使用的 Email，我們會寄送重設密碼連結。";}
+  if(passwordEl()){
+   passwordEl().required=mode!=="forgot";
+   passwordEl().setAttribute("autocomplete",mode==="signup"?"new-password":"current-password");
+  }
   if(confirmEl())confirmEl().required=mode==="signup";
   setStatus("");
+ }
+ function enterRecoveryMode(){
+  recoveryActive=true;
+  try{sessionStorage.setItem(RECOVERY_FLAG,"1");}catch(e){}
+  mode="recovery";
+  const tabs=document.getElementById("civilizationAuthTabs");
+  const title=document.getElementById("civilizationAuthFormTitle");
+  const submit=document.getElementById("civilizationAuthSubmit");
+  const emailWrap=document.getElementById("civilizationAuthEmailWrap");
+  const passwordWrap=document.getElementById("civilizationAuthPasswordWrap");
+  const confirmWrap=document.getElementById("civilizationAuthConfirmWrap");
+  const forgot=document.getElementById("civilizationAuthForgot");
+  const back=document.getElementById("civilizationAuthBackLogin");
+  const note=document.getElementById("civilizationAuthModeNote");
+  if(tabs)tabs.hidden=true;
+  if(title)title.textContent="設定新密碼";
+  if(submit)submit.textContent="更新密碼";
+  if(emailWrap)emailWrap.hidden=true;
+  if(passwordWrap)passwordWrap.hidden=false;
+  if(confirmWrap)confirmWrap.hidden=false;
+  if(forgot)forgot.hidden=true;
+  if(back)back.hidden=true;
+  if(note){note.hidden=false;note.textContent="請輸入新的密碼兩次。更新完成後會直接回到遊戲。";}
+  if(passwordEl()){
+   passwordEl().required=true;
+   passwordEl().value="";
+   passwordEl().setAttribute("autocomplete","new-password");
+  }
+  if(confirmEl()){
+   confirmEl().required=true;
+   confirmEl().value="";
+  }
+  setStatus("");
+  showGate();
  }
  function showGate(){
   const el=gate();if(!el)return;
@@ -110,6 +167,7 @@
   currentSession=session||null;
   window.civilizationAuthSession=currentSession;
   if(currentSession){
+   if(recoveryActive){showGate();enterRecoveryMode();return;}
    hideGate();
    mountAccountSettings();
    window.dispatchEvent(new CustomEvent("civilization-auth-ready",{detail:{session:currentSession}}));
@@ -124,31 +182,74 @@
   wrap.innerHTML=`<div class="civilization-auth-shell"><div class="civilization-auth-card">
    <div class="civilization-auth-brand">文明戰線</div>
    <div class="civilization-auth-subtitle">帳號驗證</div>
-   <div class="civilization-auth-tabs" role="tablist" aria-label="帳號操作">
+   <div id="civilizationAuthTabs" class="civilization-auth-tabs" role="tablist" aria-label="帳號操作">
     <button type="button" class="civilization-auth-tab active" data-auth-mode="login">登入</button>
     <button type="button" class="civilization-auth-tab" data-auth-mode="signup">建立帳號</button>
    </div>
    <form id="civilizationAuthForm" class="civilization-auth-form" novalidate>
     <h2 id="civilizationAuthFormTitle">登入帳號</h2>
-    <label>Email<input id="civilizationAuthEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"></label>
-    <label>密碼<input id="civilizationAuthPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="至少 8 個字元"></label>
+    <div id="civilizationAuthModeNote" class="civilization-auth-mode-note" hidden></div>
+    <label id="civilizationAuthEmailWrap">Email<input id="civilizationAuthEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"></label>
+    <label id="civilizationAuthPasswordWrap">密碼<input id="civilizationAuthPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="至少 8 個字元"></label>
+    <button id="civilizationAuthForgot" type="button" class="civilization-auth-link" onclick="civilizationForgotPassword()">忘記密碼？</button>
     <label id="civilizationAuthConfirmWrap" hidden>再次輸入密碼<input id="civilizationAuthPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="再次輸入密碼"></label>
     <div id="civilizationAuthStatus" class="civilization-auth-status" hidden aria-live="polite"></div>
     <button id="civilizationAuthSubmit" type="submit" class="civilization-auth-submit">登入</button>
+    <button id="civilizationAuthBackLogin" type="button" class="civilization-auth-secondary" onclick="civilizationBackToLogin()" hidden>返回登入</button>
    </form>
    <div class="civilization-auth-note">此裝置登入成功後會保持登入。遊戲進度不會自動上傳或下載雲端存檔。</div>
   </div></div>`;
   document.body.appendChild(wrap);
   wrap.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.addEventListener("click",()=>applyMode(btn.dataset.authMode)));
   formEl()?.addEventListener("submit",handleSubmit);
-  applyMode("login");
+  if(recoveryActive)enterRecoveryMode();else applyMode("login");
  }
 
+ function resetRedirectUrl(){return `${location.origin}${location.pathname}`;}
+ async function sendPasswordReset(email){
+  if(!client)throw new Error("帳號服務尚未初始化。");
+  const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:resetRedirectUrl()});
+  if(error)throw error;
+ }
+ function clearRecoveryState(){
+  recoveryActive=false;
+  try{sessionStorage.removeItem(RECOVERY_FLAG);}catch(e){}
+  try{history.replaceState({},document.title,location.pathname);}catch(e){}
+ }
+ async function updateRecoveredPassword(password){
+  if(!client)throw new Error("帳號服務尚未初始化。");
+  const {data,error}=await client.auth.updateUser({password});
+  if(error)throw error;
+  if(data?.user&&currentSession)currentSession={...currentSession,user:data.user};
+ }
  async function handleSubmit(event){
   event.preventDefault();
   if(busy||!client)return;
   const email=String(emailEl()?.value||"").trim();
   const password=String(passwordEl()?.value||"");
+  if(mode==="forgot"){
+   if(!email){setStatus("請輸入建立帳號時使用的 Email。","error");return;}
+   setBusy(true);setStatus("正在寄送重設密碼信…","info");
+   try{
+    await sendPasswordReset(email);
+    setStatus("如果這個 Email 已建立帳號，重設密碼信會寄到該信箱。請開啟信件並點擊重設連結。","success");
+   }catch(error){setStatus(authMessage(error),"error");}
+   finally{setBusy(false);}
+   return;
+  }
+  if(mode==="recovery"){
+   if(password.length<8){setStatus("新密碼至少需要 8 個字元。","error");return;}
+   const confirmPassword=String(confirmEl()?.value||"");
+   if(password!==confirmPassword){setStatus("兩次輸入的新密碼不一致。","error");return;}
+   setBusy(true);setStatus("正在更新密碼…","info");
+   try{
+    await updateRecoveredPassword(password);
+    clearRecoveryState();
+    setStatus("密碼已更新完成，正在進入遊戲…","success");
+    setTimeout(()=>notifySignedIn(currentSession),700);
+   }catch(error){setStatus(authMessage(error),"error");setBusy(false);}
+   return;
+  }
   if(!email){setStatus("請輸入 Email。","error");return;}
   if(password.length<8){setStatus("密碼至少需要 8 個字元。","error");return;}
   setBusy(true);setStatus(mode==="signup"?"正在建立帳號…":"正在登入…","info");
@@ -156,8 +257,7 @@
    if(mode==="signup"){
     const confirmPassword=String(confirmEl()?.value||"");
     if(password!==confirmPassword){setStatus("兩次輸入的密碼不一致。","error");return;}
-    const redirectTo=`${location.origin}${location.pathname}`;
-    const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectTo}});
+    const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:resetRedirectUrl()}});
     if(error)throw error;
     if(data?.session){notifySignedIn(data.session);return;}
     setStatus(`驗證信已寄到 ${email}。請到信箱點擊驗證連結，完成後再回來登入。`,"success");
@@ -174,10 +274,11 @@
  function applyModeAfterSignup(email){
   mode="login";
   document.querySelectorAll("[data-auth-mode]").forEach(btn=>btn.classList.toggle("active",btn.dataset.authMode==="login"));
-  const title=document.getElementById("civilizationAuthFormTitle"),submit=document.getElementById("civilizationAuthSubmit"),confirmWrap=document.getElementById("civilizationAuthConfirmWrap");
+  const title=document.getElementById("civilizationAuthFormTitle"),submit=document.getElementById("civilizationAuthSubmit"),confirmWrap=document.getElementById("civilizationAuthConfirmWrap"),forgot=document.getElementById("civilizationAuthForgot");
   if(title)title.textContent="完成 Email 驗證後登入";
   if(submit)submit.textContent="登入";
   if(confirmWrap)confirmWrap.hidden=true;
+  if(forgot)forgot.hidden=false;
   if(confirmEl())confirmEl().required=false;
   if(emailEl())emailEl().value=email;
   if(passwordEl()){passwordEl().value="";passwordEl().setAttribute("autocomplete","current-password");}
@@ -190,6 +291,8 @@
    if(error)throw error;
    currentSession=null;
    window.civilizationAuthSession=null;
+   clearRecoveryState();
+   const tabs=document.getElementById("civilizationAuthTabs");if(tabs)tabs.hidden=false;
    showGate();
    applyMode("login");
    if(emailEl())emailEl().value="";
@@ -199,6 +302,12 @@
    return {ok:true};
   }catch(error){return {ok:false,error};}
  }
+ window.civilizationForgotPassword=function(){if(!busy&&!recoveryActive)applyMode("forgot");};
+ window.civilizationBackToLogin=function(){
+  if(busy||recoveryActive)return;
+  const tabs=document.getElementById("civilizationAuthTabs");if(tabs)tabs.hidden=false;
+  applyMode("login");
+ };
  window.civilizationAccountLogout=async function(){
   if(busy)return;
   if(!confirm("確定要登出這台裝置嗎？本機遊戲進度不會因此刪除。"))return;
@@ -223,12 +332,22 @@
    getUser:()=>currentSession?.user||null,
    getEmail:()=>currentSession?.user?.email||"",
    signOut:signOutLocal,
+   sendPasswordReset,
+   updateRecoveredPassword,
    showGate,
    hideGate,
    mountAccountSettings
   };
   installRenderHook();
-  client.auth.onAuthStateChange((_event,session)=>notifySignedIn(session));
+  client.auth.onAuthStateChange((event,session)=>{
+   if(event==="PASSWORD_RECOVERY"){
+    recoveryActive=true;
+    try{sessionStorage.setItem(RECOVERY_FLAG,"1");}catch(e){}
+    notifySignedIn(session);
+    return;
+   }
+   notifySignedIn(session);
+  });
   try{
    const {data,error}=await client.auth.getSession();
    if(error)throw error;
