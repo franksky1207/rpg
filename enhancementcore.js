@@ -31,9 +31,4 @@
  window.enhancementMultiplier=enhancementMultiplier;
  window.enhancementUpgradeCost=enhancementUpgradeCost;
  window.enhancedMainStatValue=enhancedMainStatValue;
- // 強化是正式持久資料，但不占用 newState normalizer 名額；包裝既有 newState 建立預設值。
- if(typeof window.newState==="function"){
-  const baseNewState=window.newState;
-  window.newState=function(){return normalizeEnhancementState(baseNewState());};
- }
 })();
