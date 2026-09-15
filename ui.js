@@ -289,7 +289,7 @@ function settingsPage(){
  const body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
  <h3 style="margin-top:22px">自動出售</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">不可自動出售</span></div>
  <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row" style="align-items:flex-end"><div style="flex:1"><div style="margin-bottom:6px">角色名稱</div><input id="playerNameInput" type="text" maxlength="12" value="${name}" placeholder="玩家" style="width:100%;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff"></div><button class="btn blue" onclick="savePlayerName()">儲存名稱</button></div><div class="muted" style="margin-top:6px">最多 12 個字；空白名稱儲存時會自動恢復成「玩家」。</div><div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
- <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div><div class="controls"><button class="btn" onclick="exportSave()">匯出存檔</button><label class="btn">匯入存檔<input type="file" accept=".json" hidden onchange="importSave(event)"></label></div>
+ <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
  ${state.gm&&typeof gmHtml==="function"?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
  return wrapFunctionPage(body);
 }
@@ -305,7 +305,6 @@ function wireSettings(){
 function openGMModal(){document.getElementById("passwordModal").classList.add("show");document.getElementById("gmPassword").focus()}
 function closeGMModal(){document.getElementById("passwordModal").classList.remove("show")}
 function unlockGM(){if(document.getElementById("gmPassword").value===GM_PASSWORD){state.gm=true;save();closeGMModal();render()}else alert("密碼錯誤。")}
-function exportSave(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="rpg-save.json";a.click();URL.revokeObjectURL(a.href)}
 function normalizeSaveItem(it,forcedType=null){
  if(!it||typeof it!=="object"||Array.isArray(it))return null;
  const type=forcedType||it.type;if(!EQUIPMENT_TYPES.includes(type))return null;
@@ -323,11 +322,6 @@ function normalizeSaveItem(it,forcedType=null){
  out.sell=Number.isFinite(sell)&&sell>=0?Math.floor(sell):ceil(sellBase(level)*QUALITY[q].sm);
  out.buy=Number.isFinite(buy)&&buy>=0?Math.floor(buy):ceil(out.sell*3.5);
  return out;
-}
-function isImportableSave(x){
- if(!x||typeof x!=="object"||Array.isArray(x))return false;
- const level=Number(x.level);if(!Number.isFinite(level)||level<1)return false;
- return "saveVersion" in x||"equipment" in x||"inventory" in x||"mapProgress" in x;
 }
 function normalizeSaveState(target){
  if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
@@ -370,18 +364,6 @@ function normalizeCurrentSaveState(){
  if(typeof ensureVoidMirageState==="function")ensureVoidMirageState();
  normalizeHP();
  return state;
-}
-function importSave(ev){
- const input=ev.target,f=input.files[0];if(!f)return;
- const r=new FileReader();
- r.onload=()=>{
-  try{
-   const x=JSON.parse(r.result);if(!isImportableSave(x))throw 0;
-   if(!confirm("匯入存檔會覆蓋目前的遊戲進度。確定要繼續嗎？")){input.value="";return;}
-   state=x;normalizeCurrentSaveState();save(false);location.reload();
-  }catch(e){input.value="";alert("存檔格式不正確。");}
- };
- r.readAsText(f);
 }
 function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";inventoryFilter="all";inventoryFromAdventure=false;save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
