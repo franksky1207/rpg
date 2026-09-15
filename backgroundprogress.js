@@ -18,6 +18,18 @@
   if(count===marker||count==="continuous"||ctx?.continuous===true)return "continuous";
   return "single";
  }
+ function mainBattleEncounterKind(){
+  try{
+   if(typeof currentCombatEncounter!=="undefined"&&currentCombatEncounter?.kind)return currentCombatEncounter.kind;
+   if(typeof getPreviewEncounter==="function"){
+    const preview=getPreviewEncounter(selectedMap,selectedEnemy);
+    if(preview?.kind)return preview.kind;
+   }
+   if(typeof monsterObj==="function")return monsterObj(selectedMap,selectedEnemy)?.kind||"";
+  }catch(e){}
+  return "";
+ }
+ function mainBattleAllowsBackground(){return mainBattleEncounterKind()!=="boss";}
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
   const continuous=mode==="continuous";
@@ -93,6 +105,8 @@
  window.backgroundProgressEnvironmentIsBackground=function(){return isBackground();};
  window.backgroundProgressHasCatchUpCredit=function(kind=null){return activeFor(kind)&&flow.hiddenAt==null&&!isBackground()&&Number(flow.credit)>0;};
  window.backgroundProgressMainBattleMode=mainBattleMode;
+ window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
+ window.BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION=1;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
@@ -152,8 +166,9 @@
  const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
  if(baseBeginCombat){
   const wrappedBeginCombat=function(count,...args){
-   const mode=mainBattleMode(count);
-   if(mode!=="single")window.backgroundProgressStart("main",{mode});
+   const mode=mainBattleMode(count),useBackground=mode!=="single"&&mainBattleAllowsBackground();
+   if(useBackground)window.backgroundProgressStart("main",{mode});
+   else if(mode!=="single")window.backgroundProgressStop("main");
    return baseBeginCombat.call(this,count,...args);
   };
   window.beginCombat=wrappedBeginCombat;
@@ -164,8 +179,9 @@
  if(baseRunBattles){
   const wrappedRunBattles=async function(count,...args){
    const ctx=args[0]&&typeof args[0]==="object"?args[0]:null;
-   const mode=mainBattleMode(count,ctx),useBackground=mode!=="single";
+   const mode=mainBattleMode(count,ctx),useBackground=mode!=="single"&&mainBattleAllowsBackground();
    if(useBackground)window.backgroundProgressStart("main",{mode});
+   else if(mode!=="single")window.backgroundProgressStop("main");
    try{return await baseRunBattles.call(this,count,...args);}
    finally{if(useBackground)window.backgroundProgressStop("main");}
   };
