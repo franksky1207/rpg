@@ -1,11 +1,20 @@
 (function(){
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- const marker=window.CONTINUOUS_BATTLE_COUNT||"continuous";
+ const marker=window.CONTINUOUS_BATTLE_COUNT;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
- window.BOSS_CONTINUOUS_INTEGRITY_VERSION=3;
+ window.BOSS_CONTINUOUS_INTEGRITY_VERSION=4;
 
+ if(marker!=="continuous")fail("BOSS_CONTINUOUS_MARKER_OWNER",`CONTINUOUS_BATTLE_COUNT 應由 ui.js 統一提供 continuous，實際 ${marker}`);
  if(Number(window.MAIN_BOSS_CONTINUOUS_VERSION)!==1)fail("BOSS_CONTINUOUS_VERSION",`MAIN_BOSS_CONTINUOUS_VERSION 應為 1，實際 ${window.MAIN_BOSS_CONTINUOUS_VERSION}`);
+ if(typeof window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION!=="undefined")fail("BOSS_LEGACY_HP_FLOW_MARKER","HP flow 舊 Boss continuous 修補 marker 應已退休");
+ if(Number(window.MAIN_BATTLE_PACING_VERSION)!==1)fail("BOSS_PACING_VERSION",`MAIN_BATTLE_PACING_VERSION 應為 1，實際 ${window.MAIN_BATTLE_PACING_VERSION}`);
+ if(typeof window.mainBattleGapMs!=="function")fail("BOSS_PACING_GAP_API","mainBattleGapMs 未載入");
+ else{
+  const gaps={normal:window.mainBattleGapMs("normal"),elite:window.mainBattleGapMs("elite"),boss:window.mainBattleGapMs("boss")};
+  if(gaps.normal!==140||gaps.elite!==220||gaps.boss!==140)fail("BOSS_PACING_GAP_VALUES","主線場間節奏應為 normal 140ms／elite 220ms／boss 140ms",gaps);
+ }
+
  if(typeof battleModesForEnemy!=="function")fail("BOSS_BATTLE_MODE_API","battleModesForEnemy 未載入");
  else{
   const sets={boss:battleModesForEnemy({kind:"boss"}),elite:battleModesForEnemy({kind:"elite"}),normal:battleModesForEnemy({kind:"normal"})};
@@ -59,6 +68,7 @@
  else{
   if(!/if\s*\(\s*!r\.win\s*\)/.test(pipelineSource)||!/break/.test(pipelineSource))fail("BOSS_DEFEAT_STOPS_CONTINUOUS","主線連戰戰敗後應立即停止");
   if(!/currentCombatEncounter\s*=\s*createMonsterEncounter\(selectedMap,selectedEnemy\)/.test(pipelineSource))fail("BOSS_CONTINUOUS_SAME_TARGET","連戰下一場應繼續目前 selectedMap／selectedEnemy");
+  if(!/battleGapMs\s*\(\s*r\.e\.kind\s*\)/.test(pipelineSource))fail("BOSS_PIPELINE_SHARED_GAP","主線 pipeline 應使用共用 battleGapMs，而不是各自維護場間常數",pipelineSource);
   const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
   if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
  }
@@ -130,5 +140,5 @@
  if(!adventureGuideText.includes("離線收益不會以 Boss 作為刷怪目標")||!adventureGuideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
  if(!adventureGuideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
 
- window.BOSS_CONTINUOUS_INTEGRITY={version:3,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
+ window.BOSS_CONTINUOUS_INTEGRITY={version:4,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
