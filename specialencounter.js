@@ -97,8 +97,13 @@
   const gold=specialRewardGoldAmount(baseGold,rewardCtx);
   state.gold+=gold;
   const items=specialMakeDrops(rewardCtx,dropLevel,mapIdx);
-  const drops=items.map(item=>{const ir=addItem(item);return {item,sold:ir.sold||0};});
-  return {rewardContext:rewardCtx,xp:xpPay.xp,convertedGold:xpPay.convertedGold,gold,drops};
+  let saleEnhancementStones=normalizeEnhancementStoneReward(null);
+  const drops=items.map(item=>{
+   const ir=addItem(item);
+   saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,ir.enhancementStones);
+   return {item,sold:ir.sold||0};
+  });
+  return {rewardContext:rewardCtx,xp:xpPay.xp,convertedGold:xpPay.convertedGold,gold,drops,saleEnhancementStones};
  }
 
  async function fightFormalSpecial(ctx,special){
@@ -113,7 +118,7 @@
   await sleep(120);
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
-  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
+  const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=goldBase(level);
@@ -122,6 +127,7 @@
    result.convertedGold+=first.convertedGold;
    result.gold+=first.gold;
    result.drops.push(...first.drops);
+   result.saleEnhancementStones=mergeEnhancementStoneRewards(result.saleEnhancementStones,first.saleEnhancementStones);
 
    if(special.id==="bandit_king"){
     state.pendingBlackMarketEncounter=true;
@@ -143,6 +149,7 @@
      result.convertedGold+=bonus.convertedGold;
      result.gold+=bonus.gold;
      result.drops.push(...bonus.drops);
+     result.saleEnhancementStones=mergeEnhancementStoneRewards(result.saleEnhancementStones,bonus.saleEnhancementStones);
     }
    }
   }else{
@@ -170,6 +177,7 @@
   if(!special)return false;
   await showSpecialEncounterAlert(special,forcedByBlackMarket);
   const result=await fightFormalSpecial(ctx,special);
+  if(result.win)addBattleEnhancementReward(ctx,"autoSale",result.saleEnhancementStones);
   if(forcedByBlackMarket){
    state.pendingBlackMarketEncounter=false;
    save(false);
