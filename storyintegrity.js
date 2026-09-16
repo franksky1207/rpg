@@ -16,7 +16,8 @@
   const warn=(code,message,data=null)=>warnings.push({code,message,data});
   const stories=window.CIVILIZATION_STORIES||{};
   const regions=Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];
-  const expectedRegions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+  const expectedRegions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
+  const maps=typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[];
   const registeredIds=new Set();
   const expectedStoryIds=new Set(["earth-prologue"]);
   let bossStoryCount=0;
@@ -48,7 +49,7 @@
     const mapIdx=Number(worldRegion.mapStart)+offset;
     const expectedId=`${worldRegion.id}-boss-${offset+1}`;
     expectedStoryIds.add(expectedId);
-    const map=window.MAPS?.[mapIdx];
+    const map=maps[mapIdx];
     const expectedBoss=map?.enemies?.[4]?.[0];
     const row=rows.find(x=>x?.id===expectedId);
     const story=stories[expectedId];
