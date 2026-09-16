@@ -52,6 +52,10 @@
   });
  }
 
+ function signalReadyBeforeReveal(){
+  window.BACKGROUND_PRELOAD_READY=true;
+  try{window.dispatchEvent(new CustomEvent("civilization-background-ready-before-reveal"));}catch(e){}
+ }
  function revealGame(){
   document.body.classList.remove("background-preloading");
   document.body.classList.add("background-preload-complete");
@@ -67,10 +71,10 @@
   const jobs=urls.map(url=>preloadOne(url).then(()=>{done++;updateProgress(done,urls.length);}));
   const timeout=new Promise(resolve=>setTimeout(resolve,MAX_WAIT_MS));
   await Promise.race([Promise.all(jobs),timeout]);
-  window.BACKGROUND_PRELOAD_READY=true;
+  signalReadyBeforeReveal();
   revealGame();
   return {total:urls.length,loaded:done};
  };
 
- Promise.resolve().then(()=>window.preloadGameBackgrounds()).catch(()=>{window.BACKGROUND_PRELOAD_READY=true;revealGame();});
+ Promise.resolve().then(()=>window.preloadGameBackgrounds()).catch(()=>{signalReadyBeforeReveal();revealGame();});
 })();
