@@ -29,9 +29,11 @@
  }
  function normalizeDaily(source,currentKey,recoverInterrupted=false){
   const daily=isObject(source)?source:{};
-  let dateKey=validDateKey(daily.dateKey)||currentKey;
-  let challengeDate=validDateKey(daily.challengeDate);
+  const sourceDateKey=validDateKey(daily.dateKey),sourceChallengeDate=validDateKey(daily.challengeDate);
   let status=MIRROR_STATUSES.has(daily.status)?daily.status:"idle";
+  if(status!=="idle"&&!sourceDateKey&&!sourceChallengeDate)return replaceObject(daily,blankMirrorDaily(currentKey));
+  let dateKey=sourceDateKey||sourceChallengeDate||currentKey;
+  let challengeDate=sourceChallengeDate;
   let wins=Math.max(0,Math.min(RUN_BATTLES,finiteInt(daily.wins,0)));
   let losses=Math.max(0,Math.min(RUN_BATTLES-wins,finiteInt(daily.losses,0)));
   let startedAt=finiteInt(daily.startedAt,0),completedAt=finiteInt(daily.completedAt,0);
