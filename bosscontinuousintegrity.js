@@ -3,7 +3,7 @@
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const marker=window.CONTINUOUS_BATTLE_COUNT;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
- window.BOSS_CONTINUOUS_INTEGRITY_VERSION=5;
+ window.BOSS_CONTINUOUS_INTEGRITY_VERSION=6;
 
  if(marker!=="continuous")fail("BOSS_CONTINUOUS_MARKER_OWNER",`CONTINUOUS_BATTLE_COUNT 應由 ui.js 統一提供 continuous，實際 ${marker}`);
  if(Number(window.MAIN_BOSS_CONTINUOUS_VERSION)!==1)fail("BOSS_CONTINUOUS_VERSION",`MAIN_BOSS_CONTINUOUS_VERSION 應為 1，實際 ${window.MAIN_BOSS_CONTINUOUS_VERSION}`);
@@ -100,9 +100,12 @@
  }
 
  if(Number(window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION)!==2)fail("BOSS_BACKGROUND_SHARED_VERSION",`BACKGROUND_PROGRESS_MAIN_SHARED_VERSION 應為 2，實際 ${window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION}`);
+ if(Number(window.BACKGROUND_PROGRESS_GM_GATE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_GATE_VERSION",`BACKGROUND_PROGRESS_GM_GATE_VERSION 應為 1，實際 ${window.BACKGROUND_PROGRESS_GM_GATE_VERSION}`);
+ if(Number(window.GM_BACKGROUND_BATTLE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_CONTROL_VERSION",`GM_BACKGROUND_BATTLE_VERSION 應為 1，實際 ${window.GM_BACKGROUND_BATTLE_VERSION}`);
  if(typeof window.BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION!=="undefined")fail("BOSS_BACKGROUND_LEGACY_EXCLUSION","Boss 背景戰鬥舊排除 marker 應已退休");
+ if(typeof window.gmBackgroundBattleEnabled!=="function"||typeof window.gmBackgroundBattleStorageKey!=="function")fail("BOSS_BACKGROUND_GM_CONTROL_API","GM 背景戰鬥裝置端設定 API 未載入");
  if(typeof window.backgroundProgressMainBattleAllowsBackground!=="function")fail("BOSS_BACKGROUND_API","主線背景戰鬥判斷 API 未載入");
- else if(window.backgroundProgressMainBattleAllowsBackground()!==true)fail("BOSS_BACKGROUND_SHARED","普通怪、菁英怪與 Boss 的連續戰鬥都應共用背景推進");
+ else if(typeof window.gmBackgroundBattleEnabled==="function"&&window.backgroundProgressMainBattleAllowsBackground()!==window.gmBackgroundBattleEnabled())fail("BOSS_BACKGROUND_GM_GATE","普通怪、菁英怪與 Boss 應共用同一個 GM 背景戰鬥開關");
 
  if(typeof window.offlineEnhancementStoneReward!=="function")fail("BOSS_OFFLINE_REWARD_API","offlineEnhancementStoneReward 未載入");
  else{
@@ -129,5 +132,5 @@
  if(!adventureGuideText.includes("離線收益不會以 Boss 作為刷怪目標")||!adventureGuideText.includes("最近一次有效的普通怪或菁英怪戰鬥紀錄"))fail("BOSS_GUIDE_OFFLINE_NOTE","離線收益說明應包含 Boss 排除與最近有效普通／菁英紀錄備註");
  if(!adventureGuideText.includes('class="guide-note"'))fail("BOSS_GUIDE_OFFLINE_NOTE_STYLE","Boss 離線備註應保留獨立 guide-note 排版區塊");
 
- window.BOSS_CONTINUOUS_INTEGRITY={version:5,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
+ window.BOSS_CONTINUOUS_INTEGRITY={version:6,passed:errors.length===0,errors,checkedAt:new Date().toISOString()};
 })();
