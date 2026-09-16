@@ -50,6 +50,7 @@
   delete dungeon.activeRun;
   delete dungeon.points;
   normalizeArenaProgress(dungeon,target);
+  if(typeof window.normalizeMirrorDungeonState==="function")window.normalizeMirrorDungeonState(target);
   return dungeon;
  }
  window.normalizeDungeonSaveState=normalizeDungeonState;
