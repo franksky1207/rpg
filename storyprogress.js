@@ -127,14 +127,19 @@
   ensureStarterEquipment();
   const p=progress();
   p.starterGearReceived=true;
+  if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
   persist();
-  const modal=document.getElementById(MODAL_ID);if(modal)modal.classList.remove("open");
+  const modal=document.getElementById(MODAL_ID);
+  if(modal){modal.classList.remove("open");modal.remove();}
   starterGearOpen=false;
-  if(typeof go==="function")go("home");
-  else{
-   try{view="home";adventureScreen="maps";}catch(e){}
-   if(typeof render==="function")render();
-  }
+  const enterHome=()=>{
+   if(typeof go==="function")go("home");
+   else{
+    try{view="home";adventureScreen="maps";}catch(e){}
+    if(typeof render==="function")render();
+   }
+  };
+  if(typeof requestAnimationFrame==="function")requestAnimationFrame(enterHome);else setTimeout(enterHome,0);
  };
 
  function authReady(){return window.CIVILIZATION_AUTH_REQUIRED!==true||!!window.civilizationAuthSession;}
@@ -168,7 +173,7 @@
  }
 
  window.civilizationStoryProgress={
-  version:2,
+  version:3,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
@@ -177,7 +182,7 @@
   completeStory,
   ensureStarterEquipment
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=2;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=3;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
