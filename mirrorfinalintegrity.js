@@ -33,6 +33,7 @@
   try{
    const base=window.createMirrorCombatSnapshot(),probe=clone(base);
    probe.specializations={...(probe.specializations||{}),initiative:60,combo:60,penetration:60,counter:60,drain:60};
+   if(typeof window.mirrorSpecializationBonuses==="function")probe.specializationBonuses=window.mirrorSpecializationBonuses(probe.specializations);
    const snap=window.normalizeMirrorCombatSnapshot(probe);
    let pairs=0;
    for(let seed=1;seed<=64;seed++){
