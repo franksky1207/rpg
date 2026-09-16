@@ -1,0 +1,130 @@
+(function(){
+ const MIRROR_DUNGEON_STATE_VERSION=1;
+ const MIRROR_DUNGEON_UNLOCK_LEVEL=50;
+ const MIRROR_DUNGEON_RUN_BATTLES=20;
+ const MIRROR_STATUSES=new Set(["idle","running","completed","failed"]);
+
+ function finiteInt(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:fallback;}
+ function validDateKey(value){return typeof value==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(value)?value:null;}
+ function todayKey(timestamp=Date.now()){return typeof gameDailyDateKey==="function"?gameDailyDateKey(timestamp):new Date(Number(timestamp)||Date.now()).toISOString().slice(0,10);}
+ function blankMirrorHistory(){return {bestWins:0,bestDate:null,miracleDates:[]};}
+ function blankMirrorDaily(dateKey=todayKey()){return {dateKey,status:"idle",challengeDate:null,startedAt:0,wins:0,losses:0,completedAt:0};}
+ function blankMirrorState(dateKey=todayKey()){return {version:MIRROR_DUNGEON_STATE_VERSION,history:blankMirrorHistory(),daily:blankMirrorDaily(dateKey)};}
+
+ function normalizeHistory(source){
+  const history=source&&typeof source==="object"&&!Array.isArray(source)?source:{};
+  const bestDate=validDateKey(history.bestDate);
+  const bestWins=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES,finiteInt(history.bestWins,0)));
+  const miracleDates=Array.isArray(history.miracleDates)?history.miracleDates.map(validDateKey).filter(Boolean):[];
+  const uniqueMiracles=[];miracleDates.forEach(key=>{if(!uniqueMiracles.includes(key))uniqueMiracles.push(key);});
+  return {bestWins:bestDate?bestWins:0,bestDate:bestDate||null,miracleDates:uniqueMiracles};
+ }
+ function normalizeDaily(source,currentKey,recoverInterrupted=false){
+  const raw=source&&typeof source==="object"&&!Array.isArray(source)?source:{};
+  let dateKey=validDateKey(raw.dateKey)||currentKey;
+  let challengeDate=validDateKey(raw.challengeDate);
+  let status=MIRROR_STATUSES.has(raw.status)?raw.status:"idle";
+  let wins=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES,finiteInt(raw.wins,0)));
+  let losses=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES-wins,finiteInt(raw.losses,0)));
+  let startedAt=finiteInt(raw.startedAt,0),completedAt=finiteInt(raw.completedAt,0);
+
+  if(status==="running"){
+   challengeDate=challengeDate||dateKey;
+   dateKey=challengeDate;
+   if(recoverInterrupted){
+    if(challengeDate===currentKey){status="failed";wins=0;losses=0;completedAt=0;}
+    else return blankMirrorDaily(currentKey);
+   }
+  }else if(dateKey!==currentKey){
+   return blankMirrorDaily(currentKey);
+  }
+
+  if(status==="idle")return blankMirrorDaily(currentKey);
+  if(status==="completed"&&wins+losses!==MIRROR_DUNGEON_RUN_BATTLES){status="failed";wins=0;losses=0;completedAt=0;}
+  if(status==="failed"){wins=0;losses=0;}
+  return {dateKey,status,challengeDate:challengeDate||dateKey,startedAt,wins,losses,completedAt};
+ }
+ function normalizeMirrorDungeonState(target,timestamp=Date.now(),options={}){
+  if(!target||typeof target!=="object")return null;
+  if(!target.dungeon||typeof target.dungeon!=="object"||Array.isArray(target.dungeon))target.dungeon={};
+  const currentKey=todayKey(timestamp);
+  const source=target.dungeon.mirror&&typeof target.dungeon.mirror==="object"&&!Array.isArray(target.dungeon.mirror)?target.dungeon.mirror:{};
+  const mirror={
+   version:MIRROR_DUNGEON_STATE_VERSION,
+   history:normalizeHistory(source.history),
+   daily:normalizeDaily(source.daily,currentKey,options?.recoverInterrupted===true)
+  };
+  target.dungeon.mirror=mirror;
+  return mirror;
+ }
+ function ensureMirrorDungeonState(timestamp=Date.now()){return normalizeMirrorDungeonState(state,timestamp);}
+ function mirrorDungeonStatus(timestamp=Date.now()){
+  const mirror=ensureMirrorDungeonState(timestamp),daily=mirror?.daily||blankMirrorDaily(todayKey(timestamp)),history=mirror?.history||blankMirrorHistory();
+  const unlocked=Math.max(1,Math.floor(Number(state?.level)||1))>=MIRROR_DUNGEON_UNLOCK_LEVEL;
+  return {unlocked,status:daily.status,dateKey:daily.dateKey,challengeDate:daily.challengeDate,wins:daily.wins,losses:daily.losses,history,canStart:unlocked&&daily.status==="idle",ended:daily.status==="completed"||daily.status==="failed"};
+ }
+ function beginMirrorDungeonState(timestamp=Date.now()){
+  const info=mirrorDungeonStatus(timestamp);
+  if(!info.unlocked)return {ok:false,reason:"locked",...info};
+  if(info.status!=="idle")return {ok:false,reason:"already_used",...info};
+  const mirror=ensureMirrorDungeonState(timestamp),key=todayKey(timestamp),now=Math.max(0,Math.floor(Number(timestamp)||Date.now()));
+  mirror.daily={dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0};
+  if(typeof save==="function")save(false);
+  return {ok:true,...mirrorDungeonStatus(timestamp)};
+ }
+ function failMirrorDungeonState(timestamp=Date.now()){
+  const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return {ok:false,reason:"missing_state"};
+  if(mirror.daily.status!=="running")return {ok:false,reason:"not_running",...mirrorDungeonStatus(timestamp)};
+  const currentKey=todayKey(timestamp);
+  if(mirror.daily.challengeDate!==currentKey){mirror.daily=blankMirrorDaily(currentKey);}
+  else mirror.daily={...mirror.daily,status:"failed",wins:0,losses:0,completedAt:0};
+  if(typeof save==="function")save(false);
+  return {ok:true,...mirrorDungeonStatus(timestamp)};
+ }
+ function recordMirrorDungeonCompletion(wins,timestamp=Date.now()){
+  const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return {ok:false,reason:"missing_state"};
+  if(mirror.daily.status!=="running")return {ok:false,reason:"not_running",...mirrorDungeonStatus(timestamp)};
+  const w=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES,finiteInt(wins,0))),losses=MIRROR_DUNGEON_RUN_BATTLES-w,dateKey=mirror.daily.challengeDate||mirror.daily.dateKey||todayKey(timestamp);
+  const history=mirror.history;
+  const firstRecord=!history.bestDate;
+  if(firstRecord||w>history.bestWins){history.bestWins=w;history.bestDate=dateKey;}
+  if(w===MIRROR_DUNGEON_RUN_BATTLES&&!history.miracleDates.includes(dateKey))history.miracleDates.push(dateKey);
+  mirror.daily={...mirror.daily,dateKey,status:"completed",challengeDate:dateKey,wins:w,losses,completedAt:Math.max(0,Math.floor(Number(timestamp)||Date.now()))};
+  if(typeof save==="function")save(false);
+  return {ok:true,...mirrorDungeonStatus(timestamp)};
+ }
+ function resetMirrorDungeonToday(timestamp=Date.now()){
+  const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return null;
+  mirror.daily=blankMirrorDaily(todayKey(timestamp));
+  if(typeof save==="function")save(false);
+  return mirrorDungeonStatus(timestamp);
+ }
+
+ window.MIRROR_DUNGEON_STATE_VERSION=MIRROR_DUNGEON_STATE_VERSION;
+ window.MIRROR_DUNGEON_UNLOCK_LEVEL=MIRROR_DUNGEON_UNLOCK_LEVEL;
+ window.MIRROR_DUNGEON_RUN_BATTLES=MIRROR_DUNGEON_RUN_BATTLES;
+ window.blankMirrorDungeonState=blankMirrorState;
+ window.normalizeMirrorDungeonState=normalizeMirrorDungeonState;
+ window.ensureMirrorDungeonState=ensureMirrorDungeonState;
+ window.mirrorDungeonStatus=mirrorDungeonStatus;
+ window.beginMirrorDungeonState=beginMirrorDungeonState;
+ window.failMirrorDungeonState=failMirrorDungeonState;
+ window.recordMirrorDungeonCompletion=recordMirrorDungeonCompletion;
+ window.resetMirrorDungeonToday=resetMirrorDungeonToday;
+
+ const baseDungeonNormalizer=window.normalizeDungeonSaveState;
+ window.normalizeDungeonSaveState=function(target){
+  const dungeon=typeof baseDungeonNormalizer==="function"?baseDungeonNormalizer(target):(target.dungeon||(target.dungeon={}));
+  normalizeMirrorDungeonState(target);
+  return dungeon;
+ };
+ const baseDungeonFinalize=window.finalizeDungeonLoadedState;
+ window.finalizeDungeonLoadedState=function(){
+  const result=typeof baseDungeonFinalize==="function"?baseDungeonFinalize():{};
+  const before=state?.dungeon?.mirror?.daily?.status;
+  normalizeMirrorDungeonState(state,Date.now(),{recoverInterrupted:true});
+  const after=state?.dungeon?.mirror?.daily?.status;
+  return {...result,recoveredInterruptedMirrorRun:before==="running"&&after!=="running"};
+ };
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(target=>{normalizeMirrorDungeonState(target);return target;});
+})();
