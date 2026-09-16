@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
 
  function run(){
   const errors=[];
@@ -17,7 +17,7 @@
 
   const migration=window.civilizationStoryMigration;
   if(!migration||typeof migration.migrate!=="function"||typeof migration.backfillAvailableHistory!=="function")fail("STORY_RUNTIME_MIGRATION_MISSING","故事進度 migration 模組未完整載入");
-  if(Number(window.STORY_MIGRATION_VERSION)<2)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
+  if(Number(window.STORY_MIGRATION_VERSION)<3)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
 
   const progress=window.civilizationStoryProgress;
   if(!progress)fail("STORY_RUNTIME_PROGRESS_MISSING","civilizationStoryProgress 未載入");
@@ -57,15 +57,10 @@
   }
 
   if(migration&&progress&&regions.length&&typeof progress.bossStoryId==="function"){
-   const testMap=Number(regions[regions.length-1]?.mapStart);
+   const testRegion=regions[regions.length-1];
+   const testMap=Number(testRegion?.mapStart);
    const testId=progress.bossStoryId(testMap);
    if(Number.isInteger(testMap)&&testId&&stories[testId]){
-    const testState={
-     bossKilled:[],
-     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
-     introSeen:true
-    };
-    testState.bossKilled[testMap]=true;
     const mapIndexForStory=id=>{
      for(const region of regions){
       const start=Number(region.mapStart),end=Number(region.mapEnd);
@@ -73,12 +68,37 @@
      }
      return null;
     };
-    migration.migrate(testState,{introStoryId:"earth-prologue",skipBackfill:true,regions:window.CIVILIZATION_STORY_REGIONS||[],stories,bossMapIndexForStory:mapIndexForStory});
-    if(testState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_FIRST_CLEAR_PREFILL","首殺排隊前的保護模式仍會把當次首領故事回填成已完成",testId);
-    testState.storyProgress.pendingStory=testId;
-    migration.migrate(testState,{introStoryId:"earth-prologue",regions:window.CIVILIZATION_STORY_REGIONS||[],stories,bossMapIndexForStory:mapIndexForStory});
-    if(testState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PENDING_BACKFILL","pendingStory 不應被歷史回填標成已完成",testId);
-    if(testState.storyProgress.pendingStory!==testId)fail("STORY_RUNTIME_PENDING_LOST","歷史回填後 pendingStory 不應遺失",testId);
+    const migrationOptions={introStoryId:"earth-prologue",regions:window.CIVILIZATION_STORY_REGIONS||[],stories,bossMapIndexForStory:mapIndexForStory};
+
+    const firstClearState={
+     bossKilled:[],
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
+     introSeen:true
+    };
+    firstClearState.bossKilled[testMap]=true;
+    migration.migrate(firstClearState,{...migrationOptions,skipBackfill:true});
+    if(firstClearState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_FIRST_CLEAR_PREFILL","首殺排隊前的保護模式仍會把當次首領故事回填成已完成",testId);
+    firstClearState.storyProgress.pendingStory=testId;
+    migration.migrate(firstClearState,migrationOptions);
+    if(firstClearState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PENDING_BACKFILL","pendingStory 不應被歷史回填標成已完成",testId);
+    if(firstClearState.storyProgress.pendingStory!==testId)fail("STORY_RUNTIME_PENDING_LOST","歷史回填後 pendingStory 不應遺失",testId);
+
+    const premarkedRepairState={
+     bossKilled:[],
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[String(testRegion?.id||"")]},
+     introSeen:true
+    };
+    premarkedRepairState.bossKilled[testMap]=true;
+    migration.migrate(premarkedRepairState,migrationOptions);
+    if(!premarkedRepairState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PREMARKED_REPAIR_FAILED","已標記回填過的區域仍必須能補回缺失的已擊敗首領劇情",testId);
+
+    const futureState={
+     bossKilled:[],
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
+     introSeen:true
+    };
+    migration.migrate(futureState,migrationOptions);
+    if(futureState.storyProgress.historyBackfillRegions.includes(String(testRegion?.id||"")))fail("STORY_RUNTIME_FUTURE_REGION_PREMARKED","尚未擊敗任何首領的區域不應被提前標記為已回填",testRegion?.id);
    }
   }
 
