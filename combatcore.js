@@ -144,18 +144,19 @@
    }
    const penalty=applyDeathPenalty(logs);
    save(false);
-   return {ok:true,win:false,logs,events:combat.events,e,penalty,combatEndHp,turns:combat.turns};
+   return {ok:true,win:false,logs,events:combat.events,e,penalty,combatEndHp,turns:combat.turns,firstBossKill:false,bossMapIndex:e.kind==="boss"?mapIdx:null};
   }
 
   const xp=expReward(e),gold=goldReward(e);
   state.gold+=gold;
   gainExp(xp,logs);
+  let firstBossKill=false;
   if(e.kind==="boss"){
-   const first=!state.bossKilled[mapIdx];
+   firstBossKill=!state.bossKilled[mapIdx];
    state.bossKilled[mapIdx]=true;
    state.bossLocked[mapIdx]=false;
    state.bossProgress[mapIdx]=0;
-   if(first&&mapIdx<MAPS.length-1)state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);
+   if(firstBossKill&&mapIdx<MAPS.length-1)state.unlockedMap=Math.max(state.unlockedMap,mapIdx+1);
   }else{
    progressEnemyKill(mapIdx,eIdx);
    addProgress(mapIdx,e.kind);
@@ -186,8 +187,9 @@
   if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
   items.forEach(row=>logs.push(`${row.sold?`自動出售 ${itemHtmlPlain(row.item)}，金幣 +${row.sold}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`));
   save(false);
-  return {ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns};
+  return {ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns,firstBossKill,bossMapIndex:e.kind==="boss"?mapIdx:null};
  };
  window.fightOnce=fightOnce;
  window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION=2;
+ window.MAINLINE_BOSS_FIRST_CLEAR_SIGNAL_VERSION=1;
 })();
