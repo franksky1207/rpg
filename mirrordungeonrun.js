@@ -36,12 +36,13 @@
  function mirrorName(){return `鏡像・${playerName()}`;}
  function escapeHtml(text){return String(text??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function fmt(n){return Math.max(0,Math.floor(Number(n)||0)).toLocaleString();}
+ function scoreHtml(wins,losses){return `目前 <span class="mirror-run-wins">${wins} 勝</span> <span class="mirror-run-losses">${losses} 敗</span>`;}
 
  function installStyles(){
   if(document.getElementById("mirror-run-styles"))return;
   const style=document.createElement("style");style.id="mirror-run-styles";style.textContent=`
    .mirror-combat-shell{background:linear-gradient(180deg,#20212a,#15161d);border:1px solid #8580a4;border-radius:16px;padding:16px;max-width:900px;margin:0 auto}
-   .mirror-run-head{text-align:center;margin-bottom:12px}.mirror-run-head h2{margin:0;color:#efedf7;font-family:Georgia,"Noto Serif TC",serif}.mirror-run-progress{margin-top:7px;color:#c8c3d7;font-weight:800}.mirror-run-score{margin-top:4px;color:#aeb8d3;font-size:14px}
+   .mirror-run-head{text-align:center;margin-bottom:12px}.mirror-run-head h2{margin:0;color:#efedf7;font-family:Georgia,"Noto Serif TC",serif}.mirror-run-progress{margin-top:7px;color:#EDE7FF;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.75)}.mirror-run-score{margin-top:4px;color:#F5EEDC;font-size:14px;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.75)}.mirror-run-wins{color:#7CFF9A}.mirror-run-losses{color:#FF8A8A}
    .mirror-combat-shell .combatant{border-color:#81799d!important}.mirror-combat-shell .combatant.enemy{background:linear-gradient(180deg,#262331,#171720)!important}.mirror-combat-shell .combatant.player{background:linear-gradient(180deg,#202330,#15171f)!important}.mirror-combat-shell .combat-vs{color:#cbc5e3}.mirror-combat-shell #combatMessage{color:#d8d2e5}
    .mirror-result-page{max-width:720px;margin:0 auto}.mirror-result-panel{background:linear-gradient(180deg,#24242f,#171720);border:1px solid #8b84aa;text-align:center}.mirror-result-panel h2{color:#f2eff9}.mirror-result-score{font-size:30px;font-weight:900;color:#f0edf8;margin:14px 0}.mirror-result-reward{font-size:20px;font-weight:800;color:#d4c1f2;margin:10px 0}.mirror-result-comment{margin:16px auto;padding:13px 15px;max-width:560px;border:1px solid #514b65;border-radius:10px;background:#15151d;color:#ddd8e8;line-height:1.7}.mirror-new-record{margin:13px auto;padding:11px;border:1px solid #9b84c3;border-radius:10px;background:#211b2d;color:#eadcff;font-weight:900}.mirror-miracle{font-size:22px;color:#f2e5ff;letter-spacing:.08em}.mirror-completed-inline{margin-top:10px;padding-top:10px;border-top:1px solid #454158;text-align:center}.mirror-completed-inline strong{font-size:18px;color:#eeeaf7}.mirror-completed-inline .mirror-inline-reward{margin-top:5px;color:#cfc0eb;font-weight:800}.mirror-completed-inline .mirror-inline-comment{margin-top:6px;color:#c9c4d3;font-size:13px}
    @media(max-width:760px){.mirror-combat-shell{padding:10px}.mirror-result-panel{padding:16px 12px}.mirror-result-score{font-size:25px}}
@@ -52,7 +53,7 @@
   const r=run;if(!r)return "";
   const result=r.currentResult,snap=r.snapshot,stats=snap.stats,index=Math.max(1,Math.min(BATTLE_TOTAL,r.currentBattle||1));
   const playerHp=result?result.maxHp:stats.hp,mirrorHp=result?result.maxHp:stats.hp;
-  return `<section class="combat-screen mirror-combat-shell"><div class="mirror-run-head"><h2>【鏡像戰】</h2><div class="mirror-run-progress">第 ${index} / ${BATTLE_TOTAL} 戰</div><div class="mirror-run-score">目前 ${r.wins} 勝 ${r.losses} 敗</div></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapeHtml(playerName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${playerHp} / ${stats.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2>${escapeHtml(mirrorName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${mirrorHp} / ${stats.hp}</span></div><div class="bar"><span class="hp enemy" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥…</div></section>`;
+  return `<section class="combat-screen mirror-combat-shell"><div class="mirror-run-head"><h2>【鏡像戰】</h2><div class="mirror-run-progress">第 ${index} / ${BATTLE_TOTAL} 戰</div><div class="mirror-run-score">${scoreHtml(r.wins,r.losses)}</div></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapeHtml(playerName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${playerHp} / ${stats.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2>${escapeHtml(mirrorName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${mirrorHp} / ${stats.hp}</span></div><div class="bar"><span class="hp enemy" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥…</div></section>`;
  }
  function resultHtml(){
   const s=run?.settlement;if(!s)return `<div class="function-page mirror-result-page"><div class="card mirror-result-panel"><h2>鏡像戰</h2><div class="muted">結算資料不存在。</div><div class="controls"><button class="btn" onclick="go('dungeon')">返回副本列表</button></div></div></div>`;
@@ -146,7 +147,7 @@
     await animateBattle(result);
     if(result.win)run.wins++;else run.losses++;
     const msg=document.getElementById("combatMessage");if(msg)msg.textContent=`第 ${i} 戰${result.win?"勝利":"敗北"}`;
-    const score=document.querySelector(".mirror-run-score");if(score)score.textContent=`目前 ${run.wins} 勝 ${run.losses} 敗`;
+    const score=document.querySelector(".mirror-run-score");if(score)score.innerHTML=scoreHtml(run.wins,run.losses);
     await sleep(180);
    }
    await finishRun();
