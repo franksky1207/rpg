@@ -3,6 +3,7 @@
  const MODAL_ID="civilizationStoryModal";
  let activeStory=null;
  let activePage=0;
+ let activeOptions=null;
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function playerName(){
@@ -67,13 +68,22 @@
   document.getElementById("storyActions").innerHTML=`${first?'<span class="story-spacer"></span>':'<button class="btn" onclick="storyPreviousPage()">上一頁</button>'}<div class="story-page-number" aria-label="劇情頁數">${pageLabel}</div><button class="btn primary" onclick="${last?'closeStory()':'storyNextPage()'}">${last?'結束':'下一頁'}</button>`;
   modal.classList.add("open");
  }
- window.openStory=function(storyId){
+ window.openStory=function(storyId,options=null){
   const story=window.CIVILIZATION_STORIES?.[storyId];
   if(!story||!Array.isArray(story.pages)||!story.pages.length)return false;
-  activeStory=story;activePage=0;renderPage();return true;
+  activeStory=story;activePage=0;activeOptions=options&&typeof options==="object"?options:null;renderPage();return true;
  };
  window.storyPreviousPage=function(){if(!activeStory||activePage<=0)return;activePage--;renderPage();};
  window.storyNextPage=function(){if(!activeStory||activePage>=activeStory.pages.length-1)return;activePage++;renderPage();};
- window.closeStory=function(){const modal=document.getElementById(MODAL_ID);if(modal)modal.classList.remove("open");activeStory=null;activePage=0;};
- window.STORY_UI_VERSION=2;
+ window.closeStory=function(){
+  const modal=document.getElementById(MODAL_ID);
+  const story=activeStory,options=activeOptions;
+  if(modal)modal.classList.remove("open");
+  activeStory=null;activePage=0;activeOptions=null;
+  if(story&&typeof options?.onComplete==="function"){
+   try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
+  }
+ };
+ window.isStoryOpen=function(){return !!activeStory;};
+ window.STORY_UI_VERSION=3;
 })();
