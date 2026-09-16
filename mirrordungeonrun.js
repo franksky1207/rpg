@@ -118,14 +118,23 @@
   const r=run;if(!r?.active)return;
   const status=typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():null;
   if(status?.status!=="running")throw new Error("Mirror dungeon state is not running at settlement.");
+  if(typeof addVipPoints!=="function")throw new Error("VIP point system missing.");
+  if(typeof recordMirrorDungeonCompletion!=="function")throw new Error("Mirror completion system missing.");
   const oldHistory=status.history?JSON.parse(JSON.stringify(status.history)):null,reward=rewardForWins(r.wins);
-  const payout=typeof addVipPoints==="function"?addVipPoints(reward):null;
-  if(!payout)throw new Error("VIP point system missing.");
-  const record=typeof recordMirrorDungeonCompletion==="function"?recordMirrorDungeonCompletion(r.wins):null;
-  if(!record?.ok)throw new Error(`Mirror completion failed: ${record?.reason||"unknown"}`);
-  if(typeof save==="function")save(false);
-  r.settlement=settlementFor(r.wins,payout.added,oldHistory,record);r.active=false;
-  battleBusy=false;view="dungeon-mirror-result";render();
+  const rollback={mirror:JSON.parse(JSON.stringify(state?.dungeon?.mirror||null)),vipPoints:state.vipPoints,vipLevel:state.vipLevel,hp:state.hp};
+  try{
+   const record=recordMirrorDungeonCompletion(r.wins,Date.now(),{save:false});
+   if(!record?.ok)throw new Error(`Mirror completion failed: ${record?.reason||"unknown"}`);
+   const payout=addVipPoints(reward);
+   if(!payout)throw new Error("VIP point payout failed.");
+   if(typeof save==="function"&&save(false)===false)throw new Error("Mirror settlement save failed.");
+   r.settlement=settlementFor(r.wins,payout.added,oldHistory,record);r.active=false;
+   battleBusy=false;view="dungeon-mirror-result";render();
+  }catch(err){
+   if(state?.dungeon)state.dungeon.mirror=rollback.mirror;
+   state.vipPoints=rollback.vipPoints;state.vipLevel=rollback.vipLevel;state.hp=rollback.hp;
+   throw err;
+  }
  }
  async function executeRun(){
   try{
