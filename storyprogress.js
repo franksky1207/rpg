@@ -28,6 +28,7 @@
    introStoryId:INTRO_STORY_ID,
    fresh:options.fresh===true,
    legacy:options.legacy===true||(!options.fresh&&loadedFromExistingSave()),
+   skipBackfill:options.skipBackfill===true,
    regions:availableStoryRegions(),
    stories:window.CIVILIZATION_STORIES||{},
    bossMapIndexForStory
@@ -73,10 +74,16 @@
  function queueBossStory(mapIdx){
   const id=bossStoryId(mapIdx);
   if(!id||!window.CIVILIZATION_STORIES?.[id])return null;
-  const p=progress();
+  normalizeProgress(state,{skipBackfill:true});
+  const p=state.storyProgress;
+  if(!p)return null;
   if(p.completedStories.includes(id))return null;
   if(p.pendingStory&&p.pendingStory!==id)return null;
-  if(p.pendingStory!==id){p.pendingStory=id;persist();}
+  if(p.pendingStory!==id){
+   p.pendingStory=id;
+   normalizeProgress(state);
+   persist();
+  }
   return id;
  }
 
@@ -217,7 +224,7 @@
  }
 
  window.civilizationStoryProgress={
-  version:6,
+  version:7,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
@@ -230,7 +237,7 @@
   ensureStarterEquipment,
   completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=6;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=7;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
