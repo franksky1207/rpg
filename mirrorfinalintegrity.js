@@ -30,7 +30,7 @@
  if(typeof window.requestMirrorContinuousStop!=="undefined"||typeof window.stopMirrorCombatRun!=="undefined")fail("STOP_API","正式鏡像戰不得存在停止 API");
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)fail("RETURN_UX","懸賞／競技準備頁正式返回導覽未載入");
  if(Number(window.DUNGEON_UI_EXTENSION_VERSION)!==1)fail("DUNGEON_UI_EXTENSION","副本 UI 擴充 owner 未載入");
- if(Number(window.GM_HUB_EXTENSION_VERSION)!==1)fail("GM_HUB_EXTENSION","GM Hub 擴充 owner 未載入");
+ if(Number(window.GM_HUB_EXTENSION_VERSION)!==2)fail("GM_HUB_EXTENSION","GM Hub 擴充 owner 未載入");
  if(Number(window.MIRROR_DUNGEON_GUIDE_VERSION)!==2)fail("GUIDE","鏡像戰說明模組未載入");
  if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NORMALIZER_COUNT",`正式 newState normalizer 應維持 4，實際 ${window.getNewStateNormalizerCount()}`);
  const viewport=document.querySelector('meta[name="viewport"]')?.getAttribute("content")||"";if(!viewport.includes("width=device-width"))warn("VIEWPORT","行動版 viewport 設定異常");
