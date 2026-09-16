@@ -1,5 +1,5 @@
 (function(){
- const MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION=1;
+ const MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION=2;
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
@@ -10,15 +10,20 @@
  if(window.PROJECT_RUNTIME_REPORT?.passed!==true)fail("PROJECT_RUNTIME","專案 runtime integrity 未通過",window.PROJECT_RUNTIME_REPORT?.errors||null);
 
  if(typeof window.normalizeMirrorDungeonState==="function"){
-  const sameTs=Date.parse("2026-09-16T04:00:00Z"),nextTs=Date.parse("2026-09-17T04:00:00Z");
+  const sameTs=Date.parse("2026-09-16T04:00:00Z"),beforeMidnight=Date.parse("2026-09-16T15:59:00Z"),afterMidnight=Date.parse("2026-09-16T16:01:00Z"),nextTs=Date.parse("2026-09-17T04:00:00Z");
   const interrupted={dungeon:{mirror:{history:{bestWins:0,bestDate:null,miracleDates:[]},daily:{dateKey:"2026-09-16",status:"running",challengeDate:"2026-09-16",startedAt:1,wins:0,losses:0,completedAt:0}}}};
   const same=clone(interrupted);window.normalizeMirrorDungeonState(same,sameTs,{recoverInterrupted:true});
   if(same.dungeon.mirror.daily.status!=="failed")fail("INTERRUPT_SAME_DAY","同日重新載入 running 應轉為 failed",same.dungeon.mirror.daily);
   const crossed=clone(interrupted);window.normalizeMirrorDungeonState(crossed,nextTs,{recoverInterrupted:true});
   if(crossed.dungeon.mirror.daily.status!=="idle"||crossed.dungeon.mirror.daily.dateKey!=="2026-09-17")fail("INTERRUPT_CROSS_DAY","跨日中斷應保留新一天可挑戰機會",crossed.dungeon.mirror.daily);
+  const liveCross=clone(interrupted);window.normalizeMirrorDungeonState(liveCross,afterMidnight,{recoverInterrupted:false});
+  if(liveCross.dungeon.mirror.daily.status!=="running"||liveCross.dungeon.mirror.daily.challengeDate!=="2026-09-16")fail("LIVE_CROSS_MIDNIGHT","同一工作階段跨午夜時，進行中的挑戰應維持開始日 running",liveCross.dungeon.mirror.daily);
   const zero={dungeon:{mirror:{history:{bestWins:0,bestDate:"2026-09-16",miracleDates:[]},daily:{dateKey:"2026-09-16",status:"completed",challengeDate:"2026-09-16",startedAt:1,wins:0,losses:20,completedAt:2}}}};
   window.normalizeMirrorDungeonState(zero,sameTs);
   if(zero.dungeon.mirror.history.bestDate!=="2026-09-16"||zero.dungeon.mirror.history.bestWins!==0||zero.dungeon.mirror.daily.status!=="completed")fail("ZERO_WIN_RECORD","正式 0 勝紀錄不應被當成尚無紀錄",zero.dungeon.mirror);
+  const miracles={dungeon:{mirror:{history:{bestWins:20,bestDate:"2026-09-16",miracleDates:["2026-09-16","2026-09-16"]},daily:{dateKey:"2026-09-16",status:"completed",challengeDate:"2026-09-16",startedAt:1,wins:20,losses:0,completedAt:2}}}};
+  window.normalizeMirrorDungeonState(miracles,beforeMidnight);
+  if(miracles.dungeon.mirror.history.miracleDates.length!==2)fail("MIRACLE_DUPLICATES","同一天多次 20 勝神蹟必須逐次保留，不得去重",miracles.dungeon.mirror.history);
   const oldCompleted={dungeon:{mirror:{history:{bestWins:17,bestDate:"2026-09-10",miracleDates:[]},daily:{dateKey:"2026-09-16",status:"completed",challengeDate:"2026-09-16",startedAt:1,wins:17,losses:3,completedAt:2}}}};
   window.normalizeMirrorDungeonState(oldCompleted,nextTs);
   if(oldCompleted.dungeon.mirror.daily.status!=="idle"||oldCompleted.dungeon.mirror.history.bestWins!==17||oldCompleted.dungeon.mirror.history.bestDate!=="2026-09-10")fail("DAILY_RESET_HISTORY","跨日重置不得清除歷史最高",oldCompleted.dungeon.mirror);
@@ -35,6 +40,7 @@
     if(a.firstActor!=="player"||b.firstActor!=="mirror")fail("FIRST_ACTOR_PAIR",`seed ${seed} 先攻配對異常`,{a:a.firstActor,b:b.firstActor});
     if(a.winner===b.winner)fail("SYMMETRY_PAIR",`seed ${seed} 交換先攻後勝者未鏡像互換`,{a:a.winner,b:b.winner});
     if(a.turns!==b.turns)fail("SYMMETRY_TURNS",`seed ${seed} 鏡像配對回合數不一致`,{a:a.turns,b:b.turns});
+    if(a.playerHp!==b.mirrorHp||a.mirrorHp!==b.playerHp)fail("SYMMETRY_HP",`seed ${seed} 鏡像配對最終 HP 未互換`,{a:{playerHp:a.playerHp,mirrorHp:a.mirrorHp},b:{playerHp:b.playerHp,mirrorHp:b.mirrorHp}});
     const endA=a.events?.[a.events.length-1],endB=b.events?.[b.events.length-1];
     if(endA?.type!=="battleEnd"||endB?.type!=="battleEnd")fail("BATTLE_END_EVENT",`seed ${seed} battleEnd 不是最後事件`);
     if((a.winner==="player"&&!(a.playerHp>0&&a.mirrorHp===0))||(a.winner==="mirror"&&!(a.mirrorHp>0&&a.playerHp===0)))fail("DEATH_STATE",`seed ${seed} A 死亡狀態異常`,a);
@@ -60,6 +66,8 @@
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)!==1)fail("RETURN_UX","懸賞／競技準備頁返回副本列表模組未載入");
  if(Number(window.MIRROR_DUNGEON_GUIDE_VERSION)!==1)fail("GUIDE","鏡像戰說明模組未載入");
  if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NORMALIZER_COUNT",`正式 newState normalizer 應維持 4，實際 ${window.getNewStateNormalizerCount()}`);
+ const viewport=document.querySelector('meta[name="viewport"]')?.getAttribute("content")||"";
+ if(!viewport.includes("width=device-width"))warn("VIEWPORT","行動版 viewport 設定異常");
 
  const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now(),symmetryPairs:64};
  window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION=MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION;
