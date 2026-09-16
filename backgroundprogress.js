@@ -18,18 +18,7 @@
   if(count===marker||count==="continuous"||ctx?.continuous===true)return "continuous";
   return "single";
  }
- function mainBattleEncounterKind(){
-  try{
-   if(typeof currentCombatEncounter!=="undefined"&&currentCombatEncounter?.kind)return currentCombatEncounter.kind;
-   if(typeof getPreviewEncounter==="function"){
-    const preview=getPreviewEncounter(selectedMap,selectedEnemy);
-    if(preview?.kind)return preview.kind;
-   }
-   if(typeof monsterObj==="function")return monsterObj(selectedMap,selectedEnemy)?.kind||"";
-  }catch(e){}
-  return "";
- }
- function mainBattleAllowsBackground(){return mainBattleEncounterKind()!=="boss";}
+ function mainBattleAllowsBackground(){return true;}
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
   const continuous=mode==="continuous";
@@ -106,7 +95,7 @@
  window.backgroundProgressHasCatchUpCredit=function(kind=null){return activeFor(kind)&&flow.hiddenAt==null&&!isBackground()&&Number(flow.credit)>0;};
  window.backgroundProgressMainBattleMode=mainBattleMode;
  window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
- window.BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION=1;
+ window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
