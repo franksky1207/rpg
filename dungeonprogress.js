@@ -41,7 +41,7 @@
  }
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
 
- function normalizeDungeonState(target){
+ function normalizeDungeonState(target,options={}){
   if(!target||typeof target!=="object")return null;
   if(!target.dungeon||typeof target.dungeon!=="object"||Array.isArray(target.dungeon))target.dungeon={};
   const dungeon=target.dungeon;
@@ -50,7 +50,7 @@
   delete dungeon.activeRun;
   delete dungeon.points;
   normalizeArenaProgress(dungeon,target);
-  if(typeof window.normalizeMirrorDungeonState==="function")window.normalizeMirrorDungeonState(target);
+  if(typeof window.normalizeMirrorDungeonState==="function")window.normalizeMirrorDungeonState(target,options?.timestamp??Date.now(),options?.mirrorOptions||{});
   return dungeon;
  }
  window.normalizeDungeonSaveState=normalizeDungeonState;
@@ -67,9 +67,16 @@
 
  window.finalizeDungeonLoadedState=function(){
   const vipHpInitialized=initializeVipHpIfNeeded();
-  normalizeDungeonState(state);
+  const beforeMirrorStatus=state?.dungeon?.mirror?.daily?.status;
+  normalizeDungeonState(state,{timestamp:Date.now(),mirrorOptions:{recoverInterrupted:true}});
+  const afterMirrorStatus=state?.dungeon?.mirror?.daily?.status;
   state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
-  return {vipHpInitialized,recoveredInterruptedRun:false,dungeon:state.dungeon};
+  return {
+   vipHpInitialized,
+   recoveredInterruptedRun:false,
+   recoveredInterruptedMirrorRun:beforeMirrorStatus==="running"&&afterMirrorStatus!=="running",
+   dungeon:state.dungeon
+  };
  };
  window.ensureDungeonState=function(){return normalizeDungeonState(state);};
  // 舊名稱僅保留相容性；新程式一律使用 ensureDungeonState。
