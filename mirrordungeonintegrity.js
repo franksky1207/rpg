@@ -6,6 +6,7 @@
  if(Number(window.MIRROR_DUNGEON_UNLOCK_LEVEL)!==50)fail("UNLOCK_LEVEL",`鏡像戰應為 Lv.50 解鎖，實際 ${window.MIRROR_DUNGEON_UNLOCK_LEVEL}`);
  if(Number(window.MIRROR_DUNGEON_RUN_BATTLES)!==20)fail("RUN_BATTLES",`鏡像戰每次應固定 20 場，實際 ${window.MIRROR_DUNGEON_RUN_BATTLES}`);
  if(Number(window.MIRROR_COMBAT_BATTLE_LIMIT)!==20)fail("COMBAT_LIMIT",`Mirror Combat battle limit 應為 20，實際 ${window.MIRROR_COMBAT_BATTLE_LIMIT}`);
+ if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NORMALIZER_COUNT",`正式 newState normalizer 應維持 4 個，實際 ${window.getNewStateNormalizerCount()}`);
  if(typeof window.mirrorDungeonRewardForWins==="function"){
   [[0,0],[1,20],[10,2000],[20,8000]].forEach(([wins,reward])=>{const actual=window.mirrorDungeonRewardForWins(wins);if(Number(actual)!==reward)fail("REWARD_FORMULA",`${wins} 勝應得 ${reward} VIP，實際 ${actual}`);});
  }
@@ -24,7 +25,7 @@
    const snap=window.createMirrorCombatSnapshot();
    if(!snap?.stats||Number(snap.stats.hp)<=0)fail("SNAPSHOT","鏡像戰快照缺少有效戰鬥能力",snap||null);
    const result=window.runMirrorCombatCore(snap,{logs:false});
-   if(!result||!['player','mirror'].includes(result.winner)||!['player','mirror'].includes(result.firstActor))fail("COMBAT_RESULT","Mirror Combat 單場結果格式異常",result||null);
+   if(!result||!["player","mirror"].includes(result.winner)||!["player","mirror"].includes(result.firstActor))fail("COMBAT_RESULT","Mirror Combat 單場結果格式異常",result||null);
   }catch(err){fail("COMBAT_PROBE","Mirror Combat 試跑失敗",String(err?.message||err));}
  }
  if(typeof window.requestMirrorContinuousStop!=="undefined"||typeof window.stopMirrorCombatRun!=="undefined")fail("STOP_API","鏡像戰不應提供正式停止 API");
@@ -33,11 +34,4 @@
  window.MIRROR_DUNGEON_INTEGRITY={passed:errors.length===0,errors,warnings,checkedAt:Date.now()};
  if(errors.length)console.error("[Mirror Dungeon Integrity]",errors);
  else console.info("[Mirror Dungeon Integrity] passed",warnings.length?warnings:"");
-
- // runtimeintegrity.js 的既有 normalizer 數量檢查仍以鏡像戰加入前的核心數量為基準；
- // 只在本輪同步腳本執行期間回報核心數量，下一個 event loop 立即恢復實際 API。
- if(typeof window.getNewStateNormalizerCount==="function"){
-  const original=window.getNewStateNormalizerCount,actual=Number(original());
-  if(actual===5){window.getNewStateNormalizerCount=function(){return 4;};setTimeout(()=>{window.getNewStateNormalizerCount=original;},0);}
- }
 })();
