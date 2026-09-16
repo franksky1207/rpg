@@ -22,6 +22,11 @@
   if(!groups.some(group=>group.region.id===selectedRegionId))selectedRegionId=groups[groups.length-1].region.id;
   return groups.find(group=>group.region.id===selectedRegionId)||groups[groups.length-1];
  }
+ function prepareEntry(){
+  const groups=visibleRegions();
+  selectedRegionId=groups.length?groups[groups.length-1].region.id:null;
+  return selectedRegionId;
+ }
  function installStyles(){
   if(document.getElementById(STYLE_ID))return;
   const style=document.createElement("style");
@@ -67,6 +72,7 @@
   return `<div class="card story-record-card story-record-selected"><h2 class="story-record-chapter">${esc(chapter)}</h2><div class="story-record-list">${group.rows.map(entryHtml).join("")}</div></div>`;
  }
 
+ window.prepareStoryRecordEntry=prepareEntry;
  window.selectStoryRecordRegion=function(id){
   const groups=visibleRegions();
   if(!groups.some(group=>group.region.id===id))return false;
@@ -83,5 +89,15 @@
   return `<div class="function-page story-record-page">${back}<div class="card"><h2>戰線紀錄</h2><div class="muted">僅顯示已完成的正式劇情；尚未抵達的區域與未完成劇情不會顯示。重播不會給予獎勵或改變進度。</div></div>${introHtml(completed)}${tabsHtml(groups)}${selectedHtml(selected)}</div>`;
  };
 
- window.STORY_RECORD_TABS_VERSION=2;
+ const originalGo=typeof window.go==="function"?window.go:null;
+ if(originalGo&&!originalGo.__storyRecordLatestWrapped){
+  const wrapped=function(v){
+   if(v==="storyrecord")prepareEntry();
+   return originalGo.apply(this,arguments);
+  };
+  wrapped.__storyRecordLatestWrapped=true;
+  window.go=wrapped;
+ }
+
+ window.STORY_RECORD_TABS_VERSION=3;
 })();
