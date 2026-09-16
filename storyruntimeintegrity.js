@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
 
  function run(){
   const errors=[];
@@ -17,7 +17,7 @@
 
   const migration=window.civilizationStoryMigration;
   if(!migration||typeof migration.migrate!=="function"||typeof migration.backfillAvailableHistory!=="function")fail("STORY_RUNTIME_MIGRATION_MISSING","故事進度 migration 模組未完整載入");
-  if(Number(window.STORY_MIGRATION_VERSION)<1)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
+  if(Number(window.STORY_MIGRATION_VERSION)<2)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
 
   const progress=window.civilizationStoryProgress;
   if(!progress)fail("STORY_RUNTIME_PROGRESS_MISSING","civilizationStoryProgress 未載入");
@@ -26,7 +26,7 @@
     if(typeof progress[name]!=="function")fail("STORY_RUNTIME_PROGRESS_METHOD",`civilizationStoryProgress.${name} 未載入`);
    });
   }
-  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<6)fail("STORY_RUNTIME_PROGRESS_VERSION","CIVILIZATION_STORY_PROGRESS_VERSION 未達目前需求",window.CIVILIZATION_STORY_PROGRESS_VERSION);
+  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<7)fail("STORY_RUNTIME_PROGRESS_VERSION","CIVILIZATION_STORY_PROGRESS_VERSION 未達目前需求",window.CIVILIZATION_STORY_PROGRESS_VERSION);
 
   if(typeof window.replayCompletedStory!=="function")fail("STORY_RUNTIME_REPLAY_MISSING","戰線紀錄重播函式未載入");
   if(typeof window.storyRecordPageHtml!=="function")fail("STORY_RUNTIME_RECORD_PAGE_MISSING","戰線紀錄頁面函式未載入");
@@ -54,6 +54,32 @@
     }
    }
    if(checked!==100)fail("STORY_RUNTIME_BOSS_MAPPING_COUNT",`執行期應檢查 100 個首領故事對應，實際 ${checked}`);
+  }
+
+  if(migration&&progress&&regions.length&&typeof progress.bossStoryId==="function"){
+   const testMap=Number(regions[regions.length-1]?.mapStart);
+   const testId=progress.bossStoryId(testMap);
+   if(Number.isInteger(testMap)&&testId&&stories[testId]){
+    const testState={
+     bossKilled:[],
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
+     introSeen:true
+    };
+    testState.bossKilled[testMap]=true;
+    const mapIndexForStory=id=>{
+     for(const region of regions){
+      const start=Number(region.mapStart),end=Number(region.mapEnd);
+      for(let i=start;i<=end;i++)if(progress.bossStoryId(i)===id)return i;
+     }
+     return null;
+    };
+    migration.migrate(testState,{introStoryId:"earth-prologue",skipBackfill:true,regions:window.CIVILIZATION_STORY_REGIONS||[],stories,bossMapIndexForStory:mapIndexForStory});
+    if(testState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_FIRST_CLEAR_PREFILL","首殺排隊前的保護模式仍會把當次首領故事回填成已完成",testId);
+    testState.storyProgress.pendingStory=testId;
+    migration.migrate(testState,{introStoryId:"earth-prologue",regions:window.CIVILIZATION_STORY_REGIONS||[],stories,bossMapIndexForStory:mapIndexForStory});
+    if(testState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PENDING_BACKFILL","pendingStory 不應被歷史回填標成已完成",testId);
+    if(testState.storyProgress.pendingStory!==testId)fail("STORY_RUNTIME_PENDING_LOST","歷史回填後 pendingStory 不應遺失",testId);
+   }
   }
 
   if(typeof state!=="undefined"&&state&&progress&&typeof progress.get==="function"){
