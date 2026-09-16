@@ -18,7 +18,7 @@
   if(count===marker||count==="continuous"||ctx?.continuous===true)return "continuous";
   return "single";
  }
- function mainBattleAllowsBackground(){return true;}
+ function mainBattleAllowsBackground(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
   const continuous=mode==="continuous";
@@ -96,6 +96,7 @@
  window.backgroundProgressMainBattleMode=mainBattleMode;
  window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
  window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
+ window.BACKGROUND_PROGRESS_GM_GATE_VERSION=1;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
