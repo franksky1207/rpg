@@ -78,9 +78,10 @@
  window.closeStory=function(){
   const modal=document.getElementById(MODAL_ID);
   const story=activeStory,options=activeOptions;
+  const completed=!!story&&Array.isArray(story.pages)&&story.pages.length>0&&activePage===story.pages.length-1;
   if(modal)modal.classList.remove("open");
   activeStory=null;activePage=0;activeOptions=null;
-  if(story&&typeof options?.onComplete==="function"){
+  if(completed&&typeof options?.onComplete==="function"){
    try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
   }
  };
