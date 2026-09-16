@@ -26,14 +26,14 @@
    .story-title{margin-top:3px;font-size:clamp(15px,2.3vw,20px);font-weight:900;color:#f1d38b;line-height:1.15}
    .story-body{min-height:0;overflow:hidden;padding:clamp(15px,3.2vw,26px) clamp(17px,3.8vw,30px);font-size:clamp(14px,2.2vw,17px);line-height:1.58;letter-spacing:.015em;display:flex;flex-direction:column;justify-content:flex-start}
    .story-body p{margin:0 0 .78em;overflow-wrap:anywhere}.story-body p:last-child{margin-bottom:0}.story-body .story-em{margin:auto 0;text-align:center;font-size:1.12em;font-weight:900;color:#f0d494;letter-spacing:.035em;white-space:pre-line}
-   .story-actions{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid #334153;background:#0d141e}
-   .story-actions .btn{width:100%;height:42px;margin:0}.story-actions .story-spacer{display:block}
+   .story-actions{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px;padding:10px 16px;border-top:1px solid #334153;background:#0d141e}
+   .story-actions .btn{width:100%;height:42px;margin:0}.story-actions .story-spacer{display:block}.story-page-number{min-width:58px;text-align:center;color:#a9b6c5;font-size:13px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
    @media(max-width:760px){
     .story-overlay{padding:8px}
     .story-card{width:min(94vw,88dvh);border-radius:13px;grid-template-rows:15% 1fr 15%}
-    .story-head{padding:6px 12px}.story-body{padding:13px 16px;font-size:14px;line-height:1.52}.story-body p{margin-bottom:.68em}.story-actions{padding:8px 11px;gap:9px}.story-actions .btn{height:40px;padding:8px 10px}
+    .story-head{padding:6px 12px}.story-body{padding:13px 16px;font-size:14px;line-height:1.52}.story-body p{margin-bottom:.68em}.story-actions{padding:8px 11px;gap:10px}.story-actions .btn{height:40px;padding:8px 10px}.story-page-number{min-width:52px;font-size:12px}
    }
-   @media(max-width:390px){.story-body{font-size:13.5px;padding:12px 14px;line-height:1.5}}
+   @media(max-width:390px){.story-body{font-size:13.5px;padding:12px 14px;line-height:1.5}.story-actions{gap:8px}.story-page-number{min-width:48px}}
   `;
   document.head.appendChild(style);
  }
@@ -63,7 +63,8 @@
    return `<p>${esc(interpolate(block))}</p>`;
   }).join("");
   const first=activePage===0,last=activePage===activeStory.pages.length-1;
-  document.getElementById("storyActions").innerHTML=`${first?'<span class="story-spacer"></span>':'<button class="btn" onclick="storyPreviousPage()">上一頁</button>'}<button class="btn primary" onclick="${last?'closeStory()':'storyNextPage()'}">${last?'結束':'下一頁'}</button>`;
+  const pageLabel=`${activePage+1} / ${activeStory.pages.length}`;
+  document.getElementById("storyActions").innerHTML=`${first?'<span class="story-spacer"></span>':'<button class="btn" onclick="storyPreviousPage()">上一頁</button>'}<div class="story-page-number" aria-label="劇情頁數">${pageLabel}</div><button class="btn primary" onclick="${last?'closeStory()':'storyNextPage()'}">${last?'結束':'下一頁'}</button>`;
   modal.classList.add("open");
  }
  window.openStory=function(storyId){
@@ -74,5 +75,5 @@
  window.storyPreviousPage=function(){if(!activeStory||activePage<=0)return;activePage--;renderPage();};
  window.storyNextPage=function(){if(!activeStory||activePage>=activeStory.pages.length-1)return;activePage++;renderPage();};
  window.closeStory=function(){const modal=document.getElementById(MODAL_ID);if(modal)modal.classList.remove("open");activeStory=null;activePage=0;};
- window.STORY_UI_VERSION=1;
+ window.STORY_UI_VERSION=2;
 })();
