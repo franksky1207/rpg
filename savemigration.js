@@ -205,7 +205,8 @@
    expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
    legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
    retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
-   recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true
+   recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
+   recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
   };
   return state;
  };
