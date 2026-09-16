@@ -2,6 +2,7 @@
  const INTRO_STORY_ID="earth-prologue";
  const MODAL_ID="civilizationStarterGearModal";
  const STYLE_ID="civilizationStarterGearStyles";
+ const RECORD_STYLE_ID="civilizationStoryRecordStyles";
  let resumeQueued=false;
  let starterGearOpen=false;
 
@@ -49,6 +50,31 @@
   if(p.pendingStory===id)p.pendingStory=null;
   if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}
   persist();
+ }
+
+ function bossStoryId(mapIdx){
+  const index=Math.floor(Number(mapIdx));
+  if(!Number.isInteger(index)||index<0||!Array.isArray(WORLD_REGIONS))return null;
+  const region=WORLD_REGIONS.find(r=>index>=Number(r.mapStart)&&index<=Number(r.mapEnd));
+  if(!region)return null;
+  return `${region.id}-boss-${index-Number(region.mapStart)+1}`;
+ }
+ function bossMapIndexForStory(id){
+  if(typeof id!=="string"||!Array.isArray(WORLD_REGIONS))return null;
+  for(const region of WORLD_REGIONS){
+   const start=Number(region.mapStart),end=Number(region.mapEnd);
+   for(let i=start;i<=end;i++)if(bossStoryId(i)===id)return i;
+  }
+  return null;
+ }
+ function queueBossStory(mapIdx){
+  const id=bossStoryId(mapIdx);
+  if(!id||!window.CIVILIZATION_STORIES?.[id])return null;
+  const p=progress();
+  if(p.completedStories.includes(id))return null;
+  if(p.pendingStory&&p.pendingStory!==id)return null;
+  if(p.pendingStory!==id){p.pendingStory=id;persist();}
+  return id;
  }
 
  function starterTypes(){return Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:[];}
@@ -142,6 +168,42 @@
   if(typeof requestAnimationFrame==="function")requestAnimationFrame(enterHome);else setTimeout(enterHome,0);
  };
 
+ function installRecordStyles(){
+  if(document.getElementById(RECORD_STYLE_ID))return;
+  const style=document.createElement("style");
+  style.id=RECORD_STYLE_ID;
+  style.textContent=`.story-record-page{display:grid;gap:14px}.story-record-card{display:grid;gap:10px}.story-record-chapter{margin:0;color:#f0d494}.story-record-list{display:grid;gap:9px}.story-record-entry{width:100%;text-align:left;border:1px solid #3b4b5d;border-radius:12px;background:rgba(13,20,30,.9);color:#e7edf5;padding:13px 14px;cursor:pointer}.story-record-entry b{display:block;color:#f1d38b;font-size:16px}.story-record-entry span{display:block;margin-top:4px;color:#9fb0c1;font-size:13px;line-height:1.45}.story-record-empty{padding:18px 0;color:#9aa8b6}@media(max-width:560px){.story-record-entry{padding:12px}.story-record-entry b{font-size:15px}}`;
+  document.head.appendChild(style);
+ }
+ function storyOrder(id){
+  if(id===INTRO_STORY_ID)return 0;
+  const mapIndex=bossMapIndexForStory(id);
+  return mapIndex==null?100000:mapIndex+1;
+ }
+ function completedStoryRows(){
+  const p=progress(),stories=window.CIVILIZATION_STORIES||{};
+  return p.completedStories.filter(id=>stories[id]).map(id=>stories[id]).sort((a,b)=>storyOrder(a.id)-storyOrder(b.id));
+ }
+ function storyRecordPageHtml(){
+  installRecordStyles();
+  const rows=completedStoryRows();
+  const groups=[];
+  rows.forEach(story=>{
+   const chapter=String(story.chapter||"戰線紀錄");
+   let group=groups.find(x=>x.chapter===chapter);
+   if(!group){group={chapter,rows:[]};groups.push(group);}
+   group.rows.push(story);
+  });
+  const body=groups.length?groups.map(group=>`<div class="card story-record-card"><h2 class="story-record-chapter">${esc(group.chapter)}</h2><div class="story-record-list">${group.rows.map(story=>`<button class="story-record-entry" onclick="replayCompletedStory('${esc(story.id)}')"><b>${esc(story.title||story.id)}</b><span>${esc(story.location||"")}</span></button>`).join("")}</div></div>`).join(""):`<div class="card"><div class="story-record-empty">目前還沒有已完成的戰線紀錄。</div></div>`;
+  return `<div class="function-page story-record-page">${typeof homeBackHtml==="function"?homeBackHtml():`<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`}<div class="card"><h2>戰線紀錄</h2><div class="muted">僅顯示已完成的正式劇情；重播不會給予獎勵或改變進度。</div></div>${body}</div>`;
+ }
+ window.storyRecordPageHtml=storyRecordPageHtml;
+ window.replayCompletedStory=function(id){
+  const p=progress();
+  if(!p.completedStories.includes(id)||!window.CIVILIZATION_STORIES?.[id])return false;
+  return typeof openStory==="function"?openStory(id):false;
+ };
+
  function authReady(){return window.CIVILIZATION_AUTH_REQUIRED!==true||!!window.civilizationAuthSession;}
  function backgroundReady(){return window.BACKGROUND_PRELOAD_READY===true;}
  function openFormalStory(id){
@@ -173,16 +235,19 @@
  }
 
  window.civilizationStoryProgress={
-  version:3,
+  version:4,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
   get:()=>progress(),
   setPending,
   completeStory,
-  ensureStarterEquipment
+  queueBossStory,
+  bossStoryId,
+  ensureStarterEquipment,
+  completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=3;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=4;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
