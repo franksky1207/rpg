@@ -1,0 +1,178 @@
+(function(){
+ const MIRROR_RUN_VERSION=1;
+ const BATTLE_TOTAL=20;
+ const RESULT_COMMENTS=[
+  "你輸給了自己，而且是徹底的那種。",
+  "至少命運最後還是留了一點面子。",
+  "鏡像看起來比你本人還有自信。",
+  "尊嚴還在，只是剩得不多。",
+  "今天的自己，似乎特別難打。",
+  "命運今天明顯沒有站在你這邊。",
+  "開始有點反抗的樣子了。",
+  "至少現在看起來像一場比賽。",
+  "局勢還沒失控，但命運顯然還在看戲。",
+  "差一點，就能把天平拉回中央。",
+  "完美五五開。連命運都懶得選邊。",
+  "天平終於稍微往你這邊偏了一點。",
+  "今天的命運，開始有點客氣了。",
+  "運氣開始有點囂張了。",
+  "鏡像現在大概已經想申訴了。",
+  "幸運不是路過，是直接住下來了。",
+  "連機率都開始明顯偏心。",
+  "你不是在贏自己，你是在欺負機率。",
+  "今天的命運，已經偏心得有點過分了。",
+  "只差最後一步，神蹟就在門後。",
+  "你擊敗了命運本身。"
+ ];
+ const TITLES={15:"幸運眷顧",16:"天選之刻",17:"逆命者",18:"傳說之日",19:"距神一步",20:"神蹟"};
+ let run=null;
+
+ function clampWins(value){return Math.max(0,Math.min(BATTLE_TOTAL,Math.floor(Number(value)||0)));}
+ function rewardForWins(wins){const w=clampWins(wins);return 20*w*w;}
+ function titleForWins(wins){return TITLES[clampWins(wins)]||"";}
+ function commentForWins(wins){return RESULT_COMMENTS[clampWins(wins)]||RESULT_COMMENTS[0];}
+ function sleep(ms){return new Promise(resolve=>setTimeout(resolve,Math.max(0,Math.floor(Number(ms)||0))));}
+ function playerName(){return String(state?.playerName||"玩家");}
+ function mirrorName(){return `鏡像・${playerName()}`;}
+ function escapeHtml(text){return String(text??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
+ function fmt(n){return Math.max(0,Math.floor(Number(n)||0)).toLocaleString();}
+
+ function installStyles(){
+  if(document.getElementById("mirror-run-styles"))return;
+  const style=document.createElement("style");style.id="mirror-run-styles";style.textContent=`
+   .mirror-combat-shell{background:linear-gradient(180deg,#20212a,#15161d);border:1px solid #8580a4;border-radius:16px;padding:16px;max-width:900px;margin:0 auto}
+   .mirror-run-head{text-align:center;margin-bottom:12px}.mirror-run-head h2{margin:0;color:#efedf7;font-family:Georgia,"Noto Serif TC",serif}.mirror-run-progress{margin-top:7px;color:#c8c3d7;font-weight:800}.mirror-run-score{margin-top:4px;color:#aeb8d3;font-size:14px}
+   .mirror-combat-shell .combatant{border-color:#81799d!important}.mirror-combat-shell .combatant.enemy{background:linear-gradient(180deg,#262331,#171720)!important}.mirror-combat-shell .combatant.player{background:linear-gradient(180deg,#202330,#15171f)!important}.mirror-combat-shell .combat-vs{color:#cbc5e3}.mirror-combat-shell #combatMessage{color:#d8d2e5}
+   .mirror-result-page{max-width:720px;margin:0 auto}.mirror-result-panel{background:linear-gradient(180deg,#24242f,#171720);border:1px solid #8b84aa;text-align:center}.mirror-result-panel h2{color:#f2eff9}.mirror-result-score{font-size:30px;font-weight:900;color:#f0edf8;margin:14px 0}.mirror-result-reward{font-size:20px;font-weight:800;color:#d4c1f2;margin:10px 0}.mirror-result-comment{margin:16px auto;padding:13px 15px;max-width:560px;border:1px solid #514b65;border-radius:10px;background:#15151d;color:#ddd8e8;line-height:1.7}.mirror-new-record{margin:13px auto;padding:11px;border:1px solid #9b84c3;border-radius:10px;background:#211b2d;color:#eadcff;font-weight:900}.mirror-miracle{font-size:22px;color:#f2e5ff;letter-spacing:.08em}.mirror-completed-inline{margin-top:10px;padding-top:10px;border-top:1px solid #454158;text-align:center}.mirror-completed-inline strong{font-size:18px;color:#eeeaf7}.mirror-completed-inline .mirror-inline-reward{margin-top:5px;color:#cfc0eb;font-weight:800}.mirror-completed-inline .mirror-inline-comment{margin-top:6px;color:#c9c4d3;font-size:13px}
+   @media(max-width:760px){.mirror-combat-shell{padding:10px}.mirror-result-panel{padding:16px 12px}.mirror-result-score{font-size:25px}}
+  `;document.head.appendChild(style);
+ }
+
+ function combatHtml(){
+  const r=run;if(!r)return "";
+  const result=r.currentResult,snap=r.snapshot,stats=snap.stats,index=Math.max(1,Math.min(BATTLE_TOTAL,r.currentBattle||1));
+  const playerHp=result?result.maxHp:stats.hp,mirrorHp=result?result.maxHp:stats.hp;
+  return `<section class="combat-screen mirror-combat-shell"><div class="mirror-run-head"><h2>【鏡像戰】</h2><div class="mirror-run-progress">第 ${index} / ${BATTLE_TOTAL} 戰</div><div class="mirror-run-score">目前 ${r.wins} 勝 ${r.losses} 敗</div></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${escapeHtml(playerName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${playerHp} / ${stats.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2>${escapeHtml(mirrorName())} Lv.${snap.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${mirrorHp} / ${stats.hp}</span></div><div class="bar"><span class="hp enemy" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥…</div></section>`;
+ }
+ function resultHtml(){
+  const s=run?.settlement;if(!s)return `<div class="function-page mirror-result-page"><div class="card mirror-result-panel"><h2>鏡像戰</h2><div class="muted">結算資料不存在。</div><div class="controls"><button class="btn" onclick="go('dungeon')">返回副本列表</button></div></div></div>`;
+  const title=titleForWins(s.wins),record=s.newRecord?`<div class="mirror-new-record">NEW RECORD！<br>歷史最高：${s.wins} 勝${title?`・${title}`:""}</div>`:"";
+  const miracle=s.wins===20?`<div class="mirror-new-record mirror-miracle">神蹟</div>`:"";
+  return `<div class="function-page mirror-result-page"><div class="card mirror-result-panel"><h2>鏡像戰完成</h2><div class="mirror-result-score">${s.wins} 勝 ${s.losses} 敗</div><div class="mirror-result-reward">獲得 ${fmt(s.awarded)} VIP 積分</div><div class="mirror-result-comment">${escapeHtml(commentForWins(s.wins))}</div>${record}${miracle}<div class="controls" style="justify-content:center"><button class="btn primary" onclick="go('dungeon')">返回副本列表</button></div></div></div>`;
+ }
+ function setHpUi(playerHp,mirrorHp,maxHp,message){
+  const ph=document.getElementById("combatPlayerHp"),pb=document.getElementById("combatPlayerBar"),eh=document.getElementById("combatEnemyHp"),eb=document.getElementById("combatEnemyBar"),msg=document.getElementById("combatMessage");
+  const p=Math.max(0,Math.floor(Number(playerHp)||0)),m=Math.max(0,Math.floor(Number(mirrorHp)||0)),max=Math.max(1,Math.floor(Number(maxHp)||1));
+  if(ph)ph.textContent=`${p} / ${max}`;if(pb)pb.style.width=`${Math.max(0,Math.min(100,p/max*100))}%`;if(eh)eh.textContent=`${m} / ${max}`;if(eb)eb.style.width=`${Math.max(0,Math.min(100,m/max*100))}%`;if(msg)msg.textContent=message||"";
+ }
+ function pulse(target,text){
+  const id=target==="player"?"combatPlayer":"combatEnemy",card=document.getElementById(`${id}Card`),dmg=document.getElementById(`${id}Damage`);
+  if(card&&text!=="閃避"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
+  if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
+ }
+ function fx(target,kind,text=null){if(typeof window.spawnCombatFx==="function")window.spawnCombatFx(target,kind,text,0);}
+ function eventMessage(evt,names){
+  if(evt.type==="firstActor")return `${names[evt.actor]}取得先攻。`;
+  if(evt.type==="dodge")return `${names[evt.actor]}攻擊${names[evt.target]}，${names[evt.target]}閃避了攻擊。`;
+  if(evt.type==="attack")return `${names[evt.actor]}攻擊${names[evt.target]}${evt.crit?"，暴擊":""}造成 ${evt.damage} 點傷害。`;
+  if(evt.type==="combo")return `${names[evt.actor]}發動連擊。`;
+  if(evt.type==="counter")return `${names[evt.actor]}發動反擊。`;
+  if(evt.type==="drain")return `${names[evt.actor]}汲取生命${evt.healed>0?`，回復 ${evt.healed} HP`:""}。`;
+  if(evt.type==="battleEnd")return `${names[evt.winner]}獲勝。`;
+  return "";
+ }
+ async function animateBattle(result){
+  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(null,{logs:false});
+  let php=result.maxHp,mhp=result.maxHp;
+  const names={player:playerName(),mirror:mirrorName()},events=Array.isArray(result.events)?result.events:[],delay=events.length>80?20:events.length>40?40:75;
+  setHpUi(php,mhp,result.maxHp,"戰鬥開始");await sleep(120);
+  for(const evt of events){
+   if(!run?.active)return;
+   if(evt.type==="attack"){
+    if(evt.target==="player")php=Math.max(0,php-Math.max(0,Number(evt.actualDamage)||0));else mhp=Math.max(0,mhp-Math.max(0,Number(evt.actualDamage)||0));
+    if(evt.initiative)fx(evt.target,"initiative");if(evt.penetration)fx(evt.target,"penetration");
+    pulse(evt.target,evt.crit?`暴擊 ${evt.damage}`:`-${evt.damage}`);
+   }else if(evt.type==="dodge")pulse(evt.target,"閃避");
+   else if(evt.type==="combo")fx(evt.actor==="player"?"enemy":"player","combo");
+   else if(evt.type==="counter")fx(evt.actor==="player"?"enemy":"player","counter");
+   else if(evt.type==="drain"){
+    if(evt.actor==="player")php=Math.min(result.maxHp,php+Math.max(0,Number(evt.healed)||0));else mhp=Math.min(result.maxHp,mhp+Math.max(0,Number(evt.healed)||0));
+    fx(evt.actor,"drain");if(evt.healed>0)fx(evt.actor,"heal",`+${evt.healed} HP`);
+   }
+   setHpUi(php,mhp,result.maxHp,eventMessage(evt,names));
+   await sleep(delay);
+  }
+ }
+ function enhanceCompletedPage(){
+  if(view!=="dungeon-mirror"||typeof mirrorDungeonStatus!=="function")return;
+  const info=mirrorDungeonStatus();if(info.status!=="completed")return;
+  const box=document.querySelector(".mirror-state-box");if(!box||box.querySelector(".mirror-completed-inline"))return;
+  const reward=rewardForWins(info.wins),title=titleForWins(info.wins);
+  box.insertAdjacentHTML("beforeend",`<div class="mirror-completed-inline"><strong>今日結果：${info.wins} 勝 ${info.losses} 敗</strong><div class="mirror-inline-reward">獲得 ${fmt(reward)} VIP 積分</div><div class="mirror-inline-comment">${escapeHtml(commentForWins(info.wins))}</div>${title?`<div class="mirror-inline-comment">${escapeHtml(title)}</div>`:""}</div>`);
+ }
+ function settlementFor(wins,awarded,oldHistory,recordResult){
+  const w=clampWins(wins),previousHad=!!oldHistory?.bestDate,previousBest=previousHad?clampWins(oldHistory.bestWins):-1;
+  return {wins:w,losses:BATTLE_TOTAL-w,awarded:Math.max(0,Math.floor(Number(awarded)||0)),newRecord:!previousHad||w>previousBest,miracle:w===20,history:recordResult?.history||null};
+ }
+ async function finishRun(){
+  const r=run;if(!r?.active)return;
+  const status=typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():null;
+  if(status?.status!=="running")throw new Error("Mirror dungeon state is not running at settlement.");
+  const oldHistory=status.history?JSON.parse(JSON.stringify(status.history)):null,reward=rewardForWins(r.wins);
+  const payout=typeof addVipPoints==="function"?addVipPoints(reward):null;
+  if(!payout)throw new Error("VIP point system missing.");
+  const record=typeof recordMirrorDungeonCompletion==="function"?recordMirrorDungeonCompletion(r.wins):null;
+  if(!record?.ok)throw new Error(`Mirror completion failed: ${record?.reason||"unknown"}`);
+  if(typeof save==="function")save(false);
+  r.settlement=settlementFor(r.wins,payout.added,oldHistory,record);r.active=false;
+  battleBusy=false;view="dungeon-mirror-result";render();
+ }
+ async function executeRun(){
+  try{
+   for(let i=1;i<=BATTLE_TOTAL;i++){
+    if(!run?.active)return;
+    run.currentBattle=i;
+    const result=runMirrorCombatCore(run.snapshot,{logs:true,playerName:playerName(),mirrorName:mirrorName()});
+    run.currentResult=result;view="dungeon-mirror-combat";render();
+    await animateBattle(result);
+    if(result.win)run.wins++;else run.losses++;
+    const msg=document.getElementById("combatMessage");if(msg)msg.textContent=`第 ${i} 戰${result.win?"勝利":"敗北"}`;
+    const score=document.querySelector(".mirror-run-score");if(score)score.textContent=`目前 ${run.wins} 勝 ${run.losses} 敗`;
+    await sleep(180);
+   }
+   await finishRun();
+  }catch(err){
+   console.error("Mirror dungeon run failed",err);
+   if(typeof failMirrorDungeonState==="function")failMirrorDungeonState();
+   if(run)run.active=false;battleBusy=false;view="dungeon-mirror";render();
+  }
+ }
+
+ window.startMirrorCombatRun=function(){
+  if(run?.active||battleBusy)return false;
+  if(typeof createMirrorCombatSnapshot!=="function"||typeof runMirrorCombatCore!=="function"||typeof beginMirrorDungeonState!=="function")return false;
+  const info=typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():null;if(!info?.canStart)return false;
+  const snapshot=createMirrorCombatSnapshot();if(!snapshot?.stats?.hp)return false;
+  const begun=beginMirrorDungeonState();if(!begun?.ok)return false;
+  run={version:MIRROR_RUN_VERSION,active:true,snapshot,wins:0,losses:0,currentBattle:1,currentResult:null,settlement:null};
+  battleBusy=true;view="dungeon-mirror-combat";render();
+  setTimeout(executeRun,80);return true;
+ };
+ window.mirrorDungeonRewardForWins=rewardForWins;
+ window.mirrorDungeonResultComment=commentForWins;
+ window.mirrorDungeonRecordTitle=titleForWins;
+ window.getMirrorDungeonActiveRun=function(){return run?{active:!!run.active,wins:run.wins,losses:run.losses,currentBattle:run.currentBattle,snapshot:run.snapshot,settlement:run.settlement}:null;};
+
+ installStyles();
+ const baseRender=render;
+ render=function(){
+  installStyles();
+  const main=document.getElementById("main");
+  if(view==="dungeon-mirror-combat"){if(main)main.innerHTML=combatHtml();if(typeof renderNav==="function")renderNav();return;}
+  if(view==="dungeon-mirror-result"){if(main)main.innerHTML=resultHtml();if(typeof renderNav==="function")renderNav();return;}
+  const out=baseRender();enhanceCompletedPage();return out;
+ };
+ const baseGo=go;
+ go=function(v){if(run?.active)return;return baseGo(v);};
+ if(typeof render==="function")render();
+})();
