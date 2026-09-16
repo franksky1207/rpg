@@ -80,7 +80,7 @@
   if(typeof save==="function")save(false);
   return {ok:true,...mirrorDungeonStatus(timestamp)};
  }
- function recordMirrorDungeonCompletion(wins,timestamp=Date.now()){
+ function recordMirrorDungeonCompletion(wins,timestamp=Date.now(),options={}){
   const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return {ok:false,reason:"missing_state"};
   if(mirror.daily.status!=="running")return {ok:false,reason:"not_running",...mirrorDungeonStatus(timestamp)};
   const w=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES,finiteInt(wins,0))),losses=MIRROR_DUNGEON_RUN_BATTLES-w,dateKey=mirror.daily.challengeDate||mirror.daily.dateKey||todayKey(timestamp);
@@ -89,7 +89,7 @@
   if(firstRecord||w>history.bestWins){history.bestWins=w;history.bestDate=dateKey;}
   if(w===MIRROR_DUNGEON_RUN_BATTLES)history.miracleDates.push(dateKey);
   mirror.daily={...mirror.daily,dateKey,status:"completed",challengeDate:dateKey,wins:w,losses,completedAt:Math.max(0,Math.floor(Number(timestamp)||Date.now()))};
-  if(typeof save==="function")save(false);
+  if(options?.save!==false&&typeof save==="function")save(false);
   return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,history:{...history,miracleDates:history.miracleDates.slice()}};
  }
  function resetMirrorDungeonToday(timestamp=Date.now()){
