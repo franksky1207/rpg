@@ -125,5 +125,4 @@
   const after=state?.dungeon?.mirror?.daily?.status;
   return {...result,recoveredInterruptedMirrorRun:before==="running"&&after!=="running"};
  };
- if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(target=>{normalizeMirrorDungeonState(target);return target;});
 })();
