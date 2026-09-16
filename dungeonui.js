@@ -1,6 +1,17 @@
 (function(){
  const DUNGEON_UNLOCKS={bounty:5,arena:15,tower:25};
  const DUNGEON_IMPLEMENTED={bounty:true,arena:true,tower:true};
+ const dungeonViewRenderers=new Map();
+ const dungeonHomeCardRenderers=[];
+ const dungeonPostRenderHooks=[];
+ const dungeonNavigationGuards=[];
+
+ window.registerDungeonViewRenderer=function(viewName,renderer,options={}){const key=String(viewName||"");if(!key||typeof renderer!=="function")return false;dungeonViewRenderers.set(key,{renderer,normalizeHp:options?.normalizeHp===true});return true;};
+ window.registerDungeonHomeCardRenderer=function(renderer){if(typeof renderer!=="function"||dungeonHomeCardRenderers.includes(renderer))return false;dungeonHomeCardRenderers.push(renderer);return true;};
+ window.registerDungeonPostRenderHook=function(hook){if(typeof hook!=="function"||dungeonPostRenderHooks.includes(hook))return false;dungeonPostRenderHooks.push(hook);return true;};
+ window.registerDungeonNavigationGuard=function(guard){if(typeof guard!=="function"||dungeonNavigationGuards.includes(guard))return false;dungeonNavigationGuards.push(guard);return true;};
+ window.DUNGEON_UI_EXTENSION_VERSION=1;
+ window.DUNGEON_PREP_RETURN_UX_VERSION=2;
 
  function injectDungeonStyles(){
   if(document.getElementById("dungeon-ui-styles"))return;
@@ -33,6 +44,19 @@
   const start=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():Math.max(1,(Number(progress.highestCleared)||0)-100);
   return {highest:Math.max(0,Math.floor(Number(progress.highestCleared)||0)),start:Math.max(1,Math.floor(Number(start)||1)),daily};
  }
+ function extraDungeonCards(){return dungeonHomeCardRenderers.map(renderer=>{try{return String(renderer()||"");}catch(err){console.error("Dungeon home card renderer failed",err);return "";}}).join("");}
+ function runPostRenderHooks(){dungeonPostRenderHooks.forEach(hook=>{try{hook({view,main:document.getElementById("main")});}catch(err){console.error("Dungeon post-render hook failed",err);}});}
+ function normalizeDungeonReturnLabels(main){if(!main||!String(view).startsWith("dungeon"))return;main.querySelectorAll("button").forEach(button=>{if(button.textContent.trim()==="返回副本")button.textContent="返回副本列表";});}
+ function ensurePrepReturn(main){
+  if(!main)return;
+  let ready=false;
+  if(view==="dungeon-bounty"&&typeof getBountyTestSnapshot==="function")ready=getBountyTestSnapshot()?.phase==="ready";
+  else if(view==="dungeon-arena"&&typeof getArenaCoreState==="function")ready=getArenaCoreState()?.phase==="ready";
+  if(!ready||main.querySelector("[data-dungeon-prep-return]"))return;
+  const shell=main.querySelector(view==="dungeon-bounty"?".dungeon-bounty-shell":".arena-shell")||main.firstElementChild;if(!shell)return;
+  const wrap=document.createElement("div");wrap.className="back-home";wrap.dataset.dungeonPrepReturn="1";wrap.innerHTML=`<button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button>`;shell.insertBefore(wrap,shell.firstChild);
+ }
+ function finishDungeonRender(){const main=document.getElementById("main");normalizeDungeonReturnLabels(main);ensurePrepReturn(main);runPostRenderHooks();}
 
  window.dungeonStatusHtml=function(id="dungeon-status"){
   return `<div id="${id}" class="dungeon-status-card"><div><span class="muted">等級</span><strong>Lv.${state.level}</strong></div><div><span class="muted">EXP</span><strong>${dungeonExpText()}</strong></div><div><span class="muted">金幣</span><strong>${Math.floor(Number(state.gold)||0).toLocaleString()}</strong></div><div><span class="muted">VIP 狀態</span><strong>${typeof vipStatusText==="function"?vipStatusText():`VIP${state.vipLevel||0}`}</strong></div></div>`;
@@ -59,7 +83,7 @@
    }
    return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
   };
-  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰","高 EXP・高金幣・多裝備","隨機挑戰一名依你目前實力生成的強敵，裝備最低為稀有品質。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}</div></div>`;
+  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰","高 EXP・高金幣・多裝備","隨機挑戰一名依你目前實力生成的強敵，裝備最低為稀有品質。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
  }
 
  window.openDungeonMode=function(mode){if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
@@ -71,15 +95,18 @@
  render=function(){
   injectDungeonStyles();
   const main=document.getElementById("main");
-  if(view==="dungeon"){normalizeHP();main.innerHTML=dungeonHomeHtml();if(typeof renderNav==="function")renderNav();return;}
-  if(view==="dungeon-bounty"){normalizeHP();main.innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";if(typeof renderNav==="function")renderNav();return;}
-  if(view==="dungeon-arena"){normalizeHP();main.innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";if(typeof renderNav==="function")renderNav();return;}
-  if(view==="dungeon-void-mirage"){main.innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";if(typeof renderNav==="function")renderNav();return;}
+  if(view==="dungeon"){normalizeHP();main.innerHTML=dungeonHomeHtml();if(typeof renderNav==="function")renderNav();finishDungeonRender();return;}
+  if(view==="dungeon-bounty"){normalizeHP();main.innerHTML=typeof renderBountyDungeon==="function"?renderBountyDungeon():"";if(typeof renderNav==="function")renderNav();finishDungeonRender();return;}
+  if(view==="dungeon-arena"){normalizeHP();main.innerHTML=typeof renderArenaDungeon==="function"?renderArenaDungeon():"";if(typeof renderNav==="function")renderNav();finishDungeonRender();return;}
+  if(view==="dungeon-void-mirage"){main.innerHTML=typeof renderVoidMirageDungeon==="function"?renderVoidMirageDungeon():"";if(typeof renderNav==="function")renderNav();finishDungeonRender();return;}
+  const extension=dungeonViewRenderers.get(view);
+  if(extension){if(extension.normalizeHp&&typeof normalizeHP==="function")normalizeHP();main.innerHTML=String(extension.renderer()||"");if(typeof renderNav==="function")renderNav();finishDungeonRender();return;}
   baseRender();if(!main)return;
   if(view==="home"){ensureHomeDungeonCard(main);const menu=main.querySelector(".menu-grid");if(menu&&typeof vipHomeCardHtml==="function"&&!main.querySelector(".vip-home-card"))menu.insertAdjacentHTML("beforebegin",vipHomeCardHtml());}
+  runPostRenderHooks();
  };
  const baseGo=go;
- go=function(v){if(v==="dungeon"){view="dungeon";render();return;}baseGo(v);};
+ go=function(v){for(const guard of dungeonNavigationGuards){try{if(guard(v)===false)return;}catch(err){console.error("Dungeon navigation guard failed",err);}}if(v==="dungeon"||dungeonViewRenderers.has(v)){view=v;render();return;}baseGo(v);};
 
  injectDungeonStyles();
  if(typeof render==="function")render();
