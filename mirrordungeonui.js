@@ -13,6 +13,7 @@
    @media(max-width:760px){.mirror-page{padding-bottom:10px}.mirror-panel{padding:14px}.mirror-actions{display:grid}.mirror-start-btn,.mirror-actions .btn{width:100%;min-width:0}}
   `;document.head.appendChild(style);
  }
+ function escapeHtml(text){return String(text??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function mirrorStatus(){return typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():{unlocked:false,status:"idle",history:{bestWins:0,bestDate:null,miracleDates:[]},canStart:false,ended:false};}
  function formatDateKey(key){if(typeof key!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(key))return "—";const [y,m,d]=key.split("-");return `${y}/${m}/${d}`;}
  function mirrorTitleForWins(wins){const titles={15:"幸運眷顧",16:"天選之刻",17:"逆命者",18:"傳說之日",19:"距神一步",20:"神蹟"};return titles[Math.floor(Number(wins)||0)]||"";}
@@ -30,17 +31,17 @@
  function mirrorPageHtml(){
   const info=mirrorStatus(),need=Number(window.MIRROR_DUNGEON_UNLOCK_LEVEL)||50;
   if(!info.unlocked)return `<div class="function-page mirror-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><div class="card mirror-panel"><h2 class="mirror-title">鏡像戰</h2><div class="mirror-subtitle">Lv.${need} 解鎖</div><div class="mirror-state-box mirror-ended">尚未解鎖</div></div></div>`;
-  const ended=info.ended;
+  const ended=info.ended,displayName=escapeHtml(state?.playerName||"玩家");
   const stateHtml=ended?`<div class="mirror-state-box"><div class="mirror-ended">今日鏡像戰已結束</div>${info.status==="failed"?`<div class="muted" style="margin-top:7px;text-align:center">本日挑戰未完整完成，因此沒有成績與獎勵。今日無法再次挑戰。</div>`:""}</div>`:`<div class="mirror-state-box"><strong>今日狀態</strong><div style="margin-top:5px">${info.status==="running"?"今日鏡像戰進行中":"今日尚未挑戰"}</div></div>`;
   const startHtml=!ended&&info.status==="idle"?`<div class="mirror-actions"><button class="btn mirror-start-btn" onclick="confirmMirrorDungeonStart()">開始鏡像戰</button></div>`:"";
-  return `<div class="function-page mirror-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><div class="card mirror-panel"><h2 class="mirror-title">鏡像戰</h2><div class="mirror-subtitle">Lv.${need}・每日一次・固定連戰 20 場</div>${stateHtml}<div class="mirror-rule-box"><strong>規則</strong><div style="margin-top:6px">對手「鏡像・${String(state?.playerName||"玩家") }」會完整複製你開始挑戰時的裝備、VIP、專精、強化與戰鬥能力。</div><div>雙方能力完全相同，每場隨機決定先攻。完成 20 場後，依最終勝場自動發放 VIP 積分。</div></div><div class="mirror-rule-box mirror-warning">每日僅能挑戰一次，開始後不可停止；若途中重新整理、關閉頁面或中斷，本日挑戰直接結束。</div><div class="mirror-history-box"><strong>歷史紀錄</strong>${mirrorHistoryHtml(info.history,false)}</div>${startHtml}</div></div>`;
+  return `<div class="function-page mirror-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><div class="card mirror-panel"><h2 class="mirror-title">鏡像戰</h2><div class="mirror-subtitle">Lv.${need}・每日一次・固定連戰 20 場</div>${stateHtml}<div class="mirror-rule-box"><strong>規則</strong><div style="margin-top:6px">對手「鏡像・${displayName}」會完整複製你開始挑戰時的裝備、VIP、專精、強化與戰鬥能力。</div><div>雙方能力完全相同，每場隨機決定先攻。完成 20 場後，依最終勝場自動發放 VIP 積分。</div></div><div class="mirror-rule-box mirror-warning">每日僅能挑戰一次，開始後不可停止；若途中重新整理、關閉頁面或中斷，本日挑戰直接結束。</div><div class="mirror-history-box"><strong>歷史紀錄</strong>${mirrorHistoryHtml(info.history,false)}</div>${startHtml}</div></div>`;
  }
  window.openMirrorDungeon=function(){view="dungeon-mirror";render();};
  window.confirmMirrorDungeonStart=function(){
   const info=mirrorStatus();if(!info.canStart)return render();
   const ok=confirm("鏡像戰開始確認\n\n今日只有 1 次挑戰機會。\n開始後將自動連續進行 20 場，期間無法停止。\n\n若途中重新整理、關閉網頁或發生中斷，本日挑戰將直接結束，且今日無法再次挑戰。\n\n完成 20 場後，系統將自動結算成績並發放 VIP 積分。\n\n是否開始今日鏡像戰？");
   if(!ok)return;
-  if(typeof window.startMirrorCombatRun!=="function")return alert("鏡像戰戰鬥核心將於下一批接入；本次不會消耗今日挑戰機會。");
+  if(typeof window.startMirrorCombatRun!=="function")return alert("鏡像戰戰鬥模組尚未載入，請重新整理後再試；本次不會消耗今日挑戰機會。");
   return window.startMirrorCombatRun();
  };
 
