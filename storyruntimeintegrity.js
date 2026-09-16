@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
 
  function run(){
   const errors=[];
@@ -31,11 +31,13 @@
   if(typeof window.replayCompletedStory!=="function")fail("STORY_RUNTIME_REPLAY_MISSING","戰線紀錄重播函式未載入");
   if(typeof window.storyRecordPageHtml!=="function")fail("STORY_RUNTIME_RECORD_PAGE_MISSING","戰線紀錄頁面函式未載入");
   if(typeof window.selectStoryRecordRegion!=="function")fail("STORY_RUNTIME_RECORD_SELECT_MISSING","戰線紀錄區域切換函式未載入");
-  if(Number(window.STORY_RECORD_TABS_VERSION)<2)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);
+  if(typeof window.prepareStoryRecordEntry!=="function")fail("STORY_RUNTIME_RECORD_ENTRY_MISSING","戰線紀錄進頁初始化函式未載入");
+  if(Number(window.STORY_RECORD_TABS_VERSION)<3)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);
 
-  if(typeof window.gmStoryTestHtml!=="function")fail("STORY_RUNTIME_GM_MISSING","GM 劇情測試模組未載入");
-  if(typeof window.gmPreviewStory!=="function")fail("STORY_RUNTIME_GM_PREVIEW_MISSING","GM 劇情預覽函式未載入");
-  if(Number(window.GM_STORY_TEST_VERSION)<1)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
+  ["gmStoryTestHtml","gmPreviewStory","gmStoryMoveRegion","gmStoryMoveEntry","gmStoryRunIntegrity"].forEach(name=>{
+   if(typeof window[name]!=="function")fail("STORY_RUNTIME_GM_METHOD",`${name} 未載入`);
+  });
+  if(Number(window.GM_STORY_TEST_VERSION)<2)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
 
   const regions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const stories=window.CIVILIZATION_STORIES||{};
