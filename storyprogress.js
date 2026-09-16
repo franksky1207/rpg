@@ -8,9 +8,46 @@
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
- function freshProgress(){return {pendingStory:null,completedStories:[],introCompleted:false,starterGearReceived:false};}
- function legacyProgress(){return {pendingStory:null,completedStories:[INTRO_STORY_ID],introCompleted:true,starterGearReceived:true};}
+ function freshProgress(){return {pendingStory:null,completedStories:[],introCompleted:false,starterGearReceived:false,historyBackfillRegions:[]};}
+ function legacyProgress(){return {pendingStory:null,completedStories:[INTRO_STORY_ID],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]};}
  function loadedFromExistingSave(){return window.LAST_SAVE_LOAD_REPORT?.hadRaw===true;}
+
+ function bossStoryId(mapIdx){
+  const index=Math.floor(Number(mapIdx));
+  if(!Number.isInteger(index)||index<0||!Array.isArray(WORLD_REGIONS))return null;
+  const region=WORLD_REGIONS.find(r=>index>=Number(r.mapStart)&&index<=Number(r.mapEnd));
+  if(!region)return null;
+  return `${region.id}-boss-${index-Number(region.mapStart)+1}`;
+ }
+ function bossMapIndexForStory(id){
+  if(typeof id!=="string"||!Array.isArray(WORLD_REGIONS))return null;
+  for(const region of WORLD_REGIONS){
+   const start=Number(region.mapStart),end=Number(region.mapEnd);
+   for(let i=start;i<=end;i++)if(bossStoryId(i)===id)return i;
+  }
+  return null;
+ }
+ function availableStoryRegions(){return Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];}
+ function backfillAvailableHistory(target){
+  if(!isObject(target)||!isObject(target.storyProgress))return false;
+  const p=target.storyProgress,stories=window.CIVILIZATION_STORIES||{};
+  let changed=false;
+  for(const region of availableStoryRegions()){
+   const regionId=typeof region?.id==="string"?region.id:"";
+   if(!regionId||p.historyBackfillRegions.includes(regionId))continue;
+   const ids=(Array.isArray(region?.stories)?region.stories:[]).map(x=>x?.id).filter(id=>typeof id==="string"&&/-boss-\d+$/.test(id));
+   if(!ids.length||ids.some(id=>!stories[id]))continue;
+   ids.forEach(id=>{
+    const mapIdx=bossMapIndexForStory(id);
+    if(mapIdx==null||target.bossKilled?.[mapIdx]!==true||p.pendingStory===id||p.completedStories.includes(id))return;
+    p.completedStories.push(id);changed=true;
+   });
+   p.historyBackfillRegions.push(regionId);changed=true;
+  }
+  p.completedStories=uniqueStrings(p.completedStories);
+  p.historyBackfillRegions=uniqueStrings(p.historyBackfillRegions);
+  return changed;
+ }
 
  function normalizeProgress(target,options={}){
   if(!isObject(target))return target;
@@ -24,8 +61,10 @@
   p.completedStories=uniqueStrings(p.completedStories);
   p.introCompleted=p.introCompleted===true;
   p.starterGearReceived=p.starterGearReceived===true;
+  p.historyBackfillRegions=uniqueStrings(p.historyBackfillRegions);
   if(p.introCompleted&&!p.completedStories.includes(INTRO_STORY_ID))p.completedStories.unshift(INTRO_STORY_ID);
   target.introSeen=p.introCompleted;
+  backfillAvailableHistory(target);
   return target;
  }
 
@@ -50,22 +89,6 @@
   if(p.pendingStory===id)p.pendingStory=null;
   if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}
   persist();
- }
-
- function bossStoryId(mapIdx){
-  const index=Math.floor(Number(mapIdx));
-  if(!Number.isInteger(index)||index<0||!Array.isArray(WORLD_REGIONS))return null;
-  const region=WORLD_REGIONS.find(r=>index>=Number(r.mapStart)&&index<=Number(r.mapEnd));
-  if(!region)return null;
-  return `${region.id}-boss-${index-Number(region.mapStart)+1}`;
- }
- function bossMapIndexForStory(id){
-  if(typeof id!=="string"||!Array.isArray(WORLD_REGIONS))return null;
-  for(const region of WORLD_REGIONS){
-   const start=Number(region.mapStart),end=Number(region.mapEnd);
-   for(let i=start;i<=end;i++)if(bossStoryId(i)===id)return i;
-  }
-  return null;
  }
  function queueBossStory(mapIdx){
   const id=bossStoryId(mapIdx);
@@ -235,7 +258,7 @@
  }
 
  window.civilizationStoryProgress={
-  version:4,
+  version:5,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
@@ -244,10 +267,11 @@
   completeStory,
   queueBossStory,
   bossStoryId,
+  backfillAvailableHistory:()=>{const changed=backfillAvailableHistory(state);if(changed)persist();return changed;},
   ensureStarterEquipment,
   completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=4;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=5;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
