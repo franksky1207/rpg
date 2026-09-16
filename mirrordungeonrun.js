@@ -107,8 +107,8 @@
   if(view!=="dungeon-mirror"||typeof mirrorDungeonStatus!=="function")return;
   const info=mirrorDungeonStatus();if(info.status!=="completed")return;
   const box=document.querySelector(".mirror-state-box");if(!box||box.querySelector(".mirror-completed-inline"))return;
-  const reward=rewardForWins(info.wins),title=titleForWins(info.wins);
-  box.insertAdjacentHTML("beforeend",`<div class="mirror-completed-inline"><strong>今日結果：${info.wins} 勝 ${info.losses} 敗</strong><div class="mirror-inline-reward">獲得 ${fmt(reward)} VIP 積分</div><div class="mirror-inline-comment">${escapeHtml(commentForWins(info.wins))}</div>${title?`<div class="mirror-inline-comment">${escapeHtml(title)}</div>`:""}</div>`);
+  const reward=rewardForWins(info.wins);
+  box.insertAdjacentHTML("beforeend",`<div class="mirror-completed-inline"><strong>今日結果：${info.wins} 勝 ${info.losses} 敗</strong><div class="mirror-inline-reward">獲得 ${fmt(reward)} VIP 積分</div><div class="mirror-inline-comment">${escapeHtml(commentForWins(info.wins))}</div></div>`);
  }
  function settlementFor(wins,awarded,oldHistory,recordResult){
   const w=clampWins(wins),previousHad=!!oldHistory?.bestDate,previousBest=previousHad?clampWins(oldHistory.bestWins):-1;
