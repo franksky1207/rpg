@@ -37,7 +37,7 @@
   if(typeof window.gmPreviewStory!=="function")fail("STORY_RUNTIME_GM_PREVIEW_MISSING","GM 劇情預覽函式未載入");
   if(Number(window.GM_STORY_TEST_VERSION)<1)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
 
-  const regions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+  const regions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const stories=window.CIVILIZATION_STORIES||{};
   if(progress&&typeof progress.bossStoryId==="function"){
    let checked=0;
@@ -54,7 +54,7 @@
    if(checked!==100)fail("STORY_RUNTIME_BOSS_MAPPING_COUNT",`執行期應檢查 100 個首領故事對應，實際 ${checked}`);
   }
 
-  if(typeof window.state!=="undefined"&&window.state&&progress&&typeof progress.get==="function"){
+  if(typeof state!=="undefined"&&state&&progress&&typeof progress.get==="function"){
    let p=null;
    try{p=progress.get();}catch(error){fail("STORY_RUNTIME_PROGRESS_GET_FAILED","讀取故事進度時發生錯誤",String(error?.message||error));}
    if(p){
