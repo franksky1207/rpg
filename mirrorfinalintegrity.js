@@ -1,4 +1,5 @@
 (function(){
+ const MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION=1;
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
@@ -61,6 +62,7 @@
  if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NORMALIZER_COUNT",`正式 newState normalizer 應維持 4，實際 ${window.getNewStateNormalizerCount()}`);
 
  const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now(),symmetryPairs:64};
+ window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION=MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION;
  window.MIRROR_DUNGEON_FINAL_INTEGRITY=report;
  if(errors.length)console.error("[Mirror Dungeon Final Integrity]",errors);
  else if(warnings.length)console.warn("[Mirror Dungeon Final Integrity]",warnings);
