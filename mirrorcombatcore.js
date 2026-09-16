@@ -1,208 +1,37 @@
 (function(){
- const MIRROR_COMBAT_CORE_VERSION=2;
- const MIRROR_COMBAT_BATTLE_LIMIT=20;
- const MIRROR_COUNTER_SCALE=.40;
- const MIRROR_COMBO_SCALE=.50;
- const MIRROR_PENETRATION_DEF_MULTIPLIER=.75;
- const MIRROR_DRAIN_RATIO=.10;
+ const CONFIG=window.MIRROR_DUNGEON_CONFIG;if(!CONFIG)throw new Error("Mirror dungeon config missing.");
+ const MIRROR_COMBAT_CORE_VERSION=3;
+ const RUN_BATTLES=CONFIG.runBattles;
+ const MIRROR_COUNTER_SCALE=CONFIG.combat.counterScale;
+ const MIRROR_COMBO_SCALE=CONFIG.combat.comboScale;
+ const MIRROR_PENETRATION_DEF_MULTIPLIER=CONFIG.combat.penetrationDefMultiplier;
+ const MIRROR_DRAIN_RATIO=CONFIG.combat.drainRatio;
 
  function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
  function clampRate(value){return Math.max(0,Math.min(100,numberOr(value,0)));}
  function intLevel(value,max=60){return Math.max(0,Math.min(max,Math.floor(numberOr(value,0))));}
  function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function roll(rng,percent){return percent>0&&rng()*100<percent;}
- function specializationBonuses(levels){
-  const source=levels&&typeof levels==="object"?levels:{};
-  return {
-   initiative:intLevel(source.initiative),
-   combo:intLevel(source.combo)*.5,
-   penetration:intLevel(source.penetration)*.5,
-   counter:intLevel(source.counter)*.5,
-   drain:intLevel(source.drain)*.5
-  };
- }
- function currentSpecializationLevels(){
-  if(typeof window.specializationLevelsSnapshot==="function")return window.specializationLevelsSnapshot(false);
-  const source=state?.specializations&&typeof state.specializations==="object"?state.specializations:{};
-  return {initiative:intLevel(source.initiative),combo:intLevel(source.combo),penetration:intLevel(source.penetration),counter:intLevel(source.counter),drain:intLevel(source.drain)};
- }
- function currentSpecializationBonuses(levels){
-  const fallback=specializationBonuses(levels);
-  if(typeof window.specializationPercentBonus!=="function")return fallback;
-  return {
-   initiative:Math.max(0,numberOr(window.specializationPercentBonus("initiative",false),fallback.initiative)),
-   combo:Math.max(0,numberOr(window.specializationPercentBonus("combo",false),fallback.combo)),
-   penetration:Math.max(0,numberOr(window.specializationPercentBonus("penetration",false),fallback.penetration)),
-   counter:Math.max(0,numberOr(window.specializationPercentBonus("counter",false),fallback.counter)),
-   drain:Math.max(0,numberOr(window.specializationPercentBonus("drain",false),fallback.drain))
-  };
- }
- function normalizeBonuses(source,levels){
-  const fallback=specializationBonuses(levels),raw=source&&typeof source==="object"?source:{};
-  return {
-   initiative:Math.max(0,numberOr(raw.initiative,fallback.initiative)),
-   combo:clampRate(numberOr(raw.combo,fallback.combo)),
-   penetration:clampRate(numberOr(raw.penetration,fallback.penetration)),
-   counter:clampRate(numberOr(raw.counter,fallback.counter)),
-   drain:clampRate(numberOr(raw.drain,fallback.drain))
-  };
- }
- function currentEnhancementLevels(){
-  const source=state?.enhancement?.levels&&typeof state.enhancement.levels==="object"?state.enhancement.levels:{};
-  const types=Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
-  return Object.fromEntries(types.map(type=>[type,Math.max(0,Math.min(Number(window.ENHANCEMENT_MAX_LEVEL)||20,Math.floor(numberOr(source[type],0))))]));
- }
- function createMirrorCombatSnapshot(){
-  const stats=typeof playerCombatStats==="function"?playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0};
-  const levels=currentSpecializationLevels();
-  return {
-   version:MIRROR_COMBAT_CORE_VERSION,
-   damageModelVersion:Math.max(0,Math.floor(numberOr(window.COMBAT_DAMAGE_MODEL_VERSION,0))),
-   playerName:String(state?.playerName||"玩家"),
-   level:Math.max(1,Math.floor(numberOr(state?.level,1))),
-   vipLevel:Math.max(0,Math.floor(numberOr(state?.vipLevel,0))),
-   stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
-   specializations:cloneJson(levels)||{},
-   specializationBonuses:currentSpecializationBonuses(levels),
-   enhancementLevels:currentEnhancementLevels(),
-   equipment:cloneJson(state?.equipment)||{}
-  };
- }
- function normalizeSnapshot(snapshot){
-  const source=snapshot&&typeof snapshot==="object"?snapshot:createMirrorCombatSnapshot();
-  const stats=source.stats&&typeof source.stats==="object"?source.stats:{};
-  const levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};
-  return {
-   version:MIRROR_COMBAT_CORE_VERSION,
-   damageModelVersion:Math.max(0,Math.floor(numberOr(source.damageModelVersion,window.COMBAT_DAMAGE_MODEL_VERSION||0))),
-   playerName:String(source.playerName||"玩家"),
-   level:Math.max(1,Math.floor(numberOr(source.level,1))),
-   vipLevel:Math.max(0,Math.floor(numberOr(source.vipLevel,0))),
-   stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
-   specializations:cloneJson(levels)||{},
-   specializationBonuses:normalizeBonuses(source.specializationBonuses,levels),
-   enhancementLevels:cloneJson(source.enhancementLevels)||{},
-   equipment:cloneJson(source.equipment)||{}
-  };
- }
- function sharedCombatDamage(atk,def,rng){
-  if(typeof window.combatDamageWithRng!=="function")throw new Error("Shared combat damage model missing.");
-  return window.combatDamageWithRng(atk,def,rng);
- }
- function auditCurrentSnapshotSources(){
-  const snap=createMirrorCombatSnapshot(),issues=[];
-  const liveStats=typeof playerCombatStats==="function"?playerCombatStats():null;
-  if(!liveStats)issues.push("playerCombatStats missing");
-  else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});
-  if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");
-  const liveLevels=currentSpecializationLevels();
-  ["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});
-  const liveBonuses=currentSpecializationBonuses(liveLevels);
-  ["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializationBonuses[key])!==Number(liveBonuses[key]))issues.push(`specializationBonuses.${key} mismatch`);});
-  const liveEnhancement=currentEnhancementLevels();
-  Object.keys(liveEnhancement).forEach(key=>{if(Number(snap.enhancementLevels[key])!==Number(liveEnhancement[key]))issues.push(`enhancementLevels.${key} mismatch`);});
-  try{if(JSON.stringify(snap.equipment)!==JSON.stringify(state?.equipment||{}))issues.push("equipment mismatch");}catch(e){issues.push("equipment audit failed");}
-  if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION||0))issues.push("damage model version mismatch");
-  return {passed:issues.length===0,issues,snapshot:snap};
- }
+ function specializationBonuses(levels){const source=levels&&typeof levels==="object"?levels:{};return {initiative:intLevel(source.initiative),combo:intLevel(source.combo)*.5,penetration:intLevel(source.penetration)*.5,counter:intLevel(source.counter)*.5,drain:intLevel(source.drain)*.5};}
+ function currentSpecializationLevels(){if(typeof window.specializationLevelsSnapshot==="function")return window.specializationLevelsSnapshot(false);const source=state?.specializations&&typeof state.specializations==="object"?state.specializations:{};return {initiative:intLevel(source.initiative),combo:intLevel(source.combo),penetration:intLevel(source.penetration),counter:intLevel(source.counter),drain:intLevel(source.drain)};}
+ function currentSpecializationBonuses(levels){const fallback=specializationBonuses(levels);if(typeof window.specializationPercentBonus!=="function")return fallback;return {initiative:Math.max(0,numberOr(window.specializationPercentBonus("initiative",false),fallback.initiative)),combo:Math.max(0,numberOr(window.specializationPercentBonus("combo",false),fallback.combo)),penetration:Math.max(0,numberOr(window.specializationPercentBonus("penetration",false),fallback.penetration)),counter:Math.max(0,numberOr(window.specializationPercentBonus("counter",false),fallback.counter)),drain:Math.max(0,numberOr(window.specializationPercentBonus("drain",false),fallback.drain))};}
+ function normalizeBonuses(source,levels){const fallback=specializationBonuses(levels),raw=source&&typeof source==="object"?source:{};return {initiative:Math.max(0,numberOr(raw.initiative,fallback.initiative)),combo:clampRate(numberOr(raw.combo,fallback.combo)),penetration:clampRate(numberOr(raw.penetration,fallback.penetration)),counter:clampRate(numberOr(raw.counter,fallback.counter)),drain:clampRate(numberOr(raw.drain,fallback.drain))};}
+ function currentEnhancementLevels(){const source=state?.enhancement?.levels&&typeof state.enhancement.levels==="object"?state.enhancement.levels:{};const types=Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];return Object.fromEntries(types.map(type=>[type,Math.max(0,Math.min(Number(window.ENHANCEMENT_MAX_LEVEL)||20,Math.floor(numberOr(source[type],0))))]));}
+ function createMirrorCombatSnapshot(){const stats=typeof playerCombatStats==="function"?playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0},levels=currentSpecializationLevels();return {version:MIRROR_COMBAT_CORE_VERSION,damageModelVersion:Math.max(0,Math.floor(numberOr(window.COMBAT_DAMAGE_MODEL_VERSION,0))),playerName:String(state?.playerName||"玩家"),level:Math.max(1,Math.floor(numberOr(state?.level,1))),vipLevel:Math.max(0,Math.floor(numberOr(state?.vipLevel,0))),stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},specializations:cloneJson(levels)||{},specializationBonuses:currentSpecializationBonuses(levels),enhancementLevels:currentEnhancementLevels(),equipment:cloneJson(state?.equipment)||{}};}
+ function normalizeSnapshot(snapshot){const source=snapshot&&typeof snapshot==="object"?snapshot:createMirrorCombatSnapshot(),stats=source.stats&&typeof source.stats==="object"?source.stats:{},levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};return {version:MIRROR_COMBAT_CORE_VERSION,damageModelVersion:Math.max(0,Math.floor(numberOr(source.damageModelVersion,window.COMBAT_DAMAGE_MODEL_VERSION||0))),playerName:String(source.playerName||"玩家"),level:Math.max(1,Math.floor(numberOr(source.level,1))),vipLevel:Math.max(0,Math.floor(numberOr(source.vipLevel,0))),stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},specializations:cloneJson(levels)||{},specializationBonuses:normalizeBonuses(source.specializationBonuses,levels),enhancementLevels:cloneJson(source.enhancementLevels)||{},equipment:cloneJson(source.equipment)||{}};}
+ function sharedCombatDamage(atk,def,rng){if(typeof window.combatDamageWithRng!=="function")throw new Error("Shared combat damage model missing.");return window.combatDamageWithRng(atk,def,rng);}
+ function auditCurrentSnapshotSources(){const snap=createMirrorCombatSnapshot(),issues=[],liveStats=typeof playerCombatStats==="function"?playerCombatStats():null;if(!liveStats)issues.push("playerCombatStats missing");else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");const liveLevels=currentSpecializationLevels();["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});const liveBonuses=currentSpecializationBonuses(liveLevels);["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializationBonuses[key])!==Number(liveBonuses[key]))issues.push(`specializationBonuses.${key} mismatch`);});const liveEnhancement=currentEnhancementLevels();Object.keys(liveEnhancement).forEach(key=>{if(Number(snap.enhancementLevels[key])!==Number(liveEnhancement[key]))issues.push(`enhancementLevels.${key} mismatch`);});try{if(JSON.stringify(snap.equipment)!==JSON.stringify(state?.equipment||{}))issues.push("equipment mismatch");}catch(e){issues.push("equipment audit failed");}if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION||0))issues.push("damage model version mismatch");return {passed:issues.length===0,issues,snapshot:snap};}
 
  window.runMirrorCombatCore=function(snapshot,options={}){
-  const snap=normalizeSnapshot(snapshot);
-  const rng=typeof options.rng==="function"?options.rng:Math.random;
-  const logs=options.logs===false?null:[];
-  const events=[];
-  const names={player:String(options.playerName||snap.playerName||"玩家"),mirror:String(options.mirrorName||`鏡像・${snap.playerName||"玩家"}`)};
-  const spec=snap.specializationBonuses;
-  const stats=snap.stats;
-  const sides={
-   player:{key:"player",name:names.player,hp:stats.hp,maxHp:stats.hp,initiativeUsed:false},
-   mirror:{key:"mirror",name:names.mirror,hp:stats.hp,maxHp:stats.hp,initiativeUsed:false}
-  };
-  let active=rng()<.5?"player":"mirror";
-  const firstActor=active;
-  let turns=0;
-
-  function other(key){return key==="player"?"mirror":"player";}
-  function pushLog(text){if(logs)logs.push(text);}
-  function performStrike(actorKey,defenderKey,source,initiativeApplied){
-   const actor=sides[actorKey],defender=sides[defenderKey];
-   const scale=source==="counter"?MIRROR_COUNTER_SCALE:source==="combo"?MIRROR_COMBO_SCALE:1;
-   const dodge=roll(rng,stats.dodge);
-   if(dodge){
-    events.push({type:"dodge",actor:actorKey,target:defenderKey,source,initiative:initiativeApplied});
-    pushLog(`${actor.name}攻擊${defender.name}，${defender.name}閃避了攻擊。`);
-    return {hit:false,actualDamage:0,killed:false};
-   }
-   const penetration=roll(rng,spec.penetration);
-   const effectiveDef=stats.def*(penetration?MIRROR_PENETRATION_DEF_MULTIPLIER:1);
-   let damage=sharedCombatDamage(stats.atk,effectiveDef,rng);
-   if(initiativeApplied&&spec.initiative>0)damage=Math.ceil(damage*(1+spec.initiative/100));
-   const crit=roll(rng,stats.crit);
-   if(crit)damage=Math.ceil(damage*(Number(CRIT_DAMAGE_MULTIPLIER)||1.5));
-   damage=Math.max(1,Math.ceil(damage*scale));
-   const before=Math.max(0,defender.hp),actualDamage=Math.min(before,damage);
-   defender.hp=Math.max(0,defender.hp-damage);
-   events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage,crit,penetration,initiative:initiativeApplied});
-   pushLog(`${actor.name}攻擊${defender.name}${crit?"，暴擊":""}造成 ${damage} 點傷害。`);
-   if(actualDamage>0&&roll(rng,spec.drain)){
-    const wanted=Math.max(1,Math.ceil(actualDamage*MIRROR_DRAIN_RATIO));
-    const healed=Math.max(0,Math.min(wanted,actor.maxHp-actor.hp));
-    actor.hp+=healed;
-    events.push({type:"drain",actor:actorKey,source,healed,actualDamage});
-    if(healed>0)pushLog(`${actor.name}汲取生命，回復 ${healed} HP。`);
-   }
-   return {hit:true,actualDamage,killed:defender.hp<=0};
-  }
-  function attackChain(actorKey,defenderKey,initialSource="normal",allowCounter=false){
-   const actor=sides[actorKey],defender=sides[defenderKey];
-   let source=initialSource,first=true,hadEffectiveDamage=false;
-   while(actor.hp>0&&defender.hp>0){
-    let initiativeApplied=false;
-    if(initialSource==="normal"&&first&&!actor.initiativeUsed){actor.initiativeUsed=true;initiativeApplied=spec.initiative>0;}
-    const strike=performStrike(actorKey,defenderKey,source,initiativeApplied);
-    if(strike.actualDamage>0)hadEffectiveDamage=true;
-    first=false;
-    if(defender.hp<=0)break;
-    if(!roll(rng,spec.combo))break;
-    events.push({type:"combo",actor:actorKey,from:source});
-    source="combo";
-   }
-   if(allowCounter&&actor.hp>0&&defender.hp>0&&hadEffectiveDamage&&roll(rng,spec.counter)){
-    events.push({type:"counter",actor:defenderKey,target:actorKey});
-    pushLog(`${defender.name}發動反擊。`);
-    attackChain(defenderKey,actorKey,"counter",false);
-   }
-  }
-
-  events.push({type:"firstActor",actor:firstActor});
-  pushLog(`${sides[firstActor].name}取得先攻。`);
-  while(sides.player.hp>0&&sides.mirror.hp>0){
-   turns++;
-   const defender=other(active);
-   attackChain(active,defender,"normal",true);
-   if(sides[defender].hp<=0||sides[active].hp<=0)break;
-   active=defender;
-  }
-  const winner=sides.player.hp>0?"player":"mirror";
-  const loser=other(winner);
-  events.push({type:"battleEnd",winner,loser,turns});
-  pushLog(`${sides[winner].name}獲勝。`);
-  return {
-   win:winner==="player",
-   winner,
-   firstActor,
-   turns,
-   playerHp:Math.max(0,sides.player.hp),
-   mirrorHp:Math.max(0,sides.mirror.hp),
-   maxHp:stats.hp,
-   logs:logs||[],
-   events,
-   snapshot:snap
-  };
+  const snap=normalizeSnapshot(snapshot),rng=typeof options.rng==="function"?options.rng:Math.random,logs=options.logs===false?null:[],events=[],names={player:String(options.playerName||snap.playerName||"玩家"),mirror:String(options.mirrorName||`鏡像・${snap.playerName||"玩家"}`)},spec=snap.specializationBonuses,stats=snap.stats,sides={player:{key:"player",name:"",hp:stats.hp,maxHp:stats.hp,initiativeUsed:false},mirror:{key:"mirror",name:"",hp:stats.hp,maxHp:stats.hp,initiativeUsed:false}};sides.player.name=names.player;sides.mirror.name=names.mirror;
+  let active=rng()<.5?"player":"mirror";const firstActor=active;let turns=0;
+  function other(key){return key==="player"?"mirror":"player";}function pushLog(text){if(logs)logs.push(text);}
+  function performStrike(actorKey,defenderKey,source,initiativeApplied){const actor=sides[actorKey],defender=sides[defenderKey],scale=source==="counter"?MIRROR_COUNTER_SCALE:source==="combo"?MIRROR_COMBO_SCALE:1,dodge=roll(rng,stats.dodge);if(dodge){events.push({type:"dodge",actor:actorKey,target:defenderKey,source,initiative:initiativeApplied});pushLog(`${actor.name}攻擊${defender.name}，${defender.name}閃避了攻擊。`);return {hit:false,actualDamage:0,killed:false};}const penetration=roll(rng,spec.penetration),effectiveDef=stats.def*(penetration?MIRROR_PENETRATION_DEF_MULTIPLIER:1);let damage=sharedCombatDamage(stats.atk,effectiveDef,rng);if(initiativeApplied&&spec.initiative>0)damage=Math.ceil(damage*(1+spec.initiative/100));const crit=roll(rng,stats.crit);if(crit)damage=Math.ceil(damage*(Number(CRIT_DAMAGE_MULTIPLIER)||1.5));damage=Math.max(1,Math.ceil(damage*scale));const before=Math.max(0,defender.hp),actualDamage=Math.min(before,damage);defender.hp=Math.max(0,defender.hp-damage);events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage,crit,penetration,initiative:initiativeApplied});pushLog(`${actor.name}攻擊${defender.name}${crit?"，暴擊":""}造成 ${damage} 點傷害。`);if(actualDamage>0&&roll(rng,spec.drain)){const wanted=Math.max(1,Math.ceil(actualDamage*MIRROR_DRAIN_RATIO)),healed=Math.max(0,Math.min(wanted,actor.maxHp-actor.hp));actor.hp+=healed;events.push({type:"drain",actor:actorKey,source,healed,actualDamage});if(healed>0)pushLog(`${actor.name}汲取生命，回復 ${healed} HP。`);}return {hit:true,actualDamage,killed:defender.hp<=0};}
+  function attackChain(actorKey,defenderKey,initialSource="normal",allowCounter=false){const actor=sides[actorKey],defender=sides[defenderKey];let source=initialSource,first=true,hadEffectiveDamage=false;while(actor.hp>0&&defender.hp>0){let initiativeApplied=false;if(initialSource==="normal"&&first&&!actor.initiativeUsed){actor.initiativeUsed=true;initiativeApplied=spec.initiative>0;}const strike=performStrike(actorKey,defenderKey,source,initiativeApplied);if(strike.actualDamage>0)hadEffectiveDamage=true;first=false;if(defender.hp<=0)break;if(!roll(rng,spec.combo))break;events.push({type:"combo",actor:actorKey,from:source});source="combo";}if(allowCounter&&actor.hp>0&&defender.hp>0&&hadEffectiveDamage&&roll(rng,spec.counter)){events.push({type:"counter",actor:defenderKey,target:actorKey});pushLog(`${defender.name}發動反擊。`);attackChain(defenderKey,actorKey,"counter",false);}}
+  events.push({type:"firstActor",actor:firstActor});pushLog(`${sides[firstActor].name}取得先攻。`);while(sides.player.hp>0&&sides.mirror.hp>0){turns++;const defender=other(active);attackChain(active,defender,"normal",true);if(sides[defender].hp<=0||sides[active].hp<=0)break;active=defender;}const winner=sides.player.hp>0?"player":"mirror",loser=other(winner);events.push({type:"battleEnd",winner,loser,turns});pushLog(`${sides[winner].name}獲勝。`);return {win:winner==="player",winner,firstActor,turns,playerHp:Math.max(0,sides.player.hp),mirrorHp:Math.max(0,sides.mirror.hp),maxHp:stats.hp,logs:logs||[],events,snapshot:snap};
  };
-
  window.MIRROR_COMBAT_CORE_VERSION=MIRROR_COMBAT_CORE_VERSION;
- window.MIRROR_COMBAT_BATTLE_LIMIT=MIRROR_COMBAT_BATTLE_LIMIT;
+ window.MIRROR_COMBAT_BATTLE_LIMIT=RUN_BATTLES;
  window.createMirrorCombatSnapshot=createMirrorCombatSnapshot;
  window.normalizeMirrorCombatSnapshot=normalizeSnapshot;
  window.mirrorSpecializationBonuses=specializationBonuses;
