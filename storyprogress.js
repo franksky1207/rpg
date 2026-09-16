@@ -51,6 +51,37 @@
   persist();
  }
 
+ function starterTypes(){return Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:[];}
+ function allStarterGearMissing(){const types=starterTypes();return !!types.length&&types.every(type=>!state?.equipment?.[type]);}
+ function hasNoMainProgress(){
+  if(Number(state?.level)!==1||Number(state?.exp)!==0||Number(state?.gold)!==0||Number(state?.unlockedMap)!==0)return false;
+  if(Array.isArray(state?.inventory)&&state.inventory.length)return false;
+  if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return false;
+  if(Array.isArray(state?.bossProgress)&&state.bossProgress.some(v=>Number(v)>0))return false;
+  if(Array.isArray(state?.mapProgress)&&state.mapProgress.some(row=>Array.isArray(row)&&row.some(v=>Number(v)>0)))return false;
+  return true;
+ }
+ function brokenOnboardingGearState(){
+  const p=progress();
+  return p.introCompleted===true&&p.starterGearReceived===true&&p.completedStories.length===1&&p.completedStories[0]===INTRO_STORY_ID&&hasNoMainProgress()&&allStarterGearMissing();
+ }
+ function ensureStarterEquipment(){
+  const types=starterTypes();
+  if(!types.length)return false;
+  if(!isObject(state.equipment))state.equipment={};
+  const missing=types.filter(type=>!state.equipment[type]);
+  if(!missing.length)return false;
+  const generated=typeof starterEquipment==="function"?starterEquipment():null;
+  missing.forEach(type=>{
+   if(generated?.[type])state.equipment[type]=generated[type];
+   else if(typeof makeItem==="function")state.equipment[type]=makeItem(1,0,"normal",0,type);
+  });
+  if(typeof playerCombatStats==="function")state.hp=playerCombatStats().hp;
+  persist();
+  return true;
+ }
+ function repairBrokenOnboardingGear(){if(brokenOnboardingGearState())return ensureStarterEquipment();return false;}
+
  function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function gearLabel(type){return typeof equipmentTypeLabel==="function"?equipmentTypeLabel(type):({weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"}[type]||type);}
  function gearText(item){
@@ -83,21 +114,27 @@
   return modal;
  }
  function starterGearRows(){
-  const types=Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:[];
-  return types.map(type=>`<div class="starter-gear-row"><div class="starter-gear-type">${esc(gearLabel(type))}</div><div>${gearText(state.equipment?.[type])}</div></div>`).join("");
+  return starterTypes().map(type=>`<div class="starter-gear-row"><div class="starter-gear-type">${esc(gearLabel(type))}</div><div>${gearText(state.equipment?.[type])}</div></div>`).join("");
  }
  function showStarterGear(){
   if(starterGearOpen)return true;
+  ensureStarterEquipment();
   const modal=ensureStarterGearModal();
   modal.innerHTML=`<div class="starter-gear-card"><h2>文明戰線・作戰裝備發放</h2><div class="starter-gear-intro">正式編制已完成。文明戰線已為你配發第一套基礎作戰裝備，確認後即可進入主畫面。</div><div class="starter-gear-list">${starterGearRows()}</div><div class="starter-gear-note">這些裝備就是目前角色已建立的初始裝備；此步驟只完成正式發放確認，不會重新抽取或改變裝備數值。</div><div class="starter-gear-actions"><button class="btn primary" onclick="confirmStarterGearReceived()">領取裝備</button></div></div>`;
   modal.classList.add("open");starterGearOpen=true;return true;
  }
  window.confirmStarterGearReceived=function(){
+  ensureStarterEquipment();
   const p=progress();
   p.starterGearReceived=true;
   persist();
   const modal=document.getElementById(MODAL_ID);if(modal)modal.classList.remove("open");
   starterGearOpen=false;
+  if(typeof go==="function")go("home");
+  else{
+   try{view="home";adventureScreen="maps";}catch(e){}
+   if(typeof render==="function")render();
+  }
  };
 
  function authReady(){return window.CIVILIZATION_AUTH_REQUIRED!==true||!!window.civilizationAuthSession;}
@@ -110,6 +147,7 @@
  function resume(){
   resumeQueued=false;
   if(typeof state==="undefined"||!state||!authReady()||!backgroundReady())return false;
+  repairBrokenOnboardingGear();
   const p=progress();
   if(p.pendingStory){
    if(openFormalStory(p.pendingStory))return true;
@@ -130,17 +168,18 @@
  }
 
  window.civilizationStoryProgress={
-  version:1,
+  version:2,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
   get:()=>progress(),
   setPending,
-  completeStory
+  completeStory,
+  ensureStarterEquipment
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=1;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=2;
 
- if(typeof state!=="undefined"&&state){normalizeProgress(state);persist();}
+ if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
  window.addEventListener("civilization-auth-ready",queueResume);
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",queueResume,{once:true});else queueResume();
