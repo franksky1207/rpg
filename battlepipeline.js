@@ -14,7 +14,7 @@
  function createBattleContext(count){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
-  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],enhancementRewards:blankEnhancementRewards(),continuous,exitRequested:false};
+  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],enhancementRewards:blankEnhancementRewards(),continuous,exitRequested:false,pendingStoryId:null};
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
@@ -53,6 +53,14 @@
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
  }
+ function queueFirstClearStory(ctx,result){
+  if(result?.win!==true||result?.firstBossKill!==true)return null;
+  const storyId=window.civilizationStoryProgress?.queueBossStory?.(result.bossMapIndex);
+  if(!storyId)return null;
+  ctx.pendingStoryId=storyId;
+  if(ctx.continuous)ctx.exitRequested=true;
+  return storyId;
+ }
 
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
@@ -79,6 +87,7 @@
   }
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.exitRequested=ctx.exitRequested===true;
+  ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
   window.activeMainBattleContext=ctx;
   let defeat=null,local=0;
 
@@ -111,6 +120,7 @@
     addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);
     if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
     else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
+    queueFirstClearStory(ctx,r);
    }else defeat=r;
 
    ctx.completed++;
@@ -127,6 +137,8 @@
    }
 
    save(false);
+   if(ctx.pendingStoryId)break;
+
    let specialOutcome=false;
    if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r);
    if(specialOutcome?.triggered){
@@ -160,4 +172,5 @@
   render();
   setTimeout(()=>showBattleResult(ctx,defeat),0);
  };
+ window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=1;
 })();
