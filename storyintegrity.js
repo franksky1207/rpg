@@ -1,5 +1,40 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
+ const DISPLAY_REPLACEMENTS=[["Boss 戰","首領戰"],["Boss戰","首領戰"],["最後Boss","最後首領"],["因Boss倒下","因首領倒下"],["Boss","首領"]];
+
+ function normalizeDisplayText(value){
+  let text=String(value??"");
+  DISPLAY_REPLACEMENTS.forEach(([from,to])=>{text=text.replaceAll(from,to);});
+  return text;
+ }
+ function normalizeDisplayValue(value){
+  if(typeof value==="string")return normalizeDisplayText(value);
+  if(Array.isArray(value))return value.map(normalizeDisplayValue);
+  if(value&&typeof value==="object"){
+   const copy={};
+   Object.entries(value).forEach(([key,item])=>{copy[key]=normalizeDisplayValue(item);});
+   return copy;
+  }
+  return value;
+ }
+ function normalizeLoadedStoryData(){
+  const stories=window.CIVILIZATION_STORIES||{};
+  Object.values(stories).forEach(story=>{
+   if(!story||typeof story!=="object")return;
+   story.chapter=normalizeDisplayText(story.chapter);
+   story.location=normalizeDisplayText(story.location);
+   story.title=normalizeDisplayText(story.title);
+   story.pages=normalizeDisplayValue(story.pages);
+  });
+  const regions=Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];
+  regions.forEach(region=>{
+   if(!region||typeof region!=="object")return;
+   region.name=normalizeDisplayText(region.name);
+   if(Array.isArray(region.stories))region.stories.forEach(row=>{if(row&&typeof row==="object")row.label=normalizeDisplayText(row.label);});
+  });
+  window.STORY_TEXT_NORMALIZE_REPORT={version:1,storyCount:Object.keys(stories).length,regionCount:regions.length,ranAt:Date.now()};
+  window.STORY_TEXT_NORMALIZE_VERSION=1;
+ }
 
  function plainText(value){
   if(typeof value==="string")return value;
@@ -10,6 +45,7 @@
  function hasEnglishLetters(value){return /[A-Za-z]/.test(String(value??""));}
 
  function run(){
+  normalizeLoadedStoryData();
   const errors=[];
   const warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
