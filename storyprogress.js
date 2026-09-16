@@ -5,10 +5,6 @@
  let resumeQueued=false;
  let starterGearOpen=false;
 
- function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
- function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
- function freshProgress(){return {pendingStory:null,completedStories:[],introCompleted:false,starterGearReceived:false,historyBackfillRegions:[]};}
- function legacyProgress(){return {pendingStory:null,completedStories:[INTRO_STORY_ID],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]};}
  function loadedFromExistingSave(){return window.LAST_SAVE_LOAD_REPORT?.hadRaw===true;}
 
  function bossStoryId(mapIdx){
@@ -27,44 +23,29 @@
   return null;
  }
  function availableStoryRegions(){return Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];}
- function backfillAvailableHistory(target){
-  if(!isObject(target)||!isObject(target.storyProgress))return false;
-  const p=target.storyProgress,stories=window.CIVILIZATION_STORIES||{};
-  let changed=false;
-  for(const region of availableStoryRegions()){
-   const regionId=typeof region?.id==="string"?region.id:"";
-   if(!regionId||p.historyBackfillRegions.includes(regionId))continue;
-   const ids=(Array.isArray(region?.stories)?region.stories:[]).map(x=>x?.id).filter(id=>typeof id==="string"&&/-boss-\d+$/.test(id));
-   if(!ids.length||ids.some(id=>!stories[id]))continue;
-   ids.forEach(id=>{
-    const mapIdx=bossMapIndexForStory(id);
-    if(mapIdx==null||target.bossKilled?.[mapIdx]!==true||p.pendingStory===id||p.completedStories.includes(id))return;
-    p.completedStories.push(id);changed=true;
-   });
-   p.historyBackfillRegions.push(regionId);changed=true;
-  }
-  p.completedStories=uniqueStrings(p.completedStories);
-  p.historyBackfillRegions=uniqueStrings(p.historyBackfillRegions);
-  return changed;
+ function migrationOptions(options={}){
+  return {
+   introStoryId:INTRO_STORY_ID,
+   fresh:options.fresh===true,
+   legacy:options.legacy===true||(!options.fresh&&loadedFromExistingSave()),
+   regions:availableStoryRegions(),
+   stories:window.CIVILIZATION_STORIES||{},
+   bossMapIndexForStory
+  };
  }
-
  function normalizeProgress(target,options={}){
-  if(!isObject(target))return target;
-  const hadProgress=isObject(target.storyProgress);
-  if(!hadProgress){
-   const legacy=options.fresh===true?false:(options.legacy===true||loadedFromExistingSave());
-   target.storyProgress=legacy?legacyProgress():freshProgress();
+  const migration=window.civilizationStoryMigration;
+  if(!migration?.migrate){
+   console.error("Story migration module is unavailable");
+   return target;
   }
-  const p=target.storyProgress;
-  p.pendingStory=typeof p.pendingStory==="string"&&p.pendingStory?p.pendingStory:null;
-  p.completedStories=uniqueStrings(p.completedStories);
-  p.introCompleted=p.introCompleted===true;
-  p.starterGearReceived=p.starterGearReceived===true;
-  p.historyBackfillRegions=uniqueStrings(p.historyBackfillRegions);
-  if(p.introCompleted&&!p.completedStories.includes(INTRO_STORY_ID))p.completedStories.unshift(INTRO_STORY_ID);
-  target.introSeen=p.introCompleted;
-  backfillAvailableHistory(target);
+  migration.migrate(target,migrationOptions(options));
   return target;
+ }
+ function backfillAvailableHistory(target){
+  const migration=window.civilizationStoryMigration;
+  if(!migration?.backfillAvailableHistory)return false;
+  return migration.backfillAvailableHistory(target,migrationOptions());
  }
 
  function normalizeFreshState(target){
@@ -116,7 +97,7 @@
  function ensureStarterEquipment(){
   const types=starterTypes();
   if(!types.length)return false;
-  if(!isObject(state.equipment))state.equipment={};
+  if(!state.equipment||typeof state.equipment!=="object"||Array.isArray(state.equipment))state.equipment={};
   const missing=types.filter(type=>!state.equipment[type]);
   if(!missing.length)return false;
   const generated=typeof starterEquipment==="function"?starterEquipment():null;
@@ -236,7 +217,7 @@
  }
 
  window.civilizationStoryProgress={
-  version:5,
+  version:6,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
@@ -249,7 +230,7 @@
   ensureStarterEquipment,
   completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=5;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=6;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
