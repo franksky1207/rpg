@@ -16,8 +16,7 @@
   const bestDate=validDateKey(history.bestDate);
   const bestWins=Math.max(0,Math.min(MIRROR_DUNGEON_RUN_BATTLES,finiteInt(history.bestWins,0)));
   const miracleDates=Array.isArray(history.miracleDates)?history.miracleDates.map(validDateKey).filter(Boolean):[];
-  const uniqueMiracles=[];miracleDates.forEach(key=>{if(!uniqueMiracles.includes(key))uniqueMiracles.push(key);});
-  return {bestWins:bestDate?bestWins:0,bestDate:bestDate||null,miracleDates:uniqueMiracles};
+  return {bestWins:bestDate?bestWins:0,bestDate:bestDate||null,miracleDates};
  }
  function normalizeDaily(source,currentKey,recoverInterrupted=false){
   const raw=source&&typeof source==="object"&&!Array.isArray(source)?source:{};
@@ -88,10 +87,10 @@
   const history=mirror.history;
   const firstRecord=!history.bestDate;
   if(firstRecord||w>history.bestWins){history.bestWins=w;history.bestDate=dateKey;}
-  if(w===MIRROR_DUNGEON_RUN_BATTLES&&!history.miracleDates.includes(dateKey))history.miracleDates.push(dateKey);
+  if(w===MIRROR_DUNGEON_RUN_BATTLES)history.miracleDates.push(dateKey);
   mirror.daily={...mirror.daily,dateKey,status:"completed",challengeDate:dateKey,wins:w,losses,completedAt:Math.max(0,Math.floor(Number(timestamp)||Date.now()))};
   if(typeof save==="function")save(false);
-  return {ok:true,...mirrorDungeonStatus(timestamp)};
+  return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,history:{...history,miracleDates:history.miracleDates.slice()}};
  }
  function resetMirrorDungeonToday(timestamp=Date.now()){
   const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return null;
