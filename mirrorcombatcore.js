@@ -1,5 +1,5 @@
 (function(){
- const MIRROR_COMBAT_CORE_VERSION=1;
+ const MIRROR_COMBAT_CORE_VERSION=2;
  const MIRROR_COMBAT_BATTLE_LIMIT=20;
  const MIRROR_COUNTER_SCALE=.40;
  const MIRROR_COMBO_SCALE=.50;
@@ -11,7 +11,6 @@
  function intLevel(value,max=60){return Math.max(0,Math.min(max,Math.floor(numberOr(value,0))));}
  function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function roll(rng,percent){return percent>0&&rng()*100<percent;}
- function combatDamage(atk,def,rng){return Math.max(1,Math.ceil((Math.max(0,numberOr(atk,0))-Math.max(0,numberOr(def,0))*.55)*(.95+rng()*.1)));}
  function specializationBonuses(levels){
   const source=levels&&typeof levels==="object"?levels:{};
   return {
@@ -27,6 +26,27 @@
   const source=state?.specializations&&typeof state.specializations==="object"?state.specializations:{};
   return {initiative:intLevel(source.initiative),combo:intLevel(source.combo),penetration:intLevel(source.penetration),counter:intLevel(source.counter),drain:intLevel(source.drain)};
  }
+ function currentSpecializationBonuses(levels){
+  const fallback=specializationBonuses(levels);
+  if(typeof window.specializationPercentBonus!=="function")return fallback;
+  return {
+   initiative:Math.max(0,numberOr(window.specializationPercentBonus("initiative",false),fallback.initiative)),
+   combo:Math.max(0,numberOr(window.specializationPercentBonus("combo",false),fallback.combo)),
+   penetration:Math.max(0,numberOr(window.specializationPercentBonus("penetration",false),fallback.penetration)),
+   counter:Math.max(0,numberOr(window.specializationPercentBonus("counter",false),fallback.counter)),
+   drain:Math.max(0,numberOr(window.specializationPercentBonus("drain",false),fallback.drain))
+  };
+ }
+ function normalizeBonuses(source,levels){
+  const fallback=specializationBonuses(levels),raw=source&&typeof source==="object"?source:{};
+  return {
+   initiative:Math.max(0,numberOr(raw.initiative,fallback.initiative)),
+   combo:clampRate(numberOr(raw.combo,fallback.combo)),
+   penetration:clampRate(numberOr(raw.penetration,fallback.penetration)),
+   counter:clampRate(numberOr(raw.counter,fallback.counter)),
+   drain:clampRate(numberOr(raw.drain,fallback.drain))
+  };
+ }
  function currentEnhancementLevels(){
   const source=state?.enhancement?.levels&&typeof state.enhancement.levels==="object"?state.enhancement.levels:{};
   const types=Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
@@ -37,12 +57,13 @@
   const levels=currentSpecializationLevels();
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
+   damageModelVersion:Math.max(0,Math.floor(numberOr(window.COMBAT_DAMAGE_MODEL_VERSION,0))),
    playerName:String(state?.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(state?.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(state?.vipLevel,0))),
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
    specializations:cloneJson(levels)||{},
-   specializationBonuses:specializationBonuses(levels),
+   specializationBonuses:currentSpecializationBonuses(levels),
    enhancementLevels:currentEnhancementLevels(),
    equipment:cloneJson(state?.equipment)||{}
   };
@@ -53,15 +74,36 @@
   const levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
+   damageModelVersion:Math.max(0,Math.floor(numberOr(source.damageModelVersion,window.COMBAT_DAMAGE_MODEL_VERSION||0))),
    playerName:String(source.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(source.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(source.vipLevel,0))),
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
    specializations:cloneJson(levels)||{},
-   specializationBonuses:specializationBonuses(levels),
+   specializationBonuses:normalizeBonuses(source.specializationBonuses,levels),
    enhancementLevels:cloneJson(source.enhancementLevels)||{},
    equipment:cloneJson(source.equipment)||{}
   };
+ }
+ function sharedCombatDamage(atk,def,rng){
+  if(typeof window.combatDamageWithRng!=="function")throw new Error("Shared combat damage model missing.");
+  return window.combatDamageWithRng(atk,def,rng);
+ }
+ function auditCurrentSnapshotSources(){
+  const snap=createMirrorCombatSnapshot(),issues=[];
+  const liveStats=typeof playerCombatStats==="function"?playerCombatStats():null;
+  if(!liveStats)issues.push("playerCombatStats missing");
+  else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});
+  if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");
+  const liveLevels=currentSpecializationLevels();
+  ["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});
+  const liveBonuses=currentSpecializationBonuses(liveLevels);
+  ["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializationBonuses[key])!==Number(liveBonuses[key]))issues.push(`specializationBonuses.${key} mismatch`);});
+  const liveEnhancement=currentEnhancementLevels();
+  Object.keys(liveEnhancement).forEach(key=>{if(Number(snap.enhancementLevels[key])!==Number(liveEnhancement[key]))issues.push(`enhancementLevels.${key} mismatch`);});
+  try{if(JSON.stringify(snap.equipment)!==JSON.stringify(state?.equipment||{}))issues.push("equipment mismatch");}catch(e){issues.push("equipment audit failed");}
+  if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION||0))issues.push("damage model version mismatch");
+  return {passed:issues.length===0,issues,snapshot:snap};
  }
 
  window.runMirrorCombatCore=function(snapshot,options={}){
@@ -93,7 +135,7 @@
    }
    const penetration=roll(rng,spec.penetration);
    const effectiveDef=stats.def*(penetration?MIRROR_PENETRATION_DEF_MULTIPLIER:1);
-   let damage=combatDamage(stats.atk,effectiveDef,rng);
+   let damage=sharedCombatDamage(stats.atk,effectiveDef,rng);
    if(initiativeApplied&&spec.initiative>0)damage=Math.ceil(damage*(1+spec.initiative/100));
    const crit=roll(rng,stats.crit);
    if(crit)damage=Math.ceil(damage*(Number(CRIT_DAMAGE_MULTIPLIER)||1.5));
@@ -164,4 +206,5 @@
  window.createMirrorCombatSnapshot=createMirrorCombatSnapshot;
  window.normalizeMirrorCombatSnapshot=normalizeSnapshot;
  window.mirrorSpecializationBonuses=specializationBonuses;
+ window.auditCurrentMirrorCombatSnapshotSources=auditCurrentSnapshotSources;
 })();
