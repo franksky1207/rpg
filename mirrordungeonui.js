@@ -1,0 +1,61 @@
+(function(){
+ function injectMirrorDungeonStyles(){
+  if(document.getElementById("mirror-dungeon-ui-styles"))return;
+  const style=document.createElement("style");style.id="mirror-dungeon-ui-styles";style.textContent=`
+   @media(min-width:761px){.dungeon-mode-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+   .dungeon-mode-mirror{background:linear-gradient(180deg,#23232d,#171720);border-color:#8b84aa;box-shadow:0 12px 30px rgba(26,23,40,.28)}
+   .dungeon-mode-mirror h3{color:#e4e2ee}.dungeon-mode-mirror .dungeon-mode-reward{color:#c9b8ec}.dungeon-mode-mirror .dungeon-entry-btn{background:#58516f;border-color:#9085b0;color:#fff}.dungeon-mode-mirror .dungeon-entry-btn:not(:disabled):hover{background:#686080}
+   .mirror-history-summary{margin:12px 0 0;color:#d5d2df;font-size:13px;font-weight:700;line-height:1.55}
+   .mirror-page{max-width:760px;margin:0 auto}.mirror-panel{background:linear-gradient(180deg,#24242f,#171720);border:1px solid #8b84aa;box-shadow:0 18px 42px rgba(24,21,37,.28)}
+   .mirror-title{margin:0;color:#f0eef8;text-align:center;font-family:Georgia,"Noto Serif TC",serif}.mirror-subtitle{text-align:center;color:#bdb5d2;margin:7px 0 18px}
+   .mirror-rule-box,.mirror-history-box,.mirror-state-box{background:#15151d;border:1px solid #454158;border-radius:11px;padding:13px 14px;margin-top:12px;line-height:1.65}.mirror-rule-box strong,.mirror-history-box strong,.mirror-state-box strong{color:#ded7f3}.mirror-warning{border-color:#75678d;background:#1d1926;color:#e2d9ef;font-weight:700}.mirror-history-lines{display:grid;gap:5px;margin-top:7px;color:#cfc9db}.mirror-history-lines .mirror-record-title{color:#eeeaf7;font-size:18px;font-weight:800}
+   .mirror-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.mirror-start-btn{background:#665a80;border-color:#9686b8;color:#fff;min-width:220px}.mirror-start-btn:hover{background:#766894}.mirror-start-btn:disabled{opacity:.52;cursor:not-allowed}.mirror-ended{color:#d8d4df;text-align:center;font-weight:800;font-size:17px}
+   @media(max-width:760px){.mirror-page{padding-bottom:10px}.mirror-panel{padding:14px}.mirror-actions{display:grid}.mirror-start-btn,.mirror-actions .btn{width:100%;min-width:0}}
+  `;document.head.appendChild(style);
+ }
+ function mirrorStatus(){return typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():{unlocked:false,status:"idle",history:{bestWins:0,bestDate:null,miracleDates:[]},canStart:false,ended:false};}
+ function formatDateKey(key){if(typeof key!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(key))return "—";const [y,m,d]=key.split("-");return `${y}/${m}/${d}`;}
+ function mirrorTitleForWins(wins){const titles={15:"幸運眷顧",16:"天選之刻",17:"逆命者",18:"傳說之日",19:"距神一步",20:"神蹟"};return titles[Math.floor(Number(wins)||0)]||"";}
+ function mirrorHistoryHtml(history,compact=false){
+  const hasRecord=!!history?.bestDate,best=Math.max(0,Math.min(20,Math.floor(Number(history?.bestWins)||0))),miracles=Array.isArray(history?.miracleDates)?history.miracleDates:[],title=hasRecord?mirrorTitleForWins(best):"";
+  if(compact){return `<div class="mirror-history-summary">${hasRecord?`歷史最高：${best} 勝${title?`　・　${title}`:""}`:"歷史最高：尚無紀錄"}${miracles.length?`<br>神蹟：${miracles.length} 次`:""}</div>`;}
+  return `<div class="mirror-history-lines"><div class="mirror-record-title">${hasRecord?`歷史最高：${best} 勝`:`歷史最高：尚無紀錄`}</div>${hasRecord?`<div>首次達成：${formatDateKey(history.bestDate)}</div>`:""}${title?`<div>紀錄稱號：${title}</div>`:""}${miracles.length?`<div>神蹟：${miracles.length} 次</div><div>神蹟日期：${miracles.map(formatDateKey).join("、")}</div>`:""}</div>`;
+ }
+ function mirrorCardHtml(){
+  const info=mirrorStatus(),need=Number(window.MIRROR_DUNGEON_UNLOCK_LEVEL)||50,unlocked=info.unlocked,ended=info.ended,statusText=unlocked?(ended?"今日鏡像戰已結束":info.status==="running"?"今日鏡像戰進行中":"今日尚未挑戰"):`Lv.${need} 解鎖`;
+  const canEnter=unlocked,buttonLabel=!unlocked?"尚未解鎖":ended?"查看鏡像戰":"進入鏡像戰";
+  return `<section class="dungeon-mode-card dungeon-mode-mirror${unlocked?"":" locked"}" data-mirror-dungeon-card="1"><div class="dungeon-mode-head"><div><h3>鏡像戰</h3><div class="dungeon-mode-reward">VIP 積分</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div>${mirrorHistoryHtml(info.history,true)}<p>與完全相同的自己連續戰鬥 20 場，勝場越高，獎勵越豐厚。</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?"openMirrorDungeon()":"void(0)"}">${buttonLabel}</button></section>`;
+ }
+ function ensureMirrorDungeonCard(){const list=document.querySelector(".dungeon-mode-list");if(!list||list.querySelector("[data-mirror-dungeon-card]"))return;list.insertAdjacentHTML("beforeend",mirrorCardHtml());}
+ function mirrorPageHtml(){
+  const info=mirrorStatus(),need=Number(window.MIRROR_DUNGEON_UNLOCK_LEVEL)||50;
+  if(!info.unlocked)return `<div class="function-page mirror-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><div class="card mirror-panel"><h2 class="mirror-title">鏡像戰</h2><div class="mirror-subtitle">Lv.${need} 解鎖</div><div class="mirror-state-box mirror-ended">尚未解鎖</div></div></div>`;
+  const ended=info.ended;
+  const stateHtml=ended?`<div class="mirror-state-box"><div class="mirror-ended">今日鏡像戰已結束</div>${info.status==="failed"?`<div class="muted" style="margin-top:7px;text-align:center">本日挑戰未完整完成，因此沒有成績與獎勵。今日無法再次挑戰。</div>`:""}</div>`:`<div class="mirror-state-box"><strong>今日狀態</strong><div style="margin-top:5px">${info.status==="running"?"今日鏡像戰進行中":"今日尚未挑戰"}</div></div>`;
+  const startHtml=!ended&&info.status==="idle"?`<div class="mirror-actions"><button class="btn mirror-start-btn" onclick="confirmMirrorDungeonStart()">開始鏡像戰</button></div>`:"";
+  return `<div class="function-page mirror-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><div class="card mirror-panel"><h2 class="mirror-title">鏡像戰</h2><div class="mirror-subtitle">Lv.${need}・每日一次・固定連戰 20 場</div>${stateHtml}<div class="mirror-rule-box"><strong>規則</strong><div style="margin-top:6px">對手「鏡像・${String(state?.playerName||"玩家") }」會完整複製你開始挑戰時的裝備、VIP、專精、強化與戰鬥能力。</div><div>雙方能力完全相同，每場隨機決定先攻。完成 20 場後，依最終勝場自動發放 VIP 積分。</div></div><div class="mirror-rule-box mirror-warning">每日僅能挑戰一次，開始後不可停止；若途中重新整理、關閉頁面或中斷，本日挑戰直接結束。</div><div class="mirror-history-box"><strong>歷史紀錄</strong>${mirrorHistoryHtml(info.history,false)}</div>${startHtml}</div></div>`;
+ }
+ window.openMirrorDungeon=function(){view="dungeon-mirror";render();};
+ window.confirmMirrorDungeonStart=function(){
+  const info=mirrorStatus();if(!info.canStart)return render();
+  const ok=confirm("鏡像戰開始確認\n\n今日只有 1 次挑戰機會。\n開始後將自動連續進行 20 場，期間無法停止。\n\n若途中重新整理、關閉網頁或發生中斷，本日挑戰將直接結束，且今日無法再次挑戰。\n\n完成 20 場後，系統將自動結算成績並發放 VIP 積分。\n\n是否開始今日鏡像戰？");
+  if(!ok)return;
+  if(typeof window.startMirrorCombatRun!=="function")return alert("鏡像戰戰鬥核心將於下一批接入；本次不會消耗今日挑戰機會。");
+  return window.startMirrorCombatRun();
+ };
+
+ injectMirrorDungeonStyles();
+ const baseRender=render;
+ render=function(){
+  injectMirrorDungeonStyles();
+  if(view==="dungeon-mirror"){
+   const main=document.getElementById("main");if(!main)return;
+   if(typeof normalizeHP==="function")normalizeHP();main.innerHTML=mirrorPageHtml();if(typeof renderNav==="function")renderNav();return;
+  }
+  baseRender();
+  if(view==="dungeon")ensureMirrorDungeonCard();
+ };
+ const baseGo=go;
+ go=function(v){if(v==="dungeon-mirror"){view="dungeon-mirror";render();return;}baseGo(v);};
+ if(typeof render==="function")render();
+})();
