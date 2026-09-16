@@ -23,7 +23,7 @@
  if(typeof window.createMirrorCombatSnapshot==="function"&&typeof window.runMirrorCombatCore==="function"){try{const snap=window.createMirrorCombatSnapshot();if(!snap?.stats||Number(snap.stats.hp)<=0)fail("SNAPSHOT","鏡像戰快照缺少有效戰鬥能力",snap||null);if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION))fail("SNAPSHOT_DAMAGE_MODEL","鏡像快照傷害模型版本未對齊共用傷害模型",snap||null);const result=window.runMirrorCombatCore(snap,{logs:false});if(!result||!["player","mirror"].includes(result.winner)||!["player","mirror"].includes(result.firstActor))fail("COMBAT_RESULT","Mirror Combat 單場結果格式異常",result||null);}catch(err){fail("COMBAT_PROBE","Mirror Combat 試跑失敗",String(err?.message||err));}}
  if(typeof window.requestMirrorContinuousStop!=="undefined"||typeof window.stopMirrorCombatRun!=="undefined")fail("STOP_API","鏡像戰不應提供正式停止 API");
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)warnings.push({code:"PREP_RETURN_UX",message:"懸賞／競技準備頁正式返回導覽尚未載入"});
- if(Number(window.GM_HUB_EXTENSION_VERSION)!==1)warnings.push({code:"GM_HUB_EXTENSION",message:"GM Hub 擴充 owner 尚未載入"});
+ if(Number(window.GM_HUB_EXTENSION_VERSION)!==2)warnings.push({code:"GM_HUB_EXTENSION",message:"GM Hub 擴充 owner 尚未載入"});
  if(Number(window.MIRROR_DUNGEON_GUIDE_VERSION)!==2)warnings.push({code:"GUIDE",message:"鏡像戰遊戲說明模組版本異常"});
  window.MIRROR_DUNGEON_INTEGRITY={passed:errors.length===0,errors,warnings,checkedAt:Date.now()};
  if(errors.length)console.error("[Mirror Dungeon Integrity]",errors);else console.info("[Mirror Dungeon Integrity] passed",warnings.length?warnings:"");
