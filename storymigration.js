@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
@@ -52,24 +52,30 @@
   let changed=false;
   for(const region of regions){
    const regionId=typeof region?.id==="string"?region.id:"";
-   if(!regionId||p.historyBackfillRegions.includes(regionId))continue;
+   if(!regionId)continue;
    const ids=(Array.isArray(region?.stories)?region.stories:[])
     .map(x=>x?.id)
     .filter(id=>typeof id==="string"&&/-boss-\d+$/.test(id));
    if(!ids.length||ids.some(id=>!stories[id]))continue;
 
+   let regionHasClearedBoss=false;
    ids.forEach(id=>{
     const mapIdx=bossMapIndexForStory(id);
     if(mapIdx==null)return;
     if(target.bossKilled?.[mapIdx]!==true)return;
+    regionHasClearedBoss=true;
     if(p.pendingStory===id)return;
     if(p.completedStories.includes(id))return;
     p.completedStories.push(id);
     changed=true;
    });
 
-   p.historyBackfillRegions.push(regionId);
-   changed=true;
+   // historyBackfillRegions is informational only. Never use it to suppress
+   // future repair passes, because old saves may have been marked too early.
+   if(regionHasClearedBoss&&!p.historyBackfillRegions.includes(regionId)){
+    p.historyBackfillRegions.push(regionId);
+    changed=true;
+   }
   }
 
   const completed=uniqueStrings(p.completedStories);
