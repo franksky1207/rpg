@@ -12,16 +12,7 @@
   if(!name&&typeof state?.playerName==="string")name=state.playerName.trim();
   return !name||name==="玩家"?"作戰員":name;
  }
- function formalChineseText(v){
-  return String(v??"")
-   .replaceAll("respected","受敬重")
-   .replaceAll("Boss 戰","首領戰")
-   .replaceAll("Boss戰","首領戰")
-   .replaceAll("最後Boss","最後首領")
-   .replaceAll("因Boss倒下","因首領倒下")
-   .replaceAll("Boss","首領");
- }
- function interpolate(v){return formalChineseText(String(v??"").replaceAll("{角色名稱}",playerName()));}
+ function interpolate(v){return String(v??"").replaceAll("{角色名稱}",playerName());}
  function installStyles(){
   if(document.getElementById(STYLE_ID))return;
   const style=document.createElement("style");
@@ -95,5 +86,5 @@
   }
  };
  window.isStoryOpen=function(){return !!activeStory;};
- window.STORY_UI_VERSION=4;
+ window.STORY_UI_VERSION=5;
 })();
