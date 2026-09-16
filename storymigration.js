@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
@@ -84,7 +84,7 @@
   const ensured=ensureContainer(target,options);
   let changed=ensured.changed;
   if(normalizeFields(target,options))changed=true;
-  const backfilled=backfillAvailableHistory(target,options);
+  const backfilled=options?.skipBackfill===true?false:backfillAvailableHistory(target,options);
   if(backfilled)changed=true;
   return {changed,created:ensured.created,backfilled};
  }
