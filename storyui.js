@@ -6,9 +6,10 @@
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function playerName(){
-  if(typeof currentPlayerName==="function")return String(currentPlayerName()||"玩家");
-  const name=typeof state?.playerName==="string"?state.playerName.trim():"";
-  return name||"玩家";
+  let name="";
+  if(typeof currentPlayerName==="function")name=String(currentPlayerName()||"").trim();
+  if(!name&&typeof state?.playerName==="string")name=state.playerName.trim();
+  return !name||name==="玩家"?"作戰員":name;
  }
  function interpolate(v){return String(v??"").replaceAll("{角色名稱}",playerName());}
  function installStyles(){
