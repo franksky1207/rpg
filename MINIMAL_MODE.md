@@ -4,7 +4,7 @@
 
 ## 定位
 
-極簡模式是主線連續戰鬥的顯示模式，只簡化畫面，不建立第二套戰鬥流程，也不自行取得背景戰鬥能力。
+極簡模式是主線連續戰鬥與虛空幻境自動挑戰共用的顯示模式，只簡化畫面，不建立第二套戰鬥流程，也不自行取得背景戰鬥能力。
 
 玩家在主線連續戰鬥中可切換到純黑極簡畫面，保留時間、目前敵人、連續戰鬥場次、角色等級、EXP、金幣與戰鬥狀態。滑動可退出；退出極簡模式不等於停止連續戰鬥。
 
@@ -41,6 +41,15 @@
 
 戰敗／特殊遭遇失敗／正式結算仍由原本 owner 建立；極簡模式只覆蓋在上層並切換狀態，玩家滑動後才看到既有正式結果。
 
+## 虛空幻境 adapter
+
+- `dungeonvoidui.js` 透過 `registerMinimalModeAdapter("void-mirage", ...)` 接入共用 overlay，不建立第二套極簡 UI。
+- 虛空戰鬥中的 `【虛空幻境】` 標題維持真正置中，右側顯示共用樣式的「極簡模式」按鈕。
+- 虛空極簡內容固定為置中單欄：目前敵人、本次突破、已過樓層、歷史最高。
+- `已過樓層` 使用 `lastClearedFloor`；`歷史最高` 使用 `historicalHighest`，突破舊紀錄後同步上升。
+- 虛空戰敗或玩家要求強制退出並正式結束 run 時，overlay 切為 `stopped`：顯示「戰鬥已停止」，滑動文字為「滑動查看戰鬥結果」；滑掉後露出原本虛空結果頁。
+- `VOID_MINIMAL_MODE_HOOK_VERSION = 1`。
+
 ## 背景規則
 
 正式政策：`follow-gm-background-setting`。
@@ -55,11 +64,13 @@
 - `MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`
 - `MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION = 1`
 - `MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION = 1`
-- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 2`
+- `MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`
+- `VOID_MINIMAL_MODE_HOOK_VERSION = 1`
+- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`
 
 ## 維護規則
 
-1. 極簡模式只限主線連續戰鬥；單場不得顯示入口。
+1. 極簡模式只限主線連續戰鬥與虛空幻境自動挑戰；主線單場與虛空待機／結果頁不得顯示入口。
 2. 不建立第二套戰鬥計時、結算、故事或 state owner。
 3. 不恢復 `mainpowersave.*` 舊檔或 `PowerSave` 舊 global API。
 4. 不用 broad `MutationObserver` 掃描 `#main`，也不監看結算 modal 來判斷狀態。

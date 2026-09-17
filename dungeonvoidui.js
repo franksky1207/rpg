@@ -109,14 +109,22 @@
   try{
    while(true){
     const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;if(!run?.active)break;
-    if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
+    if(voidUi.exitAfterFloor){
+     stopVoidMinimalModeIfOpen();
+     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;
+    }
     const fr=fightNextVoidMirageFloor();
-    if(!fr?.ok){voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
+    if(!fr?.ok){stopVoidMinimalModeIfOpen();voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
     voidUi.floorResult=fr;voidUi.phase="combat";render();
-    if(!fr.ended&&typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage")window.syncMainMinimalMode();
+    if(typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage"){
+     if(fr.ended)stopVoidMinimalModeIfOpen();else window.syncMainMinimalMode();
+    }
     await animateFloor(fr);
     if(fr.ended){voidUi.finalRun=fr.run;voidUi.phase="result";voidUi.floorResult=null;render();break;}
-    if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
+    if(voidUi.exitAfterFloor){
+     stopVoidMinimalModeIfOpen();
+     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;
+    }
     await sleep(350);
    }
   }finally{
@@ -164,6 +172,12 @@
  };
  window.returnFromVoidMirage=function(){voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};view="dungeon";render();};
 
+ function stopVoidMinimalModeIfOpen(){
+  if(window.getMinimalModeAdapterId?.()!=="void-mirage")return false;
+  if(typeof window.setMainMinimalModeState!=="function")return false;
+  window.setMainMinimalModeState("stopped");
+  return true;
+ }
  function voidMinimalModeIsActive(){
   const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
   return voidUi.phase==="combat"&&!!voidUi.floorResult&&run?.active===true;
@@ -179,7 +193,6 @@
       <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">已過樓層</div><div class="main-minimal-mode-value" data-void-minimal-mode-last-cleared>第 0 層</div></div>
       <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">歷史最高</div><div class="main-minimal-mode-value" data-void-minimal-mode-highest>第 0 層</div></div>`;},
    sync(root,mode){
-    if(mode!=="running")return;
     const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
     const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
     const cleared=root.querySelector("[data-void-minimal-mode-cleared]");
@@ -196,6 +209,7 @@
   registerVoidMinimalModeAdapter();
   return typeof window.openMinimalMode==="function"&&window.openMinimalMode("void-mirage")===true;
  };
+ window.VOID_MINIMAL_MODE_HOOK_VERSION=1;
  registerVoidMinimalModeAdapter();
 
  injectStyles();

@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  window.MAIN_MINIMAL_MODE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -11,6 +11,8 @@
   if(Number(window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION)!==1)fail("pipeline-hook-version");
   if(Number(window.MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION)!==1)fail("special-hook-version");
   if(Number(window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION)!==1)fail("background-policy-version");
+  if(Number(window.MAIN_MINIMAL_MODE_ADAPTER_VERSION)!==1)fail("adapter-version");
+  if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("void-hook-version");
 
   if(typeof window.openMainMinimalMode!=="function")fail("open-api");
   if(typeof window.closeMainMinimalMode!=="function")fail("close-api");
@@ -18,6 +20,10 @@
   if(typeof window.mainMinimalModeEnsureCombatHeader!=="function")fail("header-hook-api");
   if(typeof window.mainMinimalModeHandleBattleResult!=="function")fail("battle-result-hook-api");
   if(typeof window.mainMinimalModeHandleSpecialResult!=="function")fail("special-result-hook-api");
+  if(typeof window.openMinimalMode!=="function")fail("adapter-open-api");
+  if(typeof window.registerMinimalModeAdapter!=="function")fail("adapter-register-api");
+  if(typeof window.getMinimalModeAdapterId!=="function")fail("adapter-id-api");
+  if(typeof window.openVoidMirageMinimalMode!=="function")fail("void-open-api");
 
   if(typeof window.mainMinimalModeBackgroundPolicy!=="function"||window.mainMinimalModeBackgroundPolicy()!=="follow-gm-background-setting")fail("background-policy");
 
