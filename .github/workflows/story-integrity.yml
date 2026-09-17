@@ -7,7 +7,9 @@ on:
       - 'data.js'
       - 'worldmaps-*.js'
       - 'storydata-*.js'
+      - 'story.css'
       - 'storyintegrity.js'
+      - 'storyui.js'
       - 'storymigration.js'
       - 'storyprogress.js'
       - 'storyrecordtabs.js'
@@ -16,9 +18,8 @@ on:
       - 'ui.js'
       - 'combatcore.js'
       - 'battlepipeline.js'
-      - 'story-source-purity-ci.js'
-      - 'story-integrity-ci.js'
-      - 'story-flow-ci.js'
+      - 'index.html'
+      - 'tests/story/**'
       - '.github/workflows/story-integrity.yml'
   workflow_dispatch:
 
@@ -29,10 +30,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Run raw story source purity
-        run: node story-source-purity-ci.js
+        run: node tests/story/source-purity.js
       - name: Run story data integrity
-        run: node story-integrity-ci.js
+        run: node tests/story/integrity.js
       - name: Run story flow regressions
-        run: node story-flow-ci.js
+        run: node tests/story/flow.js
