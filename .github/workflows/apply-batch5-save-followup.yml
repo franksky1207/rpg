@@ -1,0 +1,62 @@
+name: Apply batch 5 save followup
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-batch5-save-followup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Remove remaining redundant terminal saves
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('battlepipeline.js')
+          text=p.read_text(encoding='utf-8')
+          old='''   if(!r.win){\n    save();\n    break;\n   }'''
+          new='''   if(!r.win){\n    break;\n   }'''
+          if old not in text: raise SystemExit('defeat save anchor not found')
+          text=text.replace(old,new,1)
+          old='''    if(hasMoreBattles(ctx)){\n     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);\n     await sleep(battleGapMs(r.e.kind));\n    }else save();\n    continue;'''
+          new='''    if(hasMoreBattles(ctx)){\n     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);\n     await sleep(battleGapMs(r.e.kind));\n    }\n    continue;'''
+          if old not in text: raise SystemExit('special terminal save anchor not found')
+          text=text.replace(old,new,1)
+          old='''   if(hasMoreBattles(ctx)){\n    currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);\n    await sleep(battleGapMs(r.e.kind));\n   }else save();'''
+          new='''   if(hasMoreBattles(ctx)){\n    currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);\n    await sleep(battleGapMs(r.e.kind));\n   }'''
+          if old not in text: raise SystemExit('normal terminal save anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('PROJECT_HANDOFF.md')
+          text=p.read_text(encoding='utf-8')
+          old='''- 主線每場勝利的中途存檔只保留一個正式 `save(false)`；下一場 encounter 仍於場間建立，最終／戰敗／特殊遭遇結束仍依既有正式結算點 `save()`。`MAIN_BATTLE_PIPELINE_CLEANUP_VERSION = 1`。'''
+          new='''- 主線每場勝利的中途存檔只保留一個正式 `save(false)`；下一場 encounter 仍於場間建立。一般完成／戰敗統一由 pipeline 尾端做一次正式 `save()`，只有特殊遭遇失敗的 early-return 分支保留自己的 `save()`。`MAIN_BATTLE_PIPELINE_CLEANUP_VERSION = 1`。'''
+          if old not in text: raise SystemExit('handoff save wording anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          old='battlepipeline.js?v=20260917-batch5-save1'
+          new='battlepipeline.js?v=20260917-batch5-save1b'
+          if old not in text: raise SystemExit('index battle pipeline cache anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit followup
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add battlepipeline.js PROJECT_HANDOFF.md index.html
+          git commit -m 'refactor: finish main battle save consolidation'
+          git push
