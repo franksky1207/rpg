@@ -1,0 +1,65 @@
+name: One-time Pure Story Integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/story-pure-integrity-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Run one-time pure story integrity patch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Make integrity read-only and update runtime contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('storyintegrity.js'); s=p.read_text(encoding='utf-8')
+          if 'const VERSION=5;' not in s: raise SystemExit('storyintegrity version token missing')
+          s=s.replace('const VERSION=5;','const VERSION=6;',1)
+          pattern=r' const DISPLAY_REPLACEMENTS=.*?\n function plainText\(value\)\{'
+          replacement=' function plainText(value){'
+          s,n=re.subn(pattern,replacement,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('storyintegrity normalization block not found exactly once')
+          if '  normalizeLoadedStoryData();\n' not in s: raise SystemExit('normalizeLoadedStoryData call missing')
+          s=s.replace('  normalizeLoadedStoryData();\n','',1)
+          if 'STORY_TEXT_NORMALIZE' in s or 'normalizeLoadedStoryData' in s or 'DISPLAY_REPLACEMENTS' in s:
+            raise SystemExit('storyintegrity still contains normalization code')
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('storyruntimeintegrity.js'); s=p.read_text(encoding='utf-8')
+          if 'const VERSION=5;' not in s: raise SystemExit('runtime version token missing')
+          s=s.replace('const VERSION=5;','const VERSION=6;',1)
+          s=s.replace('if(Number(window.STORY_INTEGRITY_VERSION)<5)','if(Number(window.STORY_INTEGRITY_VERSION)<6)',1)
+          pattern=r'  if\(Number\(window\.STORY_TEXT_NORMALIZE_VERSION\)<1\).*?\n\n  if\(typeof window\.openStory'
+          replacement='  if(typeof window.openStory'
+          s,n=re.subn(pattern,replacement,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('runtime normalization contract block not found exactly once')
+          s=s.replace('if(Number(window.GM_STORY_TEST_VERSION)<2)','if(Number(window.GM_STORY_TEST_VERSION)<3)',1)
+          if 'STORY_TEXT_NORMALIZE' in s: raise SystemExit('runtime still depends on text normalization')
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          for filename in ['storyintegrity.js','gmstorytest.js','storyruntimeintegrity.js']:
+            pattern=re.escape(filename)+r'\?v=[^"<]+'
+            new=f'{filename}?v=20260917-story-pure2'
+            s,n=re.subn(pattern,new,s,count=1)
+            if n!=1: raise SystemExit(f'index cache token not found exactly once: {filename}')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit pure integrity patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storyintegrity.js storyruntimeintegrity.js index.html
+          git commit -m 'Make story integrity read-only'
+          git push origin main
