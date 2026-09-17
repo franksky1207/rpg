@@ -167,6 +167,19 @@ style：
 - Boss 不觸發特殊怪，也不消耗黑市情報。
 - `MAIN_BOSS_CONTINUOUS_VERSION = 1`。
 
+## 3.7 主線極簡模式
+
+- 正式名稱：**極簡模式**；定位是主線連續戰鬥的顯示模式，不是省電保證。
+- 正式檔案：`mainminimalmode.js`、`mainminimalmode.css`、`mainminimalmodeintegrity.js`；詳細維護規格另見 `MINIMAL_MODE.md`。
+- 只在主線**連續戰鬥**顯示入口；單場不顯示。
+- overlay 掛在 `body`，不建立第二套戰鬥、計時、結算、劇情或 state owner。
+- `battlepipeline.js` 正式呼叫 `mainMinimalModeEnsureCombatHeader()` 與 `mainMinimalModeHandleBattleResult()`；`specialencounter.js` 在特殊遭遇失敗結算後呼叫 `mainMinimalModeHandleSpecialResult()`。
+- 極簡模式不 wrapper `adventureCombatPage()`／`showBattleResult()`，也不以 `MutationObserver` 監看結算 modal。
+- 畫面狀態：`running`＝戰鬥持續進行中；`stopped`＝戰鬥已停止／滑動查看戰鬥結果；`story`＝戰鬥已完成／有新的劇情等待查看／滑動繼續。
+- 背景政策固定為 `follow-gm-background-setting`：極簡模式本身不呼叫 `backgroundProgressStart()`／`backgroundProgressStop()`，背景時間補償仍由 `backgroundprogress.js` 與 GM「背景戰鬥」開關決定。
+- `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 2`。
+- 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。
+
 ---
 
 # 4. 裝備、掉落、VIP、專精、強化
@@ -736,14 +749,15 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 3. `mirrordungeonintegrity.js`：鏡像 config／API／快照／共用傷害。
 4. `enhancementintegrity.js`：強化核心、成本、掉石、出售、離線、UI、GM。
 5. `bosscontinuousintegrity.js`：Boss 單場／連戰、鎖王、背景推進、離線排除等。
-6. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
-7. `runtimeintegrity.js`：專案主 runtime 檢查。
-8. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
-9. `storymigration.js`
-10. `storyprogress.js`
-11. `storyrecordtabs.js`
-12. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-13. `backgroundpreload.js` 最後處理正式背景 reveal。
+6. `mainminimalmodeintegrity.js`：主線極簡模式 hook／背景政策／舊 PowerSave API 退休。
+7. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
+8. `runtimeintegrity.js`：專案主 runtime 檢查。
+9. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
+10. `storymigration.js`
+11. `storyprogress.js`
+12. `storyrecordtabs.js`
+13. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+14. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；migration 必須先於 progress；runtime integrity 必須在 progress／record tabs 後。
 
@@ -790,6 +804,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - Boss 固定只能單場。
 - Boss 排除瀏覽器 background catch-up。
 - `BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION`。
+- `mainpowersave.js`／`mainpowersave.css` 舊省電模式命名與 `PowerSave`／`power-save` runtime API／selector。
 - 舊 JSON `exportSave()`／`importSave()`／`isImportableSave()` 正式跨裝置流程。
 - Story Integrity 檢查前自動改寫 `Boss`／英文的 V5 正規化做法。
 - `storyrecordtabs.js` 包裝 `window.go()`。
@@ -824,6 +839,10 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - `cloudsave.js`
 - `combatcore.js`
 - `battlepipeline.js`
+- `mainminimalmodeintegrity.js`
+- `mainminimalmode.css`
+- `mainminimalmode.js`
+- `MINIMAL_MODE.md`
 - `ui.js`
 - `storyintegrity.js`
 - `storyui.js`
