@@ -59,7 +59,7 @@
   const e=fr.enemy,s=run?.playerSnapshot||playerCombatStats(),floor=fr.floor,boss=e?.isBossFloor,daily=dailySafe();
   const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
   const exitLabel=voidUi.exitAfterFloor?"本層結束後將退出":"強制退出虛空幻境";
-  return `<section class="void-shell"><div class="card void-panel"><div class="void-title">【虛空幻境】</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
  }
 
  function resultHtml(run){
@@ -161,6 +161,31 @@
   const msg=document.getElementById("voidCombatMessage");if(msg)msg.textContent="已要求退出：本層結束後離開虛空幻境。";
  };
  window.returnFromVoidMirage=function(){voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};view="dungeon";render();};
+
+ function voidMinimalModeIsActive(){
+  const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
+  return voidUi.phase==="combat"&&!!voidUi.floorResult&&run?.active===true;
+ }
+ function registerVoidMinimalModeAdapter(){
+  if(typeof window.registerMinimalModeAdapter!=="function")return false;
+  return window.registerMinimalModeAdapter("void-mirage",{
+   isActive:voidMinimalModeIsActive,
+   runningStatus:"虛空幻境持續挑戰中",
+   centerClass:"main-minimal-mode-center--stacked",
+   contentHtml(){return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-void-minimal-mode-enemy>戰鬥中</div></div>`;},
+   sync(root,mode){
+    const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
+    if(!enemy||mode!=="running")return;
+    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
+    enemy.textContent=voidUi.floorResult?.enemy?.name||run?.lastEnemy?.name||"戰鬥中";
+   }
+  });
+ }
+ window.openVoidMirageMinimalMode=function(){
+  registerVoidMinimalModeAdapter();
+  return typeof window.openMinimalMode==="function"&&window.openMinimalMode("void-mirage")===true;
+ };
+ registerVoidMinimalModeAdapter();
 
  injectStyles();
 })();
