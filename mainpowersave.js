@@ -12,6 +12,8 @@
  let dragMax=0;
  let dragThreshold=0;
  let dragX=0;
+ let ownsBackgroundFlow=false;
+ let unsubscribeEnvironment=null;
 
  function isMainContinuousCombat(){
   const ctx=window.activeMainBattleContext;
@@ -72,6 +74,38 @@
   },delay);
  }
 
+ function startPowerSaveBackgroundFlow(){
+  ownsBackgroundFlow=false;
+  if(typeof window.backgroundProgressStart!=="function"||typeof window.backgroundProgressIsActive!=="function")return;
+  if(window.backgroundProgressIsActive("main"))return;
+  window.backgroundProgressStart("main",{mode:"continuous"});
+  ownsBackgroundFlow=window.backgroundProgressIsActive("main")===true;
+ }
+
+ function stopOwnedBackgroundFlow(){
+  if(!ownsBackgroundFlow)return;
+  ownsBackgroundFlow=false;
+  if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
+ }
+
+ function watchEnvironment(){
+  if(unsubscribeEnvironment){unsubscribeEnvironment();unsubscribeEnvironment=null;}
+  if(typeof window.backgroundProgressOnEnvironmentChange!=="function")return;
+  unsubscribeEnvironment=window.backgroundProgressOnEnvironmentChange(isBackground=>{
+   if(!overlay)return;
+   if(!isBackground){
+    syncValues();
+    if(!overlay.classList.contains("show"))requestAnimationFrame(()=>overlay?.classList.add("show"));
+   }
+  });
+ }
+
+ function stopEnvironmentWatch(){
+  if(!unsubscribeEnvironment)return;
+  unsubscribeEnvironment();
+  unsubscribeEnvironment=null;
+ }
+
  function sliderCopyForMode(mode){
   if(mode==="story")return {text:"滑動繼續",aria:"滑動繼續查看後續內容"};
   if(mode==="stopped")return {text:"滑動查看戰鬥結果",aria:"滑動查看戰鬥結果"};
@@ -115,6 +149,8 @@
  function closeMainPowerSave(){
   if(!overlay)return;
   stopClock();
+  stopEnvironmentWatch();
+  stopOwnedBackgroundFlow();
   document.body.classList.remove("main-power-save-open");
   const old=overlay;
   overlay=null;
@@ -197,6 +233,8 @@
   document.body.appendChild(overlay);
   document.body.classList.add("main-power-save-open");
   wireSlider();
+  startPowerSaveBackgroundFlow();
+  watchEnvironment();
   syncValues();
   startClock();
   requestAnimationFrame(()=>overlay?.classList.add("show"));
@@ -208,6 +246,7 @@
  window.syncMainPowerSave=syncValues;
  window.setMainPowerSaveState=applyOverlayMode;
  window.isMainPowerSaveOpen=()=>!!overlay;
+ window.mainPowerSaveOwnsBackgroundFlow=()=>ownsBackgroundFlow;
 
  window.adventureCombatPage=function(){
   const html=baseAdventureCombatPage();
@@ -221,6 +260,7 @@
   window.showBattleResult=function(ctx,defeat=null){
    baseShowBattleResult(ctx,defeat);
    if(!overlay)return;
+   stopOwnedBackgroundFlow();
    if(ctx?.pendingStoryId)applyOverlayMode("story");
    else applyOverlayMode("stopped");
   };
@@ -230,6 +270,7 @@
  if(resultModal&&typeof MutationObserver==="function"){
   new MutationObserver(()=>{
    if(!overlay||!resultModal.classList.contains("show")||overlayMode!=="running")return;
+   stopOwnedBackgroundFlow();
    applyOverlayMode("stopped");
   }).observe(resultModal,{attributes:true,attributeFilter:["class"]});
  }
