@@ -156,6 +156,8 @@ style：
 4. HP 1.39 / ATK 1.29 / DEF 1.17
 5. HP 1.44 / ATK 1.27 / DEF 1.17
 
+style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAIN_MONSTER_BALANCE_VERSION = 1`，數值公式本身不變。
+
 ## 3.6 主線單場／連續戰鬥
 
 - 普通、菁英、Boss 都支援單場或連續戰鬥。
@@ -177,14 +179,14 @@ style：
 - 極簡模式不 wrapper `adventureCombatPage()`／`showBattleResult()`，也不以 `MutationObserver` 監看結算 modal。
 - 畫面狀態：`running`＝戰鬥持續進行中；`stopped`＝戰鬥已停止／滑動查看戰鬥結果；`story`＝戰鬥已完成／有新的劇情等待查看／滑動繼續。
 - 背景政策固定為 `follow-gm-background-setting`：極簡模式本身不呼叫 `backgroundProgressStart()`／`backgroundProgressStop()`，背景時間補償仍由 `backgroundprogress.js` 與 GM「背景戰鬥」開關決定。
-- 共用 adapter API：`registerMinimalModeAdapter()`、`openMinimalMode()`；虛空幻境由 `dungeonvoidui.js` 以 `void-mirage` adapter 接入，不複製第二套 overlay/CSS。
+- 共用 adapter／控制 API：`registerMinimalModeAdapter()`、`openMinimalMode()`、`closeMinimalMode()`、`syncMinimalMode()`、`setMinimalModeState()`、`isMinimalModeOpen()`；舊 `*MainMinimalMode` 控制 API 暫保留為相容 alias，主線專屬 hook 名稱維持不變。虛空幻境由 `dungeonvoidui.js` 以 `void-mirage` adapter 接入，不複製第二套 overlay/CSS。
 - 虛空戰鬥頁 `【虛空幻境】` 標題真正置中，右側顯示「極簡模式」；極簡內容為目前敵人／本次突破／已過樓層／歷史最高，全部置中單欄。
 - 虛空戰敗或強制退出正式結束時切到 `stopped`，顯示「戰鬥已停止」與「滑動查看戰鬥結果」，滑掉後顯示既有虛空結果頁。
 - 虛空自動爬樓唯一正式 owner 為 `dungeonvoid.js` 的 `runVoidMirageAuto()`；`dungeonvoidui.js` 只透過 `onFloorComplete`／`onEnd` callback 做畫面、動畫、極簡模式與結果頁接線，不得再建立第二套 while-loop 爬樓流程。
 - `VOID_MIRAGE_AUTO_OWNER_VERSION = 1`；`VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION = 1`。
 - 虛空 UI 正式樣式檔為 `dungeonvoid.css`；`dungeonvoidui.js` 不再 runtime 注入 `<style>`，`VOID_MIRAGE_UI_STYLE_VERSION = 1`。
 - 虛空專屬 runtime integrity：`dungeonvoidintegrity.js`，`VOID_MIRAGE_INTEGRITY_VERSION = 2`；檢查解鎖 Lv.25、前 100 層起點、每 10 層 Boss、普通／Boss 特性數、勝利後紀錄與樓層前進順序、戰後滿血、退出旗標、唯一 auto-run owner/callback contract、必要 snapshot/API，以及正式 UI style marker。
-- `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`；`VOID_MINIMAL_MODE_HOOK_VERSION = 1`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`。
+- `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`；`MINIMAL_MODE_SHARED_API_VERSION = 1`；`VOID_MINIMAL_MODE_HOOK_VERSION = 1`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 4`。
 - 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。
 
 ---

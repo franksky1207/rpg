@@ -2,6 +2,20 @@
 // 目標：同區後段開始形成刷裝壓力；高品質裝備可多推進約一張圖，但不應跨越多張圖穩定碾壓。
 // 長期設計：怪物與玩家／裝備皆採線性等級成長，避免高等級飽和或指數失控，預留 Lv200／Lv300 以上擴等。
 // 只調整主線怪物基礎成長、style 與階段倍率，不改獎勵、掉落、裝備公式或特性機率。
+const MAIN_MONSTER_STYLE_MULTIPLIERS=Object.freeze({
+ tank:Object.freeze({hp:1.15,atk:.95,def:1}),
+ attack:Object.freeze({hp:.92,atk:1.10,def:1})
+});
+const MAIN_MONSTER_STAGE_MULTIPLIERS=Object.freeze([
+ Object.freeze({hp:1.22,atk:1.17,def:1.10}),
+ Object.freeze({hp:1.31,atk:1.24,def:1.14}),
+ Object.freeze({hp:1.34,atk:1.28,def:1.15}),
+ Object.freeze({hp:1.39,atk:1.29,def:1.17}),
+ Object.freeze({hp:1.44,atk:1.27,def:1.17})
+]);
+const MAIN_MONSTER_DEFAULT_MULTIPLIER=Object.freeze({hp:1,atk:1,def:1});
+window.MAIN_MONSTER_BALANCE_VERSION=1;
+
 function monsterBase(l){
  const level=Math.max(1,Math.floor(Number(l)||1));
  // 以一般「稀有＋史詩＋少量傳說」混裝玩家為主基準；全傳說視為偏強上限。
@@ -15,15 +29,9 @@ function monsterBase(l){
 
 function monsterObj(mapIdx,eIdx){
  let d=MAPS[mapIdx].enemies[eIdx],b=monsterBase(d[1]),kind=d[2],style=d[3];
- if(style==="tank"){b.hp=ceil(b.hp*1.15);b.atk=ceil(b.atk*.95)}
- if(style==="attack"){b.hp=ceil(b.hp*.92);b.atk=ceil(b.atk*1.10)}
- const stage=[
-  {hp:1.22,atk:1.17,def:1.10},
-  {hp:1.31,atk:1.24,def:1.14},
-  {hp:1.34,atk:1.28,def:1.15},
-  {hp:1.39,atk:1.29,def:1.17},
-  {hp:1.44,atk:1.27,def:1.17}
- ][eIdx]||{hp:1,atk:1,def:1};
+ const styleMultiplier=MAIN_MONSTER_STYLE_MULTIPLIERS[style]||MAIN_MONSTER_DEFAULT_MULTIPLIER;
+ b.hp=ceil(b.hp*styleMultiplier.hp);b.atk=ceil(b.atk*styleMultiplier.atk);b.def=ceil(b.def*styleMultiplier.def);
+ const stage=MAIN_MONSTER_STAGE_MULTIPLIERS[eIdx]||MAIN_MONSTER_DEFAULT_MULTIPLIER;
  b.hp=ceil(b.hp*stage.hp);b.atk=ceil(b.atk*stage.atk);b.def=ceil(b.def*stage.def);
  return {name:d[0],level:d[1],kind,style,...b};
 }

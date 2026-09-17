@@ -44,6 +44,7 @@
 ## 虛空幻境 adapter
 
 - `dungeonvoidui.js` 透過 `registerMinimalModeAdapter("void-mirage", ...)` 接入共用 overlay，不建立第二套極簡 UI。
+- 共用控制 API 正式採 `openMinimalMode()`／`closeMinimalMode()`／`syncMinimalMode()`／`setMinimalModeState()`／`isMinimalModeOpen()`；舊 `*MainMinimalMode` 控制 API 暫保留為相容 alias，主線專屬 hook 名稱維持不變。
 - 虛空戰鬥中的 `【虛空幻境】` 標題維持真正置中，右側顯示共用樣式的「極簡模式」按鈕。
 - 虛空極簡內容固定為置中單欄：目前敵人、本次突破、已過樓層、歷史最高。
 - `已過樓層` 使用 `lastClearedFloor`；`歷史最高` 使用 `historicalHighest`，突破舊紀錄後同步上升。
@@ -65,8 +66,9 @@
 - `MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION = 1`
 - `MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION = 1`
 - `MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`
+- `MINIMAL_MODE_SHARED_API_VERSION = 1`
 - `VOID_MINIMAL_MODE_HOOK_VERSION = 1`
-- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`
+- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 4`
 
 ## 維護規則
 

@@ -291,19 +291,32 @@
  }
 
  function openMainMinimalMode(){return openMinimalMode("main");}
+ function closeMinimalMode(){return closeMainMinimalMode();}
+ function syncMinimalMode(){return syncValues();}
+ function setMinimalModeState(mode){return applyOverlayMode(mode);}
+ function isMinimalModeOpen(){return !!overlay;}
+ function minimalModeBackgroundPolicy(){return "follow-gm-background-setting";}
 
  window.openMinimalMode=openMinimalMode;
+ window.closeMinimalMode=closeMinimalMode;
+ window.syncMinimalMode=syncMinimalMode;
+ window.setMinimalModeState=setMinimalModeState;
+ window.isMinimalModeOpen=isMinimalModeOpen;
  window.registerMinimalModeAdapter=registerMinimalModeAdapter;
- window.openMainMinimalMode=openMainMinimalMode;
- window.closeMainMinimalMode=closeMainMinimalMode;
- window.syncMainMinimalMode=syncValues;
- window.setMainMinimalModeState=applyOverlayMode;
- window.isMainMinimalModeOpen=()=>!!overlay;
  window.getMinimalModeAdapterId=()=>overlay?activeAdapterId:null;
+
+ // Main-specific aliases remain during the compatibility transition.
+ window.openMainMinimalMode=openMainMinimalMode;
+ window.closeMainMinimalMode=closeMinimalMode;
+ window.syncMainMinimalMode=syncMinimalMode;
+ window.setMainMinimalModeState=setMinimalModeState;
+ window.isMainMinimalModeOpen=isMinimalModeOpen;
  window.mainMinimalModeEnsureCombatHeader=ensureCombatHeader;
  window.mainMinimalModeHandleBattleResult=handleBattleResult;
  window.mainMinimalModeHandleSpecialResult=handleSpecialResult;
- window.mainMinimalModeBackgroundPolicy=()=>"follow-gm-background-setting";
+ window.minimalModeBackgroundPolicy=minimalModeBackgroundPolicy;
+ window.mainMinimalModeBackgroundPolicy=minimalModeBackgroundPolicy;
+ window.MINIMAL_MODE_SHARED_API_VERSION=1;
  window.MAIN_MINIMAL_MODE_HOOK_VERSION=2;
  window.MAIN_MINIMAL_MODE_ADAPTER_VERSION=1;
  window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION=1;

@@ -99,7 +99,10 @@
      render();
      if(window.getMinimalModeAdapterId?.()==="void-mirage"){
       if(fr.ended)stopVoidMinimalModeIfOpen();
-      else if(typeof window.syncMainMinimalMode==="function")window.syncMainMinimalMode();
+      else {
+       const syncMode=typeof window.syncMinimalMode==="function"?window.syncMinimalMode:window.syncMainMinimalMode;
+       if(typeof syncMode==="function")syncMode();
+      }
      }
      await animateFloor(fr);
      if(!fr.ended)await sleep(350);
@@ -162,8 +165,9 @@
 
  function stopVoidMinimalModeIfOpen(){
   if(window.getMinimalModeAdapterId?.()!=="void-mirage")return false;
-  if(typeof window.setMainMinimalModeState!=="function")return false;
-  window.setMainMinimalModeState("stopped");
+  const setMode=typeof window.setMinimalModeState==="function"?window.setMinimalModeState:window.setMainMinimalModeState;
+  if(typeof setMode!=="function")return false;
+  setMode("stopped");
   return true;
  }
  function voidMinimalModeIsActive(){
