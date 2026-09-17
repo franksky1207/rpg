@@ -1,8 +1,10 @@
 (()=>{
  const baseAdventureCombatPage=typeof window.adventureCombatPage==="function"?window.adventureCombatPage:null;
+ const baseShowBattleResult=typeof window.showBattleResult==="function"?window.showBattleResult:null;
  if(!baseAdventureCombatPage)return;
 
  let overlay=null;
+ let overlayMode="running";
  let clockTimer=null;
  let clockStartTimer=null;
  let currentPointerId=null;
@@ -35,7 +37,7 @@
 
  function syncValues(){
   if(!overlay)return;
-  if(!isMainContinuousCombat()){
+  if(overlayMode==="running"&&!isMainContinuousCombat()){
    closeMainPowerSave();
    return;
   }
@@ -47,7 +49,7 @@
   const exp=overlay.querySelector("[data-main-power-save-exp]");
   const gold=overlay.querySelector("[data-main-power-save-gold]");
   if(time)time.textContent=formatClock();
-  if(enemy)enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"戰鬥中";
+  if(enemy&&overlayMode==="running")enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"戰鬥中";
   if(round)round.textContent=`第 ${Math.max(1,Math.floor(Number(combatRound)||1))} 場`;
   if(level)level.textContent=Number(state?.level)>=Number(MAX_LEVEL)?`Lv.${MAX_LEVEL} MAX`:`Lv.${state.level}`;
   if(exp)exp.textContent=`EXP　${expText()}`;
@@ -70,6 +72,37 @@
   },delay);
  }
 
+ function sliderCopyForMode(mode){
+  if(mode==="story")return {text:"滑動繼續",aria:"滑動繼續查看後續內容"};
+  if(mode==="stopped")return {text:"滑動查看戰鬥結果",aria:"滑動查看戰鬥結果"};
+  return {text:"滑動退出省電模式",aria:"滑動退出省電模式"};
+ }
+
+ function applyOverlayMode(mode){
+  if(!overlay)return;
+  overlayMode=mode==="story"?"story":mode==="stopped"?"stopped":"running";
+  const status=overlay.querySelector("[data-main-power-save-status]");
+  const note=overlay.querySelector("[data-main-power-save-note]");
+  const slider=overlay.querySelector(".main-power-save-slider");
+  const sliderText=overlay.querySelector(".main-power-save-slider-text");
+  const knob=overlay.querySelector(".main-power-save-knob");
+  const copy=sliderCopyForMode(overlayMode);
+  if(status){
+   status.classList.toggle("is-stopped",overlayMode==="stopped");
+   status.classList.toggle("is-complete",overlayMode==="story");
+   status.textContent=overlayMode==="story"?"戰鬥已完成":overlayMode==="stopped"?"戰鬥已停止":"戰鬥持續進行中";
+  }
+  if(note){
+   note.textContent=overlayMode==="story"?"有新的劇情等待查看":"";
+   note.hidden=overlayMode!=="story";
+  }
+  if(slider)slider.setAttribute("aria-label",copy.aria);
+  if(sliderText)sliderText.textContent=copy.text;
+  if(knob)knob.setAttribute("aria-label",copy.aria);
+  resetSlider();
+  syncValues();
+ }
+
  function resetSlider(){
   if(!overlay)return;
   const knob=overlay.querySelector(".main-power-save-knob");
@@ -85,6 +118,7 @@
   document.body.classList.remove("main-power-save-open");
   const old=overlay;
   overlay=null;
+  overlayMode="running";
   old.classList.remove("show");
   setTimeout(()=>old.remove(),250);
  }
@@ -143,6 +177,7 @@
 
  function openMainPowerSave(){
   if(overlay||!isMainContinuousCombat())return false;
+  overlayMode="running";
   overlay=document.createElement("div");
   overlay.id="mainPowerSaveOverlay";
   overlay.setAttribute("role","dialog");
@@ -155,9 +190,9 @@
       <div class="main-power-save-block"><div class="main-power-save-label">連續戰鬥</div><div class="main-power-save-value" data-main-power-save-round>第 1 場</div></div>
       <div class="main-power-save-block"><div class="main-power-save-label">角色</div><div class="main-power-save-value" data-main-power-save-level>Lv.${state.level}</div></div>
       <div class="main-power-save-block main-power-save-stats"><div data-main-power-save-exp>EXP　${expText()}</div><div data-main-power-save-gold>金幣　${Math.max(0,Math.floor(Number(state.gold)||0)).toLocaleString()}</div></div>
-      <div class="main-power-save-status">戰鬥持續進行中</div>
+      <div class="main-power-save-state" aria-live="polite"><div class="main-power-save-status" data-main-power-save-status>戰鬥持續進行中</div><div class="main-power-save-note" data-main-power-save-note hidden></div></div>
     </div>
-    <div class="main-power-save-exit-wrap"><div class="main-power-save-slider" aria-label="滑動退出省電模式"><div class="main-power-save-slider-text">滑動退出省電模式</div><button type="button" class="main-power-save-knob" aria-label="拖曳退出省電模式">›</button></div></div>
+    <div class="main-power-save-exit-wrap"><div class="main-power-save-slider" aria-label="滑動退出省電模式"><div class="main-power-save-slider-text">滑動退出省電模式</div><button type="button" class="main-power-save-knob" aria-label="滑動退出省電模式">›</button></div></div>
   </div>`;
   document.body.appendChild(overlay);
   document.body.classList.add("main-power-save-open");
@@ -171,6 +206,8 @@
  window.openMainPowerSave=openMainPowerSave;
  window.closeMainPowerSave=closeMainPowerSave;
  window.syncMainPowerSave=syncValues;
+ window.setMainPowerSaveState=applyOverlayMode;
+ window.isMainPowerSaveOpen=()=>!!overlay;
 
  window.adventureCombatPage=function(){
   const html=baseAdventureCombatPage();
@@ -180,10 +217,20 @@
   return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-power-save-head"><span class="main-power-save-head-label">$1</span><button type="button" class="main-power-save-enter" onclick="openMainPowerSave()">省電模式</button></div>`);
  };
 
+ if(baseShowBattleResult){
+  window.showBattleResult=function(ctx,defeat=null){
+   baseShowBattleResult(ctx,defeat);
+   if(!overlay)return;
+   if(ctx?.pendingStoryId)applyOverlayMode("story");
+   else applyOverlayMode("stopped");
+  };
+ }
+
  const resultModal=document.getElementById("battleResultModal");
  if(resultModal&&typeof MutationObserver==="function"){
   new MutationObserver(()=>{
-   if(overlay&&resultModal.classList.contains("show"))closeMainPowerSave();
+   if(!overlay||!resultModal.classList.contains("show")||overlayMode!=="running")return;
+   applyOverlayMode("stopped");
   }).observe(resultModal,{attributes:true,attributeFilter:["class"]});
  }
 })();
