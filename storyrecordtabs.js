@@ -89,15 +89,5 @@
   return `<div class="function-page story-record-page">${back}<div class="card"><h2>戰線紀錄</h2><div class="muted">僅顯示已完成的正式劇情；尚未抵達的區域與未完成劇情不會顯示。重播不會給予獎勵或改變進度。</div></div>${introHtml(completed)}${tabsHtml(groups)}${selectedHtml(selected)}</div>`;
  };
 
- const originalGo=typeof window.go==="function"?window.go:null;
- if(originalGo&&!originalGo.__storyRecordLatestWrapped){
-  const wrapped=function(v){
-   if(v==="storyrecord")prepareEntry();
-   return originalGo.apply(this,arguments);
-  };
-  wrapped.__storyRecordLatestWrapped=true;
-  window.go=wrapped;
- }
-
- window.STORY_RECORD_TABS_VERSION=3;
+ window.STORY_RECORD_TABS_VERSION=4;
 })();
