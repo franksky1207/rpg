@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  window.VOID_MIRAGE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -17,6 +17,8 @@
   }
 
   if(Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)!==1)fail("auto-owner-version");
+  if(Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)!==1)fail("snapshot-isolation-version");
+  if(Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)!==1)fail("run-local-name-version");
   if(Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)!==1)fail("ui-auto-adapter-version");
   if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
@@ -74,13 +76,18 @@
   if(!/fightNextVoidMirageFloor/.test(autoSrc))fail("auto-owner-floor-call");
   if(!/onFloorComplete/.test(autoSrc)||!/onEnd/.test(autoSrc))fail("auto-callback-contract");
 
+  const snapshotSrc=src(window.getVoidMirageRunSnapshot);
+  if(!/cloneVoidSnapshotValue/.test(snapshotSrc))fail("snapshot-nested-clone");
+  const beginSrc=src(window.beginVoidMirageRun);
+  if(!/previousRegularName\s*:\s*["']["']/.test(beginSrc))fail("run-local-name-reset");
+
   const snapshot=typeof window.getVoidMirageRunSnapshot==="function"?window.getVoidMirageRunSnapshot():null;
   if(snapshot&&typeof snapshot==="object"){
    const keys=["active","phase","startFloor","currentFloor","lastClearedFloor","cleared","historicalHighest"];
    keys.forEach(key=>{if(!(key in snapshot))fail(`snapshot-field:${key}`);});
   }
 
-  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0};
+  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0};
   window.VOID_MIRAGE_INTEGRITY_REPORT=report;
   if(!report.ok)console.error("Void Mirage integrity check failed",report);
   return report;

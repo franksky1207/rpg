@@ -159,7 +159,6 @@
 
    if(shouldStopContinuous(ctx))break;
    if(hasMoreBattles(ctx)){
-    save(false);
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
     await sleep(battleGapMs(r.e.kind));
    }else save();
@@ -176,6 +175,7 @@
    if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);
   },0);
  };
+ window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION=1;
  window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
  window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;
 })();

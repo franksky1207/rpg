@@ -17,11 +17,18 @@
   "虛空夢魘","裂界災厄","失真君王","虛境帝皇","虛無終焉者"
  ];
 
- let lastRegularName="";
  let voidMirageRun=null;
 
  function floorNumber(value){return Math.max(1,Math.floor(Number(value)||1));}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
+ function cloneVoidSnapshotValue(value,seen=new WeakMap()){
+  if(value===null||typeof value!=="object")return value;
+  if(seen.has(value))return seen.get(value);
+  const out=Array.isArray(value)?[]:{};
+  seen.set(value,out);
+  Object.keys(value).forEach(key=>{out[key]=cloneVoidSnapshotValue(value[key],seen);});
+  return out;
+ }
  function normalizeVoidMirageState(target){
   if(!target||typeof target!=="object")return null;
   if(!target.dungeon||typeof target.dungeon!=="object")target.dungeon={};
@@ -45,9 +52,9 @@
   const withinCycle=((f-1)%100)+1;return VOID_MIRAGE_BOSS_NAMES[Math.floor((withinCycle-1)/10)];
  }
  function regularName(previousName=""){
-  const blocked=String(previousName||lastRegularName||"");
+  const blocked=String(previousName||"");
   const pool=VOID_MIRAGE_REGULAR_NAMES.filter(name=>name!==blocked),names=pool.length?pool:VOID_MIRAGE_REGULAR_NAMES;
-  const name=names[Math.floor(Math.random()*names.length)];lastRegularName=name;return name;
+  return names[Math.floor(Math.random()*names.length)];
  }
  function rollTraits(floor){
   const pool=MONSTER_TRAIT_IDS.slice(),out=[],count=isBossFloor(floor)?2:1;
@@ -73,7 +80,7 @@
  function runSnapshot(){
   if(!voidMirageRun)return null;
   const daily=dailyStatus();
-  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:voidMirageRun.playerSnapshot?{...voidMirageRun.playerSnapshot}:null,lastEnemy:voidMirageRun.lastEnemy?{...voidMirageRun.lastEnemy,traits:(voidMirageRun.lastEnemy.traits||[]).slice()}:null,lastResult:voidMirageRun.lastResult?{...voidMirageRun.lastResult,logs:(voidMirageRun.lastResult.logs||[]).slice()}:null,historicalHighest:historicalHighest(),dailyHighest:daily.highestFloor||0,dailyClaimed:daily.claimed===true,dailyReward:daily.reward||0};
+  return {active:!!voidMirageRun.active,phase:voidMirageRun.phase,startFloor:voidMirageRun.startFloor,currentFloor:voidMirageRun.currentFloor,lastClearedFloor:voidMirageRun.lastClearedFloor,cleared:voidMirageRun.cleared,totalTurns:voidMirageRun.totalTurns,averageTurns:voidMirageRun.cleared?round1(voidMirageRun.totalTurns/voidMirageRun.cleared):0,exitRequested:!!voidMirageRun.exitRequested,endedReason:voidMirageRun.endedReason||"",failedFloor:voidMirageRun.failedFloor||0,runStarted:!!voidMirageRun.runStarted,playerSnapshot:cloneVoidSnapshotValue(voidMirageRun.playerSnapshot),lastEnemy:cloneVoidSnapshotValue(voidMirageRun.lastEnemy),lastResult:cloneVoidSnapshotValue(voidMirageRun.lastResult),historicalHighest:historicalHighest(),dailyHighest:daily.highestFloor||0,dailyClaimed:daily.claimed===true,dailyReward:daily.reward||0};
  }
  function finishRun(reason,extra={}){
   if(!voidMirageRun)return null;
@@ -113,7 +120,7 @@
   if(Number(state?.level||0)<VOID_MIRAGE_UNLOCK_LEVEL)return {ok:false,reason:"level_locked",unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL};
   if(voidMirageRun?.active)return {ok:false,reason:"already_active",run:runSnapshot()};
   const startFloor=startFloorFromHistory();
-  voidMirageRun={active:true,phase:"ready",startFloor,currentFloor:startFloor,lastClearedFloor:startFloor-1,cleared:0,totalTurns:0,exitRequested:false,endedReason:"",failedFloor:0,lastEnemy:null,lastResult:null,previousRegularName:lastRegularName||"",playerSnapshot:null,runStarted:false};
+  voidMirageRun={active:true,phase:"ready",startFloor,currentFloor:startFloor,lastClearedFloor:startFloor-1,cleared:0,totalTurns:0,exitRequested:false,endedReason:"",failedFloor:0,lastEnemy:null,lastResult:null,previousRegularName:"",playerSnapshot:null,runStarted:false};
   return {ok:true,run:runSnapshot()};
  };
 
@@ -144,6 +151,8 @@
   return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,run:runSnapshot()};
  };
 
+ window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
+ window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
  window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
  window.runVoidMirageAuto=async function(options={}){
   if(!voidMirageRun?.active){const started=window.beginVoidMirageRun();if(!started.ok)return started;}
