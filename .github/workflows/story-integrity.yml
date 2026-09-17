@@ -8,7 +8,12 @@ on:
       - 'worldmaps-*.js'
       - 'storydata-*.js'
       - 'storyintegrity.js'
+      - 'storymigration.js'
+      - 'storyprogress.js'
+      - 'combatcore.js'
+      - 'battlepipeline.js'
       - 'story-integrity-ci.js'
+      - 'story-flow-ci.js'
       - '.github/workflows/story-integrity.yml'
   workflow_dispatch:
 
@@ -20,5 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run story integrity
+      - name: Run story data integrity
         run: node story-integrity-ci.js
+      - name: Run story flow regressions
+        run: node story-flow-ci.js
