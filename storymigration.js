@@ -1,5 +1,6 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
+ const LEGACY_FIELDS=["historyBackfillRegions"];
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
@@ -33,6 +34,8 @@
   const starterGearReceived=p.starterGearReceived===true;
   if(p.starterGearReceived!==starterGearReceived){p.starterGearReceived=starterGearReceived;changed=true;}
 
+  // Legacy save compatibility only. This field is informational and never
+  // controls whether repair/backfill is allowed to run.
   const history=uniqueStrings(p.historyBackfillRegions);
   if(JSON.stringify(history)!==JSON.stringify(p.historyBackfillRegions)){p.historyBackfillRegions=history;changed=true;}
 
@@ -70,8 +73,8 @@
     changed=true;
    });
 
-   // historyBackfillRegions is informational only. Never use it to suppress
-   // future repair passes, because old saves may have been marked too early.
+   // Legacy compatibility field only: historyBackfillRegions is informational.
+   // It must never suppress repair passes or decide whether a story is completed.
    if(regionHasClearedBoss&&!p.historyBackfillRegions.includes(regionId)){
     p.historyBackfillRegions.push(regionId);
     changed=true;
@@ -97,6 +100,7 @@
 
  window.civilizationStoryMigration={
   version:VERSION,
+  legacyFields:LEGACY_FIELDS.slice(),
   migrate,
   normalizeFields,
   backfillAvailableHistory
