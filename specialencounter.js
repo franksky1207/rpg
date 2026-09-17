@@ -78,6 +78,7 @@
   }
   const btn=modal.querySelector(".controls .btn.primary");if(btn){btn.textContent="確認";btn.onclick=closeBattleResultModal;}
   modal.classList.add("show");
+  if(result?.win===false&&typeof window.mainMinimalModeHandleSpecialResult==="function")window.mainMinimalModeHandleSpecialResult(ctx,special,result);
  }
 
  function specialRewardExpAmount(baseXp,rewardCtx,useTestSpecializations=false){
@@ -189,5 +190,6 @@
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
+ window.MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION=1;
  ensureSpecialEncounterAlert();
 })();
