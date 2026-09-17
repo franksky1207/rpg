@@ -104,29 +104,38 @@
   if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破`);
  }
 
- async function autoClimb(){
-  if(voidUi.running)return;voidUi.running=true;
+ async function runVoidMirageUiAuto(){
+  if(voidUi.running)return false;
+  if(typeof window.runVoidMirageAuto!=="function"){
+   voidUi.message="虛空幻境自動挑戰核心未載入。";
+   render();
+   return false;
+  }
+  voidUi.running=true;
   try{
-   while(true){
-    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;if(!run?.active)break;
-    if(voidUi.exitAfterFloor){
+   await window.runVoidMirageAuto({
+    async onFloorComplete(fr){
+     if(!fr?.ok)return;
+     voidUi.floorResult=fr;
+     voidUi.phase="combat";
+     render();
+     if(window.getMinimalModeAdapterId?.()==="void-mirage"){
+      if(fr.ended)stopVoidMinimalModeIfOpen();
+      else if(typeof window.syncMainMinimalMode==="function")window.syncMainMinimalMode();
+     }
+     await animateFloor(fr);
+     if(!fr.ended&&voidUi.exitAfterFloor&&typeof window.requestVoidMirageExit==="function")window.requestVoidMirageExit();
+     if(!fr.ended)await sleep(350);
+    },
+    async onEnd(run){
      stopVoidMinimalModeIfOpen();
-     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;
+     voidUi.finalRun=run||(typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null);
+     voidUi.phase="result";
+     voidUi.floorResult=null;
+     render();
     }
-    const fr=fightNextVoidMirageFloor();
-    if(!fr?.ok){stopVoidMinimalModeIfOpen();voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
-    voidUi.floorResult=fr;voidUi.phase="combat";render();
-    if(typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage"){
-     if(fr.ended)stopVoidMinimalModeIfOpen();else window.syncMainMinimalMode();
-    }
-    await animateFloor(fr);
-    if(fr.ended){voidUi.finalRun=fr.run;voidUi.phase="result";voidUi.floorResult=null;render();break;}
-    if(voidUi.exitAfterFloor){
-     stopVoidMinimalModeIfOpen();
-     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;
-    }
-    await sleep(350);
-   }
+   });
+   return true;
   }finally{
    voidUi.running=false;
    if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
@@ -145,7 +154,7 @@
   if(!started.ok){voidUi.message="目前無法開始虛空幻境。";render();return;}
   if(typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
   voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
-  if(typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(autoClimb);else setTimeout(autoClimb,100);
+  if(typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
  };
  window.claimVoidMirageRewardUI=function(){
   if(voidUi.running)return;
@@ -209,6 +218,7 @@
   registerVoidMinimalModeAdapter();
   return typeof window.openMinimalMode==="function"&&window.openMinimalMode("void-mirage")===true;
  };
+ window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION=1;
  window.VOID_MINIMAL_MODE_HOOK_VERSION=1;
  registerVoidMinimalModeAdapter();
 

@@ -144,6 +144,7 @@
   return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,run:runSnapshot()};
  };
 
+ window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
  window.runVoidMirageAuto=async function(options={}){
   if(!voidMirageRun?.active){const started=window.beginVoidMirageRun();if(!started.ok)return started;}
   const onFloor=typeof options.onFloorComplete==="function"?options.onFloorComplete:null,onEnd=typeof options.onEnd==="function"?options.onEnd:null;

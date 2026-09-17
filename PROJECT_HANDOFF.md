@@ -180,6 +180,8 @@ style：
 - 共用 adapter API：`registerMinimalModeAdapter()`、`openMinimalMode()`；虛空幻境由 `dungeonvoidui.js` 以 `void-mirage` adapter 接入，不複製第二套 overlay/CSS。
 - 虛空戰鬥頁 `【虛空幻境】` 標題真正置中，右側顯示「極簡模式」；極簡內容為目前敵人／本次突破／已過樓層／歷史最高，全部置中單欄。
 - 虛空戰敗或強制退出正式結束時切到 `stopped`，顯示「戰鬥已停止」與「滑動查看戰鬥結果」，滑掉後顯示既有虛空結果頁。
+- 虛空自動爬樓唯一正式 owner 為 `dungeonvoid.js` 的 `runVoidMirageAuto()`；`dungeonvoidui.js` 只透過 `onFloorComplete`／`onEnd` callback 做畫面、動畫、極簡模式與結果頁接線，不得再建立第二套 while-loop 爬樓流程。
+- `VOID_MIRAGE_AUTO_OWNER_VERSION = 1`；`VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION = 1`。
 - `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`；`VOID_MINIMAL_MODE_HOOK_VERSION = 1`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`。
 - 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。
 
