@@ -1,6 +1,7 @@
 (()=>{
  let overlay=null;
  let overlayMode="running";
+ let activeAdapterId="main";
  let clockTimer=null;
  let clockStartTimer=null;
  let currentPointerId=null;
@@ -9,6 +10,7 @@
  let dragThreshold=0;
  let dragX=0;
  let unsubscribeEnvironment=null;
+ const adapters=new Map();
 
  function isMainContinuousCombat(){
   const ctx=window.activeMainBattleContext;
@@ -32,25 +34,55 @@
   return `${Number(state?.exp)||0} / ${Number(need)||0}`;
  }
 
- function syncValues(){
-  if(!overlay)return;
-  if(overlayMode==="running"&&!isMainContinuousCombat()){
-   closeMainMinimalMode();
-   return;
-  }
+ function mainContentHtml(){
+  return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-main-minimal-mode-enemy>戰鬥中</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續戰鬥</div><div class="main-minimal-mode-value" data-main-minimal-mode-round>第 1 場</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">角色</div><div class="main-minimal-mode-value" data-main-minimal-mode-level>Lv.${state.level}</div></div>
+      <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-main-minimal-mode-exp>EXP　${expText()}</div><div data-main-minimal-mode-gold>金幣　${Math.max(0,Math.floor(Number(state.gold)||0)).toLocaleString()}</div></div>`;
+ }
+
+ function syncMainValues(root,mode){
   const encounter=currentEncounter();
-  const time=overlay.querySelector("[data-main-minimal-mode-clock]");
-  const enemy=overlay.querySelector("[data-main-minimal-mode-enemy]");
-  const round=overlay.querySelector("[data-main-minimal-mode-round]");
-  const level=overlay.querySelector("[data-main-minimal-mode-level]");
-  const exp=overlay.querySelector("[data-main-minimal-mode-exp]");
-  const gold=overlay.querySelector("[data-main-minimal-mode-gold]");
-  if(time)time.textContent=formatClock();
-  if(enemy&&overlayMode==="running")enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"戰鬥中";
+  const enemy=root.querySelector("[data-main-minimal-mode-enemy]");
+  const round=root.querySelector("[data-main-minimal-mode-round]");
+  const level=root.querySelector("[data-main-minimal-mode-level]");
+  const exp=root.querySelector("[data-main-minimal-mode-exp]");
+  const gold=root.querySelector("[data-main-minimal-mode-gold]");
+  if(enemy&&mode==="running")enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"戰鬥中";
   if(round)round.textContent=`第 ${Math.max(1,Math.floor(Number(combatRound)||1))} 場`;
   if(level)level.textContent=Number(state?.level)>=Number(MAX_LEVEL)?`Lv.${MAX_LEVEL} MAX`:`Lv.${state.level}`;
   if(exp)exp.textContent=`EXP　${expText()}`;
   if(gold)gold.textContent=`金幣　${Math.max(0,Math.floor(Number(state?.gold)||0)).toLocaleString()}`;
+ }
+
+ adapters.set("main",{
+  isActive:isMainContinuousCombat,
+  runningStatus:"戰鬥持續進行中",
+  centerClass:"",
+  contentHtml:mainContentHtml,
+  sync:syncMainValues
+ });
+
+ function getActiveAdapter(){return adapters.get(activeAdapterId)||adapters.get("main");}
+
+ function registerMinimalModeAdapter(id,adapter){
+  const key=String(id||"").trim();
+  if(!key||key==="main"||!adapter||typeof adapter!=="object")return false;
+  if(typeof adapter.isActive!=="function"||typeof adapter.contentHtml!=="function"||typeof adapter.sync!=="function")return false;
+  adapters.set(key,adapter);
+  return true;
+ }
+
+ function syncValues(){
+  if(!overlay)return;
+  const adapter=getActiveAdapter();
+  if(overlayMode==="running"&&typeof adapter?.isActive==="function"&&!adapter.isActive()){
+   closeMainMinimalMode();
+   return;
+  }
+  const time=overlay.querySelector("[data-main-minimal-mode-clock]");
+  if(time)time.textContent=formatClock();
+  if(typeof adapter?.sync==="function")adapter.sync(overlay,overlayMode);
  }
 
  function stopClock(){
@@ -96,6 +128,7 @@
  function applyOverlayMode(mode){
   if(!overlay)return;
   overlayMode=mode==="story"?"story":mode==="stopped"?"stopped":"running";
+  const adapter=getActiveAdapter();
   const status=overlay.querySelector("[data-main-minimal-mode-status]");
   const note=overlay.querySelector("[data-main-minimal-mode-note]");
   const slider=overlay.querySelector(".main-minimal-mode-slider");
@@ -105,7 +138,7 @@
   if(status){
    status.classList.toggle("is-stopped",overlayMode==="stopped");
    status.classList.toggle("is-complete",overlayMode==="story");
-   status.textContent=overlayMode==="story"?"戰鬥已完成":overlayMode==="stopped"?"戰鬥已停止":"戰鬥持續進行中";
+   status.textContent=overlayMode==="story"?"戰鬥已完成":overlayMode==="stopped"?"戰鬥已停止":String(adapter?.runningStatus||"戰鬥持續進行中");
   }
   if(note){
    note.textContent=overlayMode==="story"?"有新的劇情等待查看":"";
@@ -135,6 +168,7 @@
   const old=overlay;
   overlay=null;
   overlayMode="running";
+  activeAdapterId="main";
   old.classList.remove("show");
   setTimeout(()=>old.remove(),250);
  }
@@ -192,7 +226,7 @@
  }
 
  function ensureCombatHeader(options={}){
-  if(overlay)setTimeout(syncValues,0);
+  if(overlay&&activeAdapterId==="main")setTimeout(syncValues,0);
   if(options?.continuous!==true)return false;
   const head=document.querySelector(".combat-screen>.combat-head");
   if(!head)return false;
@@ -213,33 +247,36 @@
  }
 
  function handleBattleResult(ctx){
-  if(!overlay)return false;
+  if(!overlay||activeAdapterId!=="main")return false;
   applyOverlayMode(ctx?.pendingStoryId?"story":"stopped");
   return true;
  }
 
  function handleSpecialResult(ctx,special,result){
-  if(!overlay||result?.win!==false)return false;
+  if(!overlay||activeAdapterId!=="main"||result?.win!==false)return false;
   applyOverlayMode("stopped");
   return true;
  }
 
- function openMainMinimalMode(){
-  if(overlay||!isMainContinuousCombat())return false;
+ function openMinimalMode(adapterId="main"){
+  const key=String(adapterId||"main");
+  const adapter=adapters.get(key);
+  if(overlay||!adapter||typeof adapter.isActive!=="function"||!adapter.isActive())return false;
+  activeAdapterId=key;
   overlayMode="running";
+  const centerClass=["main-minimal-mode-center",String(adapter.centerClass||"").trim()].filter(Boolean).join(" ");
+  const content=String(adapter.contentHtml()||"");
   overlay=document.createElement("div");
   overlay.id="mainMinimalModeOverlay";
   overlay.setAttribute("role","dialog");
   overlay.setAttribute("aria-modal","true");
   overlay.setAttribute("aria-label","極簡模式");
+  overlay.dataset.minimalModeAdapter=key;
   overlay.innerHTML=`<div class="main-minimal-mode-shell">
     <div class="main-minimal-mode-clock" data-main-minimal-mode-clock>${formatClock()}</div>
-    <div class="main-minimal-mode-center">
-      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-main-minimal-mode-enemy>戰鬥中</div></div>
-      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續戰鬥</div><div class="main-minimal-mode-value" data-main-minimal-mode-round>第 1 場</div></div>
-      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">角色</div><div class="main-minimal-mode-value" data-main-minimal-mode-level>Lv.${state.level}</div></div>
-      <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-main-minimal-mode-exp>EXP　${expText()}</div><div data-main-minimal-mode-gold>金幣　${Math.max(0,Math.floor(Number(state.gold)||0)).toLocaleString()}</div></div>
-      <div class="main-minimal-mode-state" aria-live="polite"><div class="main-minimal-mode-status" data-main-minimal-mode-status>戰鬥持續進行中</div><div class="main-minimal-mode-note" data-main-minimal-mode-note hidden></div></div>
+    <div class="${centerClass}">
+      ${content}
+      <div class="main-minimal-mode-state" aria-live="polite"><div class="main-minimal-mode-status" data-main-minimal-mode-status>${String(adapter.runningStatus||"戰鬥持續進行中")}</div><div class="main-minimal-mode-note" data-main-minimal-mode-note hidden></div></div>
     </div>
     <div class="main-minimal-mode-exit-wrap"><div class="main-minimal-mode-slider" aria-label="滑動退出極簡模式"><div class="main-minimal-mode-slider-text">滑動退出極簡模式</div><button type="button" class="main-minimal-mode-knob" aria-label="滑動退出極簡模式">›</button></div></div>
   </div>`;
@@ -253,15 +290,21 @@
   return true;
  }
 
+ function openMainMinimalMode(){return openMinimalMode("main");}
+
+ window.openMinimalMode=openMinimalMode;
+ window.registerMinimalModeAdapter=registerMinimalModeAdapter;
  window.openMainMinimalMode=openMainMinimalMode;
  window.closeMainMinimalMode=closeMainMinimalMode;
  window.syncMainMinimalMode=syncValues;
  window.setMainMinimalModeState=applyOverlayMode;
  window.isMainMinimalModeOpen=()=>!!overlay;
+ window.getMinimalModeAdapterId=()=>overlay?activeAdapterId:null;
  window.mainMinimalModeEnsureCombatHeader=ensureCombatHeader;
  window.mainMinimalModeHandleBattleResult=handleBattleResult;
  window.mainMinimalModeHandleSpecialResult=handleSpecialResult;
  window.mainMinimalModeBackgroundPolicy=()=>"follow-gm-background-setting";
  window.MAIN_MINIMAL_MODE_HOOK_VERSION=2;
+ window.MAIN_MINIMAL_MODE_ADAPTER_VERSION=1;
  window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION=1;
 })();
