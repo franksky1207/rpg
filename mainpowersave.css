@@ -1,13 +1,20 @@
 /* Main-map continuous battle power-save overlay. Pure black, minimal motion, shared by mobile and desktop. */
 .main-power-save-head{
-  display:flex;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
   align-items:center;
-  justify-content:space-between;
-  gap:32px;
-  flex-wrap:wrap;
+  gap:18px;
+  position:relative;
 }
-.main-power-save-head-label{min-width:0}
+.main-power-save-head-label{
+  grid-column:2;
+  min-width:0;
+  text-align:center;
+  white-space:nowrap;
+}
 .main-power-save-enter{
+  grid-column:3;
+  justify-self:end;
   flex:0 0 auto;
   padding:7px 13px;
   border:1px solid rgba(196,168,112,.72);
@@ -42,11 +49,10 @@
 body.main-power-save-open{overflow:hidden;background:#000}
 .main-power-save-shell{
   width:min(920px,100%);
-  min-height:min(760px,calc(100vh - 48px));
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  gap:34px;
+  justify-content:center;
+  gap:26px;
 }
 .main-power-save-clock{
   text-align:center;
@@ -59,7 +65,7 @@ body.main-power-save-open{overflow:hidden;background:#000}
 .main-power-save-center{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:34px 72px;
+  gap:30px 72px;
   align-items:center;
   width:min(760px,100%);
   margin:0 auto;
@@ -67,7 +73,7 @@ body.main-power-save-open{overflow:hidden;background:#000}
 .main-power-save-block{min-width:0}
 .main-power-save-label{
   margin-bottom:7px;
-  color:#858585;
+  color:#b8b8b8;
   font-size:13px;
   letter-spacing:.08em;
 }
@@ -80,23 +86,28 @@ body.main-power-save-open{overflow:hidden;background:#000}
 .main-power-save-stats{
   display:grid;
   gap:8px;
+  color:#f0f0f0;
   font-size:clamp(16px,2vw,20px);
   font-variant-numeric:tabular-nums;
 }
 .main-power-save-status{
   grid-column:1/-1;
-  margin-top:12px;
+  margin-top:10px;
   text-align:center;
-  color:#d8d8d8;
+  color:#eeeeee;
   font-size:14px;
   animation:mainPowerSaveBreath 2.8s ease-in-out infinite;
 }
-@keyframes mainPowerSaveBreath{0%,100%{opacity:.42}50%{opacity:1}}
-.main-power-save-exit-wrap{width:min(620px,100%);margin:0 auto}
+@keyframes mainPowerSaveBreath{0%,100%{opacity:.58}50%{opacity:1}}
+.main-power-save-exit-wrap{
+  width:70%;
+  max-width:434px;
+  margin:10px auto 0;
+}
 .main-power-save-slider{
   position:relative;
   height:58px;
-  border:1px solid #2b2b2b;
+  border:1px solid #3c3c3c;
   border-radius:999px;
   background:#0c0c0c;
   overflow:hidden;
@@ -111,7 +122,7 @@ body.main-power-save-open{overflow:hidden;background:#000}
   align-items:center;
   justify-content:center;
   padding:0 66px;
-  color:#8d8d8d;
+  color:#c6c6c6;
   font-size:14px;
   pointer-events:none;
   transition:opacity .12s linear;
@@ -123,10 +134,10 @@ body.main-power-save-open{overflow:hidden;background:#000}
   width:48px;
   height:48px;
   padding:0;
-  border:1px solid #555;
+  border:1px solid #666;
   border-radius:50%;
   background:#202020;
-  color:#e7e7e7;
+  color:#f0f0f0;
   font-size:22px;
   line-height:1;
   cursor:grab;
@@ -135,26 +146,36 @@ body.main-power-save-open{overflow:hidden;background:#000}
   transition:transform .24s ease,background .16s ease,border-color .16s ease;
 }
 .main-power-save-knob.dragging{cursor:grabbing;transition:none}
-.main-power-save-knob.ready{background:#303030;border-color:#888}
+.main-power-save-knob.ready{background:#303030;border-color:#999}
 .main-power-save-knob:focus-visible{outline:2px solid #aaa;outline-offset:2px}
 
 @media(max-width:760px){
-  .main-power-save-head{gap:14px 24px}
-  .main-power-save-enter{margin-left:auto}
+  .main-power-save-head{gap:8px}
+  .main-power-save-head-label{font-size:clamp(16px,4.8vw,21px)}
+  .main-power-save-enter{font-size:12px;padding:7px 12px}
   #mainPowerSaveOverlay{padding-top:max(22px,env(safe-area-inset-top));padding-bottom:max(22px,env(safe-area-inset-bottom))}
-  .main-power-save-shell{min-height:calc(100vh - 44px);gap:26px}
-  .main-power-save-clock{font-size:clamp(64px,23vw,100px)}
-  .main-power-save-center{grid-template-columns:1fr;gap:24px;text-align:center}
-  .main-power-save-label{font-size:12px}
+  .main-power-save-shell{gap:22px}
+  .main-power-save-clock{font-size:clamp(64px,23vw,100px);margin-bottom:2px}
+  .main-power-save-center{grid-template-columns:1fr;gap:20px;text-align:center}
+  .main-power-save-label{font-size:12px;color:#bdbdbd}
   .main-power-save-value{font-size:24px}
   .main-power-save-stats{font-size:17px}
-  .main-power-save-status{grid-column:auto;margin-top:2px}
+  .main-power-save-status{grid-column:auto;margin-top:4px;font-size:15px}
+  .main-power-save-exit-wrap{width:70%;max-width:none;margin-top:12px}
   .main-power-save-slider{height:56px}
+  .main-power-save-slider-text{color:#c9c9c9;padding:0 58px;font-size:13px}
   .main-power-save-knob{width:46px;height:46px}
+}
+
+@media(max-width:390px){
+  .main-power-save-head{grid-template-columns:minmax(0,1fr) auto minmax(78px,1fr)}
+  .main-power-save-enter{font-size:11px;padding:6px 10px}
+  .main-power-save-head-label{font-size:15px}
+  .main-power-save-exit-wrap{width:74%}
 }
 
 @media(prefers-reduced-motion:reduce){
   #mainPowerSaveOverlay{transition:none}
-  .main-power-save-status{animation:none;opacity:.82}
+  .main-power-save-status{animation:none;opacity:.88}
   .main-power-save-knob{transition:none}
 }
