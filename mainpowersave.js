@@ -109,7 +109,7 @@
  function sliderCopyForMode(mode){
   if(mode==="story")return {text:"滑動繼續",aria:"滑動繼續查看後續內容"};
   if(mode==="stopped")return {text:"滑動查看戰鬥結果",aria:"滑動查看戰鬥結果"};
-  return {text:"滑動退出省電模式",aria:"滑動退出省電模式"};
+  return {text:"滑動退出極簡模式",aria:"滑動退出極簡模式"};
  }
 
  function applyOverlayMode(mode){
@@ -218,7 +218,7 @@
   overlay.id="mainPowerSaveOverlay";
   overlay.setAttribute("role","dialog");
   overlay.setAttribute("aria-modal","true");
-  overlay.setAttribute("aria-label","省電模式");
+  overlay.setAttribute("aria-label","極簡模式");
   overlay.innerHTML=`<div class="main-power-save-shell">
     <div class="main-power-save-clock" data-main-power-save-clock>${formatClock()}</div>
     <div class="main-power-save-center">
@@ -228,7 +228,7 @@
       <div class="main-power-save-block main-power-save-stats"><div data-main-power-save-exp>EXP　${expText()}</div><div data-main-power-save-gold>金幣　${Math.max(0,Math.floor(Number(state.gold)||0)).toLocaleString()}</div></div>
       <div class="main-power-save-state" aria-live="polite"><div class="main-power-save-status" data-main-power-save-status>戰鬥持續進行中</div><div class="main-power-save-note" data-main-power-save-note hidden></div></div>
     </div>
-    <div class="main-power-save-exit-wrap"><div class="main-power-save-slider" aria-label="滑動退出省電模式"><div class="main-power-save-slider-text">滑動退出省電模式</div><button type="button" class="main-power-save-knob" aria-label="滑動退出省電模式">›</button></div></div>
+    <div class="main-power-save-exit-wrap"><div class="main-power-save-slider" aria-label="滑動退出極簡模式"><div class="main-power-save-slider-text">滑動退出極簡模式</div><button type="button" class="main-power-save-knob" aria-label="滑動退出極簡模式">›</button></div></div>
   </div>`;
   document.body.appendChild(overlay);
   document.body.classList.add("main-power-save-open");
@@ -253,7 +253,7 @@
   const continuous=window.activeMainBattleContext?.continuous===true||combatTotal===0||combatTotal===window.CONTINUOUS_BATTLE_COUNT;
   if(overlay)setTimeout(syncValues,0);
   if(!continuous)return html;
-  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-power-save-head"><span class="main-power-save-head-label">$1</span><button type="button" class="main-power-save-enter" onclick="openMainPowerSave()">省電模式</button></div>`);
+  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-power-save-head"><span class="main-power-save-head-label">$1</span><button type="button" class="main-power-save-enter" onclick="openMainPowerSave()">極簡模式</button></div>`);
  };
 
  if(baseShowBattleResult){
