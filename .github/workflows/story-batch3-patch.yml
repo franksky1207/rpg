@@ -1,0 +1,80 @@
+name: Story Batch 3 Patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/story-batch3-patch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Run story batch 3 patch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch story runtime files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('storyprogress.js'); s=p.read_text(encoding='utf-8')
+          old='function progress(){normalizeProgress(state);return state.storyProgress;}'
+          new='function readProgress(){const p=state?.storyProgress;return p&&typeof p==="object"&&!Array.isArray(p)?p:null;}\n function ensureProgress(options={}){normalizeProgress(state,options);return readProgress();}'
+          if old not in s: raise SystemExit('storyprogress old getter missing')
+          s=s.replace(old,new,1)
+          s=s.replace('const p=progress();\n  if(!p.completedStories.includes(id))p.completedStories.push(id);','const p=ensureProgress();\n  if(p&&!p.completedStories.includes(id))p.completedStories.push(id);',1)
+          s=s.replace('function setPending(id){const p=progress();p.pendingStory=id||null;persist();}','function setPending(id){const p=ensureProgress();if(!p)return false;p.pendingStory=id||null;persist();return true;}',1)
+          s=s.replace('const p=progress();\n  addCompleted(id);','const p=ensureProgress();\n  if(!p)return false;\n  if(!p.completedStories.includes(id))p.completedStories.push(id);',1)
+          s=s.replace('  persist();\n }\n\n function starterTypes()','  persist();\n  return true;\n }\n\n function starterTypes()',1)
+          s=s.replace('const p=progress();\n  return p.introCompleted===true','const p=readProgress();\n  if(!p)return false;\n  return p.introCompleted===true',1)
+          s=s.replace('const p=progress();\n  p.starterGearReceived=true;','const p=ensureProgress();\n  if(!p)return;\n  p.starterGearReceived=true;',1)
+          s=s.replace('const p=progress(),stories=window.CIVILIZATION_STORIES||{};\n  return p.completedStories','const p=readProgress(),stories=window.CIVILIZATION_STORIES||{};\n  if(!p)return [];\n  return p.completedStories',1)
+          s=s.replace('const p=progress();\n  if(!p.completedStories.includes(id)','const p=readProgress();\n  if(!p||!p.completedStories.includes(id)',1)
+          s=s.replace('const p=progress();\n  if(p.pendingStory){','const p=ensureProgress();\n  if(!p)return false;\n  if(p.pendingStory){',1)
+          s=s.replace('version:7,','version:8,',1)
+          s=s.replace('get:()=>progress(),','get:()=>readProgress(),',1)
+          s=s.replace('window.CIVILIZATION_STORY_PROGRESS_VERSION=7;','window.CIVILIZATION_STORY_PROGRESS_VERSION=8;',1)
+          if 'progress()' in s: raise SystemExit('old progress() calls remain')
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('ui.js'); s=p.read_text(encoding='utf-8')
+          old='function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";view=v;render()}'
+          new='function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();view=v;render()}'
+          if old not in s: raise SystemExit('ui go token missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('storyruntimeintegrity.js'); s=p.read_text(encoding='utf-8')
+          if 'const VERSION=6;' not in s: raise SystemExit('runtime version missing')
+          s=s.replace('const VERSION=6;','const VERSION=7;',1)
+          s=s.replace('if(Number(window.STORY_MIGRATION_VERSION)<3)','if(Number(window.STORY_MIGRATION_VERSION)<4)',1)
+          s=s.replace('if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<7)','if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<8)',1)
+          s=s.replace('if(Number(window.STORY_RECORD_TABS_VERSION)<3)','if(Number(window.STORY_RECORD_TABS_VERSION)<4)',1)
+          marker='if(Number(window.STORY_MIGRATION_VERSION)<4)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);'
+          if marker not in s: raise SystemExit('runtime migration marker missing')
+          s=s.replace(marker,marker+'\n  if(!Array.isArray(migration?.legacyFields)||!migration.legacyFields.includes("historyBackfillRegions"))fail("STORY_RUNTIME_MIGRATION_LEGACY_FIELDS","migration 未標記 historyBackfillRegions 為 legacy 相容欄位");',1)
+          marker='if(Number(window.STORY_RECORD_TABS_VERSION)<4)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);'
+          if marker not in s: raise SystemExit('runtime record marker missing')
+          s=s.replace(marker,marker+'\n  if(window.go?.__storyRecordLatestWrapped)fail("STORY_RUNTIME_RECORD_GO_WRAPPER","戰線紀錄不得再包裝全域 go()；應由正式進頁 hook 處理");',1)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          for filename in ['ui.js','storymigration.js','storyprogress.js','storyrecordtabs.js','storyruntimeintegrity.js']:
+            pattern=re.escape(filename)+r'\?v=[^"<]+'
+            s,n=re.subn(pattern,f'{filename}?v=20260917-story-batch3',s,count=1)
+            if n!=1: raise SystemExit(f'cache token missing: {filename}')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storyprogress.js ui.js storyruntimeintegrity.js index.html
+          git commit -m 'Complete story batch 3 runtime cleanup'
+          git push origin main
