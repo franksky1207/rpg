@@ -53,9 +53,9 @@
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
  }
- function queueFirstClearStory(ctx,result){
-  if(result?.win!==true||result?.firstBossKill!==true)return null;
-  const storyId=window.civilizationStoryProgress?.queueBossStory?.(result.bossMapIndex);
+ function consumePendingStoryFromResult(ctx,result){
+  if(result?.win!==true)return null;
+  const storyId=typeof result.pendingStoryId==="string"&&result.pendingStoryId?result.pendingStoryId:null;
   if(!storyId)return null;
   ctx.pendingStoryId=storyId;
   if(ctx.continuous)ctx.exitRequested=true;
@@ -120,7 +120,7 @@
     addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);
     if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
     else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
-    queueFirstClearStory(ctx,r);
+    consumePendingStoryFromResult(ctx,r);
    }else defeat=r;
 
    ctx.completed++;
@@ -172,5 +172,5 @@
   render();
   setTimeout(()=>showBattleResult(ctx,defeat),0);
  };
- window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=1;
+ window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
 })();
