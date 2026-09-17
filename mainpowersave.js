@@ -8,7 +8,6 @@
  let dragMax=0;
  let dragThreshold=0;
  let dragX=0;
- let ownsBackgroundFlow=false;
  let unsubscribeEnvironment=null;
 
  function isMainContinuousCombat(){
@@ -68,20 +67,6 @@
    syncValues();
    clockTimer=setInterval(()=>{if(overlay)syncValues();},60000);
   },delay);
- }
-
- function startPowerSaveBackgroundFlow(){
-  ownsBackgroundFlow=false;
-  if(typeof window.backgroundProgressStart!=="function"||typeof window.backgroundProgressIsActive!=="function")return;
-  if(window.backgroundProgressIsActive("main"))return;
-  window.backgroundProgressStart("main",{mode:"continuous"});
-  ownsBackgroundFlow=window.backgroundProgressIsActive("main")===true;
- }
-
- function stopOwnedBackgroundFlow(){
-  if(!ownsBackgroundFlow)return;
-  ownsBackgroundFlow=false;
-  if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
  }
 
  function watchEnvironment(){
@@ -146,7 +131,6 @@
   if(!overlay)return;
   stopClock();
   stopEnvironmentWatch();
-  stopOwnedBackgroundFlow();
   document.body.classList.remove("main-power-save-open");
   const old=overlay;
   overlay=null;
@@ -230,14 +214,12 @@
 
  function handleBattleResult(ctx){
   if(!overlay)return false;
-  stopOwnedBackgroundFlow();
   applyOverlayMode(ctx?.pendingStoryId?"story":"stopped");
   return true;
  }
 
  function handleSpecialResult(ctx,special,result){
   if(!overlay||result?.win!==false)return false;
-  stopOwnedBackgroundFlow();
   applyOverlayMode("stopped");
   return true;
  }
@@ -264,7 +246,6 @@
   document.body.appendChild(overlay);
   document.body.classList.add("main-power-save-open");
   wireSlider();
-  startPowerSaveBackgroundFlow();
   watchEnvironment();
   syncValues();
   startClock();
@@ -277,9 +258,10 @@
  window.syncMainPowerSave=syncValues;
  window.setMainPowerSaveState=applyOverlayMode;
  window.isMainPowerSaveOpen=()=>!!overlay;
- window.mainPowerSaveOwnsBackgroundFlow=()=>ownsBackgroundFlow;
  window.mainMinimalModeEnsureCombatHeader=ensureCombatHeader;
  window.mainMinimalModeHandleBattleResult=handleBattleResult;
  window.mainMinimalModeHandleSpecialResult=handleSpecialResult;
+ window.mainMinimalModeBackgroundPolicy=()=>"follow-gm-background-setting";
  window.MAIN_MINIMAL_MODE_HOOK_VERSION=1;
+ window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION=1;
 })();
