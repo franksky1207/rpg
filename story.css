@@ -1,0 +1,47 @@
+/* 文明戰線：正式劇情、戰線紀錄、初始裝備 UI */
+
+/* 正式劇情視窗 */
+.story-overlay{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:rgba(2,5,10,.86);backdrop-filter:blur(5px)}
+.story-overlay.open{display:flex}
+.story-card{width:min(92vw,78dvh,620px);aspect-ratio:1/1;max-width:620px;max-height:620px;display:grid;grid-template-rows:14% 1fr 14%;overflow:hidden;border:1px solid #5c6f85;border-radius:16px;background:linear-gradient(180deg,#101722 0%,#0b1018 100%);box-shadow:0 24px 80px rgba(0,0,0,.62),inset 0 0 50px rgba(62,111,160,.08);color:#e8edf4}
+.story-head{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 18px;border-bottom:1px solid #334153;background:linear-gradient(180deg,rgba(31,49,69,.96),rgba(20,31,44,.96));text-align:center;min-height:0}
+.story-chapter{font-size:clamp(11px,1.7vw,13px);font-weight:800;letter-spacing:.08em;color:#a9bed5;line-height:1.2}
+.story-location{margin-top:2px;font-size:clamp(10px,1.45vw,12px);color:#8298af;line-height:1.15}
+.story-title{margin-top:3px;font-size:clamp(15px,2.3vw,20px);font-weight:900;color:#f1d38b;line-height:1.15}
+.story-body{min-height:0;overflow:hidden;padding:clamp(15px,3.2vw,26px) clamp(17px,3.8vw,30px);font-size:clamp(14px,2.2vw,17px);line-height:1.58;letter-spacing:.015em;display:flex;flex-direction:column;justify-content:flex-start}
+.story-body p{margin:0 0 .78em;overflow-wrap:anywhere}.story-body p:last-child{margin-bottom:0}.story-body .story-em{margin:auto 0;text-align:center;font-size:1.12em;font-weight:900;color:#f0d494;letter-spacing:.035em;white-space:pre-line}
+.story-actions{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px;padding:10px 16px;border-top:1px solid #334153;background:#0d141e}
+.story-actions .btn{width:100%;height:42px;margin:0}.story-actions .story-spacer{display:block}.story-page-number{min-width:58px;text-align:center;color:#a9b6c5;font-size:13px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+@media(max-width:760px){
+ .story-overlay{padding:8px}
+ .story-card{width:min(94vw,88dvh);border-radius:13px;grid-template-rows:15% 1fr 15%}
+ .story-head{padding:6px 12px}.story-body{padding:13px 16px;font-size:14px;line-height:1.52}.story-body p{margin-bottom:.68em}.story-actions{padding:8px 11px;gap:10px}.story-actions .btn{height:40px;padding:8px 10px}.story-page-number{min-width:52px;font-size:12px}
+}
+@media(max-width:390px){.story-body{font-size:13.5px;padding:12px 14px;line-height:1.5}.story-actions{gap:8px}.story-page-number{min-width:48px}}
+
+/* 戰線紀錄 */
+.story-record-page{display:grid;gap:14px}
+.story-record-card{display:grid;gap:10px}
+.story-record-chapter{margin:0;color:#f0d494}
+.story-record-list{display:grid;gap:9px}
+.story-record-entry{width:100%;text-align:left;border:1px solid #3b4b5d;border-radius:12px;background:rgba(13,20,30,.9);color:#e7edf5;padding:13px 14px;cursor:pointer}
+.story-record-entry b{display:block;color:#f1d38b;font-size:16px}
+.story-record-entry span{display:block;margin-top:4px;color:#9fb0c1;font-size:13px;line-height:1.45}
+.story-record-empty{padding:18px 0;color:#9aa8b6}
+.story-record-tabs{display:flex;flex-wrap:wrap;gap:10px}
+.story-record-tab{border:1px solid #465a70;border-radius:11px;background:rgba(13,20,30,.9);color:#c8d4df;padding:11px 16px;min-height:44px;font-weight:800;cursor:pointer}
+.story-record-tab.active{border-color:#d8b96f;background:rgba(76,59,27,.55);color:#f1d38b;box-shadow:inset 0 0 0 1px rgba(241,211,139,.12)}
+.story-record-intro{display:grid;gap:9px}
+.story-record-selected{display:grid;gap:10px}
+@media(max-width:560px){
+ .story-record-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .story-record-tab{width:100%;padding:10px 8px;min-height:48px;font-size:14px;line-height:1.25}
+ .story-record-entry{padding:12px}
+ .story-record-entry b{font-size:15px}
+}
+
+/* 初始裝備發放 */
+.starter-gear-overlay{position:fixed;inset:0;z-index:10055;display:none;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:rgba(2,5,10,.88);backdrop-filter:blur(5px)}
+.starter-gear-overlay.open{display:flex}.starter-gear-card{width:min(92vw,560px);max-height:min(86dvh,720px);overflow:auto;border:1px solid #5c6f85;border-radius:16px;background:linear-gradient(180deg,#101722,#0b1018);box-shadow:0 24px 80px rgba(0,0,0,.62);padding:22px;color:#e8edf4}
+.starter-gear-card h2{margin:0;text-align:center;color:#f1d38b}.starter-gear-intro{margin:10px 0 16px;color:#b8c5d2;line-height:1.65;text-align:center}.starter-gear-list{display:grid;gap:8px}.starter-gear-row{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid #334153;border-radius:10px;background:#0d141e}.starter-gear-type{color:#8fa7bf;font-weight:800}.starter-gear-note{margin-top:14px;color:#8fa0b2;font-size:13px;line-height:1.55}.starter-gear-actions{margin-top:18px;display:flex;justify-content:center}.starter-gear-actions .btn{min-width:180px}
+@media(max-width:560px){.starter-gear-card{padding:18px 15px}.starter-gear-row{grid-template-columns:64px 1fr;padding:9px 10px}.starter-gear-actions .btn{width:100%}}
