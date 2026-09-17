@@ -102,6 +102,7 @@
    const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
    adventureScreen="combat";
    render();
+   if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});
    await sleep(60);
 
    const psBefore=playerCombatStats(),startPlayerHp=state.hp;
@@ -170,7 +171,11 @@
   window.activeMainBattleContext=null;
   save();
   render();
-  setTimeout(()=>showBattleResult(ctx,defeat),0);
+  setTimeout(()=>{
+   showBattleResult(ctx,defeat);
+   if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);
+  },0);
  };
  window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
+ window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;
 })();
