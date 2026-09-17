@@ -8,6 +8,7 @@
  let dragStartX=0;
  let dragMax=0;
  let dragThreshold=0;
+ let dragX=0;
 
  function isMainContinuousCombat(){
   const ctx=window.activeMainBattleContext;
@@ -72,7 +73,7 @@
   const text=overlay.querySelector(".main-power-save-slider-text");
   if(knob){knob.classList.remove("dragging","ready");knob.style.transform="translateX(0px)";}
   if(text)text.style.opacity="1";
-  currentPointerId=null;dragStartX=0;dragMax=0;dragThreshold=0;
+  currentPointerId=null;dragStartX=0;dragMax=0;dragThreshold=0;dragX=0;
  }
 
  function closeMainPowerSave(){
@@ -88,7 +89,7 @@
  function finishDrag(ev){
   if(!overlay||currentPointerId===null||ev.pointerId!==currentPointerId)return;
   const knob=overlay.querySelector(".main-power-save-knob");
-  const success=dragThreshold>0&&dragMax>=dragThreshold;
+  const success=dragThreshold>0&&dragX>=dragThreshold;
   try{knob?.releasePointerCapture(currentPointerId);}catch(e){}
   currentPointerId=null;
   if(success){closeMainPowerSave();return;}
@@ -110,16 +111,17 @@
    const knobRect=knob.getBoundingClientRect();
    dragMax=Math.max(0,sliderRect.width-knobRect.width-10);
    dragThreshold=dragMax*.78;
+   dragX=0;
    knob.classList.add("dragging");
    knob.setPointerCapture(ev.pointerId);
    ev.preventDefault();
   });
   knob.addEventListener("pointermove",ev=>{
    if(currentPointerId===null||ev.pointerId!==currentPointerId)return;
-   const x=Math.max(0,Math.min(dragMax,ev.clientX-dragStartX));
-   knob.style.transform=`translateX(${x}px)`;
-   knob.classList.toggle("ready",x>=dragThreshold);
-   if(text)text.style.opacity=String(Math.max(.12,1-(x/Math.max(1,dragMax))*.88));
+   dragX=Math.max(0,Math.min(dragMax,ev.clientX-dragStartX));
+   knob.style.transform=`translateX(${dragX}px)`;
+   knob.classList.toggle("ready",dragX>=dragThreshold);
+   if(text)text.style.opacity=String(Math.max(.12,1-(dragX/Math.max(1,dragMax))*.88));
   });
   knob.addEventListener("pointerup",finishDrag);
   knob.addEventListener("pointercancel",finishDrag);
