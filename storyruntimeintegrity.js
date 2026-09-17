@@ -1,11 +1,15 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
 
  function run(){
   const errors=[];
   const warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
   const warn=(code,message,data=null)=>warnings.push({code,message,data});
+  const versionHint=(name,value,recommended)=>{
+   const n=Number(value);
+   if(!Number.isFinite(n)||n<recommended)warn("STORY_RUNTIME_VERSION_HINT",`${name} 版本低於目前建議值 ${recommended}；能力與行為檢查仍為主要判定依據`,value);
+  };
 
   const dataReport=typeof window.runCivilizationStoryIntegrity==="function"?window.runCivilizationStoryIntegrity():null;
   if(!dataReport)fail("STORY_RUNTIME_DATA_INTEGRITY_MISSING","正式劇情資料完整性檢查器未載入");
@@ -15,15 +19,16 @@
    if(Number(dataReport.totalStories)!==101)fail("STORY_RUNTIME_STORY_COUNT",`正式劇情執行期必須載入 101 篇故事，實際 ${Number(dataReport.totalStories)||0}`);
    if(Number(dataReport.bossStoriesChecked)!==100)fail("STORY_RUNTIME_BOSS_DATA_COUNT",`正式劇情執行期必須完成 100 個首領故事資料檢查，實際 ${Number(dataReport.bossStoriesChecked)||0}`);
   }
-  if(Number(window.STORY_INTEGRITY_VERSION)<6)fail("STORY_RUNTIME_DATA_INTEGRITY_VERSION","STORY_INTEGRITY_VERSION 未達目前需求",window.STORY_INTEGRITY_VERSION);
+  versionHint("STORY_INTEGRITY_VERSION",window.STORY_INTEGRITY_VERSION,6);
+
   if(typeof window.openStory!=="function")fail("STORY_RUNTIME_UI_OPEN_MISSING","openStory 未載入");
   if(typeof window.isStoryOpen!=="function")fail("STORY_RUNTIME_UI_STATE_MISSING","isStoryOpen 未載入");
-  if(Number(window.STORY_UI_VERSION)<5)fail("STORY_RUNTIME_UI_VERSION","STORY_UI_VERSION 未達目前需求",window.STORY_UI_VERSION);
+  versionHint("STORY_UI_VERSION",window.STORY_UI_VERSION,6);
 
   const migration=window.civilizationStoryMigration;
   if(!migration||typeof migration.migrate!=="function"||typeof migration.backfillAvailableHistory!=="function")fail("STORY_RUNTIME_MIGRATION_MISSING","故事進度 migration 模組未完整載入");
-  if(Number(window.STORY_MIGRATION_VERSION)<4)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
   if(!Array.isArray(migration?.legacyFields)||!migration.legacyFields.includes("historyBackfillRegions"))fail("STORY_RUNTIME_MIGRATION_LEGACY_FIELDS","migration 未標記 historyBackfillRegions 為 legacy 相容欄位");
+  versionHint("STORY_MIGRATION_VERSION",window.STORY_MIGRATION_VERSION,4);
 
   const progress=window.civilizationStoryProgress;
   if(!progress)fail("STORY_RUNTIME_PROGRESS_MISSING","civilizationStoryProgress 未載入");
@@ -32,19 +37,19 @@
     if(typeof progress[name]!=="function")fail("STORY_RUNTIME_PROGRESS_METHOD",`civilizationStoryProgress.${name} 未載入`);
    });
   }
-  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<8)fail("STORY_RUNTIME_PROGRESS_VERSION","CIVILIZATION_STORY_PROGRESS_VERSION 未達目前需求",window.CIVILIZATION_STORY_PROGRESS_VERSION);
+  versionHint("CIVILIZATION_STORY_PROGRESS_VERSION",window.CIVILIZATION_STORY_PROGRESS_VERSION,9);
 
   if(typeof window.replayCompletedStory!=="function")fail("STORY_RUNTIME_REPLAY_MISSING","戰線紀錄重播函式未載入");
   if(typeof window.storyRecordPageHtml!=="function")fail("STORY_RUNTIME_RECORD_PAGE_MISSING","戰線紀錄頁面函式未載入");
   if(typeof window.selectStoryRecordRegion!=="function")fail("STORY_RUNTIME_RECORD_SELECT_MISSING","戰線紀錄區域切換函式未載入");
   if(typeof window.prepareStoryRecordEntry!=="function")fail("STORY_RUNTIME_RECORD_ENTRY_MISSING","戰線紀錄進頁初始化函式未載入");
-  if(Number(window.STORY_RECORD_TABS_VERSION)<4)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);
   if(window.go?.__storyRecordLatestWrapped)fail("STORY_RUNTIME_RECORD_GO_WRAPPER","戰線紀錄不得再包裝全域 go()；應由正式進頁 hook 處理");
+  versionHint("STORY_RECORD_TABS_VERSION",window.STORY_RECORD_TABS_VERSION,5);
 
   ["gmStoryTestHtml","gmPreviewStory","gmStoryMoveRegion","gmStoryMoveEntry","gmStoryRunIntegrity"].forEach(name=>{
    if(typeof window[name]!=="function")fail("STORY_RUNTIME_GM_METHOD",`${name} 未載入`);
   });
-  if(Number(window.GM_STORY_TEST_VERSION)<3)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
+  versionHint("GM_STORY_TEST_VERSION",window.GM_STORY_TEST_VERSION,3);
 
   const regions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const stories=window.CIVILIZATION_STORIES||{};
@@ -111,7 +116,12 @@
 
   if(typeof state!=="undefined"&&state&&progress&&typeof progress.get==="function"){
    let p=null;
-   try{p=progress.get();}catch(error){fail("STORY_RUNTIME_PROGRESS_GET_FAILED","讀取故事進度時發生錯誤",String(error?.message||error));}
+   let before=null;
+   try{
+    before=JSON.stringify(state.storyProgress??null);
+    p=progress.get();
+    if(JSON.stringify(state.storyProgress??null)!==before)fail("STORY_RUNTIME_PROGRESS_GET_MUTATED","讀取故事進度時不應修改 storyProgress");
+   }catch(error){fail("STORY_RUNTIME_PROGRESS_GET_FAILED","讀取故事進度時發生錯誤",String(error?.message||error));}
    if(p){
     if(!Array.isArray(p.completedStories))fail("STORY_RUNTIME_COMPLETED_FORMAT","completedStories 格式錯誤");
     else p.completedStories.forEach(id=>{if(!stories[id])warn("STORY_RUNTIME_COMPLETED_UNKNOWN",`已完成故事紀錄找不到正式資料：${id}`);});
