@@ -67,13 +67,14 @@
    ["穿透技巧","提高穿透觸發機率，發動時會忽略敵人的部分防禦；普通攻擊、連擊與反擊都可以觸發。"],
    ["反擊技巧","敵人成功造成傷害且角色仍存活後，有機會立即反擊。反擊本身也可以觸發部分其他戰鬥效果。"],
    ["汲取技巧","玩家造成傷害時有機會觸發汲取，依實際造成的傷害回復部分 HP，且不會超過最大 HP。"],
-   ["本機存檔","使用瀏覽器本機自動存檔，也可匯出與匯入存檔；目前不支援跨裝置同步。"]
+   ["本機存檔","遊戲會自動將進度儲存在目前裝置的瀏覽器中，更換裝置時本機存檔不會自動轉移。"],
+   ["雲端存檔","登入帳號後，可在設定頁手動上傳或下載雲端存檔，用來在不同裝置之間搬移進度；雲端存檔不會自動同步，也不會在登入時自動覆蓋本機存檔。"]
   ]}
  ];
  let activeGuideCategory="adventure";
  function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=10;
+ window.GAME_GUIDE_VERSION=11;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
