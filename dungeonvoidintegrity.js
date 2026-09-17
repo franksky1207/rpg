@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  window.VOID_MIRAGE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -18,6 +18,7 @@
 
   if(Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)!==1)fail("auto-owner-version");
   if(Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)!==1)fail("ui-auto-adapter-version");
+  if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
 
   const requiredApis=[

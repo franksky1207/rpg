@@ -182,7 +182,8 @@ style：
 - 虛空戰敗或強制退出正式結束時切到 `stopped`，顯示「戰鬥已停止」與「滑動查看戰鬥結果」，滑掉後顯示既有虛空結果頁。
 - 虛空自動爬樓唯一正式 owner 為 `dungeonvoid.js` 的 `runVoidMirageAuto()`；`dungeonvoidui.js` 只透過 `onFloorComplete`／`onEnd` callback 做畫面、動畫、極簡模式與結果頁接線，不得再建立第二套 while-loop 爬樓流程。
 - `VOID_MIRAGE_AUTO_OWNER_VERSION = 1`；`VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION = 1`。
-- 虛空專屬 runtime integrity：`dungeonvoidintegrity.js`，`VOID_MIRAGE_INTEGRITY_VERSION = 1`；檢查解鎖 Lv.25、前 100 層起點、每 10 層 Boss、普通／Boss 特性數、勝利後紀錄與樓層前進順序、戰後滿血、退出旗標、唯一 auto-run owner/callback contract、必要 snapshot/API。
+- 虛空 UI 正式樣式檔為 `dungeonvoid.css`；`dungeonvoidui.js` 不再 runtime 注入 `<style>`，`VOID_MIRAGE_UI_STYLE_VERSION = 1`。
+- 虛空專屬 runtime integrity：`dungeonvoidintegrity.js`，`VOID_MIRAGE_INTEGRITY_VERSION = 2`；檢查解鎖 Lv.25、前 100 層起點、每 10 層 Boss、普通／Boss 特性數、勝利後紀錄與樓層前進順序、戰後滿血、退出旗標、唯一 auto-run owner/callback contract、必要 snapshot/API，以及正式 UI style marker。
 - `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`；`VOID_MINIMAL_MODE_HOOK_VERSION = 1`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`。
 - 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。
 

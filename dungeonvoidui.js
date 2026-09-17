@@ -2,27 +2,6 @@
  let voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("void")?window.backgroundProgressSleep(ms,"void"):new Promise(resolve=>setTimeout(resolve,ms));
 
- function injectStyles(){
-  if(document.getElementById("void-mirage-ui-styles"))return;
-  const style=document.createElement("style");
-  style.id="void-mirage-ui-styles";
-  style.textContent=`
-  .dungeon-mode-tower{background:linear-gradient(180deg,#15232b,#11191f);border-color:#3f7787}.dungeon-mode-tower h3{color:#8fd5e3}.dungeon-mode-tower .dungeon-entry-btn{background:#245c6b;border-color:#3f8294;color:#effcff}.dungeon-mode-tower .dungeon-entry-btn:not(:disabled):hover{background:#2d7183}
-  .void-shell{max-width:960px;margin:0 auto;padding-bottom:14px}.void-panel{background:linear-gradient(180deg,#13242d,#0d171d);border:1px solid #3d7788;color:#e8f8fb}.void-title{text-align:center;color:#90dce9;font-size:23px;font-weight:850;letter-spacing:.06em;margin-bottom:12px}
-  .void-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0 0 14px}.void-stat{background:#0c171c;border:1px solid #2c5560;border-radius:10px;padding:10px;text-align:center;min-width:0}.void-stat span{display:block;color:#8eabb2;font-size:12px}.void-stat strong{display:block;color:#e8fbff;font-size:19px;margin-top:3px;overflow-wrap:anywhere}
-  .void-combat{background:linear-gradient(180deg,#102129,#0c151a);border:1px solid #356f80;border-radius:16px;padding:16px}.void-combat .combat-head{color:#90dce9}.void-player{background:linear-gradient(180deg,#18232b,#10161b)!important;border-color:#536f80!important}.void-enemy{background:linear-gradient(180deg,#16313a,#0f2027)!important;border-color:#4a93a5!important;box-shadow:0 18px 44px rgba(26,91,108,.27)}.void-enemy h2{color:#dffaff}.void-vs{color:#80cbd8}.void-message{color:#9dd8e2}
-  .void-floor-badge{display:inline-block;border:1px solid #4d91a2;border-radius:999px;padding:4px 10px;color:#9ee5f0;background:#102a32;font-weight:800;margin-bottom:7px}.void-boss-badge{border-color:#c79d58;color:#f0cb84;background:#302412}.void-enemy-meta,.void-player-meta{color:#b9d4da;font-size:13px;line-height:1.6;margin:7px 0}.void-reward{color:#f0cd7d;font-weight:800}
-  .void-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.void-top-exit{margin:6px 0 10px}.void-top-exit .void-exit-btn{width:100%;max-width:520px}.void-exit-btn{background:#7b3438;border-color:#a24a50;color:#fff}.void-exit-btn:hover{background:#914047}.void-exit-btn:disabled{opacity:.62;cursor:not-allowed}.void-result{max-width:680px;margin:0 auto;text-align:center;padding:22px}.void-result h2{color:#dffaff;margin:6px 0 14px}.void-result-reason{font-size:18px;font-weight:800;color:#9ddbe5;margin-bottom:12px}.void-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;text-align:left;margin:14px 0}.void-result-grid>div{background:#0d191f;border:1px solid #2f5965;border-radius:10px;padding:11px}.void-result-grid span{display:block;color:#8faab1;font-size:12px}.void-result-grid strong{display:block;color:#edfaff;font-size:18px;margin-top:3px}.void-claim-line{color:#b9d4da;line-height:1.6;margin-top:10px}.void-claim-line strong{color:#f0cd7d}
-  @media(max-width:760px){
-   .void-shell{padding:0 4px 12px}.void-panel{padding:7px}.void-title{font-size:18px;margin-bottom:6px}.void-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-bottom:6px}.void-stat{padding:5px 3px;border-radius:7px}.void-stat span{font-size:10px;line-height:1.15}.void-stat strong{font-size:14px;margin-top:2px}
-   .void-combat{padding:7px;border-radius:11px;min-height:0}.void-combat .combat-head{margin-bottom:5px;font-size:13px}.void-combat .combat-arena{gap:6px;min-height:0;flex:0 0 auto;grid-template-rows:auto 30px auto;align-items:stretch}.void-combat .combatant{padding:8px;min-height:0;border-radius:10px;justify-content:center}.void-combat .combatant h2{font-size:18px;margin:3px 0 6px}.void-vs{font-size:17px;margin:0;line-height:30px;align-self:center}
-   .void-floor-badge{padding:2px 7px;margin-bottom:3px;font-size:11px}.void-enemy-meta,.void-player-meta{margin:2px 0;font-size:11px;line-height:1.35}.void-reward{font-size:13px;margin:2px 0}.void-combat .big-hp{margin-top:5px}.void-combat .status-label{font-size:12px;margin-bottom:3px}.void-combat .bar{height:10px}.void-message{font-size:12px;min-height:0;margin-top:5px;padding:5px}.void-top-exit{margin:4px 0 6px}.void-top-exit .void-exit-btn{padding:9px 10px;font-size:14px}.void-result{padding:17px 12px}
-  }
-  @media(max-width:430px){.void-result-grid{grid-template-columns:1fr}.void-actions .btn{width:100%}}
-  `;
-  document.head.appendChild(style);
- }
-
  function progressSafe(){
   if(typeof ensureVoidMirageState==="function")return ensureVoidMirageState()||{highestCleared:0};
   return state?.dungeon?.voidMirage||{highestCleared:0};
@@ -68,7 +47,6 @@
  }
 
  window.renderVoidMirageDungeon=function(){
-  injectStyles();
   if(voidUi.phase==="result"&&voidUi.finalRun)return resultHtml(voidUi.finalRun);
   const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
   if(voidUi.floorResult&&run)return combatHtml(voidUi.floorResult,run);
@@ -219,9 +197,8 @@
   registerVoidMinimalModeAdapter();
   return typeof window.openMinimalMode==="function"&&window.openMinimalMode("void-mirage")===true;
  };
+ window.VOID_MIRAGE_UI_STYLE_VERSION=1;
  window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION=1;
  window.VOID_MINIMAL_MODE_HOOK_VERSION=1;
  registerVoidMinimalModeAdapter();
-
- injectStyles();
 })();
