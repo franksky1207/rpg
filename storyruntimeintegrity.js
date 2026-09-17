@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
 
  function run(){
   const errors=[];
@@ -22,7 +22,8 @@
 
   const migration=window.civilizationStoryMigration;
   if(!migration||typeof migration.migrate!=="function"||typeof migration.backfillAvailableHistory!=="function")fail("STORY_RUNTIME_MIGRATION_MISSING","故事進度 migration 模組未完整載入");
-  if(Number(window.STORY_MIGRATION_VERSION)<3)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
+  if(Number(window.STORY_MIGRATION_VERSION)<4)fail("STORY_RUNTIME_MIGRATION_VERSION","STORY_MIGRATION_VERSION 未達目前需求",window.STORY_MIGRATION_VERSION);
+  if(!Array.isArray(migration?.legacyFields)||!migration.legacyFields.includes("historyBackfillRegions"))fail("STORY_RUNTIME_MIGRATION_LEGACY_FIELDS","migration 未標記 historyBackfillRegions 為 legacy 相容欄位");
 
   const progress=window.civilizationStoryProgress;
   if(!progress)fail("STORY_RUNTIME_PROGRESS_MISSING","civilizationStoryProgress 未載入");
@@ -31,13 +32,14 @@
     if(typeof progress[name]!=="function")fail("STORY_RUNTIME_PROGRESS_METHOD",`civilizationStoryProgress.${name} 未載入`);
    });
   }
-  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<7)fail("STORY_RUNTIME_PROGRESS_VERSION","CIVILIZATION_STORY_PROGRESS_VERSION 未達目前需求",window.CIVILIZATION_STORY_PROGRESS_VERSION);
+  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)<8)fail("STORY_RUNTIME_PROGRESS_VERSION","CIVILIZATION_STORY_PROGRESS_VERSION 未達目前需求",window.CIVILIZATION_STORY_PROGRESS_VERSION);
 
   if(typeof window.replayCompletedStory!=="function")fail("STORY_RUNTIME_REPLAY_MISSING","戰線紀錄重播函式未載入");
   if(typeof window.storyRecordPageHtml!=="function")fail("STORY_RUNTIME_RECORD_PAGE_MISSING","戰線紀錄頁面函式未載入");
   if(typeof window.selectStoryRecordRegion!=="function")fail("STORY_RUNTIME_RECORD_SELECT_MISSING","戰線紀錄區域切換函式未載入");
   if(typeof window.prepareStoryRecordEntry!=="function")fail("STORY_RUNTIME_RECORD_ENTRY_MISSING","戰線紀錄進頁初始化函式未載入");
-  if(Number(window.STORY_RECORD_TABS_VERSION)<3)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);
+  if(Number(window.STORY_RECORD_TABS_VERSION)<4)fail("STORY_RUNTIME_RECORD_VERSION","STORY_RECORD_TABS_VERSION 未達目前需求",window.STORY_RECORD_TABS_VERSION);
+  if(window.go?.__storyRecordLatestWrapped)fail("STORY_RUNTIME_RECORD_GO_WRAPPER","戰線紀錄不得再包裝全域 go()；應由正式進頁 hook 處理");
 
   ["gmStoryTestHtml","gmPreviewStory","gmStoryMoveRegion","gmStoryMoveEntry","gmStoryRunIntegrity"].forEach(name=>{
    if(typeof window[name]!=="function")fail("STORY_RUNTIME_GM_METHOD",`${name} 未載入`);

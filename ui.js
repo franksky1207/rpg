@@ -46,7 +46,7 @@ function renderNav(){
  if(top)top.innerHTML="";
  if(bottom)bottom.innerHTML="";
 }
-function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";view=v;render()}
+function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();view=v;render()}
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);

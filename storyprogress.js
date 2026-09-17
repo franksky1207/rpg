@@ -57,16 +57,18 @@
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshState);
  window.normalizeStoryProgressState=normalizeProgress;
 
- function progress(){normalizeProgress(state);return state.storyProgress;}
+ function readProgress(){const p=state?.storyProgress;return p&&typeof p==="object"&&!Array.isArray(p)?p:null;}
+ function ensureProgress(options={}){normalizeProgress(state,options);return readProgress();}
  function persist(){if(typeof save==="function")save(false);}
  function addCompleted(id){
-  const p=progress();
-  if(!p.completedStories.includes(id))p.completedStories.push(id);
+  const p=ensureProgress();
+  if(p&&!p.completedStories.includes(id))p.completedStories.push(id);
  }
- function setPending(id){const p=progress();p.pendingStory=id||null;persist();}
+ function setPending(id){const p=ensureProgress();if(!p)return false;p.pendingStory=id||null;persist();return true;}
  function completeStory(id){
-  const p=progress();
-  addCompleted(id);
+  const p=ensureProgress();
+  if(!p)return false;
+  if(!p.completedStories.includes(id))p.completedStories.push(id);
   if(p.pendingStory===id)p.pendingStory=null;
   if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}
   persist();
@@ -98,7 +100,8 @@
   return true;
  }
  function brokenOnboardingGearState(){
-  const p=progress();
+  const p=readProgress();
+  if(!p)return false;
   return p.introCompleted===true&&p.starterGearReceived===true&&p.completedStories.length===1&&p.completedStories[0]===INTRO_STORY_ID&&hasNoMainProgress()&&allStarterGearMissing();
  }
  function ensureStarterEquipment(){
@@ -161,7 +164,8 @@
  }
  window.confirmStarterGearReceived=function(){
   ensureStarterEquipment();
-  const p=progress();
+  const p=ensureProgress();
+  if(!p)return;
   p.starterGearReceived=true;
   if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
   persist();
@@ -184,12 +188,13 @@
   return mapIndex==null?100000:mapIndex+1;
  }
  function completedStoryRows(){
-  const p=progress(),stories=window.CIVILIZATION_STORIES||{};
+  const p=readProgress(),stories=window.CIVILIZATION_STORIES||{};
+  if(!p)return [];
   return p.completedStories.filter(id=>stories[id]).map(id=>stories[id]).sort((a,b)=>storyOrder(a.id)-storyOrder(b.id));
  }
  window.replayCompletedStory=function(id){
-  const p=progress();
-  if(!p.completedStories.includes(id)||!window.CIVILIZATION_STORIES?.[id])return false;
+  const p=readProgress();
+  if(!p||!p.completedStories.includes(id)||!window.CIVILIZATION_STORIES?.[id])return false;
   return typeof openStory==="function"?openStory(id):false;
  };
 
@@ -204,7 +209,8 @@
   resumeQueued=false;
   if(typeof state==="undefined"||!state||!authReady()||!backgroundReady())return false;
   repairBrokenOnboardingGear();
-  const p=progress();
+  const p=ensureProgress();
+  if(!p)return false;
   if(p.pendingStory){
    if(openFormalStory(p.pendingStory))return true;
    console.error("Pending story is unavailable",p.pendingStory);
@@ -224,11 +230,11 @@
  }
 
  window.civilizationStoryProgress={
-  version:7,
+  version:8,
   introStoryId:INTRO_STORY_ID,
   normalize:normalizeProgress,
   resume:queueResume,
-  get:()=>progress(),
+  get:()=>readProgress(),
   setPending,
   completeStory,
   queueBossStory,
@@ -237,7 +243,7 @@
   ensureStarterEquipment,
   completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=7;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=8;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
