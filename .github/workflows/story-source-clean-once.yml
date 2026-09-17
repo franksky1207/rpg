@@ -1,0 +1,59 @@
+name: One-time Story Source Clean
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/story-source-clean-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Run one-time story source clean'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Clean raw story display text and bump cache
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          replacements={
+            'storydata-earth.js': [('比 Boss 更危險的戰鬥','比首領更危險的戰鬥')],
+            'storydata-solar.js': [('一場 Boss 戰就得到整齊答案','一場首領戰就得到整齊答案')],
+            'storydata-nearstar.js': [('那場 Boss 戰不是為了分出誰統治誰','那場首領戰不是為了分出誰統治誰')],
+            'storydata-frontier.js': [('這場 Boss 戰真正目的不是征服','這場首領戰真正目的不是征服')],
+            'storydata-core-outer.js': [
+              ('Boss戰最後只是一次受控高重力航行測試','首領戰最後只是一次受控高重力航行測試'),
+              ('談判破裂後的Boss戰被限制','談判破裂後的首領戰被限制'),
+              ('最終Boss戰發生在相位同步層','最終首領戰發生在相位同步層')
+            ]
+          }
+          for filename, pairs in replacements.items():
+            p=Path(filename); s=p.read_text(encoding='utf-8')
+            for old,new in pairs:
+              if old not in s: raise SystemExit(f'{filename}: missing expected text: {old}')
+              if s.count(old)!=1: raise SystemExit(f'{filename}: expected exactly one match: {old}')
+              s=s.replace(old,new,1)
+            p.write_text(s,encoding='utf-8')
+
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          files=['storydata-earth.js','storydata-solar.js','storydata-nearstar.js','storydata-frontier.js','storydata-core-outer.js']
+          import re
+          for filename in files:
+            pattern=re.escape(filename)+r'\?v=[^"<]+'
+            new=f'{filename}?v=20260917-story-source-clean2'
+            s,n=re.subn(pattern,new,s,count=1)
+            if n!=1: raise SystemExit(f'index cache token not found exactly once: {filename}')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit source cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storydata-earth.js storydata-solar.js storydata-nearstar.js storydata-frontier.js storydata-core-outer.js index.html
+          git commit -m 'Clean raw story display text'
+          git push origin main
