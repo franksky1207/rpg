@@ -12,6 +12,7 @@ on:
       - 'storyprogress.js'
       - 'combatcore.js'
       - 'battlepipeline.js'
+      - 'story-source-purity-ci.js'
       - 'story-integrity-ci.js'
       - 'story-flow-ci.js'
       - '.github/workflows/story-integrity.yml'
@@ -25,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Run raw story source purity
+        run: node story-source-purity-ci.js
       - name: Run story data integrity
         run: node story-integrity-ci.js
       - name: Run story flow regressions
