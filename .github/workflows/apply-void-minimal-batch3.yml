@@ -1,0 +1,112 @@
+name: Apply void minimal mode batch 3
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-void-minimal-batch3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch void minimal mode batch 3
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # dungeonvoidui.js: keep overlay visible on defeat/manual exit and expose hook marker.
+          p=Path('dungeonvoidui.js')
+          text=p.read_text(encoding='utf-8')
+
+          old='''    if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}\n    const fr=fightNextVoidMirageFloor();\n    if(!fr?.ok){voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}\n    voidUi.floorResult=fr;voidUi.phase="combat";render();\n    if(!fr.ended&&typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage")window.syncMainMinimalMode();\n    await animateFloor(fr);\n    if(fr.ended){voidUi.finalRun=fr.run;voidUi.phase="result";voidUi.floorResult=null;render();break;}\n    if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}'''
+          new='''    if(voidUi.exitAfterFloor){\n     stopVoidMinimalModeIfOpen();\n     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;\n    }\n    const fr=fightNextVoidMirageFloor();\n    if(!fr?.ok){stopVoidMinimalModeIfOpen();voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}\n    voidUi.floorResult=fr;voidUi.phase="combat";render();\n    if(typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage"){\n     if(fr.ended)stopVoidMinimalModeIfOpen();else window.syncMainMinimalMode();\n    }\n    await animateFloor(fr);\n    if(fr.ended){voidUi.finalRun=fr.run;voidUi.phase="result";voidUi.floorResult=null;render();break;}\n    if(voidUi.exitAfterFloor){\n     stopVoidMinimalModeIfOpen();\n     const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;\n    }'''
+          if old not in text:
+              raise SystemExit('autoClimb result-flow anchor not found')
+          text=text.replace(old,new,1)
+
+          old=''' function voidMinimalModeIsActive(){\n  const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;\n  return voidUi.phase==="combat"&&!!voidUi.floorResult&&run?.active===true;\n }'''
+          new=''' function stopVoidMinimalModeIfOpen(){\n  if(window.getMinimalModeAdapterId?.()!=="void-mirage")return false;\n  if(typeof window.setMainMinimalModeState!=="function")return false;\n  window.setMainMinimalModeState("stopped");\n  return true;\n }\n function voidMinimalModeIsActive(){\n  const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;\n  return voidUi.phase==="combat"&&!!voidUi.floorResult&&run?.active===true;\n }'''
+          if old not in text:
+              raise SystemExit('void minimal active anchor not found')
+          text=text.replace(old,new,1)
+
+          old='''   sync(root,mode){\n    if(mode!=="running")return;\n    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;'''
+          new='''   sync(root,mode){\n    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;'''
+          if old not in text:
+              raise SystemExit('void adapter sync mode anchor not found')
+          text=text.replace(old,new,1)
+
+          old=''' registerVoidMinimalModeAdapter();\n\n injectStyles();\n})();'''
+          new=''' window.VOID_MINIMAL_MODE_HOOK_VERSION=1;\n registerVoidMinimalModeAdapter();\n\n injectStyles();\n})();'''
+          if old not in text:
+              raise SystemExit('void hook marker anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          # Integrity: adapter API + void hook/version checks.
+          p=Path('mainminimalmodeintegrity.js')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('const VERSION=2;','const VERSION=3;',1)
+          old='''  if(Number(window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION)!==1)fail("background-policy-version");\n\n  if(typeof window.openMainMinimalMode!=="function")fail("open-api");'''
+          new='''  if(Number(window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION)!==1)fail("background-policy-version");\n  if(Number(window.MAIN_MINIMAL_MODE_ADAPTER_VERSION)!==1)fail("adapter-version");\n  if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("void-hook-version");\n\n  if(typeof window.openMainMinimalMode!=="function")fail("open-api");'''
+          if old not in text:
+              raise SystemExit('integrity version anchor not found')
+          text=text.replace(old,new,1)
+          old='''  if(typeof window.mainMinimalModeHandleSpecialResult!=="function")fail("special-result-hook-api");\n\n  if(typeof window.mainMinimalModeBackgroundPolicy!=="function"'''
+          new='''  if(typeof window.mainMinimalModeHandleSpecialResult!=="function")fail("special-result-hook-api");\n  if(typeof window.openMinimalMode!=="function")fail("adapter-open-api");\n  if(typeof window.registerMinimalModeAdapter!=="function")fail("adapter-register-api");\n  if(typeof window.getMinimalModeAdapterId!=="function")fail("adapter-id-api");\n  if(typeof window.openVoidMirageMinimalMode!=="function")fail("void-open-api");\n\n  if(typeof window.mainMinimalModeBackgroundPolicy!=="function"'''
+          if old not in text:
+              raise SystemExit('integrity api anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          # Documentation.
+          p=Path('MINIMAL_MODE.md')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('極簡模式是主線連續戰鬥的顯示模式，只簡化畫面，不建立第二套戰鬥流程，也不自行取得背景戰鬥能力。','極簡模式是主線連續戰鬥與虛空幻境自動挑戰共用的顯示模式，只簡化畫面，不建立第二套戰鬥流程，也不自行取得背景戰鬥能力。',1)
+          anchor='''戰敗／特殊遭遇失敗／正式結算仍由原本 owner 建立；極簡模式只覆蓋在上層並切換狀態，玩家滑動後才看到既有正式結果。\n'''
+          addition='''戰敗／特殊遭遇失敗／正式結算仍由原本 owner 建立；極簡模式只覆蓋在上層並切換狀態，玩家滑動後才看到既有正式結果。\n\n## 虛空幻境 adapter\n\n- `dungeonvoidui.js` 透過 `registerMinimalModeAdapter("void-mirage", ...)` 接入共用 overlay，不建立第二套極簡 UI。\n- 虛空戰鬥中的 `【虛空幻境】` 標題維持真正置中，右側顯示共用樣式的「極簡模式」按鈕。\n- 虛空極簡內容固定為置中單欄：目前敵人、本次突破、已過樓層、歷史最高。\n- `已過樓層` 使用 `lastClearedFloor`；`歷史最高` 使用 `historicalHighest`，突破舊紀錄後同步上升。\n- 虛空戰敗或玩家要求強制退出並正式結束 run 時，overlay 切為 `stopped`：顯示「戰鬥已停止」，滑動文字為「滑動查看戰鬥結果」；滑掉後露出原本虛空結果頁。\n- `VOID_MINIMAL_MODE_HOOK_VERSION = 1`。\n'''
+          if anchor not in text:
+              raise SystemExit('minimal mode doc anchor not found')
+          text=text.replace(anchor,addition,1)
+          text=text.replace('- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 2`','- `MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`\n- `VOID_MINIMAL_MODE_HOOK_VERSION = 1`\n- `MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`',1)
+          text=text.replace('1. 極簡模式只限主線連續戰鬥；單場不得顯示入口。','1. 極簡模式只限主線連續戰鬥與虛空幻境自動挑戰；主線單場與虛空待機／結果頁不得顯示入口。',1)
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('PROJECT_HANDOFF.md')
+          text=p.read_text(encoding='utf-8')
+          old='''- `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 2`。\n- 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。'''
+          new='''- 共用 adapter API：`registerMinimalModeAdapter()`、`openMinimalMode()`；虛空幻境由 `dungeonvoidui.js` 以 `void-mirage` adapter 接入，不複製第二套 overlay/CSS。\n- 虛空戰鬥頁 `【虛空幻境】` 標題真正置中，右側顯示「極簡模式」；極簡內容為目前敵人／本次突破／已過樓層／歷史最高，全部置中單欄。\n- 虛空戰敗或強制退出正式結束時切到 `stopped`，顯示「戰鬥已停止」與「滑動查看戰鬥結果」，滑掉後顯示既有虛空結果頁。\n- `MAIN_MINIMAL_MODE_HOOK_VERSION = 2`；`MAIN_MINIMAL_MODE_ADAPTER_VERSION = 1`；`VOID_MINIMAL_MODE_HOOK_VERSION = 1`；`MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION = 1`；`MAIN_MINIMAL_MODE_INTEGRITY_VERSION = 3`。\n- 舊 `mainpowersave.js`／`mainpowersave.css` 與 `PowerSave`／`power-save` runtime 命名已退休，不得恢復。'''
+          if old not in text:
+              raise SystemExit('handoff minimal mode anchor not found')
+          text=text.replace(old,new,1)
+          text=text.replace('## 3.7 主線極簡模式','## 3.7 共用極簡模式（主線／虛空幻境）',1)
+          p.write_text(text,encoding='utf-8')
+
+          # Cache bust JS touched in this batch.
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          replacements={
+            'dungeonvoidui.js?v=20260917-void-minimal-batch2':'dungeonvoidui.js?v=20260917-void-minimal-batch3',
+            'mainminimalmodeintegrity.js?v=20260917-main-minimal-integrity2':'mainminimalmodeintegrity.js?v=20260917-void-minimal-integrity3'
+          }
+          for old,new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'index cache anchor not found: {old}')
+              text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit batch 3
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dungeonvoidui.js mainminimalmodeintegrity.js MINIMAL_MODE.md PROJECT_HANDOFF.md index.html
+          git commit -m 'feat: finish void minimal mode result flow'
+          git push
