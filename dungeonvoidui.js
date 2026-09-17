@@ -124,7 +124,6 @@
       else if(typeof window.syncMainMinimalMode==="function")window.syncMainMinimalMode();
      }
      await animateFloor(fr);
-     if(!fr.ended&&voidUi.exitAfterFloor&&typeof window.requestVoidMirageExit==="function")window.requestVoidMirageExit();
      if(!fr.ended)await sleep(350);
     },
     async onEnd(run){
@@ -175,7 +174,9 @@
   render();
  };
  window.requestVoidMirageExitUI=function(){
-  if(voidUi.phase==="result")return;voidUi.exitAfterFloor=true;
+  if(voidUi.phase==="result")return;
+  voidUi.exitAfterFloor=true;
+  if(typeof window.requestVoidMirageExit==="function")window.requestVoidMirageExit();
   const btn=document.querySelector(".void-exit-btn");if(btn){btn.disabled=true;btn.textContent="本層結束後將退出";}
   const msg=document.getElementById("voidCombatMessage");if(msg)msg.textContent="已要求退出：本層結束後離開虛空幻境。";
  };
