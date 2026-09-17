@@ -1,3 +1,4 @@
+// 永久回歸檢查：正式故事資料、10 區地圖、101 篇劇情與 100 Boss 對應。
 const fs=require('fs');
 const vm=require('vm');
 
