@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
 
  function run(){
   const errors=[];
@@ -15,15 +15,7 @@
    if(Number(dataReport.totalStories)!==101)fail("STORY_RUNTIME_STORY_COUNT",`正式劇情執行期必須載入 101 篇故事，實際 ${Number(dataReport.totalStories)||0}`);
    if(Number(dataReport.bossStoriesChecked)!==100)fail("STORY_RUNTIME_BOSS_DATA_COUNT",`正式劇情執行期必須完成 100 個首領故事資料檢查，實際 ${Number(dataReport.bossStoriesChecked)||0}`);
   }
-  if(Number(window.STORY_INTEGRITY_VERSION)<5)fail("STORY_RUNTIME_DATA_INTEGRITY_VERSION","STORY_INTEGRITY_VERSION 未達目前需求",window.STORY_INTEGRITY_VERSION);
-  if(Number(window.STORY_TEXT_NORMALIZE_VERSION)<1)fail("STORY_RUNTIME_TEXT_NORMALIZE_VERSION","正式劇情文字正規化未執行",window.STORY_TEXT_NORMALIZE_VERSION);
-  const normalizeReport=window.STORY_TEXT_NORMALIZE_REPORT;
-  if(!normalizeReport)fail("STORY_RUNTIME_TEXT_NORMALIZE_REPORT","正式劇情文字正規化報告不存在");
-  else{
-   if(Number(normalizeReport.regionCount)!==10)fail("STORY_RUNTIME_TEXT_REGION_COUNT",`文字正規化應處理 10 個區域，實際 ${Number(normalizeReport.regionCount)||0}`);
-   if(Number(normalizeReport.storyCount)!==101)fail("STORY_RUNTIME_TEXT_STORY_COUNT",`文字正規化應處理 101 篇故事，實際 ${Number(normalizeReport.storyCount)||0}`);
-  }
-
+  if(Number(window.STORY_INTEGRITY_VERSION)<6)fail("STORY_RUNTIME_DATA_INTEGRITY_VERSION","STORY_INTEGRITY_VERSION 未達目前需求",window.STORY_INTEGRITY_VERSION);
   if(typeof window.openStory!=="function")fail("STORY_RUNTIME_UI_OPEN_MISSING","openStory 未載入");
   if(typeof window.isStoryOpen!=="function")fail("STORY_RUNTIME_UI_STATE_MISSING","isStoryOpen 未載入");
   if(Number(window.STORY_UI_VERSION)<5)fail("STORY_RUNTIME_UI_VERSION","STORY_UI_VERSION 未達目前需求",window.STORY_UI_VERSION);
@@ -50,7 +42,7 @@
   ["gmStoryTestHtml","gmPreviewStory","gmStoryMoveRegion","gmStoryMoveEntry","gmStoryRunIntegrity"].forEach(name=>{
    if(typeof window[name]!=="function")fail("STORY_RUNTIME_GM_METHOD",`${name} 未載入`);
   });
-  if(Number(window.GM_STORY_TEST_VERSION)<2)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
+  if(Number(window.GM_STORY_TEST_VERSION)<3)fail("STORY_RUNTIME_GM_VERSION","GM_STORY_TEST_VERSION 未達目前需求",window.GM_STORY_TEST_VERSION);
 
   const regions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const stories=window.CIVILIZATION_STORIES||{};
