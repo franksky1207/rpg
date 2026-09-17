@@ -1,4 +1,4 @@
-// 永久回歸檢查：首領首殺劇情排隊、重打不重播、pending 保護、舊紀錄補回。
+// 永久回歸檢查：首領首殺劇情排隊、重打不重播、pending 保護、舊紀錄補回、純讀取與正式戰線紀錄入口。
 const fs=require('fs');
 const vm=require('vm');
 
@@ -8,6 +8,10 @@ function assert(condition,message){
 
 const combatCoreSource=fs.readFileSync('combatcore.js','utf8');
 const battlePipelineSource=fs.readFileSync('battlepipeline.js','utf8');
+const storyProgressSource=fs.readFileSync('storyprogress.js','utf8');
+const storyRecordSource=fs.readFileSync('storyrecordtabs.js','utf8');
+const uiSource=fs.readFileSync('ui.js','utf8');
+const migrationSource=fs.readFileSync('storymigration.js','utf8');
 
 // Owner contract: combatcore is the only runtime owner that queues a first-clear story.
 assert((combatCoreSource.match(/queueBossStory/g)||[]).length===2,'combatcore.js 應只有 queueBossStory 能力檢查與一次實際呼叫');
@@ -15,6 +19,17 @@ assert(/if\(firstBossKill&&window\.civilizationStoryProgress\?\.queueBossStory\)
 assert(!/queueBossStory/.test(battlePipelineSource),'battlepipeline.js 不得再次呼叫 queueBossStory');
 assert(/result\.pendingStoryId/.test(battlePipelineSource),'battlepipeline.js 必須只消費 fightOnce 回傳的 pendingStoryId');
 assert(/MAINLINE_BOSS_STORY_PIPELINE_VERSION=2/.test(battlePipelineSource),'battlepipeline.js 劇情管線版本應為 2');
+
+// Read/entry contracts: get() must be pure, story record must not wrap global go(), and ui.go owns the entry hook.
+assert(/get:\(\)=>readProgress\(\)/.test(storyProgressSource),'storyprogress.get 必須直接純讀 readProgress()');
+assert(!/function progress\(\)\{normalizeProgress\(state\)/.test(storyProgressSource),'storyprogress 不得在一般 getter 中執行 migration');
+assert(/CIVILIZATION_STORY_PROGRESS_VERSION=8/.test(storyProgressSource),'story progress 版本應為 8');
+assert(!/__storyRecordLatestWrapped|originalGo/.test(storyRecordSource),'storyrecordtabs.js 不得再包裝全域 go()');
+assert(/STORY_RECORD_TABS_VERSION=4/.test(storyRecordSource),'story record tabs 版本應為 4');
+assert(/v===\"storyrecord\"&&typeof window\.prepareStoryRecordEntry===\"function\"/.test(uiSource),'ui.go 必須在進入戰線紀錄時呼叫正式 prepareStoryRecordEntry hook');
+assert(/legacyFields:LEGACY_FIELDS\.slice\(\)/.test(migrationSource),'storymigration 必須公開 legacyFields');
+assert(/historyBackfillRegions/.test(migrationSource),'historyBackfillRegions legacy 相容欄位標記遺失');
+assert(/STORY_MIGRATION_VERSION=VERSION/.test(migrationSource),'story migration 版本輸出遺失');
 
 const context={
  console,
@@ -84,7 +99,19 @@ vm.runInContext(fs.readFileSync('storyprogress.js','utf8'),context,{filename:'st
 
 const progress=context.civilizationStoryProgress;
 assert(progress&&typeof progress.queueBossStory==='function','storyprogress.js 未提供 queueBossStory');
-assert(Number(context.CIVILIZATION_STORY_PROGRESS_VERSION)>=7,'story progress 版本不足');
+assert(Number(context.CIVILIZATION_STORY_PROGRESS_VERSION)>=8,'story progress 版本不足');
+assert(Number(context.STORY_MIGRATION_VERSION)>=4,'story migration 版本不足');
+assert(Array.isArray(context.civilizationStoryMigration?.legacyFields)&&context.civilizationStoryMigration.legacyFields.includes('historyBackfillRegions'),'historyBackfillRegions 未標成 legacy 相容欄位');
+
+// 0. Pure getter: deliberately malformed-but-readable data must not be normalized just because it is read.
+context.state=baseState();
+context.state.storyProgress.completedStories=['earth-prologue','earth-prologue'];
+context.state.storyProgress.historyBackfillRegions=['solar','solar'];
+const beforePureRead=JSON.stringify(context.state.storyProgress);
+const readValue=progress.get();
+const afterPureRead=JSON.stringify(context.state.storyProgress);
+assert(readValue===context.state.storyProgress,'get() 應直接回傳目前 storyProgress 參照');
+assert(beforePureRead===afterPureRead,'get() 不得修改、去重或回填 storyProgress');
 
 const mapIdx=19;
 const storyId='solar-boss-10';
@@ -114,7 +141,7 @@ progress.normalize(context.state);
 assert(context.state.storyProgress.pendingStory===storyId,'migration 後 pendingStory 不得遺失');
 assert(!context.state.storyProgress.completedStories.includes(storyId),'migration 不得把 pendingStory 回填成 completed');
 
-// 4. 舊紀錄補回：即使 historyBackfillRegions 已經有區域標記，缺失的已擊敗 Boss 劇情仍必須補回。
+// 4. 舊紀錄補回：即使 legacy historyBackfillRegions 已經有區域標記，缺失的已擊敗 Boss 劇情仍必須補回。
 context.state=baseState();
 context.state.bossKilled[mapIdx]=true;
 context.state.storyProgress.historyBackfillRegions=['solar'];
@@ -122,4 +149,4 @@ progress.normalize(context.state);
 assert(context.state.storyProgress.completedStories.includes(storyId),'舊存檔缺失的已擊敗 Boss 劇情必須補回');
 
 console.log('STORY FLOW PASSED');
-console.log('owner=combatcore firstClear=pending repeat=no-replay pending=protected legacy=backfilled');
+console.log('owner=combatcore pureGet=yes recordEntry=ui-hook repeat=no-replay pending=protected legacy=backfilled');
