@@ -163,7 +163,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 普通、菁英、Boss 都支援單場或連續戰鬥。
 - `ui.js` 是主線戰鬥入口 owner；`CONTINUOUS_BATTLE_COUNT = "continuous"`。
 - `battlepipeline.js` 是共用連戰 pipeline。
-- 主線每場勝利的中途存檔只保留一個正式 `save(false)`；下一場 encounter 仍於場間建立，最終／戰敗／特殊遭遇結束仍依既有正式結算點 `save()`。`MAIN_BATTLE_PIPELINE_CLEANUP_VERSION = 1`。
+- 主線每場勝利的中途存檔只保留一個正式 `save(false)`；下一場 encounter 仍於場間建立。一般完成／戰敗統一由 pipeline 尾端做一次正式 `save()`，只有特殊遭遇失敗的 early-return 分支保留自己的 `save()`。`MAIN_BATTLE_PIPELINE_CLEANUP_VERSION = 1`。
 - `combatpacing.js` 場間節奏：normal 140ms、elite 220ms、Boss 140ms。
 - Boss 首殺解鎖下一張地圖；連續戰鬥不自動跳圖。
 - Boss 戰敗：立即停止、`bossProgress=0`、`bossLocked=true`；需重新擊敗本圖菁英 10 隻才可再挑戰。

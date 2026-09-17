@@ -133,7 +133,6 @@
    else state.hp=playerCombatStats().hp;
 
    if(!r.win){
-    save();
     break;
    }
 
@@ -153,7 +152,7 @@
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
      await sleep(battleGapMs(r.e.kind));
-    }else save();
+    }
     continue;
    }
 
@@ -161,7 +160,7 @@
    if(hasMoreBattles(ctx)){
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
     await sleep(battleGapMs(r.e.kind));
-   }else save();
+   }
   }
 
   currentCombatEncounter=null;
