@@ -70,6 +70,12 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
   width:min(760px,100%);
   margin:0 auto;
 }
+.main-minimal-mode-center--stacked{
+  grid-template-columns:1fr;
+  gap:20px;
+  width:min(520px,100%);
+  text-align:center;
+}
 .main-minimal-mode-block{min-width:0}
 .main-minimal-mode-label{
   margin-bottom:7px;
@@ -179,6 +185,7 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
   .main-minimal-mode-shell{gap:22px}
   .main-minimal-mode-clock{font-size:clamp(64px,23vw,100px);margin-bottom:2px}
   .main-minimal-mode-center{grid-template-columns:1fr;gap:20px;text-align:center}
+  .main-minimal-mode-center--stacked{width:min(520px,100%)}
   .main-minimal-mode-label{font-size:12px;color:#bdbdbd}
   .main-minimal-mode-value{font-size:24px}
   .main-minimal-mode-stats{font-size:17px}
