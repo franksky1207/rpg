@@ -112,7 +112,9 @@
     if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
     const fr=fightNextVoidMirageFloor();
     if(!fr?.ok){voidUi.finalRun=getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
-    voidUi.floorResult=fr;voidUi.phase="combat";render();await animateFloor(fr);
+    voidUi.floorResult=fr;voidUi.phase="combat";render();
+    if(!fr.ended&&typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage")window.syncMainMinimalMode();
+    await animateFloor(fr);
     if(fr.ended){voidUi.finalRun=fr.run;voidUi.phase="result";voidUi.floorResult=null;render();break;}
     if(voidUi.exitAfterFloor){const exited=requestVoidMirageExit();voidUi.finalRun=exited.run||getVoidMirageRunSnapshot();voidUi.phase="result";voidUi.floorResult=null;render();break;}
     await sleep(350);
@@ -172,12 +174,21 @@
    isActive:voidMinimalModeIsActive,
    runningStatus:"虛空幻境持續挑戰中",
    centerClass:"main-minimal-mode-center--stacked",
-   contentHtml(){return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-void-minimal-mode-enemy>戰鬥中</div></div>`;},
+   contentHtml(){return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-void-minimal-mode-enemy>戰鬥中</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">本次突破</div><div class="main-minimal-mode-value" data-void-minimal-mode-cleared>0 層</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">已過樓層</div><div class="main-minimal-mode-value" data-void-minimal-mode-last-cleared>第 0 層</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">歷史最高</div><div class="main-minimal-mode-value" data-void-minimal-mode-highest>第 0 層</div></div>`;},
    sync(root,mode){
-    const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
-    if(!enemy||mode!=="running")return;
+    if(mode!=="running")return;
     const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
-    enemy.textContent=voidUi.floorResult?.enemy?.name||run?.lastEnemy?.name||"戰鬥中";
+    const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
+    const cleared=root.querySelector("[data-void-minimal-mode-cleared]");
+    const lastCleared=root.querySelector("[data-void-minimal-mode-last-cleared]");
+    const highest=root.querySelector("[data-void-minimal-mode-highest]");
+    if(enemy)enemy.textContent=voidUi.floorResult?.enemy?.name||run?.lastEnemy?.name||"戰鬥中";
+    if(cleared)cleared.textContent=`${Math.max(0,Math.floor(Number(run?.cleared)||0)).toLocaleString()} 層`;
+    if(lastCleared)lastCleared.textContent=`第 ${Math.max(0,Math.floor(Number(run?.lastClearedFloor)||0)).toLocaleString()} 層`;
+    if(highest)highest.textContent=`第 ${Math.max(0,Math.floor(Number(run?.historicalHighest)||0)).toLocaleString()} 層`;
    }
   });
  }
