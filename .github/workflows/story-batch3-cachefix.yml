@@ -1,0 +1,37 @@
+name: Story Batch 3 Cache Fix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/story-batch3-cachefix.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Run story batch 3 cache fix'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix exact cache tokens
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          bad='enhancementui.js?v=20260917-story-batch3'
+          old_ui='ui.js?v=20260916-story-batch3'
+          if bad not in s: raise SystemExit('bad enhancementui cache token missing')
+          if old_ui not in s: raise SystemExit('old ui cache token missing')
+          s=s.replace(bad,'enhancementui.js?v=20260915-enhancement-batch4',1)
+          s=s.replace(old_ui,'ui.js?v=20260917-story-batch3',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit cache fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Fix story batch 3 cache tokens'
+          git push origin main
