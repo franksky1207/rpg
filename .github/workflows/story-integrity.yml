@@ -1,0 +1,24 @@
+name: Story Integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data.js'
+      - 'worldmaps-*.js'
+      - 'storydata-*.js'
+      - 'storyintegrity.js'
+      - 'story-integrity-ci.js'
+      - '.github/workflows/story-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  story-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run story integrity
+        run: node story-integrity-ci.js
