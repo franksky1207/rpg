@@ -1,6 +1,5 @@
 (function(){
  let selectedRegionId=null;
- const STYLE_ID="civilizationStoryRecordTabsStyles";
  const INTRO_STORY_ID="earth-prologue";
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
@@ -26,33 +25,6 @@
   const groups=visibleRegions();
   selectedRegionId=groups.length?groups[groups.length-1].region.id:null;
   return selectedRegionId;
- }
- function installStyles(){
-  if(document.getElementById(STYLE_ID))return;
-  const style=document.createElement("style");
-  style.id=STYLE_ID;
-  style.textContent=`
-   .story-record-page{display:grid;gap:14px}
-   .story-record-card{display:grid;gap:10px}
-   .story-record-chapter{margin:0;color:#f0d494}
-   .story-record-list{display:grid;gap:9px}
-   .story-record-entry{width:100%;text-align:left;border:1px solid #3b4b5d;border-radius:12px;background:rgba(13,20,30,.9);color:#e7edf5;padding:13px 14px;cursor:pointer}
-   .story-record-entry b{display:block;color:#f1d38b;font-size:16px}
-   .story-record-entry span{display:block;margin-top:4px;color:#9fb0c1;font-size:13px;line-height:1.45}
-   .story-record-empty{padding:18px 0;color:#9aa8b6}
-   .story-record-tabs{display:flex;flex-wrap:wrap;gap:10px}
-   .story-record-tab{border:1px solid #465a70;border-radius:11px;background:rgba(13,20,30,.9);color:#c8d4df;padding:11px 16px;min-height:44px;font-weight:800;cursor:pointer}
-   .story-record-tab.active{border-color:#d8b96f;background:rgba(76,59,27,.55);color:#f1d38b;box-shadow:inset 0 0 0 1px rgba(241,211,139,.12)}
-   .story-record-intro{display:grid;gap:9px}
-   .story-record-selected{display:grid;gap:10px}
-   @media(max-width:560px){
-    .story-record-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-    .story-record-tab{width:100%;padding:10px 8px;min-height:48px;font-size:14px;line-height:1.25}
-    .story-record-entry{padding:12px}
-    .story-record-entry b{font-size:15px}
-   }
-  `;
-  document.head.appendChild(style);
  }
  function entryHtml(story){
   return `<button class="story-record-entry" onclick="replayCompletedStory('${esc(story.id)}')"><b>${esc(story.title||story.id)}</b><span>${esc(story.location||"")}</span></button>`;
@@ -81,7 +53,6 @@
   return true;
  };
  window.storyRecordPageHtml=function(){
-  installStyles();
   const completed=completedIds();
   const groups=visibleRegions();
   const selected=ensureSelection(groups);
@@ -89,5 +60,5 @@
   return `<div class="function-page story-record-page">${back}<div class="card"><h2>戰線紀錄</h2><div class="muted">僅顯示已完成的正式劇情；尚未抵達的區域與未完成劇情不會顯示。重播不會給予獎勵或改變進度。</div></div>${introHtml(completed)}${tabsHtml(groups)}${selectedHtml(selected)}</div>`;
  };
 
- window.STORY_RECORD_TABS_VERSION=4;
+ window.STORY_RECORD_TABS_VERSION=5;
 })();
