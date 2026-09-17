@@ -4,6 +4,7 @@
 
  let overlay=null;
  let clockTimer=null;
+ let clockStartTimer=null;
  let currentPointerId=null;
  let dragStartX=0;
  let dragMax=0;
@@ -54,13 +55,15 @@
  }
 
  function stopClock(){
+  if(clockStartTimer){clearTimeout(clockStartTimer);clockStartTimer=null;}
   if(clockTimer){clearInterval(clockTimer);clockTimer=null;}
  }
 
  function startClock(){
   stopClock();
   const delay=60000-(Date.now()%60000)+30;
-  setTimeout(()=>{
+  clockStartTimer=setTimeout(()=>{
+   clockStartTimer=null;
    if(!overlay)return;
    syncValues();
    clockTimer=setInterval(()=>{if(overlay)syncValues();},60000);
