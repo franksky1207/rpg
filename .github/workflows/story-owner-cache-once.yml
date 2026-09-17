@@ -1,0 +1,38 @@
+name: One-time Story Owner Cache Bump
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/story-owner-cache-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Run one-time story owner cache bump'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Bump battle pipeline cache version
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old='battlepipeline.js?v=20260916-story-batch3'
+          new='battlepipeline.js?v=20260917-story-owner1'
+          if old not in s:
+              raise SystemExit(f'expected cache token not found: {old}')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit cache bump
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Bump story owner pipeline cache'
+          git push origin main
