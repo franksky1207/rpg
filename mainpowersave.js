@@ -1,8 +1,4 @@
 (()=>{
- const baseAdventureCombatPage=typeof window.adventureCombatPage==="function"?window.adventureCombatPage:null;
- const baseShowBattleResult=typeof window.showBattleResult==="function"?window.showBattleResult:null;
- if(!baseAdventureCombatPage)return;
-
  let overlay=null;
  let overlayMode="running";
  let clockTimer=null;
@@ -211,6 +207,41 @@
   });
  }
 
+ function ensureCombatHeader(options={}){
+  if(overlay)setTimeout(syncValues,0);
+  if(options?.continuous!==true)return false;
+  const head=document.querySelector(".combat-screen>.combat-head");
+  if(!head)return false;
+  if(head.classList.contains("main-power-save-head"))return true;
+  const labelText=head.textContent||"連續戰鬥";
+  head.classList.add("main-power-save-head");
+  head.textContent="";
+  const label=document.createElement("span");
+  label.className="main-power-save-head-label";
+  label.textContent=labelText;
+  const button=document.createElement("button");
+  button.type="button";
+  button.className="main-power-save-enter";
+  button.textContent="極簡模式";
+  button.addEventListener("click",openMainPowerSave);
+  head.append(label,button);
+  return true;
+ }
+
+ function handleBattleResult(ctx){
+  if(!overlay)return false;
+  stopOwnedBackgroundFlow();
+  applyOverlayMode(ctx?.pendingStoryId?"story":"stopped");
+  return true;
+ }
+
+ function handleSpecialResult(ctx,special,result){
+  if(!overlay||result?.win!==false)return false;
+  stopOwnedBackgroundFlow();
+  applyOverlayMode("stopped");
+  return true;
+ }
+
  function openMainPowerSave(){
   if(overlay||!isMainContinuousCombat())return false;
   overlayMode="running";
@@ -247,31 +278,8 @@
  window.setMainPowerSaveState=applyOverlayMode;
  window.isMainPowerSaveOpen=()=>!!overlay;
  window.mainPowerSaveOwnsBackgroundFlow=()=>ownsBackgroundFlow;
-
- window.adventureCombatPage=function(){
-  const html=baseAdventureCombatPage();
-  const continuous=window.activeMainBattleContext?.continuous===true||combatTotal===0||combatTotal===window.CONTINUOUS_BATTLE_COUNT;
-  if(overlay)setTimeout(syncValues,0);
-  if(!continuous)return html;
-  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-power-save-head"><span class="main-power-save-head-label">$1</span><button type="button" class="main-power-save-enter" onclick="openMainPowerSave()">極簡模式</button></div>`);
- };
-
- if(baseShowBattleResult){
-  window.showBattleResult=function(ctx,defeat=null){
-   baseShowBattleResult(ctx,defeat);
-   if(!overlay)return;
-   stopOwnedBackgroundFlow();
-   if(ctx?.pendingStoryId)applyOverlayMode("story");
-   else applyOverlayMode("stopped");
-  };
- }
-
- const resultModal=document.getElementById("battleResultModal");
- if(resultModal&&typeof MutationObserver==="function"){
-  new MutationObserver(()=>{
-   if(!overlay||!resultModal.classList.contains("show")||overlayMode!=="running")return;
-   stopOwnedBackgroundFlow();
-   applyOverlayMode("stopped");
-  }).observe(resultModal,{attributes:true,attributeFilter:["class"]});
- }
+ window.mainMinimalModeEnsureCombatHeader=ensureCombatHeader;
+ window.mainMinimalModeHandleBattleResult=handleBattleResult;
+ window.mainMinimalModeHandleSpecialResult=handleSpecialResult;
+ window.MAIN_MINIMAL_MODE_HOOK_VERSION=1;
 })();
