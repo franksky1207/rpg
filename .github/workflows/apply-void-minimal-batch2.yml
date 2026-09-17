@@ -1,0 +1,79 @@
+name: Apply void minimal mode batch 2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-void-minimal-batch2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch void minimal mode batch 2
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('dungeonvoidui.js')
+          text=p.read_text(encoding='utf-8')
+
+          old='''   contentHtml(){return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-void-minimal-mode-enemy>戰鬥中</div></div>`;},
+   sync(root,mode){
+    const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
+    if(!enemy||mode!=="running")return;
+    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
+    enemy.textContent=voidUi.floorResult?.enemy?.name||run?.lastEnemy?.name||"戰鬥中";
+   }'''
+          new='''   contentHtml(){return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-void-minimal-mode-enemy>戰鬥中</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">本次突破</div><div class="main-minimal-mode-value" data-void-minimal-mode-cleared>0 層</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">已過樓層</div><div class="main-minimal-mode-value" data-void-minimal-mode-last-cleared>第 0 層</div></div>
+      <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">歷史最高</div><div class="main-minimal-mode-value" data-void-minimal-mode-highest>第 0 層</div></div>`;},
+   sync(root,mode){
+    if(mode!=="running")return;
+    const run=typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null;
+    const enemy=root.querySelector("[data-void-minimal-mode-enemy]");
+    const cleared=root.querySelector("[data-void-minimal-mode-cleared]");
+    const lastCleared=root.querySelector("[data-void-minimal-mode-last-cleared]");
+    const highest=root.querySelector("[data-void-minimal-mode-highest]");
+    if(enemy)enemy.textContent=voidUi.floorResult?.enemy?.name||run?.lastEnemy?.name||"戰鬥中";
+    if(cleared)cleared.textContent=`${Math.max(0,Math.floor(Number(run?.cleared)||0)).toLocaleString()} 層`;
+    if(lastCleared)lastCleared.textContent=`第 ${Math.max(0,Math.floor(Number(run?.lastClearedFloor)||0)).toLocaleString()} 層`;
+    if(highest)highest.textContent=`第 ${Math.max(0,Math.floor(Number(run?.historicalHighest)||0)).toLocaleString()} 層`;
+   }'''
+          if old not in text:
+              raise SystemExit('adapter content/sync anchor not found')
+          text=text.replace(old,new,1)
+
+          old='''    voidUi.floorResult=fr;voidUi.phase="combat";render();await animateFloor(fr);'''
+          new='''    voidUi.floorResult=fr;voidUi.phase="combat";render();
+    if(!fr.ended&&typeof window.syncMainMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="void-mirage")window.syncMainMinimalMode();
+    await animateFloor(fr);'''
+          if old not in text:
+              raise SystemExit('auto climb sync anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          old='dungeonvoidui.js?v=20260917-void-minimal-batch1'
+          new='dungeonvoidui.js?v=20260917-void-minimal-batch2'
+          if old not in text:
+              raise SystemExit('index cache anchor not found')
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit batch 2
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dungeonvoidui.js index.html
+          git commit -m 'feat: add void minimal mode live progress data'
+          git push
