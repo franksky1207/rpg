@@ -36,6 +36,14 @@
    {critScale:.75,critAdd:2,critCap:19,dodgeScale:.70,dodgeAdd:1,dodgeCap:16,traitMode:"extreme3"}
   ]
  };
+ const ARENA_TRAIT_COUNT_PROFILES={
+  normal1:{zero:.70,one:.30,two:0},
+  normal2:{zero:.50,one:.50,two:0},
+  one:{zero:0,one:1,two:0},
+  hard3:{zero:0,one:.75,two:.25},
+  extreme2:{zero:0,one:.75,two:.25},
+  extreme3:{zero:0,one:.70,two:.30}
+ };
 
  function arenaMaxRank(){return Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
  function clampArenaRank(value){return Math.max(1,Math.min(arenaMaxRank(),Math.floor(Number(value)||1)));}
@@ -71,14 +79,14 @@
   return {id:base.id,name:arenaVenueName(r),rank:r,rankName:arenaRankName(r),stagePoints:scaleStagePoints(base.stageWeights,totalPoints),totalPoints};
  }
  function difficultyById(id,rank=currentArenaRank()){const base=ARENA_POSITION_BASES.find(x=>x.id===id)||null;return difficultyForRank(base,rank);}
- function arenaDifficultyConfigs(rank=currentArenaRank()){const r=clampArenaRank(rank);return ARENA_POSITION_BASES.map(base=>{const d=difficultyForRank(base,r),positionStages=ARENA_POSITION_STAGE_CONFIGS[d.id]||ARENA_POSITION_STAGE_CONFIGS.normal;return {...d,stages:positionStages.map((position,i)=>({...ARENA_PHYSICAL_STAGE_PROFILE[i],...position}))};});}
+ function arenaDifficultyConfigs(rank=currentArenaRank()){const r=clampArenaRank(rank);return ARENA_POSITION_BASES.map(base=>{const d=difficultyForRank(base,r),positionStages=ARENA_POSITION_STAGE_CONFIGS[d.id]||ARENA_POSITION_STAGE_CONFIGS.normal,positionPhysical=ARENA_POSITION_PHYSICAL_MULTIPLIERS[d.id]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {...d,positionPhysical:{...positionPhysical},stages:positionStages.map((position,i)=>{const physical=ARENA_PHYSICAL_STAGE_PROFILE[i]||ARENA_PHYSICAL_STAGE_PROFILE[0];return {...physical,...position,effectivePhysical:{hpMul:physical.hpMul*positionPhysical.hp,damageMul:physical.damageMul*positionPhysical.damage,defMul:physical.defMul*positionPhysical.def}};})};});}
  function newContinuousSummary(){return {runs:0,fullClears:0,failedRuns:0,totalPoints:0,stopReason:null};}
  function createArenaState(overrides={}){return {phase:"select",rank:1,difficulty:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,roundPoints:0,roundBasePoints:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,continuous:false,stopRequested:false,summary:newContinuousSummary(),...overrides};}
  let arenaState=createArenaState();
 
  function clampLevel(v){return clampGameLevel(v);}
  function rateFromPlayer(value,scale,add,cap,maxCap){return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));}
- function traitCount(mode){if(mode==="normal1")return Math.random()<.70?0:1;if(mode==="normal2")return Math.random()<.50?0:1;if(mode==="hard3")return Math.random()<.75?1:2;if(mode==="extreme2")return Math.random()<.75?1:2;if(mode==="extreme3")return Math.random()<.70?1:2;return 1;}
+ function traitCount(mode){const p=ARENA_TRAIT_COUNT_PROFILES[mode]||ARENA_TRAIT_COUNT_PROFILES.one,roll=Math.random();if(roll<p.zero)return 0;if(roll<p.zero+p.one)return 1;return 2;}
  function rollArenaTraits(mode){const pool=MONSTER_TRAIT_IDS.slice(),count=traitCount(mode),out=[];for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return out;}
  function arenaTraitNames(enemy){if(!enemy?.traits?.length)return "無";return enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
  function difficultyClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
@@ -90,8 +98,10 @@
   return applyMonsterTraits({name:ARENA_ENEMY_NAMES[idx]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,arenaRank:rank,arenaRankName:arenaRankName(rank),hp:Math.max(1,ceil(base.hp*physical.hpMul*positionPhysical.hp*rankScale.hp)),atk:Math.max(1,ceil(base.damage*physical.damageMul*positionPhysical.damage*rankScale.damage+p.def*.55)),def:Math.max(0,ceil(base.def*physical.defMul*positionPhysical.def*rankScale.def)),crit:rateFromPlayer(p.crit,position.critScale,position.critAdd,position.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,position.dodgeScale,position.dodgeAdd,position.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
- window.ARENA_BALANCE_VERSION=2;
+ window.ARENA_BALANCE_VERSION=3;
  window.getArenaPositionPhysicalMultipliers=function(id){const key=String(id||"normal"),v=ARENA_POSITION_PHYSICAL_MULTIPLIERS[key]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {hp:v.hp,damage:v.damage,def:v.def};};
+ window.getArenaPositionStageConfig=function(id,stageIndex){const key=String(id||"normal"),stages=ARENA_POSITION_STAGE_CONFIGS[key]||ARENA_POSITION_STAGE_CONFIGS.normal,idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0))),v=stages[idx]||stages[0];return {...v};};
+ window.getArenaTraitCountProfile=function(mode){const v=ARENA_TRAIT_COUNT_PROFILES[String(mode||"one")]||ARENA_TRAIT_COUNT_PROFILES.one;return {zero:v.zero,one:v.one,two:v.two};};
  window.getArenaDifficultyConfigs=function(rank=null){return arenaDifficultyConfigs(rank==null?currentArenaRank():rank);};
  window.buildArenaEnemyForTest=function(difficultyId,stageIndex,stats=null,level=null,rank=null){return difficultyById(difficultyId,rank==null?currentArenaRank():rank)?buildArenaEnemy(difficultyId,stageIndex,stats,level,{rank:rank==null?currentArenaRank():rank}):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
