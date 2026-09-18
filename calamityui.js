@@ -1,5 +1,5 @@
 (function(){
- const UI_VERSION=2;
+ const UI_VERSION=3;
  const MINIMAL_VERSION=1;
  let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
 
@@ -139,23 +139,43 @@
   if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),250);}
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
+ function syncPresentationUi(enemyMax,playerMax,message){
+  const enemyHp=Number(window.getCombatPresentationEnemyHp?.()),playerHp=Number(window.getCombatPresentationPlayerHp?.());
+  ui.displayEnemyHp=Number.isFinite(enemyHp)?Math.max(0,enemyHp):ui.displayEnemyHp;
+  ui.displayEnemyMax=Math.max(1,enemyMax);
+  ui.displayPlayerHp=Number.isFinite(playerHp)?Math.max(0,playerHp):ui.displayPlayerHp;
+  ui.displayPlayerMax=Math.max(1,playerMax);
+  if(typeof window.syncCombatPresentationHp==="function")window.syncCombatPresentationHp();
+  const msg=document.getElementById("combatMessage");if(msg)msg.textContent=message||"";
+  if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
+ }
+ function consumePresentationPulse(target,text,enemyMax,playerMax,message){
+  if(typeof window.consumeCombatPresentationPulseManual==="function")window.consumeCombatPresentationPulseManual(target,text);
+  else if(typeof window.consumeCombatPresentationPulse==="function")window.consumeCombatPresentationPulse(target,text);
+  pulse(target,text);
+  syncPresentationUi(enemyMax,playerMax,message);
+ }
 
  async function animateBattle(battle){
   const full=battle?.result;
   if(!full)return;
   const combat=full.combat||full,enemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1),playerMax=Math.max(1,Number(full.playerStartHp)||Number(combat.playerMaxHp)||1);
-  let ehp=Math.max(0,Number(full.enemyStartHp)||enemyMax),php=playerMax;
+  const startEnemyHp=Math.max(0,Number(full.enemyStartHp)||enemyMax),startPlayerHp=Math.max(0,Number(full.playerStartHp)||playerMax);
   const logs=combat?.logs||full.logs||[],delay=logs.length>90?14:logs.length>50?24:45;
-  setHpUi(ehp,enemyMax,php,playerMax,"開始戰鬥");await sleep(100);
+  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(combat,{logs:true});
+  setHpUi(startEnemyHp,enemyMax,startPlayerHp,playerMax,"開始戰鬥");
+  if(typeof window.syncCombatPresentationHp==="function")window.syncCombatPresentationHp();
+  await sleep(100);
   for(const line of logs){
    let m=line.match(/^你攻擊.+，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);ehp=Math.max(0,ehp-n);pulse("enemy",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`);setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("閃避了你的攻擊")){pulse("enemy","閃避");setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);continue;}
+   if(m){const n=Number(m[1]);consumePresentationPulse("enemy",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`,enemyMax,playerMax,line);await sleep(delay);continue;}
+   if(line.includes("閃避了你的攻擊")){consumePresentationPulse("enemy","閃避",enemyMax,playerMax,line);await sleep(delay);continue;}
    m=line.match(/^.+攻擊你，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);php=Math.max(0,php-n);pulse("player",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`);setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("你閃避了攻擊")){pulse("player","閃避");setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("吸收印記化解了傷害")){pulse("player","吸收");setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);continue;}
-   setHpUi(ehp,enemyMax,php,playerMax,line);await sleep(delay);
+   if(m){const n=Number(m[1]);consumePresentationPulse("player",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`,enemyMax,playerMax,line);await sleep(delay);continue;}
+   if(line.includes("你閃避了攻擊")){consumePresentationPulse("player","閃避",enemyMax,playerMax,line);await sleep(delay);continue;}
+   if(line.includes("吸收印記化解了傷害")){consumePresentationPulse("player","吸收",enemyMax,playerMax,line);await sleep(delay);continue;}
+   const msg=document.getElementById("combatMessage");if(msg)msg.textContent=line;
+   await sleep(delay);
   }
   setHpUi(Math.max(0,Number(full.enemyEndHp)||0),enemyMax,Math.max(0,Number(full.playerEndHp)||0),playerMax,full.win?"災厄擊破！":"本場挑戰結束");
   await sleep(250);
