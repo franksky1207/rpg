@@ -881,8 +881,10 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 5. `bosscontinuousintegrity.js`：Boss 單場／連戰、鎖王、背景推進、離線排除等。
 6. `mainminimalmodeintegrity.js`：主線極簡模式 hook／背景政策／舊 PowerSave API 退休。
 7. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
-8. `runtimeintegrity.js`：專案主 runtime 檢查。
-9. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
+8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
+9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
+10. `runtimeintegrity.js`：專案主 runtime 檢查。
+11. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
 10. `storymigration.js`
 11. `storyprogress.js`
 12. `storyrecordtabs.js`
