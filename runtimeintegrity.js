@@ -41,7 +41,13 @@
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
  if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("ENHANCEMENT_RATE",`強化每級主能力應為 2.5%，實際 ${window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL}`);
- if(typeof window.enhancementUpgradeCost!=="function"||window.enhancementUpgradeCost(20)?.basic!==2000||window.enhancementUpgradeCost(20)?.advanced!==100)fail("ENHANCEMENT_COST20","強化 +20 成本應為基礎 2000、進階 100");
+ if(typeof window.enhancementUpgradeCost!=="function")fail("ENHANCEMENT_COST_API","強化成本 API 未載入");
+ else{
+  const c20=window.enhancementUpgradeCost(20);
+  if(c20?.basic!==1000||c20?.advanced!==100)fail("ENHANCEMENT_COST20","強化 +20 成本應為基礎 1000、進階 100",c20);
+  const total=Array.from({length:20},(_,i)=>window.enhancementUpgradeCost(i+1)).reduce((sum,cost)=>({basic:sum.basic+(Number(cost?.basic)||0),advanced:sum.advanced+(Number(cost?.advanced)||0)}),{basic:0,advanced:0});
+  if(total.basic!==10500||total.advanced!==1050)fail("ENHANCEMENT_COST_TOTAL","單欄 +0→+20 累積成本應為基礎 10,500、進階 1,050",total);
+ }
  if(typeof window.enhancementStoneEligible!=="function"||window.enhancementStoneEligible(115,105)!==false||window.enhancementStoneEligible(115,106)!==true)fail("ENHANCEMENT_LEVEL_GAP","強化石 10 級差邊界異常");
  if(typeof window.enhancementStoneSaleReward!=="function"||window.enhancementStoneSaleReward({q:4})?.basic!==5||window.enhancementStoneSaleReward({q:5})?.advanced!==1)fail("ENHANCEMENT_SALE_REWARD","傳說／神話出售強化石規則異常");
  if(typeof window.equippedStatsWithEnhancementLevels!=="function")fail("ENHANCEMENT_STATS_API","指定強化等級能力計算 API 未載入");
