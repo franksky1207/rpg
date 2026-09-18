@@ -355,6 +355,7 @@ function normalizeSaveState(target){
  target.gm=target.gm===true;
  if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
  if(typeof normalizeVipState==="function")normalizeVipState(target);
+ if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
  target.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
  return target;
 }
