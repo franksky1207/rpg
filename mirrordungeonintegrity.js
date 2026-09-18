@@ -24,6 +24,23 @@
  if(Number(window.MIRROR_COMBAT_MARK_RULE_VERSION)!==Number(window.MARK_COMBAT_RULE_VERSION))fail("MIRROR_MARK_RULE_VERSION","鏡像印記規則版本未與共用 Mark Core 同步",{mirror:window.MIRROR_COMBAT_MARK_RULE_VERSION,mark:window.MARK_COMBAT_RULE_VERSION});
  if(Number(window.MIRROR_RUN_VERSION)!==3||Number(window.MIRROR_MARK_PRESENTATION_VERSION)!==1)fail("MIRROR_MARK_PRESENTATION","鏡像印記戰鬥呈現版本異常",{run:window.MIRROR_RUN_VERSION,presentation:window.MIRROR_MARK_PRESENTATION_VERSION});
  if(typeof window.createMirrorCombatSnapshot==="function"&&typeof window.runMirrorCombatCore==="function"){try{const snap=window.createMirrorCombatSnapshot(),markKeys=Array.from(window.MARK_KEYS||[]);if(!snap?.stats||Number(snap.stats.hp)<=0)fail("SNAPSHOT","鏡像戰快照缺少有效戰鬥能力",snap||null);if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION))fail("SNAPSHOT_DAMAGE_MODEL","鏡像快照傷害模型版本未對齊共用傷害模型",snap||null);if(Number(snap.markRuleVersion)!==Number(window.MARK_COMBAT_RULE_VERSION)||markKeys.length!==10||markKeys.some(key=>!Number.isFinite(Number(snap.marks?.[key]))))fail("SNAPSHOT_MARKS","鏡像快照未完整包含 10 枚印記與規則版本",snap||null);const result=window.runMirrorCombatCore(snap,{logs:false});if(!result||!["player","mirror"].includes(result.winner)||!["player","mirror"].includes(result.firstActor)||!result.markState)fail("COMBAT_RESULT","Mirror Combat 單場結果格式／印記狀態異常",result||null);}catch(err){fail("COMBAT_PROBE","Mirror Combat 試跑失敗",String(err?.message||err));}}
+ if(typeof window.normalizeMirrorCombatSnapshot==="function"){
+  try{
+   const legacy=window.normalizeMirrorCombatSnapshot({stats:{hp:100,atk:10,def:5,crit:0,dodge:0},specializations:{},specializationBonuses:{},enhancementLevels:{},equipment:{}});
+   const markKeys=Array.from(window.MARK_KEYS||[]);
+   if(markKeys.length!==10||markKeys.some(key=>Number(legacy.marks?.[key])!==0))fail("LEGACY_MARK_SNAPSHOT","舊鏡像快照缺少 marks 時應正規化為 10 枚 Lv.0",legacy);
+  }catch(err){fail("LEGACY_MARK_SNAPSHOT_ERROR","舊鏡像快照印記正規化測試失敗",String(err?.message||err));}
+ }
+ if(typeof window.mirrorMarkPresentationTarget==="function"){
+  const mappings=[
+   [{type:"mark",owner:"player",mark:"ward",action:"activate"},"player"],
+   [{type:"mark",owner:"mirror",mark:"ward",action:"activate"},"enemy"],
+   [{type:"mark",owner:"player",target:"mirror",mark:"suppression",action:"preventDodge"},"enemy"],
+   [{type:"mark",owner:"mirror",target:"player",mark:"ignore",action:"trigger"},"player"],
+   [{type:"mark",owner:"mirror",target:"player",mark:"backlash",action:"trigger"},"player"]
+  ];
+  mappings.forEach(([evt,expected])=>{const actual=window.mirrorMarkPresentationTarget(evt);if(actual!==expected)fail("MARK_PRESENTATION_TARGET",`${evt.mark}/${evt.owner} target 應為 ${expected}，實際 ${actual}`,evt);});
+ }
  if(typeof window.requestMirrorContinuousStop!=="undefined"||typeof window.stopMirrorCombatRun!=="undefined")fail("STOP_API","鏡像戰不應提供正式停止 API");
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)warnings.push({code:"PREP_RETURN_UX",message:"懸賞／競技準備頁正式返回導覽尚未載入"});
  if(Number(window.GM_HUB_EXTENSION_VERSION)!==2)warnings.push({code:"GM_HUB_EXTENSION",message:"GM Hub 擴充 owner 尚未載入"});
