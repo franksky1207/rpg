@@ -898,14 +898,14 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 10. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
 11. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
 12. `runtimeintegrity.js`：專案主 runtime 檢查。
-12. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
-13. `storymigration.js`
-14. `storyprogress.js`
-15. `storyrecordtabs.js`
-16. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-17. `backgroundpreload.js` 最後處理正式背景 reveal。
+13. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
+14. `storymigration.js`
+15. `storyprogress.js`
+16. `storyrecordtabs.js`
+17. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+18. `backgroundpreload.js` 最後處理正式背景 reveal。
 
-故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；migration 必須先於 progress；runtime integrity 必須在 progress／record tabs 後。
+故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
 ---
 
