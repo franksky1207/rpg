@@ -37,7 +37,7 @@
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新已完成第 1～9 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1，以及完整玩家 UI／極簡模式／解鎖提示均已建立。GM 與遊戲說明／最終回歸仍留待後續批次。
+2026-09-19 文明災厄大更新已完成第 1～10 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1、完整玩家 UI／極簡模式／解鎖提示，以及 GM 整合均已建立。遊戲說明／戰線紀錄背景／最終 Integrity 與整體回歸留待第 11 批。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -905,6 +905,12 @@ repo root 舊測試檔：
 - VIP 管理與測試。
 - 8 專精正式值與測試值。
 - 五欄強化正式 +0～+20；測試能力必須呼叫 `equippedStatsWithEnhancementLevels()`，不可複製強化公式。
+- 10 枚印記正式管理：每枚可設為「未取得」或 Lv.0～Lv.10；套用時該枚 progress 歸 0 並寫入正式存檔。
+- 10 枚印記測試：只提供 Lv.0～Lv.10；未取得與 Lv.0 在戰鬥效果上等價。`gmTestMarkLevels` 只存在本次網頁工作階段。
+- GM「目前狀態」一次同步 VIP／專精／強化／印記；既有戰鬥測試摘要會顯示四類能力。
+- 文明災厄 GM：可任選 10 隻，不受正式解鎖限制；提供「單次挑戰模擬」與「完整擊殺模擬」。完整擊殺逐場呼叫正式 Combat Core、玩家每場滿血、Boss HP 跨場延續，不以平均傷害外推；100000 場只作瀏覽器安全上限，碰到時明確回報未完成。
+- 文明災厄 GM 不提供解鎖 toggle、HP setter、近死／瀕死、擊殺數等作弊控制；所有模擬皆為沙盒，不修改正式災厄 HP、印記或存檔。
+- `calamitygm.js` 使用 `registerGmHubSection()` extension API，沒有再疊新的 `gmHtml()` wrapper。
 - 副本相關管理／測試。
 - 鏡像：重置今日、20 場測試、100 次統計、對稱回歸。
 - 劇情 GM V3：10 區／101 stories 純預覽、前後導航、integrity 明細與重跑。
@@ -915,7 +921,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 # 14. UI 與玩家流程重要行為
 
-主頁功能：冒險／戰線紀錄／角色／背包／強化／專精／副本／遊戲說明／設定。
+主頁功能：冒險／戰線紀錄／角色／背包／強化／專精／副本／文明災厄／遊戲說明／設定。
 
 主線地圖：
 
@@ -951,15 +957,16 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／31 殺印記曲線／持久 HP。
 11. `calamityrunintegrity.js`：文明災厄單場／連續討伐 runtime、停止／pagehide 與非持久 run state。
 12. `calamityuiintegrity.js`：文明災厄首頁順序、UI／極簡 API、可見性與鎖定內容不洩漏。
-13. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
-14. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
-15. `runtimeintegrity.js`：專案主 runtime 檢查。
-16. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
-17. `storymigration.js`
-18. `storyprogress.js`
-19. `storyrecordtabs.js`
-20. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-21. `backgroundpreload.js` 最後處理正式背景 reveal。
+13. `calamitygmintegrity.js`：印記正式／測試管理、災厄兩種 GM 模擬、禁止作弊控制與安全上限。
+14. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
+15. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
+16. `runtimeintegrity.js`：專案主 runtime 檢查。
+17. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
+18. `storymigration.js`
+19. `storyprogress.js`
+20. `storyrecordtabs.js`
+21. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+22. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1068,7 +1075,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Calamity GM V1／Mark GM V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
