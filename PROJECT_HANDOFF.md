@@ -305,9 +305,15 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 專屬回歸：`markcoreintegrity.js`；檢查 10 枚順序、名稱、解鎖等級、升級需求、累積擊殺與 Lv.10 效果公式。
 - `COMBAT_MARK_INTEGRATION_VERSION = 1`；共用戰鬥核心正式順序為：玩家攻擊先套壓制→無視／穿透→戰意 ATK→先制→復仇／一般暴擊→連擊／反擊倍率→汲取；敵人攻擊依閃避→鎮心→韌性→吸收→護界→HP→不屈→復仇 ready→反噬→專精反擊。
 - 護界／不屈／戰意在每次 `runCombatCore()` 開始時獨立重骰；競技場每一戰、虛空每一層都會重新建立該場 battle-local 狀態。
-- structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件，供第 4 批戰鬥動畫使用。
+- structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件。第 4 批已由 `combatfx.js` 統一消費並在戰鬥兩方框內顯示。
 - GM 既有 `useTestSpecializations:true` 模擬會同步採用 session-only `gmTestMarkLevels`；亦可用 `options.markLevels` 明確傳入測試快照，不修改正式存檔。
 - `combatmarkintegrity.js` 以固定 RNG 驗證 Lv.0 基準不漂移、10 枚印記核心互動、吸收／反噬／反擊順序與護界／吸收對復仇的邊界規則。
+- `COMBAT_MARK_FX_VERSION = 1`；`combatfx.js` 是主線、特殊怪、懸賞、競技場、虛空的印記浮字與 HP 呈現 owner，不在各模式重寫 10 套印記 parser。
+- 第 4 批浮字：護界／鎮心／不屈／韌性／吸收／復仇顯示在玩家框；壓制／反噬／無視顯示在敵方框；戰意顯示在玩家框。戰意層數會顯示 `戰意 ×N`，吸收可顯示回復 HP，反噬顯示實際反傷。
+- 五個正式動畫 loop 都補上吸收成功 pulse，但吸收不觸發受擊震動；護盾、吸收、反噬造成的畫面 HP 差異由 `combatfx.js` 依 structured event 校正。
+- 模式接線版本：`MAIN_COMBAT_MARK_PRESENTATION_VERSION = 1`、`SPECIAL_COMBAT_MARK_PRESENTATION_VERSION = 1`、`BOUNTY_COMBAT_MARK_PRESENTATION_VERSION = 1`、`ARENA_COMBAT_MARK_PRESENTATION_VERSION = 1`、`VOID_COMBAT_MARK_PRESENTATION_VERSION = 1`。
+- `combatfxintegrity.js` 檢查 10 枚印記浮字 target／文字、五模式接線版本與共用 presentation API。
+
 
 
 
@@ -890,7 +896,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
 10. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
-11. `runtimeintegrity.js`：專案主 runtime 檢查。
+11. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
+12. `runtimeintegrity.js`：專案主 runtime 檢查。
 12. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
 13. `storymigration.js`
 14. `storyprogress.js`
@@ -1005,7 +1012,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
