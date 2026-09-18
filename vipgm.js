@@ -34,6 +34,8 @@
    const select=document.getElementById(`gmSpec-test-${key}`);if(select)select.value=String(current);
   });
   window.gmUseCurrentEnhancementTestStatus();
+  if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus();
+  if(typeof window.refreshGmMarkTestControls==="function")window.refreshGmMarkTestControls();
  };
  window.gmTestEnhancementLevel=function(type){return enhancementSlots().includes(type)?clampEnhancement(window.gmTestEnhancementLevels?.[type]):0;};
  window.gmTestEnhancedEquippedStats=function(){
@@ -46,6 +48,6 @@
  };
  window.gmTestVipLabel=function(){const lv=testVip(),b=vipBonusStats(lv);return `VIP${lv}｜HP/ATK +${b.hp}%｜DEF +${b.def}%｜暴擊/閃避 +${b.crit}%`;};
  window.gmTestVipOptions=function(){return Array.from({length:VIP_MAX_LEVEL+1},(_,i)=>`<option value="${i}" ${i===testVip()?"selected":""}>VIP${i}</option>`).join("");};
- window.gmTestVipControlHtml=function(){return `<div class="item" style="margin:0 0 12px"><b>測試 VIP 等級</b><div class="controls" style="margin-top:8px;align-items:end"><label>VIP<br><select id="gmTestVipLevel" class="btn" onchange="gmSetTestVipLevel(this.value)">${gmTestVipOptions()}</select></label><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">目前狀態</button><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span><span class="muted">僅本次網頁工作階段保留；重新整理或重開後回 VIP0／強化 +0。</span></div></div>`;};
+ window.gmTestVipControlHtml=function(){return `<div class="item" style="margin:0 0 12px"><b>測試 VIP 等級</b><div class="controls" style="margin-top:8px;align-items:end"><label>VIP<br><select id="gmTestVipLevel" class="btn" onchange="gmSetTestVipLevel(this.value)">${gmTestVipOptions()}</select></label><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">目前狀態</button><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span><span class="muted">目前狀態會同步 VIP／專精／強化／印記；測試資料僅本次網頁工作階段保留，重新整理後回預設值。</span></div></div>`;};
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=4;
 })();
