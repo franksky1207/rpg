@@ -1,5 +1,12 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
+ const NARRATIVE_BANNED_TERMS=["小區域","關卡","第幾關","普通怪","菁英怪","Boss","Ｂｏｓｓ","玩家","頁數","遊戲","等級","首領戰"];
+ const INTRO_FORMAT={pages:12,minChars:90,maxChars:155,minBlocks:3};
+ function bossFormatPolicy(regionId,offset){
+  if(regionId==="galactic-unification"&&offset===9)return {pages:31,minChars:90,maxChars:155,minBlocks:3};
+  if(offset===9)return {pages:15,minChars:120,maxChars:155,minBlocks:3};
+  return {pages:11,minChars:90,maxChars:120,minBlocks:2};
+ }
  function plainText(value){
   if(typeof value==="string")return value;
   if(value&&typeof value==="object"&&typeof value.em==="string")return value.em;
@@ -23,6 +30,22 @@
 
   function checkChineseDisplay(value,context){
    if(hasEnglishLetters(value))fail("STORY_ENGLISH_DISPLAY_TEXT",`${context} 正式顯示文字不可含英文字母`,String(value??""));
+  }
+  function checkNarrativeTerms(value,context){
+   const text=String(value??"");
+   const found=NARRATIVE_BANNED_TERMS.filter(term=>text.includes(term));
+   if(found.length)fail("STORY_NARRATIVE_INTERNAL_TERM",`${context} 含遊戲內部／破壞沉浸感用語：${found.join("、")}`,found);
+  }
+  function checkPageFormat(expectedId,page,pageIdx,policy){
+   if(!Array.isArray(page)||!page.length){fail("STORY_PAGE_FORMAT",`${expectedId} 第 ${pageIdx+1} 頁格式錯誤`);return;}
+   const texts=page.map(plainText).filter(text=>String(text).trim().length>0);
+   if(!texts.length){fail("STORY_PAGE_EMPTY",`${expectedId} 第 ${pageIdx+1} 頁沒有可顯示文字`);return;}
+   const joined=texts.join("\n");
+   checkNarrativeTerms(joined,`${expectedId} 第 ${pageIdx+1} 頁`);
+   checkChineseDisplay(joined,`${expectedId} 第 ${pageIdx+1} 頁`);
+   const visibleChars=Array.from(joined.replace(/\s/g,"")).length;
+   if(visibleChars<policy.minChars||visibleChars>policy.maxChars)fail("STORY_PAGE_CHAR_RANGE",`${expectedId} 第 ${pageIdx+1} 頁應為 ${policy.minChars}～${policy.maxChars} 個可見字元，實際 ${visibleChars}`,visibleChars);
+   if(texts.length<policy.minBlocks)fail("STORY_PAGE_BLOCK_COUNT",`${expectedId} 第 ${pageIdx+1} 頁至少需要 ${policy.minBlocks} 個自然文字區塊，實際 ${texts.length}`,texts.length);
   }
 
   if(expectedRegions.length!==10)fail("STORY_WORLD_REGION_COUNT",`WORLD_REGIONS 應為 10 區，實際 ${expectedRegions.length}`);
@@ -70,21 +93,16 @@
     checkChineseDisplay(story.chapter,`${expectedId} 章節名稱`);
     checkChineseDisplay(story.location,`${expectedId} 地點名稱`);
     checkChineseDisplay(story.title,`${expectedId} 劇情標題`);
-    if(!Array.isArray(story.pages)||story.pages.length<7)fail("STORY_PAGE_COUNT",`${expectedId} 頁數過少或格式錯誤`,story.pages?.length);
+    const formatPolicy=bossFormatPolicy(worldRegion.id,offset);
+    if(!Array.isArray(story.pages))fail("STORY_PAGE_COUNT_SPEC",`${expectedId} 頁面格式錯誤`,story.pages?.length);
     else{
-     const pageCountLimit=expectedId==="galactic-unification-boss-10"?31:20;
-     if(story.pages.length>pageCountLimit)warn("STORY_PAGE_COUNT_LONG",`${expectedId} 共 ${story.pages.length} 頁，超過目前建議上限 ${pageCountLimit} 頁`);
-     story.pages.forEach((page,pageIdx)=>{
-      if(!Array.isArray(page)||!page.length){fail("STORY_PAGE_FORMAT",`${expectedId} 第 ${pageIdx+1} 頁格式錯誤`);return;}
-      const texts=page.map(plainText).filter(Boolean);
-      if(!texts.length)fail("STORY_PAGE_EMPTY",`${expectedId} 第 ${pageIdx+1} 頁沒有可顯示文字`);
-      const joined=texts.join("\n");
-      if(joined.includes("玩家"))fail("STORY_PLAYER_WORD",`${expectedId} 第 ${pageIdx+1} 頁正式文字不可使用「玩家」`);
-      checkChineseDisplay(joined,`${expectedId} 第 ${pageIdx+1} 頁`);
-      const visibleChars=Array.from(joined.replace(/\s/g,"")).length;
-      if(visibleChars>230)warn("STORY_PAGE_DENSITY",`${expectedId} 第 ${pageIdx+1} 頁文字偏密，建議手機實機確認`,visibleChars);
-     });
+     if(story.pages.length!==formatPolicy.pages)fail("STORY_PAGE_COUNT_SPEC",`${expectedId} 應為 ${formatPolicy.pages} 頁，實際 ${story.pages.length}`,story.pages.length);
+     story.pages.forEach((page,pageIdx)=>checkPageFormat(expectedId,page,pageIdx,formatPolicy));
     }
+    const storyBody=Array.isArray(story.pages)?story.pages.map(pageText).join("\n"):"";
+    const expectedEnemies=(Array.isArray(map.enemies)?map.enemies:[]).map(enemy=>enemy?.[0]).filter(name=>typeof name==="string"&&name);
+    const missingEnemies=expectedEnemies.filter(name=>!storyBody.includes(name));
+    if(missingEnemies.length)fail("STORY_ENEMY_NAME_MISSING",`${expectedId} 正式劇情缺少本地圖敵人名稱：${missingEnemies.join("、")}`,missingEnemies);
    }
   });
 
@@ -94,14 +112,11 @@
    checkChineseDisplay(intro.chapter,"earth-prologue 章節名稱");
    checkChineseDisplay(intro.location,"earth-prologue 地點名稱");
    checkChineseDisplay(intro.title,"earth-prologue 劇情標題");
-   if(!Array.isArray(intro.pages)||intro.pages.length<7)fail("STORY_PROLOGUE_FORMAT","earth-prologue 頁面格式錯誤");
-   else intro.pages.forEach((page,pageIdx)=>{
-    const joined=pageText(page);
-    if(joined.includes("玩家"))fail("STORY_PLAYER_WORD",`earth-prologue 第 ${pageIdx+1} 頁正式文字不可使用「玩家」`);
-    checkChineseDisplay(joined,`earth-prologue 第 ${pageIdx+1} 頁`);
-    const visibleChars=Array.from(joined.replace(/\s/g,"")).length;
-    if(visibleChars>230)warn("STORY_PAGE_DENSITY",`earth-prologue 第 ${pageIdx+1} 頁文字偏密，建議手機實機確認`,visibleChars);
-   });
+   if(!Array.isArray(intro.pages))fail("STORY_PROLOGUE_FORMAT","earth-prologue 頁面格式錯誤");
+   else{
+    if(intro.pages.length!==INTRO_FORMAT.pages)fail("STORY_PROLOGUE_PAGE_COUNT",`earth-prologue 應為 ${INTRO_FORMAT.pages} 頁，實際 ${intro.pages.length}`,intro.pages.length);
+    intro.pages.forEach((page,pageIdx)=>checkPageFormat("earth-prologue",page,pageIdx,INTRO_FORMAT));
+   }
   }
 
   const actualStoryIds=Object.keys(stories);
