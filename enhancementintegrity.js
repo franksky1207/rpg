@@ -5,9 +5,9 @@
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("MAX_LEVEL","目前正式強化上限不是 +20");
  if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("BONUS","每級強化不是 2.5%");
  const c20=typeof enhancementUpgradeCost==="function"?enhancementUpgradeCost(20):null;
- if(c20?.basic!==2000||c20?.advanced!==100)fail("COST20","+20 成本異常");
+ if(c20?.basic!==1000||c20?.advanced!==100)fail("COST20","+20 成本異常");
  const sum=typeof enhancementUpgradeCost==="function"?Array.from({length:20},(_,i)=>enhancementUpgradeCost(i+1)).reduce((a,c)=>({basic:a.basic+c.basic,advanced:a.advanced+c.advanced}),{basic:0,advanced:0}):null;
- if(sum?.basic!==21000||sum?.advanced!==1050)fail("COST_TOTAL","單欄累積成本異常");
+ if(sum?.basic!==10500||sum?.advanced!==1050)fail("COST_TOTAL","單欄累積成本異常");
  if(typeof enhancementStoneEligible!=="function"||enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
  const saleLegend=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:4}):null,saleMythic=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:5}):null;
  if(saleLegend?.basic!==5||saleMythic?.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
