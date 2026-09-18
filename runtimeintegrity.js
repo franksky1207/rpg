@@ -10,7 +10,7 @@
 
  const required=[
   "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields","cleanupRetiredShopState","normalizePersistentFlags",
-  "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear",
+  "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear","normalizeCivilizationCalamityState","ensureCivilizationCalamityState","createBlankCalamityState","createBlankMarkState",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
@@ -30,8 +30,8 @@
  retiredShopApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_SHOP_API",`已退休商店函式 ${name} 不應再存在`);});
  if(typeof window.VOID_MIRAGE_GM_UI_V2!=="undefined")fail("LEGACY_VOID_GM_MARKER","已退休的虛空 GM UI 標記不應再載入");
 
- if(Number(SAVE_VERSION)!==12)fail("SAVE_VERSION",`SAVE_VERSION 應為 12，實際 ${SAVE_VERSION}`);
- if(Number(window.SAVE_SCHEMA_VERSION)!==12)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 12，實際 ${window.SAVE_SCHEMA_VERSION}`);
+ if(Number(SAVE_VERSION)!==13)fail("SAVE_VERSION",`SAVE_VERSION 應為 13，實際 ${SAVE_VERSION}`);
+ if(Number(window.SAVE_SCHEMA_VERSION)!==13)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 13，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
  if(Number(window.VIP_PROGRESSION_VERSION)!==12)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 12，實際 ${window.VIP_PROGRESSION_VERSION}`);
  if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
@@ -139,7 +139,7 @@
   const checks=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
   checks.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS",`競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
  }
- if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==4)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 4 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
+ if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==5)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 5 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
  if(typeof newState==="function"){
   const fresh=newState();
   if(!fresh?.daily||fresh.daily.bounty?.used!==0||fresh.daily.arena?.used!==0)fail("NEW_STATE_DAILY","newState 未正確建立每日副本狀態",fresh?.daily);
@@ -147,6 +147,8 @@
   if(fresh?.vipPoints!==0||fresh?.vipLevel!==0)fail("NEW_STATE_VIP","newState VIP 初始狀態異常",{vipPoints:fresh?.vipPoints,vipLevel:fresh?.vipLevel});
   if(Object.prototype.hasOwnProperty.call(fresh,"shop"))fail("NEW_STATE_SHOP","newState 不應再含退休的 shop 欄位");
   if(fresh.pendingBlackMarketEncounter!==false)fail("NEW_STATE_BLACK_MARKET","newState 應正式建立 pendingBlackMarketEncounter=false",fresh.pendingBlackMarketEncounter);
+  if(Number(fresh.calamities?.version)!==1||Object.keys(fresh.calamities?.entries||{}).length!==10)fail("NEW_STATE_CALAMITIES","newState 未正確建立文明災厄 state",fresh.calamities);
+  if(Number(fresh.marks?.version)!==1||Object.keys(fresh.marks?.entries||{}).length!==10)fail("NEW_STATE_MARKS","newState 未正確建立印記 state",fresh.marks);
   ["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(fresh?.dungeon||{},key))fail("NEW_STATE_LEGACY_DUNGEON",`newState 不應含舊副本欄位 ${key}`);});
  }
  if(typeof window.normalizeDailyState==="function"){
@@ -168,8 +170,9 @@
    if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v12 migration 未移除 shop");
    const lost=migrated.lostGear?.find(x=>x?.id==="runtime-migration-probe");
    if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v12 migration 未完整保留 lostGear",lost);
-   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v12 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
-  }catch(error){fail("MIGRATION_PROBE","v11 → v12 migration 回歸測試執行失敗",String(error));}
+   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v13 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
+   if(Number(migrated.saveVersion)!==13||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA13_STATE","舊存檔未正確補上 Schema 13 災厄／印記 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
+  }catch(error){fail("MIGRATION_PROBE","v11 → v13 migration 回歸測試執行失敗",String(error));}
   window.LAST_SAVE_MIGRATION_REPORT=priorReport;
  }
  if(typeof window.specialRewardGoldAmount==="function"&&typeof window.specializationAdjustedGold==="function"){
@@ -206,7 +209,9 @@
   ["今日懸賞","今日競技場","虛空歷史最高","虛空當日最高"].forEach(text=>{if(!gmText.includes(text))fail("GM_CURRENT_TEXT",`GM 介面缺少新版副本資料：${text}`);});
  }
 
+ if(window.CALAMITY_STATE_INTEGRITY?.passed!==true)fail("CALAMITY_STATE_INTEGRITY","文明災厄／印記持久 state 專屬回歸檢查未通過",window.CALAMITY_STATE_INTEGRITY?.errors||null);
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
+ if(state&&(Object.keys(state.calamities?.entries||{}).length!==10||Object.keys(state.marks?.entries||{}).length!==10))fail("STATE_CALAMITY_MARKS","正式 state 應包含 10 組災厄與 10 組印記",{calamities:state.calamities,marks:state.marks});
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
  if(state&&typeof state.pendingBlackMarketEncounter!=="boolean")fail("BLACK_MARKET_INTEL_STATE","pendingBlackMarketEncounter 應 normalize 為 boolean",state.pendingBlackMarketEncounter);
  if(state?.dungeon){
