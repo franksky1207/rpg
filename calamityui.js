@@ -1,7 +1,7 @@
 (function(){
  const UI_VERSION=1;
  const MINIMAL_VERSION=1;
- let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
+ let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
 
  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
@@ -63,7 +63,7 @@
   const php=ui.displayPlayerHp==null?p.hp:ui.displayPlayerHp,pmax=ui.displayPlayerMax||p.hp;
   const continuous=ui.mode==="continuous",stopping=run?.stopRequested===true||run?.active===false;
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
-   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,(run?.battleCount||0)+1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
+   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
    <div class="calamity-run-stats"><div><span>災厄</span><strong>${esc(def?.name||enemy.name)}</strong></div><div><span>已完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div></div>
    ${continuous?`<div class="calamity-stop-wrap"><button id="calamityStopBtn" class="btn danger" onclick="stopCivilizationCalamityContinuousUI()" ${stopping?"disabled":""}>${stopping?"停止中":"停止連續討伐"}</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div><div class="combat-arena">
@@ -145,7 +145,7 @@
  async function runSingleUi(){
   const result=window.runCivilizationCalamitySingle?.(ui.selectedId);
   if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始文明災厄挑戰。";render();return;}
-  ui.lastBattle=result.result;ui.finalRun=result.run;
+  ui.lastBattle=result.result;ui.finalRun=result.run;ui.displayBattleNumber=1;
   primeDisplay(result.result);render();
   await animateBattle(result);
   ui.running=false;ui.phase="result";resetDisplay();render();
@@ -157,6 +157,7 @@
     async onBattleComplete(battle){
      ui.lastBattle=battle.result;
      ui.finalRun=battle.run;
+     ui.displayBattleNumber=Math.max(1,Number(battle.battleNumber)||1);
      ui.phase="combat";
      primeDisplay(battle.result);render();
      await animateBattle(battle);
@@ -180,7 +181,7 @@
   if(ui.running)return false;
   const def=window.getCivilizationCalamityDefinition?.(id);
   if(!def||!window.isCivilizationCalamityUnlocked?.(id))return false;
-  ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
+  ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
   view="calamity";render();
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}
   setTimeout(runSingleUi,80);return true;
@@ -191,9 +192,9 @@
   const msg=document.getElementById("combatMessage");if(msg)msg.textContent="已停止連續討伐；不會再開始下一場。";
   return !!result?.ok;
  };
- window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
+ window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
- window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
+ window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
 
  function calamityMinimalActive(){const run=window.getCivilizationCalamityRunSnapshot?.();return ui.phase==="combat"&&ui.mode==="continuous"&&ui.running&&run?.active===true;}
  function registerMinimal(){
@@ -207,7 +208,7 @@
     const run=window.getCivilizationCalamityRunSnapshot?.(),def=window.getCivilizationCalamityDefinition?.(ui.selectedId);
     const e=root.querySelector("[data-calamity-minimal-enemy]"),round=root.querySelector("[data-calamity-minimal-round]"),ehp=root.querySelector("[data-calamity-minimal-enemy-hp]"),php=root.querySelector("[data-calamity-minimal-player-hp]");
     if(e)e.textContent=def?.name||run?.calamityName||"文明災厄";
-    if(round)round.textContent=`第 ${Math.max(1,(Number(run?.battleCount)||0)+1)} 場`;
+    if(round)round.textContent=`第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`;
     const enemyCurrent=ui.displayEnemyHp==null?Number(run?.currentHp)||0:ui.displayEnemyHp,enemyMax=ui.displayEnemyMax||Number(run?.maxHp)||0;
     const playerCurrent=ui.displayPlayerHp==null?Number(run?.playerHp)||0:ui.displayPlayerHp,playerMax=ui.displayPlayerMax||Number(run?.playerMaxHp)||0;
     if(ehp)ehp.textContent=`${fmt(enemyCurrent)} / ${fmt(enemyMax)}`;
