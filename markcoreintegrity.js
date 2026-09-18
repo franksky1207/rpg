@@ -4,6 +4,7 @@
  const expectedKeys=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
  const expectedNames=["護界印記","壓制印記","鎮心印記","不屈印記","韌性印記","戰意印記","吸收印記","復仇印記","反噬印記","無視印記"];
  const expectedLevels=[50,100,150,200,250,300,350,400,450,500];
+ const expectedRegions=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(x=>String(x?.id||""));
  const expectedUpgrade=[1,1,2,2,3,3,4,4,5,5];
 
  if(Number(window.MARK_CORE_VERSION)!==1)fail("MARK_CORE_VERSION","Mark Core version 應為 1",window.MARK_CORE_VERSION);
@@ -14,7 +15,7 @@
 
  expectedKeys.forEach((key,index)=>{
   const def=window.MARK_DEFS?.[key];
-  if(def?.name!==expectedNames[index]||Number(def?.unlockLevel)!==expectedLevels[index])fail("MARK_DEF",`${key} 定義異常`,def);
+  if(def?.name!==expectedNames[index]||Number(def?.unlockLevel)!==expectedLevels[index]||def?.regionId!==expectedRegions[index])fail("MARK_DEF",`${key} 定義異常`,def);
  });
  const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markLevel","markAcquired","markProgress","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
