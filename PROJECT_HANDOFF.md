@@ -363,8 +363,8 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 競技場階層成長維持每階 HP +5%、有效傷害 +1.5%、DEF +3%。
 - 2026-09-18 平衡基準：低位物理倍率 1/1/1；中位（Hard）HP 0.96、有效傷害 0.96、DEF 0.98；高位（Extreme）HP 0.90、有效傷害 0.92、DEF 0.96。
 - 高位 Extreme 特殊能力同步下修：第1戰暴擊上限11%、閃避9%；第2戰暴擊16%、閃避13%、雙特性25%；第3戰暴擊19%、閃避16%、雙特性30%。
-- 競技場評估相容版本正式拆分為 position model / assessment rule / balance；目前為 1 / 3 / 3。
-- 500 次評估簽章會包含上述版本。任一相容版本或正式競技場 balance version 改變時，舊評估自動失效重跑；只清除 lastCheck／promotionReady，不重置 highestArenaUnlocked、主線進度或已解鎖競技場。
+- 競技場評估相容版本正式拆分為 position model / assessment rule / balance；目前為 **1 / 4 / 3**。Assessment State／Runtime 皆為 V4。
+- 500 次評估簽章會包含上述版本、`MARK_COMBAT_RULE_VERSION`、角色等級、基礎能力、VIP、戰鬥專精與 **10 枚印記等級**。任一相容版本、正式競技場 balance version、Mark Rule 或相關角色能力改變時，舊評估自動失效重跑；只清除／失效 lastCheck／promotionReady，不重置 highestArenaUnlocked、主線進度或已解鎖競技場。評估開始時會鎖定 marks snapshot，500 次 × 3 戰全部使用同一份印記能力。
 - 此競技場機制本身不需要另升 Save Schema；目前全域 Save Schema 已因文明災厄／印記持久資料升為 13。
 - 虛空幻境：Lv25，無固定最高層；起始 `max(1, 歷史最高-100)`；每 10 層 Boss；每日基礎獎勵＝當日最高層×2 VIP 積分，每日只能領一次。
 - 鏡像戰：Lv50，每日正式挑戰 1 次，固定 20 場。
@@ -1016,7 +1016,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
