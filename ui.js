@@ -176,7 +176,7 @@ function setCombatHp(enemyHp,enemyMax,playerHp,playerMax,message){
 }
 function flashCombatText(target,text){
  const card=document.getElementById(target==="enemy"?"combatEnemyCard":"combatPlayerCard"),dmg=document.getElementById(target==="enemy"?"combatEnemyDamage":"combatPlayerDamage");
- if(card&&text!=="閃避"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260)}
+ if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260)}
  if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show")}
 }
 function flashDamage(target,amount){flashCombatText(target,`-${amount}`)}
@@ -195,7 +195,7 @@ async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
   if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
   m=line.match(/^你攻擊.+，.+閃避了攻擊。$/);
   if(m){attackMotion("player");await sleep(120);flashCombatText("enemy","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}閃避了你的攻擊`);await sleep(190);continue}
-  m=line.match(/^.+攻擊你，暴擊造成 (\d+) 點傷害。$/);
+  if(line.includes("吸收印記化解了傷害")){attackMotion("enemy");await sleep(120);flashCombatText("player","吸收");setCombatHp(ehp,enemyMax,php,playerMax,"吸收印記化解了傷害");await sleep(r.e.kind==="boss"?260:190);continue}\n  m=line.match(/^.+攻擊你，暴擊造成 (\\d+) 點傷害。$/);
   if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashCombatText("player",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}暴擊造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
   m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
   if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashCombatText("player",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
