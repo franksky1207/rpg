@@ -43,7 +43,7 @@
    if(m){attackMotion("player");await sleep(120);flashCombatText("enemy","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}閃避了你的攻擊`);await sleep(190);continue}
    m=line.match(/^.+攻擊你，你閃避了攻擊。$/);
    if(m){attackMotion("enemy");await sleep(120);flashCombatText("player","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`你閃避了${r.e.name}的攻擊`);await sleep(190);continue}
-   m=line.match(/^.+攻擊你，暴擊造成 (\d+) 點傷害。$/);
+   if(line.includes("吸收印記化解了傷害")){attackMotion("enemy");await sleep(120);flashCombatText("player","吸收");setCombatHp(ehp,enemyMax,php,playerMax,"吸收印記化解了傷害");await sleep(190);continue}\n   m=line.match(/^.+攻擊你，暴擊造成 (\\d+) 點傷害。$/);
    if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashCombatText("player",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}暴擊造成 ${m[1]} 點傷害`);await sleep(220);continue}
    m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
    if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashDamage("player",m[1]);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(190)}
