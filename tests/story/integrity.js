@@ -42,9 +42,24 @@ try{
   console.error('STORY_INTEGRITY_REPORT 不存在');
   process.exit(2);
  }
- if(Number(report.version)<8){
+ if(Number(report.version)<9){
   console.error(`STORY_INTEGRITY_VERSION 過舊：${report.version}`);
   process.exit(4);
+ }
+ const policy=report.formatPolicy||{};
+ const expectedPolicy={
+  intro:{pages:12,minChars:90,maxChars:155,minBlocks:3},
+  regularBoss:{pages:11,minChars:90,maxChars:120,minBlocks:2},
+  regionFinale:{pages:15,minChars:120,maxChars:155,minBlocks:3},
+  finalBoss:{pages:31,minChars:90,maxChars:155,minBlocks:3}
+ };
+ if(JSON.stringify(policy)!==JSON.stringify(expectedPolicy)){
+  console.error(`STORY FORMAT POLICY 不一致：${JSON.stringify(policy)}`);
+  process.exit(6);
+ }
+ if(Number(report.dataModuleFormatMinimum)!==1){
+  console.error(`STORY DATA module format minimum 不一致：${report.dataModuleFormatMinimum}`);
+  process.exit(7);
  }
  console.log(`storyRegions=${report.storyRegions} totalStories=${report.totalStories} bossStoriesChecked=${report.bossStoriesChecked}`);
  const warningAllowlist=new Set([]);
