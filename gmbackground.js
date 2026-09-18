@@ -20,7 +20,7 @@
   if(!key)return false;
   try{
    localStorage.setItem(key,next?"1":"0");
-   if(!next&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
+   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("calamity");}
    return true;
   }catch(e){return false;}
  }
