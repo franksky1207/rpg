@@ -113,7 +113,9 @@
  if(typeof window.getArenaAssessmentSignature==="function"){
   try{
    const signature=JSON.parse(window.getArenaAssessmentSignature(1));
-   const markKeys=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];\n   if(signature?.positionModelVersion!==1||signature?.assessmentRuleVersion!==4||signature?.balanceVersion!==3||Number(signature?.markRuleVersion)!==Number(window.MARK_COMBAT_RULE_VERSION))fail("ARENA_ASSESSMENT_SIGNATURE_VERSION","競技場評估簽章未包含目前版本",{signature});\n   if(!signature?.marks||markKeys.some(key=>!Number.isFinite(Number(signature.marks[key]))))fail("ARENA_ASSESSMENT_SIGNATURE_MARKS","競技場評估簽章未包含完整 10 枚印記",signature?.marks||null);
+   const markKeys=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
+   if(signature?.positionModelVersion!==1||signature?.assessmentRuleVersion!==4||signature?.balanceVersion!==3||Number(signature?.markRuleVersion)!==Number(window.MARK_COMBAT_RULE_VERSION))fail("ARENA_ASSESSMENT_SIGNATURE_VERSION","競技場評估簽章未包含目前版本",{signature});
+   if(!signature?.marks||markKeys.some(key=>!Number.isFinite(Number(signature.marks[key]))))fail("ARENA_ASSESSMENT_SIGNATURE_MARKS","競技場評估簽章未包含完整 10 枚印記",signature?.marks||null);
   }catch(error){fail("ARENA_ASSESSMENT_SIGNATURE_PARSE","競技場評估簽章無法解析",String(error));}
  }
  if(typeof window.normalizeDungeonSaveState==="function"){
