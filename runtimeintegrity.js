@@ -167,9 +167,9 @@
    probe.lostGear=[{id:"runtime-migration-probe",item,cost:123,lostAt:456}];
    const raw=JSON.parse(JSON.stringify(probe));
    const migrated=window.migrateSave(probe,11,window.normalizeSaveState,raw);
-   if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v12 migration 未移除 shop");
+   if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v13 migration 未移除 shop");
    const lost=migrated.lostGear?.find(x=>x?.id==="runtime-migration-probe");
-   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v12 migration 未完整保留 lostGear",lost);
+   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v13 migration 未完整保留 lostGear",lost);
    if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v13 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
    if(Number(migrated.saveVersion)!==13||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA13_STATE","舊存檔未正確補上 Schema 13 災厄／印記 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
   }catch(error){fail("MIGRATION_PROBE","v11 → v13 migration 回歸測試執行失敗",String(error));}
