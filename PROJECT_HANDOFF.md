@@ -4,7 +4,7 @@
 >
 > 若本文件、歷史對話、舊截圖、舊規格、舊 commit、模型記憶或任何摘要與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。本文件是交接索引與最新規則摘要，不可取代實際程式碼檢查。
 
-更新日期：**2026-09-17**
+更新日期：**2026-09-18**
 
 ---
 
@@ -525,13 +525,14 @@ Save Schema 仍是 12，沒有因鏡像或故事升到 13。
 
 `storymigration.js`：
 
-- `STORY_MIGRATION_VERSION = 4`
+- `STORY_MIGRATION_VERSION = 5`
 - 專責 storyProgress container、欄位正規化與舊存檔 backfill。
-- `historyBackfillRegions` 已正式列入 `legacyFields`。
-- **`historyBackfillRegions` 只保留資訊相容用途，不再控制是否允許 backfill，也不決定故事是否完成。**
-- 舊存檔若 `bossKilled=true` 但 `completedStories` 缺故事，會補回。
+- `historyBackfillRegions` 已正式列入 `legacyFields`，但現在是**退休欄位**。
+- 新 storyProgress 不再建立 `historyBackfillRegions`。
+- 舊存檔若帶有此欄位，migration 會先依 `bossKilled`／`pendingStory`／`completedStories` 修復缺失故事，再刪除該 legacy 欄位。
+- 舊存檔若 `bossKilled=true` 但 `completedStories` 缺故事，仍會補回。
 - 若該故事正是 `pendingStory`，backfill 不得把它補成 completed。
-- 尚未擊敗任何 Boss 的未來區域不應被提前標記成已 backfill。
+- 不得再把 `historyBackfillRegions` 恢復成 repair lock、完成判斷或新存檔欄位。
 
 ## 10.5 戰線紀錄
 
@@ -566,7 +567,7 @@ Save Schema 仍是 12，沒有因鏡像或故事升到 13。
 
 `storyintegrity.js`：
 
-- `STORY_INTEGRITY_VERSION = 6`
+- `STORY_INTEGRITY_VERSION = 9`
 - 現在是**純檢查器**，不再先修改／翻譯 story data。
 - 每次 `runCivilizationStoryIntegrity()` 都重新掃描最新資料。
 - 檢查 10 個 WORLD_REGIONS、10 個 story registry、區域順序與名稱。
@@ -574,19 +575,18 @@ Save Schema 仍是 12，沒有因鏡像或故事升到 13。
 - 正式 stories 必須 101、Boss stories 必須 100。
 - title／registry label 必須等於正式 Boss 名稱；location 必須等於正式地圖名；chapter 必須包含正式區域名。
 - 正式顯示資料若含 A-Z/a-z → error。
-- 正式本文若含「玩家」→ error。
-- 每 Boss 至少 7 頁；超過 20 頁 warning。
-- 單頁可見字數超過約 230 → warning。
+- 正式本文若含「小區域／關卡／普通怪／菁英怪／Boss／玩家／頁數／遊戲／等級／首領戰」等內部敘事詞 → error。
+- 每篇 Boss 故事都必須包含該地圖正式 5 隻敵人名稱；來源直接使用 `MAPS`，不另造第二套敵人資料。
+- 版面規格集中在單一 `STORY_FORMAT_POLICY`：序章 12 頁、一般 Boss 11 頁、區域收尾 15 頁、最終 Boss 31 頁；字數與最少自然文字區塊也由同一政策集中定義。
 - 最終兩句固定訊號存在與順序受保護。
-- 10 支 storydata 版本 marker 必須載入。
-
-目前唯一已知 Story Data warning：最終 Boss `galactic-unification-boss-10` 共 31 頁，超過一般建議 20 頁；**這是警告，不是錯誤，且符合最終章較長的設計，不應為了消 warning 砍內容。**
+- 10 支 storydata 的 `*_DATA_VERSION` 現在明確視為**模組格式相容版本**，不是故事內容修訂版；純文字內容更新靠 `index.html` cache-bust，不要求 10 支檔案同步升版。
+- 目前正式 Story Data 應為 **0 warning**；CI 會把未列入 allowlist 的新 warning 視為失敗。
 
 ## 10.8 Story Runtime Integrity
 
 `storyruntimeintegrity.js`：
 
-- `STORY_RUNTIME_INTEGRITY_VERSION = 8`
+- `STORY_RUNTIME_INTEGRITY_VERSION = 9`
 - 會先重新跑 Data Integrity。
 - 硬性檢查 10 區、101 篇、100 Boss。
 - 檢查 Story UI、migration、progress、戰線紀錄、GM 必要 API。
@@ -788,8 +788,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - `offlineprogress.js` 有 inline modal styles。
 - `gmhub.js`、`specialization.js`、部分鏡像／GM UI 仍注入局部 CSS。
 - GM 劇情測試本身仍使用少量 inline style；不影響正式故事 CSS owner。
-- Story Data Integrity 的頁面密度只 warning，不會自動拆頁；手機實際閱讀仍以真機為準。
-- 最終 Boss 31 頁是目前唯一已知 Story Data warning，屬設計性長章，不是 bug。
+- Story Data Integrity 現在會硬性檢查頁數、字數範圍與最少自然文字區塊；不會自動改寫或拆頁，手機實際閱讀仍以真機為準。
+- 最終 Boss 31 頁已是正式 `STORY_FORMAT_POLICY` 特例，不再產生 Story Data warning。
 - 101 篇正式故事尚未全部由使用者逐篇在 iPhone Safari 實機閱讀驗證；不可把 CI PASS 說成全篇真機驗收。
 - 真機若看到 stale JS/CSS，先檢查 `index.html` cache-bust 與 Safari cache，再判斷邏輯問題。
 
