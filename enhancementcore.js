@@ -1,7 +1,7 @@
 (function(){
  const MAX_LEVEL=20;
  const BONUS_PERCENT_PER_LEVEL=2.5;
- const BASIC_COST_PER_TARGET_LEVEL=100;
+ const BASIC_COST_PER_TARGET_LEVEL=50;
  const ADVANCED_COST_PER_TARGET_LEVEL=5;
  const SLOTS=["weapon","helmet","armor","shoes","accessory"];
  function clampWhole(value,min,max){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):min;}
