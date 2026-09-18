@@ -344,10 +344,10 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 災厄死亡後 Core 已完成印記結算並把 `currentHp=null`，所以下一場自動進入同一災厄的下一個完整滿血擊殺週期。
 - 手動停止：`requestCivilizationCalamityContinuousStop()`。如果已完成本場、正在 UI callback／動畫階段，立即將 runtime 標成 stopped，且不再啟動下一場；如果將來在 fighting phase 收到停止要求，則本場結算後停止。
 - 每一場正式 HP／印記先由第 7 批 Core 原子保存，再交給 `onBattleComplete`；動畫途中關頁不會回滾已完成那一場。
-- runtime 只存在 JS 記憶體，不寫入 save；重新整理／關閉頁面後不恢復連戰。`pagehide` 會把 active run 標成 ended，避免 Safari BFCache 回來後續跑舊 run。
+- runtime 只存在 JS 記憶體，不寫入 save；重新整理／真正關閉頁面後不恢復連戰。Calamity Continuous Rule V2：GM「背景戰鬥」關閉時，`pagehide` 會把 active run 標成 ended；GM 開啟時則保留 active run，並由 `backgroundProgress("calamity")` 套用與主線相同的背景時間 credit／continuous 12 小時上限，Safari BFCache／切背景後回前景可追趕進度。
 - 每場之間至少 yield 一次瀏覽器 event loop；不建立 background catch-up／離線推進，因此網頁關閉後不會繼續計算災厄 HP。
 - Snapshot 提供：目前災厄、battleCount、wins／losses／kills、totalTurns／averageTurns、stopRequested、災厄目前／最大 HP、玩家目前／最大 HP、印記狀態與上一場摘要，供第 9 批一般戰鬥畫面與極簡模式共用。
-- `calamityrunintegrity.js` 檢查 runtime API、版本、350ms UI 場間基準、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
+- `calamityrunintegrity.js` 檢查 runtime API、Calamity Continuous Rule V2、350ms UI 場間基準、GM 背景戰鬥 gate、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
 
 ## 4.9 文明災厄玩家 UI／極簡模式（第 9 批）
 
@@ -360,6 +360,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 每隻災厄提供「單場挑戰／連續討伐」；連續戰鬥畫面才顯示「停止連續討伐」與「極簡模式」。
 - 正常戰鬥使用正式 `combatPlayerCard / combatEnemyCard / combat-damage` DOM contract，因此共用第 4 批 `combatfx.js` 的印記 structured FX。
 - Calamity UI V3：災厄戰鬥 HP 動畫不再用文字 log 數字自行相減；每個攻擊／閃避 pulse 由 `consumeCombatPresentationPulseManual()` 消耗 Combat Core structured event，以 `actualDamage`、吸收、汲取、護界、反噬等正式事件更新 presentation HP，再同步一般畫面與極簡模式。DOM `animationstart` 對手動 pulse 會跳過二次消耗，避免長戰鬥血條漂移或最後突然歸零。
+- 戰鬥 UI 精簡：所有正式戰鬥共用的 `.combat-message` 文字訊息列已由 `battleflow.css` 隱藏；玩家只看雙方框、HP、傷害／閃避跳字、專精／印記浮字。Combat Core／各模式內部 logs 保留供動畫、除錯與 Integrity，不作玩家可見資訊。
 - UI 每場先以 `enemyStartHp / playerStartHp` 預填，再播放動畫，避免 Core 已結算後畫面短暫閃成戰後 HP。連戰標題與極簡模式使用 callback 的 `battleNumber`，不把已完成 `battleCount` 誤當下一場。
 - 災厄戰鬥動畫節奏直接對齊虛空：log delay 45／24／14ms、起手 100ms、結尾 250ms、連戰場間 350ms。
 - 極簡模式直接註冊到共用 `mainminimalmode.js` adapter；共用相同 overlay／時鐘／滑動退出配置。內容只顯示：目前敵人、連續戰鬥第 N 場、災厄 HP／最大 HP、玩家 HP／最大 HP；不顯示 EXP／金幣。
