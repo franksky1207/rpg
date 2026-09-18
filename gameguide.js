@@ -55,7 +55,8 @@
    ["虛空每日獎勵","虛空不再逐層直接發放 VIP 積分。系統會記錄當日最高到達層，今日基礎獎勵為「當日最高層 × 2」VIP 積分；每天只能手動領取一次，領取後當天即使再刷新更高紀錄也不能再次領取。跨日未領取的獎勵不會補發。"],
    ["VIP 系統","競技場、虛空幻境，以及部分其他副本可以取得 VIP 積分。累積足夠積分後會提升 VIP 等級，目前最高為 VIP20。VIP 等級越高，升級所需積分也會逐漸增加，並可解鎖額外能力與特權。"],
    ["VIP 基礎能力","提升 VIP 等級會同步強化 HP、攻擊、防禦、暴擊與閃避，VIP 等級越高，累積的能力加成也越高。"],
-   ["VIP 特權","部分 VIP 等級會解鎖額外特權，例如提高裝備掉落與品質、增加特殊怪收益、提升 VIP 積分副本收益，以及降低死亡損失等。各等級的完整效果與解鎖條件可在「查看特權」中確認。"]
+   ["VIP 特權","部分 VIP 等級會解鎖額外特權，例如提高裝備掉落與品質、增加特殊怪收益、提升 VIP 積分副本收益，以及降低死亡損失等。各等級的完整效果與解鎖條件可在「查看特權」中確認。"],
+   ["文明災厄","擊敗各區域最終 Boss 後解鎖對應災厄。災厄 HP 會跨挑戰保留，擊敗後可取得並提升對應印記；印記最高 Lv.10，提供永久戰鬥被動效果。文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。"]
   ]},
   {id:"growth",label:"成長與功能",items:[
    ["專精系統","專精是角色的永久成長系統，目前共有 8 種專精，每一種最高 Lv60。升級需要消耗金幣，等級越高所需費用也越高。升級後永久保留，沒有失敗機率、不需要額外材料，也不能重置。"],
@@ -75,7 +76,7 @@
  let activeGuideCategory="adventure";
  function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=13;
+ window.GAME_GUIDE_VERSION=14;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
