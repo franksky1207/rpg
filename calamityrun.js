@@ -1,6 +1,7 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
  const CALAMITY_CONTINUOUS_RULE_VERSION=1;
+ const CALAMITY_CONTINUOUS_GAP_MS=350;
  let activeRun=null;
 
  function clone(value){
@@ -165,9 +166,9 @@
    }
    if(onBattle)await onBattle(battle);
    if(battle.ended||!activeRun?.active){
-    const ended=battle.run||runStatus();
+    const ended=!activeRun?.active?runStatus():(battle.run||runStatus());
     if(onEnd)await onEnd(ended);
-    return {ok:true,ended:true,reason:battle.reason||ended?.endedReason||"ended",result:battle,run:ended};
+    return {ok:true,ended:true,reason:ended?.endedReason||battle.reason||"ended",result:battle,run:ended};
    }
    if(activeRun.stopRequested){
     const ended=finish("stopped");
@@ -198,6 +199,7 @@
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
+ window.CALAMITY_CONTINUOUS_GAP_MS=CALAMITY_CONTINUOUS_GAP_MS;
  window.beginCivilizationCalamityRun=begin;
  window.runCivilizationCalamitySingle=runSingle;
  window.fightNextCivilizationCalamityBattle=fightNext;
