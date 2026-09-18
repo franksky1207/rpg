@@ -70,6 +70,13 @@
  if(window.BOSS_CONTINUOUS_INTEGRITY?.passed!==true)fail("BOSS_CONTINUOUS_INTEGRITY","Boss 連戰專屬回歸檢查未通過",window.BOSS_CONTINUOUS_INTEGRITY?.errors||null);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
+ if(Number(window.ARENA_BALANCE_VERSION)!==2||typeof window.getArenaPositionPhysicalMultipliers!=="function")fail("ARENA_BALANCE_API","競技場平衡基準 API 未更新");
+ else{
+  const normal=window.getArenaPositionPhysicalMultipliers("normal"),hard=window.getArenaPositionPhysicalMultipliers("hard"),extreme=window.getArenaPositionPhysicalMultipliers("extreme");
+  if(normal.hp!==1||normal.damage!==1||normal.def!==1)fail("ARENA_BALANCE_NORMAL","競技場低位物理倍率異常",normal);
+  if(hard.hp!==.96||hard.damage!==.96||hard.def!==.98)fail("ARENA_BALANCE_HARD","競技場中位物理倍率異常",hard);
+  if(extreme.hp!==.90||extreme.damage!==.92||extreme.def!==.96)fail("ARENA_BALANCE_EXTREME","競技場高位物理倍率異常",extreme);
+ }
  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
  if(Number(window.VOID_MIRAGE_START_OFFSET)!==100)fail("VOID_START_OFFSET",`虛空幻境起始回退應為 100 層，實際 ${window.VOID_MIRAGE_START_OFFSET}`);
  if(typeof window.voidMirageStartFloorFromHistory==="function"){
