@@ -130,6 +130,13 @@
  }
 
  function resetDisplay(){ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
+ function primeDisplay(full){
+  if(!full)return resetDisplay();
+  ui.displayEnemyHp=Math.max(0,Number(full.enemyStartHp)||0);
+  ui.displayEnemyMax=Math.max(1,Number(full.enemy?.hp)||Number(full.combat?.enemyMaxHp)||1);
+  ui.displayPlayerHp=Math.max(0,Number(full.playerStartHp)||0);
+  ui.displayPlayerMax=Math.max(1,Number(full.playerStartHp)||Number(full.combat?.playerMaxHp)||1);
+ }
  function stopMinimalIfOpen(){
   if(window.getMinimalModeAdapterId?.()!=="civilization-calamity")return;
   if(typeof window.setMinimalModeState==="function")window.setMinimalModeState("stopped");
@@ -139,7 +146,7 @@
   const result=window.runCivilizationCalamitySingle?.(ui.selectedId);
   if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始文明災厄挑戰。";render();return;}
   ui.lastBattle=result.result;ui.finalRun=result.run;
-  render();
+  primeDisplay(result.result);render();
   await animateBattle(result);
   ui.running=false;ui.phase="result";resetDisplay();render();
  }
@@ -151,8 +158,7 @@
      ui.lastBattle=battle.result;
      ui.finalRun=battle.run;
      ui.phase="combat";
-     resetDisplay();
-     render();
+     primeDisplay(battle.result);render();
      await animateBattle(battle);
      if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(Number(window.CALAMITY_CONTINUOUS_GAP_MS)||350);
     },
