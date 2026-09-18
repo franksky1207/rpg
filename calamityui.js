@@ -109,7 +109,6 @@
  }
 
  async function animateBattle(battle){
-  const result=battle?.result?.combat||battle?.result?.combat===null?battle.result.combat:battle?.result?.combat;
   const full=battle?.result;
   if(!full)return;
   const combat=full.combat||full,enemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1),playerMax=Math.max(1,Number(full.playerStartHp)||Number(combat.playerMaxHp)||1);
@@ -218,9 +217,14 @@
   modal.innerHTML='<div class="modal-box"><div class="calamity-result-kicker">新內容解鎖</div><h3>文明災厄已解鎖</h3><div id="calamityUnlockName" class="calamity-unlock-name"></div><div class="muted">可前往「文明災厄」進行挑戰。</div><div class="controls"><button class="btn primary" onclick="closeCivilizationCalamityUnlockNotice()">確認</button></div></div>';
   document.body.appendChild(modal);return modal;
  }
+ function calamityForStory(storyId){
+  const progress=window.civilizationStoryProgress;if(!progress?.bossStoryId)return null;
+  return defs().find(item=>progress.bossStoryId(item.mapIndex)===storyId&&window.isCivilizationCalamityUnlocked?.(item.id))||null;
+ }
+ window.getCivilizationCalamityForStory=calamityForStory;
+ window.getVisibleCivilizationCalamityIds=function(){return unlockedDefs().map(def=>def.id);};
  window.showCivilizationCalamityUnlockNoticeForStory=function(storyId){
-  const progress=window.civilizationStoryProgress;if(!progress?.bossStoryId)return false;
-  const def=defs().find(item=>progress.bossStoryId(item.mapIndex)===storyId&&window.isCivilizationCalamityUnlocked?.(item.id));
+  const def=calamityForStory(storyId);
   if(!def)return false;
   const modal=ensureUnlockModal(),name=modal.querySelector("#calamityUnlockName");if(name)name.textContent=def.name;
   modal.classList.add("show");return true;
