@@ -15,7 +15,9 @@
   const name=String(e.name||options.enemyName||"敵人");
   const logs=options.logs===false?null:[];
   const events=[];
+  const rng=typeof options.rng==="function"?options.rng:Math.random;
   const useTest=options.useTestSpecializations===true;
+  const useTestMarks=options.useTestMarks===true||useTest;
   const spec={
    initiative:specBonus("initiative",useTest),
    combo:specBonus("combo",useTest),
@@ -23,6 +25,18 @@
    counter:specBonus("counter",useTest),
    drain:specBonus("drain",useTest)
   };
+  const markKeys=Array.from(window.MARK_KEYS||[]);
+  const explicitMarkLevels=options.markLevels&&typeof options.markLevels==="object"?options.markLevels:null;
+  const markLevels=Object.fromEntries(markKeys.map(key=>[
+   key,
+   explicitMarkLevels&&typeof window.markClampLevel==="function"
+    ?window.markClampLevel(explicitMarkLevels[key])
+    :(typeof window.markLevel==="function"?window.markLevel(key,useTestMarks):0)
+  ]));
+  const markEffects=Object.fromEntries(markKeys.map(key=>[
+   key,
+   typeof window.markEffectSnapshot==="function"?window.markEffectSnapshot(key,markLevels[key]):{id:key,level:markLevels[key]||0,active:false}
+  ]));
   const initialHp=startHp==null?numberOr(p.hp,0):numberOr(startHp,0);
   const playerMaxHp=Math.max(1,numberOr(p.hp,1));
   let php=Math.max(0,initialHp);
@@ -30,31 +44,93 @@
   const enemyMaxHp=ehp;
   let turns=0;
   let berserkShown=false;
+  let shield=0;
+  let indomitableActivated=false;
+  let indomitableUsed=false;
+  let battleSpiritActivated=false;
+  let battleSpiritLayer=0;
+  let revengeReady=false;
 
+  function rollRate(rate,always=false){
+   const value=Math.max(0,numberOr(rate,0));
+   if(!always&&value<=0)return false;
+   return rng()*100<value;
+  }
+  function combatDamage(atk,def){
+   if(typeof window.combatDamageWithRng==="function")return window.combatDamageWithRng(atk,def,rng);
+   return calcDamage(atk,def);
+  }
+  function markEvent(mark,action,data={}){
+   events.push({type:"mark",mark,action,...data});
+  }
+  function activateOpeningMarks(){
+   const ward=markEffects.ward||{};
+   if(ward.active&&rollRate(ward.activationChance)){
+    shield=Math.max(1,ceil(playerMaxHp*numberOr(ward.shieldMaxHpPercent,0)/100));
+    markEvent("ward","activate",{shield,maxHp:playerMaxHp,percent:numberOr(ward.shieldMaxHpPercent,0)});
+   }
+   const indomitable=markEffects.indomitable||{};
+   if(indomitable.active&&rollRate(indomitable.activationChance)){
+    indomitableActivated=true;
+    markEvent("indomitable","activate",{uses:1});
+   }
+   const battleSpirit=markEffects.battleSpirit||{};
+   if(battleSpirit.active&&rollRate(battleSpirit.activationChance)){
+    battleSpiritActivated=true;
+    markEvent("battleSpirit","activate",{maxLayers:Math.max(0,Math.floor(numberOr(battleSpirit.maxLayers,10))),atkPercentPerLayer:numberOr(battleSpirit.atkPercentPerLayer,0)});
+   }
+  }
+  function beginRoundMarks(){
+   if(!battleSpiritActivated)return;
+   const effect=markEffects.battleSpirit||{};
+   const maxLayers=Math.max(0,Math.floor(numberOr(effect.maxLayers,10)));
+   battleSpiritLayer=Math.min(maxLayers,battleSpiritLayer+1);
+   markEvent("battleSpirit","layer",{round:turns,layer:battleSpiritLayer,atkPercent:numberOr(effect.atkPercentPerLayer,0)*battleSpiritLayer});
+  }
   function playerAttack(source="normal",initiative=false){
    const scale=source==="combo"?.50:source==="counter"?.40:1;
-   if(Math.random()*100<numberOr(e.dodge,0)){
-    events.push({type:"dodge",target:"enemy",source});
+   const suppression=Math.max(0,numberOr(markEffects.suppression?.enemyDodgeReductionPoints,0));
+   const enemyDodge=Math.max(0,numberOr(e.dodge,0)-suppression);
+   if(rollRate(enemyDodge,true)){
+    events.push({type:"dodge",target:"enemy",source,rate:enemyDodge});
     if(logs)logs.push(options.mainlineLogs?`你攻擊${name}，${name}閃避了攻擊。`:`${name}閃避了你的攻擊。`);
     return false;
    }
 
-   const penetration=spec.penetration>0&&Math.random()*100<spec.penetration;
-   const effectiveDef=numberOr(e.def,0)*(penetration?.75:1);
-   let damage=calcDamage(numberOr(p.atk,0),effectiveDef);
+   const ignoreEffect=markEffects.ignore||{};
+   const ignoreDefense=ignoreEffect.active&&rollRate(ignoreEffect.triggerChance);
+   let penetration=false;
+   if(ignoreDefense){
+    markEvent("ignore","trigger",{source});
+   }else{
+    penetration=spec.penetration>0&&rollRate(spec.penetration);
+   }
+   const effectiveDef=ignoreDefense?0:numberOr(e.def,0)*(penetration?.75:1);
+   const spiritPercent=battleSpiritActivated?numberOr(markEffects.battleSpirit?.atkPercentPerLayer,0)*battleSpiritLayer:0;
+   const effectiveAtk=numberOr(p.atk,0)*(1+spiritPercent/100);
+   let damage=combatDamage(effectiveAtk,effectiveDef);
    const initiativeApplied=initiative&&spec.initiative>0;
    if(initiativeApplied)damage=ceil(damage*(1+spec.initiative/100));
-   const crit=Math.random()*100<numberOr(p.crit,0);
+
+   let crit=false,revengeCrit=false;
+   if(revengeReady){
+    crit=true;
+    revengeCrit=true;
+    revengeReady=false;
+    markEvent("revenge","consume",{source});
+   }else{
+    crit=rollRate(numberOr(p.crit,0),true);
+   }
    if(crit)damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
    damage=Math.max(1,ceil(damage*scale));
 
    const before=Math.max(0,ehp);
    const actualDamage=Math.min(before,damage);
    ehp-=damage;
-   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,penetration,initiative:initiativeApplied});
+   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer,battleSpiritAtkPercent:spiritPercent});
    if(logs)logs.push(crit?`你攻擊${name}，暴擊造成 ${damage} 點傷害。`:`你攻擊${name}，造成 ${damage} 點傷害。`);
 
-   if(spec.drain>0&&actualDamage>0&&Math.random()*100<spec.drain){
+   if(spec.drain>0&&actualDamage>0&&rollRate(spec.drain)){
     const wanted=Math.max(1,ceil(actualDamage*.10));
     const healed=Math.max(0,Math.min(wanted,playerMaxHp-php));
     php+=healed;
@@ -69,18 +145,20 @@
     playerAttack(source,first&&initiative);
     first=false;
     if(ehp<=0)break;
-    if(spec.combo<=0||Math.random()*100>=spec.combo)break;
+    if(spec.combo<=0||!rollRate(spec.combo))break;
     events.push({type:"combo",from:source});
     source="combo";
    }
   }
 
+  activateOpeningMarks();
   while(php>0&&ehp>0){
    turns++;
+   beginRoundMarks();
    playerChain("normal",turns===1);
    if(ehp<=0)break;
 
-   if(Math.random()*100<numberOr(p.dodge,0)){
+   if(rollRate(numberOr(p.dodge,0),true)){
     events.push({type:"dodge",target:"player",source:"enemy"});
     if(logs)logs.push(`${name}攻擊你，你閃避了攻擊。`);
     continue;
@@ -90,16 +168,68 @@
    const berserk=!!e.berserk&&ehp/enemyMaxHp<.5;
    if(berserk&&!berserkShown){berserkShown=true;events.push({type:"berserk",actor:"enemy"});}
    const enemyAtk=berserk?ceil(baseAtk*1.20):baseAtk;
-   let damage=calcDamage(enemyAtk,numberOr(p.def,0));
-   const crit=Math.random()*100<numberOr(e.crit,0);
-   if(crit)damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
-   const actualDamage=Math.min(Math.max(0,php),damage);
-   php-=damage;
-   events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage,crit,berserk});
+   let damage=combatDamage(enemyAtk,numberOr(p.def,0));
+   const composure=Math.max(0,numberOr(markEffects.composure?.enemyCritReductionPoints,0));
+   const enemyCritRate=Math.max(0,numberOr(e.crit,0)-composure);
+   const crit=rollRate(enemyCritRate,true);
+   if(crit){
+    const resilience=Math.max(0,Math.min(100,numberOr(markEffects.resilience?.enemyCritBonusDamageReductionPercent,0)));
+    if(resilience>0){
+     const bonus=Math.max(0,damage*(numberOr(CRIT_DAMAGE_MULTIPLIER,1.5)-1));
+     damage=ceil(damage+bonus*(1-resilience/100));
+    }else damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
+   }
+
+   const absorption=markEffects.absorption||{};
+   const absorbed=absorption.active&&rollRate(absorption.triggerChance);
+   if(absorbed){
+    const wanted=Math.max(1,ceil(damage*numberOr(absorption.healOriginalDamagePercent,25)/100));
+    const healed=Math.max(0,Math.min(wanted,playerMaxHp-php));
+    php+=healed;
+    events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage:0,crit,berserk,absorbed:true,shieldAbsorbed:0,enemyCritRate});
+    markEvent("absorption","trigger",{damage,healed});
+    if(logs)logs.push(`${name}攻擊你，但吸收印記化解了傷害。`);
+    continue;
+   }
+
+   const playerHpBefore=Math.max(0,php);
+   let remaining=damage;
+   const shieldAbsorbed=Math.min(shield,remaining);
+   if(shieldAbsorbed>0){
+    shield-=shieldAbsorbed;
+    remaining-=shieldAbsorbed;
+   }
+   if(remaining>0){
+    const rawAfter=php-remaining;
+    if(rawAfter<=0&&indomitableActivated&&!indomitableUsed){
+     indomitableUsed=true;
+     php=1;
+    }else php=Math.max(0,rawAfter);
+   }
+   const actualDamage=Math.max(0,playerHpBefore-php);
+   events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage,crit,berserk,absorbed:false,shieldAbsorbed,enemyCritRate,indomitable:indomitableUsed&&php===1&&remaining>0});
+   if(shieldAbsorbed>0)markEvent("ward","absorb",{amount:shieldAbsorbed,remainingShield:shield});
+   if(indomitableUsed&&php===1&&remaining>0&&playerHpBefore>1&&remaining>=playerHpBefore)markEvent("indomitable","survive",{hp:1});
    if(logs)logs.push(crit?`${name}攻擊你，暴擊造成 ${damage} 點傷害。`:`${name}攻擊你，造成 ${damage} 點傷害。`);
 
    if(php<=0)break;
-   if(actualDamage>0&&spec.counter>0&&Math.random()*100<spec.counter){
+
+   const revenge=markEffects.revenge||{};
+   if(crit&&revenge.active&&rollRate(revenge.triggerChance)){
+    revengeReady=true;
+    markEvent("revenge","ready",{});
+   }
+
+   const backlash=markEffects.backlash||{};
+   if(actualDamage>0&&backlash.active&&rollRate(backlash.triggerChance)){
+    const reflected=Math.max(1,ceil(actualDamage*numberOr(backlash.reflectActualHpLossPercent,30)/100));
+    const reflectedActual=Math.min(Math.max(0,ehp),reflected);
+    ehp-=reflected;
+    markEvent("backlash","trigger",{damage:reflected,actualDamage:reflectedActual,hpLoss:actualDamage});
+   }
+   if(ehp<=0)break;
+
+   if(actualDamage>0&&spec.counter>0&&rollRate(spec.counter)){
     events.push({type:"counter"});
     playerChain("counter",false);
    }
@@ -114,11 +244,22 @@
    turns,
    logs:logs||[],
    events,
+   markState:{
+    useTest:useTestMarks,
+    levels:{...markLevels},
+    shield:Math.max(0,shield),
+    indomitableActivated,
+    indomitableUsed,
+    battleSpiritActivated,
+    battleSpiritLayer,
+    revengeReady
+   },
    e:enemy
   };
   if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
   return result;
  };
+ window.COMBAT_MARK_INTEGRATION_VERSION=1;
 
  fightOnce=function(mapIdx,eIdx,encounter=null){
   if(!enemyUnlocked(mapIdx,eIdx)){
