@@ -386,15 +386,19 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 
 `mirrorcombatcore.js`：
 
-- `MIRROR_COMBAT_CORE_VERSION = 3`
-- 20 場開始前鎖定玩家快照，正式 stats 來自 `playerCombatStats()`。
+- `MIRROR_COMBAT_CORE_VERSION = 4`
+- `MIRROR_COMBAT_MARK_RULE_VERSION = MARK_COMBAT_RULE_VERSION = 1`
+- 20 場開始前鎖定玩家快照，正式 stats 來自 `playerCombatStats()`；snapshot 同時保存 10 枚印記等級與 mark rule version。
+- 玩家與鏡像使用完全相同的印記等級；護界／不屈／戰意在每一場各自獨立重骰。為維持鏡像對稱，先決定先攻，再依先攻方→後攻方順序骰開場印記。
+- 壓制／鎮心／韌性／吸收／復仇／無視／反噬與共用 Combat Core 使用同一 Mark Core 公式；鏡像雙方都可觸發。
 - 每場雙方滿血、獨立，50/50 先攻。
 - 基礎傷害只呼叫 `combatDamageWithRng()`；缺少就 error，不 fallback。
 - counter 不可形成反反擊無限鏈；死亡後停止尚未發生的 combo/counter。
+- `MIRROR_RUN_VERSION = 3`、`MIRROR_MARK_PRESENTATION_VERSION = 1`；鏡像戰畫面沿用 `combatMarkFxDescriptor()` 的印記文案／樣式，再依事件 owner/target 顯示在玩家或鏡像框。
 
 正式鏡像單場不發 EXP、金幣、裝備、石頭、特殊怪或主線進度，也不扣玩家本體 `state.hp`。
 
-GM 可重置今日鏡像狀態、跑 1 次／100 次測試、跑對稱回歸；正式 production integrity 只做較小 smoke，完整壓測留 GM。
+GM 可重置今日鏡像狀態、跑 1 次／100 次測試、跑對稱回歸；一般模擬使用目前正式角色能力（現已包含印記），64 組對稱回歸則強制滿級戰鬥專精＋10 枚 Lv.10 印記。正式 `mirrorfinalintegrity.js` V5 也會用滿印記做較小 symmetry smoke。
 
 Save Schema 已於 2026-09-19 文明災厄大更新第 1 批升為 13；鏡像與故事本身仍未另外要求升版。
 
@@ -888,7 +892,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 1. `worldmapregistrycheck.js`：世界地圖註冊。
 2. `storyintegrity.js`：101 篇正式故事 Data Integrity。
-3. `mirrordungeonintegrity.js`：鏡像 config／API／快照／共用傷害。
+3. `mirrordungeonintegrity.js`：鏡像 config／API／快照／共用傷害／10 枚印記與鏡像浮字 target。
 4. `enhancementintegrity.js`：強化核心、成本、掉石、出售、離線、UI、GM。
 5. `bosscontinuousintegrity.js`：Boss 單場／連戰、鎖王、背景推進、離線排除等。
 6. `mainminimalmodeintegrity.js`：主線極簡模式 hook／背景政策／舊 PowerSave API 退休。
@@ -898,7 +902,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 10. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
 11. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
 12. `runtimeintegrity.js`：專案主 runtime 檢查。
-13. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
+13. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
 14. `storymigration.js`
 15. `storyprogress.js`
 16. `storyrecordtabs.js`
@@ -1012,7 +1016,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
