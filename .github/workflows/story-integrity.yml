@@ -31,9 +31,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Verify story batch 4 layout
+      - name: Verify story integrity structure
         run: |
           test -f story.css
+          test -f storyintegrity.js
+          test -f storymigration.js
+          test -f storyruntimeintegrity.js
           test -f tests/story/source-purity.js
           test -f tests/story/integrity.js
           test -f tests/story/flow.js
@@ -41,6 +44,9 @@ jobs:
           test ! -e story-integrity-ci.js
           test ! -e story-flow-ci.js
           grep -q 'story.css?v=20260917-story-batch4' index.html
+          grep -q 'storyintegrity.js?v=20260918-story-policy2' index.html
+          grep -q 'storymigration.js?v=20260918-retire-backfill1' index.html
+          grep -q 'storyruntimeintegrity.js?v=20260918-retire-backfill1' index.html
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
       - name: Run story data integrity
