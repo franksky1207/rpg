@@ -14,6 +14,7 @@
  let presentation=null;
  let floatSerial=0;
  let syncingHp=false;
+ const manualPulseSkips={player:0,enemy:0};
 
  function combatScreen(){return document.querySelector("#main .combat-screen");}
  function combatCard(target){
@@ -197,6 +198,11 @@
   return match;
  }
  window.consumeCombatPresentationPulse=consumeForPulse;
+ window.consumeCombatPresentationPulseManual=function(target,text){
+  const match=consumeForPulse(target,text);
+  if(match&&(target==="player"||target==="enemy"))manualPulseSkips[target]=(manualPulseSkips[target]||0)+1;
+  return match;
+ };
 
  window.prepareCombatPresentation=function(result,options={}){
   if(options.logs===false){presentation=null;return;}
@@ -214,7 +220,7 @@
   if(event.animationName!=="damagePop")return;
   el.classList.toggle("dodge-text",String(el.textContent||"").includes("閃避"));
   const target=(el.id==="combatPlayerDamage"||el.id==="voidPlayerDamage")?"player":(el.id==="combatEnemyDamage"||el.id==="voidEnemyDamage")?"enemy":null;
-  if(target)consumeForPulse(target,el.textContent||"");
+  if(target){if((manualPulseSkips[target]||0)>0)manualPulseSkips[target]--;else consumeForPulse(target,el.textContent||"");}
  },true);
  document.addEventListener("animationend",event=>{
   const el=event.target;
