@@ -97,23 +97,27 @@
    mark:mark?{acquired:mark.acquired===true,level:Math.max(0,int(mark.level,0)),progress:Math.max(0,int(mark.progress,0)),requiredForNext:typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(mark.level):0}:null
   };
  }
+ function advanceMarkEntry(value){
+  const source=value&&typeof value==="object"?value:{};
+  const entry={acquired:source.acquired===true,level:typeof window.markClampLevel==="function"?window.markClampLevel(source.level):Math.max(0,Math.min(10,int(source.level,0))),progress:Math.max(0,int(source.progress,0))};
+  if(entry.level>0)entry.acquired=true;
+  if(!entry.acquired){
+   return {entry:{acquired:true,level:0,progress:0},settlement:{changed:true,firstAcquisition:true,level:0,progress:0,maxed:false,levelUp:false}};
+  }
+  if(entry.level>=10){
+   return {entry:{acquired:true,level:10,progress:0},settlement:{changed:false,firstAcquisition:false,level:10,progress:0,maxed:true,levelUp:false}};
+  }
+  const before=entry.level,req=Math.max(1,int(window.markRequiredKillsForNextLevel?.(before),1));
+  const nextProgress=Math.min(req,entry.progress+1);
+  const levelUp=nextProgress>=req,nextLevel=levelUp?Math.min(10,before+1):before,nextProgressStored=levelUp?0:nextProgress;
+  return {entry:{acquired:true,level:nextLevel,progress:nextLevel>=10?0:nextProgressStored},settlement:{changed:true,firstAcquisition:false,level:nextLevel,progress:nextLevel>=10?0:nextProgressStored,maxed:nextLevel>=10,levelUp,previousLevel:before,required:req}};
+ }
  function settleMarkKill(markId){
   const entry=normalizeMarkProgressEntry(markId);
   if(!entry)return {changed:false,firstAcquisition:false,level:0,progress:0,maxed:false};
-  if(!entry.acquired){
-   entry.acquired=true;entry.level=0;entry.progress=0;
-   return {changed:true,firstAcquisition:true,level:0,progress:0,maxed:false,levelUp:false};
-  }
-  if(entry.level>=10){
-   entry.level=10;entry.progress=0;
-   return {changed:false,firstAcquisition:false,level:10,progress:0,maxed:true,levelUp:false};
-  }
-  const before=entry.level,req=Math.max(1,int(window.markRequiredKillsForNextLevel?.(before),1));
-  entry.progress=Math.max(0,int(entry.progress,0))+1;
-  let levelUp=false;
-  if(entry.progress>=req){entry.level=Math.min(10,before+1);entry.progress=0;levelUp=true;}
-  if(entry.level>=10)entry.progress=0;
-  return {changed:true,firstAcquisition:false,level:entry.level,progress:entry.progress,maxed:entry.level>=10,levelUp,previousLevel:before,required:req};
+  const advanced=advanceMarkEntry(entry);
+  Object.assign(entry,advanced.entry);
+  return advanced.settlement;
  }
  function applyBattleResult(id,combat,options={}){
   const def=definition(id);if(!def||!combat)return null;
@@ -188,6 +192,7 @@
  window.getCivilizationCalamityCurrentHp=currentHp;
  window.getCivilizationCalamityStatus=status;
  window.normalizeCivilizationMarkProgressForCore=normalizeMarkProgressEntry;
+ window.advanceCivilizationCalamityMarkEntry=advanceMarkEntry;
  window.settleCivilizationCalamityMarkKill=settleMarkKill;
  window.applyCivilizationCalamityBattleResult=applyBattleResult;
  window.runCivilizationCalamityBattle=battle;
