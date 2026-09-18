@@ -42,9 +42,22 @@ try{
   console.error('STORY_INTEGRITY_REPORT 不存在');
   process.exit(2);
  }
+ if(Number(report.version)<8){
+  console.error(`STORY_INTEGRITY_VERSION 過舊：${report.version}`);
+  process.exit(4);
+ }
  console.log(`storyRegions=${report.storyRegions} totalStories=${report.totalStories} bossStoriesChecked=${report.bossStoriesChecked}`);
- if(Array.isArray(report.warnings)&&report.warnings.length){
-  console.log(`warnings=${report.warnings.length}`);
+ const warningAllowlist=new Set([]);
+ const warnings=Array.isArray(report.warnings)?report.warnings:[];
+ const unexpectedWarnings=warnings.filter(item=>!warningAllowlist.has(item?.code));
+ if(warnings.length)console.log(`warnings=${warnings.length}`);
+ if(unexpectedWarnings.length){
+  console.error(`STORY INTEGRITY UNEXPECTED WARNINGS: ${unexpectedWarnings.length}`);
+  unexpectedWarnings.forEach((warning,index)=>{
+   console.error(`${index+1}. [${warning?.code||'UNKNOWN'}] ${warning?.message||''}`);
+   if(warning?.data!==null&&warning?.data!==undefined)console.error(`   data=${JSON.stringify(warning.data)}`);
+  });
+  process.exit(5);
  }
  if(report.passed){
   console.log('STORY INTEGRITY PASSED');
