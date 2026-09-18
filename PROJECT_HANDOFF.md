@@ -37,7 +37,7 @@
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新第 1 批已建立持久資料骨架：`calamitystate.js` 是災厄／印記 state owner；`state.calamities` 以 10 個 `WORLD_REGIONS.id` 保存 `currentHp`，`state.marks` 以 10 個穩定 mark id 保存 `acquired / level / progress`。目前只建立 Schema 13、normalize/migration 與 integrity，尚未加入印記戰鬥效果、災厄數值公式或 UI。
+2026-09-19 文明災厄大更新已完成第 1～7 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）與 Civilization Calamity Core V1 均已建立。災厄 UI、單場／連續討伐 runtime、極簡模式、GM 與遊戲說明仍留待後續批次。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -315,6 +315,23 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - `combatfxintegrity.js` 檢查 10 枚印記浮字 target／文字、五模式接線版本與共用 presentation API。
 
 
+
+
+## 4.7 文明災厄 Core（第 7 批）
+
+- `CALAMITY_CORE_VERSION = 1`
+- `CALAMITY_COMBAT_RULE_VERSION = 1`
+- `COMBAT_PERSISTENT_ENEMY_HP_VERSION = 1`
+- 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。
+- 解鎖唯一來源：`state.bossKilled[region.mapEnd] === true`；不以玩家等級或 unlockedMap 判定。
+- 母體直接呼叫正式主線 `monsterObj(region.mapEnd, 4)`；不複製主線 Boss 公式。
+- 固定戰鬥數值：HP = 母體 HP ×500；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
+- `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。最大 HP 永遠由正式公式即時計算，不重複存入 save。
+- `runCombatCore()` 新增向後相容 `options.enemyStartHp`：`e.hp` 維持真正最大 HP；既有模式不傳時行為不變。
+- 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。
+- 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
+- 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；可供後續 UI 在存檔完成後才播放長動畫。
+- `calamitycoreintegrity.js` 會檢查 10 隻定義、區域 final Boss 母體、倍率、10/10 暴擊閃避、無 traits、31 殺印記曲線與持久敵方 HP 版本。
 
 
 ---
@@ -899,15 +916,16 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 7. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
 8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
-10. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
-11. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
-12. `runtimeintegrity.js`：專案主 runtime 檢查。
-13. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
-14. `storymigration.js`
-15. `storyprogress.js`
-16. `storyrecordtabs.js`
-17. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-18. `backgroundpreload.js` 最後處理正式背景 reveal。
+10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／31 殺印記曲線／持久 HP。
+11. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
+12. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
+13. `runtimeintegrity.js`：專案主 runtime 檢查。
+14. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
+15. `storymigration.js`
+16. `storyprogress.js`
+17. `storyrecordtabs.js`
+18. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+19. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1016,7 +1034,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
