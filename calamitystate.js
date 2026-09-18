@@ -16,7 +16,7 @@
  function normalizeCalamityEntry(value){
   const entry=isObject(value)?value:{};
   const hp=Number(entry.currentHp);
-  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.floor(hp):null;
+  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.max(1,Math.floor(hp)):null;
   return entry;
  }
  function normalizeMarkEntry(value){
@@ -41,7 +41,8 @@
   const calamityEntries={};
   CALAMITY_IDS.forEach(id=>{calamityEntries[id]=normalizeCalamityEntry(calamities.entries[id]);});
   calamities.version=CALAMITY_STATE_VERSION;
-  calamities.balanceVersion=CALAMITY_BALANCE_VERSION;
+  const storedBalanceVersion=Math.floor(Number(calamities.balanceVersion));
+  calamities.balanceVersion=Number.isFinite(storedBalanceVersion)&&storedBalanceVersion>=1?storedBalanceVersion:CALAMITY_BALANCE_VERSION;
   calamities.entries=calamityEntries;
 
   if(!isObject(target.marks))target.marks=createBlankMarkState();
