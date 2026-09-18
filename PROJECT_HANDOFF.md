@@ -37,7 +37,7 @@
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新已完成第 1～7 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）與 Civilization Calamity Core V1 均已建立。災厄 UI、單場／連續討伐 runtime、極簡模式、GM 與遊戲說明仍留待後續批次。
+2026-09-19 文明災厄大更新已完成第 1～8 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1，以及文明災厄單場／連續討伐 runtime V1 均已建立。災厄完整 UI／極簡模式、GM 與遊戲說明仍留待後續批次。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -332,6 +332,22 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
 - 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；可供後續 UI 在存檔完成後才播放長動畫。
 - `calamitycoreintegrity.js` 會檢查 10 隻定義、區域 final Boss 母體、倍率、10/10 暴擊閃避、無 traits、31 殺印記曲線與持久敵方 HP 版本。
+
+## 4.8 文明災厄單場／連續討伐 runtime（第 8 批）
+
+- `CALAMITY_RUN_VERSION = 1`
+- `CALAMITY_CONTINUOUS_RULE_VERSION = 1`
+- `CALAMITY_CONTINUOUS_GAP_MS = 350`；供第 9 批 UI 對齊目前虛空幻境每場動畫後的 350ms 場間節奏。
+- `calamityrun.js` 是文明災厄單場／連續討伐唯一 runtime owner；不共用主線「敗北即停止」的連戰 pipeline。
+- 單場：`runCivilizationCalamitySingle(id)` 只完成 1 場後結束 runtime。
+- 連續：`runCivilizationCalamityContinuous(id, callbacks)`；玩家勝敗都算完成一場，死亡不結束 run，下一場仍由 Calamity Core 滿血開始。
+- 災厄死亡後 Core 已完成印記結算並把 `currentHp=null`，所以下一場自動進入同一災厄的下一個完整滿血擊殺週期。
+- 手動停止：`requestCivilizationCalamityContinuousStop()`。如果已完成本場、正在 UI callback／動畫階段，立即將 runtime 標成 stopped，且不再啟動下一場；如果將來在 fighting phase 收到停止要求，則本場結算後停止。
+- 每一場正式 HP／印記先由第 7 批 Core 原子保存，再交給 `onBattleComplete`；動畫途中關頁不會回滾已完成那一場。
+- runtime 只存在 JS 記憶體，不寫入 save；重新整理／關閉頁面後不恢復連戰。`pagehide` 會把 active run 標成 ended，避免 Safari BFCache 回來後續跑舊 run。
+- 每場之間至少 yield 一次瀏覽器 event loop；不建立 background catch-up／離線推進，因此網頁關閉後不會繼續計算災厄 HP。
+- Snapshot 提供：目前災厄、battleCount、wins／losses／kills、totalTurns／averageTurns、stopRequested、災厄目前／最大 HP、玩家目前／最大 HP、印記狀態與上一場摘要，供第 9 批一般戰鬥畫面與極簡模式共用。
+- `calamityrunintegrity.js` 檢查 runtime API、版本、350ms UI 場間基準、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
 
 
 ---
@@ -917,15 +933,16 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
 10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／31 殺印記曲線／持久 HP。
-11. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
-12. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
-13. `runtimeintegrity.js`：專案主 runtime 檢查。
-14. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
-15. `storymigration.js`
-16. `storyprogress.js`
-17. `storyrecordtabs.js`
-18. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-19. `backgroundpreload.js` 最後處理正式背景 reveal。
+11. `calamityrunintegrity.js`：文明災厄單場／連續討伐 runtime、停止／pagehide 與非持久 run state。
+12. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
+13. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
+14. `runtimeintegrity.js`：專案主 runtime 檢查。
+15. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
+16. `storymigration.js`
+17. `storyprogress.js`
+18. `storyrecordtabs.js`
+19. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+20. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1034,7 +1051,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
