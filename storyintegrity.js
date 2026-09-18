@@ -1,11 +1,17 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const NARRATIVE_BANNED_TERMS=["小區域","關卡","第幾關","普通怪","菁英怪","Boss","Ｂｏｓｓ","玩家","頁數","遊戲","等級","首領戰"];
- const INTRO_FORMAT={pages:12,minChars:90,maxChars:155,minBlocks:3};
+ const STORY_FORMAT_POLICY=Object.freeze({
+  intro:Object.freeze({pages:12,minChars:90,maxChars:155,minBlocks:3}),
+  regularBoss:Object.freeze({pages:11,minChars:90,maxChars:120,minBlocks:2}),
+  regionFinale:Object.freeze({pages:15,minChars:120,maxChars:155,minBlocks:3}),
+  finalBoss:Object.freeze({pages:31,minChars:90,maxChars:155,minBlocks:3})
+ });
+ const STORY_DATA_MIN_MODULE_FORMAT_VERSION=1;
  function bossFormatPolicy(regionId,offset){
-  if(regionId==="galactic-unification"&&offset===9)return {pages:31,minChars:90,maxChars:155,minBlocks:3};
-  if(offset===9)return {pages:15,minChars:120,maxChars:155,minBlocks:3};
-  return {pages:11,minChars:90,maxChars:120,minBlocks:2};
+  if(regionId==="galactic-unification"&&offset===9)return STORY_FORMAT_POLICY.finalBoss;
+  if(offset===9)return STORY_FORMAT_POLICY.regionFinale;
+  return STORY_FORMAT_POLICY.regularBoss;
  }
  function plainText(value){
   if(typeof value==="string")return value;
@@ -114,8 +120,8 @@
    checkChineseDisplay(intro.title,"earth-prologue 劇情標題");
    if(!Array.isArray(intro.pages))fail("STORY_PROLOGUE_FORMAT","earth-prologue 頁面格式錯誤");
    else{
-    if(intro.pages.length!==INTRO_FORMAT.pages)fail("STORY_PROLOGUE_PAGE_COUNT",`earth-prologue 應為 ${INTRO_FORMAT.pages} 頁，實際 ${intro.pages.length}`,intro.pages.length);
-    intro.pages.forEach((page,pageIdx)=>checkPageFormat("earth-prologue",page,pageIdx,INTRO_FORMAT));
+    if(intro.pages.length!==STORY_FORMAT_POLICY.intro.pages)fail("STORY_PROLOGUE_PAGE_COUNT",`earth-prologue 應為 ${STORY_FORMAT_POLICY.intro.pages} 頁，實際 ${intro.pages.length}`,intro.pages.length);
+    intro.pages.forEach((page,pageIdx)=>checkPageFormat("earth-prologue",page,pageIdx,STORY_FORMAT_POLICY.intro));
    }
   }
 
@@ -136,7 +142,9 @@
    if(continuumIndex>=0&&observationIndex>=0&&continuumIndex>=observationIndex)fail("STORY_FINAL_SIGNAL_ORDER","最終固定訊號順序錯誤：必須先解除本地連續體封閉，再開始外層觀測");
   }
 
-  const requiredVersions={
+  // These markers are module-format compatibility versions, not content revision numbers.
+  // Story text revisions are cache-busted in index.html and do not need synchronized DATA_VERSION bumps.
+  const moduleFormatVersions={
    earth:Number(window.STORY_EARTH_DATA_VERSION)||0,
    solar:Number(window.STORY_SOLAR_DATA_VERSION)||0,
    nearstar:Number(window.STORY_NEARSTAR_DATA_VERSION)||0,
@@ -148,11 +156,15 @@
    "core-war":Number(window.STORY_CORE_WAR_DATA_VERSION)||0,
    "galactic-unification":Number(window.STORY_GALACTIC_UNIFICATION_DATA_VERSION)||0
   };
-  Object.entries(requiredVersions).forEach(([id,version])=>{if(version<1)fail("STORY_DATA_VERSION_MISSING",`${id} 正式劇情資料版本未正確載入`);});
+  Object.entries(moduleFormatVersions).forEach(([id,version])=>{
+   if(version<STORY_DATA_MIN_MODULE_FORMAT_VERSION)fail("STORY_DATA_VERSION_MISSING",`${id} 正式劇情模組格式版本未正確載入`,version);
+  });
 
   const report={
    passed:errors.length===0,
    version:VERSION,
+   formatPolicy:STORY_FORMAT_POLICY,
+   dataModuleFormatMinimum:STORY_DATA_MIN_MODULE_FORMAT_VERSION,
    checkedAt:Date.now(),
    worldRegions:expectedRegions.length,
    storyRegions:regions.length,
