@@ -28,8 +28,9 @@
   if(Number(window.COMBAT_MARK_INTEGRATION_VERSION)!==1)fail("COMBAT_MARK_VERSION","共用戰鬥印記整合版本應為 1",window.COMBAT_MARK_INTEGRATION_VERSION);
   resetSpecs();
 
-  const baseline=fight({hp:100,atk:20,def:5,crit:0,dodge:0},{name:"基準敵人",hp:50,atk:10,def:4,crit:0,dodge:0},zero(),()=>.5);
-  if(!baseline.win||baseline.hp!==84||baseline.enemyHp!==0||baseline.turns!==3||markEvents(baseline).length!==0)fail("BASELINE_REGRESSION","Lv.0 印記不應改變既有基準戰鬥",{win:baseline.win,hp:baseline.hp,enemyHp:baseline.enemyHp,turns:baseline.turns,events:baseline.events});
+  let baselineRngCalls=0;
+  const baseline=fight({hp:100,atk:20,def:5,crit:0,dodge:0},{name:"基準敵人",hp:50,atk:10,def:4,crit:0,dodge:0},zero(),()=>{baselineRngCalls++;return .5;});
+  if(!baseline.win||baseline.hp!==84||baseline.enemyHp!==0||baseline.turns!==3||markEvents(baseline).length!==0||baselineRngCalls!==15)fail("BASELINE_REGRESSION","Lv.0 印記不應改變既有基準戰鬥或 RNG 呼叫順序",{win:baseline.win,hp:baseline.hp,enemyHp:baseline.enemyHp,turns:baseline.turns,rngCalls:baselineRngCalls,events:baseline.events});
 
   const ward=fight({hp:100,atk:100,def:0,crit:0,dodge:0},{name:"護界測試",hp:200,atk:10,def:0,crit:0,dodge:0},one("ward"));
   const wardActivate=markEvents(ward,"ward","activate")[0],wardAbsorb=markEvents(ward,"ward","absorb")[0],wardEnemy=attacks(ward,"enemy")[0];
@@ -40,15 +41,16 @@
   if(survive.length!==1||indomitableHits[0]?.indomitable!==true||indomitableHits[0]?.actualDamage!==99||indomitableHits[1]?.indomitable!==false||indomitable.hp!==0)fail("INDOMITABLE_RULE","不屈只能在該場第一次致命傷留下 1 HP 一次",{survive,indomitableHits,hp:indomitable.hp});
 
   const suppression=fight({hp:100,atk:100,def:0,crit:0,dodge:0},{name:"壓制測試",hp:200,atk:1,def:0,crit:0,dodge:5},one("suppression"),()=>.01);
-  if((suppression.events||[])[0]?.type!=="attack"||(suppression.events||[])[0]?.actor!=="player")fail("SUPPRESSION_RULE","壓制 Lv.10 應將敵方 5% 閃避降到 0%",suppression.events?.slice(0,2));
+  if((suppression.events||[]).find(event=>event?.type==="attack"&&event.actor==="player")==null||markEvents(suppression,"suppression","preventDodge").length<1)fail("SUPPRESSION_RULE","壓制 Lv.10 應將敵方 5% 閃避降到 0%，並在真正阻止閃避時產生事件",suppression.events?.slice(0,4));
 
   const composure=fight({hp:100,atk:100,def:0,crit:0,dodge:0},{name:"鎮心測試",hp:200,atk:1,def:0,crit:5,dodge:0},one("composure"),()=>.01);
   const composureHit=attacks(composure,"enemy")[0];
-  if(composureHit?.crit!==false||composureHit?.enemyCritRate!==0)fail("COMPOSURE_RULE","鎮心 Lv.10 應將敵方 5% 暴擊率降到 0%",composureHit);
+  if(composureHit?.crit!==false||composureHit?.enemyCritRate!==0||markEvents(composure,"composure","preventCrit").length<1)fail("COMPOSURE_RULE","鎮心 Lv.10 應將敵方 5% 暴擊率降到 0%，並在真正阻止暴擊時產生事件",{hit:composureHit,events:composure.events});
 
   const resilience=fight({hp:200,atk:1,def:0,crit:0,dodge:0},{name:"韌性測試",hp:2,atk:100,def:0,crit:100,dodge:0},one("resilience"),()=>.5);
   const resilienceHit=attacks(resilience,"enemy")[0];
-  if(resilienceHit?.crit!==true||resilienceHit?.damage!==135)fail("RESILIENCE_RULE","韌性 Lv.10 應只降低暴擊額外傷害 30%，100 基礎傷害應成為 135",resilienceHit);
+  const resilienceEvent=markEvents(resilience,"resilience","reduceCritDamage")[0];
+  if(resilienceHit?.crit!==true||resilienceHit?.damage!==135||resilienceEvent?.reductionPercent!==30||resilienceEvent?.originalDamage!==150||resilienceEvent?.finalDamage!==135)fail("RESILIENCE_RULE","韌性 Lv.10 應只降低暴擊額外傷害 30%，100 基礎傷害應成為 135",{hit:resilienceHit,event:resilienceEvent});
 
   const spirit=fight({hp:100,atk:100,def:0,crit:0,dodge:0},{name:"戰意測試",hp:200,atk:1,def:0,crit:0,dodge:0},one("battleSpirit"));
   const spiritLayer=markEvents(spirit,"battleSpirit","layer")[0],spiritHit=attacks(spirit,"player")[0];
@@ -93,6 +95,7 @@
   fail("COMBAT_MARK_PROBE","印記共用戰鬥核心回歸測試執行失敗",String(error));
  }finally{
   if(priorTestSpecs)window.gmTestSpecializations=priorTestSpecs;
+  else delete window.gmTestSpecializations;
  }
 
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
