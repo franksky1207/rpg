@@ -1,6 +1,6 @@
 (function(){
  const ARENA_POSITION_MODEL_VERSION=1;
- const ARENA_ASSESSMENT_RULE_VERSION=3;
+ const ARENA_ASSESSMENT_RULE_VERSION=4;
  const ARENA_BALANCE_COMPAT_VERSION=3;
  const ARENA_ASSESS_RUNS=500;
  const ARENA_ASSESS_CLEAR_TARGET=485;
@@ -42,7 +42,7 @@
   Object.assign(source,normalized);
   return source;
  }
- window.ARENA_ASSESSMENT_STATE_VERSION=3;
+ window.ARENA_ASSESSMENT_STATE_VERSION=4;
  window.getArenaAssessmentCompatibilityVersions=function(){return {positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,balanceVersion:ARENA_BALANCE_COMPAT_VERSION};};
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
 
