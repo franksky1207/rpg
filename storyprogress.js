@@ -67,10 +67,13 @@
  function completeStory(id){
   const p=ensureProgress();
   if(!p)return false;
-  if(!p.completedStories.includes(id))p.completedStories.push(id);
+  const firstCompletion=!p.completedStories.includes(id);
+  if(firstCompletion)p.completedStories.push(id);
   if(p.pendingStory===id)p.pendingStory=null;
   if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}
   persist();
+  if(firstCompletion&&typeof window.showCivilizationCalamityUnlockNoticeForStory==="function")queueMicrotask(()=>window.showCivilizationCalamityUnlockNoticeForStory(id));
+  return true;
  }
  function queueBossStory(mapIdx){
   const id=bossStoryId(mapIdx);
