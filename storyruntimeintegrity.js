@@ -1,5 +1,5 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
 
  function run(){
   const errors=[];
@@ -28,7 +28,7 @@
   const migration=window.civilizationStoryMigration;
   if(!migration||typeof migration.migrate!=="function"||typeof migration.backfillAvailableHistory!=="function")fail("STORY_RUNTIME_MIGRATION_MISSING","故事進度 migration 模組未完整載入");
   if(!Array.isArray(migration?.legacyFields)||!migration.legacyFields.includes("historyBackfillRegions"))fail("STORY_RUNTIME_MIGRATION_LEGACY_FIELDS","migration 未標記 historyBackfillRegions 為 legacy 相容欄位");
-  versionHint("STORY_MIGRATION_VERSION",window.STORY_MIGRATION_VERSION,4);
+  versionHint("STORY_MIGRATION_VERSION",window.STORY_MIGRATION_VERSION,5);
 
   const progress=window.civilizationStoryProgress;
   if(!progress)fail("STORY_RUNTIME_PROGRESS_MISSING","civilizationStoryProgress 未載入");
@@ -84,7 +84,7 @@
 
     const firstClearState={
      bossKilled:[],
-     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true},
      introSeen:true
     };
     firstClearState.bossKilled[testMap]=true;
@@ -95,22 +95,23 @@
     if(firstClearState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PENDING_BACKFILL","pendingStory 不應被歷史回填標成已完成",testId);
     if(firstClearState.storyProgress.pendingStory!==testId)fail("STORY_RUNTIME_PENDING_LOST","歷史回填後 pendingStory 不應遺失",testId);
 
-    const premarkedRepairState={
+    const legacyRepairState={
      bossKilled:[],
      storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[String(testRegion?.id||"")]},
      introSeen:true
     };
-    premarkedRepairState.bossKilled[testMap]=true;
-    migration.migrate(premarkedRepairState,migrationOptions);
-    if(!premarkedRepairState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_PREMARKED_REPAIR_FAILED","已標記回填過的區域仍必須能補回缺失的已擊敗首領劇情",testId);
+    legacyRepairState.bossKilled[testMap]=true;
+    migration.migrate(legacyRepairState,migrationOptions);
+    if(!legacyRepairState.storyProgress.completedStories.includes(testId))fail("STORY_RUNTIME_LEGACY_REPAIR_FAILED","舊存檔即使帶有 historyBackfillRegions，仍必須補回缺失的已擊敗首領劇情",testId);
+    if(Object.prototype.hasOwnProperty.call(legacyRepairState.storyProgress,"historyBackfillRegions"))fail("STORY_RUNTIME_LEGACY_FIELD_NOT_REMOVED","historyBackfillRegions 應在 migration 後退休移除");
 
     const futureState={
      bossKilled:[],
-     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true,historyBackfillRegions:[]},
+     storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true},
      introSeen:true
     };
     migration.migrate(futureState,migrationOptions);
-    if(futureState.storyProgress.historyBackfillRegions.includes(String(testRegion?.id||"")))fail("STORY_RUNTIME_FUTURE_REGION_PREMARKED","尚未擊敗任何首領的區域不應被提前標記為已回填",testRegion?.id);
+    if(Object.prototype.hasOwnProperty.call(futureState.storyProgress,"historyBackfillRegions"))fail("STORY_RUNTIME_RETIRED_FIELD_RECREATED","新故事進度不得重新建立 historyBackfillRegions");
    }
   }
 
@@ -126,7 +127,7 @@
     if(!Array.isArray(p.completedStories))fail("STORY_RUNTIME_COMPLETED_FORMAT","completedStories 格式錯誤");
     else p.completedStories.forEach(id=>{if(!stories[id])warn("STORY_RUNTIME_COMPLETED_UNKNOWN",`已完成故事紀錄找不到正式資料：${id}`);});
     if(p.pendingStory!=null&&!stories[p.pendingStory])fail("STORY_RUNTIME_PENDING_UNKNOWN",`pendingStory 找不到正式資料：${p.pendingStory}`);
-    if(!Array.isArray(p.historyBackfillRegions))fail("STORY_RUNTIME_BACKFILL_FORMAT","historyBackfillRegions 格式錯誤");
+    if(Object.prototype.hasOwnProperty.call(p,"historyBackfillRegions"))fail("STORY_RUNTIME_RETIRED_FIELD_PRESENT","目前 storyProgress 不應再保留 historyBackfillRegions");
    }
   }
 
