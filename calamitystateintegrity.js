@@ -29,7 +29,7 @@
   }
 
   const malformed={
-   calamities:{version:999,balanceVersion:999,entries:{[calamityIds[0]]:{currentHp:-50},extra:{currentHp:100}}},
+   calamities:{version:999,balanceVersion:0,entries:{[calamityIds[0]]:{currentHp:-50},extra:{currentHp:100}}},
    marks:{version:999,entries:{[markIds[0]]:{acquired:false,level:99,progress:7},[markIds[1]]:{acquired:false,level:0,progress:5},extra:{acquired:true,level:10,progress:9}}}
   };
   window.normalizeCivilizationCalamityState(malformed);
