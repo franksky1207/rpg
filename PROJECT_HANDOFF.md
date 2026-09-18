@@ -37,7 +37,7 @@
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新已完成第 1～8 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1，以及文明災厄單場／連續討伐 runtime V1 均已建立。災厄完整 UI／極簡模式、GM 與遊戲說明仍留待後續批次。
+2026-09-19 文明災厄大更新已完成第 1～9 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1，以及完整玩家 UI／極簡模式／解鎖提示均已建立。GM 與遊戲說明／最終回歸仍留待後續批次。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -348,6 +348,22 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 每場之間至少 yield 一次瀏覽器 event loop；不建立 background catch-up／離線推進，因此網頁關閉後不會繼續計算災厄 HP。
 - Snapshot 提供：目前災厄、battleCount、wins／losses／kills、totalTurns／averageTurns、stopRequested、災厄目前／最大 HP、玩家目前／最大 HP、印記狀態與上一場摘要，供第 9 批一般戰鬥畫面與極簡模式共用。
 - `calamityrunintegrity.js` 檢查 runtime API、版本、350ms UI 場間基準、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
+
+## 4.9 文明災厄玩家 UI／極簡模式（第 9 批）
+
+- `CALAMITY_UI_VERSION = 1`
+- `CALAMITY_MINIMAL_MODE_VERSION = 1`
+- 首頁正式新增「文明災厄」，順序固定在「副本」後、「遊戲說明」前；手機 2 欄因此自然形成第 4 排「副本／文明災厄」。
+- 災厄頁只 render `isCivilizationCalamityUnlocked(id) === true` 的項目；尚未解鎖的災厄名稱與對應印記名稱**完全不出現在 HTML**，不是灰掉／鎖住。
+- 已解鎖但尚未首殺時，對應印記顯示「未取得」；首殺後顯示 Lv.0，之後顯示目前 Lv／升級進度，Lv.10 顯示 MAX。
+- 每隻災厄提供「單場挑戰／連續討伐」；連續戰鬥畫面才顯示「停止連續討伐」與「極簡模式」。
+- 正常戰鬥使用正式 `combatPlayerCard / combatEnemyCard / combat-damage` DOM contract，因此共用第 4 批 `combatfx.js` 的印記 structured FX。
+- UI 每場先以 `enemyStartHp / playerStartHp` 預填，再播放動畫，避免 Core 已結算後畫面短暫閃成戰後 HP。連戰標題與極簡模式使用 callback 的 `battleNumber`，不把已完成 `battleCount` 誤當下一場。
+- 災厄戰鬥動畫節奏直接對齊虛空：log delay 45／24／14ms、起手 100ms、結尾 250ms、連戰場間 350ms。
+- 極簡模式直接註冊到共用 `mainminimalmode.js` adapter；共用相同 overlay／時鐘／滑動退出配置。內容只顯示：目前敵人、連續戰鬥第 N 場、災厄 HP／最大 HP、玩家 HP／最大 HP；不顯示 EXP／金幣。
+- 選擇／印記頁使用既有 `assets/backgrounds/calamity/`；災厄戰鬥直接共用虛空戰鬥 `assets/backgrounds/dungeon-void-battle/`；災厄結算直接共用虛空結算 `assets/backgrounds/dungeon-void/`，桌機與手機皆同規則；不複製背景檔，`backgroundpreload.js` 不需改。
+- 區域最後 Boss 首殺流程：戰鬥結算 → pending 正式劇情 → 劇情第一次真正完成 → 顯示「文明災厄已解鎖／災厄名稱／可前往文明災厄挑戰」。提示不新增 save 欄位；利用 story `firstCompletion` 與正式 `bossKilled[region.mapEnd]` 判定。戰線紀錄重播不呼叫 `completeStory()`，因此不重複提示。
+- `calamityuiintegrity.js` 檢查首頁順序、UI API、V1 版本、可見 IDs、已解鎖災厄／印記同時顯示，以及尚未解鎖名稱完全不洩漏到 renderer。
 
 
 ---
@@ -934,15 +950,16 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
 10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／31 殺印記曲線／持久 HP。
 11. `calamityrunintegrity.js`：文明災厄單場／連續討伐 runtime、停止／pagehide 與非持久 run state。
-12. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
-13. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
-14. `runtimeintegrity.js`：專案主 runtime 檢查。
-15. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
-16. `storymigration.js`
-17. `storyprogress.js`
-18. `storyrecordtabs.js`
-19. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-20. `backgroundpreload.js` 最後處理正式背景 reveal。
+12. `calamityuiintegrity.js`：文明災厄首頁順序、UI／極簡 API、可見性與鎖定內容不洩漏。
+13. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
+14. `combatfxintegrity.js`：10 枚印記浮字 target／文字、五模式接線與 presentation API。
+15. `runtimeintegrity.js`：專案主 runtime 檢查。
+16. `mirrorfinalintegrity.js` V5：鏡像最終 state／舊資料／滿印記 symmetry smoke 回歸。
+17. `storymigration.js`
+18. `storyprogress.js`
+19. `storyrecordtabs.js`
+20. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+21. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1051,7 +1068,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
