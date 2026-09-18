@@ -12,10 +12,11 @@
   "getVisibleCivilizationCalamityIds",
   "getCivilizationCalamityForStory",
   "showCivilizationCalamityUnlockNoticeForStory",
-  "closeCivilizationCalamityUnlockNotice"
+  "closeCivilizationCalamityUnlockNotice",
+  "getCivilizationMarkEffectText"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
- if(Number(window.CALAMITY_UI_VERSION)!==1)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V1",window.CALAMITY_UI_VERSION);
+ if(Number(window.CALAMITY_UI_VERSION)!==2)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V2",window.CALAMITY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
 
  try{
@@ -39,6 +40,12 @@
    if(!unlocked&&(hasCalamity||hasMark))fail("CALAMITY_LOCKED_LEAK",`${def.id} 尚未解鎖卻出現在災厄頁`,{hasCalamity,hasMark});
   });
   if(expected.length>0&&(!html.includes("單場挑戰")||!html.includes("連續討伐")))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場／連續討伐按鈕");
+  if(expected.length>0&&(!html.includes("目前效果")&&!html.includes("Lv.1 效果預覽")))fail("CALAMITY_MARK_EFFECT_RENDER","印記卡缺少能力說明");
+  if(typeof window.getCivilizationMarkEffectText==="function"){
+   const ward=window.getCivilizationMarkEffectText("ward",1),suppression=window.getCivilizationMarkEffectText("suppression",1);
+   if(!ward.includes("30%")||!ward.includes("最大 HP 2%"))fail("CALAMITY_MARK_WARD_TEXT","護界 Lv.1 能力文字異常",ward);
+   if(!suppression.includes("0.5 個百分點"))fail("CALAMITY_MARK_SUPPRESSION_TEXT","壓制 Lv.1 能力文字異常",suppression);
+  }
  }catch(error){fail("CALAMITY_RENDER_PROBE","災厄可見性 renderer 檢查失敗",String(error?.message||error));}
 
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
