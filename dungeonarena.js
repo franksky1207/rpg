@@ -14,6 +14,11 @@
   {hpMul:.69,damageMul:.64,defMul:.80},
   {hpMul:.78,damageMul:.73,defMul:.82}
  ];
+ const ARENA_POSITION_PHYSICAL_MULTIPLIERS={
+  normal:{hp:1,damage:1,def:1},
+  hard:{hp:.96,damage:.96,def:.98},
+  extreme:{hp:.90,damage:.92,def:.96}
+ };
  const ARENA_POSITION_STAGE_CONFIGS={
   normal:[
    {critScale:.25,critAdd:0,critCap:5,dodgeScale:.20,dodgeAdd:0,dodgeCap:4,traitMode:"normal1"},
@@ -26,9 +31,9 @@
    {critScale:.70,critAdd:2,critCap:16,dodgeScale:.65,dodgeAdd:1,dodgeCap:14,traitMode:"hard3"}
   ],
   extreme:[
-   {critScale:.55,critAdd:1,critCap:12,dodgeScale:.50,dodgeAdd:1,dodgeCap:10,traitMode:"one"},
-   {critScale:.75,critAdd:2,critCap:18,dodgeScale:.70,dodgeAdd:1,dodgeCap:15,traitMode:"extreme2"},
-   {critScale:.90,critAdd:3,critCap:23,dodgeScale:.85,dodgeAdd:2,dodgeCap:20,traitMode:"extreme3"}
+   {critScale:.50,critAdd:1,critCap:11,dodgeScale:.45,dodgeAdd:1,dodgeCap:9,traitMode:"one"},
+   {critScale:.65,critAdd:2,critCap:16,dodgeScale:.60,dodgeAdd:1,dodgeCap:13,traitMode:"extreme2"},
+   {critScale:.75,critAdd:2,critCap:19,dodgeScale:.70,dodgeAdd:1,dodgeCap:16,traitMode:"extreme3"}
   ]
  };
 
@@ -73,7 +78,7 @@
 
  function clampLevel(v){return clampGameLevel(v);}
  function rateFromPlayer(value,scale,add,cap,maxCap){return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));}
- function traitCount(mode){if(mode==="normal1")return Math.random()<.70?0:1;if(mode==="normal2")return Math.random()<.50?0:1;if(mode==="hard3")return Math.random()<.75?1:2;if(mode==="extreme2")return Math.random()<.60?1:2;if(mode==="extreme3")return Math.random()<.50?1:2;return 1;}
+ function traitCount(mode){if(mode==="normal1")return Math.random()<.70?0:1;if(mode==="normal2")return Math.random()<.50?0:1;if(mode==="hard3")return Math.random()<.75?1:2;if(mode==="extreme2")return Math.random()<.75?1:2;if(mode==="extreme3")return Math.random()<.70?1:2;return 1;}
  function rollArenaTraits(mode){const pool=MONSTER_TRAIT_IDS.slice(),count=traitCount(mode),out=[];for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return out;}
  function arenaTraitNames(enemy){if(!enemy?.traits?.length)return "無";return enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
  function difficultyClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
@@ -81,8 +86,8 @@
  function adjustedFullClearPoints(diff){const base=Math.max(0,Math.floor(Number(diff?.totalPoints)||0));return typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(base):base;}
 
  function buildArenaEnemy(difficultyId,stageIndex,stats=null,level=null,options={}){
-  const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),positionStages=ARENA_POSITION_STAGE_CONFIGS[difficultyId]||ARENA_POSITION_STAGE_CONFIGS.normal,idx=Math.max(0,Math.min(2,Number(stageIndex)||0)),physical=ARENA_PHYSICAL_STAGE_PROFILE[idx]||ARENA_PHYSICAL_STAGE_PROFILE[0],position=positionStages[idx]||positionStages[0],rank=clampArenaRank(options.rank??currentArenaRank()),rankScale=arenaRankMultipliers(rank),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(position.traitMode);
-  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[idx]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,arenaRank:rank,arenaRankName:arenaRankName(rank),hp:Math.max(1,ceil(base.hp*physical.hpMul*rankScale.hp)),atk:Math.max(1,ceil(base.damage*physical.damageMul*rankScale.damage+p.def*.55)),def:Math.max(0,ceil(base.def*physical.defMul*rankScale.def)),crit:rateFromPlayer(p.crit,position.critScale,position.critAdd,position.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,position.dodgeScale,position.dodgeAdd,position.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),positionStages=ARENA_POSITION_STAGE_CONFIGS[difficultyId]||ARENA_POSITION_STAGE_CONFIGS.normal,positionPhysical=ARENA_POSITION_PHYSICAL_MULTIPLIERS[difficultyId]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal,idx=Math.max(0,Math.min(2,Number(stageIndex)||0)),physical=ARENA_PHYSICAL_STAGE_PROFILE[idx]||ARENA_PHYSICAL_STAGE_PROFILE[0],position=positionStages[idx]||positionStages[0],rank=clampArenaRank(options.rank??currentArenaRank()),rankScale=arenaRankMultipliers(rank),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(position.traitMode);
+  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[idx]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,arenaRank:rank,arenaRankName:arenaRankName(rank),hp:Math.max(1,ceil(base.hp*physical.hpMul*positionPhysical.hp*rankScale.hp)),atk:Math.max(1,ceil(base.damage*physical.damageMul*positionPhysical.damage*rankScale.damage+p.def*.55)),def:Math.max(0,ceil(base.def*physical.defMul*positionPhysical.def*rankScale.def)),crit:rateFromPlayer(p.crit,position.critScale,position.critAdd,position.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,position.dodgeScale,position.dodgeAdd,position.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
  window.getArenaDifficultyConfigs=function(rank=null){return arenaDifficultyConfigs(rank==null?currentArenaRank():rank);};
