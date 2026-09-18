@@ -284,7 +284,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 
 ## 4.6 十枚文明印記核心（第 2 批已建立規則 owner）
 
-`markcore.js` 是印記規則唯一 owner；目前只建立定義、公式、formal/test snapshot，**尚未接入 Combat Core**。
+`markcore.js` 是印記規則唯一 owner；第 3 批起已由 `combatcore.js` 的共用 `runCombatCore()` 正式套用至主線、特殊怪、懸賞、競技場與虛空。鏡像仍由獨立 `mirrorcombatcore.js` 管理，留待第 5 批。
 
 - `MARK_CORE_VERSION = 1`
 - `MARK_COMBAT_RULE_VERSION = 1`
@@ -303,6 +303,12 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 無視：每次玩家攻擊事件 0.5%×Lv 機率令該擊敵 DEF=0。
 - `markFormalSnapshot()` 保留 acquired／level／progress；GM test 以 `gmTestMarkLevels` 保存本次工作階段 Lv.0～10，不寫正式 save。
 - 專屬回歸：`markcoreintegrity.js`；檢查 10 枚順序、名稱、解鎖等級、升級需求、累積擊殺與 Lv.10 效果公式。
+- `COMBAT_MARK_INTEGRATION_VERSION = 1`；共用戰鬥核心正式順序為：玩家攻擊先套壓制→無視／穿透→戰意 ATK→先制→復仇／一般暴擊→連擊／反擊倍率→汲取；敵人攻擊依閃避→鎮心→韌性→吸收→護界→HP→不屈→復仇 ready→反噬→專精反擊。
+- 護界／不屈／戰意在每次 `runCombatCore()` 開始時獨立重骰；競技場每一戰、虛空每一層都會重新建立該場 battle-local 狀態。
+- structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件，供第 4 批戰鬥動畫使用。
+- GM 既有 `useTestSpecializations:true` 模擬會同步採用 session-only `gmTestMarkLevels`；亦可用 `options.markLevels` 明確傳入測試快照，不修改正式存檔。
+- `combatmarkintegrity.js` 以固定 RNG 驗證 Lv.0 基準不漂移、10 枚印記核心互動、吸收／反噬／反擊順序與護界／吸收對復仇的邊界規則。
+
 
 
 ---
@@ -872,7 +878,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 # 15. 完整性檢查鏈
 
-實際載入順序永遠以最新 `index.html` 為準。2026-09-18 main 的主要完整性鏈：
+實際載入順序永遠以最新 `index.html` 為準。2026-09-19 main 的主要完整性鏈：
 
 1. `worldmapregistrycheck.js`：世界地圖註冊。
 2. `storyintegrity.js`：101 篇正式故事 Data Integrity。
@@ -883,13 +889,14 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 7. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
 8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
-10. `runtimeintegrity.js`：專案主 runtime 檢查。
-11. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
-10. `storymigration.js`
-11. `storyprogress.js`
-12. `storyrecordtabs.js`
-13. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
-14. `backgroundpreload.js` 最後處理正式背景 reveal。
+10. `combatmarkintegrity.js`：共用 Combat Core 印記順序、structured events、Lv.0 基準與交互回歸。
+11. `runtimeintegrity.js`：專案主 runtime 檢查。
+12. `mirrorfinalintegrity.js`：鏡像最終 state／舊資料／smoke 回歸。
+13. `storymigration.js`
+14. `storyprogress.js`
+15. `storyrecordtabs.js`
+16. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
+17. `backgroundpreload.js` 最後處理正式背景 reveal。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；migration 必須先於 progress；runtime integrity 必須在 progress／record tabs 後。
 
@@ -998,7 +1005,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
