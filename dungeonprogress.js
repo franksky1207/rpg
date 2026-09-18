@@ -1,6 +1,7 @@
 (function(){
  const ARENA_POSITION_MODEL_VERSION=1;
- const ARENA_ASSESSMENT_RULE_VERSION=2;
+ const ARENA_ASSESSMENT_RULE_VERSION=3;
+ const ARENA_BALANCE_COMPAT_VERSION=3;
  const ARENA_ASSESS_RUNS=500;
  const ARENA_ASSESS_CLEAR_TARGET=485;
 
@@ -21,9 +22,11 @@
   const hasWindowStart=Number.isFinite(Number(source.windowStart))&&Number(source.windowStart)>=1;
   const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(source.rank)||1)));
   const positionModelCompatible=Math.floor(Number(source.positionModelVersion)||0)===ARENA_POSITION_MODEL_VERSION;
+  const assessmentRuleCompatible=Math.floor(Number(source.assessmentRuleVersion)||0)===ARENA_ASSESSMENT_RULE_VERSION;
+  const balanceCompatible=Math.floor(Number(source.balanceVersion)||0)===ARENA_BALANCE_COMPAT_VERSION;
   let highestArenaUnlocked;
   let assessmentCompatible=false;
-  if(hasHighest){highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));assessmentCompatible=positionModelCompatible;}
+  if(hasHighest){highestArenaUnlocked=Math.floor(Number(source.highestArenaUnlocked));assessmentCompatible=positionModelCompatible&&assessmentRuleCompatible&&balanceCompatible;}
   else if(hasWindowStart)highestArenaUnlocked=Math.floor(Number(source.windowStart));
   else highestArenaUnlocked=legacyRank;
   highestArenaUnlocked=Math.max(1,Math.min(maxRank,cap,highestArenaUnlocked));
@@ -34,11 +37,13 @@
   const clears=assessmentCompatible?Math.max(0,Math.min(runs,Math.floor(Number(source.lastCheckClearCount)||0))):0;
   const signature=assessmentCompatible&&typeof source.lastCheckSignature==="string"&&source.lastCheckSignature?source.lastCheckSignature:null;
   const promotionReady=!!signature&&runs===ARENA_ASSESS_RUNS&&clears>=ARENA_ASSESS_CLEAR_TARGET;
-  const normalized={positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,highestArenaUnlocked,activeRank,rank:activeRank||highestArenaUnlocked,promotionReady,lastCheckSignature:signature,lastCheckRuns:runs,lastCheckClearCount:clears};
+  const normalized={positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,balanceVersion:ARENA_BALANCE_COMPAT_VERSION,highestArenaUnlocked,activeRank,rank:activeRank||highestArenaUnlocked,promotionReady,lastCheckSignature:signature,lastCheckRuns:runs,lastCheckClearCount:clears};
   Object.keys(source).forEach(key=>{if(!(key in normalized))delete source[key];});
   Object.assign(source,normalized);
   return source;
  }
+ window.ARENA_ASSESSMENT_STATE_VERSION=3;
+ window.getArenaAssessmentCompatibilityVersions=function(){return {positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,balanceVersion:ARENA_BALANCE_COMPAT_VERSION};};
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
 
  function normalizeDungeonState(target,options={}){
