@@ -10,7 +10,7 @@
 
  const required=[
   "normalizeSaveState","migrateSave","load","finalizeDungeonLoadedState","ensureDungeonState","dungeonFightCore","cleanupLegacyDungeonFields","cleanupRetiredShopState","normalizePersistentFlags",
-  "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear","normalizeCivilizationCalamityState","ensureCivilizationCalamityState","createBlankCalamityState","createBlankMarkState","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markLevel","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus",
+  "registerNewStateNormalizer","getNewStateNormalizerCount","redeemLostGear","normalizeCivilizationCalamityState","ensureCivilizationCalamityState","createBlankCalamityState","createBlankMarkState","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markLevel","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus","combatMarkFxDescriptor","consumeCombatPresentationPulse","syncCombatPresentationHp",
   "normalizeDailyState","ensureDailyState","gameDailyDateKey","dailyDungeonStatus","dailyDungeonRemaining","consumeDailyDungeonUse",
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
@@ -211,9 +211,9 @@
 
  if(window.CALAMITY_STATE_INTEGRITY?.passed!==true)fail("CALAMITY_STATE_INTEGRITY","文明災厄／印記持久 state 專屬回歸檢查未通過",window.CALAMITY_STATE_INTEGRITY?.errors||null);
  if(window.MARK_CORE_INTEGRITY?.passed!==true)fail("MARK_CORE_INTEGRITY","Mark Core 專屬回歸檢查未通過",window.MARK_CORE_INTEGRITY?.errors||null);
- if(window.COMBAT_MARK_INTEGRITY?.passed!==true)fail("COMBAT_MARK_INTEGRITY","共用戰鬥印記整合回歸檢查未通過",window.COMBAT_MARK_INTEGRITY?.errors||null);
+ if(window.COMBAT_MARK_INTEGRITY?.passed!==true)fail("COMBAT_MARK_INTEGRITY","共用戰鬥印記整合回歸檢查未通過",window.COMBAT_MARK_INTEGRITY?.errors||null);\n if(window.COMBAT_MARK_FX_INTEGRITY?.passed!==true)fail("COMBAT_MARK_FX_INTEGRITY","戰鬥印記浮字／HP 呈現回歸檢查未通過",window.COMBAT_MARK_FX_INTEGRITY?.errors||null);
  if(Number(window.MARK_CORE_VERSION)!==1||Number(window.MARK_COMBAT_RULE_VERSION)!==1)fail("MARK_CORE_VERSION","Mark Core／戰鬥規則版本異常",{core:window.MARK_CORE_VERSION,rules:window.MARK_COMBAT_RULE_VERSION});
- if(Number(window.COMBAT_MARK_INTEGRATION_VERSION)!==1)fail("COMBAT_MARK_INTEGRATION_VERSION","共用戰鬥印記整合版本應為 1",window.COMBAT_MARK_INTEGRATION_VERSION);
+ if(Number(window.COMBAT_MARK_INTEGRATION_VERSION)!==1)fail("COMBAT_MARK_INTEGRATION_VERSION","共用戰鬥印記整合版本應為 1",window.COMBAT_MARK_INTEGRATION_VERSION);\n if(Number(window.COMBAT_MARK_FX_VERSION)!==1)fail("COMBAT_MARK_FX_VERSION","戰鬥印記浮字版本應為 1",window.COMBAT_MARK_FX_VERSION);
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
  if(state&&(Object.keys(state.calamities?.entries||{}).length!==10||Object.keys(state.marks?.entries||{}).length!==10))fail("STATE_CALAMITY_MARKS","正式 state 應包含 10 組災厄與 10 組印記",{calamities:state.calamities,marks:state.marks});
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
