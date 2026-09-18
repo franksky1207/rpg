@@ -13,10 +13,14 @@
   "getCivilizationCalamityForStory",
   "showCivilizationCalamityUnlockNoticeForStory",
   "closeCivilizationCalamityUnlockNotice",
-  "getCivilizationMarkEffectText"
+  "getCivilizationMarkEffectText",
+  "consumeCombatPresentationPulseManual",
+  "prepareCombatPresentation",
+  "getCombatPresentationEnemyHp",
+  "getCombatPresentationPlayerHp"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
- if(Number(window.CALAMITY_UI_VERSION)!==2)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V2",window.CALAMITY_UI_VERSION);
+ if(Number(window.CALAMITY_UI_VERSION)!==3)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V3",window.CALAMITY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
 
  try{
