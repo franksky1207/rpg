@@ -2,7 +2,7 @@
  const ASSESS_RUNS=500;
  const ASSESS_CLEAR_TARGET=485;
  const ASSESS_BATCH_SIZE=10;
- const COMBAT_SPEC_KEYS=["initiative","combo","penetration","counter","drain"];
+ const COMBAT_SPEC_KEYS=["initiative","combo","penetration","counter","drain"];\n const ASSESS_MARK_KEYS=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
  const POSITION_TEMPLATE_IDS=["normal","hard","extreme"];
  const POSITION_LABELS={normal:"低",hard:"中",extreme:"高"};
 
@@ -29,11 +29,7 @@
  function positionTemplateId(rank){return POSITION_TEMPLATE_IDS[positionIndexForRank(rank)]||"normal";}
  function positionLabel(rank){return POSITION_LABELS[positionTemplateId(rank)]||"低";}
 
- function combatSpecSnapshot(){
-  const out={};
-  COMBAT_SPEC_KEYS.forEach(key=>{out[key]=typeof specializationLevel==="function"?Math.max(0,Math.floor(Number(specializationLevel(key))||0)):0;});
-  return out;
- }
+ function combatSpecSnapshot(){\n  const out={};\n  COMBAT_SPEC_KEYS.forEach(key=>{out[key]=typeof specializationLevel==="function"?Math.max(0,Math.floor(Number(specializationLevel(key))||0)):0;});\n  return out;\n }\n function combatMarkSnapshot(){\n  const live=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(false):{};\n  return Object.fromEntries(ASSESS_MARK_KEYS.map(key=>[key,typeof window.markClampLevel==="function"?window.markClampLevel(live?.[key]):Math.max(0,Math.min(10,Math.floor(Number(live?.[key])||0)))]));\n }
  function assessmentCompatibilityVersions(){
   const formal=typeof window.getArenaAssessmentCompatibilityVersions==="function"?window.getArenaAssessmentCompatibilityVersions():null;
   return {
@@ -49,13 +45,11 @@
   return JSON.stringify({
    positionModelVersion:versions.positionModelVersion,
    assessmentRuleVersion:versions.assessmentRuleVersion,
-   balanceVersion:versions.balanceVersion,
-   rank:clampRank(rank),
+   balanceVersion:versions.balanceVersion,\n   markRuleVersion:Math.max(0,Math.floor(Number(window.MARK_COMBAT_RULE_VERSION)||0)),\n   rank:clampRank(rank),
    positionDifficulty:positionId,
    level:typeof clampGameLevel==="function"?clampGameLevel(state?.level):Math.max(1,Math.floor(Number(state?.level)||1)),
    base:{hp:base.hp,atk:base.atk,def:base.def,crit:base.crit,dodge:base.dodge},
-   vip,
-   spec:combatSpecSnapshot()
+   vip,\n   spec:combatSpecSnapshot(),\n   marks:combatMarkSnapshot()
   });
  }
  function assessmentArena(){
@@ -75,12 +69,12 @@
   return ready;
  }
  function currentAssessmentRank(){return clampRank(arenaProgress().assessmentRank||arenaProgress().highestArenaUnlocked||1);}
- function simulateFullRun(rank,positionId,baseStats,playerStats){
+ function simulateFullRun(rank,positionId,baseStats,playerStats,markLevels){
   let hp=playerStats.hp;
   for(let stage=0;stage<3;stage++){
    const enemy=window.buildArenaEnemyForTest(positionId,stage,baseStats,state.level,rank);
    if(!enemy)return false;
-   const result=window.runCombatCore(playerStats,enemy,hp,{logs:false});
+   const result=window.runCombatCore(playerStats,enemy,hp,{logs:false,markLevels});
    hp=result.hp;
    if(!result.win)return false;
   }
@@ -124,10 +118,9 @@
   const positionId=positionTemplateId(rank);
   const base=createSpecialPlayerSnapshot(equippedStats());
   const player=createSpecialPlayerSnapshot(playerCombatStats(base,state.vipLevel));
-  const signature=assessmentSignature(rank,positionId);
-  syncPromotionReady(arena,signature);
+  const signature=assessmentSignature(rank,positionId);\n  const marks=combatMarkSnapshot();\n  syncPromotionReady(arena,signature);
   if(arena.promotionReady===true)return {early:{...assessmentStatus(),reason:"already-ready"}};
-  return {rank,positionId,base,player,signature};
+  return {rank,positionId,base,player,marks,signature};
  }
  function finishAssessment(ctx,clears){
   const arena=assessmentArena();
@@ -145,14 +138,14 @@
   return {...assessmentStatus(),reason:arena.promotionReady?"qualified":"not-qualified"};
  }
 
- window.ARENA_ASSESSMENT_RUNTIME_VERSION=3;
+ window.ARENA_ASSESSMENT_RUNTIME_VERSION=4;
  window.getArenaAssessmentSignature=function(rank=null){const r=clampRank(rank==null?currentAssessmentRank():rank);return assessmentSignature(r,positionTemplateId(r));};
  window.getArenaAssessmentStatus=assessmentStatus;
  window.assessArenaPromotion=function(){
   const ctx=assessmentContext();
   if(ctx.early)return ctx.early;
   let clears=0;
-  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player))clears++;
+  for(let i=0;i<ASSESS_RUNS;i++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player,ctx.marks))clears++;
   return finishAssessment(ctx,clears);
  };
  window.assessArenaPromotionAsync=function(onProgress=null){
@@ -163,7 +156,7 @@
    function step(){
     try{
      const end=Math.min(ASSESS_RUNS,completed+ASSESS_BATCH_SIZE);
-     for(;completed<end;completed++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player))clears++;
+     for(;completed<end;completed++)if(simulateFullRun(ctx.rank,ctx.positionId,ctx.base,ctx.player,ctx.marks))clears++;
      if(typeof onProgress==="function")onProgress({completed,total:ASSESS_RUNS,clears});
      if(completed<ASSESS_RUNS){setTimeout(step,0);return;}
      resolve(finishAssessment(ctx,clears));
