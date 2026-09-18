@@ -1,6 +1,6 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
- const CALAMITY_CONTINUOUS_RULE_VERSION=1;
+ const CALAMITY_CONTINUOUS_RULE_VERSION=2;
  const CALAMITY_CONTINUOUS_GAP_MS=350;
  let activeRun=null;
 
@@ -9,6 +9,9 @@
   catch(error){return null;}
  }
  function validMode(mode){return mode==="single"?"single":"continuous";}
+ function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
+ function startBackground(){if(!backgroundEnabled()||typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
+ function stopBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("calamity");}
  function definition(id){return typeof window.getCivilizationCalamityDefinition==="function"?window.getCivilizationCalamityDefinition(id):null;}
  function playerMaxHp(){return typeof playerCombatStats==="function"?Math.max(1,Math.floor(Number(playerCombatStats().hp)||1)):Math.max(1,Math.floor(Number(state?.hp)||1));}
  function runStatus(){
@@ -41,6 +44,7 @@
  }
  function finish(reason){
   if(!activeRun)return null;
+  stopBackground();
   activeRun.active=false;
   activeRun.phase="ended";
   activeRun.endedReason=String(reason||"ended");
@@ -153,6 +157,7 @@
 
   const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
+  startBackground();
   while(activeRun?.active){
    if(activeRun.stopRequested&&activeRun.phase!=="fighting"){
     const ended=finish("stopped");
@@ -190,6 +195,7 @@
 
  function stopForPageHide(){
   if(!activeRun?.active)return;
+  if(activeRun.mode==="continuous"&&backgroundEnabled())return;
   activeRun.stopRequested=true;
   activeRun.active=false;
   activeRun.phase="ended";
@@ -206,6 +212,7 @@
  window.runCivilizationCalamityContinuous=runContinuous;
  window.requestCivilizationCalamityContinuousStop=requestStop;
  window.getCivilizationCalamityRunSnapshot=runStatus;
+ window.civilizationCalamityBackgroundEnabled=backgroundEnabled;
  window.stopCivilizationCalamityRunForPageHide=stopForPageHide;
  window.addEventListener("pagehide",stopForPageHide);
 })();
