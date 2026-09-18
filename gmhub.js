@@ -45,7 +45,8 @@
  };
  window.gmTestSummaryHtml=function(title,runLabel,vipText,specText=null){
   const enhancementText=typeof gmTestEnhancementLabel==="function"?gmTestEnhancementLabel():"";
-  return `<div class="gm-test-summary"><div class="gm-test-summary-title">${title}・${runLabel}</div><div class="gm-test-summary-line">${vipText}</div><div class="gm-test-summary-line">${specText||gmTestSpecializationLabel()}</div>${enhancementText?`<div class="gm-test-summary-line">${enhancementText}</div>`:""}</div>`;
+  const markText=typeof gmTestMarkLabel==="function"?gmTestMarkLabel():"";
+  return `<div class="gm-test-summary"><div class="gm-test-summary-title">${title}・${runLabel}</div><div class="gm-test-summary-line">${vipText}</div><div class="gm-test-summary-line">${specText||gmTestSpecializationLabel()}</div>${enhancementText?`<div class="gm-test-summary-line">${enhancementText}</div>`:""}${markText?`<div class="gm-test-summary-line">${markText}</div>`:""}</div>`;
  };
 
  function specialOptions(){
