@@ -90,8 +90,13 @@
   function playerAttack(source="normal",initiative=false){
    const scale=source==="combo"?.50:source==="counter"?.40:1;
    const suppression=Math.max(0,numberOr(markEffects.suppression?.enemyDodgeReductionPoints,0));
-   const enemyDodge=Math.max(0,numberOr(e.dodge,0)-suppression);
-   if(rollRate(enemyDodge,true)){
+   const rawEnemyDodge=Math.max(0,numberOr(e.dodge,0));
+   const enemyDodge=Math.max(0,rawEnemyDodge-suppression);
+   const enemyDodgeRoll=rng()*100;
+   if(suppression>0&&enemyDodgeRoll<rawEnemyDodge&&enemyDodgeRoll>=enemyDodge){
+    markEvent("suppression","preventDodge",{source,reductionPoints:suppression,originalRate:rawEnemyDodge,finalRate:enemyDodge});
+   }
+   if(enemyDodgeRoll<enemyDodge){
     events.push({type:"dodge",target:"enemy",source,rate:enemyDodge});
     if(logs)logs.push(options.mainlineLogs?`你攻擊${name}，${name}閃避了攻擊。`:`${name}閃避了你的攻擊。`);
     return false;
@@ -170,14 +175,22 @@
    const enemyAtk=berserk?ceil(baseAtk*1.20):baseAtk;
    let damage=combatDamage(enemyAtk,numberOr(p.def,0));
    const composure=Math.max(0,numberOr(markEffects.composure?.enemyCritReductionPoints,0));
-   const enemyCritRate=Math.max(0,numberOr(e.crit,0)-composure);
-   const crit=rollRate(enemyCritRate,true);
+   const rawEnemyCritRate=Math.max(0,numberOr(e.crit,0));
+   const enemyCritRate=Math.max(0,rawEnemyCritRate-composure);
+   const enemyCritRoll=rng()*100;
+   if(composure>0&&enemyCritRoll<rawEnemyCritRate&&enemyCritRoll>=enemyCritRate){
+    markEvent("composure","preventCrit",{reductionPoints:composure,originalRate:rawEnemyCritRate,finalRate:enemyCritRate});
+   }
+   const crit=enemyCritRoll<enemyCritRate;
    if(crit){
+    const baseDamage=damage;
     const resilience=Math.max(0,Math.min(100,numberOr(markEffects.resilience?.enemyCritBonusDamageReductionPercent,0)));
     if(resilience>0){
-     const bonus=Math.max(0,damage*(numberOr(CRIT_DAMAGE_MULTIPLIER,1.5)-1));
-     damage=ceil(damage+bonus*(1-resilience/100));
-    }else damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
+     const normalCritDamage=ceil(baseDamage*numberOr(CRIT_DAMAGE_MULTIPLIER,1.5));
+     const bonus=Math.max(0,baseDamage*(numberOr(CRIT_DAMAGE_MULTIPLIER,1.5)-1));
+     damage=ceil(baseDamage+bonus*(1-resilience/100));
+     markEvent("resilience","reduceCritDamage",{reductionPercent:resilience,originalDamage:normalCritDamage,finalDamage:damage});
+    }else damage=ceil(baseDamage*CRIT_DAMAGE_MULTIPLIER);
    }
 
    const absorption=markEffects.absorption||{};
