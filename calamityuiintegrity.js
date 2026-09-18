@@ -38,8 +38,7 @@
    if(unlocked&&(!hasCalamity||!hasMark))fail("CALAMITY_UNLOCKED_RENDER",`${def.id} 已解鎖但災厄／印記未同時顯示`,{hasCalamity,hasMark});
    if(!unlocked&&(hasCalamity||hasMark))fail("CALAMITY_LOCKED_LEAK",`${def.id} 尚未解鎖卻出現在災厄頁`,{hasCalamity,hasMark});
   });
-  if(!html.includes("單場挑戰")&&!expected.length===0)fail("CALAMITY_SINGLE_ACTION","災厄頁缺少單場挑戰");
-  if(expected.length&&(!html.includes("單場挑戰")||!html.includes("連續討伐")))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場／連續討伐按鈕");
+  if(expected.length>0&&(!html.includes("單場挑戰")||!html.includes("連續討伐")))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場／連續討伐按鈕");
  }catch(error){fail("CALAMITY_RENDER_PROBE","災厄可見性 renderer 檢查失敗",String(error?.message||error));}
 
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
