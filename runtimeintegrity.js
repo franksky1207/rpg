@@ -15,7 +15,7 @@
   "voidMirageDailyStatus","recordVoidMirageDailyFloor","claimVoidMirageDailyReward",
   "vipDungeonPointMultiplier","adjustVipDungeonPoints",
   "enterBountyDungeon","renderBountyDungeon",
-  "getArenaProgressState","getArenaAssessmentStatus","getArenaBaseTotalPoints",
+  "getArenaProgressState","getArenaAssessmentStatus","getArenaAssessmentCompatibilityVersions","getArenaAssessmentSignature","getArenaBaseTotalPoints",
   "ensureVoidMirageState","getVoidMirageStartFloor","voidMirageStartFloorFromHistory","beginVoidMirageRun","fightNextVoidMirageFloor","renderVoidMirageDungeon",
   "gmSetVoidMirageState","gmDungeonManagementHtml","gmApplyDungeonValues","gmResetDailyDungeonState","gmPreviewVoidMirageFloor","gmSimulateVoidMirageClimb","gmSimulateArena100",
   "registerRegionMaps","specialRewardExpAmount","specialRewardGoldAmount"
@@ -104,7 +104,32 @@
    if(!stage3?.effectivePhysical||Math.abs(stage3.effectivePhysical.hpMul-expectedHp)>1e-12||Math.abs(stage3.effectivePhysical.damageMul-expectedDamage)>1e-12||Math.abs(stage3.effectivePhysical.defMul-expectedDef)>1e-12)fail("ARENA_CONFIG_EFFECTIVE_PHYSICAL","競技場完整設定的高位第 3 戰有效物理倍率異常",stage3?.effectivePhysical);
   }
  }
- if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
+ if(Number(window.ARENA_ASSESSMENT_STATE_VERSION)!==3||Number(window.ARENA_ASSESSMENT_RUNTIME_VERSION)!==3)fail("ARENA_ASSESSMENT_VERSION","競技場評估版本機制未更新");
+ if(typeof window.getArenaAssessmentCompatibilityVersions==="function"){
+  const versions=window.getArenaAssessmentCompatibilityVersions();
+  if(versions.positionModelVersion!==1||versions.assessmentRuleVersion!==3||versions.balanceVersion!==3)fail("ARENA_ASSESSMENT_COMPAT","競技場評估相容版本異常",versions);
+  if(Number(versions.balanceVersion)!==Number(window.ARENA_BALANCE_VERSION))fail("ARENA_ASSESSMENT_BALANCE_SYNC","競技場評估 balanceVersion 與正式平衡版本不同步",{assessment:versions.balanceVersion,balance:window.ARENA_BALANCE_VERSION});
+ }
+ if(typeof window.getArenaAssessmentSignature==="function"){
+  try{
+   const signature=JSON.parse(window.getArenaAssessmentSignature(1));
+   if(signature?.positionModelVersion!==1||signature?.assessmentRuleVersion!==3||signature?.balanceVersion!==3)fail("ARENA_ASSESSMENT_SIGNATURE_VERSION","競技場評估簽章未包含目前版本",{signature});
+  }catch(error){fail("ARENA_ASSESSMENT_SIGNATURE_PARSE","競技場評估簽章無法解析",String(error));}
+ }
+ if(typeof window.normalizeDungeonSaveState==="function"){
+  try{
+   const legacyArenaProbe={
+    unlockedMap:Math.max(0,(Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS[WORLD_REGIONS.length-1]?.mapStart:99)||99),
+    dungeon:{arena:{positionModelVersion:1,assessmentRuleVersion:2,balanceVersion:2,highestArenaUnlocked:4,activeRank:null,rank:4,promotionReady:true,lastCheckSignature:"legacy-qualified",lastCheckRuns:500,lastCheckClearCount:500}}
+   };
+   window.normalizeDungeonSaveState(legacyArenaProbe,{timestamp:Date.now()});
+   const arena=legacyArenaProbe.dungeon?.arena;
+   if(arena?.highestArenaUnlocked!==4)fail("ARENA_LEGACY_UNLOCK_PRESERVE","競技場舊評估失效時不得重置已解鎖階級",arena);
+   if(arena?.promotionReady!==false||arena?.lastCheckRuns!==0||arena?.lastCheckClearCount!==0||arena?.lastCheckSignature!==null)fail("ARENA_LEGACY_ASSESS_RESET","競技場舊版本評估結果未正確失效",arena);
+   if(arena?.positionModelVersion!==1||arena?.assessmentRuleVersion!==3||arena?.balanceVersion!==3)fail("ARENA_LEGACY_VERSION_NORMALIZE","競技場舊評估版本欄位未正規化",arena);
+  }catch(error){fail("ARENA_LEGACY_ASSESS_PROBE","競技場舊評估相容測試執行失敗",String(error));}
+ }
+  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
  if(Number(window.VOID_MIRAGE_START_OFFSET)!==100)fail("VOID_START_OFFSET",`虛空幻境起始回退應為 100 層，實際 ${window.VOID_MIRAGE_START_OFFSET}`);
  if(typeof window.voidMirageStartFloorFromHistory==="function"){
   const checks=[[80,1],[850,750],[2500,2400],[4000,3900],[5000,4900],[10000,9900]];
