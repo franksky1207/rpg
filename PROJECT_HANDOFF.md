@@ -356,6 +356,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 首頁正式新增「文明災厄」，順序固定在「副本」後、「遊戲說明」前；手機 2 欄因此自然形成第 4 排「副本／文明災厄」。
 - 災厄頁只 render `isCivilizationCalamityUnlocked(id) === true` 的項目；尚未解鎖的災厄名稱與對應印記名稱**完全不出現在 HTML**，不是灰掉／鎖住。
 - 已解鎖但尚未首殺時，對應印記顯示「未取得」；首殺後顯示 Lv.0，之後顯示目前 Lv／升級進度，Lv.10 顯示 MAX。
+- 印記卡 V2 會直接顯示能力：未取得時預覽 Lv.1 效果；Lv.0 明示尚未生效並顯示 Lv.1；Lv.1～Lv.9 顯示「目前效果＋下一級效果」；Lv.10 顯示目前效果＋MAX。所有數值皆即時讀 `markEffectSnapshot()`，UI 不複製印記公式。
 - 每隻災厄提供「單場挑戰／連續討伐」；連續戰鬥畫面才顯示「停止連續討伐」與「極簡模式」。
 - 正常戰鬥使用正式 `combatPlayerCard / combatEnemyCard / combat-damage` DOM contract，因此共用第 4 批 `combatfx.js` 的印記 structured FX。
 - UI 每場先以 `enemyStartHp / playerStartHp` 預填，再播放動畫，避免 Core 已結算後畫面短暫閃成戰後 HP。連戰標題與極簡模式使用 callback 的 `battleNumber`，不把已完成 `battleCount` 誤當下一場。
@@ -1079,7 +1080,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V2／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
