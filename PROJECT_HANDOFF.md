@@ -32,6 +32,8 @@
 - `CALAMITY_STATE_VERSION = 1`
 - `CALAMITY_BALANCE_VERSION = 1`
 - `MARK_STATE_VERSION = 1`
+- `MARK_CORE_VERSION = 1`
+- `MARK_COMBAT_RULE_VERSION = 1`
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
@@ -279,6 +281,29 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - q5 神話：+1 進階
 
 `enhancementrewards.js` 是掉石／出售石頭正式 owner；離線理論量必須呼叫它的 expected API，不手寫第二套 elite EV。
+
+## 4.6 十枚文明印記核心（第 2 批已建立規則 owner）
+
+`markcore.js` 是印記規則唯一 owner；目前只建立定義、公式、formal/test snapshot，**尚未接入 Combat Core**。
+
+- `MARK_CORE_VERSION = 1`
+- `MARK_COMBAT_RULE_VERSION = 1`
+- 印記最高 Lv.10；Lv.0 無戰鬥效果。
+- 正式取得順序：Lv50 護界、Lv100 壓制、Lv150 鎮心、Lv200 不屈、Lv250 韌性、Lv300 戰意、Lv350 吸收、Lv400 復仇、Lv450 反噬、Lv500 無視。
+- Lv.0→10 每級所需重複擊殺：`1,1,2,2,3,3,4,4,5,5`；累積重複擊殺：1／2／4／6／9／12／16／20／25／30。
+- 護界：開戰啟動率 Lv1～10 = 30%→75%；成功獲得最大 HP 2%×Lv 護盾。
+- 壓制：敵方最終閃避 -0.5 percentage point×Lv。
+- 鎮心：敵方最終暴擊率 -0.5 percentage point×Lv。
+- 不屈：開戰啟動率 30%→75%；成功後該場首次致命傷保留 1 HP。
+- 韌性：敵方暴擊額外傷害部分 -3%×Lv。
+- 戰意：開戰啟動率 30%→75%；每層 ATK +0.2%×Lv，最多 10 層。
+- 吸收：敵方有效命中時 0.5%×Lv 機率取消傷害並回復原計算傷害 25%。
+- 復仇：敵方成功暴擊後 5%×Lv 機率使下一次成功命中的玩家攻擊必定暴擊。
+- 反噬：玩家實際失血且存活後 1.5%×Lv 機率反射實際 HP 損失 30%。
+- 無視：每次玩家攻擊事件 0.5%×Lv 機率令該擊敵 DEF=0。
+- `markFormalSnapshot()` 保留 acquired／level／progress；GM test 以 `gmTestMarkLevels` 保存本次工作階段 Lv.0～10，不寫正式 save。
+- 專屬回歸：`markcoreintegrity.js`；檢查 10 枚順序、名稱、解鎖等級、升級需求、累積擊殺與 Lv.10 效果公式。
+
 
 ---
 
@@ -971,7 +996,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 12、Lv1～500、10 區 100 地圖、101 篇正式故事、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
