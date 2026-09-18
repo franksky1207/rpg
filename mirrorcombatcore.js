@@ -113,11 +113,15 @@
    let damage=sharedCombatDamage(effectiveAtk,effectiveDef,rng);
    if(initiativeApplied&&spec.initiative>0)damage=Math.ceil(damage*(1+spec.initiative/100));
 
-   const composure=Math.max(0,numberOr(effects.composure?.enemyCritReductionPoints,0)),rawCrit=clampRate(stats.crit),finalCrit=Math.max(0,rawCrit-composure),critRoll=rng()*100;
-   if(composure>0&&critRoll<rawCrit&&critRoll>=finalCrit)markEvent(defenderKey,"composure","preventCrit",{target:actorKey,reductionPoints:composure,originalRate:rawCrit,finalRate:finalCrit});
+   const composure=Math.max(0,numberOr(effects.composure?.enemyCritReductionPoints,0)),rawCrit=clampRate(stats.crit),finalCrit=Math.max(0,rawCrit-composure);
    let crit=false,revengeCrit=false;
-   if(actor.revengeReady){crit=true;revengeCrit=true;actor.revengeReady=false;markEvent(actorKey,"revenge","consume",{target:defenderKey,source});}
-   else crit=critRoll<finalCrit;
+   if(actor.revengeReady){
+    crit=true;revengeCrit=true;actor.revengeReady=false;markEvent(actorKey,"revenge","consume",{target:defenderKey,source});
+   }else{
+    const critRoll=rng()*100;
+    if(composure>0&&critRoll<rawCrit&&critRoll>=finalCrit)markEvent(defenderKey,"composure","preventCrit",{target:actorKey,reductionPoints:composure,originalRate:rawCrit,finalRate:finalCrit});
+    crit=critRoll<finalCrit;
+   }
 
    if(crit){
     const baseDamage=damage,resilience=Math.max(0,Math.min(100,numberOr(effects.resilience?.enemyCritBonusDamageReductionPercent,0)));
@@ -140,16 +144,18 @@
    }
 
    const before=Math.max(0,defender.hp),shieldAbsorbed=Math.min(defender.shield,damage);
-   if(shieldAbsorbed>0){defender.shield-=shieldAbsorbed;markEvent(defenderKey,"ward","absorb",{target:actorKey,amount:shieldAbsorbed,remainingShield:defender.shield});}
+   if(shieldAbsorbed>0)defender.shield-=shieldAbsorbed;
    const remaining=Math.max(0,damage-shieldAbsorbed);
    let indomitableTriggered=false;
    if(remaining>0){
     const rawAfter=defender.hp-remaining;
-    if(rawAfter<=0&&defender.indomitableActivated&&!defender.indomitableUsed){defender.indomitableUsed=true;indomitableTriggered=true;defender.hp=1;markEvent(defenderKey,"indomitable","survive",{target:actorKey,hp:1});}
+    if(rawAfter<=0&&defender.indomitableActivated&&!defender.indomitableUsed){defender.indomitableUsed=true;indomitableTriggered=true;defender.hp=1;}
     else defender.hp=Math.max(0,rawAfter);
    }
    const actualDamage=Math.max(0,before-defender.hp);
    events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:actor.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,absorbed:false,shieldAbsorbed,indomitable:indomitableTriggered});
+   if(shieldAbsorbed>0)markEvent(defenderKey,"ward","absorb",{target:actorKey,amount:shieldAbsorbed,remainingShield:defender.shield});
+   if(indomitableTriggered)markEvent(defenderKey,"indomitable","survive",{target:actorKey,hp:1});
    pushLog(`${actor.name}攻擊${defender.name}${crit?"，暴擊":""}造成 ${damage} 點傷害。`);
 
    if(defender.hp>0&&crit){
