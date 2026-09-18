@@ -40,8 +40,9 @@
   const initialHp=startHp==null?numberOr(p.hp,0):numberOr(startHp,0);
   const playerMaxHp=Math.max(1,numberOr(p.hp,1));
   let php=Math.max(0,initialHp);
-  let ehp=Math.max(1,numberOr(e.hp,1));
-  const enemyMaxHp=ehp;
+  const enemyMaxHp=Math.max(1,numberOr(e.hp,1));
+  const enemyStartHp=options.enemyStartHp==null?enemyMaxHp:Math.max(1,Math.min(enemyMaxHp,numberOr(options.enemyStartHp,enemyMaxHp)));
+  let ehp=enemyStartHp;
   let turns=0;
   let berserkShown=false;
   let shield=0;
@@ -254,6 +255,8 @@
    win:ehp<=0,
    hp:Math.max(0,php),
    enemyHp:Math.max(0,ehp),
+   enemyStartHp,
+   enemyMaxHp,
    playerStartHp:Math.max(0,initialHp),
    playerMaxHp,
    turns,
