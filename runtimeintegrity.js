@@ -76,12 +76,33 @@
  if(window.BOSS_CONTINUOUS_INTEGRITY?.passed!==true)fail("BOSS_CONTINUOUS_INTEGRITY","Boss 連戰專屬回歸檢查未通過",window.BOSS_CONTINUOUS_INTEGRITY?.errors||null);
  if(Number(window.DAILY_DUNGEON_LIMITS?.bounty)!==20)fail("BOUNTY_DAILY_LIMIT","懸賞每日上限應為 20");
  if(Number(window.DAILY_DUNGEON_LIMITS?.arena)!==20)fail("ARENA_DAILY_LIMIT","競技場每日上限應為 20");
- if(Number(window.ARENA_BALANCE_VERSION)!==2||typeof window.getArenaPositionPhysicalMultipliers!=="function")fail("ARENA_BALANCE_API","競技場平衡基準 API 未更新");
+ if(Number(window.ARENA_BALANCE_VERSION)!==3||typeof window.getArenaPositionPhysicalMultipliers!=="function"||typeof window.getArenaPositionStageConfig!=="function"||typeof window.getArenaTraitCountProfile!=="function")fail("ARENA_BALANCE_API","競技場平衡基準 API 未更新");
  else{
   const normal=window.getArenaPositionPhysicalMultipliers("normal"),hard=window.getArenaPositionPhysicalMultipliers("hard"),extreme=window.getArenaPositionPhysicalMultipliers("extreme");
   if(normal.hp!==1||normal.damage!==1||normal.def!==1)fail("ARENA_BALANCE_NORMAL","競技場低位物理倍率異常",normal);
   if(hard.hp!==.96||hard.damage!==.96||hard.def!==.98)fail("ARENA_BALANCE_HARD","競技場中位物理倍率異常",hard);
   if(extreme.hp!==.90||extreme.damage!==.92||extreme.def!==.96)fail("ARENA_BALANCE_EXTREME","競技場高位物理倍率異常",extreme);
+
+  const extremeStages=[
+   {critScale:.50,critAdd:1,critCap:11,dodgeScale:.45,dodgeAdd:1,dodgeCap:9,traitMode:"one"},
+   {critScale:.65,critAdd:2,critCap:16,dodgeScale:.60,dodgeAdd:1,dodgeCap:13,traitMode:"extreme2"},
+   {critScale:.75,critAdd:2,critCap:19,dodgeScale:.70,dodgeAdd:1,dodgeCap:16,traitMode:"extreme3"}
+  ];
+  extremeStages.forEach((expected,index)=>{
+   const actual=window.getArenaPositionStageConfig("extreme",index);
+   Object.keys(expected).forEach(key=>{if(actual?.[key]!==expected[key])fail("ARENA_EXTREME_STAGE",`競技場高位第 ${index+1} 戰 ${key} 異常`,{expected:expected[key],actual:actual?.[key]});});
+  });
+  const extreme2Traits=window.getArenaTraitCountProfile("extreme2"),extreme3Traits=window.getArenaTraitCountProfile("extreme3");
+  if(extreme2Traits.zero!==0||extreme2Traits.one!==.75||extreme2Traits.two!==.25)fail("ARENA_EXTREME2_TRAITS","競技場高位第 2 戰特性數量機率異常",extreme2Traits);
+  if(extreme3Traits.zero!==0||extreme3Traits.one!==.70||extreme3Traits.two!==.30)fail("ARENA_EXTREME3_TRAITS","競技場高位第 3 戰特性數量機率異常",extreme3Traits);
+
+  if(typeof window.getArenaDifficultyConfigs!=="function")fail("ARENA_CONFIG_API","競技場完整設定 API 未載入");
+  else{
+   const extremeConfig=window.getArenaDifficultyConfigs(1).find(x=>x?.id==="extreme"),stage3=extremeConfig?.stages?.[2];
+   if(!extremeConfig?.positionPhysical||extremeConfig.positionPhysical.hp!==.90||extremeConfig.positionPhysical.damage!==.92||extremeConfig.positionPhysical.def!==.96)fail("ARENA_CONFIG_POSITION_PHYSICAL","競技場完整設定未包含高位物理倍率",extremeConfig?.positionPhysical);
+   const expectedHp=.78*.90,expectedDamage=.73*.92,expectedDef=.82*.96;
+   if(!stage3?.effectivePhysical||Math.abs(stage3.effectivePhysical.hpMul-expectedHp)>1e-12||Math.abs(stage3.effectivePhysical.damageMul-expectedDamage)>1e-12||Math.abs(stage3.effectivePhysical.defMul-expectedDef)>1e-12)fail("ARENA_CONFIG_EFFECTIVE_PHYSICAL","競技場完整設定的高位第 3 戰有效物理倍率異常",stage3?.effectivePhysical);
+  }
  }
  if("VOID_MIRAGE_MAX_FLOOR" in window)fail("VOID_MAX_FLOOR_RESIDUE","虛空幻境不應存在最高層限制");
  if(Number(window.VOID_MIRAGE_START_OFFSET)!==100)fail("VOID_START_OFFSET",`虛空幻境起始回退應為 100 層，實際 ${window.VOID_MIRAGE_START_OFFSET}`);
