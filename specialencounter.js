@@ -52,6 +52,7 @@
   setCombatHp(ehp,enemyMax,php,playerMax,r.win?"特殊遭遇勝利！":"特殊遭遇失敗！");
   await sleep(250);
  }
+ window.SPECIAL_COMBAT_MARK_PRESENTATION_VERSION=1;
 
  function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
