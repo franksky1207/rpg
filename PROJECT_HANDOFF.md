@@ -477,6 +477,52 @@ Save Schema 仍是 12，沒有因鏡像或故事升到 13。
 
 外層／多重宇宙只做極輕伏筆，不在 Lv500 前搶走第一部主題。
 
+## 9.6 2026-09-18 第一部 Lv1～500 劇情重寫完成狀態
+
+本輪已完成**序章＋十大區域全部正式故事重寫與排版整理**，並已寫入 `main`。目前不是草稿狀態，而是正式 `storydata-*.js` 內容。
+
+固定篇幅政策（以 `storyintegrity.js` 的 `STORY_FORMAT_POLICY` 為唯一正式檢查）：
+
+- `earth-prologue`：12 頁；每頁 90～155 可見字元；至少 3 個自然文字區塊。
+- 每個 50 級區域前 9 篇 Boss：各 11 頁；每頁 90～120 可見字元；至少 2 個自然文字區塊。實際正式資料大多以 3 區塊排版。
+- 每區第 10 篇區域收尾：15 頁；每頁 120～155 可見字元；至少 3 區塊。
+- 最終 `galactic-unification-boss-10`：**31 頁正式長篇特例**；每頁 90～155 可見字元；至少 3 區塊。不要為了縮到 20 頁而破壞收尾節奏。
+- 最終篇 31 頁已是正式政策，**不是 warning**。
+
+重寫期間固定遵守：
+
+- 每篇 Boss 故事必須自然包含該地圖正式 5 隻敵人名稱；正式來源直接取 `MAPS`。
+- 10 區 × 10 篇 Boss 已由 Integrity 自動保護 50/50（每區）敵人名稱覆蓋。
+- 正式本文禁止「小區域、關卡、第幾關、普通怪、菁英怪、Boss、玩家、頁數、遊戲、等級、首領戰」等遊戲內／破壞沉浸感用語。
+- 文字已改為自然分段，避免敘事與對話全部擠成單一大段。
+- 正式故事不可另造第二套區域／地圖／敵人資料；名稱與順序一律由 `WORLD_REGIONS + MAPS` 對照。
+- 區域不是 10 個彼此獨立短篇；前篇必須承接後篇，區域間也要保留人物、制度、錯誤、死亡與政治後果。
+- 區域第 10 篇不只處理最後 Boss，還必須收束本區前 9 段累積。
+- Lv450 前不得把「外層觀測」講破；第 8～9 區的連續體異常仍只能標記為未知。
+- 最終兩句固定訊號與第一部結尾必須原樣保留。
+
+本輪十大區域敘事功能：
+
+1. 地球：從失控、救援與觀測節點，建立「誰在控制我們」。
+2. 太陽系：拆隔離時發現守門者也曾阻擋外來戰爭；人類第一次犯下較大錯誤。
+3. 近星：人類第一次被外文明視為新的武裝文明；瑟安線建立。
+4. 星際邊疆：沒有最高中心同時帶來自由、剝削、殖民、難民與責任真空。
+5. 獵戶臂：文明戰線成為真正能改變區域秩序的力量；指揮官於 Lv250 永久死亡，犧牲不洗白先前越權爭議。
+6. 銀河邊境：秩序制度確實起源於真實文明災難，也確實製造受害者；伊芮正式進入長線。
+7. 銀河中域：權力誘惑；副官因監控爭議離開後回歸，並保留公開異議。
+8. 銀河核心外圍：物理未知、黑洞／奇點／時空限制；「不知道」正式成為資料狀態，不把未知硬解釋成敵意。
+9. 銀河核心戰爭：自由真的毀過文明、秩序真的救過文明、秩序也抹除過無辜世界；情報官曾進入裁決體系內部改革後回歸。
+10. 銀河統合戰爭：不再只問如何反抗，而是如何用可退出、可覆核、可撤回的多中心制度接住原本由最高中樞維持的公共功能。
+
+最終戰正式結論：
+
+- 不把銀河征服中樞寫成單純瘋狂反派。
+- 不主張「自由必然比較安全」。
+- 不把所有秩序、監測、隔離、緊急能力全部拆掉。
+- 真正拆除的是**不可撤回、不可覆核、不可退出的最高答案**。
+- 必要公共功能（危險技術監測、航道同步、巨構／黑洞安全、有限緊急聯合指揮等）改由可監督的多中心機制接手。
+- 最終不設新王座，也不把最高權力轉交給主角。
+
 ---
 
 # 10. 劇情執行流程：目前 main 正式架構
@@ -624,10 +670,12 @@ repo root 舊測試檔：
 
 永久 CI 四層：
 
-1. **Verify story batch 4 layout**：確認 `story.css`、三支 tests、root 舊檔不存在、`index.html` 有正確 story.css cache-bust。
-2. **Raw story source purity**：在 `storyintegrity.js` 執行前就掃原始 storydata；原始正式文案有英文直接 fail，避免檢查器掩蓋問題。
-3. **Story data integrity**：10 區／101 stories／100 Boss mapping／final signals。
-4. **Story flow regressions**：首殺 pending、重打不重播、pending 保護、legacy backfill、pure get、正式 storyrecord 入口、CSS 外移、version gate warning-only 等。
+1. **Verify story integrity structure**：確認 `story.css`、`storyintegrity.js`、`storymigration.js`、`storyruntimeintegrity.js`、三支 tests 都存在；root 舊 CI 檔不得回來；並核對目前正式 Story cache tag 與 `index.html` 一致。
+2. **Raw story source purity**：在 `storyintegrity.js` 執行前掃原始 storydata；正式文案若有英文或遊戲內部敘事禁詞直接 fail，避免檢查器掩蓋問題。
+3. **Story data integrity**：10 區／101 stories／100 Boss mapping／每篇 5 敵人名稱覆蓋／正式頁數字數分段政策／final signals／0 unexpected warning。
+4. **Story flow regressions**：首殺 pending、重打不重播、pending 保護、legacy repair、`historyBackfillRegions` 退休清除、pure get、正式 storyrecord 入口、CSS 外移、version gate warning-only 等。
+
+目前 workflow 也會鎖定集中式 `STORY_FORMAT_POLICY` 與 `DATA_VERSION` 的「模組格式相容版本」語意，避免後續又把內容版次與格式版次混用。
 
 最新 Story Integrity workflow 已在目前 main 成功通過。
 
@@ -707,6 +755,39 @@ repo root 舊測試檔：
 - Actions Node 20 → 24。
 - Runtime Integrity 改能力／行為為主，版本只 warning。
 
+## 12.8 2026-09-18 劇情重寫後四批維護整理
+
+第一批：**把人工驗收規則正式程式化**
+
+- `STORY_INTEGRITY_VERSION 7 → 8`，之後再集中政策升到 V9。
+- 正式加入頁數／字數／最少自然文字區塊硬檢查。
+- 正式加入每篇 Boss 對應 5 隻 `MAPS` 敵人名稱覆蓋檢查。
+- Story Source Purity 與 Data Integrity 都加入遊戲內部敘事禁詞。
+- CI 對未知 warning 採 fail；目前 allowlist 為空，正常正式狀態應 0 warning。
+
+第二批：**退休 `historyBackfillRegions`**
+
+- `STORY_MIGRATION_VERSION 4 → 5`。
+- 新 storyProgress 不再建立此欄位。
+- 舊存檔先依 `bossKilled/pendingStory/completedStories` 修復，再刪除此 legacy 欄位。
+- `STORY_RUNTIME_INTEGRITY_VERSION 8 → 9`，新增舊資料 repair＋欄位移除＋新資料不得重建的回歸。
+- Save Schema 維持 12。
+
+第三批：**集中 Story Policy 與釐清版本語意**
+
+- `STORY_INTEGRITY_VERSION 8 → 9`。
+- 頁數／字數／區塊規格集中到單一 `STORY_FORMAT_POLICY`。
+- CI 明確鎖定該政策。
+- 10 支 storydata 的 `*_DATA_VERSION` 明確定義為「模組格式相容版本」，不是內容修訂號；故事文字更新由 `index.html` cache-bust 管理。
+- 更新 handoff 中 migration、integrity、runtime 舊版本與最終 31 頁 warning 舊說法。
+
+第四批：**Story CI／handoff 最後清理**
+
+- Actions step 舊名 `Verify story batch 4 layout` 改為 `Verify story integrity structure`。
+- 結構檢查同步核對 `storyintegrity.js`、`storymigration.js`、`storyruntimeintegrity.js` 的正式 cache tag。
+- handoff 補正 V4→V5 `historyBackfillRegions` 歷史與 2026-09-18 完整性鏈日期。
+- 這四批都沒有改故事文字、UI、戰鬥平衡或 Save Schema。
+
 ---
 
 # 13. GM 管理總覽
@@ -777,7 +858,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 # 16. 已知技術債／尚未完成項目
 
-目前沒有已知「玩家正式功能必須立刻完成」的阻斷項目。使用者已實際回報：Lv100 Boss 首殺故事正常跳出，GM 劇情測試目前正常。
+目前沒有已知「玩家正式功能必須立刻完成」的阻斷項目。第一部 Lv1～500 正式故事已完成本輪重寫；使用者已實際回報 GM 劇情測試可正常預覽，並曾確認 Lv100 Boss 首殺故事正常跳出。使用者目前是「大致閱讀沒有問題，但尚未逐篇細看全部 101 篇」的狀態。
 
 仍存在但**不要在無關任務中順手重構**的技術債：
 
@@ -833,6 +914,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - `PROJECT_HANDOFF.md`（舊版）
 - `index.html`
+- `.github/workflows/story-integrity.yml`
 - `data.js`
 - `engine.js`
 - `combatmath.js`
@@ -856,6 +938,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - `mainminimalmode.js`
 - `MINIMAL_MODE.md`
 - `ui.js`
+- `worldmaps-earth.js` ～ `worldmaps-galactic-unification.js`（10 區正式地圖來源）
+- `storydata-earth.js` ～ `storydata-galactic-unification.js`（10 區正式故事來源）
 - `storyintegrity.js`
 - `storyui.js`
 - `storymigration.js`
@@ -874,6 +958,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 ---
 
 # 19. 下一個對話如何接手
+
+目前可視為穩定基線：**Save 12、Lv1～500、10 區 100 地圖、101 篇正式故事、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
