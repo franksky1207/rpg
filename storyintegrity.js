@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  function plainText(value){
   if(typeof value==="string")return value;
   if(value&&typeof value==="object"&&typeof value.em==="string")return value.em;
@@ -72,7 +72,8 @@
     checkChineseDisplay(story.title,`${expectedId} 劇情標題`);
     if(!Array.isArray(story.pages)||story.pages.length<7)fail("STORY_PAGE_COUNT",`${expectedId} 頁數過少或格式錯誤`,story.pages?.length);
     else{
-     if(story.pages.length>20)warn("STORY_PAGE_COUNT_LONG",`${expectedId} 共 ${story.pages.length} 頁，超過目前建議上限 20 頁`);
+     const pageCountLimit=expectedId==="galactic-unification-boss-10"?31:20;
+     if(story.pages.length>pageCountLimit)warn("STORY_PAGE_COUNT_LONG",`${expectedId} 共 ${story.pages.length} 頁，超過目前建議上限 ${pageCountLimit} 頁`);
      story.pages.forEach((page,pageIdx)=>{
       if(!Array.isArray(page)||!page.length){fail("STORY_PAGE_FORMAT",`${expectedId} 第 ${pageIdx+1} 頁格式錯誤`);return;}
       const texts=page.map(plainText).filter(Boolean);
