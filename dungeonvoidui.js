@@ -63,7 +63,7 @@
  }
  function pulse(target,text){
   const card=document.getElementById(target==="enemy"?"voidEnemyCard":"voidPlayerCard"),dmg=document.getElementById(target==="enemy"?"voidEnemyDamage":"voidPlayerDamage");
-  if(card&&text!=="閃避"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),250);}
+  if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),250);}
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
  async function animateFloor(fr){
@@ -77,6 +77,7 @@
    m=line.match(/^.+攻擊你，(?:暴擊)?造成 (\d+) 點傷害。$/);
    if(m){const n=Number(m[1]);php=Math.max(0,php-n);pulse("player",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`);setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
    if(line.includes("你閃避了攻擊")){pulse("player","閃避");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
+   if(line.includes("吸收印記化解了傷害")){pulse("player","吸收");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
    setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);
   }
   if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破`);
