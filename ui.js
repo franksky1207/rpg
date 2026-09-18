@@ -205,6 +205,7 @@ async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
  }
  setCombatHp(ehp,enemyMax,php,playerMax,r.win?"戰鬥勝利！":"戰敗！");await sleep(250);
 }
+window.MAIN_COMBAT_MARK_PRESENTATION_VERSION=1;
 function dropListHtml(items){
  if(!items.length)return `<div class="muted">裝備：無</div>`;
  return `<div style="margin-top:10px"><b>裝備</b>${items.map(x=>`<div class="item">${itemHtml(x.item,true)}${gearAbilityHtml(x.item,true)}${x.sold?`<div class="muted">自動出售 +${x.sold} 金幣</div>`:""}</div>`).join("")}</div>`;
