@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=12;
+ const SAVE_SCHEMA_VERSION=13;
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
@@ -146,6 +146,8 @@
   const version=sourceVersionOf(fromVersion??source.saveVersion,1);
   const introWasBoolean=typeof source.introSeen==="boolean";
   const introValue=introWasBoolean?source.introSeen:true;
+  const hadCalamityState=isObject(source.calamities);
+  const hadMarkState=isObject(source.marks);
 
   prepareAllGear(target);
   if(!introWasBoolean)target.introSeen=true;
@@ -163,6 +165,7 @@
   if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
+  if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
   cleanupLegacyDungeonFields(target);
   cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
@@ -171,7 +174,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState};
   return target;
  };
 
@@ -205,6 +208,8 @@
    expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
    legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
    retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
+   calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,
+   markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
    recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
   };
