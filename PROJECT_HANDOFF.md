@@ -37,7 +37,7 @@
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新已完成第 1～10 批：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1、完整玩家 UI／極簡模式／解鎖提示，以及 GM 整合均已建立。遊戲說明／戰線紀錄背景／最終 Integrity 與整體回歸留待第 11 批。
+2026-09-19 文明災厄大更新第 1～11 批已全部完成：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1、完整玩家 UI／極簡模式／解鎖提示、GM 整合、戰線紀錄背景、遊戲說明 V14、Final Integrity V1 與最終數值回歸均已建立。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -497,6 +497,7 @@ Save Schema 已於 2026-09-19 文明災厄大更新第 1 批升為 13；鏡像�
 - 正式轉換慣例：Desktop 最大寬1536、Mobile最大寬1080、WebP quality 72、method 6、LANCZOS。
 - `backgrounds.css` 管理正式背景 URL。
 - `backgroundpreload.js` 依目前 viewport 預載正式 runtime 背景，不預載 source 母圖。
+- 戰線紀錄 `.story-record-page` 正式共用 `assets/backgrounds/guide-settings/desktop.webp`／`mobile.webp`；不另複製圖片，仍由 `backgrounds.css` 與既有 preload 自動處理。
 - 同名 WebP 重製後必須 bump `backgrounds.css` URL query。
 - 一次性轉換 workflow 完成後要刪除 workflow；source 母圖保留。
 
@@ -911,6 +912,7 @@ repo root 舊測試檔：
 - 文明災厄 GM：可任選 10 隻，不受正式解鎖限制；提供「單次挑戰模擬」與「完整擊殺模擬」。完整擊殺逐場呼叫正式 Combat Core、玩家每場滿血、Boss HP 跨場延續，不以平均傷害外推；100000 場只作瀏覽器安全上限，碰到時明確回報未完成。
 - 文明災厄 GM 不提供解鎖 toggle、HP setter、近死／瀕死、擊殺數等作弊控制；所有模擬皆為沙盒，不修改正式災厄 HP、印記或存檔。
 - `calamitygm.js` 使用 `registerGmHubSection()` extension API，沒有再疊新的 `gmHtml()` wrapper。
+- 第 11 批最終災厄平衡 smoke：同級中段基準（史詩主能力、+10、VIP／戰鬥專精隨區域成長、既有前置印記 Lv.5）完整擊殺平均約 353～832 場；屬 HP×500 長期持久討伐設計，不是公式錯誤。Lv500 上限型角色回頭可單場擊殺前 3 隻災厄，第 4 隻單場約可削 60%，符合「高等回頭明顯加速」設計。
 - 副本相關管理／測試。
 - 鏡像：重置今日、20 場測試、100 次統計、對稱回歸。
 - 劇情 GM V3：10 區／101 stories 純預覽、前後導航、integrity 明細與重跑。
@@ -938,6 +940,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 重新進戰線紀錄預設最新完成區，同頁切換保留玩家選擇。
 
 故事／戰線紀錄／初始裝備樣式都由 `story.css` 管理。
+戰線紀錄的場景背景由 `backgrounds.css` 管理，正式共用「遊戲說明／設定」的 `guide-settings` 背景。
 
 ---
 
@@ -967,6 +970,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 20. `storyrecordtabs.js`
 21. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
 22. `backgroundpreload.js` 最後處理正式背景 reveal。
+23. `finalintegrity.js` V1：最尾端匯總 Calamity／Mark／Combat FX／GM／主 runtime／Mirror Final／Story Runtime 報告，鎖定 Save13、Guide V14、版本鏈，並以實際 DOM `getComputedStyle()` 驗證戰線紀錄解析到 `guide-settings` 背景。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1075,7 +1079,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Calamity GM V1／Mark GM V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V1／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
