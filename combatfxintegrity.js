@@ -14,6 +14,7 @@
  });
  if(typeof window.combatMarkFxDescriptor!=="function")fail("MARK_FX_DESCRIPTOR","combatMarkFxDescriptor 未載入");
  if(typeof window.consumeCombatPresentationPulse!=="function")fail("MARK_FX_CONSUMER","consumeCombatPresentationPulse 未載入");
+ if(typeof window.consumeCombatPresentationPulseManual!=="function")fail("MARK_FX_MANUAL_CONSUMER","consumeCombatPresentationPulseManual 未載入");
  if(typeof window.syncCombatPresentationHp!=="function")fail("MARK_FX_HP_SYNC","syncCombatPresentationHp 未載入");
 
  if(typeof window.combatMarkFxDescriptor==="function"){
