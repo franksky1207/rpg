@@ -29,8 +29,13 @@
 - `CIVILIZATION_AUTH_VERSION = 6`
 - `CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`
 - `CIVILIZATION_CLOUD_SAVE_VERSION = 2`
+- `CALAMITY_STATE_VERSION = 1`
+- `CALAMITY_BALANCE_VERSION = 1`
+- `MARK_STATE_VERSION = 1`
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
+
+2026-09-19 文明災厄大更新第 1 批已建立持久資料骨架：`calamitystate.js` 是災厄／印記 state owner；`state.calamities` 以 10 個 `WORLD_REGIONS.id` 保存 `currentHp`，`state.marks` 以 10 個穩定 mark id 保存 `acquired / level / progress`。目前只建立 Schema 13、normalize/migration 與 integrity，尚未加入印記戰鬥效果、災厄數值公式或 UI。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
