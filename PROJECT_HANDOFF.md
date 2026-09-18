@@ -4,7 +4,7 @@
 >
 > 若本文件、歷史對話、舊截圖、舊規格、舊 commit、模型記憶或任何摘要與目前 `main` 衝突，一律重新讀取 `main` 後，以實際程式碼為準。本文件是交接索引與最新規則摘要，不可取代實際程式碼檢查。
 
-更新日期：**2026-09-18**
+更新日期：**2026-09-19**
 
 ---
 
@@ -15,8 +15,8 @@
 - 遊戲名稱：**文明戰線**
 - 架構：純前端 HTML / CSS / JavaScript + `localStorage` + Supabase Auth / Database
 - 正式存檔 key：`frank_text_rpg_save`
-- `SAVE_VERSION = 12`
-- `SAVE_SCHEMA_VERSION = 12`
+- `SAVE_VERSION = 13`
+- `SAVE_SCHEMA_VERSION = 13`
 - `SAVE_LOAD_PIPELINE_VERSION = 2`
 - `MAX_LEVEL = 500`
 - 世界：10 大區域、100 張主線地圖、Lv1～500
@@ -323,7 +323,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 高位 Extreme 特殊能力同步下修：第1戰暴擊上限11%、閃避9%；第2戰暴擊16%、閃避13%、雙特性25%；第3戰暴擊19%、閃避16%、雙特性30%。
 - 競技場評估相容版本正式拆分為 position model / assessment rule / balance；目前為 1 / 3 / 3。
 - 500 次評估簽章會包含上述版本。任一相容版本或正式競技場 balance version 改變時，舊評估自動失效重跑；只清除 lastCheck／promotionReady，不重置 highestArenaUnlocked、主線進度或已解鎖競技場。
-- 此機制不需要升 Save Schema；Save Schema 仍維持 12。
+- 此競技場機制本身不需要另升 Save Schema；目前全域 Save Schema 已因文明災厄／印記持久資料升為 13。
 - 虛空幻境：Lv25，無固定最高層；起始 `max(1, 歷史最高-100)`；每 10 層 Boss；每日基礎獎勵＝當日最高層×2 VIP 積分，每日只能領一次。
 - 鏡像戰：Lv50，每日正式挑戰 1 次，固定 20 場。
 
@@ -354,7 +354,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 
 GM 可重置今日鏡像狀態、跑 1 次／100 次測試、跑對稱回歸；正式 production integrity 只做較小 smoke，完整壓測留 GM。
 
-Save Schema 仍是 12，沒有因鏡像或故事升到 13。
+Save Schema 已於 2026-09-19 文明災厄大更新第 1 批升為 13；鏡像與故事本身仍未另外要求升版。
 
 ---
 
@@ -778,7 +778,7 @@ repo root 舊測試檔：
 - 新 storyProgress 不再建立此欄位。
 - 舊存檔先依 `bossKilled/pendingStory/completedStories` 修復，再刪除此 legacy 欄位。
 - `STORY_RUNTIME_INTEGRITY_VERSION 8 → 9`，新增舊資料 repair＋欄位移除＋新資料不得重建的回歸。
-- Save Schema 維持 12。
+- 當時 Story Migration 批次本身未要求升版；目前全域 Save Schema 已因文明災厄／印記持久資料升為 13。
 
 第三批：**集中 Story Policy 與釐清版本語意**
 
@@ -793,7 +793,7 @@ repo root 舊測試檔：
 - Actions step 舊名 `Verify story batch 4 layout` 改為 `Verify story integrity structure`。
 - 結構檢查同步核對 `storyintegrity.js`、`storymigration.js`、`storyruntimeintegrity.js` 的正式 cache tag。
 - handoff 補正 V4→V5 `historyBackfillRegions` 歷史與 2026-09-18 完整性鏈日期。
-- 這四批都沒有改故事文字、UI、戰鬥平衡或 Save Schema。
+- 這四批當時都沒有改故事文字、UI、戰鬥平衡或 Save Schema；之後 2026-09-19 才因文明災厄／印記持久資料升為 13。
 
 ---
 
@@ -881,7 +881,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 101 篇正式故事尚未全部由使用者逐篇在 iPhone Safari 實機閱讀驗證；不可把 CI PASS 說成全篇真機驗收。
 - 真機若看到 stale JS/CSS，先檢查 `index.html` cache-bust 與 Safari cache，再判斷邏輯問題。
 
-目前沒有理由把 Save Schema 從 12 升到 13；不要擅自升版。
+Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
 
