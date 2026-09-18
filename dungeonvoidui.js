@@ -83,6 +83,7 @@
   if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破`);
  }
 
+ window.VOID_COMBAT_MARK_PRESENTATION_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
   if(typeof window.runVoidMirageAuto!=="function"){
