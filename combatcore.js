@@ -194,6 +194,7 @@
 
    const playerHpBefore=Math.max(0,php);
    let remaining=damage;
+   let indomitableTriggered=false;
    const shieldAbsorbed=Math.min(shield,remaining);
    if(shieldAbsorbed>0){
     shield-=shieldAbsorbed;
@@ -203,13 +204,14 @@
     const rawAfter=php-remaining;
     if(rawAfter<=0&&indomitableActivated&&!indomitableUsed){
      indomitableUsed=true;
+     indomitableTriggered=true;
      php=1;
     }else php=Math.max(0,rawAfter);
    }
    const actualDamage=Math.max(0,playerHpBefore-php);
-   events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage,crit,berserk,absorbed:false,shieldAbsorbed,enemyCritRate,indomitable:indomitableUsed&&php===1&&remaining>0});
+   events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage,crit,berserk,absorbed:false,shieldAbsorbed,enemyCritRate,indomitable:indomitableTriggered});
    if(shieldAbsorbed>0)markEvent("ward","absorb",{amount:shieldAbsorbed,remainingShield:shield});
-   if(indomitableUsed&&php===1&&remaining>0&&playerHpBefore>1&&remaining>=playerHpBefore)markEvent("indomitable","survive",{hp:1});
+   if(indomitableTriggered)markEvent("indomitable","survive",{hp:1});
    if(logs)logs.push(crit?`${name}攻擊你，暴擊造成 ${damage} 點傷害。`:`${name}攻擊你，造成 ${damage} 點傷害。`);
 
    if(php<=0)break;
