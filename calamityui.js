@@ -1,5 +1,5 @@
 (function(){
- const UI_VERSION=1;
+ const UI_VERSION=2;
  const MINIMAL_VERSION=1;
  let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
 
@@ -20,6 +20,38 @@
   return `Lv.${m.level}　進度 ${Math.max(0,Number(m.progress)||0)} / ${req}`;
  }
  function hpPercent(current,max){return max>0?Math.max(0,Math.min(100,current/max*100)):0;}
+ function pct(value){
+  const n=Number(value)||0;
+  return Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
+ }
+ function markEffectText(key,level){
+  const lv=Math.max(0,Math.min(10,Math.floor(Number(level)||0)));
+  const effect=typeof window.markEffectSnapshot==="function"?window.markEffectSnapshot(key,lv):null;
+  if(!effect||lv<=0)return "尚未生效。";
+  if(key==="ward")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動，獲得最大 HP ${pct(effect.shieldMaxHpPercent)}% 的護盾。`;
+  if(key==="suppression")return `敵人最終閃避率降低 ${pct(effect.enemyDodgeReductionPoints)} 個百分點。`;
+  if(key==="composure")return `敵人最終暴擊率降低 ${pct(effect.enemyCritReductionPoints)} 個百分點。`;
+  if(key==="indomitable")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動；本場第一次受到致死傷害時保留 ${Math.max(1,Number(effect.surviveHp)||1)} HP。`;
+  if(key==="resilience")return `敵人暴擊的額外傷害部分降低 ${pct(effect.enemyCritBonusDamageReductionPercent)}%。`;
+  if(key==="battleSpirit")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動；每層提高 ATK ${pct(effect.atkPercentPerLayer)}%，每回合增加 1 層，最多 ${Math.max(1,Number(effect.maxLayers)||10)} 層。`;
+  if(key==="absorption")return `受到原本會命中的敵方攻擊時，有 ${pct(effect.triggerChance)}% 機率完全吸收傷害，並回復原始傷害 ${pct(effect.healOriginalDamagePercent)}% 的 HP。`;
+  if(key==="revenge")return `敵人成功暴擊後，有 ${pct(effect.triggerChance)}% 機率進入復仇；下一次成功命中的攻擊必定暴擊。`;
+  if(key==="backlash")return `實際受到 HP 傷害且存活後，有 ${pct(effect.triggerChance)}% 機率反噬敵人，反射本次實際 HP 損失的 ${pct(effect.reflectActualHpLossPercent)}% 傷害。`;
+  if(key==="ignore")return `每次玩家攻擊有 ${pct(effect.triggerChance)}% 機率無視敵人 DEF。`;
+  return "永久戰鬥被動。";
+ }
+ function markEffectBlock(def,m){
+  const acquired=m?.acquired===true,level=Math.max(0,Math.min(10,Math.floor(Number(m?.level)||0)));
+  if(!acquired){
+   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">Lv.1 效果預覽</div><div>${esc(markEffectText(def.markId,1))}</div></div><div class="muted calamity-mark-note">首次擊敗對應文明災厄後取得 Lv.0。</div>`;
+  }
+  if(level===0){
+   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>Lv.0 尚未生效。</div></div><div class="calamity-mark-next"><div class="calamity-mark-effect-label">Lv.1 效果</div><div>${esc(markEffectText(def.markId,1))}</div></div>`;
+  }
+  const current=`<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>${esc(markEffectText(def.markId,level))}</div></div>`;
+  if(level>=10)return current+`<div class="calamity-mark-max">已達最高等級 MAX</div>`;
+  return current+`<div class="calamity-mark-next"><div class="calamity-mark-effect-label">下一級 Lv.${level+1}</div><div>${esc(markEffectText(def.markId,level+1))}</div></div>`;
+ }
 
  function calamityCardsHtml(){
   const list=unlockedDefs();
@@ -40,9 +72,9 @@
   const list=unlockedDefs();
   if(!list.length)return '<div class="muted">尚無可顯示的印記。</div>';
   return list.map(def=>{
-   const st=status(def.id),m=st?.mark||{},effect=typeof window.markEffectSnapshot==="function"?window.markEffectSnapshot(def.markId,m.level||0):null;
+   const st=status(def.id),m=st?.mark||{};
    const stateText=!m.acquired?"未取得":m.level>=10?"Lv.10 MAX":`Lv.${m.level}　${m.progress||0} / ${Math.max(1,m.requiredForNext||1)}`;
-   return `<article class="card calamity-mark-card"><div class="calamity-mark-source">${esc(def.name)}</div><h3>${esc(def.markName)}</h3><div class="calamity-mark-level">${stateText}</div><div class="muted">${!m.acquired?"首次擊敗對應文明災厄後取得 Lv.0。":m.level===0?"已取得；再次擊敗可開始提升等級。":"永久戰鬥被動已生效。"}</div></article>`;
+   return `<article class="card calamity-mark-card"><div class="calamity-mark-source">${esc(def.name)}</div><h3>${esc(def.markName)}</h3><div class="calamity-mark-level">${stateText}</div>${markEffectBlock(def,m)}</article>`;
   }).join("");
  }
 
@@ -238,6 +270,7 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
+ window.getCivilizationMarkEffectText=markEffectText;
  window.CALAMITY_UI_VERSION=UI_VERSION;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
