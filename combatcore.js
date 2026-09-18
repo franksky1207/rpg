@@ -278,6 +278,7 @@
   return result;
  };
  window.COMBAT_MARK_INTEGRATION_VERSION=1;
+ window.COMBAT_PERSISTENT_ENEMY_HP_VERSION=1;
 
  fightOnce=function(mapIdx,eIdx,encounter=null){
   if(!enemyUnlocked(mapIdx,eIdx)){
