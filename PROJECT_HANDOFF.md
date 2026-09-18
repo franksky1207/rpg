@@ -692,7 +692,7 @@ repo root 舊測試檔：
 
 舊邏輯可能因「這區曾標記 backfill 過」而拒絕再次補漏，造成 Boss 已擊敗但戰線紀錄缺故事。
 
-修正：V4 migration 把 `historyBackfillRegions` 降為 legacy informational field；永遠不能阻止 repair pass。
+修正：V4 migration 先把 `historyBackfillRegions` 降為 legacy informational field，避免它再阻止 repair pass；V5 進一步正式退休此欄位，新資料不再建立，舊資料修復後即刪除。
 
 ## 12.6 戰線紀錄 go wrapper 已清除
 
@@ -754,7 +754,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 # 15. 完整性檢查鏈
 
-實際載入順序永遠以最新 `index.html` 為準。2026-09-17 main 的主要完整性鏈：
+實際載入順序永遠以最新 `index.html` 為準。2026-09-18 main 的主要完整性鏈：
 
 1. `worldmapregistrycheck.js`：世界地圖註冊。
 2. `storyintegrity.js`：101 篇正式故事 Data Integrity。
