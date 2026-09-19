@@ -70,10 +70,11 @@
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
   const eventCount=window.getCombatPresentationSnapshot?.()?.eventCount||0;
   const stepDelay=eventCount>140?12:eventCount>90?20:eventCount>55?32:48;
-  await window.animateStructuredCombatPresentation(fr.result,{mode:"void",kind:fr.enemy?.kind,openingDelay:90,impactDelay:45,stepDelay,endDelay:120,clearAfter:true,clearReason:"void-floor-end"});
+  await window.animateStructuredCombatPresentation(fr.result,{mode:"void",kind:fr.enemy?.kind,openingDelay:90,impactDelay:45,stepDelay,endDelay:120,sleep,clearAfter:true,clearReason:"void-floor-end"});
  }
 
  window.VOID_COMBAT_MARK_PRESENTATION_VERSION=1;
+ window.VOID_BACKGROUND_PRESENTATION_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
   if(typeof window.runVoidMirageAuto!=="function"){
