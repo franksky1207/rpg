@@ -261,6 +261,25 @@
  if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_OWNER","戰鬥內動畫應由單一固定高速 Structured Combat Pacing V2 管理",{version:window.STRUCTURED_COMBAT_PACING_VERSION,api:typeof window.getStructuredCombatPacing});
  if(Number(window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION)!==1)fail("COMBAT_FX_ANIMATION_LIFECYCLE","Combat FX 應由 animation lifecycle 清理，不應依賴舊固定 timer",window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION);
  if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==2||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==2)fail("OFFLINE_BATTLE_SAMPLE_VERSION","離線實戰樣本應使用 V2 版本隔離",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION});
+ try{
+  if(typeof window.migrateSave!=="function")throw new Error("migrateSave unavailable");
+  const sampleVersion=Number(window.OFFLINE_BATTLE_SAMPLE_VERSION);
+  const probeSource=typeof newState==="function"?newState():{};
+  probeSource.saveVersion=Number(window.SAVE_SCHEMA_VERSION)||13;
+  probeSource.offline={
+   lastSettledAt:Date.now()-600000,
+   farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,
+   battleSampleVersion:sampleVersion,
+   battleSamples:[{sampleVersion,actualMs:1000,playerLevel:10,enemyLevel:10,kind:"normal",map:0,enemy:0,recordedAt:Date.now()-600000}],
+   maxObservedWallClock:Date.now()-600000,timeLockUntil:0
+  };
+  const raw=JSON.parse(JSON.stringify(probeSource));
+  const previousReport=window.LAST_SAVE_MIGRATION_REPORT;
+  const migrated=window.migrateSave(probeSource,probeSource.saveVersion,typeof normalizeSaveState==="function"?normalizeSaveState:null,raw);
+  window.LAST_SAVE_MIGRATION_REPORT=previousReport;
+  const row=migrated?.offline?.battleSamples?.[0];
+  if(Number(migrated?.offline?.battleSampleVersion)!==sampleVersion||Number(row?.sampleVersion)!==sampleVersion)fail("OFFLINE_SAMPLE_MIGRATION_VERSION","離線 V2 sample 經 migration normalize 後必須保留正式 sampleVersion",{owner:sampleVersion,battleSampleVersion:migrated?.offline?.battleSampleVersion,row});
+ }catch(error){fail("OFFLINE_SAMPLE_MIGRATION_PROBE","離線 V2 sample migration 回歸檢查失敗",String(error?.message||error));}
  if(Number(window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION)!==1||Number(window.VOID_BACKGROUND_GM_GATE_VERSION)!==1)fail("BACKGROUND_GM_GATE","GM 背景戰鬥開關應統一控制 main／void／calamity",{gm:window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION,void:window.VOID_BACKGROUND_GM_GATE_VERSION});
  if(Number(window.BACKGROUND_PROGRESS_CORE_VERSION)!==1||Number(window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION)!==1)fail("BACKGROUND_LIFECYCLE_OWNER","background engine／主線 lifecycle owner 異常",{core:window.BACKGROUND_PROGRESS_CORE_VERSION,main:window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION});
  if(Number(window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==3||Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_FAST_YIELDS_PER_PAINT)!==8||typeof window.backgroundProgressActiveKind!=="function")fail("BACKGROUND_FLOW_POLICY","背景進度應採 single-active-flow＋快速逐場 catch-up／週期 paint",{single:window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION,yield:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,fast:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_VERSION,every:window.BACKGROUND_PROGRESS_FAST_YIELDS_PER_PAINT,activeKind:typeof window.backgroundProgressActiveKind});
