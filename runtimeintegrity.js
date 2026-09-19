@@ -254,7 +254,8 @@
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
 
- if(Number(window.ARENA_BALANCE_VERSION)!==4||Number(window.ARENA_RANK_BALANCE_VERSION)!==1)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V4／Rank Balance V1",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
+ if(Number(window.ARENA_BALANCE_VERSION)!==5||Number(window.ARENA_RANK_BALANCE_VERSION)!==2)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V5／Rank Balance V2",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
+ if(!window.ARENA_RANK_CURVE||!["hp","damage","def"].every(key=>Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.linear))&&Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.quadratic))))fail("ARENA_RANK_CURVE_CONFIG","競技場階級公式設定異常",window.ARENA_RANK_CURVE);
  if(typeof window.getArenaRankMultipliers!=="function")fail("ARENA_RANK_MULTIPLIERS_API","缺少競技場階級倍率正式 API");
  else{
   const ranks=Array.from({length:10},(_,i)=>window.getArenaRankMultipliers(i+1));
