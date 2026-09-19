@@ -305,6 +305,9 @@
  if(typeof window.getArenaDifficultyConfigs==="function")fail("ARENA_LEGACY_DIFFICULTY_CONFIG_API","退休的 getArenaDifficultyConfigs 不應恢復");
  if(typeof window.getArenaPositionDifficultyId==="function")fail("ARENA_LEGACY_POSITION_DIFFICULTY_API","退休的 getArenaPositionDifficultyId 不應恢復");
  if(typeof window.getBountyTierConfig==="function"||typeof window.getBountyTierConfigs==="function")fail("BOUNTY_LEGACY_TIER_CONFIG_API","退休的 Bounty Tier Config 舊 API 不應恢復");
+  if(typeof window.getArenaDifficultyConfigs==="function")fail("ARENA_LEGACY_DIFFICULTY_CONFIG_API","退休的 getArenaDifficultyConfigs 不應恢復");
+ if(typeof window.getArenaPositionDifficultyId==="function")fail("ARENA_LEGACY_POSITION_DIFFICULTY_API","退休的 getArenaPositionDifficultyId 不應恢復");
+ if(typeof window.getBountyTierConfig==="function"||typeof window.getBountyTierConfigs==="function")fail("BOUNTY_LEGACY_TIER_CONFIG_API","退休的 Bounty Tier Config 舊 API 不應恢復");
   const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
  window.PROJECT_RUNTIME_REPORT=report;
  if(errors.length)console.error("[文明戰線] Runtime integrity error",errors);
