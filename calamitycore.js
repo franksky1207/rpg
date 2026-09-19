@@ -92,9 +92,12 @@
   const def=definition(id);if(!def||!combat)return null;
   ensureState();
   const calamityEntry=state?.calamities?.entries?.[def.id];if(!calamityEntry)return null;
-  let markSettlement=null;
+  let markSettlement=null,titleSettlement=null;
   if(combat.win){
    markSettlement=typeof window.settleFormalMarkKill==="function"?window.settleFormalMarkKill(def.markId):null;
+   if(markSettlement?.firstAcquisition===true&&typeof window.grantPlayerTitleForCalamityFirstKill==="function"){
+    titleSettlement=window.grantPlayerTitleForCalamityFirstKill(def.id);
+   }
    calamityEntry.currentHp=null;
   }else{
    const max=maxHp(id);
@@ -108,8 +111,7 @@
    win:combat.win===true,
    currentHp:combat.win?maxHp(id):calamityEntry.currentHp,
    maxHp:maxHp(id),
-   markSettlement
-  };
+   markSettlement,\n   titleSettlement\n  };
  }
  function battle(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
