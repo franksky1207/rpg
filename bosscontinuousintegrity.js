@@ -69,6 +69,7 @@
   if(!/battleGapMs\s*\(\s*r\.e\.kind\s*\)/.test(pipelineSource))fail("BOSS_PIPELINE_SHARED_GAP","主線 pipeline 應使用共用 battleGapMs，而不是各自維護場間常數",pipelineSource);
   const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
   if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
+  if(!/backgroundProgressUiYield\s*\(\s*["']main["']\s*\)/.test(pipelineSource))fail("BOSS_BACKGROUND_UI_YIELD_WIRING","主線連戰每場完成後應讓 background catch-up UI 至少 paint 一次",pipelineSource);
  }
 
  if(typeof window.requestContinuousBattleStop!=="function")fail("BOSS_CONTINUOUS_STOP_API","requestContinuousBattleStop 未載入");
@@ -101,8 +102,9 @@
 
  if(Number(window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION)!==2)fail("BOSS_BACKGROUND_SHARED_VERSION",`BACKGROUND_PROGRESS_MAIN_SHARED_VERSION 應為 2，實際 ${window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION}`);
  if(Number(window.BACKGROUND_PROGRESS_GM_GATE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_GATE_VERSION",`BACKGROUND_PROGRESS_GM_GATE_VERSION 應為 1，實際 ${window.BACKGROUND_PROGRESS_GM_GATE_VERSION}`);
- if(Number(window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION)!==2)fail("BOSS_BACKGROUND_VISIBILITY_OWNER",`BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION 應為 2，實際 ${window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION}`);
- if(Number(window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS)!==800)fail("BOSS_BACKGROUND_BLUR_FALLBACK","iOS Safari 背景判定應使用 800ms 延遲 blur fallback",{version:window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION,delay:window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS});
+ if(Number(window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION)!==3)fail("BOSS_BACKGROUND_VISIBILITY_OWNER",`BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION 應為 3，實際 ${window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION}`);
+ if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==1||typeof window.backgroundProgressUiYield!=="function")fail("BOSS_BACKGROUND_UI_YIELD","背景 catch-up 應提供逐場 UI yield",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION!=="undefined"||typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS!=="undefined")fail("BOSS_BACKGROUND_LEGACY_BLUR_FALLBACK","800ms blur fallback 應已退休");
  if(Number(window.GM_BACKGROUND_BATTLE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_CONTROL_VERSION",`GM_BACKGROUND_BATTLE_VERSION 應為 1，實際 ${window.GM_BACKGROUND_BATTLE_VERSION}`);
  if(typeof window.BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION!=="undefined")fail("BOSS_BACKGROUND_LEGACY_EXCLUSION","Boss 背景戰鬥舊排除 marker 應已退休");
  if(typeof window.gmBackgroundBattleEnabled!=="function"||typeof window.gmBackgroundBattleStorageKey!=="function")fail("BOSS_BACKGROUND_GM_CONTROL_API","GM 背景戰鬥裝置端設定 API 未載入");
