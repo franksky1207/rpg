@@ -76,7 +76,8 @@
  function stopReasonText(reason){return reason==="death"?"玩家死亡":reason==="daily-limit"?"今日懸賞次數已用完":reason==="manual"?"玩家手動停止":"挑戰結束";}
  function updateSummary(result){const s=bountyState.summary,r=result||{},items=Array.isArray(r.rewardItems)?r.rewardItems:[];s.runs++;if(r.win)s.wins++;s.totalExp+=Math.max(0,Math.floor(Number(r.rewardExp)||0));s.totalGold+=Math.max(0,Math.floor(Number(r.rewardGold)||0));s.convertedGold+=Math.max(0,Math.floor(Number(r.expResult?.convertedGold)||0));s.soldGold+=Math.max(0,Math.floor(Number(r.soldGold)||0));s.gearCount+=items.length;s.keptCount+=items.filter(x=>!x.sold).length;s.soldCount+=items.filter(x=>!!x.sold).length;}
  function prepareNextBounty(){const tier=rollTier();bountyState.tier=tier;bountyState.enemy=buildBountyEnemy(tier);bountyState.result=null;bountyState.phase="transition";}
- const sleep=ms=>bountyState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"bounty"):new Promise(r=>setTimeout(r,ms));\n function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("bounty");}
+ const sleep=ms=>bountyState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"bounty"):new Promise(r=>setTimeout(r,ms));
+ function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("bounty");}
  function stopBountyBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("bounty");}
  function healAfterRound(){if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;save(false);}
  function beginBountyRound(){
