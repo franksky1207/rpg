@@ -30,8 +30,8 @@
 - `CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`
 - `CIVILIZATION_CLOUD_SAVE_VERSION = 2`
 - `CALAMITY_STATE_VERSION = 1`
-- `CALAMITY_BALANCE_VERSION = 2`
-- `CALAMITY_FIXED_HP = 1,000,000`
+- `CALAMITY_BALANCE_VERSION = 3`
+- `CALAMITY_HP_PER_LEVEL = 500,000`
 - `MARK_STATE_VERSION = 1`
 - `MARK_CORE_VERSION = 1`
 - `MARK_COMBAT_RULE_VERSION = 1`
@@ -330,13 +330,13 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。名稱、區域、解鎖 map、印記配對全部由 `calamityconfig.js` 單一來源衍生。
 - 解鎖唯一來源：`state.bossKilled[region.mapEnd] === true`；不以玩家等級或 unlockedMap 判定。
 - 母體直接呼叫正式主線 `monsterObj(region.mapEnd, 4)`；不複製主線 Boss 公式。
-- 固定戰鬥數值：HP = **1,000,000**；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
-- `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。Balance V2 normalizer 會把舊存檔任何 `currentHp > 1,000,000` clamp 到 1,000,000；不重置印記、解鎖或其他進度。
+- 戰鬥數值：HP = **500,000 × 災厄等級（第1～10階）**，即 500,000／1,000,000／…／5,000,000；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
+- `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。Balance V3 normalizer 會依各災厄的正式最大 HP clamp 舊 `currentHp`；不重置印記、解鎖或其他進度。
 - `runCombatCore()` 新增向後相容 `options.enemyStartHp`：`e.hp` 維持真正最大 HP；既有模式不傳時行為不變。
 - 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。每場戰後回滿 HP 的唯一 owner 是 `calamitycore.js` settlement；Run 的 begin／finish 不再重複 restore。
 - 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
 - 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；UI 之後才播放 structured animation。`getCivilizationCalamityCurrentHp()` 與 `getCivilizationCalamityStatus()` 是 pure read，不得在 getter 內 normalize／修改 state。
-- `calamitycoreintegrity.js` 會檢查 10 隻定義直接對齊 unified config、區域 final Boss 母體、固定 1,000,000 HP、攻防倍率、10/10 暴擊閃避、無 traits、pure getter、Mark Core progression 委派與持久敵方 HP；31 殺曲線由 `markcoreintegrity.js` 負責。
+- `calamitycoreintegrity.js` 會檢查 10 隻定義直接對齊 unified config、區域 final Boss 母體、500,000 × 災厄等級 HP 曲線、攻防倍率、10/10 暴擊閃避、無 traits、pure getter、Mark Core progression 委派與持久敵方 HP；31 殺曲線由 `markcoreintegrity.js` 負責。
 
 ## 4.8 文明災厄單場／連續討伐 runtime
 
@@ -930,7 +930,7 @@ repo root 舊測試檔：
 - 文明災厄 GM：可任選 10 隻，不受正式解鎖限制；提供「單次挑戰模擬」與「完整擊殺模擬」。完整擊殺逐場呼叫正式 Combat Core、玩家每場滿血、Boss HP 跨場延續，不以平均傷害外推；100000 場只作瀏覽器安全上限，碰到時明確回報未完成。
 - 文明災厄 GM 不提供解鎖 toggle、HP setter、近死／瀕死、擊殺數等作弊控制；所有模擬皆為沙盒，不修改正式災厄 HP、印記或存檔。
 - `calamitygm.js` 使用 `registerGmHubSection()` extension API，沒有再疊新的 `gmHtml()` wrapper。
-- 舊 HP×500 平衡 smoke 已被 Balance V2 淘汰，不再作目前災厄擊殺場數依據；目前 10 隻災厄最大 HP 統一為 1,000,000。
+- 舊 HP×500 平衡 smoke 已被 Balance V2 淘汰，不再作目前災厄擊殺場數依據；目前 10 隻災厄最大 HP 改為 500,000 × 災厄等級（第1階 500,000；第10階 5,000,000）。
 - 副本相關管理／測試。
 - 鏡像：重置今日、20 場測試、100 次統計、對稱回歸。
 - 劇情 GM V3：10 區／101 stories 純預覽、前後導航、integrity 明細與重跑。
@@ -1052,7 +1052,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 Combat／Background Cleanup 第4批：完成低優先與防回歸收尾。Background Progress 正式定義為 single-active-flow policy（`BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION=1`），同時間只允許 main／void／calamity 其中一個 active flow；新 flow 依既有語意取代舊 flow，並提供 `backgroundProgressActiveKind()`。前景 catch-up UI yield 升為 V2，優先使用 `requestAnimationFrame()` 等待下一個 paint boundary，並保留 80ms timer fallback，避免 Safari 剛切背景時 rAF 暫停造成流程卡死。戰鬥外場間等待集中至 `combatpacing.js` 的 `COMBAT_OUTER_PACING_VERSION=1`／`combatOuterGapMs()`：主線 normal 140ms、elite 220ms、boss 140ms；虛空樓層 350ms；文明災厄場間 350ms。虛空與災厄 UI 改直接讀共用 owner；舊 `CALAMITY_CONTINUOUS_GAP_MS` 第二數字 owner 已退休。虛空舊未使用 `pulse()`／250ms cleanup timer 亦移除。Boss Continuous Integrity 的舊 GAME_GUIDE_VERSION V10 檢查已修正為正式 V14。相關 Void／Calamity／Boss／Runtime／Final Integrity 均同步更新。Structured Combat Pacing V2 70/35/24/90、GM background gate、offline sample V2、Save Schema 13 均不變。
 
-- 2026-09-19 Background Fast Catch-up V1：依實際體感恢復早期「逐場數字高速追趕」效果，同時保留防卡死保護。\`backgroundProgressUiYield()\` 升為 V3；catch-up credit 存在時，每一場／層仍先以 \`setTimeout(0)\` 輕量讓出 event loop，使場次能 21→22→23…快速連續逼近；每 8 次 yield 強制一次 \`requestAnimationFrame\` paint boundary，並沿用 80ms timer fallback，避免 iPhone Safari 長時間只跑 JS 或 rAF 暫停造成畫面卡死。新增 \`BACKGROUND_PROGRESS_FAST_CATCH_UP_VERSION=1\` 與 \`BACKGROUND_PROGRESS_FAST_YIELDS_PER_PAINT=8\`，main／void／calamity 共用同一 owner。背景 credit 0.96、12h cap、戰鬥數值、獎勵、Save Schema 均不變。\n\nSave Schema 現為 13；後續仍不得在無關任務中擅自升版。
+- 2026-09-19 Background Fast Catch-up V1：依實際體感恢復早期「逐場數字高速追趕」效果，同時保留防卡死保護。\`backgroundProgressUiYield()\` 升為 V3；catch-up credit 存在時，每一場／層仍先以 \`setTimeout(0)\` 輕量讓出 event loop，使場次能 21→22→23…快速連續逼近；每 8 次 yield 強制一次 \`requestAnimationFrame\` paint boundary，並沿用 80ms timer fallback，避免 iPhone Safari 長時間只跑 JS 或 rAF 暫停造成畫面卡死。新增 \`BACKGROUND_PROGRESS_FAST_CATCH_UP_VERSION=1\` 與 \`BACKGROUND_PROGRESS_FAST_YIELDS_PER_PAINT=8\`，main／void／calamity 共用同一 owner。背景 credit 0.96、12h cap、戰鬥數值、獎勵、Save Schema 均不變。\n\n- 2026-09-19 文明災厄 HP Balance V3：依 GM 實測不同階災厄總討伐回合過於接近，將原本 10 隻統一 1,000,000 HP 改為 `500,000 × 災厄等級`（第1～10階依序 500,000 至 5,000,000）。`calamitystate.js` 成為 HP 曲線 owner，正式常數為 `CALAMITY_HP_PER_LEVEL=500000`，並提供 `getCivilizationCalamityConfiguredMaxHp(id)`；舊 `CALAMITY_FIXED_HP` 正式退休。Balance 升為 V3，舊 `currentHp` 只依各階新上限 clamp，不重置印記、解鎖或其他進度。ATK×1.10、DEF×1.05、暴擊10%、閃避10%、獎勵與連續討伐規則均不變。Save Schema 維持 13。\n\nSave Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
 
