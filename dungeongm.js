@@ -108,7 +108,7 @@
   if(mapSelect)mapSelect.value=String(mapTestMap);if(enemySelect)enemySelect.value=String(mapTestEnemy);setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
  };
 
- window.gmSimulateBounty100=function(tierId){
+ window.gmSimulateBounty=function(tierId){
   const tier=getBountyTierConfig(tierId);if(!tier)return alert("找不到懸賞資料。");
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){const enemy=buildBountyEnemyForTest(tierId,base,state.level),r=simulateFight(player,enemy);summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}}
@@ -116,7 +116,7 @@
   showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
- window.gmSimulateArena100=function(difficultyId){
+ window.gmSimulateArena=function(difficultyId){
   const cfg=(typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs():[]).find(x=>x.id===difficultyId);if(!cfg)return alert("找不到競技場資料。");
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),reached=[GM_TEST_RUNS,0,0],wins=[0,0,0],vip=testVip();
   let totalBasePoints=0,totalVipPoints=0,clearHpTotal=0,totalTurns=0;
