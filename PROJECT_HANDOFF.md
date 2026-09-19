@@ -35,10 +35,13 @@
 - `MARK_STATE_VERSION = 1`
 - `MARK_CORE_VERSION = 1`
 - `MARK_COMBAT_RULE_VERSION = 1`
+- `MARK_PROGRESSION_OWNER_VERSION = 1`
+- `MARK_DESCRIPTION_OWNER_VERSION = 1`
+- `CIVILIZATION_CALAMITY_CONFIG_VERSION = 1`
 
 正式存檔策略：**每台裝置平常使用自己的本機存檔；Supabase 雲端只做玩家主動上傳／下載的跨裝置搬移，不做自動同步，也不在登入時自動覆蓋本機。**
 
-2026-09-19 文明災厄大更新第 1～11 批已全部完成：Schema 13、Mark Core、共用 Combat Core 印記、戰鬥浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、文明災厄單場／連續討伐 runtime V1、完整玩家 UI／極簡模式／解鎖提示、GM 整合、戰線紀錄背景、遊戲說明 V14、Final Integrity V1 與最終數值回歸均已建立。
+2026-09-19 文明災厄／印記／Combat Presentation 已完成正式建立與後續 5 批大整理：Schema 13、Unified Calamity Config、Mark Core progression／description owner、共用 Combat Core 印記、全模式 structured presentation／護盾／浮字、鏡像印記、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1（Continuous Rule V3）、Calamity UI V3／Minimal V1／Battle View V1、GM 整合、遊戲說明 V14、Runtime Integrity 與 Final Integrity V2 均已建立。
 
 `backgroundprogress.js` 的 background 是瀏覽器分頁隱藏／失焦後的主線或副本時間補償；正式圖片背景預載是 `backgroundpreload.js`，兩者不可混淆。
 
@@ -283,9 +286,9 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 
 `enhancementrewards.js` 是掉石／出售石頭正式 owner；離線理論量必須呼叫它的 expected API，不手寫第二套 elite EV。
 
-## 4.6 十枚文明印記核心（第 2 批已建立規則 owner）
+## 4.6 十枚文明印記核心（目前正式 owner）
 
-`markcore.js` 是印記規則唯一 owner；第 3 批起已由 `combatcore.js` 的共用 `runCombatCore()` 正式套用至主線、特殊怪、懸賞、競技場與虛空。鏡像仍由獨立 `mirrorcombatcore.js` 管理，留待第 5 批。
+`calamityconfig.js` 是「區域 → 文明災厄 → 印記」唯一配對 owner；`markcore.js` 是印記 progression／效果公式／說明文字 owner。`combatcore.js` 的共用 `runCombatCore()` 正式套用至主線、特殊怪、懸賞、競技場、虛空與文明災厄；鏡像由獨立 `mirrorcombatcore.js` 對稱實作並與同一 Mark Core 規則版本對齊。
 
 - `MARK_CORE_VERSION = 1`
 - `MARK_COMBAT_RULE_VERSION = 1`
@@ -303,14 +306,14 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 反噬：玩家實際失血且存活後 1.5%×Lv 機率反射實際 HP 損失 30%。
 - 無視：每次玩家攻擊事件 0.5%×Lv 機率令該擊敵 DEF=0。
 - `markFormalSnapshot()` 保留 acquired／level／progress；GM test 以 `gmTestMarkLevels` 保存本次工作階段 Lv.0～10，不寫正式 save。
-- 專屬回歸：`markcoreintegrity.js`；檢查 10 枚順序、名稱、解鎖等級、升級需求、累積擊殺與 Lv.10 效果公式。
+- 專屬回歸：`markcoreintegrity.js`；檢查 10 枚順序、升級需求、31 殺曲線、pure progress snapshot、Lv.10 效果公式與 `markEffectDescription()` 正式文字。名稱／區域／解鎖配對直接依 `CIVILIZATION_CALAMITY_CONFIG`，不再維護第二套 `MARK_DEFS` 公開資料。
 - `COMBAT_MARK_INTEGRATION_VERSION = 1`；共用戰鬥核心正式順序為：玩家攻擊先套壓制→無視／穿透→戰意 ATK→先制→復仇／一般暴擊→連擊／反擊倍率→汲取；敵人攻擊依閃避→鎮心→韌性→吸收→護界→HP→不屈→復仇 ready→反噬→專精反擊。
 - 護界／不屈／戰意在每次 `runCombatCore()` 開始時獨立重骰；競技場每一戰、虛空每一層都會重新建立該場 battle-local 狀態。
 - structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件。第 4 批已由 `combatfx.js` 統一消費並在戰鬥兩方框內顯示。
 - GM 既有 `useTestSpecializations:true` 模擬會同步採用 session-only `gmTestMarkLevels`；亦可用 `options.markLevels` 明確傳入測試快照，不修改正式存檔。
 - `combatmarkintegrity.js` 以固定 RNG 驗證 Lv.0 基準不漂移、10 枚印記核心互動、吸收／反噬／反擊順序與護界／吸收對復仇的邊界規則。
-- `COMBAT_MARK_FX_VERSION = 1`；`COMBAT_PRESENTATION_VERSION = 2`。`combatfx.js` 為共用戰鬥呈現 owner；V2 新增正式 prepare／clear lifecycle、combat-screen 綁定與 player shield state，防止上一場 presentation 污染下一場戰鬥。
-- 第 4 批浮字：護界／鎮心／不屈／韌性／吸收／復仇顯示在玩家框；壓制／反噬／無視顯示在敵方框；戰意顯示在玩家框。戰意層數會顯示 `戰意 ×N`，吸收可顯示回復 HP，反噬顯示實際反傷。
+- `COMBAT_MARK_FX_VERSION = 1`；`COMBAT_PRESENTATION_VERSION = 2`；`COMBAT_PRESENTATION_UNIFIED_VERSION = 1`；`COMBAT_STRUCTURED_PRESENTATION_VERSION = 1`；`MIRROR_STRUCTURED_PRESENTATION_VERSION = 1`；`CALAMITY_STRUCTURED_PRESENTATION_VERSION = 1`。`combatfx.js` 是共用戰鬥呈現 owner；正式 prepare／clear lifecycle、combat-screen 綁定、雙方 HP／shield snapshot 與 structured event animator 已取代舊 log-based HP/pulse 路徑。
+- 印記浮字：護界／鎮心／不屈／韌性／吸收／復仇／戰意顯示在玩家框；壓制／反噬／無視顯示在敵方框。戰意層數顯示 `戰意 ×N`，吸收顯示回復 HP，反噬顯示實際反傷。護界使用白色 shield bar 覆蓋原 HP 條；shield 先扣完才扣 HP。
 - 五個正式動畫 loop 都補上吸收成功 pulse，但吸收不觸發受擊震動；護盾、吸收、反噬造成的畫面 HP 差異由 `combatfx.js` 依 structured event 校正。
 - 模式接線版本：`MAIN_COMBAT_MARK_PRESENTATION_VERSION = 1`、`SPECIAL_COMBAT_MARK_PRESENTATION_VERSION = 1`、`BOUNTY_COMBAT_MARK_PRESENTATION_VERSION = 1`、`ARENA_COMBAT_MARK_PRESENTATION_VERSION = 1`、`VOID_COMBAT_MARK_PRESENTATION_VERSION = 1`。
 - `combatfxintegrity.js` 檢查 10 枚印記浮字 target／文字、五模式接線版本與共用 presentation API。
@@ -318,63 +321,66 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 
 
 
-## 4.7 文明災厄 Core（第 7 批）
+## 4.7 文明災厄 Core（目前正式架構）
 
 - `CALAMITY_CORE_VERSION = 1`
 - `CALAMITY_COMBAT_RULE_VERSION = 2`
 - `COMBAT_PERSISTENT_ENEMY_HP_VERSION = 1`
-- 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。
+- `CALAMITY_HP_RESTORE_OWNER_VERSION = 1`
+- 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。名稱、區域、解鎖 map、印記配對全部由 `calamityconfig.js` 單一來源衍生。
 - 解鎖唯一來源：`state.bossKilled[region.mapEnd] === true`；不以玩家等級或 unlockedMap 判定。
 - 母體直接呼叫正式主線 `monsterObj(region.mapEnd, 4)`；不複製主線 Boss 公式。
 - 固定戰鬥數值：HP = **1,000,000**；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
 - `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。Balance V2 normalizer 會把舊存檔任何 `currentHp > 1,000,000` clamp 到 1,000,000；不重置印記、解鎖或其他進度。
 - `runCombatCore()` 新增向後相容 `options.enemyStartHp`：`e.hp` 維持真正最大 HP；既有模式不傳時行為不變。
-- 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。
+- 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。每場戰後回滿 HP 的唯一 owner 是 `calamitycore.js` settlement；Run 的 begin／finish 不再重複 restore。
 - 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
-- 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；可供後續 UI 在存檔完成後才播放長動畫。
-- `calamitycoreintegrity.js` 會檢查 10 隻定義、區域 final Boss 母體、固定 1,000,000 HP、攻防倍率、10/10 暴擊閃避、無 traits、31 殺印記曲線與持久敵方 HP 版本。
+- 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；UI 之後才播放 structured animation。`getCivilizationCalamityCurrentHp()` 與 `getCivilizationCalamityStatus()` 是 pure read，不得在 getter 內 normalize／修改 state。
+- `calamitycoreintegrity.js` 會檢查 10 隻定義直接對齊 unified config、區域 final Boss 母體、固定 1,000,000 HP、攻防倍率、10/10 暴擊閃避、無 traits、pure getter、Mark Core progression 委派與持久敵方 HP；31 殺曲線由 `markcoreintegrity.js` 負責。
 
-## 4.8 文明災厄單場／連續討伐 runtime（第 8 批）
+## 4.8 文明災厄單場／連續討伐 runtime
 
 - `CALAMITY_RUN_VERSION = 1`
-- `CALAMITY_CONTINUOUS_RULE_VERSION = 2`
-- `CALAMITY_CONTINUOUS_GAP_MS = 350`；供第 9 批 UI 對齊目前虛空幻境每場動畫後的 350ms 場間節奏。
+- `CALAMITY_CONTINUOUS_RULE_VERSION = 3`
+- `CALAMITY_CONTINUOUS_GAP_MS = 350` 由 `calamityui.js` 擁有，屬 presentation pacing；`calamityrun.js` 不再擁有 UI 節奏常數。
 - `calamityrun.js` 是文明災厄單場／連續討伐唯一 runtime owner；不共用主線「敗北即停止」的連戰 pipeline。
 - 單場：`runCivilizationCalamitySingle(id)` 只完成 1 場後結束 runtime。
-- 連續：`runCivilizationCalamityContinuous(id, callbacks)`；玩家勝敗都算完成一場，死亡不結束 run，下一場仍由 Calamity Core 滿血開始。
+- 連續：正式 signature 固定為 `runCivilizationCalamityContinuous(id, options)`；舊 object-first 雙 signature 已退休。玩家勝敗都算完成一場，死亡不結束 run，下一場仍由 Calamity Core 滿血開始。
 - 災厄死亡後 Core 已完成印記結算並把 `currentHp=null`，所以下一場自動進入同一災厄的下一個完整滿血擊殺週期。
 - 手動停止：`requestCivilizationCalamityContinuousStop()`。如果已完成本場、正在 UI callback／動畫階段，立即將 runtime 標成 stopped，且不再啟動下一場；如果將來在 fighting phase 收到停止要求，則本場結算後停止。
 - 每一場正式 HP／印記先由第 7 批 Core 原子保存，再交給 `onBattleComplete`；動畫途中關頁不會回滾已完成那一場。
-- runtime 只存在 JS 記憶體，不寫入 save；重新整理／真正關閉頁面後不恢復連戰。Calamity Continuous Rule V2：GM「背景戰鬥」關閉時，`pagehide` 會把 active run 標成 ended；GM 開啟時則保留 active run，並由 `backgroundProgress("calamity")` 套用與主線相同的背景時間 credit／continuous 12 小時上限，Safari BFCache／切背景後回前景可追趕進度。
-- 每場之間至少 yield 一次瀏覽器 event loop；不建立 background catch-up／離線推進，因此網頁關閉後不會繼續計算災厄 HP。
+- runtime 只存在 JS 記憶體，不寫入 save；重新整理／真正關閉頁面後不恢復連戰。Continuous Rule V3：GM「背景戰鬥」關閉時，`pagehide` 會終止 active run；GM 開啟時保留 active run，並由 `backgroundProgress("calamity")` 套用既有背景時間 credit／continuous 上限。
+- Run 每場之間至少 yield 一次瀏覽器 event loop；UI 的 350ms 場間等待不屬 Run。真正關閉網頁後不會有獨立離線災厄推進 owner。
 - Snapshot 提供：目前災厄、battleCount、wins／losses／kills、totalTurns／averageTurns、stopRequested、災厄目前／最大 HP、玩家目前／最大 HP、印記狀態與上一場摘要，供第 9 批一般戰鬥畫面與極簡模式共用。
-- `calamityrunintegrity.js` 檢查 runtime API、Calamity Continuous Rule V2、350ms UI 場間基準、GM 背景戰鬥 gate、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
+- `calamityrunintegrity.js` 檢查 runtime API、Continuous Rule V3、Calamity Core 單一 HP restore owner、GM 背景戰鬥 gate、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。350ms 節奏改由 `calamityuiintegrity.js` 驗證。
 
-## 4.10 2026-09-19 全戰鬥呈現統一修正（新 4 批計畫）
+## 4.10 2026-09-19 全戰鬥呈現統一修正（已完成）
 
-- 第 1 批：**已完成**。文明災厄 Balance V2 固定 HP 1,000,000；舊 currentHp 超過 1,000,000 自動 clamp；Combat Presentation V2 正式加入 prepare／clear lifecycle、combat-screen 綁定與 player shield state；災厄每場結束／返回列表都明確 clear，避免上一場災厄 presentation 污染下一場主線 HP DOM。
-- 第 2 批：待做。主線＋特殊怪＋懸賞改成完整 structured presentation，恢復專精／印記浮字並加入護界銀白色覆蓋條。
-- 第 3 批：待做。競技場＋虛空＋鏡像接同一套 structured presentation／護盾視覺。
-- 第 4 批：待做。全模式統一回歸、移除剩餘 log-based HP owner、強化 Integrity 與跨模式污染測試。
+- 第 1 批：災厄固定 HP 1,000,000、Combat Presentation V2 lifecycle、shield state 與跨戰鬥 clear。
+- 第 2 批：主線＋特殊怪＋懸賞全面改為 structured presentation；恢復專精／印記浮字；護界使用白色 shield overlay。
+- 第 3 批：競技場＋虛空改用 structured presentation；鏡像以 `prepareMirrorCombatPresentation()`／`animateMirrorStructuredCombatPresentation()` 對稱接入。
+- 第 4 批：災厄也改用 unified structured presentation；正式退休舊 log pulse presentation API 與主線舊 HP writer；Runtime／Combat FX／Final Integrity 鎖定全模式 lifecycle。
+- 正式戰鬥呈現模式目前涵蓋：主線、特殊怪、懸賞、競技場、虛空、鏡像、文明災厄。
 
-## 4.9 文明災厄玩家 UI／極簡模式（第 9 批）
+## 4.9 文明災厄玩家 UI／極簡模式
 
 - `CALAMITY_UI_VERSION = 3`
 - `CALAMITY_MINIMAL_MODE_VERSION = 1`
+- `CALAMITY_BATTLE_VIEW_VERSION = 1`
 - 首頁正式新增「文明災厄」，順序固定在「副本」後、「遊戲說明」前；手機 2 欄因此自然形成第 4 排「副本／文明災厄」。
 - 災厄頁只 render `isCivilizationCalamityUnlocked(id) === true` 的項目；尚未解鎖的災厄名稱與對應印記名稱**完全不出現在 HTML**，不是灰掉／鎖住。
 - 已解鎖但尚未首殺時，對應印記顯示「未取得」；首殺後顯示 Lv.0，之後顯示目前 Lv／升級進度，Lv.10 顯示 MAX。
-- 印記卡 V2 會直接顯示能力：未取得時預覽 Lv.1 效果；Lv.0 明示尚未生效並顯示 Lv.1；Lv.1～Lv.9 顯示「目前效果＋下一級效果」；Lv.10 顯示目前效果＋MAX。所有數值皆即時讀 `markEffectSnapshot()`，UI 不複製印記公式。
+- 印記卡直接顯示能力：未取得時預覽 Lv.1；Lv.0 明示尚未生效並顯示 Lv.1；Lv.1～Lv.9 顯示目前效果＋下一級；Lv.10 顯示目前效果＋MAX。文字與數值由 `markEffectDescription()`／Mark Core 產生，UI 不維護第二套印記規則或文案公式。
 - 每隻災厄提供「單場挑戰／連續討伐」；連續戰鬥畫面才顯示「停止連續討伐」與「極簡模式」。
 - 正常戰鬥使用正式 `combatPlayerCard / combatEnemyCard / combat-damage` DOM contract，因此共用第 4 批 `combatfx.js` 的印記 structured FX。
-- Calamity UI V3：災厄戰鬥 HP 動畫不再用文字 log 數字自行相減；每個攻擊／閃避 pulse 由 `consumeCombatPresentationPulseManual()` 消耗 Combat Core structured event，以 `actualDamage`、吸收、汲取、護界、反噬等正式事件更新 presentation HP，再同步一般畫面與極簡模式。DOM `animationstart` 對手動 pulse 會跳過二次消耗，避免長戰鬥血條漂移或最後突然歸零。
+- Calamity UI V3：災厄戰鬥 HP／浮字完全由 `prepareCombatPresentation()`＋`animateStructuredCombatPresentation()` 消耗 Combat Core structured events；舊 `consumeCombatPresentationPulseManual()` 已退休。一般戰鬥畫面與極簡模式共用單一 `battleView` snapshot，不再維護四個獨立 HP display 欄位。
 - 戰鬥 UI 精簡：所有正式戰鬥共用的 `.combat-message` 文字訊息列已由 `battleflow.css` 隱藏；玩家只看雙方框、HP、傷害／閃避跳字、專精／印記浮字。Combat Core／各模式內部 logs 保留供動畫、除錯與 Integrity，不作玩家可見資訊。
 - UI 每場先以 `enemyStartHp / playerStartHp` 預填，再播放動畫，避免 Core 已結算後畫面短暫閃成戰後 HP。連戰標題與極簡模式使用 callback 的 `battleNumber`，不把已完成 `battleCount` 誤當下一場。
-- 災厄戰鬥動畫節奏直接對齊虛空：log delay 45／24／14ms、起手 100ms、結尾 250ms、連戰場間 350ms。
+- 災厄 structured animation 依 eventCount 動態使用 48／32／20／12ms step delay，opening 90ms、impact 45ms、end 150ms；連戰場間固定 350ms，該常數由 UI owner 管理。
 - 極簡模式直接註冊到共用 `mainminimalmode.js` adapter；共用相同 overlay／時鐘／滑動退出配置。內容只顯示：目前敵人、連續戰鬥第 N 場、災厄 HP／最大 HP、玩家 HP／最大 HP；不顯示 EXP／金幣。
 - 選擇／印記頁使用既有 `assets/backgrounds/calamity/`；災厄戰鬥直接共用虛空戰鬥 `assets/backgrounds/dungeon-void-battle/`；災厄結算直接共用虛空結算 `assets/backgrounds/dungeon-void/`，桌機與手機皆同規則；不複製背景檔，`backgroundpreload.js` 不需改。
 - 區域最後 Boss 首殺流程：戰鬥結算 → pending 正式劇情 → 劇情第一次真正完成 → 顯示「文明災厄已解鎖／災厄名稱／可前往文明災厄挑戰」。提示不新增 save 欄位；利用 story `firstCompletion` 與正式 `bossKilled[region.mapEnd]` 判定。戰線紀錄重播不呼叫 `completeStory()`，因此不重複提示。
-- `calamityuiintegrity.js` 檢查首頁順序、UI API、V3 版本、可見 IDs、已解鎖災厄／印記同時顯示，以及尚未解鎖名稱完全不洩漏到 renderer。
+- `calamityuiintegrity.js` 檢查首頁順序、UI API、V3／Battle View V1／Minimal V1、350ms UI pacing、structured presentation、可見 IDs、已解鎖災厄／印記同時顯示，以及尚未解鎖名稱完全不洩漏到 renderer。
 
 
 ---
@@ -1005,7 +1011,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 101 篇正式故事尚未全部由使用者逐篇在 iPhone Safari 實機閱讀驗證；不可把 CI PASS 說成全篇真機驗收。
 - 真機若看到 stale JS/CSS，先檢查 `index.html` cache-bust 與 Safari cache，再判斷邏輯問題。
 - 2026-09-19 災厄大整理第 1 批：`getCivilizationCalamityCurrentHp()`／`getCivilizationCalamityStatus()` 已改為 pure read，不再在 getter 內 normalize／修改 state；寫入前正規化仍由 battle／settlement 明確入口負責。`calamitystate.js` 已移除未使用的 balanceVersion 暫存變數與重複 `CALAMITY_FIXED_HP` export；Calamity Core Integrity 新增 getter purity 回歸。Save Schema、戰鬥平衡、UI 與印記效果皆未變更。
-- 2026-09-19 災厄大整理第 2 批：新增 `calamityconfig.js` 作為唯一「區域→文明災厄→印記」配對 owner，`calamitystate.js`、`markcore.js`、`calamitycore.js` 均改由此設定衍生；Mark progression（pure snapshot、31 殺升級曲線、正式擊殺 settlement）正式收回 `markcore.js`，Calamity Core 僅委派擊殺 settlement；災厄正式 Boss 母體與敵人 template 改為 module cache 後回傳 copy，避免重複建構。Integrity 已分層鎖定 config 與 progression owner。舊 Calamity 命名相容 alias 暫留在 Mark Core，列入後續最終 dead API 清理候選。Save Schema、平衡數值、UI 與印記效果皆未變更。
+- 2026-09-19 災厄大整理第 2 批：新增 `calamityconfig.js` 作為唯一「區域→文明災厄→印記」配對 owner，`calamitystate.js`、`markcore.js`、`calamitycore.js` 均改由此設定衍生；Mark progression（pure snapshot、31 殺升級曲線、正式擊殺 settlement）正式收回 `markcore.js`，Calamity Core 僅委派擊殺 settlement；災厄正式 Boss 母體與敵人 template 改為 module cache 後回傳 copy。當時暫留的舊 Calamity 命名相容 alias 已於第 5 批正式退休。Save Schema、平衡數值、UI 與印記效果皆未變更。
 - 2026-09-19 災厄大整理第 3 批：每場戰後回滿 HP 的唯一 owner 固定為 `calamitycore.js` settlement（`CALAMITY_HP_RESTORE_OWNER_VERSION=1`），`calamityrun.js` 的 begin／finish 不再重複 restore；連續討伐 API 收斂為 `runCivilizationCalamityContinuous(id, options)` 單一 signature，`CALAMITY_CONTINUOUS_RULE_VERSION` 升為 3；350ms 場間等待改由 `calamityui.js` presentation pacing owner 提供。同步移除 Calamity UI Integrity 對已退休 log-pulse API 的舊要求，改鎖 structured presentation。Save Schema、平衡數值、戰鬥結果與玩家操作流程不變。
 - 2026-09-19 災厄大整理第 4 批：印記效果說明正式收回 `markcore.js`（`MARK_DESCRIPTION_OWNER_VERSION=1`／`markEffectDescription()`），`calamityui.js` 不再複製 10 枚印記文字規則；災厄戰鬥 UI 的 4 個獨立 HP 顯示欄位收斂為單一 `battleView` snapshot（`CALAMITY_BATTLE_VIEW_VERSION=1`），一般戰鬥畫面與極簡模式共用；`calamitygm.js` 印記清單改直接使用 unified calamity config（`GM_MARK_CONFIG_OWNER_VERSION=1`），不再自行由 MARK_KEYS/MARK_DEFS 重建配對。Integrity／Runtime／Final 已同步鎖定。Save Schema、平衡數值、印記效果與戰鬥流程不變。
 - 2026-09-19 災厄大整理第 5 批：完成 dead API／Integrity／版本收尾。正式退休 `normalizeCivilizationMarkProgressForCore`、`advanceCivilizationCalamityMarkEntry`、`settleCivilizationCalamityMarkKill`、`markAcquired`、`markProgress`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`；Runtime Integrity 反向鎖定這些舊 API 不得回來。Mark／Calamity Core Integrity 改直接依 unified config 驗證，不再維護第二套名稱／配對陣列；`prepareCivilizationCalamityEntry()` 的重複 presentation clear 已移除。五支災厄分層 Integrity 保留，因各自仍對應 State／Core／Run／UI／GM 的獨立責任。版本常數經檢查後保留現有 state／balance／rule／owner 邊界，未為清理而無意義升版。Save Schema 仍為 13，玩法與數值不變。
