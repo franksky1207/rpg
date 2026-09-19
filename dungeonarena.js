@@ -100,9 +100,8 @@
  let arenaState=createArenaState();
 
  function clampLevel(v){return clampGameLevel(v);}
- function rateFromPlayer(value,scale,add,cap,maxCap){return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));}
  function traitCount(mode){const p=ARENA_TRAIT_COUNT_PROFILES[mode]||ARENA_TRAIT_COUNT_PROFILES.one,roll=Math.random();if(roll<p.zero)return 0;if(roll<p.zero+p.one)return 1;return 2;}
- function rollArenaTraits(mode){const pool=MONSTER_TRAIT_IDS.slice(),count=traitCount(mode),out=[];for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return out;}
+ function rollArenaTraits(mode){return rollUniqueMonsterTraits(traitCount(mode));}
  function arenaTraitNames(enemy){if(!enemy?.traits?.length)return "無";return enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
  function positionClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
  function stopReasonText(reason){return reason==="death"?"玩家死亡":reason==="daily-limit"?"今日競技場次數已用完":reason==="manual"?"玩家手動停止":"挑戰結束";}
@@ -110,7 +109,7 @@
 
  function buildArenaEnemy(positionId,stageIndex,stats=null,level=null,options={}){
   const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=arenaEnemyProfile(options.rank??currentArenaRank(),positionId,stageIndex),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(profile.traitMode);
-  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaDifficulty:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:rateFromPlayer(p.crit,profile.critScale,profile.critAdd,profile.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,profile.dodgeScale,profile.dodgeAdd,profile.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
  window.ARENA_BALANCE_VERSION=6;
@@ -123,9 +122,9 @@
  window.ARENA_POSITION_API_VERSION=1;
  window.ARENA_ENEMY_PROFILE_VERSION=1;
  window.ARENA_PRESENTATION_PACING_SOURCE_VERSION=1;
+ window.getArenaBalanceVersions=function(){return {balanceVersion:ARENA_BALANCE_VERSION,rankBalanceVersion:ARENA_RANK_BALANCE_VERSION,positionApiVersion:window.ARENA_POSITION_API_VERSION,enemyProfileVersion:window.ARENA_ENEMY_PROFILE_VERSION,pacingSourceVersion:window.ARENA_PRESENTATION_PACING_SOURCE_VERSION};};
  window.getArenaPositionConfigs=function(rank=null){return arenaPositionConfigs(rank==null?currentArenaRank():rank);};
  window.getArenaEnemyProfile=function(rank,positionId,stageIndex){return arenaEnemyProfile(rank,positionId,stageIndex);};
- window.getArenaDifficultyConfigs=window.getArenaPositionConfigs;
  window.buildArenaEnemyForTest=function(positionId,stageIndex,stats=null,level=null,rank=null){return positionById(positionId,rank==null?currentArenaRank():rank)?buildArenaEnemy(positionId,stageIndex,stats,level,{rank:rank==null?currentArenaRank():rank}):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
  window.getArenaCurrentRank=currentArenaRank;
