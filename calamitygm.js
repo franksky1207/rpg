@@ -1,18 +1,18 @@
 (function(){
  const GM_CALAMITY_TEST_VERSION=1;
  const GM_MARK_MANAGEMENT_VERSION=1;
+ const GM_MARK_CONFIG_OWNER_VERSION=1;
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
  let busy=false;
 
- function keys(){return Array.from(window.MARK_KEYS||[]);}
- function defs(){return window.MARK_DEFS||{};}
+ function markRows(){return Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);}
+ function keys(){return markRows().map(row=>row.markId);}
  function calamities(){return typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];}
  function clampMark(value){return typeof window.markClampLevel==="function"?window.markClampLevel(value):Math.max(0,Math.min(10,Math.floor(Number(value)||0)));}
  function formalMarks(){return typeof window.markFormalSnapshot==="function"?window.markFormalSnapshot():{};}
  function testMarks(){return typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):Object.fromEntries(keys().map(key=>[key,0]));}
- function markName(key){return String(defs()?.[key]?.name||key);}
  function markOptions(value){
   const n=clampMark(value);
   return Array.from({length:11},(_,i)=>`<option value="${i}" ${i===n?"selected":""}>Lv.${i}</option>`).join("");
@@ -25,15 +25,15 @@
  }
  function testGrid(){
   const levels=testMarks();
-  return `<div class="gm-specialization-grid gm-mark-grid">${keys().map(key=>`<label><span>${markName(key)}</span><select class="btn" id="gmMark-test-${key}" onchange="gmSetTestMarkLevelUi('${key}',this.value)">${markOptions(levels[key])}</select></label>`).join("")}</div>`;
+  return `<div class="gm-specialization-grid gm-mark-grid">${keys().map(key=>`<label><span>${String(markRows().find(row=>row.markId===key)?.markName||key)}</span><select class="btn" id="gmMark-test-${key}" onchange="gmSetTestMarkLevelUi('${key}',this.value)">${markOptions(levels[key])}</select></label>`).join("")}</div>`;
  }
  function manageGrid(){
   const formal=formalMarks();
-  return `<div class="gm-specialization-grid gm-mark-grid">${keys().map(key=>`<label><span>${markName(key)}</span><select class="btn" id="gmMark-manage-${key}">${formalOptions(formal[key])}</select></label>`).join("")}</div>`;
+  return `<div class="gm-specialization-grid gm-mark-grid">${keys().map(key=>`<label><span>${String(markRows().find(row=>row.markId===key)?.markName||key)}</span><select class="btn" id="gmMark-manage-${key}">${formalOptions(formal[key])}</select></label>`).join("")}</div>`;
  }
  window.gmTestMarkLabel=function(){
   const levels=testMarks();
-  return `印記｜${keys().map(key=>`${String(defs()?.[key]?.name||key).replace("印記","")} Lv.${levels[key]||0}`).join("｜")}`;
+  return `印記｜${markRows().map(row=>`${String(row.markName||row.markId).replace("印記","")} Lv.${levels[row.markId]||0}`).join("｜")}`;
  };
  window.refreshGmMarkTestControls=function(){
   const levels=testMarks();
@@ -146,6 +146,7 @@
  window.runGmCalamityFullKillSimulation=simulateFullKill;
  window.GM_CALAMITY_TEST_VERSION=GM_CALAMITY_TEST_VERSION;
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
+ window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
 
  if(typeof window.registerGmHubSection==="function"){
