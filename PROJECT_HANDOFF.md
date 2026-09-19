@@ -1024,6 +1024,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 競技場／懸賞整理第 1 批：純舊碼與舊命名清理，不改任何平衡數值。正式刪除 `dungeonarena.js`、`dungeonbounty.js` 中已由 Unified Structured Combat Presentation 取代且無呼叫的 `setHpUi()`／`pulse()`；GM 模擬 API 由綁死歷史名稱的 `gmSimulateArena100()`／`gmSimulateBounty100()` 改為 `gmSimulateArena()`／`gmSimulateBounty()`，實際模擬次數仍由 `GM_TEST_RUNS` 決定，`gmhub.js` 呼叫同步更新。Save Schema、Arena/Bounty 平衡公式、獎勵與玩家流程皆未變更。
 
+- 2026-09-19 競技場／懸賞整理第 2 批：只整理競技場架構與語意，不改任何平衡值。Arena 正式 runtime／GM／player flow 改以 `position` 表示 normal／hard／extreme，新增 `getArenaPositionConfigs()` 與單一 `getArenaEnemyProfile(rank, positionId, stageIndex)`／內部 `arenaEnemyProfile()` owner，統一組合 Rank Curve × Stage Physical × Position Physical × crit/dodge/trait profile；`buildArenaEnemy()` 改只消費此 profile。既有 `getArenaDifficultyConfigs`、enemy snapshot 的 `arenaDifficulty` 與 assessment signature 內歷史 difficulty 欄位暫保留相容，避免無必要讓既有 500 次升階評估失效；正式呼叫路徑已不再使用舊 difficulty API。normal/hard/extreme 物理倍率仍原封不動為 1/1/1、.96/.96/.98、.90/.92/.96，Runtime Integrity 會鎖定避免架構整理誤改平衡。Arena presentation pacing 改直接讀 `result.events.length`，不再依賴 global presentation snapshot。新增 `ARENA_POSITION_API_VERSION=1`、`ARENA_ENEMY_PROFILE_VERSION=1`、`ARENA_PRESENTATION_PACING_SOURCE_VERSION=1`。Arena Balance 仍 V6、Rank Balance 仍 V3、Assessment compatibility 仍 6，Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
