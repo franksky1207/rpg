@@ -4,7 +4,8 @@
 .player-title{
  position:relative;display:inline-block;flex:0 0 auto;
  font-family:Georgia,"Times New Roman","Noto Serif TC","PMingLiU",serif;
- font-weight:800;letter-spacing:.06em;line-height:1;
+ font-weight:800;
+ font-size:1.05em;letter-spacing:.06em;line-height:1;
  background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
  isolation:isolate;transform:translateZ(0)
 }
@@ -24,6 +25,7 @@
 .player-title--tier-8::after{opacity:.58;background:radial-gradient(circle,rgba(199,224,255,.32) 0%,rgba(111,83,188,.13) 34%,transparent 68%);filter:blur(2px);animation:titleGravity8 1.9s ease-in-out infinite}
 .player-title--tier-9{background-image:linear-gradient(102deg,#17141d 0%,#d7a542 17%,#fff0b0 31%,#6f3f9d 47%,#d2a34b 64%,#392342 80%,#f5ddb0 100%);background-size:270% 100%;text-shadow:1px 0 1px rgba(174,122,45,.72),-1px 0 1px rgba(103,50,136,.66),0 0 8px rgba(233,182,77,.8),0 0 17px rgba(112,61,153,.72),0 0 25px rgba(18,12,24,.68);animation:titleCrown9 1.55s linear infinite}
 .player-title--tier-9::after{opacity:.63;background:radial-gradient(ellipse at center,rgba(184,119,239,.16),transparent 62%);box-shadow:0 0 12px rgba(213,161,64,.27);animation:titlePressure9 1.45s ease-in-out infinite}
+.player-title--tier-8,.player-title--tier-9,.player-title--tier-10{font-size:1.08em}
 .player-title--tier-10{background-image:linear-gradient(92deg,#f9fdff 0%,#9dcaff 12%,#d0a5ff 25%,#ffe09a 39%,#ffffff 50%,#a57aff 64%,#7fc9ff 77%,#f4ca70 89%,#ffffff 100%);background-size:300% 100%;text-shadow:0 0 4px rgba(255,255,255,1),0 0 10px rgba(138,196,255,.95),0 0 18px rgba(174,108,255,.86),0 0 27px rgba(230,184,88,.54),0 0 36px rgba(59,66,154,.45);animation:titleFinal10 1.25s linear infinite}
 .player-title--tier-10::after{opacity:.72;background:radial-gradient(circle at 18% 42%,rgba(255,255,255,.9) 0 1px,transparent 1.7px),radial-gradient(circle at 48% 18%,rgba(198,168,255,.95) 0 1px,transparent 1.7px),radial-gradient(circle at 76% 66%,rgba(255,219,137,.9) 0 1px,transparent 1.7px),radial-gradient(ellipse at center,rgba(126,109,255,.18),transparent 68%);filter:blur(.15px);animation:titleStars10 1.4s ease-in-out infinite}
 
@@ -36,8 +38,6 @@
 .player-title-choice-name{font-weight:700}
 .player-title-notice-preview{display:flex;justify-content:center;align-items:center;min-height:54px;margin:14px 0;font-size:25px}
 .combatant h2 .player-identity{max-width:100%;font-size:inherit}
-.combatant h2 .player-title{font-size:.82em}
-.player-status-card .player-title,.character-stats-card .player-title{font-size:.9em}
 
 @keyframes titlePulse1{0%,100%{filter:brightness(.93)}50%{filter:brightness(1.14)}}
 @keyframes titleSweep2{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
@@ -60,8 +60,7 @@
 @media(max-width:760px){
  .player-identity{gap:.28em}
  .player-identity--compact{gap:.22em}
- .combatant h2 .player-identity{white-space:normal;flex-wrap:wrap;justify-content:center;row-gap:.12em;font-size:.86em}
- .combatant h2 .player-title{font-size:.76em;letter-spacing:.035em}
+ .combatant h2 .player-identity{white-space:normal;flex-wrap:wrap;justify-content:center;row-gap:.12em}
  .character-title-row{align-items:flex-start;flex-direction:column}
  .character-title-button{width:100%;min-width:0}
  .player-title-picker{max-width:92vw}
