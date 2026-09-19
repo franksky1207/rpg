@@ -2,6 +2,7 @@
  const MARK_CORE_VERSION=1;
  const MARK_COMBAT_RULE_VERSION=1;
  const MARK_PROGRESSION_OWNER_VERSION=1;
+ const MARK_DESCRIPTION_OWNER_VERSION=1;
  const MARK_MAX_LEVEL=Math.max(0,Math.floor(Number(window.MARK_MAX_LEVEL)||10));
  const MARK_UPGRADE_KILLS=Object.freeze([1,1,2,2,3,3,4,4,5,5]);
  const CONFIG=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
@@ -83,6 +84,26 @@
   if(key==="ignore")return {...base,triggerChance:lv*.5,enemyDefMultiplierOnTrigger:lv>0?0:1};
   return base;
  }
+ function formatPercent(value){
+  const n=Number(value)||0;
+  return Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
+ }
+ function effectDescription(key,level){
+  const lv=clampLevel(level),effect=effectSnapshot(key,lv);
+  if(!validKey(key))return "永久戰鬥被動。";
+  if(lv<=0||!effect.active)return "尚未生效。";
+  if(key==="ward")return `${formatPercent(effect.activationChance)}% 機率於戰鬥開始時啟動，獲得最大 HP ${formatPercent(effect.shieldMaxHpPercent)}% 的護盾。`;
+  if(key==="suppression")return `敵人最終閃避率降低 ${formatPercent(effect.enemyDodgeReductionPoints)} 個百分點。`;
+  if(key==="composure")return `敵人最終暴擊率降低 ${formatPercent(effect.enemyCritReductionPoints)} 個百分點。`;
+  if(key==="indomitable")return `${formatPercent(effect.activationChance)}% 機率於戰鬥開始時啟動；本場第一次受到致死傷害時保留 ${Math.max(1,Number(effect.surviveHp)||1)} HP。`;
+  if(key==="resilience")return `敵人暴擊的額外傷害部分降低 ${formatPercent(effect.enemyCritBonusDamageReductionPercent)}%。`;
+  if(key==="battleSpirit")return `${formatPercent(effect.activationChance)}% 機率於戰鬥開始時啟動；每層提高 ATK ${formatPercent(effect.atkPercentPerLayer)}%，每回合增加 1 層，最多 ${Math.max(1,Number(effect.maxLayers)||10)} 層。`;
+  if(key==="absorption")return `受到原本會命中的敵方攻擊時，有 ${formatPercent(effect.triggerChance)}% 機率完全吸收傷害，並回復原始傷害 ${formatPercent(effect.healOriginalDamagePercent)}% 的 HP。`;
+  if(key==="revenge")return `敵人成功暴擊後，有 ${formatPercent(effect.triggerChance)}% 機率進入復仇；下一次成功命中的攻擊必定暴擊。`;
+  if(key==="backlash")return `實際受到 HP 傷害且存活後，有 ${formatPercent(effect.triggerChance)}% 機率反噬敵人，反射本次實際 HP 損失的 ${formatPercent(effect.reflectActualHpLossPercent)}% 傷害。`;
+  if(key==="ignore")return `每次玩家攻擊有 ${formatPercent(effect.triggerChance)}% 機率無視敵人 DEF。`;
+  return "永久戰鬥被動。";
+ }
  function levelsSnapshot(useTest=false){return Object.fromEntries(MARK_KEYS.map(key=>[key,markLevel(key,useTest)]));}
  function formalSnapshot(){
   return Object.fromEntries(MARK_KEYS.map(key=>{
@@ -96,6 +117,7 @@
  window.MARK_CORE_VERSION=MARK_CORE_VERSION;
  window.MARK_COMBAT_RULE_VERSION=MARK_COMBAT_RULE_VERSION;
  window.MARK_PROGRESSION_OWNER_VERSION=MARK_PROGRESSION_OWNER_VERSION;
+ window.MARK_DESCRIPTION_OWNER_VERSION=MARK_DESCRIPTION_OWNER_VERSION;
  window.MARK_UPGRADE_KILLS=MARK_UPGRADE_KILLS;
  window.MARK_KEYS=MARK_KEYS;
  window.MARK_DEFS=MARK_DEFS;
@@ -110,6 +132,7 @@
  window.markAcquired=markAcquired;
  window.markProgress=markProgress;
  window.markEffectSnapshot=effectSnapshot;
+ window.markEffectDescription=effectDescription;
  window.markLevelsSnapshot=levelsSnapshot;
  window.markFormalSnapshot=formalSnapshot;
  window.markEffectsSnapshot=effectsSnapshot;
