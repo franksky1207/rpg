@@ -144,6 +144,16 @@ function specialRateFromPlayer(value,config,prefix,maxCap){
  return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));
 }
 
+function rollUniqueMonsterTraits(count,pool=null){
+ const source=Array.isArray(pool)?pool.slice():(Array.isArray(MONSTER_TRAIT_IDS)?MONSTER_TRAIT_IDS.slice():[]);
+ const total=Math.max(0,Math.min(source.length,Math.floor(Number(count)||0))),out=[];
+ for(let i=0;i<total;i++)out.push(source.splice(Math.floor(Math.random()*source.length),1)[0]);
+ return out;
+}
+window.SPECIAL_ENEMY_SHARED_HELPERS_VERSION=1;
+window.specialRateFromPlayer=specialRateFromPlayer;
+window.rollUniqueMonsterTraits=rollUniqueMonsterTraits;
+
 function createSpecialPlayerSnapshot(stats){
  const s=stats||{};
  return {
