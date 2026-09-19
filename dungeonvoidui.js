@@ -67,20 +67,10 @@
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
  async function animateFloor(fr){
-  const result=fr.result,e=fr.enemy,playerMax=fr.playerMaxHp||playerCombatStats().hp;let ehp=e.hp,php=playerMax;
-  const logs=result?.logs||[],delay=logs.length>90?14:logs.length>50?24:45;
-  setHpUi(ehp,e.hp,php,playerMax,"開始戰鬥");await sleep(100);
-  for(const line of logs){
-   let m=line.match(/^你攻擊.+，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);ehp=Math.max(0,ehp-n);pulse("enemy",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`);setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("閃避了你的攻擊")){pulse("enemy","閃避");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
-   m=line.match(/^.+攻擊你，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);php=Math.max(0,php-n);pulse("player",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`);setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("你閃避了攻擊")){pulse("player","閃避");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("吸收印記化解了傷害")){pulse("player","吸收");setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);continue;}
-   setHpUi(ehp,e.hp,php,playerMax,line);await sleep(delay);
-  }
-  if(result?.win)setHpUi(0,e.hp,Math.max(0,php),playerMax,`第 ${fr.floor} 層突破`);
+  if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
+  const eventCount=window.getCombatPresentationSnapshot?.()?.eventCount||0;
+  const stepDelay=eventCount>140?12:eventCount>90?20:eventCount>55?32:48;
+  await window.animateStructuredCombatPresentation(fr.result,{mode:"void",kind:fr.enemy?.kind,openingDelay:90,impactDelay:45,stepDelay,endDelay:120,clearAfter:true,clearReason:"void-floor-end"});
  }
 
  window.VOID_COMBAT_MARK_PRESENTATION_VERSION=1;
