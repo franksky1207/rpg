@@ -968,7 +968,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 7. `accountcloudintegrity.js`：Auth／Cloud Save／舊 JSON API 退休。
 8. `calamitystateintegrity.js`：Schema 13 災厄／印記持久 state、舊存檔 migration。
 9. `markcoreintegrity.js`：10 枚印記順序、來源區域、升級需求與效果公式。
-10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／31 殺印記曲線／持久 HP。
+10. `calamitycoreintegrity.js`：10 隻文明災厄母體／倍率／解鎖／持久 HP／pure getter 與 Mark Core progression 委派；31 殺印記曲線由 `markcoreintegrity.js` 負責。
 11. `calamityrunintegrity.js`：文明災厄單場／連續討伐 runtime、停止／pagehide 與非持久 run state。
 12. `calamityuiintegrity.js`：文明災厄首頁順序、UI／極簡 API、可見性與鎖定內容不洩漏。
 13. `calamitygmintegrity.js`：印記正式／測試管理、災厄兩種 GM 模擬、禁止作弊控制與安全上限。
@@ -981,7 +981,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 20. `storyrecordtabs.js`
 21. `storyruntimeintegrity.js`：故事最終 runtime 行為檢查。
 22. `backgroundpreload.js` 最後處理正式背景 reveal。
-23. `finalintegrity.js` V1：最尾端匯總 Calamity／Mark／Combat FX／GM／主 runtime／Mirror Final／Story Runtime 報告，鎖定 Save13、Guide V14、版本鏈，並以實際 DOM `getComputedStyle()` 驗證戰線紀錄解析到 `guide-settings` 背景。
+23. `finalintegrity.js` V2：最尾端匯總 Calamity／Mark／Combat FX／GM／主 runtime／Mirror Final／Story Runtime 報告，鎖定 Save13、Guide V14、災厄／印記 owner 與 Unified Presentation 版本鏈，並以實際 DOM `getComputedStyle()` 驗證戰線紀錄解析到 `guide-settings` 背景。
 
 故事資料的 10 支 `storydata-*` 必須全部先於 `storyintegrity.js` 載入；story migration 必須先於 story progress；`storyruntimeintegrity.js` 必須在 story progress／record tabs 後。
 
@@ -1008,6 +1008,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 2026-09-19 災厄大整理第 2 批：新增 `calamityconfig.js` 作為唯一「區域→文明災厄→印記」配對 owner，`calamitystate.js`、`markcore.js`、`calamitycore.js` 均改由此設定衍生；Mark progression（pure snapshot、31 殺升級曲線、正式擊殺 settlement）正式收回 `markcore.js`，Calamity Core 僅委派擊殺 settlement；災厄正式 Boss 母體與敵人 template 改為 module cache 後回傳 copy，避免重複建構。Integrity 已分層鎖定 config 與 progression owner。舊 Calamity 命名相容 alias 暫留在 Mark Core，列入後續最終 dead API 清理候選。Save Schema、平衡數值、UI 與印記效果皆未變更。
 - 2026-09-19 災厄大整理第 3 批：每場戰後回滿 HP 的唯一 owner 固定為 `calamitycore.js` settlement（`CALAMITY_HP_RESTORE_OWNER_VERSION=1`），`calamityrun.js` 的 begin／finish 不再重複 restore；連續討伐 API 收斂為 `runCivilizationCalamityContinuous(id, options)` 單一 signature，`CALAMITY_CONTINUOUS_RULE_VERSION` 升為 3；350ms 場間等待改由 `calamityui.js` presentation pacing owner 提供。同步移除 Calamity UI Integrity 對已退休 log-pulse API 的舊要求，改鎖 structured presentation。Save Schema、平衡數值、戰鬥結果與玩家操作流程不變。
 - 2026-09-19 災厄大整理第 4 批：印記效果說明正式收回 `markcore.js`（`MARK_DESCRIPTION_OWNER_VERSION=1`／`markEffectDescription()`），`calamityui.js` 不再複製 10 枚印記文字規則；災厄戰鬥 UI 的 4 個獨立 HP 顯示欄位收斂為單一 `battleView` snapshot（`CALAMITY_BATTLE_VIEW_VERSION=1`），一般戰鬥畫面與極簡模式共用；`calamitygm.js` 印記清單改直接使用 unified calamity config（`GM_MARK_CONFIG_OWNER_VERSION=1`），不再自行由 MARK_KEYS/MARK_DEFS 重建配對。Integrity／Runtime／Final 已同步鎖定。Save Schema、平衡數值、印記效果與戰鬥流程不變。
+- 2026-09-19 災厄大整理第 5 批：完成 dead API／Integrity／版本收尾。正式退休 `normalizeCivilizationMarkProgressForCore`、`advanceCivilizationCalamityMarkEntry`、`settleCivilizationCalamityMarkKill`、`markAcquired`、`markProgress`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`；Runtime Integrity 反向鎖定這些舊 API 不得回來。Mark／Calamity Core Integrity 改直接依 unified config 驗證，不再維護第二套名稱／配對陣列；`prepareCivilizationCalamityEntry()` 的重複 presentation clear 已移除。五支災厄分層 Integrity 保留，因各自仍對應 State／Core／Run／UI／GM 的獨立責任。版本常數經檢查後保留現有 state／balance／rule／owner 邊界，未為清理而無意義升版。Save Schema 仍為 13，玩法與數值不變。
 
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
@@ -1040,6 +1041,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 - `historyBackfillRegions` 作為 repair lock。
 - `battlepipeline.js` 第二次 queue Boss story 的雙 owner。
 - root 的 `story-source-purity-ci.js`、`story-integrity-ci.js`、`story-flow-ci.js`。
+- 災厄／印記舊相容 API：`normalizeCivilizationMarkProgressForCore()`、`advanceCivilizationCalamityMarkEntry()`、`settleCivilizationCalamityMarkKill()`、`markAcquired()`、`markProgress()`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`。
 
 ---
 
