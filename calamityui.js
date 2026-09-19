@@ -300,7 +300,8 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
- window.CALAMITY_UI_VERSION=UI_VERSION;\n window.showPendingPlayerTitleNotice=showPendingTitleNotice;
+ window.CALAMITY_UI_VERSION=UI_VERSION;
+ window.showPendingPlayerTitleNotice=showPendingTitleNotice;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
  window.CALAMITY_OUTER_PACING_VERSION=1;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
