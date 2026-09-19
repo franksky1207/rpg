@@ -1,7 +1,6 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
- const CALAMITY_CONTINUOUS_RULE_VERSION=2;
- const CALAMITY_CONTINUOUS_GAP_MS=350;
+ const CALAMITY_CONTINUOUS_RULE_VERSION=3;
  let activeRun=null;
 
  function clone(value){
@@ -49,8 +48,6 @@
   activeRun.phase="ended";
   activeRun.endedReason=String(reason||"ended");
   activeRun.endedAt=Date.now();
-  if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});
-  else if(typeof playerCombatStats==="function")state.hp=playerCombatStats().hp;
   return runStatus();
  }
  function begin(id,mode="continuous"){
@@ -75,8 +72,6 @@
    endedAt:null,
    lastBattle:null
   };
-  if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});
-  else if(typeof playerCombatStats==="function")state.hp=playerCombatStats().hp;
   return {ok:true,run:runStatus()};
  }
  function compactBattle(result,battleNumber){
@@ -144,10 +139,8 @@
  }
  const yieldControl=()=>new Promise(resolve=>setTimeout(resolve,0));
 
- async function runContinuous(idOrOptions={},maybeOptions={}){
-  const passedObject=idOrOptions&&typeof idOrOptions==="object"&&!Array.isArray(idOrOptions);
-  const options=passedObject?idOrOptions:maybeOptions;
-  const requestedId=passedObject?String(options.calamityId||""):String(idOrOptions||"");
+ async function runContinuous(id,options={}){
+  const requestedId=String(id||"");
   if(!activeRun?.active){
    const started=begin(requestedId,"continuous");
    if(!started.ok)return started;
@@ -205,7 +198,6 @@
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
- window.CALAMITY_CONTINUOUS_GAP_MS=CALAMITY_CONTINUOUS_GAP_MS;
  window.beginCivilizationCalamityRun=begin;
  window.runCivilizationCalamitySingle=runSingle;
  window.fightNextCivilizationCalamityBattle=fightNext;
