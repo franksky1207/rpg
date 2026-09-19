@@ -184,6 +184,7 @@
      ui.phase="combat";
      primeDisplay(battle.result);render();
      await animateBattle(battle);
+     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(CONTINUOUS_GAP_MS);
     },
     async onEnd(run){
