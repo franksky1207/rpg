@@ -31,6 +31,35 @@
   return target;
  }
  function titleDefinition(id){return BY_ID[String(id||"")]||null;}
+
+ function titleForCalamity(id){return DEFS.find(def=>def.calamityId===String(id||""))||null;}
+ function ensureTitleState(target=state){
+  if(!isObject(target))return null;
+  normalizePlayerTitleState(target);
+  return target.titles;
+ }
+ function grantFirstKillTitle(calamityId,target=state){
+  const def=titleForCalamity(calamityId),titles=ensureTitleState(target);
+  if(!def||!titles)return {changed:false,firstAcquisition:false,title:null};
+  const unlocked=new Set(Array.isArray(titles.unlocked)?titles.unlocked:[]);
+  const firstAcquisition=!unlocked.has(def.id);
+  if(firstAcquisition){
+   unlocked.add(def.id);
+   titles.unlocked=IDS.filter(id=>unlocked.has(id));
+   titles.pendingNotice=def.id;
+  }
+  return {changed:firstAcquisition,firstAcquisition,title:def};
+ }
+ function pendingTitleNotice(target=state){
+  const titles=ensureTitleState(target),id=titles?.pendingNotice;
+  return typeof id==="string"?titleDefinition(id):null;
+ }
+ function clearPendingTitleNotice(target=state){
+  const titles=ensureTitleState(target);
+  if(!titles?.pendingNotice)return false;
+  titles.pendingNotice=null;
+  return true;
+ }
  function unlockedTitleDefinitions(target=state){
   const unlocked=new Set(Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[]);
   return DEFS.filter(def=>unlocked.has(def.id));
@@ -41,7 +70,7 @@
  window.CIVILIZATION_PLAYER_TITLE_IDS=IDS;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
- window.getPlayerTitleDefinition=titleDefinition;
+ window.getPlayerTitleDefinition=titleDefinition;\n window.getPlayerTitleDefinitionForCalamity=titleForCalamity;\n window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;\n window.getPendingPlayerTitleNotice=pendingTitleNotice;\n window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
