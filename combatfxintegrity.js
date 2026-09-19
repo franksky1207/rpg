@@ -11,14 +11,15 @@
   VOID_COMBAT_MARK_PRESENTATION_VERSION:1,
   MIRROR_MARK_PRESENTATION_VERSION:1,
   COMBAT_STRUCTURED_PRESENTATION_VERSION:1,
-  MIRROR_STRUCTURED_PRESENTATION_VERSION:1
+  MIRROR_STRUCTURED_PRESENTATION_VERSION:1,
+  CALAMITY_STRUCTURED_PRESENTATION_VERSION:1,
+  COMBAT_PRESENTATION_UNIFIED_VERSION:1
  };
  Object.entries(versionChecks).forEach(([key,expected])=>{
   if(Number(window[key])!==expected)fail("MARK_PRESENTATION_VERSION",`${key} 應為 ${expected}`,window[key]);
  });
  if(typeof window.combatMarkFxDescriptor!=="function")fail("MARK_FX_DESCRIPTOR","combatMarkFxDescriptor 未載入");
- if(typeof window.consumeCombatPresentationPulse!=="function")fail("MARK_FX_CONSUMER","consumeCombatPresentationPulse 未載入");
- if(typeof window.consumeCombatPresentationPulseManual!=="function")fail("MARK_FX_MANUAL_CONSUMER","consumeCombatPresentationPulseManual 未載入");
+ if(typeof window.consumeCombatPresentationPulse!=="undefined"||typeof window.consumeCombatPresentationPulseManual!=="undefined")fail("LEGACY_PRESENTATION_CONSUMER","舊 log pulse presentation API 不應再存在",{consumer:typeof window.consumeCombatPresentationPulse,manual:typeof window.consumeCombatPresentationPulseManual});
  if(typeof window.syncCombatPresentationHp!=="function")fail("MARK_FX_HP_SYNC","syncCombatPresentationHp 未載入");
  if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V2 lifecycle API 未完整載入");
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
@@ -33,6 +34,10 @@
    },{logs:true});
    const snap=window.getCombatPresentationSnapshot?.();
    if(snap?.playerHp!==1000||snap?.enemyHp!==500||snap?.playerShield!==200||snap?.playerShieldMax!==200||window.isCombatPresentationActive?.()!==true)fail("COMBAT_PRESENTATION_PROBE","Combat Presentation prepare／shield 初始化異常",snap);
+   const firstToken=snap?.token;
+   window.prepareCombatPresentation({playerMaxHp:900,playerStartHp:800,enemyStartHp:400,e:{hp:450},events:[]},{logs:true});
+   const replaced=window.getCombatPresentationSnapshot?.();
+   if(!(Number(replaced?.token)>Number(firstToken))||replaced?.playerHp!==800||replaced?.enemyHp!==400)fail("COMBAT_PRESENTATION_REPLACE","新戰鬥未正確取代上一場 presentation",{first:snap,replaced});
    window.clearCombatPresentation("integrity-probe");
    if(window.isCombatPresentationActive?.()!==false||window.getCombatPresentationPlayerHp?.()!==null||window.getCombatPresentationEnemyHp?.()!==null||window.getCombatPresentationPlayerShield?.()!==null)fail("COMBAT_PRESENTATION_CLEAR","Combat Presentation clear 後仍殘留狀態",window.getCombatPresentationSnapshot?.());
    if(typeof window.prepareMirrorCombatPresentation==="function"){
