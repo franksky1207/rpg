@@ -12,6 +12,7 @@
   MIRROR_MARK_PRESENTATION_VERSION:1,
   COMBAT_STRUCTURED_PRESENTATION_VERSION:2,
   COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION:1,
+  STRUCTURED_COMBAT_PACING_VERSION:1,
   MIRROR_STRUCTURED_PRESENTATION_VERSION:1,
   CALAMITY_STRUCTURED_PRESENTATION_VERSION:1,
   COMBAT_PRESENTATION_UNIFIED_VERSION:1
@@ -25,6 +26,14 @@
  if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V2 lifecycle API 未完整載入");
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
+ if(typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_API","共用 Structured Combat Pacing API 未載入");
+ else{
+  const cases=[[0,48],[55,48],[56,32],[90,32],[91,20],[140,20],[141,12]];
+  cases.forEach(([events,stepDelay])=>{
+   const pacing=window.getStructuredCombatPacing(events);
+   if(Number(pacing?.openingDelay)!==90||Number(pacing?.impactDelay)!==45||Number(pacing?.stepDelay)!==stepDelay||Number(pacing?.endDelay)!==120)fail("STRUCTURED_COMBAT_PACING_PROFILE",`事件數 ${events} 的共用戰鬥動畫節奏異常`,pacing);
+  });
+ }
  if(Number(window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION)!==1)fail("MAIN_STRUCTURED_PRESENTATION_OWNER_VERSION","主線 Structured Presentation owner guard 應為 1",window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION);
  if(Number(window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION)!==1||typeof window.mainBattlePresentationSleep!=="function")fail("MAIN_BACKGROUND_PRESENTATION","主線 Structured Presentation 必須使用 background-aware sleep",{version:window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION,sleep:typeof window.mainBattlePresentationSleep});
  if(typeof window.animateFight!=="function")fail("MAIN_STRUCTURED_PRESENTATION_OWNER","主線 animateFight 未載入");
