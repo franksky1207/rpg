@@ -122,9 +122,7 @@
  window.requestBountyContinuousStop=function(){if(!bountyState.continuous||bountyState.phase!=="combat")return;bountyState.stopRequested=true;const btn=document.getElementById("bountyContinuousStop");if(btn){btn.textContent="本場結束後停止";btn.disabled=true;}};
  async function animateBounty(result,startHp,playerMax){
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
-  const eventCount=Array.isArray(result?.events)?result.events.length:0;
-  const stepDelay=eventCount>120?30:eventCount>70?50:95;
-  await window.animateStructuredCombatPresentation(result,{mode:"bounty",openingDelay:130,impactDelay:70,stepDelay,endDelay:180,clearAfter:true,clearReason:"bounty-battle-end"});
+  await window.animateStructuredCombatPresentation(result,{mode:"bounty",clearAfter:true,clearReason:"bounty-battle-end"});
  }
 
  window.BOUNTY_COMBAT_MARK_PRESENTATION_VERSION=1;
