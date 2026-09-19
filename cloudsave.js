@@ -144,6 +144,7 @@
    try{
     state=prepareDownloadedState(data.save_data);
     if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
+     if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("cloud-download");
     bindLocalOwner(u.id);
     if(typeof save==="function"&&!save(false))throw new Error("下載後寫入本機存檔失敗。");
     writeLocalMeta();
