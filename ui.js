@@ -187,25 +187,10 @@ function attackMotion(attacker){
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
- let ehp=enemyMax,php=startPlayerHp;
- setCombatHp(ehp,enemyMax,php,playerMax,roundText?`${roundText}・開始戰鬥`:"開始戰鬥");await sleep(180);
- for(const line of r.logs){
-  let m=line.match(/^你攻擊.+，暴擊造成 (\d+) 點傷害。$/);
-  if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`暴擊！你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
-  m=line.match(/^你攻擊.+，造成 (\d+) 點傷害。$/);
-  if(m){attackMotion("player");await sleep(120);ehp=Math.max(0,ehp-(+m[1]));flashCombatText("enemy",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`你造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
-  m=line.match(/^你攻擊.+，.+閃避了攻擊。$/);
-  if(m){attackMotion("player");await sleep(120);flashCombatText("enemy","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}閃避了你的攻擊`);await sleep(190);continue}
-  if(line.includes("吸收印記化解了傷害")){attackMotion("enemy");await sleep(120);flashCombatText("player","吸收");setCombatHp(ehp,enemyMax,php,playerMax,"吸收印記化解了傷害");await sleep(r.e.kind==="boss"?260:190);continue}
-  m=line.match(/^.+攻擊你，暴擊造成 (\d+) 點傷害。$/);
-  if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashCombatText("player",`暴擊 -${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}暴擊造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
-  m=line.match(/^.+攻擊你，造成 (\d+) 點傷害。$/);
-  if(m){attackMotion("enemy");await sleep(120);php=Math.max(0,php-(+m[1]));flashCombatText("player",`-${m[1]}`);setCombatHp(ehp,enemyMax,php,playerMax,`${r.e.name}造成 ${m[1]} 點傷害`);await sleep(r.e.kind==="boss"?260:190);continue}
-  m=line.match(/^.+攻擊你，你閃避了攻擊。$/);
-  if(m){attackMotion("enemy");await sleep(120);flashCombatText("player","閃避");setCombatHp(ehp,enemyMax,php,playerMax,`你閃避了${r.e.name}的攻擊`);await sleep(190)}
- }
- setCombatHp(ehp,enemyMax,php,playerMax,r.win?"戰鬥勝利！":"戰敗！");await sleep(250);
+ if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
+ await window.animateStructuredCombatPresentation(r,{mode:"main",openingDelay:160,impactDelay:110,stepDelay:r?.e?.kind==="boss"?220:170,endDelay:220,clearAfter:true,clearReason:"main-battle-end"});
 }
+
 window.MAIN_COMBAT_MARK_PRESENTATION_VERSION=1;
 function dropListHtml(items){
  if(!items.length)return `<div class="muted">裝備：無</div>`;
