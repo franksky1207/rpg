@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);
@@ -29,7 +29,7 @@
  });
  if(JSON.stringify(allIds)!==JSON.stringify([...calamityIds,...mirrorIds]))fail("TITLE_UNIFIED_ORDER","統一稱號順序必須固定為災厄 10 個後接鏡像 6 個",allIds);
 
- const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForMirrorWins","grantPlayerTitleForCalamityFirstKill","grantPlayerTitlesForMirrorWins","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle"];
+ const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForMirrorWins","grantPlayerTitleForCalamityFirstKill","grantPlayerTitlesForMirrorWins","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","queuePendingPlayerTitleNotice"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("TITLE_API_MISSING",`${name} 未載入`);});
 
  try{
@@ -72,10 +72,15 @@
  }catch(error){fail("TITLE_MIRROR_GRANT_PROBE","鏡像稱號取得 probe 失敗",String(error?.message||error));}
 
  try{
-  const calamityHtml=window.playerIdentityNameHtml({name:"Frank",titleId:calamityDefs[9]?.id});
-  const mirrorHtml=window.playerIdentityNameHtml({name:"Frank",titleId:mirrorDefs[5]?.id});
+  const ownedTarget={playerName:"Frank",titles:{version:1,unlocked:[calamityDefs[9]?.id,mirrorDefs[5]?.id].filter(Boolean),equipped:calamityDefs[9]?.id,pendingNotice:null}};
+  const calamityHtml=window.playerIdentityNameHtml({name:"Frank",titleId:calamityDefs[9]?.id,target:ownedTarget});
+  const mirrorHtml=window.playerIdentityNameHtml({name:"Frank",titleId:mirrorDefs[5]?.id,target:ownedTarget});
+  const blockedHtml=window.playerIdentityNameHtml({name:"Frank",titleId:mirrorDefs[4]?.id,target:ownedTarget});
+  const previewHtml=window.playerIdentityNameHtml({name:"Frank",titleId:mirrorDefs[4]?.id,target:ownedTarget,allowUnownedTitle:true});
   if(!calamityHtml.includes("player-title--tier-10")||!calamityHtml.includes("萬星終寂")||!calamityHtml.includes("player-identity-name"))fail("TITLE_CALAMITY_RENDERER","災厄 renderer 異常",calamityHtml);
   if(!mirrorHtml.includes("player-title--mirror-20")||!mirrorHtml.includes("神蹟")||mirrorHtml.indexOf("神蹟")>mirrorHtml.indexOf("Frank"))fail("TITLE_MIRROR_RENDERER","鏡像 renderer 未正確輸出於玩家名稱前",mirrorHtml);
+  if(blockedHtml.includes("player-title")||blockedHtml.includes("距神一步"))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blockedHtml);
+  if(!previewHtml.includes("player-title--mirror-19")||!previewHtml.includes("距神一步"))fail("TITLE_PREVIEW_BYPASS","明確 allowUnownedTitle 預覽應可顯示未取得稱號",previewHtml);
  }catch(error){fail("TITLE_RENDERER_PROBE","稱號 renderer probe 失敗",String(error?.message||error));}
 
  try{
@@ -84,7 +89,7 @@
   const html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"";
   const after=clone(state?.titles);
   const afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==3||!html.includes("實戰名稱預覽全部 16 個正式稱號")||!html.includes("gm-player-title-combat-preview")||!html.includes("player-identity-name"))fail("TITLE_GM_PREVIEW","GM 稱號實戰名稱預覽 V3／16 稱號未載入",{version:window.GM_PLAYER_TITLE_PREVIEW_VERSION,html});
+  if(Number(window.PLAYER_TITLE_UI_VERSION)!==1||Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==3||!html.includes("實戰名稱預覽全部 16 個正式稱號")||!html.includes("gm-player-title-combat-preview")||!html.includes("player-identity-name"))fail("TITLE_GM_PREVIEW","玩家稱號 UI V1／GM 實戰名稱預覽 V3 未載入",{ui:window.PLAYER_TITLE_UI_VERSION,gm:window.GM_PLAYER_TITLE_PREVIEW_VERSION,html});
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 title state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽無副作用 probe 失敗",String(error?.message||error));}
 
