@@ -166,9 +166,7 @@
 
  async function animateArena(result,startHp,playerMax){
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
-  const eventCount=Array.isArray(result?.events)?result.events.length:0;
-  const stepDelay=eventCount>120?24:eventCount>70?38:72;
-  await window.animateStructuredCombatPresentation(result,{mode:"arena",openingDelay:110,impactDelay:65,stepDelay,endDelay:150,clearAfter:true,clearReason:"arena-stage-end"});
+  await window.animateStructuredCombatPresentation(result,{mode:"arena",clearAfter:true,clearReason:"arena-stage-end"});
  }
 
  window.ARENA_COMBAT_MARK_PRESENTATION_VERSION=1;
