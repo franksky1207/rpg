@@ -60,7 +60,7 @@
 @media(max-width:760px){
  .player-identity{gap:.28em}
  .player-identity--compact{gap:.22em}
- .combatant h2 .player-title{font-size:.72em;letter-spacing:.035em}
+ .combatant h2 .player-identity{white-space:normal;flex-wrap:wrap;justify-content:center;row-gap:.12em;font-size:.86em}\n .combatant h2 .player-title{font-size:.76em;letter-spacing:.035em}
  .character-title-row{align-items:flex-start;flex-direction:column}
  .character-title-button{width:100%;min-width:0}
  .player-title-picker{max-width:92vw}
