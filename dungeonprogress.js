@@ -1,7 +1,18 @@
 (function(){
- const ARENA_POSITION_MODEL_VERSION=1;
- const ARENA_ASSESSMENT_RULE_VERSION=4;
- const ARENA_BALANCE_COMPAT_VERSION=6;
+ const ARENA_COMPATIBILITY_PROFILE=Object.freeze({
+  positionModelVersion:1,
+  assessmentRuleVersion:4,
+  assessmentStateVersion:4,
+  assessmentRuntimeVersion:4,
+  balanceVersion:6,
+  rankBalanceVersion:3,
+  positionApiVersion:1,
+  enemyProfileVersion:1,
+  pacingSourceVersion:1
+ });
+ const ARENA_POSITION_MODEL_VERSION=ARENA_COMPATIBILITY_PROFILE.positionModelVersion;
+ const ARENA_ASSESSMENT_RULE_VERSION=ARENA_COMPATIBILITY_PROFILE.assessmentRuleVersion;
+ const ARENA_BALANCE_COMPAT_VERSION=ARENA_COMPATIBILITY_PROFILE.balanceVersion;
  const ARENA_ASSESS_RUNS=500;
  const ARENA_ASSESS_CLEAR_TARGET=485;
 
@@ -42,8 +53,9 @@
   Object.assign(source,normalized);
   return source;
  }
- window.ARENA_ASSESSMENT_STATE_VERSION=4;
- window.getArenaAssessmentCompatibilityVersions=function(){return {positionModelVersion:ARENA_POSITION_MODEL_VERSION,assessmentRuleVersion:ARENA_ASSESSMENT_RULE_VERSION,balanceVersion:ARENA_BALANCE_COMPAT_VERSION};};
+ window.ARENA_ASSESSMENT_STATE_VERSION=ARENA_COMPATIBILITY_PROFILE.assessmentStateVersion;
+ window.getArenaVersionProfile=function(){return {...ARENA_COMPATIBILITY_PROFILE};};
+ window.getArenaAssessmentCompatibilityVersions=function(){const v=window.getArenaVersionProfile();return {positionModelVersion:v.positionModelVersion,assessmentRuleVersion:v.assessmentRuleVersion,balanceVersion:v.balanceVersion};};
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
 
  function normalizeDungeonState(target,options={}){
