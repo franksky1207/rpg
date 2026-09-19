@@ -4,6 +4,7 @@
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const OFFLINE_REAL_SAMPLE_LIMIT=20;
+ const OFFLINE_BATTLE_SAMPLE_VERSION=2;
  const NORMAL_BATTLE_GAP_MS=140;
  const ELITE_BATTLE_GAP_MS=220;
 
@@ -101,7 +102,7 @@
    const cycleMs=actualMs+(kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
    const adjustedMs=Math.max(100,Math.round(cycleMs*multiplier));
    const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
-   return {sampleVersion:2,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
+   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
   }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
  }
  function normalizeOffline(target,version){
@@ -136,6 +137,7 @@
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
+ window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
  window.normalizePersistentFlags=normalizePersistentFlags;
