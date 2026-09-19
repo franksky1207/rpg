@@ -13,6 +13,7 @@
   COMBAT_STRUCTURED_PRESENTATION_VERSION:2,
   COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION:1,
   STRUCTURED_COMBAT_PACING_VERSION:2,
+  COMBAT_FX_ANIMATION_LIFECYCLE_VERSION:1,
   MIRROR_STRUCTURED_PRESENTATION_VERSION:1,
   CALAMITY_STRUCTURED_PRESENTATION_VERSION:1,
   COMBAT_PRESENTATION_UNIFIED_VERSION:1
@@ -27,6 +28,9 @@
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
  if(typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_API","共用 Structured Combat Pacing API 未載入");
+ const fxSource=typeof window.animateStructuredCombatPresentation==="function"?Function.prototype.toString.call(window.animateStructuredCombatPresentation):"";
+ const directSource=typeof directMotion==="function"?Function.prototype.toString.call(directMotion):"";
+ if(/\b340\b|\b260\b/.test(directSource))fail("COMBAT_FX_LEGACY_CLEANUP_TIMER","Combat FX 不應再使用 340/260ms 舊 cleanup timer",directSource);
  else{
   [0,1,55,56,90,91,140,141,999].forEach(events=>{
    const pacing=window.getStructuredCombatPacing(events);
