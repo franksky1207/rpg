@@ -1032,6 +1032,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 主線 iPhone Safari 可見頁卡住修正：`backgroundprogress.js` 的正式背景判定改以 Page Visibility／pagehide 為 owner；Safari 在頁面仍可見時可能回報 `document.hasFocus()===false`，因此 blur／hasFocus 不再單獨把可見頁判為背景。這修正主線連續戰鬥在背景戰鬥開啟時，第一個 `await sleep(60)` 可能永遠等待而停在滿血戰鬥畫面的問題；真正 visibility hidden/pagehide 仍維持 background catch-up。新增 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=1` 並由 Boss Continuous Integrity 鎖定。副本、災厄、平衡、獎勵、Save Schema 皆不變。
 
+- 2026-09-19 主線戰鬥卡住根因修正：`combatpacing.js` 仍殘留舊 `window.animateFight` override，會覆蓋 `ui.js` 已改為 Structured Presentation 的正式 `animateFight()`；舊 override 又呼叫已退休的 `setCombatHp()`／`attackMotion()`／`flashCombatText()`，因此 `fightOnce()` 已完成結算與 `save(false)` 後，在動畫階段拋錯，造成單場與連續戰鬥畫面停在滿血起始狀態，但重整後已看到擊殺進度／獎勵生效。現已完全刪除該舊動畫 override，`combatpacing.js` 只保留 sleep／場間 pacing／特殊遭遇 pacing，主線唯一動畫 owner 恢復為 `ui.js -> animateStructuredCombatPresentation()`；新增 `MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION=1`，`combatfxintegrity.js` 會反向檢查不得再出現舊 log parser／HP writer owner。Save Schema、戰鬥數值與獎勵不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
