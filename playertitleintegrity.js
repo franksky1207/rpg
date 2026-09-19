@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);
@@ -84,7 +84,7 @@
   const html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"";
   const after=clone(state?.titles);
   const afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==2||!html.includes("全部 16 個正式稱號")||!html.includes("鏡像戰稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽 V2／16 稱號未載入",{version:window.GM_PLAYER_TITLE_PREVIEW_VERSION,html});
+  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==3||!html.includes("實戰名稱預覽全部 16 個正式稱號")||!html.includes("gm-player-title-combat-preview")||!html.includes("player-identity-name"))fail("TITLE_GM_PREVIEW","GM 稱號實戰名稱預覽 V3／16 稱號未載入",{version:window.GM_PLAYER_TITLE_PREVIEW_VERSION,html});
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 title state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽無副作用 probe 失敗",String(error?.message||error));}
 
