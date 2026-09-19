@@ -39,7 +39,7 @@
  const persistedCheckpoint=readCheckpoint();
  if(persistedCheckpoint!=null){
   const current=Number(state.offline.lastSettledAt);
-  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint>current)state.offline.lastSettledAt=persistedCheckpoint;
+  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
  }
  if(typeof save==="function")save(false);
  writeCheckpoint();
