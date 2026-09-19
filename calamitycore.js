@@ -151,7 +151,6 @@
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
  window.CALAMITY_FIXED_CRIT=FIXED_CRIT;
  window.CALAMITY_FIXED_DODGE=FIXED_DODGE;
- window.CALAMITY_DEFS=DEFS;
  window.getCivilizationCalamityDefinition=definition;
  window.getCivilizationCalamityDefinitions=function(){return DEFS.slice();};
  window.isCivilizationCalamityUnlocked=unlocked;
