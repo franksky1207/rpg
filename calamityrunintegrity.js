@@ -13,7 +13,7 @@
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_RUN_API",`${name} 未載入`);});
  if(Number(window.CALAMITY_RUN_VERSION)!==1)fail("CALAMITY_RUN_VERSION","文明災厄 runtime 應為 V1",window.CALAMITY_RUN_VERSION);
- if(Number(window.CALAMITY_CONTINUOUS_RULE_VERSION)!==3)fail("CALAMITY_CONTINUOUS_RULE_VERSION","文明災厄連續討伐規則版本應為 3",window.CALAMITY_CONTINUOUS_RULE_VERSION);
+ if(Number(window.CALAMITY_CONTINUOUS_RULE_VERSION)!==4)fail("CALAMITY_CONTINUOUS_RULE_VERSION","文明災厄連續討伐規則版本應為 4",window.CALAMITY_CONTINUOUS_RULE_VERSION);
  if(Number(window.CALAMITY_HP_RESTORE_OWNER_VERSION)!==1)fail("CALAMITY_HP_RESTORE_OWNER","災厄每場戰後回滿 HP 應由 Calamity Core settlement 單一管理",window.CALAMITY_HP_RESTORE_OWNER_VERSION);
  try{
   const snapshot=typeof window.getCivilizationCalamityRunSnapshot==="function"?window.getCivilizationCalamityRunSnapshot():null;
