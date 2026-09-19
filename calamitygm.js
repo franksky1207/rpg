@@ -2,10 +2,12 @@
  const GM_CALAMITY_TEST_VERSION=1;
  const GM_MARK_MANAGEMENT_VERSION=1;
  const GM_MARK_CONFIG_OWNER_VERSION=1;
+ const GM_PLAYER_TITLE_PREVIEW_VERSION=1;
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
  let busy=false;
+ let gmTitlePreviewTier=1;
 
  function markRows(){return Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);}
  function keys(){return markRows().map(row=>row.markId);}
@@ -68,6 +70,24 @@
   return `<div class="muted gm-hub-note">本區只調整 GM 戰鬥測試使用的印記等級；Lv.0 與未取得在戰鬥效果上相同，因此測試僅提供 Lv.0～Lv.10，不修改正式存檔。</div>${testGrid()}<div id="gmMarkTestInfo" class="muted" style="margin-top:10px">${window.gmTestMarkLabel()}</div>`;
  };
 
+
+ function titleDefs(){return Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);}
+ function clampTitleTier(value){return Math.max(1,Math.min(10,Math.floor(Number(value)||1)));}
+ function titlePreviewDefinition(){return titleDefs().find(def=>def.tier===gmTitlePreviewTier)||titleDefs()[0]||null;}
+ function titlePreviewOptions(){
+  return titleDefs().map(def=>`<option value="${def.tier}" ${def.tier===gmTitlePreviewTier?"selected":""}>第 ${def.tier} 階｜${def.name}</option>`).join("");
+ }
+ window.gmSetPlayerTitlePreviewTier=function(value){
+  gmTitlePreviewTier=clampTitleTier(value);
+  const box=document.getElementById("gmPlayerTitlePreviewBox"),def=titlePreviewDefinition();
+  if(box&&def)box.innerHTML=`<div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):def.name}</div><div class="muted" style="text-align:center;margin-top:6px">第 ${def.tier} 階｜${def.name}</div>`;
+  return gmTitlePreviewTier;
+ };
+ window.gmPlayerTitlePreviewHtml=function(){
+  const def=titlePreviewDefinition();
+  const preview=def&&typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):(def?.name||"稱號預覽");
+  return `<div class="muted gm-hub-note">純視覺預覽 1～10 階正式稱號效果；不解鎖稱號、不變更目前裝備稱號、不修改災厄／印記，也不寫入正式存檔。</div><div class="controls" style="align-items:end"><label>稱號階級<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px"><div class="player-title-notice-preview">${preview}</div><div class="muted" style="text-align:center;margin-top:6px">第 ${def?.tier||1} 階｜${def?.name||""}</div></div>`;
+ };
  function calamityOptions(){
   return calamities().map((def,index)=>`<option value="${def.id}" ${index===0?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
  }
@@ -147,11 +167,13 @@
  window.GM_CALAMITY_TEST_VERSION=GM_CALAMITY_TEST_VERSION;
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
  window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
+ window.GM_PLAYER_TITLE_PREVIEW_VERSION=GM_PLAYER_TITLE_PREVIEW_VERSION;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
   window.registerGmHubSection("test","印記測試",window.gmMarkTestHtml,{id:"marks-test",position:"prepend"});
   window.registerGmHubSection("test","文明災厄測試",window.gmCalamityTestHtml,{id:"calamity-test",position:"append"});
+  window.registerGmHubSection("test","稱號預覽",window.gmPlayerTitlePreviewHtml,{id:"player-title-preview",position:"append"});
  }
 })();
