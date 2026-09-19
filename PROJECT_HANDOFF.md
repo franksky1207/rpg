@@ -337,7 +337,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 ## 4.8 文明災厄單場／連續討伐 runtime（第 8 批）
 
 - `CALAMITY_RUN_VERSION = 1`
-- `CALAMITY_CONTINUOUS_RULE_VERSION = 1`
+- `CALAMITY_CONTINUOUS_RULE_VERSION = 2`
 - `CALAMITY_CONTINUOUS_GAP_MS = 350`；供第 9 批 UI 對齊目前虛空幻境每場動畫後的 350ms 場間節奏。
 - `calamityrun.js` 是文明災厄單場／連續討伐唯一 runtime owner；不共用主線「敗北即停止」的連戰 pipeline。
 - 單場：`runCivilizationCalamitySingle(id)` 只完成 1 場後結束 runtime。
@@ -349,6 +349,13 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 每場之間至少 yield 一次瀏覽器 event loop；不建立 background catch-up／離線推進，因此網頁關閉後不會繼續計算災厄 HP。
 - Snapshot 提供：目前災厄、battleCount、wins／losses／kills、totalTurns／averageTurns、stopRequested、災厄目前／最大 HP、玩家目前／最大 HP、印記狀態與上一場摘要，供第 9 批一般戰鬥畫面與極簡模式共用。
 - `calamityrunintegrity.js` 檢查 runtime API、Calamity Continuous Rule V2、350ms UI 場間基準、GM 背景戰鬥 gate、頁面啟動不得從 save 恢復 active run、無 active run 的 stop 安全性，以及 run state 不得寫進 `state.calamities`。
+
+## 4.10 2026-09-19 全戰鬥呈現統一修正（新 4 批計畫）
+
+- 第 1 批：**已完成**。文明災厄 Balance V2 固定 HP 1,000,000；舊 currentHp 超過 1,000,000 自動 clamp；Combat Presentation V2 正式加入 prepare／clear lifecycle、combat-screen 綁定與 player shield state；災厄每場結束／返回列表都明確 clear，避免上一場災厄 presentation 污染下一場主線 HP DOM。
+- 第 2 批：待做。主線＋特殊怪＋懸賞改成完整 structured presentation，恢復專精／印記浮字並加入護界銀白色覆蓋條。
+- 第 3 批：待做。競技場＋虛空＋鏡像接同一套 structured presentation／護盾視覺。
+- 第 4 批：待做。全模式統一回歸、移除剩餘 log-based HP owner、強化 Integrity 與跨模式污染測試。
 
 ## 4.9 文明災厄玩家 UI／極簡模式（第 9 批）
 
@@ -367,7 +374,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 極簡模式直接註冊到共用 `mainminimalmode.js` adapter；共用相同 overlay／時鐘／滑動退出配置。內容只顯示：目前敵人、連續戰鬥第 N 場、災厄 HP／最大 HP、玩家 HP／最大 HP；不顯示 EXP／金幣。
 - 選擇／印記頁使用既有 `assets/backgrounds/calamity/`；災厄戰鬥直接共用虛空戰鬥 `assets/backgrounds/dungeon-void-battle/`；災厄結算直接共用虛空結算 `assets/backgrounds/dungeon-void/`，桌機與手機皆同規則；不複製背景檔，`backgroundpreload.js` 不需改。
 - 區域最後 Boss 首殺流程：戰鬥結算 → pending 正式劇情 → 劇情第一次真正完成 → 顯示「文明災厄已解鎖／災厄名稱／可前往文明災厄挑戰」。提示不新增 save 欄位；利用 story `firstCompletion` 與正式 `bossKilled[region.mapEnd]` 判定。戰線紀錄重播不呼叫 `completeStory()`，因此不重複提示。
-- `calamityuiintegrity.js` 檢查首頁順序、UI API、V1 版本、可見 IDs、已解鎖災厄／印記同時顯示，以及尚未解鎖名稱完全不洩漏到 renderer。
+- `calamityuiintegrity.js` 檢查首頁順序、UI API、V3 版本、可見 IDs、已解鎖災厄／印記同時顯示，以及尚未解鎖名稱完全不洩漏到 renderer。
 
 
 ---
