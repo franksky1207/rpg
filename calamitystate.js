@@ -4,6 +4,7 @@
  const CALAMITY_FIXED_HP=1000000;
  const MARK_STATE_VERSION=1;
  const MARK_MAX_LEVEL=10;
+ const CALAMITY_FIXED_HP=1000000;
  const CALAMITY_IDS=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(region=>String(region?.id||"")).filter(Boolean);
  const MARK_IDS=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
 
@@ -62,6 +63,7 @@
  }
 
  window.CALAMITY_STATE_VERSION=CALAMITY_STATE_VERSION;
+ window.CALAMITY_FIXED_HP=CALAMITY_FIXED_HP;
  window.CALAMITY_BALANCE_VERSION=CALAMITY_BALANCE_VERSION;
  window.CALAMITY_FIXED_HP=CALAMITY_FIXED_HP;
  window.MARK_STATE_VERSION=MARK_STATE_VERSION;
