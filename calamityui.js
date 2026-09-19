@@ -2,7 +2,7 @@
  const UI_VERSION=3;
  const MINIMAL_VERSION=1;
  const CONTINUOUS_GAP_MS=350;
- let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
+ let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
 
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("calamity")?window.backgroundProgressSleep(ms,"calamity"):new Promise(resolve=>setTimeout(resolve,ms));
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
@@ -21,37 +21,17 @@
   return `Lv.${m.level}　進度 ${Math.max(0,Number(m.progress)||0)} / ${req}`;
  }
  function hpPercent(current,max){return max>0?Math.max(0,Math.min(100,current/max*100)):0;}
- function pct(value){
-  const n=Number(value)||0;
-  return Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
- }
- function markEffectText(key,level){
-  const lv=Math.max(0,Math.min(10,Math.floor(Number(level)||0)));
-  const effect=typeof window.markEffectSnapshot==="function"?window.markEffectSnapshot(key,lv):null;
-  if(!effect||lv<=0)return "尚未生效。";
-  if(key==="ward")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動，獲得最大 HP ${pct(effect.shieldMaxHpPercent)}% 的護盾。`;
-  if(key==="suppression")return `敵人最終閃避率降低 ${pct(effect.enemyDodgeReductionPoints)} 個百分點。`;
-  if(key==="composure")return `敵人最終暴擊率降低 ${pct(effect.enemyCritReductionPoints)} 個百分點。`;
-  if(key==="indomitable")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動；本場第一次受到致死傷害時保留 ${Math.max(1,Number(effect.surviveHp)||1)} HP。`;
-  if(key==="resilience")return `敵人暴擊的額外傷害部分降低 ${pct(effect.enemyCritBonusDamageReductionPercent)}%。`;
-  if(key==="battleSpirit")return `${pct(effect.activationChance)}% 機率於戰鬥開始時啟動；每層提高 ATK ${pct(effect.atkPercentPerLayer)}%，每回合增加 1 層，最多 ${Math.max(1,Number(effect.maxLayers)||10)} 層。`;
-  if(key==="absorption")return `受到原本會命中的敵方攻擊時，有 ${pct(effect.triggerChance)}% 機率完全吸收傷害，並回復原始傷害 ${pct(effect.healOriginalDamagePercent)}% 的 HP。`;
-  if(key==="revenge")return `敵人成功暴擊後，有 ${pct(effect.triggerChance)}% 機率進入復仇；下一次成功命中的攻擊必定暴擊。`;
-  if(key==="backlash")return `實際受到 HP 傷害且存活後，有 ${pct(effect.triggerChance)}% 機率反噬敵人，反射本次實際 HP 損失的 ${pct(effect.reflectActualHpLossPercent)}% 傷害。`;
-  if(key==="ignore")return `每次玩家攻擊有 ${pct(effect.triggerChance)}% 機率無視敵人 DEF。`;
-  return "永久戰鬥被動。";
- }
  function markEffectBlock(def,m){
   const acquired=m?.acquired===true,level=Math.max(0,Math.min(10,Math.floor(Number(m?.level)||0)));
   if(!acquired){
-   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">Lv.1 效果預覽</div><div>${esc(markEffectText(def.markId,1))}</div></div><div class="muted calamity-mark-note">首次擊敗對應文明災厄後取得 Lv.0。</div>`;
+   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">Lv.1 效果預覽</div><div>${esc(window.markEffectDescription?.(def.markId,1)||"尚未生效。")}</div></div><div class="muted calamity-mark-note">首次擊敗對應文明災厄後取得 Lv.0。</div>`;
   }
   if(level===0){
-   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>Lv.0 尚未生效。</div></div><div class="calamity-mark-next"><div class="calamity-mark-effect-label">Lv.1 效果</div><div>${esc(markEffectText(def.markId,1))}</div></div>`;
+   return `<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>Lv.0 尚未生效。</div></div><div class="calamity-mark-next"><div class="calamity-mark-effect-label">Lv.1 效果</div><div>${esc(window.markEffectDescription?.(def.markId,1)||"尚未生效。")}</div></div>`;
   }
-  const current=`<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>${esc(markEffectText(def.markId,level))}</div></div>`;
+  const current=`<div class="calamity-mark-effect"><div class="calamity-mark-effect-label">目前效果</div><div>${esc(window.markEffectDescription?.(def.markId,level)||"尚未生效。")}</div></div>`;
   if(level>=10)return current+`<div class="calamity-mark-max">已達最高等級 MAX</div>`;
-  return current+`<div class="calamity-mark-next"><div class="calamity-mark-effect-label">下一級 Lv.${level+1}</div><div>${esc(markEffectText(def.markId,level+1))}</div></div>`;
+  return current+`<div class="calamity-mark-next"><div class="calamity-mark-effect-label">下一級 Lv.${level+1}</div><div>${esc(window.markEffectDescription?.(def.markId,level+1)||"尚未生效。")}</div></div>`;
  }
 
  function calamityCardsHtml(){
@@ -92,8 +72,9 @@
  function combatHtml(){
   const def=window.getCivilizationCalamityDefinition?.(ui.selectedId),st=status(ui.selectedId),run=window.getCivilizationCalamityRunSnapshot?.(),p=playerStats();
   const enemy=st?.enemy||window.buildCivilizationCalamityEnemy?.(ui.selectedId)||{name:def?.name||"文明災厄",atk:0,def:0,crit:10,dodge:10};
-  const ehp=ui.displayEnemyHp==null?(st?.currentHp||enemy.hp):ui.displayEnemyHp,emax=ui.displayEnemyMax||st?.maxHp||enemy.hp;
-  const php=ui.displayPlayerHp==null?p.hp:ui.displayPlayerHp,pmax=ui.displayPlayerMax||p.hp;
+  const view=ui.battleView;
+  const ehp=view?.enemyHp??(st?.currentHp||enemy.hp),emax=view?.enemyMax??st?.maxHp??enemy.hp;
+  const php=view?.playerHp??p.hp,pmax=view?.playerMax??p.hp;
   const continuous=ui.mode==="continuous",stopping=run?.stopRequested===true||run?.active===false;
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
    <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
@@ -125,12 +106,18 @@
   return idleHtml();
  };
 
+ function battleViewFromSnapshot(snapshot){
+  if(!snapshot)return null;
+  return {
+   enemyHp:Math.max(0,Number(snapshot.enemyHp)||0),
+   enemyMax:Math.max(1,Number(snapshot.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(snapshot.playerHp)||0),
+   playerMax:Math.max(1,Number(snapshot.playerMaxHp)||1)
+  };
+ }
  function syncCalamityPresentation(snapshot){
-  if(!snapshot)return;
-  ui.displayEnemyHp=Math.max(0,Number(snapshot.enemyHp)||0);
-  ui.displayEnemyMax=Math.max(1,Number(snapshot.enemyMaxHp)||1);
-  ui.displayPlayerHp=Math.max(0,Number(snapshot.playerHp)||0);
-  ui.displayPlayerMax=Math.max(1,Number(snapshot.playerMaxHp)||1);
+  const next=battleViewFromSnapshot(snapshot);if(!next)return;
+  ui.battleView=next;
   if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
  }
 
@@ -153,20 +140,24 @@
    clearAfter:true,
    clearReason:"calamity-battle-end"
   });
-  ui.displayEnemyHp=Math.max(0,Number(full.enemyEndHp)||0);
-  ui.displayEnemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1);
-  ui.displayPlayerHp=Math.max(0,Number(full.playerEndHp)||0);
-  ui.displayPlayerMax=Math.max(1,Number(combat.playerMaxHp)||Number(full.playerStartHp)||1);
+  ui.battleView={
+   enemyHp:Math.max(0,Number(full.enemyEndHp)||0),
+   enemyMax:Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(full.playerEndHp)||0),
+   playerMax:Math.max(1,Number(combat.playerMaxHp)||Number(full.playerStartHp)||1)
+  };
   if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
  }
 
- function resetDisplay(){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
+ function resetDisplay(){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();ui.battleView=null;}
  function primeDisplay(full){
   if(!full)return resetDisplay();
-  ui.displayEnemyHp=Math.max(0,Number(full.enemyStartHp)||0);
-  ui.displayEnemyMax=Math.max(1,Number(full.enemy?.hp)||Number(full.combat?.enemyMaxHp)||1);
-  ui.displayPlayerHp=Math.max(0,Number(full.playerStartHp)||0);
-  ui.displayPlayerMax=Math.max(1,Number(full.playerStartHp)||Number(full.combat?.playerMaxHp)||1);
+  ui.battleView={
+   enemyHp:Math.max(0,Number(full.enemyStartHp)||0),
+   enemyMax:Math.max(1,Number(full.enemy?.hp)||Number(full.combat?.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(full.playerStartHp)||0),
+   playerMax:Math.max(1,Number(full.playerStartHp)||Number(full.combat?.playerMaxHp)||1)
+  };
  }
  function stopMinimalIfOpen(){
   if(window.getMinimalModeAdapterId?.()!=="civilization-calamity")return;
@@ -212,7 +203,7 @@
   if(ui.running)return false;
   const def=window.getCivilizationCalamityDefinition?.(id);
   if(!def||!window.isCivilizationCalamityUnlocked?.(id))return false;
-  ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
+  ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
   view="calamity";render();
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}
   setTimeout(runSingleUi,80);return true;
@@ -223,9 +214,9 @@
   const msg=document.getElementById("combatMessage");if(msg)msg.textContent="已停止連續討伐；不會再開始下一場。";
   return !!result?.ok;
  };
- window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
+ window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
- window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
+ window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};return true;};
 
  function calamityMinimalActive(){const run=window.getCivilizationCalamityRunSnapshot?.();return ui.phase==="combat"&&ui.mode==="continuous"&&ui.running&&run?.active===true;}
  function registerMinimal(){
@@ -240,8 +231,9 @@
     const e=root.querySelector("[data-calamity-minimal-enemy]"),round=root.querySelector("[data-calamity-minimal-round]"),ehp=root.querySelector("[data-calamity-minimal-enemy-hp]"),php=root.querySelector("[data-calamity-minimal-player-hp]");
     if(e)e.textContent=def?.name||run?.calamityName||"文明災厄";
     if(round)round.textContent=`第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`;
-    const enemyCurrent=ui.displayEnemyHp==null?Number(run?.currentHp)||0:ui.displayEnemyHp,enemyMax=ui.displayEnemyMax||Number(run?.maxHp)||0;
-    const playerCurrent=ui.displayPlayerHp==null?Number(run?.playerHp)||0:ui.displayPlayerHp,playerMax=ui.displayPlayerMax||Number(run?.playerMaxHp)||0;
+    const view=ui.battleView;
+    const enemyCurrent=view?.enemyHp??Number(run?.currentHp)||0,enemyMax=view?.enemyMax??Number(run?.maxHp)||0;
+    const playerCurrent=view?.playerHp??Number(run?.playerHp)||0,playerMax=view?.playerMax??Number(run?.playerMaxHp)||0;
     if(ehp)ehp.textContent=`${fmt(enemyCurrent)} / ${fmt(enemyMax)}`;
     if(php)php.textContent=`${fmt(playerCurrent)} / ${fmt(playerMax)}`;
    }
@@ -269,8 +261,8 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
- window.getCivilizationMarkEffectText=markEffectText;
  window.CALAMITY_UI_VERSION=UI_VERSION;
+ window.CALAMITY_BATTLE_VIEW_VERSION=1;
  window.CALAMITY_CONTINUOUS_GAP_MS=CONTINUOUS_GAP_MS;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
