@@ -312,7 +312,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件。第 4 批已由 `combatfx.js` 統一消費並在戰鬥兩方框內顯示。
 - GM 既有 `useTestSpecializations:true` 模擬會同步採用 session-only `gmTestMarkLevels`；亦可用 `options.markLevels` 明確傳入測試快照，不修改正式存檔。
 - `combatmarkintegrity.js` 以固定 RNG 驗證 Lv.0 基準不漂移、10 枚印記核心互動、吸收／反噬／反擊順序與護界／吸收對復仇的邊界規則。
-- `COMBAT_MARK_FX_VERSION = 1`；`COMBAT_PRESENTATION_VERSION = 2`；`COMBAT_PRESENTATION_UNIFIED_VERSION = 1`；`COMBAT_STRUCTURED_PRESENTATION_VERSION = 1`；`MIRROR_STRUCTURED_PRESENTATION_VERSION = 1`；`CALAMITY_STRUCTURED_PRESENTATION_VERSION = 1`。`combatfx.js` 是共用戰鬥呈現 owner；正式 prepare／clear lifecycle、combat-screen 綁定、雙方 HP／shield snapshot 與 structured event animator 已取代舊 log-based HP/pulse 路徑。
+- `COMBAT_MARK_FX_VERSION = 1`；`COMBAT_PRESENTATION_VERSION = 2`；`COMBAT_PRESENTATION_UNIFIED_VERSION = 1`；`COMBAT_STRUCTURED_PRESENTATION_VERSION = 2`；`MIRROR_STRUCTURED_PRESENTATION_VERSION = 1`；`CALAMITY_STRUCTURED_PRESENTATION_VERSION = 2`。 `COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION = 1`；`CALAMITY_BACKGROUND_PRESENTATION_VERSION = 1`。`combatfx.js` 是共用戰鬥呈現 owner；正式 prepare／clear lifecycle、combat-screen 綁定、雙方 HP／shield snapshot 與 structured event animator 已取代舊 log-based HP/pulse 路徑。
 - 印記浮字：護界／鎮心／不屈／韌性／吸收／復仇／戰意顯示在玩家框；壓制／反噬／無視顯示在敵方框。戰意層數顯示 `戰意 ×N`，吸收顯示回復 HP，反噬顯示實際反傷。護界使用白色 shield bar 覆蓋原 HP 條；shield 先扣完才扣 HP。
 - 五個正式動畫 loop 都補上吸收成功 pulse，但吸收不觸發受擊震動；護盾、吸收、反噬造成的畫面 HP 差異由 `combatfx.js` 依 structured event 校正。
 - 模式接線版本：`MAIN_COMBAT_MARK_PRESENTATION_VERSION = 1`、`SPECIAL_COMBAT_MARK_PRESENTATION_VERSION = 1`、`BOUNTY_COMBAT_MARK_PRESENTATION_VERSION = 1`、`ARENA_COMBAT_MARK_PRESENTATION_VERSION = 1`、`VOID_COMBAT_MARK_PRESENTATION_VERSION = 1`。
@@ -377,6 +377,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 戰鬥 UI 精簡：所有正式戰鬥共用的 `.combat-message` 文字訊息列已由 `battleflow.css` 隱藏；玩家只看雙方框、HP、傷害／閃避跳字、專精／印記浮字。Combat Core／各模式內部 logs 保留供動畫、除錯與 Integrity，不作玩家可見資訊。
 - UI 每場先以 `enemyStartHp / playerStartHp` 預填，再播放動畫，避免 Core 已結算後畫面短暫閃成戰後 HP。連戰標題與極簡模式使用 callback 的 `battleNumber`，不把已完成 `battleCount` 誤當下一場。
 - 災厄 structured animation 依 eventCount 動態使用 48／32／20／12ms step delay，opening 90ms、impact 45ms、end 150ms；連戰場間固定 350ms，該常數由 UI owner 管理。
+- GM「背景戰鬥」開啟時，`calamityui.js` 會把 background-aware `sleep` 注入 `animateStructuredCombatPresentation()`；opening／impact／step／end 以及場間 350ms 都走 `backgroundProgressSleep("calamity")`，背景時間 credit 可在回前景後完整追趕，不再只保留 active run。
 - 極簡模式直接註冊到共用 `mainminimalmode.js` adapter；共用相同 overlay／時鐘／滑動退出配置。內容只顯示：目前敵人、連續戰鬥第 N 場、災厄 HP／最大 HP、玩家 HP／最大 HP；不顯示 EXP／金幣。
 - 選擇／印記頁使用既有 `assets/backgrounds/calamity/`；災厄戰鬥直接共用虛空戰鬥 `assets/backgrounds/dungeon-void-battle/`；災厄結算直接共用虛空結算 `assets/backgrounds/dungeon-void/`，桌機與手機皆同規則；不複製背景檔，`backgroundpreload.js` 不需改。
 - 區域最後 Boss 首殺流程：戰鬥結算 → pending 正式劇情 → 劇情第一次真正完成 → 顯示「文明災厄已解鎖／災厄名稱／可前往文明災厄挑戰」。提示不新增 save 欄位；利用 story `firstCompletion` 與正式 `bossKilled[region.mapEnd]` 判定。戰線紀錄重播不呼叫 `completeStory()`，因此不重複提示。
@@ -1002,6 +1003,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - `cloudsave.js` wrapper `save()` 維護本機存檔時間 metadata。
 - `gmhubextensions.js` 仍集中 wrapper `gmHtml()`。
 - `backgroundprogress.js` 仍有既有戰鬥流程 wrapper／時間補償整合。
+- 2026-09-19 已修正災厄連戰背景戰鬥接線：先前僅 GM gate／active run 有接上，structured animation 仍用普通 `setTimeout`，造成背景 credit 無法完整消耗；目前已透過可注入 sleep 修正，並由 Combat FX／Calamity UI／Runtime／Final Integrity 鎖定。
 - `dungeonui.js` 與 `dungeonreturnlabels.js` 有少量返回文字正規化重複。
 - `offlineprogress.js` 有 inline modal styles。
 - `gmhub.js`、`specialization.js`、部分鏡像／GM UI 仍注入局部 CSS。
