@@ -232,8 +232,8 @@
     if(e)e.textContent=def?.name||run?.calamityName||"文明災厄";
     if(round)round.textContent=`第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`;
     const view=ui.battleView;
-    const enemyCurrent=view?.enemyHp??Number(run?.currentHp)||0,enemyMax=view?.enemyMax??Number(run?.maxHp)||0;
-    const playerCurrent=view?.playerHp??Number(run?.playerHp)||0,playerMax=view?.playerMax??Number(run?.playerMaxHp)||0;
+    const enemyCurrent=view?.enemyHp??(Number(run?.currentHp)||0),enemyMax=view?.enemyMax??(Number(run?.maxHp)||0);
+    const playerCurrent=view?.playerHp??(Number(run?.playerHp)||0),playerMax=view?.playerMax??(Number(run?.playerMaxHp)||0);
     if(ehp)ehp.textContent=`${fmt(enemyCurrent)} / ${fmt(enemyMax)}`;
     if(php)php.textContent=`${fmt(playerCurrent)} / ${fmt(playerMax)}`;
    }
