@@ -2,7 +2,7 @@
  const GM_CALAMITY_TEST_VERSION=1;
  const GM_MARK_MANAGEMENT_VERSION=1;
  const GM_MARK_CONFIG_OWNER_VERSION=1;
- const GM_PLAYER_TITLE_PREVIEW_VERSION=2;
+ const GM_PLAYER_TITLE_PREVIEW_VERSION=3;
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
@@ -88,17 +88,26 @@
    return divider+`<option value="${def.id}" ${def.id===gmTitlePreviewId?"selected":""}>${label}</option>`;
   }).join("");
  }
+ function titlePreviewPlayerName(){
+  const name=typeof state?.playerName==="string"?state.playerName.trim():"";
+  return name||"玩家";
+ }
+ function titleCombatPreviewHtml(def){
+  const identity=def&&typeof window.playerIdentityNameHtml==="function"
+   ?window.playerIdentityNameHtml({name:titlePreviewPlayerName(),titleId:def.id,compact:true})
+   :titlePreviewPlayerName();
+  return `<div class="gm-player-title-combat-preview"><div class="combatant player"><h2>${identity}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span>100 / 100</span></div><div class="bar"><span class="hp" style="width:100%"></span></div></div></div></div>`;
+ }
  window.gmSetPlayerTitlePreviewTier=function(value){
   const defs=titleDefs(),id=String(value||"");
   gmTitlePreviewId=defs.some(def=>def.id===id)?id:(defs[0]?.id||null);
   const box=document.getElementById("gmPlayerTitlePreviewBox"),def=titlePreviewDefinition();
-  if(box&&def)box.innerHTML=`<div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):def.name}</div><div class="muted" style="text-align:center;margin-top:6px">${titlePreviewLabel(def)}</div>`;
+  if(box&&def)box.innerHTML=`${titleCombatPreviewHtml(def)}<div class="muted" style="text-align:center;margin-top:8px">${titlePreviewLabel(def)}</div>`;
   return gmTitlePreviewId;
  };
  window.gmPlayerTitlePreviewHtml=function(){
   const def=titlePreviewDefinition();
-  const preview=def&&typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):(def?.name||"稱號預覽");
-  return `<div class="muted gm-hub-note">純視覺預覽全部 16 個正式稱號；前 10 個為文明災厄，後 6 個為鏡像戰。此區不解鎖稱號、不變更目前裝備稱號、不修改任何正式狀態，也不寫入正式存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px"><div class="player-title-notice-preview">${preview}</div><div class="muted" style="text-align:center;margin-top:6px">${titlePreviewLabel(def)}</div></div>`;
+  return `<div class="muted gm-hub-note">實戰名稱預覽全部 16 個正式稱號；直接使用目前正式玩家名稱與正式 playerIdentityNameHtml()，前 10 個為文明災厄、後 6 個為鏡像戰。此區不解鎖、不裝備、不修改任何正式狀態，也不寫入存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px">${titleCombatPreviewHtml(def)}<div class="muted" style="text-align:center;margin-top:8px">${titlePreviewLabel(def)}</div></div>`;
  };
  function calamityOptions(){
   return calamities().map((def,index)=>`<option value="${def.id}" ${index===0?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
