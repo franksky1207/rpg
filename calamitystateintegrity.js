@@ -14,8 +14,8 @@
  });
 
  if(Number(window.CALAMITY_STATE_VERSION)!==1)fail("CALAMITY_STATE_VERSION","文明災厄 state version 應為 1",window.CALAMITY_STATE_VERSION);
- if(Number(window.CALAMITY_BALANCE_VERSION)!==2)fail("CALAMITY_BALANCE_VERSION","文明災厄 balance version 應為 2",window.CALAMITY_BALANCE_VERSION);
- if(Number(window.CALAMITY_FIXED_HP)!==1000000)fail("CALAMITY_FIXED_HP","文明災厄固定 HP 應為 1,000,000",window.CALAMITY_FIXED_HP);
+ if(Number(window.CALAMITY_BALANCE_VERSION)!==3)fail("CALAMITY_BALANCE_VERSION","文明災厄 balance version 應為 3",window.CALAMITY_BALANCE_VERSION);
+ if(Number(window.CALAMITY_HP_PER_LEVEL)!==500000||typeof window.getCivilizationCalamityConfiguredMaxHp!=="function")fail("CALAMITY_HP_CURVE","文明災厄 HP 應為 500,000 × 災厄等級",{perLevel:window.CALAMITY_HP_PER_LEVEL,api:typeof window.getCivilizationCalamityConfiguredMaxHp});
  if(Number(window.MARK_STATE_VERSION)!==1)fail("MARK_STATE_VERSION","印記 state version 應為 1",window.MARK_STATE_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
 
@@ -43,7 +43,8 @@
    marks:{version:999,entries:{[markIds[0]]:{acquired:false,level:99,progress:7},[markIds[1]]:{acquired:false,level:0,progress:5},extra:{acquired:true,level:10,progress:9}}}
   };
   window.normalizeCivilizationCalamityState(malformed);
-  if(malformed.calamities.version!==1||malformed.calamities.balanceVersion!==2||Object.keys(malformed.calamities.entries).length!==10||malformed.calamities.entries[calamityIds[0]].currentHp!==null||malformed.calamities.entries[calamityIds[1]].currentHp!==1000000)fail("CALAMITY_NORMALIZE","災厄 state normalizer／舊 HP clamp 異常",malformed.calamities);
+  if(malformed.calamities.version!==1||malformed.calamities.balanceVersion!==3||Object.keys(malformed.calamities.entries).length!==10||malformed.calamities.entries[calamityIds[0]].currentHp!==null||malformed.calamities.entries[calamityIds[1]].currentHp!==1000000)fail("CALAMITY_NORMALIZE","災厄 state normalizer／分級 HP clamp 異常",malformed.calamities);
+  if(window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[0])!==500000||window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[9])!==5000000)fail("CALAMITY_HP_CURVE_VALUES","災厄 HP 曲線端點異常",{first:window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[0]),last:window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[9])});
   const m0=malformed.marks.entries[markIds[0]],m1=malformed.marks.entries[markIds[1]];
   if(malformed.marks.version!==1||Object.keys(malformed.marks.entries).length!==10||m0.acquired!==true||m0.level!==10||m0.progress!==0||m1.acquired!==false||m1.level!==0||m1.progress!==0)fail("MARK_NORMALIZE","印記 state normalizer 異常",malformed.marks);
  }
@@ -51,7 +52,7 @@
  if(typeof newState==="function"){
   const fresh=newState();
   if(Number(fresh.saveVersion)!==13)fail("NEW_STATE_SCHEMA","新存檔應直接建立為 Schema 13",fresh.saveVersion);
-  if(Number(fresh.calamities?.version)!==1||Number(fresh.calamities?.balanceVersion)!==2||Object.keys(fresh.calamities?.entries||{}).length!==10)fail("NEW_STATE_CALAMITIES","newState 未建立正式災厄 state",fresh.calamities);
+  if(Number(fresh.calamities?.version)!==1||Number(fresh.calamities?.balanceVersion)!==3||Object.keys(fresh.calamities?.entries||{}).length!==10)fail("NEW_STATE_CALAMITIES","newState 未建立正式災厄 state",fresh.calamities);
   if(Number(fresh.marks?.version)!==1||Object.keys(fresh.marks?.entries||{}).length!==10)fail("NEW_STATE_MARKS","newState 未建立正式印記 state",fresh.marks);
  }
 
