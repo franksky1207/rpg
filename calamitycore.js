@@ -111,7 +111,9 @@
    win:combat.win===true,
    currentHp:combat.win?maxHp(id):calamityEntry.currentHp,
    maxHp:maxHp(id),
-   markSettlement,\n   titleSettlement\n  };
+   markSettlement,
+   titleSettlement
+  };
  }
  function battle(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
