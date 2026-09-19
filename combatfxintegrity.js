@@ -26,10 +26,12 @@
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
  if(Number(window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION)!==1)fail("MAIN_STRUCTURED_PRESENTATION_OWNER_VERSION","主線 Structured Presentation owner guard 應為 1",window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION);
+ if(Number(window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION)!==1||typeof window.mainBattlePresentationSleep!=="function")fail("MAIN_BACKGROUND_PRESENTATION","主線 Structured Presentation 必須使用 background-aware sleep",{version:window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION,sleep:typeof window.mainBattlePresentationSleep});
  if(typeof window.animateFight!=="function")fail("MAIN_STRUCTURED_PRESENTATION_OWNER","主線 animateFight 未載入");
  else{
   const mainAnimateSource=Function.prototype.toString.call(window.animateFight);
   if(!/animateStructuredCombatPresentation/.test(mainAnimateSource))fail("MAIN_STRUCTURED_PRESENTATION_OWNER","主線 animateFight 必須由 ui.js 直接委派 Structured Presentation",mainAnimateSource);
+  if(!/mainBattlePresentationSleep/.test(mainAnimateSource)||!/sleep\s*:\s*presentationSleep/.test(mainAnimateSource))fail("MAIN_BACKGROUND_PRESENTATION_WIRING","主線 animateFight 必須把 background-aware sleep 注入 Structured Presentation",mainAnimateSource);
   if(/setCombatHp|attackMotion|flashCombatText/.test(mainAnimateSource))fail("MAIN_LEGACY_ANIMATION_OVERRIDE","主線 animateFight 不得恢復退休的 log parser／HP writer 動畫",mainAnimateSource);
  }
  if(typeof window.prepareMirrorCombatPresentation!=="function"||typeof window.animateMirrorStructuredCombatPresentation!=="function")fail("MIRROR_STRUCTURED_PRESENTATION","Mirror Structured Presentation adapter 未完整載入");
