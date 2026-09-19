@@ -29,7 +29,7 @@
   const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!def)return false;
   const modal=ensureTitleNoticeModal();
-  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div style="margin:14px 0;font-size:22px;font-weight:700">${esc(def.name)}</div><div class="muted">首次擊敗對應文明災厄後取得。</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
+  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):esc(def.name)}</div><div class="muted">首次擊敗對應文明災厄後取得。</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
   modal.classList.add("show");
   titleNoticeOpen=true;
   return true;
@@ -123,7 +123,7 @@
    <div class="calamity-run-stats"><div><span>災厄</span><strong>${esc(def?.name||enemy.name)}</strong></div><div><span>已完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div></div>
    ${continuous?`<div class="calamity-stop-wrap"><button id="calamityStopBtn" class="btn danger" onclick="stopCivilizationCalamityContinuousUI()" ${stopping?"disabled":""}>${stopping?"停止中":"停止連續討伐"}</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div><div class="combat-arena">
-    <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${esc(typeof currentPlayerName==="function"?currentPlayerName():"玩家")} Lv.${state.level}</h2><div class="muted">ATK ${p.atk}　DEF ${p.def}<br>暴擊 ${p.crit}%　閃避 ${p.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(pmax)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPercent(php,pmax)}%"></span></div></div></div>
+    <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):esc(typeof currentPlayerName==="function"?currentPlayerName():"玩家")} Lv.${state.level}</h2><div class="muted">ATK ${p.atk}　DEF ${p.def}<br>暴擊 ${p.crit}%　閃避 ${p.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(pmax)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPercent(php,pmax)}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
     <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="calamity-threat-badge">文明災厄</div><h2>${esc(enemy.name)}</h2><div class="muted">ATK ${fmt(enemy.atk)}　DEF ${fmt(enemy.def)}<br>暴擊 ${enemy.crit}%　閃避 ${enemy.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(ehp)} / ${fmt(emax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${hpPercent(ehp,emax)}%"></span></div></div></div>
    </div><div class="combat-message" id="combatMessage">準備戰鬥</div></div>
