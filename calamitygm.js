@@ -94,7 +94,7 @@
  }
  function titleCombatPreviewHtml(def){
   const identity=def&&typeof window.playerIdentityNameHtml==="function"
-   ?window.playerIdentityNameHtml({name:titlePreviewPlayerName(),titleId:def.id,compact:true})
+   ?window.playerIdentityNameHtml({name:titlePreviewPlayerName(),titleId:def.id,compact:true,allowUnownedTitle:true})
    :titlePreviewPlayerName();
   return `<div class="gm-player-title-combat-preview"><div class="combatant player"><h2>${identity}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span>100 / 100</span></div><div class="bar"><span class="hp" style="width:100%"></span></div></div></div></div>`;
  }
