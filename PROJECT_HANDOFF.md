@@ -1036,6 +1036,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 iPhone Safari 主線背景戰鬥判定 V2：上一版完全排除 blur 後，部分 iOS Safari 真正切到背景時只送 blur、未可靠送 visibility hidden，導致主線連續戰鬥不再吃背景時間。現在改成「Page Visibility/pagehide 優先＋800ms sustained-blur fallback」：hidden/pagehide 立刻進背景；可見頁單純 blur 先等待 800ms，若 focus 回來即取消，只有持續失焦才視為背景。恢復主線連戰的背景 catch-up，同時避免短暫 hasFocus=false 再把前景戰鬥卡住。版本為 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=2`、`BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION=1`。戰鬥數值、獎勵、Save Schema 不變。
 
+- 2026-09-19 主線背景戰鬥正式接回 Structured Presentation：主線舊 `animateFight` 退休後，`ui.js -> animateStructuredCombatPresentation()` 曾未注入 background-aware sleep，導致 `backgroundProgressStart("main")` 雖有啟動，但動畫仍用普通 setTimeout，切背景時無法像虛空／災厄一樣消耗背景時間。現在由 `combatpacing.js` 正式提供 `mainBattlePresentationSleep()`，內部共用既有 `mainFlowSleep()`／`backgroundProgressSleep("main")`，`ui.js` 以 `sleep` option 注入 Structured Presentation；新增 `MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION=1` 並由 Combat FX Integrity 鎖定。背景偵測本身不再變更，主線與災厄採同一類「presentation sleep injection」接法。戰鬥數值、獎勵、Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
