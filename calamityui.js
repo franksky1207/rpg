@@ -124,64 +124,39 @@
   return idleHtml();
  };
 
- function setHpUi(ehp,enemyMax,php,playerMax,message){
-  ui.displayEnemyHp=Math.max(0,ehp);ui.displayEnemyMax=Math.max(1,enemyMax);ui.displayPlayerHp=Math.max(0,php);ui.displayPlayerMax=Math.max(1,playerMax);
-  const eb=document.getElementById("combatEnemyBar"),eh=document.getElementById("combatEnemyHp"),pb=document.getElementById("combatPlayerBar"),ph=document.getElementById("combatPlayerHp"),msg=document.getElementById("combatMessage");
-  if(eb)eb.style.width=`${hpPercent(ui.displayEnemyHp,ui.displayEnemyMax)}%`;
-  if(eh)eh.textContent=`${fmt(ui.displayEnemyHp)} / ${fmt(ui.displayEnemyMax)}`;
-  if(pb)pb.style.width=`${hpPercent(ui.displayPlayerHp,ui.displayPlayerMax)}%`;
-  if(ph)ph.textContent=`${fmt(ui.displayPlayerHp)} / ${fmt(ui.displayPlayerMax)}`;
-  if(msg)msg.textContent=message||"";
+ function syncCalamityPresentation(snapshot){
+  if(!snapshot)return;
+  ui.displayEnemyHp=Math.max(0,Number(snapshot.enemyHp)||0);
+  ui.displayEnemyMax=Math.max(1,Number(snapshot.enemyMaxHp)||1);
+  ui.displayPlayerHp=Math.max(0,Number(snapshot.playerHp)||0);
+  ui.displayPlayerMax=Math.max(1,Number(snapshot.playerMaxHp)||1);
   if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
- }
- function pulse(target,text){
-  const card=document.getElementById(target==="enemy"?"combatEnemyCard":"combatPlayerCard"),dmg=document.getElementById(target==="enemy"?"combatEnemyDamage":"combatPlayerDamage");
-  if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),250);}
-  if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
- }
- function syncPresentationUi(enemyMax,playerMax,message){
-  const enemyHp=Number(window.getCombatPresentationEnemyHp?.()),playerHp=Number(window.getCombatPresentationPlayerHp?.());
-  ui.displayEnemyHp=Number.isFinite(enemyHp)?Math.max(0,enemyHp):ui.displayEnemyHp;
-  ui.displayEnemyMax=Math.max(1,enemyMax);
-  ui.displayPlayerHp=Number.isFinite(playerHp)?Math.max(0,playerHp):ui.displayPlayerHp;
-  ui.displayPlayerMax=Math.max(1,playerMax);
-  if(typeof window.syncCombatPresentationHp==="function")window.syncCombatPresentationHp();
-  const msg=document.getElementById("combatMessage");if(msg)msg.textContent=message||"";
-  if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
- }
- function consumePresentationPulse(target,text,enemyMax,playerMax,message){
-  if(typeof window.consumeCombatPresentationPulseManual==="function")window.consumeCombatPresentationPulseManual(target,text);
-  else if(typeof window.consumeCombatPresentationPulse==="function")window.consumeCombatPresentationPulse(target,text);
-  pulse(target,text);
-  syncPresentationUi(enemyMax,playerMax,message);
  }
 
  async function animateBattle(battle){
   const full=battle?.result;
   if(!full){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-empty");return;}
-  try{
-  const combat=full.combat||full,enemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1),playerMax=Math.max(1,Number(full.playerStartHp)||Number(combat.playerMaxHp)||1);
-  const startEnemyHp=Math.max(0,Number(full.enemyStartHp)||enemyMax),startPlayerHp=Math.max(0,Number(full.playerStartHp)||playerMax);
-  const logs=combat?.logs||full.logs||[],delay=logs.length>90?14:logs.length>50?24:45;
-  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(combat,{logs:true});
-  setHpUi(startEnemyHp,enemyMax,startPlayerHp,playerMax,"開始戰鬥");
-  if(typeof window.syncCombatPresentationHp==="function")window.syncCombatPresentationHp();
-  await sleep(100);
-  for(const line of logs){
-   let m=line.match(/^你攻擊.+，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);consumePresentationPulse("enemy",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`,enemyMax,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("閃避了你的攻擊")){consumePresentationPulse("enemy","閃避",enemyMax,playerMax,line);await sleep(delay);continue;}
-   m=line.match(/^.+攻擊你，(?:暴擊)?造成 (\d+) 點傷害。$/);
-   if(m){const n=Number(m[1]);consumePresentationPulse("player",line.includes("暴擊")?`暴擊 ${n}`:`-${n}`,enemyMax,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("你閃避了攻擊")){consumePresentationPulse("player","閃避",enemyMax,playerMax,line);await sleep(delay);continue;}
-   if(line.includes("吸收印記化解了傷害")){consumePresentationPulse("player","吸收",enemyMax,playerMax,line);await sleep(delay);continue;}
-   const msg=document.getElementById("combatMessage");if(msg)msg.textContent=line;
-   await sleep(delay);
-  }
-  setHpUi(Math.max(0,Number(full.enemyEndHp)||0),enemyMax,Math.max(0,Number(full.playerEndHp)||0),playerMax,full.win?"災厄擊破！":"本場挑戰結束");
-  await sleep(250);
-  if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();
-  }finally{if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-battle-end");}
+  const combat=full.combat||full;
+  if(typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
+  window.prepareCombatPresentation(combat,{logs:true});
+  syncCalamityPresentation(window.getCombatPresentationSnapshot?.());
+  const eventCount=Array.isArray(combat?.events)?combat.events.length:0;
+  const stepDelay=eventCount>140?12:eventCount>90?20:eventCount>55?32:48;
+  await window.animateStructuredCombatPresentation(combat,{
+   mode:"calamity",
+   openingDelay:90,
+   impactDelay:45,
+   stepDelay,
+   endDelay:150,
+   onUpdate:syncCalamityPresentation,
+   clearAfter:true,
+   clearReason:"calamity-battle-end"
+  });
+  ui.displayEnemyHp=Math.max(0,Number(full.enemyEndHp)||0);
+  ui.displayEnemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1);
+  ui.displayPlayerHp=Math.max(0,Number(full.playerEndHp)||0);
+  ui.displayPlayerMax=Math.max(1,Number(combat.playerMaxHp)||Number(full.playerStartHp)||1);
+  if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
  }
 
  function resetDisplay(){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
@@ -295,6 +270,7 @@
 
  window.getCivilizationMarkEffectText=markEffectText;
  window.CALAMITY_UI_VERSION=UI_VERSION;
+ window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
 })();
