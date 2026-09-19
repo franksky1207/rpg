@@ -197,15 +197,30 @@
  }
 
 
+ const fxClassCleanup=new WeakMap();
+ function restartFxClass(card,className,animationNamePattern){
+  if(!card)return;
+  let handlers=fxClassCleanup.get(card);
+  if(!handlers){handlers={};fxClassCleanup.set(card,handlers);}
+  const prior=handlers[className];
+  if(prior)card.removeEventListener("animationend",prior);
+  card.classList.remove(className);void card.offsetWidth;card.classList.add(className);
+  const finish=event=>{
+   if(event.target!==card||!animationNamePattern.test(String(event.animationName||"")))return;
+   card.removeEventListener("animationend",finish);
+   if(handlers[className]===finish)delete handlers[className];
+   card.classList.remove(className);
+  };
+  handlers[className]=finish;
+  card.addEventListener("animationend",finish);
+ }
  function directMotion(attacker){
   const card=combatCard(attacker==="player"?"player":"enemy");
-  if(!card)return;
-  card.classList.remove("attacking");void card.offsetWidth;card.classList.add("attacking");
-  setTimeout(()=>card.classList.remove("attacking"),340);
+  restartFxClass(card,"attacking",/Attack/);
  }
  function directPulse(target,text){
   const card=combatCard(target),dmg=document.getElementById(target==="player"?"combatPlayerDamage":"combatEnemyDamage")||document.getElementById(target==="player"?"voidPlayerDamage":"voidEnemyDamage");
-  if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
+  if(card&&text!=="閃避"&&text!=="吸收")restartFxClass(card,"hit",/^hitShake/);
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
  const STRUCTURED_COMBAT_PACING=Object.freeze({
@@ -427,5 +442,6 @@
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
 
  window.COMBAT_MARK_FX_VERSION=1;
+ window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION=1;
  installStyles();
 })();
