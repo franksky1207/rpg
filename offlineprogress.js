@@ -127,13 +127,13 @@
   return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:0};
  }
  function normalizePending(raw){
-  if(!isObject(raw))return null;
+  if(!isObject(raw)||Number(raw.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0));
   const battles=Math.max(0,Math.min(Math.floor(elapsedUsed/avg),Math.floor(Number(raw.battles)||0)));
   if(elapsedRaw<OFFLINE_MIN_MS||!legalFarmTarget(map,enemy)||battles<1)return null;
-  return {map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
+  return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
  }
  function buildPendingSettlement(){
   const o=ensureOfflineState(),t=now(),clock=wallClockGuard(o,t);
@@ -149,7 +149,7 @@
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const battles=Math.max(0,Math.floor(elapsedUsed/avg));
   if(battles<1)return null;
-  const pending={map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
+  const pending={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
   o.pendingSettlement=pending;
   if(baseSave)baseSave(false);
   return pending;
