@@ -8,7 +8,7 @@
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
- const OFFLINE_BATTLE_SAMPLE_VERSION=2;
+ const OFFLINE_BATTLE_SAMPLE_VERSION=Math.max(1,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||1));
  const CLOCK_ROLLBACK_TOLERANCE_MS=5*60*1000;
  const HEARTBEAT_MS=60*1000;
  const HEARTBEAT_PERSIST_MS=5*60*1000;
@@ -285,7 +285,6 @@
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
- window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
