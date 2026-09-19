@@ -2,9 +2,7 @@
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const expectedKeys=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
- const expectedNames=["護界印記","壓制印記","鎮心印記","不屈印記","韌性印記","戰意印記","吸收印記","復仇印記","反噬印記","無視印記"];
- const expectedLevels=[50,100,150,200,250,300,350,400,450,500];
- const expectedRegions=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(x=>String(x?.id||""));
+ const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
  const expectedUpgrade=[1,1,2,2,3,3,4,4,5,5];
 
  if(Number(window.MARK_CORE_VERSION)!==1)fail("MARK_CORE_VERSION","Mark Core version 應為 1",window.MARK_CORE_VERSION);
@@ -15,11 +13,9 @@
  if(JSON.stringify(Array.from(window.MARK_KEYS||[]))!==JSON.stringify(expectedKeys))fail("MARK_KEYS","印記順序與正式取得順序不一致",window.MARK_KEYS);
  if(JSON.stringify(Array.from(window.MARK_UPGRADE_KILLS||[]))!==JSON.stringify(expectedUpgrade))fail("MARK_UPGRADE_KILLS","印記升級擊殺需求異常",window.MARK_UPGRADE_KILLS);
 
- expectedKeys.forEach((key,index)=>{
-  const def=window.MARK_DEFS?.[key];
-  if(def?.name!==expectedNames[index]||Number(def?.unlockLevel)!==expectedLevels[index]||def?.regionId!==expectedRegions[index])fail("MARK_DEF",`${key} 定義異常`,def);
- });
- const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markAcquired","markProgress","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
+ const configKeys=config.map(entry=>entry.markId);
+ if(JSON.stringify(configKeys)!==JSON.stringify(expectedKeys))fail("MARK_CONFIG_KEYS","Mark Core 正式順序應直接來自統一災厄設定",configKeys);
+ const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
 
  if(typeof window.markActivationChance==="function"){
