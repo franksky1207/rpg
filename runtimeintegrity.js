@@ -31,6 +31,8 @@
  if(typeof window.VOID_MIRAGE_GM_UI_V2!=="undefined")fail("LEGACY_VOID_GM_MARKER","已退休的虛空 GM UI 標記不應再載入");
  const retiredPresentationApis=["consumeCombatPresentationPulse","consumeCombatPresentationPulseManual"];
  retiredPresentationApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_COMBAT_PRESENTATION_API",`舊 log-based presentation API ${name} 不應再存在`);});
+ const retiredCalamityApis=["normalizeCivilizationMarkProgressForCore","advanceCivilizationCalamityMarkEntry","settleCivilizationCalamityMarkKill","markAcquired","markProgress","MARK_DEFS","CALAMITY_DEFS"];
+ retiredCalamityApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_CALAMITY_API",`已退休的災厄／印記相容 API ${name} 不應再存在`);});
 
  if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==1||!Array.isArray(window.CIVILIZATION_CALAMITY_CONFIG)||window.CIVILIZATION_CALAMITY_CONFIG.length!==10)fail("CALAMITY_CONFIG","文明災厄統一設定未正確載入",window.CIVILIZATION_CALAMITY_CONFIG);
  if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1)fail("MARK_PROGRESSION_OWNER","Mark Core progression owner 未正確載入",window.MARK_PROGRESSION_OWNER_VERSION);
