@@ -100,6 +100,6 @@
   return true;
  };
 
- if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("test","劇情測試",window.gmStoryTestHtml,{id:"gm-story-test",open:true,position:"prepend"});
+ if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("test","劇情測試",window.gmStoryTestHtml,{id:"gm-story-test",position:"prepend"});
  window.GM_STORY_TEST_VERSION=3;
 })();
