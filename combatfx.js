@@ -17,7 +17,6 @@
  let floatSerial=0;
  let syncingHp=false;
  let structuredPlayback=false;
- const manualPulseSkips={player:0,enemy:0};
 
 
  function combatScreen(){return document.querySelector("#main .combat-screen");}
@@ -82,12 +81,10 @@
   return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,index:p.index,eventCount:p.events.length};
  };
  window.clearCombatPresentation=function(reason="clear"){
-  if(!presentation){manualPulseSkips.player=0;manualPulseSkips.enemy=0;return null;}
+  if(!presentation)return null;
   const cleared={token:presentation.token,reason};
   presentation.active=false;
   presentation=null;
-  manualPulseSkips.player=0;
-  manualPulseSkips.enemy=0;
   document.querySelectorAll(".combat-shield-bar").forEach(el=>el.remove());
   return cleared;
  };
@@ -199,65 +196,6 @@
    ||(evt.mark==="backlash"&&evt.action==="trigger");
  }
 
- function emitPrelude(events,target){
-  let delay=0;
-  for(const evt of events){
-   if(evt.type==="combo"){spawnFx(target,"combo",null,delay);delay+=85;}
-   else if(evt.type==="counter"){spawnFx(target,"counter",null,delay);delay+=85;}
-   else if(evt.type==="berserk"){spawnFx("enemy","berserk",null,delay);delay+=85;}
-   else if(evt.type==="mark")delay+=emitMark(evt,delay);
-  }
-  return delay;
- }
- function consumePostEvents(delay=0){
-  const p=presentation;if(!p||!Array.isArray(p.events))return delay;
-  while(p.index<p.events.length){
-   const evt=p.events[p.index];
-   if(evt?.type==="drain"){
-    p.index++;
-    const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
-    if(healed>0)p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
-    spawnFx("player","drain",null,delay);delay+=85;
-    if(healed>0){spawnFx("player","heal",`+${healed} HP`,delay);delay+=85;}
-    continue;
-   }
-   if(isPostMark(evt)){
-    p.index++;
-    delay+=emitMark(evt,delay);
-    continue;
-   }
-   break;
-  }
-  return delay;
- }
-
- function consumeForPulse(target,text){
-  const p=presentation;if(!p||!Array.isArray(p.events))return null;
-  const dodge=String(text||"").includes("閃避");
-  const want=evt=>dodge?(evt.type==="dodge"&&evt.target===target):(evt.type==="attack"&&((target==="enemy"&&evt.actor==="player")||(target==="player"&&evt.actor==="enemy")));
-  const pre=[];let match=null;
-  while(p.index<p.events.length){
-   const evt=p.events[p.index++];
-   if(want(evt)){match=evt;break;}
-   if(evt.type==="combo"||evt.type==="counter"||evt.type==="berserk"||evt.type==="mark")pre.push(evt);
-  }
-  if(!match)return null;
-  let delay=emitPrelude(pre,target);
-  if(match.type==="dodge"){syncCombatHpDom();return match;}
-  if(match.actor==="enemy")p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(match.actualDamage)||0)));
-  if(match.actor==="player")p.enemyHp=Math.max(0,p.enemyHp-Math.max(0,Math.floor(Number(match.actualDamage)||0)));
-  if(match.initiative){spawnFx(target,"initiative",null,delay);delay+=85;}
-  if(match.penetration){spawnFx(target,"penetration",null,delay);delay+=85;}
-  consumePostEvents(delay);
-  syncCombatHpDom();
-  return match;
- }
- window.consumeCombatPresentationPulse=consumeForPulse;
- window.consumeCombatPresentationPulseManual=function(target,text){
-  const match=consumeForPulse(target,text);
-  if(match&&(target==="player"||target==="enemy"))manualPulseSkips[target]=(manualPulseSkips[target]||0)+1;
-  return match;
- };
 
  function directMotion(attacker){
   const card=combatCard(attacker==="player"?"player":"enemy");
@@ -459,11 +397,8 @@
 
  document.addEventListener("animationstart",event=>{
   const el=event.target;
-  if(!(el instanceof Element)||!el.classList.contains("combat-damage"))return;
-  if(event.animationName!=="damagePop"||structuredPlayback)return;
+  if(!(el instanceof Element)||!el.classList.contains("combat-damage")||event.animationName!=="damagePop")return;
   el.classList.toggle("dodge-text",String(el.textContent||"").includes("閃避"));
-  const target=(el.id==="combatPlayerDamage"||el.id==="voidPlayerDamage")?"player":(el.id==="combatEnemyDamage"||el.id==="voidEnemyDamage")?"enemy":null;
-  if(target){if((manualPulseSkips[target]||0)>0)manualPulseSkips[target]--;else consumeForPulse(target,el.textContent||"");}
  },true);
  document.addEventListener("animationend",event=>{
   const el=event.target;
