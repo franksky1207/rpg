@@ -158,7 +158,8 @@
 
  async function animateBattle(battle){
   const full=battle?.result;
-  if(!full)return;
+  if(!full){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-empty");return;}
+  try{
   const combat=full.combat||full,enemyMax=Math.max(1,Number(full.enemy?.hp)||Number(combat.enemyMaxHp)||1),playerMax=Math.max(1,Number(full.playerStartHp)||Number(combat.playerMaxHp)||1);
   const startEnemyHp=Math.max(0,Number(full.enemyStartHp)||enemyMax),startPlayerHp=Math.max(0,Number(full.playerStartHp)||playerMax);
   const logs=combat?.logs||full.logs||[],delay=logs.length>90?14:logs.length>50?24:45;
@@ -179,6 +180,7 @@
   }
   setHpUi(Math.max(0,Number(full.enemyEndHp)||0),enemyMax,Math.max(0,Number(full.playerEndHp)||0),playerMax,full.win?"災厄擊破！":"本場挑戰結束");
   await sleep(250);
+  }finally{if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-battle-end");}
  }
 
  function resetDisplay(){ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
@@ -244,9 +246,9 @@
   const msg=document.getElementById("combatMessage");if(msg)msg.textContent="已停止連續討伐；不會再開始下一場。";
   return !!result?.ok;
  };
- window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
+ window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
- window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
+ window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
 
  function calamityMinimalActive(){const run=window.getCivilizationCalamityRunSnapshot?.();return ui.phase==="combat"&&ui.mode==="continuous"&&ui.running&&run?.active===true;}
  function registerMinimal(){
