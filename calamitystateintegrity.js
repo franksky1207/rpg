@@ -3,6 +3,15 @@
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const expectedRegions=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(region=>String(region?.id||"")).filter(Boolean);
  const expectedMarks=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
+ const expectedCalamityNames=["灰潮母巢","日蝕王座","星骸迴廊","黑域牧者","滅世天環","寂滅方舟","萬域蝕潮","深核奇點","無聲裁決","終末之眼"];
+ const expectedMarkNames=["護界印記","壓制印記","鎮心印記","不屈印記","韌性印記","戰意印記","吸收印記","復仇印記","反噬印記","無視印記"];
+ const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
+ if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==1)fail("CALAMITY_CONFIG_VERSION","文明災厄統一設定版本應為 1",window.CIVILIZATION_CALAMITY_CONFIG_VERSION);
+ if(config.length!==10)fail("CALAMITY_CONFIG_COUNT","文明災厄統一設定應正好 10 組",config);
+ config.forEach((entry,index)=>{
+  const region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[index]:null;
+  if(!region||entry?.index!==index||entry?.id!==region.id||entry?.regionId!==region.id||entry?.regionName!==region.name||Number(entry?.unlockLevel)!==Number(region.max)||Number(entry?.mapIndex)!==Number(region.mapEnd)||entry?.calamityName!==expectedCalamityNames[index]||entry?.markId!==expectedMarks[index]||entry?.markName!==expectedMarkNames[index])fail("CALAMITY_CONFIG_ENTRY",`第 ${index+1} 組災厄／印記統一設定異常`,{entry,region});
+ });
 
  if(Number(window.CALAMITY_STATE_VERSION)!==1)fail("CALAMITY_STATE_VERSION","文明災厄 state version 應為 1",window.CALAMITY_STATE_VERSION);
  if(Number(window.CALAMITY_BALANCE_VERSION)!==2)fail("CALAMITY_BALANCE_VERSION","文明災厄 balance version 應為 2",window.CALAMITY_BALANCE_VERSION);
