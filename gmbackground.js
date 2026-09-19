@@ -20,7 +20,7 @@
   if(!key)return false;
   try{
    localStorage.setItem(key,next?"1":"0");
-   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("calamity");}
+   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");}
    return true;
   }catch(e){return false;}
  }
@@ -50,6 +50,7 @@
  window.gmBackgroundBattleEnabled=enabled;
  window.gmBackgroundBattleStorageKey=storageKey;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
+ window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION=1;
  installStyles();
  if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("manage","背景戰鬥",managementHtml,{id:"gm-background-battle",position:"prepend"});
 })();
