@@ -13,12 +13,6 @@
  function isBackground(){return environmentBackground;}
  function activeFor(kind=null){return !!flow&&(!kind||flow.kind===kind);}
  function hasBackgroundCap(){return !!flow&&flow.maxBackgroundMs!=null&&Number.isFinite(Number(flow.maxBackgroundMs));}
- function mainBattleMode(count,ctx=null){
-  const marker=window.CONTINUOUS_BATTLE_COUNT||"continuous";
-  if(count===marker||count==="continuous"||ctx?.continuous===true)return "continuous";
-  return "single";
- }
- function mainBattleAllowsBackground(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function flowOptions(kind,options={}){
   const mode=String(options?.mode||"");
   const continuous=mode==="continuous";
@@ -93,10 +87,7 @@
  };
  window.backgroundProgressEnvironmentIsBackground=function(){return isBackground();};
  window.backgroundProgressHasCatchUpCredit=function(kind=null){return activeFor(kind)&&flow.hiddenAt==null&&!isBackground()&&Number(flow.credit)>0;};
- window.backgroundProgressMainBattleMode=mainBattleMode;
- window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
- window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
- window.BACKGROUND_PROGRESS_GM_GATE_VERSION=1;
+ window.BACKGROUND_PROGRESS_CORE_VERSION=1;
  window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3;
  window.BACKGROUND_PROGRESS_UI_YIELD_VERSION=1;
 
@@ -154,29 +145,4 @@
  });
  window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");});
 
- const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
- if(baseBeginCombat){
-  const wrappedBeginCombat=function(count,...args){
-   const mode=mainBattleMode(count),useBackground=mode!=="single"&&mainBattleAllowsBackground();
-   if(useBackground)window.backgroundProgressStart("main",{mode});
-   else if(mode!=="single")window.backgroundProgressStop("main");
-   return baseBeginCombat.call(this,count,...args);
-  };
-  window.beginCombat=wrappedBeginCombat;
-  try{beginCombat=wrappedBeginCombat;}catch(e){}
- }
-
- const baseRunBattles=typeof window.runBattles==="function"?window.runBattles:null;
- if(baseRunBattles){
-  const wrappedRunBattles=async function(count,...args){
-   const ctx=args[0]&&typeof args[0]==="object"?args[0]:null;
-   const mode=mainBattleMode(count,ctx),useBackground=mode!=="single"&&mainBattleAllowsBackground();
-   if(useBackground)window.backgroundProgressStart("main",{mode});
-   else if(mode!=="single")window.backgroundProgressStop("main");
-   try{return await baseRunBattles.call(this,count,...args);}
-   finally{if(useBackground)window.backgroundProgressStop("main");}
-  };
-  window.runBattles=wrappedRunBattles;
-  try{runBattles=wrappedRunBattles;}catch(e){}
- }
 })();
