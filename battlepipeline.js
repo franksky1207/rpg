@@ -126,6 +126,8 @@
 
    ctx.completed++;
    if(!ctx.continuous)ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
+   if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
+   if(ctx.continuous&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");
    clearPreviewEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=null;
 
