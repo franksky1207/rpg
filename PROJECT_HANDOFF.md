@@ -1150,3 +1150,6 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 若下一個對話直接要求修改，使用：
 
 > **先讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新讀取本次需求涉及的 `main` 正式 owner、相依檔案與完整 `index.html`。確認現況後直接依需求修改 GitHub `main`；修改後重新讀取 main 自我檢查，JS/CSS 改動同步更新 `index.html` cache-bust。優先修改正式來源，不要新增不必要 wrapper、fallback、第二套公式、第二套結算或第二套 state owner。**
+
+
+- 2026-09-19 玩家稱號系統第 1 批：新增 `playertitlecore.js` 作為唯一稱號資料 owner，固定 10 個文明災厄首殺稱號（灰潮餘燼、蝕日王冠、星骸殘響、黑域孤星、天環墜落、寂滅遠航、萬域寂滅、黑核權柄、無聲王權、萬星終寂），稱號與正式 `CIVILIZATION_CALAMITY_CONFIG` 依階級綁定，不另造災厄 ID。正式 state 為 `titles:{version,unlocked,equipped,pendingNotice}`；normalization 只做合法 ID 整理與「對應印記 `acquired===true` ⇒ 靜默補齊稱號」union，不因印記異常回收已取得稱號，也不建立補發通知。Save Schema 維持 13。另整理玩家名稱正式 12 格規則：漢字／全形字各 2 格，其餘字元 1 格；新改名由 `playernamerules.js` V2 驗證，既有舊檔名稱在 migration／normalize 時不再被 `.slice(0,12)` 強制截斷。第 1 批尚未實作首殺彈窗、連戰停止、稱號 renderer、角色頁選擇或 GM 預覽。
