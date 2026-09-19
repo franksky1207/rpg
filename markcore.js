@@ -67,8 +67,6 @@
   return clampLevel(window.gmTestMarkLevels?.[key]);
  }
  function markLevel(key,useTest=false){return useTest?testLevel(key):formalEntry(key).level;}
- function markAcquired(key){return formalEntry(key).acquired;}
- function markProgress(key){return formalEntry(key).progress;}
  function effectSnapshot(key,level){
   const lv=clampLevel(level);
   const base={id:key,level:lv,active:lv>0};
@@ -120,7 +118,6 @@
  window.MARK_DESCRIPTION_OWNER_VERSION=MARK_DESCRIPTION_OWNER_VERSION;
  window.MARK_UPGRADE_KILLS=MARK_UPGRADE_KILLS;
  window.MARK_KEYS=MARK_KEYS;
- window.MARK_DEFS=MARK_DEFS;
  window.markClampLevel=clampLevel;
  window.markActivationChance=activationChance;
  window.markRequiredKillsForNextLevel=requiredKillsForNextLevel;
@@ -129,8 +126,6 @@
  window.advanceMarkProgressEntry=advanceProgressEntry;
  window.settleFormalMarkKill=settleFormalKill;
  window.markLevel=markLevel;
- window.markAcquired=markAcquired;
- window.markProgress=markProgress;
  window.markEffectSnapshot=effectSnapshot;
  window.markEffectDescription=effectDescription;
  window.markLevelsSnapshot=levelsSnapshot;
@@ -149,8 +144,4 @@
   return levelsSnapshot(true);
  };
 
- // Temporary compatibility aliases; ownership is Mark Core and these are candidates for final cleanup.
- window.normalizeCivilizationMarkProgressForCore=progressSnapshot;
- window.advanceCivilizationCalamityMarkEntry=advanceProgressEntry;
- window.settleCivilizationCalamityMarkKill=settleFormalKill;
 })();
