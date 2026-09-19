@@ -5,7 +5,7 @@
  const markIds=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
  const defs=typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];
  if(Number(window.CALAMITY_CORE_VERSION)!==1)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V1",window.CALAMITY_CORE_VERSION);
- if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==1)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則版本應為 1",window.CALAMITY_COMBAT_RULE_VERSION);
+ if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==2)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則版本應為 2",window.CALAMITY_COMBAT_RULE_VERSION);
  if(Number(window.COMBAT_PERSISTENT_ENEMY_HP_VERSION)!==1)fail("PERSISTENT_ENEMY_HP_VERSION","Combat Core 持久敵方 HP 支援未載入",window.COMBAT_PERSISTENT_ENEMY_HP_VERSION);
  if(Number(window.CALAMITY_FIXED_HP)!==1000000||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_BALANCE","文明災厄固定 HP／攻防倍率異常",{hp:window.CALAMITY_FIXED_HP,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
  if(Number(window.CALAMITY_FIXED_CRIT)!==10||Number(window.CALAMITY_FIXED_DODGE)!==10)fail("CALAMITY_RATES","文明災厄固定暴擊／閃避應為 10% / 10%",{crit:window.CALAMITY_FIXED_CRIT,dodge:window.CALAMITY_FIXED_DODGE});
