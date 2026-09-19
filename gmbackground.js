@@ -51,5 +51,5 @@
  window.gmBackgroundBattleStorageKey=storageKey;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
  installStyles();
- if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("manage","背景戰鬥",managementHtml,{id:"gm-background-battle",open:true,position:"prepend"});
+ if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("manage","背景戰鬥",managementHtml,{id:"gm-background-battle",position:"prepend"});
 })();
