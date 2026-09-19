@@ -39,18 +39,7 @@
    if(Object.prototype.hasOwnProperty.call(enemy,"traits"))fail("CALAMITY_TRAITS",`${def.id} 不應攜帶普通怪物 traits`,enemy);
   }catch(error){fail("CALAMITY_BOSS_PROBE",`${def.id} Boss 母體檢查失敗`,String(error?.message||error));}
  });
- if(typeof window.advanceCivilizationCalamityMarkEntry==="function"){
-  let entry={acquired:false,level:0,progress:0};
-  const milestones={};
-  for(let kill=1;kill<=31;kill++){
-   const out=window.advanceCivilizationCalamityMarkEntry(entry);entry=out.entry;
-   if([1,2,3,5,7,10,13,17,21,26,31].includes(kill))milestones[kill]={...entry};
-  }
-  const expected={1:0,2:1,3:2,5:3,7:4,10:5,13:6,17:7,21:8,26:9,31:10};
-  Object.entries(expected).forEach(([kill,level])=>{if(milestones[kill]?.level!==level||milestones[kill]?.progress!==0)fail("MARK_KILL_CURVE",`第 ${kill} 殺印記應為 Lv.${level}、進度 0`,milestones[kill]);});
-  const extra=window.advanceCivilizationCalamityMarkEntry(entry);
-  if(extra.entry.level!==10||extra.entry.progress!==0||extra.settlement.changed!==false)fail("MARK_MAX_LOCK","印記 Lv.10 後不應再累積進度",extra);
- }else fail("MARK_ADVANCE_API","缺少純印記擊殺進度 helper");
+ if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1||typeof window.advanceMarkProgressEntry!=="function"||typeof window.settleFormalMarkKill!=="function")fail("MARK_PROGRESSION_OWNER","災厄 Core 必須委派 Mark Core progression owner",{version:window.MARK_PROGRESSION_OWNER_VERSION,advance:typeof window.advanceMarkProgressEntry,settle:typeof window.settleFormalMarkKill});
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
  window.CALAMITY_CORE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Civilization Calamity Core integrity error",errors);
