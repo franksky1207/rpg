@@ -10,6 +10,25 @@
  if(Number(window.CALAMITY_FIXED_HP)!==1000000||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_BALANCE","文明災厄固定 HP／攻防倍率異常",{hp:window.CALAMITY_FIXED_HP,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
  if(Number(window.CALAMITY_FIXED_CRIT)!==10||Number(window.CALAMITY_FIXED_DODGE)!==10)fail("CALAMITY_RATES","文明災厄固定暴擊／閃避應為 10% / 10%",{crit:window.CALAMITY_FIXED_CRIT,dodge:window.CALAMITY_FIXED_DODGE});
  if(defs.length!==10)fail("CALAMITY_DEF_COUNT","文明災厄應有 10 隻",defs);
+ try{
+  const def=defs[0],region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[0]:null;
+  if(def&&region){
+   const probe={
+    bossKilled:Array.from({length:Math.max(100,Number(region.mapEnd)+1)},()=>false),
+    calamities:{entries:{[def.id]:{currentHp:2500000}}},
+    marks:{entries:{[def.markId]:{acquired:false,level:99,progress:777}}}
+   };
+   probe.bossKilled[def.mapIndex]=true;
+   const before=JSON.stringify(probe);
+   const hp=window.getCivilizationCalamityCurrentHp?.(def.id,probe);
+   const st=window.getCivilizationCalamityStatus?.(def.id,probe);
+   const after=JSON.stringify(probe);
+   if(before!==after)fail("CALAMITY_GETTER_MUTATION","災厄 currentHp/status getter 不得修改傳入 state",{before,after});
+   if(hp!==1000000||st?.currentHp!==1000000)fail("CALAMITY_GETTER_HP_READ","災厄 pure getter 應只在回傳值 clamp HP，不修改來源",{hp,status:st});
+   if(st?.mark?.acquired!==true||st?.mark?.level!==10||st?.mark?.progress!==0)fail("CALAMITY_GETTER_MARK_READ","災厄 pure getter 應回傳正規化印記快照但不修改來源",st?.mark);
+  }
+ }catch(error){fail("CALAMITY_GETTER_PURITY_PROBE","災厄 pure getter 檢查失敗",String(error?.message||error));}
+
  defs.forEach((def,index)=>{
   const region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[index]:null;
   if(!region||def.id!==region.id||def.name!==names[index]||def.mapIndex!==region.mapEnd||def.unlockLevel!==region.max||def.markId!==markIds[index])fail("CALAMITY_DEF",`第 ${index+1} 隻文明災厄定義異常`,{def,region});
