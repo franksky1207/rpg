@@ -70,6 +70,8 @@
   const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
   if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
   if(!/backgroundProgressUiYield\s*\(\s*["']main["']\s*\)/.test(pipelineSource))fail("BOSS_BACKGROUND_UI_YIELD_WIRING","主線連戰每場完成後應讓 background catch-up UI 至少 paint 一次",pipelineSource);
+  if(!/backgroundProgressStart\s*\(\s*["']main["']/.test(pipelineSource))fail("BOSS_BACKGROUND_PIPELINE_START","主線背景 flow 應由 battlepipeline 正式啟動",pipelineSource);
+  if(!/backgroundProgressStop\s*\(\s*["']main["']\s*\)/.test(pipelineSource)||!/finally/.test(pipelineSource))fail("BOSS_BACKGROUND_PIPELINE_STOP","主線背景 flow 應由 battlepipeline finally 正式停止",pipelineSource);
  }
 
  if(typeof window.requestContinuousBattleStop!=="function")fail("BOSS_CONTINUOUS_STOP_API","requestContinuousBattleStop 未載入");
@@ -100,16 +102,15 @@
   if(bossIndex>=0&&blackMarketIndex>=0&&bossIndex>blackMarketIndex)fail("BOSS_BLACK_MARKET_ORDER","Boss 排除必須早於黑市情報強制遭遇判斷，避免消耗情報");
  }
 
- if(Number(window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION)!==2)fail("BOSS_BACKGROUND_SHARED_VERSION",`BACKGROUND_PROGRESS_MAIN_SHARED_VERSION 應為 2，實際 ${window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION}`);
- if(Number(window.BACKGROUND_PROGRESS_GM_GATE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_GATE_VERSION",`BACKGROUND_PROGRESS_GM_GATE_VERSION 應為 1，實際 ${window.BACKGROUND_PROGRESS_GM_GATE_VERSION}`);
+ if(Number(window.BACKGROUND_PROGRESS_CORE_VERSION)!==1)fail("BOSS_BACKGROUND_CORE_VERSION",`BACKGROUND_PROGRESS_CORE_VERSION 應為 1，實際 ${window.BACKGROUND_PROGRESS_CORE_VERSION}`);
+ if(Number(window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION)!==1)fail("BOSS_BACKGROUND_PIPELINE_OWNER_VERSION",`MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION 應為 1，實際 ${window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION}`);
  if(Number(window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION)!==3)fail("BOSS_BACKGROUND_VISIBILITY_OWNER",`BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION 應為 3，實際 ${window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION}`);
  if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==1||typeof window.backgroundProgressUiYield!=="function")fail("BOSS_BACKGROUND_UI_YIELD","背景 catch-up 應提供逐場 UI yield",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(typeof window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION!=="undefined"||typeof window.BACKGROUND_PROGRESS_GM_GATE_VERSION!=="undefined"||typeof window.backgroundProgressMainBattleMode==="function"||typeof window.backgroundProgressMainBattleAllowsBackground==="function")fail("BOSS_BACKGROUND_LEGACY_MAIN_WRAPPER","backgroundprogress 不應再保留主線專屬 wrapper／gate API");
  if(typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION!=="undefined"||typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS!=="undefined")fail("BOSS_BACKGROUND_LEGACY_BLUR_FALLBACK","800ms blur fallback 應已退休");
  if(Number(window.GM_BACKGROUND_BATTLE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_CONTROL_VERSION",`GM_BACKGROUND_BATTLE_VERSION 應為 1，實際 ${window.GM_BACKGROUND_BATTLE_VERSION}`);
  if(typeof window.BACKGROUND_PROGRESS_MAIN_BOSS_EXCLUDED_VERSION!=="undefined")fail("BOSS_BACKGROUND_LEGACY_EXCLUSION","Boss 背景戰鬥舊排除 marker 應已退休");
  if(typeof window.gmBackgroundBattleEnabled!=="function"||typeof window.gmBackgroundBattleStorageKey!=="function")fail("BOSS_BACKGROUND_GM_CONTROL_API","GM 背景戰鬥裝置端設定 API 未載入");
- if(typeof window.backgroundProgressMainBattleAllowsBackground!=="function")fail("BOSS_BACKGROUND_API","主線背景戰鬥判斷 API 未載入");
- else if(typeof window.gmBackgroundBattleEnabled==="function"&&window.backgroundProgressMainBattleAllowsBackground()!==window.gmBackgroundBattleEnabled())fail("BOSS_BACKGROUND_GM_GATE","普通怪、菁英怪與 Boss 應共用同一個 GM 背景戰鬥開關");
 
  if(typeof window.offlineEnhancementStoneReward!=="function")fail("BOSS_OFFLINE_REWARD_API","offlineEnhancementStoneReward 未載入");
  else{
