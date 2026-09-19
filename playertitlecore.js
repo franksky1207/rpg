@@ -110,7 +110,12 @@
  }
  function playerTitleHtml(id){
   const def=titleDefinition(id);
-  return def?`<span class="player-title player-title--tier-${def.tier}" data-player-title-id="${esc(def.id)}">${esc(def.name)}</span>`:"";
+  if(!def)return "";
+  const series=def.series==="mirror"?"mirror":"calamity";
+  const visualClass=series==="mirror"
+   ?`player-title--mirror player-title--mirror-${def.mirrorWins}`
+   :`player-title--tier-${def.tier}`;
+  return `<span class="player-title player-title--${series} ${visualClass}" data-player-title-id="${esc(def.id)}">${esc(def.name)}</span>`;
  }
  function playerIdentityNameHtml(options={}){
   const target=options.target&&typeof options.target==="object"?options.target:state;
@@ -156,7 +161,7 @@
  }
  function unlockedTitleDefinitions(target=state){
   const unlocked=new Set(Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[]);
-  return DEFS.filter(def=>unlocked.has(def.id));
+  return ALL_DEFS.filter(def=>unlocked.has(def.id));
  }
 
  window.PLAYER_TITLE_STATE_VERSION=PLAYER_TITLE_STATE_VERSION;
