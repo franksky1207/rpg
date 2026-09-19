@@ -47,9 +47,12 @@
   if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return false;
   const cycleMs=actualMs+token.gapMs;
   const adjustedMs=Math.max(100,Math.round(cycleMs*token.multiplier));
+  const sampleVersion=Math.max(0,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0));
+  if(sampleVersion<=0)return false;
   if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
-  const samples=Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[];
-  samples.push({actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
+  const samples=(Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===sampleVersion);
+  samples.push({sampleVersion,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
+  state.offline.battleSampleVersion=sampleVersion;
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
  }
