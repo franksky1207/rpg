@@ -2,6 +2,7 @@
  const CONTINUOUS_COUNT=window.CONTINUOUS_BATTLE_COUNT;
  const REAL_BATTLE_SAMPLE_LIMIT=20;
  const battleGapMs=window.mainBattleGapMs;
+ const battleFlowSleep=window.mainBattleFlowSleep;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function blankEnhancementRewards(){return {battle:{basic:0,advanced:0},autoSale:{basic:0,advanced:0}};}
  function ensureEnhancementRewards(ctx){
@@ -172,7 +173,7 @@
     if(shouldStopContinuous(ctx))break;
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-     await sleep(battleGapMs(r.e.kind));
+     await battleFlowSleep(battleGapMs(r.e.kind));
     }
     continue;
    }
@@ -180,7 +181,7 @@
    if(shouldStopContinuous(ctx))break;
    if(hasMoreBattles(ctx)){
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-    await sleep(battleGapMs(r.e.kind));
+    await battleFlowSleep(battleGapMs(r.e.kind));
    }
   }
 
