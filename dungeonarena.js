@@ -1,16 +1,9 @@
 (function(){
- const ARENA_RANK_MULTIPLIERS=Object.freeze([
-  Object.freeze({hp:1.00,damage:1.000,def:1.00}),
-  Object.freeze({hp:1.05,damage:1.015,def:1.03}),
-  Object.freeze({hp:1.10,damage:1.030,def:1.06}),
-  Object.freeze({hp:1.15,damage:1.045,def:1.09}),
-  Object.freeze({hp:1.20,damage:1.060,def:1.12}),
-  Object.freeze({hp:1.27,damage:1.085,def:1.16}),
-  Object.freeze({hp:1.39,damage:1.125,def:1.225}),
-  Object.freeze({hp:1.50,damage:1.165,def:1.285}),
-  Object.freeze({hp:1.62,damage:1.210,def:1.355}),
-  Object.freeze({hp:1.76,damage:1.260,def:1.435})
- ]);
+ const ARENA_RANK_CURVE=Object.freeze({
+  hp:Object.freeze({linear:.0272,quadratic:.00629}),
+  damage:Object.freeze({linear:.00586,quadratic:.002534}),
+  def:Object.freeze({linear:.01751,quadratic:.003363})
+ });
  const ARENA_POSITION_BASES=[
   {id:"normal",stageWeights:[25,35,120]},
   {id:"hard",stageWeights:[35,45,200]},
@@ -74,7 +67,11 @@
  function currentArenaRank(){return currentArenaProgress().rank;}
  function arenaRankName(rank){const r=clampArenaRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;return `${region?.name||`第${r}區`}階`;}
  function arenaVenueName(rank){const r=clampArenaRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;return `${region?.name||`第${r}區`}競技場`;}
- function arenaRankMultipliers(rank){const r=clampArenaRank(rank)-1,v=ARENA_RANK_MULTIPLIERS[r]||ARENA_RANK_MULTIPLIERS[0];return {hp:v.hp,damage:v.damage,def:v.def};}
+ function arenaRankMultipliers(rank){
+  const x=clampArenaRank(rank)-1;
+  const value=key=>{const curve=ARENA_RANK_CURVE[key];return 1+curve.linear*x+curve.quadratic*x*x;};
+  return {hp:value("hp"),damage:value("damage"),def:value("def")};
+ }
  function scaleStagePoints(weights,total){const source=Array.isArray(weights)&&weights.length===3?weights:[0,0,0],sourceTotal=Math.max(1,source.reduce((sum,x)=>sum+Math.max(0,Number(x)||0),0)),target=Math.max(0,Math.floor(Number(total)||0));const first=Math.max(0,Math.round((Number(source[0])||0)*target/sourceTotal)),second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));return [first,second,Math.max(0,target-first-second)];}
  function arenaBaseTotalPoints(rank,difficultyId){
   const r=clampArenaRank(rank),id=String(difficultyId||"normal");
@@ -107,8 +104,9 @@
   return applyMonsterTraits({name:ARENA_ENEMY_NAMES[idx]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,arenaRank:rank,arenaRankName:arenaRankName(rank),hp:Math.max(1,ceil(base.hp*physical.hpMul*positionPhysical.hp*rankScale.hp)),atk:Math.max(1,ceil(base.damage*physical.damageMul*positionPhysical.damage*rankScale.damage+p.def*.55)),def:Math.max(0,ceil(base.def*physical.defMul*positionPhysical.def*rankScale.def)),crit:rateFromPlayer(p.crit,position.critScale,position.critAdd,position.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,position.dodgeScale,position.dodgeAdd,position.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
- window.ARENA_BALANCE_VERSION=4;
- window.ARENA_RANK_BALANCE_VERSION=1;
+ window.ARENA_BALANCE_VERSION=5;
+ window.ARENA_RANK_BALANCE_VERSION=2;
+ window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
  window.getArenaRankMultipliers=function(rank){return arenaRankMultipliers(rank);};
  window.getArenaPositionPhysicalMultipliers=function(id){const key=String(id||"normal"),v=ARENA_POSITION_PHYSICAL_MULTIPLIERS[key]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {hp:v.hp,damage:v.damage,def:v.def};};
  window.getArenaPositionStageConfig=function(id,stageIndex){const key=String(id||"normal"),stages=ARENA_POSITION_STAGE_CONFIGS[key]||ARENA_POSITION_STAGE_CONFIGS.normal,idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0))),v=stages[idx]||stages[0];return {...v};};
