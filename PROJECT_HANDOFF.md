@@ -1030,6 +1030,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 競技場／懸賞整理第 3 批：完成共用化、版本與 Integrity 收尾，不改任何 Arena／Bounty 平衡值。Arena/Bounty 的 rate 計算改共用既有 `specialRateFromPlayer()`，唯一 trait 抽取改由 `specialmonsters.js` 的 `rollUniqueMonsterTraits()` 共用，`SPECIAL_ENEMY_SHARED_HELPERS_VERSION=1`。Arena 版本常數集中到 `dungeonprogress.js` 的單一 `ARENA_COMPATIBILITY_PROFILE`／`getArenaVersionProfile()`，Arena balance、rank balance、position/profile/pacing、assessment state/runtime 均由此 profile 對齊；assessment signature 內既有 `positionDifficulty` key 為避免讓既有 500 次評估無故 stale 而暫保留純序列化相容，不再作 runtime API。正式退休 `getArenaDifficultyConfigs()`、`getArenaPositionDifficultyId()` 與 enemy snapshot 的 `arenaDifficulty`；Runtime／Final Integrity 反向鎖定舊 API 不得回來。Bounty 設定正式命名為 `BOUNTY_TIER_META`，新增 `BOUNTY_TIER_META_VERSION=1`、`getBountyTierMeta()`／`getBountyTierMetadata()`，退休舊 `getBountyTierConfig(s)` API，GM 同步改讀正式 metadata。Arena Balance 仍 V6、Rank Balance 仍 V3、Bounty Balance 仍 V1／Difficulty Formula V1、Save Schema 仍 13。
 
+- 2026-09-19 主線 iPhone Safari 可見頁卡住修正：`backgroundprogress.js` 的正式背景判定改以 Page Visibility／pagehide 為 owner；Safari 在頁面仍可見時可能回報 `document.hasFocus()===false`，因此 blur／hasFocus 不再單獨把可見頁判為背景。這修正主線連續戰鬥在背景戰鬥開啟時，第一個 `await sleep(60)` 可能永遠等待而停在滿血戰鬥畫面的問題；真正 visibility hidden/pagehide 仍維持 background catch-up。新增 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=1` 並由 Boss Continuous Integrity 鎖定。副本、災厄、平衡、獎勵、Save Schema 皆不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
