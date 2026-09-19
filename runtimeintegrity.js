@@ -261,6 +261,14 @@
  if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_OWNER","戰鬥內動畫應由單一固定高速 Structured Combat Pacing V2 管理",{version:window.STRUCTURED_COMBAT_PACING_VERSION,api:typeof window.getStructuredCombatPacing});
  if(Number(window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION)!==1)fail("COMBAT_FX_ANIMATION_LIFECYCLE","Combat FX 應由 animation lifecycle 清理，不應依賴舊固定 timer",window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION);
  if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==2||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==2)fail("OFFLINE_BATTLE_SAMPLE_VERSION","離線實戰樣本應使用 V2 版本隔離",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION});
+ if(Number(window.OFFLINE_CHECKPOINT_RECOVERY_VERSION)!==1||typeof window.recoverOfflineCheckpointTime!=="function")fail("OFFLINE_CHECKPOINT_RECOVERY_OWNER","離線 checkpoint recovery owner 未正確載入",{version:window.OFFLINE_CHECKPOINT_RECOVERY_VERSION,api:typeof window.recoverOfflineCheckpointTime});
+ else{
+  const nowProbe=2000000,earlier=1000000,later=1500000;
+  const recovered=window.recoverOfflineCheckpointTime(later,earlier,nowProbe);
+  if(recovered!==earlier)fail("OFFLINE_CHECKPOINT_EARLIER_WINS","較早 persisted checkpoint 必須覆蓋較晚 lastSettledAt",{current:later,persisted:earlier,recovered});
+  const kept=window.recoverOfflineCheckpointTime(earlier,later,nowProbe);
+  if(kept!==earlier)fail("OFFLINE_CHECKPOINT_LATER_DOES_NOT_ADVANCE","較晚 persisted checkpoint 不得把離線起點往後推",{current:earlier,persisted:later,recovered:kept});
+ }
  try{
   if(typeof window.migrateSave!=="function")throw new Error("migrateSave unavailable");
   const sampleVersion=Number(window.OFFLINE_BATTLE_SAMPLE_VERSION);
