@@ -1,6 +1,7 @@
 (function(){
  const CALAMITY_STATE_VERSION=1;
- const CALAMITY_BALANCE_VERSION=1;
+ const CALAMITY_BALANCE_VERSION=2;
+ const CALAMITY_FIXED_HP=1000000;
  const MARK_STATE_VERSION=1;
  const MARK_MAX_LEVEL=10;
  const CALAMITY_IDS=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(region=>String(region?.id||"")).filter(Boolean);
@@ -16,7 +17,7 @@
  function normalizeCalamityEntry(value){
   const entry=isObject(value)?value:{};
   const hp=Number(entry.currentHp);
-  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.max(1,Math.floor(hp)):null;
+  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.max(1,Math.min(CALAMITY_FIXED_HP,Math.floor(hp))):null;
   return entry;
  }
  function normalizeMarkEntry(value){
@@ -42,7 +43,7 @@
   CALAMITY_IDS.forEach(id=>{calamityEntries[id]=normalizeCalamityEntry(calamities.entries[id]);});
   calamities.version=CALAMITY_STATE_VERSION;
   const storedBalanceVersion=Math.floor(Number(calamities.balanceVersion));
-  calamities.balanceVersion=Number.isFinite(storedBalanceVersion)&&storedBalanceVersion>=1?storedBalanceVersion:CALAMITY_BALANCE_VERSION;
+  calamities.balanceVersion=CALAMITY_BALANCE_VERSION;
   calamities.entries=calamityEntries;
 
   if(!isObject(target.marks))target.marks=createBlankMarkState();
@@ -62,6 +63,7 @@
 
  window.CALAMITY_STATE_VERSION=CALAMITY_STATE_VERSION;
  window.CALAMITY_BALANCE_VERSION=CALAMITY_BALANCE_VERSION;
+ window.CALAMITY_FIXED_HP=CALAMITY_FIXED_HP;
  window.MARK_STATE_VERSION=MARK_STATE_VERSION;
  window.MARK_MAX_LEVEL=MARK_MAX_LEVEL;
  window.CIVILIZATION_CALAMITY_IDS=Object.freeze(CALAMITY_IDS.slice());
