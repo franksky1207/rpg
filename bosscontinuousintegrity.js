@@ -11,6 +11,7 @@
  if(Number(window.MAIN_BATTLE_PACING_VERSION)!==2)fail("BOSS_PACING_VERSION",`MAIN_BATTLE_PACING_VERSION 應為 2，實際 ${window.MAIN_BATTLE_PACING_VERSION}`);
  if(Number(window.MAIN_BATTLE_FLOW_SLEEP_VERSION)!==1||typeof window.mainBattleFlowSleep!=="function")fail("BOSS_FLOW_SLEEP_OWNER","主線流程等待應使用明確 background-aware API",{version:window.MAIN_BATTLE_FLOW_SLEEP_VERSION,api:typeof window.mainBattleFlowSleep});
  if(typeof window.estimateMainBattleDurationMs==="function")fail("BOSS_LEGACY_DURATION_ESTIMATOR","舊 estimateMainBattleDurationMs 應已退休");
+ if(Number(window.COMBAT_OUTER_PACING_VERSION)!==1||typeof window.combatOuterGapMs!=="function")fail("BOSS_OUTER_PACING_OWNER","Combat Outer Pacing owner 未載入",{version:window.COMBAT_OUTER_PACING_VERSION,api:typeof window.combatOuterGapMs});
  if(typeof window.mainBattleGapMs!=="function")fail("BOSS_PACING_GAP_API","mainBattleGapMs 未載入");
  else{
   const gaps={normal:window.mainBattleGapMs("normal"),elite:window.mainBattleGapMs("elite"),boss:window.mainBattleGapMs("boss")};
@@ -108,7 +109,8 @@
  if(Number(window.BACKGROUND_PROGRESS_CORE_VERSION)!==1)fail("BOSS_BACKGROUND_CORE_VERSION",`BACKGROUND_PROGRESS_CORE_VERSION 應為 1，實際 ${window.BACKGROUND_PROGRESS_CORE_VERSION}`);
  if(Number(window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION)!==1)fail("BOSS_BACKGROUND_PIPELINE_OWNER_VERSION",`MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION 應為 1，實際 ${window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION}`);
  if(Number(window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION)!==3)fail("BOSS_BACKGROUND_VISIBILITY_OWNER",`BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION 應為 3，實際 ${window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION}`);
- if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==1||typeof window.backgroundProgressUiYield!=="function")fail("BOSS_BACKGROUND_UI_YIELD","背景 catch-up 應提供逐場 UI yield",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==2||typeof window.backgroundProgressUiYield!=="function")fail("BOSS_BACKGROUND_UI_YIELD","背景 catch-up 應使用前景 paint-boundary UI yield V2",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(Number(window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION)!==1||typeof window.backgroundProgressActiveKind!=="function")fail("BOSS_BACKGROUND_SINGLE_FLOW","背景進度應採單一 active flow policy",{version:window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION,api:typeof window.backgroundProgressActiveKind});
  if(typeof window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION!=="undefined"||typeof window.BACKGROUND_PROGRESS_GM_GATE_VERSION!=="undefined"||typeof window.backgroundProgressMainBattleMode==="function"||typeof window.backgroundProgressMainBattleAllowsBackground==="function")fail("BOSS_BACKGROUND_LEGACY_MAIN_WRAPPER","backgroundprogress 不應再保留主線專屬 wrapper／gate API");
  if(typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION!=="undefined"||typeof window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS!=="undefined")fail("BOSS_BACKGROUND_LEGACY_BLUR_FALLBACK","800ms blur fallback 應已退休");
  if(Number(window.GM_BACKGROUND_BATTLE_VERSION)!==1)fail("BOSS_BACKGROUND_GM_CONTROL_VERSION",`GM_BACKGROUND_BATTLE_VERSION 應為 1，實際 ${window.GM_BACKGROUND_BATTLE_VERSION}`);
@@ -130,7 +132,7 @@
   if(!html.includes("進階強化石")||!html.includes("+3"))fail("BOSS_SHARED_STONE_SETTLEMENT","Boss 連戰進階強化石應進入同一主線結算摘要",html);
  }
 
- if(Number(window.GAME_GUIDE_VERSION)!==10)fail("BOSS_GUIDE_VERSION",`GAME_GUIDE_VERSION 應為 10，實際 ${window.GAME_GUIDE_VERSION}`);
+ if(Number(window.GAME_GUIDE_VERSION)!==14)fail("BOSS_GUIDE_VERSION",`GAME_GUIDE_VERSION 應為 14，實際 ${window.GAME_GUIDE_VERSION}`);
  const categories=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES:[],adventure=categories.find(x=>x?.id==="adventure");
  const adventureGuideText=Array.isArray(adventure?.items)?adventure.items.map(x=>`${x?.[0]||""} ${x?.[1]||""}`).join("\n"):"";
  const allGuideText=categories.flatMap(x=>Array.isArray(x?.items)?x.items:[]).map(x=>`${x?.[0]||""} ${x?.[1]||""}`).join("\n");
