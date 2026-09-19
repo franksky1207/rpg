@@ -72,20 +72,28 @@
   };
  }
  function maxHp(id){return enemy(id)?.hp||0;}
- function currentHp(id){
-  const def=definition(id),e=enemy(id);if(!def||!e)return 0;
-  ensureState();
-  const entry=state?.calamities?.entries?.[def.id];if(!entry)return e.hp;
-  const raw=Number(entry.currentHp);
+ function readCurrentHp(def,e,target=state){
+  const raw=Number(target?.calamities?.entries?.[def.id]?.currentHp);
   return Number.isFinite(raw)&&raw>0?Math.max(1,Math.min(e.hp,Math.floor(raw))):e.hp;
+ }
+ function readMarkProgress(markId,target=state){
+  const source=target?.marks?.entries?.[markId];
+  if(!source)return null;
+  const level=typeof window.markClampLevel==="function"?window.markClampLevel(source.level):Math.max(0,Math.min(10,int(source.level,0)));
+  const acquired=source.acquired===true||level>0;
+  if(!acquired)return {acquired:false,level:0,progress:0,requiredForNext:typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(0):0};
+  if(level>=10)return {acquired:true,level:10,progress:0,requiredForNext:0};
+  const required=typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(level):0;
+  const progress=Math.max(0,Math.min(Math.max(0,int(required,0)-1),int(source.progress,0)));
+  return {acquired:true,level,progress,requiredForNext:required};
+ }
+ function currentHp(id,target=state){
+  const def=definition(id),e=enemy(id);if(!def||!e)return 0;
+  return readCurrentHp(def,e,target);
  }
  function status(id,target=state){
   const def=definition(id);if(!def)return null;
-  const e=enemy(id),hp=target===state?currentHp(id):(()=>{
-   const raw=Number(target?.calamities?.entries?.[def.id]?.currentHp);
-   return Number.isFinite(raw)&&raw>0?Math.max(1,Math.min(e.hp,Math.floor(raw))):e.hp;
-  })();
-  const mark=target===state?normalizeMarkProgressEntry(def.markId):target?.marks?.entries?.[def.markId];
+  const e=enemy(id),hp=readCurrentHp(def,e,target),mark=readMarkProgress(def.markId,target);
   return {
    definition:def,
    unlocked:unlocked(id,target),
@@ -93,7 +101,7 @@
    currentHp:hp,
    maxHp:e.hp,
    hpPercent:e.hp>0?hp/e.hp*100:0,
-   mark:mark?{acquired:mark.acquired===true,level:Math.max(0,int(mark.level,0)),progress:Math.max(0,int(mark.progress,0)),requiredForNext:typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(mark.level):0}:null
+   mark
   };
  }
  function advanceMarkEntry(value){
