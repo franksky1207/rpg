@@ -1,10 +1,13 @@
 (function(){
  const UI_VERSION=3;
  const MINIMAL_VERSION=1;
- const CONTINUOUS_GAP_MS=350;
  let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
 
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("calamity")?window.backgroundProgressSleep(ms,"calamity"):new Promise(resolve=>setTimeout(resolve,ms));
+ function continuousGapMs(){
+  if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
+  return window.combatOuterGapMs("calamity","battle");
+ }
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  const fmt=value=>Math.max(0,Math.floor(Number(value)||0)).toLocaleString();
 
@@ -179,7 +182,7 @@
      primeDisplay(battle.result);render();
      await animateBattle(battle);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
-     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(CONTINUOUS_GAP_MS);
+     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(continuousGapMs());
     },
     async onEnd(run){
      stopMinimalIfOpen();
@@ -259,7 +262,7 @@
 
  window.CALAMITY_UI_VERSION=UI_VERSION;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
- window.CALAMITY_CONTINUOUS_GAP_MS=CONTINUOUS_GAP_MS;
+ window.CALAMITY_OUTER_PACING_VERSION=1;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
  window.CALAMITY_BACKGROUND_PRESENTATION_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
