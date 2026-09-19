@@ -48,33 +48,11 @@
   return "";
  }
  async function animateBattle(result){
-  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(null,{logs:false});
-  let php=result.maxHp,mhp=result.maxHp;
-  const names={player:playerName(),mirror:mirrorName()},events=Array.isArray(result.events)?result.events:[],delay=events.length>80?20:events.length>40?40:75;
-  setHpUi(php,mhp,result.maxHp,"戰鬥開始");await sleep(120);
-  for(const evt of events){
-   if(!run?.active)return;
-   if(evt.type==="attack"){
-    if(evt.target==="player")php=Math.max(0,php-Math.max(0,Number(evt.actualDamage)||0));else mhp=Math.max(0,mhp-Math.max(0,Number(evt.actualDamage)||0));
-    if(evt.initiative)fx(evt.target==="player"?"player":"enemy","initiative");
-    if(evt.penetration)fx(evt.target==="player"?"player":"enemy","penetration");
-    pulse(evt.target==="player"?"player":"enemy",evt.absorbed?"吸收":evt.crit?`暴擊 ${evt.damage}`:`-${evt.damage}`);
-   }else if(evt.type==="dodge")pulse(evt.target==="player"?"player":"enemy","閃避");
-   else if(evt.type==="combo")fx(evt.actor==="player"?"enemy":"player","combo");
-   else if(evt.type==="counter")fx(evt.actor==="player"?"enemy":"player","counter");
-   else if(evt.type==="drain"){
-    if(evt.actor==="player")php=Math.min(result.maxHp,php+Math.max(0,Number(evt.healed)||0));else mhp=Math.min(result.maxHp,mhp+Math.max(0,Number(evt.healed)||0));
-    fx(evt.actor==="player"?"player":"enemy","drain");if(evt.healed>0)fx(evt.actor==="player"?"player":"enemy","heal",`+${evt.healed} HP`);
-   }else if(evt.type==="mark"){
-    if(evt.mark==="absorption"&&evt.action==="trigger"){
-     const healed=Math.max(0,Number(evt.healed)||0);if(evt.owner==="player")php=Math.min(result.maxHp,php+healed);else mhp=Math.min(result.maxHp,mhp+healed);
-    }else if(evt.mark==="backlash"&&evt.action==="trigger"){
-     const damage=Math.max(0,Number(evt.actualDamage??evt.damage)||0);if(evt.target==="player")php=Math.max(0,php-damage);else mhp=Math.max(0,mhp-damage);
-    }
-    showMirrorMarkFx(evt);
-   }
-   setHpUi(php,mhp,result.maxHp,eventMessage(evt,names));await sleep(delay);
-  }
+  if(typeof window.prepareMirrorCombatPresentation!=="function"||typeof window.animateMirrorStructuredCombatPresentation!=="function")throw new Error("Mirror Structured Combat Presentation 未載入。");
+  window.prepareMirrorCombatPresentation(result);
+  const eventCount=Array.isArray(result?.events)?result.events.length:0;
+  const stepDelay=eventCount>120?20:eventCount>75?36:68;
+  await window.animateMirrorStructuredCombatPresentation(result,{openingDelay:110,impactDelay:60,stepDelay,endDelay:140,clearAfter:true,clearReason:"mirror-battle-end"});
  }
  function settlementFor(wins,awarded,oldHistory,recordResult){const w=clampWins(wins),previousHad=!!oldHistory?.bestDate,previousBest=previousHad?clampWins(oldHistory.bestWins):-1;return {wins:w,losses:BATTLE_TOTAL-w,awarded:Math.max(0,Math.floor(Number(awarded)||0)),newRecord:!previousHad||w>previousBest,miracle:w===BATTLE_TOTAL,history:recordResult?.history||null};}
  async function finishRun(){const r=run;if(!r?.active)return;const status=typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():null;if(status?.status!=="running")throw new Error("Mirror dungeon state is not running at settlement.");if(typeof addVipPoints!=="function")throw new Error("VIP point system missing.");if(typeof recordMirrorDungeonCompletion!=="function")throw new Error("Mirror completion system missing.");const oldHistory=status.history?JSON.parse(JSON.stringify(status.history)):null,reward=rewardForWins(r.wins),rollback={mirror:JSON.parse(JSON.stringify(state?.dungeon?.mirror||null)),vipPoints:state.vipPoints,vipLevel:state.vipLevel,hp:state.hp};try{const record=recordMirrorDungeonCompletion(r.wins,Date.now(),{save:false});if(!record?.ok)throw new Error(`Mirror completion failed: ${record?.reason||"unknown"}`);const payout=addVipPoints(reward);if(!payout)throw new Error("VIP point payout failed.");if(typeof save==="function"&&save(false)===false)throw new Error("Mirror settlement save failed.");r.settlement=settlementFor(r.wins,payout.added,oldHistory,record);r.active=false;battleBusy=false;view="dungeon-mirror-result";render();}catch(err){if(state?.dungeon)state.dungeon.mirror=rollback.mirror;state.vipPoints=rollback.vipPoints;state.vipLevel=rollback.vipLevel;state.hp=rollback.hp;throw err;}}
