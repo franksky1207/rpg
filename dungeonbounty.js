@@ -1,5 +1,5 @@
 (function(){
- const BOUNTY_TIERS=[
+ const BOUNTY_TIER_META=[
   {id:"normal",name:"普通懸賞",difficulty:0,weight:45,expMult:5,goldMult:5,gearCount:2},
   {id:"high",name:"高級懸賞",difficulty:1,weight:35,expMult:8,goldMult:8,gearCount:3},
   {id:"danger",name:"危險懸賞",difficulty:2,weight:20,expMult:12,goldMult:12,gearCount:5}
@@ -26,10 +26,9 @@
  function newContinuousSummary(){return {runs:0,wins:0,totalExp:0,totalGold:0,convertedGold:0,soldGold:0,gearCount:0,keptCount:0,soldCount:0,stopReason:null};}
  let bountyState={phase:"idle",tier:null,enemy:null,result:null,startHp:0,playerMaxHp:0,continuous:false,stopRequested:false,summary:newContinuousSummary()};
 
- function rateFromPlayer(value,scale,add,cap,maxCap){return round1(Math.max(0,Math.min(maxCap,cap,(Number(value)||0)*scale+add)));}
  function curveValue(curve,d){return (Number(curve?.base)||0)+(Number(curve?.linear)||0)*d+(Number(curve?.quadratic)||0)*d*d;}
  function bountyDifficultyProfile(tierOrId){
-  const tier=typeof tierOrId==="object"&&tierOrId?tierOrId:BOUNTY_TIERS.find(x=>x.id===tierOrId)||BOUNTY_TIERS[0];
+  const tier=typeof tierOrId==="object"&&tierOrId?tierOrId:BOUNTY_TIER_META.find(x=>x.id===tierOrId)||BOUNTY_TIER_META[0];
   const d=Math.max(0,Math.min(2,Math.floor(Number(tier?.difficulty)||0)));
   return {
    difficulty:d,
@@ -45,14 +44,14 @@
    extraTraitChance:Math.max(0,Math.min(1,(d-BOUNTY_DIFFICULTY_CURVE.extraTraitChance.startDifficulty+1)*BOUNTY_DIFFICULTY_CURVE.extraTraitChance.chancePerStep))
   };
  }
- function rollTier(){let r=Math.random()*100;for(const t of BOUNTY_TIERS){r-=t.weight;if(r<0)return t;}return BOUNTY_TIERS[0];}
+ function rollTier(){let r=Math.random()*100;for(const t of BOUNTY_TIER_META){r-=t.weight;if(r<0)return t;}return BOUNTY_TIER_META[0];}
  function bountyTraitCount(tier){const p=bountyDifficultyProfile(tier);return 1+(Math.random()<p.extraTraitChance?1:0);}
- function rollBountyTraits(tier){const pool=MONSTER_TRAIT_IDS.slice(),count=bountyTraitCount(tier),out=[];for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return out;}
+ function rollBountyTraits(tier){return rollUniqueMonsterTraits(bountyTraitCount(tier));}
  function buildBountyEnemy(tier,playerStats=null,level=null,options={}){
   const p=createSpecialPlayerSnapshot(playerStats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=bountyDifficultyProfile(tier),names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
   const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
   const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier);
-  return applyMonsterTraits({name,level:clampGameLevel(level??state.level),kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:rateFromPlayer(p.crit,profile.critScale,profile.critAdd,profile.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,profile.dodgeScale,profile.dodgeAdd,profile.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  return applyMonsterTraits({name,level:clampGameLevel(level??state.level),kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
  function traitNames(enemy){return !enemy?.traits?.length?"無":enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
@@ -92,12 +91,13 @@
  }
 
  window.BOUNTY_BALANCE_VERSION=1;
+ window.BOUNTY_TIER_META_VERSION=1;
  window.BOUNTY_DIFFICULTY_FORMULA_VERSION=1;
  window.BOUNTY_DIFFICULTY_CURVE=BOUNTY_DIFFICULTY_CURVE;
- window.getBountyTierConfig=function(id){const t=BOUNTY_TIERS.find(x=>x.id===id);return t?{...t}:null;};
- window.getBountyTierConfigs=function(){return BOUNTY_TIERS.map(x=>({...x}));};
- window.getBountyDifficultyProfile=function(id){const t=BOUNTY_TIERS.find(x=>x.id===id);return t?{...bountyDifficultyProfile(t)}:null;};
- window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIERS.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
+ window.getBountyTierConfig=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
+ window.getBountyTierConfigs=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
+ window.getBountyDifficultyProfile=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...bountyDifficultyProfile(t)}:null;};
+ window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
  window.enterBountyDungeon=function(){
   if(state.level<5)return;
