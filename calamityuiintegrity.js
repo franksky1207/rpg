@@ -17,7 +17,9 @@
   "consumeCombatPresentationPulseManual",
   "prepareCombatPresentation",
   "getCombatPresentationEnemyHp",
-  "getCombatPresentationPlayerHp"
+  "getCombatPresentationPlayerHp",
+  "clearCombatPresentation",
+  "isCombatPresentationActive"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
  if(Number(window.CALAMITY_UI_VERSION)!==3)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V3",window.CALAMITY_UI_VERSION);
