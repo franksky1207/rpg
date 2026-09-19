@@ -1,8 +1,8 @@
 (function(){
  const ARENA_RANK_CURVE=Object.freeze({
-  hp:Object.freeze({linear:.0272,quadratic:.00629}),
-  damage:Object.freeze({linear:.00586,quadratic:.002534}),
-  def:Object.freeze({linear:.01751,quadratic:.003363})
+  hp:Object.freeze({linear:.025,quadratic:.0075}),
+  damage:Object.freeze({linear:.005,quadratic:.0031}),
+  def:Object.freeze({linear:.016,quadratic:.004})
  });
  const ARENA_POSITION_BASES=[
   {id:"normal",stageWeights:[25,35,120]},
@@ -104,8 +104,8 @@
   return applyMonsterTraits({name:ARENA_ENEMY_NAMES[idx]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaDifficulty:difficultyId,arenaStage:idx,arenaRank:rank,arenaRankName:arenaRankName(rank),hp:Math.max(1,ceil(base.hp*physical.hpMul*positionPhysical.hp*rankScale.hp)),atk:Math.max(1,ceil(base.damage*physical.damageMul*positionPhysical.damage*rankScale.damage+p.def*.55)),def:Math.max(0,ceil(base.def*physical.defMul*positionPhysical.def*rankScale.def)),crit:rateFromPlayer(p.crit,position.critScale,position.critAdd,position.critCap,MONSTER_MAX_CRIT_RATE),dodge:rateFromPlayer(p.dodge,position.dodgeScale,position.dodgeAdd,position.dodgeCap,MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
- window.ARENA_BALANCE_VERSION=5;
- window.ARENA_RANK_BALANCE_VERSION=2;
+ window.ARENA_BALANCE_VERSION=6;
+ window.ARENA_RANK_BALANCE_VERSION=3;
  window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
  window.getArenaRankMultipliers=function(rank){return arenaRankMultipliers(rank);};
  window.getArenaPositionPhysicalMultipliers=function(id){const key=String(id||"normal"),v=ARENA_POSITION_PHYSICAL_MULTIPLIERS[key]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {hp:v.hp,damage:v.damage,def:v.def};};
