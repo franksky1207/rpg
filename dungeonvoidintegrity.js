@@ -25,8 +25,10 @@
   if(Number(window.VOID_BACKGROUND_PRESENTATION_VERSION)!==1)fail("background-presentation-version");
   if(Number(window.VOID_BACKGROUND_UI_YIELD_VERSION)!==1)fail("background-ui-yield-version");
   if(Number(window.VOID_BACKGROUND_GM_GATE_VERSION)!==1)fail("background-gm-gate-version");
+  if(Number(window.VOID_OUTER_PACING_VERSION)!==1)fail("outer-pacing-version");
+  if(Number(window.COMBAT_OUTER_PACING_VERSION)!==1||typeof window.combatOuterGapMs!=="function"||Number(window.combatOuterGapMs("void","floor"))!==350)fail("outer-pacing-owner");
   if(Number(window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION)!==1)fail("gm-background-all-combat-gate-version");
-  if(typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
+  if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==2||typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
 
   const requiredApis=[
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
