@@ -138,7 +138,7 @@
  function arenaEnemyScalingStats(){return arenaState.enemyScalingSnapshot||createSpecialPlayerSnapshot(equippedStats());}
  function arenaPlayerStats(){if(arenaState.playerSnapshot)return arenaState.playerSnapshot;return createSpecialPlayerSnapshot(playerCombatStats(equippedStats(),state.vipLevel));}
  function arenaFightCore(enemy){const player=arenaPlayerStats(),combat=runCombatCore(player,enemy,state.hp);state.hp=combat.hp;return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};}
- const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));
+ const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));\n function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("arena");}
  function stopArenaBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("arena");}
  function healAfterRound(){if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;save(false);}
  function beginArenaRound(options={}){
@@ -146,7 +146,7 @@
   if(!use.ok)return false;
   save(false);
   const preservePreview=options.preservePreview===true,previewTraits=preservePreview&&Array.isArray(arenaState.enemy?.traits)?arenaState.enemy.traits.slice():null,enemyScaling=createSpecialPlayerSnapshot(equippedStats()),vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0)),player=createSpecialPlayerSnapshot(playerCombatStats(enemyScaling,vipLevel));
-  arenaState.enemyScalingSnapshot=enemyScaling;arenaState.vipLevelSnapshot=vipLevel;arenaState.playerSnapshot=player;arenaState.stage=0;arenaState.roundPoints=0;arenaState.roundBasePoints=0;arenaState.history=[];arenaState.result=null;arenaState.enemy=buildArenaEnemy(arenaState.position.id,0,enemyScaling,state.level,{traits:previewTraits||undefined,rank:arenaState.rank});state.hp=player.hp;arenaState.phase="combat";render();sleep(80).then(runArenaFight);return true;
+  arenaState.enemyScalingSnapshot=enemyScaling;arenaState.vipLevelSnapshot=vipLevel;arenaState.playerSnapshot=player;arenaState.stage=0;arenaState.roundPoints=0;arenaState.roundBasePoints=0;arenaState.history=[];arenaState.result=null;arenaState.enemy=buildArenaEnemy(arenaState.position.id,0,enemyScaling,state.level,{traits:previewTraits||undefined,rank:arenaState.rank});state.hp=player.hp;arenaState.phase="combat";render();Promise.resolve().then(runArenaFight);return true;
  }
 
  window.openArenaDungeon=function(){if((Number(state.level)||1)<15){view="dungeon";render();return;}if(typeof clearArenaVenueSelection==="function")clearArenaVenueSelection();resetArenaState();view="dungeon-arena";render();};
@@ -188,13 +188,13 @@
       const ds=dailyStatus();
       if(!fullClear)arenaState.summary.stopReason="death";else if(arenaState.stopRequested)arenaState.summary.stopReason="manual";else if(ds.remaining<=0)arenaState.summary.stopReason="daily-limit";
       if(arenaState.summary.stopReason){stopArenaBackground();arenaState.phase="result";render();break;}
-      await sleep(300);
+      await sleep(battleGapMs());
       if(!beginArenaRound({preservePreview:false})){stopArenaBackground();arenaState.summary.stopReason="daily-limit";arenaState.phase="result";render();break;}
       break;
      }
      arenaState.phase="result";render();break;
     }
-    save(false);arenaState.stage=stageIndex+1;arenaState.enemy=buildArenaEnemy(arenaState.position.id,arenaState.stage,arenaEnemyScalingStats(),state.level,{rank:arenaState.rank});arenaState.result=null;render();await sleep(450);
+    save(false);arenaState.stage=stageIndex+1;arenaState.enemy=buildArenaEnemy(arenaState.position.id,arenaState.stage,arenaEnemyScalingStats(),state.level,{rank:arenaState.rank});arenaState.result=null;render();await sleep(battleGapMs());
    }
   }finally{battleBusy=false;}
  }
