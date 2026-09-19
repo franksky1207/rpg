@@ -1018,6 +1018,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 2026-09-19 災厄大整理第 4 批：印記效果說明正式收回 `markcore.js`（`MARK_DESCRIPTION_OWNER_VERSION=1`／`markEffectDescription()`），`calamityui.js` 不再複製 10 枚印記文字規則；災厄戰鬥 UI 的 4 個獨立 HP 顯示欄位收斂為單一 `battleView` snapshot（`CALAMITY_BATTLE_VIEW_VERSION=1`），一般戰鬥畫面與極簡模式共用；`calamitygm.js` 印記清單改直接使用 unified calamity config（`GM_MARK_CONFIG_OWNER_VERSION=1`），不再自行由 MARK_KEYS/MARK_DEFS 重建配對。Integrity／Runtime／Final 已同步鎖定。Save Schema、平衡數值、印記效果與戰鬥流程不變。
 - 2026-09-19 災厄大整理第 5 批：完成 dead API／Integrity／版本收尾。正式退休 `normalizeCivilizationMarkProgressForCore`、`advanceCivilizationCalamityMarkEntry`、`settleCivilizationCalamityMarkKill`、`markAcquired`、`markProgress`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`；Runtime Integrity 反向鎖定這些舊 API 不得回來。Mark／Calamity Core Integrity 改直接依 unified config 驗證，不再維護第二套名稱／配對陣列；`prepareCivilizationCalamityEntry()` 的重複 presentation clear 已移除。五支災厄分層 Integrity 保留，因各自仍對應 State／Core／Run／UI／GM 的獨立責任。版本常數經檢查後保留現有 state／balance／rule／owner 邊界，未為清理而無意義升版。Save Schema 仍為 13，玩法與數值不變。
 
+- 2026-09-19 競技場 Rank Balance V1：Arena Balance 升為 V4，正式階級倍率由原本線性 `HP +5%／階、Damage +1.5%／階、DEF +3%／階` 改為明確 1～10 階曲線；1～5 階維持原數值，第 6 階僅微調，第 7～10 階逐步拉開，避免新增印記／專精後高階競技場仍接近固定 95～100% 全通。正式倍率依序為：R1 `1.00/1.000/1.00`、R2 `1.05/1.015/1.03`、R3 `1.10/1.030/1.06`、R4 `1.15/1.045/1.09`、R5 `1.20/1.060/1.12`、R6 `1.27/1.085/1.16`、R7 `1.39/1.125/1.225`、R8 `1.50/1.165/1.285`、R9 `1.62/1.210/1.355`、R10 `1.76/1.260/1.435`（HP/Damage/DEF）。97%／485-of-500 升階門檻、位置模板、三戰規則、玩家專精／印記／VIP／強化本身皆未修改。Balance compatibility 同步升為 4，因此舊戰力評估結果會視為 stale 並要求依新平衡重測。Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
