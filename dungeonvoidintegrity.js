@@ -22,6 +22,8 @@
   if(Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)!==1)fail("ui-auto-adapter-version");
   if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
+  if(Number(window.VOID_BACKGROUND_PRESENTATION_VERSION)!==1)fail("background-presentation-version");
+  if(typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
 
   const requiredApis=[
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
@@ -71,7 +73,12 @@
   if(!/exitRequested\s*=\s*true/.test(exitSrc))fail("exit-request-flag");
   if(!/phase\s*!==\s*["']fighting["']/.test(exitSrc))fail("exit-between-floor-finish");
 
-  const autoSrc=src(window.runVoidMirageAuto);
+  const uiStartSrc=src(window.startVoidMirageChallengeUI);
+  if(!/backgroundProgressStart\s*\(\s*["']void["']\s*\)/.test(uiStartSrc))fail("background-start-wiring");
+  const uiAutoSrc=src(typeof runVoidMirageUiAuto==="function"?runVoidMirageUiAuto:null);
+  if(uiAutoSrc&&!/backgroundProgressUiYield\s*\(\s*["']void["']\s*\)/.test(uiAutoSrc))fail("background-ui-yield-wiring");
+
+    const autoSrc=src(window.runVoidMirageAuto);
   if(!/while\s*\(voidMirageRun\?\.active\)/.test(autoSrc))fail("auto-loop-owner");
   if(!/fightNextVoidMirageFloor/.test(autoSrc))fail("auto-owner-floor-call");
   if(!/onFloorComplete/.test(autoSrc)||!/onEnd/.test(autoSrc))fail("auto-callback-contract");
