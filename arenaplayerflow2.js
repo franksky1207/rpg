@@ -13,7 +13,7 @@
  function arenaDailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("arena"):{used:0,remaining:0,limit:20};}
  function configForRank(rank){
   const id=positionId(rank);
-  const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs(rank):[];
+  const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):[];
   return configs.find(x=>x.id===id)||configs[0]||null;
  }
  function combatAssessmentHtml(a,p){
