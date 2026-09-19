@@ -167,24 +167,6 @@ function beginCombat(count){
  if(typeof getPreviewEncounter==="function")currentCombatEncounter=getPreviewEncounter(selectedMap,selectedEnemy);
  adventureScreen="combat";render();setTimeout(()=>runBattles(count),60);
 }
-function setCombatHp(enemyHp,enemyMax,playerHp,playerMax,message){
- const eb=document.getElementById("combatEnemyBar"),eh=document.getElementById("combatEnemyHp"),pb=document.getElementById("combatPlayerBar"),ph=document.getElementById("combatPlayerHp"),msg=document.getElementById("combatMessage");
- if(eb)eb.style.width=`${Math.max(0,Math.min(100,enemyHp/enemyMax*100))}%`;
- if(eh)eh.textContent=`${Math.max(0,enemyHp)} / ${enemyMax}`;
- if(pb)pb.style.width=`${Math.max(0,Math.min(100,playerHp/playerMax*100))}%`;
- if(ph)ph.textContent=`${Math.max(0,playerHp)} / ${playerMax}`;
- if(msg)msg.textContent=message;
-}
-function flashCombatText(target,text){
- const card=document.getElementById(target==="enemy"?"combatEnemyCard":"combatPlayerCard"),dmg=document.getElementById(target==="enemy"?"combatEnemyDamage":"combatPlayerDamage");
- if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260)}
- if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show")}
-}
-function flashDamage(target,amount){flashCombatText(target,`-${amount}`)}
-function attackMotion(attacker){
- const card=document.getElementById(attacker==="player"?"combatPlayerCard":"combatEnemyCard");
- if(card){card.classList.remove("attacking");void card.offsetWidth;card.classList.add("attacking");setTimeout(()=>card.classList.remove("attacking"),340)}
-}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
  if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
