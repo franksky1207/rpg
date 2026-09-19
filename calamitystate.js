@@ -5,8 +5,8 @@
  const MARK_STATE_VERSION=1;
  const MARK_MAX_LEVEL=10;
 
- const CALAMITY_IDS=(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(region=>String(region?.id||"")).filter(Boolean);
- const MARK_IDS=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
+ const CALAMITY_IDS=Array.from(window.CIVILIZATION_CALAMITY_IDS||[]);
+ const MARK_IDS=Array.from(window.CIVILIZATION_MARK_IDS||[]);
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function clampInt(value,min,max){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):min;}
@@ -66,8 +66,6 @@
  window.CALAMITY_BALANCE_VERSION=CALAMITY_BALANCE_VERSION;
  window.MARK_STATE_VERSION=MARK_STATE_VERSION;
  window.MARK_MAX_LEVEL=MARK_MAX_LEVEL;
- window.CIVILIZATION_CALAMITY_IDS=Object.freeze(CALAMITY_IDS.slice());
- window.CIVILIZATION_MARK_IDS=Object.freeze(MARK_IDS.slice());
  window.createBlankCalamityState=createBlankCalamityState;
  window.createBlankMarkState=createBlankMarkState;
  window.normalizeCivilizationCalamityState=normalizeCivilizationCalamityState;
