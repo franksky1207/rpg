@@ -38,8 +38,8 @@
  if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1)fail("MARK_PROGRESSION_OWNER","Mark Core progression owner 未正確載入",window.MARK_PROGRESSION_OWNER_VERSION);
  if(Number(window.MARK_DESCRIPTION_OWNER_VERSION)!==1)fail("MARK_DESCRIPTION_OWNER","Mark Core description owner 未正確載入",window.MARK_DESCRIPTION_OWNER_VERSION);
  if(Number(window.PLAYER_TITLE_STATE_VERSION)!==1||!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==16)fail("PLAYER_TITLE_CORE","玩家稱號核心 V1／災厄10＋鏡像6 定義未正確載入",{version:window.PLAYER_TITLE_STATE_VERSION,calamity:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length,total:window.PLAYER_TITLE_DEFS?.length});
- if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==2)fail("PLAYER_TITLE_GM_PREVIEW","GM 稱號純預覽 V2／16 稱號未載入",window.GM_PLAYER_TITLE_PREVIEW_VERSION);
- if(Number(window.PLAYER_TITLE_INTEGRITY_VERSION)!==2||window.PLAYER_TITLE_INTEGRITY?.passed!==true)fail("PLAYER_TITLE_INTEGRITY","玩家稱號專屬 integrity V2 未通過",window.PLAYER_TITLE_INTEGRITY?.errors||null);
+ if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==3)fail("PLAYER_TITLE_GM_PREVIEW","GM 稱號實戰名稱預覽 V3／16 稱號未載入",window.GM_PLAYER_TITLE_PREVIEW_VERSION);
+ if(Number(window.PLAYER_TITLE_INTEGRITY_VERSION)!==3||window.PLAYER_TITLE_INTEGRITY?.passed!==true)fail("PLAYER_TITLE_INTEGRITY","玩家稱號專屬 integrity V3 未通過",window.PLAYER_TITLE_INTEGRITY?.errors||null);
  if(Number(SAVE_VERSION)!==13)fail("SAVE_VERSION",`SAVE_VERSION 應為 13，實際 ${SAVE_VERSION}`);
  if(Number(window.SAVE_SCHEMA_VERSION)!==13)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 13，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
