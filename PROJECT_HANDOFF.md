@@ -1020,6 +1020,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 競技場 Rank Balance V3：在公式化架構不變的前提下，因實測勝率仍偏高，將後段二次成長再加重。令 `x = rank - 1`：HP = `1 + 0.025x + 0.0075x²`；Damage = `1 + 0.005x + 0.0031x²`；DEF = `1 + 0.016x + 0.004x²`。Rank1 仍為 1.0；前段只小幅提高，Rank7～10 增幅更明顯。Arena Balance 升為 V6；97%／485-of-500 升階門檻、位置模板、三戰規則、玩家專精／印記／VIP／強化本身皆未修改。Balance compatibility 同步升為 6，舊 V5 評估結果會視為 stale 並依新公式重測。Save Schema 不變。
 
+- 2026-09-19 懸賞戰 Balance V1／Difficulty Formula V1：普通／高級／危險不再各自持有一整排戰鬥 magic numbers。三檔只保留 difficulty 0／1／2 與出現率、EXP、金幣、裝備數等獎勵資料；戰鬥能力統一由 `bountyDifficultyProfile()` 計算。正式曲線：HP = `1 + 0.07d + 0.03d²`；Damage = `1 + 0.055d + 0.0225d²`；DEF = `0.88 + 0.035d`。暴擊／閃避 scale、add、cap 與額外特性機率亦由同一 difficulty 產生；普通／高級固定 1 特性，危險為 50% 1 特性／50% 2 特性。敵人仍以不含 VIP 的 `equippedStats()` 建立基準，因此裝備與強化自然被吸收；不額外依專精、印記或 VIP 動態追趕玩家。出現率仍為 45%／35%／20%，獎勵仍為 EXP／金幣 5／8／12 倍、裝備 2／3／5 件。Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
