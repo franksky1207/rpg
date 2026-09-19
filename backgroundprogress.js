@@ -1,16 +1,11 @@
 (function(){
  const BACKGROUND_CREDIT_RATE=.96;
  const CONTINUOUS_BACKGROUND_MAX_MS=12*60*60*1000;
- const BLUR_FALLBACK_DELAY_MS=800;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
  let windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;
- let blurFallbackBackground=false;
- let blurFallbackTimer=null;
- // Page Visibility/pagehide is authoritative. A sustained blur is only a delayed iOS Safari fallback:
- // transient focus loss while the page stays visible must not suspend combat.
- let environmentBackground=pageHidden;
+ let environmentBackground=pageHidden||windowBlurred;
  const environmentListeners=new Set();
  const pageHideListeners=new Set();
 
@@ -78,19 +73,8 @@
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
   }else flow.credit+=allowed*BACKGROUND_CREDIT_RATE;
  }
- function clearBlurFallbackTimer(){if(blurFallbackTimer){clearTimeout(blurFallbackTimer);blurFallbackTimer=null;}}
- function scheduleBlurFallback(){
-  clearBlurFallbackTimer();
-  if(pageHidden||!windowBlurred)return;
-  blurFallbackTimer=setTimeout(()=>{
-   blurFallbackTimer=null;
-   if(pageHidden||!windowBlurred)return;
-   blurFallbackBackground=true;
-   syncEnvironment("blur-fallback");
-  },BLUR_FALLBACK_DELAY_MS);
- }
  function syncEnvironment(source="unknown"){
-  const next=pageHidden||blurFallbackBackground;
+  const next=pageHidden||windowBlurred;
   if(next===environmentBackground)return;
   environmentBackground=next;
   if(next)enterBackground();else leaveBackground();
@@ -113,9 +97,8 @@
  window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
  window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
  window.BACKGROUND_PROGRESS_GM_GATE_VERSION=1;
- window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=2;
- window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION=1;
- window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS=BLUR_FALLBACK_DELAY_MS;
+ window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3;
+ window.BACKGROUND_PROGRESS_UI_YIELD_VERSION=1;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
@@ -125,7 +108,7 @@
   }
   if(flow)window.backgroundProgressStop(flow.kind);
   const config=flowOptions(nextKind,options);
-  flow={kind:nextKind,mode:config.mode,maxBackgroundMs:config.maxBackgroundMs,backgroundElapsedUsed:0,credit:0,hiddenAt:null,sleeper:null,instantSkips:0};
+  flow={kind:nextKind,mode:config.mode,maxBackgroundMs:config.maxBackgroundMs,backgroundElapsedUsed:0,credit:0,hiddenAt:null,sleeper:null};
   if(isBackground())flow.hiddenAt=now();
   return {kind:flow.kind,mode:flow.mode,credit:0};
  };
@@ -143,12 +126,7 @@
   if(flow.hiddenAt==null&&!isBackground()&&flow.credit>0&&remaining>0){
    const used=Math.min(flow.credit,remaining);flow.credit-=used;remaining-=used;
   }
-  if(remaining<=0){
-   flow.instantSkips=(flow.instantSkips||0)+1;
-   if(flow.instantSkips%24===0)return nativeSleep(0);
-   return;
-  }
-  flow.instantSkips=0;
+  if(remaining<=0)return nativeSleep(0);
   if(isBackground()){
    flow.hiddenAt=now();
    return new Promise(resolve=>{flow.sleeper={remaining,dueAt:0,timer:null,resolve};});
@@ -162,22 +140,19 @@
   if(!flow)return null;
   return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:hasBackgroundCap()?Number(flow.maxBackgroundMs):null};
  };
+ window.backgroundProgressUiYield=function(kind=null){
+  if(!activeFor(kind)||isBackground()||Number(flow.credit)<=0)return Promise.resolve(false);
+  return nativeSleep(0).then(()=>true);
+ };
 
- document.addEventListener("visibilitychange",()=>{
-  pageHidden=document.visibilityState==="hidden";
-  if(pageHidden){clearBlurFallbackTimer();blurFallbackBackground=false;syncEnvironment("visibilitychange");}
-  else{blurFallbackBackground=false;syncEnvironment("visibilitychange");if(windowBlurred)scheduleBlurFallback();}
- });
- window.addEventListener("blur",()=>{windowBlurred=true;if(pageHidden)syncEnvironment("blur");else scheduleBlurFallback();});
- window.addEventListener("focus",()=>{windowBlurred=false;clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
+ document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncEnvironment("visibilitychange");});
+ window.addEventListener("blur",()=>{windowBlurred=true;syncEnvironment("blur");});
+ window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
  window.addEventListener("pagehide",()=>{
-  clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=true;syncEnvironment("pagehide");
+  pageHidden=true;syncEnvironment("pagehide");
   pageHideListeners.forEach(listener=>{try{listener();}catch(e){console.error(e);}});
  });
- window.addEventListener("pageshow",()=>{
-  clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");
-  if(!pageHidden&&windowBlurred)scheduleBlurFallback();
- });
+ window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");});
 
  const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
  if(baseBeginCombat){
