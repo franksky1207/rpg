@@ -30,8 +30,8 @@
   const bar=document.getElementById(`combat${prefix}Bar`)||document.getElementById(`void${prefix}Bar`);
   return {text,bar};
  }
- function shieldBarElement(create=false){
-  const hpBar=hpElements("player").bar,parent=hpBar?.parentElement;
+ function shieldBarElement(target="player",create=false){
+  const hpBar=hpElements(target).bar,parent=hpBar?.parentElement;
   if(!parent)return null;
   let shield=parent.querySelector(".combat-shield-bar");
   if(!shield&&create){
@@ -41,16 +41,21 @@
   }
   return shield;
  }
- function syncCombatShieldDom(){
-  const p=presentation,shield=shieldBarElement(!!p?.active);
+ function syncCombatShieldTarget(target,current,max){
+  const shield=shieldBarElement(target,!!presentation?.active);
   if(!shield)return;
-  if(!p?.active||p.playerShieldMax<=0||p.playerShield<=0){
+  if(!presentation?.active||max<=0||current<=0){
    shield.style.width="0%";
    shield.classList.remove("active");
    return;
   }
-  shield.style.width=`${Math.max(0,Math.min(100,p.playerShield/p.playerShieldMax*100))}%`;
+  shield.style.width=`${Math.max(0,Math.min(100,current/max*100))}%`;
   shield.classList.add("active");
+ }
+ function syncCombatShieldDom(){
+  const p=presentation;
+  syncCombatShieldTarget("player",Math.max(0,Number(p?.playerShield)||0),Math.max(0,Number(p?.playerShieldMax)||0));
+  syncCombatShieldTarget("enemy",Math.max(0,Number(p?.enemyShield)||0),Math.max(0,Number(p?.enemyShieldMax)||0));
  }
  function syncCombatHpDom(){
   const p=presentation,screen=combatScreen();if(!p||p.active!==true||!screen||(p.screen&&p.screen!==screen))return;
@@ -74,7 +79,7 @@
  window.isCombatPresentationActive=function(){return presentation?.active===true;};
  window.getCombatPresentationSnapshot=function(){
   const p=presentation;if(!p?.active)return null;
-  return {token:p.token,playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,index:p.index,eventCount:p.events.length};
+  return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,index:p.index,eventCount:p.events.length};
  };
  window.clearCombatPresentation=function(reason="clear"){
   if(!presentation){manualPulseSkips.player=0;manualPulseSkips.enemy=0;return null;}
@@ -343,6 +348,93 @@
  };
  window.COMBAT_STRUCTURED_PRESENTATION_VERSION=1;
 
+ function mirrorUiTarget(key){return key==="player"?"player":"enemy";}
+ function mirrorMarkUiTarget(evt){
+  if(evt?.type!=="mark")return null;
+  if(evt.mark==="suppression"||evt.mark==="ignore"||evt.mark==="backlash")return mirrorUiTarget(evt.target);
+  return mirrorUiTarget(evt.owner);
+ }
+ function applyMirrorMarkPresentation(evt){
+  const p=presentation;if(!p?.active||p.mode!=="mirror"||evt?.type!=="mark")return;
+  const owner=mirrorUiTarget(evt.owner),target=mirrorUiTarget(evt.target);
+  if(evt.mark==="ward"&&evt.action==="activate"){
+   const shield=Math.max(0,Math.floor(Number(evt.shield)||0));
+   if(owner==="player"){p.playerShield=shield;p.playerShieldMax=Math.max(p.playerShieldMax,shield);}
+   else {p.enemyShield=shield;p.enemyShieldMax=Math.max(p.enemyShieldMax,shield);}
+  }else if(evt.mark==="ward"&&evt.action==="absorb"){
+   const remaining=Math.max(0,Math.floor(Number(evt.remainingShield)||0));
+   if(owner==="player")p.playerShield=remaining;else p.enemyShield=remaining;
+  }else if(evt.mark==="absorption"&&evt.action==="trigger"){
+   const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
+   if(owner==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
+  }else if(evt.mark==="backlash"&&evt.action==="trigger"){
+   const damage=Math.max(0,Math.floor(Number(evt.actualDamage??evt.damage)||0));
+   if(target==="player")p.playerHp=Math.max(0,p.playerHp-damage);else p.enemyHp=Math.max(0,p.enemyHp-damage);
+  }
+ }
+ window.prepareMirrorCombatPresentation=function(result){
+  window.clearCombatPresentation("mirror-replace");
+  if(!result)return null;
+  const maxHp=Math.max(1,Math.floor(Number(result.maxHp)||1)),events=Array.isArray(result.events)?result.events.slice():[];
+  const playerWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="player"&&evt.mark==="ward"&&evt.action==="activate");
+  const mirrorWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="mirror"&&evt.mark==="ward"&&evt.action==="activate");
+  const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(mirrorWard?.shield)||0));
+  presentation={active:true,token:++presentationSerial,mode:"mirror",screen:combatScreen()||null,events,index:0,playerHp:maxHp,playerMaxHp:maxHp,enemyHp:maxHp,enemyMaxHp:maxHp,playerShield,playerShieldMax:playerShield,enemyShield,enemyShieldMax:enemyShield};
+  if(combatScreen())ensureCombatExtras();
+  return window.getCombatPresentationSnapshot();
+ };
+ window.animateMirrorStructuredCombatPresentation=async function(result,options={}){
+  if(!presentation?.active||presentation.mode!=="mirror")window.prepareMirrorCombatPresentation(result);
+  const p=presentation;if(!p?.active)throw new Error("Mirror Combat Presentation 尚未初始化。");
+  p.screen=combatScreen()||p.screen||null;
+  const impactDelay=Math.max(0,Number(options.impactDelay??70)||0),stepDelay=Math.max(0,Number(options.stepDelay??75)||0),openingDelay=Math.max(0,Number(options.openingDelay??120)||0),endDelay=Math.max(0,Number(options.endDelay??180)||0);
+  structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();
+  try{
+   await structuredSleep(openingDelay);
+   while(p.active&&p.index<p.events.length){
+    const evt=p.events[p.index++];if(!evt)continue;
+    if(evt.type==="firstActor"){await structuredSleep(Math.min(stepDelay,55));continue;}
+    if(evt.type==="mark"){
+     const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
+     applyMirrorMarkPresentation(evt);
+     if(desc&&target)spawnFx(target,desc.kind,desc.text,0);
+     syncCombatHpDom();
+     if(desc)await structuredSleep(Math.min(stepDelay,70));
+     continue;
+    }
+    if(evt.type==="combo"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"combo");await structuredSleep(Math.min(stepDelay,60));continue;}
+    if(evt.type==="counter"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"counter");await structuredSleep(Math.min(stepDelay,60));continue;}
+    if(evt.type==="drain"){
+     const actor=mirrorUiTarget(evt.actor),healed=Math.max(0,Math.floor(Number(evt.healed)||0));
+     if(actor==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
+     spawnFx(actor,"drain");if(healed>0)spawnFx(actor,"heal",`+${healed} HP`,60);
+     syncCombatHpDom();await structuredSleep(stepDelay);continue;
+    }
+    if(evt.type==="dodge"){
+     const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
+     directMotion(actor);await structuredSleep(impactDelay);directPulse(target,"閃避");syncCombatHpDom();await structuredSleep(stepDelay);continue;
+    }
+    if(evt.type==="attack"){
+     const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
+     directMotion(actor);await structuredSleep(impactDelay);
+     const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0)),actualDamage=Math.max(0,Math.floor(Number(evt.actualDamage)||0));
+     if(target==="player"){p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);p.playerHp=Math.max(0,p.playerHp-actualDamage);}
+     else {p.enemyShield=Math.max(0,p.enemyShield-shieldAbsorbed);p.enemyHp=Math.max(0,p.enemyHp-actualDamage);}
+     if(evt.initiative)spawnFx(target,"initiative");
+     if(evt.penetration)spawnFx(target,"penetration",null,60);
+     if(evt.absorbed)directPulse(target,"吸收");else directPulse(target,evt.crit?`暴擊 -${Math.max(0,Math.floor(Number(evt.damage)||0))}`:`-${Math.max(0,Math.floor(Number(evt.damage)||0))}`);
+     syncCombatHpDom();await structuredSleep(stepDelay);continue;
+    }
+    if(evt.type==="battleEnd")break;
+   }
+   syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
+  }finally{
+   structuredPlayback=false;
+   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
+  }
+ };
+ window.MIRROR_STRUCTURED_PRESENTATION_VERSION=1;
+
  window.prepareCombatPresentation=function(result,options={}){
   window.clearCombatPresentation("replace");
   if(options.logs===false||!result)return null;
@@ -353,7 +445,7 @@
   const events=Array.isArray(result?.events)?result.events.slice():[];
   const wardActivate=events.find(evt=>evt?.type==="mark"&&evt.mark==="ward"&&evt.action==="activate");
   const openingShield=Math.max(0,Math.floor(Number(wardActivate?.shield)||0));
-  presentation={active:true,token:++presentationSerial,screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield};
+  presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield,enemyShield:0,enemyShieldMax:0};
   if(combatScreen())ensureCombatExtras();
   return window.getCombatPresentationSnapshot();
  };
