@@ -180,10 +180,11 @@
   }
   setHpUi(Math.max(0,Number(full.enemyEndHp)||0),enemyMax,Math.max(0,Number(full.playerEndHp)||0),playerMax,full.win?"災厄擊破！":"本場挑戰結束");
   await sleep(250);
+  if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();
   }finally{if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-battle-end");}
  }
 
- function resetDisplay(){ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
+ function resetDisplay(){if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();ui.displayEnemyHp=null;ui.displayEnemyMax=null;ui.displayPlayerHp=null;ui.displayPlayerMax=null;}
  function primeDisplay(full){
   if(!full)return resetDisplay();
   ui.displayEnemyHp=Math.max(0,Number(full.enemyStartHp)||0);
@@ -248,7 +249,7 @@
  };
  window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
- window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
+ window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};return true;};
 
  function calamityMinimalActive(){const run=window.getCivilizationCalamityRunSnapshot?.();return ui.phase==="combat"&&ui.mode==="continuous"&&ui.running&&run?.active===true;}
  function registerMinimal(){
