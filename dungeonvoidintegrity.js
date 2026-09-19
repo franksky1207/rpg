@@ -23,6 +23,7 @@
   if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
   if(Number(window.VOID_BACKGROUND_PRESENTATION_VERSION)!==1)fail("background-presentation-version");
+  if(Number(window.VOID_BACKGROUND_UI_YIELD_VERSION)!==1)fail("background-ui-yield-version");
   if(typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
 
   const requiredApis=[
