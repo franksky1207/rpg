@@ -254,6 +254,15 @@
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
 
+ if(Number(window.ARENA_BALANCE_VERSION)!==4||Number(window.ARENA_RANK_BALANCE_VERSION)!==1)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V4／Rank Balance V1",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
+ if(typeof window.getArenaRankMultipliers!=="function")fail("ARENA_RANK_MULTIPLIERS_API","缺少競技場階級倍率正式 API");
+ else{
+  const ranks=Array.from({length:10},(_,i)=>window.getArenaRankMultipliers(i+1));
+  if(ranks.some(v=>!v||![v.hp,v.damage,v.def].every(Number.isFinite)))fail("ARENA_RANK_MULTIPLIERS_DATA","競技場 1～10 階倍率資料異常",ranks);
+  for(let i=1;i<ranks.length;i++){
+   if(ranks[i].hp<=ranks[i-1].hp||ranks[i].damage<=ranks[i-1].damage||ranks[i].def<=ranks[i-1].def){fail("ARENA_RANK_CURVE","競技場 1～10 階倍率必須逐階提高",ranks);break;}
+  }
+ }
  if(state?.dungeon?.arena&&typeof window.ensureDungeonState==="function"){
   const arenaRef=state.dungeon.arena;
   window.ensureDungeonState();
