@@ -1,6 +1,10 @@
 (function(){
  let voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("void")?window.backgroundProgressSleep(ms,"void"):new Promise(resolve=>setTimeout(resolve,ms));
+ function floorGapMs(){
+  if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
+  return window.combatOuterGapMs("void","floor");
+ }
 
  function progressSafe(){
   if(typeof ensureVoidMirageState==="function")return ensureVoidMirageState()||{highestCleared:0};
@@ -61,11 +65,6 @@
   if(ph)ph.textContent=`${Math.max(0,php)} / ${playerMax}`;
   if(msg)msg.textContent=message||"";
  }
- function pulse(target,text){
-  const card=document.getElementById(target==="enemy"?"voidEnemyCard":"voidPlayerCard"),dmg=document.getElementById(target==="enemy"?"voidEnemyDamage":"voidPlayerDamage");
-  if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),250);}
-  if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
- }
  async function animateFloor(fr){
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
   await window.animateStructuredCombatPresentation(fr.result,{mode:"void",kind:fr.enemy?.kind,sleep,clearAfter:true,clearReason:"void-floor-end"});
@@ -75,6 +74,7 @@
  window.VOID_BACKGROUND_PRESENTATION_VERSION=1;
  window.VOID_BACKGROUND_UI_YIELD_VERSION=1;
  window.VOID_BACKGROUND_GM_GATE_VERSION=1;
+ window.VOID_OUTER_PACING_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
   if(typeof window.runVoidMirageAuto!=="function"){
@@ -99,7 +99,7 @@
      }
      await animateFloor(fr);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
-     if(!fr.ended)await sleep(350);
+     if(!fr.ended)await sleep(floorGapMs());
     },
     async onEnd(run){
      stopVoidMinimalModeIfOpen();
