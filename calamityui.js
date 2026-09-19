@@ -207,7 +207,7 @@
   ui.lastBattle=result.result;ui.finalRun=result.run;ui.displayBattleNumber=1;
   primeDisplay(result.result);render();
   await animateBattle(result);
-  ui.running=false;ui.phase="result";resetDisplay();render();
+  ui.running=false;ui.phase="result";resetDisplay();render();queuePendingTitleNotice();
  }
 
  async function runContinuousUi(){
@@ -230,6 +230,7 @@
      ui.phase="result";
      resetDisplay();
      render();
+     queuePendingTitleNotice();
     }
    });
   }catch(error){
