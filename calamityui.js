@@ -11,6 +11,44 @@
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  const fmt=value=>Math.max(0,Math.floor(Number(value)||0)).toLocaleString();
 
+ const TITLE_NOTICE_MODAL_ID="civilizationTitleNoticeModal";
+ let titleNoticeOpen=false;
+ function ensureTitleNoticeModal(){
+  let modal=document.getElementById(TITLE_NOTICE_MODAL_ID);
+  if(modal)return modal;
+  modal=document.createElement("div");
+  modal.id=TITLE_NOTICE_MODAL_ID;
+  modal.className="modal";
+  modal.setAttribute("role","dialog");
+  modal.setAttribute("aria-modal","true");
+  document.body.appendChild(modal);
+  return modal;
+ }
+ function showPendingTitleNotice(){
+  if(titleNoticeOpen||document.hidden)return false;
+  const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
+  if(!def)return false;
+  const modal=ensureTitleNoticeModal();
+  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div style="margin:14px 0;font-size:22px;font-weight:700">${esc(def.name)}</div><div class="muted">首次擊敗對應文明災厄後取得。</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
+  modal.classList.add("show");
+  titleNoticeOpen=true;
+  return true;
+ }
+ window.closePlayerTitleNotice=function(){
+  const modal=document.getElementById(TITLE_NOTICE_MODAL_ID);
+  if(modal){modal.classList.remove("show");modal.remove();}
+  titleNoticeOpen=false;
+  if(typeof window.clearPendingPlayerTitleNotice==="function"&&window.clearPendingPlayerTitleNotice()&&typeof save==="function")save(false);
+  return true;
+ };
+ function queuePendingTitleNotice(){
+  if(document.hidden)return false;
+  if(typeof queueMicrotask==="function")queueMicrotask(showPendingTitleNotice);
+  else setTimeout(showPendingTitleNotice,0);
+  return true;
+ }
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)queuePendingTitleNotice();});
+
  function defs(){return typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];}
  function unlockedDefs(){return defs().filter(def=>typeof window.isCivilizationCalamityUnlocked==="function"&&window.isCivilizationCalamityUnlocked(def.id));}
  function status(id){return typeof window.getCivilizationCalamityStatus==="function"?window.getCivilizationCalamityStatus(id):null;}
@@ -215,7 +253,7 @@
  };
  window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
- window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};return true;};
+ window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};queuePendingTitleNotice();return true;};
 
  function calamityMinimalActive(){const run=window.getCivilizationCalamityRunSnapshot?.();return ui.phase==="combat"&&ui.mode==="continuous"&&ui.running&&run?.active===true;}
  function registerMinimal(){
@@ -260,7 +298,7 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
- window.CALAMITY_UI_VERSION=UI_VERSION;
+ window.CALAMITY_UI_VERSION=UI_VERSION;\n window.showPendingPlayerTitleNotice=showPendingTitleNotice;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
  window.CALAMITY_OUTER_PACING_VERSION=1;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
