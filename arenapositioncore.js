@@ -40,11 +40,11 @@
   return Object.fromEntries(ASSESS_MARK_KEYS.map(key=>[key,typeof window.markClampLevel==="function"?window.markClampLevel(live?.[key]):Math.max(0,Math.min(10,Math.floor(Number(live?.[key])||0)))]));
  }
  function assessmentCompatibilityVersions(){
-  const formal=typeof window.getArenaAssessmentCompatibilityVersions==="function"?window.getArenaAssessmentCompatibilityVersions():null;
+  const formal=typeof window.getArenaVersionProfile==="function"?window.getArenaVersionProfile():{};
   return {
-   positionModelVersion:Math.max(0,Math.floor(Number(formal?.positionModelVersion)||0)),
-   assessmentRuleVersion:Math.max(0,Math.floor(Number(formal?.assessmentRuleVersion)||0)),
-   balanceVersion:Math.max(0,Math.floor(Number(window.ARENA_BALANCE_VERSION)||Number(formal?.balanceVersion)||0))
+   positionModelVersion:Math.max(0,Math.floor(Number(formal.positionModelVersion)||0)),
+   assessmentRuleVersion:Math.max(0,Math.floor(Number(formal.assessmentRuleVersion)||0)),
+   balanceVersion:Math.max(0,Math.floor(Number(formal.balanceVersion)||0))
   };
  }
  function assessmentSignature(rank,positionId){
@@ -153,7 +153,7 @@
   return {...assessmentStatus(),reason:arena.promotionReady?"qualified":"not-qualified"};
  }
 
- window.ARENA_ASSESSMENT_RUNTIME_VERSION=4;
+ window.ARENA_ASSESSMENT_RUNTIME_VERSION=Math.max(0,Math.floor(Number(window.getArenaVersionProfile?.().assessmentRuntimeVersion)||0));
  window.getArenaAssessmentSignature=function(rank=null){const r=clampRank(rank==null?currentAssessmentRank():rank);return assessmentSignature(r,positionTemplateId(r));};
  window.getArenaAssessmentStatus=assessmentStatus;
  window.assessArenaPromotion=function(){
@@ -182,7 +182,6 @@
  };
 
  window.getArenaPositionTemplateId=positionTemplateId;
- window.getArenaPositionDifficultyId=positionTemplateId;
  window.getArenaPositionLabel=positionLabel;
  window.getArenaPositionIndex=positionIndexForRank;
 })();
