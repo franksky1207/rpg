@@ -1,6 +1,7 @@
 (function(){
  const UI_VERSION=3;
  const MINIMAL_VERSION=1;
+ const CONTINUOUS_GAP_MS=350;
  let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,displayEnemyHp:null,displayEnemyMax:null,displayPlayerHp:null,displayPlayerMax:null};
 
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("calamity")?window.backgroundProgressSleep(ms,"calamity"):new Promise(resolve=>setTimeout(resolve,ms));
@@ -191,7 +192,7 @@
      ui.phase="combat";
      primeDisplay(battle.result);render();
      await animateBattle(battle);
-     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(Number(window.CALAMITY_CONTINUOUS_GAP_MS)||350);
+     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(CONTINUOUS_GAP_MS);
     },
     async onEnd(run){
      stopMinimalIfOpen();
@@ -270,6 +271,7 @@
 
  window.getCivilizationMarkEffectText=markEffectText;
  window.CALAMITY_UI_VERSION=UI_VERSION;
+ window.CALAMITY_CONTINUOUS_GAP_MS=CONTINUOUS_GAP_MS;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
