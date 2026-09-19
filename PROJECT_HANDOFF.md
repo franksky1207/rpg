@@ -1034,6 +1034,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 主線戰鬥卡住根因修正：`combatpacing.js` 仍殘留舊 `window.animateFight` override，會覆蓋 `ui.js` 已改為 Structured Presentation 的正式 `animateFight()`；舊 override 又呼叫已退休的 `setCombatHp()`／`attackMotion()`／`flashCombatText()`，因此 `fightOnce()` 已完成結算與 `save(false)` 後，在動畫階段拋錯，造成單場與連續戰鬥畫面停在滿血起始狀態，但重整後已看到擊殺進度／獎勵生效。現已完全刪除該舊動畫 override，`combatpacing.js` 只保留 sleep／場間 pacing／特殊遭遇 pacing，主線唯一動畫 owner 恢復為 `ui.js -> animateStructuredCombatPresentation()`；新增 `MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION=1`，`combatfxintegrity.js` 會反向檢查不得再出現舊 log parser／HP writer owner。Save Schema、戰鬥數值與獎勵不變。
 
+- 2026-09-19 iPhone Safari 主線背景戰鬥判定 V2：上一版完全排除 blur 後，部分 iOS Safari 真正切到背景時只送 blur、未可靠送 visibility hidden，導致主線連續戰鬥不再吃背景時間。現在改成「Page Visibility/pagehide 優先＋800ms sustained-blur fallback」：hidden/pagehide 立刻進背景；可見頁單純 blur 先等待 800ms，若 focus 回來即取消，只有持續失焦才視為背景。恢復主線連戰的背景 catch-up，同時避免短暫 hasFocus=false 再把前景戰鬥卡住。版本為 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=2`、`BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION=1`。戰鬥數值、獎勵、Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
