@@ -65,6 +65,7 @@
   return storyId;
  }
 
+ window.MAIN_REAL_BATTLE_SAMPLE_VERSION=2;
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
  window.addBattleEnhancementReward=addContextEnhancementReward;
