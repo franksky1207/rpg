@@ -39,15 +39,19 @@
   return target.titles;
  }
  function grantFirstKillTitle(calamityId,target=state){
-  const def=titleForCalamity(calamityId),titles=ensureTitleState(target);
-  if(!def||!titles)return {changed:false,firstAcquisition:false,title:null};
-  const unlocked=new Set(Array.isArray(titles.unlocked)?titles.unlocked:[]);
+  const def=titleForCalamity(calamityId);
+  if(!def||!isObject(target))return {changed:false,firstAcquisition:false,title:null};
+  const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
+  const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>IDS.includes(id)):[]);
   const firstAcquisition=!unlocked.has(def.id);
   if(firstAcquisition){
    unlocked.add(def.id);
-   titles.unlocked=IDS.filter(id=>unlocked.has(id));
-   titles.pendingNotice=def.id;
+   source.unlocked=IDS.filter(id=>unlocked.has(id));
+   source.pendingNotice=def.id;
   }
+  source.version=PLAYER_TITLE_STATE_VERSION;
+  source.equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
+  target.titles=source;
   return {changed:firstAcquisition,firstAcquisition,title:def};
  }
  function pendingTitleNotice(target=state){
