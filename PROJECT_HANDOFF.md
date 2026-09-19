@@ -1050,6 +1050,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 Combat／Background Cleanup 第3批：`combatpacing.js` 退休舊主線動畫速度模型與隱性 sleep wrapper，包括 `MAIN_START_DELAY/MAIN_WINDUP_DELAY/MAIN_NORMAL_DELAY/MAIN_BOSS_DELAY/MAIN_END_DELAY/MAIN_PRE_DELAY`、`estimateMainBattleDurationMs()`、`SPECIAL_DELAY_MAP`、`specialPacingActive` 與全域 `window.sleep` override。正式保留的主線 flow pacing 僅為 normal/boss 140ms、elite 220ms 場間等待，以及明確 API `mainBattleFlowSleep(ms)`／`mainBattlePresentationSleep(ms)`；`MAIN_BATTLE_PACING_VERSION=2`、`MAIN_BATTLE_FLOW_SLEEP_VERSION=1`。battlepipeline 場間等待直接呼叫 background-aware `battleFlowSleep`；特殊遭遇提示與進戰等待改為明確 flow sleep，正式值 850ms／140ms／70ms，`SPECIAL_ENCOUNTER_FLOW_PACING_VERSION=1`，不再靠全域 sleep 偷換 120→70。Structured Combat Pacing V2 70/35/24/90 不變，背景 credit/catch-up 行為不變，Save Schema 維持 13。
 
+- 2026-09-19 Combat／Background Cleanup 第4批：完成低優先與防回歸收尾。Background Progress 正式定義為 single-active-flow policy（`BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION=1`），同時間只允許 main／void／calamity 其中一個 active flow；新 flow 依既有語意取代舊 flow，並提供 `backgroundProgressActiveKind()`。前景 catch-up UI yield 升為 V2，優先使用 `requestAnimationFrame()` 等待下一個 paint boundary，並保留 80ms timer fallback，避免 Safari 剛切背景時 rAF 暫停造成流程卡死。戰鬥外場間等待集中至 `combatpacing.js` 的 `COMBAT_OUTER_PACING_VERSION=1`／`combatOuterGapMs()`：主線 normal 140ms、elite 220ms、boss 140ms；虛空樓層 350ms；文明災厄場間 350ms。虛空與災厄 UI 改直接讀共用 owner；舊 `CALAMITY_CONTINUOUS_GAP_MS` 第二數字 owner 已退休。虛空舊未使用 `pulse()`／250ms cleanup timer 亦移除。Boss Continuous Integrity 的舊 GAME_GUIDE_VERSION V10 檢查已修正為正式 V14。相關 Void／Calamity／Boss／Runtime／Final Integrity 均同步更新。Structured Combat Pacing V2 70/35/24/90、GM background gate、offline sample V2、Save Schema 13 均不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
