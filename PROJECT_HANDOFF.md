@@ -1046,6 +1046,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 Combat／Background Cleanup 第1批：GM「背景戰鬥」正式統一控制 main／void／calamity；虛空不再無條件啟動 background flow，GM 關閉時會一併 stop void。主線移除 beginCombat 60ms 與 battlepipeline 每場 60ms 的重複開場等待，Structured Combat Pacing V2 的 opening 70ms 成為唯一戰鬥內開場節奏。Combat FX 退休 attacking 340ms／hit 260ms 固定 cleanup timer，改由實際 CSS animationend lifecycle 清理，避免高速連擊時舊 timer 干擾新一擊。離線實戰速度樣本升為 OFFLINE_BATTLE_SAMPLE_VERSION=2／MAIN_REAL_BATTLE_SAMPLE_VERSION=2；舊未版本化 battleSamples、legacy avgBattleMs fallback、舊 pendingSettlement 均不再參與 V2 離線收益，新 sample／pending 均帶 sampleVersion。Save Schema 維持 13。
 
+- 2026-09-19 Combat／Background Cleanup 第2批：主線 background lifecycle 正式收回 `battlepipeline.js`。連續主線且 GM「背景戰鬥」開啟時，由 pipeline 自己 `backgroundProgressStart("main",{mode:"continuous"})`，並以 `try/finally` 保證所有正常完成、early return 或例外路徑最後 stop main flow；GM 關閉或非連續模式不啟用。共用 `backgroundprogress.js` 已退休 `beginCombat/runBattles` late wrapper、`mainBattleMode()`、`mainBattleAllowsBackground()` 與 `BACKGROUND_PROGRESS_MAIN_SHARED_VERSION/BACKGROUND_PROGRESS_GM_GATE_VERSION`，現在只負責 visibility／blur 環境偵測、flow、credit、sleep、UI yield 等共用 engine API，正式 marker 為 `BACKGROUND_PROGRESS_CORE_VERSION=1`。主線正式 lifecycle marker 為 `MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1`。既有 Visibility Owner V3、background credit 0.96、continuous 12h cap、UI yield 與 main／void／calamity GM gate 行為均不變。Save Schema 維持 13。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
