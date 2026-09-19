@@ -8,7 +8,9 @@
  if(marker!=="continuous")fail("BOSS_CONTINUOUS_MARKER_OWNER",`CONTINUOUS_BATTLE_COUNT 應由 ui.js 統一提供 continuous，實際 ${marker}`);
  if(Number(window.MAIN_BOSS_CONTINUOUS_VERSION)!==1)fail("BOSS_CONTINUOUS_VERSION",`MAIN_BOSS_CONTINUOUS_VERSION 應為 1，實際 ${window.MAIN_BOSS_CONTINUOUS_VERSION}`);
  if(typeof window.HP_FLOW_BOSS_CONTINUOUS_FIX_VERSION!=="undefined")fail("BOSS_LEGACY_HP_FLOW_MARKER","HP flow 舊 Boss continuous 修補 marker 應已退休");
- if(Number(window.MAIN_BATTLE_PACING_VERSION)!==1)fail("BOSS_PACING_VERSION",`MAIN_BATTLE_PACING_VERSION 應為 1，實際 ${window.MAIN_BATTLE_PACING_VERSION}`);
+ if(Number(window.MAIN_BATTLE_PACING_VERSION)!==2)fail("BOSS_PACING_VERSION",`MAIN_BATTLE_PACING_VERSION 應為 2，實際 ${window.MAIN_BATTLE_PACING_VERSION}`);
+ if(Number(window.MAIN_BATTLE_FLOW_SLEEP_VERSION)!==1||typeof window.mainBattleFlowSleep!=="function")fail("BOSS_FLOW_SLEEP_OWNER","主線流程等待應使用明確 background-aware API",{version:window.MAIN_BATTLE_FLOW_SLEEP_VERSION,api:typeof window.mainBattleFlowSleep});
+ if(typeof window.estimateMainBattleDurationMs==="function")fail("BOSS_LEGACY_DURATION_ESTIMATOR","舊 estimateMainBattleDurationMs 應已退休");
  if(typeof window.mainBattleGapMs!=="function")fail("BOSS_PACING_GAP_API","mainBattleGapMs 未載入");
  else{
   const gaps={normal:window.mainBattleGapMs("normal"),elite:window.mainBattleGapMs("elite"),boss:window.mainBattleGapMs("boss")};
@@ -67,6 +69,7 @@
   if(!/if\s*\(\s*!r\.win\s*\)/.test(pipelineSource)||!/break/.test(pipelineSource))fail("BOSS_DEFEAT_STOPS_CONTINUOUS","主線連戰戰敗後應立即停止");
   if(!/currentCombatEncounter\s*=\s*createMonsterEncounter\(selectedMap,selectedEnemy\)/.test(pipelineSource))fail("BOSS_CONTINUOUS_SAME_TARGET","連戰下一場應繼續目前 selectedMap／selectedEnemy");
   if(!/battleGapMs\s*\(\s*r\.e\.kind\s*\)/.test(pipelineSource))fail("BOSS_PIPELINE_SHARED_GAP","主線 pipeline 應使用共用 battleGapMs，而不是各自維護場間常數",pipelineSource);
+  if(!/battleFlowSleep\s*\(\s*battleGapMs\s*\(\s*r\.e\.kind\s*\)\s*\)/.test(pipelineSource))fail("BOSS_PIPELINE_FLOW_SLEEP","主線場間等待應使用明確 background-aware battleFlowSleep",pipelineSource);
   const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
   if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
   if(!/backgroundProgressUiYield\s*\(\s*["']main["']\s*\)/.test(pipelineSource))fail("BOSS_BACKGROUND_UI_YIELD_WIRING","主線連戰每場完成後應讓 background catch-up UI 至少 paint 一次",pipelineSource);
