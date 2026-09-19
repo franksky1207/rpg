@@ -43,6 +43,8 @@
   const paced=specialPacingActive?(SPECIAL_DELAY_MAP.get(n)??n):n;
   return mainFlowSleep(paced);
  };
+ window.mainBattlePresentationSleep=function(ms){return mainFlowSleep(ms);};
+ window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION=1;
 
  window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION=1;
 
