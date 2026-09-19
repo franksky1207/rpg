@@ -103,15 +103,19 @@
   if(extreme2Traits.zero!==0||extreme2Traits.one!==.75||extreme2Traits.two!==.25)fail("ARENA_EXTREME2_TRAITS","競技場高位第 2 戰特性數量機率異常",extreme2Traits);
   if(extreme3Traits.zero!==0||extreme3Traits.one!==.70||extreme3Traits.two!==.30)fail("ARENA_EXTREME3_TRAITS","競技場高位第 3 戰特性數量機率異常",extreme3Traits);
 
-  if(typeof window.getArenaDifficultyConfigs!=="function")fail("ARENA_CONFIG_API","競技場完整設定 API 未載入");
+  if(typeof window.getArenaPositionConfigs!=="function")fail("ARENA_CONFIG_API","競技場 Position 完整設定 API 未載入");
   else{
-   const extremeConfig=window.getArenaDifficultyConfigs(1).find(x=>x?.id==="extreme"),stage3=extremeConfig?.stages?.[2];
+   const extremeConfig=window.getArenaPositionConfigs(1).find(x=>x?.id==="extreme"),stage3=extremeConfig?.stages?.[2];
    if(!extremeConfig?.positionPhysical||extremeConfig.positionPhysical.hp!==.90||extremeConfig.positionPhysical.damage!==.92||extremeConfig.positionPhysical.def!==.96)fail("ARENA_CONFIG_POSITION_PHYSICAL","競技場完整設定未包含高位物理倍率",extremeConfig?.positionPhysical);
    const expectedHp=.78*.90,expectedDamage=.73*.92,expectedDef=.82*.96;
    if(!stage3?.effectivePhysical||Math.abs(stage3.effectivePhysical.hpMul-expectedHp)>1e-12||Math.abs(stage3.effectivePhysical.damageMul-expectedDamage)>1e-12||Math.abs(stage3.effectivePhysical.defMul-expectedDef)>1e-12)fail("ARENA_CONFIG_EFFECTIVE_PHYSICAL","競技場完整設定的高位第 3 戰有效物理倍率異常",stage3?.effectivePhysical);
   }
  }
- if(Number(window.ARENA_ASSESSMENT_STATE_VERSION)!==4||Number(window.ARENA_ASSESSMENT_RUNTIME_VERSION)!==4)fail("ARENA_ASSESSMENT_VERSION","競技場評估版本機制未更新");
+ const arenaVersions=typeof window.getArenaVersionProfile==="function"?window.getArenaVersionProfile():null;
+ if(!arenaVersions)fail("ARENA_VERSION_PROFILE","競技場統一版本 profile 未載入");
+ else{
+  if(Number(window.ARENA_ASSESSMENT_STATE_VERSION)!==Number(arenaVersions.assessmentStateVersion)||Number(window.ARENA_ASSESSMENT_RUNTIME_VERSION)!==Number(arenaVersions.assessmentRuntimeVersion))fail("ARENA_ASSESSMENT_VERSION","競技場評估版本與統一 profile 不一致",{state:window.ARENA_ASSESSMENT_STATE_VERSION,runtime:window.ARENA_ASSESSMENT_RUNTIME_VERSION,profile:arenaVersions});
+ }
  if(typeof window.getArenaAssessmentCompatibilityVersions==="function"){
   const versions=window.getArenaAssessmentCompatibilityVersions();
   if(versions.positionModelVersion!==1||versions.assessmentRuleVersion!==4||versions.balanceVersion!==3)fail("ARENA_ASSESSMENT_COMPAT","競技場評估相容版本異常",versions);
@@ -254,14 +258,16 @@
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
 
- if(Number(window.BOUNTY_BALANCE_VERSION)!==1||Number(window.BOUNTY_DIFFICULTY_FORMULA_VERSION)!==1)fail("BOUNTY_BALANCE_VERSION","懸賞戰應使用 Balance V1／Difficulty Formula V1",{balance:window.BOUNTY_BALANCE_VERSION,formula:window.BOUNTY_DIFFICULTY_FORMULA_VERSION});
+ if(Number(window.SPECIAL_ENEMY_SHARED_HELPERS_VERSION)!==1||typeof window.specialRateFromPlayer!=="function"||typeof window.rollUniqueMonsterTraits!=="function")fail("SPECIAL_ENEMY_SHARED_HELPERS","特殊敵人共用 rate／trait helper 異常",{version:window.SPECIAL_ENEMY_SHARED_HELPERS_VERSION});
+ if(Number(window.BOUNTY_BALANCE_VERSION)!==1||Number(window.BOUNTY_DIFFICULTY_FORMULA_VERSION)!==1||Number(window.BOUNTY_TIER_META_VERSION)!==1)fail("BOUNTY_BALANCE_VERSION","懸賞戰 Balance V1／Difficulty Formula V1／Tier Meta V1 異常",{balance:window.BOUNTY_BALANCE_VERSION,formula:window.BOUNTY_DIFFICULTY_FORMULA_VERSION,meta:window.BOUNTY_TIER_META_VERSION});
+ if(typeof window.getBountyTierMeta!=="function"||typeof window.getBountyTierMetadata!=="function")fail("BOUNTY_TIER_META_API","缺少懸賞戰 Tier Metadata 正式 API");
  if(typeof window.getBountyDifficultyProfile!=="function")fail("BOUNTY_DIFFICULTY_API","缺少懸賞戰難度公式正式 API");
  else{
   const bountyProfiles=["normal","high","danger"].map(id=>window.getBountyDifficultyProfile(id));
   if(bountyProfiles.some(v=>!v||![v.hpMul,v.damageMul,v.defMul,v.critScale,v.dodgeScale].every(Number.isFinite)))fail("BOUNTY_DIFFICULTY_DATA","懸賞戰三檔公式資料異常",bountyProfiles);
   if(!(bountyProfiles[0].hpMul<bountyProfiles[1].hpMul&&bountyProfiles[1].hpMul<bountyProfiles[2].hpMul&&bountyProfiles[0].damageMul<bountyProfiles[1].damageMul&&bountyProfiles[1].damageMul<bountyProfiles[2].damageMul&&bountyProfiles[0].defMul<bountyProfiles[1].defMul&&bountyProfiles[1].defMul<bountyProfiles[2].defMul))fail("BOUNTY_DIFFICULTY_CURVE","懸賞戰普通／高級／危險實體能力必須逐檔提高",bountyProfiles);
  }
-  if(Number(window.ARENA_BALANCE_VERSION)!==6||Number(window.ARENA_RANK_BALANCE_VERSION)!==3)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V6／Rank Balance V3",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
+ if(!arenaVersions||Number(window.ARENA_BALANCE_VERSION)!==Number(arenaVersions.balanceVersion)||Number(window.ARENA_RANK_BALANCE_VERSION)!==Number(arenaVersions.rankBalanceVersion))fail("ARENA_BALANCE_VERSION","競技場 Balance／Rank Balance 與統一版本 profile 不一致",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION,profile:arenaVersions});
  if(!window.ARENA_RANK_CURVE||!["hp","damage","def"].every(key=>Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.linear))&&Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.quadratic))))fail("ARENA_RANK_CURVE_CONFIG","競技場階級公式設定異常",window.ARENA_RANK_CURVE);
  if(Number(window.ARENA_POSITION_API_VERSION)!==1||Number(window.ARENA_ENEMY_PROFILE_VERSION)!==1||Number(window.ARENA_PRESENTATION_PACING_SOURCE_VERSION)!==1)fail("ARENA_POSITION_PROFILE_VERSION","競技場 Position／Enemy Profile／Pacing Source 版本異常",{positionApi:window.ARENA_POSITION_API_VERSION,profile:window.ARENA_ENEMY_PROFILE_VERSION,pacing:window.ARENA_PRESENTATION_PACING_SOURCE_VERSION});
  if(typeof window.getArenaPositionConfigs!=="function"||typeof window.getArenaEnemyProfile!=="function")fail("ARENA_POSITION_PROFILE_API","缺少競技場 Position／Enemy Profile 正式 API");
@@ -296,7 +302,10 @@
   if(!voidDaily||!Number.isFinite(Number(voidDaily.highestFloor))||Number(voidDaily.highestFloor)<0)fail("VOID_DAILY_STATE","虛空幻境當日最高層狀態異常",voidDaily);
  }
 
- const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
+ if(typeof window.getArenaDifficultyConfigs==="function")fail("ARENA_LEGACY_DIFFICULTY_CONFIG_API","退休的 getArenaDifficultyConfigs 不應恢復");
+ if(typeof window.getArenaPositionDifficultyId==="function")fail("ARENA_LEGACY_POSITION_DIFFICULTY_API","退休的 getArenaPositionDifficultyId 不應恢復");
+ if(typeof window.getBountyTierConfig==="function"||typeof window.getBountyTierConfigs==="function")fail("BOUNTY_LEGACY_TIER_CONFIG_API","退休的 Bounty Tier Config 舊 API 不應恢復");
+  const report={passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
  window.PROJECT_RUNTIME_REPORT=report;
  if(errors.length)console.error("[文明戰線] Runtime integrity error",errors);
  else if(warnings.length)console.warn("[文明戰線] Runtime integrity warning",warnings);
