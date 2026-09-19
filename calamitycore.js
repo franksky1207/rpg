@@ -1,7 +1,6 @@
 (function(){
  const CALAMITY_CORE_VERSION=1;
  const CALAMITY_COMBAT_RULE_VERSION=1;
- const HP_MULTIPLIER=500;
  const ATK_MULTIPLIER=1.10;
  const DEF_MULTIPLIER=1.05;
  const FIXED_CRIT=10;
@@ -63,7 +62,7 @@
    name:def.name,
    level:base.level,
    kind:"civilization-calamity",
-   hp:Math.max(1,Math.ceil(base.hp*HP_MULTIPLIER)),
+   hp:Math.max(1,Math.floor(Number(window.CALAMITY_FIXED_HP)||1000000)),
    atk:Math.max(1,Math.ceil(base.atk*ATK_MULTIPLIER)),
    def:Math.max(0,Math.ceil(base.def*DEF_MULTIPLIER)),
    crit:FIXED_CRIT,
@@ -177,7 +176,6 @@
 
  window.CALAMITY_CORE_VERSION=CALAMITY_CORE_VERSION;
  window.CALAMITY_COMBAT_RULE_VERSION=CALAMITY_COMBAT_RULE_VERSION;
- window.CALAMITY_HP_MULTIPLIER=HP_MULTIPLIER;
  window.CALAMITY_ATK_MULTIPLIER=ATK_MULTIPLIER;
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
  window.CALAMITY_FIXED_CRIT=FIXED_CRIT;
