@@ -128,14 +128,8 @@
   if(typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
   window.prepareCombatPresentation(combat,{logs:true});
   syncCalamityPresentation(window.getCombatPresentationSnapshot?.());
-  const eventCount=Array.isArray(combat?.events)?combat.events.length:0;
-  const stepDelay=eventCount>140?12:eventCount>90?20:eventCount>55?32:48;
   await window.animateStructuredCombatPresentation(combat,{
    mode:"calamity",
-   openingDelay:90,
-   impactDelay:45,
-   stepDelay,
-   endDelay:150,
    sleep,
    onUpdate:syncCalamityPresentation,
    clearAfter:true,
