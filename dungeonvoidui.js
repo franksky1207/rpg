@@ -74,6 +74,7 @@
  window.VOID_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.VOID_BACKGROUND_PRESENTATION_VERSION=1;
  window.VOID_BACKGROUND_UI_YIELD_VERSION=1;
+ window.VOID_BACKGROUND_GM_GATE_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
   if(typeof window.runVoidMirageAuto!=="function"){
@@ -125,9 +126,11 @@
   if(voidUi.running)return;
   const started=typeof beginVoidMirageRun==="function"?beginVoidMirageRun():{ok:false};
   if(!started.ok){voidUi.message="目前無法開始虛空幻境。";render();return;}
-  if(typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
+  const allowBackground=typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;
+  if(allowBackground&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
+  else if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
   voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
-  if(typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
+  if(allowBackground&&typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
  };
  window.claimVoidMirageRewardUI=function(){
   if(voidUi.running)return;
