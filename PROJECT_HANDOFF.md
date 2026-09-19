@@ -1022,6 +1022,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 懸賞戰 Balance V1／Difficulty Formula V1：普通／高級／危險不再各自持有一整排戰鬥 magic numbers。三檔只保留 difficulty 0／1／2 與出現率、EXP、金幣、裝備數等獎勵資料；戰鬥能力統一由 `bountyDifficultyProfile()` 計算。正式曲線：HP = `1 + 0.07d + 0.03d²`；Damage = `1 + 0.055d + 0.0225d²`；DEF = `0.88 + 0.035d`。暴擊／閃避 scale、add、cap 與額外特性機率亦由同一 difficulty 產生；普通／高級固定 1 特性，危險為 50% 1 特性／50% 2 特性。敵人仍以不含 VIP 的 `equippedStats()` 建立基準，因此裝備與強化自然被吸收；不額外依專精、印記或 VIP 動態追趕玩家。出現率仍為 45%／35%／20%，獎勵仍為 EXP／金幣 5／8／12 倍、裝備 2／3／5 件。Save Schema 不變。
 
+- 2026-09-19 競技場／懸賞整理第 1 批：純舊碼與舊命名清理，不改任何平衡數值。正式刪除 `dungeonarena.js`、`dungeonbounty.js` 中已由 Unified Structured Combat Presentation 取代且無呼叫的 `setHpUi()`／`pulse()`；GM 模擬 API 由綁死歷史名稱的 `gmSimulateArena100()`／`gmSimulateBounty100()` 改為 `gmSimulateArena()`／`gmSimulateBounty()`，實際模擬次數仍由 `GM_TEST_RUNS` 決定，`gmhub.js` 呼叫同步更新。Save Schema、Arena/Bounty 平衡公式、獎勵與玩家流程皆未變更。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
@@ -1054,6 +1056,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 - `battlepipeline.js` 第二次 queue Boss story 的雙 owner。
 - root 的 `story-source-purity-ci.js`、`story-integrity-ci.js`、`story-flow-ci.js`。
 - 災厄／印記舊相容 API：`normalizeCivilizationMarkProgressForCore()`、`advanceCivilizationCalamityMarkEntry()`、`settleCivilizationCalamityMarkKill()`、`markAcquired()`、`markProgress()`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`。
+- `gmSimulateArena100()`／`gmSimulateBounty100()` 舊 GM 測試 API 命名。
 
 ---
 
