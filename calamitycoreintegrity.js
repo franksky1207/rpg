@@ -7,7 +7,7 @@
  if(Number(window.CALAMITY_CORE_VERSION)!==1)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V1",window.CALAMITY_CORE_VERSION);
  if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==1)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則版本應為 1",window.CALAMITY_COMBAT_RULE_VERSION);
  if(Number(window.COMBAT_PERSISTENT_ENEMY_HP_VERSION)!==1)fail("PERSISTENT_ENEMY_HP_VERSION","Combat Core 持久敵方 HP 支援未載入",window.COMBAT_PERSISTENT_ENEMY_HP_VERSION);
- if(Number(window.CALAMITY_HP_MULTIPLIER)!==500||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_MULTIPLIERS","文明災厄固定倍率異常",{hp:window.CALAMITY_HP_MULTIPLIER,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
+ if(Number(window.CALAMITY_FIXED_HP)!==1000000||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_BALANCE","文明災厄固定 HP／攻防倍率異常",{hp:window.CALAMITY_FIXED_HP,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
  if(Number(window.CALAMITY_FIXED_CRIT)!==10||Number(window.CALAMITY_FIXED_DODGE)!==10)fail("CALAMITY_RATES","文明災厄固定暴擊／閃避應為 10% / 10%",{crit:window.CALAMITY_FIXED_CRIT,dodge:window.CALAMITY_FIXED_DODGE});
  if(defs.length!==10)fail("CALAMITY_DEF_COUNT","文明災厄應有 10 隻",defs);
  defs.forEach((def,index)=>{
@@ -16,7 +16,7 @@
   try{
    const base=window.getCivilizationCalamityBaseBoss(def.id),enemy=window.buildCivilizationCalamityEnemy(def.id),formalBoss=typeof monsterObj==="function"?monsterObj(region.mapEnd,4):null;
    if(!base||!formalBoss||base.name!==formalBoss.name||base.level!==formalBoss.level||base.hp!==formalBoss.hp||base.atk!==formalBoss.atk||base.def!==formalBoss.def)fail("CALAMITY_BASE_BOSS",`${def.id} 未直接對齊正式區域最終 Boss`,{base,formalBoss});
-   if(!enemy||enemy.hp!==Math.ceil(base.hp*500)||enemy.atk!==Math.ceil(base.atk*1.10)||enemy.def!==Math.ceil(base.def*1.05)||enemy.crit!==10||enemy.dodge!==10||enemy.kind!=="civilization-calamity")fail("CALAMITY_ENEMY_FORMULA",`${def.id} 災厄戰鬥數值異常`,{base,enemy});
+   if(!enemy||enemy.hp!==1000000||enemy.atk!==Math.ceil(base.atk*1.10)||enemy.def!==Math.ceil(base.def*1.05)||enemy.crit!==10||enemy.dodge!==10||enemy.kind!=="civilization-calamity")fail("CALAMITY_ENEMY_FORMULA",`${def.id} 災厄戰鬥數值異常`,{base,enemy});
    if(Object.prototype.hasOwnProperty.call(enemy,"traits"))fail("CALAMITY_TRAITS",`${def.id} 不應攜帶普通怪物 traits`,enemy);
   }catch(error){fail("CALAMITY_BOSS_PROBE",`${def.id} Boss 母體檢查失敗`,String(error?.message||error));}
  });
