@@ -97,7 +97,7 @@
   const style=document.createElement("style");
   style.id="combatFxStyles";
   style.textContent=`
-   .combat-fx-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:6}\n   .combatant.player .big-hp .bar{position:relative;overflow:hidden}\n   .combat-shield-bar{position:absolute;left:0;top:0;bottom:0;width:0;z-index:3;pointer-events:none;background:rgba(250,252,255,.96);box-shadow:0 0 8px rgba(255,255,255,.92);opacity:0;transition:width .18s ease,opacity .12s ease}\n   .combat-shield-bar.active{opacity:1}
+   .combat-fx-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:6}\n   .combatant .big-hp .bar{position:relative;overflow:hidden}\n   .combat-shield-bar{position:absolute;left:0;top:0;bottom:0;width:0;z-index:3;pointer-events:none;background:rgba(250,252,255,.96);box-shadow:0 0 8px rgba(255,255,255,.92);opacity:0;transition:width .18s ease,opacity .12s ease}\n   .combat-shield-bar.active{opacity:1}
    .combat-fx-pop{position:absolute;top:18%;transform:translate(-50%,0);font-size:22px;font-weight:900;letter-spacing:.05em;white-space:nowrap;opacity:0;pointer-events:none;text-shadow:0 2px 7px #000,0 0 12px rgba(0,0,0,.8);animation:combatFxPop .72s ease-out forwards;z-index:7}
    .combat-fx-pop.initiative{color:#FFD54A}.combat-fx-pop.combo{color:#FF8A3D}.combat-fx-pop.penetration{color:#B56CFF}.combat-fx-pop.counter{color:#FF5252}.combat-fx-pop.drain{color:#4CD964}.combat-fx-pop.berserk{color:#FF7043}.combat-fx-pop.heal{color:#7CFF8E;font-size:18px}
    .combat-fx-pop.mark{font-size:19px}.combat-fx-pop.mark-defense{color:#86F0FF}.combat-fx-pop.mark-offense{color:#D7A8FF}.combat-fx-pop.mark-power{color:#FFD978}
