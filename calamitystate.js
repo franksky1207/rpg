@@ -1,7 +1,7 @@
 (function(){
  const CALAMITY_STATE_VERSION=1;
- const CALAMITY_BALANCE_VERSION=2;
- const CALAMITY_FIXED_HP=1000000;
+ const CALAMITY_BALANCE_VERSION=3;
+ const CALAMITY_HP_PER_LEVEL=500000;
  const MARK_STATE_VERSION=1;
  const MARK_MAX_LEVEL=10;
 
@@ -15,10 +15,15 @@
  function createBlankCalamityState(){return {version:CALAMITY_STATE_VERSION,balanceVersion:CALAMITY_BALANCE_VERSION,entries:blankCalamityEntries()};}
  function createBlankMarkState(){return {version:MARK_STATE_VERSION,entries:blankMarkEntries()};}
 
- function normalizeCalamityEntry(value){
+ function calamityLevelForId(id){
+  const index=CALAMITY_IDS.indexOf(String(id||""));
+  return index>=0?index+1:1;
+ }
+ function calamityMaxHpForId(id){return CALAMITY_HP_PER_LEVEL*calamityLevelForId(id);}
+ function normalizeCalamityEntry(value,id){
   const entry=isObject(value)?value:{};
-  const hp=Number(entry.currentHp);
-  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.max(1,Math.min(CALAMITY_FIXED_HP,Math.floor(hp))):null;
+  const hp=Number(entry.currentHp),maxHp=calamityMaxHpForId(id);
+  entry.currentHp=Number.isFinite(hp)&&hp>0?Math.max(1,Math.min(maxHp,Math.floor(hp))):null;
   return entry;
  }
  function normalizeMarkEntry(value){
@@ -41,7 +46,7 @@
   const calamities=target.calamities;
   if(!isObject(calamities.entries))calamities.entries={};
   const calamityEntries={};
-  CALAMITY_IDS.forEach(id=>{calamityEntries[id]=normalizeCalamityEntry(calamities.entries[id]);});
+  CALAMITY_IDS.forEach(id=>{calamityEntries[id]=normalizeCalamityEntry(calamities.entries[id],id);});
   calamities.version=CALAMITY_STATE_VERSION;
   calamities.balanceVersion=CALAMITY_BALANCE_VERSION;
   calamities.entries=calamityEntries;
@@ -62,7 +67,8 @@
  }
 
  window.CALAMITY_STATE_VERSION=CALAMITY_STATE_VERSION;
- window.CALAMITY_FIXED_HP=CALAMITY_FIXED_HP;
+ window.CALAMITY_HP_PER_LEVEL=CALAMITY_HP_PER_LEVEL;
+ window.getCivilizationCalamityConfiguredMaxHp=calamityMaxHpForId;
  window.CALAMITY_BALANCE_VERSION=CALAMITY_BALANCE_VERSION;
  window.MARK_STATE_VERSION=MARK_STATE_VERSION;
  window.MARK_MAX_LEVEL=MARK_MAX_LEVEL;
