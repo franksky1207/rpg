@@ -1004,6 +1004,7 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 最終 Boss 31 頁已是正式 `STORY_FORMAT_POLICY` 特例，不再產生 Story Data warning。
 - 101 篇正式故事尚未全部由使用者逐篇在 iPhone Safari 實機閱讀驗證；不可把 CI PASS 說成全篇真機驗收。
 - 真機若看到 stale JS/CSS，先檢查 `index.html` cache-bust 與 Safari cache，再判斷邏輯問題。
+- 2026-09-19 災厄大整理第 1 批：`getCivilizationCalamityCurrentHp()`／`getCivilizationCalamityStatus()` 已改為 pure read，不再在 getter 內 normalize／修改 state；寫入前正規化仍由 battle／settlement 明確入口負責。`calamitystate.js` 已移除未使用的 balanceVersion 暫存變數與重複 `CALAMITY_FIXED_HP` export；Calamity Core Integrity 新增 getter purity 回歸。Save Schema、戰鬥平衡、UI 與印記效果皆未變更。
 
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
