@@ -8,7 +8,8 @@
  const titleForWins=window.mirrorDungeonRecordTitle;
  const commentForWins=window.mirrorDungeonResultComment;
  let run=null;
- function sleep(ms){return new Promise(resolve=>setTimeout(resolve,Math.max(0,Math.floor(Number(ms)||0))));}\n function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("mirror");}
+ function sleep(ms){return new Promise(resolve=>setTimeout(resolve,Math.max(0,Math.floor(Number(ms)||0))));}
+ function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("mirror");}
  function playerName(){return String(state?.playerName||"玩家");}
  function mirrorName(){return `鏡像・${playerName()}`;}
  function escapeHtml(text){return String(text??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
