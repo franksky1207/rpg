@@ -2,6 +2,7 @@
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const versionChecks={
+  COMBAT_PRESENTATION_VERSION:2,
   COMBAT_MARK_FX_VERSION:1,
   MAIN_COMBAT_MARK_PRESENTATION_VERSION:1,
   SPECIAL_COMBAT_MARK_PRESENTATION_VERSION:1,
@@ -16,7 +17,21 @@
  if(typeof window.consumeCombatPresentationPulse!=="function")fail("MARK_FX_CONSUMER","consumeCombatPresentationPulse 未載入");
  if(typeof window.consumeCombatPresentationPulseManual!=="function")fail("MARK_FX_MANUAL_CONSUMER","consumeCombatPresentationPulseManual 未載入");
  if(typeof window.syncCombatPresentationHp!=="function")fail("MARK_FX_HP_SYNC","syncCombatPresentationHp 未載入");
+ if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V2 lifecycle API 未完整載入");
+ if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
 
+ if(typeof window.prepareCombatPresentation==="function"&&typeof window.clearCombatPresentation==="function"){
+  try{
+   window.prepareCombatPresentation({
+    playerMaxHp:1000,playerStartHp:1000,enemyStartHp:500,e:{hp:500},
+    events:[{type:"mark",mark:"ward",action:"activate",shield:200,maxHp:1000,percent:20}]
+   },{logs:true});
+   const snap=window.getCombatPresentationSnapshot?.();
+   if(snap?.playerHp!==1000||snap?.enemyHp!==500||snap?.playerShield!==200||snap?.playerShieldMax!==200||window.isCombatPresentationActive?.()!==true)fail("COMBAT_PRESENTATION_PROBE","Combat Presentation prepare／shield 初始化異常",snap);
+   window.clearCombatPresentation("integrity-probe");
+   if(window.isCombatPresentationActive?.()!==false||window.getCombatPresentationPlayerHp?.()!==null||window.getCombatPresentationEnemyHp?.()!==null||window.getCombatPresentationPlayerShield?.()!==null)fail("COMBAT_PRESENTATION_CLEAR","Combat Presentation clear 後仍殘留狀態",window.getCombatPresentationSnapshot?.());
+  }catch(error){fail("COMBAT_PRESENTATION_PROBE_ERROR","Combat Presentation lifecycle probe 執行失敗",String(error?.message||error));}
+ }
  if(typeof window.combatMarkFxDescriptor==="function"){
   const cases=[
    [{type:"mark",mark:"ward",action:"activate"},{target:"player",text:"護界！"}],
