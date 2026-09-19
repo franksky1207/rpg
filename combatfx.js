@@ -283,6 +283,7 @@
   structuredPlayback=true;
   ensureCombatExtras();
   syncCombatHpDom();
+  if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),null);
   try{
    await structuredSleep(openingDelay);
    while(p.active&&p.index<p.events.length){
@@ -293,6 +294,7 @@
      applyMarkPresentation(evt);
      if(desc)spawnFx(desc.target,desc.kind,desc.text,0);
      syncCombatHpDom();
+     if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      if(desc)await structuredSleep(Math.min(stepDelay,85));
      continue;
     }
@@ -305,6 +307,7 @@
      spawnFx("player","drain");
      if(healed>0)spawnFx("player","heal",`+${healed} HP`,70);
      syncCombatHpDom();
+     if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await structuredSleep(stepDelay);
      continue;
     }
@@ -313,6 +316,7 @@
      directMotion(attacker);await structuredSleep(impactDelay);
      directPulse(target,"閃避");
      syncCombatHpDom();
+     if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await structuredSleep(stepDelay);
      continue;
     }
@@ -334,11 +338,13 @@
       directPulse(target,evt.crit?`暴擊 -${shown}`:`-${shown}`);
      }
      syncCombatHpDom();
+     if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await structuredSleep(stepDelay);
      continue;
     }
    }
    syncCombatHpDom();
+   if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
    await structuredSleep(endDelay);
    return window.getCombatPresentationSnapshot();
   }finally{
@@ -347,6 +353,7 @@
   }
  };
  window.COMBAT_STRUCTURED_PRESENTATION_VERSION=1;
+ window.COMBAT_PRESENTATION_UNIFIED_VERSION=1;
 
  function mirrorUiTarget(key){return key==="player"?"player":"enemy";}
  function mirrorMarkUiTarget(evt){
