@@ -321,7 +321,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 ## 4.7 文明災厄 Core（第 7 批）
 
 - `CALAMITY_CORE_VERSION = 1`
-- `CALAMITY_COMBAT_RULE_VERSION = 1`
+- `CALAMITY_COMBAT_RULE_VERSION = 2`
 - `COMBAT_PERSISTENT_ENEMY_HP_VERSION = 1`
 - 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。
 - 解鎖唯一來源：`state.bossKilled[region.mapEnd] === true`；不以玩家等級或 unlockedMap 判定。
@@ -332,7 +332,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。
 - 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
 - 戰鬥結果先同步更新災厄 HP／印記／玩家滿血，再做一次 `save(false)`；可供後續 UI 在存檔完成後才播放長動畫。
-- `calamitycoreintegrity.js` 會檢查 10 隻定義、區域 final Boss 母體、倍率、10/10 暴擊閃避、無 traits、31 殺印記曲線與持久敵方 HP 版本。
+- `calamitycoreintegrity.js` 會檢查 10 隻定義、區域 final Boss 母體、固定 1,000,000 HP、攻防倍率、10/10 暴擊閃避、無 traits、31 殺印記曲線與持久敵方 HP 版本。
 
 ## 4.8 文明災厄單場／連續討伐 runtime（第 8 批）
 
