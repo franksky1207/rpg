@@ -14,7 +14,7 @@
   "showCivilizationCalamityUnlockNoticeForStory",
   "closeCivilizationCalamityUnlockNotice",
   "getCivilizationMarkEffectText",
-  "consumeCombatPresentationPulseManual",
+  "animateStructuredCombatPresentation",
   "prepareCombatPresentation",
   "getCombatPresentationEnemyHp",
   "getCombatPresentationPlayerHp",
@@ -24,6 +24,7 @@
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
  if(Number(window.CALAMITY_UI_VERSION)!==3)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V3",window.CALAMITY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
+ if(Number(window.CALAMITY_CONTINUOUS_GAP_MS)!==350)fail("CALAMITY_CONTINUOUS_GAP","文明災厄場間 350ms 節奏應由 UI owner 提供",window.CALAMITY_CONTINUOUS_GAP_MS);
 
  try{
   if(typeof homePage==="function"){
