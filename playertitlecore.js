@@ -64,6 +64,58 @@
   titles.pendingNotice=null;
   return true;
  }
+
+ function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
+ function equippedTitleDefinition(target=state){
+  const id=target?.titles?.equipped;
+  return typeof id==="string"&&Array.isArray(target?.titles?.unlocked)&&target.titles.unlocked.includes(id)?titleDefinition(id):null;
+ }
+ function playerTitleHtml(id){
+  const def=titleDefinition(id);
+  return def?`<span class="player-title player-title--tier-${def.tier}" data-player-title-id="${esc(def.id)}">${esc(def.name)}</span>`:"";
+ }
+ function playerIdentityNameHtml(options={}){
+  const target=options.target&&typeof options.target==="object"?options.target:state;
+  const rawName=options.name!=null?String(options.name):String(target?.playerName||"玩家");
+  const name=rawName.trim()||"玩家";
+  const titleId=options.titleId!==undefined?options.titleId:equippedTitleDefinition(target)?.id;
+  const title=titleId?playerTitleHtml(titleId):"";
+  const prefix=options.prefix?esc(options.prefix):"";
+  const nameHtml=`<span class="player-identity-name">${prefix}${esc(name)}</span>`;
+  return `<span class="player-identity${options.compact?" player-identity--compact":""}">${title}${nameHtml}</span>`;
+ }
+ function equipPlayerTitle(id,target=state){
+  const titles=ensureTitleState(target);if(!titles)return false;
+  if(id==null||id===""){titles.equipped=null;return true;}
+  const value=String(id);
+  if(!Array.isArray(titles.unlocked)||!titles.unlocked.includes(value)||!BY_ID[value])return false;
+  titles.equipped=value;return true;
+ }
+ function titleChoiceHtml(target=state){
+  const unlocked=unlockedTitleDefinitions(target);
+  const equipped=target?.titles?.equipped||null;
+  const none=`<button class="player-title-choice ${equipped?"":"active"}" onclick="selectPlayerTitle(null)"><span class="player-title-choice-name">不裝備稱號</span></button>`;
+  return none+unlocked.map(def=>`<button class="player-title-choice ${equipped===def.id?"active":""}" onclick="selectPlayerTitle('${esc(def.id)}')">${playerTitleHtml(def.id)}</button>`).join("");
+ }
+ function ensureTitlePickerModal(){
+  let modal=document.getElementById("playerTitlePickerModal");
+  if(modal)return modal;
+  modal=document.createElement("div");modal.id="playerTitlePickerModal";modal.className="modal";modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");document.body.appendChild(modal);return modal;
+ }
+ function openPlayerTitlePicker(){
+  const unlocked=unlockedTitleDefinitions(state);if(!unlocked.length)return false;
+  const modal=ensureTitlePickerModal();
+  modal.innerHTML=`<div class="modal-box player-title-picker"><h3>選擇稱號</h3><div class="player-title-choice-list">${titleChoiceHtml(state)}</div><div class="controls"><button class="btn" onclick="closePlayerTitlePicker()">關閉</button></div></div>`;
+  modal.classList.add("show");return true;
+ }
+ function closePlayerTitlePicker(){const modal=document.getElementById("playerTitlePickerModal");if(modal){modal.classList.remove("show");modal.remove();}return true;}
+ function selectPlayerTitle(id){
+  if(!equipPlayerTitle(id,state))return false;
+  if(typeof save==="function")save(false);
+  closePlayerTitlePicker();
+  if(typeof render==="function")render();
+  return true;
+ }
  function unlockedTitleDefinitions(target=state){
   const unlocked=new Set(Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[]);
   return DEFS.filter(def=>unlocked.has(def.id));
@@ -76,5 +128,12 @@
  window.normalizePlayerTitleState=normalizePlayerTitleState;
  window.getPlayerTitleDefinition=titleDefinition;\n window.getPlayerTitleDefinitionForCalamity=titleForCalamity;\n window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;\n window.getPendingPlayerTitleNotice=pendingTitleNotice;\n window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
+ window.getEquippedPlayerTitleDefinition=equippedTitleDefinition;
+ window.playerTitleHtml=playerTitleHtml;
+ window.playerIdentityNameHtml=playerIdentityNameHtml;
+ window.equipPlayerTitle=equipPlayerTitle;
+ window.openPlayerTitlePicker=openPlayerTitlePicker;
+ window.closePlayerTitlePicker=closePlayerTitlePicker;
+ window.selectPlayerTitle=selectPlayerTitle;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
