@@ -10,118 +10,109 @@
  isolation:isolate;transform:translateZ(0)
 }
 .player-title::before{
- content:"";position:absolute;inset:-.30em -.30em;pointer-events:none;z-index:-1;
- border:1px solid rgba(184,203,229,.44);
- clip-path:polygon(.34em 0,calc(100% - .34em) 0,100% .34em,100% calc(100% - .34em),calc(100% - .34em) 100%,.34em 100%,0 calc(100% - .34em),0 .34em);
- box-shadow:0 0 0 1px rgba(105,126,155,.15) inset,0 0 7px rgba(105,146,194,.20);
+ content:"";position:absolute;inset:-.34em -.54em;pointer-events:none;z-index:-1;
+ border:0;box-shadow:none;clip-path:none;
  background:
-  linear-gradient(90deg,rgba(219,233,249,.11),transparent 18%,transparent 82%,rgba(219,233,249,.11));
- opacity:.84
+  radial-gradient(ellipse at left center,rgba(186,215,242,.16),transparent 42%),
+  radial-gradient(ellipse at right center,rgba(186,215,242,.16),transparent 42%),
+  linear-gradient(90deg,transparent 0 8%,rgba(205,225,245,.22) 9% 16%,transparent 17% 83%,rgba(205,225,245,.22) 84% 91%,transparent 92% 100%);
+ background-repeat:no-repeat;
+ opacity:.72
 }
 .player-title::after{content:"";position:absolute;inset:-.18em -.28em;pointer-events:none;opacity:0;border-radius:999px;z-index:-1}
-/* Calamity title frame hierarchy V3: shared structure + tier motion. */
+/* Calamity title aura hierarchy V4: open effects, no closed frame. */
 .player-title--tier-1::before{
- inset:-.26em -.27em;
- border-color:rgba(181,207,229,.42);
- box-shadow:0 0 0 1px rgba(113,143,171,.11) inset,0 0 5px rgba(101,151,190,.16);
- background:linear-gradient(90deg,rgba(222,238,250,.08),transparent 20%,transparent 80%,rgba(222,238,250,.08));
- opacity:.72;animation:titleFrameBreath1 4.6s ease-in-out infinite
+ inset:-.24em -.38em;
+ background:
+  radial-gradient(ellipse at left center,rgba(184,213,235,.18),transparent 48%),
+  radial-gradient(ellipse at right center,rgba(184,213,235,.18),transparent 48%),
+  linear-gradient(90deg,transparent 4%,rgba(210,229,244,.18) 10% 18%,transparent 24% 76%,rgba(210,229,244,.18) 82% 90%,transparent 96%);
+ opacity:.62;animation:titleFrameBreath1 4.6s ease-in-out infinite
 }
 .player-title--tier-2::before{
- inset:-.28em -.29em;
- border-color:rgba(221,167,78,.52);
- box-shadow:0 0 0 1px rgba(255,214,129,.12) inset,0 0 7px rgba(207,122,48,.22);
+ inset:-.27em -.42em;
  background:
-  linear-gradient(135deg,rgba(255,220,143,.28) 0 10%,transparent 10%) left top/.44em .44em no-repeat,
-  linear-gradient(315deg,rgba(255,220,143,.28) 0 10%,transparent 10%) right bottom/.44em .44em no-repeat,
-  linear-gradient(90deg,rgba(111,63,21,.12),transparent 24%,transparent 76%,rgba(111,63,21,.12));
- opacity:.80;animation:titleFrameWarm2 3.8s ease-in-out infinite
+  radial-gradient(circle at 8% 50%,rgba(255,205,112,.34) 0 1px,transparent 2px),
+  radial-gradient(circle at 92% 50%,rgba(255,188,82,.30) 0 1px,transparent 2px),
+  linear-gradient(90deg,transparent 2%,rgba(247,188,88,.10) 8%,rgba(247,188,88,.28) 14% 20%,transparent 28% 72%,rgba(247,155,61,.27) 80% 86%,rgba(247,155,61,.10) 92%,transparent 98%);
+ opacity:.72;animation:titleFrameWarm2 3.8s ease-in-out infinite
 }
 .player-title--tier-3::before{
- inset:-.30em -.31em;
- border-color:rgba(155,161,239,.60);
- box-shadow:0 0 0 1px rgba(217,225,255,.15) inset,0 0 8px rgba(109,111,221,.28);
+ inset:-.30em -.46em;
  background:
-  radial-gradient(circle at .24em 50%,rgba(238,243,255,.80) 0 1px,transparent 1.7px),
-  radial-gradient(circle at calc(100% - .24em) 50%,rgba(194,180,255,.76) 0 1px,transparent 1.7px),
-  linear-gradient(90deg,rgba(99,113,213,.14),transparent 24%,transparent 76%,rgba(121,91,218,.14));
- opacity:.88;animation:titleFrameEcho3 3.4s ease-in-out infinite
+  radial-gradient(circle at 7% 35%,rgba(242,246,255,.88) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 14% 68%,rgba(166,183,255,.56) 0 1px,transparent 1.7px),
+  radial-gradient(circle at 86% 30%,rgba(205,183,255,.72) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 94% 65%,rgba(146,176,255,.52) 0 1px,transparent 1.7px),
+  linear-gradient(90deg,transparent 3%,rgba(129,145,232,.18) 10% 21%,transparent 29% 71%,rgba(148,111,231,.18) 79% 90%,transparent 97%);
+ opacity:.80;animation:titleFrameEcho3 3.4s ease-in-out infinite
 }
 .player-title--tier-4::before{
- inset:-.33em -.38em;
- border:1.5px solid rgba(101,88,157,.66);
- clip-path:polygon(.46em 0,calc(100% - .46em) 0,100% .28em,calc(100% - .18em) 50%,100% calc(100% - .28em),calc(100% - .46em) 100%,.46em 100%,0 calc(100% - .28em),.18em 50%,0 .28em);
- box-shadow:0 0 0 1px rgba(79,111,157,.20) inset,0 0 9px rgba(76,60,132,.34);
+ inset:-.34em -.52em;
  background:
-  linear-gradient(90deg,rgba(75,91,141,.24) 0 .18em,transparent .18em calc(100% - .18em),rgba(105,78,153,.24) calc(100% - .18em)),
-  linear-gradient(90deg,rgba(26,37,59,.22),transparent 30%,transparent 70%,rgba(38,27,58,.22));
- opacity:.90;animation:titleFrameDomain4 3s ease-in-out infinite
+  linear-gradient(118deg,transparent 0 7%,rgba(88,103,160,.14) 8% 11%,rgba(132,102,187,.36) 12% 17%,transparent 18% 82%,rgba(101,78,160,.34) 83% 88%,rgba(60,83,129,.14) 89% 92%,transparent 93% 100%),
+  radial-gradient(ellipse at 8% 50%,rgba(85,74,143,.34),transparent 42%),
+  radial-gradient(ellipse at 92% 50%,rgba(87,67,142,.34),transparent 42%);
+ opacity:.84;animation:titleFrameDomain4 3s ease-in-out infinite
 }
 .player-title--tier-5::before{
- inset:-.35em -.42em;
- border:1.5px solid rgba(119,196,244,.72);
- clip-path:polygon(.52em 0,calc(100% - .52em) 0,100% .24em,calc(100% - .22em) 50%,100% calc(100% - .24em),calc(100% - .52em) 100%,.52em 100%,0 calc(100% - .24em),.22em 50%,0 .24em);
- box-shadow:0 0 0 1px rgba(171,220,255,.22) inset,0 0 10px rgba(101,127,244,.38);
+ inset:-.37em -.58em;
  background:
-  radial-gradient(ellipse at left center,rgba(119,220,255,.31),transparent 34%),
-  radial-gradient(ellipse at right center,rgba(160,112,255,.30),transparent 34%),
-  linear-gradient(90deg,rgba(109,201,255,.16),transparent 30%,transparent 70%,rgba(151,109,255,.16));
- opacity:.94;animation:titleFrameRing5 2.7s ease-in-out infinite
+  radial-gradient(ellipse at 9% 50%,rgba(105,218,255,.36),transparent 43%),
+  radial-gradient(ellipse at 91% 50%,rgba(161,108,255,.34),transparent 43%),
+  linear-gradient(90deg,transparent 1%,rgba(108,213,255,.12) 8%,rgba(148,226,255,.38) 14% 21%,transparent 29% 71%,rgba(166,126,255,.36) 79% 86%,rgba(131,99,246,.12) 92%,transparent 99%),
+  radial-gradient(ellipse at center,rgba(126,173,255,.10),transparent 60%);
+ opacity:.90;animation:titleFrameRing5 2.7s ease-in-out infinite
 }
 .player-title--tier-6::before{
- inset:-.36em -.46em;
- border:1.5px solid rgba(157,125,208,.72);
- clip-path:polygon(.62em 0,calc(100% - .62em) 0,calc(100% - .26em) .18em,100% 50%,calc(100% - .26em) calc(100% - .18em),calc(100% - .62em) 100%,.62em 100%,.26em calc(100% - .18em),0 50%,.26em .18em);
- box-shadow:0 0 0 1px rgba(222,207,255,.20) inset,0 0 11px rgba(99,69,164,.38),0 0 16px rgba(181,139,72,.12);
+ inset:-.39em -.64em;
  background:
-  linear-gradient(90deg,rgba(183,142,219,.28) 0 .28em,transparent .28em calc(100% - .28em),rgba(184,139,82,.25) calc(100% - .28em)),
-  repeating-linear-gradient(115deg,rgba(232,222,255,.055) 0 1px,transparent 1px 5px);
- opacity:.95;animation:titleFrameVoyage6 2.8s ease-in-out infinite
+  linear-gradient(105deg,transparent 0 5%,rgba(164,128,213,.12) 6%,rgba(210,190,242,.40) 13% 18%,transparent 28% 72%,rgba(202,155,93,.36) 82% 87%,rgba(163,112,205,.12) 94%,transparent 100%),
+  repeating-linear-gradient(115deg,transparent 0 8px,rgba(222,207,255,.06) 9px 10px,transparent 11px 16px),
+  radial-gradient(ellipse at 9% 50%,rgba(122,88,187,.34),transparent 44%),
+  radial-gradient(ellipse at 91% 50%,rgba(190,144,85,.28),transparent 44%);
+ opacity:.92;animation:titleFrameVoyage6 2.8s ease-in-out infinite
 }
 .player-title--tier-7::before{
- inset:-.39em -.52em;
- border:2px solid rgba(208,170,82,.78);
- clip-path:polygon(.76em 0,calc(50% - .32em) 0,50% .14em,calc(50% + .32em) 0,calc(100% - .76em) 0,calc(100% - .38em) .18em,100% 50%,calc(100% - .38em) calc(100% - .18em),calc(100% - .76em) 100%,calc(50% + .32em) 100%,50% calc(100% - .14em),calc(50% - .32em) 100%,.76em 100%,.38em calc(100% - .18em),0 50%,.38em .18em);
- box-shadow:0 0 0 1px rgba(143,104,220,.26) inset,0 0 12px rgba(207,165,77,.38),0 0 18px rgba(92,70,186,.24);
+ inset:-.43em -.74em;
  background:
-  linear-gradient(90deg,rgba(63,49,132,.30) 0 .34em,transparent .34em calc(100% - .34em),rgba(53,78,139,.28) calc(100% - .34em)),
-  linear-gradient(180deg,rgba(244,218,136,.13),transparent 30%,transparent 70%,rgba(137,99,229,.13));
- opacity:.98;animation:titleFrameAuthority7 2.2s ease-in-out infinite
+  linear-gradient(120deg,transparent 0 5%,rgba(80,59,159,.18) 6% 9%,rgba(225,186,83,.44) 10% 16%,transparent 17% 83%,rgba(142,95,232,.42) 84% 90%,rgba(50,75,142,.18) 91% 94%,transparent 95% 100%),
+  linear-gradient(60deg,transparent 0 8%,rgba(244,216,131,.24) 9% 12%,transparent 13% 87%,rgba(138,104,225,.24) 88% 91%,transparent 92% 100%),
+  radial-gradient(ellipse at 8% 50%,rgba(223,177,72,.28),transparent 38%),
+  radial-gradient(ellipse at 92% 50%,rgba(109,77,204,.30),transparent 38%);
+ opacity:.96;animation:titleFrameAuthority7 2.2s ease-in-out infinite
 }
 .player-title--tier-8::before{
- inset:-.41em -.55em;
- border:2px solid rgba(151,125,216,.82);
- clip-path:polygon(.78em 0,calc(50% - .36em) 0,50% .16em,calc(50% + .36em) 0,calc(100% - .78em) 0,calc(100% - .36em) .20em,100% 50%,calc(100% - .36em) calc(100% - .20em),calc(100% - .78em) 100%,calc(50% + .36em) 100%,50% calc(100% - .16em),calc(50% - .36em) 100%,.78em 100%,.36em calc(100% - .20em),0 50%,.36em .20em);
- box-shadow:0 0 0 1px rgba(207,225,255,.28) inset,0 0 12px rgba(115,86,196,.50),0 0 20px rgba(72,128,206,.25);
+ inset:-.47em -.82em;
  background:
-  radial-gradient(ellipse at center,rgba(220,235,255,.30) 0 4%,rgba(110,77,183,.18) 5% 14%,transparent 30%),
-  linear-gradient(90deg,rgba(34,24,51,.35) 0 .36em,transparent .36em calc(100% - .36em),rgba(35,25,52,.35) calc(100% - .36em)),
-  linear-gradient(180deg,rgba(130,169,231,.12),transparent 34%,transparent 66%,rgba(123,80,187,.14));
+  radial-gradient(ellipse at center,rgba(210,229,255,.24) 0 5%,rgba(110,79,184,.18) 6% 17%,transparent 32%),
+  linear-gradient(110deg,transparent 0 4%,rgba(74,47,118,.20) 5% 9%,rgba(170,145,232,.46) 10% 16%,transparent 17% 83%,rgba(137,111,213,.44) 84% 90%,rgba(50,31,80,.20) 91% 95%,transparent 96% 100%),
+  radial-gradient(ellipse at 7% 50%,rgba(101,126,207,.36),transparent 36%),
+  radial-gradient(ellipse at 93% 50%,rgba(117,83,191,.36),transparent 36%);
  opacity:1;animation:titleFrameCore8 2s ease-in-out infinite
 }
 .player-title--tier-9::before{
- inset:-.43em -.60em;
- border:2px solid rgba(213,166,69,.88);
- clip-path:polygon(.88em 0,calc(50% - .45em) 0,calc(50% - .20em) .10em,50% 0,calc(50% + .20em) .10em,calc(50% + .45em) 0,calc(100% - .88em) 0,calc(100% - .48em) .18em,100% 50%,calc(100% - .48em) calc(100% - .18em),calc(100% - .88em) 100%,calc(50% + .42em) 100%,50% calc(100% - .12em),calc(50% - .42em) 100%,.88em 100%,.48em calc(100% - .18em),0 50%,.48em .18em);
- box-shadow:0 0 0 1px rgba(115,69,145,.34) inset,0 0 13px rgba(220,170,73,.48),0 0 22px rgba(91,46,126,.32);
+ inset:-.50em -.90em;
  background:
-  linear-gradient(145deg,transparent 43%,rgba(244,218,142,.30) 44% 49%,transparent 50%) center top/1.05em .42em no-repeat,
-  linear-gradient(35deg,transparent 43%,rgba(142,81,174,.25) 44% 49%,transparent 50%) center bottom/1.05em .40em no-repeat,
-  linear-gradient(90deg,rgba(38,27,43,.42) 0 .42em,transparent .42em calc(100% - .42em),rgba(48,31,49,.42) calc(100% - .42em)),
-  linear-gradient(180deg,rgba(232,188,93,.12),transparent 31%,transparent 69%,rgba(123,70,151,.13));
+  linear-gradient(125deg,transparent 0 4%,rgba(78,49,91,.18) 5% 8%,rgba(226,180,82,.52) 9% 15%,transparent 16% 84%,rgba(149,85,178,.44) 85% 91%,rgba(54,31,68,.18) 92% 95%,transparent 96% 100%),
+  linear-gradient(55deg,transparent 0 7%,rgba(246,218,143,.28) 8% 11%,transparent 12% 88%,rgba(161,103,190,.28) 89% 92%,transparent 93% 100%),
+  radial-gradient(ellipse at 10% 50%,rgba(221,169,65,.34),transparent 36%),
+  radial-gradient(ellipse at 90% 50%,rgba(118,65,151,.34),transparent 36%),
+  radial-gradient(ellipse at 50% 0%,rgba(238,199,109,.16),transparent 34%);
  opacity:1;animation:titleFrameCrown9 1.85s ease-in-out infinite
 }
 .player-title--tier-10::before{
- inset:-.46em -.66em;
- border:2px solid rgba(224,233,255,.92);
- clip-path:polygon(.96em 0,calc(50% - .52em) 0,calc(50% - .28em) .10em,50% 0,calc(50% + .28em) .10em,calc(50% + .52em) 0,calc(100% - .96em) 0,calc(100% - .52em) .16em,100% 50%,calc(100% - .52em) calc(100% - .16em),calc(100% - .96em) 100%,calc(50% + .52em) 100%,calc(50% + .24em) calc(100% - .10em),50% 100%,calc(50% - .24em) calc(100% - .10em),calc(50% - .52em) 100%,.96em 100%,.52em calc(100% - .16em),0 50%,.52em .16em);
- box-shadow:0 0 0 1px rgba(181,139,240,.38) inset,0 0 14px rgba(168,202,255,.58),0 0 23px rgba(177,111,239,.38),0 0 30px rgba(229,188,93,.22);
+ inset:-.54em -1.02em;
  background:
-  radial-gradient(circle at 50% 50%,rgba(255,255,255,.36) 0 2%,rgba(167,132,238,.16) 3% 11%,transparent 24%),
-  linear-gradient(135deg,transparent 42%,rgba(255,232,166,.30) 43% 49%,transparent 50%) center top/1.22em .46em no-repeat,
-  linear-gradient(45deg,transparent 42%,rgba(171,207,255,.28) 43% 49%,transparent 50%) center bottom/1.22em .46em no-repeat,
-  linear-gradient(90deg,rgba(108,136,217,.25) 0 .48em,transparent .48em calc(100% - .48em),rgba(156,103,207,.25) calc(100% - .48em)),
-  linear-gradient(180deg,rgba(245,249,255,.13),transparent 28%,transparent 72%,rgba(232,191,103,.12));
+  radial-gradient(circle at 6% 36%,rgba(255,255,255,.94) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 12% 68%,rgba(152,199,255,.78) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 88% 28%,rgba(214,179,255,.82) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 95% 62%,rgba(255,220,139,.82) 0 1px,transparent 1.8px),
+  linear-gradient(118deg,transparent 0 3%,rgba(115,151,231,.18) 4% 7%,rgba(229,239,255,.56) 8% 14%,transparent 15% 85%,rgba(194,142,241,.50) 86% 92%,rgba(231,189,96,.18) 93% 96%,transparent 97% 100%),
+  linear-gradient(62deg,transparent 0 7%,rgba(255,232,166,.30) 8% 11%,transparent 12% 88%,rgba(164,207,255,.30) 89% 92%,transparent 93% 100%),
+  radial-gradient(ellipse at center,rgba(165,135,237,.16),transparent 48%),
+  radial-gradient(ellipse at 7% 50%,rgba(140,193,255,.34),transparent 34%),
+  radial-gradient(ellipse at 93% 50%,rgba(197,138,244,.34),transparent 34%);
  opacity:1;animation:titleFrameFinal10 1.6s ease-in-out infinite
 }
 .player-title--tier-1{background-image:linear-gradient(105deg,#aeb7c4 0%,#e8f5ff 48%,#7fbbe8 100%);text-shadow:0 0 3px rgba(139,199,244,.7),0 0 8px rgba(91,145,185,.28);animation:titlePulse1 3.8s ease-in-out infinite}
