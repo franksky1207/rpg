@@ -10,6 +10,7 @@
  required.forEach(function(name){if(typeof window[name]!=="function")fail("GM_CALAMITY_API",name+" 未載入");});
  if(Number(window.GM_CALAMITY_TEST_VERSION)!==1)fail("GM_CALAMITY_TEST_VERSION","文明災厄 GM 測試版本應為 1",window.GM_CALAMITY_TEST_VERSION);
  if(Number(window.GM_MARK_MANAGEMENT_VERSION)!==1)fail("GM_MARK_MANAGEMENT_VERSION","GM 印記管理版本應為 1",window.GM_MARK_MANAGEMENT_VERSION);
+ if(Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1)fail("GM_MARK_CONFIG_OWNER_VERSION","GM 印記工具應直接使用統一災厄設定",window.GM_MARK_CONFIG_OWNER_VERSION);
  if(Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("GM_CALAMITY_SAFETY_LIMIT","完整擊殺安全上限應為 100000",window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT);
  try{
   const manage=String(window.gmMarkManagementHtml?window.gmMarkManagementHtml():"");
