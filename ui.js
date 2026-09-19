@@ -170,7 +170,8 @@ function beginCombat(count){
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
  if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
- await window.animateStructuredCombatPresentation(r,{mode:"main",openingDelay:160,impactDelay:110,stepDelay:r?.e?.kind==="boss"?220:170,endDelay:220,clearAfter:true,clearReason:"main-battle-end"});
+ const presentationSleep=typeof window.mainBattlePresentationSleep==="function"?window.mainBattlePresentationSleep:undefined;
+ await window.animateStructuredCombatPresentation(r,{mode:"main",openingDelay:160,impactDelay:110,stepDelay:r?.e?.kind==="boss"?220:170,endDelay:220,sleep:presentationSleep,clearAfter:true,clearReason:"main-battle-end"});
 }
 
 window.MAIN_COMBAT_MARK_PRESENTATION_VERSION=1;
