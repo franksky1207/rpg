@@ -109,7 +109,7 @@
  };
 
  window.gmSimulateBounty=function(tierId){
-  const tier=getBountyTierConfig(tierId);if(!tier)return alert("找不到懸賞資料。");
+  const tier=typeof getBountyTierMeta==="function"?getBountyTierMeta(tierId):null;if(!tier)return alert("找不到懸賞資料。");
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){const enemy=buildBountyEnemyForTest(tierId,base,state.level),r=simulateFight(player,enemy);summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}}
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
