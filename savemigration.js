@@ -101,7 +101,7 @@
    const cycleMs=actualMs+(kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
    const adjustedMs=Math.max(100,Math.round(cycleMs*multiplier));
    const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
-   return {actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
+   return {sampleVersion:2,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
   }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
  }
  function normalizeOffline(target,version){
