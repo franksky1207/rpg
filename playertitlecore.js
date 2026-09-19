@@ -1,20 +1,21 @@
 (function(){
  const PLAYER_TITLE_STATE_VERSION=1;
- const TITLE_NAMES=Object.freeze([
-  "灰潮餘燼","蝕日王冠","星骸殘響","黑域孤星","天環墜落",
-  "寂滅遠航","萬域寂滅","黑核權柄","無聲王權","萬星終寂"
- ]);
  const CONFIG=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
- if(CONFIG.length!==TITLE_NAMES.length)throw new Error("Player title core requires exactly 10 Civilization Calamity configs.");
- const DEFS=Object.freeze(CONFIG.map((entry,index)=>Object.freeze({
-  id:`calamity_title_${String(index+1).padStart(2,"0")}`,
-  name:TITLE_NAMES[index],
-  calamityId:entry.id,
-  markId:entry.markId,
-  tier:index+1,
-  series:"calamity",
-  order:index+1
- })));
+ if(CONFIG.length!==10)throw new Error("Player title core requires exactly 10 Civilization Calamity configs.");
+ const DEFS=Object.freeze(CONFIG.map((entry,index)=>{
+  const id=String(entry?.titleId||"");
+  const name=String(entry?.titleName||"");
+  if(!id||!name)throw new Error(`Civilization Calamity title metadata missing at index ${index}.`);
+  return Object.freeze({
+   id,
+   name,
+   calamityId:entry.id,
+   markId:entry.markId,
+   tier:index+1,
+   series:"calamity",
+   order:index+1
+  });
+ }));
  const MIRROR_UNLOCKS=Array.from(window.MIRROR_DUNGEON_CONFIG?.titleUnlocks||[]);
  if(MIRROR_UNLOCKS.length!==6)throw new Error("Player title core requires exactly 6 Mirror Dungeon title unlocks.");
  const MIRROR_DEFS=Object.freeze(MIRROR_UNLOCKS.map((entry,index)=>Object.freeze({
@@ -104,33 +105,9 @@
   return true;
  }
 
- function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function equippedTitleDefinition(target=state){
   const id=target?.titles?.equipped;
   return typeof id==="string"&&Array.isArray(target?.titles?.unlocked)&&target.titles.unlocked.includes(id)?titleDefinition(id):null;
- }
- function playerTitleHtml(id){
-  const def=titleDefinition(id);
-  if(!def)return "";
-  const series=def.series==="mirror"?"mirror":"calamity";
-  const visualClass=series==="mirror"
-   ?`player-title--mirror player-title--mirror-${def.mirrorWins}`
-   :`player-title--tier-${def.tier}`;
-  return `<span class="player-title player-title--${series} ${visualClass}" data-player-title-id="${esc(def.id)}">${esc(def.name)}</span>`;
- }
- function playerIdentityNameHtml(options={}){
-  const target=options.target&&typeof options.target==="object"?options.target:state;
-  const rawName=options.name!=null?String(options.name):String(target?.playerName||"玩家");
-  const name=rawName.trim()||"玩家";
-  let titleId=options.titleId!==undefined?options.titleId:equippedTitleDefinition(target)?.id;
-  if(titleId!=null&&options.allowUnownedTitle!==true){
-   const unlocked=Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[];
-   if(!unlocked.includes(String(titleId)))titleId=null;
-  }
-  const title=titleId?playerTitleHtml(titleId):"";
-  const prefix=options.prefix?esc(options.prefix):"";
-  const nameHtml=`<span class="player-identity-name">${prefix}${esc(name)}</span>`;
-  return `<span class="player-identity${options.compact?" player-identity--compact":""}">${title}${nameHtml}</span>`;
  }
  function equipPlayerTitle(id,target=state){
   const titles=ensureTitleState(target);if(!titles)return false;
@@ -162,8 +139,6 @@
  window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
  window.getEquippedPlayerTitleDefinition=equippedTitleDefinition;
- window.playerTitleHtml=playerTitleHtml;
- window.playerIdentityNameHtml=playerIdentityNameHtml;
  window.equipPlayerTitle=equipPlayerTitle;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
