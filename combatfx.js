@@ -17,7 +17,7 @@
  let floatSerial=0;
  let syncingHp=false;
  const manualPulseSkips={player:0,enemy:0};
- let presentationSerial=0;
+
 
  function combatScreen(){return document.querySelector("#main .combat-screen");}
  function combatCard(target){
@@ -265,7 +265,7 @@
  hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
- window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
+
  window.COMBAT_MARK_FX_VERSION=1;
  installStyles();
 })();
