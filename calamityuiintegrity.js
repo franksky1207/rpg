@@ -25,9 +25,10 @@
  if(Number(window.CALAMITY_UI_VERSION)!==3)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V3",window.CALAMITY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
  if(Number(window.CALAMITY_BATTLE_VIEW_VERSION)!==1)fail("CALAMITY_BATTLE_VIEW_VERSION","文明災厄戰鬥 UI 應使用單一 battleView snapshot",window.CALAMITY_BATTLE_VIEW_VERSION);
- if(Number(window.CALAMITY_CONTINUOUS_GAP_MS)!==350)fail("CALAMITY_CONTINUOUS_GAP","文明災厄場間 350ms 節奏應由 UI owner 提供",window.CALAMITY_CONTINUOUS_GAP_MS);
+ if(Number(window.CALAMITY_OUTER_PACING_VERSION)!==1||Number(window.COMBAT_OUTER_PACING_VERSION)!==1||typeof window.combatOuterGapMs!=="function"||Number(window.combatOuterGapMs("calamity","battle"))!==350)fail("CALAMITY_OUTER_PACING","文明災厄場間 350ms 應由共用 Combat Outer Pacing owner 提供",{calamity:window.CALAMITY_OUTER_PACING_VERSION,outer:window.COMBAT_OUTER_PACING_VERSION});
+ if(typeof window.CALAMITY_CONTINUOUS_GAP_MS!=="undefined")fail("CALAMITY_LEGACY_GAP_OWNER","舊 CALAMITY_CONTINUOUS_GAP_MS 第二數字 owner 應已退休",window.CALAMITY_CONTINUOUS_GAP_MS);
  if(Number(window.CALAMITY_STRUCTURED_PRESENTATION_VERSION)!==2||Number(window.CALAMITY_BACKGROUND_PRESENTATION_VERSION)!==1||Number(window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION)!==1)fail("CALAMITY_BACKGROUND_PRESENTATION","文明災厄 structured animation 必須支援 background-aware sleep",{calamity:window.CALAMITY_STRUCTURED_PRESENTATION_VERSION,background:window.CALAMITY_BACKGROUND_PRESENTATION_VERSION,sleepInjection:window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION});
- if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==1||typeof window.backgroundProgressUiYield!=="function")fail("CALAMITY_BACKGROUND_UI_YIELD","文明災厄 catch-up 應提供逐場 UI yield",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==2||typeof window.backgroundProgressUiYield!=="function")fail("CALAMITY_BACKGROUND_UI_YIELD","文明災厄 catch-up 應使用前景 paint-boundary UI yield V2",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
 
  try{
   if(typeof homePage==="function"){
