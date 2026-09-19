@@ -22,6 +22,7 @@
   reports.forEach(([name,report])=>{if(report?.passed!==true)fail("FINAL_REPORT",`${name} 未通過`,report?.errors||null);});
 
   if(Number(window.PLAYER_TITLE_STATE_VERSION)!==1||Number(window.PLAYER_TITLE_INTEGRITY_VERSION)!==1||Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==1||!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10)fail("FINAL_PLAYER_TITLE","玩家稱號核心／10 階定義／GM 純預覽／Integrity 鏈異常",{state:window.PLAYER_TITLE_STATE_VERSION,integrity:window.PLAYER_TITLE_INTEGRITY_VERSION,gm:window.GM_PLAYER_TITLE_PREVIEW_VERSION,count:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length});
+  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("FINAL_SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
   if(Number(window.SAVE_SCHEMA_VERSION)!==13)fail("FINAL_SCHEMA","最終 Save Schema 應為 13",window.SAVE_SCHEMA_VERSION);
   if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||typeof window.getStructuredCombatPacing!=="function")fail("FINAL_STRUCTURED_COMBAT_PACING","戰鬥內動畫固定高速共用 Pacing V2 未載入",{version:window.STRUCTURED_COMBAT_PACING_VERSION,api:typeof window.getStructuredCombatPacing});
   if(Number(window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION)!==1)fail("FINAL_COMBAT_FX_ANIMATION_LIFECYCLE","Combat FX animation lifecycle owner 未載入",window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION);
