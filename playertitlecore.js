@@ -122,7 +122,11 @@
   const target=options.target&&typeof options.target==="object"?options.target:state;
   const rawName=options.name!=null?String(options.name):String(target?.playerName||"玩家");
   const name=rawName.trim()||"玩家";
-  const titleId=options.titleId!==undefined?options.titleId:equippedTitleDefinition(target)?.id;
+  let titleId=options.titleId!==undefined?options.titleId:equippedTitleDefinition(target)?.id;
+  if(titleId!=null&&options.allowUnownedTitle!==true){
+   const unlocked=Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[];
+   if(!unlocked.includes(String(titleId)))titleId=null;
+  }
   const title=titleId?playerTitleHtml(titleId):"";
   const prefix=options.prefix?esc(options.prefix):"";
   const nameHtml=`<span class="player-identity-name">${prefix}${esc(name)}</span>`;
@@ -134,31 +138,6 @@
   const value=String(id);
   if(!Array.isArray(titles.unlocked)||!titles.unlocked.includes(value)||!BY_ID[value])return false;
   titles.equipped=value;return true;
- }
- function titleChoiceHtml(target=state){
-  const unlocked=unlockedTitleDefinitions(target);
-  const equipped=target?.titles?.equipped||null;
-  const none=`<button class="player-title-choice ${equipped?"":"active"}" onclick="selectPlayerTitle(null)"><span class="player-title-choice-name">不裝備稱號</span></button>`;
-  return none+unlocked.map(def=>`<button class="player-title-choice ${equipped===def.id?"active":""}" onclick="selectPlayerTitle('${esc(def.id)}')">${playerTitleHtml(def.id)}</button>`).join("");
- }
- function ensureTitlePickerModal(){
-  let modal=document.getElementById("playerTitlePickerModal");
-  if(modal)return modal;
-  modal=document.createElement("div");modal.id="playerTitlePickerModal";modal.className="modal";modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");document.body.appendChild(modal);return modal;
- }
- function openPlayerTitlePicker(){
-  const unlocked=unlockedTitleDefinitions(state);if(!unlocked.length)return false;
-  const modal=ensureTitlePickerModal();
-  modal.innerHTML=`<div class="modal-box player-title-picker"><h3>選擇稱號</h3><div class="player-title-choice-list">${titleChoiceHtml(state)}</div><div class="controls"><button class="btn" onclick="closePlayerTitlePicker()">關閉</button></div></div>`;
-  modal.classList.add("show");return true;
- }
- function closePlayerTitlePicker(){const modal=document.getElementById("playerTitlePickerModal");if(modal){modal.classList.remove("show");modal.remove();}return true;}
- function selectPlayerTitle(id){
-  if(!equipPlayerTitle(id,state))return false;
-  if(typeof save==="function")save(false);
-  closePlayerTitlePicker();
-  if(typeof render==="function")render();
-  return true;
  }
  function unlockedTitleDefinitions(target=state){
   const unlocked=new Set(Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[]);
@@ -186,8 +165,5 @@
  window.playerTitleHtml=playerTitleHtml;
  window.playerIdentityNameHtml=playerIdentityNameHtml;
  window.equipPlayerTitle=equipPlayerTitle;
- window.openPlayerTitlePicker=openPlayerTitlePicker;
- window.closePlayerTitlePicker=closePlayerTitlePicker;
- window.selectPlayerTitle=selectPlayerTitle;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
