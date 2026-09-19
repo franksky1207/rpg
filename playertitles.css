@@ -29,79 +29,105 @@
  border:0;clip-path:none;box-shadow:none;pointer-events:none
 }
 .player-title--mirror-15{
- background-image:linear-gradient(100deg,#b9fff1 0%,#ffffff 30%,#f1d68d 52%,#d9ffff 74%,#a4e8ff 100%);
- text-shadow:0 0 4px rgba(207,255,244,.9),0 0 11px rgba(145,224,213,.34);
- animation:mirrorLuckText15 3.1s ease-in-out infinite
+ font-size:1.09em;
+ background-image:linear-gradient(100deg,#a8ffe9 0%,#ffffff 24%,#f6db8e 48%,#e8ffff 70%,#8fe3ff 100%);
+ background-size:260% 100%;
+ text-shadow:0 0 4px rgba(224,255,248,1),0 0 12px rgba(137,238,216,.58),0 0 22px rgba(247,214,124,.24);
+ animation:mirrorLuckText15 2.8s ease-in-out infinite
 }
 .player-title--mirror-15::before{
- inset:-.34em -.62em;
+ inset:-.46em -.98em;
  background:
-  radial-gradient(circle at 8% 35%,rgba(255,255,255,.9) 0 1px,transparent 1.8px),
-  radial-gradient(circle at 18% 70%,rgba(179,255,232,.72) 0 1px,transparent 1.8px),
-  radial-gradient(circle at 87% 28%,rgba(255,224,144,.76) 0 1px,transparent 1.8px),
-  radial-gradient(circle at 94% 65%,rgba(170,238,255,.68) 0 1px,transparent 1.8px),
-  linear-gradient(90deg,transparent 2%,rgba(176,255,232,.16) 10%,transparent 23% 78%,rgba(255,222,142,.14) 89%,transparent 98%);
- opacity:.72;animation:mirrorLuckAura15 2.7s ease-in-out infinite
+  radial-gradient(circle at 4% 24%,rgba(255,255,255,1) 0 1px,transparent 2px),
+  radial-gradient(circle at 11% 72%,rgba(159,255,226,.88) 0 1.1px,transparent 2.1px),
+  radial-gradient(circle at 22% 38%,rgba(202,255,243,.64) 0 1px,transparent 1.9px),
+  radial-gradient(circle at 78% 62%,rgba(255,232,160,.64) 0 1px,transparent 1.9px),
+  radial-gradient(circle at 89% 25%,rgba(255,220,127,.90) 0 1.1px,transparent 2.1px),
+  radial-gradient(circle at 97% 68%,rgba(151,235,255,.82) 0 1px,transparent 2px),
+  conic-gradient(from 245deg at 8% 50%,transparent 0 18%,rgba(164,255,230,.26) 20% 24%,transparent 26% 100%),
+  conic-gradient(from 65deg at 92% 50%,transparent 0 18%,rgba(255,220,136,.24) 20% 24%,transparent 26% 100%),
+  linear-gradient(90deg,transparent 1%,rgba(164,255,230,.20) 8% 14%,transparent 20% 80%,rgba(255,219,126,.18) 86% 92%,transparent 99%);
+ opacity:.92;animation:mirrorLuckAura15 2.35s ease-in-out infinite
 }
 .player-title--mirror-15::after{
- opacity:.42;
- background:radial-gradient(circle at 24% 48%,rgba(192,255,235,.18),transparent 20%),radial-gradient(circle at 76% 44%,rgba(255,228,159,.16),transparent 20%);
- animation:mirrorLuckDrift15 3.4s ease-in-out infinite
+ inset:-.34em -.72em;opacity:.58;
+ background:
+  radial-gradient(ellipse at 22% 48%,rgba(176,255,231,.24),transparent 28%),
+  radial-gradient(ellipse at 78% 44%,rgba(255,225,146,.22),transparent 28%),
+  linear-gradient(100deg,transparent 6%,rgba(212,255,244,.08) 24%,transparent 44%,rgba(255,236,181,.07) 62%,transparent 94%);
+ animation:mirrorLuckDrift15 2.9s ease-in-out infinite
 }
 
 .player-title--mirror-16{
- background-image:linear-gradient(90deg,#c8ecff 0%,#ffffff 34%,#f5df9a 52%,#ffffff 70%,#b9ddff 100%);
- text-shadow:0 0 4px rgba(237,249,255,.98),0 0 10px rgba(151,203,255,.42);
- animation:mirrorChosenText16 2.5s steps(2,end) infinite
+ font-size:1.10em;
+ background-image:linear-gradient(90deg,#a8dcff 0%,#ffffff 24%,#fff3c2 48%,#ffffff 65%,#9ed2ff 100%);
+ background-size:280% 100%;
+ text-shadow:0 0 4px rgba(248,253,255,1),0 0 12px rgba(133,199,255,.68),0 0 22px rgba(251,224,148,.28);
+ animation:mirrorChosenText16 2.15s steps(2,end) infinite
 }
 .player-title--mirror-16::before{
- inset:-.36em -.72em;
+ inset:-.48em -1.04em;
  background:
-  linear-gradient(90deg,transparent 0 8%,rgba(226,246,255,.55) 9% 11%,transparent 12% 20%,rgba(193,226,255,.28) 21% 23%,transparent 24% 76%,rgba(250,223,152,.28) 77% 79%,transparent 80% 88%,rgba(239,248,255,.52) 89% 91%,transparent 92%),
-  linear-gradient(180deg,transparent 0 25%,rgba(219,240,255,.18) 27% 29%,transparent 31% 69%,rgba(246,220,151,.16) 71% 73%,transparent 75%);
- opacity:.82;animation:mirrorTimeSlice16 2.8s steps(3,end) infinite
+  linear-gradient(90deg,transparent 0 4%,rgba(233,249,255,.72) 5% 7%,transparent 8% 15%,rgba(184,224,255,.40) 16% 18%,transparent 19% 26%,rgba(255,239,190,.22) 27% 29%,transparent 30% 70%,rgba(255,233,171,.24) 71% 73%,transparent 74% 81%,rgba(178,218,255,.40) 82% 84%,transparent 85% 92%,rgba(241,250,255,.72) 93% 95%,transparent 96%),
+  linear-gradient(180deg,transparent 0 19%,rgba(221,242,255,.24) 21% 23%,transparent 25% 47%,rgba(255,255,255,.18) 49% 51%,transparent 53% 77%,rgba(248,223,156,.22) 79% 81%,transparent 83%);
+ opacity:.96;animation:mirrorTimeSlice16 2.35s steps(4,end) infinite
 }
 .player-title--mirror-16::after{
- opacity:.32;
- background:linear-gradient(90deg,transparent 35%,rgba(255,255,255,.34) 48% 52%,transparent 65%);
- animation:mirrorTimeFlash16 2.8s ease-in-out infinite
+ inset:-.30em -.86em;opacity:.50;
+ background:
+  linear-gradient(90deg,transparent 22%,rgba(194,230,255,.10) 32%,rgba(255,255,255,.48) 48% 52%,rgba(255,231,169,.10) 68%,transparent 78%),
+  radial-gradient(ellipse at center,rgba(226,244,255,.16),transparent 60%);
+ animation:mirrorTimeFlash16 2.35s ease-in-out infinite
 }
 
 .player-title--mirror-17{
- background-image:linear-gradient(98deg,#33131a 0%,#ff6a6a 18%,#ffffff 45%,#7b4aff 64%,#1a111f 100%);
- text-shadow:1px 0 0 rgba(255,92,92,.54),-1px 0 0 rgba(130,87,255,.5),0 0 10px rgba(152,44,73,.5);
- animation:mirrorFateBreakText17 2.1s ease-in-out infinite
+ font-size:1.11em;
+ background-image:linear-gradient(98deg,#190b10 0%,#ff4f59 16%,#ffffff 39%,#9a6cff 61%,#260f2f 82%,#09080d 100%);
+ background-size:300% 100%;
+ text-shadow:1px 0 1px rgba(255,66,76,.82),-1px 0 1px rgba(133,81,255,.78),0 0 10px rgba(255,236,239,.52),0 0 20px rgba(120,42,151,.56);
+ animation:mirrorFateBreakText17 1.7s ease-in-out infinite
 }
 .player-title--mirror-17::before{
- inset:-.38em -.80em;
+ inset:-.52em -1.12em;
  background:
-  linear-gradient(115deg,transparent 0 8%,rgba(255,81,81,.5) 9% 11%,transparent 12% 18%,rgba(255,245,245,.28) 19% 20%,transparent 21% 79%,rgba(136,91,255,.34) 80% 82%,transparent 83% 89%,rgba(255,92,92,.26) 90% 92%,transparent 93%),
-  linear-gradient(65deg,transparent 0 16%,rgba(255,255,255,.20) 17% 18%,transparent 19% 81%,rgba(122,79,255,.22) 82% 83%,transparent 84%);
- opacity:.88;animation:mirrorFracture17 1.9s ease-in-out infinite
+  linear-gradient(116deg,transparent 0 4%,rgba(255,62,72,.68) 5% 7%,transparent 8% 13%,rgba(255,245,247,.34) 14% 16%,transparent 17% 23%,rgba(102,61,171,.20) 24% 26%,transparent 27% 73%,rgba(130,84,255,.42) 74% 76%,transparent 77% 83%,rgba(255,255,255,.30) 84% 86%,transparent 87% 92%,rgba(255,75,83,.48) 93% 95%,transparent 96%),
+  linear-gradient(64deg,transparent 0 11%,rgba(255,255,255,.22) 12% 14%,transparent 15% 31%,rgba(255,68,79,.18) 32% 34%,transparent 35% 65%,rgba(128,78,246,.22) 66% 68%,transparent 69% 85%,rgba(255,255,255,.20) 86% 88%,transparent 89%),
+  radial-gradient(ellipse at 8% 50%,rgba(154,24,47,.26),transparent 34%),
+  radial-gradient(ellipse at 92% 50%,rgba(85,50,160,.30),transparent 34%);
+ opacity:1;animation:mirrorFracture17 1.55s ease-in-out infinite
 }
 .player-title--mirror-17::after{
- opacity:.45;
- background:linear-gradient(90deg,transparent 0 22%,rgba(255,76,76,.11) 23% 25%,transparent 26% 74%,rgba(113,74,236,.12) 75% 77%,transparent 78%);
- animation:mirrorGlitch17 1.6s steps(2,end) infinite
+ inset:-.30em -.92em;opacity:.62;
+ background:
+  linear-gradient(90deg,transparent 0 13%,rgba(255,58,68,.14) 14% 18%,transparent 19% 37%,rgba(255,255,255,.08) 38% 42%,transparent 43% 57%,rgba(130,82,255,.10) 58% 63%,transparent 64% 81%,rgba(255,75,86,.12) 82% 86%,transparent 87%),
+  radial-gradient(ellipse at center,rgba(77,36,99,.12),transparent 62%);
+ animation:mirrorGlitch17 1.28s steps(2,end) infinite
 }
 
 .player-title--mirror-18{
- background-image:linear-gradient(94deg,#8a4b18 0%,#ffd77b 20%,#fff8dd 48%,#ffc96d 72%,#f7f3e9 100%);
- text-shadow:0 0 4px rgba(255,246,213,.98),0 0 12px rgba(242,173,67,.48),0 0 20px rgba(255,216,135,.20);
- animation:mirrorLegendText18 3.6s ease-in-out infinite
+ font-size:1.12em;
+ background-image:linear-gradient(94deg,#7a3f10 0%,#ffca55 14%,#fff5c6 34%,#ffffff 49%,#ffd168 66%,#fff0c8 82%,#e9edf3 100%);
+ background-size:300% 100%;
+ text-shadow:0 0 4px rgba(255,252,235,1),0 0 12px rgba(255,199,83,.74),0 0 22px rgba(255,229,164,.48),0 0 32px rgba(255,177,54,.20);
+ animation:mirrorLegendText18 3.0s ease-in-out infinite
 }
 .player-title--mirror-18::before{
- inset:-.42em -.88em;
+ inset:-.58em -1.18em;
  background:
-  radial-gradient(ellipse at 50% 100%,rgba(255,211,115,.34),transparent 48%),
-  linear-gradient(90deg,transparent 0 5%,rgba(255,200,91,.22) 12% 18%,transparent 24% 76%,rgba(255,231,165,.20) 82% 88%,transparent 95%),
-  linear-gradient(180deg,transparent 0 58%,rgba(255,223,147,.18) 63%,transparent 76%);
- opacity:.9;animation:mirrorDawn18 3.8s ease-in-out infinite
+  radial-gradient(ellipse at 50% 108%,rgba(255,206,91,.52),transparent 46%),
+  radial-gradient(ellipse at 50% 76%,rgba(255,241,190,.18),transparent 54%),
+  linear-gradient(90deg,transparent 0 2%,rgba(255,188,62,.24) 7% 13%,transparent 18% 82%,rgba(255,230,155,.22) 87% 93%,transparent 98%),
+  linear-gradient(180deg,transparent 0 48%,rgba(255,247,218,.14) 53%,rgba(255,213,110,.26) 61%,transparent 72%),
+  conic-gradient(from 265deg at 12% 100%,transparent 0 21%,rgba(255,220,129,.20) 23% 26%,transparent 28% 100%),
+  conic-gradient(from 95deg at 88% 100%,transparent 0 21%,rgba(255,238,183,.18) 23% 26%,transparent 28% 100%);
+ opacity:1;animation:mirrorDawn18 3.15s ease-in-out infinite
 }
 .player-title--mirror-18::after{
- opacity:.36;
- background:radial-gradient(ellipse at center bottom,rgba(255,240,195,.26),transparent 58%);
- animation:mirrorLegendGlow18 3.8s ease-in-out infinite
+ inset:-.36em -.96em;opacity:.58;
+ background:
+  radial-gradient(ellipse at center bottom,rgba(255,247,213,.34),transparent 60%),
+  linear-gradient(90deg,transparent 8%,rgba(255,229,149,.08) 25%,rgba(255,255,255,.12) 50%,rgba(255,211,102,.08) 75%,transparent 92%);
+ animation:mirrorLegendGlow18 3.15s ease-in-out infinite
 }
 
 .player-title--mirror-19{
@@ -274,18 +300,18 @@
 .combatant h2 .player-identity{max-width:100%;font-size:inherit}
 
 /* Mirror title motion: probability, time, fracture, dawn, ascension, miracle. */
-@keyframes mirrorLuckText15{0%,100%{background-position:0% 50%;filter:brightness(.96)}38%{filter:brightness(1.08)}67%{background-position:100% 50%;filter:brightness(1.02)}}
-@keyframes mirrorLuckAura15{0%,100%{opacity:.52;transform:translateX(-.02em)}43%{opacity:.82;transform:translateX(.025em)}71%{opacity:.64;transform:translateY(-.015em)}}
-@keyframes mirrorLuckDrift15{0%,100%{transform:scale(.98) translateX(-2%)}50%{transform:scale(1.03) translateX(2%)}}
-@keyframes mirrorChosenText16{0%,82%,100%{filter:brightness(1)}86%,90%{filter:brightness(1.18)}}
-@keyframes mirrorTimeSlice16{0%,100%{transform:translateX(0);opacity:.66}32%{transform:translateX(-.035em);opacity:.92}34%{transform:translateX(.035em);opacity:.92}68%{transform:translateX(0);opacity:.76}}
-@keyframes mirrorTimeFlash16{0%,78%,100%{opacity:.16;transform:scaleX(.7)}84%{opacity:.56;transform:scaleX(1.12)}}
-@keyframes mirrorFateBreakText17{0%,100%{background-position:0% 50%;transform:translateX(0)}46%{transform:translateX(.018em)}50%{transform:translateX(-.018em)}54%{transform:translateX(0)}}
-@keyframes mirrorFracture17{0%,100%{opacity:.72;transform:skewX(-2deg)}50%{opacity:1;transform:skewX(2deg)}}
-@keyframes mirrorGlitch17{0%,74%,100%{transform:translateX(0);opacity:.24}78%{transform:translateX(.045em);opacity:.55}82%{transform:translateX(-.045em);opacity:.44}}
-@keyframes mirrorLegendText18{0%,100%{background-position:0% 50%;filter:brightness(.96)}50%{background-position:100% 50%;filter:brightness(1.12)}}
-@keyframes mirrorDawn18{0%,100%{opacity:.68;transform:translateY(.02em) scaleX(.98)}50%{opacity:1;transform:translateY(-.025em) scaleX(1.03)}}
-@keyframes mirrorLegendGlow18{0%,100%{opacity:.2;transform:scaleX(.9)}50%{opacity:.5;transform:scaleX(1.08)}}
+@keyframes mirrorLuckText15{0%,100%{background-position:0% 50%;filter:brightness(.96)}28%{filter:brightness(1.12)}51%{background-position:76% 50%;filter:brightness(1.03)}73%{background-position:100% 50%;filter:brightness(1.16)}}
+@keyframes mirrorLuckAura15{0%,100%{opacity:.62;transform:translateX(-.04em) scale(.98)}31%{opacity:1;transform:translateX(.035em) scale(1.025)}58%{opacity:.74;transform:translateY(-.035em) scale(1.01)}79%{opacity:.94;transform:translateX(-.015em) scale(1.035)}}
+@keyframes mirrorLuckDrift15{0%,100%{transform:scale(.96) translateX(-4%);opacity:.36}50%{transform:scale(1.08) translateX(4%);opacity:.68}}
+@keyframes mirrorChosenText16{0%,70%,100%{filter:brightness(1)}74%,78%{filter:brightness(1.24)}82%{filter:brightness(.98)}86%{filter:brightness(1.16)}}
+@keyframes mirrorTimeSlice16{0%,100%{transform:translateX(0) scaleX(.98);opacity:.72}24%{transform:translateX(-.055em) scaleX(1.03);opacity:1}26%{transform:translateX(.055em) scaleX(.97);opacity:.94}52%{transform:translateX(0) scaleX(1.02);opacity:.82}76%{transform:translateX(.025em) scaleX(.99);opacity:1}}
+@keyframes mirrorTimeFlash16{0%,64%,100%{opacity:.14;transform:scaleX(.62)}70%{opacity:.72;transform:scaleX(1.2)}74%{opacity:.22;transform:scaleX(.82)}78%{opacity:.58;transform:scaleX(1.08)}}
+@keyframes mirrorFateBreakText17{0%,100%{background-position:0% 50%;transform:translateX(0)}40%{transform:translateX(.03em)}44%{transform:translateX(-.035em)}48%{transform:translateX(.018em)}52%{transform:translateX(0)}70%{background-position:100% 50%}}
+@keyframes mirrorFracture17{0%,100%{opacity:.76;transform:skewX(-3deg) scaleX(.98)}38%{opacity:1;transform:skewX(3deg) scaleX(1.035)}62%{opacity:.88;transform:skewX(-1deg) scaleX(1.01)}}
+@keyframes mirrorGlitch17{0%,62%,100%{transform:translateX(0) scaleX(1);opacity:.28}66%{transform:translateX(.075em) scaleX(1.04);opacity:.72}70%{transform:translateX(-.065em) scaleX(.97);opacity:.56}74%{transform:translateX(.025em);opacity:.42}}
+@keyframes mirrorLegendText18{0%,100%{background-position:0% 50%;filter:brightness(.98)}42%{background-position:88% 50%;filter:brightness(1.18)}58%{background-position:100% 50%;filter:brightness(1.28)}}
+@keyframes mirrorDawn18{0%,100%{opacity:.72;transform:translateY(.035em) scaleX(.95)}50%{opacity:1;transform:translateY(-.06em) scaleX(1.08)}}
+@keyframes mirrorLegendGlow18{0%,100%{opacity:.26;transform:scaleX(.86) scaleY(.94)}50%{opacity:.68;transform:scaleX(1.16) scaleY(1.06)}}
 @keyframes mirrorAscendText19{0%,100%{filter:brightness(.98)}50%{filter:brightness(1.14)}}
 @keyframes mirrorThreshold19{0%,100%{opacity:.76;transform:translateY(.025em) scale(.99)}50%{opacity:1;transform:translateY(-.04em) scale(1.025)}}
 @keyframes mirrorHalo19{0%,100%{opacity:.24;transform:scale(.92)}50%{opacity:.52;transform:scale(1.08)}}
