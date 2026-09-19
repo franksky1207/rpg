@@ -50,7 +50,7 @@
     name:def.name,
     level:base.level,
     kind:"civilization-calamity",
-    hp:Math.max(1,Math.floor(Number(window.CALAMITY_FIXED_HP)||1000000)),
+    hp:Math.max(1,Math.floor(Number(window.getCivilizationCalamityConfiguredMaxHp?.(def.id))||((def.index+1)*500000))),
     atk:Math.max(1,Math.ceil(base.atk*ATK_MULTIPLIER)),
     def:Math.max(0,Math.ceil(base.def*DEF_MULTIPLIER)),
     crit:FIXED_CRIT,
