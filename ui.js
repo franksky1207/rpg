@@ -165,7 +165,7 @@ function startBattles(){
 function beginCombat(count){
  combatRound=1;combatTotal=count;
  if(typeof getPreviewEncounter==="function")currentCombatEncounter=getPreviewEncounter(selectedMap,selectedEnemy);
- adventureScreen="combat";render();setTimeout(()=>runBattles(count),60);
+ adventureScreen="combat";render();runBattles(count);
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
