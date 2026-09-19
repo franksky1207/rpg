@@ -20,6 +20,14 @@ let upgradeDropNoticePending=false;
 let lostGearMutationBusy=false;
 let vipThreshold=null,vipLevelFromPoints=null,normalizeVipState=null;
 const newStateNormalizers=[];
+const SAVE_WRITE_GUARD_VERSION=1;
+let saveLoadResolved=false;
+let saveHadExistingAtBoot=false;
+try{saveHadExistingAtBoot=!!localStorage.getItem(SAVE_KEY);}catch(_){}
+function markSaveLoadResolved(reason="load"){saveLoadResolved=true;window.LAST_SAVE_WRITE_UNLOCK_REASON=String(reason||"load");return true}
+window.SAVE_WRITE_GUARD_VERSION=SAVE_WRITE_GUARD_VERSION;
+window.markSaveLoadResolved=markSaveLoadResolved;
+window.saveWriteGuardStatus=function(){return {resolved:saveLoadResolved,hadExistingAtBoot:saveHadExistingAtBoot,reason:window.LAST_SAVE_WRITE_UNLOCK_REASON||""};};
 
 function ceil(n){return Math.ceil(n)}
 function round1(n){return Math.round(n*10)/10}
@@ -67,6 +75,11 @@ function newState(){
 }
 
 function save(show=true){
+ if(saveHadExistingAtBoot&&!saveLoadResolved){
+  const e=document.getElementById("saveStatus");if(e)e.textContent="本機存檔保護中";
+  console.error("[文明戰線] Save blocked before successful load; existing local save was preserved.");
+  return false;
+ }
  try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(err){const e=document.getElementById("saveStatus");if(e)e.textContent="存檔失敗";console.error("Save failed",err);return false}
  if(show){let e=document.getElementById("saveStatus");if(e){e.textContent="已自動存檔";setTimeout(()=>e.textContent="本機自動存檔",900)}}return true;
 }
