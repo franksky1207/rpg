@@ -76,7 +76,7 @@
  function stopReasonText(reason){return reason==="death"?"玩家死亡":reason==="daily-limit"?"今日懸賞次數已用完":reason==="manual"?"玩家手動停止":"挑戰結束";}
  function updateSummary(result){const s=bountyState.summary,r=result||{},items=Array.isArray(r.rewardItems)?r.rewardItems:[];s.runs++;if(r.win)s.wins++;s.totalExp+=Math.max(0,Math.floor(Number(r.rewardExp)||0));s.totalGold+=Math.max(0,Math.floor(Number(r.rewardGold)||0));s.convertedGold+=Math.max(0,Math.floor(Number(r.expResult?.convertedGold)||0));s.soldGold+=Math.max(0,Math.floor(Number(r.soldGold)||0));s.gearCount+=items.length;s.keptCount+=items.filter(x=>!x.sold).length;s.soldCount+=items.filter(x=>!!x.sold).length;}
  function prepareNextBounty(){const tier=rollTier();bountyState.tier=tier;bountyState.enemy=buildBountyEnemy(tier);bountyState.result=null;bountyState.phase="transition";}
- const sleep=ms=>bountyState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"bounty"):new Promise(r=>setTimeout(r,ms));
+ const sleep=ms=>bountyState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"bounty"):new Promise(r=>setTimeout(r,ms));\n function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("bounty");}
  function stopBountyBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("bounty");}
  function healAfterRound(){if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;save(false);}
  function beginBountyRound(){
@@ -87,7 +87,7 @@
   const previewName=bountyState.enemy.name,previewTraits=Array.isArray(bountyState.enemy.traits)?bountyState.enemy.traits.slice():[];
   const enemyScalingStats=equippedStats(),combatStats=playerCombatStats(enemyScalingStats);
   bountyState.enemy=buildBountyEnemy(bountyState.tier,enemyScalingStats,state.level,{name:previewName,traits:previewTraits});
-  bountyState.phase="combat";bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();sleep(80).then(runBountyFight);return true;
+  bountyState.phase="combat";bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();Promise.resolve().then(runBountyFight);return true;
  }
 
  window.BOUNTY_BALANCE_VERSION=1;
@@ -138,7 +138,7 @@
   const ds=dailyStatus();
   if(!result.win)bountyState.summary.stopReason="death";else if(bountyState.stopRequested)bountyState.summary.stopReason="manual";else if(ds.remaining<=0)bountyState.summary.stopReason="daily-limit";
   if(bountyState.summary.stopReason){stopBountyBackground();bountyState.phase="result";render();return;}
-  prepareNextBounty();await sleep(300);
+  prepareNextBounty();await sleep(battleGapMs());
   if(!beginBountyRound()){stopBountyBackground();bountyState.summary.stopReason="daily-limit";bountyState.phase="result";render();}
  }
  function continuousResultHtml(){const ds=dailyStatus(),s=bountyState.summary;return `<section class="dungeon-bounty-shell dungeon-page-shell"><div class="dungeon-bounty-card card dungeon-bounty-result-card dungeon-continuous-result"><div class="dungeon-bounty-title">懸賞連續挑戰結算</div><div class="dungeon-bounty-result-line">共挑戰：${s.runs} 次・勝利 ${s.wins} 次</div><div class="dungeon-bounty-reward-grid"><div><span>總 EXP</span><strong>+${s.totalExp.toLocaleString()}</strong></div><div><span>懸賞金幣</span><strong>+${s.totalGold.toLocaleString()}</strong></div><div><span>裝備</span><strong>${s.gearCount} 件</strong><small>保留 ${s.keptCount}・出售 ${s.soldCount}</small></div></div>${s.convertedGold?`<div class="dungeon-bounty-result-line">滿等 EXP 轉金幣：+${s.convertedGold.toLocaleString()}</div>`:""}${s.soldGold?`<div class="dungeon-bounty-result-line">自動出售所得：+${s.soldGold.toLocaleString()} 金幣</div>`:""}<div class="dungeon-bounty-result-line">停止原因：${stopReasonText(s.stopReason)}</div><div class="dungeon-bounty-result-line">目前狀態：Lv.${state.level}・${state.level>=MAX_LEVEL?"EXP MAX":`EXP ${currentExpText()}`}・金幣 ${Math.floor(Number(state.gold)||0).toLocaleString()}</div><div class="dungeon-bounty-result-line">今日懸賞：${ds.used} / ${ds.limit}　・　剩餘 ${ds.remaining} 次</div><div class="controls dungeon-bounty-result-actions"><button class="btn" onclick="go('dungeon')">返回副本</button></div></div></section>`;}
