@@ -16,6 +16,7 @@
  let presentationSerial=0;
  let floatSerial=0;
  let syncingHp=false;
+ let structuredPlayback=false;
  const manualPulseSkips={player:0,enemy:0};
 
 
@@ -29,6 +30,28 @@
   const bar=document.getElementById(`combat${prefix}Bar`)||document.getElementById(`void${prefix}Bar`);
   return {text,bar};
  }
+ function shieldBarElement(create=false){
+  const hpBar=hpElements("player").bar,parent=hpBar?.parentElement;
+  if(!parent)return null;
+  let shield=parent.querySelector(".combat-shield-bar");
+  if(!shield&&create){
+   shield=document.createElement("span");
+   shield.className="combat-shield-bar";
+   parent.appendChild(shield);
+  }
+  return shield;
+ }
+ function syncCombatShieldDom(){
+  const p=presentation,shield=shieldBarElement(!!p?.active);
+  if(!shield)return;
+  if(!p?.active||p.playerShieldMax<=0||p.playerShield<=0){
+   shield.style.width="0%";
+   shield.classList.remove("active");
+   return;
+  }
+  shield.style.width=`${Math.max(0,Math.min(100,p.playerShield/p.playerShieldMax*100))}%`;
+  shield.classList.add("active");
+ }
  function syncCombatHpDom(){
   const p=presentation,screen=combatScreen();if(!p||p.active!==true||!screen||(p.screen&&p.screen!==screen))return;
   syncingHp=true;
@@ -40,6 +63,7 @@
     if(bar&&bar.style.width!==width)bar.style.width=width;
    });
   }finally{syncingHp=false;}
+  syncCombatShieldDom();
  }
  window.syncCombatPresentationPlayerHp=syncCombatHpDom;
  window.syncCombatPresentationHp=syncCombatHpDom;
@@ -59,6 +83,7 @@
   presentation=null;
   manualPulseSkips.player=0;
   manualPulseSkips.enemy=0;
+  document.querySelectorAll(".combat-shield-bar").forEach(el=>el.remove());
   return cleared;
  };
 
@@ -67,7 +92,7 @@
   const style=document.createElement("style");
   style.id="combatFxStyles";
   style.textContent=`
-   .combat-fx-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:6}
+   .combat-fx-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:6}\n   .combatant.player .big-hp .bar{position:relative;overflow:hidden}\n   .combat-shield-bar{position:absolute;left:0;top:0;bottom:0;width:0;z-index:3;pointer-events:none;background:rgba(250,252,255,.96);box-shadow:0 0 8px rgba(255,255,255,.92);opacity:0;transition:width .18s ease,opacity .12s ease}\n   .combat-shield-bar.active{opacity:1}
    .combat-fx-pop{position:absolute;top:18%;transform:translate(-50%,0);font-size:22px;font-weight:900;letter-spacing:.05em;white-space:nowrap;opacity:0;pointer-events:none;text-shadow:0 2px 7px #000,0 0 12px rgba(0,0,0,.8);animation:combatFxPop .72s ease-out forwards;z-index:7}
    .combat-fx-pop.initiative{color:#FFD54A}.combat-fx-pop.combo{color:#FF8A3D}.combat-fx-pop.penetration{color:#B56CFF}.combat-fx-pop.counter{color:#FF5252}.combat-fx-pop.drain{color:#4CD964}.combat-fx-pop.berserk{color:#FF7043}.combat-fx-pop.heal{color:#7CFF8E;font-size:18px}
    .combat-fx-pop.mark{font-size:19px}.combat-fx-pop.mark-defense{color:#86F0FF}.combat-fx-pop.mark-offense{color:#D7A8FF}.combat-fx-pop.mark-power{color:#FFD978}
@@ -229,6 +254,95 @@
   return match;
  };
 
+ function directMotion(attacker){
+  const card=combatCard(attacker==="player"?"player":"enemy");
+  if(!card)return;
+  card.classList.remove("attacking");void card.offsetWidth;card.classList.add("attacking");
+  setTimeout(()=>card.classList.remove("attacking"),340);
+ }
+ function directPulse(target,text){
+  const card=combatCard(target),dmg=document.getElementById(target==="player"?"combatPlayerDamage":"combatEnemyDamage")||document.getElementById(target==="player"?"voidPlayerDamage":"voidEnemyDamage");
+  if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
+  if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
+ }
+ const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
+ window.animateStructuredCombatPresentation=async function(result,options={}){
+  const p=presentation;
+  if(!p?.active||!Array.isArray(p.events))throw new Error("Combat Presentation 尚未初始化。");
+  p.screen=combatScreen()||p.screen||null;
+  const kind=String(result?.e?.kind||options.kind||"");
+  const impactDelay=Math.max(0,Number(options.impactDelay??90)||0);
+  const stepDelay=Math.max(0,Number(options.stepDelay??(kind==="boss"?210:150))||0);
+  const openingDelay=Math.max(0,Number(options.openingDelay??140)||0);
+  const endDelay=Math.max(0,Number(options.endDelay??220)||0);
+  structuredPlayback=true;
+  ensureCombatExtras();
+  syncCombatHpDom();
+  try{
+   await structuredSleep(openingDelay);
+   while(p.active&&p.index<p.events.length){
+    const evt=p.events[p.index++];
+    if(!evt)continue;
+    if(evt.type==="mark"){
+     const desc=markFxDescriptor(evt);
+     applyMarkPresentation(evt);
+     if(desc)spawnFx(desc.target,desc.kind,desc.text,0);
+     syncCombatHpDom();
+     if(desc)await structuredSleep(Math.min(stepDelay,85));
+     continue;
+    }
+    if(evt.type==="combo"){spawnFx("enemy","combo");await structuredSleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="counter"){spawnFx("enemy","counter");await structuredSleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="berserk"){spawnFx("enemy","berserk");await structuredSleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="drain"){
+     const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
+     if(healed>0)p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
+     spawnFx("player","drain");
+     if(healed>0)spawnFx("player","heal",`+${healed} HP`,70);
+     syncCombatHpDom();
+     await structuredSleep(stepDelay);
+     continue;
+    }
+    if(evt.type==="dodge"){
+     const target=evt.target==="player"?"player":"enemy",attacker=target==="player"?"enemy":"player";
+     directMotion(attacker);await structuredSleep(impactDelay);
+     directPulse(target,"閃避");
+     syncCombatHpDom();
+     await structuredSleep(stepDelay);
+     continue;
+    }
+    if(evt.type==="attack"){
+     const actor=evt.actor==="enemy"?"enemy":"player",target=actor==="player"?"enemy":"player";
+     directMotion(actor);await structuredSleep(impactDelay);
+     if(actor==="player"){
+      p.enemyHp=Math.max(0,p.enemyHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
+      if(evt.initiative)spawnFx("enemy","initiative");
+      if(evt.penetration)spawnFx("enemy","penetration",null,70);
+     }else{
+      const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0));
+      if(shieldAbsorbed>0)p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);
+      p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
+     }
+     if(evt.absorbed)directPulse(target,"吸收");
+     else{
+      const shown=Math.max(0,Math.floor(Number(evt.damage)||0));
+      directPulse(target,evt.crit?`暴擊 -${shown}`:`-${shown}`);
+     }
+     syncCombatHpDom();
+     await structuredSleep(stepDelay);
+     continue;
+    }
+   }
+   syncCombatHpDom();
+   await structuredSleep(endDelay);
+   return window.getCombatPresentationSnapshot();
+  }finally{
+   structuredPlayback=false;
+   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
+  }
+ };
+ window.COMBAT_STRUCTURED_PRESENTATION_VERSION=1;
+
  window.prepareCombatPresentation=function(result,options={}){
   window.clearCombatPresentation("replace");
   if(options.logs===false||!result)return null;
@@ -247,7 +361,7 @@
  document.addEventListener("animationstart",event=>{
   const el=event.target;
   if(!(el instanceof Element)||!el.classList.contains("combat-damage"))return;
-  if(event.animationName!=="damagePop")return;
+  if(event.animationName!=="damagePop"||structuredPlayback)return;
   el.classList.toggle("dodge-text",String(el.textContent||"").includes("閃避"));
   const target=(el.id==="combatPlayerDamage"||el.id==="voidPlayerDamage")?"player":(el.id==="combatEnemyDamage"||el.id==="voidEnemyDamage")?"enemy":null;
   if(target){if((manualPulseSkips[target]||0)>0)manualPulseSkips[target]--;else consumeForPulse(target,el.textContent||"");}
