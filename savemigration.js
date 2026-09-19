@@ -149,7 +149,8 @@
   const introWasBoolean=typeof source.introSeen==="boolean";
   const introValue=introWasBoolean?source.introSeen:true;
   const hadCalamityState=isObject(source.calamities);
-  const hadMarkState=isObject(source.marks);\n  const hadTitleState=isObject(source.titles);
+  const hadMarkState=isObject(source.marks);
+  const hadTitleState=isObject(source.titles);
 
   prepareAllGear(target);
   if(!introWasBoolean)target.introSeen=true;
@@ -167,7 +168,8 @@
   if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
-  if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);\n  if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
+  if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
+  if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
   cleanupLegacyDungeonFields(target);
   cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
@@ -211,7 +213,8 @@
    legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
    retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
    calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,
-   markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,\n   titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
+   markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
+   titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
    recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
   };
