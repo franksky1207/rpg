@@ -48,6 +48,7 @@
   return true;
  }
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)queuePendingTitleNotice();});
+ setTimeout(queuePendingTitleNotice,0);
 
  function defs(){return typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];}
  function unlockedDefs(){return defs().filter(def=>typeof window.isCivilizationCalamityUnlocked==="function"&&window.isCivilizationCalamityUnlocked(def.id));}
