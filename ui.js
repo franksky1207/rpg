@@ -27,7 +27,7 @@ function savePlayerName(){
  const input=document.getElementById("playerNameInput");
  let name=(input?.value||"").trim();
  if(!name)name="玩家";
- state.playerName=name.slice(0,12);
+ state.playerName=name;
  save();render();
 }
 
@@ -307,7 +307,7 @@ function normalizeSaveState(target){
  target.exp=target.level>=MAX_LEVEL?0:(Number.isFinite(exp)&&exp>=0?Math.floor(exp):0);
  target.gold=Number.isFinite(gold)&&gold>=0?Math.floor(gold):0;
  target.hp=Number.isFinite(hp)&&hp>=0?Math.floor(hp):baseHP(target.level);
- const name=typeof target.playerName==="string"?target.playerName.trim():"";target.playerName=(name||"玩家").slice(0,12);
+ const name=typeof target.playerName==="string"?target.playerName.trim():"";target.playerName=name||"玩家";
  if(!target.equipment||typeof target.equipment!=="object"||Array.isArray(target.equipment))target.equipment={};
  EQUIPMENT_TYPES.forEach(type=>{target.equipment[type]=normalizeSaveItem(target.equipment[type],type)});
  target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).map(it=>normalizeSaveItem(it)).filter(Boolean);
