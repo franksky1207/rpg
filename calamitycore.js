@@ -5,44 +5,26 @@
  const DEF_MULTIPLIER=1.05;
  const FIXED_CRIT=10;
  const FIXED_DODGE=10;
- const NAMES=["灰潮母巢","日蝕王座","星骸迴廊","黑域牧者","滅世天環","寂滅方舟","萬域蝕潮","深核奇點","無聲裁決","終末之眼"];
- const REGION_IDS=Array.from(window.CIVILIZATION_CALAMITY_IDS||[]);
- const MARK_IDS=Array.from(window.CIVILIZATION_MARK_IDS||[]);
+ const CONFIG=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
 
  function int(value,fallback=0){const n=Number(value);return Number.isFinite(n)?Math.floor(n):fallback;}
- function regionById(id){return (Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).find(region=>String(region?.id||"")===String(id||""))||null;}
- function defById(id){
-  const index=REGION_IDS.indexOf(String(id||""));if(index<0)return null;
-  const region=regionById(REGION_IDS[index]);if(!region)return null;
-  const markId=MARK_IDS[index]||null,markDef=window.MARK_DEFS?.[markId]||null;
-  return Object.freeze({
-   id:REGION_IDS[index],
-   index,
-   name:NAMES[index],
-   regionId:REGION_IDS[index],
-   regionName:String(region.name||""),
-   unlockLevel:Math.max(1,int(region.max,(index+1)*50)),
-   mapIndex:Math.max(0,int(region.mapEnd,index*10+9)),
-   markId,
-   markName:String(markDef?.name||markId||"")
-  });
- }
- const DEFS=Object.freeze(REGION_IDS.map(defById).filter(Boolean));
+ const DEFS=Object.freeze(CONFIG.map(entry=>Object.freeze({
+  id:entry.id,
+  index:entry.index,
+  name:entry.calamityName,
+  regionId:entry.regionId,
+  regionName:entry.regionName,
+  unlockLevel:entry.unlockLevel,
+  mapIndex:entry.mapIndex,
+  markId:entry.markId,
+  markName:entry.markName
+ })));
+ const BASE_BOSS_CACHE=new Map();
+ const ENEMY_CACHE=new Map();
 
  function ensureState(){
   if(typeof window.ensureCivilizationCalamityState==="function")window.ensureCivilizationCalamityState();
   return state?.calamities&&state?.marks?{calamities:state.calamities,marks:state.marks}:null;
- }
- function normalizeMarkProgressEntry(markId){
-  ensureState();
-  const entry=state?.marks?.entries?.[markId];if(!entry)return null;
-  entry.level=typeof window.markClampLevel==="function"?window.markClampLevel(entry.level):Math.max(0,Math.min(10,int(entry.level,0)));
-  entry.acquired=entry.acquired===true||entry.level>0;
-  if(!entry.acquired){entry.level=0;entry.progress=0;return entry;}
-  if(entry.level>=10){entry.progress=0;return entry;}
-  const req=Math.max(1,int(typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(entry.level):1,1));
-  entry.progress=Math.max(0,Math.min(req-1,int(entry.progress,0)));
-  return entry;
  }
  function definition(id){return DEFS.find(def=>def.id===String(id||""))||null;}
  function unlocked(id,target=state){
@@ -51,25 +33,32 @@
  }
  function baseBoss(id){
   const def=definition(id);if(!def)return null;
-  if(typeof monsterObj!=="function")throw new Error("Mainline monsterObj is required for Civilization Calamity.");
-  const boss=monsterObj(def.mapIndex,4);
-  if(!boss||boss.kind!=="boss")throw new Error(`Region final boss missing for calamity ${def.id}.`);
-  return {name:String(boss.name||""),level:Math.max(1,int(boss.level,def.unlockLevel)),hp:Math.max(1,int(boss.hp,1)),atk:Math.max(1,int(boss.atk,1)),def:Math.max(0,int(boss.def,0))};
+  if(!BASE_BOSS_CACHE.has(def.id)){
+   if(typeof monsterObj!=="function")throw new Error("Mainline monsterObj is required for Civilization Calamity.");
+   const boss=monsterObj(def.mapIndex,4);
+   if(!boss||boss.kind!=="boss")throw new Error(`Region final boss missing for calamity ${def.id}.`);
+   BASE_BOSS_CACHE.set(def.id,Object.freeze({name:String(boss.name||""),level:Math.max(1,int(boss.level,def.unlockLevel)),hp:Math.max(1,int(boss.hp,1)),atk:Math.max(1,int(boss.atk,1)),def:Math.max(0,int(boss.def,0))}));
+  }
+  return {...BASE_BOSS_CACHE.get(def.id)};
  }
  function enemy(id){
-  const def=definition(id),base=baseBoss(id);if(!def||!base)return null;
-  return {
-   name:def.name,
-   level:base.level,
-   kind:"civilization-calamity",
-   hp:Math.max(1,Math.floor(Number(window.CALAMITY_FIXED_HP)||1000000)),
-   atk:Math.max(1,Math.ceil(base.atk*ATK_MULTIPLIER)),
-   def:Math.max(0,Math.ceil(base.def*DEF_MULTIPLIER)),
-   crit:FIXED_CRIT,
-   dodge:FIXED_DODGE,
-   calamityId:def.id,
-   regionId:def.regionId
-  };
+  const def=definition(id);if(!def)return null;
+  if(!ENEMY_CACHE.has(def.id)){
+   const base=baseBoss(def.id);if(!base)return null;
+   ENEMY_CACHE.set(def.id,Object.freeze({
+    name:def.name,
+    level:base.level,
+    kind:"civilization-calamity",
+    hp:Math.max(1,Math.floor(Number(window.CALAMITY_FIXED_HP)||1000000)),
+    atk:Math.max(1,Math.ceil(base.atk*ATK_MULTIPLIER)),
+    def:Math.max(0,Math.ceil(base.def*DEF_MULTIPLIER)),
+    crit:FIXED_CRIT,
+    dodge:FIXED_DODGE,
+    calamityId:def.id,
+    regionId:def.regionId
+   }));
+  }
+  return {...ENEMY_CACHE.get(def.id)};
  }
  function maxHp(id){return enemy(id)?.hp||0;}
  function readCurrentHp(def,e,target=state){
@@ -77,15 +66,9 @@
   return Number.isFinite(raw)&&raw>0?Math.max(1,Math.min(e.hp,Math.floor(raw))):e.hp;
  }
  function readMarkProgress(markId,target=state){
-  const source=target?.marks?.entries?.[markId];
-  if(!source)return null;
-  const level=typeof window.markClampLevel==="function"?window.markClampLevel(source.level):Math.max(0,Math.min(10,int(source.level,0)));
-  const acquired=source.acquired===true||level>0;
-  if(!acquired)return {acquired:false,level:0,progress:0,requiredForNext:typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(0):0};
-  if(level>=10)return {acquired:true,level:10,progress:0,requiredForNext:0};
-  const required=typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(level):0;
-  const progress=Math.max(0,Math.min(Math.max(0,int(required,0)-1),int(source.progress,0)));
-  return {acquired:true,level,progress,requiredForNext:required};
+  const source=target?.marks?.entries?.[markId];if(!source)return null;
+  const mark=typeof window.markProgressSnapshot==="function"?window.markProgressSnapshot(source):{acquired:source.acquired===true,level:Math.max(0,int(source.level,0)),progress:Math.max(0,int(source.progress,0))};
+  return {...mark,requiredForNext:typeof window.markRequiredKillsForNextLevel==="function"?window.markRequiredKillsForNextLevel(mark.level):0};
  }
  function currentHp(id,target=state){
   const def=definition(id),e=enemy(id);if(!def||!e)return 0;
@@ -104,35 +87,13 @@
    mark
   };
  }
- function advanceMarkEntry(value){
-  const source=value&&typeof value==="object"?value:{};
-  const entry={acquired:source.acquired===true,level:typeof window.markClampLevel==="function"?window.markClampLevel(source.level):Math.max(0,Math.min(10,int(source.level,0))),progress:Math.max(0,int(source.progress,0))};
-  if(entry.level>0)entry.acquired=true;
-  if(!entry.acquired){
-   return {entry:{acquired:true,level:0,progress:0},settlement:{changed:true,firstAcquisition:true,level:0,progress:0,maxed:false,levelUp:false}};
-  }
-  if(entry.level>=10){
-   return {entry:{acquired:true,level:10,progress:0},settlement:{changed:false,firstAcquisition:false,level:10,progress:0,maxed:true,levelUp:false}};
-  }
-  const before=entry.level,req=Math.max(1,int(window.markRequiredKillsForNextLevel?.(before),1));
-  const nextProgress=Math.min(req,entry.progress+1);
-  const levelUp=nextProgress>=req,nextLevel=levelUp?Math.min(10,before+1):before,nextProgressStored=levelUp?0:nextProgress;
-  return {entry:{acquired:true,level:nextLevel,progress:nextLevel>=10?0:nextProgressStored},settlement:{changed:true,firstAcquisition:false,level:nextLevel,progress:nextLevel>=10?0:nextProgressStored,maxed:nextLevel>=10,levelUp,previousLevel:before,required:req}};
- }
- function settleMarkKill(markId){
-  const entry=normalizeMarkProgressEntry(markId);
-  if(!entry)return {changed:false,firstAcquisition:false,level:0,progress:0,maxed:false};
-  const advanced=advanceMarkEntry(entry);
-  Object.assign(entry,advanced.entry);
-  return advanced.settlement;
- }
  function applyBattleResult(id,combat,options={}){
   const def=definition(id);if(!def||!combat)return null;
   ensureState();
   const calamityEntry=state?.calamities?.entries?.[def.id];if(!calamityEntry)return null;
   let markSettlement=null;
   if(combat.win){
-   markSettlement=settleMarkKill(def.markId);
+   markSettlement=typeof window.settleFormalMarkKill==="function"?window.settleFormalMarkKill(def.markId):null;
    calamityEntry.currentHp=null;
   }else{
    const max=maxHp(id);
@@ -197,9 +158,6 @@
  window.getCivilizationCalamityMaxHp=maxHp;
  window.getCivilizationCalamityCurrentHp=currentHp;
  window.getCivilizationCalamityStatus=status;
- window.normalizeCivilizationMarkProgressForCore=normalizeMarkProgressEntry;
- window.advanceCivilizationCalamityMarkEntry=advanceMarkEntry;
- window.settleCivilizationCalamityMarkKill=settleMarkKill;
  window.applyCivilizationCalamityBattleResult=applyBattleResult;
  window.runCivilizationCalamityBattle=battle;
 })();
