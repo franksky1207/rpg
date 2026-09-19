@@ -116,15 +116,15 @@
   showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
- window.gmSimulateArena=function(difficultyId){
-  const cfg=(typeof getArenaDifficultyConfigs==="function"?getArenaDifficultyConfigs():[]).find(x=>x.id===difficultyId);if(!cfg)return alert("找不到競技場資料。");
+ window.gmSimulateArena=function(positionId){
+  const cfg=(typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs():[]).find(x=>x.id===positionId);if(!cfg)return alert("找不到競技場資料。");
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),reached=[GM_TEST_RUNS,0,0],wins=[0,0,0],vip=testVip();
   let totalBasePoints=0,totalVipPoints=0,clearHpTotal=0,totalTurns=0;
   for(let run=0;run<GM_TEST_RUNS;run++){
    let hp=player.hp,basePoints=0,cleared=true;
    for(let stage=0;stage<3;stage++){
     if(stage>0)reached[stage]++;
-    const enemy=buildArenaEnemyForTest(difficultyId,stage,base,state.level),r=simulateFight(player,enemy,hp);totalTurns+=r.turns;
+    const enemy=buildArenaEnemyForTest(positionId,stage,base,state.level),r=simulateFight(player,enemy,hp);totalTurns+=r.turns;
     if(r.win){wins[stage]++;hp=r.hp;basePoints+=Number(cfg.stagePoints?.[stage])||0;}else{cleared=false;break;}
    }
    if(cleared)clearHpTotal+=hp;
