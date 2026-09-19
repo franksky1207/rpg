@@ -9,6 +9,7 @@
 
  if(Number(window.MARK_CORE_VERSION)!==1)fail("MARK_CORE_VERSION","Mark Core version 應為 1",window.MARK_CORE_VERSION);
  if(Number(window.MARK_COMBAT_RULE_VERSION)!==1)fail("MARK_COMBAT_RULE_VERSION","印記戰鬥規則版本應為 1",window.MARK_COMBAT_RULE_VERSION);
+ if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1)fail("MARK_PROGRESSION_OWNER_VERSION","印記升級 progression 應由 Mark Core 單一管理",window.MARK_PROGRESSION_OWNER_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
  if(JSON.stringify(Array.from(window.MARK_KEYS||[]))!==JSON.stringify(expectedKeys))fail("MARK_KEYS","印記順序與正式取得順序不一致",window.MARK_KEYS);
  if(JSON.stringify(Array.from(window.MARK_UPGRADE_KILLS||[]))!==JSON.stringify(expectedUpgrade))fail("MARK_UPGRADE_KILLS","印記升級擊殺需求異常",window.MARK_UPGRADE_KILLS);
@@ -17,7 +18,7 @@
   const def=window.MARK_DEFS?.[key];
   if(def?.name!==expectedNames[index]||Number(def?.unlockLevel)!==expectedLevels[index]||def?.regionId!==expectedRegions[index])fail("MARK_DEF",`${key} 定義異常`,def);
  });
- const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markLevel","markAcquired","markProgress","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
+ const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markAcquired","markProgress","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
 
  if(typeof window.markActivationChance==="function"){
@@ -31,6 +32,23 @@
  if(typeof window.markRequiredKillsForNextLevel==="function"){
   expectedUpgrade.forEach((value,lv)=>{if(window.markRequiredKillsForNextLevel(lv)!==value)fail("MARK_NEXT_REQUIREMENT",`Lv.${lv} 升下一級需求應為 ${value}`,window.markRequiredKillsForNextLevel(lv));});
   if(window.markRequiredKillsForNextLevel(10)!==0)fail("MARK_MAX_REQUIREMENT","Lv.10 不應再有升級需求",window.markRequiredKillsForNextLevel(10));
+ }
+ if(typeof window.advanceMarkProgressEntry==="function"){
+  let entry={acquired:false,level:0,progress:0};
+  const milestones={};
+  for(let kill=1;kill<=31;kill++){
+   const out=window.advanceMarkProgressEntry(entry);entry=out.entry;
+   if([1,2,3,5,7,10,13,17,21,26,31].includes(kill))milestones[kill]={...entry};
+  }
+  const expected={1:0,2:1,3:2,5:3,7:4,10:5,13:6,17:7,21:8,26:9,31:10};
+  Object.entries(expected).forEach(([kill,level])=>{if(milestones[kill]?.level!==level||milestones[kill]?.progress!==0)fail("MARK_KILL_CURVE",`第 ${kill} 殺印記應為 Lv.${level}、進度 0`,milestones[kill]);});
+  const extra=window.advanceMarkProgressEntry(entry);
+  if(extra.entry.level!==10||extra.entry.progress!==0||extra.settlement.changed!==false)fail("MARK_MAX_LOCK","印記 Lv.10 後不應再累積進度",extra);
+ }
+ if(typeof window.markProgressSnapshot==="function"){
+  const source={acquired:false,level:99,progress:777},before=JSON.stringify(source),snap=window.markProgressSnapshot(source);
+  if(JSON.stringify(source)!==before)fail("MARK_PROGRESS_PURITY","markProgressSnapshot 不得修改來源",source);
+  if(snap.acquired!==true||snap.level!==10||snap.progress!==0)fail("MARK_PROGRESS_SNAPSHOT","markProgressSnapshot 正規化結果異常",snap);
  }
  if(typeof window.markEffectSnapshot==="function"){
   const checks=[
