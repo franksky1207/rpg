@@ -126,7 +126,11 @@
  window.CIVILIZATION_PLAYER_TITLE_IDS=IDS;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
- window.getPlayerTitleDefinition=titleDefinition;\n window.getPlayerTitleDefinitionForCalamity=titleForCalamity;\n window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;\n window.getPendingPlayerTitleNotice=pendingTitleNotice;\n window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
+ window.getPlayerTitleDefinition=titleDefinition;
+ window.getPlayerTitleDefinitionForCalamity=titleForCalamity;
+ window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;
+ window.getPendingPlayerTitleNotice=pendingTitleNotice;
+ window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
  window.getEquippedPlayerTitleDefinition=equippedTitleDefinition;
  window.playerTitleHtml=playerTitleHtml;
