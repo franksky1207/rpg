@@ -32,7 +32,7 @@
 
  async function animateSpecialFight(r,startPlayerHp,playerMax,enemyMax){
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
-  await window.animateStructuredCombatPresentation(r,{mode:"special",openingDelay:160,impactDelay:110,stepDelay:180,endDelay:220,clearAfter:true,clearReason:"special-battle-end"});
+  await window.animateStructuredCombatPresentation(r,{mode:"special",clearAfter:true,clearReason:"special-battle-end"});
  }
 
  window.SPECIAL_COMBAT_MARK_PRESENTATION_VERSION=1;
