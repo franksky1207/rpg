@@ -30,7 +30,8 @@
 - `CIVILIZATION_AUTH_MODE_RENDERER_VERSION = 1`
 - `CIVILIZATION_CLOUD_SAVE_VERSION = 2`
 - `CALAMITY_STATE_VERSION = 1`
-- `CALAMITY_BALANCE_VERSION = 1`
+- `CALAMITY_BALANCE_VERSION = 2`
+- `CALAMITY_FIXED_HP = 1,000,000`
 - `MARK_STATE_VERSION = 1`
 - `MARK_CORE_VERSION = 1`
 - `MARK_COMBAT_RULE_VERSION = 1`
@@ -308,7 +309,7 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - structured mark events 由 `combatcore.js` 產生；壓制只在真正阻止閃避時發 `preventDodge`、鎮心只在真正阻止暴擊時發 `preventCrit`、韌性只在實際降低暴擊傷害時發 `reduceCritDamage`，其餘印記亦有 activate/trigger/consume/layer 等事件。第 4 批已由 `combatfx.js` 統一消費並在戰鬥兩方框內顯示。
 - GM 既有 `useTestSpecializations:true` 模擬會同步採用 session-only `gmTestMarkLevels`；亦可用 `options.markLevels` 明確傳入測試快照，不修改正式存檔。
 - `combatmarkintegrity.js` 以固定 RNG 驗證 Lv.0 基準不漂移、10 枚印記核心互動、吸收／反噬／反擊順序與護界／吸收對復仇的邊界規則。
-- `COMBAT_MARK_FX_VERSION = 1`；`combatfx.js` 是主線、特殊怪、懸賞、競技場、虛空的印記浮字與 HP 呈現 owner，不在各模式重寫 10 套印記 parser。
+- `COMBAT_MARK_FX_VERSION = 1`；`COMBAT_PRESENTATION_VERSION = 2`。`combatfx.js` 為共用戰鬥呈現 owner；V2 新增正式 prepare／clear lifecycle、combat-screen 綁定與 player shield state，防止上一場 presentation 污染下一場戰鬥。
 - 第 4 批浮字：護界／鎮心／不屈／韌性／吸收／復仇顯示在玩家框；壓制／反噬／無視顯示在敵方框；戰意顯示在玩家框。戰意層數會顯示 `戰意 ×N`，吸收可顯示回復 HP，反噬顯示實際反傷。
 - 五個正式動畫 loop 都補上吸收成功 pulse，但吸收不觸發受擊震動；護盾、吸收、反噬造成的畫面 HP 差異由 `combatfx.js` 依 structured event 校正。
 - 模式接線版本：`MAIN_COMBAT_MARK_PRESENTATION_VERSION = 1`、`SPECIAL_COMBAT_MARK_PRESENTATION_VERSION = 1`、`BOUNTY_COMBAT_MARK_PRESENTATION_VERSION = 1`、`ARENA_COMBAT_MARK_PRESENTATION_VERSION = 1`、`VOID_COMBAT_MARK_PRESENTATION_VERSION = 1`。
@@ -325,8 +326,8 @@ style 與五階段倍率由 `balance.js` 的 frozen 常數表集中管理；`MAI
 - 10 隻名稱依序：灰潮母巢／日蝕王座／星骸迴廊／黑域牧者／滅世天環／寂滅方舟／萬域蝕潮／深核奇點／無聲裁決／終末之眼。
 - 解鎖唯一來源：`state.bossKilled[region.mapEnd] === true`；不以玩家等級或 unlockedMap 判定。
 - 母體直接呼叫正式主線 `monsterObj(region.mapEnd, 4)`；不複製主線 Boss 公式。
-- 固定戰鬥數值：HP = 母體 HP ×500；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
-- `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。最大 HP 永遠由正式公式即時計算，不重複存入 save。
+- 固定戰鬥數值：HP = **1,000,000**；ATK = ceil(母體 ATK ×1.10)；DEF = ceil(母體 DEF ×1.05)；暴擊／閃避固定 10%／10%；不帶 ordinary monster traits。
+- `state.calamities.entries[id].currentHp` 只保存剩餘 HP；`null` 代表下一輪滿血。Balance V2 normalizer 會把舊存檔任何 `currentHp > 1,000,000` clamp 到 1,000,000；不重置印記、解鎖或其他進度。
 - `runCombatCore()` 新增向後相容 `options.enemyStartHp`：`e.hp` 維持真正最大 HP；既有模式不傳時行為不變。
 - 災厄單場 adapter：每次玩家滿血開始；失敗只保存災厄剩餘 HP；玩家戰後恢復滿血；不套主線死亡懲罰，不給 EXP／金幣／裝備／VIP／強化石。
 - 首殺只取得對應印記 Lv.0，不計入 Lv.0→1；之後依 1,1,2,2,3,3,4,4,5,5 重複擊殺需求提升，總第 31 殺達 Lv.10；Lv.10 後不再累積。
@@ -915,7 +916,7 @@ repo root 舊測試檔：
 - 文明災厄 GM：可任選 10 隻，不受正式解鎖限制；提供「單次挑戰模擬」與「完整擊殺模擬」。完整擊殺逐場呼叫正式 Combat Core、玩家每場滿血、Boss HP 跨場延續，不以平均傷害外推；100000 場只作瀏覽器安全上限，碰到時明確回報未完成。
 - 文明災厄 GM 不提供解鎖 toggle、HP setter、近死／瀕死、擊殺數等作弊控制；所有模擬皆為沙盒，不修改正式災厄 HP、印記或存檔。
 - `calamitygm.js` 使用 `registerGmHubSection()` extension API，沒有再疊新的 `gmHtml()` wrapper。
-- 第 11 批最終災厄平衡 smoke：同級中段基準（史詩主能力、+10、VIP／戰鬥專精隨區域成長、既有前置印記 Lv.5）完整擊殺平均約 353～832 場；屬 HP×500 長期持久討伐設計，不是公式錯誤。Lv500 上限型角色回頭可單場擊殺前 3 隻災厄，第 4 隻單場約可削 60%，符合「高等回頭明顯加速」設計。
+- 舊 HP×500 平衡 smoke 已被 Balance V2 淘汰，不再作目前災厄擊殺場數依據；目前 10 隻災厄最大 HP 統一為 1,000,000。
 - 副本相關管理／測試。
 - 鏡像：重置今日、20 場測試、100 次統計、對稱回歸。
 - 劇情 GM V3：10 區／101 stories 純預覽、前後導航、integrity 明細與重跑。
@@ -1082,7 +1083,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V3／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Combat Presentation V2、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V3／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
