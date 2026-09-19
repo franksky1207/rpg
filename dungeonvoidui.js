@@ -75,6 +75,7 @@
 
  window.VOID_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.VOID_BACKGROUND_PRESENTATION_VERSION=1;
+ window.VOID_BACKGROUND_UI_YIELD_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
   if(typeof window.runVoidMirageAuto!=="function"){
@@ -98,6 +99,7 @@
       }
      }
      await animateFloor(fr);
+     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
      if(!fr.ended)await sleep(350);
     },
     async onEnd(run){
