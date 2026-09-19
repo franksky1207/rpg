@@ -33,14 +33,20 @@
    localStorage.setItem(CHECKPOINT_KEY,JSON.stringify(payload));
   }catch(e){}
  }
+ function recoverOfflineCheckpointTime(currentValue,persistedValue,nowValue=now()){
+  const t=Math.max(0,Math.floor(Number(nowValue)||now()));
+  const current=Number(currentValue),persisted=Number(persistedValue);
+  if(!Number.isFinite(persisted)||persisted<=0||persisted>t)return Number.isFinite(current)?current:t;
+  if(!Number.isFinite(current)||current<=0||current>t||persisted<current)return Math.floor(persisted);
+  return Math.floor(current);
+ }
+ window.OFFLINE_CHECKPOINT_RECOVERY_VERSION=1;
+ window.recoverOfflineCheckpointTime=recoverOfflineCheckpointTime;
  if(!state)return;
  if(!isObject(state.offline))state.offline={};
  ensureCheckpointId();
  const persistedCheckpoint=readCheckpoint();
- if(persistedCheckpoint!=null){
-  const current=Number(state.offline.lastSettledAt);
-  if(!Number.isFinite(current)||current<=0||current>now()||persistedCheckpoint<current)state.offline.lastSettledAt=persistedCheckpoint;
- }
+ if(persistedCheckpoint!=null)state.offline.lastSettledAt=recoverOfflineCheckpointTime(state.offline.lastSettledAt,persistedCheckpoint,now());
  if(typeof save==="function")save(false);
  writeCheckpoint();
  const timer=setInterval(()=>{
