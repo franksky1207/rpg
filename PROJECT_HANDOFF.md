@@ -1038,6 +1038,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 主線背景戰鬥正式接回 Structured Presentation：主線舊 `animateFight` 退休後，`ui.js -> animateStructuredCombatPresentation()` 曾未注入 background-aware sleep，導致 `backgroundProgressStart("main")` 雖有啟動，但動畫仍用普通 setTimeout，切背景時無法像虛空／災厄一樣消耗背景時間。現在由 `combatpacing.js` 正式提供 `mainBattlePresentationSleep()`，內部共用既有 `mainFlowSleep()`／`backgroundProgressSleep("main")`，`ui.js` 以 `sleep` option 注入 Structured Presentation；新增 `MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION=1` 並由 Combat FX Integrity 鎖定。背景偵測本身不再變更，主線與災厄採同一類「presentation sleep injection」接法。戰鬥數值、獎勵、Save Schema 不變。
 
+- 2026-09-19 背景戰鬥重新統一修正：嚴格比對修改前正常版本與目前主線／虛空／災厄後，將 `backgroundprogress.js` 背景判定恢復為已驗證的 `pageHidden || windowBlurred`，正式退休先前誤加的 800ms blur fallback；原先主線卡住的真正根因已確認是退休動畫 override，故不再以延遲 blur workaround 處理。Catch-up credit 被消耗時每次 `backgroundProgressSleep()` 都會 `setTimeout(0)` 讓出 event loop，不再使用每 24 次才 yield 的 `instantSkips` 節流；另新增 `backgroundProgressUiYield(kind)`／`BACKGROUND_PROGRESS_UI_YIELD_VERSION=1`，主線每場、虛空每層、災厄每場完成後在 catch-up 期間至少讓 UI paint 一次，避免場次／EXP／金幣由 20→28→37→114 批次跳號。虛空 Structured Presentation 補上正式 `sleep` injection，`VOID_BACKGROUND_PRESENTATION_VERSION=1`，與主線／災厄同樣消耗各自的 background credit。背景 owner 版本為 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3`。戰鬥數值、獎勵、Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
