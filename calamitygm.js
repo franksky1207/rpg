@@ -2,12 +2,12 @@
  const GM_CALAMITY_TEST_VERSION=1;
  const GM_MARK_MANAGEMENT_VERSION=1;
  const GM_MARK_CONFIG_OWNER_VERSION=1;
- const GM_PLAYER_TITLE_PREVIEW_VERSION=1;
+ const GM_PLAYER_TITLE_PREVIEW_VERSION=2;
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
  let busy=false;
- let gmTitlePreviewTier=1;
+ let gmTitlePreviewId=null;
 
  function markRows(){return Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);}
  function keys(){return markRows().map(row=>row.markId);}
@@ -71,22 +71,34 @@
  };
 
 
- function titleDefs(){return Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);}
- function clampTitleTier(value){return Math.max(1,Math.min(10,Math.floor(Number(value)||1)));}
- function titlePreviewDefinition(){return titleDefs().find(def=>def.tier===gmTitlePreviewTier)||titleDefs()[0]||null;}
+ function titleDefs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
+ function titlePreviewDefinition(){
+  const defs=titleDefs();
+  if(!gmTitlePreviewId&&defs.length)gmTitlePreviewId=defs[0].id;
+  return defs.find(def=>def.id===gmTitlePreviewId)||defs[0]||null;
+ }
+ function titlePreviewLabel(def){
+  if(!def)return "";
+  return def.series==="mirror"?`鏡像 ${def.mirrorWins} 勝｜${def.name}`:`災厄第 ${def.tier} 階｜${def.name}`;
+ }
  function titlePreviewOptions(){
-  return titleDefs().map(def=>`<option value="${def.tier}" ${def.tier===gmTitlePreviewTier?"selected":""}>第 ${def.tier} 階｜${def.name}</option>`).join("");
+  return titleDefs().map((def,index)=>{
+   const divider=index===10?'<option disabled>──── 鏡像戰稱號 ────</option>':"";
+   const label=titlePreviewLabel(def);
+   return divider+`<option value="${def.id}" ${def.id===gmTitlePreviewId?"selected":""}>${label}</option>`;
+  }).join("");
  }
  window.gmSetPlayerTitlePreviewTier=function(value){
-  gmTitlePreviewTier=clampTitleTier(value);
+  const defs=titleDefs(),id=String(value||"");
+  gmTitlePreviewId=defs.some(def=>def.id===id)?id:(defs[0]?.id||null);
   const box=document.getElementById("gmPlayerTitlePreviewBox"),def=titlePreviewDefinition();
-  if(box&&def)box.innerHTML=`<div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):def.name}</div><div class="muted" style="text-align:center;margin-top:6px">第 ${def.tier} 階｜${def.name}</div>`;
-  return gmTitlePreviewTier;
+  if(box&&def)box.innerHTML=`<div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):def.name}</div><div class="muted" style="text-align:center;margin-top:6px">${titlePreviewLabel(def)}</div>`;
+  return gmTitlePreviewId;
  };
  window.gmPlayerTitlePreviewHtml=function(){
   const def=titlePreviewDefinition();
   const preview=def&&typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):(def?.name||"稱號預覽");
-  return `<div class="muted gm-hub-note">純視覺預覽 1～10 階正式稱號效果；不解鎖稱號、不變更目前裝備稱號、不修改災厄／印記，也不寫入正式存檔。</div><div class="controls" style="align-items:end"><label>稱號階級<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px"><div class="player-title-notice-preview">${preview}</div><div class="muted" style="text-align:center;margin-top:6px">第 ${def?.tier||1} 階｜${def?.name||""}</div></div>`;
+  return `<div class="muted gm-hub-note">純視覺預覽全部 16 個正式稱號；前 10 個為文明災厄，後 6 個為鏡像戰。此區不解鎖稱號、不變更目前裝備稱號、不修改任何正式狀態，也不寫入正式存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px"><div class="player-title-notice-preview">${preview}</div><div class="muted" style="text-align:center;margin-top:6px">${titlePreviewLabel(def)}</div></div>`;
  };
  function calamityOptions(){
   return calamities().map((def,index)=>`<option value="${def.id}" ${index===0?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
