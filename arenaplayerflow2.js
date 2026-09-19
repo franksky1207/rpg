@@ -5,7 +5,6 @@
  function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${WORLD_REGIONS?.[rank-1]?.name||`第${rank}區`}競技場`;}
  function positionId(rank){
   if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
-  if(typeof getArenaPositionDifficultyId==="function")return getArenaPositionDifficultyId(rank);
   return "normal";
  }
  function positionClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
