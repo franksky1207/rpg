@@ -8,6 +8,7 @@
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
+ const OFFLINE_BATTLE_SAMPLE_VERSION=2;
  const CLOCK_ROLLBACK_TOLERANCE_MS=5*60*1000;
  const HEARTBEAT_MS=60*1000;
  const HEARTBEAT_PERSIST_MS=5*60*1000;
@@ -30,6 +31,12 @@
   o.maxObservedWallClock=Number.isFinite(maxObserved)&&maxObserved>=0?Math.floor(maxObserved):Math.max(o.lastSettledAt,t);
   const lockUntil=Number(o.timeLockUntil);
   o.timeLockUntil=Number.isFinite(lockUntil)&&lockUntil>0?Math.floor(lockUntil):0;
+  const storedSampleVersion=Math.max(0,Math.floor(Number(o.battleSampleVersion)||0));
+  if(storedSampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION){
+   o.battleSamples=[];
+   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;
+  }
+  o.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   const map=o.farmMap==null?NaN:Number(o.farmMap),enemy=o.farmEnemy==null?NaN:Number(o.farmEnemy);
   o.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
   o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
@@ -37,7 +44,7 @@
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
-  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
+  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
  }
@@ -85,7 +92,7 @@
   const rows=Array.isArray(o?.battleSamples)?o.battleSamples:[];
   if(!rows.length)return 0;
   let total=0,count=0;
-  rows.forEach(row=>{const ms=Number(row?.adjustedMs);if(Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}});
+  rows.forEach(row=>{const ms=Number(row?.adjustedMs);if(Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}});
   return count?Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(total/count))):0;
  }
  function resolveFarmTarget(){
@@ -95,7 +102,6 @@
   const map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy));
   const realAvg=realBattleAverageMs(o);
   if(realAvg>0&&legalFarmTarget(map,enemy))return {map,enemy,avgBattleMs:realAvg};
-  if(o.sampleCount>0&&o.avgBattleMs>0&&legalFarmTarget(o.farmMap,o.farmEnemy))return {map:o.farmMap,enemy:o.farmEnemy,avgBattleMs:o.avgBattleMs};
   return null;
  }
  function formatDuration(ms){
@@ -279,6 +285,7 @@
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
+ window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
