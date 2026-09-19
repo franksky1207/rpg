@@ -327,6 +327,7 @@ function normalizeSaveState(target){
  if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
  if(typeof normalizeVipState==="function")normalizeVipState(target);
  if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
+ if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
  target.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
  return target;
 }
