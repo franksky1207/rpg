@@ -201,6 +201,7 @@
   cleanupRetiredShopState(state);
   normalizePersistentFlags(state);
   state.saveVersion=SAVE_SCHEMA_VERSION;
+  if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("local-load");
   if(typeof save==="function")save(false);
 
   window.LAST_SAVE_LOAD_REPORT={
