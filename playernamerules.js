@@ -1,7 +1,13 @@
 (function(){
  const MAX_NAME_UNITS=12;
  function charUnits(ch){
-  try{return /\p{Script=Han}/u.test(ch)?2:1;}catch(_){return /[\u3400-\u9fff\uf900-\ufaff]/.test(ch)?2:1;}
+  try{
+   if(/\p{Script=Han}/u.test(ch))return 2;
+  }catch(_){
+   if(/[\u3400-\u9fff\uf900-\ufaff]/.test(ch))return 2;
+  }
+  const cp=ch.codePointAt(0);
+  return (cp>=0xFF01&&cp<=0xFF60)||(cp>=0xFFE0&&cp<=0xFFE6)?2:1;
  }
  function nameUnits(value){return Array.from(String(value??"")).reduce((sum,ch)=>sum+charUnits(ch),0);}
  window.playerNameUnits=nameUnits;
@@ -22,5 +28,5 @@
   return true;
  };
 
- window.PLAYER_NAME_RULE_VERSION=1;
+ window.PLAYER_NAME_RULE_VERSION=2;
 })();
