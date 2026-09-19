@@ -208,17 +208,32 @@
   if(card&&text!=="閃避"&&text!=="吸收"){card.classList.remove("hit");void card.offsetWidth;card.classList.add("hit");setTimeout(()=>card.classList.remove("hit"),260);}
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
+ const STRUCTURED_COMBAT_PACING=Object.freeze({
+  openingDelay:90,
+  impactDelay:45,
+  endDelay:120,
+  stepThresholds:Object.freeze([
+   Object.freeze({minExclusive:140,delay:12}),
+   Object.freeze({minExclusive:90,delay:20}),
+   Object.freeze({minExclusive:55,delay:32}),
+   Object.freeze({minExclusive:-1,delay:48})
+  ])
+ });
+ function structuredCombatPacing(eventCount){
+  const count=Math.max(0,Math.floor(Number(eventCount)||0));
+  const row=STRUCTURED_COMBAT_PACING.stepThresholds.find(item=>count>item.minExclusive)||STRUCTURED_COMBAT_PACING.stepThresholds[STRUCTURED_COMBAT_PACING.stepThresholds.length-1];
+  return {openingDelay:STRUCTURED_COMBAT_PACING.openingDelay,impactDelay:STRUCTURED_COMBAT_PACING.impactDelay,stepDelay:row.delay,endDelay:STRUCTURED_COMBAT_PACING.endDelay,eventCount:count};
+ }
+ window.STRUCTURED_COMBAT_PACING_VERSION=1;
+ window.getStructuredCombatPacing=function(eventCount){return structuredCombatPacing(eventCount);};
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
   const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
   const p=presentation;
   if(!p?.active||!Array.isArray(p.events))throw new Error("Combat Presentation 尚未初始化。");
   p.screen=combatScreen()||p.screen||null;
-  const kind=String(result?.e?.kind||options.kind||"");
-  const impactDelay=Math.max(0,Number(options.impactDelay??90)||0);
-  const stepDelay=Math.max(0,Number(options.stepDelay??(kind==="boss"?210:150))||0);
-  const openingDelay=Math.max(0,Number(options.openingDelay??140)||0);
-  const endDelay=Math.max(0,Number(options.endDelay??220)||0);
+  const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
+  const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
   structuredPlayback=true;
   ensureCombatExtras();
   syncCombatHpDom();
@@ -334,7 +349,8 @@
   if(!presentation?.active||presentation.mode!=="mirror")window.prepareMirrorCombatPresentation(result);
   const p=presentation;if(!p?.active)throw new Error("Mirror Combat Presentation 尚未初始化。");
   p.screen=combatScreen()||p.screen||null;
-  const impactDelay=Math.max(0,Number(options.impactDelay??70)||0),stepDelay=Math.max(0,Number(options.stepDelay??75)||0),openingDelay=Math.max(0,Number(options.openingDelay??120)||0),endDelay=Math.max(0,Number(options.endDelay??180)||0);
+  const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
+  const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
   structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();
   try{
    await structuredSleep(openingDelay);
