@@ -94,8 +94,8 @@
  window.BOUNTY_TIER_META_VERSION=1;
  window.BOUNTY_DIFFICULTY_FORMULA_VERSION=1;
  window.BOUNTY_DIFFICULTY_CURVE=BOUNTY_DIFFICULTY_CURVE;
- window.getBountyTierConfig=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
- window.getBountyTierConfigs=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
+ window.getBountyTierMeta=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
+ window.getBountyTierMetadata=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
  window.getBountyDifficultyProfile=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...bountyDifficultyProfile(t)}:null;};
  window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
