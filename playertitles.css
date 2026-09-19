@@ -1,5 +1,5 @@
 .player-identity{display:inline-flex;align-items:baseline;gap:.42em;max-width:100%;white-space:nowrap;vertical-align:baseline}
-.player-identity-name{font:inherit;color:inherit;text-shadow:inherit}
+.player-identity-name{font:inherit;color:inherit;-webkit-text-fill-color:currentColor;background:none;background-clip:border-box;-webkit-background-clip:border-box;text-shadow:inherit;opacity:1;visibility:visible}
 .player-identity--compact{gap:.34em}
 .player-title{
  position:relative;display:inline-block;flex:0 0 auto;
@@ -315,6 +315,7 @@
 .gm-player-title-combat-preview{max-width:560px;margin:8px auto 0}
 .gm-player-title-combat-preview .combatant{margin:0 auto}
 .gm-player-title-combat-preview .combatant h2{margin-top:0;text-align:center;overflow:visible}
+.gm-player-title-combat-preview .player-identity-name{display:inline-block;color:#ebcb84;-webkit-text-fill-color:#ebcb84;text-shadow:none}
 
 /* Mirror title motion: probability, time, fracture, dawn, ascension, miracle. */
 @keyframes mirrorLuckText15{0%,100%{background-position:0% 50%;filter:brightness(.96)}18%{filter:brightness(1.18)}34%{background-position:88% 50%;filter:brightness(1.06)}51%{filter:brightness(1.28)}68%{background-position:160% 50%;filter:brightness(1.03)}82%{filter:brightness(1.22)}}
