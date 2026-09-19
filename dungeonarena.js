@@ -138,7 +138,8 @@
  function arenaEnemyScalingStats(){return arenaState.enemyScalingSnapshot||createSpecialPlayerSnapshot(equippedStats());}
  function arenaPlayerStats(){if(arenaState.playerSnapshot)return arenaState.playerSnapshot;return createSpecialPlayerSnapshot(playerCombatStats(equippedStats(),state.vipLevel));}
  function arenaFightCore(enemy){const player=arenaPlayerStats(),combat=runCombatCore(player,enemy,state.hp);state.hp=combat.hp;return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};}
- const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));\n function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("arena");}
+ const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));
+ function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("arena");}
  function stopArenaBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("arena");}
  function healAfterRound(){if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;save(false);}
  function beginArenaRound(options={}){
