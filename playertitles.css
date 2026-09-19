@@ -392,6 +392,10 @@
 @keyframes titleStars10{0%,100%{transform:scale(.97);opacity:.48}50%{transform:scale(1.065);opacity:.82}}
 
 @media(max-width:760px){
+ /* Mirror battle keeps the enemy's copied title, but suspends its duplicate animation on mobile. */
+ .mirror-title-clone-host .player-title,
+ .mirror-title-clone-host .player-title::before,
+ .mirror-title-clone-host .player-title::after{animation:none!important}
  .player-identity{gap:.28em}
  .player-identity--compact{gap:.22em}
  .combatant h2 .player-identity{white-space:normal;flex-wrap:wrap;justify-content:center;row-gap:.12em}
