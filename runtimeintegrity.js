@@ -254,7 +254,14 @@
  if(!window.LAST_SAVE_LOAD_REPORT)warn("LOAD_REPORT","尚未找到 LAST_SAVE_LOAD_REPORT");
  else if(Number(window.LAST_SAVE_LOAD_REPORT.pipelineVersion)!==Number(window.SAVE_LOAD_PIPELINE_VERSION))fail("LOAD_REPORT_PIPELINE","LAST_SAVE_LOAD_REPORT pipeline 與正式版本不一致",window.LAST_SAVE_LOAD_REPORT);
 
- if(Number(window.ARENA_BALANCE_VERSION)!==6||Number(window.ARENA_RANK_BALANCE_VERSION)!==3)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V6／Rank Balance V3",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
+ if(Number(window.BOUNTY_BALANCE_VERSION)!==1||Number(window.BOUNTY_DIFFICULTY_FORMULA_VERSION)!==1)fail("BOUNTY_BALANCE_VERSION","懸賞戰應使用 Balance V1／Difficulty Formula V1",{balance:window.BOUNTY_BALANCE_VERSION,formula:window.BOUNTY_DIFFICULTY_FORMULA_VERSION});
+ if(typeof window.getBountyDifficultyProfile!=="function")fail("BOUNTY_DIFFICULTY_API","缺少懸賞戰難度公式正式 API");
+ else{
+  const bountyProfiles=["normal","high","danger"].map(id=>window.getBountyDifficultyProfile(id));
+  if(bountyProfiles.some(v=>!v||![v.hpMul,v.damageMul,v.defMul,v.critScale,v.dodgeScale].every(Number.isFinite)))fail("BOUNTY_DIFFICULTY_DATA","懸賞戰三檔公式資料異常",bountyProfiles);
+  if(!(bountyProfiles[0].hpMul<bountyProfiles[1].hpMul&&bountyProfiles[1].hpMul<bountyProfiles[2].hpMul&&bountyProfiles[0].damageMul<bountyProfiles[1].damageMul&&bountyProfiles[1].damageMul<bountyProfiles[2].damageMul&&bountyProfiles[0].defMul<bountyProfiles[1].defMul&&bountyProfiles[1].defMul<bountyProfiles[2].defMul))fail("BOUNTY_DIFFICULTY_CURVE","懸賞戰普通／高級／危險實體能力必須逐檔提高",bountyProfiles);
+ }
+  if(Number(window.ARENA_BALANCE_VERSION)!==6||Number(window.ARENA_RANK_BALANCE_VERSION)!==3)fail("ARENA_BALANCE_VERSION","競技場應使用 Balance V6／Rank Balance V3",{balance:window.ARENA_BALANCE_VERSION,rankBalance:window.ARENA_RANK_BALANCE_VERSION});
  if(!window.ARENA_RANK_CURVE||!["hp","damage","def"].every(key=>Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.linear))&&Number.isFinite(Number(window.ARENA_RANK_CURVE?.[key]?.quadratic))))fail("ARENA_RANK_CURVE_CONFIG","競技場階級公式設定異常",window.ARENA_RANK_CURVE);
  if(typeof window.getArenaRankMultipliers!=="function")fail("ARENA_RANK_MULTIPLIERS_API","缺少競技場階級倍率正式 API");
  else{
