@@ -1,8 +1,7 @@
 (function(){
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- const names=["灰潮母巢","日蝕王座","星骸迴廊","黑域牧者","滅世天環","寂滅方舟","萬域蝕潮","深核奇點","無聲裁決","終末之眼"];
- const markIds=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
+ const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
  const defs=typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];
  if(Number(window.CALAMITY_CORE_VERSION)!==1)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V1",window.CALAMITY_CORE_VERSION);
  if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==2)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則版本應為 2",window.CALAMITY_COMBAT_RULE_VERSION);
@@ -31,7 +30,8 @@
 
  defs.forEach((def,index)=>{
   const region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[index]:null;
-  if(!region||def.id!==region.id||def.name!==names[index]||def.mapIndex!==region.mapEnd||def.unlockLevel!==region.max||def.markId!==markIds[index])fail("CALAMITY_DEF",`第 ${index+1} 隻文明災厄定義異常`,{def,region});
+  const source=config[index];
+  if(!region||!source||def.id!==source.id||def.name!==source.calamityName||def.mapIndex!==source.mapIndex||def.unlockLevel!==source.unlockLevel||def.markId!==source.markId||def.regionId!==source.regionId)fail("CALAMITY_DEF",`第 ${index+1} 隻文明災厄未直接對齊統一設定`,{def,source,region});
   try{
    const base=window.getCivilizationCalamityBaseBoss(def.id),enemy=window.buildCivilizationCalamityEnemy(def.id),formalBoss=typeof monsterObj==="function"?monsterObj(region.mapEnd,4):null;
    if(!base||!formalBoss||base.name!==formalBoss.name||base.level!==formalBoss.level||base.hp!==formalBoss.hp||base.atk!==formalBoss.atk||base.def!==formalBoss.def)fail("CALAMITY_BASE_BOSS",`${def.id} 未直接對齊正式區域最終 Boss`,{base,formalBoss});
