@@ -19,6 +19,111 @@
  opacity:.84
 }
 .player-title::after{content:"";position:absolute;inset:-.18em -.28em;pointer-events:none;opacity:0;border-radius:999px;z-index:-1}
+/* Calamity title frame hierarchy V2: static structure only; motion is reserved for batch 3. */
+.player-title--tier-1::before{
+ inset:-.26em -.27em;
+ border-color:rgba(181,207,229,.42);
+ box-shadow:0 0 0 1px rgba(113,143,171,.11) inset,0 0 5px rgba(101,151,190,.16);
+ background:linear-gradient(90deg,rgba(222,238,250,.08),transparent 20%,transparent 80%,rgba(222,238,250,.08));
+ opacity:.72
+}
+.player-title--tier-2::before{
+ inset:-.28em -.29em;
+ border-color:rgba(221,167,78,.52);
+ box-shadow:0 0 0 1px rgba(255,214,129,.12) inset,0 0 7px rgba(207,122,48,.22);
+ background:
+  linear-gradient(135deg,rgba(255,220,143,.28) 0 10%,transparent 10%) left top/.44em .44em no-repeat,
+  linear-gradient(315deg,rgba(255,220,143,.28) 0 10%,transparent 10%) right bottom/.44em .44em no-repeat,
+  linear-gradient(90deg,rgba(111,63,21,.12),transparent 24%,transparent 76%,rgba(111,63,21,.12));
+ opacity:.80
+}
+.player-title--tier-3::before{
+ inset:-.30em -.31em;
+ border-color:rgba(155,161,239,.60);
+ box-shadow:0 0 0 1px rgba(217,225,255,.15) inset,0 0 8px rgba(109,111,221,.28);
+ background:
+  radial-gradient(circle at .24em 50%,rgba(238,243,255,.80) 0 1px,transparent 1.7px),
+  radial-gradient(circle at calc(100% - .24em) 50%,rgba(194,180,255,.76) 0 1px,transparent 1.7px),
+  linear-gradient(90deg,rgba(99,113,213,.14),transparent 24%,transparent 76%,rgba(121,91,218,.14));
+ opacity:.88
+}
+.player-title--tier-4::before{
+ inset:-.33em -.38em;
+ border:1.5px solid rgba(101,88,157,.66);
+ clip-path:polygon(.46em 0,calc(100% - .46em) 0,100% .28em,calc(100% - .18em) 50%,100% calc(100% - .28em),calc(100% - .46em) 100%,.46em 100%,0 calc(100% - .28em),.18em 50%,0 .28em);
+ box-shadow:0 0 0 1px rgba(79,111,157,.20) inset,0 0 9px rgba(76,60,132,.34);
+ background:
+  linear-gradient(90deg,rgba(75,91,141,.24) 0 .18em,transparent .18em calc(100% - .18em),rgba(105,78,153,.24) calc(100% - .18em)),
+  linear-gradient(90deg,rgba(26,37,59,.22),transparent 30%,transparent 70%,rgba(38,27,58,.22));
+ opacity:.90
+}
+.player-title--tier-5::before{
+ inset:-.35em -.42em;
+ border:1.5px solid rgba(119,196,244,.72);
+ clip-path:polygon(.52em 0,calc(100% - .52em) 0,100% .24em,calc(100% - .22em) 50%,100% calc(100% - .24em),calc(100% - .52em) 100%,.52em 100%,0 calc(100% - .24em),.22em 50%,0 .24em);
+ box-shadow:0 0 0 1px rgba(171,220,255,.22) inset,0 0 10px rgba(101,127,244,.38);
+ background:
+  radial-gradient(ellipse at left center,rgba(119,220,255,.31),transparent 34%),
+  radial-gradient(ellipse at right center,rgba(160,112,255,.30),transparent 34%),
+  linear-gradient(90deg,rgba(109,201,255,.16),transparent 30%,transparent 70%,rgba(151,109,255,.16));
+ opacity:.94
+}
+.player-title--tier-6::before{
+ inset:-.36em -.46em;
+ border:1.5px solid rgba(157,125,208,.72);
+ clip-path:polygon(.62em 0,calc(100% - .62em) 0,calc(100% - .26em) .18em,100% 50%,calc(100% - .26em) calc(100% - .18em),calc(100% - .62em) 100%,.62em 100%,.26em calc(100% - .18em),0 50%,.26em .18em);
+ box-shadow:0 0 0 1px rgba(222,207,255,.20) inset,0 0 11px rgba(99,69,164,.38),0 0 16px rgba(181,139,72,.12);
+ background:
+  linear-gradient(90deg,rgba(183,142,219,.28) 0 .28em,transparent .28em calc(100% - .28em),rgba(184,139,82,.25) calc(100% - .28em)),
+  repeating-linear-gradient(115deg,rgba(232,222,255,.055) 0 1px,transparent 1px 5px);
+ opacity:.95
+}
+.player-title--tier-7::before{
+ inset:-.39em -.52em;
+ border:2px solid rgba(208,170,82,.78);
+ clip-path:polygon(.76em 0,calc(50% - .32em) 0,50% .14em,calc(50% + .32em) 0,calc(100% - .76em) 0,calc(100% - .38em) .18em,100% 50%,calc(100% - .38em) calc(100% - .18em),calc(100% - .76em) 100%,calc(50% + .32em) 100%,50% calc(100% - .14em),calc(50% - .32em) 100%,.76em 100%,.38em calc(100% - .18em),0 50%,.38em .18em);
+ box-shadow:0 0 0 1px rgba(143,104,220,.26) inset,0 0 12px rgba(207,165,77,.38),0 0 18px rgba(92,70,186,.24);
+ background:
+  linear-gradient(90deg,rgba(63,49,132,.30) 0 .34em,transparent .34em calc(100% - .34em),rgba(53,78,139,.28) calc(100% - .34em)),
+  linear-gradient(180deg,rgba(244,218,136,.13),transparent 30%,transparent 70%,rgba(137,99,229,.13));
+ opacity:.98
+}
+.player-title--tier-8::before{
+ inset:-.41em -.55em;
+ border:2px solid rgba(151,125,216,.82);
+ clip-path:polygon(.78em 0,calc(50% - .36em) 0,50% .16em,calc(50% + .36em) 0,calc(100% - .78em) 0,calc(100% - .36em) .20em,100% 50%,calc(100% - .36em) calc(100% - .20em),calc(100% - .78em) 100%,calc(50% + .36em) 100%,50% calc(100% - .16em),calc(50% - .36em) 100%,.78em 100%,.36em calc(100% - .20em),0 50%,.36em .20em);
+ box-shadow:0 0 0 1px rgba(207,225,255,.28) inset,0 0 12px rgba(115,86,196,.50),0 0 20px rgba(72,128,206,.25);
+ background:
+  radial-gradient(ellipse at center,rgba(220,235,255,.30) 0 4%,rgba(110,77,183,.18) 5% 14%,transparent 30%),
+  linear-gradient(90deg,rgba(34,24,51,.35) 0 .36em,transparent .36em calc(100% - .36em),rgba(35,25,52,.35) calc(100% - .36em)),
+  linear-gradient(180deg,rgba(130,169,231,.12),transparent 34%,transparent 66%,rgba(123,80,187,.14));
+ opacity:1
+}
+.player-title--tier-9::before{
+ inset:-.43em -.60em;
+ border:2px solid rgba(213,166,69,.88);
+ clip-path:polygon(.88em 0,calc(50% - .45em) 0,calc(50% - .20em) .10em,50% 0,calc(50% + .20em) .10em,calc(50% + .45em) 0,calc(100% - .88em) 0,calc(100% - .48em) .18em,100% 50%,calc(100% - .48em) calc(100% - .18em),calc(100% - .88em) 100%,calc(50% + .42em) 100%,50% calc(100% - .12em),calc(50% - .42em) 100%,.88em 100%,.48em calc(100% - .18em),0 50%,.48em .18em);
+ box-shadow:0 0 0 1px rgba(115,69,145,.34) inset,0 0 13px rgba(220,170,73,.48),0 0 22px rgba(91,46,126,.32);
+ background:
+  linear-gradient(145deg,transparent 43%,rgba(244,218,142,.30) 44% 49%,transparent 50%) center top/1.05em .42em no-repeat,
+  linear-gradient(35deg,transparent 43%,rgba(142,81,174,.25) 44% 49%,transparent 50%) center bottom/1.05em .40em no-repeat,
+  linear-gradient(90deg,rgba(38,27,43,.42) 0 .42em,transparent .42em calc(100% - .42em),rgba(48,31,49,.42) calc(100% - .42em)),
+  linear-gradient(180deg,rgba(232,188,93,.12),transparent 31%,transparent 69%,rgba(123,70,151,.13));
+ opacity:1
+}
+.player-title--tier-10::before{
+ inset:-.46em -.66em;
+ border:2px solid rgba(224,233,255,.92);
+ clip-path:polygon(.96em 0,calc(50% - .52em) 0,calc(50% - .28em) .10em,50% 0,calc(50% + .28em) .10em,calc(50% + .52em) 0,calc(100% - .96em) 0,calc(100% - .52em) .16em,100% 50%,calc(100% - .52em) calc(100% - .16em),calc(100% - .96em) 100%,calc(50% + .52em) 100%,calc(50% + .24em) calc(100% - .10em),50% 100%,calc(50% - .24em) calc(100% - .10em),calc(50% - .52em) 100%,.96em 100%,.52em calc(100% - .16em),0 50%,.52em .16em);
+ box-shadow:0 0 0 1px rgba(181,139,240,.38) inset,0 0 14px rgba(168,202,255,.58),0 0 23px rgba(177,111,239,.38),0 0 30px rgba(229,188,93,.22);
+ background:
+  radial-gradient(circle at 50% 50%,rgba(255,255,255,.36) 0 2%,rgba(167,132,238,.16) 3% 11%,transparent 24%),
+  linear-gradient(135deg,transparent 42%,rgba(255,232,166,.30) 43% 49%,transparent 50%) center top/1.22em .46em no-repeat,
+  linear-gradient(45deg,transparent 42%,rgba(171,207,255,.28) 43% 49%,transparent 50%) center bottom/1.22em .46em no-repeat,
+  linear-gradient(90deg,rgba(108,136,217,.25) 0 .48em,transparent .48em calc(100% - .48em),rgba(156,103,207,.25) calc(100% - .48em)),
+  linear-gradient(180deg,rgba(245,249,255,.13),transparent 28%,transparent 72%,rgba(232,191,103,.12));
+ opacity:1
+}
 .player-title--tier-1{background-image:linear-gradient(105deg,#aeb7c4 0%,#e8f5ff 48%,#7fbbe8 100%);text-shadow:0 0 3px rgba(139,199,244,.7),0 0 8px rgba(91,145,185,.28);animation:titlePulse1 3.8s ease-in-out infinite}
 .player-title--tier-2{background-image:linear-gradient(110deg,#6a4a1d 0%,#ffd778 44%,#e48338 68%,#6b3b18 100%);background-size:180% 100%;text-shadow:0 0 4px rgba(247,166,71,.74),0 0 10px rgba(224,105,32,.34);animation:titleSweep2 3.3s ease-in-out infinite}
 .player-title--tier-3{background-image:linear-gradient(100deg,#6d77d9 0%,#eef2ff 36%,#a98cff 60%,#688be7 100%);background-size:190% 100%;text-shadow:0 0 4px rgba(191,204,255,.85),0 0 11px rgba(111,99,220,.42);animation:titleSweep3 3s linear infinite}
