@@ -10,6 +10,7 @@
  if(Number(window.MARK_CORE_VERSION)!==1)fail("MARK_CORE_VERSION","Mark Core version 應為 1",window.MARK_CORE_VERSION);
  if(Number(window.MARK_COMBAT_RULE_VERSION)!==1)fail("MARK_COMBAT_RULE_VERSION","印記戰鬥規則版本應為 1",window.MARK_COMBAT_RULE_VERSION);
  if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1)fail("MARK_PROGRESSION_OWNER_VERSION","印記升級 progression 應由 Mark Core 單一管理",window.MARK_PROGRESSION_OWNER_VERSION);
+ if(Number(window.MARK_DESCRIPTION_OWNER_VERSION)!==1)fail("MARK_DESCRIPTION_OWNER_VERSION","印記效果說明應由 Mark Core 單一管理",window.MARK_DESCRIPTION_OWNER_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
  if(JSON.stringify(Array.from(window.MARK_KEYS||[]))!==JSON.stringify(expectedKeys))fail("MARK_KEYS","印記順序與正式取得順序不一致",window.MARK_KEYS);
  if(JSON.stringify(Array.from(window.MARK_UPGRADE_KILLS||[]))!==JSON.stringify(expectedUpgrade))fail("MARK_UPGRADE_KILLS","印記升級擊殺需求異常",window.MARK_UPGRADE_KILLS);
@@ -18,7 +19,7 @@
   const def=window.MARK_DEFS?.[key];
   if(def?.name!==expectedNames[index]||Number(def?.unlockLevel)!==expectedLevels[index]||def?.regionId!==expectedRegions[index])fail("MARK_DEF",`${key} 定義異常`,def);
  });
- const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markAcquired","markProgress","markEffectSnapshot","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
+ const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markAcquired","markProgress","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
 
  if(typeof window.markActivationChance==="function"){
@@ -71,6 +72,22 @@
    const zero=window.markEffectSnapshot(key,0);
    if(zero?.active!==false)fail("MARK_ZERO_ACTIVE",`${key} Lv.0 不應有有效效果`,zero);
   });
+ }
+ if(typeof window.markEffectDescription==="function"){
+  const checks=[
+   ["ward",1,"30% 機率於戰鬥開始時啟動，獲得最大 HP 2% 的護盾。"],
+   ["suppression",1,"敵人最終閃避率降低 0.5 個百分點。"],
+   ["composure",10,"敵人最終暴擊率降低 5 個百分點。"],
+   ["indomitable",10,"75% 機率於戰鬥開始時啟動；本場第一次受到致死傷害時保留 1 HP。"],
+   ["resilience",10,"敵人暴擊的額外傷害部分降低 30%。"],
+   ["battleSpirit",10,"75% 機率於戰鬥開始時啟動；每層提高 ATK 2%，每回合增加 1 層，最多 10 層。"],
+   ["absorption",10,"受到原本會命中的敵方攻擊時，有 5% 機率完全吸收傷害，並回復原始傷害 25% 的 HP。"],
+   ["revenge",10,"敵人成功暴擊後，有 50% 機率進入復仇；下一次成功命中的攻擊必定暴擊。"],
+   ["backlash",10,"實際受到 HP 傷害且存活後，有 15% 機率反噬敵人，反射本次實際 HP 損失的 30% 傷害。"],
+   ["ignore",10,"每次玩家攻擊有 5% 機率無視敵人 DEF。"]
+  ];
+  checks.forEach(([key,level,expected])=>{const actual=window.markEffectDescription(key,level);if(actual!==expected)fail("MARK_DESCRIPTION",`${key} Lv.${level} 效果說明異常`,{expected,actual});});
+  if(window.markEffectDescription("ward",0)!=="尚未生效。")fail("MARK_DESCRIPTION_ZERO","Lv.0 印記說明應為尚未生效",window.markEffectDescription("ward",0));
  }
  if(typeof window.createBlankTestMarkLevels==="function"){
   const blank=window.createBlankTestMarkLevels();
