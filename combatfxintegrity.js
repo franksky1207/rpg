@@ -25,6 +25,13 @@
  if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V2 lifecycle API 未完整載入");
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
+ if(Number(window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION)!==1)fail("MAIN_STRUCTURED_PRESENTATION_OWNER_VERSION","主線 Structured Presentation owner guard 應為 1",window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION);
+ if(typeof window.animateFight!=="function")fail("MAIN_STRUCTURED_PRESENTATION_OWNER","主線 animateFight 未載入");
+ else{
+  const mainAnimateSource=Function.prototype.toString.call(window.animateFight);
+  if(!/animateStructuredCombatPresentation/.test(mainAnimateSource))fail("MAIN_STRUCTURED_PRESENTATION_OWNER","主線 animateFight 必須由 ui.js 直接委派 Structured Presentation",mainAnimateSource);
+  if(/setCombatHp|attackMotion|flashCombatText/.test(mainAnimateSource))fail("MAIN_LEGACY_ANIMATION_OVERRIDE","主線 animateFight 不得恢復退休的 log parser／HP writer 動畫",mainAnimateSource);
+ }
  if(typeof window.prepareMirrorCombatPresentation!=="function"||typeof window.animateMirrorStructuredCombatPresentation!=="function")fail("MIRROR_STRUCTURED_PRESENTATION","Mirror Structured Presentation adapter 未完整載入");
 
  if(typeof window.prepareCombatPresentation==="function"&&typeof window.clearCombatPresentation==="function"){
