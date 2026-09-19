@@ -5,7 +5,8 @@
  const expectedMarks=["ward","suppression","composure","indomitable","resilience","battleSpirit","absorption","revenge","backlash","ignore"];
 
  if(Number(window.CALAMITY_STATE_VERSION)!==1)fail("CALAMITY_STATE_VERSION","文明災厄 state version 應為 1",window.CALAMITY_STATE_VERSION);
- if(Number(window.CALAMITY_BALANCE_VERSION)!==1)fail("CALAMITY_BALANCE_VERSION","文明災厄 balance version 應為 1",window.CALAMITY_BALANCE_VERSION);
+ if(Number(window.CALAMITY_BALANCE_VERSION)!==2)fail("CALAMITY_BALANCE_VERSION","文明災厄 balance version 應為 2",window.CALAMITY_BALANCE_VERSION);
+ if(Number(window.CALAMITY_FIXED_HP)!==1000000)fail("CALAMITY_FIXED_HP","文明災厄固定 HP 應為 1,000,000",window.CALAMITY_FIXED_HP);
  if(Number(window.MARK_STATE_VERSION)!==1)fail("MARK_STATE_VERSION","印記 state version 應為 1",window.MARK_STATE_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
 
@@ -29,11 +30,11 @@
   }
 
   const malformed={
-   calamities:{version:999,balanceVersion:0,entries:{[calamityIds[0]]:{currentHp:-50},extra:{currentHp:100}}},
+   calamities:{version:999,balanceVersion:0,entries:{[calamityIds[0]]:{currentHp:-50},[calamityIds[1]]:{currentHp:2500000},extra:{currentHp:100}}},
    marks:{version:999,entries:{[markIds[0]]:{acquired:false,level:99,progress:7},[markIds[1]]:{acquired:false,level:0,progress:5},extra:{acquired:true,level:10,progress:9}}}
   };
   window.normalizeCivilizationCalamityState(malformed);
-  if(malformed.calamities.version!==1||malformed.calamities.balanceVersion!==1||Object.keys(malformed.calamities.entries).length!==10||malformed.calamities.entries[calamityIds[0]].currentHp!==null)fail("CALAMITY_NORMALIZE","災厄 state normalizer 異常",malformed.calamities);
+  if(malformed.calamities.version!==1||malformed.calamities.balanceVersion!==2||Object.keys(malformed.calamities.entries).length!==10||malformed.calamities.entries[calamityIds[0]].currentHp!==null||malformed.calamities.entries[calamityIds[1]].currentHp!==1000000)fail("CALAMITY_NORMALIZE","災厄 state normalizer／舊 HP clamp 異常",malformed.calamities);
   const m0=malformed.marks.entries[markIds[0]],m1=malformed.marks.entries[markIds[1]];
   if(malformed.marks.version!==1||Object.keys(malformed.marks.entries).length!==10||m0.acquired!==true||m0.level!==10||m0.progress!==0||m1.acquired!==false||m1.level!==0||m1.progress!==0)fail("MARK_NORMALIZE","印記 state normalizer 異常",malformed.marks);
  }
@@ -41,7 +42,7 @@
  if(typeof newState==="function"){
   const fresh=newState();
   if(Number(fresh.saveVersion)!==13)fail("NEW_STATE_SCHEMA","新存檔應直接建立為 Schema 13",fresh.saveVersion);
-  if(Number(fresh.calamities?.version)!==1||Number(fresh.calamities?.balanceVersion)!==1||Object.keys(fresh.calamities?.entries||{}).length!==10)fail("NEW_STATE_CALAMITIES","newState 未建立正式災厄 state",fresh.calamities);
+  if(Number(fresh.calamities?.version)!==1||Number(fresh.calamities?.balanceVersion)!==2||Object.keys(fresh.calamities?.entries||{}).length!==10)fail("NEW_STATE_CALAMITIES","newState 未建立正式災厄 state",fresh.calamities);
   if(Number(fresh.marks?.version)!==1||Object.keys(fresh.marks?.entries||{}).length!==10)fail("NEW_STATE_MARKS","newState 未建立正式印記 state",fresh.marks);
  }
 
