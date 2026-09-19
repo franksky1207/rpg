@@ -936,6 +936,8 @@ repo root 舊測試檔：
 - 劇情 GM V3：10 區／101 stories 純預覽、前後導航、integrity 明細與重跑。
 
 GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式才明確寫正式 state。
+- 2026-09-19 GM 區塊開合狀態改為 session-only：所有管理／測試 section 在重新整理或重新開網頁後一律預設收起；同一網頁工作階段中，玩家切遊戲頁面、切 GM 管理／測試分頁、關閉後再開 GM，都保留各 section 最後的展開／收起狀態。狀態只存在 `gmhub.js` module memory 的 `gmHubOpenSections`，不寫正式存檔、不寫 localStorage／雲端。核心與 extension section 共用 `gmHubSectionToggle()`／`gmHubSectionIsOpen()`；`GM_HUB_SECTION_STATE_VERSION=1`。先前預設展開的「一般管理」「背景戰鬥」「特殊怪測試」「劇情測試」已全部改為初始收起。
+
 
 ---
 
