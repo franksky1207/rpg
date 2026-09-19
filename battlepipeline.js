@@ -18,6 +18,20 @@
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
+ function mainBackgroundEnabled(ctx){
+  return ctx?.continuous===true&&typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true&&typeof window.backgroundProgressStart==="function";
+ }
+ function startMainBackground(ctx){
+  if(!mainBackgroundEnabled(ctx)){
+   if(ctx?.continuous===true&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
+   return false;
+  }
+  window.backgroundProgressStart("main",{mode:"continuous"});
+  return true;
+ }
+ function stopMainBackground(started){
+  if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
+ }
  function realBattleSampleMultiplier(playerLevel,enemyLevel){
   const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
   if(gap<=3)return 1;
@@ -94,8 +108,10 @@
   ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
   window.activeMainBattleContext=ctx;
   let defeat=null,local=0;
+  const mainBackgroundStarted=startMainBackground(ctx);
 
-  while(ctx.continuous||local<ctx.originalCount){
+  try{
+   while(ctx.continuous||local<ctx.originalCount){
    if(shouldStopContinuous(ctx))break;
    local++;
    let encounter=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy)||createMonsterEncounter(selectedMap,selectedEnemy);
@@ -174,11 +190,15 @@
   window.activeMainBattleContext=null;
   save();
   render();
-  setTimeout(()=>{
-   showBattleResult(ctx,defeat);
-   if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);
-  },0);
+   setTimeout(()=>{
+    showBattleResult(ctx,defeat);
+    if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);
+   },0);
+  }finally{
+   stopMainBackground(mainBackgroundStarted);
+  }
  };
+ window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
  window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION=1;
  window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
  window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;
