@@ -5,7 +5,9 @@
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
  let windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;
- let environmentBackground=pageHidden||windowBlurred;
+ // Page Visibility/pagehide is authoritative. iOS Safari may report hasFocus() === false
+ // while the page is still visibly active; blur alone must never suspend visible combat.
+ let environmentBackground=pageHidden;
  const environmentListeners=new Set();
  const pageHideListeners=new Set();
 
@@ -74,7 +76,7 @@
   }else flow.credit+=allowed*BACKGROUND_CREDIT_RATE;
  }
  function syncEnvironment(source="unknown"){
-  const next=pageHidden||windowBlurred;
+  const next=pageHidden;
   if(next===environmentBackground)return;
   environmentBackground=next;
   if(next)enterBackground();else leaveBackground();
@@ -97,6 +99,7 @@
  window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
  window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
  window.BACKGROUND_PROGRESS_GM_GATE_VERSION=1;
+ window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=1;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
