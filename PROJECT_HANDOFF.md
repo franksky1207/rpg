@@ -1042,6 +1042,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 全模式戰鬥內動畫速度統一：`combatfx.js` 新增唯一 pacing owner `getStructuredCombatPacing(eventCount)`／`STRUCTURED_COMBAT_PACING_VERSION=1`。主線、特殊怪、懸賞、競技場、虛空、文明災厄、鏡像戰均不再自行維護 opening／impact／step／end delay。正式統一節奏：opening 90ms、impact 45ms、end 120ms；step 依 structured event 數為 ≤55:48ms、56～90:32ms、91～140:20ms、>140:12ms。各模式的場間等待、樓層／階段切換、特殊遭遇提示與背景 sleep injection 仍保留各自流程，不屬於戰鬥內動畫 pacing。Combat FX／Runtime／Final Integrity 已鎖定共用 owner 與 profile。戰鬥數值、獎勵、Save Schema 不變。
 
+- 2026-09-19 Structured Combat Pacing V2：依使用者「所有戰鬥內統一且要快」的目標，正式退休 V1 依 eventCount 使用 48／32／20／12ms 的動態 step 變速。現在主線、特殊怪、懸賞、競技場、虛空、文明災厄、鏡像戰全部固定使用同一高速節奏：opening 70ms、impact 35ms、step 24ms、end 90ms；eventCount 僅保留在 pacing snapshot，不再影響速度。唯一 owner 仍為 `combatfx.js -> getStructuredCombatPacing()`，版本升為 `STRUCTURED_COMBAT_PACING_VERSION=2`。各模式戰鬥外的場間等待／樓層切換／提示時間與背景 sleep injection 不變。Combat FX／Runtime／Final Integrity 已同步鎖定 V2 固定值。戰鬥數值、獎勵、Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
