@@ -6,7 +6,7 @@
  const expectedCalamityNames=["灰潮母巢","日蝕王座","星骸迴廊","黑域牧者","滅世天環","寂滅方舟","萬域蝕潮","深核奇點","無聲裁決","終末之眼"];
  const expectedMarkNames=["護界印記","壓制印記","鎮心印記","不屈印記","韌性印記","戰意印記","吸收印記","復仇印記","反噬印記","無視印記"];
  const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
- if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==1)fail("CALAMITY_CONFIG_VERSION","文明災厄統一設定版本應為 1",window.CIVILIZATION_CALAMITY_CONFIG_VERSION);
+ if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==2)fail("CALAMITY_CONFIG_VERSION","文明災厄統一設定版本應為 2",window.CIVILIZATION_CALAMITY_CONFIG_VERSION);
  if(config.length!==10)fail("CALAMITY_CONFIG_COUNT","文明災厄統一設定應正好 10 組",config);
  config.forEach((entry,index)=>{
   const region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[index]:null;
