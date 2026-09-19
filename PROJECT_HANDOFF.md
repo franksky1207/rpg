@@ -1040,6 +1040,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 背景戰鬥重新統一修正：嚴格比對修改前正常版本與目前主線／虛空／災厄後，將 `backgroundprogress.js` 背景判定恢復為已驗證的 `pageHidden || windowBlurred`，正式退休先前誤加的 800ms blur fallback；原先主線卡住的真正根因已確認是退休動畫 override，故不再以延遲 blur workaround 處理。Catch-up credit 被消耗時每次 `backgroundProgressSleep()` 都會 `setTimeout(0)` 讓出 event loop，不再使用每 24 次才 yield 的 `instantSkips` 節流；另新增 `backgroundProgressUiYield(kind)`／`BACKGROUND_PROGRESS_UI_YIELD_VERSION=1`，主線每場、虛空每層、災厄每場完成後在 catch-up 期間至少讓 UI paint 一次，避免場次／EXP／金幣由 20→28→37→114 批次跳號。虛空 Structured Presentation 補上正式 `sleep` injection，`VOID_BACKGROUND_PRESENTATION_VERSION=1`，與主線／災厄同樣消耗各自的 background credit。背景 owner 版本為 `BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3`。戰鬥數值、獎勵、Save Schema 不變。
 
+- 2026-09-19 全模式戰鬥內動畫速度統一：`combatfx.js` 新增唯一 pacing owner `getStructuredCombatPacing(eventCount)`／`STRUCTURED_COMBAT_PACING_VERSION=1`。主線、特殊怪、懸賞、競技場、虛空、文明災厄、鏡像戰均不再自行維護 opening／impact／step／end delay。正式統一節奏：opening 90ms、impact 45ms、end 120ms；step 依 structured event 數為 ≤55:48ms、56～90:32ms、91～140:20ms、>140:12ms。各模式的場間等待、樓層／階段切換、特殊遭遇提示與背景 sleep injection 仍保留各自流程，不屬於戰鬥內動畫 pacing。Combat FX／Runtime／Final Integrity 已鎖定共用 owner 與 profile。戰鬥數值、獎勵、Save Schema 不變。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
