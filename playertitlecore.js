@@ -1,17 +1,18 @@
 (function(){
  const PLAYER_TITLE_STATE_VERSION=1;
- const DEFS=Object.freeze([
-  {id:"calamity_title_01",name:"灰潮餘燼",calamityId:"gray_tide",markId:"ward",tier:1},
-  {id:"calamity_title_02",name:"蝕日王冠",calamityId:"eclipse_throne",markId:"suppression",tier:2},
-  {id:"calamity_title_03",name:"星骸殘響",calamityId:"starbone_corridor",markId:"composure",tier:3},
-  {id:"calamity_title_04",name:"黑域孤星",calamityId:"dark_domain_shepherd",markId:"indomitable",tier:4},
-  {id:"calamity_title_05",name:"天環墜落",calamityId:"world_end_ring",markId:"resilience",tier:5},
-  {id:"calamity_title_06",name:"寂滅遠航",calamityId:"silent_ark",markId:"battleSpirit",tier:6},
-  {id:"calamity_title_07",name:"萬域寂滅",calamityId:"myriad_devouring_tide",markId:"absorption",tier:7},
-  {id:"calamity_title_08",name:"黑核權柄",calamityId:"deep_core_singularity",markId:"revenge",tier:8},
-  {id:"calamity_title_09",name:"無聲王權",calamityId:"silent_judgment",markId:"backlash",tier:9},
-  {id:"calamity_title_10",name:"萬星終寂",calamityId:"end_eye",markId:"ignore",tier:10}
- ].map(row=>Object.freeze(row)));
+ const TITLE_NAMES=Object.freeze([
+  "灰潮餘燼","蝕日王冠","星骸殘響","黑域孤星","天環墜落",
+  "寂滅遠航","萬域寂滅","黑核權柄","無聲王權","萬星終寂"
+ ]);
+ const CONFIG=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
+ if(CONFIG.length!==TITLE_NAMES.length)throw new Error("Player title core requires exactly 10 Civilization Calamity configs.");
+ const DEFS=Object.freeze(CONFIG.map((entry,index)=>Object.freeze({
+  id:`calamity_title_${String(index+1).padStart(2,"0")}`,
+  name:TITLE_NAMES[index],
+  calamityId:entry.id,
+  markId:entry.markId,
+  tier:index+1
+ })));
  const IDS=Object.freeze(DEFS.map(row=>row.id));
  const BY_ID=Object.freeze(Object.fromEntries(DEFS.map(row=>[row.id,row])));
 
