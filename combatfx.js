@@ -210,6 +210,7 @@
  }
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
+  const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
   const p=presentation;
   if(!p?.active||!Array.isArray(p.events))throw new Error("Combat Presentation 尚未初始化。");
   p.screen=combatScreen()||p.screen||null;
@@ -223,7 +224,7 @@
   syncCombatHpDom();
   if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),null);
   try{
-   await structuredSleep(openingDelay);
+   await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
     if(!evt)continue;
@@ -233,12 +234,12 @@
      if(desc)spawnFx(desc.target,desc.kind,desc.text,0);
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
-     if(desc)await structuredSleep(Math.min(stepDelay,85));
+     if(desc)await sleep(Math.min(stepDelay,85));
      continue;
     }
-    if(evt.type==="combo"){spawnFx("enemy","combo");await structuredSleep(Math.min(stepDelay,70));continue;}
-    if(evt.type==="counter"){spawnFx("enemy","counter");await structuredSleep(Math.min(stepDelay,70));continue;}
-    if(evt.type==="berserk"){spawnFx("enemy","berserk");await structuredSleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="combo"){spawnFx("enemy","combo");await sleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="counter"){spawnFx("enemy","counter");await sleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="berserk"){spawnFx("enemy","berserk");await sleep(Math.min(stepDelay,70));continue;}
     if(evt.type==="drain"){
      const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
      if(healed>0)p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
@@ -246,21 +247,21 @@
      if(healed>0)spawnFx("player","heal",`+${healed} HP`,70);
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
-     await structuredSleep(stepDelay);
+     await sleep(stepDelay);
      continue;
     }
     if(evt.type==="dodge"){
      const target=evt.target==="player"?"player":"enemy",attacker=target==="player"?"enemy":"player";
-     directMotion(attacker);await structuredSleep(impactDelay);
+     directMotion(attacker);await sleep(impactDelay);
      directPulse(target,"閃避");
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
-     await structuredSleep(stepDelay);
+     await sleep(stepDelay);
      continue;
     }
     if(evt.type==="attack"){
      const actor=evt.actor==="enemy"?"enemy":"player",target=actor==="player"?"enemy":"player";
-     directMotion(actor);await structuredSleep(impactDelay);
+     directMotion(actor);await sleep(impactDelay);
      if(actor==="player"){
       p.enemyHp=Math.max(0,p.enemyHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
       if(evt.initiative)spawnFx("enemy","initiative");
@@ -277,20 +278,21 @@
      }
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
-     await structuredSleep(stepDelay);
+     await sleep(stepDelay);
      continue;
     }
    }
    syncCombatHpDom();
    if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
-   await structuredSleep(endDelay);
+   await sleep(endDelay);
    return window.getCombatPresentationSnapshot();
   }finally{
    structuredPlayback=false;
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
  };
- window.COMBAT_STRUCTURED_PRESENTATION_VERSION=1;
+ window.COMBAT_STRUCTURED_PRESENTATION_VERSION=2;
+ window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION=1;
  window.COMBAT_PRESENTATION_UNIFIED_VERSION=1;
 
  function mirrorUiTarget(key){return key==="player"?"player":"enemy";}
