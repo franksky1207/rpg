@@ -1026,6 +1026,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 競技場／懸賞整理第 2 批：只整理競技場架構與語意，不改任何平衡值。Arena 正式 runtime／GM／player flow 改以 `position` 表示 normal／hard／extreme，新增 `getArenaPositionConfigs()` 與單一 `getArenaEnemyProfile(rank, positionId, stageIndex)`／內部 `arenaEnemyProfile()` owner，統一組合 Rank Curve × Stage Physical × Position Physical × crit/dodge/trait profile；`buildArenaEnemy()` 改只消費此 profile。既有 `getArenaDifficultyConfigs`、enemy snapshot 的 `arenaDifficulty` 與 assessment signature 內歷史 difficulty 欄位暫保留相容，避免無必要讓既有 500 次升階評估失效；正式呼叫路徑已不再使用舊 difficulty API。normal/hard/extreme 物理倍率仍原封不動為 1/1/1、.96/.96/.98、.90/.92/.96，Runtime Integrity 會鎖定避免架構整理誤改平衡。Arena presentation pacing 改直接讀 `result.events.length`，不再依賴 global presentation snapshot。新增 `ARENA_POSITION_API_VERSION=1`、`ARENA_ENEMY_PROFILE_VERSION=1`、`ARENA_PRESENTATION_PACING_SOURCE_VERSION=1`。Arena Balance 仍 V6、Rank Balance 仍 V3、Assessment compatibility 仍 6，Save Schema 不變。
 
+- 2026-09-19 競技場／懸賞整理第 3 批：完成共用化、版本與 Integrity 收尾，不改任何 Arena／Bounty 平衡值。Arena/Bounty 的 rate 計算改共用既有 `specialRateFromPlayer()`，唯一 trait 抽取改由 `specialmonsters.js` 的 `rollUniqueMonsterTraits()` 共用，`SPECIAL_ENEMY_SHARED_HELPERS_VERSION=1`。Arena 版本常數集中到 `dungeonprogress.js` 的單一 `ARENA_COMPATIBILITY_PROFILE`／`getArenaVersionProfile()`，Arena balance、rank balance、position/profile/pacing、assessment state/runtime 均由此 profile 對齊；assessment signature 內既有 `positionDifficulty` key 為避免讓既有 500 次評估無故 stale 而暫保留純序列化相容，不再作 runtime API。正式退休 `getArenaDifficultyConfigs()`、`getArenaPositionDifficultyId()` 與 enemy snapshot 的 `arenaDifficulty`；Runtime／Final Integrity 反向鎖定舊 API 不得回來。Bounty 設定正式命名為 `BOUNTY_TIER_META`，新增 `BOUNTY_TIER_META_VERSION=1`、`getBountyTierMeta()`／`getBountyTierMetadata()`，退休舊 `getBountyTierConfig(s)` API，GM 同步改讀正式 metadata。Arena Balance 仍 V6、Rank Balance 仍 V3、Bounty Balance 仍 V1／Difficulty Formula V1、Save Schema 仍 13。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
@@ -1059,6 +1061,8 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 - root 的 `story-source-purity-ci.js`、`story-integrity-ci.js`、`story-flow-ci.js`。
 - 災厄／印記舊相容 API：`normalizeCivilizationMarkProgressForCore()`、`advanceCivilizationCalamityMarkEntry()`、`settleCivilizationCalamityMarkKill()`、`markAcquired()`、`markProgress()`、`window.MARK_DEFS`、`window.CALAMITY_DEFS`。
 - `gmSimulateArena100()`／`gmSimulateBounty100()` 舊 GM 測試 API 命名。
+- Arena 舊 difficulty API：`getArenaDifficultyConfigs()`、`getArenaPositionDifficultyId()`、enemy snapshot `arenaDifficulty`。
+- Bounty 舊 tier config API：`getBountyTierConfig()`、`getBountyTierConfigs()`。
 
 ---
 
