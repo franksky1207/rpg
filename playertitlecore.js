@@ -88,6 +88,7 @@
   source.equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
   const noticeCandidates=newlyUnlocked.filter(def=>wins>previousBestWins&&def.mirrorWins>previousBestWins);
   const noticeTitle=noticeCandidates.length?noticeCandidates[noticeCandidates.length-1]:null;
+  if(noticeTitle)source.pendingNotice=noticeTitle.id;
   target.titles=source;
   return {changed:newlyUnlocked.length>0,unlockedTitles:newlyUnlocked,noticeTitle,bestWins:wins,previousBestWins};
  }
