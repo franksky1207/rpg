@@ -99,12 +99,15 @@
   const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return {ok:false,reason:"missing_state"};
   if(mirror.daily.status!=="running")return {ok:false,reason:"not_running",...mirrorDungeonStatus(timestamp)};
   const w=window.mirrorDungeonClampWins(wins),losses=RUN_BATTLES-w,dateKey=mirror.daily.challengeDate||mirror.daily.dateKey||todayKey(timestamp);
-  const history=mirror.history,firstRecord=!history.bestDate;
+  const history=mirror.history,firstRecord=!history.bestDate,previousBestWins=firstRecord?0:Math.max(0,Math.floor(Number(history.bestWins)||0));
   if(firstRecord||w>history.bestWins){history.bestWins=w;history.bestDate=dateKey;}
   if(w===RUN_BATTLES)history.miracleDates.push(dateKey);
+  const titleSettlement=typeof window.grantPlayerTitlesForMirrorWins==="function"
+   ?window.grantPlayerTitlesForMirrorWins(history.bestWins,state,{previousBestWins})
+   :null;
   replaceObject(mirror.daily,{...mirror.daily,dateKey,status:"completed",challengeDate:dateKey,wins:w,losses,completedAt:Math.max(0,Math.floor(Number(timestamp)||Date.now()))});
   if(options?.save!==false&&typeof save==="function")save(false);
-  return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,history:{...history,miracleDates:history.miracleDates.slice()}};
+  return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,titleSettlement,history:{...history,miracleDates:history.miracleDates.slice()}};
  }
  function resetMirrorDungeonToday(timestamp=Date.now()){
   const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return null;
