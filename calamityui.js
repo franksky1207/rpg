@@ -29,7 +29,10 @@
   const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!def)return false;
   const modal=ensureTitleNoticeModal();
-  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):esc(def.name)}</div><div class="muted">首次擊敗對應文明災厄後取得。</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
+  const sourceText=def.series==="mirror"
+   ?`鏡像戰歷史最高達 ${Math.max(0,Math.floor(Number(def.mirrorWins)||0))} 勝後取得。`
+   :"首次擊敗對應文明災厄後取得。";
+  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):esc(def.name)}</div><div class="muted">${esc(sourceText)}</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
   modal.classList.add("show");
   titleNoticeOpen=true;
   return true;
