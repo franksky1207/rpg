@@ -190,35 +190,49 @@
    if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,1);}
   }catch(e){rawSnapshot=null;parseFailed=true;}
 
-  const seed=isObject(rawSnapshot)?(cloneJson(rawSnapshot)||rawSnapshot):(typeof newState==="function"?newState():{});
-  const normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
-  state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
-
-  const dungeonFinalize=typeof window.finalizeDungeonLoadedState==="function"?window.finalizeDungeonLoadedState():null;
-  if(typeof ensureDailyState==="function")ensureDailyState();
-  selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
-  if(typeof normalizeHP==="function")normalizeHP();
-  cleanupRetiredShopState(state);
-  normalizePersistentFlags(state);
-  state.saveVersion=SAVE_SCHEMA_VERSION;
-  if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("local-load");
-  if(typeof save==="function")save(false);
-
-  window.LAST_SAVE_LOAD_REPORT={
-   pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,
-   hadRaw,
-   parseFailed,
-   sourceVersion,
-   targetVersion:SAVE_SCHEMA_VERSION,
-   expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
-   legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
-   retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
-   calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,
-   markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
-   titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
-   recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
-   recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
+  const failProtectedLoad=(reason,error=null)=>{
+   try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:SAVE_SCHEMA_VERSION};}
+   const e=document.getElementById("saveStatus");if(e)e.textContent="本機存檔讀取失敗・已保護";
+   window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:true,reason:String(reason||"load-failed"),error:error?String(error?.message||error):""};
+   console.error("[文明戰線] Local save load failed; original localStorage entry was preserved.",error||reason);
+   return false;
   };
-  return state;
+
+  if(hadRaw&&(parseFailed||!isObject(rawSnapshot)))return failProtectedLoad(parseFailed?"parse-failed":"invalid-root");
+  try{
+   const seed=isObject(rawSnapshot)?(cloneJson(rawSnapshot)||rawSnapshot):(typeof newState==="function"?newState():{});
+   const normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
+   state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
+
+   const dungeonFinalize=typeof window.finalizeDungeonLoadedState==="function"?window.finalizeDungeonLoadedState():null;
+   if(typeof ensureDailyState==="function")ensureDailyState();
+   selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));
+   if(typeof normalizeHP==="function")normalizeHP();
+   cleanupRetiredShopState(state);
+   normalizePersistentFlags(state);
+   state.saveVersion=SAVE_SCHEMA_VERSION;
+   if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("local-load");
+   if(typeof save==="function")save(false);
+
+   window.LAST_SAVE_LOAD_REPORT={
+    pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,
+    hadRaw,
+    parseFailed,
+    sourceVersion,
+    targetVersion:SAVE_SCHEMA_VERSION,
+    failed:false,
+    expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
+    legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
+    retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
+    calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,
+    markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
+    titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
+    recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
+    recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
+   };
+   return true;
+  }catch(error){
+   return failProtectedLoad("migration-failed",error);
+  }
  };
 })();
