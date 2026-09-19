@@ -1,6 +1,6 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
- const CALAMITY_CONTINUOUS_RULE_VERSION=3;
+ const CALAMITY_CONTINUOUS_RULE_VERSION=4;
  let activeRun=null;
 
  function clone(value){
@@ -123,6 +123,10 @@
   if(activeRun.mode==="single"){
    const run=finish("single-complete");
    return {ok:true,ended:true,reason:"single-complete",battleNumber,result,run};
+  }
+  if(result?.settlement?.titleSettlement?.firstAcquisition===true){
+   const run=finish("title-first-kill");
+   return {ok:true,ended:true,reason:"title-first-kill",battleNumber,result,run};
   }
   if(activeRun.stopRequested){
    const run=finish("stopped");
