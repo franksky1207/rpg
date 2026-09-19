@@ -1,5 +1,6 @@
 (function(){
  let gmHubTab="manage";
+ const gmHubOpenSections=new Set();
  const ENHANCEMENT_SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
 
  function installGmHubStyles(){
@@ -72,13 +73,13 @@
  function arenaTestHtml(){const result=typeof getArenaGmTestHtml==="function"?getArenaGmTestHtml():"";return `<div class="muted gm-hub-note">敵人以不含 VIP 的目前角色能力生成；玩家三連戰鎖定測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateArena('normal')">普通競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('hard')">困難競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('extreme')">極限競技場測試（${GM_TEST_RUNS} 次）</button></div><div id="gmArenaTestResult" style="margin-top:12px">${result}</div>`;}
  function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"",next=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():1;return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
 
- function section(title,body,open=false){return `<details class="gm-hub-section" ${open?"open":""}><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
+ function section(id,title,body){const key=String(id||title),open=gmHubOpenSections.has(key);return `<details class="gm-hub-section" data-gm-section="${key}" ${open?"open":""} ontoggle="gmHubSectionToggle('${key}',this.open)"><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
  function hubHtml(){
   const manage=gmHubTab==="manage";
   const testVip=manage?"":(typeof gmTestVipControlHtml==="function"?gmTestVipControlHtml():"");
   const specManage=gmSpecializationManagementHtml();
   const specTest=gmSpecializationTestHtml();
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testVip}${manage?`${section("一般管理",generalManagementHtml(),true)}${section("專精管理",specManage,false)}${section("強化管理",gmEnhancementManagementHtml(),false)}${section("副本管理",dungeonManagementHtml(),false)}`:`${section("專精測試",specTest,false)}${section("強化測試",gmEnhancementTestHtml(),false)}${section("特殊怪測試",specialTestHtml(),true)}${section("地圖怪測試",mapMonsterTestHtml(),false)}${section("懸賞戰測試",bountyTestHtml(),false)}${section("競技場測試",arenaTestHtml(),false)}${section("虛空幻境測試",voidMirageTestHtml(),false)}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testVip}${manage?`${section("general-manage","一般管理",generalManagementHtml())}${section("spec-manage","專精管理",specManage)}${section("enhancement-manage","強化管理",gmEnhancementManagementHtml())}${section("dungeon-manage","副本管理",dungeonManagementHtml())}`:`${section("spec-test","專精測試",specTest)}${section("enhancement-test","強化測試",gmEnhancementTestHtml())}${section("special-test","特殊怪測試",specialTestHtml())}${section("map-test","地圖怪測試",mapMonsterTestHtml())}${section("bounty-test","懸賞戰測試",bountyTestHtml())}${section("arena-test","競技場測試",arenaTestHtml())}${section("void-test","虛空幻境測試",voidMirageTestHtml())}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
 
  window.gmResetVip=function(){
@@ -93,7 +94,10 @@
   state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));
   save();render();
  };
+ window.gmHubSectionToggle=function(id,open){const key=String(id||"");if(!key)return;if(open)gmHubOpenSections.add(key);else gmHubOpenSections.delete(key);};
+ window.gmHubSectionIsOpen=function(id){return gmHubOpenSections.has(String(id||""));};
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
+ window.GM_HUB_SECTION_STATE_VERSION=1;
  window.GM_ENHANCEMENT_HUB_VERSION=4;
  gmHtml=function(){installGmHubStyles();return hubHtml();};
  installGmHubStyles();
