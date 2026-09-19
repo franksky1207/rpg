@@ -2,6 +2,15 @@
  const BACKGROUND_CREDIT_RATE=.96;
  const CONTINUOUS_BACKGROUND_MAX_MS=12*60*60*1000;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
+ function nextPaintBoundary(){
+  if(typeof window.requestAnimationFrame!=="function")return nativeSleep(0).then(()=>true);
+  return new Promise(resolve=>{
+   let settled=false;
+   const finish=value=>{if(settled)return;settled=true;resolve(value);};
+   const fallback=setTimeout(()=>finish(false),80);
+   window.requestAnimationFrame(()=>{clearTimeout(fallback);finish(true);});
+  });
+ }
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
  let windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;
@@ -88,8 +97,9 @@
  window.backgroundProgressEnvironmentIsBackground=function(){return isBackground();};
  window.backgroundProgressHasCatchUpCredit=function(kind=null){return activeFor(kind)&&flow.hiddenAt==null&&!isBackground()&&Number(flow.credit)>0;};
  window.BACKGROUND_PROGRESS_CORE_VERSION=1;
+ window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION=1;
  window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3;
- window.BACKGROUND_PROGRESS_UI_YIELD_VERSION=1;
+ window.BACKGROUND_PROGRESS_UI_YIELD_VERSION=2;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
@@ -111,6 +121,7 @@
   return true;
  };
  window.backgroundProgressIsActive=function(kind=null){return activeFor(kind);};
+ window.backgroundProgressActiveKind=function(){return flow?.kind||null;};
  window.backgroundProgressSleep=async function(ms,kind=null){
   let remaining=Math.max(0,Number(ms)||0);
   if(!activeFor(kind))return nativeSleep(remaining);
@@ -133,7 +144,7 @@
  };
  window.backgroundProgressUiYield=function(kind=null){
   if(!activeFor(kind)||isBackground()||Number(flow.credit)<=0)return Promise.resolve(false);
-  return nativeSleep(0).then(()=>true);
+  return nextPaintBoundary();
  };
 
  document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncEnvironment("visibilitychange");});
