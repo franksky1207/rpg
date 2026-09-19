@@ -24,6 +24,8 @@
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
   if(Number(window.VOID_BACKGROUND_PRESENTATION_VERSION)!==1)fail("background-presentation-version");
   if(Number(window.VOID_BACKGROUND_UI_YIELD_VERSION)!==1)fail("background-ui-yield-version");
+  if(Number(window.VOID_BACKGROUND_GM_GATE_VERSION)!==1)fail("background-gm-gate-version");
+  if(Number(window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION)!==1)fail("gm-background-all-combat-gate-version");
   if(typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
 
   const requiredApis=[
@@ -75,6 +77,7 @@
   if(!/phase\s*!==\s*["']fighting["']/.test(exitSrc))fail("exit-between-floor-finish");
 
   const uiStartSrc=src(window.startVoidMirageChallengeUI);
+  if(!/gmBackgroundBattleEnabled/.test(uiStartSrc)||!/allowBackground/.test(uiStartSrc))fail("background-gm-gate-wiring");
   if(!/backgroundProgressStart\s*\(\s*["']void["']\s*\)/.test(uiStartSrc))fail("background-start-wiring");
   const uiAutoSrc=src(typeof runVoidMirageUiAuto==="function"?runVoidMirageUiAuto:null);
   if(uiAutoSrc&&!/backgroundProgressUiYield\s*\(\s*["']void["']\s*\)/.test(uiAutoSrc))fail("background-ui-yield-wiring");
