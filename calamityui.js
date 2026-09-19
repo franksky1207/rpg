@@ -136,6 +136,7 @@
    impactDelay:45,
    stepDelay,
    endDelay:150,
+   sleep,
    onUpdate:syncCalamityPresentation,
    clearAfter:true,
    clearReason:"calamity-battle-end"
@@ -264,7 +265,8 @@
  window.CALAMITY_UI_VERSION=UI_VERSION;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
  window.CALAMITY_CONTINUOUS_GAP_MS=CONTINUOUS_GAP_MS;
- window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=1;
+ window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
+ window.CALAMITY_BACKGROUND_PRESENTATION_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
 })();
