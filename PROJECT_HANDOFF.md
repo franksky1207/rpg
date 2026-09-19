@@ -1090,7 +1090,7 @@ Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 # 19. 下一個對話如何接手
 
-目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Combat Presentation V2＋Structured Presentation V1（第二批已完成主線／特殊怪／懸賞；第三批已完成競技場／虛空 structured animation，以及鏡像雙方 HP／護盾／印記／專精的對稱 structured adapter）、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V3／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V1、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
+目前可視為穩定基線：**Save 13、Lv1～500、10 區 100 地圖、101 篇正式故事、文明災厄／印記持久 state V1、Mark Core V1、Combat Mark Integration V1、Combat Mark FX V1、Combat Presentation V2＋Unified Structured Presentation V1（第二批完成主線／特殊怪／懸賞；第三批完成競技場／虛空與鏡像對稱 adapter；第四批完成災厄統一、退休舊 log pulse API／主線舊 HP writer，並由 Combat FX／Runtime／Final Integrity V2 鎖定全模式 lifecycle）、Mirror Combat Core V4（marks）、Arena Assessment V4（marks）、Civilization Calamity Core V1、Calamity Run V1、Calamity UI V3／Minimal V1、Calamity GM V1／Mark GM V1、Game Guide V14、Final Integrity V2、Story Integrity V9、Story Migration V5、Story Runtime Integrity V9；Story CI 正常狀態應 0 warning。** 下一個對話仍必須重新讀取 main，不可只靠這句摘要。
 
 標準接手指令：
 
