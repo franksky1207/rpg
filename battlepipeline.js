@@ -103,7 +103,6 @@
    adventureScreen="combat";
    render();
    if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});
-   await sleep(60);
 
    const psBefore=playerCombatStats(),startPlayerHp=state.hp;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
