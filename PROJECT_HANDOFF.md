@@ -1167,3 +1167,5 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 - 2026-09-19 災厄稱號外框三批完成：playertitles.css 已建立共用科幻切角框骨架，1～10 階依序分化為微框→角飾→徽章→核心紋→王權→終末完整體；第3批加入框體動態，低階僅輕微呼吸，高階逐步增加脈衝、核心收束、王權壓迫與終末波紋感。原文字漸層/動畫與既有 ::after 能量層保留，9/10 階能量層額外強化。手機與桌機共用同一套框規則，prefers-reduced-motion 會停止文字/框/能量層動畫但保留靜態造型。未新增 DOM、未新增第二套 renderer。CSS 結構與 10 階綁定自檢通過。
 
 - 2026-09-19 災厄稱號開放式特效第1批：將原 1～10 階封閉式 frame 改為 aura/effect 輪廓。所有 tier `::before` 已移除完整 border 與 clip-path 封閉輪廓，改用斷裂式 linear/radial gradients、左右能量、局部光痕與粒子構成；原文字漸層、原 keyframes、原高階 `::after` 能量層與 reduced-motion 保留。手機/桌機仍共用同一套。cache-bust：playertitles.css?v=20260919-title-aura-batch1。自檢確認 10 階均無封閉 border/clip-path。
+
+- 2026-09-19 災厄稱號開放式特效第2批完成：低階 1～2 進一步收斂，7～10 改成更明顯的異象/能力場語言。7 階為徽記型雙側能量場，8 階為黑核/引力核心收束，9 階為王權冠冕場，10 階為宇宙終末場；仍無完整 border/clip-path 封閉框。7/8 階 ::after 也改成場域型 radial effect，避免任何框感。手機/桌機共用、reduced-motion 保留、cache-bust 為 playertitles.css?v=20260919-title-aura-batch2。自檢全數通過。
