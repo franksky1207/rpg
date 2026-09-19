@@ -1,12 +1,15 @@
 (function(){
  const BACKGROUND_CREDIT_RATE=.96;
  const CONTINUOUS_BACKGROUND_MAX_MS=12*60*60*1000;
+ const BLUR_FALLBACK_DELAY_MS=800;
  const nativeSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  let flow=null;
  let pageHidden=document.visibilityState==="hidden";
  let windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;
- // Page Visibility/pagehide is authoritative. iOS Safari may report hasFocus() === false
- // while the page is still visibly active; blur alone must never suspend visible combat.
+ let blurFallbackBackground=false;
+ let blurFallbackTimer=null;
+ // Page Visibility/pagehide is authoritative. A sustained blur is only a delayed iOS Safari fallback:
+ // transient focus loss while the page stays visible must not suspend combat.
  let environmentBackground=pageHidden;
  const environmentListeners=new Set();
  const pageHideListeners=new Set();
@@ -75,8 +78,19 @@
    if(flow.sleeper.remaining<=0)resolveSleeper();else scheduleSleeper();
   }else flow.credit+=allowed*BACKGROUND_CREDIT_RATE;
  }
+ function clearBlurFallbackTimer(){if(blurFallbackTimer){clearTimeout(blurFallbackTimer);blurFallbackTimer=null;}}
+ function scheduleBlurFallback(){
+  clearBlurFallbackTimer();
+  if(pageHidden||!windowBlurred)return;
+  blurFallbackTimer=setTimeout(()=>{
+   blurFallbackTimer=null;
+   if(pageHidden||!windowBlurred)return;
+   blurFallbackBackground=true;
+   syncEnvironment("blur-fallback");
+  },BLUR_FALLBACK_DELAY_MS);
+ }
  function syncEnvironment(source="unknown"){
-  const next=pageHidden;
+  const next=pageHidden||blurFallbackBackground;
   if(next===environmentBackground)return;
   environmentBackground=next;
   if(next)enterBackground();else leaveBackground();
@@ -99,7 +113,9 @@
  window.backgroundProgressMainBattleAllowsBackground=mainBattleAllowsBackground;
  window.BACKGROUND_PROGRESS_MAIN_SHARED_VERSION=2;
  window.BACKGROUND_PROGRESS_GM_GATE_VERSION=1;
- window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=1;
+ window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=2;
+ window.BACKGROUND_PROGRESS_BLUR_FALLBACK_VERSION=1;
+ window.BACKGROUND_PROGRESS_BLUR_FALLBACK_DELAY_MS=BLUR_FALLBACK_DELAY_MS;
 
  window.backgroundProgressStart=function(kind,options={}){
   const nextKind=String(kind||"");if(!nextKind)return null;
@@ -147,14 +163,21 @@
   return {kind:flow.kind,mode:flow.mode,credit:Math.max(0,Math.round(flow.credit)),background:isBackground(),waiting:!!flow.sleeper,backgroundElapsedUsed:Math.max(0,Math.round(Number(flow.backgroundElapsedUsed)||0)),backgroundMax:hasBackgroundCap()?Number(flow.maxBackgroundMs):null};
  };
 
- document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncEnvironment("visibilitychange");});
- window.addEventListener("blur",()=>{windowBlurred=true;syncEnvironment("blur");});
- window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
+ document.addEventListener("visibilitychange",()=>{
+  pageHidden=document.visibilityState==="hidden";
+  if(pageHidden){clearBlurFallbackTimer();blurFallbackBackground=false;syncEnvironment("visibilitychange");}
+  else{blurFallbackBackground=false;syncEnvironment("visibilitychange");if(windowBlurred)scheduleBlurFallback();}
+ });
+ window.addEventListener("blur",()=>{windowBlurred=true;if(pageHidden)syncEnvironment("blur");else scheduleBlurFallback();});
+ window.addEventListener("focus",()=>{windowBlurred=false;clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
  window.addEventListener("pagehide",()=>{
-  pageHidden=true;syncEnvironment("pagehide");
+  clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=true;syncEnvironment("pagehide");
   pageHideListeners.forEach(listener=>{try{listener();}catch(e){console.error(e);}});
  });
- window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");});
+ window.addEventListener("pageshow",()=>{
+  clearBlurFallbackTimer();blurFallbackBackground=false;pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");
+  if(!pageHidden&&windowBlurred)scheduleBlurFallback();
+ });
 
  const baseBeginCombat=typeof window.beginCombat==="function"?window.beginCombat:null;
  if(baseBeginCombat){
