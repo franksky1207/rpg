@@ -1048,6 +1048,8 @@ GM 測試功能應盡量不修改正式玩家進度；若是「管理」模式�
 
 - 2026-09-19 Combat／Background Cleanup 第2批：主線 background lifecycle 正式收回 `battlepipeline.js`。連續主線且 GM「背景戰鬥」開啟時，由 pipeline 自己 `backgroundProgressStart("main",{mode:"continuous"})`，並以 `try/finally` 保證所有正常完成、early return 或例外路徑最後 stop main flow；GM 關閉或非連續模式不啟用。共用 `backgroundprogress.js` 已退休 `beginCombat/runBattles` late wrapper、`mainBattleMode()`、`mainBattleAllowsBackground()` 與 `BACKGROUND_PROGRESS_MAIN_SHARED_VERSION/BACKGROUND_PROGRESS_GM_GATE_VERSION`，現在只負責 visibility／blur 環境偵測、flow、credit、sleep、UI yield 等共用 engine API，正式 marker 為 `BACKGROUND_PROGRESS_CORE_VERSION=1`。主線正式 lifecycle marker 為 `MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1`。既有 Visibility Owner V3、background credit 0.96、continuous 12h cap、UI yield 與 main／void／calamity GM gate 行為均不變。Save Schema 維持 13。
 
+- 2026-09-19 Combat／Background Cleanup 第3批：`combatpacing.js` 退休舊主線動畫速度模型與隱性 sleep wrapper，包括 `MAIN_START_DELAY/MAIN_WINDUP_DELAY/MAIN_NORMAL_DELAY/MAIN_BOSS_DELAY/MAIN_END_DELAY/MAIN_PRE_DELAY`、`estimateMainBattleDurationMs()`、`SPECIAL_DELAY_MAP`、`specialPacingActive` 與全域 `window.sleep` override。正式保留的主線 flow pacing 僅為 normal/boss 140ms、elite 220ms 場間等待，以及明確 API `mainBattleFlowSleep(ms)`／`mainBattlePresentationSleep(ms)`；`MAIN_BATTLE_PACING_VERSION=2`、`MAIN_BATTLE_FLOW_SLEEP_VERSION=1`。battlepipeline 場間等待直接呼叫 background-aware `battleFlowSleep`；特殊遭遇提示與進戰等待改為明確 flow sleep，正式值 850ms／140ms／70ms，`SPECIAL_ENCOUNTER_FLOW_PACING_VERSION=1`，不再靠全域 sleep 偷換 120→70。Structured Combat Pacing V2 70/35/24/90 不變，背景 credit/catch-up 行為不變，Save Schema 維持 13。
+
 Save Schema 現為 13；後續仍不得在無關任務中擅自升版。
 
 ---
