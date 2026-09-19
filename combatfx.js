@@ -1,4 +1,5 @@
 (function(){
+ const COMBAT_PRESENTATION_VERSION=2;
  const FX_LABELS={
   initiative:{text:"先制！",className:"initiative"},
   combo:{text:"連擊！",className:"combo"},
@@ -12,6 +13,7 @@
   markPower:{text:"",className:"mark mark-power"}
  };
  let presentation=null;
+ let presentationSerial=0;
  let floatSerial=0;
  let syncingHp=false;
  const manualPulseSkips={player:0,enemy:0};
@@ -27,7 +29,7 @@
   return {text,bar};
  }
  function syncCombatHpDom(){
-  const p=presentation;if(!p||!combatScreen())return;
+  const p=presentation,screen=combatScreen();if(!p||p.active!==true||!screen||(p.screen&&p.screen!==screen))return;
   syncingHp=true;
   try{
    [["player",p.playerHp,p.playerMaxHp],["enemy",p.enemyHp,p.enemyMaxHp]].forEach(([target,current,max])=>{
@@ -40,8 +42,24 @@
  }
  window.syncCombatPresentationPlayerHp=syncCombatHpDom;
  window.syncCombatPresentationHp=syncCombatHpDom;
- window.getCombatPresentationPlayerHp=function(){return presentation?presentation.playerHp:null;};
- window.getCombatPresentationEnemyHp=function(){return presentation?presentation.enemyHp:null;};
+ window.getCombatPresentationPlayerHp=function(){return presentation?.active?presentation.playerHp:null;};
+ window.getCombatPresentationEnemyHp=function(){return presentation?.active?presentation.enemyHp:null;};
+ window.getCombatPresentationPlayerShield=function(){return presentation?.active?presentation.playerShield:null;};
+ window.getCombatPresentationPlayerShieldMax=function(){return presentation?.active?presentation.playerShieldMax:null;};
+ window.isCombatPresentationActive=function(){return presentation?.active===true;};
+ window.getCombatPresentationSnapshot=function(){
+  const p=presentation;if(!p?.active)return null;
+  return {token:p.token,playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,index:p.index,eventCount:p.events.length};
+ };
+ window.clearCombatPresentation=function(reason="clear"){
+  if(!presentation){manualPulseSkips.player=0;manualPulseSkips.enemy=0;return null;}
+  const cleared={token:presentation.token,reason};
+  presentation.active=false;
+  presentation=null;
+  manualPulseSkips.player=0;
+  manualPulseSkips.enemy=0;
+  return cleared;
+ };
 
  function installStyles(){
   if(document.getElementById("combatFxStyles"))return;
@@ -120,8 +138,14 @@
  window.combatMarkFxDescriptor=markFxDescriptor;
 
  function applyMarkPresentation(evt){
-  const p=presentation;if(!p||evt?.type!=="mark")return;
-  if(evt.mark==="absorption"&&evt.action==="trigger"){
+  const p=presentation;if(!p?.active||evt?.type!=="mark")return;
+  if(evt.mark==="ward"&&evt.action==="activate"){
+   const shield=Math.max(0,Math.floor(Number(evt.shield)||0));
+   p.playerShield=shield;p.playerShieldMax=Math.max(p.playerShieldMax,shield);
+  }else if(evt.mark==="ward"&&evt.action==="absorb"){
+   const remaining=Number(evt.remainingShield);
+   p.playerShield=Number.isFinite(remaining)?Math.max(0,Math.floor(remaining)):Math.max(0,p.playerShield-Math.max(0,Math.floor(Number(evt.amount)||0)));
+  }else if(evt.mark==="absorption"&&evt.action==="trigger"){
    const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
    p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
   }else if(evt.mark==="backlash"&&evt.action==="trigger"){
@@ -205,13 +229,18 @@
  };
 
  window.prepareCombatPresentation=function(result,options={}){
-  if(options.logs===false){presentation=null;return;}
+  window.clearCombatPresentation("replace");
+  if(options.logs===false||!result)return null;
   const playerMaxHp=Math.max(1,Math.floor(Number(result?.playerMaxHp)||1));
   const playerStartHp=Math.max(0,Math.min(playerMaxHp,Math.floor(Number(result?.playerStartHp)||playerMaxHp)));
   const enemyMaxHp=Math.max(1,Math.floor(Number(result?.e?.hp)||1));
   const enemyStartHp=Math.max(0,Math.min(enemyMaxHp,Math.floor(Number(result?.enemyStartHp??enemyMaxHp)||enemyMaxHp)));
-  presentation={events:Array.isArray(result?.events)?result.events.slice():[],index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp};
+  const events=Array.isArray(result?.events)?result.events.slice():[];
+  const wardActivate=events.find(evt=>evt?.type==="mark"&&evt.mark==="ward"&&evt.action==="activate");
+  const openingShield=Math.max(0,Math.floor(Number(wardActivate?.shield)||0));
+  presentation={active:true,token:++presentationSerial,screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield};
   if(combatScreen())ensureCombatExtras();
+  return window.getCombatPresentationSnapshot();
  };
 
  document.addEventListener("animationstart",event=>{
@@ -228,12 +257,13 @@
  },true);
 
  const hpObserver=new MutationObserver(mutations=>{
-  if(syncingHp||!presentation||!combatScreen())return;
+  if(syncingHp||!presentation?.active||!combatScreen())return;
   const ids=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
   if(mutations.some(m=>ids.has(m.target?.id)))queueMicrotask(syncCombatHpDom);
  });
  hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
+ window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
  window.COMBAT_MARK_FX_VERSION=1;
  installStyles();
 })();
