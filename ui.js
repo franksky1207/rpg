@@ -22,7 +22,7 @@ function currentPlayerName(){
  return name||"玩家";
 }
 function escapePlayerName(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
-function playerNameHtml(){return escapePlayerName(currentPlayerName())}
+function playerNameHtml(){return typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml():escapePlayerName(currentPlayerName())}
 function savePlayerName(){
  const input=document.getElementById("playerNameInput");
  let name=(input?.value||"").trim();
@@ -201,7 +201,7 @@ function closeBattleResultModal(){
 
 function characterPage(){
  const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
- const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2><div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ const titleEntry=typeof window.getUnlockedPlayerTitleDefinitions==="function"&&window.getUnlockedPlayerTitleDefinitions().length?`<div class="character-title-row"><span class="muted">稱號</span><button class="btn character-title-button" onclick="openPlayerTitlePicker()">${typeof window.getEquippedPlayerTitleDefinition==="function"&&window.getEquippedPlayerTitleDefinition()?window.playerTitleHtml(window.getEquippedPlayerTitleDefinition().id):"不裝備稱號"}</button></div>`:"";\n const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
  const equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
