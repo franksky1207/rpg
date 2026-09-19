@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);
@@ -16,6 +16,7 @@
  if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==2)fail("TITLE_CALAMITY_CONFIG_VERSION","災厄稱號 metadata owner 應為 Calamity Config V2",window.CIVILIZATION_CALAMITY_CONFIG_VERSION);
  if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==1)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 應為 V1",window.PLAYER_TITLE_RENDERER_VERSION);
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI 應為 V1",window.PLAYER_TITLE_UI_VERSION);
+ if(Number(window.MIRROR_TITLE_CLONE_PERFORMANCE_VERSION)!==1)fail("TITLE_MIRROR_CLONE_PERFORMANCE","鏡像敵人稱號手機效能控制 V1 未載入",window.MIRROR_TITLE_CLONE_PERFORMANCE_VERSION);
  if(calamityDefs.length!==10||calamityIds.length!==10||mirrorDefs.length!==6||mirrorIds.length!==6||allDefs.length!==16||allIds.length!==16){
   fail("TITLE_DEFINITION_COUNT","玩家稱號定義應為災厄 10＋鏡像 6",{calamityDefs:calamityDefs.length,calamityIds:calamityIds.length,mirrorDefs:mirrorDefs.length,mirrorIds:mirrorIds.length,allDefs:allDefs.length,allIds:allIds.length});
  }
