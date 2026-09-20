@@ -1,5 +1,5 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -259,12 +259,11 @@
   await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:1,kind:"normal",hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
    const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks});
-   let round=0;
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
     if(ev.type==="drain"){drains++;return;}
     if(ev.type!=="attack"||ev.actor!=="player")return;
-    const d=Math.max(0,num(ev.actualDamage,0));round+=d;total+=d;hits++;min=Math.min(min,d);max=Math.max(max,d);
+    const d=Math.max(0,num(ev.actualDamage,0));total+=d;hits++;min=Math.min(min,d);max=Math.max(max,d);
     if(ev.crit){crits++;critDamage+=d;}
     if(ev.source==="normal"){normalHits++;normalDamage+=d;}
     if(ev.source==="combo")comboDamage+=d;
