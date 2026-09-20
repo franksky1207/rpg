@@ -20,6 +20,10 @@
 
  function now(){return Date.now();}
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
+ function currentCombatSpeed(){
+  const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+  return [1,1.5,2].includes(speed)?speed:1;
+ }
  function yieldThread(){return new Promise(resolve=>setTimeout(resolve,0));}
  function ensureOfflineState(){
   const t=now();
@@ -34,7 +38,7 @@
   const storedSampleVersion=Math.max(0,Math.floor(Number(o.battleSampleVersion)||0));
   if(storedSampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION){
    o.battleSamples=[];
-   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;
+   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;o.pendingSettlement=null;
   }
   o.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   const map=o.farmMap==null?NaN:Number(o.farmMap),enemy=o.farmEnemy==null?NaN:Number(o.farmEnemy);
@@ -44,7 +48,7 @@
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
-  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
+  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&[1,1.5,2].includes(Number(row.combatSpeed))&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
  }
@@ -88,20 +92,23 @@
   if(!Number.isInteger(m)||m<0||m>=MAPS.length||!Number.isInteger(e)||e<0||e>3)return false;
   try{const monster=monsterObj(m,e);return !!monster&&monster.kind!=="boss";}catch(err){return false;}
  }
- function realBattleAverageMs(o){
+ function realBattleAverageMs(o,speed=currentCombatSpeed()){
   const rows=Array.isArray(o?.battleSamples)?o.battleSamples:[];
   if(!rows.length)return 0;
   let total=0,count=0;
-  rows.forEach(row=>{const ms=Number(row?.adjustedMs);if(Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}});
+  rows.forEach(row=>{
+   const ms=Number(row?.adjustedMs);
+   if(Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.combatSpeed)===speed&&Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}
+  });
   return count?Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(total/count))):0;
  }
  function resolveFarmTarget(){
-  const o=ensureOfflineState();
-  const rows=Array.isArray(o.battleSamples)?o.battleSamples:[];
+  const o=ensureOfflineState(),speed=currentCombatSpeed();
+  const rows=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.combatSpeed)===speed);
   const latest=rows.length?rows[rows.length-1]:null;
   const map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy));
-  const realAvg=realBattleAverageMs(o);
-  if(realAvg>0&&legalFarmTarget(map,enemy))return {map,enemy,avgBattleMs:realAvg};
+  const realAvg=realBattleAverageMs(o,speed);
+  if(realAvg>0&&legalFarmTarget(map,enemy))return {map,enemy,avgBattleMs:realAvg,combatSpeed:speed};
   return null;
  }
  function formatDuration(ms){
@@ -127,13 +134,14 @@
   return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:0};
  }
  function normalizePending(raw){
-  if(!isObject(raw)||Number(raw.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+  const speed=currentCombatSpeed();
+  if(!isObject(raw)||Number(raw.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION||Number(raw.combatSpeed)!==speed)return null;
   const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0));
   const battles=Math.max(0,Math.min(Math.floor(elapsedUsed/avg),Math.floor(Number(raw.battles)||0)));
   if(elapsedRaw<OFFLINE_MIN_MS||!legalFarmTarget(map,enemy)||battles<1)return null;
-  return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
+  return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed:speed,map,enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
  }
  function buildPendingSettlement(){
   const o=ensureOfflineState(),t=now(),clock=wallClockGuard(o,t);
@@ -149,7 +157,7 @@
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const battles=Math.max(0,Math.floor(elapsedUsed/avg));
   if(battles<1)return null;
-  const pending={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
+  const pending={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed:target.combatSpeed,map:target.map,enemy:target.enemy,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
   o.pendingSettlement=pending;
   if(baseSave)baseSave(false);
   return pending;
@@ -288,6 +296,7 @@
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
+ window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION=1;
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
 })();
