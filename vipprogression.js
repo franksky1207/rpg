@@ -1,23 +1,23 @@
 (function(){
- const VIP_THRESHOLD_BASE=2500;
- const VIP_PROGRESSION_VERSION=12;
+ const VIP_THRESHOLD_BASE=1000;
+ const VIP_PROGRESSION_VERSION=13;
 
  function clampVipLevel(value){
   return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(value)||0)));
  }
- function vipThresholdV12(level){
+ function vipThresholdV13(level){
   const lv=clampVipLevel(level);
   return VIP_THRESHOLD_BASE*lv*lv;
  }
- function vipLevelFromPointsV12(points){
+ function vipLevelFromPointsV13(points){
   const p=Math.max(0,Math.floor(Number(points)||0));
   return clampVipLevel(Math.floor(Math.sqrt(p/VIP_THRESHOLD_BASE)));
  }
- function normalizeVipStateV12(target){
+ function normalizeVipStateV13(target){
   if(!target||typeof target!=="object")return target;
   const ownPoints=Number(target.vipPoints);
   target.vipPoints=Number.isFinite(ownPoints)&&ownPoints>=0?Math.floor(ownPoints):0;
-  target.vipLevel=vipLevelFromPointsV12(target.vipPoints);
+  target.vipLevel=vipLevelFromPointsV13(target.vipPoints);
   return target;
  }
  function vipDungeonPointMultiplier(level=null){
@@ -31,15 +31,15 @@
   return Math.max(0,Math.floor(base*vipDungeonPointMultiplier(level)));
  }
 
- vipThreshold=vipThresholdV12;
- vipLevelFromPoints=vipLevelFromPointsV12;
- normalizeVipState=normalizeVipStateV12;
+ vipThreshold=vipThresholdV13;
+ vipLevelFromPoints=vipLevelFromPointsV13;
+ normalizeVipState=normalizeVipStateV13;
  window.VIP_THRESHOLD_BASE=VIP_THRESHOLD_BASE;
  window.VIP_PROGRESSION_VERSION=VIP_PROGRESSION_VERSION;
- window.vipThreshold=vipThresholdV12;
- window.vipLevelFromPoints=vipLevelFromPointsV12;
- window.normalizeVipState=normalizeVipStateV12;
+ window.vipThreshold=vipThresholdV13;
+ window.vipLevelFromPoints=vipLevelFromPointsV13;
+ window.normalizeVipState=normalizeVipStateV13;
  window.vipDungeonPointMultiplier=vipDungeonPointMultiplier;
  window.adjustVipDungeonPoints=adjustVipDungeonPoints;
- if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeVipStateV12);
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeVipStateV13);
 })();
