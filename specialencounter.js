@@ -1,6 +1,9 @@
 (function(){
  const specialFlowSleep=ms=>typeof window.mainBattleFlowSleep==="function"?window.mainBattleFlowSleep(ms):new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
- const SPECIAL_BATTLE_READY_DELAY=70;
+ const SPECIAL_BATTLE_READY_DELAY_1X=140;
+ function specialBattleReadyDelay(){
+  return typeof window.combatSpeedScaledDelay==="function"?window.combatSpeedScaledDelay(SPECIAL_BATTLE_READY_DELAY_1X):SPECIAL_BATTLE_READY_DELAY_1X;
+ }
  function ensureSpecialEncounterAlert(){
   if(document.getElementById("specialEncounterAlert"))return;
   const el=document.createElement("div");
@@ -39,6 +42,7 @@
 
  window.SPECIAL_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.SPECIAL_ENCOUNTER_FLOW_PACING_VERSION=1;
+ window.SPECIAL_ENCOUNTER_COMBAT_SPEED_VERSION=1;
 
  function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
@@ -104,7 +108,7 @@
   const firstRewardCtx=getSpecialRewardContext(special);
   adventureScreen="combat";
   document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
-  await specialFlowSleep(SPECIAL_BATTLE_READY_DELAY);
+  await specialFlowSleep(specialBattleReadyDelay());
   const startHp=state.hp,r=specialFight(enemy);
   await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
   const result={win:r.win,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
