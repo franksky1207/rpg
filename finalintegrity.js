@@ -9,7 +9,7 @@
    ["CALAMITY_STATE_INTEGRITY",window.CALAMITY_STATE_INTEGRITY],
    ["MARK_CORE_INTEGRITY",window.MARK_CORE_INTEGRITY],
    ["COMBAT_MARK_INTEGRITY",window.COMBAT_MARK_INTEGRITY],
-   ["COMBAT_MARK_FX_INTEGRITY",window.COMBAT_MARK_FX_INTEGRITY],
+   ["COMBAT_MARK_FX_INTEGRITY",window.COMBAT_MARK_FX_INTEGRITY],\n   ["COMBAT_SPEED_INTEGRITY",window.COMBAT_SPEED_INTEGRITY],
    ["CALAMITY_CORE_INTEGRITY",window.CALAMITY_CORE_INTEGRITY],
    ["CALAMITY_RUN_INTEGRITY",window.CALAMITY_RUN_INTEGRITY],
    ["CALAMITY_UI_INTEGRITY",window.CALAMITY_UI_INTEGRITY],
@@ -24,7 +24,7 @@
   if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==16)fail("FINAL_PLAYER_TITLE","玩家稱號公開定義數量異常",{calamity:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length,total:window.PLAYER_TITLE_DEFS?.length});
   if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("FINAL_SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
   if(Number(window.SAVE_SCHEMA_VERSION)!==13)fail("FINAL_SCHEMA","最終 Save Schema 應為 13",window.SAVE_SCHEMA_VERSION);
-  if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||typeof window.getStructuredCombatPacing!=="function")fail("FINAL_STRUCTURED_COMBAT_PACING","戰鬥內動畫固定高速共用 Pacing V2 未載入",{version:window.STRUCTURED_COMBAT_PACING_VERSION,api:typeof window.getStructuredCombatPacing});
+  if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||Number(window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION)!==1||typeof window.getStructuredCombatPacing!=="function"||typeof window.getStructuredCombatPacingForSpeed!=="function")fail("FINAL_STRUCTURED_COMBAT_PACING","speed-aware 共用 Structured Combat Pacing 未載入",{version:window.STRUCTURED_COMBAT_PACING_VERSION,speedAware:window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION,api:typeof window.getStructuredCombatPacing});
   if(Number(window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION)!==1)fail("FINAL_COMBAT_FX_ANIMATION_LIFECYCLE","Combat FX animation lifecycle owner 未載入",window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION);
   if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==3||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==3||Number(window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION)!==1)fail("FINAL_OFFLINE_BATTLE_SAMPLE_VERSION","speed-aware 離線實戰樣本 V3 未載入",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION,speed:window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION});
   if(Number(window.OFFLINE_CHECKPOINT_RECOVERY_VERSION)!==1||typeof window.recoverOfflineCheckpointTime!=="function")fail("FINAL_OFFLINE_CHECKPOINT_RECOVERY","離線 checkpoint recovery owner 未載入",{version:window.OFFLINE_CHECKPOINT_RECOVERY_VERSION,api:typeof window.recoverOfflineCheckpointTime});
