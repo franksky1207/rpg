@@ -18,6 +18,9 @@
   const rng=typeof options.rng==="function"?options.rng:Math.random;
   const useTest=options.useTestSpecializations===true;
   const useTestMarks=options.useTestMarks===true||useTest;
+  const maxTurns=Math.max(0,Math.floor(numberOr(options.maxTurns,0)));
+  const skipPlayerAction=options.skipPlayerAction===true;
+  const skipEnemyAction=options.skipEnemyAction===true;
   const spec={
    initiative:specBonus("initiative",useTest),
    combo:specBonus("combo",useTest),
@@ -159,10 +162,12 @@
 
   activateOpeningMarks();
   while(php>0&&ehp>0){
+   if(maxTurns>0&&turns>=maxTurns)break;
    turns++;
    beginRoundMarks();
-   playerChain("normal",turns===1);
+   if(!skipPlayerAction)playerChain("normal",turns===1);
    if(ehp<=0)break;
+   if(skipEnemyAction)continue;
 
    if(rollRate(numberOr(p.dodge,0),true)){
     events.push({type:"dodge",target:"player",source:"enemy"});
@@ -274,7 +279,7 @@
    },
    e:enemy
   };
-  if(typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
+  if(options.preparePresentation!==false&&typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
   return result;
  };
  window.COMBAT_MARK_INTEGRATION_VERSION=1;
