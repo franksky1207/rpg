@@ -16,14 +16,14 @@
  function phaseForLevel(level){return Math.max(0,Math.floor((Math.max(1,whole(level,1))-1)/500));}
  function phaseLabel(index){const start=index*500+1,end=(index+1)*500;return "Lv"+start+"～"+end;}
  function regionsForPhase(phase){
-  return (Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[]).filter(r=>phaseForLevel(r.min)===phase);
+  return (typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).filter(r=>phaseForLevel(r.min)===phase);
  }
  function allPhases(){
-  const set=new Set((Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[]).map(r=>phaseForLevel(r.min)));
+  const set=new Set((typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).map(r=>phaseForLevel(r.min)));
   return Array.from(set).sort((a,b)=>a-b);
  }
- function regionById(id){return (Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[]).find(r=>String(r.id)===String(id))||null;}
- function mapAt(index){return Array.isArray(window.MAPS)?window.MAPS[index]||null:null;}
+ function regionById(id){return (typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).find(r=>String(r.id)===String(id))||null;}
+ function mapAt(index){return typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS[index]||null:null;}
  function enemyPreview(mapIndex,enemyIndex){
   try{
    if(typeof window.monsterObj==="function")return window.monsterObj(mapIndex,enemyIndex);
@@ -32,13 +32,13 @@
   return null;
  }
  function currentHighestMapIndex(){
-  const max=Math.max(0,(Array.isArray(window.MAPS)?window.MAPS.length:1)-1);
-  return whole(window.state&&state.unlockedMap,0,max);
+  const max=Math.max(0,(typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS.length:1)-1);
+  return whole(typeof state!=="undefined"?state.unlockedMap:0,0,max);
  }
  function ensureSelection(){
   const phases=allPhases();
   if(!phases.length)return;
-  if(!phases.includes(MODEL.phase))MODEL.phase=phases.includes(phaseForLevel(window.state&&state.level))?phaseForLevel(state.level):phases[phases.length-1];
+  if(!phases.includes(MODEL.phase))MODEL.phase=phases.includes(phaseForLevel(typeof state!=="undefined"?state.level:1))?phaseForLevel(state.level):phases[phases.length-1];
   const regions=regionsForPhase(MODEL.phase);
   if(!regions.some(r=>String(r.id)===String(MODEL.regionId)))MODEL.regionId=regions[0]?String(regions[0].id):"";
   const region=regionById(MODEL.regionId);
@@ -52,7 +52,7 @@
  function useHighestSelection(){
   const mapIndex=currentHighestMapIndex(),map=mapAt(mapIndex);
   if(!map)return false;
-  const region=(Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[]).find(r=>mapIndex>=r.mapStart&&mapIndex<=r.mapEnd);
+  const region=(typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]).find(r=>mapIndex>=r.mapStart&&mapIndex<=r.mapEnd);
   MODEL.phase=phaseForLevel(map.min||state.level);
   MODEL.regionId=region?String(region.id):MODEL.regionId;
   MODEL.mapIndex=mapIndex;
@@ -65,13 +65,13 @@
   const specs=typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(false):{};
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(false):{};
   const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?window.ENHANCEMENT_SLOTS:["weapon","helmet","armor","shoes","accessory"];
-  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):whole(state&&state.enhancement&&state.enhancement.levels&&state.enhancement.levels[type],0,20)]));
+  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):whole(typeof state!=="undefined"&&state.enhancement&&state.enhancement.levels?state.enhancement.levels[type]:0,0,20)]));
   const equipment=Object.fromEntries(slots.map(type=>{
-   const it=state&&state.equipment?state.equipment[type]:null;
+   const it=typeof state!=="undefined"&&state.equipment?state.equipment[type]:null;
    return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5)}:null];
   }));
   MODEL.snapshot={
-   capturedAt:Date.now(),level:whole(state&&state.level,1),vipLevel:whole(state&&state.vipLevel,0),vipPoints:whole(state&&state.vipPoints,0),
+   capturedAt:Date.now(),level:whole(typeof state!=="undefined"?state.level:1,1),vipLevel:whole(typeof state!=="undefined"?state.vipLevel:0,0),vipPoints:whole(typeof state!=="undefined"?state.vipPoints:0,0),
    stats:{hp:whole(stats.hp,1),atk:whole(stats.atk,1),def:whole(stats.def,0),crit:one(stats.crit),dodge:one(stats.dodge)},
    specs,marks,enhancements,equipment
   };
