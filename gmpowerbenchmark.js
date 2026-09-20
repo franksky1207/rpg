@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -88,6 +88,22 @@
   MODEL.mapIndex=mapIndex;
   MODEL.enemyIndex=Math.max(0,(Array.isArray(map.enemies)?map.enemies.length:1)-1);
   MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;
+  return true;
+ }
+ function resetBenchmarkSession(){
+  const ok=typeof confirm!=="function"||confirm("確定要清除目前所有戰力基準測試結果並重新同步角色嗎？\n不會修改正式角色或存檔。");
+  if(!ok)return false;
+  MODEL.runs=100;
+  MODEL.outputSource="selected";
+  MODEL.defenseSource="selected";
+  MODEL.customDef=0;
+  MODEL.customAtk=0;
+  MODEL.outputResult=null;
+  MODEL.defenseResult=null;
+  MODEL.combatResult=null;
+  captureSnapshot();
+  useHighestSelection();
+  if(typeof render==="function")render();
   return true;
  }
  function captureSnapshot(){
@@ -402,7 +418,7 @@
    '<label>地圖<br><select class="btn" onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
    '<label>怪物<br><select class="btn" onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
    '<label>測試量<br><select class="btn" onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>'+
-   '<button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button></div></div>'+
+   '<button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button" onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
    '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn" onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
@@ -429,6 +445,7 @@
  window.gmPowerBenchmarkSetCustomDef=function(v){MODEL.customDef=Math.max(0,num(v,0));};
  window.gmPowerBenchmarkSetCustomAtk=function(v){MODEL.customAtk=Math.max(0,num(v,0));};
  window.gmPowerBenchmarkUseHighest=function(){if(useHighestSelection())render();};
+ window.gmPowerBenchmarkReset=resetBenchmarkSession;
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
