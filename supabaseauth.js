@@ -1,7 +1,7 @@
 (function(){
  const PROJECT_URL="https://kotnpnnbvttdklkhrmvh.supabase.co";
  const PUBLISHABLE_KEY="sb_publishable_mkLiOerztii2FJqOO0Tluw_zpkvt1w9";
- const AUTH_VERSION=6;
+ const AUTH_VERSION=7;
  const RECOVERY_FLAG="civilization_frontline_password_recovery_v1";
  const AUTH_MODE_RENDERER_VERSION=1;
  const AUTH_MODES={
@@ -290,9 +290,11 @@
  }
  async function signOutLocal(){
   if(!client)return {ok:false,error:new Error("帳號服務尚未初始化。")};
+  const signingOutUserId=String(currentSession?.user?.id||window.civilizationAuthSession?.user?.id||"");
   try{
    const {error}=await client.auth.signOut({scope:"local"});
    if(error)throw error;
+   if(signingOutUserId&&typeof window.clearGmCombatSpeedOverrideForUser==="function")window.clearGmCombatSpeedOverrideForUser(signingOutUserId);
    currentSession=null;
    window.civilizationAuthSession=null;
    clearRecoveryState();
