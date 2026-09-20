@@ -43,10 +43,10 @@
  if(Number(window.SAVE_SCHEMA_VERSION)!==13)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 13，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
- if(Number(window.VIP_PROGRESSION_VERSION)!==12)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 12，實際 ${window.VIP_PROGRESSION_VERSION}`);
- if(Number(window.VIP_THRESHOLD_BASE)!==2500)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 2500，實際 ${window.VIP_THRESHOLD_BASE}`);
- if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(20))!==1000000)fail("VIP20_THRESHOLD",`VIP20 門檻應為 1,000,000，實際 ${window.vipThreshold(20)}`);
- if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(1))!==2500)fail("VIP1_THRESHOLD",`VIP1 門檻應為 2,500，實際 ${window.vipThreshold(1)}`);
+ if(Number(window.VIP_PROGRESSION_VERSION)!==13)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 13，實際 ${window.VIP_PROGRESSION_VERSION}`);
+ if(Number(window.VIP_THRESHOLD_BASE)!==1000)fail("VIP_THRESHOLD_BASE",`VIP 門檻基數應為 1000，實際 ${window.VIP_THRESHOLD_BASE}`);
+ if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(20))!==400000)fail("VIP20_THRESHOLD",`VIP20 門檻應為 400,000，實際 ${window.vipThreshold(20)}`);
+ if(typeof window.vipThreshold==="function"&&Number(window.vipThreshold(1))!==1000)fail("VIP1_THRESHOLD",`VIP1 門檻應為 1,000，實際 ${window.vipThreshold(1)}`);
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
