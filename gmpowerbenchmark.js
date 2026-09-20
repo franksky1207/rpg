@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -7,6 +7,36 @@
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null
  };
+
+ function installStyles(){
+  if(typeof document==="undefined"||document.getElementById("gmPowerBenchmarkStyles"))return;
+  const style=document.createElement("style");
+  style.id="gmPowerBenchmarkStyles";
+  style.textContent=`
+   .gm-power-benchmark{display:grid;gap:10px}.gm-power-benchmark>.item{margin:0!important;border-radius:11px}
+   .gm-power-benchmark .gmpb-title{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+   .gm-power-benchmark .gmpb-controls{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:8px;margin-top:9px;align-items:end}
+   .gm-power-benchmark .gmpb-controls label{display:flex;flex-direction:column;gap:4px;min-width:0;color:#d8c49a;font-size:12px}
+   .gm-power-benchmark .gmpb-controls .btn,.gm-power-benchmark .gmpb-controls input,.gm-power-benchmark .gmpb-controls select{width:100%;min-width:0}
+   .gm-power-benchmark .gmpb-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.gm-power-benchmark .gmpb-actions .btn{flex:1 1 170px}
+   .gm-power-benchmark .gmpb-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}
+   .gm-power-benchmark .gmpb-metric{margin:0!important;padding:9px 10px!important;min-width:0;background:#12171d;border-color:#393d42}
+   .gm-power-benchmark .gmpb-metric b{font-size:16px;color:#f0d494;overflow-wrap:anywhere}
+   .gm-power-benchmark .gmpb-sub{margin-top:5px;line-height:1.55}.gm-power-benchmark details>summary{cursor:pointer;color:#d9c596}
+   .gm-power-benchmark .gmpb-combat-card{margin-top:8px!important}.gm-power-benchmark .gmpb-summary-main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}
+   .gm-power-benchmark .gmpb-summary-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;font-size:12px;max-height:220px;overflow:auto;background:#0d1116;border:1px solid #353a40;border-radius:8px;padding:9px;margin-top:8px}
+   @media(max-width:760px){
+    .gm-power-benchmark{gap:8px}.gm-power-benchmark>.item{padding:10px!important}.gm-power-benchmark .gmpb-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    .gm-power-benchmark .gmpb-controls label:nth-child(3),.gm-power-benchmark .gmpb-controls label:nth-child(4){grid-column:span 2}
+    .gm-power-benchmark .gmpb-actions{display:grid;grid-template-columns:1fr;gap:7px}.gm-power-benchmark .gmpb-actions .btn{width:100%;min-height:42px}
+    .gm-power-benchmark .gmpb-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.gm-power-benchmark .gmpb-metric{padding:8px!important}
+    .gm-power-benchmark .gmpb-metric .muted{font-size:11px!important;line-height:1.25}.gm-power-benchmark .gmpb-metric b{font-size:15px}
+    .gm-power-benchmark .gmpb-summary-main{grid-template-columns:1fr}.gm-power-benchmark .gmpb-summary-text{max-height:180px;font-size:11px}
+   }
+   @media(max-width:390px){.gm-power-benchmark .gmpb-controls{grid-template-columns:1fr}.gm-power-benchmark .gmpb-controls label:nth-child(3),.gm-power-benchmark .gmpb-controls label:nth-child(4){grid-column:auto}.gm-power-benchmark .gmpb-metrics{grid-template-columns:1fr 1fr}}
+  `;
+  document.head.appendChild(style);
+ }
 
  function num(v,f=0){const n=Number(v);return Number.isFinite(n)?n:f;}
  function whole(v,min=0,max=Number.MAX_SAFE_INTEGER){return Math.max(min,Math.min(max,Math.floor(num(v,min))));}
@@ -138,7 +168,7 @@
  }
  function snapshotHtml(){
   const s=snapshot(),st=s.stats;
-  return '<div class="item"><b>目前角色基準</b><div class="controls" style="margin-top:8px"><button class="btn blue" type="button" onclick="gmPowerBenchmarkSync()">同步目前角色狀態</button></div>'+
+  return '<div class="item"><b>目前角色基準</b><div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkSync()">同步目前角色狀態</button></div>'+
    '<div style="margin-top:9px">Lv.'+s.level+'　VIP'+s.vipLevel+'（'+fmt(s.vipPoints)+' 積分）</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
@@ -147,11 +177,11 @@
  function sourceOptions(selected){
   return [["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]].map(x=>option(x[0],x[1],selected===x[0])).join("");
  }
- function metric(label,value){return '<div class="item" style="padding:9px 10px"><div class="muted" style="font-size:12px">'+label+'</div><b style="display:block;margin-top:3px">'+value+'</b></div>';}
+ function metric(label,value){return '<div class="item gmpb-metric"><div class="muted" style="font-size:12px">'+label+'</div><b style="display:block;margin-top:3px">'+value+'</b></div>';}
  function outputResultHtml(){
   const r=MODEL.outputResult;if(!r)return '<div class="muted">尚未執行輸出測試。</div>';
   return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜DEF '+fmt(r.targetDef)+'｜'+r.runs.toLocaleString()+' 次</div>'+
-   '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;margin-top:8px">'+
+   '<div class="gmpb-metrics">'+
    metric("平均每回合有效輸出",fmt(r.avgRoundDamage))+metric("平均單次命中",fmt(r.avgHitDamage))+metric("最低／最高單次",fmt(r.minHit)+" / "+fmt(r.maxHit))+metric("實際暴擊率",r.critRate+"%")+
    metric("平均普通攻擊",fmt(r.avgNormalDamage))+metric("平均暴擊傷害",fmt(r.avgCritDamage))+metric("每回合平均連擊",r.avgCombos)+metric("連擊傷害占比",r.comboDamageShare+"%")+
    metric("穿透觸發率",r.penetrationRate+"%")+metric("無視 DEF 觸發率",r.ignoreRate+"%")+metric("先制攻擊平均傷害",fmt(r.avgInitiativeDamage))+metric("汲取觸發率",r.drainRate+"%")+
@@ -160,7 +190,7 @@
  function defenseResultHtml(){
   const r=MODEL.defenseResult;if(!r)return '<div class="muted">尚未執行承傷測試。</div>';
   return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜ATK '+fmt(r.targetAtk)+'｜'+r.runs.toLocaleString()+' 場</div>'+
-   '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;margin-top:8px">'+
+   '<div class="gmpb-metrics">'+
    metric("平均可承受回合",r.avgSurvivalTurns)+metric("平均每回合 HP 損失",fmt(r.avgTurnLoss))+metric("平均命中後 HP 損失",fmt(r.avgHitLoss))+metric("最低／最高單次 HP 損失",fmt(r.minLoss)+" / "+fmt(r.maxLoss))+
    metric("玩家實際閃避率",r.dodgeRate+"%")+metric("敵人命中後暴擊率",r.enemyCritRate+"%")+metric("護盾平均吸收／場",fmt(r.avgShieldAbsorb))+metric("吸收印記觸發率",r.absorptionRate+"%")+
    metric("反擊平均次數／場",r.avgCounters)+metric("反噬平均傷害／場",fmt(r.avgBacklashDamage))+metric("不屈救命率",r.indomitableRate+"%")+metric("達測試上限",r.capped+" 場")+
@@ -305,9 +335,9 @@
   return '<div class="muted">'+title+'：'+rows.map(([k,v])=>formatter(k,v)).join('｜')+'</div>';
  }
  function combatRowHtml(r){
-  return '<div class="item" style="margin-top:8px"><div><b>'+r.name+' Lv.'+r.level+'</b>　<span class="muted">'+(KIND_LABELS[r.kind]||r.kind)+'｜'+r.runs.toLocaleString()+' 場</span></div>'+
+  return '<div class="item gmpb-combat-card"><div><b>'+r.name+' Lv.'+r.level+'</b>　<span class="muted">'+(KIND_LABELS[r.kind]||r.kind)+'｜'+r.runs.toLocaleString()+' 場</span></div>'+
    '<div class="muted" style="margin-top:5px">隨機特性後平均：HP '+fmt(r.avgEnemy.hp)+'｜ATK '+fmt(r.avgEnemy.atk)+'｜DEF '+fmt(r.avgEnemy.def)+'｜暴擊 '+r.avgEnemy.crit+'%｜閃避 '+r.avgEnemy.dodge+'%</div>'+
-   '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;margin-top:8px">'+
+   '<div class="gmpb-metrics">'+
    metric("勝率",r.winRate+"%")+metric("平均戰鬥回合",r.avgTurns)+metric("勝利平均剩餘 HP",r.avgWinHpPct+"%")+metric("失敗時敵人剩餘 HP",r.avgLossEnemyHpPct+"%")+
    metric("玩家每回合傷害",fmt(r.avgPlayerRoundDamage))+metric("敵人每回合傷害",fmt(r.avgEnemyRoundDamage))+
    '</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+
@@ -325,10 +355,48 @@
    result.rows.map(combatRowHtml).join("")+'</div>';
  }
 
+ function summaryText(){
+  const s=snapshot(),st=s.stats,m=mapAt(MODEL.mapIndex),lines=[];
+  lines.push("《文明戰線・戰力基準測試》");
+  lines.push("角色：Lv."+s.level+"｜VIP"+s.vipLevel+"（"+fmt(s.vipPoints)+" 積分）");
+  lines.push("能力：HP "+fmt(st.hp)+"｜ATK "+fmt(st.atk)+"｜DEF "+fmt(st.def)+"｜暴擊 "+st.crit+"%｜閃避 "+st.dodge+"%");
+  lines.push("強化："+enhancementText(s));
+  lines.push("專精："+specText(s));
+  lines.push("印記："+markText(s));
+  lines.push("裝備："+equipmentText(s));
+  lines.push("基準："+(m?("Lv"+m.min+"～"+m.max+"｜"+m.name):"未選擇地圖")+"｜測試量 "+MODEL.runs);
+  if(MODEL.outputResult){const r=MODEL.outputResult;lines.push("");lines.push("【輸出基準】"+r.sourceLabel+"｜DEF "+fmt(r.targetDef));lines.push("平均每回合有效輸出 "+fmt(r.avgRoundDamage)+"｜平均單次 "+fmt(r.avgHitDamage)+"｜暴擊率 "+r.critRate+"%｜穿透 "+r.penetrationRate+"%｜無視DEF "+r.ignoreRate+"%");}
+  if(MODEL.defenseResult){const r=MODEL.defenseResult;lines.push("");lines.push("【承傷基準】"+r.sourceLabel+"｜ATK "+fmt(r.targetAtk));lines.push("平均可承受 "+r.avgSurvivalTurns+" 回合｜平均每回合HP損失 "+fmt(r.avgTurnLoss)+"｜閃避 "+r.dodgeRate+"%｜敵方暴擊 "+r.enemyCritRate+"%");}
+  if(MODEL.combatResult){lines.push("");lines.push("【主線實戰】"+MODEL.combatResult.mapName+"｜每隻 "+MODEL.combatResult.runs+" 場");MODEL.combatResult.rows.forEach(r=>lines.push("Lv."+r.level+" "+r.name+"（"+(KIND_LABELS[r.kind]||r.kind)+"）：勝率 "+r.winRate+"%｜平均 "+r.avgTurns+" 回合｜勝利剩餘HP "+r.avgWinHpPct+"%｜玩家回合傷害 "+fmt(r.avgPlayerRoundDamage)+"｜敵人回合傷害 "+fmt(r.avgEnemyRoundDamage)));}
+  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult){lines.push("");lines.push("尚未執行輸出、承傷或主線實戰測試。");}
+  return lines.join("\\n");
+ }
+ async function copySummary(){
+  const text=summaryText();let ok=false;
+  try{if(typeof navigator!=="undefined"&&navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
+  if(!ok&&typeof document!=="undefined"){
+   const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();try{ok=document.execCommand("copy");}catch(e){}ta.remove();
+  }
+  if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");
+  return ok;
+ }
+ function summaryHtml(){
+  const s=snapshot(),o=MODEL.outputResult,d=MODEL.defenseResult,cmb=MODEL.combatResult;
+  const combatRows=cmb&&Array.isArray(cmb.rows)?cmb.rows:[];
+  const avgWin=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.winRate,0),0)/combatRows.length):null;
+  const avgTurns=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.avgTurns,0),0)/combatRows.length):null;
+  return '<div class="item"><div class="gmpb-title"><b>測試摘要</b><span class="muted">方便直接貼給 ChatGPT 做下一階段平衡</span></div>'+
+   '<div class="gmpb-summary-main">'+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("基準地圖",mapAt(MODEL.mapIndex)?mapAt(MODEL.mapIndex).name:"未選擇")+
+   metric("平均回合輸出",o?fmt(o.avgRoundDamage):"尚未測試")+metric("平均回合承傷",d?fmt(d.avgTurnLoss):"尚未測試")+
+   metric("實戰平均勝率",avgWin==null?"尚未測試":avgWin+"%")+metric("實戰平均回合",avgTurns==null?"尚未測試":avgTurns)+'</div>'+
+   '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button></div>'+
+   '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
+ }
+
  function html(){
-  ensureSelection();snapshot();
-  return '<div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。目前提供角色快照、輸出、承傷與主線實戰基準。</div>'+
-   '<div class="item"><b>測試基準設定</b><div class="controls" style="margin-top:8px;align-items:end">'+
+  installStyles();ensureSelection();snapshot();
+  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。目前提供角色快照、輸出、承傷、主線實戰與摘要。</div>'+
+   '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+
    '<label>大階段<br><select class="btn" onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
    '<label>大區域<br><select class="btn" onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
    '<label>地圖<br><select class="btn" onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
@@ -337,15 +405,15 @@
    '<button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button></div></div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
-   '<div class="controls" style="margin-top:8px;align-items:end"><label>目標 DEF<br><select class="btn" onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
+   '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn" onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
    '<label>自訂 DEF<br><input class="btn" type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
    '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunOutput()">開始輸出測試</button></div>'+outputResultHtml()+'</div>'+
    '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
-   '<div class="controls" style="margin-top:8px;align-items:end"><label>敵人 ATK<br><select class="btn" onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
+   '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn" onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
    '<label>自訂 ATK<br><input class="btn" type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
    '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunDefense()">開始承傷測試</button></div>'+defenseResultHtml()+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
-   '<div class="controls" style="margin-top:8px"><button class="btn blue" type="button" onclick="gmPowerBenchmarkRunCombat(\'single\')">測目前選擇怪物</button><button class="btn" type="button" onclick="gmPowerBenchmarkRunCombat(\'map\')">測本地圖 5 隻全部</button></div>'+combatResultHtml()+'</div>';
+   '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkRunCombat(\'single\')">測目前選擇怪物</button><button class="btn" type="button" onclick="gmPowerBenchmarkRunCombat(\'map\')">測本地圖 5 隻全部</button></div>'+combatResultHtml()+'</div>'+summaryHtml()+'</div>';
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
@@ -364,6 +432,8 @@
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
+ window.gmPowerBenchmarkSummaryText=summaryText;
+ window.gmPowerBenchmarkCopySummary=copySummary;
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
  window.gmPowerBenchmarkSession=function(){return JSON.parse(JSON.stringify(MODEL));};
 
