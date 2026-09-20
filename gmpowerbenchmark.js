@@ -417,8 +417,8 @@
    '<label>大區域<br><select class="btn" onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
    '<label>地圖<br><select class="btn" onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
    '<label>怪物<br><select class="btn" onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
-   '<label>測試量<br><select class="btn" onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>'+
-   '<button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button" onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
+   '<label>測試量<br><select class="btn" onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
+   '<div class="gmpb-actions"><button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button" onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
    '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn" onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
