@@ -1,6 +1,6 @@
 (function(){
  const sections={manage:[],test:[]};
- const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
+ const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
  const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
