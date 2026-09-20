@@ -3,7 +3,7 @@
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
- const OFFLINE_REAL_SAMPLE_LIMIT=20;
+ const OFFLINE_REAL_SAMPLES_PER_SPEED=8;
  const OFFLINE_BATTLE_SAMPLE_VERSION=3;
  const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
 
@@ -101,7 +101,14 @@
    const kind=row.kind==="elite"?"elite":"normal";
    const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
    return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
-  }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
+  }).filter(Boolean);
+  const kept=[];
+  OFFLINE_COMBAT_SPEEDS.forEach(speed=>{
+   const matches=source.battleSamples.map((row,index)=>({row,index})).filter(entry=>Number(entry.row?.combatSpeed)===speed).slice(-OFFLINE_REAL_SAMPLES_PER_SPEED);
+   kept.push(...matches);
+  });
+  kept.sort((a,b)=>a.index-b.index);
+  source.battleSamples=kept.map(entry=>entry.row);
  }
  function normalizeOffline(target,version){
   if(!isObject(target))return;
