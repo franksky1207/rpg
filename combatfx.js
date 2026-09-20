@@ -229,10 +229,10 @@
   stepDelay:48,
   endDelay:180
  });
- function structuredCombatPacing(eventCount){
+ function structuredCombatPacingForSpeed(eventCount,speed){
   const count=Math.max(0,Math.floor(Number(eventCount)||0));
-  const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
-  const resolvedSpeed=[1,1.5,2].includes(speed)?speed:1;
+  const numeric=Number(speed);
+  const resolvedSpeed=[1,1.5,2].includes(numeric)?numeric:1;
   const scale=typeof window.combatSpeedScaledDelay==="function"
    ?ms=>window.combatSpeedScaledDelay(ms,resolvedSpeed)
    :ms=>Math.max(0,Math.round((Number(ms)||0)/resolvedSpeed));
@@ -245,10 +245,15 @@
    combatSpeed:resolvedSpeed
   };
  }
+ function structuredCombatPacing(eventCount){
+  const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+  return structuredCombatPacingForSpeed(eventCount,speed);
+ }
  window.STRUCTURED_COMBAT_PACING_VERSION=2;
  window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION=1;
  window.STRUCTURED_COMBAT_PACING_BASE_1X={...STRUCTURED_COMBAT_PACING_1X};
  window.getStructuredCombatPacing=function(eventCount){return structuredCombatPacing(eventCount);};
+ window.getStructuredCombatPacingForSpeed=function(eventCount,speed){return structuredCombatPacingForSpeed(eventCount,speed);};
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
   const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
