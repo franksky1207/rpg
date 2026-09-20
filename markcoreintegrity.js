@@ -15,8 +15,13 @@
 
  const configKeys=config.map(entry=>entry.markId);
  if(JSON.stringify(configKeys)!==JSON.stringify(expectedKeys))fail("MARK_CONFIG_KEYS","Mark Core 正式順序應直接來自統一災厄設定",configKeys);
- const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
+ const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markDefinition","markDisplayName","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
+ if(typeof window.markDisplayName==="function"){
+  const expectedNames=Object.fromEntries(config.map(entry=>[entry.markId,entry.markName]));
+  expectedKeys.forEach(key=>{if(window.markDisplayName(key)!==expectedNames[key])fail("MARK_DISPLAY_NAME",`${key} 顯示名稱異常`,window.markDisplayName(key));});
+  if(window.markDisplayName("unknown-mark")!=="unknown-mark")fail("MARK_DISPLAY_FALLBACK","未知印記名稱應回傳原 key",window.markDisplayName("unknown-mark"));
+ }
 
  if(typeof window.markActivationChance==="function"){
   const expected=[0,30,35,40,45,50,55,60,65,70,75];
