@@ -502,43 +502,46 @@
 
  function html(){
   installStyles();ensureSelection();snapshot();
+  const disabled=busyDisabled();
   return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。目前提供角色快照、輸出、承傷、主線實戰與摘要。</div>'+
    '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+
-   '<label>大階段<br><select class="btn" onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
-   '<label>大區域<br><select class="btn" onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
-   '<label>地圖<br><select class="btn" onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
-   '<label>怪物<br><select class="btn" onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
-   '<label>測試量<br><select class="btn" onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
-   '<div class="gmpb-actions"><button class="btn" type="button" onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button" onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
+   '<label>大階段<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
+   '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
+   '<label>地圖<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
+   '<label>怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
+   '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
+   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
-   '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn" onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
-   '<label>自訂 DEF<br><input class="btn" type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
-   '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunOutput()">開始輸出測試</button></div>'+outputResultHtml()+'</div>'+
+   '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
+   '<label>自訂 DEF<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml()+'</div>'+
    '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
-   '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn" onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
-   '<label>自訂 ATK<br><input class="btn" type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
-   '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunDefense()">開始承傷測試</button></div>'+defenseResultHtml()+'</div>'+
+   '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
+   '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
-   '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkRunCombat(\'single\')">測目前選擇怪物</button><button class="btn" type="button" onclick="gmPowerBenchmarkRunCombat(\'map\')">測本地圖 5 隻全部</button></div>'+combatResultHtml()+'</div>'+summaryHtml()+'</div>';
+   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml()+'</div>'+summaryHtml()+'</div>';
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
+ window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
- window.gmPowerBenchmarkSetPhase=function(v){MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetRegion=function(v){MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetMap=function(v){MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetEnemy=function(v){MODEL.enemyIndex=whole(v,0);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetRuns=function(v){MODEL.runs=Number(v)===1000?1000:100;};
- window.gmPowerBenchmarkSetOutputSource=function(v){MODEL.outputSource=String(v||"selected");};
- window.gmPowerBenchmarkSetDefenseSource=function(v){MODEL.defenseSource=String(v||"selected");};
- window.gmPowerBenchmarkSetCustomDef=function(v){MODEL.customDef=Math.max(0,num(v,0));};
- window.gmPowerBenchmarkSetCustomAtk=function(v){MODEL.customAtk=Math.max(0,num(v,0));};
- window.gmPowerBenchmarkUseHighest=function(){if(useHighestSelection())render();};
+ window.gmPowerBenchmarkSetPhase=function(v){if(MODEL.busy)return;MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetRegion=function(v){if(MODEL.busy)return;MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetMap=function(v){if(MODEL.busy)return;MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetEnemy=function(v){if(MODEL.busy)return;MODEL.enemyIndex=whole(v,0);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetRuns=function(v){if(MODEL.busy)return;MODEL.runs=Number(v)===1000?1000:100;};
+ window.gmPowerBenchmarkSetOutputSource=function(v){if(MODEL.busy)return;MODEL.outputSource=String(v||"selected");};
+ window.gmPowerBenchmarkSetDefenseSource=function(v){if(MODEL.busy)return;MODEL.defenseSource=String(v||"selected");};
+ window.gmPowerBenchmarkSetCustomDef=function(v){if(MODEL.busy)return;MODEL.customDef=Math.max(0,num(v,0));};
+ window.gmPowerBenchmarkSetCustomAtk=function(v){if(MODEL.busy)return;MODEL.customAtk=Math.max(0,num(v,0));};
+ window.gmPowerBenchmarkUseHighest=function(){if(MODEL.busy)return false;if(useHighestSelection())render();return true;};
  window.gmPowerBenchmarkReset=resetBenchmarkSession;
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
+ window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
