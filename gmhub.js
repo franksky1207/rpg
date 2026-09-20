@@ -92,15 +92,19 @@
  function arenaTestHtml(){const result=typeof getArenaGmTestHtml==="function"?getArenaGmTestHtml():"";return `<div class="muted gm-hub-note">敵人以不含 VIP 的目前角色能力生成；玩家三連戰鎖定測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateArena('normal')">普通競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('hard')">困難競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('extreme')">極限競技場測試（${GM_TEST_RUNS} 次）</button></div><div id="gmArenaTestResult" style="margin-top:12px">${result}</div>`;}
  function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"",next=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():1;return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
 
- function section(id,title,body){const key=String(id||title),open=gmHubOpenSections.has(key);return `<details class="gm-hub-section" data-gm-section="${key}" ${open?"open":""} ontoggle="gmHubSectionToggle('${key}',this.open)"><summary>${title}</summary><div class="gm-hub-body">${body}</div></details>`;}
  function hubHtml(){
   const manage=gmHubTab==="manage";
   const testStatus=manage?"":(typeof gmTestCurrentStatusHtml==="function"?gmTestCurrentStatusHtml():"");
-  const testVip=manage?"":(typeof gmTestVipControlHtml==="function"?gmTestVipControlHtml():"");
-  const specManage=gmSpecializationManagementHtml();
-  const specTest=gmSpecializationTestHtml();
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testStatus}${manage?`${section("general-manage","角色管理",generalManagementHtml())}${section("spec-manage","專精管理",specManage)}${section("enhancement-manage","強化管理",gmEnhancementManagementHtml())}${section("dungeon-manage","副本管理",dungeonManagementHtml())}`:`${section("vip-test","VIP 測試",testVip)}${section("spec-test","專精測試",specTest)}${section("enhancement-test","強化測試",gmEnhancementTestHtml())}${section("map-test","地圖怪測試",mapMonsterTestHtml())}${section("special-test","特殊怪測試",specialTestHtml())}${section("bounty-test","懸賞戰測試",bountyTestHtml())}${section("arena-test","競技場測試",arenaTestHtml())}${section("void-test","虛空幻境測試",voidMirageTestHtml())}`}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  const sections=typeof window.gmHubRegisteredSectionsHtml==="function"?window.gmHubRegisteredSectionsHtml(gmHubTab):"";
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testStatus}${sections}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
+
+ window.gmGeneralManagementHtml=generalManagementHtml;
+ window.gmSpecialTestHtml=specialTestHtml;
+ window.gmMapMonsterTestHtml=mapMonsterTestHtml;
+ window.gmBountyTestHtml=bountyTestHtml;
+ window.gmArenaTestHtml=arenaTestHtml;
+ window.gmVoidMirageTestHtml=voidMirageTestHtml;
 
  window.gmResetVip=function(){
   if(!confirm("確定要將 VIP 等級與 VIP 積分全部重置為 0 嗎？"))return;
