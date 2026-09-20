@@ -4,9 +4,8 @@
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const OFFLINE_REAL_SAMPLE_LIMIT=20;
- const OFFLINE_BATTLE_SAMPLE_VERSION=2;
- const NORMAL_BATTLE_GAP_MS=140;
- const ELITE_BATTLE_GAP_MS=220;
+ const OFFLINE_BATTLE_SAMPLE_VERSION=3;
+ const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -93,16 +92,15 @@
  function normalizeRealBattleSamples(source){
   const rows=Array.isArray(source?.battleSamples)?source.battleSamples:[];
   source.battleSamples=rows.map(row=>{
-   if(!isObject(row))return null;
-   const actualMs=Math.round(Number(row.actualMs));
+   if(!isObject(row)||Number(row.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+   const actualMs=Math.round(Number(row.actualMs)),cycleMs=Math.round(Number(row.cycleMs)),adjustedMs=Math.round(Number(row.adjustedMs));
+   const combatSpeed=Number(row.combatSpeed);
    const playerLevel=Math.max(1,Math.floor(Number(row.playerLevel)||1)),enemyLevel=Math.max(1,Math.floor(Number(row.enemyLevel)||1));
    const multiplier=sampleMultiplier(playerLevel,enemyLevel);
-   if(multiplier==null||!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return null;
+   if(multiplier==null||!OFFLINE_COMBAT_SPEEDS.includes(combatSpeed)||!Number.isFinite(actualMs)||actualMs<100||actualMs>300000||!Number.isFinite(cycleMs)||cycleMs<actualMs||cycleMs>601000||!Number.isFinite(adjustedMs)||adjustedMs<100||adjustedMs>601000)return null;
    const kind=row.kind==="elite"?"elite":"normal";
-   const cycleMs=actualMs+(kind==="elite"?ELITE_BATTLE_GAP_MS:NORMAL_BATTLE_GAP_MS);
-   const adjustedMs=Math.max(100,Math.round(cycleMs*multiplier));
    const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
-   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
+   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
   }).filter(Boolean).slice(-OFFLINE_REAL_SAMPLE_LIMIT);
  }
  function normalizeOffline(target,version){
@@ -113,6 +111,12 @@
    return;
   }
   const source=target.offline;
+  const storedSampleVersion=Math.max(0,Math.floor(Number(source.battleSampleVersion)||0));
+  if(storedSampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION){
+   source.battleSamples=[];
+   source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;source.pendingSettlement=null;
+  }
+  source.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   const rawTime=source.lastSettledAt==null?NaN:Number(source.lastSettledAt);
   source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
   const priorMax=Number(source.maxObservedWallClock);
