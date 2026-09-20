@@ -8,6 +8,9 @@
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
+ const OFFLINE_SAMPLES_PER_SPEED=8;
+ const OFFLINE_SAMPLE_SELECTION_VERSION=2;
+ const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
  const OFFLINE_BATTLE_SAMPLE_VERSION=Math.max(1,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||1));
  const CLOCK_ROLLBACK_TOLERANCE_MS=5*60*1000;
  const HEARTBEAT_MS=60*1000;
@@ -48,7 +51,14 @@
   o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
   o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
   if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
-  o.battleSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&[1,1.5,2].includes(Number(row.combatSpeed))&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS).slice(-20);
+  const validSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&OFFLINE_COMBAT_SPEEDS.includes(Number(row.combatSpeed))&&Number.isFinite(Number(row.actualMs))&&Number(row.actualMs)>=REAL_BATTLE_MIN_MS&&Number(row.actualMs)<=300000&&Number.isFinite(Number(row.cycleMs))&&Number(row.cycleMs)>=Number(row.actualMs)&&Number(row.cycleMs)<=REAL_BATTLE_MAX_MS&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS);
+  const keptSamples=[];
+  OFFLINE_COMBAT_SPEEDS.forEach(speed=>{
+   const matches=validSamples.map((row,index)=>({row,index})).filter(entry=>Number(entry.row.combatSpeed)===speed).slice(-OFFLINE_SAMPLES_PER_SPEED);
+   keptSamples.push(...matches);
+  });
+  keptSamples.sort((a,b)=>a.index-b.index);
+  o.battleSamples=keptSamples.map(entry=>entry.row);
   if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
   return o;
  }
@@ -92,24 +102,32 @@
   if(!Number.isInteger(m)||m<0||m>=MAPS.length||!Number.isInteger(e)||e<0||e>3)return false;
   try{const monster=monsterObj(m,e);return !!monster&&monster.kind!=="boss";}catch(err){return false;}
  }
- function realBattleAverageMs(o,speed=currentCombatSpeed()){
-  const rows=Array.isArray(o?.battleSamples)?o.battleSamples:[];
-  if(!rows.length)return 0;
-  let total=0,count=0;
-  rows.forEach(row=>{
-   const ms=Number(row?.adjustedMs);
-   if(Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.combatSpeed)===speed&&Number.isFinite(ms)&&ms>=REAL_BATTLE_MIN_MS&&ms<=REAL_BATTLE_MAX_MS){total+=ms;count++;}
-  });
-  return count?Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(total/count))):0;
+ function sampleAdjustedMsForSpeed(row,targetSpeed){
+  const sourceSpeed=Number(row?.combatSpeed),speed=Number(targetSpeed);
+  const actualMs=Number(row?.actualMs),cycleMs=Number(row?.cycleMs),multiplier=Math.max(0.01,Number(row?.multiplier)||1);
+  if(!OFFLINE_COMBAT_SPEEDS.includes(sourceSpeed)||!OFFLINE_COMBAT_SPEEDS.includes(speed)||!Number.isFinite(actualMs)||actualMs<REAL_BATTLE_MIN_MS||!Number.isFinite(cycleMs)||cycleMs<actualMs)return 0;
+  const fixedGap=Math.max(0,cycleMs-actualMs);
+  const convertedActual=actualMs*(sourceSpeed/speed);
+  const converted=(convertedActual+fixedGap)*multiplier;
+  return Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(converted)));
+ }
+ function averageTargetMs(rows,targetSpeed){
+  const values=(Array.isArray(rows)?rows:[]).map(row=>sampleAdjustedMsForSpeed(row,targetSpeed)).filter(ms=>ms>0);
+  if(!values.length)return 0;
+  return Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(values.reduce((sum,ms)=>sum+ms,0)/values.length)));
  }
  function resolveFarmTarget(){
   const o=ensureOfflineState(),speed=currentCombatSpeed();
-  const rows=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.combatSpeed)===speed);
-  const latest=rows.length?rows[rows.length-1]:null;
+  const rows=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&legalFarmTarget(Math.floor(Number(row?.map)),Math.floor(Number(row?.enemy))));
+  if(!rows.length)return null;
+  const exactRows=rows.filter(row=>Number(row?.combatSpeed)===speed);
+  const latest=(exactRows.length?exactRows:rows)[(exactRows.length?exactRows:rows).length-1];
   const map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy));
-  const realAvg=realBattleAverageMs(o,speed);
-  if(realAvg>0&&legalFarmTarget(map,enemy))return {map,enemy,avgBattleMs:realAvg,combatSpeed:speed};
-  return null;
+  const sameTarget=rows.filter(row=>Math.floor(Number(row?.map))===map&&Math.floor(Number(row?.enemy))===enemy);
+  const exactTarget=sameTarget.filter(row=>Number(row?.combatSpeed)===speed);
+  const avg=averageTargetMs(exactTarget.length?exactTarget:sameTarget,speed);
+  if(avg<=0)return null;
+  return {map,enemy,avgBattleMs:avg,combatSpeed:speed,fallbackSpeed:exactTarget.length?null:Number(latest?.combatSpeed)||null};
  }
  function formatDuration(ms){
   const total=Math.max(0,Math.floor(ms/60000)),h=Math.floor(total/60),m=total%60;
@@ -152,7 +170,12 @@
   const elapsedRaw=Math.max(0,t-o.lastSettledAt);
   if(elapsedRaw<OFFLINE_MIN_MS){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}
   const target=resolveFarmTarget();
-  if(!target)return null;
+  if(!target){
+   o.lastSettledAt=t;
+   o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);
+   if(baseSave)baseSave(false);
+   return {unavailable:true,elapsedRaw,elapsedUsed:Math.min(OFFLINE_MAX_MS,elapsedRaw),createdAt:t};
+  }
   const elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw);
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS)));
   const battles=Math.max(0,Math.floor(elapsedUsed/avg));
@@ -238,6 +261,14 @@
   const before=progress.before,after=progress.after;
   return `<div class="offline-exp-progress"><div>Lv.${before.level}　${before.exp.toLocaleString()} / ${before.need.toLocaleString()}</div><span class="arrow">↓</span><div>Lv.${after.level}　${after.exp.toLocaleString()} / ${after.need.toLocaleString()}</div></div>`;
  }
+ function showOfflineSampleUnavailable(info){
+  ensureOfflineModals();
+  const detail=document.getElementById("offlineRewardDetail"),page=document.getElementById("offlineRewardPage");
+  if(!detail||!page)return;
+  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(info?.elapsedUsed||info?.elapsedRaw||0)}</div><div class="offline-section"><div class="offline-section-title">尚無可用的主線實戰樣本</div><div class="offline-enemy-line" style="margin-top:10px">完成一場符合條件的主線普通／菁英戰鬥後，即可建立離線收益基準。Boss、副本與背景 catch-up 不會建立此樣本。</div><div class="muted" style="margin-top:10px;line-height:1.6">本次離線區段因沒有可計算的實戰基準而不發放收益，已建立新的離線起點；之後只要有有效樣本，離線結算就會正常出現。</div></div>`;
+  document.body.classList.add("offline-result-open");
+  page.classList.add("show");
+ }
  function showOfflineResult(result){
   if(!result)return;
   ensureOfflineModals();
@@ -256,6 +287,7 @@
  async function settleOfflineOnLoad(){
   const pending=buildPendingSettlement();
   if(!pending)return;
+  if(pending.unavailable){showOfflineSampleUnavailable(pending);return;}
   const enemy=farmEnemyObject(pending);
   if(!enemy)return;
   const rollbackSnapshot=JSON.stringify(state);
@@ -293,6 +325,10 @@
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());
   if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());
  }
+ window.OFFLINE_SAMPLE_SELECTION_VERSION=OFFLINE_SAMPLE_SELECTION_VERSION;
+ window.OFFLINE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
+ window.convertOfflineSampleMsForSpeed=sampleAdjustedMsForSpeed;
+ window.resolveOfflineFarmTarget=resolveFarmTarget;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
