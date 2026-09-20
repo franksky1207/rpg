@@ -1,11 +1,11 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
   phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
-  snapshot:null,outputResult:null,defenseResult:null
+  snapshot:null,outputResult:null,defenseResult:null,combatResult:null
  };
 
  function num(v,f=0){const n=Number(v);return Number.isFinite(n)?n:f;}
@@ -57,7 +57,7 @@
   MODEL.regionId=region?String(region.id):MODEL.regionId;
   MODEL.mapIndex=mapIndex;
   MODEL.enemyIndex=Math.max(0,(Array.isArray(map.enemies)?map.enemies.length:1)-1);
-  MODEL.outputResult=null;MODEL.defenseResult=null;
+  MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;
   return true;
  }
  function captureSnapshot(){
@@ -225,9 +225,109 @@
   };
   render();
  }
+ function freshEncounter(mapIndex,enemyIndex){
+  try{
+   if(typeof createMonsterEncounter==="function")return createMonsterEncounter(mapIndex,enemyIndex);
+  }catch(e){}
+  const preview=enemyPreview(mapIndex,enemyIndex);
+  return preview?JSON.parse(JSON.stringify(preview)):null;
+ }
+ function markName(key){
+  const defs=window.MARK_DEFS||{};
+  return defs[key]&&defs[key].name?defs[key].name:key;
+ }
+ function traitName(key){
+  const defs=typeof MONSTER_TRAITS!=="undefined"&&MONSTER_TRAITS?MONSTER_TRAITS:{};
+  return defs[key]&&defs[key].name?defs[key].name:key;
+ }
+ function combatRow(mapIndex,enemyIndex,runs,s){
+  const m=mapAt(mapIndex),row=m&&Array.isArray(m.enemies)?m.enemies[enemyIndex]:null;
+  if(!row)return null;
+  const player={...s.stats};
+  let wins=0,totalTurns=0,minTurns=Infinity,maxTurns=0,winHpPct=0,lossEnemyHpPct=0,losses=0;
+  let playerDamage=0,enemyDamage=0,playerHits=0,playerCrits=0,enemyHits=0,enemyCrits=0,playerDodges=0,enemyDodges=0;
+  let enemyHp=0,enemyAtk=0,enemyDef=0,enemyCrit=0,enemyDodge=0;
+  const specs={initiative:0,combo:0,penetration:0,counter:0,drain:0};
+  const marks={},traits={};
+  for(let i=0;i<runs;i++){
+   const e=freshEncounter(mapIndex,enemyIndex);
+   if(!e)continue;
+   enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
+   (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks});
+   const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
+   if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
+   else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
+   result.events.forEach(ev=>{
+    if(ev.type==="attack"&&ev.actor==="player"){
+     const d=Math.max(0,num(ev.actualDamage,0));playerDamage+=d;playerHits++;if(ev.crit)playerCrits++;
+     if(ev.initiative)specs.initiative++;if(ev.penetration)specs.penetration++;
+     return;
+    }
+    if(ev.type==="attack"&&ev.actor==="enemy"){
+     enemyDamage+=Math.max(0,num(ev.actualDamage,0));enemyHits++;if(ev.crit)enemyCrits++;return;
+    }
+    if(ev.type==="dodge"&&ev.target==="player"){playerDodges++;return;}
+    if(ev.type==="dodge"&&ev.target==="enemy"){enemyDodges++;return;}
+    if(ev.type==="combo"){specs.combo++;return;}
+    if(ev.type==="counter"){specs.counter++;return;}
+    if(ev.type==="drain"){specs.drain++;return;}
+    if(ev.type==="mark"){const key=String(ev.mark||"unknown");marks[key]=(marks[key]||0)+1;}
+   });
+  }
+  const completed=Math.max(1,runs);
+  const playerAttempts=playerHits+enemyDodges,enemyAttempts=enemyHits+playerDodges;
+  return {
+   mapIndex,enemyIndex,name:String(row[0]||""),level:whole(row[1],1),kind:String(row[2]||"normal"),runs,
+   avgEnemy:{hp:enemyHp/completed,atk:enemyAtk/completed,def:enemyDef/completed,crit:one(enemyCrit/completed),dodge:one(enemyDodge/completed)},
+   winRate:pct(wins,runs),wins,losses,avgTurns:one(totalTurns/completed),minTurns:minTurns===Infinity?0:minTurns,maxTurns,
+   avgWinHpPct:wins?one(winHpPct/wins):0,avgLossEnemyHpPct:losses?one(lossEnemyHpPct/losses):0,
+   avgPlayerTotalDamage:playerDamage/completed,avgEnemyTotalDamage:enemyDamage/completed,
+   avgPlayerRoundDamage:totalTurns?playerDamage/totalTurns:0,avgEnemyRoundDamage:totalTurns?enemyDamage/totalTurns:0,
+   playerCritRate:pct(playerCrits,playerHits),playerDodgeRate:pct(playerDodges,enemyAttempts),
+   enemyCritRate:pct(enemyCrits,enemyHits),enemyDodgeRate:pct(enemyDodges,playerAttempts),
+   specs:Object.fromEntries(Object.entries(specs).map(([k,v])=>[k,one(v/completed)])),
+   marks:Object.fromEntries(Object.entries(marks).map(([k,v])=>[k,one(v/completed)])),
+   traits:Object.fromEntries(Object.entries(traits).map(([k,v])=>[k,pct(v,completed)]))
+  };
+ }
+ function runCombatBenchmark(mode){
+  const s=captureSnapshot(),runs=MODEL.runs,m=mapAt(MODEL.mapIndex);
+  if(!m||!Array.isArray(m.enemies)||!m.enemies.length)return;
+  const indexes=mode==="map"?m.enemies.map((_,i)=>i):[MODEL.enemyIndex];
+  const rows=indexes.map(i=>combatRow(MODEL.mapIndex,i,runs,s)).filter(Boolean);
+  MODEL.combatResult={mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
+  render();
+ }
+ function detailLine(title,entries,formatter){
+  const rows=Object.entries(entries||{});
+  if(!rows.length)return '<div class="muted">'+title+'：無</div>';
+  return '<div class="muted">'+title+'：'+rows.map(([k,v])=>formatter(k,v)).join('｜')+'</div>';
+ }
+ function combatRowHtml(r){
+  return '<div class="item" style="margin-top:8px"><div><b>'+r.name+' Lv.'+r.level+'</b>　<span class="muted">'+(KIND_LABELS[r.kind]||r.kind)+'｜'+r.runs.toLocaleString()+' 場</span></div>'+
+   '<div class="muted" style="margin-top:5px">隨機特性後平均：HP '+fmt(r.avgEnemy.hp)+'｜ATK '+fmt(r.avgEnemy.atk)+'｜DEF '+fmt(r.avgEnemy.def)+'｜暴擊 '+r.avgEnemy.crit+'%｜閃避 '+r.avgEnemy.dodge+'%</div>'+
+   '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;margin-top:8px">'+
+   metric("勝率",r.winRate+"%")+metric("平均戰鬥回合",r.avgTurns)+metric("勝利平均剩餘 HP",r.avgWinHpPct+"%")+metric("失敗時敵人剩餘 HP",r.avgLossEnemyHpPct+"%")+
+   metric("玩家每回合傷害",fmt(r.avgPlayerRoundDamage))+metric("敵人每回合傷害",fmt(r.avgEnemyRoundDamage))+
+   '</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+
+   '<div class="muted">最短／最長回合：'+r.minTurns+' / '+r.maxTurns+'｜玩家平均總傷害 '+fmt(r.avgPlayerTotalDamage)+'｜敵人平均總傷害 '+fmt(r.avgEnemyTotalDamage)+'</div>'+
+   '<div class="muted">玩家暴擊 '+r.playerCritRate+'%｜玩家閃避 '+r.playerDodgeRate+'%｜敵人暴擊 '+r.enemyCritRate+'%｜敵人閃避 '+r.enemyDodgeRate+'%</div>'+
+   detailLine("專精平均觸發／場",r.specs,(k,v)=>k+" "+v)+
+   detailLine("印記事件平均／場",r.marks,(k,v)=>markName(k)+" "+v)+
+   detailLine("怪物特性出現率",r.traits,(k,v)=>traitName(k)+" "+v+"%")+
+   '</div></details></div>';
+ }
+ function combatResultHtml(){
+  const result=MODEL.combatResult;
+  if(!result)return '<div class="muted">尚未執行主線實戰基準。</div>';
+  return '<div style="margin-top:10px"><div class="muted">'+result.mapName+'｜'+(result.mode==="map"?"地圖 5 隻全部":"單隻怪")+'｜每隻 '+result.runs.toLocaleString()+' 場</div>'+
+   result.rows.map(combatRowHtml).join("")+'</div>';
+ }
+
  function html(){
   ensureSelection();snapshot();
-  return '<div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。第1批目前提供角色快照、輸出與承傷基準。</div>'+
+  return '<div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。目前提供角色快照、輸出、承傷與主線實戰基準。</div>'+
    '<div class="item"><b>測試基準設定</b><div class="controls" style="margin-top:8px;align-items:end">'+
    '<label>大階段<br><select class="btn" onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
    '<label>大區域<br><select class="btn" onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
@@ -243,16 +343,18 @@
    '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
    '<div class="controls" style="margin-top:8px;align-items:end"><label>敵人 ATK<br><select class="btn" onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
    '<label>自訂 ATK<br><input class="btn" type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
-   '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunDefense()">開始承傷測試</button></div>'+defenseResultHtml()+'</div>';
+   '<button class="btn blue" type="button" onclick="gmPowerBenchmarkRunDefense()">開始承傷測試</button></div>'+defenseResultHtml()+'</div>'+
+   '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
+   '<div class="controls" style="margin-top:8px"><button class="btn blue" type="button" onclick="gmPowerBenchmarkRunCombat(\'single\')">測目前選擇怪物</button><button class="btn" type="button" onclick="gmPowerBenchmarkRunCombat(\'map\')">測本地圖 5 隻全部</button></div>'+combatResultHtml()+'</div>';
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.gmPowerBenchmarkHtml=html;
- window.gmPowerBenchmarkSync=function(){captureSnapshot();MODEL.outputResult=null;MODEL.defenseResult=null;render();};
- window.gmPowerBenchmarkSetPhase=function(v){MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;render();};
- window.gmPowerBenchmarkSetRegion=function(v){MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;render();};
- window.gmPowerBenchmarkSetMap=function(v){MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;render();};
- window.gmPowerBenchmarkSetEnemy=function(v){MODEL.enemyIndex=whole(v,0);MODEL.outputResult=null;MODEL.defenseResult=null;render();};
+ window.gmPowerBenchmarkSync=function(){captureSnapshot();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetPhase=function(v){MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetRegion=function(v){MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetMap=function(v){MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetEnemy=function(v){MODEL.enemyIndex=whole(v,0);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
  window.gmPowerBenchmarkSetRuns=function(v){MODEL.runs=Number(v)===1000?1000:100;};
  window.gmPowerBenchmarkSetOutputSource=function(v){MODEL.outputSource=String(v||"selected");};
  window.gmPowerBenchmarkSetDefenseSource=function(v){MODEL.defenseSource=String(v||"selected");};
@@ -261,6 +363,7 @@
  window.gmPowerBenchmarkUseHighest=function(){if(useHighestSelection())render();};
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
+ window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
  window.gmPowerBenchmarkSession=function(){return JSON.parse(JSON.stringify(MODEL));};
 
