@@ -96,8 +96,3 @@ function gmResetShopPrice(){
  save(false);render();
 }
 function gmResetShop(){gmResetShopPrice()}
-function gmClearInventory(){
- if(!state.inventory.length){alert("背包目前是空的。");return}
- if(!confirm(`確定要清空背包中的 ${state.inventory.length} 件裝備嗎？\n目前穿戴中的裝備不會受到影響。`))return;
- state.inventory=[];selectedItem=null;save();render();
-}
