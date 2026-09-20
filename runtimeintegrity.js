@@ -263,7 +263,7 @@
 
  if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_OWNER","戰鬥內動畫應由單一固定高速 Structured Combat Pacing V2 管理",{version:window.STRUCTURED_COMBAT_PACING_VERSION,api:typeof window.getStructuredCombatPacing});
  if(Number(window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION)!==1)fail("COMBAT_FX_ANIMATION_LIFECYCLE","Combat FX 應由 animation lifecycle 清理，不應依賴舊固定 timer",window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION);
- if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==2||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==2)fail("OFFLINE_BATTLE_SAMPLE_VERSION","離線實戰樣本應使用 V2 版本隔離",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION});
+ if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==3||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==3||Number(window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION)!==1)fail("OFFLINE_BATTLE_SAMPLE_VERSION","離線實戰樣本應使用 speed-aware V3",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION,speed:window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION});
  if(Number(window.OFFLINE_CHECKPOINT_RECOVERY_VERSION)!==1||typeof window.recoverOfflineCheckpointTime!=="function")fail("OFFLINE_CHECKPOINT_RECOVERY_OWNER","離線 checkpoint recovery owner 未正確載入",{version:window.OFFLINE_CHECKPOINT_RECOVERY_VERSION,api:typeof window.recoverOfflineCheckpointTime});
  else{
   const nowProbe=2000000,earlier=1000000,later=1500000;
@@ -281,7 +281,7 @@
    lastSettledAt:Date.now()-600000,
    farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,
    battleSampleVersion:sampleVersion,
-   battleSamples:[{sampleVersion,actualMs:1000,playerLevel:10,enemyLevel:10,kind:"normal",map:0,enemy:0,recordedAt:Date.now()-600000}],
+   battleSamples:[{sampleVersion,combatSpeed:1,actualMs:1000,cycleMs:1140,adjustedMs:1140,playerLevel:10,enemyLevel:10,kind:"normal",map:0,enemy:0,multiplier:1,recordedAt:Date.now()-600000}],
    maxObservedWallClock:Date.now()-600000,timeLockUntil:0
   };
   const raw=JSON.parse(JSON.stringify(probeSource));
@@ -289,15 +289,15 @@
   const migrated=window.migrateSave(probeSource,probeSource.saveVersion,typeof normalizeSaveState==="function"?normalizeSaveState:null,raw);
   window.LAST_SAVE_MIGRATION_REPORT=previousReport;
   const row=migrated?.offline?.battleSamples?.[0];
-  if(Number(migrated?.offline?.battleSampleVersion)!==sampleVersion||Number(row?.sampleVersion)!==sampleVersion)fail("OFFLINE_SAMPLE_MIGRATION_VERSION","離線 V2 sample 經 migration normalize 後必須保留正式 sampleVersion",{owner:sampleVersion,battleSampleVersion:migrated?.offline?.battleSampleVersion,row});
- }catch(error){fail("OFFLINE_SAMPLE_MIGRATION_PROBE","離線 V2 sample migration 回歸檢查失敗",String(error?.message||error));}
+  if(Number(migrated?.offline?.battleSampleVersion)!==sampleVersion||Number(row?.sampleVersion)!==sampleVersion||Number(row?.combatSpeed)!==1||Number(row?.cycleMs)!==1140)fail("OFFLINE_SAMPLE_MIGRATION_VERSION","離線 V3 sample 經 migration normalize 後必須保留正式 speed-aware sample",{owner:sampleVersion,battleSampleVersion:migrated?.offline?.battleSampleVersion,row});
+ }catch(error){fail("OFFLINE_SAMPLE_MIGRATION_PROBE","離線 V3 sample migration 回歸檢查失敗",String(error?.message||error));}
  if(Number(window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION)!==1||Number(window.VOID_BACKGROUND_GM_GATE_VERSION)!==1)fail("BACKGROUND_GM_GATE","GM 背景戰鬥開關應統一控制 main／void／calamity",{gm:window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION,void:window.VOID_BACKGROUND_GM_GATE_VERSION});
  if(Number(window.GM_DATA_MANAGEMENT_VERSION)!==1||typeof window.gmExportSaveJson!=="function"||typeof window.gmChooseImportSaveJson!=="function"||typeof window.gmValidateImportedSave!=="function")fail("GM_DATA_MANAGEMENT","GM JSON 資料管理模組未完整載入",{version:window.GM_DATA_MANAGEMENT_VERSION,exportApi:typeof window.gmExportSaveJson,importApi:typeof window.gmChooseImportSaveJson,validateApi:typeof window.gmValidateImportedSave});
  if(Number(window.GM_HUB_EXTENSION_VERSION)!==7||Number(window.GM_HUB_REGISTRY_VERSION)!==1||typeof window.registerGmHubSection!=="function"||typeof window.gmHubRegisteredSectionsHtml!=="function"||typeof window.gmHubRegisteredSectionIds!=="function")fail("GM_HUB_REGISTRY","GM Hub 統一 section registry 未完整載入",{extension:window.GM_HUB_EXTENSION_VERSION,registry:window.GM_HUB_REGISTRY_VERSION,register:typeof window.registerGmHubSection,render:typeof window.gmHubRegisteredSectionsHtml,ids:typeof window.gmHubRegisteredSectionIds});
  if(Number(window.GM_GEAR_LEVEL_INPUT_VERSION)!==1)fail("GM_GEAR_LEVEL_INPUT","GM 產生裝備等級應使用可擴充數字輸入",window.GM_GEAR_LEVEL_INPUT_VERSION);
  if(Number(window.BATCH5_CLOCK_CACHE_VERSION)!==1)fail("DAILY_CLOCK_CACHE","每日時鐘 DOM 快取版本異常",window.BATCH5_CLOCK_CACHE_VERSION);
  if(typeof window.gmHubRegisteredSectionIds==="function"){
-  const manageExpected=["gm-data-management","gm-background-battle","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
+  const manageExpected=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
   const testExpected=["vip-test","spec-test","enhancement-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
   const manageIds=window.gmHubRegisteredSectionIds("manage"),testIds=window.gmHubRegisteredSectionIds("test");
   if(JSON.stringify(manageIds)!==JSON.stringify(manageExpected))fail("GM_HUB_MANAGE_ORDER","GM 管理 section 註冊／排序異常",{expected:manageExpected,actual:manageIds});
