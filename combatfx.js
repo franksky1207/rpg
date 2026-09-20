@@ -223,17 +223,31 @@
   if(card&&text!=="閃避"&&text!=="吸收")restartFxClass(card,"hit",/^hitShake/);
   if(dmg){dmg.textContent=text;dmg.classList.remove("show");void dmg.offsetWidth;dmg.classList.add("show");}
  }
- const STRUCTURED_COMBAT_PACING=Object.freeze({
-  openingDelay:70,
-  impactDelay:35,
-  stepDelay:24,
-  endDelay:90
+ const STRUCTURED_COMBAT_PACING_1X=Object.freeze({
+  openingDelay:140,
+  impactDelay:70,
+  stepDelay:48,
+  endDelay:180
  });
  function structuredCombatPacing(eventCount){
   const count=Math.max(0,Math.floor(Number(eventCount)||0));
-  return {openingDelay:STRUCTURED_COMBAT_PACING.openingDelay,impactDelay:STRUCTURED_COMBAT_PACING.impactDelay,stepDelay:STRUCTURED_COMBAT_PACING.stepDelay,endDelay:STRUCTURED_COMBAT_PACING.endDelay,eventCount:count};
+  const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+  const resolvedSpeed=[1,1.5,2].includes(speed)?speed:1;
+  const scale=typeof window.combatSpeedScaledDelay==="function"
+   ?ms=>window.combatSpeedScaledDelay(ms,resolvedSpeed)
+   :ms=>Math.max(0,Math.round((Number(ms)||0)/resolvedSpeed));
+  return {
+   openingDelay:scale(STRUCTURED_COMBAT_PACING_1X.openingDelay),
+   impactDelay:scale(STRUCTURED_COMBAT_PACING_1X.impactDelay),
+   stepDelay:scale(STRUCTURED_COMBAT_PACING_1X.stepDelay),
+   endDelay:scale(STRUCTURED_COMBAT_PACING_1X.endDelay),
+   eventCount:count,
+   combatSpeed:resolvedSpeed
+  };
  }
  window.STRUCTURED_COMBAT_PACING_VERSION=2;
+ window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION=1;
+ window.STRUCTURED_COMBAT_PACING_BASE_1X={...STRUCTURED_COMBAT_PACING_1X};
  window.getStructuredCombatPacing=function(eventCount){return structuredCombatPacing(eventCount);};
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
