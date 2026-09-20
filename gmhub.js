@@ -30,14 +30,33 @@
   document.head.appendChild(style);
  }
 
- function enhancementSlots(){return Array.isArray(window.ENHANCEMENT_SLOTS)?window.ENHANCEMENT_SLOTS:["weapon","helmet","armor","shoes","accessory"];}
- function enhancementMax(){return Math.max(0,Math.floor(Number(window.ENHANCEMENT_MAX_LEVEL)||0));}
- function clampEnhancement(value){return Math.max(0,Math.min(enhancementMax(),Math.floor(Number(value)||0)));}
- function enhancementOptions(value){return Array.from({length:enhancementMax()+1},(_,i)=>`<option value="${i}" ${i===value?"selected":""}>+${i}</option>`).join("");}
- function enhancementGrid(mode){const test=mode==="test";return `<div class="gm-enhancement-grid">${enhancementSlots().map(type=>{const lv=test?(typeof gmTestEnhancementLevel==="function"?gmTestEnhancementLevel(type):0):(typeof enhancementLevel==="function"?enhancementLevel(state,type):clampEnhancement(state?.enhancement?.levels?.[type]));return `<label><span>${ENHANCEMENT_SLOT_LABELS[type]||type}</span><select class="btn" id="gmEnhance-${mode}-${type}" ${test?`onchange="gmSetTestEnhancement('${type}',this.value)"`:""}>${enhancementOptions(lv)}</select></label>`;}).join("")}</div>`;}
- window.gmTestEnhancementLabel=function(){return `強化｜${enhancementSlots().map(type=>`${ENHANCEMENT_SLOT_LABELS[type]||type} +${typeof gmTestEnhancementLevel==="function"?gmTestEnhancementLevel(type):0}`).join("｜")}`;};
- window.gmEnhancementManagementHtml=function(){if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);return `<div class="muted gm-hub-note">直接修改玩家正式裝備欄位強化等級；套用後寫入正式存檔，不影響目前持有的強化石。</div>${enhancementGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplyEnhancementLevels()">套用強化等級</button></div>`;};
- window.gmApplyEnhancementLevels=function(){if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);enhancementSlots().forEach(type=>{const el=document.getElementById(`gmEnhance-manage-${type}`);state.enhancement.levels[type]=clampEnhancement(el?el.value:state.enhancement.levels[type]);});if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);if(typeof save==="function")save();if(typeof render==="function")render();alert("強化等級已更新。");};
+ window.gmEnhancementSlotLabel=function(type){return ENHANCEMENT_SLOT_LABELS[type]||String(type);};
+ function enhancementOptions(value){
+  const max=Math.max(0,Math.floor(Number(window.ENHANCEMENT_MAX_LEVEL)||0));
+  return Array.from({length:max+1},(_,i)=>`<option value="${i}" ${i===value?"selected":""}>+${i}</option>`).join("");
+ }
+ function enhancementGrid(mode){
+  const test=mode==="test",slots=window.gmTestEnhancementSlots();
+  return `<div class="gm-enhancement-grid">${slots.map(type=>{
+   const lv=test?window.gmTestEnhancementLevel(type):(typeof enhancementLevel==="function"?enhancementLevel(state,type):window.gmClampTestEnhancementLevel(state?.enhancement?.levels?.[type]));
+   return `<label><span>${window.gmEnhancementSlotLabel(type)}</span><select class="btn" id="gmEnhance-${mode}-${type}" ${test?`onchange="gmSetTestEnhancement('${type}',this.value)"`:""}>${enhancementOptions(lv)}</select></label>`;
+  }).join("")}</div>`;
+ }
+ window.gmEnhancementManagementHtml=function(){
+  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
+  return `<div class="muted gm-hub-note">直接修改玩家正式裝備欄位強化等級；套用後寫入正式存檔，不影響目前持有的強化石。</div>${enhancementGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplyEnhancementLevels()">套用強化等級</button></div>`;
+ };
+ window.gmApplyEnhancementLevels=function(){
+  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
+  window.gmTestEnhancementSlots().forEach(type=>{
+   const el=document.getElementById(`gmEnhance-manage-${type}`);
+   state.enhancement.levels[type]=window.gmClampTestEnhancementLevel(el?el.value:state.enhancement.levels[type]);
+  });
+  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
+  if(typeof save==="function")save();
+  if(typeof render==="function")render();
+  alert("強化等級已更新。");
+ };
  window.gmEnhancementTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的裝備欄位強化測試等級；只影響 GM 測試快照，不消耗強化石、不修改正式角色資料。</div>${enhancementGrid("test")}<div id="gmEnhancementTestInfo" class="muted" style="margin-top:10px">${gmTestEnhancementLabel()}</div>`;};
 
  window.gmTestSpecializationLabel=function(){
@@ -99,7 +118,7 @@
  window.gmHubSectionIsOpen=function(id){return gmHubOpenSections.has(String(id||""));};
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
  window.GM_HUB_SECTION_STATE_VERSION=1;
- window.GM_ENHANCEMENT_HUB_VERSION=4;
+ window.GM_ENHANCEMENT_HUB_VERSION=5;
  gmHtml=function(){installGmHubStyles();return hubHtml();};
  installGmHubStyles();
 })();
