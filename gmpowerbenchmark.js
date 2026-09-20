@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -130,9 +130,7 @@
   return keys.map(k=>(defs[k]&&defs[k].name?defs[k].name:k)+" Lv."+whole(s.specs&&s.specs[k],0)).join("｜");
  }
  function formalMarkName(key){
-  const rows=Array.isArray(window.CIVILIZATION_CALAMITY_CONFIG)?window.CIVILIZATION_CALAMITY_CONFIG:[];
-  const row=rows.find(entry=>String(entry&&entry.markId||"")===String(key));
-  return row&&row.markName?String(row.markName):String(key);
+  return typeof window.markDisplayName==="function"?window.markDisplayName(key):String(key);
  }
  function markText(s){
   const keys=Array.isArray(window.MARK_KEYS)?Array.from(window.MARK_KEYS):Object.keys(s.marks||{});
@@ -198,23 +196,33 @@
   return [["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]].map(x=>option(x[0],x[1],selected===x[0])).join("");
  }
  function metric(label,value){return '<div class="item gmpb-metric"><div class="muted" style="font-size:12px">'+label+'</div><b style="display:block;margin-top:3px">'+value+'</b></div>';}
+ function metricFieldsHtml(fields){return fields.map(([label,value])=>metric(label,value)).join("");}
+ function summaryFieldLines(fields,size=3){
+  const lines=[];
+  for(let i=0;i<fields.length;i+=size)lines.push(fields.slice(i,i+size).map(([label,value])=>label+" "+value).join("｜"));
+  return lines;
+ }
+ function outputFields(r){
+  return [
+   ["平均每回合有效輸出",fmt(r.avgRoundDamage)],["平均單次命中",fmt(r.avgHitDamage)],["最低／最高單次",fmt(r.minHit)+" / "+fmt(r.maxHit)],["實際暴擊率",r.critRate+"%"],
+   ["平均普通攻擊",fmt(r.avgNormalDamage)],["平均暴擊傷害",fmt(r.avgCritDamage)],["每回合平均連擊",r.avgCombos],["連擊傷害占比",r.comboDamageShare+"%"],
+   ["穿透觸發率",r.penetrationRate+"%"],["無視 DEF 觸發率",r.ignoreRate+"%"],["先制攻擊平均傷害",fmt(r.avgInitiativeDamage)],["汲取觸發率",r.drainRate+"%"]
+  ];
+ }
+ function defenseFields(r){
+  return [
+   ["平均可承受回合",r.avgSurvivalTurns],["平均每回合 HP 損失",fmt(r.avgTurnLoss)],["平均命中後 HP 損失",fmt(r.avgHitLoss)],["最低／最高單次 HP 損失",fmt(r.minLoss)+" / "+fmt(r.maxLoss)],
+   ["玩家實際閃避率",r.dodgeRate+"%"],["敵人命中後暴擊率",r.enemyCritRate+"%"],["護盾平均吸收／場",fmt(r.avgShieldAbsorb)],["吸收印記觸發率",r.absorptionRate+"%"],
+   ["反擊平均次數／場",r.avgCounters],["反噬平均傷害／場",fmt(r.avgBacklashDamage)],["不屈救命率",r.indomitableRate+"%"],["達測試上限",r.capped+" 場"]
+  ];
+ }
  function outputResultHtml(){
   const r=MODEL.outputResult;if(!r)return '<div class="muted">尚未執行輸出測試。</div>';
-  return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜DEF '+fmt(r.targetDef)+'｜'+r.runs.toLocaleString()+' 次</div>'+
-   '<div class="gmpb-metrics">'+
-   metric("平均每回合有效輸出",fmt(r.avgRoundDamage))+metric("平均單次命中",fmt(r.avgHitDamage))+metric("最低／最高單次",fmt(r.minHit)+" / "+fmt(r.maxHit))+metric("實際暴擊率",r.critRate+"%")+
-   metric("平均普通攻擊",fmt(r.avgNormalDamage))+metric("平均暴擊傷害",fmt(r.avgCritDamage))+metric("每回合平均連擊",r.avgCombos)+metric("連擊傷害占比",r.comboDamageShare+"%")+
-   metric("穿透觸發率",r.penetrationRate+"%")+metric("無視 DEF 觸發率",r.ignoreRate+"%")+metric("先制攻擊平均傷害",fmt(r.avgInitiativeDamage))+metric("汲取觸發率",r.drainRate+"%")+
-   '</div></div>';
+  return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜DEF '+fmt(r.targetDef)+'｜'+r.runs.toLocaleString()+' 次</div><div class="gmpb-metrics">'+metricFieldsHtml(outputFields(r))+'</div></div>';
  }
  function defenseResultHtml(){
   const r=MODEL.defenseResult;if(!r)return '<div class="muted">尚未執行承傷測試。</div>';
-  return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜ATK '+fmt(r.targetAtk)+'｜'+r.runs.toLocaleString()+' 場</div>'+
-   '<div class="gmpb-metrics">'+
-   metric("平均可承受回合",r.avgSurvivalTurns)+metric("平均每回合 HP 損失",fmt(r.avgTurnLoss))+metric("平均命中後 HP 損失",fmt(r.avgHitLoss))+metric("最低／最高單次 HP 損失",fmt(r.minLoss)+" / "+fmt(r.maxLoss))+
-   metric("玩家實際閃避率",r.dodgeRate+"%")+metric("敵人命中後暴擊率",r.enemyCritRate+"%")+metric("護盾平均吸收／場",fmt(r.avgShieldAbsorb))+metric("吸收印記觸發率",r.absorptionRate+"%")+
-   metric("反擊平均次數／場",r.avgCounters)+metric("反噬平均傷害／場",fmt(r.avgBacklashDamage))+metric("不屈救命率",r.indomitableRate+"%")+metric("達測試上限",r.capped+" 場")+
-   '</div></div>';
+  return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜ATK '+fmt(r.targetAtk)+'｜'+r.runs.toLocaleString()+' 場</div><div class="gmpb-metrics">'+metricFieldsHtml(defenseFields(r))+'</div></div>';
  }
  function runOutput(){
   const s=captureSnapshot(),player={...s.stats};
@@ -346,24 +354,42 @@
   MODEL.combatResult={mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
   render();
  }
- function detailLine(title,entries,formatter){
+ function entryText(entries,formatter,empty="無"){
   const rows=Object.entries(entries||{});
-  if(!rows.length)return '<div class="muted">'+title+'：無</div>';
-  return '<div class="muted">'+title+'：'+rows.map(([k,v])=>formatter(k,v)).join('｜')+'</div>';
+  return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
+ }
+ function detailLine(title,entries,formatter){
+  return '<div class="muted">'+title+'：'+entryText(entries,formatter)+'</div>';
+ }
+ function specializationName(key){
+  const defs=window.SPECIALIZATION_DEFS||{};
+  return defs[key]&&defs[key].name?String(defs[key].name):String(key);
+ }
+ function combatPrimaryFields(r){
+  return [
+   ["勝率",r.winRate+"%"],["平均戰鬥回合",r.avgTurns],["勝利平均剩餘 HP",r.avgWinHpPct+"%"],["失敗時敵人剩餘 HP",r.avgLossEnemyHpPct+"%"],
+   ["玩家每回合傷害",fmt(r.avgPlayerRoundDamage)],["敵人每回合傷害",fmt(r.avgEnemyRoundDamage)]
+  ];
+ }
+ function combatDetailFields(r){
+  return [
+   ["最短／最長回合",r.minTurns+" / "+r.maxTurns],["玩家平均總傷害",fmt(r.avgPlayerTotalDamage)],["敵人平均總傷害",fmt(r.avgEnemyTotalDamage)],
+   ["玩家暴擊",r.playerCritRate+"%"],["玩家閃避",r.playerDodgeRate+"%"],["敵人暴擊",r.enemyCritRate+"%"],["敵人閃避",r.enemyDodgeRate+"%"]
+  ];
+ }
+ function combatEventGroups(r){
+  return [
+   ["專精平均觸發／場",r.specs,(k,v)=>specializationName(k)+" "+v],
+   ["印記事件平均／場",r.marks,(k,v)=>formalMarkName(k)+" "+v],
+   ["怪物特性出現率",r.traits,(k,v)=>traitName(k)+" "+v+"%"]
+  ];
  }
  function combatRowHtml(r){
+  const details=summaryFieldLines(combatDetailFields(r),3).map(line=>'<div class="muted">'+line+'</div>').join("");
+  const events=combatEventGroups(r).map(([title,entries,formatter])=>detailLine(title,entries,formatter)).join("");
   return '<div class="item gmpb-combat-card"><div><b>'+r.name+' Lv.'+r.level+'</b>　<span class="muted">'+(KIND_LABELS[r.kind]||r.kind)+'｜'+r.runs.toLocaleString()+' 場</span></div>'+
    '<div class="muted" style="margin-top:5px">隨機特性後平均：HP '+fmt(r.avgEnemy.hp)+'｜ATK '+fmt(r.avgEnemy.atk)+'｜DEF '+fmt(r.avgEnemy.def)+'｜暴擊 '+r.avgEnemy.crit+'%｜閃避 '+r.avgEnemy.dodge+'%</div>'+
-   '<div class="gmpb-metrics">'+
-   metric("勝率",r.winRate+"%")+metric("平均戰鬥回合",r.avgTurns)+metric("勝利平均剩餘 HP",r.avgWinHpPct+"%")+metric("失敗時敵人剩餘 HP",r.avgLossEnemyHpPct+"%")+
-   metric("玩家每回合傷害",fmt(r.avgPlayerRoundDamage))+metric("敵人每回合傷害",fmt(r.avgEnemyRoundDamage))+
-   '</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+
-   '<div class="muted">最短／最長回合：'+r.minTurns+' / '+r.maxTurns+'｜玩家平均總傷害 '+fmt(r.avgPlayerTotalDamage)+'｜敵人平均總傷害 '+fmt(r.avgEnemyTotalDamage)+'</div>'+
-   '<div class="muted">玩家暴擊 '+r.playerCritRate+'%｜玩家閃避 '+r.playerDodgeRate+'%｜敵人暴擊 '+r.enemyCritRate+'%｜敵人閃避 '+r.enemyDodgeRate+'%</div>'+
-   detailLine("專精平均觸發／場",r.specs,(k,v)=>k+" "+v)+
-   detailLine("印記事件平均／場",r.marks,(k,v)=>markName(k)+" "+v)+
-   detailLine("怪物特性出現率",r.traits,(k,v)=>traitName(k)+" "+v+"%")+
-   '</div></details></div>';
+   '<div class="gmpb-metrics">'+metricFieldsHtml(combatPrimaryFields(r))+'</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+details+events+'</div></details></div>';
  }
  function combatResultHtml(){
   const result=MODEL.combatResult;
@@ -372,14 +398,6 @@
    result.rows.map(combatRowHtml).join("")+'</div>';
  }
 
- function summaryEntryLine(entries,formatter,empty="無"){
-  const rows=Object.entries(entries||{});
-  return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
- }
- function specializationName(key){
-  const defs=window.SPECIALIZATION_DEFS||{};
-  return defs[key]&&defs[key].name?String(defs[key].name):String(key);
- }
  function summaryText(){
   const s=snapshot(),st=s.stats,m=mapAt(MODEL.mapIndex),lines=[];
   lines.push("《文明戰線・戰力基準測試》");
@@ -395,20 +413,14 @@
    const r=MODEL.outputResult;
    lines.push("");
    lines.push("【輸出基準】"+r.sourceLabel+"｜DEF "+fmt(r.targetDef)+"｜"+r.runs+" 次");
-   lines.push("平均每回合有效輸出 "+fmt(r.avgRoundDamage)+"｜平均單次命中 "+fmt(r.avgHitDamage)+"｜最低／最高單次 "+fmt(r.minHit)+" / "+fmt(r.maxHit));
-   lines.push("實際暴擊率 "+r.critRate+"%｜平均普通攻擊 "+fmt(r.avgNormalDamage)+"｜平均暴擊傷害 "+fmt(r.avgCritDamage));
-   lines.push("每回合平均連擊 "+r.avgCombos+"｜連擊傷害占比 "+r.comboDamageShare+"%｜穿透觸發率 "+r.penetrationRate+"%｜無視 DEF 觸發率 "+r.ignoreRate+"%");
-   lines.push("先制攻擊平均傷害 "+fmt(r.avgInitiativeDamage)+"｜汲取觸發率 "+r.drainRate+"%");
+   lines.push(...summaryFieldLines(outputFields(r),3));
   }
 
   if(MODEL.defenseResult){
    const r=MODEL.defenseResult;
    lines.push("");
    lines.push("【承傷／生存基準】"+r.sourceLabel+"｜ATK "+fmt(r.targetAtk)+"｜"+r.runs+" 場");
-   lines.push("平均可承受回合 "+r.avgSurvivalTurns+"｜平均每回合 HP 損失 "+fmt(r.avgTurnLoss)+"｜平均命中後 HP 損失 "+fmt(r.avgHitLoss));
-   lines.push("最低／最高單次 HP 損失 "+fmt(r.minLoss)+" / "+fmt(r.maxLoss)+"｜玩家實際閃避率 "+r.dodgeRate+"%｜敵人命中後暴擊率 "+r.enemyCritRate+"%");
-   lines.push("護盾平均吸收／場 "+fmt(r.avgShieldAbsorb)+"｜吸收印記觸發率 "+r.absorptionRate+"%｜反擊平均次數／場 "+r.avgCounters);
-   lines.push("反噬平均傷害／場 "+fmt(r.avgBacklashDamage)+"｜不屈救命率 "+r.indomitableRate+"%｜達測試上限 "+r.capped+" 場");
+   lines.push(...summaryFieldLines(defenseFields(r),3));
   }
 
   if(MODEL.combatResult){
@@ -418,14 +430,10 @@
     if(index>0)lines.push("");
     lines.push("Lv."+r.level+" "+r.name+"（"+(KIND_LABELS[r.kind]||r.kind)+"）");
     lines.push("隨機特性後平均：HP "+fmt(r.avgEnemy.hp)+"｜ATK "+fmt(r.avgEnemy.atk)+"｜DEF "+fmt(r.avgEnemy.def)+"｜暴擊 "+r.avgEnemy.crit+"%｜閃避 "+r.avgEnemy.dodge+"%");
-    lines.push("勝率 "+r.winRate+"%（"+r.wins+" 勝 / "+r.losses+" 敗）｜平均戰鬥回合 "+r.avgTurns+"｜最短／最長回合 "+r.minTurns+" / "+r.maxTurns);
-    lines.push("勝利平均剩餘 HP "+r.avgWinHpPct+"%｜失敗時敵人平均剩餘 HP "+r.avgLossEnemyHpPct+"%");
-    lines.push("玩家平均總傷害 "+fmt(r.avgPlayerTotalDamage)+"｜敵人平均總傷害 "+fmt(r.avgEnemyTotalDamage));
-    lines.push("玩家每回合傷害 "+fmt(r.avgPlayerRoundDamage)+"｜敵人每回合傷害 "+fmt(r.avgEnemyRoundDamage));
-    lines.push("玩家暴擊 "+r.playerCritRate+"%｜玩家閃避 "+r.playerDodgeRate+"%｜敵人暴擊 "+r.enemyCritRate+"%｜敵人閃避 "+r.enemyDodgeRate+"%");
-    lines.push("專精平均觸發／場："+summaryEntryLine(r.specs,(k,v)=>specializationName(k)+" "+v));
-    lines.push("印記事件平均／場："+summaryEntryLine(r.marks,(k,v)=>markName(k)+" "+v));
-    lines.push("怪物特性出現率："+summaryEntryLine(r.traits,(k,v)=>traitName(k)+" "+v+"%"));
+    lines.push("勝敗場數 "+r.wins+" 勝 / "+r.losses+" 敗");
+    lines.push(...summaryFieldLines(combatPrimaryFields(r),3));
+    lines.push(...summaryFieldLines(combatDetailFields(r),3));
+    combatEventGroups(r).forEach(([title,entries,formatter])=>lines.push(title+"："+entryText(entries,formatter)));
    });
   }
 
@@ -482,7 +490,6 @@
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.gmPowerBenchmarkHtml=html;
- window.gmPowerBenchmarkSync=function(){captureSnapshot();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
  window.gmPowerBenchmarkSetPhase=function(v){MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
  window.gmPowerBenchmarkSetRegion=function(v){MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
  window.gmPowerBenchmarkSetMap=function(v){MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
