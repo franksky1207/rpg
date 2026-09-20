@@ -15,6 +15,8 @@
  function clampLevel(value){return Math.max(0,Math.min(MARK_MAX_LEVEL,Math.floor(Number(value)||0)));}
  function round1(value){return Math.round((Number(value)||0)*10)/10;}
  function validKey(key){return MARK_KEYS.includes(key)&&!!MARK_DEFS[key];}
+ function definition(key){return validKey(key)?MARK_DEFS[key]:null;}
+ function displayName(key){const def=definition(key);return def?String(def.name):String(key);}
  function activationChance(level){const lv=clampLevel(level);return lv<=0?0:30+(lv-1)*5;}
  function requiredKillsForNextLevel(level){
   const lv=clampLevel(level);
@@ -127,6 +129,8 @@
  window.settleFormalMarkKill=settleFormalKill;
  window.markLevel=markLevel;
  window.markEffectSnapshot=effectSnapshot;
+ window.markDefinition=definition;
+ window.markDisplayName=displayName;
  window.markEffectDescription=effectDescription;
  window.markLevelsSnapshot=levelsSnapshot;
  window.markFormalSnapshot=formalSnapshot;
