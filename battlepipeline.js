@@ -48,7 +48,9 @@
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return null;
   const kind=encounter.kind==="elite"?"elite":"normal";
-  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:battleGapMs(kind),unsubscribe:null};
+  const combatSpeed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+  if(![1,1.5,2].includes(combatSpeed))return null;
+  const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:battleGapMs(kind),combatSpeed,unsubscribe:null};
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
   return token;
  }
@@ -66,7 +68,7 @@
   if(sampleVersion<=0)return false;
   if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
   const samples=(Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===sampleVersion);
-  samples.push({sampleVersion,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
+  samples.push({sampleVersion,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
   state.offline.battleSampleVersion=sampleVersion;
   state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
   return true;
@@ -80,7 +82,7 @@
   return storyId;
  }
 
- window.MAIN_REAL_BATTLE_SAMPLE_VERSION=2;
+ window.MAIN_REAL_BATTLE_SAMPLE_VERSION=3;
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
  window.addBattleEnhancementReward=addContextEnhancementReward;
