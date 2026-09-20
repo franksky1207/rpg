@@ -1,11 +1,13 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
+ const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
   phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
-  snapshot:null,outputResult:null,defenseResult:null,combatResult:null
+  snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
+  busy:false,busyKind:""
  };
 
  function installStyles(){
@@ -43,6 +45,30 @@
  function one(v){return Math.round(num(v,0)*10)/10;}
  function pct(n,d){return d>0?one(n/d*100):0;}
  function fmt(v){return Math.round(num(v,0)).toLocaleString();}
+ function yieldToUi(){return new Promise(resolve=>setTimeout(resolve,0));}
+ async function runBatched(total,worker,batchSize=BATCH_SIZE){
+  for(let i=0;i<total;i++){
+   worker(i);
+   if((i+1)%batchSize===0&&i+1<total)await yieldToUi();
+  }
+ }
+ async function withBenchmarkBusy(kind,task){
+  if(MODEL.busy)return false;
+  MODEL.busy=true;MODEL.busyKind=String(kind||"");
+  if(typeof render==="function")render();
+  await yieldToUi();
+  try{return await task();}
+  catch(error){
+   console.error("GM power benchmark failed",error);
+   if(typeof alert==="function")alert("戰力基準測試執行失敗，請重新整理後再試。");
+   return false;
+  }finally{
+   MODEL.busy=false;MODEL.busyKind="";
+   if(typeof render==="function")render();
+  }
+ }
+ function busyDisabled(){return MODEL.busy?" disabled":"";}
+ function busyLabel(kind,normal){return MODEL.busy&&MODEL.busyKind===kind?"測試中…":normal;}
  function phaseForLevel(level){return Math.max(0,Math.floor((Math.max(1,whole(level,1))-1)/500));}
  function phaseLabel(index){const start=index*500+1,end=(index+1)*500;return "Lv"+start+"～"+end;}
  function regionsForPhase(phase){
@@ -91,6 +117,7 @@
   return true;
  }
  function resetBenchmarkSession(){
+  if(MODEL.busy)return false;
   const ok=typeof confirm!=="function"||confirm("確定要清除目前所有戰力基準測試結果並重新同步角色嗎？\n不會修改正式角色或存檔。");
   if(!ok)return false;
   MODEL.runs=100;
@@ -224,28 +251,28 @@
   const r=MODEL.defenseResult;if(!r)return '<div class="muted">尚未執行承傷測試。</div>';
   return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜ATK '+fmt(r.targetAtk)+'｜'+r.runs.toLocaleString()+' 場</div><div class="gmpb-metrics">'+metricFieldsHtml(defenseFields(r))+'</div></div>';
  }
- function runOutput(){
+ async function runOutputTask(){
   const s=captureSnapshot(),player={...s.stats};
   const source=MODEL.outputSource,targetDef=sourceValue(source,"DEF"),runs=MODEL.runs;
   const dummyHp=Math.max(1e12,player.atk*1000000);
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
-  for(let i=0;i<runs;i++){
+  await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:1,kind:"normal",hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
    const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks});
-   const attacks=result.events.filter(x=>x.type==="attack"&&x.actor==="player");
    let round=0;
-   attacks.forEach(a=>{
-    const d=Math.max(0,num(a.actualDamage,0));round+=d;total+=d;hits++;min=Math.min(min,d);max=Math.max(max,d);
-    if(a.crit){crits++;critDamage+=d}
-    if(a.source==="normal"){normalHits++;normalDamage+=d}
-    if(a.source==="combo"){comboDamage+=d}
-    if(a.penetration)penetrations++;
-    if(a.ignoreDefense)ignores++;
-    if(a.initiative){initiativeHits++;initiativeDamage+=d}
+   (result.events||[]).forEach(ev=>{
+    if(ev.type==="combo"){combos++;return;}
+    if(ev.type==="drain"){drains++;return;}
+    if(ev.type!=="attack"||ev.actor!=="player")return;
+    const d=Math.max(0,num(ev.actualDamage,0));round+=d;total+=d;hits++;min=Math.min(min,d);max=Math.max(max,d);
+    if(ev.crit){crits++;critDamage+=d;}
+    if(ev.source==="normal"){normalHits++;normalDamage+=d;}
+    if(ev.source==="combo")comboDamage+=d;
+    if(ev.penetration)penetrations++;
+    if(ev.ignoreDefense)ignores++;
+    if(ev.initiative){initiativeHits++;initiativeDamage+=d;}
    });
-   combos+=result.events.filter(x=>x.type==="combo").length;
-   drains+=result.events.filter(x=>x.type==="drain").length;
-  }
+  });
   MODEL.outputResult={
    sourceLabel:sourceLabel(source,"DEF"),targetDef,runs,
    avgRoundDamage:total/runs,avgHitDamage:hits?total/hits:0,minHit:min===Infinity?0:min,maxHit:max,
@@ -253,19 +280,21 @@
    avgCombos:one(combos/runs),comboDamageShare:pct(comboDamage,total),penetrationRate:pct(penetrations,hits),ignoreRate:pct(ignores,hits),
    avgInitiativeDamage:initiativeHits?initiativeDamage/initiativeHits:0,drainRate:pct(drains,hits)
   };
-  render();
+  return true;
  }
- function runDefense(){
+ function runOutput(){return withBenchmarkBusy("output",runOutputTask);}
+
+ async function runDefenseTask(){
   const s=captureSnapshot(),player={...s.stats};
   const source=MODEL.defenseSource,base=source==="custom"?sourceEnemy("selected"):sourceEnemy(source);
   const targetAtk=sourceValue(source,"ATK"),runs=MODEL.runs,dummyHp=Math.max(1e12,player.atk*1000000);
   let totalTurns=0,totalLoss=0,landed=0,min=Infinity,max=0,dodges=0,crits=0,shield=0,absorptions=0,counters=0,backlash=0,indomitable=0,capped=0;
-  for(let i=0;i<runs;i++){
+  await runBatched(runs,()=>{
    const e={name:"承傷木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:targetAtk,def:Math.max(0,num(base&&base.def,0)),crit:Math.max(0,num(base&&base.crit,0)),dodge:Math.max(0,num(base&&base.dodge,0))};
    const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,markLevels:s.marks});
    totalTurns+=result.turns;if(result.hp>0)capped++;
-   result.events.forEach(ev=>{
-    if(ev.type==="dodge"&&ev.target==="player"){dodges++;return}
+   (result.events||[]).forEach(ev=>{
+    if(ev.type==="dodge"&&ev.target==="player"){dodges++;return;}
     if(ev.type==="attack"&&ev.actor==="enemy"){
      const loss=Math.max(0,num(ev.actualDamage,0));totalLoss+=loss;landed++;min=Math.min(min,loss);max=Math.max(max,loss);if(ev.crit)crits++;shield+=Math.max(0,num(ev.shieldAbsorbed,0));return;
     }
@@ -274,15 +303,17 @@
     if(ev.type==="mark"&&ev.mark==="backlash"&&ev.action==="trigger")backlash+=Math.max(0,num(ev.actualDamage,ev.damage));
     if(ev.type==="mark"&&ev.mark==="indomitable"&&ev.action==="survive")indomitable++;
    });
-  }
+  });
   MODEL.defenseResult={
    sourceLabel:sourceLabel(source,"ATK"),targetAtk,runs,
    avgSurvivalTurns:one(totalTurns/runs),avgTurnLoss:totalTurns?totalLoss/totalTurns:0,avgHitLoss:landed?totalLoss/landed:0,minLoss:min===Infinity?0:min,maxLoss:max,
    dodgeRate:pct(dodges,totalTurns),enemyCritRate:pct(crits,landed),avgShieldAbsorb:shield/runs,absorptionRate:pct(absorptions,totalTurns),
    avgCounters:one(counters/runs),avgBacklashDamage:backlash/runs,indomitableRate:pct(indomitable,runs),capped
   };
-  render();
+  return true;
  }
+ function runDefense(){return withBenchmarkBusy("defense",runDefenseTask);}
+
  function freshEncounter(mapIndex,enemyIndex){
   try{
    if(typeof createMonsterEncounter==="function")return createMonsterEncounter(mapIndex,enemyIndex);
@@ -295,7 +326,7 @@
   const defs=typeof MONSTER_TRAITS!=="undefined"&&MONSTER_TRAITS?MONSTER_TRAITS:{};
   return defs[key]&&defs[key].name?defs[key].name:key;
  }
- function combatRow(mapIndex,enemyIndex,runs,s){
+ async function combatRow(mapIndex,enemyIndex,runs,s){
   const m=mapAt(mapIndex),row=m&&Array.isArray(m.enemies)?m.enemies[enemyIndex]:null;
   if(!row)return null;
   const player={...s.stats};
@@ -304,7 +335,7 @@
   let enemyHp=0,enemyAtk=0,enemyDef=0,enemyCrit=0,enemyDodge=0;
   const specs={initiative:0,combo:0,penetration:0,counter:0,drain:0};
   const marks={},traits={};
-  for(let i=0;i<runs;i++){
+  await runBatched(runs,()=>{
    const e=freshEncounter(mapIndex,enemyIndex);
    if(!e)continue;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
@@ -329,7 +360,7 @@
     if(ev.type==="drain"){specs.drain++;return;}
     if(ev.type==="mark"){const key=String(ev.mark||"unknown");marks[key]=(marks[key]||0)+1;}
    });
-  }
+  });
   const completed=Math.max(1,runs);
   const playerAttempts=playerHits+enemyDodges,enemyAttempts=enemyHits+playerDodges;
   return {
@@ -346,14 +377,18 @@
    traits:Object.fromEntries(Object.entries(traits).map(([k,v])=>[k,pct(v,completed)]))
   };
  }
- function runCombatBenchmark(mode){
+ async function runCombatTask(mode){
   const s=captureSnapshot(),runs=MODEL.runs,m=mapAt(MODEL.mapIndex);
-  if(!m||!Array.isArray(m.enemies)||!m.enemies.length)return;
-  const indexes=mode==="map"?m.enemies.map((_,i)=>i):[MODEL.enemyIndex];
-  const rows=indexes.map(i=>combatRow(MODEL.mapIndex,i,runs,s)).filter(Boolean);
+  if(!m||!Array.isArray(m.enemies)||!m.enemies.length)return false;
+  const indexes=mode==="map"?m.enemies.map((_,i)=>i):[MODEL.enemyIndex],rows=[];
+  for(const i of indexes){
+   const row=await combatRow(MODEL.mapIndex,i,runs,s);
+   if(row)rows.push(row);
+  }
   MODEL.combatResult={mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
-  render();
+  return true;
  }
+ function runCombatBenchmark(mode){return withBenchmarkBusy(mode==="map"?"combat-map":"combat-single",()=>runCombatTask(mode));}
  function entryText(entries,formatter,empty="無"){
   const rows=Object.entries(entries||{});
   return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
