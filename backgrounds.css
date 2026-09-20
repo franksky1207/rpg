@@ -42,6 +42,27 @@
   #main>.map-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1")}
   #main>.prepare-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1")}
   #main>.combat-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1")}
+  #main>.combat-screen.mirror-combat-shell{
+    max-width:none!important;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    padding-top:30px;
+    padding-bottom:52px;
+    background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1");
+  }
+  #main>.combat-screen.mirror-combat-shell>.mirror-run-head,
+  #main>.combat-screen.mirror-combat-shell>.combat-arena,
+  #main>.combat-screen.mirror-combat-shell>.combat-message{
+    width:100%;
+    max-width:1120px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #main>.combat-screen.mirror-combat-shell>.combat-arena{
+    grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr);
+    gap:20px;
+  }
   #main>.function-page:has(>.character-layout),#main>.specialization-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/character/desktop.webp?v=20260913-character-desktop1")}
   #main>.function-page:has(>.grid){background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/inventory-shop/desktop.webp?v=20260913-inventory-shop-desktop1")}
   #main>.enhancement-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/enhancement/desktop.webp?v=20260915-enhancement-desktop1")}
