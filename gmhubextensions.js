@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
  let activeMode="manage";
- const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage","mirror-manage"];
+ const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
  const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","marks-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
@@ -70,5 +70,5 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=4;
+ window.GM_HUB_EXTENSION_VERSION=5;
 })();
