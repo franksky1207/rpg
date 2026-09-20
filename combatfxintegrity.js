@@ -13,6 +13,7 @@
   COMBAT_STRUCTURED_PRESENTATION_VERSION:2,
   COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION:1,
   STRUCTURED_COMBAT_PACING_VERSION:2,
+  STRUCTURED_COMBAT_SPEED_AWARE_VERSION:1,
   COMBAT_FX_ANIMATION_LIFECYCLE_VERSION:1,
   MIRROR_STRUCTURED_PRESENTATION_VERSION:1,
   CALAMITY_STRUCTURED_PRESENTATION_VERSION:1,
@@ -27,12 +28,21 @@
  if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V2 lifecycle API 未完整載入");
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
- if(typeof window.getStructuredCombatPacing!=="function")fail("STRUCTURED_COMBAT_PACING_API","共用 Structured Combat Pacing API 未載入");
+ if(typeof window.getStructuredCombatPacing!=="function"||typeof window.getStructuredCombatPacingForSpeed!=="function")fail("STRUCTURED_COMBAT_PACING_API","共用 Structured Combat Speed Pacing API 未完整載入");
  else{
-  [0,1,55,56,90,91,140,141,999].forEach(events=>{
-   const pacing=window.getStructuredCombatPacing(events);
-   if(Number(pacing?.openingDelay)!==70||Number(pacing?.impactDelay)!==35||Number(pacing?.stepDelay)!==24||Number(pacing?.endDelay)!==90)fail("STRUCTURED_COMBAT_PACING_PROFILE",`事件數 ${events} 應使用固定高速共用節奏`,pacing);
+  const profiles=[
+   [1,{openingDelay:140,impactDelay:70,stepDelay:48,endDelay:180}],
+   [1.5,{openingDelay:93,impactDelay:47,stepDelay:32,endDelay:120}],
+   [2,{openingDelay:70,impactDelay:35,stepDelay:24,endDelay:90}]
+  ];
+  profiles.forEach(([speed,expected])=>{
+   [0,1,55,141,999].forEach(events=>{
+    const pacing=window.getStructuredCombatPacingForSpeed(events,speed);
+    if(Number(pacing?.openingDelay)!==expected.openingDelay||Number(pacing?.impactDelay)!==expected.impactDelay||Number(pacing?.stepDelay)!==expected.stepDelay||Number(pacing?.endDelay)!==expected.endDelay||Number(pacing?.combatSpeed)!==speed)fail("STRUCTURED_COMBAT_PACING_PROFILE",`事件數 ${events}／${speed}× 倍速節奏異常`,{expected,pacing});
+   });
   });
+  const base=window.STRUCTURED_COMBAT_PACING_BASE_1X;
+  if(Number(base?.openingDelay)!==140||Number(base?.impactDelay)!==70||Number(base?.stepDelay)!==48||Number(base?.endDelay)!==180)fail("STRUCTURED_COMBAT_PACING_BASE","1× 正式戰鬥基準異常",base);
  }
  if(Number(window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION)!==1)fail("MAIN_STRUCTURED_PRESENTATION_OWNER_VERSION","主線 Structured Presentation owner guard 應為 1",window.MAIN_BATTLE_STRUCTURED_PRESENTATION_OWNER_VERSION);
  if(Number(window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION)!==1||typeof window.mainBattlePresentationSleep!=="function")fail("MAIN_BACKGROUND_PRESENTATION","主線 Structured Presentation 必須使用 background-aware sleep",{version:window.MAIN_BATTLE_BACKGROUND_PRESENTATION_VERSION,sleep:typeof window.mainBattlePresentationSleep});
