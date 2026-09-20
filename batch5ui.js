@@ -9,15 +9,26 @@
   `;document.head.appendChild(style);
  }
  function clockText(){return new Date(Date.now()+8*60*60*1000).toISOString().slice(11,19);}
+ let clockElement=null,clockTimeElement=null;
+ function connected(node){return !!node&&(typeof node.isConnected!=="boolean"||node.isConnected);}
  function ensureClock(){
-  const brand=document.querySelector("header .brand");if(!brand)return null;
-  let clock=document.getElementById("gameDailyClock");
-  if(!clock){clock=document.createElement("div");clock.id="gameDailyClock";clock.className="game-daily-clock";clock.innerHTML='<div id="gameDailyClockTime" class="game-daily-clock-time">00:00:00</div><div class="game-daily-clock-note">每日凌晨 0 點重置</div>';const save=document.getElementById("saveStatus");if(save)brand.insertBefore(clock,save);else brand.appendChild(clock);}
-  return clock;
+  if(connected(clockElement)&&connected(clockTimeElement))return clockElement;
+  clockElement=document.getElementById("gameDailyClock");
+  clockTimeElement=document.getElementById("gameDailyClockTime");
+  if(connected(clockElement)&&connected(clockTimeElement))return clockElement;
+  const brand=document.querySelector("header .brand");
+  if(!brand){clockElement=null;clockTimeElement=null;return null;}
+  if(!clockElement){
+   clockElement=document.createElement("div");clockElement.id="gameDailyClock";clockElement.className="game-daily-clock";
+   clockElement.innerHTML='<div id="gameDailyClockTime" class="game-daily-clock-time">00:00:00</div><div class="game-daily-clock-note">每日凌晨 0 點重置</div>';
+   const save=document.getElementById("saveStatus");if(save)brand.insertBefore(clockElement,save);else brand.appendChild(clockElement);
+  }
+  clockTimeElement=typeof clockElement.querySelector==="function"?clockElement.querySelector("#gameDailyClockTime"):document.getElementById("gameDailyClockTime");
+  return clockElement;
  }
  let lastDateKey=typeof gameDailyDateKey==="function"?gameDailyDateKey():"";
  function tickClock(){
-  ensureClock();const time=document.getElementById("gameDailyClockTime");if(time)time.textContent=clockText();
+  ensureClock();if(clockTimeElement)clockTimeElement.textContent=clockText();
   if(typeof gameDailyDateKey!=="function")return;
   const key=gameDailyDateKey();if(key===lastDateKey)return;lastDateKey=key;
   if(typeof ensureDailyState==="function")ensureDailyState();
@@ -59,5 +70,6 @@
  };
 
  installStyles();ensureClock();tickClock();setInterval(tickClock,1000);
+ window.BATCH5_CLOCK_CACHE_VERSION=1;
  window.BATCH5_UI_READY=true;
 })();
