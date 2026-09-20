@@ -32,6 +32,11 @@
  function effectiveCombatSpeed(){
   return gmOverride()??playerCombatSpeed();
  }
+ function scaledDelay(baseMs,speed=effectiveCombatSpeed()){
+  const base=Math.max(0,Number(baseMs)||0);
+  const resolved=normalizeSpeed(speed)??playerCombatSpeed();
+  return Math.max(0,Math.round(base/resolved));
+ }
  function setGmOverride(value){
   const speed=normalizeSpeed(value),key=storageKey();
   if(speed==null||!key)return false;
@@ -59,6 +64,7 @@
  window.playerCombatSpeed=playerCombatSpeed;
  window.gmCombatSpeedOverride=gmOverride;
  window.effectiveCombatSpeed=effectiveCombatSpeed;
+ window.combatSpeedScaledDelay=scaledDelay;
  window.setGmCombatSpeedOverride=setGmOverride;
  window.clearGmCombatSpeedOverride=clearCurrent;
  window.clearGmCombatSpeedOverrideForUser=clearForUser;
