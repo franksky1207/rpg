@@ -46,7 +46,8 @@
  window.gmSetTestMarkLevelUi=function(key,value){
   if(typeof window.gmSetTestMarkLevel!=="function")return false;
   const ok=window.gmSetTestMarkLevel(key,value);
-  window.refreshGmMarkTestControls();
+  if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  else window.refreshGmMarkTestControls();
   return ok;
  };
  window.gmMarkManagementHtml=function(){
