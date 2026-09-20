@@ -1,6 +1,7 @@
 (function(){
  const CONTINUOUS_COUNT=window.CONTINUOUS_BATTLE_COUNT;
- const REAL_BATTLE_SAMPLE_LIMIT=20;
+ const REAL_BATTLE_SAMPLES_PER_SPEED=8;
+ const REAL_BATTLE_SAMPLE_SPEEDS=Object.freeze([1,1.5,2]);
  const battleGapMs=window.mainBattleGapMs;
  const battleFlowSleep=window.mainBattleFlowSleep;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
@@ -32,6 +33,15 @@
  }
  function stopMainBackground(started){
   if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
+ }
+ function retainRealBattleSamplesBySpeed(rows,sampleVersion){
+  const kept=[];
+  REAL_BATTLE_SAMPLE_SPEEDS.forEach(speed=>{
+   const matches=(Array.isArray(rows)?rows:[]).map((row,index)=>({row,index})).filter(entry=>Number(entry.row?.sampleVersion)===sampleVersion&&Number(entry.row?.combatSpeed)===speed).slice(-REAL_BATTLE_SAMPLES_PER_SPEED);
+   kept.push(...matches);
+  });
+  kept.sort((a,b)=>a.index-b.index);
+  return kept.map(entry=>entry.row);
  }
  function realBattleSampleMultiplier(playerLevel,enemyLevel){
   const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
@@ -67,10 +77,10 @@
   const sampleVersion=Math.max(0,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0));
   if(sampleVersion<=0)return false;
   if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
-  const samples=(Array.isArray(state.offline.battleSamples)?state.offline.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===sampleVersion);
+  const samples=retainRealBattleSamplesBySpeed(state.offline.battleSamples,sampleVersion);
   samples.push({sampleVersion,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
   state.offline.battleSampleVersion=sampleVersion;
-  state.offline.battleSamples=samples.slice(-REAL_BATTLE_SAMPLE_LIMIT);
+  state.offline.battleSamples=retainRealBattleSamplesBySpeed(samples,sampleVersion);
   return true;
  }
  function consumePendingStoryFromResult(ctx,result){
