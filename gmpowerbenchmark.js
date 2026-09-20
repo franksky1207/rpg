@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -372,6 +372,14 @@
    result.rows.map(combatRowHtml).join("")+'</div>';
  }
 
+ function summaryEntryLine(entries,formatter,empty="無"){
+  const rows=Object.entries(entries||{});
+  return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
+ }
+ function specializationName(key){
+  const defs=window.SPECIALIZATION_DEFS||{};
+  return defs[key]&&defs[key].name?String(defs[key].name):String(key);
+ }
  function summaryText(){
   const s=snapshot(),st=s.stats,m=mapAt(MODEL.mapIndex),lines=[];
   lines.push("《文明戰線・戰力基準測試》");
@@ -382,11 +390,50 @@
   lines.push("印記："+markText(s));
   lines.push("裝備："+equipmentText(s));
   lines.push("基準："+(m?("Lv"+m.min+"～"+m.max+"｜"+m.name):"未選擇地圖")+"｜測試量 "+MODEL.runs);
-  if(MODEL.outputResult){const r=MODEL.outputResult;lines.push("");lines.push("【輸出基準】"+r.sourceLabel+"｜DEF "+fmt(r.targetDef));lines.push("平均每回合有效輸出 "+fmt(r.avgRoundDamage)+"｜平均單次 "+fmt(r.avgHitDamage)+"｜暴擊率 "+r.critRate+"%｜穿透 "+r.penetrationRate+"%｜無視DEF "+r.ignoreRate+"%");}
-  if(MODEL.defenseResult){const r=MODEL.defenseResult;lines.push("");lines.push("【承傷基準】"+r.sourceLabel+"｜ATK "+fmt(r.targetAtk));lines.push("平均可承受 "+r.avgSurvivalTurns+" 回合｜平均每回合HP損失 "+fmt(r.avgTurnLoss)+"｜閃避 "+r.dodgeRate+"%｜敵方暴擊 "+r.enemyCritRate+"%");}
-  if(MODEL.combatResult){lines.push("");lines.push("【主線實戰】"+MODEL.combatResult.mapName+"｜每隻 "+MODEL.combatResult.runs+" 場");MODEL.combatResult.rows.forEach(r=>lines.push("Lv."+r.level+" "+r.name+"（"+(KIND_LABELS[r.kind]||r.kind)+"）：勝率 "+r.winRate+"%｜平均 "+r.avgTurns+" 回合｜勝利剩餘HP "+r.avgWinHpPct+"%｜玩家回合傷害 "+fmt(r.avgPlayerRoundDamage)+"｜敵人回合傷害 "+fmt(r.avgEnemyRoundDamage)));}
-  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult){lines.push("");lines.push("尚未執行輸出、承傷或主線實戰測試。");}
-  return lines.join("\\n");
+
+  if(MODEL.outputResult){
+   const r=MODEL.outputResult;
+   lines.push("");
+   lines.push("【輸出基準】"+r.sourceLabel+"｜DEF "+fmt(r.targetDef)+"｜"+r.runs+" 次");
+   lines.push("平均每回合有效輸出 "+fmt(r.avgRoundDamage)+"｜平均單次命中 "+fmt(r.avgHitDamage)+"｜最低／最高單次 "+fmt(r.minHit)+" / "+fmt(r.maxHit));
+   lines.push("實際暴擊率 "+r.critRate+"%｜平均普通攻擊 "+fmt(r.avgNormalDamage)+"｜平均暴擊傷害 "+fmt(r.avgCritDamage));
+   lines.push("每回合平均連擊 "+r.avgCombos+"｜連擊傷害占比 "+r.comboDamageShare+"%｜穿透觸發率 "+r.penetrationRate+"%｜無視 DEF 觸發率 "+r.ignoreRate+"%");
+   lines.push("先制攻擊平均傷害 "+fmt(r.avgInitiativeDamage)+"｜汲取觸發率 "+r.drainRate+"%");
+  }
+
+  if(MODEL.defenseResult){
+   const r=MODEL.defenseResult;
+   lines.push("");
+   lines.push("【承傷／生存基準】"+r.sourceLabel+"｜ATK "+fmt(r.targetAtk)+"｜"+r.runs+" 場");
+   lines.push("平均可承受回合 "+r.avgSurvivalTurns+"｜平均每回合 HP 損失 "+fmt(r.avgTurnLoss)+"｜平均命中後 HP 損失 "+fmt(r.avgHitLoss));
+   lines.push("最低／最高單次 HP 損失 "+fmt(r.minLoss)+" / "+fmt(r.maxLoss)+"｜玩家實際閃避率 "+r.dodgeRate+"%｜敵人命中後暴擊率 "+r.enemyCritRate+"%");
+   lines.push("護盾平均吸收／場 "+fmt(r.avgShieldAbsorb)+"｜吸收印記觸發率 "+r.absorptionRate+"%｜反擊平均次數／場 "+r.avgCounters);
+   lines.push("反噬平均傷害／場 "+fmt(r.avgBacklashDamage)+"｜不屈救命率 "+r.indomitableRate+"%｜達測試上限 "+r.capped+" 場");
+  }
+
+  if(MODEL.combatResult){
+   lines.push("");
+   lines.push("【主線實戰】"+MODEL.combatResult.mapName+"｜"+(MODEL.combatResult.mode==="map"?"地圖 5 隻全部":"單隻怪")+"｜每隻 "+MODEL.combatResult.runs+" 場");
+   MODEL.combatResult.rows.forEach((r,index)=>{
+    if(index>0)lines.push("");
+    lines.push("Lv."+r.level+" "+r.name+"（"+(KIND_LABELS[r.kind]||r.kind)+"）");
+    lines.push("隨機特性後平均：HP "+fmt(r.avgEnemy.hp)+"｜ATK "+fmt(r.avgEnemy.atk)+"｜DEF "+fmt(r.avgEnemy.def)+"｜暴擊 "+r.avgEnemy.crit+"%｜閃避 "+r.avgEnemy.dodge+"%");
+    lines.push("勝率 "+r.winRate+"%（"+r.wins+" 勝 / "+r.losses+" 敗）｜平均戰鬥回合 "+r.avgTurns+"｜最短／最長回合 "+r.minTurns+" / "+r.maxTurns);
+    lines.push("勝利平均剩餘 HP "+r.avgWinHpPct+"%｜失敗時敵人平均剩餘 HP "+r.avgLossEnemyHpPct+"%");
+    lines.push("玩家平均總傷害 "+fmt(r.avgPlayerTotalDamage)+"｜敵人平均總傷害 "+fmt(r.avgEnemyTotalDamage));
+    lines.push("玩家每回合傷害 "+fmt(r.avgPlayerRoundDamage)+"｜敵人每回合傷害 "+fmt(r.avgEnemyRoundDamage));
+    lines.push("玩家暴擊 "+r.playerCritRate+"%｜玩家閃避 "+r.playerDodgeRate+"%｜敵人暴擊 "+r.enemyCritRate+"%｜敵人閃避 "+r.enemyDodgeRate+"%");
+    lines.push("專精平均觸發／場："+summaryEntryLine(r.specs,(k,v)=>specializationName(k)+" "+v));
+    lines.push("印記事件平均／場："+summaryEntryLine(r.marks,(k,v)=>markName(k)+" "+v));
+    lines.push("怪物特性出現率："+summaryEntryLine(r.traits,(k,v)=>traitName(k)+" "+v+"%"));
+   });
+  }
+
+  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult){
+   lines.push("");
+   lines.push("尚未執行輸出、承傷或主線實戰測試。");
+  }
+  return lines.join("\n");
  }
  async function copySummary(){
   const text=summaryText();let ok=false;
