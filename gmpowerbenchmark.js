@@ -321,7 +321,6 @@
   const preview=enemyPreview(mapIndex,enemyIndex);
   return preview?JSON.parse(JSON.stringify(preview)):null;
  }
- function markName(key){return formalMarkName(key);}
  function traitName(key){
   const defs=typeof MONSTER_TRAITS!=="undefined"&&MONSTER_TRAITS?MONSTER_TRAITS:{};
   return defs[key]&&defs[key].name?defs[key].name:key;
@@ -503,7 +502,7 @@
  function html(){
   installStyles();ensureSelection();snapshot();
   const disabled=busyDisabled();
-  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">讀取正式角色與正式主線怪物資料，在沙盒中計算；不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。目前提供角色快照、輸出、承傷、主線實戰與摘要。</div>'+
+  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：讀取正式角色與正式主線怪物資料，在沙盒中進行 100／1000 場量化測試，提供角色快照、輸出、承傷、主線實戰與完整摘要。若只想快速確認單一主線怪功能，可使用「地圖怪測試」。本工具不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。</div>'+
    '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+
    '<label>大階段<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
    '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
