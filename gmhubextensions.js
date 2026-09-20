@@ -1,6 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
  let activeMode="manage";
+ const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage","mirror-manage"];
  const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","marks-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
@@ -31,7 +32,7 @@
   return end>=0?html.slice(0,end+6)+extra+html.slice(end+6):extra+html;
  }
 
- function reorderTestSections(html){
+ function reorderSections(html,order){
   if(typeof document==="undefined")return html;
   const template=document.createElement("template");
   template.innerHTML=String(html||"").trim();
@@ -39,13 +40,13 @@
   if(!hub)return html;
   const close=Array.from(hub.children).find(el=>el.classList?.contains("gm-hub-close"))||null;
   const rows=Array.from(hub.children).filter(el=>el.matches?.("details.gm-hub-section"));
-  const rank=new Map(TEST_SECTION_ORDER.map((id,index)=>[id,index]));
+  const rank=new Map(order.map((id,index)=>[id,index]));
   const original=new Map(rows.map((el,index)=>[el,index]));
   rows.sort((a,b)=>{
    const aId=a.getAttribute("data-gm-section")||a.getAttribute("data-gm-extension")||"";
    const bId=b.getAttribute("data-gm-section")||b.getAttribute("data-gm-extension")||"";
-   const aRank=rank.has(aId)?rank.get(aId):TEST_SECTION_ORDER.length+original.get(a);
-   const bRank=rank.has(bId)?rank.get(bId):TEST_SECTION_ORDER.length+original.get(b);
+   const aRank=rank.has(aId)?rank.get(aId):order.length+original.get(a);
+   const bRank=rank.has(bId)?rank.get(bId):order.length+original.get(b);
    return aRank-bRank;
   });
   rows.forEach(row=>hub.insertBefore(row,close));
@@ -64,9 +65,10 @@
    const pos=html.indexOf(marker);
    html=pos>=0?html.slice(0,pos)+append+html.slice(pos):html+append;
   }
-  return activeMode==="test"?reorderTestSections(html):html;
+  return reorderSections(html,activeMode==="test"?TEST_SECTION_ORDER:MANAGE_SECTION_ORDER);
  };
 
+ window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=3;
+ window.GM_HUB_EXTENSION_VERSION=4;
 })();
