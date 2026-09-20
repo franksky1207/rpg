@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -129,10 +129,14 @@
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:Object.keys(s.specs||{});
   return keys.map(k=>(defs[k]&&defs[k].name?defs[k].name:k)+" Lv."+whole(s.specs&&s.specs[k],0)).join("｜");
  }
+ function formalMarkName(key){
+  const rows=Array.isArray(window.CIVILIZATION_CALAMITY_CONFIG)?window.CIVILIZATION_CALAMITY_CONFIG:[];
+  const row=rows.find(entry=>String(entry&&entry.markId||"")===String(key));
+  return row&&row.markName?String(row.markName):String(key);
+ }
  function markText(s){
-  const defs=window.MARK_DEFS||{};
   const keys=Array.isArray(window.MARK_KEYS)?Array.from(window.MARK_KEYS):Object.keys(s.marks||{});
-  return keys.map(k=>(defs[k]&&defs[k].name?defs[k].name:k)+" Lv."+whole(s.marks&&s.marks[k],0)).join("｜");
+  return keys.map(k=>formalMarkName(k)+" Lv."+whole(s.marks&&s.marks[k],0)).join("｜");
  }
  function enhancementText(s){
   return Object.keys(s.enhancements||{}).map(k=>(SLOT_LABELS[k]||k)+" +"+whole(s.enhancements[k],0)).join("｜");
@@ -184,7 +188,7 @@
  }
  function snapshotHtml(){
   const s=snapshot(),st=s.stats;
-  return '<div class="item"><b>目前角色基準</b><div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkSync()">同步目前角色狀態</button></div>'+
+  return '<div class="item"><b>目前角色基準</b><div class="muted gmpb-sub">執行戰力測試時會自動讀取目前正式角色狀態。</div>'+
    '<div style="margin-top:9px">Lv.'+s.level+'　VIP'+s.vipLevel+'（'+fmt(s.vipPoints)+' 積分）</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
@@ -278,10 +282,7 @@
   const preview=enemyPreview(mapIndex,enemyIndex);
   return preview?JSON.parse(JSON.stringify(preview)):null;
  }
- function markName(key){
-  const defs=window.MARK_DEFS||{};
-  return defs[key]&&defs[key].name?defs[key].name:key;
- }
+ function markName(key){return formalMarkName(key);}
  function traitName(key){
   const defs=typeof MONSTER_TRAITS!=="undefined"&&MONSTER_TRAITS?MONSTER_TRAITS:{};
   return defs[key]&&defs[key].name?defs[key].name:key;
