@@ -13,7 +13,7 @@
    const selected=Number(override)===speed;
    return `<button class="btn ${selected?"blue":""}" type="button" onclick="gmSetCombatSpeedOverride(${speed})" ${selected?"disabled":""}>${speedLabel(speed)}</button>`;
   }).join("");
-  return `<div class="muted gm-hub-note">一般玩家 Lv.1～500 的正式速度目前固定為 1×。此處只設定目前登入帳號的 GM 覆寫；設定會保留到正式登出，不寫入角色存檔或雲端存檔。</div><div class="controls">${buttons}</div><div class="item" style="margin-top:10px"><div><b>目前有效速度：${speedLabel(effective)}</b></div><div class="muted" style="margin-top:5px">玩家正式速度：${speedLabel(formal)}　｜　GM 覆寫：${override==null?"未設定":speedLabel(override)}</div><div class="muted" style="margin-top:5px">本批先建立倍速設定核心；正式戰鬥節奏會在下一批接入。場與場之間固定 140ms，不屬於倍速範圍。</div></div>`;
+  return `<div class="muted gm-hub-note">一般玩家 Lv.1～500 的正式速度目前固定為 1×。此處只設定目前登入帳號的 GM 覆寫；設定會保留到正式登出，不寫入角色存檔或雲端存檔。</div><div class="controls">${buttons}</div><div class="item" style="margin-top:10px"><div><b>目前有效速度：${speedLabel(effective)}</b></div><div class="muted" style="margin-top:5px">玩家正式速度：${speedLabel(formal)}　｜　GM 覆寫：${override==null?"未設定":speedLabel(override)}</div><div class="muted" style="margin-top:5px">倍速會影響正式戰鬥演出與同倍率離線實戰樣本效率；場與場之間固定 140ms，不受倍速影響。</div></div>`;
  }
  window.gmSetCombatSpeedOverride=function(value){
   if(typeof window.setGmCombatSpeedOverride!=="function"||!window.setGmCombatSpeedOverride(value)){
