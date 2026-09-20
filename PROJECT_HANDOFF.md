@@ -1,5 +1,5 @@
 # 《文明戰線》PROJECT HANDOFF
-更新日期：2026-09-19  
+更新日期：2026-09-20  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
@@ -110,6 +110,39 @@ goldBase(l) = ceil(6 + 4*l)
 - VIP 20 可免除裝備遺失。
 - 遺失裝備可在背包贖回，贖回費用為該裝備買價 ×2。
 
+## 主線怪物正式能力公式
+
+正式 owner：`balance.js`，`MAIN_MONSTER_BALANCE_VERSION = 1`。
+
+基礎：
+```js
+HP  = ceil(55 + 24 * level)
+ATK = ceil(9 + 4.2 * level)
+DEF = ceil(2.5 + 2.0 * level)
+```
+
+style：
+- tank：HP ×1.15、ATK ×0.95、DEF ×1
+- attack：HP ×0.92、ATK ×1.10、DEF ×1
+- 其他：×1
+
+同一張地圖第 1～5 隻怪再套 stage：
+1. HP ×1.22、ATK ×1.17、DEF ×1.10
+2. HP ×1.31、ATK ×1.24、DEF ×1.14
+3. HP ×1.34、ATK ×1.28、DEF ×1.15
+4. HP ×1.39、ATK ×1.29、DEF ×1.17
+5. HP ×1.44、ATK ×1.27、DEF ×1.17
+
+每層倍率逐步 `ceil`。目前 `kind=normal/elite/boss` 本身沒有額外能力倍率；差異主要來自地圖資料的 style、位置 stage 與正式隨機 traits。
+
+傷害公式 owner：`combatmath.js`：
+```js
+damage = max(1, ceil((ATK - DEF * 0.55) * random(0.95, 1.05)))
+```
+
+**Lv501～1000 的新主線怪物公式尚未正式實作。**
+未來若要擴等，先用 GM 戰力基準收集數據，再改正式 `balance.js`；不要建立平行 monster formula。
+
 ---
 
 # 4. 裝備
@@ -139,21 +172,35 @@ goldBase(l) = ceil(6 + 4*l)
 
 正式：
 - `VIP_MAX_LEVEL = 20`
-- `VIP_PROGRESSION_VERSION = 12`
-- `VIP_THRESHOLD_BASE = 2500`
+- `VIP_PROGRESSION_VERSION = 13`
+- `VIP_THRESHOLD_BASE = 1000`
 
 升級門檻：
 ```js
-VIP threshold(level) = 2500 * level^2
-VIP level = floor(sqrt(vipPoints / 2500))
+VIP threshold(level) = 1000 * level^2
+VIP level = floor(sqrt(vipPoints / 1000))
 ```
+
+例如：
+- VIP5：25,000
+- VIP6：36,000
+- VIP20：400,000
 
 副本 VIP point multiplier：
 - VIP 0～3：×1.00
 - VIP 4～11：×1.10
 - VIP 12～20：×1.20
 
-VIP stat bonus 的正式數值 owner 仍在 `engine.js`，不要另造第二套。
+`engine.js` 正式戰鬥加成：
+- HP / ATK：每級 +0.5%
+- DEF：每級 +0.25%
+- 暴擊／閃避：每級 +0.25 個百分點
+
+正式 owner：
+- 門檻／等級：`vipprogression.js`
+- 戰鬥能力加成：`engine.js -> vipBonusStats()`
+
+不要另造第二套 VIP 公式。
 
 ---
 
@@ -225,17 +272,16 @@ VIP stat bonus 的正式數值 owner 仍在 `engine.js`，不要另造第二套�
 ## Outer Pacing
 
 `combatpacing.js`：
-- 主線普通：140ms
-- 主線菁英：220ms
-- 主線 Boss：140ms
-- 虛空 floor：350ms
-- 文明災厄 battle：350ms
+- `COMBAT_OUTER_PACING_VERSION = 2`
+- `COMBAT_OUTER_GAP_MS = 140`
+- main / bounty / arena / mirror / void / calamity 目前全部統一 140ms
+
 
 正式 owner：
 - `combatfx.js`：戰鬥內動畫 pacing
 - `combatpacing.js`：場與場之間 pacing
 
-不要在各模式自己硬編第二套 delay。
+不要在各模式自己硬編第二套 delay，也不要恢復先前 220ms／350ms 的舊值。
 
 ---
 
@@ -751,40 +797,233 @@ Normalization：
 
 ---
 
-# 24. GM：文明災厄／印記／稱號
+# 24. GM 管理／測試系統：最新正式架構
+
+## 24.1 GM Hub registry
+
+`gmhub.js` 只負責 Hub 外框、管理／測試分頁、section 展開狀態、共用樣式與關閉按鈕。
+
+`gmhubextensions.js` 是正式 section registry owner：
+- `GM_HUB_EXTENSION_VERSION = 7`
+- `GM_HUB_REGISTRY_VERSION = 1`
+- `registerGmHubSection()`
+- `gmHubRegisteredSectionsHtml(mode)`
+- `gmHubRegisteredSectionIds(mode)`
+
+舊架構已退休：
+- 不再先產整份 GM HTML 再用 `<template>` parse。
+- 不再 `reorderSections()`。
+- 不再由 extension 第二次 override `gmHtml()`。
+- 所有原生與擴充 section 都走同一 registry。
+
+管理頁正式順序：
+1. 資料管理
+2. 背景戰鬥
+3. 角色管理
+4. 專精管理
+5. 強化管理
+6. 印記管理
+7. 副本管理
+
+測試頁正式順序：
+1. VIP 測試
+2. 專精測試
+3. 強化測試
+4. 印記測試
+5. 戰力基準測試
+6. 地圖怪測試
+7. 特殊怪測試
+8. 懸賞戰測試
+9. 競技場測試
+10. 虛空幻境測試
+11. 鏡像戰測試
+12. 文明災厄測試
+13. 稱號預覽
+14. 劇情測試
+
+section 展開／收合狀態由 `gmHubOpenSections` 保存於本次頁面生命週期。
+
+## 24.2 GM 共用測試狀態
+
+`vipgm.js`：
+- `GM_TEST_STATE_VERSION = 1`
+- `GM_ENHANCEMENT_TEST_PIPELINE_VERSION = 5`
+
+`gmhub.js`：
+- `GM_ENHANCEMENT_HUB_VERSION = 5`
+
+共用測試狀態：VIP、8 項專精、5 個裝備欄位強化、10 枚印記。
+
+上方按鈕正式名稱：**「同步角色到測試設定」**。
+
+`gmUseCurrentTestStatus()` 先同步四類 test state，最後只做一次 `gmRefreshTestControls()`。測試 setter 可用 `refresh=false` 做批次同步，避免每改一項就重複操作 DOM。
+
+GM 測試 state 只存在本次網頁工作階段；重新整理回預設。**不得 save、不得修改正式角色。**
+
+## 24.3 戰力基準測試
+
+正式 owner：`gmpowerbenchmark.js`
+
+目前：
+- `GM_POWER_BENCHMARK_VERSION = 9`
+- `GM_POWER_BENCHMARK_BATCH_SIZE = 25`
+
+用途：完整平衡分析，不是一般快速單怪測試。
+
+選擇層級：
+- 大階段
+- 大區域
+- 地圖
+- 怪物
+- 測試量 100 / 1000
+
+「目前角色基準」顯示正式角色：
+- Lv / VIP / VIP 積分
+- HP / ATK / DEF / 暴擊 / 閃避
+- 強化
+- 專精
+- 印記
+- 裝備
+
+每次執行輸出、承傷、主線實戰時都自動重新 `captureSnapshot()`；不需要手動同步按鈕。
+
+### 輸出基準
+敵人不還手，可用目前怪、最高普通怪、菁英、Boss 或自訂 DEF。統計：
+- 平均每回合有效輸出
+- 平均單次命中
+- 最低／最高單次
+- 實際暴擊率
+- 平均普通攻擊
+- 平均暴擊傷害
+- 每回合平均連擊
+- 連擊傷害占比
+- 穿透觸發率
+- 無視 DEF 觸發率
+- 先制平均傷害
+- 汲取觸發率
+
+### 承傷／生存基準
+玩家不主動攻擊，每場滿 HP 開始直到倒下；保留正式閃避、護盾、吸收、不屈、反擊、反噬。統計：
+- 平均可承受回合
+- 平均每回合 HP 損失
+- 平均命中後 HP 損失
+- 最低／最高單次 HP 損失
+- 玩家實際閃避率
+- 敵人命中後暴擊率
+- 護盾平均吸收／場
+- 吸收印記觸發率
+- 反擊平均次數／場
+- 反噬平均傷害／場
+- 不屈救命率
+- 達測試上限場數
+
+### 現行主線實戰基準
+可測單隻或整張地圖 5 隻。每場重新生成正式主線怪與隨機 traits，直接走正式 `runCombatCore()`。每隻怪統計：
+- 隨機特性後平均 HP / ATK / DEF / 暴擊 / 閃避
+- 勝率、勝敗場數
+- 平均／最短／最長回合
+- 勝利平均剩餘 HP
+- 失敗時敵人平均剩餘 HP
+- 玩家／敵人平均總傷害
+- 玩家／敵人每回合傷害
+- 雙方暴擊／閃避
+- 專精平均觸發／場
+- 印記事件平均／場
+- 怪物特性出現率
+
+### 摘要一致性
+畫面與複製摘要共用正式欄位定義：
+- `outputFields()`
+- `defenseFields()`
+- `combatPrimaryFields()`
+- `combatDetailFields()`
+- `combatEventGroups()`
+
+複製摘要包含畫面已產生的完整測試結果。印記名稱統一走 `markcore.js -> markDisplayName()`，不再顯示 ward / suppression 等內部 key。
+
+### 效能與 busy
+100／1000 場分批執行，每 25 場讓出一次 event loop。測試期間：
+- 執行按鈕顯示「測試中…」
+- 基準選擇、重置、其他測試按鈕暫時 disabled
+- 完成或錯誤後在 `finally` 解鎖
+
+`combatcore.js` 沒有為此修改正式戰鬥規則；benchmark 仍讀正式 events 統計。輸出測試已由多次 filter 改成單次走訪 events。
+
+## 24.4 地圖怪測試與戰力基準分工
+
+- **地圖怪測試**：快速單怪功能測試，可直接指定任何已實作主線怪。
+- **戰力基準測試**：100／1000 場量化平衡分析，包含輸出、承傷、實戰與完整摘要。
+
+兩者都保留。
+
+## 24.5 GM 資料管理
+
+`gmdata.js`：
+- `GM_DATA_MANAGEMENT_VERSION = 1`
+- GM only
+- 匯出正式本機 save JSON
+- 匯入前先驗證並走正式 migration / normalization
+- 確認後才覆蓋
+- 匯入後重設離線基準，避免把檔案保存期間算成離線收益
+- 不包含 Supabase session／帳號登入資料
+
+## 24.6 GM 背景戰鬥
+
+`gmbackground.js`：
+- `GM_BACKGROUND_BATTLE_VERSION = 1`
+- `GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION = 1`
+
+GM 背景開關統一控制正式背景 gate；不要在個別模式再造第二個 GM gate。
+
+## 24.7 角色／副本管理與小型效能收尾
+
+角色管理：
+- 指定等級
+- 指定金幣
+- 指定解鎖到等級關卡
+- 重置 VIP（等級＋積分）
+- 產生裝備
+
+產生裝備的等級已改為數字輸入：
+- `GM_GEAR_LEVEL_INPUT_VERSION = 1`
+- min=1
+- max=`MAX_LEVEL`
+- 不再生成 Lv1～MAX_LEVEL 的超長 option list
+- `gmCreateGear()` 仍驗證整數與範圍
+
+副本管理：
+- 套用副本／VIP 資料
+- 重置今日副本
+- 重置全部虛空紀錄
+- 鏡像戰管理
+
+`batch5ui.js`：
+- `BATCH5_CLOCK_CACHE_VERSION = 1`
+- 每日時鐘快取 `gameDailyClock` / `gameDailyClockTime` DOM reference；正常存在時每秒 tick 不再重複 lookup。
+
+## 24.8 文明災厄／印記／稱號 GM
 
 `calamitygm.js`：
-
 - `GM_CALAMITY_TEST_VERSION = 1`
 - `GM_MARK_MANAGEMENT_VERSION = 1`
 - `GM_MARK_CONFIG_OWNER_VERSION = 1`
 - `GM_PLAYER_TITLE_PREVIEW_VERSION = 3`
 
-## 災厄 GM
-- 單次挑戰模擬。
-- 完整擊殺模擬。
-- 沙盒，不修改正式災厄 HP／印記。
+災厄 GM：
+- 單次挑戰模擬
+- 完整擊殺模擬
+- 沙盒，不修改正式災厄 HP／印記
 
-## 印記 GM
-- 正式管理與測試仍以既有 mark owner 為準。
-- 測試狀態與正式 state 分離。
+印記：
+- 正式管理與測試分離
+- `markcore.js` 正式公開 `markDefinition()`、`markDisplayName()`
+- GM / benchmark 應透過 mark owner 取得名稱
 
-## 稱號 GM 預覽
-目前不是「純稱號」預覽，而是：
-
-**實戰名稱預覽 = 稱號 + 目前正式玩家名字**
-
-- 直接使用正式 `playerIdentityNameHtml()`。
-- 放進接近實戰的 `.combatant.player > h2` 結構。
-- 有 HP 100/100 作尺寸參考。
-- 前 10 災厄、後 6 鏡像。
-- 16 個全部可預覽。
-- 明確使用 `allowUnownedTitle:true`。
-- 不解鎖、不裝備、不寫 `state.titles`、不 save。
-
-玩家名字曾在預覽中因 `-webkit-text-fill-color` 被吃掉，現已修正：
-- 正式 `.player-identity-name` 明確鎖 `-webkit-text-fill-color: currentColor`
-- GM 預覽另有金色可見 fallback。
+稱號 GM 預覽：
+- 顯示「稱號 + 目前正式玩家名字」
+- 走正式 renderer
+- 可用 `allowUnownedTitle:true` 預覽未擁有稱號
+- 不解鎖、不裝備、不 save
 
 ---
 
@@ -855,18 +1094,24 @@ Normalization：
 
 ---
 
-# 28. 目前沒有完成／仍需實機觀察的項目
+# 28. 尚未完成／仍需實機觀察
 
-目前本輪稱號系統的程式改造已完成，沒有已知必做的程式 TODO。
+目前這一輪 GM 管理／測試優化 1～12 已全部完成，沒有尚未做完的 GM 結構改造。
 
-仍建議下一輪實測觀察：
+仍未正式實作：
+- **Lv501～1000 主線怪物新平衡公式／第二階段成長。**
+- 目前 `balance.js MAIN_MONSTER_BALANCE_VERSION=1` 仍是 Lv1～500 的正式唯一公式。
+- 後續應先使用「戰力基準測試」收集多組角色／怪物數據，再決定 Lv501+ 正式公式；不要先做平行公式。
+
+仍建議實機觀察：
+- iPhone Safari 跑戰力基準 1000 場、尤其「整張地圖 5 隻全部」時的 UI 流暢度、發熱與執行時間。
 - iPhone Safari 上裝備「距神一步／神蹟」打鏡像戰的 FPS、發熱與視覺裁切。
 - 16 個稱號在不同長度玩家名、桌機／手機實戰卡中的排版。
 - background catch-up 長時間後的實際速度與 UI 流暢度。
 - 雲端下載救援 + Save Write Guard 的真實跨裝置流程。
 
-**舊存檔處理目前不要主動重構。**  
-本輪優化時使用者明確要求「舊檔案的處理先不要修改」。只有出現具體舊檔 bug 證據時再處理。
+**舊存檔／舊資料處理目前不要主動重構。**
+只有使用者明確要求，或出現可重現的舊檔 bug 證據時才處理。
 
 ---
 
@@ -902,6 +1147,16 @@ Normalization：
 - 稱號 UI：`playertitleui.js`
 - 稱號 CSS：`playertitles.css`
 - 稱號 integrity：`playertitleintegrity.js`
+- GM Hub 外框／原生 renderer：`gmhub.js`
+- GM section registry／排序：`gmhubextensions.js`
+- GM 共用測試 state：`vipgm.js`
+- GM 戰力基準：`gmpowerbenchmark.js`
+- GM save JSON 管理：`gmdata.js`
+- GM 背景戰鬥 gate：`gmbackground.js`
+- GM 災厄／印記／稱號：`calamitygm.js`
+- GM 鏡像：`mirrordungeongm.js`
+- GM 劇情測試：`gmstorytest.js`
+- 每日時鐘／副本管理 UI：`batch5ui.js`
 - 全域 runtime integrity：`runtimeintegrity.js`
 - final integrity：`finalintegrity.js`
 - script / CSS 載入順序與 cache-bust：`index.html`
@@ -967,8 +1222,11 @@ Normalization：
 
 # 31. 下一個對話如何接手
 
-把以下指令直接貼到新對話：
+把以下標準指令直接貼到新對話：
 
 > 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 GitHub `main` 的實際程式碼與 `index.html` 載入順序，完整承接《文明戰線》專案。  
 > `main` 是唯一真實來源；handoff 只作摘要。  
+> 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
+> 我說「先討論／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
+> 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
 > 現在先不要修改任何檔案，先確認最新狀態與正式 owner，然後等我的下一個指令。
