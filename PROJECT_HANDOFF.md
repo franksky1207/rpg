@@ -1605,8 +1605,18 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - Boss 解鎖規則已落地：玩家等級 ≥ Boss 等級 - 5，且前一 Boss 已完成；第 1 隻只看 Lv.500 與已進宇宙紀元。
 - 本批 **沒有** 開戰、EXP、獎勵、裝備生成或 UI。
 
+第 2 批冒險 UI 已完成：
+- 宇宙紀元「冒險」已不再顯示 placeholder，正式讀 `secondworlddata.js`。
+- UI 結構為「大區 → 直接顯示該區已開放 Boss」，不沿用銀河紀元 100 張小地圖。
+- 未解鎖的大區／Boss 不顯示；已擊敗 Boss 仍保留可見。
+- 大區可折疊，預設自動展開目前最高已解鎖 Boss 所在區。
+- Boss 卡顯示序號、名稱、Lv、可挑戰／已擊敗狀態；本批不提供開戰按鈕。
+- 桌機沿用 5 欄 Boss grid（10 Boss = 5×2）；手機沿用 2 欄（10 Boss = 2×5）。
+- 主畫面「冒險」在宇宙紀元改為宇宙主線文案。
+- GM 同步檢查：本批只有玩家端選擇 UI，沒有新增戰鬥、正式 state mutation 或測試命令，因此 **不新增 GM 管理／GM 測試入口**；等 Boss battle owner 接入時同步擴充「地圖怪測試」與「戰力基準」。
+- Integrity 已同步：`finalintegrity.js` 驗證第二世界資料 owner 與冒險 UI owner，並修正正式 schema 檢查為 14。
+
 仍要處理：
-- 第二世界冒險 UI：大區 → 直接顯示 10 Boss；不沿用第一世界 100 張小地圖結構。
 - effective level cap：未進宇宙紀元 500、已進宇宙紀元 1000；不可只把全域 `MAX_LEVEL` 粗暴改 1000。
 - Lv.500～999 第二世界 EXP 需求與 Lv.1000 封頂。
 - 第二世界 Boss 能力公式、traits 接法、戰鬥 pipeline。
