@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -50,6 +50,69 @@
  function secondWorldEquipmentRedemptionCost(item,useTest=false){
   return Number(item?.world)===2?secondWorldEquipmentSaleDarkMatter(item,useTest)*REDEMPTION_MULTIPLIER:null;
  }
+ function universePhase(target=null){
+  const s=target&&typeof target==="object"?target:currentState();
+  return s?.secondWorld?.entered===true;
+ }
+ function equipmentSaleQuote(item,options={}){
+  const s=options.state&&typeof options.state==="object"?options.state:currentState();
+  const useTest=options.useTestSpecializations===true;
+  if(!item)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:0,phase:universePhase(s)?2:1};
+  const world=Number(item.world)===2?2:1;
+  if(universePhase(s)){
+   if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase:2};
+   const darkMatter=secondWorldEquipmentSaleDarkMatter(item,useTest);
+   const darkEnergy=Number(item.q)===5?1:0;
+   return {currency:"darkMatter",amount:darkMatter,gold:0,darkMatter,darkEnergy,world,phase:2};
+  }
+  const gold=typeof window.specializationSellValue==="function"?window.specializationSellValue(item,useTest):Math.max(0,Math.floor(Number(item.sell)||0));
+  return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0,world,phase:1};
+ }
+ function mergeEquipmentSaleQuotes(quotes=[]){
+  const rows=Array.isArray(quotes)?quotes.filter(Boolean):[];
+  const total={currency:"mixed",amount:0,gold:0,darkMatter:0,darkEnergy:0,count:rows.length,quotes:rows};
+  rows.forEach(q=>{total.gold+=Math.max(0,Number(q.gold)||0);total.darkMatter+=Math.max(0,Number(q.darkMatter)||0);total.darkEnergy+=Math.max(0,Number(q.darkEnergy)||0);});
+  if(total.darkMatter>0||total.darkEnergy>0){total.currency="darkMatter";total.amount=total.darkMatter;}
+  else if(total.gold>0){total.currency="gold";total.amount=total.gold;}
+  else{total.currency="none";total.amount=0;}
+  return total;
+ }
+ function equipmentSaleBatchQuote(items,options={}){
+  return mergeEquipmentSaleQuotes((Array.isArray(items)?items:[]).map(item=>equipmentSaleQuote(item,options)));
+ }
+ function applyEquipmentSaleQuote(quote,target=null){
+  const s=target&&typeof target==="object"?target:currentState();
+  if(!s||!quote)return false;
+  if((Number(quote.gold)||0)>0)s.gold=Math.max(0,Math.floor(Number(s.gold)||0))+Math.floor(Number(quote.gold)||0);
+  if((Number(quote.darkMatter)||0)>0){
+   if(!s.secondWorld||typeof s.secondWorld!=="object")return false;
+   s.secondWorld.darkMatter=Math.max(0,Math.floor(Number(s.secondWorld.darkMatter)||0))+Math.floor(Number(quote.darkMatter)||0);
+  }
+  if((Number(quote.darkEnergy)||0)>0){
+   if(!s.secondWorld||typeof s.secondWorld!=="object")return false;
+   s.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(s.secondWorld.darkEnergy)||0))+Math.floor(Number(quote.darkEnergy)||0);
+  }
+  return true;
+ }
+ function settleEquipmentSale(item,options={}){
+  const quote=equipmentSaleQuote(item,options);
+  if(!applyEquipmentSaleQuote(quote,options.state||null))return {ok:false,reason:"sale-state",item,quote};
+  return {ok:true,item,quote,sold:quote.amount,currency:quote.currency,darkMatter:quote.darkMatter,darkEnergy:quote.darkEnergy,gold:quote.gold};
+ }
+ function settleEquipmentSaleBatch(items,options={}){
+  const rows=Array.isArray(items)?items:[];
+  const quote=equipmentSaleBatchQuote(rows,options);
+  if(!applyEquipmentSaleQuote(quote,options.state||null))return {ok:false,reason:"sale-state",items:rows,quote};
+  return {ok:true,items:rows,quote,count:rows.length,total:quote.amount,currency:quote.currency,darkMatter:quote.darkMatter,darkEnergy:quote.darkEnergy,gold:quote.gold};
+ }
+ function equipmentSaleText(value){
+  const q=value?.quote||value||{};
+  const parts=[];
+  if((Number(q.gold)||0)>0)parts.push(`${Math.floor(Number(q.gold)).toLocaleString()} 金幣`);
+  if((Number(q.darkMatter)||0)>0)parts.push(`${Math.floor(Number(q.darkMatter)).toLocaleString()} 暗物質`);
+  if((Number(q.darkEnergy)||0)>0)parts.push(`${Math.floor(Number(q.darkEnergy)).toLocaleString()} 暗能量`);
+  return parts.length?parts.join("＋"):"0 暗物質";
+ }
  function makeSecondWorldEquipmentForBoss(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index);
   if(index<0||!boss)return null;
@@ -99,10 +162,10 @@
   if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(reward.xp,logs);else gainExp(reward.xp,logs);
   s.secondWorld.darkMatter=Math.max(0,Math.floor(Number(s.secondWorld.darkMatter)||0))+reward.darkMatter;
   s.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(s.secondWorld.darkEnergy)||0))+1;
-  if(item)addItem(item);
+  const itemResult=item?addItem(item):{kept:false,sold:0,sale:null};
   s.secondWorld.mainline.bossKilled[index]=true;
   if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item,levelBefore,levelAfter:state.level,logs};
+  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,levelBefore,levelAfter:state.level,logs};
  }
  function applySecondWorldDeathPenalty(options={}){
   const s=currentState();
@@ -146,6 +209,10 @@
   const probe={world:2,level:500,q:5};
   const raw=typeof window.specializationMultiplier==="function"?window.specializationMultiplier:null;
   if(!Number.isFinite(secondWorldEquipmentSaleDarkMatter(probe,true)))errors.push({code:"SALE_FORMULA"});
+  const saleProbe=equipmentSaleQuote(probe,{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}},useTestSpecializations:true});
+  if(saleProbe.currency!=="darkMatter"||saleProbe.darkMatter<=0||saleProbe.darkEnergy!==1)errors.push({code:"SALE_OWNER",saleProbe});
+  const legacyProbe=equipmentSaleQuote({world:1,level:500,q:5,sell:999},{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}}});
+  if(legacyProbe.amount!==0||legacyProbe.gold!==0||legacyProbe.darkMatter!==0||legacyProbe.darkEnergy!==0)errors.push({code:"LEGACY_SALE_GATE",legacyProbe});
   const first=bossMeta(0),last=bossMeta(99);
   if(!first||!last||first.level!==505||last.level!==1000)errors.push({code:"BOSS_REGISTRY"});
   return {passed:errors.length===0,version:VERSION,redemptionMultiplier:REDEMPTION_MULTIPLIER,errors};
@@ -160,6 +227,13 @@
  window.secondWorldEquipmentQualityRoll=secondWorldEquipmentQualityRoll;
  window.secondWorldEquipmentSaleDarkMatter=secondWorldEquipmentSaleDarkMatter;
  window.secondWorldEquipmentRedemptionCost=secondWorldEquipmentRedemptionCost;
+ window.equipmentSaleQuote=equipmentSaleQuote;
+ window.equipmentSaleBatchQuote=equipmentSaleBatchQuote;
+ window.mergeEquipmentSaleQuotes=mergeEquipmentSaleQuotes;
+ window.applyEquipmentSaleQuote=applyEquipmentSaleQuote;
+ window.settleEquipmentSale=settleEquipmentSale;
+ window.settleEquipmentSaleBatch=settleEquipmentSaleBatch;
+ window.equipmentSaleText=equipmentSaleText;
  window.makeSecondWorldEquipmentForBoss=makeSecondWorldEquipmentForBoss;
  window.secondWorldMainlineRewardPreview=secondWorldMainlineRewardPreview;
  window.settleSecondWorldBossVictory=settleSecondWorldBossVictory;
