@@ -63,8 +63,10 @@ function gearAbilityHtml(it,withScore=false){
 }
 
 function homePage(){
+ const secondWorldEntry=typeof window.secondWorldHomeEntryHtml==="function"?window.secondWorldHomeEntryHtml():"";
  return `<section class="home-screen">
   <div class="home-title"><h2>文明戰線</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
+  ${secondWorldEntry}
   <div class="menu-grid">
    <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>選擇地圖並挑戰怪物</span></button>
    <button class="menu-card" onclick="go('storyrecord')"><b>戰線紀錄</b><span>回顧已完成的正式劇情</span></button>
