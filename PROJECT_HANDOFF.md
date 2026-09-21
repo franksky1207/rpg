@@ -1838,33 +1838,79 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 **插入時機：第二世界 state 結構穩定後；最晚在整體宇宙紀元正式完成前。**
 
-## 29.17 跨主題批次 G：GM／戰力基準／Integrity 最終擴充
+## 29.17 跨主題批次 G：GM 管理／GM 測試／戰力基準／Integrity 同步規則
 
-第二世界新增公式後，不能只讓玩家頁能跑，GM 與 integrity 也要知道世界 2。
+**這不是最後才處理的單一批次，而是從現在起每一批正式功能都要同步檢查的固定規則。**
 
-目前觀察：
-- `gmpowerbenchmark.js` 主要仍以第一世界 `WORLD_REGIONS/MAPS` 為測試來源。
-- `finalintegrity.js` 已檢查現有 offline/background/combat speed 等第一世界 owner，但還沒有第二世界主線／經濟／文明等級完整 integrity。
+每次修改宇宙紀元正式功能，都要一起檢查：
+1. **GM 管理**：是否有對應正式 state／進度／資源／裝備／強化／災厄／副本需要管理。
+2. **GM 測試**：是否有對應快速功能測試入口，且能測世界 2 而不污染正式角色。
+3. **戰力基準**：若修改戰鬥數值、Boss、裝備、強化、文明 final damage 等，是否需要同步納入 100／1000 場量化測試。
+4. **Integrity**：是否需要新增 owner、資料完整性、跨世界 gate、save／settlement 等檢查。
+5. **GM 文案與世界識別**：不得把第一世界既有測試文字直接全域改名；世界 1／2 必須明確區分。
 
-後續：
-- GM 測試要能明確選世界 2 Boss／裝備／資源，不破壞銀河紀元測試。
-- GM 不得因世界 2 測試寫壞正式 save；測試 state 與正式 state 繼續分離。
-- 戰力基準加入第二世界代表 Boss／文明 final damage／+21～40／world 2 裝備。
-- integrity 加入：effective cap、world2 boss registry、sale owner、world2 offline、文明等級 owner、跨世界零收益 gate。
-- 最後 `finalintegrity.js` 彙總第二世界 integrity。
-- 每一批 JS/CSS 仍要 cache-bust、重新 fetch、parse、功能 probe；這個批次是總驗收，不取代各批自己的自我檢查。
+### 各主題對應 GM 依賴
 
-**插入時機：各主題開發時同步補必要 GM/integrity；全部主題後再做一次 final sweep。**
+- **冒險／Boss**
+  - GM 地圖怪測試未來要能選「宇宙紀元 → 區域 → Boss」，不要把 100 Boss 硬塞進第一世界 `WORLD_REGIONS/MAPS`。
+  - 戰力基準要能選第二世界 Boss。
+  - 第 1 批目前只有 `secondworlddata.js` 資料骨架，沒有戰鬥／UI，因此先不硬加 GM 入口；等 Boss 戰鬥 owner 可用時再接最合理。
 
-## 29.18 每一主題完成時的共通驗收
+- **角色／等級**
+  - GM 角色管理要支援有效等級上限 500／1000，不可只依舊 `MAX_LEVEL=500`。
+  - 若有第二世界專屬狀態需要測試／管理，要明確分世界。
+
+- **背包／裝備**
+  - GM 產生裝備要能指定 world 2、Lv.501～1000 與正式第二世界命名／屬性 owner。
+  - 不可讓 GM 產裝流程誤用第一世界出售／贖回經濟。
+
+- **強化**
+  - GM 強化管理 + GM 強化測試都要支援 +21～+40。
+  - 正式角色管理與沙盒測試繼續分離。
+
+- **專精**
+  - GM 專精測試要驗證 Lv.60 對第二世界 EXP／暗物質／售價等效果，不能只看第一世界金幣文案。
+
+- **文明災厄／文明等級**
+  - GM 災厄管理／測試要能選第二世界 10 隻災厄、true kills、persistent HP、文明等級結果。
+  - 戰力基準要能帶入 Civilization final damage。
+
+- **副本**
+  - 懸賞、競技、鏡像、虛空各自對應既有 GM 測試；世界 2 規則完成時同步擴充。
+  - 不要另造第二套不共用 daily／snapshot owner 的 GM 測試資料。
+
+- **背景／速度／離線**
+  - GM 背景開關與 2× override 繼續走既有共用 owner。
+  - 第二世界 background／offline 完成時，GM／integrity 要能驗證世界 2 sample、速度與 settlement。
+
+### 目前 main 觀察
+- `gmhub.js` 的「地圖怪測試」仍只讀第一世界 `WORLD_REGIONS/MAPS`。
+- `gmpowerbenchmark.js` 目前也主要以第一世界 `WORLD_REGIONS/MAPS` 為測試來源。
+- `gmhub.js` 的角色等級／產生裝備仍以舊 `MAX_LEVEL` 為上限。
+- `finalintegrity.js` 已檢查現有 offline/background/combat speed 等 owner，但還沒有第二世界主線／經濟／文明等級完整 integrity。
+
+### 最終收尾
+- 各批修改時先同步補「必要」GM／Integrity，不要全部拖到最後。
+- 全部主題完成後，再做一次 **GM／戰力基準／Integrity final sweep**，確認沒有漏掉任何世界 2 功能。
+- GM 測試不得寫壞正式 save；測試 state 與正式 state 繼續分離。
+- 每一批 JS/CSS 仍要 cache-bust、重新 fetch、parse、功能 probe。
+
+**插入時機：每一批正式功能修改時同步檢查與處理；全部主題後再總驗收一次。**
+
+## 29.18 每一主題／每一批完成時的共通驗收
 
 1. 重新讀 `main` 找正式 owner，不靠本 handoff 猜程式。
-2. 宇宙紀元正式流程不得新增／扣除第一世界 `state.gold`。
-3. 宇宙紀元不得新增 `basicStones / advancedStones`。
-4. 世界 1 回顧不得產生收益、損失或正式進度。
-5. 新經濟／settlement 必須走單一 owner，不新增散落第二套公式。
-6. JS/CSS 修改後更新 `index.html` cache-bust，重新 fetch、parse／integrity／功能 probe。
-7. 完成後更新本第 29 節，清掉已完成項目，讓下一個對話只看到真正剩下的工作。
+2. **檢查對應 GM 管理是否需要同步修改。**
+3. **檢查對應 GM 測試是否需要同步修改。**
+4. 若涉及戰鬥數值／Boss／裝備／強化／文明等級，檢查戰力基準是否需要同步修改。
+5. 檢查 Integrity／final integrity 是否需要新增對應驗證。
+6. 宇宙紀元正式流程不得新增／扣除第一世界 `state.gold`。
+7. 宇宙紀元不得新增 `basicStones / advancedStones`。
+8. 世界 1 回顧不得產生收益、損失或正式進度。
+9. 新經濟／settlement 必須走單一 owner，不新增散落第二套公式。
+10. GM 沙盒測試不得修改正式角色／正式 save；GM 管理若會寫正式 state，必須走既有正式 save／rollback 安全語意。
+11. JS/CSS 修改後更新 `index.html` cache-bust，重新 fetch、parse／integrity／功能 probe。
+12. 完成後更新本第 29 節，清掉已完成項目，讓下一個對話只看到真正剩下的工作。
 
 ## 29.19 仍建議持續實機觀察（不阻塞宇宙紀元開發）
 
