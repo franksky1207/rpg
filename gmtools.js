@@ -19,11 +19,12 @@ function gmRewardSummaryHtml(summary,extraRows=""){
 }
 
 function gmLevel(){
- const raw=prompt(`指定等級（1～${MAX_LEVEL}）`,state.level);
+ const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
+ const raw=prompt(`指定等級（1～${cap}）`,state.level);
  if(raw===null)return;
  const n=Math.floor(Number(raw));
- if(!Number.isFinite(n)){alert("請輸入有效等級。");return;}
- state.level=clampGameLevel(n);
+ if(!Number.isFinite(n)||n<1||n>cap){alert(`請輸入 1～${cap} 的整數。`);return;}
+ state.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(n,state):clampGameLevel(n);
  state.exp=0;
  state.hp=playerCombatStats().hp;
  save();render();
