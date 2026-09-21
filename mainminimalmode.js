@@ -34,11 +34,13 @@
   return `${Number(state?.exp)||0} / ${Number(need)||0}`;
  }
 
+ function resourceText(){const snap=typeof window.primaryWorldResourceSnapshot==="function"?window.primaryWorldResourceSnapshot():{label:"金幣",amount:Math.max(0,Math.floor(Number(state?.gold)||0))};return `${snap.label}　${Math.max(0,Math.floor(Number(snap.amount)||0)).toLocaleString()}`;}
+
  function mainContentHtml(){
   return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-main-minimal-mode-enemy>戰鬥中</div></div>
       <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續戰鬥</div><div class="main-minimal-mode-value" data-main-minimal-mode-round>第 1 場</div></div>
       <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">角色</div><div class="main-minimal-mode-value" data-main-minimal-mode-level>Lv.${state.level}</div></div>
-      <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-main-minimal-mode-exp>EXP　${expText()}</div><div data-main-minimal-mode-gold>金幣　${Math.max(0,Math.floor(Number(state.gold)||0)).toLocaleString()}</div></div>`;
+      <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-main-minimal-mode-exp>EXP　${expText()}</div><div data-main-minimal-mode-gold>${resourceText()}</div></div>`;
  }
 
  function syncMainValues(root,mode){
@@ -52,7 +54,7 @@
   if(round)round.textContent=`第 ${Math.max(1,Math.floor(Number(combatRound)||1))} 場`;
   if(level)level.textContent=Number(state?.level)>=Number(MAX_LEVEL)?`Lv.${MAX_LEVEL} MAX`:`Lv.${state.level}`;
   if(exp)exp.textContent=`EXP　${expText()}`;
-  if(gold)gold.textContent=`金幣　${Math.max(0,Math.floor(Number(state?.gold)||0)).toLocaleString()}`;
+  if(gold)gold.textContent=resourceText();
  }
 
  adapters.set("main",{
