@@ -49,6 +49,7 @@ function characterWorldSnapshot(target=state){
 }
 window.characterWorldSnapshot=characterWorldSnapshot;
 window.CHARACTER_WORLD_UI_VERSION=1;
+window.PLAYER_EQUIPMENT_WORLD_SOURCE_UI_HIDDEN_VERSION=1;
 function savePlayerName(){
  const input=document.getElementById("playerNameInput");
  let name=(input?.value||"").trim();
