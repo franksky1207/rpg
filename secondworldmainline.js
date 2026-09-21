@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const BACKGROUND_GM_GATE_VERSION=1;
  let busy=false;
  let activeContext=null;
@@ -83,11 +83,25 @@
   if(typeof window.mainBattleFlowSleep==="function")return window.mainBattleFlowSleep(ms);
   return new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  }
+ function catchUpActive(){
+  return typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main")===true;
+ }
+ function presentationEnabled(ctx){
+  if(!ctx)return false;
+  if(environmentIsBackground())return false;
+  if(catchUpActive())return false;
+  return typeof window.animateStructuredCombatPresentation==="function";
+ }
+ async function presentCombat(combat){
+  if(!combat||typeof window.animateStructuredCombatPresentation!=="function")return;
+  const sleep=typeof window.mainBattlePresentationSleep==="function"?window.mainBattlePresentationSleep:undefined;
+  await window.animateStructuredCombatPresentation(combat,{mode:"main",sleep,clearAfter:true,clearReason:"second-world-main-battle-end"});
+ }
  function createContext(index,boss,continuous){
   return {
    bossIndex:index,boss,continuous:continuous===true,stopRequested:false,stopReason:null,
    completed:0,wins:0,totalXp:0,totalDarkMatter:0,totalDarkEnergy:0,items:[],
-   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null
+   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null,currentEncounter:null,presenting:false
   };
  }
  function publishContext(ctx){activeContext=ctx;window.activeSecondWorldMainlineContext=ctx;}
@@ -112,9 +126,20 @@
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
 
     state.hp=playerCombatStats().hp;
-    const combat=window.runSecondWorldBossCombat(index,{startHp:state.hp,logs:false,preparePresentation:false});
+    const showPresentation=presentationEnabled(ctx);
+    const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;
+    if(!encounter){ctx.stopReason="error";alert("無法建立宇宙紀元 Boss。");break;}
+    ctx.currentEncounter=encounter;
+    if(showPresentation&&typeof render==="function")render();
+
+    const combat=window.runSecondWorldBossCombat(index,{startHp:state.hp,encounter,logs:showPresentation,preparePresentation:showPresentation});
     ctx.lastCombat=combat;
-    if(!combat?.ok){ctx.stopReason="error";alert(combat?.reason||"戰鬥啟動失敗。");break;}
+    if(!combat?.ok){ctx.currentEncounter=null;ctx.stopReason="error";alert(combat?.reason||"戰鬥啟動失敗。");break;}
+    if(showPresentation){
+     ctx.presenting=true;
+     try{await presentCombat(combat);}
+     finally{ctx.presenting=false;}
+    }
     ctx.completed++;
 
     if(combat.win){
@@ -122,17 +147,19 @@
      const settled=window.settleSecondWorldBossVictory(index);
      if(!settled.ok){ctx.stopReason="error";alert(settled.reason||"戰鬥結算失敗。");break;}
      accumulate(ctx,settled);
+     ctx.currentEncounter=null;
      if(!continuous){if(typeof render==="function")render();setTimeout(()=>showVictory(settled,combat),0);return true;}
     }else{
      state.hp=0;
      const penalty=typeof window.applySecondWorldDeathPenalty==="function"?window.applySecondWorldDeathPenalty():{ok:false,reason:"死亡懲罰 owner 尚未載入。"};
      if(!penalty.ok){ctx.stopReason="error";alert(penalty.reason||"死亡懲罰結算失敗。");break;}
-     ctx.lastPenalty=penalty;ctx.stopReason="death";
+     ctx.lastPenalty=penalty;ctx.stopReason="death";ctx.currentEncounter=null;
      if(!continuous){if(typeof render==="function")render();setTimeout(()=>showDefeat(penalty,boss,combat),0);return true;}
      break;
     }
 
-    if(typeof render==="function"&&!environmentIsBackground())render();
+    ctx.currentEncounter=null;
+    if(typeof render==="function"&&!environmentIsBackground()&&!catchUpActive())render();
     if(typeof window.backgroundProgressUiYield==="function"&&ctx.backgroundStarted)await window.backgroundProgressUiYield("main");
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
     await flowSleep(battleGapMs());
@@ -145,6 +172,8 @@
    }
    return true;
   }finally{
+   ctx.currentEncounter=null;ctx.presenting=false;
+   if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("second-world-mainline-finalize");
    stopBackgroundFlow(ctx.backgroundStarted);
    busy=false;if(typeof battleBusy!=="undefined")battleBusy=false;
    clearContext(ctx);
@@ -160,11 +189,12 @@
   return true;
  };
  window.secondWorldMainlineBusy=function(){return busy;};
+ window.secondWorldMainlinePresentationActive=function(){return activeContext?.presenting===true;};
  window.secondWorldBackgroundBattleEnabled=function(){return gmBackgroundEnabled();};
  window.SECOND_WORLD_MAINLINE_VERSION=VERSION;
  window.SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.SECOND_WORLD_MAINLINE_INTEGRITY={
-  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true,
+  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true,
   version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION
  };
 })();
