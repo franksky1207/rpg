@@ -73,6 +73,7 @@
   if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}
   persist();
   if(firstCompletion&&typeof window.showCivilizationCalamityUnlockNoticeForStory==="function")queueMicrotask(()=>window.showCivilizationCalamityUnlockNoticeForStory(id));
+  if(firstCompletion&&typeof window.handleSecondWorldStoryCompletion==="function")window.handleSecondWorldStoryCompletion(id);
   return true;
  }
  function queueBossStory(mapIdx){
@@ -232,7 +233,7 @@
   ensureStarterEquipment,
   completedStories:completedStoryRows
  };
- window.CIVILIZATION_STORY_PROGRESS_VERSION=9;
+ window.CIVILIZATION_STORY_PROGRESS_VERSION=10;
 
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}
  window.addEventListener("civilization-background-ready-before-reveal",queueResume);
