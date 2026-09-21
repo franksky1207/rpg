@@ -89,6 +89,49 @@ function gmCreateGear(){
  save();render();
 }
 
+let gmSecondWorldGearRegion=0;
+let gmSecondWorldGearBoss=0;
+function gmSecondWorldGearRegions(){return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[]}
+function gmSecondWorldGearBosses(regionIdx=gmSecondWorldGearRegion){return typeof window.secondWorldBossesForRegion==="function"?window.secondWorldBossesForRegion(regionIdx):[]}
+function normalizeGmSecondWorldGearSelection(){
+ const regions=gmSecondWorldGearRegions();
+ gmSecondWorldGearRegion=Math.max(0,Math.min(Math.max(0,regions.length-1),Math.floor(Number(gmSecondWorldGearRegion)||0)));
+ const bosses=gmSecondWorldGearBosses(gmSecondWorldGearRegion);
+ if(!bosses.some(b=>b.index===gmSecondWorldGearBoss))gmSecondWorldGearBoss=bosses[0]?.index??0;
+}
+function gmSecondWorldGearRegionOptions(){
+ normalizeGmSecondWorldGearSelection();
+ return gmSecondWorldGearRegions().map((r,i)=>`<option value="${i}" ${i===gmSecondWorldGearRegion?"selected":""}>${r.name}（Lv.${r.minLevel}～${r.maxLevel}）</option>`).join("");
+}
+function gmSecondWorldGearBossOptions(){
+ normalizeGmSecondWorldGearSelection();
+ return gmSecondWorldGearBosses(gmSecondWorldGearRegion).map(b=>`<option value="${b.index}" ${b.index===gmSecondWorldGearBoss?"selected":""}>Boss ${b.index+1}｜${b.name} Lv.${b.level}</option>`).join("");
+}
+function gmSecondWorldGearSelection(){normalizeGmSecondWorldGearSelection();return {regionIdx:gmSecondWorldGearRegion,bossIdx:gmSecondWorldGearBoss}}
+function gmSecondWorldGearChangeRegion(){
+ const region=document.getElementById("gmSecondWorldGearRegion"),boss=document.getElementById("gmSecondWorldGearBoss");
+ gmSecondWorldGearRegion=Math.max(0,Math.min(Math.max(0,gmSecondWorldGearRegions().length-1),Math.floor(Number(region?.value)||0)));
+ gmSecondWorldGearBoss=gmSecondWorldGearBosses(gmSecondWorldGearRegion)[0]?.index??0;
+ if(boss){boss.innerHTML=gmSecondWorldGearBossOptions();boss.value=String(gmSecondWorldGearBoss);}
+}
+function gmSecondWorldGearChangeBoss(){
+ const boss=document.getElementById("gmSecondWorldGearBoss"),bosses=gmSecondWorldGearBosses(gmSecondWorldGearRegion),requested=Math.floor(Number(boss?.value));
+ gmSecondWorldGearBoss=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
+}
+function gmCreateSecondWorldGear(){
+ if(typeof window.makeSecondWorldEquipmentForBoss!=="function")return alert("宇宙紀元裝備 owner 尚未載入。");
+ gmSecondWorldGearChangeBoss();
+ const q=Math.floor(Number(document.getElementById("gmSecondWorldGearQuality")?.value));
+ const type=document.getElementById("gmSecondWorldGearType")?.value;
+ if(!Number.isInteger(q)||q<1||q>5)return;
+ const types=type==="all"?EQUIPMENT_TYPES.slice():EQUIPMENT_TYPES.includes(type)?[type]:[];
+ if(!types.length)return;
+ let created=0;
+ types.forEach(slot=>{const item=window.makeSecondWorldEquipmentForBoss(gmSecondWorldGearBoss,{forcedQ:q,forcedType:slot,state});if(item){state.inventory.push(item);created++;}});
+ if(!created)return alert("無法產生宇宙紀元裝備。");
+ save();render();alert(`已產生 ${created} 件宇宙紀元裝備。`);
+}
+
 function gmRefreshShop(){freeShopRefresh(currentShopMap());save(false);render()}
 function gmResetShopPrice(){
  if(!state.shop||typeof state.shop!=="object")state.shop=newShopState();
