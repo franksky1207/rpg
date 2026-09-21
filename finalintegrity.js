@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  function run(){
   const errors=[],warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
@@ -19,13 +19,15 @@
    ["PROJECT_RUNTIME_REPORT",window.PROJECT_RUNTIME_REPORT],
    ["MIRROR_DUNGEON_FINAL_INTEGRITY",window.MIRROR_DUNGEON_FINAL_INTEGRITY],
    ["STORY_RUNTIME_INTEGRITY_REPORT",window.STORY_RUNTIME_INTEGRITY_REPORT],
-   ["SECOND_WORLD_DATA_INTEGRITY",window.SECOND_WORLD_DATA_INTEGRITY]
+   ["SECOND_WORLD_DATA_INTEGRITY",window.SECOND_WORLD_DATA_INTEGRITY],
+   ["LEVEL_PROGRESSION_INTEGRITY",window.LEVEL_PROGRESSION_INTEGRITY]
   ];
   reports.forEach(([name,report])=>{if(report?.passed!==true)fail("FINAL_REPORT",`${name} 未通過`,report?.errors||null);});
 
   if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==16)fail("FINAL_PLAYER_TITLE","玩家稱號公開定義數量異常",{calamity:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length,total:window.PLAYER_TITLE_DEFS?.length});
   if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("FINAL_SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
   if(Number(window.SAVE_SCHEMA_VERSION)!==14)fail("FINAL_SCHEMA","最終 Save Schema 應為 14",window.SAVE_SCHEMA_VERSION);
+  if(Number(window.LEVEL_PROGRESSION_VERSION)!==1||Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000||Number(window.ABSOLUTE_MAX_LEVEL)!==1000||typeof window.effectiveLevelCap!=="function"||typeof window.levelProgressSnapshot!=="function"||typeof window.universeExpNeed!=="function")fail("FINAL_LEVEL_PROGRESSION","世界感知等級／EXP owner 未完整載入",{version:window.LEVEL_PROGRESSION_VERSION,first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP,absolute:window.ABSOLUTE_MAX_LEVEL});
   if(Number(window.SECOND_WORLD_DATA_VERSION)!==1||Number(window.SECOND_WORLD_REGION_COUNT)!==10||Number(window.SECOND_WORLD_BOSS_COUNT)!==100||typeof window.canChallengeSecondWorldBoss!=="function")fail("FINAL_SECOND_WORLD_DATA","宇宙紀元主線資料 owner 未完整載入",{version:window.SECOND_WORLD_DATA_VERSION,regions:window.SECOND_WORLD_REGION_COUNT,bosses:window.SECOND_WORLD_BOSS_COUNT,challenge:typeof window.canChallengeSecondWorldBoss});
   if(Number(window.SECOND_WORLD_ADVENTURE_UI_VERSION)!==1||typeof window.secondWorldAdventurePageHtml!=="function"||typeof window.toggleSecondWorldAdventureRegion!=="function")fail("FINAL_SECOND_WORLD_ADVENTURE_UI","宇宙紀元冒險 UI owner 未完整載入",{version:window.SECOND_WORLD_ADVENTURE_UI_VERSION,page:typeof window.secondWorldAdventurePageHtml,toggle:typeof window.toggleSecondWorldAdventureRegion});
   if(Number(window.STRUCTURED_COMBAT_PACING_VERSION)!==2||Number(window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION)!==1||typeof window.getStructuredCombatPacing!=="function"||typeof window.getStructuredCombatPacingForSpeed!=="function")fail("FINAL_STRUCTURED_COMBAT_PACING","speed-aware 共用 Structured Combat Pacing 未載入",{version:window.STRUCTURED_COMBAT_PACING_VERSION,speedAware:window.STRUCTURED_COMBAT_SPEED_AWARE_VERSION,api:typeof window.getStructuredCombatPacing});
