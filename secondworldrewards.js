@@ -111,7 +111,7 @@
   if((Number(q.gold)||0)>0)parts.push(`${Math.floor(Number(q.gold)).toLocaleString()} 金幣`);
   if((Number(q.darkMatter)||0)>0)parts.push(`${Math.floor(Number(q.darkMatter)).toLocaleString()} 暗物質`);
   if((Number(q.darkEnergy)||0)>0)parts.push(`${Math.floor(Number(q.darkEnergy)).toLocaleString()} 暗能量`);
-  return parts.length?parts.join("＋"):"0 暗物質";
+  return parts.length?parts.join("＋"):(Number(q.phase)===1?"0 金幣":"0 暗物質");
  }
  function makeSecondWorldEquipmentForBoss(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index);
