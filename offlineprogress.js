@@ -116,6 +116,43 @@
   if(!values.length)return 0;
   return Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(values.reduce((sum,ms)=>sum+ms,0)/values.length)));
  }
+ function retainSamplesBySpeed(rows){
+  const kept=[];
+  OFFLINE_COMBAT_SPEEDS.forEach(speed=>{
+   const matches=(Array.isArray(rows)?rows:[]).map((row,index)=>({row,index})).filter(entry=>Number(entry.row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(entry.row?.combatSpeed)===speed).slice(-OFFLINE_SAMPLES_PER_SPEED);
+   kept.push(...matches);
+  });
+  kept.sort((a,b)=>a.index-b.index);
+  return kept.map(entry=>entry.row);
+ }
+ function beginSecondWorldOfflineBattleSample(bossIndex,boss=null){
+  const index=Math.floor(Number(bossIndex));
+  const meta=boss&&typeof boss==="object"?boss:(typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null);
+  if(!meta||index<0||state?.secondWorld?.entered!==true)return null;
+  if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
+  if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return null;
+  const combatSpeed=currentCombatSpeed();
+  if(!OFFLINE_COMBAT_SPEEDS.includes(combatSpeed))return null;
+  const token={startedAt:now(),interrupted:false,bossIndex:index,bossId:String(meta.id||""),playerLevel:Math.max(500,Math.floor(Number(state.level)||500)),enemyLevel:Math.max(505,Math.floor(Number(meta.level)||505)),combatSpeed,unsubscribe:null};
+  if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
+  return token;
+ }
+ function finishSecondWorldOfflineBattleSample(token,result,gapMs=140){
+  if(!token)return false;
+  if(typeof token.unsubscribe==="function")token.unsubscribe();
+  if(token.interrupted||result?.win!==true)return false;
+  if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return false;
+  if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return false;
+  const actualMs=Math.round(now()-Number(token.startedAt));
+  if(!Number.isFinite(actualMs)||actualMs<REAL_BATTLE_MIN_MS||actualMs>300000)return false;
+  const gap=Math.max(0,Math.round(Number(gapMs)||0)),cycleMs=actualMs+gap,adjustedMs=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,cycleMs));
+  const o=ensureOfflineState();
+  const rows=retainSamplesBySpeed(o.battleSamples);
+  rows.push({sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:2,targetType:"boss",bossIndex:token.bossIndex,bossId:token.bossId,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:"boss",multiplier:1,recordedAt:now()});
+  o.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
+  o.battleSamples=retainSamplesBySpeed(rows);
+  return true;
+ }
  function resolveFarmTarget(){
   const o=ensureOfflineState(),speed=currentCombatSpeed();
   const rows=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&legalFarmTarget(Math.floor(Number(row?.map)),Math.floor(Number(row?.enemy))));
@@ -334,6 +371,9 @@
  window.OFFLINE_SAMPLE_SELECTION_VERSION=OFFLINE_SAMPLE_SELECTION_VERSION;
  window.OFFLINE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
  window.convertOfflineSampleMsForSpeed=sampleAdjustedMsForSpeed;
+ window.beginSecondWorldOfflineBattleSample=beginSecondWorldOfflineBattleSample;
+ window.finishSecondWorldOfflineBattleSample=finishSecondWorldOfflineBattleSample;
+ window.SECOND_WORLD_OFFLINE_SAMPLE_VERSION=1;
  window.resolveOfflineFarmTarget=resolveFarmTarget;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
