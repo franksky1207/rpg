@@ -29,3 +29,5 @@
 
 .universe-boss-stats{margin-top:8px;color:#b8c5d4;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
 @media(max-width:760px){.universe-boss-stats{font-size:11px;line-height:1.35}}
+
+.universe-boss-action{width:100%;margin-top:10px;min-height:38px}
