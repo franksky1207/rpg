@@ -26,7 +26,8 @@ assert(/MAINLINE_BOSS_STORY_PIPELINE_VERSION=2/.test(battlePipelineSource),'batt
 // Read/entry contracts: get() must be pure, story record must not wrap global go(), and ui.go owns the entry hook.
 assert(/get:\(\)=>readProgress\(\)/.test(storyProgressSource),'storyprogress.get 必須直接純讀 readProgress()');
 assert(!/function progress\(\)\{normalizeProgress\(state\)/.test(storyProgressSource),'storyprogress 不得在一般 getter 中執行 migration');
-assert(/CIVILIZATION_STORY_PROGRESS_VERSION=9/.test(storyProgressSource),'story progress 版本應為 9');
+assert(/CIVILIZATION_STORY_PROGRESS_VERSION=10/.test(storyProgressSource),'story progress 版本應為 10');
+assert(/if\(firstCompletion&&typeof window\.handleSecondWorldStoryCompletion==="function"\)window\.handleSecondWorldStoryCompletion\(id\)/.test(storyProgressSource),'storyprogress 完成故事後必須保留宇宙紀元解鎖 hook');
 assert(!/__storyRecordLatestWrapped|originalGo/.test(storyRecordSource),'storyrecordtabs.js 不得再包裝全域 go()');
 assert(/STORY_RECORD_TABS_VERSION=5/.test(storyRecordSource),'story record tabs 版本應為 5');
 assert(/v===\"storyrecord\"&&typeof window\.prepareStoryRecordEntry===\"function\"/.test(uiSource),'ui.go 必須在進入戰線紀錄時呼叫正式 prepareStoryRecordEntry hook');
@@ -116,7 +117,7 @@ vm.runInContext(fs.readFileSync('storyprogress.js','utf8'),context,{filename:'st
 
 const progress=context.civilizationStoryProgress;
 assert(progress&&typeof progress.queueBossStory==='function','storyprogress.js 未提供 queueBossStory');
-assert(Number(context.CIVILIZATION_STORY_PROGRESS_VERSION)>=9,'story progress 版本不足');
+assert(Number(context.CIVILIZATION_STORY_PROGRESS_VERSION)>=10,'story progress 版本不足');
 assert(Number(context.STORY_MIGRATION_VERSION)>=5,'story migration 版本不足');
 assert(Array.isArray(context.civilizationStoryMigration?.legacyFields)&&context.civilizationStoryMigration.legacyFields.includes('historyBackfillRegions'),'historyBackfillRegions 未標成 legacy 相容欄位');
 
