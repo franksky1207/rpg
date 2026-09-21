@@ -1681,10 +1681,22 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - GM 同步：`gmbackground.js` 管理文字已明確標示「背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關」，銀河／宇宙共用同一 gate。
 - Integrity 已加入 `SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=1`、宇宙連戰 start/stop owner 與 GM background gate 驗證。
 
+第 7 批完整戰鬥 UI／HP 演出／速度呈現已完成：
+- `worldmapui.js` 的宇宙冒險 UI 升級 V2；正式戰鬥期間直接切到與銀河主線共用 DOM 契約的 combat screen，不再在 Boss 卡片按下後直接跳結算。
+- 戰鬥畫面包含玩家／Boss 名稱與 Lv、HP 數字與血條、EXP、暗物質／暗能量、Boss 隨機 traits、傷害浮字與戰鬥訊息。
+- `secondworldmainline.js` 升級 V3；每場 foreground 正式戰鬥先建立 encounter → render combat screen → `runSecondWorldBossCombat()` → 共用 `prepareCombatPresentation()/animateStructuredCombatPresentation()` 播放正式 events。
+- 因此宇宙紀元直接沿用既有 Structured Combat FX：HP 逐擊變化、暴擊、閃避、護盾、先制、穿透、連擊、反擊、汲取、印記等演出，不另建第二套動畫。
+- 戰鬥畫面會顯示目前 effective speed；一般玩家宇宙紀元為 1×／1.5×，GM override 可顯示 2×。Structured pacing 與 outer gap 均繼續走既有 speed owner。
+- 單場勝敗結算會在最後一幀 combat screen 上開啟 modal；關閉後回宇宙冒險 Boss 列表。
+- 連續戰鬥每一場都重新生成正式 Boss traits 並重新播放完整戰鬥演出；場與場之間不會閃回冒險地圖。
+- 「停止連續戰鬥」直接放在戰鬥畫面，仍採本場結束後停止。
+- GM-only background 規則保持不變：真正 background 或回頁 catch-up credit 期間**跳過視覺演出但不跳過正式 combat／settlement**；回到正常 foreground 後下一場恢復完整演出，避免 catch-up 被動畫拖慢。
+- GM／戰力基準本批不新增入口：本批只改正式玩家 presentation，Boss 公式／玩家能力／GM 沙盒數值均未改；既有 GM Boss 測試與戰力基準 V11 繼續使用同一 `runCombatCore()`。
+- Integrity 已更新為 Adventure UI V2、Mainline V3，並驗證 combat page／presentation owner。
+
 仍要處理：
-- 第 7 批：宇宙主線完整戰鬥 UI／HP 演出／1×與1.5×實戰呈現整合。
+- 第二世界主線 offline sample／正式離線收益仍依第 29.13 後續處理；offline 正式結算需等背包 sale owner 穩定後一起接。
 - 第二世界正式背包 sale owner／自動出售／批量出售仍在第 29.3；目前只建立 sale value helper 與主線掉裝。
-- 第二世界主線 offline sample／離線收益仍依第 29.13 後續處理。
 
 ### 與冒險一起必須防止的舊世界殘留
 - `levelcap.js / levelcapresult.js`：宇宙紀元不可把 Lv.500 EXP 轉成金幣。
