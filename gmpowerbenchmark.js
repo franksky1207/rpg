@@ -118,7 +118,7 @@
   return true;
  }
  function useHighestBenchmarkSelection(){
-  if(benchmarkWorld()===1)return useHighestSelection();
+  if(benchmarkWorld()===1){const ok=useHighestSelection();if(ok)clearSelectionResults();return ok;}
   const regions=universeRegions();if(!regions.length)return false;
   const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?whole(window.secondWorldHighestUnlockedBossIndex(),0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1)):MODEL.universeBossIndex;
   const meta=universeBossMeta(highest);if(!meta)return false;
@@ -140,7 +140,7 @@
   MODEL.defenseResult=null;
   MODEL.combatResult=null;
   captureSnapshot();
-  useHighestSelection();
+  useHighestBenchmarkSelection();
   if(typeof render==="function")render();
   return true;
  }
@@ -677,7 +677,7 @@
   render();
  };
  window.gmPowerBenchmarkSelectedEnemy=function(){const e=benchmarkSelectedEnemy();return e?JSON.parse(JSON.stringify(e)):null;};
- window.gmPowerBenchmarkSetPhase=function(v){if(MODEL.busy)return;MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetPhase=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();clearSelectionResults();render();};
  window.gmPowerBenchmarkSetRegion=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;clearSelectionResults();render();};
  window.gmPowerBenchmarkSetMap=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);clearSelectionResults();render();};
  window.gmPowerBenchmarkSetEnemy=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.enemyIndex=whole(v,0);clearSelectionResults();render();};
