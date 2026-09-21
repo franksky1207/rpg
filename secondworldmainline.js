@@ -147,19 +147,17 @@
      const settled=window.settleSecondWorldBossVictory(index);
      if(!settled.ok){ctx.stopReason="error";alert(settled.reason||"戰鬥結算失敗。");break;}
      accumulate(ctx,settled);
-     ctx.currentEncounter=null;
      if(!continuous){if(typeof render==="function")render();setTimeout(()=>showVictory(settled,combat),0);return true;}
     }else{
      state.hp=0;
      const penalty=typeof window.applySecondWorldDeathPenalty==="function"?window.applySecondWorldDeathPenalty():{ok:false,reason:"死亡懲罰 owner 尚未載入。"};
      if(!penalty.ok){ctx.stopReason="error";alert(penalty.reason||"死亡懲罰結算失敗。");break;}
-     ctx.lastPenalty=penalty;ctx.stopReason="death";ctx.currentEncounter=null;
+     ctx.lastPenalty=penalty;ctx.stopReason="death";
      if(!continuous){if(typeof render==="function")render();setTimeout(()=>showDefeat(penalty,boss,combat),0);return true;}
      break;
     }
 
-    ctx.currentEncounter=null;
-    if(typeof render==="function"&&!environmentIsBackground()&&!catchUpActive())render();
+    // Keep the combat screen on the completed round until the next round begins; avoid map-screen flicker between continuous battles.
     if(typeof window.backgroundProgressUiYield==="function"&&ctx.backgroundStarted)await window.backgroundProgressUiYield("main");
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
     await flowSleep(battleGapMs());
