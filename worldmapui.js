@@ -216,6 +216,11 @@
   window.secondWorldAdventurePageHtml=function(){
     const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
     if(!entered)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>尚未正式進入宇宙紀元。</b></div></section>`;
+    const active=window.activeSecondWorldMainlineContext;
+    if(active?.currentEncounter){
+      const combatHtml=secondWorldCombatPageHtml(active);
+      if(combatHtml)return combatHtml;
+    }
     const regions=secondWorldRegions();
     if(!regions.length)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>宇宙紀元主線資料尚未載入。</b></div></section>`;
     syncSecondWorldRegionOpenState();
