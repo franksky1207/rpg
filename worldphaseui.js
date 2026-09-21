@@ -116,7 +116,6 @@
  function clearWelcomeMarker(){try{sessionStorage.removeItem("civilization_second_world_just_entered_v1");}catch(e){}}
  window.showSecondWorldWelcome=function(){
   if(typeof window.isSecondWorldEntered!=="function"||!window.isSecondWorldEntered()||!welcomeMarkerPresent())return false;
-  clearWelcomeMarker();
   const modal=ensureOverlay(IDS.welcome);
   modal.innerHTML=`<div class="world-phase-card world-phase-welcome-card">
    <div class="world-phase-scroll">
@@ -140,6 +139,7 @@
    </div>
   </div>`;
   modal.classList.add("open");
+  clearWelcomeMarker();
   return true;
  };
  window.closeSecondWorldWelcome=function(){
