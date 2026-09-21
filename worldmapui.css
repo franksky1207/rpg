@@ -31,3 +31,5 @@
 @media(max-width:760px){.universe-boss-stats{font-size:11px;line-height:1.35}}
 
 .universe-boss-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.universe-boss-action{width:100%;min-height:38px}.universe-boss-card>.universe-boss-action{margin-top:10px}@media(max-width:760px){.universe-boss-actions{grid-template-columns:1fr;gap:6px}}
+
+.universe-combat-screen .combat-head{display:flex;align-items:center;justify-content:center;gap:10px}.universe-combat-speed{font-size:12px;font-weight:800;padding:3px 8px;border:1px solid #40516a;border-radius:999px;color:#b9cce6;background:#101720}@media(max-width:760px){.universe-combat-screen .combat-head{gap:7px}.universe-combat-speed{font-size:11px;padding:2px 7px}}
