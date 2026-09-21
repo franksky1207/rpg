@@ -23,6 +23,11 @@ function currentPlayerName(){
 }
 function escapePlayerName(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 function playerNameHtml(){return typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml():escapePlayerName(currentPlayerName())}
+function currentWorldResource(){
+ const snap=typeof window.primaryWorldResourceSnapshot==="function"?window.primaryWorldResourceSnapshot():{label:"金幣",amount:Math.max(0,Math.floor(Number(state?.gold)||0)),secondaryLabel:null,secondaryAmount:0};
+ return {label:String(snap.label||"金幣"),amount:Math.max(0,Math.floor(Number(snap.amount)||0)),secondaryLabel:snap.secondaryLabel?String(snap.secondaryLabel):null,secondaryAmount:Math.max(0,Math.floor(Number(snap.secondaryAmount)||0))};
+}
+function secondWorldActive(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();}
 function savePlayerName(){
  const input=document.getElementById("playerNameInput");
  let name=(input?.value||"").trim();
@@ -84,7 +89,8 @@ function homePage(){
 
 function playerStatusHtml(){
  const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100,low=hpPct<50;
- return `<div class="card player-status-card"><div style="font-size:18px;font-weight:700;color:#f0d494;margin-bottom:9px">${playerNameHtml()}</div><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div></div><div class="status-line ${low?"q-mythic":""}"><div class="status-label"><span>HP${low?"　⚠ 低血量":""}</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ const resource=currentWorldResource(),resourceStats=resource.secondaryLabel?`<div class="stat">${resource.label}<b>${resource.amount.toLocaleString()}</b></div><div class="stat">${resource.secondaryLabel}<b>${resource.secondaryAmount.toLocaleString()}</b></div>`:`<div class="stat">${resource.label}<b>${resource.amount.toLocaleString()}</b></div>`;
+ return `<div class="card player-status-card"><div style="font-size:18px;font-weight:700;color:#f0d494;margin-bottom:9px">${playerNameHtml()}</div><div class="stats"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}</div><div class="status-line ${low?"q-mythic":""}"><div class="status-label"><span>HP${low?"　⚠ 低血量":""}</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div class="status-line"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
 }
 function mapStatusText(i){
  if(i>state.unlockedMap)return "未解鎖";
@@ -154,12 +160,16 @@ function adventureCombatPage(){
  const requested=window.activeMainBattleContext?.exitRequested===true;
  const head=continuous?`連續戰鬥・第 ${Math.max(1,Number(combatRound)||1)} 場`:`單場戰鬥`;
  const stop=continuous?`<div class="continuous-stop-wrap"><button id="continuousBattleStopBtn" class="btn danger" onclick="requestContinuousBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
- return `<section class="combat-screen"><div class="combat-head">${head}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">金幣 ${state.gold.toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
+ return `<section class="combat-screen"><div class="combat-head">${head}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">${currentWorldResource().label} ${currentWorldResource().amount.toLocaleString()}${currentWorldResource().secondaryLabel?`　${currentWorldResource().secondaryLabel} ${currentWorldResource().secondaryAmount.toLocaleString()}`:""}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
 }
-function adventurePage(){if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()}
+function adventurePage(){
+ if(secondWorldActive())return wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>新的主線戰線已開啟。</b></div><div class="muted" style="margin-top:10px;line-height:1.7">宇宙紀元正式主線將於後續階段開放；目前不會進入銀河紀元的正式戰鬥流程。</div></div>');
+ if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
+}
 
 function healBeforeBattle(){state.hp=playerCombatStats().hp;save(false)}
 function startBattles(){
+ if(secondWorldActive())return alert("宇宙紀元主線尚未開放。");
  if(battleBusy)return;
  const count=selectedBattleCount;
  healBeforeBattle();beginCombat(count);
@@ -204,7 +214,8 @@ function closeBattleResultModal(){
 function characterPage(){
  const s=playerCombatStats(),need=state.level<MAX_LEVEL?expNeed(state.level):0,hpPct=s.hp?state.hp/s.hp*100:0,expPct=state.level<MAX_LEVEL?Math.min(100,state.exp/need*100):100;
  const titleEntry=typeof window.getUnlockedPlayerTitleDefinitions==="function"&&window.getUnlockedPlayerTitleDefinitions().length?`<div class="character-title-row"><span class="muted">稱號</span><button class="btn character-title-button" onclick="openPlayerTitlePicker()">${typeof window.getEquippedPlayerTitleDefinition==="function"&&window.getEquippedPlayerTitleDefinition()?window.playerTitleHtml(window.getEquippedPlayerTitleDefinition().id):"不裝備稱號"}</button></div>`:"";
- const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div><div class="stat">金幣<b>${state.gold.toLocaleString()}</b></div><div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ const resource=currentWorldResource(),resourceStats=`<div class="stat">${resource.label}<b>${resource.amount.toLocaleString()}</b></div>${resource.secondaryLabel?`<div class="stat">${resource.secondaryLabel}<b>${resource.secondaryAmount.toLocaleString()}</b></div>`:""}`;
+ const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}<div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
  const equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
@@ -226,7 +237,7 @@ function inventoryContent(){
  const sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
  const filterOptions=`<option value="all" ${inventoryFilter==="all"?"selected":""}>全部</option>${EQUIPMENT_TYPES.map(t=>`<option value="${t}" ${inventoryFilter===t?"selected":""}>${equipmentTypeLabel(t)}</option>`).join("")}`;
  const main=`<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${specializationSellValue(it)}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()" ${secondWorldActive()?"disabled":""}>${secondWorldActive()?"出售系統尚未開放":"一鍵賣出較低裝備"}</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>${secondWorldActive()?"來源":"售價"}</th></tr></thead><tbody>${items.map(it=>`<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${secondWorldActive()?(Number(it.world)===2?"宇宙紀元":"銀河紀元"):specializationSellValue(it)}</td></tr>`).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
  return `${main}${lostGearSectionHtml()}`;
 }
 function inventoryPage(){
@@ -243,6 +254,7 @@ function equipBestAll(){
  normalizeHP();selectedItem=null;save();render();alert(changed?`已更換 ${changed} 件較強裝備。`:"目前裝備已是最佳。");
 }
 function sellLowerAll(){
+ if(secondWorldActive())return alert("宇宙紀元裝備出售系統尚未開放。");
  const targets=state.inventory.filter(it=>{const current=state.equipment[it.type];if(!current)return false;return equipmentScore(it)<=equipmentScore(current)});
  if(!targets.length)return alert("沒有可出售的較低裝備。");
  const total=targets.reduce((a,it)=>a+specializationSellValue(it),0);
@@ -251,11 +263,11 @@ function sellLowerAll(){
 }
 function compareHtml(it){
  const old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=round1(old?newScore-oldScore:newScore);
- return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()">出售</button></div></div>`;
+ return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()" ${secondWorldActive()?"disabled":""}>${secondWorldActive()?"出售尚未開放":"出售"}</button></div></div>`;
 }
 function selectItem(id){selectedItem=id;render()}
 function equipSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
-function sellSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=specializationSellValue(it);selectedItem=null;save();render()}
+function sellSelected(){if(secondWorldActive())return alert("宇宙紀元裝備出售系統尚未開放。");const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=specializationSellValue(it);selectedItem=null;save();render()}
 function discardLostGear(i){
  const lost=state.lostGear?.[i];if(!lost)return;
  const label=lost.item?itemHtmlPlain(lost.item):"這件遺失裝備";
