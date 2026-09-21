@@ -14,3 +14,20 @@
  .world-phase-home-card{padding:13px;display:block}.world-phase-home-card h3{font-size:21px}.world-phase-home-actions{margin-top:12px;justify-content:stretch}.world-phase-home-actions .btn{flex:1 1 140px}
  .world-phase-overlay{padding:10px}.world-phase-card{width:100%;max-height:84dvh;padding:15px;border-radius:13px}.world-phase-requirement-copy{display:block}.world-phase-requirement-copy span{display:block;text-align:left;margin-top:3px}.world-phase-modal-actions{position:sticky;bottom:0}.world-phase-modal-actions .btn{min-height:42px}.world-phase-unlock-card h2{font-size:24px}
 }
+
+.world-phase-welcome-card{max-width:660px;display:flex;flex-direction:column;overflow:hidden}
+.world-phase-modal-head.welcome h2{font-size:30px;line-height:1.25;margin-top:5px}
+.world-phase-war-copy{margin:4px 0 14px;padding:13px 14px;border:1px solid #5a4d36;border-radius:11px;background:#15130f;display:grid;gap:5px}
+.world-phase-war-copy b{color:#f6f3ed;font-size:18px;line-height:1.55}
+.world-phase-war-copy span{color:#f0c781;font-weight:800;line-height:1.55}
+.world-phase-speed-unlock{margin:14px 0;padding:15px;border:1px solid #3d779c;border-radius:12px;background:#10202b;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"icon title" "icon note";gap:3px 9px;align-items:center}
+.world-phase-speed-unlock>span{grid-area:icon;font-size:28px}
+.world-phase-speed-unlock>b{grid-area:title;color:#c9ecff;font-size:23px;line-height:1.3;text-shadow:0 0 14px rgba(115,199,255,.18)}
+.world-phase-speed-unlock>small{grid-area:note;color:#dce9f1;font-size:13px;line-height:1.5}
+.world-phase-section-title{margin:18px 0 10px;color:#f5f8fb;font-size:18px}
+.world-phase-change-list{display:grid;gap:8px}
+.world-phase-change-list>div{padding:10px 11px;border:1px solid #313b46;border-radius:10px;background:#111820;display:grid;gap:4px}
+.world-phase-change-list b{color:#f2f6f9}
+.world-phase-change-list span{color:#d7e0e7;line-height:1.55}
+.world-phase-change-list strong{color:#c9e7ff}
+.world-phase-start-button{width:100%;min-height:46px;font-size:16px;font-weight:800}
