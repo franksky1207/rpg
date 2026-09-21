@@ -335,8 +335,12 @@ function normalizeSaveState(target){
  target.lostGear=(Array.isArray(target.lostGear)?target.lostGear:[]).map(x=>{
   if(!x||typeof x!=="object")return null;
   const item=normalizeSaveItem(x.item);if(!item)return null;
-  const cost=Number(x.cost),lostAt=Number(x.lostAt);
-  return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost:Number.isFinite(cost)&&cost>=0?Math.floor(cost):ceil(item.buy*2),lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
+  const pending=x.redemptionPending===true||x.currency==="pending";
+  const rawCost=Number(x.cost),lostAt=Number(x.lostAt);
+  const currency=pending?"pending":x.currency==="darkMatter"?"darkMatter":"gold";
+  const fallback=currency==="darkMatter"&&typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):ceil(item.buy*2);
+  const cost=pending?null:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
+  return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:pending,lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
  if(typeof normalizePersistentFlags==="function")normalizePersistentFlags(target);else target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
