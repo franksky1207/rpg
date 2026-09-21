@@ -341,6 +341,7 @@ function normalizeSaveState(target){
  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,5):[];while(auto.length<5)auto.push(false);target.settings.autoSell=auto.map(Boolean);
  target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
  target.settings.dark=typeof target.settings.dark==="boolean"?target.settings.dark:true;
+ const combatSpeed=Number(target.settings.combatSpeed);target.settings.combatSpeed=combatSpeed===1.5?1.5:1;
  target.gm=target.gm===true;
  if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
  if(typeof normalizeVipState==="function")normalizeVipState(target);
