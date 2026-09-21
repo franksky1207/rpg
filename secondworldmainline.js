@@ -32,8 +32,10 @@
    const base=typeof itemHtml==="function"?itemHtml(item,true):item.name;
    return `<div class="item">${base}</div>`;
   }).join("");
-  const omitted=Math.max(0,ctx.items.length-20);
-  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${ctx.boss.name} Lv.${ctx.boss.level}</div><div class="notice"><b>完成 ${ctx.wins.toLocaleString()} 場</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp.toLocaleString()}</b></div><div class="stat">暗物質<b>+${ctx.totalDarkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>+${ctx.totalDarkEnergy.toLocaleString()}</b></div><div class="stat">裝備<b>${ctx.items.length.toLocaleString()} 件</b></div></div>${rows?`<div style="margin-top:10px"><b>最近掉落</b>${rows}${omitted?`<div class="muted">另有 ${omitted.toLocaleString()} 件已收入背包。</div>`:""}</div>`:""}<div class="muted" style="margin-top:10px">${ctx.stopReason==="death"?"因戰敗結束。":ctx.stopReason==="manual"?"已依要求停止。":"連續戰鬥已結束。"}</div></div>`;
+  const omitted=Math.max(0,ctx.items.length-20),penalty=ctx.lastPenalty||null,dropped=penalty?.dropped;
+  const droppedHtml=dropped?`<div style="margin-top:10px"><b>戰敗遺失裝備</b><div class="item">${typeof itemHtml==="function"?itemHtml(dropped,true):dropped.name}</div>${penalty.redemptionPending?'<div class="muted">銀河紀元裝備的宇宙贖回價格待定。</div>':Number.isFinite(Number(penalty.cost))?`<div class="muted">贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質</div>`:""}</div>`:"";
+  const deathHtml=penalty?`<div class="notice" style="margin-top:10px"><b>戰敗結束</b><div class="muted">EXP 損失：${Number(penalty.expLost)||0}${penalty.protectedByVip20?"　／　VIP20 已保護裝備":""}</div></div>${droppedHtml}`:"";
+  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${ctx.boss.name} Lv.${ctx.boss.level}</div><div class="notice"><b>完成 ${ctx.wins.toLocaleString()} 場</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp.toLocaleString()}</b></div><div class="stat">暗物質<b>+${ctx.totalDarkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>+${ctx.totalDarkEnergy.toLocaleString()}</b></div><div class="stat">裝備<b>${ctx.items.length.toLocaleString()} 件</b></div></div>${rows?`<div style="margin-top:10px"><b>最近掉落</b>${rows}${omitted?`<div class="muted">另有 ${omitted.toLocaleString()} 件已收入背包。</div>`:""}</div>`:""}${deathHtml}<div class="muted" style="margin-top:10px">${ctx.stopReason==="death"?"因戰敗結束。":ctx.stopReason==="manual"?"已依要求停止。":"連續戰鬥已結束。"}</div></div>`;
   modal.classList.add("show");
  }
  function showDefeat(penalty,boss,combat){
@@ -139,8 +141,7 @@
    if(continuous){
     if(!ctx.stopReason)ctx.stopReason=ctx.stopRequested?"manual":"complete";
     if(typeof render==="function")render();
-    if(ctx.stopReason==="death"&&ctx.lastPenalty)setTimeout(()=>{showContinuousResult(ctx);showDefeat(ctx.lastPenalty,boss,ctx.lastCombat);},0);
-    else setTimeout(()=>showContinuousResult(ctx),0);
+    setTimeout(()=>showContinuousResult(ctx),0);
    }
    return true;
   }finally{
