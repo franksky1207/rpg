@@ -1,6 +1,6 @@
 (function(){
- const VERSION=2;
- const PLAYER_RULE_VERSION=2;
+ const VERSION=3;
+ const PLAYER_RULE_VERSION=3;
  const GM_OVERRIDE_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
@@ -22,19 +22,23 @@
   const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
   return entered?[1,1.5]:[1];
  }
+ function currentGameState(){
+  try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}
+  catch(e){return null;}
+ }
  function playerCombatSpeed(){
-  const options=playerCombatSpeedOptions();
-  const stored=normalizeSpeed(globalThis.state?.settings?.combatSpeed);
+  const options=playerCombatSpeedOptions(),gameState=currentGameState();
+  const stored=normalizeSpeed(gameState?.settings?.combatSpeed);
   return stored!=null&&options.includes(stored)?stored:1;
  }
  function setPlayerCombatSpeed(value){
-  const speed=normalizeSpeed(value),options=playerCombatSpeedOptions();
-  if(speed==null||!options.includes(speed)||speed===2||!globalThis.state)return false;
-  if(!state.settings||typeof state.settings!=="object"||Array.isArray(state.settings))state.settings={};
-  const previous=state.settings.combatSpeed;
-  state.settings.combatSpeed=speed;
+  const speed=normalizeSpeed(value),options=playerCombatSpeedOptions(),gameState=currentGameState();
+  if(speed==null||!options.includes(speed)||speed===2||!gameState)return false;
+  if(!gameState.settings||typeof gameState.settings!=="object"||Array.isArray(gameState.settings))gameState.settings={};
+  const previous=gameState.settings.combatSpeed;
+  gameState.settings.combatSpeed=speed;
   const saved=typeof save==="function"?save(false):true;
-  if(saved!==true){state.settings.combatSpeed=previous;return false;}
+  if(saved!==true){gameState.settings.combatSpeed=previous;return false;}
   window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed,effectiveSpeed:effectiveCombatSpeed(),source:"player"}}));
   return true;
  }
