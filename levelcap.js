@@ -1,7 +1,8 @@
 (function(){
  window.specialExpPayout=function(rawXp,logs=[]){
   const amount=Math.max(0,ceil(Number(rawXp)||0));
-  if(state.level>=MAX_LEVEL){
+  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
+  if(state.level>=cap){
    if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return {xp:0,convertedGold:0,deferredXp:amount};
    state.gold+=amount;
    return {xp:0,convertedGold:amount};
@@ -13,7 +14,8 @@
  // 一般／菁英／Boss：玩家在戰鬥開始時已滿等，該場 EXP 以 1:1 轉為金幣。
  const baseFightOnceForLevelCap=fightOnce;
  fightOnce=function(mapIdx,eIdx,encounter=null){
-  const startedAtCap=state.level>=MAX_LEVEL;
+  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
+  const startedAtCap=state.level>=cap;
   const r=baseFightOnceForLevelCap(mapIdx,eIdx,encounter);
   if(!startedAtCap||!r?.ok||!r.win)return r;
   if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return r;
