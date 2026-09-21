@@ -285,6 +285,12 @@
  }
  window.closeOfflineRewardModal=function(){document.getElementById("offlineRewardPage")?.classList.remove("show");document.body.classList.remove("offline-result-open");if(typeof render==="function")render();};
  async function settleOfflineOnLoad(){
+  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()){
+   const o=ensureOfflineState(),t=now();
+   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;o.battleSamples=[];o.pendingSettlement=null;o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);
+   if(baseSave)baseSave(false);
+   return;
+  }
   const pending=buildPendingSettlement();
   if(!pending)return;
   if(pending.unavailable){showOfflineSampleUnavailable(pending);return;}
