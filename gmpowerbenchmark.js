@@ -533,7 +533,18 @@
    });
   }
 
-  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult){
+  if(MODEL.universeCombatResult?.row){
+   const r=MODEL.universeCombatResult.row;
+   lines.push("");
+   lines.push("【宇宙紀元 Boss 實戰】Lv."+r.level+" "+r.name+"｜"+r.runs+" 場");
+   lines.push("隨機特性後平均：HP "+fmt(r.avgEnemy.hp)+"｜ATK "+fmt(r.avgEnemy.atk)+"｜DEF "+fmt(r.avgEnemy.def)+"｜暴擊 "+r.avgEnemy.crit+"%｜閃避 "+r.avgEnemy.dodge+"%");
+   lines.push("勝敗場數 "+r.wins+" 勝 / "+r.losses+" 敗");
+   lines.push(...summaryFieldLines(combatPrimaryFields(r),3));
+   lines.push(...summaryFieldLines(combatDetailFields(r),3));
+   combatEventGroups(r).forEach(([title,entries,formatter])=>lines.push(title+"："+entryText(entries,formatter)));
+  }
+
+  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult&&!MODEL.universeCombatResult){
    lines.push("");
    lines.push("尚未執行輸出、承傷或主線實戰測試。");
   }
@@ -549,14 +560,14 @@
   return ok;
  }
  function summaryHtml(){
-  const s=snapshot(),o=MODEL.outputResult,d=MODEL.defenseResult,cmb=MODEL.combatResult;
+  const s=snapshot(),o=MODEL.outputResult,d=MODEL.defenseResult,cmb=MODEL.combatResult,universe=MODEL.universeCombatResult?.row||null;
   const combatRows=cmb&&Array.isArray(cmb.rows)?cmb.rows:[];
   const avgWin=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.winRate,0),0)/combatRows.length):null;
   const avgTurns=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.avgTurns,0),0)/combatRows.length):null;
   return '<div class="item"><div class="gmpb-title"><b>測試摘要</b><span class="muted">方便直接貼給 ChatGPT 做下一階段平衡</span></div>'+
    '<div class="gmpb-summary-main">'+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("基準地圖",mapAt(MODEL.mapIndex)?mapAt(MODEL.mapIndex).name:"未選擇")+
    metric("平均回合輸出",o?fmt(o.avgRoundDamage):"尚未測試")+metric("平均回合承傷",d?fmt(d.avgTurnLoss):"尚未測試")+
-   metric("實戰平均勝率",avgWin==null?"尚未測試":avgWin+"%")+metric("實戰平均回合",avgTurns==null?"尚未測試":avgTurns)+'</div>'+
+   metric("銀河實戰平均勝率",avgWin==null?"尚未測試":avgWin+"%")+metric("宇宙 Boss 勝率",universe?universe.winRate+"%":"尚未測試")+'</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button></div>'+
    '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
  }
