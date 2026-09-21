@@ -37,7 +37,7 @@
  }
  function managementHtml(){
   const on=enabled();
-  return `<div class="muted gm-hub-note">此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。</div><div class="controls"><button class="btn blue" onclick="gmSetBackgroundBattle(true)" ${on?"disabled":""}>開啟背景戰鬥</button><button class="btn danger" onclick="gmSetBackgroundBattle(false)" ${on?"":"disabled"}>關閉背景戰鬥</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：背景戰鬥已${on?"開啟":"關閉"}</div>`;
+  return `<div class="muted gm-hub-note">背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。銀河紀元與宇宙紀元主線共用此 gate。</div><div class="controls"><button class="btn blue" onclick="gmSetBackgroundBattle(true)" ${on?"disabled":""}>開啟背景戰鬥</button><button class="btn danger" onclick="gmSetBackgroundBattle(false)" ${on?"":"disabled"}>關閉背景戰鬥</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：背景戰鬥已${on?"開啟":"關閉"}</div>`;
  }
  window.gmSetBackgroundBattle=function(next){
   if(!setEnabled(next===true)){
