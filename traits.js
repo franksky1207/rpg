@@ -12,15 +12,17 @@ const baseMonsterObj=monsterObj;
 let monsterPreviewCache={};
 let currentCombatEncounter=null;
 
-function traitCountForKind(kind){
- const r=Math.random()*100;
+function traitCountForKind(kind,rng=Math.random){
+ const random=typeof rng==="function"?rng:Math.random;
+ const r=random()*100;
  if(kind==="boss")return r<15?0:r<70?1:2;
  if(kind==="elite")return r<35?0:r<85?1:2;
  return r<70?0:r<95?1:2;
 }
-function rollMonsterTraits(kind){
- const count=traitCountForKind(kind),pool=MONSTER_TRAIT_IDS.slice(),out=[];
- for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+function rollMonsterTraits(kind,rng=Math.random){
+ const random=typeof rng==="function"?rng:Math.random;
+ const count=traitCountForKind(kind,random),pool=MONSTER_TRAIT_IDS.slice(),out=[];
+ for(let i=0;i<count&&pool.length;i++)out.push(pool.splice(Math.floor(random()*pool.length),1)[0]);
  return out;
 }
 function applyMonsterTraits(enemy,traitIds=[]){
@@ -66,6 +68,10 @@ function combatTraitBadgesHtml(traits){
  return badges?`<div class="combat-trait-badges" style="display:flex;align-self:stretch;width:100%;justify-content:flex-start;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px;text-align:left;font-size:1.5em;font-weight:700">${badges}</div>`:"";
 }
 
+window.MONSTER_TRAITS=MONSTER_TRAITS;
+window.MONSTER_TRAIT_IDS=MONSTER_TRAIT_IDS.slice();
+window.traitCountForKind=traitCountForKind;
+window.rollMonsterTraits=rollMonsterTraits;
 window.applyMonsterTraits=applyMonsterTraits;
 window.combatTraitBadgesHtml=combatTraitBadgesHtml;
 window.monsterObj=function(mapIdx,eIdx){return getPreviewEncounter(mapIdx,eIdx)};
