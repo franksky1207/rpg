@@ -28,6 +28,31 @@ function currentWorldResource(){
  return {label:String(snap.label||"金幣"),amount:Math.max(0,Math.floor(Number(snap.amount)||0)),secondaryLabel:snap.secondaryLabel?String(snap.secondaryLabel):null,secondaryAmount:Math.max(0,Math.floor(Number(snap.secondaryAmount)||0))};
 }
 function secondWorldActive(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();}
+function characterEquipmentWorldLabel(it){
+ if(!it)return "";
+ return Number(it.world)===2?"宇宙紀元":"銀河紀元";
+}
+function characterWorldSnapshot(target=state){
+ const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(target);
+ const progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(target):{level:Math.max(1,Math.floor(Number(target?.level)||1)),cap:universe?1000:MAX_LEVEL,atCap:Number(target?.level)>= (universe?1000:MAX_LEVEL),exp:Math.max(0,Math.floor(Number(target?.exp)||0)),need:0,percent:100,world:universe?2:1};
+ const sw=target?.secondWorld||{};
+ return {
+  world:universe?2:1,
+  worldLabel:universe?"宇宙紀元":"銀河紀元",
+  level:Math.max(1,Math.floor(Number(target?.level)||1)),
+  cap:Math.max(1,Math.floor(Number(progress.cap)|| (universe?1000:MAX_LEVEL))),
+  atCap:progress.atCap===true,
+  exp:Math.max(0,Math.floor(Number(progress.exp)||0)),
+  need:Math.max(0,Math.floor(Number(progress.need)||0)),
+  percent:Math.max(0,Math.min(100,Number(progress.percent)||0)),
+  gold:Math.max(0,Math.floor(Number(target?.gold)||0)),
+  darkMatter:Math.max(0,Math.floor(Number(sw.darkMatter)||0)),
+  darkEnergy:Math.max(0,Math.floor(Number(sw.darkEnergy)||0)),
+  equippedWorlds:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,target?.equipment?.[type]?Number(target.equipment[type].world)===2?2:1:null]))
+ };
+}
+window.characterWorldSnapshot=characterWorldSnapshot;
+window.CHARACTER_WORLD_UI_VERSION=1;
 function savePlayerName(){
  const input=document.getElementById("playerNameInput");
  let name=(input?.value||"").trim();
@@ -214,12 +239,13 @@ function closeBattleResultModal(){
 }
 
 function characterPage(){
- const progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(state):{atCap:state.level>=MAX_LEVEL,need:state.level<MAX_LEVEL?expNeed(state.level):0,percent:state.level<MAX_LEVEL?Math.min(100,state.exp/expNeed(state.level)*100):100,exp:state.exp};
+ const snap=characterWorldSnapshot(state),progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(state):snap;
  const s=playerCombatStats(),need=progress.need,hpPct=s.hp?state.hp/s.hp*100:0,expPct=progress.percent;
  const titleEntry=typeof window.getUnlockedPlayerTitleDefinitions==="function"&&window.getUnlockedPlayerTitleDefinitions().length?`<div class="character-title-row"><span class="muted">稱號</span><button class="btn character-title-button" onclick="openPlayerTitlePicker()">${typeof window.getEquippedPlayerTitleDefinition==="function"&&window.getEquippedPlayerTitleDefinition()?window.playerTitleHtml(window.getEquippedPlayerTitleDefinition().id):"不裝備稱號"}</button></div>`:"";
- const resource=currentWorldResource(),resourceStats=`<div class="stat">${resource.label}<b>${resource.amount.toLocaleString()}</b></div>${resource.secondaryLabel?`<div class="stat">${resource.secondaryLabel}<b>${resource.secondaryAmount.toLocaleString()}</b></div>`:""}`;
- const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}<div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
- const equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>`;
+ const resourceStats=snap.world===2?`<div class="stat">暗物質<b>${snap.darkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>${snap.darkEnergy.toLocaleString()}</b></div>`:`<div class="stat">金幣<b>${snap.gold.toLocaleString()}</b></div>`;
+ const worldInfo=`<div class="notice" style="margin-bottom:12px"><b>${snap.worldLabel}</b><div class="muted" style="margin-top:5px">目前角色等級上限 Lv.${snap.cap}${snap.world===2?"；銀河紀元裝備仍可繼續穿戴，來源會個別標示。":""}</div></div>`;
+ const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${worldInfo}${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}<div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ const equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>{const it=state.equipment[t];return `<div class="item"><b>${equipmentTypeLabel(t)}</b>${it?`<span class="muted" style="float:right">來源：${characterEquipmentWorldLabel(it)}</span>`:""}<br>${itemHtml(it,true)}${it?gearAbilityHtml(it,true):""}</div>`;}).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
 function setInventoryFilter(v){inventoryFilter=v;selectedItem=null;render()}
