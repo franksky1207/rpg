@@ -69,7 +69,7 @@ function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
  const enhancement={basicStones:0,advancedStones:0,levels:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,0]))};
- let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),enhancement,equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true},gm:false};
+ let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),enhancement,equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true,combatSpeed:1},gm:false};
  newStateNormalizers.forEach(normalizer=>{const normalized=normalizer(next);if(normalized&&typeof normalized==="object")next=normalized;});
  return next;
 }
