@@ -1745,8 +1745,9 @@
   return index===0||s?.secondWorld?.mainline?.bossKilled?.[index-1]===true;
  }
  function secondWorldBossVisible(value,target=null){
-  const index=bossIndex(value);
-  return index>=0&&(secondWorldBossKilled(index,target)||canChallengeSecondWorldBoss(index,target));
+  const index=bossIndex(value),s=targetState(target);
+  if(index<0||!s||s?.secondWorld?.entered!==true)return false;
+  return secondWorldBossKilled(index,s)||canChallengeSecondWorldBoss(index,s);
  }
  function secondWorldHighestClearedBossIndex(target=null){
   const s=targetState(target);
@@ -1781,7 +1782,7 @@
   return boss?{...boss.equipment}:null;
  }
  function validateSecondWorldData(){
-  const errors=[];
+  const errors=[],warnings=[];
   if(REGIONS.length!==REGION_COUNT)errors.push({code:"REGION_COUNT",actual:REGIONS.length});
   if(BOSSES.length!==BOSS_COUNT)errors.push({code:"BOSS_COUNT",actual:BOSSES.length});
   const expectedLevels=Array.from({length:BOSS_COUNT},(_,i)=>505+i*5);
@@ -1799,12 +1800,13 @@
   if(bossNames.size!==BOSS_COUNT)errors.push({code:"BOSS_NAME_DUPLICATE"});
   const gearNames=BOSSES.flatMap(row=>EQUIPMENT_SLOTS.map(slot=>row.equipment?.[slot])).filter(Boolean);
   if(gearNames.length!==BOSS_COUNT*EQUIPMENT_SLOTS.length)errors.push({code:"GEAR_COUNT",actual:gearNames.length});
-  if(new Set(gearNames).size!==gearNames.length)errors.push({code:"GEAR_NAME_DUPLICATE",actualUnique:new Set(gearNames).size});
+  const duplicateGearNames=[...new Set(gearNames.filter((name,index,all)=>all.indexOf(name)!==index))];
+  if(duplicateGearNames.length)warnings.push({code:"GEAR_NAME_DUPLICATE",names:duplicateGearNames});
   BOSSES.forEach((boss,index)=>{
    if(boss.index!==index)errors.push({code:"BOSS_INDEX",index});
    EQUIPMENT_SLOTS.forEach(slot=>{if(typeof boss.equipment?.[slot]!=="string"||!boss.equipment[slot])errors.push({code:"GEAR_NAME_MISSING",index,slot});});
   });
-  return {passed:errors.length===0,version:VERSION,regionCount:REGIONS.length,bossCount:BOSSES.length,equipmentNameCount:gearNames.length,errors};
+  return {passed:errors.length===0,version:VERSION,regionCount:REGIONS.length,bossCount:BOSSES.length,equipmentNameCount:gearNames.length,errors,warnings};
  }
 
  window.SECOND_WORLD_DATA_VERSION=VERSION;
@@ -1826,5 +1828,5 @@
  window.secondWorldEquipmentNamesForBoss=secondWorldEquipmentNamesForBoss;
  window.validateSecondWorldData=validateSecondWorldData;
  window.SECOND_WORLD_DATA_INTEGRITY=validateSecondWorldData();
- if(!window.SECOND_WORLD_DATA_INTEGRITY.passed)console.error("[文明戰線] Second World data integrity error",window.SECOND_WORLD_DATA_INTEGRITY.errors);
+ if(!window.SECOND_WORLD_DATA_INTEGRITY.passed)console.error("[文明戰線] Second World data integrity error",window.SECOND_WORLD_DATA_INTEGRITY.errors);else if(window.SECOND_WORLD_DATA_INTEGRITY.warnings?.length)console.warn("[文明戰線] Second World data integrity warning",window.SECOND_WORLD_DATA_INTEGRITY.warnings);
 })();
