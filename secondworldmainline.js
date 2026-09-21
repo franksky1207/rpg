@@ -147,13 +147,13 @@
      const settled=window.settleSecondWorldBossVictory(index);
      if(!settled.ok){ctx.stopReason="error";alert(settled.reason||"戰鬥結算失敗。");break;}
      accumulate(ctx,settled);
-     if(!continuous){if(typeof render==="function")render();setTimeout(()=>showVictory(settled,combat),0);return true;}
+     if(!continuous){setTimeout(()=>showVictory(settled,combat),0);return true;}
     }else{
      state.hp=0;
      const penalty=typeof window.applySecondWorldDeathPenalty==="function"?window.applySecondWorldDeathPenalty():{ok:false,reason:"死亡懲罰 owner 尚未載入。"};
      if(!penalty.ok){ctx.stopReason="error";alert(penalty.reason||"死亡懲罰結算失敗。");break;}
      ctx.lastPenalty=penalty;ctx.stopReason="death";
-     if(!continuous){if(typeof render==="function")render();setTimeout(()=>showDefeat(penalty,boss,combat),0);return true;}
+     if(!continuous){setTimeout(()=>showDefeat(penalty,boss,combat),0);return true;}
      break;
     }
 
@@ -165,8 +165,10 @@
 
    if(continuous){
     if(!ctx.stopReason)ctx.stopReason=ctx.stopRequested?"manual":"complete";
-    if(typeof render==="function")render();
     setTimeout(()=>showContinuousResult(ctx),0);
+   }else if(ctx.stopReason==="error"&&typeof render==="function"){
+    ctx.currentEncounter=null;
+    render();
    }
    return true;
   }finally{
