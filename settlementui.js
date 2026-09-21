@@ -59,11 +59,11 @@
   save(false);
   syncSettlementEquipControls();
   row.querySelector(".settlement-swap-sold")?.remove();
-  if(handled?.sold){
-   const reward=stoneText(handled.enhancementStones);
+  if(handled?.sale){
+   const reward=stoneText(handled.enhancementStones),saleText=typeof window.equipmentSaleText==="function"?window.equipmentSaleText(handled.sale):`${handled.sold||0} 金幣`;
    const note=document.createElement("div");
    note.className="settlement-swap-sold";
-   note.textContent=`換下裝備已自動出售 +${handled.sold} 金幣${reward?`，另獲得 ${reward}`:""}`;
+   note.textContent=`換下裝備已自動出售，獲得 ${saleText}${reward?`，另獲得 ${reward}`:""}`;
    row.appendChild(note);
   }
  };
@@ -78,8 +78,8 @@
   if(!rows.length)return `<div class="muted" style="margin-top:${marginTop}px">${emptyText}</div>`;
   const heading=showCount?`${title} ${rows.length} 件`:title;
   return `<div class="settlement-drop-wrap" style="margin-top:${marginTop}px"><div class="settlement-drop-head"><b>${heading}</b></div><div class="settlement-drop-scroll">${rows.map(x=>{
-   const item=x.item,sold=Number(x.sold)||0,id=encodedItemId(item);
-   return `<div class="settlement-drop-row" data-settlement-item="${id}">${itemHtml(item,true)}${!sold&&typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}${sold?`<div class="muted">自動出售 +${sold} 金幣</div>`:`<div class="settlement-equip-control">${equipControlHtml(item)}</div>`}</div>`;
+   const item=x.item,sale=x.sale||null,sold=Number(x.sold)||0,id=encodedItemId(item),saleText=sale&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(sale):sold?`${sold} 金幣`:"";
+   return `<div class="settlement-drop-row" data-settlement-item="${id}">${itemHtml(item,true)}${!sale&&!sold&&typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):""}${sale||sold?`<div class="muted">自動出售，獲得 ${saleText}</div>`:`<div class="settlement-equip-control">${equipControlHtml(item)}</div>`}</div>`;
   }).join("")}</div></div>`;
  };
 
