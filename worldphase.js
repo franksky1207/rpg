@@ -1,5 +1,5 @@
 (function(){
- const WORLD_PHASE_VERSION=1;
+ const WORLD_PHASE_VERSION=2;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
 
@@ -131,6 +131,8 @@
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
  window.normalizeSecondWorldState=normalizeSecondWorldState;
+ window.finalFirstWorldStoryId=finalFirstWorldStoryId;
+ window.isFinalFirstWorldStoryId=function(id){return !!id&&id===finalFirstWorldStoryId();};
  window.secondWorldEntryRequirements=secondWorldEntryRequirements;
  window.canEnterSecondWorld=canEnterSecondWorld;
  window.isSecondWorldEntered=isSecondWorldEntered;
