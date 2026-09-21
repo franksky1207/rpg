@@ -103,6 +103,11 @@
   }
 
   function secondWorldActiveRegionIndex(){
+    const active=window.activeSecondWorldMainlineContext;
+    if(active?.currentEncounter&&typeof window.secondWorldCombatPageHtml==="function"){
+      const combatHtml=window.secondWorldCombatPageHtml(active);
+      if(combatHtml)return combatHtml;
+    }
     const regions=secondWorldRegions();
     if(!regions.length)return -1;
     const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?window.secondWorldHighestUnlockedBossIndex():-1;
@@ -180,6 +185,34 @@
     lastSecondWorldActiveRegionId=null;
   };
 
+  function secondWorldCombatPageHtml(ctx){
+    const encounter=ctx?.currentEncounter||ctx?.lastCombat?.e||null;
+    const boss=ctx?.boss||encounter;
+    if(!encounter||!boss)return "";
+    const s=typeof playerCombatStats==="function"?playerCombatStats():{hp:1};
+    const progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(state):{atCap:false,exp:Number(state.exp)||0,need:1,percent:0};
+    const hpPct=s.hp?Math.max(0,Math.min(100,(Number(state.hp)||0)/s.hp*100)):0;
+    const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(encounter.traits):"";
+    const round=Math.max(1,Math.floor(Number(ctx.completed)||0)+1);
+    const continuous=ctx.continuous===true;
+    const requested=ctx.stopRequested===true;
+    const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+    const speedText=[1,1.5,2].includes(speed)?speed:1;
+    const head=continuous?`連續戰鬥・第 ${round} 場`:"單場戰鬥";
+    const stop=continuous?`<div class="continuous-stop-wrap"><button class="btn danger" onclick="requestSecondWorldContinuousStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
+    return `<section class="combat-screen universe-combat-screen">
+      <div class="combat-head">${head}<span class="universe-combat-speed">${speedText}×</span></div>
+      <div class="combat-arena">
+       <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${state.level}</h2><div class="muted">暗物質 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}　暗能量 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.max(0,Math.floor(Number(state.hp)||0))} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+progress.need}</span></div><div class="bar"><span class="xp" style="width:${progress.percent}%"></span></div></div></div>
+       <div class="combat-vs">VS</div>
+       <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${encounter.name} Lv.${encounter.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${encounter.hp} / ${encounter.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
+      </div>
+      <div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}
+    </section>`;
+  }
+
+  window.secondWorldCombatPageHtml=secondWorldCombatPageHtml;
+
   window.secondWorldAdventurePageHtml=function(){
     const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
     if(!entered)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>尚未正式進入宇宙紀元。</b></div></section>`;
@@ -191,5 +224,5 @@
     return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元・冒險</h2><span></span></div><div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
-  window.SECOND_WORLD_ADVENTURE_UI_VERSION=1;
+  window.SECOND_WORLD_ADVENTURE_UI_VERSION=2;
 })();
