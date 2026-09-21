@@ -73,7 +73,7 @@ function homePage(){
   <div class="home-title"><h2>文明戰線</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
   ${secondWorldEntry}
   <div class="menu-grid">
-   <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>選擇地圖並挑戰怪物</span></button>
+   <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>${secondWorldActive()?"進入宇宙主線並挑戰 Boss":"選擇地圖並挑戰怪物"}</span></button>
    <button class="menu-card" onclick="go('storyrecord')"><b>戰線紀錄</b><span>回顧已完成的正式劇情</span></button>
    <button class="menu-card" onclick="go('character')"><b>角色</b><span>查看能力與目前裝備</span></button>
    <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備、出售與贖回遺失裝備</span></button>
@@ -163,7 +163,7 @@ function adventureCombatPage(){
  return `<section class="combat-screen"><div class="combat-head">${head}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">${currentWorldResource().label} ${currentWorldResource().amount.toLocaleString()}${currentWorldResource().secondaryLabel?`　${currentWorldResource().secondaryLabel} ${currentWorldResource().secondaryAmount.toLocaleString()}`:""}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${secondWorldActive()?"新階段尚未開放":state.level>=MAX_LEVEL?"MAX":state.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
 }
 function adventurePage(){
- if(secondWorldActive())return wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>新的主線戰線已開啟。</b></div><div class="muted" style="margin-top:10px;line-height:1.7">宇宙紀元正式主線將於後續階段開放；目前不會進入銀河紀元的正式戰鬥流程。</div></div>');
+ if(secondWorldActive())return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');
  if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
 }
 
