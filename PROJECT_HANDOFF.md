@@ -1874,8 +1874,17 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 「使用目前最高」會依紀元切換為最高地圖／最高可用 Boss。
 - 原本頁面底部獨立「宇宙紀元 Boss 實戰基準」UI 已移除；其舊 runner 暫留內部，待第 2～3 批併入共用測試後清除。
 - **本批不改輸出／承傷／實戰運算**。為避免宇宙紀元誤讀銀河怪資料，切到宇宙紀元時這三類測試暫時顯示第 2 批提示並停用。
-- 第 2 批：輸出／承傷／主線實戰改為正式 world-aware，共用「目前選擇怪物」。
-- 第 3 批：摘要／舊 universe result 路徑清理／Integrity 最終收尾。
+### 第 2 批：輸出／承傷／主線實戰 world-aware — 已完成
+- `gmpowerbenchmark.js` 升級 V13。
+- 「輸出基準測試」「承傷／生存基準測試」「現行主線實戰基準」現在全部讀取第 1 批的統一「目前選擇怪物」。
+- 銀河紀元行為維持：輸出／承傷可選目前怪物、本地圖普通／菁英／Boss、自訂；主線實戰可測目前怪物或本地圖 5 隻全部。
+- 宇宙紀元輸出／承傷來源只提供「目前選擇怪物／自訂」，避免出現不存在的普通／菁英／本地圖來源。
+- 宇宙紀元輸出測試使用目前 Boss 的正式**基礎 DEF**；承傷測試使用目前 Boss 的正式**基礎 ATK／DEF／暴擊／閃避**。這兩種木樁測試與銀河既有語意一致，不抽隨機 traits。
+- 宇宙紀元主線實戰改走正式 `universeCombatRow() → secondWorldBossEncounter() → runCombatCore()`；每場重新抽正式 Boss traits，與正式第二世界 Boss 戰鬥來源一致。
+- 宇宙紀元主線實戰只有「測目前選擇怪物」，**沒有「測本地圖 5 隻全部」**。
+- 正式實戰結果現在寫入共用 `MODEL.combatResult`；舊 `universeCombatResult` runner 暫留內部但不再由 UI 使用，待第 3 批清理。
+- 全部測試仍是 sandbox，不寫 EXP／資源／裝備／死亡懲罰／Boss 主線進度／存檔。
+- 第 3 批：摘要改成紀元感知、移除舊 `universeCombatResult / runUniverseCombatBenchmark` 路徑、最終 Integrity／回歸收尾。
 
 ## 29.10 第 10 順位：遊戲說明
 
