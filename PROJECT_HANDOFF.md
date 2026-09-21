@@ -330,9 +330,9 @@ VIP level = floor(sqrt(vipPoints / 1000))
 - 最短離線：1 分鐘。
 - 最長計算：12 小時。
 - EXP：正式戰鬥收益的 10%。
-- 金幣：10%。
+- 銀河紀元金幣：10%；宇宙紀元改為暗物質 10%。
 - 裝備掉落機率：正式掉落流程的 10%。
-- 戰鬥強化石：正式期望收益的 5%。
+- 銀河紀元戰鬥強化石：正式期望收益的 5%；宇宙紀元直接強化資源改為暗能量 5%。
 - battle sample 實際戰鬥時間合法值：100ms～300000ms；cycle / adjusted 上限 601000ms。
 - `OFFLINE_BATTLE_SAMPLE_VERSION = 3`。
 - `OFFLINE_SAMPLE_SELECTION_VERSION = 2`。
@@ -340,10 +340,9 @@ VIP level = floor(sqrt(vipPoints / 1000))
 - `OFFLINE_COMBAT_SPEED_SAMPLE_VERSION = 1`。
 
 正式樣本只來自：
-- 前景主線普通／菁英。
-- 必須實際勝利。
-- Boss 不記樣本。
-- 背景追趕、離線結算、其他副本不應寫正式 sample。
+- 銀河紀元：前景主線普通／菁英，必須實際勝利；銀河 Boss 不記樣本。
+- 宇宙紀元：前景正式主線 Boss 勝利；以 bossIndex / bossId 辨識，不使用 map / enemy。
+- 兩個世界的背景追趕、離線結算、其他副本都不應寫正式 sample。
 
 實戰 sample 等級差修正：
 - 玩家高怪 ≤3 級：×1
@@ -372,6 +371,16 @@ adjustedMs = round(cycleMs * levelGapMultiplier)
 3. 跨速換算只縮放實際戰鬥本體 `actualMs`，固定 outer gap 140ms 不縮放。
 4. 例如 1× sample：actual 1400ms、cycle 1540ms，換成 2× 時正式結果為 840ms（700 + 140）。
 5. 不要恢復舊的「所有速度共用最後幾筆」或舊 sample fallback。
+
+### 宇宙紀元正式離線收益（第 11 批）
+
+- `SECOND_WORLD_OFFLINE_SAMPLE_VERSION = 1`
+- `SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION = 1`
+- EXP 10%、暗物質 10%、裝備 10%、暗能量 5%。
+- world2 離線裝備出售共用正式 `settleEquipmentSaleBatch()`。
+- 不產生金幣、第一世界強化石、特殊遭遇或主線首次擊破進度。
+- 結果頁依世界切換資源與 target 文案。
+- 失敗沿用既有 rollback / retry，不吞掉 pending settlement。
 
 ## checkpoint
 
@@ -1905,23 +1914,33 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ## 29.13 跨主題批次 C：第二世界離線收益
 
-目前 main 已在宇宙紀元先 gate 掉第一世界離線結算，因此不會誤發金幣／強化石；但正式世界 2 offline 尚未開放。
+**新第 11 批已完成：第二世界正式離線收益。**
 
-目前需注意：
-- `offlineprogress.js` 仍硬編第一世界 `goldReward`、金幣出售、基礎強化石、第一世界地圖／敵人 farm target 與「Boss 不作離線樣本」說明。
-- 第二世界設計已確定：Boss 主線可以成為正式離線 sample。
-- 現有 speed-aware sample：1×／1.5×／2×各 8 筆，跨速換算保留固定 140ms outer gap。
+正式規則：
+- 沿用同一個 `offlineprogress.js` owner，不另建第二套離線系統。
+- 最短離線 1 分鐘、最長 12 小時維持不變。
+- 宇宙紀元離線 target 直接讀第 10 批 world2 Boss sample：`world:2 / targetType:"boss" / bossIndex / bossId`。
+- 1×／1.5×／GM 2× 仍各保留最近 8 筆，選樣優先目前速度；沒有同速樣本時可使用同 Boss 其他速度樣本換算。
+- EXP = 對應正式宇宙主線 Boss EXP 的 **10%**，逐場套當下玩家等級與實戰訓練，升級仍走 `gainEffectiveExp()`；Lv.1000 不再把溢出 EXP 轉成其他資源。
+- 暗物質 = 對應正式宇宙主線 Boss 暗物質收益的 **10%**，仍包含搜刮技巧。
+- 裝備 = 每場以 **10%** 機率建立該 Boss 的正式 world2 裝備，直接走 `makeSecondWorldEquipmentForBoss()`。
+- 直接強化資源沿用第一世界離線 5% 概念：第二世界以暗能量承接，`floor(離線場次 × 5%)`。
+- 離線裝備整理沿用既有邏輯：非神話只留下每部位較佳候選，最後再與目前穿戴比較；較差裝備統一交給第 9 批正式 sale owner。
+- 離線出售 world2 裝備所得暗物質／暗能量完全走 `settleEquipmentSaleBatch()`；不在 offline 另寫售價公式。
+- 神話裝備仍保留，不做自動出售；若未來正式 sale owner 允許某種神話出售情境，暗能量仍由 sale metadata 統一結算。
+- 宇宙紀元離線 settlement **不讀寫金幣、不發基礎／進階強化石、不觸發特殊遭遇／黑市、不推進 Boss 主線首次擊破**。
+- 離線結果 UI 在宇宙紀元顯示 Boss 身份、EXP、暗物質、暗能量、裝備；不顯示第一世界金幣／強化石文案。
+- 無有效 sample 時，宇宙紀元提示玩家先完成一場正式前景 Boss 勝利；背景戰鬥／catch-up／副本不會建立 sample。
+- settlement 仍沿用原本 rollback / retry：正式結算前 snapshot，任何錯誤回復 state，pending 區段保留供 reload 重試。
+- 世界突破時舊第一世界 sample／pending／checkpoint 的切斷已完成，不重做。
+- GM 同步檢查：離線收益沒有獨立 GM 可調參數，不新增 GM 管理頁；GM 2× sample 與 settlement 直接走共用 owner，Final Integrity 驗證正式 world2 offline APIs 與 5% 暗能量率。
+- `SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1`。
 
-正式實作：
-- 沿用現有 offline owner、12h 上限、1m 下限、speed-aware sample，不另做第二套離線系統。
-- 世界 2 Boss sample 必須有不依賴第一世界 `map/enemy` index 的身份資料。
-- EXP／暗物質／裝備依第二世界正式比例結算；禁止金幣／第一世界強化石。
-- 世界 2 裝備離線出售走統一 sale owner；神話若依正式規則出售，暗能量由同一 settlement 處理。
-- 離線結果 UI 要改為第二世界資源與 Boss 身份，不再寫「普通／菁英」「金幣」「基礎強化石」。
-- 世界突破時舊 sample／farm target／pending settlement／checkpoint 的切斷 **已完成**，不要重做。
-- 離線 settlement 失敗要保留現有 rollback / retry 安全語意。
-
-**插入時機：第 1 順位「冒險」+ 第 3 順位「背包 sale owner」都穩定後。**
+至此新批次鏈：
+- 第 8 批角色：完成。
+- 第 9 批背包＋sale owner：完成。
+- 第 10 批 world2 offline sample：完成。
+- 第 11 批 world2 正式離線收益：完成。
 
 ## 29.14 跨主題批次 D：每日重置／跨世界每日使用量
 
