@@ -1616,9 +1616,21 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - GM 同步檢查：本批只有玩家端選擇 UI，沒有新增戰鬥、正式 state mutation 或測試命令，因此 **不新增 GM 管理／GM 測試入口**；等 Boss battle owner 接入時同步擴充「地圖怪測試」與「戰力基準」。
 - Integrity 已同步：`finalintegrity.js` 驗證第二世界資料 owner 與冒險 UI owner，並修正正式 schema 檢查為 14。
 
+第 3 批等級／EXP owner 已完成：
+- 新增 `levelprogression.js`，保留舊 `MAX_LEVEL=500` 作為銀河紀元舊常數，不粗暴全域改成 1000。
+- 正式 effective cap：未進宇宙紀元 = Lv.500；已進宇宙紀元 = Lv.1000；absolute max = 1000。
+- Lv.1～499 完全沿用既有 EXP 曲線。
+- 已進宇宙紀元後，Lv.500～999 使用 `ceil((25 + 4*L) * 250)`；Lv.1000 EXP 固定 0。
+- `gainExp()`、`expNeed()`、`clampGameLevel()` 已由世界感知 owner 接管；升到 effective cap 時剩餘 EXP 清 0。
+- 角色頁／冒險角色狀態已正式顯示宇宙紀元 EXP，不再顯示「新階段尚未開放」或錯誤的 Lv.500 MAX。
+- save migration 在 `secondWorld` 正規化後同步正規化角色 level／EXP，避免世界狀態與等級上限不一致。
+- `levelcap.js` 的滿等判定改走 effective cap；宇宙紀元不會因舊 `MAX_LEVEL=500` 誤判滿等。
+- GM 同步完成：GM「指定等級」會依目前世界限制 1～500／1～1000；GM 管理頁明確顯示目前世界與有效等級上限。
+- GM「銀河紀元解鎖進度」與銀河裝備產生器仍保持世界 1 owner，避免本批尚未完成的世界 2 Boss／裝備邏輯被假接。
+- 戰力基準本批只讀角色 snapshot，不需新增世界 2 Boss 選擇；待 Boss battle owner 完成時再同步擴充。
+- Integrity 已加入 level progression owner／500→1000 cap／EXP 公式檢查。
+
 仍要處理：
-- effective level cap：未進宇宙紀元 500、已進宇宙紀元 1000；不可只把全域 `MAX_LEVEL` 粗暴改 1000。
-- Lv.500～999 第二世界 EXP 需求與 Lv.1000 封頂。
 - 第二世界 Boss 能力公式、traits 接法、戰鬥 pipeline。
 - 主線獎勵：EXP、暗物質、暗能量、固定 1 件世界 2 裝備。
 - 世界 2 裝備等級／品質／屬性延伸。
