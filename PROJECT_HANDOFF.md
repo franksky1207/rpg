@@ -1846,5 +1846,5 @@ secondWorld: {
 > 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
 > 我說「先討論／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 第二世界 Lv.501～1000 目前仍是規劃、尚未寫入 main；先讀 handoff 第 28 節，再重新確認現有第一世界 save/state/owner，絕對不要把規劃當成已存在 API。  
+> 第二世界 Lv.501～1000 已開始第一階段骨架實作：目前 `worldphase.js`、`secondWorld` 基礎 state 與 save schema 14 已進 main，但真正世界轉換仍未開放。先讀 handoff 第 28 節與第 29.1 節，再重新確認 main，絕對不要把未實作規劃當成已存在功能。  
 > 現在先不要修改任何檔案，先確認最新狀態與正式 owner，然後等我的下一個指令。
