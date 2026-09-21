@@ -278,9 +278,11 @@ function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason)
 
 function settingsPage(){
  const s=state.settings,name=escapePlayerName(currentPlayerName());
+ const speed=typeof window.playerCombatSpeed==="function"?window.playerCombatSpeed():1;
+ const speedHtml=secondWorldActive()?`<div class="setting-row combat-speed-setting"><div><div style="margin-bottom:6px">戰鬥速度</div><div class="muted">宇宙紀元已解鎖 1.5×；可隨時切回標準速度。</div></div><div class="combat-speed-options"><label class="btn ${Number(speed)===1?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1" ${Number(speed)===1?"checked":""}> 1×　標準速度</label><label class="btn ${Number(speed)===1.5?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1.5" ${Number(speed)===1.5?"checked":""}> 1.5×　加速戰鬥</label></div></div>`:"";
  const body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
  <h3 style="margin-top:22px">自動出售</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">不可自動出售</span></div>
- <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row" style="align-items:flex-end"><div style="flex:1"><div style="margin-bottom:6px">角色名稱</div><input id="playerNameInput" type="text" maxlength="12" value="${name}" placeholder="玩家" style="width:100%;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff"></div><button class="btn blue" onclick="savePlayerName()">儲存名稱</button></div><div class="muted" style="margin-top:6px">最多 12 個字；空白名稱儲存時會自動恢復成「玩家」。</div><div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
+ <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row" style="align-items:flex-end"><div style="flex:1"><div style="margin-bottom:6px">角色名稱</div><input id="playerNameInput" type="text" maxlength="12" value="${name}" placeholder="玩家" style="width:100%;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff"></div><button class="btn blue" onclick="savePlayerName()">儲存名稱</button></div><div class="muted" style="margin-top:6px">最多 12 個字；空白名稱儲存時會自動恢復成「玩家」。</div>${speedHtml}<div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
  ${state.gm&&typeof gmHtml==="function"?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
  return wrapFunctionPage(body);
@@ -292,6 +294,7 @@ function wireSettings(){
   title.style.touchAction="manipulation";title.style.userSelect="none";title.style.webkitUserSelect="none";
  }
  document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
+ document.querySelectorAll("[data-player-combat-speed]").forEach(el=>el.onchange=()=>{if(!el.checked)return;const ok=typeof window.setPlayerCombatSpeed==="function"&&window.setPlayerCombatSpeed(Number(el.dataset.playerCombatSpeed));if(!ok)return alert("戰鬥速度設定失敗。");render();});
  const keep=document.getElementById("keepUpgrade");if(keep)keep.onchange=()=>{state.settings.keepUpgrade=keep.checked;save()};
 }
 function openGMModal(){document.getElementById("passwordModal").classList.add("show");document.getElementById("gmPassword").focus()}
