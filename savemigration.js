@@ -184,6 +184,7 @@
   if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
   if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
   if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
+  if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
   cleanupLegacyDungeonFields(target);
   cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
