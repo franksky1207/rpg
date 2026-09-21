@@ -1641,8 +1641,10 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - **本批刻意保持 `SECOND_WORLD_COMBAT_SETTLEMENT_READY=false`**：戰鬥核心已可跑，但玩家正式挑戰按鈕尚未開放，避免在第 5 批獎勵／掉裝／主線進度 settlement 完成前擊殺 Boss 而漏發不可補回的正式獎勵。
 - 因此本批沒有修改 `secondWorld.mainline.bossKilled`、沒有 EXP／暗物質／暗能量／裝備結算，也沒有死亡懲罰正式寫入。
 - GM 同步完成：
-  - 既有「地圖怪測試」內新增「宇宙紀元 Boss」沙盒，可直接選 100 Boss，100 場測試正式能力＋隨機特性，不修改 save／進度。
-  - 「戰力基準測試」升級 V10，新增宇宙紀元 Boss 100／1000 場實戰基準與摘要，走同一 `runCombatCore()`。
+  - 既有「地圖怪測試」內新增「宇宙紀元 Boss」沙盒；操作結構正式改為「區域 → 怪物」，直接使用 `SECOND_WORLD_REGIONS` 與 `secondWorldBossesForRegion()`，每區固定 10 Boss，不新增不存在的地圖層。
+  - 銀河紀元仍維持「區域 → 地圖 → 怪物」，兩個世界的 GM 測試依各自主線結構呈現。
+  - 「戰力基準測試」升級 V11；宇宙紀元同樣使用「區域 → 怪物 → 100／1000 場」，摘要仍走同一 `runCombatCore()`。
+  - 宇宙 GM 快速測試／戰力基準皆為沙盒，不修改 save／正式進度。
 - Integrity 已加入第二世界 combat owner、settlement gate、GM 快速測試、GM 戰力基準 V10 驗證。
 
 仍要處理：
