@@ -1,5 +1,5 @@
 # 《文明戰線》PROJECT HANDOFF
-更新日期：2026-09-21  
+更新日期：2026-09-22  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
@@ -11,160 +11,198 @@
 
 《文明戰線》是純前端網頁文字／數值養成／科幻星際 RPG，支援桌機與手機。
 
-核心玩法：
-- 主線打怪、升級、裝備掉落。
-- 10 個大區域、100 張地圖，Lv.1～500。
-- 普通／菁英／Boss。
-- VIP、8 項專精、裝備強化。
-- 懸賞、競技場、虛空、鏡像戰、文明災厄。
-- 離線收益、背景連戰。
-- Supabase Auth + 手動雲端存檔。
-- 故事／戰線紀錄。
-- GM 管理／測試系統。
-- 玩家稱號系統：10 個文明災厄稱號 + 6 個鏡像戰稱號。
+核心：
+- **銀河紀元（第一世界）**：Lv.1～500，10 大區、100 張地圖、普通／菁英／Boss。
+- **宇宙紀元（第二世界）**：Lv.501～1000，10 大區、100 隻主線 Boss，沒有第一世界的「每圖 5 怪」結構。
+- VIP、8 項專精、裝備／強化、印記、稱號。
+- 懸賞、競技場、鏡像、虛空、文明災厄。
+- 離線收益、GM-only 背景戰鬥、手動 Cloud Save。
+- 故事／戰線紀錄、GM 管理／測試／戰力基準。
 
-正式存檔 key：
-- `frank_text_rpg_save`
-
-正式存檔版本：
+正式存檔：
+- key：`frank_text_rpg_save`
 - `SAVE_VERSION = 13`
 - `SAVE_SCHEMA_VERSION = 14`
 - `SAVE_LOAD_PIPELINE_VERSION = 2`
 
-最高等級：
-- `MAX_LEVEL = 500`
+等級：
+- 舊常數 `MAX_LEVEL = 500` **只保留為銀河紀元 legacy constant，不代表全遊戲最高等級**。
+- 正式 effective cap 由 `levelprogression.js` 決定：
+  - 未進宇宙紀元：Lv.500
+  - 已進宇宙紀元：Lv.1000
+  - absolute max：1000
+
+正式世界階段：
+- 唯一永久旗標：`secondWorld.entered`
+- 不使用 `currentWorld` 或第二套 save。
 
 ---
 
-# 2. 世界與地圖
+# 2. 世界與主線結構
 
-正式世界由 `data.js` 的 `WORLD_REGIONS` 與各 `worldmaps-*.js` 固定註冊。
+## 銀河紀元
 
-10 區：
-1. 地球戰爭 Lv.1～50，map 0～9
-2. 太陽系戰爭 Lv.51～100，map 10～19
-3. 近星戰爭 Lv.101～150，map 20～29
-4. 星際邊疆 Lv.151～200，map 30～39
-5. 獵戶臂戰爭 Lv.201～250，map 40～49
-6. 銀河邊境 Lv.251～300，map 50～59
-7. 銀河中域 Lv.301～350，map 60～69
-8. 銀河核心外圍 Lv.351～400，map 70～79
-9. 銀河核心戰爭 Lv.401～450，map 80～89
-10. 銀河統合戰爭 Lv.451～500，map 90～99
+正式 owner：`data.js` + `worldmaps-*.js`。
 
-每區固定 10 張地圖，每張 5 級範圍。
+10 區／100 張地圖：
+1. 地球戰爭 Lv.1～50
+2. 太陽系戰爭 Lv.51～100
+3. 近星戰爭 Lv.101～150
+4. 星際邊疆 Lv.151～200
+5. 獵戶臂戰爭 Lv.201～250
+6. 銀河邊境 Lv.251～300
+7. 銀河中域 Lv.301～350
+8. 銀河核心外圍 Lv.351～400
+9. 銀河核心戰爭 Lv.401～450
+10. 銀河統合戰爭 Lv.451～500
 
-正式原則：
-- 地圖固定依 region id 註冊到指定 index。
-- 不依賴 push/splice 或 script 載入順序決定 map index。
-- `validateWorldMapRegistration()` 會驗證 100 張地圖完整性。
+每區 10 張地圖，每圖 5 級範圍，每圖 5 隻怪。地圖 index 固定註冊，不能靠 push/splice 或 script 載入順序。
+
+## 宇宙紀元
+
+正式 owner：`secondworlddata.js`。
+- 10 大區、100 Boss。
+- Boss 等級：505、510、…、1000。
+- 每區 10 Boss，**沒有小地圖層**。
+- Boss 解鎖：玩家等級 ≥ Boss 等級 - 5，且前一 Boss 已完成；第 1 Boss 只需已正式進入宇宙紀元。
+- 10 區：
+  1. 銀河彼端
+  2. 本星系群戰爭
+  3. 星群邊疆
+  4. 群星會戰
+  5. 超域邊境
+  6. 萬域戰線
+  7. 宇宙纖維帶
+  8. 星海巨牆
+  9. 宇宙深域
+  10. 宇宙統合戰爭
+
+玩家正式進入宇宙紀元後，主成長永久使用宇宙紀元規則；銀河紀元只允許回顧／封存用途，後續各頁回顧規則仍需逐頁完成。
 
 ---
 
-# 3. 主線成長與經濟公式
+# 3. 主線成長、戰鬥與經濟公式
 
-## EXP
+## 銀河紀元 EXP
 
-`engine.js`：
+`engine.js` legacy owner：
 
 ```js
 sameExp(l) = ceil(25 + 4*l)
-
-expProgressionFactor(l)
-= 5 + 495 * (1 - exp(-(l-1)/142))
-
-expNeed(l)
-= ceil(sameExp(l) * expProgressionFactor(l))
+expProgressionFactor(l) = 5 + 495 * (1 - exp(-(l-1)/142))
+expNeed(l) = ceil(sameExp(l) * expProgressionFactor(l))
 ```
 
 怪物等級差 EXP multiplier：
-- 怪物高玩家 ≥5：1.3
+- 怪高玩家 ≥5：1.3
 - +3～+4：1.2
 - +1～+2：1.1
 - 同級：1
 - 低 1～2：0.9
 - 低 3～5：0.6
 - 低 6～10：0.25
-- 再更低：0.05
+- 更低：0.05
 
-怪物 EXP 類型倍率：
-- 普通：1
-- 菁英：2
-- Boss：5
+類型倍率：普通 1／菁英 2／Boss 5。
 
-## 金幣
+## 宇宙紀元玩家 EXP
 
+正式 owner：`levelprogression.js`。
+- Lv.1～499：沿用銀河紀元曲線。
+- 已進宇宙紀元後，Lv.500～999：
+  ```js
+  expNeed(L) = ceil((25 + 4*L) * 250)
+  ```
+- Lv.1000：EXP 固定 0。
+- `gainExp()/expNeed()/clampGameLevel()` 已由世界感知 owner 接管。
+
+## 宇宙紀元 Boss
+
+正式 owner：`secondworldcombat.js`。
+
+Boss index `N = 0..99`：
 ```js
-goldBase(l) = ceil(6 + 4*l)
+multiplier = 1 + N * 0.015
+HP  = 36000 * multiplier
+ATK = 6000  * multiplier
+DEF = 3000  * multiplier
 ```
 
-類型倍率：
-- 普通：1
-- 菁英：2.5
-- Boss：6
+端點：
+- Lv.505：36,000 / 6,000 / 3,000
+- Lv.1000：89,460 / 14,910 / 7,455
 
-## 死亡
+Boss 全部 `kind="boss"`，traits 沿用正式 `traits.js` Boss 機率與 `runCombatCore()`，不另造第二套 combat formula。
 
-- 未滿 500 級：扣目前等級升級需求的 10% EXP，上限扣至 0。
-- 有穿裝備時，30% 機率遺失一件已裝備裝備。
-- VIP 20 可免除裝備遺失。
-- 遺失裝備可在背包贖回，贖回費用為該裝備買價 ×2。
+## 宇宙紀元主線獎勵
 
-## 主線怪物正式能力公式
+正式 owner：`secondworldrewards.js`。
+- EXP：`sameExp(BossLevel) × expLevelFactor(BossLevel, playerLevel)`，**不套銀河 Boss ×5**，再套實戰訓練。
+- 暗物質：
+  ```js
+  base = 20 + 2 * BossIndex
+  ```
+  再套搜刮技巧。
+- 每次主線 Boss 勝利：+1 暗能量。
+- 每次勝利固定 1 件 world2 裝備。
+- 不給金幣、基礎石、進階石，不觸發銀河特殊遭遇／黑市。
 
-正式 owner：`balance.js`，`MAIN_MONSTER_BALANCE_VERSION = 1`。
+## 死亡／贖回
 
-基礎：
-```js
-HP  = ceil(55 + 24 * level)
-ATK = ceil(9 + 4.2 * level)
-DEF = ceil(2.5 + 2.0 * level)
-```
+宇宙紀元：
+- EXP 懲罰：目前 effective `expNeed` 的 10%。
+- 30% 機率遺失 1 件穿戴裝備。
+- VIP20 保護裝備不遺失。
+- world2 裝備：贖回成本 = 正式 world2 售價 ×10，使用暗物質。
+- **world1 銀河裝備若在宇宙紀元死亡遺失：免費贖回，不再使用金幣。**
+- 舊 `redemptionPending/pending` 會 normalization 成 `cost:0 / currency:"free"`。
 
-style：
-- tank：HP ×1.15、ATK ×0.95、DEF ×1
-- attack：HP ×0.92、ATK ×1.10、DEF ×1
-- 其他：×1
-
-同一張地圖第 1～5 隻怪再套 stage：
-1. HP ×1.22、ATK ×1.17、DEF ×1.10
-2. HP ×1.31、ATK ×1.24、DEF ×1.14
-3. HP ×1.34、ATK ×1.28、DEF ×1.15
-4. HP ×1.39、ATK ×1.29、DEF ×1.17
-5. HP ×1.44、ATK ×1.27、DEF ×1.17
-
-每層倍率逐步 `ceil`。目前 `kind=normal/elite/boss` 本身沒有額外能力倍率；差異主要來自地圖資料的 style、位置 stage 與正式隨機 traits。
-
-傷害公式 owner：`combatmath.js`：
-```js
-damage = max(1, ceil((ATK - DEF * 0.55) * random(0.95, 1.05)))
-```
-
-**Lv501～1000 的新主線怪物公式尚未正式實作。**
-未來若要擴等，先用 GM 戰力基準收集數據，再改正式 `balance.js`；不要建立平行 monster formula。
+銀河紀元 legacy death/buy×2 規則只屬第一世界正式流程；不得拿去處理宇宙紀元裝備。
 
 ---
 
-# 4. 裝備
+# 4. 裝備與出售
 
-品質共 6 階：
-1. 普通 common
-2. 優良 uncommon
-3. 稀有 rare
-4. 史詩 epic
-5. 傳說 legendary
-6. 神話 mythic
+品質共 6 階：普通／優良／稀有／史詩／傳說／神話。品質倍率正式 owner 仍是 `data.js -> QUALITY`。
 
-正式品質倍率由 `data.js -> QUALITY` 持有。
+## 銀河紀元
+- 正式掉裝／主屬性／詞綴 owner 保持既有 `engine.js` 與裝備 core。
+- 普通／菁英／Boss 舊掉落規則不變。
 
-掉裝率：
-- 普通：25%
-- 菁英：60%
-- Boss：100%
+## 宇宙紀元
+正式 owner：`secondworldrewards.js`。
+- 每 Boss 有 5 件專屬命名，100 Boss 共 500 件。
+- 每次主線 Boss 勝利固定 1 件。
+- 品質：優良 45%／稀有 35%／史詩 15%／傳說 4.5%／神話 0.5%；普通 0%。
+- 裝備等級：`min(playerLevel, bossLevel)`。
+- 沿用現有主屬性／詞綴線性公式到 Lv.1000。
+- 內部用 `item.world=1/2` 區分來源與經濟。
 
-掉落裝備等級會依怪物類型產生小幅上下浮動。
+## 統一 sale owner
 
-不要在新檔另建第二套裝備公式；正式 owner 仍以 `engine.js`、裝備相關 core 為準。
+正式 API：
+- `equipmentSaleQuote()`
+- `equipmentSaleBatchQuote()`
+- `settleEquipmentSale()`
+- `settleEquipmentSaleBatch()`
+- `equipmentSaleText()`
+
+宇宙紀元出售：
+- world1 裝備收益固定 0。
+- world2 售價基準：
+  ```js
+  N = floor((equipmentLevel - 500) / 5)
+  B = 20 + 2*N
+  saleDM = ceil(B * qualityMultiplier * appraisalMultiplier)
+  ```
+- 品質倍率：普通 .10／優良 .15／稀有 .25／史詩 .40／傳說 .70／神話 1.00。
+- 神話出售額外 +1 暗能量；鑑價只放大暗物質，不放大暗能量。
+- 單賣、批量出售、自動出售、換裝後舊裝整理、戰鬥掉裝、離線裝備出售全部必須走同一 owner。
+
+玩家 UI 永久規則：
+- **不要顯示「來源：銀河紀元／宇宙紀元」文字。**
+- `item.world` 只做內部辨識。早期只會有少數銀河裝備過渡，玩家介面不需要暴露來源世界。
+- `PLAYER_EQUIPMENT_WORLD_SOURCE_UI_HIDDEN_VERSION = 1`。
 
 ---
 
@@ -258,46 +296,33 @@ VIP level = floor(sqrt(vipPoints / 1000))
 
 # 8. 戰鬥節奏
 
-## Combat Speed 正式 owner
+## Combat Speed
 
-`combatspeed.js`：
-- `COMBAT_SPEED_CORE_VERSION = 1`
-- `COMBAT_SPEED_PLAYER_RULE_VERSION = 1`
-- `COMBAT_SPEED_GM_OVERRIDE_VERSION = 1`
-- 允許速度：`1 / 1.5 / 2`
-- 正式玩家目前 Lv.1～500 固定為 `1×`。
-- GM 可對目前登入帳號設定 `1× / 1.5× / 2×` override，存在 localStorage，登出時清除對應帳號 override。
-- 未來若 Lv.500 後要正式解鎖玩家倍速，只應擴充 `combatspeed.js -> playerCombatSpeed()`，不要在各模式另做速度判斷。
+正式 owner：`combatspeed.js`。
+- 可用速度：1 / 1.5 / 2。
+- 銀河紀元一般玩家：固定 1×。
+- 宇宙紀元一般玩家：可選 1×／1.5×，設定寫入正式 state。
+- 2×：只屬 GM override，同帳號 localStorage 持續。
+- GM override 優先於玩家設定。
+- 曾修正 iPhone Safari 1.5× 無法保存：原因是錯把 lexical `state` 當 `globalThis.state`；現在 `combatspeed.js` 直接存取正式 lexical state，不要改回 globalThis 判斷。
 
 ## Structured Combat Pacing
 
-`combatfx.js`：
-- `STRUCTURED_COMBAT_PACING_VERSION = 2`
-- `STRUCTURED_COMBAT_SPEED_AWARE_VERSION = 1`
-- 1× 基準：
-  - opening：140ms
-  - impact：70ms
-  - step：48ms
-  - end：180ms
-- 1.5×／2× 由正式 `combatSpeedScaledDelay()` 按倍速縮放。
-- main / bounty / arena / mirror / void / calamity 都使用共用 structured presentation，不要在模式內另造 pacing。
+`combatfx.js` 共用正式動畫：
+- opening 140ms
+- impact 70ms
+- step 48ms
+- end 180ms
+- 1.5×／2× 經 `combatSpeedScaledDelay()` 縮放。
 
-目前已移除過去無必要的額外 60ms／80ms 啟動等待，不要自行恢復。
+銀河主線與宇宙主線都共用 structured presentation；宇宙前景戰鬥會顯示 effective speed。
 
 ## Outer Pacing
 
 `combatpacing.js`：
-- `COMBAT_OUTER_PACING_VERSION = 2`
-- `COMBAT_OUTER_GAP_MS = 140`
-- main / bounty / arena / mirror / void / calamity 目前全部統一 140ms。
-- Outer gap 是固定場間等待，不跟 Structured Combat Speed 一起縮放。
-
-正式 owner：
-- `combatspeed.js`：倍速規則。
-- `combatfx.js`：戰鬥內動畫 pacing。
-- `combatpacing.js`：場與場之間 pacing。
-
-不要在各模式自己硬編第二套 delay，也不要恢復先前 220ms／300ms／350ms／450ms 等舊值。
+- 所有模式 outer gap 正式統一 140ms。
+- outer gap 是場間等待，不隨 structured speed 縮放。
+- 不要恢復舊 220/300/350/450ms 或已刪除的 60/80ms 啟動等待。
 
 ---
 
@@ -839,231 +864,95 @@ Normalization：
 
 # 24. GM 管理／測試系統：最新正式架構
 
-## 24.1 GM Hub registry
+## 24.1 GM Hub
 
-`gmhub.js` 只負責 Hub 外框、管理／測試分頁、section 展開狀態、共用樣式與關閉按鈕。
+`gmhub.js` + `gmhubextensions.js`：
+- 管理／測試分頁與 section registry。
+- test state 只存本頁生命週期，不 save、不污染正式角色。
+- 每批正式功能都必須同步檢查 GM 管理、GM 測試、戰力基準、Integrity 是否需要更新。
 
-`gmhubextensions.js` 是正式 section registry owner：
-- `GM_HUB_EXTENSION_VERSION = 7`
-- `GM_HUB_REGISTRY_VERSION = 1`
-- `registerGmHubSection()`
-- `gmHubRegisteredSectionsHtml(mode)`
-- `gmHubRegisteredSectionIds(mode)`
+## 24.2 角色／世界管理
 
-舊架構已退休：
-- 不再先產整份 GM HTML 再用 `<template>` parse。
-- 不再 `reorderSections()`。
-- 不再由 extension 第二次 override `gmHtml()`。
-- 所有原生與擴充 section 都走同一 registry。
+GM 角色等級使用 effective cap：
+- 銀河：1～500
+- 宇宙：1～1000
 
-管理頁正式順序：
-1. 資料管理
-2. 背景戰鬥
-3. 角色管理
-4. 專精管理
-5. 強化管理
-6. 印記管理
-7. 副本管理
+資源按世界顯示：
+- 銀河：指定金幣
+- 宇宙：指定暗物質／指定暗能量
 
-測試頁正式順序：
-1. VIP 測試
-2. 專精測試
-3. 強化測試
-4. 印記測試
-5. 戰力基準測試
-6. 地圖怪測試
-7. 特殊怪測試
-8. 懸賞戰測試
-9. 競技場測試
-10. 虛空幻境測試
-11. 鏡像戰測試
-12. 文明災厄測試
-13. 稱號預覽
-14. 劇情測試
+宇宙裝備產生器：
+- 區域 → Boss → 品質 → 部位
+- 直接走正式 world2 equipment owner。
 
-section 展開／收合狀態由 `gmHubOpenSections` 保存於本次頁面生命週期。
+## 24.3 地圖怪／Boss 快速測試
 
-## 24.2 GM 共用測試狀態
+銀河：
+- 區域 → 地圖 → 怪物。
 
-`vipgm.js`：
-- `GM_TEST_STATE_VERSION = 1`
-- `GM_ENHANCEMENT_TEST_PIPELINE_VERSION = 5`
+宇宙：
+- 區域 → 怪物（Boss）。
+- **沒有地圖層**，因每區就是 10 隻 Boss。
+- 沙盒 100 場，零 EXP／資源／裝備／主線進度。
 
-`gmhub.js`：
-- `GM_ENHANCEMENT_HUB_VERSION = 5`
+## 24.4 戰力基準測試
 
-共用測試狀態：VIP、8 項專精、5 個裝備欄位強化、10 枚印記。
-
-上方按鈕正式名稱：**「同步角色到測試設定」**。
-
-`gmUseCurrentTestStatus()` 先同步四類 test state，最後只做一次 `gmRefreshTestControls()`。測試 setter 可用 `refresh=false` 做批次同步，避免每改一項就重複操作 DOM。
-
-GM 測試 state 只存在本次網頁工作階段；重新整理回預設。**不得 save、不得修改正式角色。**
-
-## 24.3 戰力基準測試
-
-正式 owner：`gmpowerbenchmark.js`
-
-目前：
-- `GM_POWER_BENCHMARK_VERSION = 9`
+正式 owner：`gmpowerbenchmark.js`。
+- `GM_POWER_BENCHMARK_VERSION = 14`
 - `GM_POWER_BENCHMARK_BATCH_SIZE = 25`
 
-用途：完整平衡分析，不是一般快速單怪測試。
+第一層先選紀元。
 
-選擇層級：
-- 大階段
-- 大區域
-- 地圖
-- 怪物
-- 測試量 100 / 1000
+銀河：
+`紀元 → 大區域 → 地圖 → 怪物 → 測試量 100/1000`
 
-「目前角色基準」顯示正式角色：
-- Lv / VIP / VIP 積分
-- HP / ATK / DEF / 暴擊 / 閃避
-- 強化
-- 專精
-- 印記
-- 裝備
+宇宙：
+`紀元 → 區域 → 怪物 → 測試量 100/1000`
 
-每次執行輸出、承傷、主線實戰時都自動重新 `captureSnapshot()`；不需要手動同步按鈕。
+共用三種測試：
+1. 輸出基準
+2. 承傷／生存基準
+3. 現行主線實戰基準
 
-### 輸出基準
-敵人不還手，可用目前怪、最高普通怪、菁英、Boss 或自訂 DEF。統計：
-- 平均每回合有效輸出
-- 平均單次命中
-- 最低／最高單次
-- 實際暴擊率
-- 平均普通攻擊
-- 平均暴擊傷害
-- 每回合平均連擊
-- 連擊傷害占比
-- 穿透觸發率
-- 無視 DEF 觸發率
-- 先制平均傷害
-- 汲取觸發率
+銀河實戰：
+- 可測目前選擇怪物。
+- 可測本地圖 5 隻全部。
 
-### 承傷／生存基準
-玩家不主動攻擊，每場滿 HP 開始直到倒下；保留正式閃避、護盾、吸收、不屈、反擊、反噬。統計：
-- 平均可承受回合
-- 平均每回合 HP 損失
-- 平均命中後 HP 損失
-- 最低／最高單次 HP 損失
-- 玩家實際閃避率
-- 敵人命中後暴擊率
-- 護盾平均吸收／場
-- 吸收印記觸發率
-- 反擊平均次數／場
-- 反噬平均傷害／場
-- 不屈救命率
-- 達測試上限場數
+宇宙實戰：
+- 只測目前選擇 Boss。
+- **沒有「本地圖 5 隻全部」**。
+- 正式路徑：
+  `gmPowerBenchmarkRunCombat("single") → runCombatTask() → universeCombatRow() → secondWorldBossEncounter() → runCombatCore()`
+- 每場重新抽正式 Boss traits。
 
-### 現行主線實戰基準
-可測單隻或整張地圖 5 隻。每場重新生成正式主線怪與隨機 traits，直接走正式 `runCombatCore()`。每隻怪統計：
-- 隨機特性後平均 HP / ATK / DEF / 暴擊 / 閃避
-- 勝率、勝敗場數
-- 平均／最短／最長回合
-- 勝利平均剩餘 HP
-- 失敗時敵人平均剩餘 HP
-- 玩家／敵人平均總傷害
-- 玩家／敵人每回合傷害
-- 雙方暴擊／閃避
-- 專精平均觸發／場
-- 印記事件平均／場
-- 怪物特性出現率
+輸出／承傷：
+- 銀河可用目前怪、本地圖普通／菁英／Boss、自訂。
+- 宇宙只提供目前 Boss／自訂，避免不存在的本地圖來源。
+- 宇宙輸出使用 Boss 基礎 DEF；承傷使用 Boss 基礎 ATK/DEF/crit/dodge，與既有木樁測試語意一致，不抽 traits。
 
-### 摘要一致性
-畫面與複製摘要共用正式欄位定義：
-- `outputFields()`
-- `defenseFields()`
-- `combatPrimaryFields()`
-- `combatDetailFields()`
-- `combatEventGroups()`
+摘要：
+- 只顯示目前紀元，不再同時顯示銀河與宇宙兩套勝率。
+- 顯示目前基準怪物。
+- 銀河標示單隻怪／地圖 5 隻；宇宙標示單隻 Boss。
+- 舊 `universeCombatResult`、`runUniverseCombatBenchmark()`、`gmPowerBenchmarkRunUniverseCombat` 已完全移除。
+- Final Integrity 反向要求 legacy universe runner 不得再存在。
 
-複製摘要包含畫面已產生的完整測試結果。印記名稱統一走 `markcore.js -> markDisplayName()`，不再顯示 ward / suppression 等內部 key。
+## 24.5 背景戰鬥
 
-### 效能與 busy
-100／1000 場分批執行，每 25 場讓出一次 event loop。測試期間：
-- 執行按鈕顯示「測試中…」
-- 基準選擇、重置、其他測試按鈕暫時 disabled
-- 完成或錯誤後在 `finally` 解鎖
+`gmbackground.js` 是唯一 GM background gate。
+- **背景戰鬥只能由 GM 管理開啟。**
+- 玩家介面沒有背景戰鬥開關。
+- 銀河／宇宙共用同一 `main` background flow。
 
-`combatcore.js` 沒有為此修改正式戰鬥規則；benchmark 仍讀正式 events 統計。輸出測試已由多次 filter 改成單次走訪 events。
+## 24.6 其他 GM
 
-## 24.4 地圖怪測試與戰力基準分工
-
-- **地圖怪測試**：快速單怪功能測試，可直接指定任何已實作主線怪。
-- **戰力基準測試**：100／1000 場量化平衡分析，包含輸出、承傷、實戰與完整摘要。
-
-兩者都保留。
-
-## 24.5 GM 資料管理
-
-`gmdata.js`：
-- `GM_DATA_MANAGEMENT_VERSION = 1`
-- GM only
-- 匯出正式本機 save JSON
-- 匯入前先驗證並走正式 migration / normalization
-- 確認後才覆蓋
-- 匯入後重設離線基準，避免把檔案保存期間算成離線收益
-- 不包含 Supabase session／帳號登入資料
-
-## 24.6 GM 背景戰鬥
-
-`gmbackground.js`：
-- `GM_BACKGROUND_BATTLE_VERSION = 1`
-- `GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION = 1`
-
-GM 背景開關統一控制正式背景 gate；不要在個別模式再造第二個 GM gate。
-
-## 24.7 角色／副本管理與小型效能收尾
-
-角色管理：
-- 指定等級
-- 指定金幣
-- 指定解鎖到等級關卡
-- 重置 VIP（等級＋積分）
-- 產生裝備
-
-產生裝備的等級已改為數字輸入：
-- `GM_GEAR_LEVEL_INPUT_VERSION = 1`
-- min=1
-- max=`MAX_LEVEL`
-- 不再生成 Lv1～MAX_LEVEL 的超長 option list
-- `gmCreateGear()` 仍驗證整數與範圍
-
-副本管理：
-- 套用副本／VIP 資料
-- 重置今日副本
-- 重置全部虛空紀錄
-- 鏡像戰管理
-
-`batch5ui.js`：
-- `BATCH5_CLOCK_CACHE_VERSION = 1`
-- 每日時鐘快取 `gameDailyClock` / `gameDailyClockTime` DOM reference；正常存在時每秒 tick 不再重複 lookup。
-
-## 24.8 文明災厄／印記／稱號 GM
-
-`calamitygm.js`：
-- `GM_CALAMITY_TEST_VERSION = 1`
-- `GM_MARK_MANAGEMENT_VERSION = 1`
-- `GM_MARK_CONFIG_OWNER_VERSION = 1`
-- `GM_PLAYER_TITLE_PREVIEW_VERSION = 3`
-
-災厄 GM：
-- 單次挑戰模擬
-- 完整擊殺模擬
-- 沙盒，不修改正式災厄 HP／印記
-
-印記：
-- 正式管理與測試分離
-- `markcore.js` 正式公開 `markDefinition()`、`markDisplayName()`
-- GM / benchmark 應透過 mark owner 取得名稱
-
-稱號 GM 預覽：
-- 顯示「稱號 + 目前正式玩家名字」
-- 走正式 renderer
-- 可用 `allowUnownedTitle:true` 預覽未擁有稱號
-- 不解鎖、不裝備、不 save
+仍保留並沿正式 owner：
+- VIP／專精／強化／印記測試。
+- 懸賞／競技／虛空／鏡像測試。
+- 文明災厄測試。
+- 稱號預覽。
+- 劇情測試。
+- JSON 匯出／匯入。
 
 ---
 
@@ -1112,25 +1001,29 @@ GM 背景開關統一控制正式背景 gate；不要在個別模式再造第二
 # 27. 重要已修 Bug
 
 ## A. JS parser / 空白主畫面
-曾因字面 `\n` 出現在 JS source 中造成 parser error。
-修正後的工作規範：
-- 所有改動 JS 必須重新 fetch main 後 parse。
-- 不可只相信 update 成功。
-- 不要做全域 `\n` replace；只能修明確的非法 source。
+曾因 source 被寫入字面 `\n` 造成 parser error。所有 JS 修改後必須重新 fetch main 並 parse，不能只相信 update API 成功。
 
 ## B. 載入失敗覆蓋舊存檔
-已由 Save Write Guard V1 正式解決。
+已由 Save Write Guard V1 解決。existing save 在成功 load resolve 前禁止正式 `save()` 覆蓋。
 
-## C. 災厄／一般戰鬥 HP bar 不更新
-目前 structured combat presentation 已統一處理玩家／敵人 HP 與 shield UI。
-若未來又出現，優先查 presentation owner，不要在各模式另寫一套血條更新。
+## C. 戰鬥 HP / shield 不更新
+已由 structured combat presentation 統一；不要再在各模式寫第二套 HP bar。
 
-## D. GM 稱號預覽只有稱號沒有玩家名
-原因與 WebKit text fill 繼承／透明漸層有關。
-目前 `.player-identity-name` 已有明確文字填色保護。
+## D. GM 稱號預覽
+已修正成正式「稱號 + 玩家名」，並處理 WebKit text-fill 問題。
 
-## E. 高階鏡像稱號手機效能
-正式保留鏡像稱號複製語意，但手機停 enemy clone 動畫，避免同時跑兩套 19/20 完整動畫。
+## E. 手機鏡像高階稱號效能
+手機保留 enemy clone 靜態稱號外觀，但停止 clone 稱號動畫；玩家自己的稱號動畫維持。
+
+## F. iPhone Safari 宇宙 1.5× 設定失敗
+原因：`combatspeed.js` 曾誤讀 `globalThis.state`，但正式 state 是 top-level lexical `let state`。已改成正式 state 存取並加入 Integrity。
+
+## G. Story Integrity CI 持續失敗
+原因：`storyprogress.js` 已升到 `CIVILIZATION_STORY_PROGRESS_VERSION=10`，但 `tests/story/flow.js` 還硬性要求 9。
+已修：
+- CI contract 改驗證 V10。
+- 額外驗證 `handleSecondWorldStoryCompletion(id)` hook 不得遺失。
+- 修正後 GitHub Actions 的 **Story Integrity 已實際完成 success / 綠燈**。
 
 ---
 
@@ -1576,535 +1469,205 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 若之後決定完全鎖死第一世界副本入口，則 UI 可以更簡單；待下一輪討論確認。
 - 第二世界尚未設計完的副本可以先不開，不應阻塞第二世界主線先實作。
 
-## 28.13 尚未完成的第二世界主體
+## 28.13 尚未完成的宇宙紀元主體
 
-世界突破 4 批已完成並實機驗收，以下不再列為待辦：
-- World Phase / `secondWorld.entered`
-- save schema 14 與第二世界基礎 state
-- 主畫面宇宙紀元入口、5 項突破條件、不可逆確認
-- 正式 `enterSecondWorld()` 原子轉換、舊資源／離線殘留切斷、reload
-- 進入後歡迎宇宙紀元視窗
-- 暗物質／暗能量的基本顯示切換與第一世界經濟暫時 gate
-- 宇宙紀元一般玩家 1×／1.5×設定；2×維持 GM only
+已完成並不再列待辦：
+- World Phase／原子突破／Save schema 14。
+- Lv.501～1000 effective cap / EXP。
+- 100 Boss 主線資料、戰鬥、獎勵、裝備、單場／連戰、完整戰鬥 UI。
+- GM-only background / catch-up。
+- 角色頁、背包 sale owner、死亡／贖回。
+- world2 offline sample 與正式離線收益。
+- GM 宇宙 Boss 快速測試。
+- GM 戰力基準雙世界完整重構。
 
-真正仍未完成的第二世界主體，改由第 29 節「主畫面 10 主題」順序管理；不要再依本節舊的批次清單判斷優先度。
+真正仍未完成：
+1. **強化 +21～+40**：暗物質＋暗能量成本、正式強化 owner、GM 管理／測試。
+2. **專精第二世界完整 UX/驗收**：核心效果已被主線 EXP／暗物質／售價使用，但專精主題本身尚未做第二世界完整收尾。
+3. **文明等級 0～10**：每級 final damage +5% 的正式 owner 尚未完成。
+4. **第二世界文明災厄 10 隻**：每 50 級、30 true kills、persistent HP、文明等級升級。
+5. **第二世界副本**：懸賞、競技等正式規則／進度／獎勵尚未完整落地；daily 必須沿用共用 owner。
+6. **銀河紀元封存／回顧跨頁完整收尾**：尤其災厄、副本、戰線紀錄。
+7. **戰線紀錄、設定、遊戲說明** 的宇宙紀元 UX 收尾。
+8. **Cloud Save / migration 真實跨裝置救援驗證**：至少一次宇宙存檔上傳→乾淨環境下載→reload。
+9. 全部完成後做一次 **GM／Integrity final sweep**。
+
+不要再把「宇宙主線／角色／背包／離線收益／GM 戰力基準」列成未完成。
+
 
 ---
 
-# 29. 宇宙紀元後續待定清單：主畫面 10 主題實作順序
-
-> 2026-09-21 世界突破 milestone 已完成並經 iPhone Safari 實機確認。  
-> 後續以主畫面 10 個主題為單位依序處理；**順序依系統依賴，而不是目前主畫面排列。**  
-> 每完成一個主題，就從本清單刪除／標記完成，避免跨對話重複討論。  
-> GitHub `main` 永遠是唯一真實來源，本清單只是後續工作索引。
-
-### 建議整體執行節奏（10 主題＋跨主題批次）
-`冒險 → 背景戰鬥整合 → 角色 → 背包 → 死亡／贖回 → 離線收益 → 強化 → 專精 → 文明災厄 → 副本（先驗 daily）→ 戰線紀錄 → 設定 → 遊戲說明 → Cloud Save／跨裝置 → GM／Integrity final sweep`
-
-銀河紀元封存／回顧屬跨頁規則，不排成單一最後批次；在冒險、災厄、副本、戰線紀錄各自做到相關入口時同步接入，最後再總驗收。
-
-## 29.1 第 1 順位：冒險
-
-這是下一個正式開發主題，也是宇宙紀元 Lv.501～1000 的核心資料來源。
-
-第 1 批資料骨架已完成：
-- `secondworlddata.js` 為第二世界主線資料 owner。
-- 已正式註冊 10 大區、100 Boss（Lv.505～1000）與每 Boss 5 件專屬裝備名稱，共 500 件。
-- 已提供 Boss／區域查詢、世界 2 擊殺狀態、等級門檻、可挑戰／可見、最高已完成／已解鎖等計算 API。
-- Boss 解鎖規則已落地：玩家等級 ≥ Boss 等級 - 5，且前一 Boss 已完成；第 1 隻只看 Lv.500 與已進宇宙紀元。
-- 本批 **沒有** 開戰、EXP、獎勵、裝備生成或 UI。
-
-第 2 批冒險 UI 已完成：
-- 宇宙紀元「冒險」已不再顯示 placeholder，正式讀 `secondworlddata.js`。
-- UI 結構為「大區 → 直接顯示該區已開放 Boss」，不沿用銀河紀元 100 張小地圖。
-- 未解鎖的大區／Boss 不顯示；已擊敗 Boss 仍保留可見。
-- 大區可折疊，預設自動展開目前最高已解鎖 Boss 所在區。
-- Boss 卡顯示序號、名稱、Lv、可挑戰／已擊敗狀態；本批不提供開戰按鈕。
-- 桌機沿用 5 欄 Boss grid（10 Boss = 5×2）；手機沿用 2 欄（10 Boss = 2×5）。
-- 主畫面「冒險」在宇宙紀元改為宇宙主線文案。
-- GM 同步檢查：本批只有玩家端選擇 UI，沒有新增戰鬥、正式 state mutation 或測試命令，因此 **不新增 GM 管理／GM 測試入口**；等 Boss battle owner 接入時同步擴充「地圖怪測試」與「戰力基準」。
-- Integrity 已同步：`finalintegrity.js` 驗證第二世界資料 owner 與冒險 UI owner，並修正正式 schema 檢查為 14。
-
-第 3 批等級／EXP owner 已完成：
-- 新增 `levelprogression.js`，保留舊 `MAX_LEVEL=500` 作為銀河紀元舊常數，不粗暴全域改成 1000。
-- 正式 effective cap：未進宇宙紀元 = Lv.500；已進宇宙紀元 = Lv.1000；absolute max = 1000。
-- Lv.1～499 完全沿用既有 EXP 曲線。
-- 已進宇宙紀元後，Lv.500～999 使用 `ceil((25 + 4*L) * 250)`；Lv.1000 EXP 固定 0。
-- `gainExp()`、`expNeed()`、`clampGameLevel()` 已由世界感知 owner 接管；升到 effective cap 時剩餘 EXP 清 0。
-- 角色頁／冒險角色狀態已正式顯示宇宙紀元 EXP，不再顯示「新階段尚未開放」或錯誤的 Lv.500 MAX。
-- save migration 在 `secondWorld` 正規化後同步正規化角色 level／EXP，避免世界狀態與等級上限不一致。
-- `levelcap.js` 的滿等判定改走 effective cap；宇宙紀元不會因舊 `MAX_LEVEL=500` 誤判滿等。
-- GM 同步完成：GM「指定等級」會依目前世界限制 1～500／1～1000；GM 管理頁明確顯示目前世界與有效等級上限。
-- GM「銀河紀元解鎖進度」與銀河裝備產生器仍保持世界 1 owner，避免本批尚未完成的世界 2 Boss／裝備邏輯被假接。
-- 戰力基準本批只讀角色 snapshot，不需新增世界 2 Boss 選擇；待 Boss battle owner 完成時再同步擴充。
-- Integrity 已加入 level progression owner／500→1000 cap／EXP 公式檢查。
-
-第 4 批 Boss 戰鬥核心已完成：
-- 新增 `secondworldcombat.js`，正式 owner 使用 100 Boss registry，不沿用第一世界 monsterBase／stage 倍率。
-- Boss 基礎能力公式已落地：`N=(Lv-505)/5`、倍率 `1 + N×0.015`；HP=`36000×倍率`、ATK=`6000×倍率`、DEF=`3000×倍率`。
-- Lv.505 首 Boss：HP 36,000／ATK 6,000／DEF 3,000；Lv.1000 最終 Boss：倍率 2.485、HP 89,460／ATK 14,910／DEF 7,455。
-- 100 Boss 全部 `kind="boss"`，沿用既有 Boss 隨機特性機率與 `applyMonsterTraits()`，不另造第二套 trait 系統。
-- `traits.js` 只做共用能力擴充：正式公開 `rollMonsterTraits()`／trait defs，並支援 injectable RNG；銀河紀元原行為不變。
-- 第二世界 Boss 戰鬥正式共用 `runCombatCore()`，因此暴擊、閃避、專精、印記、護盾、不屈、反擊、汲取、狂暴等仍走同一正式 combat owner。
-- 玩家冒險 UI 已顯示每隻已開放 Boss 的正式 HP／ATK／DEF。
-- **本批刻意保持 `SECOND_WORLD_COMBAT_SETTLEMENT_READY=false`**：戰鬥核心已可跑，但玩家正式挑戰按鈕尚未開放，避免在第 5 批獎勵／掉裝／主線進度 settlement 完成前擊殺 Boss 而漏發不可補回的正式獎勵。
-- 因此本批沒有修改 `secondWorld.mainline.bossKilled`、沒有 EXP／暗物質／暗能量／裝備結算，也沒有死亡懲罰正式寫入。
-- GM 同步完成：
-  - 既有「地圖怪測試」內新增「宇宙紀元 Boss」沙盒；操作結構正式改為「區域 → 怪物」，直接使用 `SECOND_WORLD_REGIONS` 與 `secondWorldBossesForRegion()`，每區固定 10 Boss，不新增不存在的地圖層。
-  - 銀河紀元仍維持「區域 → 地圖 → 怪物」，兩個世界的 GM 測試依各自主線結構呈現。
-  - 「戰力基準測試」升級 V11；宇宙紀元同樣使用「區域 → 怪物 → 100／1000 場」，摘要仍走同一 `runCombatCore()`。
-  - 宇宙 GM 快速測試／戰力基準皆為沙盒，不修改 save／正式進度。
-- Integrity 已加入第二世界 combat owner、settlement gate、GM 快速測試、GM 戰力基準 V11 驗證。
-
-第 5 批主線獎勵／裝備／正式 settlement 已完成：
-- 新增 `secondworldrewards.js` 作為宇宙紀元主線 reward/equipment owner。
-- 第二世界 Boss EXP 正式公式：`sameExp(BossLevel) × expLevelFactor(BossLevel, playerLevel)`，**不套第一世界 Boss ×5**；再套實戰訓練專精。
-- 暗物質：`20 + 2×BossIndex`，再套搜刮技巧；第 1 Boss 基礎 20、第 100 Boss 基礎 218。
-- 每次主線 Boss 勝利固定 +1 暗能量。
-- 每次勝利固定產生 1 件世界 2 裝備；品質 45/35/15/4.5/0.5（優良→神話），普通 0%；裝備等級 `min(currentPlayerLevel, BossLevel)`。
-- 世界 2 裝備正式沿用既有主屬性／詞綴線性公式到 Lv.1000，名稱直接讀 100 Boss × 5 專屬命名 registry，`item.world=2`。
-- 主線勝利 settlement 會原子寫入 EXP、暗物質、暗能量、裝備與 `secondWorld.mainline.bossKilled[]`；save 失敗會 rollback。
-- `SECOND_WORLD_COMBAT_SETTLEMENT_READY=true`，玩家冒險 Boss 卡已開放正式**單場**「挑戰 Boss／再次挑戰」。
-- 正式宇宙主線 settlement 不呼叫第一世界 `goldReward()`、不給金幣／基礎石／進階石，也不觸發第一世界特殊遭遇／黑市。
-- 第二世界死亡基礎流程已接：EXP 扣目前 `expNeed` 10%、30% 穿戴裝備遺失、VIP20 保護；世界 2 裝備贖回成本依正式世界 2 暗物質售價 ×10，使用暗物質贖回。
-- **銀河紀元裝備在宇宙紀元死亡遺失時正式採免費贖回**：不再使用金幣，也不扣暗物質；舊 `redemptionPending` 狀態會在讀檔 normalization 轉為免費贖回。
-- GM 同步完成：
-  - 宇宙 Boss 快速測試會顯示本次測試專精下的正式單場 EXP／暗物質／暗能量／裝備等級預覽，但仍為沙盒零 settlement。
-  - GM 一般管理在宇宙紀元新增「區域 → Boss → 品質 → 部位」世界 2 裝備產生器，直接走正式裝備 owner。
-  - GM 專精測試經濟文字會依世界顯示「怪物金幣／裝備售價」或「主線暗物質／裝備暗物質售價」。
-- Integrity 已加入 reward/equipment owner、正式 mainline owner、settlement gate=true 與 GM 世界 2 裝備管理驗證。
-
-第 6 批連續戰鬥／背景戰鬥／回頁 catch-up 已完成：
-- `secondworldmainline.js` 升級 V2，宇宙紀元 Boss 正式支援「單場」與「連續戰鬥」。
-- 玩家可主動開始／停止**連續戰鬥**；停止語意為「本場結束後停止」，已完成場次獎勵全部保留。
-- 每一場仍逐場走正式 `runSecondWorldBossCombat() → settleSecondWorldBossVictory()`；死亡逐場走 `applySecondWorldDeathPenalty()`，沒有批次數學結算，因此 EXP／暗物質／暗能量／裝備／死亡事件不會被跳過。
-- 每場開始前回滿 HP，與既有主線連戰行為一致；戰敗立即結束連戰。
-- 連續結算會彙總總 EXP／暗物質／暗能量／裝備數，若因戰敗結束也會保留已完成場次獎勵與死亡懲罰資訊。
-- 第二世界連戰接入既有 `backgroundprogress.js` 的 `main` single-active-flow owner；沒有建立第二套 background engine。
-- **背景戰鬥維持 GM only**：只有 `gmbackground.js` 的 GM 管理開關可以啟用。玩家介面沒有任何背景戰鬥開關。
-- GM background gate 未開啟時，宇宙連戰若頁面進入 background 會等待回到 foreground，不在背景繼續跑；GM 開啟後才呼叫 `backgroundProgressStart("main",{mode:"continuous"})`。
-- GM 關閉背景戰鬥時會沿用既有 `backgroundProgressStop("main")`，不需要第二世界專屬開關。
-- 回頁 catch-up 沿用 `backgroundprogress.js` credit 機制與 `mainBattleFlowSleep()`，逐場快速追趕正式 settlement；不做一次性數學補發。
-- 場間 pacing 使用既有 main 140ms owner，再經 `combatSpeedScaledDelay()` 套用 1×／1.5×／GM 2×。
-- 宇宙連戰仍不觸發銀河紀元特殊遭遇／金幣／第一世界強化石。
-- GM 同步：`gmbackground.js` 管理文字已明確標示「背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關」，銀河／宇宙共用同一 gate。
-- Integrity 已加入 `SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=1`、宇宙連戰 start/stop owner 與 GM background gate 驗證。
-
-第 7 批完整戰鬥 UI／HP 演出／速度呈現已完成：
-- `worldmapui.js` 的宇宙冒險 UI 升級 V2；正式戰鬥期間直接切到與銀河主線共用 DOM 契約的 combat screen，不再在 Boss 卡片按下後直接跳結算。
-- 戰鬥畫面包含玩家／Boss 名稱與 Lv、HP 數字與血條、EXP、暗物質／暗能量、Boss 隨機 traits、傷害浮字與戰鬥訊息。
-- `secondworldmainline.js` 升級 V3；每場 foreground 正式戰鬥先建立 encounter → render combat screen → `runSecondWorldBossCombat()` → 共用 `prepareCombatPresentation()/animateStructuredCombatPresentation()` 播放正式 events。
-- 因此宇宙紀元直接沿用既有 Structured Combat FX：HP 逐擊變化、暴擊、閃避、護盾、先制、穿透、連擊、反擊、汲取、印記等演出，不另建第二套動畫。
-- 戰鬥畫面會顯示目前 effective speed；一般玩家宇宙紀元為 1×／1.5×，GM override 可顯示 2×。Structured pacing 與 outer gap 均繼續走既有 speed owner。
-- 單場勝敗結算會在最後一幀 combat screen 上開啟 modal；關閉後回宇宙冒險 Boss 列表。
-- 連續戰鬥每一場都重新生成正式 Boss traits 並重新播放完整戰鬥演出；場與場之間不會閃回冒險地圖。
-- 「停止連續戰鬥」直接放在戰鬥畫面，仍採本場結束後停止。
-- GM-only background 規則保持不變：真正 background 或回頁 catch-up credit 期間**跳過視覺演出但不跳過正式 combat／settlement**；回到正常 foreground 後下一場恢復完整演出，避免 catch-up 被動畫拖慢。
-- GM／戰力基準本批不新增入口：本批只改正式玩家 presentation，Boss 公式／玩家能力／GM 沙盒數值均未改；既有 GM Boss 測試與戰力基準 V11 繼續使用同一 `runCombatCore()`。
-- Integrity 已更新為 Adventure UI V2、Mainline V3，並驗證 combat page／presentation owner。
-
-仍要處理：
-- 第二世界主線 offline sample／正式離線收益仍依第 29.13 後續處理；offline 正式結算需等背包 sale owner 穩定後一起接。
-- 第二世界正式背包 sale owner／自動出售／批量出售仍在第 29.3；目前只建立 sale value helper 與主線掉裝。
-
-### 與冒險一起必須防止的舊世界殘留
-- `levelcap.js / levelcapresult.js`：宇宙紀元不可把 Lv.500 EXP 轉成金幣。
-- `enhancementrewards.js`：第二世界主線不得發第一世界強化石。
-- `specialencounter.js`：宇宙紀元正式主線完全禁止第一世界特殊遭遇／黑市。
-- 第二世界主線 settlement 不得直接沿用第一世界 `state.gold` 經濟。
-
-## 29.2 第 2 順位：角色
-
-**新第 8 批已完成：角色頁完整化。**
-- 角色頁正式使用 `characterWorldSnapshot()` 與 `levelProgressSnapshot()`，銀河紀元／宇宙紀元依正式 world phase 顯示。
-- 宇宙紀元角色頁顯示 Lv.501～1000 與正式 EXP；Lv.1000 顯示 MAX。
-- 資源依世界切換：銀河紀元顯示金幣；宇宙紀元顯示暗物質＋暗能量，不再混入舊金幣作為主資源。
-- 角色頁明確顯示目前世界與有效等級上限（銀河 500／宇宙 1000）。
-- `item.world` 仍保留作內部來源／經濟辨識，但**玩家角色頁與背包不顯示「銀河紀元／宇宙紀元」裝備來源文字**；初期混穿只屬過渡狀態，避免長名稱與不必要資訊擠壓 UI。
-- 總 HP／ATK／DEF／暴擊／閃避仍完全走既有 `playerCombatStats()`，沒有為世界 2 複製第二套能力值公式。
-- 稱號與既有裝備顯示維持原 owner，不破壞銀河紀元資料。
-- **文明等級／文明 final damage 尚未實作，因此角色頁本批不顯示假資料；等第 29.6 完成後再補。**
-- GM 同步完成：GM「指定等級」沿用 effective cap；銀河紀元顯示「指定金幣」，宇宙紀元改為「指定暗物質／指定暗能量」，正式寫入 `secondWorld` 資源並走既有 save。
-- GM 戰力基準本批不需新增測項：角色能力數值 owner 未改，世界 2 Boss 基準 V11 已讀目前正式 `playerCombatStats()`。
-- Integrity 已加入 `CHARACTER_WORLD_UI_VERSION=1`、`characterWorldSnapshot()` 與 GM 暗物質／暗能量管理 API 檢查。
-
-**接續新批次：**
-- 第 9 批：背包＋統一世界 2 sale owner。
-- 第 10 批：第二世界 offline sample。
-- 第 11 批：第二世界正式離線收益。
-
-## 29.3 第 3 順位：背包
-
-**新第 9 批已完成：背包＋統一世界 2 sale owner。**
-- `secondworldrewards.js` 升級 V2，正式建立共用裝備 sale owner：
-  - `equipmentSaleQuote()`
-  - `equipmentSaleBatchQuote()`
-  - `settleEquipmentSale()`
-  - `settleEquipmentSaleBatch()`
-  - `equipmentSaleText()`
-- 已進宇宙紀元時：
-  - `item.world===1` 可出售／自動處理，但收益固定 **0**；不回流金幣、暗物質、暗能量或第一世界強化石。
-  - `item.world===2` 出售取得暗物質。
-  - 神話 world 2 裝備出售額外 **+1 暗能量**。
-  - 鑑價只乘暗物質售價；暗能量固定 +1，不受鑑價放大。
-- 世界 2 正式暗物質售價公式維持：
-  - `N=floor((equipmentLevel-500)/5)`
-  - `B=20+2N`
-  - 品質倍率：普通 .10／優良 .15／稀有 .25／史詩 .40／傳說 .70／神話 1.00
-  - 再乘鑑價倍率。
-- `engine.js -> addItem()`、實際 owner `equipmentlock.js` 的手動出售／一鍵出售／換裝後自動出售／戰鬥掉裝自動出售，已全部改走同一 sale owner。
-- `settlementui.js` 已能依 sale metadata 顯示金幣或暗物質／暗能量，不再把所有自動出售硬寫成「金幣」。
-- 宇宙主線掉落如果被自動出售，`secondworldmainline.js` 會正確把出售取得的暗物質／暗能量計入連戰總結；只有真正保留的裝備才列為背包掉落。
-- 世界 2 贖回公式仍由同一暗物質售價 helper ×10 推回，因此 sale／redemption 基準一致。
-- **玩家 UI 永久原則：不顯示裝備 world 來源文字。**
-  - 角色頁已移除「來源：銀河紀元／宇宙紀元」。
-  - 背包已移除「來源」欄，改回統一「售價」欄。
-  - `item.world=1/2` 只保留內部辨識、經濟與規則判斷；後續相關玩家畫面也不要額外顯示來源標籤。
-- 鎖定裝備仍不能手動／一鍵／自動出售；神話仍不自動出售，手動出售保留確認。
-- GM 同步檢查完成：
-  - GM 世界 2 裝備產生器仍直接走正式世界 2 item owner。
-  - GM 管理文字已明確標示產生後的手動／批量／自動出售共用正式 sale owner。
-  - 本批沒有新增獨立 GM sale 測試頁，因 sale 為純 owner／背包 settlement；由 runtime probe + Final Integrity 驗證，避免另造一套 GM 專用售價公式。
-- 戰力基準不需修改：本批沒有變更裝備戰鬥能力，只變更出售 settlement。
-- Integrity 已要求 `SECOND_WORLD_REWARD_VERSION=2`、`EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=3` 與單賣／批量 sale API。
-
-### 死亡／贖回現況
-- 世界 2 裝備贖回：暗物質，正式 sale value ×10。
-- 宇宙紀元內遺失的 world=1 銀河裝備：**免費贖回**，不再使用金幣，也不扣暗物質。
-- 舊版 `redemptionPending / pending` 會在讀檔時自動正規化成 `currency:"free" / cost:0`。
-- 銀河紀元回顧戰仍必須零正式死亡損失。
-
-### 接續新批次
-- 第 10 批：第二世界 offline sample。**已完成**
-- 第 11 批：第二世界正式離線收益；屆時離線裝備出售直接呼叫本批 sale owner，不重寫公式。
-
-## 29.4 第 4 順位：強化
-
-目前宇宙紀元頁面只顯示「高階強化尚未開放」，之後正式接：
-- +21～+40。
-- +20 既有效果完整保留。
-- 每級主能力 +2.5%，最高 +40 = +100%。
-- 成本改用暗物質＋暗能量，公式依第 28.7 節。
-- 不得重新啟用第一世界基礎／進階強化石作為宇宙紀元材料。
-- 強化 owner、UI、GM、integrity 一起驗證。
-
-## 29.5 第 5 順位：專精
-
-宇宙紀元專精本身已完成 Lv.60、不可再升級；這一題主要是「效果整合驗收」，不是再做一套成長。
-
-要確認：
-- 實戰訓練 Lv.60 正式作用於第二世界 EXP。
-- 搜刮技巧 Lv.60 正式作用於主線／允許來源的暗物質。
-- 鑑價技巧 Lv.60 正式作用於世界 2 裝備暗物質售價。
-- 先制／連擊／穿透／反擊／汲取持續走既有正式 combat owner。
-- 不再出現宇宙紀元金幣升級路徑。
-- GM 測試文字若涉及「怪物金幣／裝備售價」，要能明確區分世界，不要全域硬改名而破壞銀河紀元測試。
-
-## 29.6 第 6 順位：文明災厄
-
-主線與基本成長穩定後再接：
-- 第二世界 10 隻文明災厄（550、600……1000）。
-- 30 次 true kills = 100% 完成；持久 HP。
-- Civilization Lv.0～10，由完成的第二世界災厄計算，不另存平行 level。
-- 每級 +5% final damage，放在正式 late/final damage layer。
-- 第二世界災厄不掉暗能量。
-- 第一世界災厄回顧模式：runtime HP、可單場／連續、零收益／零損失／零正式進度，離開後重置。
-- 第一世界正式災厄殘 HP 已在世界突破時清空，不要重做。
-- 第二世界災厄是否新增新稱號／其他獎勵，仍待使用者決定。
-
-## 29.7 第 7 順位：副本
-
-建議內部順序：
-1. 懸賞戰
-2. 競技場
-3. 鏡像戰整合
-4. 虛空幻境整合檢查
-
-### 懸賞
-- 第二世界懸賞改用暗物質／世界 2 裝備等正式規則。
-- 禁止產生金幣／第一世界強化石。
-- 裝備出售走統一 sale owner。
-- 每日 20 次的既有 daily 使用量延續。
-
-### 競技場
-- 第二世界 1～10 階，與銀河紀元進度分離。
-- 每日使用量延續。
-- 解鎖條件、VIP 積分等依第 28 節設計。
-- **第二世界 Arena 敵人 balance curve 尚未正式定案；實作前不可自行複製第一世界公式當最終版。**
-
-### 鏡像
-- 進度／歷史／每日狀態保留。
-- snapshot 必須納入第二世界新永久力量（+21～40、文明 final damage 等）。
-- 不因世界 2 另建第二套鏡像系統。
-
-### 虛空
-- 進度與 daily 延續。
-- 驗證第二世界等級／新永久力量下的相容性即可，不任意改獎勵。
-
-### 副本共通
-- 第二世界 settlement 不得直接引用第一世界 `goldReward()`／`state.gold`／強化石 reward。
-- 不要因「宇宙紀元」就自行替所有副本補暗物質；各模式只給其正式規則允許的獎勵。
-
-## 29.8 第 8 順位：戰線紀錄
-
-等第二世界故事實際加入後再擴充：
-- 保留銀河紀元既有紀錄。
-- 第二世界劇情／Boss 故事獨立掛入正式 story owner。
-- 世界切換／回顧不得重發獎勵或正式進度。
-- 若第二世界初期尚未寫故事，本頁不需要為空內容提前重構。
-
-## 29.9 第 9 順位：設定
-
-目前最重要的宇宙紀元設定已完成：
-- 銀河紀元一般玩家只 1×，且設定頁不顯示速度。
-- 宇宙紀元一般玩家顯示 1×／1.5×；預設仍 1×。
-- 2× 維持 GM only；GM override 優先。
-
-後續只在真的出現新設定需求時追加；不要為第二世界另做一個設定頁。
-
-## GM 戰力基準重構（2026-09-22）
-
-### 第 1 批：紀元優先選擇架構 — 已完成
-- `gmpowerbenchmark.js` 升級 V12。
-- 測試基準設定最上層改為先選「銀河紀元／宇宙紀元」。
-- 銀河紀元選擇鏈：`紀元 → 大區域 → 地圖 → 怪物 → 測試量`。
-- 宇宙紀元選擇鏈：`紀元 → 區域 → 怪物 → 測試量`，**沒有地圖層**。
-- 原本「大階段 Lv1～500」玩家可見控制已移除；銀河內部 phase 資料仍保留給舊 owner，相容現有第一世界資料。
-- 新增統一選擇 owner：`gmPowerBenchmarkSetWorld()`、`gmPowerBenchmarkSelectedEnemy()`，目前基準怪物會依紀元顯示銀河怪或宇宙 Boss。
-- 「使用目前最高」會依紀元切換為最高地圖／最高可用 Boss。
-- 原本頁面底部獨立「宇宙紀元 Boss 實戰基準」UI 已移除；其舊 runner 暫留內部，待第 2～3 批併入共用測試後清除。
-- **本批不改輸出／承傷／實戰運算**。為避免宇宙紀元誤讀銀河怪資料，切到宇宙紀元時這三類測試暫時顯示第 2 批提示並停用。
-### 第 2 批：輸出／承傷／主線實戰 world-aware — 已完成
-- `gmpowerbenchmark.js` 升級 V13。
-- 「輸出基準測試」「承傷／生存基準測試」「現行主線實戰基準」現在全部讀取第 1 批的統一「目前選擇怪物」。
-- 銀河紀元行為維持：輸出／承傷可選目前怪物、本地圖普通／菁英／Boss、自訂；主線實戰可測目前怪物或本地圖 5 隻全部。
-- 宇宙紀元輸出／承傷來源只提供「目前選擇怪物／自訂」，避免出現不存在的普通／菁英／本地圖來源。
-- 宇宙紀元輸出測試使用目前 Boss 的正式**基礎 DEF**；承傷測試使用目前 Boss 的正式**基礎 ATK／DEF／暴擊／閃避**。這兩種木樁測試與銀河既有語意一致，不抽隨機 traits。
-- 宇宙紀元主線實戰改走正式 `universeCombatRow() → secondWorldBossEncounter() → runCombatCore()`；每場重新抽正式 Boss traits，與正式第二世界 Boss 戰鬥來源一致。
-- 宇宙紀元主線實戰只有「測目前選擇怪物」，**沒有「測本地圖 5 隻全部」**。
-- 正式實戰結果現在寫入共用 `MODEL.combatResult`；舊 `universeCombatResult` runner 暫留內部但不再由 UI 使用，待第 3 批清理。
-- 全部測試仍是 sandbox，不寫 EXP／資源／裝備／死亡懲罰／Boss 主線進度／存檔。
-### 第 3 批：摘要／舊路徑清理／最終收尾 — 已完成
-- `gmpowerbenchmark.js` 升級 V14。
-- 測試摘要正式改成紀元感知：摘要只顯示目前選擇的「銀河紀元」或「宇宙紀元」，不再同時出現銀河勝率與宇宙 Boss 勝率兩套欄位。
-- 摘要基準改為「目前基準怪物」；宇宙紀元不再誤顯第一世界「基準地圖」。
-- 純文字摘要新增「紀元」與目前基準怪物，主線實戰標題依世界顯示「單隻怪／地圖 5 隻全部／單隻 Boss」。
-- 舊 `MODEL.universeCombatResult`、`runUniverseCombatTask()`、`runUniverseCombatBenchmark()`、`universeCombatResultHtml()` 與 `gmPowerBenchmarkRunUniverseCombat` export 已完全移除。
-- 宇宙實戰唯一正式 GM 戰力基準路徑為共用 `gmPowerBenchmarkRunCombat("single") → runCombatTask() → universeCombatRow() → secondWorldBossEncounter() → runCombatCore()`。
-- Final Integrity 升級並明確要求 legacy `gmPowerBenchmarkRunUniverseCombat` 不得再存在，防止未來重新分裂成第二套宇宙 runner。
-- 已完成銀河／宇宙雙世界回歸：銀河保留 5 怪整圖測試；宇宙只有單 Boss；輸出／承傷／實戰／摘要皆共用同一選擇 owner；sandbox 不修改正式 state。
-
-**GM 戰力基準三批重構至此完成。**
-
-## 29.10 第 10 順位：遊戲說明
-
-最後統一處理。
-- 等主線、裝備、強化、文明災厄、副本等正式規則都落地後再更新。
-- 不要在功能尚未完成時先把設計稿寫成「已實作規則」。
-- 使用者已明確表示遊戲說明之後會另行處理，因此前面各批不需為說明文字阻塞。
-
-## 29.11 跨主題批次 A：背景戰鬥／回頁 catch-up
-
-這不是主畫面獨立卡片，但第二世界主線正式可玩前要一起驗證。
-
-目前 main 正式狀態：
-- `backgroundprogress.js` 是單一 active flow owner，連續背景最多 12 小時，回頁用逐場快速 catch-up，不用數學一次結算。
-- 銀河紀元與宇宙紀元主線都共用 `main` flow，不另建第二套 background engine。
-- 宇宙紀元連續 Boss 已逐場跑正式 combat／settlement；死亡、裝備、暗物質／暗能量不會被 catch-up 略過。
-- 場間 pacing 共用 main 140ms 並套用 effective combat speed。
-- **正式規則：背景戰鬥只有 GM 管理可以開啟。玩家沒有背景戰鬥設定或開關。**
-- GM gate 關閉：連續戰鬥只能在 foreground 執行，切到 background 時等待回頁。
-- GM gate 開啟：連續戰鬥接入 `backgroundProgressStart("main",{mode:"continuous"})`；回頁使用既有 credit 做逐場快速 catch-up。
-- 關閉 GM 背景戰鬥會停止既有 `main` background flow；正式連戰本身仍可在 foreground 繼續。
-- 第二世界 background 不產生第一世界金幣／強化石／特殊遭遇。
-- offline sample 仍是後續第 29.13 的獨立工作；背景／catch-up 期間仍不得誤記 offline sample。
-
-**此跨主題批次已完成主線 background/catch-up 接入；後續只需隨第 7 批戰鬥 UI 與第 29.13 offline sample 做相容性驗收。**
-
-## 29.12 跨主題批次 B：死亡／遺失裝備／贖回
-
-目前宇宙紀元只先 gate 掉舊金幣贖回；正式第二世界死亡規則尚未完成。
-
-要處理：
-- 第二世界死亡 EXP 懲罰：依當前第二世界 `expNeed` 的 10%。
-- 30% 穿戴裝備遺失、VIP20 保護等既有正式規則是否完整延續，要由正式 owner 接世界 2，不要複製一套。
-- `lostGear` 要能區分 world 1／2 裝備。
-- 世界 2 裝備贖回使用暗物質，成本以正式世界 2 sale owner 推回。
-- **world=1 裝備在宇宙紀元死亡遺失時正式免費贖回；不再使用金幣贖回。**
-- 銀河紀元回顧戰零損失，不得寫入正式 `lostGear`。
-
-**插入時機：第 3 順位「背包」統一 sale owner 完成後，第二世界主線正式長時間刷怪前。**
-
-**新第 10 批已完成：第二世界 offline sample 前置。**
-- 沿用既有 `state.offline.battleSamples` 與 speed-aware 架構，不另建第二套離線 sample 系統。
-- 宇宙紀元正式 Boss 勝利現在可寫入 sample identity：`world:2 / targetType:"boss" / bossIndex / bossId`，完全不依賴第一世界 `map / enemy`。
-- 1×／1.5×／GM 2× 仍各保留最近 8 筆；跨速換算仍保留實戰時間＋固定場間 gap 的既有算法。
-- sample 只在正常 foreground 正式勝利後建立；真正 background、戰鬥中途切到 background、或回頁 catch-up credit 期間都不記錄，避免高速追趕污染離線樣本。
-- `savemigration.js` 已能正規化並保留 world2 Boss sample；既有 world1 sample 仍相容。
-- 本批**只建立 sample，不開第二世界正式離線收益 settlement**；金幣／強化石等第一世界離線收益仍被 world-phase gate 擋住。
-- GM 同步檢查：sample 本身沒有需要玩家或 GM 手動操作的參數，因此不新增 GM 頁面；由 Final Integrity＋runtime probe 驗證 owner、速度分桶、background/catch-up gate。
-- Integrity 新增 `SECOND_WORLD_OFFLINE_SAMPLE_VERSION=1` 與 begin/finish sample API 驗證。
-- 同批定案死亡贖回：**宇宙紀元內遺失的銀河紀元裝備免費贖回；不再使用金幣贖回。**
-
-## 29.13 跨主題批次 C：第二世界離線收益
-
-**新第 11 批已完成：第二世界正式離線收益。**
-
-正式規則：
-- 沿用同一個 `offlineprogress.js` owner，不另建第二套離線系統。
-- 最短離線 1 分鐘、最長 12 小時維持不變。
-- 宇宙紀元離線 target 直接讀第 10 批 world2 Boss sample：`world:2 / targetType:"boss" / bossIndex / bossId`。
-- 1×／1.5×／GM 2× 仍各保留最近 8 筆，選樣優先目前速度；沒有同速樣本時可使用同 Boss 其他速度樣本換算。
-- EXP = 對應正式宇宙主線 Boss EXP 的 **10%**，逐場套當下玩家等級與實戰訓練，升級仍走 `gainEffectiveExp()`；Lv.1000 不再把溢出 EXP 轉成其他資源。
-- 暗物質 = 對應正式宇宙主線 Boss 暗物質收益的 **10%**，仍包含搜刮技巧。
-- 裝備 = 每場以 **10%** 機率建立該 Boss 的正式 world2 裝備，直接走 `makeSecondWorldEquipmentForBoss()`。
-- 直接強化資源沿用第一世界離線 5% 概念：第二世界以暗能量承接，`floor(離線場次 × 5%)`。
-- 離線裝備整理沿用既有邏輯：非神話只留下每部位較佳候選，最後再與目前穿戴比較；較差裝備統一交給第 9 批正式 sale owner。
-- 離線出售 world2 裝備所得暗物質／暗能量完全走 `settleEquipmentSaleBatch()`；不在 offline 另寫售價公式。
-- 神話裝備仍保留，不做自動出售；若未來正式 sale owner 允許某種神話出售情境，暗能量仍由 sale metadata 統一結算。
-- 宇宙紀元離線 settlement **不讀寫金幣、不發基礎／進階強化石、不觸發特殊遭遇／黑市、不推進 Boss 主線首次擊破**。
-- 離線結果 UI 在宇宙紀元顯示 Boss 身份、EXP、暗物質、暗能量、裝備；不顯示第一世界金幣／強化石文案。
-- 無有效 sample 時，宇宙紀元提示玩家先完成一場正式前景 Boss 勝利；背景戰鬥／catch-up／副本不會建立 sample。
-- settlement 仍沿用原本 rollback / retry：正式結算前 snapshot，任何錯誤回復 state，pending 區段保留供 reload 重試。
-- 世界突破時舊第一世界 sample／pending／checkpoint 的切斷已完成，不重做。
-- GM 同步檢查：離線收益沒有獨立 GM 可調參數，不新增 GM 管理頁；GM 2× sample 與 settlement 直接走共用 owner，Final Integrity 驗證正式 world2 offline APIs 與 5% 暗能量率。
-- `SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1`。
-
-至此新批次鏈：
-- 第 8 批角色：完成。
-- 第 9 批背包＋sale owner：完成。
-- 第 10 批 world2 offline sample：完成。
-- 第 11 批 world2 正式離線收益：完成。
-
-## 29.14 跨主題批次 D：每日重置／跨世界每日使用量
-
-`dailycore.js` 目前是共用 daily owner：
-- bounty 20／日
-- arena 20／日
-- voidMirage daily
-- UTC+8 日期鍵
-
-第二世界規則已定「進宇宙紀元時保留當日已使用次數」，因此後續副本實作時：
-- 不要因世界 2 另建一份 daily reset。
-- 懸賞／競技世界 1→2 要沿用同一天的 `used`。
-- 鏡像／虛空既有 daily／history 保留。
-- 需要驗證 00:00（UTC+8）跨日重置、雲端下載後 daily normalization、以及世界突破當天不重置。
-- GM 每日時鐘／重置測試若支援世界 2，要仍走同一 `dailycore.js`。
-
-**插入時機：第 7 順位「副本」開始前先做資料語意確認，副本完成時一起驗收。**
-
-## 29.15 跨主題批次 E：銀河紀元封存／回顧整合
-
-世界突破後，銀河紀元不是第二套正式成長世界，而是回顧用途。這件事會跨「冒險／災厄／副本／戰線紀錄」。
-
-要統一確認：
-- 銀河紀元回顧：EXP 0、金幣 0、強化石 0、裝備掉落 0、VIP 0、印記／稱號／養成進度 0。
-- 回顧死亡：不扣第二世界 EXP、不遺失裝備。
-- 回顧不建立 offline sample、不改 offline farm target。
-- 回顧不觸發特殊遭遇／黑市。
-- 第一世界災厄回顧使用 runtime HP；離開／停止／reload 後重置，不碰正式 `state.calamities.entries[].currentHp`。
-- 戰線紀錄純回顧，不重發獎勵。
-- 第一世界副本最終採「封存可進」或「鎖入口」若仍有未決處，實作前再由使用者確認；不可自行決定。
-
-**插入時機：冒險、文明災厄、副本各自做到回顧入口時分段接入；最後做一次跨頁總驗收。**
-
-## 29.16 跨主題批次 F：Cloud Save／migration／跨裝置救援
-
-目前 `cloudsave.js` 會整包上下載正式 state，這方向可沿用；但第二世界資料量與新欄位增加後仍需專門驗證。
-
-要處理／驗收：
-- Cloud save 必須完整保存 `secondWorld`、world 2 裝備、+21～40、文明等級來源資料、第二世界副本進度等正式 state。
-- 下載舊 schema 存檔後，仍只能由 migration 補預設值，**不得把符合條件的舊檔自動判成 `secondWorld.entered=true`**。
-- 雲端下載後 offline clock reset／pending settlement 清理要與第二世界 offline 相容。
-- Save Write Guard V1 必須保留：load 未成功 resolve 前禁止覆蓋既有本機 save。
-- 本機／雲端比較 UI 目前只顯示時間、Lv、EXP；是否要額外顯示「銀河紀元／宇宙紀元」可在最後 UX 收尾時決定，不是阻塞項。
-- 至少做一次「宇宙紀元存檔上傳 → 另一裝置／乾淨環境下載 → reload」實機救援測試。
-
-**插入時機：第二世界 state 結構穩定後；最晚在整體宇宙紀元正式完成前。**
-
-## 29.17 跨主題批次 G：GM 管理／GM 測試／戰力基準／Integrity 同步規則
-
-**這不是最後才處理的單一批次，而是從現在起每一批正式功能都要同步檢查的固定規則。**
-
-每次修改宇宙紀元正式功能，都要一起檢查：
-1. **GM 管理**：是否有對應正式 state／進度／資源／裝備／強化／災厄／副本需要管理。
-2. **GM 測試**：是否有對應快速功能測試入口，且能測世界 2 而不污染正式角色。
-3. **戰力基準**：若修改戰鬥數值、Boss、裝備、強化、文明 final damage 等，是否需要同步納入 100／1000 場量化測試。
-4. **Integrity**：是否需要新增 owner、資料完整性、跨世界 gate、save／settlement 等檢查。
-5. **GM 文案與世界識別**：不得把第一世界既有測試文字直接全域改名；世界 1／2 必須明確區分。
-
-### 各主題對應 GM 依賴
-
-- **冒險／Boss**
-  - GM 地圖怪測試未來要能選「宇宙紀元 → 區域 → Boss」，不要把 100 Boss 硬塞進第一世界 `WORLD_REGIONS/MAPS`。
-  - 戰力基準要能選第二世界 Boss。
-  - 第 1 批目前只有 `secondworlddata.js` 資料骨架，沒有戰鬥／UI，因此先不硬加 GM 入口；等 Boss 戰鬥 owner 可用時再接最合理。
-
-- **角色／等級**
-  - GM 角色管理要支援有效等級上限 500／1000，不可只依舊 `MAX_LEVEL=500`。
-  - 若有第二世界專屬狀態需要測試／管理，要明確分世界。
-
-- **背包／裝備**
-  - GM 產生裝備要能指定 world 2、Lv.501～1000 與正式第二世界命名／屬性 owner。
-  - 不可讓 GM 產裝流程誤用第一世界出售／贖回經濟。
-
-- **強化**
-  - GM 強化管理 + GM 強化測試都要支援 +21～+40。
-  - 正式角色管理與沙盒測試繼續分離。
-
-- **專精**
-  - GM 專精測試要驗證 Lv.60 對第二世界 EXP／暗物質／售價等效果，不能只看第一世界金幣文案。
-
-- **文明災厄／文明等級**
-  - GM 災厄管理／測試要能選第二世界 10 隻災厄、true kills、persistent HP、文明等級結果。
-  - 戰力基準要能帶入 Civilization final damage。
-
-- **副本**
-  - 懸賞、競技、鏡像、虛空各自對應既有 GM 測試；世界 2 規則完成時同步擴充。
-  - 不要另造第二套不共用 daily／snapshot owner 的 GM 測試資料。
-
-- **背景／速度／離線**
-  - GM 背景開關與 2× override 繼續走既有共用 owner。
-  - 第二世界 background／offline 完成時，GM／integrity 要能驗證世界 2 sample、速度與 settlement。
-
-### 目前 main 觀察
-- `gmhub.js` 的「地圖怪測試」仍只讀第一世界 `WORLD_REGIONS/MAPS`。
-- `gmpowerbenchmark.js` 目前也主要以第一世界 `WORLD_REGIONS/MAPS` 為測試來源。
-- `gmhub.js` 的角色等級／產生裝備仍以舊 `MAX_LEVEL` 為上限。
-- `finalintegrity.js` 已檢查現有 offline/background/combat speed 等 owner，但還沒有第二世界主線／經濟／文明等級完整 integrity。
-
-### 最終收尾
-- 各批修改時先同步補「必要」GM／Integrity，不要全部拖到最後。
-- 全部主題完成後，再做一次 **GM／戰力基準／Integrity final sweep**，確認沒有漏掉任何世界 2 功能。
-- GM 測試不得寫壞正式 save；測試 state 與正式 state 繼續分離。
-- 每一批 JS/CSS 仍要 cache-bust、重新 fetch、parse、功能 probe。
-
-**插入時機：每一批正式功能修改時同步檢查與處理；全部主題後再總驗收一次。**
-
-## 29.18 每一主題／每一批完成時的共通驗收
-
-1. 重新讀 `main` 找正式 owner，不靠本 handoff 猜程式。
-2. **檢查對應 GM 管理是否需要同步修改。**
-3. **檢查對應 GM 測試是否需要同步修改。**
-4. 若涉及戰鬥數值／Boss／裝備／強化／文明等級，檢查戰力基準是否需要同步修改。
-5. 檢查 Integrity／final integrity 是否需要新增對應驗證。
-6. 宇宙紀元正式流程不得新增／扣除第一世界 `state.gold`。
-7. 宇宙紀元不得新增 `basicStones / advancedStones`。
-8. 世界 1 回顧不得產生收益、損失或正式進度。
-9. 新經濟／settlement 必須走單一 owner，不新增散落第二套公式。
-10. GM 沙盒測試不得修改正式角色／正式 save；GM 管理若會寫正式 state，必須走既有正式 save／rollback 安全語意。
-11. JS/CSS 修改後更新 `index.html` cache-bust，重新 fetch、parse／integrity／功能 probe。
-12. 完成後更新本第 29 節，清掉已完成項目，讓下一個對話只看到真正剩下的工作。
-
-## 29.19 仍建議持續實機觀察（不阻塞宇宙紀元開發）
-
-- iPhone Safari 跑戰力基準 1000 場時的 UI 流暢度、發熱與執行時間。
-- 高階鏡像稱號在手機上的 FPS、發熱與裁切。
-- 稱號搭配不同長度玩家名的桌機／手機實戰排版。
-- background catch-up 長時間後的速度與 UI 流暢度。
-- 雲端下載救援 + Save Write Guard 真實跨裝置流程。
-
-**舊存檔／舊資料不要主動重構。**只有使用者明確要求，或出現可重現舊檔 bug 證據時才處理。
+# 29. 宇宙紀元最新完成狀態與後續順序
+
+> 本節只記目前有效狀態與真正剩餘工作。歷史批次若已被後續實作覆蓋，不再保留「當時尚未開放」之類過期敘述。
+
+## 29.1 已完成：世界突破
+
+- `worldphase.js` 正式 owner，唯一永久旗標 `secondWorld.entered`。
+- 入場條件：Lv.500、銀河主線／最終故事完成、8 專精全 60、5 強化全 +20、10 印記全 10；VIP 不限。
+- 符合條件 ≠ 已進入；必須玩家按正式入場確認。
+- `enterSecondWorld()` 原子轉換：重新驗證 → snapshot → 清舊資源／舊離線殘留 → 一次 save → 失敗 rollback → 成功 reload。
+- 不由 migration 自動推導 `entered=true`。
+
+## 29.2 已完成：冒險主線（本對話第 1～7 批）
+
+- `secondworlddata.js`：10 區／100 Boss／500 專屬裝備名稱。
+- `levelprogression.js`：effective cap 500/1000、宇宙 EXP。
+- `secondworldcombat.js`：Boss 基礎能力、traits、`runCombatCore()`。
+- `secondworldrewards.js`：EXP／暗物質／暗能量／world2 裝備／死亡。
+- `secondworldmainline.js`：正式單場、連續戰鬥、GM background、catch-up、完整 presentation。
+- 玩家正式戰鬥 UI：HP 數字／血條、traits、浮字、暴擊／閃避／護盾／專精／印記演出。
+- 正常 foreground 播完整演出；真正 background/catch-up 跳視覺但不跳正式 combat/settlement。
+- 背景戰鬥 **GM only**，玩家無開關。
+
+## 29.3 已完成：角色（第 8 批）
+
+- `CHARACTER_WORLD_UI_VERSION=1`。
+- 角色頁顯示目前紀元、effective cap、宇宙 EXP、暗物質／暗能量。
+- 能力仍只讀 `playerCombatStats()`。
+- 玩家 UI **不顯示裝備來源世界**；world 只做內部辨識。
+- GM 角色管理依世界提供等級／金幣或暗物質／暗能量控制。
+
+## 29.4 已完成：背包／sale owner（第 9 批）
+
+- 單件／批量／自動出售／換裝整理／離線出售統一走正式 sale owner。
+- 宇宙 world1 裝備出售收益 0。
+- world2 出售暗物質；神話額外 +1 暗能量。
+- 鑑價只放大暗物質。
+- 鎖定裝備與神話自動出售保護保留。
+- 玩家介面不顯示 world 來源文字。
+
+## 29.5 已完成：offline sample（第 10 批）
+
+- 宇宙 Boss 正式 foreground 勝利寫 `world:2 / targetType:"boss" / bossIndex / bossId` sample。
+- 1×／1.5×／2× 各保留最近 8 筆。
+- background、catch-up、戰鬥中途切背景、戰敗都不記 sample。
+- migration 保留 world1 舊 sample 與 world2 Boss sample。
+
+同批定案：
+- **宇宙紀元內遺失的銀河裝備免費贖回；不再使用金幣。**
+
+## 29.6 已完成：正式宇宙離線收益（第 11 批）
+
+`SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1`。
+- 1 分鐘下限／12 小時上限。
+- EXP：正式 Boss 收益 10%。
+- 暗物質：正式 Boss 收益 10%。
+- 裝備：正式 world2 掉裝 10%。
+- 暗能量：直接強化資源 5%。
+- 裝備出售走 `settleEquipmentSaleBatch()`。
+- 不碰金幣、基礎／進階強化石、特殊遭遇、黑市、Boss 首殺進度。
+- 失敗保留 rollback / retry / pending settlement。
+
+## 29.7 已完成：GM 戰力基準三批重構
+
+`GM_POWER_BENCHMARK_VERSION=14`。
+- 先選紀元。
+- 銀河：區域 → 地圖 → 怪物。
+- 宇宙：區域 → Boss，沒有地圖層。
+- 輸出／承傷／實戰共用目前選擇怪物。
+- 銀河保留「本地圖 5 隻全部」；宇宙只有單 Boss。
+- 摘要世界感知，只顯示目前紀元。
+- legacy `universeCombatResult` / `gmPowerBenchmarkRunUniverseCombat` 已完全移除。
+- Final Integrity 明確禁止舊 universe runner 回流。
+
+## 29.8 已完成的重要維護
+
+- Story Integrity CI 已同步 Story Progress V10，並實際確認 GitHub Actions 綠燈。
+- Combat Speed iOS lexical-state bug 已修。
+- Final Integrity 目前為 V17。
+- 每批 JS/CSS 皆需 cache-bust。
+
+## 29.9 下一步建議：強化 +21～+40
+
+仍未實作。既定設計：
+- +21～+40 使用暗物質＋暗能量。
+- target level `T=21..40`，`K=T-21`：
+  ```js
+  darkMatter = 30000 + 12000*K
+  darkEnergy = 300 + 10*K
+  ```
+- 每級仍 +2.5% 主屬性；+40 總強化倍率 +100%。
+- +20 銀河效果完整保留。
+- 必須同步 GM 強化管理、GM 強化測試、角色能力、Integrity。
+
+## 29.10 後續：專精第二世界收尾
+
+核心主線目前已正確使用：
+- training → EXP
+- scavenge → 暗物質
+- appraisal → world2 售價
+
+仍需完整檢查專精頁、GM 文案、所有第二世界資源路徑，避免殘留「金幣」語意。
+
+## 29.11 後續：文明等級＋第二世界文明災厄
+
+文明等級：
+- 0～10。
+- 每級 final damage +5%，必須放在 late/final layer。
+- 不直接用暗能量購買。
+
+第二世界災厄：
+- 每 50 級開一隻：550、600…1000。
+- 第 2 隻起需前一文明完成。
+- 每隻 `trueKills >= 30` 才完成一級文明。
+- HP：第 1 隻 1,000,000；之後每隻 +200,000。
+- ATK = 對應章末 Boss ×1.10；DEF ×1.05；crit/dodge 10%。
+- HP persistent。
+- 玩家每戰滿 HP。
+- 不給暗能量。
+- 需同步 GM 管理／測試／戰力基準。
+
+## 29.12 後續：副本
+
+- 懸賞：第二世界版正式規則尚未完整實作。
+- 競技：第二世界 1～10 階、對應區域開放＋評估門檻；正式 balance curve 尚不能自行發明。
+- 鏡像：沿用正式永久能力 snapshot，新能力必須納入。
+- 虛空：延續無限模式。
+- daily 仍共用 `dailycore.js`；進宇宙不重置當日已使用次數。
+- 銀河副本進宇宙後到底「封存可進」或「鎖入口」若仍未定，實作前詢問使用者，不能自行決定。
+
+## 29.13 後續：銀河封存／回顧跨頁收尾
+
+統一要求：
+- 回顧零 EXP／金幣／強化石／裝備／VIP／印記／稱號／養成進度。
+- 回顧死亡零損失。
+- 不寫 offline sample／farm target。
+- 不觸發特殊遭遇／黑市。
+- 第一世界災厄回顧使用 runtime HP，不碰正式 persistent HP。
+- 戰線紀錄只回顧，不重發獎勵。
+
+## 29.14 後續：戰線紀錄／設定／遊戲說明
+
+- 戰線紀錄加入兩紀元回顧 UX。
+- 設定統一檢查宇宙 speed / world-aware 文案。
+- 遊戲說明最後更新，只描述已正式落地規則，不把設計稿寫成已實作。
+
+## 29.15 後續：Cloud Save／跨裝置
+
+- 仍是整包單一 state。
+- 驗證 secondWorld、world2 裝備、未來 +21～40、文明等級、副本進度完整保存。
+- 舊 schema 只能 migration 補預設，不得自動判 `entered=true`。
+- offline clock / pending settlement 與 cloud download 要相容。
+- Save Write Guard V1 不可移除。
+- 至少實測一次：宇宙存檔上傳 → 乾淨裝置／環境下載 → reload。
+
+## 29.16 固定跨批規則
+
+每一批正式功能修改後都要檢查：
+1. GM 管理。
+2. GM 測試。
+3. 戰力基準。
+4. Integrity。
+5. 世界識別與文案。
+6. save / rollback。
+7. cache-bust。
+8. 功能 probe。
+
+禁止：
+- 宇宙正式流程碰第一世界金幣／強化石。
+- 銀河回顧產生任何正式收益／損失。
+- duplicate owner / wrapper / fallback / 第二套公式／第二套 settlement。
 
 ---
 
@@ -2160,62 +1723,58 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 # 31. 下一個 ChatGPT 必須遵守的操作規範
 
-1. **永遠先讀 GitHub `main` 的實際程式碼。**
-   - 不可只根據 PROJECT_HANDOFF、聊天記憶或舊 commit 判斷。
-   - 至少先讀要修改的正式 owner、直接相依檔案與 `index.html`。
+1. **GitHub `main` 的實際程式碼是唯一真實來源。**
+   - PROJECT_HANDOFF 只是摘要。
+   - 修改前必須重新讀正式 owner、直接相依檔案與 `index.html`。
 
-2. **使用者說「先討論／先看／先檢查／先不要修改」時，禁止寫 GitHub。**
-   - 只能分析與提供建議。
+2. **使用者說「先討論／先查／先看／先檢查／先不要修改」時，不得寫 GitHub。**
 
-3. **使用者說「做／修改／執行／第 N 批／寫入 GitHub」時，直接執行。**
-   - 不要先用泛化理由說「無法寫 GitHub」。
-   - GitHub 工具可用時應先實際執行。
-   - 只有實際 GitHub 操作回傳錯誤時，才回報具體錯誤。
+3. **使用者說「做／修改／執行／第 N 批」時，可直接修改 GitHub `main`。**
 
-4. **優先修改正式 owner。**
-   - 不新增第二套 state。
-   - 不新增第二套公式。
-   - 不新增第二套 settlement。
-   - 不用 wrapper/fallback 掩蓋正式 owner 的問題。
-   - 除非架構上真的需要，否則不要加 duplicate API。
+4. **優先修改正式來源。**
+   - 不用 wrapper/fallback 掩蓋 owner 問題。
+   - 不新增 duplicate API、第二套 state、第二套公式、第二套 settlement。
+   - 不因方便把宇宙資料硬塞進銀河 `MAPS/WORLD_REGIONS`。
 
-5. **修改前先找唯一 owner。**
-   - 例如 pacing 去 `combatpacing.js/combatfx.js`。
-   - 稱號 state 去 `playertitlecore.js`。
-   - 稱號 HTML 去 `playertitlerenderer.js`。
-   - 稱號 UI 去 `playertitleui.js`。
-   - 災厄 title metadata 去 `calamityconfig.js`。
+5. **修改後必須重新 fetch `main` 自我檢查。**
+   - JS：parse / `new Function` + 功能 probe。
+   - CSS：brace balance + selector/animation 檢查。
+   - 不能只因 update API 成功就宣稱完成。
 
-6. **修改後必須重新 fetch `main` 自我檢查。**
-   - 不能只根據 update API 成功就宣稱完成。
+6. **任何 JS/CSS 改動都要更新 `index.html` cache-bust。**
+   - 新 JS 還要確認正式 load order。
 
-7. **JS 修改後：**
-   - 重新 fetch 每一支改動 JS。
-   - 用 parser / `new Function(content)` 驗證。
-   - 檢查正式 API、owner、版本鏈與必要功能 probe。
+7. **每批都檢查 GM／Integrity。**
+   - GM 沙盒不得污染正式 save。
+   - GM 管理若寫正式 state，必須走正式 save／rollback 語意。
 
-8. **CSS 修改後：**
-   - 重新 fetch CSS。
-   - 檢查 brace balance。
-   - 檢查 selector / animation / reduced-motion。
-   - 確認沒有誤改其他系列。
+8. **Save Write Guard V1 不可破壞。**
+   - existing save 在成功 load resolve 前，不得被新 state 覆蓋。
 
-9. **任何 JS/CSS 改動都要同步更新 `index.html` cache-bust。**
-   - 新增 JS 也要確認正式載入順序。
+9. **不要主動重構舊存檔語意。**
+   - 除非使用者明確要求，或有可重現 bug。
 
-10. **修改後自我檢查要針對需求，不只是語法。**
-    - 例如 save rollback、GM 無副作用、背景單 flow、稱號權限等，都應做功能 probe。
-
-11. **避免無關重構。**
-    - 一批只做該批核准範圍。
-    - 使用者沒要求的 balance、save schema、故事資料不要順手改。
-
-12. **不要主動碰舊存檔語意。**
-    - 除非使用者明確要求，或有可重現的舊檔 bug。
+10. **一批只做核准範圍。**
+    - 不順手改 balance、故事、schema 或其他未授權功能。
 
 ---
 
 # 32. 下一個對話如何接手
+
+標準指令：
+
+> 讀取 GitHub `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查目前 `main` 的實際程式碼與 `index.html` 載入順序，完整承接《文明戰線》專案。  
+> **`main` 是唯一真實來源，handoff 只作摘要。**  
+> 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
+> 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
+> 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
+> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益，以及 GM 戰力基準銀河／宇宙雙世界重構。  
+> 真正下一批優先看 handoff 第 29 節；目前建議先做 **強化 +21～+40**。  
+> 現在先不要修改任何檔案，先確認最新 main 狀態、正式 owner 與下一個未完成項目，再等我的下一個指令。
+
+---
+
+
 
 把以下標準指令直接貼到新對話：
 
