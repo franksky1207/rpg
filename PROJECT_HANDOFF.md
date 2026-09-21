@@ -1630,9 +1630,23 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 戰力基準本批只讀角色 snapshot，不需新增世界 2 Boss 選擇；待 Boss battle owner 完成時再同步擴充。
 - Integrity 已加入 level progression owner／500→1000 cap／EXP 公式檢查。
 
+第 4 批 Boss 戰鬥核心已完成：
+- 新增 `secondworldcombat.js`，正式 owner 使用 100 Boss registry，不沿用第一世界 monsterBase／stage 倍率。
+- Boss 基礎能力公式已落地：`N=(Lv-505)/5`、倍率 `1 + N×0.015`；HP=`36000×倍率`、ATK=`6000×倍率`、DEF=`3000×倍率`。
+- Lv.505 首 Boss：HP 36,000／ATK 6,000／DEF 3,000；Lv.1000 最終 Boss：倍率 2.485、HP 89,460／ATK 14,910／DEF 7,455。
+- 100 Boss 全部 `kind="boss"`，沿用既有 Boss 隨機特性機率與 `applyMonsterTraits()`，不另造第二套 trait 系統。
+- `traits.js` 只做共用能力擴充：正式公開 `rollMonsterTraits()`／trait defs，並支援 injectable RNG；銀河紀元原行為不變。
+- 第二世界 Boss 戰鬥正式共用 `runCombatCore()`，因此暴擊、閃避、專精、印記、護盾、不屈、反擊、汲取、狂暴等仍走同一正式 combat owner。
+- 玩家冒險 UI 已顯示每隻已開放 Boss 的正式 HP／ATK／DEF。
+- **本批刻意保持 `SECOND_WORLD_COMBAT_SETTLEMENT_READY=false`**：戰鬥核心已可跑，但玩家正式挑戰按鈕尚未開放，避免在第 5 批獎勵／掉裝／主線進度 settlement 完成前擊殺 Boss 而漏發不可補回的正式獎勵。
+- 因此本批沒有修改 `secondWorld.mainline.bossKilled`、沒有 EXP／暗物質／暗能量／裝備結算，也沒有死亡懲罰正式寫入。
+- GM 同步完成：
+  - 既有「地圖怪測試」內新增「宇宙紀元 Boss」沙盒，可直接選 100 Boss，100 場測試正式能力＋隨機特性，不修改 save／進度。
+  - 「戰力基準測試」升級 V10，新增宇宙紀元 Boss 100／1000 場實戰基準與摘要，走同一 `runCombatCore()`。
+- Integrity 已加入第二世界 combat owner、settlement gate、GM 快速測試、GM 戰力基準 V10 驗證。
+
 仍要處理：
-- 第二世界 Boss 能力公式、traits 接法、戰鬥 pipeline。
-- 主線獎勵：EXP、暗物質、暗能量、固定 1 件世界 2 裝備。
+- 主線獎勵／正式 settlement：EXP、暗物質、暗能量、固定 1 件世界 2 裝備，完成後才開玩家正式挑戰。
 - 世界 2 裝備等級／品質／屬性延伸。
 - 第二世界主線不得觸發第一世界特殊遭遇／黑市。
 - 正式戰鬥死亡流程所需的第二世界基礎 gate，要在主線可玩前確認。
