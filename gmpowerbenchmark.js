@@ -1,5 +1,5 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -7,7 +7,7 @@
   phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
-  universeBossIndex:0,universeCombatResult:null,
+  universeRegionIndex:0,universeBossIndex:0,universeCombatResult:null,
   busy:false,busyKind:""
  };
 
@@ -389,12 +389,36 @@
  }
  function runCombatBenchmark(mode){return withBenchmarkBusy(mode==="map"?"combat-map":"combat-single",()=>runCombatTask(mode));}
 
+ function universeRegions(){
+  return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
+ }
+ function universeRegionMeta(index=MODEL.universeRegionIndex){
+  const regions=universeRegions();
+  return regions[whole(index,0,Math.max(0,regions.length-1))]||null;
+ }
+ function universeBossesForRegion(index=MODEL.universeRegionIndex){
+  if(typeof window.secondWorldBossesForRegion==="function")return window.secondWorldBossesForRegion(index);
+  const region=universeRegionMeta(index),bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
+  return region?bosses.filter(b=>Number(b.regionIndex)===Number(region.index)):[];
+ }
+ function normalizeUniverseSelection(){
+  const regions=universeRegions();
+  if(!regions.length){MODEL.universeRegionIndex=0;MODEL.universeBossIndex=0;return;}
+  MODEL.universeRegionIndex=whole(MODEL.universeRegionIndex,0,regions.length-1);
+  const bosses=universeBossesForRegion(MODEL.universeRegionIndex);
+  if(!bosses.length){MODEL.universeBossIndex=0;return;}
+  if(!bosses.some(b=>b.index===MODEL.universeBossIndex))MODEL.universeBossIndex=bosses[0].index;
+ }
  function universeBossMeta(index=MODEL.universeBossIndex){
   return typeof window.secondWorldBoss==="function"?window.secondWorldBoss(whole(index,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1))):null;
  }
+ function universeRegionOptions(){
+  normalizeUniverseSelection();
+  return universeRegions().map((region,i)=>option(i,region.name+"｜Lv."+region.minLevel+"～"+region.maxLevel,i===MODEL.universeRegionIndex)).join("");
+ }
  function universeBossOptions(){
-  const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
-  return bosses.map(b=>option(b.index,(b.regionName||"宇宙紀元")+"｜Boss "+(b.index+1)+"｜"+b.name+" Lv."+b.level,b.index===MODEL.universeBossIndex)).join("");
+  normalizeUniverseSelection();
+  return universeBossesForRegion(MODEL.universeRegionIndex).map(b=>option(b.index,"Boss "+(b.index+1)+"｜"+b.name+" Lv."+b.level,b.index===MODEL.universeBossIndex)).join("");
  }
  async function universeCombatRow(index,runs,s){
   const meta=universeBossMeta(index);if(!meta||typeof window.secondWorldBossEncounter!=="function")return null;
@@ -594,8 +618,8 @@
    '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml()+'</div>'+
-   '<div class="item"><b>宇宙紀元 Boss 實戰基準</b><div class="muted" style="margin-top:5px">使用第二世界正式 Boss 能力公式、Boss 隨機特性與同一 runCombatCore；純沙盒，不結算任何獎勵、死亡懲罰或主線進度。</div>'+
-   '<div class="gmpb-controls"><label style="grid-column:span 4">Boss<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label><label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
+   '<div class="item"><b>宇宙紀元 Boss 實戰基準</b><div class="muted" style="margin-top:5px">宇宙紀元沒有地圖層級，改為「區域 → 怪物」；使用第二世界正式 Boss 能力公式、Boss 隨機特性與同一 runCombatCore，純沙盒、不結算任何獎勵、死亡懲罰或主線進度。</div>'+
+   '<div class="gmpb-controls"><label>區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseRegion(this.value)">'+universeRegionOptions()+'</select></label><label style="grid-column:span 3">怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label><label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunUniverseCombat()">'+busyLabel("combat-universe","測宇宙 Boss")+'</button></div>'+universeCombatResultHtml()+'</div>'+summaryHtml()+'</div>';
  }
 
@@ -616,7 +640,23 @@
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
- window.gmPowerBenchmarkSetUniverseBoss=function(v){if(MODEL.busy)return;MODEL.universeBossIndex=whole(v,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1));MODEL.universeCombatResult=null;render();};
+ window.gmPowerBenchmarkSetUniverseRegion=function(v){
+  if(MODEL.busy)return;
+  const regions=universeRegions();
+  MODEL.universeRegionIndex=whole(v,0,Math.max(0,regions.length-1));
+  const bosses=universeBossesForRegion(MODEL.universeRegionIndex);
+  MODEL.universeBossIndex=bosses[0]?.index??0;
+  MODEL.universeCombatResult=null;
+  render();
+ };
+ window.gmPowerBenchmarkSetUniverseBoss=function(v){
+  if(MODEL.busy)return;
+  normalizeUniverseSelection();
+  const bosses=universeBossesForRegion(MODEL.universeRegionIndex),requested=whole(v,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1));
+  MODEL.universeBossIndex=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
+  MODEL.universeCombatResult=null;
+  render();
+ };
  window.gmPowerBenchmarkRunUniverseCombat=runUniverseCombatBenchmark;
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
