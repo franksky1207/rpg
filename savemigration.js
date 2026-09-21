@@ -50,6 +50,7 @@
   const type=forcedType||item.type;
   if(!Array.isArray(EQUIPMENT_TYPES)||!EQUIPMENT_TYPES.includes(type))return item;
   item.type=type;
+  item.world=Number(item.world)===2?2:1;
   item.locked=item.locked===true;
   const totals={};
   STAT_KEYS.forEach(key=>{totals[key]=finiteNonNegative(item[key],0);});
