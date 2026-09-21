@@ -64,6 +64,65 @@
  window.getMapMonsterGmEnemyOptions=function(mapIdx,eIdx=mapTestEnemy){return enemyOptionsForMap(mapIdx,eIdx);};
  window.getMapMonsterGmTestHtml=function(){return mapMonsterTestHtml;};
 
+ let secondWorldTestBoss=0;
+ let secondWorldBossTestHtml="";
+ function secondWorldBossOptions(){
+  const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
+  return bosses.map(boss=>`<option value="${boss.index}" ${boss.index===secondWorldTestBoss?"selected":""}>${boss.regionName}｜Boss ${boss.index+1}｜${boss.name} Lv.${boss.level}</option>`).join("");
+ }
+ function clearSecondWorldBossTest(){secondWorldBossTestHtml="";showTestResult("gmSecondWorldBossTestResult","");}
+ window.getSecondWorldBossGmOptions=function(){return secondWorldBossOptions();};
+ window.getSecondWorldBossGmTestHtml=function(){return secondWorldBossTestHtml;};
+ window.gmSecondWorldBossChange=function(){
+  const el=document.getElementById("gmSecondWorldBoss");
+  secondWorldTestBoss=Math.max(0,Math.min((Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1,Math.floor(Number(el?.value)||0)));
+  clearSecondWorldBossTest();
+ };
+ function secondWorldBossResultHtml(boss,summary){
+  return `<div class="notice">${testSummary(`宇宙紀元｜${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
+  <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+   <div class="stat">勝率<b>${summary.winRate}%</b></div>
+   <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
+   <div class="stat">平均回合<b>${summary.avgTurns}</b></div>
+   <div class="stat">平均 Boss HP<b>${Math.round(summary.avgEnemyHp).toLocaleString()}</b></div>
+   <div class="stat">平均 Boss ATK<b>${Math.round(summary.avgEnemyAtk).toLocaleString()}</b></div>
+   <div class="stat">平均 Boss DEF<b>${Math.round(summary.avgEnemyDef).toLocaleString()}</b></div>
+  </div><div class="muted" style="margin-top:7px">特性出現：${summary.traits||"無"}</div>`;
+ }
+ window.gmStartSecondWorldBossTest=function(){
+  if(battleBusy)return;
+  const select=document.getElementById("gmSecondWorldBoss");
+  const index=Math.max(0,Math.min((Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1,Math.floor(Number(select?.value)||secondWorldTestBoss||0)));
+  secondWorldTestBoss=index;
+  const boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null;
+  if(!boss||typeof window.secondWorldBossEncounter!=="function"||typeof window.runSecondWorldBossCombat!=="function")return alert("宇宙紀元 Boss 戰鬥資料尚未載入。");
+  const button=document.getElementById("gmSecondWorldBossStartBtn");setTestButton(button,true,`開始測試（${GM_TEST_RUNS} 次）`);
+  const sandbox=gmCreateSandboxSnapshot(),basePlayer=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(basePlayer);
+  const traits={},summary={wins:0,losses:0,winHpTotal:0,totalTurns:0,enemyHp:0,enemyAtk:0,enemyDef:0};
+  battleBusy=true;
+  for(let i=0;i<GM_TEST_RUNS;i++){
+   gmResetSandbox(sandbox);state.vipLevel=testVip();
+   const encounter=window.secondWorldBossEncounter(index);
+   if(!encounter)continue;
+   summary.enemyHp+=encounter.hp;summary.enemyAtk+=encounter.atk;summary.enemyDef+=encounter.def;
+   (encounter.traits||[]).forEach(key=>traits[key]=(traits[key]||0)+1);
+   const result=window.runSecondWorldBossCombat(index,{ignoreUnlock:true,encounter,player,startHp:player.hp,logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true});
+   if(!result.ok)continue;
+   summary.totalTurns+=Math.max(0,Number(result.turns)||0);
+   if(result.win){summary.wins++;summary.winHpTotal+=Math.max(0,Number(result.hp)||0);}else summary.losses++;
+  }
+  const completed=Math.max(1,summary.wins+summary.losses);
+  summary.winRate=testPercent(summary.wins,completed);
+  summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0;
+  summary.avgTurns=round1(summary.totalTurns/completed);
+  summary.avgEnemyHp=summary.enemyHp/completed;summary.avgEnemyAtk=summary.enemyAtk/completed;summary.avgEnemyDef=summary.enemyDef/completed;
+  summary.traits=Object.entries(traits).map(([key,count])=>{const t=window.MONSTER_TRAITS?.[key];return `${t?.name||key} ${round1(count/completed*100)}%`;}).join("｜");
+  gmRestoreSandbox(sandbox);battleBusy=false;
+  secondWorldBossTestHtml=secondWorldBossResultHtml(boss,summary);
+  showTestResult("gmSecondWorldBossTestResult",secondWorldBossTestHtml);
+  if(select)select.value=String(secondWorldTestBoss);setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
+ };
+
  function mapMonsterResultHtml(mapIdx,eIdx,summary){
   const map=MAPS[mapIdx],base=map.enemies[eIdx],region=WORLD_REGIONS[regionIndexForMap(mapIdx)];
   return `<div class="notice">${testSummary(`${region?.name?region.name+"｜":""}${map.name}｜${base[0]}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人使用不含 VIP 的角色基準；玩家戰鬥使用本次測試 VIP 與專精。正式角色資料未變更。</div></div>
