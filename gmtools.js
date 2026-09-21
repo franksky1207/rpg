@@ -38,6 +38,23 @@ function gmGold(){
  state.gold=n;save();render();
 }
 
+function gmDarkMatter(){
+ if(!(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()))return alert("目前尚未進入宇宙紀元。");
+ const raw=prompt("指定暗物質（0 以上）",state.secondWorld?.darkMatter||0);
+ if(raw===null)return;
+ const n=Math.floor(Number(raw));
+ if(!Number.isFinite(n)||n<0){alert("請輸入 0 以上的數字。");return;}
+ state.secondWorld.darkMatter=n;save();render();
+}
+function gmDarkEnergy(){
+ if(!(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()))return alert("目前尚未進入宇宙紀元。");
+ const raw=prompt("指定暗能量（0 以上）",state.secondWorld?.darkEnergy||0);
+ if(raw===null)return;
+ const n=Math.floor(Number(raw));
+ if(!Number.isFinite(n)||n<0){alert("請輸入 0 以上的數字。");return;}
+ state.secondWorld.darkEnergy=n;save();render();
+}
+
 function gmSetWorldProgress(){
  const raw=prompt(`指定目前攻略到哪個等級關卡（1～${MAX_LEVEL}）`,state.level);
  if(raw===null)return;
