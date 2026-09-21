@@ -1,12 +1,12 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const allowed=Array.isArray(window.COMBAT_SPEED_ALLOWED)?window.COMBAT_SPEED_ALLOWED.map(Number):[];
  const expectedAllowed=[1,1.5,2];
 
- if(Number(window.COMBAT_SPEED_CORE_VERSION)!==2)fail("CORE_VERSION","Combat Speed core 應為 V2",window.COMBAT_SPEED_CORE_VERSION);
- if(Number(window.COMBAT_SPEED_PLAYER_RULE_VERSION)!==2)fail("PLAYER_RULE_VERSION","玩家正式倍速規則 owner 應為 V2",window.COMBAT_SPEED_PLAYER_RULE_VERSION);
+ if(Number(window.COMBAT_SPEED_CORE_VERSION)!==3)fail("CORE_VERSION","Combat Speed core 應為 V3",window.COMBAT_SPEED_CORE_VERSION);
+ if(Number(window.COMBAT_SPEED_PLAYER_RULE_VERSION)!==3)fail("PLAYER_RULE_VERSION","玩家正式倍速規則 owner 應為 V3",window.COMBAT_SPEED_PLAYER_RULE_VERSION);
  if(Number(window.COMBAT_SPEED_GM_OVERRIDE_VERSION)!==1)fail("GM_OVERRIDE_VERSION","GM 倍速覆寫 owner 應為 V1",window.COMBAT_SPEED_GM_OVERRIDE_VERSION);
  if(JSON.stringify(allowed)!==JSON.stringify(expectedAllowed))fail("ALLOWED_SPEEDS","正式合法倍速應為 1／1.5／2",allowed);
  if(typeof window.playerCombatSpeedOptions!=="function"||typeof window.playerCombatSpeed!=="function"||typeof window.setPlayerCombatSpeed!=="function")fail("PLAYER_SPEED_API","玩家正式倍速 API 未完整載入",{options:typeof window.playerCombatSpeedOptions,get:typeof window.playerCombatSpeed,set:typeof window.setPlayerCombatSpeed});
@@ -17,6 +17,10 @@
   if(JSON.stringify(actualOptions)!==JSON.stringify(expectedOptions))fail("PLAYER_OPTIONS","玩家正式倍速選項與世界階段不符",{entered,expectedOptions,actualOptions});
   const formal=Number(window.playerCombatSpeed());
   if(!expectedOptions.includes(formal))fail("PLAYER_SPEED","玩家正式速度不在目前世界合法選項內",{formal,expectedOptions});
+  try{
+   const stored=Number(state?.settings?.combatSpeed);
+   if(entered&&(stored===1||stored===1.5)&&formal!==stored)fail("PLAYER_STATE_ACCESS","玩家正式倍速沒有讀到實際 state.settings.combatSpeed",{stored,formal});
+  }catch(e){fail("PLAYER_STATE_ACCESS","玩家正式倍速無法讀取遊戲 state",String(e?.message||e));}
  }
  if(typeof window.effectiveCombatSpeed!=="function"||!expectedAllowed.includes(Number(window.effectiveCombatSpeed())))fail("EFFECTIVE_SPEED","目前有效倍速必須是正式合法值",typeof window.effectiveCombatSpeed==="function"?window.effectiveCombatSpeed():null);
  if(typeof window.combatSpeedScaledDelay!=="function")fail("SCALE_API","combatSpeedScaledDelay 未載入");
