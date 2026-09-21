@@ -31,9 +31,10 @@
   const speed=normalizeSpeed(value),options=playerCombatSpeedOptions();
   if(speed==null||!options.includes(speed)||speed===2||!globalThis.state)return false;
   if(!state.settings||typeof state.settings!=="object"||Array.isArray(state.settings))state.settings={};
+  const previous=state.settings.combatSpeed;
   state.settings.combatSpeed=speed;
   const saved=typeof save==="function"?save(false):true;
-  if(saved!==true)return false;
+  if(saved!==true){state.settings.combatSpeed=previous;return false;}
   window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed,effectiveSpeed:effectiveCombatSpeed(),source:"player"}}));
   return true;
  }
