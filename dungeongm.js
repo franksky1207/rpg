@@ -64,22 +64,67 @@
  window.getMapMonsterGmEnemyOptions=function(mapIdx,eIdx=mapTestEnemy){return enemyOptionsForMap(mapIdx,eIdx);};
  window.getMapMonsterGmTestHtml=function(){return mapMonsterTestHtml;};
 
+ let secondWorldTestRegion=0;
  let secondWorldTestBoss=0;
  let secondWorldBossTestHtml="";
- function secondWorldBossOptions(){
+ function secondWorldRegionList(){
+  return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
+ }
+ function secondWorldRegionAt(index=secondWorldTestRegion){
+  const regions=secondWorldRegionList();
+  const i=Math.max(0,Math.min(regions.length-1,Math.floor(Number(index)||0)));
+  return regions[i]||null;
+ }
+ function secondWorldBossListForRegion(regionIndex=secondWorldTestRegion){
+  if(typeof window.secondWorldBossesForRegion==="function")return window.secondWorldBossesForRegion(regionIndex);
+  const region=secondWorldRegionAt(regionIndex);
   const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
-  return bosses.map(boss=>`<option value="${boss.index}" ${boss.index===secondWorldTestBoss?"selected":""}>${boss.regionName}｜Boss ${boss.index+1}｜${boss.name} Lv.${boss.level}</option>`).join("");
+  return region?bosses.filter(b=>Number(b.regionIndex)===Number(region.index)):[];
+ }
+ function secondWorldRegionOptions(){
+  return secondWorldRegionList().map((region,i)=>`<option value="${i}" ${i===secondWorldTestRegion?"selected":""}>${region.name}（Lv.${region.minLevel}～${region.maxLevel}）</option>`).join("");
+ }
+ function secondWorldBossOptions(regionIndex=secondWorldTestRegion){
+  const bosses=secondWorldBossListForRegion(regionIndex);
+  return bosses.map(boss=>`<option value="${boss.index}" ${boss.index===secondWorldTestBoss?"selected":""}>Boss ${boss.index+1}｜${boss.name} Lv.${boss.level}</option>`).join("");
+ }
+ function normalizeSecondWorldGmSelection(){
+  const regions=secondWorldRegionList();
+  if(!regions.length){secondWorldTestRegion=0;secondWorldTestBoss=0;return;}
+  secondWorldTestRegion=Math.max(0,Math.min(regions.length-1,Math.floor(Number(secondWorldTestRegion)||0)));
+  const bosses=secondWorldBossListForRegion(secondWorldTestRegion);
+  if(!bosses.length){secondWorldTestBoss=0;return;}
+  if(!bosses.some(b=>b.index===secondWorldTestBoss))secondWorldTestBoss=bosses[0].index;
  }
  function clearSecondWorldBossTest(){secondWorldBossTestHtml="";showTestResult("gmSecondWorldBossTestResult","");}
- window.getSecondWorldBossGmOptions=function(){return secondWorldBossOptions();};
+ window.getSecondWorldBossGmSelection=function(){normalizeSecondWorldGmSelection();return {regionIdx:secondWorldTestRegion,bossIdx:secondWorldTestBoss};};
+ window.getSecondWorldBossGmRegionOptions=function(){normalizeSecondWorldGmSelection();return secondWorldRegionOptions();};
+ window.getSecondWorldBossGmOptions=function(regionIdx=secondWorldTestRegion){
+  secondWorldTestRegion=Math.max(0,Math.min(secondWorldRegionList().length-1,Math.floor(Number(regionIdx)||0)));
+  normalizeSecondWorldGmSelection();
+  return secondWorldBossOptions(secondWorldTestRegion);
+ };
  window.getSecondWorldBossGmTestHtml=function(){return secondWorldBossTestHtml;};
+ window.gmSecondWorldRegionChange=function(){
+  const regionSelect=document.getElementById("gmSecondWorldRegion"),bossSelect=document.getElementById("gmSecondWorldBoss");
+  if(!regionSelect||!bossSelect)return;
+  secondWorldTestRegion=Math.max(0,Math.min(secondWorldRegionList().length-1,Math.floor(Number(regionSelect.value)||0)));
+  const bosses=secondWorldBossListForRegion(secondWorldTestRegion);
+  secondWorldTestBoss=bosses[0]?.index??0;
+  bossSelect.innerHTML=secondWorldBossOptions(secondWorldTestRegion);
+  bossSelect.value=String(secondWorldTestBoss);
+  clearSecondWorldBossTest();
+ };
  window.gmSecondWorldBossChange=function(){
   const el=document.getElementById("gmSecondWorldBoss");
-  secondWorldTestBoss=Math.max(0,Math.min((Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1,Math.floor(Number(el?.value)||0)));
+  const bosses=secondWorldBossListForRegion(secondWorldTestRegion);
+  const requested=Math.floor(Number(el?.value));
+  secondWorldTestBoss=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
   clearSecondWorldBossTest();
  };
  function secondWorldBossResultHtml(boss,summary){
-  return `<div class="notice">${testSummary(`宇宙紀元｜${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
+  const region=typeof window.secondWorldRegion==="function"?window.secondWorldRegion(boss.regionIndex):null;
+  return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
   <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
    <div class="stat">勝率<b>${summary.winRate}%</b></div>
    <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -91,8 +136,12 @@
  }
  window.gmStartSecondWorldBossTest=function(){
   if(battleBusy)return;
-  const select=document.getElementById("gmSecondWorldBoss");
-  const index=Math.max(0,Math.min((Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1,Math.floor(Number(select?.value)||secondWorldTestBoss||0)));
+  normalizeSecondWorldGmSelection();
+  const regionSelect=document.getElementById("gmSecondWorldRegion"),select=document.getElementById("gmSecondWorldBoss");
+  if(regionSelect)secondWorldTestRegion=Math.max(0,Math.min(secondWorldRegionList().length-1,Math.floor(Number(regionSelect.value)||secondWorldTestRegion)));
+  const bosses=secondWorldBossListForRegion(secondWorldTestRegion);
+  const requested=Math.floor(Number(select?.value));
+  const index=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??secondWorldTestBoss);
   secondWorldTestBoss=index;
   const boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null;
   if(!boss||typeof window.secondWorldBossEncounter!=="function"||typeof window.runSecondWorldBossCombat!=="function")return alert("宇宙紀元 Boss 戰鬥資料尚未載入。");
@@ -120,7 +169,9 @@
   gmRestoreSandbox(sandbox);battleBusy=false;
   secondWorldBossTestHtml=secondWorldBossResultHtml(boss,summary);
   showTestResult("gmSecondWorldBossTestResult",secondWorldBossTestHtml);
-  if(select)select.value=String(secondWorldTestBoss);setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
+  if(regionSelect)regionSelect.value=String(secondWorldTestRegion);
+  if(select)select.value=String(secondWorldTestBoss);
+  setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
  };
 
  function mapMonsterResultHtml(mapIdx,eIdx,summary){
