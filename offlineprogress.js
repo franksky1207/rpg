@@ -207,6 +207,18 @@
   const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));
   return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1)),atCap:false};
  }
+ function expProgressDelta(before,after){
+  if(!before||!after)return 0;
+  const bl=Math.max(1,Math.floor(Number(before.level)||1)),al=Math.max(bl,Math.floor(Number(after.level)||bl));
+  if(al===bl)return Math.max(0,Math.floor(Number(after.exp)||0)-Math.floor(Number(before.exp)||0));
+  let total=Math.max(0,Math.floor(Number(before.need)||0)-Math.floor(Number(before.exp)||0));
+  for(let level=bl+1;level<al;level++){
+   const need=typeof window.effectiveExpNeed==="function"?window.effectiveExpNeed(level,state):typeof expNeed==="function"?expNeed(level):0;
+   total+=Math.max(0,Math.floor(Number(need)||0));
+  }
+  if(after.atCap!==true)total+=Math.max(0,Math.floor(Number(after.exp)||0));
+  return Math.max(0,total);
+ }
  function offlineEnhancementStoneReward(enemy,battleCount,playerLevel){
   const count=Math.max(0,Math.floor(Number(battleCount)||0));
   if(!enemy||count<1||typeof expectedMainlineEnhancementStoneReward!=="function")return {basic:0,advanced:0};
@@ -305,7 +317,7 @@
   const count=Math.max(0,Math.floor(Number(pending.battles)||0)),bossIndex=Math.floor(Number(pending.bossIndex));
   if(!boss||bossIndex<0||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function")throw new Error("Second-world offline reward owner unavailable");
   const expBefore=expSnapshot(),bestByType=new Map(),mythics=[],soldItems=[];
-  let xpCarry=0,darkMatterCarry=0,totalXp=0,eligibleRolls=0,droppedCount=0;
+  let xpCarry=0,darkMatterCarry=0,eligibleRolls=0,droppedCount=0;
   function consider(item){
    item=normalizeOfflineDrop(item);if(!item)return;
    droppedCount++;
@@ -319,7 +331,7 @@
    const xpValue=Math.max(0,Number(window.secondWorldBossExpReward(bossIndex,false,state))||0)*OFFLINE_EXP_RATE;
    xpCarry+=xpValue;
    const grant=Math.floor(xpCarry);
-   if(grant>0){xpCarry-=grant;const beforeLevel=state.level,beforeExp=state.exp;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);const afterLevel=state.level,afterExp=state.exp;totalXp+=Math.max(0,grant-(beforeLevel===afterLevel?Math.max(0,(beforeExp+grant)-afterExp):0));}
+   if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}
    darkMatterCarry+=Math.max(0,Number(window.secondWorldBossDarkMatterReward(bossIndex,false))||0)*OFFLINE_GOLD_RATE;
    if(Math.random()<OFFLINE_GEAR_RATE){
     eligibleRolls++;
@@ -343,8 +355,8 @@
    if(!sale?.ok)throw new Error("Second-world offline equipment sale failed");
   }
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  const saleDarkMatter=Math.max(0,Math.floor(Number(sale?.quote?.darkMatter)||0)),saleDarkEnergy=Math.max(0,Math.floor(Number(sale?.quote?.darkEnergy)||0));
-  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
+  const saleDarkMatter=Math.max(0,Math.floor(Number(sale?.quote?.darkMatter)||0)),saleDarkEnergy=Math.max(0,Math.floor(Number(sale?.quote?.darkEnergy)||0)),expAfter=expSnapshot(),totalXp=expProgressDelta(expBefore,expAfter);
+  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length}};
  }
  function ensureOfflineModals(){
   if(!document.getElementById("offline-reward-styles")){
@@ -373,13 +385,16 @@
  function expProgressHtml(progress){
   if(!progress?.before||!progress?.after)return "";
   const before=progress.before,after=progress.after;
-  return `<div class="offline-exp-progress"><div>Lv.${before.level}　${before.exp.toLocaleString()} / ${before.need.toLocaleString()}</div><span class="arrow">↓</span><div>Lv.${after.level}　${after.exp.toLocaleString()} / ${after.need.toLocaleString()}</div></div>`;
+  const line=p=>p.atCap===true?`Lv.${p.level}　MAX`:`Lv.${p.level}　${p.exp.toLocaleString()} / ${p.need.toLocaleString()}`;
+  return `<div class="offline-exp-progress"><div>${line(before)}</div><span class="arrow">↓</span><div>${line(after)}</div></div>`;
  }
  function showOfflineSampleUnavailable(info){
   ensureOfflineModals();
   const detail=document.getElementById("offlineRewardDetail"),page=document.getElementById("offlineRewardPage");
   if(!detail||!page)return;
-  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(info?.elapsedUsed||info?.elapsedRaw||0)}</div><div class="offline-section"><div class="offline-section-title">尚無可用的主線實戰樣本</div><div class="offline-enemy-line" style="margin-top:10px">完成一場符合條件的主線普通／菁英戰鬥後，即可建立離線收益基準。Boss、副本與背景 catch-up 不會建立此樣本。</div><div class="muted" style="margin-top:10px;line-height:1.6">本次離線區段因沒有可計算的實戰基準而不發放收益，已建立新的離線起點；之後只要有有效樣本，離線結算就會正常出現。</div></div>`;
+  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
+  const guidance=universe?"完成一場宇宙紀元主線 Boss 正式前景勝利後，即可建立離線收益基準。背景戰鬥、回頁 catch-up 與副本不會建立此樣本。":"完成一場符合條件的主線普通／菁英戰鬥後，即可建立離線收益基準。Boss、副本與背景 catch-up 不會建立此樣本。";
+  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(info?.elapsedUsed||info?.elapsedRaw||0)}</div><div class="offline-section"><div class="offline-section-title">尚無可用的主線實戰樣本</div><div class="offline-enemy-line" style="margin-top:10px">${guidance}</div><div class="muted" style="margin-top:10px;line-height:1.6">本次離線區段因沒有可計算的實戰基準而不發放收益，已建立新的離線起點；之後只要有有效樣本，離線結算就會正常出現。</div></div>`;
   document.body.classList.add("offline-result-open");
   page.classList.add("show");
  }
@@ -390,33 +405,34 @@
   if(!detail||!page)return;
   const enemyLevel=Math.max(1,Math.floor(Number(result.enemyLevel)||1));
   const capNote=result.elapsedRaw>OFFLINE_MAX_MS?`<div class="offline-limit-note">本次離線超過 12 小時，僅計算前 12 小時。</div>`:`<div class="offline-limit-note">離線收益最多計算 12 小時</div>`;
-  const enhancement=result.enhancement||{battleBasic:0,saleBasic:0,saleAdvanced:0,totalBasic:0,totalAdvanced:0};
-  const stoneSaleParts=[enhancement.saleBasic?`基礎強化石 +${enhancement.saleBasic.toLocaleString()}`:"",enhancement.saleAdvanced?`進階強化石 +${enhancement.saleAdvanced.toLocaleString()}`:""].filter(Boolean);
-  const stoneSaleNote=stoneSaleParts.length?`<div class="muted" style="margin-top:8px">離線出售裝備另獲得 ${stoneSaleParts.join("、")}</div>`:"";
-  detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div><div class="offline-reward-card"><div class="offline-reward-label">基礎強化石</div><div class="offline-reward-value">+${Math.max(0,Number(enhancement.battleBasic)||0).toLocaleString()}</div><div class="muted" style="margin-top:6px">離線戰鬥收益 5%</div></div></div>${offlineGearHtml(result.gear)}${stoneSaleNote}${capNote}`;
+  if(Number(result.world)===2){
+   const saleParts=[result.saleDarkMatter?`暗物質 +${result.saleDarkMatter.toLocaleString()}`:"",result.saleDarkEnergy?`暗能量 +${result.saleDarkEnergy.toLocaleString()}`:""].filter(Boolean);
+   const saleNote=saleParts.length?`<div class="muted" style="margin-top:8px">離線出售裝備另獲得 ${saleParts.join("、")}</div>`:"";
+   detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">宇宙紀元主線</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線 Boss"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div><div class="muted" style="margin-top:6px">正式主線收益 10%</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">暗物質</div><div class="offline-reward-value">+${result.totalDarkMatter.toLocaleString()}</div><div class="muted" style="margin-top:6px">正式主線收益 10%</div></div><div class="offline-reward-card"><div class="offline-reward-label">暗能量</div><div class="offline-reward-value">+${result.totalDarkEnergy.toLocaleString()}</div><div class="muted" style="margin-top:6px">直接強化資源 5%</div></div></div>${offlineGearHtml(result.gear)}${saleNote}${capNote}`;
+  }else{
+   const enhancement=result.enhancement||{battleBasic:0,saleBasic:0,saleAdvanced:0,totalBasic:0,totalAdvanced:0};
+   const stoneSaleParts=[enhancement.saleBasic?`基礎強化石 +${enhancement.saleBasic.toLocaleString()}`:"",enhancement.saleAdvanced?`進階強化石 +${enhancement.saleAdvanced.toLocaleString()}`:""].filter(Boolean);
+   const stoneSaleNote=stoneSaleParts.length?`<div class="muted" style="margin-top:8px">離線出售裝備另獲得 ${stoneSaleParts.join("、")}</div>`:"";
+   detail.innerHTML=`<div class="offline-duration">離線 ${formatDuration(result.elapsedUsed)}</div><div class="offline-section"><div class="offline-section-title">戰鬥場次</div><div class="offline-battle-count">${result.battles.toLocaleString()} 場</div><div class="offline-enemy-line">Lv.${enemyLevel} ${result.enemyName||"主線敵人"} × ${result.battles.toLocaleString()}</div></div><div class="offline-reward-grid"><div class="offline-reward-card"><div class="offline-reward-label">EXP</div><div class="offline-reward-value">+${result.totalXp.toLocaleString()}</div>${expProgressHtml(result.expProgress)}</div><div class="offline-reward-card"><div class="offline-reward-label">金幣</div><div class="offline-reward-value">+${result.totalGold.toLocaleString()}</div></div><div class="offline-reward-card"><div class="offline-reward-label">基礎強化石</div><div class="offline-reward-value">+${Math.max(0,Number(enhancement.battleBasic)||0).toLocaleString()}</div><div class="muted" style="margin-top:6px">離線戰鬥收益 5%</div></div></div>${offlineGearHtml(result.gear)}${stoneSaleNote}${capNote}`;
+  }
   document.body.classList.add("offline-result-open");
   page.classList.add("show");
  }
  window.closeOfflineRewardModal=function(){document.getElementById("offlineRewardPage")?.classList.remove("show");document.body.classList.remove("offline-result-open");if(typeof render==="function")render();};
  async function settleOfflineOnLoad(){
-  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()){
-   const o=ensureOfflineState(),t=now();
-   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;o.battleSamples=[];o.pendingSettlement=null;o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);
-   if(baseSave)baseSave(false);
-   return;
-  }
   const pending=buildPendingSettlement();
   if(!pending)return;
   if(pending.unavailable){showOfflineSampleUnavailable(pending);return;}
-  const enemy=farmEnemyObject(pending);
-  if(!enemy)return;
+  const universe=Number(pending.world)===2;
+  const target=universe?(typeof window.secondWorldBoss==="function"?window.secondWorldBoss(pending.bossIndex):null):farmEnemyObject(pending);
+  if(!target)return;
   const rollbackSnapshot=JSON.stringify(state);
   offlineSettlementBusy=true;
   setCalculatingVisible(true);
   await yieldThread();
   try{
-   const rewards=await grantOfflineRewards(pending,enemy);
-   const result={elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:enemy.name||"主線敵人",enemyLevel:enemy.level,...rewards};
+   const rewards=universe?await grantSecondWorldOfflineRewards(pending,target):await grantOfflineRewards(pending,target);
+   const result={world:universe?2:1,elapsedRaw:pending.elapsedRaw,elapsedUsed:pending.elapsedUsed,battles:pending.battles,enemyName:target.name||(universe?"主線 Boss":"主線敵人"),enemyLevel:target.level,...rewards};
    const o=ensureOfflineState(),t=now();o.pendingSettlement=null;o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);
    if(baseSave)baseSave(false);
    setCalculatingVisible(false);showOfflineResult(result);
@@ -451,6 +467,9 @@
  window.beginSecondWorldOfflineBattleSample=beginSecondWorldOfflineBattleSample;
  window.finishSecondWorldOfflineBattleSample=finishSecondWorldOfflineBattleSample;
  window.SECOND_WORLD_OFFLINE_SAMPLE_VERSION=1;
+ window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1;
+ window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE=OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE;
+ window.grantSecondWorldOfflineRewards=grantSecondWorldOfflineRewards;
  window.resolveOfflineFarmTarget=resolveFarmTarget;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
