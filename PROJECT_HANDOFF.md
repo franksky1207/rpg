@@ -1658,7 +1658,7 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - `SECOND_WORLD_COMBAT_SETTLEMENT_READY=true`，玩家冒險 Boss 卡已開放正式**單場**「挑戰 Boss／再次挑戰」。
 - 正式宇宙主線 settlement 不呼叫第一世界 `goldReward()`、不給金幣／基礎石／進階石，也不觸發第一世界特殊遭遇／黑市。
 - 第二世界死亡基礎流程已接：EXP 扣目前 `expNeed` 10%、30% 穿戴裝備遺失、VIP20 保護；世界 2 裝備贖回成本依正式世界 2 暗物質售價 ×10，使用暗物質贖回。
-- **銀河紀元裝備在宇宙紀元死亡遺失的贖回成本仍未定案**：不自行造價；該裝備會安全存入 `lostGear` 並標記 `redemptionPending`，UI 顯示「價格待定」且禁止贖回，等使用者正式決定後再接。
+- **銀河紀元裝備在宇宙紀元死亡遺失時正式採免費贖回**：不再使用金幣，也不扣暗物質；舊 `redemptionPending` 狀態會在讀檔 normalization 轉為免費贖回。
 - GM 同步完成：
   - 宇宙 Boss 快速測試會顯示本次測試專精下的正式單場 EXP／暗物質／暗能量／裝備等級預覽，但仍為沙盒零 settlement。
   - GM 一般管理在宇宙紀元新增「區域 → Boss → 品質 → 部位」世界 2 裝備產生器，直接走正式裝備 owner。
@@ -1761,11 +1761,12 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ### 死亡／贖回現況
 - 世界 2 裝備贖回：暗物質，正式 sale value ×10。
-- **未解決：宇宙紀元穿 world=1 裝備死亡遺失時的贖回成本。** 仍保持 `redemptionPending`，不得自行推成 0，也不得沿用舊金幣 `buy×2`。
+- 宇宙紀元內遺失的 world=1 銀河裝備：**免費贖回**，不再使用金幣，也不扣暗物質。
+- 舊版 `redemptionPending / pending` 會在讀檔時自動正規化成 `currency:"free" / cost:0`。
 - 銀河紀元回顧戰仍必須零正式死亡損失。
 
 ### 接續新批次
-- 第 10 批：第二世界 offline sample。
+- 第 10 批：第二世界 offline sample。**已完成**
 - 第 11 批：第二世界正式離線收益；屆時離線裝備出售直接呼叫本批 sale owner，不重寫公式。
 
 ## 29.4 第 4 順位：強化
@@ -1886,10 +1887,21 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 30% 穿戴裝備遺失、VIP20 保護等既有正式規則是否完整延續，要由正式 owner 接世界 2，不要複製一套。
 - `lostGear` 要能區分 world 1／2 裝備。
 - 世界 2 裝備贖回使用暗物質，成本以正式世界 2 sale owner 推回。
-- **world=1 裝備在宇宙紀元死亡遺失時的贖回成本仍未定；實作前必須問使用者，禁止自行用 0 或沿用金幣 buy×2。**
+- **world=1 裝備在宇宙紀元死亡遺失時正式免費贖回；不再使用金幣贖回。**
 - 銀河紀元回顧戰零損失，不得寫入正式 `lostGear`。
 
 **插入時機：第 3 順位「背包」統一 sale owner 完成後，第二世界主線正式長時間刷怪前。**
+
+**新第 10 批已完成：第二世界 offline sample 前置。**
+- 沿用既有 `state.offline.battleSamples` 與 speed-aware 架構，不另建第二套離線 sample 系統。
+- 宇宙紀元正式 Boss 勝利現在可寫入 sample identity：`world:2 / targetType:"boss" / bossIndex / bossId`，完全不依賴第一世界 `map / enemy`。
+- 1×／1.5×／GM 2× 仍各保留最近 8 筆；跨速換算仍保留實戰時間＋固定場間 gap 的既有算法。
+- sample 只在正常 foreground 正式勝利後建立；真正 background、戰鬥中途切到 background、或回頁 catch-up credit 期間都不記錄，避免高速追趕污染離線樣本。
+- `savemigration.js` 已能正規化並保留 world2 Boss sample；既有 world1 sample 仍相容。
+- 本批**只建立 sample，不開第二世界正式離線收益 settlement**；金幣／強化石等第一世界離線收益仍被 world-phase gate 擋住。
+- GM 同步檢查：sample 本身沒有需要玩家或 GM 手動操作的參數，因此不新增 GM 頁面；由 Final Integrity＋runtime probe 驗證 owner、速度分桶、background/catch-up gate。
+- Integrity 新增 `SECOND_WORLD_OFFLINE_SAMPLE_VERSION=1` 與 begin/finish sample API 驗證。
+- 同批定案死亡贖回：**宇宙紀元內遺失的銀河紀元裝備免費贖回；不再使用金幣贖回。**
 
 ## 29.13 跨主題批次 C：第二世界離線收益
 
