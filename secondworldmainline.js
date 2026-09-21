@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const BACKGROUND_GM_GATE_VERSION=1;
  let busy=false;
  let activeContext=null;
@@ -132,6 +132,7 @@
 
     state.hp=playerCombatStats().hp;
     const showPresentation=presentationEnabled(ctx);
+    const sampleToken=typeof window.beginSecondWorldOfflineBattleSample==="function"?window.beginSecondWorldOfflineBattleSample(index,boss):null;
     const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;
     if(!encounter){ctx.stopReason="error";alert("無法建立宇宙紀元 Boss。");break;}
     ctx.currentEncounter=encounter;
@@ -146,6 +147,7 @@
      finally{ctx.presenting=false;}
     }
     ctx.completed++;
+    if(typeof window.finishSecondWorldOfflineBattleSample==="function")window.finishSecondWorldOfflineBattleSample(sampleToken,combat,battleGapMs());
 
     if(combat.win){
      state.hp=Math.max(0,Math.floor(Number(combat.hp)||0));
