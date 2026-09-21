@@ -1,5 +1,5 @@
 (function(){
- const VERSION=12;
+ const VERSION=13;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -224,6 +224,11 @@
   return m.enemies.map((row,i)=>option(i,"Lv"+row[1]+"｜"+row[0]+"｜"+(KIND_LABELS[row[2]]||row[2]),i===MODEL.enemyIndex)).join("");
  }
  function sourceEnemy(kind){
+  if(benchmarkWorld()===2){
+   const selected=benchmarkSelectedEnemy();
+   if(kind==="selected"||kind==="custom")return selected;
+   return null;
+  }
   const m=mapAt(MODEL.mapIndex);if(!m||!Array.isArray(m.enemies))return null;
   if(kind==="selected")return enemyPreview(MODEL.mapIndex,MODEL.enemyIndex);
   const indexes=m.enemies.map((row,i)=>({row,i})).filter(x=>x.row[2]===kind).map(x=>x.i);
@@ -233,11 +238,17 @@
  function sourceLabel(kind,stat){
   if(kind==="custom")return "自訂 "+stat;
   const e=sourceEnemy(kind);
-  return e?String(e.name)+" Lv."+whole(e.level,1):"無可用怪物";
+  return e?(benchmarkWorld()===2?"宇宙紀元｜":"")+String(e.name)+" Lv."+whole(e.level,1):"無可用怪物";
  }
  function sourceValue(kind,stat){
   if(kind==="custom")return Math.max(0,num(stat==="DEF"?MODEL.customDef:MODEL.customAtk,0));
   const e=sourceEnemy(kind);return e?Math.max(0,num(e[stat.toLowerCase()],0)):0;
+ }
+ function normalizeBenchmarkSources(){
+  if(benchmarkWorld()===2){
+   if(!["selected","custom"].includes(MODEL.outputSource))MODEL.outputSource="selected";
+   if(!["selected","custom"].includes(MODEL.defenseSource))MODEL.defenseSource="selected";
+  }
  }
  function selectedEnemySummary(){
   const e=benchmarkSelectedEnemy();
@@ -255,7 +266,8 @@
    '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
  }
  function sourceOptions(selected){
-  return [["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]].map(x=>option(x[0],x[1],selected===x[0])).join("");
+  const rows=benchmarkWorld()===2?[["selected","目前選擇怪物"],["custom","自訂"]]:[["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]];
+  return rows.map(x=>option(x[0],x[1],selected===x[0])).join("");
  }
  function metric(label,value){return '<div class="item gmpb-metric"><div class="muted" style="font-size:12px">'+label+'</div><b style="display:block;margin-top:3px">'+value+'</b></div>';}
  function metricFieldsHtml(fields){return fields.map(([label,value])=>metric(label,value)).join("");}
@@ -287,12 +299,14 @@
   return '<div style="margin-top:10px"><div class="muted">'+r.sourceLabel+'｜ATK '+fmt(r.targetAtk)+'｜'+r.runs.toLocaleString()+' 場</div><div class="gmpb-metrics">'+metricFieldsHtml(defenseFields(r))+'</div></div>';
  }
  async function runOutputTask(){
+  normalizeBenchmarkSources();
   const s=captureSnapshot(),player={...s.stats};
-  const source=MODEL.outputSource,targetDef=sourceValue(source,"DEF"),runs=MODEL.runs;
+  const source=MODEL.outputSource,base=sourceEnemy(source),targetDef=sourceValue(source,"DEF"),runs=MODEL.runs;
+  if(source!=="custom"&&!base)return false;
   const dummyHp=Math.max(1e12,player.atk*1000000);
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
   await runBatched(runs,()=>{
-   const e={name:"輸出木樁",level:1,kind:"normal",hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
+   const e={name:"輸出木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
    const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks});
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
@@ -308,7 +322,7 @@
    });
   });
   MODEL.outputResult={
-   sourceLabel:sourceLabel(source,"DEF"),targetDef,runs,
+   world:benchmarkWorld(),sourceLabel:sourceLabel(source,"DEF"),targetDef,runs,
    avgRoundDamage:total/runs,avgHitDamage:hits?total/hits:0,minHit:min===Infinity?0:min,maxHit:max,
    critRate:pct(crits,hits),avgCritDamage:crits?critDamage/crits:0,avgNormalDamage:normalHits?normalDamage/normalHits:0,
    avgCombos:one(combos/runs),comboDamageShare:pct(comboDamage,total),penetrationRate:pct(penetrations,hits),ignoreRate:pct(ignores,hits),
@@ -319,9 +333,11 @@
  function runOutput(){return withBenchmarkBusy("output",runOutputTask);}
 
  async function runDefenseTask(){
+  normalizeBenchmarkSources();
   const s=captureSnapshot(),player={...s.stats};
   const source=MODEL.defenseSource,base=source==="custom"?sourceEnemy("selected"):sourceEnemy(source);
   const targetAtk=sourceValue(source,"ATK"),runs=MODEL.runs,dummyHp=Math.max(1e12,player.atk*1000000);
+  if(!base)return false;
   let totalTurns=0,totalLoss=0,landed=0,min=Infinity,max=0,dodges=0,crits=0,shield=0,absorptions=0,counters=0,backlash=0,indomitable=0,capped=0;
   await runBatched(runs,()=>{
    const e={name:"承傷木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:targetAtk,def:Math.max(0,num(base&&base.def,0)),crit:Math.max(0,num(base&&base.crit,0)),dodge:Math.max(0,num(base&&base.dodge,0))};
@@ -339,7 +355,7 @@
    });
   });
   MODEL.defenseResult={
-   sourceLabel:sourceLabel(source,"ATK"),targetAtk,runs,
+   world:benchmarkWorld(),sourceLabel:sourceLabel(source,"ATK"),targetAtk,runs,
    avgSurvivalTurns:one(totalTurns/runs),avgTurnLoss:totalTurns?totalLoss/totalTurns:0,avgHitLoss:landed?totalLoss/landed:0,minLoss:min===Infinity?0:min,maxLoss:max,
    dodgeRate:pct(dodges,totalTurns),enemyCritRate:pct(crits,landed),avgShieldAbsorb:shield/runs,absorptionRate:pct(absorptions,totalTurns),
    avgCounters:one(counters/runs),avgBacklashDamage:backlash/runs,indomitableRate:pct(indomitable,runs),capped
@@ -411,17 +427,29 @@
   };
  }
  async function runCombatTask(mode){
-  const s=captureSnapshot(),runs=MODEL.runs,m=mapAt(MODEL.mapIndex);
+  const s=captureSnapshot(),runs=MODEL.runs;
+  if(benchmarkWorld()===2){
+   const row=await universeCombatRow(MODEL.universeBossIndex,runs,s);
+   if(!row)return false;
+   const region=universeRegionMeta(MODEL.universeRegionIndex);
+   MODEL.combatResult={world:2,mode:"single",bossIndex:MODEL.universeBossIndex,mapName:region?String(region.name||"宇宙紀元"):"宇宙紀元",runs,rows:[row]};
+   MODEL.universeCombatResult=null;
+   return true;
+  }
+  const m=mapAt(MODEL.mapIndex);
   if(!m||!Array.isArray(m.enemies)||!m.enemies.length)return false;
   const indexes=mode==="map"?m.enemies.map((_,i)=>i):[MODEL.enemyIndex],rows=[];
   for(const i of indexes){
    const row=await combatRow(MODEL.mapIndex,i,runs,s);
    if(row)rows.push(row);
   }
-  MODEL.combatResult={mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
+  MODEL.combatResult={world:1,mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
   return true;
  }
- function runCombatBenchmark(mode){return withBenchmarkBusy(mode==="map"?"combat-map":"combat-single",()=>runCombatTask(mode));}
+ function runCombatBenchmark(mode){
+  const universe=benchmarkWorld()===2;
+  return withBenchmarkBusy(universe?"combat-single":mode==="map"?"combat-map":"combat-single",()=>runCombatTask(universe?"single":mode));
+ }
 
  function universeRegions(){
   return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
@@ -548,7 +576,8 @@
  function combatResultHtml(){
   const result=MODEL.combatResult;
   if(!result)return '<div class="muted">尚未執行主線實戰基準。</div>';
-  return '<div style="margin-top:10px"><div class="muted">'+result.mapName+'｜'+(result.mode==="map"?"地圖 5 隻全部":"單隻怪")+'｜每隻 '+result.runs.toLocaleString()+' 場</div>'+
+  const scope=Number(result.world)===2?"宇宙紀元｜單隻 Boss":result.mode==="map"?"地圖 5 隻全部":"單隻怪";
+  return '<div style="margin-top:10px"><div class="muted">'+result.mapName+'｜'+scope+'｜每隻 '+result.runs.toLocaleString()+' 場</div>'+
    result.rows.map(combatRowHtml).join("")+'</div>';
  }
 
