@@ -124,6 +124,7 @@
  };
  function secondWorldBossResultHtml(boss,summary){
   const region=typeof window.secondWorldRegion==="function"?window.secondWorldRegion(boss.regionIndex):null;
+  const reward=summary.reward||null;
   return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
   <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
    <div class="stat">勝率<b>${summary.winRate}%</b></div>
@@ -132,7 +133,7 @@
    <div class="stat">平均 Boss HP<b>${Math.round(summary.avgEnemyHp).toLocaleString()}</b></div>
    <div class="stat">平均 Boss ATK<b>${Math.round(summary.avgEnemyAtk).toLocaleString()}</b></div>
    <div class="stat">平均 Boss DEF<b>${Math.round(summary.avgEnemyDef).toLocaleString()}</b></div>
-  </div><div class="muted" style="margin-top:7px">特性出現：${summary.traits||"無"}</div>`;
+  </div>${reward?`<div class="notice" style="margin-top:9px"><b>正式單場勝利獎勵預覽</b><div class="muted" style="margin-top:5px">EXP +${reward.xp.toLocaleString()}　／　暗物質 +${reward.darkMatter.toLocaleString()}　／　暗能量 +1　／　固定 1 件 Lv.${reward.equipmentLevel} 裝備</div></div>`:""}<div class="muted" style="margin-top:7px">特性出現：${summary.traits||"無"}</div>`;
  }
  window.gmStartSecondWorldBossTest=function(){
   if(battleBusy)return;
@@ -147,7 +148,7 @@
   if(!boss||typeof window.secondWorldBossEncounter!=="function"||typeof window.runSecondWorldBossCombat!=="function")return alert("宇宙紀元 Boss 戰鬥資料尚未載入。");
   const button=document.getElementById("gmSecondWorldBossStartBtn");setTestButton(button,true,`開始測試（${GM_TEST_RUNS} 次）`);
   const sandbox=gmCreateSandboxSnapshot(),basePlayer=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(basePlayer);
-  const traits={},summary={wins:0,losses:0,winHpTotal:0,totalTurns:0,enemyHp:0,enemyAtk:0,enemyDef:0};
+  const traits={},summary={wins:0,losses:0,winHpTotal:0,totalTurns:0,enemyHp:0,enemyAtk:0,enemyDef:0,reward:typeof window.secondWorldMainlineRewardPreview==="function"?window.secondWorldMainlineRewardPreview(index,{state,useTestSpecializations:true}):null};
   battleBusy=true;
   for(let i=0;i<GM_TEST_RUNS;i++){
    gmResetSandbox(sandbox);state.vipLevel=testVip();
