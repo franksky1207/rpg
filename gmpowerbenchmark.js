@@ -1,5 +1,5 @@
 (function(){
- const VERSION=9;
+ const VERSION=10;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -7,6 +7,7 @@
   phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
+  universeBossIndex:0,universeCombatResult:null,
   busy:false,busyKind:""
  };
 
@@ -387,6 +388,63 @@
   return true;
  }
  function runCombatBenchmark(mode){return withBenchmarkBusy(mode==="map"?"combat-map":"combat-single",()=>runCombatTask(mode));}
+
+ function universeBossMeta(index=MODEL.universeBossIndex){
+  return typeof window.secondWorldBoss==="function"?window.secondWorldBoss(whole(index,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1))):null;
+ }
+ function universeBossOptions(){
+  const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
+  return bosses.map(b=>option(b.index,(b.regionName||"宇宙紀元")+"｜Boss "+(b.index+1)+"｜"+b.name+" Lv."+b.level,b.index===MODEL.universeBossIndex)).join("");
+ }
+ async function universeCombatRow(index,runs,s){
+  const meta=universeBossMeta(index);if(!meta||typeof window.secondWorldBossEncounter!=="function")return null;
+  const player={...s.stats};
+  let wins=0,totalTurns=0,minTurns=Infinity,maxTurns=0,winHpPct=0,lossEnemyHpPct=0,losses=0;
+  let playerDamage=0,enemyDamage=0,playerHits=0,playerCrits=0,enemyHits=0,enemyCrits=0,playerDodges=0,enemyDodges=0;
+  let enemyHp=0,enemyAtk=0,enemyDef=0,enemyCrit=0,enemyDodge=0;
+  const specs={initiative:0,combo:0,penetration:0,counter:0,drain:0},marks={},traits={};
+  await runBatched(runs,()=>{
+   const e=window.secondWorldBossEncounter(index);
+   if(!e)return;
+   enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
+   (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks});
+   const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
+   if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
+   else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
+   (result.events||[]).forEach(ev=>{
+    if(ev.type==="attack"&&ev.actor==="player"){const d=Math.max(0,num(ev.actualDamage,0));playerDamage+=d;playerHits++;if(ev.crit)playerCrits++;if(ev.initiative)specs.initiative++;if(ev.penetration)specs.penetration++;return;}
+    if(ev.type==="attack"&&ev.actor==="enemy"){enemyDamage+=Math.max(0,num(ev.actualDamage,0));enemyHits++;if(ev.crit)enemyCrits++;return;}
+    if(ev.type==="dodge"&&ev.target==="player"){playerDodges++;return;}
+    if(ev.type==="dodge"&&ev.target==="enemy"){enemyDodges++;return;}
+    if(ev.type==="combo"){specs.combo++;return;}
+    if(ev.type==="counter"){specs.counter++;return;}
+    if(ev.type==="drain"){specs.drain++;return;}
+    if(ev.type==="mark"){const key=String(ev.mark||"unknown");marks[key]=(marks[key]||0)+1;}
+   });
+  });
+  const completed=Math.max(1,runs),playerAttempts=playerHits+enemyDodges,enemyAttempts=enemyHits+playerDodges;
+  return {
+   bossIndex:index,name:meta.name,level:meta.level,kind:"boss",runs,
+   avgEnemy:{hp:enemyHp/completed,atk:enemyAtk/completed,def:enemyDef/completed,crit:one(enemyCrit/completed),dodge:one(enemyDodge/completed)},
+   winRate:pct(wins,runs),wins,losses,avgTurns:one(totalTurns/completed),minTurns:minTurns===Infinity?0:minTurns,maxTurns,
+   avgWinHpPct:wins?one(winHpPct/wins):0,avgLossEnemyHpPct:losses?one(lossEnemyHpPct/losses):0,
+   avgPlayerTotalDamage:playerDamage/completed,avgEnemyTotalDamage:enemyDamage/completed,
+   avgPlayerRoundDamage:totalTurns?playerDamage/totalTurns:0,avgEnemyRoundDamage:totalTurns?enemyDamage/totalTurns:0,
+   playerCritRate:pct(playerCrits,playerHits),playerDodgeRate:pct(playerDodges,enemyAttempts),
+   enemyCritRate:pct(enemyCrits,enemyHits),enemyDodgeRate:pct(enemyDodges,playerAttempts),
+   specs:Object.fromEntries(Object.entries(specs).map(([k,v])=>[k,one(v/completed)])),
+   marks:Object.fromEntries(Object.entries(marks).map(([k,v])=>[k,one(v/completed)])),
+   traits:Object.fromEntries(Object.entries(traits).map(([k,v])=>[k,pct(v,completed)]))
+  };
+ }
+ async function runUniverseCombatTask(){
+  const s=captureSnapshot(),row=await universeCombatRow(MODEL.universeBossIndex,MODEL.runs,s);
+  if(!row)return false;
+  MODEL.universeCombatResult={runs:MODEL.runs,row};
+  return true;
+ }
+ function runUniverseCombatBenchmark(){return withBenchmarkBusy("combat-universe",runUniverseCombatTask);}
  function entryText(entries,formatter,empty="無"){
   const rows=Object.entries(entries||{});
   return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
@@ -423,6 +481,11 @@
   return '<div class="item gmpb-combat-card"><div><b>'+r.name+' Lv.'+r.level+'</b>　<span class="muted">'+(KIND_LABELS[r.kind]||r.kind)+'｜'+r.runs.toLocaleString()+' 場</span></div>'+
    '<div class="muted" style="margin-top:5px">隨機特性後平均：HP '+fmt(r.avgEnemy.hp)+'｜ATK '+fmt(r.avgEnemy.atk)+'｜DEF '+fmt(r.avgEnemy.def)+'｜暴擊 '+r.avgEnemy.crit+'%｜閃避 '+r.avgEnemy.dodge+'%</div>'+
    '<div class="gmpb-metrics">'+metricFieldsHtml(combatPrimaryFields(r))+'</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+details+events+'</div></details></div>';
+ }
+ function universeCombatResultHtml(){
+  const result=MODEL.universeCombatResult;
+  if(!result?.row)return '<div class="muted">尚未執行宇宙紀元 Boss 實戰基準。</div>';
+  return '<div style="margin-top:10px">'+combatRowHtml(result.row)+'</div>';
  }
  function combatResultHtml(){
   const result=MODEL.combatResult;
@@ -519,7 +582,10 @@
    '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
    '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
-   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml()+'</div>'+summaryHtml()+'</div>';
+   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml()+'</div>'+
+   '<div class="item"><b>宇宙紀元 Boss 實戰基準</b><div class="muted" style="margin-top:5px">使用第二世界正式 Boss 能力公式、Boss 隨機特性與同一 runCombatCore；純沙盒，不結算任何獎勵、死亡懲罰或主線進度。</div>'+
+   '<div class="gmpb-controls"><label style="grid-column:span 4">Boss<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label><label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
+   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunUniverseCombat()">'+busyLabel("combat-universe","測宇宙 Boss")+'</button></div>'+universeCombatResultHtml()+'</div>'+summaryHtml()+'</div>';
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
@@ -539,6 +605,8 @@
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
+ window.gmPowerBenchmarkSetUniverseBoss=function(v){if(MODEL.busy)return;MODEL.universeBossIndex=whole(v,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1));MODEL.universeCombatResult=null;render();};
+ window.gmPowerBenchmarkRunUniverseCombat=runUniverseCombatBenchmark;
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
