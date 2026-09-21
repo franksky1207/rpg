@@ -255,7 +255,11 @@ function lostGearCompareHtml(it){
 function lostGearSectionHtml(){
  const lost=Array.isArray(state.lostGear)?state.lostGear:[];
  if(!lost.length)return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="muted">目前沒有遺失裝備。</div></div>`;
- const rows=lost.map((x,i)=>{const pending=!!x.redemptionPending||x.currency==="pending",universe=secondWorldActive(),price=pending?"待定":universe&&x.currency==="darkMatter"?`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 暗物質`:`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 金幣`;return `<tr><td data-label="裝備" class="lost-gear-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="lost-gear-stats-cell">${gearAbilityHtml(x.item,false)}</td><td data-label="比較" class="lost-gear-compare-cell">${lostGearCompareHtml(x.item)}</td><td data-label="贖回價格" class="lost-gear-price-cell">${price}</td><td class="lost-gear-action-cell"><div class="controls lost-gear-row-actions"><button class="btn" onclick="redeemGear(${i})" ${pending?"disabled":""}>${pending?"價格待定":"贖回"}</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`;}).join("");
+ const rows=lost.map((x,i)=>{
+  const universe=secondWorldActive(),free=universe&&Number(x.item?.world)!==2;
+  const price=free?"免費":universe&&x.currency==="darkMatter"?`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 暗物質`:`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 金幣`;
+  return `<tr><td data-label="裝備" class="lost-gear-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="lost-gear-stats-cell">${gearAbilityHtml(x.item,false)}</td><td data-label="比較" class="lost-gear-compare-cell">${lostGearCompareHtml(x.item)}</td><td data-label="贖回價格" class="lost-gear-price-cell">${price}</td><td class="lost-gear-action-cell"><div class="controls lost-gear-row-actions"><button class="btn" onclick="redeemGear(${i})">${free?"免費贖回":"贖回"}</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`;
+}).join("");
  return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="lost-gear-table-wrap"><table class="lost-gear-table"><thead><tr><th>裝備</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
 }
 function inventoryContent(){
@@ -357,12 +361,12 @@ function normalizeSaveState(target){
  target.lostGear=(Array.isArray(target.lostGear)?target.lostGear:[]).map(x=>{
   if(!x||typeof x!=="object")return null;
   const item=normalizeSaveItem(x.item);if(!item)return null;
-  const pending=x.redemptionPending===true||x.currency==="pending";
-  const rawCost=Number(x.cost),lostAt=Number(x.lostAt);
-  const currency=pending?"pending":x.currency==="darkMatter"?"darkMatter":"gold";
-  const fallback=currency==="darkMatter"&&typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):ceil(item.buy*2);
-  const cost=pending?null:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
-  return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:pending,lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
+  const rawCost=Number(x.cost),lostAt=Number(x.lostAt),world=Number(item.world)===2?2:1;
+  const legacyUniverseFree=world===1&&(x.redemptionPending===true||x.currency==="pending"||x.currency==="free");
+  const currency=legacyUniverseFree?"free":x.currency==="darkMatter"?"darkMatter":"gold";
+  const fallback=currency==="darkMatter"&&typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):currency==="free"?0:ceil(item.buy*2);
+  const cost=currency==="free"?0:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
+  return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:false,lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
  if(typeof normalizePersistentFlags==="function")normalizePersistentFlags(target);else target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
