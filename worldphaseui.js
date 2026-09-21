@@ -6,7 +6,7 @@
   confirm:"secondWorldConfirmModal"
  });
 
- function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",""":"&quot;","'":"&#39;"}[ch]));}
+ function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
  function ensureOverlay(id,className="world-phase-overlay"){
   let el=document.getElementById(id);
   if(el)return el;
