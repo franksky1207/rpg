@@ -94,14 +94,19 @@
   const rows=Array.isArray(source?.battleSamples)?source.battleSamples:[];
   source.battleSamples=rows.map(row=>{
    if(!isObject(row)||Number(row.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
-   const actualMs=Math.round(Number(row.actualMs)),cycleMs=Math.round(Number(row.cycleMs)),adjustedMs=Math.round(Number(row.adjustedMs));
-   const combatSpeed=Number(row.combatSpeed);
-   const playerLevel=Math.max(1,Math.floor(Number(row.playerLevel)||1)),enemyLevel=Math.max(1,Math.floor(Number(row.enemyLevel)||1));
+   const actualMs=Math.round(Number(row.actualMs)),cycleMs=Math.round(Number(row.cycleMs)),adjustedMs=Math.round(Number(row.adjustedMs)),combatSpeed=Number(row.combatSpeed);
+   const playerLevel=Math.max(1,Math.floor(Number(row.playerLevel)||1)),enemyLevel=Math.max(1,Math.floor(Number(row.enemyLevel)||1)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
+   if(!OFFLINE_COMBAT_SPEEDS.includes(combatSpeed)||!Number.isFinite(actualMs)||actualMs<100||actualMs>300000||!Number.isFinite(cycleMs)||cycleMs<actualMs||cycleMs>601000||!Number.isFinite(adjustedMs)||adjustedMs<100||adjustedMs>601000)return null;
+   if(Number(row.world)===2||row.targetType==="boss"){
+    const bossIndex=Math.floor(Number(row.bossIndex)),bossId=typeof row.bossId==="string"?row.bossId:"";
+    if(!Number.isInteger(bossIndex)||bossIndex<0||bossIndex>=100||!bossId)return null;
+    return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:2,targetType:"boss",bossIndex,bossId,combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind:"boss",multiplier:1,recordedAt};
+   }
    const multiplier=sampleMultiplier(playerLevel,enemyLevel);
-   if(multiplier==null||!OFFLINE_COMBAT_SPEEDS.includes(combatSpeed)||!Number.isFinite(actualMs)||actualMs<100||actualMs>300000||!Number.isFinite(cycleMs)||cycleMs<actualMs||cycleMs>601000||!Number.isFinite(adjustedMs)||adjustedMs<100||adjustedMs>601000)return null;
+   if(multiplier==null)return null;
    const kind=row.kind==="elite"?"elite":"normal";
-   const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0)),recordedAt=Math.max(0,Math.floor(Number(row.recordedAt)||0));
-   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
+   const map=Math.max(0,Math.floor(Number(row.map)||0)),enemy=Math.max(0,Math.floor(Number(row.enemy)||0));
+   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:1,targetType:"mapEnemy",combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,enemyLevel,kind,map,enemy,multiplier,recordedAt};
   }).filter(Boolean);
   const kept=[];
   OFFLINE_COMBAT_SPEEDS.forEach(speed=>{
