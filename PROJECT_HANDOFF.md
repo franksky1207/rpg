@@ -1665,11 +1665,26 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
   - GM 專精測試經濟文字會依世界顯示「怪物金幣／裝備售價」或「主線暗物質／裝備暗物質售價」。
 - Integrity 已加入 reward/equipment owner、正式 mainline owner、settlement gate=true 與 GM 世界 2 裝備管理驗證。
 
+第 6 批連續戰鬥／背景戰鬥／回頁 catch-up 已完成：
+- `secondworldmainline.js` 升級 V2，宇宙紀元 Boss 正式支援「單場」與「連續戰鬥」。
+- 玩家可主動開始／停止**連續戰鬥**；停止語意為「本場結束後停止」，已完成場次獎勵全部保留。
+- 每一場仍逐場走正式 `runSecondWorldBossCombat() → settleSecondWorldBossVictory()`；死亡逐場走 `applySecondWorldDeathPenalty()`，沒有批次數學結算，因此 EXP／暗物質／暗能量／裝備／死亡事件不會被跳過。
+- 每場開始前回滿 HP，與既有主線連戰行為一致；戰敗立即結束連戰。
+- 連續結算會彙總總 EXP／暗物質／暗能量／裝備數，若因戰敗結束也會保留已完成場次獎勵與死亡懲罰資訊。
+- 第二世界連戰接入既有 `backgroundprogress.js` 的 `main` single-active-flow owner；沒有建立第二套 background engine。
+- **背景戰鬥維持 GM only**：只有 `gmbackground.js` 的 GM 管理開關可以啟用。玩家介面沒有任何背景戰鬥開關。
+- GM background gate 未開啟時，宇宙連戰若頁面進入 background 會等待回到 foreground，不在背景繼續跑；GM 開啟後才呼叫 `backgroundProgressStart("main",{mode:"continuous"})`。
+- GM 關閉背景戰鬥時會沿用既有 `backgroundProgressStop("main")`，不需要第二世界專屬開關。
+- 回頁 catch-up 沿用 `backgroundprogress.js` credit 機制與 `mainBattleFlowSleep()`，逐場快速追趕正式 settlement；不做一次性數學補發。
+- 場間 pacing 使用既有 main 140ms owner，再經 `combatSpeedScaledDelay()` 套用 1×／1.5×／GM 2×。
+- 宇宙連戰仍不觸發銀河紀元特殊遭遇／金幣／第一世界強化石。
+- GM 同步：`gmbackground.js` 管理文字已明確標示「背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關」，銀河／宇宙共用同一 gate。
+- Integrity 已加入 `SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=1`、宇宙連戰 start/stop owner 與 GM background gate 驗證。
+
 仍要處理：
-- 宇宙紀元主線**連續戰鬥／背景戰鬥／回頁 catch-up** 尚未接入；依第 29.11 跨主題批次 A 處理，不另造第二套 engine。
-- 第二世界正式背包 sale owner／自動出售／批量出售仍在第 29.3；本批只建立 sale value helper 與主線掉裝。
+- 第 7 批：宇宙主線完整戰鬥 UI／HP 演出／1×與1.5×實戰呈現整合。
+- 第二世界正式背包 sale owner／自動出售／批量出售仍在第 29.3；目前只建立 sale value helper 與主線掉裝。
 - 第二世界主線 offline sample／離線收益仍依第 29.13 後續處理。
-- 角色頁目前 Lv.500 的 EXP「MAX」只是暫時舊顯示；接上 effective cap／第二世界 EXP 時自然修正，不另開小修。
 
 ### 與冒險一起必須防止的舊世界殘留
 - `levelcap.js / levelcapresult.js`：宇宙紀元不可把 Lv.500 EXP 轉成金幣。
@@ -1799,19 +1814,19 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 這不是主畫面獨立卡片，但第二世界主線正式可玩前要一起驗證。
 
-目前 main 現況：
+目前 main 正式狀態：
 - `backgroundprogress.js` 是單一 active flow owner，連續背景最多 12 小時，回頁用逐場快速 catch-up，不用數學一次結算。
-- `battlepipeline.js` 的主線 background lifecycle 目前仍依現有 main flow；離線 sample 在真正背景／catch-up 期間會刻意不記錄。
-- 目前主線 background 啟用還會經過既有 GM background gate；第二世界是否沿用完全相同 gate，要以使用者最新規則與現有第一世界實際行為為準，不可自行改成一般玩家常駐背景。
+- 銀河紀元與宇宙紀元主線都共用 `main` flow，不另建第二套 background engine。
+- 宇宙紀元連續 Boss 已逐場跑正式 combat／settlement；死亡、裝備、暗物質／暗能量不會被 catch-up 略過。
+- 場間 pacing 共用 main 140ms 並套用 effective combat speed。
+- **正式規則：背景戰鬥只有 GM 管理可以開啟。玩家沒有背景戰鬥設定或開關。**
+- GM gate 關閉：連續戰鬥只能在 foreground 執行，切到 background 時等待回頁。
+- GM gate 開啟：連續戰鬥接入 `backgroundProgressStart("main",{mode:"continuous"})`；回頁使用既有 credit 做逐場快速 catch-up。
+- 關閉 GM 背景戰鬥會停止既有 `main` background flow；正式連戰本身仍可在 foreground 繼續。
+- 第二世界 background 不產生第一世界金幣／強化石／特殊遭遇。
+- offline sample 仍是後續第 29.13 的獨立工作；背景／catch-up 期間仍不得誤記 offline sample。
 
-第二世界要做：
-- 第二世界連續 Boss 主線接上同一個 `backgroundprogress.js`，不要另建第二套 background engine。
-- 回頁 catch-up 必須逐場跑正式戰鬥／正式 settlement，不能跳過死亡、裝備、暗物質／暗能量等事件。
-- 1×／1.5×／GM 2×的 combat pacing 與 background catch-up 要保持一致。
-- 背景中斷／停止／切頁／reload 不得重複結算。
-- 第二世界 background 戰鬥不得產生第一世界金幣／強化石／特殊遭遇。
-
-**插入時機：第 1 順位「冒險」主線 battle pipeline 可跑後、正式宣告冒險完成前。**
+**此跨主題批次已完成主線 background/catch-up 接入；後續只需隨第 7 批戰鬥 UI 與第 29.13 offline sample 做相容性驗收。**
 
 ## 29.12 跨主題批次 B：死亡／遺失裝備／贖回
 
