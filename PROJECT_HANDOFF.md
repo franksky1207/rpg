@@ -28,7 +28,7 @@
 
 正式存檔版本：
 - `SAVE_VERSION = 13`
-- `SAVE_SCHEMA_VERSION = 13`
+- `SAVE_SCHEMA_VERSION = 14`
 - `SAVE_LOAD_PIPELINE_VERSION = 2`
 
 最高等級：
@@ -584,7 +584,7 @@ VIP points = 20 * wins^2
 - 災厄 10
 - 鏡像 6
 
-Save Schema 仍是 13；正式 state：
+Save Schema 目前為 14；稱號正式 state：
 
 ```js
 titles: {
@@ -1589,6 +1589,11 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 > 每完成一個主題，就從本清單刪除／標記完成，避免跨對話重複討論。  
 > GitHub `main` 永遠是唯一真實來源，本清單只是後續工作索引。
 
+### 建議整體執行節奏（10 主題＋跨主題批次）
+`冒險 → 背景戰鬥整合 → 角色 → 背包 → 死亡／贖回 → 離線收益 → 強化 → 專精 → 文明災厄 → 副本（先驗 daily）→ 戰線紀錄 → 設定 → 遊戲說明 → Cloud Save／跨裝置 → GM／Integrity final sweep`
+
+銀河紀元封存／回顧屬跨頁規則，不排成單一最後批次；在冒險、災厄、副本、戰線紀錄各自做到相關入口時同步接入，最後再總驗收。
+
 ## 29.1 第 1 順位：冒險
 
 這是下一個正式開發主題，也是宇宙紀元 Lv.501～1000 的核心資料來源。
@@ -1731,17 +1736,123 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 不要在功能尚未完成時先把設計稿寫成「已實作規則」。
 - 使用者已明確表示遊戲說明之後會另行處理，因此前面各批不需為說明文字阻塞。
 
-## 29.11 跨主題延後項目：第二世界離線收益
+## 29.11 跨主題批次 A：背景戰鬥／回頁 catch-up
 
-離線不是主畫面獨立卡片，但必須在第二世界主線／出售 owner 穩定後正式接上，不能遺漏：
-- 沿用第一世界 offline 架構與 speed-aware sample 概念。
-- 第二世界 Boss 可建立正式 offline sample。
-- 經濟軸改為暗物質，不得發金幣／第一世界強化石。
-- 世界 2 離線裝備出售走統一 sale owner；神話裝若正式規則允許，暗能量由同一 settlement 處理。
+這不是主畫面獨立卡片，但第二世界主線正式可玩前要一起驗證。
+
+目前 main 現況：
+- `backgroundprogress.js` 是單一 active flow owner，連續背景最多 12 小時，回頁用逐場快速 catch-up，不用數學一次結算。
+- `battlepipeline.js` 的主線 background lifecycle 目前仍依現有 main flow；離線 sample 在真正背景／catch-up 期間會刻意不記錄。
+- 目前主線 background 啟用還會經過既有 GM background gate；第二世界是否沿用完全相同 gate，要以使用者最新規則與現有第一世界實際行為為準，不可自行改成一般玩家常駐背景。
+
+第二世界要做：
+- 第二世界連續 Boss 主線接上同一個 `backgroundprogress.js`，不要另建第二套 background engine。
+- 回頁 catch-up 必須逐場跑正式戰鬥／正式 settlement，不能跳過死亡、裝備、暗物質／暗能量等事件。
+- 1×／1.5×／GM 2×的 combat pacing 與 background catch-up 要保持一致。
+- 背景中斷／停止／切頁／reload 不得重複結算。
+- 第二世界 background 戰鬥不得產生第一世界金幣／強化石／特殊遭遇。
+
+**插入時機：第 1 順位「冒險」主線 battle pipeline 可跑後、正式宣告冒險完成前。**
+
+## 29.12 跨主題批次 B：死亡／遺失裝備／贖回
+
+目前宇宙紀元只先 gate 掉舊金幣贖回；正式第二世界死亡規則尚未完成。
+
+要處理：
+- 第二世界死亡 EXP 懲罰：依當前第二世界 `expNeed` 的 10%。
+- 30% 穿戴裝備遺失、VIP20 保護等既有正式規則是否完整延續，要由正式 owner 接世界 2，不要複製一套。
+- `lostGear` 要能區分 world 1／2 裝備。
+- 世界 2 裝備贖回使用暗物質，成本以正式世界 2 sale owner 推回。
+- **world=1 裝備在宇宙紀元死亡遺失時的贖回成本仍未定；實作前必須問使用者，禁止自行用 0 或沿用金幣 buy×2。**
+- 銀河紀元回顧戰零損失，不得寫入正式 `lostGear`。
+
+**插入時機：第 3 順位「背包」統一 sale owner 完成後，第二世界主線正式長時間刷怪前。**
+
+## 29.13 跨主題批次 C：第二世界離線收益
+
+目前 main 已在宇宙紀元先 gate 掉第一世界離線結算，因此不會誤發金幣／強化石；但正式世界 2 offline 尚未開放。
+
+目前需注意：
+- `offlineprogress.js` 仍硬編第一世界 `goldReward`、金幣出售、基礎強化石、第一世界地圖／敵人 farm target 與「Boss 不作離線樣本」說明。
+- 第二世界設計已確定：Boss 主線可以成為正式離線 sample。
+- 現有 speed-aware sample：1×／1.5×／2×各 8 筆，跨速換算保留固定 140ms outer gap。
+
+正式實作：
+- 沿用現有 offline owner、12h 上限、1m 下限、speed-aware sample，不另做第二套離線系統。
+- 世界 2 Boss sample 必須有不依賴第一世界 `map/enemy` index 的身份資料。
+- EXP／暗物質／裝備依第二世界正式比例結算；禁止金幣／第一世界強化石。
+- 世界 2 裝備離線出售走統一 sale owner；神話若依正式規則出售，暗能量由同一 settlement 處理。
+- 離線結果 UI 要改為第二世界資源與 Boss 身份，不再寫「普通／菁英」「金幣」「基礎強化石」。
 - 世界突破時舊 sample／farm target／pending settlement／checkpoint 的切斷 **已完成**，不要重做。
-- 目前宇宙紀元第一世界 offline settlement 已先被 gate；正式世界 2 offline 尚未開放。
+- 離線 settlement 失敗要保留現有 rollback / retry 安全語意。
 
-## 29.12 每一主題完成時的共通驗收
+**插入時機：第 1 順位「冒險」+ 第 3 順位「背包 sale owner」都穩定後。**
+
+## 29.14 跨主題批次 D：每日重置／跨世界每日使用量
+
+`dailycore.js` 目前是共用 daily owner：
+- bounty 20／日
+- arena 20／日
+- voidMirage daily
+- UTC+8 日期鍵
+
+第二世界規則已定「進宇宙紀元時保留當日已使用次數」，因此後續副本實作時：
+- 不要因世界 2 另建一份 daily reset。
+- 懸賞／競技世界 1→2 要沿用同一天的 `used`。
+- 鏡像／虛空既有 daily／history 保留。
+- 需要驗證 00:00（UTC+8）跨日重置、雲端下載後 daily normalization、以及世界突破當天不重置。
+- GM 每日時鐘／重置測試若支援世界 2，要仍走同一 `dailycore.js`。
+
+**插入時機：第 7 順位「副本」開始前先做資料語意確認，副本完成時一起驗收。**
+
+## 29.15 跨主題批次 E：銀河紀元封存／回顧整合
+
+世界突破後，銀河紀元不是第二套正式成長世界，而是回顧用途。這件事會跨「冒險／災厄／副本／戰線紀錄」。
+
+要統一確認：
+- 銀河紀元回顧：EXP 0、金幣 0、強化石 0、裝備掉落 0、VIP 0、印記／稱號／養成進度 0。
+- 回顧死亡：不扣第二世界 EXP、不遺失裝備。
+- 回顧不建立 offline sample、不改 offline farm target。
+- 回顧不觸發特殊遭遇／黑市。
+- 第一世界災厄回顧使用 runtime HP；離開／停止／reload 後重置，不碰正式 `state.calamities.entries[].currentHp`。
+- 戰線紀錄純回顧，不重發獎勵。
+- 第一世界副本最終採「封存可進」或「鎖入口」若仍有未決處，實作前再由使用者確認；不可自行決定。
+
+**插入時機：冒險、文明災厄、副本各自做到回顧入口時分段接入；最後做一次跨頁總驗收。**
+
+## 29.16 跨主題批次 F：Cloud Save／migration／跨裝置救援
+
+目前 `cloudsave.js` 會整包上下載正式 state，這方向可沿用；但第二世界資料量與新欄位增加後仍需專門驗證。
+
+要處理／驗收：
+- Cloud save 必須完整保存 `secondWorld`、world 2 裝備、+21～40、文明等級來源資料、第二世界副本進度等正式 state。
+- 下載舊 schema 存檔後，仍只能由 migration 補預設值，**不得把符合條件的舊檔自動判成 `secondWorld.entered=true`**。
+- 雲端下載後 offline clock reset／pending settlement 清理要與第二世界 offline 相容。
+- Save Write Guard V1 必須保留：load 未成功 resolve 前禁止覆蓋既有本機 save。
+- 本機／雲端比較 UI 目前只顯示時間、Lv、EXP；是否要額外顯示「銀河紀元／宇宙紀元」可在最後 UX 收尾時決定，不是阻塞項。
+- 至少做一次「宇宙紀元存檔上傳 → 另一裝置／乾淨環境下載 → reload」實機救援測試。
+
+**插入時機：第二世界 state 結構穩定後；最晚在整體宇宙紀元正式完成前。**
+
+## 29.17 跨主題批次 G：GM／戰力基準／Integrity 最終擴充
+
+第二世界新增公式後，不能只讓玩家頁能跑，GM 與 integrity 也要知道世界 2。
+
+目前觀察：
+- `gmpowerbenchmark.js` 主要仍以第一世界 `WORLD_REGIONS/MAPS` 為測試來源。
+- `finalintegrity.js` 已檢查現有 offline/background/combat speed 等第一世界 owner，但還沒有第二世界主線／經濟／文明等級完整 integrity。
+
+後續：
+- GM 測試要能明確選世界 2 Boss／裝備／資源，不破壞銀河紀元測試。
+- GM 不得因世界 2 測試寫壞正式 save；測試 state 與正式 state 繼續分離。
+- 戰力基準加入第二世界代表 Boss／文明 final damage／+21～40／world 2 裝備。
+- integrity 加入：effective cap、world2 boss registry、sale owner、world2 offline、文明等級 owner、跨世界零收益 gate。
+- 最後 `finalintegrity.js` 彙總第二世界 integrity。
+- 每一批 JS/CSS 仍要 cache-bust、重新 fetch、parse、功能 probe；這個批次是總驗收，不取代各批自己的自我檢查。
+
+**插入時機：各主題開發時同步補必要 GM/integrity；全部主題後再做一次 final sweep。**
+
+## 29.18 每一主題完成時的共通驗收
 
 1. 重新讀 `main` 找正式 owner，不靠本 handoff 猜程式。
 2. 宇宙紀元正式流程不得新增／扣除第一世界 `state.gold`。
@@ -1751,7 +1862,7 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 6. JS/CSS 修改後更新 `index.html` cache-bust，重新 fetch、parse／integrity／功能 probe。
 7. 完成後更新本第 29 節，清掉已完成項目，讓下一個對話只看到真正剩下的工作。
 
-## 29.13 仍建議持續實機觀察（不阻塞宇宙紀元開發）
+## 29.19 仍建議持續實機觀察（不阻塞宇宙紀元開發）
 
 - iPhone Safari 跑戰力基準 1000 場時的 UI 流暢度、發熱與執行時間。
 - 高階鏡像稱號在手機上的 FPS、發熱與裁切。
