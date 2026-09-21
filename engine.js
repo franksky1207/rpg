@@ -137,7 +137,11 @@ function claimLostGearMutation(){if(lostGearMutationBusy)return false;lostGearMu
 function redeemLostGear(i){
  let lost=state.lostGear[i];if(!lost)return {ok:false,reason:"找不到這件遺失裝備。"};
  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()){
-  if(lost.redemptionPending||lost.currency==="pending"||Number(lost.item?.world)!==2)return {ok:false,reason:"這件銀河紀元裝備的宇宙贖回價格尚未定案，暫時無法贖回。"};
+  const world=Number(lost.item?.world)===2?2:1;
+  if(world===1){
+   if(!claimLostGearMutation())return {ok:true,ignored:true};
+   state.inventory.push(lost.item);state.lostGear.splice(i,1);save(false);return {ok:true,item:lost.item,cost:0,currency:"free"};
+  }
   const cost=Math.max(0,Math.floor(Number(lost.cost)||0));
   if((Number(state.secondWorld?.darkMatter)||0)<cost)return {ok:false,reason:"暗物質不足。"};
   if(!claimLostGearMutation())return {ok:true,ignored:true};
