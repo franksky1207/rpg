@@ -40,8 +40,23 @@
   if(!Number.isFinite(current)||current<=0||current>t||persisted<current)return Math.floor(persisted);
   return Math.floor(current);
  }
- window.OFFLINE_CHECKPOINT_RECOVERY_VERSION=1;
+ function prepareOfflineCheckpointForWorldTransition(){
+  if(!isObject(state.offline))state.offline={};
+  const t=now();
+  state.offline.checkpointId=makeCheckpointId();
+  state.offline.lastSettledAt=t;
+  state.offline.maxObservedWallClock=t;
+  return {checkpointId:state.offline.checkpointId,lastSettledAt:t};
+ }
+ function finalizeOfflineCheckpointForWorldTransition(){
+  try{localStorage.removeItem(CHECKPOINT_KEY);}catch(e){}
+  writeCheckpoint(now());
+  return true;
+ }
+ window.OFFLINE_CHECKPOINT_RECOVERY_VERSION=2;
  window.recoverOfflineCheckpointTime=recoverOfflineCheckpointTime;
+ window.prepareOfflineCheckpointForWorldTransition=prepareOfflineCheckpointForWorldTransition;
+ window.finalizeOfflineCheckpointForWorldTransition=finalizeOfflineCheckpointForWorldTransition;
  if(!state)return;
  if(!isObject(state.offline))state.offline={};
  ensureCheckpointId();
