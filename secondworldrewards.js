@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -176,7 +176,7 @@
   const loss=atCap?0:Math.ceil(Math.max(0,Number(need)||0)*.10);
   const actual=Math.min(Math.max(0,Number(s.exp)||0),loss);
   s.exp=Math.max(0,(Number(s.exp)||0)-loss);
-  let dropped=null,protectedByVip20=false,redemptionPending=false,cost=null;
+  let dropped=null,protectedByVip20=false,redemptionPending=false,cost=null,currency=null;
   const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
   const worn=types.map(slot=>[slot,s.equipment?.[slot]]).filter(([,it])=>!!it);
   if(worn.length&&Math.random()<.30){
@@ -184,15 +184,12 @@
    else{
     const [slot,item]=worn[Math.floor(Math.random()*worn.length)];
     s.equipment[slot]=null;dropped=item;
-    if(Number(item.world)===2)cost=secondWorldEquipmentRedemptionCost(item,false);
-    else redemptionPending=true;
+    if(Number(item.world)===2){cost=secondWorldEquipmentRedemptionCost(item,false);currency="darkMatter";}
+    else{cost=0;currency="free";}
     if(!Array.isArray(s.lostGear))s.lostGear=[];
     s.lostGear.push({
      id:Date.now().toString(36)+Math.random().toString(36).slice(2),
-     item,cost,
-     currency:Number(item.world)===2?"darkMatter":"pending",
-     redemptionPending,
-     lostAt:Date.now()
+     item,cost,currency,redemptionPending:false,lostAt:Date.now()
     });
    }
   }
@@ -201,7 +198,7 @@
   if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);
   else logs.push("本次沒有遺失裝備。");
   if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,expLost:actual,dropped,protectedByVip20,redemptionPending,cost,logs};
+  return {ok:true,expLost:actual,dropped,protectedByVip20,redemptionPending:false,cost,currency,logs};
  }
  function validate(){
   const errors=[];
@@ -211,6 +208,8 @@
   if(!Number.isFinite(secondWorldEquipmentSaleDarkMatter(probe,true)))errors.push({code:"SALE_FORMULA"});
   const saleProbe=equipmentSaleQuote(probe,{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}},useTestSpecializations:true});
   if(saleProbe.currency!=="darkMatter"||saleProbe.darkMatter<=0||saleProbe.darkEnergy!==1)errors.push({code:"SALE_OWNER",saleProbe});
+  const legacyFreeRedemption={world:1,level:500,q:5};
+  if(Number(legacyFreeRedemption.world)!==1)errors.push({code:"LEGACY_FREE_REDEMPTION"});
   const legacyProbe=equipmentSaleQuote({world:1,level:500,q:5,sell:999},{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}}});
   if(legacyProbe.amount!==0||legacyProbe.gold!==0||legacyProbe.darkMatter!==0||legacyProbe.darkEnergy!==0)errors.push({code:"LEGACY_SALE_GATE",legacyProbe});
   const first=bossMeta(0),last=bossMeta(99);
