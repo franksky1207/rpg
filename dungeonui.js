@@ -36,7 +36,8 @@
   document.head.appendChild(style);
  }
 
- function dungeonExpText(){return state.level>=MAX_LEVEL?"MAX":`${Math.floor(Number(state.exp)||0).toLocaleString()} / ${expNeed(state.level).toLocaleString()}`;}
+ function universePhase(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();}
+ function dungeonExpText(){if(universePhase())return "新階段尚未開放";return state.level>=MAX_LEVEL?"MAX":`${Math.floor(Number(state.exp)||0).toLocaleString()} / ${expNeed(state.level).toLocaleString()}`;}
  function dailyStatus(mode){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus(mode):{used:0,remaining:0,limit:20};}
  function voidStatus(){
   const progress=typeof ensureVoidMirageState==="function"?ensureVoidMirageState():state?.dungeon?.voidMirage||{highestCleared:0};
@@ -59,7 +60,8 @@
  function finishDungeonRender(){const main=document.getElementById("main");normalizeDungeonReturnLabels(main);ensurePrepReturn(main);runPostRenderHooks();}
 
  window.dungeonStatusHtml=function(id="dungeon-status"){
-  return `<div id="${id}" class="dungeon-status-card"><div><span class="muted">等級</span><strong>Lv.${state.level}</strong></div><div><span class="muted">EXP</span><strong>${dungeonExpText()}</strong></div><div><span class="muted">金幣</span><strong>${Math.floor(Number(state.gold)||0).toLocaleString()}</strong></div><div><span class="muted">VIP 狀態</span><strong>${typeof vipStatusText==="function"?vipStatusText():`VIP${state.vipLevel||0}`}</strong></div></div>`;
+  const resource=universePhase()?{label:"暗物質",amount:Math.max(0,Math.floor(Number(state?.secondWorld?.darkMatter)||0))}:{label:"金幣",amount:Math.max(0,Math.floor(Number(state.gold)||0))};
+  return `<div id="${id}" class="dungeon-status-card"><div><span class="muted">等級</span><strong>Lv.${state.level}</strong></div><div><span class="muted">EXP</span><strong>${dungeonExpText()}</strong></div><div><span class="muted">${resource.label}</span><strong>${resource.amount.toLocaleString()}</strong></div><div><span class="muted">VIP 狀態</span><strong>${typeof vipStatusText==="function"?vipStatusText():`VIP${state.vipLevel||0}`}</strong></div></div>`;
  };
 
  function dungeonHomeHtml(){
@@ -68,13 +70,13 @@
    const unlocked=lv>=need,implemented=!!DUNGEON_IMPLEMENTED[key];
    let canEnter=false,statusText="",buttonLabel="尚未解鎖",currentFloorHtml="";
    if(key==="bounty"){
-    canEnter=unlocked&&implemented&&bounty.remaining>0;
-    statusText=`今日懸賞：${bounty.used} / ${bounty.limit}　・　剩餘 ${bounty.remaining} 次`;
-    if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&bounty.remaining<=0)buttonLabel="今日懸賞次數已用完";else if(canEnter)buttonLabel=`進入${title}`;
+    if(universePhase()){canEnter=false;statusText="宇宙紀元懸賞戰尚未開放";buttonLabel="尚未開放";}
+    else canEnter=unlocked&&implemented&&bounty.remaining>0;
+    if(!universePhase()){statusText=`今日懸賞：${bounty.used} / ${bounty.limit}　・　剩餘 ${bounty.remaining} 次`;if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&bounty.remaining<=0)buttonLabel="今日懸賞次數已用完";else if(canEnter)buttonLabel=`進入${title}`;}
    }else if(key==="arena"){
-    canEnter=unlocked&&implemented&&arena.remaining>0;
-    statusText=`今日競技場：${arena.used} / ${arena.limit}　・　剩餘 ${arena.remaining} 輪`;
-    if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&arena.remaining<=0)buttonLabel="今日競技場次數已用完";else if(canEnter)buttonLabel=`進入${title}`;
+    if(universePhase()){canEnter=false;statusText="宇宙紀元競技場尚未開放";buttonLabel="尚未開放";}
+    else canEnter=unlocked&&implemented&&arena.remaining>0;
+    if(!universePhase()){statusText=`今日競技場：${arena.used} / ${arena.limit}　・　剩餘 ${arena.remaining} 輪`;if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&arena.remaining<=0)buttonLabel="今日競技場次數已用完";else if(canEnter)buttonLabel=`進入${title}`;}
    }else{
     canEnter=unlocked&&implemented;
     currentFloorHtml=unlocked?`<div class="dungeon-current-floor">歷史最高：第 ${voidInfo.highest.toLocaleString()} 層<br>挑戰起點：第 ${voidInfo.start.toLocaleString()} 層</div>`:"";
@@ -83,10 +85,10 @@
    }
    return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
   };
-  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰","高 EXP・高金幣・多裝備","隨機挑戰一名依你目前實力生成的強敵，裝備最低為稀有品質。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
+  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰",universePhase()?"宇宙紀元版本尚未開放":"高 EXP・高金幣・多裝備",universePhase()?"新的宇宙紀元懸賞規則將於後續開放。":"隨機挑戰一名依你目前實力生成的強敵，裝備最低為稀有品質。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
  }
 
- window.openDungeonMode=function(mode){if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
+ window.openDungeonMode=function(mode){if(universePhase()&&(mode==="bounty"||mode==="arena"))return alert("宇宙紀元的此副本尚未開放。");if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
  function ensureHomeDungeonCard(main){const menu=main?.querySelector(".menu-grid");if(!menu)return;const existing=Array.from(menu.querySelectorAll(".menu-card")).find(el=>(el.getAttribute("onclick")||"").includes("go('dungeon')"));if(existing){existing.dataset.dungeonHomeCard="1";return;}const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰副本取得各類獎勵</span></button>`;const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);}
 
  const basePlayerStatusHtml=playerStatusHtml;
