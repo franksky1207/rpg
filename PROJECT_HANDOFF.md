@@ -1645,13 +1645,30 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
   - 銀河紀元仍維持「區域 → 地圖 → 怪物」，兩個世界的 GM 測試依各自主線結構呈現。
   - 「戰力基準測試」升級 V11；宇宙紀元同樣使用「區域 → 怪物 → 100／1000 場」，摘要仍走同一 `runCombatCore()`。
   - 宇宙 GM 快速測試／戰力基準皆為沙盒，不修改 save／正式進度。
-- Integrity 已加入第二世界 combat owner、settlement gate、GM 快速測試、GM 戰力基準 V10 驗證。
+- Integrity 已加入第二世界 combat owner、settlement gate、GM 快速測試、GM 戰力基準 V11 驗證。
+
+第 5 批主線獎勵／裝備／正式 settlement 已完成：
+- 新增 `secondworldrewards.js` 作為宇宙紀元主線 reward/equipment owner。
+- 第二世界 Boss EXP 正式公式：`sameExp(BossLevel) × expLevelFactor(BossLevel, playerLevel)`，**不套第一世界 Boss ×5**；再套實戰訓練專精。
+- 暗物質：`20 + 2×BossIndex`，再套搜刮技巧；第 1 Boss 基礎 20、第 100 Boss 基礎 218。
+- 每次主線 Boss 勝利固定 +1 暗能量。
+- 每次勝利固定產生 1 件世界 2 裝備；品質 45/35/15/4.5/0.5（優良→神話），普通 0%；裝備等級 `min(currentPlayerLevel, BossLevel)`。
+- 世界 2 裝備正式沿用既有主屬性／詞綴線性公式到 Lv.1000，名稱直接讀 100 Boss × 5 專屬命名 registry，`item.world=2`。
+- 主線勝利 settlement 會原子寫入 EXP、暗物質、暗能量、裝備與 `secondWorld.mainline.bossKilled[]`；save 失敗會 rollback。
+- `SECOND_WORLD_COMBAT_SETTLEMENT_READY=true`，玩家冒險 Boss 卡已開放正式**單場**「挑戰 Boss／再次挑戰」。
+- 正式宇宙主線 settlement 不呼叫第一世界 `goldReward()`、不給金幣／基礎石／進階石，也不觸發第一世界特殊遭遇／黑市。
+- 第二世界死亡基礎流程已接：EXP 扣目前 `expNeed` 10%、30% 穿戴裝備遺失、VIP20 保護；世界 2 裝備贖回成本依正式世界 2 暗物質售價 ×10，使用暗物質贖回。
+- **銀河紀元裝備在宇宙紀元死亡遺失的贖回成本仍未定案**：不自行造價；該裝備會安全存入 `lostGear` 並標記 `redemptionPending`，UI 顯示「價格待定」且禁止贖回，等使用者正式決定後再接。
+- GM 同步完成：
+  - 宇宙 Boss 快速測試會顯示本次測試專精下的正式單場 EXP／暗物質／暗能量／裝備等級預覽，但仍為沙盒零 settlement。
+  - GM 一般管理在宇宙紀元新增「區域 → Boss → 品質 → 部位」世界 2 裝備產生器，直接走正式裝備 owner。
+  - GM 專精測試經濟文字會依世界顯示「怪物金幣／裝備售價」或「主線暗物質／裝備暗物質售價」。
+- Integrity 已加入 reward/equipment owner、正式 mainline owner、settlement gate=true 與 GM 世界 2 裝備管理驗證。
 
 仍要處理：
-- 主線獎勵／正式 settlement：EXP、暗物質、暗能量、固定 1 件世界 2 裝備，完成後才開玩家正式挑戰。
-- 世界 2 裝備等級／品質／屬性延伸。
-- 第二世界主線不得觸發第一世界特殊遭遇／黑市。
-- 正式戰鬥死亡流程所需的第二世界基礎 gate，要在主線可玩前確認。
+- 宇宙紀元主線**連續戰鬥／背景戰鬥／回頁 catch-up** 尚未接入；依第 29.11 跨主題批次 A 處理，不另造第二套 engine。
+- 第二世界正式背包 sale owner／自動出售／批量出售仍在第 29.3；本批只建立 sale value helper 與主線掉裝。
+- 第二世界主線 offline sample／離線收益仍依第 29.13 後續處理。
 - 角色頁目前 Lv.500 的 EXP「MAX」只是暫時舊顯示；接上 effective cap／第二世界 EXP 時自然修正，不另開小修。
 
 ### 與冒險一起必須防止的舊世界殘留
