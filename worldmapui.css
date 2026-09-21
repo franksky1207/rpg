@@ -30,4 +30,4 @@
 .universe-boss-stats{margin-top:8px;color:#b8c5d4;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
 @media(max-width:760px){.universe-boss-stats{font-size:11px;line-height:1.35}}
 
-.universe-boss-action{width:100%;margin-top:10px;min-height:38px}
+.universe-boss-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.universe-boss-action{width:100%;min-height:38px}.universe-boss-card>.universe-boss-action{margin-top:10px}@media(max-width:760px){.universe-boss-actions{grid-template-columns:1fr;gap:6px}}
