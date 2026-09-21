@@ -1,5 +1,5 @@
 (function(){
- const VERSION=13;
+ const VERSION=14;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -7,7 +7,7 @@
   world:1,phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
-  universeRegionIndex:0,universeBossIndex:0,universeCombatResult:null,
+  universeRegionIndex:0,universeBossIndex:0,
   busy:false,busyKind:""
  };
 
@@ -205,7 +205,7 @@
   return e?{...e,world:1,mapIndex:MODEL.mapIndex,enemyIndex:MODEL.enemyIndex}:null;
  }
  function clearSelectionResults(){
-  MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;MODEL.universeCombatResult=null;
+  MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;
  }
  function phaseOptions(){
   return allPhases().map(p=>option(p,phaseLabel(p),p===MODEL.phase)).join("");
@@ -433,7 +433,6 @@
    if(!row)return false;
    const region=universeRegionMeta(MODEL.universeRegionIndex);
    MODEL.combatResult={world:2,mode:"single",bossIndex:MODEL.universeBossIndex,mapName:region?String(region.name||"宇宙紀元"):"宇宙紀元",runs,rows:[row]};
-   MODEL.universeCombatResult=null;
    return true;
   }
   const m=mapAt(MODEL.mapIndex);
@@ -524,13 +523,6 @@
    traits:Object.fromEntries(Object.entries(traits).map(([k,v])=>[k,pct(v,completed)]))
   };
  }
- async function runUniverseCombatTask(){
-  const s=captureSnapshot(),row=await universeCombatRow(MODEL.universeBossIndex,MODEL.runs,s);
-  if(!row)return false;
-  MODEL.universeCombatResult={runs:MODEL.runs,row};
-  return true;
- }
- function runUniverseCombatBenchmark(){return withBenchmarkBusy("combat-universe",runUniverseCombatTask);}
  function entryText(entries,formatter,empty="無"){
   const rows=Object.entries(entries||{});
   return rows.length?rows.map(([k,v])=>formatter(k,v)).join("｜"):empty;
@@ -568,11 +560,6 @@
    '<div class="muted" style="margin-top:5px">隨機特性後平均：HP '+fmt(r.avgEnemy.hp)+'｜ATK '+fmt(r.avgEnemy.atk)+'｜DEF '+fmt(r.avgEnemy.def)+'｜暴擊 '+r.avgEnemy.crit+'%｜閃避 '+r.avgEnemy.dodge+'%</div>'+
    '<div class="gmpb-metrics">'+metricFieldsHtml(combatPrimaryFields(r))+'</div><details style="margin-top:8px"><summary>詳細統計</summary><div style="margin-top:8px;line-height:1.65">'+details+events+'</div></details></div>';
  }
- function universeCombatResultHtml(){
-  const result=MODEL.universeCombatResult;
-  if(!result?.row)return '<div class="muted">尚未執行宇宙紀元 Boss 實戰基準。</div>';
-  return '<div style="margin-top:10px">'+combatRowHtml(result.row)+'</div>';
- }
  function combatResultHtml(){
   const result=MODEL.combatResult;
   if(!result)return '<div class="muted">尚未執行主線實戰基準。</div>';
@@ -582,15 +569,17 @@
  }
 
  function summaryText(){
-  const s=snapshot(),st=s.stats,m=mapAt(MODEL.mapIndex),lines=[];
+  const s=snapshot(),st=s.stats,enemy=benchmarkSelectedEnemy(),cmb=MODEL.combatResult,lines=[];
   lines.push("《文明戰線・戰力基準測試》");
+  lines.push("紀元："+benchmarkWorldLabel());
   lines.push("角色：Lv."+s.level+"｜VIP"+s.vipLevel+"（"+fmt(s.vipPoints)+" 積分）");
   lines.push("能力：HP "+fmt(st.hp)+"｜ATK "+fmt(st.atk)+"｜DEF "+fmt(st.def)+"｜暴擊 "+st.crit+"%｜閃避 "+st.dodge+"%");
   lines.push("強化："+enhancementText(s));
   lines.push("專精："+specText(s));
   lines.push("印記："+markText(s));
   lines.push("裝備："+equipmentText(s));
-  lines.push("基準："+(m?("Lv"+m.min+"～"+m.max+"｜"+m.name):"未選擇地圖")+"｜測試量 "+MODEL.runs);
+  if(enemy)lines.push("基準怪物：Lv."+enemy.level+" "+enemy.name+"（"+(KIND_LABELS[enemy.kind]||enemy.kind)+"）｜測試量 "+MODEL.runs);
+  else lines.push("基準怪物：未選擇｜測試量 "+MODEL.runs);
 
   if(MODEL.outputResult){
    const r=MODEL.outputResult;
@@ -606,10 +595,11 @@
    lines.push(...summaryFieldLines(defenseFields(r),3));
   }
 
-  if(MODEL.combatResult){
+  if(cmb){
    lines.push("");
-   lines.push("【主線實戰】"+MODEL.combatResult.mapName+"｜"+(MODEL.combatResult.mode==="map"?"地圖 5 隻全部":"單隻怪")+"｜每隻 "+MODEL.combatResult.runs+" 場");
-   MODEL.combatResult.rows.forEach((r,index)=>{
+   const scope=Number(cmb.world)===2?"單隻 Boss":cmb.mode==="map"?"地圖 5 隻全部":"單隻怪";
+   lines.push("【主線實戰】"+benchmarkWorldLabel()+"｜"+cmb.mapName+"｜"+scope+"｜每隻 "+cmb.runs+" 場");
+   cmb.rows.forEach((r,index)=>{
     if(index>0)lines.push("");
     lines.push("Lv."+r.level+" "+r.name+"（"+(KIND_LABELS[r.kind]||r.kind)+"）");
     lines.push("隨機特性後平均：HP "+fmt(r.avgEnemy.hp)+"｜ATK "+fmt(r.avgEnemy.atk)+"｜DEF "+fmt(r.avgEnemy.def)+"｜暴擊 "+r.avgEnemy.crit+"%｜閃避 "+r.avgEnemy.dodge+"%");
@@ -620,23 +610,13 @@
    });
   }
 
-  if(MODEL.universeCombatResult?.row){
-   const r=MODEL.universeCombatResult.row;
-   lines.push("");
-   lines.push("【宇宙紀元 Boss 實戰】Lv."+r.level+" "+r.name+"｜"+r.runs+" 場");
-   lines.push("隨機特性後平均：HP "+fmt(r.avgEnemy.hp)+"｜ATK "+fmt(r.avgEnemy.atk)+"｜DEF "+fmt(r.avgEnemy.def)+"｜暴擊 "+r.avgEnemy.crit+"%｜閃避 "+r.avgEnemy.dodge+"%");
-   lines.push("勝敗場數 "+r.wins+" 勝 / "+r.losses+" 敗");
-   lines.push(...summaryFieldLines(combatPrimaryFields(r),3));
-   lines.push(...summaryFieldLines(combatDetailFields(r),3));
-   combatEventGroups(r).forEach(([title,entries,formatter])=>lines.push(title+"："+entryText(entries,formatter)));
-  }
-
-  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult&&!MODEL.universeCombatResult){
+  if(!MODEL.outputResult&&!MODEL.defenseResult&&!MODEL.combatResult){
    lines.push("");
    lines.push("尚未執行輸出、承傷或主線實戰測試。");
   }
   return lines.join("\n");
  }
+
  async function copySummary(){
   const text=summaryText();let ok=false;
   try{if(typeof navigator!=="undefined"&&navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
@@ -647,14 +627,15 @@
   return ok;
  }
  function summaryHtml(){
-  const s=snapshot(),o=MODEL.outputResult,d=MODEL.defenseResult,cmb=MODEL.combatResult,universe=MODEL.universeCombatResult?.row||null;
+  const s=snapshot(),o=MODEL.outputResult,d=MODEL.defenseResult,cmb=MODEL.combatResult,enemy=benchmarkSelectedEnemy();
   const combatRows=cmb&&Array.isArray(cmb.rows)?cmb.rows:[];
   const avgWin=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.winRate,0),0)/combatRows.length):null;
-  const avgTurns=combatRows.length?one(combatRows.reduce((a,r)=>a+num(r.avgTurns,0),0)/combatRows.length):null;
+  const targetText=enemy?("Lv."+enemy.level+" "+enemy.name):"未選擇";
+  const winLabel=benchmarkWorld()===2?"Boss 實戰勝率":"主線實戰平均勝率";
   return '<div class="item"><div class="gmpb-title"><b>測試摘要</b><span class="muted">方便直接貼給 ChatGPT 做下一階段平衡</span></div>'+
-   '<div class="gmpb-summary-main">'+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("基準地圖",mapAt(MODEL.mapIndex)?mapAt(MODEL.mapIndex).name:"未選擇")+
-   metric("平均回合輸出",o?fmt(o.avgRoundDamage):"尚未測試")+metric("平均回合承傷",d?fmt(d.avgTurnLoss):"尚未測試")+
-   metric("銀河實戰平均勝率",avgWin==null?"尚未測試":avgWin+"%")+metric("宇宙 Boss 勝率",universe?universe.winRate+"%":"尚未測試")+'</div>'+
+   '<div class="gmpb-summary-main">'+metric("紀元",benchmarkWorldLabel())+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+
+   metric("基準怪物",targetText)+metric("平均回合輸出",o?fmt(o.avgRoundDamage):"尚未測試")+
+   metric("平均回合承傷",d?fmt(d.avgTurnLoss):"尚未測試")+metric(winLabel,avgWin==null?"尚未測試":avgWin+"%")+'</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button></div>'+
    '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
  }
@@ -737,7 +718,6 @@
   clearSelectionResults();
   render();
  };
- window.gmPowerBenchmarkRunUniverseCombat=runUniverseCombatBenchmark;
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
