@@ -1,5 +1,5 @@
 (function(){
- const VERSION=11;
+ const VERSION=12;
  function run(){
   const errors=[],warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
@@ -31,6 +31,7 @@
   if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("FINAL_SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
   if(Number(window.SAVE_SCHEMA_VERSION)!==14)fail("FINAL_SCHEMA","最終 Save Schema 應為 14",window.SAVE_SCHEMA_VERSION);
   if(Number(window.CHARACTER_WORLD_UI_VERSION)!==1||typeof window.characterWorldSnapshot!=="function")fail("FINAL_CHARACTER_WORLD_UI","角色頁世界感知 owner 未完整載入",{version:window.CHARACTER_WORLD_UI_VERSION,snapshot:typeof window.characterWorldSnapshot});
+  if(Number(window.PLAYER_EQUIPMENT_WORLD_SOURCE_UI_HIDDEN_VERSION)!==1)fail("FINAL_PLAYER_EQUIPMENT_WORLD_SOURCE_UI","玩家裝備來源世界應只保留內部辨識，不得作為玩家 UI 顯示",{version:window.PLAYER_EQUIPMENT_WORLD_SOURCE_UI_HIDDEN_VERSION});
   if(typeof gmDarkMatter!=="function"||typeof gmDarkEnergy!=="function")fail("FINAL_GM_CHARACTER_RESOURCES","GM 宇宙紀元角色資源管理未完整載入",{darkMatter:typeof gmDarkMatter,darkEnergy:typeof gmDarkEnergy});
   if(Number(window.LEVEL_PROGRESSION_VERSION)!==1||Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000||Number(window.ABSOLUTE_MAX_LEVEL)!==1000||typeof window.effectiveLevelCap!=="function"||typeof window.levelProgressSnapshot!=="function"||typeof window.universeExpNeed!=="function")fail("FINAL_LEVEL_PROGRESSION","世界感知等級／EXP owner 未完整載入",{version:window.LEVEL_PROGRESSION_VERSION,first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP,absolute:window.ABSOLUTE_MAX_LEVEL});
   if(Number(window.SECOND_WORLD_REWARD_VERSION)!==2||Number(window.SECOND_WORLD_REDEMPTION_MULTIPLIER)!==10||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function"||typeof window.settleSecondWorldBossVictory!=="function"||typeof window.applySecondWorldDeathPenalty!=="function"||typeof window.equipmentSaleQuote!=="function"||typeof window.equipmentSaleBatchQuote!=="function"||typeof window.settleEquipmentSale!=="function"||typeof window.settleEquipmentSaleBatch!=="function"||typeof window.equipmentSaleText!=="function")fail("FINAL_SECOND_WORLD_REWARDS","宇宙紀元主線獎勵／裝備／sale owner 未完整載入",{version:window.SECOND_WORLD_REWARD_VERSION,redemption:window.SECOND_WORLD_REDEMPTION_MULTIPLIER,xp:typeof window.secondWorldBossExpReward,dm:typeof window.secondWorldBossDarkMatterReward,item:typeof window.makeSecondWorldEquipmentForBoss,settle:typeof window.settleSecondWorldBossVictory,sale:typeof window.settleEquipmentSale,batchSale:typeof window.settleEquipmentSaleBatch,death:typeof window.applySecondWorldDeathPenalty});
