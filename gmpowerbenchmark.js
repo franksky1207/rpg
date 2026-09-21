@@ -660,7 +660,7 @@
  }
 
  function html(){
-  installStyles();ensureSelection();normalizeUniverseSelection();snapshot();
+  installStyles();ensureSelection();normalizeUniverseSelection();normalizeBenchmarkSources();snapshot();
   const disabled=busyDisabled(),world=benchmarkWorld();
   const selectionControls=world===2
    ?'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
@@ -673,25 +673,23 @@
     '<label>怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
     '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>';
   const highestLabel=world===2?"使用目前最高 Boss":"使用目前最高地圖";
-  const phaseNotice=world===2?'<div class="muted" style="margin-top:8px">宇宙紀元沒有地圖層；本批先完成「紀元 → 區域 → 怪物」共用選擇架構。輸出／承傷／實戰運算將於下一批接入目前宇宙怪物。</div>':"";
-  const universeDisabled=world===2?" disabled":"";
-  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：先選擇紀元，再讀取該紀元正式主線怪物資料。銀河紀元使用「區域 → 地圖 → 怪物」；宇宙紀元使用「區域 → 怪物」。本工具只做沙盒模擬，不修改正式角色、獎勵、進度或存檔。</div>'+
+  const combatActions=world===2
+   ?'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button></div>'
+   :'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>';
+  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：先選擇紀元，再讀取該紀元正式主線怪物資料。銀河紀元使用「區域 → 地圖 → 怪物」；宇宙紀元使用「區域 → 怪物」。輸出、承傷與主線實戰皆共用目前選擇怪物；宇宙紀元沒有「本地圖 5 隻全部」。本工具只做沙盒模擬，不修改正式角色、獎勵、進度或存檔。</div>'+
    '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+selectionControls+'</div>'+
-   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">'+highestLabel+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div>'+phaseNotice+'</div>'+
+   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">'+highestLabel+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
-   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元輸出基準將於第 2 批接入目前選擇 Boss；本批先停用，避免誤用銀河怪物資料。</div>':
    '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
    '<label>自訂 DEF<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml())+'</div>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml()+'</div>'+
    '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
-   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元承傷基準將於第 2 批接入目前選擇 Boss；本批先停用，避免誤用銀河怪物資料。</div>':
    '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
    '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml())+'</div>'+
-   '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
-   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元主線實戰將於第 2 批併入此區塊；不再使用下方獨立宇宙 Boss 測試區。</div>':
-   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml())+'</div>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
+   '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵、死亡懲罰或進度。</div>'+
+   combatActions+combatResultHtml()+'</div>'+
    summaryHtml()+'</div>';
  }
 
