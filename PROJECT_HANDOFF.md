@@ -1884,7 +1884,17 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 宇宙紀元主線實戰只有「測目前選擇怪物」，**沒有「測本地圖 5 隻全部」**。
 - 正式實戰結果現在寫入共用 `MODEL.combatResult`；舊 `universeCombatResult` runner 暫留內部但不再由 UI 使用，待第 3 批清理。
 - 全部測試仍是 sandbox，不寫 EXP／資源／裝備／死亡懲罰／Boss 主線進度／存檔。
-- 第 3 批：摘要改成紀元感知、移除舊 `universeCombatResult / runUniverseCombatBenchmark` 路徑、最終 Integrity／回歸收尾。
+### 第 3 批：摘要／舊路徑清理／最終收尾 — 已完成
+- `gmpowerbenchmark.js` 升級 V14。
+- 測試摘要正式改成紀元感知：摘要只顯示目前選擇的「銀河紀元」或「宇宙紀元」，不再同時出現銀河勝率與宇宙 Boss 勝率兩套欄位。
+- 摘要基準改為「目前基準怪物」；宇宙紀元不再誤顯第一世界「基準地圖」。
+- 純文字摘要新增「紀元」與目前基準怪物，主線實戰標題依世界顯示「單隻怪／地圖 5 隻全部／單隻 Boss」。
+- 舊 `MODEL.universeCombatResult`、`runUniverseCombatTask()`、`runUniverseCombatBenchmark()`、`universeCombatResultHtml()` 與 `gmPowerBenchmarkRunUniverseCombat` export 已完全移除。
+- 宇宙實戰唯一正式 GM 戰力基準路徑為共用 `gmPowerBenchmarkRunCombat("single") → runCombatTask() → universeCombatRow() → secondWorldBossEncounter() → runCombatCore()`。
+- Final Integrity 升級並明確要求 legacy `gmPowerBenchmarkRunUniverseCombat` 不得再存在，防止未來重新分裂成第二套宇宙 runner。
+- 已完成銀河／宇宙雙世界回歸：銀河保留 5 怪整圖測試；宇宙只有單 Boss；輸出／承傷／實戰／摘要皆共用同一選擇 owner；sandbox 不修改正式 state。
+
+**GM 戰力基準三批重構至此完成。**
 
 ## 29.10 第 10 順位：遊戲說明
 
