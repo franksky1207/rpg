@@ -1,10 +1,10 @@
 (function(){
- const VERSION=11;
+ const VERSION=12;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
-  phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
+  world:1,phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
   universeRegionIndex:0,universeBossIndex:0,universeCombatResult:null,
@@ -117,6 +117,16 @@
   MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;
   return true;
  }
+ function useHighestBenchmarkSelection(){
+  if(benchmarkWorld()===1)return useHighestSelection();
+  const regions=universeRegions();if(!regions.length)return false;
+  const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?whole(window.secondWorldHighestUnlockedBossIndex(),0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1)):MODEL.universeBossIndex;
+  const meta=universeBossMeta(highest);if(!meta)return false;
+  MODEL.universeRegionIndex=whole(meta.regionIndex,0,regions.length-1);
+  MODEL.universeBossIndex=meta.index;
+  clearSelectionResults();
+  return true;
+ }
  function resetBenchmarkSession(){
   if(MODEL.busy)return false;
   const ok=typeof confirm!=="function"||confirm("確定要清除目前所有戰力基準測試結果並重新同步角色嗎？\n不會修改正式角色或存檔。");
@@ -174,6 +184,29 @@
   }).join("｜");
  }
  function option(value,label,selected){return '<option value="'+value+'" '+(selected?'selected':'')+'>'+label+'</option>';}
+ function benchmarkWorld(){return Number(MODEL.world)===2?2:1;}
+ function benchmarkWorldLabel(){return benchmarkWorld()===2?"宇宙紀元":"銀河紀元";}
+ function benchmarkWorldOptions(){
+  return option(1,"銀河紀元",benchmarkWorld()===1)+option(2,"宇宙紀元",benchmarkWorld()===2);
+ }
+ function benchmarkSelectedEnemy(){
+  if(benchmarkWorld()===2){
+   normalizeUniverseSelection();
+   const meta=universeBossMeta(MODEL.universeBossIndex);
+   if(!meta)return null;
+   const stats=typeof window.secondWorldBossBaseStats==="function"?window.secondWorldBossBaseStats(meta.index):null;
+   return {
+    world:2,id:meta.id||"",index:meta.index,name:String(meta.name||""),level:whole(meta.level,1),kind:"boss",
+    hp:Math.max(0,num(stats?.hp,0)),atk:Math.max(0,num(stats?.atk,0)),def:Math.max(0,num(stats?.def,0)),
+    crit:Math.max(0,num(stats?.crit,0)),dodge:Math.max(0,num(stats?.dodge,0)),traits:[]
+   };
+  }
+  const e=enemyPreview(MODEL.mapIndex,MODEL.enemyIndex);
+  return e?{...e,world:1,mapIndex:MODEL.mapIndex,enemyIndex:MODEL.enemyIndex}:null;
+ }
+ function clearSelectionResults(){
+  MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;MODEL.universeCombatResult=null;
+ }
  function phaseOptions(){
   return allPhases().map(p=>option(p,phaseLabel(p),p===MODEL.phase)).join("");
  }
@@ -207,10 +240,11 @@
   const e=sourceEnemy(kind);return e?Math.max(0,num(e[stat.toLowerCase()],0)):0;
  }
  function selectedEnemySummary(){
-  const e=sourceEnemy("selected");
+  const e=benchmarkSelectedEnemy();
   if(!e)return '<div class="muted">目前沒有可用怪物資料。</div>';
-  const traits=Array.isArray(e.traits)&&e.traits.length?e.traits.join("、"):"無";
-  return '<div class="item"><b>目前基準怪物</b><div class="muted" style="margin-top:6px">'+e.name+' Lv.'+e.level+'｜'+(KIND_LABELS[e.kind]||e.kind)+'</div><div style="margin-top:5px">HP '+fmt(e.hp)+'　ATK '+fmt(e.atk)+'　DEF '+fmt(e.def)+'　暴擊 '+one(e.crit||0)+'%　閃避 '+one(e.dodge||0)+'%</div><div class="muted" style="margin-top:5px">特性：'+traits+'</div></div>';
+  const traits=e.world===2?"戰鬥時隨機":Array.isArray(e.traits)&&e.traits.length?e.traits.join("、"):"無";
+  const statPrefix=e.world===2?"基礎 ":"";
+  return '<div class="item"><b>目前基準怪物</b><div class="muted" style="margin-top:6px">'+benchmarkWorldLabel()+'｜'+e.name+' Lv.'+e.level+'｜'+(KIND_LABELS[e.kind]||e.kind)+'</div><div style="margin-top:5px">'+statPrefix+'HP '+fmt(e.hp)+'　ATK '+fmt(e.atk)+'　DEF '+fmt(e.def)+'　暴擊 '+one(e.crit||0)+'%　閃避 '+one(e.dodge||0)+'%</div><div class="muted" style="margin-top:5px">特性：'+traits+'</div></div>';
  }
  function snapshotHtml(){
   const s=snapshot(),st=s.stats;
@@ -597,64 +631,83 @@
  }
 
  function html(){
-  installStyles();ensureSelection();snapshot();
-  const disabled=busyDisabled();
-  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：讀取正式角色與正式主線怪物資料，在沙盒中進行 100／1000 場量化測試，提供角色快照、輸出、承傷、主線實戰與完整摘要。若只想快速確認單一主線怪功能，可使用「地圖怪測試」。本工具不增加 EXP／金幣／掉落／進度，不修改 HP、VIP 或存檔。</div>'+
-   '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+
-   '<label>大階段<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetPhase(this.value)">'+phaseOptions()+'</select></label>'+
-   '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
-   '<label>地圖<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
-   '<label>怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
-   '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
-   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">使用目前最高地圖</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
+  installStyles();ensureSelection();normalizeUniverseSelection();snapshot();
+  const disabled=busyDisabled(),world=benchmarkWorld();
+  const selectionControls=world===2
+   ?'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
+    '<label>區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseRegion(this.value)">'+universeRegionOptions()+'</select></label>'+
+    '<label style="grid-column:span 2">怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label>'+
+    '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>'
+   :'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
+    '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
+    '<label>地圖<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
+    '<label>怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
+    '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>';
+  const highestLabel=world===2?"使用目前最高 Boss":"使用目前最高地圖";
+  const phaseNotice=world===2?'<div class="muted" style="margin-top:8px">宇宙紀元沒有地圖層；本批先完成「紀元 → 區域 → 怪物」共用選擇架構。輸出／承傷／實戰運算將於下一批接入目前宇宙怪物。</div>':"";
+  const universeDisabled=world===2?" disabled":"";
+  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：先選擇紀元，再讀取該紀元正式主線怪物資料。銀河紀元使用「區域 → 地圖 → 怪物」；宇宙紀元使用「區域 → 怪物」。本工具只做沙盒模擬，不修改正式角色、獎勵、進度或存檔。</div>'+
+   '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+selectionControls+'</div>'+
+   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">'+highestLabel+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div>'+phaseNotice+'</div>'+
    selectedEnemySummary()+snapshotHtml()+
    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
+   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元輸出基準將於第 2 批接入目前選擇 Boss；本批先停用，避免誤用銀河怪物資料。</div>':
    '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
    '<label>自訂 DEF<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml()+'</div>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml())+'</div>'+
    '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
+   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元承傷基準將於第 2 批接入目前選擇 Boss；本批先停用，避免誤用銀河怪物資料。</div>':
    '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
    '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
+   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml())+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵或進度。</div>'+
-   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml()+'</div>'+
-   '<div class="item"><b>宇宙紀元 Boss 實戰基準</b><div class="muted" style="margin-top:5px">宇宙紀元沒有地圖層級，改為「區域 → 怪物」；使用第二世界正式 Boss 能力公式、Boss 隨機特性與同一 runCombatCore，純沙盒、不結算任何獎勵、死亡懲罰或主線進度。</div>'+
-   '<div class="gmpb-controls"><label>區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseRegion(this.value)">'+universeRegionOptions()+'</select></label><label style="grid-column:span 3">怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label><label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label></div>'+
-   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunUniverseCombat()">'+busyLabel("combat-universe","測宇宙 Boss")+'</button></div>'+universeCombatResultHtml()+'</div>'+summaryHtml()+'</div>';
+   (world===2?'<div class="notice" style="margin-top:9px">宇宙紀元主線實戰將於第 2 批併入此區塊；不再使用下方獨立宇宙 Boss 測試區。</div>':
+   '<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>'+combatResultHtml())+'</div>'+
+   summaryHtml()+'</div>';
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
+ window.gmPowerBenchmarkSetWorld=function(v){
+  if(MODEL.busy)return;
+  MODEL.world=Number(v)===2?2:1;
+  if(MODEL.world===1)ensureSelection();else normalizeUniverseSelection();
+  clearSelectionResults();
+  render();
+ };
+ window.gmPowerBenchmarkSelectedEnemy=function(){const e=benchmarkSelectedEnemy();return e?JSON.parse(JSON.stringify(e)):null;};
  window.gmPowerBenchmarkSetPhase=function(v){if(MODEL.busy)return;MODEL.phase=whole(v,0);MODEL.regionId="";ensureSelection();MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetRegion=function(v){if(MODEL.busy)return;MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetMap=function(v){if(MODEL.busy)return;MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
- window.gmPowerBenchmarkSetEnemy=function(v){if(MODEL.busy)return;MODEL.enemyIndex=whole(v,0);MODEL.outputResult=null;MODEL.defenseResult=null;MODEL.combatResult=null;render();};
+ window.gmPowerBenchmarkSetRegion=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.regionId=String(v||"");const r=regionById(MODEL.regionId);if(r)MODEL.mapIndex=r.mapStart;MODEL.enemyIndex=4;clearSelectionResults();render();};
+ window.gmPowerBenchmarkSetMap=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.mapIndex=whole(v,0);MODEL.enemyIndex=Math.max(0,(mapAt(MODEL.mapIndex)&&mapAt(MODEL.mapIndex).enemies?mapAt(MODEL.mapIndex).enemies.length:1)-1);clearSelectionResults();render();};
+ window.gmPowerBenchmarkSetEnemy=function(v){if(MODEL.busy)return;MODEL.world=1;MODEL.enemyIndex=whole(v,0);clearSelectionResults();render();};
  window.gmPowerBenchmarkSetRuns=function(v){if(MODEL.busy)return;MODEL.runs=Number(v)===1000?1000:100;};
  window.gmPowerBenchmarkSetOutputSource=function(v){if(MODEL.busy)return;MODEL.outputSource=String(v||"selected");};
  window.gmPowerBenchmarkSetDefenseSource=function(v){if(MODEL.busy)return;MODEL.defenseSource=String(v||"selected");};
  window.gmPowerBenchmarkSetCustomDef=function(v){if(MODEL.busy)return;MODEL.customDef=Math.max(0,num(v,0));};
  window.gmPowerBenchmarkSetCustomAtk=function(v){if(MODEL.busy)return;MODEL.customAtk=Math.max(0,num(v,0));};
- window.gmPowerBenchmarkUseHighest=function(){if(MODEL.busy)return false;if(useHighestSelection())render();return true;};
+ window.gmPowerBenchmarkUseHighest=function(){if(MODEL.busy)return false;if(useHighestBenchmarkSelection())render();return true;};
  window.gmPowerBenchmarkReset=resetBenchmarkSession;
  window.gmPowerBenchmarkRunOutput=runOutput;
  window.gmPowerBenchmarkRunDefense=runDefense;
  window.gmPowerBenchmarkRunCombat=runCombatBenchmark;
  window.gmPowerBenchmarkSetUniverseRegion=function(v){
   if(MODEL.busy)return;
+  MODEL.world=2;
   const regions=universeRegions();
   MODEL.universeRegionIndex=whole(v,0,Math.max(0,regions.length-1));
   const bosses=universeBossesForRegion(MODEL.universeRegionIndex);
   MODEL.universeBossIndex=bosses[0]?.index??0;
-  MODEL.universeCombatResult=null;
+  clearSelectionResults();
   render();
  };
  window.gmPowerBenchmarkSetUniverseBoss=function(v){
   if(MODEL.busy)return;
+  MODEL.world=2;
   normalizeUniverseSelection();
   const bosses=universeBossesForRegion(MODEL.universeRegionIndex),requested=whole(v,0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1));
   MODEL.universeBossIndex=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
-  MODEL.universeCombatResult=null;
+  clearSelectionResults();
   render();
  };
  window.gmPowerBenchmarkRunUniverseCombat=runUniverseCombatBenchmark;
