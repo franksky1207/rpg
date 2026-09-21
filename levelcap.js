@@ -2,6 +2,7 @@
  window.specialExpPayout=function(rawXp,logs=[]){
   const amount=Math.max(0,ceil(Number(rawXp)||0));
   if(state.level>=MAX_LEVEL){
+   if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return {xp:0,convertedGold:0,deferredXp:amount};
    state.gold+=amount;
    return {xp:0,convertedGold:amount};
   }
@@ -15,6 +16,7 @@
   const startedAtCap=state.level>=MAX_LEVEL;
   const r=baseFightOnceForLevelCap(mapIdx,eIdx,encounter);
   if(!startedAtCap||!r?.ok||!r.win)return r;
+  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return r;
 
   const rawXp=Math.max(0,ceil(Number(r.xp)||0));
   if(!rawXp){r.xp=0;return r;}
