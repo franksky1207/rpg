@@ -12,3 +12,17 @@
 @media(max-width:760px){
  .world-region-list{gap:9px}.world-region-header{padding:12px;gap:10px;align-items:flex-start}.world-region-title{font-size:16px}.world-region-title-wrap{gap:5px;display:grid}.world-region-level{font-size:12px}.world-region-meta{font-size:12px;gap:7px}.world-region-body{padding:10px}
 }
+
+.universe-adventure-notice{margin-bottom:12px}
+.universe-region-list{margin-top:12px}
+.universe-boss-card{cursor:default;position:relative}
+.universe-boss-card:hover{transform:none!important}
+.universe-boss-number{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8299b7;margin-bottom:7px}
+.universe-boss-card .map-status{margin-top:12px}
+.universe-boss-card.cleared .map-status{color:#83c18d}
+@media(max-width:760px){
+ .universe-adventure-notice{margin-bottom:9px}
+ .universe-region-list{margin-top:9px}
+ .universe-boss-card{min-height:106px}
+ .universe-boss-number{font-size:10px;margin-bottom:5px}
+}
