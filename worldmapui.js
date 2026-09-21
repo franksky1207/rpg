@@ -143,7 +143,8 @@
     const stats=typeof window.secondWorldBossBaseStats==="function"?window.secondWorldBossBaseStats(boss.index):null;
     const status=killed?"已擊敗":canChallenge?"可挑戰":"尚未開放";
     const statLine=stats?`<div class="universe-boss-stats">HP ${stats.hp.toLocaleString()}　ATK ${stats.atk.toLocaleString()}　DEF ${stats.def.toLocaleString()}</div>`:"";
-    return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><div class="universe-boss-number">Boss ${boss.index+1}</div><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${status}</div></div>`;
+    const action=canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"?`<button class="btn blue universe-boss-action" type="button" onclick="event.stopPropagation();startSecondWorldBossBattle(${boss.index})">${killed?"再次挑戰":"挑戰 Boss"}</button>`:"";
+    return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><div class="universe-boss-number">Boss ${boss.index+1}</div><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${status}</div>${action}</div>`;
   }
 
   function secondWorldRegionHtml(region,activeIndex){
@@ -181,7 +182,7 @@
     syncSecondWorldRegionOpenState();
     const activeIndex=secondWorldActiveRegionIndex();
     const visible=regions.filter(secondWorldRegionVisible);
-    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元・冒險</h2><span></span></div><div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">Boss 能力與正式戰鬥核心已接入；玩家正式挑戰會在獎勵／進度結算完成後開放，避免測試戰鬥造成漏發獎勵。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
+    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元・冒險</h2><span></span></div><div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
   window.SECOND_WORLD_ADVENTURE_UI_VERSION=1;
