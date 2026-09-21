@@ -5,7 +5,7 @@
  function normalizeReward(reward){return {basic:Math.max(0,Math.floor(Number(reward?.basic)||0)),advanced:Math.max(0,Math.floor(Number(reward?.advanced)||0))};}
  function addRewards(...rewards){return rewards.reduce((sum,reward)=>{const r=normalizeReward(reward);sum.basic+=r.basic;sum.advanced+=r.advanced;return sum;},{basic:0,advanced:0});}
  function hasReward(reward){const r=normalizeReward(reward);return r.basic>0||r.advanced>0;}
- function addStones(basic=0,advanced=0){ensure();const reward=normalizeReward({basic,advanced});state.enhancement.basicStones+=reward.basic;state.enhancement.advancedStones+=reward.advanced;return reward;}
+ function addStones(basic=0,advanced=0){if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return {basic:0,advanced:0};ensure();const reward=normalizeReward({basic,advanced});state.enhancement.basicStones+=reward.basic;state.enhancement.advancedStones+=reward.advanced;return reward;}
  function eligible(playerLevel,monsterLevel){return Math.floor(Number(playerLevel)||1)-Math.floor(Number(monsterLevel)||1)<LEVEL_GAP_LIMIT;}
  function eliteBasicExpected(){return ELITE_BASIC_STONE_CHANCES.reduce((sum,row)=>sum+row.amount*row.probability,0);}
  function expectedMainlineReward(enemy,playerLevel=null){
