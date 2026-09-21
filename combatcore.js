@@ -331,14 +331,14 @@
   let saleEnhancementStones={basic:0,advanced:0};
   const it=dropItem(e,mapIdx),ir=addItem(it);
   if(it){
-   items.push({item:it,sold:ir.sold||0});
+   items.push({item:it,sold:ir.sold||0,sale:ir.sale||null});
    saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,ir.enhancementStones);
   }
   if(e.kind==="boss"&&(state.vipLevel||0)>=16&&Math.random()<.15){
    const extra=dropItem(e,mapIdx);
    if(extra){
     const extraResult=addItem(extra);
-    items.push({item:extra,sold:extraResult.sold||0,vip16Extra:true});
+    items.push({item:extra,sold:extraResult.sold||0,sale:extraResult.sale||null,vip16Extra:true});
     saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,extraResult.enhancementStones);
    }
   }
@@ -350,7 +350,7 @@
   if(e.kind==="elite"&&!state.bossKilled[mapIdx]&&!state.bossLocked[mapIdx]&&state.mapProgress[mapIdx][3]>=10)logs.push(state.level>=MAPS[mapIdx].max?`Boss 已出現：${MAPS[mapIdx].enemies[4][0]}。`:`菁英進度完成；達到 Lv.${MAPS[mapIdx].max} 後 Boss 才會出現。`);
   if(e.kind==="elite"&&state.bossLocked[mapIdx])logs.push(`Boss 再挑戰進度：${state.bossProgress[mapIdx]}/10 菁英。`);
   if(e.kind==="elite"&&!state.bossLocked[mapIdx]&&state.bossProgress[mapIdx]>=10)logs.push(`Boss 已重新開放，可以再次挑戰。`);
-  items.forEach(row=>logs.push(`${row.sold?`自動出售 ${itemHtmlPlain(row.item)}，金幣 +${row.sold}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`));
+  items.forEach(row=>{const saleText=row.sale&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(row.sale):row.sold?`${row.sold} 金幣`:"";logs.push(`${row.sale||row.sold?`自動出售 ${itemHtmlPlain(row.item)}，獲得 ${saleText}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`);});
   let pendingStoryId=null;
   if(firstBossKill&&window.civilizationStoryProgress?.queueBossStory)pendingStoryId=window.civilizationStoryProgress.queueBossStory(mapIdx);
   save(false);
