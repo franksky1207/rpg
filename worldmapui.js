@@ -88,4 +88,99 @@
     const visible=WORLD_REGIONS.filter(regionUnlocked);
     return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="world-region-list">${visible.map(region=>regionHtml(region,activeIndex,WORLD_REGIONS.indexOf(region))).join("")}</div></section>`;
   };
+
+
+  // 宇宙紀元冒險 UI：只負責區域／Boss 選擇呈現；正式戰鬥、EXP 與獎勵由後續批次接入。
+  const secondWorldRegionOpenState=Object.create(null);
+  let lastSecondWorldActiveRegionId=null;
+
+  function secondWorldRegions(){
+    return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
+  }
+
+  function secondWorldBosses(){
+    return Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
+  }
+
+  function secondWorldActiveRegionIndex(){
+    const regions=secondWorldRegions();
+    if(!regions.length)return -1;
+    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?window.secondWorldHighestUnlockedBossIndex():-1;
+    if(highest<0)return 0;
+    const boss=secondWorldBosses()[highest];
+    return Math.max(0,Math.min(regions.length-1,Math.floor(Number(boss?.regionIndex)||0)));
+  }
+
+  function syncSecondWorldRegionOpenState(){
+    const regions=secondWorldRegions(),activeIndex=secondWorldActiveRegionIndex(),active=regions[activeIndex];
+    if(!active)return;
+    if(lastSecondWorldActiveRegionId!==active.id){
+      Object.keys(secondWorldRegionOpenState).forEach(key=>delete secondWorldRegionOpenState[key]);
+      secondWorldRegionOpenState[active.id]=true;
+      lastSecondWorldActiveRegionId=active.id;
+      return;
+    }
+    if(typeof secondWorldRegionOpenState[active.id]!=="boolean")secondWorldRegionOpenState[active.id]=true;
+  }
+
+  function secondWorldRegionVisible(region){
+    return !!region&&typeof window.secondWorldRegionVisible==="function"&&window.secondWorldRegionVisible(region.index);
+  }
+
+  function secondWorldVisibleBosses(region){
+    if(!region||typeof window.secondWorldBossesForRegion!=="function")return [];
+    return window.secondWorldBossesForRegion(region.index).filter(boss=>typeof window.secondWorldBossVisible==="function"&&window.secondWorldBossVisible(boss.index));
+  }
+
+  function secondWorldRegionKilledCount(region){
+    if(!region||typeof window.secondWorldBossesForRegion!=="function")return 0;
+    return window.secondWorldBossesForRegion(region.index).filter(boss=>typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(boss.index)).length;
+  }
+
+  function secondWorldBossCardHtml(boss){
+    const killed=typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(boss.index);
+    const canChallenge=typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(boss.index);
+    const status=killed?"已擊敗":canChallenge?"可挑戰":"尚未開放";
+    return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><div class="universe-boss-number">Boss ${boss.index+1}</div><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div><div class="map-status">${status}</div></div>`;
+  }
+
+  function secondWorldRegionHtml(region,activeIndex){
+    const open=!!secondWorldRegionOpenState[region.id];
+    const visibleBosses=secondWorldVisibleBosses(region);
+    const killed=secondWorldRegionKilledCount(region);
+    const completed=killed>=10;
+    const current=region.index===activeIndex;
+    const progressText=completed?"10 / 10・已完成":`已擊敗 ${killed} / 10`;
+    return `<section class="world-region universe-region ${current?"current":""} ${completed?"completed":""}">
+      <button class="world-region-header" type="button" aria-expanded="${open?"true":"false"}" onclick="toggleSecondWorldAdventureRegion('${region.id}')">
+        <span class="world-region-title-wrap"><b class="world-region-title">${region.name}</b><span class="world-region-level">Lv.${region.minLevel}～${region.maxLevel}</span></span>
+        <span class="world-region-meta"><span>${progressText}</span><span class="world-region-toggle">${open?"▲":"▼"}</span></span>
+      </button>
+      ${open?`<div class="world-region-body"><div class="map-grid universe-boss-grid">${visibleBosses.map(secondWorldBossCardHtml).join("")}</div></div>`:""}
+    </section>`;
+  }
+
+  window.toggleSecondWorldAdventureRegion=function(id){
+    syncSecondWorldRegionOpenState();
+    secondWorldRegionOpenState[id]=!secondWorldRegionOpenState[id];
+    render();
+  };
+
+  window.resetSecondWorldAdventureRegionFolds=function(){
+    Object.keys(secondWorldRegionOpenState).forEach(key=>delete secondWorldRegionOpenState[key]);
+    lastSecondWorldActiveRegionId=null;
+  };
+
+  window.secondWorldAdventurePageHtml=function(){
+    const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
+    if(!entered)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>尚未正式進入宇宙紀元。</b></div></section>`;
+    const regions=secondWorldRegions();
+    if(!regions.length)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>宇宙紀元主線資料尚未載入。</b></div></section>`;
+    syncSecondWorldRegionOpenState();
+    const activeIndex=secondWorldActiveRegionIndex();
+    const visible=regions.filter(secondWorldRegionVisible);
+    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元・冒險</h2><span></span></div><div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">目前已開放區域與 Boss 選擇介面；正式戰鬥、EXP 與獎勵將於後續批次接入。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
+  };
+
+  window.SECOND_WORLD_ADVENTURE_UI_VERSION=1;
 })();
