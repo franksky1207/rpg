@@ -1,6 +1,6 @@
 (function(){
- const VERSION=1;
- const PLAYER_RULE_VERSION=1;
+ const VERSION=2;
+ const PLAYER_RULE_VERSION=2;
  const GM_OVERRIDE_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
@@ -18,10 +18,24 @@
   return id?`${STORAGE_PREFIX}${id}`:"";
  }
  function storageKey(){return storageKeyForUser(currentUserId());}
+ function playerCombatSpeedOptions(){
+  const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
+  return entered?[1,1.5]:[1];
+ }
  function playerCombatSpeed(){
-  // Lv.1～500 的正式玩家規則目前固定為 1×。
-  // 未來突破 500 後的正式倍速解鎖只應從這個 owner 擴充。
-  return 1;
+  const options=playerCombatSpeedOptions();
+  const stored=normalizeSpeed(globalThis.state?.settings?.combatSpeed);
+  return stored!=null&&options.includes(stored)?stored:1;
+ }
+ function setPlayerCombatSpeed(value){
+  const speed=normalizeSpeed(value),options=playerCombatSpeedOptions();
+  if(speed==null||!options.includes(speed)||speed===2||!globalThis.state)return false;
+  if(!state.settings||typeof state.settings!=="object"||Array.isArray(state.settings))state.settings={};
+  state.settings.combatSpeed=speed;
+  const saved=typeof save==="function"?save(false):true;
+  if(saved!==true)return false;
+  window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed,effectiveSpeed:effectiveCombatSpeed(),source:"player"}}));
+  return true;
  }
  function gmOverride(){
   const key=storageKey();
@@ -61,7 +75,9 @@
  window.COMBAT_SPEED_PLAYER_RULE_VERSION=PLAYER_RULE_VERSION;
  window.COMBAT_SPEED_GM_OVERRIDE_VERSION=GM_OVERRIDE_VERSION;
  window.COMBAT_SPEED_ALLOWED=ALLOWED.slice();
+ window.playerCombatSpeedOptions=playerCombatSpeedOptions;
  window.playerCombatSpeed=playerCombatSpeed;
+ window.setPlayerCombatSpeed=setPlayerCombatSpeed;
  window.gmCombatSpeedOverride=gmOverride;
  window.effectiveCombatSpeed=effectiveCombatSpeed;
  window.combatSpeedScaledDelay=scaledDelay;
