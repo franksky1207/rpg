@@ -227,7 +227,7 @@
   }
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.specialEncounters.push({special,result,forcedByBlackMarket});
-  if(world===2||!result.win)showSpecialResult(ctx,special,result);
+  if(!result.win||(world===2&&ctx?.continuous!==true))showSpecialResult(ctx,special,result);
   return {triggered:true,win:result.win,special,result,forcedByBlackMarket};
  }
 
