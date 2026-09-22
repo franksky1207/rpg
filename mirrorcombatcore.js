@@ -1,6 +1,6 @@
 (function(){
  const CONFIG=window.MIRROR_DUNGEON_CONFIG;if(!CONFIG)throw new Error("Mirror dungeon config missing.");
- const MIRROR_COMBAT_CORE_VERSION=4;
+ const MIRROR_COMBAT_CORE_VERSION=5;
  const MIRROR_MARK_RULE_VERSION=Math.max(0,Math.floor(Number(window.MARK_COMBAT_RULE_VERSION)||0));
  const RUN_BATTLES=CONFIG.runBattles;
  const MIRROR_COUNTER_SCALE=CONFIG.combat.counterScale;
@@ -26,6 +26,8 @@
 
  function createMirrorCombatSnapshot(){
   const stats=typeof playerCombatStats==="function"?playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0},levels=currentSpecializationLevels(),marks=currentMarkLevels();
+  const civilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
+  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
    damageModelVersion:Math.max(0,Math.floor(numberOr(window.COMBAT_DAMAGE_MODEL_VERSION,0))),
@@ -33,6 +35,8 @@
    playerName:String(state?.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(state?.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(state?.vipLevel,0))),
+   civilizationLevel,
+   civilizationDamageMultiplier,
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
    specializations:cloneJson(levels)||{},
    specializationBonuses:currentSpecializationBonuses(levels),
@@ -43,6 +47,8 @@
  }
  function normalizeSnapshot(snapshot){
   const source=snapshot&&typeof snapshot==="object"?snapshot:createMirrorCombatSnapshot(),stats=source.stats&&typeof source.stats==="object"?source.stats:{},levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};
+  const civilizationLevel=Math.max(0,Math.min(Number(window.CIVILIZATION_LEVEL_MAX)||10,Math.floor(numberOr(source.civilizationLevel,0))));
+  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):Math.max(1,numberOr(source.civilizationDamageMultiplier,1));
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
    damageModelVersion:Math.max(0,Math.floor(numberOr(source.damageModelVersion,window.COMBAT_DAMAGE_MODEL_VERSION||0))),
@@ -50,6 +56,8 @@
    playerName:String(source.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(source.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(source.vipLevel,0))),
+   civilizationLevel,
+   civilizationDamageMultiplier,
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
    specializations:cloneJson(levels)||{},
    specializationBonuses:normalizeBonuses(source.specializationBonuses,levels),
@@ -63,6 +71,10 @@
   const snap=createMirrorCombatSnapshot(),issues=[],liveStats=typeof playerCombatStats==="function"?playerCombatStats():null;
   if(!liveStats)issues.push("playerCombatStats missing");else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});
   if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");
+  const liveCivilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
+  const liveCivilizationMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(liveCivilizationLevel):1;
+  if(Number(snap.civilizationLevel)!==Number(liveCivilizationLevel))issues.push("civilizationLevel mismatch");
+  if(Math.abs(Number(snap.civilizationDamageMultiplier)-Number(liveCivilizationMultiplier))>1e-9)issues.push("civilizationDamageMultiplier mismatch");
   const liveLevels=currentSpecializationLevels();["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});
   const liveBonuses=currentSpecializationBonuses(liveLevels);["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializationBonuses[key])!==Number(liveBonuses[key]))issues.push(`specializationBonuses.${key} mismatch`);});
   const liveEnhancement=currentEnhancementLevels();Object.keys(liveEnhancement).forEach(key=>{if(Number(snap.enhancementLevels[key])!==Number(liveEnhancement[key]))issues.push(`enhancementLevels.${key} mismatch`);});
@@ -132,12 +144,13 @@
     }else damage=Math.ceil(baseDamage*(Number(CRIT_DAMAGE_MULTIPLIER)||1.5));
    }
    damage=Math.max(1,Math.ceil(damage*scale));
+   damage=Math.max(1,Math.ceil(damage*Math.max(1,numberOr(snap.civilizationDamageMultiplier,1))));
 
    const absorption=effects.absorption||{},absorbed=absorption.active&&roll(rng,absorption.triggerChance);
    if(absorbed){
     const wanted=Math.max(1,Math.ceil(damage*numberOr(absorption.healOriginalDamagePercent,25)/100)),healed=Math.max(0,Math.min(wanted,defender.maxHp-defender.hp));
     defender.hp+=healed;
-    events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage:0,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:actor.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,absorbed:true,shieldAbsorbed:0});
+    events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage:0,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:actor.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,civilizationDamageMultiplier:snap.civilizationDamageMultiplier,absorbed:true,shieldAbsorbed:0});
     markEvent(defenderKey,"absorption","trigger",{target:actorKey,damage,healed});
     pushLog(`${actor.name}攻擊${defender.name}，但${defender.name}的吸收印記化解了傷害。`);
     return {hit:true,actualDamage:0,killed:false,absorbed:true};
@@ -153,7 +166,7 @@
     else defender.hp=Math.max(0,rawAfter);
    }
    const actualDamage=Math.max(0,before-defender.hp);
-   events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:actor.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,absorbed:false,shieldAbsorbed,indomitable:indomitableTriggered});
+   events.push({type:"attack",actor:actorKey,target:defenderKey,source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:actor.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,civilizationDamageMultiplier:snap.civilizationDamageMultiplier,absorbed:false,shieldAbsorbed,indomitable:indomitableTriggered});
    if(shieldAbsorbed>0)markEvent(defenderKey,"ward","absorb",{target:actorKey,amount:shieldAbsorbed,remainingShield:defender.shield});
    if(indomitableTriggered)markEvent(defenderKey,"indomitable","survive",{target:actorKey,hp:1});
    pushLog(`${actor.name}攻擊${defender.name}${crit?"，暴擊":""}造成 ${damage} 點傷害。`);
@@ -221,6 +234,7 @@
  window.MIRROR_COMBAT_CORE_VERSION=MIRROR_COMBAT_CORE_VERSION;
  window.MIRROR_COMBAT_MARK_RULE_VERSION=MIRROR_MARK_RULE_VERSION;
  window.MIRROR_COMBAT_BATTLE_LIMIT=RUN_BATTLES;
+ window.MIRROR_CIVILIZATION_DAMAGE_VERSION=1;
  window.createMirrorCombatSnapshot=createMirrorCombatSnapshot;
  window.normalizeMirrorCombatSnapshot=normalizeSnapshot;
  window.mirrorSpecializationBonuses=specializationBonuses;
