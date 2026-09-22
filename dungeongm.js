@@ -229,7 +229,9 @@
   const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){const enemy=buildBountyEnemyForTest(tierId,base,state.level),r=simulateFight(player,enemy);summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}}
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
-  showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
+  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true,reward=universe&&typeof window.getUniverseBountyRewardPreview==="function"?window.getUniverseBountyRewardPreview(tierId,state.level):null;
+  const rewardHtml=reward?`<div class="muted gm-test-context">宇宙獎勵基準：Lv.${reward.rewardLevel} → Lv.${reward.bossLevel} ${reward.bossName}；EXP ${reward.exp.toLocaleString()}・暗物質 ${reward.darkMatter.toLocaleString()}・裝備 ${reward.gearCount} 件。</div>`:"";
+  showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div>${rewardHtml}<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  window.gmSimulateArena=function(positionId){
@@ -268,6 +270,7 @@
   showVoidMirageTest(`<div class="notice">${testSummary("虛空幻境",`從第 ${startFloor} 層連續爬塔`)}<div class="muted gm-test-context">每層皆以滿血開始下一層；以下每日獎勵是假設最後成功樓層成為當日最高時的結果。</div><div class="stats" style="margin-top:10px"><div class="stat">起始樓層<b>${startFloor}</b></div><div class="stat">成功層數<b>${cleared}</b></div><div class="stat">最後成功樓層<b>${cleared?lastWinFloor:"—"}</b></div><div class="stat">停止／失敗樓層<b>${stopFloor}</b></div><div class="stat">基礎每日獎勵<b>${rewardBase.toLocaleString()}</b></div><div class="stat">測試 VIP 實得<b>${reward.toLocaleString()}</b></div><div class="stat">平均戰鬥回合<b>${avgTurns}</b></div><div class="stat">最後成功剩餘 HP<b>${cleared?`${lastWinHp}（${lastHpPct}%）`:"—"}</b></div></div></div>`);
  };
 
+ window.GM_BOUNTY_UNIVERSE_PREVIEW_VERSION=1;
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getArenaGmTestHtml=function(){return arenaTestHtml;};
  window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
