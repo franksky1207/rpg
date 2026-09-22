@@ -181,6 +181,7 @@
    if(!signature?.marks||markKeys.some(key=>!Number.isFinite(Number(signature.marks[key]))))fail("ARENA_ASSESSMENT_SIGNATURE_MARKS","競技場評估簽章未包含完整 10 枚印記",signature?.marks||null);
   }catch(error){fail("ARENA_ASSESSMENT_SIGNATURE_PARSE","競技場評估簽章無法解析",String(error));}
  }
+ if(Number(window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION)!==1)fail("GM_SECOND_WORLD_ARENA_CURVE","GM 第二世界競技場曲線提示未載入",window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION);
  if(Number(window.SECOND_WORLD_ARENA_UNLOCK_VERSION)!==1||Number(window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION)!==1||Number(window.SECOND_WORLD_ARENA_POINTS_VERSION)!==1||Number(window.ARENA_ASSESS_RUNS)!==500||Number(window.ARENA_ASSESS_CLEAR_TARGET)!==485)fail("SECOND_WORLD_ARENA_RULES","第二世界競技場解鎖／評估／積分 owner 異常",{unlock:window.SECOND_WORLD_ARENA_UNLOCK_VERSION,progress:window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION,points:window.SECOND_WORLD_ARENA_POINTS_VERSION,runs:window.ARENA_ASSESS_RUNS,clears:window.ARENA_ASSESS_CLEAR_TARGET});
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.getArenaProgressForWorld!=="function"||typeof window.getCurrentArenaProgress!=="function")fail("ARENA_BY_WORLD_OWNER","競技場分世界 state／migration owner 未完整載入",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION,get:typeof window.getArenaProgressForWorld,current:typeof window.getCurrentArenaProgress});
  else{
@@ -459,6 +460,14 @@
    if(!row||Math.abs(Number(physical.hp)-expected[id].hp)>1e-9||Math.abs(Number(physical.damage)-expected[id].damage)>1e-9||Math.abs(Number(physical.def)-expected[id].def)>1e-9)fail("ARENA_POSITION_PHYSICAL","競技場 Position 歷史物理倍率被意外改動",{id,row});
    const profile=window.getArenaEnemyProfile(6,id,2);
    if(!profile||profile.positionId!==id||profile.stageIndex!==2||![profile.finalPhysical?.hpMul,profile.finalPhysical?.damageMul,profile.finalPhysical?.defMul,profile.critScale,profile.dodgeScale].every(Number.isFinite))fail("ARENA_ENEMY_PROFILE","競技場 Enemy Profile 輸出異常",{id,profile});
+  });
+ }
+  if(Number(window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION)!==1||typeof window.getArenaRankCurveForWorld!=="function"||!window.SECOND_WORLD_ARENA_RANK_CURVE)fail("SECOND_WORLD_ARENA_CURVE_OWNER","第二世界競技場獨立強度曲線 owner 未完整載入",{version:window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION,api:typeof window.getArenaRankCurveForWorld,curve:window.SECOND_WORLD_ARENA_RANK_CURVE});
+ else{
+  const galaxyCurve=window.getArenaRankCurveForWorld(1),universeCurve=window.getArenaRankCurveForWorld(2);
+  if(galaxyCurve===universeCurve||galaxyCurve.hp===universeCurve.hp)fail("SECOND_WORLD_ARENA_CURVE_REFERENCE","第二世界競技場曲線不得與第一世界共用同一物件參照");
+  ["hp","damage","def"].forEach(key=>{
+   if(!galaxyCurve?.[key]||!universeCurve?.[key]||!Number.isFinite(Number(universeCurve[key].linear))||!Number.isFinite(Number(universeCurve[key].quadratic)))fail("SECOND_WORLD_ARENA_CURVE_DATA","第二世界競技場曲線資料異常",{key,galaxyCurve,universeCurve});
   });
  }
   if(typeof window.getArenaRankMultipliers!=="function")fail("ARENA_RANK_MULTIPLIERS_API","缺少競技場階級倍率正式 API");
