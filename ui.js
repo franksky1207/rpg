@@ -329,11 +329,11 @@ function wireSettings(){
 function openGMModal(){document.getElementById("passwordModal").classList.add("show");document.getElementById("gmPassword").focus()}
 function closeGMModal(){document.getElementById("passwordModal").classList.remove("show")}
 function unlockGM(){if(document.getElementById("gmPassword").value===GM_PASSWORD){state.gm=true;save();closeGMModal();render()}else alert("密碼錯誤。")}
-function normalizeSaveItem(it,forcedType=null){
+function normalizeSaveItem(it,forcedType=null,target=null){
  if(!it||typeof it!=="object"||Array.isArray(it))return null;
  const type=forcedType||it.type;if(!EQUIPMENT_TYPES.includes(type))return null;
  const q=Math.max(0,Math.min(QUALITY.length-1,Math.floor(Number(it.q)||0)));
- const level=clampGameLevel(it.level);
+ const level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(it.level,target):Math.max(1,Math.min(Number(target?.secondWorld?.entered)===true?1000:MAX_LEVEL,Math.floor(Number(it.level)||1)));
  const out={...it,type,q,level};
  out.id=typeof it.id==="string"&&it.id?it.id:Date.now().toString(36)+Math.random().toString(36).slice(2);
  out.name=typeof it.name==="string"&&it.name.trim()?it.name.trim().slice(0,80):"未知裝備";
@@ -349,18 +349,19 @@ function normalizeSaveItem(it,forcedType=null){
 }
 function normalizeSaveState(target){
  if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
- target.level=clampGameLevel(target.level);
+ target.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(target.level,target):Math.max(1,Math.min(Number(target?.secondWorld?.entered)===true?1000:MAX_LEVEL,Math.floor(Number(target.level)||1)));
  const exp=Number(target.exp),gold=Number(target.gold),hp=Number(target.hp);
- target.exp=target.level>=MAX_LEVEL?0:(Number.isFinite(exp)&&exp>=0?Math.floor(exp):0);
+ const effectiveCap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(target):(target?.secondWorld?.entered===true?1000:MAX_LEVEL);
+ target.exp=target.level>=effectiveCap?0:(Number.isFinite(exp)&&exp>=0?Math.floor(exp):0);
  target.gold=Number.isFinite(gold)&&gold>=0?Math.floor(gold):0;
  target.hp=Number.isFinite(hp)&&hp>=0?Math.floor(hp):baseHP(target.level);
  const name=typeof target.playerName==="string"?target.playerName.trim():"";target.playerName=name||"玩家";
  if(!target.equipment||typeof target.equipment!=="object"||Array.isArray(target.equipment))target.equipment={};
- EQUIPMENT_TYPES.forEach(type=>{target.equipment[type]=normalizeSaveItem(target.equipment[type],type)});
- target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).map(it=>normalizeSaveItem(it)).filter(Boolean);
+ EQUIPMENT_TYPES.forEach(type=>{target.equipment[type]=normalizeSaveItem(target.equipment[type],type,target)});
+ target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).map(it=>normalizeSaveItem(it,null,target)).filter(Boolean);
  target.lostGear=(Array.isArray(target.lostGear)?target.lostGear:[]).map(x=>{
   if(!x||typeof x!=="object")return null;
-  const item=normalizeSaveItem(x.item);if(!item)return null;
+  const item=normalizeSaveItem(x.item,null,target);if(!item)return null;
   const rawCost=Number(x.cost),lostAt=Number(x.lostAt),world=Number(item.world)===2?2:1;
   const legacyUniverseFree=world===1&&(x.redemptionPending===true||x.currency==="pending"||x.currency==="free");
   const currency=legacyUniverseFree?"free":x.currency==="darkMatter"?"darkMatter":"gold";
@@ -383,6 +384,9 @@ function normalizeSaveState(target){
  target.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
  return target;
 }
+window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
+window.normalizeSaveItem=normalizeSaveItem;
+window.normalizeSaveState=normalizeSaveState;
 function normalizeCurrentSaveState(){
  const sourceVersion=Math.max(1,Math.floor(Number(state?.saveVersion)||1));
  let sourceRaw=null;
