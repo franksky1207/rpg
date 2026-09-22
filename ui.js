@@ -322,6 +322,9 @@ function normalizeSaveItem(it,forcedType=null,target=null){
 }
 function normalizeSaveState(target){
  if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
+ if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
+ if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
+ if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
  target.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(target.level,target):Math.max(1,Math.min(target?.secondWorld?.entered===true?1000:MAX_LEVEL,Math.floor(Number(target.level)||1)));
  const exp=Number(target.exp),gold=Number(target.gold),hp=Number(target.hp);
  const effectiveCap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(target):(target?.secondWorld?.entered===true?1000:MAX_LEVEL);
@@ -351,7 +354,7 @@ function normalizeSaveState(target){
  target.settings.dark=typeof target.settings.dark==="boolean"?target.settings.dark:true;
  const combatSpeed=Number(target.settings.combatSpeed);target.settings.combatSpeed=combatSpeed===1.5?1.5:1;
  target.gm=target.gm===true;
- if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
+ if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
  if(typeof normalizeVipState==="function")normalizeVipState(target);
  if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
  if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
@@ -359,6 +362,7 @@ function normalizeSaveState(target){
  return target;
 }
 window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
+window.SAVE_ROOT_NORMALIZATION_ORDER_VERSION=1;
 window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
 window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=1;
 window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION=1;
