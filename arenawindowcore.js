@@ -1,8 +1,9 @@
 (function(){
- function maxArenaRank(){return Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
+ function arenaWorld(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state):(state?.secondWorld?.entered===true?2:1);}
+ function maxArenaRank(){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(arenaWorld()):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
  function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1)));}
  function arenaVenueName(rank){
-  const r=clampRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;
+  const r=clampRank(rank),region=arenaWorld()===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
   return `${region?.name||`第${r}區`}競技場`;
  }
  function arenaState(){
@@ -12,6 +13,7 @@
   return dungeon.arena;
  }
  function regionUnlockedCap(){
+  if(typeof window.getArenaRankCapForWorld==="function")return clampRank(window.getArenaRankCapForWorld(arenaWorld(),state));
   if(typeof unlockedArenaRankCapForState==="function")return clampRank(unlockedArenaRankCapForState(state));
   return 1;
  }
@@ -74,6 +76,7 @@
   return {ok:true,...(nextAssessment||{})};
  };
 
+ window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION=1;
  window.getArenaWindowState=progressState;
  window.getArenaProgressState=progressState;
  window.getArenaVisibleRanks=function(){return progressState().visibleRanks.slice();};
