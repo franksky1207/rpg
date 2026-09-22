@@ -45,3 +45,6 @@
 .starter-gear-overlay.open{display:flex}.starter-gear-card{width:min(92vw,560px);max-height:min(86dvh,720px);overflow:auto;border:1px solid #5c6f85;border-radius:16px;background:linear-gradient(180deg,#101722,#0b1018);box-shadow:0 24px 80px rgba(0,0,0,.62);padding:22px;color:#e8edf4}
 .starter-gear-card h2{margin:0;text-align:center;color:#f1d38b}.starter-gear-intro{margin:10px 0 16px;color:#b8c5d2;line-height:1.65;text-align:center}.starter-gear-list{display:grid;gap:8px}.starter-gear-row{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid #334153;border-radius:10px;background:#0d141e}.starter-gear-type{color:#8fa7bf;font-weight:800}.starter-gear-note{margin-top:14px;color:#8fa0b2;font-size:13px;line-height:1.55}.starter-gear-actions{margin-top:18px;display:flex;justify-content:center}.starter-gear-actions .btn{min-width:180px}
 @media(max-width:560px){.starter-gear-card{padding:18px 15px}.starter-gear-row{grid-template-columns:64px 1fr;padding:9px 10px}.starter-gear-actions .btn{width:100%}}
+
+/* 戰線紀錄雙紀元回顧 */
+.story-record-era-tabs{margin:10px 0 12px}.story-record-universe-empty .story-record-empty{padding:8px 0 2px;line-height:1.65}
