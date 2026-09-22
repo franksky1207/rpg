@@ -324,7 +324,9 @@ darkEnergy = 300 + 10*K
 - 無直接暗能量。
 - shared daily bounty limit 20，進宇宙不重置。
 - 失敗不套主線 world2 death penalty。
+- 宇宙正式戰鬥與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
 - GM 已用 explicit world context，不能靠暫改正式 `state.secondWorld.entered` 模擬。
+- `BOUNTY_CIVILIZATION_DAMAGE_VERSION=1`
 - `BOUNTY_TEST_CONTEXT_VERSION=1`
 - `GM_BOUNTY_STATE_ISOLATION_VERSION=1`
 
@@ -336,20 +338,30 @@ darkEnergy = 300 + 10*K
 - Rank curve 第二世界獨立，但正式 helper 統一。
 - 三連戰不回血；新一輪才回血。
 - shared daily arena limit 20。
+- 宇宙正式三連戰與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
 - GM 使用 explicit world context，已移除暫改正式 state 的舊路徑。
+- `ARENA_CIVILIZATION_DAMAGE_VERSION=1`
+- `GM_ARENA_CIVILIZATION_DAMAGE_VERSION=1`
 - `ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1`
 - `GM_ARENA_STATE_ISOLATION_VERSION=1`
 
 ## 9.3 虛空
 - 維持無限模式。
 - GM 戰力基準不提供紀元 selector，視為共用模式。
+- 玩家／GM 測試角色若處於宇宙紀元，文明等級 final damage 會正式生效；銀河紀元為 ×1.00。
 - GM 可預覽指定樓層／從指定樓層連爬；起始樓層設定在同一頁面工作階段保留。
+- `VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=1`
+- `GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=1`
 
 ## 9.4 鏡像
 - 不分紀元 selector。
 - 正式每次 20 戰；VIP points = `20 * wins^2`。
-- GM 鏡像測試現在讀取「GM 測試角色」snapshot，而不是正式角色。
+- 宇宙紀元文明最終傷害會納入鏡像 snapshot，並對玩家與鏡像雙方套用同一倍率，維持完全對稱。
+- GM 鏡像測試現在讀取「GM 測試角色」snapshot，文明等級亦取 GM 測試角色，不讀正式角色。
 - 100 次實戰與 64 組對稱回歸可同時保留結果。
+- `MIRROR_COMBAT_CORE_VERSION=5`
+- `MIRROR_CIVILIZATION_DAMAGE_VERSION=1`
+- `GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=1`
 
 ---
 
