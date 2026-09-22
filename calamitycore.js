@@ -1,6 +1,6 @@
 (function(){
  const CALAMITY_CORE_VERSION=1;
- const CALAMITY_COMBAT_RULE_VERSION=2;
+ const CALAMITY_COMBAT_RULE_VERSION=3;
  const CALAMITY_HP_RESTORE_OWNER_VERSION=1;
  const ATK_MULTIPLIER=1.10;
  const DEF_MULTIPLIER=1.05;
@@ -62,7 +62,12 @@
   return {...ENEMY_CACHE.get(def.id)};
  }
  function maxHp(id){return enemy(id)?.hp||0;}
+ function markMaxed(def,target=state){
+  const mark=readMarkProgress(def?.markId,target);
+  return !!mark&&mark.level>=Math.max(0,Math.floor(Number(window.MARK_MAX_LEVEL)||10));
+ }
  function readCurrentHp(def,e,target=state){
+  if(markMaxed(def,target))return e.hp;
   const raw=Number(target?.calamities?.entries?.[def.id]?.currentHp);
   return Number.isFinite(raw)&&raw>0?Math.max(1,Math.min(e.hp,Math.floor(raw))):e.hp;
  }
@@ -101,8 +106,11 @@
    calamityEntry.currentHp=null;
   }else{
    const max=maxHp(id);
-   calamityEntry.currentHp=Math.max(1,Math.min(max,Math.floor(Number(combat.enemyHp)||max)));
+   calamityEntry.currentHp=markMaxed(def,state)?null:Math.max(1,Math.min(max,Math.floor(Number(combat.enemyHp)||max)));
   }
+  const finalMark=readMarkProgress(def.markId,state);
+  const markIsMaxed=!!finalMark&&finalMark.level>=Math.max(0,Math.floor(Number(window.MARK_MAX_LEVEL)||10));
+  if(markIsMaxed)calamityEntry.currentHp=null;
   if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
   if(options.save!==false&&typeof save==="function")save(false);
@@ -112,6 +120,7 @@
    currentHp:combat.win?maxHp(id):calamityEntry.currentHp,
    maxHp:maxHp(id),
    markSettlement,
+   markMaxed:markIsMaxed,
    titleSettlement
   };
  }
@@ -151,6 +160,7 @@
  window.CALAMITY_CORE_VERSION=CALAMITY_CORE_VERSION;
  window.CALAMITY_COMBAT_RULE_VERSION=CALAMITY_COMBAT_RULE_VERSION;
  window.CALAMITY_HP_RESTORE_OWNER_VERSION=CALAMITY_HP_RESTORE_OWNER_VERSION;
+ window.CALAMITY_MAXED_REPLAY_HP_VERSION=1;
  window.CALAMITY_ATK_MULTIPLIER=ATK_MULTIPLIER;
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
  window.CALAMITY_FIXED_CRIT=FIXED_CRIT;
