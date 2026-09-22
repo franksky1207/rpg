@@ -1,6 +1,7 @@
 (function(){
  let bountyTestHtml="";
  let bountyTestResult=null;
+ let bountyTestResults={};
  let voidMirageTestResult=null;
  let bountyTestWorld=Number(window.gmTestWorld)===2?2:1;
  let arenaTestHtml="";
@@ -246,6 +247,7 @@
   const reward=world===2&&typeof window.getUniverseBountyRewardPreview==="function"?withTemporaryTestWorld(2,level,()=>window.getUniverseBountyRewardPreview(tierId,level)):null;
   const rewardHtml=reward?`<div class="muted gm-test-context">宇宙獎勵基準：Lv.${reward.rewardLevel} → Lv.${reward.bossLevel} ${reward.bossName}；EXP ${reward.exp.toLocaleString()}・暗物質 ${reward.darkMatter.toLocaleString()}・裝備 ${reward.gearCount} 件。</div>`:"";
   bountyTestResult={world,level,tierId:tier.id,tierName:tier.name,runs:GM_TEST_RUNS,wins:summary.wins,losses:GM_TEST_RUNS-summary.wins,winRate,avgWinHp,avgTurns,reward:reward?{rewardLevel:reward.rewardLevel,bossLevel:reward.bossLevel,bossName:reward.bossName,exp:reward.exp,darkMatter:reward.darkMatter,gearCount:reward.gearCount}:null};
+  bountyTestResults[String(world)+":"+tier.id]=JSON.parse(JSON.stringify(bountyTestResult));
   showBountyTest(`<div class="notice">${testSummary(`${world===2?"宇宙紀元":"銀河紀元"}・${tier.name}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">GM 測試角色 Lv.${level}；紀元與正式角色進度完全脫鉤，玩家戰鬥套用測試 VIP／專精／強化／印記。</div>${rewardHtml}<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
@@ -292,9 +294,9 @@
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getArenaGmTestHtml=function(){return arenaTestHtml;};
  window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
- window.gmBountyTestResultSnapshot=function(){return bountyTestResult?JSON.parse(JSON.stringify(bountyTestResult)):null;};
+ window.gmBountyTestResultSnapshot=function(){const rows=Object.values(bountyTestResults);return rows.length?JSON.parse(JSON.stringify(rows)):null;};
  window.gmVoidMirageTestResultSnapshot=function(){return voidMirageTestResult?JSON.parse(JSON.stringify(voidMirageTestResult)):null;};
- window.gmClearBountyTestResult=function(){bountyTestHtml="";bountyTestResult=null;return true;};
+ window.gmClearBountyTestResult=function(){bountyTestHtml="";bountyTestResult=null;bountyTestResults={};return true;};
  window.gmClearVoidMirageTestResult=function(){voidMirageTestHtml="";voidMirageTestResult=null;return true;};
  window.GM_DUNGEON_SUMMARY_EXPORT_VERSION=1;
 })();
