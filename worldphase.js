@@ -27,31 +27,46 @@
    const row=isObject(source[index])?source[index]:{};
    const hp=Number(row.currentHp);
    return {
+    ...row,
     currentHp:Number.isFinite(hp)&&hp>0?Math.max(1,Math.floor(hp)):null,
     trueKills:Math.max(0,Math.min(30,finiteCount(row.trueKills)))
    };
   });
  }
+ function civilizationFloorFromCalamities(value){
+  const rows=Array.isArray(value)?value:[];
+  let level=0;
+  for(let index=0;index<SECOND_WORLD_CALAMITY_COUNT;index++){
+   if(finiteCount(rows[index]?.trueKills)>=30)level=index+1;
+   else break;
+  }
+  return level;
+ }
  function normalizeSecondWorldState(target){
   if(!isObject(target))return target;
   const source=isObject(target.secondWorld)?target.secondWorld:{};
   const mainline=isObject(source.mainline)?source.mainline:{};
+  const calamities=normalizeCalamities(source.calamities);
+  const storedCivilizationLevel=Math.max(0,Math.min(10,finiteCount(source.civilizationLevel)));
+  const inferredCivilizationLevel=civilizationFloorFromCalamities(calamities);
   target.secondWorld={
+   ...source,
    entered:source.entered===true,
-   mainline:{bossKilled:normalizeBossKilled(mainline.bossKilled)},
+   mainline:{...mainline,bossKilled:normalizeBossKilled(mainline.bossKilled)},
    darkMatter:finiteCount(source.darkMatter),
    darkEnergy:finiteCount(source.darkEnergy),
-   civilizationLevel:Math.max(0,Math.min(10,finiteCount(source.civilizationLevel))),
-   calamities:normalizeCalamities(source.calamities)
+   civilizationLevel:Math.max(storedCivilizationLevel,inferredCivilizationLevel),
+   calamities
   };
   return target;
  }
  function secondWorldState(target=state){
   if(!isObject(target))return createBlankSecondWorldState();
-  normalizeSecondWorldState(target);
-  return target.secondWorld;
+  return isObject(target.secondWorld)?target.secondWorld:createBlankSecondWorldState();
  }
- function isSecondWorldEntered(target=state){return secondWorldState(target).entered===true;}
+ function isSecondWorldEntered(target=state){
+  return !!(isObject(target)&&isObject(target.secondWorld)&&target.secondWorld.entered===true);
+ }
  function firstWorldProgressionEnabled(target=state){return !isSecondWorldEntered(target);}
  function secondWorldProgressionEnabled(target=state){return isSecondWorldEntered(target);}
 
@@ -186,6 +201,10 @@
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
  window.SECOND_WORLD_CIVILIZATION_STATE_VERSION=1;
+ window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION=1;
+ window.SECOND_WORLD_ENTRY_PURE_READ_VERSION=1;
+ window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION=1;
+ window.secondWorldCivilizationFloorFromCalamities=civilizationFloorFromCalamities;
  window.normalizeSecondWorldState=normalizeSecondWorldState;
  window.finalFirstWorldStoryId=finalFirstWorldStoryId;
  window.isFinalFirstWorldStoryId=function(id){return !!id&&id===finalFirstWorldStoryId();};
