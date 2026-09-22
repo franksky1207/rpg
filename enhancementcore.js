@@ -1,5 +1,8 @@
 (function(){
- const MAX_LEVEL=20;
+ const FIRST_WORLD_ENHANCEMENT_CAP=20;
+ const SECOND_WORLD_ENHANCEMENT_CAP=40;
+ const SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=false;
+ const MAX_LEVEL=FIRST_WORLD_ENHANCEMENT_CAP;
  const BONUS_PERCENT_PER_LEVEL=2.5;
  const BASIC_COST_PER_TARGET_LEVEL=50;
  const ADVANCED_COST_PER_TARGET_LEVEL=5;
@@ -21,6 +24,9 @@
  function enhancementMultiplier(level){return 1+enhancementBonusPercent(level)/100;}
  function enhancementUpgradeCost(targetLevel){const n=clampWhole(targetLevel,1,MAX_LEVEL);return {basic:BASIC_COST_PER_TARGET_LEVEL*n,advanced:ADVANCED_COST_PER_TARGET_LEVEL*n};}
  function enhancedMainStatValue(rawValue,level){return Math.max(0,Number(rawValue)||0)*enhancementMultiplier(level);}
+ window.FIRST_WORLD_ENHANCEMENT_CAP=FIRST_WORLD_ENHANCEMENT_CAP;
+ window.SECOND_WORLD_ENHANCEMENT_CAP=SECOND_WORLD_ENHANCEMENT_CAP;
+ window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE;
  window.ENHANCEMENT_MAX_LEVEL=MAX_LEVEL;
  window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL=BONUS_PERCENT_PER_LEVEL;
  window.ENHANCEMENT_SLOTS=Object.freeze(SLOTS.slice());
