@@ -79,7 +79,7 @@ async function gmStartSpecialBattle(){
  const playerMax=playerSnapshot.hp;
  const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{};
  const civLevel=world===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
- const civMultiplier=world===2&&typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civLevel):1;
+ const civMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,civilizationLevel:civLevel}):1;
  battleBusy=true;
  const summary={world,level,count:GM_TEST_RUNS,wins:0,losses:0,totalTurns:0,totalXp:0,totalResource:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
 
@@ -147,3 +147,4 @@ window.gmClearSpecialBatchResult=function(){gmSpecialBatchResult=null;gmSpecialB
 window.GM_SPECIAL_WORLD_BENCHMARK_VERSION=1;
 window.GM_SPECIAL_SUMMARY_EXPORT_VERSION=1;
 window.GM_SPECIAL_WEAK_SLOT_SANDBOX_VERSION=1;
+window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1;
