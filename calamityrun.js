@@ -1,6 +1,6 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
- const CALAMITY_CONTINUOUS_RULE_VERSION=4;
+ const CALAMITY_CONTINUOUS_RULE_VERSION=5;
  let activeRun=null;
 
  function clone(value){
@@ -137,6 +137,11 @@
    const run=finish("title-first-kill");
    return {ok:true,ended:true,reason:"title-first-kill",battleNumber,result,run};
   }
+  if(result?.settlement?.markMaxed===true){
+   if(options.save===false&&typeof save==="function")save(false);
+   const run=finish("mark-maxed");
+   return {ok:true,ended:true,reason:"mark-maxed",battleNumber,result,run};
+  }
   if(activeRun.stopRequested){
    const run=finish("stopped");
    return {ok:true,ended:true,reason:"stopped",battleNumber,result,run};
@@ -214,6 +219,7 @@
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
  window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
+ window.CALAMITY_MAXED_MARK_CONTINUOUS_STOP_VERSION=1;
  window.beginCivilizationCalamityRun=begin;
  window.runCivilizationCalamitySingle=runSingle;
  window.fightNextCivilizationCalamityBattle=fightNext;
