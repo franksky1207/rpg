@@ -1,6 +1,7 @@
 (function(){
  const FIRST_WORLD_ENHANCEMENT_CAP=20;
  const SECOND_WORLD_ENHANCEMENT_CAP=40;
+ const SECOND_WORLD_ENHANCEMENT_MIN=FIRST_WORLD_ENHANCEMENT_CAP;
  const SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=true;
  const ABSOLUTE_MAX_LEVEL=SECOND_WORLD_ENHANCEMENT_CAP;
  const MAX_LEVEL=FIRST_WORLD_ENHANCEMENT_CAP;
@@ -21,8 +22,10 @@
   if(typeof window.isSecondWorldEntered==="function")return window.isSecondWorldEntered(holder)===true;
   return holder?.secondWorld?.entered===true;
  }
+ function effectiveEnhancementMin(target=null){return enteredSecondWorld(target)?SECOND_WORLD_ENHANCEMENT_MIN:0;}
  function effectiveEnhancementCap(target=null){return enteredSecondWorld(target)?SECOND_WORLD_ENHANCEMENT_CAP:FIRST_WORLD_ENHANCEMENT_CAP;}
  function clampEffectiveEnhancementLevel(value,target=null){return clampWhole(value,0,effectiveEnhancementCap(target));}
+ function formalEnhancementLevelValid(value,target=null){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=effectiveEnhancementMin(target)&&n<=effectiveEnhancementCap(target);}
  function normalizeEnhancementState(target){
   if(!target||typeof target!=="object")return target;
   const source=target.enhancement&&typeof target.enhancement==="object"&&!Array.isArray(target.enhancement)?target.enhancement:{};
@@ -38,7 +41,8 @@
  function enhancementMultiplier(level){return 1+enhancementBonusPercent(level)/100;}
  function enhancementUpgradeCost(targetLevel,target=null){
   const raw=Math.floor(Number(targetLevel)),cap=effectiveEnhancementCap(target);
-  if(!Number.isFinite(raw)||raw<1||raw>cap)return {available:false,targetLevel:Number.isFinite(raw)?raw:0,phase:enteredSecondWorld(target)?2:1,basic:0,advanced:0,darkMatter:0,darkEnergy:0};
+  const second=enteredSecondWorld(target);
+  if(!Number.isFinite(raw)||raw<1||raw>cap||(second&&raw<=SECOND_WORLD_ENHANCEMENT_MIN))return {available:false,targetLevel:Number.isFinite(raw)?raw:0,phase:second?2:1,basic:0,advanced:0,darkMatter:0,darkEnergy:0};
   if(raw<=FIRST_WORLD_ENHANCEMENT_CAP)return {available:true,targetLevel:raw,phase:1,basic:BASIC_COST_PER_TARGET_LEVEL*raw,advanced:ADVANCED_COST_PER_TARGET_LEVEL*raw,darkMatter:0,darkEnergy:0};
   const k=raw-(FIRST_WORLD_ENHANCEMENT_CAP+1);
   return {available:true,targetLevel:raw,phase:2,basic:0,advanced:0,darkMatter:SECOND_WORLD_DARK_MATTER_BASE+SECOND_WORLD_DARK_MATTER_STEP*k,darkEnergy:SECOND_WORLD_DARK_ENERGY_BASE+SECOND_WORLD_DARK_ENERGY_STEP*k};
@@ -46,17 +50,21 @@
  function enhancedMainStatValue(rawValue,level){return Math.max(0,Number(rawValue)||0)*enhancementMultiplier(level);}
  window.FIRST_WORLD_ENHANCEMENT_CAP=FIRST_WORLD_ENHANCEMENT_CAP;
  window.SECOND_WORLD_ENHANCEMENT_CAP=SECOND_WORLD_ENHANCEMENT_CAP;
+ window.SECOND_WORLD_ENHANCEMENT_MIN=SECOND_WORLD_ENHANCEMENT_MIN;
  window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE;
  window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL=ABSOLUTE_MAX_LEVEL;
  window.ENHANCEMENT_MAX_LEVEL=MAX_LEVEL;
- window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION=1;
+ window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION=2;
+ window.ENHANCEMENT_FORMAL_RANGE_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_COST_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_DATA_CAP_ACTIVE=true;
  window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL=BONUS_PERCENT_PER_LEVEL;
  window.ENHANCEMENT_SLOTS=Object.freeze(SLOTS.slice());
  window.createBlankEnhancementLevels=blankLevels;
+ window.effectiveEnhancementMin=effectiveEnhancementMin;
  window.effectiveEnhancementCap=effectiveEnhancementCap;
  window.clampEffectiveEnhancementLevel=clampEffectiveEnhancementLevel;
+ window.formalEnhancementLevelValid=formalEnhancementLevelValid;
  window.normalizeEnhancementState=normalizeEnhancementState;
  window.enhancementLevel=enhancementLevel;
  window.enhancementBonusPercent=enhancementBonusPercent;
