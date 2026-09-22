@@ -114,12 +114,14 @@
  };
  window.gmSetTestVipLevel=function(value,refresh=true){
   window.gmTestVipLevel=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(value)||0)));
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testVip();
  };
  window.gmSetTestEnhancement=function(type,value,refresh=true){
   if(!enhancementSlots().includes(type))return false;
   window.gmTestEnhancementLevels[type]=clampEnhancement(value);
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return true;
  };
@@ -179,6 +181,7 @@
   window.gmUseCurrentEnhancementTestStatus(false);
   if(typeof window.gmUseCurrentCivilizationTestStatus==="function")window.gmUseCurrentCivilizationTestStatus(false);
   if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus();
+  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return {character:window.gmTestCharacterSnapshot(),vip:testVip(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
  };
@@ -217,3 +220,5 @@
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
  window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
 })();
+
+window.GM_TEST_RESULT_INVALIDATION_VERSION=1;
