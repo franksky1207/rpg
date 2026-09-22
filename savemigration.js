@@ -25,9 +25,22 @@
   delete target.shop;
   return true;
  }
- function normalizePersistentFlags(target){
+ const TRANSIENT_GM_TEST_STATE_KEYS=Object.freeze(["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmPowerBenchmark","gmTestResults"]);
+ function cleanupTransientGmTestState(target){
+  if(!isObject(target))return false;
+  let removed=false;
+  TRANSIENT_GM_TEST_STATE_KEYS.forEach(key=>{if(Object.prototype.hasOwnProperty.call(target,key)){delete target[key];removed=true;}});
+  return removed;
+ }
+ function normalizePendingBlackMarketEncounter(target){
   if(!isObject(target))return target;
   target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
+  return target;
+ }
+ function normalizePersistentFlags(target){
+  if(!isObject(target))return target;
+  normalizePendingBlackMarketEncounter(target);
+  cleanupTransientGmTestState(target);
   return target;
  }
  function legacySameExpV9(level){const l=Math.max(1,Math.floor(Number(level)||1));return Math.ceil(25+4*l);}
@@ -163,6 +176,11 @@
  window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
+ window.normalizePendingBlackMarketEncounter=normalizePendingBlackMarketEncounter;
+ window.cleanupTransientGmTestState=cleanupTransientGmTestState;
+ window.GM_TEST_TRANSIENT_STATE_KEYS=Array.from(TRANSIENT_GM_TEST_STATE_KEYS);
+ window.PENDING_BLACK_MARKET_FLAG_SEMANTICS_VERSION=1;
+ window.GM_TEST_SAVE_ISOLATION_VERSION=1;
  window.normalizePersistentFlags=normalizePersistentFlags;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePersistentFlags);
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
@@ -183,6 +201,7 @@
   if(!introWasBoolean)target.introSeen=true;
   const retiredShopStateRemoved=cleanupRetiredShopState(target);
   const legacyDungeonFieldsRemoved=cleanupLegacyDungeonFields(target);
+  const transientGmTestStateRemoved=cleanupTransientGmTestState(target);
   const normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);
   cleanupRetiredShopState(target);
@@ -207,7 +226,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
   return target;
  };
 
@@ -253,6 +272,7 @@
     expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,
     legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,
     retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,
+    transientGmTestStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.transientGmTestStateRemoved===true,
     calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,
     markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
     titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
