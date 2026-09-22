@@ -31,14 +31,15 @@
    if(typeof window.migrateSave==="function"&&typeof state!=="undefined"&&state&&typeof state==="object"){
     const probe=clone(state),source=clone(state),previousReport=window.LAST_SAVE_MIGRATION_REPORT;
     if(probe&&source){
-     if(!probe.secondWorld)probe.secondWorld={};
-     if(!source.secondWorld)source.secondWorld={};
-     probe.secondWorld.entered=true;source.secondWorld.entered=true;
-     delete probe.secondWorld.civilizationLevel;delete source.secondWorld.civilizationLevel;
-     const migrated=window.migrateSave(probe,Number(window.SAVE_SCHEMA_VERSION)||14,null,source);
-     if(migrated?.secondWorld?.civilizationLevel!==0)fail("MIGRATION_DEFAULT","舊存檔 migration 應補文明 Lv0",migrated?.secondWorld);
-     if(window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized!==true)fail("MIGRATION_REPORT","migration report 未標示文明等級初始化",window.LAST_SAVE_MIGRATION_REPORT);
-     window.LAST_SAVE_MIGRATION_REPORT=previousReport;
+     try{
+      if(!probe.secondWorld)probe.secondWorld={};
+      if(!source.secondWorld)source.secondWorld={};
+      probe.secondWorld.entered=true;source.secondWorld.entered=true;
+      delete probe.secondWorld.civilizationLevel;delete source.secondWorld.civilizationLevel;
+      const migrated=window.migrateSave(probe,Number(window.SAVE_SCHEMA_VERSION)||14,null,source);
+      if(migrated?.secondWorld?.civilizationLevel!==0)fail("MIGRATION_DEFAULT","舊存檔 migration 應補文明 Lv0",migrated?.secondWorld);
+      if(window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized!==true)fail("MIGRATION_REPORT","migration report 未標示文明等級初始化",window.LAST_SAVE_MIGRATION_REPORT);
+     }finally{window.LAST_SAVE_MIGRATION_REPORT=previousReport;}
     }else fail("MIGRATION_CLONE","無法建立 migration probe clone");
    }else fail("MIGRATION_API","migrateSave／state 未載入");
 
