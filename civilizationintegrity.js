@@ -56,7 +56,7 @@
 
    if(Number(window.CHARACTER_CIVILIZATION_UI_VERSION)!==1)fail("PLAYER_UI","角色頁文明等級 UI owner 未載入");
    if(Number(window.GM_CIVILIZATION_VERSION)!==1||Number(window.GM_CIVILIZATION_FORMAL_RANGE_VERSION)!==1||Number(window.GM_CIVILIZATION_TEST_RANGE_VERSION)!==1)fail("GM_OWNER","GM 文明等級 owner 未完整載入");
-   if(Number(window.GM_POWER_BENCHMARK_VERSION)!==17||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION)!==1)fail("BENCHMARK_OWNER","GM 戰力基準文明等級 owner 異常",{version:window.GM_POWER_BENCHMARK_VERSION,civilization:window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION});
+   if(Number(window.GM_POWER_BENCHMARK_VERSION)!==18||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION)!==1)fail("BENCHMARK_OWNER","GM 戰力基準文明等級 owner 異常",{version:window.GM_POWER_BENCHMARK_VERSION,civilization:window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION});
   }catch(error){fail("EXCEPTION","文明等級 integrity 執行失敗",String(error?.message||error));}
   const report={version:VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
   window.CIVILIZATION_LEVEL_INTEGRITY_REPORT=report;
