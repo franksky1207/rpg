@@ -167,7 +167,7 @@
  function arenaPlayerStats(){if(arenaState.playerSnapshot)return arenaState.playerSnapshot;return createSpecialPlayerSnapshot(playerCombatStats(equippedStats(),state.vipLevel));}
  function arenaFightCore(enemy){
   const player=arenaPlayerStats();
-  const civilizationMultiplier=arenaWorld()===2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(state):1;
+  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:arenaWorld(),state}):1;
   const combat=runCombatCore(player,enemy,state.hp,{playerFinalDamageMultiplier:civilizationMultiplier});
   state.hp=combat.hp;
   return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns,civilizationDamageMultiplier};
@@ -206,7 +206,7 @@
 
  window.ARENA_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.SECOND_WORLD_ARENA_POINTS_VERSION=1;
- window.ARENA_CIVILIZATION_DAMAGE_VERSION=1;
+ window.ARENA_CIVILIZATION_DAMAGE_VERSION=2;
  async function runArenaFight(){
   if(battleBusy)return;
   battleBusy=true;
