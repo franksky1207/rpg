@@ -141,6 +141,7 @@
   if(!validKey(key))return false;
   if(!window.gmTestMarkLevels||typeof window.gmTestMarkLevels!=="object")window.gmTestMarkLevels=blankTestLevels();
   window.gmTestMarkLevels[key]=clampLevel(value);
+  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   return true;
  };
  window.gmUseCurrentMarkTestStatus=function(){
