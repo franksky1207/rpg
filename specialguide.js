@@ -30,12 +30,14 @@
 
  function sgMonsterListHtml(){
   if(!Array.isArray(SPECIAL_MONSTERS)||!SPECIAL_MONSTERS.length)return `<div class="muted">目前沒有特殊怪資料。</div>`;
-  return SPECIAL_MONSTERS.map(monster=>`<div class="item"><b>✦ ${monster.name}</b><div class="muted" style="margin-top:5px">${monster.description||"特殊遭遇中的罕見敵人。"}</div><div style="margin-top:5px">${sgMonsterRewardText(monster)}</div></div>`).join("");
+  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
+  return SPECIAL_MONSTERS.map(base=>{const monster=typeof window.specialMonsterForWorld==="function"?window.specialMonsterForWorld(base,universe?2:1):base;return `<div class="item"><b>✦ ${monster.name}</b><div class="muted" style="margin-top:5px">${monster.description||"特殊遭遇中的罕見敵人。"}</div></div>`;}).join("");
  }
 
  function sgGuideHtml(){
-  const rate=Math.round((Number(SPECIAL_ENCOUNTER_RATE)||0)*1000)/10;
-  return `<details class="card" style="margin-top:14px"><summary style="cursor:pointer"><b>✦ 特殊遭遇說明</b></summary><div class="notice" style="margin-top:12px"><b>特殊遭遇規則</b><div class="muted" style="margin-top:6px">一般怪與菁英戰鬥後，每場約有 ${rate}% 機率觸發特殊遭遇；Boss 不會觸發。若目前怪物等級比玩家低 10 級以上，也不會觸發。主線每場戰鬥結束後會回滿 HP；觸發特殊遭遇時會自動進入戰鬥。特殊戰鬥結束後也會回滿 HP；勝利後繼續原本的連續戰鬥，失敗則立即結束本次連續戰鬥。</div></div><div style="margin-top:12px"><b>特殊怪</b>${sgMonsterListHtml()}</div></details>`;
+  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
+  const rule=universe?"宇宙主線 Boss 勝利後有機會觸發特殊遭遇。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。":"普通怪與菁英怪勝利後有機會觸發特殊遭遇，Boss 不會觸發。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。";
+  return `<details class="card" style="margin-top:14px"><summary style="cursor:pointer"><b>✦ 特殊遭遇說明</b></summary><div class="notice" style="margin-top:12px"><b>特殊遭遇規則</b><div class="muted" style="margin-top:6px">${rule}</div></div><div style="margin-top:12px"><b>特殊怪</b>${sgMonsterListHtml()}</div></details>`;
  }
 
  const sgBaseAdventurePreparePage=adventurePreparePage;
@@ -45,4 +47,5 @@
   if(insertAt<0)return html+sgGuideHtml();
   return html.slice(0,insertAt)+sgGuideHtml()+html.slice(insertAt);
  };
+window.SPECIAL_GUIDE_WORLD_AWARE_VERSION=1;
 })();
