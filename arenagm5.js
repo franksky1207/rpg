@@ -54,7 +54,7 @@
   const button=document.getElementById("gmArenaRun100Btn5");if(button){button.disabled=true;button.textContent="測試中…";}
   battleBusy=true;try{arenaGm5Summary=simulate(rank,positionId,100);if(arenaGm5Summary){arenaGm5Summary.assessment=false;arenaGm5Results[String(arenaGm5Summary.world)+":"+rank+":"+positionId+":100"]=JSON.parse(JSON.stringify(arenaGm5Summary));}arenaGm5Result=resultHtml(arenaGm5Summary,false);}finally{battleBusy=false;}
   const box=document.getElementById("gmArenaTestResult");if(box)box.innerHTML=arenaGm5Result;
-  if(button){button.disabled=false;button.textContent="100 次完整三連戰";}
+  if(button){button.disabled=false;button.textContent="100 次完整三連戰";}if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
  };
  window.gmArena5RunPromotion=function(){
   if(battleBusy)return;
@@ -65,7 +65,7 @@
   battleBusy=true;try{arenaGm5Summary=simulate(rank,positionId,500);if(arenaGm5Summary){arenaGm5Summary.assessment=true;arenaGm5Results[String(arenaGm5Summary.world)+":"+rank+":"+positionId+":500"]=JSON.parse(JSON.stringify(arenaGm5Summary));}arenaGm5Result=resultHtml(arenaGm5Summary,true);}finally{battleBusy=false;}
   const position=document.getElementById("gmArenaPosition5");if(position)position.value=positionId;
   const box=document.getElementById("gmArenaTestResult");if(box)box.innerHTML=arenaGm5Result;
-  if(button){button.disabled=false;button.textContent="500 次正式戰力評估";}
+  if(button){button.disabled=false;button.textContent="500 次正式戰力評估";}if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
  };
  function arenaGmBody(){
   const curveText=arenaGm5World===2?"宇宙紀元獨立強度曲線":"銀河紀元正式強度曲線";
