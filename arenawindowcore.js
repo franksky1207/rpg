@@ -1,9 +1,14 @@
 (function(){
- function arenaWorld(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state):(state?.secondWorld?.entered===true?2:1);}
+ function arenaWorld(){
+  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true)return 2;
+  if(state?.secondWorld?.entered===true)return 2;
+  return 1;
+ }
  function maxArenaRank(){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(arenaWorld()):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
- function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1)));}
+ function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1));}
  function arenaVenueName(rank){
-  const r=clampRank(rank),region=arenaWorld()===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
+  const r=clampRank(rank),world=arenaWorld();
+  const region=world===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
   return `${region?.name||`第${r}區`}競技場`;
  }
  function arenaState(){
@@ -55,7 +60,6 @@
   const arena=arenaState();if(!arena)return;
   const p=progressState();arena.activeRank=null;arena.rank=p.assessmentRank;
  }
-
  window.promoteArenaRank=function(){
   const arena=arenaState(),p=progressState();
   const assessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
@@ -75,8 +79,8 @@
   const nextAssessment=typeof window.getArenaAssessmentStatus==="function"?window.getArenaAssessmentStatus():null;
   return {ok:true,...(nextAssessment||{})};
  };
-
- window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION=1;
+ window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION=2;
+ window.ARENA_VENUE_WORLD_NAME_VERSION=2;
  window.getArenaWindowState=progressState;
  window.getArenaProgressState=progressState;
  window.getArenaVisibleRanks=function(){return progressState().visibleRanks.slice();};
