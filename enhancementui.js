@@ -2,6 +2,7 @@
  let pending=null,busy=false;
  function ensure(){normalizeEnhancementState(state);}
  function universe(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
+ function minLevel(){return typeof window.effectiveEnhancementMin==="function"?window.effectiveEnhancementMin(state):0;}
  function cap(){return typeof window.effectiveEnhancementCap==="function"?window.effectiveEnhancementCap(state):ENHANCEMENT_MAX_LEVEL;}
  function fmt(stat,value){const rate=stat==="crit"||stat==="dodge";const n=rate?round1(value):Math.ceil(value);return `${STAT_LABELS[stat]||stat} +${n}${rate?"%":""}`;}
  function level(type){ensure();return enhancementLevel(state,type);}
@@ -43,7 +44,8 @@
  function settleUpgrade(type,expectedLevel,next){
   ensure();
   if(!ENHANCEMENT_SLOTS.includes(type))return {ok:false,reason:"無效的強化欄位。"};
-  const current=level(type),effectiveCap=cap();
+  const current=level(type),effectiveMin=minLevel(),effectiveCap=cap();
+  if(current<effectiveMin)return {ok:false,reason:`強化資料異常：目前紀元正式強化不得低於 +${effectiveMin}。`};
   if(current!==expectedLevel||next!==current+1)return {ok:false,reason:"強化狀態已變更，請重新操作。"};
   if(next>effectiveCap)return {ok:false,reason:"目前紀元尚未開放此強化等級。"};
   const cost=costFor(next);
@@ -61,10 +63,10 @@
   return {ok:true,type,levelBefore:current,levelAfter:next,cost,phase:cost.phase};
  }
  function slotCard(type){
-  const lv=level(type),effectiveCap=cap(),max=lv>=effectiveCap,item=state.equipment?.[type]||null,next=Math.min(effectiveCap,lv+1),cost=max?null:costFor(next),pct=enhancementBonusPercent(lv),nextPct=enhancementBonusPercent(next);
+  const lv=level(type),effectiveMin=minLevel(),effectiveCap=cap(),invalid=lv<effectiveMin,max=lv>=effectiveCap,item=state.equipment?.[type]||null,next=Math.min(effectiveCap,lv+1),cost=max||invalid?null:costFor(next),pct=enhancementBonusPercent(lv),nextPct=enhancementBonusPercent(next);
   let itemHtmlBlock=`<div class="enhance-empty muted">目前未裝備；欄位仍可永久強化。</div>`;
   if(item){const stat=item.mainStat?.stat||mainStatForType(type),raw=Math.max(0,Number(item.mainStat?.value)||0),actual=enhancedMainStatValue(raw,lv),nextValue=enhancedMainStatValue(raw,next);itemHtmlBlock=`<div class="enhance-item">${itemHtml(item,true)}</div><div class="enhance-stat-row"><span>原始主能力</span><b>${fmt(stat,raw)}</b></div><div class="enhance-stat-row current"><span>目前實際主能力</span><b>${fmt(stat,actual)}</b></div>${max?"":`<div class="enhance-stat-row next"><span>強化後主能力</span><b>${fmt(stat,nextValue)}</b></div>`}`;}
-  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
+  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${invalid?`+${lv} / 異常`:max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max||invalid?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${invalid?`<div class="notice" style="margin-top:10px"><b>強化資料異常</b><div class="muted" style="margin-top:5px">宇宙紀元正式強化不得低於 +${effectiveMin}；系統不會自動補強化等級，請使用 GM／存檔檢查處理。</div></div>`:max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
  }
  function page(){
   ensure();
@@ -78,7 +80,7 @@
  function ensureModal(){if(document.getElementById("enhancementConfirmModal"))return;const el=document.createElement("div");el.className="modal";el.id="enhancementConfirmModal";el.innerHTML=`<div class="modal-box enhancement-confirm-box"><h3>確認強化</h3><div id="enhancementConfirmDetail"></div><div class="controls"><button class="btn" onclick="closeEnhancementConfirm()">取消</button><button id="enhancementConfirmButton" class="btn primary" onclick="confirmEnhancementUpgrade()">確認強化</button></div></div>`;document.body.appendChild(el);}
  window.openEnhancementConfirm=function(type){
   ensure();if(busy||!ENHANCEMENT_SLOTS.includes(type))return;
-  const lv=level(type),effectiveCap=cap();if(lv>=effectiveCap)return;
+  const lv=level(type),effectiveMin=minLevel(),effectiveCap=cap();if(lv<effectiveMin)return alert(`強化資料異常：目前紀元正式強化不得低於 +${effectiveMin}。`);if(lv>=effectiveCap)return;
   const next=lv+1,cost=costFor(next);if(!cost?.available)return alert("目前紀元尚未開放此強化等級。");if(!hasCost(cost))return alert(insufficientText(cost));
   pending={type,level:lv,next,cost};ensureModal();
   const item=state.equipment?.[type]||null;
@@ -102,5 +104,6 @@
  window.ENHANCEMENT_UI_VERSION=6;
  window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION=1;
+ window.ENHANCEMENT_PLAYER_FORMAL_RANGE_VERSION=1;
  ensureModal();
 })();
