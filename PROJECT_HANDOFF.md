@@ -1759,7 +1759,136 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ---
 
-# 32. 下一個對話如何接手
+# 32. 2026-09-22 宇宙紀元全面健檢／五批維護後最新基準
+
+> 本節為目前 `main` 的最新維護基準。若前文與本節衝突，以 `main` 與本節較新的狀態為準。
+
+## 32.1 Save／migration 世界感知安全
+
+已完成：
+- `SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1`。
+- `normalizeSaveState(target)` 與裝備 normalization 不再依賴尚未切換完成的 global `state` 判定世界。
+- Lv.501～999 宇宙存檔不會再被 legacy `MAX_LEVEL=500` 清 EXP。
+- Lv.500+ world2 裝備不會在 load / migration 時被壓回 Lv.500。
+- 正式回歸 probe 已覆蓋 Lv.501／750／1000 與 Lv.505／750／1000 world2 裝備。
+- Save schema 仍為 14；Save Write Guard V1 不可破壞。
+
+## 32.2 Runtime／Final Integrity 已對齊 main
+
+已清理過時檢查：
+- Offline checkpoint recovery 正式為 V2。
+- GM Power Benchmark 正式為 V14。
+- Runtime 不再要求 Save Schema 13／Offline V1／Benchmark V9。
+- Runtime / Final 都會檢查共用 Fast Catch-up owner 與四條正式接入路徑。
+
+## 32.3 背包／裝備／sale owner 最新狀態
+
+正式 mutation / sale owner 集中於 `equipmentlock.js`：
+- `EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=4`。
+- `EQUIPMENT_SALE_FAIL_CLOSED_VERSION=1`。
+- `EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1`。
+- `ui.js` 舊 `equipBestAll / sellLowerAll / compareHtml / equipSelected / sellSelected / discardLostGear` mutation 實作已退休，只保留 UI。
+- 宇宙紀元若正式 sale owner 未載入：不出售、不加金幣、不刪裝備；自動出售失敗時裝備保留。
+- lostGear 正式規則：
+  - world2 → 暗物質贖回，正式成本 = world2 出售價 ×10。
+  - world1 + 已進宇宙紀元 → 免費贖回。
+  - world1 + 銀河紀元 → 保留金幣贖回語意。
+
+## 32.4 強化 cap owner／宇宙入口
+
+已建立明確世界 cap：
+- `FIRST_WORLD_ENHANCEMENT_CAP=20`。
+- `SECOND_WORLD_ENHANCEMENT_CAP=40`。
+- `SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=false`。
+- 目前正式 `ENHANCEMENT_MAX_LEVEL=20`，+21～+40 尚未開放。
+- 宇宙紀元入口只讀第一世界完成門檻 +20，不得未來因全域 max 變 40 而被誤改成 +40。
+- `WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1`。
+
+## 32.5 Save normalization 正式順序
+
+`SAVE_NORMALIZATION_PIPELINE_VERSION=1`，正式順序：
+
+```text
+worldPhase
+→ worldProgress
+→ level
+→ gear
+→ enhancement
+→ vip
+→ specialization
+→ daily
+→ dungeon
+→ calamity
+→ titles
+→ offline
+→ persistentFlags
+```
+
+Root normalizer 與 `migrateSave()` 都採 world-first：
+1. `normalizeSecondWorldState`
+2. `normalizeWorldSaveState`
+3. `normalizeLevelProgressionState`
+4. gear
+5. enhancement
+6. 其餘系統
+
+禁止恢復「先用第一世界規則碰資料，再由第二世界 owner 補救」的舊順序。
+
+## 32.6 Fast Catch-up 共用政策
+
+Background 仍只有一個 Single Active Flow。
+
+共用 Fast Catch-up Policy：
+- 1～30 場：每 5 場刷新 UI。
+- 31～100：每 10 場。
+- 101～500：每 25 場。
+- 501+：每 50 場。
+- checkpoint：前 100 每 50 場；101～500 每 100 場；501+ 每 200 場。
+- 抽樣完整 presentation：每 100 場。
+- 無畫面場次仍依 Structured Combat Pacing 消耗正式 background credit，不能因跳 DOM 而多算場數。
+
+正式接入：
+- 銀河主線。
+- 宇宙主線。
+- 文明災厄。
+- 虛空幻境。
+
+## 32.7 宇宙主線 atomic save：刻意保留
+
+本次健檢後決定 **不把宇宙主線逐場 atomic save 批次化**。
+
+理由：
+- `settleSecondWorldBossVictory()` 每場採 snapshot → settlement → save → save 失敗整場 rollback。
+- 這是正式資料安全邊界，不只是多餘 localStorage I/O。
+- Fast Catch-up 已批次化 presentation / DOM / yield，但宇宙主線 settlement 仍逐場 atomic save。
+- `SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION=1`。
+- `SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION=1`。
+- 未來只有在設計完整「批次 transaction + rollback + interruption recovery」後才可考慮改，不能單純拔掉逐場 save。
+
+## 32.8 secondworlddata 重複 region metadata：保留
+
+100 Boss 目前每筆保留 `regionIndex / regionId / regionName`。
+本次評估後不做去重，原因：
+- 正式 registry 可自包含查詢，UI／GM 不需每次二次 join。
+- `validateSecondWorldData()` 已有 `REGION_LINK` 檢查，逐區確認 Boss metadata 與 `REGIONS` 一致。
+- 因此目前不存在「重複欄位無防護」問題；不為純粹減少欄位而增加所有 consumer 的查表耦合。
+
+## 32.9 目前下一個真正大型功能
+
+仍建議依序：
+1. 強化 +21～+40 正式實作（暗物質＋暗能量；目前只定義 cap，尚未啟用）。
+2. 專精第二世界 UX／語意完整收尾。
+3. 文明等級 0～10。
+4. 第二世界文明災厄 10 隻。
+5. 第二世界懸賞／競技等副本。
+6. 銀河封存／回顧跨頁收尾。
+7. Cloud Save 宇宙存檔真實跨裝置驗證。
+
+目前只有使用者本人進行測試；健檢優先順序以資料安全、邏輯正確、效能、正式 owner、舊程式殘留為主，不需要為一般玩家尚未存在的 UX 誤解額外提高優先度。
+
+---
+
+# 33. 下一個對話如何接手
 
 標準指令：
 
@@ -1774,14 +1903,3 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ---
 
-
-
-把以下標準指令直接貼到新對話：
-
-> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 GitHub `main` 的實際程式碼與 `index.html` 載入順序，完整承接《文明戰線》專案。  
-> `main` 是唯一真實來源；handoff 只作摘要。  
-> 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
-> 我說「先討論／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
-> 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 宇宙紀元世界突破 milestone 已完成並實機驗收：`worldphase.js`、`secondWorld.entered`、save schema 14、原子轉換、reload 歡迎視窗、舊資源／離線殘留切斷、玩家 1×／1.5×速度皆已進 main。Lv.501～1000 主線與其餘第二世界系統仍依 handoff 第 29 節順序待做。先重新讀 main，再處理下一個待辦，絕對不要把設計稿當成已存在功能。  
-> 現在先不要修改任何檔案，先確認最新狀態與正式 owner，然後等我的下一個指令。
