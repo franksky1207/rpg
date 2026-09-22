@@ -326,6 +326,17 @@ darkEnergy = 300 + 10*K
 - 失敗不套主線 world2 death penalty。
 - 宇宙正式戰鬥與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
 - GM 已用 explicit world context，不能靠暫改正式 `state.secondWorld.entered` 模擬。
+- 懸賞難度採統一公式 V2，不寫死三個 tier：
+  - HP：`1 + 0.67d - 0.19d²`
+  - 傷害：`1 + 0.57d - 0.13d²`
+  - DEF：`0.88 + 0.15d - 0.04d²`
+  - d=0/1/2 對應普通／高級／危險。
+  - 對應倍率：普通 HP1.00／傷害1.00／DEF0.88；高級 HP1.48／傷害1.44／DEF0.99；危險 HP1.58／傷害1.62／DEF1.02。
+- 宇宙懸賞建立敵人時，敵方 HP 會乘上同一文明 final damage 倍率，抵消文明等級對玩家輸出的純倍率成長，避免 Lv.500 調準後 Lv.1000 因文明 Lv.10 自然變過易；銀河固定 ×1.00。
+- `BOUNTY_BALANCE_VERSION=2`
+- `BOUNTY_DIFFICULTY_FORMULA_VERSION=2`
+- `BOUNTY_CIVILIZATION_SCALING_VERSION=1`
+- `GM_BOUNTY_CIVILIZATION_SCALING_VERSION=1`
 - `DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
 - `BOUNTY_TEST_CONTEXT_VERSION=1`
 - `GM_BOUNTY_STATE_ISOLATION_VERSION=1`
@@ -703,6 +714,20 @@ Integrity 已同步：
 - Runtime Integrity 與 Story Integrity 均已通過。
 - 本輪只做架構統一，**沒有改文明每級 +5% 規則，也沒有調整懸賞／競技／虛空／鏡像平衡數值**。
 - 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`，不需要 migration。
+
+## 15.3 2026-09-23 懸賞難度公式 V2
+
+依宇宙 Lv.502 實測與先前大量模擬校準，懸賞不採三階人工倍率，而是保留單一 difficulty curve：
+
+- 普通（d=0）：維持原本強度，作為穩定日常刷取。
+- 高級（d=1）：由公式自動得到 HP ×1.48、傷害 ×1.44、DEF ×0.99。
+- 危險（d=2）：由公式自動得到 HP ×1.58、傷害 ×1.62、DEF ×1.02。
+- 暴擊／閃避／額外特性仍沿用既有 difficulty curve，不另寫 tier 特例。
+- 宇宙紀元額外使用 `civilizationCombatDamageMultiplier(...)` 作為敵方 HP 動態補償；文明每級 +5% 的正式玩家傷害仍完整生效，但懸賞這種 player-relative 模式會同步把有效輸出成長納入敵人 HP。
+- GM `buildBountyEnemyForTest(...)` 新增 explicit civilization level，與正式戰鬥完全同公式。
+- `finalintegrity.js` 與 Runtime Integrity 已升級檢查 Bounty Formula V2。
+- 本輪未改 tier 出現率、EXP／金幣／暗物質倍率、裝備件數或品質分布。
+- 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`。
 
 ---
 
