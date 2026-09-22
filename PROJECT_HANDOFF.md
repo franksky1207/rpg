@@ -1511,13 +1511,14 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - GM 戰力基準雙世界完整重構。
 
 真正仍未完成：
-1. **第二世界文明災厄 10 隻**：每 50 級、30 true kills、persistent HP、文明等級升級。
-2. **第二世界副本**：懸賞、競技等正式規則／進度／獎勵尚未完整落地；daily 必須沿用共用 owner。
-3. **銀河紀元封存／回顧跨頁完整收尾**：尤其災厄、副本、戰線紀錄。
-4. **戰線紀錄、設定、遊戲說明** 的宇宙紀元 UX 收尾。
-5. **Cloud Save / migration 真實跨裝置救援驗證**：至少一次宇宙存檔上傳→乾淨環境下載→reload。
-6. 宇宙主要架構接近完成後做 **全介面＋遊戲說明雙紀元語意總掃描**。
-7. 全部完成後做一次 **GM／Integrity final sweep**。
+1. **第二世界副本**：懸賞、競技等正式規則／進度／獎勵尚未完整落地；daily 必須沿用共用 owner。
+2. **銀河紀元封存／回顧跨頁完整收尾**：尤其副本、戰線紀錄等跨紀元入口。
+3. **戰線紀錄、設定、遊戲說明** 的宇宙紀元 UX 最終收尾。
+4. **Cloud Save / migration 真實跨裝置救援驗證**：至少一次宇宙存檔上傳→乾淨環境下載→reload。
+5. 宇宙主要架構接近完成後做 **全介面＋遊戲說明雙紀元語意總掃描**。
+6. 全部完成後做一次 **GM／Integrity final sweep**。
+
+第二世界文明災厄 10 隻已於第 29.12 節五批完成，不再列待辦。
 
 不要再把「宇宙主線／角色／背包／離線收益／強化 +21～+40／專精第二世界 UX／文明等級 0～10／GM 戰力基準」列成未完成。
 
@@ -1710,12 +1711,13 @@ Migration / Integrity：
 - 進度 helper：1 kill = 3.33%、2 = 6.67%、30 = 100%。
 - 未完成時 current HP 採 persistent。
 - **完成 30 true kills 或對應文明等級已達成後，重打比照第一世界滿印記規則：每場從滿 HP 開始，殘血不再保存。**
-- **完成狀態的連續討伐 policy 已定：本場結束後必須停止；包含「本場剛完成第 30 kill」與「原本已完成後重打」。真正 runtime 接線留第 2 批。**
+- **完成狀態的連續討伐規則已正式接線：本場結束後必須停止；包含「本場剛完成第 30 kill」與「原本已完成後重打」。**
 
 版本：
 - `SECOND_WORLD_CALAMITY_DATA_VERSION=1`
 - `SECOND_WORLD_CALAMITY_STATE_VERSION=1`
-- `SECOND_WORLD_CALAMITY_UNLOCK_VERSION=1`
+- `SECOND_WORLD_CALAMITY_UNLOCK_VERSION=2`
+- `SECOND_WORLD_CALAMITY_DISCOVERY_VERSION=1`
 - `SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1`
 - `SECOND_WORLD_CALAMITY_COUNT=10`
 - `SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=30`
@@ -2088,12 +2090,11 @@ Background 仍只有一個 Single Active Flow。
 
 ## 32.9 目前下一個真正大型功能
 
-強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10 皆已完成。後續建議依序：
-1. 第二世界文明災厄 10 隻。
-2. 第二世界懸賞／競技等副本。
-3. 銀河封存／回顧跨頁收尾。
-4. Cloud Save 宇宙存檔真實跨裝置驗證。
-5. **宇宙架構接近完成時，執行「全介面＋遊戲說明雙紀元語意總掃描」**。
+強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10、第二世界文明災厄 10 隻皆已完成。後續建議依序：
+1. 第二世界懸賞／競技等副本。
+2. 銀河封存／回顧跨頁收尾。
+3. Cloud Save 宇宙存檔真實跨裝置驗證。
+4. **宇宙架構接近完成時，執行「全介面＋遊戲說明雙紀元語意總掃描」**。
 
 目前只有使用者本人進行測試；健檢優先順序以資料安全、邏輯正確、效能、正式 owner、舊程式殘留為主，不需要為一般玩家尚未存在的 UX 誤解額外提高優先度。
 
@@ -2154,6 +2155,7 @@ Background 仍只有一個 Single Active Flow。
 - 文明等級角色頁。
 - 文明等級相關遊戲說明。
 - GM 文明等級正式／沙盒與戰力基準語意。
+- 第二世界文明災厄玩家頁、現身通知、GM 管理／沙盒與戰力基準語意。
 
 **不要因這些局部完成就把本項視為完成；必須等宇宙主要架構接近完成後再做全專案總掃描。**
 
@@ -2163,10 +2165,10 @@ Background 仍只有一個 Single Active Flow。
 
 - Core / State / Migration / final damage layer 已完成。
 - 玩家角色頁文明等級顯示已完成。
-- GM 正式管理、GM 共用沙盒、宇宙 Boss GM 測試、GM 戰力基準 V17 已完成。
+- GM 正式管理、GM 共用沙盒、宇宙 Boss GM 測試、GM 戰力基準 V18 已完成。
 - 遊戲說明已 world-aware：銀河說明「不套用」、宇宙說明 Lv.0～10／每級 +5% final damage。
 - 專屬 `civilizationintegrity.js` 已對公式、migration、銀河隔離與 Combat Core final layer 做非破壞回歸。
-- **目前沒有正式升級途徑是刻意狀態**；下一個系統「第二世界文明災厄」完成後，才由 30 true kills 推進對應文明等級。
+- **正式升級途徑已完成**：第二世界文明災厄每隻累積 30 true kills 後，推進對應 Civilization Lv.+1，最高 Lv.10。
 
 ---
 
@@ -2179,8 +2181,8 @@ Background 仍只有一個 Single Active Flow。
 > 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
 > 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10，以及 GM 戰力基準銀河／宇宙雙世界重構。  
-> 真正下一批優先看 handoff 第 29 節；目前建議進入 **第二世界文明災厄 10 隻**。宇宙主要架構接近完成時，務必依第 32.11 節提醒使用者做全介面＋遊戲說明雙紀元語意總掃描。  
+> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10、第二世界文明災厄 10 隻，以及 GM 戰力基準銀河／宇宙雙世界重構。  
+> 真正下一批優先看 handoff 第 29 節；目前下一個大型功能是 **第二世界懸賞／競技等副本**。宇宙主要架構接近完成時，務必依第 32.11 節提醒使用者做全介面＋遊戲說明雙紀元語意總掃描。  
 > 現在先不要修改任何檔案，先確認最新 main 狀態、正式 owner 與下一個未完成項目，再等我的下一個指令。
 
 ---
