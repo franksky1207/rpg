@@ -52,7 +52,7 @@
   const p=createSpecialPlayerSnapshot(playerStats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=bountyDifficultyProfile(tier),names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
   const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
   const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier);
-  const world=Number(options.world)===2?2:1,rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
+  const world=options.world==null?(universePhase()?2:1):(Number(options.world)===2?2:1),rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
   return applyMonsterTraits({name,level:enemyLevel,kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
