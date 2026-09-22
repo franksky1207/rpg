@@ -267,7 +267,7 @@ function inventoryContent(){
  const sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
  const filterOptions=`<option value="all" ${inventoryFilter==="all"?"selected":""}>全部</option>${EQUIPMENT_TYPES.map(t=>`<option value="${t}" ${inventoryFilter===t?"selected":""}>${equipmentTypeLabel(t)}</option>`).join("")}`;
  const main=`<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>{const quote=typeof window.equipmentSaleQuote==="function"?window.equipmentSaleQuote(it):null;const price=quote&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(quote):specializationSellValue(it).toLocaleString()+" 金幣";return `<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${price}</td></tr>`;}).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>{const quote=typeof window.equipmentSaleQuote==="function"?window.equipmentSaleQuote(it):null;const price=quote&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(quote):secondWorldActive()?"出售系統未載入":specializationSellValue(it).toLocaleString()+" 金幣";return `<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${price}</td></tr>`;}).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
  return `${main}${lostGearSectionHtml()}`;
 }
 function inventoryPage(){
@@ -339,7 +339,7 @@ function normalizeSaveState(target){
   const universe=target?.secondWorld?.entered===true;
   const currency=world===2?"darkMatter":universe?"free":"gold";
   const officialDarkMatterCost=typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):null;
-  const fallback=currency==="darkMatter"&&Number.isFinite(Number(officialDarkMatterCost))?Math.max(0,Math.floor(Number(officialDarkMatterCost))):currency==="free"?0:ceil(item.buy*2);
+  const fallback=currency==="darkMatter"&&officialDarkMatterCost!=null&&Number.isFinite(Number(officialDarkMatterCost))?Math.max(0,Math.floor(Number(officialDarkMatterCost))):currency==="free"?0:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):ceil(item.buy*2));
   const cost=currency==="free"?0:currency==="darkMatter"?fallback:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
   return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:false,lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
@@ -360,6 +360,7 @@ function normalizeSaveState(target){
 }
 window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
 window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
+window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=1;
 window.normalizeSaveItem=normalizeSaveItem;
 window.normalizeSaveState=normalizeSaveState;
 function normalizeCurrentSaveState(){
