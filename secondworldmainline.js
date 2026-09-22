@@ -36,7 +36,7 @@
   }).join("");
   const omitted=Math.max(0,ctx.items.length-20),penalty=ctx.lastPenalty||null,dropped=penalty?.dropped;
   const droppedHtml=dropped?`<div style="margin-top:10px"><b>戰敗遺失裝備</b><div class="item">${typeof itemHtml==="function"?itemHtml(dropped,true):dropped.name}</div>${Number(dropped.world)===2&&Number.isFinite(Number(penalty.cost))?`<div class="muted">贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質</div>`:'<div class="muted">此銀河紀元裝備可免費贖回。</div>'}</div>`:"";
-  const deathHtml=penalty?`<div class="notice" style="margin-top:10px"><b>戰敗結束</b><div class="muted">EXP 損失：${Number(penalty.expLost)||0}${penalty.protectedByVip20?"　／　VIP20 已保護裝備":""}</div></div>${droppedHtml}`:"";
+  const deathHtml=penalty?`<div class="notice" style="margin-top:10px"><b>戰敗結束</b>${penalty.protectedByVip20?'<div class="muted">VIP20 已保護裝備</div>':""}</div>${droppedHtml}`:"";
   detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${ctx.boss.name} Lv.${ctx.boss.level}</div><div class="notice"><b>完成 ${ctx.wins.toLocaleString()} 場</b></div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp.toLocaleString()}</b></div><div class="stat">暗物質<b>+${ctx.totalDarkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>+${ctx.totalDarkEnergy.toLocaleString()}</b></div><div class="stat">保留裝備<b>${ctx.items.length.toLocaleString()} 件</b></div>${ctx.autoSoldCount?`<div class="stat">自動出售<b>${ctx.autoSoldCount.toLocaleString()} 件</b></div>`:""}</div>${rows?`<div style="margin-top:10px"><b>最近掉落</b>${rows}${omitted?`<div class="muted">另有 ${omitted.toLocaleString()} 件已收入背包。</div>`:""}</div>`:""}${deathHtml}<div class="muted" style="margin-top:10px">${ctx.stopReason==="death"?"因戰敗結束。":ctx.stopReason==="manual"?"已依要求停止。":ctx.stopReason==="calamity-appeared"?"區域最終 Boss 首次擊破，新的文明災厄已現身。":"連續戰鬥已結束。"}</div></div>`;
   modal.classList.add("show");
  }
@@ -46,7 +46,7 @@
   const dropped=penalty?.dropped;
   const item=dropped?(typeof itemHtml==="function"?itemHtml(dropped,true):dropped.name):"";
   const world2Cost=dropped&&Number(dropped.world)===2&&Number.isFinite(Number(penalty?.cost))?`<div class="muted" style="margin-top:6px">贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質</div>`:dropped?'<div class="muted" style="margin-top:6px">此銀河紀元裝備可免費贖回。</div>':"";
-  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${boss?.name||"宇宙紀元 Boss"}</div><div class="item"><b>EXP 損失：${Number(penalty?.expLost)||0}</b></div>${dropped?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${item}</div>${world2Cost}</div>`:'<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>'}${penalty?.protectedByVip20?'<div class="vip-event">【VIP20】裝備受到保護，本次死亡沒有遺失裝備。</div>':""}<div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
+  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${boss?.name||"宇宙紀元 Boss"}</div>${dropped?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${item}</div>${world2Cost}</div>`:'<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>'}${penalty?.protectedByVip20?'<div class="vip-event">【VIP20】裝備受到保護，本次死亡沒有遺失裝備。</div>':""}<div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
   modal.classList.add("show");
  }
 
