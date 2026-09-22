@@ -91,7 +91,8 @@ function equippedStatsWithEnhancementLevels(levelSource=null){
   if(!item)return;
   const stat=item.mainStat?.stat,raw=Math.max(0,Number(item.mainStat?.value)||0);
   if(!raw||!["hp","atk","def","crit","dodge"].includes(stat))return;
-  const level=levelSource&&typeof levelSource==="object"?Math.max(0,Math.min(Number(window.ENHANCEMENT_MAX_LEVEL)||20,Math.floor(Number(levelSource[type])||0))):(typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):0);
+  const testCap=Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)||Number(window.ENHANCEMENT_MAX_LEVEL)||20));
+  const level=levelSource&&typeof levelSource==="object"?Math.max(0,Math.min(testCap,Math.floor(Number(levelSource[type])||0))):(typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):0);
   const enhanced=typeof window.enhancedMainStatValue==="function"?window.enhancedMainStatValue(raw,level):raw;
   out[stat]+=Math.max(0,enhanced-raw);
  });
@@ -102,6 +103,7 @@ function equippedStats(){return equippedStatsWithEnhancementLevels(null)}
 window.rawEquippedStats=rawEquippedStats;
 window.equippedStats=equippedStats;
 window.equippedStatsWithEnhancementLevels=equippedStatsWithEnhancementLevels;
+window.ENHANCEMENT_EXPLICIT_LEVEL_CAP_VERSION=1;
 function playerCombatStats(baseStats=null,vipLevel=null){const base=baseStats&&typeof baseStats==="object"?baseStats:equippedStats(),bonus=vipBonusStats(vipLevel);return {hp:Math.max(1,ceil((Number(base.hp)||1)*(1+bonus.hp/100))),atk:Math.max(1,ceil((Number(base.atk)||1)*(1+bonus.atk/100))),def:Math.max(0,ceil((Number(base.def)||0)*(1+bonus.def/100))),crit:round1(Math.max(0,Number(base.crit)||0)+bonus.crit),dodge:round1(Math.max(0,Number(base.dodge)||0)+bonus.dodge)}}
 window.playerCombatStats=playerCombatStats;
 function addVipPoints(amount){if(typeof normalizeVipState==="function")normalizeVipState(state);else{state.vipPoints=Math.max(0,Math.floor(Number(state.vipPoints)||0));state.vipLevel=Math.max(0,Math.floor(Number(state.vipLevel)||0))}const added=Math.max(0,Math.floor(Number(amount)||0)),beforeMax=playerCombatStats().hp,beforeHp=Math.max(0,Math.min(beforeMax,Number(state.hp)||0)),ratio=beforeMax>0?beforeHp/beforeMax:1,wasFull=beforeHp>=beforeMax;state.vipPoints+=added;const nextLevel=typeof vipLevelFromPoints==="function"?vipLevelFromPoints(state.vipPoints):state.vipLevel,levelBefore=state.vipLevel;if(nextLevel>state.vipLevel)state.vipLevel=nextLevel;const afterMax=playerCombatStats().hp;if(state.vipLevel>levelBefore&&afterMax!==beforeMax)state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));return {added,points:state.vipPoints,level:state.vipLevel,levelsGained:Math.max(0,state.vipLevel-levelBefore)}}
