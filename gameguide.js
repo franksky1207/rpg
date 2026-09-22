@@ -96,23 +96,33 @@
    ?"文明等級為宇宙紀元永久成長，範圍 Lv.0～Lv.10。每級提高玩家宇宙戰鬥最終傷害 5%，Lv.5 為 +25%，Lv.10 為 +50%；此加成位於 late/final damage layer，不會改變角色頁的總攻擊。正式提升來源為宇宙紀元文明災厄。"
    :"文明等級屬於宇宙紀元系統；銀河紀元不套用文明最終傷害倍率。進入宇宙紀元後由 Lv.0 開始，最高 Lv.10。";
  }
+
+ function calamityGuideWorldText(title,target=null){
+  if(title!=="文明災厄")return null;
+  const universe=guideUniverse(target);
+  return universe
+   ?"宇宙紀元共有 10 隻文明災厄，分別在 Lv.550、600、650…1000 的各區域最終 Boss 首次擊敗後現身。災厄現身後會永久顯示；真正挑戰還需完成前一文明等級，第 1 隻沒有前置文明需求。未完成時災厄 HP 會跨挑戰保留，只有真正將 HP 歸零才計 1 次 true kill；每隻累積 30 次 true kill 後完成該文明階段並使文明等級 +1。文明進度以百分比顯示。每場結束後玩家恢復滿 HP，災厄不提供 EXP、暗物質、暗能量、裝備或其他一般獎勵。完成後仍可單場重打，但每次都從災厄滿 HP 開始、不再增加進度，也不提供連續重打。"
+   :"擊敗各區域最終 Boss 後解鎖對應災厄。未完成印記前，災厄 HP 會跨挑戰保留；擊敗後可取得並提升對應印記，印記最高 Lv.10，提供永久戰鬥被動效果。文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。印記達 Lv.10 後仍可單場重打，但每次從災厄滿 HP 開始，且不再顯示連續討伐。";
+ }
  function gameGuideCategoriesForState(target=null){
   return GUIDE_CATEGORIES.map(category=>({
    ...category,
    items:(category.items||[]).map(item=>{
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
     const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
-    const worldText=civilizationText||specializationText;
+    const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
+    const worldText=calamityText||civilizationText||specializationText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
  }
  function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=16;
+ window.GAME_GUIDE_VERSION=17;
  window.GAME_GUIDE_WORLD_AWARE_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
+ window.GAME_GUIDE_CALAMITY_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
