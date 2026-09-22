@@ -221,7 +221,7 @@
     let action="";
     if(activeHere)action=`<button class="btn danger universe-boss-action" type="button" onclick="requestSecondWorldContinuousStop()">本場結束後停止</button>`;
     else if(canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"){
-      action=`<div class="universe-boss-actions"><button class="btn blue universe-boss-action" type="button" onclick="startSecondWorldBossBattle(${boss.index})">${killed?"再次挑戰":"挑戰 Boss"}</button><button class="btn universe-boss-action" type="button" onclick="startSecondWorldBossContinuous(${boss.index})">連續戰鬥</button></div>`;
+      action=`<div class="universe-boss-actions"><button class="btn blue universe-boss-action" type="button" onclick="startSecondWorldBossBattle(${boss.index})">${killed?"再次挑戰":"挑戰 Boss"}</button><button class="btn universe-boss-action" type="button" onclick="startSecondWorldBossContinuous(${boss.index})">連續戰鬥</button><button class="btn universe-boss-action" type="button" onclick="openAdventureInventory()">背包</button></div>`;
     }
     return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${activeHere?"連續戰鬥中":status}</div>${action}</div>`;
   }
