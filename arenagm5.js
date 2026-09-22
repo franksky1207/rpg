@@ -78,15 +78,7 @@
  window.gmArena5SetPosition=function(value){arenaGm5PositionId=["normal","hard","extreme"].includes(String(value))?String(value):"extreme";return arenaGm5PositionId;};
  window.gmArena5TestWorld=function(){return arenaGm5World;};
  window.gmArena5TestHtml=arenaGmBody;
- function enhanceArenaGm(){
-  if(!state?.gm)return;
-  const hub=document.querySelector(".gm-hub");if(!hub)return;
-  const section=Array.from(hub.querySelectorAll(".gm-hub-section")).find(el=>el.querySelector(":scope > summary")?.textContent.trim()==="競技場測試");
-  const body=section?.querySelector(":scope > .gm-hub-body");if(!body||body.dataset.arenaGm5==="1")return;
-  body.dataset.arenaGm5="1";body.innerHTML=arenaGmBody();
- }
- const baseRender=render;
- render=function(){const out=baseRender();enhanceArenaGm();return out;};
+
  window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION=1;
  window.gmArena5ResultSnapshot=function(){const rows=Object.values(arenaGm5Results);return rows.length?JSON.parse(JSON.stringify(rows)):null;};
  window.gmClearArena5Result=function(){arenaGm5Result="";arenaGm5Summary=null;arenaGm5Results={};return true;};
@@ -94,6 +86,5 @@
  window.GM_ARENA_SUMMARY_EXPORT_VERSION=1;
  window.GM_ARENA_SESSION_SETTINGS_VERSION=1;
  window.GM_ARENA_STATE_ISOLATION_VERSION=1;
- window.refreshArenaGm5=enhanceArenaGm;
- enhanceArenaGm();
+ window.GM_ARENA_LEGACY_INJECTION_RETIRED_VERSION=1;
 })();
