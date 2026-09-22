@@ -68,7 +68,7 @@
   }
 
   const fightSrc=src(window.fightNextVoidMirageFloor);
-  if(!/options\.save!==false/.test(fightSrc)||!/preparePresentation:options\.preparePresentation!==false/.test(fightSrc))fail("fast-catch-up-floor-options");
+  if(!/voidMirageFightCore\s*\(\s*enemy\s*,\s*options\s*\)/.test(fightSrc)||!/options\.save!==false/.test(fightSrc))fail("fast-catch-up-floor-options");
   const defeatPos=fightSrc.indexOf("if(!result.win)");
   const recordPos=fightSrc.indexOf("recordClear(floor)");
   const advancePos=fightSrc.indexOf("currentFloor=clear.nextFloor");
