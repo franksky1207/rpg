@@ -6,6 +6,7 @@
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
+ let gmCalamityLastResult=null;
  let busy=false;
  let gmTitlePreviewId=null;
 
@@ -164,6 +165,7 @@
   busy=true;
   try{
    const data=simulateAttempt(id);
+   gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
    singleResultHtml=singleHtml(data);
    if(box)box.innerHTML=singleResultHtml;
   }finally{busy=false;}
@@ -175,6 +177,7 @@
   busy=true;if(button){button.disabled=true;button.textContent="模擬中…";}
   try{
    const data=await simulateFullKill(id,(attempts,hp,maxHp)=>{if(box)box.innerHTML=`<div class="notice">完整擊殺模擬中…<div class="muted" style="margin-top:8px">已完成 ${attempts.toLocaleString()} 場｜災厄 HP ${hp.toLocaleString()} / ${maxHp.toLocaleString()}</div></div>`;});
+   gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
    fullResultHtml=fullHtml(data);
    if(box)box.innerHTML=fullResultHtml;
   }finally{busy=false;if(button){button.disabled=false;button.textContent="完整擊殺模擬";}}
@@ -191,7 +194,10 @@
  window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=GM_PLAYER_TITLE_PREVIEW_VERSION;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
+ window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
+ window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
+ window.GM_CALAMITY_SUMMARY_EXPORT_VERSION=1;
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
