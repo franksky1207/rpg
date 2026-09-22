@@ -45,7 +45,7 @@
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier:civilizationMultiplier
   });
-  return {ok:true,win:combat.win===true,definition:d,enemy:e,enemyStartHp:startEnemyHp,enemyEndHp:combat.enemyHp,playerStartHp:p.hp,playerEndHp:combat.hp,turns:combat.turns,logs:combat.logs||[],events:combat.events||[],combat,civilizationDamageMultiplier};
+  return {ok:true,win:combat.win===true,definition:d,enemy:e,enemyStartHp:startEnemyHp,enemyEndHp:combat.enemyHp,playerStartHp:p.hp,playerEndHp:combat.hp,turns:combat.turns,logs:combat.logs||[],events:combat.events||[],combat,civilizationDamageMultiplier:civilizationMultiplier};
  }
  function settle(value,combat,options={}){
   const d=def(value);if(!d||!combat)return {ok:false,reason:"文明災厄結算資料無效。"};
