@@ -87,17 +87,25 @@
   const s=targetState(target);
   return s?.secondWorld?.mainline?.bossKilled?.[def.bossIndex]===true;
  }
+ function visible(value,target=null){
+  const def=definition(value),s=targetState(target);
+  return !!def&&s?.secondWorld?.entered===true&&mainBossCleared(def,s);
+ }
  function unlockStatus(value,target=null){
   const def=definition(value),s=targetState(target);
-  if(!def||!s)return {unlocked:false,reason:"invalid",definition:def};
-  if(s?.secondWorld?.entered!==true)return {unlocked:false,reason:"world-locked",definition:def};
+  if(!def||!s)return {visible:false,unlocked:false,reason:"invalid",definition:def};
+  if(s?.secondWorld?.entered!==true)return {visible:false,unlocked:false,reason:"world-locked",definition:def};
   const bossCleared=mainBossCleared(def,s);
+  const isVisible=bossCleared;
   const civLevel=civilization(s);
   const previousCivilizationComplete=civLevel>=def.previousCivilizationLevel;
-  const unlocked=bossCleared&&previousCivilizationComplete;
+  const unlocked=isVisible&&previousCivilizationComplete;
   return {
+   visible:isVisible,
+   discovered:isVisible,
    unlocked,
-   reason:unlocked?"":(!bossCleared?"main-boss": "previous-civilization"),
+   challengeable:unlocked,
+   reason:unlocked?"":(!bossCleared?"main-boss":"previous-civilization"),
    definition:def,
    mainBossCleared:bossCleared,
    previousCivilizationComplete,
@@ -105,7 +113,11 @@
    requiredCivilizationLevel:def.previousCivilizationLevel
   };
  }
- function canChallenge(value,target=null){return unlockStatus(value,target).unlocked===true;}
+ function canChallenge(value,target=null){return unlockStatus(value,target).challengeable===true;}
+ function forBoss(value){
+  const n=int(value,-1);
+  return DEFS.find(def=>def.bossIndex===n)||null;
+ }
  function maxHp(value){return definition(value)?.maxHp||0;}
  function currentHp(value,target=null){
   const def=definition(value);if(!def)return 0;
@@ -121,7 +133,10 @@
   const kills=trueKills(def,target),isCompleted=completed(def,target),unlock=unlockStatus(def,target);
   return {
    definition:def,
+   visible:unlock.visible,
+   discovered:unlock.visible,
    unlocked:unlock.unlocked,
+   challengeable:unlock.challengeable,
    unlock,
    trueKills:kills,
    trueKillsRequired:TRUE_KILLS_REQUIRED,
@@ -170,7 +185,8 @@
 
  window.SECOND_WORLD_CALAMITY_DATA_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_STATE_VERSION=1;
- window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION=2;
+ window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_COUNT=COUNT;
  window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=TRUE_KILLS_REQUIRED;
@@ -187,6 +203,8 @@
  window.getSecondWorldCalamityMaxHp=maxHp;
  window.getSecondWorldCalamityCurrentHp=currentHp;
  window.getSecondWorldCalamityProgressPercent=progressPercent;
+ window.isSecondWorldCalamityVisible=visible;
+ window.getSecondWorldCalamityForBoss=forBoss;
  window.getSecondWorldCalamityUnlockStatus=unlockStatus;
  window.canChallengeSecondWorldCalamity=canChallenge;
  window.isSecondWorldCalamityCompleted=completed;
