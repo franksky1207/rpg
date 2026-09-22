@@ -110,13 +110,13 @@
  function healAfterRound(){if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;save(false);}
  function beginBountyRound(){
   if(!bountyState.enemy||!bountyState.tier||battleBusy)return false;
+  const rewardLevel=clampGameLevel(state.level),world=universePhase()?2:1,universeCtx=world===2?universeBountyContext(rewardLevel):null;
+  if(world===2&&!universeCtx)return false;
   const use=typeof consumeDailyDungeonUse==="function"?consumeDailyDungeonUse("bounty",1):{ok:false,reason:"daily_core_missing"};
   if(!use.ok)return false;
   save(false);
   const previewName=bountyState.enemy.name,previewTraits=Array.isArray(bountyState.enemy.traits)?bountyState.enemy.traits.slice():[];
-  const enemyScalingStats=equippedStats(),combatStats=playerCombatStats(enemyScalingStats),rewardLevel=clampGameLevel(state.level),world=universePhase()?2:1;
-  const universeCtx=world===2?universeBountyContext(rewardLevel):null;
-  if(world===2&&!universeCtx)return false;
+  const enemyScalingStats=equippedStats(),combatStats=playerCombatStats(enemyScalingStats);
   bountyState.rewardWorld=world;bountyState.rewardLevel=rewardLevel;bountyState.rewardBossIndex=universeCtx?.bossIndex??null;
   bountyState.enemy=buildBountyEnemy(bountyState.tier,enemyScalingStats,rewardLevel,{name:previewName,traits:previewTraits});
   bountyState.phase="combat";bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();Promise.resolve().then(runBountyFight);return true;
