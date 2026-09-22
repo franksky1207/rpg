@@ -267,18 +267,39 @@ VIP level = floor(sqrt(vipPoints / 1000))
 
 # 7. 裝備強化
 
-正式：
-- `ENHANCEMENT_MAX_LEVEL = 20`
-- 每級主屬性 +2.5%
+正式世界範圍：
+- 銀河紀元：+0～+20。
+- 宇宙紀元：正式玩家 +20～+40。
+- `ENHANCEMENT_MAX_LEVEL = 20` 只保留第一世界／legacy 相容語意。
+- `ENHANCEMENT_ABSOLUTE_MAX_LEVEL = 40`。
+- `FIRST_WORLD_ENHANCEMENT_CAP = 20`。
+- `SECOND_WORLD_ENHANCEMENT_MIN = 20`。
+- `SECOND_WORLD_ENHANCEMENT_CAP = 40`。
+- `SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE = true`。
+- 每級主屬性 +2.5%；+40 = 主屬性 +100%。
 
 倍率：
 ```js
-1 + level * 2.5% 
+1 + level * 2.5%
 ```
 
-升到目標等級 N 的成本：
+銀河 +1～+20 升到目標等級 N 的成本：
 - 基礎強化石：`50 * N`
 - 進階強化石：`5 * N`
+
+宇宙 +21～+40：
+```js
+K = targetLevel - 21
+darkMatter = 30000 + 12000 * K
+darkEnergy = 300 + 10 * K
+```
+- 純資源制；不綁玩家等級、區域或 Boss 進度。
+- 單欄 +20→+40：暗物質 2,880,000、暗能量 7,900。
+- 五欄全滿：暗物質 14,400,000、暗能量 39,500。
+- 正式玩家宇宙紀元若出現 <+20 屬資料異常；normalization 不會免費補到 +20，而由 Integrity / GM 檢查處理。
+- GM 正式管理：銀河 0～20、宇宙 20～40。
+- GM 沙盒測試：固定 0～40。
+- 玩家宇宙高階強化採 snapshot → 扣資源 → 升級 → save；save 失敗整次 rollback。
 
 主線強化石：
 - 玩家與怪物等級差必須 < 10 才有資格。
@@ -1578,9 +1599,9 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - Final Integrity 目前為 V17。
 - 每批 JS/CSS 皆需 cache-bust。
 
-## 29.9 下一步建議：強化 +21～+40
+## 29.9 已完成：強化 +21～+40
 
-仍未實作。既定設計：
+已正式實作：
 - +21～+40 使用暗物質＋暗能量。
 - target level `T=21..40`，`K=T-21`：
   ```js
@@ -1589,7 +1610,8 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
   ```
 - 每級仍 +2.5% 主屬性；+40 總強化倍率 +100%。
 - +20 銀河效果完整保留。
-- 必須同步 GM 強化管理、GM 強化測試、角色能力、Integrity。
+- 宇宙正式玩家範圍 +20～+40；純資源制，不設等級／區域／Boss 門檻。
+- 玩家正式 UI、atomic rollback、migration、GM 正式管理、GM 沙盒 0～40、GM 戰力基準與 Integrity 已同步。
 
 ## 29.10 後續：專精第二世界收尾
 
@@ -1796,12 +1818,15 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ## 32.4 強化 cap owner／宇宙入口
 
-已建立明確世界 cap：
+正式世界範圍：
 - `FIRST_WORLD_ENHANCEMENT_CAP=20`。
+- `SECOND_WORLD_ENHANCEMENT_MIN=20`。
 - `SECOND_WORLD_ENHANCEMENT_CAP=40`。
-- `SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=false`。
-- 目前正式 `ENHANCEMENT_MAX_LEVEL=20`，+21～+40 尚未開放。
-- 宇宙紀元入口只讀第一世界完成門檻 +20，不得未來因全域 max 變 40 而被誤改成 +40。
+- `SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE=true`。
+- `ENHANCEMENT_MAX_LEVEL=20` 只保留第一世界／legacy 相容；絕對上限由 `ENHANCEMENT_ABSOLUTE_MAX_LEVEL=40` 管理。
+- `effectiveEnhancementMin(target)` / `effectiveEnhancementCap(target)` 是正式世界感知 owner。
+- normalization 只做 0～cap 資料安全，不會把宇宙 <+20 異常免費補到 +20；`enhancementFormalStateIssues()` 負責非破壞式偵測。
+- 宇宙紀元入口仍只讀第一世界完成門檻 +20，不會因第二世界 cap 40 而誤改成 +40。
 - `WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1`。
 
 ## 32.5 Save normalization 正式順序
@@ -1875,16 +1900,49 @@ Background 仍只有一個 Single Active Flow。
 
 ## 32.9 目前下一個真正大型功能
 
-仍建議依序：
-1. 強化 +21～+40 正式實作（暗物質＋暗能量；目前只定義 cap，尚未啟用）。
-2. 專精第二世界 UX／語意完整收尾。
-3. 文明等級 0～10。
-4. 第二世界文明災厄 10 隻。
-5. 第二世界懸賞／競技等副本。
-6. 銀河封存／回顧跨頁收尾。
-7. Cloud Save 宇宙存檔真實跨裝置驗證。
+強化 +21～+40 已完成。後續建議依序：
+1. 專精第二世界 UX／語意完整收尾。
+2. 文明等級 0～10。
+3. 第二世界文明災厄 10 隻。
+4. 第二世界懸賞／競技等副本。
+5. 銀河封存／回顧跨頁收尾。
+6. Cloud Save 宇宙存檔真實跨裝置驗證。
 
 目前只有使用者本人進行測試；健檢優先順序以資料安全、邏輯正確、效能、正式 owner、舊程式殘留為主，不需要為一般玩家尚未存在的 UX 誤解額外提高優先度。
+
+---
+
+# 32.10 2026-09-22 宇宙紀元強化 +21～+40 四批實作完成基準
+
+正式 owner／版本：
+- `ENHANCEMENT_WORLD_AWARE_CORE_VERSION=2`
+- `ENHANCEMENT_FORMAL_RANGE_VERSION=2`
+- `SECOND_WORLD_ENHANCEMENT_COST_VERSION=1`
+- `ENHANCEMENT_MIGRATION_WORLD_AWARE_VERSION=2`
+- `ENHANCEMENT_UI_VERSION=6`
+- `SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION=1`
+- `SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION=1`
+- `ENHANCEMENT_PLAYER_FORMAL_RANGE_VERSION=1`
+- `GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6`
+- `GM_ENHANCEMENT_TEST_RANGE_VERSION=1`
+- `GM_ENHANCEMENT_HUB_VERSION=5`
+- `GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1`
+- `ENHANCEMENT_EXPLICIT_LEVEL_CAP_VERSION=1`
+- `GM_POWER_BENCHMARK_VERSION=15`
+- `GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1`
+- `ENHANCEMENT_FINAL_INTEGRITY_VERSION=2`
+
+重要規則：
+- 銀河正式玩家 +0～+20；宇宙正式玩家 +20～+40。
+- 宇宙 +21～+40 為純資源制，不綁等級、區域或 Boss 進度。
+- 成本維持：+21 30,000/300；+30 138,000/390；+40 258,000/490。
+- 五欄 +20→+40 總成本：暗物質 14,400,000、暗能量 39,500。
+- 正常宇宙 500→1000 滿專精主線生命週期資源已重新驗算，成本可成立，不需下修。
+- 玩家高階強化採 atomic save rollback。
+- 宇宙正式 <+20 是異常資料；不自動補值。
+- GM 正式管理跟世界範圍；GM sandbox 固定可測 0～40。
+- `engine.js` explicit enhancement test level 已改用絕對上限 40，避免 GM 選 +40 實際只算 +20。
+- migration / Final Integrity 已對 +21/+30/+40、成本、+40=100%、正式最低 +20 與 reload 保留做回歸。
 
 ---
 
@@ -1897,8 +1955,8 @@ Background 仍只有一個 Single Active Flow。
 > 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
 > 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益，以及 GM 戰力基準銀河／宇宙雙世界重構。  
-> 真正下一批優先看 handoff 第 29 節；目前建議先做 **強化 +21～+40**。  
+> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40，以及 GM 戰力基準銀河／宇宙雙世界重構。  
+> 真正下一批優先看 handoff 第 29 節；目前建議先做 **專精第二世界 UX／語意完整收尾**。  
 > 現在先不要修改任何檔案，先確認最新 main 狀態、正式 owner 與下一個未完成項目，再等我的下一個指令。
 
 ---
