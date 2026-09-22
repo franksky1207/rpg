@@ -809,6 +809,7 @@ Integrity 已同步：
 - 冒險 UI／雙紀元回顧 owner：`worldmapui.js` + `ui.js`
 - 手機冒險固定控制列：`preparemobilecontrols.js` + `adventureuipolish.css`
 - 全站 JS / 關鍵 owner CI：`tests/runtime/js-integrity.js` + `.github/workflows/runtime-integrity.yml`
+- Runtime Integrity workflow 會先確認目前 push 是否仍為 `main` 最新 HEAD；若只是連續修改中的舊 intermediate commit，會正常跳過正式檢查，避免中間半成品造成假失敗通知。
 - 專精：`specialization.js`
 - VIP：`vipprogression.js` + `engine.js`
 - 強化：`enhancementcore.js`
