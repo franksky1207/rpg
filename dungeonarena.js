@@ -165,7 +165,13 @@
  function resetArenaState(){arenaState=createArenaState({rank:currentArenaRank()});}
  function arenaEnemyScalingStats(){return arenaState.enemyScalingSnapshot||createSpecialPlayerSnapshot(equippedStats());}
  function arenaPlayerStats(){if(arenaState.playerSnapshot)return arenaState.playerSnapshot;return createSpecialPlayerSnapshot(playerCombatStats(equippedStats(),state.vipLevel));}
- function arenaFightCore(enemy){const player=arenaPlayerStats(),combat=runCombatCore(player,enemy,state.hp);state.hp=combat.hp;return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};}
+ function arenaFightCore(enemy){
+  const player=arenaPlayerStats();
+  const civilizationMultiplier=arenaWorld()===2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(state):1;
+  const combat=runCombatCore(player,enemy,state.hp,{playerFinalDamageMultiplier:civilizationMultiplier});
+  state.hp=combat.hp;
+  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns,civilizationDamageMultiplier};
+ }
  const sleep=ms=>arenaState.continuous&&typeof window.backgroundProgressSleep==="function"?window.backgroundProgressSleep(ms,"arena"):new Promise(r=>setTimeout(r,ms));
  function battleGapMs(){if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");return window.combatOuterGapMs("arena");}
  function stopArenaBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("arena");}
@@ -200,6 +206,7 @@
 
  window.ARENA_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.SECOND_WORLD_ARENA_POINTS_VERSION=1;
+ window.ARENA_CIVILIZATION_DAMAGE_VERSION=1;
  async function runArenaFight(){
   if(battleBusy)return;
   battleBusy=true;
