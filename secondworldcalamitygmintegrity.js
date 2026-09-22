@@ -4,10 +4,9 @@
  if(Number(window.GM_SECOND_WORLD_CALAMITY_VERSION)!==1)fail("GM_VERSION","宇宙文明災厄 GM owner 應為 V1",window.GM_SECOND_WORLD_CALAMITY_VERSION);
  if(Number(window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION)!==1)fail("FORMAL_VERSION","正式管理 owner 應為 V1",window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION);
  if(Number(window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION)!==1)fail("TEST_VERSION","沙盒測試 owner 應為 V1",window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION);
+ if(Number(window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION)!==1)fail("MANAGE_RETIRED","宇宙文明災厄管理應已正式退休",window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION);
  if(Number(window.GM_POWER_BENCHMARK_CALAMITY_VERSION)!==1)fail("BENCHMARK_VERSION","災厄 Benchmark owner 應為 V1",window.GM_POWER_BENCHMARK_CALAMITY_VERSION);
  const required=[
-  "gmSecondWorldCalamityManagementHtml","gmApplySecondWorldCalamityFormal","gmSecondWorldCalamitySetFullHp",
-  "gmSecondWorldCalamitySetNearDeath","gmSecondWorldCalamityResetSelected","gmSyncCivilizationFromCalamities",
   "gmSecondWorldCalamityTestHtml","gmSecondWorldCalamitySingleTest","gmSecondWorldCalamityFullKillTest","gmSecondWorldCalamityUnlockProbe","gmSecondWorldCalamityRunUnlockProbe",
   "runGmSecondWorldCalamitySimulation","runGmSecondWorldCalamityFullKill","runGmSecondWorldCalamityBenchmark",
   "gmSecondWorldCalamityBenchmarkHtml","gmPowerBenchmarkRunCalamity"
@@ -18,7 +17,7 @@
   if(defs.length!==10)fail("DATA_COUNT","GM 應對齊 10 隻宇宙文明災厄",defs.length);
   if(typeof window.gmHubRegisteredSectionIds==="function"){
    const manage=window.gmHubRegisteredSectionIds("manage"),test=window.gmHubRegisteredSectionIds("test");
-   if(!manage.includes("second-world-calamity-manage"))fail("HUB_MANAGE","GM Hub 缺少宇宙文明災厄管理 section",manage);
+   if(manage.includes("second-world-calamity-manage"))fail("HUB_MANAGE_RETIRED","已退休的宇宙文明災厄管理 section 不應再註冊",manage);
    if(!test.includes("second-world-calamity-test"))fail("HUB_TEST","GM Hub 缺少宇宙文明災厄測試 section",test);
   }
  }catch(error){fail("REGISTRY_PROBE","GM registry probe 失敗",String(error?.message||error));}
