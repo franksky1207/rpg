@@ -164,6 +164,7 @@
  window.BOUNTY_UNIVERSE_CORE_VERSION=1;
  window.BOUNTY_UNIVERSE_REWARD_OWNER_VERSION=1;
  window.BOUNTY_UNIVERSE_UI_VERSION=1;
+ window.BOUNTY_CIVILIZATION_DAMAGE_VERSION=1;
  window.BOUNTY_TEST_CONTEXT_VERSION=1;
  window.getUniverseBountyRewardPreview=function(tierId,level=state.level,options={}){
   const tier=BOUNTY_TIER_META.find(x=>x.id===tierId);if(!tier)return null;
@@ -179,7 +180,7 @@
  };
  async function runBountyFight(){
   battleBusy=true;
-  const startHp=bountyState.startHp,playerMax=bountyState.playerMaxHp,result=dungeonFightCore(bountyState.enemy);
+  const startHp=bountyState.startHp,playerMax=bountyState.playerMaxHp,result=dungeonFightCore(bountyState.enemy,{world:bountyState.rewardWorld});
   await animateBounty(result,startHp,playerMax);
   let rewardExp=0,expResult=null,rewardGold=0,rewardDarkMatter=0,soldGold=0,soldDarkMatter=0,soldDarkEnergy=0,rewardItems=[];
   if(result.win){
