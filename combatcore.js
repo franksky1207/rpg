@@ -9,6 +9,7 @@
   return 0;
  }
 
+ window.COMBAT_PLAYER_FINAL_DAMAGE_LAYER_VERSION=1;
  window.runCombatCore=function(player,enemy,startHp=null,options={}){
   const p=player&&typeof player==="object"?player:{};
   const e=enemy&&typeof enemy==="object"?enemy:{};
@@ -21,6 +22,7 @@
   const maxTurns=Math.max(0,Math.floor(numberOr(options.maxTurns,0)));
   const skipPlayerAction=options.skipPlayerAction===true;
   const skipEnemyAction=options.skipEnemyAction===true;
+  const playerFinalDamageMultiplier=Math.max(0,numberOr(options.playerFinalDamageMultiplier,1));
   const spec={
    initiative:specBonus("initiative",useTest),
    combo:specBonus("combo",useTest),
@@ -132,11 +134,12 @@
    }
    if(crit)damage=ceil(damage*CRIT_DAMAGE_MULTIPLIER);
    damage=Math.max(1,ceil(damage*scale));
+   damage=Math.max(1,ceil(damage*playerFinalDamageMultiplier));
 
    const before=Math.max(0,ehp);
    const actualDamage=Math.min(before,damage);
    ehp-=damage;
-   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer,battleSpiritAtkPercent:spiritPercent});
+   events.push({type:"attack",actor:"player",source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,playerFinalDamageMultiplier});
    if(logs)logs.push(crit?`你攻擊${name}，暴擊造成 ${damage} 點傷害。`:`你攻擊${name}，造成 ${damage} 點傷害。`);
 
    if(spec.drain>0&&actualDamage>0&&rollRate(spec.drain)){
