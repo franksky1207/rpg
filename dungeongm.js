@@ -28,7 +28,6 @@
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
  function simulateFight(player,enemy,startHp=player.hp){const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});}
  function gmTestLevelForWorld(world){const raw=Math.floor(Number(window.gmTestLevel)||Number(state?.level)||1);return Number(world)===2?Math.max(500,Math.min(1000,raw)):Math.max(1,Math.min(500,raw));}
- function withTemporaryTestWorld(world,level,fn){const oldLevel=state.level,hadSecond=!!state.secondWorld,oldEntered=state?.secondWorld?.entered;if(!state.secondWorld||typeof state.secondWorld!=="object")state.secondWorld={};state.secondWorld.entered=Number(world)===2;state.level=level;try{return fn();}finally{state.level=oldLevel;if(hadSecond)state.secondWorld.entered=oldEntered;else delete state.secondWorld;}}
  function regionIndexForMap(mapIdx){
   const idx=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0)));
   const found=WORLD_REGIONS.findIndex(region=>idx>=region.mapStart&&idx<=region.mapEnd);
@@ -237,14 +236,12 @@
   const world=bountyTestWorld,level=gmTestLevelForWorld(world);
   const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats());
   const player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
-  withTemporaryTestWorld(world,level,()=>{
-   for(let i=0;i<GM_TEST_RUNS;i++){
-    const enemy=buildBountyEnemyForTest(tierId,base,level),r=simulateFight(player,enemy);
-    summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
-   }
-  });
+  for(let i=0;i<GM_TEST_RUNS;i++){
+   const enemy=buildBountyEnemyForTest(tierId,base,level,world),r=simulateFight(player,enemy);
+   summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
+  }
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
-  const reward=world===2&&typeof window.getUniverseBountyRewardPreview==="function"?withTemporaryTestWorld(2,level,()=>window.getUniverseBountyRewardPreview(tierId,level)):null;
+  const reward=world===2&&typeof window.getUniverseBountyRewardPreview==="function"?window.getUniverseBountyRewardPreview(tierId,level,{useTestSpecializations:true,state:{level}}):null;
   const rewardHtml=reward?`<div class="muted gm-test-context">宇宙獎勵基準：Lv.${reward.rewardLevel} → Lv.${reward.bossLevel} ${reward.bossName}；EXP ${reward.exp.toLocaleString()}・暗物質 ${reward.darkMatter.toLocaleString()}・裝備 ${reward.gearCount} 件。</div>`:"";
   bountyTestResult={world,level,tierId:tier.id,tierName:tier.name,runs:GM_TEST_RUNS,wins:summary.wins,losses:GM_TEST_RUNS-summary.wins,winRate,avgWinHp,avgTurns,reward:reward?{rewardLevel:reward.rewardLevel,bossLevel:reward.bossLevel,bossName:reward.bossName,exp:reward.exp,darkMatter:reward.darkMatter,gearCount:reward.gearCount}:null};
   bountyTestResults[String(world)+":"+tier.id]=JSON.parse(JSON.stringify(bountyTestResult));
@@ -299,4 +296,5 @@
  window.gmClearBountyTestResult=function(){bountyTestHtml="";bountyTestResult=null;bountyTestResults={};return true;};
  window.gmClearVoidMirageTestResult=function(){voidMirageTestHtml="";voidMirageTestResult=null;return true;};
  window.GM_DUNGEON_SUMMARY_EXPORT_VERSION=1;
+ window.GM_BOUNTY_STATE_ISOLATION_VERSION=1;
 })();
