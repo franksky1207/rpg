@@ -72,12 +72,14 @@
  function runFullHeal(){state.hp=runPlayerStats().hp;}
  function voidMirageFightCore(enemy,options={}){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
+  const civilizationMultiplier=typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(state):1;
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp,{
    logs:options.logs===false?false:true,
-   preparePresentation:options.preparePresentation!==false
+   preparePresentation:options.preparePresentation!==false,
+   playerFinalDamageMultiplier:civilizationMultiplier
   });
   state.hp=combat.hp;
-  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns};
+  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns,civilizationDamageMultiplier};
  }
  function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function runSnapshot(){
@@ -156,6 +158,7 @@
 
  window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
  window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
+ window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=1;
  window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION=1;
  window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
  function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("void")===true;}
