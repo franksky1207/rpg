@@ -97,6 +97,16 @@
    :"文明等級屬於宇宙紀元系統；銀河紀元不套用文明最終傷害倍率。進入宇宙紀元後由 Lv.0 開始，最高 Lv.10。";
  }
 
+ function bountyGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="懸賞戰")return universe
+   ?"懸賞戰是宇宙紀元的資源型副本，每天最多挑戰 20 次，並與進入宇宙紀元當天尚未使用完的銀河紀元懸賞額度共用。可選單次或連續挑戰；每場正式開戰時才使用 1 次額度，每場結束後 HP 回滿。勝利可取得高額 EXP、暗物質與多件第二世界裝備，不直接掉落暗能量。"
+   :"懸賞戰是資源型副本，主打高 EXP、高金幣與多裝備。每天最多挑戰 20 次，每一場真正開始戰鬥時才使用 1 次今日額度。可選單次或連續挑戰；連續模式會在死亡、今日額度用完或玩家要求停止時結束。每場結束後 HP 會回滿。";
+  if(title==="懸賞難度")return universe
+   ?"每次懸賞會隨機遇到普通、高級或危險懸賞，三者共用同一條難度公式曲線。獎勵以玩家目前等級向上對應的宇宙 Boss 為基準：EXP 與暗物質分別乘以 5／8／12；裝備數量為 2／3／5 件。裝備名稱使用該對應 Boss 的裝備世代，實際裝備等級固定為本場開戰時玩家等級；懸賞裝備最低為稀有品質。"
+   :"每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。";
+  return null;
+ }
  function calamityGuideWorldText(title,target=null){
   if(title!=="文明災厄")return null;
   const universe=guideUniverse(target);
@@ -110,8 +120,9 @@
    items:(category.items||[]).map(item=>{
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
     const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
+    const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
     const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||civilizationText||specializationText;
+    const worldText=calamityText||bountyText||civilizationText||specializationText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
@@ -123,6 +134,7 @@
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CALAMITY_WORLD_VERSION=1;
+ window.GAME_GUIDE_BOUNTY_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
