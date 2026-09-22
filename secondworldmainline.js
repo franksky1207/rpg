@@ -87,6 +87,22 @@
  function catchUpActive(){
   return typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main")===true;
  }
+ function catchUpPreviewPolicy(){
+  if(!catchUpActive()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
+  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
+  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
+  return window.backgroundProgressCatchUpPolicy("main",next,false);
+ }
+ function catchUpStep(){
+  return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("main"):null;
+ }
+ function catchUpFinal(){
+  return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;
+ }
+ function refreshCatchUpUi(){
+  if(typeof render==="function")render();
+  if(typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
+ }
  function presentationEnabled(ctx){
   if(!ctx)return false;
   if(environmentIsBackground())return false;
@@ -102,7 +118,7 @@
   return {
    bossIndex:index,boss,continuous:continuous===true,stopRequested:false,stopReason:null,
    completed:0,wins:0,totalXp:0,totalDarkMatter:0,totalDarkEnergy:0,items:[],autoSoldCount:0,
-   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null,currentEncounter:null,presenting:false
+   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null,currentEncounter:null,presenting:false,catchUpNeedsFinalSync:false
   };
  }
  function publishContext(ctx){activeContext=ctx;window.activeSecondWorldMainlineContext=ctx;}
@@ -130,7 +146,9 @@
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
 
     state.hp=playerCombatStats().hp;
-    const showPresentation=presentationEnabled(ctx);
+    const fastCatchUp=catchUpActive();
+    const previewPolicy=fastCatchUp?catchUpPreviewPolicy():null;
+    const showPresentation=presentationEnabled(ctx)||previewPolicy?.shouldPresentBattle===true;
     const sampleToken=typeof window.beginSecondWorldOfflineBattleSample==="function"?window.beginSecondWorldOfflineBattleSample(index,boss):null;
     const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;
     if(!encounter){ctx.stopReason="error";alert("無法建立宇宙紀元 Boss。");break;}
@@ -163,10 +181,20 @@
      break;
     }
 
-    // Keep the combat screen on the completed round until the next round begins; avoid map-screen flicker between continuous battles.
-    if(typeof window.backgroundProgressUiYield==="function"&&ctx.backgroundStarted)await window.backgroundProgressUiYield("main");
+    // Fast catch-up keeps formal combat/settlement per battle, but samples presentation/UI through the shared owner.
+    const catchUpPolicy=fastCatchUp?catchUpStep():null;
+    if(fastCatchUp){
+     ctx.catchUpNeedsFinalSync=true;
+     if(catchUpPolicy?.shouldRefreshUi&&!showPresentation)refreshCatchUpUi();
+     if((catchUpPolicy?.shouldRefreshUi||showPresentation)&&typeof window.backgroundProgressUiYield==="function"&&ctx.backgroundStarted)await window.backgroundProgressUiYield("main");
+    }
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
     await flowSleep(battleGapMs());
+    if(ctx.catchUpNeedsFinalSync&&!catchUpActive()){
+     const finalPolicy=catchUpFinal();
+     if(finalPolicy?.shouldRefreshUi)refreshCatchUpUi();
+     ctx.catchUpNeedsFinalSync=false;
+    }
    }while(continuous);
 
    if(continuous){
@@ -199,8 +227,9 @@
  window.secondWorldBackgroundBattleEnabled=function(){return gmBackgroundEnabled();};
  window.SECOND_WORLD_MAINLINE_VERSION=VERSION;
  window.SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
+ window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION=1;
  window.SECOND_WORLD_MAINLINE_INTEGRITY={
-  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true,
+  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1,
   version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION
  };
 })();
