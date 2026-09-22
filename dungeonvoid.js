@@ -77,7 +77,7 @@
    preparePresentation:options.preparePresentation!==false
   });
   state.hp=combat.hp;
-  return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
+  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns};
  }
  function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function runSnapshot(){
@@ -90,7 +90,7 @@
   voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=String(reason||"ended");
   if(extra.failedFloor)voidMirageRun.failedFloor=floorNumber(extra.failedFloor);
   if(voidMirageRun.runStarted)fullHeal();
-  if(options.save!==false&&typeof save==="function")save(false);
+  if(typeof save==="function")save(false);
   return runSnapshot();
  }
  function recordClear(floor){
@@ -150,7 +150,7 @@
   const clear=recordClear(floor);
   voidMirageRun.cleared++;voidMirageRun.lastClearedFloor=floor;voidMirageRun.currentFloor=clear.nextFloor;voidMirageRun.phase="between";runFullHeal();
   if(voidMirageRun.exitRequested){const final=finishRun("exit");return {ok:true,win:true,ended:true,reason:"exit",floor,enemy,result,playerMaxHp,run:final};}
-  if(typeof save==="function")save(false);
+  if(options.save!==false&&typeof save==="function")save(false);
   return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,run:runSnapshot()};
  };
 
