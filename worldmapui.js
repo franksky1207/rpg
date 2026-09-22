@@ -107,14 +107,14 @@
   function initReviewRegions(){
     if(reviewRegionInitialized)return;
     reviewRegionInitialized=true;
-    const regions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+    const regions=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
     if(regions.length)reviewRegionOpenState[regions[regions.length-1].id]=true;
   }
 
   function reviewRegionCardsHtml(region){
     const cards=[];
     for(let index=region.mapStart;index<=region.mapEnd;index++){
-      const map=window.MAPS?.[index];
+      const map=MAPS[index];
       if(!map)continue;
       cards.push(`<div class="map-card cleared galaxy-review-map-card"><b>${index+1}. ${map.name}</b><div class="muted">Lv.${map.min}～${map.max}</div><div class="map-status">已完成・可回顧</div><button class="btn blue galaxy-review-action" type="button" onclick="openGalaxyReviewMap(${index})">回顧挑戰</button></div>`);
     }
@@ -134,12 +134,12 @@
 
   function galaxyReviewAdventureHtml(){
     initReviewRegions();
-    const regions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+    const regions=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
     return `<section class="map-screen universe-adventure-screen galaxy-review-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice galaxy-review-notice"><b>銀河紀元・回顧</b><div class="muted" style="margin-top:6px">第一紀元已完成的 10 大區、100 張地圖均可回顧。回顧戰為純挑戰，不影響宇宙紀元正式進度。</div></div><div class="world-region-list galaxy-review-region-list">${regions.map(reviewRegionHtml).join("")}</div></section>`;
   }
 
   window.openGalaxyReviewMap=function(mapIndex){
-    galaxyReviewSelectedMap=Math.max(0,Math.min((window.MAPS?.length||1)-1,Math.floor(Number(mapIndex)||0)));
+    galaxyReviewSelectedMap=Math.max(0,Math.min((MAPS.length||1)-1,Math.floor(Number(mapIndex)||0)));
     if(typeof window.enterGalaxyReviewMap==="function")window.enterGalaxyReviewMap(galaxyReviewSelectedMap);
   };
   window.getGalaxyReviewSelectedMap=function(){return galaxyReviewSelectedMap;};
