@@ -621,24 +621,48 @@ Game Guide：
 - 統一測試摘要與 live refresh。
 - GM 測試 save isolation / explicit test context / legacy cleanup。
 
+## 15.1 2026-09-22 冒險回顧／GM／Integrity 收尾
+
+本輪已完成並已實機確認：
+- 宇宙紀元冒險頁加入「銀河紀元・回顧」分頁；第一紀元 10 大區、100 張地圖可進行純回顧挑戰。
+- 銀河回顧戰：單場挑戰、零收益、零損失、不影響宇宙正式進度；正式 HP 於回顧戰後還原。
+- 回顧地圖／回顧敵人 selection 已與正式銀河主線 `selectedMap / selectedEnemy` 完全分離：
+  - `GALAXY_REVIEW_SELECTION_OWNER_VERSION=1`
+  - `GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1`
+  - `GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=3`
+- 冒險背包返回改為 explicit return context：
+  - 銀河正式主線 → 回原正式準備頁。
+  - 銀河回顧 → 回原回顧地圖選怪頁。
+  - 宇宙主線 → 回宇宙 Boss 地圖。
+  - `ADVENTURE_INVENTORY_RETURN_CONTEXT_VERSION=1`
+- 宇宙 Boss 卡片新增「背包」入口，方便換裝／出售後直接回冒險。
+- `secondWorldActiveRegionIndex()` 已修正為永遠只回 numeric region index，不再混入 combat HTML。
+- 宇宙冒險版本：
+  - `SECOND_WORLD_ADVENTURE_UI_VERSION=4`
+  - `SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3`
+  - `GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2`
+- 手機準備頁控制列改用 explicit owner：
+  - HTML：`data-mobile-prepare-actions="1"`、`data-mobile-battle-panel="1"`
+  - `preparemobilecontrols.js` 不再用泛用 `.prepare-actions` selector。
+  - `PREPARE_MOBILE_CONTROLS_VERSION=2`
+- GM Hub regression 已修復：清理退休 GM renderer 時誤刪的 `generalManagementHtml()` 已恢復；`gmHtml` 正常建立。
+- Story Integrity cache-bust 檢查已改為接受任何有效 `?v=`，不再綁死舊版本字串；story record 版本檢查改為最低版本 floor。
+- 新增全站 Runtime Integrity：
+  - workflow：`.github/workflows/runtime-integrity.yml`
+  - test：`tests/runtime/js-integrity.js`
+  - 每次 JS / index / adventure UI CSS 相關 push 會用 Node 24 對全 repo JavaScript 執行 `node --check`，並檢查關鍵 owner、cache-bust、本地 script 是否存在。
+  - 最新 Runtime Integrity run 已通過。
+- 本輪未新增任何正式 save 欄位；`SAVE_SCHEMA_VERSION` 維持 15，不需要 migration 或舊資料清理。
+
 ---
 
 # 16. 尚未完成／後續優先項目
 
-目前不要再把「第二世界懸賞／競技」列為未完成，它們已落地。
+目前不要再把「第二世界懸賞／競技」或「銀河冒險／災厄／戰線紀錄回顧」列為未完成；主要回顧入口已落地。
 
 仍應保留的後續：
 
-## 16.1 銀河封存／回顧跨頁收尾
-統一要求：
-- 回顧零 EXP／金幣／強化石／裝備／VIP／印記／稱號／養成進度。
-- 回顧死亡零損失。
-- 不寫 offline sample／farm target。
-- 不觸發特殊遭遇／黑市。
-- 第一世界災厄回顧不得污染正式 persistent HP。
-- 戰線紀錄只回顧、不重發獎勵。
-
-## 16.2 Cloud Save 真實跨裝置驗證
+## 16.1 Cloud Save 真實跨裝置驗證
 至少實測：
 1. 宇宙存檔上傳。
 2. 乾淨環境／另一裝置下載。
@@ -646,7 +670,7 @@ Game Guide：
 4. 核對 secondWorld、world2 gear、+21～40、文明、arenaByWorld、災厄、offline/pending settlement。
 5. 不破壞 Save Write Guard。
 
-## 16.3 全介面＋遊戲說明雙紀元語意總掃描
+## 16.2 全介面＋遊戲說明雙紀元語意總掃描
 這是使用者明確保留的必做項。
 
 至少掃：
@@ -670,7 +694,7 @@ Game Guide：
 - 宇宙不能殘留銀河金幣／強化石／Lv.500／每圖 5 怪等錯誤語意。
 - 同一功能跨世界不同文字／規則時，優先共用 world-aware semantic/helper owner，不要各頁硬寫字串。
 
-## 16.4 實際玩家測試後的 balance
+## 16.3 實際玩家測試後的 balance
 目前 GM 工具已足以用同一套角色 snapshot 測各模式；後續 balance 應先跑資料再調，不要直接逐階手改怪物。
 
 ---
@@ -690,6 +714,9 @@ Game Guide：
 - Combat speed：`combatspeed.js`
 - Offline：`offlineprogress.js`
 - Offline target/checkpoint：`offlinefarmtarget.js`
+- 冒險 UI／雙紀元回顧 owner：`worldmapui.js` + `ui.js`
+- 手機冒險固定控制列：`preparemobilecontrols.js` + `adventureuipolish.css`
+- 全站 JS / 關鍵 owner CI：`tests/runtime/js-integrity.js` + `.github/workflows/runtime-integrity.yml`
 - 專精：`specialization.js`
 - VIP：`vipprogression.js` + `engine.js`
 - 強化：`enhancementcore.js`
@@ -774,5 +801,5 @@ Game Guide：
 > 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。GM 測試要使用正式 owner＋explicit test context，不得污染正式 save。  
 > 目前宇宙紀元已完成：世界突破、Lv.501～1000、100 Boss 主線、world2 裝備／經濟、離線收益、強化 +21～+40、專精宇宙語意、文明等級、第二世界文明災厄、雙紀元特殊怪、第二世界懸賞／競技，以及 GM 角色 sandbox／7 模式戰力基準／統一摘要。  
-> 目前主要後續是：銀河封存／回顧跨頁收尾、Cloud Save 宇宙存檔真實跨裝置驗證、全介面＋遊戲說明雙紀元語意總掃描，以及依 GM 測試資料進行 balance。  
+> 目前主要後續是：Cloud Save 宇宙存檔真實跨裝置驗證、全介面＋遊戲說明雙紀元語意總掃描，以及依 GM 測試資料進行 balance。  
 > 現在先不要修改任何功能；先確認最新 main、正式 owner 與目前未完成項目，再等我的下一個指令。
