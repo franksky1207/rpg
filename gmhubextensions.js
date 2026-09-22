@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
  const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","civilization-manage","dungeon-manage"];
- const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","civilization-test","second-world-calamity-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
+ const TEST_SECTION_ORDER=["player-ability-test","second-world-calamity-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
   let body="";
@@ -38,6 +38,18 @@
   return orderedEntries(mode).map(entry=>entry.id);
  };
 
+ function abilityTestSubsection(title,renderer){
+  let body="";
+  try{body=typeof renderer==="function"?String(renderer()||""):'<div class="muted gm-hub-note">測試模組尚未載入。</div>';}
+  catch(err){console.error("GM ability test subsection renderer failed",err);body='<div class="muted gm-hub-note">測試模組載入失敗。</div>';}
+  return `<details class="gm-ability-test-sub"><summary>${title}</summary><div class="gm-ability-test-sub-body">${body}</div></details>`;
+ }
+ window.gmPlayerAbilityTestHtml=function(){
+  const status=typeof window.gmTestCurrentStatusHtml==="function"?window.gmTestCurrentStatusHtml():"";
+  return `${status}<div class="gm-ability-test-stack">${abilityTestSubsection("VIP 測試",window.gmTestVipControlHtml)}${abilityTestSubsection("專精測試",window.gmSpecializationTestHtml)}${abilityTestSubsection("強化測試",window.gmEnhancementTestHtml)}${abilityTestSubsection("印記測試",window.gmMarkTestHtml)}${abilityTestSubsection("文明等級測試",window.gmCivilizationTestHtml)}</div>`;
+ };
+ window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=1;
+
  function registerNativeSections(){
   const registrations=[
    ["manage","角色管理",window.gmGeneralManagementHtml,{id:"general-manage"}],
@@ -45,10 +57,7 @@
    ["manage","強化管理",window.gmEnhancementManagementHtml,{id:"enhancement-manage"}],
    ["manage","文明等級管理",window.gmCivilizationManagementHtml,{id:"civilization-manage"}],
    ["manage","副本管理",window.gmDungeonManagementHtml,{id:"dungeon-manage"}],
-   ["test","VIP 測試",window.gmTestVipControlHtml,{id:"vip-test"}],
-   ["test","專精測試",window.gmSpecializationTestHtml,{id:"spec-test"}],
-   ["test","強化測試",window.gmEnhancementTestHtml,{id:"enhancement-test"}],
-   ["test","文明等級測試",window.gmCivilizationTestHtml,{id:"civilization-test"}],
+   ["test","角色能力測試",window.gmPlayerAbilityTestHtml,{id:"player-ability-test"}],
    ["test","地圖怪測試",window.gmMapMonsterTestHtml,{id:"map-test"}],
    ["test","特殊怪測試",window.gmSpecialTestHtml,{id:"special-test"}],
    ["test","懸賞戰測試",window.gmBountyTestHtml,{id:"bounty-test"}],
