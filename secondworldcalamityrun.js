@@ -36,7 +36,7 @@
   const p=options.player&&typeof options.player==="object"?options.player:player();if(!p)return {ok:false,reason:"無法取得玩家能力。"};
   const startEnemyHp=typeof window.getSecondWorldCalamityCurrentHp==="function"?window.getSecondWorldCalamityCurrentHp(d.id,options.state||null):e.hp;
   const targetState=options.state&&typeof options.state==="object"?options.state:state;
-  const civilizationMultiplier=typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(targetState):1;
+  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel}):1;
   const combat=window.runCombatCore(p,e,Math.max(1,Number(p.hp)||1),{
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
