@@ -82,7 +82,7 @@ function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
- const fn={home:homePage,adventure:adventurePage,storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="notice"><b>宇宙紀元文明災厄尚未開放。</b></div><div class="muted" style="margin-top:10px;line-height:1.7">銀河紀元的正式災厄進度已封存；回顧模式將於後續階段開放。</div></div>`):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
+ const fn={home:homePage,adventure:adventurePage,storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
  document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
@@ -237,7 +237,9 @@ function showBattleResult(ctx,defeat=null){
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
  adventureScreen="prepare";render();
- if(window.civilizationStoryProgress?.get?.().pendingStory)window.civilizationStoryProgress.resume();
+ const pendingStory=window.civilizationStoryProgress?.get?.().pendingStory;
+ if(pendingStory)window.civilizationStoryProgress.resume();
+ else if(typeof window.flushSecondWorldCalamityAppearanceNotice==="function")setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
 }
 
 function characterPage(){
