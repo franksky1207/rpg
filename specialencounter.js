@@ -72,7 +72,7 @@
    const penalty=result.penalty||null,lost=penalty?.dropped;
    detail.innerHTML=result.win
     ?`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}${result.blackMarketIntelGranted?`<div class="muted" style="margin-top:5px">取得暗域黑市情報：下一次符合條件的主線勝利後，必定觸發另一個特殊遭遇。</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${Number(result.xp)||0}</b></div><div class="stat">特殊暗物質<b>+${Number(result.darkMatter)||0}</b></div><div class="stat">特殊暗能量<b>+${Number(result.darkEnergy)||0}</b></div><div class="stat">保留裝備<b>${keptCount}</b></div><div class="stat">自動出售<b>${saleCount}</b></div></div>`
-    :`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${Number(penalty?.expLost)||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(lost,true):""}</div><div class="muted">${Number(lost.world)===2&&Number.isFinite(Number(penalty?.cost))?`贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質`:"可前往背包的「遺失裝備贖回」取回。"}</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+    :`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(lost,true):""}</div><div class="muted">${Number(lost.world)===2&&Number.isFinite(Number(penalty?.cost))?`贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質`:"可前往背包的「遺失裝備贖回」取回。"}</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
   }else if(typeof mainBattleSettlementHtml==="function"&&typeof specialEncounterSettlementHtml==="function"){
    detail.innerHTML=mainBattleSettlementHtml(ctx,{interrupted:!result.win})+specialEncounterSettlementHtml(ctx);
   }else{
@@ -82,7 +82,7 @@
     body+=`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}${result.blackMarketIntelGranted?`<div class="muted" style="margin-top:5px">取得黑市情報：下一次符合條件的主線勝利後，必定觸發另一個特殊遭遇。</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${result.xp}</b></div><div class="stat">特殊金幣<b>+${result.gold}</b></div></div>`;
    }else{
     const lost=result.penalty?.dropped;
-    body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${result.penalty?.expLost||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至背包的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+    body+=`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${gearAbilityHtml(lost,true)}</div><div class="muted">已移至背包的「遺失裝備贖回」。</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
    }
    detail.innerHTML=body;
   }
