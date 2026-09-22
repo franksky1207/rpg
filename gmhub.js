@@ -85,36 +85,14 @@
   return SPECIAL_MONSTERS.map(x=>`<option value="${x.id}" ${x.id===selected?"selected":""}>${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");
  }
  function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===4?"selected":""}>${q.n}</option>`).join(""),type:`<option value="all">全部</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")};}
- function mapMonsterSelection(){return typeof getMapMonsterGmSelection==="function"?getMapMonsterGmSelection():{regionIdx:0,mapIdx:0,eIdx:0};}
- function mapMonsterRegionOptions(){const s=mapMonsterSelection();return WORLD_REGIONS.map((region,i)=>`<option value="${i}" ${i===s.regionIdx?"selected":""}>${region.name}（Lv.${region.min}～${region.max}）</option>`).join("");}
- function mapMonsterMapOptions(regionIdx=0){const s=mapMonsterSelection();if(typeof getMapMonsterGmMapOptions==="function")return getMapMonsterGmMapOptions(regionIdx,s.mapIdx);const region=WORLD_REGIONS[Math.max(0,Math.min(WORLD_REGIONS.length-1,Number(regionIdx)||0))]||WORLD_REGIONS[0];if(!region)return "";return MAPS.slice(region.mapStart,region.mapEnd+1).map((map,offset)=>{const i=region.mapStart+offset;return `<option value="${i}" ${i===s.mapIdx?"selected":""}>${i+1}. ${map.name}（Lv.${map.min}～${map.max}）</option>`;}).join("");}
- function mapMonsterEnemyOptions(mapIdx=0){const s=mapMonsterSelection();if(typeof getMapMonsterGmEnemyOptions==="function")return getMapMonsterGmEnemyOptions(mapIdx,s.eIdx);const i=Math.max(0,Math.min(MAPS.length-1,Number(mapIdx)||0));return MAPS[i].enemies.map((e,j)=>`<option value="${j}" ${i===s.mapIdx&&j===s.eIdx?"selected":""}>${e[2]==="boss"?"Boss":e[2]==="elite"?"菁英":"普通"}｜${e[0]} Lv.${e[1]}</option>`).join("");}
-
- function generalManagementHtml(){
-  const g=gearOptions();
-  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
-  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
-  const worldLabel=universe?"宇宙紀元":"銀河紀元";
-  const swSelection=typeof gmSecondWorldGearSelection==="function"?gmSecondWorldGearSelection():{regionIdx:0,bossIdx:0};
-  const swRegionOptions=typeof gmSecondWorldGearRegionOptions==="function"?gmSecondWorldGearRegionOptions():"";
-  const swBossOptions=typeof gmSecondWorldGearBossOptions==="function"?gmSecondWorldGearBossOptions():"";
-  const swQuality=QUALITY.slice(1).map((q,i)=>`<option value="${i+1}" ${i+1===4?"selected":""}>${q.n}</option>`).join("");
-  const swType=`<option value="all">全部 5 部位</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
-  const swGear=universe?`<div class="item" style="margin-top:12px"><b>產生宇宙紀元裝備</b><div class="muted" style="margin-top:5px">依正式「區域 → Boss」命名與世界 2 屬性公式產生；裝備等級自動取 min(目前角色等級, Boss 等級)。產生後的手動／批量／自動出售均走正式統一 sale owner。</div><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmSecondWorldGearRegion" class="btn" onchange="gmSecondWorldGearChangeRegion()">${swRegionOptions}</select></label><label>Boss<br><select id="gmSecondWorldGearBoss" class="btn" onchange="gmSecondWorldGearChangeBoss()">${swBossOptions}</select></label><label>品質<br><select id="gmSecondWorldGearQuality" class="btn">${swQuality}</select></label><label>部位<br><select id="gmSecondWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateSecondWorldGear()">產生裝備</button></div></div>`:"";
-  const resourceButtons=universe?`<button class="btn" onclick="gmDarkMatter()">指定暗物質</button><button class="btn" onclick="gmDarkEnergy()">指定暗能量</button>`:`<button class="btn" onclick="gmGold()">指定金幣</button>`;
-  return `<div class="notice gm-hub-note">目前世界：${worldLabel}　／　角色有效等級上限 Lv.${cap}</div><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button>${resourceButtons}<button class="btn" onclick="gmSetWorldProgress()">指定銀河紀元解鎖進度</button><button class="btn danger" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>
-  <div class="item" style="margin-top:12px"><b>產生銀河紀元裝備</b><div class="controls" style="align-items:end;margin-top:8px"><label>品質<br><select id="gmGearQuality" class="btn">${g.quality}</select></label><label>等級<br><input id="gmGearLevel" class="btn" type="number" inputmode="numeric" min="1" max="${MAX_LEVEL}" step="1" value="${Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(state.level)||1)))}"></label><label>部位<br><select id="gmGearType" class="btn">${g.type}</select></label><button class="btn gm-create" onclick="gmCreateGear()">產生裝備</button></div></div>${swGear}`;
- }
  function specialTestHtml(){
   const result=(typeof gmSpecialBatchResultHtml==="function"&&typeof gmSpecialBatchResult!=="undefined"&&gmSpecialBatchResult)?gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary):"";
   const worldOptions=typeof window.gmSpecialWorldOptionsHtml==="function"?window.gmSpecialWorldOptionsHtml():'<option value="1">銀河紀元</option><option value="2">宇宙紀元</option>';
   const monsterOptions=typeof window.gmSpecialBatchOptionsHtml==="function"?window.gmSpecialBatchOptionsHtml():specialOptions();
   return `<div class="muted gm-hub-note">特殊怪使用同一套戰鬥系統，依測試紀元切換名稱與獎勵 profile。紀元可自由選擇，不受正式角色目前世界與解鎖限制；玩家能力固定讀取 GM 測試角色。</div><div class="controls" style="margin-top:10px;align-items:end"><label>紀元<br><select id="gmSpecialWorld" class="btn" onchange="gmSetSpecialBatchWorld(this.value)">${worldOptions}</select></label><label>特殊怪<br><select id="gmSpecialMonster" class="btn" onchange="gmSetSpecialBatchSelected(this.value)">${monsterOptions}</select></label><button id="gmSpecialBatchStartBtn" class="btn blue" onclick="gmStartSpecialBattle()">開始測試（${GM_TEST_RUNS} 次）</button></div><div id="gmSpecialBatchResult" style="margin-top:12px">${result}</div>`;
  }
- function mapMonsterTestHtml(){const s=mapMonsterSelection(),result=typeof getMapMonsterGmTestHtml==="function"?getMapMonsterGmTestHtml():"",secondSelection=typeof getSecondWorldBossGmSelection==="function"?getSecondWorldBossGmSelection():{regionIdx:0,bossIdx:0},secondRegionOptions=typeof getSecondWorldBossGmRegionOptions==="function"?getSecondWorldBossGmRegionOptions():"",secondBossOptions=typeof getSecondWorldBossGmOptions==="function"?getSecondWorldBossGmOptions(secondSelection.regionIdx):"",secondResult=typeof getSecondWorldBossGmTestHtml==="function"?getSecondWorldBossGmTestHtml():"";return `<div class="muted gm-hub-note">快速單怪功能測試：銀河紀元使用「區域 → 地圖 → 怪物」；宇宙紀元因每區直接配置 10 隻 Boss，使用「區域 → 怪物」。兩者皆為沙盒模式，不修改正式角色資料。</div><div class="item"><b>銀河紀元</b><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmMapMonsterRegion" class="btn" onchange="gmMapMonsterChangeRegion()">${mapMonsterRegionOptions()}</select></label><label>地圖<br><select id="gmMapMonsterMap" class="btn" onchange="gmMapMonsterChangeMap()">${mapMonsterMapOptions(s.regionIdx)}</select></label><label>怪物<br><select id="gmMapMonsterEnemy" class="btn" onchange="gmMapMonsterChangeEnemy()">${mapMonsterEnemyOptions(s.mapIdx)}</select></label><button id="gmMapMonsterStartBtn" class="btn blue" onclick="gmStartMapMonsterTest()">開始測試（${GM_TEST_RUNS} 次）</button></div><div id="gmMapMonsterTestResult" style="margin-top:12px">${result}</div></div><div class="item" style="margin-top:10px"><b>宇宙紀元 Boss</b><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmSecondWorldRegion" class="btn" onchange="gmSecondWorldRegionChange()">${secondRegionOptions}</select></label><label style="flex:1 1 320px">怪物<br><select id="gmSecondWorldBoss" class="btn" onchange="gmSecondWorldBossChange()">${secondBossOptions}</select></label><button id="gmSecondWorldBossStartBtn" class="btn blue" onclick="gmStartSecondWorldBossTest()">開始測試（${GM_TEST_RUNS} 次）</button></div><div class="muted" style="margin-top:7px">每個區域固定顯示該區 10 隻主線 Boss；使用正式宇宙 Boss 能力公式＋Boss 隨機特性，不結算 EXP、暗物質、暗能量、裝備或主線進度。</div><div id="gmSecondWorldBossTestResult" style="margin-top:12px">${secondResult}</div></div>`;}
  function bountyTestHtml(){const result=typeof getBountyGmTestHtml==="function"?getBountyGmTestHtml():"",world=typeof window.gmBountyTestWorld==="function"?window.gmBountyTestWorld():1;return `<div class="muted gm-hub-note">懸賞戰可獨立選擇銀河／宇宙紀元，不受正式角色目前世界與解鎖限制；玩家固定使用 GM 測試角色。</div><div class="controls" style="align-items:end"><label>紀元<br><select id="gmBountyTestWorld" class="btn" onchange="gmSetBountyTestWorld(this.value)"><option value="1" ${world===1?"selected":""}>銀河紀元</option><option value="2" ${world===2?"selected":""}>宇宙紀元</option></select></label></div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateBounty('normal')">普通懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty('high')">高級懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty('danger')">危險懸賞測試（${GM_TEST_RUNS} 次）</button></div><div id="gmBountyTestResult" style="margin-top:12px">${result}</div>`;}
 
- function arenaTestHtml(){const result=typeof getArenaGmTestHtml==="function"?getArenaGmTestHtml():"";return `<div class="muted gm-hub-note">敵人以不含 VIP 的目前角色能力生成；玩家三連戰鎖定測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateArena('normal')">普通競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('hard')">困難競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('extreme')">極限競技場測試（${GM_TEST_RUNS} 次）</button></div><div id="gmArenaTestResult" style="margin-top:12px">${result}</div>`;}
  let gmVoidMirageFloorSession=null;
  function gmVoidMirageSessionFloor(){
   if(gmVoidMirageFloorSession==null){
@@ -138,9 +116,7 @@
 
  window.gmGeneralManagementHtml=generalManagementHtml;
  window.gmSpecialTestHtml=specialTestHtml;
- window.gmMapMonsterTestHtml=mapMonsterTestHtml;
  window.gmBountyTestHtml=bountyTestHtml;
- window.gmArenaTestHtml=arenaTestHtml;
  window.gmVoidMirageTestHtml=voidMirageTestHtml;
 
  window.gmResetVip=function(){
@@ -162,6 +138,7 @@
  window.GM_TEST_SESSION_UI_VERSION=1;
  window.GM_HUB_SPECIAL_WORLD_TEST_VERSION=1;
  window.GM_HUB_BOUNTY_WORLD_TEST_VERSION=1;
+ window.GM_HUB_LEGACY_COMBAT_RENDERERS_RETIRED_VERSION=1;
  window.GM_GEAR_LEVEL_INPUT_VERSION=1;
  window.GM_ENHANCEMENT_HUB_VERSION=5;
  window.GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1;
