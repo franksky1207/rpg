@@ -7,6 +7,7 @@
  let testResultHtml="";
  let benchmarkResultHtml="";
  let gmSecondWorldCalamityLastResult=null;
+ let gmSecondWorldUnlockBossCleared=true;
 
  function defs(){return typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];}
  function clampIndex(v){const list=defs();return Math.max(0,Math.min(Math.max(0,list.length-1),Math.floor(Number(v)||0)));}
@@ -170,11 +171,13 @@
  };
  window.gmSecondWorldCalamityTestHtml=function(){
   const d=def(),civ=testCiv();
-  return `<div class="muted gm-hub-note">宇宙文明災厄沙盒不受正式解鎖限制，使用目前 GM 共用測試 VIP／專精／強化／印記／文明等級。所有測試不修改正式災厄 HP、trueKills、文明等級或存檔。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmSecondWorldCalamityTestTarget" class="btn" onchange="gmSecondWorldCalamitySelectTest(this.value)">${options()}</select></label><button class="btn blue" onclick="gmSecondWorldCalamitySingleTest()">單場沙盒</button><button class="btn" onclick="gmSecondWorldCalamityFullKillTest()">完整擊殺沙盒</button></div><div class="notice" style="margin-top:10px"><b>雙條件解鎖沙盒</b><div class="controls" style="align-items:end"><label>章末 Boss<br><select id="gmSecondWorldCalamityUnlockBoss" class="btn"><option value="0">未完成</option><option value="1" selected>已完成</option></select></label><span class="muted">使用目前 GM 測試文明 Lv.${civ}</span><button class="btn" onclick="gmSecondWorldCalamityRunUnlockProbe()">測解鎖判定</button></div><div id="gmSecondWorldCalamityUnlockResult" class="muted"></div></div><div id="gmSecondWorldCalamityTestResult" style="margin-top:10px">${testResultHtml}</div>`;
+  return `<div class="muted gm-hub-note">宇宙文明災厄沙盒不受正式解鎖限制，使用目前 GM 共用測試 VIP／專精／強化／印記／文明等級。所有測試不修改正式災厄 HP、trueKills、文明等級或存檔。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmSecondWorldCalamityTestTarget" class="btn" onchange="gmSecondWorldCalamitySelectTest(this.value)">${options()}</select></label><button class="btn blue" onclick="gmSecondWorldCalamitySingleTest()">單場沙盒</button><button class="btn" onclick="gmSecondWorldCalamityFullKillTest()">完整擊殺沙盒</button></div><div class="notice" style="margin-top:10px"><b>雙條件解鎖沙盒</b><div class="controls" style="align-items:end"><label>章末 Boss<br><select id="gmSecondWorldCalamityUnlockBoss" class="btn" onchange="gmSecondWorldCalamitySetUnlockBoss(this.value)"><option value="0" ${gmSecondWorldUnlockBossCleared?"":"selected"}>未完成</option><option value="1" ${gmSecondWorldUnlockBossCleared?"selected":""}>已完成</option></select></label><span class="muted">使用目前 GM 測試文明 Lv.${civ}</span><button class="btn" onclick="gmSecondWorldCalamityRunUnlockProbe()">測解鎖判定</button></div><div id="gmSecondWorldCalamityUnlockResult" class="muted"></div></div><div id="gmSecondWorldCalamityTestResult" style="margin-top:10px">${testResultHtml}</div>`;
  };
+ window.gmSecondWorldCalamitySetUnlockBoss=function(value){gmSecondWorldUnlockBossCleared=String(value)==="1";return gmSecondWorldUnlockBossCleared;};
  window.gmSecondWorldCalamityRunUnlockProbe=function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget");
   const boss=document.getElementById("gmSecondWorldCalamityUnlockBoss")?.value==="1";
+  gmSecondWorldUnlockBossCleared=boss;
   const result=unlockProbe(d,boss,testCiv());
   const box=document.getElementById("gmSecondWorldCalamityUnlockResult");
   if(box&&result)box.textContent=`現身：${result.visible?"是":"否"}｜可挑戰：${result.challengeable?"是":"否"}｜前置文明 Lv.${result.requiredCivilizationLevel} ${result.previousCivilizationComplete?"✓":"✕"}`;
@@ -237,4 +240,5 @@
  window.gmClearSecondWorldCalamityTestResult=function(){testResultHtml="";benchmarkResultHtml="";gmSecondWorldCalamityLastResult=null;return true;};
  window.GM_SECOND_WORLD_CALAMITY_TEST_EMBEDDED_VERSION=1;
  window.GM_SECOND_WORLD_CALAMITY_SUMMARY_EXPORT_VERSION=1;
+ window.GM_SECOND_WORLD_CALAMITY_SESSION_SETTINGS_VERSION=1;
 })();
