@@ -1,5 +1,5 @@
 (function(){
- const VERSION=15;
+ const VERSION=16;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -168,6 +168,11 @@
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:Object.keys(s.specs||{});
   return keys.map(k=>(defs[k]&&defs[k].name?defs[k].name:k)+" Lv."+whole(s.specs&&s.specs[k],0)).join("｜");
  }
+ function benchmarkSpecializationEconomyText(s){
+  const target={secondWorld:{entered:benchmarkWorld()===2}};
+  if(typeof window.specializationWorldEconomySummary==="function")return window.specializationWorldEconomySummary(target,false,s?.specs||{}).text;
+  return "";
+ }
  function formalMarkName(key){
   return typeof window.markDisplayName==="function"?window.markDisplayName(key):String(key);
  }
@@ -264,7 +269,7 @@
    '<div style="margin-top:9px">Lv.'+s.level+'　VIP'+s.vipLevel+'（'+fmt(s.vipPoints)+' 積分）</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
-   '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
+   '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
  }
  function sourceOptions(selected){
   const rows=benchmarkWorld()===2?[["selected","目前選擇怪物"],["custom","自訂"]]:[["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]];
@@ -577,6 +582,7 @@
   lines.push("能力：HP "+fmt(st.hp)+"｜ATK "+fmt(st.atk)+"｜DEF "+fmt(st.def)+"｜暴擊 "+st.crit+"%｜閃避 "+st.dodge+"%");
   lines.push("強化："+enhancementText(s));
   lines.push("專精："+specText(s));
+  lines.push("經濟專精效果："+benchmarkSpecializationEconomyText(s));
   lines.push("印記："+markText(s));
   lines.push("裝備："+equipmentText(s));
   if(enemy)lines.push("基準怪物：Lv."+enemy.level+" "+enemy.name+"（"+(KIND_LABELS[enemy.kind]||enemy.kind)+"）｜測試量 "+MODEL.runs);
@@ -677,6 +683,7 @@
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
+ window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSetWorld=function(v){
