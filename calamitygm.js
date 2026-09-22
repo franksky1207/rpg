@@ -171,6 +171,7 @@
    gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
    singleResultHtml=singleHtml(data);
    if(box)box.innerHTML=singleResultHtml;
+   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
   }finally{busy=false;}
   return true;
  };
@@ -183,6 +184,7 @@
    gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
    fullResultHtml=fullHtml(data);
    if(box)box.innerHTML=fullResultHtml;
+   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
   }finally{busy=false;if(button){button.disabled=false;button.textContent="完整擊殺模擬";}}
   return true;
  };
