@@ -5,6 +5,29 @@
   if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
   return window.combatOuterGapMs("void","floor");
  }
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("void")===true;}
+ function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("void"):null;}
+ function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
+ async function consumeCatchUpDelay(ms){
+  const delay=Math.max(0,Number(ms)||0);
+  if(delay<=0)return true;
+  if(fastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"void");
+   if(Number(consumed?.remaining)>0)await sleep(consumed.remaining);
+   return Number(consumed?.remaining)<=0;
+  }
+  await sleep(delay);
+  return false;
+ }
+ function refreshVoidCatchUpUi(fr){
+  voidUi.floorResult=fr;
+  voidUi.phase="combat";
+  render();
+  if(window.getMinimalModeAdapterId?.()==="void-mirage"){
+   const syncMode=typeof window.syncMinimalMode==="function"?window.syncMinimalMode:window.syncMainMinimalMode;
+   if(typeof syncMode==="function")syncMode();
+  }
+ }
 
  function progressSafe(){
   if(typeof ensureVoidMirageState==="function")return ensureVoidMirageState()||{highestCleared:0};
@@ -74,6 +97,7 @@
  window.VOID_BACKGROUND_PRESENTATION_VERSION=1;
  window.VOID_BACKGROUND_UI_YIELD_VERSION=1;
  window.VOID_BACKGROUND_GM_GATE_VERSION=1;
+ window.VOID_FAST_CATCH_UP_UI_VERSION=1;
  window.VOID_OUTER_PACING_VERSION=1;
  async function runVoidMirageUiAuto(){
   if(voidUi.running)return false;
@@ -89,17 +113,38 @@
      if(!fr?.ok)return;
      voidUi.floorResult=fr;
      voidUi.phase="combat";
-     render();
-     if(window.getMinimalModeAdapterId?.()==="void-mirage"){
-      if(fr.ended)stopVoidMinimalModeIfOpen();
-      else {
-       const syncMode=typeof window.syncMinimalMode==="function"?window.syncMinimalMode:window.syncMainMinimalMode;
-       if(typeof syncMode==="function")syncMode();
+     const policy=fr.catchUpPolicy||null;
+     const fast=policy?.active===true;
+     if(fast){
+      if(policy?.shouldPresentBattle){
+       refreshVoidCatchUpUi(fr);
+       await animateFloor(fr);
+      }else{
+       await consumeCatchUpDelay(structuredDuration(fr.result));
+       if(policy?.shouldRefreshUi)refreshVoidCatchUpUi(fr);
+      }
+      if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
+     }else{
+      render();
+      if(window.getMinimalModeAdapterId?.()==="void-mirage"){
+       if(fr.ended)stopVoidMinimalModeIfOpen();
+       else {
+        const syncMode=typeof window.syncMinimalMode==="function"?window.syncMinimalMode:window.syncMainMinimalMode;
+        if(typeof syncMode==="function")syncMode();
+       }
+      }
+      await animateFloor(fr);
+      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
+     }
+     if(!fr.ended){
+      if(fast)await consumeCatchUpDelay(floorGapMs());
+      else await sleep(floorGapMs());
+      if(fast&&!fastCatchUp()){
+       const finalPolicy=catchUpFinal();
+       if(finalPolicy?.shouldRefreshUi)refreshVoidCatchUpUi(fr);
+       if(finalPolicy?.shouldCheckpoint&&typeof save==="function")save(false);
       }
      }
-     await animateFloor(fr);
-     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
-     if(!fr.ended)await sleep(floorGapMs());
     },
     async onEnd(run){
      stopVoidMinimalModeIfOpen();
