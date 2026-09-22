@@ -74,9 +74,9 @@
     statusText=`今日懸賞：${bounty.used} / ${bounty.limit}　・　剩餘 ${bounty.remaining} 次`;
     if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&bounty.remaining<=0)buttonLabel="今日懸賞次數已用完";else if(canEnter)buttonLabel=`進入${title}`;
    }else if(key==="arena"){
-    if(universePhase()){canEnter=false;statusText="宇宙紀元競技場尚未開放";buttonLabel="尚未開放";}
-    else canEnter=unlocked&&implemented&&arena.remaining>0;
-    if(!universePhase()){statusText=`今日競技場：${arena.used} / ${arena.limit}　・　剩餘 ${arena.remaining} 輪`;if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&arena.remaining<=0)buttonLabel="今日競技場次數已用完";else if(canEnter)buttonLabel=`進入${title}`;}
+    canEnter=unlocked&&implemented&&arena.remaining>0;
+    statusText=`今日競技場：${arena.used} / ${arena.limit}　・　剩餘 ${arena.remaining} 輪`;
+    if(unlocked&&!implemented)buttonLabel="尚未開放";else if(unlocked&&arena.remaining<=0)buttonLabel="今日競技場次數已用完";else if(canEnter)buttonLabel=`進入${title}`;
    }else{
     canEnter=unlocked&&implemented;
     currentFloorHtml=unlocked?`<div class="dungeon-current-floor">歷史最高：第 ${voidInfo.highest.toLocaleString()} 層<br>挑戰起點：第 ${voidInfo.start.toLocaleString()} 層</div>`:"";
@@ -89,7 +89,8 @@
  }
 
  window.DUNGEON_UNIVERSE_BOUNTY_UI_VERSION=1;
- window.openDungeonMode=function(mode){if(universePhase()&&mode==="arena")return alert("宇宙紀元的此副本尚未開放。");if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
+ window.DUNGEON_UNIVERSE_ARENA_UI_VERSION=1;
+ window.openDungeonMode=function(mode){if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
  function ensureHomeDungeonCard(main){const menu=main?.querySelector(".menu-grid");if(!menu)return;const existing=Array.from(menu.querySelectorAll(".menu-card")).find(el=>(el.getAttribute("onclick")||"").includes("go('dungeon')"));if(existing){existing.dataset.dungeonHomeCard="1";return;}const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰副本取得各類獎勵</span></button>`;const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);}
 
  const basePlayerStatusHtml=playerStatusHtml;
