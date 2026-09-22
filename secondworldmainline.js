@@ -99,6 +99,20 @@
  function catchUpFinal(){
   return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;
  }
+ function structuredDuration(result){
+  return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;
+ }
+ async function consumeCatchUpDelay(ms){
+  const delay=Math.max(0,Number(ms)||0);
+  if(delay<=0)return true;
+  if(catchUpActive()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"main");
+   if(Number(consumed?.remaining)>0)await flowSleep(consumed.remaining);
+   return Number(consumed?.remaining)<=0;
+  }
+  await flowSleep(delay);
+  return false;
+ }
  function refreshCatchUpUi(){
   if(typeof render==="function")render();
   if(typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
@@ -158,11 +172,13 @@
     const combat=window.runSecondWorldBossCombat(index,{startHp:state.hp,encounter,logs:showPresentation,preparePresentation:showPresentation});
     ctx.lastCombat=combat;
     if(!combat?.ok){ctx.currentEncounter=null;ctx.stopReason="error";alert(combat?.reason||"戰鬥啟動失敗。");break;}
+    const catchUpPolicy=fastCatchUp?catchUpStep():null;
+    if(fastCatchUp)ctx.catchUpNeedsFinalSync=true;
     if(showPresentation){
      ctx.presenting=true;
      try{await presentCombat(combat);}
      finally{ctx.presenting=false;}
-    }
+    }else if(fastCatchUp)await consumeCatchUpDelay(structuredDuration(combat));
     ctx.completed++;
     if(typeof window.finishSecondWorldOfflineBattleSample==="function")window.finishSecondWorldOfflineBattleSample(sampleToken,combat,battleGapMs());
 
@@ -182,14 +198,12 @@
     }
 
     // Fast catch-up keeps formal combat/settlement per battle, but samples presentation/UI through the shared owner.
-    const catchUpPolicy=fastCatchUp?catchUpStep():null;
     if(fastCatchUp){
-     ctx.catchUpNeedsFinalSync=true;
      if(catchUpPolicy?.shouldRefreshUi&&!showPresentation)refreshCatchUpUi();
      if((catchUpPolicy?.shouldRefreshUi||showPresentation)&&typeof window.backgroundProgressUiYield==="function"&&ctx.backgroundStarted)await window.backgroundProgressUiYield("main");
     }
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
-    await flowSleep(battleGapMs());
+    await consumeCatchUpDelay(battleGapMs());
     if(ctx.catchUpNeedsFinalSync&&!catchUpActive()){
      const finalPolicy=catchUpFinal();
      if(finalPolicy?.shouldRefreshUi)refreshCatchUpUi();
