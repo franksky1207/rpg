@@ -49,9 +49,8 @@
    if(Number(req?.enhancement?.requiredLevel)!==Number(window.FIRST_WORLD_ENHANCEMENT_CAP)||Number(req?.enhancement?.requiredLevel)!==20)fail("FINAL_SECOND_WORLD_ENTRY_ENHANCEMENT_CAP","宇宙紀元入口必須固定依第一世界 +20 完成門檻",{required:req?.enhancement?.requiredLevel,firstCap:window.FIRST_WORLD_ENHANCEMENT_CAP,secondCap:window.SECOND_WORLD_ENHANCEMENT_CAP});
   }catch(error){fail("FINAL_SECOND_WORLD_ENTRY_ENHANCEMENT_PROBE","宇宙入口強化 cap probe 失敗",String(error?.message||error));}
 
-  else{
-   try{
-    const probes=[
+  try{
+   const probes=[
      {level:501,exp:123456,itemLevel:505},
      {level:750,exp:234567,itemLevel:750},
      {level:1000,exp:345678,itemLevel:1000}
@@ -71,8 +70,7 @@
      if(Number(normalized.exp)!==expectedExp)fail("FINAL_WORLD_AWARE_PLAYER_EXP","宇宙紀元存檔 normalization 不得誤清 Lv.500+ EXP",{probe,actual:normalized.exp,expected:expectedExp});
      if(Number(normalized.equipment?.weapon?.level)!==probe.itemLevel)fail("FINAL_WORLD_AWARE_GEAR_LEVEL","宇宙紀元裝備 normalization 不得把 Lv.500+ 裝備壓回 500",{probe,actual:normalized.equipment?.weapon?.level});
     });
-   }catch(error){fail("FINAL_WORLD_AWARE_SAVE_PROBE","世界感知存檔 normalization probe 執行失敗",String(error?.message||error));}
-  }
+  }catch(error){fail("FINAL_WORLD_AWARE_SAVE_PROBE","世界感知存檔 normalization probe 執行失敗",String(error?.message||error));}
   if(Number(window.SECOND_WORLD_REWARD_VERSION)!==3||Number(window.SECOND_WORLD_REDEMPTION_MULTIPLIER)!==10||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function"||typeof window.settleSecondWorldBossVictory!=="function"||typeof window.applySecondWorldDeathPenalty!=="function"||typeof window.equipmentSaleQuote!=="function"||typeof window.equipmentSaleBatchQuote!=="function"||typeof window.settleEquipmentSale!=="function"||typeof window.settleEquipmentSaleBatch!=="function"||typeof window.equipmentSaleText!=="function")fail("FINAL_SECOND_WORLD_REWARDS","宇宙紀元主線獎勵／裝備／sale owner 未完整載入",{version:window.SECOND_WORLD_REWARD_VERSION,redemption:window.SECOND_WORLD_REDEMPTION_MULTIPLIER,xp:typeof window.secondWorldBossExpReward,dm:typeof window.secondWorldBossDarkMatterReward,item:typeof window.makeSecondWorldEquipmentForBoss,settle:typeof window.settleSecondWorldBossVictory,sale:typeof window.settleEquipmentSale,batchSale:typeof window.settleEquipmentSaleBatch,death:typeof window.applySecondWorldDeathPenalty});
   if(Number(window.SECOND_WORLD_OFFLINE_SAMPLE_VERSION)!==1||typeof window.beginSecondWorldOfflineBattleSample!=="function"||typeof window.finishSecondWorldOfflineBattleSample!=="function")fail("FINAL_SECOND_WORLD_OFFLINE_SAMPLE","宇宙紀元 offline sample owner 未完整載入",{version:window.SECOND_WORLD_OFFLINE_SAMPLE_VERSION,begin:typeof window.beginSecondWorldOfflineBattleSample,finish:typeof window.finishSecondWorldOfflineBattleSample});
   if(Number(window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION)!==1||Number(window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE)!==0.05||typeof window.grantSecondWorldOfflineRewards!=="function")fail("FINAL_SECOND_WORLD_OFFLINE_SETTLEMENT","宇宙紀元正式離線收益 owner 未完整載入",{version:window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION,darkEnergyRate:window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE,grant:typeof window.grantSecondWorldOfflineRewards});
