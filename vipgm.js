@@ -32,6 +32,7 @@
   refreshVipControls();
   refreshSpecializationControls();
   refreshEnhancementControls();
+  if(typeof window.refreshGmCivilizationTestControls==="function")window.refreshGmCivilizationTestControls();
   if(typeof window.refreshGmMarkTestControls==="function")window.refreshGmMarkTestControls();
   return true;
  };
@@ -64,9 +65,10 @@
    else window.gmTestSpecializations[key]=current;
   });
   window.gmUseCurrentEnhancementTestStatus(false);
+  if(typeof window.gmUseCurrentCivilizationTestStatus==="function")window.gmUseCurrentCivilizationTestStatus(false);
   if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus();
   if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-  return {vip:testVip(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
+  return {vip:testVip(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
  };
  window.gmTestEnhancementSlots=function(){return enhancementSlots();};
  window.gmClampTestEnhancementLevel=clampEnhancement;
@@ -82,7 +84,7 @@
  window.gmTestVipLabel=function(){const lv=testVip(),b=vipBonusStats(lv);return `VIP${lv}｜HP/ATK +${b.hp}%｜DEF +${b.def}%｜暴擊/閃避 +${b.crit}%`;};
  window.gmTestEnhancementLabel=function(){return `強化｜${enhancementSlots().map(type=>`${typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):type} +${window.gmTestEnhancementLevel(type)}`).join("｜")}`;};
  window.gmTestVipOptions=function(){return Array.from({length:VIP_MAX_LEVEL+1},(_,i)=>`<option value="${i}" ${i===testVip()?"selected":""}>VIP${i}</option>`).join("");};
- window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步角色到測試設定</button><span class="muted">將目前正式角色的 VIP／專精／強化／印記同步到 GM 共用測試設定；測試資料僅本次網頁工作階段保留，重新整理後回預設值。</span></div></div>`;};
+ window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步角色到測試設定</button><span class="muted">將目前正式角色的 VIP／專精／強化／文明等級／印記同步到 GM 共用測試設定；測試資料僅本次網頁工作階段保留，重新整理後回預設值。</span></div></div>`;};
  window.gmTestVipControlHtml=function(){return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><select id="gmTestVipLevel" class="btn" onchange="gmSetTestVipLevel(this.value)">${gmTestVipOptions()}</select></label><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span></div>`;};
  window.GM_TEST_STATE_VERSION=GM_TEST_STATE_VERSION;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
