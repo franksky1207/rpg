@@ -138,7 +138,7 @@
   const e=window.buildSecondWorldCalamityEnemy(d.id),p=testPlayer(options.snapshot);if(!e||!p)return null;
   const startHp=options.startHp==null?e.hp:Math.max(1,Math.min(e.hp,Math.floor(Number(options.startHp)||e.hp)));
   const civ=testCiv(options.snapshot);
-  const multi=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civ):1+civ*.05;
+  const multi=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:civ}):1;
   const markLevels=options.snapshot?.marks||(typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null);
   const result=window.runCombatCore(p,e,p.hp,{logs:false,preparePresentation:false,enemyStartHp:startHp,playerFinalDamageMultiplier:multi,markLevels,useTestSpecializations:!options.snapshot,useTestMarks:!options.snapshot});
   return {definition:d,enemy:e,player:p,startHp,civilizationLevel:civ,civilizationDamageMultiplier:multi,result,damage:Math.max(0,startHp-Math.max(0,Number(result.enemyHp)||0))};
