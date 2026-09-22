@@ -78,7 +78,7 @@ function renderNav(){
  if(top)top.innerHTML="";
  if(bottom)bottom.innerHTML="";
 }
-function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"&&typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();view=v;render()}
+function go(v){inventoryFromAdventure=false;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
@@ -107,7 +107,7 @@ function homePage(){
    <button class="menu-card" onclick="go('enhancement')"><b>強化</b><span>永久提升裝備欄位主能力</span></button>
    <button class="menu-card" onclick="go('specialization')"><b>專精</b><span>${secondWorldActive()?"查看已完成並持續生效的永久專精":"消耗金幣提升永久能力"}</span></button>
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
-   <button class="menu-card" onclick="go('calamity')"><b>文明災厄</b><span>討伐文明級威脅並培養永久印記</span></button>
+   <button class="menu-card" onclick="go('calamity')"><b>文明災厄</b><span>${secondWorldActive()?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記"}</span></button>
    <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法與規則</span></button>
    <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
   </div>
