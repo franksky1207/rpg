@@ -1,6 +1,8 @@
 (function(){
  const SAVE_SCHEMA_VERSION=14;
  const SAVE_LOAD_PIPELINE_VERSION=2;
+ const SAVE_NORMALIZATION_PIPELINE_VERSION=1;
+ const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["worldPhase","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const OFFLINE_REAL_SAMPLES_PER_SPEED=8;
@@ -154,6 +156,8 @@
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
+ window.SAVE_NORMALIZATION_PIPELINE_VERSION=SAVE_NORMALIZATION_PIPELINE_VERSION;
+ window.SAVE_NORMALIZATION_PIPELINE_ORDER=Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER);
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
@@ -179,17 +183,17 @@
   cleanupRetiredShopState(target);
   const expProgressMigrated=migrateExpProgress(target,version,source);
 
-  prepareAllGear(target);
+  if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
+  if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
+  prepareAllGear(target);
+  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
-  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeDailyState==="function")normalizeDailyState(target);
   if(typeof normalizeDungeonSaveState==="function")normalizeDungeonSaveState(target);
   if(typeof normalizeCivilizationCalamityState==="function")normalizeCivilizationCalamityState(target);
   if(typeof normalizePlayerTitleState==="function")normalizePlayerTitleState(target);
-  if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
-  if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
   cleanupLegacyDungeonFields(target);
   cleanupRetiredShopState(target);
   normalizeVoidMirage(target);
