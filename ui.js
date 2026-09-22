@@ -44,11 +44,16 @@ function characterWorldSnapshot(target=state){
   gold:Math.max(0,Math.floor(Number(target?.gold)||0)),
   darkMatter:Math.max(0,Math.floor(Number(sw.darkMatter)||0)),
   darkEnergy:Math.max(0,Math.floor(Number(sw.darkEnergy)||0)),
+  civilizationLevel:universe&&typeof window.civilizationLevel==="function"?window.civilizationLevel(target):0,
+  civilizationMax:Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||10)),
+  civilizationDamageBonusPercent:universe&&typeof window.civilizationDamageBonusPercent==="function"?window.civilizationDamageBonusPercent(target):0,
+  civilizationDamageMultiplier:universe&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(target):1,
   equippedWorlds:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,target?.equipment?.[type]?Number(target.equipment[type].world)===2?2:1:null]))
  };
 }
 window.characterWorldSnapshot=characterWorldSnapshot;
 window.CHARACTER_WORLD_UI_VERSION=1;
+window.CHARACTER_CIVILIZATION_UI_VERSION=1;
 window.PLAYER_EQUIPMENT_WORLD_SOURCE_UI_HIDDEN_VERSION=1;
 function savePlayerName(){
  const input=document.getElementById("playerNameInput");
@@ -240,8 +245,10 @@ function characterPage(){
  const s=playerCombatStats(),need=progress.need,hpPct=s.hp?state.hp/s.hp*100:0,expPct=progress.percent;
  const titleEntry=typeof window.getUnlockedPlayerTitleDefinitions==="function"&&window.getUnlockedPlayerTitleDefinitions().length?`<div class="character-title-row"><span class="muted">稱號</span><button class="btn character-title-button" onclick="openPlayerTitlePicker()">${typeof window.getEquippedPlayerTitleDefinition==="function"&&window.getEquippedPlayerTitleDefinition()?window.playerTitleHtml(window.getEquippedPlayerTitleDefinition().id):"不裝備稱號"}</button></div>`:"";
  const resourceStats=snap.world===2?`<div class="stat">暗物質<b>${snap.darkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>${snap.darkEnergy.toLocaleString()}</b></div>`:`<div class="stat">金幣<b>${snap.gold.toLocaleString()}</b></div>`;
+ const civilizationStats=snap.world===2?`<div class="stat">文明等級<b>Lv.${snap.civilizationLevel} / ${snap.civilizationMax}</b></div><div class="stat">最終傷害<b>+${snap.civilizationDamageBonusPercent}%</b></div>`:"";
+ const civilizationInfo=snap.world===2?`<div class="notice" style="margin-top:12px"><b>文明力量</b><div class="muted" style="margin-top:5px">每 1 級文明等級提高玩家宇宙戰鬥最終傷害 5%；目前倍率 ×${Number(snap.civilizationDamageMultiplier).toFixed(2)}。文明等級將由宇宙紀元文明災厄推進。</div></div>`:"";
  const worldInfo=`<div class="notice" style="margin-bottom:12px"><b>${snap.worldLabel}</b><div class="muted" style="margin-top:5px">目前角色等級上限 Lv.${snap.cap}</div></div>`;
- const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${worldInfo}${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}<div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
+ const stats=`<div class="card character-stats-card"><h2>角色｜${playerNameHtml()}</h2>${worldInfo}${titleEntry}<div class="grid3 character-stats-grid"><div class="stat">等級<b>Lv.${state.level}</b></div>${resourceStats}${civilizationStats}<div class="stat">總攻擊<b>${s.atk}</b></div><div class="stat">總防禦<b>${s.def}</b></div><div class="stat">暴擊率<b>${s.crit||0}%</b></div><div class="stat">閃避率<b>${s.dodge||0}%</b></div></div>${civilizationInfo}<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;gap:10px"><span>HP</span><span>${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" style="width:${hpPct}%"></span></div></div><div style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div>`;
  const equips=`<div class="card character-equipment-card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>{const it=state.equipment[t];return `<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(it,true)}${it?gearAbilityHtml(it,true):""}</div>`;}).join("")}</div>`;
  return wrapFunctionPage(`<div class="character-layout">${stats}${equips}</div>`);
 }
