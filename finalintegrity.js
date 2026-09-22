@@ -163,6 +163,8 @@
   }
   if(Number(window.ARENA_POSITION_API_VERSION)!==1||Number(window.ARENA_ENEMY_PROFILE_VERSION)!==1||Number(window.ARENA_PRESENTATION_PACING_SOURCE_VERSION)!==1||typeof window.getArenaPositionConfigs!=="function"||typeof window.getArenaEnemyProfile!=="function")fail("FINAL_ARENA_POSITION_PROFILE","Arena Position／Enemy Profile／Pacing Source 正式 owner 異常",{positionApi:window.ARENA_POSITION_API_VERSION,profile:window.ARENA_ENEMY_PROFILE_VERSION,pacing:window.ARENA_PRESENTATION_PACING_SOURCE_VERSION});
   if(!window.ARENA_RANK_CURVE)fail("FINAL_ARENA_RANK_CURVE","Arena Rank 正式公式設定未載入");
+  if(Number(window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION)!==1||!window.SECOND_WORLD_ARENA_RANK_CURVE||typeof window.getArenaRankCurveForWorld!=="function")fail("FINAL_SECOND_WORLD_ARENA_CURVE","第二世界 Arena 獨立 Rank Curve 未載入",{version:window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION,curve:window.SECOND_WORLD_ARENA_RANK_CURVE,api:typeof window.getArenaRankCurveForWorld});
+  if(Number(window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION)!==1)fail("FINAL_GM_SECOND_WORLD_ARENA_CURVE","GM 第二世界競技場曲線提示未載入",window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION);
   if(typeof window.getArenaDifficultyConfigs==="function"||typeof window.getArenaPositionDifficultyId==="function")fail("FINAL_ARENA_LEGACY_DIFFICULTY_API","Arena 舊 difficulty API 不應恢復");
   if(typeof window.getBountyTierConfig==="function"||typeof window.getBountyTierConfigs==="function")fail("FINAL_BOUNTY_LEGACY_TIER_API","Bounty 舊 tier config API 不應恢復");
   if(Number(window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION)!==5)fail("FINAL_MIRROR_VERSION","Mirror Final Integrity 應為 V5",window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION);
