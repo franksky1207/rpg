@@ -51,7 +51,8 @@
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
- if(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)!==20||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)!==40||window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE!==false)fail("ENHANCEMENT_WORLD_CAPS","強化世界 cap owner 異常",{first:window.FIRST_WORLD_ENHANCEMENT_CAP,second:window.SECOND_WORLD_ENHANCEMENT_CAP,active:window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE});
+ if(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)!==20||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)!==40||window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE!==true)fail("ENHANCEMENT_WORLD_CAPS","強化世界 cap owner／宇宙高階強化啟用狀態異常",{first:window.FIRST_WORLD_ENHANCEMENT_CAP,second:window.SECOND_WORLD_ENHANCEMENT_CAP,active:window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE});
+ if(Number(window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION)!==1||Number(window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION)!==1||typeof window.performEnhancementUpgrade!=="function"||Number(window.ENHANCEMENT_UI_VERSION)!==6)fail("SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW","宇宙高階強化玩家流程／atomic owner 未完整載入",{flow:window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION,atomic:window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION,api:typeof window.performEnhancementUpgrade,ui:window.ENHANCEMENT_UI_VERSION});
  if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("ENHANCEMENT_RATE",`強化每級主能力應為 2.5%，實際 ${window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL}`);
  if(typeof window.enhancementUpgradeCost!=="function")fail("ENHANCEMENT_COST_API","強化成本 API 未載入");
  else{
