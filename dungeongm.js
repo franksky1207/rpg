@@ -12,7 +12,7 @@
  function setTestButton(button,busy,label){if(!button)return;button.disabled=busy;button.textContent=busy?"測試中…":label;}
  function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
  function vipLabel(){return typeof gmTestVipLabel==="function"?gmTestVipLabel():`VIP${testVip()}`;}
- function testSummary(title,runLabel){return gmTestSummaryHtml(title,runLabel,vipLabel());}
+ function testSummary(title,runLabel,specText=null){return gmTestSummaryHtml(title,runLabel,vipLabel(),specText);}
  function testPlayer(base=null){return typeof gmTestPlayerStats==="function"?gmTestPlayerStats(base):createSpecialPlayerSnapshot(playerCombatStats(base||equippedStats(),testVip()));}
  function traitDetail(enemy){
   if(!enemy?.traits?.length)return "無";
@@ -105,6 +105,7 @@
   return secondWorldBossOptions(secondWorldTestRegion);
  };
  window.getSecondWorldBossGmTestHtml=function(){return secondWorldBossTestHtml;};
+ window.SECOND_WORLD_GM_SPECIALIZATION_SEMANTICS_VERSION=1;
  window.gmSecondWorldRegionChange=function(){
   const regionSelect=document.getElementById("gmSecondWorldRegion"),bossSelect=document.getElementById("gmSecondWorldBoss");
   if(!regionSelect||!bossSelect)return;
@@ -125,7 +126,9 @@
  function secondWorldBossResultHtml(boss,summary){
   const region=typeof window.secondWorldRegion==="function"?window.secondWorldRegion(boss.regionIndex):null;
   const reward=summary.reward||null;
-  return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
+  const economy=typeof window.specializationWorldEconomySummary==="function"?window.specializationWorldEconomySummary({secondWorld:{entered:true}},true).text:"";
+  const specText=(typeof gmTestSpecializationLabel==="function"?gmTestSpecializationLabel():"專精")+(economy?`｜經濟：${economy}`:"");
+  return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`,specText)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
   <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
    <div class="stat">勝率<b>${summary.winRate}%</b></div>
    <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
