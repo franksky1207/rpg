@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  window.VOID_MIRAGE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -29,6 +29,8 @@
   if(Number(window.COMBAT_OUTER_PACING_VERSION)!==2||typeof window.combatOuterGapMs!=="function"||Number(window.combatOuterGapMs("void","floor"))!==140)fail("outer-pacing-owner");
   if(Number(window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION)!==1)fail("gm-background-all-combat-gate-version");
   if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==3||typeof window.backgroundProgressUiYield!=="function")fail("background-ui-yield-api");
+  if(Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.VOID_FAST_CATCH_UP_UI_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)!==1)fail("fast-catch-up-policy-version");
+  if(Number(window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION)!==1||typeof window.structuredCombatPresentationDurationMs!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function")fail("fast-catch-up-timing-owner");
 
   const requiredApis=[
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
@@ -66,6 +68,7 @@
   }
 
   const fightSrc=src(window.fightNextVoidMirageFloor);
+  if(!/options\.save!==false/.test(fightSrc)||!/preparePresentation:options\.preparePresentation!==false/.test(fightSrc))fail("fast-catch-up-floor-options");
   const defeatPos=fightSrc.indexOf("if(!result.win)");
   const recordPos=fightSrc.indexOf("recordClear(floor)");
   const advancePos=fightSrc.indexOf("currentFloor=clear.nextFloor");
@@ -84,7 +87,8 @@
   const uiAutoSrc=src(typeof runVoidMirageUiAuto==="function"?runVoidMirageUiAuto:null);
   if(uiAutoSrc&&!/backgroundProgressUiYield\s*\(\s*["']void["']\s*\)/.test(uiAutoSrc))fail("background-ui-yield-wiring");
 
-    const autoSrc=src(window.runVoidMirageAuto);
+  const autoSrc=src(window.runVoidMirageAuto);
+  if(!/catchUpPreviewPolicy/.test(autoSrc)||!/backgroundProgressCatchUpStep/.test(autoSrc)||!/shouldCheckpoint/.test(autoSrc)||!/shouldPresentBattle/.test(autoSrc))fail("fast-catch-up-auto-wiring");
   if(!/while\s*\(voidMirageRun\?\.active\)/.test(autoSrc))fail("auto-loop-owner");
   if(!/fightNextVoidMirageFloor/.test(autoSrc))fail("auto-owner-floor-call");
   if(!/onFloorComplete/.test(autoSrc)||!/onEnd/.test(autoSrc))fail("auto-callback-contract");
@@ -100,7 +104,7 @@
    keys.forEach(key=>{if(!(key in snapshot))fail(`snapshot-field:${key}`);});
   }
 
-  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0};
+  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0,fastCatchUpVersion:Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)||0};
   window.VOID_MIRAGE_INTEGRITY_REPORT=report;
   if(!report.ok)console.error("Void Mirage integrity check failed",report);
   return report;
