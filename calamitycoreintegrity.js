@@ -4,7 +4,7 @@
  const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
  const defs=typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];
  if(Number(window.CALAMITY_CORE_VERSION)!==1)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V1",window.CALAMITY_CORE_VERSION);
- if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==2)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則版本應為 2",window.CALAMITY_COMBAT_RULE_VERSION);
+ if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==3||Number(window.CALAMITY_MAXED_REPLAY_HP_VERSION)!==1)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則應為 V3，滿印記重打每場滿 HP",{rules:window.CALAMITY_COMBAT_RULE_VERSION,replayHp:window.CALAMITY_MAXED_REPLAY_HP_VERSION});
  if(Number(window.COMBAT_PERSISTENT_ENEMY_HP_VERSION)!==1)fail("PERSISTENT_ENEMY_HP_VERSION","Combat Core 持久敵方 HP 支援未載入",window.COMBAT_PERSISTENT_ENEMY_HP_VERSION);
  if(Number(window.CALAMITY_HP_PER_LEVEL)!==500000||typeof window.getCivilizationCalamityConfiguredMaxHp!=="function"||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_BALANCE","文明災厄分級 HP／攻防倍率異常",{hpPerLevel:window.CALAMITY_HP_PER_LEVEL,hpApi:typeof window.getCivilizationCalamityConfiguredMaxHp,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
  if(Number(window.CALAMITY_FIXED_CRIT)!==10||Number(window.CALAMITY_FIXED_DODGE)!==10)fail("CALAMITY_RATES","文明災厄固定暴擊／閃避應為 10% / 10%",{crit:window.CALAMITY_FIXED_CRIT,dodge:window.CALAMITY_FIXED_DODGE});
@@ -25,6 +25,9 @@
    if(before!==after)fail("CALAMITY_GETTER_MUTATION","災厄 currentHp/status getter 不得修改傳入 state",{before,after});
    if(hp!==500000||st?.currentHp!==500000)fail("CALAMITY_GETTER_HP_READ","災厄 pure getter 應只在回傳值依災厄等級 clamp HP，不修改來源",{hp,status:st});
    if(st?.mark?.acquired!==true||st?.mark?.level!==10||st?.mark?.progress!==0)fail("CALAMITY_GETTER_MARK_READ","災厄 pure getter 應回傳正規化印記快照但不修改來源",st?.mark);
+   const maxedReplay={bossKilled:probe.bossKilled.slice(),calamities:{entries:{[def.id]:{currentHp:123456}}},marks:{entries:{[def.markId]:{acquired:true,level:10,progress:0}}}};
+   const replayHp=window.getCivilizationCalamityCurrentHp?.(def.id,maxedReplay);
+   if(replayHp!==500000)fail("CALAMITY_MAXED_REPLAY_FULL_HP","印記 Lv10 後重打災厄必須從滿 HP 開始",{stored:123456,replayHp});
   }
  }catch(error){fail("CALAMITY_GETTER_PURITY_PROBE","災厄 pure getter 檢查失敗",String(error?.message||error));}
 
