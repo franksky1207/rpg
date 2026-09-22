@@ -5,7 +5,7 @@
   return 1;
  }
  function maxArenaRank(){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(arenaWorld()):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
- function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1));}
+ function clampRank(value){return Math.max(1,Math.min(maxArenaRank(),Math.floor(Number(value)||1)));}
  function arenaVenueName(rank){
   const r=clampRank(rank),world=arenaWorld();
   const region=world===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
