@@ -5,8 +5,8 @@
   clearPortal();
   const mobile=window.matchMedia&&window.matchMedia("(max-width:760px)").matches;
   if(!mobile)return;
-  const panel=document.querySelector("#main .prepare-screen .battle-count-panel");
-  const actions=document.querySelector("#main .prepare-screen .prepare-actions");
+  const panel=document.querySelector('#main .prepare-screen [data-mobile-battle-panel="1"]');
+  const actions=document.querySelector('#main .prepare-screen [data-mobile-prepare-actions="1"]');
   if(!actions)return;
   const portal=document.createElement("div");
   portal.id="prepareMobileControlsPortal";
@@ -20,4 +20,5 @@
   portalPrepareControls();
  };
  setTimeout(()=>window.compactMobileDom(),0);
+ window.PREPARE_MOBILE_CONTROLS_VERSION=2;
 })();
