@@ -62,7 +62,7 @@
     <div class="calamity-hp-row"><span>HP</span><strong>${fmt(st?.currentHp)} / ${fmt(st?.maxHp)}</strong></div>
     <div class="bar calamity-hp-bar"><span class="hp" style="width:${pct}%"></span></div>
     <div class="calamity-mark-summary"><span>${esc(def.markName)}</span><strong>${markLine(st)}</strong></div>
-    <div class="calamity-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">單場挑戰</button><button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button></div>
+    <div class="calamity-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">${m.level>=10?"單場重打":"單場挑戰"}</button>${m.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button>`}</div>
    </article>`;
   }).join("");
  }
@@ -114,7 +114,7 @@
    <div class="calamity-result-kicker">文明災厄</div><h2>${title}</h2><div class="muted">${resultLine}</div>
    <div class="calamity-result-grid"><div><span>完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>勝 / 敗</span><strong>${fmt(run?.wins||0)} / ${fmt(run?.losses||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div><div><span>災厄目前 HP</span><strong>${fmt(st?.currentHp)} / ${fmt(st?.maxHp)}</strong></div><div><span>目前印記</span><strong>${esc(def?.markName||"—")}</strong></div><div><span>印記狀態</span><strong>${markLine(st)}</strong></div></div>
    <div class="muted calamity-no-reward">文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。</div>
-   <div class="calamity-result-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${ui.selectedId}','single')">單場挑戰</button><button class="btn danger" onclick="startCivilizationCalamityUI('${ui.selectedId}','continuous')">連續討伐</button><button class="btn" onclick="returnToCivilizationCalamityList()">返回文明災厄</button></div>
+   <div class="calamity-result-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${ui.selectedId}','single')">${st?.mark?.level>=10?"單場重打":"單場挑戰"}</button>${st?.mark?.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${ui.selectedId}','continuous')">連續討伐</button>`}<button class="btn" onclick="returnToCivilizationCalamityList()">返回文明災厄</button></div>
   </div></section>`;
  }
 
@@ -311,6 +311,7 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
+ window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION=1;
  window.CALAMITY_UI_VERSION=UI_VERSION;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
  window.CALAMITY_OUTER_PACING_VERSION=1;
