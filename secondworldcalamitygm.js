@@ -227,10 +227,10 @@
  window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION=FORMAL_VERSION;
  window.GM_SECOND_WORLD_CALAMITY_ATOMIC_MUTATION_VERSION=1;
  window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION=TEST_VERSION;
+ window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION=1;
  window.GM_POWER_BENCHMARK_CALAMITY_VERSION=BENCHMARK_VERSION;
 
  if(typeof window.registerGmHubSection==="function"){
-  window.registerGmHubSection("manage","宇宙文明災厄管理",window.gmSecondWorldCalamityManagementHtml,{id:"second-world-calamity-manage"});
   window.registerGmHubSection("test","宇宙文明災厄測試",window.gmSecondWorldCalamityTestHtml,{id:"second-world-calamity-test"});
  }
 })();
