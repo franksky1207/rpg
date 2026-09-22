@@ -137,16 +137,18 @@
  window.markEffectsSnapshot=effectsSnapshot;
  window.createBlankTestMarkLevels=blankTestLevels;
  window.gmTestMarkLevels=blankTestLevels();
- window.gmSetTestMarkLevel=function(key,value){
+ window.gmSetTestMarkLevel=function(key,value,refresh=true){
   if(!validKey(key))return false;
   if(!window.gmTestMarkLevels||typeof window.gmTestMarkLevels!=="object")window.gmTestMarkLevels=blankTestLevels();
   window.gmTestMarkLevels[key]=clampLevel(value);
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   return true;
  };
- window.gmUseCurrentMarkTestStatus=function(){
-  MARK_KEYS.forEach(key=>window.gmSetTestMarkLevel(key,markLevel(key,false)));
+ window.gmUseCurrentMarkTestStatus=function(refresh=true){
+  MARK_KEYS.forEach(key=>window.gmSetTestMarkLevel(key,markLevel(key,false),false));
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   return levelsSnapshot(true);
  };
+ window.GM_MARK_TEST_BATCH_SYNC_VERSION=1;
 
 })();
