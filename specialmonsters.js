@@ -18,6 +18,22 @@ const SPECIAL_TIERS={
  }
 };
 
+const SPECIAL_WORLD2_PROFILES={
+ gold_slime:{name:"星源聚合體",description:"由高密度暗物質與稀有宇宙資源異常聚合形成的特殊單位。戰力很低，但擊破後能回收大量暗物質。"},
+ mimic:{name:"虛空誘餌艙",description:"漂流於宇宙航路中的高危誘餌艙。擊破後必定能取得一件高品質宇宙裝備。"},
+ reaper:{name:"終焉協議體",description:"執行宇宙級終焉協議的極少見戰鬥個體。殺傷力極高，但成功摧毀後能取得極為豐厚的報酬。"},
+ lucky_rabbit:{name:"星運增幅信標",description:"干擾宇宙戰利品分布的異常信標。戰力不高，擊破後必定能取得宇宙裝備。"},
+ ancient_guardian:{name:"古域警戒機",description:"自古老宇宙區域重新啟動的警戒機。回收資源不多，但其高密度戰鬥資料能帶來大量經驗。"},
+ relic_guardian:{name:"星藏保全體",description:"專門保護高價值宇宙裝備的保全個體，戰利品會優先補足目前最薄弱的裝備部位。",effects:[
+  {type:"guaranteedDrop"},
+  {type:"weakSlotDrop",primary:70,secondary:30},
+  {type:"qualityTable",value:[0,40,40,15,4.5,.5]}
+ ]},
+ bandit_king:{name:"暗域黑市王",description:"控制宇宙暗域非法物資流通的武裝首領。擊敗後可回收大量暗物質，並鎖定另一個特殊目標。"},
+ collector:{name:"星骸回收者",description:"專門回收宇宙戰場裝備的特殊個體，擊敗後可以一次取得兩件宇宙裝備。"},
+ mysterious_traveler:{name:"界域交易使",description:"穿梭不同宇宙區域的神秘交易使。擊敗後可能取得大量暗物質、經驗資料，或高品質宇宙裝備。"}
+};
+
 const SPECIAL_MONSTERS=[
  {
   id:"gold_slime",name:"稀有資源聚合體",tier:"low",weight:18,
@@ -121,16 +137,26 @@ const SPECIAL_EFFECT_HANDLERS={
  }
 };
 
-function getSpecialMonsterById(id){return SPECIAL_MONSTERS.find(x=>x.id===id)||null;}
+function specialMonsterForWorld(special,world=1){
+ if(!special)return null;
+ if(Number(world)!==2)return special;
+ const profile=SPECIAL_WORLD2_PROFILES[special.id]||null;
+ if(!profile)return {...special,world:2};
+ return {...special,...profile,effects:Array.isArray(profile.effects)?profile.effects:special.effects,world:2,baseName:special.name};
+}
+function getSpecialMonsterById(id,world=1){
+ const special=SPECIAL_MONSTERS.find(x=>x.id===id)||null;
+ return specialMonsterForWorld(special,world);
+}
 
-function rollSpecialMonster(excludedIds=null){
+function rollSpecialMonster(excludedIds=null,world=1){
  const excluded=new Set(Array.isArray(excludedIds)?excludedIds:excludedIds?[excludedIds]:[]);
  const pool=SPECIAL_MONSTERS.filter(x=>!excluded.has(x.id));
  const total=pool.reduce((sum,x)=>sum+Math.max(0,x.weight||0),0);
  if(total<=0)return null;
  let r=Math.random()*total;
- for(const x of pool){r-=Math.max(0,x.weight||0);if(r<0)return x;}
- return pool[pool.length-1]||null;
+ for(const x of pool){r-=Math.max(0,x.weight||0);if(r<0)return specialMonsterForWorld(x,world);}
+ return specialMonsterForWorld(pool[pool.length-1]||null,world);
 }
 
 function specialTierConfig(special){
@@ -235,8 +261,14 @@ function applySpecialEffectsToContext(ctx,effects){
  return ctx;
 }
 
-function getSpecialRewardContext(special){
+function getSpecialRewardContext(special,world=1){
+ const resolved=specialMonsterForWorld(special,world);
  const ctx=createSpecialRewardContext();
- if(special)applySpecialEffectsToContext(ctx,special.effects||[]);
+ if(resolved)applySpecialEffectsToContext(ctx,resolved.effects||[]);
+ ctx.world=Number(world)===2?2:1;
  return ctx;
 }
+
+window.SPECIAL_WORLD_PROFILE_VERSION=1;
+window.SPECIAL_WORLD2_PROFILES=SPECIAL_WORLD2_PROFILES;
+window.specialMonsterForWorld=specialMonsterForWorld;
