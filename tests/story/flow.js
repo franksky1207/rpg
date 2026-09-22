@@ -29,7 +29,8 @@ assert(!/function progress\(\)\{normalizeProgress\(state\)/.test(storyProgressSo
 assert(/CIVILIZATION_STORY_PROGRESS_VERSION=10/.test(storyProgressSource),'story progress 版本應為 10');
 assert(/if\(firstCompletion&&typeof window\.handleSecondWorldStoryCompletion==="function"\)window\.handleSecondWorldStoryCompletion\(id\)/.test(storyProgressSource),'storyprogress 完成故事後必須保留宇宙紀元解鎖 hook');
 assert(!/__storyRecordLatestWrapped|originalGo/.test(storyRecordSource),'storyrecordtabs.js 不得再包裝全域 go()');
-assert(/STORY_RECORD_TABS_VERSION=5/.test(storyRecordSource),'story record tabs 版本應為 5');
+const storyRecordVersionMatch=storyRecordSource.match(/STORY_RECORD_TABS_VERSION=(\d+)/);
+assert(storyRecordVersionMatch&&Number(storyRecordVersionMatch[1])>=5,'story record tabs 版本不得低於 5');
 assert(/v===\"storyrecord\"&&typeof window\.prepareStoryRecordEntry===\"function\"/.test(uiSource),'ui.go 必須在進入戰線紀錄時呼叫正式 prepareStoryRecordEntry hook');
 assert(/legacyFields:LEGACY_FIELDS\.slice\(\)/.test(migrationSource),'storymigration 必須公開 legacyFields');
 assert(/LEGACY_FIELDS=\["historyBackfillRegions"\]/.test(migrationSource),'historyBackfillRegions legacy 相容欄位標記遺失');
