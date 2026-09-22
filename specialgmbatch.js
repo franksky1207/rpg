@@ -96,7 +96,7 @@ async function gmStartSpecialBattle(){
    resource=specialRewardGoldAmount(baseGold,ctx,true);
   }
   summary.totalXp+=xp;summary.totalResource+=resource;
-  const items=specialMakeDrops(ctx,level,world===1?mapIdx:null,{world,bossIndex,state});
+  const items=specialMakeDrops(ctx,level,world===1?mapIdx:null,{world,bossIndex,state,equipment:window.gmTestEquipment||null});
   summary.dropCount+=items.length;
   items.forEach(item=>{summary.qualityCounts[item.q]=(summary.qualityCounts[item.q]||0)+1;});
   if(ctx?.randomReward?.label)summary.randomRewards[ctx.randomReward.label]=(summary.randomRewards[ctx.randomReward.label]||0)+1;
@@ -146,3 +146,4 @@ window.gmSpecialBatchResultSnapshot=function(){const rows=Object.values(gmSpecia
 window.gmClearSpecialBatchResult=function(){gmSpecialBatchResult=null;gmSpecialBatchResults={};return true;};
 window.GM_SPECIAL_WORLD_BENCHMARK_VERSION=1;
 window.GM_SPECIAL_SUMMARY_EXPORT_VERSION=1;
+window.GM_SPECIAL_WEAK_SLOT_SANDBOX_VERSION=1;
