@@ -242,8 +242,9 @@
  window.SECOND_WORLD_MAINLINE_VERSION=VERSION;
  window.SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION=1;
+ window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION=1;
  window.SECOND_WORLD_MAINLINE_INTEGRITY={
-  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1,
+  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1&&Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)===1,
   version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION
  };
 })();
