@@ -32,6 +32,7 @@ const css=read("adventureuipolish.css");
 const index=read("index.html");
 const civilization=read("civilizationcore.js");
 const bounty=read("dungeonbounty.js");
+const secondWorldCombat=read("secondworldcombat.js");
 const civilizationFormalFiles=["secondworldcombat.js","specialcore.js","secondworldcalamityrun.js","dungeoncore.js","dungeonarena.js","dungeonvoid.js","mirrorcombatcore.js"];
 const civilizationGmFiles=["dungeongm.js","arenagm5.js","mirrordungeongm.js","specialgmbatch.js","secondworldcalamitygm.js","gmpowerbenchmark.js"];
 
@@ -51,6 +52,10 @@ assert(/data-mobile-prepare-actions/.test(css),"adventureuipolish.css 未綁定 
 
 assert(/CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1/.test(civilization),"civilizationcore.js 缺少統一文明戰鬥倍率 owner。");
 assert(/BOUNTY_BALANCE_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Balance 應為 V2。");
+assert(/SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1/.test(secondWorldCombat),"secondworldcombat.js 缺少宇宙 Boss 基準公式版本。");
+assert(/const BASE_STAT=3000;/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 單一基準應為 3000。");
+assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 比例應為 12:2:1。");
+assert(!/const BASE_HP=|const BASE_ATK=|const BASE_DEF=/.test(secondWorldCombat),"secondworldcombat.js 不得恢復三套獨立基準常數。");
 assert(/BOUNTY_DIFFICULTY_FORMULA_VERSION=2/.test(bounty),"dungeonbounty.js Difficulty Formula 應為 V2。");
 assert(/BOUNTY_CIVILIZATION_SCALING_VERSION=1/.test(bounty),"dungeonbounty.js 缺少文明動態縮放。");
 assert(/hp:Object\.freeze\(\{linear:\.67,quadratic:-\.19\}\)/.test(bounty),"dungeonbounty.js HP curve 係數不符。");
