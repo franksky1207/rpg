@@ -6,6 +6,7 @@
  let selectedIndex=0;
  let testResultHtml="";
  let benchmarkResultHtml="";
+ let gmSecondWorldCalamityLastResult=null;
 
  function defs(){return typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];}
  function clampIndex(v){const list=defs();return Math.max(0,Math.min(Math.max(0,list.length-1),Math.floor(Number(v)||0)));}
@@ -182,12 +183,14 @@
  window.gmSecondWorldCalamitySelectTest=function(v){selectedIndex=clampIndex(v);testResultHtml="";if(typeof render==="function")render();return selectedIndex;};
  window.gmSecondWorldCalamitySingleTest=function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=simulate(d);
+  gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
   testResultHtml=singleTestHtml(data);
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   return data;
  };
  window.gmSecondWorldCalamityFullKillTest=async function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=await fullKill(d);
+  gmSecondWorldCalamityLastResult=data?{type:"full",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},attempts:data.attempts,totalDamage:data.totalDamage,totalTurns:data.totalTurns,remainingHp:data.remainingHp,completed:!!data.completed,civilizationLevel:testCiv()}:null;
   testResultHtml=data?`<div class="notice"><b>${d.name}・完整擊殺沙盒</b><div class="stats" style="margin-top:10px"><div class="stat">結果<b>${data.completed?"完整擊殺":"安全上限"}</b></div><div class="stat">需要場次<b>${fmt(data.attempts)}</b></div><div class="stat">總傷害<b>${fmt(data.totalDamage)}</b></div><div class="stat">總回合<b>${fmt(data.totalTurns)}</b></div></div></div>`:'<div class="notice">測試失敗。</div>';
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   return data;
@@ -230,5 +233,8 @@
  window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION=1;
  window.GM_POWER_BENCHMARK_CALAMITY_VERSION=BENCHMARK_VERSION;
 
+ window.gmSecondWorldCalamityTestResultSnapshot=function(){return gmSecondWorldCalamityLastResult?JSON.parse(JSON.stringify(gmSecondWorldCalamityLastResult)):null;};
+ window.gmClearSecondWorldCalamityTestResult=function(){testResultHtml="";benchmarkResultHtml="";gmSecondWorldCalamityLastResult=null;return true;};
  window.GM_SECOND_WORLD_CALAMITY_TEST_EMBEDDED_VERSION=1;
+ window.GM_SECOND_WORLD_CALAMITY_SUMMARY_EXPORT_VERSION=1;
 })();
