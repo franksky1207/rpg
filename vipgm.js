@@ -3,7 +3,7 @@
  window.gmTestVipLevel=0;
  function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
  function enhancementSlots(){return Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"];}
- function enhancementMax(){return Math.max(0,Math.floor(Number(window.ENHANCEMENT_MAX_LEVEL)||0));}
+ function enhancementMax(){return Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)||Number(window.ENHANCEMENT_MAX_LEVEL)||0));}
  function clampEnhancement(value){return Math.max(0,Math.min(enhancementMax(),Math.floor(Number(value)||0)));}
  function blankEnhancementLevels(){return typeof window.createBlankEnhancementLevels==="function"?window.createBlankEnhancementLevels():Object.fromEntries(enhancementSlots().map(type=>[type,0]));}
  window.gmTestEnhancementLevels=blankEnhancementLevels();
@@ -85,5 +85,6 @@
  window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步角色到測試設定</button><span class="muted">將目前正式角色的 VIP／專精／強化／印記同步到 GM 共用測試設定；測試資料僅本次網頁工作階段保留，重新整理後回預設值。</span></div></div>`;};
  window.gmTestVipControlHtml=function(){return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><select id="gmTestVipLevel" class="btn" onchange="gmSetTestVipLevel(this.value)">${gmTestVipOptions()}</select></label><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span></div>`;};
  window.GM_TEST_STATE_VERSION=GM_TEST_STATE_VERSION;
- window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=5;
+ window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
+ window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
 })();
