@@ -30,10 +30,21 @@
   return Math.max(0,Math.ceil(base*civilizationDamageMultiplier(target)));
  }
 
+ function civilizationCombatDamageMultiplier(options={}){
+  const source=options&&typeof options==="object"?options:{};
+  const target=source.state&&typeof source.state==="object"?source.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  const explicitWorld=source.world==null?null:(Number(source.world)===2?2:1);
+  const world=explicitWorld||(typeof window.isSecondWorldEntered==="function"&&target?window.isSecondWorldEntered(target)===true:(target?.secondWorld?.entered===true))?2:1;
+  if(world!==2)return 1;
+  if(source.civilizationLevel!=null)return civilizationDamageMultiplierForLevel(source.civilizationLevel);
+  return civilizationDamageMultiplier(target);
+ }
+
  window.CIVILIZATION_LEVEL_MAX=CIVILIZATION_LEVEL_MAX;
  window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL=CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL;
  window.CIVILIZATION_CORE_VERSION=1;
  window.CIVILIZATION_FINAL_DAMAGE_LAYER_VERSION=1;
+ window.CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1;
  window.clampCivilizationLevel=clampCivilizationLevel;
  window.civilizationLevel=civilizationLevel;
  window.civilizationDamageBonusPercentForLevel=civilizationDamageBonusPercentForLevel;
@@ -41,4 +52,5 @@
  window.civilizationDamageBonusPercent=civilizationDamageBonusPercent;
  window.civilizationDamageMultiplier=civilizationDamageMultiplier;
  window.civilizationFinalDamage=civilizationFinalDamage;
+ window.civilizationCombatDamageMultiplier=civilizationCombatDamageMultiplier;
 })();
