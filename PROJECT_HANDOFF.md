@@ -919,7 +919,7 @@ GM 角色等級使用 effective cap：
 ## 24.4 戰力基準測試
 
 正式 owner：`gmpowerbenchmark.js`。
-- `GM_POWER_BENCHMARK_VERSION = 14`
+- `GM_POWER_BENCHMARK_VERSION=17`
 - `GM_POWER_BENCHMARK_BATCH_SIZE = 25`
 
 第一層先選紀元。
@@ -1503,17 +1503,15 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - GM 戰力基準雙世界完整重構。
 
 真正仍未完成：
-1. **強化 +21～+40**：暗物質＋暗能量成本、正式強化 owner、GM 管理／測試。
-2. **專精第二世界完整 UX/驗收**：核心效果已被主線 EXP／暗物質／售價使用，但專精主題本身尚未做第二世界完整收尾。
-3. **文明等級 0～10**：每級 final damage +5% 的正式 owner 尚未完成。
-4. **第二世界文明災厄 10 隻**：每 50 級、30 true kills、persistent HP、文明等級升級。
-5. **第二世界副本**：懸賞、競技等正式規則／進度／獎勵尚未完整落地；daily 必須沿用共用 owner。
-6. **銀河紀元封存／回顧跨頁完整收尾**：尤其災厄、副本、戰線紀錄。
-7. **戰線紀錄、設定、遊戲說明** 的宇宙紀元 UX 收尾。
-8. **Cloud Save / migration 真實跨裝置救援驗證**：至少一次宇宙存檔上傳→乾淨環境下載→reload。
-9. 全部完成後做一次 **GM／Integrity final sweep**。
+1. **第二世界文明災厄 10 隻**：每 50 級、30 true kills、persistent HP、文明等級升級。
+2. **第二世界副本**：懸賞、競技等正式規則／進度／獎勵尚未完整落地；daily 必須沿用共用 owner。
+3. **銀河紀元封存／回顧跨頁完整收尾**：尤其災厄、副本、戰線紀錄。
+4. **戰線紀錄、設定、遊戲說明** 的宇宙紀元 UX 收尾。
+5. **Cloud Save / migration 真實跨裝置救援驗證**：至少一次宇宙存檔上傳→乾淨環境下載→reload。
+6. 宇宙主要架構接近完成後做 **全介面＋遊戲說明雙紀元語意總掃描**。
+7. 全部完成後做一次 **GM／Integrity final sweep**。
 
-不要再把「宇宙主線／角色／背包／離線收益／GM 戰力基準」列成未完成。
+不要再把「宇宙主線／角色／背包／離線收益／強化 +21～+40／專精第二世界 UX／文明等級 0～10／GM 戰力基準」列成未完成。
 
 
 ---
@@ -1582,7 +1580,7 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ## 29.7 已完成：GM 戰力基準三批重構
 
-`GM_POWER_BENCHMARK_VERSION=16`。
+`GM_POWER_BENCHMARK_VERSION=17`。
 - 先選紀元。
 - 銀河：區域 → 地圖 → 怪物。
 - 宇宙：區域 → Boss，沒有地圖層。
@@ -1630,7 +1628,7 @@ GM：
 - 正式管理：銀河 Lv.0～60；宇宙正式固定 Lv.60，不允許製造 <60 的正式宇宙專精。
 - 沙盒測試固定 Lv.0～60。
 - 宇宙 Boss GM 測試與 GM 戰力基準摘要會使用宇宙專精經濟語意。
-- `GM_POWER_BENCHMARK_VERSION=16`。
+- `GM_POWER_BENCHMARK_VERSION=17`。
 
 正式 owner／標記：
 - `SPECIALIZATION_WORLD_SEMANTICS_VERSION=1`
@@ -1644,14 +1642,53 @@ GM：
 - `GAME_GUIDE_WORLD_AWARE_VERSION=1`
 - `GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1`
 
-## 29.11 後續：文明等級＋第二世界文明災厄
+## 29.11 已完成：文明等級 0～10
 
-文明等級：
-- 0～10。
-- 每級 final damage +5%，必須放在 late/final layer。
-- 不直接用暗能量購買。
+正式規則：
+- state：`secondWorld.civilizationLevel`，範圍 Lv.0～10；進入宇宙起始 Lv.0。
+- 每級玩家宇宙戰鬥 **最終傷害 +5%**。
+- Lv.0 / 1 / 5 / 10 = ×1.00 / ×1.05 / ×1.25 / ×1.50。
+- 文明倍率位於 Combat Core 的 late/final player damage layer，不寫入 ATK，也不影響 HP、DEF、暴擊、閃避。
+- 銀河紀元永遠不套文明倍率。
+- 不以暗物質／暗能量直接購買；正式升級來源保留給第二世界文明災厄。
 
-第二世界災厄：
+玩家：
+- 宇宙角色頁顯示文明等級、最終傷害加成與倍率；銀河角色頁不顯示。
+- `CHARACTER_CIVILIZATION_UI_VERSION=1`。
+- 遊戲說明 V16 已加入 world-aware 文明等級說明。
+
+GM：
+- 正式宇宙文明管理 Lv.0～10；銀河沒有正式文明等級管理值。
+- 共用 GM 沙盒文明 Lv.0～10，不修改正式 state。
+- 「同步角色到測試設定」已包含文明等級。
+- 宇宙 Boss GM 測試會把測試文明等級傳入正式 final-damage layer。
+- GM 戰力基準 V17：銀河固定 ×1.00；宇宙使用 GM 測試文明等級，輸出木樁與宇宙 Boss 實戰皆一致套用。
+
+Migration / Integrity：
+- `SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION=1`。
+- 舊 secondWorld 存檔缺欄位時補 `civilizationLevel=0`，不升 Save Schema。
+- `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1` 對 Lv.0/1/5/10、0～10 clamp、銀河隔離、舊存檔 migration、Combat Core 1.50× final layer、GM／Benchmark owner 做回歸。
+- Runtime / Final Integrity 必須要求上述專屬 integrity report 通過。
+
+正式 owner／版本：
+- `SECOND_WORLD_CIVILIZATION_STATE_VERSION=1`
+- `CIVILIZATION_CORE_VERSION=1`
+- `CIVILIZATION_FINAL_DAMAGE_LAYER_VERSION=1`
+- `COMBAT_PLAYER_FINAL_DAMAGE_LAYER_VERSION=1`
+- `SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=1`
+- `CHARACTER_CIVILIZATION_UI_VERSION=1`
+- `GM_CIVILIZATION_VERSION=1`
+- `GM_CIVILIZATION_FORMAL_RANGE_VERSION=1`
+- `GM_CIVILIZATION_TEST_RANGE_VERSION=1`
+- `SECOND_WORLD_GM_CIVILIZATION_TEST_VERSION=1`
+- `GM_POWER_BENCHMARK_VERSION=17`
+- `GM_POWER_BENCHMARK_CIVILIZATION_VERSION=1`
+- `GAME_GUIDE_VERSION=16`
+- `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
+- `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
+
+## 29.12 後續：第二世界文明災厄
+
 - 每 50 級開一隻：550、600…1000。
 - 第 2 隻起需前一文明完成。
 - 每隻 `trueKills >= 30` 才完成一級文明。
@@ -1660,9 +1697,10 @@ GM：
 - HP persistent。
 - 玩家每戰滿 HP。
 - 不給暗能量。
-- 需同步 GM 管理／測試／戰力基準。
+- 完成對應 30 true kills 後正式使文明等級 +1。
+- 需同步玩家 UI、GM 管理／測試、戰力基準、Integrity。
 
-## 29.12 後續：副本
+## 29.13 後續：副本
 
 - 懸賞：第二世界版正式規則尚未完整實作。
 - 競技：第二世界 1～10 階、對應區域開放＋評估門檻；正式 balance curve 尚不能自行發明。
@@ -1922,13 +1960,12 @@ Background 仍只有一個 Single Active Flow。
 
 ## 32.9 目前下一個真正大型功能
 
-強化 +21～+40、專精第二世界 UX／語意收尾皆已完成。後續建議依序：
-1. 文明等級 0～10。
-2. 第二世界文明災厄 10 隻。
-3. 第二世界懸賞／競技等副本。
-4. 銀河封存／回顧跨頁收尾。
-5. Cloud Save 宇宙存檔真實跨裝置驗證。
-6. **宇宙架構接近完成時，執行「全介面＋遊戲說明雙紀元語意總掃描」**。
+強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10 皆已完成。後續建議依序：
+1. 第二世界文明災厄 10 隻。
+2. 第二世界懸賞／競技等副本。
+3. 銀河封存／回顧跨頁收尾。
+4. Cloud Save 宇宙存檔真實跨裝置驗證。
+5. **宇宙架構接近完成時，執行「全介面＋遊戲說明雙紀元語意總掃描」**。
 
 目前只有使用者本人進行測試；健檢優先順序以資料安全、邏輯正確、效能、正式 owner、舊程式殘留為主，不需要為一般玩家尚未存在的 UX 誤解額外提高優先度。
 
@@ -1950,7 +1987,7 @@ Background 仍只有一個 Single Active Flow。
 - `GM_ENHANCEMENT_HUB_VERSION=5`
 - `GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1`
 - `ENHANCEMENT_EXPLICIT_LEVEL_CAP_VERSION=1`
-- `GM_POWER_BENCHMARK_VERSION=15`
+- `GM_POWER_BENCHMARK_VERSION=17`
 - `GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1`
 - `ENHANCEMENT_FINAL_INTEGRITY_VERSION=2`
 
@@ -1986,8 +2023,22 @@ Background 仍只有一個 Single Active Flow。
 - 專精相關遊戲說明。
 - GM 專精經濟摘要。
 - GM 戰力基準專精語意。
+- 文明等級角色頁。
+- 文明等級相關遊戲說明。
+- GM 文明等級正式／沙盒與戰力基準語意。
 
 **不要因這些局部完成就把本項視為完成；必須等宇宙主要架構接近完成後再做全專案總掃描。**
+
+---
+
+# 32.12 2026-09-22 文明等級 0～10 四批實作完成基準
+
+- Core / State / Migration / final damage layer 已完成。
+- 玩家角色頁文明等級顯示已完成。
+- GM 正式管理、GM 共用沙盒、宇宙 Boss GM 測試、GM 戰力基準 V17 已完成。
+- 遊戲說明已 world-aware：銀河說明「不套用」、宇宙說明 Lv.0～10／每級 +5% final damage。
+- 專屬 `civilizationintegrity.js` 已對公式、migration、銀河隔離與 Combat Core final layer 做非破壞回歸。
+- **目前沒有正式升級途徑是刻意狀態**；下一個系統「第二世界文明災厄」完成後，才由 30 true kills 推進對應文明等級。
 
 ---
 
@@ -2000,8 +2051,8 @@ Background 仍只有一個 Single Active Flow。
 > 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
 > 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40、專精第二世界 UX／語意收尾，以及 GM 戰力基準銀河／宇宙雙世界重構。  
-> 真正下一批優先看 handoff 第 29 節；目前建議進入 **文明等級 0～10**。宇宙主要架構接近完成時，務必依第 32.11 節提醒使用者做全介面＋遊戲說明雙紀元語意總掃描。  
+> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40、專精第二世界 UX／語意收尾、文明等級 0～10，以及 GM 戰力基準銀河／宇宙雙世界重構。  
+> 真正下一批優先看 handoff 第 29 節；目前建議進入 **第二世界文明災厄 10 隻**。宇宙主要架構接近完成時，務必依第 32.11 節提醒使用者做全介面＋遊戲說明雙紀元語意總掃描。  
 > 現在先不要修改任何檔案，先確認最新 main 狀態、正式 owner 與下一個未完成項目，再等我的下一個指令。
 
 ---
