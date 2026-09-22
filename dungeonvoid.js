@@ -72,7 +72,7 @@
  function runFullHeal(){state.hp=runPlayerStats().hp;}
  function voidMirageFightCore(enemy,options={}){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
-  const civilizationMultiplier=typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(state):1;
+  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1,state}):1;
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp,{
    logs:options.logs===false?false:true,
    preparePresentation:options.preparePresentation!==false,
@@ -158,7 +158,7 @@
 
  window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
  window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
- window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=1;
+ window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2;
  window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION=1;
  window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
  function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("void")===true;}
