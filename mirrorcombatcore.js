@@ -26,8 +26,9 @@
 
  function createMirrorCombatSnapshot(){
   const stats=typeof playerCombatStats==="function"?playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0},levels=currentSpecializationLevels(),marks=currentMarkLevels();
+  const world=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1;
   const civilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
-  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
+  const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state,civilizationLevel}):1;
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
    damageModelVersion:Math.max(0,Math.floor(numberOr(window.COMBAT_DAMAGE_MODEL_VERSION,0))),
@@ -35,6 +36,7 @@
    playerName:String(state?.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(state?.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(state?.vipLevel,0))),
+   world,
    civilizationLevel,
    civilizationDamageMultiplier,
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
@@ -48,7 +50,9 @@
  function normalizeSnapshot(snapshot){
   const source=snapshot&&typeof snapshot==="object"?snapshot:createMirrorCombatSnapshot(),stats=source.stats&&typeof source.stats==="object"?source.stats:{},levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};
   const civilizationLevel=Math.max(0,Math.min(Number(window.CIVILIZATION_LEVEL_MAX)||10,Math.floor(numberOr(source.civilizationLevel,0))));
-  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):Math.max(1,numberOr(source.civilizationDamageMultiplier,1));
+  const fallbackWorld=typeof window.isSecondWorldEntered==="function"&&typeof state!=="undefined"&&state?window.isSecondWorldEntered(state)===true?2:1:1;
+  const world=source.world==null?(civilizationLevel>0||numberOr(source.civilizationDamageMultiplier,1)>1?2:fallbackWorld):(Number(source.world)===2?2:1);
+  const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,civilizationLevel}):Math.max(1,numberOr(source.civilizationDamageMultiplier,1));
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
    damageModelVersion:Math.max(0,Math.floor(numberOr(source.damageModelVersion,window.COMBAT_DAMAGE_MODEL_VERSION||0))),
@@ -56,6 +60,7 @@
    playerName:String(source.playerName||"玩家"),
    level:Math.max(1,Math.floor(numberOr(source.level,1))),
    vipLevel:Math.max(0,Math.floor(numberOr(source.vipLevel,0))),
+   world,
    civilizationLevel,
    civilizationDamageMultiplier,
    stats:{hp:Math.max(1,Math.ceil(numberOr(stats.hp,1))),atk:Math.max(1,Math.ceil(numberOr(stats.atk,1))),def:Math.max(0,Math.ceil(numberOr(stats.def,0))),crit:clampRate(stats.crit),dodge:clampRate(stats.dodge)},
@@ -72,7 +77,9 @@
   if(!liveStats)issues.push("playerCombatStats missing");else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});
   if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");
   const liveCivilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
-  const liveCivilizationMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(liveCivilizationLevel):1;
+  const liveWorld=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1;
+  const liveCivilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:liveWorld,state,civilizationLevel:liveCivilizationLevel}):1;
+  if(Number(snap.world)!==Number(liveWorld))issues.push("world mismatch");
   if(Number(snap.civilizationLevel)!==Number(liveCivilizationLevel))issues.push("civilizationLevel mismatch");
   if(Math.abs(Number(snap.civilizationDamageMultiplier)-Number(liveCivilizationMultiplier))>1e-9)issues.push("civilizationDamageMultiplier mismatch");
   const liveLevels=currentSpecializationLevels();["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});
@@ -235,6 +242,7 @@
  window.MIRROR_COMBAT_MARK_RULE_VERSION=MIRROR_MARK_RULE_VERSION;
  window.MIRROR_COMBAT_BATTLE_LIMIT=RUN_BATTLES;
  window.MIRROR_CIVILIZATION_DAMAGE_VERSION=1;
+ window.MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.createMirrorCombatSnapshot=createMirrorCombatSnapshot;
  window.normalizeMirrorCombatSnapshot=normalizeSnapshot;
  window.mirrorSpecializationBonuses=specializationBonuses;
