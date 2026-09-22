@@ -34,10 +34,12 @@
    const cfg=configs.find(x=>x.id===positionId);if(!cfg)return null;
    const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base);
    const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
+   const civilizationLevel=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+   const civilizationMultiplier=arenaGm5World===2&&typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
    const level=gmArenaTestLevel();
    const reached=[runs,0,0],wins=[0,0,0];let totalPoints=0,totalVipPoints=0,totalTurns=0,clearHpTotal=0,clearCount=0;
-   for(let run=0;run<runs;run++){let hp=player.hp,points=0,cleared=true;for(let stage=0;stage<3;stage++){if(stage>0)reached[stage]++;const enemy=buildArenaEnemyForTest(positionId,stage,base,level,rank,arenaGm5World);const out=runCombatCore(player,enemy,hp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});totalTurns+=out.turns;if(out.win){wins[stage]++;hp=out.hp;points+=Number(cfg.stagePoints?.[stage])||0;}else{cleared=false;break;}}if(cleared){clearCount++;clearHpTotal+=hp;}totalPoints+=points;totalVipPoints+=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(points,testVip()):points;}
-   return {world:arenaGm5World,rank,positionId,cfg,runs,reached,wins,clearCount,totalPoints,totalVipPoints,totalTurns,avgPoints:round1(totalPoints/runs),avgVipPoints:round1(totalVipPoints/runs),avgTurns:round1(totalTurns/runs),avgClearHp:clearCount?round1(clearHpTotal/clearCount/player.hp*100):0};
+   for(let run=0;run<runs;run++){let hp=player.hp,points=0,cleared=true;for(let stage=0;stage<3;stage++){if(stage>0)reached[stage]++;const enemy=buildArenaEnemyForTest(positionId,stage,base,level,rank,arenaGm5World);const out=runCombatCore(player,enemy,hp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:civilizationMultiplier});totalTurns+=out.turns;if(out.win){wins[stage]++;hp=out.hp;points+=Number(cfg.stagePoints?.[stage])||0;}else{cleared=false;break;}}if(cleared){clearCount++;clearHpTotal+=hp;}totalPoints+=points;totalVipPoints+=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(points,testVip()):points;}
+   return {world:arenaGm5World,rank,positionId,cfg,runs,reached,wins,clearCount,totalPoints,totalVipPoints,totalTurns,avgPoints:round1(totalPoints/runs),avgVipPoints:round1(totalVipPoints/runs),avgTurns:round1(totalTurns/runs),avgClearHp:clearCount?round1(clearHpTotal/clearCount/player.hp*100):0,civilizationLevel,civilizationDamageMultiplier:civilizationMultiplier};
  }
  function resultHtml(s,assessment=false){
   if(!s)return `<div class="notice">找不到競技場測試資料。</div>`;
@@ -87,4 +89,5 @@
  window.GM_ARENA_SESSION_SETTINGS_VERSION=1;
  window.GM_ARENA_STATE_ISOLATION_VERSION=1;
  window.GM_ARENA_LEGACY_INJECTION_RETIRED_VERSION=1;
+ window.GM_ARENA_CIVILIZATION_DAMAGE_VERSION=1;
 })();
