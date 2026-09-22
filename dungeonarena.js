@@ -4,6 +4,11 @@
   damage:Object.freeze({linear:.005,quadratic:.0031}),
   def:Object.freeze({linear:.016,quadratic:.004})
  });
+ const SECOND_WORLD_ARENA_RANK_CURVE=Object.freeze({
+  hp:Object.freeze({linear:.025,quadratic:.0075}),
+  damage:Object.freeze({linear:.005,quadratic:.0031}),
+  def:Object.freeze({linear:.016,quadratic:.004})
+ });
  const ARENA_POSITION_BASES=[
   {id:"normal",stageWeights:[25,35,120]},
   {id:"hard",stageWeights:[35,45,200]},
@@ -74,9 +79,12 @@
  }
  function arenaRankName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}階`;}
  function arenaVenueName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}競技場`;}
+ function arenaRankCurve(){
+  return arenaWorld()===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
+ }
  function arenaRankMultipliers(rank){
-  const x=clampArenaRank(rank)-1;
-  const value=key=>{const curve=ARENA_RANK_CURVE[key];return 1+curve.linear*x+curve.quadratic*x*x;};
+  const x=clampArenaRank(rank)-1,source=arenaRankCurve();
+  const value=key=>{const curve=source[key];return 1+curve.linear*x+curve.quadratic*x*x;};
   return {hp:value("hp"),damage:value("damage"),def:value("def")};
  }
  function scaleStagePoints(weights,total){const source=Array.isArray(weights)&&weights.length===3?weights:[0,0,0],sourceTotal=Math.max(1,source.reduce((sum,x)=>sum+Math.max(0,Number(x)||0),0)),target=Math.max(0,Math.floor(Number(total)||0));const first=Math.max(0,Math.round((Number(source[0])||0)*target/sourceTotal)),second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));return [first,second,Math.max(0,target-first-second)];}
@@ -123,6 +131,12 @@
  window.ARENA_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.balanceVersion)||0));
  window.ARENA_RANK_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.rankBalanceVersion)||0));
  window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
+ window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION=1;
+ window.SECOND_WORLD_ARENA_RANK_CURVE=SECOND_WORLD_ARENA_RANK_CURVE;
+ window.getArenaRankCurveForWorld=function(world=arenaWorld()){
+  const source=Number(world)===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
+  return {hp:{...source.hp},damage:{...source.damage},def:{...source.def}};
+ };
  window.getArenaRankMultipliers=function(rank){return arenaRankMultipliers(rank);};
  window.getArenaPositionPhysicalMultipliers=function(id){const key=String(id||"normal"),v=ARENA_POSITION_PHYSICAL_MULTIPLIERS[key]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {hp:v.hp,damage:v.damage,def:v.def};};
  window.getArenaPositionStageConfig=function(id,stageIndex){const key=String(id||"normal"),stages=ARENA_POSITION_STAGE_CONFIGS[key]||ARENA_POSITION_STAGE_CONFIGS.normal,idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0))),v=stages[idx]||stages[0];return {...v};};
