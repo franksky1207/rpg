@@ -183,6 +183,7 @@
   if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus();
   if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
   return {character:window.gmTestCharacterSnapshot(),vip:testVip(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
  };
  window.gmTestEnhancementSlots=function(){return enhancementSlots();};
