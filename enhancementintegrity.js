@@ -25,7 +25,7 @@
   if(blockedExpected.basic!==0||blockedExpected.advanced!==0)fail("EXPECTED_LEVEL_GAP","理論強化石產量未遵守 10 級差規則");
  }
  if(Number(window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("MAINLINE_OWNER","主線強化石 owner 異常");
- if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("EQUIPMENT_OWNER","出售／換裝強化石 owner 異常");
+ if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==4)fail("EQUIPMENT_OWNER","出售／換裝強化石 owner 異常");
  if(Number(window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION)!==3||typeof offlineEnhancementStoneReward!=="function")fail("OFFLINE_OWNER","離線強化石 owner 異常");
  else{
   const normalOffline=offlineEnhancementStoneReward({kind:"normal",level:100},20,100);
@@ -47,7 +47,7 @@
    ["hp","atk","def","crit","dodge"].forEach(stat=>{if((Number(maxed?.[stat])||0)+1e-9<(Number(raw?.[stat])||0))fail("COMBAT_MAX_LEVEL",`+20 強化不應降低 ${stat}`);});
   }catch(error){fail("COMBAT_PROBE",`正式強化能力計算測試失敗：${String(error)}`);}
  }
- if(Number(window.ENHANCEMENT_UI_VERSION)!==4||typeof enhancementPage!=="function"||typeof openEnhancementConfirm!=="function")fail("UI_OWNER","強化正式 UI 未完整載入");
+ if(Number(window.ENHANCEMENT_UI_VERSION)!==6||typeof enhancementPage!=="function"||typeof openEnhancementConfirm!=="function"||typeof window.performEnhancementUpgrade!=="function")fail("UI_OWNER","強化正式 UI 未完整載入");
  if(document.getElementById("enhancement-ui-styles"))fail("LEGACY_UI_STYLE","強化 UI 不應再由 JS 注入樣式");
  if(document.getElementById("enhancementGmStyles"))fail("LEGACY_GM_STYLE","GM 強化不應再由 JS 注入樣式");
  if(typeof homePage==="function"&&!homePage().includes("go('enhancement')"))fail("HOME_ROUTE","首頁未正式提供強化入口");
