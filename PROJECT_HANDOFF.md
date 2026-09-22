@@ -719,17 +719,17 @@ Integrity 已同步：
 
 第二紀元 100 隻主線 Boss 的基準三圍已從三個獨立常數收斂成單一基準＋固定比例，**本輪只做架構統一，沒有改實際強度**：
 
-- 單一基準：`BASE_STAT=2900`
+- 單一基準：`BASE_STAT=2800`
 - 固定比例：`HP:ATK:DEF = 12:2:1`
 - 成長倍率仍為：`M(N)=1+0.015N`，N=0～99。
 - 正式公式：
   - `HP(N)=ceil(BASE_STAT × 12 × M(N))`
   - `ATK(N)=ceil(BASE_STAT × 2 × M(N))`
   - `DEF(N)=ceil(BASE_STAT × 1 × M(N))`
-- 目前第 1 隻為 34800／5800／2900，第 100 隻為 86478／14413／7207。
+- 目前第 1 隻為 33600／5600／2800，第 100 隻為 83496／13916／6958。
 - `SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1`
 - Final Integrity 與 Runtime Integrity 已加 guard，禁止恢復 `BASE_HP / BASE_ATK / BASE_DEF` 三套獨立基準。
-- 2026-09-23 將 `BASE_STAT` 由 3000 降為 2900，作為前期難度實機測試版本；12:2:1 與 `STEP_RATE=.015` 不變。後續若仍要調前期難度只改 `BASE_STAT`，若要改後期成長速度再調 `STEP_RATE`。
+- 2026-09-23 將 `BASE_STAT` 進一步調整為 2800，作為前期難度實機測試版本；12:2:1 與 `STEP_RATE=.015` 不變。後續若仍要調前期難度只改 `BASE_STAT`，若要改後期成長速度再調 `STEP_RATE`。
 
 ## 15.3 2026-09-23 懸賞難度公式 V2
 
