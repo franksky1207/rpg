@@ -1,10 +1,10 @@
 (function(){
- const VERSION=18;
+ const VERSION=19;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
-  world:1,phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
+  world:Number(window.gmTestWorld)===2?2:1,phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
   universeRegionIndex:0,universeBossIndex:0,
@@ -145,20 +145,26 @@
   return true;
  }
  function captureSnapshot(){
-  const stats=typeof window.playerCombatStats==="function"?window.playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0};
-  const specs=typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(false):{};
-  const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(false):{};
+  const character=typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;
+  const stats=typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():typeof window.playerCombatStats==="function"?window.playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0};
+  const specs=typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(true):{};
+  const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{};
   const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?window.ENHANCEMENT_SLOTS:["weapon","helmet","armor","shoes","accessory"];
-  const enhancementCap=typeof window.effectiveEnhancementCap==="function"?window.effectiveEnhancementCap(state):Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||40));
-  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):whole(typeof state!=="undefined"&&state.enhancement&&state.enhancement.levels?state.enhancement.levels[type]:0,0,enhancementCap)]));
+  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.gmTestEnhancementLevel==="function"?window.gmTestEnhancementLevel(type):0]));
+  const sourceEquipment=character?.equipment&&typeof character.equipment==="object"?character.equipment:{};
   const equipment=Object.fromEntries(slots.map(type=>{
-   const it=typeof state!=="undefined"&&state.equipment?state.equipment[type]:null;
-   return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5)}:null];
+   const it=sourceEquipment[type]||null;
+   return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5),world:Number(it.world)===2?2:1}:null];
   }));
   const civilizationLevel=benchmarkWorld()===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
   const civilizationDamageMultiplier=benchmarkWorld()===2&&typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
   MODEL.snapshot={
-   capturedAt:Date.now(),level:whole(typeof state!=="undefined"?state.level:1,1),vipLevel:whole(typeof state!=="undefined"?state.vipLevel:0,0),vipPoints:whole(typeof state!=="undefined"?state.vipPoints:0,0),
+   capturedAt:Date.now(),
+   characterWorld:Number(character?.world)===2?2:1,
+   equipmentSource:character?.equipmentSource==="synced"?"synced":"generated",
+   level:whole(character?.level??window.gmTestLevel??(typeof state!=="undefined"?state.level:1),1,1000),
+   vipLevel:whole(window.gmTestVipLevel??(typeof state!=="undefined"?state.vipLevel:0),0),
+   vipPoints:0,
    stats:{hp:whole(stats.hp,1),atk:whole(stats.atk,1),def:whole(stats.def,0),crit:one(stats.crit),dodge:one(stats.dodge)},
    civilizationLevel,civilizationDamageMultiplier,
    specs,marks,enhancements,equipment
@@ -173,7 +179,7 @@
  }
  function benchmarkSpecializationEconomyText(s){
   const target={secondWorld:{entered:benchmarkWorld()===2}};
-  if(typeof window.specializationWorldEconomySummary==="function")return window.specializationWorldEconomySummary(target,false,s?.specs||{}).text;
+  if(typeof window.specializationWorldEconomySummary==="function")return window.specializationWorldEconomySummary(target,true,s?.specs||{}).text;
   return "";
  }
  function civilizationText(s){
@@ -274,8 +280,8 @@
  }
  function snapshotHtml(){
   const s=snapshot(),st=s.stats;
-  return '<div class="item"><b>目前角色基準</b><div class="muted gmpb-sub">執行戰力測試時會自動讀取目前正式角色狀態。</div>'+
-   '<div style="margin-top:9px">Lv.'+s.level+'　VIP'+s.vipLevel+'（'+fmt(s.vipPoints)+' 積分）</div>'+
+  return '<div class="item"><b>目前 GM 測試角色</b><div class="muted gmpb-sub">所有戰力測試讀取「角色能力測試」的 GM 沙盒角色；與正式角色目前紀元、解鎖與進度脫鉤。</div>'+
+   '<div style="margin-top:9px">'+(s.characterWorld===2?"宇宙紀元角色":"銀河紀元角色")+'｜Lv.'+s.level+'　VIP'+s.vipLevel+'｜'+(s.equipmentSource==="synced"?"正式實穿裝備":"同級神話預測裝備")+'</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
    '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+civilizationText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
@@ -322,7 +328,7 @@
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
   await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks,playerFinalDamageMultiplier:benchmarkWorld()===2?Number(s.civilizationDamageMultiplier)||1:1});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:benchmarkWorld()===2?Number(s.civilizationDamageMultiplier)||1:1});
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
     if(ev.type==="drain"){drains++;return;}
@@ -356,7 +362,7 @@
   let totalTurns=0,totalLoss=0,landed=0,min=Infinity,max=0,dodges=0,crits=0,shield=0,absorptions=0,counters=0,backlash=0,indomitable=0,capped=0;
   await runBatched(runs,()=>{
    const e={name:"承傷木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:targetAtk,def:Math.max(0,num(base&&base.def,0)),crit:Math.max(0,num(base&&base.crit,0)),dodge:Math.max(0,num(base&&base.dodge,0))};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks});
    totalTurns+=result.turns;if(result.hp>0)capped++;
    (result.events||[]).forEach(ev=>{
     if(ev.type==="dodge"&&ev.target==="player"){dodges++;return;}
@@ -404,7 +410,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -508,7 +514,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.civilizationDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.civilizationDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -657,8 +663,14 @@
    '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
  }
 
- function html(){
-  installStyles();ensureSelection();normalizeUniverseSelection();normalizeBenchmarkSources();snapshot();
+ function benchmarkSubsection(title,body,id,open=false){
+  return '<details class="gm-ability-test-sub gmpb-mode-sub" data-gmpb-mode="'+id+'" '+(open?'open':'')+'><summary>'+title+'</summary><div class="gm-ability-test-sub-body">'+body+'</div></details>';
+ }
+ function pendingModeHtml(text){
+  return '<div class="muted gm-hub-note">'+text+'（第 3 批接入現有正式 GM 測試 owner）。</div>';
+ }
+ function mapBenchmarkHtml(){
+  ensureSelection();normalizeUniverseSelection();normalizeBenchmarkSources();
   const disabled=busyDisabled(),world=benchmarkWorld();
   const selectionControls=world===2
    ?'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
@@ -675,25 +687,40 @@
   const combatActions=world===2
    ?'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button></div>'
    :'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>';
-  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">完整平衡分析工具：先選擇紀元，再讀取該紀元正式主線怪物資料。銀河紀元使用「區域 → 地圖 → 怪物」；宇宙紀元使用「區域 → 怪物」。輸出、承傷與主線實戰皆共用目前選擇怪物；宇宙紀元沒有「本地圖 5 隻全部」。本工具只做沙盒模擬，不修改正式角色、獎勵、進度或存檔。</div>'+
-   '<div class="item"><b>測試基準設定</b><div class="gmpb-controls">'+selectionControls+'</div>'+
-   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">'+highestLabel+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置測試</button></div></div>'+
-   selectedEnemySummary()+snapshotHtml()+
-   '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。防禦來源可獨立選擇。</div>'+
-   '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
-   '<label>自訂 DEF<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml()+'</div>'+
-   '<div class="item"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。保留正式閃避、護盾、吸收、不屈、反擊與反噬規則。</div>'+
-   '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
-   '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
-   '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
-   '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵、死亡懲罰或進度。</div>'+
-   combatActions+combatResultHtml()+'</div>'+
-   (world===2&&typeof window.gmSecondWorldCalamityBenchmarkHtml==="function"?window.gmSecondWorldCalamityBenchmarkHtml():"")+
-   summaryHtml()+'</div>';
+  return '<div class="muted gm-hub-note">地圖怪實戰為主要平衡測試；輸出／承傷只保留在本區作進階診斷。銀河與宇宙紀元可自由切換，不受正式角色目前紀元與解鎖限制。</div>'+
+   '<div class="item"><b>地圖怪設定</b><div class="gmpb-controls">'+selectionControls+'</div>'+
+   '<div class="gmpb-actions"><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkUseHighest()">'+highestLabel+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkReset()">重置地圖怪測試</button></div></div>'+
+   selectedEnemySummary()+
+   '<div class="item"><b>實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式怪物與隨機特性，使用 GM 測試角色完整戰鬥規則；只做沙盒模擬。</div>'+combatActions+combatResultHtml()+'</div>'+
+   '<details class="item" style="margin-top:0"><summary><b>進階診斷：輸出／承傷</b></summary><div style="margin-top:10px">'+
+    '<div class="item"><b>輸出基準測試</b><div class="muted" style="margin-top:5px">敵人不還手；使用正式傷害、暴擊、先制、連擊、穿透與印記規則。</div>'+
+    '<div class="gmpb-controls"><label>目標 DEF<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetOutputSource(this.value)">'+sourceOptions(MODEL.outputSource)+'</select></label>'+
+    '<label>自訂 DEF<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customDef,0)+'" onchange="gmPowerBenchmarkSetCustomDef(this.value)"></label>'+
+    '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunOutput()">'+busyLabel("output","開始輸出測試")+'</button></div>'+outputResultHtml()+'</div>'+
+    '<div class="item" style="margin-top:10px"><b>承傷／生存基準測試</b><div class="muted" style="margin-top:5px">玩家不主動攻擊；每場從滿 HP 開始直到倒下。</div>'+
+    '<div class="gmpb-controls"><label>敵人 ATK<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetDefenseSource(this.value)">'+sourceOptions(MODEL.defenseSource)+'</select></label>'+
+    '<label>自訂 ATK<br><input class="btn"'+disabled+' type="number" min="0" value="'+whole(MODEL.customAtk,0)+'" onchange="gmPowerBenchmarkSetCustomAtk(this.value)"></label>'+
+    '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
+   '</div></details>';
  }
-
+ function html(){
+  installStyles();ensureSelection();normalizeUniverseSelection();normalizeBenchmarkSources();captureSnapshot();
+  const special=typeof window.gmSpecialTestHtml==="function"?window.gmSpecialTestHtml():'<div class="muted">特殊怪測試模組尚未載入。</div>';
+  return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">戰力基準測試統一使用「角色能力測試」的 GM 沙盒角色。模式紀元可以獨立切換，因此即使正式角色仍在銀河紀元，也能直接預測宇宙紀元戰鬥。</div>'+
+   snapshotHtml()+
+   '<div class="gm-ability-test-stack gmpb-section-stack">'+
+    benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",true)+
+    benchmarkSubsection("特殊怪測試",special,"special",false)+
+    benchmarkSubsection("懸賞戰測試",pendingModeHtml("懸賞戰"),"bounty",false)+
+    benchmarkSubsection("競技場測試",pendingModeHtml("競技場"),"arena",false)+
+    benchmarkSubsection("虛空幻境測試",pendingModeHtml("虛空幻境"),"void",false)+
+    benchmarkSubsection("鏡像戰測試",pendingModeHtml("鏡像戰"),"mirror",false)+
+    benchmarkSubsection("文明災厄測試",pendingModeHtml("文明災厄"),"calamity",false)+
+   '</div>'+summaryHtml()+'</div>';
+ }
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
+ window.GM_POWER_BENCHMARK_GROUP_VERSION=1;
+ window.GM_POWER_BENCHMARK_GM_CHARACTER_VERSION=1;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
  window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION=1;
