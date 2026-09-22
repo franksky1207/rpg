@@ -1,6 +1,7 @@
 let gmSpecialBatchSelectedId=(typeof SPECIAL_MONSTERS!=="undefined"&&SPECIAL_MONSTERS[0])?SPECIAL_MONSTERS[0].id:"";
 let gmSpecialBatchWorld=Number(window.gmTestWorld)===2?2:1;
 let gmSpecialBatchResult=null;
+let gmSpecialBatchResults={};
 
 function gmSpecialBatchWorldValue(){return Number(gmSpecialBatchWorld)===2?2:1;}
 function gmSpecialBatchLevel(){
@@ -129,6 +130,7 @@ async function gmStartSpecialBattle(){
   summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/playerMax*100):0;
   summary.avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
   gmSpecialBatchResult={special,summary};
+  gmSpecialBatchResults[(summary.world===2?"2":"1")+":"+special.id]=JSON.parse(JSON.stringify(gmSpecialBatchResult));
  }finally{
   battleBusy=false;
  }
@@ -140,7 +142,7 @@ window.gmSpecialBatchWorldValue=gmSpecialBatchWorldValue;
 window.gmSpecialWorldOptionsHtml=gmSpecialWorldOptionsHtml;
 window.gmSpecialBatchOptionsHtml=gmSpecialOptionsHtml;
 window.gmSetSpecialBatchWorld=gmSetSpecialBatchWorld;
-window.gmSpecialBatchResultSnapshot=function(){return gmSpecialBatchResult?JSON.parse(JSON.stringify(gmSpecialBatchResult)):null;};
-window.gmClearSpecialBatchResult=function(){gmSpecialBatchResult=null;return true;};
+window.gmSpecialBatchResultSnapshot=function(){const rows=Object.values(gmSpecialBatchResults);return rows.length?JSON.parse(JSON.stringify(rows)):null;};
+window.gmClearSpecialBatchResult=function(){gmSpecialBatchResult=null;gmSpecialBatchResults={};return true;};
 window.GM_SPECIAL_WORLD_BENCHMARK_VERSION=1;
 window.GM_SPECIAL_SUMMARY_EXPORT_VERSION=1;
