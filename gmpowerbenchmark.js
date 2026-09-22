@@ -697,7 +697,7 @@
     benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",true)+
     benchmarkSubsection("特殊怪測試",special,"special",false)+
     benchmarkSubsection("懸賞戰測試",modeRenderer(window.gmBountyTestHtml,"懸賞戰測試尚未載入。"),"bounty",false)+
-    benchmarkSubsection("競技場測試",modeRenderer(window.gmArena5TestHtml||window.gmArenaTestHtml,"競技場測試尚未載入。"),"arena",false)+
+    benchmarkSubsection("競技場測試",modeRenderer(window.gmArena5TestHtml,"競技場測試尚未載入。"),"arena",false)+
     benchmarkSubsection("虛空幻境測試",modeRenderer(window.gmVoidMirageTestHtml,"虛空幻境測試尚未載入。"),"void",false)+
     benchmarkSubsection("鏡像戰測試",modeRenderer(window.gmMirrorTestHtml,"鏡像戰測試尚未載入。"),"mirror",false)+
     benchmarkSubsection("文明災厄測試",calamityBenchmarkHtml(),"calamity",false)+
@@ -726,6 +726,7 @@
  window.GM_POWER_BENCHMARK_ALL_MODES_VERSION=1;
  window.GM_POWER_BENCHMARK_UNIFIED_SUMMARY_VERSION=2;
  window.GM_POWER_BENCHMARK_LIVE_REFRESH_VERSION=1;
+ window.GM_POWER_BENCHMARK_LEGACY_FALLBACK_RETIRED_VERSION=1;
  window.GM_POWER_BENCHMARK_GM_CHARACTER_VERSION=1;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
