@@ -69,6 +69,7 @@
   normalizeLockFlag(item);
   if(shouldAutoSellItem(item)){
    const sale=settleSale(item,options);
+   if(!sale?.ok){state.inventory.push(item);return {kept:true,sold:0,item,sale:null,reason:sale?.reason||"sale",enhancementStones:blankEnhancementReward()};}
    return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),item,sale,enhancementStones:saleEnhancementReward(item,sale)};
   }
   state.inventory.push(item);
@@ -86,6 +87,7 @@
   }
   if(shouldAutoSellItem(item)){
    const sale=settleSale(item,options);
+   if(!sale?.ok){state.inventory.push(item);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,item,sale:null,reason:sale?.reason||"sale",enhancementStones:blankEnhancementReward()};}
    return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),item,sale,enhancementStones:saleEnhancementReward(item,sale)};
   }
   state.inventory.push(item);
