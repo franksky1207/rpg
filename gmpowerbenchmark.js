@@ -772,7 +772,7 @@
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
- window.gmPowerBenchmarkInvalidateSnapshot=function(){MODEL.snapshot=null;clearResults();return true;};
+ window.gmPowerBenchmarkInvalidateSnapshot=function(){MODEL.snapshot=null;clearSelectionResults();return true;};
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
  window.gmPowerBenchmarkSession=function(){return JSON.parse(JSON.stringify(MODEL));};
 
