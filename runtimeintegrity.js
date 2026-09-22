@@ -356,20 +356,24 @@
  if(Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)!==1||window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY?.passed!==true||typeof window.backgroundProgressFastCatchUpActive!=="function"||typeof window.backgroundProgressCatchUpPolicy!=="function"||typeof window.backgroundProgressCatchUpStep!=="function"||typeof window.backgroundProgressCatchUpFinalPolicy!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function")fail("BACKGROUND_FAST_CATCH_UP_POLICY","共用 Fast Catch-up Policy owner 未完整載入",{version:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION,integrity:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY});
  if(Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)!==1||Number(window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION)!==1)fail("SECOND_WORLD_ATOMIC_SAVE_POLICY","宇宙主線 Fast Catch-up 必須保留逐場 atomic settlement/save rollback",{settlement:window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION,catchUp:window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION});
  if(Number(window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION)!==1||Number(window.SECOND_WORLD_GM_SPECIALIZATION_SEMANTICS_VERSION)!==1)fail("SECOND_WORLD_SPECIALIZATION_OWNER","宇宙專精 EXP／暗物質／出售與 GM 語意 owner 未完整載入",{economy:window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION,gm:window.SECOND_WORLD_GM_SPECIALIZATION_SEMANTICS_VERSION});
- try{
+ {
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
-  const backup=JSON.parse(JSON.stringify(window.gmTestSpecializations||{}));
-  keys.forEach(key=>window.gmTestSpecializations[key]=0);
-  const exp0=window.secondWorldBossExpReward?.(0,true,{level:500})||0;
-  keys.forEach(key=>window.gmTestSpecializations[key]=60);
-  const exp60=window.secondWorldBossExpReward?.(0,true,{level:500})||0;
-  const dm60=window.secondWorldBossDarkMatterReward?.(0,true)||0;
-  const sale60=window.secondWorldEquipmentSaleDarkMatter?.({world:2,level:500,q:5},true)||0;
-  window.gmTestSpecializations=backup;
-  if(exp0<=0||exp60!==Math.ceil(exp0*2.5))fail("SECOND_WORLD_TRAINING_RATE","宇宙 EXP 實戰訓練 Lv60 應為 2.5×",{exp0,exp60});
-  if(dm60!==50)fail("SECOND_WORLD_SCAVENGE_RATE","宇宙 Boss1 暗物質在搜刮 Lv60 應為 50",{dm60});
-  if(sale60!==50)fail("SECOND_WORLD_APPRAISAL_RATE","Lv500 神話 world2 裝備在鑑價 Lv60 出售暗物質應為 50",{sale60});
- }catch(error){fail("SECOND_WORLD_SPECIALIZATION_PROBE","宇宙專精正式 consumer probe 失敗",String(error&&error.message||error));}
+  const holder=window.gmTestSpecializations&&typeof window.gmTestSpecializations==="object"?window.gmTestSpecializations:null;
+  const backup=holder?Object.fromEntries(keys.map(key=>[key,holder[key]])):null;
+  try{
+   if(!holder)throw new Error("gmTestSpecializations missing");
+   keys.forEach(key=>holder[key]=0);
+   const exp0=window.secondWorldBossExpReward?.(0,true,{level:500})||0;
+   keys.forEach(key=>holder[key]=60);
+   const exp60=window.secondWorldBossExpReward?.(0,true,{level:500})||0;
+   const dm60=window.secondWorldBossDarkMatterReward?.(0,true)||0;
+   const sale60=window.secondWorldEquipmentSaleDarkMatter?.({world:2,level:500,q:5},true)||0;
+   if(exp0<=0||exp60!==Math.ceil(exp0*2.5))fail("SECOND_WORLD_TRAINING_RATE","宇宙 EXP 實戰訓練 Lv60 應為 2.5×",{exp0,exp60});
+   if(dm60!==50)fail("SECOND_WORLD_SCAVENGE_RATE","宇宙 Boss1 暗物質在搜刮 Lv60 應為 50",{dm60});
+   if(sale60!==50)fail("SECOND_WORLD_APPRAISAL_RATE","Lv500 神話 world2 裝備在鑑價 Lv60 出售暗物質應為 50",{sale60});
+  }catch(error){fail("SECOND_WORLD_SPECIALIZATION_PROBE","宇宙專精正式 consumer probe 失敗",String(error&&error.message||error));}
+  finally{if(holder&&backup)keys.forEach(key=>holder[key]=backup[key]);}
+ }
  if(Number(window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.CALAMITY_FAST_CATCH_UP_UI_VERSION)!==1||Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.VOID_FAST_CATCH_UP_UI_VERSION)!==1)fail("BACKGROUND_FAST_CATCH_UP_COVERAGE","main／universe／calamity／void 應全部接入共用 Fast Catch-up Policy",{main:window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION,universe:window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION,calamity:window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION,calamityUi:window.CALAMITY_FAST_CATCH_UP_UI_VERSION,void:window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION,voidUi:window.VOID_FAST_CATCH_UP_UI_VERSION});
  if(Number(window.COMBAT_OUTER_PACING_VERSION)!==2||Number(window.COMBAT_OUTER_GAP_MS)!==140||typeof window.combatOuterGapMs!=="function"||["main","bounty","arena","mirror","void","calamity"].some(mode=>Number(window.combatOuterGapMs(mode))!==140))fail("COMBAT_OUTER_PACING_OWNER","戰鬥外場間節奏 owner 異常",{version:window.COMBAT_OUTER_PACING_VERSION,gap:window.COMBAT_OUTER_GAP_MS});
  if(Number(window.MAIN_BATTLE_PACING_VERSION)!==2||Number(window.MAIN_BATTLE_FLOW_SLEEP_VERSION)!==1||typeof window.mainBattleFlowSleep!=="function"||typeof window.mainBattlePresentationSleep!=="function")fail("MAIN_FLOW_PACING_OWNER","主線 flow/presentation sleep owner 異常",{pacing:window.MAIN_BATTLE_PACING_VERSION,flow:window.MAIN_BATTLE_FLOW_SLEEP_VERSION,flowApi:typeof window.mainBattleFlowSleep,presentationApi:typeof window.mainBattlePresentationSleep});
