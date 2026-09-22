@@ -126,7 +126,9 @@
   return Number.isFinite(raw)&&raw>0?Math.max(1,Math.min(def.maxHp,Math.floor(raw))):def.maxHp;
  }
  function progressPercent(value,target=null){
-  return Math.round(trueKills(value,target)/TRUE_KILLS_REQUIRED*10000)/100;
+  const def=definition(value);if(!def)return 0;
+  if(completed(def,target))return 100;
+  return Math.round(trueKills(def,target)/TRUE_KILLS_REQUIRED*10000)/100;
  }
  function status(value,target=null){
   const def=definition(value);if(!def)return null;
@@ -139,9 +141,11 @@
    challengeable:unlock.challengeable,
    unlock,
    trueKills:kills,
+   recordedTrueKills:kills,
    trueKillsRequired:TRUE_KILLS_REQUIRED,
    progressPercent:progressPercent(def,target),
    completed:isCompleted,
+   completionSource:kills>=TRUE_KILLS_REQUIRED?"true-kills":(isCompleted?"civilization":null),
    currentHp:currentHp(def,target),
    maxHp:def.maxHp,
    hpPercent:def.maxHp>0?currentHp(def,target)/def.maxHp*100:0,
@@ -161,6 +165,7 @@
    const achieved=kills>=TRUE_KILLS_REQUIRED||clamp(s.secondWorld.civilizationLevel,0,10)>=def.targetCivilizationLevel;
    const hp=Number(row.currentHp);
    return {
+    ...row,
     currentHp:achieved?null:(Number.isFinite(hp)&&hp>0?Math.max(1,Math.min(def.maxHp,Math.floor(hp))):null),
     trueKills:kills
    };
@@ -188,6 +193,8 @@
  window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION=2;
  window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION=2;
+ window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION=1;
  window.SECOND_WORLD_CALAMITY_COUNT=COUNT;
  window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=TRUE_KILLS_REQUIRED;
  window.SECOND_WORLD_CALAMITY_FIRST_HP=FIRST_HP;
