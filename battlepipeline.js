@@ -34,9 +34,6 @@
  function stopMainBackground(started){
   if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
  }
- function mainEnvironmentBackground(){
-  return typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground()===true;
- }
  function mainFastCatchUp(){
   return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("main")===true;
  }
@@ -45,6 +42,20 @@
  }
  function mainCatchUpFinal(){
   return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;
+ }
+ function mainStructuredDuration(result){
+  return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;
+ }
+ async function consumeMainCatchUpDelay(ms){
+  const delay=Math.max(0,Number(ms)||0);
+  if(delay<=0)return true;
+  if(mainFastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"main");
+   if(Number(consumed?.remaining)>0)await battleFlowSleep(consumed.remaining);
+   return Number(consumed?.remaining)<=0;
+  }
+  await battleFlowSleep(delay);
+  return false;
  }
  function refreshMainCatchUpUi(ctx){
   adventureScreen="combat";
@@ -152,7 +163,7 @@
    const playerLevelBefore=state.level;
    const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
    const fastCatchUp=mainFastCatchUp();
-   const suppressPresentation=fastCatchUp||mainEnvironmentBackground();
+   const suppressPresentation=fastCatchUp;
    if(!suppressPresentation){
     adventureScreen="combat";
     render();
@@ -186,7 +197,10 @@
     if(catchUpPolicy?.shouldPresentBattle){
      refreshMainCatchUpUi(ctx);
      await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
-    }else if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
+    }else{
+     await consumeMainCatchUpDelay(mainStructuredDuration(r));
+     if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
+    }
     if((catchUpPolicy?.shouldRefreshUi||catchUpPolicy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");
    }else if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
    clearPreviewEncounter(selectedMap,selectedEnemy);
@@ -214,7 +228,7 @@
     if(shouldStopContinuous(ctx))break;
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-     await battleFlowSleep(battleGapMs(r.e.kind));
+     await consumeMainCatchUpDelay(battleGapMs(r.e.kind));
      if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
       const finalPolicy=mainCatchUpFinal();
       if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
@@ -228,7 +242,7 @@
    if(shouldStopContinuous(ctx))break;
    if(hasMoreBattles(ctx)){
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-    await battleFlowSleep(battleGapMs(r.e.kind));
+    await consumeMainCatchUpDelay(battleGapMs(r.e.kind));
     if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
      const finalPolicy=mainCatchUpFinal();
      if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
