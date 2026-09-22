@@ -270,7 +270,7 @@
   showArenaTest(`<div class="notice">${testSummary(cfg.name,`${GM_TEST_RUNS} 次完整三連戰`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家三戰鎖定本次測試 VIP 能力並套用測試專精；每個新敵人都重新獲得一次先制。積分依正式規則在每輪結束時一次套用測試 VIP 倍率。</div><div class="stats" style="margin-top:10px"><div class="stat">第1戰通過<b>${testPercent(wins[0])}%</b></div><div class="stat">第2戰到達<b>${testPercent(reached[1])}%</b></div><div class="stat">第2戰條件通過<b>${conditional(1)}%</b></div><div class="stat">第3戰到達<b>${testPercent(reached[2])}%</b></div><div class="stat">第3戰條件通過<b>${conditional(2)}%</b></div><div class="stat">全通率<b>${testPercent(clearCount)}%</b></div><div class="stat">平均基礎積分<b>${avgBasePoints}</b></div><div class="stat">平均實得 VIP 積分<b>${avgVipPoints}</b></div><div class="stat">全通平均剩餘 HP<b>${avgClearHp}%</b></div><div class="stat">平均總回合<b>${avgTurns}</b></div></div></div>`);
  };
 
- function gmVoidFloorValue(){const raw=Number(document.getElementById("gmVoidMirageFloor")?.value);return Number.isFinite(raw)&&raw>=1?Math.floor(raw):null;}
+ function gmVoidFloorValue(){const raw=Number(document.getElementById("gmVoidMirageFloor")?.value),floor=Number.isFinite(raw)&&raw>=1?Math.floor(raw):null;if(floor&&typeof window.gmSetVoidMirageTestFloor==="function")window.gmSetVoidMirageTestFloor(floor);return floor;}
  window.gmPreviewVoidMirageFloor=function(){
   const floor=gmVoidFloorValue();if(!floor)return alert("請輸入 1 以上的起始樓層。");if(typeof buildVoidMirageEnemy!=="function")return alert("虛空幻境資料尚未載入。");
   const base=typeof voidMirageBaseStats==="function"?voidMirageBaseStats(floor):null,enemy=buildVoidMirageEnemy(floor),boss=!!enemy.isBossFloor;
