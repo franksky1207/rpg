@@ -76,7 +76,7 @@
  let activeGuideCategory="adventure";
  function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=15;
+ window.GAME_GUIDE_VERSION=14;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
