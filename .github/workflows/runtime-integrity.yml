@@ -15,8 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check whether this push is still main head
+        id: freshness
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          sleep 5
+          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [ "$latest" = "$GITHUB_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+            echo "This commit is the current main head."
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping stale intermediate commit $GITHUB_SHA; current main is $latest."
+          fi
       - uses: actions/setup-node@v4
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         with:
           node-version: '24'
       - name: Run full JavaScript syntax and owner integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: node tests/runtime/js-integrity.js
