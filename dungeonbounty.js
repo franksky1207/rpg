@@ -52,7 +52,8 @@
   const p=createSpecialPlayerSnapshot(playerStats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=bountyDifficultyProfile(tier),names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
   const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
   const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier);
-  return applyMonsterTraits({name,level:clampGameLevel(level??state.level),kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  const world=Number(options.world)===2?2:1,rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
+  return applyMonsterTraits({name,level:enemyLevel,kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
  function traitNames(enemy){return !enemy?.traits?.length?"無":enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
@@ -66,15 +67,15 @@
   const bossIndex=window.secondWorldBossIndexForPlayerLevel(rewardLevel),boss=window.secondWorldBossForPlayerLevel(rewardLevel);
   return Number.isInteger(bossIndex)&&boss?{rewardLevel,bossIndex,boss}:null;
  }
- function universeBountyExpReward(tier,level=state.level){
+ function universeBountyExpReward(tier,level=state.level,useTestSpecializations=false,targetState=null){
   const ctx=universeBountyContext(level);if(!ctx||typeof window.secondWorldBossExpReward!=="function")return 0;
-  const target={...state,level:ctx.rewardLevel};
-  const base=window.secondWorldBossExpReward(ctx.bossIndex,false,target);
+  const target={...(targetState&&typeof targetState==="object"?targetState:state),level:ctx.rewardLevel};
+  const base=window.secondWorldBossExpReward(ctx.bossIndex,useTestSpecializations===true,target);
   return Math.max(0,Math.floor(base*Math.max(1,Number(tier?.expMult)||1)));
  }
- function universeBountyDarkMatterReward(tier,level=state.level){
+ function universeBountyDarkMatterReward(tier,level=state.level,useTestSpecializations=false){
   const ctx=universeBountyContext(level);if(!ctx||typeof window.secondWorldBossDarkMatterReward!=="function")return 0;
-  const base=window.secondWorldBossDarkMatterReward(ctx.bossIndex,false);
+  const base=window.secondWorldBossDarkMatterReward(ctx.bossIndex,useTestSpecializations===true);
   return Math.max(0,Math.floor(base*Math.max(1,Number(tier?.goldMult)||1)));
  }
  function rollBountyQuality(){let r=Math.random()*100,c=0;for(let i=0;i<BOUNTY_QUALITY_WEIGHTS.length;i++){c+=BOUNTY_QUALITY_WEIGHTS[i];if(r<c)return i;}return 2;}
@@ -131,7 +132,7 @@
  window.getBountyTierMeta=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
  window.getBountyTierMetadata=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
  window.getBountyDifficultyProfile=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...bountyDifficultyProfile(t)}:null;};
- window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);return t?buildBountyEnemy(t,playerStats,level):null;};
+ window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null,world=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);const w=world==null?(universePhase()?2:1):(Number(world)===2?2:1);return t?buildBountyEnemy(t,playerStats,level,{world:w}):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
  window.enterBountyDungeon=function(){
   if(state.level<5)return;
@@ -163,10 +164,12 @@
  window.BOUNTY_UNIVERSE_CORE_VERSION=1;
  window.BOUNTY_UNIVERSE_REWARD_OWNER_VERSION=1;
  window.BOUNTY_UNIVERSE_UI_VERSION=1;
- window.getUniverseBountyRewardPreview=function(tierId,level=state.level){
+ window.BOUNTY_TEST_CONTEXT_VERSION=1;
+ window.getUniverseBountyRewardPreview=function(tierId,level=state.level,options={}){
   const tier=BOUNTY_TIER_META.find(x=>x.id===tierId);if(!tier)return null;
   const ctx=universeBountyContext(level);if(!ctx)return null;
-  return {tier:{...tier},rewardLevel:ctx.rewardLevel,bossIndex:ctx.bossIndex,bossLevel:ctx.boss.level,bossName:ctx.boss.name,exp:universeBountyExpReward(tier,ctx.rewardLevel),darkMatter:universeBountyDarkMatterReward(tier,ctx.rewardLevel),gearCount:tier.gearCount,directDarkEnergy:0};
+  const useTest=options.useTestSpecializations===true,target=options.state&&typeof options.state==="object"?options.state:null;
+  return {tier:{...tier},rewardLevel:ctx.rewardLevel,bossIndex:ctx.bossIndex,bossLevel:ctx.boss.level,bossName:ctx.boss.name,exp:universeBountyExpReward(tier,ctx.rewardLevel,useTest,target),darkMatter:universeBountyDarkMatterReward(tier,ctx.rewardLevel,useTest),gearCount:tier.gearCount,directDarkEnergy:0};
  };
  window.makeUniverseBountyItemForTest=function(tierId,level=state.level,options={}){
   const tier=BOUNTY_TIER_META.find(x=>x.id===tierId),ctx=universeBountyContext(level);if(!tier||!ctx||typeof window.makeSecondWorldEquipmentForBoss!=="function")return null;
