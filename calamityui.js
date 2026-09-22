@@ -8,6 +8,21 @@
   if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
   return window.combatOuterGapMs("calamity","battle");
  }
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
+ function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("calamity"):null;}
+ function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("calamity"):null;}
+ function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
+ async function consumeCatchUpDelay(ms){
+  const delay=Math.max(0,Number(ms)||0);
+  if(delay<=0)return true;
+  if(fastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"calamity");
+   if(Number(consumed?.remaining)>0)await sleep(consumed.remaining);
+   return Number(consumed?.remaining)<=0;
+  }
+  await sleep(delay);
+  return false;
+ }
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  const fmt=value=>Math.max(0,Math.floor(Number(value)||0)).toLocaleString();
 
@@ -157,6 +172,20 @@
    playerMax:Math.max(1,Number(full.playerStartHp)||Number(full.combat?.playerMaxHp)||1)
   };
  }
+ function finalDisplay(full){
+  if(!full)return resetDisplay();
+  ui.battleView={
+   enemyHp:Math.max(0,Number(full.enemyEndHp)||0),
+   enemyMax:Math.max(1,Number(full.enemy?.hp)||Number(full.combat?.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(full.playerEndHp)||0),
+   playerMax:Math.max(1,Number(full.combat?.playerMaxHp)||Number(full.playerStartHp)||1)
+  };
+ }
+ function refreshCatchUpUi(full){
+  finalDisplay(full);
+  render();
+  if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
+ }
  function stopMinimalIfOpen(){
   if(window.getMinimalModeAdapterId?.()!=="civilization-calamity")return;
   if(typeof window.setMinimalModeState==="function")window.setMinimalModeState("stopped");
@@ -179,10 +208,31 @@
      ui.finalRun=battle.run;
      ui.displayBattleNumber=Math.max(1,Number(battle.battleNumber)||1);
      ui.phase="combat";
-     primeDisplay(battle.result);render();
-     await animateBattle(battle);
-     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
-     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active)await sleep(continuousGapMs());
+     const fast=fastCatchUp();
+     const policy=fast?catchUpStep():null;
+     if(fast){
+      if(policy?.shouldPresentBattle){
+       primeDisplay(battle.result);render();
+       await animateBattle(battle);
+      }else{
+       await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
+       if(policy?.shouldRefreshUi)refreshCatchUpUi(battle.result);
+      }
+      if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+     }else{
+      primeDisplay(battle.result);render();
+      await animateBattle(battle);
+      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+     }
+     if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active){
+      if(fast)await consumeCatchUpDelay(continuousGapMs());
+      else await sleep(continuousGapMs());
+      if(fast&&!fastCatchUp()){
+       const finalPolicy=catchUpFinal();
+       if(finalPolicy?.shouldRefreshUi)refreshCatchUpUi(battle.result);
+       if(finalPolicy?.shouldCheckpoint&&typeof save==="function")save(false);
+      }
+     }
     },
     async onEnd(run){
      stopMinimalIfOpen();
@@ -266,6 +316,7 @@
  window.CALAMITY_OUTER_PACING_VERSION=1;
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
  window.CALAMITY_BACKGROUND_PRESENTATION_VERSION=1;
+ window.CALAMITY_FAST_CATCH_UP_UI_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
 })();
