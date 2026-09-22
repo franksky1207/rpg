@@ -106,6 +106,7 @@
  };
  window.getSecondWorldBossGmTestHtml=function(){return secondWorldBossTestHtml;};
  window.SECOND_WORLD_GM_SPECIALIZATION_SEMANTICS_VERSION=1;
+ window.SECOND_WORLD_GM_CIVILIZATION_TEST_VERSION=1;
  window.gmSecondWorldRegionChange=function(){
   const regionSelect=document.getElementById("gmSecondWorldRegion"),bossSelect=document.getElementById("gmSecondWorldBoss");
   if(!regionSelect||!bossSelect)return;
@@ -127,8 +128,9 @@
   const region=typeof window.secondWorldRegion==="function"?window.secondWorldRegion(boss.regionIndex):null;
   const reward=summary.reward||null;
   const economy=typeof window.specializationWorldEconomySummary==="function"?window.specializationWorldEconomySummary({secondWorld:{entered:true}},true).text:"";
-  const specText=(typeof gmTestSpecializationLabel==="function"?gmTestSpecializationLabel():"專精")+(economy?`｜經濟：${economy}`:"");
-  return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`,specText)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
+  const civilization=typeof window.gmTestCivilizationLabel==="function"?window.gmTestCivilizationLabel():"";
+  const specText=(typeof gmTestSpecializationLabel==="function"?gmTestSpecializationLabel():"專精")+(economy?`｜經濟：${economy}`:"")+(civilization?`｜${civilization}`:"");
+  return `<div class="notice">${testSummary(`宇宙紀元｜${region?.name?region.name+"｜":""}${boss.name} Lv.${boss.level}`,`${GM_TEST_RUNS} 次模擬`,specText)}<div class="muted gm-test-context">使用正式宇宙 Boss 能力公式與 Boss 隨機特性；玩家套用本次 GM 測試 VIP／專精／強化／文明等級／印記。純沙盒，不修改正式進度、EXP、HP 或存檔。</div></div>
   <div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
    <div class="stat">勝率<b>${summary.winRate}%</b></div>
    <div class="stat">勝利平均剩餘 HP<b>${summary.avgWinHp}%</b></div>
@@ -159,7 +161,7 @@
    if(!encounter)continue;
    summary.enemyHp+=encounter.hp;summary.enemyAtk+=encounter.atk;summary.enemyDef+=encounter.def;
    (encounter.traits||[]).forEach(key=>traits[key]=(traits[key]||0)+1);
-   const result=window.runSecondWorldBossCombat(index,{ignoreUnlock:true,encounter,player,startHp:player.hp,logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true});
+   const result=window.runSecondWorldBossCombat(index,{ignoreUnlock:true,encounter,player,startHp:player.hp,logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0});
    if(!result.ok)continue;
    summary.totalTurns+=Math.max(0,Number(result.turns)||0);
    if(result.win){summary.wins++;summary.winHpTotal+=Math.max(0,Number(result.hp)||0);}else summary.losses++;
