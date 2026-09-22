@@ -533,13 +533,16 @@ UI 會比較：
 - ATK = 對應主線 Boss ×1.10
 - DEF = 對應主線 Boss ×1.05
 - 災厄無 EXP、金幣、裝備、VIP、強化石等一般戰利品。
-- 災厄剩餘 HP 會跨挑戰保留。
+- 災厄剩餘 HP 會跨挑戰保留；**但對應印記已達 Lv.10 後，重打模式不再保留災厄殘血，每一場都從滿 HP 開始。**
 - 玩家每次挑戰後由正式 HP restore owner 恢復。
+- `CALAMITY_COMBAT_RULE_VERSION = 3`
+- `CALAMITY_MAXED_REPLAY_HP_VERSION = 1`
 
 ## Run
 
 - `CALAMITY_RUN_VERSION = 1`
-- `CALAMITY_CONTINUOUS_RULE_VERSION = 4`
+- `CALAMITY_CONTINUOUS_RULE_VERSION = 5`
+- `CALAMITY_MAXED_MARK_CONTINUOUS_STOP_VERSION = 1`
 
 支援：
 - 單場挑戰
@@ -551,6 +554,11 @@ UI 會比較：
 - 連續討伐立即以 `title-first-kill` 停止。
 - 不開始下一場。
 - 讓玩家先看到正式稱號取得通知。
+
+印記滿級停止規則：
+- 若某一場結算後對應印記已達 Lv.10，連續討伐會在該場結束後以 `mark-maxed` 停止。
+- 包含「本場剛升到 Lv.10」與「原本已 Lv.10 後重打」兩種情況。
+- 已滿印記的重打若本場未擊殺，也不保存殘血；下一次挑戰仍從災厄滿 HP 開始。
 
 ---
 
