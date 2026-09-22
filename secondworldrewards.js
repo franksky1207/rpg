@@ -171,11 +171,6 @@
   const s=currentState();
   if(!s||s?.secondWorld?.entered!==true)return {ok:false,reason:"不是宇宙紀元正式死亡流程。"};
   const before=snapshotState(),logs=[];
-  const atCap=typeof window.atEffectiveLevelCap==="function"?window.atEffectiveLevelCap(s):s.level>=1000;
-  const need=atCap?0:(typeof window.effectiveExpNeed==="function"?window.effectiveExpNeed(s.level,s):expNeed(s.level));
-  const loss=atCap?0:Math.ceil(Math.max(0,Number(need)||0)*.10);
-  const actual=Math.min(Math.max(0,Number(s.exp)||0),loss);
-  s.exp=Math.max(0,(Number(s.exp)||0)-loss);
   let dropped=null,protectedByVip20=false,redemptionPending=false,cost=null,currency=null;
   const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
   const worn=types.map(slot=>[slot,s.equipment?.[slot]]).filter(([,it])=>!!it);
@@ -194,11 +189,10 @@
    }
   }
   s.hp=playerCombatStats().hp;
-  logs.push(`死亡懲罰：EXP -${actual}${loss>actual?"（目前 EXP 已扣至 0）":""}。`);
   if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);
   else logs.push("本次沒有遺失裝備。");
   if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,expLost:actual,dropped,protectedByVip20,redemptionPending:false,cost,currency,logs};
+  return {ok:true,dropped,protectedByVip20,redemptionPending:false,cost,currency,logs};
  }
  function validate(){
   const errors=[];
