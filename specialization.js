@@ -107,6 +107,7 @@
  window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；沙盒固定可測 Lv.0～Lv.${SPECIALIZATION_MAX_LEVEL}，不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
  window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION=1;
  window.GM_SPECIALIZATION_TEST_RANGE_VERSION=1;
+ window.SPECIALIZATION_WORLD_INTEGRITY_VERSION=1;
 
  function installStyles(){
   if(document.getElementById("specializationStyles"))return;
