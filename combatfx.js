@@ -254,6 +254,24 @@
  window.STRUCTURED_COMBAT_PACING_BASE_1X={...STRUCTURED_COMBAT_PACING_1X};
  window.getStructuredCombatPacing=function(eventCount){return structuredCombatPacing(eventCount);};
  window.getStructuredCombatPacingForSpeed=function(eventCount,speed){return structuredCombatPacingForSpeed(eventCount,speed);};
+ window.structuredCombatPresentationDurationMs=function(result,speed=null){
+  const events=Array.isArray(result?.events)?result.events:[];
+  const pacing=speed==null?structuredCombatPacing(events.length):structuredCombatPacingForSpeed(events.length,speed);
+  const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
+  let total=openingDelay+endDelay;
+  events.forEach(evt=>{
+   if(!evt)return;
+   if(evt.type==="mark"){
+    if(markFxDescriptor(evt))total+=Math.min(stepDelay,85);
+    return;
+   }
+   if(evt.type==="combo"||evt.type==="counter"||evt.type==="berserk"){total+=Math.min(stepDelay,70);return;}
+   if(evt.type==="drain"){total+=stepDelay;return;}
+   if(evt.type==="dodge"||evt.type==="attack"){total+=impactDelay+stepDelay;return;}
+  });
+  return Math.max(0,Math.round(total));
+ };
+ window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION=1;
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
   const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
