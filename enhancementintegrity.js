@@ -51,7 +51,7 @@
  if(document.getElementById("enhancement-ui-styles"))fail("LEGACY_UI_STYLE","強化 UI 不應再由 JS 注入樣式");
  if(document.getElementById("enhancementGmStyles"))fail("LEGACY_GM_STYLE","GM 強化不應再由 JS 注入樣式");
  if(typeof homePage==="function"&&!homePage().includes("go('enhancement')"))fail("HOME_ROUTE","首頁未正式提供強化入口");
- if(Number(window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION)!==4||Number(window.GM_ENHANCEMENT_HUB_VERSION)!==4)fail("GM_OWNER","GM 強化正式整合未完成");
+ if(Number(window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION)!==6||Number(window.GM_ENHANCEMENT_TEST_RANGE_VERSION)!==1||Number(window.GM_ENHANCEMENT_HUB_VERSION)!==5||Number(window.GM_ENHANCEMENT_FORMAL_RANGE_VERSION)!==1)fail("GM_OWNER","GM 強化正式／沙盒範圍整合未完成");
  if(typeof gmTestEnhancedEquippedStats!=="function"||typeof gmUseCurrentEnhancementTestStatus!=="function"||typeof gmEnhancementManagementHtml!=="function"||typeof gmEnhancementTestHtml!=="function")fail("GM_API","GM 強化 API 未完整載入");
  if(Number(window.GAME_GUIDE_VERSION)<9)fail("GUIDE_VERSION","遊戲指南尚未更新強化說明");
  else{
