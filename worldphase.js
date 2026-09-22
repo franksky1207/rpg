@@ -83,7 +83,7 @@
  }
  function enhancementRequirement(target){
   const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"];
-  const requiredLevel=20;
+  const requiredLevel=Math.max(0,Math.floor(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)||20));
   const total=slots.length;
   const completed=slots.filter(slot=>Math.floor(Number(target?.enhancement?.levels?.[slot])||0)>=requiredLevel).length;
   return {ok:total===5&&completed===total,completed,total:total||5,requiredLevel};
@@ -179,6 +179,7 @@
  }
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
+ window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1;
  window.SECOND_WORLD_MAIN_BOSS_COUNT=SECOND_WORLD_MAIN_BOSS_COUNT;
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
