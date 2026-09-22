@@ -1,0 +1,22 @@
+name: Runtime Integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.js'
+      - 'index.html'
+      - 'adventureuipolish.css'
+      - '.github/workflows/runtime-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  runtime-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run full JavaScript syntax and owner integrity
+        run: node tests/runtime/js-integrity.js
