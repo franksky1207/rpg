@@ -140,4 +140,7 @@ window.gmSpecialBatchWorldValue=gmSpecialBatchWorldValue;
 window.gmSpecialWorldOptionsHtml=gmSpecialWorldOptionsHtml;
 window.gmSpecialBatchOptionsHtml=gmSpecialOptionsHtml;
 window.gmSetSpecialBatchWorld=gmSetSpecialBatchWorld;
+window.gmSpecialBatchResultSnapshot=function(){return gmSpecialBatchResult?JSON.parse(JSON.stringify(gmSpecialBatchResult)):null;};
+window.gmClearSpecialBatchResult=function(){gmSpecialBatchResult=null;return true;};
 window.GM_SPECIAL_WORLD_BENCHMARK_VERSION=1;
+window.GM_SPECIAL_SUMMARY_EXPORT_VERSION=1;
