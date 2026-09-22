@@ -23,6 +23,21 @@
   return changed;
  }
  function ensureSpecializationState(){return normalizeSpecializationState(state);}
+ function specializationFormalStateIssues(target=state){
+  if(!target||typeof target!=="object")return [{code:"STATE_MISSING"}];
+  const universe=target?.secondWorld?.entered===true;
+  const source=target.specializations&&typeof target.specializations==="object"?target.specializations:{};
+  const min=universe?SPECIALIZATION_MAX_LEVEL:0;
+  return SPECIALIZATION_KEYS.flatMap(key=>{
+   const raw=Number(source[key]);
+   if(!Number.isFinite(raw))return [{code:"LEVEL_INVALID",key,value:source[key],min,max:SPECIALIZATION_MAX_LEVEL}];
+   const level=Math.floor(raw);
+   if(level<min)return [{code:"LEVEL_BELOW_FORMAL_MIN",key,value:level,min,max:SPECIALIZATION_MAX_LEVEL}];
+   if(level>SPECIALIZATION_MAX_LEVEL)return [{code:"LEVEL_ABOVE_FORMAL_CAP",key,value:level,min,max:SPECIALIZATION_MAX_LEVEL}];
+   return [];
+  });
+ }
+ function specializationFormalStateValid(target=state){return specializationFormalStateIssues(target).length===0;}
  function specializationUpgradeCost(targetLevel){const lv=Math.max(1,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(targetLevel)||1)));return 1000*lv*lv;}
  function formalLevel(key){ensureSpecializationState();return clampSpecializationLevel(state.specializations[key]);}
 
@@ -32,6 +47,9 @@
  window.createBlankSpecializations=blankSpecializations;
  window.normalizeSpecializationState=normalizeSpecializationState;
  window.ensureSpecializationState=ensureSpecializationState;
+ window.specializationFormalStateIssues=specializationFormalStateIssues;
+ window.specializationFormalStateValid=specializationFormalStateValid;
+ window.SPECIALIZATION_FORMAL_STATE_INTEGRITY_VERSION=1;
  window.specializationUpgradeCost=specializationUpgradeCost;
  window.gmTestSpecializations=blankSpecializations();
  window.specializationLevel=function(key,useTest=false){if(!SPECIALIZATION_DEFS[key])return 0;return useTest?clampSpecializationLevel(window.gmTestSpecializations?.[key]):formalLevel(key);};
