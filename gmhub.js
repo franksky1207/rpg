@@ -142,6 +142,7 @@
  window.GM_HUB_SECTION_STATE_VERSION=1;
  window.GM_GEAR_LEVEL_INPUT_VERSION=1;
  window.GM_ENHANCEMENT_HUB_VERSION=5;
+ window.GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1;
  gmHtml=function(){installGmHubStyles();return hubHtml();};
  installGmHubStyles();
 })();
