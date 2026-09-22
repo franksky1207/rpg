@@ -115,6 +115,31 @@
  };
  return (universe?universeText:galaxy)[title]||null;
 }
+function specialGuideWorldText(title,target=null){
+ const universe=guideUniverse(target);
+ if(title==="特殊遭遇")return universe
+  ?"宇宙主線 Boss 勝利後有機會觸發特殊遭遇。特殊戰鬥結束後 HP 回滿；勝利後繼續原本流程，失敗則結束連續戰鬥。"
+  :"普通怪與菁英怪勝利後有機會觸發特殊遭遇，Boss 不會觸發。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。";
+ if(title==="VIP 與特殊怪")return "部分 VIP 特權會提高特殊遭遇機率或增加特殊怪收益，詳細效果可在 VIP 特權中查看。";
+ const ids=["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"];
+ const idx=GUIDE_CATEGORIES.find(x=>x.id==="special")?.items?.findIndex(x=>x?.[0]===title)??-1;
+ if(idx<1||idx>9)return null;
+ const monster=typeof window.getSpecialMonsterById==="function"?window.getSpecialMonsterById(ids[idx-1],universe?2:1):null;
+ return monster?.description||null;
+}
+function dungeonCommonGuideWorldText(title,target=null){
+ const universe=guideUniverse(target);
+ if(title==="副本解鎖")return universe
+  ?"宇宙紀元沿用懸賞戰、競技場、虛空幻境與鏡像戰，並依各副本的宇宙規則運作。"
+  :"銀河紀元會隨等級逐步開放懸賞戰、競技場、虛空幻境與鏡像戰。各副本提供資源、VIP 積分或特殊挑戰。";
+ if(title==="每日重置")return "副本的每日次數與獎勵於每天凌晨 0 點重置；各副本依自己的額度與規則運作。";
+ if(title==="虛空幻境")return "虛空幻境是無限層挑戰，每次從歷史最高紀錄前 100 層開始。每層戰後回滿 HP，每 10 層會遇到 Boss。";
+ if(title==="虛空每日獎勵")return "虛空依當日最高層提供 VIP 積分，每天可手動領取一次；領取後當日無法再次領取。";
+ if(title==="VIP 系統")return "透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級，最高 VIP20。升級後可獲得能力與特權。";
+ if(title==="VIP 基礎能力")return "VIP 等級會提升 HP、攻擊、防禦、暴擊與閃避。";
+ if(title==="VIP 特權")return "部分 VIP 等級會解鎖裝備、特殊怪、副本與死亡保護等特權；完整效果可在「查看特權」確認。";
+ return null;
+}
 function specializationGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
   if(title==="專精系統")return universe
@@ -136,23 +161,23 @@ function specializationGuideWorldText(title,target=null){
  function bountyGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
   if(title==="懸賞戰")return universe
-   ?"懸賞戰是宇宙紀元的資源型副本，每天最多挑戰 20 次，並與進入宇宙紀元當天尚未使用完的銀河紀元懸賞額度共用。可選單次或連續挑戰；每場正式開戰時才使用 1 次額度，每場結束後 HP 回滿。勝利可取得高額 EXP、暗物質與多件宇宙紀元裝備，不直接掉落暗能量。"
-   :"懸賞戰是資源型副本，主打高 EXP、高金幣與多裝備。每天最多挑戰 20 次，每一場真正開始戰鬥時才使用 1 次今日額度。可選單次或連續挑戰；連續模式會在死亡、今日額度用完或玩家要求停止時結束。每場結束後 HP 會回滿。";
+   ?"宇宙懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、暗物質與宇宙紀元裝備，每場結束後 HP 回滿。"
+   :"銀河懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、金幣與裝備，每場結束後 HP 回滿。";
   if(title==="懸賞難度")return universe
-   ?"每次懸賞會隨機遇到普通、高級或危險懸賞，三者共用同一條難度公式曲線。獎勵以玩家目前等級向上對應的宇宙 Boss 為基準：EXP 與暗物質分別乘以 5／8／12；裝備數量為 2／3／5 件。裝備名稱使用該對應 Boss 的裝備世代，實際裝備等級固定為本場開戰時玩家等級；懸賞裝備最低為稀有品質。"
+   ?"懸賞分為普通、高級與危險三種難度。難度越高，EXP、暗物質與裝備收益越高；裝備最低為稀有品質。"
    :"每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。";
   return null;
  }
  function arenaGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
   if(title==="競技場")return universe
-   ?"宇宙紀元競技場重新從第 1 個開始，共 10 個競技場。每天最多開始 20 輪，與銀河紀元當天已使用的競技場額度共用；每輪仍為 3 場連續戰鬥，三戰之間不回血，任一戰失敗即結束該輪，每遇到新敵人會重新取得先制機會，整輪結束後 HP 回滿。"
-   :"競技場共有 10 個階級，每次挑戰是一整輪 3 場連續戰鬥，三戰之間不回血；任一戰失敗即結束該輪。每天最多開始 20 輪，真正開始第一戰時才使用 1 次今日額度。每遇到新的敵人都會重新取得一次先制機會，整輪結束後 HP 會回滿。";
+   ?"宇宙紀元共有 10 個競技場，每輪連戰 3 場，場間不回血，任一場戰敗即結束。每天最多挑戰 20 輪，整輪結束後 HP 回滿。"
+   :"銀河紀元共有 10 個競技場，每輪連戰 3 場，場間不回血，任一場戰敗即結束。每天最多挑戰 20 輪，整輪結束後 HP 回滿。";
   if(title==="競技場解鎖")return universe
-   ?"宇宙紀元競技場最多顯示最近 3 個已解鎖競技場。解鎖下一個競技場需同時通過目前最高競技場的正式戰力評估（500 輪中至少 485 輪完整三連戰成功，即 97%），並且下一個競技場所對應的第二世界主線區域已開放。"
+   ?"最多顯示最近 3 個已解鎖競技場。開啟下一個競技場需通過目前最高競技場的戰力評估，並解鎖對應的宇宙主線區域。"
    :"最多顯示最近 3 個已解鎖競技場。想開啟下一個競技場，必須先通過目前最高競技場的戰力評估，並解鎖下一個競技場所對應的主線區域。";
   if(title==="競技場 VIP 積分")return universe
-   ?"宇宙紀元競技場沿用低／中／高三種位置算法。第 1～3 競技場的基礎全通積分為低 570、中 620、高 670；第 4 競技場起，各難度基礎值再加 60 ×（競技場編號 − 3）。若三連戰中途失敗，仍依實際通過的戰鬥取得部分積分，並繼續套用既有 VIP 副本積分倍率。"
+   ?"完成競技場可取得 VIP 積分。競技場越後期、挑戰難度越高，獎勵越多；中途失敗仍會依實際勝場取得部分積分。"
    :"完成競技場挑戰可以取得 VIP 積分。競技場階級越高、挑戰難度越高，能取得的 VIP 積分也越多。若三連戰中途失敗，仍會依實際通過的戰鬥取得部分積分。";
   return null;
  }
@@ -161,20 +186,22 @@ function specializationGuideWorldText(title,target=null){
   if(title!=="文明災厄")return null;
   const universe=guideUniverse(target);
   return universe
-   ?"宇宙紀元共有 10 隻文明災厄，分別在 Lv.550、600、650…1000 的各區域最終 Boss 首次擊敗後現身。災厄現身後會永久顯示；真正挑戰還需完成前一文明等級，第 1 隻沒有前置文明需求。未完成時災厄 HP 會跨挑戰保留，只有真正將 HP 歸零才計 1 次 true kill；每隻累積 30 次 true kill 後完成該文明階段並使文明等級 +1。文明進度以百分比顯示。每場結束後玩家恢復滿 HP，災厄不提供 EXP、暗物質、暗能量、裝備或其他一般獎勵。完成後仍可單場重打，但每次都從災厄滿 HP 開始、不再增加進度，也不提供連續重打。"
-   :"擊敗各區域最終 Boss 後解鎖對應災厄。未完成印記前，災厄 HP 會跨挑戰保留；擊敗後可取得並提升對應印記，印記最高 Lv.10，提供永久戰鬥被動效果。文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。印記達 Lv.10 後仍可單場重打，但每次從災厄滿 HP 開始，且不再顯示連續討伐。";
+   ?"擊敗各區域最終 Boss 後會發現對應災厄，符合前置條件即可挑戰。每成功討伐 30 次會完成該文明階段並提升文明等級；災厄不提供一般戰鬥獎勵。"
+   :"擊敗各區域最終 Boss 後解鎖對應災厄。成功討伐可取得並提升永久印記，最高 Lv.10；災厄不提供一般戰鬥獎勵。";
  }
  function gameGuideCategoriesForState(target=null){
   return GUIDE_CATEGORIES.map(category=>({
    ...category,
    items:(category.items||[]).map(item=>{
     const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
+    const specialText=category.id==="special"?specialGuideWorldText(item?.[0],target):null;
+    const dungeonCommonText=category.id==="dungeon"?dungeonCommonGuideWorldText(item?.[0],target):null;
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
     const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
     const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
     const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
     const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||arenaText||bountyText||civilizationText||specializationText||coreText;
+    const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||civilizationText||specializationText||coreText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
@@ -182,12 +209,14 @@ function specializationGuideWorldText(title,target=null){
  function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
  window.GAME_GUIDE_VERSION=18;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=3;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=4;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
- window.GAME_GUIDE_CALAMITY_WORLD_VERSION=1;
- window.GAME_GUIDE_BOUNTY_WORLD_VERSION=1;
- window.GAME_GUIDE_ARENA_WORLD_VERSION=1;
+ window.GAME_GUIDE_CALAMITY_WORLD_VERSION=2;
+ window.GAME_GUIDE_BOUNTY_WORLD_VERSION=2;
+ window.GAME_GUIDE_ARENA_WORLD_VERSION=2;
+ window.GAME_GUIDE_SPECIAL_WORLD_VERSION=1;
+ window.GAME_GUIDE_DUNGEON_COMMON_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
