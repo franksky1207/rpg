@@ -721,6 +721,21 @@
   ["gmClearSpecialBatchResult","gmClearBountyTestResult","gmClearArena5Result","gmClearVoidMirageTestResult","gmClearMirrorTestResult","gmClearCalamityTestResult","gmClearSecondWorldCalamityTestResult"].forEach(name=>{try{if(typeof window[name]==="function")window[name]();}catch(error){console.error("GM result clear failed",name,error);}});
  }
  function clearAllBenchmarkResults(){clearSelectionResults();clearExternalModeResults();if(typeof render==="function")render();return true;}
+ function gmTestArchitectureManifest(){
+  const transientKeys=Array.isArray(window.GM_TEST_TRANSIENT_STATE_KEYS)?window.GM_TEST_TRANSIENT_STATE_KEYS:[];
+  const persistedTransientKeys=transientKeys.filter(key=>state&&Object.prototype.hasOwnProperty.call(state,key));
+  return {
+   version:1,
+   sessionOnly:Number(window.GM_TEST_SESSION_ONLY_VERSION)===1&&Number(window.GM_TEST_SAVE_ISOLATION_VERSION)===1,
+   batchSync:Number(window.GM_TEST_BATCH_SYNC_VERSION)===1&&Number(window.GM_MARK_TEST_BATCH_SYNC_VERSION)===1&&Number(window.GM_CIVILIZATION_TEST_BATCH_SYNC_VERSION)===1,
+   benchmark:Number(window.GM_POWER_BENCHMARK_VERSION)===21&&Number(window.GM_POWER_BENCHMARK_GROUP_VERSION)===2&&Number(window.GM_POWER_BENCHMARK_ALL_MODES_VERSION)===1,
+   stateIsolation:Number(window.GM_BOUNTY_STATE_ISOLATION_VERSION)===1&&Number(window.GM_ARENA_STATE_ISOLATION_VERSION)===1,
+   legacyRetired:Number(window.GM_ARENA_LEGACY_INJECTION_RETIRED_VERSION)===1&&Number(window.GM_LEGACY_MAP_ARENA_TESTS_RETIRED_VERSION)===1&&Number(window.GM_HUB_LEGACY_COMBAT_RENDERERS_RETIRED_VERSION)===1&&Number(window.GM_POWER_BENCHMARK_LEGACY_FALLBACK_RETIRED_VERSION)===1,
+   persistedTransientKeys
+  };
+ }
+ window.GM_TEST_ARCHITECTURE_MANIFEST_VERSION=1;
+ window.gmTestArchitectureManifest=gmTestArchitectureManifest;
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_GROUP_VERSION=2;
  window.GM_POWER_BENCHMARK_ALL_MODES_VERSION=1;
