@@ -715,6 +715,22 @@ Integrity 已同步：
 - 本輪只做架構統一，**沒有改文明每級 +5% 規則，也沒有調整懸賞／競技／虛空／鏡像平衡數值**。
 - 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`，不需要 migration。
 
+## 15.4 2026-09-23 宇宙主線 Boss 基準公式統一
+
+第二紀元 100 隻主線 Boss 的基準三圍已從三個獨立常數收斂成單一基準＋固定比例，**本輪只做架構統一，沒有改實際強度**：
+
+- 單一基準：`BASE_STAT=3000`
+- 固定比例：`HP:ATK:DEF = 12:2:1`
+- 成長倍率仍為：`M(N)=1+0.015N`，N=0～99。
+- 正式公式：
+  - `HP(N)=ceil(BASE_STAT × 12 × M(N))`
+  - `ATK(N)=ceil(BASE_STAT × 2 × M(N))`
+  - `DEF(N)=ceil(BASE_STAT × 1 × M(N))`
+- 因此第 1 隻仍是 36000／6000／3000，第 100 隻仍是 89460／14910／7455。
+- `SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1`
+- Final Integrity 與 Runtime Integrity 已加 guard，禁止恢復 `BASE_HP / BASE_ATK / BASE_DEF` 三套獨立基準。
+- 下一步若要降低第二紀元前期難度，只需調整 `BASE_STAT`；若要改後期成長速度，再調 `STEP_RATE`。
+
 ## 15.3 2026-09-23 懸賞難度公式 V2
 
 依宇宙 Lv.502 實測與先前大量模擬校準，懸賞不採三階人工倍率，而是保留單一 difficulty curve：
