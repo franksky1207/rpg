@@ -36,6 +36,9 @@
  }
 
  function specialFight(enemy,world=1){return specialFightCore(enemy,{world});}
+ function pendingBlackMarketActive(target=state){return target?.pendingBlackMarketEncounter===true;}
+ function grantPendingBlackMarket(target=state){if(!target||typeof target!=="object")return false;target.pendingBlackMarketEncounter=true;return true;}
+ function consumePendingBlackMarket(target=state){if(!target||typeof target!=="object")return false;const active=pendingBlackMarketActive(target);target.pendingBlackMarketEncounter=false;return active;}
  function specialWorld(options={}){
   if(Number(options.world)===1)return 1;
   if(Number(options.world)===2)return 2;
@@ -155,7 +158,7 @@
    result.saleEnhancementStones=mergeEnhancementStoneRewards(result.saleEnhancementStones,first.saleEnhancementStones);
 
    if(special.id==="bandit_king"){
-    state.pendingBlackMarketEncounter=true;
+    grantPendingBlackMarket(state);
     result.blackMarketIntelGranted=true;
    }
 
@@ -201,7 +204,7 @@
   if(world===1&&baseEnemy?.kind==="boss")return false;
   if(world===1&&state.level-(Number(baseEnemy?.level)||0)>=10)return false;
 
-  const forcedByBlackMarket=state.pendingBlackMarketEncounter===true;
+  const forcedByBlackMarket=pendingBlackMarketActive(state);
   if(!forcedByBlackMarket){
    const encounterRate=SPECIAL_ENCOUNTER_RATE+((state.vipLevel||0)>=6 ? .02 : 0);
    if(Math.random()>=encounterRate)return false;
@@ -222,7 +225,7 @@
    }
   }
   if(forcedByBlackMarket){
-   state.pendingBlackMarketEncounter=false;
+   consumePendingBlackMarket(state);
    save(false);
   }
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
@@ -234,5 +237,7 @@
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
  window.MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION=1;
  window.SPECIAL_WORLD_FORMAL_FLOW_VERSION=1;
+ window.pendingBlackMarketActive=pendingBlackMarketActive;
+ window.PENDING_BLACK_MARKET_CURRENT_PHASE_VERSION=1;
  ensureSpecialEncounterAlert();
 })();
