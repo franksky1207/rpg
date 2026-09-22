@@ -46,9 +46,9 @@
  }
  window.gmPlayerAbilityTestHtml=function(){
   const status=typeof window.gmTestCurrentStatusHtml==="function"?window.gmTestCurrentStatusHtml():"";
-  return `${status}<div class="gm-ability-test-stack">${abilityTestSubsection("VIP 測試",window.gmTestVipControlHtml)}${abilityTestSubsection("專精測試",window.gmSpecializationTestHtml)}${abilityTestSubsection("強化測試",window.gmEnhancementTestHtml)}${abilityTestSubsection("印記測試",window.gmMarkTestHtml)}${abilityTestSubsection("文明等級測試",window.gmCivilizationTestHtml)}</div>`;
+  return `${status}<div class="gm-ability-test-stack">${abilityTestSubsection("角色基準",window.gmTestCharacterBaseHtml)}${abilityTestSubsection("VIP 測試",window.gmTestVipControlHtml)}${abilityTestSubsection("專精測試",window.gmSpecializationTestHtml)}${abilityTestSubsection("強化測試",window.gmEnhancementTestHtml)}${abilityTestSubsection("印記測試",window.gmMarkTestHtml)}${abilityTestSubsection("文明等級測試",window.gmCivilizationTestHtml)}</div>`;
  };
- window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=1;
+ window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=2;
 
  function registerNativeSections(){
   const registrations=[
