@@ -13,7 +13,7 @@
   try{
    const defs=typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];
    const names=["彼岸黑潮","群星焚爐","邊星獵皇","萬軍葬艦","超域蝕核","無盡兵災","星脈噬巢","巨牆戰堡","深域吞星","終戰天穹"];
-   if(Number(window.SECOND_WORLD_CALAMITY_DATA_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STATE_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION)!==1)fail("OWNER_VERSION","第二世界文明災厄 Data／State／Unlock／Discovery／Replay owner 版本異常");
+   if(Number(window.SECOND_WORLD_CALAMITY_DATA_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STATE_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION)!==1)fail("OWNER_VERSION","第二世界文明災厄 Data／State／Unlock／Normalization／Completion owner 版本異常");
    if(defs.length!==10||Number(window.SECOND_WORLD_CALAMITY_COUNT)!==10||Number(window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED)!==30)fail("COUNT_RULE","第二世界文明災厄應為 10 隻、每隻 30 true kills",{count:defs.length,kills:window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED});
    defs.forEach((d,i)=>{
     if(d.name!==names[i])fail("NAME","災厄名稱異常",{i,actual:d.name,expected:names[i]});
@@ -33,10 +33,11 @@
    const blank=()=>({entered:true,civilizationLevel:0,mainline:{bossKilled:Array(100).fill(false)},calamities:Array.from({length:10},()=>({currentHp:null,trueKills:0}))});
    if(typeof window.normalizeSecondWorldCalamityState==="function"){
     const probe={secondWorld:blank()};
-    probe.secondWorld.calamities[0]={currentHp:99999999,trueKills:-5};
+    probe.secondWorld.calamities[0]={currentHp:99999999,trueKills:-5,futureTag:"keep"};
     probe.secondWorld.calamities[1]={currentHp:123456,trueKills:99};
     window.normalizeSecondWorldCalamityState(probe);
     if(probe.secondWorld.calamities.length!==10||probe.secondWorld.calamities[0].trueKills!==0||probe.secondWorld.calamities[0].currentHp!==1000000)fail("STATE_NORMALIZE","未完成災厄 state 正規化異常",probe.secondWorld.calamities.slice(0,2));
+    if(probe.secondWorld.calamities[0].futureTag!=="keep")fail("STATE_UNKNOWN_PRESERVE","災厄專屬 normalization 不得刪除未知欄位",probe.secondWorld.calamities[0]);
     if(probe.secondWorld.calamities[1].trueKills!==30||probe.secondWorld.calamities[1].currentHp!==null)fail("STATE_COMPLETED_CLEAR","完成災厄應 trueKills=30 且 currentHp 清除",probe.secondWorld.calamities[1]);
    }else fail("STATE_API","normalizeSecondWorldCalamityState 未載入");
 
@@ -60,6 +61,9 @@
    if(window.getSecondWorldCalamityProgressPercent?.(0,progressState)!==6.67)fail("PROGRESS_2","2 true kills 應為 6.67%");
    progressState.secondWorld.calamities[0].trueKills=30;
    if(window.getSecondWorldCalamityProgressPercent?.(0,progressState)!==100)fail("PROGRESS_30","30 true kills 應為 100%");
+   const civCompleteState={secondWorld:blank()};civCompleteState.secondWorld.civilizationLevel=1;civCompleteState.secondWorld.calamities[0].trueKills=7;
+   const civCompleteStatus=window.getSecondWorldCalamityStatus?.(0,civCompleteState);
+   if(civCompleteStatus?.completed!==true||civCompleteStatus?.progressPercent!==100||civCompleteStatus?.recordedTrueKills!==7||civCompleteStatus?.completionSource!=="civilization")fail("CIVILIZATION_COMPLETION_SEMANTICS","文明已達成時正式完成進度應為 100%，但保留歷史 trueKills 紀錄",civCompleteStatus);
 
    if(Number(window.SECOND_WORLD_CALAMITY_COMBAT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION)!==1)fail("COMBAT_OWNER","災厄 Combat／Settlement／Continuous owner 版本異常");
    if(typeof state!=="undefined"&&state&&typeof state==="object"&&typeof window.settleSecondWorldCalamityBattle==="function"){
@@ -91,7 +95,7 @@
    }catch(error){fail("SOURCE_WIRING","戰鬥 source probe 失敗",String(error?.message||error));}
 
    if(Number(window.SECOND_WORLD_CALAMITY_UI_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION)!==1||window.SECOND_WORLD_CALAMITY_UI_INTEGRITY?.passed!==true)fail("PLAYER_UI","第二世界災厄玩家 UI 完整性異常",window.SECOND_WORLD_CALAMITY_UI_INTEGRITY);
-   if(Number(window.GM_SECOND_WORLD_CALAMITY_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_INTEGRITY_VERSION)!==1||window.GM_SECOND_WORLD_CALAMITY_INTEGRITY?.passed!==true)fail("GM_CHAIN","第二世界災厄 GM 完整性異常",window.GM_SECOND_WORLD_CALAMITY_INTEGRITY);
+   if(Number(window.GM_SECOND_WORLD_CALAMITY_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_ATOMIC_MUTATION_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_INTEGRITY_VERSION)!==1||window.GM_SECOND_WORLD_CALAMITY_INTEGRITY?.passed!==true)fail("GM_CHAIN","第二世界災厄 GM 完整性／atomic mutation 異常",window.GM_SECOND_WORLD_CALAMITY_INTEGRITY);
    if(Number(window.GM_POWER_BENCHMARK_VERSION)!==18||Number(window.GM_POWER_BENCHMARK_CALAMITY_VERSION)!==1||Number(window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION)!==1)fail("BENCHMARK_CHAIN","第二世界災厄 Benchmark 版本鏈異常",{benchmark:window.GM_POWER_BENCHMARK_VERSION,calamity:window.GM_POWER_BENCHMARK_CALAMITY_VERSION,integration:window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION});
 
    if(Number(window.GAME_GUIDE_VERSION)!==17||Number(window.GAME_GUIDE_CALAMITY_WORLD_VERSION)!==1||typeof window.gameGuideCategoriesForState!=="function")fail("GUIDE_OWNER","文明災厄 world-aware Guide owner 異常");
