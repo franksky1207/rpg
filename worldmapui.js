@@ -90,7 +90,65 @@
   };
 
 
-  // 宇宙紀元冒險 UI：只負責區域／Boss 選擇呈現；正式戰鬥、EXP 與獎勵由後續批次接入。
+  // 宇宙紀元冒險 UI：正式世界預設宇宙；銀河回顧只保留本次頁面生命週期，不寫正式 save/localStorage。
+  let secondWorldAdventureView="universe";
+  const reviewRegionOpenState=Object.create(null);
+  let reviewRegionInitialized=false;
+
+  function adventureEraTabsHtml(){
+    return `<div class="era-view-tabs" role="tablist" aria-label="冒險紀元">
+      <button class="era-view-tab ${secondWorldAdventureView==="universe"?"active":""}" type="button" role="tab" aria-selected="${secondWorldAdventureView==="universe"?"true":"false"}" onclick="setSecondWorldAdventureView('universe')">宇宙紀元</button>
+      <button class="era-view-tab ${secondWorldAdventureView==="galaxy-review"?"active":""}" type="button" role="tab" aria-selected="${secondWorldAdventureView==="galaxy-review"?"true":"false"}" onclick="setSecondWorldAdventureView('galaxy-review')">銀河紀元・回顧</button>
+    </div>`;
+  }
+
+  function initReviewRegions(){
+    if(reviewRegionInitialized)return;
+    reviewRegionInitialized=true;
+    const regions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+    if(regions.length)reviewRegionOpenState[regions[regions.length-1].id]=true;
+  }
+
+  function reviewRegionCardsHtml(region){
+    const cards=[];
+    for(let index=region.mapStart;index<=region.mapEnd;index++){
+      const map=window.MAPS?.[index];
+      if(!map)continue;
+      cards.push(`<div class="map-card cleared galaxy-review-map-card"><b>${index+1}. ${map.name}</b><div class="muted">Lv.${map.min}～${map.max}</div><div class="map-status">已完成・可回顧</div><button class="btn galaxy-review-action" type="button" disabled>回顧挑戰</button></div>`);
+    }
+    return cards.join("");
+  }
+
+  function reviewRegionHtml(region){
+    const open=!!reviewRegionOpenState[region.id];
+    return `<section class="world-region completed galaxy-review-region">
+      <button class="world-region-header" type="button" aria-expanded="${open?"true":"false"}" onclick="toggleGalaxyReviewAdventureRegion('${region.id}')">
+        <span class="world-region-title-wrap"><b class="world-region-title">${region.name}</b><span class="world-region-level">Lv.${region.min}～${region.max}</span></span>
+        <span class="world-region-meta"><span>10 / 10・已完成</span><span class="world-region-toggle">${open?"▲":"▼"}</span></span>
+      </button>
+      ${open?`<div class="world-region-body"><div class="map-grid">${reviewRegionCardsHtml(region)}</div></div>`:""}
+    </section>`;
+  }
+
+  function galaxyReviewAdventureHtml(){
+    initReviewRegions();
+    const regions=Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];
+    return `<section class="map-screen universe-adventure-screen galaxy-review-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice galaxy-review-notice"><b>銀河紀元・回顧</b><div class="muted" style="margin-top:6px">第一紀元已完成的 10 大區、100 張地圖均可回顧。回顧戰為純挑戰，不影響宇宙紀元正式進度。</div></div><div class="world-region-list galaxy-review-region-list">${regions.map(reviewRegionHtml).join("")}</div></section>`;
+  }
+
+  window.setSecondWorldAdventureView=function(value){
+    const next=value==="galaxy-review"?"galaxy-review":"universe";
+    if(secondWorldAdventureView===next)return;
+    secondWorldAdventureView=next;
+    render();
+  };
+  window.toggleGalaxyReviewAdventureRegion=function(id){
+    initReviewRegions();
+    reviewRegionOpenState[id]=!reviewRegionOpenState[id];
+    render();
+  };
+  window.getSecondWorldAdventureView=function(){return secondWorldAdventureView;};
+
   const secondWorldRegionOpenState=Object.create(null);
   let lastSecondWorldActiveRegionId=null;
 
@@ -226,9 +284,11 @@
     syncSecondWorldRegionOpenState();
     const activeIndex=secondWorldActiveRegionIndex();
     const visible=regions.filter(secondWorldRegionVisible);
-    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元・冒險</h2><span></span></div><div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
+    if(secondWorldAdventureView==="galaxy-review")return galaxyReviewAdventureHtml();
+    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
-  window.SECOND_WORLD_ADVENTURE_UI_VERSION=2;
+  window.SECOND_WORLD_ADVENTURE_UI_VERSION=3;
+  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=1;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();
