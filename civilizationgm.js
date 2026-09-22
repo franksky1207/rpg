@@ -18,9 +18,11 @@
  }
 
  window.gmTestCivilizationLevelValue=testLevel;
+ window.gmCivilizationTestOptionsHtml=testOptions;
  window.gmTestCivilizationLabel=function(){return label(testLevel());};
  window.gmSetTestCivilizationLevel=function(value,refresh=true){
   window.gmTestCivilizationLevel=clamp(value);
+  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testLevel();
  };
