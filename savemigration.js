@@ -159,6 +159,7 @@
  window.SAVE_NORMALIZATION_PIPELINE_VERSION=SAVE_NORMALIZATION_PIPELINE_VERSION;
  window.SAVE_NORMALIZATION_PIPELINE_ORDER=Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER);
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
+ window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION=1;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
  window.normalizePersistentFlags=normalizePersistentFlags;
@@ -173,6 +174,7 @@
   const hadMarkState=isObject(source.marks);
   const hadTitleState=isObject(source.titles);
   const hadSecondWorldState=isObject(source.secondWorld);
+  const hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel));
 
   prepareAllGear(target);
   if(!introWasBoolean)target.introSeen=true;
@@ -202,7 +204,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel};
   return target;
  };
 
@@ -252,6 +254,7 @@
     markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
     titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
     secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,
+    civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,
     recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
     recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
    };
