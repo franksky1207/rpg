@@ -30,7 +30,7 @@
  window.gmTestCivilizationLabel=function(){return label(testLevel());};
  window.gmSetTestCivilizationLevel=function(value,refresh=true){
   window.gmTestCivilizationLevel=clamp(value);
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testLevel();
  };
@@ -74,4 +74,5 @@
  window.GM_CIVILIZATION_FORMAL_RANGE_VERSION=1;
  window.GM_CIVILIZATION_TEST_RANGE_VERSION=1;
  window.GM_CIVILIZATION_ATOMIC_MUTATION_VERSION=1;
+ window.GM_CIVILIZATION_TEST_BATCH_SYNC_VERSION=1;
 })();
