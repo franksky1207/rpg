@@ -33,6 +33,7 @@ const index=read("index.html");
 const civilization=read("civilizationcore.js");
 const bounty=read("dungeonbounty.js");
 const secondWorldCombat=read("secondworldcombat.js");
+const arena=read("dungeonarena.js");
 const civilizationFormalFiles=["secondworldcombat.js","specialcore.js","secondworldcalamityrun.js","dungeoncore.js","dungeonarena.js","dungeonvoid.js","mirrorcombatcore.js"];
 const civilizationGmFiles=["dungeongm.js","arenagm5.js","mirrordungeongm.js","specialgmbatch.js","secondworldcalamitygm.js","gmpowerbenchmark.js"];
 
@@ -53,6 +54,12 @@ assert(/data-mobile-prepare-actions/.test(css),"adventureuipolish.css 未綁定 
 assert(/CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1/.test(civilization),"civilizationcore.js 缺少統一文明戰鬥倍率 owner。");
 assert(/BOUNTY_BALANCE_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Balance 應為 V2。");
 assert(/SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1/.test(secondWorldCombat),"secondworldcombat.js 缺少宇宙 Boss 基準公式版本。");
+assert(/SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2/.test(arena),"dungeonarena.js 第二世界 Arena Rank Curve 應為 V2。");
+assert(/SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1/.test(arena),"dungeonarena.js 缺少第二世界 Arena 文明耐久補償。");
+assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0015\}\)/.test(arena),"dungeonarena.js 第二世界 Arena HP curve 係數不符。");
+assert(/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.001\}\)/.test(arena),"dungeonarena.js 第二世界 Arena damage curve 係數不符。");
+assert(/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.0004\}\)/.test(arena),"dungeonarena.js 第二世界 Arena DEF curve 係數不符。");
+assert(/base\.hp\*profile\.finalPhysical\.hpMul\*civilizationScale/.test(arena),"dungeonarena.js 第二世界 Arena 敵方 HP 未納入文明補償。");
 assert(/const BASE_STAT=2700;/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 單一基準應為 2900。");
 assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 比例應為 12:2:1。");
 assert(!/const BASE_HP=|const BASE_ATK=|const BASE_DEF=/.test(secondWorldCombat),"secondworldcombat.js 不得恢復三套獨立基準常數。");
