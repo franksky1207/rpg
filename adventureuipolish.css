@@ -161,8 +161,8 @@
   .prepare-screen .map-progress-fold summary{background:rgba(23,25,18,.58)}
   .prepare-screen .map-progress-fold .notice{background:rgba(27,25,20,.72)}
   /* preparemobilecontrols.js 會把這兩個正式控制區搬到 body portal；留在 #main 的短暫原位版本先隱藏，避免 Safari 在搬移前重繪出第二份控制列。 */
-  #main>.prepare-screen .battle-count-panel,
-  #main>.prepare-screen .prepare-actions{visibility:hidden}
+  #main>.prepare-screen [data-mobile-battle-panel="1"],
+  #main>.prepare-screen [data-mobile-prepare-actions="1"]{visibility:hidden}
   #prepareMobileControlsPortal{
     position:static!important;
     min-height:0!important;
