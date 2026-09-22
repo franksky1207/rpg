@@ -50,6 +50,7 @@
  }
  function finish(reason){
   if(!activeRun)return null;
+  if(typeof save==="function")save(false);
   stopBackground();
   activeRun.active=false;
   activeRun.phase="ended";
