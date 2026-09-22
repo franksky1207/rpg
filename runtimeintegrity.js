@@ -77,6 +77,14 @@
    if(currentSpecIssues.length)fail("SPECIALIZATION_CURRENT_FORMAL_STATE","目前宇宙正式角色專精資料不符合 8 項全 Lv60 的 invariant",currentSpecIssues);
   }
   if(Number(window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION)!==1||Number(window.SECOND_WORLD_ENTRY_PURE_READ_VERSION)!==1||Number(window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION)!==1||typeof window.secondWorldCivilizationFloorFromCalamities!=="function")fail("SECOND_WORLD_STATE_SAFETY","第二世界 state preservation／純讀取／文明 reconciliation／災厄 normalization owner 未完整載入",{preserve:window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION,pureRead:window.SECOND_WORLD_ENTRY_PURE_READ_VERSION,reconcile:window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION,structure:window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION,calamityNormalize:window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION,completion:window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION});
+  if(Number(window.SECOND_WORLD_PLAYER_LEVEL_BOSS_OWNER_VERSION)!==1||typeof window.secondWorldBossIndexForPlayerLevel!=="function"||typeof window.secondWorldBossForPlayerLevel!=="function")fail("SECOND_WORLD_PLAYER_LEVEL_BOSS_OWNER","玩家等級對應宇宙 Boss 共用 owner 未完整載入",{version:window.SECOND_WORLD_PLAYER_LEVEL_BOSS_OWNER_VERSION,indexApi:typeof window.secondWorldBossIndexForPlayerLevel,bossApi:typeof window.secondWorldBossForPlayerLevel});
+  else{
+   const ownerCases=[[500,0,505],[504,0,505],[505,1,510],[509,1,510],[510,2,515],[513,2,515],[995,99,1000],[999,99,1000],[1000,99,1000]];
+   ownerCases.forEach(([level,expectedIndex,expectedBossLevel])=>{
+    const actualIndex=window.secondWorldBossIndexForPlayerLevel(level),actualBoss=window.secondWorldBossForPlayerLevel(level);
+    if(actualIndex!==expectedIndex||Number(actualBoss?.level)!==expectedBossLevel)fail("SECOND_WORLD_PLAYER_LEVEL_BOSS_MAPPING","玩家等級對應宇宙 Boss 邊界異常",{level,expectedIndex,expectedBossLevel,actualIndex,actualBossLevel:actualBoss?.level??null});
+   });
+  }
   if(Number(window.GAME_GUIDE_WORLD_AWARE_VERSION)!==1||Number(window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION)!==1||Number(window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION)!==1||typeof window.gameGuideCategoriesForState!=="function")fail("GUIDE_WORLD_AWARE_OWNER","遊戲說明 world-aware owner 未完整載入",{guide:window.GAME_GUIDE_WORLD_AWARE_VERSION,spec:window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION,api:typeof window.gameGuideCategoriesForState});
   else{
    const read=(entered,title)=>{const cats=window.gameGuideCategoriesForState({secondWorld:{entered}});const growth=cats.find(x=>x&&x.id==="growth");const row=(growth&&growth.items||[]).find(x=>x&&x[0]===title);return row?row[1]:"";};
