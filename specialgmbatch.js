@@ -135,7 +135,7 @@ async function gmStartSpecialBattle(){
   battleBusy=false;
  }
  const result=document.getElementById("gmSpecialBatchResult");if(result&&gmSpecialBatchResult)result.innerHTML=gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary);
- if(select)select.value=gmSpecialBatchSelectedId;if(button){button.disabled=false;button.textContent=`開始測試（${GM_TEST_RUNS} 次）`;}
+ if(select)select.value=gmSpecialBatchSelectedId;if(button){button.disabled=false;button.textContent=`開始測試（${GM_TEST_RUNS} 次）`;}if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
 }
 
 window.gmSpecialBatchWorldValue=gmSpecialBatchWorldValue;
