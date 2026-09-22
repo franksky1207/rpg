@@ -59,10 +59,10 @@
    ["文明災厄","擊敗各區域最終 Boss 後解鎖對應災厄。災厄 HP 會跨挑戰保留，擊敗後可取得並提升對應印記；印記最高 Lv.10，提供永久戰鬥被動效果。文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。"]
   ]},
   {id:"growth",label:"成長與功能",items:[
-   ["專精系統","專精是角色的永久成長系統，目前共有 8 種專精，每一種最高 Lv60。升級需要消耗金幣，等級越高所需費用也越高。升級後永久保留，沒有失敗機率、不需要額外材料，也不能重置。"],
+   ["專精系統","專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。銀河紀元使用金幣升級；進入宇宙紀元的條件之一是 8 項專精全部 Lv60，因此宇宙紀元不再繼續升級，但既有效果會完整保留並依宇宙資源語意繼續生效。"],
    ["實戰訓練","提升擊敗怪物時取得的 EXP。"],
-   ["搜刮技巧","提升擊敗怪物時直接取得的金幣，不影響出售裝備取得的金幣。"],
-   ["鑑價技巧","提升出售裝備時取得的金幣，會影響自動出售、手動出售與一鍵出售。"],
+   ["搜刮技巧","每級 +2.5%。銀河紀元提升怪物直接掉落的金幣；宇宙紀元改為提升主線 Boss 直接取得的暗物質。不影響裝備出售收益。"],
+   ["鑑價技巧","每級 +2.5%。銀河紀元提升出售裝備取得的金幣；宇宙紀元改為提升第二世界裝備出售取得的暗物質，會套用於正式手動／批量／自動出售，但不放大暗能量。"],
    ["先制技巧","提高每場戰鬥第一次主動普通攻擊的傷害；每遇到新的敵人，都會重新取得一次先制機會。"],
    ["連擊技巧","提高連擊觸發機率，觸發後會追加一次較低傷害的攻擊，而且追加攻擊仍可能再次觸發連擊。"],
    ["穿透技巧","提高穿透觸發機率，發動時會忽略敵人的部分防禦；普通攻擊、連擊與反擊都可以觸發。"],
@@ -76,7 +76,7 @@
  let activeGuideCategory="adventure";
  function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=14;
+ window.GAME_GUIDE_VERSION=15;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
