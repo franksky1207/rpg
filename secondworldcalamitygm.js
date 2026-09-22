@@ -14,6 +14,21 @@
  function row(d,target=state){return target?.secondWorld?.calamities?.[d?.index]||null;}
  function fmt(v){return Math.max(0,Math.floor(Number(v)||0)).toLocaleString();}
  function pct(v){return Math.round(Math.max(0,Math.min(100,Number(v)||0))*100)/100;}
+ function cloneState(){try{return JSON.parse(JSON.stringify(state));}catch(e){return null;}}
+ function restoreStateSnapshot(snapshot){if(!snapshot||typeof snapshot!=="object")return false;state=snapshot;return true;}
+ function atomicFormalMutation(mutator){
+  const snapshot=cloneState();if(!snapshot)return {ok:false,reason:"snapshot-failed"};
+  try{
+   const result=mutator();
+   if(typeof window.normalizeSecondWorldCalamityState==="function")window.normalizeSecondWorldCalamityState(state);
+   const saved=typeof save==="function"&&save(false)===true;
+   if(!saved){restoreStateSnapshot(snapshot);return {ok:false,reason:"save-failed",rolledBack:true};}
+   return {ok:true,result};
+  }catch(error){
+   restoreStateSnapshot(snapshot);
+   return {ok:false,reason:"mutation-failed",error:String(error?.message||error),rolledBack:true};
+  }
+ }
  function options(){return defs().map((d,i)=>`<option value="${i}" ${i===selectedIndex?"selected":""}>${d.name}｜Lv.${d.level}</option>`).join("");}
  function selectedFromDom(id="gmSecondWorldCalamityManageTarget"){
   const el=typeof document!=="undefined"?document.getElementById(id):null;
@@ -30,7 +45,7 @@
   return `<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
    <div class="stat">狀態<b>${st.completed?"已完成":st.challengeable?"可挑戰":st.visible?"已現身・鎖定":"未現身"}</b></div>
    <div class="stat">文明進度<b>${pct(st.progressPercent)}%</b></div>
-   <div class="stat">True Kills<b>${st.trueKills} / 30</b></div>
+   <div class="stat">紀錄 True Kills<b>${st.recordedTrueKills} / 30</b></div>
    <div class="stat">目前 HP<b>${fmt(st.currentHp)} / ${fmt(st.maxHp)}</b></div>
    <div class="stat">State HP<b>${r?.currentHp==null?"滿血／null":fmt(rawHp)}</b></div>
    <div class="stat">目標文明<b>Lv.${d.targetCivilizationLevel}</b></div>
@@ -64,16 +79,18 @@
   const r=row(d);if(!r)return false;
   const kills=Math.max(0,Math.min(30,Math.floor(Number(document.getElementById("gmSecondWorldCalamityTrueKills")?.value)||0)));
   const hp=Math.max(1,Math.min(d.maxHp,Math.floor(Number(document.getElementById("gmSecondWorldCalamityCurrentHp")?.value)||d.maxHp)));
-  r.trueKills=kills;
-  if(kills>=30){
-   r.currentHp=null;
-   state.secondWorld.civilizationLevel=Math.max(Math.floor(Number(state.secondWorld.civilizationLevel)||0),d.targetCivilizationLevel);
-  }else{
-   const completedByCiv=Math.floor(Number(state.secondWorld.civilizationLevel)||0)>=d.targetCivilizationLevel;
-   r.currentHp=completedByCiv?null:(hp>=d.maxHp?null:hp);
-  }
-  if(typeof window.normalizeSecondWorldCalamityState==="function")window.normalizeSecondWorldCalamityState(state);
-  if(typeof save==="function")save(false);
+  const committed=atomicFormalMutation(()=>{
+   const target=row(d);if(!target)throw new Error("missing-calamity-row");
+   target.trueKills=kills;
+   if(kills>=30){
+    target.currentHp=null;
+    state.secondWorld.civilizationLevel=Math.max(Math.floor(Number(state.secondWorld.civilizationLevel)||0),d.targetCivilizationLevel);
+   }else{
+    const completedByCiv=Math.floor(Number(state.secondWorld.civilizationLevel)||0)>=d.targetCivilizationLevel;
+    target.currentHp=completedByCiv?null:(hp>=d.maxHp?null:hp);
+   }
+  });
+  if(!committed.ok){if(typeof render==="function")render();alert("存檔失敗，已回復文明災厄修改前狀態。");return false;}
   if(typeof render==="function")render();
   return true;
  };
@@ -88,8 +105,8 @@
  };
  window.gmSecondWorldCalamityResetSelected=function(){
   const d=selectedFromDom();if(!d||!row(d))return false;
-  row(d).trueKills=0;row(d).currentHp=null;
-  if(typeof save==="function")save(false);
+  const committed=atomicFormalMutation(()=>{const target=row(d);target.trueKills=0;target.currentHp=null;});
+  if(!committed.ok){if(typeof render==="function")render();alert("存檔失敗，已回復災厄重置前狀態。");return false;}
   if(typeof render==="function")render();
   return true;
  };
@@ -100,9 +117,8 @@
    if(Math.max(0,Math.floor(Number(row(d)?.trueKills)||0))>=30)lv=d.targetCivilizationLevel;
    else break;
   }
-  state.secondWorld.civilizationLevel=Math.max(0,Math.min(10,lv));
-  if(typeof window.normalizeSecondWorldCalamityState==="function")window.normalizeSecondWorldCalamityState(state);
-  if(typeof save==="function")save(false);
+  const committed=atomicFormalMutation(()=>{state.secondWorld.civilizationLevel=Math.max(0,Math.min(10,lv));});
+  if(!committed.ok){if(typeof render==="function")render();alert("存檔失敗，已回復文明同步前狀態。");return false;}
   if(typeof render==="function")render();
   return lv;
  };
@@ -209,6 +225,7 @@
  window.runGmSecondWorldCalamityBenchmark=benchmark;
  window.GM_SECOND_WORLD_CALAMITY_VERSION=VERSION;
  window.GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION=FORMAL_VERSION;
+ window.GM_SECOND_WORLD_CALAMITY_ATOMIC_MUTATION_VERSION=1;
  window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION=TEST_VERSION;
  window.GM_POWER_BENCHMARK_CALAMITY_VERSION=BENCHMARK_VERSION;
 
