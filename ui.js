@@ -451,4 +451,4 @@ function normalizeCurrentSaveState(){
 function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";inventoryFilter="all";inventoryReturnContext=null;save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
 const initialLoadOk=load();if(initialLoadOk!==false){normalizeCurrentSaveState();save(false);}render();
-window.GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=1;
+window.GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2;
