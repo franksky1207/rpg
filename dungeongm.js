@@ -1,5 +1,6 @@
 (function(){
  let bountyTestHtml="";
+ let bountyTestWorld=Number(window.gmTestWorld)===2?2:1;
  let arenaTestHtml="";
  let voidMirageTestHtml="";
  let mapMonsterTestHtml="";
@@ -22,7 +23,9 @@
  function showBountyTest(html){bountyTestHtml=html;showTestResult("gmBountyTestResult",html);}
  function showArenaTest(html){arenaTestHtml=html;showTestResult("gmArenaTestResult",html);}
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);}
- function simulateFight(player,enemy,startHp=player.hp){return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true});}
+ function simulateFight(player,enemy,startHp=player.hp){const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});}
+ function gmTestLevelForWorld(world){const raw=Math.floor(Number(window.gmTestLevel)||Number(state?.level)||1);return Number(world)===2?Math.max(500,Math.min(1000,raw)):Math.max(1,Math.min(500,raw));}
+ function withTemporaryTestWorld(world,level,fn){const oldLevel=state.level,hadSecond=!!state.secondWorld,oldEntered=state?.secondWorld?.entered;if(!state.secondWorld||typeof state.secondWorld!=="object")state.secondWorld={};state.secondWorld.entered=Number(world)===2;state.level=level;try{return fn();}finally{state.level=oldLevel;if(hadSecond)state.secondWorld.entered=oldEntered;else delete state.secondWorld;}}
  function regionIndexForMap(mapIdx){
   const idx=Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(mapIdx)||0)));
   const found=WORLD_REGIONS.findIndex(region=>idx>=region.mapStart&&idx<=region.mapEnd);
@@ -224,14 +227,23 @@
   if(mapSelect)mapSelect.value=String(mapTestMap);if(enemySelect)enemySelect.value=String(mapTestEnemy);setTestButton(button,false,`開始測試（${GM_TEST_RUNS} 次）`);
  };
 
+ window.gmSetBountyTestWorld=function(value){bountyTestWorld=Number(value)===2?2:1;bountyTestHtml="";if(typeof render==="function")render();return bountyTestWorld;};
+ window.gmBountyTestWorld=function(){return bountyTestWorld;};
  window.gmSimulateBounty=function(tierId){
   const tier=typeof getBountyTierMeta==="function"?getBountyTierMeta(tierId):null;if(!tier)return alert("找不到懸賞資料。");
-  const base=createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
-  for(let i=0;i<GM_TEST_RUNS;i++){const enemy=buildBountyEnemyForTest(tierId,base,state.level),r=simulateFight(player,enemy);summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}}
+  const world=bountyTestWorld,level=gmTestLevelForWorld(world);
+  const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats());
+  const player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
+  withTemporaryTestWorld(world,level,()=>{
+   for(let i=0;i<GM_TEST_RUNS;i++){
+    const enemy=buildBountyEnemyForTest(tierId,base,level),r=simulateFight(player,enemy);
+    summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
+   }
+  });
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
-  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true,reward=universe&&typeof window.getUniverseBountyRewardPreview==="function"?window.getUniverseBountyRewardPreview(tierId,state.level):null;
+  const reward=world===2&&typeof window.getUniverseBountyRewardPreview==="function"?withTemporaryTestWorld(2,level,()=>window.getUniverseBountyRewardPreview(tierId,level)):null;
   const rewardHtml=reward?`<div class="muted gm-test-context">宇宙獎勵基準：Lv.${reward.rewardLevel} → Lv.${reward.bossLevel} ${reward.bossName}；EXP ${reward.exp.toLocaleString()}・暗物質 ${reward.darkMatter.toLocaleString()}・裝備 ${reward.gearCount} 件。</div>`:"";
-  showBountyTest(`<div class="notice">${testSummary(tier.name,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">敵人生成不含 VIP；玩家戰鬥使用本次測試 VIP 與專精。</div>${rewardHtml}<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
+  showBountyTest(`<div class="notice">${testSummary(`${world===2?"宇宙紀元":"銀河紀元"}・${tier.name}`,`${GM_TEST_RUNS} 次模擬`)}<div class="muted gm-test-context">GM 測試角色 Lv.${level}；紀元與正式角色進度完全脫鉤，玩家戰鬥套用測試 VIP／專精／強化／印記。</div>${rewardHtml}<div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">勝率<b>${winRate}%</b></div><div class="stat">勝利平均剩餘 HP<b>${avgWinHp}%</b></div><div class="stat">平均回合<b>${avgTurns}</b></div></div></div>`);
  };
 
  window.gmSimulateArena=function(positionId){
@@ -271,6 +283,7 @@
  };
 
  window.GM_BOUNTY_UNIVERSE_PREVIEW_VERSION=1;
+ window.GM_BOUNTY_INDEPENDENT_WORLD_TEST_VERSION=1;
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getArenaGmTestHtml=function(){return arenaTestHtml;};
  window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
