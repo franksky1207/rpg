@@ -126,7 +126,7 @@
  function adjustedFullClearPoints(diff){const base=Math.max(0,Math.floor(Number(diff?.totalPoints)||0));return typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(base):base;}
 
  function buildArenaEnemy(positionId,stageIndex,stats=null,level=null,options={}){
-  const world=Number(options.world)===2?2:1,rank=options.rank??currentArenaRank();
+  const world=options.world==null?arenaWorld():(Number(options.world)===2?2:1),rank=options.rank??currentArenaRank();
   const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=arenaEnemyProfile(rank,positionId,stageIndex,world),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(profile.traitMode);
   return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level,world),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank,world),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
