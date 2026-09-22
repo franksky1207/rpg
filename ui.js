@@ -274,35 +274,8 @@ function inventoryPage(){
  const back=inventoryFromAdventure?`<div class="back-home"><button class="btn back-btn" onclick="backToAdventureFromInventory()">← 返回冒險</button></div>`:homeBackHtml();
  return `<div class="function-page inventory-page">${back}${inventoryContent()}</div>`;
 }
-function equipBestAll(){
- let changed=0;
- EQUIPMENT_TYPES.forEach(type=>{
-  const current=state.equipment[type];let best=current,bestScore=equipmentScore(current);
-  state.inventory.filter(it=>it.type===type).forEach(it=>{const sc=equipmentScore(it);if(sc>bestScore){best=it;bestScore=sc}});
-  if(best&&best!==current){const idx=state.inventory.findIndex(it=>it.id===best.id);if(idx>=0){state.inventory.splice(idx,1);if(current)state.inventory.push(current);state.equipment[type]=best;changed++}}
- });
- normalizeHP();selectedItem=null;save();render();alert(changed?`已更換 ${changed} 件較強裝備。`:"目前裝備已是最佳。");
-}
-function sellLowerAll(){
- const targets=state.inventory.filter(it=>{const current=state.equipment[it.type];if(!current)return false;return equipmentScore(it)<=equipmentScore(current)});
- if(!targets.length)return alert("沒有可出售的較低裝備。");
- const total=targets.reduce((a,it)=>a+specializationSellValue(it),0);
- if(!confirm(`將出售 ${targets.length} 件較低或同能力裝備，共獲得 ${total.toLocaleString()} 金幣。確定出售嗎？`))return;
- const ids=new Set(targets.map(it=>it.id));state.inventory=state.inventory.filter(it=>!ids.has(it.id));state.gold+=total;selectedItem=null;save();render();alert(`已出售 ${targets.length} 件裝備，獲得 ${total.toLocaleString()} 金幣。`);
-}
-function compareHtml(it){
- const old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=round1(old?newScore-oldScore:newScore);
- return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn" onclick="sellSelected()">出售</button></div></div>`;
-}
-function selectItem(id){selectedItem=id;render()}
-function equipSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory.splice(i,1)[0],old=state.equipment[it.type];state.equipment[it.type]=it;if(old)state.inventory.push(old);normalizeHP();save();render()}
-function sellSelected(){const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return;const it=state.inventory[i];if(it.q===5&&!confirm("這是神話裝備，確定要出售嗎？"))return;state.inventory.splice(i,1);state.gold+=specializationSellValue(it);selectedItem=null;save();render()}
-function discardLostGear(i){
- const lost=state.lostGear?.[i];if(!lost)return;
- const label=lost.item?itemHtmlPlain(lost.item):"這件遺失裝備";
- if(!confirm(`確定永久放棄 ${label} 嗎？放棄後無法復原。`))return;
- state.lostGear.splice(i,1);save();render();
-}
+// Inventory equipment mutation/actions are owned by equipmentlock.js.
+// ui.js intentionally keeps rendering only; runtime onclick handlers resolve after the full script stack loads.
 function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();render()}
 
 function settingsPage(){
@@ -349,7 +322,7 @@ function normalizeSaveItem(it,forcedType=null,target=null){
 }
 function normalizeSaveState(target){
  if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
- target.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(target.level,target):Math.max(1,Math.min(Number(target?.secondWorld?.entered)===true?1000:MAX_LEVEL,Math.floor(Number(target.level)||1)));
+ target.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(target.level,target):Math.max(1,Math.min(target?.secondWorld?.entered===true?1000:MAX_LEVEL,Math.floor(Number(target.level)||1)));
  const exp=Number(target.exp),gold=Number(target.gold),hp=Number(target.hp);
  const effectiveCap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(target):(target?.secondWorld?.entered===true?1000:MAX_LEVEL);
  target.exp=target.level>=effectiveCap?0:(Number.isFinite(exp)&&exp>=0?Math.floor(exp):0);
