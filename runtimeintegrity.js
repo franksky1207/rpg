@@ -413,6 +413,13 @@
   if(Number(window.SPECIAL_ENEMY_SHARED_HELPERS_VERSION)!==1||typeof window.specialRateFromPlayer!=="function"||typeof window.rollUniqueMonsterTraits!=="function")fail("SPECIAL_ENEMY_SHARED_HELPERS","特殊敵人共用 rate／trait helper 異常",{version:window.SPECIAL_ENEMY_SHARED_HELPERS_VERSION});
  if(Number(window.BOUNTY_BALANCE_VERSION)!==1||Number(window.BOUNTY_DIFFICULTY_FORMULA_VERSION)!==1||Number(window.BOUNTY_TIER_META_VERSION)!==1)fail("BOUNTY_BALANCE_VERSION","懸賞戰 Balance V1／Difficulty Formula V1／Tier Meta V1 異常",{balance:window.BOUNTY_BALANCE_VERSION,formula:window.BOUNTY_DIFFICULTY_FORMULA_VERSION,meta:window.BOUNTY_TIER_META_VERSION});
  if(typeof window.getBountyTierMeta!=="function"||typeof window.getBountyTierMetadata!=="function")fail("BOUNTY_TIER_META_API","缺少懸賞戰 Tier Metadata 正式 API");
+ if(Number(window.BOUNTY_UNIVERSE_CORE_VERSION)!==1||Number(window.BOUNTY_UNIVERSE_REWARD_OWNER_VERSION)!==1||typeof window.getUniverseBountyRewardPreview!=="function"||typeof window.makeUniverseBountyItemForTest!=="function")fail("BOUNTY_UNIVERSE_CORE","宇宙懸賞戰鬥／獎勵核心未完整載入",{core:window.BOUNTY_UNIVERSE_CORE_VERSION,reward:window.BOUNTY_UNIVERSE_REWARD_OWNER_VERSION,preview:typeof window.getUniverseBountyRewardPreview,item:typeof window.makeUniverseBountyItemForTest});
+ else{
+  const probe=window.getUniverseBountyRewardPreview("danger",513),baseExp=typeof window.secondWorldBossExpReward==="function"?window.secondWorldBossExpReward(2,false,{...state,level:513}):null,baseDm=typeof window.secondWorldBossDarkMatterReward==="function"?window.secondWorldBossDarkMatterReward(2,false):null;
+  if(!probe||probe.rewardLevel!==513||probe.bossIndex!==2||probe.bossLevel!==515||probe.exp!==Math.floor(Number(baseExp)*12)||probe.darkMatter!==Math.floor(Number(baseDm)*12)||probe.gearCount!==5||probe.directDarkEnergy!==0)fail("BOUNTY_UNIVERSE_REWARD_MAPPING","宇宙懸賞 Boss／獎勵倍率映射異常",{probe,baseExp,baseDm});
+  const item=window.makeUniverseBountyItemForTest("normal",513,{forcedQ:3,forcedType:"weapon"});
+  if(!item||Number(item.world)!==2||Number(item.level)!==513||Number(item.sourceBossIndex)!==2||Number(item.q)!==3)fail("BOUNTY_UNIVERSE_ITEM_MAPPING","宇宙懸賞裝備世代／等級映射異常",item);
+ }
  if(typeof window.getBountyDifficultyProfile!=="function")fail("BOUNTY_DIFFICULTY_API","缺少懸賞戰難度公式正式 API");
  else{
   const bountyProfiles=["normal","high","danger"].map(id=>window.getBountyDifficultyProfile(id));
