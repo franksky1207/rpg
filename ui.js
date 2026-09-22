@@ -333,7 +333,7 @@ function normalizeSaveItem(it,forcedType=null,target=null){
  if(!it||typeof it!=="object"||Array.isArray(it))return null;
  const type=forcedType||it.type;if(!EQUIPMENT_TYPES.includes(type))return null;
  const q=Math.max(0,Math.min(QUALITY.length-1,Math.floor(Number(it.q)||0)));
- const level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(it.level,target):Math.max(1,Math.min(Number(target?.secondWorld?.entered)===true?1000:MAX_LEVEL,Math.floor(Number(it.level)||1)));
+ const level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(it.level,target):Math.max(1,Math.min(target?.secondWorld?.entered===true?1000:MAX_LEVEL,Math.floor(Number(it.level)||1)));
  const out={...it,type,q,level};
  out.id=typeof it.id==="string"&&it.id?it.id:Date.now().toString(36)+Math.random().toString(36).slice(2);
  out.name=typeof it.name==="string"&&it.name.trim()?it.name.trim().slice(0,80):"未知裝備";
