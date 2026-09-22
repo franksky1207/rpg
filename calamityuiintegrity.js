@@ -23,6 +23,7 @@
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
  if(Number(window.CALAMITY_UI_VERSION)!==3)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V3",window.CALAMITY_UI_VERSION);
+ if(Number(window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION)!==1)fail("CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI","滿印記災厄應只保留單場重打",window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
  if(Number(window.CALAMITY_BATTLE_VIEW_VERSION)!==1)fail("CALAMITY_BATTLE_VIEW_VERSION","文明災厄戰鬥 UI 應使用單一 battleView snapshot",window.CALAMITY_BATTLE_VIEW_VERSION);
  if(Number(window.CALAMITY_OUTER_PACING_VERSION)!==1||Number(window.COMBAT_OUTER_PACING_VERSION)!==2||typeof window.combatOuterGapMs!=="function"||Number(window.combatOuterGapMs("calamity","battle"))!==140)fail("CALAMITY_OUTER_PACING","文明災厄場間應由共用 Combat Outer Pacing V2 提供固定 140ms",{calamity:window.CALAMITY_OUTER_PACING_VERSION,outer:window.COMBAT_OUTER_PACING_VERSION});
@@ -54,7 +55,10 @@
    if(unlocked&&(!hasCalamity||!hasMark))fail("CALAMITY_UNLOCKED_RENDER",`${def.id} 已解鎖但災厄／印記未同時顯示`,{hasCalamity,hasMark});
    if(!unlocked&&(hasCalamity||hasMark))fail("CALAMITY_LOCKED_LEAK",`${def.id} 尚未解鎖卻出現在災厄頁`,{hasCalamity,hasMark});
   });
-  if(expected.length>0&&(!html.includes("單場挑戰")||!html.includes("連續討伐")))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場／連續討伐按鈕");
+  if(expected.length>0&&!html.includes("單場"))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場挑戰／重打按鈕");
+  const hasIncomplete=defs.filter(def=>expected.includes(def.id)).some(def=>(window.getCivilizationCalamityStatus?.(def.id)?.mark?.level||0)<10);
+  if(hasIncomplete&&!html.includes("連續討伐"))fail("CALAMITY_CONTINUOUS_ACTION","尚未滿印記的災厄應保留連續討伐按鈕");
+  if(!hasIncomplete&&expected.length>0&&html.includes("連續討伐"))fail("CALAMITY_MAXED_REPLAY_ACTION","所有可見災厄皆滿印記時不應顯示連續討伐按鈕");
   if(expected.length>0&&(!html.includes("目前效果")&&!html.includes("Lv.1 效果預覽")))fail("CALAMITY_MARK_EFFECT_RENDER","印記卡缺少能力說明");
   if(typeof window.markEffectDescription==="function"){
    const ward=window.markEffectDescription("ward",1),suppression=window.markEffectDescription("suppression",1);
