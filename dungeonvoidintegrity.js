@@ -88,7 +88,7 @@
   if(uiAutoSrc&&!/backgroundProgressUiYield\s*\(\s*["']void["']\s*\)/.test(uiAutoSrc))fail("background-ui-yield-wiring");
 
   const autoSrc=src(window.runVoidMirageAuto);
-  if(!/catchUpPreviewPolicy/.test(autoSrc)||!/backgroundProgressCatchUpStep/.test(autoSrc)||!/shouldCheckpoint/.test(autoSrc)||!/shouldPresentBattle/.test(autoSrc))fail("fast-catch-up-auto-wiring");
+  if(!/catchUpPreviewPolicy/.test(autoSrc)||!/backgroundProgressCatchUpStep/.test(autoSrc)||!/shouldCheckpoint/.test(autoSrc)||!/shouldPresentBattle/.test(autoSrc)||!/preparePresentation:fast\?previewPolicy\?\.shouldPresentBattle/.test(autoSrc))fail("fast-catch-up-auto-wiring");
   if(!/while\s*\(voidMirageRun\?\.active\)/.test(autoSrc))fail("auto-loop-owner");
   if(!/fightNextVoidMirageFloor/.test(autoSrc))fail("auto-owner-floor-call");
   if(!/onFloorComplete/.test(autoSrc)||!/onEnd/.test(autoSrc))fail("auto-callback-contract");
