@@ -29,6 +29,10 @@
  if(typeof window.CALAMITY_CONTINUOUS_GAP_MS!=="undefined")fail("CALAMITY_LEGACY_GAP_OWNER","舊 CALAMITY_CONTINUOUS_GAP_MS 第二數字 owner 應已退休",window.CALAMITY_CONTINUOUS_GAP_MS);
  if(Number(window.CALAMITY_STRUCTURED_PRESENTATION_VERSION)!==2||Number(window.CALAMITY_BACKGROUND_PRESENTATION_VERSION)!==1||Number(window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION)!==1)fail("CALAMITY_BACKGROUND_PRESENTATION","文明災厄 structured animation 必須支援 background-aware sleep",{calamity:window.CALAMITY_STRUCTURED_PRESENTATION_VERSION,background:window.CALAMITY_BACKGROUND_PRESENTATION_VERSION,sleepInjection:window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION});
  if(Number(window.BACKGROUND_PROGRESS_UI_YIELD_VERSION)!==3||typeof window.backgroundProgressUiYield!=="function")fail("CALAMITY_BACKGROUND_UI_YIELD","文明災厄 catch-up 應使用前景快速 catch-up UI yield V3",{version:window.BACKGROUND_PROGRESS_UI_YIELD_VERSION,api:typeof window.backgroundProgressUiYield});
+ if(Number(window.CALAMITY_FAST_CATCH_UP_UI_VERSION)!==1||Number(window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION)!==1||typeof window.structuredCombatPresentationDurationMs!=="function")fail("CALAMITY_FAST_CATCH_UP_UI","文明災厄 Fast Catch-up UI／headless timing owner 未完整載入",{ui:window.CALAMITY_FAST_CATCH_UP_UI_VERSION,durationVersion:window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION,duration:typeof window.structuredCombatPresentationDurationMs});
+ const startSource=(()=>{try{return Function.prototype.toString.call(window.startCivilizationCalamityUI);}catch(e){return "";}})();
+ const pageSource=typeof window.civilizationCalamityPageHtml==="function"?Function.prototype.toString.call(window.civilizationCalamityPageHtml):"";
+ if(Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_PRESENTATION_INTERVAL)!==100)fail("CALAMITY_FAST_CATCH_UP_PRESENTATION_INTERVAL","文明災厄抽樣 presentation 應共用每 100 場 policy",window.BACKGROUND_PROGRESS_FAST_CATCH_UP_PRESENTATION_INTERVAL);
 
  try{
   if(typeof homePage==="function"){
