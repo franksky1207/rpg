@@ -51,6 +51,24 @@
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.SPECIALIZATION_WORLD_SEMANTICS_VERSION)!==1||Number(window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION)!==1||Number(window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION)!==1||Number(window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION)!==1||Number(window.GM_SPECIALIZATION_TEST_RANGE_VERSION)!==1||Number(window.SPECIALIZATION_WORLD_INTEGRITY_VERSION)!==1||typeof window.specializationWorldSemantics!=="function"||typeof window.specializationWorldEconomySummary!=="function"||typeof window.specializationPercentForLevel!=="function")fail("SPECIALIZATION_WORLD_SEMANTICS","專精玩家／GM 世界感知語意 owner 未完整載入",{semantics:window.SPECIALIZATION_WORLD_SEMANTICS_VERSION,playerUi:window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION,gm:window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION,formalRange:window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION,testRange:window.GM_SPECIALIZATION_TEST_RANGE_VERSION,integrity:window.SPECIALIZATION_WORLD_INTEGRITY_VERSION});
+ try{
+  const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
+  const full=Object.fromEntries(keys.map(key=>[key,60]));
+  const rates={training:150,scavenge:150,appraisal:150,initiative:60,combo:30,penetration:30,counter:30,drain:30};
+  Object.entries(rates).forEach(([key,expected])=>{if(window.specializationPercentForLevel(key,60)!==expected)fail("SPECIALIZATION_LEVEL60_RATE","Lv60 專精倍率異常",{key,expected,actual:window.specializationPercentForLevel(key,60)});});
+  const g=window.specializationWorldEconomySummary({secondWorld:{entered:false}},false,full);
+  const u=window.specializationWorldEconomySummary({secondWorld:{entered:true}},false,full);
+  if(g.text!=="EXP +150%　／　怪物金幣 +150%　／　裝備售價 +150%")fail("SPECIALIZATION_GALAXY_TEXT","銀河專精經濟語意異常",g);
+  if(u.text!=="EXP +150%　／　主線暗物質 +150%　／　裝備暗物質售價 +150%")fail("SPECIALIZATION_UNIVERSE_TEXT","宇宙專精經濟語意異常",u);
+  if(Number(window.GAME_GUIDE_WORLD_AWARE_VERSION)!==1||Number(window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION)!==1||typeof window.gameGuideCategoriesForState!=="function")fail("GUIDE_WORLD_AWARE_OWNER","遊戲說明 world-aware owner 未完整載入",{guide:window.GAME_GUIDE_WORLD_AWARE_VERSION,spec:window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION,api:typeof window.gameGuideCategoriesForState});
+  else{
+   const read=(entered,title)=>{const cats=window.gameGuideCategoriesForState({secondWorld:{entered}});const growth=cats.find(x=>x&&x.id==="growth");const row=(growth&&growth.items||[]).find(x=>x&&x[0]===title);return row?row[1]:"";};
+   const gs=read(false,"搜刮技巧"),us=read(true,"搜刮技巧"),ga=read(false,"鑑價技巧"),ua=read(true,"鑑價技巧");
+   if(!gs.includes("金幣")||gs.includes("暗物質"))fail("GUIDE_GALAXY_SPECIALIZATION_TEXT","銀河遊戲說明專精詞彙異常",{gs,ga});
+   if(!us.includes("暗物質")||us.includes("怪物金幣"))fail("GUIDE_UNIVERSE_SPECIALIZATION_TEXT","宇宙遊戲說明搜刮詞彙異常",us);
+   if(!ga.includes("金幣")||!ua.includes("暗物質")||!ua.includes("不放大暗能量"))fail("GUIDE_APPRAISAL_WORLD_TEXT","遊戲說明鑑價雙紀元詞彙異常",{ga,ua});
+  }
+ }catch(error){fail("SPECIALIZATION_WORLD_PROBE","專精世界感知回歸 probe 失敗",String(error&&error.message||error));}
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
  if(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)!==20||Number(window.SECOND_WORLD_ENHANCEMENT_MIN)!==20||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)!==40||window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE!==true||Number(window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION)!==2||Number(window.ENHANCEMENT_FORMAL_RANGE_VERSION)!==2||typeof window.effectiveEnhancementMin!=="function"||typeof window.formalEnhancementLevelValid!=="function")fail("ENHANCEMENT_WORLD_CAPS","強化正式世界範圍 owner 異常",{first:window.FIRST_WORLD_ENHANCEMENT_CAP,secondMin:window.SECOND_WORLD_ENHANCEMENT_MIN,second:window.SECOND_WORLD_ENHANCEMENT_CAP,active:window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE,core:window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION,range:window.ENHANCEMENT_FORMAL_RANGE_VERSION});
  if(Number(window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION)!==1||Number(window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION)!==1||typeof window.performEnhancementUpgrade!=="function"||Number(window.ENHANCEMENT_UI_VERSION)!==6)fail("SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW","宇宙高階強化玩家流程／atomic owner 未完整載入",{flow:window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION,atomic:window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION,api:typeof window.performEnhancementUpgrade,ui:window.ENHANCEMENT_UI_VERSION});
