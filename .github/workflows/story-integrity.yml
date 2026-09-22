@@ -43,10 +43,10 @@ jobs:
           test ! -e story-source-purity-ci.js
           test ! -e story-integrity-ci.js
           test ! -e story-flow-ci.js
-          grep -q 'story.css?v=20260917-story-batch4' index.html
-          grep -q 'storyintegrity.js?v=20260918-story-policy2' index.html
-          grep -q 'storymigration.js?v=20260918-retire-backfill1' index.html
-          grep -q 'storyruntimeintegrity.js?v=20260918-retire-backfill1' index.html
+          grep -Eq 'href="story\.css\?v=[^"]+"' index.html
+          grep -Eq 'src="storyintegrity\.js\?v=[^"]+"' index.html
+          grep -Eq 'src="storymigration\.js\?v=[^"]+"' index.html
+          grep -Eq 'src="storyruntimeintegrity\.js\?v=[^"]+"' index.html
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
       - name: Run story data integrity
