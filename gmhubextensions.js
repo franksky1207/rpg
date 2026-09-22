@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
  const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","civilization-manage","dungeon-manage"];
- const TEST_SECTION_ORDER=["player-ability-test","second-world-calamity-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
+ const TEST_SECTION_ORDER=["player-ability-test","power-benchmark-test","second-world-calamity-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
   let body="";
@@ -58,8 +58,6 @@
    ["manage","文明等級管理",window.gmCivilizationManagementHtml,{id:"civilization-manage"}],
    ["manage","副本管理",window.gmDungeonManagementHtml,{id:"dungeon-manage"}],
    ["test","角色能力測試",window.gmPlayerAbilityTestHtml,{id:"player-ability-test"}],
-   ["test","地圖怪測試",window.gmMapMonsterTestHtml,{id:"map-test"}],
-   ["test","特殊怪測試",window.gmSpecialTestHtml,{id:"special-test"}],
    ["test","懸賞戰測試",window.gmBountyTestHtml,{id:"bounty-test"}],
    ["test","競技場測試",window.gmArenaTestHtml,{id:"arena-test"}],
    ["test","虛空幻境測試",window.gmVoidMirageTestHtml,{id:"void-test"}]
@@ -70,6 +68,7 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=9;
+ window.GM_HUB_EXTENSION_VERSION=10;
  window.GM_HUB_REGISTRY_VERSION=1;
+ window.GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=1;
 })();
