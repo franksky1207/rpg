@@ -290,7 +290,7 @@
  }
  function snapshotHtml(){
   const s=snapshot(),st=s.stats;
-  return '<div class="item"><b>目前 GM 測試角色</b><div class="muted gmpb-sub">所有戰力測試讀取「角色能力測試」的 GM 沙盒角色；與正式角色目前紀元、解鎖與進度脫鉤。</div>'+
+  return '<div id="gmPowerBenchmarkCharacterSnapshot" class="item"><b>目前 GM 測試角色</b><div class="muted gmpb-sub">所有戰力測試讀取「角色能力測試」的 GM 沙盒角色；與正式角色目前紀元、解鎖與進度脫鉤。</div>'+
    '<div style="margin-top:9px">'+(s.characterWorld===2?"宇宙紀元角色":"銀河紀元角色")+'｜Lv.'+s.level+'　VIP'+s.vipLevel+'｜'+(s.equipmentSource==="synced"?"正式實穿裝備":"同級神話預測裝備")+'</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
@@ -638,7 +638,7 @@
  function summaryHtml(){
   const s=snapshot(),r=collectedModeResults(),count=testedModeCount(r),tested=[];
   if(MODEL.outputResult||MODEL.defenseResult||MODEL.combatResult)tested.push("地圖怪");if(r.special)tested.push("特殊怪");if(r.bounty)tested.push("懸賞");if(r.arena)tested.push("競技場");if(r.void)tested.push("虛空");if(r.mirror)tested.push("鏡像");if(r.calamity1||r.calamity2)tested.push("災厄");
-  return '<div class="item"><div class="gmpb-title"><b>統一測試摘要</b><span class="muted">只收錄本次實際跑過的模式，可直接貼給 ChatGPT 分析平衡</span></div>'+
+  return '<div id="gmPowerBenchmarkUnifiedSummary" class="item"><div class="gmpb-title"><b>統一測試摘要</b><span class="muted">只收錄本次實際跑過的模式，可直接貼給 ChatGPT 分析平衡</span></div>'+
    '<div class="gmpb-summary-main">'+metric("測試角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("角色來源",s.equipmentSource==="synced"?"正式角色同步":"神話預測裝備")+metric("已測模式",count+" / 7")+metric("包含內容",tested.length?tested.join("、"):"尚未測試")+metric("文明等級","Lv."+s.civilizationLevel)+metric("角色紀元",s.characterWorld===2?"宇宙紀元":"銀河紀元")+'</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button><button class="btn" type="button" onclick="gmPowerBenchmarkClearAllResults()">清除全部測試結果</button></div>'+
    '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
@@ -703,6 +703,20 @@
     benchmarkSubsection("文明災厄測試",calamityBenchmarkHtml(),"calamity",false)+
    '</div>'+summaryHtml()+'</div>';
  }
+ function refreshBenchmarkUi(options={}){
+  if(options.capture!==false){MODEL.snapshot=null;captureSnapshot();}
+  const characterBox=typeof document!=="undefined"?document.getElementById("gmPowerBenchmarkCharacterSnapshot"):null;
+  if(characterBox){
+   const html=snapshotHtml(),wrap=document.createElement("div");wrap.innerHTML=html;
+   const next=wrap.firstElementChild;if(next)characterBox.replaceWith(next);
+  }
+  const summaryBox=typeof document!=="undefined"?document.getElementById("gmPowerBenchmarkUnifiedSummary"):null;
+  if(summaryBox){
+   const html=summaryHtml(),wrap=document.createElement("div");wrap.innerHTML=html;
+   const next=wrap.firstElementChild;if(next)summaryBox.replaceWith(next);
+  }
+  return true;
+ }
  function clearExternalModeResults(){
   ["gmClearSpecialBatchResult","gmClearBountyTestResult","gmClearArena5Result","gmClearVoidMirageTestResult","gmClearMirrorTestResult","gmClearCalamityTestResult","gmClearSecondWorldCalamityTestResult"].forEach(name=>{try{if(typeof window[name]==="function")window[name]();}catch(error){console.error("GM result clear failed",name,error);}});
  }
@@ -710,7 +724,8 @@
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_GROUP_VERSION=2;
  window.GM_POWER_BENCHMARK_ALL_MODES_VERSION=1;
- window.GM_POWER_BENCHMARK_UNIFIED_SUMMARY_VERSION=1;
+ window.GM_POWER_BENCHMARK_UNIFIED_SUMMARY_VERSION=2;
+ window.GM_POWER_BENCHMARK_LIVE_REFRESH_VERSION=1;
  window.GM_POWER_BENCHMARK_GM_CHARACTER_VERSION=1;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
@@ -766,6 +781,8 @@
  window.gmPowerBenchmarkCopySummary=copySummary;
  window.gmPowerBenchmarkInvalidateSnapshot=function(){MODEL.snapshot=null;clearSelectionResults();clearExternalModeResults();return true;};
  window.gmPowerBenchmarkClearAllResults=clearAllBenchmarkResults;
+ window.gmPowerBenchmarkRefreshUi=refreshBenchmarkUi;
+ window.gmPowerBenchmarkRefreshSummary=function(){return refreshBenchmarkUi({capture:false});};
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
  window.gmPowerBenchmarkSession=function(){return JSON.parse(JSON.stringify(MODEL));};
 
