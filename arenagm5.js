@@ -3,17 +3,20 @@
  let arenaGm5Summary=null;
  let arenaGm5Results={};
  let arenaGm5World=Number(window.gmTestWorld)===2?2:1;
+ let arenaGm5Rank=1;
+ let arenaGm5PositionId="extreme";
  function withArenaTestWorld(fn){const oldLevel=state.level,hadSecond=!!state.secondWorld,oldEntered=state?.secondWorld?.entered;if(!state.secondWorld||typeof state.secondWorld!=="object")state.secondWorld={};state.secondWorld.entered=arenaGm5World===2;state.level=arenaGm5World===2?Math.max(500,Math.min(1000,Math.floor(Number(window.gmTestLevel)||500))):Math.max(1,Math.min(500,Math.floor(Number(window.gmTestLevel)||1)));try{return fn();}finally{state.level=oldLevel;if(hadSecond)state.secondWorld.entered=oldEntered;else delete state.secondWorld;}}
  function venueName(rank){return withArenaTestWorld(()=>{if(typeof getArenaVenueName==="function")return getArenaVenueName(rank);const regions=arenaGm5World===2?(window.SECOND_WORLD_REGIONS||[]):WORLD_REGIONS;return `${regions?.[rank-1]?.name||`第${rank}區`}競技場`;});}
  function rankOptions(){
   const regions=arenaGm5World===2?(Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[]):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]);
   const max=Math.max(1,regions.length||10);
-  const current=1;
+  const current=Math.max(1,Math.min(max,Math.floor(Number(arenaGm5Rank)||1)));
+  arenaGm5Rank=current;
   let html="";
   for(let rank=1;rank<=max;rank++)html+=`<option value="${rank}" ${rank===current?"selected":""}>第 ${rank} 個｜${venueName(rank)}</option>`;
   return html;
  }
- function positionOptions(){return `<option value="normal">左位（低）</option><option value="hard">中位（中）</option><option value="extreme" selected>右位（高）</option>`;}
+ function positionOptions(){return ["normal","hard","extreme"].map(id=>`<option value="${id}" ${id===arenaGm5PositionId?"selected":""}>${positionLabel(id)}</option>`).join("");}
  function formalAssessmentPosition(rank){
   if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
   return rank<=1?"normal":rank===2?"hard":"extreme";
@@ -45,8 +48,9 @@
  }
  window.gmArena5Run100=function(){
   if(battleBusy)return;
-  const rank=Math.max(1,Math.floor(Number(document.getElementById("gmArenaRank5")?.value)||1));
-  const positionId=document.getElementById("gmArenaPosition5")?.value||"extreme";
+  const rank=Math.max(1,Math.floor(Number(document.getElementById("gmArenaRank5")?.value)||arenaGm5Rank||1));
+  const positionId=document.getElementById("gmArenaPosition5")?.value||arenaGm5PositionId||"extreme";
+  arenaGm5Rank=rank;arenaGm5PositionId=positionId;
   const button=document.getElementById("gmArenaRun100Btn5");if(button){button.disabled=true;button.textContent="測試中…";}
   battleBusy=true;try{arenaGm5Summary=simulate(rank,positionId,100);if(arenaGm5Summary){arenaGm5Summary.assessment=false;arenaGm5Results[String(arenaGm5Summary.world)+":"+rank+":"+positionId+":100"]=JSON.parse(JSON.stringify(arenaGm5Summary));}arenaGm5Result=resultHtml(arenaGm5Summary,false);}finally{battleBusy=false;}
   const box=document.getElementById("gmArenaTestResult");if(box)box.innerHTML=arenaGm5Result;
@@ -54,8 +58,9 @@
  };
  window.gmArena5RunPromotion=function(){
   if(battleBusy)return;
-  const rank=Math.max(1,Math.floor(Number(document.getElementById("gmArenaRank5")?.value)||1));
+  const rank=Math.max(1,Math.floor(Number(document.getElementById("gmArenaRank5")?.value)||arenaGm5Rank||1));
   const positionId=formalAssessmentPosition(rank);
+  arenaGm5Rank=rank;arenaGm5PositionId=positionId;
   const button=document.getElementById("gmArenaRun500Btn5");if(button){button.disabled=true;button.textContent="評估中…";}
   battleBusy=true;try{arenaGm5Summary=simulate(rank,positionId,500);if(arenaGm5Summary){arenaGm5Summary.assessment=true;arenaGm5Results[String(arenaGm5Summary.world)+":"+rank+":"+positionId+":500"]=JSON.parse(JSON.stringify(arenaGm5Summary));}arenaGm5Result=resultHtml(arenaGm5Summary,true);}finally{battleBusy=false;}
   const position=document.getElementById("gmArenaPosition5");if(position)position.value=positionId;
@@ -64,9 +69,11 @@
  };
  function arenaGmBody(){
   const curveText=arenaGm5World===2?"宇宙紀元獨立強度曲線":"銀河紀元正式強度曲線";
-  return `<div class="muted gm-hub-note">競技場可獨立選擇銀河／宇宙紀元；不受正式角色目前世界、Rank 或主線解鎖限制。玩家固定使用 GM 測試角色。<br>目前：${curveText}。</div><div class="controls" style="align-items:end"><label>紀元<br><select id="gmArenaWorld5" class="btn" onchange="gmArena5SetWorld(this.value)"><option value="1" ${arenaGm5World===1?"selected":""}>銀河紀元</option><option value="2" ${arenaGm5World===2?"selected":""}>宇宙紀元</option></select></label><label>競技場<br><select id="gmArenaRank5" class="btn">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">正式評估門檻仍以 485 / 500（97%）呈現；此處只模擬，不修改正式競技場進度。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
+  return `<div class="muted gm-hub-note">競技場可獨立選擇銀河／宇宙紀元；不受正式角色目前世界、Rank 或主線解鎖限制。玩家固定使用 GM 測試角色。<br>目前：${curveText}。</div><div class="controls" style="align-items:end"><label>紀元<br><select id="gmArenaWorld5" class="btn" onchange="gmArena5SetWorld(this.value)"><option value="1" ${arenaGm5World===1?"selected":""}>銀河紀元</option><option value="2" ${arenaGm5World===2?"selected":""}>宇宙紀元</option></select></label><label>競技場<br><select id="gmArenaRank5" class="btn" onchange="gmArena5SetRank(this.value)">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn" onchange="gmArena5SetPosition(this.value)">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">正式評估門檻仍以 485 / 500（97%）呈現；此處只模擬，不修改正式競技場進度。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
  }
  window.gmArena5SetWorld=function(value){arenaGm5World=Number(value)===2?2:1;arenaGm5Result="";arenaGm5Summary=null;if(typeof render==="function")render();return arenaGm5World;};
+ window.gmArena5SetRank=function(value){arenaGm5Rank=Math.max(1,Math.floor(Number(value)||1));return arenaGm5Rank;};
+ window.gmArena5SetPosition=function(value){arenaGm5PositionId=["normal","hard","extreme"].includes(String(value))?String(value):"extreme";return arenaGm5PositionId;};
  window.gmArena5TestWorld=function(){return arenaGm5World;};
  window.gmArena5TestHtml=arenaGmBody;
  function enhanceArenaGm(){
@@ -83,6 +90,7 @@
  window.gmClearArena5Result=function(){arenaGm5Result="";arenaGm5Summary=null;arenaGm5Results={};return true;};
  window.GM_ARENA_INDEPENDENT_WORLD_TEST_VERSION=1;
  window.GM_ARENA_SUMMARY_EXPORT_VERSION=1;
+ window.GM_ARENA_SESSION_SETTINGS_VERSION=1;
  window.refreshArenaGm5=enhanceArenaGm;
  enhanceArenaGm();
 })();
