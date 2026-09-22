@@ -23,10 +23,24 @@
    if(typeof window.normalizeSecondWorldState==="function"){
     const legacy={secondWorld:{entered:true,darkMatter:0,darkEnergy:0,mainline:{bossKilled:[]},calamities:[]}};
     const high={secondWorld:{entered:true,civilizationLevel:99,darkMatter:0,darkEnergy:0,mainline:{bossKilled:[]},calamities:[]}};
-    window.normalizeSecondWorldState(legacy);window.normalizeSecondWorldState(high);
+    const preserve={secondWorld:{entered:true,civilizationLevel:0,darkMatter:1,darkEnergy:2,futureDungeon:{rank:7},mainline:{bossKilled:[],futureFlag:"keep"},calamities:[{currentHp:123,trueKills:0,futureTag:"keep"}]}};
+    const reconcile={secondWorld:{entered:true,civilizationLevel:0,darkMatter:0,darkEnergy:0,mainline:{bossKilled:[]},calamities:Array.from({length:10},(_,i)=>({currentHp:null,trueKills:i<2?30:0}))}};
+    const gap={secondWorld:{entered:true,civilizationLevel:0,darkMatter:0,darkEnergy:0,mainline:{bossKilled:[]},calamities:Array.from({length:10},(_,i)=>({currentHp:null,trueKills:i===0||i===2?30:0}))}};
+    window.normalizeSecondWorldState(legacy);window.normalizeSecondWorldState(high);window.normalizeSecondWorldState(preserve);window.normalizeSecondWorldState(reconcile);window.normalizeSecondWorldState(gap);
     if(legacy.secondWorld.civilizationLevel!==0)fail("LEGACY_DEFAULT","舊 secondWorld 缺文明等級應補 0",legacy.secondWorld);
     if(high.secondWorld.civilizationLevel!==10)fail("NORMALIZE_CAP","文明等級 >10 應 clamp 10",high.secondWorld);
+    if(preserve.secondWorld.futureDungeon?.rank!==7||preserve.secondWorld.mainline?.futureFlag!=="keep"||preserve.secondWorld.calamities?.[0]?.futureTag!=="keep")fail("PRESERVE_UNKNOWN","secondWorld normalization 不得刪除未知未來欄位",preserve.secondWorld);
+    if(reconcile.secondWorld.civilizationLevel!==2)fail("RECONCILE_CONTIGUOUS","連續完成前兩隻災厄時文明等級最低應補至 Lv2",reconcile.secondWorld);
+    if(gap.secondWorld.civilizationLevel!==1)fail("RECONCILE_GAP","災厄完成有斷層時只能推導連續完成的最低文明等級",gap.secondWorld);
+    if(typeof window.secondWorldCivilizationFloorFromCalamities!=="function"||window.secondWorldCivilizationFloorFromCalamities(reconcile.secondWorld.calamities)!==2)fail("RECONCILE_API","文明等級災厄推導 API 異常");
    }else fail("STATE_API","normalizeSecondWorldState 未載入");
+
+   if(Number(window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION)!==1||Number(window.SECOND_WORLD_ENTRY_PURE_READ_VERSION)!==1||Number(window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION)!==1)fail("WORLD_STATE_SAFETY_VERSION","第二世界 state preservation／純讀取／文明 reconciliation 版本未完整載入");
+   if(typeof window.isSecondWorldEntered==="function"){
+    const pureProbe={secondWorld:{entered:true,future:{x:1}}};
+    const before=JSON.stringify(pureProbe);
+    if(window.isSecondWorldEntered(pureProbe)!==true||JSON.stringify(pureProbe)!==before)fail("PURE_ENTRY_READ","isSecondWorldEntered 必須為無 mutation 的純讀取",pureProbe);
+   }else fail("PURE_ENTRY_API","isSecondWorldEntered 未載入");
 
    if(typeof window.migrateSave==="function"&&typeof state!=="undefined"&&state&&typeof state==="object"){
     const probe=clone(state),source=clone(state),previousReport=window.LAST_SAVE_MIGRATION_REPORT;
