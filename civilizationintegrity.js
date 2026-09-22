@@ -6,7 +6,7 @@
   const errors=[];
   const fail=(code,message,detail=null)=>errors.push({code,message,detail});
   try{
-   if(Number(window.CIVILIZATION_CORE_VERSION)!==1||Number(window.CIVILIZATION_LEVEL_MAX)!==10||Number(window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL)!==5)fail("CORE_OWNER","文明等級 Core owner 異常");
+   if(Number(window.CIVILIZATION_CORE_VERSION)!==1||Number(window.CIVILIZATION_LEVEL_MAX)!==10||Number(window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL)!==5||Number(window.CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION)!==1||typeof window.civilizationCombatDamageMultiplier!=="function")fail("CORE_OWNER","文明等級 Core／統一戰鬥倍率 owner 異常");
    const expected={0:1,1:1.05,5:1.25,10:1.5};
    Object.entries(expected).forEach(([level,multi])=>{
     const actual=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(Number(level)):NaN;
@@ -19,6 +19,12 @@
    const universe={secondWorld:{entered:true,civilizationLevel:10}};
    if(window.civilizationLevel?.(galaxy)!==0||window.civilizationDamageMultiplier?.(galaxy)!==1)fail("GALAXY_ISOLATION","銀河紀元不得套文明等級");
    if(window.civilizationLevel?.(universe)!==10||window.civilizationDamageMultiplier?.(universe)!==1.5)fail("UNIVERSE_LEVEL10","宇宙文明 Lv10 應為 1.50×");
+   if(typeof window.civilizationCombatDamageMultiplier==="function"){
+    const galaxyCombat=window.civilizationCombatDamageMultiplier({world:1,civilizationLevel:10});
+    const universeCombat=window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:10});
+    const midCombat=window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:6});
+    if(galaxyCombat!==1||universeCombat!==1.5||midCombat!==1.3)fail("COMBAT_OWNER_PROBE","統一文明戰鬥倍率 owner world/context probe 異常",{galaxyCombat,universeCombat,midCombat});
+   }
 
    if(typeof window.normalizeSecondWorldState==="function"){
     const legacy={secondWorld:{entered:true,darkMatter:0,darkEnergy:0,mainline:{bossKilled:[]},calamities:[]}};
@@ -70,7 +76,8 @@
 
    if(Number(window.CHARACTER_CIVILIZATION_UI_VERSION)!==1)fail("PLAYER_UI","角色頁文明等級 UI owner 未載入");
    if(Number(window.GM_CIVILIZATION_VERSION)!==1||Number(window.GM_CIVILIZATION_FORMAL_RANGE_VERSION)!==1||Number(window.GM_CIVILIZATION_TEST_RANGE_VERSION)!==1)fail("GM_OWNER","GM 文明等級 owner 未完整載入");
-   if(Number(window.GM_POWER_BENCHMARK_VERSION)!==18||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION)!==1)fail("BENCHMARK_OWNER","GM 戰力基準文明等級 owner 異常",{version:window.GM_POWER_BENCHMARK_VERSION,civilization:window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION});
+   if(Number(window.GM_POWER_BENCHMARK_VERSION)!==21||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION)!==1||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION)!==1)fail("BENCHMARK_OWNER","GM 戰力基準文明等級／統一戰鬥倍率 owner 異常",{version:window.GM_POWER_BENCHMARK_VERSION,civilization:window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION,combatOwner:window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION});
+   if(Number(window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION)!==1)fail("GM_COMBAT_OWNER","GM 戰鬥模式未完整接統一文明倍率 owner",{dungeon:window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION,arena:window.GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION,special:window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION,mirror:window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION,calamity:window.GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION});
   }catch(error){fail("EXCEPTION","文明等級 integrity 執行失敗",String(error?.message||error));}
   const report={version:VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
   window.CIVILIZATION_LEVEL_INTEGRITY_REPORT=report;
