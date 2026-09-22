@@ -151,6 +151,11 @@
   target.offline.maxObservedWallClock=t;
   target.offline.timeLockUntil=0;
  }
+ function resetPendingBlackMarketForWorldTransition(target){
+  if(!isObject(target))return false;
+  target.pendingBlackMarketEncounter=false;
+  return true;
+ }
  function enterSecondWorld(){
   const requirements=secondWorldEntryRequirements(state);
   if(requirements.alreadyEntered)return {ok:false,reason:"already-entered",requirements};
@@ -166,7 +171,7 @@
    state.enhancement.basicStones=0;
    state.enhancement.advancedStones=0;
    state.lostGear=[];
-   state.pendingBlackMarketEncounter=false;
+   resetPendingBlackMarketForWorldTransition(state);
    clearFirstWorldCalamityResidualHp(state);
    clearFirstWorldOfflineState(state);
    if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();
@@ -207,6 +212,8 @@
  window.isSecondWorldEntered=isSecondWorldEntered;
  window.firstWorldProgressionEnabled=firstWorldProgressionEnabled;
  window.secondWorldProgressionEnabled=secondWorldProgressionEnabled;
+ window.resetPendingBlackMarketForWorldTransition=resetPendingBlackMarketForWorldTransition;
+ window.PENDING_BLACK_MARKET_WORLD_TRANSITION_VERSION=1;
  window.enterSecondWorld=enterSecondWorld;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeSecondWorldState);
 })();
