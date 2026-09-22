@@ -88,14 +88,21 @@
   }catch(e){}
   return null;
  }
+ function testCharacterLevel(){
+  return whole(window.gmTestLevel??(typeof state!=="undefined"?state.level:1),1,1000);
+ }
  function currentHighestMapIndex(){
-  const max=Math.max(0,(typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS.length:1)-1);
-  return whole(typeof state!=="undefined"?state.unlockedMap:0,0,max);
+  const maps=typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[];
+  if(!maps.length)return 0;
+  const lv=Math.max(1,Math.min(500,testCharacterLevel()));
+  let best=0;
+  maps.forEach((map,index)=>{if((Number(map?.min)||1)<=lv)best=index;});
+  return whole(best,0,maps.length-1);
  }
  function ensureSelection(){
   const phases=allPhases();
   if(!phases.length)return;
-  if(!phases.includes(MODEL.phase))MODEL.phase=phases.includes(phaseForLevel(typeof state!=="undefined"?state.level:1))?phaseForLevel(state.level):phases[phases.length-1];
+  if(!phases.includes(MODEL.phase)){const p=phaseForLevel(testCharacterLevel());MODEL.phase=phases.includes(p)?p:phases[phases.length-1];}
   const regions=regionsForPhase(MODEL.phase);
   if(!regions.some(r=>String(r.id)===String(MODEL.regionId)))MODEL.regionId=regions[0]?String(regions[0].id):"";
   const region=regionById(MODEL.regionId);
@@ -120,7 +127,8 @@
  function useHighestBenchmarkSelection(){
   if(benchmarkWorld()===1){const ok=useHighestSelection();if(ok)clearSelectionResults();return ok;}
   const regions=universeRegions();if(!regions.length)return false;
-  const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?whole(window.secondWorldHighestUnlockedBossIndex(),0,Math.max(0,(Number(window.SECOND_WORLD_BOSS_COUNT)||100)-1)):MODEL.universeBossIndex;
+  const level=Math.max(500,Math.min(1000,testCharacterLevel()));
+  const highest=typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(level):MODEL.universeBossIndex;
   const meta=universeBossMeta(highest);if(!meta)return false;
   MODEL.universeRegionIndex=whole(meta.regionIndex,0,regions.length-1);
   MODEL.universeBossIndex=meta.index;
@@ -683,7 +691,7 @@
     '<label>地圖<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetMap(this.value)">'+mapOptions()+'</select></label>'+
     '<label>怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetEnemy(this.value)">'+enemyOptions()+'</select></label>'+
     '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>';
-  const highestLabel=world===2?"使用目前最高 Boss":"使用目前最高地圖";
+  const highestLabel=world===2?"使用測試等級對應 Boss":"使用測試等級對應地圖";
   const combatActions=world===2
    ?'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button></div>'
    :'<div class="gmpb-actions"><button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'single\')">'+busyLabel("combat-single","測目前選擇怪物")+'</button><button class="btn" type="button"'+disabled+' onclick="gmPowerBenchmarkRunCombat(\'map\')">'+busyLabel("combat-map","測本地圖 5 隻全部")+'</button></div>';
