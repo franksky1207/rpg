@@ -326,7 +326,7 @@ darkEnergy = 300 + 10*K
 - 失敗不套主線 world2 death penalty。
 - 宇宙正式戰鬥與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
 - GM 已用 explicit world context，不能靠暫改正式 `state.secondWorld.entered` 模擬。
-- `BOUNTY_CIVILIZATION_DAMAGE_VERSION=1`
+- `DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
 - `BOUNTY_TEST_CONTEXT_VERSION=1`
 - `GM_BOUNTY_STATE_ISOLATION_VERSION=1`
 
@@ -340,8 +340,8 @@ darkEnergy = 300 + 10*K
 - shared daily arena limit 20。
 - 宇宙正式三連戰與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
 - GM 使用 explicit world context，已移除暫改正式 state 的舊路徑。
-- `ARENA_CIVILIZATION_DAMAGE_VERSION=1`
-- `GM_ARENA_CIVILIZATION_DAMAGE_VERSION=1`
+- `ARENA_CIVILIZATION_DAMAGE_VERSION=2`
+- `GM_ARENA_CIVILIZATION_DAMAGE_VERSION=2`
 - `ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1`
 - `GM_ARENA_STATE_ISOLATION_VERSION=1`
 
@@ -350,8 +350,8 @@ darkEnergy = 300 + 10*K
 - GM 戰力基準不提供紀元 selector，視為共用模式。
 - 玩家／GM 測試角色若處於宇宙紀元，文明等級 final damage 會正式生效；銀河紀元為 ×1.00。
 - GM 可預覽指定樓層／從指定樓層連爬；起始樓層設定在同一頁面工作階段保留。
-- `VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=1`
-- `GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=1`
+- `VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2`
+- `GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
 
 ## 9.4 鏡像
 - 不分紀元 selector。
@@ -361,7 +361,7 @@ darkEnergy = 300 + 10*K
 - 100 次實戰與 64 組對稱回歸可同時保留結果。
 - `MIRROR_COMBAT_CORE_VERSION=5`
 - `MIRROR_CIVILIZATION_DAMAGE_VERSION=1`
-- `GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=1`
+- `GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2`
 
 ---
 
@@ -666,6 +666,44 @@ Game Guide：
   - 最新 Runtime Integrity run 已通過。
 - 本輪未新增任何正式 save 欄位；`SAVE_SCHEMA_VERSION` 維持 15，不需要 migration 或舊資料清理。
 
+## 15.2 2026-09-23 文明最終傷害統一 owner
+
+為避免不同戰鬥模式各自判斷文明倍率而再次漏接，已完成兩批統一：
+
+- 正式唯一戰鬥倍率入口：`civilizationCombatDamageMultiplier({ world, state, civilizationLevel })`
+- owner：`civilizationcore.js`
+- `CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1`
+- 規則：
+  - `world=1` → 固定 ×1.00。
+  - `world=2` → 依文明 Lv.0～10 套用 ×1.00～×1.50。
+  - 可使用正式 `state`，也可用 explicit `civilizationLevel`；GM 不需要暫改正式 state。
+- `runCombatCore()` 仍只接受已解析好的 `playerFinalDamageMultiplier`，不自行猜紀元。
+
+正式戰鬥已全部改用統一 owner：
+- 宇宙主線：`SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2`
+- 特殊怪：`SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 宇宙文明災厄：`SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 懸賞共用 Dungeon Core：`DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
+- 競技場：`ARENA_CIVILIZATION_DAMAGE_VERSION=2`
+- 虛空幻境：`VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2`
+- 鏡像：`MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1`；倍率寫入 snapshot，玩家與鏡像雙方套用相同倍率，維持對稱。
+
+GM／Benchmark 亦全部改用同一正式 owner：
+- 懸賞／虛空：`GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`、`GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 競技場：`GM_ARENA_CIVILIZATION_DAMAGE_VERSION=2`、`GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 特殊怪：`GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 鏡像：`GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2`、`GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 宇宙文明災厄：`GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+- 統一摘要：`GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION=1`
+
+Integrity 已同步：
+- `civilizationintegrity.js` 新增 world/context functional probe，並檢查所有 GM civilization combat owner。
+- `finalintegrity.js` 新增正式／GM 全模式 owner guard。
+- `tests/runtime/js-integrity.js` 會掃正式與 GM 戰鬥 owner，禁止重新直接呼叫 `civilizationDamageMultiplierForLevel()` 或 `civilizationDamageMultiplier()`。
+- Runtime Integrity 與 Story Integrity 均已通過。
+- 本輪只做架構統一，**沒有改文明每級 +5% 規則，也沒有調整懸賞／競技／虛空／鏡像平衡數值**。
+- 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`，不需要 migration。
+
 ---
 
 # 16. 尚未完成／後續優先項目
@@ -720,6 +758,7 @@ Game Guide：
 - 等級 progression：`levelprogression.js`
 - 第一世界戰鬥 pipeline：`battlepipeline.js`
 - Combat Core：正式 combat owner（依目前 main 實際檔案重新讀）
+- 文明戰鬥倍率唯一 owner：`civilizationcore.js` → `civilizationCombatDamageMultiplier(...)`
 - Structured FX：`combatfx.js`
 - Outer pacing：`combatpacing.js`
 - Background：`backgroundprogress.js`
