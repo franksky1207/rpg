@@ -1,5 +1,5 @@
 (function(){
- const VERSION=17;
+ const VERSION=18;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -689,6 +689,7 @@
    '<button class="btn blue" type="button"'+disabled+' onclick="gmPowerBenchmarkRunDefense()">'+busyLabel("defense","開始承傷測試")+'</button></div>'+defenseResultHtml()+'</div>'+
    '<div class="item"><b>現行主線實戰基準</b><div class="muted" style="margin-top:5px">每場重新生成正式主線怪物與隨機特性，使用目前角色完整正式戰鬥規則；只做沙盒模擬，不結算任何獎勵、死亡懲罰或進度。</div>'+
    combatActions+combatResultHtml()+'</div>'+
+   (world===2&&typeof window.gmSecondWorldCalamityBenchmarkHtml==="function"?window.gmSecondWorldCalamityBenchmarkHtml():"")+
    summaryHtml()+'</div>';
  }
 
@@ -696,8 +697,10 @@
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
  window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION=1;
+ window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
+ window.gmPowerBenchmarkSnapshot=function(){const s=snapshot();return s?JSON.parse(JSON.stringify(s)):null;};
  window.gmPowerBenchmarkSetWorld=function(v){
   if(MODEL.busy)return;
   MODEL.world=Number(v)===2?2:1;
