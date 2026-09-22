@@ -2,7 +2,13 @@
  let assessmentRunning=false;
  let assessmentProgress=0;
 
- function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${WORLD_REGIONS?.[rank-1]?.name||`第${rank}區`}競技場`;}
+ function universeArena(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state)===2:state?.secondWorld?.entered===true;}
+ function arenaRegionName(rank){
+  const r=Math.max(1,Math.floor(Number(rank)||1));
+  const region=universeArena()&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):WORLD_REGIONS?.[r-1];
+  return region?.name||`第${r}區域`;
+ }
+ function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${arenaRegionName(rank)}競技場`;}
  function positionId(rank){
   if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
   return "normal";
@@ -26,7 +32,7 @@
  }
  function regionAssessmentHtml(p){
   if(p.atFinalWindow)return `<div class="arena-dual-card ready"><div class="arena-dual-head"><span>② 主線條件</span><strong>已完成</strong></div><div class="arena-dual-target">10 個競技場已全部解鎖</div><p>沒有下一個競技場需要解鎖。</p></div>`;
-  const nextRegion=WORLD_REGIONS?.[p.nextRank-1]?.name||`第${p.nextRank}區域`;
+  const nextRegion=arenaRegionName(p.nextRank);
   return `<div class="arena-dual-card ${p.regionReady?"ready":"locked"}"><div class="arena-dual-head"><span>② 主線條件</span><strong>${p.regionReady?"已達成":"未達成"}</strong></div><div class="arena-dual-target">下一個：${p.nextName}</div><p>${p.regionReady?`主線第 ${p.nextRank} 區域「${nextRegion}」已解鎖。`:`需先解鎖主線第 ${p.nextRank} 區域「${nextRegion}」。`}</p></div>`;
  }
  function refreshAssessmentButton(button){if(!button)return;button.disabled=assessmentRunning;button.textContent=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";}
@@ -58,7 +64,7 @@
  function unlockPanelHtml(a,p){
   if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
   const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且主線第 ${p.nextRank} 區已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" onclick="runArenaAssessmentFromUi(this)" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" onclick="runArenaUnlockFromUi(this)" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
+  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且對應主線區域已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" onclick="runArenaAssessmentFromUi(this)" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" onclick="runArenaUnlockFromUi(this)" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
  }
  function venueCard(rank,p,canChallenge){
   const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
@@ -66,6 +72,7 @@
   const pointText=cfg?(actual!==base?`三戰全通 ${actual} VIP 積分（基礎 ${base}）`:`三戰全通 ${base} VIP 積分`):"三戰挑戰";
   return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${positionClass(id)}" ${canChallenge?"":"disabled"} onclick="${canChallenge?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
  }
+ window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=1;
  window.renderArenaVenueSelectionHtml=function(){
   const ds=arenaDailyStatus(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
   const cards=p.visibleRanks.map(rank=>venueCard(rank,p,ds.remaining>0)).join("");
