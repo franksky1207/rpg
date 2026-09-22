@@ -139,7 +139,7 @@
   }
 
   window.openGalaxyReviewMap=function(mapIndex){
-    galaxyReviewSelectedMap=Math.max(0,Math.min((window.MAPS?.length||1)-1,Math.floor(Number(mapIndex)||0));
+    galaxyReviewSelectedMap=Math.max(0,Math.min((window.MAPS?.length||1)-1,Math.floor(Number(mapIndex)||0)));
     if(typeof window.enterGalaxyReviewMap==="function")window.enterGalaxyReviewMap(galaxyReviewSelectedMap);
   };
   window.getGalaxyReviewSelectedMap=function(){return galaxyReviewSelectedMap;};
