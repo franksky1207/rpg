@@ -166,7 +166,7 @@
    return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5),world:Number(it.world)===2?2:1}:null];
   }));
   const civilizationLevel=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
-  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
+  const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:Number(character?.world)===2?2:1,civilizationLevel}):1;
   MODEL.snapshot={
    capturedAt:Date.now(),
    characterWorld:Number(character?.world)===2?2:1,
@@ -194,7 +194,7 @@
  function civilizationText(s){
   const lv=benchmarkWorld()===2?whole(s?.civilizationLevel,0,Math.max(0,Number(window.CIVILIZATION_LEVEL_MAX)||10)):0;
   const bonus=typeof window.civilizationDamageBonusPercentForLevel==="function"?window.civilizationDamageBonusPercentForLevel(lv):lv*5;
-  const multi=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(lv):1+bonus/100;
+  const multi=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:benchmarkWorld(),civilizationLevel:lv}):1;
   return benchmarkWorld()===2?`文明 Lv.${lv}｜最終傷害 +${bonus}%｜×${Number(multi).toFixed(2)}`:"文明等級｜銀河紀元不套用";
  }
  function formalMarkName(key){
@@ -746,6 +746,7 @@
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
  window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION=1;
+ window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
