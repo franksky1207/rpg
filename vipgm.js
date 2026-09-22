@@ -180,7 +180,7 @@
   });
   window.gmUseCurrentEnhancementTestStatus(false);
   if(typeof window.gmUseCurrentCivilizationTestStatus==="function")window.gmUseCurrentCivilizationTestStatus(false);
-  if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus();
+  if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus(false);
   if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   if(typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
@@ -224,3 +224,5 @@
 
 window.GM_TEST_RESULT_INVALIDATION_VERSION=1;
 window.GM_TEST_SYNC_BENCHMARK_REFRESH_VERSION=1;
+window.GM_TEST_BATCH_SYNC_VERSION=1;
+window.GM_TEST_SESSION_ONLY_VERSION=1;
