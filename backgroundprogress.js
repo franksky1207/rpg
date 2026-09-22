@@ -153,6 +153,13 @@
   return catchUpPolicySnapshot(kind,flow.catchUpPolicyCount,false);
  };
  window.backgroundProgressCatchUpFinalPolicy=function(kind=null){return catchUpPolicySnapshot(kind,null,true);};
+ window.backgroundProgressConsumeCatchUpCredit=function(ms,kind=null){
+  const requested=Math.max(0,Number(ms)||0);
+  if(!fastCatchUpActive(kind)||requested<=0)return {active:false,requested,consumed:0,remaining:requested,credit:Math.max(0,Number(flow?.credit)||0)};
+  const consumed=Math.min(Math.max(0,Number(flow.credit)||0),requested);
+  flow.credit=Math.max(0,Number(flow.credit)||0)-consumed;
+  return {active:true,requested,consumed,remaining:Math.max(0,requested-consumed),credit:Math.max(0,Number(flow.credit)||0)};
+ };
  window.BACKGROUND_PROGRESS_CORE_VERSION=1;
  window.BACKGROUND_PROGRESS_SINGLE_ACTIVE_FLOW_VERSION=1;
  window.BACKGROUND_PROGRESS_VISIBILITY_OWNER_VERSION=3;
@@ -218,6 +225,7 @@
   expected.forEach(([count,interval])=>{if(catchUpUiInterval(count)!==interval)errors.push({code:"UI_INTERVAL",count,actual:catchUpUiInterval(count),expected:interval});});
   if(catchUpCheckpointInterval(1)!==50||catchUpCheckpointInterval(100)!==50||catchUpCheckpointInterval(101)!==100||catchUpCheckpointInterval(500)!==100||catchUpCheckpointInterval(501)!==200)errors.push({code:"CHECKPOINT_INTERVAL"});
   if(FAST_CATCH_UP_PRESENTATION_INTERVAL!==100)errors.push({code:"PRESENTATION_INTERVAL"});
+  if(typeof window.backgroundProgressConsumeCatchUpCredit!=="function")errors.push({code:"CONSUME_API"});
   return {passed:errors.length===0,version:FAST_CATCH_UP_POLICY_VERSION,errors};
  })();
 
