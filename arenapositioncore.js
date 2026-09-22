@@ -47,6 +47,10 @@
    balanceVersion:Math.max(0,Math.floor(Number(formal.balanceVersion)||0))
   };
  }
+ function assessmentLevel(){
+  if(state?.secondWorld?.entered===true)return Math.max(500,Math.min(1000,Math.floor(Number(state?.level)||500)));
+  return typeof clampGameLevel==="function"?clampGameLevel(state?.level):Math.max(1,Math.floor(Number(state?.level)||1));
+ }
  function assessmentSignature(rank,positionId){
   const base=createSpecialPlayerSnapshot(equippedStats());
   const vip=Math.max(0,Math.floor(Number(state?.vipLevel)||0));
@@ -58,7 +62,7 @@
    markRuleVersion:Math.max(0,Math.floor(Number(window.MARK_COMBAT_RULE_VERSION)||0)),
    rank:clampRank(rank),
    positionDifficulty:positionId,
-   level:typeof clampGameLevel==="function"?clampGameLevel(state?.level):Math.max(1,Math.floor(Number(state?.level)||1)),
+   level:assessmentLevel(),
    base:{hp:base.hp,atk:base.atk,def:base.def,crit:base.crit,dodge:base.dodge},
    vip,
    spec:combatSpecSnapshot(),
@@ -153,6 +157,7 @@
   return {...assessmentStatus(),reason:arena.promotionReady?"qualified":"not-qualified"};
  }
 
+ window.SECOND_WORLD_ARENA_ASSESSMENT_LEVEL_VERSION=1;
  window.ARENA_ASSESSMENT_RUNTIME_VERSION=Math.max(0,Math.floor(Number(window.getArenaVersionProfile?.().assessmentRuntimeVersion)||0));
  window.getArenaAssessmentSignature=function(rank=null){const r=clampRank(rank==null?currentAssessmentRank():rank);return assessmentSignature(r,positionTemplateId(r));};
  window.getArenaAssessmentStatus=assessmentStatus;
