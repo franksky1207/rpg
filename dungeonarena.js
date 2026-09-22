@@ -114,7 +114,10 @@
  function createArenaState(overrides={}){return {phase:"select",rank:1,position:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,roundPoints:0,roundBasePoints:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,continuous:false,stopRequested:false,summary:newContinuousSummary(),...overrides};}
  let arenaState=createArenaState();
 
- function clampLevel(v){return clampGameLevel(v);}
+ function clampLevel(v){
+  if(arenaWorld()===2)return Math.max(500,Math.min(1000,Math.floor(Number(v)||500)));
+  return clampGameLevel(v);
+ }
  function traitCount(mode){const p=ARENA_TRAIT_COUNT_PROFILES[mode]||ARENA_TRAIT_COUNT_PROFILES.one,roll=Math.random();if(roll<p.zero)return 0;if(roll<p.zero+p.one)return 1;return 2;}
  function rollArenaTraits(mode){return rollUniqueMonsterTraits(traitCount(mode));}
  function arenaTraitNames(enemy){if(!enemy?.traits?.length)return "無";return enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
@@ -132,6 +135,7 @@
  window.ARENA_RANK_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.rankBalanceVersion)||0));
  window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
  window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION=1;
+ window.SECOND_WORLD_ARENA_LEVEL_CLAMP_VERSION=1;
  window.SECOND_WORLD_ARENA_RANK_CURVE=SECOND_WORLD_ARENA_RANK_CURVE;
  window.getArenaRankCurveForWorld=function(world=arenaWorld()){
   const source=Number(world)===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
