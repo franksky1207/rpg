@@ -391,7 +391,7 @@
  if(Number(window.BATCH5_CLOCK_CACHE_VERSION)!==1)fail("DAILY_CLOCK_CACHE","每日時鐘 DOM 快取版本異常",window.BATCH5_CLOCK_CACHE_VERSION);
  if(typeof window.gmHubRegisteredSectionIds==="function"){
   const manageExpected=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","civilization-manage","dungeon-manage"];
-  const testExpected=["player-ability-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
+  const testExpected=["player-ability-test","second-world-calamity-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
   const manageIds=window.gmHubRegisteredSectionIds("manage"),testIds=window.gmHubRegisteredSectionIds("test");
   if(JSON.stringify(manageIds)!==JSON.stringify(manageExpected))fail("GM_HUB_MANAGE_ORDER","GM 管理 section 註冊／排序異常",{expected:manageExpected,actual:manageIds});
   if(JSON.stringify(testIds)!==JSON.stringify(testExpected))fail("GM_HUB_TEST_ORDER","GM 測試 section 註冊／排序異常",{expected:testExpected,actual:testIds});
