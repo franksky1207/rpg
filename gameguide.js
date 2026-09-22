@@ -74,18 +74,46 @@
   ]}
  ];
  let activeGuideCategory="adventure";
- function activeCategory(){return GUIDE_CATEGORIES.find(x=>x.id===activeGuideCategory)||GUIDE_CATEGORIES[0];}
+ function guideUniverse(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  return typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(holder)===true:holder?.secondWorld?.entered===true;
+ }
+ function specializationGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="專精系統")return universe
+   ?"專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。進入宇宙紀元前已要求 8 項全部 Lv60，因此本紀元不再升級專精；既有效果會完整保留並套用到 EXP、暗物質、裝備出售與戰鬥能力。"
+   :"專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。銀河紀元使用金幣升級，等級越高所需費用越高；升級後永久保留，沒有失敗機率、不需要額外材料，也不能重置。";
+  if(title==="實戰訓練")return universe?"提升擊敗宇宙紀元主線 Boss 時取得的 EXP；Lv60 時 EXP +150%。":"提升擊敗怪物時取得的 EXP；每級 +2.5%。";
+  if(title==="搜刮技巧")return universe?"提升宇宙紀元主線 Boss 直接取得的暗物質；每級 +2.5%，Lv60 時 +150%。不影響裝備出售取得的暗物質。":"提升銀河紀元怪物直接掉落的金幣；每級 +2.5%。不影響出售裝備取得的金幣。";
+  if(title==="鑑價技巧")return universe?"提升第二世界裝備出售取得的暗物質；每級 +2.5%，Lv60 時 +150%。正式手動、批量與自動出售都適用，但不放大暗能量。":"提升銀河紀元出售裝備取得的金幣；每級 +2.5%。會影響正式手動、批量與自動出售。";
+  return null;
+ }
+ function gameGuideCategoriesForState(target=null){
+  return GUIDE_CATEGORIES.map(category=>({
+   ...category,
+   items:(category.items||[]).map(item=>{
+    const worldText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
+    return worldText?[item[0],worldText]:item.slice();
+   })
+  }));
+ }
+ function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=14;
+ window.GAME_GUIDE_VERSION=15;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=1;
+ window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
+ window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
   if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
   activeGuideCategory=id;
   if(typeof render==="function")render();
  };
  window.gameGuidePage=function(){
-  const current=activeCategory();
-  const tabs=GUIDE_CATEGORIES.map(x=>`<button class="guide-category ${x.id===current.id?"active":""}" onclick="setGameGuideCategory('${x.id}')">${x.label}</button>`).join("");
-  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">查看玩法、系統、戰鬥與各項規則。</div></div><div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
+  const categories=gameGuideCategoriesForState();
+  const current=categories.find(x=>x.id===activeGuideCategory)||categories[0];
+  const tabs=categories.map(x=>`<button class="guide-category ${x.id===current.id?"active":""}" onclick="setGameGuideCategory('${x.id}')">${x.label}</button>`).join("");
+  const worldLabel=guideUniverse()?"宇宙紀元":"銀河紀元";
+  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">${worldLabel}｜查看目前紀元的玩法、系統、戰鬥與各項規則。</div></div><div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
  };
 })();
