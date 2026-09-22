@@ -7,11 +7,12 @@
   if(!mobile)return;
   const panel=document.querySelector("#main .prepare-screen .battle-count-panel");
   const actions=document.querySelector("#main .prepare-screen .prepare-actions");
-  if(!panel||!actions)return;
+  if(!actions)return;
   const portal=document.createElement("div");
   portal.id="prepareMobileControlsPortal";
   portal.className="prepare-screen prepare-mobile-controls-portal";
-  portal.append(panel,actions);
+  if(panel)portal.append(panel);
+  portal.append(actions);
   document.body.appendChild(portal);
  }
  window.compactMobileDom=function(){
