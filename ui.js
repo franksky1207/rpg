@@ -361,6 +361,7 @@ function normalizeSaveState(target){
 window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
 window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
 window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=1;
+window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION=1;
 window.normalizeSaveItem=normalizeSaveItem;
 window.normalizeSaveState=normalizeSaveState;
 function normalizeCurrentSaveState(){
