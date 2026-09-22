@@ -1695,7 +1695,7 @@ Migration / Integrity：
 - `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
 - `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
 
-## 29.12 進行中：第二世界文明災厄（第 1～2 批已完成）
+## 29.12 進行中：第二世界文明災厄（第 1～3 批已完成）
 
 第 1 批正式 owner：`secondworldcalamity.js`。
 
@@ -1750,9 +1750,26 @@ Migration / Integrity：
 - `SECOND_WORLD_MAINLINE_VERSION=6`
 - `CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION=1`
 
+第 3 批玩家 UI 收尾已完成：
+- 第二世界首頁「文明災厄」入口改為宇宙語意：「討伐宇宙文明級威脅並提升文明等級」，不再顯示第一世界「培養永久印記」。
+- 進入第二世界災厄頁不再誤呼叫第一世界 `prepareCivilizationCalamityEntry()`；新增 `prepareSecondWorldCivilizationCalamityEntry()`。
+- 災厄頁頂部顯示目前文明 Lv.X / 10 與「每級宇宙最終傷害 +5%」。
+- 第一隻災厄文明條件改為「無前置文明需求 ✓」，不再顯示沒有意義的「需要文明 Lv.0」。
+- 戰鬥頁玩家卡補齊正式玩家名稱、ATK／DEF／暴擊／閃避資訊。
+- 第 30 次 true kill 若使文明升級，結果頁明確顯示「文明等級提升至 Lv.X」與「宇宙戰鬥最終傷害永久提升 5%」。
+- 現身通知 V2 除了「文明災厄已現身」，也會顯示當下是否已符合挑戰條件；未符合時顯示需要的前置文明等級，但不會誤稱已解鎖可打。
+- 完成狀態仍只保留「單場重打」；未完成且可挑戰才顯示「單場挑戰／連續討伐」。
+- 新增 `secondworldcalamityuiintegrity.js`，鎖住玩家 UI V2、現身通知 V2、挑戰 gate 與完成後單場重打 wiring。
+
+第 3 批版本：
+- `SECOND_WORLD_CALAMITY_UI_VERSION=2`
+- `SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION=1`
+- `SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION=2`
+- `SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION=1`
+
 仍未完成：
 - GM 管理／測試與戰力基準。
-- 第二世界災厄專屬完整 Integrity。
+- 第二世界災厄專屬完整 Integrity（第 3 批目前只有玩家 UI integrity）。
 - Game Guide／最終 handoff 收尾。
 
 ## 29.13 後續：副本
