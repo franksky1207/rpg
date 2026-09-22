@@ -1,5 +1,5 @@
 (function(){
- const VERSION=16;
+ const VERSION=17;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -155,9 +155,12 @@
    const it=typeof state!=="undefined"&&state.equipment?state.equipment[type]:null;
    return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5)}:null];
   }));
+  const civilizationLevel=benchmarkWorld()===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  const civilizationDamageMultiplier=benchmarkWorld()===2&&typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
   MODEL.snapshot={
    capturedAt:Date.now(),level:whole(typeof state!=="undefined"?state.level:1,1),vipLevel:whole(typeof state!=="undefined"?state.vipLevel:0,0),vipPoints:whole(typeof state!=="undefined"?state.vipPoints:0,0),
    stats:{hp:whole(stats.hp,1),atk:whole(stats.atk,1),def:whole(stats.def,0),crit:one(stats.crit),dodge:one(stats.dodge)},
+   civilizationLevel,civilizationDamageMultiplier,
    specs,marks,enhancements,equipment
   };
   return MODEL.snapshot;
@@ -172,6 +175,12 @@
   const target={secondWorld:{entered:benchmarkWorld()===2}};
   if(typeof window.specializationWorldEconomySummary==="function")return window.specializationWorldEconomySummary(target,false,s?.specs||{}).text;
   return "";
+ }
+ function civilizationText(s){
+  const lv=benchmarkWorld()===2?whole(s?.civilizationLevel,0,Math.max(0,Number(window.CIVILIZATION_LEVEL_MAX)||10)):0;
+  const bonus=typeof window.civilizationDamageBonusPercentForLevel==="function"?window.civilizationDamageBonusPercentForLevel(lv):lv*5;
+  const multi=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(lv):1+bonus/100;
+  return benchmarkWorld()===2?`文明 Lv.${lv}｜最終傷害 +${bonus}%｜×${Number(multi).toFixed(2)}`:"文明等級｜銀河紀元不套用";
  }
  function formalMarkName(key){
   return typeof window.markDisplayName==="function"?window.markDisplayName(key):String(key);
@@ -269,7 +278,7 @@
    '<div style="margin-top:9px">Lv.'+s.level+'　VIP'+s.vipLevel+'（'+fmt(s.vipPoints)+' 積分）</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
-   '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
+   '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+civilizationText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
  }
  function sourceOptions(selected){
   const rows=benchmarkWorld()===2?[["selected","目前選擇怪物"],["custom","自訂"]]:[["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]];
@@ -313,7 +322,7 @@
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
   await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,markLevels:s.marks,playerFinalDamageMultiplier:benchmarkWorld()===2?Number(s.civilizationDamageMultiplier)||1:1});
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
     if(ev.type==="drain"){drains++;return;}
@@ -499,7 +508,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.civilizationDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -583,6 +592,7 @@
   lines.push("強化："+enhancementText(s));
   lines.push("專精："+specText(s));
   lines.push("經濟專精效果："+benchmarkSpecializationEconomyText(s));
+  lines.push("文明力量："+civilizationText(s));
   lines.push("印記："+markText(s));
   lines.push("裝備："+equipmentText(s));
   if(enemy)lines.push("基準怪物：Lv."+enemy.level+" "+enemy.name+"（"+(KIND_LABELS[enemy.kind]||enemy.kind)+"）｜測試量 "+MODEL.runs);
@@ -640,7 +650,7 @@
   const targetText=enemy?("Lv."+enemy.level+" "+enemy.name):"未選擇";
   const winLabel=benchmarkWorld()===2?"Boss 實戰勝率":"主線實戰平均勝率";
   return '<div class="item"><div class="gmpb-title"><b>測試摘要</b><span class="muted">方便直接貼給 ChatGPT 做下一階段平衡</span></div>'+
-   '<div class="gmpb-summary-main">'+metric("紀元",benchmarkWorldLabel())+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+
+   '<div class="gmpb-summary-main">'+metric("紀元",benchmarkWorldLabel())+metric("角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("文明力量",benchmarkWorld()===2?("Lv."+s.civilizationLevel+" / ×"+Number(s.civilizationDamageMultiplier||1).toFixed(2)):"不套用")+
    metric("基準怪物",targetText)+metric("平均回合輸出",o?fmt(o.avgRoundDamage):"尚未測試")+
    metric("平均回合承傷",d?fmt(d.avgTurnLoss):"尚未測試")+metric(winLabel,avgWin==null?"尚未測試":avgWin+"%")+'</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button></div>'+
@@ -654,6 +664,7 @@
    ?'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
     '<label>區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseRegion(this.value)">'+universeRegionOptions()+'</select></label>'+
     '<label style="grid-column:span 2">怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label>'+
+    '<label>文明等級<br><select class="btn"'+disabled+' onchange="gmSetTestCivilizationLevel(this.value);gmPowerBenchmarkInvalidateSnapshot()">'+(typeof window.gmCivilizationTestOptionsHtml==="function"?window.gmCivilizationTestOptionsHtml():"")+'</select></label>'+
     '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>'
    :'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
     '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
@@ -684,6 +695,7 @@
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
+ window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSetWorld=function(v){
@@ -730,6 +742,7 @@
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
+ window.gmPowerBenchmarkInvalidateSnapshot=function(){MODEL.snapshot=null;clearResults();return true;};
  window.gmPowerBenchmarkSnapshot=function(){return JSON.parse(JSON.stringify(snapshot()));};
  window.gmPowerBenchmarkSession=function(){return JSON.parse(JSON.stringify(MODEL));};
 
