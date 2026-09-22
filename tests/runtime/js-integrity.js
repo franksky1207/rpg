@@ -30,6 +30,9 @@ const gmhub=read("gmhub.js");
 const mobile=read("preparemobilecontrols.js");
 const css=read("adventureuipolish.css");
 const index=read("index.html");
+const civilization=read("civilizationcore.js");
+const civilizationFormalFiles=["secondworldcombat.js","specialcore.js","secondworldcalamityrun.js","dungeoncore.js","dungeonarena.js","dungeonvoid.js","mirrorcombatcore.js"];
+const civilizationGmFiles=["dungeongm.js","arenagm5.js","mirrordungeongm.js","specialgmbatch.js","secondworldcalamitygm.js","gmpowerbenchmark.js"];
 
 assert(/window\.startGalaxyReviewBattle=async function\(\)/.test(ui),"ui.js 缺少銀河回顧戰正式入口。");
 assert(/ADVENTURE_INVENTORY_RETURN_CONTEXT_VERSION=1/.test(ui),"ui.js 缺少冒險背包返回 context owner。");
@@ -45,7 +48,16 @@ assert(!/#main \.prepare-screen \.prepare-actions/.test(mobile),"preparemobileco
 assert(/PREPARE_MOBILE_CONTROLS_VERSION=2/.test(mobile),"preparemobilecontrols.js 版本應為 2。");
 assert(/data-mobile-prepare-actions/.test(css),"adventureuipolish.css 未綁定 explicit mobile action owner。");
 
-for(const source of ["ui.js","worldmapui.js","preparemobilecontrols.js","gmhub.js"]){
+assert(/CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1/.test(civilization),"civilizationcore.js 缺少統一文明戰鬥倍率 owner。");
+assert(/window\.civilizationCombatDamageMultiplier=civilizationCombatDamageMultiplier/.test(civilization),"civilizationcore.js 缺少正式 combat multiplier API。");
+for(const file of [...civilizationFormalFiles,...civilizationGmFiles]){
+ const source=read(file);
+ assert(/civilizationCombatDamageMultiplier/.test(source),file+" 未接統一文明戰鬥倍率 owner。");
+ assert(!/civilizationDamageMultiplierForLevel\s*\(/.test(source),file+" 不得自行直呼 civilizationDamageMultiplierForLevel。");
+ assert(!/civilizationDamageMultiplier\s*\(/.test(source),file+" 不得自行直呼 civilizationDamageMultiplier。");
+}
+
+for(const source of ["ui.js","worldmapui.js","preparemobilecontrols.js","gmhub.js","civilizationcore.js","secondworldcombat.js","specialcore.js","secondworldcalamityrun.js","dungeoncore.js","dungeonarena.js","dungeonvoid.js","mirrorcombatcore.js","dungeongm.js","arenagm5.js","mirrordungeongm.js","specialgmbatch.js","secondworldcalamitygm.js","gmpowerbenchmark.js","civilizationintegrity.js","finalintegrity.js"]){
  assert(index.includes('src="'+source+'?v='),"index.html 缺少 "+source+" cache-bust 載入。");
 }
 
