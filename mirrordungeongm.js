@@ -12,7 +12,9 @@
   const specs=typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(true):{};
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{};
   const enhancements=typeof window.gmTestEnhancementSlots==="function"?Object.fromEntries(window.gmTestEnhancementSlots().map(type=>[type,window.gmTestEnhancementLevel(type)])):{};
-  return window.normalizeMirrorCombatSnapshot({playerName:String(state?.playerName||"玩家"),level:Math.max(1,Math.floor(Number(character?.level)||1)),vipLevel:Math.max(0,Math.floor(Number(window.gmTestVipLevel)||0)),stats,specializations:specs,specializationBonuses:typeof window.mirrorSpecializationBonuses==="function"?window.mirrorSpecializationBonuses(specs):{},enhancementLevels:enhancements,marks,equipment:character?.equipment||{}});
+  const civilizationLevel=Number(character?.world)===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  const civilizationDamageMultiplier=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civilizationLevel):1;
+  return window.normalizeMirrorCombatSnapshot({playerName:String(state?.playerName||"玩家"),level:Math.max(1,Math.floor(Number(character?.level)||1)),vipLevel:Math.max(0,Math.floor(Number(window.gmTestVipLevel)||0)),civilizationLevel,civilizationDamageMultiplier,stats,specializations:specs,specializationBonuses:typeof window.mirrorSpecializationBonuses==="function"?window.mirrorSpecializationBonuses(specs):{},enhancementLevels:enhancements,marks,equipment:character?.equipment||{}});
  }
  function eventCounts(target,events){(events||[]).forEach(evt=>{if(evt.type==="combo")target.combo++;else if(evt.type==="counter")target.counter++;else if(evt.type==="drain")target.drain++;else if(evt.type==="attack"){if(evt.penetration)target.penetration++;if(evt.initiative)target.initiative++;}});}
  function simulate(runs){const snap=snapshot();if(!snap||typeof runMirrorCombatCore!=="function")return null;const totalPerRun=CONFIG.runBattles,summary={runs,totalBattles:runs*totalPerRun,totalWins:0,playerFirst:0,playerFirstWins:0,mirrorFirst:0,mirrorFirstWins:0,totalTurns:0,distribution:Array(totalPerRun+1).fill(0),events:{initiative:0,combo:0,penetration:0,counter:0,drain:0}};for(let r=0;r<runs;r++){let wins=0;for(let i=0;i<totalPerRun;i++){const out=runMirrorCombatCore(snap,{logs:false});if(out.win){wins++;summary.totalWins++;}if(out.firstActor==="player"){summary.playerFirst++;if(out.win)summary.playerFirstWins++;}else{summary.mirrorFirst++;if(out.win)summary.mirrorFirstWins++;}summary.totalTurns+=Math.max(0,Number(out.turns)||0);eventCounts(summary.events,out.events);}summary.distribution[wins]++;}return summary;}
@@ -44,4 +46,5 @@
  window.gmMirrorTestHtml=mirrorTestBody;
  window.GM_MIRROR_SHARED_TEST_CHARACTER_VERSION=1;
  window.GM_MIRROR_SUMMARY_EXPORT_VERSION=1;
+ window.GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=1;
 })();
