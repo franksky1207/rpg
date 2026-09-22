@@ -46,9 +46,7 @@ assert(/PREPARE_MOBILE_CONTROLS_VERSION=2/.test(mobile),"preparemobilecontrols.j
 assert(/data-mobile-prepare-actions/.test(css),"adventureuipolish.css 未綁定 explicit mobile action owner。");
 
 for(const source of ["ui.js","worldmapui.js","preparemobilecontrols.js","gmhub.js"]){
- const escaped=source.replace(".","\\.");
- const re=new RegExp("src=[\\\"\\\']"+escaped+"\\\\?v=[^\\\"\\\']+[\\\"\\\']");
- assert(re.test(index),"index.html 缺少 "+source+" cache-bust 載入。");
+ assert(index.includes('src="'+source+'?v='),"index.html 缺少 "+source+" cache-bust 載入。");
 }
 
 const localScripts=[...index.matchAll(/<script\s+src=["\']([^"\']+)["\']/g)]
