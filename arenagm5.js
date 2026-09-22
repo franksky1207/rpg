@@ -5,8 +5,12 @@
  let arenaGm5World=Number(window.gmTestWorld)===2?2:1;
  let arenaGm5Rank=1;
  let arenaGm5PositionId="extreme";
- function withArenaTestWorld(fn){const oldLevel=state.level,hadSecond=!!state.secondWorld,oldEntered=state?.secondWorld?.entered;if(!state.secondWorld||typeof state.secondWorld!=="object")state.secondWorld={};state.secondWorld.entered=arenaGm5World===2;state.level=arenaGm5World===2?Math.max(500,Math.min(1000,Math.floor(Number(window.gmTestLevel)||500))):Math.max(1,Math.min(500,Math.floor(Number(window.gmTestLevel)||1)));try{return fn();}finally{state.level=oldLevel;if(hadSecond)state.secondWorld.entered=oldEntered;else delete state.secondWorld;}}
- function venueName(rank){return withArenaTestWorld(()=>{if(typeof getArenaVenueName==="function")return getArenaVenueName(rank);const regions=arenaGm5World===2?(window.SECOND_WORLD_REGIONS||[]):WORLD_REGIONS;return `${regions?.[rank-1]?.name||`第${rank}區`}競技場`;});}
+ function gmArenaTestLevel(){return arenaGm5World===2?Math.max(500,Math.min(1000,Math.floor(Number(window.gmTestLevel)||500))):Math.max(1,Math.min(500,Math.floor(Number(window.gmTestLevel)||1)));}
+ function venueName(rank){
+  if(typeof window.getArenaVenueNameForWorld==="function")return window.getArenaVenueNameForWorld(rank,arenaGm5World);
+  const regions=arenaGm5World===2?(window.SECOND_WORLD_REGIONS||[]):WORLD_REGIONS;
+  return `${regions?.[rank-1]?.name||`第${rank}區`}競技場`;
+ }
  function rankOptions(){
   const regions=arenaGm5World===2?(Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[]):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[]);
   const max=Math.max(1,regions.length||10);
@@ -26,16 +30,14 @@
  function pct(v,n){return n?round1(v/n*100):0;}
  function positionLabel(id){return id==="extreme"?"右位（高）":id==="hard"?"中位（中）":"左位（低）";}
  function simulate(rank,positionId,runs){
-  return withArenaTestWorld(()=>{
-   const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):[];
+   const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank,arenaGm5World):[];
    const cfg=configs.find(x=>x.id===positionId);if(!cfg)return null;
    const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats()),player=testPlayer(base);
    const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
-   const level=arenaGm5World===2?Math.max(500,Math.min(1000,Math.floor(Number(window.gmTestLevel)||500))):Math.max(1,Math.min(500,Math.floor(Number(window.gmTestLevel)||1)));
+   const level=gmArenaTestLevel();
    const reached=[runs,0,0],wins=[0,0,0];let totalPoints=0,totalVipPoints=0,totalTurns=0,clearHpTotal=0,clearCount=0;
-   for(let run=0;run<runs;run++){let hp=player.hp,points=0,cleared=true;for(let stage=0;stage<3;stage++){if(stage>0)reached[stage]++;const enemy=buildArenaEnemyForTest(positionId,stage,base,level,rank);const out=runCombatCore(player,enemy,hp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});totalTurns+=out.turns;if(out.win){wins[stage]++;hp=out.hp;points+=Number(cfg.stagePoints?.[stage])||0;}else{cleared=false;break;}}if(cleared){clearCount++;clearHpTotal+=hp;}totalPoints+=points;totalVipPoints+=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(points,testVip()):points;}
+   for(let run=0;run<runs;run++){let hp=player.hp,points=0,cleared=true;for(let stage=0;stage<3;stage++){if(stage>0)reached[stage]++;const enemy=buildArenaEnemyForTest(positionId,stage,base,level,rank,arenaGm5World);const out=runCombatCore(player,enemy,hp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});totalTurns+=out.turns;if(out.win){wins[stage]++;hp=out.hp;points+=Number(cfg.stagePoints?.[stage])||0;}else{cleared=false;break;}}if(cleared){clearCount++;clearHpTotal+=hp;}totalPoints+=points;totalVipPoints+=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(points,testVip()):points;}
    return {world:arenaGm5World,rank,positionId,cfg,runs,reached,wins,clearCount,totalPoints,totalVipPoints,totalTurns,avgPoints:round1(totalPoints/runs),avgVipPoints:round1(totalVipPoints/runs),avgTurns:round1(totalTurns/runs),avgClearHp:clearCount?round1(clearHpTotal/clearCount/player.hp*100):0};
-  });
  }
  function resultHtml(s,assessment=false){
   if(!s)return `<div class="notice">找不到競技場測試資料。</div>`;
@@ -91,6 +93,7 @@
  window.GM_ARENA_INDEPENDENT_WORLD_TEST_VERSION=1;
  window.GM_ARENA_SUMMARY_EXPORT_VERSION=1;
  window.GM_ARENA_SESSION_SETTINGS_VERSION=1;
+ window.GM_ARENA_STATE_ISOLATION_VERSION=1;
  window.refreshArenaGm5=enhanceArenaGm;
  enhanceArenaGm();
 })();
