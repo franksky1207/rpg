@@ -40,7 +40,7 @@
  if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==16)fail("PLAYER_TITLE_CORE","玩家稱號災厄10＋鏡像6 定義未正確載入",{calamity:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length,total:window.PLAYER_TITLE_DEFS?.length});
  if(window.PLAYER_TITLE_INTEGRITY?.passed!==true)fail("PLAYER_TITLE_INTEGRITY","玩家稱號專屬 integrity 未通過",window.PLAYER_TITLE_INTEGRITY?.errors||null);
  if(Number(SAVE_VERSION)!==13)fail("SAVE_VERSION",`SAVE_VERSION 應為 13，實際 ${SAVE_VERSION}`);
- if(Number(window.SAVE_SCHEMA_VERSION)!==14)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 14，實際 ${window.SAVE_SCHEMA_VERSION}`);
+ if(Number(window.SAVE_SCHEMA_VERSION)!==15)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 15，實際 ${window.SAVE_SCHEMA_VERSION}`);
  if(Number(window.SECOND_WORLD_CIVILIZATION_STATE_VERSION)!==1||Number(window.CIVILIZATION_CORE_VERSION)!==1||Number(window.CIVILIZATION_LEVEL_MAX)!==10||Number(window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL)!==5||Number(window.CIVILIZATION_FINAL_DAMAGE_LAYER_VERSION)!==1||Number(window.COMBAT_PLAYER_FINAL_DAMAGE_LAYER_VERSION)!==1||Number(window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION)!==1||Number(window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION)!==1||typeof window.civilizationLevel!=="function"||typeof window.civilizationDamageMultiplier!=="function"||typeof window.civilizationDamageMultiplierForLevel!=="function")fail("CIVILIZATION_CORE","文明等級 Core／State／final damage／migration owner 未完整載入",{state:window.SECOND_WORLD_CIVILIZATION_STATE_VERSION,core:window.CIVILIZATION_CORE_VERSION,max:window.CIVILIZATION_LEVEL_MAX,perLevel:window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL,layer:window.CIVILIZATION_FINAL_DAMAGE_LAYER_VERSION,combatLayer:window.COMBAT_PLAYER_FINAL_DAMAGE_LAYER_VERSION,worldCombat:window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION,migration:window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION});
  if(Number(window.SECOND_WORLD_CALAMITY_DATA_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STATE_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_COUNT)!==10||Number(window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED)!==30||typeof window.getSecondWorldCalamityDefinition!=="function"||typeof window.getSecondWorldCalamityStatus!=="function"||typeof window.canChallengeSecondWorldCalamity!=="function"||window.SECOND_WORLD_CALAMITY_DATA_INTEGRITY?.passed!==true)fail("SECOND_WORLD_CALAMITY_BATCH1","第二世界文明災厄 Data／State／Unlock／Replay Policy V1 未完整載入",{data:window.SECOND_WORLD_CALAMITY_DATA_VERSION,state:window.SECOND_WORLD_CALAMITY_STATE_VERSION,unlock:window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION,replay:window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION,count:window.SECOND_WORLD_CALAMITY_COUNT,kills:window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED,integrity:window.SECOND_WORLD_CALAMITY_DATA_INTEGRITY});
  if(Number(window.SECOND_WORLD_CALAMITY_COMBAT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UI_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION)!==1||window.SECOND_WORLD_CALAMITY_UI_INTEGRITY?.passed!==true||typeof window.runSecondWorldCalamityBattle!=="function"||typeof window.runSecondWorldCalamityContinuous!=="function"||typeof window.secondWorldCivilizationCalamityPageHtml!=="function")fail("SECOND_WORLD_CALAMITY_BATCH3","第二世界文明災厄戰鬥／玩家 UI V2／現身通知 V2／UI Integrity V1 未完整載入",{combat:window.SECOND_WORLD_CALAMITY_COMBAT_VERSION,settlement:window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION,continuous:window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION,ui:window.SECOND_WORLD_CALAMITY_UI_VERSION,semantics:window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION,notice:window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION,integrity:window.SECOND_WORLD_CALAMITY_UI_INTEGRITY});
@@ -181,6 +181,18 @@
    if(!signature?.marks||markKeys.some(key=>!Number.isFinite(Number(signature.marks[key]))))fail("ARENA_ASSESSMENT_SIGNATURE_MARKS","競技場評估簽章未包含完整 10 枚印記",signature?.marks||null);
   }catch(error){fail("ARENA_ASSESSMENT_SIGNATURE_PARSE","競技場評估簽章無法解析",String(error));}
  }
+ if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.getArenaProgressForWorld!=="function"||typeof window.getCurrentArenaProgress!=="function")fail("ARENA_BY_WORLD_OWNER","競技場分世界 state／migration owner 未完整載入",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION,get:typeof window.getArenaProgressForWorld,current:typeof window.getCurrentArenaProgress});
+ else{
+  try{
+   const probe={unlockedMap:999,secondWorld:{entered:true},dungeon:{arena:{positionModelVersion:1,assessmentRuleVersion:4,balanceVersion:6,highestArenaUnlocked:7,rank:7,lastCheckRuns:500,lastCheckClearCount:490,lastCheckSignature:"legacy"}}};
+   window.normalizeDungeonSaveState(probe,{timestamp:Date.now()});
+   const first=probe.dungeon?.arenaByWorld?.[1],second=probe.dungeon?.arenaByWorld?.[2],current=probe.dungeon?.arena;
+   if(first?.highestArenaUnlocked!==7)fail("ARENA_BY_WORLD_LEGACY_MIGRATION","舊競技場進度未完整移入第一世界",first);
+   if(second?.highestArenaUnlocked!==1||current!==second)fail("ARENA_BY_WORLD_SECOND_START","第二世界競技場應獨立從第 1 階開始",{second,current});
+   const serialized=JSON.parse(JSON.stringify(probe));
+   if(!serialized.dungeon?.arenaByWorld?.["1"]||!serialized.dungeon?.arenaByWorld?.["2"]||Object.prototype.hasOwnProperty.call(serialized.dungeon,"arena"))fail("ARENA_BY_WORLD_SERIALIZATION","arena 相容投影不得重複寫入 save",serialized.dungeon);
+  }catch(error){fail("ARENA_BY_WORLD_PROBE","競技場分世界 state probe 失敗",String(error&&error.message||error));}
+ }
  if(typeof window.normalizeDungeonSaveState==="function"){
   try{
    const legacyArenaProbe={
@@ -234,10 +246,10 @@
    const migrated=window.migrateSave(probe,11,window.normalizeSaveState,raw);
    if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v14 migration 未移除 shop");
    const lost=migrated.lostGear?.find(x=>x?.id==="runtime-migration-probe");
-   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v14 migration 未完整保留 lostGear",lost);
-   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v14 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
-   if(Number(migrated.saveVersion)!==14||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA14_STATE","舊存檔未正確補上 Schema 14 正式 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
-  }catch(error){fail("MIGRATION_PROBE","v11 → v14 migration 回歸測試執行失敗",String(error));}
+   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v15 migration 未完整保留 lostGear",lost);
+   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v15 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
+   if(Number(migrated.saveVersion)!==15||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA15_STATE","舊存檔未正確補上 Schema 15 正式 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
+  }catch(error){fail("MIGRATION_PROBE","v11 → v15 migration 回歸測試執行失敗",String(error));}
   window.LAST_SAVE_MIGRATION_REPORT=priorReport;
  }
  if(typeof window.specialRewardGoldAmount==="function"&&typeof window.specializationAdjustedGold==="function"){
