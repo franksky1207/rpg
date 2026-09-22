@@ -93,6 +93,7 @@
   // 宇宙紀元冒險 UI：正式世界預設宇宙；銀河回顧只保留本次頁面生命週期，不寫正式 save/localStorage。
   let secondWorldAdventureView="universe";
   let galaxyReviewSelectedMap=0;
+  let galaxyReviewSelectedEnemy=4;
   let galaxyReviewBattleActive=false;
   const reviewRegionOpenState=Object.create(null);
   let reviewRegionInitialized=false;
@@ -140,9 +141,15 @@
 
   window.openGalaxyReviewMap=function(mapIndex){
     galaxyReviewSelectedMap=Math.max(0,Math.min((MAPS.length||1)-1,Math.floor(Number(mapIndex)||0)));
-    if(typeof window.enterGalaxyReviewMap==="function")window.enterGalaxyReviewMap(galaxyReviewSelectedMap);
+    galaxyReviewSelectedEnemy=4;
+    if(typeof window.enterGalaxyReviewMap==="function")window.enterGalaxyReviewMap();
   };
   window.getGalaxyReviewSelectedMap=function(){return galaxyReviewSelectedMap;};
+  window.getGalaxyReviewSelectedEnemy=function(){return galaxyReviewSelectedEnemy;};
+  window.setGalaxyReviewSelectedEnemy=function(value){
+    galaxyReviewSelectedEnemy=Math.max(0,Math.min(4,Math.floor(Number(value)||0)));
+    return galaxyReviewSelectedEnemy;
+  };
   window.setGalaxyReviewBattleActive=function(value){galaxyReviewBattleActive=value===true;};
   window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};
 
@@ -171,11 +178,6 @@
   }
 
   function secondWorldActiveRegionIndex(){
-    const active=window.activeSecondWorldMainlineContext;
-    if(active?.currentEncounter&&typeof window.secondWorldCombatPageHtml==="function"){
-      const combatHtml=window.secondWorldCombatPageHtml(active);
-      if(combatHtml)return combatHtml;
-    }
     const regions=secondWorldRegions();
     if(!regions.length)return -1;
     const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?window.secondWorldHighestUnlockedBossIndex():-1;
@@ -298,7 +300,8 @@
     return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
-  window.SECOND_WORLD_ADVENTURE_UI_VERSION=3;
-  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=2;
+  window.SECOND_WORLD_ADVENTURE_UI_VERSION=4;
+  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3;
+  window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();
