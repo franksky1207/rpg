@@ -1695,7 +1695,7 @@ Migration / Integrity：
 - `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
 - `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
 
-## 29.12 進行中：第二世界文明災厄（第 1～3 批已完成）
+## 29.12 進行中：第二世界文明災厄（第 1～4 批已完成）
 
 第 1 批正式 owner：`secondworldcalamity.js`。
 
@@ -1767,10 +1767,34 @@ Migration / Integrity：
 - `SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION=2`
 - `SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION=1`
 
+第 4 批 GM／測試／戰力基準已完成：
+- 新增 `secondworldcalamitygm.js`，正式 GM 管理可選 10 隻宇宙文明災厄。
+- 正式管理可直接調整 `trueKills 0～30` 與目前 HP。
+- 提供「滿血」「瀕死 1 HP」「重置進度資料（保留文明）」與「同步文明等級」。
+- GM 設 `trueKills=30` 時，會至少把正式文明等級提升到該災厄對應 Lv.，並清除 persistent HP。
+- 「同步文明等級」只依 **從第 1 隻起連續完成 30 true kills** 的最高階重新計算 Civilization Lv.，避免跳階災厄誤推進文明。
+- 新增宇宙文明災厄沙盒測試：不受正式解鎖限制，使用共用 GM 測試 VIP／專精／強化／印記／文明等級，不修改正式 HP、trueKills、文明等級或存檔。
+- 沙盒提供單場與完整擊殺測試。
+- 新增雙條件解鎖 probe，可測「章末 Boss 是否完成 + GM 測試文明等級」對已現身／可挑戰的影響。
+- 戰力基準升級為 V18；宇宙紀元 Benchmark 內加入「文明災厄基準」。
+- 災厄 Benchmark 使用同一份 `gmPowerBenchmarkSnapshot()`、文明倍率與印記 snapshot，提供 100／1000 場測試，輸出平均單場傷害、平均剩餘 HP、平均回合、單場擊殺率、玩家存活率。
+- GM Hub 新增「宇宙文明災厄管理／測試」並納入正式排序。
+- 新增 `secondworldcalamitygmintegrity.js`，鎖住 GM owner、Hub 註冊、正式 Combat Core 重用與 GM 測試專精／印記接線。
+
+第 4 批版本：
+- `GM_SECOND_WORLD_CALAMITY_VERSION=1`
+- `GM_SECOND_WORLD_CALAMITY_FORMAL_VERSION=1`
+- `GM_SECOND_WORLD_CALAMITY_TEST_VERSION=1`
+- `GM_POWER_BENCHMARK_CALAMITY_VERSION=1`
+- `GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1`
+- `GM_SECOND_WORLD_CALAMITY_INTEGRITY_VERSION=1`
+- `GM_POWER_BENCHMARK_VERSION=18`
+- `GM_HUB_EXTENSION_VERSION=9`
+
 仍未完成：
-- GM 管理／測試與戰力基準。
-- 第二世界災厄專屬完整 Integrity（第 3 批目前只有玩家 UI integrity）。
-- Game Guide／最終 handoff 收尾。
+- 第 5 批：第二世界文明災厄專屬完整 Integrity（Data／State／Unlock／Combat／Settlement／Persistent HP／30 true kills／文明升級／重打規則／GM／UI 全鏈）。
+- Game Guide。
+- 最終 handoff 收尾。
 
 ## 29.13 後續：副本
 
