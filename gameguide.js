@@ -107,6 +107,20 @@
    :"每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。";
   return null;
  }
+ function arenaGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="競技場")return universe
+   ?"宇宙紀元競技場重新從第 1 個開始，共 10 個競技場。每天最多開始 20 輪，與銀河紀元當天已使用的競技場額度共用；每輪仍為 3 場連續戰鬥，三戰之間不回血，任一戰失敗即結束該輪，每遇到新敵人會重新取得先制機會，整輪結束後 HP 回滿。"
+   :"競技場共有 10 個階級，每次挑戰是一整輪 3 場連續戰鬥，三戰之間不回血；任一戰失敗即結束該輪。每天最多開始 20 輪，真正開始第一戰時才使用 1 次今日額度。每遇到新的敵人都會重新取得一次先制機會，整輪結束後 HP 會回滿。";
+  if(title==="競技場解鎖")return universe
+   ?"宇宙紀元競技場最多顯示最近 3 個已解鎖競技場。解鎖下一個競技場需同時通過目前最高競技場的正式戰力評估（500 輪中至少 485 輪完整三連戰成功，即 97%），並且下一個競技場所對應的第二世界主線區域已開放。"
+   :"最多顯示最近 3 個已解鎖競技場。想開啟下一個競技場，必須先通過目前最高競技場的戰力評估，並解鎖下一個競技場所對應的主線區域。";
+  if(title==="競技場 VIP 積分")return universe
+   ?"宇宙紀元競技場沿用低／中／高三種位置算法。第 1～3 競技場的基礎全通積分為低 570、中 620、高 670；第 4 競技場起，各難度基礎值再加 60 ×（競技場編號 − 3）。若三連戰中途失敗，仍依實際通過的戰鬥取得部分積分，並繼續套用既有 VIP 副本積分倍率。"
+   :"完成競技場挑戰可以取得 VIP 積分。競技場階級越高、挑戰難度越高，能取得的 VIP 積分也越多。若三連戰中途失敗，仍會依實際通過的戰鬥取得部分積分。";
+  return null;
+ }
+
  function calamityGuideWorldText(title,target=null){
   if(title!=="文明災厄")return null;
   const universe=guideUniverse(target);
@@ -121,20 +135,22 @@
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
     const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
     const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
+    const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
     const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||bountyText||civilizationText||specializationText;
+    const worldText=calamityText||arenaText||bountyText||civilizationText||specializationText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
  }
  function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=17;
+ window.GAME_GUIDE_VERSION=18;
  window.GAME_GUIDE_WORLD_AWARE_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CALAMITY_WORLD_VERSION=1;
  window.GAME_GUIDE_BOUNTY_WORLD_VERSION=1;
+ window.GAME_GUIDE_ARENA_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
