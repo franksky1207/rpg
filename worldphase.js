@@ -23,15 +23,7 @@
  }
  function normalizeCalamities(value){
   const source=Array.isArray(value)?value:[];
-  return Array.from({length:SECOND_WORLD_CALAMITY_COUNT},(_,index)=>{
-   const row=isObject(source[index])?source[index]:{};
-   const hp=Number(row.currentHp);
-   return {
-    ...row,
-    currentHp:Number.isFinite(hp)&&hp>0?Math.max(1,Math.floor(hp)):null,
-    trueKills:Math.max(0,Math.min(30,finiteCount(row.trueKills)))
-   };
-  });
+  return Array.from({length:SECOND_WORLD_CALAMITY_COUNT},(_,index)=>isObject(source[index])?{...source[index]}:{currentHp:null,trueKills:0});
  }
  function civilizationFloorFromCalamities(value){
   const rows=Array.isArray(value)?value:[];
@@ -204,6 +196,7 @@
  window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION=1;
  window.SECOND_WORLD_ENTRY_PURE_READ_VERSION=1;
  window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION=1;
  window.secondWorldCivilizationFloorFromCalamities=civilizationFloorFromCalamities;
  window.normalizeSecondWorldState=normalizeSecondWorldState;
  window.finalFirstWorldStoryId=finalFirstWorldStoryId;
