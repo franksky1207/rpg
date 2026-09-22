@@ -70,9 +70,12 @@
  function fullHeal(){state.hp=playerCombatStats().hp;}
  function runPlayerStats(){return voidMirageRun?.playerSnapshot||createSpecialPlayerSnapshot(playerCombatStats());}
  function runFullHeal(){state.hp=runPlayerStats().hp;}
- function voidMirageFightCore(enemy){
+ function voidMirageFightCore(enemy,options={}){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
-  const combat=runCombatCore(runPlayerStats(),enemy,state.hp);
+  const combat=runCombatCore(runPlayerStats(),enemy,state.hp,{
+   logs:options.logs===false?false:true,
+   preparePresentation:options.preparePresentation!==false
+  });
   state.hp=combat.hp;
   return {win:combat.win,logs:combat.logs,e:enemy,combatEndHp:state.hp,turns:combat.turns};
  }
@@ -87,7 +90,7 @@
   voidMirageRun.active=false;voidMirageRun.phase="ended";voidMirageRun.endedReason=String(reason||"ended");
   if(extra.failedFloor)voidMirageRun.failedFloor=floorNumber(extra.failedFloor);
   if(voidMirageRun.runStarted)fullHeal();
-  if(typeof save==="function")save(false);
+  if(options.save!==false&&typeof save==="function")save(false);
   return runSnapshot();
  }
  function recordClear(floor){
@@ -131,7 +134,7 @@
   return {ok:true,ended:false,run:runSnapshot()};
  };
 
- window.fightNextVoidMirageFloor=function(){
+ window.fightNextVoidMirageFloor=function(options={}){
   if(!voidMirageRun?.active)return {ok:false,reason:"no_active_run",run:runSnapshot()};
   if(voidMirageRun.exitRequested&&voidMirageRun.phase!=="fighting")return {ok:true,ended:true,run:finishRun("exit")};
   if(!voidMirageRun.runStarted){
@@ -141,7 +144,7 @@
   const floor=floorNumber(voidMirageRun.currentFloor),playerMaxHp=runPlayerStats().hp,enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
   if(!enemy.isBossFloor)voidMirageRun.previousRegularName=enemy.name;
   voidMirageRun.phase="fighting";voidMirageRun.lastEnemy=enemy;
-  const result=voidMirageFightCore(enemy);
+  const result=voidMirageFightCore(enemy,options);
   voidMirageRun.lastResult=result;voidMirageRun.totalTurns+=Math.max(0,Math.floor(Number(result.turns)||0));
   if(!result.win){const final=finishRun("defeat",{failedFloor:floor});return {ok:true,win:false,ended:true,reason:"defeat",floor,enemy,result,playerMaxHp,run:final};}
   const clear=recordClear(floor);
@@ -153,17 +156,32 @@
 
  window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
  window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
+ window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION=1;
  window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("void")===true;}
+ function catchUpPreviewPolicy(){
+  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
+  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
+  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
+  return window.backgroundProgressCatchUpPolicy("void",next,false);
+ }
  window.runVoidMirageAuto=async function(options={}){
   if(!voidMirageRun?.active){const started=window.beginVoidMirageRun();if(!started.ok)return started;}
   const onFloor=typeof options.onFloorComplete==="function"?options.onFloorComplete:null,onEnd=typeof options.onEnd==="function"?options.onEnd:null;
   while(voidMirageRun?.active){
    if(voidMirageRun.exitRequested&&voidMirageRun.phase!=="fighting"){const ended=finishRun("exit");if(onEnd)await onEnd(ended);return {ok:true,ended:true,run:ended};}
-   const floorResult=window.fightNextVoidMirageFloor();
+   const previewPolicy=catchUpPreviewPolicy();
+   const fast=!!previewPolicy?.active;
+   const floorResult=window.fightNextVoidMirageFloor({
+    save:fast?previewPolicy?.shouldCheckpoint===true:true,
+    logs:fast?previewPolicy?.shouldPresentBattle===true:true,
+    preparePresentation:fast?previewPolicy?.shouldPresentBattle===true:true
+   });
+   if(fast&&floorResult?.ok&&typeof window.backgroundProgressCatchUpStep==="function")floorResult.catchUpPolicy=window.backgroundProgressCatchUpStep("void");
    if(!floorResult.ok){if(onEnd)await onEnd(floorResult.run);return floorResult;}
    if(onFloor)await onFloor(floorResult);
    if(floorResult.ended){if(onEnd)await onEnd(floorResult.run);return {ok:true,ended:true,result:floorResult,run:floorResult.run};}
-   await yieldControl();
+   if(!fastCatchUp())await yieldControl();
   }
   const snapshot=runSnapshot();if(onEnd)await onEnd(snapshot);return {ok:true,ended:true,run:snapshot};
  };
