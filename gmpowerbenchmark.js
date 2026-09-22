@@ -1,5 +1,5 @@
 (function(){
- const VERSION=19;
+ const VERSION=20;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -7,7 +7,7 @@
   world:Number(window.gmTestWorld)===2?2:1,phase:0,regionId:"",mapIndex:0,enemyIndex:4,runs:100,
   outputSource:"selected",defenseSource:"selected",customDef:0,customAtk:0,
   snapshot:null,outputResult:null,defenseResult:null,combatResult:null,
-  universeRegionIndex:0,universeBossIndex:0,
+  universeRegionIndex:0,universeBossIndex:0,calamityWorld:Number(window.gmTestWorld)===2?2:1,
   busy:false,busyKind:""
  };
 
@@ -674,8 +674,13 @@
  function benchmarkSubsection(title,body,id,open=false){
   return '<details class="gm-ability-test-sub gmpb-mode-sub" data-gmpb-mode="'+id+'" '+(open?'open':'')+'><summary>'+title+'</summary><div class="gm-ability-test-sub-body">'+body+'</div></details>';
  }
- function pendingModeHtml(text){
-  return '<div class="muted gm-hub-note">'+text+'（第 3 批接入現有正式 GM 測試 owner）。</div>';
+ function modeRenderer(fn,missing){
+  try{return typeof fn==="function"?String(fn()||""):'<div class="muted gm-hub-note">'+missing+'</div>';}catch(error){console.error("GM benchmark child renderer failed",error);return '<div class="muted gm-hub-note">測試模組載入失敗。</div>';}
+ }
+ function calamityBenchmarkHtml(){
+  const world=Number(MODEL.calamityWorld)===2?2:1;
+  const body=world===2?modeRenderer(window.gmSecondWorldCalamityTestHtml,"宇宙文明災厄測試尚未載入。"):modeRenderer(window.gmCalamityTestHtml,"銀河文明災厄測試尚未載入。");
+  return '<div class="muted gm-hub-note">文明災厄測試可獨立選擇紀元；沿用各紀元既有測試資料與功能，不新增輸出／承傷診斷。</div><div class="controls" style="align-items:end"><label>紀元<br><select id="gmBenchmarkCalamityWorld" class="btn" onchange="gmPowerBenchmarkSetCalamityWorld(this.value)"><option value="1" '+(world===1?'selected':'')+'>銀河紀元</option><option value="2" '+(world===2?'selected':'')+'>宇宙紀元</option></select></label></div>'+body;
  }
  function mapBenchmarkHtml(){
   ensureSelection();normalizeUniverseSelection();normalizeBenchmarkSources();
@@ -719,15 +724,16 @@
    '<div class="gm-ability-test-stack gmpb-section-stack">'+
     benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",true)+
     benchmarkSubsection("特殊怪測試",special,"special",false)+
-    benchmarkSubsection("懸賞戰測試",pendingModeHtml("懸賞戰"),"bounty",false)+
-    benchmarkSubsection("競技場測試",pendingModeHtml("競技場"),"arena",false)+
-    benchmarkSubsection("虛空幻境測試",pendingModeHtml("虛空幻境"),"void",false)+
-    benchmarkSubsection("鏡像戰測試",pendingModeHtml("鏡像戰"),"mirror",false)+
-    benchmarkSubsection("文明災厄測試",pendingModeHtml("文明災厄"),"calamity",false)+
+    benchmarkSubsection("懸賞戰測試",modeRenderer(window.gmBountyTestHtml,"懸賞戰測試尚未載入。"),"bounty",false)+
+    benchmarkSubsection("競技場測試",modeRenderer(window.gmArena5TestHtml||window.gmArenaTestHtml,"競技場測試尚未載入。"),"arena",false)+
+    benchmarkSubsection("虛空幻境測試",modeRenderer(window.gmVoidMirageTestHtml,"虛空幻境測試尚未載入。"),"void",false)+
+    benchmarkSubsection("鏡像戰測試",modeRenderer(window.gmMirrorTestHtml,"鏡像戰測試尚未載入。"),"mirror",false)+
+    benchmarkSubsection("文明災厄測試",calamityBenchmarkHtml(),"calamity",false)+
    '</div>'+summaryHtml()+'</div>';
  }
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
- window.GM_POWER_BENCHMARK_GROUP_VERSION=1;
+ window.GM_POWER_BENCHMARK_GROUP_VERSION=2;
+ window.GM_POWER_BENCHMARK_ALL_MODES_VERSION=1;
  window.GM_POWER_BENCHMARK_GM_CHARACTER_VERSION=1;
  window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_SPECIALIZATION_WORLD_VERSION=1;
@@ -736,6 +742,7 @@
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSnapshot=function(){const s=snapshot();return s?JSON.parse(JSON.stringify(s)):null;};
+ window.gmPowerBenchmarkSetCalamityWorld=function(v){if(MODEL.busy)return;MODEL.calamityWorld=Number(v)===2?2:1;if(typeof render==="function")render();return MODEL.calamityWorld;};
  window.gmPowerBenchmarkSetWorld=function(v){
   if(MODEL.busy)return;
   MODEL.world=Number(v)===2?2:1;
