@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
- const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","marks-manage","dungeon-manage"];
- const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
+ const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","civilization-manage","marks-manage","dungeon-manage"];
+ const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","civilization-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
   let body="";
@@ -43,10 +43,12 @@
    ["manage","角色管理",window.gmGeneralManagementHtml,{id:"general-manage"}],
    ["manage","專精管理",window.gmSpecializationManagementHtml,{id:"spec-manage"}],
    ["manage","強化管理",window.gmEnhancementManagementHtml,{id:"enhancement-manage"}],
+   ["manage","文明等級管理",window.gmCivilizationManagementHtml,{id:"civilization-manage"}],
    ["manage","副本管理",window.gmDungeonManagementHtml,{id:"dungeon-manage"}],
    ["test","VIP 測試",window.gmTestVipControlHtml,{id:"vip-test"}],
    ["test","專精測試",window.gmSpecializationTestHtml,{id:"spec-test"}],
    ["test","強化測試",window.gmEnhancementTestHtml,{id:"enhancement-test"}],
+   ["test","文明等級測試",window.gmCivilizationTestHtml,{id:"civilization-test"}],
    ["test","地圖怪測試",window.gmMapMonsterTestHtml,{id:"map-test"}],
    ["test","特殊怪測試",window.gmSpecialTestHtml,{id:"special-test"}],
    ["test","懸賞戰測試",window.gmBountyTestHtml,{id:"bounty-test"}],
@@ -59,6 +61,6 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=7;
+ window.GM_HUB_EXTENSION_VERSION=8;
  window.GM_HUB_REGISTRY_VERSION=1;
 })();
