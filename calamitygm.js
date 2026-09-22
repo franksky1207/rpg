@@ -194,7 +194,6 @@
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
-  window.registerGmHubSection("test","印記測試",window.gmMarkTestHtml,{id:"marks-test",position:"prepend"});
   window.registerGmHubSection("test","文明災厄測試",window.gmCalamityTestHtml,{id:"calamity-test",position:"append"});
   window.registerGmHubSection("test","稱號預覽",window.gmPlayerTitlePreviewHtml,{id:"player-title-preview",position:"append"});
  }
