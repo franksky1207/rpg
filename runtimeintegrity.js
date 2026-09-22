@@ -183,12 +183,12 @@
    probe.lostGear=[{id:"runtime-migration-probe",item,cost:123,lostAt:456}];
    const raw=JSON.parse(JSON.stringify(probe));
    const migrated=window.migrateSave(probe,11,window.normalizeSaveState,raw);
-   if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v13 migration 未移除 shop");
+   if(Object.prototype.hasOwnProperty.call(migrated,"shop"))fail("MIGRATION_SHOP_RETIRE","v11 → v14 migration 未移除 shop");
    const lost=migrated.lostGear?.find(x=>x?.id==="runtime-migration-probe");
-   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v13 migration 未完整保留 lostGear",lost);
-   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v13 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
-   if(Number(migrated.saveVersion)!==13||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA13_STATE","舊存檔未正確補上 Schema 13 災厄／印記 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
-  }catch(error){fail("MIGRATION_PROBE","v11 → v13 migration 回歸測試執行失敗",String(error));}
+   if(!lost||lost.cost!==123||lost.lostAt!==456||lost.item?.id!==item?.id)fail("MIGRATION_LOST_GEAR","v11 → v14 migration 未完整保留 lostGear",lost);
+   if(migrated.pendingBlackMarketEncounter!==false)fail("MIGRATION_BLACK_MARKET_FLAG","v11 → v14 migration 未建立黑市情報布林狀態",migrated.pendingBlackMarketEncounter);
+   if(Number(migrated.saveVersion)!==14||Object.keys(migrated.calamities?.entries||{}).length!==10||Object.keys(migrated.marks?.entries||{}).length!==10)fail("MIGRATION_SCHEMA14_STATE","舊存檔未正確補上 Schema 14 正式 state",{saveVersion:migrated.saveVersion,calamities:migrated.calamities,marks:migrated.marks});
+  }catch(error){fail("MIGRATION_PROBE","v11 → v14 migration 回歸測試執行失敗",String(error));}
   window.LAST_SAVE_MIGRATION_REPORT=priorReport;
  }
  if(typeof window.specialRewardGoldAmount==="function"&&typeof window.specializationAdjustedGold==="function"){
@@ -245,6 +245,25 @@
  if(Number(window.GM_CALAMITY_TEST_VERSION)!==1||Number(window.GM_MARK_MANAGEMENT_VERSION)!==1||Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1||Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("CALAMITY_GM_VERSION","文明災厄／印記 GM 版本異常",{calamity:window.GM_CALAMITY_TEST_VERSION,marks:window.GM_MARK_MANAGEMENT_VERSION,configOwner:window.GM_MARK_CONFIG_OWNER_VERSION,safety:window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT});
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
  if(Number(window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION)!==1||typeof window.normalizeSaveState!=="function"||typeof window.normalizeSaveItem!=="function")fail("WORLD_AWARE_SAVE_NORMALIZATION","世界感知存檔／裝備 normalization owner 未完整載入",{version:window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION,state:typeof window.normalizeSaveState,item:typeof window.normalizeSaveItem});
+ if(Number(window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION)!==1||Number(window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION)!==1)fail("INVENTORY_UI_OWNER","背包 UI 應只保留顯示，正式 mutation／sale 由 equipment owner 管理",{retired:window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION,displayFailClosed:window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION});
+ if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==4||Number(window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION)!==1||Number(window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION)!==1||typeof window.handleUnequippedItem!=="function"||typeof window.equipmentSellSelected!=="function"||typeof window.equipmentSellLowerAll!=="function")fail("EQUIPMENT_SALE_PIPELINE","裝備 mutation／sale owner V4 未完整載入",{pipeline:window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION,failClosed:window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION,lostGear:window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION});
+ try{
+  const mkItem=(world,level=600,q=3)=>({id:"lost-probe-"+world,name:"probe",type:"weapon",world,level,q,mainStat:{stat:"atk",value:1},affixes:[],atk:1,def:0,hp:0,crit:0,dodge:0,sell:0,buy:100});
+  const universe=typeof newState==="function"?newState():{};
+  universe.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:false,mainline:{bossKilled:Array(100).fill(false)},darkMatter:0,darkEnergy:0,calamities:Array(10).fill(null)};
+  universe.secondWorld.entered=true;universe.level=600;
+  universe.lostGear=[{id:"w2",item:mkItem(2),cost:123,currency:"gold",lostAt:1},{id:"w1",item:mkItem(1,500),cost:999,currency:"gold",lostAt:2}];
+  const normalizedUniverse=window.normalizeSaveState(universe);
+  const w2=normalizedUniverse.lostGear?.find(x=>x.id==="w2"),w1=normalizedUniverse.lostGear?.find(x=>x.id==="w1");
+  const expectedW2=typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(w2?.item,false):null;
+  if(w2?.currency!=="darkMatter"||expectedW2==null||Number(w2?.cost)!==Number(expectedW2))fail("LOST_GEAR_WORLD2_CURRENCY","world2 遺失裝備應統一為正式暗物質贖回價",{w2,expectedW2});
+  if(w1?.currency!=="free"||Number(w1?.cost)!==0)fail("LOST_GEAR_WORLD1_UNIVERSE_FREE","宇宙紀元遺失的 world1 裝備應免費贖回",w1);
+  const galaxy=typeof newState==="function"?newState():{};
+  galaxy.lostGear=[{id:"g1",item:mkItem(1,500),cost:321,currency:"gold",lostAt:3}];
+  const normalizedGalaxy=window.normalizeSaveState(galaxy),g1=normalizedGalaxy.lostGear?.[0];
+  if(g1?.currency!=="gold"||Number(g1?.cost)!==321)fail("LOST_GEAR_WORLD1_GALAXY_GOLD","銀河紀元 world1 遺失裝備應保留金幣贖回資料",g1);
+ }catch(error){fail("LOST_GEAR_WORLD_AWARE_PROBE","lostGear 世界感知 normalization probe 失敗",String(error?.message||error));}
+
  if(state&&(Object.keys(state.calamities?.entries||{}).length!==10||Object.keys(state.marks?.entries||{}).length!==10))fail("STATE_CALAMITY_MARKS","正式 state 應包含 10 組災厄與 10 組印記",{calamities:state.calamities,marks:state.marks});
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
  if(state&&typeof state.pendingBlackMarketEncounter!=="boolean")fail("BLACK_MARKET_INTEL_STATE","pendingBlackMarketEncounter 應 normalize 為 boolean",state.pendingBlackMarketEncounter);
