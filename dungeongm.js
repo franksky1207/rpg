@@ -23,9 +23,8 @@
  function gmTestCivilizationMultiplier(world=null){
   const character=typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;
   const activeWorld=world==null?(Number(character?.world)===2?2:1):(Number(world)===2?2:1);
-  if(activeWorld!==2)return 1;
   const level=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
-  return typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(level):1;
+  return typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:activeWorld,civilizationLevel:level}):1;
  }
  function simulateFight(player,enemy,startHp=player.hp,world=null){
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
@@ -72,7 +71,8 @@
  };
 
  window.GM_BOUNTY_UNIVERSE_PREVIEW_VERSION=1;
- window.GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=1;
+ window.GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2;
+ window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.GM_BOUNTY_INDEPENDENT_WORLD_TEST_VERSION=1;
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
