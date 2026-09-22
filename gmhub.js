@@ -115,7 +115,20 @@
  function bountyTestHtml(){const result=typeof getBountyGmTestHtml==="function"?getBountyGmTestHtml():"",world=typeof window.gmBountyTestWorld==="function"?window.gmBountyTestWorld():1;return `<div class="muted gm-hub-note">懸賞戰可獨立選擇銀河／宇宙紀元，不受正式角色目前世界與解鎖限制；玩家固定使用 GM 測試角色。</div><div class="controls" style="align-items:end"><label>紀元<br><select id="gmBountyTestWorld" class="btn" onchange="gmSetBountyTestWorld(this.value)"><option value="1" ${world===1?"selected":""}>銀河紀元</option><option value="2" ${world===2?"selected":""}>宇宙紀元</option></select></label></div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateBounty('normal')">普通懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty('high')">高級懸賞測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateBounty('danger')">危險懸賞測試（${GM_TEST_RUNS} 次）</button></div><div id="gmBountyTestResult" style="margin-top:12px">${result}</div>`;}
 
  function arenaTestHtml(){const result=typeof getArenaGmTestHtml==="function"?getArenaGmTestHtml():"";return `<div class="muted gm-hub-note">敵人以不含 VIP 的目前角色能力生成；玩家三連戰鎖定測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="gm-test-button-grid"><button class="btn blue" onclick="gmSimulateArena('normal')">普通競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('hard')">困難競技場測試（${GM_TEST_RUNS} 次）</button><button class="btn blue" onclick="gmSimulateArena('extreme')">極限競技場測試（${GM_TEST_RUNS} 次）</button></div><div id="gmArenaTestResult" style="margin-top:12px">${result}</div>`;}
- function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"",next=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():1;return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
+ let gmVoidMirageFloorSession=null;
+ function gmVoidMirageSessionFloor(){
+  if(gmVoidMirageFloorSession==null){
+   const start=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():1;
+   gmVoidMirageFloorSession=Math.max(1,Math.floor(Number(start)||1));
+  }
+  return gmVoidMirageFloorSession;
+ }
+ window.gmSetVoidMirageTestFloor=function(value){
+  gmVoidMirageFloorSession=Math.max(1,Math.floor(Number(value)||1));
+  const el=document.getElementById("gmVoidMirageFloor");if(el&&String(el.value)!==String(gmVoidMirageFloorSession))el.value=String(gmVoidMirageFloorSession);
+  return gmVoidMirageFloorSession;
+ };
+ function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"",next=gmVoidMirageSessionFloor();return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" onchange="gmSetVoidMirageTestFloor(this.value)" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
 
  function hubHtml(){
   const manage=gmHubTab==="manage";
@@ -146,6 +159,7 @@
  window.gmHubSectionIsOpen=function(id){return gmHubOpenSections.has(String(id||""));};
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
  window.GM_HUB_SECTION_STATE_VERSION=1;
+ window.GM_TEST_SESSION_UI_VERSION=1;
  window.GM_HUB_SPECIAL_WORLD_TEST_VERSION=1;
  window.GM_HUB_BOUNTY_WORLD_TEST_VERSION=1;
  window.GM_GEAR_LEVEL_INPUT_VERSION=1;
