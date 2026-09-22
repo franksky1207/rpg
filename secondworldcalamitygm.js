@@ -230,7 +230,5 @@
  window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION=1;
  window.GM_POWER_BENCHMARK_CALAMITY_VERSION=BENCHMARK_VERSION;
 
- if(typeof window.registerGmHubSection==="function"){
-  window.registerGmHubSection("test","宇宙文明災厄測試",window.gmSecondWorldCalamityTestHtml,{id:"second-world-calamity-test"});
- }
+ window.GM_SECOND_WORLD_CALAMITY_TEST_EMBEDDED_VERSION=1;
 })();
