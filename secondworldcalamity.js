@@ -47,6 +47,14 @@
  }));
 
  function indexOf(value){
+  if(value&&typeof value==="object"){
+   if(typeof value.id==="string"){
+    const byId=DEFS.findIndex(def=>def.id===value.id);
+    if(byId>=0)return byId;
+   }
+   const byIndex=int(value.index,-1);
+   if(byIndex>=0&&byIndex<COUNT)return byIndex;
+  }
   if(typeof value==="string"){
    const byId=DEFS.findIndex(def=>def.id===value);
    if(byId>=0)return byId;
