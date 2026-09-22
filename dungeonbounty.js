@@ -5,9 +5,9 @@
   {id:"danger",name:"危險懸賞",difficulty:2,weight:20,expMult:12,goldMult:12,gearCount:5}
  ];
  const BOUNTY_DIFFICULTY_CURVE=Object.freeze({
-  hp:Object.freeze({linear:.07,quadratic:.03}),
-  damage:Object.freeze({linear:.055,quadratic:.0225}),
-  def:Object.freeze({base:.88,linear:.035}),
+  hp:Object.freeze({linear:.675,quadratic:-.175}),
+  damage:Object.freeze({linear:.61,quadratic:-.13}),
+  def:Object.freeze({base:.88,linear:.155,quadratic:-.035}),
   rateScale:Object.freeze({base:.50,linear:.225,quadratic:-.025}),
   critAdd:Object.freeze({linear:2.5,quadratic:-.5}),
   critCap:Object.freeze({base:10,linear:11,quadratic:-1}),
@@ -53,7 +53,8 @@
   const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
   const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier);
   const world=options.world==null?(universePhase()?2:1):(Number(options.world)===2?2:1),rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
-  return applyMonsterTraits({name,level:enemyLevel,kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  const civilizationScale=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state:options.state&&typeof options.state==="object"?options.state:state,civilizationLevel:options.civilizationLevel}):1;
+  return applyMonsterTraits({name,level:enemyLevel,kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul*civilizationScale)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p,civilizationScale},traits);
  }
  function tierClass(id){return id==="danger"?"dungeon-bounty-tag-danger":id==="high"?"dungeon-bounty-tag-high":"dungeon-bounty-tag-normal";}
  function traitNames(enemy){return !enemy?.traits?.length?"無":enemy.traits.map(id=>MONSTER_TRAITS?.[id]?.name||id).join("、");}
@@ -125,14 +126,15 @@
   bountyState.phase="combat";bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();Promise.resolve().then(runBountyFight);return true;
  }
 
- window.BOUNTY_BALANCE_VERSION=1;
+ window.BOUNTY_BALANCE_VERSION=2;
  window.BOUNTY_TIER_META_VERSION=1;
- window.BOUNTY_DIFFICULTY_FORMULA_VERSION=1;
+ window.BOUNTY_DIFFICULTY_FORMULA_VERSION=2;
+ window.BOUNTY_CIVILIZATION_SCALING_VERSION=1;
  window.BOUNTY_DIFFICULTY_CURVE=BOUNTY_DIFFICULTY_CURVE;
  window.getBountyTierMeta=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
  window.getBountyTierMetadata=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
  window.getBountyDifficultyProfile=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...bountyDifficultyProfile(t)}:null;};
- window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null,world=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);const w=world==null?(universePhase()?2:1):(Number(world)===2?2:1);return t?buildBountyEnemy(t,playerStats,level,{world:w}):null;};
+ window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null,world=null,civilizationLevel=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);const w=world==null?(universePhase()?2:1):(Number(world)===2?2:1);return t?buildBountyEnemy(t,playerStats,level,{world:w,civilizationLevel}):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
  window.enterBountyDungeon=function(){
   if(state.level<5)return;
