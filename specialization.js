@@ -39,7 +39,9 @@
  window.specializationWorldSemantics=specializationWorldSemantics;
  window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=1;
  window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=1;
- window.specializationPercentBonus=function(key,useTest=false){const lv=window.specializationLevel(key,useTest);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;};
+ function specializationPercentForLevel(key,level){const lv=clampSpecializationLevel(level);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;}
+ window.specializationPercentForLevel=specializationPercentForLevel;
+ window.specializationPercentBonus=function(key,useTest=false){return specializationPercentForLevel(key,window.specializationLevel(key,useTest));};
  window.specializationMultiplier=function(key,useTest=false){return 1+window.specializationPercentBonus(key,useTest)/100;};
  window.specializationAdjustedExp=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("training",useTest)));};
  window.specializationAdjustedGold=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("scavenge",useTest)));};
@@ -58,6 +60,20 @@
    :{name:def.name,perLevel:"每級裝備售價 +2.5%",desc:"提升銀河紀元出售裝備取得的金幣。",effectLabel:"裝備售價"};
   return {name:def.name,perLevel:def.perLevel,desc:def.desc,effectLabel:null};
  }
+ function specializationWorldEconomySummary(target=state,useTest=false,levels=null){
+  const source=levels&&typeof levels==="object"?levels:null;
+  const get=key=>source?specializationPercentForLevel(key,source[key]):window.specializationPercentBonus(key,useTest);
+  const exp=get("training"),scavenge=get("scavenge"),appraisal=get("appraisal"),universe=universePhase(target);
+  return {
+   world:universe?2:1,
+   exp,scavenge,appraisal,
+   scavengeLabel:universe?"主線暗物質":"怪物金幣",
+   appraisalLabel:universe?"裝備暗物質售價":"裝備售價",
+   text:`EXP +${exp}%　／　${universe?"主線暗物質":"怪物金幣"} +${scavenge}%　／　${universe?"裝備暗物質售價":"裝備售價"} +${appraisal}%`
+  };
+ }
+ window.specializationWorldEconomySummary=specializationWorldEconomySummary;
+ window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=1;
  function effectLines(key,lv){const semantics=specializationWorldSemantics(key);if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];if(key==="initiative")return [`第一擊傷害 +${lv}%`];if(key==="combo")return [`連擊率 ${lv*.5}%`,`追加傷害 50%`];if(key==="penetration")return [`穿透率 ${lv*.5}%`,`忽略防禦 25%`];if(key==="counter")return [`反擊率 ${lv*.5}%`,`反擊傷害 40%`];if(key==="drain")return [`汲取率 ${lv*.5}%`,`回復傷害 10%`];return [];}
  function specializationCard(key){const def=SPECIALIZATION_DEFS[key],lv=formalLevel(key),maxed=lv>=SPECIALIZATION_MAX_LEVEL,cost=maxed?0:specializationUpgradeCost(lv+1),enough=maxed||state.gold>=cost;return `<section class="specialization-card"><div class="specialization-card-head"><b>${def.name}</b><span>Lv.${lv} / ${SPECIALIZATION_MAX_LEVEL}</span></div><div class="specialization-effect">${effectLines(key,lv).map(x=>`<div>${x}</div>`).join("")}</div><div class="specialization-cost">${maxed?"已達最高等級":`${cost.toLocaleString()} 金幣`}</div><button class="btn specialization-upgrade" ${maxed||!enough?"disabled":""} onclick="upgradeSpecialization('${key}')">${maxed?"已滿級":"升級"}</button></section>`;}
  function specializationGuideHtml(target=state){const universe=universePhase(target),lead=universe?`銀河紀元完成的 8 項專精會在宇宙紀元持續生效；進入宇宙紀元時已要求全部 Lv.${SPECIALIZATION_MAX_LEVEL}，不再消耗金幣升級。`:`每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。`;return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">${lead}</div>${SPECIALIZATION_KEYS.map(key=>{const d=specializationWorldSemantics(key,target);return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;}
@@ -80,14 +96,17 @@
   }finally{setTimeout(()=>{upgradeActionBusy=false},300);}
  };
 
- function levelOptions(value){return Array.from({length:SPECIALIZATION_MAX_LEVEL+1},(_,i)=>`<option value="${i}" ${i===value?"selected":""}>Lv.${i}</option>`).join("");}
- function gmGrid(mode){const test=mode==="test";return `<div class="gm-specialization-grid">${SPECIALIZATION_KEYS.map(key=>{const value=test?window.specializationLevel(key,true):formalLevel(key);return `<label><span>${SPECIALIZATION_DEFS[key].name}</span><select class="btn" id="gmSpec-${mode}-${key}" ${test?`onchange="gmSetTestSpecialization('${key}',this.value)"`:""}>${levelOptions(value)}</select></label>`;}).join("")}</div>`;}
- function gmTestEconomyLabel(){const exp=window.specializationPercentBonus("training",true),scavenge=window.specializationPercentBonus("scavenge",true),sell=window.specializationPercentBonus("appraisal",true),universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();return universe?`測試效果：EXP +${exp}%　／　主線暗物質 +${scavenge}%　／　裝備暗物質售價 +${sell}%`:`測試效果：EXP +${exp}%　／　怪物金幣 +${scavenge}%　／　裝備售價 +${sell}%`;}
+ function gmFormalSpecializationRange(target=state){return universePhase(target)?{min:SPECIALIZATION_MAX_LEVEL,max:SPECIALIZATION_MAX_LEVEL}:{min:0,max:SPECIALIZATION_MAX_LEVEL};}
+ function levelOptions(value,min=0,max=SPECIALIZATION_MAX_LEVEL){const lo=Math.max(0,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(min)||0))),hi=Math.max(lo,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(max)||SPECIALIZATION_MAX_LEVEL))),selected=Math.max(lo,Math.min(hi,clampSpecializationLevel(value)));return Array.from({length:hi-lo+1},(_,i)=>lo+i).map(i=>`<option value="${i}" ${i===selected?"selected":""}>Lv.${i}</option>`).join("");}
+ function gmGrid(mode){const test=mode==="test",range=test?{min:0,max:SPECIALIZATION_MAX_LEVEL}:gmFormalSpecializationRange(state);return `<div class="gm-specialization-grid">${SPECIALIZATION_KEYS.map(key=>{const value=test?window.specializationLevel(key,true):formalLevel(key);return `<label><span>${SPECIALIZATION_DEFS[key].name}</span><select class="btn" id="gmSpec-${mode}-${key}" ${test?`onchange="gmSetTestSpecialization('${key}',this.value)"`:""}>${levelOptions(value,range.min,range.max)}</select></label>`;}).join("")}</div>`;}
+ function gmTestEconomyLabel(){return "測試效果："+specializationWorldEconomySummary(state,true).text;}
  window.gmTestSpecializationEconomyLabel=gmTestEconomyLabel;
- window.gmSpecializationManagementHtml=function(){ensureSpecializationState();return `<div class="muted gm-hub-note">直接修改玩家正式專精等級，套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
- window.gmApplySpecializations=function(){ensureSpecializationState();SPECIALIZATION_KEYS.forEach(key=>{const el=document.getElementById(`gmSpec-manage-${key}`);if(el)state.specializations[key]=clampSpecializationLevel(el.value);});save();render();alert("專精等級已更新。");};
+ window.gmSpecializationManagementHtml=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state),note=range.min===range.max?`目前宇宙紀元正式專精固定 Lv.${range.max}；進入宇宙紀元的條件已要求 8 項全滿，正式管理不允許降回 Lv.59 以下。`:`目前銀河紀元正式專精可管理 Lv.${range.min}～Lv.${range.max}。`;return `<div class="muted gm-hub-note">${note} 套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
+ window.gmApplySpecializations=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state);SPECIALIZATION_KEYS.forEach(key=>{const el=document.getElementById(`gmSpec-manage-${key}`);if(el){const raw=clampSpecializationLevel(el.value);state.specializations[key]=Math.max(range.min,Math.min(range.max,raw));}});save();render();alert("專精等級已更新。");};
  window.gmSetTestSpecialization=function(key,value,refresh=true){if(!SPECIALIZATION_DEFS[key])return false;window.gmTestSpecializations[key]=clampSpecializationLevel(value);if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();else if(refresh){const info=document.getElementById("gmSpecEconomyInfo");if(info)info.textContent=gmTestEconomyLabel();}return true;};
- window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
+ window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；沙盒固定可測 Lv.0～Lv.${SPECIALIZATION_MAX_LEVEL}，不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
+ window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION=1;
+ window.GM_SPECIALIZATION_TEST_RANGE_VERSION=1;
 
  function installStyles(){
   if(document.getElementById("specializationStyles"))return;
