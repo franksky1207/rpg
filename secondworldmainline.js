@@ -189,7 +189,20 @@
      accumulate(ctx,settled);
      const appeared=settled.firstKill===true&&typeof window.getSecondWorldCalamityForBoss==="function"?window.getSecondWorldCalamityForBoss(index):null;
      if(appeared&&typeof window.queueSecondWorldCalamityAppearanceNotice==="function")window.queueSecondWorldCalamityAppearanceNotice(appeared);
-     if(!continuous){setTimeout(()=>showVictory(settled,combat),0);return true;}
+     let specialOutcome=false;
+     if(!appeared&&typeof window.maybeHandleSpecialEncounter==="function"){
+      specialOutcome=await window.maybeHandleSpecialEncounter(ctx,{...combat,win:true,e:encounter},{world:2,bossIndex:index});
+      if(specialOutcome?.triggered&&!specialOutcome.win){
+       ctx.stopReason="special-defeat";
+       if(!continuous)return true;
+       break;
+      }
+     }
+     if(!continuous){
+      if(!specialOutcome?.triggered)setTimeout(()=>showVictory(settled,combat),0);
+      else if(typeof render==="function")render();
+      return true;
+     }
      if(appeared){ctx.stopReason="calamity-appeared";break;}
     }else{
      state.hp=0;
@@ -247,6 +260,7 @@
  window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION=1;
  window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_APPEARANCE_TRIGGER_VERSION=1;
+ window.SECOND_WORLD_SPECIAL_ENCOUNTER_HOOK_VERSION=1;
  window.SECOND_WORLD_MAINLINE_INTEGRITY={
   passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1&&Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)===1,
   version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION
