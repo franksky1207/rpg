@@ -347,10 +347,18 @@ darkEnergy = 300 + 10*K
 - 下一階解鎖仍依區域 + 500 場評估至少 485/500（97%）。
 - 宇宙 points base：normal 570 / hard 620 / extreme 670；Rank 4 起每階 +60。
 - Rank curve 第二世界獨立，但正式 helper 統一。
+- 第二世界 Rank Curve V2（x=Rank-1）：
+  - HP：`1.68 + 0.05x - 0.0015x²`
+  - 傷害：`1.52 + 0.04x - 0.001x²`
+  - DEF：`1.11 + 0.022x - 0.0004x²`
+- 第二世界 Arena 敵方 HP 會乘同一文明 final damage 倍率作耐久補償；玩家文明傷害仍完整生效，但不再因文明等級上升而讓 player-relative Arena 自然失衡。
 - 三連戰不回血；新一輪才回血。
 - shared daily arena limit 20。
 - 宇宙正式三連戰與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
-- GM 使用 explicit world context，已移除暫改正式 state 的舊路徑。
+- GM 使用 explicit world + civilization level context，已移除暫改正式 state 的舊路徑。
+- `SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2`
+- `SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`
+- `GM_SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`
 - `ARENA_CIVILIZATION_DAMAGE_VERSION=2`
 - `GM_ARENA_CIVILIZATION_DAMAGE_VERSION=2`
 - `ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1`
@@ -730,6 +738,37 @@ Integrity 已同步：
 - `SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1`
 - Final Integrity 與 Runtime Integrity 已加 guard，禁止恢復 `BASE_HP / BASE_ATK / BASE_DEF` 三套獨立基準。
 - 2026-09-23 將 `BASE_STAT` 進一步調整為 2700，作為前期難度實機測試版本；12:2:1 與 `STEP_RATE=.015` 不變。後續若仍要調前期難度只改 `BASE_STAT`，若要改後期成長速度再調 `STEP_RATE`。
+
+## 15.5 2026-09-23 宇宙競技場 Rank Curve V2
+
+以 GM 預測角色 Lv.600／VIP8／+24 全身／8 專精 Lv.60／10 印記 Lv.10／文明 Lv.2 作校準。舊第二世界曲線在 Rank 1～3 的 500 次正式評估皆為 100% 全通，且全通剩餘 HP 約 92～94%，確認明顯過弱。
+
+本輪原則：
+- 不逐 Rank 手動補倍率。
+- 第一世界 `ARENA_RANK_CURVE` 完全不動。
+- 第二世界使用單一 `SECOND_WORLD_ARENA_RANK_CURVE` V2。
+- Rank 1 也需要變強，因此曲線加入 base 項，不再固定從 ×1.00 起跳。
+- 宇宙文明倍率納入敵方 HP 耐久補償，避免文明 Lv.0→10 造成 player-relative Arena 難度自然漂移。
+- GM `buildArenaEnemyForTest(...)` 追加 explicit civilization level，與正式戰鬥同公式。
+
+V2 公式（x=Rank-1）：
+- HP：`1.68 + 0.05x - 0.0015x²`
+- 傷害：`1.52 + 0.04x - 0.001x²`
+- DEF：`1.11 + 0.022x - 0.0004x²`
+
+使用 Lv.600 校準角色與正式三連戰規則進行 100,000 場／Rank 的離線模擬，模型預估全通率約：
+- Rank1 99.7%
+- Rank2 98.2%
+- Rank3 98.1%
+- Rank4 96.8%
+- Rank5 95.3%
+- Rank6 93.2%
+- Rank7 91.0%
+- Rank8 88.4%
+- Rank9 85.6%
+- Rank10 82.4%
+
+此模擬用於找曲線形狀；最終仍以遊戲內 GM 500 次正式評估為實機驗收。未更改競技積分、每日次數、三連戰規則或解鎖門檻。
 
 ## 15.3 2026-09-23 懸賞難度公式 V2
 
