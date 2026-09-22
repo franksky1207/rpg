@@ -45,6 +45,7 @@
  function catchUpCheckpointInterval(count){return policyInterval(FAST_CATCH_UP_CHECKPOINT_INTERVALS,count,200);}
  function catchUpPolicySnapshot(kind=null,count=null,final=false){
   const active=fastCatchUpActive(kind);
+  const eligible=activeFor(kind)&&flow?.hiddenAt==null&&!isBackground();
   const completed=count==null?Math.max(0,Math.floor(Number(flow?.catchUpPolicyCount)||0)):Math.max(0,Math.floor(Number(count)||0));
   const basis=Math.max(1,completed||1);
   const uiInterval=catchUpUiInterval(basis);
@@ -59,8 +60,8 @@
    uiInterval,
    checkpointInterval,
    presentationInterval,
-   shouldRefreshUi:active&&(forceFinal||completed>0&&completed%uiInterval===0),
-   shouldCheckpoint:active&&(forceFinal||completed>0&&completed%checkpointInterval===0),
+   shouldRefreshUi:forceFinal?eligible:active&&completed>0&&completed%uiInterval===0,
+   shouldCheckpoint:forceFinal?eligible:active&&completed>0&&completed%checkpointInterval===0,
    shouldPresentBattle:active&&!forceFinal&&completed>0&&completed%presentationInterval===0,
    final:forceFinal
   };
