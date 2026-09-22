@@ -41,6 +41,7 @@
  if(window.PLAYER_TITLE_INTEGRITY?.passed!==true)fail("PLAYER_TITLE_INTEGRITY","玩家稱號專屬 integrity 未通過",window.PLAYER_TITLE_INTEGRITY?.errors||null);
  if(Number(SAVE_VERSION)!==13)fail("SAVE_VERSION",`SAVE_VERSION 應為 13，實際 ${SAVE_VERSION}`);
  if(Number(window.SAVE_SCHEMA_VERSION)!==14)fail("SAVE_SCHEMA",`SAVE_SCHEMA_VERSION 應為 14，實際 ${window.SAVE_SCHEMA_VERSION}`);
+ if(Number(window.SAVE_NORMALIZATION_PIPELINE_VERSION)!==1||JSON.stringify(window.SAVE_NORMALIZATION_PIPELINE_ORDER)!==JSON.stringify(["worldPhase","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]))fail("SAVE_NORMALIZATION_PIPELINE","存檔 normalization 順序 owner 未正確載入",{version:window.SAVE_NORMALIZATION_PIPELINE_VERSION,order:window.SAVE_NORMALIZATION_PIPELINE_ORDER});
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1||typeof window.markSaveLoadResolved!=="function"||typeof window.saveWriteGuardStatus!=="function")fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",{version:window.SAVE_WRITE_GUARD_VERSION,mark:typeof window.markSaveLoadResolved,status:typeof window.saveWriteGuardStatus});
  if(Number(window.SAVE_LOAD_PIPELINE_VERSION)!==2)fail("SAVE_PIPELINE",`SAVE_LOAD_PIPELINE_VERSION 應為 2，實際 ${window.SAVE_LOAD_PIPELINE_VERSION}`);
  if(Number(window.VIP_PROGRESSION_VERSION)!==13)fail("VIP_PROGRESSION_VERSION",`VIP 正式核心版本應為 13，實際 ${window.VIP_PROGRESSION_VERSION}`);
@@ -50,6 +51,7 @@
  if(typeof window.adjustVipDungeonPoints==="function"&&Number(window.adjustVipDungeonPoints(570,12))!==684)fail("VIP_DUNGEON_MULTIPLIER",`VIP12 對 570 基礎積分應為 684，實際 ${window.adjustVipDungeonPoints(570,12)}`);
  if(Number(window.SPECIALIZATION_MAX_LEVEL)!==60)fail("SPECIALIZATION_MAX_LEVEL",`專精上限應為 60，實際 ${window.SPECIALIZATION_MAX_LEVEL}`);
  if(Number(window.ENHANCEMENT_MAX_LEVEL)!==20)fail("ENHANCEMENT_MAX_LEVEL",`強化上限應為 20，實際 ${window.ENHANCEMENT_MAX_LEVEL}`);
+ if(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)!==20||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)!==40||window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE!==false)fail("ENHANCEMENT_WORLD_CAPS","強化世界 cap owner 異常",{first:window.FIRST_WORLD_ENHANCEMENT_CAP,second:window.SECOND_WORLD_ENHANCEMENT_CAP,active:window.SECOND_WORLD_ENHANCEMENT_EXTENSION_ACTIVE});
  if(Number(window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL)!==2.5)fail("ENHANCEMENT_RATE",`強化每級主能力應為 2.5%，實際 ${window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL}`);
  if(typeof window.enhancementUpgradeCost!=="function")fail("ENHANCEMENT_COST_API","強化成本 API 未載入");
  else{
@@ -245,6 +247,7 @@
  if(Number(window.GM_CALAMITY_TEST_VERSION)!==1||Number(window.GM_MARK_MANAGEMENT_VERSION)!==1||Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1||Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("CALAMITY_GM_VERSION","文明災厄／印記 GM 版本異常",{calamity:window.GM_CALAMITY_TEST_VERSION,marks:window.GM_MARK_MANAGEMENT_VERSION,configOwner:window.GM_MARK_CONFIG_OWNER_VERSION,safety:window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT});
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema 不一致`);
  if(Number(window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION)!==1||typeof window.normalizeSaveState!=="function"||typeof window.normalizeSaveItem!=="function")fail("WORLD_AWARE_SAVE_NORMALIZATION","世界感知存檔／裝備 normalization owner 未完整載入",{version:window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION,state:typeof window.normalizeSaveState,item:typeof window.normalizeSaveItem});
+ if(Number(window.SAVE_ROOT_NORMALIZATION_ORDER_VERSION)!==1)fail("SAVE_ROOT_NORMALIZATION_ORDER","root save normalizer 應採 world-first 順序",window.SAVE_ROOT_NORMALIZATION_ORDER_VERSION);
  if(Number(window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION)!==1||Number(window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION)!==1)fail("INVENTORY_UI_OWNER","背包 UI 應只保留顯示，正式 mutation／sale 由 equipment owner 管理",{retired:window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION,displayFailClosed:window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION});
  if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==4||Number(window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION)!==1||Number(window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION)!==1||typeof window.handleUnequippedItem!=="function"||typeof window.equipmentSellSelected!=="function"||typeof window.equipmentSellLowerAll!=="function")fail("EQUIPMENT_SALE_PIPELINE","裝備 mutation／sale owner V4 未完整載入",{pipeline:window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION,failClosed:window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION,lostGear:window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION});
  try{
