@@ -35,8 +35,18 @@
   const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
   return Math.max(1,regions.length||1);
  }
+ function secondWorldArenaRegionCap(target){
+  if(target?.secondWorld?.entered!==true)return 1;
+  if(typeof window.secondWorldRegionVisible==="function"){
+   let count=0;
+   for(let i=0;i<10;i++){if(window.secondWorldRegionVisible(i,target))count=i+1;else break;}
+   return Math.max(1,Math.min(10,count||1));
+  }
+  const level=Math.max(500,Math.min(1000,Math.floor(Number(target?.level)||500)));
+  return Math.max(1,Math.min(10,Math.floor((level-500)/50)+1));
+ }
  function arenaRankCapForWorld(target,world){
-  if(Number(world)===2)return 10;
+  if(Number(world)===2)return secondWorldArenaRegionCap(target);
   return Math.max(1,Math.min(arenaMaxRankForWorld(1),unlockedArenaRankCap(target)));
  }
  function normalizeArenaProfile(source,target,world){
@@ -97,6 +107,12 @@
  window.normalizeArenaProgressByWorld=normalizeArenaProgress;
  window.getArenaProgressForWorld=function(world,target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaProgressForWorld(s,world);};
  window.getCurrentArenaProgress=function(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaProgressForWorld(s,null);};
+ window.SECOND_WORLD_ARENA_UNLOCK_VERSION=1;
+ window.getArenaMaxRankForWorld=arenaMaxRankForWorld;
+ window.getArenaRankCapForWorld=function(world,target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaRankCapForWorld(s,world);};
+ window.getSecondWorldArenaRegionCap=function(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return secondWorldArenaRegionCap(s);};
+ window.ARENA_ASSESS_RUNS=ARENA_ASSESS_RUNS;
+ window.ARENA_ASSESS_CLEAR_TARGET=ARENA_ASSESS_CLEAR_TARGET;
 
  function normalizeDungeonState(target,options={}){
   if(!target||typeof target!=="object")return null;
