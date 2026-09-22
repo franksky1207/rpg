@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=14;
+ const SAVE_SCHEMA_VERSION=15;
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const SAVE_NORMALIZATION_PIPELINE_VERSION=1;
  const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["worldPhase","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);
@@ -160,6 +160,7 @@
  window.SAVE_NORMALIZATION_PIPELINE_ORDER=Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER);
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION=1;
+ window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
  window.normalizePersistentFlags=normalizePersistentFlags;
@@ -175,6 +176,8 @@
   const hadTitleState=isObject(source.titles);
   const hadSecondWorldState=isObject(source.secondWorld);
   const hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel));
+  const hadArenaByWorld=isObject(source?.dungeon?.arenaByWorld);
+  const hadLegacyArena=isObject(source?.dungeon?.arena);
 
   prepareAllGear(target);
   if(!introWasBoolean)target.introSeen=true;
@@ -204,7 +207,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
   return target;
  };
 
@@ -255,6 +258,8 @@
     titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
     secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,
     civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,
+    arenaByWorldInitialized:window.LAST_SAVE_MIGRATION_REPORT?.arenaByWorldInitialized===true,
+    legacyArenaMigrated:window.LAST_SAVE_MIGRATION_REPORT?.legacyArenaMigrated===true,
     recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,
     recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true
    };
