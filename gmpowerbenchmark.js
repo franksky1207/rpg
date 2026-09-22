@@ -1,5 +1,5 @@
 (function(){
- const VERSION=14;
+ const VERSION=15;
  const BATCH_SIZE=25;
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
@@ -149,7 +149,8 @@
   const specs=typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(false):{};
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(false):{};
   const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?window.ENHANCEMENT_SLOTS:["weapon","helmet","armor","shoes","accessory"];
-  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):whole(typeof state!=="undefined"&&state.enhancement&&state.enhancement.levels?state.enhancement.levels[type]:0,0,20)]));
+  const enhancementCap=typeof window.effectiveEnhancementCap==="function"?window.effectiveEnhancementCap(state):Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||40));
+  const enhancements=Object.fromEntries(slots.map(type=>[type,typeof window.enhancementLevel==="function"?window.enhancementLevel(state,type):whole(typeof state!=="undefined"&&state.enhancement&&state.enhancement.levels?state.enhancement.levels[type]:0,0,enhancementCap)]));
   const equipment=Object.fromEntries(slots.map(type=>{
    const it=typeof state!=="undefined"&&state.equipment?state.equipment[type]:null;
    return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5)}:null];
@@ -675,6 +676,7 @@
  }
 
  window.GM_POWER_BENCHMARK_VERSION=VERSION;
+ window.GM_POWER_BENCHMARK_ENHANCEMENT_RANGE_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSetWorld=function(v){
