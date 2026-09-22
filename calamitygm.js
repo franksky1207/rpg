@@ -7,6 +7,7 @@
  let singleResultHtml="";
  let fullResultHtml="";
  let gmCalamityLastResult=null;
+ let gmCalamitySelectedId=null;
  let busy=false;
  let gmTitlePreviewId=null;
 
@@ -112,9 +113,11 @@
   return `<div class="muted gm-hub-note">實戰名稱預覽全部 16 個正式稱號；直接使用目前正式玩家名稱與正式 playerIdentityNameHtml()，前 10 個為文明災厄、後 6 個為鏡像戰。此區不解鎖、不裝備、不修改任何正式狀態，也不寫入存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px">${titleCombatPreviewHtml(def)}<div class="muted" style="text-align:center;margin-top:8px">${titlePreviewLabel(def)}</div></div>`;
  };
  function calamityOptions(){
-  return calamities().map((def,index)=>`<option value="${def.id}" ${index===0?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
+  const list=calamities();if(!gmCalamitySelectedId)gmCalamitySelectedId=String(list[0]?.id||"");
+  return list.map(def=>`<option value="${def.id}" ${String(def.id)===gmCalamitySelectedId?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
  }
- function selectedCalamityId(){return String(document.getElementById("gmCalamityTarget")?.value||calamities()[0]?.id||"");}
+ function selectedCalamityId(){const id=String(document.getElementById("gmCalamityTarget")?.value||gmCalamitySelectedId||calamities()[0]?.id||"");gmCalamitySelectedId=id;return id;}
+ window.gmSetCalamityTestTarget=function(value){gmCalamitySelectedId=String(value||calamities()[0]?.id||"");return gmCalamitySelectedId;};
  function player(){
   return typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():createSpecialPlayerSnapshot(playerCombatStats());
  }
@@ -184,7 +187,7 @@
   return true;
  };
  window.gmCalamityTestHtml=function(){
-  return `<div class="muted gm-hub-note">文明災厄 GM 模擬不受正式解鎖狀態限制。玩家使用目前 GM 測試 VIP／專精／強化／印記；災厄固定使用正式數值。所有結果皆為沙盒，不修改正式災厄 HP 或印記。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmCalamityTarget" class="btn">${calamityOptions()}</select></label><button class="btn blue" onclick="gmCalamitySingle()">單次挑戰模擬</button><button id="gmCalamityFullBtn" class="btn gm-create" onclick="gmCalamityFullKill()">完整擊殺模擬</button></div><div id="gmCalamityResult" style="margin-top:12px">${fullResultHtml||singleResultHtml}</div>`;
+  return `<div class="muted gm-hub-note">文明災厄 GM 模擬不受正式解鎖狀態限制。玩家使用目前 GM 測試 VIP／專精／強化／印記；災厄固定使用正式數值。所有結果皆為沙盒，不修改正式災厄 HP 或印記。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmCalamityTarget" class="btn" onchange="gmSetCalamityTestTarget(this.value)">${calamityOptions()}</select></label><button class="btn blue" onclick="gmCalamitySingle()">單次挑戰模擬</button><button id="gmCalamityFullBtn" class="btn gm-create" onclick="gmCalamityFullKill()">完整擊殺模擬</button></div><div id="gmCalamityResult" style="margin-top:12px">${fullResultHtml||singleResultHtml}</div>`;
  };
 
  window.runGmCalamitySingleSimulation=function(id,options={}){return simulateAttempt(id,options.startHp??null,options.rng);};
@@ -198,6 +201,7 @@
  window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
  window.GM_CALAMITY_SUMMARY_EXPORT_VERSION=1;
+ window.GM_CALAMITY_SESSION_SETTINGS_VERSION=1;
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
