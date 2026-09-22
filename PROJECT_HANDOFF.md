@@ -1582,7 +1582,7 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 
 ## 29.7 已完成：GM 戰力基準三批重構
 
-`GM_POWER_BENCHMARK_VERSION=14`。
+`GM_POWER_BENCHMARK_VERSION=16`。
 - 先選紀元。
 - 銀河：區域 → 地圖 → 怪物。
 - 宇宙：區域 → Boss，沒有地圖層。
@@ -1613,14 +1613,36 @@ calamityHP(index) = 1,000,000 + (index - 1) * 200,000
 - 宇宙正式玩家範圍 +20～+40；純資源制，不設等級／區域／Boss 門檻。
 - 玩家正式 UI、atomic rollback、migration、GM 正式管理、GM 沙盒 0～40、GM 戰力基準與 Integrity 已同步。
 
-## 29.10 後續：專精第二世界收尾
+## 29.10 已完成：專精第二世界 UX／語意收尾
 
-核心主線目前已正確使用：
-- training → EXP
-- scavenge → 暗物質
-- appraisal → world2 售價
+正式規則：
+- training → EXP，Lv.60 = +150%。
+- scavenge → 銀河怪物金幣／宇宙主線 Boss 直接暗物質，Lv.60 = +150%。
+- appraisal → 銀河裝備金幣售價／宇宙 world2 裝備暗物質售價，Lv.60 = +150%；不放大暗能量。
+- 其餘先制／連擊／穿透／反擊／汲取跨世界沿用原戰鬥效果。
 
-仍需完整檢查專精頁、GM 文案、所有第二世界資源路徑，避免殘留「金幣」語意。
+玩家：
+- 專精頁使用同一個 world-aware 語意 owner，自動依紀元顯示金幣或暗物質。
+- 宇宙紀元顯示專精已完成；進入宇宙前 8 項必須全 Lv.60，不再以金幣繼續升級。
+- 遊戲說明已建立 `gameGuideCategoriesForState(target)`，專精相關說明會依目前紀元自動換詞。
+
+GM：
+- 正式管理：銀河 Lv.0～60；宇宙正式固定 Lv.60，不允許製造 <60 的正式宇宙專精。
+- 沙盒測試固定 Lv.0～60。
+- 宇宙 Boss GM 測試與 GM 戰力基準摘要會使用宇宙專精經濟語意。
+- `GM_POWER_BENCHMARK_VERSION=16`。
+
+正式 owner／標記：
+- `SPECIALIZATION_WORLD_SEMANTICS_VERSION=1`
+- `SPECIALIZATION_PLAYER_WORLD_UI_VERSION=1`
+- `SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=1`
+- `GM_SPECIALIZATION_FORMAL_RANGE_VERSION=1`
+- `GM_SPECIALIZATION_TEST_RANGE_VERSION=1`
+- `SPECIALIZATION_WORLD_INTEGRITY_VERSION=1`
+- `SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION=1`
+- `SECOND_WORLD_GM_SPECIALIZATION_SEMANTICS_VERSION=1`
+- `GAME_GUIDE_WORLD_AWARE_VERSION=1`
+- `GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1`
 
 ## 29.11 後續：文明等級＋第二世界文明災厄
 
@@ -1900,13 +1922,13 @@ Background 仍只有一個 Single Active Flow。
 
 ## 32.9 目前下一個真正大型功能
 
-強化 +21～+40 已完成。後續建議依序：
-1. 專精第二世界 UX／語意完整收尾。
-2. 文明等級 0～10。
-3. 第二世界文明災厄 10 隻。
-4. 第二世界懸賞／競技等副本。
-5. 銀河封存／回顧跨頁收尾。
-6. Cloud Save 宇宙存檔真實跨裝置驗證。
+強化 +21～+40、專精第二世界 UX／語意收尾皆已完成。後續建議依序：
+1. 文明等級 0～10。
+2. 第二世界文明災厄 10 隻。
+3. 第二世界懸賞／競技等副本。
+4. 銀河封存／回顧跨頁收尾。
+5. Cloud Save 宇宙存檔真實跨裝置驗證。
+6. **宇宙架構接近完成時，執行「全介面＋遊戲說明雙紀元語意總掃描」**。
 
 目前只有使用者本人進行測試；健檢優先順序以資料安全、邏輯正確、效能、正式 owner、舊程式殘留為主，不需要為一般玩家尚未存在的 UX 誤解額外提高優先度。
 
@@ -1946,6 +1968,29 @@ Background 仍只有一個 Single Active Flow。
 
 ---
 
+# 32.11 必做備忘：宇宙架構完成前的全介面／遊戲說明雙紀元語意總掃描
+
+**這是使用者明確要求保留在 GitHub 的後續提醒，不可遺漏。**
+
+當宇宙紀元主要架構（至少文明等級、第二世界文明災厄、主要第二世界副本／功能）大致完成後，必須主動提醒使用者安排一批「雙紀元 UI／文案總掃描」。
+
+目標：
+- 所有玩家介面依目前紀元使用正確詞彙與規則，不應把銀河的金幣／強化石／Lv.500／普通怪地圖結構帶進宇宙介面。
+- 所有遊戲說明依目前紀元顯示對應版本；不只是專精。
+- GM 正式管理、GM 測試、戰力基準摘要也要區分「正式角色所在紀元」與「測試選擇紀元」。
+- 對同一功能若兩個紀元規則不同，優先使用共用 world-aware semantic/helper owner，不要在各頁散落手寫替換字串。
+- 最後應掃描至少：首頁、主線／冒險、角色、裝備／背包、強化、專精、離線收益、死亡／贖回、副本、文明災厄、設定、GM、所有遊戲說明與結算文案。
+
+目前已先完成的 world-aware 範例：
+- 專精頁。
+- 專精相關遊戲說明。
+- GM 專精經濟摘要。
+- GM 戰力基準專精語意。
+
+**不要因這些局部完成就把本項視為完成；必須等宇宙主要架構接近完成後再做全專案總掃描。**
+
+---
+
 # 33. 下一個對話如何接手
 
 標準指令：
@@ -1955,8 +2000,8 @@ Background 仍只有一個 Single Active Flow。
 > 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
 > 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。  
-> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40，以及 GM 戰力基準銀河／宇宙雙世界重構。  
-> 真正下一批優先看 handoff 第 29 節；目前建議先做 **專精第二世界 UX／語意完整收尾**。  
+> 目前宇宙紀元已完成：世界突破、Lv.501～1000 等級／EXP、100 Boss 主線、獎勵／world2 裝備、單場／連戰、完整戰鬥 UI、GM-only background/catch-up、角色、背包 sale owner、死亡／贖回、world2 offline sample、正式離線收益、強化 +21～+40、專精第二世界 UX／語意收尾，以及 GM 戰力基準銀河／宇宙雙世界重構。  
+> 真正下一批優先看 handoff 第 29 節；目前建議進入 **文明等級 0～10**。宇宙主要架構接近完成時，務必依第 32.11 節提醒使用者做全介面＋遊戲說明雙紀元語意總掃描。  
 > 現在先不要修改任何檔案，先確認最新 main 狀態、正式 owner 與下一個未完成項目，再等我的下一個指令。
 
 ---
