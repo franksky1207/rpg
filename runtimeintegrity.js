@@ -240,7 +240,7 @@
  if(clock?.textContent?.includes("臺灣時間"))fail("DAILY_CLOCK_LABEL","時鐘不應顯示「臺灣時間」文字");
  if(!clock?.textContent?.includes("每日凌晨 0 點重置"))fail("DAILY_RESET_LABEL","缺少固定的每日凌晨 0 點重置文字");
 
- if(Number(window.GAME_GUIDE_VERSION)!==14)fail("GUIDE_VERSION",`遊戲說明版本應為 14，實際 ${window.GAME_GUIDE_VERSION}`);
+ if(Number(window.GAME_GUIDE_VERSION)!==16)fail("GUIDE_VERSION",`遊戲說明版本應為 16，實際 ${window.GAME_GUIDE_VERSION}`);
  if(window.GAME_GUIDE_ARENA_V6!==true)fail("GUIDE_LATE_OVERRIDE","舊競技場說明覆蓋檔未停用");
  const guideText=Array.isArray(window.GAME_GUIDE_CATEGORIES)?window.GAME_GUIDE_CATEGORIES.flatMap(c=>c.items||[]).flat().join(" "):"";
  const guideRequired=["每天最多挑戰 20 次","每天最多開始 20 輪","沒有最高層數","當日最高層 × 2","最高 Lv60","查看特權","主線由多個區域與地圖組成","遺失裝備贖回","黑市情報","裝備欄位強化","玩家高於怪物 10 級（含）以上時，主線戰鬥將不再掉落強化石","Boss 可選擇單場或連續戰鬥","普通怪、菁英怪與 Boss 都可以選擇","Boss 不會觸發","離線收益不會以 Boss 作為刷怪目標","最近一次有效的普通怪或菁英怪戰鬥紀錄","擊敗各區域最終 Boss 後解鎖對應災厄","災厄 HP 會跨挑戰保留","印記最高 Lv.10","文明災厄不提供 EXP、金幣、裝備或其他一般獎勵"];
