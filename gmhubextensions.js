@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
- const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","civilization-manage","marks-manage","dungeon-manage"];
- const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","civilization-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
+ const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-combat-speed","general-manage","spec-manage","enhancement-manage","civilization-manage","second-world-calamity-manage","marks-manage","dungeon-manage"];
+ const TEST_SECTION_ORDER=["vip-test","spec-test","enhancement-test","civilization-test","second-world-calamity-test","marks-test","power-benchmark-test","map-test","special-test","bounty-test","arena-test","void-test","mirror-test","calamity-test","player-title-preview","gm-story-test"];
 
  function sectionHtml(entry){
   let body="";
@@ -61,6 +61,6 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=8;
+ window.GM_HUB_EXTENSION_VERSION=9;
  window.GM_HUB_REGISTRY_VERSION=1;
 })();
