@@ -40,6 +40,14 @@
  function specializationFormalStateValid(target=state){return specializationFormalStateIssues(target).length===0;}
  function specializationUpgradeCost(targetLevel){const lv=Math.max(1,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(targetLevel)||1)));return 1000*lv*lv;}
  function formalLevel(key){ensureSpecializationState();return clampSpecializationLevel(state.specializations[key]);}
+ function cloneState(){try{return JSON.parse(JSON.stringify(state));}catch(e){return null;}}
+ function restoreStateSnapshot(snapshot){if(!snapshot||typeof snapshot!=="object")return false;state=snapshot;return true;}
+ function saveStateOrRollback(snapshot,show=false){
+  const ok=typeof save==="function"&&save(show)===true;
+  if(ok)return true;
+  restoreStateSnapshot(snapshot);
+  return false;
+ }
 
  window.SPECIALIZATION_MAX_LEVEL=SPECIALIZATION_MAX_LEVEL;
  window.SPECIALIZATION_KEYS=SPECIALIZATION_KEYS.slice();
@@ -110,9 +118,17 @@
    const current=formalLevel(key);
    if(current!==lv)return;
    if(state.gold<cost)return alert("金幣不足。");
-   state.gold-=cost;state.specializations[key]=next;save();render();
+   const snapshot=cloneState();
+   if(!snapshot)return alert("無法建立升級前存檔快照。");
+   state.gold-=cost;state.specializations[key]=next;
+   if(!saveStateOrRollback(snapshot,false)){
+    if(typeof render==="function")render();
+    return alert("存檔失敗，已回復專精升級前狀態。");
+   }
+   if(typeof render==="function")render();
   }finally{setTimeout(()=>{upgradeActionBusy=false},300);}
  };
+ window.SPECIALIZATION_ATOMIC_UPGRADE_VERSION=1;
 
  function gmFormalSpecializationRange(target=state){return universePhase(target)?{min:SPECIALIZATION_MAX_LEVEL,max:SPECIALIZATION_MAX_LEVEL}:{min:0,max:SPECIALIZATION_MAX_LEVEL};}
  function levelOptions(value,min=0,max=SPECIALIZATION_MAX_LEVEL){const lo=Math.max(0,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(min)||0))),hi=Math.max(lo,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(max)||SPECIALIZATION_MAX_LEVEL))),selected=Math.max(lo,Math.min(hi,clampSpecializationLevel(value)));return Array.from({length:hi-lo+1},(_,i)=>lo+i).map(i=>`<option value="${i}" ${i===selected?"selected":""}>Lv.${i}</option>`).join("");}
@@ -120,11 +136,21 @@
  function gmTestEconomyLabel(){return "測試效果："+specializationWorldEconomySummary(state,true).text;}
  window.gmTestSpecializationEconomyLabel=gmTestEconomyLabel;
  window.gmSpecializationManagementHtml=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state),note=range.min===range.max?`目前宇宙紀元正式專精固定 Lv.${range.max}；進入宇宙紀元的條件已要求 8 項全滿，正式管理不允許降回 Lv.59 以下。`:`目前銀河紀元正式專精可管理 Lv.${range.min}～Lv.${range.max}。`;return `<div class="muted gm-hub-note">${note} 套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
- window.gmApplySpecializations=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state);SPECIALIZATION_KEYS.forEach(key=>{const el=document.getElementById(`gmSpec-manage-${key}`);if(el){const raw=clampSpecializationLevel(el.value);state.specializations[key]=Math.max(range.min,Math.min(range.max,raw));}});save();render();alert("專精等級已更新。");};
+ window.gmApplySpecializations=function(){
+  ensureSpecializationState();
+  const snapshot=cloneState();if(!snapshot)return alert("無法建立專精管理前存檔快照。");
+  const range=gmFormalSpecializationRange(state);
+  SPECIALIZATION_KEYS.forEach(key=>{const el=document.getElementById(`gmSpec-manage-${key}`);if(el){const raw=clampSpecializationLevel(el.value);state.specializations[key]=Math.max(range.min,Math.min(range.max,raw));}});
+  if(!saveStateOrRollback(snapshot,false)){if(typeof render==="function")render();return alert("存檔失敗，已回復專精管理前狀態。");}
+  if(typeof render==="function")render();
+  alert("專精等級已更新。");
+  return true;
+ };
  window.gmSetTestSpecialization=function(key,value,refresh=true){if(!SPECIALIZATION_DEFS[key])return false;window.gmTestSpecializations[key]=clampSpecializationLevel(value);if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();else if(refresh){const info=document.getElementById("gmSpecEconomyInfo");if(info)info.textContent=gmTestEconomyLabel();}return true;};
  window.gmSpecializationTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的專精測試等級；沙盒固定可測 Lv.0～Lv.${SPECIALIZATION_MAX_LEVEL}，不修改正式角色資料，重新整理後回到 Lv.0。</div>${gmGrid("test")}<div id="gmSpecEconomyInfo" class="muted" style="margin-top:10px">${gmTestEconomyLabel()}</div>`;};
  window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION=1;
  window.GM_SPECIALIZATION_TEST_RANGE_VERSION=1;
+ window.GM_SPECIALIZATION_ATOMIC_MUTATION_VERSION=1;
  window.SPECIALIZATION_WORLD_INTEGRITY_VERSION=1;
 
  function installStyles(){
