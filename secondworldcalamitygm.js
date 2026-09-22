@@ -45,7 +45,7 @@
     <label>目前 HP<br><input id="gmSecondWorldCalamityCurrentHp" class="btn" type="number" min="1" max="${d.maxHp}" value="${r.currentHp==null?d.maxHp:Math.max(1,Math.min(d.maxHp,Math.floor(Number(r.currentHp)||d.maxHp)))}"></label>
     <button class="btn blue" onclick="gmApplySecondWorldCalamityFormal()">套用本災厄</button>
    </div>
-   <div class="controls"><button class="btn" onclick="gmSecondWorldCalamitySetFullHp()">滿血</button><button class="btn danger" onclick="gmSecondWorldCalamitySetNearDeath()">瀕死 1 HP</button><button class="btn" onclick="gmSecondWorldCalamityResetSelected()">重置本災厄</button><button class="btn blue" onclick="gmSyncCivilizationFromCalamities()">同步文明等級</button></div>
+   <div class="controls"><button class="btn" onclick="gmSecondWorldCalamitySetFullHp()">滿血</button><button class="btn danger" onclick="gmSecondWorldCalamitySetNearDeath()">瀕死 1 HP</button><button class="btn" onclick="gmSecondWorldCalamityResetSelected()">重置進度資料（保留文明）</button><button class="btn blue" onclick="gmSyncCivilizationFromCalamities()">同步文明等級</button></div>
    ${formalSummary(d)}`;
   }
   return d;
@@ -121,7 +121,8 @@
   const startHp=options.startHp==null?e.hp:Math.max(1,Math.min(e.hp,Math.floor(Number(options.startHp)||e.hp)));
   const civ=testCiv(options.snapshot);
   const multi=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(civ):1+civ*.05;
-  const result=window.runCombatCore(p,e,p.hp,{logs:false,preparePresentation:false,enemyStartHp:startHp,playerFinalDamageMultiplier:multi,markLevels:options.snapshot?.marks});
+  const markLevels=options.snapshot?.marks||(typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null);
+  const result=window.runCombatCore(p,e,p.hp,{logs:false,preparePresentation:false,enemyStartHp:startHp,playerFinalDamageMultiplier:multi,markLevels,useTestSpecializations:!options.snapshot,useTestMarks:!options.snapshot});
   return {definition:d,enemy:e,player:p,startHp,civilizationLevel:civ,civilizationDamageMultiplier:multi,result,damage:Math.max(0,startHp-Math.max(0,Number(result.enemyHp)||0))};
  }
  function singleTestHtml(data){
@@ -140,9 +141,27 @@
   }
   return {definition:d,attempts,totalDamage,totalTurns,remainingHp:hp,completed:hp<=0};
  }
+ function unlockProbe(d,bossCleared,civLevel){
+  if(!d)return null;
+  const civ=Math.max(0,Math.min(10,Math.floor(Number(civLevel)||0)));
+  const visible=bossCleared===true;
+  const previousCivilizationComplete=civ>=d.previousCivilizationLevel;
+  return {visible,challengeable:visible&&previousCivilizationComplete,bossCleared:visible,civilizationLevel:civ,requiredCivilizationLevel:d.previousCivilizationLevel,previousCivilizationComplete};
+ }
+ window.gmSecondWorldCalamityUnlockProbe=function(value,bossCleared,civLevel){
+  return unlockProbe(def(value),bossCleared,civLevel);
+ };
  window.gmSecondWorldCalamityTestHtml=function(){
-  const d=def();
-  return `<div class="muted gm-hub-note">宇宙文明災厄沙盒不受正式解鎖限制，使用目前 GM 共用測試 VIP／專精／強化／文明等級。所有測試不修改正式災厄 HP、trueKills、文明等級或存檔。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmSecondWorldCalamityTestTarget" class="btn" onchange="gmSecondWorldCalamitySelectTest(this.value)">${options()}</select></label><button class="btn blue" onclick="gmSecondWorldCalamitySingleTest()">單場沙盒</button><button class="btn" onclick="gmSecondWorldCalamityFullKillTest()">完整擊殺沙盒</button></div><div id="gmSecondWorldCalamityTestResult" style="margin-top:10px">${testResultHtml}</div>`;
+  const d=def(),civ=testCiv();
+  return `<div class="muted gm-hub-note">宇宙文明災厄沙盒不受正式解鎖限制，使用目前 GM 共用測試 VIP／專精／強化／印記／文明等級。所有測試不修改正式災厄 HP、trueKills、文明等級或存檔。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmSecondWorldCalamityTestTarget" class="btn" onchange="gmSecondWorldCalamitySelectTest(this.value)">${options()}</select></label><button class="btn blue" onclick="gmSecondWorldCalamitySingleTest()">單場沙盒</button><button class="btn" onclick="gmSecondWorldCalamityFullKillTest()">完整擊殺沙盒</button></div><div class="notice" style="margin-top:10px"><b>雙條件解鎖沙盒</b><div class="controls" style="align-items:end"><label>章末 Boss<br><select id="gmSecondWorldCalamityUnlockBoss" class="btn"><option value="0">未完成</option><option value="1" selected>已完成</option></select></label><span class="muted">使用目前 GM 測試文明 Lv.${civ}</span><button class="btn" onclick="gmSecondWorldCalamityRunUnlockProbe()">測解鎖判定</button></div><div id="gmSecondWorldCalamityUnlockResult" class="muted"></div></div><div id="gmSecondWorldCalamityTestResult" style="margin-top:10px">${testResultHtml}</div>`;
+ };
+ window.gmSecondWorldCalamityRunUnlockProbe=function(){
+  const d=selectedFromDom("gmSecondWorldCalamityTestTarget");
+  const boss=document.getElementById("gmSecondWorldCalamityUnlockBoss")?.value==="1";
+  const result=unlockProbe(d,boss,testCiv());
+  const box=document.getElementById("gmSecondWorldCalamityUnlockResult");
+  if(box&&result)box.textContent=`現身：${result.visible?"是":"否"}｜可挑戰：${result.challengeable?"是":"否"}｜前置文明 Lv.${result.requiredCivilizationLevel} ${result.previousCivilizationComplete?"✓":"✕"}`;
+  return result;
  };
  window.gmSecondWorldCalamitySelectTest=function(v){selectedIndex=clampIndex(v);testResultHtml="";if(typeof render==="function")render();return selectedIndex;};
  window.gmSecondWorldCalamitySingleTest=function(){
