@@ -15,6 +15,12 @@
  if(Number(window.CALAMITY_RUN_VERSION)!==1)fail("CALAMITY_RUN_VERSION","文明災厄 runtime 應為 V1",window.CALAMITY_RUN_VERSION);
  if(Number(window.CALAMITY_CONTINUOUS_RULE_VERSION)!==4)fail("CALAMITY_CONTINUOUS_RULE_VERSION","文明災厄連續討伐規則版本應為 4",window.CALAMITY_CONTINUOUS_RULE_VERSION);
  if(Number(window.CALAMITY_HP_RESTORE_OWNER_VERSION)!==1)fail("CALAMITY_HP_RESTORE_OWNER","災厄每場戰後回滿 HP 應由 Calamity Core settlement 單一管理",window.CALAMITY_HP_RESTORE_OWNER_VERSION);
+ if(Number(window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)!==1)fail("CALAMITY_FAST_CATCH_UP_POLICY","文明災厄應接入共用 Fast Catch-up Policy V1",{calamity:window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION,owner:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION});
+ const continuousSource=(()=>{try{return Function.prototype.toString.call(window.runCivilizationCalamityContinuous);}catch(e){return "";}})();
+ const fightSource=(()=>{try{return Function.prototype.toString.call(window.fightNextCivilizationCalamityBattle);}catch(e){return "";}})();
+ if(!/catchUpPreviewPolicy/.test(continuousSource)||!/shouldCheckpoint/.test(continuousSource)||!/save:fast/.test(continuousSource))fail("CALAMITY_FAST_CATCH_UP_SAVE_WIRING","文明災厄 catch-up 應由共用 policy 決定批次 checkpoint",continuousSource);
+ if(!/options\.save!==false/.test(fightSource))fail("CALAMITY_FAST_CATCH_UP_SAVE_OPTION","災厄 fightNext 應允許 catch-up 關閉逐場 save",fightSource);
+ if(typeof window.backgroundProgressConsumeCatchUpCredit!=="function")fail("CALAMITY_FAST_CATCH_UP_CREDIT_API","缺少共用 catch-up credit consume API");
  try{
   const snapshot=typeof window.getCivilizationCalamityRunSnapshot==="function"?window.getCivilizationCalamityRunSnapshot():null;
   if(snapshot!==null)fail("CALAMITY_RUN_BOOT_STATE","頁面載入時不應從 save 恢復文明災厄連戰",snapshot);
