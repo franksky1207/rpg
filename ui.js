@@ -336,10 +336,11 @@ function normalizeSaveState(target){
   if(!x||typeof x!=="object")return null;
   const item=normalizeSaveItem(x.item,null,target);if(!item)return null;
   const rawCost=Number(x.cost),lostAt=Number(x.lostAt),world=Number(item.world)===2?2:1;
-  const legacyUniverseFree=world===1&&(x.redemptionPending===true||x.currency==="pending"||x.currency==="free");
-  const currency=legacyUniverseFree?"free":x.currency==="darkMatter"?"darkMatter":"gold";
-  const fallback=currency==="darkMatter"&&typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):currency==="free"?0:ceil(item.buy*2);
-  const cost=currency==="free"?0:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
+  const universe=target?.secondWorld?.entered===true;
+  const currency=world===2?"darkMatter":universe?"free":"gold";
+  const officialDarkMatterCost=typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):null;
+  const fallback=currency==="darkMatter"&&Number.isFinite(Number(officialDarkMatterCost))?Math.max(0,Math.floor(Number(officialDarkMatterCost))):currency==="free"?0:ceil(item.buy*2);
+  const cost=currency==="free"?0:currency==="darkMatter"?fallback:(Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):fallback);
   return {id:typeof x.id==="string"&&x.id?x.id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:false,lostAt:Number.isFinite(lostAt)&&lostAt>=0?lostAt:Date.now()};
  }).filter(Boolean);
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
@@ -358,6 +359,7 @@ function normalizeSaveState(target){
  return target;
 }
 window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
+window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
 window.normalizeSaveItem=normalizeSaveItem;
 window.normalizeSaveState=normalizeSaveState;
 function normalizeCurrentSaveState(){
