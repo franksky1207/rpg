@@ -191,10 +191,10 @@
  window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=GM_PLAYER_TITLE_PREVIEW_VERSION;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
+ window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
-  window.registerGmHubSection("test","文明災厄測試",window.gmCalamityTestHtml,{id:"calamity-test",position:"append"});
   window.registerGmHubSection("test","稱號預覽",window.gmPlayerTitlePreviewHtml,{id:"player-title-preview",position:"append"});
  }
 })();
