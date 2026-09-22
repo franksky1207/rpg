@@ -79,22 +79,58 @@
   const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   return typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(holder)===true:holder?.secondWorld?.entered===true;
  }
- function specializationGuideWorldText(title,target=null){
+ function coreGuideWorldText(title,target=null){
+ const universe=guideUniverse(target);
+ const galaxy={
+  "遊戲基本玩法":"銀河紀元以打怪、升級、取得裝備與推進地圖為核心。戰鬥可獲得 EXP、金幣與裝備。",
+  "主線地圖":"銀河主線由多個區域與地圖組成，每張地圖都有普通怪、菁英怪與 Boss。完成目前地圖後會逐步開啟後續戰區。",
+  "地圖探索":"尚未抵達的地圖不會提前顯示；首次擊敗目前地圖 Boss 後開啟下一張。已探索地圖可隨時返回挑戰。",
+  "地圖推進":"普通怪與菁英怪各擊敗 10 次，並達到該地圖最高等級後，即可挑戰 Boss。",
+  "Boss":"Boss 可單場或連續挑戰。首次擊敗會開啟下一張地圖；若挑戰失敗，需再擊敗該地圖菁英怪 10 次才能重新挑戰。",
+  "戰鬥模式":"普通怪、菁英怪與 Boss 都可單場或連續戰鬥。連續戰鬥會持續至戰敗或玩家要求停止。",
+  "離線收益":"離線超過 1 分鐘後，可依最近有效的普通怪或菁英怪戰鬥取得部分 EXP、金幣、裝備與強化石，最多計算 12 小時。",
+  "目前等級上限":"銀河紀元角色等級上限為 Lv500。到達 Lv500 後不再累積 EXP，原本可取得的 EXP 會轉換為金幣。",
+  "裝備掉落":"銀河主線的普通怪、菁英怪與 Boss 都可能掉落裝備，Boss 勝利必定掉落。裝備等級最高 Lv500。",
+  "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。銀河紀元遺失裝備可使用金幣贖回。",
+  "自動出售":"可依品質自動出售裝備並取得金幣；神話裝備不會自動出售。鑑價技巧會提高出售收益。",
+  "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
+  "裝備欄位強化":"五個裝備欄位可永久強化至 +20，換裝或裝備遺失都不會降低強化等級。",
+  "強化石":"基礎與進階強化石用於銀河紀元 +1～+20，可由主線、部分裝備出售與離線收益取得。"
+ };
+ const universeText={
+  "遊戲基本玩法":"宇宙紀元以挑戰主線 Boss、升級與取得裝備為核心。勝利可獲得 EXP、暗物質、暗能量與第二世界裝備。",
+  "主線地圖":"宇宙主線共有 10 個區域、100 隻 Boss，等級由 Lv505 推進至 Lv1000。依序擊敗 Boss 即可前往後續戰區。",
+  "地圖探索":"尚未抵達的宇宙 Boss 不會提前顯示；擊敗前一隻後逐步向後推進。冒險頁也可切到「銀河紀元・回顧」進行純挑戰。",
+  "地圖推進":"宇宙紀元沒有普通怪與菁英怪主線。達到需求等級並擊敗前一隻 Boss 後，即可挑戰下一隻。",
+  "Boss":"宇宙主線全由 Boss 組成，可單場或連續挑戰。首次擊敗會推進主線；戰敗時連續戰鬥立即停止。",
+  "戰鬥模式":"宇宙主線 Boss 可選擇單場或連續戰鬥。連續戰鬥會持續挑戰目前 Boss，直到戰敗或玩家要求停止。",
+  "離線收益":"離線超過 1 分鐘後，可依最近的宇宙主線戰鬥紀錄取得部分 EXP、暗物質與裝備，最多計算 12 小時。離線收益不提供暗能量或副本額度。",
+  "目前等級上限":"宇宙紀元角色等級上限為 Lv1000。Lv500～999 可正常累積 EXP 升級，到達 Lv1000 後不再累積 EXP。",
+  "裝備掉落":"宇宙主線 Boss 勝利會取得第二世界裝備，裝備等級最高 Lv1000。裝備品質與詞條仍會影響實際能力。",
+  "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。宇宙紀元裝備出售與贖回主要使用暗物質。",
+  "自動出售":"可依品質自動出售第二世界裝備，出售後主要取得暗物質；神話裝備不會自動出售。鑑價技巧會提高出售收益。",
+  "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
+  "裝備欄位強化":"五個裝備欄位可由 +20 繼續強化至 +40，使用暗物質與暗能量。強化永久保留，不受換裝或裝備遺失影響。",
+  "強化石":"宇宙紀元 +21～+40 不再使用強化石，改用暗物質與暗能量。銀河紀元留下的強化石會保留。"
+ };
+ return (universe?universeText:galaxy)[title]||null;
+}
+function specializationGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
   if(title==="專精系統")return universe
-   ?"專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。進入宇宙紀元前已要求 8 項全部 Lv60，因此本紀元不再升級專精；既有效果會完整保留並套用到 EXP、暗物質、裝備出售與戰鬥能力。"
-   :"專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。銀河紀元使用金幣升級，等級越高所需費用越高；升級後永久保留，沒有失敗機率、不需要額外材料，也不能重置。";
-  if(title==="實戰訓練")return universe?"提升擊敗宇宙紀元主線 Boss 時取得的 EXP；Lv60 時 EXP +150%。":"提升擊敗怪物時取得的 EXP；每級 +2.5%。";
-  if(title==="搜刮技巧")return universe?"提升宇宙紀元主線 Boss 直接取得的暗物質；每級 +2.5%，Lv60 時 +150%。不影響裝備出售取得的暗物質。":"提升銀河紀元怪物直接掉落的金幣；每級 +2.5%。不影響出售裝備取得的金幣。";
-  if(title==="鑑價技巧")return universe?"提升第二世界裝備出售取得的暗物質；每級 +2.5%，Lv60 時 +150%。正式手動、批量與自動出售都適用，但不放大暗能量。":"提升銀河紀元出售裝備取得的金幣；每級 +2.5%。會影響正式手動、批量與自動出售。";
+   ?"專精共有 8 種，最高 Lv60。進入宇宙紀元時已全部滿級，效果會永久保留並繼續生效。"
+   :"專精共有 8 種，最高 Lv60，可使用金幣升級。不同專精會提升戰鬥、EXP、金幣與裝備相關能力。";
+  if(title==="實戰訓練")return universe?"提升宇宙主線 Boss 的 EXP 收益。":"提升擊敗怪物時取得的 EXP。";
+  if(title==="搜刮技巧")return universe?"提升宇宙主線 Boss 直接取得的暗物質，不影響裝備出售收益。":"提升怪物直接掉落的金幣，不影響裝備出售收益。";
+  if(title==="鑑價技巧")return universe?"提升宇宙紀元裝備出售取得的暗物質，不影響暗能量。":"提升出售裝備取得的金幣。";
   return null;
  }
  function civilizationGuideWorldText(title,target=null){
   if(title!=="文明等級")return null;
   const universe=guideUniverse(target);
   return universe
-   ?"文明等級為宇宙紀元永久成長，範圍 Lv.0～Lv.10。每級提高玩家宇宙戰鬥最終傷害 5%，Lv.5 為 +25%，Lv.10 為 +50%；此加成位於 late/final damage layer，不會改變角色頁的總攻擊。正式提升來源為宇宙紀元文明災厄。"
-   :"文明等級屬於宇宙紀元系統；銀河紀元不套用文明最終傷害倍率。進入宇宙紀元後由 Lv.0 開始，最高 Lv.10。";
+   ?"文明等級是宇宙紀元的永久成長系統，最高 Lv10。每級提高 5% 最終傷害，主要透過討伐文明災厄提升。"
+   :"文明等級會在進入宇宙紀元後開放；銀河紀元不套用這項加成。";
  }
 
  function bountyGuideWorldText(title,target=null){
@@ -132,12 +168,13 @@
   return GUIDE_CATEGORIES.map(category=>({
    ...category,
    items:(category.items||[]).map(item=>{
+    const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
     const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
     const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
     const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
     const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||arenaText||bountyText||civilizationText||specializationText;
+    const worldText=calamityText||arenaText||bountyText||civilizationText||specializationText||coreText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
