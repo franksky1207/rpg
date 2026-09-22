@@ -8,7 +8,7 @@
  const required=[
   "gmSecondWorldCalamityManagementHtml","gmApplySecondWorldCalamityFormal","gmSecondWorldCalamitySetFullHp",
   "gmSecondWorldCalamitySetNearDeath","gmSecondWorldCalamityResetSelected","gmSyncCivilizationFromCalamities",
-  "gmSecondWorldCalamityTestHtml","gmSecondWorldCalamitySingleTest","gmSecondWorldCalamityFullKillTest",
+  "gmSecondWorldCalamityTestHtml","gmSecondWorldCalamitySingleTest","gmSecondWorldCalamityFullKillTest","gmSecondWorldCalamityUnlockProbe","gmSecondWorldCalamityRunUnlockProbe",
   "runGmSecondWorldCalamitySimulation","runGmSecondWorldCalamityFullKill","runGmSecondWorldCalamityBenchmark",
   "gmSecondWorldCalamityBenchmarkHtml","gmPowerBenchmarkRunCalamity"
  ];
@@ -25,6 +25,7 @@
  try{
   const src=Function.prototype.toString.call(window.runGmSecondWorldCalamitySimulation);
   if(!/buildSecondWorldCalamityEnemy/.test(src)||!/runCombatCore/.test(src))fail("FORMAL_COMBAT_REUSE","GM 沙盒必須重用正式災厄敵人與 Combat Core",src);
+  if(!/useTestSpecializations/.test(src)||!/markLevels/.test(src))fail("TEST_STATE_WIRING","GM 沙盒必須接入共用測試專精與印記",src);
  }catch(error){fail("SOURCE_PROBE","GM source probe 失敗",String(error?.message||error));}
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
  window.GM_SECOND_WORLD_CALAMITY_INTEGRITY_VERSION=1;
