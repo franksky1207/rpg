@@ -18,20 +18,28 @@
  function saleEnhancementText(reward){return enhancementStoneRewardText(reward);}
  function blankEnhancementReward(){return normalizeEnhancementStoneReward(null);}
  function mergeEnhancementRewards(...rewards){return mergeEnhancementStoneRewards(...rewards);}
+ function secondWorldActive(){
+  return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;
+ }
+ function saleOwnerMissingResult(item=null){return {ok:false,reason:"sale-owner-missing",item,quote:{ok:false,currency:"unavailable",amount:0,gold:0,darkMatter:0,darkEnergy:0}};}
  function settleSale(item,options={}){
   if(typeof window.settleEquipmentSale==="function")return window.settleEquipmentSale(item,options);
+  if(secondWorldActive())return saleOwnerMissingResult(item);
   const sold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
   state.gold+=sold;
   return {ok:true,item,sold,quote:{currency:"gold",amount:sold,gold:sold,darkMatter:0,darkEnergy:0}};
  }
  function saleQuote(item,options={}){
   if(typeof window.equipmentSaleQuote==="function")return window.equipmentSaleQuote(item,options);
+  if(secondWorldActive())return saleOwnerMissingResult(item).quote;
   const gold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
   return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0};
  }
  function saleText(value){
   if(typeof window.equipmentSaleText==="function")return window.equipmentSaleText(value);
-  const quote=value?.quote||value||{};return `${Math.max(0,Math.floor(Number(quote.gold)||0)).toLocaleString()} 金幣`;
+  const quote=value?.quote||value||{};
+  if(quote.currency==="unavailable")return "出售系統未載入";
+  return Math.max(0,Math.floor(Number(quote.gold)||0)).toLocaleString()+" 金幣";
  }
  window.restoreAfterEquipmentChange=restoreAfterEquipmentChange;
  window.isGearLocked=function(item){return item?.locked===true;};
@@ -141,11 +149,12 @@
    const current=state.equipment[item.type];
    return !!current&&equipmentScore(item)<=equipmentScore(current);
   });
-  const quote=typeof window.equipmentSaleBatchQuote==="function"?window.equipmentSaleBatchQuote(targets):{currency:"gold",amount:targets.reduce((sum,item)=>sum+saleQuote(item).amount,0),gold:targets.reduce((sum,item)=>sum+saleQuote(item).gold,0),darkMatter:0,darkEnergy:0};
+  const quote=typeof window.equipmentSaleBatchQuote==="function"?window.equipmentSaleBatchQuote(targets):(secondWorldActive()?{ok:false,currency:"unavailable",amount:0,gold:0,darkMatter:0,darkEnergy:0}:{currency:"gold",amount:targets.reduce((sum,item)=>sum+saleQuote(item).amount,0),gold:targets.reduce((sum,item)=>sum+saleQuote(item).gold,0),darkMatter:0,darkEnergy:0});
   return {targets,total:quote.amount,quote};
  };
  window.equipmentSellLowerAll=function(preview=null){
   const data=preview?.targets?preview:equipmentLowerSalePreview();
+  if(secondWorldActive()&&typeof window.settleEquipmentSaleBatch!=="function")return {ok:false,reason:"sale-owner-missing",count:0,total:0};
   const sale=typeof window.settleEquipmentSaleBatch==="function"?window.settleEquipmentSaleBatch(data.targets):null;
   if(!sale?.ok&&typeof window.settleEquipmentSaleBatch==="function")return {ok:false,reason:sale?.reason||"sale",count:0,total:0};
   if(!sale){
@@ -243,7 +252,8 @@
   });
  }
 
- window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=3;
+ window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=4;
+ window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=1;
  injectLockStyles();normalizeAllGearLocks();save(false);
  const main=document.getElementById("main");
  if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(enhanceEquippedLockControls,0)).observe(main,{childList:true,subtree:true});
