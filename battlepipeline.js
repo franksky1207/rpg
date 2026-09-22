@@ -34,6 +34,24 @@
  function stopMainBackground(started){
   if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
  }
+ function mainEnvironmentBackground(){
+  return typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground()===true;
+ }
+ function mainFastCatchUp(){
+  return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("main")===true;
+ }
+ function mainCatchUpStep(){
+  return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("main"):null;
+ }
+ function mainCatchUpFinal(){
+  return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;
+ }
+ function refreshMainCatchUpUi(ctx){
+  adventureScreen="combat";
+  if(typeof render==="function")render();
+  if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx?.continuous===true});
+  if(ctx?.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
+ }
  function retainRealBattleSamplesBySpeed(rows,sampleVersion){
   const kept=[];
   REAL_BATTLE_SAMPLE_SPEEDS.forEach(speed=>{
@@ -120,7 +138,7 @@
   ctx.exitRequested=ctx.exitRequested===true;
   ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
   window.activeMainBattleContext=ctx;
-  let defeat=null,local=0;
+  let defeat=null,local=0,catchUpNeedsFinalSync=false;
   const mainBackgroundStarted=startMainBackground(ctx);
 
   try{
@@ -133,16 +151,20 @@
    combatTotal=ctx.continuous?0:ctx.originalCount;
    const playerLevelBefore=state.level;
    const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
-   adventureScreen="combat";
-   render();
-   if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});
+   const fastCatchUp=mainFastCatchUp();
+   const suppressPresentation=fastCatchUp||mainEnvironmentBackground();
+   if(!suppressPresentation){
+    adventureScreen="combat";
+    render();
+    if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});
+   }
 
    const psBefore=playerCombatStats(),startPlayerHp=state.hp;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
    if(!r.ok){if(typeof realBattleTiming?.unsubscribe==="function")realBattleTiming.unsubscribe();alert(r.reason);break}
 
    const roundLabel=ctx.continuous?`連續戰鬥・第 ${combatRound} 場`:ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"";
-   await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
+   if(!suppressPresentation)await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
    finishRealBattleTiming(realBattleTiming,r);
 
    if(r.win){
@@ -158,8 +180,15 @@
 
    ctx.completed++;
    if(!ctx.continuous)ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
-   if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
-   if(ctx.continuous&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");
+   const catchUpPolicy=fastCatchUp?mainCatchUpStep():null;
+   if(fastCatchUp){
+    catchUpNeedsFinalSync=true;
+    if(catchUpPolicy?.shouldPresentBattle){
+     refreshMainCatchUpUi(ctx);
+     await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
+    }else if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
+    if((catchUpPolicy?.shouldRefreshUi||catchUpPolicy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");
+   }else if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
    clearPreviewEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=null;
 
@@ -170,7 +199,7 @@
     break;
    }
 
-   save(false);
+   if(!fastCatchUp||catchUpPolicy?.shouldCheckpoint)save(false);
    if(ctx.pendingStoryId)break;
 
    let specialOutcome=false;
@@ -186,6 +215,12 @@
     if(hasMoreBattles(ctx)){
      currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
      await battleFlowSleep(battleGapMs(r.e.kind));
+     if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
+      const finalPolicy=mainCatchUpFinal();
+      if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
+      if(finalPolicy?.shouldCheckpoint)save(false);
+      catchUpNeedsFinalSync=false;
+     }
     }
     continue;
    }
@@ -194,6 +229,12 @@
    if(hasMoreBattles(ctx)){
     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
     await battleFlowSleep(battleGapMs(r.e.kind));
+    if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
+     const finalPolicy=mainCatchUpFinal();
+     if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
+     if(finalPolicy?.shouldCheckpoint)save(false);
+     catchUpNeedsFinalSync=false;
+    }
    }
   }
 
@@ -212,6 +253,7 @@
   }
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
+ window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION=1;
  window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION=1;
  window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
  window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;
