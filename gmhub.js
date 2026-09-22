@@ -19,6 +19,7 @@
    .gm-hub-body{padding:14px}.gm-hub-body .item{margin-top:0}.gm-hub-body input,.gm-hub-body select{max-width:100%}
    .gm-hub .btn.gm-create{background:#8a641f;border-color:#c99a43;color:#fff3cf}.gm-hub .btn.gm-create:hover{background:#9b7227;border-color:#ddb05b}
    .gm-hub-close{margin-top:14px}.gm-hub-note{margin-bottom:10px}
+   .gm-ability-test-stack{display:grid;gap:8px}.gm-ability-test-sub{border:1px solid #403a30;border-radius:10px;background:#14181e;overflow:hidden}.gm-ability-test-sub>summary{cursor:pointer;list-style:none;padding:11px 12px;color:#e4c98d;font-weight:700;background:#1b1f25}.gm-ability-test-sub>summary::-webkit-details-marker{display:none}.gm-ability-test-sub>summary::after{content:"＋";float:right;color:#a99b7f}.gm-ability-test-sub[open]>summary::after{content:"－"}.gm-ability-test-sub-body{padding:12px}
    .gm-dungeon-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
    .gm-dungeon-summary-item{display:inline-flex;gap:5px;align-items:baseline}.gm-dungeon-summary-label{color:#b7ad99}.gm-dungeon-summary-value{color:#eee2c5;font-weight:700}
    .gm-dungeon-summary-sep{color:#8f846f}
@@ -112,9 +113,8 @@
 
  function hubHtml(){
   const manage=gmHubTab==="manage";
-  const testStatus=manage?"":(typeof gmTestCurrentStatusHtml==="function"?gmTestCurrentStatusHtml():"");
   const sections=typeof window.gmHubRegisteredSectionsHtml==="function"?window.gmHubRegisteredSectionsHtml(gmHubTab):"";
-  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${testStatus}${sections}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
+  return `<div class="gm-hub"><h3>管理／GM 模式</h3><div class="gm-hub-tabs"><button class="gm-hub-tab ${manage?"active":""}" onclick="gmHubSwitch('manage')">管理</button><button class="gm-hub-tab ${manage?"":"active"}" onclick="gmHubSwitch('test')">測試</button></div>${sections}<div class="controls gm-hub-close"><button class="btn" onclick="state.gm=false;save();render()">關閉管理模式</button></div></div>`;
  }
 
  window.gmGeneralManagementHtml=generalManagementHtml;
