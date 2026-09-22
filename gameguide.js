@@ -21,7 +21,7 @@
    ["自動出售","可以在設定中指定要自動出售的裝備品質。符合條件的掉落會直接轉換成金幣。神話裝備不會自動出售；若開啟保留升級裝備，評分高於目前裝備的掉落也會優先保留。鑑價技巧會提高實際出售裝備時取得的金幣。"],
    ["死亡懲罰","戰鬥失敗不會損失任何既有 EXP。正式死亡流程仍有 30% 機率遺失一件已裝備的裝備；遺失裝備會進入背包的「遺失裝備贖回」，可依所在紀元的規則取回或永久放棄。戰鬥結束後 HP 會回滿。VIP20 可以完全防止死亡時遺失裝備。"],
    ["裝備欄位強化","武器、頭盔、鎧甲、鞋子、飾品五個欄位都能永久強化，強化等級會保留在欄位上，不受更換裝備或戰敗遺失影響。銀河紀元正式範圍為 +0～+20；進入宇宙紀元時五個欄位必定已達 +20，之後可使用暗物質與暗能量繼續強化至 +40。+21～+40 不另設角色等級、區域或 Boss 進度門檻，每級仍提升裝備主能力 2.5%，+40 共提升主能力 100%。"],
-   ["強化石","基礎／進階強化石屬於銀河紀元 +1～+20 的強化資源，可透過主線戰鬥、部分裝備出售與離線刷怪取得，其中離線只能獲得少量基礎強化石。玩家高於怪物 10 級（含）以上時，主線戰鬥將不再掉落強化石；特殊怪與副本也不會掉落強化石。進入宇宙紀元後，+21～+40 改用暗物質與暗能量，不再消耗第一世界強化石。"]
+   ["強化石","基礎／進階強化石屬於銀河紀元 +1～+20 的強化資源，可透過主線戰鬥、部分裝備出售與離線刷怪取得，其中離線只能獲得少量基礎強化石。玩家高於怪物 10 級（含）以上時，主線戰鬥將不再掉落強化石；特殊怪與副本也不會掉落強化石。進入宇宙紀元後，+21～+40 改用暗物質與暗能量，不再消耗銀河紀元強化石。"]
   ]},
   {id:"combat",label:"戰鬥與怪物",items:[
    ["基本戰鬥","戰鬥會自動進行，玩家與敵人輪流攻擊，直到其中一方 HP 歸零。每次戰鬥的結果會依雙方能力、暴擊、閃避與各種特殊效果決定。除競技場三連戰的場間之外，戰鬥結束後 HP 會回滿。"],
@@ -115,6 +115,13 @@
  };
  return (universe?universeText:galaxy)[title]||null;
 }
+function combatGuideWorldText(title,target=null){
+ const universe=guideUniverse(target);
+ if(title==="多重特性")return universe
+  ?"宇宙主線 Boss 可能帶有多個怪物特性，會直接影響戰鬥方式與難度。"
+  :"普通怪、菁英怪與 Boss 都可能帶有怪物特性，較強敵人通常更容易出現。";
+ return null;
+}
 function specialGuideWorldText(title,target=null){
  const universe=guideUniverse(target);
  if(title==="特殊遭遇")return universe
@@ -194,6 +201,7 @@ function specializationGuideWorldText(title,target=null){
    ...category,
    items:(category.items||[]).map(item=>{
     const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
+    const combatText=category.id==="combat"?combatGuideWorldText(item?.[0],target):null;
     const specialText=category.id==="special"?specialGuideWorldText(item?.[0],target):null;
     const dungeonCommonText=category.id==="dungeon"?dungeonCommonGuideWorldText(item?.[0],target):null;
     const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
@@ -201,7 +209,7 @@ function specializationGuideWorldText(title,target=null){
     const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
     const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
     const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||civilizationText||specializationText||coreText;
+    const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||combatText||civilizationText||specializationText||coreText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
@@ -209,7 +217,7 @@ function specializationGuideWorldText(title,target=null){
  function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
  window.GAME_GUIDE_VERSION=18;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=4;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=5;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CALAMITY_WORLD_VERSION=2;
@@ -217,6 +225,7 @@ function specializationGuideWorldText(title,target=null){
  window.GAME_GUIDE_ARENA_WORLD_VERSION=2;
  window.GAME_GUIDE_SPECIAL_WORLD_VERSION=1;
  window.GAME_GUIDE_DUNGEON_COMMON_WORLD_VERSION=1;
+ window.GAME_GUIDE_COMBAT_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
