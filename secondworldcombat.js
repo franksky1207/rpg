@@ -1,9 +1,8 @@
 (function(){
  const VERSION=1;
  const SETTLEMENT_READY=true;
- const BASE_HP=36000;
- const BASE_ATK=6000;
- const BASE_DEF=3000;
+ const BASE_STAT=3000;
+ const STAT_RATIO=Object.freeze({hp:12,atk:2,def:1});
  const STEP_RATE=.015;
 
  function bossMeta(value){
@@ -28,9 +27,9 @@
    level:boss.level,
    kind:"boss",
    style:"universe",
-   hp:Math.ceil(BASE_HP*multiplier),
-   atk:Math.ceil(BASE_ATK*multiplier),
-   def:Math.ceil(BASE_DEF*multiplier),
+   hp:Math.ceil(BASE_STAT*STAT_RATIO.hp*multiplier),
+   atk:Math.ceil(BASE_STAT*STAT_RATIO.atk*multiplier),
+   def:Math.ceil(BASE_STAT*STAT_RATIO.def*multiplier),
    crit:0,
    dodge:0,
    multiplier
@@ -105,7 +104,8 @@
 
  window.SECOND_WORLD_COMBAT_VERSION=VERSION;
  window.SECOND_WORLD_COMBAT_SETTLEMENT_READY=SETTLEMENT_READY;
- window.SECOND_WORLD_BOSS_BASE_STATS=Object.freeze({hp:BASE_HP,atk:BASE_ATK,def:BASE_DEF,stepRate:STEP_RATE});
+ window.SECOND_WORLD_BOSS_BASE_STATS=Object.freeze({base:BASE_STAT,ratio:STAT_RATIO,hp:BASE_STAT*STAT_RATIO.hp,atk:BASE_STAT*STAT_RATIO.atk,def:BASE_STAT*STAT_RATIO.def,stepRate:STEP_RATE});
+ window.SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1;
  window.secondWorldBossMultiplier=secondWorldBossMultiplier;
  window.secondWorldBossBaseStats=secondWorldBossBaseStats;
  window.secondWorldBossEncounter=secondWorldBossEncounter;
