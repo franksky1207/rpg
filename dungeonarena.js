@@ -47,10 +47,12 @@
   extreme3:{zero:0,one:.70,two:.30}
  };
 
- function arenaMaxRank(){return Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
+ function arenaWorld(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state):(state?.secondWorld?.entered===true?2:1);}
+ function arenaMaxRank(){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(arenaWorld()):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
  function clampArenaRank(value){return Math.max(1,Math.min(arenaMaxRank(),Math.floor(Number(value)||1)));}
  function dailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("arena"):{used:0,remaining:0,limit:20};}
  function arenaUnlockedRankCap(){
+  if(typeof window.getArenaRankCapForWorld==="function")return clampArenaRank(window.getArenaRankCapForWorld(arenaWorld(),state));
   if(typeof unlockedArenaRankCapForState==="function")return clampArenaRank(unlockedArenaRankCapForState(state));
   const unlockedMap=Math.max(0,Math.floor(Number(state?.unlockedMap)||0)),regions=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const count=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;
@@ -65,8 +67,13 @@
   return dungeon.arena;
  }
  function currentArenaRank(){return currentArenaProgress().rank;}
- function arenaRankName(rank){const r=clampArenaRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;return `${region?.name||`第${r}區`}階`;}
- function arenaVenueName(rank){const r=clampArenaRank(rank),region=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;return `${region?.name||`第${r}區`}競技場`;}
+ function arenaRegionMeta(rank){
+  const r=clampArenaRank(rank);
+  if(arenaWorld()===2&&typeof window.getSecondWorldRegion==="function")return window.getSecondWorldRegion(r-1);
+  return Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;
+ }
+ function arenaRankName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}階`;}
+ function arenaVenueName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}競技場`;}
  function arenaRankMultipliers(rank){
   const x=clampArenaRank(rank)-1;
   const value=key=>{const curve=ARENA_RANK_CURVE[key];return 1+curve.linear*x+curve.quadratic*x*x;};
@@ -74,8 +81,8 @@
  }
  function scaleStagePoints(weights,total){const source=Array.isArray(weights)&&weights.length===3?weights:[0,0,0],sourceTotal=Math.max(1,source.reduce((sum,x)=>sum+Math.max(0,Number(x)||0),0)),target=Math.max(0,Math.floor(Number(total)||0));const first=Math.max(0,Math.round((Number(source[0])||0)*target/sourceTotal)),second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));return [first,second,Math.max(0,target-first-second)];}
  function arenaBaseTotalPoints(rank,positionId){
-  const r=clampArenaRank(rank),id=String(positionId||"normal");
-  const base=id==="extreme"?150:id==="hard"?100:50;
+  const r=clampArenaRank(rank),id=String(positionId||"normal"),universe=arenaWorld()===2;
+  const base=universe?(id==="extreme"?670:id==="hard"?620:570):(id==="extreme"?150:id==="hard"?100:50);
   if(r<=3)return base;
   return base+60*(r-3);
  }
@@ -171,6 +178,7 @@
  }
 
  window.ARENA_COMBAT_MARK_PRESENTATION_VERSION=1;
+ window.SECOND_WORLD_ARENA_POINTS_VERSION=1;
  async function runArenaFight(){
   if(battleBusy)return;
   battleBusy=true;
