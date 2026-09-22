@@ -53,8 +53,8 @@
  };
 
  function arenaWorld(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state):(state?.secondWorld?.entered===true?2:1);}
- function arenaMaxRank(){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(arenaWorld()):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
- function clampArenaRank(value){return Math.max(1,Math.min(arenaMaxRank(),Math.floor(Number(value)||1)));}
+ function arenaMaxRank(world=arenaWorld()){return typeof window.getArenaMaxRankForWorld==="function"?window.getArenaMaxRankForWorld(Number(world)===2?2:1):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
+ function clampArenaRank(value,world=arenaWorld()){return Math.max(1,Math.min(arenaMaxRank(world),Math.floor(Number(value)||1)));}
  function dailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("arena"):{used:0,remaining:0,limit:20};}
  function arenaUnlockedRankCap(){
   if(typeof window.getArenaRankCapForWorld==="function")return clampArenaRank(window.getArenaRankCapForWorld(arenaWorld(),state));
@@ -72,50 +72,50 @@
   return dungeon.arena;
  }
  function currentArenaRank(){return currentArenaProgress().rank;}
- function arenaRegionMeta(rank){
-  const r=clampArenaRank(rank);
-  if(arenaWorld()===2&&typeof window.getSecondWorldRegion==="function")return window.getSecondWorldRegion(r-1);
+ function arenaRegionMeta(rank,world=arenaWorld()){
+  const w=Number(world)===2?2:1,r=clampArenaRank(rank,w);
+  if(w===2&&typeof window.getSecondWorldRegion==="function")return window.getSecondWorldRegion(r-1);
   return Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;
  }
- function arenaRankName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}階`;}
- function arenaVenueName(rank){const r=clampArenaRank(rank),region=arenaRegionMeta(r);return `${region?.name||`第${r}區`}競技場`;}
- function arenaRankCurve(){
-  return arenaWorld()===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
+ function arenaRankName(rank,world=arenaWorld()){const w=Number(world)===2?2:1,r=clampArenaRank(rank,w),region=arenaRegionMeta(r,w);return `${region?.name||`第${r}區`}階`;}
+ function arenaVenueName(rank,world=arenaWorld()){const w=Number(world)===2?2:1,r=clampArenaRank(rank,w),region=arenaRegionMeta(r,w);return `${region?.name||`第${r}區`}競技場`;}
+ function arenaRankCurve(world=arenaWorld()){
+  return Number(world)===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
  }
- function arenaRankMultipliers(rank){
-  const x=clampArenaRank(rank)-1,source=arenaRankCurve();
+ function arenaRankMultipliers(rank,world=arenaWorld()){
+  const w=Number(world)===2?2:1,x=clampArenaRank(rank,w)-1,source=arenaRankCurve(w);
   const value=key=>{const curve=source[key];return 1+curve.linear*x+curve.quadratic*x*x;};
   return {hp:value("hp"),damage:value("damage"),def:value("def")};
  }
  function scaleStagePoints(weights,total){const source=Array.isArray(weights)&&weights.length===3?weights:[0,0,0],sourceTotal=Math.max(1,source.reduce((sum,x)=>sum+Math.max(0,Number(x)||0),0)),target=Math.max(0,Math.floor(Number(total)||0));const first=Math.max(0,Math.round((Number(source[0])||0)*target/sourceTotal)),second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));return [first,second,Math.max(0,target-first-second)];}
- function arenaBaseTotalPoints(rank,positionId){
-  const r=clampArenaRank(rank),id=String(positionId||"normal"),universe=arenaWorld()===2;
+ function arenaBaseTotalPoints(rank,positionId,world=arenaWorld()){
+  const w=Number(world)===2?2:1,r=clampArenaRank(rank,w),id=String(positionId||"normal"),universe=w===2;
   const base=universe?(id==="extreme"?670:id==="hard"?620:570):(id==="extreme"?150:id==="hard"?100:50);
   if(r<=3)return base;
   return base+60*(r-3);
  }
- function positionForRank(base,rank){
+ function positionForRank(base,rank,world=arenaWorld()){
   if(!base)return null;
-  const r=clampArenaRank(rank),totalPoints=arenaBaseTotalPoints(r,base.id);
-  return {id:base.id,name:arenaVenueName(r),rank:r,rankName:arenaRankName(r),stagePoints:scaleStagePoints(base.stageWeights,totalPoints),totalPoints};
+  const w=Number(world)===2?2:1,r=clampArenaRank(rank,w),totalPoints=arenaBaseTotalPoints(r,base.id,w);
+  return {id:base.id,name:arenaVenueName(r,w),rank:r,rankName:arenaRankName(r,w),stagePoints:scaleStagePoints(base.stageWeights,totalPoints),totalPoints};
  }
- function positionById(id,rank=currentArenaRank()){const base=ARENA_POSITION_BASES.find(x=>x.id===id)||null;return positionForRank(base,rank);}
- function arenaEnemyProfile(rank,positionId,stageIndex){
-  const r=clampArenaRank(rank),id=ARENA_POSITION_BASES.some(x=>x.id===positionId)?positionId:"normal",idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0)));
-  const stagePhysical=ARENA_PHYSICAL_STAGE_PROFILE[idx]||ARENA_PHYSICAL_STAGE_PROFILE[0],positionPhysical=ARENA_POSITION_PHYSICAL_MULTIPLIERS[id]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal,positionStage=(ARENA_POSITION_STAGE_CONFIGS[id]||ARENA_POSITION_STAGE_CONFIGS.normal)[idx]||ARENA_POSITION_STAGE_CONFIGS.normal[0],rankScale=arenaRankMultipliers(r);
+ function positionById(id,rank=currentArenaRank(),world=arenaWorld()){const base=ARENA_POSITION_BASES.find(x=>x.id===id)||null;return positionForRank(base,rank,world);}
+ function arenaEnemyProfile(rank,positionId,stageIndex,world=arenaWorld()){
+  const w=Number(world)===2?2:1,r=clampArenaRank(rank,w),id=ARENA_POSITION_BASES.some(x=>x.id===positionId)?positionId:"normal",idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0)));
+  const stagePhysical=ARENA_PHYSICAL_STAGE_PROFILE[idx]||ARENA_PHYSICAL_STAGE_PROFILE[0],positionPhysical=ARENA_POSITION_PHYSICAL_MULTIPLIERS[id]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal,positionStage=(ARENA_POSITION_STAGE_CONFIGS[id]||ARENA_POSITION_STAGE_CONFIGS.normal)[idx]||ARENA_POSITION_STAGE_CONFIGS.normal[0],rankScale=arenaRankMultipliers(r,w);
   const effectivePhysical={hpMul:stagePhysical.hpMul*positionPhysical.hp,damageMul:stagePhysical.damageMul*positionPhysical.damage,defMul:stagePhysical.defMul*positionPhysical.def};
   return {rank:r,positionId:id,stageIndex:idx,rankScale:{...rankScale},stagePhysical:{...stagePhysical},positionPhysical:{...positionPhysical},effectivePhysical,finalPhysical:{hpMul:effectivePhysical.hpMul*rankScale.hp,damageMul:effectivePhysical.damageMul*rankScale.damage,defMul:effectivePhysical.defMul*rankScale.def},critScale:positionStage.critScale,critAdd:positionStage.critAdd,critCap:positionStage.critCap,dodgeScale:positionStage.dodgeScale,dodgeAdd:positionStage.dodgeAdd,dodgeCap:positionStage.dodgeCap,traitMode:positionStage.traitMode};
  }
- function arenaPositionConfigs(rank=currentArenaRank()){
-  const r=clampArenaRank(rank);
-  return ARENA_POSITION_BASES.map(base=>{const position=positionForRank(base,r);return {...position,positionPhysical:{...(ARENA_POSITION_PHYSICAL_MULTIPLIERS[position.id]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal)},stages:[0,1,2].map(i=>{const p=arenaEnemyProfile(r,position.id,i);return {...p.stagePhysical,critScale:p.critScale,critAdd:p.critAdd,critCap:p.critCap,dodgeScale:p.dodgeScale,dodgeAdd:p.dodgeAdd,dodgeCap:p.dodgeCap,traitMode:p.traitMode,effectivePhysical:{...p.effectivePhysical}};})};});
+ function arenaPositionConfigs(rank=currentArenaRank(),world=arenaWorld()){
+  const w=Number(world)===2?2:1,r=clampArenaRank(rank,w);
+  return ARENA_POSITION_BASES.map(base=>{const position=positionForRank(base,r,w);return {...position,positionPhysical:{...(ARENA_POSITION_PHYSICAL_MULTIPLIERS[position.id]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal)},stages:[0,1,2].map(i=>{const p=arenaEnemyProfile(r,position.id,i,w);return {...p.stagePhysical,critScale:p.critScale,critAdd:p.critAdd,critCap:p.critCap,dodgeScale:p.dodgeScale,dodgeAdd:p.dodgeAdd,dodgeCap:p.dodgeCap,traitMode:p.traitMode,effectivePhysical:{...p.effectivePhysical}};})};});
  }
  function newContinuousSummary(){return {runs:0,fullClears:0,failedRuns:0,totalPoints:0,stopReason:null};}
  function createArenaState(overrides={}){return {phase:"select",rank:1,position:null,stage:0,enemy:null,result:null,history:[],gainedPoints:0,roundPoints:0,roundBasePoints:0,playerSnapshot:null,enemyScalingSnapshot:null,vipLevelSnapshot:0,continuous:false,stopRequested:false,summary:newContinuousSummary(),...overrides};}
  let arenaState=createArenaState();
 
- function clampLevel(v){
-  if(arenaWorld()===2)return Math.max(500,Math.min(1000,Math.floor(Number(v)||500)));
+ function clampLevel(v,world=arenaWorld()){
+  if(Number(world)===2)return Math.max(500,Math.min(1000,Math.floor(Number(v)||500)));
   return clampGameLevel(v);
  }
  function traitCount(mode){const p=ARENA_TRAIT_COUNT_PROFILES[mode]||ARENA_TRAIT_COUNT_PROFILES.one,roll=Math.random();if(roll<p.zero)return 0;if(roll<p.zero+p.one)return 1;return 2;}
@@ -126,8 +126,9 @@
  function adjustedFullClearPoints(diff){const base=Math.max(0,Math.floor(Number(diff?.totalPoints)||0));return typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(base):base;}
 
  function buildArenaEnemy(positionId,stageIndex,stats=null,level=null,options={}){
-  const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=arenaEnemyProfile(options.rank??currentArenaRank(),positionId,stageIndex),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(profile.traitMode);
-  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  const world=Number(options.world)===2?2:1,rank=options.rank??currentArenaRank();
+  const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=arenaEnemyProfile(rank,positionId,stageIndex,world),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(profile.traitMode);
+  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level,world),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank,world),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
  }
 
  const ARENA_VERSION_PROFILE=typeof window.getArenaVersionProfile==="function"?window.getArenaVersionProfile():{};
@@ -135,13 +136,15 @@
  window.ARENA_RANK_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.rankBalanceVersion)||0));
  window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
  window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION=1;
+ window.ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1;
  window.SECOND_WORLD_ARENA_LEVEL_CLAMP_VERSION=1;
  window.SECOND_WORLD_ARENA_RANK_CURVE=SECOND_WORLD_ARENA_RANK_CURVE;
  window.getArenaRankCurveForWorld=function(world=arenaWorld()){
   const source=Number(world)===2?SECOND_WORLD_ARENA_RANK_CURVE:ARENA_RANK_CURVE;
   return {hp:{...source.hp},damage:{...source.damage},def:{...source.def}};
  };
- window.getArenaRankMultipliers=function(rank){return arenaRankMultipliers(rank);};
+ window.getArenaRankMultipliers=function(rank,world=null){return arenaRankMultipliers(rank,world==null?arenaWorld():world);};
+ window.getArenaVenueNameForWorld=function(rank,world){return arenaVenueName(rank,world);};
  window.getArenaPositionPhysicalMultipliers=function(id){const key=String(id||"normal"),v=ARENA_POSITION_PHYSICAL_MULTIPLIERS[key]||ARENA_POSITION_PHYSICAL_MULTIPLIERS.normal;return {hp:v.hp,damage:v.damage,def:v.def};};
  window.getArenaPositionStageConfig=function(id,stageIndex){const key=String(id||"normal"),stages=ARENA_POSITION_STAGE_CONFIGS[key]||ARENA_POSITION_STAGE_CONFIGS.normal,idx=Math.max(0,Math.min(2,Math.floor(Number(stageIndex)||0))),v=stages[idx]||stages[0];return {...v};};
  window.getArenaTraitCountProfile=function(mode){const v=ARENA_TRAIT_COUNT_PROFILES[String(mode||"one")]||ARENA_TRAIT_COUNT_PROFILES.one;return {zero:v.zero,one:v.one,two:v.two};};
@@ -149,9 +152,9 @@
  window.ARENA_ENEMY_PROFILE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.enemyProfileVersion)||0));
  window.ARENA_PRESENTATION_PACING_SOURCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.pacingSourceVersion)||0));
  window.getArenaBalanceVersions=function(){return {balanceVersion:window.ARENA_BALANCE_VERSION,rankBalanceVersion:window.ARENA_RANK_BALANCE_VERSION,positionApiVersion:window.ARENA_POSITION_API_VERSION,enemyProfileVersion:window.ARENA_ENEMY_PROFILE_VERSION,pacingSourceVersion:window.ARENA_PRESENTATION_PACING_SOURCE_VERSION};};
- window.getArenaPositionConfigs=function(rank=null){return arenaPositionConfigs(rank==null?currentArenaRank():rank);};
- window.getArenaEnemyProfile=function(rank,positionId,stageIndex){return arenaEnemyProfile(rank,positionId,stageIndex);};
- window.buildArenaEnemyForTest=function(positionId,stageIndex,stats=null,level=null,rank=null){return positionById(positionId,rank==null?currentArenaRank():rank)?buildArenaEnemy(positionId,stageIndex,stats,level,{rank:rank==null?currentArenaRank():rank}):null;};
+ window.getArenaPositionConfigs=function(rank=null,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1);return arenaPositionConfigs(rank==null?currentArenaRank():rank,w);};
+ window.getArenaEnemyProfile=function(rank,positionId,stageIndex,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1);return arenaEnemyProfile(rank,positionId,stageIndex,w);};
+ window.buildArenaEnemyForTest=function(positionId,stageIndex,stats=null,level=null,rank=null,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1),r=rank==null?currentArenaRank():rank;return positionById(positionId,r,w)?buildArenaEnemy(positionId,stageIndex,stats,level,{rank:r,world:w}):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
  window.getArenaCurrentRank=currentArenaRank;
  window.getArenaUnlockedRankCap=arenaUnlockedRankCap;
