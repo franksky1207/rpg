@@ -63,9 +63,9 @@
   if(!player)return {ok:false,reason:"無法取得玩家戰鬥能力。"};
   const startHp=options.startHp==null?Math.max(1,Number(player.hp)||1):Math.max(0,Number(options.startHp)||0);
   const targetState=options.state&&typeof options.state==="object"?options.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
-  const civilizationMultiplier=options.civilizationLevel!=null&&typeof window.civilizationDamageMultiplierForLevel==="function"
-   ?window.civilizationDamageMultiplierForLevel(options.civilizationLevel)
-   :(typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(targetState):1);
+  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
+   ?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel})
+   :1;
   const combat=window.runCombatCore(player,enemy,startHp,{
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
@@ -111,7 +111,7 @@
  window.secondWorldBossEncounter=secondWorldBossEncounter;
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
- window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=1;
+ window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
  window.SECOND_WORLD_COMBAT_INTEGRITY=validate();
  if(!window.SECOND_WORLD_COMBAT_INTEGRITY.passed)console.error("[文明戰線] Second World combat integrity error",window.SECOND_WORLD_COMBAT_INTEGRITY.errors);
 })();
