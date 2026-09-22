@@ -5,9 +5,9 @@
   def:Object.freeze({linear:.016,quadratic:.004})
  });
  const SECOND_WORLD_ARENA_RANK_CURVE=Object.freeze({
-  hp:Object.freeze({linear:.025,quadratic:.0075}),
-  damage:Object.freeze({linear:.005,quadratic:.0031}),
-  def:Object.freeze({linear:.016,quadratic:.004})
+  hp:Object.freeze({base:1.68,linear:.05,quadratic:-.0015}),
+  damage:Object.freeze({base:1.52,linear:.04,quadratic:-.001}),
+  def:Object.freeze({base:1.11,linear:.022,quadratic:-.0004})
  });
  const ARENA_POSITION_BASES=[
   {id:"normal",stageWeights:[25,35,120]},
@@ -84,7 +84,7 @@
  }
  function arenaRankMultipliers(rank,world=arenaWorld()){
   const w=Number(world)===2?2:1,x=clampArenaRank(rank,w)-1,source=arenaRankCurve(w);
-  const value=key=>{const curve=source[key];return 1+curve.linear*x+curve.quadratic*x*x;};
+  const value=key=>{const curve=source[key],base=Number.isFinite(Number(curve.base))?Number(curve.base):1;return base+curve.linear*x+curve.quadratic*x*x;};
   return {hp:value("hp"),damage:value("damage"),def:value("def")};
  }
  function scaleStagePoints(weights,total){const source=Array.isArray(weights)&&weights.length===3?weights:[0,0,0],sourceTotal=Math.max(1,source.reduce((sum,x)=>sum+Math.max(0,Number(x)||0),0)),target=Math.max(0,Math.floor(Number(total)||0));const first=Math.max(0,Math.round((Number(source[0])||0)*target/sourceTotal)),second=Math.max(0,Math.round((Number(source[1])||0)*target/sourceTotal));return [first,second,Math.max(0,target-first-second)];}
@@ -128,14 +128,16 @@
  function buildArenaEnemy(positionId,stageIndex,stats=null,level=null,options={}){
   const world=options.world==null?arenaWorld():(Number(options.world)===2?2:1),rank=options.rank??currentArenaRank();
   const p=createSpecialPlayerSnapshot(stats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=arenaEnemyProfile(rank,positionId,stageIndex,world),traits=Array.isArray(options.traits)?options.traits.slice():rollArenaTraits(profile.traitMode);
-  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level,world),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank,world),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p},traits);
+  const civilizationScale=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state:options.state&&typeof options.state==="object"?options.state:state,civilizationLevel:options.civilizationLevel}):1;
+  return applyMonsterTraits({name:ARENA_ENEMY_NAMES[profile.stageIndex]||"模擬對手",level:clampLevel(level||state.level,world),kind:"dungeon-arena",arenaPosition:profile.positionId,arenaStage:profile.stageIndex,arenaRank:profile.rank,arenaRankName:arenaRankName(profile.rank,world),hp:Math.max(1,ceil(base.hp*profile.finalPhysical.hpMul*civilizationScale)),atk:Math.max(1,ceil(base.damage*profile.finalPhysical.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.finalPhysical.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p,civilizationScale},traits);
  }
 
  const ARENA_VERSION_PROFILE=typeof window.getArenaVersionProfile==="function"?window.getArenaVersionProfile():{};
  window.ARENA_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.balanceVersion)||0));
  window.ARENA_RANK_BALANCE_VERSION=Math.max(0,Math.floor(Number(ARENA_VERSION_PROFILE.rankBalanceVersion)||0));
  window.ARENA_RANK_CURVE=ARENA_RANK_CURVE;
- window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION=1;
+ window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2;
+ window.SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1;
  window.ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1;
  window.SECOND_WORLD_ARENA_LEVEL_CLAMP_VERSION=1;
  window.SECOND_WORLD_ARENA_RANK_CURVE=SECOND_WORLD_ARENA_RANK_CURVE;
@@ -154,7 +156,7 @@
  window.getArenaBalanceVersions=function(){return {balanceVersion:window.ARENA_BALANCE_VERSION,rankBalanceVersion:window.ARENA_RANK_BALANCE_VERSION,positionApiVersion:window.ARENA_POSITION_API_VERSION,enemyProfileVersion:window.ARENA_ENEMY_PROFILE_VERSION,pacingSourceVersion:window.ARENA_PRESENTATION_PACING_SOURCE_VERSION};};
  window.getArenaPositionConfigs=function(rank=null,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1);return arenaPositionConfigs(rank==null?currentArenaRank():rank,w);};
  window.getArenaEnemyProfile=function(rank,positionId,stageIndex,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1);return arenaEnemyProfile(rank,positionId,stageIndex,w);};
- window.buildArenaEnemyForTest=function(positionId,stageIndex,stats=null,level=null,rank=null,world=null){const w=world==null?arenaWorld():(Number(world)===2?2:1),r=rank==null?currentArenaRank():rank;return positionById(positionId,r,w)?buildArenaEnemy(positionId,stageIndex,stats,level,{rank:r,world:w}):null;};
+ window.buildArenaEnemyForTest=function(positionId,stageIndex,stats=null,level=null,rank=null,world=null,civilizationLevel=null){const w=world==null?arenaWorld():(Number(world)===2?2:1),r=rank==null?currentArenaRank():rank;return positionById(positionId,r,w)?buildArenaEnemy(positionId,stageIndex,stats,level,{rank:r,world:w,civilizationLevel}):null;};
  window.arenaTraitNames=function(enemy){return arenaTraitNames(enemy);};
  window.getArenaCurrentRank=currentArenaRank;
  window.getArenaUnlockedRankCap=arenaUnlockedRankCap;
