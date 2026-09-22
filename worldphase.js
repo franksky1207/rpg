@@ -13,6 +13,7 @@
    mainline:{bossKilled:blankBossKilled()},
    darkMatter:0,
    darkEnergy:0,
+   civilizationLevel:0,
    calamities:blankCalamities()
   };
  }
@@ -40,6 +41,7 @@
    mainline:{bossKilled:normalizeBossKilled(mainline.bossKilled)},
    darkMatter:finiteCount(source.darkMatter),
    darkEnergy:finiteCount(source.darkEnergy),
+   civilizationLevel:Math.max(0,Math.min(10,finiteCount(source.civilizationLevel))),
    calamities:normalizeCalamities(source.calamities)
   };
   return target;
@@ -183,6 +185,7 @@
  window.SECOND_WORLD_MAIN_BOSS_COUNT=SECOND_WORLD_MAIN_BOSS_COUNT;
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
+ window.SECOND_WORLD_CIVILIZATION_STATE_VERSION=1;
  window.normalizeSecondWorldState=normalizeSecondWorldState;
  window.finalFirstWorldStoryId=finalFirstWorldStoryId;
  window.isFinalFirstWorldStoryId=function(id){return !!id&&id===finalFirstWorldStoryId();};
