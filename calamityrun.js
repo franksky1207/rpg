@@ -11,6 +11,13 @@
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function startBackground(){if(!backgroundEnabled()||typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
  function stopBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("calamity");}
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
+ function catchUpPreviewPolicy(){
+  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
+  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
+  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
+  return window.backgroundProgressCatchUpPolicy("calamity",next,false);
+ }
  function definition(id){return typeof window.getCivilizationCalamityDefinition==="function"?window.getCivilizationCalamityDefinition(id):null;}
  function playerMaxHp(){return typeof playerCombatStats==="function"?Math.max(1,Math.floor(Number(playerCombatStats().hp)||1)):Math.max(1,Math.floor(Number(state?.hp)||1));}
  function runStatus(){
@@ -100,7 +107,7 @@
     logs:options.logs===false?false:true,
     rng:typeof options.rng==="function"?options.rng:undefined,
     markLevels:options.markLevels&&typeof options.markLevels==="object"?options.markLevels:undefined,
-    save:true
+    save:options.save!==false
    });
   }catch(error){
    activeRun.phase="between";
@@ -125,6 +132,7 @@
    return {ok:true,ended:true,reason:"single-complete",battleNumber,result,run};
   }
   if(result?.settlement?.titleSettlement?.firstAcquisition===true){
+   if(options.save===false&&typeof save==="function")save(false);
    const run=finish("title-first-kill");
    return {ok:true,ended:true,reason:"title-first-kill",battleNumber,result,run};
   }
@@ -161,7 +169,9 @@
     if(onEnd)await onEnd(ended);
     return {ok:true,ended:true,reason:"stopped",run:ended};
    }
-   const battle= fightNext(options);
+   const previewPolicy=catchUpPreviewPolicy();
+   const fast=!!previewPolicy?.active;
+   const battle=fightNext({...options,save:fast?previewPolicy?.shouldCheckpoint===true:options.save});
    if(!battle.ok){
     if(onEnd)await onEnd(battle.run);
     return battle;
@@ -177,7 +187,7 @@
     if(onEnd)await onEnd(ended);
     return {ok:true,ended:true,reason:"stopped",result:battle,run:ended};
    }
-   await yieldControl();
+   if(!fastCatchUp())await yieldControl();
   }
   const ended=runStatus();
   if(onEnd)await onEnd(ended);
@@ -202,6 +212,7 @@
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
+ window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
  window.beginCivilizationCalamityRun=begin;
  window.runCivilizationCalamitySingle=runSingle;
  window.fightNextCivilizationCalamityBattle=fightNext;
