@@ -69,7 +69,8 @@
   if(button){button.disabled=false;button.textContent="500 次正式戰力評估";}
  };
  function arenaGmBody(){
-  return `<div class="muted gm-hub-note">競技場名稱固定依主線區域。100次測試可自由指定位置算法；積分會同步使用目前正式的三格推進規則。</div><div class="controls" style="align-items:end"><label>競技場<br><select id="gmArenaRank5" class="btn">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">正式評估需至少 97% 全通；積分測試沿用目前正式的三格推進規則。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
+  const universe=state?.secondWorld?.entered===true,curveText=universe?"宇宙紀元獨立強度曲線":"銀河紀元正式強度曲線";
+  return `<div class="muted gm-hub-note">競技場名稱固定依主線區域。100次測試可自由指定位置算法；積分會同步使用目前正式的三格推進規則。<br>目前：${curveText}。</div><div class="controls" style="align-items:end"><label>競技場<br><select id="gmArenaRank5" class="btn">${rankOptions()}</select></label><label>位置算法<br><select id="gmArenaPosition5" class="btn">${positionOptions()}</select></label><button id="gmArenaRun100Btn5" class="btn blue" onclick="gmArena5Run100()">100 次完整三連戰</button><button id="gmArenaRun500Btn5" class="btn gm-create" onclick="gmArena5RunPromotion()">500 次正式戰力評估</button></div><div class="muted" style="margin-top:8px">正式評估需至少 97% 全通；積分測試沿用目前正式的三格推進規則。</div><div id="gmArenaTestResult" style="margin-top:12px">${arenaGm5Result}</div>`;
  }
  function enhanceArenaGm(){
   if(!state?.gm)return;
@@ -80,6 +81,7 @@
  }
  const baseRender=render;
  render=function(){const out=baseRender();enhanceArenaGm();return out;};
+ window.GM_SECOND_WORLD_ARENA_CURVE_PREVIEW_VERSION=1;
  window.refreshArenaGm5=enhanceArenaGm;
  enhanceArenaGm();
 })();
