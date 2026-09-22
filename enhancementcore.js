@@ -26,6 +26,18 @@
  function effectiveEnhancementCap(target=null){return enteredSecondWorld(target)?SECOND_WORLD_ENHANCEMENT_CAP:FIRST_WORLD_ENHANCEMENT_CAP;}
  function clampEffectiveEnhancementLevel(value,target=null){return clampWhole(value,0,effectiveEnhancementCap(target));}
  function formalEnhancementLevelValid(value,target=null){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=effectiveEnhancementMin(target)&&n<=effectiveEnhancementCap(target);}
+ function enhancementFormalStateIssues(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  if(!holder)return [{code:"STATE_MISSING"}];
+  const min=effectiveEnhancementMin(holder),cap=effectiveEnhancementCap(holder),levels=holder?.enhancement?.levels||{};
+  return SLOTS.flatMap(type=>{
+   const raw=Math.floor(Number(levels[type]));
+   if(!Number.isFinite(raw))return [{code:"LEVEL_INVALID",type,value:levels[type],min,max:cap}];
+   if(raw<min)return [{code:"LEVEL_BELOW_FORMAL_MIN",type,value:raw,min,max:cap}];
+   if(raw>cap)return [{code:"LEVEL_ABOVE_FORMAL_CAP",type,value:raw,min,max:cap}];
+   return [];
+  });
+ }
  function normalizeEnhancementState(target){
   if(!target||typeof target!=="object")return target;
   const source=target.enhancement&&typeof target.enhancement==="object"&&!Array.isArray(target.enhancement)?target.enhancement:{};
@@ -55,7 +67,7 @@
  window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL=ABSOLUTE_MAX_LEVEL;
  window.ENHANCEMENT_MAX_LEVEL=MAX_LEVEL;
  window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION=2;
- window.ENHANCEMENT_FORMAL_RANGE_VERSION=1;
+ window.ENHANCEMENT_FORMAL_RANGE_VERSION=2;
  window.SECOND_WORLD_ENHANCEMENT_COST_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_DATA_CAP_ACTIVE=true;
  window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL=BONUS_PERCENT_PER_LEVEL;
@@ -65,6 +77,7 @@
  window.effectiveEnhancementCap=effectiveEnhancementCap;
  window.clampEffectiveEnhancementLevel=clampEffectiveEnhancementLevel;
  window.formalEnhancementLevelValid=formalEnhancementLevelValid;
+ window.enhancementFormalStateIssues=enhancementFormalStateIssues;
  window.normalizeEnhancementState=normalizeEnhancementState;
  window.enhancementLevel=enhancementLevel;
  window.enhancementBonusPercent=enhancementBonusPercent;
