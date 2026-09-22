@@ -8,6 +8,22 @@
   (state?.inventory||[]).forEach(normalizeLockFlag);
   (state?.lostGear||[]).forEach(x=>normalizeLockFlag(x?.item));
  }
+ function normalizeLostGearEconomy(){
+  const universe=secondWorldActive();
+  (state?.lostGear||[]).forEach(entry=>{
+   const item=entry?.item;if(!item)return;
+   const world=Number(item.world)===2?2:1;
+   const rawCost=Number(entry.cost);
+   if(world===2){
+    entry.currency="darkMatter";
+    const official=typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):null;
+    if(official!=null&&Number.isFinite(Number(official)))entry.cost=Math.max(0,Math.floor(Number(official)));
+    else entry.cost=Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):0;
+   }else if(universe){entry.currency="free";entry.cost=0;}
+   else{entry.currency="gold";entry.cost=Number.isFinite(rawCost)&&rawCost>=0?Math.floor(rawCost):Math.ceil(Math.max(0,Number(item.buy)||0)*2);}
+   entry.redemptionPending=false;
+  });
+ }
  function restoreAfterEquipmentChange(){
   if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
   state.hp=playerCombatStats().hp;
@@ -254,7 +270,8 @@
 
  window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=4;
  window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=1;
- injectLockStyles();normalizeAllGearLocks();save(false);
+ window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
+ injectLockStyles();normalizeAllGearLocks();normalizeLostGearEconomy();save(false);
  const main=document.getElementById("main");
  if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(enhanceEquippedLockControls,0)).observe(main,{childList:true,subtree:true});
  setTimeout(enhanceEquippedLockControls,0);
