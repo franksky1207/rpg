@@ -1,7 +1,7 @@
 (function(){
  const VERSION=1;
  const SETTLEMENT_READY=true;
- const BASE_STAT=2800;
+ const BASE_STAT=2700;
  const STAT_RATIO=Object.freeze({hp:12,atk:2,def:1});
  const STEP_RATE=.015;
 
@@ -96,8 +96,8 @@
  function validate(){
   const errors=[];
   const first=secondWorldBossBaseStats(0),last=secondWorldBossBaseStats(99);
-  if(!first||first.level!==505||first.hp!==33600||first.atk!==5600||first.def!==2800)errors.push({code:"FIRST_BOSS_BASE",first});
-  if(!last||last.level!==1000||Math.abs(last.multiplier-2.485)>1e-9||last.hp!==83496||last.atk!==13916||last.def!==6958)errors.push({code:"LAST_BOSS_BASE",last});
+  if(!first||first.level!==505||first.hp!==32400||first.atk!==5400||first.def!==2700)errors.push({code:"FIRST_BOSS_BASE",first});
+  if(!last||last.level!==1000||Math.abs(last.multiplier-2.485)>1e-9||last.hp!==80514||last.atk!==13419||last.def!==6710)errors.push({code:"LAST_BOSS_BASE",last});
   if(SETTLEMENT_READY!==true)errors.push({code:"SETTLEMENT_GATE"});
   return {passed:errors.length===0,version:VERSION,settlementReady:SETTLEMENT_READY,errors};
  }
