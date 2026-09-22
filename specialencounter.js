@@ -28,13 +28,16 @@
 
  function specialBattlePage(enemy,special){
   const s=playerCombatStats(),hpPct=s.hp?state.hp/s.hp*100:0;
-  const continuous=window.activeMainBattleContext?.continuous===true,requested=window.activeMainBattleContext?.exitRequested===true;
-  const stop=continuous?`<div class="continuous-stop-wrap"><button id="continuousBattleStopBtn" class="btn danger" onclick="requestContinuousBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
+  const world2=state?.secondWorld?.entered===true&&window.activeSecondWorldMainlineContext;
+  const active=world2?window.activeSecondWorldMainlineContext:window.activeMainBattleContext;
+  const continuous=active?.continuous===true,requested=world2?active?.stopRequested===true:active?.exitRequested===true;
+  const stop=continuous?`<div class="continuous-stop-wrap"><button id="continuousBattleStopBtn" class="btn danger" onclick="${world2?"requestSecondWorldContinuousStop()":"requestContinuousBattleStop()"}" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
   return `<section class="combat-screen"><div class="combat-head">⚠ 特殊遭遇</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard" style="border-color:#c99b45;box-shadow:0 0 22px rgba(201,155,69,.22)"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">✦ ${special.name} Lv.${enemy.level}</h2><div class="muted" style="margin:8px 0 5px">${special.description}</div><div class="muted" style="margin-bottom:12px">暴擊 ${enemy.crit||0}%　閃避 ${enemy.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${enemy.hp} / ${enemy.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">特殊戰鬥開始</div>${stop}</section>`;
  }
 
  function specialFight(enemy,world=1){return specialFightCore(enemy,{world});}
  function specialWorld(options={}){
+  if(Number(options.world)===1)return 1;
   if(Number(options.world)===2)return 2;
   return state?.secondWorld?.entered===true?2:1;
  }
@@ -59,7 +62,15 @@
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(!title||!detail||!modal)return;
   title.textContent=result.win?"特殊遭遇完成":"特殊遭遇失敗";
-  if(typeof mainBattleSettlementHtml==="function"&&typeof specialEncounterSettlementHtml==="function"){
+  if(Number(result?.world)===2){
+   const rewardLabel=result.rewardContext?.randomReward?.label;
+   const saleCount=(result.drops||[]).filter(x=>x?.sale).length;
+   const keptCount=(result.drops||[]).filter(x=>x?.kept===true).length;
+   const penalty=result.penalty||null,lost=penalty?.dropped;
+   detail.innerHTML=result.win
+    ?`<div class="notice"><b>✦ ${special.name} 擊破</b>${rewardLabel?`<div class="muted" style="margin-top:5px">特殊獎勵：${rewardLabel}</div>`:""}${result.blackMarketIntelGranted?`<div class="muted" style="margin-top:5px">取得暗域黑市情報：下一次符合條件的主線勝利後，必定觸發另一個特殊遭遇。</div>`:""}</div><div class="stats" style="margin-top:10px"><div class="stat">特殊 EXP<b>+${Number(result.xp)||0}</b></div><div class="stat">特殊暗物質<b>+${Number(result.darkMatter)||0}</b></div><div class="stat">特殊暗能量<b>+${Number(result.darkEnergy)||0}</b></div><div class="stat">保留裝備<b>${keptCount}</b></div><div class="stat">自動出售<b>${saleCount}</b></div></div>`
+    :`<div class="notice"><b>特殊遭遇｜✦ ${special.name} 挑戰失敗</b><div class="muted" style="margin-top:5px">本次連續戰鬥立即結束。</div></div><div class="item" style="margin-top:10px"><b>EXP 損失：${Number(penalty?.expLost)||0}</b></div>${lost?`<div style="margin-top:10px"><b>遺失裝備</b><div class="item">${itemHtml(lost,true)}${typeof gearAbilityHtml==="function"?gearAbilityHtml(lost,true):""}</div><div class="muted">${Number(lost.world)===2&&Number.isFinite(Number(penalty?.cost))?`贖回成本：${Number(penalty.cost).toLocaleString()} 暗物質`:"可前往背包的「遺失裝備贖回」取回。"}</div></div>`:`<div class="muted" style="margin-top:10px">本次沒有遺失裝備。</div>`}`;
+  }else if(typeof mainBattleSettlementHtml==="function"&&typeof specialEncounterSettlementHtml==="function"){
    detail.innerHTML=mainBattleSettlementHtml(ctx,{interrupted:!result.win})+specialEncounterSettlementHtml(ctx);
   }else{
    let body=fallbackPriorRewardsHtml(ctx);
@@ -101,7 +112,7 @@
   const drops=items.map(item=>{
    const ir=addItem(item);
    saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,ir.enhancementStones);
-   return {item,sold:ir.sold||0};
+   return {item,sold:ir.sold||0,kept:ir.kept===true,sale:ir.sale||null};
   });
   let saleDarkMatter=0,saleDarkEnergy=0;
   const resolvedDrops=drops.map(row=>{
@@ -216,7 +227,7 @@
   }
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.specialEncounters.push({special,result,forcedByBlackMarket});
-  if(!result.win)showSpecialResult(ctx,special,result);
+  if(world===2||!result.win)showSpecialResult(ctx,special,result);
   return {triggered:true,win:result.win,special,result,forcedByBlackMarket};
  }
 
