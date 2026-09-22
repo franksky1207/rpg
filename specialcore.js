@@ -28,24 +28,38 @@
   return Math.random()*100<p?(order[0]||null):(order[1]||order[0]||null);
  }
 
- function rollQuality(ctx){
-  let q=ctx?.qualityTable?qualityFromTable(ctx.qualityTable):qualityRoll("normal");
+ function rollQuality(ctx,world=1){
+  let q;
+  if(ctx?.qualityTable)q=qualityFromTable(ctx.qualityTable);
+  else if(Number(world)===2&&typeof window.secondWorldEquipmentQualityRoll==="function")q=window.secondWorldEquipmentQualityRoll();
+  else q=qualityRoll("normal");
   return Math.max(q,ctx?.minQuality||0);
  }
 
- window.specialMakeDrops=function(ctx,level,mapIdx){
+ window.specialMakeDrops=function(ctx,level,mapIdx,options={}){
+  const world=Number(options.world??ctx?.world)===2?2:1;
   const chance=ctx?.dropChance==null?0.25:ctx.dropChance;
   if(Math.random()>chance)return [];
   const count=Math.max(1,ctx?.dropCount||1),drops=[];
   for(let i=0;i<count;i++){
-   const q=rollQuality(ctx),type=dropType(ctx);
-   drops.push(makeItem(level,mapIdx,"normal",q,type));
+   const q=rollQuality(ctx,world),type=dropType(ctx);
+   if(world===2){
+    const bossIndex=Number.isInteger(options.bossIndex)?options.bossIndex:(typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(level):-1);
+    const item=typeof window.makeSecondWorldEquipmentForBoss==="function"&&bossIndex>=0
+     ?window.makeSecondWorldEquipmentForBoss(bossIndex,{state:options.state,level,forcedQ:q,forcedType:type})
+     :null;
+    if(item)drops.push(item);
+   }else{
+    drops.push(makeItem(level,mapIdx,"normal",q,type));
+   }
   }
   return drops;
  };
 
- window.specialFightCore=function(enemy){
-  const combat=runCombatCore(playerCombatStats(),enemy,state.hp);
+ window.specialFightCore=function(enemy,options={}){
+  const combat=runCombatCore(playerCombatStats(),enemy,state.hp,{
+   playerFinalDamageMultiplier:Number(options.world)===2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier():1
+  });
   state.hp=combat.hp;
   return {
    win:combat.win,
@@ -56,4 +70,5 @@
    turns:combat.turns
   };
  };
+ window.SPECIAL_WORLD_DROP_OWNER_VERSION=1;
 })();
