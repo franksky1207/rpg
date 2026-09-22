@@ -5,9 +5,9 @@
   {id:"danger",name:"危險懸賞",difficulty:2,weight:20,expMult:12,goldMult:12,gearCount:5}
  ];
  const BOUNTY_DIFFICULTY_CURVE=Object.freeze({
-  hp:Object.freeze({linear:.675,quadratic:-.175}),
-  damage:Object.freeze({linear:.61,quadratic:-.13}),
-  def:Object.freeze({base:.88,linear:.155,quadratic:-.035}),
+  hp:Object.freeze({linear:.67,quadratic:-.19}),
+  damage:Object.freeze({linear:.57,quadratic:-.13}),
+  def:Object.freeze({base:.88,linear:.15,quadratic:-.04}),
   rateScale:Object.freeze({base:.50,linear:.225,quadratic:-.025}),
   critAdd:Object.freeze({linear:2.5,quadratic:-.5}),
   critCap:Object.freeze({base:10,linear:11,quadratic:-1}),
