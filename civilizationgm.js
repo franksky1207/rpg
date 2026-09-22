@@ -1,6 +1,14 @@
 (function(){
  function maxLevel(){return Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||10));}
  function clamp(value){return typeof window.clampCivilizationLevel==="function"?window.clampCivilizationLevel(value):Math.max(0,Math.min(maxLevel(),Math.floor(Number(value)||0)));}
+ function cloneState(){try{return JSON.parse(JSON.stringify(state));}catch(e){return null;}}
+ function restoreStateSnapshot(snapshot){if(!snapshot||typeof snapshot!=="object")return false;state=snapshot;return true;}
+ function saveOrRollback(snapshot){
+  const ok=typeof save==="function"&&save(false)===true;
+  if(ok)return true;
+  restoreStateSnapshot(snapshot);
+  return false;
+ }
  window.gmTestCivilizationLevel=0;
 
  function testLevel(){return clamp(window.gmTestCivilizationLevel);}
@@ -50,9 +58,10 @@
   const el=document.getElementById("gmCivilizationManageLevel");
   const lv=clamp(el?el.value:state?.secondWorld?.civilizationLevel);
   if(!state.secondWorld||typeof state.secondWorld!=="object")return alert("宇宙紀元 state 尚未載入。");
+  const snapshot=cloneState();if(!snapshot)return alert("無法建立文明等級修改前存檔快照。");
   state.secondWorld.civilizationLevel=lv;
   if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(state);
-  if(typeof save==="function")save();
+  if(!saveOrRollback(snapshot)){if(typeof render==="function")render();return alert("存檔失敗，已回復文明等級修改前狀態。");}
   if(typeof render==="function")render();
   alert(`文明等級已更新為 Lv.${lv}。`);
   return lv;
@@ -64,4 +73,5 @@
  window.GM_CIVILIZATION_VERSION=1;
  window.GM_CIVILIZATION_FORMAL_RANGE_VERSION=1;
  window.GM_CIVILIZATION_TEST_RANGE_VERSION=1;
+ window.GM_CIVILIZATION_ATOMIC_MUTATION_VERSION=1;
 })();
