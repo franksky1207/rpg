@@ -1695,18 +1695,36 @@ Migration / Integrity：
 - `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
 - `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
 
-## 29.12 後續：第二世界文明災厄
+## 29.12 進行中：第二世界文明災厄（第 1 批 Data／State／Unlock 已完成）
 
-- 每 50 級開一隻：550、600…1000。
-- 第 2 隻起需前一文明完成。
-- 每隻 `trueKills >= 30` 才完成一級文明。
-- HP：第 1 隻 1,000,000；之後每隻 +200,000。
-- ATK = 對應章末 Boss ×1.10；DEF ×1.05；crit/dodge 10%。
-- HP persistent。
-- 玩家每戰滿 HP。
-- 不給暗能量。
-- 完成對應 30 true kills 後正式使文明等級 +1。
-- 需同步玩家 UI、GM 管理／測試、戰力基準、Integrity。
+第 1 批正式 owner：`secondworldcalamity.js`。
+
+已完成：
+- 10 隻正式 metadata：550、600…1000。
+- 正式名稱依第 28.9 節：彼岸黑潮、群星焚爐、邊星獵皇、萬軍葬艦、超域蝕核、無盡兵災、星脈噬巢、巨牆戰堡、深域吞星、終戰天穹。
+- 對應章末 Boss index：9、19、29、39、49、59、69、79、89、99。
+- 每隻 `trueKills` 正規化範圍 0～30。
+- HP：第 1 隻 1,000,000；之後每隻 +200,000，至第 10 隻 2,800,000。
+- 正式戰鬥 metadata：ATK ×1.10、DEF ×1.05、crit/dodge 10%。
+- 雙解鎖：已進宇宙 + 對應章末 Boss 完成；第 2 隻起另需前一文明等級完成。
+- 進度 helper：1 kill = 3.33%、2 = 6.67%、30 = 100%。
+- 未完成時 current HP 採 persistent。
+- **完成 30 true kills 或對應文明等級已達成後，重打比照第一世界滿印記規則：每場從滿 HP 開始，殘血不再保存。**
+- **完成狀態的連續討伐 policy 已定：本場結束後必須停止；包含「本場剛完成第 30 kill」與「原本已完成後重打」。真正 runtime 接線留第 2 批。**
+
+版本：
+- `SECOND_WORLD_CALAMITY_DATA_VERSION=1`
+- `SECOND_WORLD_CALAMITY_STATE_VERSION=1`
+- `SECOND_WORLD_CALAMITY_UNLOCK_VERSION=1`
+- `SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1`
+- `SECOND_WORLD_CALAMITY_COUNT=10`
+- `SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=30`
+
+仍未完成：
+- 第 2 批正式戰鬥／settlement：persistent HP 寫回、true kill 判定、30 kill → Civilization +1、玩家每場回滿、atomic save/rollback、完成後連戰停止 runtime。
+- 玩家 UI。
+- GM 管理／測試與戰力基準。
+- 完整 Integrity／Guide／最終 handoff 收尾。
 
 ## 29.13 後續：副本
 
