@@ -73,7 +73,9 @@
   if(!/battleFlowSleep\s*\(\s*battleGapMs\s*\(\s*r\.e\.kind\s*\)\s*\)/.test(pipelineSource))fail("BOSS_PIPELINE_FLOW_SLEEP","主線場間等待應使用明確 background-aware battleFlowSleep",pipelineSource);
   const stopChecks=(pipelineSource.match(/shouldStopContinuous\s*\(\s*ctx\s*\)/g)||[]).length;
   if(stopChecks<3)fail("BOSS_CONTINUOUS_STOP_BOUNDARIES","主線 pipeline 應在下一場開始前、特殊遭遇後與一般主線後都檢查停止要求",{stopChecks});
-  if(!/backgroundProgressUiYield\s*\(\s*["']main["']\s*\)/.test(pipelineSource))fail("BOSS_BACKGROUND_UI_YIELD_WIRING","主線連戰每場完成後應讓 background catch-up UI 至少 paint 一次",pipelineSource);
+  if(!/backgroundProgressUiYield\s*\(\s*["']main["']\s*\)/.test(pipelineSource))fail("BOSS_BACKGROUND_UI_YIELD_WIRING","主線 Fast Catch-up 抽樣 UI 應使用共用 backgroundProgressUiYield",pipelineSource);
+  if(Number(window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION)!==1||Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)!==1)fail("BOSS_FAST_CATCH_UP_POLICY_VERSION","銀河主線應接入共用 Fast Catch-up Policy V1",{main:window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION,owner:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION});
+  if(!/backgroundProgressCatchUpStep\s*\(\s*["']main["']\s*\)/.test(pipelineSource)||!/shouldCheckpoint/.test(pipelineSource)||!/shouldPresentBattle/.test(pipelineSource)||!/shouldRefreshUi/.test(pipelineSource))fail("BOSS_FAST_CATCH_UP_POLICY_WIRING","銀河主線未完整接入共用 Fast Catch-up policy",pipelineSource);
   if(!/backgroundProgressStart\s*\(\s*["']main["']/.test(pipelineSource))fail("BOSS_BACKGROUND_PIPELINE_START","主線背景 flow 應由 battlepipeline 正式啟動",pipelineSource);
   if(!/backgroundProgressStop\s*\(\s*["']main["']\s*\)/.test(pipelineSource)||!/finally/.test(pipelineSource))fail("BOSS_BACKGROUND_PIPELINE_STOP","主線背景 flow 應由 battlepipeline finally 正式停止",pipelineSource);
  }
