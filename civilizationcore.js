@@ -34,7 +34,8 @@
   const source=options&&typeof options==="object"?options:{};
   const target=source.state&&typeof source.state==="object"?source.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   const explicitWorld=source.world==null?null:(Number(source.world)===2?2:1);
-  const world=explicitWorld||(typeof window.isSecondWorldEntered==="function"&&target?window.isSecondWorldEntered(target)===true:(target?.secondWorld?.entered===true))?2:1;
+  const inferredWorld=typeof window.isSecondWorldEntered==="function"&&target?window.isSecondWorldEntered(target)===true:(target?.secondWorld?.entered===true);
+  const world=explicitWorld!=null?explicitWorld:(inferredWorld?2:1);
   if(world!==2)return 1;
   if(source.civilizationLevel!=null)return civilizationDamageMultiplierForLevel(source.civilizationLevel);
   return civilizationDamageMultiplier(target);
