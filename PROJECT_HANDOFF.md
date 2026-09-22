@@ -1695,7 +1695,7 @@ Migration / Integrity：
 - `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
 - `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
 
-## 29.12 進行中：第二世界文明災厄（第 1～4 批已完成）
+## 29.12 已完成：第二世界文明災厄（第 1～5 批完成）
 
 第 1 批正式 owner：`secondworldcalamity.js`。
 
@@ -1791,10 +1791,42 @@ Migration / Integrity：
 - `GM_POWER_BENCHMARK_VERSION=18`
 - `GM_HUB_EXTENSION_VERSION=9`
 
-仍未完成：
-- 第 5 批：第二世界文明災厄專屬完整 Integrity（Data／State／Unlock／Combat／Settlement／Persistent HP／30 true kills／文明升級／重打規則／GM／UI 全鏈）。
-- Game Guide。
-- 最終 handoff 收尾。
+第 5 批完整 Integrity／Guide／handoff 收尾已完成：
+- 新增 `secondworldcalamityintegrity.js`，作為第二世界文明災厄全鏈正式完整性檢查。
+- 完整 Integrity 覆蓋：
+  - 10 隻正式名稱、Lv.550～1000、章末 Boss index 9／19／…／99。
+  - HP 1,000,000～2,800,000 曲線。
+  - ATK ×1.10、DEF ×1.05、crit/dodge 10%。
+  - State normalize／trueKills 0～30／完成後 currentHp 清除。
+  - 「已現身」與「可挑戰」雙層判定。
+  - 第 1 隻無前置文明需求，第 2～10 隻需前一文明等級。
+  - 1／2／30 true kills 對應 3.33%／6.67%／100%。
+  - 正式災厄敵人直接對齊章末 Boss 母體。
+  - 未擊殺 persistent HP 寫回。
+  - 第 30 次 true kill → Civilization +1。
+  - 完成後滿 HP 重打、敗北不留殘血、不再增加進度。
+  - 玩家每戰滿 HP、零 EXP／暗物質／暗能量／裝備。
+  - 完成後連續討伐停止 wiring。
+  - Atomic save／HP restore wiring。
+  - 玩家 UI V2、GM V1、Benchmark V18 全鏈。
+  - Game Guide 銀河／宇宙雙紀元文明災厄語意。
+- `gameguide.js` 升級至 V17，新增 `GAME_GUIDE_CALAMITY_WORLD_VERSION=1`。
+- 銀河紀元文明災厄說明維持：印記 Lv.10、未滿時 persistent HP、無一般獎勵、滿印記後只可單場重打且每場滿 HP。
+- 宇宙紀元文明災厄說明改為正式規則：10 隻、章末 Boss 現身、前置文明雙條件、30 true kills、百分比進度、persistent HP、文明 +1、完成後滿血單場重打、無一般獎勵。
+- 修正 `civilizationintegrity.js` 對 Benchmark 的舊 V17 期待，正式同步至 V18。
+- Runtime Integrity／Final Integrity 已要求 `SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT.passed === true`。
+- 至此第二世界文明災厄 5 批正式完成。
+
+第 5 批版本：
+- `SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=1`
+- `GAME_GUIDE_VERSION=17`
+- `GAME_GUIDE_CALAMITY_WORLD_VERSION=1`
+
+後續第二世界大型項目：
+- 副本正式第二世界版。
+- 銀河封存／回顧跨頁收尾。
+- 戰線紀錄／設定／遊戲說明最後總掃描。
+- 依第 32.11 節，在第二世界主要架構接近完成時必須執行雙紀元 UI／文案總掃描。
 
 ## 29.13 後續：副本
 
