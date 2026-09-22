@@ -113,6 +113,11 @@
   document.body.appendChild(modal);return modal;
  }
 
+ window.prepareSecondWorldCivilizationCalamityEntry=function(){
+  if(ui.running)return false;
+  ui.selectedId=null;ui.mode="single";ui.phase="idle";ui.message="";ui.lastBattle=null;ui.finalRun=null;
+  return true;
+ };
  window.secondWorldCivilizationCalamityPageHtml=function(){return ui.phase==="combat"?combat():ui.phase==="result"?result():idle();};
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   const st=status(id);if(!st?.challengeable)return false;
