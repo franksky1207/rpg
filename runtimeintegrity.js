@@ -181,6 +181,7 @@
    if(!signature?.marks||markKeys.some(key=>!Number.isFinite(Number(signature.marks[key]))))fail("ARENA_ASSESSMENT_SIGNATURE_MARKS","競技場評估簽章未包含完整 10 枚印記",signature?.marks||null);
   }catch(error){fail("ARENA_ASSESSMENT_SIGNATURE_PARSE","競技場評估簽章無法解析",String(error));}
  }
+ if(Number(window.SECOND_WORLD_ARENA_UNLOCK_VERSION)!==1||Number(window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION)!==1||Number(window.SECOND_WORLD_ARENA_POINTS_VERSION)!==1||Number(window.ARENA_ASSESS_RUNS)!==500||Number(window.ARENA_ASSESS_CLEAR_TARGET)!==485)fail("SECOND_WORLD_ARENA_RULES","第二世界競技場解鎖／評估／積分 owner 異常",{unlock:window.SECOND_WORLD_ARENA_UNLOCK_VERSION,progress:window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION,points:window.SECOND_WORLD_ARENA_POINTS_VERSION,runs:window.ARENA_ASSESS_RUNS,clears:window.ARENA_ASSESS_CLEAR_TARGET});
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.getArenaProgressForWorld!=="function"||typeof window.getCurrentArenaProgress!=="function")fail("ARENA_BY_WORLD_OWNER","競技場分世界 state／migration owner 未完整載入",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION,get:typeof window.getArenaProgressForWorld,current:typeof window.getCurrentArenaProgress});
  else{
   try{
@@ -213,8 +214,14 @@
   checks.forEach(([highest,expected])=>{const actual=window.voidMirageStartFloorFromHistory(highest);if(Number(actual)!==expected)fail("VOID_START_FLOOR",`歷史最高 ${highest} 時起始層應為 ${expected}，實際 ${actual}`);});
  }
  if(typeof window.getArenaBaseTotalPoints==="function"){
-  const checks=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
-  checks.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS",`競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
+  const sw=state?.secondWorld,entered=sw?.entered===true;
+  if(sw)sw.entered=false;
+  const galaxy=[[1,"normal",50],[1,"hard",100],[1,"extreme",150],[4,"normal",110],[4,"hard",160],[4,"extreme",210],[10,"normal",470],[10,"hard",520],[10,"extreme",570]];
+  galaxy.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS_GALAXY",`銀河競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
+  if(sw)sw.entered=true;
+  const universe=[[1,"normal",570],[2,"normal",570],[3,"hard",620],[3,"extreme",670],[4,"normal",630],[4,"hard",680],[4,"extreme",730],[10,"normal",990],[10,"hard",1040],[10,"extreme",1090]];
+  universe.forEach(([rank,id,expected])=>{const actual=window.getArenaBaseTotalPoints(rank,id);if(Number(actual)!==expected)fail("ARENA_POINTS_UNIVERSE",`宇宙競技場第 ${rank} 階 ${id} 積分應為 ${expected}，實際 ${actual}`);});
+  if(sw)sw.entered=entered;
  }
  if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==5)fail("NEW_STATE_NORMALIZERS",`新存檔應只有 5 個正式 normalizer，實際 ${window.getNewStateNormalizerCount()}`);
  if(typeof newState==="function"){
