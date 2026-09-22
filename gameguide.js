@@ -68,6 +68,7 @@
    ["穿透技巧","提高穿透觸發機率，發動時會忽略敵人的部分防禦；普通攻擊、連擊與反擊都可以觸發。"],
    ["反擊技巧","敵人成功造成傷害且角色仍存活後，有機會立即反擊。反擊本身也可以觸發部分其他戰鬥效果。"],
    ["汲取技巧","玩家造成傷害時有機會觸發汲取，依實際造成的傷害回復部分 HP，且不會超過最大 HP。"],
+   ["文明等級","文明等級是宇宙紀元的永久成長系統，最高 Lv10；每級提高玩家宇宙戰鬥最終傷害 5%。"],
    ["極簡模式","連續戰鬥中可切換為極簡顯示畫面，僅保留必要資訊；戰鬥仍會持續進行，滑動即可退出極簡模式。"],
    ["本機存檔","遊戲會自動將進度儲存在目前裝置的瀏覽器中，更換裝置時本機存檔不會自動轉移。"],
    ["雲端存檔","登入帳號後，可在設定頁手動上傳或下載雲端存檔，用來在不同裝置之間搬移進度；雲端存檔不會自動同步，也不會在登入時自動覆蓋本機存檔。"]
@@ -88,20 +89,30 @@
   if(title==="鑑價技巧")return universe?"提升第二世界裝備出售取得的暗物質；每級 +2.5%，Lv60 時 +150%。正式手動、批量與自動出售都適用，但不放大暗能量。":"提升銀河紀元出售裝備取得的金幣；每級 +2.5%。會影響正式手動、批量與自動出售。";
   return null;
  }
+ function civilizationGuideWorldText(title,target=null){
+  if(title!=="文明等級")return null;
+  const universe=guideUniverse(target);
+  return universe
+   ?"文明等級為宇宙紀元永久成長，範圍 Lv.0～Lv.10。每級提高玩家宇宙戰鬥最終傷害 5%，Lv.5 為 +25%，Lv.10 為 +50%；此加成位於 late/final damage layer，不會改變角色頁的總攻擊。正式提升來源為宇宙紀元文明災厄。"
+   :"文明等級屬於宇宙紀元系統；銀河紀元不套用文明最終傷害倍率。進入宇宙紀元後由 Lv.0 開始，最高 Lv.10。";
+ }
  function gameGuideCategoriesForState(target=null){
   return GUIDE_CATEGORIES.map(category=>({
    ...category,
    items:(category.items||[]).map(item=>{
-    const worldText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
+    const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
+    const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
+    const worldText=civilizationText||specializationText;
     return worldText?[item[0],worldText]:item.slice();
    })
   }));
  }
  function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=15;
+ window.GAME_GUIDE_VERSION=16;
  window.GAME_GUIDE_WORLD_AWARE_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
+ window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){
