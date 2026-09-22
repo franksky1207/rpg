@@ -20,7 +20,17 @@
  function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
  function showBountyTest(html){bountyTestHtml=html;showTestResult("gmBountyTestResult",html);if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
- function simulateFight(player,enemy,startHp=player.hp){const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks});}
+ function gmTestCivilizationMultiplier(world=null){
+  const character=typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;
+  const activeWorld=world==null?(Number(character?.world)===2?2:1):(Number(world)===2?2:1);
+  if(activeWorld!==2)return 1;
+  const level=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  return typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(level):1;
+ }
+ function simulateFight(player,enemy,startHp=player.hp,world=null){
+  const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
+  return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:gmTestCivilizationMultiplier(world)});
+ }
  function gmTestLevelForWorld(world){const raw=Math.floor(Number(window.gmTestLevel)||Number(state?.level)||1);return Number(world)===2?Math.max(500,Math.min(1000,raw)):Math.max(1,Math.min(500,raw));}
  window.gmSetBountyTestWorld=function(value){bountyTestWorld=Number(value)===2?2:1;bountyTestHtml="";if(typeof render==="function")render();return bountyTestWorld;};
  window.gmBountyTestWorld=function(){return bountyTestWorld;};
@@ -30,7 +40,7 @@
   const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats());
   const player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){
-   const enemy=buildBountyEnemyForTest(tierId,base,level,world),r=simulateFight(player,enemy);
+   const enemy=buildBountyEnemyForTest(tierId,base,level,world),r=simulateFight(player,enemy,player.hp,world);
    summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
   }
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
@@ -62,6 +72,7 @@
  };
 
  window.GM_BOUNTY_UNIVERSE_PREVIEW_VERSION=1;
+ window.GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=1;
  window.GM_BOUNTY_INDEPENDENT_WORLD_TEST_VERSION=1;
  window.getBountyGmTestHtml=function(){return bountyTestHtml;};
  window.getVoidMirageGmTestHtml=function(){return voidMirageTestHtml;};
