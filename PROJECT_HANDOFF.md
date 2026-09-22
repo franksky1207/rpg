@@ -1695,7 +1695,7 @@ Migration / Integrity：
 - `GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1`
 - `CIVILIZATION_LEVEL_INTEGRITY_VERSION=1`
 
-## 29.12 進行中：第二世界文明災厄（第 1 批 Data／State／Unlock 已完成）
+## 29.12 進行中：第二世界文明災厄（第 1～2 批已完成）
 
 第 1 批正式 owner：`secondworldcalamity.js`。
 
@@ -1720,11 +1720,40 @@ Migration / Integrity：
 - `SECOND_WORLD_CALAMITY_COUNT=10`
 - `SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=30`
 
+第 2 批已完成：
+- 「已現身」與「可挑戰」正式拆開：
+  - 已現身／可見 = 對應區域最後 Boss 已首次擊破。
+  - 可挑戰 = 已現身 + 前一文明等級完成。
+  - 第 1 隻前置文明為 Lv.0，因此章末 Boss 完成後立即可打。
+- 章末 Boss 首次擊破時，會排入一次「文明災厄已現身」通知；通知文字不宣稱已可挑戰。
+- 若章末 Boss 在連續主線中首次擊破並使災厄現身，該場後停止主線連戰，先完成結算，再於關閉結算視窗後顯示現身通知。
+- 正式 combat／settlement owner：`secondworldcalamityrun.js`。
+- 未完成災厄戰敗時保存 persistent HP；下一場由殘血開始。
+- 真正 HP 歸零才算 1 次 true kill。
+- 第 30 次 true kill：`trueKills=30`、對應 Civilization +1、殘血清除。
+- 玩家每場後恢復滿 HP；災厄不給 EXP／暗物質／暗能量／裝備等一般獎勵。
+- 完成後重打每場從滿 HP 開始、敗北也不保存殘血、不再增加 trueKills／文明進度。
+- 完成狀態若從 continuous runtime 進入，只打一場便以 civilization-complete 結束。
+- 第二世界玩家頁已可看到「已現身但尚不可挑戰／可挑戰／文明階段已完成」三種狀態。
+- 未完成：顯示單場挑戰＋連續討伐；完成：只顯示「單場重打」，不顯示連續重打。
+- 第一世界同步：對應印記 Lv.10 後，災厄卡片與結果頁只保留「單場重打」，不再顯示連續討伐。
+
+第 2 批版本：
+- `SECOND_WORLD_CALAMITY_UNLOCK_VERSION=2`
+- `SECOND_WORLD_CALAMITY_DISCOVERY_VERSION=1`
+- `SECOND_WORLD_CALAMITY_COMBAT_VERSION=1`
+- `SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION=1`
+- `SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION=1`
+- `SECOND_WORLD_CALAMITY_UI_VERSION=1`
+- `SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION=1`
+- `SECOND_WORLD_CALAMITY_APPEARANCE_TRIGGER_VERSION=1`
+- `SECOND_WORLD_MAINLINE_VERSION=6`
+- `CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION=1`
+
 仍未完成：
-- 第 2 批正式戰鬥／settlement：persistent HP 寫回、true kill 判定、30 kill → Civilization +1、玩家每場回滿、atomic save/rollback、完成後連戰停止 runtime。
-- 玩家 UI。
 - GM 管理／測試與戰力基準。
-- 完整 Integrity／Guide／最終 handoff 收尾。
+- 第二世界災厄專屬完整 Integrity。
+- Game Guide／最終 handoff 收尾。
 
 ## 29.13 後續：副本
 
