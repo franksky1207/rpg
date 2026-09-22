@@ -1731,6 +1731,13 @@
   const index=bossIndex(value),s=targetState(target);
   return index>=0&&s?.secondWorld?.mainline?.bossKilled?.[index]===true;
  }
+ function secondWorldBossIndexForPlayerLevel(level){
+  const lv=Math.max(500,Math.min(1000,Math.floor(Number(level)||500)));
+  return Math.max(0,Math.min(BOSS_COUNT-1,Math.floor((lv-500)/5)));
+ }
+ function secondWorldBossForPlayerLevel(level){
+  return BOSSES[secondWorldBossIndexForPlayerLevel(level)]||null;
+ }
  function secondWorldBossLevelRequirement(value){
   const boss=secondWorldBoss(value);
   return boss?Math.max(500,boss.level-5):null;
@@ -1802,6 +1809,14 @@
   if(gearNames.length!==BOSS_COUNT*EQUIPMENT_SLOTS.length)errors.push({code:"GEAR_COUNT",actual:gearNames.length});
   const duplicateGearNames=[...new Set(gearNames.filter((name,index,all)=>all.indexOf(name)!==index))];
   if(duplicateGearNames.length)warnings.push({code:"GEAR_NAME_DUPLICATE",names:duplicateGearNames});
+  const levelOwnerCases=[
+   [500,0,505],[504,0,505],[505,1,510],[509,1,510],[510,2,515],
+   [513,2,515],[995,99,1000],[999,99,1000],[1000,99,1000]
+  ];
+  levelOwnerCases.forEach(([level,expectedIndex,expectedBossLevel])=>{
+   const actualIndex=secondWorldBossIndexForPlayerLevel(level),actualBoss=secondWorldBossForPlayerLevel(level);
+   if(actualIndex!==expectedIndex||actualBoss?.level!==expectedBossLevel)errors.push({code:"PLAYER_LEVEL_BOSS_OWNER",level,expectedIndex,expectedBossLevel,actualIndex,actualBossLevel:actualBoss?.level??null});
+  });
   BOSSES.forEach((boss,index)=>{
    if(boss.index!==index)errors.push({code:"BOSS_INDEX",index});
    EQUIPMENT_SLOTS.forEach(slot=>{if(typeof boss.equipment?.[slot]!=="string"||!boss.equipment[slot])errors.push({code:"GEAR_NAME_MISSING",index,slot});});
@@ -1819,6 +1834,9 @@
  window.secondWorldRegion=secondWorldRegion;
  window.secondWorldBossesForRegion=secondWorldBossesForRegion;
  window.secondWorldBossKilled=secondWorldBossKilled;
+ window.secondWorldBossIndexForPlayerLevel=secondWorldBossIndexForPlayerLevel;
+ window.secondWorldBossForPlayerLevel=secondWorldBossForPlayerLevel;
+ window.SECOND_WORLD_PLAYER_LEVEL_BOSS_OWNER_VERSION=1;
  window.secondWorldBossLevelRequirement=secondWorldBossLevelRequirement;
  window.canChallengeSecondWorldBoss=canChallengeSecondWorldBoss;
  window.secondWorldBossVisible=secondWorldBossVisible;
