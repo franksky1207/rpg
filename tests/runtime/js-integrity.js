@@ -31,6 +31,7 @@ const mobile=read("preparemobilecontrols.js");
 const css=read("adventureuipolish.css");
 const index=read("index.html");
 const civilization=read("civilizationcore.js");
+const bounty=read("dungeonbounty.js");
 const civilizationFormalFiles=["secondworldcombat.js","specialcore.js","secondworldcalamityrun.js","dungeoncore.js","dungeonarena.js","dungeonvoid.js","mirrorcombatcore.js"];
 const civilizationGmFiles=["dungeongm.js","arenagm5.js","mirrordungeongm.js","specialgmbatch.js","secondworldcalamitygm.js","gmpowerbenchmark.js"];
 
@@ -49,6 +50,12 @@ assert(/PREPARE_MOBILE_CONTROLS_VERSION=2/.test(mobile),"preparemobilecontrols.j
 assert(/data-mobile-prepare-actions/.test(css),"adventureuipolish.css 未綁定 explicit mobile action owner。");
 
 assert(/CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1/.test(civilization),"civilizationcore.js 缺少統一文明戰鬥倍率 owner。");
+assert(/BOUNTY_BALANCE_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Balance 應為 V2。");
+assert(/BOUNTY_DIFFICULTY_FORMULA_VERSION=2/.test(bounty),"dungeonbounty.js Difficulty Formula 應為 V2。");
+assert(/BOUNTY_CIVILIZATION_SCALING_VERSION=1/.test(bounty),"dungeonbounty.js 缺少文明動態縮放。");
+assert(/hp:Object\.freeze\(\{linear:\.67,quadratic:-\.19\}\)/.test(bounty),"dungeonbounty.js HP curve 係數不符。");
+assert(/damage:Object\.freeze\(\{linear:\.57,quadratic:-\.13\}\)/.test(bounty),"dungeonbounty.js damage curve 係數不符。");
+assert(/def:Object\.freeze\(\{base:\.88,linear:\.15,quadratic:-\.04\}\)/.test(bounty),"dungeonbounty.js DEF curve 係數不符。");
 assert(/window\.civilizationCombatDamageMultiplier=civilizationCombatDamageMultiplier/.test(civilization),"civilizationcore.js 缺少正式 combat multiplier API。");
 for(const file of [...civilizationFormalFiles,...civilizationGmFiles]){
  const source=read(file);
