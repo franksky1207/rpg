@@ -11,8 +11,9 @@
   return 0;
  }
 
- function weakEquipmentTypes(){
-  const rows=EQUIPMENT_TYPES.map(type=>({type,score:equipmentScore(state.equipment[type])}));
+ function weakEquipmentTypes(equipment=null){
+  const source=equipment&&typeof equipment==="object"?equipment:state.equipment;
+  const rows=EQUIPMENT_TYPES.map(type=>({type,score:equipmentScore(source?.[type]||null)}));
   for(let i=rows.length-1;i>0;i--){
    let j=Math.floor(Math.random()*(i+1));
    [rows[i],rows[j]]=[rows[j],rows[i]];
@@ -22,9 +23,9 @@
  }
  window.weakEquipmentTypes=weakEquipmentTypes;
 
- function dropType(ctx){
+ function dropType(ctx,equipment=null){
   if(!ctx?.weakSlotDrop)return null;
-  const order=weakEquipmentTypes(),p=ctx.weakSlotDrop.primary??70;
+  const order=weakEquipmentTypes(equipment),p=ctx.weakSlotDrop.primary??70;
   return Math.random()*100<p?(order[0]||null):(order[1]||order[0]||null);
  }
 
@@ -42,7 +43,7 @@
   if(Math.random()>chance)return [];
   const count=Math.max(1,ctx?.dropCount||1),drops=[];
   for(let i=0;i<count;i++){
-   const q=rollQuality(ctx,world),type=dropType(ctx);
+   const q=rollQuality(ctx,world),type=dropType(ctx,options.equipment||null);
    if(world===2){
     const bossIndex=Number.isInteger(options.bossIndex)?options.bossIndex:(typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(level):-1);
     const item=typeof window.makeSecondWorldEquipmentForBoss==="function"&&bossIndex>=0
@@ -70,5 +71,6 @@
    turns:combat.turns
   };
  };
- window.SPECIAL_WORLD_DROP_OWNER_VERSION=1;
+ window.SPECIAL_WORLD_DROP_OWNER_VERSION=2;
+ window.SPECIAL_WEAK_SLOT_CONTEXT_VERSION=1;
 })();
