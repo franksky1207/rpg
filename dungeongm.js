@@ -39,7 +39,8 @@
   const base=typeof window.gmTestEnhancedEquippedStats==="function"?createSpecialPlayerSnapshot(window.gmTestEnhancedEquippedStats()):createSpecialPlayerSnapshot(equippedStats());
   const player=testPlayer(base),summary={wins:0,totalTurns:0,winHpTotal:0};
   for(let i=0;i<GM_TEST_RUNS;i++){
-   const enemy=buildBountyEnemyForTest(tierId,base,level,world),r=simulateFight(player,enemy,player.hp,world);
+   const civilizationLevel=world===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+   const enemy=buildBountyEnemyForTest(tierId,base,level,world,civilizationLevel),r=simulateFight(player,enemy,player.hp,world);
    summary.totalTurns+=r.turns;if(r.win){summary.wins++;summary.winHpTotal+=r.hp;}
   }
   const winRate=testPercent(summary.wins),avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/player.hp*100):0,avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
@@ -71,6 +72,7 @@
  };
 
  window.GM_BOUNTY_UNIVERSE_PREVIEW_VERSION=1;
+ window.GM_BOUNTY_CIVILIZATION_SCALING_VERSION=1;
  window.GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.GM_BOUNTY_INDEPENDENT_WORLD_TEST_VERSION=1;
