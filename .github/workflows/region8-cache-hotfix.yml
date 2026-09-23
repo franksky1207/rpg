@@ -1,0 +1,37 @@
+name: Region 8 Cache Hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/region8-cache-hotfix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bump region 8 story cache
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          old='storydata-universe-stellar-great-wall.js?v=20260923-universe-story-batch3'
+          new='storydata-universe-stellar-great-wall.js?v=20260923-universe-region8-dialogue1'
+          if text.count(old)!=1:
+              raise SystemExit(f'expected one cache target, got {text.count(old)}')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit region 8 cache
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Bump universe region 8 story cache"
+          git push origin main
