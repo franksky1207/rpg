@@ -6,9 +6,13 @@
  }
  function maxArenaRank(world=arenaWorld()){return typeof window.getArenaMaxRankForWorld==="function"?Math.max(1,Math.floor(Number(window.getArenaMaxRankForWorld(world))||1)):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
  function clampRank(value,world=arenaWorld()){return Math.max(1,Math.min(maxArenaRank(world),Math.floor(Number(value)||1)));}
- function arenaVenueName(rank,world=arenaWorld()){
+ function arenaRegion(rank,world=arenaWorld()){
   const w=Number(world)===2?2:1,r=clampRank(rank,w);
-  const region=w===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
+  if(w===2&&typeof window.secondWorldRegion==="function")return window.secondWorldRegion(r-1);
+  return Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null;
+ }
+ function arenaVenueName(rank,world=arenaWorld()){
+  const w=Number(world)===2?2:1,r=clampRank(rank,w),region=arenaRegion(r,w);
   return `${region?.name||`第${r}區`}競技場`;
  }
  function arenaState(world=arenaWorld()){
@@ -84,14 +88,17 @@
   return {ok:true,...(nextAssessment||{})};
  };
  window.SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION=2;
- window.ARENA_VENUE_WORLD_NAME_VERSION=2;
- window.ARENA_WINDOW_WORLD_OWNER_VERSION=1;
+ window.ARENA_VENUE_WORLD_NAME_VERSION=3;
+ window.ARENA_WINDOW_WORLD_OWNER_VERSION=2;
+ window.ARENA_SECOND_WORLD_REGION_OWNER_VERSION=1;
  window.getArenaWindowState=progressState;
  window.getArenaProgressState=progressState;
  window.getArenaVisibleRanks=function(){return progressState().visibleRanks.slice();};
  window.getArenaAssessmentRank=function(){return progressState().assessmentRank;};
  window.getArenaHighestUnlocked=function(){return progressState().highestArenaUnlocked;};
  window.getArenaVenueName=arenaVenueName;
+ window.getArenaVenueNameForWorld=arenaVenueName;
+ window.getArenaRegionForWorld=arenaRegion;
  window.isArenaRankVisible=function(rank){const p=progressState();return p.visibleRanks.includes(clampRank(rank,p.world));};
  window.selectArenaVenueRank=selectVisibleRank;
  window.clearArenaVenueSelection=clearActiveRank;
