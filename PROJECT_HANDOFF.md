@@ -1,10 +1,10 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-09-22  
+更新日期：2026-09-23  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
-> 本文件只做交接摘要。若本文件、舊對話、設計稿、記憶與 `main` 有衝突，一律以目前 `main` 為準；修改前必須重新讀正式 owner 與直接相依檔案。
+> 本文件只做交接摘要。若本文件、舊對話、設計稿、記憶與 `main` 有衝突，一律以目前 `main` 為準。任何修改前都必須重新讀取正式 owner、直接相依檔案、相關 Integrity / workflow 與 `index.html` 載入順序。
 
 ---
 
@@ -20,7 +20,7 @@
 正式存檔：
 - key：`frank_text_rpg_save`
 - `SAVE_VERSION = 13`
-- **`SAVE_SCHEMA_VERSION = 15`**
+- `SAVE_SCHEMA_VERSION = 15`
 - `SAVE_LOAD_PIPELINE_VERSION = 2`
 - `SAVE_NORMALIZATION_PIPELINE_VERSION = 1`
 - Save Write Guard V1 必須保留。
@@ -48,6 +48,7 @@ worldPhase
 - GM 測試 transient 欄位不得寫入正式 state；schema 15 會清理：
   `gmTestWorld / gmTestLevel / gmTestEquipment / gmTestEquipmentSource / gmTestVipLevel / gmTestEnhancementLevels / gmTestSpecializations / gmTestMarkLevels / gmTestCivilizationLevel / gmPowerBenchmark / gmTestResults`。
 - `GM_TEST_SAVE_ISOLATION_VERSION=1`。
+- Arena 的 legacy dungeon cleanup 由 `savemigration.js` 負責；runtime normalization 不應再自行做破壞性 legacy cleanup。
 
 ---
 
@@ -79,28 +80,68 @@ worldPhase
 - Boss 等級：505、510、…、1000。
 - 每區 10 Boss。
 - 玩家等級／前置 Boss 共同決定正式主線解鎖。
-- 世界入口條件仍以第一世界完成基準為準：Lv.500、第一世界最終主線完成、8 專精全 60、5 部位 +20、10 印記全 10；VIP 不作入口限制。
+- 世界入口條件：Lv.500、第一世界最終主線完成、8 專精全 60、5 部位 +20、10 印記全 10；VIP 不作入口限制。
 - 進入宇宙時初始化正式 `secondWorld`，並切斷第一世界離線殘留；`isSecondWorldEntered()` 保持 pure read。
 
-第二世界 Boss 基礎：
+宇宙 10 區 canonical 名稱：
+1. 銀河彼端
+2. 本星系群戰爭
+3. 星群邊疆
+4. 群星會戰
+5. 超域邊境
+6. 萬域戰線
+7. 宇宙纖維帶
+8. 星海巨牆
+9. 宇宙深域
+10. 宇宙統合戰爭
+
+### 宇宙主線 Boss 正式基準
+
+目前已收斂為「單一基準 + 固定 12:2:1 比例」，不要恢復三套獨立 HP/ATK/DEF base：
+
 ```js
+BASE_STAT = 2700
+HP : ATK : DEF = 12 : 2 : 1
 N = 0..99
-multiplier = 1 + 0.015 * N
-HP  = 36000 * multiplier
-ATK = 6000  * multiplier
-DEF = 3000  * multiplier
+M(N) = 1 + 0.015 * N
+HP(N)  = ceil(BASE_STAT * 12 * M(N))
+ATK(N) = ceil(BASE_STAT *  2 * M(N))
+DEF(N) = ceil(BASE_STAT *  1 * M(N))
 ```
 
-Lv.505：36,000 / 6,000 / 3,000  
-Lv.1000：89,460 / 14,910 / 7,455
+代表值：
+- Lv.505／第 1 隻：32,400 / 5,400 / 2,700。
+- Lv.515／第 3 隻：33,372 / 5,562 / 2,781。
+- Lv.1000／第 100 隻：80,514 / 13,419 / 6,710。
+- 基礎暴擊／閃避 0%，之後仍可受 Boss 特性修改。
+- `SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1`。
+- `SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2`：宇宙主線玩家 final damage 正式套文明倍率。
+
+目前實測狀態：
+- `BASE_STAT=2800` 時，Lv.512 完整銀河畢業角色打 Lv.515 100 場約 89% 勝率，偏硬。
+- 調至 `BASE_STAT=2700` 後，使用者實測前期約 93～98%，目前作為正式基準繼續測試。
+- `STEP_RATE=.015` 尚應以 Lv.550／600～650／750 等中後期實機資料確認；不要因前期已合適就直接假設整段曲線完成。
 
 ---
 
 # 3. 等級、EXP、資源、死亡與裝備
 
-## 3.1 EXP
+## 3.1 等級與 EXP owner
 
-銀河 legacy：
+正式 runtime 世界等級上限 owner：`levelprogression.js`。
+
+- `FIRST_WORLD_LEVEL_CAP=500`
+- `SECOND_WORLD_LEVEL_CAP=1000`
+- `ABSOLUTE_MAX_LEVEL=1000`
+- `LEVEL_PROGRESSION_VERSION=1`（公開相容版本刻意維持）
+- `LEVEL_RUNTIME_WORLD_CAP_OWNER_VERSION=1`
+- `LEGACY_MAX_LEVEL_MIGRATION_ONLY_VERSION=1`
+
+原則：
+- runtime 必須走 `effectiveLevelCap()`；legacy `MAX_LEVEL=500` 只允許歷史 migration 相容使用。
+- `expNeed / gainExp / clampGameLevel` 已接 world-aware owner。
+
+銀河 legacy EXP：
 ```js
 sameExp(l) = ceil(25 + 4*l)
 expProgressionFactor(l) = 5 + 495 * (1 - exp(-(l-1)/142))
@@ -108,12 +149,21 @@ expNeed(l) = ceil(sameExp(l) * expProgressionFactor(l))
 ```
 
 宇宙：
-- Lv.500～999：
 ```js
+Lv.500～999:
 expNeed(L) = ceil((25 + 4*L) * 250)
+Lv.1000: 0
 ```
-- Lv.1000 EXP 固定 0。
-- 正式 cap 必須走 world-aware progression owner；不要把 legacy `MAX_LEVEL=500` 當全遊戲上限。
+
+Integrity probe：
+- Lv.500 = 506,250
+- Lv.999 = 1,005,250
+- Lv.1000 = 0
+
+`levelcap.js`：
+- 銀河滿等戰鬥 EXP 仍可 1:1 轉金幣。
+- 宇宙滿等不做銀河式金幣轉換；不可把宇宙 EXP 誤轉成金幣。
+- `LEVEL_CAP_LEGACY_FALLBACK_VERSION=1`。
 
 ## 3.2 宇宙主線獎勵
 
@@ -127,7 +177,7 @@ expNeed(L) = ceil((25 + 4*L) * 250)
 ## 3.3 死亡／贖回
 
 銀河／宇宙統一：
-- 所有正式戰鬥死亡／戰敗皆不損失任何既有 EXP；不得扣除目前 EXP，也不得因此降級。
+- 所有正式戰鬥死亡／戰敗皆不損失任何既有 EXP；不得因此降級。
 - 正式死亡流程維持 30% 機率遺失一件已穿戴裝備。
 - VIP20 完全防止死亡時遺失裝備。
 - world2 裝備贖回 = 正式出售價 ×10 暗物質。
@@ -148,9 +198,8 @@ B = 20 + 2*N
 saleDM = ceil(B * qualityMultiplier * appraisalMultiplier)
 ```
 
-神話出售額外 +1 暗能量；鑑價只放大暗物質。
-
-玩家 UI 不顯示裝備來源世界文字；`item.world` 只做內部邏輯。
+- 神話出售額外 +1 暗能量；鑑價只放大暗物質。
+- 玩家 UI 不顯示裝備來源世界文字；`item.world` 只做內部邏輯。
 
 ---
 
@@ -168,7 +217,7 @@ saleDM = ceil(B * qualityMultiplier * appraisalMultiplier)
 - scavenge：銀河怪物金幣／宇宙主線暗物質 +2.5% / Lv.
 - appraisal：裝備售價 +2.5% / Lv.
 - initiative：第一擊傷害 +1% / Lv.
-- combo / penetration / counter / drain：各自既有正式 Combat Core 規則。
+- combo / penetration / counter / drain：各走既有 Combat Core 正式規則。
 
 宇宙入口要求 8×60；不要另造第二套宇宙專精公式。
 
@@ -196,7 +245,9 @@ darkEnergy = 300 + 10*K
 - 宇宙戰鬥每級 final damage +5%。
 - Lv.10 = ×1.50。
 - 銀河不套。
-- 不以暗物質／暗能量直接購買；正式來源是宇宙文明災厄。
+- 正式來源是宇宙文明災厄，不以暗物質／暗能量直接購買。
+- 正式唯一戰鬥倍率入口：`civilizationCombatDamageMultiplier({ world, state, civilizationLevel })`。
+- `CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1`。
 
 ---
 
@@ -248,7 +299,6 @@ darkEnergy = 300 + 10*K
 稱號：
 - 正式共 16 個：災厄 10 + 鏡像 6。
 - 災厄首殺稱號、鏡像 15～20 勝稱號已完成。
-- 玩家名與稱號視覺 owner 仍以正式 renderer / CSS 為準。
 
 ---
 
@@ -276,7 +326,7 @@ darkEnergy = 300 + 10*K
 
 正式共用同一組 9 個 ID，不建立第二套特殊怪系統。
 
-銀河原有 9 怪保留；宇宙 profile：
+宇宙 profile：
 - gold_slime → 星源聚合體
 - mimic → 虛空誘餌艙
 - reaper → 終焉協議體
@@ -296,43 +346,43 @@ darkEnergy = 300 + 10*K
 - world2 特殊怪失敗走正式宇宙死亡懲罰。
 - 黑市 pending chain 共用。
 - 宇宙主線章末災厄現身通知優先，pending 黑市留到下一次 eligible battle。
-
-近期重要修正：
 - `SPECIAL_WORLD_DROP_OWNER_VERSION=2`。
 - `SPECIAL_WEAK_SLOT_CONTEXT_VERSION=1`。
-- weak-slot 特殊掉落可顯式使用 GM 測試裝備 context，不再偷偷讀正式 `state.equipment`。
-- `GM_SPECIAL_WEAK_SLOT_SANDBOX_VERSION=1`。
+- GM weak-slot 使用 explicit 測試裝備 context，不讀正式 `state.equipment`。
 
 ---
 
-# 9. 第二世界副本：懸賞與競技場已完成
+# 9. 第二世界副本與現行平衡
 
-> 舊 handoff 曾寫「尚未完整實作」，已失效。
+## 9.1 懸賞：V2 已定案
 
-## 9.1 懸賞
-- 第二世界懸賞正式存在。
-- tier：
-  - 普通：倍率 5、2 件裝備
-  - 高級：倍率 8、3 件
-  - 危險：倍率 12、5 件
-- Boss reward owner 依玩家等級採向上對應：
-  - 500～504 → 505
-  - 505～509 → 510
-  - …
-  - 995～1000 → 1000
-- 正式 EXP 已含 training，暗物質已含 scavenge，不能二次套用。
+第二世界懸賞正式存在，且目前 V2 視為已定案；除非使用者明確重開平衡，不要再主動微調。
+
+- tier：普通／高級／危險。
+- Boss reward owner 依玩家等級採向上對應 505、510…1000。
+- EXP 已含 training，暗物質已含 scavenge，不能二次套用。
 - 無直接暗能量。
 - shared daily bounty limit 20，進宇宙不重置。
 - 失敗不套主線 world2 death penalty。
-- 宇宙正式戰鬥與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
-- GM 已用 explicit world context，不能靠暫改正式 `state.secondWorld.entered` 模擬。
-- 懸賞難度採統一公式 V2，不寫死三個 tier：
-  - HP：`1 + 0.67d - 0.19d²`
-  - 傷害：`1 + 0.57d - 0.13d²`
-  - DEF：`0.88 + 0.15d - 0.04d²`
-  - d=0/1/2 對應普通／高級／危險。
-  - 對應倍率：普通 HP1.00／傷害1.00／DEF0.88；高級 HP1.48／傷害1.44／DEF0.99；危險 HP1.58／傷害1.62／DEF1.02。
-- 宇宙懸賞建立敵人時，敵方 HP 會乘上同一文明 final damage 倍率，抵消文明等級對玩家輸出的純倍率成長，避免 Lv.500 調準後 Lv.1000 因文明 Lv.10 自然變過易；銀河固定 ×1.00。
+
+統一 difficulty curve（d=0/1/2）：
+```text
+HP     = 1 + 0.67d - 0.19d²
+傷害   = 1 + 0.57d - 0.13d²
+DEF    = 0.88 + 0.15d - 0.04d²
+```
+
+倍率：
+- 普通：HP1.00／傷害1.00／DEF0.88
+- 高級：HP1.48／傷害1.44／DEF0.99
+- 危險：HP1.58／傷害1.62／DEF1.02
+
+文明補償：
+- 宇宙懸賞敵方 HP 乘同一文明 final damage 倍率，抵消 player-relative 模式因文明純倍率造成的難度漂移。
+- 銀河固定 ×1.00。
+- 100,000 場級大量模擬中，普通約 100%、高級約 98%、危險約 83～84%，文明 Lv.0→10 漂移約僅 1 個百分點量級。
+
+版本：
 - `BOUNTY_BALANCE_VERSION=2`
 - `BOUNTY_DIFFICULTY_FORMULA_VERSION=2`
 - `BOUNTY_CIVILIZATION_SCALING_VERSION=1`
@@ -341,24 +391,118 @@ darkEnergy = 300 + 10*K
 - `BOUNTY_TEST_CONTEXT_VERSION=1`
 - `GM_BOUNTY_STATE_ISOLATION_VERSION=1`
 
-## 9.2 競技場
-- `state.dungeon.arenaByWorld={1:{...},2:{...}}`，兩世界 Rank 獨立。
+## 9.2 競技場：世界 owner 已重整，宇宙 Rank Curve V2
+
+### 正式 state / owner
+
+- canonical state：`state.dungeon.arenaByWorld={1:{...},2:{...}}`，兩世界進度獨立。
+- `dungeon.arena` 只保留為**非 enumerable 的 compatibility getter/setter alias**，指向目前世界的 `arenaByWorld[world]`；不要再把它當正式持久 owner。
+- `ARENA_BY_WORLD_STATE_VERSION=2`
+- `ARENA_BY_WORLD_COMPAT_ALIAS_VERSION=2`
+- `ARENA_WORLD_OWNER_VERSION=2`
+- `ARENA_REGION_OWNER_VERSION=2`
+- `SECOND_WORLD_ARENA_UNLOCK_VERSION=2`
+- `DUNGEON_RUNTIME_NORMALIZATION_VERSION=2`
+- Arena legacy cleanup 正式 owner：`savemigration.js`。
+
+Arena compatibility profile 目前：
+```text
+positionModelVersion = 1
+assessmentRuleVersion = 4
+assessmentStateVersion = 4
+assessmentRuntimeVersion = 4
+balanceVersion = 6
+rankBalanceVersion = 3
+positionApiVersion = 1
+enemyProfileVersion = 1
+pacingSourceVersion = 1
+```
+
+若舊 assessment 的 position/rule/balance 版本不相容，正式 normalization 會讓舊評估失效，不可沿用過時 promotion 結果。
+
+### 解鎖／視窗／評估
+
 - 宇宙 10 Rank。
-- 下一階解鎖仍依區域 + 500 場評估至少 485/500（97%）。
+- 正式評估固定 500 場，至少 485/500 = 97%。
+- 解鎖下一競技場需要**雙條件**：
+  1. 目前最高已解鎖競技場的 500 場評估 ≥97%。
+  2. 下一競技場所屬主線區域已解鎖。
+- 競技場選擇視窗只顯示最近最多 3 個已解鎖 Rank；最高 Rank 是評估目標。
+- promotion 後會清除舊 assessment signature/runs/clears，下一階重新評估。
+- `SECOND_WORLD_ARENA_PROGRESS_RULES_VERSION=3`
+- `ARENA_WINDOW_WORLD_OWNER_VERSION=3`
+- `ARENA_SECOND_WORLD_REGION_OWNER_VERSION=2`
+- `SECOND_WORLD_ARENA_ASSESSMENT_LEVEL_VERSION=2`
+- `ARENA_POSITION_WORLD_AWARE_VERSION=3`
+- `ARENA_ASSESSMENT_CIVILIZATION_CONTEXT_VERSION=1`
+- `ARENA_ASSESSMENT_PROGRESS_OWNER_VERSION=2`
+
+Assessment signature 會綁：world、rank、position、level、civilization、base stats、VIP、戰鬥專精、印記，以及相容版本；角色條件改變後可正確判定舊評估 stale。
+
+### 宇宙 Rank Curve V2
+
+第一世界 `ARENA_RANK_CURVE` 不動。第二世界使用：
+
+```text
+x = Rank - 1
+HP倍率   = 1.68 + 0.05x - 0.0015x²
+傷害倍率 = 1.52 + 0.04x - 0.001x²
+DEF倍率  = 1.11 + 0.022x - 0.0004x²
+```
+
+- `SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2`
+- Rank 1 直接有 base 強度，不再固定 ×1.00 起跳。
+- 宇宙 Arena 敵方 HP 乘同一文明 final damage 倍率作耐久補償。
+- `SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`。
+- GM `buildArenaEnemyForTest(...)` 使用 explicit civilization level；不暫改正式 state。
+- `GM_SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`。
+
+Lv.600／VIP8／+24 全身／專精60／印記10／文明 Lv.2 校準前：Rank1～3 各 500 場皆 100%，全通剩餘 HP 約 92～94%，確認過弱。
+
+V2 大量模擬預估全通率約：
+- Rank1 99.7%
+- Rank2 98.2%
+- Rank3 98.1%
+- Rank4 96.8%
+- Rank5 95.3%
+- Rank6 93.2%
+- Rank7 91.0%
+- Rank8 88.4%
+- Rank9 85.6%
+- Rank10 82.4%
+
+**尚待實機驗收：**使用相同 Lv.600 校準角色，在遊戲內 GM 再跑 Rank1～3 各 500 次正式評估，確認 V2 真實結果是否符合預期。不要只依離線模擬就宣布平衡永久完成。
+
+### 世界內容／UI
+
+宇宙競技場名稱使用 canonical 第二世界區域：
+1. 銀河彼端競技場
+2. 本星系群戰爭競技場
+3. 星群邊疆競技場
+4. 群星會戰競技場
+5. 超域邊境競技場
+6. 萬域戰線競技場
+7. 宇宙纖維帶競技場
+8. 星海巨牆競技場
+9. 宇宙深域競技場
+10. 宇宙統合戰爭競技場
+
+三連戰敵人名稱已依紀元拆分：
+- 銀河：基礎模擬單元 → 戰術強化單元 → 極限測試平台。
+- 宇宙：星域戰爭構裝 → 宇宙征戰構裝 → 文明終焉構裝。
+
+UI 會顯示目前紀元名稱、競技場 canonical 名稱、該紀元三戰對手、雙條件解鎖卡。
+- `ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=2`
+- `ARENA_WORLD_LABEL_UI_VERSION=3`
+- `ARENA_ENEMY_LINEUP_UI_VERSION=1`
+- `ARENA_WORLD_CONTENT_VERSION=1`
+
+### 積分與戰鬥規則
+
 - 宇宙 points base：normal 570 / hard 620 / extreme 670；Rank 4 起每階 +60。
-- Rank curve 第二世界獨立，但正式 helper 統一。
-- 第二世界 Rank Curve V2（x=Rank-1）：
-  - HP：`1.68 + 0.05x - 0.0015x²`
-  - 傷害：`1.52 + 0.04x - 0.001x²`
-  - DEF：`1.11 + 0.022x - 0.0004x²`
-- 第二世界 Arena 敵方 HP 會乘同一文明 final damage 倍率作耐久補償；玩家文明傷害仍完整生效，但不再因文明等級上升而讓 player-relative Arena 自然失衡。
 - 三連戰不回血；新一輪才回血。
 - shared daily arena limit 20。
-- 宇宙正式三連戰與 GM 測試都套用文明 final damage；銀河版本固定 ×1.00。
-- GM 使用 explicit world + civilization level context，已移除暫改正式 state 的舊路徑。
-- `SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2`
-- `SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`
-- `GM_SECOND_WORLD_ARENA_CIVILIZATION_SCALING_VERSION=1`
+- 宇宙玩家 final damage 套文明倍率；銀河固定 ×1.00。
 - `ARENA_CIVILIZATION_DAMAGE_VERSION=2`
 - `GM_ARENA_CIVILIZATION_DAMAGE_VERSION=2`
 - `ARENA_EXPLICIT_WORLD_CONTEXT_VERSION=1`
@@ -367,26 +511,70 @@ darkEnergy = 300 + 10*K
 ## 9.3 虛空
 - 維持無限模式。
 - GM 戰力基準不提供紀元 selector，視為共用模式。
-- 玩家／GM 測試角色若處於宇宙紀元，文明等級 final damage 會正式生效；銀河紀元為 ×1.00。
-- GM 可預覽指定樓層／從指定樓層連爬；起始樓層設定在同一頁面工作階段保留。
+- 玩家／GM 測試角色若處於宇宙紀元，文明等級 final damage 正式生效；銀河為 ×1.00。
+- GM 可預覽指定樓層／從指定樓層連爬。
 - `VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2`
 - `GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
 
 ## 9.4 鏡像
 - 不分紀元 selector。
 - 正式每次 20 戰；VIP points = `20 * wins^2`。
-- 宇宙紀元文明最終傷害會納入鏡像 snapshot，並對玩家與鏡像雙方套用同一倍率，維持完全對稱。
-- GM 鏡像測試現在讀取「GM 測試角色」snapshot，文明等級亦取 GM 測試角色，不讀正式角色。
-- 100 次實戰與 64 組對稱回歸可同時保留結果。
-- `MIRROR_COMBAT_CORE_VERSION=5`
-- `MIRROR_CIVILIZATION_DAMAGE_VERSION=1`
-- `GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2`
+- 宇宙紀元文明 final damage 納入鏡像 snapshot，玩家與鏡像雙方套相同倍率，維持對稱。
+- GM 鏡像測試讀 GM 測試角色 snapshot，不讀正式角色。
+- 100 次實戰與 64 組對稱回歸可同時保留。
+- 鏡像副本首頁卡片目前由 `dungeonui.js` 擁有；`mirrordungeonui.js` 聚焦鏡像副本頁本身，避免重複 home-card owner。
 
 ---
 
-# 10. GM 架構：目前正式基準
+# 10. 冒險回顧／災厄回顧／正式 state 保護
 
-## 10.1 GM 頂層
+宇宙紀元可回顧銀河內容：
+- 冒險頁「銀河紀元・回顧」可進第一世界 10 大區、100 地圖。
+- 回顧戰單場、零收益、零損失、不影響宇宙正式進度；正式 HP 戰後還原。
+- 回顧 selection 與正式銀河 `selectedMap / selectedEnemy` 分離。
+- 冒險背包 return context 明確區分銀河正式／銀河回顧／宇宙主線。
+- 宇宙 Boss 卡有背包入口。
+- 戰線紀錄與災厄回顧入口已完成，不再列為未完成功能。
+
+重要安全補強：`galaxyreviewintegrity.js`
+- `GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION=1`。
+- 會保護 `startGalaxyReviewBattle` 與 `startGalaxyCalamityReview`。
+- 回顧前 snapshot 正式 `state`；若回顧流程意外改動正式 state，會自動 restore，並重新 normalize dungeon state。
+- 這是最後一道 zero-impact safety guard，不應用來合理化正式 review owner 直接亂寫 state；正式 owner 本身仍應保持回顧隔離。
+
+既有版本：
+- `GALAXY_REVIEW_SELECTION_OWNER_VERSION=1`
+- `GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1`
+- `GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=3`
+- `ADVENTURE_INVENTORY_RETURN_CONTEXT_VERSION=1`
+- `SECOND_WORLD_ADVENTURE_UI_VERSION=4`
+- `SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3`
+- `GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2`
+- `PREPARE_MOBILE_CONTROLS_VERSION=2`
+
+---
+
+# 11. Dungeon UI／世界語意近期整理
+
+`dungeonui.js` 已成為副本首頁／共用延伸的正式 owner，提供：
+- `registerDungeonViewRenderer`
+- `registerDungeonHomeCardRenderer`
+- `registerDungeonPostRenderHook`
+- `registerDungeonNavigationGuard`
+- `DUNGEON_UI_EXTENSION_VERSION=1`
+- `DUNGEON_PREP_RETURN_UX_VERSION=2`
+
+近期重要行為：
+- 副本狀態列 EXP 改走 `levelProgressSnapshot(state)`，宇宙 Lv.501～1000 不再被銀河 Lv.500 語意卡住；滿等才顯示 MAX。
+- 副本／Arena 文案已做紀元感知清理，移除過時的 home text override。
+- 鏡像首頁卡 ownership 移到 `dungeonui.js`，避免多重 renderer。
+- Arena 世界名稱、區域名稱、敵人 lineup 已統一走 canonical world-aware owner。
+
+---
+
+# 12. GM 架構：目前正式基準
+
+## 12.1 GM 頂層
 
 Manage 排序：
 1. 資料管理
@@ -399,57 +587,34 @@ Manage 排序：
 8. 文明等級
 9. 副本
 
-Test 頂層 **只剩 4 個**：
-1. `player-ability-test` 角色能力測試
-2. `power-benchmark-test` 戰力基準測試
-3. `player-title-preview` 稱號預覽
-4. `gm-story-test` 劇情測試
+Test 頂層只剩：
+1. `player-ability-test`
+2. `power-benchmark-test`
+3. `player-title-preview`
+4. `gm-story-test`
 
-舊的獨立 map/special/bounty/arena/void/mirror/calamity test section 已退休，不要恢復。
+舊獨立 map/special/bounty/arena/void/mirror/calamity test section 已退休，不要恢復。
 
-正式排序 owner：`gmhubextensions.js`。
-- `GM_HUB_EXTENSION_VERSION=11`
-- `GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=2`
+## 12.2 共用 GM 測試角色
 
-## 10.2 角色能力測試 = 共用 GM 測試角色
-
-子區：
-1. 角色基準
-2. VIP
-3. 專精
-4. 強化
-5. 印記
-6. 文明等級
-
-角色基準：
-- 測試紀元與正式角色世界完全脫鉤。
-- 測試等級：
-  - 銀河 1～500
-  - 宇宙 500～1000
-- 手動改紀元／等級時，自動建立「同級 5 件神話裝備」。
-- 詞條走正式隨機 builder。
-- 可重新隨機神話裝備。
-
-「同步正式角色到測試設定」必須完整同步：
+角色能力測試可獨立設定：
 - 紀元
 - 等級
-- 五件實穿裝備（完整 clone，含品質／主屬性／詞條）
+- 同級 5 件神話裝備／同步正式實穿裝備
 - VIP
 - 8 專精
 - 5 部位強化
 - 10 印記
 - 文明等級
 
-近期 bug 修正：
-- 同步後戰力基準角色卡會立即重建 snapshot，不再只更新等級／總能力而養成明細顯示舊值。
-- `GM_TEST_SYNC_BENCHMARK_REFRESH_VERSION=1`。
+手動改紀元／等級時可建立同級神話裝備；同步正式角色時要完整 clone 目前裝備與養成，不得只同步總能力。
 
-## 10.3 GM 測試狀態生命週期
+## 12.3 Session-only / Save isolation
 
 使用者明確要求：
-- **同一次頁面工作階段內，切換 GM 區塊／切到遊戲其他頁再回來，設定不能跑掉。**
-- 只有 browser reload／重新進網頁才回初始值。
-- 不寫入正式 save、不寫 localStorage。
+- 同一頁面工作階段內切 GM 區塊、離開再回來，測試設定保留。
+- browser reload／重新進網頁才回初始值。
+- 不寫正式 save、不寫 localStorage。
 
 目前 session-only 保留：
 - 測試角色紀元／等級／裝備／VIP／專精／強化／印記／文明。
@@ -458,19 +623,10 @@ Test 頂層 **只剩 4 個**：
 - 懸賞紀元。
 - Arena 紀元／Rank／位置。
 - Void 指定樓層。
-- 銀河災厄目標。
-- 宇宙災厄目標與 unlock probe 的章末 Boss 已完成／未完成。
+- 銀河／宇宙災厄目標與 unlock probe。
 - 已跑測試結果。
 
-架構標記：
-- `GM_TEST_SESSION_ONLY_VERSION=1`
-- `GM_TEST_SAVE_ISOLATION_VERSION=1`
-- `GM_TEST_BATCH_SYNC_VERSION=1`
-- `GM_MARK_TEST_BATCH_SYNC_VERSION=1`
-- `GM_CIVILIZATION_TEST_BATCH_SYNC_VERSION=1`
-- `GM_TEST_ARCHITECTURE_MANIFEST_VERSION=1`
-
-`gmTestArchitectureManifest()` 必須回報：
+`gmTestArchitectureManifest()` 必須維持：
 - sessionOnly true
 - batchSync true
 - benchmark true
@@ -480,7 +636,7 @@ Test 頂層 **只剩 4 個**：
 
 ---
 
-# 11. GM 戰力基準 V21
+# 13. GM 戰力基準 V21
 
 正式 owner：`gmpowerbenchmark.js`。
 
@@ -492,93 +648,32 @@ Test 頂層 **只剩 4 個**：
 - `GM_POWER_BENCHMARK_LIVE_REFRESH_VERSION=1`
 - `GM_POWER_BENCHMARK_BATCH_SIZE=25`
 
-固定 7 個子區：
-1. 地圖怪測試
-2. 特殊怪測試
-3. 懸賞戰測試
-4. 競技場測試
-5. 虛空幻境測試
-6. 鏡像戰測試
-7. 文明災厄測試
+固定 7 模式：
+1. 地圖怪
+2. 特殊怪
+3. 懸賞
+4. 競技場
+5. 虛空幻境
+6. 鏡像戰
+7. 文明災厄
 
 紀元 selector：
-- 地圖怪：銀河／宇宙
-- 特殊怪：銀河／宇宙
-- 懸賞：銀河／宇宙
-- 競技：銀河／宇宙
-- 災厄：銀河／宇宙
-- 虛空：不分紀元
-- 鏡像：不分紀元
+- 地圖怪／特殊怪／懸賞／競技／災厄：銀河／宇宙。
+- 虛空／鏡像：不分紀元 selector。
 
-**GM 測試紀元必須與正式角色世界脫鉤。**  
-正式角色還在銀河，也能測 Lv.750 宇宙；正式角色進宇宙，也能回測銀河。
-
-## 地圖怪
-- 實戰為主要測試。
-- 只有地圖怪保留「輸出／承傷」進階診斷。
-- 銀河可選區／圖／怪；宇宙對應 100 Boss。
-- 「使用最高」以測試角色等級對應 target，不讀正式解鎖進度。
-
-## 特殊怪
-- 使用同一 9 怪正式 owner。
-- 可跨紀元。
-- 顯示勝率、回合、剩餘 HP、EXP、金幣／暗物質、掉裝與品質分布、VIP10 額外獎勵等。
-
-## 懸賞
-- 可跨紀元。
-- 會保留同一 session 多個 tier／world 的結果。
-- 宇宙摘要可顯示對應 Boss、EXP、暗物質、裝備數。
-
-## 競技
-- 可跨紀元。
-- 可跑 100 次完整三連戰與 500 次正式評估。
-- 摘要有第 1 戰、第 2/3 戰條件勝率、全通率、平均回合、剩餘 HP、平均基礎積分、**平均 VIP 實得積分**。
-- 同一 session 可保留不同 world/rank/position/runs 結果。
-
-## 虛空
-- 指定樓層預覽或連爬結果可納入摘要。
-
-## 鏡像
-- GM 測試角色 snapshot。
-- 實戰結果與 symmetry result 可共存。
-
-## 災厄
-- 銀河／宇宙各自呼叫正式 owner。
-- 不另造共用假公式。
-- 兩紀元都測過時，統一摘要可同時保留兩邊。
+重點：
+- GM 測試紀元與正式角色世界脫鉤。
+- 地圖怪保留輸出／承傷診斷；其他模式以完整實戰模擬為主。
+- Arena 可跑 100 次三連戰與 500 次正式評估；摘要含各戰條件勝率、全通率、平均回合、剩餘 HP、基礎／VIP 積分。
+- Arena GM 目前 explicit 傳入 world + civilizationLevel，與正式 V2 enemy builder 同公式。
+- 統一摘要只輸出本 session 實際跑過的模式。
+- GM 測試角色條件變動時，舊結果要清除，避免摘要混用舊角色。
 
 ---
 
-# 12. 統一測試摘要
+# 14. GM 舊路徑退休與 state isolation
 
-戰力基準最下方有：
-- 「複製測試摘要」
-- 「清除全部測試結果」
-
-摘要固定帶角色測試設定：
-- 角色來源（同步正式／GM 神話預測）
-- 角色紀元
-- 等級
-- VIP
-- HP / ATK / DEF / 暴擊 / 閃避
-- 強化
-- 專精
-- 印記
-- 文明等級
-- 五件裝備
-
-只輸出**實際跑過的模式**，不塞「未測試」雜訊。
-
-重要近期 bug 修正：
-1. 非地圖模式原本測完後結果物件有資料，但統一摘要 DOM 不會即時刷新；現在特殊怪／懸賞／競技／虛空／鏡像／兩紀元災厄測完都會呼叫共用 live refresh。
-2. 正式角色同步後 benchmark snapshot 會立即刷新完整養成資訊。
-3. GM 測試角色條件改變時，舊戰鬥結果會失效清除，避免「畫面是新角色、摘要卻是舊結果」混資料。
-
----
-
-# 13. GM 舊路徑退休與 state isolation
-
-不要恢復這些已退休 GM 戰鬥 API／renderer：
+不要恢復：
 - `gmMapMonsterTestHtml`
 - `getMapMonsterGmTestHtml`
 - `gmStartMapMonsterTest`
@@ -598,40 +693,113 @@ Test 頂層 **只剩 4 個**：
 - `GM_POWER_BENCHMARK_LEGACY_FALLBACK_RETIRED_VERSION=1`
 
 原則：
-- 不為 GM 模擬去暫改正式 `state.secondWorld.entered`。
-- 懸賞、競技已改 explicit world/test context。
-- 特殊怪 weak-slot 計算要用傳入的 test equipment context。
-- GM 測試不能污染 formal state/save。
+- 不為 GM 模擬暫改 `state.secondWorld.entered`。
+- 不複製正式公式到 GM；GM 呼叫正式 owner + explicit test context。
+- 特殊怪 weak-slot 用傳入 test equipment context。
+- GM 測試不得污染 formal state/save。
 
 ---
 
-# 14. Integrity / Guide
+# 15. Integrity／維護流程
 
-Runtime／Final Integrity 已對齊：
-- SAVE_VERSION 13
-- SAVE_SCHEMA_VERSION 15
-- GM Benchmark V21
-- Unified Summary V2
-- GM session-only / batch sync / architecture manifest
-- 特殊怪 world2 drop context
-- Bounty/Arena state isolation
-- legacy GM combat retirement
-- 宇宙文明災厄完整鏈
+## 15.1 Runtime / Story Integrity
+
+Runtime／Final Integrity 持續檢查：
+- SAVE_VERSION 13 / SCHEMA 15
 - Save Write Guard V1
+- world-aware level owner
+- 第二世界 Boss 12:2:1 + BASE_STAT 2700
+- civilization combat owner
+- Bounty V2
+- Arena world state / curve / civilization scaling / owner isolation
+- GM session-only / batch sync / legacy retirement
+- 宇宙文明災厄完整鏈
 
-Game Guide：
-- `GAME_GUIDE_VERSION=18`
-- world-aware specialization / civilization / calamity / bounty / arena 語意已接正式 owner。
-- 最終仍需做全介面＋遊戲說明雙紀元總掃描，見「尚未完成」。
+`.github/workflows/runtime-integrity.yml`：
+- 會對 JS、`index.html`、指定 CSS、workflow 自身變動觸發。
+- 先確認本次 push 是否仍為遠端 `main` 最新 HEAD。
+- 若只是連續修改中的 stale intermediate commit，正常跳過正式 Runtime Integrity，避免半成品中間 commit 造成大量假失敗 Email。
+- **只有目前最新 main HEAD 的正式檢查成功，才能宣告該批完成。**
+
+之前 Email 狂跳問題根因：連續多 commit 修改時，中間 commit 已改正式值但 Integrity 還沒同步，例如 Boss base 已切 2800 而 runtime guard 尚在 2900。stale-head guard 已補上；不能用關通知掩蓋真正最新 HEAD 的失敗。
+
+## 15.2 DEVELOPMENT_PROTOCOL.md
+
+Repo 已新增正式維護規範 `DEVELOPMENT_PROTOCOL.md`，後續 ChatGPT 必須一起遵守：
+- 修改前重新讀 main 正式 owner、直接相依、Integrity/workflow。
+- 「先討論／先檢查／先列出」不得修改。
+- 修改後重新讀回 main，不能只相信 update API 成功。
+- JS/CSS 有改動必須同步 `index.html` cache-bust。
+- 最新 HEAD Runtime Integrity 必須 success 才能說完成；queued/in_progress 仍不算完成。
+- Story 相關修改同理確認 Story Integrity。
+- 本批紅燈必須先修，不能靠下一批無關 commit 掩過。
 
 ---
 
-# 15. 目前已完成的大型功能
+# 16. 本輪 2026-09-23 主要完成項
 
-截至目前 `main`：
+## 16.1 文明 final damage 統一 owner
+
+正式唯一入口：`civilizationCombatDamageMultiplier({ world, state, civilizationLevel })`。
+
+已接：
+- 宇宙主線
+- 特殊怪
+- 宇宙災厄
+- 懸賞
+- 競技
+- 虛空
+- 鏡像（雙方同倍率維持對稱）
+- 各 GM／Benchmark 對應測試
+
+禁止各模式重新直接呼叫舊倍率 helper 形成第二套判斷。
+
+## 16.2 懸賞 V2 定案
+
+- 單一 difficulty curve，非逐 tier 手改。
+- 宇宙敵方 HP 有文明補償。
+- GM explicit civilization context。
+- 大量模擬已驗證，現在視為 frozen baseline。
+
+## 16.3 宇宙主線 Boss 基準統一與降至 2700
+
+- 三套 base 收斂成 `BASE_STAT` + `12:2:1`。
+- 3000 → 2800 → 2700。
+- 目前 2700 前期實測約 93～98%。
+- `STEP_RATE=.015` 暫不動，待中後期測試。
+
+## 16.4 宇宙 Arena Rank Curve V2
+
+- 第一世界 curve 不動。
+- 第二世界改 V2 base+線性+二次公式。
+- 宇宙 enemy HP 補文明倍率。
+- GM explicit civilization level。
+- 尚待遊戲內 500 場 Rank1～3 實測驗收。
+
+## 16.5 Arena 架構清理／世界 owner 統一
+
+在 V2 平衡後，main 又完成一輪大幅 owner 收斂：
+- `arenaByWorld` 成為 canonical state，legacy `dungeon.arena` 只作 non-enumerable compatibility alias。
+- world／region／progress／assessment owner 集中，刪除重複推導。
+- assessment compatibility profile 升級；不相容舊結果會失效。
+- 宇宙競技場名稱直接吃 canonical 第二世界區域。
+- 三連戰敵人內容依紀元拆分。
+- 選擇 UI、評估 UI、雙條件解鎖、最近 3 個場地視窗改走 canonical owner。
+- Universe EXP 在副本 status 正確顯示。
+- mirror home card ownership 收斂至 `dungeonui.js`。
+
+## 16.6 回顧正式 state safety guard
+
+新增 `galaxyreviewintegrity.js`，保護冒險回顧與災厄回顧 zero-impact 語意；偵測正式 state 被意外改動會自動 restore。
+
+---
+
+# 17. 目前已完成的大型功能
+
+截至目前 main：
 - 第一世界完整主線與成長。
 - 宇宙世界突破。
-- Lv.501～1000 成長／EXP。
+- Lv.501～1000 world-aware progression／EXP。
 - 100 Boss 宇宙主線。
 - world2 裝備、sale、死亡／贖回。
 - 宇宙離線收益與 speed-aware sample。
@@ -642,217 +810,85 @@ Game Guide：
 - 第二世界文明災厄 10 隻。
 - 16 種稱號。
 - 特殊怪雙紀元共用正式系統。
-- 第二世界懸賞。
-- 第二世界競技場。
-- 鏡像、虛空既有正式模式。
+- 第二世界懸賞 V2。
+- 第二世界競技場與 Rank Curve V2。
+- Arena world-aware state / progress / assessment / UI owner 重整。
+- 鏡像、虛空正式模式。
+- 銀河冒險／災厄／戰線紀錄回顧。
+- 回顧正式 state safety guard。
 - GM 管理重整。
 - GM 角色能力 sandbox。
 - GM 戰力基準 7 模式集中。
 - GM session-only 設定保留。
 - 統一測試摘要與 live refresh。
-- GM 測試 save isolation / explicit test context / legacy cleanup。
-
-## 15.1 2026-09-22 冒險回顧／GM／Integrity 收尾
-
-本輪已完成並已實機確認：
-- 宇宙紀元冒險頁加入「銀河紀元・回顧」分頁；第一紀元 10 大區、100 張地圖可進行純回顧挑戰。
-- 銀河回顧戰：單場挑戰、零收益、零損失、不影響宇宙正式進度；正式 HP 於回顧戰後還原。
-- 回顧地圖／回顧敵人 selection 已與正式銀河主線 `selectedMap / selectedEnemy` 完全分離：
-  - `GALAXY_REVIEW_SELECTION_OWNER_VERSION=1`
-  - `GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1`
-  - `GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=3`
-- 冒險背包返回改為 explicit return context：
-  - 銀河正式主線 → 回原正式準備頁。
-  - 銀河回顧 → 回原回顧地圖選怪頁。
-  - 宇宙主線 → 回宇宙 Boss 地圖。
-  - `ADVENTURE_INVENTORY_RETURN_CONTEXT_VERSION=1`
-- 宇宙 Boss 卡片新增「背包」入口，方便換裝／出售後直接回冒險。
-- `secondWorldActiveRegionIndex()` 已修正為永遠只回 numeric region index，不再混入 combat HTML。
-- 宇宙冒險版本：
-  - `SECOND_WORLD_ADVENTURE_UI_VERSION=4`
-  - `SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3`
-  - `GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2`
-- 手機準備頁控制列改用 explicit owner：
-  - HTML：`data-mobile-prepare-actions="1"`、`data-mobile-battle-panel="1"`
-  - `preparemobilecontrols.js` 不再用泛用 `.prepare-actions` selector。
-  - `PREPARE_MOBILE_CONTROLS_VERSION=2`
-- GM Hub regression 已修復：清理退休 GM renderer 時誤刪的 `generalManagementHtml()` 已恢復；`gmHtml` 正常建立。
-- Story Integrity cache-bust 檢查已改為接受任何有效 `?v=`，不再綁死舊版本字串；story record 版本檢查改為最低版本 floor。
-- 新增全站 Runtime Integrity：
-  - workflow：`.github/workflows/runtime-integrity.yml`
-  - test：`tests/runtime/js-integrity.js`
-  - 每次 JS / index / adventure UI CSS 相關 push 會用 Node 24 對全 repo JavaScript 執行 `node --check`，並檢查關鍵 owner、cache-bust、本地 script 是否存在。
-  - 最新 Runtime Integrity run 已通過。
-- 本輪未新增任何正式 save 欄位；`SAVE_SCHEMA_VERSION` 維持 15，不需要 migration 或舊資料清理。
-
-## 15.2 2026-09-23 文明最終傷害統一 owner
-
-為避免不同戰鬥模式各自判斷文明倍率而再次漏接，已完成兩批統一：
-
-- 正式唯一戰鬥倍率入口：`civilizationCombatDamageMultiplier({ world, state, civilizationLevel })`
-- owner：`civilizationcore.js`
-- `CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION=1`
-- 規則：
-  - `world=1` → 固定 ×1.00。
-  - `world=2` → 依文明 Lv.0～10 套用 ×1.00～×1.50。
-  - 可使用正式 `state`，也可用 explicit `civilizationLevel`；GM 不需要暫改正式 state。
-- `runCombatCore()` 仍只接受已解析好的 `playerFinalDamageMultiplier`，不自行猜紀元。
-
-正式戰鬥已全部改用統一 owner：
-- 宇宙主線：`SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2`
-- 特殊怪：`SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 宇宙文明災厄：`SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 懸賞共用 Dungeon Core：`DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`
-- 競技場：`ARENA_CIVILIZATION_DAMAGE_VERSION=2`
-- 虛空幻境：`VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2`
-- 鏡像：`MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1`；倍率寫入 snapshot，玩家與鏡像雙方套用相同倍率，維持對稱。
-
-GM／Benchmark 亦全部改用同一正式 owner：
-- 懸賞／虛空：`GM_DUNGEON_CIVILIZATION_DAMAGE_VERSION=2`、`GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 競技場：`GM_ARENA_CIVILIZATION_DAMAGE_VERSION=2`、`GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 特殊怪：`GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 鏡像：`GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2`、`GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 宇宙文明災厄：`GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-- 統一摘要：`GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION=1`
-
-Integrity 已同步：
-- `civilizationintegrity.js` 新增 world/context functional probe，並檢查所有 GM civilization combat owner。
-- `finalintegrity.js` 新增正式／GM 全模式 owner guard。
-- `tests/runtime/js-integrity.js` 會掃正式與 GM 戰鬥 owner，禁止重新直接呼叫 `civilizationDamageMultiplierForLevel()` 或 `civilizationDamageMultiplier()`。
-- Runtime Integrity 與 Story Integrity 均已通過。
-- 本輪只做架構統一，**沒有改文明每級 +5% 規則，也沒有調整懸賞／競技／虛空／鏡像平衡數值**。
-- 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`，不需要 migration。
-
-## 15.4 2026-09-23 宇宙主線 Boss 基準公式統一
-
-第二紀元 100 隻主線 Boss 的基準三圍已從三個獨立常數收斂成單一基準＋固定比例，**本輪只做架構統一，沒有改實際強度**：
-
-- 單一基準：`BASE_STAT=2700`
-- 固定比例：`HP:ATK:DEF = 12:2:1`
-- 成長倍率仍為：`M(N)=1+0.015N`，N=0～99。
-- 正式公式：
-  - `HP(N)=ceil(BASE_STAT × 12 × M(N))`
-  - `ATK(N)=ceil(BASE_STAT × 2 × M(N))`
-  - `DEF(N)=ceil(BASE_STAT × 1 × M(N))`
-- 目前第 1 隻為 32400／5400／2700，第 100 隻為 80514／13419／6710。
-- `SECOND_WORLD_BOSS_STAT_FORMULA_VERSION=1`
-- Final Integrity 與 Runtime Integrity 已加 guard，禁止恢復 `BASE_HP / BASE_ATK / BASE_DEF` 三套獨立基準。
-- 2026-09-23 將 `BASE_STAT` 進一步調整為 2700，作為前期難度實機測試版本；12:2:1 與 `STEP_RATE=.015` 不變。後續若仍要調前期難度只改 `BASE_STAT`，若要改後期成長速度再調 `STEP_RATE`。
-
-## 15.5 2026-09-23 宇宙競技場 Rank Curve V2
-
-以 GM 預測角色 Lv.600／VIP8／+24 全身／8 專精 Lv.60／10 印記 Lv.10／文明 Lv.2 作校準。舊第二世界曲線在 Rank 1～3 的 500 次正式評估皆為 100% 全通，且全通剩餘 HP 約 92～94%，確認明顯過弱。
-
-本輪原則：
-- 不逐 Rank 手動補倍率。
-- 第一世界 `ARENA_RANK_CURVE` 完全不動。
-- 第二世界使用單一 `SECOND_WORLD_ARENA_RANK_CURVE` V2。
-- Rank 1 也需要變強，因此曲線加入 base 項，不再固定從 ×1.00 起跳。
-- 宇宙文明倍率納入敵方 HP 耐久補償，避免文明 Lv.0→10 造成 player-relative Arena 難度自然漂移。
-- GM `buildArenaEnemyForTest(...)` 追加 explicit civilization level，與正式戰鬥同公式。
-
-V2 公式（x=Rank-1）：
-- HP：`1.68 + 0.05x - 0.0015x²`
-- 傷害：`1.52 + 0.04x - 0.001x²`
-- DEF：`1.11 + 0.022x - 0.0004x²`
-
-使用 Lv.600 校準角色與正式三連戰規則進行 100,000 場／Rank 的離線模擬，模型預估全通率約：
-- Rank1 99.7%
-- Rank2 98.2%
-- Rank3 98.1%
-- Rank4 96.8%
-- Rank5 95.3%
-- Rank6 93.2%
-- Rank7 91.0%
-- Rank8 88.4%
-- Rank9 85.6%
-- Rank10 82.4%
-
-此模擬用於找曲線形狀；最終仍以遊戲內 GM 500 次正式評估為實機驗收。未更改競技積分、每日次數、三連戰規則或解鎖門檻。
-
-## 15.3 2026-09-23 懸賞難度公式 V2
-
-依宇宙 Lv.502 實測與先前大量模擬校準，懸賞不採三階人工倍率，而是保留單一 difficulty curve：
-
-- 普通（d=0）：維持原本強度，作為穩定日常刷取。
-- 高級（d=1）：由公式自動得到 HP ×1.48、傷害 ×1.44、DEF ×0.99。
-- 危險（d=2）：由公式自動得到 HP ×1.58、傷害 ×1.62、DEF ×1.02。
-- 暴擊／閃避／額外特性仍沿用既有 difficulty curve，不另寫 tier 特例。
-- 宇宙紀元額外使用 `civilizationCombatDamageMultiplier(...)` 作為敵方 HP 動態補償；文明每級 +5% 的正式玩家傷害仍完整生效，但懸賞這種 player-relative 模式會同步把有效輸出成長納入敵人 HP。
-- GM `buildBountyEnemyForTest(...)` 新增 explicit civilization level，與正式戰鬥完全同公式。
-- `finalintegrity.js` 與 Runtime Integrity 已升級檢查 Bounty Formula V2。
-- 本輪未改 tier 出現率、EXP／金幣／暗物質倍率、裝備件數或品質分布。
-- 未新增 save 欄位；`SAVE_SCHEMA_VERSION=15`。
+- GM save isolation / explicit test context / legacy cleanup。
+- Runtime Integrity + stale-head guard。
+- DEVELOPMENT_PROTOCOL 正式維護規範。
 
 ---
 
-# 16. 尚未完成／後續優先項目
+# 18. 尚未完成／後續優先項目
 
-目前不要再把「第二世界懸賞／競技」或「銀河冒險／災厄／戰線紀錄回顧」列為未完成；主要回顧入口已落地。
+不要再把「第二世界懸賞／競技」、「銀河冒險／災厄／戰線紀錄回顧」列成未完成。
 
-仍應保留的後續：
+目前真正後續：
 
-## 16.1 Cloud Save 真實跨裝置驗證
-至少實測：
+## 18.1 Arena V2 實機驗收
+
+用同一組 Lv.600／VIP8／+24／專精60／印記10／文明 Lv.2 GM 預測角色，至少再跑：
+- Rank1 500 次正式評估
+- Rank2 500 次正式評估
+- Rank3 500 次正式評估
+
+確認實際全通率、剩餘 HP、回合數，再判斷是否定案。不要逐 Rank 手改。
+
+## 18.2 宇宙主線中後期平衡
+
+`BASE_STAT=2700` 前期已較合適；後續需在 Lv.550、600～650、750 甚至更後段檢查 `STEP_RATE=.015` 是否合理。
+
+## 18.3 Cloud Save 真實跨裝置驗證
+
+至少：
 1. 宇宙存檔上傳。
 2. 乾淨環境／另一裝置下載。
 3. reload。
 4. 核對 secondWorld、world2 gear、+21～40、文明、arenaByWorld、災厄、offline/pending settlement。
-5. 不破壞 Save Write Guard。
+5. 確認 Save Write Guard 不被破壞。
 
-## 16.2 全介面＋遊戲說明雙紀元語意總掃描
-這是使用者明確保留的必做項。
+## 18.4 全介面＋遊戲說明雙紀元語意總掃描
 
-至少掃：
-- 首頁
-- 主線／冒險
-- 角色
-- 背包／裝備
-- 強化
-- 專精
-- 離線收益
-- 死亡／贖回
-- 懸賞／競技／鏡像／虛空
-- 文明災厄
-- 戰線紀錄
-- 設定
-- GM
-- 所有結算文案
-- 遊戲說明
+至少掃：首頁、主線／冒險、角色、背包／裝備、強化、專精、離線收益、死亡／贖回、懸賞／競技／鏡像／虛空、文明災厄、戰線紀錄、設定、GM、所有結算文案、遊戲說明。
 
 原則：
 - 宇宙不能殘留銀河金幣／強化石／Lv.500／每圖 5 怪等錯誤語意。
-- 同一功能跨世界不同文字／規則時，優先共用 world-aware semantic/helper owner，不要各頁硬寫字串。
-
-## 16.3 實際玩家測試後的 balance
-目前 GM 工具已足以用同一套角色 snapshot 測各模式；後續 balance 應先跑資料再調，不要直接逐階手改怪物。
+- 同功能跨世界不同文字／規則時，優先共用 world-aware semantic/helper owner，不各頁硬寫。
 
 ---
 
-# 17. 正式 owner 速查
+# 19. 正式 owner 速查
 
 - 基礎世界／品質：`data.js`
 - 第一世界主成長／核心 state：`engine.js`
 - save migration/load：`savemigration.js`
 - 世界階段：`worldphase.js`
 - 等級 progression：`levelprogression.js`
+- 滿等額外語意：`levelcap.js`
 - 第一世界戰鬥 pipeline：`battlepipeline.js`
-- Combat Core：正式 combat owner（依目前 main 實際檔案重新讀）
-- 文明戰鬥倍率唯一 owner：`civilizationcore.js` → `civilizationCombatDamageMultiplier(...)`
+- Combat Core：依 main 正式 combat owner 重新讀取
+- 文明戰鬥倍率：`civilizationcore.js`
 - Structured FX：`combatfx.js`
 - Outer pacing：`combatpacing.js`
 - Background：`backgroundprogress.js`
 - Combat speed：`combatspeed.js`
 - Offline：`offlineprogress.js`
 - Offline target/checkpoint：`offlinefarmtarget.js`
-- 冒險 UI／雙紀元回顧 owner：`worldmapui.js` + `ui.js`
-- 手機冒險固定控制列：`preparemobilecontrols.js` + `adventureuipolish.css`
-- 全站 JS / 關鍵 owner CI：`tests/runtime/js-integrity.js` + `.github/workflows/runtime-integrity.yml`
-- Runtime Integrity workflow 會先確認目前 push 是否仍為 `main` 最新 HEAD；若只是連續修改中的舊 intermediate commit，會正常跳過正式檢查，避免中間半成品造成假失敗通知。
+- 冒險／雙紀元回顧：`worldmapui.js` + `ui.js`
+- 回顧 state guard：`galaxyreviewintegrity.js`
+- 手機冒險固定控制：`preparemobilecontrols.js` + `adventureuipolish.css`
 - 專精：`specialization.js`
 - VIP：`vipprogression.js` + `engine.js`
 - 強化：`enhancementcore.js`
-- 裝備正式 mutation/sale：`equipmentlock.js`
+- 裝備 mutation/sale：`equipmentlock.js`
 - 特殊怪 metadata：`specialmonsters.js`
 - 特殊怪 drop/core：`specialcore.js`
 - 特殊怪正式 flow：`specialencounter.js`
@@ -860,78 +896,64 @@ V2 公式（x=Rank-1）：
 - 宇宙主線：`secondworldmainline.js`
 - 宇宙 combat：`secondworldcombat.js`
 - 宇宙 reward／裝備：`secondworldrewards.js`
-- 第一世界災厄 metadata：`calamityconfig.js`
-- 第一世界災厄 state/core/run/UI：`calamitystate.js` / `calamitycore.js` / `calamityrun.js` / `calamityui.js`
+- 第一世界災厄：`calamityconfig.js` / `calamitystate.js` / `calamitycore.js` / `calamityrun.js` / `calamityui.js`
 - 印記：`markcore.js`
 - 宇宙災厄：`secondworldcalamity.js` / `secondworldcalamityrun.js`
+- 副本共用 UI：`dungeonui.js`
+- 副本進度／Arena canonical world state：`dungeonprogress.js`
 - 懸賞：`dungeonbounty.js`
-- 競技：`dungeonarena.js`
-- 鏡像：`mirrorconfig.js` / `mirrordungeonstate.js` / `mirrordungeonrun.js`
+- 競技戰鬥：`dungeonarena.js`
+- Arena assessment：`arenapositioncore.js`
+- Arena window/progress：`arenawindowcore.js`
+- Arena player UI：`arenaplayerflow2.js`
+- 鏡像：`mirrorconfig.js` / `mirrordungeonstate.js` / `mirrordungeonrun.js` / `mirrordungeonui.js`
 - GM Hub：`gmhub.js`
 - GM registry/order：`gmhubextensions.js`
-- GM 測試角色：`vipgm.js` + 各養成正式 owner 的 test state
+- GM 測試角色：`vipgm.js` + 各正式養成 owner 的 test state
 - GM 特殊怪：`specialgmbatch.js`
 - GM 懸賞／虛空：`dungeongm.js`
 - GM 競技：`arenagm5.js`
 - GM 鏡像：`mirrordungeongm.js`
 - GM 災厄：`calamitygm.js` / `secondworldcalamitygm.js`
 - GM 戰力基準：`gmpowerbenchmark.js`
-- Runtime integrity：`runtimeintegrity.js`
+- Runtime integrity：`runtimeintegrity.js` + `tests/runtime/js-integrity.js`
 - Final integrity：`finalintegrity.js`
+- Runtime workflow：`.github/workflows/runtime-integrity.yml`
+- 正式修改流程：`DEVELOPMENT_PROTOCOL.md`
 - load order / cache-bust：`index.html`
 
 ---
 
-# 18. 下一個 ChatGPT 必須遵守的操作規範
+# 20. 下一個 ChatGPT 必須遵守的操作規範
 
-1. **GitHub `main` 的實際程式碼是唯一真實來源。**
-   - HANDOFF 只作摘要。
-   - 每次工作前重新讀 formal owner、直接依賴與 `index.html`。
-
-2. **使用者說「先討論／先查／先看／先檢查／先不要修改」時，不得寫 GitHub。**
-
-3. **使用者說「做／修改／執行／第 N 批」時，可直接修改 GitHub `main`。**
-
-4. **優先修改正式來源。**
-   - 不用 wrapper / fallback 掩蓋 owner 問題。
-   - 不新增第二套 state、第二套公式、第二套 settlement。
-   - 不複製正式公式到 GM；GM 應呼叫正式 owner 並給 explicit test context。
-
-5. **修改後必須重新 fetch `main` 自我檢查。**
-   - JS：至少 parser / `new Function`。
-   - 再做與修改範圍相符的 functional/static probe。
-   - 不能只因 GitHub update API 成功就宣稱完成。
-
-6. **任何 JS/CSS 改動都要更新 `index.html` cache-bust。**
-   - 新 script 要確認 load order。
-   - 不要遺留同檔多次載入或舊 cache tag。
-
-7. **每批都檢查 GM／Integrity／Save isolation。**
-   - GM 測試不得寫正式 save。
-   - GM 管理若改正式 state，要走正式 save/rollback 語意。
-
-8. **Save Write Guard V1 不可破壞。**
-
-9. **不要自行重構舊存檔。**
-   - 除非使用者明確要求，或有可重現 production bug。
-
-10. **一批只做核准範圍。**
-    - 不順手改 balance、故事、schema 或其他未授權功能。
-
-11. **已退休 API 不要為了相容再加回 wrapper。**
-    - Runtime / Final Integrity 已明確把部分舊 GM combat API 當錯誤。
+1. **GitHub `main` 的實際程式碼是唯一真實來源。** HANDOFF 只作摘要；任何工作前重新讀 main。
+2. **修改前先讀相關正式 owner、直接相依、Integrity/workflow 與 `index.html`。**
+3. 使用者說「先討論／先查／先看／先檢查／先列出／先不要修改」時，**不得寫 GitHub**。
+4. 使用者說「做／修改／執行／修正／第 N 批」時，可直接修改 GitHub `main`。
+5. **優先修改正式來源。** 不用 wrapper／fallback 掩蓋 owner 問題；不新增第二套 state、第二套公式、第二套 settlement。
+6. GM 不複製正式公式；使用正式 owner + explicit test context，且不得污染正式 save。
+7. 修改後必須重新 fetch 最新 `main` 自我檢查，不能只因 update API 成功就宣稱完成。
+8. JS 至少做 parser / syntax；再做與修改範圍相符的 functional/static probe。
+9. **任何玩家端 JS/CSS 改動都同步更新 `index.html` cache-bust。** 新 script 同時確認 load order，避免同檔重複載入。
+10. Runtime Integrity 最新 main HEAD 必須是 success 才能說該批完成；queued/in_progress 不算完成；failure 必須先修。
+11. Story 相關修改需同步確認 Story Integrity。
+12. Save Write Guard V1 不可破壞。
+13. 不自行重構舊存檔，除非使用者明確要求或有可重現 production bug。
+14. 一批只做核准範圍，不順手改 balance、故事、schema 或其他未授權功能。
+15. 已退休 API 不為相容而加回 wrapper。
+16. `DEVELOPMENT_PROTOCOL.md` 是 repo 內正式維護規範，與本節一起遵守。
 
 ---
 
-# 19. 下一個對話如何接手
+# 21. 下一個對話如何接手
 
 標準指令：
 
-> 讀取 GitHub `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查目前 `main` 的實際程式碼與 `index.html` 載入順序，完整承接《文明戰線》專案。  
+> 讀取 GitHub `franksky1207/rpg` 的 `PROJECT_HANDOFF.md` 與 `DEVELOPMENT_PROTOCOL.md`，再重新檢查目前 `main` 的實際程式碼、正式 owner、直接相依、Integrity workflow 與 `index.html` 載入順序，完整承接《文明戰線》專案。  
 > **`main` 是唯一真實來源，HANDOFF 只作摘要。**  
-> 修改前先讀正式 owner 與直接相依檔案；修改後重新 fetch `main` 自我檢查。JS/CSS 有改動時同步更新 `index.html` cache-bust。  
-> 我說「先討論／先查／先看／先檢查／先不要修改」時不得寫 GitHub；我說「做／修改／執行／第 N 批」時可直接修改 GitHub `main`。  
+> 修改前先讀相關正式 owner；修改後重新 fetch 最新 `main` 自我檢查。玩家端 JS/CSS 有改動時同步更新 `index.html` cache-bust，並確認最新 main HEAD 的 Runtime Integrity 最終為 success；故事相關修改同時確認 Story Integrity。  
+> 我說「先討論／先查／先看／先檢查／先列出／先不要修改」時不得寫 GitHub；我說「做／修改／執行／修正／第 N 批」時可直接修改 GitHub `main`。  
 > 優先修改正式來源，不要額外建立 wrapper、fallback、第二套 state、第二套公式或第二套 settlement。GM 測試要使用正式 owner＋explicit test context，不得污染正式 save。  
-> 目前宇宙紀元已完成：世界突破、Lv.501～1000、100 Boss 主線、world2 裝備／經濟、離線收益、強化 +21～+40、專精宇宙語意、文明等級、第二世界文明災厄、雙紀元特殊怪、第二世界懸賞／競技，以及 GM 角色 sandbox／7 模式戰力基準／統一摘要。  
-> 目前主要後續是：Cloud Save 宇宙存檔真實跨裝置驗證、全介面＋遊戲說明雙紀元語意總掃描，以及依 GM 測試資料進行 balance。  
-> 現在先不要修改任何功能；先確認最新 main、正式 owner 與目前未完成項目，再等我的下一個指令。
+> 目前宇宙主線 Boss 正式基準為 `BASE_STAT=2700`、`HP:ATK:DEF=12:2:1`、`STEP_RATE=.015`；前期實測約 93～98%，中後段仍需驗證。懸賞 V2 已定案，除非明確要求不要再調。宇宙競技場使用 Rank Curve V2，Arena state／region／assessment／UI 已做 world-aware owner 收斂；下一步優先用同一 Lv.600 校準角色實機跑 Rank1～3 各 500 次驗收。  
+> 目前另外保留 Cloud Save 真實跨裝置驗證，以及全介面＋遊戲說明雙紀元語意總掃描。  
+> 現在先不要修改任何功能；先確認最新 main 與目前未完成項目，再等我的下一個指令。
