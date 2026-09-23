@@ -2,7 +2,7 @@
  const VERSION=1;
  const SETTLEMENT_VERSION=1;
  const CONTINUOUS_VERSION=1;
- const TITLE_FIRST_KILL_VERSION=1;
+ const TITLE_FIRST_KILL_VERSION=2;
  let activeRun=null;
 
  function clone(value){try{return value==null?value:JSON.parse(JSON.stringify(value));}catch(e){return null;}}
@@ -57,18 +57,24 @@
   const completedBefore=typeof window.isSecondWorldCalamityCompleted==="function"&&window.isSecondWorldCalamityCompleted(d.id,state);
   const killsBefore=Math.max(0,Math.min(30,Math.floor(Number(row.trueKills)||0)));
   const civBefore=Math.max(0,Math.min(10,Math.floor(Number(state.secondWorld.civilizationLevel)||0)));
+  const firstRecordedKill=killsBefore===0;
   let trueKill=false,civilizationLevelUp=false,titleSettlement=null;
   if(combat.win){
    if(!completedBefore){
     row.trueKills=Math.min(30,killsBefore+1);
     trueKill=true;
-    if(killsBefore===0&&typeof window.grantPlayerTitleForUniverseCalamityFirstKill==="function"){
-     titleSettlement=window.grantPlayerTitleForUniverseCalamityFirstKill(d.id,state);
-    }
     if(row.trueKills>=30){
      state.secondWorld.civilizationLevel=Math.max(civBefore,d.targetCivilizationLevel);
      civilizationLevelUp=state.secondWorld.civilizationLevel>civBefore;
     }
+   }else if(firstRecordedKill){
+    // GM may have advanced civilizationLevel without any real kill. Record only this genuine first kill;
+    // do not fabricate 30 kills or alter the already-completed civilization level.
+    row.trueKills=1;
+    trueKill=true;
+   }
+   if(firstRecordedKill&&typeof window.grantPlayerTitleForUniverseCalamityFirstKill==="function"){
+    titleSettlement=window.grantPlayerTitleForUniverseCalamityFirstKill(d.id,state);
    }
    row.currentHp=null;
   }else{
