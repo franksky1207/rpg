@@ -73,7 +73,7 @@
   const pointText=cfg?(actual!==base?`三戰全通 ${actual} VIP 積分（基礎 ${base}）`:`三戰全通 ${base} VIP 積分`):"三戰挑戰";
   return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${positionClass(id)}" ${canChallenge?"":"disabled"} onclick="${canChallenge?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
  }
- window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=2;
+ window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=1;
  window.ARENA_WORLD_LABEL_UI_VERSION=1;
  window.renderArenaVenueSelectionHtml=function(){
   const ds=arenaDailyStatus(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
@@ -87,4 +87,26 @@
   if(!p.visibleRanks.includes(r)||typeof selectArenaVenueRank!=="function"||!selectArenaVenueRank(r))return;
   if(typeof startArenaDungeon==="function")startArenaDungeon(positionId(r));
  };
+
+ function runArenaWorldRegressionIntegrity(){
+  const errors=[];
+  const fail=(code,data=null)=>errors.push({code,data});
+  try{
+   if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.normalizeDungeonSaveState!=="function"||typeof window.getArenaProgressForWorld!=="function")fail("owner-missing",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION});
+   const legacy={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arena:{rank:4}}};
+   window.normalizeDungeonSaveState(legacy);
+   const legacyGalaxy=window.getArenaProgressForWorld(1,legacy),legacyUniverse=window.getArenaProgressForWorld(2,legacy);
+   if(Number(legacyGalaxy?.highestArenaUnlocked)!==4||Number(legacyUniverse?.highestArenaUnlocked)!==1)fail("legacy-world-split",{galaxy:legacyGalaxy?.highestArenaUnlocked,universe:legacyUniverse?.highestArenaUnlocked});
+   const split={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arenaByWorld:{1:{rank:3},2:{rank:6}}}};
+   window.normalizeDungeonSaveState(split);
+   const galaxy=window.getArenaProgressForWorld(1,split),universe=window.getArenaProgressForWorld(2,split);
+   if(Number(galaxy?.highestArenaUnlocked)!==3||Number(universe?.highestArenaUnlocked)!==6||galaxy===universe)fail("world-progress-isolation",{galaxy:galaxy?.highestArenaUnlocked,universe:universe?.highestArenaUnlocked,same:galaxy===universe});
+   if(Object.prototype.propertyIsEnumerable.call(split.dungeon,"arena"))fail("legacy-alias-enumerable");
+   if(Number(window.ARENA_WORLD_LABEL_UI_VERSION)!==1||Number(window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION)!==1)fail("ui-version",{label:window.ARENA_WORLD_LABEL_UI_VERSION,flow:window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION});
+  }catch(error){fail("exception",String(error?.message||error));}
+  return {passed:errors.length===0,errors};
+ }
+ window.ARENA_WORLD_REGRESSION_INTEGRITY_VERSION=1;
+ window.ARENA_WORLD_REGRESSION_INTEGRITY=runArenaWorldRegressionIntegrity();
+ if(!window.ARENA_WORLD_REGRESSION_INTEGRITY.passed)console.error("[文明戰線] 競技場雙紀元回歸檢查失敗",window.ARENA_WORLD_REGRESSION_INTEGRITY.errors);
 })();
