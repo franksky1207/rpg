@@ -13,7 +13,7 @@ const files=[
 ];
 const context={console,Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error};context.window=context;vm.createContext(context);
 for(const file of files){if(!fs.existsSync(file))throw new Error(`缺少宇宙紀元正式劇情來源檔：${file}`);vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});}
-const strictTerms=['主線','配角','玩家','遊戲','關卡','頁數','破關','通關','劇情'];
+const strictTerms=['主線','配角','玩家','遊戲','關卡','頁數','破關','通關','劇情','章節','篇章','讀者','故事要收尾'];
 const strictPatterns=[
  /第[一二三四五六七八九十百千0-9]+區/g,
  /第[一二三四五六七八九十百千0-9]+篇/g,
