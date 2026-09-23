@@ -7,7 +7,7 @@
  function firstWorldRegions(){return Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];}
  function secondWorldRegions(){return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];}
  function arenaRegionsForWorld(world){return Number(world)===2?secondWorldRegions():firstWorldRegions();}
- function arenaRegionForWorld(world,rank){const w=Number(world)===2?2:1,regions=arenaRegionsForWorld(w),max=Math.max(1,regions.length||1),r=Math.max(1,Math.min(max,Math.floor(Number(rank)||1));if(w===2&&typeof window.secondWorldRegion==="function")return window.secondWorldRegion(r-1);return regions[r-1]||null;}
+ function arenaRegionForWorld(world,rank){const w=Number(world)===2?2:1,regions=arenaRegionsForWorld(w),max=Math.max(1,regions.length||1),r=Math.max(1,Math.min(max,Math.floor(Number(rank)||1)));if(w===2&&typeof window.secondWorldRegion==="function")return window.secondWorldRegion(r-1);return regions[r-1]||null;}
  function unlockedArenaRankCap(target){const regions=firstWorldRegions();if(!regions.length)return 1;const unlockedMap=Math.max(0,Math.floor(Number(target?.unlockedMap)||0));const unlockedRegions=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;return Math.max(1,Math.min(regions.length,unlockedRegions||1));}
  function blankArenaProgress(){return {};}
  function arenaMaxRankForWorld(world){const regions=arenaRegionsForWorld(world);return Math.max(1,regions.length||1);}
