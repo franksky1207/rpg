@@ -9,7 +9,8 @@ const files=[
  'storydata-universe-myriad-domain-frontline.js',
  'storydata-universe-cosmic-filament.js',
  'storydata-universe-stellar-great-wall.js',
- 'storydata-universe-cosmic-deep-domain.js'
+ 'storydata-universe-cosmic-deep-domain.js',
+ 'storydata-universe-cosmic-unification-war.js'
 ];
 const context={console,Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error};context.window=context;vm.createContext(context);
 for(const file of files){if(!fs.existsSync(file))throw new Error(`缺少宇宙紀元正式劇情來源檔：${file}`);vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});}
