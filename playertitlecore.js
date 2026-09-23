@@ -45,6 +45,8 @@
  const UNIVERSE_IDS=Object.freeze(UNIVERSE_DEFS.map(row=>row.id));
  const MIRROR_IDS=Object.freeze(MIRROR_DEFS.map(row=>row.id));
  const ALL_IDS=Object.freeze(ALL_DEFS.map(row=>row.id));
+ const LEGACY_DEFS=Object.freeze([...DEFS,...MIRROR_DEFS]);
+ const LEGACY_IDS=Object.freeze(LEGACY_DEFS.map(row=>row.id));
  const BY_ID=Object.freeze(Object.fromEntries(ALL_DEFS.map(row=>[row.id,row])));
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
@@ -150,8 +152,11 @@
  window.UNIVERSE_CALAMITY_PLAYER_TITLE_IDS=UNIVERSE_IDS;
  window.MIRROR_PLAYER_TITLE_DEFS=MIRROR_DEFS;
  window.MIRROR_PLAYER_TITLE_IDS=MIRROR_IDS;
- window.PLAYER_TITLE_DEFS=ALL_DEFS;
- window.PLAYER_TITLE_IDS=ALL_IDS;
+ window.PLAYER_TITLE_DEFS=LEGACY_DEFS;
+ window.PLAYER_TITLE_IDS=LEGACY_IDS;
+ window.PLAYER_TITLE_ALL_DEFS=ALL_DEFS;
+ window.PLAYER_TITLE_ALL_IDS=ALL_IDS;
+ window.PLAYER_TITLE_CATALOG_VERSION=2;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
  window.getPlayerTitleDefinition=titleDefinition;
