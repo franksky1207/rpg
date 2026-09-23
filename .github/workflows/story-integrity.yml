@@ -40,6 +40,7 @@ jobs:
           test -f storymigration.js
           test -f storyruntimeintegrity.js
           test -f secondworldstoryregistry.js
+          test -f storydata-universe-galaxy-beyond.js
           test -f tests/story/source-purity.js
           test -f tests/story/integrity.js
           test -f tests/story/flow.js
@@ -53,6 +54,13 @@ jobs:
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
       - name: Run story data integrity
-        run: node tests/story/integrity.js
+        run: node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
+      - name: Upload story integrity diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: story-integrity-report
+          path: story-integrity-report.txt
+          retention-days: 1
       - name: Run story flow regressions
         run: node tests/story/flow.js
