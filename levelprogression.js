@@ -22,7 +22,7 @@
  }
  function clampEffectiveGameLevel(level,target=null){
   const cap=effectiveLevelCap(target);
-  return Math.max(1,Math.min(cap,Math.floor(Number(level)||1));
+  return Math.max(1,Math.min(cap,Math.floor(Number(level)||1)));
  }
  function atEffectiveLevelCap(target=null){
   const s=targetState(target);
