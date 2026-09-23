@@ -35,7 +35,7 @@ jobs:
           node-version: '24'
       - name: Run full JavaScript syntax and owner integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+        run: set -o pipefail; node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
       - name: Upload runtime integrity diagnostics
         if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
         uses: actions/upload-artifact@v4
