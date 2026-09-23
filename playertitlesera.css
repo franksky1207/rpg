@@ -1,0 +1,113 @@
+/* Universe calamity title series V1 + Mirror ceiling V2.
+   Hierarchy: Galaxy < Universe < Mirror. Open effects only; no closed frame. */
+.player-title--universe-calamity{
+ font-size:1.12em;
+ letter-spacing:.075em;
+ background-size:300% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.96),0 0 13px rgba(154,226,255,.84),0 0 26px rgba(105,125,215,.54),0 0 40px rgba(98,77,155,.24);
+ animation:universeLawText 2.8s ease-in-out infinite;
+}
+.player-title--universe-calamity::before{
+ content:"";
+ inset:-.72em -1.62em;
+ border:0;box-shadow:none;clip-path:none;border-radius:0;
+ background:
+  radial-gradient(ellipse at 50% 50%,rgba(231,249,255,.16),transparent 34%),
+  radial-gradient(ellipse at 7% 50%,rgba(120,226,255,.26),transparent 29%),
+  radial-gradient(ellipse at 93% 50%,rgba(157,132,240,.24),transparent 29%),
+  conic-gradient(from 242deg at 8% 50%,transparent 0 18%,rgba(184,241,255,.42) 20% 24%,transparent 27% 100%),
+  conic-gradient(from 62deg at 92% 50%,transparent 0 18%,rgba(200,184,255,.40) 20% 24%,transparent 27% 100%),
+  linear-gradient(90deg,transparent 0 5%,rgba(211,248,255,.24) 9% 13%,transparent 18% 82%,rgba(202,188,255,.22) 87% 91%,transparent 95% 100%);
+ opacity:.98;
+ animation:universeLawField 3.4s ease-in-out infinite;
+}
+.player-title--universe-calamity::after{
+ content:"";
+ inset:-.52em -1.18em;
+ border:0;box-shadow:none;border-radius:0;
+ opacity:.78;
+ background:
+  linear-gradient(108deg,transparent 0 18%,rgba(217,250,255,.18) 20% 22%,transparent 24% 47%,rgba(255,255,255,.22) 49% 51%,transparent 53% 76%,rgba(202,187,255,.17) 78% 80%,transparent 82% 100%),
+  radial-gradient(ellipse at center,rgba(226,247,255,.18),transparent 58%);
+ animation:universePhasePlane 3.1s ease-in-out infinite;
+}
+.player-title--universe-calamity-1{background-image:linear-gradient(96deg,#8de6ff 0%,#ffffff 24%,#c9f7ff 42%,#8ab7ff 62%,#e9ddff 82%,#ffffff 100%)}
+.player-title--universe-calamity-1::before{inset:-.74em -1.70em;animation-duration:3.8s}
+.player-title--universe-calamity-2{background-image:linear-gradient(96deg,#b4f0ff 0%,#ffffff 18%,#d7c9ff 39%,#8ddcff 60%,#fff0c6 80%,#ffffff 100%);text-shadow:0 0 4px #fff,0 0 14px rgba(129,225,255,.9),0 0 27px rgba(172,147,255,.58),0 0 42px rgba(232,217,169,.22)}
+.player-title--universe-calamity-2::after{background:repeating-linear-gradient(112deg,transparent 0 14px,rgba(221,248,255,.11) 15px 16px,transparent 17px 29px),radial-gradient(ellipse at center,rgba(218,207,255,.15),transparent 58%)}
+.player-title--universe-calamity-3{font-size:1.13em;background-image:linear-gradient(100deg,#d8fbff 0%,#6fd3ff 19%,#ffffff 39%,#889dff 58%,#e4d8ff 78%,#ffffff 100%);text-shadow:0 0 4px #fff,0 0 14px rgba(92,214,255,.94),0 0 29px rgba(106,123,236,.64),0 0 45px rgba(125,90,190,.26)}
+.player-title--universe-calamity-3::before{background:linear-gradient(113deg,transparent 0 7%,rgba(202,249,255,.58) 8% 10%,transparent 12% 88%,rgba(202,187,255,.54) 90% 92%,transparent 94%),radial-gradient(ellipse at 7% 50%,rgba(91,220,255,.30),transparent 30%),radial-gradient(ellipse at 93% 50%,rgba(153,120,240,.28),transparent 30%)}
+.player-title--universe-calamity-4{font-size:1.14em;background-image:linear-gradient(96deg,#516073 0%,#dffbff 18%,#ffffff 34%,#8d9bd3 51%,#d5c5ff 70%,#eefcff 86%,#4d5870 100%);text-shadow:0 0 5px #fff,0 0 15px rgba(181,236,255,.88),0 0 30px rgba(99,111,169,.68),0 0 47px rgba(58,52,102,.32)}
+.player-title--universe-calamity-4::after{opacity:.88;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.27),transparent 36%),linear-gradient(90deg,transparent 0 14%,rgba(198,235,255,.15) 20%,transparent 31% 69%,rgba(194,177,255,.15) 80%,transparent 86%)}
+.player-title--universe-calamity-5{font-size:1.15em;background-image:linear-gradient(94deg,#9ef1ff 0%,#ffffff 18%,#d8fbff 31%,#a493ff 48%,#ffffff 64%,#8edfff 82%,#f1eaff 100%);text-shadow:0 0 5px #fff,0 0 16px rgba(108,225,255,.96),0 0 32px rgba(134,113,246,.72),0 0 50px rgba(89,67,163,.32)}
+.player-title--universe-calamity-5::before{inset:-.84em -1.88em;background:radial-gradient(ellipse at center,rgba(255,255,255,.28) 0 5%,rgba(138,222,255,.18) 12%,rgba(132,105,235,.15) 22%,transparent 42%),conic-gradient(from 236deg at 7% 52%,transparent 0 16%,rgba(194,247,255,.55) 18% 24%,transparent 27%),conic-gradient(from 56deg at 93% 52%,transparent 0 16%,rgba(209,192,255,.54) 18% 24%,transparent 27%)}
+.player-title--universe-calamity-6{font-size:1.16em;background-image:linear-gradient(96deg,#c5f7ff 0%,#ffffff 16%,#87dcff 31%,#d8c9ff 48%,#ffffff 65%,#91b9ff 82%,#f7edcf 100%);text-shadow:0 0 5px #fff,0 0 17px rgba(107,218,255,.98),0 0 34px rgba(153,134,242,.74),0 0 52px rgba(108,102,176,.34)}
+.player-title--universe-calamity-6::after{opacity:.94;background:linear-gradient(90deg,transparent 0 6%,rgba(180,240,255,.25) 11% 14%,transparent 18% 28%,rgba(227,248,255,.18) 33% 36%,transparent 40% 60%,rgba(210,194,255,.18) 64% 67%,transparent 72% 82%,rgba(166,201,255,.24) 86% 89%,transparent 94%),radial-gradient(ellipse at center,rgba(255,255,255,.16),transparent 60%)}
+.player-title--universe-calamity-7{font-size:1.17em;background-image:linear-gradient(94deg,#6dd8ff 0%,#ffffff 14%,#d6fbff 28%,#ab98ff 44%,#ffffff 59%,#72d7ff 74%,#e6dcff 88%,#ffffff 100%);text-shadow:0 0 5px #fff,0 0 18px rgba(89,213,255,1),0 0 36px rgba(139,112,244,.76),0 0 56px rgba(74,100,168,.38)}
+.player-title--universe-calamity-7::before{inset:-.92em -2.04em;background:repeating-linear-gradient(118deg,transparent 0 11px,rgba(191,243,255,.09) 12px 13px,transparent 14px 23px),repeating-linear-gradient(62deg,transparent 0 15px,rgba(204,190,255,.075) 16px 17px,transparent 18px 29px),radial-gradient(ellipse at 8% 50%,rgba(90,218,255,.32),transparent 30%),radial-gradient(ellipse at 92% 50%,rgba(149,118,239,.31),transparent 30%),radial-gradient(ellipse at center,rgba(235,252,255,.16),transparent 50%)}
+.player-title--universe-calamity-8{font-size:1.18em;background-image:linear-gradient(95deg,#b9f4ff 0%,#ffffff 13%,#7ccfff 27%,#d6c8ff 42%,#ffffff 57%,#8ae0ff 73%,#c9b7ff 88%,#ffffff 100%);text-shadow:0 0 5px #fff,0 0 19px rgba(105,220,255,1),0 0 38px rgba(155,130,255,.80),0 0 58px rgba(85,68,169,.42)}
+.player-title--universe-calamity-8::before{inset:-.98em -2.16em;background:linear-gradient(114deg,transparent 0 16%,rgba(205,250,255,.38) 18% 20%,transparent 22% 44%,rgba(255,255,255,.18) 46% 48%,transparent 50% 72%,rgba(209,192,255,.36) 74% 76%,transparent 78%),linear-gradient(66deg,transparent 0 20%,rgba(166,229,255,.20) 22% 24%,transparent 26% 74%,rgba(183,162,255,.20) 76% 78%,transparent 80%),radial-gradient(ellipse at center,rgba(234,250,255,.18),transparent 48%)}
+.player-title--universe-calamity-9{font-size:1.20em;background-image:linear-gradient(92deg,#7387a8 0%,#e9fbff 12%,#ffffff 26%,#a4cfff 40%,#d8c9ff 55%,#ffffff 70%,#84d7ff 84%,#f8fbff 100%);text-shadow:0 0 5px #fff,0 0 20px rgba(126,222,255,1),0 0 40px rgba(130,120,228,.84),0 0 62px rgba(38,46,84,.48)}
+.player-title--universe-calamity-9::before{inset:-1.02em -2.28em;background:radial-gradient(ellipse at center,rgba(5,10,24,.48) 0 12%,rgba(103,143,211,.18) 20%,rgba(220,247,255,.16) 30%,transparent 49%),conic-gradient(from 236deg at 7% 50%,transparent 0 15%,rgba(216,249,255,.62) 18% 24%,transparent 27%),conic-gradient(from 56deg at 93% 50%,transparent 0 15%,rgba(202,187,255,.58) 18% 24%,transparent 27%)}
+.player-title--universe-calamity-10{font-size:1.22em;background-image:linear-gradient(90deg,#ffffff 0%,#c9f8ff 11%,#ffffff 22%,#9edfff 34%,#e8ddff 47%,#ffffff 58%,#b9f4ff 71%,#fff3cf 84%,#ffffff 100%);background-size:420% 100%;text-shadow:0 0 5px #fff,0 0 21px rgba(152,233,255,1),0 0 42px rgba(166,145,255,.86),0 0 64px rgba(111,169,214,.48),0 0 78px rgba(239,220,169,.18);animation:universeApexText 2.1s ease-in-out infinite}
+.player-title--universe-calamity-10::before{inset:-1.10em -2.48em;background:radial-gradient(ellipse at center,rgba(255,255,255,.28),transparent 24%),radial-gradient(ellipse at 8% 50%,rgba(124,227,255,.36),transparent 27%),radial-gradient(ellipse at 92% 50%,rgba(172,145,255,.34),transparent 27%),conic-gradient(from 234deg at 6% 50%,transparent 0 14%,rgba(222,252,255,.70) 17% 23%,rgba(148,226,255,.28) 24% 27%,transparent 30%),conic-gradient(from 54deg at 94% 50%,transparent 0 14%,rgba(227,215,255,.68) 17% 23%,rgba(255,235,183,.24) 24% 27%,transparent 30%),linear-gradient(90deg,transparent 0 4%,rgba(223,250,255,.28) 8% 12%,transparent 17% 39%,rgba(255,255,255,.18) 44% 56%,transparent 61% 83%,rgba(217,202,255,.27) 88% 92%,transparent 96%);animation:universeApexField 2.7s ease-in-out infinite}
+.player-title--universe-calamity-10::after{inset:-.82em -1.82em;opacity:.96;background:linear-gradient(104deg,transparent 0 14%,rgba(207,247,255,.20) 17% 20%,transparent 23% 42%,rgba(255,255,255,.24) 46% 54%,transparent 58% 77%,rgba(215,200,255,.20) 80% 83%,transparent 86%),radial-gradient(ellipse at center,rgba(234,250,255,.22),transparent 56%);animation:universeApexPlane 2.4s ease-in-out infinite}
+
+/* Mirror ceiling V2: anomaly always outranks Universe. */
+.player-title--mirror{letter-spacing:.08em}
+.player-title--mirror::before{content:attr(data-title-text);position:absolute;left:0;top:0;inset:auto;z-index:-1;white-space:nowrap;background:none!important;border:0!important;box-shadow:none!important;clip-path:none!important;pointer-events:none;-webkit-text-fill-color:transparent;background-clip:text;-webkit-background-clip:text}
+.player-title--mirror::after{content:"";border:0!important;box-shadow:none!important;clip-path:none!important;pointer-events:none}
+.player-title--mirror-15{font-size:1.24em;text-shadow:0 0 5px #fff,2px 0 7px rgba(121,255,218,.72),-2px 0 7px rgba(255,224,122,.64),0 0 30px rgba(126,230,255,.58),0 0 56px rgba(187,164,255,.24);animation:mirrorProbability15 1.65s steps(5,end) infinite}
+.player-title--mirror-15::before{opacity:.50;transform:translate(1.5px,-.5px);background-image:linear-gradient(90deg,#8bffe2,#ffffff,#ffe58f,#8fdfff)!important;animation:mirrorGhost15 1.65s steps(5,end) infinite}
+.player-title--mirror-15::after{inset:-.92em -2.05em;opacity:.98;background:radial-gradient(circle at 7% 30%,#fff 0 1px,transparent 2px),radial-gradient(circle at 92% 66%,rgba(255,224,125,.95) 0 1.2px,transparent 2.2px),radial-gradient(ellipse at center,rgba(185,255,240,.22),transparent 55%),linear-gradient(90deg,transparent 4%,rgba(173,255,231,.24) 10% 16%,transparent 22% 78%,rgba(255,227,139,.22) 84% 90%,transparent 96%);animation:mirrorAnomalyAura15 1.9s ease-in-out infinite}
+.player-title--mirror-16{font-size:1.26em;text-shadow:0 0 5px #fff,0 0 18px rgba(130,206,255,.98),0 0 36px rgba(255,225,145,.72),0 0 60px rgba(157,216,255,.34);animation:mirrorTimeBody16 1.28s steps(4,end) infinite}
+.player-title--mirror-16::before{opacity:.66;transform:translate(-2px,0);background-image:linear-gradient(90deg,#a9dfff,#ffffff,#ffe9a8,#b9dfff)!important;animation:mirrorTimeGhost16 1.28s steps(6,end) infinite}
+.player-title--mirror-16::after{inset:-.98em -2.18em;opacity:.95;background:repeating-linear-gradient(90deg,transparent 0 13px,rgba(224,246,255,.22) 14px 15px,transparent 16px 27px),linear-gradient(180deg,transparent 0 28%,rgba(255,255,255,.18) 30% 33%,transparent 35% 62%,rgba(255,232,163,.16) 65% 68%,transparent 71%);animation:mirrorTimeSlices16 1.28s steps(6,end) infinite}
+.player-title--mirror-17{font-size:1.28em;text-shadow:3px 0 2px rgba(255,48,62,.95),-3px 0 2px rgba(132,74,255,.92),0 0 7px #fff,0 0 24px rgba(255,51,67,.72),0 0 50px rgba(114,53,190,.58);animation:mirrorCauseBody17 1.06s steps(3,end) infinite}
+.player-title--mirror-17::before{opacity:.72;transform:translate(3px,0);background-image:linear-gradient(90deg,#ff3848,#ffffff,#a88cff,#2b102d)!important;animation:mirrorCauseGhost17 .94s steps(4,end) infinite}
+.player-title--mirror-17::after{inset:-1.02em -2.30em;opacity:1;background:linear-gradient(117deg,transparent 0 10%,rgba(255,48,61,.54) 11% 13%,transparent 15% 39%,rgba(255,255,255,.30) 41% 43%,transparent 45% 72%,rgba(150,91,255,.44) 74% 76%,transparent 78%),linear-gradient(63deg,transparent 0 21%,rgba(255,255,255,.20) 23% 25%,transparent 27% 69%,rgba(255,53,69,.32) 71% 73%,transparent 75%);animation:mirrorEffectBeforeCause17 .88s steps(4,end) infinite}
+.player-title--mirror-18{font-size:1.30em;animation:mirrorDualReality18 2.0s steps(2,end) infinite;text-shadow:0 0 5px #fff,0 0 20px rgba(255,199,75,.98),0 0 40px rgba(255,232,157,.78),0 0 64px rgba(106,56,169,.34)}
+.player-title--mirror-18::before{opacity:.72;background-image:linear-gradient(90deg,#fff4be,#ffffff,#8c66d8,#1d1028)!important;animation:mirrorDualGhost18 2s steps(2,end) infinite}
+.player-title--mirror-18::after{inset:-1.06em -2.42em;opacity:1;background:radial-gradient(ellipse at 20% 50%,rgba(255,194,60,.34),transparent 32%),radial-gradient(ellipse at 80% 50%,rgba(126,81,204,.34),transparent 32%),linear-gradient(90deg,transparent 7%,rgba(255,238,177,.22) 20%,transparent 43%,rgba(168,129,229,.20) 57%,transparent 80% 93%);animation:mirrorDualField18 2s steps(2,end) infinite}
+.player-title--mirror-19{font-size:1.34em;text-shadow:0 0 5px #fff,2px 0 10px rgba(255,228,143,.88),-2px 0 10px rgba(214,194,255,.88),0 0 28px rgba(255,246,214,.88),0 0 58px rgba(220,204,255,.52),0 0 82px rgba(255,234,168,.26);animation:mirrorLayerBody19 1.46s ease-in-out infinite}
+.player-title--mirror-19::before{opacity:.78;transform:translate(3px,-1px);background-image:linear-gradient(90deg,#ffffff,#ffe69c,#f0e5ff,#ffffff)!important;text-shadow:-5px 1px 8px rgba(218,198,255,.62),5px -1px 8px rgba(255,225,137,.62);animation:mirrorLayerGhost19 1.46s ease-in-out infinite}
+.player-title--mirror-19::after{inset:-1.20em -2.72em;opacity:1;background:linear-gradient(90deg,transparent 0 7%,rgba(255,242,195,.26) 12% 16%,transparent 21% 41%,rgba(255,255,255,.34) 47% 53%,transparent 59% 79%,rgba(224,207,255,.26) 84% 88%,transparent 93%),radial-gradient(ellipse at center,rgba(255,255,255,.24),transparent 58%);animation:mirrorRealityMerge19 1.46s ease-in-out infinite}
+.player-title--mirror-20{font-size:1.38em;text-shadow:0 0 6px #fff,3px 0 9px rgba(167,236,255,.94),-3px 0 9px rgba(241,206,255,.92),0 0 30px rgba(255,233,157,.94),0 0 62px rgba(169,224,255,.58),0 0 92px rgba(224,198,255,.38);animation:mirrorImpossibleBody20 .86s steps(5,end) infinite}
+.player-title--mirror-20::before{opacity:.82;transform:translate(-4px,1px);background-image:linear-gradient(90deg,#ffffff,#bff0ff,#ffe99c,#f4d8ff,#c8fff2,#ffffff)!important;text-shadow:5px -1px 8px rgba(255,216,137,.56),-5px 1px 8px rgba(193,216,255,.62);animation:mirrorImpossibleGhost20 .73s steps(7,end) infinite}
+.player-title--mirror-20::after{inset:-1.34em -3.00em;opacity:1;background:radial-gradient(circle at 3% 19%,#fff 0 1.3px,transparent 2.3px),radial-gradient(circle at 96% 72%,rgba(238,207,255,.98) 0 1.4px,transparent 2.4px),linear-gradient(102deg,transparent 0 8%,rgba(255,255,255,.26) 10% 14%,transparent 17% 34%,rgba(174,240,255,.22) 37% 41%,transparent 44% 57%,rgba(255,222,145,.22) 60% 64%,transparent 67% 83%,rgba(229,201,255,.26) 86% 90%,transparent 93%),radial-gradient(ellipse at center,rgba(255,255,255,.24),transparent 54%);animation:mirrorImpossibleField20 .79s steps(6,end) infinite}
+
+@keyframes universeLawText{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes universeLawField{0%,100%{transform:scaleX(.98);opacity:.86}50%{transform:scaleX(1.03);opacity:1}}
+@keyframes universePhasePlane{0%,100%{transform:translateX(-1.5%);opacity:.64}50%{transform:translateX(1.5%);opacity:.90}}
+@keyframes universeApexText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.10)}}
+@keyframes universeApexField{0%,100%{transform:scale(.98);opacity:.88}50%{transform:scale(1.04);opacity:1}}
+@keyframes universeApexPlane{0%,100%{transform:translateX(-2%);opacity:.72}50%{transform:translateX(2%);opacity:1}}
+@keyframes mirrorProbability15{0%,100%{background-position:0 50%}40%{background-position:72% 50%}60%{background-position:31% 50%}80%{background-position:100% 50%}}
+@keyframes mirrorGhost15{0%,100%{transform:translate(1px,0);opacity:.35}25%{transform:translate(-2px,1px);opacity:.55}50%{transform:translate(2px,-1px);opacity:.42}75%{transform:translate(-1px,0);opacity:.62}}
+@keyframes mirrorAnomalyAura15{0%,100%{transform:scale(.98)}50%{transform:scale(1.04)}}
+@keyframes mirrorTimeBody16{0%,24%{transform:translateX(0)}25%,49%{transform:translateX(1px)}50%,74%{transform:translateX(-1px)}75%,100%{transform:translateX(0)}}
+@keyframes mirrorTimeGhost16{0%,16%{transform:translate(-3px,0)}17%,33%{transform:translate(2px,-1px)}34%,50%{transform:translate(-1px,1px)}51%,67%{transform:translate(3px,0)}68%,84%{transform:translate(-2px,-1px)}85%,100%{transform:translate(1px,1px)}}
+@keyframes mirrorTimeSlices16{0%,100%{background-position:0 0}50%{background-position:9px 0}}
+@keyframes mirrorCauseBody17{0%,100%{transform:translateX(0)}33%{transform:translateX(1px)}66%{transform:translateX(-1px)}}
+@keyframes mirrorCauseGhost17{0%,30%{transform:translate(4px,0);opacity:.78}31%,55%{transform:translate(-3px,1px);opacity:.48}56%,100%{transform:translate(2px,-1px);opacity:.70}}
+@keyframes mirrorEffectBeforeCause17{0%,20%{transform:scaleX(1.06);opacity:1}21%,45%{transform:scaleX(.98);opacity:.62}46%,70%{transform:scaleX(1.03);opacity:.92}71%,100%{transform:scaleX(1);opacity:.72}}
+@keyframes mirrorDualReality18{0%,49%{background-image:linear-gradient(94deg,#7d3c08,#ffbd35,#fff0a8,#ffffff,#ffd568,#fff8d8)}50%,100%{background-image:linear-gradient(94deg,#130d1d,#6f43a6,#dac8ff,#ffffff,#9e78e8,#22152d)}}
+@keyframes mirrorDualGhost18{0%,49%{transform:translate(2px,0);opacity:.62}50%,100%{transform:translate(-2px,0);opacity:.78}}
+@keyframes mirrorDualField18{0%,49%{filter:hue-rotate(0deg);transform:scale(1.02)}50%,100%{filter:hue-rotate(42deg);transform:scale(.98)}}
+@keyframes mirrorLayerBody19{0%,100%{transform:translateX(0);filter:brightness(1)}46%{transform:translateX(1px);filter:brightness(1.04)}50%{transform:translateX(0);filter:brightness(1.28)}54%{transform:translateX(-1px);filter:brightness(1.04)}}
+@keyframes mirrorLayerGhost19{0%,42%{transform:translate(3px,-1px);opacity:.75}49%,51%{transform:translate(0,0);opacity:.18}58%,100%{transform:translate(-3px,1px);opacity:.72}}
+@keyframes mirrorRealityMerge19{0%,42%{transform:scaleX(1.04);opacity:.90}49%,51%{transform:scaleX(.96);opacity:1}58%,100%{transform:scaleX(1.04);opacity:.90}}
+@keyframes mirrorImpossibleBody20{0%{transform:translate(0,0)}18%{transform:translate(1px,-1px)}36%{transform:translate(-1px,0)}54%{transform:translate(0,1px)}72%{transform:translate(1px,0)}90%,100%{transform:translate(0,0)}}
+@keyframes mirrorImpossibleGhost20{0%{transform:translate(-4px,1px);opacity:.78}14%{transform:translate(4px,-1px);opacity:.48}28%{transform:translate(-2px,-1px);opacity:.84}42%{transform:translate(3px,1px);opacity:.40}56%{transform:translate(-5px,0);opacity:.82}70%{transform:translate(2px,-1px);opacity:.55}84%,100%{transform:translate(0,0);opacity:.22}}
+@keyframes mirrorImpossibleField20{0%{transform:translateX(-2%) scaleX(1.03);opacity:.95}16%{transform:translateX(2%) scaleX(.98);opacity:.62}33%{transform:translateX(-1%) scaleX(1.05);opacity:1}50%{transform:translateX(1%) scaleX(.96);opacity:.70}67%{transform:translateX(-2%) scaleX(1.02);opacity:.94}84%,100%{transform:translateX(0) scaleX(1);opacity:.82}}
+
+@media(max-width:600px){
+ .player-title--universe-calamity{letter-spacing:.055em}
+ .player-title--mirror{letter-spacing:.06em}
+ .player-title--universe-calamity::before,.player-title--mirror::after{transform-origin:center}
+}
+
+@media(prefers-reduced-motion:reduce){
+ .player-title--universe-calamity,.player-title--universe-calamity::before,.player-title--universe-calamity::after,
+ .player-title--mirror,.player-title--mirror::before,.player-title--mirror::after{animation:none!important}
+}
