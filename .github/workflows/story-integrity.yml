@@ -35,6 +35,8 @@ jobs:
           node-version: '24'
       - name: Run raw story source purity
         run: set -o pipefail; node tests/story/source-purity.js 2>&1 | tee story-purity-report.txt
+      - name: Run universe meta-language audit
+        run: set -o pipefail; node tests/story/meta-language.js 2>&1 | tee story-meta-language-report.txt
       - name: Run story data integrity
         run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
       - name: Upload story integrity diagnostics
@@ -44,6 +46,7 @@ jobs:
           name: story-integrity-report
           path: |
             story-purity-report.txt
+            story-meta-language-report.txt
             story-integrity-report.txt
           if-no-files-found: ignore
           retention-days: 1
