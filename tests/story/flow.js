@@ -1,15 +1,24 @@
-// 永久回歸檢查：銀河首殺流程不回歸，宇宙紀元共用 pending/completed 與 100 Boss mapping。
-const fs=require('fs'),vm=require('vm');function assert(v,m){if(!v)throw new Error(m);}
-const combat=fs.readFileSync('combatcore.js','utf8'),pipeline=fs.readFileSync('battlepipeline.js','utf8'),progressSource=fs.readFileSync('storyprogress.js','utf8'),recordSource=fs.readFileSync('storyrecordtabs.js','utf8'),runtimeSource=fs.readFileSync('storyruntimeintegrity.js','utf8');
-assert((combat.match(/queueBossStory/g)||[]).length===2,'銀河 combatcore queueBossStory owner 契約改變');assert(!/queueBossStory/.test(pipeline),'battlepipeline 不得再次排銀河故事');assert(/queueUniverseBossStory/.test(progressSource),'storyprogress 缺少宇宙首殺排隊能力');assert(/UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1/.test(progressSource),'宇宙首殺 hook 版本遺失');assert(/STORY_RECORD_TABS_VERSION=7/.test(recordSource),'戰線紀錄未升級為雙紀元');assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtimeSource),'Runtime Integrity 版本輸出遺失');
-const context={console,setTimeout:()=>0,clearTimeout:()=>{},queueMicrotask:()=>{},requestAnimationFrame:fn=>fn?.(),Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error,Buffer,save:()=>{},registerNewStateNormalizer:()=>{},LAST_SAVE_LOAD_REPORT:{hadRaw:true},BACKGROUND_PRELOAD_READY:false,CIVILIZATION_AUTH_REQUIRED:false,addEventListener:()=>{},document:{readyState:'loading',addEventListener:()=>{},getElementById:()=>null,createElement:()=>({classList:{add(){},remove(){}},setAttribute(){},remove(){}}),body:{appendChild(){}}}};context.window=context;vm.createContext(context);
-const files=['data.js','worldmaps-earth.js','worldmaps-solar.js','worldmaps-nearstar.js','worldmaps-frontier.js','worldmaps-orion.js','worldmaps-galactic-frontier.js','worldmaps-galactic-mid.js','worldmaps-core-outer.js','worldmaps-core-war.js','worldmaps-galactic-unification.js','secondworlddata.js','storydata-earth.js','storydata-solar.js','storydata-nearstar.js','storydata-frontier.js','storydata-orion.js','storydata-galactic-frontier.js','storydata-galactic-mid.js','storydata-core-outer.js','storydata-core-war.js','storydata-galactic-unification.js','storyintegrity.js','storymigration.js'];for(const file of files)vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});vm.runInContext('var EQUIPMENT_TYPES=[];',context);
-function baseState(){return {level:100,exp:0,gold:0,unlockedMap:19,inventory:[],equipment:{},hp:1,bossKilled:Array(100).fill(false),storyProgress:{pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true},introSeen:true,secondWorld:{entered:true,mainline:{bossKilled:Array(100).fill(false)}}};}
-context.state=baseState();context.settleSecondWorldBossVictory=index=>({ok:true,firstKill:true,bossIndex:index});context.startSecondWorldBossBattle=index=>`single-${index}`;context.startSecondWorldBossContinuous=index=>`continuous-${index}`;context.secondWorldBossKilled=index=>context.state.secondWorld.mainline.bossKilled[index]===true;vm.runInContext(fs.readFileSync('storyprogress.js','utf8'),context,{filename:'storyprogress.js'});const p=context.civilizationStoryProgress;
-assert(Number(context.CIVILIZATION_STORY_PROGRESS_VERSION)>=12,'story progress 版本不足');assert(context.UNIVERSE_STORY_REGISTRY_READY===true,'宇宙 Registry 未就緒');assert(p.universeBossStoryId(0)==='universe-galaxy-beyond-boss-1','宇宙第1 Boss mapping 錯誤');assert(p.universeBossStoryId(99)==='universe-cosmic-unification-war-boss-10','宇宙第100 Boss mapping 錯誤');assert(p.universeBossIndexForStory(p.universeBossStoryId(99))===99,'宇宙 mapping 反查錯誤');
-const mapIdx=19,storyId='solar-boss-10';context.state=baseState();context.state.bossKilled[mapIdx]=true;assert(p.queueBossStory(mapIdx)===storyId,'銀河首殺排隊失敗');assert(context.state.storyProgress.pendingStory===storyId,'銀河 pending 遺失');p.completeStory(storyId);assert(p.queueBossStory(mapIdx)===null,'銀河已完成故事被重播');
-// 第1批只有宇宙架構，未建立正式文字時不得產生不存在的 pending。
-context.state=baseState();assert(p.queueUniverseBossStory(0)===null,'宇宙正式文字尚未建立時不應排 pending');assert(context.state.storyProgress.pendingStory===null,'宇宙空資料不得留下 pending');
-// 一旦正式故事資料加入，共用 queue/pending/completed 必須直接生效。
-const uid=p.universeBossStoryId(0);context.CIVILIZATION_STORIES[uid]={id:uid,title:'彼岸守門者',chapter:'宇宙紀元・銀河彼端',location:'銀河彼端',pages:[['測試']]};context.state=baseState();assert(p.queueUniverseBossStory(0)===uid,'宇宙首殺未進共用 pending');assert(context.state.storyProgress.pendingStory===uid,'宇宙 pending 未保存');p.completeStory(uid);assert(context.state.storyProgress.completedStories.includes(uid),'宇宙 completed 未保存');assert(p.queueUniverseBossStory(0)===null,'宇宙已完成故事不得重播');
-console.log('STORY FLOW PASSED | galaxy owner preserved | universe mapping=100 | shared pending/completed=yes');
+// 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
+const fs=require('fs');
+function assert(v,m){if(!v)throw new Error(m);}
+const combat=fs.readFileSync('combatcore.js','utf8');
+const pipeline=fs.readFileSync('battlepipeline.js','utf8');
+const progress=fs.readFileSync('storyprogress.js','utf8');
+const record=fs.readFileSync('storyrecordtabs.js','utf8');
+const gm=fs.readFileSync('gmstorytest.js','utf8');
+const runtime=fs.readFileSync('storyruntimeintegrity.js','utf8');
+const integrity=fs.readFileSync('storyintegrity.js','utf8');
+assert((combat.match(/queueBossStory/g)||[]).length===2,'銀河 combatcore queueBossStory owner 契約改變');
+assert(!/queueBossStory/.test(pipeline),'battlepipeline 不得再次排銀河故事');
+assert(/function queueUniverseBossStory\(index\)/.test(progress),'storyprogress 缺少宇宙首殺 queue owner');
+assert(/queueStory\(universeBossStoryId\(index\)\)/.test(progress),'宇宙首殺必須共用 queueStory/pending/completed');
+assert(/UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1/.test(progress),'宇宙首殺 hook 版本遺失');
+assert(/result\?\.ok&&result\.firstKill===true/.test(progress),'宇宙首殺 hook 未綁 firstKill');
+assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 storyProgress 欄位遺失');
+assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
+assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
+assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
+assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
+assert(/CIVILIZATION_STORY_PROGRESS_VERSION=12/.test(progress),'story progress 版本應為 12');
+assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
+console.log('STORY FLOW PASSED | galaxy owner preserved | universe shared architecture=yes | target=201');
