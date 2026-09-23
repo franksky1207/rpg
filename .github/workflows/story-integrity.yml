@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'data.js'
+      - 'secondworlddata.js'
+      - 'secondworldstoryregistry.js'
       - 'worldmaps-*.js'
       - 'storydata-*.js'
       - 'story.css'
@@ -37,6 +39,7 @@ jobs:
           test -f storyintegrity.js
           test -f storymigration.js
           test -f storyruntimeintegrity.js
+          test -f secondworldstoryregistry.js
           test -f tests/story/source-purity.js
           test -f tests/story/integrity.js
           test -f tests/story/flow.js
