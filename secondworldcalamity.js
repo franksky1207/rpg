@@ -53,6 +53,7 @@
    trueKillsRequired:TRUE_KILLS_REQUIRED
   });
  }));
+ const DEF_BY_ID=Object.freeze(Object.fromEntries(DEFS.map(def=>[def.id,def])));
 
  function indexOf(value){
   if(value&&typeof value==="object"){
@@ -75,8 +76,10 @@
   return index>=0?DEFS[index]:null;
  }
  function rawEntry(def,target=null){
-  const s=targetState(target);
-  const row=s?.secondWorld?.calamities?.[def?.index];
+  const s=targetState(target),rows=s?.secondWorld?.calamities;
+  if(!Array.isArray(rows)||!def)return null;
+  const byId=rows.find(row=>row&&typeof row==="object"&&row.calamityId===def.id);
+  const row=byId||rows[def.index];
   return row&&typeof row==="object"?row:null;
  }
  function trueKills(value,target=null){
@@ -165,15 +168,28 @@
  function normalizeSecondWorldCalamityState(target){
   const s=targetState(target);
   if(!s?.secondWorld)return target;
-  if(!Array.isArray(s.secondWorld.calamities))s.secondWorld.calamities=[];
-  s.secondWorld.calamities=Array.from({length:COUNT},(_,index)=>{
-   const def=DEFS[index],source=s.secondWorld.calamities[index];
+  const rows=Array.isArray(s.secondWorld.calamities)?s.secondWorld.calamities:[];
+  const claimed=new Set();
+  const byId=new Map();
+  rows.forEach((row,index)=>{
+   if(!row||typeof row!=="object")return;
+   const id=typeof row.calamityId==="string"?row.calamityId:"";
+   if(DEF_BY_ID[id]&&!byId.has(id)){byId.set(id,{row,index});claimed.add(index);}
+  });
+  s.secondWorld.calamities=DEFS.map((def,index)=>{
+   const identified=byId.get(def.id);
+   let source=identified?.row||null;
+   if(!source){
+    const fallback=rows[index];
+    if(fallback&&typeof fallback==="object"&&!claimed.has(index))source=fallback;
+   }
    const row=source&&typeof source==="object"?source:{};
    const kills=clamp(row.trueKills,0,TRUE_KILLS_REQUIRED);
    const achieved=kills>=TRUE_KILLS_REQUIRED||clamp(s.secondWorld.civilizationLevel,0,10)>=def.targetCivilizationLevel;
    const hp=Number(row.currentHp);
    return {
     ...row,
+    calamityId:def.id,
     currentHp:achieved?null:(Number.isFinite(hp)&&hp>0?Math.max(1,Math.min(def.maxHp,Math.floor(hp))):null),
     trueKills:kills
    };
@@ -202,7 +218,8 @@
  window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION=2;
  window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1;
- window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION=2;
+ window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION=3;
+ window.SECOND_WORLD_CALAMITY_ROW_IDENTITY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION=1;
  window.SECOND_WORLD_CALAMITY_TITLE_METADATA_VERSION=1;
  window.SECOND_WORLD_CALAMITY_COUNT=COUNT;
