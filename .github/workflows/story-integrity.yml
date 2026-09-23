@@ -57,12 +57,12 @@ jobs:
           test ! -e story-source-purity-ci.js
           test ! -e story-integrity-ci.js
           test ! -e story-flow-ci.js
-          grep -Eq 'href="story\.css\?v=[^"]+"' index.html
-          grep -Eq 'src="secondworldstoryregistry\.js\?v=[^"]+"' index.html
-          grep -Eq 'src="storydata-universe-galaxy-beyond\.js\?v=[^"]+"' index.html
-          grep -Eq 'src="storydata-universe-cosmic-unification-war\.js\?v=[^"]+"' index.html
-          grep -Eq 'src="storyintegrity\.js\?v=[^"]+"' index.html
-          grep -Eq 'src="storyruntimeintegrity\.js\?v=[^"]+"' index.html
+          grep -Fq 'href="story.css?v=' index.html
+          grep -Fq 'src="secondworldstoryregistry.js?v=' index.html
+          grep -Fq 'src="storydata-universe-galaxy-beyond.js?v=' index.html
+          grep -Fq 'src="storydata-universe-cosmic-unification-war.js?v=' index.html
+          grep -Fq 'src="storyintegrity.js?v=' index.html
+          grep -Fq 'src="storyruntimeintegrity.js?v=' index.html
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
       - name: Run story data integrity
