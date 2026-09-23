@@ -16,7 +16,7 @@
  }
  function clampRank(value,world=arenaWorld()){
   const max=maxArenaRank(world);
-  return Math.max(1,Math.min(max,Math.floor(Number(value)||1));
+  return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
  }
  function arenaProgress(){
   if(typeof getArenaProgressState==="function")return getArenaProgressState();
