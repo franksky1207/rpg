@@ -17,44 +17,39 @@
  const ARENA_ASSESS_CLEAR_TARGET=485;
 
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
+ function arenaWorldForState(target){return target?.secondWorld?.entered===true?2:1;}
+ function firstWorldRegions(){return Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];}
+ function secondWorldRegions(){return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];}
+ function arenaRegionsForWorld(world){return Number(world)===2?secondWorldRegions():firstWorldRegions();}
+ function arenaRegionForWorld(world,rank){
+  const w=Number(world)===2?2:1,regions=arenaRegionsForWorld(w),max=Math.max(1,regions.length||1),r=Math.max(1,Math.min(max,Math.floor(Number(rank)||1)));
+  if(w===2&&typeof window.secondWorldRegion==="function")return window.secondWorldRegion(r-1);
+  return regions[r-1]||null;
+ }
  function unlockedArenaRankCap(target){
-  const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
+  const regions=firstWorldRegions();
   if(!regions.length)return 1;
   const unlockedMap=Math.max(0,Math.floor(Number(target?.unlockedMap)||0));
   const unlockedRegions=regions.filter(region=>unlockedMap>=Math.max(0,Math.floor(Number(region?.mapStart)||0))).length;
   return Math.max(1,Math.min(regions.length,unlockedRegions||1));
  }
- function arenaWorldForState(target){
-  return target?.secondWorld?.entered===true?2:1;
- }
- function blankArenaProgress(){
-  return {};
- }
- function arenaMaxRankForWorld(world){
-  if(Number(world)===2)return 10;
-  const regions=Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS:[];
-  return Math.max(1,regions.length||1);
- }
+ function blankArenaProgress(){return {};}
+ function arenaMaxRankForWorld(world){const regions=arenaRegionsForWorld(world);return Math.max(1,regions.length||1);}
  function secondWorldArenaRegionCap(target){
-  if(target?.secondWorld?.entered!==true)return 1;
-  if(typeof window.secondWorldRegionVisible==="function"){
-   let count=0;
-   for(let i=0;i<10;i++){if(window.secondWorldRegionVisible(i,target))count=i+1;else break;}
-   return Math.max(1,Math.min(10,count||1));
-  }
-  const level=Math.max(500,Math.min(1000,Math.floor(Number(target?.level)||500)));
-  return Math.max(1,Math.min(10,Math.floor((level-500)/50)+1));
+  if(arenaWorldForState(target)!==2)return 1;
+  const regions=secondWorldRegions(),max=Math.max(1,regions.length||1);
+  if(typeof window.secondWorldRegionVisible!=="function")return 1;
+  let count=0;
+  for(let i=0;i<max;i++){if(window.secondWorldRegionVisible(i,target))count=i+1;else break;}
+  return Math.max(1,Math.min(max,count||1));
  }
- function arenaRankCapForWorld(target,world){
-  if(Number(world)===2)return secondWorldArenaRegionCap(target);
-  return Math.max(1,Math.min(arenaMaxRankForWorld(1),unlockedArenaRankCap(target)));
- }
+ function arenaRankCapForWorld(target,world){return Number(world)===2?secondWorldArenaRegionCap(target):Math.max(1,Math.min(arenaMaxRankForWorld(1),unlockedArenaRankCap(target)));}
  function normalizeArenaProfile(source,target,world){
   const row=source&&typeof source==="object"&&!Array.isArray(source)?source:blankArenaProgress();
   const maxRank=arenaMaxRankForWorld(world),cap=Math.max(1,Math.min(maxRank,arenaRankCapForWorld(target,world)));
   const hasHighest=Number.isFinite(Number(row.highestArenaUnlocked))&&Number(row.highestArenaUnlocked)>=1;
   const hasWindowStart=Number.isFinite(Number(row.windowStart))&&Number(row.windowStart)>=1;
-  const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(row.rank)||1)));
+  const legacyRank=Math.max(1,Math.min(maxRank,Math.floor(Number(row.rank)||1));
   const positionModelCompatible=Math.floor(Number(row.positionModelVersion)||0)===ARENA_POSITION_MODEL_VERSION;
   const assessmentRuleCompatible=Math.floor(Number(row.assessmentRuleVersion)||0)===ARENA_ASSESSMENT_RULE_VERSION;
   const balanceCompatible=Math.floor(Number(row.balanceVersion)||0)===ARENA_BALANCE_COMPAT_VERSION;
@@ -83,12 +78,7 @@
   normalizeArenaProfile(dungeon.arenaByWorld[1],target,1);
   normalizeArenaProfile(dungeon.arenaByWorld[2],target,2);
   try{delete dungeon.arena;}catch(e){}
-  Object.defineProperty(dungeon,"arena",{
-   configurable:true,
-   enumerable:false,
-   get(){return dungeon.arenaByWorld[arenaWorldForState(target)]||dungeon.arenaByWorld[1];},
-   set(value){const world=arenaWorldForState(target);dungeon.arenaByWorld[world]=normalizeArenaProfile(value,target,world);}
-  });
+  Object.defineProperty(dungeon,"arena",{configurable:true,enumerable:false,get(){return dungeon.arenaByWorld[arenaWorldForState(target)]||dungeon.arenaByWorld[1];},set(value){const world=arenaWorldForState(target);dungeon.arenaByWorld[world]=normalizeArenaProfile(value,target,world);}});
   return dungeon.arena;
  }
  function arenaProgressForWorld(target,world=null){
@@ -103,11 +93,16 @@
  window.getArenaAssessmentCompatibilityVersions=function(){const v=window.getArenaVersionProfile();return {positionModelVersion:v.positionModelVersion,assessmentRuleVersion:v.assessmentRuleVersion,balanceVersion:v.balanceVersion};};
  window.unlockedArenaRankCapForState=unlockedArenaRankCap;
  window.ARENA_BY_WORLD_STATE_VERSION=1;
+ window.ARENA_WORLD_OWNER_VERSION=2;
+ window.ARENA_REGION_OWNER_VERSION=2;
  window.arenaWorldForState=arenaWorldForState;
+ window.getArenaRegionsForWorld=function(world){return arenaRegionsForWorld(world).slice();};
+ window.getArenaRegionForWorld=arenaRegionForWorld;
+ window.getArenaRegionNameForWorld=function(world,rank){const region=arenaRegionForWorld(world,rank);return region?.name||`第${Math.max(1,Math.floor(Number(rank)||1))}區`;};
  window.normalizeArenaProgressByWorld=normalizeArenaProgress;
  window.getArenaProgressForWorld=function(world,target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaProgressForWorld(s,world);};
  window.getCurrentArenaProgress=function(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaProgressForWorld(s,null);};
- window.SECOND_WORLD_ARENA_UNLOCK_VERSION=1;
+ window.SECOND_WORLD_ARENA_UNLOCK_VERSION=2;
  window.getArenaMaxRankForWorld=arenaMaxRankForWorld;
  window.getArenaRankCapForWorld=function(world,target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return arenaRankCapForWorld(s,world);};
  window.getSecondWorldArenaRegionCap=function(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return secondWorldArenaRegionCap(s);};
@@ -118,48 +113,17 @@
   if(!target||typeof target!=="object")return null;
   if(!target.dungeon||typeof target.dungeon!=="object"||Array.isArray(target.dungeon))target.dungeon={};
   const dungeon=target.dungeon;
-  delete dungeon.progress;
-  delete dungeon.attempts;
-  delete dungeon.activeRun;
-  delete dungeon.points;
+  delete dungeon.progress;delete dungeon.attempts;delete dungeon.activeRun;delete dungeon.points;
   normalizeArenaProgress(dungeon,target);
   if(typeof window.normalizeMirrorDungeonState==="function")window.normalizeMirrorDungeonState(target,options?.timestamp??Date.now(),options?.mirrorOptions||{});
   return dungeon;
  }
  window.normalizeDungeonSaveState=normalizeDungeonState;
-
- function initializeVipHpIfNeeded(){
-  if(!state||state.vipInitialized===true)return false;
-  const baseMax=Math.max(1,equippedStats().hp),current=Math.max(0,Number(state.hp)||0),ratio=Math.max(0,Math.min(1,current/baseMax)),vipMax=Math.max(1,playerCombatStats().hp);
-  state.hp=current>=baseMax?vipMax:Math.max(0,Math.min(vipMax,Math.round(vipMax*ratio)));
-  state.vipInitialized=true;
-  return true;
- }
+ function initializeVipHpIfNeeded(){if(!state||state.vipInitialized===true)return false;const baseMax=Math.max(1,equippedStats().hp),current=Math.max(0,Number(state.hp)||0),ratio=Math.max(0,Math.min(1,current/baseMax)),vipMax=Math.max(1,playerCombatStats().hp);state.hp=current>=baseMax?vipMax:Math.max(0,Math.min(vipMax,Math.round(vipMax*ratio)));state.vipInitialized=true;return true;}
  function normalizeFreshDungeonState(target){normalizeDungeonState(target);target.vipInitialized=true;return target;}
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshDungeonState);
-
- window.finalizeDungeonLoadedState=function(){
-  const vipHpInitialized=initializeVipHpIfNeeded();
-  const beforeMirrorStatus=state?.dungeon?.mirror?.daily?.status;
-  normalizeDungeonState(state,{timestamp:Date.now(),mirrorOptions:{recoverInterrupted:true}});
-  const afterMirrorStatus=state?.dungeon?.mirror?.daily?.status;
-  state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
-  return {
-   vipHpInitialized,
-   recoveredInterruptedRun:false,
-   recoveredInterruptedMirrorRun:beforeMirrorStatus==="running"&&afterMirrorStatus!=="running",
-   dungeon:state.dungeon
-  };
- };
+ window.finalizeDungeonLoadedState=function(){const vipHpInitialized=initializeVipHpIfNeeded();const beforeMirrorStatus=state?.dungeon?.mirror?.daily?.status;normalizeDungeonState(state,{timestamp:Date.now(),mirrorOptions:{recoverInterrupted:true}});const afterMirrorStatus=state?.dungeon?.mirror?.daily?.status;state.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;return {vipHpInitialized,recoveredInterruptedRun:false,recoveredInterruptedMirrorRun:beforeMirrorStatus==="running"&&afterMirrorStatus!=="running",dungeon:state.dungeon};};
  window.ensureDungeonState=function(){return normalizeDungeonState(state);};
- // 舊名稱僅保留相容性；新程式一律使用 ensureDungeonState。
  window.ensureDungeonProgressState=window.ensureDungeonState;
- window.addDungeonPoints=function(amount){
-  const baseAdded=Math.floor(finiteNonNegative(amount,0));
-  const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;
-  const adjusted=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseAdded):Math.floor(baseAdded*multiplier);
-  const result=typeof addVipPoints==="function"?addVipPoints(adjusted):{added:adjusted,points:(state.vipPoints||0)+adjusted};
-  state.vipPoints=Math.floor(finiteNonNegative(result.points,0));
-  return {added:result.added??adjusted,baseAdded,points:state.vipPoints,multiplier,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};
- };
+ window.addDungeonPoints=function(amount){const baseAdded=Math.floor(finiteNonNegative(amount,0));const multiplier=typeof vipDungeonPointMultiplier==="function"?vipDungeonPointMultiplier():1;const adjusted=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(baseAdded):Math.floor(baseAdded*multiplier);const result=typeof addVipPoints==="function"?addVipPoints(adjusted):{added:adjusted,points:(state.vipPoints||0)+adjusted};state.vipPoints=Math.floor(finiteNonNegative(result.points,0));return {added:result.added??adjusted,baseAdded,points:state.vipPoints,multiplier,vipLevel:state.vipLevel||0,levelsGained:result.levelsGained||0};};
 })();
