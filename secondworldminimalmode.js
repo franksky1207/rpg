@@ -1,15 +1,25 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const ADAPTER_ID="second-world-mainline";
  const originalAdventurePage=window.secondWorldAdventurePageHtml;
  const originalContinuous=window.startSecondWorldBossContinuous;
  let retainedContext=null;
+ let liveSyncTimer=null;
 
  function liveContext(){return window.activeSecondWorldMainlineContext||null;}
  function displayContext(){return liveContext()||retainedContext;}
  function isActive(){const ctx=liveContext();return ctx?.continuous===true&&!!ctx.currentEncounter;}
  function progressSnapshot(){return typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(state):{atCap:false,exp:Number(state?.exp)||0,need:0};}
  function fmt(value){return Math.max(0,Math.floor(Number(value)||0)).toLocaleString();}
+ function stopLiveSync(){if(liveSyncTimer){clearTimeout(liveSyncTimer);liveSyncTimer=null;}}
+ function liveSyncTick(){
+  liveSyncTimer=null;
+  if(window.getMinimalModeAdapterId?.()!==ADAPTER_ID||!window.isMinimalModeOpen?.())return;
+  if(!isActive())return;
+  window.syncMinimalMode?.();
+  liveSyncTimer=setTimeout(liveSyncTick,120);
+ }
+ function startLiveSync(){stopLiveSync();liveSyncTimer=setTimeout(liveSyncTick,0);}
  function contentHtml(){
   return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-second-world-minimal-enemy>宇宙 Boss</div></div>
    <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續戰鬥</div><div class="main-minimal-mode-value" data-second-world-minimal-round>第 1 場</div></div>
@@ -37,7 +47,12 @@
   if(typeof window.registerMinimalModeAdapter!=="function")return false;
   return window.registerMinimalModeAdapter(ADAPTER_ID,{isActive,runningStatus:"宇宙主線持續戰鬥中",centerClass:"main-minimal-mode-center--stacked",contentHtml,sync});
  }
- window.openSecondWorldMainlineMinimalMode=function(){return typeof window.openMinimalMode==="function"?window.openMinimalMode(ADAPTER_ID):false;};
+ window.openSecondWorldMainlineMinimalMode=function(){
+  if(typeof window.openMinimalMode!=="function")return false;
+  const opened=window.openMinimalMode(ADAPTER_ID);
+  if(opened)startLiveSync();
+  return opened;
+ };
 
  function injectEntry(html){
   const ctx=liveContext();
@@ -54,6 +69,7 @@
   if(ctx)retainedContext=ctx;
   const result=await pending;
   if(ctx)retainedContext=ctx;
+  stopLiveSync();
   if(window.getMinimalModeAdapterId?.()===ADAPTER_ID&&window.isMinimalModeOpen?.()){
    const afterPending=state?.storyProgress?.pendingStory||null;
    const hasNewStory=!!afterPending&&afterPending!==beforePending;
@@ -65,6 +81,7 @@
 
  registerAdapter();
  window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_VERSION=VERSION;
+ window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_LIVE_SYNC_VERSION=1;
  window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_INTEGRITY={
   version:VERSION,
   passed:typeof window.openSecondWorldMainlineMinimalMode==="function"&&typeof window.secondWorldAdventurePageHtml==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.registerMinimalModeAdapter==="function"
