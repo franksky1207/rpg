@@ -24,12 +24,6 @@
   const daily=dailyState();daily.highestFloor=d;daily.claimed=claimed===true;
   saveRender();return true;
  };
- window.gmResetVoidMirageFloor=function(){
-  if(!canManage())return;
-  voidState().highestCleared=0;
-  const daily=dailyState();daily.highestFloor=0;daily.claimed=false;
-  saveRender();
- };
  window.getVoidMirageGmManageInfo=function(){
   const s=voidState(),daily=dailyState();
   const highest=Math.max(0,Math.floor(Number(s.highestCleared)||0));
@@ -37,4 +31,5 @@
   const start=typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():Math.max(1,highest-100);
   return {highestCleared:highest,startFloor:start,dailyHighest,claimed:daily.claimed===true,reward:typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus().reward:dailyHighest*2};
  };
+ window.GM_VOID_FULL_RESET_RETIRED_VERSION=1;
 })();
