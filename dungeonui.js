@@ -37,7 +37,14 @@
  }
 
  function universePhase(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();}
- function dungeonExpText(){if(universePhase())return "新階段尚未開放";return state.level>=MAX_LEVEL?"MAX":`${Math.floor(Number(state.exp)||0).toLocaleString()} / ${expNeed(state.level).toLocaleString()}`;}
+ function dungeonExpText(){
+  if(typeof window.levelProgressSnapshot==="function"){
+   const progress=window.levelProgressSnapshot(state);
+   return progress.atCap?"MAX":`${Math.floor(Number(progress.exp)||0).toLocaleString()} / ${Math.floor(Number(progress.need)||0).toLocaleString()}`;
+  }
+  const cap=universePhase()?1000:MAX_LEVEL;
+  return state.level>=cap?"MAX":`${Math.floor(Number(state.exp)||0).toLocaleString()} / ${expNeed(state.level).toLocaleString()}`;
+ }
  function dailyStatus(mode){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus(mode):{used:0,remaining:0,limit:20};}
  function voidStatus(){
   const progress=typeof ensureVoidMirageState==="function"?ensureVoidMirageState():state?.dungeon?.voidMirage||{highestCleared:0};
