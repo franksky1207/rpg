@@ -1,7 +1,14 @@
 (function(){
+ function currentLevelCap(target=state){
+  if(typeof window.effectiveLevelCap==="function")return window.effectiveLevelCap(target);
+  const second=target?.secondWorld?.entered===true;
+  if(second)return Math.max(1,Math.floor(Number(window.SECOND_WORLD_LEVEL_CAP)||1000));
+  return Math.max(1,Math.floor(Number(window.FIRST_WORLD_LEVEL_CAP)||500));
+ }
+
  window.specialExpPayout=function(rawXp,logs=[]){
   const amount=Math.max(0,ceil(Number(rawXp)||0));
-  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
+  const cap=currentLevelCap(state);
   if(state.level>=cap){
    if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return {xp:0,convertedGold:0,deferredXp:amount};
    state.gold+=amount;
@@ -14,7 +21,7 @@
  // 一般／菁英／Boss：玩家在戰鬥開始時已滿等，該場 EXP 以 1:1 轉為金幣。
  const baseFightOnceForLevelCap=fightOnce;
  fightOnce=function(mapIdx,eIdx,encounter=null){
-  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
+  const cap=currentLevelCap(state);
   const startedAtCap=state.level>=cap;
   const r=baseFightOnceForLevelCap(mapIdx,eIdx,encounter);
   if(!startedAtCap||!r?.ok||!r.win)return r;
@@ -37,4 +44,5 @@
   save(false);
   return r;
  };
+ window.LEVEL_CAP_LEGACY_FALLBACK_VERSION=1;
 })();
