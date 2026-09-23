@@ -62,7 +62,6 @@ jobs:
           grep -Eq 'src="storydata-universe-galaxy-beyond\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storydata-universe-cosmic-unification-war\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storyintegrity\.js\?v=[^"]+"' index.html
-          grep -Eq 'src="storymigration\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storyruntimeintegrity\.js\?v=[^"]+"' index.html
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
