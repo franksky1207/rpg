@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
  const FIRST_WORLD_LEVEL_CAP=500;
  const SECOND_WORLD_LEVEL_CAP=1000;
  const ABSOLUTE_MAX_LEVEL=1000;
