@@ -29,7 +29,6 @@ jobs:
                   raise SystemExit(f'{path}: expected exactly one match for {old!r}, got {n}')
               p.write_text(text.replace(old,new,1),encoding='utf-8')
 
-          # 第四區：禁用詞＋一般篇低字數頁
           p='storydata-universe-stellar-battlefront.js'
           replace_once(p,'軍事關卡','軍事封鎖點')
           replace_once(p,'"遠征火力穿過斷層，把母皇主艦逼離人口區外。"','"遠征火力穿過斷層，把母皇主艦逼離人口區外。","協同火線也跟著向前推進。"')
@@ -40,7 +39,6 @@ jobs:
           replace_once(p,'"你沒有反駁。遠征隊開始計算繞行成本，而不是準備攻城。"','"你沒有反駁。遠征隊開始計算繞行成本，而不是準備攻城。","導航組也同步標出外側備援線。"')
           replace_once(p,'"他選擇離開遠征，帶著自己的決定前往別處。"','"他選擇離開遠征，帶著自己的決定前往別處。","沒有人勸他留下。"')
 
-          # 第四區區域收尾：15 頁全部補到 120～155 可見字元
           additions=[
               ('"問題只剩如何安全離開，以及誰先停火。"','"問題只剩如何安全離開，以及誰先停火。","桌上的沉默，比任何威脅都更接近真正的談判。"'),
               ('"談判因此有了現實基礎。"','"談判因此有了現實基礎。","雙方至少先承認，彼此都不會憑空消失。"'),
@@ -61,19 +59,12 @@ jobs:
           for old,new in additions:
               replace_once(p,old,new)
 
-          # 舊銀河紀元五處「主角」殘留
           replace_once('storydata-earth.js','也是主角第一次真正走近決策位置。','也是你第一次真正走近決策位置。')
           replace_once('storydata-earth.js','主角也第一次明白，反抗未知控制與武斷判定未知，其實可能只有一步之隔。','你也第一次明白，反抗未知控制與武斷判定未知，其實可能只有一步之隔。')
           replace_once('storydata-galactic-frontier.js','包含主角越權、補給接管失敗與醫療走廊爆炸。','包含你越權、補給接管失敗與醫療走廊爆炸。')
           replace_once('storydata-galactic-mid.js','主角第一次真正失去親近戰友，不是因為死亡，而是因為自己的選擇。','你第一次真正失去親近戰友，不是因為死亡，而是因為自己的選擇。')
           replace_once('storydata-galactic-unification.js','一路同行的意義不是最後所有人都站在主角身後，而是每個人把共同經歷帶回自己的位置，繼續保留不同答案與互相監督的能力。','一路同行的意義不是最後所有人都站在你身後，而是每個人把共同經歷帶回自己的位置，繼續保留不同答案與互相監督的能力。')
 
-          # CI：pipeline 必須傳遞 node 的失敗狀態，不能再被 tee 吃掉
-          wf='.github/workflows/story-integrity.yml'
-          replace_once(wf,'run: node tests/story/source-purity.js 2>&1 | tee story-purity-report.txt','run: set -o pipefail; node tests/story/source-purity.js 2>&1 | tee story-purity-report.txt')
-          replace_once(wf,'run: node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt','run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt')
-
-          # Cache bust：所有本次修改的正式劇情資料
           idx='index.html'
           replace_once(idx,'storydata-earth.js?v=20260918-earth-story-clean1','storydata-earth.js?v=20260923-player-ref-fix1')
           replace_once(idx,'storydata-galactic-frontier.js?v=20260918-galactic-frontier-rewrite2','storydata-galactic-frontier.js?v=20260923-player-ref-fix1')
@@ -86,6 +77,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add storydata-universe-stellar-battlefront.js storydata-earth.js storydata-galactic-frontier.js storydata-galactic-mid.js storydata-galactic-unification.js .github/workflows/story-integrity.yml index.html
-          git commit -m "Fix story integrity failures and CI propagation"
+          git add storydata-universe-stellar-battlefront.js storydata-earth.js storydata-galactic-frontier.js storydata-galactic-mid.js storydata-galactic-unification.js index.html
+          git commit -m "Fix story integrity failures and player references"
           git push origin main
