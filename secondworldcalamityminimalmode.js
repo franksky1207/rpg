@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const ADAPTER_ID="second-world-calamity";
  const originalPage=window.secondWorldCivilizationCalamityPageHtml;
  const originalContinuous=window.runSecondWorldCalamityContinuous;
@@ -77,8 +77,9 @@
    async onBattleComplete(step){
     retainedRun=step?.run||liveRun()||retainedRun;
     if(step?.result?.settlement?.civilizationLevelUp===true)completedLevelUp=true;
+    const finalStep=step?.ended===true||step?.result?.settlement?.completed===true;
     if(userBattle)await userBattle(step);
-    if(window.getMinimalModeAdapterId?.()===ADAPTER_ID&&window.isMinimalModeOpen?.())window.syncMinimalMode?.();
+    if(!finalStep&&window.getMinimalModeAdapterId?.()===ADAPTER_ID&&window.isMinimalModeOpen?.())window.syncMinimalMode?.();
    },
    async onEnd(run){retainedRun=run||liveRun()||retainedRun;if(userEnd)await userEnd(run);applyEndState(retainedRun);}
   });
@@ -86,5 +87,6 @@
 
  registerAdapter();
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION=VERSION;
+ window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_COMPLETION_SYNC_VERSION=1;
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_INTEGRITY={version:VERSION,passed:typeof window.openSecondWorldCalamityMinimalMode==="function"&&typeof window.secondWorldCivilizationCalamityPageHtml==="function"&&typeof window.runSecondWorldCalamityContinuous==="function"&&typeof window.registerMinimalModeAdapter==="function"};
 })();
