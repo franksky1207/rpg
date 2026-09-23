@@ -9,6 +9,7 @@ const gm=fs.readFileSync('gmstorytest.js','utf8');
 const runtime=fs.readFileSync('storyruntimeintegrity.js','utf8');
 const integrity=fs.readFileSync('storyintegrity.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
+const region5=fs.readFileSync('storydata-universe-trans-domain-frontier.js','utf8');
 assert((combat.match(/queueBossStory/g)||[]).length===2,'銀河 combatcore queueBossStory owner 契約改變');
 assert(!/queueBossStory/.test(pipeline),'battlepipeline 不得再次排銀河故事');
 assert(/function queueUniverseBossStory\(index\)/.test(progress),'storyprogress 缺少宇宙首殺 queue owner');
@@ -29,4 +30,7 @@ assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
 assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
-console.log('STORY FLOW PASSED | galaxy owner preserved | universe formal runtime load=yes | containers=10 | shared architecture=yes | target=201');
+assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
+assert(region5.includes('第五章・超域邊境　完'),'第五章・超域邊境缺少區域完成標記');
+assert(index.includes('storydata-universe-trans-domain-frontier.js?v=20260923-universe-region5-dialogue1'),'第五章・超域邊境 cache-bust 未更新');
+console.log('STORY FLOW PASSED | galaxy owner preserved | universe formal runtime load=yes | containers=10 | region5=10 | shared architecture=yes | target=201');
