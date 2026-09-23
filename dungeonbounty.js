@@ -21,6 +21,11 @@
   high:["裝甲追緝犯","戰區破壞手","非法火力平台","禁區滲透指揮","深空走私艦長"],
   danger:["都市級威脅體","殲滅協議載體","戰爭失控核心","軌道破壞平台","深空封鎖母艦"]
  };
+ const UNIVERSE_BOUNTY_NAMES={
+  normal:["界航偷渡者","星群私兵","暗域護運隊","跨域劫運兵","漂流戰械"],
+  high:["星路私掠者","界域破航兵","暗物質武裝艇","星群滲透官","跨域走私艦主"],
+  danger:["萬域私戰艦","跨域劫掠主機","戰線叛離主機","星路封鎖要塞","跨域掠奪母艦"]
+ };
 
  function universePhase(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
  function dailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("bounty"):{used:0,remaining:0,limit:20};}
@@ -49,10 +54,11 @@
  function bountyTraitCount(tier){const p=bountyDifficultyProfile(tier);return 1+(Math.random()<p.extraTraitChance?1:0);}
  function rollBountyTraits(tier){return rollUniqueMonsterTraits(bountyTraitCount(tier));}
  function buildBountyEnemy(tier,playerStats=null,level=null,options={}){
-  const p=createSpecialPlayerSnapshot(playerStats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=bountyDifficultyProfile(tier),names=BOUNTY_NAMES[tier.id]||BOUNTY_NAMES.normal;
+  const p=createSpecialPlayerSnapshot(playerStats||equippedStats()),base=specialBaseEnemyFromPlayer(p),profile=bountyDifficultyProfile(tier);
+  const world=options.world==null?(universePhase()?2:1):(Number(options.world)===2?2:1),namePool=world===2?UNIVERSE_BOUNTY_NAMES:BOUNTY_NAMES,names=namePool[tier.id]||namePool.normal;
   const name=typeof options.name==="string"&&options.name?options.name:names[Math.floor(Math.random()*names.length)];
   const traits=Array.isArray(options.traits)?options.traits.slice():rollBountyTraits(tier);
-  const world=options.world==null?(universePhase()?2:1):(Number(options.world)===2?2:1),rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
+  const rawLevel=Math.floor(Number(level??state.level)||1),enemyLevel=world===2?Math.max(500,Math.min(1000,rawLevel)):clampGameLevel(rawLevel);
   const civilizationScale=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state:options.state&&typeof options.state==="object"?options.state:state,civilizationLevel:options.civilizationLevel}):1;
   return applyMonsterTraits({name,level:enemyLevel,kind:"dungeon-bounty",bountyTier:tier.id,hp:Math.max(1,ceil(base.hp*profile.hpMul*civilizationScale)),atk:Math.max(1,ceil(base.damage*profile.damageMul+p.def*.55)),def:Math.max(0,ceil(base.def*profile.defMul)),crit:specialRateFromPlayer(p.crit,profile,"crit",MONSTER_MAX_CRIT_RATE),dodge:specialRateFromPlayer(p.dodge,profile,"dodge",MONSTER_MAX_DODGE_RATE),playerSnapshot:p,civilizationScale},traits);
  }
@@ -130,6 +136,7 @@
  window.BOUNTY_TIER_META_VERSION=1;
  window.BOUNTY_DIFFICULTY_FORMULA_VERSION=2;
  window.BOUNTY_CIVILIZATION_SCALING_VERSION=1;
+ window.BOUNTY_UNIVERSE_NAME_POOL_VERSION=1;
  window.BOUNTY_DIFFICULTY_CURVE=BOUNTY_DIFFICULTY_CURVE;
  window.getBountyTierMeta=function(id){const t=BOUNTY_TIER_META.find(x=>x.id===id);return t?{...t}:null;};
  window.getBountyTierMetadata=function(){return BOUNTY_TIER_META.map(x=>({...x}));};
