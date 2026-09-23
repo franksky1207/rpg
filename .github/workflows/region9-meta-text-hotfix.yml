@@ -1,0 +1,45 @@
+name: Region 9 Meta Text Hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/region9-meta-text-hotfix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Replace meta story wording and bump cache
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('storydata-universe-cosmic-deep-domain.js')
+          text=p.read_text(encoding='utf-8')
+          old='辛站在韓策曾經常站的位置旁，沒有坐下。他只問：「最後十場？」你回答：「最後十場主線。」'
+          new='辛站在韓策曾經常站的位置旁，沒有坐下。他望著前方交錯的航線，只問：「前面就是戰爭匯流區了？」你回答：「嗯。走到這裡，就把該做的事做完。」'
+          if text.count(old)!=1:
+              raise SystemExit(f'expected one story target, got {text.count(old)}')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          old='storydata-universe-cosmic-deep-domain.js?v=20260923-universe-region9-dialogue1'
+          new='storydata-universe-cosmic-deep-domain.js?v=20260923-universe-region9-dialogue2'
+          if text.count(old)!=1:
+              raise SystemExit(f'expected one cache target, got {text.count(old)}')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit hotfix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add storydata-universe-cosmic-deep-domain.js index.html
+          git commit -m "Remove meta wording from universe region 9"
+          git push origin main
