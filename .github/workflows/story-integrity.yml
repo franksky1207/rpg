@@ -40,7 +40,17 @@ jobs:
           test -f storymigration.js
           test -f storyruntimeintegrity.js
           test -f secondworldstoryregistry.js
-          test -f storydata-universe-galaxy-beyond.js
+          for file in \
+            storydata-universe-galaxy-beyond.js \
+            storydata-universe-local-group-war.js \
+            storydata-universe-supercluster-frontier.js \
+            storydata-universe-cosmic-web.js \
+            storydata-universe-dark-matter-sea.js \
+            storydata-universe-deep-space.js \
+            storydata-universe-void.js \
+            storydata-universe-multi-domain.js \
+            storydata-universe-cosmic-center.js \
+            storydata-universe-cosmic-unification-war.js; do test -f "$file"; done
           test -f tests/story/source-purity.js
           test -f tests/story/integrity.js
           test -f tests/story/flow.js
@@ -48,6 +58,9 @@ jobs:
           test ! -e story-integrity-ci.js
           test ! -e story-flow-ci.js
           grep -Eq 'href="story\.css\?v=[^"]+"' index.html
+          grep -Eq 'src="secondworldstoryregistry\.js\?v=[^"]+"' index.html
+          grep -Eq 'src="storydata-universe-galaxy-beyond\.js\?v=[^"]+"' index.html
+          grep -Eq 'src="storydata-universe-cosmic-unification-war\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storyintegrity\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storymigration\.js\?v=[^"]+"' index.html
           grep -Eq 'src="storyruntimeintegrity\.js\?v=[^"]+"' index.html
