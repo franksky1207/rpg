@@ -34,9 +34,9 @@ jobs:
         with:
           node-version: '24'
       - name: Run raw story source purity
-        run: node tests/story/source-purity.js 2>&1 | tee story-purity-report.txt
+        run: set -o pipefail; node tests/story/source-purity.js 2>&1 | tee story-purity-report.txt
       - name: Run story data integrity
-        run: node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
+        run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
       - name: Upload story integrity diagnostics
         if: always()
         uses: actions/upload-artifact@v4
