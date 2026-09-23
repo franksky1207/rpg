@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  function clone(v){try{return JSON.parse(JSON.stringify(v));}catch(e){return null;}}
  function restoreObject(target,snapshot){
   if(!target||!snapshot)return false;
@@ -13,7 +13,7 @@
   try{
    const defs=typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];
    const names=["彼岸黑潮","群星焚爐","邊星獵皇","萬軍葬艦","超域蝕核","無盡兵災","星脈噬巢","巨牆戰堡","深域吞星","終戰天穹"];
-   if(Number(window.SECOND_WORLD_CALAMITY_DATA_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STATE_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION)!==1)fail("OWNER_VERSION","第二世界文明災厄 Data／State／Unlock／Normalization／Completion owner 版本異常");
+   if(Number(window.SECOND_WORLD_CALAMITY_DATA_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STATE_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_UNLOCK_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_DISCOVERY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION)!==3||Number(window.SECOND_WORLD_CALAMITY_ROW_IDENTITY_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION)!==1)fail("OWNER_VERSION","第二世界文明災厄 Data／State／Unlock／Normalization／Row Identity／Completion owner 版本異常");
    if(defs.length!==10||Number(window.SECOND_WORLD_CALAMITY_COUNT)!==10||Number(window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED)!==30)fail("COUNT_RULE","第二世界文明災厄應為 10 隻、每隻 30 true kills",{count:defs.length,kills:window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED});
    defs.forEach((d,i)=>{
     if(d.name!==names[i])fail("NAME","災厄名稱異常",{i,actual:d.name,expected:names[i]});
@@ -39,6 +39,13 @@
     if(probe.secondWorld.calamities.length!==10||probe.secondWorld.calamities[0].trueKills!==0||probe.secondWorld.calamities[0].currentHp!==1000000)fail("STATE_NORMALIZE","未完成災厄 state 正規化異常",probe.secondWorld.calamities.slice(0,2));
     if(probe.secondWorld.calamities[0].futureTag!=="keep")fail("STATE_UNKNOWN_PRESERVE","災厄專屬 normalization 不得刪除未知欄位",probe.secondWorld.calamities[0]);
     if(probe.secondWorld.calamities[1].trueKills!==30||probe.secondWorld.calamities[1].currentHp!==null)fail("STATE_COMPLETED_CLEAR","完成災厄應 trueKills=30 且 currentHp 清除",probe.secondWorld.calamities[1]);
+    if(probe.secondWorld.calamities.some((row,i)=>row.calamityId!==defs[i]?.id))fail("ROW_ID_STAMP","災厄 state 每列都應帶穩定 calamityId",probe.secondWorld.calamities);
+
+    const reordered={secondWorld:blank()};
+    reordered.secondWorld.calamities=defs.map((d,i)=>({calamityId:d.id,trueKills:i,currentHp:null,tag:`row-${i}`}));
+    [reordered.secondWorld.calamities[0],reordered.secondWorld.calamities[4]]=[reordered.secondWorld.calamities[4],reordered.secondWorld.calamities[0]];
+    window.normalizeSecondWorldCalamityState(reordered);
+    if(reordered.secondWorld.calamities[0].tag!=="row-0"||reordered.secondWorld.calamities[4].tag!=="row-4"||reordered.secondWorld.calamities[4].trueKills!==4)fail("ROW_ID_REORDER","有 calamityId 的資料應依 ID 回到正確災厄，不得因陣列順序串位",reordered.secondWorld.calamities.slice(0,5));
    }else fail("STATE_API","normalizeSecondWorldCalamityState 未載入");
 
    const unlockState={secondWorld:blank()};
@@ -65,7 +72,7 @@
    const civCompleteStatus=window.getSecondWorldCalamityStatus?.(0,civCompleteState);
    if(civCompleteStatus?.completed!==true||civCompleteStatus?.progressPercent!==100||civCompleteStatus?.recordedTrueKills!==7||civCompleteStatus?.completionSource!=="civilization")fail("CIVILIZATION_COMPLETION_SEMANTICS","文明已達成時正式完成進度應為 100%，但保留歷史 trueKills 紀錄",civCompleteStatus);
 
-   if(Number(window.SECOND_WORLD_CALAMITY_COMBAT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION)!==1)fail("COMBAT_OWNER","災厄 Combat／Settlement／Continuous owner 版本異常");
+   if(Number(window.SECOND_WORLD_CALAMITY_COMBAT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION)!==2)fail("COMBAT_OWNER","災厄 Combat／Settlement／Continuous／First Kill owner 版本異常");
    if(typeof state!=="undefined"&&state&&typeof state==="object"&&typeof window.settleSecondWorldCalamityBattle==="function"){
     const backup=clone(state);
     if(!backup)fail("STATE_BACKUP","無法建立正式 state probe 備份");
@@ -83,6 +90,14 @@
       const replayLoss=window.settleSecondWorldCalamityBattle(0,{win:false,enemyHp:111111,hp:1},{save:false});
       if(replayStart!==1000000||replayLoss?.trueKill!==false||replayLoss?.trueKills!==30||state.secondWorld.calamities[0].currentHp!==null)fail("COMPLETED_REPLAY","完成後重打必須滿 HP 開始、敗北不留殘血、不再增加進度",{replayStart,replayLoss,row:state.secondWorld.calamities[0]});
       if(replayLoss?.rewards?.exp!==0||replayLoss?.rewards?.darkMatter!==0||replayLoss?.rewards?.darkEnergy!==0||replayLoss?.rewards?.equipment!==0)fail("NO_REWARDS","文明災厄不得提供一般獎勵",replayLoss?.rewards);
+
+      state.secondWorld=blank();
+      state.secondWorld.civilizationLevel=1;
+      state.secondWorld.mainline.bossKilled[9]=true;
+      state.titles={version:1,unlocked:[],equipped:null,pendingNotice:null};
+      const gmAdvancedKill=window.settleSecondWorldCalamityBattle(0,{win:true,enemyHp:0,hp:1},{save:false});
+      const titleId=defs[0]?.titleId;
+      if(!gmAdvancedKill?.ok||gmAdvancedKill.completedBefore!==true||gmAdvancedKill.trueKill!==true||gmAdvancedKill.trueKills!==1||gmAdvancedKill.civilizationLevel!==1||gmAdvancedKill.civilizationLevelUp!==false||gmAdvancedKill.titleSettlement?.firstAcquisition!==true||!state.titles?.unlocked?.includes(titleId))fail("GM_ADVANCED_FIRST_KILL","GM 已先提高文明等級時，下一次真正首殺應只記 1 true kill 並正常補首殺稱號，不偽造 30 擊殺",{gmAdvancedKill,titles:state.titles,row:state.secondWorld.calamities[0]});
      }finally{restoreObject(state,backup);}
     }
    }else fail("SETTLEMENT_API","正式 settlement／state 未載入");
@@ -90,8 +105,8 @@
    try{
     const runSource=Function.prototype.toString.call(window.fightNextSecondWorldCalamityBattle);
     const settleSource=Function.prototype.toString.call(window.settleSecondWorldCalamityBattle);
-    if(!/civilization-complete/.test(runSource)||!/completed/.test(runSource))fail("CONTINUOUS_STOP","完成文明後連續討伐停止 wiring 遺失",runSource);
-    if(!/saveAtomic/.test(settleSource)||!/restorePlayerHp/.test(settleSource))fail("SETTLEMENT_ATOMIC_HP","settlement 應保留 atomic save 與玩家滿 HP restore wiring",settleSource);
+    if(!/civilization-complete/.test(runSource)||!/completed/.test(runSource)||!/title-first-kill/.test(runSource))fail("CONTINUOUS_STOP","文明完成／首殺稱號的連續討伐停止 wiring 遺失",runSource);
+    if(!/saveAtomic/.test(settleSource)||!/restorePlayerHp/.test(settleSource)||!/firstRecordedKill/.test(settleSource))fail("SETTLEMENT_ATOMIC_HP","settlement 應保留 atomic save、玩家滿 HP restore 與真實首殺 wiring",settleSource);
    }catch(error){fail("SOURCE_WIRING","戰鬥 source probe 失敗",String(error?.message||error));}
 
    if(Number(window.SECOND_WORLD_CALAMITY_UI_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION)!==1||Number(window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION)!==2||Number(window.SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION)!==1||window.SECOND_WORLD_CALAMITY_UI_INTEGRITY?.passed!==true)fail("PLAYER_UI","第二世界災厄玩家 UI 完整性異常",window.SECOND_WORLD_CALAMITY_UI_INTEGRITY);
