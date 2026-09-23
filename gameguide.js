@@ -1,14 +1,14 @@
 (function(){
  const GUIDE_CATEGORIES=[
   {id:"adventure",label:"冒險入門",items:[
-   ["遊戲基本玩法","《文明戰線》是一款以打怪、升級、取得裝備與推進地圖為核心的文字 RPG。挑戰敵人可以取得 EXP、金幣與裝備，持續提升角色能力並前往更高等級的戰區。"],
-   ["主線地圖","主線由多個區域與地圖組成，隨角色成長逐步向後推進。每張地圖都有普通怪、菁英怪與 Boss，完成目前地圖後會逐步開啟後續戰區。"],
-   ["地圖探索","主線採逐步探索方式。尚未到達的地圖不會提前顯示；首次擊敗目前地圖 Boss 後才會開啟下一張地圖。已經探索過的舊地圖會永久保留，可以隨時返回刷怪或再次挑戰 Boss。進入新的大區域後，舊區域會預設收合，也可以手動展開。"],
-   ["地圖推進","依序擊敗普通怪與菁英怪各 10 次，並達到該地圖最高等級後，即可挑戰 Boss。"],
-   ["Boss","Boss 可選擇單場或連續戰鬥。首次擊敗 Boss 會解鎖下一張地圖，之後仍可留在原地持續挑戰。若挑戰 Boss 失敗，連續戰鬥會立即停止，且必須再擊敗該地圖菁英怪 10 次才能重新挑戰。"],
-   ["戰鬥模式","普通怪、菁英怪與 Boss 都可以選擇「單場戰鬥」或「連續戰鬥」。連續戰鬥會持續挑戰目前選擇的敵人，直到戰敗或玩家要求停止；玩家要求停止時，會在目前這一場結束後離開。"],
-   ["離線收益","關閉遊戲超過 1 分鐘後，重新進入遊戲時可獲得少量 EXP、金幣、裝備與符合條件的離線強化石收益，最多計算 12 小時。離線收益不會增加懸賞或競技場的每日額度，也不會直接取得 VIP 積分。若想更有效率地升級、取得裝備與資源，仍建議保持在線進行戰鬥。<div class=\"guide-note\"><b>備註：</b>離線收益不會以 Boss 作為刷怪目標。若玩家最後進行的是 Boss 戰鬥，系統會沿用最近一次有效的普通怪或菁英怪戰鬥紀錄來計算離線收益。</div>"],
-   ["目前等級上限","目前角色等級上限為 Lv500。Lv1～499 都可以正常累積 EXP 並升級；到達 Lv500 後不再繼續累積 EXP，原本可取得的 EXP 會轉換為金幣。角色仍可繼續挑戰主線、Boss、特殊怪與副本，也能繼續取得裝備、金幣、VIP 積分並提升專精。"]
+   ["遊戲基本玩法","依目前紀元進行主線戰鬥、升級、取得裝備與推進戰區。"],
+   ["主線地圖","主線內容會依目前紀元切換。"],
+   ["地圖探索","尚未到達的主線內容會隨進度逐步解鎖。"],
+   ["地圖推進","依目前紀元的主線條件推進。"],
+   ["Boss","Boss 可依目前紀元規則進行挑戰。"],
+   ["戰鬥模式","主線可依目前紀元支援單場或連續戰鬥。"],
+   ["離線收益","離線超過 1 分鐘後可依最近有效戰鬥紀錄取得部分收益，最多計算 12 小時。"],
+   ["目前等級上限","角色等級上限會依目前紀元決定。"]
   ]},
   {id:"gear",label:"角色與裝備",items:[
    ["角色能力","HP 代表生命值；攻擊影響造成的傷害；防禦可以降低受到的傷害；暴擊有機會造成更高傷害；閃避有機會完全避開一次攻擊。角色升級後，基礎 HP、攻擊與防禦也會成長。"],
@@ -16,59 +16,59 @@
    ["裝備品質","裝備共有普通、優良、稀有、史詩、傳說、神話 6 種品質。品質越高，主要能力通常越強，也更容易擁有較多額外詞條。高品質裝備通常也具有更高的出售價值；神話裝備不會被自動出售。"],
    ["裝備詞條","部分裝備除了主要能力之外，還會附帶攻擊、防禦、HP、暴擊或閃避等額外詞條。不同部位可以出現的詞條種類不同，同一件裝備不會重複出現相同詞條。"],
    ["裝備評分","裝備評分會綜合裝備提供的各種能力，用來快速比較同部位裝備的整體價值。一鍵裝備功能也會依照評分選擇較好的裝備。"],
-   ["裝備掉落","一般主線戰鬥中，普通怪、菁英怪與 Boss 的裝備掉落機會不同；Boss 擊敗後一定會掉落裝備。掉落裝備的等級通常接近敵人等級，怪物特性與部分 VIP 特權也可能影響最終掉落。裝備等級最高為 Lv500。"],
-   ["背包","背包可以查看裝備能力與評分、手動裝備與出售，也可以一鍵裝備較高評分的裝備，或一鍵出售低於或等於目前裝備評分的裝備。戰敗時遺失的裝備也會保存在背包的「遺失裝備贖回」區域，可花費金幣取回或永久放棄。"],
-   ["自動出售","可以在設定中指定要自動出售的裝備品質。符合條件的掉落會直接轉換成金幣。神話裝備不會自動出售；若開啟保留升級裝備，評分高於目前裝備的掉落也會優先保留。鑑價技巧會提高實際出售裝備時取得的金幣。"],
-   ["死亡懲罰","戰鬥失敗不會損失任何既有 EXP。正式死亡流程仍有 30% 機率遺失一件已裝備的裝備；遺失裝備會進入背包的「遺失裝備贖回」，可依所在紀元的規則取回或永久放棄。戰鬥結束後 HP 會回滿。VIP20 可以完全防止死亡時遺失裝備。"],
-   ["裝備欄位強化","武器、頭盔、鎧甲、鞋子、飾品五個欄位都能永久強化，強化等級會保留在欄位上，不受更換裝備或戰敗遺失影響。銀河紀元正式範圍為 +0～+20；進入宇宙紀元時五個欄位必定已達 +20，之後可使用暗物質與暗能量繼續強化至 +40。+21～+40 不另設角色等級、區域或 Boss 進度門檻，每級仍提升裝備主能力 2.5%，+40 共提升主能力 100%。"],
-   ["強化石","基礎／進階強化石屬於銀河紀元 +1～+20 的強化資源，可透過主線戰鬥、部分裝備出售與離線刷怪取得，其中離線只能獲得少量基礎強化石。玩家高於怪物 10 級（含）以上時，主線戰鬥將不再掉落強化石；特殊怪與副本也不會掉落強化石。進入宇宙紀元後，+21～+40 改用暗物質與暗能量，不再消耗銀河紀元強化石。"]
+   ["裝備掉落","裝備掉落規則與最高等級會依目前紀元切換。"],
+   ["背包","背包可以查看裝備能力與評分、手動裝備與出售，也可以處理遺失裝備贖回。"],
+   ["自動出售","可以在設定中指定要自動出售的裝備品質；出售資源會依目前紀元切換。"],
+   ["死亡懲罰","戰鬥失敗不會損失任何既有 EXP。正式死亡流程仍有 30% 機率遺失一件已裝備的裝備；VIP20 可以完全防止死亡時遺失裝備。"],
+   ["裝備欄位強化","五個裝備欄位的強化會永久保留，並依目前紀元使用對應的強化資源與上限。"],
+   ["強化石","強化石屬於銀河紀元的強化資源。"]
   ]},
   {id:"combat",label:"戰鬥與怪物",items:[
    ["基本戰鬥","戰鬥會自動進行，玩家與敵人輪流攻擊，直到其中一方 HP 歸零。每次戰鬥的結果會依雙方能力、暴擊、閃避與各種特殊效果決定。除競技場三連戰的場間之外，戰鬥結束後 HP 會回滿。"],
    ["暴擊與閃避","暴擊成功時會造成更高傷害；閃避成功時可以完全避開該次攻擊。玩家與敵人都可能擁有暴擊與閃避能力。"],
    ["怪物特性","部分敵人會隨機擁有怪物特性：強壯提高 HP、兇猛提高攻擊、堅硬提高防禦、迅捷提高閃避、致命提高暴擊、狂暴會在低 HP 時提高攻擊、巨體提高 HP 與攻擊但降低閃避。"],
-   ["多重特性","敵人可能沒有任何特性，也可能同時擁有多個特性。普通怪、菁英怪與 Boss 出現特性的機率並不完全相同；菁英與 Boss 通常更容易帶有特性。"],
+   ["多重特性","敵人可能沒有任何特性，也可能同時擁有多個特性。"],
    ["特殊戰鬥提示","先制、連擊、穿透、反擊、汲取、狂暴與 HP 回復等特殊效果，會以不同的彩色浮字顯示在戰鬥畫面中，方便快速辨識觸發狀況。"]
   ]},
   {id:"special",label:"特殊怪",items:[
-   ["特殊遭遇","一般怪與菁英主線勝利後有機會觸發特殊遭遇；Boss 不會觸發。觸發後會自動進入特殊戰鬥，特殊戰鬥結束後 HP 會回滿；勝利後繼續原本的連續戰鬥，失敗則立即結束本次連續戰鬥。"],
-   ["稀有資源聚合體","戰鬥能力較低，擊敗後主要可以取得大量金幣。"],
-   ["誘餌補給艙","戰鬥能力較高，擊敗後必定取得裝備，而且通常有較好的品質。"],
-   ["終止協議單元","非常少見且較危險，成功擊敗後可以取得大量 EXP、金幣與高品質裝備。"],
-   ["機率增幅信標","戰鬥能力較低，擊敗後必定取得裝備。"],
-   ["封存警戒機","可以取得的金幣較少，但會提供大量 EXP。"],
-   ["裝備保全單元","擊敗後必定取得裝備，掉落時會優先考慮角色目前較弱的裝備部位。"],
-   ["黑市武裝頭目","擊敗後可取得較多金幣，並取得黑市情報。下一次符合特殊遭遇條件的主線勝利後，必定遭遇另一隻特殊怪；此效果不會再次抽到黑市武裝頭目。"],
-   ["戰利品回收者","擊敗後可以一次取得兩件裝備。"],
-   ["流動交易代理人","擊敗後會隨機取得其中一種特殊獎勵：大量金幣、大量 EXP，或較好的裝備。"],
-   ["VIP 與特殊怪","部分 VIP 特權會影響特殊怪，例如提高特殊遭遇機率，或讓特殊怪有機會額外提供一次獎勵。"]
+   ["特殊遭遇","特殊遭遇的觸發來源會依目前紀元切換。"],
+   ["稀有資源聚合體","特殊怪資料會依目前紀元切換。"],
+   ["誘餌補給艙","特殊怪資料會依目前紀元切換。"],
+   ["終止協議單元","特殊怪資料會依目前紀元切換。"],
+   ["機率增幅信標","特殊怪資料會依目前紀元切換。"],
+   ["封存警戒機","特殊怪資料會依目前紀元切換。"],
+   ["裝備保全單元","特殊怪資料會依目前紀元切換。"],
+   ["黑市武裝頭目","特殊怪資料會依目前紀元切換。"],
+   ["戰利品回收者","特殊怪資料會依目前紀元切換。"],
+   ["流動交易代理人","特殊怪資料會依目前紀元切換。"],
+   ["VIP 與特殊怪","部分 VIP 特權會影響特殊遭遇機率或特殊怪收益。"]
   ]},
   {id:"dungeon",label:"副本與 VIP",items:[
-   ["副本解鎖","目前共有 3 種副本：Lv5 開放懸賞戰、Lv15 開放競技場、Lv25 開放虛空幻境。懸賞戰以 EXP、金幣與裝備為主要獎勵；競技場與虛空幻境則以 VIP 積分為主要獎勵。"],
-   ["每日重置","懸賞戰、競技場與虛空每日獎勵使用同一套每日資料，固定在每日凌晨 0 點重置。主線與離線收益不提供任何副本額度，三種副本各自依自己的規則運作。"],
-   ["懸賞戰","懸賞戰是資源型副本，主打高 EXP、高金幣與多裝備。每天最多挑戰 20 次，每一場真正開始戰鬥時才使用 1 次今日額度。可選單次或連續挑戰；連續模式會在死亡、今日額度用完或玩家要求停止時結束。每場結束後 HP 會回滿。"],
-   ["懸賞難度","每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。"],
-   ["競技場","競技場共有 10 個階級，每次挑戰是一整輪 3 場連續戰鬥，三戰之間不回血；任一戰失敗即結束該輪。每天最多開始 20 輪，真正開始第一戰時才使用 1 次今日額度。每遇到新的敵人都會重新取得一次先制機會，整輪結束後 HP 會回滿。"],
-   ["競技場解鎖","最多顯示最近 3 個已解鎖競技場。想開啟下一個競技場，必須先通過目前最高競技場的戰力評估，並解鎖下一個競技場所對應的主線區域。"],
-   ["競技場 VIP 積分","完成競技場挑戰可以取得 VIP 積分。競技場階級越高、挑戰難度越高，能取得的 VIP 積分也越多。若三連戰中途失敗，仍會依實際通過的戰鬥取得部分積分。"],
-   ["虛空幻境","虛空幻境是沒有最高層數的無限型副本，可以重複挑戰。每次開始時，挑戰起點固定為「歷史最高紀錄 − 100 層」，最低從第 1 層開始。每突破一層後 HP 會完全恢復再進入下一層；一般樓層帶 1 個怪物特性，每 10 層為 Boss 並帶 2 個特性。"],
-   ["虛空每日獎勵","虛空不再逐層直接發放 VIP 積分。系統會記錄當日最高到達層，今日基礎獎勵為「當日最高層 × 2」VIP 積分；每天只能手動領取一次，領取後當天即使再刷新更高紀錄也不能再次領取。跨日未領取的獎勵不會補發。"],
-   ["VIP 系統","競技場、虛空幻境，以及部分其他副本可以取得 VIP 積分。累積足夠積分後會提升 VIP 等級，目前最高為 VIP20。VIP 等級越高，升級所需積分也會逐漸增加，並可解鎖額外能力與特權。"],
-   ["VIP 基礎能力","提升 VIP 等級會同步強化 HP、攻擊、防禦、暴擊與閃避，VIP 等級越高，累積的能力加成也越高。"],
-   ["VIP 特權","部分 VIP 等級會解鎖額外特權，例如提高裝備掉落與品質、增加特殊怪收益、提升 VIP 積分副本收益，以及 VIP20 完全防止死亡時遺失裝備。各等級的完整效果與解鎖條件可在「查看特權」中確認。"],
-   ["文明災厄","擊敗各區域最終 Boss 後解鎖對應災厄。災厄 HP 會跨挑戰保留，擊敗後可取得並提升對應印記；印記最高 Lv.10，提供永久戰鬥被動效果。文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。"]
+   ["副本解鎖","副本內容會依目前紀元與既有進度運作。"],
+   ["每日重置","副本每日次數與獎勵固定於每日凌晨 0 點重置。"],
+   ["懸賞戰","懸賞戰是資源型副本，每天最多挑戰 20 次，可單場或連續挑戰。"],
+   ["懸賞難度","懸賞分為普通、高級與危險三種難度。"],
+   ["競技場","競技場每輪為 3 場連續戰鬥，場間不回血。"],
+   ["競技場解鎖","競技場解鎖需同時符合評估與主線區域條件。"],
+   ["競技場 VIP 積分","完成競技場可取得 VIP 積分。"],
+   ["虛空幻境","虛空幻境是沒有最高層數的無限型副本。"],
+   ["虛空每日獎勵","虛空依當日最高層提供 VIP 積分，每天只能領取一次。"],
+   ["VIP 系統","透過副本取得 VIP 積分並提升 VIP 等級，目前最高 VIP20。"],
+   ["VIP 基礎能力","VIP 等級會提升 HP、攻擊、防禦、暴擊與閃避。"],
+   ["VIP 特權","部分 VIP 等級會解鎖裝備、特殊怪、副本與死亡保護等特權。"],
+   ["文明災厄","文明災厄規則會依目前紀元切換。"]
   ]},
   {id:"growth",label:"成長與功能",items:[
-   ["專精系統","專精是角色的永久成長系統，共有 8 種，每一種最高 Lv60。銀河紀元使用金幣升級；進入宇宙紀元的條件之一是 8 項專精全部 Lv60，因此宇宙紀元不再繼續升級，但既有效果會完整保留並依宇宙資源語意繼續生效。"],
-   ["實戰訓練","提升擊敗怪物時取得的 EXP。"],
-   ["搜刮技巧","每級 +2.5%。銀河紀元提升怪物直接掉落的金幣；宇宙紀元改為提升主線 Boss 直接取得的暗物質。不影響裝備出售收益。"],
-   ["鑑價技巧","每級 +2.5%。銀河紀元提升出售裝備取得的金幣；宇宙紀元改為提升宇宙紀元裝備出售取得的暗物質，會套用於正式手動／批量／自動出售，但不放大暗能量。"],
+   ["專精系統","專精共有 8 種，每一種最高 Lv60。"],
+   ["實戰訓練","提升戰鬥 EXP 收益。"],
+   ["搜刮技巧","提升主線直接取得的主要資源。"],
+   ["鑑價技巧","提升裝備出售取得的主要資源。"],
    ["先制技巧","提高每場戰鬥第一次主動普通攻擊的傷害；每遇到新的敵人，都會重新取得一次先制機會。"],
    ["連擊技巧","提高連擊觸發機率，觸發後會追加一次較低傷害的攻擊，而且追加攻擊仍可能再次觸發連擊。"],
    ["穿透技巧","提高穿透觸發機率，發動時會忽略敵人的部分防禦；普通攻擊、連擊與反擊都可以觸發。"],
    ["反擊技巧","敵人成功造成傷害且角色仍存活後，有機會立即反擊。反擊本身也可以觸發部分其他戰鬥效果。"],
    ["汲取技巧","玩家造成傷害時有機會觸發汲取，依實際造成的傷害回復部分 HP，且不會超過最大 HP。"],
-   ["文明等級","文明等級是宇宙紀元的永久成長系統，最高 Lv10；每級提高玩家宇宙戰鬥最終傷害 5%。"],
+   ["文明等級","文明等級會在宇宙紀元開放。"],
    ["極簡模式","連續戰鬥中可切換為極簡顯示畫面，僅保留必要資訊；戰鬥仍會持續進行，滑動即可退出極簡模式。"],
    ["本機存檔","遊戲會自動將進度儲存在目前裝置的瀏覽器中，更換裝置時本機存檔不會自動轉移。"],
    ["雲端存檔","登入帳號後，可在設定頁手動上傳或下載雲端存檔，用來在不同裝置之間搬移進度；雲端存檔不會自動同步，也不會在登入時自動覆蓋本機存檔。"]
@@ -80,78 +80,70 @@
   return typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(holder)===true:holder?.secondWorld?.entered===true;
  }
  function coreGuideWorldText(title,target=null){
- const universe=guideUniverse(target);
- const galaxy={
-  "遊戲基本玩法":"銀河紀元以打怪、升級、取得裝備與推進地圖為核心。戰鬥可獲得 EXP、金幣與裝備。",
-  "主線地圖":"銀河主線由多個區域與地圖組成，每張地圖都有普通怪、菁英怪與 Boss。完成目前地圖後會逐步開啟後續戰區。",
-  "地圖探索":"尚未抵達的地圖不會提前顯示；首次擊敗目前地圖 Boss 後開啟下一張。已探索地圖可隨時返回挑戰。",
-  "地圖推進":"普通怪與菁英怪各擊敗 10 次，並達到該地圖最高等級後，即可挑戰 Boss。",
-  "Boss":"Boss 可單場或連續挑戰。首次擊敗會開啟下一張地圖；若挑戰失敗，需再擊敗該地圖菁英怪 10 次才能重新挑戰。",
-  "戰鬥模式":"普通怪、菁英怪與 Boss 都可單場或連續戰鬥。連續戰鬥會持續至戰敗或玩家要求停止。",
-  "離線收益":"離線超過 1 分鐘後，可依最近有效的普通怪或菁英怪戰鬥取得部分 EXP、金幣、裝備與強化石，最多計算 12 小時。",
-  "目前等級上限":"銀河紀元角色等級上限為 Lv500。到達 Lv500 後不再累積 EXP，原本可取得的 EXP 會轉換為金幣。",
-  "裝備掉落":"銀河主線的普通怪、菁英怪與 Boss 都可能掉落裝備，Boss 勝利必定掉落。裝備等級最高 Lv500。",
-  "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。銀河紀元遺失裝備可使用金幣贖回。",
-  "自動出售":"可依品質自動出售裝備並取得金幣；神話裝備不會自動出售。鑑價技巧會提高出售收益。",
-  "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
-  "裝備欄位強化":"五個裝備欄位可永久強化至 +20，換裝或裝備遺失都不會降低強化等級。",
-  "強化石":"基礎與進階強化石用於銀河紀元 +1～+20，可由主線、部分裝備出售與離線收益取得。"
- };
- const universeText={
-  "遊戲基本玩法":"宇宙紀元以挑戰主線 Boss、升級與取得裝備為核心。勝利可獲得 EXP、暗物質、暗能量與宇宙紀元裝備。",
-  "主線地圖":"宇宙主線共有 10 個區域、100 隻 Boss，等級由 Lv505 推進至 Lv1000。依序擊敗 Boss 即可前往後續戰區。",
-  "地圖探索":"尚未抵達的宇宙 Boss 不會提前顯示；擊敗前一隻後逐步向後推進。冒險頁也可切到「銀河紀元・回顧」進行純挑戰。",
-  "地圖推進":"宇宙紀元沒有普通怪與菁英怪主線。達到需求等級並擊敗前一隻 Boss 後，即可挑戰下一隻。",
-  "Boss":"宇宙主線全由 Boss 組成，可單場或連續挑戰。首次擊敗會推進主線；戰敗時連續戰鬥立即停止。",
-  "戰鬥模式":"宇宙主線 Boss 可選擇單場或連續戰鬥。連續戰鬥會持續挑戰目前 Boss，直到戰敗或玩家要求停止。",
-  "離線收益":"離線超過 1 分鐘後，可依最近的宇宙主線戰鬥紀錄取得部分 EXP、暗物質與裝備，最多計算 12 小時。離線收益不提供暗能量或副本額度。",
-  "目前等級上限":"宇宙紀元角色等級上限為 Lv1000。Lv500～999 可正常累積 EXP 升級，到達 Lv1000 後不再累積 EXP。",
-  "裝備掉落":"宇宙主線 Boss 勝利會取得宇宙紀元裝備，裝備等級最高 Lv1000。裝備品質與詞條仍會影響實際能力。",
-  "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。宇宙紀元裝備出售與贖回主要使用暗物質。",
-  "自動出售":"可依品質自動出售宇宙紀元裝備，出售後主要取得暗物質；神話裝備不會自動出售。鑑價技巧會提高出售收益。",
-  "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
-  "裝備欄位強化":"五個裝備欄位可由 +20 繼續強化至 +40，使用暗物質與暗能量。強化永久保留，不受換裝或裝備遺失影響。",
-  "強化石":"宇宙紀元 +21～+40 不再使用強化石，改用暗物質與暗能量。銀河紀元留下的強化石會保留。"
- };
- return (universe?universeText:galaxy)[title]||null;
-}
-function combatGuideWorldText(title,target=null){
- const universe=guideUniverse(target);
- if(title==="多重特性")return universe
-  ?"宇宙主線 Boss 可能帶有多個怪物特性，會直接影響戰鬥方式與難度。"
-  :"普通怪、菁英怪與 Boss 都可能帶有怪物特性，較強敵人通常更容易出現。";
- return null;
-}
-function specialGuideWorldText(title,target=null){
- const universe=guideUniverse(target);
- if(title==="特殊遭遇")return universe
-  ?"宇宙主線 Boss 勝利後有機會觸發特殊遭遇。特殊戰鬥結束後 HP 回滿；勝利後繼續原本流程，失敗則結束連續戰鬥。"
-  :"普通怪與菁英怪勝利後有機會觸發特殊遭遇，Boss 不會觸發。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。";
- if(title==="VIP 與特殊怪")return "部分 VIP 特權會提高特殊遭遇機率或增加特殊怪收益，詳細效果可在 VIP 特權中查看。";
- const ids=["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"];
- const idx=GUIDE_CATEGORIES.find(x=>x.id==="special")?.items?.findIndex(x=>x?.[0]===title)??-1;
- if(idx<1||idx>9)return null;
- const monster=typeof window.getSpecialMonsterById==="function"?window.getSpecialMonsterById(ids[idx-1],universe?2:1):null;
- return monster?.description||null;
-}
-function dungeonCommonGuideWorldText(title,target=null){
- const universe=guideUniverse(target);
- if(title==="副本解鎖")return universe
-  ?"宇宙紀元沿用懸賞戰、競技場、虛空幻境與鏡像戰，並依各副本的宇宙規則運作。"
-  :"銀河紀元會隨等級逐步開放懸賞戰、競技場、虛空幻境與鏡像戰。各副本提供資源、VIP 積分或特殊挑戰。";
- if(title==="每日重置")return "副本的每日次數與獎勵於每天凌晨 0 點重置；各副本依自己的額度與規則運作。";
- if(title==="虛空幻境")return "虛空幻境是無限層挑戰，每次從歷史最高紀錄前 100 層開始。每層戰後回滿 HP，每 10 層會遇到 Boss。";
- if(title==="虛空每日獎勵")return "虛空依當日最高層提供 VIP 積分，每天可手動領取一次；領取後當日無法再次領取。";
- if(title==="VIP 系統")return "透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級，最高 VIP20。升級後可獲得能力與特權。";
- if(title==="VIP 基礎能力")return "VIP 等級會提升 HP、攻擊、防禦、暴擊與閃避。";
- if(title==="VIP 特權")return "部分 VIP 等級會解鎖裝備、特殊怪、副本與死亡保護等特權；完整效果可在「查看特權」確認。";
- return null;
-}
-function specializationGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
-  if(title==="專精系統")return universe
-   ?"專精共有 8 種，最高 Lv60。進入宇宙紀元時已全部滿級，效果會永久保留並繼續生效。"
-   :"專精共有 8 種，最高 Lv60，可使用金幣升級。不同專精會提升戰鬥、EXP、金幣與裝備相關能力。";
+  const galaxy={
+   "遊戲基本玩法":"銀河紀元以打怪、升級、取得裝備與推進地圖為核心。戰鬥可獲得 EXP、金幣與裝備。",
+   "主線地圖":"銀河主線由多個區域與地圖組成，每張地圖都有普通怪、菁英怪與 Boss。完成目前地圖後會逐步開啟後續戰區。",
+   "地圖探索":"尚未抵達的地圖不會提前顯示；首次擊敗目前地圖 Boss 後開啟下一張。已探索地圖可隨時返回挑戰。",
+   "地圖推進":"普通怪與菁英怪各擊敗 10 次，並達到該地圖最高等級後，即可挑戰 Boss。",
+   "Boss":"Boss 可單場或連續挑戰。首次擊敗會開啟下一張地圖；若挑戰失敗，需再擊敗該地圖菁英怪 10 次才能重新挑戰。",
+   "戰鬥模式":"普通怪、菁英怪與 Boss 都可單場或連續戰鬥。連續戰鬥會持續至戰敗或玩家要求停止。",
+   "離線收益":"離線超過 1 分鐘後，可依最近有效的普通怪或菁英怪戰鬥取得部分 EXP、金幣、裝備與強化石，最多計算 12 小時。離線收益不增加副本額度或 VIP 積分。",
+   "目前等級上限":"銀河紀元角色等級上限為 Lv500。到達 Lv500 後不再累積 EXP，原本可取得的 EXP 會轉換為金幣。",
+   "裝備掉落":"銀河主線的普通怪、菁英怪與 Boss 都可能掉落裝備，Boss 勝利必定掉落。裝備等級最高 Lv500。",
+   "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。銀河紀元遺失裝備可使用金幣贖回。",
+   "自動出售":"可依品質自動出售裝備並取得金幣；神話裝備不會自動出售。鑑價技巧會提高出售收益。",
+   "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
+   "裝備欄位強化":"五個裝備欄位可永久強化至 +20，換裝或裝備遺失都不會降低強化等級。",
+   "強化石":"基礎與進階強化石用於銀河紀元 +1～+20，可由主線、部分裝備出售與離線收益取得。"
+  };
+  const universeText={
+   "遊戲基本玩法":"宇宙紀元以挑戰主線 Boss、升級與取得裝備為核心。勝利可獲得 EXP、暗物質、暗能量與宇宙紀元裝備。",
+   "主線地圖":"宇宙主線共有 10 個區域、100 隻 Boss，等級由 Lv505 推進至 Lv1000。依序擊敗 Boss 即可前往後續戰區。",
+   "地圖探索":"尚未抵達的宇宙 Boss 不會提前顯示；擊敗前一隻後逐步向後推進。冒險頁也可切到「銀河紀元・回顧」進行純挑戰。",
+   "地圖推進":"宇宙紀元沒有普通怪與菁英怪主線。達到需求等級並擊敗前一隻 Boss 後，即可挑戰下一隻。",
+   "Boss":"宇宙主線全由 Boss 組成，可單場或連續挑戰。首次擊敗會推進主線；戰敗時連續戰鬥立即停止。",
+   "戰鬥模式":"宇宙主線 Boss 可選擇單場或連續戰鬥。連續戰鬥會持續挑戰目前 Boss，直到戰敗或玩家要求停止。",
+   "離線收益":"離線超過 1 分鐘後，可依最近的宇宙主線戰鬥樣本取得部分 EXP、暗物質、裝備與少量直接暗能量收益，最多計算 12 小時；不增加副本額度或 VIP 積分。",
+   "目前等級上限":"宇宙紀元角色等級上限為 Lv1000。進入宇宙紀元後可繼續累積 EXP 升級，到達 Lv1000 後不再累積 EXP，且不會把滿等 EXP 轉成銀河金幣。",
+   "裝備掉落":"宇宙主線 Boss 勝利會取得宇宙紀元裝備，裝備等級最高 Lv1000。裝備品質與詞條仍會影響實際能力。",
+   "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。宇宙紀元裝備出售使用暗物質；宇宙裝備贖回以暗物質支付，若遺失的是銀河紀元裝備則可免費贖回。",
+   "自動出售":"可依品質自動出售宇宙紀元裝備，出售後主要取得暗物質；神話裝備不會自動出售，且出售神話裝備可依正式規則額外取得暗能量。鑑價技巧只提高暗物質出售收益。",
+   "死亡懲罰":"戰敗不會損失 EXP，但正式死亡有 30% 機率遺失一件已裝備裝備，可在背包贖回。VIP20 可完全防止裝備遺失，戰後 HP 回滿。",
+   "裝備欄位強化":"五個裝備欄位可由 +20 繼續強化至 +40，使用暗物質與暗能量。強化永久保留，不受換裝或裝備遺失影響。",
+   "強化石":"進入宇宙紀元時銀河紀元的基礎／進階強化石會清空。宇宙紀元 +21～+40 不再使用強化石，改用暗物質與暗能量。"
+  };
+  return (universe?universeText:galaxy)[title]||null;
+ }
+ function combatGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="多重特性")return universe?"宇宙主線 Boss 可能帶有多個怪物特性，會直接影響戰鬥方式與難度。":"普通怪、菁英怪與 Boss 都可能帶有怪物特性，較強敵人通常更容易出現。";
+  return null;
+ }
+ function specialGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="特殊遭遇")return universe?"宇宙主線 Boss 勝利後有機會觸發特殊遭遇。特殊戰鬥結束後 HP 回滿；勝利後繼續原本流程，失敗則結束連續戰鬥。":"普通怪與菁英怪勝利後有機會觸發特殊遭遇，Boss 不會觸發。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。";
+  if(title==="VIP 與特殊怪")return "部分 VIP 特權會提高特殊遭遇機率或增加特殊怪收益，詳細效果可在 VIP 特權中查看。";
+  const ids=["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"];
+  const idx=GUIDE_CATEGORIES.find(x=>x.id==="special")?.items?.findIndex(x=>x?.[0]===title)??-1;
+  if(idx<1||idx>9)return null;
+  const monster=typeof window.getSpecialMonsterById==="function"?window.getSpecialMonsterById(ids[idx-1],universe?2:1):null;
+  return monster?.description||null;
+ }
+ function dungeonCommonGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="副本解鎖")return universe?"宇宙紀元沿用懸賞戰、競技場、虛空幻境與鏡像戰，並依各副本的宇宙規則運作。":"銀河紀元會隨等級逐步開放懸賞戰、競技場、虛空幻境與鏡像戰。各副本提供資源、VIP 積分或特殊挑戰。";
+  if(title==="每日重置")return "副本的每日次數與獎勵於每天凌晨 0 點重置；各副本依自己的額度與規則運作。";
+  if(title==="虛空幻境")return "虛空幻境是無限層挑戰，每次從歷史最高紀錄前 100 層開始。每層戰後回滿 HP，每 10 層會遇到 Boss。";
+  if(title==="虛空每日獎勵")return "虛空依當日最高層提供 VIP 積分，每天可手動領取一次；領取後當日無法再次領取。";
+  if(title==="VIP 系統")return "透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級，最高 VIP20。升級後可獲得能力與特權。";
+  if(title==="VIP 基礎能力")return "VIP 等級會提升 HP、攻擊、防禦、暴擊與閃避。";
+  if(title==="VIP 特權")return "部分 VIP 等級會解鎖裝備、特殊怪、副本與死亡保護等特權；完整效果可在「查看特權」確認。";
+  return null;
+ }
+ function specializationGuideWorldText(title,target=null){
+  const universe=guideUniverse(target);
+  if(title==="專精系統")return universe?"專精共有 8 種，最高 Lv60。進入宇宙紀元時已全部滿級，效果會永久保留並繼續生效。":"專精共有 8 種，最高 Lv60，可使用金幣升級。不同專精會提升戰鬥、EXP、金幣與裝備相關能力。";
   if(title==="實戰訓練")return universe?"提升宇宙主線 Boss 的 EXP 收益。":"提升擊敗怪物時取得的 EXP。";
   if(title==="搜刮技巧")return universe?"提升宇宙主線 Boss 直接取得的暗物質，不影響裝備出售收益。":"提升怪物直接掉落的金幣，不影響裝備出售收益。";
   if(title==="鑑價技巧")return universe?"提升宇宙紀元裝備出售取得的暗物質，不影響暗能量。":"提升出售裝備取得的金幣。";
@@ -159,65 +151,43 @@ function specializationGuideWorldText(title,target=null){
  }
  function civilizationGuideWorldText(title,target=null){
   if(title!=="文明等級")return null;
-  const universe=guideUniverse(target);
-  return universe
-   ?"文明等級是宇宙紀元的永久成長系統，最高 Lv10。每級提高 5% 最終傷害，主要透過討伐文明災厄提升。"
-   :"文明等級會在進入宇宙紀元後開放；銀河紀元不套用這項加成。";
+  return guideUniverse(target)?"文明等級是宇宙紀元的永久成長系統，最高 Lv10。每級提高 5% 最終傷害，主要透過討伐文明災厄提升。":"文明等級會在進入宇宙紀元後開放；銀河紀元不套用這項加成。";
  }
-
  function bountyGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
-  if(title==="懸賞戰")return universe
-   ?"宇宙懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、暗物質與宇宙紀元裝備，每場結束後 HP 回滿。"
-   :"銀河懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、金幣與裝備，每場結束後 HP 回滿。";
-  if(title==="懸賞難度")return universe
-   ?"懸賞分為普通、高級與危險三種難度。難度越高，EXP、暗物質與裝備收益越高；裝備最低為稀有品質。"
-   :"每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。";
+  if(title==="懸賞戰")return universe?"宇宙懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、暗物質與宇宙紀元裝備，每場結束後 HP 回滿。":"銀河懸賞每天最多挑戰 20 次，可單場或連續挑戰。勝利可取得較多 EXP、金幣與裝備，每場結束後 HP 回滿。";
+  if(title==="懸賞難度")return universe?"懸賞分為普通、高級與危險三種難度。難度越高，EXP、暗物質與裝備收益越高；裝備最低為稀有品質。":"每次懸賞會隨機遇到普通、高級或危險懸賞。難度越高，EXP、金幣與裝備數量越高；懸賞裝備最低為稀有品質。";
   return null;
  }
  function arenaGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
-  if(title==="競技場")return universe
-   ?"宇宙紀元共有 10 個競技場，每輪連戰 3 場，場間不回血，任一場戰敗即結束。每天最多挑戰 20 輪，整輪結束後 HP 回滿。"
-   :"銀河紀元共有 10 個競技場，每輪連戰 3 場，場間不回血，任一場戰敗即結束。每天最多挑戰 20 輪，整輪結束後 HP 回滿。";
-  if(title==="競技場解鎖")return universe
-   ?"最多顯示最近 3 個已解鎖競技場。開啟下一個競技場需通過目前最高競技場的戰力評估，並解鎖對應的宇宙主線區域。"
-   :"最多顯示最近 3 個已解鎖競技場。想開啟下一個競技場，必須先通過目前最高競技場的戰力評估，並解鎖下一個競技場所對應的主線區域。";
-  if(title==="競技場 VIP 積分")return universe
-   ?"完成競技場可取得 VIP 積分。競技場越後期、挑戰難度越高，獎勵越多；中途失敗仍會依實際勝場取得部分積分。"
-   :"完成競技場挑戰可以取得 VIP 積分。競技場階級越高、挑戰難度越高，能取得的 VIP 積分也越多。若三連戰中途失敗，仍會依實際通過的戰鬥取得部分積分。";
+  if(title==="競技場")return `${universe?"宇宙":"銀河"}紀元共有 10 個競技場，每輪連戰 3 場，場間不回血，任一場戰敗即結束。每天最多挑戰 20 輪，整輪結束後 HP 回滿。`;
+  if(title==="競技場解鎖")return universe?"最多顯示最近 3 個已解鎖競技場。開啟下一個競技場需通過目前最高競技場的戰力評估，並解鎖對應的宇宙主線區域。":"最多顯示最近 3 個已解鎖競技場。想開啟下一個競技場，必須先通過目前最高競技場的戰力評估，並解鎖下一個競技場所對應的主線區域。";
+  if(title==="競技場 VIP 積分")return "完成競技場可取得 VIP 積分。競技場越後期、挑戰難度越高，獎勵越多；中途失敗仍會依實際勝場取得部分積分。";
   return null;
  }
-
  function calamityGuideWorldText(title,target=null){
   if(title!=="文明災厄")return null;
-  const universe=guideUniverse(target);
-  return universe
-   ?"擊敗各區域最終 Boss 後會發現對應災厄，符合前置條件即可挑戰。每成功討伐 30 次會完成該文明階段並提升文明等級；災厄不提供一般戰鬥獎勵。"
-   :"擊敗各區域最終 Boss 後解鎖對應災厄。成功討伐可取得並提升永久印記，最高 Lv.10；災厄不提供一般戰鬥獎勵。";
+  return guideUniverse(target)?"擊敗各區域最終 Boss 後會發現對應災厄，符合前置文明條件即可挑戰。每隻災厄完成 30 次完整擊殺後會完成該文明階段並提升文明等級；災厄不提供一般戰鬥獎勵。":"擊敗各區域最終 Boss 後解鎖對應災厄。成功討伐可取得並提升永久印記，最高 Lv.10；災厄不提供一般戰鬥獎勵。";
  }
  function gameGuideCategoriesForState(target=null){
-  return GUIDE_CATEGORIES.map(category=>({
-   ...category,
-   items:(category.items||[]).map(item=>{
-    const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
-    const combatText=category.id==="combat"?combatGuideWorldText(item?.[0],target):null;
-    const specialText=category.id==="special"?specialGuideWorldText(item?.[0],target):null;
-    const dungeonCommonText=category.id==="dungeon"?dungeonCommonGuideWorldText(item?.[0],target):null;
-    const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
-    const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
-    const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
-    const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
-    const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-    const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||combatText||civilizationText||specializationText||coreText;
-    return worldText?[item[0],worldText]:item.slice();
-   })
-  }));
+  return GUIDE_CATEGORIES.map(category=>({...category,items:(category.items||[]).map(item=>{
+   const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
+   const combatText=category.id==="combat"?combatGuideWorldText(item?.[0],target):null;
+   const specialText=category.id==="special"?specialGuideWorldText(item?.[0],target):null;
+   const dungeonCommonText=category.id==="dungeon"?dungeonCommonGuideWorldText(item?.[0],target):null;
+   const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
+   const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
+   const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
+   const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
+   const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
+   const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||combatText||civilizationText||specializationText||coreText;
+   return worldText?[item[0],worldText]:item.slice();
+  })}));
  }
- function activeCategory(target=null){const categories=gameGuideCategoriesForState(target);return categories.find(x=>x.id===activeGuideCategory)||categories[0];}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=18;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=5;
+ window.GAME_GUIDE_VERSION=19;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=6;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CALAMITY_WORLD_VERSION=2;
@@ -228,11 +198,7 @@ function specializationGuideWorldText(title,target=null){
  window.GAME_GUIDE_COMBAT_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
- window.setGameGuideCategory=function(id){
-  if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;
-  activeGuideCategory=id;
-  if(typeof render==="function")render();
- };
+ window.setGameGuideCategory=function(id){if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;activeGuideCategory=id;if(typeof render==="function")render();};
  window.gameGuidePage=function(){
   const categories=gameGuideCategoriesForState();
   const current=categories.find(x=>x.id===activeGuideCategory)||categories[0];
