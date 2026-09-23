@@ -4,109 +4,25 @@
 
  function universeArena(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state)===2:state?.secondWorld?.entered===true;}
  function arenaEpochName(){return universeArena()?"宇宙紀元":"銀河紀元";}
- function arenaRegionName(rank){
-  const r=Math.max(1,Math.floor(Number(rank)||1));
-  const region=universeArena()&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):WORLD_REGIONS?.[r-1];
-  return region?.name||`第${r}區域`;
- }
+ function arenaWorld(){return universeArena()?2:1;}
+ function arenaEnemyLineup(){const names=typeof window.getArenaEnemyNamesForWorld==="function"?window.getArenaEnemyNamesForWorld(arenaWorld()):[];return Array.isArray(names)&&names.length===3?names.join(" → "):"三戰挑戰";}
+ function arenaRegionName(rank){const r=Math.max(1,Math.floor(Number(rank)||1));const region=universeArena()&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):WORLD_REGIONS?.[r-1];return region?.name||`第${r}區域`;}
  function venueName(rank){return typeof getArenaVenueName==="function"?getArenaVenueName(rank):`${arenaRegionName(rank)}競技場`;}
- function positionId(rank){
-  if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);
-  return "normal";
- }
+ function positionId(rank){if(typeof getArenaPositionTemplateId==="function")return getArenaPositionTemplateId(rank);return "normal";}
  function positionClass(id){return id==="extreme"?"arena-tag-extreme":id==="hard"?"arena-tag-hard":"arena-tag-normal";}
  function assessmentTone(a){if(a?.promotionReady)return "ready";if(a?.stale)return "warn";return "neutral";}
  function arenaDailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("arena"):{used:0,remaining:0,limit:20};}
- function configForRank(rank){
-  const id=positionId(rank);
-  const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):[];
-  return configs.find(x=>x.id===id)||configs[0]||null;
- }
- function combatAssessmentHtml(a,p){
-  const target=venueName(p.assessmentRank),pct=a?.hasResult?Math.max(0,Math.min(100,Number(a.rate)||0)):0;
-  let value="尚未評估",detail="";
-  if(a?.promotionReady){value=`${a.rate}%`;detail="戰力評估已通過；等下一競技場對應主線區域開放後即可解鎖。";}
-  else if(a?.stale){value=`${a.rate}%`;detail="目前裝備、VIP 或戰鬥專精已變化，可重新評估。";}
-  else if(a?.hasResult){value=`${a.rate}%`;detail=a.rate>=97?"已達解鎖標準。":"尚未達解鎖標準，可提升戰力後重新評估。";}
-  else if(assessmentRunning){value=`評估中 ${assessmentProgress}/500`;detail="正在進行戰力評估。";}
-  return `<div class="arena-dual-card ${assessmentTone(a)}"><div class="arena-dual-head"><span>① 戰力評估</span><strong>${value}</strong></div><div class="arena-dual-target">目前最高：${target}</div><div class="arena-dual-bar"><span style="width:${assessmentRunning?Math.max(0,Math.min(100,assessmentProgress/5)):pct}%"></span></div>${detail?`<p>${detail}</p>`:""}</div>`;
- }
- function regionAssessmentHtml(p){
-  if(p.atFinalWindow)return `<div class="arena-dual-card ready"><div class="arena-dual-head"><span>② 主線條件</span><strong>已完成</strong></div><div class="arena-dual-target">${arenaEpochName()} 10 個競技場已全部解鎖</div><p>沒有下一個競技場需要解鎖。</p></div>`;
-  const nextRegion=arenaRegionName(p.nextRank);
-  return `<div class="arena-dual-card ${p.regionReady?"ready":"locked"}"><div class="arena-dual-head"><span>② 主線條件</span><strong>${p.regionReady?"已達成":"未達成"}</strong></div><div class="arena-dual-target">下一個：${p.nextName}</div><p>${p.regionReady?`${arenaEpochName()}主線第 ${p.nextRank} 區域「${nextRegion}」已解鎖。`:`需先解鎖${arenaEpochName()}主線第 ${p.nextRank} 區域「${nextRegion}」。`}</p></div>`;
- }
+ function configForRank(rank){const id=positionId(rank);const configs=typeof getArenaPositionConfigs==="function"?getArenaPositionConfigs(rank):[];return configs.find(x=>x.id===id)||configs[0]||null;}
+ function combatAssessmentHtml(a,p){const target=venueName(p.assessmentRank),pct=a?.hasResult?Math.max(0,Math.min(100,Number(a.rate)||0)):0;let value="尚未評估",detail="";if(a?.promotionReady){value=`${a.rate}%`;detail="戰力評估已通過；等下一競技場對應主線區域開放後即可解鎖。";}else if(a?.stale){value=`${a.rate}%`;detail="目前裝備、VIP 或戰鬥專精已變化，可重新評估。";}else if(a?.hasResult){value=`${a.rate}%`;detail=a.rate>=97?"已達解鎖標準。":"尚未達解鎖標準，可提升戰力後重新評估。";}else if(assessmentRunning){value=`評估中 ${assessmentProgress}/500`;detail="正在進行戰力評估。";}return `<div class="arena-dual-card ${assessmentTone(a)}"><div class="arena-dual-head"><span>① 戰力評估</span><strong>${value}</strong></div><div class="arena-dual-target">目前最高：${target}</div><div class="arena-dual-bar"><span style="width:${assessmentRunning?Math.max(0,Math.min(100,assessmentProgress/5)):pct}%"></span></div>${detail?`<p>${detail}</p>`:""}</div>`;}
+ function regionAssessmentHtml(p){if(p.atFinalWindow)return `<div class="arena-dual-card ready"><div class="arena-dual-head"><span>② 主線條件</span><strong>已完成</strong></div><div class="arena-dual-target">${arenaEpochName()} 10 個競技場已全部解鎖</div><p>沒有下一個競技場需要解鎖。</p></div>`;const nextRegion=arenaRegionName(p.nextRank);return `<div class="arena-dual-card ${p.regionReady?"ready":"locked"}"><div class="arena-dual-head"><span>② 主線條件</span><strong>${p.regionReady?"已達成":"未達成"}</strong></div><div class="arena-dual-target">下一個：${p.nextName}</div><p>${p.regionReady?`${arenaEpochName()}主線第 ${p.nextRank} 區域「${nextRegion}」已解鎖。`:`需先解鎖${arenaEpochName()}主線第 ${p.nextRank} 區域「${nextRegion}」。`}</p></div>`;}
  function refreshAssessmentButton(button){if(!button)return;button.disabled=assessmentRunning;button.textContent=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";}
- window.runArenaAssessmentFromUi=function(button){
-  if(assessmentRunning)return;
-  const asyncAssess=typeof window.assessArenaPromotionAsync==="function"?window.assessArenaPromotionAsync:null;
-  const syncAssess=typeof window.assessArenaPromotion==="function"?window.assessArenaPromotion:null;
-  if(!asyncAssess&&!syncAssess){alert("戰力評估功能尚未載入。");return;}
-  assessmentRunning=true;assessmentProgress=0;refreshAssessmentButton(button);
-  const done=function(){assessmentRunning=false;assessmentProgress=0;if(typeof render==="function")render();};
-  const failed=function(err){console.error("Arena assessment failed",err);alert("戰力評估執行失敗，請重新整理頁面後再試一次。");};
-  if(asyncAssess){
-   asyncAssess(function(progress){assessmentProgress=Math.max(0,Math.min(500,Math.floor(Number(progress?.completed)||0)));refreshAssessmentButton(button);const value=document.querySelector(".arena-dual-card .arena-dual-head strong");if(value)value.textContent=`評估中 ${assessmentProgress}/500`;const bar=document.querySelector(".arena-dual-card .arena-dual-bar span");if(bar)bar.style.width=`${assessmentProgress/5}%`;}).then(done).catch(function(err){failed(err);done();});
-   return;
-  }
-  setTimeout(function(){try{syncAssess();}catch(err){failed(err);}finally{done();}},30);
- };
- window.runArenaUnlockFromUi=function(button){
-  if(typeof window.promoteArenaRank!=="function"){alert("競技場解鎖功能尚未載入。");return;}
-  if(button){button.disabled=true;button.textContent="解鎖中…";}
-  let result;
-  try{result=window.promoteArenaRank();}
-  catch(err){console.error("Arena unlock failed",err);alert("競技場解鎖失敗，請重新整理頁面後再試一次。");if(typeof render==="function")render();return;}
-  if(result?.ok){if(typeof render==="function")render();return;}
-  const reason=result?.reason;
-  const message=reason==="combat-not-qualified"?"戰力評估尚未達到解鎖標準。":reason==="region-locked"?"下一個競技場所需的主線區域尚未解鎖。":reason==="max-arena"?`所有${arenaEpochName()}競技場都已解鎖。`:"目前尚未符合競技場解鎖條件。";
-  alert(message);if(typeof render==="function")render();
- };
- function unlockPanelHtml(a,p){
-  if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖${arenaEpochName()}全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;
-  const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";
-  return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且${arenaEpochName()}對應主線區域已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" onclick="runArenaAssessmentFromUi(this)" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" onclick="runArenaUnlockFromUi(this)" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;
- }
- function venueCard(rank,p,canChallenge){
-  const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";
-  const base=cfg?Math.max(0,Math.floor(Number(cfg.totalPoints)||0)):0,actual=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(base):base;
-  const pointText=cfg?(actual!==base?`三戰全通 ${actual} VIP 積分（基礎 ${base}）`:`三戰全通 ${base} VIP 積分`):"三戰挑戰";
-  return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${positionClass(id)}" ${canChallenge?"":"disabled"} onclick="${canChallenge?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small></button>`;
- }
- window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=1;
- window.ARENA_WORLD_LABEL_UI_VERSION=1;
- window.renderArenaVenueSelectionHtml=function(){
-  const ds=arenaDailyStatus(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();
-  const cards=p.visibleRanks.map(rank=>venueCard(rank,p,ds.remaining>0)).join("");
-  const visibleText=p.visibleRanks.length===1?"目前只開放 1 個競技場":`目前顯示最近 ${p.visibleRanks.length} 個已解鎖競技場`;
-  return `<div class="function-page dungeon-page-shell arena-shell arena-venue-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">${arenaEpochName()}競技場</div><div class="arena-attempts">今日競技場：<strong>${ds.used} / ${ds.limit}</strong>・剩餘 ${ds.remaining} 輪・${visibleText}</div>${unlockPanelHtml(a,p)}<div class="arena-venue-grid">${cards}</div></section></div>`;
- };
- window.startArenaVenue=function(rank){
-  if(arenaDailyStatus().remaining<=0)return;
-  const r=Math.floor(Number(rank)||0),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState();
-  if(!p.visibleRanks.includes(r)||typeof selectArenaVenueRank!=="function"||!selectArenaVenueRank(r))return;
-  if(typeof startArenaDungeon==="function")startArenaDungeon(positionId(r));
- };
-
- function runArenaWorldRegressionIntegrity(){
-  const errors=[];
-  const fail=(code,data=null)=>errors.push({code,data});
-  try{
-   if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.normalizeDungeonSaveState!=="function"||typeof window.getArenaProgressForWorld!=="function")fail("owner-missing",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION});
-   const legacy={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arena:{rank:4}}};
-   window.normalizeDungeonSaveState(legacy);
-   const legacyGalaxy=window.getArenaProgressForWorld(1,legacy),legacyUniverse=window.getArenaProgressForWorld(2,legacy);
-   if(Number(legacyGalaxy?.highestArenaUnlocked)!==4||Number(legacyUniverse?.highestArenaUnlocked)!==1)fail("legacy-world-split",{galaxy:legacyGalaxy?.highestArenaUnlocked,universe:legacyUniverse?.highestArenaUnlocked});
-   const split={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arenaByWorld:{1:{rank:3},2:{rank:6}}}};
-   window.normalizeDungeonSaveState(split);
-   const galaxy=window.getArenaProgressForWorld(1,split),universe=window.getArenaProgressForWorld(2,split);
-   if(Number(galaxy?.highestArenaUnlocked)!==3||Number(universe?.highestArenaUnlocked)!==6||galaxy===universe)fail("world-progress-isolation",{galaxy:galaxy?.highestArenaUnlocked,universe:universe?.highestArenaUnlocked,same:galaxy===universe});
-   if(Object.prototype.propertyIsEnumerable.call(split.dungeon,"arena"))fail("legacy-alias-enumerable");
-   if(Number(window.ARENA_WORLD_LABEL_UI_VERSION)!==1||Number(window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION)!==1)fail("ui-version",{label:window.ARENA_WORLD_LABEL_UI_VERSION,flow:window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION});
-  }catch(error){fail("exception",String(error?.message||error));}
-  return {passed:errors.length===0,errors};
- }
- window.ARENA_WORLD_REGRESSION_INTEGRITY_VERSION=1;
- window.ARENA_WORLD_REGRESSION_INTEGRITY=runArenaWorldRegressionIntegrity();
- if(!window.ARENA_WORLD_REGRESSION_INTEGRITY.passed)console.error("[文明戰線] 競技場雙紀元回歸檢查失敗",window.ARENA_WORLD_REGRESSION_INTEGRITY.errors);
+ window.runArenaAssessmentFromUi=function(button){if(assessmentRunning)return;const asyncAssess=typeof window.assessArenaPromotionAsync==="function"?window.assessArenaPromotionAsync:null;const syncAssess=typeof window.assessArenaPromotion==="function"?window.assessArenaPromotion:null;if(!asyncAssess&&!syncAssess){alert("戰力評估功能尚未載入。");return;}assessmentRunning=true;assessmentProgress=0;refreshAssessmentButton(button);const done=function(){assessmentRunning=false;assessmentProgress=0;if(typeof render==="function")render();};const failed=function(err){console.error("Arena assessment failed",err);alert("戰力評估執行失敗，請重新整理頁面後再試一次。");};if(asyncAssess){asyncAssess(function(progress){assessmentProgress=Math.max(0,Math.min(500,Math.floor(Number(progress?.completed)||0)));refreshAssessmentButton(button);const value=document.querySelector(".arena-dual-card .arena-dual-head strong");if(value)value.textContent=`評估中 ${assessmentProgress}/500`;const bar=document.querySelector(".arena-dual-card .arena-dual-bar span");if(bar)bar.style.width=`${assessmentProgress/5}%`;}).then(done).catch(function(err){failed(err);done();});return;}setTimeout(function(){try{syncAssess();}catch(err){failed(err);}finally{done();}},30);};
+ window.runArenaUnlockFromUi=function(button){if(typeof window.promoteArenaRank!=="function"){alert("競技場解鎖功能尚未載入。");return;}if(button){button.disabled=true;button.textContent="解鎖中…";}let result;try{result=window.promoteArenaRank();}catch(err){console.error("Arena unlock failed",err);alert("競技場解鎖失敗，請重新整理頁面後再試一次。");if(typeof render==="function")render();return;}if(result?.ok){if(typeof render==="function")render();return;}const reason=result?.reason;const message=reason==="combat-not-qualified"?"戰力評估尚未達到解鎖標準。":reason==="region-locked"?"下一個競技場所需的主線區域尚未解鎖。":reason==="max-arena"?`所有${arenaEpochName()}競技場都已解鎖。`:"目前尚未符合競技場解鎖條件。";alert(message);if(typeof render==="function")render();};
+ function unlockPanelHtml(a,p){if(p.atFinalWindow)return `<section class="arena-dual-assessment"><div class="arena-window-title">已解鎖${arenaEpochName()}全部 10 個競技場</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div></section>`;const assessDisabled=a?.promotionReady||assessmentRunning,assessLabel=assessmentRunning?`評估中 ${assessmentProgress}/500`:"戰力評估";return `<section class="arena-dual-assessment"><div class="arena-window-title">目前最高已解鎖：第 ${p.highestArenaUnlocked} 個・${p.assessmentName}</div><div class="arena-window-sub">解鎖 ${p.nextName} 需要：目前最高競技場戰力評估達 97%，且${arenaEpochName()}對應主線區域已解鎖。</div><div class="arena-dual-grid">${combatAssessmentHtml(a,p)}${regionAssessmentHtml(p)}</div><div class="arena-dual-actions"><button id="arenaAssessBtn" class="btn" onclick="runArenaAssessmentFromUi(this)" ${assessDisabled?"disabled":""}>${assessLabel}</button><button id="arenaUnlockBtn" class="btn primary" onclick="runArenaUnlockFromUi(this)" ${p.canUnlockNext?"":"disabled"}>解鎖 ${p.nextName}</button></div></section>`;}
+ function venueCard(rank,p,canChallenge){const id=positionId(rank),cfg=configForRank(rank),target=rank===p.assessmentRank?`<span class="arena-venue-badge">目前最高・評估目標</span>`:"";const base=cfg?Math.max(0,Math.floor(Number(cfg.totalPoints)||0)):0,actual=typeof adjustVipDungeonPoints==="function"?adjustVipDungeonPoints(base):base;const pointText=cfg?(actual!==base?`三戰全通 ${actual} VIP 積分（基礎 ${base}）`:`三戰全通 ${base} VIP 積分`):"三戰挑戰";return `<button class="arena-venue-card ${rank===p.assessmentRank?"assessment-target":""} ${positionClass(id)}" ${canChallenge?"":"disabled"} onclick="${canChallenge?`startArenaVenue(${rank})`:"void(0)"}"><div class="arena-venue-rank">第 ${rank} 個競技場 ${target}</div><strong>${venueName(rank)}</strong><small>${pointText}</small><small>${arenaEnemyLineup()}</small></button>`;}
+ window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION=2;window.ARENA_WORLD_LABEL_UI_VERSION=1;window.ARENA_ENEMY_LINEUP_UI_VERSION=1;
+ window.renderArenaVenueSelectionHtml=function(){const ds=arenaDailyStatus(),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState(),a=getArenaAssessmentStatus();const cards=p.visibleRanks.map(rank=>venueCard(rank,p,ds.remaining>0)).join("");const visibleText=p.visibleRanks.length===1?"目前只開放 1 個競技場":`目前顯示最近 ${p.visibleRanks.length} 個已解鎖競技場`;return `<div class="function-page dungeon-page-shell arena-shell arena-venue-page"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本</button></div><section class="arena-panel"><div class="arena-title">${arenaEpochName()}競技場</div><div class="arena-attempts">今日競技場：<strong>${ds.used} / ${ds.limit}</strong>・剩餘 ${ds.remaining} 輪・${visibleText}</div><div class="arena-window-sub">本紀元三戰對手：${arenaEnemyLineup()}</div>${unlockPanelHtml(a,p)}<div class="arena-venue-grid">${cards}</div></section></div>`;};
+ window.startArenaVenue=function(rank){if(arenaDailyStatus().remaining<=0)return;const r=Math.floor(Number(rank)||0),p=typeof getArenaProgressState==="function"?getArenaProgressState():getArenaWindowState();if(!p.visibleRanks.includes(r)||typeof selectArenaVenueRank!=="function"||!selectArenaVenueRank(r))return;if(typeof startArenaDungeon==="function")startArenaDungeon(positionId(r));};
+ function runArenaWorldRegressionIntegrity(){const errors=[];const fail=(code,data=null)=>errors.push({code,data});try{if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==1||Number(window.ARENA_BY_WORLD_MIGRATION_VERSION)!==1||typeof window.normalizeDungeonSaveState!=="function"||typeof window.getArenaProgressForWorld!=="function")fail("owner-missing",{state:window.ARENA_BY_WORLD_STATE_VERSION,migration:window.ARENA_BY_WORLD_MIGRATION_VERSION});const legacy={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arena:{rank:4}}};window.normalizeDungeonSaveState(legacy);const legacyGalaxy=window.getArenaProgressForWorld(1,legacy),legacyUniverse=window.getArenaProgressForWorld(2,legacy);if(Number(legacyGalaxy?.highestArenaUnlocked)!==4||Number(legacyUniverse?.highestArenaUnlocked)!==1)fail("legacy-world-split",{galaxy:legacyGalaxy?.highestArenaUnlocked,universe:legacyUniverse?.highestArenaUnlocked});const split={level:1000,unlockedMap:999,secondWorld:{entered:true},dungeon:{arenaByWorld:{1:{rank:3},2:{rank:6}}}};window.normalizeDungeonSaveState(split);const galaxy=window.getArenaProgressForWorld(1,split),universe=window.getArenaProgressForWorld(2,split);if(Number(galaxy?.highestArenaUnlocked)!==3||Number(universe?.highestArenaUnlocked)!==6||galaxy===universe)fail("world-progress-isolation",{galaxy:galaxy?.highestArenaUnlocked,universe:universe?.highestArenaUnlocked,same:galaxy===universe});if(Object.prototype.propertyIsEnumerable.call(split.dungeon,"arena"))fail("legacy-alias-enumerable");if(Number(window.ARENA_WORLD_LABEL_UI_VERSION)!==1||Number(window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION)!==2||Number(window.ARENA_ENEMY_LINEUP_UI_VERSION)!==1)fail("ui-version",{label:window.ARENA_WORLD_LABEL_UI_VERSION,flow:window.ARENA_UNIVERSE_PLAYER_FLOW_UI_VERSION,lineup:window.ARENA_ENEMY_LINEUP_UI_VERSION});}catch(error){fail("exception",String(error?.message||error));}return {passed:errors.length===0,errors};}
+ window.ARENA_WORLD_REGRESSION_INTEGRITY_VERSION=2;window.ARENA_WORLD_REGRESSION_INTEGRITY=runArenaWorldRegressionIntegrity();if(!window.ARENA_WORLD_REGRESSION_INTEGRITY.passed)console.error("[文明戰線] 競技場雙紀元回歸檢查失敗",window.ARENA_WORLD_REGRESSION_INTEGRITY.errors);
 })();
