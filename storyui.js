@@ -48,9 +48,14 @@
   const page=activeStory.pages[activePage]||[];
   const first=activePage===0,last=activePage===activeStory.pages.length-1;
   const finaleLabel=last?regionFinaleLabel(activeStory):"";
-  const hasFinaleLabel=!!finaleLabel&&page.some(block=>block&&typeof block==="object"&&typeof block.em==="string"&&String(block.em).trim()===finaleLabel.trim());
+  const normalizedFinale=finaleLabel.trim();
+  const hasFinaleLabel=!!finaleLabel&&page.some(block=>{
+   if(block&&typeof block==="object"&&typeof block.em==="string")return String(block.em).trim()===normalizedFinale;
+   return typeof block==="string"&&String(block).trim()===normalizedFinale;
+  });
   let bodyHtml=page.map(block=>{
    if(block&&typeof block==="object"&&Object.prototype.hasOwnProperty.call(block,"em"))return `<p class="story-em">${esc(interpolate(block.em))}</p>`;
+   if(finaleLabel&&typeof block==="string"&&String(block).trim()===normalizedFinale)return `<p class="story-em">${esc(interpolate(block))}</p>`;
    return `<p>${esc(interpolate(block))}</p>`;
   }).join("");
   if(finaleLabel&&!hasFinaleLabel)bodyHtml+=`<p class="story-em">${esc(interpolate(finaleLabel))}</p>`;
@@ -77,5 +82,5 @@
   }
  };
  window.isStoryOpen=function(){return !!activeStory;};
- window.STORY_UI_VERSION=7;
+ window.STORY_UI_VERSION=8;
 })();
