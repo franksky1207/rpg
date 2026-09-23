@@ -87,7 +87,7 @@
    return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlockLabel}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
   };
   const bountyDesc=universe?"挑戰依目前實力生成的強敵，取得 EXP、暗物質與裝備。":"挑戰依目前實力生成的強敵，取得 EXP、金幣與裝備。";
-  const arenaDesc=universe?"挑戰宇宙紀元競技場，每輪連戰三場並取得 VIP 積分。":"挑戰銀河紀元競技場，每輪連戰三場並取得 VIP 積分。";
+  const arenaDesc=universe?"進入宇宙紀元後從銀河彼端競技場開始；後續需戰力評估達 97% 並解鎖對應主線區域，最多顯示最近 3 個已解鎖競技場。":"Lv15 開放競技場後從地球戰爭競技場開始；後續需戰力評估達 97% 並解鎖對應主線區域，最多顯示最近 3 個已解鎖競技場。";
   return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰",universe?"高 EXP・高暗物質・多裝備":"高 EXP・高金幣・多裝備",bountyDesc,DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分",arenaDesc,DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
  }
 
