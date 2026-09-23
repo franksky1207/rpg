@@ -65,7 +65,7 @@
  };
 
  function dungeonHomeHtml(){
-  const lv=Math.max(1,Number(state.level)||1),bounty=dailyStatus("bounty"),arena=dailyStatus("arena"),voidInfo=voidStatus();
+  const lv=Math.max(1,Number(state.level)||1),bounty=dailyStatus("bounty"),arena=dailyStatus("arena"),voidInfo=voidStatus(),universe=universePhase();
   const card=(key,title,reward,desc,need)=>{
    const unlocked=lv>=need,implemented=!!DUNGEON_IMPLEMENTED[key];
    let canEnter=false,statusText="",buttonLabel="尚未解鎖",currentFloorHtml="";
@@ -83,13 +83,16 @@
     statusText=`當日最高：第 ${Number(voidInfo.daily.highestFloor||0).toLocaleString()} 層　・　${voidInfo.daily.claimed?"今日獎勵已領取":`可領 ${Number(voidInfo.daily.reward||0).toLocaleString()} VIP`}`;
     if(unlocked&&!implemented)buttonLabel="尚未開放";else if(canEnter)buttonLabel=`進入${title}`;
    }
-   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
+   const unlockLabel=universe?(unlocked?"宇宙紀元已解鎖":"尚未解鎖"):(unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`);
+   return `<section class="dungeon-mode-card dungeon-mode-${key}${unlocked?"":" locked"}"><div class="dungeon-mode-head"><div><h3>${title}</h3><div class="dungeon-mode-reward">${reward}</div></div><span class="dungeon-unlock-label">${unlockLabel}</span></div>${currentFloorHtml}<p>${desc}</p><div class="dungeon-cost">${statusText}</div><button class="btn dungeon-entry-btn" ${canEnter?"":"disabled"} onclick="${canEnter?`openDungeonMode('${key}')`:"void(0)"}">${buttonLabel}</button></section>`;
   };
-  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰",universePhase()?"高 EXP・高暗物質・多裝備":"高 EXP・高金幣・多裝備","隨機挑戰一名依你目前實力生成的強敵，裝備最低為稀有品質。",DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分","連續挑戰三名敵人，考驗整體續戰能力。",DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
+  const bountyDesc=universe?"挑戰依目前實力生成的強敵，取得 EXP、暗物質與裝備。":"挑戰依目前實力生成的強敵，取得 EXP、金幣與裝備。";
+  const arenaDesc=universe?"挑戰宇宙紀元競技場，每輪連戰三場並取得 VIP 積分。":"挑戰銀河紀元競技場，每輪連戰三場並取得 VIP 積分。";
+  return `<div class="function-page dungeon-page-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>${dungeonStatusHtml("dungeon-home-status")}<div class="dungeon-mode-list">${card("bounty","懸賞戰",universe?"高 EXP・高暗物質・多裝備":"高 EXP・高金幣・多裝備",bountyDesc,DUNGEON_UNLOCKS.bounty)}${card("arena","競技場","VIP 積分",arenaDesc,DUNGEON_UNLOCKS.arena)}${card("tower","虛空幻境","VIP 積分","從歷史最高紀錄前 100 層開始，挑戰當日最高紀錄並領取每日 VIP 獎勵。",DUNGEON_UNLOCKS.tower)}${extraDungeonCards()}</div></div>`;
  }
 
  window.DUNGEON_UNIVERSE_BOUNTY_UI_VERSION=1;
- window.DUNGEON_UNIVERSE_ARENA_UI_VERSION=1;
+ window.DUNGEON_UNIVERSE_ARENA_UI_VERSION=2;
  window.openDungeonMode=function(mode){if(mode==="bounty"&&DUNGEON_IMPLEMENTED.bounty&&typeof enterBountyDungeon==="function")return enterBountyDungeon();if(mode==="arena"&&DUNGEON_IMPLEMENTED.arena&&typeof openArenaDungeon==="function")return openArenaDungeon();if(mode==="tower"&&DUNGEON_IMPLEMENTED.tower&&typeof enterVoidMirageDungeon==="function")return enterVoidMirageDungeon();};
  function ensureHomeDungeonCard(main){const menu=main?.querySelector(".menu-grid");if(!menu)return;const existing=Array.from(menu.querySelectorAll(".menu-card")).find(el=>(el.getAttribute("onclick")||"").includes("go('dungeon')"));if(existing){existing.dataset.dungeonHomeCard="1";return;}const adventure=menu.querySelector(".menu-card"),wrap=document.createElement("div");wrap.innerHTML=`<button class="menu-card" data-dungeon-home-card="1" onclick="go('dungeon')"><b>副本</b><span>挑戰副本取得各類獎勵</span></button>`;const card=wrap.firstElementChild;if(adventure?.nextSibling)menu.insertBefore(card,adventure.nextSibling);else menu.appendChild(card);}
 
