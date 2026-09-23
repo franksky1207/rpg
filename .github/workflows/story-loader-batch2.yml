@@ -1,0 +1,35 @@
+name: Story Loader Batch 2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/story-loader-batch2.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply formal universe story load path
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          registry='<script src="secondworldstoryregistry.js?v=20260923-universe-story-load-batch2"></script>'
+          if registry not in s:
+              s=s.replace('<script src="secondworlddata.js?v=20260922-universe-bounty-batch1"></script>', '<script src="secondworlddata.js?v=20260922-universe-bounty-batch1"></script>'+registry)
+          universe=''.join(f'<script src="{name}?v=20260923-universe-story-load-batch2"></script>' for name in [
+            'storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-supercluster-frontier.js','storydata-universe-cosmic-web.js','storydata-universe-dark-matter-sea.js','storydata-universe-deep-space.js','storydata-universe-void.js','storydata-universe-multi-domain.js','storydata-universe-cosmic-center.js','storydata-universe-cosmic-unification-war.js'])
+          anchor='<script src="storydata-galactic-unification.js?v=20260918-galactic-unification1"></script>'
+          if 'storydata-universe-local-group-war.js?v=20260923-universe-story-load-batch2' not in s:
+              s=s.replace(anchor,anchor+universe)
+          s=s.replace('gmstorytest.js?v=20260919-gm-section-state1','gmstorytest.js?v=20260923-universe-story-load-batch2')
+          p.write_text(s)
+      - name: Commit index cache-bust and load order
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Load universe story files through formal runtime path"
+          git push
