@@ -5,7 +5,7 @@
   return state?.secondWorld?.entered===true?2:1;
  }
  function maxArenaRank(world=arenaWorld()){return typeof window.getArenaMaxRankForWorld==="function"?Math.max(1,Math.floor(Number(window.getArenaMaxRankForWorld(world))||1)):Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);}
- function clampRank(value,world=arenaWorld()){return Math.max(1,Math.min(maxArenaRank(world),Math.floor(Number(value)||1));}
+ function clampRank(value,world=arenaWorld()){return Math.max(1,Math.min(maxArenaRank(world),Math.floor(Number(value)||1)));}
  function arenaVenueName(rank,world=arenaWorld()){
   const w=Number(world)===2?2:1,r=clampRank(rank,w);
   const region=w===2&&typeof window.getSecondWorldRegion==="function"?window.getSecondWorldRegion(r-1):(Array.isArray(WORLD_REGIONS)?WORLD_REGIONS[r-1]:null);
