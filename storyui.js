@@ -12,6 +12,20 @@
   return !name||name==="玩家"?"作戰員":name;
  }
  function interpolate(v){return String(v??"").replaceAll("{角色名稱}",playerName());}
+ function regionFinaleLabel(story){
+  if(!story?.id)return "";
+  const registries=[window.CIVILIZATION_STORY_REGIONS,window.CIVILIZATION_UNIVERSE_STORY_REGIONS];
+  for(const regions of registries){
+   if(!Array.isArray(regions))continue;
+   for(const region of regions){
+    const rows=Array.isArray(region?.stories)?region.stories:[];
+    if(!rows.length||rows[rows.length-1]?.id!==story.id)continue;
+    const chapter=String(story.chapter||"").replace(/^宇宙紀元・/,"").trim();
+    return chapter?`${chapter}　完`:"";
+   }
+  }
+  return "";
+ }
  function ensureModal(){
   let modal=document.getElementById(MODAL_ID);
   if(modal)return modal;
@@ -32,11 +46,15 @@
   document.getElementById("storyLocation").textContent=interpolate(activeStory.location||"");
   document.getElementById("storyTitle").textContent=interpolate(activeStory.title||"");
   const page=activeStory.pages[activePage]||[];
-  document.getElementById("storyBody").innerHTML=page.map(block=>{
+  const first=activePage===0,last=activePage===activeStory.pages.length-1;
+  const finaleLabel=last?regionFinaleLabel(activeStory):"";
+  const hasFinaleLabel=!!finaleLabel&&page.some(block=>block&&typeof block==="object"&&typeof block.em==="string"&&String(block.em).trim()===finaleLabel.trim());
+  let bodyHtml=page.map(block=>{
    if(block&&typeof block==="object"&&Object.prototype.hasOwnProperty.call(block,"em"))return `<p class="story-em">${esc(interpolate(block.em))}</p>`;
    return `<p>${esc(interpolate(block))}</p>`;
   }).join("");
-  const first=activePage===0,last=activePage===activeStory.pages.length-1;
+  if(finaleLabel&&!hasFinaleLabel)bodyHtml+=`<p class="story-em">${esc(interpolate(finaleLabel))}</p>`;
+  document.getElementById("storyBody").innerHTML=bodyHtml;
   const pageLabel=`${activePage+1} / ${activeStory.pages.length}`;
   document.getElementById("storyActions").innerHTML=`${first?'<span class="story-spacer"></span>':'<button class="btn" onclick="storyPreviousPage()">上一頁</button>'}<div class="story-page-number" aria-label="劇情頁數">${pageLabel}</div><button class="btn primary" onclick="${last?'closeStory()':'storyNextPage()'}">${last?'結束':'下一頁'}</button>`;
   modal.classList.add("open");
@@ -59,5 +77,5 @@
   }
  };
  window.isStoryOpen=function(){return !!activeStory;};
- window.STORY_UI_VERSION=6;
+ window.STORY_UI_VERSION=7;
 })();
