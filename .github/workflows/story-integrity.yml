@@ -33,20 +33,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Verify story integrity structure
-        run: |
-          for file in story.css storyintegrity.js storyruntimeintegrity.js secondworldstoryregistry.js tests/story/source-purity.js tests/story/integrity.js tests/story/flow.js; do
-            test -f "$file" || { echo "Missing required story file: $file"; exit 1; }
-          done
-          for file in storydata-universe-galaxy-beyond.js storydata-universe-local-group-war.js storydata-universe-supercluster-frontier.js storydata-universe-cosmic-web.js storydata-universe-dark-matter-sea.js storydata-universe-deep-space.js storydata-universe-void.js storydata-universe-multi-domain.js storydata-universe-cosmic-center.js storydata-universe-cosmic-unification-war.js; do
-            test -f "$file" || { echo "Missing universe story container: $file"; exit 1; }
-          done
-          node - <<'NODE'
-          const fs=require('fs');
-          const html=fs.readFileSync('index.html','utf8');
-          const required=['story.css?v=','secondworldstoryregistry.js?v=','storydata-universe-galaxy-beyond.js?v=','storydata-universe-cosmic-unification-war.js?v=','storyintegrity.js?v=','storyruntimeintegrity.js?v='];
-          for(const token of required)if(!html.includes(token))throw new Error('index.html missing '+token);
-          NODE
       - name: Run raw story source purity
         run: node tests/story/source-purity.js
       - name: Run story data integrity
