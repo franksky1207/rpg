@@ -13,6 +13,10 @@
   "彼岸黑潮","群星焚爐","邊星獵皇","萬軍葬艦","超域蝕核",
   "無盡兵災","星脈噬巢","巨牆戰堡","深域吞星","終戰天穹"
  ]);
+ const TITLE_NAMES=Object.freeze([
+  "越界先驅","寰世銘者","荒境孤鋒","死線歸客","域外凌絕",
+  "萬軍獨行","寰宇織者","破界行者","幽域長明","萬界之巔"
+ ]);
 
  function int(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,int(value,min)));}
@@ -28,6 +32,10 @@
    index,
    id:`universe-calamity-${String(index+1).padStart(2,"0")}`,
    name:NAMES[index],
+   titleId:`universe_calamity_title_${String(index+1).padStart(2,"0")}`,
+   titleName:TITLE_NAMES[index],
+   titleTier:index+1,
+   titleSeries:"universe-calamity",
    level,
    regionIndex:index,
    regionId:region?.id||"",
@@ -181,6 +189,7 @@
    if(def.level!==550+index*50)errors.push({code:"LEVEL",index,actual:def.level});
    if(def.bossIndex!==9+index*10)errors.push({code:"BOSS_INDEX",index,actual:def.bossIndex});
    if(def.maxHp!==FIRST_HP+index*HP_STEP)errors.push({code:"HP",index,actual:def.maxHp});
+   if(def.titleId!==`universe_calamity_title_${String(index+1).padStart(2,"0")}`||def.titleName!==TITLE_NAMES[index]||def.titleTier!==index+1||def.titleSeries!=="universe-calamity")errors.push({code:"TITLE_METADATA",index});
    if(def.targetCivilizationLevel!==index+1||def.previousCivilizationLevel!==index)errors.push({code:"CIVILIZATION_LINK",index});
    if(!region||def.regionId!==region.id||def.regionName!==region.name)errors.push({code:"REGION_LINK",index});
    if(!boss||boss.level!==def.level||def.bossId!==boss.id||def.bossName!==boss.name)errors.push({code:"BOSS_LINK",index});
@@ -195,6 +204,7 @@
  window.SECOND_WORLD_CALAMITY_REPLAY_POLICY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_NORMALIZATION_OWNER_VERSION=2;
  window.SECOND_WORLD_CALAMITY_COMPLETION_SEMANTICS_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_TITLE_METADATA_VERSION=1;
  window.SECOND_WORLD_CALAMITY_COUNT=COUNT;
  window.SECOND_WORLD_CALAMITY_TRUE_KILLS_REQUIRED=TRUE_KILLS_REQUIRED;
  window.SECOND_WORLD_CALAMITY_FIRST_HP=FIRST_HP;
