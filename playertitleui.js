@@ -1,5 +1,6 @@
 (function(){
  const PLAYER_TITLE_UI_VERSION=1;
+ const UNIVERSE_NOTICE_VERSION=1;
  const TITLE_NOTICE_MODAL_ID="playerTitleNoticeModal";
  const TITLE_PICKER_MODAL_ID="playerTitlePickerModal";
  let titleNoticeOpen=false;
@@ -69,15 +70,18 @@
   return modal;
  }
 
+ function titleSourceText(def){
+  if(def?.series==="mirror")return `鏡像戰歷史最高達 ${Math.max(0,Math.floor(Number(def.mirrorWins)||0))} 勝後取得。`;
+  if(def?.series==="universe-calamity")return "首次擊敗對應宇宙紀元文明災厄後取得。";
+  return "首次擊敗對應銀河紀元文明災厄後取得。";
+ }
+
  function showPendingPlayerTitleNotice(){
   if(titleNoticeOpen||document.hidden)return false;
   const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!def)return false;
   const modal=ensureTitleNoticeModal();
-  const sourceText=def.series==="mirror"
-   ?`鏡像戰歷史最高達 ${Math.max(0,Math.floor(Number(def.mirrorWins)||0))} 勝後取得。`
-   :"首次擊敗對應文明災厄後取得。";
-  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):esc(def.name)}</div><div class="muted">${esc(sourceText)}</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
+  modal.innerHTML=`<div class="modal-box"><h3>獲得稱號</h3><div class="player-title-notice-preview">${typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):esc(def.name)}</div><div class="muted">${esc(titleSourceText(def))}</div><div class="controls" style="margin-top:16px"><button class="btn primary" onclick="closePlayerTitleNotice()">確認</button></div></div>`;
   modal.classList.add("show");
   titleNoticeOpen=true;
   return true;
@@ -107,6 +111,7 @@
  setTimeout(queuePendingPlayerTitleNotice,0);
 
  window.PLAYER_TITLE_UI_VERSION=PLAYER_TITLE_UI_VERSION;
+ window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION=UNIVERSE_NOTICE_VERSION;
  window.openPlayerTitlePicker=openPlayerTitlePicker;
  window.closePlayerTitlePicker=closePlayerTitlePicker;
  window.selectPlayerTitle=selectPlayerTitle;
