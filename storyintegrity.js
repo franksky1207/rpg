@@ -1,72 +1,25 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const NARRATIVE_BANNED_TERMS=["小區域","關卡","第幾關","普通怪","菁英怪","Boss","Ｂｏｓｓ","玩家","頁數","遊戲","等級","首領戰"];
  const STORY_FORMAT_POLICY=Object.freeze({intro:Object.freeze({pages:12,minChars:90,maxChars:155,minBlocks:3}),regularBoss:Object.freeze({pages:11,minChars:90,maxChars:120,minBlocks:2}),regionFinale:Object.freeze({pages:15,minChars:120,maxChars:155,minBlocks:3}),finalBoss:Object.freeze({pages:31,minChars:90,maxChars:155,minBlocks:3})});
- function plainText(value){if(typeof value==="string")return value;if(value&&typeof value==="object"&&typeof value.em==="string")return value.em;return "";}
- function checkPage(errors,id,page,index,policy){
-  if(!Array.isArray(page)||!page.length){errors.push({code:"STORY_PAGE_FORMAT",message:`${id} 第 ${index+1} 頁格式錯誤`});return;}
-  const texts=page.map(plainText).filter(Boolean),joined=texts.join("\n"),chars=Array.from(joined.replace(/\s/g,"")).length;
-  const banned=NARRATIVE_BANNED_TERMS.filter(term=>joined.includes(term));
-  if(banned.length)errors.push({code:"STORY_NARRATIVE_INTERNAL_TERM",message:`${id} 第 ${index+1} 頁含內部用語：${banned.join("、")}`});
-  if(/[A-Za-z]/.test(joined))errors.push({code:"STORY_ENGLISH_DISPLAY_TEXT",message:`${id} 第 ${index+1} 頁正式顯示文字不可含英文字母`});
-  if(chars<policy.minChars||chars>policy.maxChars)errors.push({code:"STORY_PAGE_CHAR_RANGE",message:`${id} 第 ${index+1} 頁應為 ${policy.minChars}～${policy.maxChars} 個可見字元，實際 ${chars}`});
-  if(texts.length<policy.minBlocks)errors.push({code:"STORY_PAGE_BLOCK_COUNT",message:`${id} 第 ${index+1} 頁至少需要 ${policy.minBlocks} 個自然文字區塊`});
+ function ensureUniverseRegistry(){
+  if(window.UNIVERSE_STORY_REGISTRY_READY===true)return;
+  const regions=Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[],bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
+  const storyId=index=>{const boss=bosses[Math.floor(Number(index))];if(!boss)return null;const region=regions.find(r=>Number(r.index)===Number(boss.regionIndex));if(!region)return null;return `universe-${region.id}-boss-${Number(boss.index)-Number(region.firstBossIndex)+1}`;};
+  const registry=regions.map(region=>Object.freeze({id:region.id,name:region.name,era:"universe",stories:Object.freeze(bosses.filter(b=>Number(b.regionIndex)===Number(region.index)).map(b=>Object.freeze({id:storyId(b.index),label:b.name,bossIndex:b.index,bossLevel:b.level,finale:Number(b.index)===Number(region.lastBossIndex)})))}));
+  window.CIVILIZATION_UNIVERSE_STORY_REGIONS=Object.freeze(registry);window.universeStoryIdForBossIndex=storyId;window.universeBossIndexForStoryId=id=>{for(let i=0;i<bosses.length;i++)if(storyId(i)===id)return i;return null;};window.UNIVERSE_STORY_REGISTRY_VERSION=1;window.UNIVERSE_STORY_REGISTRY_READY=registry.length===10&&registry.every(r=>r.stories.length===10)&&new Set(registry.flatMap(r=>r.stories.map(s=>s.id))).size===100;
  }
+ function plainText(value){if(typeof value==="string")return value;if(value&&typeof value==="object"&&typeof value.em==="string")return value.em;return "";}
+ function checkPage(errors,id,page,index,policy){if(!Array.isArray(page)||!page.length){errors.push({code:"STORY_PAGE_FORMAT",message:`${id} 第 ${index+1} 頁格式錯誤`});return;}const texts=page.map(plainText).filter(Boolean),joined=texts.join("\n"),chars=Array.from(joined.replace(/\s/g,"")).length,banned=NARRATIVE_BANNED_TERMS.filter(term=>joined.includes(term));if(banned.length)errors.push({code:"STORY_NARRATIVE_INTERNAL_TERM",message:`${id} 第 ${index+1} 頁含內部用語：${banned.join("、")}`});if(/[A-Za-z]/.test(joined))errors.push({code:"STORY_ENGLISH_DISPLAY_TEXT",message:`${id} 第 ${index+1} 頁正式顯示文字不可含英文字母`});if(chars<policy.minChars||chars>policy.maxChars)errors.push({code:"STORY_PAGE_CHAR_RANGE",message:`${id} 第 ${index+1} 頁應為 ${policy.minChars}～${policy.maxChars} 個可見字元，實際 ${chars}`});if(texts.length<policy.minBlocks)errors.push({code:"STORY_PAGE_BLOCK_COUNT",message:`${id} 第 ${index+1} 頁至少需要 ${policy.minBlocks} 個自然文字區塊`});}
  function run(){
-  const errors=[],warnings=[],stories=window.CIVILIZATION_STORIES||{};
-  const fail=(code,message,data=null)=>errors.push({code,message,data});
-  const galaxyRegions=Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];
-  const worldRegions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
-  const maps=typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[];
-  const galaxyExpected=new Set(["earth-prologue"]);let galaxyBossChecked=0;
-  if(worldRegions.length!==10)fail("STORY_WORLD_REGION_COUNT",`銀河紀元 WORLD_REGIONS 應為 10 區，實際 ${worldRegions.length}`);
-  if(galaxyRegions.length!==10)fail("STORY_REGION_REGISTRY_COUNT",`銀河紀元故事登錄應為 10 區，實際 ${galaxyRegions.length}`);
-  worldRegions.forEach((region,ri)=>{
-   const registered=galaxyRegions.find(row=>row?.id===region.id);if(!registered){fail("STORY_REGION_MISSING",`缺少銀河故事區域：${region.id}`);return;}
-   if(galaxyRegions[ri]?.id!==region.id)fail("STORY_REGION_ORDER",`銀河故事區域順序錯誤：${region.id}`);
-   for(let offset=0;offset<10;offset++){
-    const mapIndex=Number(region.mapStart)+offset,id=`${region.id}-boss-${offset+1}`,story=stories[id],map=maps[mapIndex],boss=map?.enemies?.[4]?.[0];galaxyExpected.add(id);galaxyBossChecked++;
-    if(!registered.stories?.some(row=>row.id===id))fail("STORY_REGISTRY_ID_MISSING",`銀河登錄缺少 ${id}`);
-    if(!story){fail("STORY_DATA_MISSING",`缺少銀河故事資料 ${id}`);continue;}
-    if(story.title!==boss)fail("STORY_TITLE_MISMATCH",`${id} title 與正式首領名稱不一致`);
-    if(story.location!==map?.name)fail("STORY_LOCATION_MISMATCH",`${id} location 與正式地圖名稱不一致`);
-    const policy=region.id==="galactic-unification"&&offset===9?STORY_FORMAT_POLICY.finalBoss:offset===9?STORY_FORMAT_POLICY.regionFinale:STORY_FORMAT_POLICY.regularBoss;
-    if(!Array.isArray(story.pages)||story.pages.length!==policy.pages)fail("STORY_PAGE_COUNT_SPEC",`${id} 應為 ${policy.pages} 頁，實際 ${story.pages?.length||0}`);
-    else story.pages.forEach((page,pi)=>checkPage(errors,id,page,pi,policy));
-   }
-  });
-  const intro=stories["earth-prologue"];
-  if(!intro)fail("STORY_PROLOGUE_MISSING","缺少 earth-prologue");
-  else if(!Array.isArray(intro.pages)||intro.pages.length!==STORY_FORMAT_POLICY.intro.pages)fail("STORY_PROLOGUE_PAGE_COUNT",`earth-prologue 應為 ${STORY_FORMAT_POLICY.intro.pages} 頁`);
-  else intro.pages.forEach((page,pi)=>checkPage(errors,"earth-prologue",page,pi,STORY_FORMAT_POLICY.intro));
-
-  const universeRegions=Array.isArray(window.CIVILIZATION_UNIVERSE_STORY_REGIONS)?window.CIVILIZATION_UNIVERSE_STORY_REGIONS:[];
-  const universeBosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
-  const universeExpected=new Set();let universeLoaded=0;
-  if(window.UNIVERSE_STORY_REGISTRY_READY!==true)fail("UNIVERSE_STORY_REGISTRY_NOT_READY","宇宙紀元故事 Registry 尚未建立完整 10 區／100 Boss 架構");
-  if(universeRegions.length!==10)fail("UNIVERSE_STORY_REGION_COUNT",`宇宙紀元故事登錄應為 10 區，實際 ${universeRegions.length}`);
-  if(universeBosses.length!==100)fail("UNIVERSE_STORY_BOSS_COUNT",`宇宙紀元正式 Boss 應為 100 隻，實際 ${universeBosses.length}`);
-  universeRegions.forEach(region=>{
-   if(region.stories?.length!==10)fail("UNIVERSE_STORY_REGION_ROW_COUNT",`${region.name} 應登錄 10 篇劇情`);
-   (region.stories||[]).forEach((row,offset)=>{
-    universeExpected.add(row.id);const story=stories[row.id];if(!story)return;universeLoaded++;
-    const boss=universeBosses[row.bossIndex];
-    if(story.id!==row.id)fail("UNIVERSE_STORY_ID_MISMATCH",`${row.id} story.id 不一致`);
-    if(story.title!==boss?.name)fail("UNIVERSE_STORY_TITLE_MISMATCH",`${row.id} title 應為「${boss?.name||""}」`);
-    if(typeof story.chapter!=="string"||!story.chapter.includes(region.name))fail("UNIVERSE_STORY_CHAPTER_MISMATCH",`${row.id} chapter 應包含「${region.name}」`);
-    const policy=row.finale?STORY_FORMAT_POLICY.regionFinale:STORY_FORMAT_POLICY.regularBoss;
-    if(!Array.isArray(story.pages)||story.pages.length!==policy.pages)fail("UNIVERSE_STORY_PAGE_COUNT",`${row.id} 應為 ${policy.pages} 頁，實際 ${story.pages?.length||0}`);
-    else story.pages.forEach((page,pi)=>checkPage(errors,row.id,page,pi,policy));
-   });
-  });
-  const registeredUniverseIds=universeRegions.flatMap(region=>(region.stories||[]).map(row=>row.id));
-  if(new Set(registeredUniverseIds).size!==100)fail("UNIVERSE_STORY_ID_DUPLICATE","宇宙紀元 100 篇 Registry 存在重複 id");
-  Object.keys(stories).filter(id=>id.startsWith("universe-")).forEach(id=>{if(!universeExpected.has(id))fail("UNIVERSE_STORY_UNEXPECTED_ID",`存在未登錄的宇宙紀元故事：${id}`);});
-
-  const report={passed:errors.length===0,version:VERSION,formatPolicy:STORY_FORMAT_POLICY,checkedAt:Date.now(),worldRegions:worldRegions.length,storyRegions:galaxyRegions.length,bossStoriesExpected:100,bossStoriesChecked:galaxyBossChecked,galaxyStories:galaxyExpected.size,totalStories:Object.keys(stories).length,universeRegions:universeRegions.length,universeStoriesExpected:100,universeStoriesLoaded:universeLoaded,totalStoriesTarget:201,warnings,errors};
-  window.STORY_INTEGRITY_REPORT=report;
-  if(!report.passed)console.error("[文明戰線] 正式劇情完整性檢查失敗",errors);else console.info("[文明戰線] 正式劇情完整性檢查通過",report);
-  return report;
+  ensureUniverseRegistry();const errors=[],warnings=[],stories=window.CIVILIZATION_STORIES||{},fail=(code,message,data=null)=>errors.push({code,message,data}),galaxyRegions=Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[],worldRegions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[],maps=typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[],galaxyExpected=new Set(["earth-prologue"]);let galaxyBossChecked=0;
+  if(worldRegions.length!==10)fail("STORY_WORLD_REGION_COUNT",`銀河紀元 WORLD_REGIONS 應為 10 區，實際 ${worldRegions.length}`);if(galaxyRegions.length!==10)fail("STORY_REGION_REGISTRY_COUNT",`銀河紀元故事登錄應為 10 區，實際 ${galaxyRegions.length}`);
+  worldRegions.forEach((region,ri)=>{const registered=galaxyRegions.find(row=>row?.id===region.id);if(!registered){fail("STORY_REGION_MISSING",`缺少銀河故事區域：${region.id}`);return;}if(galaxyRegions[ri]?.id!==region.id)fail("STORY_REGION_ORDER",`銀河故事區域順序錯誤：${region.id}`);for(let offset=0;offset<10;offset++){const mapIndex=Number(region.mapStart)+offset,id=`${region.id}-boss-${offset+1}`,story=stories[id],map=maps[mapIndex],boss=map?.enemies?.[4]?.[0];galaxyExpected.add(id);galaxyBossChecked++;if(!registered.stories?.some(row=>row.id===id))fail("STORY_REGISTRY_ID_MISSING",`銀河登錄缺少 ${id}`);if(!story){fail("STORY_DATA_MISSING",`缺少銀河故事資料 ${id}`);continue;}if(story.title!==boss)fail("STORY_TITLE_MISMATCH",`${id} title 與正式首領名稱不一致`);if(story.location!==map?.name)fail("STORY_LOCATION_MISMATCH",`${id} location 與正式地圖名稱不一致`);const policy=region.id==="galactic-unification"&&offset===9?STORY_FORMAT_POLICY.finalBoss:offset===9?STORY_FORMAT_POLICY.regionFinale:STORY_FORMAT_POLICY.regularBoss;if(!Array.isArray(story.pages)||story.pages.length!==policy.pages)fail("STORY_PAGE_COUNT_SPEC",`${id} 應為 ${policy.pages} 頁，實際 ${story.pages?.length||0}`);else story.pages.forEach((page,pi)=>checkPage(errors,id,page,pi,policy));}});
+  const intro=stories["earth-prologue"];if(!intro)fail("STORY_PROLOGUE_MISSING","缺少 earth-prologue");else if(!Array.isArray(intro.pages)||intro.pages.length!==STORY_FORMAT_POLICY.intro.pages)fail("STORY_PROLOGUE_PAGE_COUNT",`earth-prologue 應為 ${STORY_FORMAT_POLICY.intro.pages} 頁`);else intro.pages.forEach((page,pi)=>checkPage(errors,"earth-prologue",page,pi,STORY_FORMAT_POLICY.intro));
+  const universeRegions=Array.isArray(window.CIVILIZATION_UNIVERSE_STORY_REGIONS)?window.CIVILIZATION_UNIVERSE_STORY_REGIONS:[],universeBosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[],universeExpected=new Set();let universeLoaded=0;if(window.UNIVERSE_STORY_REGISTRY_READY!==true)fail("UNIVERSE_STORY_REGISTRY_NOT_READY","宇宙紀元故事 Registry 尚未建立完整 10 區／100 Boss 架構");if(universeRegions.length!==10)fail("UNIVERSE_STORY_REGION_COUNT",`宇宙紀元故事登錄應為 10 區，實際 ${universeRegions.length}`);if(universeBosses.length!==100)fail("UNIVERSE_STORY_BOSS_COUNT",`宇宙紀元正式 Boss 應為 100 隻，實際 ${universeBosses.length}`);
+  universeRegions.forEach(region=>{if(region.stories?.length!==10)fail("UNIVERSE_STORY_REGION_ROW_COUNT",`${region.name} 應登錄 10 篇劇情`);(region.stories||[]).forEach(row=>{universeExpected.add(row.id);const story=stories[row.id];if(!story)return;universeLoaded++;const boss=universeBosses[row.bossIndex];if(story.id!==row.id)fail("UNIVERSE_STORY_ID_MISMATCH",`${row.id} story.id 不一致`);if(story.title!==boss?.name)fail("UNIVERSE_STORY_TITLE_MISMATCH",`${row.id} title 應為「${boss?.name||""}」`);if(typeof story.chapter!=="string"||!story.chapter.includes(region.name))fail("UNIVERSE_STORY_CHAPTER_MISMATCH",`${row.id} chapter 應包含「${region.name}」`);const policy=row.finale?STORY_FORMAT_POLICY.regionFinale:STORY_FORMAT_POLICY.regularBoss;if(!Array.isArray(story.pages)||story.pages.length!==policy.pages)fail("UNIVERSE_STORY_PAGE_COUNT",`${row.id} 應為 ${policy.pages} 頁，實際 ${story.pages?.length||0}`);else story.pages.forEach((page,pi)=>checkPage(errors,row.id,page,pi,policy));});});
+  const ids=universeRegions.flatMap(r=>(r.stories||[]).map(s=>s.id));if(new Set(ids).size!==100)fail("UNIVERSE_STORY_ID_DUPLICATE","宇宙紀元 100 篇 Registry 存在重複 id");Object.keys(stories).filter(id=>id.startsWith("universe-")).forEach(id=>{if(!universeExpected.has(id))fail("UNIVERSE_STORY_UNEXPECTED_ID",`存在未登錄的宇宙紀元故事：${id}`);});
+  const report={passed:errors.length===0,version:VERSION,formatPolicy:STORY_FORMAT_POLICY,checkedAt:Date.now(),worldRegions:worldRegions.length,storyRegions:galaxyRegions.length,bossStoriesExpected:100,bossStoriesChecked:galaxyBossChecked,galaxyStories:galaxyExpected.size,totalStories:Object.keys(stories).length,universeRegions:universeRegions.length,universeStoriesExpected:100,universeStoriesLoaded:universeLoaded,totalStoriesTarget:201,warnings,errors};window.STORY_INTEGRITY_REPORT=report;if(!report.passed)console.error("[文明戰線] 正式劇情完整性檢查失敗",errors);else console.info("[文明戰線] 正式劇情完整性檢查通過",report);return report;
  }
  window.STORY_INTEGRITY_VERSION=VERSION;window.runCivilizationStoryIntegrity=run;run();
 })();
