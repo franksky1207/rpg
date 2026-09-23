@@ -16,6 +16,21 @@
    order:index+1
   });
  }));
+ const UNIVERSE_CONFIG=Array.from(window.SECOND_WORLD_CALAMITY_DEFINITIONS||[]);
+ if(UNIVERSE_CONFIG.length!==10)throw new Error("Player title core requires exactly 10 Universe Calamity configs.");
+ const UNIVERSE_DEFS=Object.freeze(UNIVERSE_CONFIG.map((entry,index)=>{
+  const id=String(entry?.titleId||"");
+  const name=String(entry?.titleName||"");
+  if(!id||!name)throw new Error(`Universe Calamity title metadata missing at index ${index}.`);
+  return Object.freeze({
+   id,
+   name,
+   calamityId:String(entry.id||""),
+   tier:Math.max(1,Math.floor(Number(entry.titleTier)||index+1)),
+   series:"universe-calamity",
+   order:DEFS.length+index+1
+  });
+ }));
  const MIRROR_UNLOCKS=Array.from(window.MIRROR_DUNGEON_CONFIG?.titleUnlocks||[]);
  if(MIRROR_UNLOCKS.length!==6)throw new Error("Player title core requires exactly 6 Mirror Dungeon title unlocks.");
  const MIRROR_DEFS=Object.freeze(MIRROR_UNLOCKS.map((entry,index)=>Object.freeze({
@@ -23,10 +38,11 @@
   name:String(entry.name),
   mirrorWins:Math.floor(Number(entry.wins)||0),
   series:"mirror",
-  order:DEFS.length+index+1
+  order:DEFS.length+UNIVERSE_DEFS.length+index+1
  })));
- const ALL_DEFS=Object.freeze([...DEFS,...MIRROR_DEFS]);
+ const ALL_DEFS=Object.freeze([...DEFS,...UNIVERSE_DEFS,...MIRROR_DEFS]);
  const IDS=Object.freeze(DEFS.map(row=>row.id));
+ const UNIVERSE_IDS=Object.freeze(UNIVERSE_DEFS.map(row=>row.id));
  const MIRROR_IDS=Object.freeze(MIRROR_DEFS.map(row=>row.id));
  const ALL_IDS=Object.freeze(ALL_DEFS.map(row=>row.id));
  const BY_ID=Object.freeze(Object.fromEntries(ALL_DEFS.map(row=>[row.id,row])));
@@ -40,6 +56,10 @@
   DEFS.forEach(def=>{
    if(target?.marks?.entries?.[def.markId]?.acquired===true)unlocked.add(def.id);
   });
+  UNIVERSE_DEFS.forEach((def,index)=>{
+   const kills=Math.max(0,Math.floor(Number(target?.secondWorld?.calamities?.[index]?.trueKills)||0));
+   if(kills>=1)unlocked.add(def.id);
+  });
   const mirrorBestWins=Math.max(0,Math.floor(Number(target?.dungeon?.mirror?.history?.bestWins)||0));
   MIRROR_DEFS.forEach(def=>{if(mirrorBestWins>=def.mirrorWins)unlocked.add(def.id);});
   const equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
@@ -50,13 +70,13 @@
  function titleDefinition(id){return BY_ID[String(id||"")]||null;}
 
  function titleForCalamity(id){return DEFS.find(def=>def.calamityId===String(id||""))||null;}
+ function titleForUniverseCalamity(id){return UNIVERSE_DEFS.find(def=>def.calamityId===String(id||""))||null;}
  function ensureTitleState(target=state){
   if(!isObject(target))return null;
   normalizePlayerTitleState(target);
   return target.titles;
  }
- function grantFirstKillTitle(calamityId,target=state){
-  const def=titleForCalamity(calamityId);
+ function grantDefinition(def,target=state){
   if(!def||!isObject(target))return {changed:false,firstAcquisition:false,title:null};
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
   const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>ALL_IDS.includes(id)):[]);
@@ -71,6 +91,8 @@
   target.titles=source;
   return {changed:firstAcquisition,firstAcquisition,title:def};
  }
+ function grantFirstKillTitle(calamityId,target=state){return grantDefinition(titleForCalamity(calamityId),target);}
+ function grantUniverseFirstKillTitle(calamityId,target=state){return grantDefinition(titleForUniverseCalamity(calamityId),target);}
  function titleForMirrorWins(value){
   const wins=Math.floor(Number(value)||0);
   return MIRROR_DEFS.find(def=>def.mirrorWins===wins)||null;
@@ -124,6 +146,8 @@
  window.PLAYER_TITLE_STATE_VERSION=PLAYER_TITLE_STATE_VERSION;
  window.CIVILIZATION_PLAYER_TITLE_DEFS=DEFS;
  window.CIVILIZATION_PLAYER_TITLE_IDS=IDS;
+ window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS=UNIVERSE_DEFS;
+ window.UNIVERSE_CALAMITY_PLAYER_TITLE_IDS=UNIVERSE_IDS;
  window.MIRROR_PLAYER_TITLE_DEFS=MIRROR_DEFS;
  window.MIRROR_PLAYER_TITLE_IDS=MIRROR_IDS;
  window.PLAYER_TITLE_DEFS=ALL_DEFS;
@@ -132,13 +156,16 @@
  window.normalizePlayerTitleState=normalizePlayerTitleState;
  window.getPlayerTitleDefinition=titleDefinition;
  window.getPlayerTitleDefinitionForCalamity=titleForCalamity;
+ window.getPlayerTitleDefinitionForUniverseCalamity=titleForUniverseCalamity;
  window.getPlayerTitleDefinitionForMirrorWins=titleForMirrorWins;
  window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;
+ window.grantPlayerTitleForUniverseCalamityFirstKill=grantUniverseFirstKillTitle;
  window.grantPlayerTitlesForMirrorWins=grantMirrorTitlesForWins;
  window.getPendingPlayerTitleNotice=pendingTitleNotice;
  window.clearPendingPlayerTitleNotice=clearPendingTitleNotice;
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
  window.getEquippedPlayerTitleDefinition=equippedTitleDefinition;
  window.equipPlayerTitle=equipPlayerTitle;
+ window.UNIVERSE_CALAMITY_TITLE_BACKFILL_VERSION=1;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
