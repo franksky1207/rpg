@@ -19,6 +19,15 @@
   sections[key].push({id,title:String(title||"擴充"),renderer,registeredAt:sections[key].length});
   return true;
  };
+ window.replaceGmHubSectionRenderer=function(mode,id,renderer,title=null){
+  const key=mode==="test"?"test":"manage";
+  if(typeof renderer!=="function")return false;
+  const target=sections[key].find(entry=>entry.id===String(id||""));
+  if(!target)return false;
+  target.renderer=renderer;
+  if(title!=null)target.title=String(title||target.title);
+  return true;
+ };
 
  function orderedEntries(mode){
   const key=mode==="test"?"test":"manage";
@@ -67,5 +76,6 @@
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
  window.GM_HUB_EXTENSION_VERSION=11;
  window.GM_HUB_REGISTRY_VERSION=1;
+ window.GM_HUB_SECTION_RENDERER_REPLACE_VERSION=1;
  window.GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=2;
 })();
