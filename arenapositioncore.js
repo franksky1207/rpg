@@ -7,8 +7,15 @@
  const POSITION_TEMPLATE_IDS=["normal","hard","extreme"];
  const POSITION_LABELS={normal:"低",hard:"中",extreme:"高"};
 
- function clampRank(value){
-  const max=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
+ function arenaWorld(){return typeof window.arenaWorldForState==="function"?window.arenaWorldForState(state):(state?.secondWorld?.entered===true?2:1);}
+ function maxArenaRank(world=arenaWorld()){
+  const w=Number(world)===2?2:1;
+  if(typeof window.getArenaMaxRankForWorld==="function")return Math.max(1,Math.floor(Number(window.getArenaMaxRankForWorld(w))||1));
+  if(w===2)return 10;
+  return Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
+ }
+ function clampRank(value,world=arenaWorld()){
+  const max=maxArenaRank(world);
   return Math.max(1,Math.min(max,Math.floor(Number(value)||1)));
  }
  function arenaProgress(){
@@ -48,7 +55,7 @@
   };
  }
  function assessmentLevel(){
-  if(state?.secondWorld?.entered===true)return Math.max(500,Math.min(1000,Math.floor(Number(state?.level)||500)));
+  if(arenaWorld()===2)return Math.max(500,Math.min(1000,Math.floor(Number(state?.level)||500)));
   return typeof clampGameLevel==="function"?clampGameLevel(state?.level):Math.max(1,Math.floor(Number(state?.level)||1));
  }
  function assessmentSignature(rank,positionId){
@@ -60,6 +67,7 @@
    assessmentRuleVersion:versions.assessmentRuleVersion,
    balanceVersion:versions.balanceVersion,
    markRuleVersion:Math.max(0,Math.floor(Number(window.MARK_COMBAT_RULE_VERSION)||0)),
+   world:arenaWorld(),
    rank:clampRank(rank),
    positionDifficulty:positionId,
    level:assessmentLevel(),
@@ -99,16 +107,18 @@
  }
  function assessmentStatus(){
   const arena=assessmentArena();
+  const world=arenaWorld();
   const rank=currentAssessmentRank();
   const positionId=positionTemplateId(rank);
   const signature=assessmentSignature(rank,positionId);
   const runs=Math.max(0,Math.min(ASSESS_RUNS,Math.floor(Number(arena?.lastCheckRuns)||0)));
   const clears=Math.max(0,Math.min(runs,Math.floor(Number(arena?.lastCheckClearCount)||0)));
   const hasResult=runs===ASSESS_RUNS&&typeof arena?.lastCheckSignature==="string"&&!!arena.lastCheckSignature;
-  const maxRank=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
-  const unlockedCap=typeof getArenaUnlockedRankCap==="function"?clampRank(getArenaUnlockedRankCap()):rank;
+  const maxRank=maxArenaRank(world);
+  const unlockedCap=typeof window.getArenaRankCapForWorld==="function"?clampRank(window.getArenaRankCapForWorld(world,state),world):typeof getArenaUnlockedRankCap==="function"?clampRank(getArenaUnlockedRankCap(),world):rank;
   const promotionReady=syncPromotionReady(arena,signature);
   return {
+   world,
    rank,
    rankName:typeof getArenaRankName==="function"?getArenaRankName(rank):`第${rank}階`,
    positionTemplateId:positionId,
@@ -129,7 +139,7 @@
  function assessmentContext(){
   const arena=assessmentArena();
   const rank=currentAssessmentRank();
-  const maxRank=Math.max(1,Array.isArray(WORLD_REGIONS)&&WORLD_REGIONS.length?WORLD_REGIONS.length:1);
+  const maxRank=maxArenaRank();
   if(!arena)return {early:{...assessmentStatus(),reason:"unavailable"}};
   if(rank>=maxRank)return {early:{...assessmentStatus(),reason:"max-rank"}};
   const positionId=positionTemplateId(rank);
@@ -157,7 +167,8 @@
   return {...assessmentStatus(),reason:arena.promotionReady?"qualified":"not-qualified"};
  }
 
- window.SECOND_WORLD_ARENA_ASSESSMENT_LEVEL_VERSION=1;
+ window.SECOND_WORLD_ARENA_ASSESSMENT_LEVEL_VERSION=2;
+ window.ARENA_POSITION_WORLD_AWARE_VERSION=1;
  window.ARENA_ASSESSMENT_RUNTIME_VERSION=Math.max(0,Math.floor(Number(window.getArenaVersionProfile?.().assessmentRuntimeVersion)||0));
  window.getArenaAssessmentSignature=function(rank=null){const r=clampRank(rank==null?currentAssessmentRank():rank);return assessmentSignature(r,positionTemplateId(r));};
  window.getArenaAssessmentStatus=assessmentStatus;
