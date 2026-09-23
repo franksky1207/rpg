@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const FIRST_WORLD_LEVEL_CAP=500;
  const SECOND_WORLD_LEVEL_CAP=1000;
  const ABSOLUTE_MAX_LEVEL=1000;
@@ -22,7 +22,7 @@
  }
  function clampEffectiveGameLevel(level,target=null){
   const cap=effectiveLevelCap(target);
-  return Math.max(1,Math.min(cap,Math.floor(Number(level)||1)));
+  return Math.max(1,Math.min(cap,Math.floor(Number(level)||1));
  }
  function atEffectiveLevelCap(target=null){
   const s=targetState(target);
@@ -102,7 +102,7 @@
   return {level,cap,atCap,exp,need,percent,world:enteredSecondWorld(s)?2:1};
  }
 
- // Keep legacy MAX_LEVEL=500 as the silver-era constant; world-aware code must use this owner.
+ // 正式 runtime 的等級上限只由 effectiveLevelCap owner 決定；舊 MAX_LEVEL 僅允許歷史 migration 相容使用。
  if(typeof expNeed==="function")expNeed=function(level){return effectiveExpNeed(level,currentState());};
  if(typeof gainExp==="function")gainExp=gainEffectiveExp;
  if(typeof clampGameLevel==="function")clampGameLevel=function(level){return clampEffectiveGameLevel(level,currentState());};
@@ -111,6 +111,8 @@
  window.SECOND_WORLD_LEVEL_CAP=SECOND_WORLD_LEVEL_CAP;
  window.ABSOLUTE_MAX_LEVEL=ABSOLUTE_MAX_LEVEL;
  window.LEVEL_PROGRESSION_VERSION=VERSION;
+ window.LEVEL_RUNTIME_WORLD_CAP_OWNER_VERSION=1;
+ window.LEGACY_MAX_LEVEL_MIGRATION_ONLY_VERSION=1;
  window.effectiveLevelCap=effectiveLevelCap;
  window.clampEffectiveGameLevel=clampEffectiveGameLevel;
  window.atEffectiveLevelCap=atEffectiveLevelCap;
@@ -126,6 +128,7 @@
  window.LEVEL_PROGRESSION_INTEGRITY=(function(){
   const errors=[];
   if(FIRST_WORLD_LEVEL_CAP!==500||SECOND_WORLD_LEVEL_CAP!==1000||ABSOLUTE_MAX_LEVEL!==1000)errors.push({code:"CAP_CONSTANTS"});
+  if(effectiveLevelCap({secondWorld:{entered:false}})!==500||effectiveLevelCap({secondWorld:{entered:true}})!==1000)errors.push({code:"WORLD_CAP_OWNER"});
   if(universeExpNeed(500)!==506250)errors.push({code:"EXP_500",actual:universeExpNeed(500)});
   if(universeExpNeed(999)!==1005250)errors.push({code:"EXP_999",actual:universeExpNeed(999)});
   if(universeExpNeed(1000)!==0)errors.push({code:"EXP_1000",actual:universeExpNeed(1000)});
