@@ -2,14 +2,12 @@
  const GM_CALAMITY_TEST_VERSION=1;
  const GM_MARK_MANAGEMENT_VERSION=1;
  const GM_MARK_CONFIG_OWNER_VERSION=1;
- const GM_PLAYER_TITLE_PREVIEW_VERSION=3;
  const FULL_KILL_SAFETY_LIMIT=100000;
  let singleResultHtml="";
  let fullResultHtml="";
  let gmCalamityLastResult=null;
  let gmCalamitySelectedId=null;
  let busy=false;
- let gmTitlePreviewId=null;
 
  function markRows(){return Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);}
  function keys(){return markRows().map(row=>row.markId);}
@@ -73,45 +71,6 @@
   return `<div class="muted gm-hub-note">本區只調整 GM 戰鬥測試使用的印記等級；Lv.0 與未取得在戰鬥效果上相同，因此測試僅提供 Lv.0～Lv.10，不修改正式存檔。</div>${testGrid()}<div id="gmMarkTestInfo" class="muted" style="margin-top:10px">${window.gmTestMarkLabel()}</div>`;
  };
 
-
- function titleDefs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
- function titlePreviewDefinition(){
-  const defs=titleDefs();
-  if(!gmTitlePreviewId&&defs.length)gmTitlePreviewId=defs[0].id;
-  return defs.find(def=>def.id===gmTitlePreviewId)||defs[0]||null;
- }
- function titlePreviewLabel(def){
-  if(!def)return "";
-  return def.series==="mirror"?`鏡像 ${def.mirrorWins} 勝｜${def.name}`:`災厄第 ${def.tier} 階｜${def.name}`;
- }
- function titlePreviewOptions(){
-  return titleDefs().map((def,index)=>{
-   const divider=index===10?'<option disabled>──── 鏡像戰稱號 ────</option>':"";
-   const label=titlePreviewLabel(def);
-   return divider+`<option value="${def.id}" ${def.id===gmTitlePreviewId?"selected":""}>${label}</option>`;
-  }).join("");
- }
- function titlePreviewPlayerName(){
-  const name=typeof state?.playerName==="string"?state.playerName.trim():"";
-  return name||"玩家";
- }
- function titleCombatPreviewHtml(def){
-  const identity=def&&typeof window.playerIdentityNameHtml==="function"
-   ?window.playerIdentityNameHtml({name:titlePreviewPlayerName(),titleId:def.id,compact:true,allowUnownedTitle:true})
-   :titlePreviewPlayerName();
-  return `<div class="gm-player-title-combat-preview"><div class="combatant player"><h2>${identity}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span>100 / 100</span></div><div class="bar"><span class="hp" style="width:100%"></span></div></div></div></div>`;
- }
- window.gmSetPlayerTitlePreviewTier=function(value){
-  const defs=titleDefs(),id=String(value||"");
-  gmTitlePreviewId=defs.some(def=>def.id===id)?id:(defs[0]?.id||null);
-  const box=document.getElementById("gmPlayerTitlePreviewBox"),def=titlePreviewDefinition();
-  if(box&&def)box.innerHTML=`${titleCombatPreviewHtml(def)}<div class="muted" style="text-align:center;margin-top:8px">${titlePreviewLabel(def)}</div>`;
-  return gmTitlePreviewId;
- };
- window.gmPlayerTitlePreviewHtml=function(){
-  const def=titlePreviewDefinition();
-  return `<div class="muted gm-hub-note">實戰名稱預覽全部 16 個正式稱號；直接使用目前正式玩家名稱與正式 playerIdentityNameHtml()，前 10 個為文明災厄、後 6 個為鏡像戰。此區不解鎖、不裝備、不修改任何正式狀態，也不寫入存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${titlePreviewOptions()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px">${titleCombatPreviewHtml(def)}<div class="muted" style="text-align:center;margin-top:8px">${titlePreviewLabel(def)}</div></div>`;
- };
  function calamityOptions(){
   const list=calamities();if(!gmCalamitySelectedId)gmCalamitySelectedId=String(list[0]?.id||"");
   return list.map(def=>`<option value="${def.id}" ${String(def.id)===gmCalamitySelectedId?"selected":""}>${def.name}（Lv.${def.unlockLevel}）</option>`).join("");
@@ -197,16 +156,15 @@
  window.GM_CALAMITY_TEST_VERSION=GM_CALAMITY_TEST_VERSION;
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
  window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
- window.GM_PLAYER_TITLE_PREVIEW_VERSION=GM_PLAYER_TITLE_PREVIEW_VERSION;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
  window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
  window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
  window.GM_CALAMITY_SUMMARY_EXPORT_VERSION=1;
  window.GM_CALAMITY_SESSION_SETTINGS_VERSION=1;
+ window.GM_CALAMITY_LEGACY_TITLE_PREVIEW_RETIRED_VERSION=1;
 
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","印記管理",window.gmMarkManagementHtml,{id:"marks-manage",position:"append"});
-  window.registerGmHubSection("test","稱號預覽",window.gmPlayerTitlePreviewHtml,{id:"player-title-preview",position:"append"});
  }
 })();
