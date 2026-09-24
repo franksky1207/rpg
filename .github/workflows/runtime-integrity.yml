@@ -8,6 +8,10 @@ on:
       - 'index.html'
       - 'adventureuipolish.css'
       - 'assets/**'
+      - 'README.md'
+      - 'PROJECT_HANDOFF.md'
+      - 'PROJECT_PENDING_STATUS.md'
+      - 'LEVEL100_EXPANSION.md'
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
@@ -40,6 +44,9 @@ jobs:
       - name: Run background asset integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Run project documentation integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/docs-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Upload runtime integrity diagnostics
         if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
         uses: actions/upload-artifact@v4
