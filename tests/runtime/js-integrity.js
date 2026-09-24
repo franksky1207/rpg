@@ -88,7 +88,7 @@ const maxLevelConsumers=productionFiles.filter(file=>/\bMAX_LEVEL\b/.test(read(f
 const allowedMaxLevelConsumers=["compatibilityowners.js","dungeonbounty.js","dungeonui.js","engine.js","enhancementcore.js","enhancementintegrity.js","gmhub.js","gmtools.js","levelprogression.js","mainminimalmode.js","offlineprogress.js","savemigration.js","traitdrop.js","ui.js"].sort();
 assert(JSON.stringify(maxLevelConsumers)===JSON.stringify(allowedMaxLevelConsumers),"MAX_LEVEL consumer audit 異常："+maxLevelConsumers.join(", "));
 const saveVersionConsumers=productionFiles.filter(file=>/\bSAVE_VERSION\b/.test(read(file))).map(basename).sort();
-const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js"].sort();
+const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js","ui.js"].sort();
 assert(JSON.stringify(saveVersionConsumers)===JSON.stringify(allowedSaveVersionConsumers),"SAVE_VERSION consumer audit 異常："+saveVersionConsumers.join(", "));
 const directArenaConsumers=productionFiles.filter(file=>!["dungeonprogress.js","savemigration.js"].includes(basename(file))&&/(?:dungeon\.arena|dungeon\?\.arena)/.test(read(file))).map(basename);
 assert(directArenaConsumers.length===0,"正式程式不得直接依賴 legacy dungeon.arena alias："+directArenaConsumers.join(", "));
