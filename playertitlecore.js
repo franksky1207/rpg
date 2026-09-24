@@ -24,8 +24,6 @@
  const UNIVERSE_IDS=Object.freeze(UNIVERSE_DEFS.map(row=>row.id));
  const MIRROR_IDS=Object.freeze(MIRROR_DEFS.map(row=>row.id));
  const CATALOG_IDS=Object.freeze(CATALOG_DEFS.map(row=>row.id));
- const LEGACY_DEFS=Object.freeze([...DEFS,...MIRROR_DEFS]);
- const LEGACY_IDS=Object.freeze(LEGACY_DEFS.map(row=>row.id));
  const BY_ID=Object.freeze(Object.fromEntries(CATALOG_DEFS.map(row=>[row.id,row])));
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
@@ -95,18 +93,15 @@
  window.UNIVERSE_CALAMITY_PLAYER_TITLE_IDS=UNIVERSE_IDS;
  window.MIRROR_PLAYER_TITLE_DEFS=MIRROR_DEFS;
  window.MIRROR_PLAYER_TITLE_IDS=MIRROR_IDS;
+ window.PLAYER_TITLE_DEFS=CATALOG_DEFS;
+ window.PLAYER_TITLE_IDS=CATALOG_IDS;
  window.PLAYER_TITLE_CATALOG_DEFS=CATALOG_DEFS;
  window.PLAYER_TITLE_CATALOG_IDS=CATALOG_IDS;
- window.PLAYER_TITLE_LEGACY_DEFS=LEGACY_DEFS;
- window.PLAYER_TITLE_LEGACY_IDS=LEGACY_IDS;
- // Temporary external alias retained until the legacy GM/runtime consumers are retired in the next maintenance batch.
- window.PLAYER_TITLE_DEFS=LEGACY_DEFS;
- window.PLAYER_TITLE_IDS=LEGACY_IDS;
  window.PLAYER_TITLE_ALL_DEFS=CATALOG_DEFS;
  window.PLAYER_TITLE_ALL_IDS=CATALOG_IDS;
- window.PLAYER_TITLE_CATALOG_VERSION=2;
- window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION=1;
- window.PLAYER_TITLE_LEGACY_ALIAS_VERSION=1;
+ window.PLAYER_TITLE_CATALOG_VERSION=3;
+ window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION=2;
+ window.PLAYER_TITLE_UNIFIED_DEFS_VERSION=1;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
  window.getPlayerTitleDefinition=titleDefinition;
