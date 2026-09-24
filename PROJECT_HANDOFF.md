@@ -1,10 +1,12 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-09-24  
+更新日期：2026-09-24 11:07（UTC+8）  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
 > 本檔是交接摘要，不是第二套規格。若本檔、舊對話、設計稿、記憶與 `main` 衝突，一律以當下 `main` 為準。任何修改前必須重新讀正式 owner、直接相依、Integrity / workflow 與 `index.html` 載入順序。
+
+本次 handoff 更新前的程式碼 HEAD：`c9f7e91766ff510c2efa8c414e42c824fd6b44ba`；該 HEAD 的 Runtime Integrity #279 為 `success`。本檔更新 commit 只修改 `PROJECT_HANDOFF.md`，不代表任何額外功能變更。
 
 ---
 
@@ -107,17 +109,128 @@ DEF = ceil(2700*1*M)
 
 ---
 
-# 6. 文明災厄／印記／稱號
+# 6. 文明災厄／印記／稱號（2026-09-24 最新）
+
+## 6.1 銀河文明災厄／印記
 
 - 銀河災厄10隻；印記10枚、最大Lv.10；正式 owner `markcore.js`。
-- 宇宙災厄10隻：550、600、…、1000；每隻30 true kills完成，30=100%，完成一階 Civilization +1。
-- 未完成殘血 persistent；完成後重打每場滿血、不再加 trueKills、不保存敗北殘血、不顯示連續重打。
+- 銀河首次正式取得對應印記時，同步取得災厄稱號；連續討伐遇首次稱號取得會停止，避免首殺里程碑被背景流程吃掉。
+- 銀河10稱號：灰潮餘燼、蝕日王冠、星骸殘響、黑域孤星、天環墜落、寂滅遠航、萬域寂滅、黑核權柄、無聲王權、萬星終寂。
+
+## 6.2 宇宙文明災厄
+
+正式 owner：`secondworldcalamity.js`、`secondworldcalamityrun.js`。
+
+- 10隻：彼岸黑潮、群星焚爐、邊星獵皇、萬軍葬艦、超域蝕核、無盡兵災、星脈噬巢、巨牆戰堡、深域吞星、終戰天穹。
+- 等級：550、600、…、1000。
+- 每隻30 true kills完成，30=100%，完成一階 Civilization +1。
+- HP：第1隻 1,000,000；每階 +200,000。ATK×1.10、DEF×1.05、暴擊10%、閃避10%。
+- 未完成殘血 persistent；完成後重打每場滿血、不再增加 trueKills、不保存敗北殘血、不顯示連續重打。
 - 「現身」與「可挑戰」分離：章末 Boss 首殺先通知現身，實際挑戰仍需前一文明完成（第一隻例外）。
-- 稱號共16個：災厄10 + 鏡像15～20勝6個。
+- state row 現在有穩定 `calamityId`；normalizer **優先依 ID 對齊，舊檔才 fallback index**。未升 save schema。
+- `completed()` 仍可由 `trueKills>=30` 或文明等級已達該階判定；但若 GM 曾直接拉高文明等級、造成某災厄 `completed=true` 且 `trueKills=0`，下一次真正擊殺仍會記錄 `trueKills=1` 並正常取得首殺稱號，**不偽造30擊殺、不再次加文明等級**。
+
+## 6.3 正式稱號系統＝26個
+
+唯一正式 catalog owner：`playertitlecore.js`。
+
+正式順序固定：
+1. 銀河災厄10
+2. 宇宙災厄10
+3. 鏡像15～20勝6
+
+`PLAYER_TITLE_DEFS / PLAYER_TITLE_IDS / PLAYER_TITLE_CATALOG_DEFS / PLAYER_TITLE_ALL_DEFS` 現在都指向同一份26稱號 canonical catalog，不再維持16與26兩套 catalog。各系列另有 subset：`CIVILIZATION_PLAYER_TITLE_DEFS`、`UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS`、`MIRROR_PLAYER_TITLE_DEFS`。
+
+正式 state 維持單一：
+```text
+state.titles = {
+  version,
+  unlocked: [],
+  equipped: null,
+  pendingNotice: null
+}
+```
+不建立 `secondWorld.titles` 或任何第二套稱號 state。
+
+宇宙10稱號：
+1. 越界先驅
+2. 寰世銘者
+3. 荒境孤鋒
+4. 死線歸客
+5. 域外凌絕
+6. 萬軍獨行
+7. 寰宇織者
+8. 破界行者
+9. 幽域長明
+10. 萬界之巔
+
+宇宙稱號首殺規則：正式擊殺且該災厄 `trueKillsBefore===0` 即取得；不必等30/30。連續討伐取得首次稱號後以 `title-first-kill` 停止。稱號與 trueKills 在同一正式 settlement／atomic save 中處理。
+
+舊資料補正：
+- 銀河：已取得對應印記者，normalizer補稱號。
+- 宇宙：對應災厄 `trueKills>=1` 者，normalizer補稱號；先依 `calamityId` 找 row，找不到才 fallback 舊 index。
+- 鏡像：依 history `bestWins` 補15～20勝稱號。
+- 補發舊資料只修 `unlocked`，**不製造 pending notice 洗版**。
+- 稱號存檔保存 ID，不保存顯示名稱；日後只改名稱時不需要 save migration。
+
+鏡像6稱號：
+- 15勝：幸運眷顧
+- 16勝：天選之刻
+- 17勝：逆命者
+- 18勝：傳說之日
+- 19勝：距神一步
+- 20勝：神蹟
+
+## 6.4 稱號角色穿戴／取得通知／GM預覽
+
+- 角色介面直接使用完整 `getUnlockedPlayerTitleDefinitions()`；26個稱號都走同一 `equipPlayerTitle()`／`state.titles.equipped`，可裝備、替換、卸下。
+- 裝備後稱號顯示在玩家名稱前方，正式 renderer 為 `playerIdentityNameHtml()`。
+- 取得通知已區分銀河災厄／宇宙災厄／鏡像來源。
+- GM「稱號預覽」正式 owner：`playertitlegmpreview.js`，目前版本 V5；完整26個，分銀河10／宇宙10／鏡像6三區，直接走正式 `playerIdentityNameHtml()`。
+- GM稱號預覽只做視覺，不解鎖、不裝備、不改正式 state、不寫存檔。
 
 ---
 
-# 7. 特殊怪
+# 7. 稱號視覺架構（重要，2026-09-24 最新）
+
+視覺位階原則：**銀河＝華麗；宇宙＝宏大／宇宙法則顯現；鏡像＝不可能／現實異常**，整體順序固定：
+`銀河1～10 < 宇宙1～10 < 鏡像15～20`。
+
+- 銀河現有1～10視覺已接受，**不要因鏡像維護去改銀河**。
+- 宇宙1～10視覺已接受，使用 `player-title--universe-calamity-*`；**不要因鏡像維護去改宇宙**。
+- 宇宙視覺正式檔目前仍是 `playertitlesera.css`；其宇宙規則不要動，除非使用者明確要求。
+
+## 7.1 Mirror V3：目前唯一 active owner
+
+2026-09-24 因 iPhone Safari 上鏡像稱號出現矩形／底板感，已停止以多層 override 疊加修補，重構成獨立 active class：
+
+- renderer 現在只輸出 `player-title--mirror-v3` + `player-title--mirror-v3-15..20`。
+- 唯一 active CSS owner：`playertitlesmirror.css`。
+- `playertitlesmirrorseal.css` 已正式刪除，不再載入。
+- Mirror V3 三層職責：
+  1. 主元素＝稱號文字本體／漸層／階級字級。
+  2. `::before`＝純文字 clone，只用 `color / opacity / transform`；**不使用 background-image / background-clip:text**，避免 Safari 把 pseudo-element 背景畫成矩形底板。
+  3. `::after`＝外圍異象（粒子、斜線、光軌、空間異常），不當文字底板。
+- `PLAYER_TITLE_MIRROR_RENDERER_VERSION=3`。
+- `index.html` 現載入 `playertitlesmirror.css?v=20260924-mirror-v3-owner1` 並標記 `data-player-title-mirror-owner="3"`。
+
+**重要：目前 V3 已通過 Runtime Integrity #279，但尚待使用者用 iPhone Safari 實機確認「矩形底板」是否完全消失。** 下一個對話先問／等使用者實機結果，不要自動再改。
+
+## 7.2 目前仍存在的 dead Mirror CSS（短期待清理）
+
+為了這次重構不碰已接受的銀河／宇宙視覺，`playertitles.css` 與 `playertitlesera.css` 內仍保留舊 `player-title--mirror*` 規則；因 renderer 已不再輸出舊 class，這些規則目前是 **dead code，不會套用到正式鏡像稱號**。
+
+若使用者確認 Mirror V3 實機正常，下一步建議：
+1. 只刪除 `playertitles.css` 內舊 Mirror V1 規則／keyframes。
+2. 只刪除 `playertitlesera.css` 內舊 Mirror V2 規則／keyframes。
+3. **銀河 tier 1～10 與宇宙 calamity 1～10 active CSS 必須原樣保留，不順手重寫。**
+4. 清理後重新 fetch 比對，確認 active Galaxy／Universe rule 未變；更新 `index.html` cache-bust；跑 Runtime Integrity。
+
+Mirror 15～20 的最終階級細修（字色／殘影／異象層次）只有在使用者確認 V3 無底板後且明確要求時才做；不要先自行改。
+
+---
+
+# 8. 特殊怪
 
 雙紀元共用同一組9個 ID，不建立第二套系統。
 
@@ -129,13 +242,29 @@ DEF = ceil(2700*1*M)
 
 ---
 
-# 8. 副本
+# 9. 副本
 
-## 8.1 懸賞 V2
+## 9.1 懸賞 V2
 
 第二世界懸賞已完成並定案；除非使用者明確重開平衡，不主動微調。shared daily bounty limit 20；失敗不套主線 world2 death penalty；無直接暗能量。
 
-## 8.2 競技場 Arena V2
+2026-09-24 已正式拆分銀河／宇宙懸賞怪名稱池，**只改名稱，不改難度、獎勵或公式**。
+
+銀河：
+- 普通：武裝逃逸者、非法改裝兵、黑市護衛、走私突擊手、失控安保機
+- 高級：裝甲追緝犯、戰區破壞手、非法火力平台、禁區滲透指揮、深空走私艦長
+- 危險：都市級威脅體、殲滅協議載體、戰爭失控核心、軌道破壞平台、深空封鎖母艦
+
+宇宙：
+- 普通：界航偷渡者、星群私兵、暗域護運隊、跨域劫運兵、漂流戰械
+- 高級：星路私掠者、界域破航兵、暗物質武裝艇、星群滲透官、跨域走私艦主
+- 危險：萬域私戰艦、跨域劫掠主機、戰線叛離主機、星路封鎖要塞、跨域掠奪母艦
+
+`buildBountyEnemy()` 先決定 world，再選對應 pool。懸賞名稱不是正式 save state，因此這次名稱變更**不需要舊存檔 migration**。
+
+`bountynameintegrity.js` 會直接透過正式 test API 驗證：兩世界各3×5、每組5個不同名稱、同紀元15名互不重複、兩紀元無交集。結果由 `runtimeintegrityaddon.js` 併入 Runtime report。
+
+## 9.2 競技場 Arena V2
 
 正式 state：`state.dungeon.arenaByWorld={1:{...},2:{...}}`，兩世界獨立。`dungeon.arena` 只保留 compatibility alias。
 
@@ -152,14 +281,14 @@ DEF  = 1.11 + .022x - .0004x²
 
 **Arena V2 實機驗收已由使用者取消，不再列為待辦。除非使用者日後主動重開，禁止再次把 Rank1～3 各500次驗收列入後續工作。**
 
-## 8.3 虛空／鏡像
+## 9.3 虛空／鏡像
 
 - 虛空維持無限；宇宙角色文明 final damage 生效。
 - 鏡像正式每次20戰；VIP points=`20*wins²`；宇宙文明倍率納入 snapshot 且雙方對稱。
 
 ---
 
-# 9. 銀河回顧系統
+# 10. 銀河回顧系統
 
 宇宙紀元可回顧銀河冒險100地圖、文明災厄10隻與戰線紀錄。
 
@@ -167,10 +296,11 @@ DEF  = 1.11 + .022x - .0004x²
 - 回顧 selection 與正式銀河 selection 分離。
 - 同一頁面 session 內保留回顧選擇；整理／重開網頁才回預設宇宙紀元。
 - `galaxyreviewintegrity.js` 提供正式 state safety guard。
+- 宇宙冒險／銀河回顧共用頁面 header 已整理：返回左、標題真置中、背包單一右側；Boss卡重複背包按鈕已移除，正式走 `openAdventureInventory()`。
 
 ---
 
-# 10. 正式劇情系統
+# 11. 正式劇情系統
 
 - 銀河正式劇情：101 篇（序章1 + 100 Boss）。
 - 宇宙正式劇情：100/100 全部完成，10 區／100 Boss／100 個唯一 story ID。
@@ -179,6 +309,7 @@ DEF  = 1.11 + .022x - .0004x²
 - 銀河與宇宙共用 `CIVILIZATION_STORIES`、`storyProgress`、正式劇情視窗、戰線紀錄與 GM 劇情測試架構。
 - 宇宙首殺只有 `result.ok && result.firstKill===true` 才 queue 正式劇情。
 - 戰線紀錄宇宙進入後預設宇宙紀元，可切銀河回顧。
+- GM劇情測試預設紀元現在依 `isSecondWorldEntered()` 決定：未進宇宙預設銀河、已進宇宙預設宇宙；手動切換在同頁 session 內保留，重新整理才回預設。
 
 篇幅硬規格：
 - 序章12頁，90～155字／頁，至少3 block。
@@ -192,15 +323,15 @@ Source Purity／Meta Language／Story Integrity 均為正式 CI；`set -o pipefa
 
 ---
 
-# 11. Dungeon UI／近期架構整理
+# 12. Dungeon UI／近期架構整理
 
-`dungeonui.js` 是副本首頁／共用延伸正式 owner。近期已完成副本狀態 world-aware EXP／資源、宇宙懸賞與競技場文案、鏡像首頁卡 ownership、Arena world／region／progress／assessment canonical 化。
+`dungeonui.js` 是副本首頁／共用延伸正式 owner。已完成副本狀態 world-aware EXP／資源、宇宙懸賞與競技場文案、鏡像首頁卡 ownership、Arena world／region／progress／assessment canonical 化。
 
 核心原則：**正式 owner 優先；移除重複推導；compatibility 只保留必要 alias；不新增第二套公式／state／settlement／Registry。**
 
 ---
 
-# 12. GM 正式架構
+# 13. GM 正式架構
 
 Manage：資料管理 → 背景戰鬥 → 戰鬥速度 → 角色 → 專精 → 強化 → 印記 → 文明等級 → 副本。
 
@@ -214,41 +345,54 @@ GM 戰力基準正式 owner `gmpowerbenchmark.js`，固定7模式：地圖怪、
 
 GM 原則：不暫改 `state.secondWorld.entered`；不複製正式公式；使用正式 owner + explicit test context；不得污染 formal state/save。
 
+近期稱號／災厄相關 GM 注意：
+- 舊 `calamitygm.js` 16稱號 preview owner 已退休；不要加回。
+- `playertitlegmpreview.js` 是26稱號唯一 GM preview owner。
+- GM直接改文明等級不會偽造災厄 trueKills；若某宇宙災厄因 GM 文明等級已被視為完成但從未真正擊殺，第一次真實勝利仍可拿首殺稱號。
+
 ---
 
-# 13. 雙紀元介面／遊戲說明語意總掃描（2026-09-24 完成）
+# 14. 雙紀元介面／遊戲說明語意總掃描（完成）
 
-本輪已完成三批：
+已完成三批：
 
 1. **遊戲說明／共用規則**：修正 `gameguide.js` 中宇宙離線收益、強化石清空、宇宙背包／贖回、宇宙自動出售、Lv.1000 滿等 EXP 等語意；遊戲說明已 world-aware。
-2. **玩家正式 UI**：角色、背包、強化、副本、特殊遭遇、宇宙主線、災厄、回顧戰、結算等均重新掃描；共用首頁標語依紀元顯示，副本入口補上鏡像戰。`playersemanticsui.js` 目前只負責共用玩家 UI 語意顯示，不接管任何戰鬥／資源／存檔公式。
+2. **玩家正式 UI**：角色、背包、強化、副本、特殊遭遇、宇宙主線、災厄、回顧戰、結算等均重新掃描；共用首頁標語依紀元顯示，副本入口補上鏡像戰。`playersemanticsui.js` 只負責共用玩家 UI 語意顯示，不接管任何戰鬥／資源／存檔公式。
 3. **GM／漏網字串／全域回歸**：GM 顯示文字已確認沒有把宇宙正式規則錯寫成銀河規則；高風險字串逐項判斷，銀河限定的「金幣／強化石／普通怪／菁英／Lv.500」保留，跨紀元錯誤語意已清理。
 
 此總掃描現視為**完成**，不再列為待辦。除非使用者日後發現具體錯字／錯誤畫面或主動要求重新掃描，否則不要再次把它列入後續工作。
 
 ---
 
-# 14. Integrity／維護流程
+# 15. Integrity／維護流程（2026-09-24 最新）
 
 `.github/workflows/runtime-integrity.yml`：
 - 有 stale-head guard。
-- 只有當下最新 main HEAD 的 Runtime Integrity `success` 才能宣告完成。
+- 只有當下最新 main HEAD 的 Runtime Integrity `success` 才能宣告功能修改完成。
 - `queued`／`in_progress` 不算完成；`failure` 必須先讀 log 修正。
 - Runtime command 已使用 `set -o pipefail`。
 
 `.github/workflows/story-integrity.yml`：故事資料／UI／規則／tests／相關 owner 修改時觸發；Story 修改必須同步確認 Story Integrity。
 
-`DEVELOPMENT_PROTOCOL.md` 為正式維護規範：修改前重讀 main；修改後重新 fetch；JS/CSS 改動同步 `index.html` cache-bust；本批紅燈不能靠下一批無關 commit 掩過。
+`DEVELOPMENT_PROTOCOL.md` 為正式維護規範：修改前重讀 main；修改後重新 fetch；玩家端 JS/CSS 改動同步 `index.html` cache-bust；本批紅燈不能靠下一批無關 commit 掩過。
+
+近期新增／收斂的 Integrity：
+- `playertitleintegrity.js` 已改成直接檢查單一26稱號 canonical catalog，不再驗證舊16 catalog。
+- `playertitlegmpreviewintegrity.js` 檢查 GM 26稱號 preview、正式 renderer、且不得污染正式 state/save。
+- `playertitleuniverseintegrity.js` 目前 V2：檢查宇宙 renderer、Mirror renderer V3、唯一 `playertitlesmirror.css` active owner、舊 seal 不得載入。
+- `secondworldcalamityintegrity.js` 驗證 calamityId normalization、GM文明等級提前完成但0擊殺的真正首殺行為、30擊殺／殘血／完成重打語意。
+- `bountynameintegrity.js` 驗證雙紀元懸賞名稱池；`runtimeintegrityaddon.js` 將其併入 `PROJECT_RUNTIME_REPORT`。
+- `runtimeintegrity.js` 已把26稱號、宇宙稱號 API、GM預覽與 Universe/Mirror visual integrity 納入核心要求。
 
 ---
 
-# 15. 目前已完成的大型功能
+# 16. 目前已完成的大型功能
 
-銀河完整主線與成長；宇宙世界突破；Lv.501～1000 progression/EXP；100 Boss 宇宙主線；world2 裝備／sale／死亡／贖回；宇宙離線收益；+21～+40；文明0～10；雙紀元特殊怪；兩世界災厄；16稱號；第二世界懸賞V2；第二世界競技場與Rank Curve V2；Arena world-aware owner；虛空／鏡像；銀河冒險／災厄／戰線紀錄回顧；GM管理與角色 sandbox；GM七模式戰力基準；session-only 測試設定；save isolation；Runtime Integrity stale-head guard；宇宙10區／100 Boss故事 Registry；宇宙100/100正式故事；宇宙首殺正式故事 hook；雙紀元戰線紀錄與GM劇情測試；Source Purity／Meta Language／Story Integrity CI；跨紀元 canonical 劇情規則；雙紀元介面／遊戲說明語意總掃描；`DEVELOPMENT_PROTOCOL.md`。
+銀河完整主線與成長；宇宙世界突破；Lv.501～1000 progression/EXP；100 Boss 宇宙主線；world2 裝備／sale／死亡／贖回；宇宙離線收益；+21～+40；文明0～10；雙紀元特殊怪；兩世界災厄；26稱號 canonical catalog；宇宙災厄首殺稱號；角色統一稱號穿戴；GM 26稱號實戰預覽；宇宙稱號法則視覺；Mirror V3獨立 active owner；第二世界懸賞V2；雙紀元懸賞名稱池；第二世界競技場與Rank Curve V2；Arena world-aware owner；虛空／鏡像；銀河冒險／災厄／戰線紀錄回顧；宇宙冒險／回顧共用 header；GM管理與角色 sandbox；GM七模式戰力基準；session-only 測試設定；save isolation；Runtime Integrity stale-head guard；宇宙10區／100 Boss故事 Registry；宇宙100/100正式故事；宇宙首殺正式故事 hook；雙紀元戰線紀錄與GM劇情測試；Source Purity／Meta Language／Story Integrity CI；跨紀元 canonical 劇情規則；雙紀元介面／遊戲說明語意總掃描；`DEVELOPMENT_PROTOCOL.md`。
 
 ---
 
-# 16. 尚未完成／後續項目
+# 17. 尚未完成／後續項目
 
 目前已取消、且**不得再自行列回待辦**：
 - Arena V2 Rank1～3 各500次實機驗收。
@@ -257,15 +401,26 @@ GM 原則：不暫改 `state.secondWorld.entered`；不複製正式公式；使�
 
 已完成、不再列為待辦：
 - 全介面＋遊戲說明雙紀元語意總掃描。
+- 16→26稱號 catalog 收斂。
+- 宇宙災厄首殺稱號、角色穿戴、GM 26稱號預覽。
+- 懸賞雙紀元名稱池與 Integrity。
+- Mirror seal override 已退休；目前 active owner 已改為 V3獨立 class/CSS。
 
-目前唯一明確的大型未完成方向：
-1. **第三紀元尚未設計／實作**：已有 canonical 劇情規則與建立流程，但尚未定核心命題、總篇數、區域、結果矩陣、Registry、數值系統或 runtime；不要自行假設第三紀元內容。
+## 17.1 下一個對話近期優先處理
+
+1. **先等使用者實機確認 Mirror V3。** 目前最後一個使用者回報前已把鏡像改成 V3單一 active owner；下一步不是直接再改，而是確認 iPhone Safari 的 15～20勝（尤其17、19）是否已沒有矩形／底板。
+2. **若使用者確認正常，再做 dead CSS 純清潔。** 只移除 `playertitles.css` 的舊 Mirror V1 與 `playertitlesera.css` 的舊 Mirror V2 規則／keyframes；銀河與宇宙 active CSS 不可改。清理後更新 cache-bust、重新 fetch 比對、Runtime Integrity success。
+3. **Mirror 15～20 視覺細修不是自動待辦。** 只有使用者看完 V3 並明確要求，才再調階級差異；不可碰銀河／宇宙稱號視覺。
+
+## 17.2 大型未完成方向
+
+- **第三紀元尚未設計／實作**：已有 canonical 劇情規則與建立流程，但尚未定核心命題、總篇數、區域、結果矩陣、Registry、數值系統或 runtime；不要自行假設第三紀元內容。
 
 除非使用者主動提出新需求，**不要自行創造新的驗收／平衡／跨裝置待辦。**
 
 ---
 
-# 17. 正式 owner 速查
+# 18. 正式 owner 速查
 
 - 基礎世界／品質：`data.js`
 - 核心 state／銀河：`engine.js`
@@ -281,51 +436,61 @@ GM 原則：不暫改 `state.secondWorld.entered`；不複製正式公式；使�
 - 特殊怪：`specialmonsters.js` / `specialcore.js` / `specialencounter.js`
 - 宇宙資料：`secondworlddata.js`；主線：`secondworldmainline.js`；combat：`secondworldcombat.js`；reward：`secondworldrewards.js`
 - 銀河災厄：`calamityconfig.js` / `calamitystate.js` / `calamitycore.js` / `calamityrun.js` / `calamityui.js`
-- 印記：`markcore.js`；宇宙災厄：`secondworldcalamity.js` / `secondworldcalamityrun.js`
+- 印記：`markcore.js`
+- 宇宙災厄：`secondworldcalamity.js` / `secondworldcalamityrun.js`
+- 稱號 canonical state/catalog：`playertitlecore.js`
+- 稱號 renderer：`playertitlerenderer.js`；角色／取得通知 UI：`playertitleui.js`
+- 銀河稱號 active CSS：`playertitles.css`
+- 宇宙稱號 active CSS：`playertitlesera.css`
+- Mirror V3唯一 active CSS：`playertitlesmirror.css`
+- GM稱號預覽：`playertitlegmpreview.js`
 - 副本 UI：`dungeonui.js`；副本進度／Arena state：`dungeonprogress.js`
-- 懸賞：`dungeonbounty.js`；競技：`dungeonarena.js`；assessment：`arenapositioncore.js`；window：`arenawindowcore.js`
+- 懸賞：`dungeonbounty.js`；懸賞名稱 Integrity：`bountynameintegrity.js`
+- 競技：`dungeonarena.js`；assessment：`arenapositioncore.js`；window：`arenawindowcore.js`
 - 鏡像：`mirrorconfig.js` / `mirrordungeonstate.js` / `mirrordungeonrun.js` / `mirrordungeonui.js`
 - Story progress：`storyprogress.js`；UI：`storyui.js`；戰線紀錄：`storyrecordtabs.js`
 - 宇宙 Registry：`secondworldstoryregistry.js`；宇宙 storydata：`storydata-universe-*.js`
 - Story 格式 owner：`storyintegrity.js`
 - GM Story：`gmstorytest.js`
 - GM Hub：`gmhub.js` / `gmhubextensions.js`；戰力基準：`gmpowerbenchmark.js`
-- Runtime：`runtimeintegrity.js` + `tests/runtime/js-integrity.js`；Final：`finalintegrity.js`
+- Runtime：`runtimeintegrity.js` + `runtimeintegrityaddon.js` + `tests/runtime/js-integrity.js`；Final：`finalintegrity.js`
 - 維護規範：`DEVELOPMENT_PROTOCOL.md`
 - load order / cache-bust：`index.html`
 
 ---
 
-# 18. 下一個 ChatGPT 必須遵守的操作規範
+# 19. 下一個 ChatGPT 必須遵守的操作規範
 
 1. **GitHub `main` 實際程式碼是唯一真實來源。** HANDOFF 只作摘要；工作前重新讀 main。
 2. 修改前先讀相關正式 owner、直接相依、Integrity/workflow 與 `index.html`。
 3. 使用者說「先討論／先查／先看／先檢查／先列出／先不要修改」時，**不得寫 GitHub**。
 4. 使用者說「做／修改／執行／修正／第 N 批」時，可直接修改 GitHub `main`。
-5. **優先修改正式來源。** 不用 wrapper/fallback 掩蓋 owner 問題；不新增第二套 state、第二套公式、第二套 settlement、第二套 Registry 或 sample story。
-6. GM 不複製正式公式；使用正式 owner + explicit test context，且不得污染正式 save。
-7. 修改後重新 fetch 最新 `main` 自我檢查，不能只相信 update API。
-8. JS 至少做 parser/syntax，再做範圍相符的 functional/static probe。
-9. **玩家端 JS/CSS 改動必須同步更新 `index.html` cache-bust。** 新 script 同時確認 load order。
-10. 最新 main HEAD Runtime Integrity 必須 success 才能宣告完成；queued/in_progress 不算，failure 必須先修。
-11. Story 修改同步確認 Story Integrity。
-12. Save Write Guard V1 不可破壞。
-13. 不自行重構舊存檔，除非使用者明確要求或有可重現 production bug。
-14. 一批只做核准範圍，不順手改 balance、故事、schema 或其他功能。
-15. 已退休 API 不為相容而加回 wrapper。
-16. 同時遵守 `DEVELOPMENT_PROTOCOL.md`。
+5. **優先修改正式來源。** 不用 wrapper/fallback 掩蓋 owner 問題；不新增第二套 state、第二套公式、第二套 settlement、第二套 Registry、第二套 title catalog 或 sample story。
+6. 遇到舊 owner／過渡碼問題，優先退休舊正式來源並收斂成一個 owner；不要持續新增 override／seal／wrapper 疊加。
+7. GM 不複製正式公式；使用正式 owner + explicit test context，且不得污染正式 save。
+8. 修改後重新 fetch 最新 `main` 自我檢查，不能只相信 update API。
+9. JS 至少做 parser/syntax，再做範圍相符的 functional/static probe。
+10. **玩家端 JS/CSS 改動必須同步更新 `index.html` cache-bust。** 新 script／stylesheet 同時確認 load order。
+11. 最新 main HEAD Runtime Integrity 必須 success 才能宣告功能修改完成；queued/in_progress 不算，failure 必須先修。
+12. Story 修改同步確認 Story Integrity。
+13. Save Write Guard V1 不可破壞。
+14. 不自行重構舊存檔，除非使用者明確要求或有可重現 production bug；名稱類變更若 ID／state shape 不變通常不需要 migration。
+15. 一批只做核准範圍，不順手改 balance、故事、schema 或其他功能。
+16. 已退休 API／CSS owner 不為相容而加回 wrapper。
+17. 同時遵守 `DEVELOPMENT_PROTOCOL.md`。
 
 ---
 
-# 19. 下一個對話如何接手
+# 20. 下一個對話如何接手
 
 標準指令：
 
 > 讀取 GitHub `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`、`DEVELOPMENT_PROTOCOL.md`；若工作涉及正式劇情，再同時讀 `STORY_WRITING_RULES.md`。之後重新檢查目前 `main` 的實際程式碼、正式 owner、直接相依、Integrity workflow 與 `index.html` 載入順序，完整承接《文明戰線》專案。  
 > **GitHub `main` 是唯一真實來源，HANDOFF 只作摘要。**  
 > 修改前先讀相關正式 owner；修改後重新 fetch 最新 `main` 自我檢查。玩家端 JS/CSS 有改動時同步更新 `index.html` cache-bust，並確認最新 main HEAD 的 Runtime Integrity 最終為 success。  
-> 我說「先討論／先查／先看／先檢查／先列出／先不要修改」時不得寫 GitHub；我說「做／修改／執行／修正／第 N 批」時可直接修改 GitHub `main`。  
-> 目前宇宙主線 Boss 基準為 `BASE_STAT=2700`、`HP:ATK:DEF=12:2:1`、`STEP_RATE=.015`；懸賞 V2 已定案；宇宙競技場使用 Rank Curve V2；雙紀元介面／遊戲說明語意總掃描已完成。  
-> Arena V2 額外實機驗收、宇宙主線中後期平衡驗證、Cloud Save 跨裝置驗證均已由使用者取消，不得自行再列成待辦。  
-> 目前唯一明確的大型未完成方向是第三紀元尚未設計；不要自行假設內容或建立新待辦。  
+> 我說「先討論／先查／先看／先檢查／先列出／先不要修改」時不得寫 GitHub；我說「做／修改／執行／修正／第 N 批」時可直接修改 GitHub `main`。優先修改正式來源，不要用 wrapper、fallback、seal 或第二套公式／state／catalog 掩蓋 owner 問題。  
+> 目前宇宙主線 Boss 基準為 `BASE_STAT=2700`、`HP:ATK:DEF=12:2:1`、`STEP_RATE=.015`；懸賞 V2 已定案，並已拆銀河／宇宙名稱池；宇宙競技場使用 Rank Curve V2；雙紀元介面／遊戲說明語意總掃描已完成。  
+> 正式稱號現在是26個單一 canonical catalog：銀河災厄10＋宇宙災厄10＋鏡像6。宇宙災厄首次真正擊殺即可取得對應稱號，角色頁可穿戴，GM可預覽完整26稱號。  
+> Mirror稱號目前已重構為 `playertitlesmirror.css` V3單一 active owner，renderer只輸出 `player-title--mirror-v3*`；舊 `playertitlesmirrorseal.css` 已刪除。下一步先等我確認 iPhone Safari 實機是否已沒有矩形底板；若確認正常，再只清掉 `playertitles.css`／`playertitlesera.css` 內不再生效的舊 Mirror dead CSS，銀河／宇宙 active CSS不要動。  
+> Arena V2 額外實機驗收、宇宙主線中後期平衡驗證、Cloud Save 跨裝置驗證均已由使用者取消，不得自行再列成待辦。大型未完成方向只有第三紀元尚未設計；不要自行假設內容或建立新待辦。  
 > 現在先不要修改任何功能；先確認最新 main，再等我的下一個指令。
