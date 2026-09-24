@@ -212,9 +212,9 @@
 
   const special=rollSpecialMonster(forcedByBlackMarket?["bandit_king"]:null,world);
   if(!special)return false;
+  await showSpecialEncounterAlert(special,forcedByBlackMarket);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
-  await showSpecialEncounterAlert(special,forcedByBlackMarket);
   const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});
   if(result.win&&world===1&&typeof addBattleEnhancementReward==="function")addBattleEnhancementReward(ctx,"autoSale",result.saleEnhancementStones);
   if(result.win&&world===2&&ctx){

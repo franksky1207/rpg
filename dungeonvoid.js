@@ -44,12 +44,10 @@
   const h=Math.max(0,Math.floor(Number(highest)||0));
   return Math.max(1,h-VOID_MIRAGE_START_OFFSET);
  }
- function equivalentPower(floor){return 24+floorNumber(floor)/10;}
  function baseStats(floor){
-  const f=floorNumber(floor),e=equivalentPower(f);
+  const f=floorNumber(floor);
   return {
    floor:f,
-   equivalentPower:e,
    hp:Math.max(1,Math.ceil(VOID_MIRAGE_HP_BASE+VOID_MIRAGE_HP_PER_FLOOR*f)),
    atk:Math.max(1,Math.ceil(VOID_MIRAGE_ATK_BASE+VOID_MIRAGE_ATK_PER_FLOOR*f)),
    def:Math.max(0,Math.ceil(VOID_MIRAGE_DEF_BASE+VOID_MIRAGE_DEF_PER_FLOOR*f)),
@@ -137,7 +135,6 @@
  };};
  window.ensureVoidMirageState=function(){return normalizeVoidMirageState(state);};
  window.canEnterVoidMirage=function(){return Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;};
- window.voidMirageEquivalentPower=equivalentPower;
  window.voidMirageBaseStats=baseStats;
  window.isVoidMirageBossFloor=isBossFloor;
  window.voidMirageBossNameForFloor=bossNameForFloor;
