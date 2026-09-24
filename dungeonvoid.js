@@ -3,9 +3,12 @@
  const VOID_MIRAGE_UNLOCK_LEVEL=25;
  const VOID_MIRAGE_BASE_CRIT=10;
  const VOID_MIRAGE_BASE_DODGE=8;
- const VOID_MIRAGE_HP_MULTIPLIER=2.40;
- const VOID_MIRAGE_ATK_MULTIPLIER=2.15;
- const VOID_MIRAGE_DEF_MULTIPLIER=2.65;
+ const VOID_MIRAGE_HP_BASE=100.0;
+ const VOID_MIRAGE_HP_PER_FLOOR=9.6;
+ const VOID_MIRAGE_ATK_BASE=10.0;
+ const VOID_MIRAGE_ATK_PER_FLOOR=1.3;
+ const VOID_MIRAGE_DEF_BASE=5.0;
+ const VOID_MIRAGE_DEF_PER_FLOOR=0.6;
  const VOID_MIRAGE_START_OFFSET=100;
 
  const VOID_MIRAGE_REGULAR_NAMES=[
@@ -44,7 +47,15 @@
  function equivalentPower(floor){return 24+floorNumber(floor)/10;}
  function baseStats(floor){
   const f=floorNumber(floor),e=equivalentPower(f);
-  return {floor:f,equivalentPower:e,hp:Math.max(1,Math.ceil((62+16.2*e)*VOID_MIRAGE_HP_MULTIPLIER)),atk:Math.max(1,Math.ceil((10.5+2.45*e)*VOID_MIRAGE_ATK_MULTIPLIER)),def:Math.max(0,Math.ceil((3.2+0.92*e)*VOID_MIRAGE_DEF_MULTIPLIER)),crit:VOID_MIRAGE_BASE_CRIT,dodge:VOID_MIRAGE_BASE_DODGE};
+  return {
+   floor:f,
+   equivalentPower:e,
+   hp:Math.max(1,Math.ceil(VOID_MIRAGE_HP_BASE+VOID_MIRAGE_HP_PER_FLOOR*f)),
+   atk:Math.max(1,Math.ceil(VOID_MIRAGE_ATK_BASE+VOID_MIRAGE_ATK_PER_FLOOR*f)),
+   def:Math.max(0,Math.ceil(VOID_MIRAGE_DEF_BASE+VOID_MIRAGE_DEF_PER_FLOOR*f)),
+   crit:VOID_MIRAGE_BASE_CRIT,
+   dodge:VOID_MIRAGE_BASE_DODGE
+  };
  }
  function isBossFloor(floor){return floorNumber(floor)%10===0;}
  function bossNameForFloor(floor){
@@ -107,7 +118,23 @@
  window.VOID_MIRAGE_NAME=VOID_MIRAGE_NAME;
  window.VOID_MIRAGE_UNLOCK_LEVEL=VOID_MIRAGE_UNLOCK_LEVEL;
  window.VOID_MIRAGE_START_OFFSET=VOID_MIRAGE_START_OFFSET;
- window.getVoidMirageConfig=function(){return {name:VOID_MIRAGE_NAME,unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,startOffset:VOID_MIRAGE_START_OFFSET,dailyRewardPerFloor:2,baseCrit:VOID_MIRAGE_BASE_CRIT,baseDodge:VOID_MIRAGE_BASE_DODGE,hpMultiplier:VOID_MIRAGE_HP_MULTIPLIER,atkMultiplier:VOID_MIRAGE_ATK_MULTIPLIER,defMultiplier:VOID_MIRAGE_DEF_MULTIPLIER,regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),bossNames:VOID_MIRAGE_BOSS_NAMES.slice()};};
+ window.getVoidMirageConfig=function(){return {
+  name:VOID_MIRAGE_NAME,
+  unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL,
+  startOffset:VOID_MIRAGE_START_OFFSET,
+  dailyRewardPerFloor:2,
+  formulaVersion:2,
+  baseCrit:VOID_MIRAGE_BASE_CRIT,
+  baseDodge:VOID_MIRAGE_BASE_DODGE,
+  hpBase:VOID_MIRAGE_HP_BASE,
+  hpPerFloor:VOID_MIRAGE_HP_PER_FLOOR,
+  atkBase:VOID_MIRAGE_ATK_BASE,
+  atkPerFloor:VOID_MIRAGE_ATK_PER_FLOOR,
+  defBase:VOID_MIRAGE_DEF_BASE,
+  defPerFloor:VOID_MIRAGE_DEF_PER_FLOOR,
+  regularNames:VOID_MIRAGE_REGULAR_NAMES.slice(),
+  bossNames:VOID_MIRAGE_BOSS_NAMES.slice()
+ };};
  window.ensureVoidMirageState=function(){return normalizeVoidMirageState(state);};
  window.canEnterVoidMirage=function(){return Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;};
  window.voidMirageEquivalentPower=equivalentPower;
@@ -156,6 +183,7 @@
   return {ok:true,win:true,ended:false,floor,enemy,result,playerMaxHp,run:runSnapshot()};
  };
 
+ window.VOID_MIRAGE_FORMULA_VERSION=2;
  window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
  window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
  window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2;
