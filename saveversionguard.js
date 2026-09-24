@@ -2,14 +2,16 @@
  const VERSION=1;
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function currentVersion(){return Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||1));}
+ function minimumVersion(){return Math.max(1,Math.floor(Number(window.SAVE_MIN_SUPPORTED_VERSION)||1));}
  function sourceVersion(raw,explicitVersion=null){
   const candidate=explicitVersion??raw?.saveVersion;
   const n=Math.floor(Number(candidate));
-  return Number.isFinite(n)&&n>=1?n:1;
+  return Number.isFinite(n)&&n>=1?n:minimumVersion();
  }
  function compatibility(raw,explicitVersion=null){
-  const source=sourceVersion(raw,explicitVersion),current=currentVersion();
-  return {version:VERSION,sourceVersion:source,currentVersion:current,isFuture:source>current,supported:source<=current};
+  const source=sourceVersion(raw,explicitVersion),current=currentVersion(),minimum=minimumVersion();
+  const isFuture=source>current,isTooOld=source<minimum;
+  return {version:VERSION,sourceVersion:source,currentVersion:current,minSupportedVersion:minimum,isLegacy:source<current&&!isTooOld,isFuture,isTooOld,supported:!isFuture&&!isTooOld};
  }
  function assertSupported(raw,options={}){
   const label=String(options.label||"存檔");
@@ -18,6 +20,12 @@
   if(info.isFuture){
    const error=new Error(`${label}版本（${info.sourceVersion}）高於目前遊戲版本（${info.currentVersion}），已停止讀取以保護較新的存檔。`);
    error.code="FUTURE_SAVE_VERSION";
+   error.saveCompatibility=info;
+   throw error;
+  }
+  if(info.isTooOld){
+   const error=new Error(`${label}版本（${info.sourceVersion}）低於目前最低支援版本（${info.minSupportedVersion}），無法安全讀取。`);
+   error.code="UNSUPPORTED_LEGACY_SAVE_VERSION";
    error.saveCompatibility=info;
    throw error;
   }
@@ -42,11 +50,12 @@
     if(raw){
      parsed=JSON.parse(raw);
      const info=compatibility(parsed);
-     if(info.isFuture){
+     if(info.isFuture||info.isTooOld){
       try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}
-      const status=document.getElementById("saveStatus");if(status)status.textContent="本機存檔版本較新・已保護";
-      window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,failed:true,reason:"future-version",error:""};
-      console.error(`[文明戰線] Local save v${info.sourceVersion} is newer than supported v${info.currentVersion}; original localStorage entry was preserved.`);
+      const status=document.getElementById("saveStatus");if(status)status.textContent=info.isFuture?"本機存檔版本較新・已保護":"本機存檔版本過舊・已保護";
+      const reason=info.isFuture?"future-version":"unsupported-legacy-version";
+      window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,minSupportedVersion:info.minSupportedVersion,failed:true,reason,error:""};
+      console.error(`[文明戰線] Local save v${info.sourceVersion} is outside supported range v${info.minSupportedVersion}–v${info.currentVersion}; original localStorage entry was preserved.`);
       return false;
      }
     }
