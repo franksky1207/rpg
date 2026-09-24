@@ -6,6 +6,27 @@
  let reviewSelectedId=null;
  let reviewBattle=null;
 
+ const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("calamity")?window.backgroundProgressSleep(ms,"calamity"):new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
+ function continuousGapMs(){
+  if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
+  return window.combatOuterGapMs("calamity","battle");
+ }
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
+ function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("calamity"):null;}
+ function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("calamity"):null;}
+ function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
+ async function consumeCatchUpDelay(ms){
+  const delay=Math.max(0,Number(ms)||0);
+  if(delay<=0)return true;
+  if(fastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"calamity");
+   if(Number(consumed?.remaining)>0)await sleep(consumed.remaining);
+   return Number(consumed?.remaining)<=0;
+  }
+  await sleep(delay);
+  return false;
+ }
+
  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
  function fmt(v){return Math.max(0,Math.floor(Number(v)||0)).toLocaleString();}
  function defs(){return typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];}
@@ -126,7 +147,31 @@
  }
  async function continuous(){
   const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{
-   async onBattleComplete(step){ui.lastBattle=step.result;ui.finalRun=step.run;ui.phase="combat";render();await animate(step.result);},
+   async onBattleComplete(step){
+    ui.lastBattle=step.result;ui.finalRun=step.run;ui.phase="combat";
+    const fast=fastCatchUp();
+    const policy=fast?catchUpStep():null;
+    if(fast){
+     if(policy?.shouldPresentBattle){render();await animate(step.result);}
+     else{
+      await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
+      if(policy?.shouldRefreshUi)render();
+     }
+     if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+    }else{
+     render();await animate(step.result);
+     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+    }
+    if(!step.ended&&window.getSecondWorldCalamityRunSnapshot?.()?.active){
+     if(fast)await consumeCatchUpDelay(continuousGapMs());
+     else await sleep(continuousGapMs());
+     if(fast&&!fastCatchUp()){
+      const finalPolicy=catchUpFinal();
+      if(finalPolicy?.shouldRefreshUi)render();
+      if(finalPolicy?.shouldCheckpoint&&typeof save==="function")save(false);
+     }
+    }
+   },
    async onEnd(run){ui.finalRun=run;}
   });
   ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();

@@ -1,9 +1,20 @@
 (function(){
  const VERSION=1;
  const SETTLEMENT_VERSION=1;
- const CONTINUOUS_VERSION=1;
+ const CONTINUOUS_VERSION=2;
  const TITLE_FIRST_KILL_VERSION=2;
  let activeRun=null;
+
+ function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
+ function startBackground(){if(!backgroundEnabled()||typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
+ function stopBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("calamity");}
+ function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
+ function catchUpPreviewPolicy(){
+  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
+  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
+  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
+  return window.backgroundProgressCatchUpPolicy("calamity",next,false);
+ }
 
  function clone(value){try{return value==null?value:JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function def(value){return typeof window.getSecondWorldCalamityDefinition==="function"?window.getSecondWorldCalamityDefinition(value):null;}
@@ -108,6 +119,8 @@
  }
  function finish(reason){
   if(!activeRun)return null;
+  if(typeof save==="function")save(false);
+  stopBackground();
   activeRun.active=false;activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
   return runSnapshot();
  }
@@ -150,12 +163,19 @@
   if(!activeRun?.active){const started=begin(value,"continuous");if(!started.ok)return started;}
   const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
+  startBackground();
   while(activeRun?.active){
-   const step=fightNext(options);
+   const previewPolicy=catchUpPreviewPolicy();
+   const fast=!!previewPolicy?.active;
+   const step=fightNext({...options,
+    save:fast?previewPolicy?.shouldCheckpoint===true:options.save,
+    logs:fast?previewPolicy?.shouldPresentBattle===true:options.logs,
+    preparePresentation:fast?previewPolicy?.shouldPresentBattle===true:options.preparePresentation
+   });
    if(!step.ok){if(onEnd)await onEnd(step.run);return step;}
    if(onBattle)await onBattle(step);
    if(step.ended||!activeRun?.active){const run=step.run||runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:step.reason,result:step,run};}
-   await new Promise(resolve=>setTimeout(resolve,0));
+   if(!fastCatchUp())await new Promise(resolve=>setTimeout(resolve,0));
   }
   const run=runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:run?.reason||"ended",run};
  }
@@ -168,11 +188,22 @@
   activeRun.stopRequested=true;
   return {ok:true,ended:false,run:runSnapshot()};
  }
+ function stopForPageHide(){
+  if(!activeRun?.active)return;
+  if(activeRun.mode==="continuous"&&backgroundEnabled())return;
+  activeRun.stopRequested=true;
+  activeRun.active=false;
+  activeRun.reason="pagehide";
+  activeRun.endedAt=Date.now();
+  stopBackground();
+ }
 
  window.SECOND_WORLD_CALAMITY_COMBAT_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
  window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION=CONTINUOUS_VERSION;
  window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;
+ window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
  window.buildSecondWorldCalamityEnemy=enemy;
  window.runSecondWorldCalamityCombat=runCombat;
  window.settleSecondWorldCalamityBattle=settle;
@@ -183,4 +214,7 @@
  window.runSecondWorldCalamityContinuous=continuous;
  window.requestSecondWorldCalamityStop=stop;
  window.getSecondWorldCalamityRunSnapshot=runSnapshot;
+ window.secondWorldCalamityBackgroundEnabled=backgroundEnabled;
+ window.stopSecondWorldCalamityRunForPageHide=stopForPageHide;
+ window.addEventListener("pagehide",stopForPageHide);
 })();
