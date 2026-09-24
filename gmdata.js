@@ -14,7 +14,8 @@
   if(!isObject(raw))throw new Error("JSON 根資料必須是物件。");
   const version=Math.floor(Number(raw.saveVersion));
   if(!Number.isFinite(version)||version<1)throw new Error("缺少有效的 saveVersion。");
-  if(version>currentSchemaVersion())throw new Error(`此存檔版本（${version}）高於目前遊戲版本（${currentSchemaVersion()}），無法安全匯入。`);
+  if(typeof window.assertSaveVersionSupported!=="function")throw new Error("正式存檔版本保護尚未載入。");
+  window.assertSaveVersionSupported(raw,{version,label:"JSON 存檔"});
   if(!Number.isFinite(Number(raw.level)))throw new Error("缺少有效的角色等級。");
   if(!isObject(raw.equipment))throw new Error("缺少有效的裝備資料。");
   if(!Array.isArray(raw.inventory))throw new Error("缺少有效的背包資料。");
