@@ -39,10 +39,7 @@
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
   const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>CATALOG_IDS.includes(id)):[]);
   DEFS.forEach(def=>{if(target?.marks?.entries?.[def.markId]?.acquired===true)unlocked.add(def.id);});
-  UNIVERSE_DEFS.forEach((def,index)=>{
-   const kills=Math.max(0,Math.floor(Number(universeCalamityRow(target,def,index)?.trueKills)||0));
-   if(kills>=1)unlocked.add(def.id);
-  });
+  UNIVERSE_DEFS.forEach((def,index)=>{const kills=Math.max(0,Math.floor(Number(universeCalamityRow(target,def,index)?.trueKills)||0));if(kills>=1)unlocked.add(def.id);});
   const mirrorBestWins=Math.max(0,Math.floor(Number(target?.dungeon?.mirror?.history?.bestWins)||0));
   MIRROR_DEFS.forEach(def=>{if(mirrorBestWins>=def.mirrorWins)unlocked.add(def.id);});
   const equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
@@ -107,7 +104,7 @@
  window.PLAYER_TITLE_IDS=LEGACY_IDS;
  window.PLAYER_TITLE_ALL_DEFS=CATALOG_DEFS;
  window.PLAYER_TITLE_ALL_IDS=CATALOG_IDS;
- window.PLAYER_TITLE_CATALOG_VERSION=3;
+ window.PLAYER_TITLE_CATALOG_VERSION=2;
  window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION=1;
  window.PLAYER_TITLE_LEGACY_ALIAS_VERSION=1;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
@@ -124,6 +121,7 @@
  window.getUnlockedPlayerTitleDefinitions=unlockedTitleDefinitions;
  window.getEquippedPlayerTitleDefinition=equippedTitleDefinition;
  window.equipPlayerTitle=equipPlayerTitle;
- window.UNIVERSE_CALAMITY_TITLE_BACKFILL_VERSION=2;
+ window.UNIVERSE_CALAMITY_TITLE_BACKFILL_VERSION=1;
+ window.UNIVERSE_CALAMITY_TITLE_ID_BACKFILL_VERSION=1;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePlayerTitleState);
 })();
