@@ -1,11 +1,12 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  try{
   const universe=Array.from(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS||[]);
   const mirror=Array.from(window.MIRROR_PLAYER_TITLE_DEFS||[]);
   if(Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1)fail("UNIVERSE_RENDERER_VERSION","宇宙災厄稱號 renderer V1 未載入",window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION);
+  if(Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3)fail("MIRROR_RENDERER_VERSION","鏡像稱號 renderer V3 未載入",window.PLAYER_TITLE_MIRROR_RENDERER_VERSION);
   if(Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1)fail("UNIVERSE_NOTICE_VERSION","宇宙災厄稱號取得通知 V1 未載入",window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION);
   if(universe.length!==10)fail("UNIVERSE_TITLE_COUNT","宇宙災厄稱號應為 10 個",universe.length);
   universe.forEach((def,index)=>{
@@ -26,15 +27,17 @@
   if(mirror.length!==6)fail("MIRROR_TITLE_COUNT","鏡像稱號應維持 6 個",mirror.length);
   mirror.forEach(def=>{
    const html=typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):"";
-   if(!html.includes(`player-title--mirror-${def.mirrorWins}`)||!html.includes("data-title-text"))fail("MIRROR_RENDER_V2",`鏡像 ${def.mirrorWins} 勝 renderer anomaly hook 遺失`,html);
+   if(!html.includes(`player-title--mirror-v3-${def.mirrorWins}`)||!html.includes("player-title--mirror-v3")||!html.includes("data-title-text"))fail("MIRROR_RENDER_V3",`鏡像 ${def.mirrorWins} 勝 renderer V3 hook 遺失`,html);
+   if(html.includes("player-title--mirror-"))fail("MIRROR_LEGACY_CLASS",`鏡像 ${def.mirrorWins} 勝仍輸出舊 Mirror class`,html);
   });
   const links=Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
   const eraLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesera.css"));
+  const mirrorLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesmirror.css"));
   const sealLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesmirrorseal.css"));
-  if(eraLinks.length!==1)fail("ERA_STYLESHEET","宇宙／鏡像新版稱號 stylesheet 應且只能載入一次",eraLinks.length);
-  if(sealLinks.length!==1)fail("MIRROR_VISUAL_SEAL","Mirror V2 最終視覺 owner seal 應且只能載入一次",sealLinks.length);
-  if(eraLinks[0]&&sealLinks[0]&&links.indexOf(sealLinks[0])<=links.indexOf(eraLinks[0]))fail("MIRROR_VISUAL_ORDER","Mirror V2 ownership seal 必須載於 era stylesheet 之後");
-  if(sealLinks[0]?.dataset?.playerTitleMirrorOwner!=="2")fail("MIRROR_VISUAL_OWNER","Mirror 最終視覺 owner marker 應為 V2",sealLinks[0]?.dataset?.playerTitleMirrorOwner||null);
+  if(eraLinks.length!==1)fail("ERA_STYLESHEET","宇宙稱號 stylesheet 應且只能載入一次",eraLinks.length);
+  if(mirrorLinks.length!==1)fail("MIRROR_V3_STYLESHEET","Mirror V3 stylesheet 應且只能載入一次",mirrorLinks.length);
+  if(sealLinks.length!==0)fail("MIRROR_LEGACY_SEAL","Mirror seal stylesheet 應已退休",sealLinks.length);
+  if(mirrorLinks[0]?.dataset?.playerTitleMirrorOwner!=="3")fail("MIRROR_VISUAL_OWNER","Mirror 最終視覺 owner marker 應為 V3",mirrorLinks[0]?.dataset?.playerTitleMirrorOwner||null);
  }catch(error){fail("EXCEPTION","宇宙／鏡像稱號顯示完整性檢查失敗",String(error?.message||error));}
  const report={version:VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_VERSION=VERSION;
