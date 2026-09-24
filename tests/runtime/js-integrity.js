@@ -39,6 +39,8 @@ const bounty=read("dungeonbounty.js");
 const secondWorldCombat=read("secondworldcombat.js");
 const worldmap=read("worldmapui.js");
 const secondWorldCalamityIntegrity=read("secondworldcalamityintegrity.js");
+const secondWorldCalamityRun=read("secondworldcalamityrun.js");
+const secondWorldCalamityUi=read("secondworldcalamityui.js");
 const titleCore=read("playertitlecore.js");
 const compatibilityOwners=read("compatibilityowners.js");
 const levelAudit=read("levelprogressionaudit.js");
@@ -148,6 +150,17 @@ assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldComb
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
+
+assert(/const CONTINUOUS_VERSION=2;/.test(secondWorldCalamityRun),"宇宙災厄連續討伐版本應為 V2。");
+assert(/SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1/.test(secondWorldCalamityRun),"宇宙災厄必須宣告背景戰鬥與 fast catch-up owner 版本。");
+assert(/backgroundProgressStart\("calamity",\{mode:"continuous"\}\)/.test(secondWorldCalamityRun)&&/backgroundProgressStop\("calamity"\)/.test(secondWorldCalamityRun),"宇宙災厄連續討伐必須共用 calamity 背景 start/stop owner。");
+assert(/backgroundProgressFastCatchUpActive\("calamity"\)/.test(secondWorldCalamityRun)&&/backgroundProgressCatchUpPolicy\("calamity",next,false\)/.test(secondWorldCalamityRun),"宇宙災厄連續討伐必須接上 fast catch-up policy。");
+assert(/startBackground\(\);[\s\S]*const previewPolicy=catchUpPreviewPolicy\(\);/.test(secondWorldCalamityRun),"宇宙災厄 continuous 必須先啟動背景 flow，再套用 catch-up policy。");
+assert(/save:fast\?previewPolicy\?\.shouldCheckpoint===true:options\.save/.test(secondWorldCalamityRun)&&/preparePresentation:fast\?previewPolicy\?\.shouldPresentBattle===true:options\.preparePresentation/.test(secondWorldCalamityRun),"宇宙災厄 fast catch-up 必須降低存檔與演出頻率。");
+assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test(secondWorldCalamityRun)&&/addEventListener\("pagehide",stopForPageHide\)/.test(secondWorldCalamityRun),"宇宙災厄 pagehide 必須在背景戰鬥開啟時保留連續討伐。");
+assert(/backgroundProgressSleep\(ms,"calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressCatchUpStep\("calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressConsumeCatchUpCredit\(delay,"calamity"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須共用 calamity 背景 sleep、catch-up step 與 credit。");
+assert(/backgroundProgressCatchUpFinalPolicy\("calamity"\)/.test(secondWorldCalamityUi)&&/combatOuterGapMs\("calamity","battle"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須在追趕完成後收斂並維持正式場間節奏。");
+assert(index.includes('src="secondworldcalamityrun.js?v=20260924-universe-background-batch1"')&&index.includes('src="secondworldcalamityui.js?v=20260924-universe-background-batch1"'),"index.html 必須載入宇宙災厄背景戰鬥 Batch1 cache-bust。");
 
 assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");
 assert(/const VOID_MIRAGE_ATK_BASE=10\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_ATK_PER_FLOOR=1\.3;/.test(dungeonVoid),"虛空 ATK 線性公式應為 10.0 + 1.3F。");
