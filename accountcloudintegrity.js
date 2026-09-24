@@ -1,12 +1,18 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  window.ACCOUNT_CLOUD_INTEGRITY_VERSION=VERSION;
  function run(){
   const issues=[];
   if(Number(window.CIVILIZATION_AUTH_VERSION||0)<6)issues.push("auth-version");
   if(Number(window.CIVILIZATION_AUTH_MODE_RENDERER_VERSION||0)<1)issues.push("auth-mode-renderer");
-  if(Number(window.CIVILIZATION_CLOUD_SAVE_VERSION||0)<2)issues.push("cloud-save-version");
+  if(Number(window.CIVILIZATION_CLOUD_SAVE_VERSION||0)<3)issues.push("cloud-save-version");
   if(Number(window.CLOUD_SAVE_GUIDE_VERSION||0)<2)issues.push("cloud-save-guide");
+  if(Number(window.SAVE_HOOK_CORE_VERSION||0)<1)issues.push("save-hook-core");
+  if(String(window.SAVE_HOOK_RUNTIME_OWNER||"")!=="compatibilityowners")issues.push("save-hook-owner");
+  if(typeof window.registerAfterSaveHook!=="function"||typeof window.unregisterAfterSaveHook!=="function"||typeof window.getAfterSaveHookIds!=="function")issues.push("save-hook-api");
+  else if(!window.getAfterSaveHookIds().includes("cloud-local-meta"))issues.push("cloud-save-hook-registration");
+  if(Number(window.SCRIPT_LOAD_POLICY_VERSION||0)<1||typeof window.scriptLoadGroupFor!=="function")issues.push("script-load-policy");
+  else if(window.scriptLoadGroupFor("storydata-earth.js")!=="story"||window.scriptLoadGroupFor("gmhub.js")!=="gm"||window.scriptLoadGroupFor("runtimeintegrity.js")!=="integrity")issues.push("script-load-groups");
   if(typeof window.civilizationCloudUpload!=="function")issues.push("cloud-upload-api");
   if(typeof window.civilizationCloudDownload!=="function")issues.push("cloud-download-api");
   if(typeof window.civilizationAccountLogout!=="function")issues.push("logout-api");
