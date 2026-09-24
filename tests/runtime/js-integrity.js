@@ -42,6 +42,8 @@ const secondWorldCalamityIntegrity=read("secondworldcalamityintegrity.js");
 const titleCore=read("playertitlecore.js");
 const compatibilityOwners=read("compatibilityowners.js");
 const levelAudit=read("levelprogressionaudit.js");
+const dungeonVoid=read("dungeonvoid.js");
+const dungeonGm=read("dungeongm.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -145,5 +147,16 @@ assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldComb
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
+
+assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");
+assert(/const VOID_MIRAGE_ATK_BASE=10\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_ATK_PER_FLOOR=1\.3;/.test(dungeonVoid),"虛空 ATK 線性公式應為 10.0 + 1.3F。");
+assert(/const VOID_MIRAGE_DEF_BASE=5\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_DEF_PER_FLOOR=0\.6;/.test(dungeonVoid),"虛空 DEF 線性公式應為 5.0 + 0.6F。");
+assert(/formulaVersion:2/.test(dungeonVoid),"虛空公式版本應為 V2。");
+assert(/Math\.ceil\(VOID_MIRAGE_HP_BASE\+VOID_MIRAGE_HP_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 HP baseStats 未使用正式線性公式。");
+assert(/Math\.ceil\(VOID_MIRAGE_ATK_BASE\+VOID_MIRAGE_ATK_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 ATK baseStats 未使用正式線性公式。");
+assert(/Math\.ceil\(VOID_MIRAGE_DEF_BASE\+VOID_MIRAGE_DEF_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 DEF baseStats 未使用正式線性公式。");
+assert(!/VOID_MIRAGE_(HP|ATK|DEF)_MULTIPLIER/.test(dungeonVoid),"虛空 V2 不得復活舊倍率公式。");
+assert(/voidMirageBaseStats\(floor\)/.test(dungeonGm)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
+assert(index.includes('src="dungeonvoid.js?v=20260924-void-linear-v2"'),"index.html 必須載入虛空線性公式 V2 cache-bust。");
 
 console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, and load order are synchronized.");
