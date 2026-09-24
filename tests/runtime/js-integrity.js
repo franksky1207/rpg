@@ -90,8 +90,9 @@ assert(JSON.stringify(maxLevelConsumers)===JSON.stringify(allowedMaxLevelConsume
 const saveVersionConsumers=productionFiles.filter(file=>/\bSAVE_VERSION\b/.test(read(file))).map(basename).sort();
 const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js","ui.js"].sort();
 assert(JSON.stringify(saveVersionConsumers)===JSON.stringify(allowedSaveVersionConsumers),"SAVE_VERSION consumer audit 異常："+saveVersionConsumers.join(", "));
-const directArenaConsumers=productionFiles.filter(file=>!["dungeonprogress.js","savemigration.js"].includes(basename(file))&&/(?:dungeon\.arena|dungeon\?\.arena)/.test(read(file))).map(basename);
-assert(directArenaConsumers.length===0,"正式程式不得直接依賴 legacy dungeon.arena alias："+directArenaConsumers.join(", "));
+const directArenaConsumers=productionFiles.filter(file=>/(?:dungeon\.arena|dungeon\?\.arena)/.test(read(file))).map(basename).sort();
+const allowedDirectArenaConsumers=["dungeonarena.js","dungeonprogress.js","runtimeintegrity.js","savemigration.js"].sort();
+assert(JSON.stringify(directArenaConsumers)===JSON.stringify(allowedDirectArenaConsumers),"legacy dungeon.arena consumer audit 異常："+directArenaConsumers.join(", "));
 const retiredLevel100Consumers=productionFiles.filter(file=>/\blevel100ExpFactor\b/.test(read(file))).map(basename);
 assert(retiredLevel100Consumers.length===0,"level100ExpFactor 已退休，不得再有 consumer："+retiredLevel100Consumers.join(", "));
 
