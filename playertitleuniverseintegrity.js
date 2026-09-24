@@ -28,8 +28,13 @@
    const html=typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):"";
    if(!html.includes(`player-title--mirror-${def.mirrorWins}`)||!html.includes("data-title-text"))fail("MIRROR_RENDER_V2",`鏡像 ${def.mirrorWins} 勝 renderer anomaly hook 遺失`,html);
   });
-  const link=Array.from(document.querySelectorAll('link[rel="stylesheet"]')).find(node=>String(node.getAttribute("href")||"").includes("playertitlesera.css"));
-  if(!link)fail("ERA_STYLESHEET","宇宙／鏡像新版稱號 stylesheet 未載入");
+  const links=Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+  const eraLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesera.css"));
+  const sealLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesmirrorseal.css"));
+  if(eraLinks.length!==1)fail("ERA_STYLESHEET","宇宙／鏡像新版稱號 stylesheet 應且只能載入一次",eraLinks.length);
+  if(sealLinks.length!==1)fail("MIRROR_VISUAL_SEAL","Mirror V2 最終視覺 owner seal 應且只能載入一次",sealLinks.length);
+  if(eraLinks[0]&&sealLinks[0]&&links.indexOf(sealLinks[0])<=links.indexOf(eraLinks[0]))fail("MIRROR_VISUAL_ORDER","Mirror V2 ownership seal 必須載於 era stylesheet 之後");
+  if(sealLinks[0]?.dataset?.playerTitleMirrorOwner!=="2")fail("MIRROR_VISUAL_OWNER","Mirror 最終視覺 owner marker 應為 V2",sealLinks[0]?.dataset?.playerTitleMirrorOwner||null);
  }catch(error){fail("EXCEPTION","宇宙／鏡像稱號顯示完整性檢查失敗",String(error?.message||error));}
  const report={version:VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_VERSION=VERSION;
