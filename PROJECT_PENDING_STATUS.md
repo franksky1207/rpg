@@ -19,6 +19,7 @@
 - Save Hook 正式化與 script load 分組政策。
 - 背景 source／runtime 素材政策與 Asset Integrity。
 - README／handoff／pending／歷史文件同步（本批）。
+- GM「戰力基準測試」中的「地圖怪測試」改為預設收起；外層戰力基準區塊仍沿用既有預設收起與本工作階段展開狀態。
 
 先前的「全介面＋遊戲說明雙紀元語意總掃描」已完成，不再列為待辦。
 
