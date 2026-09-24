@@ -1,12 +1,12 @@
 (function(){
- const CLOUD_SAVE_VERSION=2;
+ const CLOUD_SAVE_VERSION=3;
  const TABLE="game_saves";
  const LOCAL_META_KEY="civilization_frontline_local_save_meta_v1";
  const LOCAL_OWNER_KEY="civilization_frontline_local_owner_v1";
+ const SAVE_HOOK_ID="cloud-local-meta";
  let cloudMeta=null;
  let cloudBusy=false;
  let lastMetaUserId=null;
- let saveWrapped=false;
 
  window.CIVILIZATION_CLOUD_SAVE_VERSION=CLOUD_SAVE_VERSION;
 
@@ -158,15 +158,13 @@
   }catch(error){renderOnly();setStatus(errorText(error),"error");}
   finally{setBusy(false);}
  }
- function installSaveWrapper(){
-  if(saveWrapped||typeof window.save!=="function")return;
-  const base=window.save;
-  const wrapped=function(show=true){const ok=base(show);if(ok)writeLocalMeta();return ok;};
-  window.save=wrapped;try{save=wrapped;}catch(e){}
-  saveWrapped=true;
+ function installSaveHook(){
+  if(typeof window.registerAfterSaveHook!=="function")throw new Error("正式 Save Hook owner 尚未載入。");
+  window.registerAfterSaveHook(SAVE_HOOK_ID,context=>writeLocalMeta(context?.savedAt||Date.now()));
  }
  function initialize(){
-  installSaveWrapper();ensureLocalIdentity();
+  installSaveHook();ensureLocalIdentity();
+  window.CLOUD_SAVE_HOOK_VERSION=1;
   window.civilizationCloudSave={version:CLOUD_SAVE_VERSION,mount,refreshMeta,upload,download,localSnapshot,getCloudMeta:()=>cloudMeta};
   window.civilizationCloudUpload=upload;
   window.civilizationCloudDownload=download;
