@@ -1,5 +1,5 @@
 (function(){
- const VERSION=18;
+ const VERSION=19;
  function run(){
   const errors=[],warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
@@ -16,7 +16,7 @@
    if(Array.isArray(report?.warnings)&&report.warnings.length)warn("FINAL_REPORT_WARNING",`${name} 有 warning`,report.warnings);
   });
 
-  if(Number(window.PROJECT_RUNTIME_INTEGRITY_VERSION)!==18)fail("FINAL_RUNTIME_VERSION","Runtime Integrity 應為 V18",window.PROJECT_RUNTIME_INTEGRITY_VERSION);
+  if(Number(window.PROJECT_RUNTIME_INTEGRITY_VERSION)!==19)fail("FINAL_RUNTIME_VERSION","Runtime Integrity 應為 V19",window.PROJECT_RUNTIME_INTEGRITY_VERSION);
   if(Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)!==1||typeof window.runCivilizationIntegrityContract!=="function"){
    fail("FINAL_CONTRACT_MISSING","Canonical Integrity Contract V1 未載入",{version:window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION,api:typeof window.runCivilizationIntegrityContract});
   }else{
