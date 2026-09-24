@@ -40,6 +40,8 @@ const secondWorldCombat=read("secondworldcombat.js");
 const worldmap=read("worldmapui.js");
 const secondWorldCalamityIntegrity=read("secondworldcalamityintegrity.js");
 const titleCore=read("playertitlecore.js");
+const compatibilityOwners=read("compatibilityowners.js");
+const levelAudit=read("levelprogressionaudit.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -50,16 +52,21 @@ assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigrat
 assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須在正式 migration 之後載入。");
 assert(pos("saveversionguard.js")<pos("gmdata.js")&&pos("saveversionguard.js")<pos("cloudsave.js"),"saveversionguard.js 必須先於 JSON／Cloud 存檔入口載入。");
 assert(pos("offlineprogress.js")>pos("offlinestatecore.js"),"offlineprogress.js 必須在 Offline state owner 之後載入。");
+assert(pos("levelprogressionaudit.js")>pos("levelprogression.js"),"levelprogressionaudit.js 必須在正式等級 owner 之後載入。");
+assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")>pos("levelprogression.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
 assert(pos("integritycontract.js")>=0,"index.html 缺少 integritycontract.js cache-bust 載入。");
 assert(pos("runtimeintegrity.js")>pos("integritycontract.js"),"integritycontract.js 必須先於 runtimeintegrity.js 載入。");
 assert(pos("finalintegrity.js")>pos("runtimeintegrity.js"),"finalintegrity.js 必須晚於 runtimeintegrity.js 載入。");
 assert(!index.includes('src="runtimeintegrityaddon.js?v='),"runtimeintegrityaddon.js 已納入正式 Runtime owner，不應再載入。");
+assert(!index.includes('src="level100balance.js?v='),"level100balance.js 已退休，不應再由正式頁面載入。");
+assert(!fs.existsSync("level100balance.js"),"level100balance.js 已退休，repo 不應再保留舊檔。");
 
 assert(/CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION/.test(contract),"Canonical Integrity Contract V1 export 缺失。");
 assert(/SAVE_SCHEMA_VERSION:15/.test(contract),"Integrity Contract 的 Save Schema 應為 15。");
 assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION:1/.test(contract),"Integrity Contract 必須要求舊存檔支援政策 V1。");
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION:1/.test(contract),"Integrity Contract 必須要求 Offline state normalization V1。");
 assert(/SAVE_FUTURE_VERSION_GUARD_VERSION:1/.test(contract),"Integrity Contract 必須要求未來版本存檔保護 V1。");
+assert(/LEGACY_COMPATIBILITY_OWNER_VERSION:1/.test(contract)&&/LEVEL_PROGRESSION_AUDIT_VERSION:1/.test(contract),"Integrity Contract 必須要求 compatibility owner 與通用等級 audit V1。");
 assert(/PLAYER_TITLE_CATALOG_VERSION:3/.test(contract),"Integrity Contract 的稱號 catalog 應為 V3。");
 assert(/ARENA_BY_WORLD_STATE_VERSION:2/.test(contract),"Integrity Contract 的 Arena By World state 應為 V2。");
 assert(/SECOND_WORLD_ARENA_UNLOCK_VERSION:2/.test(contract),"Integrity Contract 的宇宙 Arena unlock 應為 V2。");
@@ -68,6 +75,25 @@ assert(/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION:2/.test(contract),"Integrity Co
 assert(/BOUNTY_BALANCE_VERSION:2/.test(contract)&&/BOUNTY_DIFFICULTY_FORMULA_VERSION:2/.test(contract),"Integrity Contract 的 Bounty 應為 V2。");
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION:4/.test(contract),"Integrity Contract 的宇宙冒險 UI 應為 V4。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2/.test(contract),"Integrity Contract 的宇宙災厄完整檢查應為 V2。");
+
+assert(/LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION/.test(compatibilityOwners),"compatibilityowners.js 缺少正式 V1 export。");
+assert(/LEGACY_SAVE_VERSION_VALUE!==13/.test(compatibilityOwners)&&/LEGACY_MAX_LEVEL_VALUE!==500/.test(compatibilityOwners),"compatibilityowners.js 必須固定驗證 legacy Save V13 與舊第一世界上限 500。");
+assert(/SAVE_SCHEMA_OWNER="savemigration"/.test(compatibilityOwners)&&/LEVEL_CAP_RUNTIME_OWNER="levelprogression"/.test(compatibilityOwners)&&/ARENA_RUNTIME_OWNER="arenaByWorld"/.test(compatibilityOwners),"compatibilityowners.js 正式 owner 宣告不完整。");
+assert(/LEVEL_PROGRESSION_AUDIT_VERSION=VERSION/.test(levelAudit),"levelprogressionaudit.js 缺少正式 V1 export。");
+assert(!/level100ExpFactor/.test(levelAudit),"通用等級 audit 不得復活 level100ExpFactor 舊 alias。");
+
+const productionFiles=files.filter(file=>!file.startsWith("tests"+path.sep));
+const basename=file=>path.basename(file);
+const maxLevelConsumers=productionFiles.filter(file=>/\bMAX_LEVEL\b/.test(read(file))).map(basename).sort();
+const allowedMaxLevelConsumers=["compatibilityowners.js","engine.js","levelprogression.js","savemigration.js"].sort();
+assert(JSON.stringify(maxLevelConsumers)===JSON.stringify(allowedMaxLevelConsumers),"MAX_LEVEL consumer audit 異常："+maxLevelConsumers.join(", "));
+const saveVersionConsumers=productionFiles.filter(file=>/\bSAVE_VERSION\b/.test(read(file))).map(basename).sort();
+const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js"].sort();
+assert(JSON.stringify(saveVersionConsumers)===JSON.stringify(allowedSaveVersionConsumers),"SAVE_VERSION consumer audit 異常："+saveVersionConsumers.join(", "));
+const directArenaConsumers=productionFiles.filter(file=>!["dungeonprogress.js","savemigration.js"].includes(basename(file))&&/(?:dungeon\.arena|dungeon\?\.arena)/.test(read(file))).map(basename);
+assert(directArenaConsumers.length===0,"正式程式不得直接依賴 legacy dungeon.arena alias："+directArenaConsumers.join(", "));
+const retiredLevel100Consumers=productionFiles.filter(file=>/\blevel100ExpFactor\b/.test(read(file))).map(basename);
+assert(retiredLevel100Consumers.length===0,"level100ExpFactor 已退休，不得再有 consumer："+retiredLevel100Consumers.join(", "));
 
 assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION=1/.test(saveMigration),"savemigration.js 必須宣告舊存檔支援政策 V1。");
 assert(/SAVE_MIN_SUPPORTED_VERSION=1/.test(saveMigration)&&/SAVE_LEGACY_SUPPORT_MODE="all-known"/.test(saveMigration),"savemigration.js 應維持所有已知 V1+ 舊存檔支援政策。");
@@ -119,4 +145,4 @@ assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇�
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
 
-console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, and load order are synchronized.");
+console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, and load order are synchronized.");
