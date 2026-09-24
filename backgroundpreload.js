@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const BACKGROUND_PATH_TOKEN="/assets/backgrounds/";
  const SOURCE_PATH_TOKEN="/backgrounds-source/";
  const CRITICAL_MAX_WAIT_MS=4500;
@@ -78,6 +78,10 @@
    if(image.complete)finish();
   });
  }
+ function waitForDomReady(){
+  if(document.readyState!=="loading")return Promise.resolve();
+  return new Promise(resolve=>document.addEventListener("DOMContentLoaded",resolve,{once:true}));
+ }
  function signalReadyBeforeReveal(){
   window.BACKGROUND_PRELOAD_READY=true;
   try{window.dispatchEvent(new CustomEvent("civilization-background-ready-before-reveal"));}catch(e){}
@@ -132,6 +136,7 @@
   let timedOut=false;
   const timeout=new Promise(resolve=>setTimeout(()=>{timedOut=true;resolve();},CRITICAL_MAX_WAIT_MS));
   await Promise.race([Promise.all(jobs),timeout]);
+  await waitForDomReady();
   window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:done,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
   signalReadyBeforeReveal();
   revealGame();
@@ -142,5 +147,5 @@
  window.BACKGROUND_PRELOAD_POLICY_VERSION=VERSION;
  window.BACKGROUND_PRELOAD_CRITICAL_MAX_WAIT_MS=CRITICAL_MAX_WAIT_MS;
  window.BACKGROUND_PRELOAD_DEFERRED_CONCURRENCY=DEFERRED_CONCURRENCY;
- Promise.resolve().then(()=>window.preloadGameBackgrounds()).catch(()=>{signalReadyBeforeReveal();revealGame();});
+ Promise.resolve().then(()=>window.preloadGameBackgrounds()).catch(async()=>{await waitForDomReady();signalReadyBeforeReveal();revealGame();});
 })();
