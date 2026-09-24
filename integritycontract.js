@@ -4,6 +4,7 @@
   SAVE_SCHEMA_VERSION:15,
   SAVE_LOAD_PIPELINE_VERSION:2,
   SAVE_NORMALIZATION_PIPELINE_VERSION:1,
+  SAVE_FUTURE_VERSION_GUARD_VERSION:1,
   PLAYER_TITLE_CATALOG_VERSION:3,
   PLAYER_TITLE_INTEGRITY_VERSION:9,
   GM_PLAYER_TITLE_PREVIEW_INTEGRITY_VERSION:2,
@@ -21,7 +22,7 @@
   GAME_GUIDE_VERSION:18
  });
  const REQUIRED_APIS=Object.freeze([
-  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus",
+  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported",
   "normalizePlayerTitleState","playerIdentityNameHtml","equipPlayerTitle",
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile",
   "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat",
@@ -44,6 +45,13 @@
   if(Number(window.SECOND_WORLD_BOSS_BASE_STATS?.base)!==2700||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.hp)!==12||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.atk)!==2||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.def)!==1){
    errors.push({code:"SECOND_WORLD_BOSS_FORMULA",value:window.SECOND_WORLD_BOSS_BASE_STATS||null});
   }
+  try{
+   const supported=window.saveCompatibilityFor?.({saveVersion:window.SAVE_SCHEMA_VERSION});
+   const future=window.saveCompatibilityFor?.({saveVersion:Number(window.SAVE_SCHEMA_VERSION)+1});
+   if(supported?.supported!==true||supported?.isFuture!==false||future?.supported!==false||future?.isFuture!==true){
+    errors.push({code:"SAVE_FUTURE_VERSION_GUARD",supported,future});
+   }
+  }catch(error){errors.push({code:"SAVE_FUTURE_VERSION_GUARD_PROBE",error:String(error?.message||error)});}
   return {version:VERSION,phase:String(options.phase||"runtime"),passed:errors.length===0,errors,checkedAt:Date.now()};
  }
  window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION;
