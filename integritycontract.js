@@ -4,7 +4,9 @@
   SAVE_SCHEMA_VERSION:15,
   SAVE_LOAD_PIPELINE_VERSION:2,
   SAVE_NORMALIZATION_PIPELINE_VERSION:1,
+  SAVE_LEGACY_SUPPORT_POLICY_VERSION:1,
   SAVE_FUTURE_VERSION_GUARD_VERSION:1,
+  OFFLINE_STATE_NORMALIZATION_VERSION:1,
   PLAYER_TITLE_CATALOG_VERSION:3,
   PLAYER_TITLE_INTEGRITY_VERSION:9,
   GM_PLAYER_TITLE_PREVIEW_INTEGRITY_VERSION:2,
@@ -22,7 +24,7 @@
   GAME_GUIDE_VERSION:18
  });
  const REQUIRED_APIS=Object.freeze([
-  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported",
+  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState",
   "normalizePlayerTitleState","playerIdentityNameHtml","equipPlayerTitle",
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile",
   "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat",
@@ -35,6 +37,9 @@
    if(actual!==expected)errors.push({code:"VERSION_MISMATCH",name,expected,actual:Number.isFinite(actual)?actual:null});
   });
   REQUIRED_APIS.forEach(name=>{if(typeof window[name]!=="function")errors.push({code:"API_MISSING",name});});
+  if(Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known"){
+   errors.push({code:"SAVE_LEGACY_POLICY",minSupportedVersion:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});
+  }
   if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS)||window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==26){
    errors.push({code:"TITLE_CATALOG_COUNT",counts:{galaxy:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length??null,universe:window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS?.length??null,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length??null,total:window.PLAYER_TITLE_DEFS?.length??null}});
   }
@@ -46,12 +51,22 @@
    errors.push({code:"SECOND_WORLD_BOSS_FORMULA",value:window.SECOND_WORLD_BOSS_BASE_STATS||null});
   }
   try{
+   const legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION});
    const supported=window.saveCompatibilityFor?.({saveVersion:window.SAVE_SCHEMA_VERSION});
    const future=window.saveCompatibilityFor?.({saveVersion:Number(window.SAVE_SCHEMA_VERSION)+1});
-   if(supported?.supported!==true||supported?.isFuture!==false||future?.supported!==false||future?.isFuture!==true){
-    errors.push({code:"SAVE_FUTURE_VERSION_GUARD",supported,future});
+   if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||supported?.isFuture!==false||future?.supported!==false||future?.isFuture!==true){
+    errors.push({code:"SAVE_COMPATIBILITY_POLICY",legacy,supported,future});
    }
-  }catch(error){errors.push({code:"SAVE_FUTURE_VERSION_GUARD_PROBE",error:String(error?.message||error)});}
+  }catch(error){errors.push({code:"SAVE_COMPATIBILITY_POLICY_PROBE",error:String(error?.message||error)});}
+  try{
+   const probe={saveVersion:window.SAVE_SCHEMA_VERSION,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
+   const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789});
+   const snapshot=JSON.stringify(probe.offline);
+   const second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789});
+   if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot){
+    errors.push({code:"OFFLINE_STATE_NORMALIZATION",offline:probe.offline});
+   }
+  }catch(error){errors.push({code:"OFFLINE_STATE_NORMALIZATION_PROBE",error:String(error?.message||error)});}
   return {version:VERSION,phase:String(options.phase||"runtime"),passed:errors.length===0,errors,checkedAt:Date.now()};
  }
  window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION;
