@@ -121,7 +121,11 @@
   finally{setBusy(false);}
  }
  function prepareDownloadedState(raw){
-  const next=cloneJson(raw);if(!next||typeof next!=="object")throw new Error("雲端存檔內容無效。");
+  const source=cloneJson(raw);if(!source||typeof source!=="object")throw new Error("雲端存檔內容無效。");
+  if(typeof window.assertSaveVersionSupported!=="function"||typeof window.saveCompatibilityFor!=="function")throw new Error("正式存檔版本保護尚未載入。");
+  const compatibility=window.assertSaveVersionSupported(source,{label:"雲端存檔"});
+  if(typeof window.migrateSave!=="function")throw new Error("正式存檔 migration 尚未載入。");
+  const next=window.migrateSave(source,compatibility.sourceVersion,typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null,raw);
   const now=Date.now();
   if(!next.offline||typeof next.offline!=="object")next.offline={};
   next.offline.lastSettledAt=now;
@@ -138,13 +142,13 @@
    if(error)throw error;
    if(!data?.save_data){cloudMeta=null;renderOnly();setStatus("目前沒有可下載的雲端存檔。","error");return;}
    cloudMeta={updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1)};
+   const prepared=prepareDownloadedState(data.save_data);
    const local=localSnapshot();
    if(!confirm(confirmSummary("download",local,cloudMeta))){renderOnly();return;}
    const previous=cloneJson(state);
    try{
-    state=prepareDownloadedState(data.save_data);
-    if(typeof normalizeCurrentSaveState==="function")normalizeCurrentSaveState();
-     if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("cloud-download");
+    state=prepared;
+    if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("cloud-download");
     bindLocalOwner(u.id);
     if(typeof save==="function"&&!save(false))throw new Error("下載後寫入本機存檔失敗。");
     writeLocalMeta();
