@@ -1,5 +1,5 @@
 (function(){
- const VERSION=18;
+ const VERSION=19;
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
@@ -47,7 +47,7 @@
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","finalizeDungeonLoadedState","ensureDungeonState",
+  "normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState","finalizeDungeonLoadedState","ensureDungeonState",
   "normalizePlayerTitleState","getPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle",
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile","getArenaEnemyProfile",
   "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat","secondWorldAdventurePageHtml",
@@ -66,14 +66,24 @@
 
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1)fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",window.SAVE_WRITE_GUARD_VERSION);
  if(Number(window.SAVE_FUTURE_VERSION_GUARD_VERSION)!==1)fail("SAVE_FUTURE_VERSION_GUARD","未來版本存檔保護 V1 未載入",window.SAVE_FUTURE_VERSION_GUARD_VERSION);
+ if(Number(window.SAVE_LEGACY_SUPPORT_POLICY_VERSION)!==1||Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known")fail("SAVE_LEGACY_POLICY","舊存檔支援政策異常",{version:window.SAVE_LEGACY_SUPPORT_POLICY_VERSION,min:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});
+ if(Number(window.OFFLINE_STATE_NORMALIZATION_VERSION)!==1)fail("OFFLINE_STATE_OWNER","Offline state normalization V1 未載入",window.OFFLINE_STATE_NORMALIZATION_VERSION);
  try{
   const current=Number(window.SAVE_SCHEMA_VERSION)||0;
+  const legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION});
   const supported=window.saveCompatibilityFor?.({saveVersion:current});
   const future=window.saveCompatibilityFor?.({saveVersion:current+1});
   let threw=false;
   try{window.assertSaveVersionSupported?.({saveVersion:current+1},{label:"Runtime 測試存檔"});}catch(error){threw=error?.code==="FUTURE_SAVE_VERSION";}
-  if(supported?.supported!==true||future?.isFuture!==true||future?.supported!==false||!threw)fail("SAVE_FUTURE_VERSION_GUARD_PROBE","未來版本存檔保護 probe 異常",{supported,future,threw});
- }catch(error){fail("SAVE_FUTURE_VERSION_GUARD_PROBE","未來版本存檔保護 probe 執行失敗",String(error?.message||error));}
+  if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||future?.isFuture!==true||future?.supported!==false||!threw)fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 異常",{legacy,supported,future,threw});
+ }catch(error){fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 執行失敗",String(error?.message||error));}
+ try{
+  const probe={saveVersion:Number(window.SAVE_SCHEMA_VERSION)||1,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
+  const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789});
+  const snapshot=JSON.stringify(probe.offline);
+  const second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789});
+  if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot)fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 異常",probe.offline);
+ }catch(error){fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 執行失敗",String(error?.message||error));}
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema ${window.SAVE_SCHEMA_VERSION} 不一致`);
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
  if(state?.dungeon)["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(state.dungeon,key))fail("LEGACY_DUNGEON_STATE",`state.dungeon 不應再含舊欄位 ${key}`);});
