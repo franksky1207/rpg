@@ -27,7 +27,10 @@ const index=read("index.html");
 const contract=read("integritycontract.js");
 const runtime=read("runtimeintegrity.js");
 const finalIntegrity=read("finalintegrity.js");
+const saveMigration=read("savemigration.js");
 const saveVersionGuard=read("saveversionguard.js");
+const offlineStateCore=read("offlinestatecore.js");
+const offlineProgress=read("offlineprogress.js");
 const cloudSave=read("cloudsave.js");
 const gmData=read("gmdata.js");
 const dungeonProgress=read("dungeonprogress.js");
@@ -43,8 +46,10 @@ const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
 const pos=name=>index.indexOf('src="'+name+'?v=');
-assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須緊接正式 migration 之後載入。");
+assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
+assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須在正式 migration 之後載入。");
 assert(pos("saveversionguard.js")<pos("gmdata.js")&&pos("saveversionguard.js")<pos("cloudsave.js"),"saveversionguard.js 必須先於 JSON／Cloud 存檔入口載入。");
+assert(pos("offlineprogress.js")>pos("offlinestatecore.js"),"offlineprogress.js 必須在 Offline state owner 之後載入。");
 assert(pos("integritycontract.js")>=0,"index.html 缺少 integritycontract.js cache-bust 載入。");
 assert(pos("runtimeintegrity.js")>pos("integritycontract.js"),"integritycontract.js 必須先於 runtimeintegrity.js 載入。");
 assert(pos("finalintegrity.js")>pos("runtimeintegrity.js"),"finalintegrity.js 必須晚於 runtimeintegrity.js 載入。");
@@ -52,6 +57,8 @@ assert(!index.includes('src="runtimeintegrityaddon.js?v='),"runtimeintegrityaddo
 
 assert(/CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION/.test(contract),"Canonical Integrity Contract V1 export 缺失。");
 assert(/SAVE_SCHEMA_VERSION:15/.test(contract),"Integrity Contract 的 Save Schema 應為 15。");
+assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION:1/.test(contract),"Integrity Contract 必須要求舊存檔支援政策 V1。");
+assert(/OFFLINE_STATE_NORMALIZATION_VERSION:1/.test(contract),"Integrity Contract 必須要求 Offline state normalization V1。");
 assert(/SAVE_FUTURE_VERSION_GUARD_VERSION:1/.test(contract),"Integrity Contract 必須要求未來版本存檔保護 V1。");
 assert(/PLAYER_TITLE_CATALOG_VERSION:3/.test(contract),"Integrity Contract 的稱號 catalog 應為 V3。");
 assert(/ARENA_BY_WORLD_STATE_VERSION:2/.test(contract),"Integrity Contract 的 Arena By World state 應為 V2。");
@@ -62,24 +69,36 @@ assert(/BOUNTY_BALANCE_VERSION:2/.test(contract)&&/BOUNTY_DIFFICULTY_FORMULA_VER
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION:4/.test(contract),"Integrity Contract 的宇宙冒險 UI 應為 V4。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2/.test(contract),"Integrity Contract 的宇宙災厄完整檢查應為 V2。");
 
+assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION=1/.test(saveMigration),"savemigration.js 必須宣告舊存檔支援政策 V1。");
+assert(/SAVE_MIN_SUPPORTED_VERSION=1/.test(saveMigration)&&/SAVE_LEGACY_SUPPORT_MODE="all-known"/.test(saveMigration),"savemigration.js 應維持所有已知 V1+ 舊存檔支援政策。");
+assert(/normalizeOfflineSaveState\(target,\{sourceVersion:version\}\)/.test(saveMigration),"savemigration.js 必須委派 Offline state normalization 給單一 owner。");
+assert(!/function normalizeOffline\(/.test(saveMigration)&&!/function normalizeRealBattleSamples\(/.test(saveMigration),"savemigration.js 不得保留重複 Offline normalization owner。");
+assert(/OFFLINE_STATE_NORMALIZATION_VERSION=VERSION/.test(offlineStateCore),"offlinestatecore.js 缺少正式 normalization V1 export。");
+assert(/OFFLINE_BATTLE_SAMPLE_VERSION=3/.test(offlineStateCore),"offlinestatecore.js 應持有 Offline battle sample V3 正式常數。");
+assert(/window\.normalizeOfflineSaveState=normalizeOfflineSaveState/.test(offlineStateCore),"offlinestatecore.js 缺少正式 normalizeOfflineSaveState API。");
+assert(/return window\.normalizeOfflineSaveState\(state,/.test(offlineProgress),"offlineprogress.js runtime ensure 必須委派給 Offline state owner。");
+assert(!/storedSampleVersion/.test(offlineProgress),"offlineprogress.js 不得保留第二套 battleSampleVersion normalization。");
+
 assert(/SAVE_FUTURE_VERSION_GUARD_VERSION=VERSION/.test(saveVersionGuard),"saveversionguard.js 缺少正式 V1 export。");
 assert(/FUTURE_SAVE_VERSION/.test(saveVersionGuard),"saveversionguard.js 必須具備 future-version fail-closed 錯誤碼。");
+assert(/SAVE_MIN_SUPPORTED_VERSION/.test(saveVersionGuard)&&/isLegacy/.test(saveVersionGuard),"saveversionguard.js 必須套用正式 legacy support policy。");
 assert(/window\.migrateSave=function/.test(saveVersionGuard),"saveversionguard.js 必須防護 direct migrateSave 呼叫。");
-assert(/window\.load=function/.test(saveVersionGuard)&&/reason:"future-version"/.test(saveVersionGuard),"Local Load 必須在較新版本存檔時 fail-closed 並保留明確原因。");
+assert(/window\.load=function/.test(saveVersionGuard)&&/reason=info\.isFuture\?"future-version":"unsupported-legacy-version"/.test(saveVersionGuard),"Local Load 必須依正式相容範圍 fail-closed。");
 assert(/assertSaveVersionSupported\(source,\{label:"雲端存檔"\}\)/.test(cloudSave),"Cloud Download 必須使用共用未來版本存檔保護。");
 assert(/migrateSave\(source,compatibility\.sourceVersion/.test(cloudSave),"Cloud Download 必須走正式 migration pipeline。");
 assert(/assertSaveVersionSupported\(raw,\{version,label:"JSON 存檔"\}\)/.test(gmData),"GM JSON Import 必須使用共用未來版本存檔保護。");
 
-assert(/const VERSION=18;/.test(runtime),"runtimeintegrity.js 應為 V18。");
+assert(/const VERSION=19;/.test(runtime),"runtimeintegrity.js 應為 V19。");
 assert(/runCivilizationIntegrityContract\(\{phase:"runtime"\}\)/.test(runtime),"runtimeintegrity.js 必須執行 canonical contract。");
-assert(/SAVE_FUTURE_VERSION_GUARD_VERSION/.test(runtime)&&/FUTURE_SAVE_VERSION/.test(runtime),"runtimeintegrity.js 必須實際 probe 未來版本存檔保護。");
+assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION/.test(runtime)&&/OFFLINE_STATE_NORMALIZATION_VERSION/.test(runtime),"runtimeintegrity.js 必須 probe legacy policy 與 Offline state owner。");
 assert(/PROJECT_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime),"runtimeintegrity.js 缺少正式版本 export。");
 assert(!runtime.includes("v11 → v14"),"runtimeintegrity.js 不得保留舊 Schema 14 診斷文字。");
 assert(!/PLAYER_TITLE_DEFS\.length!==16/.test(runtime),"runtimeintegrity.js 不得再以 16 稱號為正式基準。");
 assert(!/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION\)!==1/.test(runtime),"runtimeintegrity.js 不得再要求舊宇宙文明戰鬥 V1。");
 assert(!/ARENA_BY_WORLD_STATE_VERSION\)!==1/.test(runtime),"runtimeintegrity.js 不得再要求舊 Arena By World V1。");
 
-assert(/const VERSION=18;/.test(finalIntegrity),"finalintegrity.js 應為 V18。");
+assert(/const VERSION=19;/.test(finalIntegrity),"finalintegrity.js 應為 V19。");
+assert(/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==19/.test(finalIntegrity),"finalintegrity.js 必須要求 Runtime Integrity V19。");
 assert(/runCivilizationIntegrityContract\(\{phase:"final"\}\)/.test(finalIntegrity),"finalintegrity.js 必須執行 canonical contract。");
 assert(!/PLAYER_TITLE_DEFS\.length!==16/.test(finalIntegrity),"finalintegrity.js 不得再以 16 稱號為正式基準。");
 assert(!/ARENA_BY_WORLD_STATE_VERSION\)!==1/.test(finalIntegrity),"finalintegrity.js 不得再要求舊 Arena By World V1。");
@@ -100,4 +119,4 @@ assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇�
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
 
-console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save-version guard, and load order are synchronized.");
+console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, and load order are synchronized.");
