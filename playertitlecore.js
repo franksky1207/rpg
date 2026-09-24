@@ -28,6 +28,20 @@
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function createBlankPlayerTitleState(){return {version:PLAYER_TITLE_STATE_VERSION,unlocked:[],equipped:null,pendingNotice:null};}
+ function validUnlockedSet(values){
+  const unlocked=new Set();
+  if(Array.isArray(values))values.forEach(id=>{if(typeof id==="string"&&BY_ID[id])unlocked.add(id);});
+  return unlocked;
+ }
+ function sanitizePlayerTitleState(sourceLike,unlockedValues=null){
+  const source=isObject(sourceLike)?sourceLike:createBlankPlayerTitleState();
+  const unlocked=unlockedValues instanceof Set?new Set(Array.from(unlockedValues).filter(id=>typeof id==="string"&&BY_ID[id])):validUnlockedSet(source.unlocked);
+  source.version=PLAYER_TITLE_STATE_VERSION;
+  source.unlocked=CATALOG_IDS.filter(id=>unlocked.has(id));
+  source.equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
+  source.pendingNotice=typeof source.pendingNotice==="string"&&unlocked.has(source.pendingNotice)?source.pendingNotice:null;
+  return {source,unlocked};
+ }
  function universeCalamityRow(target,def,index){
   const rows=Array.isArray(target?.secondWorld?.calamities)?target.secondWorld.calamities:[];
   return rows.find(row=>row&&typeof row==="object"&&row.calamityId===def.calamityId)||rows[index]||null;
@@ -35,14 +49,12 @@
  function normalizePlayerTitleState(target){
   if(!isObject(target))return target;
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
-  const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>CATALOG_IDS.includes(id)):[]);
+  const unlocked=validUnlockedSet(source.unlocked);
   DEFS.forEach(def=>{if(target?.marks?.entries?.[def.markId]?.acquired===true)unlocked.add(def.id);});
   UNIVERSE_DEFS.forEach((def,index)=>{const kills=Math.max(0,Math.floor(Number(universeCalamityRow(target,def,index)?.trueKills)||0));if(kills>=1)unlocked.add(def.id);});
   const mirrorBestWins=Math.max(0,Math.floor(Number(target?.dungeon?.mirror?.history?.bestWins)||0));
   MIRROR_DEFS.forEach(def=>{if(mirrorBestWins>=def.mirrorWins)unlocked.add(def.id);});
-  const equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
-  const pendingNotice=typeof source.pendingNotice==="string"&&unlocked.has(source.pendingNotice)?source.pendingNotice:null;
-  target.titles={version:PLAYER_TITLE_STATE_VERSION,unlocked:CATALOG_IDS.filter(id=>unlocked.has(id)),equipped,pendingNotice};
+  target.titles=sanitizePlayerTitleState(source,unlocked).source;
   return target;
  }
  function titleDefinition(id){return BY_ID[String(id||"")]||null;}
@@ -52,12 +64,12 @@
  function grantDefinition(def,target=state){
   if(!def||!isObject(target))return {changed:false,firstAcquisition:false,title:null};
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
-  const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>CATALOG_IDS.includes(id)):[]);
+  const unlocked=validUnlockedSet(source.unlocked);
   const firstAcquisition=!unlocked.has(def.id);
-  if(firstAcquisition){unlocked.add(def.id);source.unlocked=CATALOG_IDS.filter(id=>unlocked.has(id));source.pendingNotice=def.id;}
-  source.version=PLAYER_TITLE_STATE_VERSION;
-  source.equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
-  target.titles=source;
+  if(firstAcquisition)unlocked.add(def.id);
+  const sanitized=sanitizePlayerTitleState(source,unlocked).source;
+  if(firstAcquisition)sanitized.pendingNotice=def.id;
+  target.titles=sanitized;
   return {changed:firstAcquisition,firstAcquisition,title:def};
  }
  function grantFirstKillTitle(calamityId,target=state){return grantDefinition(titleForCalamity(calamityId),target);}
@@ -68,16 +80,14 @@
   const wins=Math.max(0,Math.floor(Number(bestWins)||0));
   const previousBestWins=Math.max(0,Math.floor(Number(options?.previousBestWins)||0));
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
-  const unlocked=new Set(Array.isArray(source.unlocked)?source.unlocked.filter(id=>CATALOG_IDS.includes(id)):[]);
+  const unlocked=validUnlockedSet(source.unlocked);
   const eligible=MIRROR_DEFS.filter(def=>wins>=def.mirrorWins),newlyUnlocked=[];
   eligible.forEach(def=>{if(!unlocked.has(def.id)){unlocked.add(def.id);newlyUnlocked.push(def);}});
-  source.version=PLAYER_TITLE_STATE_VERSION;
-  source.unlocked=CATALOG_IDS.filter(id=>unlocked.has(id));
-  source.equipped=typeof source.equipped==="string"&&unlocked.has(source.equipped)?source.equipped:null;
+  const sanitized=sanitizePlayerTitleState(source,unlocked).source;
   const noticeCandidates=newlyUnlocked.filter(def=>wins>previousBestWins&&def.mirrorWins>previousBestWins);
   const noticeTitle=noticeCandidates.length?noticeCandidates[noticeCandidates.length-1]:null;
-  if(noticeTitle)source.pendingNotice=noticeTitle.id;
-  target.titles=source;
+  if(noticeTitle)sanitized.pendingNotice=noticeTitle.id;
+  target.titles=sanitized;
   return {changed:newlyUnlocked.length>0,unlockedTitles:newlyUnlocked,noticeTitle,bestWins:wins,previousBestWins};
  }
  function pendingTitleNotice(target=state){const titles=ensureTitleState(target),id=titles?.pendingNotice;return typeof id==="string"?titleDefinition(id):null;}
