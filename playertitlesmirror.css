@@ -1,0 +1,175 @@
+/* Mirror title series V3 — single active owner.
+   Galaxy and Universe title rules are intentionally untouched.
+   Main glyph = text only; ::before = text clone only; ::after = open outer anomaly only. */
+.player-title--mirror-v3{
+ --mirror-size:1.18em;
+ --mirror-clone-color:rgba(255,255,255,.36);
+ --mirror-clone-x:1px;
+ --mirror-clone-y:0;
+ --mirror-clone-opacity:.34;
+ --mirror-field-opacity:.82;
+ font-size:var(--mirror-size);
+ letter-spacing:.08em;
+ background-size:360% 100%;
+ background-repeat:no-repeat;
+ background-color:transparent;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ text-shadow:none;
+ isolation:isolate;
+}
+.player-title--mirror-v3::before{
+ content:attr(data-title-text);
+ position:absolute;
+ left:0;
+ top:0;
+ inset:auto;
+ z-index:-1;
+ white-space:nowrap;
+ pointer-events:none;
+ color:var(--mirror-clone-color);
+ -webkit-text-fill-color:var(--mirror-clone-color);
+ background:none;
+ background-image:none;
+ background-clip:border-box;
+ -webkit-background-clip:border-box;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ clip-path:none;
+ filter:none;
+ text-shadow:none;
+ opacity:var(--mirror-clone-opacity);
+ transform:translate(var(--mirror-clone-x),var(--mirror-clone-y));
+}
+.player-title--mirror-v3::after{
+ content:"";
+ position:absolute;
+ inset:-.9em -2em;
+ z-index:-2;
+ pointer-events:none;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ clip-path:none;
+ background-color:transparent;
+ opacity:var(--mirror-field-opacity);
+}
+
+.player-title--mirror-v3-15{
+ --mirror-size:1.15em;
+ --mirror-clone-color:rgba(126,255,220,.42);
+ --mirror-clone-x:1px;
+ --mirror-clone-y:-.5px;
+ background-image:linear-gradient(100deg,#8bffe2 0%,#ffffff 24%,#ffe58f 48%,#d8ffff 72%,#75dcff 100%);
+ animation:mirrorV3Text15 2.4s ease-in-out infinite;
+}
+.player-title--mirror-v3-15::after{
+ background:
+  radial-gradient(circle at 5% 28%,rgba(255,255,255,.95) 0 1px,transparent 2px),
+  radial-gradient(circle at 95% 68%,rgba(255,225,126,.90) 0 1.2px,transparent 2.2px),
+  conic-gradient(from 244deg at 7% 50%,transparent 0 18%,rgba(125,255,217,.40) 20% 24%,transparent 27% 100%),
+  conic-gradient(from 64deg at 93% 50%,transparent 0 18%,rgba(255,224,126,.38) 20% 24%,transparent 27% 100%);
+ animation:mirrorV3Field15 2.4s ease-in-out infinite;
+}
+
+.player-title--mirror-v3-16{
+ --mirror-size:1.16em;
+ --mirror-clone-color:rgba(139,207,255,.42);
+ --mirror-clone-x:-1px;
+ background-image:linear-gradient(90deg,#8bcfff 0%,#ffffff 22%,#d9f1ff 40%,#fff0ae 58%,#ffffff 74%,#7bc3ff 100%);
+ animation:mirrorV3Text16 1.9s steps(3,end) infinite;
+}
+.player-title--mirror-v3-16::after{
+ background:
+  linear-gradient(90deg,transparent 0 8%,rgba(224,246,255,.28) 9% 10%,transparent 11% 24%,rgba(255,239,185,.20) 25% 26%,transparent 27% 73%,rgba(180,220,255,.24) 74% 75%,transparent 76% 90%,rgba(255,255,255,.30) 91% 92%,transparent 93%),
+  linear-gradient(180deg,transparent 0 32%,rgba(255,255,255,.14) 33% 34%,transparent 35% 66%,rgba(180,220,255,.12) 67% 68%,transparent 69%);
+ animation:mirrorV3Field16 1.9s steps(5,end) infinite;
+}
+
+.player-title--mirror-v3-17{
+ --mirror-size:1.18em;
+ --mirror-clone-color:rgba(143,78,255,.48);
+ --mirror-clone-x:-2px;
+ --mirror-clone-opacity:.42;
+ background-image:linear-gradient(98deg,#16070b 0%,#ff3947 22%,#ffffff 42%,#b18cff 60%,#632a8d 78%,#09070b 100%);
+ text-shadow:2px 0 0 rgba(255,48,62,.78),-2px 0 0 rgba(132,74,255,.74);
+ animation:mirrorV3Text17 1.3s steps(4,end) infinite;
+}
+.player-title--mirror-v3-17::after{
+ background:
+  linear-gradient(117deg,transparent 0 8%,rgba(255,48,61,.48) 9% 10%,transparent 12% 36%,rgba(255,255,255,.22) 38% 39%,transparent 41% 70%,rgba(150,91,255,.40) 72% 73%,transparent 75%),
+  linear-gradient(63deg,transparent 0 20%,rgba(255,255,255,.18) 22% 23%,transparent 25% 68%,rgba(255,53,69,.28) 70% 71%,transparent 73%);
+ animation:mirrorV3Field17 1.15s steps(3,end) infinite;
+}
+
+.player-title--mirror-v3-18{
+ --mirror-size:1.20em;
+ --mirror-clone-color:rgba(255,198,73,.40);
+ --mirror-clone-x:1px;
+ --mirror-clone-y:.5px;
+ background-image:linear-gradient(94deg,#7d3c08 0%,#ffbd35 20%,#fff0a8 40%,#ffffff 54%,#ffd568 74%,#fff8d8 100%);
+ animation:mirrorV3Text18 2.3s ease-in-out infinite;
+}
+.player-title--mirror-v3-18::after{
+ background:
+  conic-gradient(from 260deg at 8% 78%,transparent 0 18%,rgba(255,213,102,.34) 20% 25%,transparent 28% 100%),
+  conic-gradient(from 100deg at 92% 78%,transparent 0 18%,rgba(180,142,235,.30) 20% 25%,transparent 28% 100%),
+  radial-gradient(circle at 7% 70%,rgba(255,220,126,.78) 0 1px,transparent 2px),
+  radial-gradient(circle at 93% 30%,rgba(200,172,255,.72) 0 1px,transparent 2px);
+ animation:mirrorV3Field18 2.3s ease-in-out infinite;
+}
+
+.player-title--mirror-v3-19{
+ --mirror-size:1.23em;
+ --mirror-clone-color:rgba(226,208,255,.46);
+ --mirror-clone-x:-1px;
+ --mirror-clone-opacity:.40;
+ background-image:linear-gradient(92deg,#fff8e8 0%,#ffffff 18%,#ffe69c 36%,#f0e5ff 58%,#ffffff 78%,#eadcff 100%);
+ animation:mirrorV3Text19 1.75s ease-in-out infinite;
+}
+.player-title--mirror-v3-19::after{
+ background:
+  radial-gradient(circle at 4% 20%,rgba(255,255,255,.92) 0 1.2px,transparent 2.2px),
+  radial-gradient(circle at 96% 76%,rgba(227,205,255,.88) 0 1.2px,transparent 2.2px),
+  linear-gradient(90deg,transparent 0 8%,rgba(255,239,185,.24) 10% 11%,transparent 13% 43%,rgba(255,255,255,.26) 49% 51%,transparent 57% 87%,rgba(221,204,255,.24) 89% 90%,transparent 92%);
+ animation:mirrorV3Field19 1.7s steps(4,end) infinite;
+}
+
+.player-title--mirror-v3-20{
+ --mirror-size:1.27em;
+ --mirror-clone-color:rgba(205,236,255,.48);
+ --mirror-clone-x:2px;
+ --mirror-clone-opacity:.44;
+ background-image:linear-gradient(90deg,#ffffff 0%,#bff0ff 14%,#ffe99c 29%,#f4d8ff 43%,#ffffff 56%,#c8fff2 70%,#ffd993 84%,#ffffff 100%);
+ background-size:460% 100%;
+ animation:mirrorV3Text20 1.4s steps(5,end) infinite;
+}
+.player-title--mirror-v3-20::after{
+ inset:-1em -2.2em;
+ background:
+  radial-gradient(circle at 2% 18%,rgba(255,255,255,1) 0 1.3px,transparent 2.3px),
+  radial-gradient(circle at 98% 72%,rgba(238,207,255,.96) 0 1.4px,transparent 2.4px),
+  conic-gradient(from 238deg at 5% 50%,transparent 0 16%,rgba(179,239,255,.48) 18% 23%,transparent 26% 100%),
+  conic-gradient(from 58deg at 95% 50%,transparent 0 16%,rgba(237,204,255,.46) 18% 23%,transparent 26% 100%),
+  linear-gradient(102deg,transparent 0 10%,rgba(255,255,255,.24) 12% 13%,transparent 15% 38%,rgba(255,225,150,.22) 40% 41%,transparent 43% 67%,rgba(203,239,255,.22) 69% 70%,transparent 72%);
+ animation:mirrorV3Field20 1.35s steps(4,end) infinite;
+}
+
+@keyframes mirrorV3Text15{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes mirrorV3Field15{0%,100%{opacity:.68;transform:scale(.98)}50%{opacity:.96;transform:scale(1.02)}}
+@keyframes mirrorV3Text16{0%,100%{background-position:0% 50%}34%{background-position:46% 50%}67%{background-position:100% 50%}}
+@keyframes mirrorV3Field16{0%,100%{opacity:.62}40%{opacity:.88}60%{opacity:.48}}
+@keyframes mirrorV3Text17{0%,100%{background-position:0% 50%;transform:translateX(0)}32%{background-position:72% 50%;transform:translateX(1px)}35%{transform:translateX(-1px)}68%{background-position:100% 50%;transform:translateX(0)}}
+@keyframes mirrorV3Field17{0%,100%{opacity:.68;transform:translateX(0)}35%{opacity:.92;transform:translateX(1px)}68%{opacity:.54;transform:translateX(-1px)}}
+@keyframes mirrorV3Text18{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes mirrorV3Field18{0%,100%{opacity:.62;transform:scale(.99)}50%{opacity:.94;transform:scale(1.03)}}
+@keyframes mirrorV3Text19{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes mirrorV3Field19{0%,100%{opacity:.58;transform:translateX(-1px)}50%{opacity:.96;transform:translateX(1px)}}
+@keyframes mirrorV3Text20{0%,100%{background-position:0% 50%;transform:translateX(0)}25%{background-position:35% 50%;transform:translateX(1px)}50%{background-position:68% 50%;transform:translateX(-1px)}75%{background-position:100% 50%;transform:translateX(0)}}
+@keyframes mirrorV3Field20{0%,100%{opacity:.62;transform:scale(.98)}25%{opacity:.96;transform:scale(1.02)}50%{opacity:.70;transform:translateX(1px)}75%{opacity:.90;transform:translateX(-1px)}}
+
+@media (prefers-reduced-motion:reduce){
+ .player-title--mirror-v3,.player-title--mirror-v3::before,.player-title--mirror-v3::after{animation:none!important}
+}
