@@ -1,0 +1,77 @@
+name: Temporary Optimize Void And Special
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-optimize-void-special.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply approved optimizations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          p=Path('dungeonvoid.js')
+          s=p.read_text()
+          replacements=[
+            (' function equivalentPower(floor){return 24+floorNumber(floor)/10;}\n',''),
+            ('  const f=floorNumber(floor),e=equivalentPower(f);','  const f=floorNumber(floor);'),
+            ('   equivalentPower:e,\n',''),
+            (' window.voidMirageEquivalentPower=equivalentPower;\n','')
+          ]
+          for old,new in replacements:
+            assert s.count(old)==1,(old,s.count(old))
+            s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('specialencounter.js')
+          s=p.read_text()
+          old='''  if(!special)return false;\n  if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});\n  else state.hp=playerCombatStats().hp;\n  await showSpecialEncounterAlert(special,forcedByBlackMarket);\n  const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});'''
+          new='''  if(!special)return false;\n  await showSpecialEncounterAlert(special,forcedByBlackMarket);\n  if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});\n  else state.hp=playerCombatStats().hp;\n  const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});'''
+          assert s.count(old)==1,s.count(old)
+          p.write_text(s.replace(old,new,1))
+
+          p=Path('tests/runtime/js-integrity.js')
+          s=p.read_text()
+          old='''assert(specialEncounter.includes('if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});'),"特殊遭遇正式觸發後必須具備回滿血處理。");\nassert(specialEncounter.includes('const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});'),"特殊遭遇正式戰鬥入口不得遺失。");\nassert(index.includes('src="specialencounter.js?v=20260924-special-full-heal1"'),"index.html 必須載入特殊遭遇滿血規則 cache-bust。");'''
+          new='''assert(!/equivalentPower/.test(dungeonVoid),"虛空 V2 已改為純樓層線性公式，不得保留 equivalentPower 舊語意。\");\nconst specialFlowStart=specialEncounter.indexOf('const special=rollSpecialMonster(');\nconst specialFlowEnd=specialEncounter.indexOf('if(result.win&&world===1',specialFlowStart);\nconst specialFlow=specialFlowStart>=0&&specialFlowEnd>specialFlowStart?specialEncounter.slice(specialFlowStart,specialFlowEnd):"";\nconst specialAlertPos=specialFlow.indexOf('await showSpecialEncounterAlert(special,forcedByBlackMarket);');\nconst specialHealPos=specialFlow.indexOf('if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});');\nconst specialFightPos=specialFlow.indexOf('const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});');\nassert(specialAlertPos>=0&&specialHealPos>specialAlertPos&&specialFightPos>specialHealPos,"特殊遭遇流程必須為提示完成後回滿血，再進入正式特殊戰鬥。\");\nassert(index.includes('src="specialencounter.js?v=20260924-special-heal-order2"'),"index.html 必須載入特殊遭遇回血順序 V2 cache-bust。\");'''
+          assert s.count(old)==1,s.count(old)
+          s=s.replace(old,new,1)
+          s=s.replace('src="dungeonvoid.js?v=20260924-void-linear-v2"','src="dungeonvoid.js?v=20260924-void-linear-cleanup1"')
+          s=s.replace('index.html 必須載入虛空線性公式 V2 cache-bust。','index.html 必須載入虛空線性公式 V2 cleanup cache-bust。')
+          p.write_text(s)
+
+          p=Path('index.html')
+          s=p.read_text()
+          assert s.count('dungeonvoid.js?v=20260924-void-linear-v2')==1
+          assert s.count('specialencounter.js?v=20260924-special-full-heal1')==1
+          s=s.replace('dungeonvoid.js?v=20260924-void-linear-v2','dungeonvoid.js?v=20260924-void-linear-cleanup1',1)
+          s=s.replace('specialencounter.js?v=20260924-special-full-heal1','specialencounter.js?v=20260924-special-heal-order2',1)
+          p.write_text(s)
+          PY
+          node --check dungeonvoid.js
+          node --check specialencounter.js
+          node --check tests/runtime/js-integrity.js
+          rm .github/workflows/temp-optimize-void-special.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add dungeonvoid.js specialencounter.js tests/runtime/js-integrity.js index.html .github/workflows/temp-optimize-void-special.yml
+          git commit -m "Optimize void formula cleanup and special heal ordering"
+          git push origin HEAD:main
+          sleep 2
+          gh workflow run runtime-integrity.yml --ref main
+          gh workflow run story-integrity.yml --ref main
