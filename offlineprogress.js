@@ -9,9 +9,9 @@
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
- const OFFLINE_SAMPLES_PER_SPEED=8;
+ const OFFLINE_SAMPLES_PER_SPEED=Math.max(1,Math.floor(Number(window.OFFLINE_STATE_SAMPLES_PER_SPEED)||8));
  const OFFLINE_SAMPLE_SELECTION_VERSION=2;
- const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
+ const OFFLINE_COMBAT_SPEEDS=Object.freeze(Array.isArray(window.OFFLINE_STATE_COMBAT_SPEEDS)?window.OFFLINE_STATE_COMBAT_SPEEDS.slice():[1,1.5,2]);
  const OFFLINE_BATTLE_SAMPLE_VERSION=Math.max(1,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||1));
  const CLOCK_ROLLBACK_TOLERANCE_MS=5*60*1000;
  const HEARTBEAT_MS=60*1000;
@@ -30,38 +30,8 @@
  }
  function yieldThread(){return new Promise(resolve=>setTimeout(resolve,0));}
  function ensureOfflineState(){
-  const t=now();
-  if(!isObject(state.offline))state.offline={};
-  const o=state.offline;
-  const rawTime=o.lastSettledAt==null?NaN:Number(o.lastSettledAt);
-  o.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=t?Math.floor(rawTime):t;
-  const maxObserved=Number(o.maxObservedWallClock);
-  o.maxObservedWallClock=Number.isFinite(maxObserved)&&maxObserved>=0?Math.floor(maxObserved):Math.max(o.lastSettledAt,t);
-  const lockUntil=Number(o.timeLockUntil);
-  o.timeLockUntil=Number.isFinite(lockUntil)&&lockUntil>0?Math.floor(lockUntil):0;
-  const storedSampleVersion=Math.max(0,Math.floor(Number(o.battleSampleVersion)||0));
-  if(storedSampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION){
-   o.battleSamples=[];
-   o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;o.pendingSettlement=null;
-  }
-  o.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
-  const map=o.farmMap==null?NaN:Number(o.farmMap),enemy=o.farmEnemy==null?NaN:Number(o.farmEnemy);
-  o.farmMap=Number.isInteger(map)&&map>=0&&map<MAPS.length?map:null;
-  o.farmEnemy=Number.isInteger(enemy)&&enemy>=0&&enemy<=3?enemy:null;
-  const avg=Number(o.avgBattleMs);
-  o.avgBattleMs=Number.isFinite(avg)&&avg>=600&&avg<=60000?Math.round(avg):0;
-  o.sampleCount=Math.max(0,Math.min(20,Math.floor(Number(o.sampleCount)||0)));
-  if(o.sampleCount<=0||o.avgBattleMs<=0||o.farmMap==null||o.farmEnemy==null){o.farmMap=null;o.farmEnemy=null;o.avgBattleMs=0;o.sampleCount=0;}
-  const validSamples=(Array.isArray(o.battleSamples)?o.battleSamples:[]).filter(row=>isObject(row)&&Number(row.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&OFFLINE_COMBAT_SPEEDS.includes(Number(row.combatSpeed))&&Number.isFinite(Number(row.actualMs))&&Number(row.actualMs)>=REAL_BATTLE_MIN_MS&&Number(row.actualMs)<=300000&&Number.isFinite(Number(row.cycleMs))&&Number(row.cycleMs)>=Number(row.actualMs)&&Number(row.cycleMs)<=REAL_BATTLE_MAX_MS&&Number.isFinite(Number(row.adjustedMs))&&Number(row.adjustedMs)>=REAL_BATTLE_MIN_MS&&Number(row.adjustedMs)<=REAL_BATTLE_MAX_MS);
-  const keptSamples=[];
-  OFFLINE_COMBAT_SPEEDS.forEach(speed=>{
-   const matches=validSamples.map((row,index)=>({row,index})).filter(entry=>Number(entry.row.combatSpeed)===speed).slice(-OFFLINE_SAMPLES_PER_SPEED);
-   keptSamples.push(...matches);
-  });
-  keptSamples.sort((a,b)=>a.index-b.index);
-  o.battleSamples=keptSamples.map(entry=>entry.row);
-  if(!isObject(o.pendingSettlement))o.pendingSettlement=null;
-  return o;
+  if(typeof window.normalizeOfflineSaveState!=="function")throw new Error("Offline save normalization owner unavailable");
+  return window.normalizeOfflineSaveState(state,{sourceVersion:Number(state?.saveVersion)||Number(window.SAVE_SCHEMA_VERSION)||1,currentTime:now()});
  }
  function wallClockGuard(o,t=now()){
   const maxObserved=Math.max(0,Math.floor(Number(o.maxObservedWallClock)||0));
