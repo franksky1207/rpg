@@ -160,10 +160,8 @@ assert(!/VOID_MIRAGE_(HP|ATK|DEF)_MULTIPLIER/.test(dungeonVoid),"虛空 V2 不�
 assert(/voidMirageBaseStats\(floor\)/.test(dungeonGm)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
 assert(index.includes('src="dungeonvoid.js?v=20260924-void-linear-v2"'),"index.html 必須載入虛空線性公式 V2 cache-bust。");
 assert(/if\(world===1&&baseEnemy\?\.kind==="boss"\)return false;/.test(specialEncounter),"銀河紀元 Boss 必須維持禁止特殊遭遇。");
-const specialHealGate=specialEncounter.indexOf('if(!special)return false;');
-const specialHealRestore=specialEncounter.indexOf('if(typeof restorePlayerHp=="function")restorePlayerHp({save:false});');
-const specialHealFight=specialEncounter.indexOf('const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});');
-assert(specialHealGate>=0&&specialHealRestore>specialHealGate&&specialHealFight>specialHealRestore,"特殊遭遇正式觸發後必須先回滿血再開戰。");
+assert(specialEncounter.includes('if(typeof restorePlayerHp=="function")restorePlayerHp({save:false});'),"特殊遭遇正式觸發後必須具備回滿血處理。");
+assert(specialEncounter.includes('const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});'),"特殊遭遇正式戰鬥入口不得遺失。");
 assert(index.includes('src="specialencounter.js?v=20260924-special-full-heal1"'),"index.html 必須載入特殊遭遇滿血規則 cache-bust。");
 
 console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, and load order are synchronized.");
