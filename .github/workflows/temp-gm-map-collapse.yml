@@ -1,0 +1,45 @@
+name: Temporary GM map collapse patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-gm-map-collapse.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply narrow GM benchmark default-collapse patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('gmpowerbenchmark.js')
+          s=p.read_text()
+          old='benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",true)'
+          new='benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",false)'
+          if s.count(old)!=1:
+              raise SystemExit(f'unexpected map default-open match count: {s.count(old)}')
+          p.write_text(s.replace(old,new,1))
+
+          p=Path('index.html')
+          s=p.read_text()
+          old='gmpowerbenchmark.js?v=20260923-civ-owner-batch2'
+          new='gmpowerbenchmark.js?v=20260924-gm-map-collapse1'
+          if s.count(old)!=1:
+              raise SystemExit(f'unexpected cache-bust match count: {s.count(old)}')
+          p.write_text(s.replace(old,new,1))
+          PY
+          rm .github/workflows/temp-gm-map-collapse.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add gmpowerbenchmark.js index.html .github/workflows/temp-gm-map-collapse.yml
+          git commit -m "Collapse GM map benchmark by default"
+          git push origin HEAD:main
