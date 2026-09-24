@@ -41,13 +41,13 @@
   if(contract?.passed!==true)fail("INTEGRITY_CONTRACT",`Canonical Integrity Contract 未通過`,contract?.errors||null);
  }
 
- const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1),0):0;
+ const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1,0),0):0;
  if(!Array.isArray(MAPS)||MAPS.length!==expectedMaps)fail("WORLD_MAP_COUNT",`MAPS 應為 ${expectedMaps} 張，實際 ${Array.isArray(MAPS)?MAPS.length:"非陣列"}`);
  if(window.WORLD_MAP_REGISTRATION_REPORT?.passed!==true)fail("WORLD_MAP_REGISTRY","世界地圖固定註冊檢查未通過",window.WORLD_MAP_REGISTRATION_REPORT?.errors||null);
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
 
  const required=[
-  "normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","finalizeDungeonLoadedState","ensureDungeonState",
+  "normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","finalizeDungeonLoadedState","ensureDungeonState",
   "normalizePlayerTitleState","getPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle",
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile","getArenaEnemyProfile",
   "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat","secondWorldAdventurePageHtml",
@@ -65,6 +65,15 @@
  retiredApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_API",`已退休 API ${name} 不應再存在`);});
 
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1)fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",window.SAVE_WRITE_GUARD_VERSION);
+ if(Number(window.SAVE_FUTURE_VERSION_GUARD_VERSION)!==1)fail("SAVE_FUTURE_VERSION_GUARD","未來版本存檔保護 V1 未載入",window.SAVE_FUTURE_VERSION_GUARD_VERSION);
+ try{
+  const current=Number(window.SAVE_SCHEMA_VERSION)||0;
+  const supported=window.saveCompatibilityFor?.({saveVersion:current});
+  const future=window.saveCompatibilityFor?.({saveVersion:current+1});
+  let threw=false;
+  try{window.assertSaveVersionSupported?.({saveVersion:current+1},{label:"Runtime 測試存檔"});}catch(error){threw=error?.code==="FUTURE_SAVE_VERSION";}
+  if(supported?.supported!==true||future?.isFuture!==true||future?.supported!==false||!threw)fail("SAVE_FUTURE_VERSION_GUARD_PROBE","未來版本存檔保護 probe 異常",{supported,future,threw});
+ }catch(error){fail("SAVE_FUTURE_VERSION_GUARD_PROBE","未來版本存檔保護 probe 執行失敗",String(error?.message||error));}
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema ${window.SAVE_SCHEMA_VERSION} 不一致`);
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
  if(state?.dungeon)["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(state.dungeon,key))fail("LEGACY_DUNGEON_STATE",`state.dungeon 不應再含舊欄位 ${key}`);});
