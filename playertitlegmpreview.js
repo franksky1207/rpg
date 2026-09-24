@@ -2,7 +2,7 @@
  const VERSION=4;
  let selectedId=null;
 
- function defs(){return Array.from(window.PLAYER_TITLE_ALL_DEFS||[]);}
+ function defs(){return Array.from(window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_ALL_DEFS||[]);}
  function current(){
   const list=defs();
   if(!selectedId&&list.length)selectedId=list[0].id;
@@ -49,5 +49,6 @@
  window.gmPlayerTitlePreviewHtml=html;
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=VERSION;
  window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=1;
+ window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=1;
  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("test","player-title-preview",html,"稱號預覽");
 })();
