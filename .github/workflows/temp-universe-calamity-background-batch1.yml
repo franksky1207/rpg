@@ -1,0 +1,111 @@
+name: Temporary Universe Calamity Background Batch1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-universe-calamity-background-batch1.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply universe calamity background batch1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          p=Path('secondworldcalamityrun.js')
+          s=p.read_text()
+          s=s.replace(' const CONTINUOUS_VERSION=1;',' const CONTINUOUS_VERSION=2;',1)
+          anchor=''' const TITLE_FIRST_KILL_VERSION=2;\n let activeRun=null;\n'''
+          insert=''' const TITLE_FIRST_KILL_VERSION=2;\n let activeRun=null;\n\n function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}\n function startBackground(){if(!backgroundEnabled()||typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}\n function stopBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("calamity");}\n function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}\n function catchUpPreviewPolicy(){\n  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;\n  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;\n  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;\n  return window.backgroundProgressCatchUpPolicy("calamity",next,false);\n }\n'''
+          assert s.count(anchor)==1,s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          old=''' function finish(reason){\n  if(!activeRun)return null;\n  activeRun.active=false;activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();\n  return runSnapshot();\n }'''
+          new=''' function finish(reason){\n  if(!activeRun)return null;\n  if(typeof save==="function")save(false);\n  stopBackground();\n  activeRun.active=false;activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();\n  return runSnapshot();\n }'''
+          assert s.count(old)==1,s.count(old)
+          s=s.replace(old,new,1)
+          old=''' async function continuous(value,options={}){\n  if(!activeRun?.active){const started=begin(value,"continuous");if(!started.ok)return started;}\n  const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;\n  const onEnd=typeof options.onEnd==="function"?options.onEnd:null;\n  while(activeRun?.active){\n   const step=fightNext(options);\n   if(!step.ok){if(onEnd)await onEnd(step.run);return step;}\n   if(onBattle)await onBattle(step);\n   if(step.ended||!activeRun?.active){const run=step.run||runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:step.reason,result:step,run};}\n   await new Promise(resolve=>setTimeout(resolve,0));\n  }\n  const run=runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:run?.reason||"ended",run};\n }'''
+          new=''' async function continuous(value,options={}){\n  if(!activeRun?.active){const started=begin(value,"continuous");if(!started.ok)return started;}\n  const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;\n  const onEnd=typeof options.onEnd==="function"?options.onEnd:null;\n  startBackground();\n  while(activeRun?.active){\n   const previewPolicy=catchUpPreviewPolicy();\n   const fast=!!previewPolicy?.active;\n   const step=fightNext({...options,\n    save:fast?previewPolicy?.shouldCheckpoint===true:options.save,\n    logs:fast?previewPolicy?.shouldPresentBattle===true:options.logs,\n    preparePresentation:fast?previewPolicy?.shouldPresentBattle===true:options.preparePresentation\n   });\n   if(!step.ok){if(onEnd)await onEnd(step.run);return step;}\n   if(onBattle)await onBattle(step);\n   if(step.ended||!activeRun?.active){const run=step.run||runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:step.reason,result:step,run};}\n   if(!fastCatchUp())await new Promise(resolve=>setTimeout(resolve,0));\n  }\n  const run=runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:run?.reason||"ended",run};\n }'''
+          assert s.count(old)==1,s.count(old)
+          s=s.replace(old,new,1)
+          anchor=''' function stop(){\n  if(!activeRun?.active)return {ok:false,reason:"no-active-run",run:runSnapshot()};\n  activeRun.stopRequested=true;\n  return {ok:true,ended:false,run:runSnapshot()};\n }\n'''
+          insert=''' function stop(){\n  if(!activeRun?.active)return {ok:false,reason:"no-active-run",run:runSnapshot()};\n  activeRun.stopRequested=true;\n  return {ok:true,ended:false,run:runSnapshot()};\n }\n function stopForPageHide(){\n  if(!activeRun?.active)return;\n  if(activeRun.mode==="continuous"&&backgroundEnabled())return;\n  activeRun.stopRequested=true;\n  activeRun.active=false;\n  activeRun.reason="pagehide";\n  activeRun.endedAt=Date.now();\n  stopBackground();\n }\n'''
+          assert s.count(anchor)==1,s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          anchor=''' window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;\n'''
+          insert=''' window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;\n window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;\n window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;\n'''
+          assert s.count(anchor)==1
+          s=s.replace(anchor,insert,1)
+          anchor=''' window.requestSecondWorldCalamityStop=stop;\n window.getSecondWorldCalamityRunSnapshot=runSnapshot;\n})();\n'''
+          insert=''' window.requestSecondWorldCalamityStop=stop;\n window.getSecondWorldCalamityRunSnapshot=runSnapshot;\n window.secondWorldCalamityBackgroundEnabled=backgroundEnabled;\n window.stopSecondWorldCalamityRunForPageHide=stopForPageHide;\n window.addEventListener("pagehide",stopForPageHide);\n})();\n'''
+          assert s.count(anchor)==1,s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          p.write_text(s)
+
+          p=Path('secondworldcalamityui.js')
+          s=p.read_text()
+          anchor=''' let reviewSelectedId=null;\n let reviewBattle=null;\n'''
+          insert=''' let reviewSelectedId=null;\n let reviewBattle=null;\n\n const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("calamity")?window.backgroundProgressSleep(ms,"calamity"):new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));\n function continuousGapMs(){\n  if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");\n  return window.combatOuterGapMs("calamity","battle");\n }\n function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}\n function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("calamity"):null;}\n function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("calamity"):null;}\n function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}\n async function consumeCatchUpDelay(ms){\n  const delay=Math.max(0,Number(ms)||0);\n  if(delay<=0)return true;\n  if(fastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){\n   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"calamity");\n   if(Number(consumed?.remaining)>0)await sleep(consumed.remaining);\n   return Number(consumed?.remaining)<=0;\n  }\n  await sleep(delay);\n  return false;\n }\n'''
+          assert s.count(anchor)==1,s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          old=''' async function continuous(){\n  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{\n   async onBattleComplete(step){ui.lastBattle=step.result;ui.finalRun=step.run;ui.phase="combat";render();await animate(step.result);},\n   async onEnd(run){ui.finalRun=run;}\n  });\n  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();\n }'''
+          new=''' async function continuous(){\n  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{\n   async onBattleComplete(step){\n    ui.lastBattle=step.result;ui.finalRun=step.run;ui.phase="combat";\n    const fast=fastCatchUp();\n    const policy=fast?catchUpStep():null;\n    if(fast){\n     if(policy?.shouldPresentBattle){render();await animate(step.result);}\n     else{\n      await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));\n      if(policy?.shouldRefreshUi)render();\n     }\n     if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");\n    }else{\n     render();await animate(step.result);\n     if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");\n    }\n    if(!step.ended&&window.getSecondWorldCalamityRunSnapshot?.()?.active){\n     if(fast)await consumeCatchUpDelay(continuousGapMs());\n     else await sleep(continuousGapMs());\n     if(fast&&!fastCatchUp()){\n      const finalPolicy=catchUpFinal();\n      if(finalPolicy?.shouldRefreshUi)render();\n      if(finalPolicy?.shouldCheckpoint&&typeof save==="function")save(false);\n     }\n    }\n   },\n   async onEnd(run){ui.finalRun=run;}\n  });\n  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();\n }'''
+          assert s.count(old)==1,s.count(old)
+          s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('index.html')
+          s=p.read_text()
+          assert s.count('secondworldcalamityrun.js?v=20260924-maintenance-batch1')==1
+          assert s.count('secondworldcalamityui.js?v=20260922-review-batch3')==1
+          s=s.replace('secondworldcalamityrun.js?v=20260924-maintenance-batch1','secondworldcalamityrun.js?v=20260924-universe-background-batch1',1)
+          s=s.replace('secondworldcalamityui.js?v=20260922-review-batch3','secondworldcalamityui.js?v=20260924-universe-background-batch1',1)
+          p.write_text(s)
+          PY
+
+          node --check secondworldcalamityrun.js
+          node --check secondworldcalamityui.js
+          python3 <<'PY'
+          from pathlib import Path
+          run=Path('secondworldcalamityrun.js').read_text()
+          ui=Path('secondworldcalamityui.js').read_text()
+          index=Path('index.html').read_text()
+          checks=[
+           ('background start','backgroundProgressStart("calamity",{mode:"continuous"})' in run),
+           ('background stop','backgroundProgressStop("calamity")' in run),
+           ('fast catch-up owner','backgroundProgressFastCatchUpActive("calamity")' in run),
+           ('catch-up policy','backgroundProgressCatchUpPolicy("calamity",next,false)' in run),
+           ('pagehide preserve','activeRun.mode==="continuous"&&backgroundEnabled()' in run),
+           ('pagehide listener','window.addEventListener("pagehide",stopForPageHide);' in run),
+           ('ui background sleep','backgroundProgressSleep(ms,"calamity")' in ui),
+           ('ui catch-up step','backgroundProgressCatchUpStep("calamity")' in ui),
+           ('ui catch-up credit','backgroundProgressConsumeCatchUpCredit(delay,"calamity")' in ui),
+           ('run cache','secondworldcalamityrun.js?v=20260924-universe-background-batch1' in index),
+           ('ui cache','secondworldcalamityui.js?v=20260924-universe-background-batch1' in index),
+          ]
+          failed=[name for name,ok in checks if not ok]
+          assert not failed,failed
+          print('Universe calamity background batch1 static self-check passed.')
+          PY
+
+          rm .github/workflows/temp-universe-calamity-background-batch1.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add secondworldcalamityrun.js secondworldcalamityui.js index.html .github/workflows/temp-universe-calamity-background-batch1.yml
+          git commit -m "Wire universe calamity continuous background battle"
+          git push origin HEAD:main
+          sleep 2
+          gh workflow run runtime-integrity.yml --ref main
+          gh workflow run story-integrity.yml --ref main
