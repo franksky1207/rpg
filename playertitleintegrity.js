@@ -1,5 +1,5 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]);
@@ -22,7 +22,7 @@
  if(Number(window.CIVILIZATION_CALAMITY_CONFIG_VERSION)!==2)fail("TITLE_CALAMITY_CONFIG_VERSION","銀河災厄稱號 metadata owner 應為 Calamity Config V2",window.CIVILIZATION_CALAMITY_CONFIG_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_TITLE_METADATA_VERSION)!==1)fail("TITLE_UNIVERSE_CONFIG_VERSION","宇宙災厄稱號 metadata owner V1 未載入",window.SECOND_WORLD_CALAMITY_TITLE_METADATA_VERSION);
  if(Number(window.UNIVERSE_CALAMITY_TITLE_BACKFILL_VERSION)!==1||Number(window.UNIVERSE_CALAMITY_TITLE_ID_BACKFILL_VERSION)!==1)fail("TITLE_UNIVERSE_BACKFILL_VERSION","宇宙災厄稱號舊檔／ID 補發 owner 未完整載入",{backfill:window.UNIVERSE_CALAMITY_TITLE_BACKFILL_VERSION,id:window.UNIVERSE_CALAMITY_TITLE_ID_BACKFILL_VERSION});
- if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==1)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 應為 V1",window.PLAYER_TITLE_RENDERER_VERSION);
+ if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==2||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 應為 Base V2／Universe V1／Mirror V3",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION});
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI 應為 V1",window.PLAYER_TITLE_UI_VERSION);
  if(Number(window.MIRROR_TITLE_CLONE_PERFORMANCE_VERSION)!==1)fail("TITLE_MIRROR_CLONE_PERFORMANCE","鏡像敵人稱號手機效能控制 V1 未載入",window.MIRROR_TITLE_CLONE_PERFORMANCE_VERSION);
  if(calamityDefs.length!==10||calamityIds.length!==10||universeDefs.length!==10||universeIds.length!==10||mirrorDefs.length!==6||mirrorIds.length!==6||catalogDefs.length!==26||catalogIds.length!==26){
@@ -101,9 +101,9 @@
   const previewHtml=window.playerIdentityNameHtml({name:"Frank",titleId:mirrorDefs[4]?.id,target:ownedTarget,allowUnownedTitle:true});
   if(!calamityHtml.includes("player-title--tier-10")||!calamityHtml.includes(calamityDefs[9]?.name||"")||!calamityHtml.includes("player-identity-name"))fail("TITLE_CALAMITY_RENDERER","銀河災厄 renderer 異常",calamityHtml);
   if(!universeHtml.includes("player-title--universe-calamity-10")||!universeHtml.includes(universeDefs[9]?.name||""))fail("TITLE_UNIVERSE_RENDERER","宇宙災厄 renderer 異常",universeHtml);
-  if(!mirrorHtml.includes("player-title--mirror-20")||!mirrorHtml.includes(mirrorDefs[5]?.name||"")||mirrorHtml.indexOf(mirrorDefs[5]?.name||"")>mirrorHtml.indexOf("Frank"))fail("TITLE_MIRROR_RENDERER","鏡像 renderer 未正確輸出於玩家名稱前",mirrorHtml);
+  if(!mirrorHtml.includes("player-title--mirror-v3-20")||mirrorHtml.includes("player-title--mirror-20")||!mirrorHtml.includes(mirrorDefs[5]?.name||"")||mirrorHtml.indexOf(mirrorDefs[5]?.name||"")>mirrorHtml.indexOf("Frank"))fail("TITLE_MIRROR_RENDERER","鏡像 renderer 未正確輸出 V3 class 於玩家名稱前",mirrorHtml);
   if(blockedHtml.includes("player-title")||blockedHtml.includes(mirrorDefs[4]?.name||""))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blockedHtml);
-  if(!previewHtml.includes("player-title--mirror-19")||!previewHtml.includes(mirrorDefs[4]?.name||""))fail("TITLE_PREVIEW_BYPASS","明確 allowUnownedTitle 預覽應可顯示未取得稱號",previewHtml);
+  if(!previewHtml.includes("player-title--mirror-v3-19")||previewHtml.includes("player-title--mirror-19")||!previewHtml.includes(mirrorDefs[4]?.name||""))fail("TITLE_PREVIEW_BYPASS","明確 allowUnownedTitle 預覽應以 Mirror V3 顯示未取得稱號",previewHtml);
  }catch(error){fail("TITLE_RENDERER_PROBE","稱號 renderer probe 失敗",String(error?.message||error));}
 
  try{
