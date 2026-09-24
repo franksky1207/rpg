@@ -28,7 +28,7 @@
   mirror.forEach(def=>{
    const html=typeof window.playerTitleHtml==="function"?window.playerTitleHtml(def.id):"";
    if(!html.includes(`player-title--mirror-v3-${def.mirrorWins}`)||!html.includes("player-title--mirror-v3")||!html.includes("data-title-text"))fail("MIRROR_RENDER_V3",`鏡像 ${def.mirrorWins} 勝 renderer V3 hook 遺失`,html);
-   if(html.includes("player-title--mirror-"))fail("MIRROR_LEGACY_CLASS",`鏡像 ${def.mirrorWins} 勝仍輸出舊 Mirror class`,html);
+   if(html.includes(`player-title--mirror-${def.mirrorWins}`))fail("MIRROR_LEGACY_CLASS",`鏡像 ${def.mirrorWins} 勝仍輸出舊 Mirror class`,html);
   });
   const links=Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
   const eraLinks=links.filter(node=>String(node.getAttribute("href")||"").includes("playertitlesera.css"));
