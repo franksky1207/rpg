@@ -694,7 +694,7 @@
   return '<div class="gm-power-benchmark"><div class="muted gm-hub-note">戰力基準測試統一使用「角色能力測試」的 GM 沙盒角色。模式紀元可以獨立切換，因此即使正式角色仍在銀河紀元，也能直接預測宇宙紀元戰鬥。</div>'+
    snapshotHtml()+
    '<div class="gm-ability-test-stack gmpb-section-stack">'+
-    benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",true)+
+    benchmarkSubsection("地圖怪測試",mapBenchmarkHtml(),"map",false)+
     benchmarkSubsection("特殊怪測試",special,"special",false)+
     benchmarkSubsection("懸賞戰測試",modeRenderer(window.gmBountyTestHtml,"懸賞戰測試尚未載入。"),"bounty",false)+
     benchmarkSubsection("競技場測試",modeRenderer(window.gmArena5TestHtml,"競技場測試尚未載入。"),"arena",false)+
