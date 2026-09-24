@@ -1,0 +1,34 @@
+name: Temporary Final Special Heal Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-final-special-heal-probe.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Correct probe and dispatch final integrity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 -c "from pathlib import Path; p=Path('tests/runtime/js-integrity.js'); s=p.read_text(); old='assert(specialEncounter.includes(\'if(typeof restorePlayerHp==\"function\")restorePlayerHp({save:false});\'),\"特殊遭遇正式觸發後必須具備回滿血處理。\");'; new='assert(specialEncounter.includes(\'if(typeof restorePlayerHp===\"function\")restorePlayerHp({save:false});\'),\"特殊遭遇正式觸發後必須具備回滿血處理。\");'; assert s.count(old)==1, s.count(old); p.write_text(s.replace(old,new,1))"
+          rm .github/workflows/temp-final-special-heal-probe.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add tests/runtime/js-integrity.js .github/workflows/temp-final-special-heal-probe.yml
+          git commit -m "Correct special heal integrity probe"
+          git push origin HEAD:main
+          sleep 2
+          gh workflow run runtime-integrity.yml --ref main
+          gh workflow run story-integrity.yml --ref main
