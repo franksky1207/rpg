@@ -1,8 +1,8 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  let selectedId=null;
 
- function defs(){return Array.from(window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_ALL_DEFS||[]);}
+ function defs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
  function current(){
   const list=defs();
   if(!selectedId&&list.length)selectedId=list[0].id;
@@ -48,7 +48,11 @@
  window.gmSetPlayerTitlePreviewTier=setPreview;
  window.gmPlayerTitlePreviewHtml=html;
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=VERSION;
- window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=1;
- window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=1;
- if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("test","player-title-preview",html,"稱號預覽");
+ window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=2;
+ window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=2;
+ window.GM_PLAYER_TITLE_PREVIEW_OWNER_VERSION=1;
+ let registered=false;
+ if(typeof window.replaceGmHubSectionRenderer==="function")registered=window.replaceGmHubSectionRenderer("test","player-title-preview",html,"稱號預覽")===true;
+ if(!registered&&typeof window.registerGmHubSection==="function")registered=window.registerGmHubSection("test","稱號預覽",html,{id:"player-title-preview"})===true;
+ window.GM_PLAYER_TITLE_PREVIEW_SECTION_OWNER_VERSION=registered?1:0;
 })();
