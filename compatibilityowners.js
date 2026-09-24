@@ -1,0 +1,28 @@
+(function(){
+ const VERSION=1;
+ const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
+ const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
+ const SAVE_SCHEMA_OWNER="savemigration";
+ const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
+ const ARENA_RUNTIME_OWNER="arenaByWorld";
+ const ARENA_ALIAS_POLICY="legacy-read-through-only";
+
+ window.LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION;
+ window.LEGACY_SAVE_VERSION=LEGACY_SAVE_VERSION_VALUE;
+ window.LEGACY_SAVE_VERSION_ALIAS_VERSION=1;
+ window.LEGACY_FIRST_WORLD_LEVEL_CAP=LEGACY_MAX_LEVEL_VALUE;
+ window.LEGACY_MAX_LEVEL_ALIAS_VERSION=1;
+ window.SAVE_SCHEMA_RUNTIME_OWNER=SAVE_SCHEMA_OWNER;
+ window.LEVEL_CAP_RUNTIME_OWNER=LEVEL_CAP_RUNTIME_OWNER;
+ window.ARENA_PROGRESS_RUNTIME_OWNER=ARENA_RUNTIME_OWNER;
+ window.ARENA_LEGACY_ALIAS_POLICY=ARENA_ALIAS_POLICY;
+ window.ARENA_LEGACY_ALIAS_AUDIT_VERSION=1;
+
+ const errors=[];
+ if(LEGACY_SAVE_VERSION_VALUE!==13)errors.push({code:"LEGACY_SAVE_VERSION",actual:LEGACY_SAVE_VERSION_VALUE});
+ if(Number(window.SAVE_SCHEMA_VERSION)!==15)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION});
+ if(LEGACY_MAX_LEVEL_VALUE!==500)errors.push({code:"LEGACY_MAX_LEVEL",actual:LEGACY_MAX_LEVEL_VALUE});
+ if(Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000)errors.push({code:"LEVEL_CAP_OWNER",first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP});
+ if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
+ window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors};
+})();
