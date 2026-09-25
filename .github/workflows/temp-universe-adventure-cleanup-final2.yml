@@ -1,0 +1,76 @@
+name: Temporary Universe Adventure Cleanup Final2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-universe-adventure-cleanup-final2.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply robust cleanup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          Path('playersemanticsui.js').write_text('''(function(){\n const VERSION=5;\n function universe(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}\n function applyHomeSemantics(){\n  if(typeof document==="undefined")return;\n  const home=document.querySelector(".home-screen");\n  if(!home)return;\n  const subtitle=home.querySelector(".home-title .muted");\n  if(subtitle)subtitle.textContent=universe()?"挑戰宇宙主線、持續成長與換裝，向更高階戰區推進。":"打怪、升級、換裝，逐步推進銀河紀元主線。";\n  home.querySelectorAll(".menu-card").forEach(card=>{\n   const title=card.querySelector("b")?.textContent?.trim();\n   const desc=card.querySelector("span");\n   if(title==="副本"&&desc)desc.textContent="挑戰懸賞、競技場、虛空幻境與鏡像戰";\n  });\n }\n function apply(){\n  applyHomeSemantics();\n  if(typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();\n }\n const base=typeof window.render==="function"?window.render:null;\n if(base){\n  window.render=function(...args){const result=base.apply(this,args);apply();return result;};\n }\n if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();\n window.PLAYER_SEMANTICS_UI_VERSION=VERSION;\n window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;\n})();\n''')
+
+          p=Path('worldmapui.js'); s=p.read_text()
+          def must(old,new,label):
+            global s
+            n=s.count(old)
+            assert n==1, f'{label}: expected 1, got {n}'
+            s=s.replace(old,new,1)
+
+          must('''  window.requestSecondWorldAdventureProgressFocus=function(){\n    secondWorldAdventureFocusPending=true;\n    return true;\n  };\n  window.applySecondWorldAdventureProgressFocus=function(){\n''','''  window.requestSecondWorldAdventureProgressFocus=function(){\n    secondWorldAdventureFocusPending=true;\n    return true;\n  };\n  window.cancelSecondWorldAdventureProgressFocus=function(){\n    secondWorldAdventureFocusPending=false;\n    return true;\n  };\n  window.applySecondWorldAdventureProgressFocus=function(){\n''','focus owner')
+          must('''    const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");\n    if(!screen)return false;\n    const index=secondWorldLatestProgressBossIndex();\n    const target=index>=0?screen.querySelector(`[data-second-world-boss="${index}"]`):null;\n    if(!target)return false;\n''','''    const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");\n    if(!screen){secondWorldAdventureFocusPending=false;return false;}\n    const index=secondWorldLatestProgressBossIndex();\n    const target=index>=0?screen.querySelector(`[data-second-world-boss="${index}"]`):null;\n    if(!target){secondWorldAdventureFocusPending=false;return false;}\n''','pending consume')
+          must('''  function secondWorldActiveRegionIndex(){\n    const regions=secondWorldRegions();\n    if(!regions.length)return -1;\n    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?window.secondWorldHighestUnlockedBossIndex():-1;\n''','''  function secondWorldActiveRegionIndex(){\n    const regions=secondWorldRegions();\n    if(!regions.length)return -1;\n    const highest=secondWorldLatestProgressBossIndex();\n''','latest owner reuse')
+          must('''    if(secondWorldAdventureView===next)return;\n    secondWorldAdventureView=next;\n''','''    if(secondWorldAdventureView===next)return;\n    if(next!=="universe"&&typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();\n    secondWorldAdventureView=next;\n''','view cancel')
+          must('  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1;','  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2;','focus version')
+          p.write_text(s)
+
+          p=Path('tests/runtime/js-integrity.js'); s=p.read_text()
+          start=s.index('assert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1/')
+          end=s.index('assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION',start)
+          replacement='''assert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2/.test(worldmap),"宇宙冒險目前進度自動定位應為 V2。");\nassert(/requestSecondWorldAdventureProgressFocus=function/.test(worldmap)&&/applySecondWorldAdventureProgressFocus=function/.test(worldmap)&&/cancelSecondWorldAdventureProgressFocus=function/.test(worldmap),"宇宙冒險必須提供一次性定位 request/apply/cancel owner。");\nassert(/scrollIntoView/.test(worldmap)&&/block:"center"/.test(worldmap)&&/data-second-world-boss/.test(worldmap),"宇宙冒險定位必須以目前 Boss 元素置中，不得依賴固定像素捲動。");\nassert(/function secondWorldActiveRegionIndex\\(\\)[\\s\\S]*secondWorldLatestProgressBossIndex\\(\\)/.test(worldmap),"宇宙目前區域必須共用 latest-progress Boss owner。");\nassert(!/installStyles|applyUniverseAdventureSemantics|SECOND_WORLD_ADVENTURE_HEADER_POLISH_VERSION/.test(playerSemanticsUi),"已退休的宇宙冒險頂部背包 cleanup 不得殘留。");\nfor(const fn of ["go","backToAdventureFromInventory","closeBattleResultModal"]){\n const start=ui.indexOf("function "+fn+"(");\n assert(start>=0,"找不到 "+fn+"。\");\n const next=ui.indexOf("\\nfunction ",start+1);\n const body=ui.slice(start,next>=0?next:ui.length);\n assert(body.includes("requestSecondWorldAdventureProgressFocus"),fn+" 必須保留宇宙目前 Boss 定位請求。");\n}\nassert(/applySecondWorldAdventureProgressFocus/.test(playerSemanticsUi),"playersemanticsui.js 必須在 render 後套用一次性宇宙冒險定位。");\n'''
+          s=s[:start]+replacement+s[end:]
+          p.write_text(s)
+
+          p=Path('index.html'); s=p.read_text()
+          for name in ['worldmapui.js','playersemanticsui.js']:
+            s,n=re.subn(rf'src="{re.escape(name)}\\?v=[^"]+"',f'src="{name}?v=20260925-universe-adventure-cleanup1"',s,count=1)
+            assert n==1,f'cache bust {name}: {n}'
+          p.write_text(s)
+          PY
+
+          node --check worldmapui.js
+          node --check playersemanticsui.js
+          node --check tests/runtime/js-integrity.js
+          node tests/runtime/js-integrity.js
+          grep -q 'SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2' worldmapui.js
+          ! grep -q 'SECOND_WORLD_ADVENTURE_HEADER_POLISH_VERSION' playersemanticsui.js
+          ! grep -q 'applyUniverseAdventureSemantics' playersemanticsui.js
+
+          rm -f .github/workflows/temp-universe-adventure-cleanup-final.yml
+          rm -f .github/workflows/temp-universe-adventure-cleanup-final2.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add worldmapui.js playersemanticsui.js tests/runtime/js-integrity.js index.html .github/workflows/temp-universe-adventure-cleanup-final.yml .github/workflows/temp-universe-adventure-cleanup-final2.yml
+          git commit -m "Clean universe adventure focus owners"
+          git push origin HEAD:main
+          sleep 2
+          gh workflow run runtime-integrity.yml --ref main
+          gh workflow run story-integrity.yml --ref main
