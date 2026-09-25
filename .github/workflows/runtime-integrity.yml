@@ -42,6 +42,9 @@ jobs:
       - name: Run full JavaScript syntax and owner integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+      - name: Run unlimited VIP integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run background asset integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
