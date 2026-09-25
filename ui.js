@@ -348,7 +348,7 @@ function inventoryPage(){
 }
 // Inventory equipment mutation/actions are owned by equipmentlock.js.
 // ui.js intentionally keeps rendering only; runtime onclick handlers resolve after the full script stack loads.
-function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();render()}
+function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();if(typeof window.requestInventoryPostRedeemFocus==="function")window.requestInventoryPostRedeemFocus();render();if(typeof window.applyInventoryEntryFocus==="function")window.applyInventoryEntryFocus()}
 
 function settingsPage(){
  const s=state.settings,name=escapePlayerName(currentPlayerName());

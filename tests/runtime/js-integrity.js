@@ -49,6 +49,7 @@ const levelAudit=read("levelprogressionaudit.js");
 const dungeonVoid=read("dungeonvoid.js");
 const dungeonGm=read("dungeongm.js");
 const specialEncounter=read("specialencounter.js");
+const inventoryFocus=read("inventoryfocus.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -67,6 +68,20 @@ assert(pos("finalintegrity.js")>pos("runtimeintegrity.js"),"finalintegrity.js �
 assert(!index.includes('src="runtimeintegrityaddon.js?v='),"runtimeintegrityaddon.js 已納入正式 Runtime owner，不應再載入。");
 assert(!index.includes('src="level100balance.js?v='),"level100balance.js 已退休，不應再由正式頁面載入。");
 assert(!fs.existsSync("level100balance.js"),"level100balance.js 已退休，repo 不應再保留舊檔。");
+
+assert(pos("inventoryfocus.js")>pos("equipmentlock.js"),"inventoryfocus.js 必須在 equipmentlock.js 後載入，以共用正式裝備比較 owner。");
+assert(/INVENTORY_ENTRY_FOCUS_VERSION=VERSION/.test(inventoryFocus)&&/const VERSION=2;/.test(inventoryFocus),"背包進入定位 owner 應為 V2。");
+assert(/requestInventoryEntryFocus=requestEntryFocus/.test(inventoryFocus)&&/requestInventoryPostRedeemFocus=requestPostRedeemFocus/.test(inventoryFocus)&&/applyInventoryEntryFocus=applyFocus/.test(inventoryFocus),"背包定位必須提供 entry、post-redeem 與 apply API。");
+const inventoryLostPos=inventoryFocus.indexOf("if(hasLostGear())");
+const inventoryUpgradePos=inventoryFocus.indexOf("if(hasUpgrade())");
+const inventoryTopPos=inventoryFocus.indexOf('mode==="entry"');
+assert(inventoryLostPos>=0&&inventoryUpgradePos>inventoryLostPos&&inventoryTopPos>inventoryUpgradePos,"背包進入定位優先序必須為遺失裝備 → 較強裝備 → 頂部。");
+assert(/scrollIntoView/.test(inventoryFocus)&&/\.lost-gear-card/.test(inventoryFocus)&&/equipBestAll/.test(inventoryFocus),"背包定位必須使用實際 DOM 目標，不得依賴固定像素位置。");
+assert(/if\(args\[0\]==="inventory"\)return enterInventory/.test(inventoryFocus)&&/openAdventureInventory=function/.test(inventoryFocus),"首頁與冒險背包入口必須共用同一套 entry focus owner。");
+assert(/const mode=pendingMode;[\s\S]*pendingMode=null/.test(inventoryFocus),"背包定位 pending 必須在套用時一次性消耗。");
+assert(/mode==="post-redeem"/.test(inventoryFocus)||/mode==="entry"/.test(inventoryFocus),"背包定位必須區分 entry 與 post-redeem 模式。");
+assert(/function redeemGear\(i\)[\s\S]*requestInventoryPostRedeemFocus[\s\S]*render\(\)[\s\S]*applyInventoryEntryFocus/.test(ui),"成功贖回後必須在 render 前建立 post-redeem request，並在 render 後套用定位。");
+assert(index.includes('inventoryfocus.js?v=20260925-inventory-focus-batch2'),"index.html 必須載入最新 inventoryfocus.js cache-bust。");
 
 assert(/CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION/.test(contract),"Canonical Integrity Contract V1 export 缺失。");
 assert(/SAVE_SCHEMA_VERSION:15/.test(contract),"Integrity Contract 的 Save Schema 應為 15。");
