@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const BACKGROUND_GM_GATE_VERSION=1;
  let busy=false;
  let activeContext=null;
@@ -11,19 +11,27 @@
    modal:typeof document!=="undefined"?document.getElementById("battleResultModal"):null
   };
  }
- function rewardItemHtml(item){
+ function rewardItemHtml(item,label="主線裝備"){
   if(!item)return '<div class="muted">裝備：無</div>';
   const base=typeof itemHtml==="function"?itemHtml(item,true):item.name;
   const ability=typeof gearAbilityHtml==="function"?gearAbilityHtml(item,true):"";
-  return `<div style="margin-top:10px"><b>主線裝備</b><div class="item">${base}${ability}</div></div>`;
+  return `<div style="margin-top:10px"><b>${label}</b><div class="item">${base}${ability}</div></div>`;
+ }
+ function rewardRows(result){
+  const rows=Array.isArray(result?.equipmentRewards)&&result.equipmentRewards.length?result.equipmentRewards:(result?.item?[{item:result.item,kept:result.kept===true,sale:result.sale||null,vip16Extra:false}]:[]);
+  return rows.map(row=>{
+   const label=row.vip16Extra?"VIP16 額外主線裝備":"主線裝備";
+   if(row.kept)return rewardItemHtml(row.item,label);
+   if(row.sale&&typeof window.equipmentSaleText==="function")return `<div class="notice" style="margin-top:10px"><b>${label}已依自動出售設定處理</b><div class="muted" style="margin-top:5px">獲得 ${window.equipmentSaleText(row.sale)}</div></div>`;
+   return rewardItemHtml(row.item,label);
+  }).join("");
  }
  function showVictory(result,combat){
   const {title,detail,modal}=battleModal();if(!title||!detail||!modal)return;
   title.textContent="宇宙紀元・戰鬥勝利";
   const levelUp=Number(result.levelAfter)>Number(result.levelBefore)?`<div class="notice" style="margin-top:10px"><b>升級至 Lv.${result.levelAfter}</b></div>`:"";
   const first=result.firstKill?'<div class="notice" style="margin-top:10px"><b>主線首次擊破，後續 Boss 解鎖條件已更新。</b></div>':"";
-  const saleText=result.sale&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(result.sale):"";
-  const gearHtml=result.kept?rewardItemHtml(result.item):result.sale?`<div class="notice" style="margin-top:10px"><b>主線裝備已依自動出售設定處理</b><div class="muted" style="margin-top:5px">獲得 ${saleText}</div></div>`:rewardItemHtml(result.item);
+  const gearHtml=rewardRows(result);
   detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${result.boss.name} Lv.${result.boss.level}</div><div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${result.xp.toLocaleString()}</b></div><div class="stat">暗物質<b>+${result.darkMatter.toLocaleString()}</b></div><div class="stat">暗能量<b>+${result.darkEnergy}</b></div></div>${gearHtml}${levelUp}${first}<div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
   modal.classList.add("show");
  }
@@ -139,10 +147,15 @@
  function clearContext(ctx){if(activeContext===ctx)activeContext=null;if(window.activeSecondWorldMainlineContext===ctx)window.activeSecondWorldMainlineContext=null;}
  function accumulate(ctx,settled){
   ctx.wins++;ctx.totalXp+=Math.max(0,Number(settled.xp)||0);
-  ctx.totalDarkMatter+=Math.max(0,Number(settled.darkMatter)||0)+Math.max(0,Number(settled.sale?.quote?.darkMatter)||0);
-  ctx.totalDarkEnergy+=Math.max(0,Number(settled.darkEnergy)||0)+Math.max(0,Number(settled.sale?.quote?.darkEnergy)||0);
-  if(settled.kept&&settled.item)ctx.items.push(settled.item);
-  else if(settled.sale)ctx.autoSoldCount++;
+  ctx.totalDarkMatter+=Math.max(0,Number(settled.darkMatter)||0);
+  ctx.totalDarkEnergy+=Math.max(0,Number(settled.darkEnergy)||0);
+  const rows=Array.isArray(settled.equipmentRewards)&&settled.equipmentRewards.length?settled.equipmentRewards:(settled.item?[{item:settled.item,kept:settled.kept===true,sale:settled.sale||null}]:[]);
+  rows.forEach(row=>{
+   ctx.totalDarkMatter+=Math.max(0,Number(row.sale?.quote?.darkMatter)||0);
+   ctx.totalDarkEnergy+=Math.max(0,Number(row.sale?.quote?.darkEnergy)||0);
+   if(row.kept&&row.item)ctx.items.push(row.item);
+   else if(row.sale)ctx.autoSoldCount++;
+  });
  }
  async function runFlow(index,continuous){
   if(busy||typeof battleBusy!=="undefined"&&battleBusy)return false;

@@ -53,6 +53,8 @@ const inventoryFocus=read("inventoryfocus.js");
 const vipLootCore=read("viplootcore.js");
 const traitDrop=read("traitdrop.js");
 const combatCore=read("combatcore.js");
+const secondWorldRewards=read("secondworldrewards.js");
+const secondWorldMainline=read("secondworldmainline.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -79,6 +81,13 @@ assert(/applyVipLootQualityPromotions/.test(traitDrop)&&/vipLootForcedType/.test
 assert(/applyVipLootQualityPromotions\(q,\{boss:false\}\)/.test(bounty)&&/vipLootForcedType\(\)/.test(bounty)&&!/\(state\.vipLevel\|\|0\)>=14&&Math\.random\(\)<\.05/.test(bounty)&&!/\(state\.vipLevel\|\|0\)>=8&&Math\.random\(\)<\.15/.test(bounty),"銀河／宇宙懸賞 VIP8／14 必須委派共用 VIP Loot owner。");
 assert(/vipLootBossExtraDropTriggered\(\{boss:e\.kind==="boss"\}\)/.test(combatCore)&&!/e\.kind==="boss"&&\(state\.vipLevel\|\|0\)>=16&&Math\.random\(\)<\.15/.test(combatCore),"銀河主線 VIP16 Boss 額外掉落必須委派共用 VIP Loot owner。");
 assert(index.includes('viplootcore.js?v=20260925-vip-loot-batch1')&&index.includes('combatcore.js?v=20260925-vip-loot-batch1')&&index.includes('traitdrop.js?v=20260925-vip-loot-batch1')&&index.includes('dungeonbounty.js?v=20260925-vip-loot-batch1'),"index.html 必須載入 VIP Loot Batch1 最新 cache-bust。");
+assert(/const VERSION=4;/.test(secondWorldRewards)&&/SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1/.test(secondWorldRewards),"宇宙主線 VIP Loot pipeline 應為正式 V1。");
+assert(/applyVipLootQualityPromotions\(baseQuality,\{boss:true/.test(secondWorldRewards)&&/vipLootForcedType\(\{rng/.test(secondWorldRewards),"宇宙主線固定 Boss 裝備必須套用共用 VIP8／14／18 owner。");
+assert(/vipLootBossExtraDropTriggered\(\{boss:true\}\)/.test(secondWorldRewards)&&/vip16Extra:true/.test(secondWorldRewards),"宇宙主線 VIP16 必須由共用 owner 產生額外 Boss 裝備。");
+assert(/equipmentRewards=drops\.map/.test(secondWorldRewards)&&/equipmentRewards,levelBefore/.test(secondWorldRewards),"宇宙主線結算必須保留所有基礎／VIP16 額外裝備結果。");
+assert(/function rewardRows\(result\)/.test(secondWorldMainline)&&/VIP16 額外主線裝備/.test(secondWorldMainline),"宇宙主線單場結算必須呈現 VIP16 額外裝備。");
+assert(/rows\.forEach\(row=>/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkMatter/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkEnergy/.test(secondWorldMainline),"宇宙主線連續戰鬥必須逐件統計保留／自售與暗物質／暗能量。");
+assert(index.includes('secondworldrewards.js?v=20260925-vip-loot-batch2')&&index.includes('secondworldmainline.js?v=20260925-vip-loot-batch2'),"index.html 必須載入 VIP Loot Batch2 最新 cache-bust。");
 assert(pos("inventoryfocus.js")>pos("equipmentlock.js")&&pos("inventoryfocus.js")>pos("gearupgrade.js"),"inventoryfocus.js 必須在 equipmentlock.js 與 gearupgrade.js 後載入，以共用正式裝備比較 owner。");
 assert(/INVENTORY_FOCUS_VERSION=VERSION/.test(inventoryFocus)&&/const VERSION=3;/.test(inventoryFocus),"背包定位 owner 應為 V3。");
 assert(/requestInventoryEntryFocus=requestEntryFocus/.test(inventoryFocus)&&/requestInventoryPostRedeemFocus=requestPostRedeemFocus/.test(inventoryFocus)&&/applyInventoryFocus=applyFocus/.test(inventoryFocus),"背包定位必須提供 entry、post-redeem 與 apply API。");

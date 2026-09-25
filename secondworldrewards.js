@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -130,6 +130,15 @@
   affixes.forEach(a=>addItemStat(item,a.stat,a.value));
   return item;
  }
+ function makeSecondWorldMainlineBossEquipment(value,options={}){
+  if(typeof window.applyVipLootQualityPromotions!=="function"||typeof window.vipLootForcedType!=="function")throw new Error("VIP Loot Core 未載入。");
+  const rng=typeof options.rng==="function"?options.rng:Math.random;
+  const baseQuality=secondWorldEquipmentQualityRoll(rng);
+  const qualityResult=window.applyVipLootQualityPromotions(baseQuality,{boss:true,rng,vipLevel:options.vipLevel});
+  const forcedType=window.vipLootForcedType({rng,vipLevel:options.vipLevel});
+  const item=makeSecondWorldEquipmentForBoss(value,{state:options.state||currentState(),level:options.level,forcedQ:qualityResult.quality,forcedType,rng});
+  return {item,baseQuality,qualityResult,forcedType};
+ }
  function secondWorldMainlineRewardPreview(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=options.state||currentState();
   if(index<0||!boss||!s)return null;
@@ -155,17 +164,27 @@
   if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,s)))return {ok:false,reason:"此 Boss 尚未解鎖。"};
   const before=snapshotState();
   const reward=secondWorldMainlineRewardPreview(index,{state:s,useTestSpecializations:false});
-  const item=makeSecondWorldEquipmentForBoss(index,{state:s});
+  const primaryDrop=makeSecondWorldMainlineBossEquipment(index,{state:s});
+  const drops=primaryDrop?.item?[{...primaryDrop,vip16Extra:false}]:[];
+  if(typeof window.vipLootBossExtraDropTriggered!=="function")throw new Error("VIP Loot Core 未載入。");
+  if(window.vipLootBossExtraDropTriggered({boss:true})){
+   const extraDrop=makeSecondWorldMainlineBossEquipment(index,{state:s});
+   if(extraDrop?.item)drops.push({...extraDrop,vip16Extra:true});
+  }
   const firstKill=s.secondWorld.mainline.bossKilled[index]!==true;
   const logs=[];
   const levelBefore=s.level;
   if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(reward.xp,logs);else gainExp(reward.xp,logs);
   s.secondWorld.darkMatter=Math.max(0,Math.floor(Number(s.secondWorld.darkMatter)||0))+reward.darkMatter;
   s.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(s.secondWorld.darkEnergy)||0))+1;
-  const itemResult=item?addItem(item):{kept:false,sold:0,sale:null};
+  const equipmentRewards=drops.map(drop=>{
+   const itemResult=addItem(drop.item);
+   return {item:drop.item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,vip16Extra:drop.vip16Extra===true,baseQuality:drop.baseQuality,qualityResult:drop.qualityResult,forcedType:drop.forcedType};
+  });
+  const primary=equipmentRewards[0]||null;
   s.secondWorld.mainline.bossKilled[index]=true;
   if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,levelBefore,levelAfter:state.level,logs};
+  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item:primary?.item||null,itemResult:primary?.itemResult||null,sale:primary?.sale||null,kept:primary?.kept===true,equipmentRewards,levelBefore,levelAfter:state.level,logs};
  }
  function applySecondWorldDeathPenalty(options={}){
   const s=currentState();
@@ -214,6 +233,7 @@
  window.SECOND_WORLD_REWARD_VERSION=VERSION;
  window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION=1;
  window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION=1;
+ window.SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1;
  window.SECOND_WORLD_REDEMPTION_MULTIPLIER=REDEMPTION_MULTIPLIER;
  window.SECOND_WORLD_QUALITY_MULTIPLIERS=QUALITY_MULTIPLIERS.slice();
  window.secondWorldBossExpReward=secondWorldBossExpReward;
@@ -230,6 +250,7 @@
  window.settleEquipmentSaleBatch=settleEquipmentSaleBatch;
  window.equipmentSaleText=equipmentSaleText;
  window.makeSecondWorldEquipmentForBoss=makeSecondWorldEquipmentForBoss;
+ window.makeSecondWorldMainlineBossEquipment=makeSecondWorldMainlineBossEquipment;
  window.secondWorldMainlineRewardPreview=secondWorldMainlineRewardPreview;
  window.settleSecondWorldBossVictory=settleSecondWorldBossVictory;
  window.applySecondWorldDeathPenalty=applySecondWorldDeathPenalty;
