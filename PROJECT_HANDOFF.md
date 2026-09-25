@@ -1,12 +1,12 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-09-24 15:35（UTC+8）  
+更新日期：2026-09-25（UTC+8）  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
 > 本檔是交接摘要，不是第二套規格。若本檔、舊對話、設計稿、記憶與 `main` 衝突，一律以當下 `main` 為準。任何修改前必須重新讀正式 owner、直接相依、Integrity／workflow 與 `index.html` 載入順序。
 
-本次 handoff 更新前的程式碼／文件 HEAD：`799ab6c90a8ce70726f2a10d9d02614b6fd2ac46`。本次 handoff 更新本身只整理交接資料，不代表額外遊戲規則變更。
+本次 handoff 更新前的程式碼 HEAD：`cf2d03a24866dc580024e8d7903c448a9ffb78a9`。本次 handoff 更新本身只整理交接資料，不代表額外遊戲規則變更。
 
 ---
 
@@ -131,7 +131,9 @@ Lv.1000：80,514 / 13,419 / 6,710。
 # 4. 宇宙資源／裝備／強化／死亡
 
 - 宇宙正式資源：暗物質、暗能量。
-- 宇宙主線勝利：EXP、暗物質、每勝 +1 暗能量、固定 1 件 world2 裝備；不給銀河金幣／強化石。
+- 宇宙主線基礎勝利獎勵：EXP、暗物質、每勝 +1 暗能量、固定 1 件 world2 裝備；不給銀河金幣／強化石。
+- VIP16 可能額外再給第 2 件 Boss 裝備；正式結算以 `equipmentRewards[]` 保存所有裝備結果。
+- `item / itemResult / sale / kept` 仍保留，但只作 `equipmentRewards[0]` 的 legacy compatibility projection；新的正式 consumer 不應再依賴單件欄位。
 - world2 品質：優良45%、稀有35%、史詩15%、傳說4.5%、神話0.5%。
 - 所有正式戰鬥死亡／戰敗不扣既有 EXP、不降級。
 - 仍有 30% 機率遺失一件穿戴裝備；VIP20 完全防止。
@@ -145,7 +147,42 @@ Lv.1000：80,514 / 13,419 / 6,710。
 
 # 5. VIP／專精／文明等級
 
+## 5.1 VIP 基礎規則
+
 - VIP 最大20；門檻 `1000*level²`。
+- 每 VIP 等級：HP +0.5%、ATK +0.5%、DEF +0.25%、暴擊 +0.25pp、閃避 +0.25pp。
+- 角色最終戰鬥能力共用正式 `playerCombatStats(...)`，銀河／宇宙都套用同一套 VIP 基礎能力。
+- VIP2：銀河主線裝備掉落率 +5pp；宇宙主線本來固定掉裝，因此此效果在宇宙沒有額外作用，**這是刻意保留的新手期特權，不需另改。**
+- VIP4／VIP12：副本 VIP 積分倍率由正式 VIP point owner 統一處理。
+- VIP6：特殊遭遇機率 +2pp；兩紀元共用。
+- VIP10：特殊獎勵 10% 再發動；兩紀元共用各自正式資源。
+- VIP20：死亡裝備保護；兩紀元正式死亡流程都有效。
+
+## 5.2 VIP Loot Core V2
+
+正式 owner：`viplootcore.js`，`VIP_LOOT_CORE_VERSION = 2`。
+
+共用規則：
+
+- VIP8：15% 優先目前最弱裝備部位。
+- VIP14：5% 品質 +1。
+- VIP16：Boss 15% 額外掉 1 件裝備。
+- VIP18：Boss 10% 品質 +1。
+- VIP14 與 VIP18 是獨立判定，可同時成功合計 +2，但最高封頂神話品質 5。
+
+正式 pipeline：
+
+- `resolveVipLootModifiers(baseQuality,{boss,state,rng,...})` 一次統一處理 VIP8／14／18。
+- `vipLootBossExtraDropTriggered(...)` 統一處理 VIP16。
+- VIP8 最弱部位直接依指定 target state 的正式 `equipmentScore()` 計算；不再依賴漂移的舊函式名稱，亦可供 GM／模擬 state 注入 resolver。
+- 銀河主線、銀河／宇宙懸賞、宇宙主線都必須共用此 owner；不得各自重寫機率或第二套判斷。
+- 懸賞不是 Boss，因此只套 VIP8／14，不套 VIP16／18。
+- 宇宙主線每件基礎／VIP16 額外裝備都各自重新跑 VIP8／14／18，不是複製第一件。
+- 宇宙主線同一可注入 RNG 會傳進 VIP16 與每件裝備的 VIP modifier pipeline，方便 deterministic integrity 測試。
+- 此次 VIP Loot 改動沒有新增 save 欄位，**不需要 Save Schema bump 或 migration，也不回溯重製舊裝備。**
+
+## 5.3 專精／文明等級
+
 - 8 專精最大60；兩紀元共用正式效果。
 - 文明等級：`secondWorld.civilizationLevel` 0～10。
 - 宇宙每級 final damage +5%，Lv.10 ×1.50；銀河 ×1.00。
@@ -161,6 +198,21 @@ Lv.1000：80,514 / 13,419 / 6,710。
 - Background 單一 active flow，最長 12 小時，credit rate 0.96；主線／虛空／災厄等支援 fast catch-up。
 - Offline 最短1分鐘、最多12小時；EXP10%；銀河金幣10%／宇宙暗物質10%；裝備掉落流程10%；銀河直接強化石期望5%／宇宙直接暗能量5%。
 - world2 離線出售必須走正式 sale owner，不得製造特殊遭遇／首殺等非法副作用。
+
+## 6.1 宇宙文明災厄背景連續戰鬥
+
+`secondworldcalamityrun.js` 目前：
+
+- `CONTINUOUS_VERSION = 2`
+- `SECOND_WORLD_CALAMITY_BACKGROUND_VERSION = 1`
+- `SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION = 1`
+
+正式行為：
+
+- 連續戰鬥在 GM 背景戰鬥開啟時會加入共用 `backgroundProgress` flow。
+- 背景回頁支援 fast catch-up；UI 端使用 structured duration、consume credit、throttled presentation／render／checkpoint。
+- `pagehide` 若背景戰鬥啟用，保留 continuous flow；未啟用則停止。
+- minimal mode 仍包正式 `runSecondWorldCalamityContinuous()`，所以自然共用背景能力，不另做第二套。
 
 ---
 
@@ -221,14 +273,55 @@ Renderer：
 
 - 競技場已 world-aware，正式 state 為 `arenaByWorld`；legacy `dungeon.arena` 只作相容。
 - 宇宙競技 Arena By World V2、Unlock V2、Rank Curve V2。
-- 懸賞正式採 V2 統一難度／公式 owner。
+- 懸賞正式採 V2 統一難度／公式 owner；VIP8／14 掉裝特權由 `viplootcore.js` 共用，銀河／宇宙不分紀元。
 - 鏡像 15～20 勝稱號系統已完成。
-- 虛空維持無限型副本。
 - 已完成銀河／宇宙地圖戰、災厄戰、戰線紀錄回顧；宇宙紀元為預設，但同一 session 內玩家切去回顧後不會被強制跳回預設，除非整理／重開頁面。
+
+## 8.1 虛空幻境 V2
+
+正式 owner：`dungeonvoid.js`。
+
+解鎖 Lv.25；開場樓層仍為：
+
+`max(1, highestCleared - 100)`
+
+V2 純線性怪物公式：
+
+```text
+F = floor
+HP  = ceil(100.0 + 9.6*F)
+ATK = ceil(10.0  + 1.3*F)
+DEF = ceil(5.0   + 0.6*F)
+Crit = 10%
+Dodge = 8%
+```
+
+- `getVoidMirageConfig().formulaVersion = 2`。
+- 普通樓層 1 特性；每 10 樓 Boss 2 個不同特性。
+- Boss 不另外乘隱藏 stat multiplier；差異只來自 Boss 特性等正式系統。
+- 每層之間補滿 HP；run 內使用玩家 snapshot。
+- 文明最終傷害倍率走正式 `civilizationCombatDamageMultiplier(...)`。
+- 舊 `equivalentPower()` 已退休，不再作第二套難度公式。
+- 既有玩家若 `highestCleared > 10000`，**不做 migration、不重置、不換算**；使用者會用既有 GM 管理自行處理。
+- 使用者已用 Lv.583 左右宇宙角色實測 V2 約 F4200～4600，現階段接受；先繼續實玩到 Lv.1000，再由使用者主動決定是否重開平衡。
 
 ---
 
-# 9. Story／UI 語意
+# 9. 特殊遭遇／Story／UI 語意
+
+## 9.1 特殊遭遇
+
+`specialencounter.js` 正式流程已整理為：
+
+`提示特殊遭遇 → 補滿玩家 HP → 進入特殊戰鬥`
+
+- 宇宙 Boss 可觸發特殊遭遇。
+- 銀河 Boss 排除特殊遭遇。
+- 銀河主線本來每戰後會補血，因此前置 full-heal 是 idempotent。
+- 特殊遭遇結束仍有正式 settlement heal。
+- 宇宙若剛觸發新文明災厄出現，該次特殊遭遇會依既有規則跳過。
+
+## 9.2 Story／雙紀元語意
 
 - 銀河＋宇宙 Story data 已正式存在，Story Integrity 持續檢查。
 - 全介面＋遊戲說明雙紀元語意總掃描已完成，不再列 pending。
@@ -237,37 +330,113 @@ Renderer：
 
 ---
 
-# 10. 2026-09-24 全站技術整理結果
+# 10. 冒險／背包 UI 行為
 
-本次在銀河＋宇宙接近封版後完成 8 批大型整理。
+## 10.1 宇宙冒險目前 Boss 背包
 
-## 10.1 Integrity／CI
+- 宇宙冒險頁頂部不再放通用「背包」按鈕。
+- **只有目前／最新進度 Boss 卡**顯示背包按鈕；舊 Boss 卡不顯示。
+- 判定使用正式 `secondWorldHighestUnlockedBossIndex()`。
+- 即使目前 Boss 暫時不可挑戰，該最新卡仍保留背包入口；全通關後保留最後 Boss 卡。
+- 銀河冒險既有背包入口維持原行為。
 
-- 建立 `integritycontract.js` 作 canonical Integrity Contract。
+## 10.2 宇宙冒險 one-shot 自動定位
+
+正式 owner 由 `worldmapui.js`＋`playersemanticsui.js` 配合：
+
+- 首頁 → 宇宙冒險：一次定位到目前／最新 Boss。
+- 宇宙 Boss 戰鬥結果關閉：一次定位到新的目前／最新 Boss。
+- 從宇宙目前 Boss 背包返回冒險：一次定位回目前／最新 Boss。
+- 只在明確 navigation event request 時生效，不會在玩家正常瀏覽時持續搶 scroll。
+- 目標使用 `data-second-world-boss` 與 `scrollIntoView({block:"center", inline:"nearest", behavior:"auto"})`。
+- 銀河不受影響。
+
+## 10.3 全背包智慧定位 V3
+
+正式 owner：`inventoryfocus.js`，`INVENTORY_FOCUS_VERSION = 3`。
+
+任何正式「進入背包」入口都遵守一次性優先序：
+
+1. 若有遺失裝備 → 定位「遺失裝備／贖回」區。
+2. 否則若背包有實際較強裝備 → 定位「一鍵裝備較強裝備」。
+3. 否則 → 背包頂端。
+
+成功贖回後：
+
+1. 若仍有遺失裝備 → 留在／定位遺失裝備區。
+2. 若已無遺失裝備但存在升級裝備 → 定位一鍵裝備。
+3. 否則 → **不額外移動視角**。
+
+架構規則：
+
+- pending focus 只消耗一次；後續 equip／sell／filter／render 不得持續跳動。
+- 較強裝備判斷共用正式 `isActualGearUpgrade()`，不再重寫 `equipmentScore` 比較公式。
+- `inventoryfocus.js` 不 monkey-patch `go()`／`openAdventureInventory()`；正式 `ui.js` 入口直接 request → render → apply。
+- `resolveInventoryFocusTarget()` 是純 target resolver；DOM scroll 與判斷分離。
+- Runtime Integrity 已用 VM 行為測試驗證 entry／post-redeem 六種主要狀況與 one-shot pending。
+
+---
+
+# 11. GM 管理／戰力基準
+
+- GM 密碼在純前端只能防誤觸，不是真正安全邊界；目前不做 server-side GM 權限重構。
+- GM 測試／預覽不得污染正式 save。
+- GM Hub 外層 section 預設收合；切頁保留 session 狀態。
+- 戰力基準中的「地圖怪 ×100」子區塊預設收合，避免 GM 頁面開啟時過長。
+- redundant 的 GM 虛空「完整重置」按鈕已退休；既有最高樓層可用正式管理方式處理。
+
+## 11.1 GM 測試角色與 VIP
+
+GM 測試角色支援銀河／宇宙，正式同步內容包含：
+
+- 測試紀元／等級
+- 正式角色實穿裝備或同級神話預測裝備
+- 強化
+- 8 專精
+- 10 印記
+- 文明等級
+- VIP 等級
+
+`gmTestPlayerStats()` 最後仍走正式：
+
+`playerCombatStats(equipment, testVip())`
+
+因此 VIP 的 HP／ATK／DEF／暴擊／閃避基礎能力，在銀河與宇宙 GM 戰力基準都會正確套用；「同步目前狀態」也會把 `state.vipLevel` 同步到 `gmTestVipLevel`。
+
+VIP8／14／16／18 是**掉裝特權**，目前 GM 戰力基準不另外模擬完整 loot settlement，這是刻意保留；GM 的「指定產生宇宙裝備」也是明確指定品質／部位的管理工具，不應被 VIP Loot 隨機規則干涉。
+
+---
+
+# 12. 2026-09-24～09-25 技術整理／Integrity
+
+## 12.1 既有 8 批全站技術整理
+
+### Integrity／CI
+
+- `integritycontract.js` 是 canonical Integrity Contract。
 - `runtimeintegrity.js` V19、`finalintegrity.js` V19 共用同一 contract。
 - 舊 `runtimeintegrityaddon.js` 已退休。
-- CI 會做全 JS syntax、owner／legacy consumer audit、save／load order contract。
-- 舊錯誤文字／版本漂移已整理。
+- CI 做全 JS syntax、owner／legacy consumer audit、save／load order contract。
 
-## 10.2 Save future-version 保護
+### Save future-version 保護
 
 - `saveversionguard.js` V1。
 - Local／Cloud／JSON 三入口統一 fail-closed。
 - direct `migrateSave()` 也受保護。
 
-## 10.3 Migration／Normalization
+### Migration／Normalization
 
 - Offline normalization 收斂到 `offlinestatecore.js`。
 - 舊存檔政策正式為 V1+ all-known。
 - 不因整理任意刪除舊 migration。
 
-## 10.4 Legacy owner
+### Legacy owner
 
 - `compatibilityowners.js` V1。
 - `level100balance.js` 已退休。
 - `MAX_LEVEL`、`SAVE_VERSION`、Arena alias 的既有 consumer 已由 CI 鎖定，禁止新依賴擴散。
 
-## 10.5 啟動背景效能
+### 啟動背景效能
 
 `backgroundpreload.js` Policy V3：
 
@@ -276,7 +445,7 @@ Renderer：
 - 其他背景遊戲顯示後以 idle＋最多2併發逐步 preload。
 - reveal 前會等待 DOMContentLoaded，避免 deferred script 尚未完成就讓玩家操作。
 
-## 10.6 Save Hook／Script Load
+### Save Hook／Script Load
 
 `compatibilityowners.js` 提供正式 after-save hook：
 
@@ -288,27 +457,50 @@ Cloud Save V3 不再自行 monkey-patch `save()`，只註冊 `cloud-local-meta` 
 
 Script Load Policy V1 分組：`core / world / gm / story / integrity`。大量 Story payload 已 `defer`；不強制把仍有交錯依賴的 GM 全部延遲，避免 race。
 
-## 10.7 素材政策
+### 素材政策
 
 - `assets/backgrounds-source/`：原始 PNG authoring source，不得被 runtime 引用。
 - `assets/backgrounds/`：正式 WebP runtime。
 - `assets/README.md` 是素材政策說明。
 - `tests/runtime/asset-integrity.js` 驗證格式、desktop/mobile 配對、CSS 引用存在、禁止 source runtime 引用與體積關係。
-- 目前約：source 32 張／76.36MB；runtime WebP 32 張／4.32MB，約 source 的5.7%。
-- 不做 history rewrite／Git LFS migration；若未來源素材大幅成長，另案處理。
+- 不做 history rewrite／Git LFS migration；若未來來源素材大幅成長，另案處理。
+
+## 12.2 最新 Runtime 行為測試
+
+`tests/runtime/js-integrity.js` 已包含：
+
+- 背包定位 V3 真正 VM 行為測試，而非只靠 source-string if 順序。
+- VIP Loot V2 deterministic VM 行為測試：
+  - VIP7 不得提前取得 VIP8／14。
+  - VIP8 15% 邊界。
+  - VIP14 5% 邊界。
+  - VIP16 只限 Boss 且 15% 邊界。
+  - VIP18 只限 Boss 且 10% 邊界。
+  - VIP14＋18 可獨立同時觸發並合計 +2。
+  - 神話品質封頂 5。
+  - VIP8 必須使用指定 target state／resolver。
+- Universe settlement audit：`equipmentRewards[]` 是正式陣列 owner；舊 `item / itemResult / sale / kept` 只能是第一件相容投影。
+
+更新 handoff 前最新 exact-head `cf2d03a24866dc580024e8d7903c448a9ffb78a9`：
+
+- Runtime Integrity #360：success。
+- Story Integrity #574：success。
+
+## 12.3 已知 CI 小缺口
+
+`.github/workflows/runtime-integrity.yml` 的 path filters 仍沒有單獨列出 `backgrounds.css`。  
+因此若未來只改 `backgrounds.css` 而沒有其他會觸發 Runtime workflow 的檔案，可能不會自動跑 Runtime CI；目前不要偷偷改，除非使用者明確授權。
 
 ---
 
-# 11. Cloud Save／GM
+# 13. Cloud Save
 
 - Cloud Save 以 Supabase 為後端；下載會走正式版本檢查＋migration pipeline，並重設 offline 計時起點。
 - Cloud Save 真實跨裝置驗證已由使用者取消，不得自動列回 pending。
-- GM 密碼在純前端只能防誤觸，不是真正安全邊界；目前不做 server-side GM 權限重構。
-- GM 測試／預覽不得污染正式 save。
 
 ---
 
-# 12. 目前真正 Pending
+# 14. 目前真正 Pending
 
 目前主要工作不是繼續擴功能，而是：
 
@@ -322,7 +514,12 @@ Script Load Policy V1 分組：`core / world / gm / story / integrity`。大量 
 - 平衡體感
 - 文案／語意問題
 
-不要為了程式碼更漂亮而重寫穩定系統。
+近期已明確接受／暫緩：
+
+- 虛空幻境 V2 目前先不再調整，等使用者持續玩到 Lv.1000 後再看體感。
+- 既有 >10000 虛空紀錄不 migration、不重置。
+- GM 戰力基準目前不新增 VIP Loot 掉裝模擬。
+- VIP2 宇宙紀元不另造新效果。
 
 已取消、不得自行復活：
 
@@ -334,24 +531,26 @@ Script Load Policy V1 分組：`core / world / gm / story / integrity`。大量 
 
 ---
 
-# 13. 下一個 ChatGPT／維護者操作規範
+# 15. 下一個 ChatGPT／維護者操作規範
 
 1. **先讀 current `main`，不要只靠本檔或對話記憶。**
 2. 修改前讀相關正式 owner、直接相依、Integrity／workflow、`index.html`。
 3. 使用者說「先討論／先檢查／先列出」時，**不能修改**。
 4. 使用者說「做／修改／執行／第N批」時，可直接修改 GitHub `main`。
-5. JS／CSS 修改後更新 `index.html` cache-bust；純文件不需要 cache-bust。
-6. 修改後重新讀 actual main，並做 base→head compare，確認沒有誤動無關檔案。
-7. 不要刪舊 migration，除非先正式改最低支援 save policy。
-8. 不要建立第二套稱號 state、文明倍率、Offline normalization、Arena progress owner。
-9. 不要復活 `level100balance.js`、Mirror V1/V2 CSS、runtimeintegrityaddon.js 或舊速度等待。
-10. 完成前必須等**最新 main HEAD** 的 Runtime Integrity 成功；若涉及 Story，再確認 Story Integrity。
-11. 若改背景／素材，Runtime CI 的 Asset Integrity 必須通過。
-12. 第三紀元沒有正式規格前，禁止自行推導。
+5. **優先修改正式來源／canonical owner；不要額外做 wrapper、fallback、第二套公式、第二套 state 或第二套 pipeline。** 只有已有明確 legacy compatibility contract 時才保留相容投影，且不得讓新 consumer 擴散依賴。
+6. JS／CSS 修改後更新 `index.html` cache-bust；純文件不需要 cache-bust。
+7. 修改後重新讀 actual main，並做 base→head compare，確認沒有誤動無關檔案。
+8. 不要刪舊 migration，除非先正式改最低支援 save policy。
+9. 不要建立第二套稱號 state、文明倍率、VIP Loot 規則、Offline normalization、Arena progress owner。
+10. 不要復活 `level100balance.js`、Mirror V1/V2 CSS、runtimeintegrityaddon.js、Void `equivalentPower()` 或舊速度等待。
+11. 完成前必須等**最新 main HEAD** 的 Runtime Integrity 成功；若涉及 Story code／content 或 `index.html`，再確認 exact-head Story Integrity。
+12. 若改背景／素材，Runtime CI 的 Asset Integrity 必須通過。
+13. 第三紀元沒有正式規格前，禁止自行推導。
+14. 使用者親自實玩期間，以「修真 bug／UI／流程／平衡」優先，不要只為了程式碼漂亮而重寫穩定系統。
 
 ---
 
-# 14. 文件角色
+# 16. 文件角色
 
 - `README.md`：對外簡介與目前版本總覽。
 - `PROJECT_HANDOFF.md`：跨工作階段承接摘要。
@@ -360,3 +559,13 @@ Script Load Policy V1 分組：`core / world / gm / story / integrity`。大量 
 - `LEVEL100_EXPANSION.md`：純歷史文件，不是 current 規格。
 
 再次強調：**任何衝突一律以 current GitHub `main` 實際程式碼為準。**
+
+---
+
+# 17. 下一個對話如何接手（標準指令）
+
+請在新的 ChatGPT 對話直接貼以下文字：
+
+> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查目前 GitHub `main` 的實際程式碼與相關正式 owner／相依／Integrity／`index.html`，完整承接《文明戰線》專案。  
+> 以 `main` 為唯一真實來源；若 handoff、舊對話或記憶與 `main` 衝突，以 `main` 為準。  
+> 現在先不要修改，先告訴我你已承接完成，以及目前真正 pending／最近需要注意的風險。
