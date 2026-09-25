@@ -6,14 +6,26 @@
 
 - **銀河紀元**：Lv.1～500，10 區、100 張主線地圖，普通／菁英／Boss 結構。
 - **宇宙紀元**：Lv.501～1000，10 區、100 隻主線 Boss。
+- **高維紀元**：已進入正式設計階段，但尚未實作到 runtime。
 - 角色系統：5 裝備部位、6 品質、詞條、裝備評分、鎖定、遺失裝備贖回。
-- 養成系統：8 種專精（各 Lv.60）、VIP20、銀河強化 +20、宇宙強化 +40、10 印記、宇宙文明等級 Lv.10。
+- 養成系統：8 種專精（各 Lv.60）、**VIP 等級無上限（特殊特權至 VIP20）**、銀河強化 +20、宇宙強化 +40、10 印記、宇宙文明等級 Lv.10。
 - 副本／戰鬥：懸賞、競技、鏡像、虛空、文明災厄，以及主線／特殊怪。
 - 正式玩家稱號共 26 個：銀河災厄 10、宇宙災厄 10、鏡像 15～20 勝 6。
 - 戰鬥倍速：一般玩家 1×／1.5×（依紀元與模式）；GM 可測 2×。
 - 離線收益、瀏覽器背景戰鬥與快速追趕已支援雙紀元。
 - Cloud Save 使用 Supabase；本機正式 save 仍以 `localStorage` 為基礎。
 - 桌機／手機各自使用正式 WebP 科幻背景；原始 PNG 僅保留為 authoring source。
+
+## VIP 長期成長
+
+- VIP 升級門檻：`1000 × VIP等級²`。
+- VIP 等級本身沒有上限。
+- 每級持續提供 HP／ATK +0.5%、DEF +0.25%、暴擊／閃避 +0.25 個百分點。
+- VIP2～VIP20 依既有規則解鎖特殊特權；VIP20 是最後一個特殊特權階段。
+- VIP21 以上不新增特權，但既有特權與每級基本能力成長持續有效。
+- 競技場、虛空幻境等既有 VIP 積分來源仍具有長期用途。
+
+完整實作、GM、Integrity 與自我檢查紀錄見 `PROJECT_VIP_UNBOUNDED_UPDATE.md`。
 
 ## 存檔
 
@@ -23,12 +35,14 @@
 - 正式舊存檔政策：已知 V1+ 皆支援 migration。
 - 未來版本存檔會 fail-closed；舊版網頁不得把新版存檔降版覆寫。
 - Save Write Guard 必須保留；GM sandbox 不得寫正式玩家存檔。
+- VIP 無上限不新增 save 欄位、不升 schema；既有 `vipPoints` 會依正式公式自然重算 VIP21+。
 
 ## Integrity／維護
 
 目前有 Runtime Integrity、Story Integrity、Asset Integrity 與各系統專屬 Integrity。
 
 - Runtime／Final 共用 canonical Integrity Contract。
+- VIP 無上限另有 `VIP_UNBOUNDED_INTEGRITY_VERSION = 1` runtime probe 與 `tests/runtime/vip-unbounded-integrity.js` CI 測試。
 - Save migration、Offline state、舊 compatibility、Arena alias 等都有 owner audit。
 - 正式背景只能從 `assets/backgrounds/` 讀取 WebP；`assets/backgrounds-source/` 不得被玩家端 runtime 引用。
 - `main` 的實際程式碼永遠是唯一真實來源。
@@ -42,10 +56,11 @@ GitHub Pages 可直接使用 `main` 分支根目錄部署，入口為 `index.htm
 跨對話／跨工作階段承接前請先閱讀：
 
 - `PROJECT_HANDOFF.md`：目前正式系統、owner、版本與修改規範。
+- `PROJECT_VIP_UNBOUNDED_UPDATE.md`：2026-09-26 VIP 無上限正式更新；**若舊 handoff 的 VIP20 封頂敘述與此檔衝突，以 current main 與本補充為準。**
 - `PROJECT_PENDING_STATUS.md`：目前真正尚未完成／已取消的工作。
 - `assets/README.md`：背景 source／runtime 素材政策。
 - `GM_UI_GUIDE.md`：GM 功能按鈕語意與配色規範。
 
 修改前必須重新讀 current `main` 的相關 owner、直接相依、Integrity／workflow 與 `index.html`。JS／CSS 改動需同步更新 cache-bust；修改後要重新確認 actual main，並以最新 HEAD 的 Runtime Integrity 成功為完成條件。
 
-第三紀元目前尚未正式設計／實作；先以完整實際遊玩銀河＋宇宙兩紀元為下一階段。
+高維紀元目前已進入正式設計階段，但尚未實作；其已確認設計以最新 handoff／補充文件與 current main 為準。
