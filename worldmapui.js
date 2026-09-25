@@ -177,6 +177,14 @@
     return Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
   }
 
+  function secondWorldLatestProgressBossIndex(){
+    const bosses=secondWorldBosses();
+    if(!bosses.length)return -1;
+    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?Number(window.secondWorldHighestUnlockedBossIndex()):-1;
+    if(Number.isFinite(highest)&&highest>=0)return Math.max(0,Math.min(bosses.length-1,Math.floor(highest)));
+    return 0;
+  }
+
   function secondWorldActiveRegionIndex(){
     const regions=secondWorldRegions();
     if(!regions.length)return -1;
@@ -215,6 +223,7 @@
   function secondWorldBossCardHtml(boss){
     const killed=typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(boss.index);
     const canChallenge=typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(boss.index);
+    const latestProgress=Number(boss.index)===secondWorldLatestProgressBossIndex();
     const stats=typeof window.secondWorldBossBaseStats==="function"?window.secondWorldBossBaseStats(boss.index):null;
     const status=killed?"已擊敗":canChallenge?"可挑戰":"尚未開放";
     const statLine=stats?`<div class="universe-boss-stats">HP ${stats.hp.toLocaleString()}　ATK ${stats.atk.toLocaleString()}　DEF ${stats.def.toLocaleString()}</div>`:"";
@@ -222,8 +231,14 @@
     const activeHere=active?.continuous===true&&Number(active.bossIndex)===Number(boss.index);
     let action="";
     if(activeHere)action=`<button class="btn danger universe-boss-action" type="button" onclick="requestSecondWorldContinuousStop()">本場結束後停止</button>`;
-    else if(canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"){
-      action=`<div class="universe-boss-actions"><button class="btn blue universe-boss-action" type="button" onclick="startSecondWorldBossBattle(${boss.index})">${killed?"再次挑戰":"挑戰 Boss"}</button><button class="btn universe-boss-action" type="button" onclick="startSecondWorldBossContinuous(${boss.index})">連續戰鬥</button><button class="btn universe-boss-action" type="button" onclick="openAdventureInventory()">背包</button></div>`;
+    else{
+      const buttons=[];
+      if(canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"){
+        buttons.push(`<button class="btn blue universe-boss-action" type="button" onclick="startSecondWorldBossBattle(${boss.index})">${killed?"再次挑戰":"挑戰 Boss"}</button>`);
+        buttons.push(`<button class="btn universe-boss-action" type="button" onclick="startSecondWorldBossContinuous(${boss.index})">連續戰鬥</button>`);
+      }
+      if(latestProgress)buttons.push(`<button class="btn universe-boss-action" type="button" data-universe-contextual-inventory="1" onclick="openAdventureInventory()">背包</button>`);
+      if(buttons.length)action=`<div class="universe-boss-actions">${buttons.join("")}</div>`;
     }
     return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${activeHere?"連續戰鬥中":status}</div>${action}</div>`;
   }
