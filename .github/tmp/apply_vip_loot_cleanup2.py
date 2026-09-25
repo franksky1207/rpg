@@ -6,7 +6,8 @@ marker='const vm=require("vm");\n'
 if marker not in s:
     raise SystemExit('vm marker missing')
 if 'VIP Loot behavior contract' in s:
-    raise SystemExit('VIP Loot behavior contract already exists')
+    print('VIP Loot behavior contract already present; no patch needed')
+    raise SystemExit(0)
 block=r'''// VIP Loot behavior contract: execute the shared owner with deterministic RNG.
 function createVipLootHarness({vipLevel=0,equipment=null}={}){
  const context={
