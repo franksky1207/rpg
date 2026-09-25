@@ -1,4 +1,5 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
+// 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
 const combat=fs.readFileSync('combatcore.js','utf8');
