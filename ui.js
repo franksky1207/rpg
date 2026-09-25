@@ -78,7 +78,7 @@ function renderNav(){
  if(top)top.innerHTML="";
  if(bottom)bottom.innerHTML="";
 }
-function go(v){inventoryReturnContext=null;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}
+function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
@@ -176,7 +176,10 @@ function backToAdventureFromInventory(){
  view="adventure";
  if(ctx?.mode==="galaxy-review")adventureScreen="review-prepare";
  else if(ctx?.mode==="galaxy-main")adventureScreen=ctx.screen==="prepare"?"prepare":"maps";
- else adventureScreen="maps";
+ else{
+  adventureScreen="maps";
+  if(ctx?.mode==="universe-main"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ }
  render();
 }
 window.ADVENTURE_INVENTORY_RETURN_CONTEXT_VERSION=1;
@@ -294,7 +297,9 @@ function showBattleResult(ctx,defeat=null){
 }
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
- adventureScreen="prepare";render();
+ adventureScreen="prepare";
+ if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ render();
  const pendingStory=window.civilizationStoryProgress?.get?.().pendingStory;
  if(pendingStory)window.civilizationStoryProgress.resume();
  else if(typeof window.flushSecondWorldCalamityAppearanceNotice==="function")setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);

@@ -168,6 +168,7 @@
 
   const secondWorldRegionOpenState=Object.create(null);
   let lastSecondWorldActiveRegionId=null;
+  let secondWorldAdventureFocusPending=false;
 
   function secondWorldRegions(){
     return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
@@ -184,6 +185,27 @@
     if(Number.isFinite(highest)&&highest>=0)return Math.max(0,Math.min(bosses.length-1,Math.floor(highest)));
     return 0;
   }
+
+  window.requestSecondWorldAdventureProgressFocus=function(){
+    secondWorldAdventureFocusPending=true;
+    return true;
+  };
+  window.applySecondWorldAdventureProgressFocus=function(){
+    if(!secondWorldAdventureFocusPending||typeof document==="undefined")return false;
+    const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");
+    if(!screen)return false;
+    const index=secondWorldLatestProgressBossIndex();
+    const target=index>=0?screen.querySelector(`[data-second-world-boss="${index}"]`):null;
+    if(!target)return false;
+    secondWorldAdventureFocusPending=false;
+    const run=()=>{
+      if(!target.isConnected)return;
+      target.scrollIntoView({block:"center",inline:"nearest",behavior:"auto"});
+    };
+    if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>requestAnimationFrame(run));
+    else setTimeout(run,0);
+    return true;
+  };
 
   function secondWorldActiveRegionIndex(){
     const regions=secondWorldRegions();
@@ -315,6 +337,7 @@
     return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
+  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1;
   window.SECOND_WORLD_ADVENTURE_UI_VERSION=4;
   window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3;
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;

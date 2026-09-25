@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  function universe(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
  function installStyles(){
   if(typeof document==="undefined")return;
@@ -30,7 +30,10 @@
    legacyInventory.replaceWith(placeholder);
   }
  }
- function apply(){installStyles();applyHomeSemantics();applyUniverseAdventureSemantics();}
+ function apply(){
+  installStyles();applyHomeSemantics();applyUniverseAdventureSemantics();
+  if(typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();
+ }
  const base=typeof window.render==="function"?window.render:null;
  if(base){
   window.render=function(...args){const result=base.apply(this,args);apply();return result;};
