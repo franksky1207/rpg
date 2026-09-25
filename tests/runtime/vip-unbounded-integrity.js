@@ -52,6 +52,8 @@ const context={
 };
 vm.createContext(context);
 vm.runInContext(progression,context,{filename:"vipprogression.js"});
+assert(context.window.VIP_POINTS_SOURCE_OF_TRUTH_VERSION===1,"VIP 積分唯一真實來源標記必須 export 到 runtime。");
+assert(context.window.VIP_STATE_RECONCILIATION_VERSION===1,"VIP 舊狀態一致性標記必須 export 到 runtime。");
 assert(context.window.vipThreshold(21)===441000,"VIP21 門檻應為441,000。");
 assert(context.window.vipThreshold(50)===2500000,"VIP50 門檻應為2,500,000。");
 assert(context.window.vipLevelFromPoints(441000)===21,"441,000 積分應為 VIP21。");
