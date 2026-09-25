@@ -47,48 +47,6 @@
   return orderedEntries(mode).map(entry=>entry.id);
  };
 
- function normalizeTestVip(value){return typeof window.normalizeVipLevel==="function"?window.normalizeVipLevel(value):Math.max(0,Math.floor(Number(value)||0));}
- function installUnlimitedVipTestOverrides(){
-  const baseUseCurrent=typeof window.gmUseCurrentTestStatus==="function"?window.gmUseCurrentTestStatus:null;
-  const baseRefresh=typeof window.gmRefreshTestControls==="function"?window.gmRefreshTestControls:null;
-  window.gmSetTestVipLevel=function(value,refresh=true){
-   window.gmTestVipLevel=normalizeTestVip(value);
-   if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-   return window.gmTestVipLevel;
-  };
-  window.gmTestVipLabel=function(){const lv=normalizeTestVip(window.gmTestVipLevel),b=vipBonusStats(lv);return `VIP${lv}｜HP/ATK +${b.hp}%｜DEF +${b.def}%｜暴擊/閃避 +${b.crit}%`;};
-  window.gmTestVipOptions=function(){return "";};
-  window.gmTestVipControlHtml=function(){const lv=normalizeTestVip(window.gmTestVipLevel);return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；VIP 測試沒有上限，只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><input id="gmTestVipLevel" class="btn" type="number" min="0" step="1" value="${lv}" onchange="gmSetTestVipLevel(this.value)" style="width:140px"></label><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span></div>`;};
-  window.gmTestPlayerStats=function(baseStats=null){
-   const equipment=baseStats||window.gmTestEnhancedEquippedStats();
-   const combat=playerCombatStats(equipment,normalizeTestVip(window.gmTestVipLevel));
-   return typeof createSpecialPlayerSnapshot==="function"?createSpecialPlayerSnapshot(combat):combat;
-  };
-  if(baseRefresh){
-   window.gmRefreshTestControls=function(){
-    const result=baseRefresh();
-    const level=normalizeTestVip(window.gmTestVipLevel);
-    const input=document.getElementById("gmTestVipLevel");if(input)input.value=String(level);
-    const info=document.getElementById("gmTestVipInfo");if(info)info.textContent=window.gmTestVipLabel();
-    return result;
-   };
-  }
-  if(baseUseCurrent){
-   window.gmUseCurrentTestStatus=function(){
-    const result=baseUseCurrent();
-    window.gmSetTestVipLevel(state?.vipLevel,false);
-    if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-    if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-    if(typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
-    if(result&&typeof result==="object")result.vip=normalizeTestVip(window.gmTestVipLevel);
-    return result;
-   };
-  }
-  window.GM_UNBOUNDED_VIP_TEST_VERSION=1;
- }
- installUnlimitedVipTestOverrides();
-
  function abilityTestSubsection(title,renderer){
   let body="";
   try{body=typeof renderer==="function"?String(renderer()||""):'<div class="muted gm-hub-note">測試模組尚未載入。</div>';}
