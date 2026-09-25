@@ -1,0 +1,115 @@
+name: Temporary Universe Adventure Focus Batch2 Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-universe-adventure-focus-batch2-fix.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply universe adventure focus batch2 safely
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('worldmapui.js')
+          s=p.read_text()
+          anchor='''  let lastSecondWorldActiveRegionId=null;\n\n'''
+          insert='''  let lastSecondWorldActiveRegionId=null;\n  let secondWorldAdventureFocusPending=false;\n\n'''
+          assert s.count(anchor)==1, s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          anchor='''  function secondWorldLatestProgressBossIndex(){\n    const bosses=secondWorldBosses();\n    if(!bosses.length)return -1;\n    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?Number(window.secondWorldHighestUnlockedBossIndex()):-1;\n    if(Number.isFinite(highest)&&highest>=0)return Math.max(0,Math.min(bosses.length-1,Math.floor(highest)));\n    return 0;\n  }\n\n'''
+          insert='''  function secondWorldLatestProgressBossIndex(){\n    const bosses=secondWorldBosses();\n    if(!bosses.length)return -1;\n    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?Number(window.secondWorldHighestUnlockedBossIndex()):-1;\n    if(Number.isFinite(highest)&&highest>=0)return Math.max(0,Math.min(bosses.length-1,Math.floor(highest)));\n    return 0;\n  }\n\n  window.requestSecondWorldAdventureProgressFocus=function(){\n    secondWorldAdventureFocusPending=true;\n    return true;\n  };\n  window.applySecondWorldAdventureProgressFocus=function(){\n    if(!secondWorldAdventureFocusPending||typeof document==="undefined")return false;\n    const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");\n    if(!screen)return false;\n    const index=secondWorldLatestProgressBossIndex();\n    const target=index>=0?screen.querySelector(`[data-second-world-boss="${index}"]`):null;\n    if(!target)return false;\n    secondWorldAdventureFocusPending=false;\n    const run=()=>{\n      if(!target.isConnected)return;\n      target.scrollIntoView({block:"center",inline:"nearest",behavior:"auto"});\n    };\n    if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>requestAnimationFrame(run));\n    else setTimeout(run,0);\n    return true;\n  };\n\n'''
+          assert s.count(anchor)==1, s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          anchor='''  window.SECOND_WORLD_ADVENTURE_UI_VERSION=4;\n'''
+          assert s.count(anchor)==1, s.count(anchor)
+          s=s.replace(anchor,'  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1;\n'+anchor,1)
+          p.write_text(s)
+
+          p=Path('ui.js')
+          s=p.read_text()
+          old='''function go(v){inventoryReturnContext=null;if(v==="adventure")adventureScreen="maps";if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}\n'''
+          new='''function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}\n'''
+          assert s.count(old)==1, s.count(old)
+          s=s.replace(old,new,1)
+          old='''function backToAdventureFromInventory(){\n const ctx=inventoryReturnContext;\n inventoryReturnContext=null;\n view="adventure";\n if(ctx?.mode==="galaxy-review")adventureScreen="review-prepare";\n else if(ctx?.mode==="galaxy-main")adventureScreen=ctx.screen==="prepare"?"prepare":"maps";\n else adventureScreen="maps";\n render();\n}\n'''
+          new='''function backToAdventureFromInventory(){\n const ctx=inventoryReturnContext;\n inventoryReturnContext=null;\n view="adventure";\n if(ctx?.mode==="galaxy-review")adventureScreen="review-prepare";\n else if(ctx?.mode==="galaxy-main")adventureScreen=ctx.screen==="prepare"?"prepare":"maps";\n else{\n  adventureScreen="maps";\n  if(ctx?.mode==="universe-main"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();\n }\n render();\n}\n'''
+          assert s.count(old)==1, s.count(old)
+          s=s.replace(old,new,1)
+          old='''function closeBattleResultModal(){\n const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");\n adventureScreen="prepare";render();\n'''
+          new='''function closeBattleResultModal(){\n const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");\n adventureScreen="prepare";\n if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();\n render();\n'''
+          assert s.count(old)==1, s.count(old)
+          s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('playersemanticsui.js')
+          s=p.read_text()
+          assert s.count(' const VERSION=3;')==1
+          s=s.replace(' const VERSION=3;',' const VERSION=4;',1)
+          old=''' function apply(){installStyles();applyHomeSemantics();applyUniverseAdventureSemantics();}\n'''
+          new=''' function apply(){\n  installStyles();applyHomeSemantics();applyUniverseAdventureSemantics();\n  if(typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();\n }\n'''
+          assert s.count(old)==1, s.count(old)
+          s=s.replace(old,new,1)
+          p.write_text(s)
+
+          p=Path('tests/runtime/js-integrity.js')
+          s=p.read_text()
+          anchor='''const worldmap=read("worldmapui.js");\n'''
+          insert='''const worldmap=read("worldmapui.js");\nconst ui=read("ui.js");\nconst playerSemanticsUi=read("playersemanticsui.js");\n'''
+          assert s.count(anchor)==1, s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          anchor='''assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");\n'''
+          insert='''assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");\nassert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1/.test(worldmap),"宇宙冒險目前進度自動定位應為 V1。");\nassert(/requestSecondWorldAdventureProgressFocus=function/.test(worldmap)&&/applySecondWorldAdventureProgressFocus=function/.test(worldmap),"宇宙冒險必須提供一次性定位 request/apply owner。");\nassert(/scrollIntoView\\(\\{block:"center",inline:"nearest",behavior:"auto"\\}\\)/.test(worldmap),"宇宙冒險定位必須以目前 Boss 元素置中，不得使用固定像素捲動。");\nassert(/if\\(v==="adventure"\\)\\{adventureScreen="maps";if\\(secondWorldActive\\(\\)/.test(ui),"從主頁進宇宙冒險必須提出目前 Boss 定位請求。");\nassert(/ctx\\?\\.mode==="universe-main"[\\s\\S]*requestSecondWorldAdventureProgressFocus/.test(ui),"宇宙冒險背包返回必須提出目前 Boss 定位請求。");\nassert(/function closeBattleResultModal\\(\\)[\\s\\S]*secondWorldActive\\(\\)[\\s\\S]*requestSecondWorldAdventureProgressFocus/.test(ui),"宇宙 Boss 結算返回必須提出目前 Boss 定位請求。");\nassert(/applySecondWorldAdventureProgressFocus/.test(playerSemanticsUi),"playersemanticsui.js 必須在 render 後套用一次性宇宙冒險定位。");\n'''
+          assert s.count(anchor)==1, s.count(anchor)
+          s=s.replace(anchor,insert,1)
+          p.write_text(s)
+
+          p=Path('index.html')
+          s=p.read_text()
+          replacements={
+            r'src="worldmapui\.js\?v=[^"]+"':'src="worldmapui.js?v=20260925-universe-auto-focus1"',
+            r'src="ui\.js\?v=[^"]+"':'src="ui.js?v=20260925-universe-auto-focus1"',
+            r'src="playersemanticsui\.js\?v=[^"]+"':'src="playersemanticsui.js?v=20260925-universe-auto-focus1"',
+          }
+          for pattern,replacement in replacements.items():
+            s,n=re.subn(pattern,replacement,s,count=1)
+            assert n==1,(pattern,n)
+          p.write_text(s)
+          PY
+
+          node --check worldmapui.js
+          node --check ui.js
+          node --check playersemanticsui.js
+          node --check tests/runtime/js-integrity.js
+          node tests/runtime/js-integrity.js
+          grep -q 'SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1' worldmapui.js
+          grep -q 'scrollIntoView({block:"center",inline:"nearest",behavior:"auto"})' worldmapui.js
+          grep -q 'src="worldmapui.js?v=20260925-universe-auto-focus1"' index.html
+          grep -q 'src="ui.js?v=20260925-universe-auto-focus1"' index.html
+          grep -q 'src="playersemanticsui.js?v=20260925-universe-auto-focus1"' index.html
+
+          rm -f .github/workflows/temp-universe-adventure-focus-batch2.yml
+          rm -f .github/workflows/temp-universe-adventure-focus-batch2-fix.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add worldmapui.js ui.js playersemanticsui.js tests/runtime/js-integrity.js index.html .github/workflows/temp-universe-adventure-focus-batch2.yml .github/workflows/temp-universe-adventure-focus-batch2-fix.yml
+          git commit -m "Auto focus current universe adventure boss"
+          git push origin HEAD:main
+          sleep 2
+          gh workflow run runtime-integrity.yml --ref main
+          gh workflow run story-integrity.yml --ref main
