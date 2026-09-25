@@ -1,6 +1,7 @@
 (function(){
  const GM_TEST_STATE_VERSION=2;
  const GM_TEST_CHARACTER_SANDBOX_VERSION=1;
+ const GM_UNBOUNDED_VIP_TEST_VERSION=1;
  window.gmTestVipLevel=0;
 
  function cloneValue(value){
@@ -15,6 +16,7 @@
   const range=levelRange(world),n=Math.floor(Number(value)||range.min);
   return Math.max(range.min,Math.min(range.max,n));
  }
+ function normalizeTestVip(value){return typeof window.normalizeVipLevel==="function"?window.normalizeVipLevel(value):Math.max(0,Math.floor(Number(value)||0));}
  function equipmentSlots(){return Array.isArray(EQUIPMENT_TYPES)?Array.from(EQUIPMENT_TYPES):["weapon","helmet","armor","shoes","accessory"];}
  function formalEquipmentSnapshot(){
   return Object.fromEntries(equipmentSlots().map(type=>[type,cloneValue(state?.equipment?.[type]||null)]));
@@ -56,7 +58,7 @@
  window.gmTestLevel=clampTestLevel(state?.level,window.gmTestWorld);
  window.gmTestEquipment=formalEquipmentSnapshot();
  window.gmTestEquipmentSource="synced";
- function testVip(){return Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(window.gmTestVipLevel)||0)));}
+ function testVip(){return normalizeTestVip(window.gmTestVipLevel);}
  function enhancementSlots(){return Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"];}
  function enhancementMax(){return Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)||Number(window.ENHANCEMENT_MAX_LEVEL)||0));}
  function clampEnhancement(value){return Math.max(0,Math.min(enhancementMax(),Math.floor(Number(value)||0)));}
@@ -84,7 +86,7 @@
   const gear=document.getElementById("gmTestCharacterEquipment");if(gear)gear.innerHTML=testEquipmentSummaryHtml();
  }
  function refreshVipControls(){
-  const select=document.getElementById("gmTestVipLevel");if(select)select.value=String(testVip());
+  const input=document.getElementById("gmTestVipLevel");if(input)input.value=String(testVip());
   const info=document.getElementById("gmTestVipInfo");if(info)info.textContent=window.gmTestVipLabel();
  }
  function refreshSpecializationControls(){
@@ -113,7 +115,7 @@
   return true;
  };
  window.gmSetTestVipLevel=function(value,refresh=true){
-  window.gmTestVipLevel=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(value)||0)));
+  window.gmTestVipLevel=normalizeTestVip(value);
   if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testVip();
@@ -168,7 +170,7 @@
 
  window.gmUseCurrentTestStatus=function(){
   setTestCharacterBase(formalWorld(),state?.level,formalEquipmentSnapshot(),"synced");
-  const currentVip=Math.max(0,Math.min(VIP_MAX_LEVEL,Math.floor(Number(state?.vipLevel)||0)));
+  const currentVip=normalizeTestVip(state?.vipLevel);
   window.gmSetTestVipLevel(currentVip,false);
   if(typeof ensureSpecializationState==="function")ensureSpecializationState();
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
@@ -208,15 +210,17 @@
  };
  window.gmTestPlayerStats=function(baseStats=null){
   const equipment=baseStats||window.gmTestEnhancedEquippedStats();
-  return createSpecialPlayerSnapshot(playerCombatStats(equipment,testVip()));
+  const combat=playerCombatStats(equipment,testVip());
+  return typeof createSpecialPlayerSnapshot==="function"?createSpecialPlayerSnapshot(combat):combat;
  };
  window.gmTestVipLabel=function(){const lv=testVip(),b=vipBonusStats(lv);return `VIP${lv}｜HP/ATK +${b.hp}%｜DEF +${b.def}%｜暴擊/閃避 +${b.crit}%`;};
  window.gmTestEnhancementLabel=function(){return `強化｜${enhancementSlots().map(type=>`${typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):type} +${window.gmTestEnhancementLevel(type)}`).join("｜")}`;};
- window.gmTestVipOptions=function(){return Array.from({length:VIP_MAX_LEVEL+1},(_,i)=>`<option value="${i}" ${i===testVip()?"selected":""}>VIP${i}</option>`).join("");};
+ window.gmTestVipOptions=function(){return "";};
  window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="muted" style="margin-top:6px">${window.gmTestCharacterLabel()}</div><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步正式角色到測試設定</button><span class="muted">完整同步正式角色的紀元、等級、五件實穿裝備（含品質／主屬性／詞條）、VIP、專精、強化、印記與文明等級；只寫入 GM 測試沙盒，不修改正式角色。</span></div></div>`;};
- window.gmTestVipControlHtml=function(){return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><select id="gmTestVipLevel" class="btn" onchange="gmSetTestVipLevel(this.value)">${gmTestVipOptions()}</select></label><span id="gmTestVipInfo" class="muted">${gmTestVipLabel()}</span></div>`;};
+ window.gmTestVipControlHtml=function(){const lv=testVip();return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；VIP 測試沒有上限，只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><input id="gmTestVipLevel" class="btn" type="number" min="0" step="1" value="${lv}" onchange="gmSetTestVipLevel(this.value)" style="width:140px"></label><span id="gmTestVipInfo" class="muted">${window.gmTestVipLabel()}</span></div>`;};
  window.GM_TEST_STATE_VERSION=GM_TEST_STATE_VERSION;
  window.GM_TEST_CHARACTER_SANDBOX_VERSION=GM_TEST_CHARACTER_SANDBOX_VERSION;
+ window.GM_UNBOUNDED_VIP_TEST_VERSION=GM_UNBOUNDED_VIP_TEST_VERSION;
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
  window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
