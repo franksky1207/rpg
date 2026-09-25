@@ -1,8 +1,0 @@
-bounty: 0
-combatcore: 1
-index-owner: 0
-index-combat: 0
-index-trait: 0
-index-bounty: 0
-integrity-read: 1
-integrity-anchor: 1
