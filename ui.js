@@ -78,7 +78,7 @@ function renderNav(){
  if(top)top.innerHTML="";
  if(bottom)bottom.innerHTML="";
 }
-function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}view=v;render()}
+function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}if(v==="inventory"&&typeof window.requestInventoryEntryFocus==="function")window.requestInventoryEntryFocus();view=v;render();if(v==="inventory"&&typeof window.applyInventoryFocus==="function")window.applyInventoryFocus()}
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
@@ -169,7 +169,7 @@ function adventureInventoryReturnContext(){
  }
  return {mode:"galaxy-main",screen:adventureScreen==="prepare"?"prepare":"maps"};
 }
-function openAdventureInventory(){inventoryReturnContext=adventureInventoryReturnContext();view="inventory";render()}
+function openAdventureInventory(){inventoryReturnContext=adventureInventoryReturnContext();if(typeof window.requestInventoryEntryFocus==="function")window.requestInventoryEntryFocus();view="inventory";render();if(typeof window.applyInventoryFocus==="function")window.applyInventoryFocus()}
 function backToAdventureFromInventory(){
  const ctx=inventoryReturnContext;
  inventoryReturnContext=null;
@@ -348,7 +348,7 @@ function inventoryPage(){
 }
 // Inventory equipment mutation/actions are owned by equipmentlock.js.
 // ui.js intentionally keeps rendering only; runtime onclick handlers resolve after the full script stack loads.
-function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();if(typeof window.requestInventoryPostRedeemFocus==="function")window.requestInventoryPostRedeemFocus();render();if(typeof window.applyInventoryEntryFocus==="function")window.applyInventoryEntryFocus()}
+function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason);save();if(typeof window.requestInventoryPostRedeemFocus==="function")window.requestInventoryPostRedeemFocus();render();if(typeof window.applyInventoryFocus==="function")window.applyInventoryFocus()}
 
 function settingsPage(){
  const s=state.settings,name=escapePlayerName(currentPlayerName());
