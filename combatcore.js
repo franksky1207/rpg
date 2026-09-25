@@ -337,7 +337,8 @@
    items.push({item:it,sold:ir.sold||0,sale:ir.sale||null});
    saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,ir.enhancementStones);
   }
-  if(e.kind==="boss"&&(state.vipLevel||0)>=16&&Math.random()<.15){
+  if(typeof window.vipLootBossExtraDropTriggered!=="function")throw new Error("VIP Loot Core 未載入。");
+  if(window.vipLootBossExtraDropTriggered({boss:e.kind==="boss"})){
    const extra=dropItem(e,mapIdx);
    if(extra){
     const extraResult=addItem(extra);
