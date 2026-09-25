@@ -15,12 +15,12 @@ jobs:
         with:
           python-version: '3.x'
       - run: python .github/tmp/apply_vip_loot_batch1.py
-      - run: node --check viplootcore.js && node --check traitdrop.js && node --check dungeonbounty.js && node --check engine.js && node tests/runtime/js-integrity.js
+      - run: node --check viplootcore.js && node --check traitdrop.js && node --check dungeonbounty.js && node --check combatcore.js && node tests/runtime/js-integrity.js
       - name: Commit changes
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add engine.js dungeonbounty.js index.html tests/runtime/js-integrity.js
+          git add combatcore.js dungeonbounty.js index.html tests/runtime/js-integrity.js
           git diff --cached --quiet && exit 0
           git commit -m "Unify VIP loot privilege consumers"
           git push
