@@ -58,28 +58,6 @@
   const lv=vipLevel(),points=vipPoints();
   return `<div class="muted gm-hub-note">正式 VIP 等級沒有上限，正式資料以 VIP 積分為準；等級會依 1000 × 等級² 自動反推。VIP20 之後不再新增特殊特權，但基本能力仍持續成長。</div><div class="notice">目前：VIP${lv}｜VIP 積分 ${points.toLocaleString()}｜下一級門檻 ${nextThreshold(lv).toLocaleString()}</div><div class="controls" style="align-items:end"><label>指定 VIP 積分<br><input id="gmVipPointsInput" class="btn" type="number" min="0" step="1" value="${points}" style="width:190px"></label><button class="btn blue" type="button" onclick="gmApplyVipPoints()">套用 VIP 積分</button><button class="btn danger" type="button" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>`;
  }
- function patchGuideCopy(){
-  const patchCategories=categories=>(Array.isArray(categories)?categories.map(category=>({...category,items:(category.items||[]).map(item=>{
-   if(item?.[0]==="VIP 系統")return [item[0],"透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級。VIP 等級沒有上限；VIP20 是最後一個特殊特權階段，之後仍可持續提升基本能力。"];
-   if(item?.[0]==="VIP 基礎能力")return [item[0],"VIP 每提升 1 級，HP／攻擊 +0.5%、防禦 +0.25%、暴擊／閃避 +0.25 個百分點；VIP20 之後仍持續成長。"];
-   if(item?.[0]==="VIP 特權")return [item[0],"VIP2～VIP20 會依指定等級解鎖裝備、特殊怪、副本與死亡保護等特權；VIP20 為最後一個特殊特權，VIP21 以上不新增特權。"];
-   return Array.isArray(item)?item.slice():item;
-  })})):categories);
-  if(typeof window.gameGuideCategoriesForState==="function"){
-   const baseCategories=window.gameGuideCategoriesForState;
-   window.gameGuideCategoriesForState=function(target=null){return patchCategories(baseCategories(target));};
-  }
-  if(typeof window.gameGuidePage==="function"){
-   const basePage=window.gameGuidePage;
-   window.gameGuidePage=function(){
-    return String(basePage())
-     .replace("透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級，最高 VIP20。升級後可獲得能力與特權。","透過競技場、虛空幻境等玩法取得 VIP 積分並提升 VIP 等級。VIP 等級沒有上限；VIP20 是最後一個特殊特權階段，之後仍可持續提升基本能力。")
-     .replace("VIP 等級會提升 HP、攻擊、防禦、暴擊與閃避。","VIP 每提升 1 級，HP／攻擊 +0.5%、防禦 +0.25%、暴擊／閃避 +0.25 個百分點；VIP20 之後仍持續成長。")
-     .replace("部分 VIP 等級會解鎖裝備、特殊怪、副本與死亡保護等特權；完整效果可在「查看特權」確認。","VIP2～VIP20 會解鎖裝備、特殊怪、副本與死亡保護等特權；VIP20 為最後一個特殊特權，VIP21 以上不新增特權。完整效果可在「查看特權」確認。");
-   };
-  }
-  window.GAME_GUIDE_VIP_UNBOUNDED_COPY_VERSION=1;
- }
  window.vipStatusText=vipStatusText;window.vipHomeCardHtml=vipHomeCardHtml;window.vipEventsHtml=vipEventsHtml;
  window.openVipDetails=function(){ensureVipModal();const body=document.getElementById("vipDetailBody");if(body)body.innerHTML=vipDetailsHtml();document.getElementById("vipDetailModal")?.classList.add("show");};
  window.closeVipDetails=function(){document.getElementById("vipDetailModal")?.classList.remove("show");};
@@ -87,6 +65,5 @@
  window.gmApplyVipPoints=function(){const input=document.getElementById("gmVipPointsInput"),raw=input?input.value:null,n=Number(raw);if(!Number.isFinite(n)||n<0||!Number.isInteger(n)){alert("請輸入 0 以上的整數 VIP 積分。");return false;}const result=setFormalVipPoints(n);alert(`VIP 積分已更新為 ${result.points.toLocaleString()}，目前 VIP${result.level}。`);return true;};
  window.setFormalVipPoints=setFormalVipPoints;
  window.VIP_UI_VERSION=VIP_UI_VERSION;
- patchGuideCopy();
  ensureVipModal();
 })();
