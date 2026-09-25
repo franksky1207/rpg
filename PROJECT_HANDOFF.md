@@ -6,8 +6,8 @@
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
 > 本檔是交接摘要，不是第二套規格；若 handoff、舊對話、設計稿、記憶與 `main` 衝突，一律以當下 `main` 為準。
 
-本次 handoff 更新前 `main` HEAD：`7a53be196e51336e3e48e7f5b057a5cdf590104a`。  
-最新遊戲功能程式碼 HEAD 仍為 `cf2d03a24866dc580024e8d7903c448a9ffb78a9`；`7a53...` 只改上一版 handoff。本次同樣只更新 `PROJECT_HANDOFF.md`，不修改遊戲功能。
+最近一次確認的**遊戲功能程式碼基準 HEAD**為 `cf2d03a24866dc580024e8d7903c448a9ffb78a9`。  
+`main` 後續可能包含純文件 commit；承接時不得只靠本檔記錄的 SHA 推定 current main，必須重新讀取 actual `main` 並以 compare 確認是否有遊戲功能變更。截至本次文件整理前，`cf2d03...` 之後既有變更僅涉及交接文件，未修改遊戲功能；本次亦只更新文件。
 
 ---
 
@@ -220,7 +220,7 @@ GM測試角色支援銀河／宇宙：紀元、等級、裝備、強化、8專�
 - `assets/backgrounds-source/` 為原稿；`assets/backgrounds/` 為 runtime WebP；`tests/runtime/asset-integrity.js` 驗證素材政策。
 - `tests/runtime/js-integrity.js` 已包含背包定位V3與VIP Loot V2 deterministic behavior tests，以及 `equipmentRewards[]` owner audit。
 
-最新功能程式碼 exact-head `cf2d03a24866dc580024e8d7903c448a9ffb78a9`：Runtime Integrity #360 success、Story Integrity #574 success。上一版 handoff `7a53...` 之後沒有遊戲功能程式碼變更。
+最近一次確認的遊戲功能程式碼基準 `cf2d03a24866dc580024e8d7903c448a9ffb78a9`：Runtime Integrity #360 success、Story Integrity #574 success。後續若 `main` 再出現新 commit，必須重新 compare；不得因 handoff 內的 SHA 未更新就直接判斷功能有變或沒變。
 
 已知 CI 小缺口：`.github/workflows/runtime-integrity.yml` path filter 仍未單列 `backgrounds.css`；不要偷偷修，除非使用者授權。
 
