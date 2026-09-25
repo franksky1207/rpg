@@ -102,6 +102,7 @@ assert(index.includes('inventoryfocus.js?v=20260925-inventory-focus-cleanup1'),"
 
 // Inventory Focus behavior contract: verify actual resolver output instead of source-code if-order.
 const vm=require("vm");
+// VIP Loot V2 behavior contract and legacy reward projection audit are permanently covered below.
 // VIP Loot behavior contract: execute the shared owner with deterministic RNG.
 function createVipLootHarness({vipLevel=0,equipment=null}={}){
  const context={
