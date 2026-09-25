@@ -50,6 +50,7 @@
  function normalizeTestVip(value){return typeof window.normalizeVipLevel==="function"?window.normalizeVipLevel(value):Math.max(0,Math.floor(Number(value)||0));}
  function installUnlimitedVipTestOverrides(){
   const baseUseCurrent=typeof window.gmUseCurrentTestStatus==="function"?window.gmUseCurrentTestStatus:null;
+  const baseRefresh=typeof window.gmRefreshTestControls==="function"?window.gmRefreshTestControls:null;
   window.gmSetTestVipLevel=function(value,refresh=true){
    window.gmTestVipLevel=normalizeTestVip(value);
    if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
@@ -64,6 +65,15 @@
    const combat=playerCombatStats(equipment,normalizeTestVip(window.gmTestVipLevel));
    return typeof createSpecialPlayerSnapshot==="function"?createSpecialPlayerSnapshot(combat):combat;
   };
+  if(baseRefresh){
+   window.gmRefreshTestControls=function(){
+    const result=baseRefresh();
+    const level=normalizeTestVip(window.gmTestVipLevel);
+    const input=document.getElementById("gmTestVipLevel");if(input)input.value=String(level);
+    const info=document.getElementById("gmTestVipInfo");if(info)info.textContent=window.gmTestVipLabel();
+    return result;
+   };
+  }
   if(baseUseCurrent){
    window.gmUseCurrentTestStatus=function(){
     const result=baseUseCurrent();
