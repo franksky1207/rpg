@@ -1,0 +1,36 @@
+name: tmp-vip-loot-finalize
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/tmp-vip-loot-finalize.yml'
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add permanent audit note and remove temporary workflow
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/runtime/js-integrity.js')
+          s=p.read_text()
+          note='// VIP Loot V2 behavior contract and legacy reward projection audit are permanently covered below.\n'
+          if note not in s:
+              marker='// VIP Loot behavior contract: execute the shared owner with deterministic RNG.\n'
+              if marker not in s:
+                  raise SystemExit('VIP Loot behavior marker missing')
+              s=s.replace(marker,note+marker,1)
+              p.write_text(s)
+          PY
+          rm -f .github/workflows/tmp-vip-loot-finalize.yml
+          node --check tests/runtime/js-integrity.js
+          node tests/runtime/js-integrity.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests/runtime/js-integrity.js .github/workflows/tmp-vip-loot-finalize.yml
+          git commit -m 'Finalize VIP loot behavior integrity audit'
+          git push
