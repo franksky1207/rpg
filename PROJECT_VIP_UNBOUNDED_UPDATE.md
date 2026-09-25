@@ -40,6 +40,8 @@ VIP 已由「最高 VIP20」改為：
 - `VIP_PROGRESSION_VERSION = 14`
 - `VIP_UNBOUNDED_LEVEL_VERSION = 1`
 - `VIP_PERK_MAX_LEVEL = 20`
+- `VIP_POINTS_SOURCE_OF_TRUTH_VERSION = 1`
+- `VIP_STATE_RECONCILIATION_VERSION = 1`
 - `vipLevelFromPoints(...)` 不再 clamp 到20。
 - `normalizeVipState(...)` 直接依既有 `vipPoints` 重算真實 VIP 等級。
 - `vipBonusStats(...)` 依真實 VIP 等級計算，不再封頂20。
@@ -121,6 +123,9 @@ Runtime probe 會確認：
 - `VIP_PROGRESSION_VERSION = 14`
 - `VIP_UNBOUNDED_LEVEL_VERSION = 1`
 - `VIP_PERK_MAX_LEVEL = 20`
+- `VIP_POINTS_SOURCE_OF_TRUTH_VERSION = 1`
+- `VIP_STATE_RECONCILIATION_VERSION = 1`
+- `VIP_ADD_POINTS_OWNER_REQUIRED_VERSION = 1`
 - `VIP_UI_VERSION = 2`
 - `GM_UNBOUNDED_VIP_TEST_VERSION = 1`
 - `VIP_UNBOUNDED_INTEGRITY_VERSION = 1`
@@ -135,10 +140,12 @@ Runtime probe 會確認：
 
 `index.html` 已更新本次變更相關載入版本：
 
+- `engine.js`
 - `vipprogression.js`
 - `viplootcore.js`
 - `gameguide.js`
 - `vipui.js`
+- `vipgm.js`
 - `gmhubextensions.js`
 - `integritycontract.js`
 
@@ -173,5 +180,22 @@ Runtime probe 會確認：
 - Save schema 維持15，沒有新增 VIP save 欄位，不需要 migration。
 - VIP20 死亡保護及 VIP2～18 既有特殊特權門檻沒有改變。
 - 高維紀元 runtime 仍未實作，本次只修正其 VIP 設計前提。
+
+## 8. 2026-09-26 後續 owner／舊資料收斂
+
+針對 VIP 無上限改版再做一次維護檢查後，已追加以下正式收斂：
+
+- `engine.js` 不再持有 `VIP_MAX_LEVEL` 或第二套 `vipBonusStats()`；VIP 基本能力正式唯一 owner 為 `vipprogression.js`。
+- `vipgm.js` 本體直接支援無上限 VIP 測試；`gmhubextensions.js` 不再透過 runtime override 修正 VIP 測試。
+- `addVipPoints(...)` 不再保留自己的 vipPoints／vipLevel fallback；若正式 `normalizeVipState` 或 `vipLevelFromPoints` owner 未載入，直接 fail-fast，避免第二套 progression 漂移。
+- `VIP_ADD_POINTS_OWNER_REQUIRED_VERSION = 1` 標記上述依賴政策。
+- **舊存檔的 VIP 真實來源正式定義為 `vipPoints`。** `vipLevel` 為可重建衍生值；載入與正規化時一律依積分重算。
+- 舊資料測試已涵蓋：
+  - `vipPoints = 490,000`、舊 `vipLevel = 20` → VIP22。
+  - `vipPoints = 441,000`、缺少 `vipLevel` → VIP21。
+  - `vipPoints = 400,000`、錯誤 `vipLevel = 99` → VIP20。
+  - 只有 `vipLevel = 50`、缺少 `vipPoints` → 視為 0 積分並重建為 VIP0；不信任無積分依據的孤立等級值。
+- 不升 Save Schema；上述皆由現有 normalization owner 處理。
+- VIP Loot 追加回歸測試：VIP21／50／100 均完整繼承 VIP8／14／16／18 既有特權與原機率，但特權表仍只有 `vip8 / vip14 / vip16 / vip18`，不得因無限等級自行新增 VIP21+ tier。
 
 CI 最終結果應以 current main 最新 HEAD 的 GitHub Actions `Runtime Integrity` 為準；若後續文件 commit 使中間 commit 被 freshness guard 略過，應查看最後一個 current-head run。
