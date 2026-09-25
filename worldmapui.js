@@ -156,6 +156,7 @@
   window.setSecondWorldAdventureView=function(value){
     const next=value==="galaxy-review"?"galaxy-review":"universe";
     if(secondWorldAdventureView===next)return;
+    if(next!=="universe"&&typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
     secondWorldAdventureView=next;
     render();
   };
@@ -190,13 +191,17 @@
     secondWorldAdventureFocusPending=true;
     return true;
   };
+  window.cancelSecondWorldAdventureProgressFocus=function(){
+    secondWorldAdventureFocusPending=false;
+    return true;
+  };
   window.applySecondWorldAdventureProgressFocus=function(){
     if(!secondWorldAdventureFocusPending||typeof document==="undefined")return false;
     const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");
-    if(!screen)return false;
+    if(!screen){secondWorldAdventureFocusPending=false;return false;}
     const index=secondWorldLatestProgressBossIndex();
     const target=index>=0?screen.querySelector(`[data-second-world-boss="${index}"]`):null;
-    if(!target)return false;
+    if(!target){secondWorldAdventureFocusPending=false;return false;}
     secondWorldAdventureFocusPending=false;
     const run=()=>{
       if(!target.isConnected)return;
@@ -210,7 +215,7 @@
   function secondWorldActiveRegionIndex(){
     const regions=secondWorldRegions();
     if(!regions.length)return -1;
-    const highest=typeof window.secondWorldHighestUnlockedBossIndex==="function"?window.secondWorldHighestUnlockedBossIndex():-1;
+    const highest=secondWorldLatestProgressBossIndex();
     if(highest<0)return 0;
     const boss=secondWorldBosses()[highest];
     return Math.max(0,Math.min(regions.length-1,Math.floor(Number(boss?.regionIndex)||0)));
@@ -337,7 +342,7 @@
     return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
-  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1;
+  window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2;
   window.SECOND_WORLD_ADVENTURE_UI_VERSION=4;
   window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3;
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;

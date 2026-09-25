@@ -1,10 +1,6 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  function universe(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
- function installStyles(){
-  if(typeof document==="undefined")return;
-  document.getElementById("playerSemanticsUiStyles")?.remove();
- }
  function applyHomeSemantics(){
   if(typeof document==="undefined")return;
   const home=document.querySelector(".home-screen");
@@ -17,21 +13,8 @@
    if(title==="副本"&&desc)desc.textContent="挑戰懸賞、競技場、虛空幻境與鏡像戰";
   });
  }
- function applyUniverseAdventureSemantics(){
-  if(typeof document==="undefined")return;
-  const screen=document.querySelector(".universe-adventure-screen");
-  if(!screen)return;
-  const top=screen.querySelector(":scope > .page-top");
-  if(!top)return;
-  top.classList.remove("universe-adventure-top");
-  const legacyInventory=top.querySelector(".universe-adventure-inventory");
-  if(legacyInventory){
-   const placeholder=document.createElement("span");
-   legacyInventory.replaceWith(placeholder);
-  }
- }
  function apply(){
-  installStyles();applyHomeSemantics();applyUniverseAdventureSemantics();
+  applyHomeSemantics();
   if(typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();
  }
  const base=typeof window.render==="function"?window.render:null;
@@ -40,6 +23,5 @@
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
  window.PLAYER_SEMANTICS_UI_VERSION=VERSION;
- window.SECOND_WORLD_ADVENTURE_HEADER_POLISH_VERSION=1;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
 })();

@@ -150,12 +150,18 @@ assert(/const BASE_STAT=2700;/.test(secondWorldCombat),"secondworldcombat.js 宇
 assert(/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2/.test(secondWorldCombat),"secondworldcombat.js 宇宙文明戰鬥 owner 應為 V2。");
 assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 比例應為 12:2:1。");
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");
-assert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=1/.test(worldmap),"宇宙冒險目前進度自動定位應為 V1。");
-assert(/requestSecondWorldAdventureProgressFocus=function/.test(worldmap)&&/applySecondWorldAdventureProgressFocus=function/.test(worldmap),"宇宙冒險必須提供一次性定位 request/apply owner。");
-assert(/scrollIntoView\(\{block:"center",inline:"nearest",behavior:"auto"\}\)/.test(worldmap),"宇宙冒險定位必須以目前 Boss 元素置中，不得使用固定像素捲動。");
-assert(/if\(v==="adventure"\)\{adventureScreen="maps";if\(secondWorldActive\(\)/.test(ui),"從主頁進宇宙冒險必須提出目前 Boss 定位請求。");
-assert(/ctx\?\.mode==="universe-main"[\s\S]*requestSecondWorldAdventureProgressFocus/.test(ui),"宇宙冒險背包返回必須提出目前 Boss 定位請求。");
-assert(/function closeBattleResultModal\(\)[\s\S]*secondWorldActive\(\)[\s\S]*requestSecondWorldAdventureProgressFocus/.test(ui),"宇宙 Boss 結算返回必須提出目前 Boss 定位請求。");
+assert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2/.test(worldmap),"宇宙冒險目前進度自動定位應為 V2。");
+assert(/requestSecondWorldAdventureProgressFocus=function/.test(worldmap)&&/applySecondWorldAdventureProgressFocus=function/.test(worldmap)&&/cancelSecondWorldAdventureProgressFocus=function/.test(worldmap),"宇宙冒險必須提供一次性定位 request/apply/cancel owner。");
+assert(/scrollIntoView/.test(worldmap)&&/block:"center"/.test(worldmap)&&/data-second-world-boss/.test(worldmap),"宇宙冒險定位必須以目前 Boss 元素置中，不得依賴固定像素捲動。");
+assert(/function secondWorldActiveRegionIndex\(\)[\s\S]*secondWorldLatestProgressBossIndex\(\)/.test(worldmap),"宇宙目前區域必須共用 latest-progress Boss owner。");
+assert(!/installStyles|applyUniverseAdventureSemantics|SECOND_WORLD_ADVENTURE_HEADER_POLISH_VERSION/.test(playerSemanticsUi),"已退休的宇宙冒險頂部背包 cleanup 不得殘留。");
+for(const fn of ["go","backToAdventureFromInventory","closeBattleResultModal"]){
+ const start=ui.indexOf("function "+fn+"(");
+ assert(start>=0,"找不到 "+fn+"。");
+ const next=ui.indexOf("\nfunction ",start+1);
+ const body=ui.slice(start,next>=0?next:ui.length);
+ assert(body.includes("requestSecondWorldAdventureProgressFocus"),fn+" 必須保留宇宙目前 Boss 定位請求。");
+}
 assert(/applySecondWorldAdventureProgressFocus/.test(playerSemanticsUi),"playersemanticsui.js 必須在 render 後套用一次性宇宙冒險定位。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
