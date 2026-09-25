@@ -23,7 +23,13 @@
   SECOND_WORLD_ADVENTURE_UI_VERSION:4,
   SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2,
   LEVEL_PROGRESSION_VERSION:1,
-  GAME_GUIDE_VERSION:18
+  VIP_PROGRESSION_VERSION:14,
+  VIP_UNBOUNDED_LEVEL_VERSION:1,
+  VIP_PERK_MAX_LEVEL:20,
+  VIP_UI_VERSION:2,
+  GM_UNBOUNDED_VIP_TEST_VERSION:1,
+  VIP_UNBOUNDED_INTEGRITY_VERSION:1,
+  GAME_GUIDE_VERSION:19
  });
  const REQUIRED_APIS=Object.freeze([
   "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState",
@@ -31,7 +37,8 @@
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile",
   "effectiveLevelCap","effectiveExpNeed","levelProgressionAudit",
   "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat",
-  "secondWorldAdventurePageHtml","gameGuideCategoriesForState"
+  "secondWorldAdventurePageHtml","gameGuideCategoriesForState",
+  "vipThreshold","vipLevelFromPoints","normalizeVipState","vipBonusStats","gmVipManagementHtml","gmSetTestVipLevel"
  ]);
  function run(options={}){
   const errors=[];
@@ -40,6 +47,9 @@
    if(actual!==expected)errors.push({code:"VERSION_MISMATCH",name,expected,actual:Number.isFinite(actual)?actual:null});
   });
   REQUIRED_APIS.forEach(name=>{if(typeof window[name]!=="function")errors.push({code:"API_MISSING",name});});
+  if(window.VIP_UNBOUNDED_INTEGRITY_REPORT?.passed!==true){
+   errors.push({code:"VIP_UNBOUNDED_INTEGRITY",report:window.VIP_UNBOUNDED_INTEGRITY_REPORT||null});
+  }
   if(Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known"){
    errors.push({code:"SAVE_LEGACY_POLICY",minSupportedVersion:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});
   }
