@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -131,13 +131,16 @@
   return item;
  }
  function makeSecondWorldMainlineBossEquipment(value,options={}){
-  if(typeof window.applyVipLootQualityPromotions!=="function"||typeof window.vipLootForcedType!=="function")throw new Error("VIP Loot Core 未載入。");
-  const rng=typeof options.rng==="function"?options.rng:Math.random;
+  if(typeof window.resolveVipLootModifiers!=="function")throw new Error("VIP Loot Core 未載入。");
+  const rng=typeof options.rng==="function"?options.rng:Math.random,stateTarget=options.state||currentState();
   const baseQuality=secondWorldEquipmentQualityRoll(rng);
-  const qualityResult=window.applyVipLootQualityPromotions(baseQuality,{boss:true,rng,vipLevel:options.vipLevel});
-  const forcedType=window.vipLootForcedType({rng,vipLevel:options.vipLevel});
-  const item=makeSecondWorldEquipmentForBoss(value,{state:options.state||currentState(),level:options.level,forcedQ:qualityResult.quality,forcedType,rng});
-  return {item,baseQuality,qualityResult,forcedType};
+  const loot=window.resolveVipLootModifiers(baseQuality,{boss:true,rng,vipLevel:options.vipLevel,state:stateTarget,weakTypesResolver:options.weakTypesResolver});
+  const item=makeSecondWorldEquipmentForBoss(value,{state:stateTarget,level:options.level,forcedQ:loot.quality,forcedType:loot.forcedType,rng});
+  return {item,baseQuality,qualityResult:loot.qualityResult,forcedType:loot.forcedType};
+ }
+ function secondWorldEquipmentRewardRows(result){
+  if(Array.isArray(result?.equipmentRewards)&&result.equipmentRewards.length)return result.equipmentRewards;
+  return result?.item?[{item:result.item,itemResult:result.itemResult||null,sale:result.sale||null,kept:result.kept===true,vip16Extra:false}]:[];
  }
  function secondWorldMainlineRewardPreview(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=options.state||currentState();
@@ -164,11 +167,13 @@
   if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,s)))return {ok:false,reason:"此 Boss 尚未解鎖。"};
   const before=snapshotState();
   const reward=secondWorldMainlineRewardPreview(index,{state:s,useTestSpecializations:false});
-  const primaryDrop=makeSecondWorldMainlineBossEquipment(index,{state:s});
+  const rng=typeof options.rng==="function"?options.rng:Math.random;
+  const lootOptions={state:s,rng,vipLevel:options.vipLevel,weakTypesResolver:options.weakTypesResolver};
+  const primaryDrop=makeSecondWorldMainlineBossEquipment(index,lootOptions);
   const drops=primaryDrop?.item?[{...primaryDrop,vip16Extra:false}]:[];
   if(typeof window.vipLootBossExtraDropTriggered!=="function")throw new Error("VIP Loot Core 未載入。");
-  if(window.vipLootBossExtraDropTriggered({boss:true})){
-   const extraDrop=makeSecondWorldMainlineBossEquipment(index,{state:s});
+  if(window.vipLootBossExtraDropTriggered({boss:true,rng,vipLevel:options.vipLevel})){
+   const extraDrop=makeSecondWorldMainlineBossEquipment(index,lootOptions);
    if(extraDrop?.item)drops.push({...extraDrop,vip16Extra:true});
   }
   const firstKill=s.secondWorld.mainline.bossKilled[index]!==true;
@@ -251,6 +256,7 @@
  window.equipmentSaleText=equipmentSaleText;
  window.makeSecondWorldEquipmentForBoss=makeSecondWorldEquipmentForBoss;
  window.makeSecondWorldMainlineBossEquipment=makeSecondWorldMainlineBossEquipment;
+ window.secondWorldEquipmentRewardRows=secondWorldEquipmentRewardRows;
  window.secondWorldMainlineRewardPreview=secondWorldMainlineRewardPreview;
  window.settleSecondWorldBossVictory=settleSecondWorldBossVictory;
  window.applySecondWorldDeathPenalty=applySecondWorldDeathPenalty;

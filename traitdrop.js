@@ -16,13 +16,12 @@ window.dropItem=function(enemy,mapIdx){
  let traitPromotion=0;
  if(traitRoll&&q<5){q++;traitPromotion=1;}
 
- if(typeof window.applyVipLootQualityPromotions!=="function")throw new Error("VIP Loot Core 未載入。");
- const vipQuality=window.applyVipLootQualityPromotions(q,{boss:enemy.kind==="boss"});
- q=vipQuality.quality;
-
- if(typeof window.vipLootForcedType!=="function")throw new Error("VIP Loot Core 未載入。");
- const forcedType=window.vipLootForcedType();
- const vip8WeakSlot=!!forcedType;
+ if(typeof window.resolveVipLootModifiers!=="function")throw new Error("VIP Loot Core 未載入。");
+ const vipLoot=window.resolveVipLootModifiers(q,{boss:enemy.kind==="boss",state});
+ const vipQuality=vipLoot.qualityResult;
+ q=vipLoot.quality;
+ const forcedType=vipLoot.forcedType;
+ const vip8WeakSlot=vipLoot.vip8WeakSlot;
 
  const item=makeItem(lv,mapIdx,enemy.kind,q,forcedType);
  const meta={

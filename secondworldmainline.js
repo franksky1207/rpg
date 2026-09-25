@@ -1,5 +1,5 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
  const BACKGROUND_GM_GATE_VERSION=1;
  let busy=false;
  let activeContext=null;
@@ -18,7 +18,7 @@
   return `<div style="margin-top:10px"><b>${label}</b><div class="item">${base}${ability}</div></div>`;
  }
  function rewardRows(result){
-  const rows=Array.isArray(result?.equipmentRewards)&&result.equipmentRewards.length?result.equipmentRewards:(result?.item?[{item:result.item,kept:result.kept===true,sale:result.sale||null,vip16Extra:false}]:[]);
+  const rows=typeof window.secondWorldEquipmentRewardRows==="function"?window.secondWorldEquipmentRewardRows(result):[];
   return rows.map(row=>{
    const label=row.vip16Extra?"VIP16 額外主線裝備":"主線裝備";
    if(row.kept)return rewardItemHtml(row.item,label);
@@ -149,7 +149,7 @@
   ctx.wins++;ctx.totalXp+=Math.max(0,Number(settled.xp)||0);
   ctx.totalDarkMatter+=Math.max(0,Number(settled.darkMatter)||0);
   ctx.totalDarkEnergy+=Math.max(0,Number(settled.darkEnergy)||0);
-  const rows=Array.isArray(settled.equipmentRewards)&&settled.equipmentRewards.length?settled.equipmentRewards:(settled.item?[{item:settled.item,kept:settled.kept===true,sale:settled.sale||null}]:[]);
+  const rows=typeof window.secondWorldEquipmentRewardRows==="function"?window.secondWorldEquipmentRewardRows(settled):[];
   rows.forEach(row=>{
    ctx.totalDarkMatter+=Math.max(0,Number(row.sale?.quote?.darkMatter)||0);
    ctx.totalDarkEnergy+=Math.max(0,Number(row.sale?.quote?.darkEnergy)||0);

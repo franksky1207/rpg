@@ -86,25 +86,21 @@
   return Math.max(0,Math.floor(base*Math.max(1,Number(tier?.goldMult)||1)));
  }
  function rollBountyQuality(){let r=Math.random()*100,c=0;for(let i=0;i<BOUNTY_QUALITY_WEIGHTS.length;i++){c+=BOUNTY_QUALITY_WEIGHTS[i];if(r<c)return i;}return 2;}
- function bountyQualityForEnemy(enemy){
+ function bountyLootModifiers(enemy){
   let q=rollBountyQuality();
   const traitCount=Array.isArray(enemy?.traits)?Math.min(2,enemy.traits.length):0,traitChance=traitCount===2?.30:traitCount===1?.15:0;
   if(traitChance>0&&Math.random()<traitChance&&q<5)q++;
-  if(typeof window.applyVipLootQualityPromotions!=="function")throw new Error("VIP Loot Core 未載入。");
-  return window.applyVipLootQualityPromotions(q,{boss:false}).quality;
- }
- function bountyForcedType(){
-  if(typeof window.vipLootForcedType!=="function")throw new Error("VIP Loot Core 未載入。");
-  return window.vipLootForcedType();
+  if(typeof window.resolveVipLootModifiers!=="function")throw new Error("VIP Loot Core 未載入。");
+  return window.resolveVipLootModifiers(q,{boss:false,state});
  }
  function bountyItem(enemy,mapIdx){
-  const level=clampGameLevel(enemy?.level??state.level),offset=[-2,-1,0,0,1],lv=Math.max(1,Math.min(MAX_LEVEL,level+offset[Math.floor(Math.random()*offset.length)]));
-  return makeItem(lv,mapIdx,"normal",bountyQualityForEnemy(enemy),bountyForcedType());
+  const level=clampGameLevel(enemy?.level??state.level),offset=[-2,-1,0,0,1],lv=Math.max(1,Math.min(MAX_LEVEL,level+offset[Math.floor(Math.random()*offset.length)])),loot=bountyLootModifiers(enemy);
+  return makeItem(lv,mapIdx,"normal",loot.quality,loot.forcedType);
  }
  function universeBountyItem(enemy,level,bossIndex){
   if(typeof window.makeSecondWorldEquipmentForBoss!=="function")return null;
-  const q=bountyQualityForEnemy(enemy),forcedType=bountyForcedType();
-  return window.makeSecondWorldEquipmentForBoss(bossIndex,{state,level,forcedQ:q,forcedType});
+  const loot=bountyLootModifiers(enemy);
+  return window.makeSecondWorldEquipmentForBoss(bossIndex,{state,level,forcedQ:loot.quality,forcedType:loot.forcedType});
  }
  function bountySaleText(row){if(!row?.sold)return "保留";if(row.sale&&typeof window.equipmentSaleText==="function")return "自動出售 +"+window.equipmentSaleText(row.sale);return `自動出售 +${Math.max(0,Number(row.sold)||0).toLocaleString()} 金幣`;}
  function bountyLootHtml(items){if(!Array.isArray(items)||!items.length)return "";return `<div class="dungeon-bounty-loot-list">${items.map(row=>`<div class="dungeon-bounty-loot-row"><span>${itemHtml(row.item,true)}</span><span class="${row.sold?"muted":"dungeon-bounty-reward"}">${bountySaleText(row)}</span></div>`).join("")}</div>`;}
