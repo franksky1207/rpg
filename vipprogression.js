@@ -1,6 +1,8 @@
 (function(){
  const VIP_THRESHOLD_BASE=1000;
  const VIP_PROGRESSION_VERSION=14;
+ const VIP_UNBOUNDED_LEVEL_VERSION=1;
+ const VIP_PERK_MAX_LEVEL=20;
 
  function normalizeVipLevel(value){
   return Math.max(0,Math.floor(Number(value)||0));
@@ -20,6 +22,17 @@
   target.vipLevel=vipLevelFromPointsV14(target.vipPoints);
   return target;
  }
+ function vipBonusStatsV14(level=null){
+  const lv=normalizeVipLevel(level??state?.vipLevel);
+  return {
+   level:lv,
+   hp:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,
+   atk:lv*VIP_HP_ATK_PERCENT_PER_LEVEL,
+   def:lv*VIP_DEF_PERCENT_PER_LEVEL,
+   crit:lv*VIP_RATE_STAT_PER_LEVEL,
+   dodge:lv*VIP_RATE_STAT_PER_LEVEL
+  };
+ }
  function vipDungeonPointMultiplier(level=null){
   const lv=normalizeVipLevel(level??state?.vipLevel);
   if(lv>=12)return 1.20;
@@ -34,12 +47,16 @@
  vipThreshold=vipThresholdV14;
  vipLevelFromPoints=vipLevelFromPointsV14;
  normalizeVipState=normalizeVipStateV14;
+ vipBonusStats=vipBonusStatsV14;
  window.VIP_THRESHOLD_BASE=VIP_THRESHOLD_BASE;
  window.VIP_PROGRESSION_VERSION=VIP_PROGRESSION_VERSION;
+ window.VIP_UNBOUNDED_LEVEL_VERSION=VIP_UNBOUNDED_LEVEL_VERSION;
+ window.VIP_PERK_MAX_LEVEL=VIP_PERK_MAX_LEVEL;
  window.normalizeVipLevel=normalizeVipLevel;
  window.vipThreshold=vipThresholdV14;
  window.vipLevelFromPoints=vipLevelFromPointsV14;
  window.normalizeVipState=normalizeVipStateV14;
+ window.vipBonusStats=vipBonusStatsV14;
  window.vipDungeonPointMultiplier=vipDungeonPointMultiplier;
  window.adjustVipDungeonPoints=adjustVipDungeonPoints;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeVipStateV14);
