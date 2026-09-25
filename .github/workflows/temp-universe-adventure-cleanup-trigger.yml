@@ -1,0 +1,36 @@
+name: Trigger Corrected Universe Adventure Cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-universe-adventure-cleanup-trigger.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Correct safety scan and retrigger cleanup
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/temp-universe-adventure-cleanup.yml')
+          s=p.read_text()
+          old="if not p.is_file() or p.name=='playersemanticsui.js' or '.git' in p.parts:"
+          new="if not p.is_file() or p.name=='playersemanticsui.js' or '.git' in p.parts or '.github' in p.parts:"
+          assert s.count(old)==1
+          p.write_text(s.replace(old,new,1))
+          PY
+          rm .github/workflows/temp-universe-adventure-cleanup-trigger.yml
+          git config user.name "franksky1207"
+          git config user.email "131867380+franksky1207@users.noreply.github.com"
+          git add .github/workflows/temp-universe-adventure-cleanup.yml .github/workflows/temp-universe-adventure-cleanup-trigger.yml
+          git commit -m "Correct universe adventure cleanup safety scan"
+          git push origin HEAD:main
