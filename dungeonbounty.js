@@ -90,12 +90,12 @@
   let q=rollBountyQuality();
   const traitCount=Array.isArray(enemy?.traits)?Math.min(2,enemy.traits.length):0,traitChance=traitCount===2?.30:traitCount===1?.15:0;
   if(traitChance>0&&Math.random()<traitChance&&q<5)q++;
-  if((state.vipLevel||0)>=14&&Math.random()<.05&&q<5)q++;
-  return q;
+  if(typeof window.applyVipLootQualityPromotions!=="function")throw new Error("VIP Loot Core 未載入。");
+  return window.applyVipLootQualityPromotions(q,{boss:false}).quality;
  }
  function bountyForcedType(){
-  if((state.vipLevel||0)>=8&&Math.random()<.15&&typeof weakEquipmentTypes==="function"){const order=weakEquipmentTypes();return order[0]||null;}
-  return null;
+  if(typeof window.vipLootForcedType!=="function")throw new Error("VIP Loot Core 未載入。");
+  return window.vipLootForcedType();
  }
  function bountyItem(enemy,mapIdx){
   const level=clampGameLevel(enemy?.level??state.level),offset=[-2,-1,0,0,1],lv=Math.max(1,Math.min(MAX_LEVEL,level+offset[Math.floor(Math.random()*offset.length)]));

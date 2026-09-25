@@ -50,6 +50,9 @@ const dungeonVoid=read("dungeonvoid.js");
 const dungeonGm=read("dungeongm.js");
 const specialEncounter=read("specialencounter.js");
 const inventoryFocus=read("inventoryfocus.js");
+const vipLootCore=read("viplootcore.js");
+const traitDrop=read("traitdrop.js");
+const combatCore=read("combatcore.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -69,6 +72,13 @@ assert(!index.includes('src="runtimeintegrityaddon.js?v='),"runtimeintegrityaddo
 assert(!index.includes('src="level100balance.js?v='),"level100balance.js 已退休，不應再由正式頁面載入。");
 assert(!fs.existsSync("level100balance.js"),"level100balance.js 已退休，repo 不應再保留舊檔。");
 
+assert(pos("viplootcore.js")>pos("vipprogression.js")&&pos("viplootcore.js")<pos("traitdrop.js")&&pos("viplootcore.js")<pos("dungeonbounty.js")&&pos("viplootcore.js")<pos("combatcore.js"),"viplootcore.js 必須在 VIP progression 後、正式掉裝 consumer 前載入。");
+assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=1;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V1。");
+assert(/vip8:Object\.freeze\(\{level:VIP8_LEVEL,chance:VIP8_WEAK_SLOT_CHANCE\}\)/.test(vipLootCore)&&/vip14:Object\.freeze\(\{level:VIP14_LEVEL,chance:VIP14_QUALITY_CHANCE\}\)/.test(vipLootCore)&&/vip16:Object\.freeze\(\{level:VIP16_LEVEL,chance:VIP16_BOSS_EXTRA_CHANCE\}\)/.test(vipLootCore)&&/vip18:Object\.freeze\(\{level:VIP18_LEVEL,chance:VIP18_BOSS_QUALITY_CHANCE\}\)/.test(vipLootCore),"VIP8／14／16／18 裝備特權必須由 viplootcore.js 統一持有。");
+assert(/applyVipLootQualityPromotions/.test(traitDrop)&&/vipLootForcedType/.test(traitDrop)&&!/vip14Roll=\(state\.vipLevel/.test(traitDrop)&&!/vip18Roll=enemy\.kind/.test(traitDrop),"銀河主線 VIP8／14／18 必須委派共用 VIP Loot owner。");
+assert(/applyVipLootQualityPromotions\(q,\{boss:false\}\)/.test(bounty)&&/vipLootForcedType\(\)/.test(bounty)&&!/\(state\.vipLevel\|\|0\)>=14&&Math\.random\(\)<\.05/.test(bounty)&&!/\(state\.vipLevel\|\|0\)>=8&&Math\.random\(\)<\.15/.test(bounty),"銀河／宇宙懸賞 VIP8／14 必須委派共用 VIP Loot owner。");
+assert(/vipLootBossExtraDropTriggered\(\{boss:e\.kind==="boss"\}\)/.test(combatCore)&&!/e\.kind==="boss"&&\(state\.vipLevel\|\|0\)>=16&&Math\.random\(\)<\.15/.test(combatCore),"銀河主線 VIP16 Boss 額外掉落必須委派共用 VIP Loot owner。");
+assert(index.includes('viplootcore.js?v=20260925-vip-loot-batch1')&&index.includes('combatcore.js?v=20260925-vip-loot-batch1')&&index.includes('traitdrop.js?v=20260925-vip-loot-batch1')&&index.includes('dungeonbounty.js?v=20260925-vip-loot-batch1'),"index.html 必須載入 VIP Loot Batch1 最新 cache-bust。");
 assert(pos("inventoryfocus.js")>pos("equipmentlock.js")&&pos("inventoryfocus.js")>pos("gearupgrade.js"),"inventoryfocus.js 必須在 equipmentlock.js 與 gearupgrade.js 後載入，以共用正式裝備比較 owner。");
 assert(/INVENTORY_FOCUS_VERSION=VERSION/.test(inventoryFocus)&&/const VERSION=3;/.test(inventoryFocus),"背包定位 owner 應為 V3。");
 assert(/requestInventoryEntryFocus=requestEntryFocus/.test(inventoryFocus)&&/requestInventoryPostRedeemFocus=requestPostRedeemFocus/.test(inventoryFocus)&&/applyInventoryFocus=applyFocus/.test(inventoryFocus),"背包定位必須提供 entry、post-redeem 與 apply API。");
