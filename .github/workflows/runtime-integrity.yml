@@ -1,5 +1,6 @@
 name: Runtime Integrity
 
+# exact-head runtime guard; touching this file is the supported manual retrigger path.
 on:
   push:
     branches: [main]
