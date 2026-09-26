@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const BOSS_COUNT=Number(window.THIRD_WORLD_BOSS_COUNT);
  const BOSS_MAX_HP=Number(window.THIRD_WORLD_BOSS_MAX_HP);
  if(!Number.isInteger(BOSS_COUNT)||BOSS_COUNT<=0)throw new Error("Third-world data requires THIRD_WORLD_BOSS_COUNT owner.");
@@ -7,6 +7,8 @@
  const TOTAL_BOSS_MAX_HP=BOSS_COUNT*BOSS_MAX_HP;
  const FIVE_POINT_PERCENT=5;
  const FIVE_POINT_HP_GAP=Math.floor(BOSS_MAX_HP*FIVE_POINT_PERCENT/100);
+ const CHALLENGE_AUTHORITY=Object.freeze({decisionField:"allowed",gapField:"gapHp",thresholdField:"fivePointHpGap",displayOnlyFields:Object.freeze(["targetRemainingPercent","highestAliveRemainingPercent","gapPoints"])});
+ const SNAPSHOT_USAGE_POLICY=Object.freeze({resolveAtBattleStart:true,reuseDuringCombatRun:true,refreshAfterSettlement:true,refreshAfterBossHpMutation:true,globalCache:false,combatTickRecompute:false});
  const BASE_STATS=Object.freeze({maxHp:BOSS_MAX_HP,atk:15000,def:10000,crit:10,dodge:10,initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:30});
  const STAGE_CONFIG=Object.freeze({maxStage:9,stepPercent:10,atkPerStage:600,defPerStage:1200,critPointsPerStage:2,dodgePointsPerStage:2});
  const BOSS_ROWS=Object.freeze([
@@ -109,14 +111,14 @@
  function formalThirdWorldProgressionEnabled(target=null){const s=targetState(target);return !!s&&typeof window.worldProgressionEnabled==="function"&&window.worldProgressionEnabled(3,s)===true;}
  function thirdWorldChallengeStatus(value,target=null){
   const index=bossIndex(value),s=targetState(target);
-  if(index<0||!s)return Object.freeze({allowed:false,challengeable:false,reason:"invalid",targetIndex:index});
+  if(index<0||!s)return Object.freeze({allowed:false,challengeable:false,reason:"invalid",targetIndex:index,authority:CHALLENGE_AUTHORITY});
   const aggregate=thirdWorldBossAggregateSnapshot(s),targetBoss=aggregate.bosses[index];
-  if(!formalThirdWorldProgressionEnabled(s))return Object.freeze({allowed:false,challengeable:false,reason:"world-locked",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount});
-  if(targetBoss.defeated)return Object.freeze({allowed:false,challengeable:false,reason:"defeated",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount});
+  if(!formalThirdWorldProgressionEnabled(s))return Object.freeze({allowed:false,challengeable:false,reason:"world-locked",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount,authority:CHALLENGE_AUTHORITY});
+  if(targetBoss.defeated)return Object.freeze({allowed:false,challengeable:false,reason:"defeated",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount,authority:CHALLENGE_AUTHORITY});
   const alive=aggregate.bosses.filter(row=>row.alive);
-  if(alive.length===1)return Object.freeze({allowed:true,challengeable:true,reason:"last-survivor",targetIndex:index,target:targetBoss,aliveCount:1,targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:targetBoss.remainingPercent,gapHp:0,gapPoints:0,highestAliveBossIndexes:Object.freeze([index]),blockingBossIndexes:Object.freeze([]),fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP});
+  if(alive.length===1)return Object.freeze({allowed:true,challengeable:true,reason:"last-survivor",targetIndex:index,target:targetBoss,aliveCount:1,targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:targetBoss.remainingPercent,gapHp:0,gapPoints:0,highestAliveBossIndexes:Object.freeze([index]),blockingBossIndexes:Object.freeze([]),fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP,authority:CHALLENGE_AUTHORITY});
   const highestHp=Math.max(...alive.map(row=>row.currentHp)),highestAlive=alive.filter(row=>row.currentHp===highestHp),blockers=alive.filter(row=>row.index!==index&&row.currentHp-targetBoss.currentHp>=FIVE_POINT_HP_GAP),gapHp=Math.max(0,highestHp-targetBoss.currentHp),gapPoints=gapHp/BOSS_MAX_HP*100,allowed=blockers.length===0;
-  return Object.freeze({allowed,challengeable:allowed,reason:allowed?"":"five-point-front",targetIndex:index,target:targetBoss,aliveCount:alive.length,targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:highestHp/BOSS_MAX_HP*100,gapHp,gapPoints,highestAliveBossIndexes:Object.freeze(highestAlive.map(row=>row.index)),blockingBossIndexes:Object.freeze(blockers.map(row=>row.index)),fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP});
+  return Object.freeze({allowed,challengeable:allowed,reason:allowed?"":"five-point-front",targetIndex:index,target:targetBoss,aliveCount:alive.length,targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:highestHp/BOSS_MAX_HP*100,gapHp,gapPoints,highestAliveBossIndexes:Object.freeze(highestAlive.map(row=>row.index)),blockingBossIndexes:Object.freeze(blockers.map(row=>row.index)),fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP,authority:CHALLENGE_AUTHORITY});
  }
  function thirdWorldChallengeAllowed(value,target=null){return thirdWorldChallengeStatus(value,target).allowed===true;}
  function canChallengeThirdWorldBoss(value,target=null){return thirdWorldChallengeAllowed(value,target);}
@@ -137,10 +139,7 @@
   for(let index=8;index>=0;index--){const def=TITLE_ROWS[index];if(total<=def.thresholdRemainingPercentSum)return def.tier;}
   return 0;
  }
- function thirdWorldTitleTier(target=null){
-  if(typeof target==="number")return thirdWorldTitleTierForRemainingPercentSum(target);
-  return thirdWorldTitleTierForRemainingHp(thirdWorldBossAggregateSnapshot(target).currentHp);
- }
+ function thirdWorldTitleTier(target=null){return thirdWorldTitleTierForRemainingHp(thirdWorldBossAggregateSnapshot(target).currentHp);}
  function thirdWorldTitleDefinition(tier){const value=finiteWhole(tier,0);return TITLE_ROWS.find(row=>row.tier===value)||null;}
  function thirdWorldCurrentTitleDefinition(target=null){return thirdWorldTitleDefinition(thirdWorldTitleTier(target));}
  function makeThirdWorldProbeState(hps){const rows=Array.from({length:BOSS_COUNT},(_,index)=>({currentHp:clamp(finiteWhole(hps?.[index],BOSS_MAX_HP),0,BOSS_MAX_HP)}));return {secondWorld:{entered:true},thirdWorld:{entered:true,bosses:rows}};}
@@ -164,7 +163,9 @@
    const full=makeThirdWorldProbeState(Array(10).fill(BOSS_MAX_HP)),fullAgg=thirdWorldBossAggregateSnapshot(full);
    if(fullAgg.currentHp!==TOTAL_BOSS_MAX_HP||fullAgg.maxHp!==TOTAL_BOSS_MAX_HP||fullAgg.aliveCount!==10||fullAgg.defeatedCount!==0||fullAgg.remainingPercentSum!==1000||fullAgg.overallRemainingPercent!==100)fail("AGGREGATE_FULL",fullAgg);
    const hp951=Math.floor(BOSS_MAX_HP*951/1000),hp950=Math.floor(BOSS_MAX_HP*95/100),p951=makeThirdWorldProbeState([hp951,...Array(9).fill(BOSS_MAX_HP)]),p950=makeThirdWorldProbeState([hp950,...Array(9).fill(BOSS_MAX_HP)]);
-   if(thirdWorldChallengeAllowed(0,p951)!==true||thirdWorldChallengeAllowed(0,p950)!==false||thirdWorldChallengeStatus(0,p950)?.reason!=="five-point-front")fail("FIVE_POINT_BOUNDARY",{p951:thirdWorldChallengeStatus(0,p951),p950:thirdWorldChallengeStatus(0,p950)});
+   const status951=thirdWorldChallengeStatus(0,p951),status950=thirdWorldChallengeStatus(0,p950);
+   if(status951.allowed!==true||status950.allowed!==false||status950.reason!=="five-point-front")fail("FIVE_POINT_BOUNDARY",{p951:status951,p950:status950});
+   if(status950.gapHp!==FIVE_POINT_HP_GAP||status950.authority!==CHALLENGE_AUTHORITY||status950.authority?.decisionField!=="allowed"||status950.authority?.gapField!=="gapHp"||status950.authority?.displayOnlyFields?.includes("gapPoints")!==true)fail("FIVE_POINT_AUTHORITY",status950);
    const oneDead=makeThirdWorldProbeState([0,...Array(9).fill(hp950)]),oneDeadStatus=thirdWorldChallengeStatus(1,oneDead);
    if(oneDeadStatus.allowed!==true||oneDeadStatus.blockingBossIndexes.length!==0)fail("DEAD_EXCLUDED_FROM_FIVE_POINT",oneDeadStatus);
    const last=makeThirdWorldProbeState([...Array(9).fill(0),1]),lastStatus=thirdWorldChallengeStatus(9,last);
@@ -177,10 +178,12 @@
    const hpTitleCases=[[TOTAL_BOSS_MAX_HP,0],[9900000000,1],[8800000000,2],[7700000000,3],[6600000000,4],[5500000000,5],[4400000000,6],[3300000000,7],[2200000000,8],[1100000000,9],[1,9],[0,10]];
    hpTitleCases.forEach(([remainingHp,expected])=>{const actual=thirdWorldTitleTierForRemainingHp(remainingHp);if(actual!==expected)fail("TITLE_HP_THRESHOLD",{remainingHp,expected,actual});});
    if(thirdWorldTitleTier(full)!==0||thirdWorldTitleTier(allDead)!==10)fail("TITLE_STATE_HP_AUTHORITY",{full:thirdWorldTitleTier(full),dead:thirdWorldTitleTier(allDead)});
+   if(thirdWorldTitleTier(900)!==thirdWorldTitleTier(null))fail("TITLE_STATE_ONLY_API",{numeric:thirdWorldTitleTier(900),current:thirdWorldTitleTier(null)});
    if(thirdWorldTitleTierForRemainingPercentSum(NaN)!==0||thirdWorldTitleTierForRemainingPercentSum(undefined)!==0||thirdWorldTitleTierForRemainingPercentSum(-1)!==0||thirdWorldTitleTierForRemainingPercentSum(1001)!==0)fail("TITLE_PERCENT_INVALID_INPUT");
    if(thirdWorldTitleTierForRemainingHp(NaN)!==0||thirdWorldTitleTierForRemainingHp(-1)!==0||thirdWorldTitleTierForRemainingHp(TOTAL_BOSS_MAX_HP+1)!==0||thirdWorldTitleTierForRemainingHp(1.5)!==0)fail("TITLE_HP_INVALID_INPUT");
+   if(SNAPSHOT_USAGE_POLICY.resolveAtBattleStart!==true||SNAPSHOT_USAGE_POLICY.reuseDuringCombatRun!==true||SNAPSHOT_USAGE_POLICY.refreshAfterSettlement!==true||SNAPSHOT_USAGE_POLICY.globalCache!==false||SNAPSHOT_USAGE_POLICY.combatTickRecompute!==false)fail("SNAPSHOT_USAGE_POLICY",SNAPSHOT_USAGE_POLICY);
   }catch(error){fail("EXCEPTION",String(error?.message||error));}
-  return Object.freeze({version:2,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
+  return Object.freeze({version:3,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
  }
  window.THIRD_WORLD_DATA_VERSION=VERSION;
  window.THIRD_WORLD_BOSS_DATA_VERSION=1;
@@ -190,11 +193,14 @@
  window.THIRD_WORLD_BOSS_AGGREGATE_SNAPSHOT_VERSION=1;
  window.THIRD_WORLD_FIVE_POINT_FRONT_VERSION=1;
  window.THIRD_WORLD_CHALLENGE_GATE_VERSION=1;
- window.THIRD_WORLD_TITLE_RULE_VERSION=1;
- window.THIRD_WORLD_DATA_INTEGRITY_VERSION=2;
+ window.THIRD_WORLD_TITLE_RULE_VERSION=2;
+ window.THIRD_WORLD_DATA_INTEGRITY_VERSION=3;
  window.THIRD_WORLD_BOSS_PERSISTENCE_ORDER_VERSION=1;
  window.THIRD_WORLD_TITLE_HP_AUTHORITY_VERSION=1;
  window.THIRD_WORLD_DATA_OWNER_REQUIREMENT_VERSION=1;
+ window.THIRD_WORLD_FIVE_POINT_AUTHORITY_VERSION=1;
+ window.THIRD_WORLD_TITLE_API_SEMANTICS_VERSION=1;
+ window.THIRD_WORLD_SNAPSHOT_USAGE_POLICY_VERSION=1;
  window.THIRD_WORLD_BOSS_BASE_STATS=BASE_STATS;
  window.THIRD_WORLD_BOSS_STAGE_CONFIG=STAGE_CONFIG;
  window.THIRD_WORLD_BOSS_DEFINITIONS=BOSS_ROWS;
@@ -204,6 +210,8 @@
  window.THIRD_WORLD_TOTAL_BOSS_MAX_HP=TOTAL_BOSS_MAX_HP;
  window.THIRD_WORLD_FIVE_POINT_THRESHOLD=FIVE_POINT_PERCENT;
  window.THIRD_WORLD_FIVE_POINT_HP_GAP=FIVE_POINT_HP_GAP;
+ window.THIRD_WORLD_CHALLENGE_AUTHORITY=CHALLENGE_AUTHORITY;
+ window.THIRD_WORLD_SNAPSHOT_USAGE_POLICY=SNAPSHOT_USAGE_POLICY;
  window.thirdWorldBossIndex=bossIndex;
  window.thirdWorldBoss=thirdWorldBoss;
  window.thirdWorldBossStage=thirdWorldBossStage;
