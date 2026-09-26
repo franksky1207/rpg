@@ -32,51 +32,31 @@
  function thirdWorldBossesAllDefeated(target=state){const rows=thirdWorldState(target).bosses;return Array.isArray(rows)&&rows.length===THIRD_WORLD_BOSS_COUNT&&rows.every(row=>finiteWhole(row?.currentHp,THIRD_WORLD_BOSS_MAX_HP)===0);}
  function thirdWorldCompletionSnapshot(target=state){const data=thirdWorldState(target),bossesDefeated=thirdWorldBossesAllDefeated(target);return {storedCompleted:data.completed===true,bossesDefeated,finalSeen:data.story?.finalSeen===true,readyForCompletionOwner:bossesDefeated};}
 
- function finalSecondWorldBossIndex(){
-  const count=Math.max(1,finiteWhole(window.SECOND_WORLD_MAIN_BOSS_COUNT,100));
-  return count-1;
- }
+ function finalSecondWorldBossIndex(){const count=Math.max(1,finiteWhole(window.SECOND_WORLD_MAIN_BOSS_COUNT,100));return count-1;}
  function finalSecondWorldStoryId(){
   const index=finalSecondWorldBossIndex();
   if(typeof window.universeStoryIdForBossIndex==="function")return window.universeStoryIdForBossIndex(index);
-  const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];
-  const regions=Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
-  const boss=bosses[index];if(!boss)return null;
+  const bosses=Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[],regions=Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[],boss=bosses[index];if(!boss)return null;
   const region=regions.find(row=>Number(row.index)===Number(boss.regionIndex));if(!region)return null;
   const offset=index-Number(region.firstBossIndex);return offset>=0&&offset<=9?`universe-${region.id}-boss-${offset+1}`:null;
  }
- function finalSecondWorldBossKilled(target=state){
-  const rows=target?.secondWorld?.mainline?.bossKilled,index=finalSecondWorldBossIndex();
-  return Array.isArray(rows)&&rows[index]===true;
- }
- function finalSecondWorldStoryCompleted(target=state){
-  const storyId=finalSecondWorldStoryId(),completed=target?.storyProgress?.completedStories;
-  return !!storyId&&Array.isArray(completed)&&completed.includes(storyId);
- }
- function vipEntryRequirement(target){
-  const points=Math.max(0,finiteWhole(target?.vipPoints,0));
-  const current=typeof window.vipLevelFromPoints==="function"?Math.max(0,finiteWhole(window.vipLevelFromPoints(points),0)):Math.max(0,finiteWhole(target?.vipLevel,0));
-  return {ok:current>=THIRD_WORLD_ENTRY_VIP_LEVEL,current,required:THIRD_WORLD_ENTRY_VIP_LEVEL,source:"vipPoints"};
- }
- function civilizationEntryRequirement(target){
-  const current=clamp(finiteWhole(target?.secondWorld?.civilizationLevel,0),0,10);
-  return {ok:current>=THIRD_WORLD_ENTRY_CIVILIZATION_LEVEL,current,required:THIRD_WORLD_ENTRY_CIVILIZATION_LEVEL};
- }
+ function isFinalSecondWorldStoryId(id){const finalId=finalSecondWorldStoryId();return !!id&&!!finalId&&id===finalId;}
+ function finalSecondWorldBossKilled(target=state){const rows=target?.secondWorld?.mainline?.bossKilled,index=finalSecondWorldBossIndex();return Array.isArray(rows)&&rows[index]===true;}
+ function finalSecondWorldStoryCompleted(target=state){const storyId=finalSecondWorldStoryId(),completed=target?.storyProgress?.completedStories;return !!storyId&&Array.isArray(completed)&&completed.includes(storyId);}
+ function vipEntryRequirement(target){const points=Math.max(0,finiteWhole(target?.vipPoints,0));const current=typeof window.vipLevelFromPoints==="function"?Math.max(0,finiteWhole(window.vipLevelFromPoints(points),0)):Math.max(0,finiteWhole(target?.vipLevel,0));return {ok:current>=THIRD_WORLD_ENTRY_VIP_LEVEL,current,required:THIRD_WORLD_ENTRY_VIP_LEVEL,source:"vipPoints"};}
+ function civilizationEntryRequirement(target){const current=clamp(finiteWhole(target?.secondWorld?.civilizationLevel,0),0,10);return {ok:current>=THIRD_WORLD_ENTRY_CIVILIZATION_LEVEL,current,required:THIRD_WORLD_ENTRY_CIVILIZATION_LEVEL};}
  function thirdWorldEntryRequirements(target=state){
   const levelCurrent=Math.max(1,finiteWhole(target?.level,1)),level={ok:levelCurrent>=THIRD_WORLD_ENTRY_LEVEL,current:levelCurrent,required:THIRD_WORLD_ENTRY_LEVEL};
   const secondWorldEntered=typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(target)===true:target?.secondWorld?.entered===true;
   const bossCompleted=finalSecondWorldBossKilled(target),finalStoryCompleted=finalSecondWorldStoryCompleted(target);
   const mainline={ok:secondWorldEntered&&bossCompleted&&finalStoryCompleted,secondWorldEntered,bossCompleted,finalStoryCompleted,finalStoryId:finalSecondWorldStoryId(),finalBossIndex:finalSecondWorldBossIndex()};
   const enhancement=typeof window.worldPhaseEnhancementRequirement==="function"?window.worldPhaseEnhancementRequirement(target,THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL):{ok:false,completed:0,total:5,requiredLevel:THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL};
-  const civilization=civilizationEntryRequirement(target);
-  const vip=vipEntryRequirement(target);
+  const civilization=civilizationEntryRequirement(target),vip=vipEntryRequirement(target);
   const specializations=typeof window.worldPhaseSpecializationRequirement==="function"?window.worldPhaseSpecializationRequirement(target,THIRD_WORLD_ENTRY_SPECIALIZATION_LEVEL):{ok:false,completed:0,total:8,requiredLevel:THIRD_WORLD_ENTRY_SPECIALIZATION_LEVEL};
   const marks=typeof window.worldPhaseMarkRequirement==="function"?window.worldPhaseMarkRequirement(target,THIRD_WORLD_ENTRY_MARK_LEVEL):{ok:false,completed:0,total:10,requiredLevel:THIRD_WORLD_ENTRY_MARK_LEVEL};
-  const rows=[level,mainline,enhancement,civilization,vip,specializations,marks];
-  const alreadyEntered=target?.thirdWorld?.entered===true;
+  const rows=[level,mainline,enhancement,civilization,vip,specializations,marks],alreadyEntered=target?.thirdWorld?.entered===true;
   if(typeof window.summarizeWorldEntryRequirements==="function")return window.summarizeWorldEntryRequirements(rows,alreadyEntered,{level,mainline,enhancement,civilization,vip,specializations,marks});
-  const completed=rows.filter(row=>row.ok===true).length;
-  return {eligible:completed===rows.length&&!alreadyEntered,alreadyEntered,completed,total:rows.length,level,mainline,enhancement,civilization,vip,specializations,marks};
+  const completed=rows.filter(row=>row.ok===true).length;return {eligible:completed===rows.length&&!alreadyEntered,alreadyEntered,completed,total:rows.length,level,mainline,enhancement,civilization,vip,specializations,marks};
  }
  function canEnterThirdWorld(target=state){return thirdWorldEntryRequirements(target).eligible===true;}
 
@@ -99,6 +79,7 @@
  window.thirdWorldCompletionSnapshot=thirdWorldCompletionSnapshot;
  window.finalSecondWorldBossIndex=finalSecondWorldBossIndex;
  window.finalSecondWorldStoryId=finalSecondWorldStoryId;
+ window.isFinalSecondWorldStoryId=isFinalSecondWorldStoryId;
  window.finalSecondWorldBossKilled=finalSecondWorldBossKilled;
  window.finalSecondWorldStoryCompleted=finalSecondWorldStoryCompleted;
  window.thirdWorldEntryRequirements=thirdWorldEntryRequirements;
