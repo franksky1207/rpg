@@ -25,6 +25,13 @@
   if(!key)return false;
   try{return localStorage.getItem(key)==="1";}catch(e){return false;}
  }
+ function mainlineHpLockActive(scope=""){
+  if(!mainlineHpLockEnabled())return false;
+  if(scope==="world1-mainline")return true;
+  if(scope==="world2-mainline")return !!window.activeSecondWorldMainlineContext;
+  if(scope==="special")return !!(window.activeMainBattleContext||window.activeSecondWorldMainlineContext);
+  return false;
+ }
  function setEnabled(next){
   const key=storageKey();
   if(!key)return false;
@@ -58,25 +65,6 @@
   const on=mainlineHpLockEnabled();
   return `<div class="muted gm-hub-note">主線鎖血只允許從 GM 管理開啟；玩家介面沒有此開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。只作用於銀河紀元／宇宙紀元正式主線與主線特殊怪，不影響副本、災厄、回顧戰或 GM 測試。</div><div class="controls"><button class="btn blue" onclick="gmSetMainlineHpLock(true)" ${on?"disabled":""}>開啟主線鎖血</button><button class="btn danger" onclick="gmSetMainlineHpLock(false)" ${on?"":"disabled"}>關閉主線鎖血</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：主線鎖血已${on?"開啟":"關閉"}</div>`;
  }
- function mainlineHpLockPresentationResult(result,options={}){
-  if(options?.lockPlayerFullHp!==true||!result||!Array.isArray(result.events))return result;
-  return {...result,events:result.events.map(evt=>{
-   if(!evt||evt.type!=="attack"||evt.actor!=="enemy")return evt;
-   const resolvedActualDamage=Math.max(0,Math.floor(Number(evt.actualDamage)||0));
-   return {...evt,resolvedActualDamage,actualDamage:0,playerHpLocked:true};
-  })};
- }
- function installMainlineHpLockPresentationBridge(){
-  const base=window.prepareCombatPresentation;
-  if(typeof base!=="function"||base.__gmMainlineHpLockWrapped===true)return false;
-  const wrapped=function(result,options={}){
-   return base(mainlineHpLockPresentationResult(result,options),options);
-  };
-  wrapped.__gmMainlineHpLockWrapped=true;
-  wrapped.__gmMainlineHpLockBase=base;
-  window.prepareCombatPresentation=wrapped;
-  return true;
- }
  window.gmSetBackgroundBattle=function(next){
   if(!setEnabled(next===true)){
    alert("背景戰鬥設定無法寫入目前裝置。");
@@ -97,15 +85,12 @@
  window.gmBackgroundBattleStorageKey=storageKey;
  window.gmMainlineHpLockEnabled=mainlineHpLockEnabled;
  window.gmMainlineHpLockStorageKey=mainlineHpLockStorageKey;
- window.gmMainlineHpLockPresentationResult=mainlineHpLockPresentationResult;
- window.installGmMainlineHpLockPresentationBridge=installMainlineHpLockPresentationBridge;
+ window.gmMainlineHpLockActive=mainlineHpLockActive;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
  window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION=1;
  window.GM_MAINLINE_HP_LOCK_MANAGEMENT_VERSION=1;
- window.GM_MAINLINE_HP_LOCK_PRESENTATION_VERSION=1;
+ window.GM_MAINLINE_HP_LOCK_GATE_VERSION=1;
  installStyles();
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",installMainlineHpLockPresentationBridge,{once:true});
- else installMainlineHpLockPresentationBridge();
  if(typeof window.registerGmHubSection==="function"){
   window.registerGmHubSection("manage","背景戰鬥",managementHtml,{id:"gm-background-battle",position:"prepend"});
   window.registerGmHubSection("manage","主線鎖血",mainlineHpLockManagementHtml,{id:"gm-mainline-hp-lock",position:"prepend"});
