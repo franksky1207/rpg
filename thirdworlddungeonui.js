@@ -13,7 +13,7 @@
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
   if(typeof window.primaryWorldResourceSnapshot==="function")return window.primaryWorldResourceSnapshot(s);
   if(currentPhase(s)===3)return {label:"維度之弦",amount:Math.max(0,Math.floor(Number(s?.thirdWorld?.dimensionalStrings)||0)),secondaryLabel:null,secondaryAmount:0};
-  if(currentPhase(s)===2)return {label:"暗物質",amount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkMatter)||0)),secondaryLabel:"暗能量",secondaryAmount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkEnergy)||0)};
+  if(currentPhase(s)===2)return {label:"暗物質",amount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkMatter)||0)),secondaryLabel:"暗能量",secondaryAmount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkEnergy)||0))};
   return {label:"金幣",amount:Math.max(0,Math.floor(Number(s?.gold)||0)),secondaryLabel:null,secondaryAmount:0};
  }
  function syncStatusResource(main){
