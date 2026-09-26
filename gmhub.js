@@ -84,7 +84,7 @@
   const selected=(typeof gmSpecialBatchSelectedId==="string"&&gmSpecialBatchSelectedId)?gmSpecialBatchSelectedId:(SPECIAL_MONSTERS[0]?.id||"");
   return SPECIAL_MONSTERS.map(x=>`<option value="${x.id}" ${x.id===selected?"selected":""}>${x.name}（${tierLabel[x.tier]||"低"}）</option>`).join("");
  }
- function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===4?"selected":""}>${q.n}</option>`).join(""),type:`<option value="all">全部</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")};}
+ function gearOptions(){return {quality:QUALITY.map((q,i)=>`<option value="${i}" ${i===5?"selected":""}>${q.n}</option>`).join(""),type:`<option value="all">全部</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("")};}
  function generalManagementHtml(){
   const g=gearOptions();
   const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
@@ -93,7 +93,7 @@
   const swSelection=typeof gmSecondWorldGearSelection==="function"?gmSecondWorldGearSelection():{regionIdx:0,bossIdx:0};
   const swRegionOptions=typeof gmSecondWorldGearRegionOptions==="function"?gmSecondWorldGearRegionOptions():"";
   const swBossOptions=typeof gmSecondWorldGearBossOptions==="function"?gmSecondWorldGearBossOptions():"";
-  const swQuality=QUALITY.slice(1).map((q,i)=>`<option value="${i+1}" ${i+1===4?"selected":""}>${q.n}</option>`).join("");
+  const swQuality=QUALITY.slice(1).map((q,i)=>`<option value="${i+1}" ${i+1===5?"selected":""}>${q.n}</option>`).join("");
   const swType=`<option value="all">全部 5 部位</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
   const swGear=universe?`<div class="item" style="margin-top:12px"><b>產生宇宙紀元裝備</b><div class="muted" style="margin-top:5px">依正式「區域 → Boss」命名與世界 2 屬性公式產生；裝備等級自動取 min(目前角色等級, Boss 等級)。產生後的手動／批量／自動出售均走正式統一 sale owner。</div><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmSecondWorldGearRegion" class="btn" onchange="gmSecondWorldGearChangeRegion()">${swRegionOptions}</select></label><label>Boss<br><select id="gmSecondWorldGearBoss" class="btn" onchange="gmSecondWorldGearChangeBoss()">${swBossOptions}</select></label><label>品質<br><select id="gmSecondWorldGearQuality" class="btn">${swQuality}</select></label><label>部位<br><select id="gmSecondWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateSecondWorldGear()">產生裝備</button></div></div>`:"";
   const resourceButtons=universe?`<button class="btn" onclick="gmDarkMatter()">指定暗物質</button><button class="btn" onclick="gmDarkEnergy()">指定暗能量</button>`:`<button class="btn" onclick="gmGold()">指定金幣</button>`;
