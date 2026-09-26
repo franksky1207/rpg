@@ -8,6 +8,7 @@
  const SAVE_LEGACY_SUPPORT_MODE="all-known";
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
+ const PRE_SCHEMA16_BACKUP_SUFFIX=".pre-schema16-backup-v1";
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -60,12 +61,18 @@
   return true;
  }
 
- function prepareLegacyItem(item,forcedType=null){
+ function normalizedItemWorld(value,sourceVersion=SAVE_SCHEMA_VERSION){
+  const world=Math.floor(Number(value));
+  if(world===2)return 2;
+  if(world===3&&sourceVersion>=16)return 3;
+  return 1;
+ }
+ function prepareLegacyItem(item,forcedType=null,sourceVersion=SAVE_SCHEMA_VERSION){
   if(!isObject(item))return item;
   const type=forcedType||item.type;
   if(!Array.isArray(EQUIPMENT_TYPES)||!EQUIPMENT_TYPES.includes(type))return item;
   item.type=type;
-  item.world=Number(item.world)===2?2:1;
+  item.world=normalizedItemWorld(item.world,sourceVersion);
   item.locked=item.locked===true;
   const totals={};
   STAT_KEYS.forEach(key=>{totals[key]=finiteNonNegative(item[key],0);});
@@ -84,11 +91,11 @@
   return item;
  }
 
- function prepareAllGear(target){
+ function prepareAllGear(target,sourceVersion=SAVE_SCHEMA_VERSION){
   if(!isObject(target))return;
-  if(isObject(target.equipment))EQUIPMENT_TYPES.forEach(type=>prepareLegacyItem(target.equipment[type],type));
-  if(Array.isArray(target.inventory))target.inventory.forEach(item=>prepareLegacyItem(item));
-  if(Array.isArray(target.lostGear))target.lostGear.forEach(entry=>prepareLegacyItem(entry?.item));
+  if(isObject(target.equipment))EQUIPMENT_TYPES.forEach(type=>prepareLegacyItem(target.equipment[type],type,sourceVersion));
+  if(Array.isArray(target.inventory))target.inventory.forEach(item=>prepareLegacyItem(item,null,sourceVersion));
+  if(Array.isArray(target.lostGear))target.lostGear.forEach(entry=>prepareLegacyItem(entry?.item,null,sourceVersion));
  }
 
  function normalizeVoidMirage(target){
@@ -100,6 +107,23 @@
  function cloneJson(value){
   try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}
  }
+ function preSchema16BackupKey(){return `${SAVE_KEY}${PRE_SCHEMA16_BACKUP_SUFFIX}`;}
+ function ensurePreSchema16Backup(rawText,sourceVersion){
+  const result={required:sourceVersion<16,created:false,alreadyExists:false,failed:false,key:""};
+  if(!result.required||typeof rawText!=="string"||!rawText)return result;
+  const key=preSchema16BackupKey();
+  result.key=key;
+  try{
+   const existing=localStorage.getItem(key);
+   if(existing){result.alreadyExists=true;return result;}
+   localStorage.setItem(key,rawText);
+   result.created=true;
+  }catch(error){
+   result.failed=true;
+   console.warn("[文明戰線] Unable to create pre-Schema16 local backup.",error);
+  }
+  return result;
+ }
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
@@ -110,6 +134,9 @@
  window.SAVE_LEGACY_SUPPORT_MODE=SAVE_LEGACY_SUPPORT_MODE;
  window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION=1;
  window.THIRD_WORLD_STATE_MIGRATION_VERSION=1;
+ window.THIRD_WORLD_PRE_SCHEMA16_DISCARD_VERSION=1;
+ window.SAVE_PRE_SCHEMA16_BACKUP_VERSION=1;
+ window.GEAR_WORLD_FIELD_MIGRATION_VERSION=2;
  window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
@@ -131,11 +158,13 @@
   const hadTitleState=isObject(source.titles);
   const hadSecondWorldState=isObject(source.secondWorld);
   const hadThirdWorldState=isObject(source.thirdWorld);
+  const legacyThirdWorldStateDiscarded=version<16&&Object.prototype.hasOwnProperty.call(source,"thirdWorld");
   const hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel));
   const hadArenaByWorld=isObject(source?.dungeon?.arenaByWorld);
   const hadLegacyArena=isObject(source?.dungeon?.arena);
 
-  prepareAllGear(target);
+  if(version<16&&Object.prototype.hasOwnProperty.call(target,"thirdWorld"))delete target.thirdWorld;
+  prepareAllGear(target,version);
   if(!introWasBoolean)target.introSeen=true;
   const retiredShopStateRemoved=cleanupRetiredShopState(target);
   const legacyDungeonFieldsRemoved=cleanupLegacyDungeonFields(target);
@@ -149,7 +178,7 @@
   if(typeof window.normalizeThirdWorldState==="function")window.normalizeThirdWorldState(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
   if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
-  prepareAllGear(target);
+  prepareAllGear(target,SAVE_SCHEMA_VERSION);
   if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(target);
   if(typeof normalizeVipState==="function")normalizeVipState(target);
   if(typeof normalizeSpecializationState==="function")normalizeSpecializationState(target);
@@ -166,14 +195,15 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:!hadThirdWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:version<16||!hadThirdWorldState,legacyThirdWorldStateDiscarded,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
   return target;
  };
 
  window.load=function(){
-  let rawSnapshot=null,sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false;
+  let rawSnapshot=null,rawText="",sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false,preSchema16Backup={required:false,created:false,alreadyExists:false,failed:false,key:""};
   try{
    const raw=localStorage.getItem(SAVE_KEY);
+   rawText=raw||"";
    hadRaw=!!raw;
    if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,SAVE_MIN_SUPPORTED_VERSION);}
   }catch(e){rawSnapshot=null;parseFailed=true;}
@@ -181,13 +211,14 @@
   const failProtectedLoad=(reason,error=null)=>{
    try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:SAVE_SCHEMA_VERSION};}
    const e=document.getElementById("saveStatus");if(e)e.textContent="本機存檔讀取失敗・已保護";
-   window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:true,reason:String(reason||"load-failed"),error:error?String(error?.message||error):""};
+   window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:true,reason:String(reason||"load-failed"),error:error?String(error?.message||error):"",preSchema16Backup};
    console.error("[文明戰線] Local save load failed; original localStorage entry was preserved.",error||reason);
    return false;
   };
 
   if(hadRaw&&(parseFailed||!isObject(rawSnapshot)))return failProtectedLoad(parseFailed?"parse-failed":"invalid-root");
   try{
+   if(hadRaw&&sourceVersion<16)preSchema16Backup=ensurePreSchema16Backup(rawText,sourceVersion);
    const seed=isObject(rawSnapshot)?(cloneJson(rawSnapshot)||rawSnapshot):(typeof newState==="function"?newState():{});
    const normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
    state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
@@ -209,6 +240,7 @@
     sourceVersion,
     targetVersion:SAVE_SCHEMA_VERSION,
     failed:false,
+    preSchema16Backup,
     legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,
     minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,
     legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,
@@ -221,6 +253,7 @@
     titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
     secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,
     thirdWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.thirdWorldStateInitialized===true,
+    legacyThirdWorldStateDiscarded:window.LAST_SAVE_MIGRATION_REPORT?.legacyThirdWorldStateDiscarded===true,
     civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,
     arenaByWorldInitialized:window.LAST_SAVE_MIGRATION_REPORT?.arenaByWorldInitialized===true,
     legacyArenaMigrated:window.LAST_SAVE_MIGRATION_REPORT?.legacyArenaMigrated===true,
