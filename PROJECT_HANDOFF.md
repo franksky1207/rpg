@@ -4,10 +4,25 @@
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
-> 本檔是交接摘要與「尚未實作但已確認」的設計基準；若本檔、舊對話、舊設計稿與 current `main` 衝突，現行實作一律以 `main` 為準。第三紀元尚未進 runtime，因此第三紀元以本檔最新設計段落為準，直到正式實作後再由 actual code 接管。
+> 本檔是交接摘要與「尚未實作但已確認」的設計基準；若本檔、舊對話、舊設計稿、Word 規格與 current `main` 衝突，**現行實作一律以 `main` 為準**。第三紀元尚未進 runtime，因此第三紀元部分以本檔最新「已確認設計」為準，直到正式實作後再由 actual code 接管。
 
-目前重新確認的 `main` HEAD：`383e01a824cc87e8badba8d58d8352e824e83621`。  
-最近一次已驗證的遊戲功能基準仍包含 VIP 無上限、owner 收斂與 GM 主線鎖血；本次只同步文件，**沒有修改 JS／CSS／save runtime**。
+## 本次交接前重新驗證結果
+
+本次不是只靠對話記憶，已重新讀取 current `main` 實際程式碼。重新驗證起點 HEAD：`d48b06cdee4cb6afecf0e24414214d382db91711`。
+
+已重新確認的 canonical 現況：
+
+- `savemigration.js`：現行 `SAVE_SCHEMA_VERSION = 15`、Load Pipeline V2、Normalization Pipeline V1；目前**沒有** `thirdWorld` 正式 save。
+- `worldphase.js`：`WORLD_PHASE_VERSION = 3`；目前正式永久世界只到 `secondWorld`，`firstWorldProgressionEnabled()`／`secondWorldProgressionEnabled()` 仍只依第二紀元 entered 判斷。
+- `levelprogression.js`：`FIRST_WORLD_LEVEL_CAP=500`、`SECOND_WORLD_LEVEL_CAP=1000`、`ABSOLUTE_MAX_LEVEL=1000`；第三紀元 Lv.2000 尚未實作。
+- `vipprogression.js`：VIP Progression V14、VIP 無上限；`vipPoints` 是真實來源，`vipLevel` 由積分重算。
+- `viplootcore.js`：VIP Loot Core V2；VIP8／14／16／18 的掉裝特權仍由同一 owner 管理。
+- `gmpowerbenchmark.js`：現行 V21；正式 GM 戰力基準仍只有銀河／宇宙兩紀元，測試等級仍 clamp 到 1000；第三紀元 GM 能力目前只是設計、尚未實作。
+- `gmbackground.js`：背景戰鬥與主線鎖血都採裝置＋登入帳號隔離的 localStorage 偏好；主線鎖血 gate 仍只作用銀河／宇宙正式主線與主線特殊怪。
+- `worldphaseui.js`：宇宙紀元入口仍是「主畫面卡 → 條件 → 不可逆確認 → reload → Welcome」，第三紀元入口尚未實作。
+- `combatfx.js`：正式戰鬥 presentation owner 仍負責 HP／護盾／戰鬥 FX；主線鎖血呈現不應再由 GM 模組 monkey-patch。
+
+另外已 compare `93287fd1f305b96037ab5f658e5b0ff3c2ca6254` → `d48b06cdee4cb6afecf0e24414214d382db91711`：期間只有 `PROJECT_HANDOFF.md`、`PROJECT_PENDING_STATUS.md`、`README.md`、`GM_UI_GUIDE.md` 等文件變更，**沒有遊戲功能 JS/CSS 變更**。因此目前最新 functional code 仍承接 `93287fd1...` 那批 VIP／GM 主線鎖血完成態。
 
 ---
 
@@ -45,6 +60,8 @@
 
 `offlinestatecore.js` 是 Offline save normalization owner；`offlineprogress.js` 只管 runtime 收益／sample 收集。`compatibilityowners.js` 管 legacy owner 與 script policy。
 
+**重要：第三紀元的 schema 16／`thirdWorld` 目前只是已確認設計，不是 current runtime。**
+
 ---
 
 # 3. 世界／主線／等級（現行 runtime）
@@ -59,7 +76,9 @@
 
 - 10區／100 Boss；Boss 等級505、510、…、1000。
 - 入場：Lv500、銀河最終主線完成、8專精全60、5部位+20、10印記全10；VIP不限。
-- 進入宇宙會初始化 `secondWorld` 並切斷銀河離線殘留。
+- 進入宇宙會初始化 `secondWorld`。
+- 世界轉換會清：金幣、基礎／進階強化石、待贖回裝備、未處理特殊遭遇、銀河未結算離線狀態／樣本；保留等級、VIP、裝備、專精、強化等級、印記、鏡像、虛空與歷史紀錄。
+- 世界轉換前會做 safe backup；存檔失敗時還原原 state。
 
 宇宙主線 Boss 正式基準：
 
@@ -73,16 +92,21 @@ ATK = ceil(2700*2*M)
 DEF = ceil(2700*1*M)
 ```
 
+Lv505：32,400 / 5,400 / 2,700。  
+Lv1000：80,514 / 13,419 / 6,710。
+
 `.015` 中後期再驗證已取消，除非使用者主動重開。
 
 ## 3.3 等級 owner
 
-`levelprogression.js`：
+`levelprogression.js` V1：
 
 - `FIRST_WORLD_LEVEL_CAP = 500`
 - `SECOND_WORLD_LEVEL_CAP = 1000`
 - current `ABSOLUTE_MAX_LEVEL = 1000`
 - runtime 走 `effectiveLevelCap()`。
+- 宇宙 Lv500～999：`ceil((25 + 4*L) * 250)`；Lv1000 need=0。
+- 到 cap 時 EXP 正規化為0。
 
 第三紀元已確定 Lv1000→2000、每級固定1000萬 EXP；尚未實作前不得自行改 current cap。
 
@@ -95,7 +119,10 @@ DEF = ceil(2700*1*M)
 - VIP16 可額外第2件 Boss 裝備；結果用 `equipmentRewards[]`。
 - world2 品質：優良45%、稀有35%、史詩15%、傳說4.5%、神話0.5%。
 - 戰敗不扣既有 EXP、不降級；30%機率遺失穿戴裝備，VIP20完全防止。
-- 銀河強化+0～+20；宇宙正式+20～+40；每級主屬性+2.5%，+40＝+100%。
+- world2 贖回＝正式出售價×10暗物質；銀河來源裝備在宇宙遺失時免費贖回。
+- 神話出售額外 +1 暗能量；鑑價只放大暗物質。
+- 銀河強化+0～+20；宇宙正式+20～+40；GM sandbox 0～40。
+- 每級主屬性+2.5%，+40＝+100%；詞條不吃強化倍率。
 - 第一、第二紀元裝備主屬性／詞條公式共用同一套 owner。
 
 ---
@@ -104,14 +131,22 @@ DEF = ceil(2700*1*M)
 
 ## 5.1 VIP 無上限（正式）
 
-owner：`vipprogression.js`。
+owner：`vipprogression.js`，正式版本：
+
+- `VIP_PROGRESSION_VERSION = 14`
+- `VIP_UNBOUNDED_LEVEL_VERSION = 1`
+- `VIP_PERK_MAX_LEVEL = 20`
+- `VIP_POINTS_SOURCE_OF_TRUTH_VERSION = 1`
+- `VIP_STATE_RECONCILIATION_VERSION = 1`
+
+規則：
 
 - VIP 等級**無上限**。
 - 門檻永久為 `1000 × VIP等級²`。
 - 每級：HP +0.5%、ATK +0.5%、DEF +0.25%、暴擊 +0.25pp、閃避 +0.25pp。
 - **VIP20＝特殊特權畢業，不是等級上限。**
 - VIP21+ 不新增特殊特權，但基本能力持續成長。
-- `vipPoints` 是真實來源；`vipLevel` 可重建。
+- `vipPoints` 是真實來源；`vipLevel` 由積分重算。
 
 VIP Loot Core V2：
 
@@ -121,6 +156,7 @@ VIP Loot Core V2：
 - VIP18：Boss 10%品質+1。
 - VIP14＋18可獨立疊加，最高神話。
 - VIP20：死亡裝備完全保護。
+- VIP21／50／100等高等級仍完整繼承上述特權，不新增21+ tier。
 
 ## 5.2 專精／文明
 
@@ -131,10 +167,11 @@ VIP Loot Core V2：
 
 # 6. 戰鬥節奏／背景／離線（現行 runtime）
 
-- 場內、場間正式基準140ms。
+- 場內、場間正式基準140ms；舊60/80ms啟動等待與220/300/350/450ms舊延遲不得復活。
 - 玩家1×／1.5×；GM可2×。
 - Background 單一 active flow；支援 fast catch-up。
 - Offline最短1分鐘、最長12小時；依正式 sample 結算。
+- Offline sample 依速度分開保存，取近期有效主線樣本；無樣本時需提示，不可暗算假資料。
 - 宇宙災厄 `secondworldcalamityrun.js` 支援背景／fast catch-up／pagehide checkpoint。
 
 ---
@@ -142,8 +179,10 @@ VIP Loot Core V2：
 # 7. 災厄／印記／稱號（現行 runtime）
 
 - 銀河災厄10隻；印記10枚、最大Lv10；owner `markcore.js`。
-- 宇宙災厄10隻；每隻30 true kills；完成後 replay 滿血、無正式進度。
+- 宇宙災厄10隻；等級550、600、…、1000；每隻30 true kills；完成後 replay 滿血、無正式進度、不顯示連續重打。
+- 宇宙災厄採章末提示＋雙條件正式挑戰 gate。
 - 現行正式稱號共26個：銀河10＋宇宙10＋鏡像6；owner `playertitlecore.js`。
+- 鏡像稱號15～20六階已完成，稱號呈現不回到舊方框式效果。
 
 ---
 
@@ -151,20 +190,33 @@ VIP Loot Core V2：
 
 正式模式：懸賞、競技、鏡像、虛空，另有文明災厄。
 
-- Arena正式state：`arenaByWorld`。
+- Arena正式state：`arenaByWorld`；legacy `dungeon.arena` 僅相容。
 - 宇宙競技 Arena By World V2。
 - 懸賞 V2 共用 `viplootcore.js`。
 - 鏡像15～20勝稱號完成。
-- 虛空 owner：`dungeonvoid.js`；V2 線性公式：`HP=ceil(100+9.6F)`、`ATK=ceil(10+1.3F)`、`DEF=ceil(5+0.6F)`。
+- 虛空 owner：`dungeonvoid.js`；V2 線性公式：
+
+```text
+HP  = ceil(100 + 9.6F)
+ATK = ceil(10 + 1.3F)
+DEF = ceil(5 + 0.6F)
+Crit = 10%
+Dodge = 8%
+```
+
 - 銀河／宇宙地圖、災厄、戰線紀錄回顧已完成。
+- 回顧 tab／view 狀態是 session 行為，不應污染正式進度。
 
 ---
 
 # 9. 特殊遭遇／Story／UI（現行 runtime）
 
-銀河＋宇宙 Story data 已存在並受 Story Integrity 檢查。第三紀元目前沒有 runtime story code。
-
-宇宙冒險／背包／回顧的既有行為維持 current main；正式 owner 不得被第三紀元另造 duplicate pipeline 取代。
+- 特殊遭遇正式流程：提示 → 補滿玩家HP → 特殊戰鬥。
+- 宇宙 Boss 可觸發；銀河 Boss 排除；宇宙剛解鎖災厄時該次特殊遭遇跳過。
+- 銀河＋宇宙 Story data 已存在並受 Story Integrity 檢查。
+- 第三紀元目前沒有 runtime story code。
+- 宇宙冒險／背包／回顧的既有行為維持 current main；正式 owner 不得被第三紀元另造 duplicate pipeline 取代。
+- `worldphaseui.js` 目前宇宙入口流程：主畫面「宇宙紀元」卡 → 查看突破條件 → 不可逆確認 → `enterSecondWorld()` → reload → Welcome modal。
 
 ---
 
@@ -172,9 +224,37 @@ VIP Loot Core V2：
 
 GM sandbox 不得污染正式 save。
 
-GM測試角色目前支援銀河／宇宙：紀元、等級、裝備、強化、8專精、10印記、文明、VIP。戰力基準沿用正式 `playerCombatStats` 與 combat core。
+## 10.1 戰力基準
 
-GM主線鎖血正式 owner：`gmbackground.js`；只作用銀河／宇宙正式主線與正式主線 context 特殊怪，不作用副本、災厄、回顧或 GM sandbox。`combatfx.js` 是呈現 owner。
+`gmpowerbenchmark.js` 現行 V21：
+
+- GM測試角色目前支援銀河／宇宙：紀元、等級、裝備、強化、8專精、10印記、文明、VIP。
+- 測試角色等級目前 clamp 1～1000。
+- 戰力基準沿用正式 `playerCombatStats` 與 combat core。
+- 可做輸出／承傷／正式模式實戰 benchmark，結果不寫正式角色。
+- 第三紀元 GM 能力尚未實作，見 13.15／13.16。
+
+## 10.2 背景戰鬥／主線鎖血
+
+`gmbackground.js` V1：
+
+- 背景戰鬥與主線鎖血皆只允許 GM 管理操作。
+- 設定只保存在目前裝置，並依登入帳號隔離；未登入 fail-closed。
+- 不寫角色 save、Cloud Save 或 GM JSON 匯出。
+- 主線鎖血 storage key：`civilization_frontline_gm_mainline_hp_lock_v1_<userId>`。
+- 正式 gate：`gmMainlineHpLockActive(scope)`。
+- 只作用：銀河正式主線、宇宙正式主線、正式主線 context 內特殊怪。
+- 不作用：懸賞、競技、鏡像、虛空、銀河／宇宙災厄、回顧戰、GM benchmark／sandbox。
+
+### 重要 bug 修正／owner 收斂（已完成）
+
+- 主線鎖血不再由 GM 模組 monkey-patch `prepareCombatPresentation()`。
+- `combatcore.js` 保留真實敵方攻擊、護盾、不屈、反噬、反擊與 `actualDamage` 語意；鎖血只在正式 scope 下使玩家正式HP保持滿血。
+- 非滿血進場且鎖血開啟時，正式 `playerStartHp` 會正規化為最大HP。
+- `combatfx.js` 是鎖血呈現正式 owner：血條／數字維持滿血，但真實承傷事件仍存在。
+- 背景戰鬥／主線鎖血共用 device boolean preference helper，但使用不同 storage prefix。
+
+這是目前最近一批真正的 runtime 功能／bug 修正；本次對話後段只有第三紀元設計與文件同步，**沒有新增 JS/CSS bug fix**。
 
 ---
 
@@ -186,9 +266,10 @@ GM主線鎖血正式 owner：`gmbackground.js`；只作用銀河／宇宙正式�
 - `compatibilityowners.js`：legacy owner、after-save hook、script policy。
 - `backgroundpreload.js`：分階段素材 preload。
 - `assets/backgrounds-source/` 原稿；`assets/backgrounds/` runtime WebP。
+- Runtime Integrity 已包含 VIP 無上限與 GM 主線鎖血專用 probe／test。
 - JS／CSS 改動必須同步更新 `index.html` cache-bust。
 
-目前只做文件同步，因此本次不需要改 cache-bust，也不改 Integrity runtime。
+最近功能基準 `93287fd1f305b96037ab5f658e5b0ff3c2ca6254` 已驗證 Runtime Integrity #416 success、Story Integrity #583 success。後續文件 commit 不代表功能變更；下一位仍需用 current HEAD 重新確認。
 
 ---
 
@@ -601,27 +682,66 @@ thirdWorld: {
 
 ---
 
-# 14. 目前真正 Pending
+# 14. 本對話期間完成內容
 
-除實玩銀河／宇宙外，第三紀元大型系統骨架已基本定完。**目前真正刻意保留未定的大項只有：**
+本對話期間**沒有新增遊戲 runtime 功能修改**；主要完成第三紀元「高維紀元」大骨架定案與 GitHub 文件整理。
+
+已定案並同步至本 handoff：
+
+- 十王正式名稱、概念、個體特化。
+- 十階高維稱號正式名稱與100%總血量門檻。
+- 維度之弦／界弦核心正式名稱與公式。
+- 高維100死連戰、停止／重整即清壓制、取消正式單場挑戰。
+- 5pp死亡王退出、合法場次不截傷害。
+- 100%至少1件裝備、十王共用95%傳說／5%神話基礎池、VIP loot沿用。
+- 10套裝備名稱池依十王總剩餘HP階段切換；具體名稱仍屬細節。
+- 高維離線只看近期正式高維戰鬥 sample、不分王；只產裝備，不產正式EXP／維度之弦／王傷害。
+- 進第三紀元暗物質／暗能量清零並退出正式介面。
+- 高維死亡不掉裝、無贖回；裝備清理不換維度之弦。
+- 懸賞關閉、鏡像／虛空保留、特殊遭遇關閉；第三紀元競技場延後定義。
+- 玩家速度最高仍1.5×；Lv2000 EXP封頂但正式高維削血／資源／掉裝續行。
+- UI原則：不創新新操作模型，沿用宇宙入口、Boss卡、tab、modal、強化頁等成熟結構。
+- GM第三紀元測試／管理方向。
+- 第三紀元 save schema16、`thirdWorld` 根資料、owner 分工設計。
+- 高維回顧固定10%最終型態、無正式收益。
+
+本對話期間文件已同步整理過 `PROJECT_HANDOFF.md`／`PROJECT_PENDING_STATUS.md`／`README.md`；這些是文件更新，不代表第三紀元已進 runtime。
+
+---
+
+# 15. 目前真正 Pending
+
+除使用者繼續實玩銀河／宇宙、回報真實 bug／體感問題外，第三紀元大型系統骨架已基本定完。**目前刻意保留未定的大項只有：**
 
 1. 高維序章、10段主劇情的具體文本／事件內容。
 2. 十王全滅後最終通關事件／最終畫面，以及是否銜接低維輪迴／轉生。
 3. 第三紀元競技場的正式形式與數值曲線。
 
-實作階段才決定的細節：10套高維裝備的具體名稱、視覺／背景／動畫、UI微文案、最終數值實測微調、script load order等。
+實作階段才處理的細節：10套高維裝備的具體名稱、視覺／背景／動畫、UI微文案、最終數值實測微調、script load order等。
 
 已確認、不准再誤列為 pending：十王正式名稱與概念、十稱號名稱與門檻、維度之弦、界弦核心、100%掉裝／95-5品質池、VIP loot沿用、高維offline方向、十套名稱池規則、GM測試／GM管理方向、save schema16與state／owner設計、進第三紀元暗物質／暗能量清零、第三紀元死亡無掉裝／無贖回、5pp死亡王退出、1.5×速度、Lv2000 EXP封頂、特殊遭遇關閉、懸賞關閉、回顧10%最終型態。
 
 ---
 
-# 15. 下一位 ChatGPT／正式實作操作規範
+# 16. 下一位 ChatGPT／正式實作操作規範
 
-1. **先讀 current `main` 實碼，再動手；main 是唯一真實來源。**
-2. 修改前讀相關 canonical owner／dependency／Integrity／`index.html`。
-3. 使用者說「先討論／先檢查／先不要改」就不能寫入。
-4. 使用者說「做／修改／執行／第N批」可直接修改 `main`。
-5. 不建立 duplicate state、duplicate settlement、duplicate story／loot／offline pipeline。
-6. JS／CSS改動必須更新 `index.html` cache-bust。
-7. 每批完成後重新讀 main、compare base→head、自我檢查；依影響範圍執行 Runtime／Story／Asset Integrity。
-8. 文件設計與現行runtime要明確分開：第三紀元尚未實作前，不能把設計值宣稱為current code。
+1. **main 是唯一真實來源。** 開始任何工作前先重新讀 current `main`，不能只靠本 handoff、聊天記憶或舊文件。
+2. 修改前先讀相關 canonical owner、直接 dependency、Integrity／workflow 與 `index.html`；先判斷哪個檔案才是真正 owner。
+3. 使用者說「先討論／先檢查／先不要修改／先列出」時，**禁止寫入 GitHub**。
+4. 使用者說「做／修改／執行／第N批」時，可直接修改 GitHub `main`，不需再反覆確認。
+5. **優先修改正式來源。** 不額外做 wrapper、fallback、monkey-patch、duplicate state、第二套公式、第二套 settlement、第二套 loot／story／offline pipeline。
+6. JS／CSS 改動必須同步更新 `index.html` cache-bust。
+7. 每批完成後必須重新讀 actual `main`、compare base→head、自我檢查；依影響範圍執行 Runtime／Story／Asset Integrity。
+8. GM sandbox／benchmark 不得污染正式 save；GM管理若明確修改正式角色才可寫正式 state。
+9. 文件設計與現行 runtime 必須明確分開；第三紀元尚未實作前，不得把設計值宣稱為 current code。
+10. 遇到 handoff 與 code 不一致時，修 code 前先判斷是文件過時還是 runtime bug；**不准為了讓文件看起來一致而另加 workaround**。
+
+---
+
+# 17. 下一個對話如何接手
+
+標準接手指令：
+
+> **讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 `main` 實際程式碼，完整承接《文明戰線》專案。現在先不要修改。**
+
+下一位 ChatGPT 收到這句後，應先讀 handoff＋current main；確認實際 HEAD、canonical owner、pending 與設計／runtime邊界，再回報已承接，**不要在使用者尚未授權修改前動 GitHub**。
