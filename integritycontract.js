@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const EXPECTED_VERSIONS=Object.freeze({
   SAVE_SCHEMA_VERSION:16,
   SAVE_LOAD_PIPELINE_VERSION:2,
@@ -8,6 +8,14 @@
   SAVE_FUTURE_VERSION_GUARD_VERSION:1,
   OFFLINE_STATE_NORMALIZATION_VERSION:1,
   LEGACY_COMPATIBILITY_OWNER_VERSION:1,
+  SCRIPT_LOAD_POLICY_VERSION:2,
+  WORLD_PHASE_VERSION:4,
+  WORLD_PHASE_PRIMARY_RESOURCE_VERSION:2,
+  THIRD_WORLD_PHASE_VERSION:1,
+  THIRD_WORLD_STATE_MIGRATION_VERSION:1,
+  THIRD_WORLD_PHASE_INTEGRITY_VERSION:1,
+  PLAYER_SEMANTICS_UI_VERSION:6,
+  PLAYER_SEMANTICS_WORLD_PHASE_VERSION:1,
   LEVEL_PROGRESSION_AUDIT_VERSION:1,
   PLAYER_TITLE_CATALOG_VERSION:3,
   PLAYER_TITLE_INTEGRITY_VERSION:9,
@@ -36,6 +44,8 @@
  });
  const REQUIRED_APIS=Object.freeze([
   "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState",
+  "currentWorldPhase","worldProgressionEnabled","worldPhaseSnapshot","primaryWorldResourceSnapshot","scriptLoadGroupFor",
+  "createBlankThirdWorldState","normalizeThirdWorldState","thirdWorldState",
   "normalizePlayerTitleState","playerIdentityNameHtml","equipPlayerTitle",
   "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile",
   "effectiveLevelCap","effectiveExpNeed","levelProgressionAudit",
@@ -50,6 +60,9 @@
    if(actual!==expected)errors.push({code:"VERSION_MISMATCH",name,expected,actual:Number.isFinite(actual)?actual:null});
   });
   REQUIRED_APIS.forEach(name=>{if(typeof window[name]!=="function")errors.push({code:"API_MISSING",name});});
+  if(window.THIRD_WORLD_PHASE_INTEGRITY_REPORT?.passed!==true){
+   errors.push({code:"THIRD_WORLD_PHASE_INTEGRITY",report:window.THIRD_WORLD_PHASE_INTEGRITY_REPORT||null});
+  }
   if(window.VIP_UNBOUNDED_INTEGRITY_REPORT?.passed!==true){
    errors.push({code:"VIP_UNBOUNDED_INTEGRITY",report:window.VIP_UNBOUNDED_INTEGRITY_REPORT||null});
   }
@@ -89,6 +102,13 @@
     errors.push({code:"OFFLINE_STATE_NORMALIZATION",offline:probe.offline});
    }
   }catch(error){errors.push({code:"OFFLINE_STATE_NORMALIZATION_PROBE",error:String(error?.message||error)});}
+  try{
+   const phaseProbe={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:true,dimensionalStrings:4}};
+   const phase=window.currentWorldPhase?.(phaseProbe),resource=window.primaryWorldResourceSnapshot?.(phaseProbe),snapshot=window.worldPhaseSnapshot?.(phaseProbe);
+   if(phase!==3||resource?.label!=="維度之弦"||Number(resource?.amount)!==4||snapshot?.progression?.[2]!==false||snapshot?.progression?.[3]!==true){
+    errors.push({code:"THIRD_WORLD_PHASE_POLICY",phase,resource,snapshot});
+   }
+  }catch(error){errors.push({code:"THIRD_WORLD_PHASE_POLICY_PROBE",error:String(error?.message||error)});}
   return {version:VERSION,phase:String(options.phase||"runtime"),passed:errors.length===0,errors,checkedAt:Date.now()};
  }
  window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION;
