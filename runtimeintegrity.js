@@ -3,112 +3,29 @@
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
-
- const reports=[
-  ["CALAMITY_STATE_INTEGRITY",window.CALAMITY_STATE_INTEGRITY],
-  ["MARK_CORE_INTEGRITY",window.MARK_CORE_INTEGRITY],
-  ["COMBAT_MARK_INTEGRITY",window.COMBAT_MARK_INTEGRITY],
-  ["COMBAT_MARK_FX_INTEGRITY",window.COMBAT_MARK_FX_INTEGRITY],
-  ["COMBAT_SPEED_INTEGRITY",window.COMBAT_SPEED_INTEGRITY],
-  ["CALAMITY_CORE_INTEGRITY",window.CALAMITY_CORE_INTEGRITY],
-  ["CALAMITY_RUN_INTEGRITY",window.CALAMITY_RUN_INTEGRITY],
-  ["CALAMITY_UI_INTEGRITY",window.CALAMITY_UI_INTEGRITY],
-  ["CALAMITY_GM_INTEGRITY",window.CALAMITY_GM_INTEGRITY],
-  ["PLAYER_TITLE_INTEGRITY",window.PLAYER_TITLE_INTEGRITY],
-  ["GM_PLAYER_TITLE_PREVIEW_INTEGRITY_REPORT",window.GM_PLAYER_TITLE_PREVIEW_INTEGRITY_REPORT],
-  ["PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_REPORT",window.PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_REPORT],
-  ["CIVILIZATION_LEVEL_INTEGRITY_REPORT",window.CIVILIZATION_LEVEL_INTEGRITY_REPORT],
-  ["SECOND_WORLD_DATA_INTEGRITY",window.SECOND_WORLD_DATA_INTEGRITY],
-  ["LEVEL_PROGRESSION_INTEGRITY",window.LEVEL_PROGRESSION_INTEGRITY],
-  ["SECOND_WORLD_COMBAT_INTEGRITY",window.SECOND_WORLD_COMBAT_INTEGRITY],
-  ["SECOND_WORLD_REWARD_INTEGRITY",window.SECOND_WORLD_REWARD_INTEGRITY],
-  ["SECOND_WORLD_MAINLINE_INTEGRITY",window.SECOND_WORLD_MAINLINE_INTEGRITY],
-  ["SECOND_WORLD_CALAMITY_UI_INTEGRITY",window.SECOND_WORLD_CALAMITY_UI_INTEGRITY],
-  ["SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT",window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT],
-  ["ENHANCEMENT_FINAL_INTEGRITY",window.ENHANCEMENT_FINAL_INTEGRITY],
-  ["BOSS_CONTINUOUS_INTEGRITY",window.BOSS_CONTINUOUS_INTEGRITY],
-  ["BOUNTY_NAME_POOL_INTEGRITY",window.BOUNTY_NAME_POOL_INTEGRITY]
- ];
- reports.forEach(([name,report])=>{
-  if(report?.passed!==true)fail("SUBSYSTEM_REPORT",`${name} 未通過或未載入`,report?.errors||null);
-  if(Array.isArray(report?.warnings)&&report.warnings.length)warn("SUBSYSTEM_WARNING",`${name} 有 warning`,report.warnings);
- });
-
- if(Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)!==1||typeof window.runCivilizationIntegrityContract!=="function"){
-  fail("INTEGRITY_CONTRACT_MISSING","Canonical Integrity Contract V1 未載入",{version:window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION,api:typeof window.runCivilizationIntegrityContract});
- }else{
-  const contract=window.runCivilizationIntegrityContract({phase:"runtime"});
-  if(contract?.passed!==true)fail("INTEGRITY_CONTRACT",`Canonical Integrity Contract 未通過`,contract?.errors||null);
- }
-
+ const reports=[["CALAMITY_STATE_INTEGRITY",window.CALAMITY_STATE_INTEGRITY],["MARK_CORE_INTEGRITY",window.MARK_CORE_INTEGRITY],["COMBAT_MARK_INTEGRITY",window.COMBAT_MARK_INTEGRITY],["COMBAT_MARK_FX_INTEGRITY",window.COMBAT_MARK_FX_INTEGRITY],["COMBAT_SPEED_INTEGRITY",window.COMBAT_SPEED_INTEGRITY],["CALAMITY_CORE_INTEGRITY",window.CALAMITY_CORE_INTEGRITY],["CALAMITY_RUN_INTEGRITY",window.CALAMITY_RUN_INTEGRITY],["CALAMITY_UI_INTEGRITY",window.CALAMITY_UI_INTEGRITY],["CALAMITY_GM_INTEGRITY",window.CALAMITY_GM_INTEGRITY],["PLAYER_TITLE_INTEGRITY",window.PLAYER_TITLE_INTEGRITY],["GM_PLAYER_TITLE_PREVIEW_INTEGRITY_REPORT",window.GM_PLAYER_TITLE_PREVIEW_INTEGRITY_REPORT],["PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_REPORT",window.PLAYER_TITLE_UNIVERSE_VISUAL_INTEGRITY_REPORT],["CIVILIZATION_LEVEL_INTEGRITY_REPORT",window.CIVILIZATION_LEVEL_INTEGRITY_REPORT],["SECOND_WORLD_DATA_INTEGRITY",window.SECOND_WORLD_DATA_INTEGRITY],["LEVEL_PROGRESSION_INTEGRITY",window.LEVEL_PROGRESSION_INTEGRITY],["SECOND_WORLD_COMBAT_INTEGRITY",window.SECOND_WORLD_COMBAT_INTEGRITY],["SECOND_WORLD_REWARD_INTEGRITY",window.SECOND_WORLD_REWARD_INTEGRITY],["SECOND_WORLD_MAINLINE_INTEGRITY",window.SECOND_WORLD_MAINLINE_INTEGRITY],["SECOND_WORLD_CALAMITY_UI_INTEGRITY",window.SECOND_WORLD_CALAMITY_UI_INTEGRITY],["SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT",window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT],["ENHANCEMENT_FINAL_INTEGRITY",window.ENHANCEMENT_FINAL_INTEGRITY],["BOSS_CONTINUOUS_INTEGRITY",window.BOSS_CONTINUOUS_INTEGRITY],["BOUNTY_NAME_POOL_INTEGRITY",window.BOUNTY_NAME_POOL_INTEGRITY]];
+ reports.forEach(([name,report])=>{if(report?.passed!==true)fail("SUBSYSTEM_REPORT",`${name} 未通過或未載入`,report?.errors||null);if(Array.isArray(report?.warnings)&&report.warnings.length)warn("SUBSYSTEM_WARNING",`${name} 有 warning`,report.warnings);});
+ if(Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)!==2||typeof window.runCivilizationIntegrityContract!=="function")fail("INTEGRITY_CONTRACT_MISSING","Canonical Integrity Contract V2 未載入",{version:window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION,api:typeof window.runCivilizationIntegrityContract});else{const contract=window.runCivilizationIntegrityContract({phase:"runtime"});if(contract?.passed!==true)fail("INTEGRITY_CONTRACT","Canonical Integrity Contract 未通過",contract?.errors||null);}
  const expectedMaps=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS.reduce((max,r)=>Math.max(max,(Number(r?.mapEnd)||-1)+1,0),0):0;
  if(!Array.isArray(MAPS)||MAPS.length!==expectedMaps)fail("WORLD_MAP_COUNT",`MAPS 應為 ${expectedMaps} 張，實際 ${Array.isArray(MAPS)?MAPS.length:"非陣列"}`);
  if(window.WORLD_MAP_REGISTRATION_REPORT?.passed!==true)fail("WORLD_MAP_REGISTRY","世界地圖固定註冊檢查未通過",window.WORLD_MAP_REGISTRATION_REPORT?.errors||null);
  if(window.WORLD_NAMING_REPORT?.errors?.length)fail("WORLD_NAMING","世界資料硬錯誤",window.WORLD_NAMING_REPORT.errors);
-
- const required=[
-  "normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState","finalizeDungeonLoadedState","ensureDungeonState",
-  "normalizePlayerTitleState","getPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle",
-  "getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile","getArenaEnemyProfile",
-  "civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat","secondWorldAdventurePageHtml",
-  "backgroundProgressSleep","resolveOfflineFarmTarget","gmDataManagementHtml"
- ];
+ const required=["normalizeSaveState","migrateSave","load","markSaveLoadResolved","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState","finalizeDungeonLoadedState","ensureDungeonState","normalizePlayerTitleState","getPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","getArenaProgressForWorld","getCurrentArenaProgress","getArenaVersionProfile","getArenaEnemyProfile","civilizationCombatDamageMultiplier","secondWorldBossBaseStats","runSecondWorldBossCombat","secondWorldAdventurePageHtml","backgroundProgressSleep","resolveOfflineFarmTarget","gmDataManagementHtml"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`必要函式 ${name} 未載入`);});
-
- const retiredApis=[
-  "gmMapMonsterTestHtml","getMapMonsterGmTestHtml","gmStartMapMonsterTest","getSecondWorldBossGmSelection","getSecondWorldBossGmRegionOptions","getSecondWorldBossGmOptions","gmStartSecondWorldBossTest","gmArenaTestHtml","getArenaGmTestHtml","gmSimulateArena","refreshArenaGm5",
-  "canStartDungeonRun","beginDungeonRun","getActiveDungeonRun","finishDungeonRun","getVoidMirageNextFloor","voidMirageFirstClearPoints",
-  "newShopState","currentShopMap","makeShopItems","ensureShop","shopRefreshCost","paidShopRefresh","freeShopRefresh","shopPurchase","canResetShopPrice","resetShopPrice","specialApplyShopDiscount",
-  "consumeCombatPresentationPulse","consumeCombatPresentationPulseManual","normalizeCivilizationMarkProgressForCore","advanceCivilizationCalamityMarkEntry","settleCivilizationCalamityMarkKill","markAcquired","markProgress","MARK_DEFS","CALAMITY_DEFS",
-  "getArenaDifficultyConfigs","getArenaPositionDifficultyId","getBountyTierConfig","getBountyTierConfigs"
- ];
+ const retiredApis=["gmMapMonsterTestHtml","getMapMonsterGmTestHtml","gmStartMapMonsterTest","getSecondWorldBossGmSelection","getSecondWorldBossGmRegionOptions","getSecondWorldBossGmOptions","gmStartSecondWorldBossTest","gmArenaTestHtml","getArenaGmTestHtml","gmSimulateArena","refreshArenaGm5","canStartDungeonRun","beginDungeonRun","getActiveDungeonRun","finishDungeonRun","getVoidMirageNextFloor","voidMirageFirstClearPoints","newShopState","currentShopMap","makeShopItems","ensureShop","shopRefreshCost","paidShopRefresh","freeShopRefresh","shopPurchase","canResetShopPrice","resetShopPrice","specialApplyShopDiscount","consumeCombatPresentationPulse","consumeCombatPresentationPulseManual","normalizeCivilizationMarkProgressForCore","advanceCivilizationCalamityMarkEntry","settleCivilizationCalamityMarkKill","markAcquired","markProgress","MARK_DEFS","CALAMITY_DEFS","getArenaDifficultyConfigs","getArenaPositionDifficultyId","getBountyTierConfig","getBountyTierConfigs"];
  retiredApis.forEach(name=>{if(typeof window[name]!=="undefined")fail("LEGACY_API",`已退休 API ${name} 不應再存在`);});
-
  if(Number(window.SAVE_WRITE_GUARD_VERSION)!==1)fail("SAVE_WRITE_GUARD","本機存檔寫入保護 V1 未載入",window.SAVE_WRITE_GUARD_VERSION);
  if(Number(window.SAVE_FUTURE_VERSION_GUARD_VERSION)!==1)fail("SAVE_FUTURE_VERSION_GUARD","未來版本存檔保護 V1 未載入",window.SAVE_FUTURE_VERSION_GUARD_VERSION);
  if(Number(window.SAVE_LEGACY_SUPPORT_POLICY_VERSION)!==1||Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known")fail("SAVE_LEGACY_POLICY","舊存檔支援政策異常",{version:window.SAVE_LEGACY_SUPPORT_POLICY_VERSION,min:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});
  if(Number(window.OFFLINE_STATE_NORMALIZATION_VERSION)!==1)fail("OFFLINE_STATE_OWNER","Offline state normalization V1 未載入",window.OFFLINE_STATE_NORMALIZATION_VERSION);
- try{
-  const current=Number(window.SAVE_SCHEMA_VERSION)||0;
-  const legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION});
-  const supported=window.saveCompatibilityFor?.({saveVersion:current});
-  const future=window.saveCompatibilityFor?.({saveVersion:current+1});
-  let threw=false;
-  try{window.assertSaveVersionSupported?.({saveVersion:current+1},{label:"Runtime 測試存檔"});}catch(error){threw=error?.code==="FUTURE_SAVE_VERSION";}
-  if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||future?.isFuture!==true||future?.supported!==false||!threw)fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 異常",{legacy,supported,future,threw});
- }catch(error){fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 執行失敗",String(error?.message||error));}
- try{
-  const probe={saveVersion:Number(window.SAVE_SCHEMA_VERSION)||1,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
-  const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789});
-  const snapshot=JSON.stringify(probe.offline);
-  const second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789});
-  if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot)fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 異常",probe.offline);
- }catch(error){fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 執行失敗",String(error?.message||error));}
+ try{const current=Number(window.SAVE_SCHEMA_VERSION)||0,legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION}),supported=window.saveCompatibilityFor?.({saveVersion:current}),future=window.saveCompatibilityFor?.({saveVersion:current+1});let threw=false;try{window.assertSaveVersionSupported?.({saveVersion:current+1},{label:"Runtime 測試存檔"});}catch(error){threw=error?.code==="FUTURE_SAVE_VERSION";}if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||future?.isFuture!==true||future?.supported!==false||!threw)fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 異常",{legacy,supported,future,threw});}catch(error){fail("SAVE_COMPATIBILITY_POLICY_PROBE","存檔相容政策 probe 執行失敗",String(error?.message||error));}
+ try{const probe={saveVersion:Number(window.SAVE_SCHEMA_VERSION)||1,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789}),snapshot=JSON.stringify(probe.offline),second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:probe.saveVersion,currentTime:123456789});if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot)fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 異常",probe.offline);}catch(error){fail("OFFLINE_STATE_OWNER_PROBE","Offline normalization owner probe 執行失敗",String(error?.message||error));}
  if(state&&Number(state.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("STATE_SCHEMA",`state.saveVersion ${state.saveVersion} 與正式 schema ${window.SAVE_SCHEMA_VERSION} 不一致`);
  if(state&&Object.prototype.hasOwnProperty.call(state,"shop"))fail("LEGACY_SHOP_STATE","正式 state 不應再含退休的 shop 欄位");
  if(state?.dungeon)["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(state.dungeon,key))fail("LEGACY_DUNGEON_STATE",`state.dungeon 不應再含舊欄位 ${key}`);});
-
- try{
-  if(typeof newState==="function"){
-   const fresh=newState();
-   if(Number(fresh?.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("NEW_STATE_SCHEMA","newState schema 異常",fresh?.saveVersion);
-   if(Object.prototype.hasOwnProperty.call(fresh||{},"shop"))fail("NEW_STATE_SHOP","newState 不應含退休 shop");
-   if(!fresh?.dungeon?.arenaByWorld?.[1]||!fresh?.dungeon?.arenaByWorld?.[2])fail("NEW_STATE_ARENA_BY_WORLD","newState 應建立兩個紀元的 arenaByWorld",fresh?.dungeon?.arenaByWorld||null);
-   if(!Array.isArray(fresh?.titles?.unlocked)||fresh.titles.unlocked.length!==0)fail("NEW_STATE_TITLES","newState 稱號狀態異常",fresh?.titles||null);
-  }
- }catch(error){fail("NEW_STATE_PROBE","newState probe 失敗",String(error?.message||error));}
-
- try{
-  const profile=window.getArenaVersionProfile?.();
-  if(!profile||Number(profile.balanceVersion)!==6||Number(profile.rankBalanceVersion)!==3||Number(profile.assessmentRuleVersion)!==4)fail("ARENA_PROFILE","Arena canonical profile 異常",profile||null);
-  const universeCurve=window.getArenaRankCurveForWorld?.(2);
-  if(!universeCurve||Number(window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION)!==2)fail("ARENA_UNIVERSE_CURVE","第二世界 Arena 曲線 owner 應為 V2",{version:window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION,curve:universeCurve||null});
- }catch(error){fail("ARENA_PROBE","Arena profile probe 失敗",String(error?.message||error));}
-
+ try{if(typeof newState==="function"){const fresh=newState();if(Number(fresh?.saveVersion)!==Number(window.SAVE_SCHEMA_VERSION))fail("NEW_STATE_SCHEMA","newState schema 異常",fresh?.saveVersion);if(Object.prototype.hasOwnProperty.call(fresh||{},"shop"))fail("NEW_STATE_SHOP","newState 不應含退休 shop");if(!fresh?.dungeon?.arenaByWorld?.[1]||!fresh?.dungeon?.arenaByWorld?.[2])fail("NEW_STATE_ARENA_BY_WORLD","newState 應建立兩個紀元的 arenaByWorld",fresh?.dungeon?.arenaByWorld||null);if(!Array.isArray(fresh?.titles?.unlocked)||fresh.titles.unlocked.length!==0)fail("NEW_STATE_TITLES","newState 稱號狀態異常",fresh?.titles||null);}}catch(error){fail("NEW_STATE_PROBE","newState probe 失敗",String(error?.message||error));}
+ try{const profile=window.getArenaVersionProfile?.();if(!profile||Number(profile.balanceVersion)!==6||Number(profile.rankBalanceVersion)!==3||Number(profile.assessmentRuleVersion)!==4)fail("ARENA_PROFILE","Arena canonical profile 異常",profile||null);const universeCurve=window.getArenaRankCurveForWorld?.(2);if(!universeCurve||Number(window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION)!==2)fail("ARENA_UNIVERSE_CURVE","第二世界 Arena 曲線 owner 應為 V2",{version:window.SECOND_WORLD_ARENA_RANK_CURVE_VERSION,curve:universeCurve||null});}catch(error){fail("ARENA_PROBE","Arena profile probe 失敗",String(error?.message||error));}
  const report={version:VERSION,contractVersion:Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)||0,passed:errors.length===0,clean:errors.length===0&&warnings.length===0,errors,warnings,checkedAt:Date.now()};
- window.PROJECT_RUNTIME_INTEGRITY_VERSION=VERSION;
- window.PROJECT_RUNTIME_REPORT=report;
- if(errors.length)console.error("[文明戰線] Runtime integrity error",errors);
- else if(warnings.length)console.warn("[文明戰線] Runtime integrity warning",warnings);
- else console.info("[文明戰線] Runtime integrity passed");
+ window.PROJECT_RUNTIME_INTEGRITY_VERSION=VERSION;window.PROJECT_RUNTIME_REPORT=report;
+ if(errors.length)console.error("[文明戰線] Runtime integrity error",errors);else if(warnings.length)console.warn("[文明戰線] Runtime integrity warning",warnings);else console.info("[文明戰線] Runtime integrity passed");
 })();
