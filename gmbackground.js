@@ -56,7 +56,7 @@
  }
  function mainlineHpLockManagementHtml(){
   const on=mainlineHpLockEnabled();
-  return `<div class="muted gm-hub-note">主線鎖血只允許從 GM 管理開啟；玩家介面沒有此開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。正式接入後只作用於主線與主線特殊怪，不影響副本、災厄、回顧戰或 GM 測試。</div><div class="controls"><button class="btn blue" onclick="gmSetMainlineHpLock(true)" ${on?"disabled":""}>開啟主線鎖血</button><button class="btn danger" onclick="gmSetMainlineHpLock(false)" ${on?"":"disabled"}>關閉主線鎖血</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：主線鎖血已${on?"開啟":"關閉"}</div>`;
+  return `<div class="muted gm-hub-note">主線鎖血只允許從 GM 管理開啟；玩家介面沒有此開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。只作用於銀河紀元／宇宙紀元正式主線與主線特殊怪，不影響副本、災厄、回顧戰或 GM 測試。</div><div class="controls"><button class="btn blue" onclick="gmSetMainlineHpLock(true)" ${on?"disabled":""}>開啟主線鎖血</button><button class="btn danger" onclick="gmSetMainlineHpLock(false)" ${on?"":"disabled"}>關閉主線鎖血</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：主線鎖血已${on?"開啟":"關閉"}</div>`;
  }
  window.gmSetBackgroundBattle=function(next){
   if(!setEnabled(next===true)){
