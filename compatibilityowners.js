@@ -70,6 +70,12 @@
  if(LEGACY_MAX_LEVEL_VALUE!==500)errors.push({code:"LEGACY_MAX_LEVEL",actual:LEGACY_MAX_LEVEL_VALUE});
  if(Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000||Number(window.THIRD_WORLD_LEVEL_CAP)!==2000||Number(window.ABSOLUTE_MAX_LEVEL)!==2000)errors.push({code:"LEVEL_CAP_OWNER",first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP,third:window.THIRD_WORLD_LEVEL_CAP,absolute:window.ABSOLUTE_MAX_LEVEL});
  if(Number(window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION)!==1||Number(window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION)!==1||Number(window.THIRD_WORLD_EXP_OWNER_VERSION)!==1)errors.push({code:"THIRD_WORLD_LEVEL_OWNER_VERSION",phase:window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION,progression:window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION,exp:window.THIRD_WORLD_EXP_OWNER_VERSION});
+ try{
+  const galaxy={level:500,secondWorld:{entered:false},thirdWorld:{entered:false}},universe={level:1000,secondWorld:{entered:true},thirdWorld:{entered:false}},higher={level:1000,secondWorld:{entered:true},thirdWorld:{entered:true}};
+  if(typeof window.currentLevelWorldPhase!=="function"||window.currentLevelWorldPhase(galaxy)!==1||window.currentLevelWorldPhase(universe)!==2||window.currentLevelWorldPhase(higher)!==3)errors.push({code:"LEVEL_WORLD_PHASE_RUNTIME"});
+  if(typeof window.effectiveLevelCap!=="function"||window.effectiveLevelCap(galaxy)!==500||window.effectiveLevelCap(universe)!==1000||window.effectiveLevelCap(higher)!==2000)errors.push({code:"LEVEL_CAP_RUNTIME_BEHAVIOR",galaxy:window.effectiveLevelCap?.(galaxy),universe:window.effectiveLevelCap?.(universe),higher:window.effectiveLevelCap?.(higher)});
+  if(typeof window.effectiveExpNeed!=="function"||window.effectiveExpNeed(1000,universe)!==0||window.effectiveExpNeed(1000,higher)!==10000000||window.effectiveExpNeed(1999,higher)!==10000000||window.effectiveExpNeed(2000,higher)!==0)errors.push({code:"LEVEL_EXP_RUNTIME_BEHAVIOR",u1000:window.effectiveExpNeed?.(1000,universe),h1000:window.effectiveExpNeed?.(1000,higher),h1999:window.effectiveExpNeed?.(1999,higher),h2000:window.effectiveExpNeed?.(2000,higher)});
+ }catch(error){errors.push({code:"LEVEL_RUNTIME_PROBE_EXCEPTION",error:String(error?.message||error)});}
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
  if(!baseSave||typeof window.registerAfterSaveHook!=="function")errors.push({code:"SAVE_HOOK_OWNER"});
  window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors};
