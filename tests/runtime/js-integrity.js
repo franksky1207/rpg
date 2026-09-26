@@ -217,7 +217,7 @@ assert(/SAVE_SCHEMA_VERSION:16/.test(contract),"Integrity Contract 的 Save Sche
 assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION:1/.test(contract),"Integrity Contract 必須要求舊存檔支援政策 V1。");
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION:1/.test(contract),"Integrity Contract 必須要求 Offline state normalization V1。");
 assert(/SAVE_FUTURE_VERSION_GUARD_VERSION:1/.test(contract),"Integrity Contract 必須要求未來版本存檔保護 V1。");
-assert(/LEGACY_COMPATIBILITY_OWNER_VERSION:1/.test(contract)&&/LEVEL_PROGRESSION_AUDIT_VERSION:1/.test(contract),"Integrity Contract 必須要求 compatibility owner 與通用等級 audit V1。");
+assert(/LEGACY_COMPATIBILITY_OWNER_VERSION:1/.test(contract)&&/LEVEL_PROGRESSION_AUDIT_VERSION:2/.test(contract),"Integrity Contract 必須要求 compatibility owner V1 與通用等級 audit V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION:3/.test(contract),"Integrity Contract 的稱號 catalog 應為 V3。");
 assert(/ARENA_BY_WORLD_STATE_VERSION:2/.test(contract),"Integrity Contract 的 Arena By World state 應為 V2。");
 assert(/SECOND_WORLD_ARENA_UNLOCK_VERSION:2/.test(contract),"Integrity Contract 的宇宙 Arena unlock 應為 V2。");
@@ -236,7 +236,7 @@ assert(pos("gmpowerbenchmarkworldphase.js")>pos("gmpowerbenchmarkstate.js"),"GM 
 assert(/LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION/.test(compatibilityOwners),"compatibilityowners.js 缺少正式 V1 export。");
 assert(/LEGACY_SAVE_VERSION_VALUE!==13/.test(compatibilityOwners)&&/LEGACY_MAX_LEVEL_VALUE!==500/.test(compatibilityOwners),"compatibilityowners.js 必須固定驗證 legacy Save V13 與舊第一世界上限 500。");
 assert(/SAVE_SCHEMA_OWNER="savemigration"/.test(compatibilityOwners)&&/LEVEL_CAP_RUNTIME_OWNER="levelprogression"/.test(compatibilityOwners)&&/ARENA_RUNTIME_OWNER="arenaByWorld"/.test(compatibilityOwners),"compatibilityowners.js 正式 owner 宣告不完整。");
-assert(/LEVEL_PROGRESSION_AUDIT_VERSION=VERSION/.test(levelAudit),"levelprogressionaudit.js 缺少正式 V1 export。");
+assert(/LEVEL_PROGRESSION_AUDIT_VERSION=VERSION/.test(levelAudit),"levelprogressionaudit.js 缺少正式 V2 export。");
 assert(!/level100ExpFactor/.test(levelAudit),"通用等級 audit 不得復活 level100ExpFactor 舊 alias。");
 
 const productionFiles=files.filter(file=>!file.startsWith("tests"+path.sep));
