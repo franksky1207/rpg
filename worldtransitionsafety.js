@@ -1,6 +1,6 @@
 (function(){
- const VERSION=1;
- function currentPhase(){return typeof window.currentWorldPhase==="function"?window.currentWorldPhase():state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;}
+ const VERSION=2;
+ function currentPhase(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):s?.thirdWorld?.entered===true?3:s?.secondWorld?.entered===true?2:1;}
  function activeView(){try{return String(view||"");}catch(e){return "";}}
  function bountyAllowed(){return currentPhase()!==3;}
  function subsystemRuntimeStatus(){
@@ -14,6 +14,24 @@
   if(window.activeSpecialEncounter)reasons.push("special-encounter-active");
   return {blocked:reasons.length>0,reasons};
  }
+ function cleanupWelcomeMarkers(){
+  let phase=currentPhase();
+  try{
+   if(phase===3)sessionStorage.removeItem("civilization_second_world_just_entered_v1");
+   else if(phase===2)sessionStorage.removeItem("civilization_third_world_just_entered_v1");
+   else{sessionStorage.removeItem("civilization_second_world_just_entered_v1");sessionStorage.removeItem("civilization_third_world_just_entered_v1");}
+   return true;
+  }catch(e){return false;}
+ }
+ function installOfflineWorldPhaseGuards(){
+  const begin=window.beginSecondWorldOfflineBattleSample;
+  if(typeof begin==="function"&&begin.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()!==2)return null;return begin.apply(this,args);};wrapped.__worldPhaseGuard=true;window.beginSecondWorldOfflineBattleSample=wrapped;}
+  const finish=window.finishSecondWorldOfflineBattleSample;
+  if(typeof finish==="function"&&finish.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()!==2)return false;return finish.apply(this,args);};wrapped.__worldPhaseGuard=true;window.finishSecondWorldOfflineBattleSample=wrapped;}
+  const resolve=window.resolveOfflineFarmTarget;
+  if(typeof resolve==="function"&&resolve.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()===3)return null;return resolve.apply(this,args);};wrapped.__worldPhaseGuard=true;window.resolveOfflineFarmTarget=wrapped;}
+  return true;
+ }
  const baseEnterBountyDungeon=typeof window.enterBountyDungeon==="function"?window.enterBountyDungeon:null;
  if(baseEnterBountyDungeon){
   window.enterBountyDungeon=function(...args){
@@ -24,9 +42,16 @@
    return baseEnterBountyDungeon.apply(this,args);
   };
  }
+ installOfflineWorldPhaseGuards();
+ cleanupWelcomeMarkers();
  window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION=VERSION;
  window.BOUNTY_WORLD_PHASE_GATE_VERSION=1;
+ window.OFFLINE_WORLD_PHASE_POLICY_VERSION=1;
+ window.WORLD_PHASE_STALE_WELCOME_CLEANUP_VERSION=1;
  window.worldPhaseBountyAvailable=bountyAllowed;
  window.worldTransitionSubsystemRuntimeStatus=subsystemRuntimeStatus;
+ window.currentOfflineWorldPhase=currentPhase;
+ window.installOfflineWorldPhaseGuards=installOfflineWorldPhaseGuards;
+ window.cleanupStaleWorldPhaseWelcomeMarkers=cleanupWelcomeMarkers;
  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")window.registerWorldTransitionRuntimeBlocker("subsystems",subsystemRuntimeStatus);
 })();
