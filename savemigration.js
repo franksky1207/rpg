@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=15;
+ const SAVE_SCHEMA_VERSION=16;
  const SAVE_LOAD_PIPELINE_VERSION=2;
  const SAVE_NORMALIZATION_PIPELINE_VERSION=1;
  const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["worldPhase","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);
@@ -109,6 +109,7 @@
  window.SAVE_MIN_SUPPORTED_VERSION=SAVE_MIN_SUPPORTED_VERSION;
  window.SAVE_LEGACY_SUPPORT_MODE=SAVE_LEGACY_SUPPORT_MODE;
  window.SECOND_WORLD_CIVILIZATION_MIGRATION_VERSION=1;
+ window.THIRD_WORLD_STATE_MIGRATION_VERSION=1;
  window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.cleanupLegacyDungeonFields=cleanupLegacyDungeonFields;
  window.cleanupRetiredShopState=cleanupRetiredShopState;
@@ -129,6 +130,7 @@
   const hadMarkState=isObject(source.marks);
   const hadTitleState=isObject(source.titles);
   const hadSecondWorldState=isObject(source.secondWorld);
+  const hadThirdWorldState=isObject(source.thirdWorld);
   const hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel));
   const hadArenaByWorld=isObject(source?.dungeon?.arenaByWorld);
   const hadLegacyArena=isObject(source?.dungeon?.arena);
@@ -144,6 +146,7 @@
   const expProgressMigrated=migrateExpProgress(target,version,source);
 
   if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
+  if(typeof window.normalizeThirdWorldState==="function")window.normalizeThirdWorldState(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
   if(typeof window.normalizeLevelProgressionState==="function")window.normalizeLevelProgressionState(target);
   prepareAllGear(target);
@@ -163,7 +166,7 @@
 
   target.introSeen=introValue;
   target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:!hadThirdWorldState,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};
   return target;
  };
 
@@ -217,6 +220,7 @@
     markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,
     titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,
     secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,
+    thirdWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.thirdWorldStateInitialized===true,
     civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,
     arenaByWorldInitialized:window.LAST_SAVE_MIGRATION_REPORT?.arenaByWorldInitialized===true,
     legacyArenaMigrated:window.LAST_SAVE_MIGRATION_REPORT?.legacyArenaMigrated===true,
