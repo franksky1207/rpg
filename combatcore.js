@@ -268,7 +268,7 @@
    enemyHp:Math.max(0,ehp),
    enemyStartHp,
    enemyMaxHp,
-   playerStartHp:Math.max(0,initialHp),
+   playerStartHp:lockPlayerFullHp?playerMaxHp:Math.max(0,initialHp),
    playerMaxHp,
    turns,
    logs:logs||[],
@@ -291,6 +291,7 @@
  window.COMBAT_MARK_INTEGRATION_VERSION=1;
  window.COMBAT_PERSISTENT_ENEMY_HP_VERSION=1;
  window.COMBAT_OPTIONAL_FULL_HP_LOCK_VERSION=1;
+ window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;
 
  fightOnce=function(mapIdx,eIdx,encounter=null){
   if(!enemyUnlocked(mapIdx,eIdx)){
@@ -302,7 +303,7 @@
 
   const playerLevelBefore=Math.max(1,Math.floor(Number(state.level)||1));
   const ps=playerCombatStats();
-  const gmMainlineHpLock=typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;
+  const gmMainlineHpLock=typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world1-mainline")===true;
   const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true,lockPlayerFullHp:gmMainlineHpLock});
   state.hp=combat.hp;
   const combatEndHp=state.hp;
