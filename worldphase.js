@@ -1,5 +1,5 @@
 (function(){
- const WORLD_PHASE_VERSION=7;
+ const WORLD_PHASE_VERSION=6;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
  const WORLD_PHASE_METADATA=Object.freeze({
@@ -167,7 +167,7 @@
  function enterSecondWorld(){return runWorldTransition({requirements:()=>secondWorldEntryRequirements(state),runtimeStatus:()=>worldTransitionRuntimeStatus(),mutate:target=>{const next=createBlankSecondWorldState();next.entered=true;target.secondWorld=next;target.gold=0;if(!isObject(target.enhancement))target.enhancement={};target.enhancement.basicStones=0;target.enhancement.advancedStones=0;target.lostGear=[];resetPendingBlackMarketForWorldTransition(target);clearFirstWorldCalamityResidualHp(target);resetOfflineStateForWorldTransition(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_second_world_just_entered_v1"});}
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
- window.WORLD_PHASE_SHARED_CORE_VERSION=4;
+ window.WORLD_PHASE_SHARED_CORE_VERSION=3;
  window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=1;
  window.WORLD_PHASE_METADATA=WORLD_PHASE_METADATA;
  window.WORLD_PHASE_METADATA_VERSION=2;
@@ -180,10 +180,10 @@
  window.worldPhaseEnhancementRequirement=enhancementRequirement;
  window.worldPhaseMarkRequirement=markRequirement;
  window.summarizeWorldEntryRequirements=summarizeWorldEntryRequirements;
- window.WORLD_PHASE_SAFE_TRANSITION_VERSION=4;
+ window.WORLD_PHASE_SAFE_TRANSITION_VERSION=3;
  window.WORLD_PHASE_TRANSITION_CALLBACK_CONTRACT_VERSION=1;
  window.WORLD_TRANSITION_CLEANUP_VERSION=1;
- window.WORLD_TRANSITION_RUNTIME_GUARD_VERSION=2;
+ window.WORLD_TRANSITION_RUNTIME_GUARD_VERSION=1;
  window.WORLD_TRANSITION_BLOCKER_REGISTRY_VERSION=1;
  window.WORLD_TRANSITION_ROLLBACK_REHYDRATION_VERSION=1;
  window.runWorldTransition=runWorldTransition;
