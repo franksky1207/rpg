@@ -1,7 +1,9 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const BOSS_COUNT=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||10));
  const BOSS_MAX_HP=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1100000000));
+ const FIVE_POINT_PERCENT=5;
+ const FIVE_POINT_HP_GAP=Math.floor(BOSS_MAX_HP*FIVE_POINT_PERCENT/100);
  const BASE_STATS=Object.freeze({
   maxHp:BOSS_MAX_HP,
   atk:15000,
@@ -46,6 +48,8 @@
 
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
+ function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(e){return null;}}
+ function targetState(target){return target&&typeof target==="object"?target:currentState();}
  function bossIndex(value){
   if(value&&typeof value==="object"){
    if(typeof value.id==="string"){
@@ -121,18 +125,115 @@
    Object.freeze({...def,active:stage>=def.unlockStage})
   ])));
  }
+ function bossStoredHp(index,target=null){
+  const boss=BOSS_ROWS[index];
+  if(!boss)return 0;
+  const s=targetState(target),raw=s?.thirdWorld?.bosses?.[index]?.currentHp;
+  return clamp(finiteWhole(raw,boss.maxHp),0,boss.maxHp);
+ }
+ function bossProgressCore(index,target=null){
+  const boss=BOSS_ROWS[index];
+  if(!boss)return null;
+  const currentHp=bossStoredHp(index,target),maxHp=boss.maxHp;
+  const remainingRatio=maxHp>0?currentHp/maxHp:0;
+  const remainingPercent=remainingRatio*100;
+  const remainingBasisPoints=Math.round(remainingRatio*10000);
+  const defeated=currentHp<=0;
+  return Object.freeze({
+   index:boss.index,id:boss.id,name:boss.name,maxHp,currentHp,
+   remainingRatio,remainingPercent,remainingBasisPoints,
+   alive:!defeated,defeated,
+   stage:thirdWorldBossStage(currentHp,maxHp),
+   stats:thirdWorldBossStats(index,currentHp),
+   abilities:thirdWorldBossAbilities(index,currentHp)
+  });
+ }
+ function thirdWorldBossAggregateSnapshot(target=null){
+  const bosses=BOSS_ROWS.map((_,index)=>bossProgressCore(index,target));
+  const maxHp=bosses.reduce((sum,row)=>sum+row.maxHp,0);
+  const currentHp=bosses.reduce((sum,row)=>sum+row.currentHp,0);
+  const alive=bosses.filter(row=>row.alive),defeated=bosses.filter(row=>row.defeated);
+  const remainingPercentSum=bosses.reduce((sum,row)=>sum+row.remainingPercent,0);
+  return Object.freeze({
+   bossCount:bosses.length,
+   aliveCount:alive.length,
+   defeatedCount:defeated.length,
+   currentHp,maxHp,
+   overallRemainingPercent:maxHp>0?currentHp/maxHp*100:0,
+   remainingPercentSum,
+   aliveBossIndexes:Object.freeze(alive.map(row=>row.index)),
+   defeatedBossIndexes:Object.freeze(defeated.map(row=>row.index)),
+   bosses:Object.freeze(bosses.slice())
+  });
+ }
+ function formalThirdWorldProgressionEnabled(target=null){
+  const s=targetState(target);
+  return !!s&&typeof window.worldProgressionEnabled==="function"&&window.worldProgressionEnabled(3,s)===true;
+ }
+ function thirdWorldChallengeStatus(value,target=null){
+  const index=bossIndex(value),s=targetState(target);
+  if(index<0||!s)return Object.freeze({allowed:false,challengeable:false,reason:"invalid",targetIndex:index});
+  const aggregate=thirdWorldBossAggregateSnapshot(s),targetBoss=aggregate.bosses[index];
+  if(!formalThirdWorldProgressionEnabled(s))return Object.freeze({allowed:false,challengeable:false,reason:"world-locked",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount});
+  if(targetBoss.defeated)return Object.freeze({allowed:false,challengeable:false,reason:"defeated",targetIndex:index,target:targetBoss,aliveCount:aggregate.aliveCount});
+  const alive=aggregate.bosses.filter(row=>row.alive);
+  if(alive.length===1)return Object.freeze({
+   allowed:true,challengeable:true,reason:"last-survivor",targetIndex:index,target:targetBoss,aliveCount:1,
+   targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:targetBoss.remainingPercent,gapPoints:0,
+   highestAliveBossIndexes:Object.freeze([index]),blockingBossIndexes:Object.freeze([]),fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP
+  });
+  const highestHp=Math.max(...alive.map(row=>row.currentHp));
+  const highestAlive=alive.filter(row=>row.currentHp===highestHp);
+  const blockers=alive.filter(row=>row.index!==index&&row.currentHp-targetBoss.currentHp>=FIVE_POINT_HP_GAP);
+  const gapHp=Math.max(0,highestHp-targetBoss.currentHp),gapPoints=gapHp/BOSS_MAX_HP*100;
+  const allowed=blockers.length===0;
+  return Object.freeze({
+   allowed,challengeable:allowed,reason:allowed?"":"five-point-front",
+   targetIndex:index,target:targetBoss,aliveCount:alive.length,
+   targetRemainingPercent:targetBoss.remainingPercent,
+   highestAliveRemainingPercent:highestHp/BOSS_MAX_HP*100,
+   gapHp,gapPoints,
+   highestAliveBossIndexes:Object.freeze(highestAlive.map(row=>row.index)),
+   blockingBossIndexes:Object.freeze(blockers.map(row=>row.index)),
+   fivePointThreshold:FIVE_POINT_PERCENT,
+   fivePointHpGap:FIVE_POINT_HP_GAP
+  });
+ }
+ function thirdWorldChallengeAllowed(value,target=null){return thirdWorldChallengeStatus(value,target).allowed===true;}
+ function canChallengeThirdWorldBoss(value,target=null){return thirdWorldChallengeAllowed(value,target);}
+ function thirdWorldBossProgressSnapshot(value,target=null){
+  const index=bossIndex(value);
+  if(index<0)return null;
+  const core=bossProgressCore(index,target),challenge=thirdWorldChallengeStatus(index,target);
+  return Object.freeze({...core,challengeAllowed:challenge.allowed===true,challengeStatus:challenge});
+ }
+ function thirdWorldTotalRemainingPercent(target=null){return thirdWorldBossAggregateSnapshot(target).remainingPercentSum;}
+ function thirdWorldOverallRemainingPercent(target=null){return thirdWorldBossAggregateSnapshot(target).overallRemainingPercent;}
 
  window.THIRD_WORLD_DATA_VERSION=VERSION;
  window.THIRD_WORLD_BOSS_DATA_VERSION=1;
  window.THIRD_WORLD_BOSS_STAGE_VERSION=1;
  window.THIRD_WORLD_BOSS_ABILITY_DESCRIPTOR_VERSION=1;
+ window.THIRD_WORLD_BOSS_PROGRESS_SNAPSHOT_VERSION=1;
+ window.THIRD_WORLD_BOSS_AGGREGATE_SNAPSHOT_VERSION=1;
+ window.THIRD_WORLD_FIVE_POINT_FRONT_VERSION=1;
+ window.THIRD_WORLD_CHALLENGE_GATE_VERSION=1;
  window.THIRD_WORLD_BOSS_BASE_STATS=BASE_STATS;
  window.THIRD_WORLD_BOSS_STAGE_CONFIG=STAGE_CONFIG;
  window.THIRD_WORLD_BOSS_DEFINITIONS=BOSS_ROWS;
  window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS=ABILITY_DEFS;
+ window.THIRD_WORLD_FIVE_POINT_THRESHOLD=FIVE_POINT_PERCENT;
+ window.THIRD_WORLD_FIVE_POINT_HP_GAP=FIVE_POINT_HP_GAP;
  window.thirdWorldBossIndex=bossIndex;
  window.thirdWorldBoss=thirdWorldBoss;
  window.thirdWorldBossStage=thirdWorldBossStage;
  window.thirdWorldBossStats=thirdWorldBossStats;
  window.thirdWorldBossAbilities=thirdWorldBossAbilities;
+ window.thirdWorldBossProgressSnapshot=thirdWorldBossProgressSnapshot;
+ window.thirdWorldBossAggregateSnapshot=thirdWorldBossAggregateSnapshot;
+ window.thirdWorldChallengeStatus=thirdWorldChallengeStatus;
+ window.thirdWorldChallengeAllowed=thirdWorldChallengeAllowed;
+ window.canChallengeThirdWorldBoss=canChallengeThirdWorldBoss;
+ window.thirdWorldTotalRemainingPercent=thirdWorldTotalRemainingPercent;
+ window.thirdWorldOverallRemainingPercent=thirdWorldOverallRemainingPercent;
 })();
