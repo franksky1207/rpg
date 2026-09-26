@@ -78,7 +78,7 @@
  window.isCombatPresentationActive=function(){return presentation?.active===true;};
  window.getCombatPresentationSnapshot=function(){
   const p=presentation;if(!p?.active)return null;
-  return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,index:p.index,eventCount:p.events.length};
+  return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,index:p.index,eventCount:p.events.length,lockPlayerFullHp:p.lockPlayerFullHp===true};
  };
  window.clearCombatPresentation=function(reason="clear"){
   if(!presentation)return null;
@@ -330,7 +330,8 @@
      }else{
       const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0));
       if(shieldAbsorbed>0)p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);
-      p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
+      if(p.lockPlayerFullHp)p.playerHp=p.playerMaxHp;
+      else p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
      }
      if(evt.absorbed)directPulse(target,"吸收");
      else{
@@ -448,13 +449,14 @@
   window.clearCombatPresentation("replace");
   if(options.logs===false||!result)return null;
   const playerMaxHp=Math.max(1,Math.floor(Number(result?.playerMaxHp)||1));
-  const playerStartHp=Math.max(0,Math.min(playerMaxHp,Math.floor(Number(result?.playerStartHp)||playerMaxHp)));
+  const lockPlayerFullHp=options.lockPlayerFullHp===true;
+  const playerStartHp=lockPlayerFullHp?playerMaxHp:Math.max(0,Math.min(playerMaxHp,Math.floor(Number(result?.playerStartHp)||playerMaxHp)));
   const enemyMaxHp=Math.max(1,Math.floor(Number(result?.e?.hp)||1));
   const enemyStartHp=Math.max(0,Math.min(enemyMaxHp,Math.floor(Number(result?.enemyStartHp??enemyMaxHp)||enemyMaxHp)));
   const events=Array.isArray(result?.events)?result.events.slice():[];
   const wardActivate=events.find(evt=>evt?.type==="mark"&&evt.mark==="ward"&&evt.action==="activate");
   const openingShield=Math.max(0,Math.floor(Number(wardActivate?.shield)||0));
-  presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield,enemyShield:0,enemyShieldMax:0};
+  presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield,enemyShield:0,enemyShieldMax:0,lockPlayerFullHp};
   if(combatScreen())ensureCombatExtras();
   return window.getCombatPresentationSnapshot();
  };
@@ -477,6 +479,7 @@
  hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
+ window.COMBAT_FULL_HP_LOCK_PRESENTATION_VERSION=1;
 
  window.COMBAT_MARK_FX_VERSION=1;
  window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION=1;
