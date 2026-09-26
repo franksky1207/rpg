@@ -55,6 +55,9 @@ const traitDrop=read("traitdrop.js");
 const combatCore=read("combatcore.js");
 const secondWorldRewards=read("secondworldrewards.js");
 const secondWorldMainline=read("secondworldmainline.js");
+const vipGm=read("vipgm.js");
+const civilizationCore=read("civilizationcore.js");
+const benchmarkWorldPhase=read("gmpowerbenchmarkworldphase.js");
 
 const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
@@ -210,7 +213,7 @@ assert(inventoryPendingHarness.api.applyInventoryFocus()===false,"背包定位 p
 assert(inventoryPendingHarness.scrolls.filter(x=>x==="top").length===1,"背包定位 pending：一次 request 只能造成一次實際定位。");
 
 assert(/CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION/.test(contract),"Canonical Integrity Contract V1 export 缺失。");
-assert(/SAVE_SCHEMA_VERSION:15/.test(contract),"Integrity Contract 的 Save Schema 應為 15。");
+assert(/SAVE_SCHEMA_VERSION:16/.test(contract),"Integrity Contract 的 Save Schema 應為 16。");
 assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION:1/.test(contract),"Integrity Contract 必須要求舊存檔支援政策 V1。");
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION:1/.test(contract),"Integrity Contract 必須要求 Offline state normalization V1。");
 assert(/SAVE_FUTURE_VERSION_GUARD_VERSION:1/.test(contract),"Integrity Contract 必須要求未來版本存檔保護 V1。");
@@ -223,6 +226,12 @@ assert(/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION:2/.test(contract),"Integrity Co
 assert(/BOUNTY_BALANCE_VERSION:2/.test(contract)&&/BOUNTY_DIFFICULTY_FORMULA_VERSION:2/.test(contract),"Integrity Contract 的 Bounty 應為 V2。");
 assert(/SECOND_WORLD_ADVENTURE_UI_VERSION:4/.test(contract),"Integrity Contract 的宇宙冒險 UI 應為 V4。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2/.test(contract),"Integrity Contract 的宇宙災厄完整檢查應為 V2。");
+assert(/GM_TEST_THREE_WORLD_CHARACTER_VERSION=1/.test(vipGm)&&/GM_TEST_THIRD_WORLD_GEAR_PREVIEW_VERSION=1/.test(vipGm),"GM 測試角色必須正式支援三紀元與高維預測裝備。");
+assert(/w===3\?\{min:1000,max:2000\}/.test(vipGm)&&/option value="3"/.test(vipGm)&&/高維紀元/.test(vipGm),"GM 高維測試角色必須支援 Lv.1000～2000 與高維紀元選項。");
+assert(/world:3/.test(vipGm)&&/mainStatValue\(type,lv,m,q\)/.test(vipGm)&&/rollAffixes\(type,lv,q,m\)/.test(vipGm),"GM 高維預測裝備必須共用正式裝備屬性／詞條公式。");
+assert(/CIVILIZATION_WORLD_PHASE_DAMAGE_VERSION=1/.test(civilizationCore)&&/if\(world<2\)return 1;/.test(civilizationCore),"文明傷害 owner 必須支援 World2/3 共用、World1 隔離。");
+assert(/GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION/.test(benchmarkWorldPhase),"GM 戰力基準缺少 World Phase adapter。");
+assert(pos("gmpowerbenchmarkworldphase.js")>pos("gmpowerbenchmarkstate.js"),"GM 戰力基準 World Phase adapter 必須在基準與展開狀態 owner 後載入。");
 
 assert(/LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION/.test(compatibilityOwners),"compatibilityowners.js 缺少正式 V1 export。");
 assert(/LEGACY_SAVE_VERSION_VALUE!==13/.test(compatibilityOwners)&&/LEGACY_MAX_LEVEL_VALUE!==500/.test(compatibilityOwners),"compatibilityowners.js 必須固定驗證 legacy Save V13 與舊第一世界上限 500。");
@@ -339,4 +348,4 @@ const specialFightPos=specialFlow.indexOf('const result=await fightFormalSpecial
 assert(specialAlertPos>=0&&specialHealPos>specialAlertPos&&specialFightPos>specialHealPos,"特殊遭遇流程必須為提示完成後回滿血，再進入正式特殊戰鬥。");
 assert(index.includes('src="specialencounter.js?v=20260924-special-heal-order2"'),"index.html 必須載入特殊遭遇回血順序 V2 cache-bust。");
 
-console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, and load order are synchronized.");
+console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, GM World3 test character, and load order are synchronized.");
