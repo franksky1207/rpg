@@ -71,8 +71,9 @@
  if(hadLiveMigrationReport)window.LAST_SAVE_MIGRATION_REPORT=liveMigrationReport;else delete window.LAST_SAVE_MIGRATION_REPORT;
  const universeProbe={level:999,secondWorld:{entered:true},thirdWorld:{entered:false}},higherProbe={level:1000,secondWorld:{entered:true},thirdWorld:{entered:true}};
  const universeAudit=window.levelProgressionAudit(999,universeProbe),higherAudit=window.levelProgressionAudit(1000,higherProbe);
- const auditSemanticsPassed=universeAudit?.world===2&&typeof universeAudit?.sameLevelNormalKills==="number"&&universeAudit?.permanentDamageNeeded===null&&universeAudit?.progressionMetric==="sameLevelNormalKills"&&higherAudit?.world===3&&higherAudit?.expNeed===10000000&&higherAudit?.expPerSameLevelNormal===null&&higherAudit?.sameLevelNormalKills===null&&higherAudit?.permanentDamageNeeded===10000000&&higherAudit?.progressionMetric==="permanentBossHpDamage";
- window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_REPORT={version:1,passed:auditSemanticsPassed,universe:universeAudit,higher:higherAudit,checkedAt:Date.now()};
+ const helperBoundaryPassed=typeof window.thirdWorldExpNeed==="function"&&window.thirdWorldExpNeed(999)===0&&window.thirdWorldExpNeed(1000)===10000000&&window.thirdWorldExpNeed(1999)===10000000&&window.thirdWorldExpNeed(2000)===0;
+ const auditSemanticsPassed=helperBoundaryPassed&&universeAudit?.world===2&&typeof universeAudit?.sameLevelNormalKills==="number"&&universeAudit?.permanentDamageNeeded===null&&universeAudit?.progressionMetric==="sameLevelNormalKills"&&higherAudit?.world===3&&higherAudit?.expNeed===10000000&&higherAudit?.expPerSameLevelNormal===null&&higherAudit?.sameLevelNormalKills===null&&higherAudit?.permanentDamageNeeded===10000000&&higherAudit?.progressionMetric==="permanentBossHpDamage";
+ window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_REPORT={version:1,passed:auditSemanticsPassed,helperBoundaryPassed,universe:universeAudit,higher:higherAudit,checkedAt:Date.now()};
  if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true||auditSemanticsPassed!==true){
   if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true)console.error("[文明戰線] Level migration regression audit failed",window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT);
   if(auditSemanticsPassed!==true)console.error("[文明戰線] Third-world level audit semantics failed",window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_REPORT);
