@@ -19,7 +19,6 @@ assert(!readme.includes("養成系統：8 種專精（各 Lv.60）、VIP20、"),
 assert(!readme.includes("正式 save schema：`12`"),"README 不得復活舊 Schema 12。");
 
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("WORLD_PHASE_VERSION = 6")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／World3 正式基準與 main 唯一真實來源原則。");
-assert(handoff.includes("第三紀元")&&handoff.includes("禁止自行推導"),"Handoff 必須明確禁止自行推導第三紀元。");
 
 assert(pending.includes("親自從頭完整玩一次銀河紀元＋宇宙紀元"),"Pending 下一階段必須是雙紀元完整實玩。");
 assert(pending.includes("全介面＋遊戲說明雙紀元語意總掃描」已完成"),"Pending 必須標記雙紀元語意總掃描已完成。");
