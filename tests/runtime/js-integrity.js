@@ -242,7 +242,7 @@ assert(!/level100ExpFactor/.test(levelAudit),"通用等級 audit 不得復活 le
 const productionFiles=files.filter(file=>!file.startsWith("tests"+path.sep));
 const basename=file=>path.basename(file);
 const maxLevelConsumers=productionFiles.filter(file=>/\bMAX_LEVEL\b/.test(read(file))).map(basename).sort();
-const allowedMaxLevelConsumers=["compatibilityowners.js","dungeonbounty.js","dungeonui.js","engine.js","enhancementcore.js","enhancementintegrity.js","gmhub.js","gmtools.js","levelprogression.js","mainminimalmode.js","offlineprogress.js","savemigration.js","traitdrop.js","ui.js"].sort();
+const allowedMaxLevelConsumers=["compatibilityowners.js","dungeonbounty.js","dungeonui.js","engine.js","enhancementcore.js","enhancementintegrity.js","gmhub.js","gmtools.js","integritycontract.js","levelprogression.js","levelprogressionaudit.js","mainminimalmode.js","offlineprogress.js","savemigration.js","traitdrop.js","ui.js"].sort();
 assert(JSON.stringify(maxLevelConsumers)===JSON.stringify(allowedMaxLevelConsumers),"MAX_LEVEL consumer audit 異常："+maxLevelConsumers.join(", "));
 const saveVersionConsumers=productionFiles.filter(file=>/\bSAVE_VERSION\b/.test(read(file))).map(basename).sort();
 const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js","ui.js"].sort();
