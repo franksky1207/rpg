@@ -5,6 +5,12 @@
   if(target&&typeof target==="object")return target;
   try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(e){return null;}
  }
+ function auditWorld(target){
+  const s=auditTarget(target);
+  const raw=typeof window.currentLevelWorldPhase==="function"?window.currentLevelWorldPhase(s):typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):null;
+  const world=Number(raw);
+  return Number.isInteger(world)?world:null;
+ }
 
  window.levelExpFactor=window.expProgressionFactor;
  window.sameLevelNormalKillsToLevel=function(level,target=null){
@@ -18,13 +24,15 @@
   const l=Math.max(1,Math.floor(Number(level)||1));
   const s=auditTarget(target);
   const need=typeof window.effectiveExpNeed==="function"?window.effectiveExpNeed(l,s):typeof expNeed==="function"?expNeed(l):0;
-  const world=typeof window.currentLevelWorldPhase==="function"?window.currentLevelWorldPhase(s):typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):null;
+  const world=auditWorld(s),thirdWorld=world===3;
   return {
    level:l,
-   world:Number.isInteger(Number(world))?Number(world):null,
-   expPerSameLevelNormal:sameExp(l),
+   world,
+   expPerSameLevelNormal:thirdWorld?null:sameExp(l),
    expNeed:Math.max(0,Number(need)||0),
-   sameLevelNormalKills:window.sameLevelNormalKillsToLevel(l,s),
+   sameLevelNormalKills:thirdWorld?null:window.sameLevelNormalKillsToLevel(l,s),
+   permanentDamageNeeded:thirdWorld?Math.max(0,Number(need)||0):null,
+   progressionMetric:thirdWorld?"permanentBossHpDamage":"sameLevelNormalKills",
    baseHp:baseHP(l),
    baseAtk:baseATK(l),
    baseDef:baseDEF(l),
@@ -49,19 +57,25 @@
    levelsGained++;
   }
   if(current>=cap){current=cap;currentExp=0;}
-  const world=typeof window.currentLevelWorldPhase==="function"?window.currentLevelWorldPhase(s):typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):null;
-  return {startLevel:Math.max(1,Math.floor(Number(level)||1)),startExp:Math.max(0,Number(exp)||0),gain:added,level:current,exp:Math.max(0,Math.floor(currentExp)),levelsGained,cap,atCap:current>=cap,world:Number.isInteger(Number(world))?Number(world):null};
+  const world=auditWorld(s);
+  return {startLevel:Math.max(1,Math.floor(Number(level)||1)),startExp:Math.max(0,Number(exp)||0),gain:added,level:current,exp:Math.max(0,Math.floor(currentExp)),levelsGained,cap,atCap:current>=cap,world};
  };
 
  window.LEVEL_PROGRESSION_AUDIT_VERSION=VERSION;
  window.LEVEL_PROGRESSION_AUDIT_WORLD_PHASE_VERSION=1;
  window.LEVEL_PROGRESSION_TRANSITION_AUDIT_VERSION=1;
+ window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_VERSION=1;
  window.LEVEL_MIGRATION_REGRESSION_AUDIT_VERSION=1;
  const hadLiveMigrationReport=Object.prototype.hasOwnProperty.call(window,"LAST_SAVE_MIGRATION_REPORT"),liveMigrationReport=window.LAST_SAVE_MIGRATION_REPORT;
  window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT=typeof window.runLevelMigrationRegression==="function"?window.runLevelMigrationRegression():{version:1,passed:false,errors:[{code:"MIGRATION_REGRESSION_OWNER_MISSING"}],cases:[],checkedAt:Date.now()};
  if(hadLiveMigrationReport)window.LAST_SAVE_MIGRATION_REPORT=liveMigrationReport;else delete window.LAST_SAVE_MIGRATION_REPORT;
- if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true){
-  console.error("[文明戰線] Level migration regression audit failed",window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT);
+ const universeProbe={level:999,secondWorld:{entered:true},thirdWorld:{entered:false}},higherProbe={level:1000,secondWorld:{entered:true},thirdWorld:{entered:true}};
+ const universeAudit=window.levelProgressionAudit(999,universeProbe),higherAudit=window.levelProgressionAudit(1000,higherProbe);
+ const auditSemanticsPassed=universeAudit?.world===2&&typeof universeAudit?.sameLevelNormalKills==="number"&&universeAudit?.permanentDamageNeeded===null&&universeAudit?.progressionMetric==="sameLevelNormalKills"&&higherAudit?.world===3&&higherAudit?.expNeed===10000000&&higherAudit?.expPerSameLevelNormal===null&&higherAudit?.sameLevelNormalKills===null&&higherAudit?.permanentDamageNeeded===10000000&&higherAudit?.progressionMetric==="permanentBossHpDamage";
+ window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_REPORT={version:1,passed:auditSemanticsPassed,universe:universeAudit,higher:higherAudit,checkedAt:Date.now()};
+ if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true||auditSemanticsPassed!==true){
+  if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true)console.error("[文明戰線] Level migration regression audit failed",window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT);
+  if(auditSemanticsPassed!==true)console.error("[文明戰線] Third-world level audit semantics failed",window.THIRD_WORLD_LEVEL_AUDIT_SEMANTICS_REPORT);
   window.LEVEL_PROGRESSION_AUDIT_VERSION=0;
  }
 })();
