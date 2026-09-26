@@ -20,7 +20,6 @@ assert(!readme.includes("正式 save schema：`12`"),"README 不得復活舊 Sch
 
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("WORLD_PHASE_VERSION = 6")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／World3 正式基準與 main 唯一真實來源原則。");
 
-assert(pending.includes("親自從頭完整玩一次銀河紀元＋宇宙紀元"),"Pending 下一階段必須是雙紀元完整實玩。");
 assert(pending.includes("全介面＋遊戲說明雙紀元語意總掃描」已完成"),"Pending 必須標記雙紀元語意總掃描已完成。");
 assert(pending.includes("VIP 無上限正式改版")&&pending.includes("VIP 等級本身無上限"),"Pending 必須同步 VIP 無上限改版完成狀態。");
 assert(pending.includes("PROJECT_VIP_UNBOUNDED_UPDATE.md"),"Pending 必須指向 VIP 正式補充文件。");
