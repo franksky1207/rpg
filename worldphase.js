@@ -209,15 +209,22 @@
     state=backup;
     return {ok:false,reason:"save-failed",requirements};
    }
-   if(typeof config.finalizeAfterSave==="function")config.finalizeAfterSave(state,requirements);
-   const marker=String(config.sessionMarker||"").trim();
-   if(marker){try{sessionStorage.setItem(marker,"1");}catch(e){}}
-   if(config.reload!==false)setTimeout(()=>{try{location.reload();}catch(e){}},0);
-   return {ok:true,reloading:config.reload!==false,requirements};
   }catch(error){
    state=backup;
    return {ok:false,reason:"transition-failed",error:String(error?.message||error),requirements};
   }
+
+  let postCommitError="";
+  try{
+   if(typeof config.finalizeAfterSave==="function")config.finalizeAfterSave(state,requirements);
+  }catch(error){
+   postCommitError=String(error?.message||error);
+   console.error("[文明戰線] World transition committed, but post-commit finalization failed.",error);
+  }
+  const marker=String(config.sessionMarker||"").trim();
+  if(marker){try{sessionStorage.setItem(marker,"1");}catch(e){}}
+  if(config.reload!==false)setTimeout(()=>{try{location.reload();}catch(e){}},0);
+  return {ok:true,reloading:config.reload!==false,requirements,postCommitError};
  }
  function enterSecondWorld(){
   return runWorldTransition({
@@ -255,7 +262,7 @@
  window.isWorldEntered=isWorldEntered;
  window.worldProgressionEnabled=worldProgressionEnabled;
  window.worldPhaseSnapshot=worldPhaseSnapshot;
- window.WORLD_PHASE_SAFE_TRANSITION_VERSION=1;
+ window.WORLD_PHASE_SAFE_TRANSITION_VERSION=2;
  window.runWorldTransition=runWorldTransition;
  window.WORLD_PHASE_PRIMARY_RESOURCE_VERSION=2;
  window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1;
