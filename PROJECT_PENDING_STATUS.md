@@ -1,23 +1,31 @@
 # 《文明戰線》目前待辦狀態
 
-更新日期：2026-09-26  
+更新日期：2026-09-27  
 分支：`main`
 
-> 本檔只記錄**真正尚未完成或刻意保留未定**的工作。若本檔、舊 handoff、舊對話或歷史文件與 current `main` 或較新的 `PROJECT_HANDOFF.md` 衝突，現行實作先以 current `main` 為準；尚未實作的第三紀元設計以最新 `PROJECT_HANDOFF.md` 第13節為準。
+> 本檔只記錄**真正尚未完成或刻意保留未定**的工作。若本檔、舊 handoff、舊對話或歷史文件與 current `main` 或較新的 `PROJECT_HANDOFF.md` 衝突，**一律以 current `main` 為準**；尚未實作但已確認的第三紀元設計，以最新 `PROJECT_HANDOFF.md` 為準。
 
 ## 目前狀態
 
 銀河紀元與宇宙紀元目前均已進入「可完整實際遊玩／封版前體驗」階段。
 
+第三紀元「高維紀元」目前已不是純設計階段：**foundation、Schema16、World Phase、persistent state、Lv1000～2000 等級 owner、十王 data／5pp／階段規則、第三紀元入場條件、部分 GM 測試基礎均已正式進入 current `main` runtime**；但正式高維戰鬥、永久削血結算、loot、offline、玩家 UI 等完整遊戲迴圈仍尚未完成。
+
 已完成的重要正式項目包括：
 
 - Integrity／CI 信任鏈與 owner 收斂。
 - Future save fail-closed、Migration／Offline normalization整理。
+- `SAVE_SCHEMA_VERSION = 16`，第三紀元 persistent state 已正式納入 save／migration。
+- World Phase 已正式擴充為銀河／宇宙／高維三紀元。
+- 第三紀元 Lv1000～2000 與固定 10,000,000 EXP／級 owner 已完成。
+- 第三紀元十王 metadata、階段規則、5pp、總進度、稱號門檻 data owner 已完成。
+- 第三紀元七項入場條件與 entry reconciliation 已完成。
+- GM 測試角色已支援高維紀元 Lv1000～2000，既有戰力基準已接上 World Phase adapter。
 - VIP 無上限正式改版：VIP20為特權畢業、VIP等級本身無上限。
 - GM「主線鎖血」與正式呈現 owner 收斂。
 - 虛空幻境 V2 線性公式。
 - 銀河／宇宙地圖、災厄、戰線紀錄回顧。
-- 雙紀元介面與遊戲說明語意整理。
+- 雙紀元既有介面與遊戲說明語意整理。
 
 使用者目前仍會親自從頭完整實玩銀河＋宇宙；後續優先處理實玩真正遇到的 bug、流程、UI、平衡與文案，不為了程式碼更漂亮而主動重寫穩定系統。
 
@@ -35,13 +43,23 @@
 
 # 第三紀元「高維紀元」
 
-第三紀元大型系統骨架已基本完成設計，但**尚未實作到 `main` runtime／save**。
+第三紀元目前已完成正式 foundation 並進入 current `main` runtime／save；**不能再寫成「尚未實作到 runtime／save」**。
 
-完整設計以 `PROJECT_HANDOFF.md` 第13節為準。本檔不再複製完整規格，只保留「哪些已定、哪些真的還沒定」。
+目前正式 runtime 基準包括：
+
+- `SAVE_SCHEMA_VERSION = 16`。
+- `worldphase.js` 已正式支援第三紀元。
+- `thirdworldphase.js` 已正式負責 persistent shape、七項入場條件與 entry reconciliation。
+- `thirdworlddata.js` 已正式負責十王 metadata、能力 descriptor、階段、5pp、總進度與高維稱號門檻。
+- `levelprogression.js` 已正式負責第三紀元 Lv1000～2000 與固定 10,000,000 EXP／級。
+- `civilizationcore.js` 已讓 World2／World3 共用文明最終傷害 owner。
+- GM 測試角色與既有戰力基準已具備 World3 foundation／adapter。
+
+完整已完成狀態、現行公式與後續施工順序，以最新 `PROJECT_HANDOFF.md` 為準。本檔只保留真正 pending／未定項目，不再把已完成 foundation 重列成待辦。
 
 ## 已確認，不得再誤列為 pending
 
-以下均已定案：
+以下均已定案；其中 foundation／data owner 部分已進 runtime，其餘仍依後述 pending 清單逐批實作：
 
 - 正式名稱：**高維紀元**。
 - 入場：Lv1000、宇宙主線完成、+40×5、文明Lv10、VIP≥20、8專精×60、10印記×10。
@@ -89,13 +107,35 @@
 - 懸賞第三紀元關閉；鏡像／虛空保留；不新增第三紀元文明災厄。
 - GM測試方向已定：整合既有角色能力測試／戰力基準；可選高維紀元、Lv1000～2000、界弦核心、十王與100→10%階段，另可模擬100死連戰。
 - GM管理方向已定：只調根資料（entered／completed、角色等級、維度之弦、界弦核心、十王HP與preset），派生狀態全部自動重算。
-- 第三紀元persistent state方向已定：`thirdWorld`只存entered／completed、維度之弦、核心Lv、十王currentHp、story里程碑；王階段／能力／5pp／暫態連戰等不存。
-- 正式加入第三紀元persistent state時預計 `SAVE_SCHEMA_VERSION 15→16`；runtime目前仍是15。
-- 預定owner：`thirdworldphase.js`、`thirdworlddata.js`、`thirdworldcombat.js`、`thirdworldprogress.js`、`thirdworldui.js`；`savemigration.js`只管schema／load pipeline；`worldphaseui.js`優先擴充共用紀元突破UI。
+- 第三紀元 persistent state 已正式採 `thirdWorld`，只持久化 entered／completed、entryVersion、維度之弦、核心Lv、十王currentHp、story里程碑；王階段／能力／5pp／暫態連戰等不存。
+- `savemigration.js` 只管 schema／load pipeline；第三紀元 persistent state 已正式採 Schema16。
+
+## 目前真正尚未完成的第三紀元實作
+
+以下才是 current `main` 真正尚未完成的 runtime／玩家流程：
+
+- `thirdworldcombat.js` 正式高維戰鬥 core。
+- Boss 端能力真正 combat execution。
+- 正式永久削血 settlement。
+- 維度之弦正式發放。
+- World3 正式 EXP settlement。
+- World3 正式 loot／drop。
+- 100 死連戰。
+- 界弦核心升級／死亡壓制 runtime。
+- World3 正式 offline loot settlement。
+- World3 玩家高維戰線 UI。
+- 已死十王正式回顧模式。
+- 高維稱號正式 grant 到 `playertitlecore.js`。
+- 高維劇情 trigger framework。
+- 十王全滅最終事件。
+- 第三紀元競技場正式規則。
+- 完整高維 GM benchmark／管理頁。
+
+後續施工順序以最新 `PROJECT_HANDOFF.md` 第5～第10批規劃為準；不得因本檔舊文字把 data owner 誤認為正式 combat／settlement 已完成。
 
 ## 目前真正尚未定案的大項
 
-目前只保留以下三塊，不再把已定內容列回 pending：
+以下屬「規格仍未定」，與上面的「已定但尚未實作」要分開：
 
 1. **高維序章＋10段主劇情的具體文本／事件內容。**
 2. **十王全滅後的最終通關事件／最終畫面，以及是否銜接低維輪迴／轉生。**
@@ -113,9 +153,10 @@
 
 ## 實作限制
 
-- 第三紀元目前仍是設計，不得把它宣稱為 current runtime。
-- 正式實作前必須重新讀 current `main`、`PROJECT_HANDOFF.md` 與相關 canonical owner。
+- 第三紀元 foundation 已是 current runtime；不得再宣稱整個第三紀元仍只有設計。
+- 正式實作每一批前仍必須重新讀 current `main`、`PROJECT_HANDOFF.md` 與相關 canonical owner。
 - 不得另造 duplicate save state、settlement、loot、offline、story、combat pipeline。
+- 能共用第一／第二紀元 owner 的規則，優先共用，不建立平行第三套系統。
 - 使用者說「先討論／先檢查／先不要修改」不可寫；使用者說「做／修改／執行／第N批」即可直接改 `main`。
 - JS／CSS改動必須更新 `index.html` cache-bust；每批修改後重新讀main、compare base→head並執行對應Integrity。
 
@@ -124,5 +165,6 @@
 # 目前真正 Pending 摘要
 
 1. 使用者從頭完整實玩銀河＋宇宙，期間只處理實際問題。
-2. 第三紀元只剩：高維序章／10段主劇情、最終通關事件、第三紀元競技場。
-3. 其他第三紀元大型系統設計已完成，不得再被舊文件的「未定」敘述覆蓋。
+2. 第三紀元 foundation／Schema16／World Phase／等級 owner／十王 data owner／入場條件／GM 基礎已進 current `main`，不得再列回 pending。
+3. 第三紀元目前真正待實作的是：正式 combat → settlement／EXP／維度之弦 → 100死連戰／界弦核心 → loot／offline → 玩家 UI／回顧／稱號／劇情 trigger → 完整 GM 工具等後續批次。
+4. 真正尚未定案的大項仍只有：高維具體劇情文本、十王全滅最終事件／是否轉生、第三紀元競技場正式規則。
