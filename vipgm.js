@@ -9,9 +9,19 @@
   try{return typeof structuredClone==="function"?structuredClone(value):JSON.parse(JSON.stringify(value));}
   catch(e){try{return JSON.parse(JSON.stringify(value));}catch(_){return value;}}
  }
- function formalWorld(){return state?.secondWorld?.entered===true?2:1;}
- function clampWorld(value){return Number(value)===2?2:1;}
- function levelRange(world=window.gmTestWorld){return clampWorld(world)===2?{min:500,max:1000}:{min:1,max:500};}
+ function formalWorld(){
+  if(typeof window.currentWorldPhase==="function"){
+   const world=Number(window.currentWorldPhase(state));
+   if(world===1||world===2||world===3)return world;
+  }
+  return state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;
+ }
+ function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
+ function worldLabel(world=window.gmTestWorld){return clampWorld(world)===3?"高維紀元":clampWorld(world)===2?"宇宙紀元":"銀河紀元";}
+ function levelRange(world=window.gmTestWorld){
+  const w=clampWorld(world);
+  return w===3?{min:1000,max:2000}:w===2?{min:500,max:1000}:{min:1,max:500};
+ }
  function clampTestLevel(value,world=window.gmTestWorld){
   const range=levelRange(world),n=Math.floor(Number(value)||range.min);
   return Math.max(range.min,Math.min(range.max,n));
@@ -30,9 +40,20 @@
   MAPS.forEach((map,index)=>{if((Number(map?.min)||1)<=lv)best=index;});
   return best;
  }
+ function makeThirdWorldTestEquipment(level,type){
+  const lv=Math.max(1000,Math.min(2000,Math.floor(Number(level)||1000))),q=5;
+  if(typeof QUALITY==="undefined"||!QUALITY[q]||typeof mainStatForType!=="function"||typeof mainStatValue!=="function"||typeof rollAffixes!=="function"||typeof addItemStat!=="function")return null;
+  const m=QUALITY[q].m,mainStat=mainStatForType(type),mainValue=mainStatValue(type,lv,m,q),affixes=rollAffixes(type,lv,q,m);
+  const item={id:"gm3-"+Date.now().toString(36)+Math.random().toString(36).slice(2),name:`高維預測・${equipmentLabel(type)}`,level:lv,q,type,world:3,mainStat:{stat:mainStat,value:mainValue},affixes,sell:0,buy:0};
+  addItemStat(item,mainStat,mainValue);
+  affixes.forEach(a=>addItemStat(item,a.stat,a.value));
+  return item;
+ }
  function generateTestEquipment(world,level){
   const w=clampWorld(world),lv=clampTestLevel(level,w),out={};
-  if(w===2){
+  if(w===3){
+   equipmentSlots().forEach(type=>{out[type]=makeThirdWorldTestEquipment(lv,type);});
+  }else if(w===2){
    const bossIndex=typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(lv):-1;
    equipmentSlots().forEach(type=>{
     out[type]=typeof window.makeSecondWorldEquipmentForBoss==="function"&&bossIndex>=0
@@ -161,11 +182,11 @@
  };
  window.gmTestCharacterLabel=function(){
   const source=window.gmTestEquipmentSource==="synced"?"正式角色實穿裝備":"同級神話預測裝備";
-  return `${window.gmTestWorld===2?"宇宙紀元":"銀河紀元"}｜Lv.${window.gmTestLevel}｜${source}`;
+  return `${worldLabel()}｜Lv.${window.gmTestLevel}｜${source}`;
  };
  window.gmTestCharacterBaseHtml=function(){
   const range=levelRange();
-  return `<div class="muted gm-hub-note">GM 測試角色與正式進度解鎖脫鉤。手動切換紀元或等級時，會使用正式裝備公式重新隨機生成五件「同等級神話裝備」；不修改正式角色。</div><div class="controls" style="align-items:end"><label>測試紀元<br><select id="gmTestCharacterWorld" class="btn" onchange="gmSetTestWorld(this.value)"><option value="1" ${window.gmTestWorld===1?"selected":""}>銀河紀元</option><option value="2" ${window.gmTestWorld===2?"selected":""}>宇宙紀元</option></select></label><label>測試等級<br><input id="gmTestCharacterLevel" class="btn" type="number" min="${range.min}" max="${range.max}" step="1" value="${window.gmTestLevel}" onchange="gmSetTestLevel(this.value)"></label><button class="btn" type="button" onclick="gmRegenerateTestEquipment()">重新隨機神話裝備</button><span id="gmTestCharacterBaseInfo" class="muted">${window.gmTestCharacterLabel()}</span></div><div id="gmTestCharacterEquipment">${testEquipmentSummaryHtml()}</div>`;
+  return `<div class="muted gm-hub-note">GM 測試角色與正式進度解鎖脫鉤。手動切換紀元或等級時，會使用共用正式裝備屬性公式重新隨機生成五件「同等級神話裝備」；不修改正式角色。</div><div class="controls" style="align-items:end"><label>測試紀元<br><select id="gmTestCharacterWorld" class="btn" onchange="gmSetTestWorld(this.value)"><option value="1" ${window.gmTestWorld===1?"selected":""}>銀河紀元</option><option value="2" ${window.gmTestWorld===2?"selected":""}>宇宙紀元</option><option value="3" ${window.gmTestWorld===3?"selected":""}>高維紀元</option></select></label><label>測試等級<br><input id="gmTestCharacterLevel" class="btn" type="number" min="${range.min}" max="${range.max}" step="1" value="${window.gmTestLevel}" onchange="gmSetTestLevel(this.value)"></label><button class="btn" type="button" onclick="gmRegenerateTestEquipment()">重新隨機神話裝備</button><span id="gmTestCharacterBaseInfo" class="muted">${window.gmTestCharacterLabel()}</span></div><div id="gmTestCharacterEquipment">${testEquipmentSummaryHtml()}</div>`;
  };
 
  window.gmUseCurrentTestStatus=function(){
@@ -224,6 +245,8 @@
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
  window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
+ window.GM_TEST_THREE_WORLD_CHARACTER_VERSION=1;
+ window.GM_TEST_THIRD_WORLD_GEAR_PREVIEW_VERSION=1;
 })();
 
 window.GM_TEST_RESULT_INVALIDATION_VERSION=1;
