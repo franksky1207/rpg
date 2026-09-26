@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const BOSS_COUNT=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||10));
  const BOSS_MAX_HP=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1100000000));
  const FIVE_POINT_PERCENT=5;
@@ -45,6 +45,18 @@
   Object.freeze({id:"ignore",name:"無視",unlockRemainingPercent:20,unlockStage:8,triggerChance:5,ignorePlayerDefensePercent:100}),
   Object.freeze({id:"battleSpirit",name:"戰意",unlockRemainingPercent:10,unlockStage:9,battleStartTriggerChance:75,atkPercentPerTurn:2,maxStacks:10})
  ]);
+ const TITLE_ROWS=Object.freeze([
+  {id:"higher-dimensional-title-01",name:"破界初臨",tier:1,thresholdRemainingPercentSum:900},
+  {id:"higher-dimensional-title-02",name:"維外行者",tier:2,thresholdRemainingPercentSum:800},
+  {id:"higher-dimensional-title-03",name:"超界之軀",tier:3,thresholdRemainingPercentSum:700},
+  {id:"higher-dimensional-title-04",name:"高維真形",tier:4,thresholdRemainingPercentSum:600},
+  {id:"higher-dimensional-title-05",name:"萬維共鳴",tier:5,thresholdRemainingPercentSum:500},
+  {id:"higher-dimensional-title-06",name:"界律共主",tier:6,thresholdRemainingPercentSum:400},
+  {id:"higher-dimensional-title-07",name:"維序凌駕",tier:7,thresholdRemainingPercentSum:300},
+  {id:"higher-dimensional-title-08",name:"超維至尊",tier:8,thresholdRemainingPercentSum:200},
+  {id:"higher-dimensional-title-09",name:"諸維唯一",tier:9,thresholdRemainingPercentSum:100},
+  {id:"higher-dimensional-title-10",name:"萬維之上",tier:10,thresholdRemainingPercentSum:0,exactZero:true}
+ ].map(row=>Object.freeze({...row,series:"higher-dimensional"})));
 
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
@@ -98,11 +110,7 @@
   if(!boss)return null;
   const stage=thirdWorldBossStage(currentHp,boss.maxHp);
   const stats={
-   index:boss.index,
-   id:boss.id,
-   name:boss.name,
-   maxHp:boss.maxHp,
-   stage,
+   index:boss.index,id:boss.id,name:boss.name,maxHp:boss.maxHp,stage,
    atk:BASE_STATS.atk+stage*STAGE_CONFIG.atkPerStage,
    def:BASE_STATS.def+stage*STAGE_CONFIG.defPerStage,
    crit:BASE_STATS.crit+stage*STAGE_CONFIG.critPointsPerStage,
@@ -120,10 +128,7 @@
   const boss=thirdWorldBoss(value);
   if(!boss)return null;
   const stage=thirdWorldBossStage(currentHp,boss.maxHp);
-  return Object.freeze(Object.fromEntries(ABILITY_DEFS.map(def=>[
-   def.id,
-   Object.freeze({...def,active:stage>=def.unlockStage})
-  ])));
+  return Object.freeze(Object.fromEntries(ABILITY_DEFS.map(def=>[def.id,Object.freeze({...def,active:stage>=def.unlockStage})])));
  }
  function bossStoredHp(index,target=null){
   const boss=BOSS_ROWS[index];
@@ -155,12 +160,8 @@
   const alive=bosses.filter(row=>row.alive),defeated=bosses.filter(row=>row.defeated);
   const remainingPercentSum=bosses.reduce((sum,row)=>sum+row.remainingPercent,0);
   return Object.freeze({
-   bossCount:bosses.length,
-   aliveCount:alive.length,
-   defeatedCount:defeated.length,
-   currentHp,maxHp,
-   overallRemainingPercent:maxHp>0?currentHp/maxHp*100:0,
-   remainingPercentSum,
+   bossCount:bosses.length,aliveCount:alive.length,defeatedCount:defeated.length,currentHp,maxHp,
+   overallRemainingPercent:maxHp>0?currentHp/maxHp*100:0,remainingPercentSum,
    aliveBossIndexes:Object.freeze(alive.map(row=>row.index)),
    defeatedBossIndexes:Object.freeze(defeated.map(row=>row.index)),
    bosses:Object.freeze(bosses.slice())
@@ -188,15 +189,10 @@
   const gapHp=Math.max(0,highestHp-targetBoss.currentHp),gapPoints=gapHp/BOSS_MAX_HP*100;
   const allowed=blockers.length===0;
   return Object.freeze({
-   allowed,challengeable:allowed,reason:allowed?"":"five-point-front",
-   targetIndex:index,target:targetBoss,aliveCount:alive.length,
-   targetRemainingPercent:targetBoss.remainingPercent,
-   highestAliveRemainingPercent:highestHp/BOSS_MAX_HP*100,
-   gapHp,gapPoints,
-   highestAliveBossIndexes:Object.freeze(highestAlive.map(row=>row.index)),
-   blockingBossIndexes:Object.freeze(blockers.map(row=>row.index)),
-   fivePointThreshold:FIVE_POINT_PERCENT,
-   fivePointHpGap:FIVE_POINT_HP_GAP
+   allowed,challengeable:allowed,reason:allowed?"":"five-point-front",targetIndex:index,target:targetBoss,aliveCount:alive.length,
+   targetRemainingPercent:targetBoss.remainingPercent,highestAliveRemainingPercent:highestHp/BOSS_MAX_HP*100,gapHp,gapPoints,
+   highestAliveBossIndexes:Object.freeze(highestAlive.map(row=>row.index)),blockingBossIndexes:Object.freeze(blockers.map(row=>row.index)),
+   fivePointThreshold:FIVE_POINT_PERCENT,fivePointHpGap:FIVE_POINT_HP_GAP
   });
  }
  function thirdWorldChallengeAllowed(value,target=null){return thirdWorldChallengeStatus(value,target).allowed===true;}
@@ -209,6 +205,58 @@
  }
  function thirdWorldTotalRemainingPercent(target=null){return thirdWorldBossAggregateSnapshot(target).remainingPercentSum;}
  function thirdWorldOverallRemainingPercent(target=null){return thirdWorldBossAggregateSnapshot(target).overallRemainingPercent;}
+ function thirdWorldTitleTierForRemainingPercentSum(value){
+  const total=clamp(Number(value)||0,0,BOSS_COUNT*100);
+  if(total<=0)return 10;
+  for(let index=8;index>=0;index--){const def=TITLE_ROWS[index];if(total<=def.thresholdRemainingPercentSum)return def.tier;}
+  return 0;
+ }
+ function thirdWorldTitleTier(target=null){
+  if(typeof target==="number")return thirdWorldTitleTierForRemainingPercentSum(target);
+  return thirdWorldTitleTierForRemainingPercentSum(thirdWorldTotalRemainingPercent(target));
+ }
+ function thirdWorldTitleDefinition(tier){
+  const value=finiteWhole(tier,0);
+  return TITLE_ROWS.find(row=>row.tier===value)||null;
+ }
+ function thirdWorldCurrentTitleDefinition(target=null){return thirdWorldTitleDefinition(thirdWorldTitleTier(target));}
+ function makeThirdWorldProbeState(hps){
+  const rows=Array.from({length:BOSS_COUNT},(_,index)=>({currentHp:clamp(finiteWhole(hps?.[index],BOSS_MAX_HP),0,BOSS_MAX_HP)}));
+  return {secondWorld:{entered:true},thirdWorld:{entered:true,bosses:rows}};
+ }
+ function validateThirdWorldData(){
+  const errors=[],fail=(code,data=null)=>errors.push({code,data});
+  try{
+   if(BOSS_COUNT!==10||BOSS_ROWS.length!==10)fail("BOSS_COUNT",{BOSS_COUNT,rows:BOSS_ROWS.length});
+   if(new Set(BOSS_ROWS.map(row=>row.id)).size!==10)fail("BOSS_ID_UNIQUE");
+   if(new Set(BOSS_ROWS.map(row=>row.name)).size!==10)fail("BOSS_NAME_UNIQUE");
+   if(BOSS_MAX_HP!==1100000000||BOSS_ROWS.some(row=>row.maxHp!==BOSS_MAX_HP))fail("BOSS_MAX_HP",BOSS_MAX_HP);
+   if(BASE_STATS.atk!==15000||BASE_STATS.def!==10000||BASE_STATS.crit!==10||BASE_STATS.dodge!==10)fail("BASE_STATS",BASE_STATS);
+   const hp900001=Math.floor(BOSS_MAX_HP*900001/1000000),hp90=Math.floor(BOSS_MAX_HP*90/100);
+   if(thirdWorldBossStage(BOSS_MAX_HP)!==0||thirdWorldBossStage(hp900001)!==0||thirdWorldBossStage(hp90)!==1||thirdWorldBossStage(BOSS_MAX_HP*.8)!==2||thirdWorldBossStage(BOSS_MAX_HP*.1)!==9||thirdWorldBossStage(0)!==9)fail("STAGE_BOUNDARY");
+   const stage9=thirdWorldBossStats(4,BOSS_MAX_HP*.1);
+   if(stage9?.atk!==20400||stage9?.def!==20800||stage9?.crit!==28||stage9?.dodge!==28||stage9?.comboRate!==40)fail("STAGE9_STATS",stage9);
+   const specChecks=[thirdWorldBossStats(0)?.atk===17250,thirdWorldBossStats(1)?.def===11500,thirdWorldBossStats(2)?.crit===16,thirdWorldBossStats(3)?.dodge===16,thirdWorldBossStats(5)?.penetrationRate===40,thirdWorldBossStats(6)?.counterRate===40,thirdWorldBossStats(7)?.drainRate===40,thirdWorldBossStats(8)?.initiativeBonusPercent===80,thirdWorldBossStats(9)?.atk===16200&&thirdWorldBossStats(9)?.def===10800];
+   if(specChecks.some(value=>value!==true))fail("BOSS_SPECIALIZATION",specChecks);
+   const at70=thirdWorldBossAbilities(0,BOSS_MAX_HP*.7),above70=thirdWorldBossAbilities(0,Math.floor(BOSS_MAX_HP*.7)+1),at10=thirdWorldBossAbilities(0,BOSS_MAX_HP*.1);
+   if(at70?.composure?.active!==true||at70?.suppression?.active!==false||above70?.composure?.active!==false||Object.values(at10||{}).some(row=>row.active!==true))fail("ABILITY_BOUNDARY",{at70,above70,at10});
+   const full=makeThirdWorldProbeState(Array(10).fill(BOSS_MAX_HP)),fullAgg=thirdWorldBossAggregateSnapshot(full);
+   if(fullAgg.currentHp!==11000000000||fullAgg.maxHp!==11000000000||fullAgg.aliveCount!==10||fullAgg.defeatedCount!==0||fullAgg.remainingPercentSum!==1000||fullAgg.overallRemainingPercent!==100)fail("AGGREGATE_FULL",fullAgg);
+   const hp951=Math.floor(BOSS_MAX_HP*951/1000),hp950=Math.floor(BOSS_MAX_HP*95/100);
+   const p951=makeThirdWorldProbeState([hp951,...Array(9).fill(BOSS_MAX_HP)]),p950=makeThirdWorldProbeState([hp950,...Array(9).fill(BOSS_MAX_HP)]);
+   if(thirdWorldChallengeAllowed(0,p951)!==true||thirdWorldChallengeAllowed(0,p950)!==false||thirdWorldChallengeStatus(0,p950)?.reason!=="five-point-front")fail("FIVE_POINT_BOUNDARY",{p951:thirdWorldChallengeStatus(0,p951),p950:thirdWorldChallengeStatus(0,p950)});
+   const oneDead=makeThirdWorldProbeState([0,...Array(9).fill(hp950)]),oneDeadStatus=thirdWorldChallengeStatus(1,oneDead);
+   if(oneDeadStatus.allowed!==true||oneDeadStatus.blockingBossIndexes.length!==0)fail("DEAD_EXCLUDED_FROM_FIVE_POINT",oneDeadStatus);
+   const last=makeThirdWorldProbeState([...Array(9).fill(0),1]),lastStatus=thirdWorldChallengeStatus(9,last);
+   if(lastStatus.allowed!==true||lastStatus.reason!=="last-survivor")fail("LAST_SURVIVOR",lastStatus);
+   const allDead=makeThirdWorldProbeState(Array(10).fill(0)),deadAgg=thirdWorldBossAggregateSnapshot(allDead);
+   if(deadAgg.currentHp!==0||deadAgg.aliveCount!==0||deadAgg.defeatedCount!==10||deadAgg.remainingPercentSum!==0||deadAgg.overallRemainingPercent!==0)fail("AGGREGATE_DEAD",deadAgg);
+   if(TITLE_ROWS.length!==10||new Set(TITLE_ROWS.map(row=>row.id)).size!==10||new Set(TITLE_ROWS.map(row=>row.name)).size!==10)fail("TITLE_METADATA");
+   const titleCases=[[1000,0],[900,1],[800,2],[700,3],[600,4],[500,5],[400,6],[300,7],[200,8],[100,9],[1,9],[0,10]];
+   titleCases.forEach(([remaining,expected])=>{const actual=thirdWorldTitleTierForRemainingPercentSum(remaining);if(actual!==expected)fail("TITLE_THRESHOLD",{remaining,expected,actual});});
+  }catch(error){fail("EXCEPTION",String(error?.message||error));}
+  return Object.freeze({version:1,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
+ }
 
  window.THIRD_WORLD_DATA_VERSION=VERSION;
  window.THIRD_WORLD_BOSS_DATA_VERSION=1;
@@ -218,10 +266,13 @@
  window.THIRD_WORLD_BOSS_AGGREGATE_SNAPSHOT_VERSION=1;
  window.THIRD_WORLD_FIVE_POINT_FRONT_VERSION=1;
  window.THIRD_WORLD_CHALLENGE_GATE_VERSION=1;
+ window.THIRD_WORLD_TITLE_RULE_VERSION=1;
+ window.THIRD_WORLD_DATA_INTEGRITY_VERSION=1;
  window.THIRD_WORLD_BOSS_BASE_STATS=BASE_STATS;
  window.THIRD_WORLD_BOSS_STAGE_CONFIG=STAGE_CONFIG;
  window.THIRD_WORLD_BOSS_DEFINITIONS=BOSS_ROWS;
  window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS=ABILITY_DEFS;
+ window.THIRD_WORLD_TITLE_DEFINITIONS=TITLE_ROWS;
  window.THIRD_WORLD_FIVE_POINT_THRESHOLD=FIVE_POINT_PERCENT;
  window.THIRD_WORLD_FIVE_POINT_HP_GAP=FIVE_POINT_HP_GAP;
  window.thirdWorldBossIndex=bossIndex;
@@ -236,4 +287,10 @@
  window.canChallengeThirdWorldBoss=canChallengeThirdWorldBoss;
  window.thirdWorldTotalRemainingPercent=thirdWorldTotalRemainingPercent;
  window.thirdWorldOverallRemainingPercent=thirdWorldOverallRemainingPercent;
+ window.thirdWorldTitleTierForRemainingPercentSum=thirdWorldTitleTierForRemainingPercentSum;
+ window.thirdWorldTitleTier=thirdWorldTitleTier;
+ window.thirdWorldTitleDefinition=thirdWorldTitleDefinition;
+ window.thirdWorldCurrentTitleDefinition=thirdWorldCurrentTitleDefinition;
+ window.validateThirdWorldData=validateThirdWorldData;
+ window.THIRD_WORLD_DATA_INTEGRITY=validateThirdWorldData();
 })();
