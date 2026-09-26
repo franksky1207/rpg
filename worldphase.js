@@ -10,8 +10,8 @@
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteCount(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:0;}
- function normalizeWorldIndex(value){const n=Math.floor(Number(value));return n>=1&&n<=3?n:1;}
- function worldPhaseMeta(value){return WORLD_PHASE_METADATA[normalizeWorldIndex(value)]||WORLD_PHASE_METADATA[1];}
+ function worldIndexOrNull(value){const n=Math.floor(Number(value));return n>=1&&n<=3?n:null;}
+ function worldPhaseMeta(value){const index=worldIndexOrNull(value);return index?WORLD_PHASE_METADATA[index]:null;}
  function blankBossKilled(){return Array(SECOND_WORLD_MAIN_BOSS_COUNT).fill(false);}
  function blankCalamities(){return Array.from({length:SECOND_WORLD_CALAMITY_COUNT},()=>({currentHp:null,trueKills:0}));}
  function createBlankSecondWorldState(){
@@ -70,7 +70,8 @@
   return !!(isObject(target)&&isObject(target.thirdWorld)&&target.thirdWorld.entered===true);
  }
  function isWorldEntered(world,target=state){
-  const index=normalizeWorldIndex(world);
+  const index=worldIndexOrNull(world);
+  if(!index)return false;
   if(index===1)return true;
   if(index===2)return isSecondWorldEntered(target);
   return isThirdWorldEntered(target);
@@ -81,18 +82,18 @@
   return 1;
  }
  function worldProgressionEnabled(world,target=state){
-  const index=normalizeWorldIndex(world),current=currentWorldPhase(target);
-  return index===current;
+  const index=worldIndexOrNull(world);
+  return !!index&&index===currentWorldPhase(target);
  }
  function firstWorldProgressionEnabled(target=state){return worldProgressionEnabled(1,target);}
  function secondWorldProgressionEnabled(target=state){return worldProgressionEnabled(2,target);}
  function thirdWorldProgressionEnabled(target=state){return worldProgressionEnabled(3,target);}
  function worldPhaseSnapshot(target=state){
-  const current=currentWorldPhase(target);
+  const current=currentWorldPhase(target),meta=worldPhaseMeta(current);
   return {
    current,
-   currentId:worldPhaseMeta(current).id,
-   currentName:worldPhaseMeta(current).name,
+   currentId:meta?.id||"",
+   currentName:meta?.name||"",
    entered:{1:true,2:isSecondWorldEntered(target),3:isThirdWorldEntered(target)},
    progression:{1:worldProgressionEnabled(1,target),2:worldProgressionEnabled(2,target),3:worldProgressionEnabled(3,target)}
   };
