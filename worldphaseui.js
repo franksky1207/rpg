@@ -1,9 +1,10 @@
 (function(){
- const UI_VERSION=2;
+ const UI_VERSION=3;
+ const SHARED_UI_VERSION=1;
  const IDS=Object.freeze({
-  notice:"secondWorldUnlockNotice",
-  requirements:"secondWorldRequirementsModal",
-  confirm:"secondWorldConfirmModal",
+  notice:"worldPhaseUnlockNotice",
+  requirements:"worldPhaseRequirementsModal",
+  confirm:"worldPhaseConfirmModal",
   welcome:"secondWorldWelcomeModal"
  });
 
@@ -19,177 +20,186 @@
   document.body.appendChild(el);
   return el;
  }
- function closeOverlay(id){
-  const el=document.getElementById(id);
-  if(el)el.classList.remove("open");
- }
- function req(){
-  return typeof window.secondWorldEntryRequirements==="function"?window.secondWorldEntryRequirements():null;
- }
+ function closeOverlay(id){const el=document.getElementById(id);if(el)el.classList.remove("open");}
  function statusMark(ok){return ok?'<span class="world-phase-check ok">✓</span>':'<span class="world-phase-check pending">•</span>';}
- function requirementRowsHtml(r){
-  if(!r)return '<div class="muted">突破條件資料尚未載入。</div>';
-  return [
-   {ok:r.level?.ok,label:"角色等級",value:`Lv.${Number(r.level?.current)||0} / Lv.${Number(r.level?.required)||500}`},
-   {ok:r.mainline?.ok,label:"完成銀河紀元主線",value:r.mainline?.ok?"已完成":"尚未完成"},
-   {ok:r.specializations?.ok,label:"專精全滿",value:`${Number(r.specializations?.completed)||0} / ${Number(r.specializations?.total)||8}`},
-   {ok:r.enhancement?.ok,label:"五個裝備欄位強化 +20",value:`${Number(r.enhancement?.completed)||0} / ${Number(r.enhancement?.total)||5}`},
-   {ok:r.marks?.ok,label:"十種印記 Lv.10",value:`${Number(r.marks?.completed)||0} / ${Number(r.marks?.total)||10}`}
-  ].map(row=>`<div class="world-phase-requirement-row">${statusMark(row.ok)}<div class="world-phase-requirement-copy"><b>${esc(row.label)}</b><span>${esc(row.value)}</span></div></div>`).join("");
- }
+ function requirementRow(ok,label,value){return `<div class="world-phase-requirement-row">${statusMark(ok)}<div class="world-phase-requirement-copy"><b>${esc(label)}</b><span>${esc(value)}</span></div></div>`;}
+ function requirementSummary(r){return `${Number(r?.completed)||0} / ${Number(r?.total)||0}`;}
 
- window.secondWorldHomeEntryHtml=function(){
-  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return "";
-  const r=req();
-  if(!r?.mainline?.bossCompleted)return "";
-  const ready=r.eligible===true;
-  return `<section class="world-phase-home-card">
-   <div class="world-phase-home-copy">
-    <div class="world-phase-kicker">新紀元</div>
-    <h3>宇宙紀元</h3>
-    <div class="world-phase-home-desc">${ready?"突破條件已全部完成。文明已準備跨越銀河疆界。":"銀河紀元主線已完成。完成所有突破條件後，即可正式進入宇宙紀元。"}</div>
-    <div class="world-phase-progress">突破條件 <b>${Number(r.completed)||0} / ${Number(r.total)||5}</b></div>
-   </div>
-   <div class="world-phase-home-actions">
-    <button class="btn" onclick="openSecondWorldRequirements()">查看突破條件</button>
-    ${ready?'<button class="btn primary" onclick="openSecondWorldConfirmation()">進入宇宙紀元</button>':""}
-   </div>
-  </section>`;
- };
-
- window.openSecondWorldRequirements=function(){
-  const r=req();
-  const modal=ensureOverlay(IDS.requirements);
-  modal.innerHTML=`<div class="world-phase-card world-phase-requirements-card">
-   <div class="world-phase-modal-head">
-    <div class="world-phase-kicker">銀河紀元 → 宇宙紀元</div>
-    <h2>宇宙紀元突破條件</h2>
-    <div class="muted">完成全部條件後，才可正式進入新的紀元。</div>
-   </div>
-   <div class="world-phase-requirement-list">${requirementRowsHtml(r)}</div>
-   <div class="world-phase-modal-actions">
-    <button class="btn" onclick="closeSecondWorldRequirements()">關閉</button>
-    ${r?.eligible?'<button class="btn primary" onclick="closeSecondWorldRequirements();openSecondWorldConfirmation()">進入宇宙紀元</button>':""}
-   </div>
-  </div>`;
-  modal.classList.add("open");
- };
- window.closeSecondWorldRequirements=function(){closeOverlay(IDS.requirements);};
-
- window.openSecondWorldConfirmation=function(){
-  const r=req();
-  if(!r?.eligible)return window.openSecondWorldRequirements();
-  const modal=ensureOverlay(IDS.confirm);
-  modal.innerHTML=`<div class="world-phase-card world-phase-confirm-card">
-   <div class="world-phase-scroll">
-    <div class="world-phase-modal-head">
-     <div class="world-phase-kicker">不可逆世界突破</div>
-     <h2>確定進入「宇宙紀元」？</h2>
-    </div>
+ function phaseConfig(targetWorld){
+  const world=Number(targetWorld);
+  if(world===2)return {
+   world:2,fromName:"銀河紀元",toName:"宇宙紀元",
+   requirements:()=>typeof window.secondWorldEntryRequirements==="function"?window.secondWorldEntryRequirements():null,
+   entered:()=>typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(),
+   visible:r=>!!r?.mainline?.bossCompleted,
+   homePending:"銀河紀元主線已完成。完成所有突破條件後，即可正式進入宇宙紀元。",
+   homeReady:"突破條件已全部完成。文明已準備跨越銀河疆界。",
+   rows:r=>[
+    requirementRow(r.level?.ok,"角色等級",`Lv.${Number(r.level?.current)||0} / Lv.${Number(r.level?.required)||500}`),
+    requirementRow(r.mainline?.ok,"完成銀河紀元主線",r.mainline?.ok?"已完成":"尚未完成"),
+    requirementRow(r.specializations?.ok,"專精全滿",`${Number(r.specializations?.completed)||0} / ${Number(r.specializations?.total)||8}`),
+    requirementRow(r.enhancement?.ok,"五個裝備欄位強化 +20",`${Number(r.enhancement?.completed)||0} / ${Number(r.enhancement?.total)||5}`),
+    requirementRow(r.marks?.ok,"十種印記 Lv.10",`${Number(r.marks?.completed)||0} / ${Number(r.marks?.total)||10}`)
+   ],
+   confirmation:`
     <p>進入後將結束「銀河紀元」的正式成長，並開啟新的成長階段。</p>
     <div class="world-phase-info-block"><b>會保留</b><span>等級、VIP、所有裝備、專精、強化等級、印記、鏡像戰、虛空與歷史紀錄。</span></div>
     <div class="world-phase-info-block warning"><b>會清空</b><span>金幣、基礎／進階強化石、待贖回裝備、特殊遭遇，以及銀河紀元未結算的離線狀態。</span></div>
     <div class="world-phase-info-block speed"><b>宇宙紀元新功能</b><span>解鎖 <strong>1.5× 戰鬥速度</strong>，可於設定中自由切換。</span></div>
-    <p class="world-phase-review-note">銀河紀元之後仍可回顧，但不再產生收益、損失或正式進度。</p>
-    <div class="world-phase-danger-text">此操作無法復原。</div>
+    <p class="world-phase-review-note">銀河紀元之後仍可回顧，但不再產生收益、損失或正式進度。</p>`,
+   enter:()=>typeof window.enterSecondWorld==="function"?window.enterSecondWorld():{ok:false,reason:"transition-owner-missing"}
+  };
+  if(world===3)return {
+   world:3,fromName:"宇宙紀元",toName:"高維紀元",
+   requirements:()=>typeof window.thirdWorldEntryRequirements==="function"?window.thirdWorldEntryRequirements():null,
+   entered:()=>typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered(),
+   visible:r=>!!r?.mainline?.bossCompleted,
+   homePending:"宇宙紀元主線已完成。完成所有突破條件後，即可正式跨越維度邊界，進入高維紀元。",
+   homeReady:"突破條件已全部完成。你已站在現有宇宙與高維世界的邊界。",
+   rows:r=>[
+    requirementRow(r.level?.ok,"角色等級",`Lv.${Number(r.level?.current)||0} / Lv.${Number(r.level?.required)||1000}`),
+    requirementRow(r.mainline?.ok,"完成宇宙紀元主線",r.mainline?.ok?"已完成":"尚未完成"),
+    requirementRow(r.enhancement?.ok,"五個裝備欄位強化 +40",`${Number(r.enhancement?.completed)||0} / ${Number(r.enhancement?.total)||5}`),
+    requirementRow(r.civilization?.ok,"文明等級 Lv.10",`Lv.${Number(r.civilization?.current)||0} / Lv.${Number(r.civilization?.required)||10}`),
+    requirementRow(r.vip?.ok,"VIP Lv.20",`Lv.${Number(r.vip?.current)||0} / Lv.${Number(r.vip?.required)||20}`),
+    requirementRow(r.specializations?.ok,"專精全滿",`${Number(r.specializations?.completed)||0} / ${Number(r.specializations?.total)||8}`),
+    requirementRow(r.marks?.ok,"十種印記 Lv.10",`${Number(r.marks?.completed)||0} / ${Number(r.marks?.total)||10}`)
+   ],
+   confirmation:`
+    <p>進入後將結束「宇宙紀元」的正式成長，並跨越現有宇宙的維度邊界。</p>
+    <div class="world-phase-info-block"><b>會保留</b><span>等級與 EXP、VIP、所有裝備與背包、強化 +40、專精、印記、文明等級、鏡像戰、虛空、既有稱號，以及銀河紀元／宇宙紀元的歷史與戰線紀錄。</span></div>
+    <div class="world-phase-info-block warning"><b>會截止／清除</b><span>暗物質、暗能量、宇宙紀元離線狀態、未處理特殊遭遇，以及不應跨越紀元繼續執行的戰鬥暫態。</span></div>
+    <div class="world-phase-info-block"><b>遺失裝備</b><span>進入高維紀元前，既有待贖回裝備將免費歸還，不會因暗物質歸零而失去。</span></div>
+    <div class="world-phase-info-block"><b>副本變化</b><span>懸賞戰將於高維紀元關閉；競技場、鏡像戰與虛空仍會保留。</span></div>
+    <p class="world-phase-review-note">銀河紀元與宇宙紀元之後仍可回顧，但不再產生正式成長收益。</p>`,
+   enter:()=>typeof window.enterThirdWorld==="function"?window.enterThirdWorld():{ok:false,reason:"transition-owner-missing"}
+  };
+  return null;
+ }
+ function targetWorldForHome(){
+  if(typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered())return null;
+  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return 3;
+  return 2;
+ }
+ function configAndRequirements(targetWorld){const config=phaseConfig(targetWorld);return {config,r:config?.requirements?.()||null};}
+
+ function worldPhaseHomeEntryHtml(targetWorld=targetWorldForHome()){
+  const {config,r}=configAndRequirements(targetWorld);
+  if(!config||config.entered()||!config.visible(r))return "";
+  const ready=r?.eligible===true;
+  return `<section class="world-phase-home-card" data-world-phase-target="${config.world}">
+   <div class="world-phase-home-copy">
+    <div class="world-phase-kicker">新紀元</div>
+    <h3>${esc(config.toName)}</h3>
+    <div class="world-phase-home-desc">${esc(ready?config.homeReady:config.homePending)}</div>
+    <div class="world-phase-progress">突破條件 <b>${esc(requirementSummary(r))}</b></div>
    </div>
-   <div class="world-phase-modal-actions fixed">
-    <button class="btn" onclick="closeSecondWorldConfirmation()">取消</button>
-    <button id="secondWorldConfirmEnterButton" class="btn primary" onclick="confirmSecondWorldEntry()">進入宇宙紀元</button>
+   <div class="world-phase-home-actions">
+    <button class="btn" onclick="openWorldPhaseRequirements(${config.world})">查看突破條件</button>
+    ${ready?`<button class="btn primary" onclick="openWorldPhaseConfirmation(${config.world})">進入${esc(config.toName)}</button>`:""}
    </div>
+  </section>`;
+ }
+
+ function openWorldPhaseRequirements(targetWorld){
+  const {config,r}=configAndRequirements(targetWorld);if(!config)return false;
+  const modal=ensureOverlay(IDS.requirements);
+  modal.innerHTML=`<div class="world-phase-card world-phase-requirements-card">
+   <div class="world-phase-modal-head"><div class="world-phase-kicker">${esc(config.fromName)} → ${esc(config.toName)}</div><h2>${esc(config.toName)}突破條件</h2><div class="muted">完成全部條件後，才可正式進入新的紀元。</div></div>
+   <div class="world-phase-requirement-list">${r?config.rows(r).join(""):'<div class="muted">突破條件資料尚未載入。</div>'}</div>
+   <div class="world-phase-modal-actions"><button class="btn" onclick="closeWorldPhaseRequirements()">關閉</button>${r?.eligible?`<button class="btn primary" onclick="closeWorldPhaseRequirements();openWorldPhaseConfirmation(${config.world})">進入${esc(config.toName)}</button>`:""}</div>
   </div>`;
-  modal.classList.add("open");
- };
- window.closeSecondWorldConfirmation=function(){closeOverlay(IDS.confirm);};
- window.confirmSecondWorldEntry=function(){
-  const button=document.getElementById("secondWorldConfirmEnterButton");
-  if(button)button.disabled=true;
-  const result=typeof window.enterSecondWorld==="function"?window.enterSecondWorld():{ok:false,reason:"transition-owner-missing"};
+  modal.classList.add("open");return true;
+ }
+ function closeWorldPhaseRequirements(){closeOverlay(IDS.requirements);}
+ function openWorldPhaseConfirmation(targetWorld){
+  const {config,r}=configAndRequirements(targetWorld);if(!config)return false;
+  if(!r?.eligible)return openWorldPhaseRequirements(config.world);
+  const modal=ensureOverlay(IDS.confirm);
+  modal.innerHTML=`<div class="world-phase-card world-phase-confirm-card">
+   <div class="world-phase-scroll"><div class="world-phase-modal-head"><div class="world-phase-kicker">不可逆世界突破</div><h2>確定進入「${esc(config.toName)}」？</h2></div>${config.confirmation}<div class="world-phase-danger-text">此操作無法復原。</div></div>
+   <div class="world-phase-modal-actions fixed"><button class="btn" onclick="closeWorldPhaseConfirmation()">取消</button><button id="worldPhaseConfirmEnterButton" class="btn primary" onclick="confirmWorldPhaseEntry(${config.world})">進入${esc(config.toName)}</button></div>
+  </div>`;
+  modal.classList.add("open");return true;
+ }
+ function closeWorldPhaseConfirmation(){closeOverlay(IDS.confirm);}
+ function transitionFailureMessage(result,targetWorld){
+  if(result?.reason==="requirements-incomplete")return "突破條件已變更，請重新確認。";
+  if(result?.reason==="save-failed")return "世界轉換存檔失敗，原有進度已還原。";
+  if(result?.reason==="backup-failed")return "無法建立安全備份，已取消世界轉換。";
+  if(result?.reason==="transition-owner-missing"&&Number(targetWorld)===3)return "高維紀元的正式世界轉換將於下一階段啟用；目前僅開放突破條件與確認流程預覽。";
+  return "世界轉換未完成，請稍後再試。";
+ }
+ function confirmWorldPhaseEntry(targetWorld){
+  const {config}=configAndRequirements(targetWorld);if(!config)return false;
+  const button=document.getElementById("worldPhaseConfirmEnterButton");if(button)button.disabled=true;
+  const result=config.enter();
   if(result?.ok===true)return true;
   if(button)button.disabled=false;
-  const message=result?.reason==="requirements-incomplete"?"突破條件已變更，請重新確認。":result?.reason==="save-failed"?"世界轉換存檔失敗，原有進度已還原。":result?.reason==="backup-failed"?"無法建立安全備份，已取消世界轉換。":"世界轉換未完成，請稍後再試。";
-  alert(message);
+  alert(transitionFailureMessage(result,targetWorld));
   return false;
- };
+ }
 
+ // Compatibility aliases. Existing callers continue to work while sharing one UI owner.
+ window.worldPhaseHomeEntryHtml=worldPhaseHomeEntryHtml;
+ window.openWorldPhaseRequirements=openWorldPhaseRequirements;
+ window.closeWorldPhaseRequirements=closeWorldPhaseRequirements;
+ window.openWorldPhaseConfirmation=openWorldPhaseConfirmation;
+ window.closeWorldPhaseConfirmation=closeWorldPhaseConfirmation;
+ window.confirmWorldPhaseEntry=confirmWorldPhaseEntry;
+ window.secondWorldHomeEntryHtml=function(){return worldPhaseHomeEntryHtml();};
+ window.openSecondWorldRequirements=function(){return openWorldPhaseRequirements(2);};
+ window.closeSecondWorldRequirements=closeWorldPhaseRequirements;
+ window.openSecondWorldConfirmation=function(){return openWorldPhaseConfirmation(2);};
+ window.closeSecondWorldConfirmation=closeWorldPhaseConfirmation;
+ window.confirmSecondWorldEntry=function(){return confirmWorldPhaseEntry(2);};
+ window.thirdWorldHomeEntryHtml=function(){return worldPhaseHomeEntryHtml(3);};
+ window.openThirdWorldRequirements=function(){return openWorldPhaseRequirements(3);};
+ window.closeThirdWorldRequirements=closeWorldPhaseRequirements;
+ window.openThirdWorldConfirmation=function(){return openWorldPhaseConfirmation(3);};
+ window.closeThirdWorldConfirmation=closeWorldPhaseConfirmation;
+ window.confirmThirdWorldEntry=function(){return confirmWorldPhaseEntry(3);};
+
+ // Second-world welcome remains active until the shared welcome-marker work in batch 2-4.
  function welcomeMarkerPresent(){try{return sessionStorage.getItem("civilization_second_world_just_entered_v1")==="1";}catch(e){return false;}}
  function clearWelcomeMarker(){try{sessionStorage.removeItem("civilization_second_world_just_entered_v1");}catch(e){}}
  window.showSecondWorldWelcome=function(){
   if(typeof window.isSecondWorldEntered!=="function"||!window.isSecondWorldEntered()||!welcomeMarkerPresent())return false;
   const modal=ensureOverlay(IDS.welcome);
-  modal.innerHTML=`<div class="world-phase-card world-phase-welcome-card">
-   <div class="world-phase-scroll">
-    <div class="world-phase-modal-head welcome">
-     <div class="world-phase-kicker">新紀元正式展開</div>
-     <h2>歡迎來到「宇宙紀元」</h2>
-    </div>
-    <div class="world-phase-war-copy"><b>宇宙紀元，不再有銀河紀元的共存與協調。</b><span>從這一刻起，文明之間將進入全面戰爭。</span></div>
-    <div class="world-phase-speed-unlock"><span>⚡</span><b>1.5× 戰鬥速度已解鎖</b><small>可於「設定」自由切換 1×／1.5× 戰鬥速度。</small></div>
-    <h3 class="world-phase-section-title">宇宙紀元的新變化</h3>
-    <div class="world-phase-change-list">
-     <div><b>全新主線形式</b><span>不再有普通怪與菁英怪，主線將以連續 Boss 戰為核心。</span></div>
-     <div><b>全新資源</b><span><strong>暗物質</strong>成為宇宙紀元的主要資源；<strong>暗能量</strong>將用於新的高階成長系統。</span></div>
-     <div><b>新的成長階段</b><span>玩家、裝備與強化系統都將進入新的成長區間。</span></div>
-     <div><b>文明等級開放</b><span>完成宇宙紀元的文明災厄，可持續提升文明力量。</span></div>
-     <div><b>既有內容延續</b><span>鏡像戰與虛空進度完整保留；銀河紀元仍可進行回顧。</span></div>
-    </div>
-   </div>
-   <div class="world-phase-modal-actions fixed">
-    <button class="btn primary world-phase-start-button" onclick="closeSecondWorldWelcome()">開始宇宙紀元</button>
-   </div>
-  </div>`;
-  modal.classList.add("open");
-  clearWelcomeMarker();
-  return true;
+  modal.innerHTML=`<div class="world-phase-card world-phase-welcome-card"><div class="world-phase-scroll"><div class="world-phase-modal-head welcome"><div class="world-phase-kicker">新紀元正式展開</div><h2>歡迎來到「宇宙紀元」</h2></div><div class="world-phase-war-copy"><b>宇宙紀元，不再有銀河紀元的共存與協調。</b><span>從這一刻起，文明之間將進入全面戰爭。</span></div><div class="world-phase-speed-unlock"><span>⚡</span><b>1.5× 戰鬥速度已解鎖</b><small>可於「設定」自由切換 1×／1.5× 戰鬥速度。</small></div><h3 class="world-phase-section-title">宇宙紀元的新變化</h3><div class="world-phase-change-list"><div><b>全新主線形式</b><span>不再有普通怪與菁英怪，主線將以連續 Boss 戰為核心。</span></div><div><b>全新資源</b><span><strong>暗物質</strong>成為宇宙紀元的主要資源；<strong>暗能量</strong>將用於新的高階成長系統。</span></div><div><b>新的成長階段</b><span>玩家、裝備與強化系統都將進入新的成長區間。</span></div><div><b>文明等級開放</b><span>完成宇宙紀元的文明災厄，可持續提升文明力量。</span></div><div><b>既有內容延續</b><span>鏡像戰與虛空進度完整保留；銀河紀元仍可進行回顧。</span></div></div></div><div class="world-phase-modal-actions fixed"><button class="btn primary world-phase-start-button" onclick="closeSecondWorldWelcome()">開始宇宙紀元</button></div></div>`;
+  modal.classList.add("open");clearWelcomeMarker();return true;
  };
- window.closeSecondWorldWelcome=function(){
-  closeOverlay(IDS.welcome);
-  if(typeof go==="function")go("home");
- };
- function tryShowWelcomeAfterReload(){
-  if(!welcomeMarkerPresent())return false;
-  if(typeof window.isSecondWorldEntered!=="function"||!window.isSecondWorldEntered())return false;
-  if(window.CIVILIZATION_AUTH_REQUIRED===true&&!window.civilizationAuthSession)return false;
-  if(window.BACKGROUND_PRELOAD_READY!==true)return false;
-  return window.showSecondWorldWelcome();
- }
+ window.closeSecondWorldWelcome=function(){closeOverlay(IDS.welcome);if(typeof go==="function")go("home");};
+ function tryShowWelcomeAfterReload(){if(!welcomeMarkerPresent())return false;if(typeof window.isSecondWorldEntered!=="function"||!window.isSecondWorldEntered())return false;if(window.CIVILIZATION_AUTH_REQUIRED===true&&!window.civilizationAuthSession)return false;if(window.BACKGROUND_PRELOAD_READY!==true)return false;return window.showSecondWorldWelcome();}
 
- window.showSecondWorldUnlockNotice=function(){
-  if(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered())return false;
-  const r=req();
-  if(!r?.mainline?.bossCompleted||!r?.mainline?.finalStoryCompleted)return false;
+ function showWorldPhaseUnlockNotice(targetWorld){
+  const {config,r}=configAndRequirements(targetWorld);if(!config||config.entered()||!r?.mainline?.ok)return false;
   const modal=ensureOverlay(IDS.notice);
-  modal.innerHTML=`<div class="world-phase-card world-phase-unlock-card">
-   <div class="world-phase-kicker">新紀元已開啟</div>
-   <h2>宇宙紀元已開啟</h2>
-   <p>銀河紀元的主線已走到終點。新的世界突破入口已出現在主畫面。</p>
-   <div class="world-phase-modal-actions">
-    <button class="btn" onclick="closeSecondWorldUnlockNotice()">稍後再說</button>
-    <button class="btn primary" onclick="goToSecondWorldHome()">回主畫面查看</button>
-   </div>
-  </div>`;
-  modal.classList.add("open");
-  return true;
- };
- window.closeSecondWorldUnlockNotice=function(){closeOverlay(IDS.notice);};
- window.goToSecondWorldHome=function(){
-  closeOverlay(IDS.notice);
-  if(typeof go==="function")go("home");
-  else{
-   try{view="home";}catch(e){}
-   if(typeof render==="function")render();
-  }
- };
-
+  modal.innerHTML=`<div class="world-phase-card world-phase-unlock-card"><div class="world-phase-kicker">新紀元已開啟</div><h2>${esc(config.toName)}已開啟</h2><p>${esc(config.fromName)}的主線已走到終點。新的世界突破入口已出現在主畫面。</p><div class="world-phase-modal-actions"><button class="btn" onclick="closeWorldPhaseUnlockNotice()">稍後再說</button><button class="btn primary" onclick="goToWorldPhaseHome()">回主畫面查看</button></div></div>`;
+  modal.classList.add("open");return true;
+ }
+ function closeWorldPhaseUnlockNotice(){closeOverlay(IDS.notice);}
+ function goToWorldPhaseHome(){closeOverlay(IDS.notice);if(typeof go==="function")go("home");else{try{view="home";}catch(e){}if(typeof render==="function")render();}}
+ window.showWorldPhaseUnlockNotice=showWorldPhaseUnlockNotice;
+ window.closeWorldPhaseUnlockNotice=closeWorldPhaseUnlockNotice;
+ window.goToWorldPhaseHome=goToWorldPhaseHome;
+ window.showSecondWorldUnlockNotice=function(){return showWorldPhaseUnlockNotice(2);};
+ window.closeSecondWorldUnlockNotice=closeWorldPhaseUnlockNotice;
+ window.goToSecondWorldHome=goToWorldPhaseHome;
+ window.showThirdWorldUnlockNotice=function(){return showWorldPhaseUnlockNotice(3);};
+ window.closeThirdWorldUnlockNotice=closeWorldPhaseUnlockNotice;
+ window.goToThirdWorldHome=goToWorldPhaseHome;
  window.handleSecondWorldStoryCompletion=function(storyId){
-  if(typeof window.isFinalFirstWorldStoryId!=="function"||!window.isFinalFirstWorldStoryId(storyId))return false;
-  queueMicrotask(()=>window.showSecondWorldUnlockNotice());
-  return true;
+  if(typeof window.isFinalFirstWorldStoryId==="function"&&window.isFinalFirstWorldStoryId(storyId)){queueMicrotask(()=>showWorldPhaseUnlockNotice(2));return true;}
+  if(typeof window.isFinalSecondWorldStoryId==="function"&&window.isFinalSecondWorldStoryId(storyId)){queueMicrotask(()=>showWorldPhaseUnlockNotice(3));return true;}
+  return false;
  };
 
  window.addEventListener("civilization-background-ready-before-reveal",()=>setTimeout(tryShowWelcomeAfterReload,0));
  window.addEventListener("civilization-auth-ready",()=>setTimeout(tryShowWelcomeAfterReload,0));
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(tryShowWelcomeAfterReload,0),{once:true});else setTimeout(tryShowWelcomeAfterReload,0);
 
+ window.WORLD_PHASE_UI_VERSION=UI_VERSION;
+ window.WORLD_PHASE_SHARED_UI_VERSION=SHARED_UI_VERSION;
  window.SECOND_WORLD_PHASE_UI_VERSION=UI_VERSION;
 })();
