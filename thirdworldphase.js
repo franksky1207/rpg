@@ -59,21 +59,28 @@
   const completed=rows.filter(row=>row.ok===true).length;return {eligible:completed===rows.length&&!alreadyEntered,alreadyEntered,completed,total:rows.length,level,mainline,enhancement,civilization,vip,specializations,marks};
  }
  function canEnterThirdWorld(target=state){return thirdWorldEntryRequirements(target).eligible===true;}
+ function thirdWorldEntryOwnersReady(){return typeof window.restoreLostGearForWorldTransition==="function"&&typeof window.resetPendingBlackMarketForWorldTransition==="function"&&typeof window.resetOfflineStateForWorldTransition==="function";}
+ function applyThirdWorldEntryState(target){
+  if(!isObject(target))throw new Error("Third-world entry target state is invalid.");
+  if(!thirdWorldEntryOwnersReady())throw new Error("Third-world transition cleanup owner is unavailable.");
+  const next=createBlankThirdWorldState();next.entered=true;target.thirdWorld=next;
+  if(!isObject(target.secondWorld))target.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:true};
+  target.secondWorld.entered=true;
+  target.secondWorld.darkMatter=0;
+  target.secondWorld.darkEnergy=0;
+  const lostGear=window.restoreLostGearForWorldTransition(target);
+  window.resetPendingBlackMarketForWorldTransition(target);
+  window.resetOfflineStateForWorldTransition(target);
+  return {ok:true,restoredLostGear:Math.max(0,finiteWhole(lostGear?.restored,0)),phase:typeof window.currentWorldPhase==="function"?window.currentWorldPhase(target):3};
+ }
  function enterThirdWorld(){
-  if(typeof window.runWorldTransition!=="function")return {ok:false,reason:"transition-owner-missing"};
+  if(typeof window.runWorldTransition!=="function"||!thirdWorldEntryOwnersReady())return {ok:false,reason:"transition-owner-missing"};
   const runtimeStatus=()=>typeof window.worldTransitionRuntimeStatus==="function"?window.worldTransitionRuntimeStatus():{blocked:false,blockers:[]};
   return window.runWorldTransition({
    requirements:()=>thirdWorldEntryRequirements(state),
    runtimeStatus,
    mutate:target=>{
-    const next=createBlankThirdWorldState();next.entered=true;target.thirdWorld=next;
-    if(!isObject(target.secondWorld))target.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:true};
-    target.secondWorld.entered=true;
-    target.secondWorld.darkMatter=0;
-    target.secondWorld.darkEnergy=0;
-    if(typeof window.restoreLostGearForWorldTransition==="function")window.restoreLostGearForWorldTransition(target);else target.lostGear=[];
-    if(typeof window.resetPendingBlackMarketForWorldTransition==="function")window.resetPendingBlackMarketForWorldTransition(target);else target.pendingBlackMarketEncounter=false;
-    if(typeof window.resetOfflineStateForWorldTransition==="function")window.resetOfflineStateForWorldTransition(target);
+    applyThirdWorldEntryState(target);
     if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();
    },
    prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},
@@ -96,7 +103,8 @@
  window.THIRD_WORLD_STORY_PERSISTENT_KEYS=Array.from(THIRD_WORLD_STORY_PERSISTENT_KEYS);
  window.THIRD_WORLD_COMPLETION_DERIVATION_VERSION=1;
  window.THIRD_WORLD_ENTRY_REQUIREMENTS_VERSION=1;
- window.THIRD_WORLD_ENTRY_TRANSITION_VERSION=1;
+ window.THIRD_WORLD_ENTRY_TRANSITION_VERSION=2;
+ window.THIRD_WORLD_ENTRY_STATE_MUTATION_VERSION=1;
  window.THIRD_WORLD_ENTRY_CONFIG=Object.freeze({level:THIRD_WORLD_ENTRY_LEVEL,enhancementLevel:THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL,civilizationLevel:THIRD_WORLD_ENTRY_CIVILIZATION_LEVEL,vipLevel:THIRD_WORLD_ENTRY_VIP_LEVEL,specializationLevel:THIRD_WORLD_ENTRY_SPECIALIZATION_LEVEL,markLevel:THIRD_WORLD_ENTRY_MARK_LEVEL});
  window.createBlankThirdWorldState=createBlankThirdWorldState;
  window.normalizeThirdWorldState=normalizeThirdWorldState;
@@ -110,6 +118,7 @@
  window.finalSecondWorldStoryCompleted=finalSecondWorldStoryCompleted;
  window.thirdWorldEntryRequirements=thirdWorldEntryRequirements;
  window.canEnterThirdWorld=canEnterThirdWorld;
+ window.applyThirdWorldEntryState=applyThirdWorldEntryState;
  window.enterThirdWorld=enterThirdWorld;
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeThirdWorldState);
 })();
