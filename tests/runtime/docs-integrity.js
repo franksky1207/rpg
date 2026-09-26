@@ -18,7 +18,7 @@ assert(readme.includes("PROJECT_VIP_UNBOUNDED_UPDATE.md"),"README 必須指向 V
 assert(!readme.includes("養成系統：8 種專精（各 Lv.60）、VIP20、"),"README 不得再把 VIP20 當正式等級上限。");
 assert(!readme.includes("正式 save schema：`12`"),"README 不得復活舊 Schema 12。");
 
-assert(handoff.includes("SAVE_SCHEMA_VERSION = 15")&&handoff.includes("runtimeintegrity.js` V19")&&handoff.includes("finalintegrity.js` V19"),"Handoff 必須同步目前 Save／Integrity 正式版本。");
+assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("WORLD_PHASE_VERSION = 6")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／World3 正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("Background")||handoff.includes("backgroundpreload.js"),"Handoff 必須保留啟動背景／preload 現況。");
 assert(handoff.includes("使用者親自從頭完整玩一次銀河紀元＋宇宙紀元"),"Handoff 的目前下一階段必須是雙紀元實玩。");
 assert(handoff.includes("第三紀元")&&handoff.includes("禁止自行推導"),"Handoff 必須明確禁止自行推導第三紀元。");
