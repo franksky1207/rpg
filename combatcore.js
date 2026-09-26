@@ -22,6 +22,7 @@
   const maxTurns=Math.max(0,Math.floor(numberOr(options.maxTurns,0)));
   const skipPlayerAction=options.skipPlayerAction===true;
   const skipEnemyAction=options.skipEnemyAction===true;
+  const lockPlayerFullHp=options.lockPlayerFullHp===true;
   const playerFinalDamageMultiplier=Math.max(0,numberOr(options.playerFinalDamageMultiplier,1));
   const spec={
    initiative:specBonus("initiative",useTest),
@@ -44,7 +45,7 @@
   ]));
   const initialHp=startHp==null?numberOr(p.hp,0):numberOr(startHp,0);
   const playerMaxHp=Math.max(1,numberOr(p.hp,1));
-  let php=Math.max(0,initialHp);
+  let php=lockPlayerFullHp?playerMaxHp:Math.max(0,initialHp);
   const enemyMaxHp=Math.max(1,numberOr(e.hp,1));
   const enemyStartHp=options.enemyStartHp==null?enemyMaxHp:Math.max(1,Math.min(enemyMaxHp,numberOr(options.enemyStartHp,enemyMaxHp)));
   let ehp=enemyStartHp;
@@ -211,6 +212,7 @@
     events.push({type:"attack",actor:"enemy",source:"normal",damage,actualDamage:0,crit,berserk,absorbed:true,shieldAbsorbed:0,enemyCritRate});
     markEvent("absorption","trigger",{damage,healed});
     if(logs)logs.push(`${name}攻擊你，但吸收印記化解了傷害。`);
+    if(lockPlayerFullHp)php=playerMaxHp;
     continue;
    }
 
@@ -235,6 +237,7 @@
    if(shieldAbsorbed>0)markEvent("ward","absorb",{amount:shieldAbsorbed,remainingShield:shield});
    if(indomitableTriggered)markEvent("indomitable","survive",{hp:1});
    if(logs)logs.push(crit?`${name}攻擊你，暴擊造成 ${damage} 點傷害。`:`${name}攻擊你，造成 ${damage} 點傷害。`);
+   if(lockPlayerFullHp)php=playerMaxHp;
 
    if(php<=0)break;
 
@@ -287,6 +290,7 @@
  };
  window.COMBAT_MARK_INTEGRATION_VERSION=1;
  window.COMBAT_PERSISTENT_ENEMY_HP_VERSION=1;
+ window.COMBAT_OPTIONAL_FULL_HP_LOCK_VERSION=1;
 
  fightOnce=function(mapIdx,eIdx,encounter=null){
   if(!enemyUnlocked(mapIdx,eIdx)){
@@ -298,7 +302,8 @@
 
   const playerLevelBefore=Math.max(1,Math.floor(Number(state.level)||1));
   const ps=playerCombatStats();
-  const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true});
+  const gmMainlineHpLock=typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;
+  const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true,lockPlayerFullHp:gmMainlineHpLock});
   state.hp=combat.hp;
   const combatEndHp=state.hp;
   const logs=combat.logs;
