@@ -32,6 +32,28 @@
   };
  };
 
+ // 純讀 audit：模擬既有 Level/EXP owner 的跨級結果，不修改正式 state。
+ window.levelProgressionTransitionAudit=function(level,exp,gain,target=null){
+  const s=auditTarget(target);
+  const cap=typeof window.effectiveLevelCap==="function"?Math.max(1,Math.floor(Number(window.effectiveLevelCap(s))||1)):Math.max(1,Math.floor(Number(window.MAX_LEVEL)||500));
+  let current=Math.max(1,Math.min(cap,Math.floor(Number(level)||1)));
+  let currentExp=current>=cap?0:Math.max(0,Number(exp)||0);
+  const added=Math.max(0,Number(gain)||0);
+  currentExp+=added;
+  let levelsGained=0;
+  while(current<cap){
+   const need=typeof window.effectiveExpNeed==="function"?Math.max(0,Number(window.effectiveExpNeed(current,s))||0):0;
+   if(!(need>0)||currentExp<need)break;
+   currentExp-=need;
+   current++;
+   levelsGained++;
+  }
+  if(current>=cap){current=cap;currentExp=0;}
+  const world=typeof window.currentLevelWorldPhase==="function"?window.currentLevelWorldPhase(s):typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):null;
+  return {startLevel:Math.max(1,Math.floor(Number(level)||1)),startExp:Math.max(0,Number(exp)||0),gain:added,level:current,exp:Math.max(0,Math.floor(currentExp)),levelsGained,cap,atCap:current>=cap,world:Number.isInteger(Number(world))?Number(world):null};
+ };
+
  window.LEVEL_PROGRESSION_AUDIT_VERSION=VERSION;
  window.LEVEL_PROGRESSION_AUDIT_WORLD_PHASE_VERSION=1;
+ window.LEVEL_PROGRESSION_TRANSITION_AUDIT_VERSION=1;
 })();
