@@ -49,6 +49,11 @@
   if(target&&target.ignoreUnlock===true)return true;
   return typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,target?.state||null);
  }
+ function formalMainlineHpLockActive(options={}){
+  if(options.lockPlayerFullHp===true)return true;
+  const formalContext=!!window.activeSecondWorldMainlineContext;
+  return formalContext&&typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;
+ }
  function runSecondWorldBossCombat(value,options={}){
   const index=clampBossIndex(value);
   if(index<0)return {ok:false,reason:"找不到宇宙紀元 Boss。"};
@@ -73,7 +78,8 @@
    markLevels:options.markLevels||null,
    maxTurns:options.maxTurns||0,
    preparePresentation:options.preparePresentation!==false,
-   playerFinalDamageMultiplier:civilizationMultiplier
+   playerFinalDamageMultiplier:civilizationMultiplier,
+   lockPlayerFullHp:formalMainlineHpLockActive(options)
   });
   return {
    ok:true,
@@ -112,6 +118,7 @@
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
  window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
+ window.SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=1;
  window.SECOND_WORLD_COMBAT_INTEGRITY=validate();
  if(!window.SECOND_WORLD_COMBAT_INTEGRITY.passed)console.error("[文明戰線] Second World combat integrity error",window.SECOND_WORLD_COMBAT_INTEGRITY.errors);
 })();
