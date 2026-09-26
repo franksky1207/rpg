@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
  const EXPECTED_VERSIONS=Object.freeze({
   SAVE_SCHEMA_VERSION:16,
   SAVE_LOAD_PIPELINE_VERSION:2,
@@ -60,55 +60,18 @@
    if(actual!==expected)errors.push({code:"VERSION_MISMATCH",name,expected,actual:Number.isFinite(actual)?actual:null});
   });
   REQUIRED_APIS.forEach(name=>{if(typeof window[name]!=="function")errors.push({code:"API_MISSING",name});});
-  if(window.THIRD_WORLD_PHASE_INTEGRITY_REPORT?.passed!==true){
-   errors.push({code:"THIRD_WORLD_PHASE_INTEGRITY",report:window.THIRD_WORLD_PHASE_INTEGRITY_REPORT||null});
-  }
-  if(window.VIP_UNBOUNDED_INTEGRITY_REPORT?.passed!==true){
-   errors.push({code:"VIP_UNBOUNDED_INTEGRITY",report:window.VIP_UNBOUNDED_INTEGRITY_REPORT||null});
-  }
-  if(Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known"){
-   errors.push({code:"SAVE_LEGACY_POLICY",minSupportedVersion:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});
-  }
-  if(window.LEGACY_COMPATIBILITY_OWNER_REPORT?.passed!==true){
-   errors.push({code:"LEGACY_COMPATIBILITY_OWNER",report:window.LEGACY_COMPATIBILITY_OWNER_REPORT||null});
-  }
-  if(Number(window.LEGACY_SAVE_VERSION)!==13||Number(window.LEGACY_FIRST_WORLD_LEVEL_CAP)!==500||String(window.SAVE_SCHEMA_RUNTIME_OWNER||"")!=="savemigration"||String(window.LEVEL_CAP_RUNTIME_OWNER||"")!=="levelprogression"||String(window.ARENA_PROGRESS_RUNTIME_OWNER||"")!=="arenaByWorld"){
-   errors.push({code:"LEGACY_OWNER_POLICY",legacySaveVersion:window.LEGACY_SAVE_VERSION,legacyLevelCap:window.LEGACY_FIRST_WORLD_LEVEL_CAP,saveOwner:window.SAVE_SCHEMA_RUNTIME_OWNER,levelOwner:window.LEVEL_CAP_RUNTIME_OWNER,arenaOwner:window.ARENA_PROGRESS_RUNTIME_OWNER});
-  }
-  if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS)||window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==26){
-   errors.push({code:"TITLE_CATALOG_COUNT",counts:{galaxy:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length??null,universe:window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS?.length??null,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length??null,total:window.PLAYER_TITLE_DEFS?.length??null}});
-  }
+  if(window.THIRD_WORLD_PHASE_INTEGRITY_REPORT?.passed!==true){errors.push({code:"THIRD_WORLD_PHASE_INTEGRITY",report:window.THIRD_WORLD_PHASE_INTEGRITY_REPORT||null});}
+  if(window.VIP_UNBOUNDED_INTEGRITY_REPORT?.passed!==true){errors.push({code:"VIP_UNBOUNDED_INTEGRITY",report:window.VIP_UNBOUNDED_INTEGRITY_REPORT||null});}
+  if(Number(window.SAVE_MIN_SUPPORTED_VERSION)!==1||String(window.SAVE_LEGACY_SUPPORT_MODE||"")!=="all-known"){errors.push({code:"SAVE_LEGACY_POLICY",minSupportedVersion:window.SAVE_MIN_SUPPORTED_VERSION,mode:window.SAVE_LEGACY_SUPPORT_MODE});}
+  if(window.LEGACY_COMPATIBILITY_OWNER_REPORT?.passed!==true){errors.push({code:"LEGACY_COMPATIBILITY_OWNER",report:window.LEGACY_COMPATIBILITY_OWNER_REPORT||null});}
+  if(Number(window.LEGACY_SAVE_VERSION)!==13||Number(window.LEGACY_FIRST_WORLD_LEVEL_CAP)!==500||String(window.SAVE_SCHEMA_RUNTIME_OWNER||"")!=="savemigration"||String(window.LEVEL_CAP_RUNTIME_OWNER||"")!=="levelprogression"||String(window.ARENA_PROGRESS_RUNTIME_OWNER||"")!=="arenaByWorld")errors.push({code:"LEGACY_OWNER_POLICY",legacySaveVersion:window.LEGACY_SAVE_VERSION,legacyLevelCap:window.LEGACY_FIRST_WORLD_LEVEL_CAP,saveOwner:window.SAVE_SCHEMA_RUNTIME_OWNER,levelOwner:window.LEVEL_CAP_RUNTIME_OWNER,arenaOwner:window.ARENA_PROGRESS_RUNTIME_OWNER});
+  if(!Array.isArray(window.CIVILIZATION_PLAYER_TITLE_DEFS)||window.CIVILIZATION_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS)||window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS.length!==10||!Array.isArray(window.MIRROR_PLAYER_TITLE_DEFS)||window.MIRROR_PLAYER_TITLE_DEFS.length!==6||!Array.isArray(window.PLAYER_TITLE_DEFS)||window.PLAYER_TITLE_DEFS.length!==26)errors.push({code:"TITLE_CATALOG_COUNT",counts:{galaxy:window.CIVILIZATION_PLAYER_TITLE_DEFS?.length??null,universe:window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS?.length??null,mirror:window.MIRROR_PLAYER_TITLE_DEFS?.length??null,total:window.PLAYER_TITLE_DEFS?.length??null}});
   const arenaProfile=typeof window.getArenaVersionProfile==="function"?window.getArenaVersionProfile():null;
-  if(!arenaProfile||Number(arenaProfile.balanceVersion)!==6||Number(arenaProfile.rankBalanceVersion)!==3||Number(arenaProfile.assessmentRuleVersion)!==4||Number(arenaProfile.assessmentStateVersion)!==4||Number(arenaProfile.assessmentRuntimeVersion)!==4){
-   errors.push({code:"ARENA_PROFILE_MISMATCH",profile:arenaProfile});
-  }
-  if(Number(window.SECOND_WORLD_BOSS_BASE_STATS?.base)!==2700||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.hp)!==12||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.atk)!==2||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.def)!==1){
-   errors.push({code:"SECOND_WORLD_BOSS_FORMULA",value:window.SECOND_WORLD_BOSS_BASE_STATS||null});
-  }
-  try{
-   const legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION});
-   const supported=window.saveCompatibilityFor?.({saveVersion:window.SAVE_SCHEMA_VERSION});
-   const future=window.saveCompatibilityFor?.({saveVersion:Number(window.SAVE_SCHEMA_VERSION)+1});
-   if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||supported?.isFuture!==false||future?.supported!==false||future?.isFuture!==true){
-    errors.push({code:"SAVE_COMPATIBILITY_POLICY",legacy,supported,future});
-   }
-  }catch(error){errors.push({code:"SAVE_COMPATIBILITY_POLICY_PROBE",error:String(error?.message||error)});}
-  try{
-   const probe={saveVersion:window.SAVE_SCHEMA_VERSION,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
-   const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789});
-   const snapshot=JSON.stringify(probe.offline);
-   const second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789});
-   if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot){
-    errors.push({code:"OFFLINE_STATE_NORMALIZATION",offline:probe.offline});
-   }
-  }catch(error){errors.push({code:"OFFLINE_STATE_NORMALIZATION_PROBE",error:String(error?.message||error)});}
-  try{
-   const phaseProbe={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:true,dimensionalStrings:4}};
-   const phase=window.currentWorldPhase?.(phaseProbe),resource=window.primaryWorldResourceSnapshot?.(phaseProbe),snapshot=window.worldPhaseSnapshot?.(phaseProbe);
-   if(phase!==3||resource?.label!=="維度之弦"||Number(resource?.amount)!==4||snapshot?.progression?.[2]!==false||snapshot?.progression?.[3]!==true){
-    errors.push({code:"THIRD_WORLD_PHASE_POLICY",phase,resource,snapshot});
-   }
-  }catch(error){errors.push({code:"THIRD_WORLD_PHASE_POLICY_PROBE",error:String(error?.message||error)});}
+  if(!arenaProfile||Number(arenaProfile.balanceVersion)!==6||Number(arenaProfile.rankBalanceVersion)!==3||Number(arenaProfile.assessmentRuleVersion)!==4||Number(arenaProfile.assessmentStateVersion)!==4||Number(arenaProfile.assessmentRuntimeVersion)!==4)errors.push({code:"ARENA_PROFILE_MISMATCH",profile:arenaProfile});
+  if(Number(window.SECOND_WORLD_BOSS_BASE_STATS?.base)!==2700||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.hp)!==12||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.atk)!==2||Number(window.SECOND_WORLD_BOSS_BASE_STATS?.ratio?.def)!==1)errors.push({code:"SECOND_WORLD_BOSS_FORMULA",value:window.SECOND_WORLD_BOSS_BASE_STATS||null});
+  try{const legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION}),supported=window.saveCompatibilityFor?.({saveVersion:window.SAVE_SCHEMA_VERSION}),future=window.saveCompatibilityFor?.({saveVersion:Number(window.SAVE_SCHEMA_VERSION)+1});if(legacy?.supported!==true||legacy?.isLegacy!==true||supported?.supported!==true||supported?.isFuture!==false||future?.supported!==false||future?.isFuture!==true)errors.push({code:"SAVE_COMPATIBILITY_POLICY",legacy,supported,future});}catch(error){errors.push({code:"SAVE_COMPATIBILITY_POLICY_PROBE",error:String(error?.message||error)});}
+  try{const probe={saveVersion:window.SAVE_SCHEMA_VERSION,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789}),snapshot=JSON.stringify(probe.offline),second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:window.SAVE_SCHEMA_VERSION,currentTime:123456789});if(!first||!second||Number(probe.offline.battleSampleVersion)!==3||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot)errors.push({code:"OFFLINE_STATE_NORMALIZATION",offline:probe.offline});}catch(error){errors.push({code:"OFFLINE_STATE_NORMALIZATION_PROBE",error:String(error?.message||error)});}
+  try{const phaseProbe={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:true,dimensionalStrings:4}},phase=window.currentWorldPhase?.(phaseProbe),resource=window.primaryWorldResourceSnapshot?.(phaseProbe),snapshot=window.worldPhaseSnapshot?.(phaseProbe);if(phase!==3||resource?.label!=="維度之弦"||Number(resource?.amount)!==4||snapshot?.progression?.[2]!==false||snapshot?.progression?.[3]!==true)errors.push({code:"THIRD_WORLD_PHASE_POLICY",phase,resource,snapshot});}catch(error){errors.push({code:"THIRD_WORLD_PHASE_POLICY_PROBE",error:String(error?.message||error)});}
   return {version:VERSION,phase:String(options.phase||"runtime"),passed:errors.length===0,errors,checkedAt:Date.now()};
  }
  window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION;
