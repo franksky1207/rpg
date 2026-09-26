@@ -6,7 +6,7 @@
  const THIRD_WORLD_STORY_MAX_STAGE=10;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
- function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
+ function finiteWhole(value,fallback=0){if(value==null)return fallback;const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
  function blankBosses(){return Array.from({length:THIRD_WORLD_BOSS_COUNT},()=>({currentHp:THIRD_WORLD_BOSS_MAX_HP}));}
  function createBlankThirdWorldState(){
