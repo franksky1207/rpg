@@ -56,4 +56,7 @@
  window.LEVEL_PROGRESSION_AUDIT_VERSION=VERSION;
  window.LEVEL_PROGRESSION_AUDIT_WORLD_PHASE_VERSION=1;
  window.LEVEL_PROGRESSION_TRANSITION_AUDIT_VERSION=1;
+ window.LEVEL_MIGRATION_REGRESSION_AUDIT_VERSION=1;
+ window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT=typeof window.runLevelMigrationRegression==="function"?window.runLevelMigrationRegression():{version:1,passed:false,errors:[{code:"MIGRATION_REGRESSION_OWNER_MISSING"}],cases:[],checkedAt:Date.now()};
+ if(window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT?.passed!==true)console.error("[文明戰線] Level migration regression audit failed",window.LEVEL_MIGRATION_REGRESSION_AUDIT_REPORT);
 })();
