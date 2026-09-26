@@ -7,24 +7,24 @@
   const id=window.civilizationAuth?.getUser?.()?.id||window.civilizationAuthSession?.user?.id||"";
   return String(id||"");
  }
- function storageKey(){
+ function devicePreferenceStorageKey(prefix){
   const id=currentUserId();
-  return id?`${STORAGE_PREFIX}${id}`:"";
+  return id?`${String(prefix||"")}${id}`:"";
  }
- function mainlineHpLockStorageKey(){
-  const id=currentUserId();
-  return id?`${MAINLINE_HP_LOCK_STORAGE_PREFIX}${id}`:"";
- }
- function enabled(){
-  const key=storageKey();
+ function deviceBooleanPreferenceEnabled(prefix){
+  const key=devicePreferenceStorageKey(prefix);
   if(!key)return false;
   try{return localStorage.getItem(key)==="1";}catch(e){return false;}
  }
- function mainlineHpLockEnabled(){
-  const key=mainlineHpLockStorageKey();
+ function setDeviceBooleanPreference(prefix,next){
+  const key=devicePreferenceStorageKey(prefix);
   if(!key)return false;
-  try{return localStorage.getItem(key)==="1";}catch(e){return false;}
+  try{localStorage.setItem(key,next?"1":"0");return true;}catch(e){return false;}
  }
+ function storageKey(){return devicePreferenceStorageKey(STORAGE_PREFIX);}
+ function mainlineHpLockStorageKey(){return devicePreferenceStorageKey(MAINLINE_HP_LOCK_STORAGE_PREFIX);}
+ function enabled(){return deviceBooleanPreferenceEnabled(STORAGE_PREFIX);}
+ function mainlineHpLockEnabled(){return deviceBooleanPreferenceEnabled(MAINLINE_HP_LOCK_STORAGE_PREFIX);}
  function mainlineHpLockActive(scope=""){
   if(!mainlineHpLockEnabled())return false;
   if(scope==="world1-mainline")return true;
@@ -33,19 +33,11 @@
   return false;
  }
  function setEnabled(next){
-  const key=storageKey();
-  if(!key)return false;
-  try{
-   localStorage.setItem(key,next?"1":"0");
-   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");}
-   return true;
-  }catch(e){return false;}
+  if(!setDeviceBooleanPreference(STORAGE_PREFIX,next))return false;
+  if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");}
+  return true;
  }
- function setMainlineHpLockEnabled(next){
-  const key=mainlineHpLockStorageKey();
-  if(!key)return false;
-  try{localStorage.setItem(key,next?"1":"0");return true;}catch(e){return false;}
- }
+ function setMainlineHpLockEnabled(next){return setDeviceBooleanPreference(MAINLINE_HP_LOCK_STORAGE_PREFIX,next);}
  function installStyles(){
   if(document.getElementById("gmBackgroundBattleStyles"))return;
   const style=document.createElement("style");
@@ -81,11 +73,15 @@
   if(typeof render==="function")render();
   return true;
  };
+ window.gmDevicePreferenceStorageKey=devicePreferenceStorageKey;
+ window.gmDeviceBooleanPreferenceEnabled=deviceBooleanPreferenceEnabled;
+ window.gmSetDeviceBooleanPreference=setDeviceBooleanPreference;
  window.gmBackgroundBattleEnabled=enabled;
  window.gmBackgroundBattleStorageKey=storageKey;
  window.gmMainlineHpLockEnabled=mainlineHpLockEnabled;
  window.gmMainlineHpLockStorageKey=mainlineHpLockStorageKey;
  window.gmMainlineHpLockActive=mainlineHpLockActive;
+ window.GM_DEVICE_BOOLEAN_PREFERENCE_VERSION=1;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
  window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION=1;
  window.GM_MAINLINE_HP_LOCK_MANAGEMENT_VERSION=1;
