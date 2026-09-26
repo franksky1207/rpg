@@ -1,5 +1,5 @@
 (function(){
- const WORLD_PHASE_VERSION=6;
+ const WORLD_PHASE_VERSION=7;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
  const WORLD_PHASE_METADATA=Object.freeze({
@@ -7,6 +7,7 @@
   2:Object.freeze({index:2,id:"universe",stateKey:"secondWorld",name:"宇宙紀元"}),
   3:Object.freeze({index:3,id:"higher-dimensional",stateKey:"thirdWorld",name:"高維紀元"})
  });
+ const worldTransitionRuntimeBlockers=new Map();
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteCount(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:0;}
@@ -102,12 +103,22 @@
   target.lostGear=[];
   return {restored};
  }
+ function registerWorldTransitionRuntimeBlocker(name,checker){const key=String(name||"").trim();if(!key||typeof checker!=="function")return false;worldTransitionRuntimeBlockers.set(key,checker);return true;}
+ function unregisterWorldTransitionRuntimeBlocker(name){return worldTransitionRuntimeBlockers.delete(String(name||"").trim());}
  function worldTransitionRuntimeStatus(){
   const blockers=[];
   try{if(typeof battleBusy!=="undefined"&&battleBusy===true)blockers.push("battle-busy");}catch(e){}
   if(window.activeMainBattleContext)blockers.push("mainline-active");
   if(window.activeSecondWorldMainlineContext)blockers.push("second-world-mainline-active");
   if(typeof window.isMinimalModeOpen==="function"&&window.isMinimalModeOpen())blockers.push("minimal-mode-open");
+  worldTransitionRuntimeBlockers.forEach((checker,name)=>{
+   try{
+    const result=checker({state,currentWorld:currentWorldPhase(state)});
+    if(result===true)blockers.push(name);
+    else if(typeof result==="string"&&result)blockers.push(`${name}:${result}`);
+    else if(result?.blocked===true){const reasons=Array.isArray(result.reasons)?result.reasons.filter(Boolean):[];if(reasons.length)reasons.forEach(reason=>blockers.push(`${name}:${reason}`));else blockers.push(name);}
+   }catch(error){blockers.push(`${name}:check-error`);console.error("[文明戰線] World transition blocker check failed.",name,error);}
+  });
   return {blocked:blockers.length>0,blockers};
  }
  function resetWorldTransitionTransientRuntime(){
@@ -118,6 +129,17 @@
   window.currentCombatEncounter=null;
   window.activeSpecialEncounter=null;
   return true;
+ }
+ function restoreWorldTransitionBackup(backup){
+  state=backup;
+  const errors=[];
+  const run=(name,fn)=>{try{const result=fn();if(result&&typeof result==="object"&&result!==state&&name==="normalizeSaveState")state=result;}catch(error){errors.push({name,error:String(error?.message||error)});}};
+  if(typeof window.normalizeSaveState==="function")run("normalizeSaveState",()=>window.normalizeSaveState(state));
+  if(typeof window.normalizeSecondWorldState==="function")run("normalizeSecondWorldState",()=>window.normalizeSecondWorldState(state));
+  if(typeof window.normalizeThirdWorldState==="function")run("normalizeThirdWorldState",()=>window.normalizeThirdWorldState(state));
+  if(typeof window.normalizeDungeonSaveState==="function")run("normalizeDungeonSaveState",()=>window.normalizeDungeonSaveState(state));
+  if(typeof window.normalizeOfflineSaveState==="function")run("normalizeOfflineSaveState",()=>window.normalizeOfflineSaveState(state,{sourceVersion:Number(state?.saveVersion)||Number(window.SAVE_SCHEMA_VERSION)||1,currentTime:Date.now()}));
+  return {ok:errors.length===0,errors};
  }
  function transitionContext(phase,requirements){return Object.freeze({phase,requirements:requirements||null,committed:phase==="postcommit"});}
  function runWorldTransition(config={}){
@@ -134,18 +156,18 @@
    if(typeof config.mutate==="function")config.mutate(state,requirements,context);
    if(typeof config.prepareBeforeSave==="function")config.prepareBeforeSave(state,requirements,context);
    const saved=typeof save==="function"?save(false):false;
-   if(saved!==true){state=backup;return {ok:false,reason:"save-failed",requirements};}
-  }catch(error){state=backup;return {ok:false,reason:"transition-failed",error:String(error?.message||error),requirements};}
+   if(saved!==true){const rollback=restoreWorldTransitionBackup(backup);return {ok:false,reason:"save-failed",requirements,rollback};}
+  }catch(error){const rollback=restoreWorldTransitionBackup(backup);return {ok:false,reason:"transition-failed",error:String(error?.message||error),requirements,rollback};}
   let postCommitError="";
   try{if(typeof config.finalizeAfterSave==="function")config.finalizeAfterSave(state,requirements,transitionContext("postcommit",requirements));}catch(error){postCommitError=String(error?.message||error);console.error("[文明戰線] World transition committed, but post-commit finalization failed.",error);}
   const marker=String(config.sessionMarker||"").trim();if(marker){try{sessionStorage.setItem(marker,"1");}catch(e){}}
   if(config.reload!==false)setTimeout(()=>{try{location.reload();}catch(e){}},0);
   return {ok:true,reloading:config.reload!==false,requirements,postCommitError};
  }
- function enterSecondWorld(){return runWorldTransition({requirements:()=>secondWorldEntryRequirements(state),mutate:target=>{const next=createBlankSecondWorldState();next.entered=true;target.secondWorld=next;target.gold=0;if(!isObject(target.enhancement))target.enhancement={};target.enhancement.basicStones=0;target.enhancement.advancedStones=0;target.lostGear=[];resetPendingBlackMarketForWorldTransition(target);clearFirstWorldCalamityResidualHp(target);resetOfflineStateForWorldTransition(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_second_world_just_entered_v1"});}
+ function enterSecondWorld(){return runWorldTransition({requirements:()=>secondWorldEntryRequirements(state),runtimeStatus:()=>worldTransitionRuntimeStatus(),mutate:target=>{const next=createBlankSecondWorldState();next.entered=true;target.secondWorld=next;target.gold=0;if(!isObject(target.enhancement))target.enhancement={};target.enhancement.basicStones=0;target.enhancement.advancedStones=0;target.lostGear=[];resetPendingBlackMarketForWorldTransition(target);clearFirstWorldCalamityResidualHp(target);resetOfflineStateForWorldTransition(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_second_world_just_entered_v1"});}
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
- window.WORLD_PHASE_SHARED_CORE_VERSION=3;
+ window.WORLD_PHASE_SHARED_CORE_VERSION=4;
  window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=1;
  window.WORLD_PHASE_METADATA=WORLD_PHASE_METADATA;
  window.WORLD_PHASE_METADATA_VERSION=2;
@@ -158,12 +180,17 @@
  window.worldPhaseEnhancementRequirement=enhancementRequirement;
  window.worldPhaseMarkRequirement=markRequirement;
  window.summarizeWorldEntryRequirements=summarizeWorldEntryRequirements;
- window.WORLD_PHASE_SAFE_TRANSITION_VERSION=3;
+ window.WORLD_PHASE_SAFE_TRANSITION_VERSION=4;
  window.WORLD_PHASE_TRANSITION_CALLBACK_CONTRACT_VERSION=1;
  window.WORLD_TRANSITION_CLEANUP_VERSION=1;
- window.WORLD_TRANSITION_RUNTIME_GUARD_VERSION=1;
+ window.WORLD_TRANSITION_RUNTIME_GUARD_VERSION=2;
+ window.WORLD_TRANSITION_BLOCKER_REGISTRY_VERSION=1;
+ window.WORLD_TRANSITION_ROLLBACK_REHYDRATION_VERSION=1;
  window.runWorldTransition=runWorldTransition;
  window.worldTransitionRuntimeStatus=worldTransitionRuntimeStatus;
+ window.registerWorldTransitionRuntimeBlocker=registerWorldTransitionRuntimeBlocker;
+ window.unregisterWorldTransitionRuntimeBlocker=unregisterWorldTransitionRuntimeBlocker;
+ window.restoreWorldTransitionBackup=restoreWorldTransitionBackup;
  window.resetOfflineStateForWorldTransition=resetOfflineStateForWorldTransition;
  window.restoreLostGearForWorldTransition=restoreLostGearForWorldTransition;
  window.resetWorldTransitionTransientRuntime=resetWorldTransitionTransientRuntime;
