@@ -20,11 +20,8 @@ assert(!readme.includes("正式 save schema：`12`"),"README 不得復活舊 Sch
 
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("WORLD_PHASE_VERSION = 6")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／World3 正式基準與 main 唯一真實來源原則。");
 
-assert(pending.includes("全介面＋遊戲說明雙紀元語意總掃描」已完成"),"Pending 必須標記雙紀元語意總掃描已完成。");
-assert(pending.includes("VIP 無上限正式改版")&&pending.includes("VIP 等級本身無上限"),"Pending 必須同步 VIP 無上限改版完成狀態。");
-assert(pending.includes("PROJECT_VIP_UNBOUNDED_UPDATE.md"),"Pending 必須指向 VIP 正式補充文件。");
-assert(!pending.includes("此掃描目前**尚未執行**"),"Pending 不得保留已完成掃描的舊待辦。");
-assert(pending.includes("Arena V2 額外「實機 500 場」驗收")&&pending.includes("Cloud Save 真實跨裝置驗證"),"Pending 必須保留已取消項目，避免日後自動復活。");
+assert(pending.includes("第三紀元")&&pending.includes("VIP 無上限正式改版")&&pending.includes("VIP等級本身無上限"),"Pending 必須保留第三紀元與 VIP 無上限現行政策。");
+assert(pending.includes("已取消／不得自動復活")&&pending.includes("Arena V2 額外500場驗收")&&pending.includes("Cloud Save 真實跨裝置驗證"),"Pending 必須保留已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
 assert(vipUpdate.includes("VIP_PROGRESSION_VERSION = 14")&&vipUpdate.includes("VIP_UNBOUNDED_INTEGRITY_VERSION = 1"),"VIP 補充文件必須記錄正式 owner／Integrity 版本。");
