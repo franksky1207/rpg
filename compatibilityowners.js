@@ -7,7 +7,7 @@
  const ARENA_RUNTIME_OWNER="arenaByWorld";
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
  const SAVE_HOOK_CORE_VERSION=1;
- const SCRIPT_LOAD_POLICY_VERSION=1;
+ const SCRIPT_LOAD_POLICY_VERSION=2;
  const saveHooks=new Map();
  const baseSave=typeof window.save==="function"?window.save:null;
 
@@ -38,7 +38,7 @@
   if(name.startsWith("storydata-")||["storyintegrity.js","storyui.js","storymigration.js","storyprogress.js","storyrecordtabs.js","storyruntimeintegrity.js"].includes(name))return "story";
   if(name.includes("integrity"))return "integrity";
   if(name.startsWith("gm")||name.includes("gm.")||name.includes("gmp")||name.endsWith("gm.js")||["vipgm.js","civilizationgm.js","specialgmbatch.js","dungeongm.js","arenagm5.js","dungeonvoidgmmanage.js","batch5ui.js","mirrordungeongm.js","levelprogressionaudit.js"].includes(name))return "gm";
-  if(name.startsWith("worldmaps-")||name.startsWith("secondworld")||name.startsWith("worldphase")||name.startsWith("worldmap"))return "world";
+  if(name.startsWith("worldmaps-")||name.startsWith("secondworld")||name.startsWith("thirdworld")||name.startsWith("worldphase")||name.startsWith("worldmap"))return "world";
   return "core";
  }
 
