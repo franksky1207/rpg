@@ -57,14 +57,21 @@
   return drops;
  };
 
+ function formalMainlineHpLockActive(){
+  const mainlineContext=!!(window.activeMainBattleContext||window.activeSecondWorldMainlineContext);
+  return mainlineContext&&typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;
+ }
+
  window.specialFightCore=function(enemy,options={}){
   const world=Number(options.world)===2?2:1;
   const targetState=options.state&&typeof options.state==="object"?options.state:state;
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
    ?window.civilizationCombatDamageMultiplier({world,state:targetState,civilizationLevel:options.civilizationLevel})
    :1;
+  const lockPlayerFullHp=options.lockPlayerFullHp===true||formalMainlineHpLockActive();
   const combat=runCombatCore(playerCombatStats(),enemy,state.hp,{
-   playerFinalDamageMultiplier:civilizationMultiplier
+   playerFinalDamageMultiplier:civilizationMultiplier,
+   lockPlayerFullHp
   });
   state.hp=combat.hp;
   return {
@@ -79,4 +86,5 @@
  window.SPECIAL_WORLD_DROP_OWNER_VERSION=2;
  window.SPECIAL_WEAK_SLOT_CONTEXT_VERSION=1;
  window.SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1;
+ window.SPECIAL_MAINLINE_HP_LOCK_SCOPE_VERSION=1;
 })();
