@@ -36,6 +36,17 @@
 - `index.html` 已更新本次 VIP／Guide／GM／Integrity cache-bust。
 - 完整規則、版本、GM 行為與自我檢查紀錄見 `PROJECT_VIP_UNBOUNDED_UPDATE.md`。
 
+2026-09-26 已完成 GM「主線鎖血」與後續 owner 收斂：
+
+- GM 管理順序為「背景戰鬥 → 主線鎖血 → 戰鬥速度」。
+- 主線鎖血只作用於銀河紀元正式主線、宇宙紀元正式主線與正式主線 context 中的特殊怪；不作用於懸賞、競技、鏡像、虛空、文明災厄、回顧戰或 GM 測試。
+- `combatcore.js` 保留真實敵方攻擊、護盾、不屈、反噬、反擊等正式戰鬥機制；鎖血只讓玩家正式 HP 保持滿血，且非滿血進場時正式 `playerStartHp` 會直接正規化為最大 HP。
+- `combatfx.js` 是鎖血呈現正式 owner；不再由 GM 設定檔 monkey-patch `prepareCombatPresentation()`，也不再竄改 `actualDamage` 的真實承傷語意。
+- `gmbackground.js` 提供唯一正式 `gmMainlineHpLockActive(scope)` gate，並將背景戰鬥／主線鎖血的帳號本機布林設定收斂到共用 device preference helper。
+- 既有 localStorage key 保持 `civilization_frontline_gm_mainline_hp_lock_v1_<userId>`，既有開／關值直接沿用，不需 localStorage migration；不同登入帳號在同一裝置各自保存。
+- 此功能不寫入角色 save、Cloud Save 或 GM JSON 匯出資料；Save schema 維持15，不需 `savemigration.js` migration。
+- `tests/runtime/gm-mainline-hp-lock-integrity.js` 已納入 Runtime Integrity，會驗證正式 scope、帳號隔離、舊 v1 key 沿用、未登入 fail-closed，以及副本／災厄／GM 測試不得接入。
+
 先前的「全介面＋遊戲說明雙紀元語意總掃描」已完成，不再列為待辦。
 
 ## 現行已實作內容的下一階段
