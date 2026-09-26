@@ -166,7 +166,9 @@
  }
  function canEnterSecondWorld(target=state){return secondWorldEntryRequirements(target).eligible===true;}
  function primaryResourceSnapshot(target=state){
-  if(isSecondWorldEntered(target))return {label:"暗物質",amount:finiteCount(target?.secondWorld?.darkMatter),secondaryLabel:"暗能量",secondaryAmount:finiteCount(target?.secondWorld?.darkEnergy)};
+  const phase=currentWorldPhase(target);
+  if(phase===3)return {label:"維度之弦",amount:finiteCount(target?.thirdWorld?.dimensionalStrings),secondaryLabel:null,secondaryAmount:0};
+  if(phase===2)return {label:"暗物質",amount:finiteCount(target?.secondWorld?.darkMatter),secondaryLabel:"暗能量",secondaryAmount:finiteCount(target?.secondWorld?.darkEnergy)};
   return {label:"金幣",amount:finiteCount(target?.gold),secondaryLabel:null,secondaryAmount:0};
  }
  function cloneState(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
@@ -255,6 +257,7 @@
  window.worldPhaseSnapshot=worldPhaseSnapshot;
  window.WORLD_PHASE_SAFE_TRANSITION_VERSION=1;
  window.runWorldTransition=runWorldTransition;
+ window.WORLD_PHASE_PRIMARY_RESOURCE_VERSION=2;
  window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1;
  window.SECOND_WORLD_MAIN_BOSS_COUNT=SECOND_WORLD_MAIN_BOSS_COUNT;
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
