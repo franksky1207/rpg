@@ -49,9 +49,9 @@
  };
 
  window.gmCivilizationManagementHtml=function(){
-  if(!entered())return '<div class="muted gm-hub-note">文明等級只屬於宇宙紀元；目前正式角色仍在銀河紀元，沒有可修改的文明等級。</div>';
+  if(!entered())return '<div class="muted gm-hub-note">文明等級自宇宙紀元起啟用；目前正式角色仍在銀河紀元，沒有可修改的文明等級。</div>';
   const current=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
-  return `<div class="muted gm-hub-note">直接修改正式角色文明等級，範圍 Lv.0～Lv.${maxLevel()}；每級提高宇宙戰鬥最終傷害 5%。</div><div class="controls" style="align-items:end"><label>文明等級<br><select id="gmCivilizationManageLevel" class="btn">${formalOptions()}</select></label><span class="muted">${label(current)}</span><button class="btn blue" onclick="gmApplyCivilizationLevel()">套用文明等級</button></div>`;
+  return `<div class="muted gm-hub-note">直接修改正式角色文明等級，範圍 Lv.0～Lv.${maxLevel()}；文明等級會保留至高維紀元，並對宇宙／高維戰鬥提供每級 5% 最終傷害。</div><div class="controls" style="align-items:end"><label>文明等級<br><select id="gmCivilizationManageLevel" class="btn">${formalOptions()}</select></label><span class="muted">${label(current)}</span><button class="btn blue" onclick="gmApplyCivilizationLevel()">套用文明等級</button></div>`;
  };
  window.gmApplyCivilizationLevel=function(){
   if(!entered())return alert("目前尚未進入宇宙紀元。");
@@ -67,7 +67,7 @@
   return lv;
  };
  window.gmCivilizationTestHtml=function(){
-  return `<div class="muted gm-hub-note">設定宇宙紀元戰鬥使用的文明等級測試值；沙盒固定 Lv.0～Lv.${maxLevel()}，不修改正式角色資料。銀河紀元測試永遠不套文明傷害倍率。</div><div class="controls" style="align-items:end"><label>測試文明等級<br><select id="gmTestCivilizationLevel" class="btn" onchange="gmSetTestCivilizationLevel(this.value)">${testOptions()}</select></label><span id="gmCivilizationTestInfo" class="muted">${window.gmTestCivilizationLabel()}</span></div>`;
+  return `<div class="muted gm-hub-note">設定宇宙／高維紀元戰鬥使用的文明等級測試值；沙盒固定 Lv.0～Lv.${maxLevel()}，不修改正式角色資料。銀河紀元測試永遠不套文明傷害倍率。</div><div class="controls" style="align-items:end"><label>測試文明等級<br><select id="gmTestCivilizationLevel" class="btn" onchange="gmSetTestCivilizationLevel(this.value)">${testOptions()}</select></label><span id="gmCivilizationTestInfo" class="muted">${window.gmTestCivilizationLabel()}</span></div>`;
  };
 
  window.GM_CIVILIZATION_VERSION=1;
@@ -75,4 +75,5 @@
  window.GM_CIVILIZATION_TEST_RANGE_VERSION=1;
  window.GM_CIVILIZATION_ATOMIC_MUTATION_VERSION=1;
  window.GM_CIVILIZATION_TEST_BATCH_SYNC_VERSION=1;
+ window.GM_CIVILIZATION_WORLD_PHASE_VERSION=1;
 })();
