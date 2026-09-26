@@ -46,8 +46,9 @@
   return Math.ceil(base*250);
  }
  function thirdWorldExpNeed(level){
-  const l=Math.max(SECOND_WORLD_LEVEL_CAP,Math.floor(Number(level)||SECOND_WORLD_LEVEL_CAP));
-  return l>=THIRD_WORLD_LEVEL_CAP?0:THIRD_WORLD_EXP_PER_LEVEL;
+  const l=Math.floor(Number(level));
+  if(!Number.isFinite(l)||l<SECOND_WORLD_LEVEL_CAP||l>=THIRD_WORLD_LEVEL_CAP)return 0;
+  return THIRD_WORLD_EXP_PER_LEVEL;
  }
 
  const originalExpNeed=typeof expNeed==="function"?expNeed:null;
@@ -130,6 +131,7 @@
  window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION=1;
  window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION=1;
  window.THIRD_WORLD_EXP_OWNER_VERSION=1;
+ window.THIRD_WORLD_EXP_HELPER_STRICT_RANGE_VERSION=1;
  window.LEGACY_MAX_LEVEL_MIGRATION_ONLY_VERSION=1;
  window.currentLevelWorldPhase=currentLevelWorldPhase;
  window.effectiveLevelCap=effectiveLevelCap;
@@ -156,7 +158,7 @@
   if(universeExpNeed(999)!==1005250)errors.push({code:"EXP_999",actual:universeExpNeed(999)});
   if(universeExpNeed(1000)!==0)errors.push({code:"UNIVERSE_EXP_1000",actual:universeExpNeed(1000)});
   if(effectiveExpNeed(1000,universe)!==0)errors.push({code:"WORLD2_EXP_1000",actual:effectiveExpNeed(1000,universe)});
-  if(thirdWorldExpNeed(1000)!==THIRD_WORLD_EXP_PER_LEVEL||thirdWorldExpNeed(1999)!==THIRD_WORLD_EXP_PER_LEVEL||thirdWorldExpNeed(2000)!==0)errors.push({code:"THIRD_WORLD_EXP_HELPER"});
+  if(thirdWorldExpNeed(500)!==0||thirdWorldExpNeed(999)!==0||thirdWorldExpNeed(1000)!==THIRD_WORLD_EXP_PER_LEVEL||thirdWorldExpNeed(1999)!==THIRD_WORLD_EXP_PER_LEVEL||thirdWorldExpNeed(2000)!==0||thirdWorldExpNeed(2001)!==0)errors.push({code:"THIRD_WORLD_EXP_HELPER_STRICT_RANGE",values:{lv500:thirdWorldExpNeed(500),lv999:thirdWorldExpNeed(999),lv1000:thirdWorldExpNeed(1000),lv1999:thirdWorldExpNeed(1999),lv2000:thirdWorldExpNeed(2000),lv2001:thirdWorldExpNeed(2001)}});
   if(effectiveExpNeed(1000,higher)!==THIRD_WORLD_EXP_PER_LEVEL||effectiveExpNeed(1999,higher)!==THIRD_WORLD_EXP_PER_LEVEL||effectiveExpNeed(2000,higher)!==0)errors.push({code:"WORLD3_EXP_OWNER"});
   const world3Snapshot=levelProgressSnapshot({level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true}});
   if(world3Snapshot.world!==3||world3Snapshot.cap!==2000||world3Snapshot.need!==THIRD_WORLD_EXP_PER_LEVEL||world3Snapshot.atCap!==false)errors.push({code:"WORLD3_SNAPSHOT",actual:world3Snapshot});
