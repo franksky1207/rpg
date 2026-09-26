@@ -1,5 +1,5 @@
 (function(){
- const WORLD_PHASE_VERSION=5;
+ const WORLD_PHASE_VERSION=6;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
  const WORLD_PHASE_METADATA=Object.freeze({
@@ -36,18 +36,41 @@
  function thirdWorldProgressionEnabled(target=state){return worldProgressionEnabled(3,target);}
  function worldPhaseSnapshot(target=state){const current=currentWorldPhase(target),meta=worldPhaseMeta(current);return {current,currentId:meta?.id||"",currentName:meta?.name||"",entered:{1:true,2:isSecondWorldEntered(target),3:isThirdWorldEntered(target)},progression:{1:worldProgressionEnabled(1,target),2:worldProgressionEnabled(2,target),3:worldProgressionEnabled(3,target)}};}
 
+ function specializationRequirement(target,requiredLevel=null){
+  const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
+  const fallback=Math.max(0,Math.floor(Number(window.SPECIALIZATION_MAX_LEVEL)||60));
+  const required=Math.max(0,Math.floor(Number(requiredLevel??fallback)||fallback)),total=keys.length;
+  const completed=keys.filter(key=>Math.floor(Number(target?.specializations?.[key])||0)>=required).length;
+  return {ok:total===8&&completed===total,completed,total:total||8,requiredLevel:required};
+ }
+ function enhancementRequirement(target,requiredLevel=null){
+  const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"];
+  const fallback=Math.max(0,Math.floor(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)||20));
+  const required=Math.max(0,Math.floor(Number(requiredLevel??fallback)||fallback)),total=slots.length;
+  const completed=slots.filter(slot=>Math.floor(Number(target?.enhancement?.levels?.[slot])||0)>=required).length;
+  return {ok:total===5&&completed===total,completed,total:total||5,requiredLevel:required};
+ }
+ function markRequirement(target,requiredLevel=null){
+  const ids=Array.from(window.CIVILIZATION_MARK_IDS||[]);
+  const fallback=Math.max(0,Math.floor(Number(window.MARK_MAX_LEVEL)||10));
+  const required=Math.max(0,Math.floor(Number(requiredLevel??fallback)||fallback)),total=ids.length;
+  const completed=ids.filter(id=>Math.floor(Number(target?.marks?.entries?.[id]?.level)||0)>=required).length;
+  return {ok:total===10&&completed===total,completed,total:total||10,requiredLevel:required};
+ }
+ function summarizeWorldEntryRequirements(rows,alreadyEntered=false,extra={}){
+  const list=Array.isArray(rows)?rows.filter(Boolean):[],completed=list.filter(row=>row?.ok===true).length;
+  return {...extra,eligible:completed===list.length&&list.length>0&&alreadyEntered!==true,alreadyEntered:alreadyEntered===true,completed,total:list.length};
+ }
+
  function finalFirstWorldMapIndex(){if(Array.isArray(MAPS)&&MAPS.length)return MAPS.length-1;return 99;}
  function finalFirstWorldStoryId(){const mapIndex=finalFirstWorldMapIndex();if(!Array.isArray(WORLD_REGIONS))return null;const region=WORLD_REGIONS.find(row=>mapIndex>=Number(row?.mapStart)&&mapIndex<=Number(row?.mapEnd));if(!region?.id)return null;return `${region.id}-boss-${mapIndex-Number(region.mapStart)+1}`;}
  function finalFirstWorldBossKilled(target){const index=finalFirstWorldMapIndex();return Array.isArray(target?.bossKilled)&&target.bossKilled[index]===true;}
  function finalFirstWorldStoryCompleted(target){const storyId=finalFirstWorldStoryId();if(!storyId)return false;const completed=target?.storyProgress?.completedStories;return Array.isArray(completed)&&completed.includes(storyId);}
- function specializationRequirement(target){const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[],max=Math.max(0,Math.floor(Number(window.SPECIALIZATION_MAX_LEVEL)||60)),total=keys.length,completed=keys.filter(key=>Math.floor(Number(target?.specializations?.[key])||0)>=max).length;return {ok:total===8&&completed===total,completed,total:total||8,requiredLevel:max};}
- function enhancementRequirement(target){const slots=Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"],requiredLevel=Math.max(0,Math.floor(Number(window.FIRST_WORLD_ENHANCEMENT_CAP)||20)),total=slots.length,completed=slots.filter(slot=>Math.floor(Number(target?.enhancement?.levels?.[slot])||0)>=requiredLevel).length;return {ok:total===5&&completed===total,completed,total:total||5,requiredLevel};}
- function markRequirement(target){const ids=Array.from(window.CIVILIZATION_MARK_IDS||[]),requiredLevel=Math.max(0,Math.floor(Number(window.MARK_MAX_LEVEL)||10)),total=ids.length,completed=ids.filter(id=>Math.floor(Number(target?.marks?.entries?.[id]?.level)||0)>=requiredLevel).length;return {ok:total===10&&completed===total,completed,total:total||10,requiredLevel};}
  function secondWorldEntryRequirements(target=state){
   const levelCurrent=Math.max(1,Math.floor(Number(target?.level)||1)),level={ok:levelCurrent>=500,current:levelCurrent,required:500};
   const bossCompleted=finalFirstWorldBossKilled(target),finalStoryCompleted=finalFirstWorldStoryCompleted(target),mainline={ok:bossCompleted&&finalStoryCompleted,bossCompleted,finalStoryCompleted,finalStoryId:finalFirstWorldStoryId()};
-  const specializations=specializationRequirement(target),enhancement=enhancementRequirement(target),marks=markRequirement(target),rows=[level,mainline,specializations,enhancement,marks],completed=rows.filter(row=>row.ok).length;
-  return {eligible:completed===rows.length&&!isSecondWorldEntered(target),alreadyEntered:isSecondWorldEntered(target),completed,total:rows.length,level,mainline,specializations,enhancement,marks};
+  const specializations=specializationRequirement(target),enhancement=enhancementRequirement(target),marks=markRequirement(target);
+  return summarizeWorldEntryRequirements([level,mainline,specializations,enhancement,marks],isSecondWorldEntered(target),{level,mainline,specializations,enhancement,marks});
  }
  function canEnterSecondWorld(target=state){return secondWorldEntryRequirements(target).eligible===true;}
  function primaryResourceSnapshot(target=state){const phase=currentWorldPhase(target);if(phase===3)return {label:"維度之弦",amount:finiteCount(target?.thirdWorld?.dimensionalStrings),secondaryLabel:null,secondaryAmount:0};if(phase===2)return {label:"暗物質",amount:finiteCount(target?.secondWorld?.darkMatter),secondaryLabel:"暗能量",secondaryAmount:finiteCount(target?.secondWorld?.darkEnergy)};return {label:"金幣",amount:finiteCount(target?.gold),secondaryLabel:null,secondaryAmount:0};}
@@ -77,7 +100,8 @@
  function enterSecondWorld(){return runWorldTransition({requirements:()=>secondWorldEntryRequirements(state),mutate:target=>{const next=createBlankSecondWorldState();next.entered=true;target.secondWorld=next;target.gold=0;if(!isObject(target.enhancement))target.enhancement={};target.enhancement.basicStones=0;target.enhancement.advancedStones=0;target.lostGear=[];resetPendingBlackMarketForWorldTransition(target);clearFirstWorldCalamityResidualHp(target);clearFirstWorldOfflineState(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_second_world_just_entered_v1"});}
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
- window.WORLD_PHASE_SHARED_CORE_VERSION=2;
+ window.WORLD_PHASE_SHARED_CORE_VERSION=3;
+ window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=1;
  window.WORLD_PHASE_METADATA=WORLD_PHASE_METADATA;
  window.WORLD_PHASE_METADATA_VERSION=2;
  window.worldPhaseMeta=worldPhaseMeta;
@@ -85,17 +109,21 @@
  window.isWorldEntered=isWorldEntered;
  window.worldProgressionEnabled=worldProgressionEnabled;
  window.worldPhaseSnapshot=worldPhaseSnapshot;
+ window.worldPhaseSpecializationRequirement=specializationRequirement;
+ window.worldPhaseEnhancementRequirement=enhancementRequirement;
+ window.worldPhaseMarkRequirement=markRequirement;
+ window.summarizeWorldEntryRequirements=summarizeWorldEntryRequirements;
  window.WORLD_PHASE_SAFE_TRANSITION_VERSION=3;
  window.WORLD_PHASE_TRANSITION_CALLBACK_CONTRACT_VERSION=1;
  window.runWorldTransition=runWorldTransition;
  window.WORLD_PHASE_PRIMARY_RESOURCE_VERSION=2;
- window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1;
+ window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=2;
  window.SECOND_WORLD_MAIN_BOSS_COUNT=SECOND_WORLD_MAIN_BOSS_COUNT;
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
  window.SECOND_WORLD_CIVILIZATION_STATE_VERSION=1;
  window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION=1;
- window.SECOND_WORLD_ENTRY_PURE_READ_VERSION=1;
+ window.SECOND_WORLD_ENTRY_PURE_READ_VERSION=2;
  window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION=1;
  window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION=1;
  window.secondWorldCivilizationFloorFromCalamities=civilizationFloorFromCalamities;
