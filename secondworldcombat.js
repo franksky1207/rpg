@@ -43,11 +43,17 @@
   if(typeof window.applyMonsterTraits==="function")return window.applyMonsterTraits({...base},traitIds);
   return {...base,traits:traitIds};
  }
+ function secondWorldFormalCombatEnabled(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  return typeof window.secondWorldProgressionEnabled==="function"?window.secondWorldProgressionEnabled(holder)===true:holder?.secondWorld?.entered===true&&holder?.thirdWorld?.entered!==true;
+ }
  function canRunSecondWorldBossCombat(value,target=null){
   const index=clampBossIndex(value);
   if(index<0)return false;
   if(target&&target.ignoreUnlock===true)return true;
-  return typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,target?.state||null);
+  const targetState=target?.state||null;
+  if(!secondWorldFormalCombatEnabled(targetState))return false;
+  return typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState);
  }
  function formalMainlineHpLockActive(){
   return typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world2-mainline")===true;
@@ -55,7 +61,9 @@
  function runSecondWorldBossCombat(value,options={}){
   const index=clampBossIndex(value);
   if(index<0)return {ok:false,reason:"找不到宇宙紀元 Boss。"};
-  if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,options.state||null))){
+  const targetState=options.state&&typeof options.state==="object"?options.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  if(options.ignoreUnlock!==true&&!secondWorldFormalCombatEnabled(targetState))return {ok:false,reason:"宇宙紀元已轉為回顧，無法產生正式主線進度。"};
+  if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState))){
    return {ok:false,reason:"此宇宙紀元 Boss 尚未解鎖。"};
   }
   if(typeof window.runCombatCore!=="function")return {ok:false,reason:"正式戰鬥核心尚未載入。"};
@@ -64,7 +72,6 @@
   const player=options.player&&typeof options.player==="object"?options.player:(typeof window.playerCombatStats==="function"?window.playerCombatStats():null);
   if(!player)return {ok:false,reason:"無法取得玩家戰鬥能力。"};
   const startHp=options.startHp==null?Math.max(1,Number(player.hp)||1):Math.max(0,Number(options.startHp)||0);
-  const targetState=options.state&&typeof options.state==="object"?options.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
    ?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel})
    :1;
@@ -118,6 +125,7 @@
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
  window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
+ window.SECOND_WORLD_FORMAL_COMBAT_PHASE_GATE_VERSION=1;
  window.SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=2;
  window.SECOND_WORLD_COMBAT_INTEGRITY=validate();
  if(!window.SECOND_WORLD_COMBAT_INTEGRITY.passed)console.error("[文明戰線] Second World combat integrity error",window.SECOND_WORLD_COMBAT_INTEGRITY.errors);
