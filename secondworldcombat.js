@@ -49,10 +49,8 @@
   if(target&&target.ignoreUnlock===true)return true;
   return typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,target?.state||null);
  }
- function formalMainlineHpLockActive(options={}){
-  if(options.lockPlayerFullHp===true)return true;
-  const formalContext=!!window.activeSecondWorldMainlineContext;
-  return formalContext&&typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;
+ function formalMainlineHpLockActive(){
+  return typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world2-mainline")===true;
  }
  function runSecondWorldBossCombat(value,options={}){
   const index=clampBossIndex(value);
@@ -70,6 +68,8 @@
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
    ?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel})
    :1;
+  const explicitHpLock=options.lockPlayerFullHp===true;
+  const lockPlayerFullHp=explicitHpLock||formalMainlineHpLockActive();
   const combat=window.runCombatCore(player,enemy,startHp,{
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
@@ -79,7 +79,7 @@
    maxTurns:options.maxTurns||0,
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier:civilizationMultiplier,
-   lockPlayerFullHp:formalMainlineHpLockActive(options)
+   lockPlayerFullHp
   });
   return {
    ok:true,
@@ -118,7 +118,7 @@
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
  window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
- window.SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=1;
+ window.SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=2;
  window.SECOND_WORLD_COMBAT_INTEGRITY=validate();
  if(!window.SECOND_WORLD_COMBAT_INTEGRITY.passed)console.error("[文明戰線] Second World combat integrity error",window.SECOND_WORLD_COMBAT_INTEGRITY.errors);
 })();
