@@ -9,6 +9,7 @@
   try{const arena=typeof window.getArenaCoreState==="function"?window.getArenaCoreState():null;if(v==="dungeon-arena"||arena?.phase==="ready"||arena?.phase==="combat"||arena?.continuous===true)reasons.push("arena-active");}catch(e){reasons.push("arena-check-error");}
   try{const mirror=typeof window.mirrorDungeonStatus==="function"?window.mirrorDungeonStatus():null;if(mirror?.status==="running")reasons.push("mirror-active");}catch(e){reasons.push("mirror-check-error");}
   try{const voidRun=typeof window.getVoidMirageRunSnapshot==="function"?window.getVoidMirageRunSnapshot():null;if(voidRun?.active===true)reasons.push("void-active");}catch(e){reasons.push("void-check-error");}
+  try{const calamity=typeof window.getCivilizationCalamityRunSnapshot==="function"?window.getCivilizationCalamityRunSnapshot():null;if(calamity?.active===true)reasons.push("galaxy-calamity-active");}catch(e){reasons.push("galaxy-calamity-check-error");}
   try{const calamity=typeof window.getSecondWorldCalamityRunSnapshot==="function"?window.getSecondWorldCalamityRunSnapshot():null;if(calamity?.active===true)reasons.push("second-world-calamity-active");}catch(e){reasons.push("second-world-calamity-check-error");}
   if(window.activeSpecialEncounter)reasons.push("special-encounter-active");
   return {blocked:reasons.length>0,reasons};
