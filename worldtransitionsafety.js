@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  function currentPhase(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):s?.thirdWorld?.entered===true?3:s?.secondWorld?.entered===true?2:1;}
  function activeView(){try{return String(view||"");}catch(e){return "";}}
  function bountyAllowed(){return currentPhase()!==3;}
@@ -15,13 +15,24 @@
   return {blocked:reasons.length>0,reasons};
  }
  function cleanupWelcomeMarkers(){
-  let phase=currentPhase();
+  const phase=currentPhase();
   try{
    if(phase===3)sessionStorage.removeItem("civilization_second_world_just_entered_v1");
    else if(phase===2)sessionStorage.removeItem("civilization_third_world_just_entered_v1");
    else{sessionStorage.removeItem("civilization_second_world_just_entered_v1");sessionStorage.removeItem("civilization_third_world_just_entered_v1");}
    return true;
   }catch(e){return false;}
+ }
+ function prepareLegacyOfflineBeforeLoad(){
+  if(currentPhase()!==3||Number(window.THIRD_WORLD_OFFLINE_SETTLEMENT_VERSION)>0)return false;
+  if(!state||typeof state!=="object")return false;
+  if(!state.offline||typeof state.offline!=="object")state.offline={};
+  const t=Date.now();
+  state.offline.pendingSettlement=null;
+  state.offline.lastSettledAt=t;
+  state.offline.maxObservedWallClock=Math.max(t,Number(state.offline.maxObservedWallClock)||0);
+  state.offline.timeLockUntil=0;
+  return true;
  }
  function installOfflineWorldPhaseGuards(){
   const begin=window.beginSecondWorldOfflineBattleSample;
@@ -32,25 +43,24 @@
   if(typeof resolve==="function"&&resolve.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()===3)return null;return resolve.apply(this,args);};wrapped.__worldPhaseGuard=true;window.resolveOfflineFarmTarget=wrapped;}
   return true;
  }
- const baseEnterBountyDungeon=typeof window.enterBountyDungeon==="function"?window.enterBountyDungeon:null;
- if(baseEnterBountyDungeon){
-  window.enterBountyDungeon=function(...args){
-   if(!bountyAllowed()){
-    if(typeof alert==="function")alert("高維紀元已關閉懸賞戰。競技場、鏡像戰與虛空仍可使用。");
-    return false;
-   }
-   return baseEnterBountyDungeon.apply(this,args);
-  };
+ function installBountyGate(){
+  const base=window.enterBountyDungeon;if(typeof base!=="function"||base.__worldPhaseGate===true)return false;
+  const wrapped=function(...args){if(!bountyAllowed()){if(typeof alert==="function")alert("高維紀元已關閉懸賞戰。競技場、鏡像戰與虛空仍可使用。");return false;}return base.apply(this,args);};wrapped.__worldPhaseGate=true;window.enterBountyDungeon=wrapped;return true;
  }
+ prepareLegacyOfflineBeforeLoad();
+ installBountyGate();
  installOfflineWorldPhaseGuards();
+ setTimeout(()=>{installBountyGate();installOfflineWorldPhaseGuards();},0);
  cleanupWelcomeMarkers();
  window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION=VERSION;
  window.BOUNTY_WORLD_PHASE_GATE_VERSION=1;
- window.OFFLINE_WORLD_PHASE_POLICY_VERSION=1;
+ window.OFFLINE_WORLD_PHASE_POLICY_VERSION=2;
+ window.OFFLINE_WORLD3_LEGACY_SETTLEMENT_GATE_VERSION=1;
  window.WORLD_PHASE_STALE_WELCOME_CLEANUP_VERSION=1;
  window.worldPhaseBountyAvailable=bountyAllowed;
  window.worldTransitionSubsystemRuntimeStatus=subsystemRuntimeStatus;
  window.currentOfflineWorldPhase=currentPhase;
+ window.prepareLegacyOfflineBeforeLoad=prepareLegacyOfflineBeforeLoad;
  window.installOfflineWorldPhaseGuards=installOfflineWorldPhaseGuards;
  window.cleanupStaleWorldPhaseWelcomeMarkers=cleanupWelcomeMarkers;
  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")window.registerWorldTransitionRuntimeBlocker("subsystems",subsystemRuntimeStatus);
