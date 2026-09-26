@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
  const policies=new Map();
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
