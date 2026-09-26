@@ -1,10 +1,17 @@
 (function(){
- const WORLD_PHASE_VERSION=3;
+ const WORLD_PHASE_VERSION=4;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
+ const WORLD_PHASE_METADATA=Object.freeze({
+  1:Object.freeze({index:1,id:"galaxy",key:"firstWorld",name:"銀河紀元"}),
+  2:Object.freeze({index:2,id:"universe",key:"secondWorld",name:"宇宙紀元"}),
+  3:Object.freeze({index:3,id:"higher-dimensional",key:"thirdWorld",name:"高維紀元"})
+ });
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteCount(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:0;}
+ function normalizeWorldIndex(value){const n=Math.floor(Number(value));return n>=1&&n<=3?n:1;}
+ function worldPhaseMeta(value){return WORLD_PHASE_METADATA[normalizeWorldIndex(value)]||WORLD_PHASE_METADATA[1];}
  function blankBossKilled(){return Array(SECOND_WORLD_MAIN_BOSS_COUNT).fill(false);}
  function blankCalamities(){return Array.from({length:SECOND_WORLD_CALAMITY_COUNT},()=>({currentHp:null,trueKills:0}));}
  function createBlankSecondWorldState(){
@@ -59,8 +66,37 @@
  function isSecondWorldEntered(target=state){
   return !!(isObject(target)&&isObject(target.secondWorld)&&target.secondWorld.entered===true);
  }
- function firstWorldProgressionEnabled(target=state){return !isSecondWorldEntered(target);}
- function secondWorldProgressionEnabled(target=state){return isSecondWorldEntered(target);}
+ function isThirdWorldEntered(target=state){
+  return !!(isObject(target)&&isObject(target.thirdWorld)&&target.thirdWorld.entered===true);
+ }
+ function isWorldEntered(world,target=state){
+  const index=normalizeWorldIndex(world);
+  if(index===1)return true;
+  if(index===2)return isSecondWorldEntered(target);
+  return isThirdWorldEntered(target);
+ }
+ function currentWorldPhase(target=state){
+  if(isThirdWorldEntered(target))return 3;
+  if(isSecondWorldEntered(target))return 2;
+  return 1;
+ }
+ function worldProgressionEnabled(world,target=state){
+  const index=normalizeWorldIndex(world),current=currentWorldPhase(target);
+  return index===current;
+ }
+ function firstWorldProgressionEnabled(target=state){return worldProgressionEnabled(1,target);}
+ function secondWorldProgressionEnabled(target=state){return worldProgressionEnabled(2,target);}
+ function thirdWorldProgressionEnabled(target=state){return worldProgressionEnabled(3,target);}
+ function worldPhaseSnapshot(target=state){
+  const current=currentWorldPhase(target);
+  return {
+   current,
+   currentId:worldPhaseMeta(current).id,
+   currentName:worldPhaseMeta(current).name,
+   entered:{1:true,2:isSecondWorldEntered(target),3:isThirdWorldEntered(target)},
+   progression:{1:worldProgressionEnabled(1,target),2:worldProgressionEnabled(2,target),3:worldProgressionEnabled(3,target)}
+  };
+ }
 
  function finalFirstWorldMapIndex(){
   if(Array.isArray(MAPS)&&MAPS.length)return MAPS.length-1;
@@ -156,43 +192,68 @@
   target.pendingBlackMarketEncounter=false;
   return true;
  }
- function enterSecondWorld(){
-  const requirements=secondWorldEntryRequirements(state);
-  if(requirements.alreadyEntered)return {ok:false,reason:"already-entered",requirements};
-  if(!requirements.eligible)return {ok:false,reason:"requirements-incomplete",requirements};
+ function runWorldTransition(config={}){
+  const requirements=typeof config.requirements==="function"?config.requirements(state):config.requirements;
+  if(requirements?.alreadyEntered===true)return {ok:false,reason:"already-entered",requirements};
+  if(requirements&&requirements.eligible!==true)return {ok:false,reason:"requirements-incomplete",requirements};
   const backup=cloneState(state);
   if(!backup)return {ok:false,reason:"backup-failed",requirements};
   try{
-   const next=createBlankSecondWorldState();
-   next.entered=true;
-   state.secondWorld=next;
-   state.gold=0;
-   if(!isObject(state.enhancement))state.enhancement={};
-   state.enhancement.basicStones=0;
-   state.enhancement.advancedStones=0;
-   state.lostGear=[];
-   resetPendingBlackMarketForWorldTransition(state);
-   clearFirstWorldCalamityResidualHp(state);
-   clearFirstWorldOfflineState(state);
-   if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();
-   if(typeof playerCombatStats==="function")state.hp=playerCombatStats().hp;
-   else if(typeof normalizeHP==="function")normalizeHP();
+   if(typeof config.mutate==="function")config.mutate(state,requirements);
+   if(typeof config.prepareBeforeSave==="function")config.prepareBeforeSave(state,requirements);
    const saved=typeof save==="function"?save(false):false;
    if(saved!==true){
     state=backup;
     return {ok:false,reason:"save-failed",requirements};
    }
-   if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();
-   try{sessionStorage.setItem("civilization_second_world_just_entered_v1","1");}catch(e){}
-   setTimeout(()=>{try{location.reload();}catch(e){}},0);
-   return {ok:true,reloading:true};
+   if(typeof config.finalizeAfterSave==="function")config.finalizeAfterSave(state,requirements);
+   const marker=String(config.sessionMarker||"").trim();
+   if(marker){try{sessionStorage.setItem(marker,"1");}catch(e){}}
+   if(config.reload!==false)setTimeout(()=>{try{location.reload();}catch(e){}},0);
+   return {ok:true,reloading:config.reload!==false,requirements};
   }catch(error){
    state=backup;
    return {ok:false,reason:"transition-failed",error:String(error?.message||error),requirements};
   }
  }
+ function enterSecondWorld(){
+  return runWorldTransition({
+   requirements:()=>secondWorldEntryRequirements(state),
+   mutate:target=>{
+    const next=createBlankSecondWorldState();
+    next.entered=true;
+    target.secondWorld=next;
+    target.gold=0;
+    if(!isObject(target.enhancement))target.enhancement={};
+    target.enhancement.basicStones=0;
+    target.enhancement.advancedStones=0;
+    target.lostGear=[];
+    resetPendingBlackMarketForWorldTransition(target);
+    clearFirstWorldCalamityResidualHp(target);
+    clearFirstWorldOfflineState(target);
+    if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;
+    else if(typeof normalizeHP==="function")normalizeHP();
+   },
+   prepareBeforeSave:()=>{
+    if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();
+   },
+   finalizeAfterSave:()=>{
+    if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();
+   },
+   sessionMarker:"civilization_second_world_just_entered_v1"
+  });
+ }
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
+ window.WORLD_PHASE_SHARED_CORE_VERSION=1;
+ window.WORLD_PHASE_METADATA=WORLD_PHASE_METADATA;
+ window.worldPhaseMeta=worldPhaseMeta;
+ window.currentWorldPhase=currentWorldPhase;
+ window.isWorldEntered=isWorldEntered;
+ window.worldProgressionEnabled=worldProgressionEnabled;
+ window.worldPhaseSnapshot=worldPhaseSnapshot;
+ window.WORLD_PHASE_SAFE_TRANSITION_VERSION=1;
+ window.runWorldTransition=runWorldTransition;
  window.WORLD_PHASE_ENHANCEMENT_REQUIREMENT_OWNER_VERSION=1;
  window.SECOND_WORLD_MAIN_BOSS_COUNT=SECOND_WORLD_MAIN_BOSS_COUNT;
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
@@ -210,8 +271,10 @@
  window.secondWorldEntryRequirements=secondWorldEntryRequirements;
  window.canEnterSecondWorld=canEnterSecondWorld;
  window.isSecondWorldEntered=isSecondWorldEntered;
+ window.isThirdWorldEntered=isThirdWorldEntered;
  window.firstWorldProgressionEnabled=firstWorldProgressionEnabled;
  window.secondWorldProgressionEnabled=secondWorldProgressionEnabled;
+ window.thirdWorldProgressionEnabled=thirdWorldProgressionEnabled;
  window.resetPendingBlackMarketForWorldTransition=resetPendingBlackMarketForWorldTransition;
  window.PENDING_BLACK_MARKET_WORLD_TRANSITION_VERSION=1;
  window.enterSecondWorld=enterSecondWorld;
