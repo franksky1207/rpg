@@ -63,7 +63,7 @@
 
  const errors=[];
  if(LEGACY_SAVE_VERSION_VALUE!==13)errors.push({code:"LEGACY_SAVE_VERSION",actual:LEGACY_SAVE_VERSION_VALUE});
- if(Number(window.SAVE_SCHEMA_VERSION)!==15)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION});
+ if(Number(window.SAVE_SCHEMA_VERSION)!==16)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION});
  if(LEGACY_MAX_LEVEL_VALUE!==500)errors.push({code:"LEGACY_MAX_LEVEL",actual:LEGACY_MAX_LEVEL_VALUE});
  if(Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000)errors.push({code:"LEVEL_CAP_OWNER",first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP});
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
