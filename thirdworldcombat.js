@@ -1,7 +1,7 @@
 (function(){
  const VERSION=1;
  const SNAPSHOT_VERSION=1;
- const REVENGE_TRIGGER_CHANCE=50;
+ const REVENGE_TRIGGER_CHANCE=Math.max(0,Number(Array.from(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS||[]).find(row=>row?.id==="revenge")?.triggerChance)||0);
 
  function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
@@ -26,7 +26,7 @@
    composure:{...source.composure,playerCritRateReductionPoints:numberOr(source.composure?.playerCritRateReductionPoints,0)},
    suppression:{...source.suppression,playerDodgeRateReductionPoints:numberOr(source.suppression?.playerDodgeRateReductionPoints,0)},
    resilience:{...source.resilience,playerCritBonusDamageReductionPercent:numberOr(source.resilience?.playerCritBonusDamageReductionPercent,0)},
-   revenge:{...source.revenge,triggerChance:REVENGE_TRIGGER_CHANCE},
+   revenge:{...source.revenge,triggerChance:numberOr(source.revenge?.triggerChance,REVENGE_TRIGGER_CHANCE)},
    backlash:{...source.backlash,triggerChance:numberOr(source.backlash?.triggerChance,0),reflectActualHpLossPercent:numberOr(source.backlash?.reflectActualHpLossPercent,0)},
    ignore:{...source.ignore,triggerChance:numberOr(source.ignore?.triggerChance,0)},
    battleSpirit:{
