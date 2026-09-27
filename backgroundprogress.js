@@ -16,6 +16,7 @@
   Object.freeze({max:Infinity,interval:200})
  ]);
  const FAST_CATCH_UP_PRESENTATION_INTERVAL=100;
+ const CONTINUOUS_RUN_INFRA_VERSION=1;
  function nextPaintBoundary(){
   if(typeof window.requestAnimationFrame!=="function")return nativeSleep(0).then(()=>true);
   return new Promise(resolve=>{
@@ -218,6 +219,101 @@
   if(flow.catchUpYieldCount%CATCH_UP_FAST_YIELDS_PER_PAINT===0)return nextPaintBoundary();
   return nativeSleep(0).then(()=>true);
  };
+
+ function continuousRunStopReasonMeta(reason=""){
+  const value=String(reason||"");
+  const progression=new Set(["title-first-kill","mark-maxed","civilization-complete","boss-defeated","stage-crossed","five-point-front","progress-event"]);
+  const limits=new Set(["death-limit","background-limit"]);
+  const interruption=new Set(["manual","stopped","pagehide","reload","world-transition","active-runtime"]);
+  const errors=new Set(["error","battle-error","battle-failed","combat-incomplete","settlement-failed","owner-missing","runtime-status-check-error"]);
+  const completion=new Set(["single-complete","completed","boss-defeated","civilization-complete"]);
+  let category="other";
+  if(errors.has(value)||value.endsWith("-error")||value.endsWith("-failed"))category="error";
+  else if(interruption.has(value))category="interruption";
+  else if(limits.has(value))category="limit";
+  else if(progression.has(value))category="progression";
+  else if(completion.has(value))category="completion";
+  return Object.freeze({reason:value,category,terminal:value!=="",interrupted:category==="interruption",error:category==="error"});
+ }
+ function continuousRunBoundedHistory(rows,limit=20){
+  const max=Math.max(1,Math.floor(Number(limit)||20));
+  return (Array.isArray(rows)?rows:[]).slice(-max);
+ }
+ function continuousRunConflictStatus(flowKind,blockerName=""){
+  const kind=String(flowKind||""),ownBlocker=String(blockerName||"");
+  const blockers=[];
+  const activeKind=typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";
+  if(activeKind&&activeKind!==kind)blockers.push(`background-flow:${activeKind}`);
+  if(typeof window.worldTransitionRuntimeStatus==="function"){
+   try{
+    const status=window.worldTransitionRuntimeStatus();
+    (Array.isArray(status?.blockers)?status.blockers:[]).forEach(reason=>{
+     const text=String(reason||"");
+     if(!text)return;
+     if(ownBlocker&&(text===ownBlocker||text.startsWith(`${ownBlocker}:`)))return;
+     if(!blockers.includes(text))blockers.push(text);
+    });
+   }catch(error){if(!blockers.includes("runtime-status-check-error"))blockers.push("runtime-status-check-error");}
+  }
+  return Object.freeze({blocked:blockers.length>0,blockers:Object.freeze(blockers.slice()),activeBackgroundKind:activeKind||null});
+ }
+ function createContinuousRunInfrastructure(options={}){
+  const flowKind=String(options.flowKind||"").trim();
+  const mode=String(options.mode||"continuous")==="continuous"?"continuous":"finite";
+  const defaultHistoryLimit=Math.max(1,Math.floor(Number(options.historyLimit)||20));
+  const blockerName=String(options.blockerName||"").trim();
+  return Object.freeze({
+   version:CONTINUOUS_RUN_INFRA_VERSION,
+   flowKind,
+   mode,
+   startBackground(extra={}){return flowKind&&typeof window.backgroundProgressStart==="function"?window.backgroundProgressStart(flowKind,{mode,...extra}):null;},
+   stopBackground(){return flowKind&&typeof window.backgroundProgressStop==="function"?window.backgroundProgressStop(flowKind):false;},
+   activeKind(){return typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";},
+   flowOwned(){const active=this.activeKind();return !active||active===flowKind;},
+   fastCatchUp(){return !!(flowKind&&typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive(flowKind)===true);},
+   previewCatchUp(){
+    if(!this.fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
+    const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
+    const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
+    return window.backgroundProgressCatchUpPolicy(flowKind,next,false);
+   },
+   catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(flowKind):null;},
+   catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy(flowKind):null;},
+   async consumeDelay(ms){
+    const delay=Math.max(0,Number(ms)||0);
+    if(delay<=0)return true;
+    if(this.fastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
+     const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,flowKind);
+     if(Number(consumed?.remaining)>0&&typeof window.backgroundProgressSleep==="function")await window.backgroundProgressSleep(consumed.remaining,flowKind);
+     else if(Number(consumed?.remaining)>0)await nativeSleep(consumed.remaining);
+     return Number(consumed?.remaining)<=0;
+    }
+    if(typeof window.backgroundProgressSleep==="function")await window.backgroundProgressSleep(delay,flowKind);
+    else await nativeSleep(delay);
+    return false;
+   },
+   uiYield(){return typeof window.backgroundProgressUiYield==="function"?window.backgroundProgressUiYield(flowKind):Promise.resolve(false);},
+   conflictStatus(name=blockerName){return continuousRunConflictStatus(flowKind,name);},
+   boundedHistory(rows,limit=defaultHistoryLimit){return continuousRunBoundedHistory(rows,limit);},
+   stopReasonMeta(reason){return continuousRunStopReasonMeta(reason);},
+   onPageHide(listener){return typeof window.backgroundProgressOnPageHide==="function"?window.backgroundProgressOnPageHide(listener):()=>{};},
+   registerRuntimeBlocker(name,checker){return typeof window.registerWorldTransitionRuntimeBlocker==="function"?window.registerWorldTransitionRuntimeBlocker(String(name||blockerName||""),checker)===true:false;}
+  });
+ }
+ window.CONTINUOUS_RUN_INFRA_VERSION=CONTINUOUS_RUN_INFRA_VERSION;
+ window.createContinuousRunInfrastructure=createContinuousRunInfrastructure;
+ window.continuousRunStopReasonMeta=continuousRunStopReasonMeta;
+ window.continuousRunBoundedHistory=continuousRunBoundedHistory;
+ window.continuousRunConflictStatus=continuousRunConflictStatus;
+ window.CONTINUOUS_RUN_INFRA_INTEGRITY=(function(){
+  const errors=[];
+  const api=createContinuousRunInfrastructure({flowKind:"probe",historyLimit:2,blockerName:"probe-run"});
+  if(api.version!==CONTINUOUS_RUN_INFRA_VERSION||api.flowKind!=="probe"||typeof api.startBackground!=="function"||typeof api.stopBackground!=="function"||typeof api.fastCatchUp!=="function"||typeof api.previewCatchUp!=="function"||typeof api.consumeDelay!=="function"||typeof api.conflictStatus!=="function"||typeof api.onPageHide!=="function")errors.push({code:"API_SHAPE"});
+  const bounded=api.boundedHistory([1,2,3]);if(bounded.length!==2||bounded[0]!==2||bounded[1]!==3)errors.push({code:"BOUNDED_HISTORY"});
+  const manual=api.stopReasonMeta("manual"),progress=api.stopReasonMeta("stage-crossed"),failed=api.stopReasonMeta("settlement-failed");
+  if(manual.category!=="interruption"||progress.category!=="progression"||failed.category!=="error")errors.push({code:"STOP_REASON_CLASSIFICATION",manual,progress,failed});
+  return Object.freeze({passed:errors.length===0,version:CONTINUOUS_RUN_INFRA_VERSION,errors:Object.freeze(errors)});
+ })();
 
  window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY=(function(){
   const errors=[];
