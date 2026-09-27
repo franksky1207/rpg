@@ -12,7 +12,7 @@
   Object.freeze({id:entry.markId,name:entry.markName,regionId:entry.regionId,unlockLevel:entry.unlockLevel})
  ])));
 
- function clampLevel(value){return Math.max(0,Math.min(MARK_MAX_LEVEL,Math.floor(Number(value)||0));}
+ function clampLevel(value){return Math.max(0,Math.min(MARK_MAX_LEVEL,Math.floor(Number(value)||0)));}
  function round1(value){return Math.round((Number(value)||0)*10)/10;}
  function validKey(key){return MARK_KEYS.includes(key)&&!!MARK_DEFS[key];}
  function definition(key){return validKey(key)?MARK_DEFS[key]:null;}
