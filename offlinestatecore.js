@@ -1,6 +1,7 @@
 (function(){
- const VERSION=1;
- const OFFLINE_BATTLE_SAMPLE_VERSION=3;
+ const VERSION=2;
+ const OFFLINE_BATTLE_SAMPLE_VERSION=4;
+ const OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=1;
  const OFFLINE_SAMPLES_PER_SPEED=8;
  const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
  const REAL_BATTLE_MIN_MS=100;
@@ -17,12 +18,19 @@
   if(gap<=15)return 2;
   return null;
  }
+ function sourceSampleVersion(row){return Math.max(0,finiteInteger(row?.sampleVersion,0));}
  function normalizeSample(row){
-  if(!isObject(row)||Number(row.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+  if(!isObject(row))return null;
+  const sourceVersion=sourceSampleVersion(row);
+  if(sourceVersion!==3&&sourceVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
   const combatSpeed=Number(row.combatSpeed);
   const actualMs=Math.round(Number(row.actualMs)),cycleMs=Math.round(Number(row.cycleMs)),adjustedMs=Math.round(Number(row.adjustedMs));
-  const playerLevel=Math.max(1,finiteInteger(row.playerLevel,1)),enemyLevel=Math.max(1,finiteInteger(row.enemyLevel,1)),recordedAt=Math.max(0,finiteInteger(row.recordedAt,0));
+  const playerLevel=Math.max(1,finiteInteger(row.playerLevel,1)),recordedAt=Math.max(0,finiteInteger(row.recordedAt,0));
   if(!OFFLINE_COMBAT_SPEEDS.includes(combatSpeed)||!Number.isFinite(actualMs)||actualMs<REAL_BATTLE_MIN_MS||actualMs>REAL_BATTLE_MAX_ACTUAL_MS||!Number.isFinite(cycleMs)||cycleMs<actualMs||cycleMs>REAL_BATTLE_MAX_CYCLE_MS||!Number.isFinite(adjustedMs)||adjustedMs<REAL_BATTLE_MIN_MS||adjustedMs>REAL_BATTLE_MAX_CYCLE_MS)return null;
+  if(sourceVersion===OFFLINE_BATTLE_SAMPLE_VERSION&&(Number(row.world)===3||row.targetType==="higher-dimensional")){
+   return {sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:3,targetType:"higher-dimensional",combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel,kind:"higher-dimensional",multiplier:1,recordedAt};
+  }
+  const enemyLevel=Math.max(1,finiteInteger(row.enemyLevel,1));
   if(Number(row.world)===2||row.targetType==="boss"){
    const bossIndex=finiteInteger(row.bossIndex,-1),bossId=typeof row.bossId==="string"?row.bossId.trim():"";
    if(bossIndex<0||bossIndex>=100||!bossId)return null;
@@ -44,6 +52,19 @@
   kept.sort((a,b)=>a.index-b.index);
   return kept.map(entry=>entry.row);
  }
+ function migratePendingSettlement(raw,target){
+  if(!isObject(raw))return null;
+  const sampleVersion=sourceSampleVersion(raw),world=finiteInteger(raw.world,0),phase=target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
+  if(sampleVersion!==3&&sampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+  if(world!==phase)return null;
+  if(world===3){
+   if(sampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION||raw.targetType!=="higher-dimensional")return null;
+   return {...raw,sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:3,targetType:"higher-dimensional"};
+  }
+  if(world===2&&raw.targetType!=="boss")return null;
+  if(world===1&&raw.targetType!=="mapEnemy")return null;
+  return {...raw,sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION};
+ }
  function freshOfflineState(now){
   return {battleSampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[],maxObservedWallClock:now,timeLockUntil:0,pendingSettlement:null};
  }
@@ -57,10 +78,11 @@
   }
   const source=target.offline;
   const storedSampleVersion=Math.max(0,finiteInteger(source.battleSampleVersion,0));
-  if(storedSampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION){
+  const migratable=storedSampleVersion===3||storedSampleVersion===OFFLINE_BATTLE_SAMPLE_VERSION;
+  if(!migratable){
    source.battleSamples=[];
    source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;source.pendingSettlement=null;
-  }
+  }else source.pendingSettlement=migratePendingSettlement(source.pendingSettlement,target);
   source.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   const rawTime=source.lastSettledAt==null?NaN:Number(source.lastSettledAt);
   source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
@@ -84,6 +106,7 @@
 
  window.OFFLINE_STATE_NORMALIZATION_VERSION=VERSION;
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
+ window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION;
  window.OFFLINE_STATE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
  window.OFFLINE_STATE_COMBAT_SPEEDS=Array.from(OFFLINE_COMBAT_SPEEDS);
  window.normalizeOfflineSaveState=normalizeOfflineSaveState;
