@@ -18,8 +18,15 @@
     if(!ok)fail(id,{migrated:migrated?.thirdWorld||migrated,report});
    }catch(error){cases.push({id,ok:false,error:String(error?.message||error)});fail(id,String(error?.message||error));}
   };
+  const runCoreBoundaryCase=(id,entryVersion,check)=>{
+   try{
+    const probe={thirdWorld:{entered:true,entryVersion,coreLevel:7,coreProgress:456789012,dimensionalStrings:1234567890}},result=window.reconcileThirdWorldCoreProgressionState?.(probe),ok=check(probe,result)===true;
+    cases.push({id,ok,entryVersion,coreLevel:Number(probe.thirdWorld?.coreLevel)||0,coreProgress:Number(probe.thirdWorld?.coreProgress)||0,dimensionalStrings:Number(probe.thirdWorld?.dimensionalStrings)||0,reconciliation:clone(result)});
+    if(!ok)fail(id,{probe,result});
+   }catch(error){cases.push({id,ok:false,error:String(error?.message||error)});fail(id,String(error?.message||error));}
+  };
   try{
-   if(typeof window.migrateSave!=="function"||typeof window.normalizeThirdWorldCoreInvestment!=="function"||!Number.isInteger(max)||max<=0||count!==10){fail("OWNER_MISSING",{migrateSave:typeof window.migrateSave,normalizeThirdWorldCoreInvestment:typeof window.normalizeThirdWorldCoreInvestment,max,count});}
+   if(typeof window.migrateSave!=="function"||typeof window.normalizeThirdWorldCoreInvestment!=="function"||typeof window.reconcileThirdWorldCoreProgressionState!=="function"||!Number.isInteger(max)||max<=0||count!==10){fail("OWNER_MISSING",{migrateSave:typeof window.migrateSave,normalizeThirdWorldCoreInvestment:typeof window.normalizeThirdWorldCoreInvestment,reconcileThirdWorldCoreProgressionState:typeof window.reconcileThirdWorldCoreProgressionState,max,count});}
    else{
     const distinct=Array.from({length:count},(_,index)=>({currentHp:max-index*1234567}));
     runCase("SCHEMA16_DISTINCT_HP_PRESERVED",baseSave(distinct),m=>Array.isArray(m?.thirdWorld?.bosses)&&m.thirdWorld.bosses.length===count&&m.thirdWorld.bosses.every((row,index)=>row.currentHp===distinct[index].currentHp));
@@ -43,15 +50,13 @@
     const maxCoreProgress=baseSave(distinct);maxCoreProgress.thirdWorld.coreLevel=10;maxCoreProgress.thirdWorld.coreProgress=777777777;maxCoreProgress.thirdWorld.dimensionalStrings=100;
     runCase("SCHEMA16_MAX_CORE_PROGRESS_RECOVERED_TO_STRINGS",maxCoreProgress,m=>Number(m?.thirdWorld?.coreLevel)===10&&Number(m?.thirdWorld?.coreProgress)===0&&Number(m?.thirdWorld?.dimensionalStrings)===777777877);
 
-    [0,1].forEach(entryVersion=>{
-     const legacyCore=baseSave(distinct);legacyCore.thirdWorld.entryVersion=entryVersion;legacyCore.thirdWorld.coreLevel=7;legacyCore.thirdWorld.coreProgress=456789012;legacyCore.thirdWorld.dimensionalStrings=1234567890;
-     runCase(`SCHEMA16_UNTRUSTED_ENTRY_V${entryVersion}_CORE_RESET`,legacyCore,m=>Number(m?.thirdWorld?.coreLevel)===0&&Number(m?.thirdWorld?.coreProgress)===0&&Number(m?.thirdWorld?.entryVersion)===trustedEntryVersion&&Number(m?.thirdWorld?.dimensionalStrings)===1234567890);
-    });
-    [trustedEntryVersion,trustedEntryVersion+1].forEach(entryVersion=>{
-     const trustedCore=baseSave(distinct);trustedCore.thirdWorld.entryVersion=entryVersion;trustedCore.thirdWorld.coreLevel=5;trustedCore.thirdWorld.coreProgress=600000000;trustedCore.thirdWorld.dimensionalStrings=3000000000;
-     runCase(`SCHEMA16_TRUSTED_ENTRY_V${entryVersion}_CORE_PRESERVED`,trustedCore,m=>Number(m?.thirdWorld?.coreLevel)===5&&Number(m?.thirdWorld?.coreProgress)===600000000&&Number(m?.thirdWorld?.entryVersion)===entryVersion&&Number(m?.thirdWorld?.dimensionalStrings)===3000000000);
-    });
+    runCoreBoundaryCase("UNTRUSTED_ENTRY_V0_CORE_RESET",0,(p,r)=>Number(p.thirdWorld.coreLevel)===0&&Number(p.thirdWorld.coreProgress)===0&&Number(p.thirdWorld.entryVersion)===trustedEntryVersion&&Number(p.thirdWorld.dimensionalStrings)===1234567890&&r?.legacyUnpaidCoreReset===true);
+    runCoreBoundaryCase("UNTRUSTED_ENTRY_V1_CORE_RESET",1,(p,r)=>Number(p.thirdWorld.coreLevel)===0&&Number(p.thirdWorld.coreProgress)===0&&Number(p.thirdWorld.entryVersion)===trustedEntryVersion&&Number(p.thirdWorld.dimensionalStrings)===1234567890&&r?.legacyUnpaidCoreReset===true);
+    runCoreBoundaryCase("TRUSTED_ENTRY_V2_CORE_PRESERVED",trustedEntryVersion,(p,r)=>Number(p.thirdWorld.coreLevel)===7&&Number(p.thirdWorld.coreProgress)===456789012&&Number(p.thirdWorld.entryVersion)===trustedEntryVersion&&Number(p.thirdWorld.dimensionalStrings)===1234567890&&r?.legacyUnpaidCoreReset!==true);
+    runCoreBoundaryCase("TRUSTED_FUTURE_ENTRY_CORE_PRESERVED",trustedEntryVersion+1,(p,r)=>Number(p.thirdWorld.coreLevel)===7&&Number(p.thirdWorld.coreProgress)===456789012&&Number(p.thirdWorld.entryVersion)===trustedEntryVersion+1&&Number(p.thirdWorld.dimensionalStrings)===1234567890&&r?.legacyUnpaidCoreReset!==true);
 
+    const legacyCore=baseSave(distinct);legacyCore.thirdWorld.entryVersion=1;legacyCore.thirdWorld.coreLevel=7;legacyCore.thirdWorld.coreProgress=456789012;legacyCore.thirdWorld.dimensionalStrings=1234567890;
+    runCase("SCHEMA16_PRE_BATCH7_UNPAID_CORE_RESET",legacyCore,m=>Number(m?.thirdWorld?.coreLevel)===0&&Number(m?.thirdWorld?.coreProgress)===0&&Number(m?.thirdWorld?.entryVersion)===trustedEntryVersion&&Number(m?.thirdWorld?.dimensionalStrings)===1234567890);
     runCase("SCHEMA15_THIRD_WORLD_DISCARDED_AS_DEVELOPMENT_DATA",{saveVersion:15,level:1500,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,completed:true,entryVersion:99,dimensionalStrings:999999,coreLevel:10,coreProgress:999999999,bosses:distinct,deaths:100,run:{active:true}},offline:{}},(m,r)=>{const row=m?.thirdWorld||{};return row.entered!==true&&row.completed!==true&&Number(row.dimensionalStrings||0)===0&&Number(row.coreLevel||0)===0&&Number(row.coreProgress||0)===0&&Array.isArray(row.bosses)&&row.bosses.every(b=>b.currentHp===max)&&r?.legacyThirdWorldStateDiscarded===true;});
    }
    const policy=window.SAVE_SCHEMA_EVOLUTION_POLICY,requires=window.saveSchemaChangeRequiresBump;
