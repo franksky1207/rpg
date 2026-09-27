@@ -1,6 +1,9 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
+ const CORE_UI_VERSION=1;
  let commonAbilitiesOpen=false;
+ let coreFeedback="";
+ let coreFeedbackOk=false;
 
  function n(value){const x=Number(value);return Number.isFinite(x)?x:0;}
  function whole(value){return Math.max(0,Math.floor(n(value)));}
@@ -12,9 +15,12 @@
  function aggregate(){return typeof window.thirdWorldBossAggregateSnapshot==="function"?window.thirdWorldBossAggregateSnapshot(state):null;}
  function bossSnapshot(index){return typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,state):null;}
  function titleDefinition(){return typeof window.thirdWorldCurrentTitleDefinition==="function"?window.thirdWorldCurrentTitleDefinition(state):null;}
+ function coreSnapshot(){return typeof window.thirdWorldCoreSnapshot==="function"?window.thirdWorldCoreSnapshot(state):null;}
+ function corePlan(){return typeof window.thirdWorldCoreInjectionPlan==="function"?window.thirdWorldCoreInjectionPlan(state):null;}
  function coreLevel(){return Math.max(0,Math.min(whole(window.THIRD_WORLD_CORE_MAX_LEVEL||10),whole(state?.thirdWorld?.coreLevel)));}
  function strings(){return whole(state?.thirdWorld?.dimensionalStrings);}
  function maxCore(){return Math.max(0,whole(window.THIRD_WORLD_CORE_MAX_LEVEL||10));}
+ function suppressionPerDeath(level){return typeof window.thirdWorldSuppressionPerDeathPoints==="function"?n(window.thirdWorldSuppressionPerDeathPoints(level)):null;}
 
  function specializationPresentation(boss){
   const spec=boss?.specialization||{};
@@ -92,6 +98,36 @@
   </section>`;
  }
  function combatRuleHtml(){return `<div class="notice third-world-run-rule"><b>高維正式挑戰皆採連續戰鬥</b><div class="muted">玩家死亡後仍會繼續下一場；一輪最多累積 100 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡、跨入新強化階段或 5pp 戰線鎖定時會停止下一場。</div></div>`;}
+ function coreButtonText(snap){
+  if(!snap)return "核心資料未載入";
+  if(snap.atMax)return "界弦核心已達 Lv.10";
+  if(snap.runActive)return "連戰中不可注入";
+  if(snap.dimensionalStrings<=0)return "目前沒有維度之弦可注入";
+  return `全部注入 ${fmt(snap.availableInjection)} 維度之弦`;
+ }
+ function corePreviewHtml(snap,plan){
+  if(!snap||snap.atMax)return `<div class="third-world-core-preview max"><b>核心已完成</b><span>Lv.${maxCore()} 已達最高等級，不再吸收維度之弦。</span></div>`;
+  if(!plan||plan.injected<=0)return `<div class="third-world-core-preview"><b>等待維度之弦</b><span>正式戰鬥造成的有效永久削血會同步取得維度之弦，可隨時累積後注入。</span></div>`;
+  const levelText=plan.levelAfter>plan.levelBefore?`Lv.${whole(plan.levelBefore)} → Lv.${whole(plan.levelAfter)}`:`維持 Lv.${whole(plan.levelBefore)}`;
+  const progressText=plan.levelAfter>=maxCore()?"核心完成":`注入後本級進度 ${fmt(plan.coreProgressAfter)} / ${fmt(snap.progressRequired)}`;
+  return `<div class="third-world-core-preview ready"><b>${levelText}</b><span>${progressText}${plan.dimensionalStringsAfter>0?`；剩餘維度之弦 ${fmt(plan.dimensionalStringsAfter)}`:""}</span></div>`;
+ }
+ function corePanelHtml(){
+  const snap=coreSnapshot(),plan=corePlan();
+  if(!snap)return `<section class="card third-world-core-panel"><h2>界弦核心</h2><div class="notice">核心資料尚未載入完整。</div></section>`;
+  const progress=Math.max(0,Math.min(100,n(snap.progressPercent))),perDeath=suppressionPerDeath(snap.level),nextPerDeath=snap.atMax?null:suppressionPerDeath(Math.min(maxCore(),snap.level+1));
+  const disabled=!snap.canInject;
+  const feedback=coreFeedback?`<div class="third-world-core-feedback ${coreFeedbackOk?"ok":"error"}" role="status">${coreFeedback}</div>`:"";
+  return `<section class="card third-world-core-panel">
+   <div class="third-world-core-head"><div><h2>界弦核心</h2><div class="muted">注入維度之弦累積核心進度。界弦核心只降低高維連戰死亡壓制，不增加一般戰鬥能力。</div></div><div class="third-world-core-level">Lv.${whole(snap.level)} / ${whole(snap.maxLevel)}</div></div>
+   <div class="third-world-core-progress"><div class="status-label"><span>${snap.atMax?"核心完成":"目前等級注入進度"}</span><b>${snap.atMax?"MAX":`${fmt(snap.coreProgress)} / ${fmt(snap.progressRequired)}`}</b></div><div class="bar"><span class="hp" style="width:${progress}%"></span></div><div class="third-world-core-progress-meta"><span>${snap.atMax?"100.00%":pct(progress)}</span><span>${snap.atMax?"已達最高等級":`距下一級 ${fmt(snap.remainingToNext)}`}</span></div></div>
+   <div class="third-world-core-stats"><div class="stat">持有維度之弦<b>${fmt(snap.dimensionalStrings)}</b></div><div class="stat">本次可注入<b>${fmt(snap.availableInjection)}</b></div><div class="stat">每次死亡壓制<b>${perDeath==null?"—":`${perDeath.toFixed(2)}pp`}</b></div><div class="stat">下一級壓制<b>${snap.atMax?"MAX":nextPerDeath==null?"—":`${nextPerDeath.toFixed(2)}pp`}</b></div></div>
+   ${corePreviewHtml(snap,plan)}
+   ${feedback}
+   <button class="btn primary third-world-core-inject" type="button" onclick="injectThirdWorldCoreFromPlayerUi()" ${disabled?"disabled":""}>${coreButtonText(snap)}</button>
+   ${snap.runActive?`<div class="muted third-world-core-lock-note">目前正式高維連戰進行中。核心等級會在一輪開始時固定，因此必須先停止連戰才能注入。</div>`:""}
+  </section>`;
+ }
  function unavailableHtml(message){
   return `<section class="map-screen third-world-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>${message}</b></div></section>`;
  }
@@ -99,7 +135,7 @@
   if(currentPhase()!==3)return unavailableHtml("目前尚未正式進入高維紀元。");
   const agg=aggregate();if(!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==10)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
   const defs=bossDefs();if(defs.length!==10)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
-  return `<section class="map-screen third-world-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div></section>`;
+  return `<section class="map-screen third-world-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div>${corePanelHtml()}</section>`;
  }
  function validate(){
   const errors=[];
@@ -108,16 +144,34 @@
   if(typeof window.thirdWorldBossProgressSnapshot!=="function")errors.push("BOSS_SNAPSHOT_OWNER_MISSING");
   if(typeof window.thirdWorldChallengeStatus!=="function")errors.push("CHALLENGE_OWNER_MISSING");
   if(typeof window.thirdWorldCurrentTitleDefinition!=="function")errors.push("TITLE_OWNER_MISSING");
+  if(typeof window.thirdWorldCoreSnapshot!=="function")errors.push("CORE_SNAPSHOT_OWNER_MISSING");
+  if(typeof window.thirdWorldCoreInjectionPlan!=="function")errors.push("CORE_PLAN_OWNER_MISSING");
+  if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
   if(bossDefs().length!==10)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityDefs().length!==7)errors.push("ABILITY_DEFINITION_COUNT");
-  return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.toggleThirdWorldCommonAbilities=function(){commonAbilitiesOpen=!commonAbilitiesOpen;if(typeof window.render==="function")window.render();};
+ window.injectThirdWorldCoreFromPlayerUi=function(){
+  if(typeof window.injectAllThirdWorldCoreStrings!=="function"){
+   coreFeedbackOk=false;coreFeedback="界弦核心注入功能尚未載入完整。";
+  }else{
+   const result=window.injectAllThirdWorldCoreStrings();
+   coreFeedbackOk=result?.ok===true;
+   if(coreFeedbackOk){
+    const gained=whole(result.levelsGained),injected=whole(result.injected),after=result.snapshot||coreSnapshot();
+    coreFeedback=`已注入 ${fmt(injected)} 維度之弦${gained>0?`，界弦核心提升 ${gained} 級`:""}。目前 Lv.${whole(after?.level)}${after?.atMax?" MAX":`，本級進度 ${fmt(after?.coreProgress)} / ${fmt(after?.progressRequired)}`}。`;
+   }else coreFeedback=String(result?.reason||"界弦核心注入失敗，請稍後再試。");
+  }
+  if(typeof window.render==="function")window.render();
+  return coreFeedbackOk;
+ };
  window.thirdWorldAdventurePageHtml=pageHtml;
  window.validateThirdWorldPlayerUi=validate;
  window.THIRD_WORLD_PLAYER_UI_VERSION=VERSION;
  window.THIRD_WORLD_PLAYER_UI_BOSS_GRID_VERSION=1;
+ window.THIRD_WORLD_PLAYER_UI_CORE_VERSION=CORE_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_DERIVED_OWNER_VERSION=1;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
