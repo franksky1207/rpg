@@ -111,7 +111,7 @@
   const unlockedStoryStages=storyChanged?Array.from({length:storyAfter-storyBefore},(_,index)=>storyBefore+index+1):[];
   const bossDefeatedNow=checked.formalStartHp>0&&checked.combatEndHp===0;
   const stageTransition=stageTransitionSnapshot(checked.bossIndex,checked.formalStartHp,checked.combatEndHp,bossDefeatedNow);
-  const challengeAfter=bossDefeatedNow?window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null:window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
+  const challengeAfter=window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
   const fivePointBlocked=!bossDefeatedNow&&challengeAfter?.allowed===false&&challengeAfter?.reason==="five-point-front";
   const titleChanged=titleGrant?.changed===true,progressEventPending=titleChanged||storyChanged;
   let terminalReason="";
