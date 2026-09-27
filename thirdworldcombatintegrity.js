@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const maxHp=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||0));
@@ -85,10 +85,14 @@
   if(typeof window.runCombatCore!=="function")fail("COMBAT_CORE_MISSING","共用 runCombatCore 未載入");
   if(typeof window.runThirdWorldBossCombat!=="function")fail("THIRD_WORLD_COMBAT_MISSING","runThirdWorldBossCombat 未載入");
   if(typeof window.createThirdWorldBossCombatSnapshot!=="function")fail("THIRD_WORLD_SNAPSHOT_MISSING","高維戰鬥快照 owner 未載入");
-  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==3)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 3",window.THIRD_WORLD_COMBAT_VERSION);
+  if(typeof window.thirdWorldSettlementBasisFromResult!=="function")fail("SETTLEMENT_AUTHORITY_API_MISSING","settlementBasis authority API 未載入");
+  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==4)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 4",window.THIRD_WORLD_COMBAT_VERSION);
   if(Number(window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION)!==1)fail("FORMAL_HP_OVERRIDE_GUARD_VERSION","正式 Boss HP override guard 應為版本 1",window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION);
-  if(Number(window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION)!==1)fail("RESULT_CONTRACT_VERSION","高維戰鬥 result contract 版本應為 1",window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION);
-  if(Number(window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION)!==1)fail("SETTLEMENT_BASIS_VERSION","高維 settlement basis 版本應為 1",window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION);
+  if(Number(window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION)!==2)fail("RESULT_CONTRACT_VERSION","高維戰鬥 result contract 版本應為 2",window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION);
+  if(Number(window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION)!==2)fail("SETTLEMENT_BASIS_VERSION","高維 settlement basis 版本應為 2",window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION);
+  if(Number(window.THIRD_WORLD_SETTLEMENT_AUTHORITY_VERSION)!==1)fail("SETTLEMENT_AUTHORITY_VERSION","高維 settlement authority 版本應為 1",window.THIRD_WORLD_SETTLEMENT_AUTHORITY_VERSION);
+  if(Number(window.THIRD_WORLD_RESULT_DIAGNOSTIC_VERSION)!==1)fail("RESULT_DIAGNOSTIC_VERSION","高維 diagnostics 版本應為 1",window.THIRD_WORLD_RESULT_DIAGNOSTIC_VERSION);
+  if(window.THIRD_WORLD_SETTLEMENT_AUTHORITY?.field!=="settlementBasis"||window.THIRD_WORLD_SETTLEMENT_AUTHORITY?.topLevelSettlementFields!=="convenience-only")fail("SETTLEMENT_AUTHORITY_DECLARATION","settlementBasis 必須是唯一正式結算 authority",window.THIRD_WORLD_SETTLEMENT_AUTHORITY||null);
   if(window.COMBAT_MARK_INTEGRITY?.passed!==true)fail("SHARED_MARK_INTEGRITY","高維戰鬥依賴的共用印記 deterministic integrity 未通過",window.COMBAT_MARK_INTEGRITY||null);
   resetTestSpecs();
 
@@ -174,11 +178,21 @@
 
   const formalState=fakeState(),formalBefore=stable(formalState);
   const formal=window.runThirdWorldBossCombat(0,{state:formalState,player:killer,startHp:killer.hp,playerHealCap:killer.hp,civilizationLevel:0,maxTurns:5,logs:false,useTestSpecializations:true,markLevels:zeroMarks(),rng:constantRng(.99)});
-  if(!formal?.ok||formal.combatCompleted!==true||formal.bossDefeated!==true||formal.formalSettlementEligible!==true||formal.settlementInputReady!==true||formal.settlementBasis?.formalRun!==true||formal.settlementBasis?.challengeAllowedAtStart!==true||formal.formalStartHp!==maxHp)fail("FORMAL_SETTLEMENT_ELIGIBLE","合法 World3 正式戰鬥自然結束後必須產生 formalSettlementEligible=true",{result:summary(formal),eligible:formal?.formalSettlementEligible,basis:formal?.settlementBasis,challenge:formal?.challengeStatus});
+  const formalBasis=window.thirdWorldSettlementBasisFromResult(formal,{requireEligible:true});
+  if(!formal?.ok||formal.combatCompleted!==true||formal.bossDefeated!==true||formal.formalSettlementEligible!==true||formal.settlementInputReady!==true||formalBasis!==formal.settlementBasis||formalBasis?.formalRun!==true||formalBasis?.challengeAllowedAtStart!==true||formalBasis?.formalSettlementEligible!==true||formalBasis?.formalStartHp!==maxHp)fail("FORMAL_SETTLEMENT_ELIGIBLE","合法 World3 正式戰鬥自然結束後必須由 settlementBasis 產生正式可結算狀態",{result:summary(formal),basis:formalBasis,challenge:formal?.challengeStatus});
   if(stable(formalState)!==formalBefore)fail("FORMAL_HEADLESS_STATE_MUTATION","第 5 批正式 headless 戰鬥仍不得直接寫入 Boss 永久 HP 或其他正式 state",{before:formalBefore,after:stable(formalState)});
 
+  const divergentView={...formal,formalStartHp:1,combatEndHp:999,effectivePermanentDamage:999999,formalSettlementEligible:false,settlementBasis:formal.settlementBasis};
+  const authoritative=window.thirdWorldSettlementBasisFromResult(divergentView,{requireEligible:true});
+  if(authoritative!==formal.settlementBasis||authoritative?.formalStartHp!==maxHp||authoritative?.combatEndHp!==0||authoritative?.effectivePermanentDamage!==maxHp||authoritative?.formalSettlementEligible!==true)fail("SETTLEMENT_AUTHORITY_DIVERGENCE","top-level convenience 欄位即使與 settlementBasis 不一致，正式 authority 仍必須只讀 settlementBasis",{view:{formalStartHp:divergentView.formalStartHp,combatEndHp:divergentView.combatEndHp,effectivePermanentDamage:divergentView.effectivePermanentDamage,formalSettlementEligible:divergentView.formalSettlementEligible},basis:authoritative});
+  if(window.thirdWorldSettlementBasisFromResult({formalStartHp:maxHp,formalSettlementEligible:true},{requireEligible:true})!==null)fail("SETTLEMENT_AUTHORITY_REQUIRED","缺少 settlementBasis 時不得僅依 top-level 欄位形成正式結算輸入");
+
   [limitA,win,loss,formal,drain].forEach((result,index)=>{
-   if(!Object.isFrozen(result)||!Object.isFrozen(result?.events)||!Object.isFrozen(result?.logs)||!Object.isFrozen(result?.items)||!Object.isFrozen(result?.settlementBasis))fail("RESULT_IMMUTABILITY","高維戰鬥輸出與 settlement basis 應為 immutable",{index});
+   const combatEvents=result?.combat?.events,firstCombatEvent=Array.isArray(combatEvents)?combatEvents[0]:null;
+   if(!Object.isFrozen(result)||!Object.isFrozen(result?.events)||!Object.isFrozen(result?.logs)||!Object.isFrozen(result?.items)||!Object.isFrozen(result?.settlementBasis)||!Object.isFrozen(result?.diagnostics)||!Object.isFrozen(result?.combat)||!Object.isFrozen(result?.snapshot)||!Object.isFrozen(result?.challengeStatus)||!Object.isFrozen(combatEvents)||firstCombatEvent&&!Object.isFrozen(firstCombatEvent))fail("RESULT_IMMUTABILITY","高維 result、diagnostics、raw combat alias 與 settlement basis 應全部不可變",{index});
+   if(result?.contractSemantics!==window.THIRD_WORLD_SETTLEMENT_AUTHORITY||result?.contractSemantics?.field!=="settlementBasis"||result?.diagnostics?.version!==1)fail("RESULT_CONTRACT_SEMANTICS","result 必須明示 settlementBasis 為 authority，combat/snapshot 僅供 diagnostics",{index,semantics:result?.contractSemantics,diagnostics:result?.diagnostics});
+   const basis=result?.settlementBasis;
+   if(result?.combatCompleted!==basis?.combatCompleted||result?.settlementInputReady!==basis?.settlementInputReady||result?.formalSettlementEligible!==basis?.formalSettlementEligible||result?.formalStartHp!==basis?.formalStartHp||result?.combatEndHp!==basis?.combatEndHp||result?.effectivePermanentDamage!==basis?.effectivePermanentDamage||result?.playerDied!==basis?.playerDied||result?.bossDefeated!==basis?.bossDefeated)fail("TOP_LEVEL_MIRROR_DRIFT","top-level convenience 欄位必須與 authority settlementBasis 同步",{index,result:summary(result),basis});
    if(result?.settlementReady!==false||result?.formalProgressChanged!==false||Number(result?.xp)!==0||Number(result?.dimensionalStrings)!==0||(result?.items||[]).length!==0)fail("PRE_SETTLEMENT_GUARD","第 5 批戰鬥層不得偷做永久進度／EXP／維度之弦／掉落",{index,result:{settlementReady:result?.settlementReady,formalProgressChanged:result?.formalProgressChanged,xp:result?.xp,dimensionalStrings:result?.dimensionalStrings,items:result?.items}});
   });
 
