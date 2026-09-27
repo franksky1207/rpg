@@ -1,5 +1,6 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
+ const TITLE_POST_FLOW_VERSION=1;
  const noticeQueue=[];
  const ui={selectedId:null,mode:"single",phase:"idle",running:false,message:"",lastBattle:null,finalRun:null};
  let calamityEraView="universe";
@@ -25,6 +26,10 @@
   }
   await sleep(delay);
   return false;
+ }
+ function notifyTitlePostFlow(source){
+  if(typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")return window.flushPendingPlayerTitleNoticeAfterFlow({source:String(source||"universe-calamity")});
+  return typeof window.queuePendingPlayerTitleNotice==="function"?window.queuePendingPlayerTitleNotice():false;
  }
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
@@ -115,7 +120,7 @@
    <div class="combat-screen calamity-combat"><div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerName()} Lv.${state.level}</h2><div class="muted">ATK ${fmt(p.atk)}　DEF ${fmt(p.def)}<br>暴擊 ${Number(p.crit||0).toFixed(1)}%　閃避 ${Number(p.dodge||0).toFixed(1)}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(p.hp)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,php/p.hp*100))}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
-    <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="calamity-threat-badge">文明災厄</div><h2>${esc(e.name)}</h2><div class="muted">ATK ${fmt(e.atk)}　DEF ${fmt(e.def)}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(ehp)} / ${fmt(e.hp)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${Math.max(0,Math.min(100,ehp/e.hp*100))}%"></span></div></div></div>
+    <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="calamity-threat-badge">文明災厄</div><h2>${esc(e.name)}</h2><div class="muted">ATK ${fmt(e.atk)}　DEF ${fmt(e.def)}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(ehp)} / ${fmt(e.hp)}</span></div><div class="bar calamity-hp-bar"><span class="hp" id="combatEnemyBar" style="width:${Math.max(0,Math.min(100,ehp/e.hp*100))}%"></span></div></div></div>
    </div><div class="combat-message" id="combatMessage">準備戰鬥</div></div>
   </div></section>`;
  }
@@ -143,7 +148,7 @@
  async function single(){
   const res=window.runSecondWorldCalamitySingle?.(ui.selectedId);
   if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始此文明災厄挑戰。";render();return;}
-  ui.lastBattle=res.result;ui.finalRun=res.run;render();await animate(res.result);ui.running=false;ui.phase="result";render();
+  ui.lastBattle=res.result;ui.finalRun=res.run;render();await animate(res.result);ui.running=false;ui.phase="result";render();notifyTitlePostFlow("universe-calamity-single");
  }
  async function continuous(){
   const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{
@@ -174,7 +179,7 @@
    },
    async onEnd(run){ui.finalRun=run;}
   });
-  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();
+  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();notifyTitlePostFlow("universe-calamity-continuous");
  }
  function ensureNotice(){
   let modal=document.getElementById("secondWorldCalamityAppearanceModal");if(modal)return modal;
@@ -186,6 +191,7 @@
  window.prepareSecondWorldCivilizationCalamityEntry=function(){
   if(ui.running)return false;
   ui.selectedId=null;ui.mode="single";ui.phase="idle";ui.message="";ui.lastBattle=null;ui.finalRun=null;
+  notifyTitlePostFlow("universe-calamity-entry");
   return true;
  };
  window.secondWorldCivilizationCalamityPageHtml=function(){if(calamityEraView==="galaxy-review")return reviewBattle?.phase==="combat"?galaxyReviewCombat():galaxyReviewIdle();return ui.phase==="combat"?combat():ui.phase==="result"?result():idle();};
@@ -238,6 +244,7 @@
   if(noticeQueue.length)setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
  };
  window.SECOND_WORLD_CALAMITY_UI_VERSION=VERSION;
+ window.SECOND_WORLD_CALAMITY_TITLE_POST_FLOW_VERSION=TITLE_POST_FLOW_VERSION;
  window.SECOND_WORLD_CALAMITY_REVIEW_VERSION=1;
  window.SECOND_WORLD_CALAMITY_MARK_ARCHIVE_VERSION=1;
  window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION=1;
