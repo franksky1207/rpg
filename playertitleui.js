@@ -1,10 +1,15 @@
 (function(){
- const PLAYER_TITLE_UI_VERSION=2;
+ const PLAYER_TITLE_UI_VERSION=3;
  const UNIVERSE_NOTICE_VERSION=1;
  const THIRD_WORLD_NOTICE_VERSION=1;
+ const POST_FLOW_NOTIFICATION_VERSION=1;
+ const LEGACY_QUEUE_DELEGATE_VERSION=1;
+ const THIRD_WORLD_POST_FLOW_READY_VERSION=1;
  const TITLE_NOTICE_MODAL_ID="playerTitleNoticeModal";
  const TITLE_PICKER_MODAL_ID="playerTitlePickerModal";
  let titleNoticeOpen=false;
+ let postFlowQueued=false;
+ let lastPostFlowSource="";
 
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
@@ -79,6 +84,7 @@
  }
 
  function showPendingPlayerTitleNotice(){
+  postFlowQueued=false;
   if(titleNoticeOpen||document.hidden)return false;
   const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!def)return false;
@@ -102,23 +108,37 @@
   return true;
  }
 
- function queuePendingPlayerTitleNotice(){
-  if(document.hidden)return false;
+ function flushPendingPlayerTitleNoticeAfterFlow(options={}){
+  lastPostFlowSource=String(options?.source||"");
+  if(document.hidden||titleNoticeOpen)return false;
+  const pending=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
+  if(!pending)return false;
+  if(postFlowQueued)return true;
+  postFlowQueued=true;
   if(typeof queueMicrotask==="function")queueMicrotask(showPendingPlayerTitleNotice);
   else setTimeout(showPendingPlayerTitleNotice,0);
   return true;
  }
 
- document.addEventListener("visibilitychange",()=>{if(!document.hidden)queuePendingPlayerTitleNotice();});
- setTimeout(queuePendingPlayerTitleNotice,0);
+ function queuePendingPlayerTitleNotice(){return flushPendingPlayerTitleNoticeAfterFlow({source:"legacy-queue"});}
+ function postFlowStatus(){return Object.freeze({queued:postFlowQueued,open:titleNoticeOpen,source:lastPostFlowSource,pendingId:typeof window.getPendingPlayerTitleNotice==="function"?(window.getPendingPlayerTitleNotice()?.id||null):null});}
+
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)flushPendingPlayerTitleNoticeAfterFlow({source:"visibilitychange"});});
+ setTimeout(()=>flushPendingPlayerTitleNoticeAfterFlow({source:"startup"}),0);
 
  window.PLAYER_TITLE_UI_VERSION=PLAYER_TITLE_UI_VERSION;
  window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION=UNIVERSE_NOTICE_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION=THIRD_WORLD_NOTICE_VERSION;
+ window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION=POST_FLOW_NOTIFICATION_VERSION;
+ window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION=LEGACY_QUEUE_DELEGATE_VERSION;
+ window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION=THIRD_WORLD_POST_FLOW_READY_VERSION;
+ window.PLAYER_TITLE_POST_FLOW_ERAS=Object.freeze(["galaxy","universe","higher-dimensional"]);
  window.openPlayerTitlePicker=openPlayerTitlePicker;
  window.closePlayerTitlePicker=closePlayerTitlePicker;
  window.selectPlayerTitle=selectPlayerTitle;
  window.showPendingPlayerTitleNotice=showPendingPlayerTitleNotice;
  window.closePlayerTitleNotice=closePlayerTitleNotice;
+ window.flushPendingPlayerTitleNoticeAfterFlow=flushPendingPlayerTitleNoticeAfterFlow;
  window.queuePendingPlayerTitleNotice=queuePendingPlayerTitleNotice;
+ window.getPlayerTitlePostFlowStatus=postFlowStatus;
 })();
