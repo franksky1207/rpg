@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const maxHp=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||0));
@@ -13,6 +13,7 @@
  const summary=(result)=>({
   ok:result?.ok===true,
   combatCompleted:result?.combatCompleted===true,
+  actionSafetyReached:result?.actionSafetyReached===true,
   turnLimitReached:result?.turnLimitReached===true,
   terminationReason:result?.terminationReason||null,
   playerDied:result?.playerDied===true,
@@ -46,6 +47,8 @@
    formalStartHp:options.formalStartHp==null?maxHp:options.formalStartHp,
    civilizationLevel:0,
    maxTurns:options.maxTurns||0,
+   maxActions:options.maxActions,
+   maxActionsPerChain:options.maxActionsPerChain,
    logs:false,
    useTestSpecializations:true,
    markLevels:zeroMarks(),
@@ -71,6 +74,8 @@
    useTestSpecializations:true,
    markLevels:zeroMarks(),
    maxTurns:options.maxTurns==null?1:options.maxTurns,
+   maxActions:options.maxActions,
+   maxActionsPerChain:options.maxActionsPerChain,
    skipPlayerAction:options.skipPlayerAction===true,
    skipEnemyAction:options.skipEnemyAction===true,
    rng:options.rng||constantRng(.99),
@@ -86,14 +91,27 @@
   if(typeof window.runThirdWorldBossCombat!=="function")fail("THIRD_WORLD_COMBAT_MISSING","runThirdWorldBossCombat 未載入");
   if(typeof window.createThirdWorldBossCombatSnapshot!=="function")fail("THIRD_WORLD_SNAPSHOT_MISSING","高維戰鬥快照 owner 未載入");
   if(typeof window.thirdWorldSettlementBasisFromResult!=="function")fail("SETTLEMENT_AUTHORITY_API_MISSING","settlementBasis authority API 未載入");
-  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==4)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 4",window.THIRD_WORLD_COMBAT_VERSION);
+  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==5)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 5",window.THIRD_WORLD_COMBAT_VERSION);
   if(Number(window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION)!==1)fail("FORMAL_HP_OVERRIDE_GUARD_VERSION","正式 Boss HP override guard 應為版本 1",window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION);
   if(Number(window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION)!==2)fail("RESULT_CONTRACT_VERSION","高維戰鬥 result contract 版本應為 2",window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION);
   if(Number(window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION)!==2)fail("SETTLEMENT_BASIS_VERSION","高維 settlement basis 版本應為 2",window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION);
   if(Number(window.THIRD_WORLD_SETTLEMENT_AUTHORITY_VERSION)!==1)fail("SETTLEMENT_AUTHORITY_VERSION","高維 settlement authority 版本應為 1",window.THIRD_WORLD_SETTLEMENT_AUTHORITY_VERSION);
   if(Number(window.THIRD_WORLD_RESULT_DIAGNOSTIC_VERSION)!==1)fail("RESULT_DIAGNOSTIC_VERSION","高維 diagnostics 版本應為 1",window.THIRD_WORLD_RESULT_DIAGNOSTIC_VERSION);
+  if(Number(window.COMBAT_ACTION_SAFETY_VERSION)!==1||Number(window.COMBAT_ACTION_SAFETY_RULES?.maxActionsPerRun)<=0||Number(window.COMBAT_ACTION_SAFETY_RULES?.maxActionsPerChain)<=0)fail("COMBAT_ACTION_SAFETY_OWNER","共用戰鬥 action safety owner 未正確載入",window.COMBAT_ACTION_SAFETY_RULES||null);
+  if(Number(window.MARK_MAX_LEVEL_OWNER_VERSION)!==1||typeof window.markMaxLevel!=="function"||Number(window.markMaxLevel())!==Number(window.MARK_MAX_LEVEL))fail("MARK_MAX_LEVEL_OWNER","第三紀元必須直接讀取 Mark Core 正式滿級 owner",{ownerVersion:window.MARK_MAX_LEVEL_OWNER_VERSION,max:window.MARK_MAX_LEVEL,api:typeof window.markMaxLevel==="function"?window.markMaxLevel():null});
+  if(Number(window.THIRD_WORLD_MARK_MAX_LEVEL_SOURCE_VERSION)!==1)fail("THIRD_WORLD_MARK_MAX_SOURCE","高維印記滿級來源版本應為 1",window.THIRD_WORLD_MARK_MAX_LEVEL_SOURCE_VERSION);
+  if(Number(window.SPECIALIZATION_COMBAT_RULE_SOURCE_VERSION)!==1||typeof window.specializationCombatRuleSnapshot!=="function"||window.specializationCombatRuleSnapshot()!==window.COMBAT_STANDARD_ABILITY_RULES)fail("SPECIALIZATION_COMBAT_RULE_SOURCE","專精說明必須直接讀 shared combat rule owner",{version:window.SPECIALIZATION_COMBAT_RULE_SOURCE_VERSION});
   if(window.THIRD_WORLD_SETTLEMENT_AUTHORITY?.field!=="settlementBasis"||window.THIRD_WORLD_SETTLEMENT_AUTHORITY?.topLevelSettlementFields!=="convenience-only")fail("SETTLEMENT_AUTHORITY_DECLARATION","settlementBasis 必須是唯一正式結算 authority",window.THIRD_WORLD_SETTLEMENT_AUTHORITY||null);
   if(window.COMBAT_MARK_INTEGRITY?.passed!==true)fail("SHARED_MARK_INTEGRITY","高維戰鬥依賴的共用印記 deterministic integrity 未通過",window.COMBAT_MARK_INTEGRITY||null);
+  const sharedRules=window.COMBAT_STANDARD_ABILITY_RULES||{};
+  const pct=value=>String(Math.round((Number(value)||0)*1000)/10);
+  const semanticChecks={
+   combo:pct(sharedRules.comboScale),
+   penetration:pct(1-Number(sharedRules.penetrationDefMultiplier||0)),
+   counter:pct(sharedRules.counterScale),
+   drain:pct(sharedRules.drainRatio)
+  };
+  Object.entries(semanticChecks).forEach(([key,value])=>{const text=window.specializationWorldSemantics?.(key,fakeState())?.desc||"";if(!text.includes(`${value}%`))fail("SPECIALIZATION_RULE_TEXT_DRIFT","專精說明未反映 shared combat rule owner",{key,value,text});});
   resetTestSpecs();
 
   const base={atk:15000,def:10000,crit:10,dodge:10,initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:30};
@@ -140,7 +158,7 @@
 
   const combo=isolatedEnemyCore(4,"comboRate",abilityTank,{skipPlayerAction:true,maxTurns:1,rng:sequenceRng([.99,.5,.99,.1,.99,.5,.99,.99])});
   const comboHits=(combo?.events||[]).filter(event=>event?.type==="attack"&&event.actor==="enemy"),comboEvents=(combo?.events||[]).filter(event=>event?.type==="combo"&&event.actor==="enemy");
-  if(comboEvents.length!==1||comboHits.length!==2||comboHits[0]?.source!=="normal"||comboHits[1]?.source!=="combo"||comboHits[1]?.damage!==Math.ceil(comboHits[0].damage*.5))fail("ENEMY_COMBO_EXECUTION","高維連擊應實際追加一次 50% 傷害攻擊",{comboEvents,comboHits});
+  if(comboEvents.length!==1||comboHits.length!==2||comboHits[0]?.source!=="normal"||comboHits[1]?.source!=="combo"||comboHits[1]?.damage!==Math.ceil(comboHits[0].damage*Number(sharedRules.comboScale)))fail("ENEMY_COMBO_EXECUTION","高維連擊應依 shared comboScale 實際追加傷害",{comboEvents,comboHits,comboScale:sharedRules.comboScale});
 
   const penetration=isolatedEnemyCore(5,"penetrationRate",abilityTank,{skipPlayerAction:true,maxTurns:1,rng:constantRng(.1)});
   const noPenetration=isolatedEnemyCore(5,null,abilityTank,{skipPlayerAction:true,maxTurns:1,rng:constantRng(.1)});
@@ -155,6 +173,17 @@
   const drain=run(7,drainPlayer,{formalStartHp:historicalHp,maxTurns:1,rng:sequenceRng([.99,.5,.99,.99,.99,.99,.5,.99,.1,.99])});
   const drainEvent=(drain?.events||[]).find(event=>event?.type==="drain"&&event.actor==="enemy");
   if(!drain?.ok||!drainEvent||drainEvent.healCap!==historicalHp||drainEvent.healed!==1||drain.combatEndHp!==historicalHp||drain.enemyHealCap!==historicalHp||drain.formalStartHp>=drain.bossMaxHp)fail("ENEMY_DRAIN_HISTORICAL_CAP","高維汲取必須實際受本場 formalStartHp 上限約束，不能補回歷史永久削血",{drainEvent,result:summary(drain),enemyHealCap:drain?.enemyHealCap,bossMaxHp:drain?.bossMaxHp});
+
+  const safetyActor={hp:1000000000,atk:1,def:1000000000,crit:0,dodge:0};
+  const safetyEnemy={hp:1000000000,atk:1,def:1000000000,crit:0,dodge:0,name:"安全預算測試"};
+  const runSafety=window.runCombatCore(safetyActor,safetyEnemy,safetyActor.hp,{logs:false,skipPlayerAction:true,maxActions:5,maxActionsPerChain:100,rng:constantRng(.1),enemyAbilityProfile:{comboRate:100},enemyEffectProfile:{}});
+  const runSafetyEvent=(runSafety?.events||[]).find(event=>event?.type==="combatSafety"&&event.scope==="run");
+  if(runSafety?.actionBudgetReached!==true||runSafety?.actionCount!==5||!runSafetyEvent)fail("ACTION_SAFETY_RUN_BUDGET","共用戰鬥 action run budget 應在極端連擊輸入下安全終止",{actionCount:runSafety?.actionCount,actionBudgetReached:runSafety?.actionBudgetReached,event:runSafetyEvent});
+  const chainSafety=window.runCombatCore(safetyActor,safetyEnemy,safetyActor.hp,{logs:false,skipPlayerAction:true,maxTurns:1,maxActions:100,maxActionsPerChain:3,rng:constantRng(.1),enemyAbilityProfile:{comboRate:100},enemyEffectProfile:{}});
+  const chainSafetyEvent=(chainSafety?.events||[]).find(event=>event?.type==="combatSafety"&&event.scope==="chain");
+  if(chainSafety?.chainBudgetReached!==true||chainSafety?.actionBudgetReached===true||chainSafety?.actionCount!==3||!chainSafetyEvent)fail("ACTION_SAFETY_CHAIN_BUDGET","共用戰鬥單一 chain budget 應限制極端 combo chain，且不誤標整場 run budget",{actionCount:chainSafety?.actionCount,chainBudgetReached:chainSafety?.chainBudgetReached,event:chainSafetyEvent});
+  const adapterSafety=run(4,abilityTank,{maxActions:3,maxActionsPerChain:100,rng:constantRng(.1)});
+  if(!adapterSafety?.ok||adapterSafety.actionSafetyReached!==true||adapterSafety.combatCompleted!==false||adapterSafety.turnLimitReached!==false||adapterSafety.terminationReason!=="action-safety"||adapterSafety.settlementInputReady!==false||adapterSafety.formalSettlementEligible!==false||adapterSafety.settlementBasis?.terminationReason!=="action-safety")fail("ACTION_SAFETY_ADAPTER_CONTRACT","高維 adapter 遇到 shared action run budget 時必須標記 action-safety 且不得結算",summary(adapterSafety));
 
   const overrideState=fakeState(),storedHp=Math.max(1,maxHp-54321);overrideState.thirdWorld.bosses[0].currentHp=storedHp;
   const guarded=window.createThirdWorldBossCombatSnapshot(0,{state:overrideState,allowFormalHpOverride:true,formalStartHp:1});
@@ -187,7 +216,7 @@
   if(authoritative!==formal.settlementBasis||authoritative?.formalStartHp!==maxHp||authoritative?.combatEndHp!==0||authoritative?.effectivePermanentDamage!==maxHp||authoritative?.formalSettlementEligible!==true)fail("SETTLEMENT_AUTHORITY_DIVERGENCE","top-level convenience 欄位即使與 settlementBasis 不一致，正式 authority 仍必須只讀 settlementBasis",{view:{formalStartHp:divergentView.formalStartHp,combatEndHp:divergentView.combatEndHp,effectivePermanentDamage:divergentView.effectivePermanentDamage,formalSettlementEligible:divergentView.formalSettlementEligible},basis:authoritative});
   if(window.thirdWorldSettlementBasisFromResult({formalStartHp:maxHp,formalSettlementEligible:true},{requireEligible:true})!==null)fail("SETTLEMENT_AUTHORITY_REQUIRED","缺少 settlementBasis 時不得僅依 top-level 欄位形成正式結算輸入");
 
-  [limitA,win,loss,formal,drain].forEach((result,index)=>{
+  [limitA,win,loss,formal,drain,adapterSafety].forEach((result,index)=>{
    const combatEvents=result?.combat?.events,firstCombatEvent=Array.isArray(combatEvents)?combatEvents[0]:null;
    if(!Object.isFrozen(result)||!Object.isFrozen(result?.events)||!Object.isFrozen(result?.logs)||!Object.isFrozen(result?.items)||!Object.isFrozen(result?.settlementBasis)||!Object.isFrozen(result?.diagnostics)||!Object.isFrozen(result?.combat)||!Object.isFrozen(result?.snapshot)||!Object.isFrozen(result?.challengeStatus)||!Object.isFrozen(combatEvents)||firstCombatEvent&&!Object.isFrozen(firstCombatEvent))fail("RESULT_IMMUTABILITY","高維 result、diagnostics、raw combat alias 與 settlement basis 應全部不可變",{index});
    if(result?.contractSemantics!==window.THIRD_WORLD_SETTLEMENT_AUTHORITY||result?.contractSemantics?.field!=="settlementBasis"||result?.diagnostics?.version!==1)fail("RESULT_CONTRACT_SEMANTICS","result 必須明示 settlementBasis 為 authority，combat/snapshot 僅供 diagnostics",{index,semantics:result?.contractSemantics,diagnostics:result?.diagnostics});
