@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const SNAPSHOT_VERSION=1;
  const RESULT_CONTRACT_VERSION=1;
  const SETTLEMENT_BASIS_VERSION=1;
@@ -83,7 +83,7 @@
   if(!boss)return null;
   const target=targetState(options);
   const progress=target&&typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,target):null;
-  const allowOverride=options.ignoreUnlock===true||options.allowFormalHpOverride===true;
+  const allowOverride=options.ignoreUnlock===true;
   const storedHp=progress?finiteWhole(progress.currentHp,boss.maxHp):finiteWhole(boss.maxHp,1);
   const requestedHp=allowOverride&&options.formalStartHp!=null?finiteWhole(options.formalStartHp,storedHp):storedHp;
   const formalStartHp=Math.max(0,Math.min(finiteWhole(boss.maxHp,1),requestedHp));
@@ -269,12 +269,15 @@
    if(!stage9||stage9.stage!==9||Number(stage9.enemyAbilityProfile?.comboRate)!==40||markKeys.some(key=>stage9.enemyEffectProfile?.[key]?.active!==true||!markProfileMatchesOwner(stage9.enemyEffectProfile,key)))fail("MARK_EFFECT_OWNER",stage9?.enemyEffectProfile||null);
    const partial=createThirdWorldBossCombatSnapshot(7,{ignoreUnlock:true,formalStartHp:Math.floor(max*.55)});
    if(!partial||partial.enemyHealCap!==partial.formalStartHp||partial.enemyHealCap>=partial.bossMaxHp)fail("FORMAL_HP_HEAL_CAP",partial||null);
+   const formalStoredHp=Math.max(1,max-12345),formalProbeState={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:Number(window.THIRD_WORLD_BOSS_COUNT)||10},(_,index)=>({currentHp:index===0?formalStoredHp:max}))}};
+   const guarded=createThirdWorldBossCombatSnapshot(0,{state:formalProbeState,allowFormalHpOverride:true,formalStartHp:1});
+   if(!guarded||guarded.formalStartHp!==formalStoredHp)fail("FORMAL_HP_OVERRIDE_GUARD",{expected:formalStoredHp,actual:guarded?.formalStartHp||null});
    const basis=createSettlementBasis({bossIndex:3,bossId:"probe",formalStartHp:1000,combatEndHp:640,bossMaxHp:1100,bossStageAtStart:4,playerStartHp:500,playerEndHp:0,playerDied:true,bossDefeated:false,turns:8,eventCount:12,terminationReason:"player-defeated",combatCompleted:true,challengeAllowedAtStart:true,formalRun:true});
    if(!Object.isFrozen(basis)||basis.version!==SETTLEMENT_BASIS_VERSION||basis.effectivePermanentDamage!==360||basis.combatCompleted!==true||basis.terminationReason!=="player-defeated")fail("SETTLEMENT_BASIS_CONTRACT",basis);
    const incomplete=createSettlementBasis({formalStartHp:1000,combatEndHp:900,terminationReason:"turn-limit",combatCompleted:false});
    if(incomplete.effectivePermanentDamage!==100||incomplete.combatCompleted!==false||incomplete.terminationReason!=="turn-limit")fail("INCOMPLETE_BASIS_CONTRACT",incomplete);
   }catch(error){fail("EXCEPTION",String(error?.message||error));}
-  return Object.freeze({version:2,passed:errors.length===0,errors:Object.freeze(errors.slice())});
+  return Object.freeze({version:3,passed:errors.length===0,errors:Object.freeze(errors.slice())});
  }
 
  window.THIRD_WORLD_COMBAT_VERSION=VERSION;
@@ -283,6 +286,7 @@
  window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION=SETTLEMENT_BASIS_VERSION;
  window.THIRD_WORLD_COMBAT_HEADLESS_DEFAULT_VERSION=1;
  window.THIRD_WORLD_COMBAT_NO_SETTLEMENT_VERSION=1;
+ window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION=1;
  window.THIRD_WORLD_MARK_EFFECT_SOURCE_VERSION=1;
  window.thirdWorldCombatAbilityProfileFromStats=abilityProfileFromStats;
  window.thirdWorldCombatEffectProfileFromAbilities=effectProfileFromAbilities;
