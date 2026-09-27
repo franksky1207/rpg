@@ -1,15 +1,16 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const SUPPRESSION_VERSION=1;
- const RUNTIME_VERSION=2;
- const EVENT_PAUSE_VERSION=1;
+ const RUNTIME_VERSION=3;
+ const EVENT_TERMINAL_VERSION=1;
+ const LEGACY_EVENT_ACK_VERSION=1;
  const PAGEHIDE_RESET_VERSION=2;
  const FAST_CATCH_UP_VERSION=1;
  const BOUNDED_HISTORY_VERSION=1;
  const ACTIVE_FLOW_GUARD_VERSION=1;
  const SHARED_PAGEHIDE_OWNER_VERSION=1;
- const RESULT_SUMMARY_VERSION=1;
- const INTEGRITY_VERSION=2;
+ const RESULT_SUMMARY_VERSION=2;
+ const INTEGRITY_VERSION=3;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
@@ -58,13 +59,13 @@
   return freeze({
    version:RUNTIME_VERSION,
    active:source.active===true,
-   paused:source.paused===true,
+   paused:false,
    looping:source.looping===true,
    bossIndex:finiteWhole(source.bossIndex,-1),
    deaths:clamp(finiteWhole(source.deaths,0),0,MAX_DEATHS),
    battles:Math.max(0,finiteWhole(source.battles,0)),
    startedAt:Math.max(0,finiteWhole(source.startedAt,0)),
-   pauseReason:String(source.pauseReason||""),
+   pauseReason:"",
    stopReason,
    stopMeta:runInfra()?.stopReasonMeta(stopReason)||null,
    pendingEvents:freeze((Array.isArray(source.pendingEvents)?source.pendingEvents:[]).slice()),
@@ -111,7 +112,7 @@
  }
  function clearRuntime(reason="manual"){
   if(!runtime){stopBackgroundFlow();return freeze({...runtimeSnapshot(),stopReason:String(reason||"manual"),stopMeta:runInfra()?.stopReasonMeta(reason)||null});}
-  const finished={...runtime,active:false,paused:false,looping:false,stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[],recentBattles:Array.isArray(runtime.recentBattles)?runtime.recentBattles.slice():[]};
+  const finished={...runtime,active:false,paused:false,looping:false,pauseReason:"",stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[],recentBattles:Array.isArray(runtime.recentBattles)?runtime.recentBattles.slice():[]};
   runtime=null;runSerial+=1;stopBackgroundFlow();
   return runtimeSnapshot(finished);
  }
@@ -131,23 +132,21 @@
   runSerial+=1;startBackgroundFlow();
   return freeze({ok:true,started:true,snapshot:runtimeSnapshot()});
  }
- function pauseForProgressEvents(settlement){
-  if(!runtime)return runtimeSnapshot();
-  runtime.paused=true;
-  runtime.pauseReason="progress-event";
-  runtime.pendingEvents=Array.isArray(settlement?.eventSequence)?settlement.eventSequence.slice():[];
-  stopBackgroundFlow();
-  return runtimeSnapshot();
+ function terminalReasonForStep(terminalReason,progressEvent,deathLimitReached){
+  const formal=String(terminalReason||"");
+  if(formal)return formal;
+  if(progressEvent===true)return "progress-event";
+  if(deathLimitReached===true)return "death-limit";
+  return "";
+ }
+ function settlePendingEvents(settlement){
+  if(!runtime)return [];
+  const events=Array.isArray(settlement?.eventSequence)?settlement.eventSequence.slice():[];
+  runtime.pendingEvents=events;
+  return events;
  }
  function acknowledgeEvents(){
-  if(!runtime?.active||runtime.paused!==true||runtime.pauseReason!=="progress-event")return freeze({ok:false,reason:"目前沒有待確認的高維進度事件。",snapshot:runtimeSnapshot()});
-  if(runtime.deaths>=MAX_DEATHS){const stopped=clearRuntime("death-limit");return freeze({ok:false,reason:"本輪已達 100 次死亡上限。",snapshot:stopped});}
-  const conflict=runtimeConflictStatus();
-  if(conflict.blocked){const stopped=clearRuntime("active-runtime");return freeze({ok:false,reason:"已有其他正式戰鬥／背景流程接管，已停止高維連戰。",runtime:conflict,snapshot:stopped});}
-  const target=currentState(),status=typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus(runtime.bossIndex,target):null;
-  if(status?.allowed!==true){const stopped=clearRuntime(status?.reason||"challenge-blocked");return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),snapshot:stopped});}
-  runtime.paused=false;runtime.pauseReason="";runtime.pendingEvents=[];startBackgroundFlow();
-  return freeze({ok:true,snapshot:runtimeSnapshot()});
+  return freeze({ok:false,reason:"高維進度事件已改為當場結束整輪；請在顯示事件後重新開始新的連戰。",code:"event-run-ended",snapshot:runtimeSnapshot()});
  }
  function battleOptions(options,cap){
   return {
@@ -164,7 +163,7 @@
  }
  function summaryFromStep(settlement,combat,data={}){
   const items=Array.isArray(settlement?.items)?settlement.items:[];
-  const summary=freeze({
+  return freeze({
    version:RESULT_SUMMARY_VERSION,
    battleNumber:Math.max(0,finiteWhole(data.battleNumber,0)),
    bossIndex:finiteWhole(settlement?.bossIndex,finiteWhole(combat?.bossIndex,-1)),
@@ -185,7 +184,6 @@
    progressEventPending:data.progressEvent===true,
    continuationAllowed:data.continuationAllowed===true
   });
-  return summary;
  }
  function recordBattleSummary(summary){
   if(!runtime||!summary)return;
@@ -196,7 +194,6 @@
  }
  function runOneBattle(options={}){
   if(!runtime?.active)return freeze({ok:false,reason:"高維連戰尚未開始。",snapshot:runtimeSnapshot()});
-  if(runtime.paused)return freeze({ok:false,reason:"高維連戰正在等待進度事件確認。",snapshot:runtimeSnapshot()});
   if(runtime.deaths>=MAX_DEATHS)return freeze({ok:false,reason:"本輪已達 100 次死亡上限。",snapshot:clearRuntime("death-limit")});
   const conflict=runtimeConflictStatus();
   if(conflict.blocked||!backgroundFlowOwned())return freeze({ok:false,reason:"其他正式戰鬥／背景流程已接管，停止高維連戰。",runtime:conflict,snapshot:clearRuntime("active-runtime")});
@@ -213,18 +210,16 @@
   if(countsDeath)runtime.deaths=clamp(runtime.deaths+1,0,MAX_DEATHS);
   const deathsAfter=runtime.deaths;
   const continuation=settlement.continuation&&typeof settlement.continuation==="object"?settlement.continuation:{};
-  const terminalReason=String(continuation.terminalReason||"");
+  const formalTerminalReason=String(continuation.terminalReason||"");
   const progressEvent=continuation.requiresEventHandling===true;
   const deathLimitReached=countsDeath&&deathsAfter>=MAX_DEATHS;
-  const willContinue=!terminalReason&&!deathLimitReached&&!progressEvent;
+  if(progressEvent||Array.isArray(settlement?.eventSequence)&&settlement.eventSequence.length)settlePendingEvents(settlement);
+  const terminalReason=terminalReasonForStep(formalTerminalReason,progressEvent,deathLimitReached);
+  const willContinue=!terminalReason;
   const summary=summaryFromStep(settlement,combat,{battleNumber:runtime.battles,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEvent,continuationAllowed:willContinue});
   recordBattleSummary(summary);
-  let snapshot;
-  if(terminalReason)snapshot=clearRuntime(terminalReason);
-  else if(deathLimitReached)snapshot=clearRuntime("death-limit");
-  else if(progressEvent)snapshot=pauseForProgressEvents(settlement);
-  else snapshot=runtimeSnapshot();
-  return freeze({ok:true,world:3,combat,settlement,summary,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEventPending:progressEvent,continuationAllowed:snapshot.active===true&&!snapshot.paused,snapshot});
+  const snapshot=terminalReason?clearRuntime(terminalReason):runtimeSnapshot();
+  return freeze({ok:true,world:3,combat,settlement,summary,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEventPending:progressEvent,continuationAllowed:terminalReason===""&&snapshot.active===true,snapshot});
  }
  async function sleepBetweenBattles(){return consumeCatchUpDelay(Math.max(0,numberOr(window.COMBAT_OUTER_GAP_MS,140)));}
  function shouldNotifyDuringCatchUp(step,policy){return step?.ok!==true||step?.terminalReason||step?.progressEventPending===true||step?.deathLimitReached===true||policy?.shouldRefreshUi===true||policy?.shouldPresentBattle===true;}
@@ -237,7 +232,6 @@
   runtime.looping=true;
   try{
    while(runtime?.active===true&&runSerial===serial){
-    if(runtime.paused)break;
     const fastCatchUp=fastCatchUpActive();
     const step=runOneBattle(options);
     total+=1;lastStep=step;lastSnapshot=step?.snapshot||runtimeSnapshot();
@@ -247,7 +241,7 @@
     const notify=!fastCatchUp||shouldNotifyDuringCatchUp(step,policy);
     if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy});}catch(error){console.error(error);}}
     if(fastCatchUp){const infra=runInfra();if(infra)await infra.uiYield();else if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield(FLOW_KIND);}
-    if(step.ok!==true||runtime?.active!==true||runtime.paused||runSerial!==serial)break;
+    if(step.ok!==true||runtime?.active!==true||runSerial!==serial)break;
     await sleepBetweenBattles();
     if(catchUpNeedsFinalSync&&!fastCatchUpActive()){
      const finalPolicy=catchUpFinal();
@@ -273,6 +267,7 @@
   if(p0!==.5||pMax!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,pMax,maxCore});
   if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,hMax});
   if(hMid.perDeathSuppressionPoints!==.3||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
+  if(terminalReasonForStep("stage-crossed",true,true)!=="stage-crossed"||terminalReasonForStep("",true,true)!=="progress-event"||terminalReasonForStep("",false,true)!=="death-limit"||terminalReasonForStep("",false,false)!=="")errors.push({code:"TERMINAL_PRECEDENCE"});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
   if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")errors.push({code:"FORMAL_OWNER_MISSING"});
@@ -283,6 +278,8 @@
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
   const bounded=boundedSummaries(Array.from({length:RECENT_HISTORY_LIMIT+5},(_,index)=>freeze({version:RESULT_SUMMARY_VERSION,battleNumber:index+1})));
   if(bounded.length!==RECENT_HISTORY_LIMIT||bounded[0]?.battleNumber!==6||bounded[bounded.length-1]?.battleNumber!==RECENT_HISTORY_LIMIT+5)errors.push({code:"BOUNDED_HISTORY",length:bounded.length,first:bounded[0]||null,last:bounded[bounded.length-1]||null});
+  const source=Function.prototype.toString.call(runOneBattle);
+  if(/pauseForProgressEvents/.test(source)||!/terminalReasonForStep/.test(source)||!/clearRuntime\(terminalReason\)/.test(source))errors.push({code:"PROGRESS_EVENT_TERMINAL_WIRING"});
   return freeze({version:INTEGRITY_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
@@ -297,7 +294,9 @@
  window.THIRD_WORLD_RUN_VERSION=VERSION;
  window.THIRD_WORLD_SUPPRESSION_VERSION=SUPPRESSION_VERSION;
  window.THIRD_WORLD_CONTINUOUS_RUNTIME_VERSION=RUNTIME_VERSION;
- window.THIRD_WORLD_RUN_EVENT_PAUSE_VERSION=EVENT_PAUSE_VERSION;
+ window.THIRD_WORLD_RUN_EVENT_PAUSE_VERSION=0;
+ window.THIRD_WORLD_RUN_EVENT_TERMINAL_VERSION=EVENT_TERMINAL_VERSION;
+ window.THIRD_WORLD_RUN_LEGACY_EVENT_ACK_VERSION=LEGACY_EVENT_ACK_VERSION;
  window.THIRD_WORLD_RUN_PAGEHIDE_RESET_VERSION=PAGEHIDE_RESET_VERSION;
  window.THIRD_WORLD_RUN_FAST_CATCH_UP_VERSION=FAST_CATCH_UP_VERSION;
  window.THIRD_WORLD_RUN_BOUNDED_HISTORY_VERSION=BOUNDED_HISTORY_VERSION;
