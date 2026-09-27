@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=5;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
