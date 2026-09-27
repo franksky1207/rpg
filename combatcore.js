@@ -129,7 +129,7 @@
    const actualDamage=Math.max(0,before-hpOf(defender));events.push({type:"attack",actor,target:defender,source,damage,actualDamage,crit,revengeCrit,penetration,ignoreDefense,initiative:initiativeApplied,battleSpiritLayer:aRt.battleSpiritLayer,battleSpiritAtkPercent:spiritPercent,playerFinalDamageMultiplier:actor==="player"?playerFinalDamageMultiplier:1,berserk,absorbed:false,shieldAbsorbed,indomitable:indomitableTriggered});
    if(shieldAbsorbed>0)markEvent(defender,"ward","absorb",{target:actor,amount:shieldAbsorbed,remainingShield:dRt.shield});if(indomitableTriggered)markEvent(defender,"indomitable","survive",{target:actor,hp:1});
    if(logs)logs.push(actor==="player"?(crit?`你攻擊${name}，暴擊造成 ${damage} 點傷害。`:`你攻擊${name}，造成 ${damage} 點傷害。`):(crit?`${name}攻擊你，暴擊造成 ${damage} 點傷害。`:`${name}攻擊你，造成 ${damage} 點傷害。`));
-   if(lockPlayerFullHp&&defender==="player"&&php>0)php=playerHealCap;
+   if(lockPlayerFullHp&&defender==="player")php=playerHealCap;
    if(hpOf(defender)<=0)return {hit:true,actualDamage,killed:true,crit};
    const revenge=dEffects.revenge||{};if(crit&&revenge.active&&rollRate(revenge.triggerChance)){dRt.revengeReady=true;markEvent(defender,"revenge","ready",{target:actor});}
    const backlash=dEffects.backlash||{};if(actualDamage>0&&backlash.active&&rollRate(backlash.triggerChance)){const reflected=Math.max(1,ceil(actualDamage*numberOr(backlash.reflectActualHpLossPercent,30)/100)),reflectedActual=Math.min(Math.max(0,hpOf(actor)),reflected);setHp(actor,hpOf(actor)-reflected);markEvent(defender,"backlash","trigger",{target:actor,damage:reflected,actualDamage:reflectedActual,hpLoss:actualDamage});}
