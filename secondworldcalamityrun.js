@@ -3,14 +3,19 @@
  const SETTLEMENT_VERSION=1;
  const CONTINUOUS_VERSION=2;
  const TITLE_FIRST_KILL_VERSION=2;
+ const GLOBAL_MUTEX_VERSION=1;
+ const BLOCKER_NAME="second-world-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
+ let blockerRegistered=false;
 
  function runInfra(){
   if(sharedRunInfra)return sharedRunInfra;
-  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:"calamity",mode:"continuous"});
+  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:"calamity",mode:"continuous",blockerName:BLOCKER_NAME});
   return sharedRunInfra;
  }
+ function ownRuntimeBlockerStatus(){return activeRun?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
+ function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:false,blockers:[]};}
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();if(infra)return !!infra.startBackground();if(typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
  function stopBackground(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop("calamity");return false;}
@@ -132,6 +137,8 @@
   const d=def(value);if(!d)return {ok:false,reason:"unknown-calamity",run:runSnapshot()};
   if(!(typeof window.canChallengeSecondWorldCalamity==="function"&&window.canChallengeSecondWorldCalamity(d.id)))return {ok:false,reason:"locked",run:runSnapshot()};
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runSnapshot()};
+  const conflict=runtimeConflictStatus();
+  if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runSnapshot()};
   activeRun={active:true,mode:mode==="single"?"single":"continuous",calamityId:d.id,calamityName:d.name,battleCount:0,wins:0,losses:0,trueKills:0,stopRequested:false,reason:"",startedAt:Date.now(),endedAt:null,lastBattle:null};
   return {ok:true,run:runSnapshot()};
  }
@@ -201,8 +208,13 @@
   activeRun.endedAt=Date.now();
   stopBackground();
  }
- function subscribePageHide(){const infra=runInfra();if(infra)return infra.onPageHide(stopForPageHide);window.addEventListener("pagehide",stopForPageHide);return ()=>{};}
- setTimeout(subscribePageHide,0);
+ function subscribeSharedLifecycle(){
+  const infra=runInfra();
+  if(infra){infra.onPageHide(stopForPageHide);blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);return;}
+  window.addEventListener("pagehide",stopForPageHide);
+  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+ }
+ setTimeout(subscribeSharedLifecycle,0);
 
  window.SECOND_WORLD_CALAMITY_COMBAT_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
@@ -210,6 +222,8 @@
  window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;
  window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;
  window.SECOND_WORLD_CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
+ window.SECOND_WORLD_CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
  window.buildSecondWorldCalamityEnemy=enemy;
  window.runSecondWorldCalamityCombat=runCombat;
@@ -221,6 +235,8 @@
  window.runSecondWorldCalamityContinuous=continuous;
  window.requestSecondWorldCalamityStop=stop;
  window.getSecondWorldCalamityRunSnapshot=runSnapshot;
+ window.secondWorldCalamityRunConflictStatus=runtimeConflictStatus;
  window.secondWorldCalamityBackgroundEnabled=backgroundEnabled;
  window.stopSecondWorldCalamityRunForPageHide=stopForPageHide;
+ window.SECOND_WORLD_CALAMITY_GLOBAL_RUN_MUTEX_INTEGRITY={version:GLOBAL_MUTEX_VERSION,passed:typeof BLOCKER_NAME==="string"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};
 })();
