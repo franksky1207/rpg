@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  function currentPhase(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):s?.thirdWorld?.entered===true?3:s?.secondWorld?.entered===true?2:1;}
  function activeView(){try{return String(view||"");}catch(e){return "";}}
  function bountyAllowed(){return currentPhase()!==3;}
@@ -39,8 +39,6 @@
   if(typeof begin==="function"&&begin.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()!==2)return null;return begin.apply(this,args);};wrapped.__worldPhaseGuard=true;window.beginSecondWorldOfflineBattleSample=wrapped;}
   const finish=window.finishSecondWorldOfflineBattleSample;
   if(typeof finish==="function"&&finish.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()!==2)return false;return finish.apply(this,args);};wrapped.__worldPhaseGuard=true;window.finishSecondWorldOfflineBattleSample=wrapped;}
-  const resolve=window.resolveOfflineFarmTarget;
-  if(typeof resolve==="function"&&resolve.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()===3)return null;return resolve.apply(this,args);};wrapped.__worldPhaseGuard=true;window.resolveOfflineFarmTarget=wrapped;}
   return true;
  }
  function installBountyGate(){
@@ -54,7 +52,7 @@
  cleanupWelcomeMarkers();
  window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION=VERSION;
  window.BOUNTY_WORLD_PHASE_GATE_VERSION=1;
- window.OFFLINE_WORLD_PHASE_POLICY_VERSION=2;
+ window.OFFLINE_WORLD_PHASE_POLICY_VERSION=3;
  window.OFFLINE_WORLD3_LEGACY_SETTLEMENT_GATE_VERSION=1;
  window.WORLD_PHASE_STALE_WELCOME_CLEANUP_VERSION=1;
  window.worldPhaseBountyAvailable=bountyAllowed;
