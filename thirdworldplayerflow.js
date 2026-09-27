@@ -44,11 +44,11 @@
  }
  function refreshContextFromStep(step){
   if(!activeContext)return null;
-  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),cap=capFromCombat(combat);
+  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),cap=capFromCombat(combat),deathsAfter=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths),deathsAtBattleStart=Math.max(0,deathsAfter-(step?.countsDeath===true?1:0));
   activeContext.bossIndex=whole(summary.bossIndex??activeContext.bossIndex);
   activeContext.bossName=String(boss?.name||step?.combat?.bossName||combat?.e?.name||activeContext.bossName||"高維存在");
   activeContext.battleNumber=Math.max(1,whole(summary.battleNumber||activeContext.battleNumber||1));
-  activeContext.deaths=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths);
+  activeContext.deaths=deathsAtBattleStart;
   activeContext.hpCap=cap.cap;
   activeContext.hpCapPercent=cap.percent;
   activeContext.currentCombat=combat;
