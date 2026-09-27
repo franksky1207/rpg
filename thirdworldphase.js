@@ -38,12 +38,16 @@
  function normalizeStory(value){const source=isObject(value)?value:{};return {introSeen:source.introSeen===true,unlockedStage:clamp(finiteWhole(source.unlockedStage,0),0,THIRD_WORLD_STORY_MAX_STAGE),finalSeen:source.finalSeen===true};}
  function reconcileThirdWorldCoreProgressionState(target){
   if(!isObject(target)||!isObject(target.thirdWorld)||target.thirdWorld.entered!==true)return {applied:false,pending:false,reason:"not-entered"};
-  const third=target.thirdWorld,current=Math.max(0,finiteWhole(third.entryVersion,0)),before=normalizedCoreLevel(third.coreLevel),progressBefore=normalizedCoreProgress(third.coreProgress,before);
+  const third=target.thirdWorld,current=Math.max(0,finiteWhole(third.entryVersion,0));
   if(current>=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION){
-   third.coreLevel=before;
-   third.coreProgress=progressBefore;
-   return {applied:false,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:current,coreLevelBefore:before,coreLevelAfter:before,coreProgressBefore:progressBefore,coreProgressAfter:progressBefore};
+   const beforeLevel=normalizedCoreLevel(third.coreLevel),beforeProgress=Math.max(0,finiteWhole(third.coreProgress,0)),beforeStrings=Math.max(0,finiteWhole(third.dimensionalStrings,0)),investment=normalizeThirdWorldCoreInvestment(beforeLevel,beforeProgress,beforeStrings,{preserveOverflow:true});
+   third.coreLevel=investment.level;
+   third.coreProgress=investment.progress;
+   third.dimensionalStrings=investment.dimensionalStrings;
+   const changed=investment.level!==beforeLevel||investment.progress!==beforeProgress||investment.dimensionalStrings!==beforeStrings;
+   return {applied:changed,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:current,coreLevelBefore:beforeLevel,coreLevelAfter:investment.level,coreProgressBefore:beforeProgress,coreProgressAfter:investment.progress,dimensionalStringsBefore:beforeStrings,dimensionalStringsAfter:investment.dimensionalStrings,recoveredOverflow:investment.recoveredOverflow,levelsCarried:investment.levelsCarried};
   }
+  const before=normalizedCoreLevel(third.coreLevel),progressBefore=normalizedCoreProgress(third.coreProgress,before);
   third.coreLevel=0;
   third.coreProgress=0;
   third.entryVersion=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION;
@@ -126,20 +130,7 @@
  function enterThirdWorld(){
   if(typeof window.runWorldTransition!=="function"||!thirdWorldEntryOwnersReady())return {ok:false,reason:"transition-owner-missing"};
   const runtimeStatus=()=>typeof window.worldTransitionRuntimeStatus==="function"?window.worldTransitionRuntimeStatus():{blocked:false,blockers:[]};
-  return window.runWorldTransition({
-   requirements:()=>thirdWorldEntryRequirements(state),
-   runtimeStatus,
-   mutate:target=>{
-    applyThirdWorldEntryState(target);
-    if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();
-   },
-   prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},
-   finalizeAfterSave:()=>{
-    if(typeof window.resetWorldTransitionTransientRuntime==="function")window.resetWorldTransitionTransientRuntime();
-    if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();
-   },
-   sessionMarker:"civilization_third_world_just_entered_v1"
-  });
+  return window.runWorldTransition({requirements:()=>thirdWorldEntryRequirements(state),runtimeStatus,mutate:target=>{applyThirdWorldEntryState(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.resetWorldTransitionTransientRuntime==="function")window.resetWorldTransitionTransientRuntime();if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_third_world_just_entered_v1"});
  }
 
  window.THIRD_WORLD_PHASE_VERSION=VERSION;
