@@ -1,15 +1,16 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const QUALITY_POLICY_VERSION=1;
  const DETERMINISTIC_VERSION=1;
+ const METADATA_OWNER_VERSION=1;
  const BASE_LEGENDARY_CHANCE=.95;
  const BASE_MYTHIC_CHANCE=.05;
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function rngFn(value){return typeof value==="function"?value:Math.random;}
- function equipmentTypes(){return typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)&&EQUIPMENT_TYPES.length?EQUIPMENT_TYPES.slice():["weapon","helmet","armor","shoes","accessory"];}
- function typeLabel(type){return typeof equipmentTypeLabel==="function"?equipmentTypeLabel(type):String(type||"裝備");}
+ function equipmentTypes(){return typeof window.sharedEquipmentTypes==="function"?window.sharedEquipmentTypes():[];}
+ function typeLabel(type){return typeof window.sharedEquipmentTypeLabel==="function"?window.sharedEquipmentTypeLabel(type):String(type||"裝備");}
  function targetState(value=null){return value&&typeof value==="object"?value:currentState();}
  function playerEquipmentLevel(target=null){
   const s=targetState(target),cap=Math.max(1,finiteWhole(window.ABSOLUTE_MAX_LEVEL,2000));
@@ -19,7 +20,9 @@
  function makeThirdWorldEquipmentForBoss(value,options={}){
   const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(value):null;
   if(!boss||typeof window.makeEquipmentRewardItem!=="function")return null;
-  const rng=rngFn(options.rng),types=equipmentTypes(),forcedType=types.includes(options.forcedType)?options.forcedType:null;
+  const rng=rngFn(options.rng),types=equipmentTypes();
+  if(!types.length)return null;
+  const forcedType=types.includes(options.forcedType)?options.forcedType:null;
   const type=forcedType||types[Math.max(0,Math.min(types.length-1,Math.floor(rng()*types.length)))]||types[0];
   const q=Number.isInteger(options.forcedQ)?Math.max(4,Math.min(5,options.forcedQ)):thirdWorldEquipmentBaseQualityRoll(rng);
   const level=Math.max(1,Math.min(Math.max(1,finiteWhole(window.ABSOLUTE_MAX_LEVEL,2000)),finiteWhole(options.level,playerEquipmentLevel(options.state))));
@@ -50,6 +53,7 @@
   const errors=[];
   if(thirdWorldEquipmentBaseQualityRoll(()=>.949999)!==4||thirdWorldEquipmentBaseQualityRoll(()=>.95)!==5)errors.push({code:"BASE_QUALITY_95_5"});
   if(typeof window.makeEquipmentRewardItem!=="function"||window.EQUIPMENT_REWARD_CORE_INTEGRITY?.passed!==true||Number(window.SHARED_EQUIPMENT_RNG_PIPELINE_VERSION)!==1)errors.push({code:"SHARED_EQUIPMENT_FACTORY"});
+  if(typeof window.sharedEquipmentTypes!=="function"||typeof window.sharedEquipmentTypeLabel!=="function"||Number(window.SHARED_EQUIPMENT_METADATA_OWNER_VERSION)!==1)errors.push({code:"SHARED_EQUIPMENT_METADATA_OWNER"});
   if(typeof window.resolveVipLootModifiers!=="function"||typeof window.vipLootBossExtraDropTriggered!=="function")errors.push({code:"VIP_LOOT_OWNER"});
   const probeState={level:1350,vipLevel:0,equipment:{},secondWorld:{entered:true},thirdWorld:{entered:true}};
   const legendary=makeThirdWorldEquipmentForBoss(0,{state:probeState,level:1350,forcedQ:4,forcedType:"weapon",rng:()=>.5});
@@ -64,12 +68,13 @@
   const firstSeeded=makeThirdWorldBossEquipmentDrops(2,{state:{...probeState,vipLevel:16},level:1350,vipLevel:16,rng:sequenceRng(seed),weakTypesResolver:()=>["accessory"]});
   const secondSeeded=makeThirdWorldBossEquipmentDrops(2,{state:{...probeState,vipLevel:16},level:1350,vipLevel:16,rng:sequenceRng(seed),weakTypesResolver:()=>["accessory"]});
   if(JSON.stringify(firstSeeded)!==JSON.stringify(secondSeeded))errors.push({code:"SEEDED_DROP_NOT_DETERMINISTIC",firstSeeded,secondSeeded});
-  return Object.freeze({version:VERSION,deterministicVersion:DETERMINISTIC_VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice())});
+  return Object.freeze({version:VERSION,deterministicVersion:DETERMINISTIC_VERSION,metadataOwnerVersion:METADATA_OWNER_VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice())});
  }
 
  window.THIRD_WORLD_EQUIPMENT_REWARD_VERSION=VERSION;
  window.THIRD_WORLD_EQUIPMENT_QUALITY_POLICY_VERSION=QUALITY_POLICY_VERSION;
  window.THIRD_WORLD_EQUIPMENT_DETERMINISTIC_VERSION=DETERMINISTIC_VERSION;
+ window.THIRD_WORLD_EQUIPMENT_METADATA_OWNER_VERSION=METADATA_OWNER_VERSION;
  window.THIRD_WORLD_EQUIPMENT_BASE_POLICY=Object.freeze({legendaryChance:BASE_LEGENDARY_CHANCE,mythicChance:BASE_MYTHIC_CHANCE,baseDropCount:1,levelSource:"player-current",saleResource:"none",vipLootPrivileges:true});
  window.thirdWorldEquipmentBaseQualityRoll=thirdWorldEquipmentBaseQualityRoll;
  window.makeThirdWorldEquipmentForBoss=makeThirdWorldEquipmentForBoss;
