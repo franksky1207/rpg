@@ -2,6 +2,8 @@
  const CALAMITY_RUN_VERSION=1;
  const CALAMITY_CONTINUOUS_RULE_VERSION=5;
  const GLOBAL_MUTEX_VERSION=1;
+ const SHARED_INFRA_STRICT_VERSION=1;
+ const MANUAL_STOP_TERMINAL_VERSION=2;
  const BLOCKER_NAME="galaxy-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
@@ -18,18 +20,12 @@
   return sharedRunInfra;
  }
  function ownRuntimeBlockerStatus(){return activeRun?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
- function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:false,blockers:[]};}
+ function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:true,blockers:["continuous-run-infrastructure-missing"],activeBackgroundKind:null};}
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
- function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();if(infra)return !!infra.startBackground();if(typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
- function stopBackground(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop("calamity");return false;}
- function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
- function catchUpPreviewPolicy(){
-  const infra=runInfra();if(infra)return infra.previewCatchUp();
-  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
-  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
-  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
-  return window.backgroundProgressCatchUpPolicy("calamity",next,false);
- }
+ function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();return infra?!!infra.startBackground():false;}
+ function stopBackground(){const infra=runInfra();return infra?infra.stopBackground():false;}
+ function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():false;}
+ function catchUpPreviewPolicy(){const infra=runInfra();return infra?infra.previewCatchUp():null;}
  function definition(id){return typeof window.getCivilizationCalamityDefinition==="function"?window.getCivilizationCalamityDefinition(id):null;}
  function playerMaxHp(){return typeof playerCombatStats==="function"?Math.max(1,Math.floor(Number(playerCombatStats().hp)||1)):Math.max(1,Math.floor(Number(state?.hp)||1));}
  function runStatus(){
@@ -234,15 +230,17 @@
  }
  function subscribeSharedLifecycle(){
   const infra=runInfra();
-  if(infra){infra.onPageHide(stopForPageHide);blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);return;}
-  window.addEventListener("pagehide",stopForPageHide);
-  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+  if(!infra)return;
+  infra.onPageHide(stopForPageHide);
+  blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);
  }
  setTimeout(subscribeSharedLifecycle,0);
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
  window.CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
+ window.CALAMITY_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION;
+ window.CALAMITY_MANUAL_STOP_TERMINAL_VERSION=MANUAL_STOP_TERMINAL_VERSION;
  window.CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
  window.CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
