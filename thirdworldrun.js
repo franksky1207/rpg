@@ -10,6 +10,7 @@
  const SHARED_PAGEHIDE_OWNER_VERSION=1;
  const RESULT_SUMMARY_VERSION=1;
  const INTEGRITY_VERSION=2;
+ const SHARED_CONTINUOUS_INFRA_VERSION=1;
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
  const CORE_REDUCTION_PER_LEVEL=.04;
@@ -20,6 +21,7 @@
  let runSerial=0;
  let pageHideSubscribed=false;
  let blockerRegistered=false;
+ let sharedRunInfra=null;
 
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
@@ -28,6 +30,11 @@
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function resolveBossIndex(value){return typeof window.thirdWorldBossIndex==="function"?window.thirdWorldBossIndex(value):-1;}
  function round2(value){return Math.round((Number(value)||0)*100)/100;}
+ function runInfra(){
+  if(sharedRunInfra)return sharedRunInfra;
+  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:FLOW_KIND,mode:"continuous",historyLimit:RECENT_HISTORY_LIMIT,blockerName:BLOCKER_NAME});
+  return sharedRunInfra;
+ }
  function coreMaxLevel(){return Math.max(0,finiteWhole(window.THIRD_WORLD_CORE_MAX_LEVEL,0));}
  function coreLevel(target=currentState()){return clamp(finiteWhole(target?.thirdWorld?.coreLevel,0),0,coreMaxLevel());}
  function suppressionPerDeathPoints(value=coreLevel()){
@@ -44,9 +51,10 @@
   const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevel(target),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round2(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
   return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,coreMaxLevel:coreMaxLevel(),perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round2(fraction*100)});
  }
- function boundedSummaries(rows){return freeze((Array.isArray(rows)?rows:[]).slice(-RECENT_HISTORY_LIMIT));}
+ function boundedSummaries(rows){const infra=runInfra();return freeze(infra?infra.boundedHistory(rows,RECENT_HISTORY_LIMIT):(Array.isArray(rows)?rows:[]).slice(-RECENT_HISTORY_LIMIT));}
  function runtimeSnapshot(source=runtime){
-  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,pendingEvents:freeze([]),stopReason:"",recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
+  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
+  const stopReason=String(source.stopReason||"");
   return freeze({
    version:RUNTIME_VERSION,
    active:source.active===true,
@@ -57,7 +65,8 @@
    battles:Math.max(0,finiteWhole(source.battles,0)),
    startedAt:Math.max(0,finiteWhole(source.startedAt,0)),
    pauseReason:String(source.pauseReason||""),
-   stopReason:String(source.stopReason||""),
+   stopReason,
+   stopMeta:runInfra()?.stopReasonMeta(stopReason)||null,
    pendingEvents:freeze((Array.isArray(source.pendingEvents)?source.pendingEvents:[]).slice()),
    hpCap:hpCapSnapshot(source.deaths,currentState()),
    recentBattleLimit:RECENT_HISTORY_LIMIT,
@@ -65,9 +74,10 @@
    lastBattleSummary:source.lastBattleSummary||null
   });
  }
- function activeBackgroundKind(){return typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";}
+ function activeBackgroundKind(){const infra=runInfra();return infra?infra.activeKind():typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";}
  function ownRuntimeBlockerStatus(){return runtime?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
  function runtimeConflictStatus(){
+  const infra=runInfra();if(infra)return infra.conflictStatus(BLOCKER_NAME);
   const blockers=[];
   const activeKind=activeBackgroundKind();
   if(activeKind&&activeKind!==FLOW_KIND)blockers.push(`background-flow:${activeKind}`);
@@ -79,14 +89,15 @@
   }
   return freeze({blocked:blockers.length>0,blockers:freeze(blockers.slice()),activeBackgroundKind:activeKind||null});
  }
- function stopBackgroundFlow(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop(FLOW_KIND);}
- function startBackgroundFlow(){return typeof window.backgroundProgressStart==="function"?window.backgroundProgressStart(FLOW_KIND,{mode:"continuous"}):null;}
- function backgroundFlowOwned(){const kind=activeBackgroundKind();return !kind||kind===FLOW_KIND;}
- function fastCatchUpActive(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive(FLOW_KIND)===true;}
- function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(FLOW_KIND):null;}
- function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy(FLOW_KIND):null;}
+ function stopBackgroundFlow(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop(FLOW_KIND);return false;}
+ function startBackgroundFlow(){const infra=runInfra();return infra?infra.startBackground():typeof window.backgroundProgressStart==="function"?window.backgroundProgressStart(FLOW_KIND,{mode:"continuous"}):null;}
+ function backgroundFlowOwned(){const infra=runInfra();if(infra)return infra.flowOwned();const kind=activeBackgroundKind();return !kind||kind===FLOW_KIND;}
+ function fastCatchUpActive(){const infra=runInfra();return infra?infra.fastCatchUp():typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive(FLOW_KIND)===true;}
+ function catchUpStep(){const infra=runInfra();return infra?infra.catchUpStep():typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(FLOW_KIND):null;}
+ function catchUpFinal(){const infra=runInfra();return infra?infra.catchUpFinal():typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy(FLOW_KIND):null;}
  async function consumeCatchUpDelay(ms){
-  const delay=Math.max(0,numberOr(ms,0));
+  const delay=Math.max(0,numberOr(ms,0)),infra=runInfra();
+  if(infra)return infra.consumeDelay(delay);
   if(delay<=0)return true;
   if(fastCatchUpActive()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
    const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,FLOW_KIND);
@@ -99,7 +110,7 @@
   return false;
  }
  function clearRuntime(reason="manual"){
-  if(!runtime){stopBackgroundFlow();return freeze({...runtimeSnapshot(),stopReason:String(reason||"manual")});}
+  if(!runtime){stopBackgroundFlow();return freeze({...runtimeSnapshot(),stopReason:String(reason||"manual"),stopMeta:runInfra()?.stopReasonMeta(reason)||null});}
   const finished={...runtime,active:false,paused:false,looping:false,stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[],recentBattles:Array.isArray(runtime.recentBattles)?runtime.recentBattles.slice():[]};
   runtime=null;runSerial+=1;stopBackgroundFlow();
   return runtimeSnapshot(finished);
@@ -235,7 +246,7 @@
     if(fastCatchUp)catchUpNeedsFinalSync=true;
     const notify=!fastCatchUp||shouldNotifyDuringCatchUp(step,policy);
     if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy});}catch(error){console.error(error);}}
-    if(fastCatchUp&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield(FLOW_KIND);
+    if(fastCatchUp){const infra=runInfra();if(infra)await infra.uiYield();else if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield(FLOW_KIND);}
     if(step.ok!==true||runtime?.active!==true||runtime.paused||runSerial!==serial)break;
     await sleepBetweenBattles();
     if(catchUpNeedsFinalSync&&!fastCatchUpActive()){
@@ -266,6 +277,7 @@
   if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")errors.push({code:"FORMAL_OWNER_MISSING"});
   if(typeof window.backgroundProgressFastCatchUpActive!=="function"||typeof window.backgroundProgressCatchUpStep!=="function"||typeof window.backgroundProgressCatchUpFinalPolicy!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function"||typeof window.backgroundProgressUiYield!=="function"||window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY?.passed!==true)errors.push({code:"FAST_CATCH_UP_OWNER_MISSING"});
+  if(typeof window.createContinuousRunInfrastructure!=="function"||Number(window.CONTINUOUS_RUN_INFRA_VERSION)!==SHARED_CONTINUOUS_INFRA_VERSION||window.CONTINUOUS_RUN_INFRA_INTEGRITY?.passed!==true||!runInfra())errors.push({code:"SHARED_CONTINUOUS_INFRA_MISSING"});
   if(typeof window.backgroundProgressActiveKind!=="function"||typeof window.worldTransitionRuntimeStatus!=="function")errors.push({code:"ACTIVE_FLOW_GUARD_OWNER_MISSING"});
   if(typeof window.backgroundProgressOnPageHide!=="function"||pageHideSubscribed!==true)errors.push({code:"PAGEHIDE_OWNER_MISSING"});
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
@@ -275,8 +287,12 @@
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
  function onPageHide(){if(runtime?.active)clearRuntime("pagehide");}
- if(typeof window.backgroundProgressOnPageHide==="function"){window.backgroundProgressOnPageHide(onPageHide);pageHideSubscribed=true;}
- if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+ const sharedInfra=runInfra();
+ if(sharedInfra){sharedInfra.onPageHide(onPageHide);pageHideSubscribed=true;blockerRegistered=sharedInfra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);}
+ else{
+  if(typeof window.backgroundProgressOnPageHide==="function"){window.backgroundProgressOnPageHide(onPageHide);pageHideSubscribed=true;}
+  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+ }
 
  window.THIRD_WORLD_RUN_VERSION=VERSION;
  window.THIRD_WORLD_SUPPRESSION_VERSION=SUPPRESSION_VERSION;
@@ -287,6 +303,7 @@
  window.THIRD_WORLD_RUN_BOUNDED_HISTORY_VERSION=BOUNDED_HISTORY_VERSION;
  window.THIRD_WORLD_RUN_ACTIVE_FLOW_GUARD_VERSION=ACTIVE_FLOW_GUARD_VERSION;
  window.THIRD_WORLD_RUN_SHARED_PAGEHIDE_OWNER_VERSION=SHARED_PAGEHIDE_OWNER_VERSION;
+ window.THIRD_WORLD_RUN_SHARED_CONTINUOUS_INFRA_VERSION=SHARED_CONTINUOUS_INFRA_VERSION;
  window.THIRD_WORLD_RUN_RESULT_SUMMARY_VERSION=RESULT_SUMMARY_VERSION;
  window.THIRD_WORLD_RUN_INTEGRITY_VERSION=INTEGRITY_VERSION;
  window.THIRD_WORLD_RUN_MAX_DEATHS=MAX_DEATHS;
