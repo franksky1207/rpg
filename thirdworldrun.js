@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const SUPPRESSION_VERSION=2;
  const RUNTIME_VERSION=4;
  const EVENT_TERMINAL_VERSION=1;
@@ -11,12 +11,14 @@
  const SHARED_PAGEHIDE_OWNER_VERSION=1;
  const RESULT_SUMMARY_VERSION=2;
  const RUN_TOTALS_VERSION=1;
- const INTEGRITY_VERSION=7;
+ const RUN_IDENTITY_VERSION=1;
+ const EXCEPTION_CLEANUP_VERSION=1;
+ const INTEGRITY_VERSION=8;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
  const SHARED_INFRA_STRICT_VERSION=1;
  const CORE_RUN_SNAPSHOT_VERSION=1;
  const HP_LIFECYCLE_VERSION=1;
- const LAST_FINISHED_SNAPSHOT_VERSION=1;
+ const LAST_FINISHED_SNAPSHOT_VERSION=2;
  const FORMAL_BATTLE_COUNT_VERSION=1;
  const BACKGROUND_GM_GATE_VERSION=1;
  const FOREGROUND_WAIT_VERSION=1;
@@ -71,10 +73,11 @@
   return freeze({version:BACKGROUND_POLICY_VERSION,gmEnabled,environmentBackground:environmentIsBackground(),waitsForForeground:!gmEnabled,backgroundFlowActive:activeKind===FLOW_KIND,activeBackgroundKind:activeKind||null});
  }
  function runtimeSnapshot(source=runtime){
-  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,coreLevelAtStart:null,perDeathSuppressionPointsAtStart:null,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
+  if(!source)return freeze({version:RUNTIME_VERSION,runId:null,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,coreLevelAtStart:null,perDeathSuppressionPointsAtStart:null,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
   const stopReason=String(source.stopReason||""),levelAtStart=clamp(finiteWhole(source.coreLevelAtStart,coreLevel()),0,coreMaxLevel()),perDeathAtStart=suppressionPerDeathPoints(levelAtStart);
   return freeze({
    version:RUNTIME_VERSION,
+   runId:Math.max(1,finiteWhole(source.runId,1)),
    active:source.active===true,
    paused:false,
    looping:source.looping===true,
@@ -94,7 +97,11 @@
    lastBattleSummary:source.lastBattleSummary||null
   });
  }
- function lastFinishedRunSnapshot(){return lastFinishedRuntime;}
+ function lastFinishedRunSnapshot(expectedRunId=null){
+  if(!lastFinishedRuntime)return null;
+  if(expectedRunId!=null&&Math.max(1,finiteWhole(expectedRunId,1))!==Math.max(1,finiteWhole(lastFinishedRuntime.runId,1)))return null;
+  return lastFinishedRuntime;
+ }
  function ownRuntimeBlockerStatus(){return runtime?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
  function runtimeConflictStatus(){
   const infra=runInfra();
@@ -146,9 +153,9 @@
   if(!target||typeof window.thirdWorldChallengeStatus!=="function")return freeze({ok:false,reason:"無法取得高維正式狀態。",snapshot:runtimeSnapshot()});
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
-  const levelAtStart=coreLevel(target);
-  runtime={active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
-  runSerial+=1;
+  const levelAtStart=coreLevel(target),runId=runSerial+1;
+  runtime={runId,active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
+  runSerial=runId;
   if(gmBackgroundEnabled())startBackgroundFlow();else stopBackgroundFlow();
   return freeze({ok:true,started:true,snapshot:runtimeSnapshot()});
  }
@@ -247,8 +254,8 @@
   const started=startRun(value);
   if(!started.ok)return started;
   if(runtime?.looping===true)return freeze({ok:false,reason:"此高維連戰已由另一個 loop 執行中。",snapshot:runtimeSnapshot()});
-  const serial=runSerial,recent=[],startedBattleCount=Math.max(0,finiteWhole(runtime?.battles,0)),totals={effectivePermanentDamage:0,xp:0,dimensionalStrings:0,itemCount:0};
-  let total=0,lastStep=null,lastSnapshot=started.snapshot,catchUpNeedsFinalSync=false;
+  const serial=runSerial,runId=Math.max(1,finiteWhole(runtime?.runId,serial)),recent=[],startedBattleCount=Math.max(0,finiteWhole(runtime?.battles,0)),totals={effectivePermanentDamage:0,xp:0,dimensionalStrings:0,itemCount:0};
+  let total=0,lastStep=null,lastSnapshot=started.snapshot,catchUpNeedsFinalSync=false,caughtError=null;
   runtime.looping=true;
   try{
    while(runtime?.active===true&&runSerial===serial){
@@ -278,6 +285,12 @@
      catchUpNeedsFinalSync=false;
     }
    }
+  }catch(error){
+   caughtError=error;
+   if(runtime?.active===true&&runSerial===serial)lastSnapshot=clearRuntime("battle-error");
+   else lastSnapshot=lastFinishedRunSnapshot(runId)||lastSnapshot;
+   lastStep=freeze({ok:false,world:3,reason:"battle-error",error:String(error?.message||error),snapshot:lastSnapshot});
+   console.error(error);
   }finally{
    if(runtime?.active===true&&runSerial===serial)runtime.looping=false;
   }
@@ -287,7 +300,7 @@
   }
   const completed=Math.max(total,Math.max(0,finiteWhole(lastSnapshot?.battles,startedBattleCount)-startedBattleCount));
   const summaries=boundedSummaries(recent),runTotals=freeze({version:RUN_TOTALS_VERSION,effectivePermanentDamage:totals.effectivePermanentDamage,xp:totals.xp,dimensionalStrings:totals.dimensionalStrings,itemCount:totals.itemCount});
-  return freeze({ok:true,world:3,battles:completed,totals:runTotals,results:summaries,recentBattles:summaries,resultsTruncated:completed>summaries.length,lastResult:lastStep,snapshot:lastSnapshot});
+  return freeze({ok:caughtError==null,world:3,runId,battles:completed,totals:runTotals,results:summaries,recentBattles:summaries,resultsTruncated:completed>summaries.length,lastResult:lastStep,snapshot:lastSnapshot,reason:caughtError?"battle-error":"",error:caughtError?String(caughtError?.message||caughtError):""});
  }
  function validate(){
   const errors=[];
@@ -300,7 +313,7 @@
   if(life.startHp!==777||life.playerHealCap!==777)errors.push({code:"HP_LIFECYCLE_CAP",life});
   if(terminalReasonForStep("stage-crossed",true,true)!=="stage-crossed"||terminalReasonForStep("",true,true)!=="progress-event"||terminalReasonForStep("",false,true)!=="death-limit"||terminalReasonForStep("",false,false)!=="")errors.push({code:"TERMINAL_PRECEDENCE"});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
-  if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart","runTotals"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
+  if(["deaths","suppression","run","runId","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart","runTotals"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")errors.push({code:"FORMAL_OWNER_MISSING"});
   if(typeof window.backgroundProgressFastCatchUpActive!=="function"||typeof window.backgroundProgressCatchUpStep!=="function"||typeof window.backgroundProgressCatchUpFinalPolicy!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function"||typeof window.backgroundProgressUiYield!=="function"||window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY?.passed!==true)errors.push({code:"FAST_CATCH_UP_OWNER_MISSING"});
   if(typeof window.createContinuousRunInfrastructure!=="function"||Number(window.CONTINUOUS_RUN_INFRA_VERSION)!==SHARED_CONTINUOUS_INFRA_VERSION||window.CONTINUOUS_RUN_INFRA_INTEGRITY?.passed!==true||!runInfra())errors.push({code:"SHARED_CONTINUOUS_INFRA_MISSING"});
@@ -312,16 +325,18 @@
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
   const bounded=boundedSummaries(Array.from({length:RECENT_HISTORY_LIMIT+5},(_,index)=>freeze({version:RESULT_SUMMARY_VERSION,battleNumber:index+1})));
   if(bounded.length!==RECENT_HISTORY_LIMIT||bounded[0]?.battleNumber!==6||bounded[bounded.length-1]?.battleNumber!==RECENT_HISTORY_LIMIT+5)errors.push({code:"BOUNDED_HISTORY",length:bounded.length,first:bounded[0]||null,last:bounded[bounded.length-1]||null});
-  const battleSource=Function.prototype.toString.call(runOneBattle),startSource=Function.prototype.toString.call(startRun),loopSource=Function.prototype.toString.call(runLoop),clearSource=Function.prototype.toString.call(clearRuntime),conflictSource=Function.prototype.toString.call(runtimeConflictStatus);
+  const battleSource=Function.prototype.toString.call(runOneBattle),startSource=Function.prototype.toString.call(startRun),loopSource=Function.prototype.toString.call(runLoop),clearSource=Function.prototype.toString.call(clearRuntime),lastFinishedSource=Function.prototype.toString.call(lastFinishedRunSnapshot),conflictSource=Function.prototype.toString.call(runtimeConflictStatus);
   if(/pauseForProgressEvents/.test(battleSource)||!/terminalReasonForStep/.test(battleSource)||!/clearRuntime\(terminalReason\)/.test(battleSource))errors.push({code:"PROGRESS_EVENT_TERMINAL_WIRING"});
   if(!/runtime\.coreLevelAtStart/.test(battleSource)||!/coreLevelAtStart/.test(startSource)||!/perDeathSuppressionPointsAtStart/.test(startSource))errors.push({code:"CORE_RUN_SNAPSHOT_WIRING"});
   if(!/if\(step\?\.ok===true\)total\+=1/.test(loopSource))errors.push({code:"FORMAL_BATTLE_COUNT_WIRING"});
   if(!/totals\.effectivePermanentDamage/.test(loopSource)||!/itemCount/.test(loopSource)||!/runTotals/.test(loopSource))errors.push({code:"RUN_TOTALS_WIRING"});
+  if(!/catch\(error\)/.test(loopSource)||!/clearRuntime\("battle-error"\)/.test(loopSource)||!/ok:caughtError==null/.test(loopSource))errors.push({code:"RUN_EXCEPTION_CLEANUP_WIRING"});
+  if(!/runId/.test(startSource)||!/expectedRunId/.test(lastFinishedSource)||!/lastFinishedRuntime\.runId/.test(lastFinishedSource))errors.push({code:"RUN_IDENTITY_WIRING"});
   if(!/gmBackgroundEnabled\(\).*startBackgroundFlow/.test(startSource)||!/else stopBackgroundFlow/.test(startSource))errors.push({code:"BACKGROUND_GM_GATE_WIRING"});
   if(!/waitForForegroundIfBackgroundDisabled/.test(loopSource))errors.push({code:"FOREGROUND_WAIT_WIRING"});
   if(!/lastFinishedRuntime=finishedSnapshot/.test(clearSource)||lastFinishedRunSnapshot()!==null)errors.push({code:"LAST_FINISHED_SNAPSHOT_WIRING"});
   if(!/continuous-run-infrastructure-missing/.test(conflictSource))errors.push({code:"STRICT_SHARED_INFRA_WIRING"});
-  return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
+  return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,runIdentityVersion:RUN_IDENTITY_VERSION,exceptionCleanupVersion:EXCEPTION_CLEANUP_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
  function onPageHide(){if(runtime?.active)clearRuntime("pagehide");}
@@ -347,6 +362,8 @@
  window.THIRD_WORLD_RUN_FORMAL_BATTLE_COUNT_VERSION=FORMAL_BATTLE_COUNT_VERSION;
  window.THIRD_WORLD_RUN_RESULT_SUMMARY_VERSION=RESULT_SUMMARY_VERSION;
  window.THIRD_WORLD_RUN_TOTALS_VERSION=RUN_TOTALS_VERSION;
+ window.THIRD_WORLD_RUN_IDENTITY_VERSION=RUN_IDENTITY_VERSION;
+ window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION=EXCEPTION_CLEANUP_VERSION;
  window.THIRD_WORLD_RUN_INTEGRITY_VERSION=INTEGRITY_VERSION;
  window.THIRD_WORLD_RUN_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.THIRD_WORLD_RUN_FOREGROUND_WAIT_VERSION=FOREGROUND_WAIT_VERSION;
