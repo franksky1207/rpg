@@ -12,7 +12,7 @@
   Object.freeze({id:entry.markId,name:entry.markName,regionId:entry.regionId,unlockLevel:entry.unlockLevel})
  ])));
 
- function clampLevel(value){return Math.max(0,Math.min(MARK_MAX_LEVEL,Math.floor(Number(value)||0)));}
+ function clampLevel(value){return Math.max(0,Math.min(MARK_MAX_LEVEL,Math.floor(Number(value)||0));}
  function round1(value){return Math.round((Number(value)||0)*10)/10;}
  function validKey(key){return MARK_KEYS.includes(key)&&!!MARK_DEFS[key];}
  function definition(key){return validKey(key)?MARK_DEFS[key]:null;}
@@ -118,6 +118,9 @@
  window.MARK_COMBAT_RULE_VERSION=MARK_COMBAT_RULE_VERSION;
  window.MARK_PROGRESSION_OWNER_VERSION=MARK_PROGRESSION_OWNER_VERSION;
  window.MARK_DESCRIPTION_OWNER_VERSION=MARK_DESCRIPTION_OWNER_VERSION;
+ window.MARK_MAX_LEVEL=MARK_MAX_LEVEL;
+ window.MARK_MAX_LEVEL_OWNER_VERSION=1;
+ window.markMaxLevel=function(){return MARK_MAX_LEVEL;};
  window.MARK_UPGRADE_KILLS=MARK_UPGRADE_KILLS;
  window.MARK_KEYS=MARK_KEYS;
  window.markClampLevel=clampLevel;
