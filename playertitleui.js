@@ -1,6 +1,7 @@
 (function(){
- const PLAYER_TITLE_UI_VERSION=1;
+ const PLAYER_TITLE_UI_VERSION=2;
  const UNIVERSE_NOTICE_VERSION=1;
+ const THIRD_WORLD_NOTICE_VERSION=1;
  const TITLE_NOTICE_MODAL_ID="playerTitleNoticeModal";
  const TITLE_PICKER_MODAL_ID="playerTitlePickerModal";
  let titleNoticeOpen=false;
@@ -73,6 +74,7 @@
  function titleSourceText(def){
   if(def?.series==="mirror")return `鏡像戰歷史最高達 ${Math.max(0,Math.floor(Number(def.mirrorWins)||0))} 勝後取得。`;
   if(def?.series==="universe-calamity")return "首次擊敗對應宇宙紀元文明災厄後取得。";
+  if(def?.series==="higher-dimensional")return `高維戰線十王總剩餘 HP 達成第 ${Math.max(1,Math.floor(Number(def.tier)||1))} 階門檻後取得。`;
   return "首次擊敗對應銀河紀元文明災厄後取得。";
  }
 
@@ -112,6 +114,7 @@
 
  window.PLAYER_TITLE_UI_VERSION=PLAYER_TITLE_UI_VERSION;
  window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION=UNIVERSE_NOTICE_VERSION;
+ window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION=THIRD_WORLD_NOTICE_VERSION;
  window.openPlayerTitlePicker=openPlayerTitlePicker;
  window.closePlayerTitlePicker=closePlayerTitlePicker;
  window.selectPlayerTitle=selectPlayerTitle;
