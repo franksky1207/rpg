@@ -1,5 +1,5 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -116,40 +116,10 @@
     info=document.createElement("div");
     info.className="notice third-world-character-info";
     info.style.marginTop="12px";
-    const anchor=grid;
-    anchor.insertAdjacentElement("afterend",info);
+    grid.insertAdjacentElement("afterend",info);
    }
    info.innerHTML=`<b>高維紀元完成態</b><div class="muted" style="margin-top:5px">文明 Lv.${snap.civilizationLevel} 的既有效果持續生效；裝備強化維持 +40、8 項專精維持 Lv.60、10 項印記維持 Lv.10。界弦核心只影響高維連戰死亡壓制，不增加一般戰鬥能力。</div>`;
   }
-  return true;
- }
- function applyEnhancementSemantics(){
-  if(typeof document==="undefined"||phase()!==3)return false;
-  const page=document.querySelector(".enhancement-page");
-  if(!page)return false;
-  const resources=page.querySelector(".enhance-resources");
-  if(resources)resources.innerHTML=`<div style="grid-column:1/-1"><span>高維紀元</span><b>五部位 +40 MAX</b></div>`;
-  const note=page.querySelector(".enhance-summary > .muted");
-  if(note)note.textContent="高維紀元沿用宇宙紀元完成的 +40 裝備欄位強化；第三紀元不開放 +41 以上強化，也不再消耗暗物質或暗能量。";
-  return true;
- }
- function applySpecializationSemantics(){
-  if(typeof document==="undefined"||phase()!==3)return false;
-  const page=document.querySelector(".specialization-page");
-  if(!page)return false;
-  const notice=page.querySelector(".specialization-panel > .notice");
-  const title=notice?.querySelector("b"),copy=notice?.querySelector(".muted");
-  if(title)title.textContent="高維紀元專精已完成";
-  if(copy)copy.textContent="8 項專精維持 Lv.60；實戰訓練與戰鬥類專精持續生效。第三紀元不再開放專精升級，也不建立新的金幣／暗物質售價循環。";
-  const guideLead=page.querySelector(".specialization-guide-body > .muted");
-  if(guideLead)guideLead.textContent="8 項專精已在前兩紀元完成並永久保留；高維紀元不再提高專精上限。";
-  page.querySelectorAll(".specialization-card").forEach(card=>{
-   const name=card.querySelector(".specialization-card-head b")?.textContent?.trim();
-   const effect=card.querySelector(".specialization-effect");
-   if(!effect)return;
-   if(name==="搜刮技巧")effect.innerHTML="<div>第三紀元無直接資源加成</div><div class=\"muted\">高維正式資源由永久削血結算為維度之弦。</div>";
-   if(name==="鑑價技巧")effect.innerHTML="<div>第三紀元無裝備貨幣售價</div><div class=\"muted\">高維裝備不建立新的出售貨幣循環。</div>";
-  });
   return true;
  }
  function applySettingsSemantics(){
@@ -180,8 +150,6 @@
  function apply(){
   applyHomeSemantics();
   applyCharacterSemantics();
-  applyEnhancementSemantics();
-  applySpecializationSemantics();
   applySettingsSemantics();
   if(phase()===2&&typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();
   if(phase()===3)applyThirdWorldUniverseReviewSemantics();
@@ -192,13 +160,13 @@
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
  window.PLAYER_SEMANTICS_UI_VERSION=VERSION;
- window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=2;
+ window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=3;
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=2;
- window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=1;
+ window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=2;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=1;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;
- window.applyThirdWorldCompletedSystemSemantics=function(){applyEnhancementSemantics();applySpecializationSemantics();applySettingsSemantics();};
+ window.applyThirdWorldCompletedSystemSemantics=function(){applySettingsSemantics();};
  window.applyThirdWorldUniverseReviewSemantics=applyThirdWorldUniverseReviewSemantics;
 })();
