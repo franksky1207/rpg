@@ -4,12 +4,19 @@
  const CONTINUOUS_VERSION=2;
  const TITLE_FIRST_KILL_VERSION=2;
  let activeRun=null;
+ let sharedRunInfra=null;
 
+ function runInfra(){
+  if(sharedRunInfra)return sharedRunInfra;
+  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:"calamity",mode:"continuous"});
+  return sharedRunInfra;
+ }
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
- function startBackground(){if(!backgroundEnabled()||typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
- function stopBackground(){if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("calamity");}
- function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
+ function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();if(infra)return !!infra.startBackground();if(typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
+ function stopBackground(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop("calamity");return false;}
+ function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
  function catchUpPreviewPolicy(){
+  const infra=runInfra();if(infra)return infra.previewCatchUp();
   if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
   const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
   const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
@@ -79,14 +86,10 @@
      civilizationLevelUp=state.secondWorld.civilizationLevel>civBefore;
     }
    }else if(firstRecordedKill){
-    // GM may have advanced civilizationLevel without any real kill. Record only this genuine first kill;
-    // do not fabricate 30 kills or alter the already-completed civilization level.
     row.trueKills=1;
     trueKill=true;
    }
-   if(firstRecordedKill&&typeof window.grantPlayerTitleForUniverseCalamityFirstKill==="function"){
-    titleSettlement=window.grantPlayerTitleForUniverseCalamityFirstKill(d.id,state);
-   }
+   if(firstRecordedKill&&typeof window.grantPlayerTitleForUniverseCalamityFirstKill==="function")titleSettlement=window.grantPlayerTitleForUniverseCalamityFirstKill(d.id,state);
    row.currentHp=null;
   }else{
    const completeNow=completedBefore||row.trueKills>=30||Math.max(0,Math.floor(Number(state.secondWorld.civilizationLevel)||0))>=d.targetCivilizationLevel;
@@ -115,7 +118,8 @@
  }
  function runSnapshot(){
   if(!activeRun)return null;
-  return {...activeRun,lastBattle:clone(activeRun.lastBattle)};
+  const reason=activeRun.reason||"";
+  return {...activeRun,stopMeta:runInfra()?.stopReasonMeta(reason)||null,lastBattle:clone(activeRun.lastBattle)};
  }
  function finish(reason){
   if(!activeRun)return null;
@@ -197,12 +201,15 @@
   activeRun.endedAt=Date.now();
   stopBackground();
  }
+ function subscribePageHide(){const infra=runInfra();if(infra)return infra.onPageHide(stopForPageHide);window.addEventListener("pagehide",stopForPageHide);return ()=>{};}
+ setTimeout(subscribePageHide,0);
 
  window.SECOND_WORLD_CALAMITY_COMBAT_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
  window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION=CONTINUOUS_VERSION;
  window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;
  window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
  window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
  window.buildSecondWorldCalamityEnemy=enemy;
  window.runSecondWorldCalamityCombat=runCombat;
@@ -216,5 +223,4 @@
  window.getSecondWorldCalamityRunSnapshot=runSnapshot;
  window.secondWorldCalamityBackgroundEnabled=backgroundEnabled;
  window.stopSecondWorldCalamityRunForPageHide=stopForPageHide;
- window.addEventListener("pagehide",stopForPageHide);
 })();
