@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const FIRST_WORLD_LEVEL_CAP=500;
  const SECOND_WORLD_LEVEL_CAP=1000;
  const THIRD_WORLD_LEVEL_CAP=2000;
@@ -76,8 +76,8 @@
   return target;
  }
 
- function gainEffectiveExp(amount,logs=[]){
-  const s=currentState();
+ function gainEffectiveExpForState(amount,target,logs=[]){
+  const s=targetState(target);
   if(!s)return 0;
   const add=Math.max(0,Number(amount)||0);
   const cap=effectiveLevelCap(s);
@@ -94,7 +94,7 @@
    s.exp-=need;
    s.level++;
    ups++;
-   if(typeof playerCombatStats==="function")s.hp=playerCombatStats().hp;
+   if(s===currentState()&&typeof playerCombatStats==="function")s.hp=playerCombatStats().hp;
    if(Array.isArray(logs))logs.push(`升級！你到達 Lv.${s.level}，HP 已完全恢復。`);
   }
   if(s.level>=cap){
@@ -103,6 +103,7 @@
   }
   return ups;
  }
+ function gainEffectiveExp(amount,logs=[]){return gainEffectiveExpForState(amount,currentState(),logs);}
 
  function levelProgressSnapshot(target=null){
   const s=targetState(target);
@@ -129,6 +130,7 @@
  window.LEVEL_PROGRESSION_VERSION=VERSION;
  window.LEVEL_RUNTIME_WORLD_CAP_OWNER_VERSION=1;
  window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION=1;
+ window.LEVEL_TARGET_EXP_OWNER_VERSION=1;
  window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION=1;
  window.THIRD_WORLD_EXP_OWNER_VERSION=1;
  window.THIRD_WORLD_EXP_HELPER_STRICT_RANGE_VERSION=1;
@@ -142,6 +144,7 @@
  window.effectiveExpNeed=effectiveExpNeed;
  window.normalizeLevelProgressionState=normalizeLevelProgressionState;
  window.levelProgressSnapshot=levelProgressSnapshot;
+ window.gainEffectiveExpForState=gainEffectiveExpForState;
  window.gainEffectiveExp=gainEffectiveExp;
  window.clampGameLevel=clampGameLevel;
  window.expNeed=expNeed;
@@ -162,6 +165,11 @@
   if(effectiveExpNeed(1000,higher)!==THIRD_WORLD_EXP_PER_LEVEL||effectiveExpNeed(1999,higher)!==THIRD_WORLD_EXP_PER_LEVEL||effectiveExpNeed(2000,higher)!==0)errors.push({code:"WORLD3_EXP_OWNER"});
   const world3Snapshot=levelProgressSnapshot({level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true}});
   if(world3Snapshot.world!==3||world3Snapshot.cap!==2000||world3Snapshot.need!==THIRD_WORLD_EXP_PER_LEVEL||world3Snapshot.atCap!==false)errors.push({code:"WORLD3_SNAPSHOT",actual:world3Snapshot});
+  const targetProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true}};
+  const targetUps=gainEffectiveExpForState(THIRD_WORLD_EXP_PER_LEVEL,targetProbe,[]);
+  if(targetUps!==1||targetProbe.level!==1001||targetProbe.exp!==0)errors.push({code:"TARGET_EXP_OWNER",actual:{targetUps,level:targetProbe.level,exp:targetProbe.exp}});
+  const capProbe={level:2000,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true}};
+  if(gainEffectiveExpForState(THIRD_WORLD_EXP_PER_LEVEL,capProbe,[])!==0||capProbe.level!==2000||capProbe.exp!==0)errors.push({code:"TARGET_EXP_CAP",actual:capProbe});
   return {passed:errors.length===0,version:VERSION,errors};
  })();
 })();
