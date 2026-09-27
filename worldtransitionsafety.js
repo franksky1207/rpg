@@ -23,17 +23,7 @@
    return true;
   }catch(e){return false;}
  }
- function prepareLegacyOfflineBeforeLoad(){
-  if(currentPhase()!==3||Number(window.THIRD_WORLD_OFFLINE_SETTLEMENT_VERSION)>0)return false;
-  if(!state||typeof state!=="object")return false;
-  if(!state.offline||typeof state.offline!=="object")state.offline={};
-  const t=Date.now();
-  state.offline.pendingSettlement=null;
-  state.offline.lastSettledAt=t;
-  state.offline.maxObservedWallClock=Math.max(t,Number(state.offline.maxObservedWallClock)||0);
-  state.offline.timeLockUntil=0;
-  return true;
- }
+ function prepareLegacyOfflineBeforeLoad(){return false;}
  function installOfflineWorldPhaseGuards(){
   const begin=window.beginSecondWorldOfflineBattleSample;
   if(typeof begin==="function"&&begin.__worldPhaseGuard!==true){const wrapped=function(...args){if(currentPhase()!==2)return null;return begin.apply(this,args);};wrapped.__worldPhaseGuard=true;window.beginSecondWorldOfflineBattleSample=wrapped;}
@@ -45,7 +35,6 @@
   const base=window.enterBountyDungeon;if(typeof base!=="function"||base.__worldPhaseGate===true)return false;
   const wrapped=function(...args){if(!bountyAllowed()){if(typeof alert==="function")alert("高維紀元已關閉懸賞戰。競技場、鏡像戰與虛空仍可使用。");return false;}return base.apply(this,args);};wrapped.__worldPhaseGate=true;window.enterBountyDungeon=wrapped;return true;
  }
- prepareLegacyOfflineBeforeLoad();
  installBountyGate();
  installOfflineWorldPhaseGuards();
  setTimeout(()=>{installBountyGate();installOfflineWorldPhaseGuards();},0);
@@ -53,7 +42,7 @@
  window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION=VERSION;
  window.BOUNTY_WORLD_PHASE_GATE_VERSION=1;
  window.OFFLINE_WORLD_PHASE_POLICY_VERSION=3;
- window.OFFLINE_WORLD3_LEGACY_SETTLEMENT_GATE_VERSION=1;
+ window.OFFLINE_WORLD3_LEGACY_SETTLEMENT_GATE_VERSION=2;
  window.WORLD_PHASE_STALE_WELCOME_CLEANUP_VERSION=1;
  window.worldPhaseBountyAvailable=bountyAllowed;
  window.worldTransitionSubsystemRuntimeStatus=subsystemRuntimeStatus;
