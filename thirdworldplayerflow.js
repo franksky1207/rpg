@@ -11,6 +11,7 @@
  let retainedContext=null;
  let flowPromise=null;
  let adapterRegistered=false;
+ let environmentSubscribed=false;
  let eventModalResolver=null;
 
  function whole(value){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(0,n):0;}
@@ -64,10 +65,14 @@
  }
  function refreshContextAfterSettledStep(step){
   if(!activeContext)return;
-  const snapshot=step?.snapshot||{},cap=snapshot?.hpCap||{};
+  const snapshot=step?.snapshot||{},cap=snapshot?.hpCap||{},settledHp=Number(step?.settlement?.combatEndHp);
   activeContext.deaths=whole(step?.deathsAfter??snapshot?.deaths??activeContext.deaths);
   if(Number.isFinite(Number(cap.hpCap)))activeContext.hpCap=whole(cap.hpCap);
   if(Number.isFinite(Number(cap.hpCapPercent)))activeContext.hpCapPercent=clamp(cap.hpCapPercent,0,100);
+  if(activeContext.currentCombat&&typeof activeContext.currentCombat==="object"){
+   const nextCap=Number.isFinite(Number(cap.hpCap))?whole(cap.hpCap):whole(activeContext.currentCombat.playerHealCap||activeContext.currentCombat.playerMaxHp);
+   activeContext.currentCombat={...activeContext.currentCombat,playerStartHp:nextCap,playerHealCap:nextCap,enemyStartHp:Number.isFinite(settledHp)?Math.max(0,whole(settledHp)):activeContext.currentCombat.enemyStartHp};
+  }
  }
  function presentationResult(combat){
   const cap=capFromCombat(combat),playerStart=Math.max(0,Math.min(cap.cap,whole(combat?.playerStartHp??cap.cap)));
@@ -165,6 +170,14 @@
   if(!existing){const head=screen.querySelector(".third-world-combat-head");if(head?.after)head.after(node);else screen.prepend(node);}
   return true;
  }
+ function beginCatchUpUi(){
+  if(!activeContext)return false;
+  activeContext.catchingUp=true;
+  if(typeof render==="function")render();
+  syncMinimal();
+  syncCatchUpNotice();
+  return true;
+ }
  function finishCatchUpUi(payload={}){
   if(!activeContext)return;
   const snapshot=payload?.snapshot||{},cap=snapshot?.hpCap||{};
@@ -176,6 +189,15 @@
   syncMinimal();
   if(typeof render==="function")render();
   syncCatchUpNotice();
+ }
+ function registerEnvironmentSync(){
+  if(typeof window.backgroundProgressOnEnvironmentChange!=="function")return false;
+  window.backgroundProgressOnEnvironmentChange(isBackground=>{
+   if(isBackground||!activeContext)return;
+   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("third-world")===true)beginCatchUpUi();
+  });
+  environmentSubscribed=true;
+  return true;
  }
  async function presentStep(step,meta={}){
   if(step?.ok!==true||!activeContext)return;
@@ -234,7 +256,7 @@
    updateContextFromFinalSnapshot();
    if(activeContext){activeContext.active=false;activeContext.catchingUp=false;activeContext.catchUpCompleted=0;retainedContext={...activeContext};}
    activeContext=null;
-   document.getElementById("thirdWorldCatchUpStatus")?.remove();
+   if(typeof document!=="undefined")document.getElementById("thirdWorldCatchUpStatus")?.remove();
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-player-flow-end");
    finishMinimalMode();
    flowPromise=null;
@@ -286,12 +308,14 @@
   if(typeof window.thirdWorldBoss!=="function"||typeof window.thirdWorldTitleDefinition!=="function"||!Array.isArray(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS))errors.push("THIRD_WORLD_EVENT_PRESENTATION_OWNER_MISSING");
   if(typeof window.thirdWorldRunBackgroundPolicySnapshot!=="function"||Number(window.THIRD_WORLD_RUN_BACKGROUND_GM_GATE_VERSION)!==1||Number(window.THIRD_WORLD_RUN_FOREGROUND_WAIT_VERSION)!==1)errors.push("THIRD_WORLD_BACKGROUND_POLICY_OWNER_MISSING");
   if(Number(window.GM_BACKGROUND_BATTLE_THIRD_WORLD_GATE_VERSION)!==1)errors.push("GM_BACKGROUND_THIRD_WORLD_GATE_MISSING");
+  if(environmentSubscribed!==true)errors.push("BACKGROUND_ENVIRONMENT_SYNC_MISSING");
   if(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)!==100)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
   return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  registerAdapter();
+ registerEnvironmentSync();
  window.startThirdWorldPlayerFlow=startFlow;
  window.stopThirdWorldPlayerFlow=stopFlow;
  window.getThirdWorldPlayerFlowContext=function(){return publicContext(activeContext);};
