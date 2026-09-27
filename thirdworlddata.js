@@ -7,6 +7,7 @@
  const TOTAL_BOSS_MAX_HP=BOSS_COUNT*BOSS_MAX_HP;
  const FIVE_POINT_PERCENT=5;
  const FIVE_POINT_HP_GAP=Math.floor(BOSS_MAX_HP*FIVE_POINT_PERCENT/100);
+ const EQUIPMENT_NAME_BAND_VERSION=1;
  const CHALLENGE_AUTHORITY=Object.freeze({decisionField:"allowed",gapField:"gapHp",thresholdField:"fivePointHpGap",displayOnlyFields:Object.freeze(["targetRemainingPercent","highestAliveRemainingPercent","gapPoints"])});
  const SNAPSHOT_USAGE_POLICY=Object.freeze({resolveAtBattleStart:true,reuseDuringCombatRun:true,refreshAfterSettlement:true,refreshAfterBossHpMutation:true,globalCache:false,combatTickRecompute:false});
  const BASE_STATS=Object.freeze({maxHp:BOSS_MAX_HP,atk:15000,def:10000,crit:10,dodge:10,initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:30});
@@ -108,6 +109,19 @@
   const maxHp=bosses.reduce((sum,row)=>sum+row.maxHp,0),currentHp=bosses.reduce((sum,row)=>sum+row.currentHp,0),alive=bosses.filter(row=>row.alive),defeated=bosses.filter(row=>row.defeated),remainingPercentSum=bosses.reduce((sum,row)=>sum+row.remainingPercent,0);
   return Object.freeze({bossCount:bosses.length,aliveCount:alive.length,defeatedCount:defeated.length,currentHp,maxHp,overallRemainingPercent:maxHp>0?currentHp/maxHp*100:0,remainingPercentSum,aliveBossIndexes:Object.freeze(alive.map(row=>row.index)),defeatedBossIndexes:Object.freeze(defeated.map(row=>row.index)),bosses:Object.freeze(bosses.slice())});
  }
+ function thirdWorldEquipmentNameBandForRemainingHp(currentHp,maxHp=TOTAL_BOSS_MAX_HP){
+  const max=finiteWhole(maxHp,0),hp=finiteWhole(currentHp,-1);
+  if(max<=0||hp<0||hp>max)return 0;
+  for(let band=1;band<=9;band++){
+   const threshold=100-band*10;
+   if(hp*100>max*threshold)return band;
+  }
+  return 10;
+ }
+ function thirdWorldEquipmentNameBand(target=null){
+  const aggregate=thirdWorldBossAggregateSnapshot(target);
+  return thirdWorldEquipmentNameBandForRemainingHp(aggregate.currentHp,aggregate.maxHp);
+ }
  function formalThirdWorldProgressionEnabled(target=null){const s=targetState(target);return !!s&&typeof window.worldProgressionEnabled==="function"&&window.worldProgressionEnabled(3,s)===true;}
  function thirdWorldChallengeStatus(value,target=null){
   const index=bossIndex(value),s=targetState(target);
@@ -164,6 +178,10 @@
    if(ABILITY_DEFS.some(def=>Object.keys(def).some(key=>!allowedAbilityKeys.has(key))))fail("ABILITY_DESCRIPTOR_OWNS_COMBAT_VALUES",ABILITY_DEFS);
    const full=makeThirdWorldProbeState(Array(10).fill(BOSS_MAX_HP)),fullAgg=thirdWorldBossAggregateSnapshot(full);
    if(fullAgg.currentHp!==TOTAL_BOSS_MAX_HP||fullAgg.maxHp!==TOTAL_BOSS_MAX_HP||fullAgg.aliveCount!==10||fullAgg.defeatedCount!==0||fullAgg.remainingPercentSum!==1000||fullAgg.overallRemainingPercent!==100)fail("AGGREGATE_FULL",fullAgg);
+   const nameBandCases=[[TOTAL_BOSS_MAX_HP,1],[Math.floor(TOTAL_BOSS_MAX_HP*.9)+1,1],[Math.floor(TOTAL_BOSS_MAX_HP*.9),2],[Math.floor(TOTAL_BOSS_MAX_HP*.8),3],[Math.floor(TOTAL_BOSS_MAX_HP*.2),9],[Math.floor(TOTAL_BOSS_MAX_HP*.1),10],[1,10],[0,10]];
+   nameBandCases.forEach(([remainingHp,expected])=>{const actual=thirdWorldEquipmentNameBandForRemainingHp(remainingHp,TOTAL_BOSS_MAX_HP);if(actual!==expected)fail("EQUIPMENT_NAME_BAND_BOUNDARY",{remainingHp,expected,actual});});
+   if(thirdWorldEquipmentNameBand(full)!==1)fail("EQUIPMENT_NAME_BAND_STATE",{full:thirdWorldEquipmentNameBand(full)});
+   if(thirdWorldEquipmentNameBandForRemainingHp(-1,TOTAL_BOSS_MAX_HP)!==0||thirdWorldEquipmentNameBandForRemainingHp(TOTAL_BOSS_MAX_HP+1,TOTAL_BOSS_MAX_HP)!==0)fail("EQUIPMENT_NAME_BAND_INVALID_INPUT");
    const hp951=Math.floor(BOSS_MAX_HP*951/1000),hp950=Math.floor(BOSS_MAX_HP*95/100),p951=makeThirdWorldProbeState([hp951,...Array(9).fill(BOSS_MAX_HP)]),p950=makeThirdWorldProbeState([hp950,...Array(9).fill(BOSS_MAX_HP)]);
    const status951=thirdWorldChallengeStatus(0,p951),status950=thirdWorldChallengeStatus(0,p950);
    if(status951.allowed!==true||status950.allowed!==false||status950.reason!=="five-point-front")fail("FIVE_POINT_BOUNDARY",{p951:status951,p950:status950});
@@ -174,6 +192,7 @@
    if(lastStatus.allowed!==true||lastStatus.reason!=="last-survivor")fail("LAST_SURVIVOR",lastStatus);
    const allDead=makeThirdWorldProbeState(Array(10).fill(0)),deadAgg=thirdWorldBossAggregateSnapshot(allDead);
    if(deadAgg.currentHp!==0||deadAgg.aliveCount!==0||deadAgg.defeatedCount!==10||deadAgg.remainingPercentSum!==0||deadAgg.overallRemainingPercent!==0)fail("AGGREGATE_DEAD",deadAgg);
+   if(thirdWorldEquipmentNameBand(allDead)!==10)fail("EQUIPMENT_NAME_BAND_ZERO_SPECIAL",{dead:thirdWorldEquipmentNameBand(allDead)});
    if(TITLE_ROWS.length!==10||new Set(TITLE_ROWS.map(row=>row.id)).size!==10||new Set(TITLE_ROWS.map(row=>row.name)).size!==10)fail("TITLE_METADATA");
    const titleCases=[[1000,0],[900,1],[800,2],[700,3],[600,4],[500,5],[400,6],[300,7],[200,8],[100,9],[1,9],[0,10]];
    titleCases.forEach(([remaining,expected])=>{const actual=thirdWorldTitleTierForRemainingPercentSum(remaining);if(actual!==expected)fail("TITLE_PERCENT_THRESHOLD",{remaining,expected,actual});});
@@ -203,6 +222,7 @@
  window.THIRD_WORLD_FIVE_POINT_AUTHORITY_VERSION=1;
  window.THIRD_WORLD_TITLE_API_SEMANTICS_VERSION=1;
  window.THIRD_WORLD_SNAPSHOT_USAGE_POLICY_VERSION=1;
+ window.THIRD_WORLD_EQUIPMENT_NAME_BAND_VERSION=EQUIPMENT_NAME_BAND_VERSION;
  window.THIRD_WORLD_BOSS_BASE_STATS=BASE_STATS;
  window.THIRD_WORLD_BOSS_STAGE_CONFIG=STAGE_CONFIG;
  window.THIRD_WORLD_BOSS_DEFINITIONS=BOSS_ROWS;
@@ -221,6 +241,8 @@
  window.thirdWorldBossAbilities=thirdWorldBossAbilities;
  window.thirdWorldBossProgressSnapshot=thirdWorldBossProgressSnapshot;
  window.thirdWorldBossAggregateSnapshot=thirdWorldBossAggregateSnapshot;
+ window.thirdWorldEquipmentNameBandForRemainingHp=thirdWorldEquipmentNameBandForRemainingHp;
+ window.thirdWorldEquipmentNameBand=thirdWorldEquipmentNameBand;
  window.thirdWorldChallengeStatus=thirdWorldChallengeStatus;
  window.thirdWorldChallengeAllowed=thirdWorldChallengeAllowed;
  window.canChallengeThirdWorldBoss=canChallengeThirdWorldBoss;
