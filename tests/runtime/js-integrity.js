@@ -165,7 +165,7 @@ function sequenceRng(values,fallback=.99){let i=0;return ()=>i<values.length?val
  assert(order[0]==="accessory","VIP8 預設最弱部位必須依傳入 target state 判斷，而不是偷讀其他角色裝備。");
  let seenState=null;
  const target={vipLevel:8,equipment};
- const forced=h.window.resolveVipLootModifiers(2,{state:target,vipLevel:8,boss:false,rng:()=>0,weakTypesResolver:s=>{seenState=s;return ["shoes"];}});
+ const forced=h.window.resolveVipLootModifiers(2,{state:target,vipLevel:8,boss:false,rng:()=>0,weakTypesResolver:s=>{seenState=s;return ["shoes"];} });
  assert(seenState===target&&forced.forcedType==="shoes","VIP8 自訂 resolver 必須收到指定 target state 並決定部位。");
 }
 assert(/function secondWorldEquipmentRewardRows\(result\)/.test(secondWorldRewards)&&/result\?\.equipmentRewards/.test(secondWorldRewards)&&/result\?\.item/.test(secondWorldRewards),"宇宙主線裝備結果必須以 equipmentRewards 為正式陣列 owner，並保留舊單件 fallback 相容層。");
@@ -318,15 +318,16 @@ assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正�
 
 assert(/const CONTINUOUS_VERSION=2;/.test(secondWorldCalamityRun),"宇宙災厄連續討伐版本應為 V2。");
 assert(/SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1/.test(secondWorldCalamityRun),"宇宙災厄必須宣告背景戰鬥與 fast catch-up owner 版本。");
-assert(/backgroundProgressStart\("calamity",\{mode:"continuous"\}\)/.test(secondWorldCalamityRun)&&/backgroundProgressStop\("calamity"\)/.test(secondWorldCalamityRun),"宇宙災厄連續討伐必須共用 calamity 背景 start/stop owner。");
-assert(/backgroundProgressFastCatchUpActive\("calamity"\)/.test(secondWorldCalamityRun)&&/backgroundProgressCatchUpPolicy\("calamity",next,false\)/.test(secondWorldCalamityRun),"宇宙災厄連續討伐必須接上 fast catch-up policy。");
+assert(/SECOND_WORLD_CALAMITY_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_MANUAL_STOP_TERMINAL_VERSION=MANUAL_STOP_TERMINAL_VERSION/.test(secondWorldCalamityRun),"宇宙災厄必須宣告 strict shared infrastructure 與立即停止語意。");
+assert(!/backgroundProgressStart\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressStop\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressFastCatchUpActive\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressCatchUpPolicy\("calamity"/.test(secondWorldCalamityRun),"宇宙災厄正式 run 不得保留 shared infrastructure 直連 fallback。");
 assert(/startBackground\(\);[\s\S]*const previewPolicy=catchUpPreviewPolicy\(\);/.test(secondWorldCalamityRun),"宇宙災厄 continuous 必須先啟動背景 flow，再套用 catch-up policy。");
 assert(/save:fast\?previewPolicy\?\.shouldCheckpoint===true:options\.save/.test(secondWorldCalamityRun)&&/preparePresentation:fast\?previewPolicy\?\.shouldPresentBattle===true:options\.preparePresentation/.test(secondWorldCalamityRun),"宇宙災厄 fast catch-up 必須降低存檔與演出頻率。");
-assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test(secondWorldCalamityRun)&&/addEventListener\("pagehide",stopForPageHide\)/.test(secondWorldCalamityRun),"宇宙災厄 pagehide 必須在背景戰鬥開啟時保留連續討伐。");
+assert(/function stop\(\)[\s\S]*phase!=="fighting"[\s\S]*finish\("stopped"\)/.test(secondWorldCalamityRun),"宇宙災厄非戰鬥中手動停止必須立即 terminal。");
+assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test(secondWorldCalamityRun)&&/infra\.onPageHide\(stopForPageHide\)/.test(secondWorldCalamityRun)&&!/addEventListener\("pagehide"/.test(secondWorldCalamityRun),"宇宙災厄 pagehide 必須由 shared lifecycle owner 接管。");
 assert(/backgroundProgressSleep\(ms,"calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressCatchUpStep\("calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressConsumeCatchUpCredit\(delay,"calamity"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須共用 calamity 背景 sleep、catch-up step 與 credit。");
 assert(/backgroundProgressCatchUpFinalPolicy\("calamity"\)/.test(secondWorldCalamityUi)&&/combatOuterGapMs\("calamity","battle"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須在追趕完成後收斂並維持正式場間節奏。");
-assert(index.includes('src="secondworldcalamityrun.js?v=20260927-run-opt-batch1"')&&index.includes('src="secondworldcalamityui.js?v=20260927-title-post-flow1"'),"index.html 必須載入宇宙災厄 Batch 7 優化 run cache 與稱號 post-flow UI cache-bust。");
-assert(index.includes('src="calamityrun.js?v=20260927-run-opt-batch1"')&&index.includes('src="backgroundprogress.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldphase.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldmigrationregression.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldrun.js?v=20260927-run-opt-batch1"')&&index.includes('src="continuousrunintegrity.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldsubsystemintegrity.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldintegritycontract.js?v=20260927-run-opt-batch1"'),"index.html 必須同步載入 Batch 7 優化後的正式 owner cache-bust。");
+assert(index.includes('src="secondworldcalamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="secondworldcalamityui.js?v=20260927-title-post-flow1"'),"index.html 必須載入宇宙災厄 Batch 7 第2批優化 run cache 與稱號 post-flow UI cache-bust。");
+assert(index.includes('src="calamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="backgroundprogress.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldphase.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldcore.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldmigrationregression.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="continuousrunintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldsubsystemintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldintegritycontract.js?v=20260927-run-opt-batch2"'),"index.html 必須同步載入 Batch 7 第2批優化後的正式 owner cache-bust。");
 
 assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");
 assert(/const VOID_MIRAGE_ATK_BASE=10\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_ATK_PER_FLOOR=1\.3;/.test(dungeonVoid),"虛空 ATK 線性公式應為 10.0 + 1.3F。");
