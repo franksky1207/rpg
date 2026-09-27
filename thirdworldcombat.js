@@ -1,7 +1,6 @@
 (function(){
  const VERSION=1;
  const SNAPSHOT_VERSION=1;
- const REVENGE_TRIGGER_CHANCE=Math.max(0,Number(Array.from(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS||[]).find(row=>row?.id==="revenge")?.triggerChance)||0);
 
  function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
@@ -9,6 +8,7 @@
  function targetState(options={}){return options?.state&&typeof options.state==="object"?options.state:currentState();}
  function resolveBossIndex(value){return typeof window.thirdWorldBossIndex==="function"?window.thirdWorldBossIndex(value):-1;}
  function freezeCopy(value){return Object.freeze({...value});}
+ function maxMarkLevel(){return typeof window.markClampLevel==="function"?window.markClampLevel(Number.MAX_SAFE_INTEGER):0;}
 
  function abilityProfileFromStats(stats){
   const raw={
@@ -22,20 +22,12 @@
  }
  function effectProfileFromAbilities(abilities){
   const source=abilities&&typeof abilities==="object"?abilities:{};
-  const raw={
-   composure:{...source.composure,playerCritRateReductionPoints:numberOr(source.composure?.playerCritRateReductionPoints,0)},
-   suppression:{...source.suppression,playerDodgeRateReductionPoints:numberOr(source.suppression?.playerDodgeRateReductionPoints,0)},
-   resilience:{...source.resilience,playerCritBonusDamageReductionPercent:numberOr(source.resilience?.playerCritBonusDamageReductionPercent,0)},
-   revenge:{...source.revenge,triggerChance:numberOr(source.revenge?.triggerChance,REVENGE_TRIGGER_CHANCE)},
-   backlash:{...source.backlash,triggerChance:numberOr(source.backlash?.triggerChance,0),reflectActualHpLossPercent:numberOr(source.backlash?.reflectActualHpLossPercent,0)},
-   ignore:{...source.ignore,triggerChance:numberOr(source.ignore?.triggerChance,0)},
-   battleSpirit:{
-    ...source.battleSpirit,
-    activationChance:numberOr(source.battleSpirit?.battleStartTriggerChance,0),
-    atkPercentPerLayer:numberOr(source.battleSpirit?.atkPercentPerTurn,0),
-    maxLayers:Math.max(0,finiteWhole(source.battleSpirit?.maxStacks,0))
-   }
-  };
+  const level=maxMarkLevel();
+  const raw={};
+  Object.entries(source).forEach(([key,descriptor])=>{
+   const effect=typeof window.markEffectSnapshot==="function"?window.markEffectSnapshot(key,level):{id:key,level:0,active:false};
+   raw[key]={...effect,active:descriptor?.active===true&&effect?.active===true};
+  });
   return typeof window.normalizeCombatEffectProfile==="function"?window.normalizeCombatEffectProfile(raw):Object.freeze(raw);
  }
  function challengeReason(status){
@@ -176,18 +168,26 @@
    items:[]
   };
  }
+ function markProfileMatchesOwner(profile,key){
+  if(typeof window.markEffectSnapshot!=="function")return false;
+  const expected=window.markEffectSnapshot(key,maxMarkLevel());
+  const actual=profile?.[key];
+  if(!actual||!expected)return false;
+  return Object.entries(expected).every(([field,value])=>field==="active"||actual[field]===value);
+ }
  function validateThirdWorldCombatAdapter(){
   const errors=[];
   const fail=(code,data=null)=>errors.push({code,data});
   try{
    if(typeof window.runCombatCore!=="function")fail("COMBAT_CORE_MISSING");
    if(typeof window.thirdWorldBossStats!=="function"||typeof window.thirdWorldBossAbilities!=="function")fail("THIRD_WORLD_DATA_OWNER_MISSING");
-   if(REVENGE_TRIGGER_CHANCE!==50)fail("REVENGE_TRIGGER_CHANCE",REVENGE_TRIGGER_CHANCE);
+   if(typeof window.markEffectSnapshot!=="function"||typeof window.markClampLevel!=="function")fail("MARK_CORE_OWNER_MISSING");
    const max=Math.max(1,finiteWhole(window.THIRD_WORLD_BOSS_MAX_HP,1));
    const stage6=createThirdWorldBossCombatSnapshot(0,{ignoreUnlock:true,formalStartHp:Math.floor(max*.4)});
-   if(!stage6||stage6.stage!==6||stage6.enemyEffectProfile?.revenge?.active!==true||Number(stage6.enemyEffectProfile?.revenge?.triggerChance)!==50)fail("REVENGE_PROFILE",stage6?.enemyEffectProfile?.revenge||null);
+   if(!stage6||stage6.stage!==6||stage6.enemyEffectProfile?.revenge?.active!==true||!markProfileMatchesOwner(stage6.enemyEffectProfile,"revenge"))fail("REVENGE_MARK_OWNER",stage6?.enemyEffectProfile?.revenge||null);
    const stage9=createThirdWorldBossCombatSnapshot(4,{ignoreUnlock:true,formalStartHp:Math.floor(max*.1)});
-   if(!stage9||stage9.stage!==9||Number(stage9.enemyAbilityProfile?.comboRate)!==40||stage9.enemyEffectProfile?.battleSpirit?.active!==true||Number(stage9.enemyEffectProfile?.battleSpirit?.activationChance)!==75||Number(stage9.enemyEffectProfile?.battleSpirit?.atkPercentPerLayer)!==2||Number(stage9.enemyEffectProfile?.battleSpirit?.maxLayers)!==10)fail("STAGE9_PROFILE",stage9||null);
+   const markKeys=["composure","suppression","resilience","revenge","backlash","ignore","battleSpirit"];
+   if(!stage9||stage9.stage!==9||Number(stage9.enemyAbilityProfile?.comboRate)!==40||markKeys.some(key=>stage9.enemyEffectProfile?.[key]?.active!==true||!markProfileMatchesOwner(stage9.enemyEffectProfile,key)))fail("MARK_EFFECT_OWNER",stage9?.enemyEffectProfile||null);
    const partial=createThirdWorldBossCombatSnapshot(7,{ignoreUnlock:true,formalStartHp:Math.floor(max*.55)});
    if(!partial||partial.enemyHealCap!==partial.formalStartHp||partial.enemyHealCap>=partial.bossMaxHp)fail("FORMAL_HP_HEAL_CAP",partial||null);
   }catch(error){fail("EXCEPTION",String(error?.message||error));}
@@ -196,9 +196,9 @@
 
  window.THIRD_WORLD_COMBAT_VERSION=VERSION;
  window.THIRD_WORLD_COMBAT_SNAPSHOT_VERSION=SNAPSHOT_VERSION;
- window.THIRD_WORLD_REVENGE_TRIGGER_CHANCE=REVENGE_TRIGGER_CHANCE;
  window.THIRD_WORLD_COMBAT_HEADLESS_DEFAULT_VERSION=1;
  window.THIRD_WORLD_COMBAT_NO_SETTLEMENT_VERSION=1;
+ window.THIRD_WORLD_MARK_EFFECT_SOURCE_VERSION=1;
  window.thirdWorldCombatAbilityProfileFromStats=abilityProfileFromStats;
  window.thirdWorldCombatEffectProfileFromAbilities=effectProfileFromAbilities;
  window.createThirdWorldBossCombatSnapshot=createThirdWorldBossCombatSnapshot;
