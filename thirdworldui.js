@@ -38,8 +38,8 @@
  function challengePresentation(snapshot){
   if(snapshot?.defeated)return {className:"defeated",label:"已擊破",detail:"永久 HP 已歸零"};
   const status=snapshot?.challengeStatus||{};
-  if(status.allowed===true&&status.reason==="last-survivor")return {className:"ready final",label:"最終存活・可挑戰",detail:"僅存一名高維存在，5pp 限制自然解除"};
-  if(status.allowed===true)return {className:"ready",label:"可挑戰",detail:"目前位於合法 5pp 戰線內"};
+  if(status.allowed===true&&status.reason==="last-survivor")return {className:"ready final",label:"最終存活・可挑戰",detail:"僅存一名高維存在，5% 戰線限制自然解除"};
+  if(status.allowed===true)return {className:"ready",label:"可挑戰",detail:"目前位於合法 5% 戰線內"};
   if(status.reason==="five-point-front")return {className:"blocked",label:"戰線偏離｜暫不可挑戰",detail:"請先推進其他存活高維存在"};
   return {className:"blocked",label:"正式挑戰未開放",detail:"目前世界狀態不允許正式挑戰"};
  }
@@ -67,7 +67,7 @@
   const base=baseAbilityItems().map(([name,value])=>`<div class="third-world-common-item"><b>${name}</b><span>${value}</span></div>`).join(""),unlocks=abilityDefs().map(def=>`<div class="third-world-common-item"><b>${whole(def.unlockRemainingPercent)}%</b><span>${def.name}</span></div>`).join("");
   return `<section class="world-region third-world-common ${commonAbilitiesOpen?"open":""}"><button class="world-region-header" type="button" aria-expanded="${commonAbilitiesOpen?"true":"false"}" onclick="toggleThirdWorldCommonAbilities()"><span class="world-region-title-wrap"><b class="world-region-title">高維存在・共通能力</b><span class="world-region-level">十王共用，不在王卡重複</span></span><span class="world-region-toggle">${commonAbilitiesOpen?"▲":"▼"}</span></button>${commonAbilitiesOpen?`<div class="world-region-body"><div class="third-world-common-section"><h3>固定基礎能力</h3><div class="third-world-common-grid">${base}</div></div><div class="third-world-common-section"><h3>階段新增能力</h3><div class="third-world-common-grid third-world-common-unlocks">${unlocks}</div></div></div>`:""}</section>`;
  }
- function combatRuleHtml(){return `<div class="notice third-world-run-rule"><b>高維正式挑戰皆採連續戰鬥</b><div class="muted">玩家死亡後仍會繼續下一場；一輪最多累積 100 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡、跨入新強化階段或 5pp 戰線鎖定時會停止下一場。</div></div>`;}
+ function combatRuleHtml(){return `<div class="notice third-world-run-rule"><b>高維正式挑戰皆採連續戰鬥</b><div class="muted">玩家死亡後仍會繼續下一場；一輪最多累積 100 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡、跨入新強化階段或 5% 戰線鎖定時會停止下一場。</div></div>`;}
  function activeRunHtml(){
   const run=runSnapshot();if(run.active!==true)return "";
   const boss=bossDefs()[whole(run.bossIndex)]||null;
@@ -139,6 +139,8 @@
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
+  const playerCopy=[challengePresentation({challengeStatus:{allowed:true,reason:"last-survivor"}}).detail,challengePresentation({challengeStatus:{allowed:true,reason:"within-five-point-front"}}).detail,combatRuleHtml()].join(" ");
+  if(playerCopy.includes("5pp"))errors.push("PLAYER_PERCENT_TERMINOLOGY");
   return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,coreConfirmationVersion:CORE_CONFIRMATION_VERSION,runEntryUiVersion:RUN_ENTRY_UI_VERSION,threeColumnHeaderVersion:THREE_COLUMN_HEADER_VERSION,combatPageUiVersion:COMBAT_PAGE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
