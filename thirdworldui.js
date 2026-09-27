@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const CORE_UI_VERSION=1;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
@@ -10,6 +10,8 @@
  function pct(value,digits=2){return `${Math.max(0,Math.min(100,n(value))).toFixed(digits)}%`;}
  function fmt(value){return whole(value).toLocaleString();}
  function currentPhase(){return typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(state)):state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;}
+ function expectedBossCount(){return Math.max(0,whole(window.THIRD_WORLD_BOSS_COUNT));}
+ function expectedAbilityCount(){return Math.max(0,whole(window.THIRD_WORLD_BOSS_ABILITY_COUNT));}
  function bossDefs(){return Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS:[];}
  function abilityDefs(){return Array.isArray(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS)?window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS:[];}
  function aggregate(){return typeof window.thirdWorldBossAggregateSnapshot==="function"?window.thirdWorldBossAggregateSnapshot(state):null;}
@@ -21,25 +23,7 @@
  function strings(){return whole(state?.thirdWorld?.dimensionalStrings);}
  function maxCore(){return Math.max(0,whole(window.THIRD_WORLD_CORE_MAX_LEVEL||10));}
  function suppressionPerDeath(level){return typeof window.thirdWorldSuppressionPerDeathPoints==="function"?n(window.thirdWorldSuppressionPerDeathPoints(level)):null;}
-
- function specializationPresentation(boss){
-  const spec=boss?.specialization||{};
-  const id=String(spec.id||"");
-  const rows={
-   attack:["高攻型",`ATK ×${n(spec.atkMultiplier).toFixed(2)}`],
-   defense:["高防型",`DEF ×${n(spec.defMultiplier).toFixed(2)}`],
-   critical:["高暴型",`暴擊 +${whole(spec.critPoints)}pp`],
-   dodge:["高閃型",`閃避 +${whole(spec.dodgePoints)}pp`],
-   combo:["連擊型",`連擊率 +${whole(spec.comboRatePoints)}pp`],
-   penetration:["穿透型",`穿透率 +${whole(spec.penetrationRatePoints)}pp`],
-   counter:["反擊型",`反擊率 +${whole(spec.counterRatePoints)}pp`],
-   drain:["汲取型",`汲取率 +${whole(spec.drainRatePoints)}pp`],
-   initiative:["先制型",`第一擊加成 +${whole(spec.initiativeBonusPoints)}pp`],
-   origin:["均衡型",`ATK ×${n(spec.atkMultiplier).toFixed(2)}、DEF ×${n(spec.defMultiplier).toFixed(2)}`]
-  };
-  const hit=rows[id]||["高維存在","個體特化"];
-  return {label:hit[0],effect:hit[1]};
- }
+ function specializationPresentation(boss){return typeof window.thirdWorldBossSpecializationPresentation==="function"?(window.thirdWorldBossSpecializationPresentation(boss)||{label:"高維存在",effect:"個體特化"}):{label:"高維存在",effect:"個體特化"};}
  function activeAbilityNames(snapshot){
   if(!snapshot?.abilities||typeof snapshot.abilities!=="object")return [];
   return abilityDefs().filter(def=>snapshot.abilities?.[def.id]?.active===true).map(def=>def.name);
@@ -133,22 +117,23 @@
  }
  function pageHtml(){
   if(currentPhase()!==3)return unavailableHtml("目前尚未正式進入高維紀元。");
-  const agg=aggregate();if(!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==10)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
-  const defs=bossDefs();if(defs.length!==10)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
+  const count=expectedBossCount(),agg=aggregate();if(count<=0||!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==count)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
+  const defs=bossDefs();if(defs.length!==count)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
   return `<section class="map-screen third-world-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div>${corePanelHtml()}</section>`;
  }
  function validate(){
-  const errors=[];
+  const errors=[],bossCount=expectedBossCount(),abilityCount=expectedAbilityCount();
   if(typeof window.currentWorldPhase!=="function")errors.push("WORLD_PHASE_OWNER_MISSING");
   if(typeof window.thirdWorldBossAggregateSnapshot!=="function")errors.push("AGGREGATE_OWNER_MISSING");
   if(typeof window.thirdWorldBossProgressSnapshot!=="function")errors.push("BOSS_SNAPSHOT_OWNER_MISSING");
   if(typeof window.thirdWorldChallengeStatus!=="function")errors.push("CHALLENGE_OWNER_MISSING");
   if(typeof window.thirdWorldCurrentTitleDefinition!=="function")errors.push("TITLE_OWNER_MISSING");
+  if(typeof window.thirdWorldBossSpecializationPresentation!=="function")errors.push("SPECIALIZATION_PRESENTATION_OWNER_MISSING");
   if(typeof window.thirdWorldCoreSnapshot!=="function")errors.push("CORE_SNAPSHOT_OWNER_MISSING");
   if(typeof window.thirdWorldCoreInjectionPlan!=="function")errors.push("CORE_PLAN_OWNER_MISSING");
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
-  if(bossDefs().length!==10)errors.push("BOSS_DEFINITION_COUNT");
-  if(abilityDefs().length!==7)errors.push("ABILITY_DEFINITION_COUNT");
+  if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
+  if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
   return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
@@ -172,7 +157,7 @@
  window.THIRD_WORLD_PLAYER_UI_VERSION=VERSION;
  window.THIRD_WORLD_PLAYER_UI_BOSS_GRID_VERSION=1;
  window.THIRD_WORLD_PLAYER_UI_CORE_VERSION=CORE_UI_VERSION;
- window.THIRD_WORLD_PLAYER_UI_DERIVED_OWNER_VERSION=1;
+ window.THIRD_WORLD_PLAYER_UI_DERIVED_OWNER_VERSION=2;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
 })();
