@@ -46,12 +46,7 @@
   else if(active)reason="run-active";
   else if(atMax)reason="max-level";
   else if(dimensionalStrings<=0)reason="no-dimensional-strings";
-  return freeze({
-   version:VERSION,entered,level,maxLevel:maxLevel(),atMax,costPerLevel:COST_PER_LEVEL,
-   coreProgress,progressRequired:COST_PER_LEVEL,progressPercent:atMax?100:coreProgress/COST_PER_LEVEL*100,
-   dimensionalStrings,nextCost:remainingToNext,remainingToNext,totalCostToMax,availableInjection,
-   runActive:active,formalTarget:isFormalTarget(target),canInject:reason==="",canUpgrade:reason==="",reason
-  });
+  return freeze({version:VERSION,entered,level,maxLevel:maxLevel(),atMax,costPerLevel:COST_PER_LEVEL,coreProgress,progressRequired:COST_PER_LEVEL,progressPercent:atMax?100:coreProgress/COST_PER_LEVEL*100,dimensionalStrings,nextCost:remainingToNext,remainingToNext,totalCostToMax,availableInjection,runActive:active,formalTarget:isFormalTarget(target),canInject:reason==="",canUpgrade:reason==="",reason});
  }
  function injectAllCoreStrings(){
   const before=coreSnapshot();
@@ -64,10 +59,10 @@
    label:"third-world-core-injection",
    mutate:live=>{
     if(runActive(live))return {ok:false,reason:"run-active"};
-    const third=live?.thirdWorld;
-    if(!third||third.entered!==true)return {ok:false,reason:"not-entered"};
+    if(!live?.thirdWorld||live.thirdWorld.entered!==true)return {ok:false,reason:"not-entered"};
     if(typeof window.normalizeThirdWorldState==="function")window.normalizeThirdWorldState(live);
-    const plan=injectionPlan(live);
+    const third=live?.thirdWorld,plan=injectionPlan(live);
+    if(!third||third.entered!==true)return {ok:false,reason:"not-entered"};
     if(plan.levelBefore>=maxLevel())return {ok:false,reason:"max-level"};
     if(plan.dimensionalStringsBefore<=0||plan.injected<=0)return {ok:false,reason:"no-dimensional-strings"};
     third.coreLevel=plan.levelAfter;
@@ -77,15 +72,7 @@
    }
   });
   if(tx?.ok!==true){
-   const code=String(tx?.reason||"transaction-failed");
-   const messages={
-    "run-active":"高維連戰進行中，必須先停止連戰才能注入界弦核心。",
-    "not-entered":"尚未進入高維紀元。",
-    "max-level":"界弦核心已達最高等級。",
-    "no-dimensional-strings":"目前沒有可注入的維度之弦。",
-    "save-failed":"界弦核心注入存檔失敗，已回復注入前狀態。",
-    "save-exception":"界弦核心注入存檔發生錯誤，已回復注入前狀態。"
-   };
+   const code=String(tx?.reason||"transaction-failed"),messages={"run-active":"高維連戰進行中，必須先停止連戰才能注入界弦核心。","not-entered":"尚未進入高維紀元。","max-level":"界弦核心已達最高等級。","no-dimensional-strings":"目前沒有可注入的維度之弦。","save-failed":"界弦核心注入存檔失敗，已回復注入前狀態。","save-exception":"界弦核心注入存檔發生錯誤，已回復注入前狀態。"};
    return freeze({ok:false,code,reason:messages[code]||"界弦核心注入失敗，狀態已安全回復。",rolledBack:tx?.rolledBack===true,snapshot:coreSnapshot(),transaction:tx||null});
   }
   return freeze({ok:true,code:"injected",...tx.value,snapshot:coreSnapshot(),transaction:tx});
