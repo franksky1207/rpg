@@ -1,8 +1,11 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
  const CALAMITY_CONTINUOUS_RULE_VERSION=5;
+ const GLOBAL_MUTEX_VERSION=1;
+ const BLOCKER_NAME="galaxy-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
+ let blockerRegistered=false;
 
  function clone(value){
   try{return value==null?value:JSON.parse(JSON.stringify(value));}
@@ -11,9 +14,11 @@
  function validMode(mode){return mode==="single"?"single":"continuous";}
  function runInfra(){
   if(sharedRunInfra)return sharedRunInfra;
-  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:"calamity",mode:"continuous"});
+  if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:"calamity",mode:"continuous",blockerName:BLOCKER_NAME});
   return sharedRunInfra;
  }
+ function ownRuntimeBlockerStatus(){return activeRun?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
+ function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:false,blockers:[]};}
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();if(infra)return !!infra.startBackground();if(typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
  function stopBackground(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop("calamity");return false;}
@@ -72,6 +77,8 @@
   if(!def)return {ok:false,reason:"unknown-calamity",run:runStatus()};
   if(typeof window.isCivilizationCalamityUnlocked!=="function"||!window.isCivilizationCalamityUnlocked(def.id))return {ok:false,reason:"locked",calamityId:def.id,run:runStatus()};
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runStatus()};
+  const conflict=runtimeConflictStatus();
+  if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runStatus()};
   activeRun={
    active:true,
    mode:validMode(mode),
@@ -225,12 +232,19 @@
   activeRun.endedAt=Date.now();
   stopBackground();
  }
- function subscribePageHide(){const infra=runInfra();if(infra)return infra.onPageHide(stopForPageHide);window.addEventListener("pagehide",stopForPageHide);return ()=>{};}
- setTimeout(subscribePageHide,0);
+ function subscribeSharedLifecycle(){
+  const infra=runInfra();
+  if(infra){infra.onPageHide(stopForPageHide);blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);return;}
+  window.addEventListener("pagehide",stopForPageHide);
+  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+ }
+ setTimeout(subscribeSharedLifecycle,0);
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
  window.CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
+ window.CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
+ window.CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
  window.CALAMITY_MAXED_MARK_CONTINUOUS_STOP_VERSION=1;
  window.beginCivilizationCalamityRun=begin;
@@ -239,6 +253,8 @@
  window.runCivilizationCalamityContinuous=runContinuous;
  window.requestCivilizationCalamityContinuousStop=requestStop;
  window.getCivilizationCalamityRunSnapshot=runStatus;
+ window.civilizationCalamityRunConflictStatus=runtimeConflictStatus;
  window.civilizationCalamityBackgroundEnabled=backgroundEnabled;
  window.stopCivilizationCalamityRunForPageHide=stopForPageHide;
+ window.CALAMITY_GLOBAL_RUN_MUTEX_INTEGRITY={version:GLOBAL_MUTEX_VERSION,passed:typeof BLOCKER_NAME==="string"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};
 })();
