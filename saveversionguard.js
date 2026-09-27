@@ -1,5 +1,12 @@
 (function(){
  const VERSION=1;
+ const SCHEMA_EVOLUTION_POLICY_VERSION=1;
+ const SCHEMA_EVOLUTION_POLICY=Object.freeze({
+  currentSchema:16,
+  sameSchemaAllowed:Object.freeze(["additive-optional-field","normalization-only"]),
+  schemaBumpRequired:Object.freeze(["semantic-reinterpretation","persistent-field-removal","incompatible-structure"]),
+  schema16ThirdWorld:Object.freeze({coreProgressOptional:true,missingCoreProgressDefaultsTo:0,preSchema16ThirdWorld:"discard-development-data"})
+ });
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function currentVersion(){return Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||1));}
  function minimumVersion(){return Math.max(1,Math.floor(Number(window.SAVE_MIN_SUPPORTED_VERSION)||1));}
@@ -12,6 +19,12 @@
   const source=sourceVersion(raw,explicitVersion),current=currentVersion(),minimum=minimumVersion();
   const isFuture=source>current,isTooOld=source<minimum;
   return {version:VERSION,sourceVersion:source,currentVersion:current,minSupportedVersion:minimum,isLegacy:source<current&&!isTooOld,isFuture,isTooOld,supported:!isFuture&&!isTooOld};
+ }
+ function schemaChangeRequiresBump(kind){
+  const key=String(kind||"").trim();
+  if(SCHEMA_EVOLUTION_POLICY.sameSchemaAllowed.includes(key))return false;
+  if(SCHEMA_EVOLUTION_POLICY.schemaBumpRequired.includes(key))return true;
+  return null;
  }
  function assertSupported(raw,options={}){
   const label=String(options.label||"存檔");
@@ -66,6 +79,9 @@
  }
 
  window.SAVE_FUTURE_VERSION_GUARD_VERSION=VERSION;
+ window.SAVE_SCHEMA_EVOLUTION_POLICY_VERSION=SCHEMA_EVOLUTION_POLICY_VERSION;
+ window.SAVE_SCHEMA_EVOLUTION_POLICY=SCHEMA_EVOLUTION_POLICY;
+ window.saveSchemaChangeRequiresBump=schemaChangeRequiresBump;
  window.saveCompatibilityFor=compatibility;
  window.assertSaveVersionSupported=assertSupported;
 })();
