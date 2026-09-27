@@ -1,6 +1,7 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const CORE_UI_VERSION=1;
+ const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
  let coreFeedbackOk=false;
@@ -23,6 +24,12 @@
  function strings(){return whole(state?.thirdWorld?.dimensionalStrings);}
  function maxCore(){return Math.max(0,whole(window.THIRD_WORLD_CORE_MAX_LEVEL||10));}
  function suppressionPerDeath(level){return typeof window.thirdWorldSuppressionPerDeathPoints==="function"?n(window.thirdWorldSuppressionPerDeathPoints(level)):null;}
+ function clearCoreFeedback(){coreFeedback="";coreFeedbackOk=false;return true;}
+ function clearCoreFeedbackOnFreshEntry(){
+  if(typeof document==="undefined")return false;
+  if(document.querySelector(".third-world-adventure-screen"))return false;
+  return clearCoreFeedback();
+ }
  function specializationPresentation(boss){return typeof window.thirdWorldBossSpecializationPresentation==="function"?(window.thirdWorldBossSpecializationPresentation(boss)||{label:"高維存在",effect:"個體特化"}):{label:"高維存在",effect:"個體特化"};}
  function activeAbilityNames(snapshot){
   if(!snapshot?.abilities||typeof snapshot.abilities!=="object")return [];
@@ -116,6 +123,7 @@
   return `<section class="map-screen third-world-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>${message}</b></div></section>`;
  }
  function pageHtml(){
+  clearCoreFeedbackOnFreshEntry();
   if(currentPhase()!==3)return unavailableHtml("目前尚未正式進入高維紀元。");
   const count=expectedBossCount(),agg=aggregate();if(count<=0||!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==count)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
   const defs=bossDefs();if(defs.length!==count)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
@@ -134,7 +142,7 @@
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
-  return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.toggleThirdWorldCommonAbilities=function(){commonAbilitiesOpen=!commonAbilitiesOpen;if(typeof window.render==="function")window.render();};
@@ -152,12 +160,14 @@
   if(typeof window.render==="function")window.render();
   return coreFeedbackOk;
  };
+ window.clearThirdWorldCoreFeedback=clearCoreFeedback;
  window.thirdWorldAdventurePageHtml=pageHtml;
  window.validateThirdWorldPlayerUi=validate;
  window.THIRD_WORLD_PLAYER_UI_VERSION=VERSION;
  window.THIRD_WORLD_PLAYER_UI_BOSS_GRID_VERSION=1;
  window.THIRD_WORLD_PLAYER_UI_CORE_VERSION=CORE_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_DERIVED_OWNER_VERSION=2;
+ window.THIRD_WORLD_PLAYER_UI_CORE_FEEDBACK_LIFECYCLE_VERSION=CORE_FEEDBACK_LIFECYCLE_VERSION;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
 })();
