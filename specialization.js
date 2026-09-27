@@ -23,11 +23,19 @@
   return changed;
  }
  function ensureSpecializationState(){return normalizeSpecializationState(state);}
+ function enteredSecondWorld(target=state){return typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(target)===true:target?.secondWorld?.entered===true;}
+ function currentPhase(target=state){
+  if(typeof window.currentWorldPhase==="function"){
+   const value=Number(window.currentWorldPhase(target));
+   if(Number.isInteger(value)&&value>=1&&value<=3)return value;
+  }
+  return target?.thirdWorld?.entered===true?3:enteredSecondWorld(target)?2:1;
+ }
  function specializationFormalStateIssues(target=state){
   if(!target||typeof target!=="object")return [{code:"STATE_MISSING"}];
-  const universe=target?.secondWorld?.entered===true;
+  const completedEra=enteredSecondWorld(target);
   const source=target.specializations&&typeof target.specializations==="object"?target.specializations:{};
-  const min=universe?SPECIALIZATION_MAX_LEVEL:0;
+  const min=completedEra?SPECIALIZATION_MAX_LEVEL:0;
   return SPECIALIZATION_KEYS.flatMap(key=>{
    const raw=Number(source[key]);
    if(!Number.isFinite(raw))return [{code:"LEVEL_INVALID",key,value:source[key],min,max:SPECIALIZATION_MAX_LEVEL}];
@@ -74,8 +82,8 @@
  window.specializationLevel=function(key,useTest=false){if(!SPECIALIZATION_DEFS[key])return 0;return useTest?clampSpecializationLevel(window.gmTestSpecializations?.[key]):formalLevel(key);};
  window.specializationLevelsSnapshot=function(useTest=false){return Object.fromEntries(SPECIALIZATION_KEYS.map(key=>[key,window.specializationLevel(key,useTest)]));};
  window.specializationWorldSemantics=specializationWorldSemantics;
- window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=1;
- window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=1;
+ window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=2;
+ window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=2;
  window.SPECIALIZATION_COMBAT_RULE_SOURCE_VERSION=1;
  window.specializationCombatRuleSnapshot=combatRuleSnapshot;
  function specializationPercentForLevel(key,level){const lv=clampSpecializationLevel(level);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;}
@@ -86,26 +94,31 @@
  window.specializationAdjustedGold=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("scavenge",useTest)));};
  window.specializationSellValue=function(item,useTest=false){const base=Math.max(0,Math.floor(Number(item?.sell)||0));return Math.max(0,Math.ceil(base*window.specializationMultiplier("appraisal",useTest)));};
 
- function universePhase(target=state){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(target);}
  function specializationWorldSemantics(key,target=state){
-  const universe=universePhase(target),def=SPECIALIZATION_DEFS[key];
+  const phase=currentPhase(target),def=SPECIALIZATION_DEFS[key];
   if(!def)return null;
-  if(key==="training")return {name:def.name,perLevel:"每級 EXP +2.5%",desc:"提升擊敗敵人取得的經驗值。",effectLabel:"EXP"};
-  if(key==="scavenge")return universe
-   ?{name:def.name,perLevel:"每級主線暗物質 +2.5%",desc:"提升宇宙紀元主線 Boss 直接取得的暗物質；不影響裝備出售取得的暗物質。",effectLabel:"主線暗物質"}
-   :{name:def.name,perLevel:"每級怪物金幣 +2.5%",desc:"提升銀河紀元怪物直接掉落的金幣；不影響裝備出售取得的金幣。",effectLabel:"怪物金幣"};
-  if(key==="appraisal")return universe
-   ?{name:def.name,perLevel:"每級裝備暗物質售價 +2.5%",desc:"提升宇宙紀元裝備出售取得的暗物質；不放大暗能量。",effectLabel:"裝備暗物質售價"}
-   :{name:def.name,perLevel:"每級裝備售價 +2.5%",desc:"提升銀河紀元出售裝備取得的金幣。",effectLabel:"裝備售價"};
+  if(key==="training")return {name:def.name,perLevel:"每級 EXP +2.5%",desc:"提升擊敗敵人取得的經驗值。",effectLabel:"EXP",world:phase};
+  if(key==="scavenge"){
+   if(phase===3)return {name:def.name,perLevel:"高維紀元不再提供直接資源加成",desc:"高維紀元的正式資源由對高維存在造成的有效永久削血結算為維度之弦；搜刮技巧不再額外放大此資源。",effectLabel:null,world:phase};
+   if(phase===2)return {name:def.name,perLevel:"每級主線暗物質 +2.5%",desc:"提升宇宙紀元主線 Boss 直接取得的暗物質；不影響裝備出售取得的暗物質。",effectLabel:"主線暗物質",world:phase};
+   return {name:def.name,perLevel:"每級怪物金幣 +2.5%",desc:"提升銀河紀元怪物直接掉落的金幣；不影響裝備出售取得的金幣。",effectLabel:"怪物金幣",world:phase};
+  }
+  if(key==="appraisal"){
+   if(phase===3)return {name:def.name,perLevel:"高維紀元不建立裝備貨幣售價",desc:"高維紀元裝備不建立新的出售貨幣循環，因此鑑價技巧不再產生第三紀元貨幣售價加成。",effectLabel:null,world:phase};
+   if(phase===2)return {name:def.name,perLevel:"每級裝備暗物質售價 +2.5%",desc:"提升宇宙紀元裝備出售取得的暗物質；不放大暗能量。",effectLabel:"裝備暗物質售價",world:phase};
+   return {name:def.name,perLevel:"每級裝備售價 +2.5%",desc:"提升銀河紀元出售裝備取得的金幣。",effectLabel:"裝備售價",world:phase};
+  }
   const combatText=combatRuleText(key);
-  return {name:def.name,perLevel:def.perLevel,desc:combatText?.desc||def.desc,effectLabel:null};
+  return {name:def.name,perLevel:def.perLevel,desc:combatText?.desc||def.desc,effectLabel:null,world:phase};
  }
  function specializationWorldEconomySummary(target=state,useTest=false,levels=null){
   const source=levels&&typeof levels==="object"?levels:null;
   const get=key=>source?specializationPercentForLevel(key,source[key]):window.specializationPercentBonus(key,useTest);
-  const exp=get("training"),scavenge=get("scavenge"),appraisal=get("appraisal"),universe=universePhase(target);
+  const exp=get("training"),scavenge=get("scavenge"),appraisal=get("appraisal"),phase=currentPhase(target);
+  if(phase===3)return {world:3,exp,scavenge,appraisal,scavengeLabel:"第三紀元無直接資源加成",appraisalLabel:"第三紀元無裝備貨幣售價",text:`EXP +${exp}%　／　第三紀元無直接資源加成　／　第三紀元無裝備貨幣售價`};
+  const universe=phase===2;
   return {
-   world:universe?2:1,
+   world:phase,
    exp,scavenge,appraisal,
    scavengeLabel:universe?"主線暗物質":"怪物金幣",
    appraisalLabel:universe?"裝備暗物質售價":"裝備售價",
@@ -113,14 +126,39 @@
   };
  }
  window.specializationWorldEconomySummary=specializationWorldEconomySummary;
- window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=1;
- function effectLines(key,lv){const semantics=specializationWorldSemantics(key);if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];if(key==="initiative")return [`第一擊傷害 +${lv}%`];const combatText=combatRuleText(key);if(key==="combo")return [`連擊率 ${lv*.5}%`,combatText?.detail||"追加攻擊依共用戰鬥規則"];if(key==="penetration")return [`穿透率 ${lv*.5}%`,combatText?.detail||"穿透效果依共用戰鬥規則"];if(key==="counter")return [`反擊率 ${lv*.5}%`,combatText?.detail||"反擊傷害依共用戰鬥規則"];if(key==="drain")return [`汲取率 ${lv*.5}%`,combatText?.detail||"汲取回血依共用戰鬥規則"];return [];}
+ window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=2;
+ function effectLines(key,lv){
+  const semantics=specializationWorldSemantics(key);
+  if(currentPhase()===3&&key==="scavenge")return ["第三紀元無直接資源加成","高維正式資源由永久削血結算為維度之弦。"];
+  if(currentPhase()===3&&key==="appraisal")return ["第三紀元無裝備貨幣售價","高維裝備不建立新的出售貨幣循環。"];
+  if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];
+  if(key==="initiative")return [`第一擊傷害 +${lv}%`];
+  const combatText=combatRuleText(key);
+  if(key==="combo")return [`連擊率 ${lv*.5}%`,combatText?.detail||"追加攻擊依共用戰鬥規則"];
+  if(key==="penetration")return [`穿透率 ${lv*.5}%`,combatText?.detail||"穿透效果依共用戰鬥規則"];
+  if(key==="counter")return [`反擊率 ${lv*.5}%`,combatText?.detail||"反擊傷害依共用戰鬥規則"];
+  if(key==="drain")return [`汲取率 ${lv*.5}%`,combatText?.detail||"汲取回血依共用戰鬥規則"];
+  return [];
+ }
  function specializationCard(key){const def=SPECIALIZATION_DEFS[key],lv=formalLevel(key),maxed=lv>=SPECIALIZATION_MAX_LEVEL,cost=maxed?0:specializationUpgradeCost(lv+1),enough=maxed||state.gold>=cost;return `<section class="specialization-card"><div class="specialization-card-head"><b>${def.name}</b><span>Lv.${lv} / ${SPECIALIZATION_MAX_LEVEL}</span></div><div class="specialization-effect">${effectLines(key,lv).map(x=>`<div>${x}</div>`).join("")}</div><div class="specialization-cost">${maxed?"已達最高等級":`${cost.toLocaleString()} 金幣`}</div><button class="btn specialization-upgrade" ${maxed||!enough?"disabled":""} onclick="upgradeSpecialization('${key}')">${maxed?"已滿級":"升級"}</button></section>`;}
- function specializationGuideHtml(target=state){const universe=universePhase(target),lead=universe?`銀河紀元完成的 8 項專精會在宇宙紀元持續生效；進入宇宙紀元時已要求全部 Lv.${SPECIALIZATION_MAX_LEVEL}，不再消耗金幣升級。`:`每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。`;return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">${lead}</div>${SPECIALIZATION_KEYS.map(key=>{const d=specializationWorldSemantics(key,target);return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;}
- function specializationPage(){ensureSpecializationState();const universe=universePhase(),goldHtml=universe?"":`<div class="specialization-gold">金幣 <b>${state.gold.toLocaleString()}</b></div>`,worldNote=universe?`<div class="notice" style="margin-top:12px"><b>宇宙紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精在進入宇宙紀元前即需全部 Lv.${SPECIALIZATION_MAX_LEVEL}；效果會繼續套用到 EXP、暗物質、宇宙裝備出售與戰鬥能力。</div></div>`:"";return `<div class="function-page specialization-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card specialization-panel"><div class="specialization-title-row"><h2>專精</h2>${goldHtml}</div>${worldNote}${specializationGuideHtml(state)}<div class="specialization-grid">${SPECIALIZATION_KEYS.map(specializationCard).join("")}</div></div></div>`;}
+ function specializationGuideHtml(target=state){
+  const phase=currentPhase(target),lead=phase===3
+   ?`8 項專精已在前兩紀元完成並永久保留；高維紀元不再提高專精上限。`
+   :phase===2?`銀河紀元完成的 8 項專精會在宇宙紀元持續生效；進入宇宙紀元時已要求全部 Lv.${SPECIALIZATION_MAX_LEVEL}，不再消耗金幣升級。`
+   :`每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。`;
+  return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">${lead}</div>${SPECIALIZATION_KEYS.map(key=>{const d=specializationWorldSemantics(key,target);return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;
+ }
+ function specializationPage(){
+  ensureSpecializationState();
+  const phase=currentPhase(),goldHtml=phase===1?`<div class="specialization-gold">金幣 <b>${state.gold.toLocaleString()}</b></div>`:"";
+  const worldNote=phase===3
+   ?`<div class="notice" style="margin-top:12px"><b>高維紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精維持 Lv.${SPECIALIZATION_MAX_LEVEL}；實戰訓練與戰鬥類專精持續生效。第三紀元不再開放專精升級，也不建立新的金幣／暗物質售價循環。</div></div>`
+   :phase===2?`<div class="notice" style="margin-top:12px"><b>宇宙紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精在進入宇宙紀元前即需全部 Lv.${SPECIALIZATION_MAX_LEVEL}；效果會繼續套用到 EXP、暗物質、宇宙裝備出售與戰鬥能力。</div></div>`:"";
+  return `<div class="function-page specialization-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card specialization-panel"><div class="specialization-title-row"><h2>專精</h2>${goldHtml}</div>${worldNote}${specializationGuideHtml(state)}<div class="specialization-grid">${SPECIALIZATION_KEYS.map(specializationCard).join("")}</div></div></div>`;
+ }
  window.specializationPage=specializationPage;
  window.upgradeSpecialization=function(key){
-  if(universePhase())return alert("宇宙紀元中專精已完成，不再使用金幣升級。");
+  if(enteredSecondWorld())return alert(currentPhase()===3?"高維紀元中專精已完成，不再使用金幣升級。":"宇宙紀元中專精已完成，不再使用金幣升級。");
   if(upgradeActionBusy||!SPECIALIZATION_DEFS[key])return;
   ensureSpecializationState();
   const lv=formalLevel(key);if(lv>=SPECIALIZATION_MAX_LEVEL)return;
@@ -144,12 +182,12 @@
  };
  window.SPECIALIZATION_ATOMIC_UPGRADE_VERSION=1;
 
- function gmFormalSpecializationRange(target=state){return universePhase(target)?{min:SPECIALIZATION_MAX_LEVEL,max:SPECIALIZATION_MAX_LEVEL}:{min:0,max:SPECIALIZATION_MAX_LEVEL};}
+ function gmFormalSpecializationRange(target=state){return enteredSecondWorld(target)?{min:SPECIALIZATION_MAX_LEVEL,max:SPECIALIZATION_MAX_LEVEL}:{min:0,max:SPECIALIZATION_MAX_LEVEL};}
  function levelOptions(value,min=0,max=SPECIALIZATION_MAX_LEVEL){const lo=Math.max(0,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(min)||0))),hi=Math.max(lo,Math.min(SPECIALIZATION_MAX_LEVEL,Math.floor(Number(max)||SPECIALIZATION_MAX_LEVEL))),selected=Math.max(lo,Math.min(hi,clampSpecializationLevel(value)));return Array.from({length:hi-lo+1},(_,i)=>lo+i).map(i=>`<option value="${i}" ${i===selected?"selected":""}>Lv.${i}</option>`).join("");}
  function gmGrid(mode){const test=mode==="test",range=test?{min:0,max:SPECIALIZATION_MAX_LEVEL}:gmFormalSpecializationRange(state);return `<div class="gm-specialization-grid">${SPECIALIZATION_KEYS.map(key=>{const value=test?window.specializationLevel(key,true):formalLevel(key);return `<label><span>${SPECIALIZATION_DEFS[key].name}</span><select class="btn" id="gmSpec-${mode}-${key}" ${test?`onchange="gmSetTestSpecialization('${key}',this.value)"`:""}>${levelOptions(value,range.min,range.max)}</select></label>`;}).join("")}</div>`;}
  function gmTestEconomyLabel(){return "測試效果："+specializationWorldEconomySummary(state,true).text;}
  window.gmTestSpecializationEconomyLabel=gmTestEconomyLabel;
- window.gmSpecializationManagementHtml=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state),note=range.min===range.max?`目前宇宙紀元正式專精固定 Lv.${range.max}；進入宇宙紀元的條件已要求 8 項全滿，正式管理不允許降回 Lv.59 以下。`:`目前銀河紀元正式專精可管理 Lv.${range.min}～Lv.${range.max}。`;return `<div class="muted gm-hub-note">${note} 套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
+ window.gmSpecializationManagementHtml=function(){ensureSpecializationState();const range=gmFormalSpecializationRange(state),phase=currentPhase(),note=range.min===range.max?(phase===3?`目前高維紀元正式專精固定 Lv.${range.max}；正式管理不允許降回 Lv.59 以下。`:`目前宇宙紀元正式專精固定 Lv.${range.max}；進入宇宙紀元的條件已要求 8 項全滿，正式管理不允許降回 Lv.59 以下。`):`目前銀河紀元正式專精可管理 Lv.${range.min}～Lv.${range.max}。`;return `<div class="muted gm-hub-note">${note} 套用後會寫入正式存檔。</div>${gmGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplySpecializations()">套用專精等級</button></div>`;};
  window.gmApplySpecializations=function(){
   ensureSpecializationState();
   const snapshot=cloneState();if(!snapshot)return alert("無法建立專精管理前存檔快照。");
@@ -165,7 +203,8 @@
  window.GM_SPECIALIZATION_FORMAL_RANGE_VERSION=1;
  window.GM_SPECIALIZATION_TEST_RANGE_VERSION=1;
  window.GM_SPECIALIZATION_ATOMIC_MUTATION_VERSION=1;
- window.SPECIALIZATION_WORLD_INTEGRITY_VERSION=1;
+ window.SPECIALIZATION_WORLD_INTEGRITY_VERSION=2;
+ window.SPECIALIZATION_CURRENT_PHASE_SEMANTICS_VERSION=1;
 
  function installStyles(){
   if(document.getElementById("specializationStyles"))return;
