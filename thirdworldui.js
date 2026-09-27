@@ -1,15 +1,15 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const CORE_UI_VERSION=2;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
  const RUN_ENTRY_UI_VERSION=1;
  const THREE_COLUMN_HEADER_VERSION=1;
+ const COMBAT_PAGE_UI_VERSION=1;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
  let coreFeedbackOk=false;
  let pendingCoreConfirmation=null;
- let playerRunPromise=null;
 
  function n(value){const x=Number(value);return Number.isFinite(x)?x:0;}
  function whole(value){return Math.max(0,Math.floor(n(value)));}
@@ -30,6 +30,7 @@
  function maxCore(){return Math.max(0,whole(window.THIRD_WORLD_CORE_MAX_LEVEL||10));}
  function suppressionPerDeath(level){return typeof window.thirdWorldSuppressionPerDeathPoints==="function"?n(window.thirdWorldSuppressionPerDeathPoints(level)):null;}
  function runSnapshot(){return typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():{active:false,bossIndex:-1,deaths:0,battles:0,hpCap:null};}
+ function playerFlowContext(){return typeof window.getThirdWorldPlayerFlowContext==="function"?window.getThirdWorldPlayerFlowContext():null;}
  function clearCoreFeedback(){coreFeedback="";coreFeedbackOk=false;return true;}
  function clearCoreFeedbackOnFreshEntry(){if(typeof document==="undefined")return false;if(document.querySelector(".third-world-adventure-screen"))return false;return clearCoreFeedback();}
  function specializationPresentation(boss){return typeof window.thirdWorldBossSpecializationPresentation==="function"?(window.thirdWorldBossSpecializationPresentation(boss)||{label:"高維存在",effect:"個體特化"}):{label:"高維存在",effect:"個體特化"};}
@@ -103,14 +104,24 @@
  }
  function stopActiveRun(reason="manual"){
   const run=runSnapshot();if(run.active!==true)return false;
+  if(typeof window.stopThirdWorldPlayerFlow==="function")return window.stopThirdWorldPlayerFlow(reason);
   if(typeof window.stopThirdWorldContinuousRun!=="function")return false;
   window.stopThirdWorldContinuousRun(reason);return true;
  }
  function topBarHtml(withInventory=true){return `<div class="page-top third-world-page-top"><div class="third-world-page-top-cell left"><button class="btn back-btn" onclick="thirdWorldGoHomeFromPlayerUi()">← 返回主頁</button></div><div class="third-world-page-top-cell center"><h2 class="page-title">高維戰線</h2></div><div class="third-world-page-top-cell right">${withInventory?`<button class="btn" onclick="thirdWorldOpenInventoryFromPlayerUi()">背包</button>`:""}</div></div>`;}
  function unavailableHtml(message){return `<section class="map-screen third-world-adventure-screen">${topBarHtml(false)}<div class="notice"><b>${message}</b></div></section>`;}
+ function combatPageHtml(){
+  const ctx=playerFlowContext(),combat=ctx?.currentCombat;if(!ctx||!combat)return "";
+  const maxDeaths=Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)),deaths=Math.min(maxDeaths,whole(ctx.deaths)),round=Math.max(1,whole(ctx.battleNumber||1));
+  const playerBaseMax=Math.max(1,whole(combat.playerMaxHp)),playerCap=Math.max(1,Math.min(playerBaseMax,whole(combat.playerHealCap||playerBaseMax))),playerStart=Math.max(0,Math.min(playerCap,whole(combat.playerStartHp??playerCap))),playerPct=playerCap?Math.max(0,Math.min(100,playerStart/playerCap*100)):0,capPercent=playerBaseMax?playerCap/playerBaseMax*100:100;
+  const enemyMax=Math.max(1,whole(combat.enemyMaxHp||combat.e?.hp||1)),enemyStart=Math.max(0,Math.min(enemyMax,whole(combat.enemyStartHp??enemyMax))),enemyPct=enemyMax?Math.max(0,Math.min(100,enemyStart/enemyMax*100)):0;
+  const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1,speedText=[1,1.5,2].includes(speed)?speed:1,bossName=String(ctx.bossName||combat.e?.name||"高維存在");
+  return `<section class="combat-screen third-world-combat-screen"><div class="combat-head main-minimal-mode-head third-world-combat-head"><span class="main-minimal-mode-head-label third-world-combat-head-label"><span>高維連戰・第 ${round} 場</span><small>死亡 ${deaths} / ${maxDeaths}｜目前最大 HP ${pct(capPercent)}｜${speedText}×</small></span><button type="button" class="main-minimal-mode-enter" onclick="openThirdWorldMinimalMode()">極簡模式</button></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${whole(state?.level)}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(playerStart)} / ${fmt(playerCap)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${bossName}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${enemyPct}%"></span></div></div></div></div><div class="combat-message" id="combatMessage">高維連戰進行中</div><div class="continuous-stop-wrap"><button class="btn danger" onclick="stopThirdWorldRunFromPlayerUi()">停止連續戰鬥</button></div></section>`;
+ }
  function pageHtml(){
   clearCoreFeedbackOnFreshEntry();
   if(currentPhase()!==3)return unavailableHtml("目前尚未正式進入高維紀元。");
+  const combatHtml=combatPageHtml();if(combatHtml)return combatHtml;
   const count=expectedBossCount(),agg=aggregate();if(count<=0||!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==count)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
   const defs=bossDefs();if(defs.length!==count)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
   return `<section class="map-screen third-world-adventure-screen">${topBarHtml(true)}${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}${activeRunHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div>${corePanelHtml()}</section>`;
@@ -128,22 +139,19 @@
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
-  return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,coreConfirmationVersion:CORE_CONFIRMATION_VERSION,runEntryUiVersion:RUN_ENTRY_UI_VERSION,threeColumnHeaderVersion:THREE_COLUMN_HEADER_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,coreConfirmationVersion:CORE_CONFIRMATION_VERSION,runEntryUiVersion:RUN_ENTRY_UI_VERSION,threeColumnHeaderVersion:THREE_COLUMN_HEADER_VERSION,combatPageUiVersion:COMBAT_PAGE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.toggleThirdWorldCommonAbilities=function(){commonAbilitiesOpen=!commonAbilitiesOpen;if(typeof window.render==="function")window.render();};
  window.startThirdWorldRunFromPlayerUi=async function(value){
   const index=whole(value),current=runSnapshot();
   if(current.active===true)return current.bossIndex===index?true:false;
-  if(playerRunPromise)return false;
-  if(typeof window.startThirdWorldContinuousRun!=="function"||typeof window.runThirdWorldContinuousLoop!=="function"){alert("高維連戰模組尚未載入完整，請重新整理後再試。");return false;}
-  const started=window.startThirdWorldContinuousRun(index);
-  if(started?.ok!==true){alert(String(started?.reason||"目前無法開始高維連戰。"));return false;}
-  if(typeof window.render==="function")window.render();
-  playerRunPromise=window.runThirdWorldContinuousLoop(index,{onBattle:async()=>{if(typeof window.render==="function")window.render();}});
-  try{return await playerRunPromise;}
-  catch(error){console.error("[文明戰線] 高維玩家連戰失敗",error);alert("高維連戰發生錯誤，已停止本輪挑戰。");stopActiveRun("error");return false;}
-  finally{playerRunPromise=null;if(typeof window.render==="function")window.render();}
+  if(typeof window.startThirdWorldPlayerFlow!=="function"){alert("高維玩家戰鬥流程尚未載入完整，請重新整理後再試。");return false;}
+  try{
+   const result=await window.startThirdWorldPlayerFlow(index);
+   if(result?.ok===false){alert(String(result?.reason||"目前無法開始高維連戰。"));return false;}
+   return true;
+  }catch(error){console.error("[文明戰線] 高維玩家連戰失敗",error);alert("高維連戰發生錯誤，已停止本輪挑戰。");stopActiveRun("error");return false;}
  };
  window.stopThirdWorldRunFromPlayerUi=function(){const stopped=stopActiveRun("manual");if(typeof window.render==="function")window.render();return stopped;};
  window.thirdWorldGoHomeFromPlayerUi=function(){stopActiveRun("manual");if(typeof go==="function")go("home");return true;};
@@ -165,6 +173,7 @@
  window.injectThirdWorldCoreFromPlayerUi=function(){return window.openThirdWorldCoreInjectionConfirm();};
  window.clearThirdWorldCoreFeedback=clearCoreFeedback;
  window.thirdWorldAdventurePageHtml=pageHtml;
+ window.thirdWorldCombatPageHtml=combatPageHtml;
  window.validateThirdWorldPlayerUi=validate;
  window.THIRD_WORLD_PLAYER_UI_VERSION=VERSION;
  window.THIRD_WORLD_PLAYER_UI_BOSS_GRID_VERSION=1;
@@ -174,6 +183,7 @@
  window.THIRD_WORLD_PLAYER_UI_CORE_CONFIRMATION_VERSION=CORE_CONFIRMATION_VERSION;
  window.THIRD_WORLD_PLAYER_UI_RUN_ENTRY_VERSION=RUN_ENTRY_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_THREE_COLUMN_HEADER_VERSION=THREE_COLUMN_HEADER_VERSION;
+ window.THIRD_WORLD_PLAYER_UI_COMBAT_PAGE_VERSION=COMBAT_PAGE_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
 })();
