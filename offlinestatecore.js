@@ -1,6 +1,7 @@
 (function(){
  const VERSION=2;
  const OFFLINE_BATTLE_SAMPLE_VERSION=4;
+ const LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION=3;
  const OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=1;
  const OFFLINE_SAMPLES_PER_SPEED=8;
  const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
@@ -22,7 +23,7 @@
  function normalizeSample(row){
   if(!isObject(row))return null;
   const sourceVersion=sourceSampleVersion(row);
-  if(sourceVersion!==3&&sourceVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+  if(sourceVersion!==LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION&&sourceVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
   const combatSpeed=Number(row.combatSpeed);
   const actualMs=Math.round(Number(row.actualMs)),cycleMs=Math.round(Number(row.cycleMs)),adjustedMs=Math.round(Number(row.adjustedMs));
   const playerLevel=Math.max(1,finiteInteger(row.playerLevel,1)),recordedAt=Math.max(0,finiteInteger(row.recordedAt,0));
@@ -55,7 +56,7 @@
  function migratePendingSettlement(raw,target){
   if(!isObject(raw))return null;
   const sampleVersion=sourceSampleVersion(raw),world=finiteInteger(raw.world,0),phase=target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
-  if(sampleVersion!==3&&sampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
+  if(sampleVersion!==LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION&&sampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION)return null;
   if(world!==phase)return null;
   if(world===3){
    if(sampleVersion!==OFFLINE_BATTLE_SAMPLE_VERSION||raw.targetType!=="higher-dimensional")return null;
@@ -78,7 +79,7 @@
   }
   const source=target.offline;
   const storedSampleVersion=Math.max(0,finiteInteger(source.battleSampleVersion,0));
-  const migratable=storedSampleVersion===3||storedSampleVersion===OFFLINE_BATTLE_SAMPLE_VERSION;
+  const migratable=storedSampleVersion===LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION||storedSampleVersion===OFFLINE_BATTLE_SAMPLE_VERSION;
   if(!migratable){
    source.battleSamples=[];
    source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;source.pendingSettlement=null;
@@ -106,6 +107,7 @@
 
  window.OFFLINE_STATE_NORMALIZATION_VERSION=VERSION;
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
+ window.OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION=LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION;
  window.OFFLINE_STATE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
  window.OFFLINE_STATE_COMBAT_SPEEDS=Array.from(OFFLINE_COMBAT_SPEEDS);
