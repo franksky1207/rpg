@@ -122,6 +122,7 @@
  function validate(){
   const errors=[];
   if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==4)errors.push({code:"SAMPLE_VERSION",actual:window.OFFLINE_BATTLE_SAMPLE_VERSION});
+  if(Number(window.OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION)!==3||Number(window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION)!==1)errors.push({code:"V3_TO_V4_MIGRATION_OWNER",legacy:window.OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION,migration:window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION});
   if(typeof window.normalizeOfflineBattleSamples!=="function"||typeof window.convertOfflineSampleMsForSpeed!=="function")errors.push({code:"SHARED_OFFLINE_OWNER"});
   if(typeof baseResolve!=="function")errors.push({code:"BASE_TARGET_OWNER"});
   const sample={sampleVersion:4,world:3,targetType:TARGET_TYPE,combatSpeed:1,actualMs:1000,cycleMs:1140,adjustedMs:1140,playerLevel:1200,kind:TARGET_TYPE,multiplier:1,recordedAt:1};
