@@ -1,9 +1,10 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const PRESENTATION_ADAPTER_VERSION=1;
  const MINIMAL_MODE_ADAPTER_VERSION=1;
  const HP_CAP_PRESENTATION_VERSION=1;
  const PROGRESS_EVENT_PRESENTATION_VERSION=1;
+ const CATCH_UP_SYNC_VERSION=1;
  const ADAPTER_ID="third-world-mainline";
  const EVENT_MODAL_ID="thirdWorldProgressEventModal";
  let activeContext=null;
@@ -42,6 +43,8 @@
    hpCap:whole(source.hpCap),
    hpCapPercent:clamp(source.hpCapPercent,0,100),
    presenting:source.presenting===true,
+   catchingUp:source.catchingUp===true,
+   catchUpCompleted:whole(source.catchUpCompleted),
    currentCombat:source.currentCombat||null,
    stopReason:String(source.stopReason||"")
   });
@@ -58,6 +61,13 @@
   activeContext.currentCombat=combat;
   activeContext.stopReason=String(step?.terminalReason||"");
   return combat;
+ }
+ function refreshContextAfterSettledStep(step){
+  if(!activeContext)return;
+  const snapshot=step?.snapshot||{},cap=snapshot?.hpCap||{};
+  activeContext.deaths=whole(step?.deathsAfter??snapshot?.deaths??activeContext.deaths);
+  if(Number.isFinite(Number(cap.hpCap)))activeContext.hpCap=whole(cap.hpCap);
+  if(Number.isFinite(Number(cap.hpCapPercent)))activeContext.hpCapPercent=clamp(cap.hpCapPercent,0,100);
  }
  function presentationResult(combat){
   const cap=capFromCombat(combat),playerStart=Math.max(0,Math.min(cap.cap,whole(combat?.playerStartHp??cap.cap)));
@@ -141,13 +151,47 @@
   modal.classList.add("show");
   return new Promise(resolve=>{eventModalResolver=resolve;});
  }
+ function syncCatchUpNotice(){
+  if(typeof document==="undefined")return false;
+  const screen=document.querySelector(".third-world-combat-screen"),existing=document.getElementById("thirdWorldCatchUpStatus");
+  if(!activeContext?.catchingUp){existing?.remove();return false;}
+  if(!screen)return false;
+  const node=existing||document.createElement("div");
+  node.id="thirdWorldCatchUpStatus";
+  node.className="notice";
+  node.setAttribute("role","status");
+  const completed=whole(activeContext.catchUpCompleted);
+  node.innerHTML=`<b>正在快速補算背景進度</b><div class="muted" style="margin-top:4px">${completed>0?`已快速補算 ${fmt(completed)} 場；`:""}戰線資料會依共用 Fast Catch-up checkpoint 更新。</div>`;
+  if(!existing){const head=screen.querySelector(".third-world-combat-head");if(head?.after)head.after(node);else screen.prepend(node);}
+  return true;
+ }
+ function finishCatchUpUi(payload={}){
+  if(!activeContext)return;
+  const snapshot=payload?.snapshot||{},cap=snapshot?.hpCap||{};
+  activeContext.catchingUp=false;
+  activeContext.catchUpCompleted=0;
+  activeContext.deaths=whole(snapshot?.deaths??activeContext.deaths);
+  if(Number.isFinite(Number(cap.hpCap)))activeContext.hpCap=whole(cap.hpCap);
+  if(Number.isFinite(Number(cap.hpCapPercent)))activeContext.hpCapPercent=clamp(cap.hpCapPercent,0,100);
+  syncMinimal();
+  if(typeof render==="function")render();
+  syncCatchUpNotice();
+ }
  async function presentStep(step,meta={}){
   if(step?.ok!==true||!activeContext)return;
   const combat=refreshContextFromStep(step);if(!combat)return;
   if(meta?.fastCatchUp===true){
+   activeContext.catchingUp=true;
+   activeContext.catchUpCompleted=Math.max(whole(activeContext.catchUpCompleted)+1,whole(meta?.catchUpPolicy?.completed));
+   refreshContextAfterSettledStep(step);
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-fast-catch-up-skip");
+   if(meta?.catchUpPolicy?.shouldRefreshUi===true&&typeof render==="function")render();
    syncMinimal();
+   syncCatchUpNotice();
   }else{
+   activeContext.catchingUp=false;
+   activeContext.catchUpCompleted=0;
+   syncCatchUpNotice();
    if(typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")throw new Error("共用戰鬥呈現 owner 尚未載入。");
    if(typeof render==="function")render();
    window.prepareCombatPresentation(presentationResult(combat),{logs:true});
@@ -182,14 +226,15 @@
   if(started?.ok!==true)return started;
   const boss=bossDefinition(index),snapshot=started.snapshot||runSnapshot(),cap=snapshot?.hpCap||{};
   retainedContext=null;
-  activeContext={active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,stopReason:""};
+  activeContext={active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,catchingUp:false,catchUpCompleted:0,stopReason:""};
   if(typeof render==="function")render();
-  flowPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async()=>{syncMinimal();if(typeof render==="function")render();}});
+  flowPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});
   try{return await flowPromise;}
   finally{
    updateContextFromFinalSnapshot();
-   if(activeContext){activeContext.active=false;retainedContext={...activeContext};}
+   if(activeContext){activeContext.active=false;activeContext.catchingUp=false;activeContext.catchUpCompleted=0;retainedContext={...activeContext};}
    activeContext=null;
+   document.getElementById("thirdWorldCatchUpStatus")?.remove();
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-player-flow-end");
    finishMinimalMode();
    flowPromise=null;
@@ -239,9 +284,11 @@
   if(typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function"||Number(window.COMBAT_STRUCTURED_PRESENTATION_VERSION)<2)errors.push("SHARED_COMBAT_PRESENTATION_OWNER_MISSING");
   if(typeof window.registerMinimalModeAdapter!=="function"||typeof window.openMinimalMode!=="function"||Number(window.MINIMAL_MODE_SHARED_API_VERSION)!==1)errors.push("SHARED_MINIMAL_MODE_OWNER_MISSING");
   if(typeof window.thirdWorldBoss!=="function"||typeof window.thirdWorldTitleDefinition!=="function"||!Array.isArray(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS))errors.push("THIRD_WORLD_EVENT_PRESENTATION_OWNER_MISSING");
+  if(typeof window.thirdWorldRunBackgroundPolicySnapshot!=="function"||Number(window.THIRD_WORLD_RUN_BACKGROUND_GM_GATE_VERSION)!==1||Number(window.THIRD_WORLD_RUN_FOREGROUND_WAIT_VERSION)!==1)errors.push("THIRD_WORLD_BACKGROUND_POLICY_OWNER_MISSING");
+  if(Number(window.GM_BACKGROUND_BATTLE_THIRD_WORLD_GATE_VERSION)!==1)errors.push("GM_BACKGROUND_THIRD_WORLD_GATE_MISSING");
   if(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)!==100)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
-  return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  registerAdapter();
@@ -255,6 +302,7 @@
  window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION=MINIMAL_MODE_ADAPTER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_HP_CAP_PRESENTATION_VERSION=HP_CAP_PRESENTATION_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_PROGRESS_EVENT_PRESENTATION_VERSION=PROGRESS_EVENT_PRESENTATION_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_CATCH_UP_SYNC_VERSION=CATCH_UP_SYNC_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_ADAPTER_ID=ADAPTER_ID;
  window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY.passed)console.error("[文明戰線] Third-world player flow integrity error",window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY.errors);
