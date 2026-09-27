@@ -1,6 +1,7 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
+ const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
   if(typeof window.currentWorldPhase==="function"){
@@ -42,6 +43,18 @@
   };
  }
  if(baseCharacterWorldSnapshot)window.characterWorldSnapshot=characterSnapshot;
+ function thirdWorldAdventureFallback(){
+  if(typeof window.wrapFunctionPage==="function")return window.wrapFunctionPage(`<div class="card"><h2>高維戰線</h2><div class="notice"><b>高維正式玩家介面尚未載入。</b><div class="muted" style="margin-top:6px">高維紀元已由共用玩家 UI 正確接管；十王正式玩家 UI 將由第三紀元介面 owner 提供。</div></div></div>`);
+  return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維正式玩家介面尚未載入。</b></div></section>`;
+ }
+ function phaseAwareAdventurePage(){
+  if(phase()===3){
+   if(typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
+   return typeof window.thirdWorldAdventurePageHtml==="function"?window.thirdWorldAdventurePageHtml():thirdWorldAdventureFallback();
+  }
+  return baseAdventurePage?baseAdventurePage():`<section class="map-screen"><div class="notice"><b>冒險介面尚未載入。</b></div></section>`;
+ }
+ if(baseAdventurePage)window.adventurePage=phaseAwareAdventurePage;
  function applyHomeSemantics(){
   if(typeof document==="undefined")return;
   const home=document.querySelector(".home-screen");
@@ -54,7 +67,10 @@
   home.querySelectorAll(".menu-card").forEach(card=>{
    const title=card.querySelector("b")?.textContent?.trim();
    const desc=card.querySelector("span");
-   if(title==="副本"&&desc)desc.textContent=current===3?"競技場、虛空幻境與鏡像戰保留；懸賞戰已關閉":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
+   if(!desc)return;
+   if(title==="冒險")desc.textContent=current===3?"進入高維戰線，攻略十名高維存在":current===2?"進入宇宙主線並挑戰 Boss":"選擇地圖並挑戰怪物";
+   if(title==="副本")desc.textContent=current===3?"競技場、虛空幻境與鏡像戰保留；懸賞戰已關閉":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
+   if(title==="文明災厄")desc.textContent=current===3?"回顧舊紀元文明災厄":current===2?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記";
   });
  }
  function applyCharacterSemantics(){
@@ -102,6 +118,7 @@
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
  window.PLAYER_SEMANTICS_UI_VERSION=VERSION;
  window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=1;
+ window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=1;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=1;
