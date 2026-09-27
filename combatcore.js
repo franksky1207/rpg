@@ -1,7 +1,9 @@
 (function(){
  const STANDARD_ABILITY_RULES=Object.freeze({comboScale:.50,penetrationDefMultiplier:.75,counterScale:.40,drainRatio:.10});
+ const ACTION_SAFETY_RULES=Object.freeze({maxActionsPerRun:1000000,maxActionsPerChain:1024});
  function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
  function clampRate(value){return Math.max(0,Math.min(100,numberOr(value,0)));}
+ function positiveWhole(value,fallback){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>0?n:fallback;}
  function specBonus(key,useTest=false){
   if(typeof window.specializationPercentBonus==="function")return Math.max(0,Number(window.specializationPercentBonus(key,useTest))||0);
   if(typeof window.specializationLevel==="function")return Math.max(0,Number(window.specializationLevel(key,useTest))||0);
@@ -25,6 +27,8 @@
  }
  window.COMBAT_STANDARD_ABILITY_RULES=STANDARD_ABILITY_RULES;
  window.COMBAT_STANDARD_ABILITY_RULES_VERSION=1;
+ window.COMBAT_ACTION_SAFETY_RULES=ACTION_SAFETY_RULES;
+ window.COMBAT_ACTION_SAFETY_VERSION=1;
  window.normalizeCombatAbilityProfile=normalizeAbilityProfile;
  window.normalizeCombatEffectProfile=normalizeEffectProfile;
  window.COMBAT_ACTOR_ABILITY_PROFILE_VERSION=1;
@@ -42,6 +46,8 @@
   const useTest=options.useTestSpecializations===true;
   const useTestMarks=options.useTestMarks===true||useTest;
   const maxTurns=Math.max(0,Math.floor(numberOr(options.maxTurns,0)));
+  const maxActions=Math.min(ACTION_SAFETY_RULES.maxActionsPerRun,positiveWhole(options.maxActions,ACTION_SAFETY_RULES.maxActionsPerRun));
+  const maxActionsPerChain=Math.min(ACTION_SAFETY_RULES.maxActionsPerChain,positiveWhole(options.maxActionsPerChain,ACTION_SAFETY_RULES.maxActionsPerChain));
   const skipPlayerAction=options.skipPlayerAction===true;
   const skipEnemyAction=options.skipEnemyAction===true;
   const lockPlayerFullHp=options.lockPlayerFullHp===true;
@@ -61,7 +67,7 @@
   const enemyStartHp=options.enemyStartHp==null?enemyMaxHp:Math.max(1,Math.min(enemyMaxHp,numberOr(options.enemyStartHp,enemyMaxHp)));
   const enemyHealCap=Math.max(1,Math.min(enemyMaxHp,numberOr(options.enemyHealCap,enemyMaxHp)));
   let ehp=Math.min(enemyStartHp,enemyHealCap);
-  let turns=0,berserkShown=false;
+  let turns=0,berserkShown=false,actionCount=0,actionBudgetReached=false,chainBudgetReached=false;
   const runtime={
    player:{shield:0,indomitableActivated:false,indomitableUsed:false,battleSpiritActivated:false,battleSpiritLayer:0,revengeReady:false,initiativeUsed:false},
    enemy:{shield:0,indomitableActivated:false,indomitableUsed:false,battleSpiritActivated:false,battleSpiritLayer:0,revengeReady:false,initiativeUsed:false}
@@ -77,6 +83,7 @@
   function effectsOf(side){return side==="player"?playerEffects:enemyEffects;}
   function other(side){return side==="player"?"enemy":"player";}
   function markEvent(owner,mark,action,data={}){events.push({type:"mark",owner,mark,action,...data});}
+  function safetyEvent(scope,actor,data={}){events.push({type:"combatSafety",scope,actor,actionCount,maxActions,maxActionsPerChain,...data});}
   function activateOpeningEffects(side){
    const rt=runtime[side],effects=effectsOf(side),maxHp=maxHpOf(side);
    const ward=effects.ward||{};
@@ -137,20 +144,24 @@
    return {hit:true,actualDamage,killed:hpOf(defender)<=0||hpOf(actor)<=0,crit};
   }
   function attackChain(actor,initialSource="normal",allowCounter=true){
-   const defender=other(actor),aRt=runtime[actor],ability=abilityOf(actor);let source=initialSource,first=true,hadEffectiveDamage=false;
+   const defender=other(actor),aRt=runtime[actor],ability=abilityOf(actor);let source=initialSource,first=true,hadEffectiveDamage=false,chainActions=0;
    while(hpOf(actor)>0&&hpOf(defender)>0){
+    if(actionCount>=maxActions){actionBudgetReached=true;safetyEvent("run",actor,{source});break;}
+    if(chainActions>=maxActionsPerChain){chainBudgetReached=true;safetyEvent("chain",actor,{source,chainActions});break;}
+    actionCount++;chainActions++;
     const initiativeApplied=initialSource==="normal"&&first&&!aRt.initiativeUsed;if(initiativeApplied)aRt.initiativeUsed=true;
     const hit=strike(actor,source,initiativeApplied);if(hit.actualDamage>0)hadEffectiveDamage=true;first=false;if(hpOf(actor)<=0||hpOf(defender)<=0)break;if(!rollRate(ability.comboRate))break;events.push({type:"combo",actor,from:source});source="combo";
    }
-   if(allowCounter&&hadEffectiveDamage&&hpOf(actor)>0&&hpOf(defender)>0){const defenderAbility=abilityOf(defender);if(rollRate(defenderAbility.counterRate)){events.push({type:"counter",actor:defender,target:actor});attackChain(defender,"counter",false);}}
+   if(!actionBudgetReached&&allowCounter&&hadEffectiveDamage&&hpOf(actor)>0&&hpOf(defender)>0){const defenderAbility=abilityOf(defender);if(rollRate(defenderAbility.counterRate)){events.push({type:"counter",actor:defender,target:actor});attackChain(defender,"counter",false);}}
   }
   activateOpeningEffects("player");activateOpeningEffects("enemy");
   while(php>0&&ehp>0){
-   if(maxTurns>0&&turns>=maxTurns)break;turns++;beginRoundEffects("player");beginRoundEffects("enemy");
-   if(!skipPlayerAction)attackChain("player","normal",true);if(php<=0||ehp<=0)break;if(skipEnemyAction)continue;
+   if(actionBudgetReached)break;if(maxTurns>0&&turns>=maxTurns)break;turns++;beginRoundEffects("player");beginRoundEffects("enemy");
+   if(!skipPlayerAction)attackChain("player","normal",true);if(actionBudgetReached||php<=0||ehp<=0)break;if(skipEnemyAction)continue;
    attackChain("enemy","normal",true);
   }
   const result={win:ehp<=0,hp:Math.max(0,php),enemyHp:Math.max(0,ehp),enemyStartHp,enemyMaxHp,enemyHealCap,playerStartHp:lockPlayerFullHp?playerHealCap:Math.max(0,Math.min(initialHp,playerHealCap)),playerMaxHp,playerHealCap,turns,logs:logs||[],events,
+   actionCount,maxActions,maxActionsPerChain,actionBudgetReached,chainBudgetReached,
    markState:{useTest:useTestMarks,levels:{...markLevels},shield:Math.max(0,runtime.player.shield),indomitableActivated:runtime.player.indomitableActivated,indomitableUsed:runtime.player.indomitableUsed,battleSpiritActivated:runtime.player.battleSpiritActivated,battleSpiritLayer:runtime.player.battleSpiritLayer,revengeReady:runtime.player.revengeReady},
    actorState:{player:{...runtime.player},enemy:{...runtime.enemy}},playerAbilityProfile:playerAbility,enemyAbilityProfile:enemyAbility,e:enemy};
   if(options.preparePresentation!==false&&typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
