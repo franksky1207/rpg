@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const SNAPSHOT_VERSION=1;
  const RESULT_CONTRACT_VERSION=2;
  const SETTLEMENT_BASIS_VERSION=2;
@@ -12,7 +12,7 @@
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function targetState(options={}){return options?.state&&typeof options.state==="object"?options.state:currentState();}
  function resolveBossIndex(value){return typeof window.thirdWorldBossIndex==="function"?window.thirdWorldBossIndex(value):-1;}
- function maxMarkLevel(){return typeof window.markClampLevel==="function"?window.markClampLevel(Number.MAX_SAFE_INTEGER):0;}
+ function maxMarkLevel(){return typeof window.markMaxLevel==="function"?Math.max(0,finiteWhole(window.markMaxLevel(),0)):0;}
  function deepFreezeClone(value,seen=new WeakMap()){
   if(value==null||typeof value!=="object")return value;
   if(seen.has(value))return seen.get(value);
@@ -52,10 +52,11 @@
   if(reason==="invalid")return "找不到高維 Boss。";
   return "此高維 Boss 目前無法進行正式挑戰。";
  }
- function terminationReason(playerDied,bossDefeated,turnLimitReached){
+ function terminationReason(playerDied,bossDefeated,turnLimitReached,actionSafetyReached=false){
   if(playerDied&&bossDefeated)return "mutual-defeat";
   if(bossDefeated)return "boss-defeated";
   if(playerDied)return "player-defeated";
+  if(actionSafetyReached)return "action-safety";
   if(turnLimitReached)return "turn-limit";
   return "incomplete";
  }
@@ -186,6 +187,8 @@
    useTestMarks:options.useTestMarks===true,
    markLevels:options.markLevels||null,
    maxTurns:requestedMaxTurns,
+   maxActions:options.maxActions,
+   maxActionsPerChain:options.maxActionsPerChain,
    preparePresentation:presentationRequested,
    playerFinalDamageMultiplier:civilizationDamageMultiplier,
    playerHealCap,
@@ -200,8 +203,9 @@
   const bossDefeated=combatEndHp<=0;
   const combatCompleted=playerDied||bossDefeated;
   const turns=Math.max(0,finiteWhole(combat.turns,0));
-  const turnLimitReached=!combatCompleted&&requestedMaxTurns>0&&turns>=requestedMaxTurns;
-  const endReason=terminationReason(playerDied,bossDefeated,turnLimitReached);
+  const actionSafetyReached=combat.actionBudgetReached===true;
+  const turnLimitReached=!combatCompleted&&!actionSafetyReached&&requestedMaxTurns>0&&turns>=requestedMaxTurns;
+  const endReason=terminationReason(playerDied,bossDefeated,turnLimitReached,actionSafetyReached);
   const events=deepFreezeClone(Array.isArray(combat.events)?combat.events:[]);
   const logs=deepFreezeClone(Array.isArray(combat.logs)?combat.logs:[]);
   const formalRun=options.ignoreUnlock!==true;
@@ -237,6 +241,7 @@
    presentationRequested,
    win:combat.win===true,
    combatCompleted:settlementBasis.combatCompleted,
+   actionSafetyReached,
    turnLimitReached,
    terminationReason:settlementBasis.terminationReason,
    settlementInputReady:settlementBasis.settlementInputReady,
@@ -291,7 +296,7 @@
   try{
    if(typeof window.runCombatCore!=="function")fail("COMBAT_CORE_MISSING");
    if(typeof window.thirdWorldBossStats!=="function"||typeof window.thirdWorldBossAbilities!=="function")fail("THIRD_WORLD_DATA_OWNER_MISSING");
-   if(typeof window.markEffectSnapshot!=="function"||typeof window.markClampLevel!=="function")fail("MARK_CORE_OWNER_MISSING");
+   if(typeof window.markEffectSnapshot!=="function"||typeof window.markMaxLevel!=="function"||Number(window.MARK_MAX_LEVEL_OWNER_VERSION)!==1)fail("MARK_CORE_OWNER_MISSING");
    const max=Math.max(1,finiteWhole(window.THIRD_WORLD_BOSS_MAX_HP,1));
    const stage6=createThirdWorldBossCombatSnapshot(0,{ignoreUnlock:true,formalStartHp:Math.floor(max*.4)});
    if(!stage6||stage6.stage!==6||stage6.enemyEffectProfile?.revenge?.active!==true||!markProfileMatchesOwner(stage6.enemyEffectProfile,"revenge"))fail("REVENGE_MARK_OWNER",stage6?.enemyEffectProfile?.revenge||null);
@@ -309,7 +314,7 @@
    const incomplete=createSettlementBasis({formalStartHp:1000,combatEndHp:900,terminationReason:"turn-limit",combatCompleted:false});
    if(incomplete.effectivePermanentDamage!==100||incomplete.combatCompleted!==false||incomplete.settlementInputReady!==false||incomplete.formalSettlementEligible!==false||incomplete.terminationReason!=="turn-limit")fail("INCOMPLETE_BASIS_CONTRACT",incomplete);
   }catch(error){fail("EXCEPTION",String(error?.message||error));}
-  return Object.freeze({version:4,passed:errors.length===0,errors:Object.freeze(errors.slice())});
+  return Object.freeze({version:5,passed:errors.length===0,errors:Object.freeze(errors.slice())});
  }
 
  window.THIRD_WORLD_COMBAT_VERSION=VERSION;
@@ -322,6 +327,7 @@
  window.THIRD_WORLD_COMBAT_NO_SETTLEMENT_VERSION=1;
  window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION=1;
  window.THIRD_WORLD_MARK_EFFECT_SOURCE_VERSION=1;
+ window.THIRD_WORLD_MARK_MAX_LEVEL_SOURCE_VERSION=1;
  window.THIRD_WORLD_SETTLEMENT_AUTHORITY=SETTLEMENT_AUTHORITY;
  window.thirdWorldCombatAbilityProfileFromStats=abilityProfileFromStats;
  window.thirdWorldCombatEffectProfileFromAbilities=effectProfileFromAbilities;
