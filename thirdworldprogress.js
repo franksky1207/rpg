@@ -1,9 +1,11 @@
 (function(){
- const VERSION=2;
- const SETTLEMENT_VERSION=2;
+ const VERSION=3;
+ const SETTLEMENT_VERSION=3;
  const REPLAY_GUARD_VERSION=1;
  const ECONOMY_VERSION=1;
+ const EQUIPMENT_VERSION=1;
  const settledBasisObjects=new WeakSet();
+ const preparedLootByBasis=new WeakMap();
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
@@ -57,7 +59,34 @@
    logs
   };
  }
- function settleThirdWorldCombatResult(result){
+ function preparedEquipmentDrops(basis,target,options={}){
+  if(preparedLootByBasis.has(basis))return preparedLootByBasis.get(basis);
+  if(typeof window.makeThirdWorldBossEquipmentDrops!=="function")return null;
+  const drops=window.makeThirdWorldBossEquipmentDrops(basis.bossIndex,{state:target,level:target?.level,rng:options.rng,vipLevel:options.vipLevel,weakTypesResolver:options.weakTypesResolver});
+  const rows=Array.isArray(drops)?drops.slice():[];
+  if(!rows.length)return null;
+  preparedLootByBasis.set(basis,rows);
+  return rows;
+ }
+ function applyEquipmentRewards(basis,target,options={}){
+  if(typeof addItem!=="function")return {ok:false,reason:"共用背包 addItem owner 尚未載入。"};
+  if(typeof window.equipmentSaleQuote!=="function"||typeof window.settleEquipmentSale!=="function")return {ok:false,reason:"共用裝備出售 owner 尚未載入。"};
+  const drops=preparedEquipmentDrops(basis,target,options);
+  if(!Array.isArray(drops)||!drops.length)return {ok:false,reason:"高維正式裝備掉落建立失敗。"};
+  const equipmentRewards=[];
+  for(const drop of drops){
+   const item=drop?.item;
+   if(!item||Number(item.world)!==3)return {ok:false,reason:"高維裝備掉落資料無效。"};
+   if(finiteWhole(item.level,0)!==finiteWhole(target.level,0))return {ok:false,reason:"高維裝備等級未跟隨玩家目前等級。"};
+   if(![4,5].includes(finiteWhole(item.q,-1)))return {ok:false,reason:"高維裝備品質超出傳說／神話池。"};
+   const itemResult=addItem(item,{state:target,useTestSpecializations:false});
+   const sold=Math.max(0,Number(itemResult?.sold)||0),saleAmount=Math.max(0,Number(itemResult?.sale?.quote?.amount)||0);
+   if(sold!==0||saleAmount!==0)return {ok:false,reason:"高維裝備出售不得產生任何資源。"};
+   equipmentRewards.push({item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,vip16Extra:drop.vip16Extra===true,baseQuality:drop.baseQuality,qualityResult:drop.qualityResult||null,forcedType:drop.forcedType||null});
+  }
+  return {ok:true,equipmentRewards,items:equipmentRewards.map(row=>row.item),dropCount:equipmentRewards.length};
+ }
+ function settleThirdWorldCombatResult(result,options={}){
   const basis=basisFromResult(result);
   if(!basis)return reject("basis-ineligible","戰鬥結果不是可正式落帳的高維 settlement basis。");
   if(settledBasisObjects.has(basis))return reject("duplicate-result","同一場高維戰鬥結果已經完成正式結算。");
@@ -66,14 +95,18 @@
   if(!precheck.ok)return precheck;
   if(typeof window.runSettlementTransaction!=="function")return reject("transaction-owner-missing","共用正式結算 transaction owner 尚未載入。");
   if(typeof window.gainEffectiveExpForState!=="function")return reject("exp-owner-missing","共用 EXP progression owner 尚未載入。");
+  if(typeof window.makeThirdWorldBossEquipmentDrops!=="function")return reject("equipment-owner-missing","高維裝備掉落 adapter 尚未載入。");
+  if(typeof addItem!=="function"||typeof window.settleEquipmentSale!=="function")return reject("inventory-owner-missing","共用背包／出售 owner 尚未載入。");
   const tx=window.runSettlementTransaction({
-   label:"third-world-permanent-economy",
+   label:"third-world-permanent-economy-equipment",
    mutate:liveState=>{
     const checked=validateBasisAgainstState(basis,liveState);
     if(!checked.ok)return checked;
     liveState.thirdWorld.bosses[checked.bossIndex].currentHp=checked.combatEndHp;
     const economy=applyEconomyRewards(liveState,checked.effectivePermanentDamage);
     if(!economy.ok)return economy;
+    const equipment=applyEquipmentRewards(basis,liveState,options);
+    if(!equipment.ok)return equipment;
     return {
      ok:true,
      bossIndex:checked.bossIndex,
@@ -84,18 +117,22 @@
      playerDied:basis.playerDied===true,
      bossDefeated:basis.bossDefeated===true,
      terminationReason:String(basis.terminationReason||""),
-     economy
+     economy,
+     equipment
     };
    }
   });
-  if(!tx.ok)return reject("transaction-failed","高維正式經濟結算失敗，已回復結算前狀態。",{transaction:tx});
+  if(!tx.ok)return reject("transaction-failed","高維正式結算失敗，已回復結算前狀態。",{transaction:tx});
   settledBasisObjects.add(basis);
-  const value=tx.value||{},economy=value.economy||{};
+  preparedLootByBasis.delete(basis);
+  const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{};
+  const equipmentRewards=Array.isArray(equipment.equipmentRewards)?equipment.equipmentRewards.map(row=>freeze({...row})):[];
+  const items=Array.isArray(equipment.items)?equipment.items.slice():[];
   return freeze({
    ok:true,
    world:3,
    settlementVersion:SETTLEMENT_VERSION,
-   phase:"permanent-hp-exp-strings",
+   phase:"permanent-hp-exp-strings-equipment",
    bossIndex:value.bossIndex,
    bossId:value.bossId,
    formalStartHp:value.formalStartHp,
@@ -117,9 +154,11 @@
    atLevelCapBefore:economy.atLevelCapBefore===true,
    atLevelCapAfter:economy.atLevelCapAfter===true,
    logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),
-   items:freeze([]),
+   items:freeze(items),
+   equipmentRewards:freeze(equipmentRewards),
+   equipmentDropCount:Math.max(0,finiteWhole(equipment.dropCount,items.length)),
    rewardsPending:false,
-   equipmentPending:true,
+   equipmentPending:false,
    progressionPending:true,
    saved:true
   });
@@ -137,6 +176,7 @@
   if(stale.ok||stale.code!=="stale-settlement")errors.push({code:"STALE_GUARD",stale});
   if(typeof window.runSettlementTransaction!=="function")errors.push({code:"TRANSACTION_OWNER"});
   if(typeof window.gainEffectiveExpForState!=="function")errors.push({code:"EXP_OWNER"});
+  if(typeof window.makeThirdWorldBossEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_EQUIPMENT_OWNER"});
   const economyProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:7}};
   const economy=applyEconomyRewards(economyProbe,10000000);
   if(!economy.ok||economy.xp!==10000000||economy.dimensionalStrings!==10000000||economyProbe.level!==1001||economyProbe.exp!==0||economyProbe.thirdWorld.dimensionalStrings!==10000007)errors.push({code:"ECONOMY_MATCH_DAMAGE",economy,state:economyProbe});
@@ -153,6 +193,7 @@
  window.THIRD_WORLD_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
  window.THIRD_WORLD_SETTLEMENT_REPLAY_GUARD_VERSION=REPLAY_GUARD_VERSION;
  window.THIRD_WORLD_SETTLEMENT_ECONOMY_VERSION=ECONOMY_VERSION;
+ window.THIRD_WORLD_SETTLEMENT_EQUIPMENT_VERSION=EQUIPMENT_VERSION;
  window.settleThirdWorldCombatResult=settleThirdWorldCombatResult;
  window.THIRD_WORLD_PROGRESS_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PROGRESS_INTEGRITY.passed)console.error("[文明戰線] Third-world progress integrity error",window.THIRD_WORLD_PROGRESS_INTEGRITY.errors);
