@@ -1,5 +1,5 @@
 (function(){
- const VERSION=20;
+ const VERSION=19;
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const warn=(code,message,data=null)=>warnings.push({code,message,data});
