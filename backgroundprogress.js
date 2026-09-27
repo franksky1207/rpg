@@ -17,6 +17,7 @@
  ]);
  const FAST_CATCH_UP_PRESENTATION_INTERVAL=100;
  const CONTINUOUS_RUN_INFRA_VERSION=1;
+ const STOP_REASON_SEMANTICS_VERSION=2;
  function nextPaintBoundary(){
   if(typeof window.requestAnimationFrame!=="function")return nativeSleep(0).then(()=>true);
   return new Promise(resolve=>{
@@ -222,18 +223,18 @@
 
  function continuousRunStopReasonMeta(reason=""){
   const value=String(reason||"");
-  const progression=new Set(["title-first-kill","mark-maxed","civilization-complete","boss-defeated","stage-crossed","five-point-front","progress-event"]);
+  const completion=new Set(["single-complete","completed","boss-defeated","civilization-complete"]);
+  const progression=new Set(["title-first-kill","mark-maxed","stage-crossed","five-point-front","progress-event"]);
   const limits=new Set(["death-limit","background-limit"]);
   const interruption=new Set(["manual","stopped","pagehide","reload","world-transition","active-runtime"]);
   const errors=new Set(["error","battle-error","battle-failed","combat-incomplete","settlement-failed","owner-missing","runtime-status-check-error"]);
-  const completion=new Set(["single-complete","completed","boss-defeated","civilization-complete"]);
   let category="other";
   if(errors.has(value)||value.endsWith("-error")||value.endsWith("-failed"))category="error";
   else if(interruption.has(value))category="interruption";
   else if(limits.has(value))category="limit";
-  else if(progression.has(value))category="progression";
   else if(completion.has(value))category="completion";
-  return Object.freeze({reason:value,category,terminal:value!=="",interrupted:category==="interruption",error:category==="error"});
+  else if(progression.has(value))category="progression";
+  return Object.freeze({version:STOP_REASON_SEMANTICS_VERSION,reason:value,category,terminal:value!=="",interrupted:category==="interruption",error:category==="error"});
  }
  function continuousRunBoundedHistory(rows,limit=20){
   const max=Math.max(1,Math.floor(Number(limit)||20));
@@ -301,6 +302,7 @@
   });
  }
  window.CONTINUOUS_RUN_INFRA_VERSION=CONTINUOUS_RUN_INFRA_VERSION;
+ window.CONTINUOUS_RUN_STOP_REASON_SEMANTICS_VERSION=STOP_REASON_SEMANTICS_VERSION;
  window.createContinuousRunInfrastructure=createContinuousRunInfrastructure;
  window.continuousRunStopReasonMeta=continuousRunStopReasonMeta;
  window.continuousRunBoundedHistory=continuousRunBoundedHistory;
@@ -310,9 +312,9 @@
   const api=createContinuousRunInfrastructure({flowKind:"probe",historyLimit:2,blockerName:"probe-run"});
   if(api.version!==CONTINUOUS_RUN_INFRA_VERSION||api.flowKind!=="probe"||typeof api.startBackground!=="function"||typeof api.stopBackground!=="function"||typeof api.fastCatchUp!=="function"||typeof api.previewCatchUp!=="function"||typeof api.consumeDelay!=="function"||typeof api.conflictStatus!=="function"||typeof api.onPageHide!=="function")errors.push({code:"API_SHAPE"});
   const bounded=api.boundedHistory([1,2,3]);if(bounded.length!==2||bounded[0]!==2||bounded[1]!==3)errors.push({code:"BOUNDED_HISTORY"});
-  const manual=api.stopReasonMeta("manual"),progress=api.stopReasonMeta("stage-crossed"),failed=api.stopReasonMeta("settlement-failed");
-  if(manual.category!=="interruption"||progress.category!=="progression"||failed.category!=="error")errors.push({code:"STOP_REASON_CLASSIFICATION",manual,progress,failed});
-  return Object.freeze({passed:errors.length===0,version:CONTINUOUS_RUN_INFRA_VERSION,errors:Object.freeze(errors)});
+  const manual=api.stopReasonMeta("manual"),progress=api.stopReasonMeta("stage-crossed"),failed=api.stopReasonMeta("settlement-failed"),boss=api.stopReasonMeta("boss-defeated"),civilization=api.stopReasonMeta("civilization-complete");
+  if(manual.category!=="interruption"||progress.category!=="progression"||failed.category!=="error"||boss.category!=="completion"||civilization.category!=="completion"||boss.version!==STOP_REASON_SEMANTICS_VERSION)errors.push({code:"STOP_REASON_CLASSIFICATION",manual,progress,failed,boss,civilization});
+  return Object.freeze({passed:errors.length===0,version:CONTINUOUS_RUN_INFRA_VERSION,stopReasonSemanticsVersion:STOP_REASON_SEMANTICS_VERSION,errors:Object.freeze(errors)});
  })();
 
  window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY=(function(){
