@@ -1,7 +1,7 @@
 (function(){
- const VERSION=3;
- const SUPPRESSION_VERSION=1;
- const RUNTIME_VERSION=3;
+ const VERSION=4;
+ const SUPPRESSION_VERSION=2;
+ const RUNTIME_VERSION=4;
  const EVENT_TERMINAL_VERSION=1;
  const LEGACY_EVENT_ACK_VERSION=1;
  const PAGEHIDE_RESET_VERSION=2;
@@ -10,8 +10,10 @@
  const ACTIVE_FLOW_GUARD_VERSION=1;
  const SHARED_PAGEHIDE_OWNER_VERSION=1;
  const RESULT_SUMMARY_VERSION=2;
- const INTEGRITY_VERSION=3;
+ const INTEGRITY_VERSION=4;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
+ const CORE_RUN_SNAPSHOT_VERSION=1;
+ const HP_LIFECYCLE_VERSION=1;
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
  const CORE_REDUCTION_PER_LEVEL=.04;
@@ -48,14 +50,14 @@
   const stats=window.playerCombatStats();
   return Math.max(1,finiteWhole(stats?.hp,1));
  }
- function hpCapSnapshot(deaths,target=currentState(),maxHpOverride=null){
-  const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevel(target),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round2(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
+ function hpCapSnapshot(deaths,target=currentState(),maxHpOverride=null,coreLevelOverride=null){
+  const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevelOverride==null?coreLevel(target):clamp(finiteWhole(coreLevelOverride,0),0,coreMaxLevel()),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round2(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
   return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,coreMaxLevel:coreMaxLevel(),perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round2(fraction*100)});
  }
  function boundedSummaries(rows){const infra=runInfra();return freeze(infra?infra.boundedHistory(rows,RECENT_HISTORY_LIMIT):(Array.isArray(rows)?rows:[]).slice(-RECENT_HISTORY_LIMIT));}
  function runtimeSnapshot(source=runtime){
-  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
-  const stopReason=String(source.stopReason||"");
+  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,coreLevelAtStart:null,perDeathSuppressionPointsAtStart:null,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
+  const stopReason=String(source.stopReason||""),levelAtStart=clamp(finiteWhole(source.coreLevelAtStart,coreLevel()),0,coreMaxLevel()),perDeathAtStart=suppressionPerDeathPoints(levelAtStart);
   return freeze({
    version:RUNTIME_VERSION,
    active:source.active===true,
@@ -65,11 +67,13 @@
    deaths:clamp(finiteWhole(source.deaths,0),0,MAX_DEATHS),
    battles:Math.max(0,finiteWhole(source.battles,0)),
    startedAt:Math.max(0,finiteWhole(source.startedAt,0)),
+   coreLevelAtStart:levelAtStart,
+   perDeathSuppressionPointsAtStart:perDeathAtStart,
    pauseReason:"",
    stopReason,
    stopMeta:runInfra()?.stopReasonMeta(stopReason)||null,
    pendingEvents:freeze((Array.isArray(source.pendingEvents)?source.pendingEvents:[]).slice()),
-   hpCap:hpCapSnapshot(source.deaths,currentState()),
+   hpCap:hpCapSnapshot(source.deaths,currentState(),null,levelAtStart),
    recentBattleLimit:RECENT_HISTORY_LIMIT,
    recentBattles:boundedSummaries(source.recentBattles),
    lastBattleSummary:source.lastBattleSummary||null
@@ -128,7 +132,8 @@
   if(!target||typeof window.thirdWorldChallengeStatus!=="function")return freeze({ok:false,reason:"無法取得高維正式狀態。",snapshot:runtimeSnapshot()});
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
-  runtime={active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
+  const levelAtStart=coreLevel(target);
+  runtime={active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
   runSerial+=1;startBackgroundFlow();
   return freeze({ok:true,started:true,snapshot:runtimeSnapshot()});
  }
@@ -200,7 +205,7 @@
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")return freeze({ok:false,reason:"高維戰鬥／結算 owner 尚未載入。",snapshot:clearRuntime("owner-missing")});
   const target=currentState(),status=typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus(runtime.bossIndex,target):null;
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:clearRuntime(status?.reason||"challenge-blocked")});
-  const cap=hpCapSnapshot(runtime.deaths,target);
+  const cap=hpCapSnapshot(runtime.deaths,target,null,runtime.coreLevelAtStart);
   const combat=window.runThirdWorldBossCombat(runtime.bossIndex,battleOptions(options,cap));
   if(combat?.ok!==true||combat?.formalSettlementEligible!==true)return freeze({ok:false,reason:String(combat?.reason||combat?.terminationReason||"combat-incomplete"),combat:combat||null,snapshot:clearRuntime("combat-incomplete")});
   const settlement=window.settleThirdWorldCombatResult(combat,{rng:options.rng,vipLevel:options.vipLevel,weakTypesResolver:options.weakTypesResolver});
@@ -262,24 +267,28 @@
  }
  function validate(){
   const errors=[];
-  const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000);
+  const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000),hOverride=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000,0),life=battleOptions({},freeze({hpCap:777}));
   if(maxCore!==10)errors.push({code:"CORE_MAX_OWNER",maxCore});
   if(p0!==.5||pMax!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,pMax,maxCore});
   if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,hMax});
   if(hMid.perDeathSuppressionPoints!==.3||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
+  if(hOverride.coreLevel!==0||hOverride.hpCapPercent!==50||hOverride.hpCap!==5000)errors.push({code:"RUN_START_CORE_OVERRIDE",hOverride});
+  if(life.startHp!==777||life.playerHealCap!==777)errors.push({code:"HP_LIFECYCLE_CAP",life});
   if(terminalReasonForStep("stage-crossed",true,true)!=="stage-crossed"||terminalReasonForStep("",true,true)!=="progress-event"||terminalReasonForStep("",false,true)!=="death-limit"||terminalReasonForStep("",false,false)!=="")errors.push({code:"TERMINAL_PRECEDENCE"});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
-  if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
+  if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","coreLevelAtStart","perDeathSuppressionPointsAtStart"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")errors.push({code:"FORMAL_OWNER_MISSING"});
   if(typeof window.backgroundProgressFastCatchUpActive!=="function"||typeof window.backgroundProgressCatchUpStep!=="function"||typeof window.backgroundProgressCatchUpFinalPolicy!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function"||typeof window.backgroundProgressUiYield!=="function"||window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY?.passed!==true)errors.push({code:"FAST_CATCH_UP_OWNER_MISSING"});
   if(typeof window.createContinuousRunInfrastructure!=="function"||Number(window.CONTINUOUS_RUN_INFRA_VERSION)!==SHARED_CONTINUOUS_INFRA_VERSION||window.CONTINUOUS_RUN_INFRA_INTEGRITY?.passed!==true||!runInfra())errors.push({code:"SHARED_CONTINUOUS_INFRA_MISSING"});
+  if(typeof window.thirdWorldCoreSnapshot!=="function"||typeof window.upgradeThirdWorldCore!=="function"||window.THIRD_WORLD_CORE_INTEGRITY?.passed!==true)errors.push({code:"CORE_PROGRESSION_OWNER_MISSING"});
   if(typeof window.backgroundProgressActiveKind!=="function"||typeof window.worldTransitionRuntimeStatus!=="function")errors.push({code:"ACTIVE_FLOW_GUARD_OWNER_MISSING"});
   if(typeof window.backgroundProgressOnPageHide!=="function"||pageHideSubscribed!==true)errors.push({code:"PAGEHIDE_OWNER_MISSING"});
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
   const bounded=boundedSummaries(Array.from({length:RECENT_HISTORY_LIMIT+5},(_,index)=>freeze({version:RESULT_SUMMARY_VERSION,battleNumber:index+1})));
   if(bounded.length!==RECENT_HISTORY_LIMIT||bounded[0]?.battleNumber!==6||bounded[bounded.length-1]?.battleNumber!==RECENT_HISTORY_LIMIT+5)errors.push({code:"BOUNDED_HISTORY",length:bounded.length,first:bounded[0]||null,last:bounded[bounded.length-1]||null});
-  const source=Function.prototype.toString.call(runOneBattle);
-  if(/pauseForProgressEvents/.test(source)||!/terminalReasonForStep/.test(source)||!/clearRuntime\(terminalReason\)/.test(source))errors.push({code:"PROGRESS_EVENT_TERMINAL_WIRING"});
+  const battleSource=Function.prototype.toString.call(runOneBattle),startSource=Function.prototype.toString.call(startRun);
+  if(/pauseForProgressEvents/.test(battleSource)||!/terminalReasonForStep/.test(battleSource)||!/clearRuntime\(terminalReason\)/.test(battleSource))errors.push({code:"PROGRESS_EVENT_TERMINAL_WIRING"});
+  if(!/runtime\.coreLevelAtStart/.test(battleSource)||!/coreLevelAtStart/.test(startSource)||!/perDeathSuppressionPointsAtStart/.test(startSource))errors.push({code:"CORE_RUN_SNAPSHOT_WIRING"});
   return freeze({version:INTEGRITY_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
@@ -303,6 +312,8 @@
  window.THIRD_WORLD_RUN_ACTIVE_FLOW_GUARD_VERSION=ACTIVE_FLOW_GUARD_VERSION;
  window.THIRD_WORLD_RUN_SHARED_PAGEHIDE_OWNER_VERSION=SHARED_PAGEHIDE_OWNER_VERSION;
  window.THIRD_WORLD_RUN_SHARED_CONTINUOUS_INFRA_VERSION=SHARED_CONTINUOUS_INFRA_VERSION;
+ window.THIRD_WORLD_RUN_CORE_SNAPSHOT_VERSION=CORE_RUN_SNAPSHOT_VERSION;
+ window.THIRD_WORLD_RUN_HP_LIFECYCLE_VERSION=HP_LIFECYCLE_VERSION;
  window.THIRD_WORLD_RUN_RESULT_SUMMARY_VERSION=RESULT_SUMMARY_VERSION;
  window.THIRD_WORLD_RUN_INTEGRITY_VERSION=INTEGRITY_VERSION;
  window.THIRD_WORLD_RUN_MAX_DEATHS=MAX_DEATHS;
