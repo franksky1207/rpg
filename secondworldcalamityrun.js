@@ -4,6 +4,8 @@
  const CONTINUOUS_VERSION=2;
  const TITLE_FIRST_KILL_VERSION=2;
  const GLOBAL_MUTEX_VERSION=1;
+ const SHARED_INFRA_STRICT_VERSION=1;
+ const MANUAL_STOP_TERMINAL_VERSION=1;
  const BLOCKER_NAME="second-world-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
@@ -15,18 +17,12 @@
   return sharedRunInfra;
  }
  function ownRuntimeBlockerStatus(){return activeRun?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
- function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:false,blockers:[]};}
+ function runtimeConflictStatus(){const infra=runInfra();return infra?infra.conflictStatus(BLOCKER_NAME):{blocked:true,blockers:["continuous-run-infrastructure-missing"],activeBackgroundKind:null};}
  function backgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
- function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();if(infra)return !!infra.startBackground();if(typeof window.backgroundProgressStart!=="function")return false;window.backgroundProgressStart("calamity",{mode:"continuous"});return true;}
- function stopBackground(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop("calamity");return false;}
- function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
- function catchUpPreviewPolicy(){
-  const infra=runInfra();if(infra)return infra.previewCatchUp();
-  if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
-  const snapshot=typeof window.backgroundProgressSnapshot==="function"?window.backgroundProgressSnapshot():null;
-  const next=Math.max(0,Math.floor(Number(snapshot?.catchUpPolicyCount)||0))+1;
-  return window.backgroundProgressCatchUpPolicy("calamity",next,false);
- }
+ function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();return infra?!!infra.startBackground():false;}
+ function stopBackground(){const infra=runInfra();return infra?infra.stopBackground():false;}
+ function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():false;}
+ function catchUpPreviewPolicy(){const infra=runInfra();return infra?infra.previewCatchUp():null;}
 
  function clone(value){try{return value==null?value:JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function def(value){return typeof window.getSecondWorldCalamityDefinition==="function"?window.getSecondWorldCalamityDefinition(value):null;}
@@ -130,7 +126,7 @@
   if(!activeRun)return null;
   if(typeof save==="function")save(false);
   stopBackground();
-  activeRun.active=false;activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
+  activeRun.active=false;activeRun.phase="ended";activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
   return runSnapshot();
  }
  function begin(value,mode="continuous"){
@@ -139,14 +135,15 @@
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runSnapshot()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runSnapshot()};
-  activeRun={active:true,mode:mode==="single"?"single":"continuous",calamityId:d.id,calamityName:d.name,battleCount:0,wins:0,losses:0,trueKills:0,stopRequested:false,reason:"",startedAt:Date.now(),endedAt:null,lastBattle:null};
+  activeRun={active:true,mode:mode==="single"?"single":"continuous",phase:"ready",calamityId:d.id,calamityName:d.name,battleCount:0,wins:0,losses:0,trueKills:0,stopRequested:false,reason:"",startedAt:Date.now(),endedAt:null,lastBattle:null};
   return {ok:true,run:runSnapshot()};
  }
  function fightNext(options={}){
   if(!activeRun?.active)return {ok:false,reason:"no-active-run",run:runSnapshot()};
-  if(activeRun.stopRequested)return {ok:true,ended:true,reason:"stopped",run:finish("stopped")};
+  if(activeRun.stopRequested&&activeRun.phase!=="fighting")return {ok:true,ended:true,reason:"stopped",run:finish("stopped")};
+  activeRun.phase="fighting";
   const result=battle(activeRun.calamityId,options);
-  if(!result.ok)return {ok:false,reason:result.reason,run:finish("error")};
+  if(!result.ok){activeRun.phase="between";return {ok:false,reason:result.reason,run:finish("error")};}
   activeRun.battleCount++;
   if(result.win)activeRun.wins++;else activeRun.losses++;
   if(result.settlement?.trueKill)activeRun.trueKills++;
@@ -155,6 +152,7 @@
    playerStartHp:result.playerStartHp,playerEndHp:result.playerEndHp,turns:result.turns,
    settlement:clone(result.settlement)
   };
+  activeRun.phase="between";
   if(activeRun.mode==="single"){
    const run=finish("single-complete");return {ok:true,ended:true,reason:"single-complete",result,run,battleNumber:activeRun.battleCount};
   }
@@ -197,6 +195,7 @@
  function stop(){
   if(!activeRun?.active)return {ok:false,reason:"no-active-run",run:runSnapshot()};
   activeRun.stopRequested=true;
+  if(activeRun.phase!=="fighting")return {ok:true,ended:true,run:finish("stopped")};
   return {ok:true,ended:false,run:runSnapshot()};
  }
  function stopForPageHide(){
@@ -204,15 +203,16 @@
   if(activeRun.mode==="continuous"&&backgroundEnabled())return;
   activeRun.stopRequested=true;
   activeRun.active=false;
+  activeRun.phase="ended";
   activeRun.reason="pagehide";
   activeRun.endedAt=Date.now();
   stopBackground();
  }
  function subscribeSharedLifecycle(){
   const infra=runInfra();
-  if(infra){infra.onPageHide(stopForPageHide);blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);return;}
-  window.addEventListener("pagehide",stopForPageHide);
-  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
+  if(!infra)return;
+  infra.onPageHide(stopForPageHide);
+  blockerRegistered=infra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);
  }
  setTimeout(subscribeSharedLifecycle,0);
 
@@ -222,6 +222,8 @@
  window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;
  window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;
  window.SECOND_WORLD_CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION;
+ window.SECOND_WORLD_CALAMITY_MANUAL_STOP_TERMINAL_VERSION=MANUAL_STOP_TERMINAL_VERSION;
  window.SECOND_WORLD_CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
  window.SECOND_WORLD_CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
