@@ -79,18 +79,8 @@
  function clearFirstWorldCalamityResidualHp(target){const entries=target?.calamities?.entries;if(!isObject(entries))return;Object.values(entries).forEach(entry=>{if(isObject(entry))entry.currentHp=null;});}
  function resetOfflineStateForWorldTransition(target){
   if(!isObject(target))return false;
-  if(!isObject(target.offline))target.offline={};
-  const t=Date.now();
-  target.offline.lastSettledAt=t;
-  target.offline.farmMap=null;
-  target.offline.farmEnemy=null;
-  target.offline.avgBattleMs=0;
-  target.offline.sampleCount=0;
-  target.offline.battleSamples=[];
-  target.offline.pendingSettlement=null;
-  target.offline.maxObservedWallClock=t;
-  target.offline.timeLockUntil=0;
-  return true;
+  if(typeof window.resetOfflineSaveState!=="function")throw new Error("Offline reset owner unavailable");
+  return !!window.resetOfflineSaveState(target,{currentTime:Date.now()});
  }
  function clearFirstWorldOfflineState(target){return resetOfflineStateForWorldTransition(target);}
  function resetPendingBlackMarketForWorldTransition(target){if(!isObject(target))return false;target.pendingBlackMarketEncounter=false;return true;}
@@ -183,6 +173,7 @@
  window.WORLD_PHASE_SAFE_TRANSITION_VERSION=3;
  window.WORLD_PHASE_TRANSITION_CALLBACK_CONTRACT_VERSION=1;
  window.WORLD_TRANSITION_CLEANUP_VERSION=1;
+ window.WORLD_TRANSITION_OFFLINE_RESET_DELEGATION_VERSION=1;
  window.WORLD_TRANSITION_RUNTIME_GUARD_VERSION=1;
  window.WORLD_TRANSITION_BLOCKER_REGISTRY_VERSION=1;
  window.WORLD_TRANSITION_ROLLBACK_REHYDRATION_VERSION=1;
