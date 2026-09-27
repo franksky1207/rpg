@@ -1,17 +1,30 @@
 (function(){
- const VERSION=3;
- const SETTLEMENT_VERSION=3;
+ const VERSION=4;
+ const SETTLEMENT_VERSION=4;
  const REPLAY_GUARD_VERSION=1;
  const ECONOMY_VERSION=1;
  const EQUIPMENT_VERSION=1;
+ const AGGREGATE_PROGRESSION_VERSION=1;
+ const TITLE_SETTLEMENT_VERSION=1;
+ const STORY_STAGE_SETTLEMENT_VERSION=1;
+ const BOSS_DEFEAT_SETTLEMENT_VERSION=1;
+ const STAGE_CROSSING_SETTLEMENT_VERSION=1;
+ const POST_SETTLEMENT_FIVE_POINT_VERSION=1;
+ const CONTINUATION_DECISION_VERSION=1;
  const settledBasisObjects=new WeakSet();
  const preparedLootByBasis=new WeakMap();
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function freeze(value){return Object.freeze(value);}
+ function freezeRows(rows){return freeze((Array.isArray(rows)?rows:[]).map(row=>row&&typeof row==="object"?freeze({...row}):row));}
  function reject(code,reason,data=null){return freeze({ok:false,world:3,code:String(code||"settlement-rejected"),reason:String(reason||"高維正式結算遭拒。"),data});}
  function basisFromResult(result){return typeof window.thirdWorldSettlementBasisFromResult==="function"?window.thirdWorldSettlementBasisFromResult(result,{requireEligible:true}):null;}
+ function titleTierForAggregate(aggregate){
+  if(!aggregate||typeof aggregate!=="object")return 0;
+  if(typeof window.thirdWorldTitleTierForRemainingHp==="function")return Math.max(0,Math.min(10,finiteWhole(window.thirdWorldTitleTierForRemainingHp(aggregate.currentHp),0)));
+  return 0;
+ }
  function validateBasisAgainstState(basis,target){
   if(!basis||typeof basis!=="object")return reject("basis-invalid","正式高維結算資料無效。");
   if(!target||typeof target!=="object"||target?.thirdWorld?.entered!==true)return reject("state-invalid","目前不是有效的高維紀元正式狀態。");
@@ -43,20 +56,9 @@
   const stringsBefore=Math.max(0,finiteWhole(target.thirdWorld.dimensionalStrings,0));
   target.thirdWorld.dimensionalStrings=stringsBefore+reward;
   return {
-   ok:true,
-   xp:reward,
-   dimensionalStrings:reward,
-   dimensionalStringsBefore:stringsBefore,
-   dimensionalStringsAfter:target.thirdWorld.dimensionalStrings,
-   levelBefore,
-   levelAfter:Math.max(1,finiteWhole(target.level,levelBefore)),
-   expBefore,
-   expAfter:Math.max(0,finiteWhole(target.exp,0)),
-   levelUps:Math.max(0,finiteWhole(levelUps,0)),
-   levelCap:cap,
-   atLevelCapBefore,
-   atLevelCapAfter:Math.max(1,finiteWhole(target.level,levelBefore))>=cap,
-   logs
+   ok:true,xp:reward,dimensionalStrings:reward,dimensionalStringsBefore:stringsBefore,dimensionalStringsAfter:target.thirdWorld.dimensionalStrings,
+   levelBefore,levelAfter:Math.max(1,finiteWhole(target.level,levelBefore)),expBefore,expAfter:Math.max(0,finiteWhole(target.exp,0)),
+   levelUps:Math.max(0,finiteWhole(levelUps,0)),levelCap:cap,atLevelCapBefore,atLevelCapAfter:Math.max(1,finiteWhole(target.level,levelBefore))>=cap,logs
   };
  }
  function preparedEquipmentDrops(basis,target,options={}){
@@ -86,6 +88,49 @@
   }
   return {ok:true,equipmentRewards,items:equipmentRewards.map(row=>row.item),dropCount:equipmentRewards.length};
  }
+ function abilityIdsAtStage(bossIndex,hp){
+  const profile=typeof window.thirdWorldBossAbilities==="function"?window.thirdWorldBossAbilities(bossIndex,hp):null;
+  return profile&&typeof profile==="object"?Object.entries(profile).filter(([,row])=>row?.active===true).map(([id])=>id):[];
+ }
+ function stageTransitionSnapshot(bossIndex,formalStartHp,combatEndHp,bossDefeatedNow=false){
+  const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(bossIndex):null;
+  if(!boss||typeof window.thirdWorldBossStage!=="function")return freeze({changed:false,from:0,to:0,crossedStages:freeze([]),newAbilityIds:freeze([]),beforeStats:null,afterStats:null});
+  const from=Math.max(0,finiteWhole(window.thirdWorldBossStage(formalStartHp,boss.maxHp),0)),to=Math.max(0,finiteWhole(window.thirdWorldBossStage(combatEndHp,boss.maxHp),0));
+  if(bossDefeatedNow||to<=from)return freeze({changed:false,from,to,crossedStages:freeze([]),newAbilityIds:freeze([]),beforeStats:window.thirdWorldBossStats?.(bossIndex,formalStartHp)||null,afterStats:window.thirdWorldBossStats?.(bossIndex,combatEndHp)||null});
+  const crossedStages=Array.from({length:to-from},(_,index)=>from+index+1),beforeIds=new Set(abilityIdsAtStage(bossIndex,formalStartHp)),afterIds=abilityIdsAtStage(bossIndex,combatEndHp),newAbilityIds=afterIds.filter(id=>!beforeIds.has(id));
+  return freeze({changed:true,from,to,crossedStages:freeze(crossedStages),newAbilityIds:freeze(newAbilityIds),beforeStats:window.thirdWorldBossStats?.(bossIndex,formalStartHp)||null,afterStats:window.thirdWorldBossStats?.(bossIndex,combatEndHp)||null});
+ }
+ function applyAggregateProgression(target,checked,aggregateBefore){
+  if(typeof window.thirdWorldBossAggregateSnapshot!=="function")return {ok:false,reason:"高維 aggregate owner 尚未載入。"};
+  if(typeof window.grantPlayerTitlesForThirdWorldTier!=="function")return {ok:false,reason:"高維稱號共用 owner 尚未載入。"};
+  const aggregateAfter=window.thirdWorldBossAggregateSnapshot(target),titleTierBefore=titleTierForAggregate(aggregateBefore),titleTierAfter=titleTierForAggregate(aggregateAfter);
+  const titleGrant=window.grantPlayerTitlesForThirdWorldTier(titleTierAfter,target,{previousTier:titleTierBefore});
+  if(!target.thirdWorld.story||typeof target.thirdWorld.story!=="object")target.thirdWorld.story={introSeen:false,unlockedStage:0,finalSeen:false};
+  const storyBefore=Math.max(0,Math.min(10,finiteWhole(target.thirdWorld.story.unlockedStage,0))),storyAfter=Math.max(storyBefore,titleTierAfter),storyChanged=storyAfter>storyBefore;
+  target.thirdWorld.story.unlockedStage=storyAfter;
+  const unlockedStoryStages=storyChanged?Array.from({length:storyAfter-storyBefore},(_,index)=>storyBefore+index+1):[];
+  const bossDefeatedNow=checked.formalStartHp>0&&checked.combatEndHp===0;
+  const stageTransition=stageTransitionSnapshot(checked.bossIndex,checked.formalStartHp,checked.combatEndHp,bossDefeatedNow);
+  const challengeAfter=bossDefeatedNow?window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null:window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
+  const fivePointBlocked=!bossDefeatedNow&&challengeAfter?.allowed===false&&challengeAfter?.reason==="five-point-front";
+  const titleChanged=titleGrant?.changed===true,progressEventPending=titleChanged||storyChanged;
+  let terminalReason="";
+  if(bossDefeatedNow)terminalReason="boss-defeated";
+  else if(stageTransition.changed)terminalReason="stage-crossed";
+  else if(fivePointBlocked)terminalReason="five-point-front";
+  const eventSequence=[];
+  if(progressEventPending)eventSequence.push(freeze({type:"aggregate-progress",titleChanged,storyChanged,titleTier:titleTierAfter,storyStage:storyAfter,titleId:titleGrant?.noticeTitle?.id||null,storyStages:freeze(unlockedStoryStages.slice())}));
+  if(bossDefeatedNow)eventSequence.push(freeze({type:"boss-defeated",bossIndex:checked.bossIndex,bossId:String(checked.boss.id||"")}));
+  else if(stageTransition.changed)eventSequence.push(freeze({type:"stage-crossed",bossIndex:checked.bossIndex,from:stageTransition.from,to:stageTransition.to,crossedStages:stageTransition.crossedStages,newAbilityIds:stageTransition.newAbilityIds}));
+  if(fivePointBlocked)eventSequence.push(freeze({type:"five-point-front",bossIndex:checked.bossIndex,gapHp:Number(challengeAfter?.gapHp)||0,gapPoints:Number(challengeAfter?.gapPoints)||0}));
+  const continuationAllowed=!progressEventPending&&!terminalReason;
+  const continuationReason=progressEventPending?"progress-event":terminalReason;
+  return {
+   ok:true,aggregateBefore,aggregateAfter,titleTierBefore,titleTierAfter,titleGrant,storyBefore,storyAfter,storyChanged,unlockedStoryStages,
+   bossDefeatedNow,stageTransition,challengeAfter,fivePointBlocked,completionReady:aggregateAfter.aliveCount===0,
+   progressEventPending,eventSequence,continuation:freeze({allowed:continuationAllowed,reason:continuationReason,terminalReason,requiresEventHandling:progressEventPending})
+  };
+ }
  function settleThirdWorldCombatResult(result,options={}){
   const basis=basisFromResult(result);
   if(!basis)return reject("basis-ineligible","戰鬥結果不是可正式落帳的高維 settlement basis。");
@@ -97,95 +142,82 @@
   if(typeof window.gainEffectiveExpForState!=="function")return reject("exp-owner-missing","共用 EXP progression owner 尚未載入。");
   if(typeof window.makeThirdWorldBossEquipmentDrops!=="function")return reject("equipment-owner-missing","高維裝備掉落 adapter 尚未載入。");
   if(typeof addItem!=="function"||typeof window.settleEquipmentSale!=="function")return reject("inventory-owner-missing","共用背包／出售 owner 尚未載入。");
+  if(typeof window.thirdWorldBossAggregateSnapshot!=="function"||typeof window.grantPlayerTitlesForThirdWorldTier!=="function")return reject("progression-owner-missing","高維 aggregate／稱號 owner 尚未載入。");
   const tx=window.runSettlementTransaction({
-   label:"third-world-permanent-economy-equipment",
+   label:"third-world-permanent-economy-equipment-progression",
    mutate:liveState=>{
     const checked=validateBasisAgainstState(basis,liveState);
     if(!checked.ok)return checked;
+    const aggregateBefore=window.thirdWorldBossAggregateSnapshot(liveState);
     liveState.thirdWorld.bosses[checked.bossIndex].currentHp=checked.combatEndHp;
     const economy=applyEconomyRewards(liveState,checked.effectivePermanentDamage);
     if(!economy.ok)return economy;
     const equipment=applyEquipmentRewards(basis,liveState,options);
     if(!equipment.ok)return equipment;
+    const progression=applyAggregateProgression(liveState,checked,aggregateBefore);
+    if(!progression.ok)return progression;
     return {
-     ok:true,
-     bossIndex:checked.bossIndex,
-     bossId:String(checked.boss.id||""),
-     formalStartHp:checked.formalStartHp,
-     combatEndHp:checked.combatEndHp,
-     effectivePermanentDamage:checked.effectivePermanentDamage,
-     playerDied:basis.playerDied===true,
-     bossDefeated:basis.bossDefeated===true,
-     terminationReason:String(basis.terminationReason||""),
-     economy,
-     equipment
+     ok:true,bossIndex:checked.bossIndex,bossId:String(checked.boss.id||""),formalStartHp:checked.formalStartHp,combatEndHp:checked.combatEndHp,
+     effectivePermanentDamage:checked.effectivePermanentDamage,playerDied:basis.playerDied===true,bossDefeated:basis.bossDefeated===true,
+     terminationReason:String(basis.terminationReason||""),economy,equipment,progression
     };
    }
   });
   if(!tx.ok)return reject("transaction-failed","高維正式結算失敗，已回復結算前狀態。",{transaction:tx});
   settledBasisObjects.add(basis);
   preparedLootByBasis.delete(basis);
-  const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{};
-  const equipmentRewards=Array.isArray(equipment.equipmentRewards)?equipment.equipmentRewards.map(row=>freeze({...row})):[];
-  const items=Array.isArray(equipment.items)?equipment.items.slice():[];
+  const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{},progression=value.progression||{};
+  const equipmentRewards=Array.isArray(equipment.equipmentRewards)?equipment.equipmentRewards.map(row=>freeze({...row})):[],items=Array.isArray(equipment.items)?equipment.items.slice():[];
+  const unlockedTitles=Array.isArray(progression.titleGrant?.unlockedTitles)?progression.titleGrant.unlockedTitles.map(row=>freeze({...row})):[];
   return freeze({
-   ok:true,
-   world:3,
-   settlementVersion:SETTLEMENT_VERSION,
-   phase:"permanent-hp-exp-strings-equipment",
-   bossIndex:value.bossIndex,
-   bossId:value.bossId,
-   formalStartHp:value.formalStartHp,
-   combatEndHp:value.combatEndHp,
-   effectivePermanentDamage:value.effectivePermanentDamage,
-   formalProgressChanged:Number(value.effectivePermanentDamage)>0,
-   playerDied:value.playerDied===true,
-   bossDefeated:value.bossDefeated===true,
-   terminationReason:value.terminationReason,
-   xp:Math.max(0,finiteWhole(economy.xp,0)),
-   dimensionalStrings:Math.max(0,finiteWhole(economy.dimensionalStrings,0)),
-   dimensionalStringsBefore:Math.max(0,finiteWhole(economy.dimensionalStringsBefore,0)),
-   dimensionalStringsAfter:Math.max(0,finiteWhole(economy.dimensionalStringsAfter,0)),
-   levelBefore:Math.max(1,finiteWhole(economy.levelBefore,1)),
-   levelAfter:Math.max(1,finiteWhole(economy.levelAfter,1)),
-   expBefore:Math.max(0,finiteWhole(economy.expBefore,0)),
-   expAfter:Math.max(0,finiteWhole(economy.expAfter,0)),
-   levelUps:Math.max(0,finiteWhole(economy.levelUps,0)),
-   atLevelCapBefore:economy.atLevelCapBefore===true,
-   atLevelCapAfter:economy.atLevelCapAfter===true,
-   logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),
-   items:freeze(items),
-   equipmentRewards:freeze(equipmentRewards),
-   equipmentDropCount:Math.max(0,finiteWhole(equipment.dropCount,items.length)),
-   rewardsPending:false,
-   equipmentPending:false,
-   progressionPending:true,
-   saved:true
+   ok:true,world:3,settlementVersion:SETTLEMENT_VERSION,phase:"permanent-hp-exp-strings-equipment-progression",bossIndex:value.bossIndex,bossId:value.bossId,
+   formalStartHp:value.formalStartHp,combatEndHp:value.combatEndHp,effectivePermanentDamage:value.effectivePermanentDamage,formalProgressChanged:Number(value.effectivePermanentDamage)>0,
+   playerDied:value.playerDied===true,bossDefeated:value.bossDefeated===true,bossDefeatedNow:progression.bossDefeatedNow===true,terminationReason:value.terminationReason,
+   xp:Math.max(0,finiteWhole(economy.xp,0)),dimensionalStrings:Math.max(0,finiteWhole(economy.dimensionalStrings,0)),
+   dimensionalStringsBefore:Math.max(0,finiteWhole(economy.dimensionalStringsBefore,0)),dimensionalStringsAfter:Math.max(0,finiteWhole(economy.dimensionalStringsAfter,0)),
+   levelBefore:Math.max(1,finiteWhole(economy.levelBefore,1)),levelAfter:Math.max(1,finiteWhole(economy.levelAfter,1)),expBefore:Math.max(0,finiteWhole(economy.expBefore,0)),expAfter:Math.max(0,finiteWhole(economy.expAfter,0)),
+   levelUps:Math.max(0,finiteWhole(economy.levelUps,0)),atLevelCapBefore:economy.atLevelCapBefore===true,atLevelCapAfter:economy.atLevelCapAfter===true,
+   logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),items:freeze(items),equipmentRewards:freeze(equipmentRewards),equipmentDropCount:Math.max(0,finiteWhole(equipment.dropCount,items.length)),
+   aggregateBefore:progression.aggregateBefore||null,aggregateAfter:progression.aggregateAfter||null,titleTierBefore:Math.max(0,finiteWhole(progression.titleTierBefore,0)),titleTierAfter:Math.max(0,finiteWhole(progression.titleTierAfter,0)),
+   unlockedTitles:freeze(unlockedTitles),titleNoticeId:progression.titleGrant?.noticeTitle?.id||null,storyStageBefore:Math.max(0,finiteWhole(progression.storyBefore,0)),storyStageAfter:Math.max(0,finiteWhole(progression.storyAfter,0)),
+   unlockedStoryStages:freeze(Array.isArray(progression.unlockedStoryStages)?progression.unlockedStoryStages.slice():[]),progressEventPending:progression.progressEventPending===true,
+   stageTransition:progression.stageTransition||null,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
+   eventSequence:freeze(Array.isArray(progression.eventSequence)?progression.eventSequence.slice():[]),continuation:progression.continuation||freeze({allowed:false,reason:"progression-missing",terminalReason:"",requiresEventHandling:false}),
+   rewardsPending:false,equipmentPending:false,progressionPending:false,saved:true
   });
  }
  function validate(){
   const errors=[];
-  const max=Math.max(1,finiteWhole(window.THIRD_WORLD_BOSS_MAX_HP,1));
-  const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(0):null;
-  const sample={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:0,bosses:Array.from({length:10},()=>({currentHp:max}))}};
+  const max=Math.max(1,finiteWhole(window.THIRD_WORLD_BOSS_MAX_HP,1)),boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(0):null;
+  const sample={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:0,story:{introSeen:false,unlockedStage:0,finalSeen:false},bosses:Array.from({length:10},()=>({currentHp:max}))},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
   const basis=freeze({authority:"third-world-settlement-basis",authorityVersion:1,version:2,world:3,bossIndex:0,bossId:String(boss?.id||""),formalStartHp:max,combatEndHp:max-100,effectivePermanentDamage:100,formalSettlementEligible:true});
   const valid=validateBasisAgainstState(basis,sample);
   if(!valid.ok||valid.effectivePermanentDamage!==100)errors.push({code:"VALID_BASIS",valid});
   sample.thirdWorld.bosses[0].currentHp=max-1;
   const stale=validateBasisAgainstState(basis,sample);
   if(stale.ok||stale.code!=="stale-settlement")errors.push({code:"STALE_GUARD",stale});
+  sample.thirdWorld.bosses[0].currentHp=max;
   if(typeof window.runSettlementTransaction!=="function")errors.push({code:"TRANSACTION_OWNER"});
   if(typeof window.gainEffectiveExpForState!=="function")errors.push({code:"EXP_OWNER"});
   if(typeof window.makeThirdWorldBossEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_EQUIPMENT_OWNER"});
-  const economyProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:7}};
-  const economy=applyEconomyRewards(economyProbe,10000000);
+  if(typeof window.grantPlayerTitlesForThirdWorldTier!=="function"||!Array.isArray(window.THIRD_WORLD_PLAYER_TITLE_DEFS)||window.THIRD_WORLD_PLAYER_TITLE_DEFS.length!==10)errors.push({code:"THIRD_WORLD_TITLE_OWNER"});
+  const economyProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:7}},economy=applyEconomyRewards(economyProbe,10000000);
   if(!economy.ok||economy.xp!==10000000||economy.dimensionalStrings!==10000000||economyProbe.level!==1001||economyProbe.exp!==0||economyProbe.thirdWorld.dimensionalStrings!==10000007)errors.push({code:"ECONOMY_MATCH_DAMAGE",economy,state:economyProbe});
-  const capProbe={level:2000,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:11}};
-  const capEconomy=applyEconomyRewards(capProbe,500);
+  const capProbe={level:2000,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:11}},capEconomy=applyEconomyRewards(capProbe,500);
   if(!capEconomy.ok||capEconomy.xp!==500||capEconomy.dimensionalStrings!==500||capProbe.level!==2000||capProbe.exp!==0||capProbe.thirdWorld.dimensionalStrings!==511||capEconomy.levelUps!==0)errors.push({code:"LEVEL_CAP_STRINGS_CONTINUE",capEconomy,state:capProbe});
-  const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}};
-  const zeroEconomy=applyEconomyRewards(zeroProbe,0);
+  const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}},zeroEconomy=applyEconomyRewards(zeroProbe,0);
   if(!zeroEconomy.ok||zeroEconomy.xp!==0||zeroEconomy.dimensionalStrings!==0||zeroProbe.exp!==123||zeroProbe.thirdWorld.dimensionalStrings!==9)errors.push({code:"ZERO_DAMAGE_ZERO_ECONOMY",zeroEconomy,state:zeroProbe});
+  const stageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),Math.floor(max*.69),false);
+  if(!stageProbe.changed||stageProbe.from!==0||stageProbe.to!==3||JSON.stringify(stageProbe.crossedStages)!==JSON.stringify([1,2,3])||!stageProbe.newAbilityIds.includes("composure"))errors.push({code:"MULTI_STAGE_CROSS",stageProbe});
+  const deathStageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),0,true);
+  if(deathStageProbe.changed)errors.push({code:"DEATH_SUPPRESSES_STAGE_EVENT",deathStageProbe});
+  const progressionProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:0,story:{introSeen:false,unlockedStage:0,finalSeen:false},bosses:Array.from({length:10},(_,index)=>({currentHp:index===0?0:max}))},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+  const aggregateBefore={currentHp:max*9+1},checked={bossIndex:0,boss:boss||{id:"higher-dimensional-boss-01",maxHp:max},formalStartHp:1,combatEndHp:0};
+  const progression=applyAggregateProgression(progressionProbe,checked,aggregateBefore);
+  if(!progression.ok||progression.titleTierBefore!==0||progression.titleTierAfter!==1||progression.storyAfter!==1||progression.titleGrant?.noticeTitle?.tier!==1||progression.bossDefeatedNow!==true||progression.continuation?.allowed!==false||progression.continuation?.reason!=="progress-event"||progression.continuation?.terminalReason!=="boss-defeated")errors.push({code:"AGGREGATE_EVENT_ORDER",progression});
+  const lastSurvivor={level:1000,secondWorld:{entered:true},thirdWorld:{entered:true,story:{introSeen:false,unlockedStage:0,finalSeen:false},bosses:Array.from({length:10},(_,index)=>({currentHp:index===0?Math.floor(max*.2):0}))}};
+  const lastStatus=window.thirdWorldChallengeStatus?.(0,lastSurvivor);
+  if(lastStatus?.allowed!==true||lastStatus?.reason!=="last-survivor")errors.push({code:"DEAD_BOSSES_EXIT_FIVE_POINT",lastStatus});
   return freeze({version:VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
 
@@ -194,6 +226,13 @@
  window.THIRD_WORLD_SETTLEMENT_REPLAY_GUARD_VERSION=REPLAY_GUARD_VERSION;
  window.THIRD_WORLD_SETTLEMENT_ECONOMY_VERSION=ECONOMY_VERSION;
  window.THIRD_WORLD_SETTLEMENT_EQUIPMENT_VERSION=EQUIPMENT_VERSION;
+ window.THIRD_WORLD_AGGREGATE_PROGRESSION_VERSION=AGGREGATE_PROGRESSION_VERSION;
+ window.THIRD_WORLD_TITLE_SETTLEMENT_VERSION=TITLE_SETTLEMENT_VERSION;
+ window.THIRD_WORLD_STORY_STAGE_SETTLEMENT_VERSION=STORY_STAGE_SETTLEMENT_VERSION;
+ window.THIRD_WORLD_BOSS_DEFEAT_SETTLEMENT_VERSION=BOSS_DEFEAT_SETTLEMENT_VERSION;
+ window.THIRD_WORLD_STAGE_CROSSING_SETTLEMENT_VERSION=STAGE_CROSSING_SETTLEMENT_VERSION;
+ window.THIRD_WORLD_POST_SETTLEMENT_FIVE_POINT_VERSION=POST_SETTLEMENT_FIVE_POINT_VERSION;
+ window.THIRD_WORLD_CONTINUATION_DECISION_VERSION=CONTINUATION_DECISION_VERSION;
  window.settleThirdWorldCombatResult=settleThirdWorldCombatResult;
  window.THIRD_WORLD_PROGRESS_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PROGRESS_INTEGRITY.passed)console.error("[文明戰線] Third-world progress integrity error",window.THIRD_WORLD_PROGRESS_INTEGRITY.errors);
