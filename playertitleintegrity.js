@@ -1,5 +1,6 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
+ const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
@@ -35,6 +36,16 @@
  }catch(error){fail("TITLE_NORMALIZE_PROBE","稱號 normalization probe 失敗",String(error?.message||error));}
 
  try{
+  const max=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1)),targetTier=4,total=Math.max(0,Math.floor(Number(higherDefs[targetTier-1]?.thresholdRemainingHp)||0));
+  let left=total;const bosses=Array.from({length:10},()=>{const currentHp=Math.max(0,Math.min(max,left));left-=currentHp;return {currentHp};});
+  const oldSave={marks:{entries:{}},secondWorld:{entered:true,calamities:[]},thirdWorld:{entered:true,bosses,story:{introSeen:false,unlockedStage:0,finalSeen:false}},dungeon:{mirror:{history:{bestWins:0}}},titles:{version:1,unlocked:["retired-title-id","unknown-title-id"],equipped:"retired-title-id",pendingNotice:"unknown-title-id"}};
+  window.normalizePlayerTitleState(oldSave);
+  const expectedHigher=higherDefs.slice(0,targetTier).map(def=>def.id),actualHigher=oldSave.titles.unlocked.filter(id=>expectedHigher.includes(id));
+  if(JSON.stringify(actualHigher)!==JSON.stringify(expectedHigher))fail("TITLE_THIRD_WORLD_BACKFILL_REGRESSION","舊存檔缺少高維稱號時，應依正式十王總 HP 靜默補齊至目前階級",{expectedHigher,actualHigher,titles:oldSave.titles,total});
+  if(oldSave.titles.unlocked.some(id=>id==="retired-title-id"||id==="unknown-title-id")||oldSave.titles.equipped!==null||oldSave.titles.pendingNotice!==null)fail("TITLE_UNKNOWN_ID_SANITIZE_REGRESSION","未知／退役稱號 id 應在 normalization 移除，且 backfill 不得建立通知",oldSave.titles);
+ }catch(error){fail("TITLE_THIRD_WORLD_BACKFILL_REGRESSION_PROBE","高維舊存檔 backfill regression 失敗",String(error?.message||error));}
+
+ try{
   const target={titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
   const grant=window.grantPlayerTitlesForThirdWorldTier(3,target,{previousTier:0});
   if(grant?.changed!==true||grant?.unlockedTitles?.length!==3||grant?.noticeTitle?.id!==higherDefs[2]?.id||target.titles.pendingNotice!==higherDefs[2]?.id)fail("TITLE_THIRD_WORLD_MULTI_UNLOCK","高維 0→3 應補齊1～3階並只通知最高階",{grant,titles:target.titles});
@@ -56,8 +67,9 @@
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽 probe 失敗",String(error?.message||error));}
 
- const report={version:VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_INTEGRITY_VERSION=VERSION;
+ window.PLAYER_TITLE_THIRD_WORLD_BACKFILL_REGRESSION_VERSION=THIRD_WORLD_BACKFILL_REGRESSION_VERSION;
  window.PLAYER_TITLE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Player title integrity error",errors);
 })();
