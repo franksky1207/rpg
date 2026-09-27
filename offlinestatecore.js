@@ -1,8 +1,10 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const OFFLINE_BATTLE_SAMPLE_VERSION=4;
  const LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION=3;
  const OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=1;
+ const OFFLINE_SAMPLE_OWNER_VERSION=1;
+ const OFFLINE_RESET_OWNER_VERSION=1;
  const OFFLINE_SAMPLES_PER_SPEED=8;
  const OFFLINE_COMBAT_SPEEDS=Object.freeze([1,1.5,2]);
  const REAL_BATTLE_MIN_MS=100;
@@ -69,6 +71,19 @@
  function freshOfflineState(now){
   return {battleSampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[],maxObservedWallClock:now,timeLockUntil:0,pendingSettlement:null};
  }
+ function restoreOfflineObject(target,snapshot){
+  if(!isObject(target)||!isObject(snapshot))return false;
+  Object.keys(target).forEach(key=>{if(!Object.prototype.hasOwnProperty.call(snapshot,key))delete target[key];});
+  Object.keys(snapshot).forEach(key=>{target[key]=snapshot[key];});
+  return true;
+ }
+ function resetOfflineSaveState(target,options={}){
+  if(!isObject(target))return null;
+  const now=Math.max(0,finiteInteger(options.currentTime,Date.now()));
+  const fresh=freshOfflineState(now);
+  if(isObject(target.offline))restoreOfflineObject(target.offline,fresh);else target.offline=fresh;
+  return target.offline;
+ }
  function normalizeOfflineSaveState(target,options={}){
   if(!isObject(target))return null;
   const sourceVersion=Math.max(1,finiteInteger(options.sourceVersion??target.saveVersion,1));
@@ -104,13 +119,47 @@
   if(!isObject(source.pendingSettlement))source.pendingSettlement=null;
   return source;
  }
+ function appendOfflineBattleSample(target,row,options={}){
+  if(!isObject(target))return Object.freeze({ok:false,reason:"target-invalid",persisted:false});
+  const now=Math.max(0,finiteInteger(options.currentTime,Date.now()));
+  const offline=normalizeOfflineSaveState(target,{sourceVersion:Number(target.saveVersion)||Number(window.SAVE_SCHEMA_VERSION)||1,currentTime:now});
+  const normalized=normalizeSample(row);
+  if(!offline||!normalized)return Object.freeze({ok:false,reason:"sample-invalid",persisted:false});
+  let before=null;
+  if(options.persist===true){try{before=JSON.parse(JSON.stringify(offline));}catch(_){return Object.freeze({ok:false,reason:"snapshot-failed",persisted:false});}}
+  offline.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
+  offline.battleSamples=retainSamples([...(Array.isArray(offline.battleSamples)?offline.battleSamples:[]),normalized]);
+  if(options.persist===true){
+   const saveFn=typeof options.saveFn==="function"?options.saveFn:(typeof save==="function"?save:null);
+   let saved=false;
+   try{saved=typeof saveFn==="function"&&saveFn(false)===true;}catch(_){saved=false;}
+   if(!saved){restoreOfflineObject(offline,before);return Object.freeze({ok:false,reason:"save-failed",persisted:false});}
+  }
+  return Object.freeze({ok:true,reason:"",persisted:options.persist===true,row:normalized,count:offline.battleSamples.length});
+ }
+ function runOfflineSampleOwnerIntegrity(){
+  const errors=[],probe={saveVersion:16,thirdWorld:{entered:true},offline:freshOfflineState(1000)};
+  for(let i=0;i<9;i++)appendOfflineBattleSample(probe,{sampleVersion:4,world:3,targetType:"higher-dimensional",combatSpeed:1,actualMs:1000,cycleMs:1140,adjustedMs:1140,playerLevel:1000,recordedAt:1000+i},{currentTime:2000});
+  appendOfflineBattleSample(probe,{sampleVersion:4,world:3,targetType:"higher-dimensional",combatSpeed:1.5,actualMs:800,cycleMs:940,adjustedMs:940,playerLevel:1000,recordedAt:2010},{currentTime:2000});
+  if(probe.offline.battleSamples.filter(row=>row.combatSpeed===1).length!==8)errors.push({code:"RETENTION_PER_SPEED"});
+  if(probe.offline.battleSamples.filter(row=>row.combatSpeed===1.5).length!==1)errors.push({code:"SPEED_POOL_ISOLATION"});
+  resetOfflineSaveState(probe,{currentTime:3000});
+  if(probe.offline.battleSampleVersion!==4||probe.offline.battleSamples.length!==0||probe.offline.pendingSettlement!==null||probe.offline.lastSettledAt!==3000)errors.push({code:"RESET_OWNER"});
+  return Object.freeze({version:1,passed:errors.length===0,errors:Object.freeze(errors)});
+ }
 
  window.OFFLINE_STATE_NORMALIZATION_VERSION=VERSION;
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION=LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION;
+ window.OFFLINE_SAMPLE_OWNER_VERSION=OFFLINE_SAMPLE_OWNER_VERSION;
+ window.OFFLINE_RESET_OWNER_VERSION=OFFLINE_RESET_OWNER_VERSION;
  window.OFFLINE_STATE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
  window.OFFLINE_STATE_COMBAT_SPEEDS=Array.from(OFFLINE_COMBAT_SPEEDS);
  window.normalizeOfflineSaveState=normalizeOfflineSaveState;
  window.normalizeOfflineBattleSamples=retainSamples;
+ window.appendOfflineBattleSample=appendOfflineBattleSample;
+ window.resetOfflineSaveState=resetOfflineSaveState;
+ window.OFFLINE_SAMPLE_OWNER_INTEGRITY=runOfflineSampleOwnerIntegrity();
+ if(!window.OFFLINE_SAMPLE_OWNER_INTEGRITY.passed)console.error("[文明戰線] Offline sample owner integrity error",window.OFFLINE_SAMPLE_OWNER_INTEGRITY.errors);
 })();
