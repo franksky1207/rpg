@@ -34,7 +34,7 @@
  }
  function setEnabled(next){
   if(!setDeviceBooleanPreference(STORAGE_PREFIX,next))return false;
-  if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");}
+  if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");window.backgroundProgressStop("third-world");}
   return true;
  }
  function setMainlineHpLockEnabled(next){return setDeviceBooleanPreference(MAINLINE_HP_LOCK_STORAGE_PREFIX,next);}
@@ -51,7 +51,7 @@
  }
  function managementHtml(){
   const on=enabled();
-  return `<div class="muted gm-hub-note">背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。銀河紀元與宇宙紀元主線共用此 gate。</div><div class="controls"><button class="btn blue" onclick="gmSetBackgroundBattle(true)" ${on?"disabled":""}>開啟背景戰鬥</button><button class="btn danger" onclick="gmSetBackgroundBattle(false)" ${on?"":"disabled"}>關閉背景戰鬥</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：背景戰鬥已${on?"開啟":"關閉"}</div>`;
+  return `<div class="muted gm-hub-note">背景戰鬥只允許從 GM 管理開啟；玩家介面沒有背景戰鬥開關。此設定只保存在目前裝置，依登入帳號分開記錄；不寫入遊戲存檔或雲端資料。銀河紀元、宇宙紀元與高維紀元正式連戰共用此 gate。</div><div class="controls"><button class="btn blue" onclick="gmSetBackgroundBattle(true)" ${on?"disabled":""}>開啟背景戰鬥</button><button class="btn danger" onclick="gmSetBackgroundBattle(false)" ${on?"":"disabled"}>關閉背景戰鬥</button></div><div class="gm-background-status ${on?"on":"off"}">目前狀態：背景戰鬥已${on?"開啟":"關閉"}</div>`;
  }
  function mainlineHpLockManagementHtml(){
   const on=mainlineHpLockEnabled();
@@ -84,6 +84,7 @@
  window.GM_DEVICE_BOOLEAN_PREFERENCE_VERSION=1;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
  window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION=1;
+ window.GM_BACKGROUND_BATTLE_THIRD_WORLD_GATE_VERSION=1;
  window.GM_MAINLINE_HP_LOCK_MANAGEMENT_VERSION=1;
  window.GM_MAINLINE_HP_LOCK_GATE_VERSION=1;
  installStyles();
