@@ -1,7 +1,8 @@
 (function(){
- const VERSION=1;
- const SETTLEMENT_VERSION=1;
+ const VERSION=2;
+ const SETTLEMENT_VERSION=2;
  const REPLAY_GUARD_VERSION=1;
+ const ECONOMY_VERSION=1;
  const settledBasisObjects=new WeakSet();
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
@@ -27,6 +28,35 @@
   if(effectivePermanentDamage!==Math.max(0,finiteWhole(basis.effectivePermanentDamage,0)))return reject("damage-mismatch","永久淨削血與正式 settlement basis 不一致。",{bossIndex:index,effectivePermanentDamage,basisDamage:basis.effectivePermanentDamage});
   return freeze({ok:true,bossIndex:index,boss,bossRow:row,currentHp,formalStartHp,combatEndHp,effectivePermanentDamage});
  }
+ function applyEconomyRewards(target,amount){
+  if(!target||typeof target!=="object"||!target.thirdWorld||typeof target.thirdWorld!=="object")return {ok:false,reason:"高維經濟狀態無效。"};
+  if(typeof window.gainEffectiveExpForState!=="function")return {ok:false,reason:"共用 EXP progression owner 尚未載入。"};
+  const reward=Math.max(0,finiteWhole(amount,0));
+  const logs=[];
+  const levelBefore=Math.max(1,finiteWhole(target.level,1));
+  const expBefore=Math.max(0,finiteWhole(target.exp,0));
+  const cap=typeof window.effectiveLevelCap==="function"?Math.max(1,finiteWhole(window.effectiveLevelCap(target),2000)):2000;
+  const atLevelCapBefore=levelBefore>=cap;
+  const levelUps=window.gainEffectiveExpForState(reward,target,logs);
+  const stringsBefore=Math.max(0,finiteWhole(target.thirdWorld.dimensionalStrings,0));
+  target.thirdWorld.dimensionalStrings=stringsBefore+reward;
+  return {
+   ok:true,
+   xp:reward,
+   dimensionalStrings:reward,
+   dimensionalStringsBefore:stringsBefore,
+   dimensionalStringsAfter:target.thirdWorld.dimensionalStrings,
+   levelBefore,
+   levelAfter:Math.max(1,finiteWhole(target.level,levelBefore)),
+   expBefore,
+   expAfter:Math.max(0,finiteWhole(target.exp,0)),
+   levelUps:Math.max(0,finiteWhole(levelUps,0)),
+   levelCap:cap,
+   atLevelCapBefore,
+   atLevelCapAfter:Math.max(1,finiteWhole(target.level,levelBefore))>=cap,
+   logs
+  };
+ }
  function settleThirdWorldCombatResult(result){
   const basis=basisFromResult(result);
   if(!basis)return reject("basis-ineligible","戰鬥結果不是可正式落帳的高維 settlement basis。");
@@ -35,12 +65,15 @@
   const precheck=validateBasisAgainstState(basis,target);
   if(!precheck.ok)return precheck;
   if(typeof window.runSettlementTransaction!=="function")return reject("transaction-owner-missing","共用正式結算 transaction owner 尚未載入。");
+  if(typeof window.gainEffectiveExpForState!=="function")return reject("exp-owner-missing","共用 EXP progression owner 尚未載入。");
   const tx=window.runSettlementTransaction({
-   label:"third-world-permanent-hp",
+   label:"third-world-permanent-economy",
    mutate:liveState=>{
     const checked=validateBasisAgainstState(basis,liveState);
     if(!checked.ok)return checked;
     liveState.thirdWorld.bosses[checked.bossIndex].currentHp=checked.combatEndHp;
+    const economy=applyEconomyRewards(liveState,checked.effectivePermanentDamage);
+    if(!economy.ok)return economy;
     return {
      ok:true,
      bossIndex:checked.bossIndex,
@@ -50,18 +83,19 @@
      effectivePermanentDamage:checked.effectivePermanentDamage,
      playerDied:basis.playerDied===true,
      bossDefeated:basis.bossDefeated===true,
-     terminationReason:String(basis.terminationReason||"")
+     terminationReason:String(basis.terminationReason||""),
+     economy
     };
    }
   });
-  if(!tx.ok)return reject("transaction-failed","高維永久進度結算失敗，已回復結算前狀態。",{transaction:tx});
+  if(!tx.ok)return reject("transaction-failed","高維正式經濟結算失敗，已回復結算前狀態。",{transaction:tx});
   settledBasisObjects.add(basis);
-  const value=tx.value||{};
+  const value=tx.value||{},economy=value.economy||{};
   return freeze({
    ok:true,
    world:3,
    settlementVersion:SETTLEMENT_VERSION,
-   phase:"permanent-hp-only",
+   phase:"permanent-hp-exp-strings",
    bossIndex:value.bossIndex,
    bossId:value.bossId,
    formalStartHp:value.formalStartHp,
@@ -71,10 +105,21 @@
    playerDied:value.playerDied===true,
    bossDefeated:value.bossDefeated===true,
    terminationReason:value.terminationReason,
-   xp:0,
-   dimensionalStrings:0,
+   xp:Math.max(0,finiteWhole(economy.xp,0)),
+   dimensionalStrings:Math.max(0,finiteWhole(economy.dimensionalStrings,0)),
+   dimensionalStringsBefore:Math.max(0,finiteWhole(economy.dimensionalStringsBefore,0)),
+   dimensionalStringsAfter:Math.max(0,finiteWhole(economy.dimensionalStringsAfter,0)),
+   levelBefore:Math.max(1,finiteWhole(economy.levelBefore,1)),
+   levelAfter:Math.max(1,finiteWhole(economy.levelAfter,1)),
+   expBefore:Math.max(0,finiteWhole(economy.expBefore,0)),
+   expAfter:Math.max(0,finiteWhole(economy.expAfter,0)),
+   levelUps:Math.max(0,finiteWhole(economy.levelUps,0)),
+   atLevelCapBefore:economy.atLevelCapBefore===true,
+   atLevelCapAfter:economy.atLevelCapAfter===true,
+   logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),
    items:freeze([]),
-   rewardsPending:true,
+   rewardsPending:false,
+   equipmentPending:true,
    progressionPending:true,
    saved:true
   });
@@ -83,7 +128,7 @@
   const errors=[];
   const max=Math.max(1,finiteWhole(window.THIRD_WORLD_BOSS_MAX_HP,1));
   const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(0):null;
-  const sample={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:10},()=>({currentHp:max}))}};
+  const sample={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:0,bosses:Array.from({length:10},()=>({currentHp:max}))}};
   const basis=freeze({authority:"third-world-settlement-basis",authorityVersion:1,version:2,world:3,bossIndex:0,bossId:String(boss?.id||""),formalStartHp:max,combatEndHp:max-100,effectivePermanentDamage:100,formalSettlementEligible:true});
   const valid=validateBasisAgainstState(basis,sample);
   if(!valid.ok||valid.effectivePermanentDamage!==100)errors.push({code:"VALID_BASIS",valid});
@@ -91,12 +136,23 @@
   const stale=validateBasisAgainstState(basis,sample);
   if(stale.ok||stale.code!=="stale-settlement")errors.push({code:"STALE_GUARD",stale});
   if(typeof window.runSettlementTransaction!=="function")errors.push({code:"TRANSACTION_OWNER"});
+  if(typeof window.gainEffectiveExpForState!=="function")errors.push({code:"EXP_OWNER"});
+  const economyProbe={level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:7}};
+  const economy=applyEconomyRewards(economyProbe,10000000);
+  if(!economy.ok||economy.xp!==10000000||economy.dimensionalStrings!==10000000||economyProbe.level!==1001||economyProbe.exp!==0||economyProbe.thirdWorld.dimensionalStrings!==10000007)errors.push({code:"ECONOMY_MATCH_DAMAGE",economy,state:economyProbe});
+  const capProbe={level:2000,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:11}};
+  const capEconomy=applyEconomyRewards(capProbe,500);
+  if(!capEconomy.ok||capEconomy.xp!==500||capEconomy.dimensionalStrings!==500||capProbe.level!==2000||capProbe.exp!==0||capProbe.thirdWorld.dimensionalStrings!==511||capEconomy.levelUps!==0)errors.push({code:"LEVEL_CAP_STRINGS_CONTINUE",capEconomy,state:capProbe});
+  const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}};
+  const zeroEconomy=applyEconomyRewards(zeroProbe,0);
+  if(!zeroEconomy.ok||zeroEconomy.xp!==0||zeroEconomy.dimensionalStrings!==0||zeroProbe.exp!==123||zeroProbe.thirdWorld.dimensionalStrings!==9)errors.push({code:"ZERO_DAMAGE_ZERO_ECONOMY",zeroEconomy,state:zeroProbe});
   return freeze({version:VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
 
  window.THIRD_WORLD_PROGRESS_VERSION=VERSION;
  window.THIRD_WORLD_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
  window.THIRD_WORLD_SETTLEMENT_REPLAY_GUARD_VERSION=REPLAY_GUARD_VERSION;
+ window.THIRD_WORLD_SETTLEMENT_ECONOMY_VERSION=ECONOMY_VERSION;
  window.settleThirdWorldCombatResult=settleThirdWorldCombatResult;
  window.THIRD_WORLD_PROGRESS_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PROGRESS_INTEGRITY.passed)console.error("[文明戰線] Third-world progress integrity error",window.THIRD_WORLD_PROGRESS_INTEGRITY.errors);
