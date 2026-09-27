@@ -3,6 +3,7 @@
  const THIRD_WORLD_BOSS_COUNT=10;
  const THIRD_WORLD_BOSS_MAX_HP=1100000000;
  const THIRD_WORLD_CORE_MAX_LEVEL=10;
+ const THIRD_WORLD_CORE_PROGRESS_PER_LEVEL=1000000000;
  const THIRD_WORLD_STORY_MAX_STAGE=10;
  const THIRD_WORLD_ENTRY_LEVEL=1000;
  const THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL=40;
@@ -13,7 +14,7 @@
  const THIRD_WORLD_ENTRY_RESOURCE_RECONCILIATION_VERSION=1;
  const THIRD_WORLD_ENTRY_RECONCILIATION_VERSION=2;
  const THIRD_WORLD_CORE_RECONCILIATION_VERSION=1;
- const THIRD_WORLD_PERSISTENT_KEYS=Object.freeze(["entered","completed","entryVersion","dimensionalStrings","coreLevel","bosses","story"]);
+ const THIRD_WORLD_PERSISTENT_KEYS=Object.freeze(["entered","completed","entryVersion","dimensionalStrings","coreLevel","coreProgress","bosses","story"]);
  const THIRD_WORLD_BOSS_PERSISTENT_KEYS=Object.freeze(["currentHp"]);
  const THIRD_WORLD_STORY_PERSISTENT_KEYS=Object.freeze(["introSeen","unlockedStage","finalSeen"]);
 
@@ -21,16 +22,23 @@
  function finiteWhole(value,fallback=0){if(value==null)return fallback;const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
  function blankBosses(){return Array.from({length:THIRD_WORLD_BOSS_COUNT},()=>({currentHp:THIRD_WORLD_BOSS_MAX_HP}));}
- function createBlankThirdWorldState(){return {entered:false,completed:false,entryVersion:0,dimensionalStrings:0,coreLevel:0,bosses:blankBosses(),story:{introSeen:false,unlockedStage:0,finalSeen:false}};}
+ function normalizedCoreLevel(value){return clamp(finiteWhole(value,0),0,THIRD_WORLD_CORE_MAX_LEVEL);}
+ function normalizedCoreProgress(value,level){return level>=THIRD_WORLD_CORE_MAX_LEVEL?0:clamp(finiteWhole(value,0),0,THIRD_WORLD_CORE_PROGRESS_PER_LEVEL-1);}
+ function createBlankThirdWorldState(){return {entered:false,completed:false,entryVersion:0,dimensionalStrings:0,coreLevel:0,coreProgress:0,bosses:blankBosses(),story:{introSeen:false,unlockedStage:0,finalSeen:false}};}
  function normalizeBosses(value){const source=Array.isArray(value)?value:[];return Array.from({length:THIRD_WORLD_BOSS_COUNT},(_,index)=>{const row=isObject(source[index])?source[index]:{},hp=clamp(finiteWhole(row.currentHp,THIRD_WORLD_BOSS_MAX_HP),0,THIRD_WORLD_BOSS_MAX_HP);return {currentHp:hp};});}
  function normalizeStory(value){const source=isObject(value)?value:{};return {introSeen:source.introSeen===true,unlockedStage:clamp(finiteWhole(source.unlockedStage,0),0,THIRD_WORLD_STORY_MAX_STAGE),finalSeen:source.finalSeen===true};}
  function reconcileThirdWorldCoreProgressionState(target){
   if(!isObject(target)||!isObject(target.thirdWorld)||target.thirdWorld.entered!==true)return {applied:false,pending:false,reason:"not-entered"};
-  const third=target.thirdWorld,current=Math.max(0,finiteWhole(third.entryVersion,0)),before=clamp(finiteWhole(third.coreLevel,0),0,THIRD_WORLD_CORE_MAX_LEVEL);
-  if(current>=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION){third.coreLevel=before;return {applied:false,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:current,coreLevelBefore:before,coreLevelAfter:before};}
+  const third=target.thirdWorld,current=Math.max(0,finiteWhole(third.entryVersion,0)),before=normalizedCoreLevel(third.coreLevel),progressBefore=normalizedCoreProgress(third.coreProgress,before);
+  if(current>=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION){
+   third.coreLevel=before;
+   third.coreProgress=progressBefore;
+   return {applied:false,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:current,coreLevelBefore:before,coreLevelAfter:before,coreProgressBefore:progressBefore,coreProgressAfter:progressBefore};
+  }
   third.coreLevel=0;
+  third.coreProgress=0;
   third.entryVersion=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION;
-  return {applied:true,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:THIRD_WORLD_ENTRY_RECONCILIATION_VERSION,coreLevelBefore:before,coreLevelAfter:0,legacyUnpaidCoreReset:before>0};
+  return {applied:true,pending:false,version:THIRD_WORLD_CORE_RECONCILIATION_VERSION,entryVersion:THIRD_WORLD_ENTRY_RECONCILIATION_VERSION,coreLevelBefore:before,coreLevelAfter:0,coreProgressBefore:progressBefore,coreProgressAfter:0,legacyUnpaidCoreReset:before>0||progressBefore>0};
  }
  function thirdWorldEntryOwnersReady(){return typeof window.restoreLostGearForWorldTransition==="function"&&typeof window.resetPendingBlackMarketForWorldTransition==="function"&&typeof window.resetOfflineStateForWorldTransition==="function";}
  function reconcileThirdWorldEntryState(target){
@@ -55,8 +63,8 @@
  }
  function normalizeThirdWorldState(target){
   if(!isObject(target))return target;
-  const source=isObject(target.thirdWorld)?target.thirdWorld:{},entered=source.entered===true||source.completed===true;
-  target.thirdWorld={entered,completed:source.completed===true,entryVersion:entered?Math.max(0,finiteWhole(source.entryVersion,0)):0,dimensionalStrings:Math.max(0,finiteWhole(source.dimensionalStrings,0)),coreLevel:clamp(finiteWhole(source.coreLevel,0),0,THIRD_WORLD_CORE_MAX_LEVEL),bosses:normalizeBosses(source.bosses),story:normalizeStory(source.story)};
+  const source=isObject(target.thirdWorld)?target.thirdWorld:{},entered=source.entered===true||source.completed===true,coreLevel=normalizedCoreLevel(source.coreLevel);
+  target.thirdWorld={entered,completed:source.completed===true,entryVersion:entered?Math.max(0,finiteWhole(source.entryVersion,0)):0,dimensionalStrings:Math.max(0,finiteWhole(source.dimensionalStrings,0)),coreLevel,coreProgress:normalizedCoreProgress(source.coreProgress,coreLevel),bosses:normalizeBosses(source.bosses),story:normalizeStory(source.story)};
   if(entered){if(!isObject(target.secondWorld))target.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:true};target.secondWorld.entered=true;reconcileThirdWorldEntryState(target);}
   return target;
  }
@@ -127,8 +135,10 @@
  window.THIRD_WORLD_BOSS_COUNT=THIRD_WORLD_BOSS_COUNT;
  window.THIRD_WORLD_BOSS_MAX_HP=THIRD_WORLD_BOSS_MAX_HP;
  window.THIRD_WORLD_CORE_MAX_LEVEL=THIRD_WORLD_CORE_MAX_LEVEL;
+ window.THIRD_WORLD_CORE_PROGRESS_PER_LEVEL=THIRD_WORLD_CORE_PROGRESS_PER_LEVEL;
  window.THIRD_WORLD_STORY_MAX_STAGE=THIRD_WORLD_STORY_MAX_STAGE;
- window.THIRD_WORLD_PERSISTENCE_POLICY_VERSION=1;
+ window.THIRD_WORLD_PERSISTENCE_POLICY_VERSION=2;
+ window.THIRD_WORLD_CORE_PROGRESS_PERSISTENCE_VERSION=1;
  window.THIRD_WORLD_PERSISTENT_KEYS=Array.from(THIRD_WORLD_PERSISTENT_KEYS);
  window.THIRD_WORLD_BOSS_PERSISTENT_KEYS=Array.from(THIRD_WORLD_BOSS_PERSISTENT_KEYS);
  window.THIRD_WORLD_STORY_PERSISTENT_KEYS=Array.from(THIRD_WORLD_STORY_PERSISTENT_KEYS);
