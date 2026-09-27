@@ -145,13 +145,7 @@
  function secondWorldMainlineRewardPreview(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=options.state||currentState();
   if(index<0||!boss||!s)return null;
-  return {
-   bossIndex:index,
-   xp:secondWorldBossExpReward(index,options.useTestSpecializations===true,s),
-   darkMatter:secondWorldBossDarkMatterReward(index,options.useTestSpecializations===true),
-   darkEnergy:1,
-   equipmentLevel:Math.min(rewardPlayerLevel(s),boss.level)
-  };
+  return {bossIndex:index,xp:secondWorldBossExpReward(index,options.useTestSpecializations===true,s),darkMatter:secondWorldBossDarkMatterReward(index,options.useTestSpecializations===true),darkEnergy:1,equipmentLevel:Math.min(rewardPlayerLevel(s),boss.level)};
  }
  function runRewardTransaction(label,mutate){
   if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"共用正式結算 transaction owner 尚未載入。"};
@@ -185,7 +179,7 @@
    });
    const primary=equipmentRewards[0]||null;
    live.secondWorld.mainline.bossKilled[index]=true;
-   return {ok:true,equipmentRewards,primary,levelBefore,levelAfter:live.level,logs};
+   return {ok:true,equipmentRewards,levelBefore,levelAfter:live.level,logs,primary};
   });
   if(!tx.ok)return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
   const settled=tx.value||{},primary=settled.primary||null;
@@ -211,8 +205,7 @@
     }
    }
    live.hp=playerCombatStats().hp;
-   if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);
-   else logs.push("本次沒有遺失裝備。");
+   if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);else logs.push("本次沒有遺失裝備。");
    return {ok:true,dropped,protectedByVip20,redemptionPending,cost,currency,logs};
   });
   if(!tx.ok)return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
