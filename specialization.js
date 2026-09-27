@@ -6,10 +6,10 @@
   scavenge:{name:"搜刮技巧",perLevel:"每級怪物金幣 +2.5%",desc:"提升怪物直接掉落的金幣。"},
   appraisal:{name:"鑑價技巧",perLevel:"每級裝備售價 +2.5%",desc:"提升出售裝備取得的金幣。"},
   initiative:{name:"先制技巧",perLevel:"每級第一擊傷害 +1%",desc:"提升每場戰鬥第一次主動攻擊的傷害。"},
-  combo:{name:"連擊技巧",perLevel:"每級連擊率 +0.5%",desc:"攻擊時有機率追加一次 50% 傷害的攻擊，追加攻擊可再次觸發連擊。"},
-  penetration:{name:"穿透技巧",perLevel:"每級穿透率 +0.5%",desc:"攻擊時有機率忽略敵人 25% 防禦。"},
-  counter:{name:"反擊技巧",perLevel:"每級反擊率 +0.5%",desc:"受到敵人有效攻擊後有機率立即反擊，反擊造成 40% 傷害。"},
-  drain:{name:"汲取技巧",perLevel:"每級汲取率 +0.5%",desc:"造成傷害時有機率回復生命，觸發時回復本次實際傷害的 10%。"}
+  combo:{name:"連擊技巧",perLevel:"每級連擊率 +0.5%",desc:"攻擊時有機率追加攻擊，追加攻擊可再次觸發連擊。"},
+  penetration:{name:"穿透技巧",perLevel:"每級穿透率 +0.5%",desc:"攻擊時有機率降低敵人的有效防禦。"},
+  counter:{name:"反擊技巧",perLevel:"每級反擊率 +0.5%",desc:"受到敵人有效攻擊後有機率立即反擊。"},
+  drain:{name:"汲取技巧",perLevel:"每級汲取率 +0.5%",desc:"造成實際傷害時有機率回復生命。"}
  };
  let upgradeActionBusy=false;
 
@@ -48,6 +48,17 @@
   restoreStateSnapshot(snapshot);
   return false;
  }
+ function combatRuleSnapshot(){const rules=window.COMBAT_STANDARD_ABILITY_RULES;return rules&&typeof rules==="object"?rules:null;}
+ function pct(value){const n=Math.round((Number(value)||0)*1000)/10;return Number.isInteger(n)?String(n):String(n);}
+ function combatRuleText(key){
+  const rules=combatRuleSnapshot();
+  if(!rules)return null;
+  if(key==="combo")return {desc:`攻擊時有機率追加一次 ${pct(rules.comboScale)}% 傷害的攻擊，追加攻擊可再次觸發連擊。`,detail:`追加傷害 ${pct(rules.comboScale)}%`};
+  if(key==="penetration")return {desc:`攻擊時有機率忽略敵人 ${pct(1-Number(rules.penetrationDefMultiplier||0))}% 防禦。`,detail:`忽略防禦 ${pct(1-Number(rules.penetrationDefMultiplier||0))}%`};
+  if(key==="counter")return {desc:`受到敵人有效攻擊後有機率立即反擊，反擊造成 ${pct(rules.counterScale)}% 傷害。`,detail:`反擊傷害 ${pct(rules.counterScale)}%`};
+  if(key==="drain")return {desc:`造成傷害時有機率回復生命，觸發時回復本次實際傷害的 ${pct(rules.drainRatio)}%。`,detail:`回復傷害 ${pct(rules.drainRatio)}%`};
+  return null;
+ }
 
  window.SPECIALIZATION_MAX_LEVEL=SPECIALIZATION_MAX_LEVEL;
  window.SPECIALIZATION_KEYS=SPECIALIZATION_KEYS.slice();
@@ -65,6 +76,8 @@
  window.specializationWorldSemantics=specializationWorldSemantics;
  window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=1;
  window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=1;
+ window.SPECIALIZATION_COMBAT_RULE_SOURCE_VERSION=1;
+ window.specializationCombatRuleSnapshot=combatRuleSnapshot;
  function specializationPercentForLevel(key,level){const lv=clampSpecializationLevel(level);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;}
  window.specializationPercentForLevel=specializationPercentForLevel;
  window.specializationPercentBonus=function(key,useTest=false){return specializationPercentForLevel(key,window.specializationLevel(key,useTest));};
@@ -84,7 +97,8 @@
   if(key==="appraisal")return universe
    ?{name:def.name,perLevel:"每級裝備暗物質售價 +2.5%",desc:"提升宇宙紀元裝備出售取得的暗物質；不放大暗能量。",effectLabel:"裝備暗物質售價"}
    :{name:def.name,perLevel:"每級裝備售價 +2.5%",desc:"提升銀河紀元出售裝備取得的金幣。",effectLabel:"裝備售價"};
-  return {name:def.name,perLevel:def.perLevel,desc:def.desc,effectLabel:null};
+  const combatText=combatRuleText(key);
+  return {name:def.name,perLevel:def.perLevel,desc:combatText?.desc||def.desc,effectLabel:null};
  }
  function specializationWorldEconomySummary(target=state,useTest=false,levels=null){
   const source=levels&&typeof levels==="object"?levels:null;
@@ -100,7 +114,7 @@
  }
  window.specializationWorldEconomySummary=specializationWorldEconomySummary;
  window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=1;
- function effectLines(key,lv){const semantics=specializationWorldSemantics(key);if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];if(key==="initiative")return [`第一擊傷害 +${lv}%`];if(key==="combo")return [`連擊率 ${lv*.5}%`,`追加傷害 50%`];if(key==="penetration")return [`穿透率 ${lv*.5}%`,`忽略防禦 25%`];if(key==="counter")return [`反擊率 ${lv*.5}%`,`反擊傷害 40%`];if(key==="drain")return [`汲取率 ${lv*.5}%`,`回復傷害 10%`];return [];}
+ function effectLines(key,lv){const semantics=specializationWorldSemantics(key);if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];if(key==="initiative")return [`第一擊傷害 +${lv}%`];const combatText=combatRuleText(key);if(key==="combo")return [`連擊率 ${lv*.5}%`,combatText?.detail||"追加攻擊依共用戰鬥規則"];if(key==="penetration")return [`穿透率 ${lv*.5}%`,combatText?.detail||"穿透效果依共用戰鬥規則"];if(key==="counter")return [`反擊率 ${lv*.5}%`,combatText?.detail||"反擊傷害依共用戰鬥規則"];if(key==="drain")return [`汲取率 ${lv*.5}%`,combatText?.detail||"汲取回血依共用戰鬥規則"];return [];}
  function specializationCard(key){const def=SPECIALIZATION_DEFS[key],lv=formalLevel(key),maxed=lv>=SPECIALIZATION_MAX_LEVEL,cost=maxed?0:specializationUpgradeCost(lv+1),enough=maxed||state.gold>=cost;return `<section class="specialization-card"><div class="specialization-card-head"><b>${def.name}</b><span>Lv.${lv} / ${SPECIALIZATION_MAX_LEVEL}</span></div><div class="specialization-effect">${effectLines(key,lv).map(x=>`<div>${x}</div>`).join("")}</div><div class="specialization-cost">${maxed?"已達最高等級":`${cost.toLocaleString()} 金幣`}</div><button class="btn specialization-upgrade" ${maxed||!enough?"disabled":""} onclick="upgradeSpecialization('${key}')">${maxed?"已滿級":"升級"}</button></section>`;}
  function specializationGuideHtml(target=state){const universe=universePhase(target),lead=universe?`銀河紀元完成的 8 項專精會在宇宙紀元持續生效；進入宇宙紀元時已要求全部 Lv.${SPECIALIZATION_MAX_LEVEL}，不再消耗金幣升級。`:`每項專精最高 Lv.${SPECIALIZATION_MAX_LEVEL}。使用金幣升級，升級後永久保留。`;return `<details class="specialization-guide"><summary>專精說明</summary><div class="specialization-guide-body"><div class="muted">${lead}</div>${SPECIALIZATION_KEYS.map(key=>{const d=specializationWorldSemantics(key,target);return `<div class="specialization-guide-row"><b>${d.name}</b><div>${d.desc}</div><div class="muted">${d.perLevel}</div></div>`;}).join("")}</div></details>`;}
  function specializationPage(){ensureSpecializationState();const universe=universePhase(),goldHtml=universe?"":`<div class="specialization-gold">金幣 <b>${state.gold.toLocaleString()}</b></div>`,worldNote=universe?`<div class="notice" style="margin-top:12px"><b>宇宙紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精在進入宇宙紀元前即需全部 Lv.${SPECIALIZATION_MAX_LEVEL}；效果會繼續套用到 EXP、暗物質、宇宙裝備出售與戰鬥能力。</div></div>`:"";return `<div class="function-page specialization-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card specialization-panel"><div class="specialization-title-row"><h2>專精</h2>${goldHtml}</div>${worldNote}${specializationGuideHtml(state)}<div class="specialization-grid">${SPECIALIZATION_KEYS.map(specializationCard).join("")}</div></div></div>`;}
