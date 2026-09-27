@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=2;
  function clone(v){try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}}
  function restoreObject(target,snapshot){if(!target||!snapshot)return false;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,clone(snapshot));return true;}
  function run(){
