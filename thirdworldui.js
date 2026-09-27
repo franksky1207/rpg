@@ -147,7 +147,7 @@
  };
  window.stopThirdWorldRunFromPlayerUi=function(){const stopped=stopActiveRun("manual");if(typeof window.render==="function")window.render();return stopped;};
  window.thirdWorldGoHomeFromPlayerUi=function(){stopActiveRun("manual");if(typeof go==="function")go("home");return true;};
- window.thirdWorldOpenInventoryFromPlayerUi=function(){stopActiveRun("manual");if(typeof go==="function")go("inventory");return true;};
+ window.thirdWorldOpenInventoryFromPlayerUi=function(){stopActiveRun("manual");if(typeof openAdventureInventory==="function")openAdventureInventory();else if(typeof go==="function")go("inventory");return true;};
  window.openThirdWorldCoreInjectionConfirm=function(){
   const snap=coreSnapshot(),plan=corePlan();
   if(!snap?.canInject||!plan||plan.injected<=0){coreFeedbackOk=false;coreFeedback=snap?.reason==="run-active"?"高維連戰進行中，必須先停止連戰才能注入。":snap?.reason==="max-level"?"界弦核心已達最高等級。":"目前沒有可注入的維度之弦。";if(typeof window.render==="function")window.render();return false;}
