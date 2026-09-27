@@ -12,6 +12,7 @@
  const RESULT_SUMMARY_VERSION=2;
  const INTEGRITY_VERSION=5;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
+ const SHARED_INFRA_STRICT_VERSION=1;
  const CORE_RUN_SNAPSHOT_VERSION=1;
  const HP_LIFECYCLE_VERSION=1;
  const LAST_FINISHED_SNAPSHOT_VERSION=1;
@@ -83,39 +84,23 @@
   });
  }
  function lastFinishedRunSnapshot(){return lastFinishedRuntime;}
- function activeBackgroundKind(){const infra=runInfra();return infra?infra.activeKind():typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";}
+ function activeBackgroundKind(){const infra=runInfra();return infra?infra.activeKind():"";}
  function ownRuntimeBlockerStatus(){return runtime?.active===true?{blocked:true,reasons:["active"]}:{blocked:false,reasons:[]};}
  function runtimeConflictStatus(){
-  const infra=runInfra();if(infra)return infra.conflictStatus(BLOCKER_NAME);
-  const blockers=[];
-  const activeKind=activeBackgroundKind();
-  if(activeKind&&activeKind!==FLOW_KIND)blockers.push(`background-flow:${activeKind}`);
-  if(typeof window.worldTransitionRuntimeStatus==="function"){
-   try{
-    const status=window.worldTransitionRuntimeStatus();
-    (Array.isArray(status?.blockers)?status.blockers:[]).forEach(reason=>{const text=String(reason||"");if(text&&!text.startsWith(`${BLOCKER_NAME}:`)&&text!==BLOCKER_NAME&&!blockers.includes(text))blockers.push(text);});
-   }catch(error){blockers.push("runtime-status-check-error");}
-  }
-  return freeze({blocked:blockers.length>0,blockers:freeze(blockers.slice()),activeBackgroundKind:activeKind||null});
+  const infra=runInfra();
+  if(!infra)return freeze({blocked:true,blockers:freeze(["continuous-run-infrastructure-missing"]),activeBackgroundKind:null});
+  return infra.conflictStatus(BLOCKER_NAME);
  }
- function stopBackgroundFlow(){const infra=runInfra();if(infra)return infra.stopBackground();if(typeof window.backgroundProgressStop==="function")return window.backgroundProgressStop(FLOW_KIND);return false;}
- function startBackgroundFlow(){const infra=runInfra();return infra?infra.startBackground():typeof window.backgroundProgressStart==="function"?window.backgroundProgressStart(FLOW_KIND,{mode:"continuous"}):null;}
- function backgroundFlowOwned(){const infra=runInfra();if(infra)return infra.flowOwned();const kind=activeBackgroundKind();return !kind||kind===FLOW_KIND;}
- function fastCatchUpActive(){const infra=runInfra();return infra?infra.fastCatchUp():typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive(FLOW_KIND)===true;}
- function catchUpStep(){const infra=runInfra();return infra?infra.catchUpStep():typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(FLOW_KIND):null;}
- function catchUpFinal(){const infra=runInfra();return infra?infra.catchUpFinal():typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy(FLOW_KIND):null;}
+ function stopBackgroundFlow(){const infra=runInfra();return infra?infra.stopBackground():false;}
+ function startBackgroundFlow(){const infra=runInfra();return infra?infra.startBackground():null;}
+ function backgroundFlowOwned(){const infra=runInfra();return infra?infra.flowOwned():false;}
+ function fastCatchUpActive(){const infra=runInfra();return infra?infra.fastCatchUp():false;}
+ function catchUpStep(){const infra=runInfra();return infra?infra.catchUpStep():null;}
+ function catchUpFinal(){const infra=runInfra();return infra?infra.catchUpFinal():null;}
  async function consumeCatchUpDelay(ms){
   const delay=Math.max(0,numberOr(ms,0)),infra=runInfra();
   if(infra)return infra.consumeDelay(delay);
-  if(delay<=0)return true;
-  if(fastCatchUpActive()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
-   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,FLOW_KIND);
-   if(Number(consumed?.remaining)>0&&typeof window.backgroundProgressSleep==="function")await window.backgroundProgressSleep(consumed.remaining,FLOW_KIND);
-   else if(Number(consumed?.remaining)>0)await new Promise(resolve=>setTimeout(resolve,consumed.remaining));
-   return Number(consumed?.remaining)<=0;
-  }
-  if(typeof window.backgroundProgressSleep==="function")await window.backgroundProgressSleep(delay,FLOW_KIND);
-  else await new Promise(resolve=>setTimeout(resolve,delay));
+  if(delay>0)await new Promise(resolve=>setTimeout(resolve,delay));
   return false;
  }
  function clearRuntime(reason="manual"){
@@ -251,7 +236,7 @@
     if(fastCatchUp)catchUpNeedsFinalSync=true;
     const notify=!fastCatchUp||shouldNotifyDuringCatchUp(step,policy);
     if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy});}catch(error){console.error(error);}}
-    if(fastCatchUp){const infra=runInfra();if(infra)await infra.uiYield();else if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield(FLOW_KIND);}
+    if(fastCatchUp){const infra=runInfra();if(infra)await infra.uiYield();}
     if(step.ok!==true||runtime?.active!==true||runSerial!==serial)break;
     await sleepBetweenBattles();
     if(catchUpNeedsFinalSync&&!fastCatchUpActive()){
@@ -292,21 +277,18 @@
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
   const bounded=boundedSummaries(Array.from({length:RECENT_HISTORY_LIMIT+5},(_,index)=>freeze({version:RESULT_SUMMARY_VERSION,battleNumber:index+1})));
   if(bounded.length!==RECENT_HISTORY_LIMIT||bounded[0]?.battleNumber!==6||bounded[bounded.length-1]?.battleNumber!==RECENT_HISTORY_LIMIT+5)errors.push({code:"BOUNDED_HISTORY",length:bounded.length,first:bounded[0]||null,last:bounded[bounded.length-1]||null});
-  const battleSource=Function.prototype.toString.call(runOneBattle),startSource=Function.prototype.toString.call(startRun),loopSource=Function.prototype.toString.call(runLoop),clearSource=Function.prototype.toString.call(clearRuntime);
+  const battleSource=Function.prototype.toString.call(runOneBattle),startSource=Function.prototype.toString.call(startRun),loopSource=Function.prototype.toString.call(runLoop),clearSource=Function.prototype.toString.call(clearRuntime),conflictSource=Function.prototype.toString.call(runtimeConflictStatus);
   if(/pauseForProgressEvents/.test(battleSource)||!/terminalReasonForStep/.test(battleSource)||!/clearRuntime\(terminalReason\)/.test(battleSource))errors.push({code:"PROGRESS_EVENT_TERMINAL_WIRING"});
   if(!/runtime\.coreLevelAtStart/.test(battleSource)||!/coreLevelAtStart/.test(startSource)||!/perDeathSuppressionPointsAtStart/.test(startSource))errors.push({code:"CORE_RUN_SNAPSHOT_WIRING"});
   if(!/if\(step\?\.ok===true\)total\+=1/.test(loopSource))errors.push({code:"FORMAL_BATTLE_COUNT_WIRING"});
   if(!/lastFinishedRuntime=finishedSnapshot/.test(clearSource)||lastFinishedRunSnapshot()!==null)errors.push({code:"LAST_FINISHED_SNAPSHOT_WIRING"});
+  if(!/continuous-run-infrastructure-missing/.test(conflictSource))errors.push({code:"STRICT_SHARED_INFRA_WIRING"});
   return freeze({version:INTEGRITY_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
  function onPageHide(){if(runtime?.active)clearRuntime("pagehide");}
  const sharedInfra=runInfra();
  if(sharedInfra){sharedInfra.onPageHide(onPageHide);pageHideSubscribed=true;blockerRegistered=sharedInfra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);}
- else{
-  if(typeof window.backgroundProgressOnPageHide==="function"){window.backgroundProgressOnPageHide(onPageHide);pageHideSubscribed=true;}
-  if(typeof window.registerWorldTransitionRuntimeBlocker==="function")blockerRegistered=window.registerWorldTransitionRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus)===true;
- }
 
  window.THIRD_WORLD_RUN_VERSION=VERSION;
  window.THIRD_WORLD_SUPPRESSION_VERSION=SUPPRESSION_VERSION;
@@ -320,6 +302,7 @@
  window.THIRD_WORLD_RUN_ACTIVE_FLOW_GUARD_VERSION=ACTIVE_FLOW_GUARD_VERSION;
  window.THIRD_WORLD_RUN_SHARED_PAGEHIDE_OWNER_VERSION=SHARED_PAGEHIDE_OWNER_VERSION;
  window.THIRD_WORLD_RUN_SHARED_CONTINUOUS_INFRA_VERSION=SHARED_CONTINUOUS_INFRA_VERSION;
+ window.THIRD_WORLD_RUN_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION;
  window.THIRD_WORLD_RUN_CORE_SNAPSHOT_VERSION=CORE_RUN_SNAPSHOT_VERSION;
  window.THIRD_WORLD_RUN_HP_LIFECYCLE_VERSION=HP_LIFECYCLE_VERSION;
  window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION=LAST_FINISHED_SNAPSHOT_VERSION;
