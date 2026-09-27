@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -54,16 +54,22 @@
   const s=target&&typeof target==="object"?target:currentState();
   return s?.secondWorld?.entered===true;
  }
+ function currentRewardPhase(target=null){
+  const s=target&&typeof target==="object"?target:currentState();
+  if(s?.thirdWorld?.entered===true)return 3;
+  return universePhase(s)?2:1;
+ }
  function equipmentSaleQuote(item,options={}){
   const s=options.state&&typeof options.state==="object"?options.state:currentState();
-  const useTest=options.useTestSpecializations===true;
-  if(!item)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:0,phase:universePhase(s)?2:1};
-  const world=Number(item.world)===2?2:1;
-  if(universePhase(s)){
-   if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase:2};
+  const useTest=options.useTestSpecializations===true,phase=currentRewardPhase(s);
+  if(!item)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:0,phase};
+  const rawWorld=Math.floor(Number(item.world)||1),world=rawWorld===3?3:(rawWorld===2?2:1);
+  if(world===3)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:3,phase};
+  if(phase>=2){
+   if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase};
    const darkMatter=secondWorldEquipmentSaleDarkMatter(item,useTest);
    const darkEnergy=Number(item.q)===5?1:0;
-   return {currency:"darkMatter",amount:darkMatter,gold:0,darkMatter,darkEnergy,world,phase:2};
+   return {currency:"darkMatter",amount:darkMatter,gold:0,darkMatter,darkEnergy,world,phase};
   }
   const gold=typeof window.specializationSellValue==="function"?window.specializationSellValue(item,useTest):Math.max(0,Math.floor(Number(item.sell)||0));
   return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0,world,phase:1};
@@ -111,24 +117,24 @@
   if((Number(q.gold)||0)>0)parts.push(`${Math.floor(Number(q.gold)).toLocaleString()} 金幣`);
   if((Number(q.darkMatter)||0)>0)parts.push(`${Math.floor(Number(q.darkMatter)).toLocaleString()} 暗物質`);
   if((Number(q.darkEnergy)||0)>0)parts.push(`${Math.floor(Number(q.darkEnergy)).toLocaleString()} 暗能量`);
-  return parts.length?parts.join("＋"):(Number(q.phase)===1?"0 金幣":"0 暗物質");
+  if(parts.length)return parts.join("＋");
+  if(Number(q.phase)===3||Number(q.world)===3)return "0 資源";
+  return Number(q.phase)===1?"0 金幣":"0 暗物質";
  }
  function makeSecondWorldEquipmentForBoss(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index);
   if(index<0||!boss)return null;
+  if(typeof window.makeEquipmentRewardItem!=="function")throw new Error("Shared Equipment Reward Core 未載入。");
   const types=Array.isArray(window.SECOND_WORLD_EQUIPMENT_SLOTS)&&window.SECOND_WORLD_EQUIPMENT_SLOTS.length?window.SECOND_WORLD_EQUIPMENT_SLOTS:(typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"]);
   const forcedType=types.includes(options.forcedType)?options.forcedType:null;
-  const type=forcedType||types[Math.floor((typeof options.rng==="function"?options.rng():Math.random())*types.length)]||types[0];
+  const rng=typeof options.rng==="function"?options.rng:Math.random;
+  const type=forcedType||types[Math.floor(rng()*types.length)]||types[0];
   const forcedQ=Number.isInteger(options.forcedQ)?Math.max(1,Math.min(5,options.forcedQ)):null;
-  const q=forcedQ??secondWorldEquipmentQualityRoll(options.rng);
+  const q=forcedQ??secondWorldEquipmentQualityRoll(rng);
   const level=Math.max(500,Math.min(boss.level,Math.floor(Number(options.level)||rewardPlayerLevel(options.state))));
   const names=typeof window.secondWorldEquipmentNamesForBoss==="function"?window.secondWorldEquipmentNamesForBoss(index):boss.equipment;
   const name=String(names?.[type]||boss.name+"裝備");
-  const m=QUALITY[q].m,mainStat=mainStatForType(type),mainValue=mainStatValue(type,level,m,q),affixes=rollAffixes(type,level,q,m);
-  const item={id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,level,q,type,world:2,sourceBossIndex:index,sourceBossId:boss.id,mainStat:{stat:mainStat,value:mainValue},affixes,sell:0,buy:0};
-  addItemStat(item,mainStat,mainValue);
-  affixes.forEach(a=>addItemStat(item,a.stat,a.value));
-  return item;
+  return window.makeEquipmentRewardItem({world:2,level,q,type,name,sourceBossIndex:index,sourceBossId:boss.id,sell:0,buy:0,rng});
  }
  function makeSecondWorldMainlineBossEquipment(value,options={}){
   if(typeof window.resolveVipLootModifiers!=="function")throw new Error("VIP Loot Core 未載入。");
@@ -222,15 +228,19 @@
   if(Number(legacyFreeRedemption.world)!==1)errors.push({code:"LEGACY_FREE_REDEMPTION"});
   const legacyProbe=equipmentSaleQuote({world:1,level:500,q:5,sell:999},{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}}});
   if(legacyProbe.amount!==0||legacyProbe.gold!==0||legacyProbe.darkMatter!==0||legacyProbe.darkEnergy!==0)errors.push({code:"LEGACY_SALE_GATE",legacyProbe});
+  const world3Probe=equipmentSaleQuote({world:3,level:1200,q:5,sell:999},{state:{secondWorld:{entered:true},thirdWorld:{entered:true}}});
+  if(world3Probe.world!==3||world3Probe.phase!==3||world3Probe.currency!=="none"||world3Probe.amount!==0||world3Probe.gold!==0||world3Probe.darkMatter!==0||world3Probe.darkEnergy!==0||equipmentSaleText(world3Probe)!=="0 資源")errors.push({code:"THIRD_WORLD_ZERO_SALE",world3Probe,text:equipmentSaleText(world3Probe)});
   const first=bossMeta(0),last=bossMeta(99);
   if(!first||!last||first.level!==505||last.level!==1000)errors.push({code:"BOSS_REGISTRY"});
   if(typeof window.runSettlementTransaction!=="function")errors.push({code:"SHARED_SETTLEMENT_TRANSACTION_OWNER"});
+  if(typeof window.makeEquipmentRewardItem!=="function"||window.EQUIPMENT_REWARD_CORE_INTEGRITY?.passed!==true)errors.push({code:"SHARED_EQUIPMENT_REWARD_FACTORY"});
   return {passed:errors.length===0,version:VERSION,redemptionMultiplier:REDEMPTION_MULTIPLIER,errors};
  }
 
  window.SECOND_WORLD_REWARD_VERSION=VERSION;
  window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION=1;
  window.SECOND_WORLD_SHARED_SETTLEMENT_TRANSACTION_VERSION=1;
+ window.SECOND_WORLD_SHARED_EQUIPMENT_FACTORY_VERSION=1;
  window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION=1;
  window.SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1;
  window.SECOND_WORLD_REDEMPTION_MULTIPLIER=REDEMPTION_MULTIPLIER;
