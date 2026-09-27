@@ -18,6 +18,10 @@
  const HEARTBEAT_PERSIST_MS=5*60*1000;
  const YIELD_EVERY=750;
  const THIRD_WORLD_TARGET_TYPE="higher-dimensional";
+ const OFFLINE_GEAR_ACCUMULATOR_VERSION=2;
+ const OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION=1;
+ const THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION=1;
+ const THIRD_WORLD_OFFLINE_STATE_ALLOWLIST=Object.freeze(["inventory","offline"]);
  const baseSave=typeof save==="function"?save:null;
  let heartbeatTimer=null;
  let lastHeartbeatPersist=Date.now();
@@ -120,16 +124,23 @@
   const elapsedRaw=Math.max(0,t-o.lastSettledAt);if(elapsedRaw<OFFLINE_MIN_MS){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}const target=resolveFarmTarget();if(!target){o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);if(baseSave)baseSave(false);return {unavailable:true,world:currentPhase(),elapsedRaw,elapsedUsed:Math.min(OFFLINE_MAX_MS,elapsedRaw),createdAt:t};}
   const elapsedUsed=Math.min(OFFLINE_MAX_MS,elapsedRaw),avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(target.avgBattleMs)||DEFAULT_BATTLE_MS))),battles=Math.max(0,Math.floor(elapsedUsed/avg));if(battles<1)return null;const pending=pendingFromTarget(target,avg,elapsedRaw,elapsedUsed,battles,t);o.pendingSettlement=pending;if(baseSave)baseSave(false);return pending;
  }
- function createGearAccumulator({reject}={}){
-  const bestByType=new Map(),mythics=[],rejected=[];let droppedCount=0;
+ function equipmentTypes(){return typeof window.sharedEquipmentTypes==="function"?window.sharedEquipmentTypes():(typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES.slice():[]);}
+ function isFormalStateTarget(target){try{return target===state;}catch(_){return false;}}
+ function createGearAccumulator({target=null,reject,score,notifyUpgrade=true}={}){
+  const s=isObject(target)?target:state,scoreItem=typeof score==="function"?score:(item=>equipmentScore(item)),types=equipmentTypes(),bestByType=new Map(),mythics=[],rejected=[];let droppedCount=0;
   function rejectItem(item){if(!item)return;rejected.push(item);if(typeof reject==="function")reject(item);}
-  function consider(raw){const item=normalizeOfflineDrop(raw);if(!item)return;droppedCount++;if(Number(item.q)===5){mythics.push(item);return;}const type=item.type;if(!EQUIPMENT_TYPES.includes(type)){rejectItem(item);return;}const previous=bestByType.get(type);if(!previous||equipmentScore(item)>equipmentScore(previous)){if(previous)rejectItem(previous);bestByType.set(type,item);}else rejectItem(item);}
-  function finalize(){const keptOrdinary=[];bestByType.forEach((item,type)=>{const current=state.equipment?.[type]||null;if(equipmentScore(item)>equipmentScore(current))keptOrdinary.push(item);else rejectItem(item);});keptOrdinary.forEach(item=>state.inventory.push(item));mythics.forEach(item=>state.inventory.push(item));if(keptOrdinary.length)upgradeDropNoticePending=true;return {droppedCount,rejected,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length};}
+  function consider(raw){const item=normalizeOfflineDrop(raw);if(!item)return;droppedCount++;if(Number(item.q)===5){mythics.push(item);return;}const type=item.type;if(!types.includes(type)){rejectItem(item);return;}const previous=bestByType.get(type);if(!previous||scoreItem(item)>scoreItem(previous)){if(previous)rejectItem(previous);bestByType.set(type,item);}else rejectItem(item);}
+  function finalize(){if(!Array.isArray(s.inventory))s.inventory=[];const keptOrdinary=[];bestByType.forEach((item,type)=>{const current=s.equipment?.[type]||null;if(scoreItem(item)>scoreItem(current))keptOrdinary.push(item);else rejectItem(item);});keptOrdinary.forEach(item=>s.inventory.push(item));mythics.forEach(item=>s.inventory.push(item));if(keptOrdinary.length&&notifyUpgrade!==false&&isFormalStateTarget(s)){try{upgradeDropNoticePending=true;}catch(_){}}return {droppedCount,rejected,keptOrdinary,mythics,keptCount:keptOrdinary.length+mythics.length};}
   return {consider,finalize};
  }
+ function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}}
+ function snapshotStateOutsideAllowedRoots(target,allowedRoots=THIRD_WORLD_OFFLINE_STATE_ALLOWLIST){
+  const copy=cloneJson(target);if(!isObject(copy))return null;for(const key of allowedRoots)delete copy[key];return JSON.stringify(copy);
+ }
+ function inventoryPrefixSnapshot(target,count=null){const inventory=Array.isArray(target?.inventory)?target.inventory:[],limit=count==null?inventory.length:Math.max(0,Math.min(inventory.length,Math.floor(Number(count)||0)));return JSON.stringify(inventory.slice(0,limit));}
  async function grantOfflineRewards(pending,enemy){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0)),settlementPlayerLevel=Math.max(1,Math.floor(Number(state.level)||1));let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0,eligibleRolls=0,soldCount=0,soldGold=0,saleStones=normalizeEnhancementStoneReward(null);const expBefore=expSnapshot();
-  const gear=createGearAccumulator({reject:item=>{soldCount++;soldGold+=offlineSellValue(item);saleStones=mergeEnhancementStoneRewards(saleStones,enhancementStoneSaleReward(item));}});
+  const gear=createGearAccumulator({target:state,reject:item=>{soldCount++;soldGold+=offlineSellValue(item);saleStones=mergeEnhancementStoneRewards(saleStones,enhancementStoneSaleReward(item));}});
   for(let i=0;i<count;i++){
    goldCarry+=Math.max(0,Number(goldReward(enemy))||0)*OFFLINE_GOLD_RATE;const xpValue=Math.max(0,Number(expReward(enemy))||0)*OFFLINE_EXP_RATE;if(state.level>=MAX_LEVEL)convertedCarry+=xpValue;else{xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}}
    if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;let encounter=null;try{encounter=typeof createMonsterEncounter==="function"?createMonsterEncounter(pending.map,pending.enemy):monsterObj(pending.map,pending.enemy);}catch(_){encounter=null;}if(encounter&&encounter.kind!=="boss"){const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;if(item)gear.consider(item);}}
@@ -140,7 +151,7 @@
  }
  async function grantSecondWorldOfflineRewards(pending,boss){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0)),bossIndex=Math.floor(Number(pending.bossIndex));if(!boss||bossIndex<0||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function")throw new Error("Second-world offline reward owner unavailable");
-  const expBefore=expSnapshot(),soldItems=[];let xpCarry=0,darkMatterCarry=0,eligibleRolls=0;const gear=createGearAccumulator({reject:item=>soldItems.push(item)});
+  const expBefore=expSnapshot(),soldItems=[];let xpCarry=0,darkMatterCarry=0,eligibleRolls=0;const gear=createGearAccumulator({target:state,reject:item=>soldItems.push(item)});
   for(let i=0;i<count;i++){
    const xpValue=Math.max(0,Number(window.secondWorldBossExpReward(bossIndex,false,state))||0)*OFFLINE_EXP_RATE;xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}darkMatterCarry+=Math.max(0,Number(window.secondWorldBossDarkMatterReward(bossIndex,false))||0)*OFFLINE_GOLD_RATE;
    if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;const item=window.makeSecondWorldEquipmentForBoss(bossIndex,{state});if(item)gear.consider(item);}if((i+1)%YIELD_EVERY===0)await yieldThread();
@@ -150,15 +161,16 @@
   const saleDarkMatter=Math.max(0,Math.floor(Number(sale?.quote?.darkMatter)||0)),saleDarkEnergy=Math.max(0,Math.floor(Number(sale?.quote?.darkEnergy)||0)),expAfter=expSnapshot(),totalXp=expProgressDelta(expBefore,expAfter);
   return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
  }
- function protectedThirdWorldSnapshot(){
-  const t=state?.thirdWorld||{};return JSON.stringify({level:state?.level,exp:state?.exp,dimensionalStrings:t.dimensionalStrings,coreLevel:t.coreLevel,completed:t.completed,bosses:t.bosses,story:t.story,playerTitles:state?.playerTitles,titles:state?.titles});
- }
  async function grantThirdWorldOfflineRewards(pending){
-  const count=Math.max(0,Math.floor(Number(pending.battles)||0));if(typeof window.makeThirdWorldEquipmentDrops!=="function")throw new Error("Third-world offline equipment owner unavailable");const protectedBefore=protectedThirdWorldSnapshot();let eligibleRolls=0;const gear=createGearAccumulator();
+  const count=Math.max(0,Math.floor(Number(pending.battles)||0));if(typeof window.makeThirdWorldEquipmentDrops!=="function")throw new Error("Third-world offline equipment owner unavailable");
+  const protectedBefore=snapshotStateOutsideAllowedRoots(state),inventoryCountBefore=Array.isArray(state.inventory)?state.inventory.length:0,inventoryBefore=inventoryPrefixSnapshot(state,inventoryCountBefore);if(protectedBefore==null)throw new Error("Third-world offline allow-list snapshot failed");
+  let eligibleRolls=0;const gear=createGearAccumulator({target:state});
   for(let i=0;i<count;i++){
    if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;const drops=window.makeThirdWorldEquipmentDrops({state,level:Math.max(1000,Math.floor(Number(state.level)||1000)),sourceTag:"third-world-offline"});for(const row of drops||[])if(row?.item)gear.consider(row.item);}if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
-  const finalized=gear.finalize();if(protectedThirdWorldSnapshot()!==protectedBefore)throw new Error("Third-world offline settlement mutated protected progression");
+  const finalized=gear.finalize(),protectedAfter=snapshotStateOutsideAllowedRoots(state),inventoryPrefixAfter=inventoryPrefixSnapshot(state,inventoryCountBefore),addedInventory=(Array.isArray(state.inventory)?state.inventory:[]).slice(inventoryCountBefore),expectedAdded=[...finalized.keptOrdinary,...finalized.mythics];
+  if(protectedAfter!==protectedBefore)throw new Error("Third-world offline settlement mutated a state root outside the allow-list");
+  if(inventoryPrefixAfter!==inventoryBefore||JSON.stringify(addedInventory)!==JSON.stringify(expectedAdded))throw new Error("Third-world offline settlement mutated existing inventory instead of append-only rewards");
   return {world:3,totalXp:0,totalDimensionalStrings:0,totalCoreProgress:0,gear:{eligibleRolls,droppedCount:finalized.droppedCount,discardedCount:finalized.rejected.length,soldCount:0,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
  }
  function ensureOfflineModals(){
@@ -189,8 +201,18 @@
  function installSaveWrapper(){if(!baseSave)return;const wrapped=function(show=true){if(offlineSettlementBusy)return true;checkpoint(now(),false);return baseSave(show);};try{save=wrapped;}catch(_){}window.save=wrapped;}
  function persistForegroundCheckpoint(){if(offlineSettlementBusy)return;checkpoint(now(),false);if(baseSave)baseSave(false);lastHeartbeatPersist=now();}
  function installHeartbeat(){if(heartbeatTimer)clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(offlineSettlementBusy)return;const background=typeof window.backgroundProgressEnvironmentIsBackground==="function"?window.backgroundProgressEnvironmentIsBackground():document.visibilityState==="hidden";if(background)return;checkpoint(now(),false);if(now()-lastHeartbeatPersist>=HEARTBEAT_PERSIST_MS&&baseSave){baseSave(false);lastHeartbeatPersist=now();}},HEARTBEAT_MS);if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());}
+ function runGearAccumulatorRegression(){
+  const errors=[];
+  function probe(){const target={equipment:{weapon:{score:50},armor:{score:80}},inventory:[{id:"existing",score:1}]},rejected=[],gear=createGearAccumulator({target,reject:item=>rejected.push(item.id),score:item=>Number(item?.score)||0,notifyUpgrade:false});gear.consider({id:"weapon-best",type:"weapon",q:4,score:60});gear.consider({id:"weapon-lower",type:"weapon",q:4,score:55});gear.consider({id:"armor-lower",type:"armor",q:4,score:70});gear.consider({id:"mythic",type:"shoes",q:5,score:1});const result=gear.finalize();return {target,rejected,result};}
+  const a=probe(),b=probe();
+  if(JSON.stringify(a)!==JSON.stringify(b))errors.push({code:"ACCUMULATOR_NOT_DETERMINISTIC"});
+  if(a.target.inventory.map(item=>item.id).join("|")!=="existing|weapon-best|mythic")errors.push({code:"TARGET_INVENTORY_RESULT",inventory:a.target.inventory});
+  if(a.rejected.join("|")!=="weapon-lower|armor-lower"||a.result.keptCount!==2||a.result.droppedCount!==4)errors.push({code:"TARGET_SELECTION_RESULT",rejected:a.rejected,result:a.result});
+  if(a.target.equipment.weapon.score!==50||a.target.equipment.armor.score!==80)errors.push({code:"TARGET_EQUIPMENT_MUTATED"});
+  return Object.freeze({version:1,passed:errors.length===0,targetIsolation:true,deterministic:true,errors:Object.freeze(errors)});
+ }
  function validateThirdWorldOfflineSettlement(){
-  const errors=[];if(OFFLINE_GEAR_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_GEAR_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});if(Number(window.OFFLINE_SAMPLE_OWNER_VERSION)!==1||typeof window.appendOfflineBattleSample!=="function")errors.push({code:"SAMPLE_OWNER"});if(Number(window.OFFLINE_RESET_OWNER_VERSION)!==1||typeof window.resetOfflineSaveState!=="function")errors.push({code:"RESET_OWNER"});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});return Object.freeze({version:2,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,errors:Object.freeze(errors)});
+  const errors=[];if(OFFLINE_GEAR_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_GEAR_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});if(Number(window.OFFLINE_SAMPLE_OWNER_VERSION)!==1||typeof window.appendOfflineBattleSample!=="function")errors.push({code:"SAMPLE_OWNER"});if(Number(window.OFFLINE_RESET_OWNER_VERSION)!==1||typeof window.resetOfflineSaveState!=="function")errors.push({code:"RESET_OWNER"});if(window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY?.passed!==true)errors.push({code:"GEAR_ACCUMULATOR_TARGETING"});if(THIRD_WORLD_OFFLINE_STATE_ALLOWLIST.join("|")!=="inventory|offline")errors.push({code:"STATE_ALLOWLIST",allowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});if(!/snapshotStateOutsideAllowedRoots/.test(source)||!/inventoryPrefixSnapshot/.test(source))errors.push({code:"ALLOWLIST_GUARD_MISSING"});return Object.freeze({version:3,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,stateAllowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST,errors:Object.freeze(errors)});
  }
  window.OFFLINE_SAMPLE_SELECTION_VERSION=OFFLINE_SAMPLE_SELECTION_VERSION;
  window.OFFLINE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
@@ -201,7 +223,12 @@
  window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1;
  window.THIRD_WORLD_OFFLINE_SETTLEMENT_VERSION=1;
  window.OFFLINE_THREE_ERA_SETTLEMENT_VERSION=1;
- window.OFFLINE_GEAR_ACCUMULATOR_VERSION=1;
+ window.OFFLINE_GEAR_ACCUMULATOR_VERSION=OFFLINE_GEAR_ACCUMULATOR_VERSION;
+ window.OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION=OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION;
+ window.THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION=THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION;
+ window.THIRD_WORLD_OFFLINE_STATE_ALLOWLIST=THIRD_WORLD_OFFLINE_STATE_ALLOWLIST;
+ window.createOfflineGearAccumulator=createGearAccumulator;
+ window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY=runGearAccumulatorRegression();
  window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE=OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE;
  window.OFFLINE_THIRD_WORLD_GEAR_RATE=OFFLINE_GEAR_RATE;
  window.grantSecondWorldOfflineRewards=grantSecondWorldOfflineRewards;
@@ -212,6 +239,7 @@
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
  window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION=1;
  window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY=validateThirdWorldOfflineSettlement();
+ if(!window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY.passed)console.error("[文明戰線] Offline gear accumulator integrity error",window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY.errors);
  if(!window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY.passed)console.error("[文明戰線] Third-world offline settlement integrity error",window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY.errors);
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
