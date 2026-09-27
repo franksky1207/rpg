@@ -10,12 +10,14 @@
  if(Number(window.MARK_PROGRESSION_OWNER_VERSION)!==1)fail("MARK_PROGRESSION_OWNER_VERSION","印記升級 progression 應由 Mark Core 單一管理",window.MARK_PROGRESSION_OWNER_VERSION);
  if(Number(window.MARK_DESCRIPTION_OWNER_VERSION)!==1)fail("MARK_DESCRIPTION_OWNER_VERSION","印記效果說明應由 Mark Core 單一管理",window.MARK_DESCRIPTION_OWNER_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
+ if(Number(window.MARK_MAX_LEVEL_OWNER_VERSION)!==1)fail("MARK_MAX_LEVEL_OWNER_VERSION","印記滿級 owner 版本應為 1",window.MARK_MAX_LEVEL_OWNER_VERSION);
+ if(typeof window.markMaxLevel!=="function"||Number(window.markMaxLevel())!==Number(window.MARK_MAX_LEVEL))fail("MARK_MAX_LEVEL_OWNER","markMaxLevel() 必須直接回傳 Mark Core 正式滿級",typeof window.markMaxLevel==="function"?window.markMaxLevel():null);
  if(JSON.stringify(Array.from(window.MARK_KEYS||[]))!==JSON.stringify(expectedKeys))fail("MARK_KEYS","印記順序與正式取得順序不一致",window.MARK_KEYS);
  if(JSON.stringify(Array.from(window.MARK_UPGRADE_KILLS||[]))!==JSON.stringify(expectedUpgrade))fail("MARK_UPGRADE_KILLS","印記升級擊殺需求異常",window.MARK_UPGRADE_KILLS);
 
  const configKeys=config.map(entry=>entry.markId);
  if(JSON.stringify(configKeys)!==JSON.stringify(expectedKeys))fail("MARK_CONFIG_KEYS","Mark Core 正式順序應直接來自統一災厄設定",configKeys);
- const required=["markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markDefinition","markDisplayName","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
+ const required=["markMaxLevel","markClampLevel","markActivationChance","markRequiredKillsForNextLevel","markCumulativeKillsForLevel","markProgressSnapshot","advanceMarkProgressEntry","settleFormalMarkKill","markLevel","markDefinition","markDisplayName","markEffectSnapshot","markEffectDescription","markLevelsSnapshot","markFormalSnapshot","markEffectsSnapshot","createBlankTestMarkLevels","gmSetTestMarkLevel","gmUseCurrentMarkTestStatus"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MARK_API",`缺少 Mark Core API：${name}`);});
  if(typeof window.markDisplayName==="function"){
   const expectedNames=Object.fromEntries(config.map(entry=>[entry.markId,entry.markName]));
