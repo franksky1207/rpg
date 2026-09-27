@@ -1,9 +1,9 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const DATA_VERSION=3;
  const COMBAT_VERSION=1;
  const PROGRESSION_VERSION=1;
- const RUN_VERSION=5;
+ const RUN_VERSION=6;
  function freezeReport(version,errors){return Object.freeze({version,passed:errors.length===0,errors:Object.freeze(errors.slice())});}
  function dataReport(){
   const errors=[];
@@ -76,14 +76,14 @@
   const sandboxCore=typeof window.thirdWorldCoreSnapshot==="function"?window.thirdWorldCoreSnapshot({thirdWorld:{entered:true,coreLevel:5,dimensionalStrings:2000000000}}):null;
   if(sandboxCore?.formalTarget!==false||sandboxCore?.runActive!==false)errors.push({code:"THIRD_WORLD_CORE_TARGET_ISOLATION",snapshot:sandboxCore});
   if(Number(window.THIRD_WORLD_RUN_CORE_SNAPSHOT_VERSION)!==1||Number(window.THIRD_WORLD_RUN_HP_LIFECYCLE_VERSION)!==1)errors.push({code:"THIRD_WORLD_RUN_SNAPSHOT_POLICY",coreSnapshot:window.THIRD_WORLD_RUN_CORE_SNAPSHOT_VERSION,hpLifecycle:window.THIRD_WORLD_RUN_HP_LIFECYCLE_VERSION});
-  if(Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==1||Number(window.THIRD_WORLD_RUN_FORMAL_BATTLE_COUNT_VERSION)!==1||typeof window.thirdWorldLastFinishedRunSnapshot!=="function")errors.push({code:"THIRD_WORLD_RUN_RESULT_LIFECYCLE",lastFinished:window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION,battleCount:window.THIRD_WORLD_RUN_FORMAL_BATTLE_COUNT_VERSION,api:typeof window.thirdWorldLastFinishedRunSnapshot});
+  if(Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==2||Number(window.THIRD_WORLD_RUN_IDENTITY_VERSION)!==1||Number(window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION)!==1||Number(window.THIRD_WORLD_RUN_FORMAL_BATTLE_COUNT_VERSION)!==1||typeof window.thirdWorldLastFinishedRunSnapshot!=="function")errors.push({code:"THIRD_WORLD_RUN_RESULT_LIFECYCLE",lastFinished:window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION,identity:window.THIRD_WORLD_RUN_IDENTITY_VERSION,exceptionCleanup:window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION,battleCount:window.THIRD_WORLD_RUN_FORMAL_BATTLE_COUNT_VERSION,api:typeof window.thirdWorldLastFinishedRunSnapshot});
   if(Number(window.THIRD_WORLD_RUN_RECENT_HISTORY_LIMIT)!==20)errors.push({code:"THIRD_WORLD_RUN_HISTORY_LIMIT",actual:window.THIRD_WORLD_RUN_RECENT_HISTORY_LIMIT});
   if(window.thirdWorldSuppressionPerDeathPoints?.(0)!==.5||window.thirdWorldSuppressionPerDeathPoints?.(10)!==.1)errors.push({code:"THIRD_WORLD_SUPPRESSION_ENDPOINTS",lv0:window.thirdWorldSuppressionPerDeathPoints?.(0),lv10:window.thirdWorldSuppressionPerDeathPoints?.(10)});
   if(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY?.passed!==true||typeof window.backgroundProgressFastCatchUpActive!=="function"||typeof window.backgroundProgressCatchUpStep!=="function"||typeof window.backgroundProgressCatchUpFinalPolicy!=="function"||typeof window.backgroundProgressConsumeCatchUpCredit!=="function"||typeof window.backgroundProgressUiYield!=="function")errors.push({code:"THIRD_WORLD_FAST_CATCH_UP_OWNER",report:window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_INTEGRITY||null});
   if(typeof window.backgroundProgressActiveKind!=="function"||typeof window.worldTransitionRuntimeStatus!=="function"||typeof window.registerWorldTransitionRuntimeBlocker!=="function")errors.push({code:"THIRD_WORLD_ACTIVE_FLOW_GUARD_OWNER"});
   if(typeof window.backgroundProgressOnPageHide!=="function")errors.push({code:"THIRD_WORLD_SHARED_PAGEHIDE_OWNER"});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
-  if(["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart"].some(key=>persistent.includes(key)))errors.push({code:"THIRD_WORLD_RUN_PERSISTENCE_LEAK",persistent});
+  if(["deaths","suppression","run","runId","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart","runTotals"].some(key=>persistent.includes(key)))errors.push({code:"THIRD_WORLD_RUN_PERSISTENCE_LEAK",persistent});
   return freezeReport(RUN_VERSION,errors);
  }
  function build(){const reports=Object.freeze({data:dataReport(),combat:combatReport(),progression:progressionReport(),run:runReport()});const errors=[];Object.entries(reports).forEach(([name,report])=>{if(report.passed!==true)errors.push({code:"THIRD_WORLD_SUBSYSTEM_FAILED",name,report});});return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors),reports});}
