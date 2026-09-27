@@ -10,36 +10,61 @@
 
 # 0. 本次交接重新驗證
 
-本次交接不是只靠對話記憶，已重新讀取 current `main` 實際程式碼。
+本次不是只靠對話記憶；更新本檔前已重新讀取 current `main` 實碼與近期 Integrity 結果。
 
 更新本檔前的 main HEAD：
 
-`afa54f79708a4d0fd3b955cb13583989a41a664d`
+`dc00ec431a43de3714ab893e4acadf84e470416a`
 
-已重新確認的 current runtime：
+重新確認的第三紀元主要 runtime：
 
-- `savemigration.js`：正式 `SAVE_SCHEMA_VERSION = 16`、Load Pipeline V2、Normalization Pipeline V2。
-- `worldphase.js`：正式 `WORLD_PHASE_VERSION = 6`，世界為銀河／宇宙／高維三階段。
-- `thirdworldphase.js`：正式 `THIRD_WORLD_PHASE_VERSION = 3`，第三紀元 persistent state、七項入場條件、entry reconciliation 均已進 runtime。
-- `levelprogression.js`：第三紀元 Lv.1000～2000 與固定 10,000,000 EXP／級已正式完成。
-- `thirdworlddata.js`：正式 `THIRD_WORLD_DATA_VERSION = 5`；十王 metadata、階段、能力 descriptor、5pp、總進度、稱號門檻均已完成。
-- `vipgm.js`：GM 測試角色已正式支援三紀元，World3 可測 Lv.1000～2000，並使用共用裝備公式產生高維神話預測裝備。
-- `civilizationcore.js`：文明最終傷害已改為 World Phase 共用 owner，World2／World3 共用文明倍率，World1 不套用。
-- `gmpowerbenchmarkworldphase.js`：既有 GM 戰力基準已接上三紀元 World Phase adapter，沒有另建 World3 戰力引擎。
-- Runtime Integrity 最新已完整通過：198 個 JavaScript 檔案、VIP、GM HP lock、背景素材、Documentation Integrity 全數成功。
+```text
+SAVE_SCHEMA_VERSION = 16
+THIRD_WORLD_PHASE_VERSION = 3
+THIRD_WORLD_DATA_VERSION = 5
+THIRD_WORLD_COMBAT_VERSION = 5
+THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION = 2
+THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION = 2
+THIRD_WORLD_PROGRESS_VERSION = 4
+THIRD_WORLD_SETTLEMENT_VERSION = 4
+THIRD_WORLD_RUN_VERSION = 2
+THIRD_WORLD_CONTINUOUS_RUNTIME_VERSION = 2
+THIRD_WORLD_EQUIPMENT_REWARD_VERSION = 3
+SHARED_EQUIPMENT_REWARD_FACTORY_VERSION = 3
+SHARED_SETTLEMENT_TRANSACTION_VERSION = 2
+LEVEL_PROGRESSION_VERSION = 2
+PLAYER_TITLE_CATALOG_VERSION = 3
+PLAYER_TITLE_UI_VERSION = 3
+CIVILIZATION_THIRD_WORLD_DATA_CONTRACT_EXTENSION_VERSION = 16
+```
 
-本次只更新 `PROJECT_HANDOFF.md`，**沒有做其他功能修改**。
+目前不是「第三紀元只有 foundation」。current main 已完成：
+
+- 第三紀元等級／EXP owner；
+- 十王 data／stage／5pp／aggregate／title metadata；
+- shared combat 擴充與正式 headless 高維 combat adapter；
+- settlement basis 單一 authority；
+- 永久 Boss HP、EXP、維度之弦、正式高維裝備、稱號、story stage 的原子結算；
+- 第三紀元 100 死連戰 runtime foundation、死亡壓制、pagehide 清理、fast catch-up、runtime blocker；
+- 高維稱號已正式併入共用玩家稱號 catalog；
+- 第一／第二／第三紀元稱號通知已統一 post-flow owner；
+- 高維裝備 base drop／VIP loot／零售價資源政策已有正式 owner；
+- GM 三紀元角色測試與 World Phase adapter 基礎已完成。
+
+但**第 7～10 批仍視為尚未正式收尾的施工批次**。其中 current main 已有部分提前完成的底層 owner，下一個對話必須「承接／補完」，不能重做第二套。
+
+本次只更新 `PROJECT_HANDOFF.md`，**不做其他功能修改**。
 
 ---
 
 # 1. 下一個 ChatGPT 必須遵守的操作規範
 
-1. **`main` 是唯一真實來源。** 每次修改前先重新讀取相關 actual code，不得只依賴本檔、對話記憶或舊規格。
+1. **`main` 是唯一真實來源。** 每次修改前先重新讀 actual code，不得只依賴本檔、對話記憶或舊規格。
 2. 使用者說「先討論／先檢查／先不要修改」時，**不得修改 GitHub**。
 3. 使用者說「做／修改／執行／第 N 批」時，可直接修改 `main`，不需要再問一次確認。
 4. 每批修改前：
    - 先重新讀 current `main` 相關 owner；
-   - 確認沒有別的 commit 已經改過同一區；
+   - 確認沒有較新的 commit 已改同一區；
    - 以 current main 為 base。
 5. 每批修改後：
    - 重新讀 current main 實碼；
@@ -48,12 +73,14 @@
    - 跑可用的 Integrity／CI；
    - 回報受影響檔案與 exact main HEAD SHA。
 6. **任何 JS／CSS 修改都必須同步更新 `index.html` cache-bust。**
-7. 優先修改正式 owner；**不要額外做 wrapper、fallback、第二套公式、第二套 combat engine、第二套 offline pipeline**。
+7. 優先修改正式來源；**不要額外做 wrapper、fallback、第二套公式、第二套 combat engine、第二套 offline pipeline**。
 8. 只有在正式 owner 已存在、且真的需要跨模組銜接時，才允許薄 adapter／policy layer。
-9. 第一／第二／第三紀元能共用的規則，優先做 shared owner，不要把三個世界切成三套平行系統。
+9. 第一／第二／第三紀元能共用的規則，優先做 shared owner，不要切成三套平行系統。
 10. GM sandbox／benchmark state 不得污染正式 save。
-11. 若現有架構已有 registry／hook／policy owner，優先掛進既有 owner，不要多層 monkey-patch。
-12. 第三紀元未定案內容不可自行補故事、最終結局或競技場正式規則。
+11. 若已有 registry／hook／policy owner，優先掛進既有 owner，不要多層 monkey-patch。
+12. 第三紀元未定案故事、最終結局、競技場正式規則、裝備最終名稱，不可自行補成正式內容。
+13. **不要動鏡像戰來實作第三紀元。** 鏡像戰可作為玩家能力／敵方能力語意參考，但不要修改鏡像本體，除非使用者明示。
+14. 第三紀元 `thirdWorld` persistent state 只存根資料；Boss stage、能力、5pp、稱號階、story tier 等一律由正式 owner 推導。
 
 ---
 
@@ -63,9 +90,11 @@
 
 正式世界：
 
-- **銀河紀元**：Lv.1～500。
-- **宇宙紀元**：Lv.501～1000。
-- **高維紀元**：Lv.1000～2000 的第三紀元；目前 foundation、等級 owner、十王 data／規則 owner、GM 測試基礎已完成，**正式高維戰鬥／結算／連戰／loot／offline／玩家 UI 尚未完成**。
+```text
+銀河紀元：Lv.1～500
+宇宙紀元：Lv.501～1000
+高維紀元：Lv.1000～2000
+```
 
 `currentWorldPhase()`：
 
@@ -83,8 +112,8 @@ worldProgressionEnabled(world) === (world === currentWorldPhase())
 
 進入 World3 後：
 
-- World1／World2 仍保留歷史與回顧；
-- 不再產生第一／第二紀元正式成長；
+- World1／World2 歷史與回顧保留；
+- 第一／第二紀元不再產生正式成長；
 - World3 為正式 progression phase。
 
 ---
@@ -95,42 +124,19 @@ worldProgressionEnabled(world) === (world === currentWorldPhase())
 
 `frank_text_rpg_save`
 
-目前版本：
+目前：
 
 ```text
 SAVE_SCHEMA_VERSION = 16
-SAVE_LOAD_PIPELINE_VERSION = 2
-SAVE_NORMALIZATION_PIPELINE_VERSION = 2
-SAVE_LEGACY_SUPPORT_POLICY_VERSION = 1
 ```
 
-future save 採 fail-closed。
+Schema16 重要政策：
 
-Normalization order：
-
-```text
-worldPhase.secondWorld
-→ worldPhase.thirdWorld
-→ worldProgress
-→ level
-→ gear
-→ enhancement
-→ vip
-→ specialization
-→ daily
-→ dungeon
-→ calamity
-→ titles
-→ offline
-→ persistentFlags
-```
-
-Schema16 重要規則：
-
-- Schema1～15 若夾帶 `thirdWorld`，視為不可信舊資料並丟棄。
-- 升 Schema16 前建立 `.pre-schema16-backup-v1` 原始 localStorage 備份。
-- `world=3` 裝備只有 source schema ≥16 才接受。
-- GM transient test state 不得寫入正式 save。
+- Schema1～15 若夾帶 `thirdWorld`，視為不可信開發期資料並丟棄；
+- 升 Schema16 前建立 `.pre-schema16-backup-v1` 原始 localStorage 備份；
+- `world=3` 裝備只有 source schema ≥16 才接受；
+- GM transient test state 不得寫入正式 save；
+- future save 採 fail-closed。
 
 ## 3.1 ThirdWorld persistent allowlist
 
@@ -149,86 +155,27 @@ thirdWorld:
 - story.finalSeen
 ```
 
-以下必須維持 transient，不得存入 save：
+以下必須保持 transient：
 
-- 本輪玩家死亡數
-- 死亡壓制層數
-- 目前連戰 target
-- 當場 combat runtime
-- 暫時 ability 狀態
-- battle spirit stacks
-- revenge pending 狀態
-- 其他只屬單場／單輪的 combat context
+- 本輪玩家死亡數；
+- 死亡壓制累積；
+- 目前連戰 target；
+- pending progression events；
+- recent battle summaries；
+- combat runtime；
+- battle spirit／revenge 等單場狀態。
 
-## 3.2 Entry reconciliation
+`thirdworldrun.js` Integrity 已明確檢查上述欄位不得滲入 persistent allowlist。
 
-`THIRD_WORLD_ENTRY_RECONCILIATION_VERSION = 1`
+## 3.2 進入第三紀元條件
 
-早期 Schema16／GM／測試資料若：
-
-```text
-thirdWorld.entered = true
-entryVersion < 1
-```
-
-會一次性：
-
-- 保證 `secondWorld.entered = true`
-- 暗物質清 0
-- 暗能量清 0
-- lostGear 免費歸還 inventory
-- pending black market 清除
-- 舊 offline context 截止
-- `entryVersion = 1`
-
-之後不重跑。
-
----
-
-# 4. World Phase 共用架構
-
-正式 owner：`worldphase.js`。
-
-目前共用：
-
-```js
-currentWorldPhase()
-isWorldEntered()
-worldProgressionEnabled()
-worldPhaseSnapshot()
-primaryWorldResourceSnapshot()
-worldPhaseSpecializationRequirement()
-worldPhaseEnhancementRequirement()
-worldPhaseMarkRequirement()
-summarizeWorldEntryRequirements()
-runWorldTransition()
-```
-
-World metadata：
-
-```text
-1 galaxy / 銀河紀元
-2 universe / 宇宙紀元 / secondWorld
-3 higher-dimensional / 高維紀元 / thirdWorld
-```
-
-`worldIndex` 必須為精確整數 1～3。
-
-World3 primary resource：
-
-```text
-維度之弦 = state.thirdWorld.dimensionalStrings
-```
-
-## 4.1 進入第三紀元七項條件
-
-全部成立才可進入：
+全部成立：
 
 1. Lv1000
 2. 宇宙紀元已 entered＋第100王擊破＋宇宙最終故事完成
 3. 五部位強化 +40
 4. 文明等級 Lv10
-5. VIP ≥20（由 `vipPoints` source of truth 推導）
+5. VIP ≥20（以 `vipPoints` source of truth 推導）
 6. 8 專精全部 Lv60
 7. 10 印記全部 Lv10
 
@@ -236,7 +183,7 @@ World3 primary resource：
 
 - 等級／EXP
 - VIP
-- 已裝備與背包裝備
+- 已裝備與背包
 - +40 強化
 - 8 專精
 - 10 印記
@@ -252,72 +199,13 @@ World3 primary resource：
 - World2 offline context／pending settlement
 - lost gear 先免費歸還 inventory
 
----
-
-# 5. 第一／第二紀元仍然是正式共用來源
-
-第三紀元不得把成熟的第一／第二紀元系統複製一份。
-
-目前仍應優先共用：
-
-- `combatcore.js`
-- `combatmath.js`
-- `specialization.js`
-- `markcore.js`
-- `vipprogression.js`
-- `viplootcore.js`
-- 裝備 stat／affix 公式
-- `enhancementcore.js`
-- `playertitlecore.js`
-- `offlinestatecore.js`
-- `offlineprogress.js`
-- `combatfx.js`
-- World Phase／save normalization owner
-
-第二紀元正式主線 Boss 基準仍為：
-
-```text
-BASE_STAT = 2700
-HP : ATK : DEF = 12 : 2 : 1
-N = 0..99
-M(N) = 1 + 0.015*N
-HP  = ceil(2700*12*M)
-ATK = ceil(2700*2*M)
-DEF = ceil(2700*1*M)
-```
-
-Lv505：
-
-```text
-HP 32,400
-ATK 5,400
-DEF 2,700
-```
-
-Lv1000：
-
-```text
-HP 80,514
-ATK 13,419
-DEF 6,710
-```
-
-第二紀元第10文明災厄約：
-
-```text
-ATK ≈ 14,761
-DEF ≈ 7,046
-```
-
-這也是第三紀元 Boss 起始 ATK 不宜低於第二紀元畢業內容的重要平衡基準。
+`THIRD_WORLD_ENTRY_RECONCILIATION_VERSION = 1`，舊 Schema16 entry 狀態只做一次 reconciliation。
 
 ---
 
-# 6. 第三紀元等級／EXP owner（已完成）
+# 4. 第三紀元等級／EXP（已完成）
 
 正式 owner：`levelprogression.js`。
-
-目前：
 
 ```text
 FIRST_WORLD_LEVEL_CAP = 500
@@ -327,14 +215,6 @@ ABSOLUTE_MAX_LEVEL = 2000
 THIRD_WORLD_EXP_PER_LEVEL = 10,000,000
 ```
 
-`effectiveLevelCap()`：
-
-```text
-World1 → 500
-World2 → 1000
-World3 → 2000
-```
-
 第三紀元：
 
 ```text
@@ -342,137 +222,67 @@ Lv1000～1999：每級固定 10,000,000 EXP
 Lv2000：EXP need = 0
 ```
 
-Lv2000 時：
-
-- EXP 不再累積；
-- `state.exp = 0`；
-- 但未來正式 World3 battle／維度之弦／裝備／Boss 進度仍可繼續。
-
-重要 helper：
+重要 shared API：
 
 ```js
 thirdWorldExpNeed(level)
 effectiveExpNeed(level,target)
 effectiveLevelCap(target)
+gainEffectiveExpForState(amount,target,logs)
 normalizeLevelProgressionState(target)
-gainEffectiveExp(amount,logs)
 levelProgressSnapshot(target)
 ```
 
-`thirdWorldExpNeed()` 嚴格邊界：
+Lv2000：
 
-```text
-999 → 0
-1000 → 10,000,000
-1999 → 10,000,000
-2000 → 0
-2001 → 0
-```
-
-## 6.1 Level cap 舊世界相容
-
-`levelcap.js` 現行：
-
-- World1 滿等後，一般／菁英／Boss EXP 可 1:1 轉金幣。
-- World2／World3 滿等不做金幣轉換。
-- World2／3 的 cap 行為交由正式 level owner／settlement owner 處理。
-
-## 6.2 Level audit
-
-`levelprogressionaudit.js`：
-
-```text
-LEVEL_PROGRESSION_AUDIT_VERSION = 2
-```
-
-World3 audit 語意不是「幾隻同級普通怪升級」，而是：
-
-```text
-progressionMetric = permanentBossHpDamage
-permanentDamageNeeded = 10,000,000
-sameLevelNormalKills = null
-```
-
-這是之後第6批正式 settlement 的驗證基準。
-
-## 6.3 Save migration regression 已覆蓋
-
-已測：
-
-- Schema16 World3 Lv1000
-- Schema16 World3 Lv1500
-- Schema16 World3 Lv2000
-- 偽造 World2 Lv1500 → clamp 1000
-- Schema15 偽造 World3 Lv1500 → 丟棄 thirdWorld，clamp 1000
+- `state.exp = 0`；
+- 不再升級；
+- 維度之弦仍可增加；
+- Boss HP、loot、稱號、story progression 仍照常。
 
 ---
 
-# 7. 第三紀元十王資料 owner（已完成）
+# 5. 第三紀元十王／stage／5pp／aggregate（已完成 data owner）
 
 正式 owner：`thirdworlddata.js`。
 
-```text
-THIRD_WORLD_DATA_VERSION = 5
-THIRD_WORLD_DATA_INTEGRITY_VERSION = 3
-```
-
-`thirdworldphase.js` 仍是 persistent shape／Boss HP bound owner；`thirdworlddata.js` 不重複持久化資料。
-
-## 7.1 十王固定資料
-
-每王最大 HP：
+## 5.1 十王固定資料
 
 ```text
-1,100,000,000
+每王最大 HP：1,100,000,000
+十王總 HP：11,000,000,000
 ```
 
-十王總 HP：
+十王 persisted order：
 
 ```text
-11,000,000,000
+higher-dimensional-boss-01  破界天裁  高攻
+higher-dimensional-boss-02  永劫重垣  高防
+higher-dimensional-boss-03  宿因天秤  高暴
+higher-dimensional-boss-04  無相彼岸  高閃
+higher-dimensional-boss-05  萬象迴演  連擊
+higher-dimensional-boss-06  維隙之刃  穿透
+higher-dimensional-boss-07  逆因輪轉  反擊
+higher-dimensional-boss-08  噬界深淵  汲取
+higher-dimensional-boss-09  先驗之瞳  先制
+higher-dimensional-boss-10  高維原點  均衡
 ```
 
-十王：
-
-1. 破界天裁 — 高攻
-2. 永劫重垣 — 高防
-3. 宿因天秤 — 高暴
-4. 無相彼岸 — 高閃
-5. 萬象迴演 — 連擊
-6. 維隙之刃 — 穿透
-7. 逆因輪轉 — 反擊
-8. 噬界深淵 — 汲取
-9. 先驗之瞳 — 先制
-10. 高維原點 — 均衡
-
-stable persisted order：
+共同 base：
 
 ```text
-higher-dimensional-boss-01
-...
-higher-dimensional-boss-10
+ATK 15,000
+DEF 10,000
+暴擊 10%
+閃避 10%
+先制 bonus 60%
+連擊 30%
+穿透 30%
+反擊 30%
+汲取 30%
 ```
 
-## 7.2 十王共同基準能力
-
-正式 current baseline：
-
-```text
-HP：1,100,000,000
-ATK：15,000
-DEF：10,000
-暴擊：10%
-閃避：10%
-先制 bonus：60%
-連擊：30%
-穿透：30%
-反擊：30%
-汲取：30%
-```
-
-此 ATK／DEF 已由原草案 8,000／8,000 調整為 current main 的 **15,000／10,000**。
-
-## 7.3 十王個體特化
+個體特化：
 
 ```text
 破界天裁：ATK ×1.15
@@ -487,29 +297,23 @@ DEF：10,000
 高維原點：ATK ×1.08、DEF ×1.08
 ```
 
-特化是在共同 base＋stage 上套用。
-
----
-
-# 8. 第三紀元 Boss 階段規則（已完成 data owner）
-
-Boss HP 以正式 `currentHp` 判定 stage：
+## 5.2 Stage
 
 ```text
->90%      stage 0
-≤90%      stage 1
-≤80%      stage 2
-≤70%      stage 3
-≤60%      stage 4
-≤50%      stage 5
-≤40%      stage 6
-≤30%      stage 7
-≤20%      stage 8
-≤10%      stage 9
-0%        defeated，但 stage 表示仍為 9
+>90%  stage0
+≤90%  stage1
+≤80%  stage2
+≤70%  stage3
+≤60%  stage4
+≤50%  stage5
+≤40%  stage6
+≤30%  stage7
+≤20%  stage8
+≤10%  stage9
+0%    defeated（stage 表示仍為9）
 ```
 
-每跨一階固定增加：
+每跨一階：
 
 ```text
 ATK +600
@@ -518,128 +322,58 @@ DEF +1,200
 閃避 +2pp
 ```
 
-共同 Boss stage9（未算個體特化）：
+Stage abilities：
 
 ```text
-ATK 20,400
-DEF 20,800
-暴擊 28%
-閃避 28%
+70% 鎮心
+60% 壓制
+50% 韌性
+40% 復仇
+30% 反噬
+20% 無視
+10% 戰意
 ```
 
-階段能力 descriptor：
+這七項現在已不是只有 descriptor；`thirdworldcombat.js` 會把它們轉成 shared `combatcore.js` effect profile，數值語意直接讀 max-level mark owner，不建立第二套效果常數。
 
-```text
-70%：鎮心
-    玩家最終暴擊率 -5pp
+## 5.3 5pp 戰線
 
-60%：壓制
-    玩家最終閃避率 -5pp
-
-50%：韌性
-    玩家「暴擊額外傷害部分」降低 30%
-
-40%：復仇
-    玩家暴擊後，Boss 下一次成功命中的攻擊必定暴擊
-
-30%：反噬
-    玩家受到實際 HP 傷害後，15% 機率反射其中 30%
-
-20%：無視
-    Boss 攻擊 5% 機率完全無視玩家 DEF
-
-10%：戰意
-    戰鬥開始 75% 機率啟動
-    每回合 ATK +2%
-    最多 10 層
-```
-
-目前這些只是 **descriptor／data owner**；真正的戰鬥執行要在第5批接進 shared `combatcore.js`，不得在 data 檔內執行戰鬥。
-
----
-
-# 9. 5pp 高維戰線規則（已完成 data owner）
-
-正式 5pp 判斷使用 HP 整數差，不以浮點顯示百分比當 authority。
-
-每王 5pp 對應：
+每王 5pp：
 
 ```text
 1,100,000,000 × 5% = 55,000,000 HP
 ```
 
-規則：
+正式規則：
 
-> 若目標王目前 HP 比「最高存活王」少 **55,000,000 HP 以上**，則下一場不可挑戰。
+> 若目標王比「最高存活王」少 55,000,000 HP 以上，下一場不可挑戰。
 
-等價例：
-
-```text
-100.0% vs 95.1% → 可打
-100.0% vs 95.0% → 鎖定
-```
-
-重要：
-
-- 只計算存活 Boss。
-- 已死亡 Boss 退出 5pp。
-- 只剩最後一隻存活 Boss 時，不受 5pp 限制。
-- 已死亡 Boss 不可作為正式 challenge target；未來回顧另走 review mode。
-- challenge legality 只在 battle start resolve。
-- 一場已合法開始的戰鬥，即使途中跨過 5pp，也要完整打完並結算；下一場才重新判定。
-
-正式 API：
-
-```js
-thirdWorldChallengeStatus()
-thirdWorldChallengeAllowed()
-canChallengeThirdWorldBoss()
-```
-
-`allowed`＋`gapHp` 是 authoritative；`gapPoints`／顯示百分比只供 UI。
-
-Snapshot policy：
+權威欄位：
 
 ```text
-battle start resolve 一次
-同一 combat run 重用
-settlement 後 refresh
-Boss HP mutation 後 refresh
-不做 global cache
-不在每 combat tick 重算
+allowed
+gapHp
+fivePointHpGap
 ```
 
----
+`gapPoints`／顯示百分比只供 UI。
 
-# 10. 第三紀元總進度／稱號 metadata（data owner 已完成）
+- 只計存活 Boss；
+- 已死亡 Boss 退出 5pp；
+- 只剩最後一王時不受 5pp；
+- challenge legality 只在 battle start resolve；
+- 合法開打後即使本場跨過 5pp，也完整打完再結算；下一場再重判。
 
-Aggregate snapshot：
+## 5.4 Aggregate／稱號門檻
 
-```js
-thirdWorldBossAggregateSnapshot()
-```
-
-會提供：
-
-- bossCount
-- aliveCount
-- defeatedCount
-- currentHp
-- maxHp
-- overallRemainingPercent（0～100）
-- remainingPercentSum（0～1000）
-- aliveBossIndexes
-- defeatedBossIndexes
-- bosses[]
-
-注意兩種百分比語意：
+`thirdWorldBossAggregateSnapshot()`：
 
 ```text
-overallRemainingPercent：十王總 HP 相對 110 億的 0～100%
-remainingPercentSum：十王每隻百分比相加，滿血 = 1000%
+overallRemainingPercent：十王總HP相對110億的 0～100%
+remainingPercentSum：十王各自百分比加總，滿血 = 1000%
 ```
 
-高維十稱號 metadata／門檻：
+高維稱號：
 
 ```text
 ≤900%  破界初臨
@@ -654,88 +388,404 @@ remainingPercentSum：十王每隻百分比相加，滿血 = 1000%
 0%     萬維之上
 ```
 
-目前只有 pure metadata／tier derivation；**尚未正式 grant 到玩家稱號 state**。
-
-稱號正式授予與 UI 要在後續接 `playertitlecore.js`，不可另建 `thirdWorld.titles`。
+稱號 tier 的正式 HP authority 仍由 `thirdworlddata.js` 持有，不允許 UI／story／GM 另算一套。
 
 ---
 
-# 11. 第三紀元自然進度與平衡基準
+# 6. 第 5 批：高維正式戰鬥核心（已完成）
 
-十王總 HP：
-
-```text
-11,000,000,000
-```
-
-Lv1000 → Lv2000 所需總 EXP：
+正式檔：
 
 ```text
-10,000,000 × 1000 = 10,000,000,000
+thirdworldcombat.js
+thirdworldcombatintegrity.js
+thirdworldcombatsaveguard.js
+thirdworldcombatfinalize.js
 ```
 
-未來第6批正式規則：
+shared owner：
 
 ```text
-1 點有效永久淨削血 = 1 EXP = 1 維度之弦
+combatcore.js
+combatmath.js
+specialization.js
+markcore.js
+civilizationcore.js
 ```
 
-因此若 5pp 讓十王大致均衡推進，總進度和等級天然接近：
+## 6.1 shared combat 擴充
+
+`combatcore.js` 現在同時支援 player／enemy：
+
+- initiative
+- combo
+- penetration
+- counter
+- drain
+- effect profiles
+- enemyStartHp／enemyHealCap
+- playerHealCap
+- player final damage multiplier
+- action safety budget
+
+共用能力基準：
 
 ```text
-十王 100% → 玩家約 Lv1000
-十王 90%  → 玩家約 Lv1110
-十王 80%  → 玩家約 Lv1220
-十王 70%  → 玩家約 Lv1330
-十王 60%  → 玩家約 Lv1440
-十王 50%  → 玩家約 Lv1550
-十王 40%  → 玩家約 Lv1660
-十王 30%  → 玩家約 Lv1770
-十王 20%  → 玩家約 Lv1880
-十王 10%  → 玩家約 Lv1990
+comboScale = 0.50
+penetrationDefMultiplier = 0.75
+counterScale = 0.40
+drainRatio = 0.10
 ```
 
-這個同步目前視為正式設計優點，不要任意改第三紀元 EXP 曲線。
+Boss 端 7 個高維 stage effect 直接借用 max-level mark effect semantics；Boss 不擁有也不提升玩家印記 state。
 
-## 11.1 目前同級神話＋40＋文明10＋既有養成的能力參考
+## 6.2 高維 Boss 汲取永久削血保護
 
-現有正式 formula 下，約為：
+正式戰鬥明確區分：
 
 ```text
-Lv1000  HP 49,336  ATK 13,019  DEF 6,067
-Lv1100  HP 54,246  ATK 14,317  DEF 6,672
-Lv1200  HP 59,156  ATK 15,615  DEF 7,277
-Lv1300  HP 64,067  ATK 16,913  DEF 7,882
-Lv1400  HP 68,977  ATK 18,211  DEF 8,487
-Lv1500  HP 73,887  ATK 19,509  DEF 9,091
-Lv1600  HP 78,798  ATK 20,807  DEF 9,696
-Lv1700  HP 83,708  ATK 22,105  DEF 10,301
-Lv1800  HP 88,619  ATK 23,403  DEF 10,906
-Lv1900  HP 93,529  ATK 24,701  DEF 11,511
-Lv2000  HP 98,440  ATK 25,999  DEF 12,115
+formalStartHp
+combatEndHp
+enemyHealCap = formalStartHp
 ```
 
-JS 浮點＋`Math.ceil` 可能使部分 HP 比舊設計表高 1 點，屬正常公式結果。
+所以 Boss 本場可汲取回復，但只能回到本場開始的正式 HP，**不能補回之前戰鬥已永久削掉的 HP**。
 
-現有傷害公式核心：
+## 6.3 settlement authority
+
+`settlementBasis` 是唯一正式結算 authority。
 
 ```text
-max(1, ceil((ATK - DEF × 0.55) × random(0.95～1.05)))
+combat / snapshot / challengeStatus = diagnostic-only
+top-level settlement 欄位 = convenience-only
 ```
 
-文明 Lv10 正式最終傷害倍率：
+正式 public APIs 只保留：
 
-```text
-+50% = ×1.50
+```js
+createThirdWorldBossCombatSnapshot()
+thirdWorldSettlementBasisFromResult()
+canRunThirdWorldBossCombat()
+runThirdWorldBossCombat()
 ```
+
+舊 private helper 已由 finalize owner 退休。
 
 ---
 
-# 12. GM 三紀元測試基礎（已完成，但高維正式 GM 尚未完成）
+# 7. 第 6 批：永久削血＋EXP＋維度之弦＋正式結算（已完成）
 
-## 12.1 GM 測試角色
+正式 owner：`thirdworldprogress.js`。
 
-`vipgm.js` 已正式支援：
+核心公式：
+
+```text
+有效永久削血 = max(0, formalStartHp - combatEndHp)
+EXP = 有效永久削血
+維度之弦 = 有效永久削血
+```
+
+玩家死亡仍會結算當場已造成的有效永久削血；0 淨削血則 EXP／維度之弦皆為 0。
+
+## 7.1 stale／replay protection
+
+正式 settlement 前必須：
+
+```text
+persisted boss currentHp === settlementBasis.formalStartHp
+```
+
+不一致即拒絕 stale／duplicate result。
+
+同一 `settlementBasis` 物件完成後不可重複落帳。
+
+## 7.2 原子結算
+
+共用 owner：`settlementtransaction.js` V2。
+
+任何 mutate／save 失敗：
+
+- 回復結算前 state；
+- 保持 root object identity；
+- nested references 亦維持；
+- 不允許半套 HP／EXP／裝備已寫入。
+
+World2 settlement 也已接同一 shared transaction owner。
+
+## 7.3 current main 的實際 settlement 順序
+
+以 current code 為準：
+
+```text
+1. 驗證 settlementBasis / stale guard
+2. 取得 aggregateBefore
+3. 寫回 Boss persistent currentHp
+4. 依永久淨削血發 EXP + 維度之弦
+   - gainEffectiveExpForState() 在這一步直接處理升級
+5. 建立並加入正式高維裝備
+   - item level 使用此時角色 current level
+   - 因此前一步若升級，裝備等級是「post-EXP 等級」
+6. aggregate progression
+   - 高維稱號 grant
+   - story.unlockedStage
+   - Boss death derived
+   - stage crossing
+   - post-settlement 5pp
+   - continuation decision / eventSequence
+7. shared transaction save
+```
+
+這個順序已取代舊 handoff 中「裝備後才升級」的舊描述。
+
+## 7.4 稱號與 story stage 已正式接上
+
+高維稱號不放 `thirdWorld.titles`。
+
+`playertitlecore.js` 目前正式 catalog：
+
+```text
+銀河10 + 宇宙10 + 鏡像6 + 高維10 = 36 個稱號
+```
+
+`grantPlayerTitlesForThirdWorldTier()`：
+
+- 可一次跨多階；
+- 補齊所有缺少的低階稱號；
+- pending notice 只指向本次最高新稱號。
+
+`thirdWorld.story.unlockedStage` 使用同一 aggregate tier，不另做 story threshold formula。
+
+舊存檔 normalization 會依目前十王總 HP 靜默 backfill 高維稱號，不產生通知。
+
+## 7.5 進度事件／continuation
+
+Settlement 現在會輸出：
+
+```text
+aggregateBefore / aggregateAfter
+titleTierBefore / titleTierAfter
+unlockedTitles
+titleNoticeId
+storyStageBefore / storyStageAfter
+unlockedStoryStages
+bossDefeatedNow
+stageTransition
+fivePointStatus
+fivePointBlocked
+completionReady
+eventSequence
+continuation
+```
+
+注意：
+
+- Boss death 不建立 persisted `bossKilled`；以 `currentHp === 0` 推導。
+- 十王全滅目前只得到 `completionReady = true`；**尚未由正式 completion owner 寫入 `thirdWorld.completed`／最終事件**。
+
+---
+
+# 8. 高維裝備 current main 現況（底層已提前完成，完整第8批仍未結案）
+
+正式共用 factory：`equipmentrewardcore.js` V3。  
+高維 policy adapter：`thirdworldloot.js` V3。
+
+目前已完成：
+
+```text
+品質：傳說95% / 神話5%
+每場正式 settlement：100% 至少1件
+VIP8 / 14 / 16 / 18：共用 viplootcore.js
+VIP16：可額外1件
+品質上限：神話 q5
+item level：post-EXP 的玩家目前等級
+world = 3
+sell = 0
+buy = 0
+```
+
+裝備 stat／affix 直接共用：
+
+```text
+mainStatForType()
+mainStatValue()
+rollAffixes()
+addItemStat()
+```
+
+共享 RNG pipeline 已完成 deterministic integrity；相同注入 RNG 可重現掉落內容。
+
+高維裝備出售／自售的 shared quote 已接既有 `equipmentSaleQuote()`：
+
+```text
+currency = none
+amount = 0
+gold = 0
+darkMatter = 0
+darkEnergy = 0
+```
+
+**尚未完成的第8批部分：**
+
+- 高維 10 套名稱池尚未改成「十王總剩餘 HP 區間」；current `thirdworldloot.js` 仍以 Boss 名＋部位當名稱。
+- World3 offline sample／settlement 尚未接進正式 offline pipeline。
+
+因此第8批施工時**不能重做 base drop／VIP／stat formula**，只補命名 policy＋offline integration 與必要 UI 呈現。
+
+---
+
+# 9. 100死連戰／界弦核心 current main 現況（第7批已有 runtime foundation，但尚未正式結案）
+
+正式 runtime：`thirdworldrun.js` V2。
+
+已存在：
+
+```text
+THIRD_WORLD_RUN_MAX_DEATHS = 100
+BASE_SUPPRESSION_PER_DEATH = 0.50pp
+CORE_REDUCTION_PER_LEVEL = 0.04pp
+RECENT_HISTORY_LIMIT = 20
+```
+
+死亡壓制公式：
+
+```text
+每死壓制 = 0.50pp - coreLv × 0.04pp
+```
+
+端點：
+
+```text
+Lv0  → 0.50pp / 死
+Lv10 → 0.10pp / 死
+100死：Lv0 約剩50%最大HP；Lv10約剩90%
+```
+
+目前 runtime 已具備：
+
+- 開始連戰時 deaths = 0；
+- 最多 100 死；
+- 玩家死亡但 Boss 未死才計一次 death；
+- 每場 startHp／playerHealCap 套當前死亡壓制後的 HP cap；
+- Boss death 停止；
+- stage crossing 停止；
+- 5pp blocked 停止；
+- 100 death limit 停止；
+- manual stop 會清 runtime；
+- 換王時若已有 active run 會拒絕，必須先停止；
+- pagehide 透過 shared `backgroundProgressOnPageHide()` 清 transient runtime；
+- reload 因 runtime 純記憶體資料而自然歸零；
+- shared background-progress / fast catch-up；
+- shared world-transition runtime blocker；
+- bounded recent battle summaries，不把完整 combat results 無限堆在記憶體。
+
+### 9.1 第7批仍要修正／補完的地方
+
+使用者最新定案的第7批要求是：
+
+> **稱號／劇情門檻要「停止本輪」而不是只 pause 後續跑。**
+
+current `thirdworldrun.js` 對 `progress-event` 的現況是：
+
+```text
+pauseForProgressEvents()
+→ paused = true
+→ acknowledgeThirdWorldContinuousRunEvents()
+→ 可在同一 runtime / 同一 deaths 計數下繼續
+```
+
+這與最新第7批「門檻停止、下一輪 deaths 從0開始」仍有差距。
+
+因此正式第7批要把 progression event 行為收斂成：
+
+```text
+settle
+→ 寫回進度
+→ 停止本輪 / 清 transient deaths
+→ 顯示 milestone
+→ 使用者再開始新一輪時 deaths = 0
+```
+
+另外目前只有 `coreLevel` persistent 根資料＋run 時的壓制計算；**尚缺正式界弦核心升級消費 owner**：
+
+```text
+Lv0～10
+每升1級消耗 1,000,000,000 維度之弦
+總成本 10,000,000,000
+```
+
+核心不是一般 player stat，不要塞進通用角色能力公式；它只調節高維連戰死亡後的 HP cap。
+
+### 9.2 正式玩家模式與 headless API 的區分
+
+`runThirdWorldBossCombat()` 仍必須保留 headless 單場 API，供 settlement／Integrity／GM／run owner 使用。
+
+但**玩家正式 UI 不提供單場正式挑戰**；正式入口只允許第7批的 continuous run。
+
+---
+
+# 10. Offline current main 現況
+
+現有正式 owner：
+
+```text
+offlinestatecore.js
+offlineprogress.js
+```
+
+目前 sample normalization／selection 正式支援：
+
+```text
+World1：mapEnemy
+World2：boss
+```
+
+尚未支援 World3。
+
+World3 offline 第8批要接同一 pipeline，不另建第二套 `thirdworldoffline.js`；若需要新檔，只能是非常薄的 World3 adapter／policy。
+
+正式 World3 offline 規則見第 13 節。
+
+---
+
+# 11. 稱號通知與 UI lifecycle：本次對話的重要 bug 修正
+
+最近已修正第二紀元取得稱號後「已可裝備，但通知很久後才突然跳出」的問題。
+
+`playertitleui.js` V3 現在提供三紀元共用 post-flow owner：
+
+```js
+flushPendingPlayerTitleNoticeAfterFlow()
+getPlayerTitlePostFlowStatus()
+```
+
+正式支援：
+
+```text
+galaxy
+universe
+higher-dimensional
+```
+
+行為：
+
+- 戰鬥／結算只建立 `pendingNotice`；
+- 動畫／結果／progression presentation 結束後再 flush；
+- document hidden 時不彈；
+- 回前景後補顯示；
+- 防止重複 queue／重複 modal；
+- 舊 `queuePendingPlayerTitleNotice()` 已變成 shared owner delegate。
+
+第一紀元原有 call site 不需要重寫；第二紀元文明災厄 UI 已正式補接 post-flow flush。
+
+第三紀元目前還沒有正式玩家 UI，所以 contract 已先標記 `THIRD_WORLD_POST_FLOW_READY`；第9批做 progression presentation 後，必須沿用同一 shared post-flow owner，不得另做第三套 title modal。
+
+---
+
+# 12. GM current main 現況
+
+## 12.1 已完成 foundation
+
+`vipgm.js` 已支援三紀元測試角色：
 
 ```text
 銀河紀元：Lv1～500
@@ -743,42 +793,9 @@ max(1, ceil((ATK - DEF × 0.55) × random(0.95～1.05)))
 高維紀元：Lv1000～2000
 ```
 
-GM 測試角色與正式 progression 解鎖脫鉤，不修改正式角色。
+World3 測試裝備共用正式裝備 stat／affix formula，預設可生成同級神話預測裝備；不寫正式角色 save。
 
-切換紀元／等級時：
-
-- World1：沿用既有 Boss 裝備生成。
-- World2：沿用第二紀元 Boss 裝備 owner。
-- World3：使用既有正式裝備 stat／affix formula 生成同級神話預測裝備。
-
-World3 預測裝備直接共用：
-
-```js
-mainStatForType()
-mainStatValue()
-rollAffixes()
-addItemStat()
-```
-
-固定 `q = 5` 神話，只是測試預測，不是正式掉落 owner。
-
-沒有建立第二套：
-
-```text
-gmThirdWorldPlayer
-thirdWorldTestStats
-thirdWorldTestEquipmentFormula
-```
-
-## 12.2 文明傷害共用 owner
-
-`civilizationcore.js`：
-
-```js
-civilizationCombatDamageMultiplier({ world, civilizationLevel })
-```
-
-規則：
+`civilizationcore.js` 的文明最終傷害 owner：
 
 ```text
 World1 → ×1
@@ -786,389 +803,133 @@ World2 → 套文明等級
 World3 → 套保留下來的文明等級
 ```
 
-World2／3 共用一套文明傷害 owner。
+`gmpowerbenchmarkworldphase.js` 已存在三紀元 World Phase adapter；它只是既有 benchmark 的薄 adapter，不是第二套戰鬥引擎。
 
-## 12.3 GM 戰力基準 World Phase adapter
+## 12.2 尚未完成的正式高維 GM
 
-`gmpowerbenchmarkworldphase.js` 已新增，但它只是薄 adapter，不是新戰鬥引擎。
+仍缺第10批：
 
-它把既有：
+- 高維 Boss／stage 選擇；
+- 100死連戰 benchmark；
+- 永久淨削血／回血／死亡／跨階完整輸出；
+- 高維正式管理頁；
+- core Lv0～10 的正式測試控制與輸出。
 
-```js
-gmPowerBenchmarkRunOutput()
-gmPowerBenchmarkRunCombat()
-gmPowerBenchmarkSnapshot()
-gmPowerBenchmarkSummaryText()
-gmPowerBenchmarkHtml()
-```
-
-接上目前測試 World Phase。
-
-可正確顯示：
-
-```text
-高維紀元角色｜Lv.xxxx
-角色紀元：高維紀元
-文明等級：Lv.x｜高維紀元最終傷害
-```
-
-注意：**這不等於第10批正式高維 Boss／100死 benchmark 已完成。**
-
-目前只完成「三紀元測試角色基礎＋共用文明倍率＋World Phase adapter」。
+GM 正式管理只允許改根資料，不得直接寫派生資料，見第15節。
 
 ---
 
-# 13. Runtime Integrity／本次對話的重要修正
+# 13. 暫定施工批次：第 7～第 10 批（使用者最新指定，必須保留）
 
-本次對話期間，除了完成 World3 等級／資料／GM foundation，也整理了多個已過期的 CI assertion。
-
-已修正：
-
-- Runtime Integrity 不再要求舊 `SAVE_SCHEMA_VERSION = 15`。
-- Level Progression Audit assertion 已由 V1 對齊 V2。
-- `MAX_LEVEL` audit whitelist 已允許 canonical integrity owners。
-- Handoff docs-integrity 不再強迫舊的「雙紀元下一階段」文字。
-- Pending docs-integrity 不再用舊開發階段句型卡住 current third-world implementation。
-- 沒有為了讓 CI 綠燈而把正式 runtime 降回舊版本。
-
-最後確認的 Runtime Integrity：
-
-```text
-198 JavaScript files parsed ✅
-Canonical source contract ✅
-Save compatibility policy ✅
-GM World3 test character ✅
-Load order ✅
-Unlimited VIP Integrity ✅
-GM mainline HP lock Integrity ✅
-Background Asset Integrity ✅
-Documentation Integrity ✅
-Runtime Integrity workflow SUCCESS ✅
-Pages deployment SUCCESS ✅
-```
-
-本次對話完成後的 functional baseline 仍以 current main 為準。
-
----
-
-# 14. 尚未完成／禁止誤認為已完成
-
-目前 **尚未完成**：
-
-- `thirdworldcombat.js` 正式高維戰鬥 core
-- Boss 端 ability 真正 combat execution
-- 正式永久削血 settlement
-- 維度之弦正式發放
-- World3 正式 EXP settlement
-- World3 正式 loot/drop
-- 100 死連戰
-- 界弦核心升級／死亡壓制 runtime
-- World3 正式 offline loot settlement
-- World3 玩家高維戰線 UI
-- 已死十王正式回顧模式
-- 高維稱號正式 grant
-- 高維劇情 trigger framework
-- 高維具體故事文本
-- 十王全滅最終事件
-- 第三紀元競技場正式規則
-- 第10批完整高維 GM benchmark／管理頁
-
-目前 `thirdworlddata.js` 是 pure rule/data owner，**不能把它誤當正式 combat／settlement 已完成**。
-
----
-
-# 15. 後續施工順序：第5～第10批
-
-以下為下一個對話正式承接順序。
-
-## 第 5 批：高維正式戰鬥核心
-
-這是第三紀元最關鍵的一批。
-
-建立：
-
-```text
-thirdworldcombat.js
-```
-
-但**不得自己重做一套 combat engine**。
-
-要盡量接：
-
-- `combatcore.js`
-- `combatmath.js`
-- `specialization.js`
-- `markcore.js`
-- VIP combat／stats owner
-- 裝備能力
-- enhancement combat owner
-- civilization damage owner
-- `combatfx.js`
-
-第三紀元只增加 Boss 端 World3 規則：
-
-基礎戰鬥能力：
-
-- 先制
-- 連擊
-- 穿透
-- 反擊
-- 汲取
-
-高維階段能力：
-
-- 鎮心
-- 壓制
-- 韌性
-- 復仇
-- 反噬
-- 無視
-- 戰意
-
-以及十王各自特化。
-
-### 第5批最重要規則
-
-高維 Boss 汲取：
-
-```text
-本場回血上限 = 本場開始正式 HP
-```
-
-例如某王歷史上已從 11 億削到 8 億，本場開始正式 HP = 8 億；本場即使汲取，也只能回到 8 億，**不能補回歷史永久削掉的 3 億**。
-
-因此 `thirdworldcombat.js` 必須把：
-
-```text
-formalStartHp
-combatCurrentHp
-healCap = formalStartHp
-```
-
-分清楚。
-
-### 第5批完成標準
-
-先做到：
-
-> 一次 **headless 高維單場戰鬥** 可以正確跑完並回傳結果。
-
-這一批：
-
-- 可以建立正式 combat adapter／context；
-- 可以跑玩家 vs 高維 Boss；
-- 必須正確吃現有玩家能力；
-- 必須正確執行 Boss ability；
-- 必須正確處理 Boss heal cap；
-- **先不要做 UI 連戰**；
-- **先不要做永久削血正式 settlement**。
-
-### 第5批架構原則
-
-建議：
-
-```text
-thirdworlddata.js
-    ↓ metadata / stage / ability descriptors
-thirdworldcombat.js
-    ↓ 將 descriptor 轉成 shared combatcore 可理解的 options/context
-combatcore.js
-    ↓ 實際共用戰鬥
-```
-
-如果 shared `combatcore.js` 缺 Boss-side hook，優先擴充 shared combat option／hook，而不是在 `thirdworldcombat.js` 複製整個回合引擎。
-
----
-
-## 第 6 批：永久削血＋維度之弦＋正式結算
-
-建立：
-
-```text
-thirdworldprogress.js
-```
-
-核心：
-
-```text
-有效永久削血
-= max(0, 場初正式 HP - 場末正式 HP)
-```
-
-獎勵：
-
-```text
-EXP = 有效永久削血
-維度之弦 = 有效永久削血
-```
-
-注意 Boss 本場汲取後，必須用**本場最終正式 HP**算淨削血，不是用玩家總輸出。
-
-正式 settlement 順序固定：
-
-1. 戰鬥完成
-2. 王 HP 寫回
-3. 算永久淨削血
-4. 發 EXP
-5. 發維度之弦
-6. 裝備掉落
-7. 升級
-8. 稱號／劇情
-9. 王死亡
-10. 強化跨階
-11. 5pp
-12. 決定是否續戰
-
-若實作時需要更細的內部 sub-step，可以拆，但對外語意與副作用順序不得顛倒。
-
-Lv2000：
-
-- EXP 不再增加；
-- 維度之弦照發；
-- Boss HP 照削；
-- loot／稱號／劇情照常處理。
-
-這一批完成後，第三紀元才真正具備正式遊戲核心。
-
----
+> 這四批是目前正式後續施工資料庫／交接基準。current main 已有部分提前完成 owner，施工時要承接，不得 duplicate。
 
 ## 第 7 批：100死連戰＋界弦核心
 
-正式高維模式：
+### 連戰
 
-- 不提供單場正式挑戰
-- 正式玩家入口只提供連續戰鬥
-- 每次開始死亡數 = 0
-- 最多 100 死
-- 停止即清零
-- reload 也清零
-- 換王必須先中止本輪
+正式玩家模式：
 
-界弦核心：
+- 不提供單場正式挑戰；
+- 只提供連續戰鬥；
+- 每次開始死亡數 = 0；
+- 最多 100 死；
+- 停止即清零；
+- reload 也清零；
+- 換王必須中止目前連戰。
+
+### 界弦核心
 
 ```text
 Lv0～10
 每級 1,000,000,000 維度之弦
-總成本 10,000,000,000
 ```
 
 死亡壓制：
 
 ```text
-每死壓制 = 0.50pp - coreLv × 0.04pp
+0.50pp - coreLv × 0.04pp
 ```
 
-對照：
+例如：
 
 ```text
-Lv0  → -0.50pp／死
-Lv1  → -0.46pp／死
-Lv2  → -0.42pp／死
-...
-Lv9  → -0.14pp／死
-Lv10 → -0.10pp／死
+Lv0  → 每死一次 -0.50pp
+Lv10 → 每死一次 -0.10pp
 ```
 
-100 死後對應可用最大 HP：
+本批停止條件：
 
-```text
-Lv0  約 50%
-Lv10 約 90%
-```
+- 100死自動停止；
+- 王死亡停止；
+- 跨階停止；
+- 稱號／劇情門檻停止；
+- 5pp鎖停止；
+- 手動停止；
+- pagehide／reload transient 清理。
 
-本批必須處理停止條件：
+**界弦核心是「高維連戰死亡狀態調節器」，不是一般角色 stat。**
 
-- 100死自動停止
-- 王死亡停止
-- 跨階停止
-- 稱號／劇情門檻停止
-- 5pp鎖停止
-- 手動停止
-- pagehide／reload transient 清理
+### 第7批接手注意
 
-跨階原則：
+current main 已有 `thirdworldrun.js` foundation。正式施工應：
 
-```text
-settle
-→ 寫回進度
-→ 強制停止
-→ milestone prompt
-→ 下一輪死亡／壓制 transient 從 0 開始
-```
-
-界弦核心不是一般角色 stat；它是「高維連戰死亡狀態調節器」，所以不能提早塞進一般 player stat owner。
+1. 先重新審核 run V2；
+2. 把 progress-event 的「pause＋resume」改成最新定案的「停止本輪」；
+3. 增加正式 core upgrade spending owner；
+4. 保留 transient／pagehide／active-flow／fast-catch-up 共用架構；
+5. 不重做 combat／settlement。
 
 ---
 
 ## 第 8 批：高維裝備＋掉落＋離線
 
-### 高維正式裝備
+### 裝備
 
-延伸現有裝備公式至 Lv2000：
+延伸既有裝備公式到 Lv2000：
 
-- 只有傳說／神話
-- 基礎品質池 95%／5%
-- 每場正式高維戰鬥 100% 至少 1 件
-- VIP8／14／16／18 照常套用既有 loot owner
-- 不開 +41～+60
-- 強化仍停 +40
-- item level = 正式角色等級
+- 只有傳說／神話；
+- 95%／5%；
+- 每場 100% 至少1件；
+- VIP8／14／16／18照常；
+- 不開 +41～+60；
+- 強化仍停 +40；
+- item level 跟玩家正式 current level。
 
-名稱池依：
-
-> **十王總剩餘 HP 區間**
-
-不是依單一 Boss。
-
-10 套命名區間對應總 remaining percent sum：
-
-```text
-1000%
-900%
-800%
-...
-100%
-```
+**名稱池依十王總剩餘 HP 區間，不依單王。**
 
 能力公式不變，只有名稱語意改變。
 
-裝備出售／清理：
+current main 已有正式 base drop／VIP／shared equipment formula，**不可重做**。
 
-```text
-不產金幣
-不產暗物質
-不產維度之弦
-```
-
-第三紀元不建立新商店經濟。
-
-### 高維 offline
-
-必須接既有：
-
-- `offlinestatecore.js`
-- `offlineprogress.js`
-
-不要另建第二套 `thirdworldoffline.js` pipeline；若有該檔只能是非常薄的 adapter。
+### 離線
 
 第三紀元 offline：
 
-- 來源：近期正式高維戰鬥 sample
-- 不分王
-- 不削 Boss HP
-- 不給 EXP
-- 不給維度之弦
-- 不推稱號
-- 不推劇情
-- 不推界弦核心
-- 只模擬裝備掉落機會
-- VIP loot 照常套用
+- 來源：近期正式高維 sample；
+- 不分王；
+- 不削王 HP；
+- 不給 EXP；
+- 不給維度之弦；
+- 不推稱號；
+- 不推劇情；
+- 不推核心；
+- 只模擬裝備掉落機會；
+- VIP loot 照常套用。
+
+必須接：
+
+```text
+offlinestatecore.js
+offlineprogress.js
+```
+
+不要另建第二套 pipeline；若有 `thirdworldoffline.js`，只能是薄 adapter。
 
 ---
 
 ## 第 9 批：正式 UI／回顧／稱號／劇情框架
 
-建立：
+建立／正式化：
 
 ```text
 thirdworldui.js
@@ -1176,7 +937,7 @@ thirdworldui.js
 
 ### 主畫面
 
-新增／正式化：
+新增：
 
 ```text
 新紀元｜高維紀元
@@ -1184,49 +945,44 @@ thirdworldui.js
 
 ### 冒險
 
-不做 10 區。
-
-直接進：
+不做 10 區，直接：
 
 ```text
 高維戰線
 ```
 
-桌機：2×5 十王卡。
+桌機 2×5 十王卡。
 
 頂部摘要：
 
-- 十王總剩餘 HP
-- 高維稱號
-- 維度之弦
-- 界弦核心
+- 總剩餘 HP；
+- 高維稱號；
+- 維度之弦；
+- 界弦核心。
 
 王卡：
 
-- 王名
-- 個體特化
-- HP
-- %
-- 階段
-- 可挑戰／5pp鎖
-- 已擊破／回顧
+- 王名；
+- 個體特化；
+- HP；
+- %；
+- 階段；
+- 可挑戰／5pp鎖；
+- 已擊破／回顧。
 
 ### 回顧
 
-已擊破高維王：
+已擊破王：
 
-- 10% 最終型態
-- 滿 HP
-- 單場
-- 無 EXP
-- 無維度之弦
-- 無裝備
-- 無正式進度
-- 不寫回 Boss persistent HP
+- 10% 最終型態；
+- 滿 HP；
+- 單場；
+- 無收益；
+- 不改正式 HP／EXP／維度之弦／裝備／稱號／story。
 
 ### 分頁
 
-Session-only 瀏覽狀態：
+session-only：
 
 ```text
 高維紀元
@@ -1234,11 +990,11 @@ Session-only 瀏覽狀態：
 銀河紀元・回顧
 ```
 
-在同一次 session 中，使用者切到回顧後不要自動跳回高維；reload／重開後才回 current world 預設。
+同一次 session 內切換後不要自動跳回預設；reload／重開後才回 current world 預設。
 
 ### 稱號／劇情 trigger framework
 
-先完成 milestone trigger：
+只做 milestone trigger：
 
 ```text
 900%
@@ -1253,50 +1009,52 @@ Session-only 瀏覽狀態：
 0%
 ```
 
-具體第三紀元故事文本尚未定，**不可自行寫故事內容**。
+具體故事文本目前未定，**不可自行寫**。
 
-高維 title grant 必須接 `playertitlecore.js`，不要把稱號塞進 `thirdWorld` state。
+高維稱號 grant 已在 current settlement／shared title owner 完成；第9批主要補玩家 presentation／event framework，並使用既有 shared post-flow title notification。
 
 ---
 
 ## 第 10 批：GM＋Integrity＋收尾
 
-正式高維系統穩定後才做完整 GM，避免先做出 duplicate logic。
+正式高維玩家系統穩定後才做完整 GM，避免 duplicate logic。
 
 ### GM 角色能力測試
 
-現有三紀元基礎已完成；本批再補：
+補正式高維語意：
 
-- 高維紀元正式語意
-- Lv1000～2000
-- 界弦核心 Lv0～10
+```text
+高維紀元
+Lv1000～2000
+界弦核心 Lv0～10
+```
 
 ### GM 戰力基準
 
-新增正式「高維」模式，可選：
+新增「高維存在」模式，可選：
 
-- Boss
-- 100／90／80…10% stage
-- runs
-- 模擬 100 死連戰
+- 王；
+- 100／90／80…10% stage；
+- runs；
+- 模擬100死連戰。
 
 輸出：
 
-- 勝率
-- 回合
-- 總傷害
-- 永久淨削血
-- Boss 回血
-- 玩家死亡
-- 剩餘 HP
-- 跨階段資訊
+- 勝率；
+- 回合；
+- 總傷害；
+- 永久淨削血；
+- 王回血；
+- 玩家死亡；
+- 剩餘HP；
+- 跨階段資訊。
 
-高維平衡主要看：
+高維平衡重點：
 
-- 平均每死可打幾回合
-- 每條命平均永久削血
-- 100死總永久削血
-- 100死大約提升多少等級
+- 平均每死可打幾回合；
+- 每條命平均永久削血；
+- 100死總永久削血；
+- 100死大約提升多少等級。
 
 不要只看單場勝率。
 
@@ -1304,30 +1062,68 @@ Session-only 瀏覽狀態：
 
 只允許直接調根資料：
 
-- `thirdWorld.entered`
-- `thirdWorld.completed`
-- `state.level`
-- `thirdWorld.dimensionalStrings`
-- `thirdWorld.coreLevel`
-- `thirdWorld.bosses[].currentHp`
+```text
+thirdWorld.entered
+thirdWorld.completed
+state.level
+thirdWorld.dimensionalStrings
+thirdWorld.coreLevel
+thirdWorld.bosses[].currentHp
+```
 
-可以做 Boss HP preset，但 preset 最終仍只寫 `currentHp`。
+可做 Boss HP preset，但最終只寫 `currentHp`。
 
-不得直接改派生資料：
+不得直接改：
 
-- Boss stage
-- Boss ability
-- 5pp
-- title tier
-- story tier
+- Boss stage；
+- Boss ability；
+- 5pp；
+- title tier；
+- story tier。
 
-這些全部由正式 owner 自動推導。
+全部由正式 owner 推導。
 
 ---
 
-# 16. 第三紀元仍未定案的內容
+# 14. 目前尚未完成／禁止誤認為已完成
 
-以下目前不得自行決定：
+目前仍未正式完成：
+
+- 第7批正式 closure：progress milestone 要停止整輪而非 pause-resume；
+- 正式界弦核心升級／扣維度之弦 owner；
+- 第8批十王總 HP 區間裝備名稱池；
+- World3 offline sample／offline gear-only settlement；
+- 正式 `thirdworldui.js` 玩家介面；
+- 已死十王回顧戰；
+- 高維 milestone presentation framework；
+- 高維具體故事文本；
+- 十王全滅 final completion owner／最終事件；
+- `thirdWorld.completed` 的正式最終寫入流程；
+- 第三紀元競技場正式規則；
+- 第10批完整高維 GM benchmark／管理頁；
+- 高維專屬背景／動畫／最終稱號視覺微調；
+- 十王大量實測後的最終平衡微調。
+
+以下已完成，**不要重做**：
+
+- `thirdworldcombat.js` 正式 headless combat adapter；
+- shared Boss-side combat hooks；
+- heal cap；
+- settlementBasis authority；
+- 永久淨削血 settlement；
+- EXP／維度之弦結算；
+- base 高維裝備掉落／VIP loot；
+- 高維稱號正式 grant／backfill；
+- story unlockedStage settlement；
+- stage／5pp continuation contract；
+- `thirdworldrun.js` 100死 runtime foundation；
+- 三紀元稱號 post-flow notification owner。
+
+---
+
+# 15. 第三紀元仍未定案的內容
+
+除非使用者之後明確定案，以下不可自行決定：
 
 1. 高維序章具體故事文本。
 2. 10 個高維 milestone 的完整故事／事件文本。
@@ -1336,70 +1132,102 @@ Session-only 瀏覽狀態：
 5. 第三紀元競技場正式形式與數值曲線。
 6. 10 套高維裝備的最終具體名稱。
 7. 高維專屬背景／動畫／稱號視覺細節。
-8. 十王實測後的最終數值微調。
-
-只要使用者未明確定案，不可把推測寫成正式規則。
+8. 十王實測後最終數值微調。
 
 ---
 
-# 17. 下一個對話最先要做什麼
+# 16. Integrity／CI 與近期重要修正
 
-下一個對話不是再做 foundation，也不是再做 GM。
+第三紀元已有集中 Integrity：
 
-正式起點：
+```text
+thirdworldcombatintegrity.js
+thirdworldcombatsaveguard.js
+thirdworldcombatfinalize.js
+thirdworldsubsystemintegrity.js
+thirdworldintegritycontract.js
+thirdworldmigrationregression.js
+```
 
-> **第 5 批：高維正式戰鬥核心**
+`thirdworldsubsystemintegrity.js` 分：
 
-第一步應重新讀 current `main`：
+```text
+data
+combat
+progression
+run
+```
+
+目前 contract 會檢查：
+
+- Schema16；
+- third-world migration；
+- 5pp authority；
+- snapshot policy；
+- shared mark／specialization combat rules；
+- action safety；
+- settlement basis authority；
+- shared settlement transaction rollback identity；
+- deterministic equipment pipeline；
+- zero-sale policy；
+- title catalog/backfill；
+- run 100死／壓制／fast catch-up／pagehide／active-flow guard。
+
+近期重要修正：
+
+1. 第二紀元稱號通知漏接已修：取得稱號後在 post-flow 正常彈出，不再延遲到之後某次 UI lifecycle 才顯示。
+2. 三紀元 title notification lifecycle 已統一 shared owner。
+3. Runtime Integrity 曾因舊測試硬鎖第二紀元災厄 UI 舊 cache-bust 失敗；已只更新該 static contract，沒有把正式 cache 退回舊版。
+4. current main `dc00ec4...` 的 Runtime Integrity 已成功。
+5. 最近 Story Integrity 與 GitHub Pages deployment 亦成功。
+
+---
+
+# 17. 下一個對話如何接手
+
+目前後續正式施工不是第5／第6批；它們已完成。
+
+下一個主要施工起點：
+
+> **第7批：100死連戰＋界弦核心收尾。**
+
+第一步必須重新讀 current `main`：
 
 ```text
 PROJECT_HANDOFF.md
 thirdworldphase.js
 thirdworlddata.js
-combatcore.js
-combatmath.js
-specialization.js
-markcore.js
-vipprogression.js
-civilizationcore.js
-enhancementcombat.js
-裝備能力相關 owner
-combatfx.js
+thirdworldcombat.js
+thirdworldprogress.js
+thirdworldrun.js
+thirdworldloot.js
+settlementtransaction.js
+playertitlecore.js
+playertitleui.js
+backgroundprogress.js（或 current shared background-progress owner）
+worldphase.js
+offlinestatecore.js
+offlineprogress.js
+thirdworldsubsystemintegrity.js
+thirdworldintegritycontract.js
 index.html
 ```
 
-並檢查現有 `combatcore.js` 能不能直接承接 Boss-side：
+第7批最重要差異：
 
-- initiative
-- combo
-- penetration
-- counter
-- drain
-- composure
-- suppression
-- resilience
-- revenge
-- backlash
-- ignore
-- battleSpirit
+```text
+current：progress-event pause → acknowledge → 同一輪續戰
+最新定案：progress-event 必須停止本輪 → transient deaths 清0 → 下次重新開一輪
+```
 
-若缺 hook：
+同時補正式界弦核心升級：
 
-> 優先擴充 shared combat option／event hook；不要複製整個 combat loop。
+```text
+每級 1,000,000,000 維度之弦
+Lv0～10
+```
 
-第5批目標只做到：
-
-> **headless 單次高維正式戰鬥可以正確算完。**
-
-不要在第5批提前做：
-
-- 正式連戰 UI
-- 100死
-- 核心升級
-- 正式 loot
-- offline
-- 正式高維玩家 UI
-- 完整 GM benchmark
+不要重做 combat／settlement／loot base owner。
 
 ---
 
@@ -1409,8 +1237,10 @@ index.html
 
 > 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 current `main` 的實際程式碼，完整承接《文明戰線》專案。  
 > `main` 是唯一真實來源；若 handoff 與 current main 衝突，以 current main 為準。  
-> 這次從 **第5批：高維正式戰鬥核心** 接手。先讀 `thirdworldphase.js`、`thirdworlddata.js`、`combatcore.js`、`combatmath.js`、`specialization.js`、`markcore.js`、VIP／文明／裝備／強化 combat owner、`combatfx.js` 與 `index.html`。  
-> 先分析 shared combat core 能否承接第三紀元 Boss 端能力，優先共用既有 owner，不要另做第二套 combat engine、公式或 fallback。  
-> 高維 Boss 汲取必須遵守「本場回血上限 = 本場開始正式 HP」，不能補回歷史永久削血。  
-> 使用者若說「先討論／先檢查」就不要修改；若說「第5批／修改／執行」即可直接改 GitHub `main`。  
-> JS／CSS 修改後更新 `index.html` cache-bust；完成後重新讀 main、compare base→head、自我檢查並回報 exact HEAD SHA。
+> 第5批高維 combat 與第6批正式 settlement 已完成；目前從 **第7批：100死連戰＋界弦核心收尾** 接手。  
+> 先讀 `thirdworldphase.js`、`thirdworlddata.js`、`thirdworldcombat.js`、`thirdworldprogress.js`、`thirdworldrun.js`、`thirdworldloot.js`、`settlementtransaction.js`、`playertitlecore.js`、`playertitleui.js`、World Phase／background progress／offline owners、`thirdworldsubsystemintegrity.js`、`thirdworldintegritycontract.js` 與 `index.html`。  
+> 特別確認 current `thirdworldrun.js` 已有 100死、死亡壓制、pagehide、fast catch-up、runtime blocker foundation，但目前 progress-event 是 pause＋resume；最新規則要求稱號／劇情門檻直接停止本輪，下一輪死亡數從0開始。  
+> 界弦核心正式升級為 Lv0～10，每級消耗 10 億維度之弦；它只影響高維連戰死亡壓制，不是一般角色 stat。  
+> 後續第8批要承接現有 `thirdworldloot.js`／shared equipment owner，只補總HP區間命名與 World3 offline，不得重做掉落公式。第9批做正式 UI／回顧／milestone presentation；第10批最後做完整高維 GM／Integrity 收尾。  
+> 使用者若說「先討論／先檢查」就不要修改；若說「第7批／修改／執行」即可直接改 GitHub `main`。  
+> 優先修改正式 owner，不要額外做 wrapper、fallback、第二套公式、第二套 combat engine、第二套 offline pipeline。JS／CSS 修改後更新 `index.html` cache-bust；完成後重新讀 main、compare base→head、自我檢查並回報 exact HEAD SHA。
