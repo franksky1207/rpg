@@ -1,5 +1,5 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -25,6 +25,11 @@
   const current=phase(s);
   const progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(s):null;
   const resource=typeof window.primaryWorldResourceSnapshot==="function"?window.primaryWorldResourceSnapshot(s):current===3?{label:"維度之弦",amount:Math.max(0,Math.floor(Number(s?.thirdWorld?.dimensionalStrings)||0)),secondaryLabel:null,secondaryAmount:0}:current===2?{label:"暗物質",amount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkMatter)||0)),secondaryLabel:"暗能量",secondaryAmount:Math.max(0,Math.floor(Number(s?.secondWorld?.darkEnergy)||0))}:{label:"金幣",amount:Math.max(0,Math.floor(Number(s?.gold)||0)),secondaryLabel:null,secondaryAmount:0};
+  const civilizationLevel=current>=2&&typeof window.civilizationLevel==="function"?window.civilizationLevel(s):Math.max(0,Math.floor(Number(base?.civilizationLevel)||0));
+  const civilizationMax=Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||Number(base?.civilizationMax)||10));
+  const civilizationDamageBonusPercent=current>=2&&typeof window.civilizationDamageBonusPercent==="function"?window.civilizationDamageBonusPercent(s):Math.max(0,Number(base?.civilizationDamageBonusPercent)||0);
+  const civilizationDamageMultiplier=current>=2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(s):Math.max(1,Number(base?.civilizationDamageMultiplier)||1);
+  const equippedWorlds=typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=s?.equipment?.[type];const world=Number(item?.world);return [type,item?(world===3?3:world===2?2:1):null];})):base?.equippedWorlds||{};
   return {
    ...base,
    world:current,
@@ -39,7 +44,14 @@
    resourceAmount:Math.max(0,Math.floor(Number(resource?.amount)||0)),
    resourceSecondaryLabel:resource?.secondaryLabel?String(resource.secondaryLabel):null,
    resourceSecondaryAmount:Math.max(0,Math.floor(Number(resource?.secondaryAmount)||0)),
-   dimensionalStrings:Math.max(0,Math.floor(Number(s?.thirdWorld?.dimensionalStrings)||0))
+   dimensionalStrings:Math.max(0,Math.floor(Number(s?.thirdWorld?.dimensionalStrings)||0)),
+   coreLevel:Math.max(0,Math.min(Math.max(0,Math.floor(Number(window.THIRD_WORLD_CORE_MAX_LEVEL)||10)),Math.floor(Number(s?.thirdWorld?.coreLevel)||0))),
+   coreMax:Math.max(0,Math.floor(Number(window.THIRD_WORLD_CORE_MAX_LEVEL)||10)),
+   civilizationLevel,
+   civilizationMax,
+   civilizationDamageBonusPercent,
+   civilizationDamageMultiplier,
+   equippedWorlds
   };
  }
  if(baseCharacterWorldSnapshot)window.characterWorldSnapshot=characterSnapshot;
@@ -69,9 +81,19 @@
    const desc=card.querySelector("span");
    if(!desc)return;
    if(title==="冒險")desc.textContent=current===3?"進入高維戰線，攻略十名高維存在":current===2?"進入宇宙主線並挑戰 Boss":"選擇地圖並挑戰怪物";
+   if(title==="強化"&&current===3)desc.textContent="查看已完成的 +40 裝備欄位強化";
+   if(title==="專精"&&current===3)desc.textContent="查看已完成並持續生效的 Lv.60 專精";
    if(title==="副本")desc.textContent=current===3?"競技場、虛空幻境與鏡像戰保留；懸賞戰已關閉":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
    if(title==="文明災厄")desc.textContent=current===3?"回顧舊紀元文明災厄":current===2?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記";
   });
+ }
+ function statByLabel(grid,label){return Array.from(grid?.querySelectorAll(".stat")||[]).find(row=>String(row.childNodes?.[0]?.textContent||row.textContent||"").trim().startsWith(label))||null;}
+ function ensureCharacterStat(grid,label,value){
+  if(!grid)return null;
+  let row=statByLabel(grid,label);
+  if(!row){row=document.createElement("div");row.className="stat";grid.appendChild(row);}
+  row.innerHTML=`${label}<b>${value}</b>`;
+  return row;
  }
  function applyCharacterSemantics(){
   if(typeof document==="undefined")return false;
@@ -82,10 +104,60 @@
   const title=notice?.querySelector("b"),copy=notice?.querySelector(".muted");
   if(title)title.textContent=snap.worldLabel;
   if(copy)copy.textContent=`目前角色等級上限 Lv.${snap.cap}`;
-  if(snap.world===3){
-   const stat=Array.from(card.querySelectorAll(".character-stats-grid .stat")).find(row=>/^(金幣|暗物質|維度之弦)/.test(String(row.textContent||"").trim()));
-   if(stat)stat.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
+  const grid=card.querySelector(".character-stats-grid");
+  if(snap.world===3&&grid){
+   const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
+   if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
+   ensureCharacterStat(grid,"文明等級",`Lv.${snap.civilizationLevel} / ${snap.civilizationMax}`);
+   ensureCharacterStat(grid,"最終傷害",`+${snap.civilizationDamageBonusPercent}%`);
+   ensureCharacterStat(grid,"界弦核心",`Lv.${snap.coreLevel} / ${snap.coreMax}`);
+   let info=card.querySelector(".third-world-character-info");
+   if(!info){
+    info=document.createElement("div");
+    info.className="notice third-world-character-info";
+    info.style.marginTop="12px";
+    const anchor=grid;
+    anchor.insertAdjacentElement("afterend",info);
+   }
+   info.innerHTML=`<b>高維紀元完成態</b><div class="muted" style="margin-top:5px">文明 Lv.${snap.civilizationLevel} 的既有效果持續生效；裝備強化維持 +40、8 項專精維持 Lv.60、10 項印記維持 Lv.10。界弦核心只影響高維連戰死亡壓制，不增加一般戰鬥能力。</div>`;
   }
+  return true;
+ }
+ function applyEnhancementSemantics(){
+  if(typeof document==="undefined"||phase()!==3)return false;
+  const page=document.querySelector(".enhancement-page");
+  if(!page)return false;
+  const resources=page.querySelector(".enhance-resources");
+  if(resources)resources.innerHTML=`<div style="grid-column:1/-1"><span>高維紀元</span><b>五部位 +40 MAX</b></div>`;
+  const note=page.querySelector(".enhance-summary > .muted");
+  if(note)note.textContent="高維紀元沿用宇宙紀元完成的 +40 裝備欄位強化；第三紀元不開放 +41 以上強化，也不再消耗暗物質或暗能量。";
+  return true;
+ }
+ function applySpecializationSemantics(){
+  if(typeof document==="undefined"||phase()!==3)return false;
+  const page=document.querySelector(".specialization-page");
+  if(!page)return false;
+  const notice=page.querySelector(".specialization-panel > .notice");
+  const title=notice?.querySelector("b"),copy=notice?.querySelector(".muted");
+  if(title)title.textContent="高維紀元專精已完成";
+  if(copy)copy.textContent="8 項專精維持 Lv.60；實戰訓練與戰鬥類專精持續生效。第三紀元不再開放專精升級，也不建立新的金幣／暗物質售價循環。";
+  const guideLead=page.querySelector(".specialization-guide-body > .muted");
+  if(guideLead)guideLead.textContent="8 項專精已在前兩紀元完成並永久保留；高維紀元不再提高專精上限。";
+  page.querySelectorAll(".specialization-card").forEach(card=>{
+   const name=card.querySelector(".specialization-card-head b")?.textContent?.trim();
+   const effect=card.querySelector(".specialization-effect");
+   if(!effect)return;
+   if(name==="搜刮技巧")effect.innerHTML="<div>第三紀元無直接資源加成</div><div class=\"muted\">高維正式資源由永久削血結算為維度之弦。</div>";
+   if(name==="鑑價技巧")effect.innerHTML="<div>第三紀元無裝備貨幣售價</div><div class=\"muted\">高維裝備不建立新的出售貨幣循環。</div>";
+  });
+  return true;
+ }
+ function applySettingsSemantics(){
+  if(typeof document==="undefined"||phase()!==3)return false;
+  const row=document.querySelector(".combat-speed-setting");
+  if(!row)return false;
+  const copy=row.querySelector(".muted");
+  if(copy)copy.textContent="高維紀元沿用已解鎖的 1.5× 戰鬥速度；可隨時切回標準速度。";
   return true;
  }
  function applyThirdWorldUniverseReviewSemantics(){
@@ -108,6 +180,9 @@
  function apply(){
   applyHomeSemantics();
   applyCharacterSemantics();
+  applyEnhancementSemantics();
+  applySpecializationSemantics();
+  applySettingsSemantics();
   if(phase()===2&&typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();
   if(phase()===3)applyThirdWorldUniverseReviewSemantics();
  }
@@ -117,11 +192,13 @@
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
  window.PLAYER_SEMANTICS_UI_VERSION=VERSION;
- window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=1;
+ window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=2;
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=1;
- window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=1;
+ window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=2;
+ window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=1;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=1;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;
+ window.applyThirdWorldCompletedSystemSemantics=function(){applyEnhancementSemantics();applySpecializationSemantics();applySettingsSemantics();};
  window.applyThirdWorldUniverseReviewSemantics=applyThirdWorldUniverseReviewSemantics;
 })();
