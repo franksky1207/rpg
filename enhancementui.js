@@ -1,7 +1,13 @@
 (function(){
  let pending=null,busy=false;
  function ensure(){normalizeEnhancementState(state);}
- function universe(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
+ function currentPhase(target=state){
+  if(typeof window.currentWorldPhase==="function"){
+   const value=Number(window.currentWorldPhase(target));
+   if(Number.isInteger(value)&&value>=1&&value<=3)return value;
+  }
+  return target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
+ }
  function minLevel(){return typeof window.effectiveEnhancementMin==="function"?window.effectiveEnhancementMin(state):0;}
  function cap(){return typeof window.effectiveEnhancementCap==="function"?window.effectiveEnhancementCap(state):ENHANCEMENT_MAX_LEVEL;}
  function fmt(stat,value){const rate=stat==="crit"||stat==="dodge";const n=rate?round1(value):Math.ceil(value);return `${STAT_LABELS[stat]||stat} +${n}${rate?"%":""}`;}
@@ -66,16 +72,20 @@
   const lv=level(type),effectiveMin=minLevel(),effectiveCap=cap(),invalid=lv<effectiveMin,max=lv>=effectiveCap,item=state.equipment?.[type]||null,next=Math.min(effectiveCap,lv+1),cost=max||invalid?null:costFor(next),pct=enhancementBonusPercent(lv),nextPct=enhancementBonusPercent(next);
   let itemHtmlBlock=`<div class="enhance-empty muted">目前未裝備；欄位仍可永久強化。</div>`;
   if(item){const stat=item.mainStat?.stat||mainStatForType(type),raw=Math.max(0,Number(item.mainStat?.value)||0),actual=enhancedMainStatValue(raw,lv),nextValue=enhancedMainStatValue(raw,next);itemHtmlBlock=`<div class="enhance-item">${itemHtml(item,true)}</div><div class="enhance-stat-row"><span>原始主能力</span><b>${fmt(stat,raw)}</b></div><div class="enhance-stat-row current"><span>目前實際主能力</span><b>${fmt(stat,actual)}</b></div>${max?"":`<div class="enhance-stat-row next"><span>強化後主能力</span><b>${fmt(stat,nextValue)}</b></div>`}`;}
-  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${invalid?`+${lv} / 異常`:max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max||invalid?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${invalid?`<div class="notice" style="margin-top:10px"><b>強化資料異常</b><div class="muted" style="margin-top:5px">宇宙紀元正式強化不得低於 +${effectiveMin}；系統不會自動補強化等級，請使用 GM／存檔檢查處理。</div></div>`:max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
+  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${invalid?`+${lv} / 異常`:max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max||invalid?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${invalid?`<div class="notice" style="margin-top:10px"><b>強化資料異常</b><div class="muted" style="margin-top:5px">目前紀元正式強化不得低於 +${effectiveMin}；系統不會自動補強化等級，請使用 GM／存檔檢查處理。</div></div>`:max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
  }
  function page(){
   ensure();
-  const effectiveCap=cap(),isUniverse=universe();
-  const resourceHtml=isUniverse?
-   `<div class="enhance-resources"><div><span>暗物質</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}</b></div><div><span>暗能量</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</b></div></div>`:
-   `<div class="enhance-resources"><div><span>基礎強化石</span><b>${state.enhancement.basicStones.toLocaleString()}</b></div><div><span>進階強化石</span><b>${state.enhancement.advancedStones.toLocaleString()}</b></div></div>`;
-  const universeNote=isUniverse?`<div class="muted" style="margin-top:8px">宇宙紀元高階強化使用暗物質與暗能量；+21～+40 不設等級、區域或 Boss 進度門檻。</div>`:"";
-  return `<div class="function-page enhancement-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="enhance-shell"><div class="card enhance-summary"><div class="enhance-title"><div><h2>裝備欄位強化</h2><div class="muted">永久提升裝備欄位主能力；更換或遺失裝備不影響強化等級。</div></div><div class="enhance-progress">強化進度 <b>${progress()} / ${ENHANCEMENT_SLOTS.length*effectiveCap}</b></div></div>${resourceHtml}${universeNote}</div><div class="enhance-grid">${ENHANCEMENT_SLOTS.map(slotCard).join("")}</div></div></div>`;
+  const effectiveCap=cap(),phase=currentPhase();
+  const resourceHtml=phase===3
+   ?`<div class="enhance-resources"><div style="grid-column:1/-1"><span>高維紀元</span><b>五部位 +40 MAX</b></div></div>`
+   :phase===2
+    ?`<div class="enhance-resources"><div><span>暗物質</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}</b></div><div><span>暗能量</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</b></div></div>`
+    :`<div class="enhance-resources"><div><span>基礎強化石</span><b>${state.enhancement.basicStones.toLocaleString()}</b></div><div><span>進階強化石</span><b>${state.enhancement.advancedStones.toLocaleString()}</b></div></div>`;
+  const phaseNote=phase===3
+   ?`<div class="muted" style="margin-top:8px">高維紀元沿用宇宙紀元完成的 +40 裝備欄位強化；第三紀元不開放 +41 以上強化，也不再消耗暗物質或暗能量。</div>`
+   :phase===2?`<div class="muted" style="margin-top:8px">宇宙紀元高階強化使用暗物質與暗能量；+21～+40 不設等級、區域或 Boss 進度門檻。</div>`:"";
+  return `<div class="function-page enhancement-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="enhance-shell"><div class="card enhance-summary"><div class="enhance-title"><div><h2>裝備欄位強化</h2><div class="muted">永久提升裝備欄位主能力；更換或遺失裝備不影響強化等級。</div></div><div class="enhance-progress">強化進度 <b>${progress()} / ${ENHANCEMENT_SLOTS.length*effectiveCap}</b></div></div>${resourceHtml}${phaseNote}</div><div class="enhance-grid">${ENHANCEMENT_SLOTS.map(slotCard).join("")}</div></div></div>`;
  }
  function ensureModal(){if(document.getElementById("enhancementConfirmModal"))return;const el=document.createElement("div");el.className="modal";el.id="enhancementConfirmModal";el.innerHTML=`<div class="modal-box enhancement-confirm-box"><h3>確認強化</h3><div id="enhancementConfirmDetail"></div><div class="controls"><button class="btn" onclick="closeEnhancementConfirm()">取消</button><button id="enhancementConfirmButton" class="btn primary" onclick="confirmEnhancementUpgrade()">確認強化</button></div></div>`;document.body.appendChild(el);}
  window.openEnhancementConfirm=function(type){
@@ -101,7 +111,8 @@
  };
  window.enhancementPage=page;
  window.performEnhancementUpgrade=settleUpgrade;
- window.ENHANCEMENT_UI_VERSION=6;
+ window.ENHANCEMENT_UI_VERSION=7;
+ window.ENHANCEMENT_CURRENT_PHASE_UI_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION=1;
  window.ENHANCEMENT_PLAYER_FORMAL_RANGE_VERSION=1;
