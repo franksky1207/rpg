@@ -325,7 +325,7 @@ assert(/save:fast\?previewPolicy\?\.shouldCheckpoint===true:options\.save/.test(
 assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test(secondWorldCalamityRun)&&/addEventListener\("pagehide",stopForPageHide\)/.test(secondWorldCalamityRun),"宇宙災厄 pagehide 必須在背景戰鬥開啟時保留連續討伐。");
 assert(/backgroundProgressSleep\(ms,"calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressCatchUpStep\("calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressConsumeCatchUpCredit\(delay,"calamity"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須共用 calamity 背景 sleep、catch-up step 與 credit。");
 assert(/backgroundProgressCatchUpFinalPolicy\("calamity"\)/.test(secondWorldCalamityUi)&&/combatOuterGapMs\("calamity","battle"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須在追趕完成後收斂並維持正式場間節奏。");
-assert(index.includes('src="secondworldcalamityrun.js?v=20260924-universe-background-batch1"')&&index.includes('src="secondworldcalamityui.js?v=20260927-title-post-flow1"'),"index.html 必須保留宇宙災厄背景 run cache 並載入稱號 post-flow UI cache-bust。");
+assert(index.includes('src="secondworldcalamityrun.js?v=20260927-run-infra-batch7-1"')&&index.includes('src="secondworldcalamityui.js?v=20260927-title-post-flow1"'),"index.html 必須載入宇宙災厄共用連戰 infrastructure cache 與稱號 post-flow UI cache-bust。");
 
 assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");
 assert(/const VOID_MIRAGE_ATK_BASE=10\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_ATK_PER_FLOOR=1\.3;/.test(dungeonVoid),"虛空 ATK 線性公式應為 10.0 + 1.3F。");
