@@ -62,11 +62,6 @@
   return Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(converted)));
  }
  function averageTargetMs(rows,targetSpeed){const values=(Array.isArray(rows)?rows:[]).map(row=>sampleAdjustedMsForSpeed(row,targetSpeed)).filter(ms=>ms>0);return values.length?Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(values.reduce((sum,ms)=>sum+ms,0)/values.length))):0;}
- function retainSamplesBySpeed(rows){
-  const kept=[];
-  OFFLINE_COMBAT_SPEEDS.forEach(speed=>{const matches=(Array.isArray(rows)?rows:[]).map((row,index)=>({row,index})).filter(entry=>Number(entry.row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(entry.row?.combatSpeed)===speed).slice(-OFFLINE_SAMPLES_PER_SPEED);kept.push(...matches);});
-  kept.sort((a,b)=>a.index-b.index);return kept.map(entry=>entry.row);
- }
  function beginSecondWorldOfflineBattleSample(bossIndex,boss=null){
   const index=Math.floor(Number(bossIndex)),meta=boss&&typeof boss==="object"?boss:(typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null);
   if(!meta||index<0||currentPhase()!==2)return null;
@@ -82,10 +77,11 @@
   if(token.interrupted||result?.win!==true||currentPhase()!==2)return false;
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return false;
   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return false;
+  if(typeof window.appendOfflineBattleSample!=="function")return false;
   const actualMs=Math.round(now()-Number(token.startedAt));if(!Number.isFinite(actualMs)||actualMs<REAL_BATTLE_MIN_MS||actualMs>300000)return false;
-  const gap=Math.max(0,Math.round(Number(gapMs)||0)),cycleMs=actualMs+gap,adjustedMs=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,cycleMs)),o=ensureOfflineState(),rows=retainSamplesBySpeed(o.battleSamples);
-  rows.push({sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:2,targetType:"boss",bossIndex:token.bossIndex,bossId:token.bossId,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:"boss",multiplier:1,recordedAt:now()});
-  o.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;o.battleSamples=retainSamplesBySpeed(rows);return true;
+  const gap=Math.max(0,Math.round(Number(gapMs)||0)),cycleMs=actualMs+gap,adjustedMs=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,cycleMs));
+  const appended=window.appendOfflineBattleSample(state,{sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:2,targetType:"boss",bossIndex:token.bossIndex,bossId:token.bossId,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:"boss",multiplier:1,recordedAt:now()},{currentTime:now()});
+  return appended?.ok===true;
  }
  function legalSecondWorldBossSample(row){if(Number(row?.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION||Number(row?.world)!==2||row?.targetType!=="boss")return false;const index=Math.floor(Number(row?.bossIndex)),boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null;return !!boss&&String(row?.bossId||"")===String(boss.id||"");}
  function legalThirdWorldSample(row){return Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.world)===3&&row?.targetType===THIRD_WORLD_TARGET_TYPE&&OFFLINE_COMBAT_SPEEDS.includes(Number(row?.combatSpeed));}
@@ -194,7 +190,7 @@
  function persistForegroundCheckpoint(){if(offlineSettlementBusy)return;checkpoint(now(),false);if(baseSave)baseSave(false);lastHeartbeatPersist=now();}
  function installHeartbeat(){if(heartbeatTimer)clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(offlineSettlementBusy)return;const background=typeof window.backgroundProgressEnvironmentIsBackground==="function"?window.backgroundProgressEnvironmentIsBackground():document.visibilityState==="hidden";if(background)return;checkpoint(now(),false);if(now()-lastHeartbeatPersist>=HEARTBEAT_PERSIST_MS&&baseSave){baseSave(false);lastHeartbeatPersist=now();}},HEARTBEAT_MS);if(typeof window.backgroundProgressOnEnvironmentChange==="function")window.backgroundProgressOnEnvironmentChange(()=>persistForegroundCheckpoint());if(typeof window.backgroundProgressOnPageHide==="function")window.backgroundProgressOnPageHide(()=>persistForegroundCheckpoint());}
  function validateThirdWorldOfflineSettlement(){
-  const errors=[];if(OFFLINE_GEAR_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_GEAR_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});return Object.freeze({version:1,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,errors:Object.freeze(errors)});
+  const errors=[];if(OFFLINE_GEAR_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_GEAR_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});if(Number(window.OFFLINE_SAMPLE_OWNER_VERSION)!==1||typeof window.appendOfflineBattleSample!=="function")errors.push({code:"SAMPLE_OWNER"});if(Number(window.OFFLINE_RESET_OWNER_VERSION)!==1||typeof window.resetOfflineSaveState!=="function")errors.push({code:"RESET_OWNER"});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});return Object.freeze({version:2,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,errors:Object.freeze(errors)});
  }
  window.OFFLINE_SAMPLE_SELECTION_VERSION=OFFLINE_SAMPLE_SELECTION_VERSION;
  window.OFFLINE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
