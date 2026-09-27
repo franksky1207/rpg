@@ -128,7 +128,7 @@
    }
    if(event.type==="five-point-front"){
     const boss=bossDefinition(event.bossIndex),gap=whole(event.gapHp);
-    sections.push(`<div class="notice"><b>戰線偏離｜暫不可挑戰</b><div class="muted" style="margin-top:6px;line-height:1.55">${esc(boss?.name||"此高維存在")} 已超前目前戰線${gap>0?` ${fmt(gap)} HP`:""}。本場已完整結算，但下一場已鎖定；請先推進其他存活高維存在。</div></div>`);
+    sections.push(`<div class="notice"><b>戰線偏離｜暫不可挑戰</b><div class="muted" style="margin-top:6px;line-height:1.55">${esc(boss?.name||"此高維存在")} 已超前目前 5% 戰線${gap>0?`（${fmt(gap)} HP）`:""}。本場已完整結算，但下一場已鎖定；請先推進其他存活高維存在。</div></div>`);
    }
   });
   if(settlement.completionReady===true)sections.push(`<div class="notice"><b>十名高維存在已全數擊破</b><div class="muted" style="margin-top:6px">高維戰線已達成十王全滅條件。</div></div>`);
@@ -160,7 +160,7 @@
   const modal=ensureProgressEventModal();
   if(!modal)return Promise.resolve(false);
   const reason=String(step?.terminalReason||"");
-  const reasonCopy=reason==="boss-defeated"?"Boss 已擊破，本輪連戰結束。":reason==="stage-crossed"?"跨入新強化階段，本輪連戰結束。":reason==="five-point-front"?"5pp 戰線鎖定，本輪連戰結束。":reason==="progress-event"?"高維整體進度已推進，本輪連戰結束。":"高維進度事件已結算。";
+  const reasonCopy=reason==="boss-defeated"?"Boss 已擊破，本輪連戰結束。":reason==="stage-crossed"?"跨入新強化階段，本輪連戰結束。":reason==="five-point-front"?"5% 戰線鎖定，本輪連戰結束。":reason==="progress-event"?"高維整體進度已推進，本輪連戰結束。":"高維進度事件已結算。";
   modal.innerHTML=`<div class="modal-box"><h3>高維戰線事件</h3><div style="display:grid;gap:10px">${sections.join("")}</div><div class="muted" style="margin-top:12px">${esc(reasonCopy)}確認後可重新選擇高維存在開始下一輪。</div><div class="controls" style="margin-top:16px"><button class="btn primary" type="button" onclick="closeThirdWorldProgressEventModal()">確認</button></div></div>`;
   modal.classList.add("show");
   return new Promise(resolve=>{eventModalResolver=resolve;});
@@ -197,7 +197,7 @@
   const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
   closeRunSummaryModal();const modal=ensureRunSummaryModal();if(!modal)return Promise.resolve(false);
   const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`;
-  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}<div class="muted" style="margin-top:10px">停止類型：${esc(stop.category)}</div></div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
+  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}</div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
   modal.classList.add("show");return new Promise(resolve=>{summaryModalResolver=resolve;});
  }
  function syncCatchUpNotice(){
@@ -282,14 +282,19 @@
  async function startFlow(value){
   const index=whole(value);
   if(flowPromise)return Object.freeze({ok:false,reason:"高維玩家連戰流程已在執行中。"});
-  if(typeof window.startThirdWorldContinuousRun!=="function"||typeof window.runThirdWorldContinuousLoop!=="function")return Object.freeze({ok:false,reason:"高維連戰 runtime 尚未載入完整。"});
-  const started=window.startThirdWorldContinuousRun(index);
-  if(started?.ok!==true)return started;
-  const boss=bossDefinition(index),snapshot=started.snapshot||runSnapshot(),cap=snapshot?.hpCap||{},runId=snapshot?.runId==null?null:whole(snapshot.runId);
+  if(typeof window.runThirdWorldContinuousLoop!=="function")return Object.freeze({ok:false,reason:"高維連戰 runtime 尚未載入完整。"});
+  const boss=bossDefinition(index);
   retainedContext=null;
+  const loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});
+  const snapshot=runSnapshot();
+  if(snapshot?.active!==true||whole(snapshot.bossIndex)!==index){
+   const failed=await loopPromise;
+   return failed;
+  }
+  const cap=snapshot?.hpCap||{},runId=snapshot?.runId==null?null:whole(snapshot.runId);
   activeContext={runId,active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,catchingUp:false,catchUpCompleted:0,stopReason:""};
   if(typeof render==="function")render();
-  flowPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});
+  flowPromise=loopPromise;
   let completedResult=null,finalSnapshot=null;
   try{completedResult=await flowPromise;return completedResult;}
   finally{
@@ -343,7 +348,7 @@
  }
  function validate(){
   const errors=[];
-  if(typeof window.startThirdWorldContinuousRun!=="function"||typeof window.runThirdWorldContinuousLoop!=="function"||typeof window.stopThirdWorldContinuousRun!=="function")errors.push("THIRD_WORLD_RUN_OWNER_MISSING");
+  if(typeof window.runThirdWorldContinuousLoop!=="function"||typeof window.stopThirdWorldContinuousRun!=="function")errors.push("THIRD_WORLD_RUN_OWNER_MISSING");
   if(typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function"||Number(window.COMBAT_STRUCTURED_PRESENTATION_VERSION)<2)errors.push("SHARED_COMBAT_PRESENTATION_OWNER_MISSING");
   if(typeof window.registerMinimalModeAdapter!=="function"||typeof window.openMinimalMode!=="function"||Number(window.MINIMAL_MODE_SHARED_API_VERSION)!==1)errors.push("SHARED_MINIMAL_MODE_OWNER_MISSING");
   if(typeof window.thirdWorldBoss!=="function"||typeof window.thirdWorldBossProgressSnapshot!=="function"||typeof window.thirdWorldTitleDefinition!=="function"||!Array.isArray(window.THIRD_WORLD_BOSS_ABILITY_DEFINITIONS))errors.push("THIRD_WORLD_EVENT_PRESENTATION_OWNER_MISSING");
@@ -360,9 +365,11 @@
   if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||limit.category!=="limit"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
-  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot);
+  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents);
   if(flowSource.indexOf("await presentRunSummary")<0||flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow")<flowSource.indexOf("await presentRunSummary"))errors.push("TITLE_POST_FLOW_SEQUENCE");
   if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
+  if(flowSource.includes("startThirdWorldContinuousRun"))errors.push("DUPLICATE_START_OWNER");
+  if(summarySource.includes("停止類型")||eventSource.includes("5pp"))errors.push("PLAYER_INTERNAL_TERMINOLOGY_LEAK");
   return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
