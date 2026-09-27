@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const PRESENTATION_ADAPTER_VERSION=1;
  const MINIMAL_MODE_ADAPTER_VERSION=1;
  const HP_CAP_PRESENTATION_VERSION=1;
@@ -8,6 +8,8 @@
  const RUN_SUMMARY_PRESENTATION_VERSION=1;
  const TITLE_POST_FLOW_SEQUENCE_VERSION=1;
  const STOP_REASON_PRESENTATION_VERSION=1;
+ const RUN_IDENTITY_GUARD_VERSION=1;
+ const TOTALS_FAIL_CLOSED_VERSION=1;
  const ADAPTER_ID="third-world-mainline";
  const EVENT_MODAL_ID="thirdWorldProgressEventModal";
  const SUMMARY_MODAL_ID="thirdWorldRunSummaryModal";
@@ -41,6 +43,7 @@
   if(!source)return null;
   return Object.freeze({
    version:VERSION,
+   runId:source.runId==null?null:whole(source.runId),
    active:source.active===true,
    bossIndex:whole(source.bossIndex),
    bossName:String(source.bossName||"高維存在"),
@@ -164,15 +167,18 @@
  }
  function stopReasonPresentation(reason=""){
   const value=String(reason||""),meta=typeof window.continuousRunStopReasonMeta==="function"?window.continuousRunStopReasonMeta(value):{category:"other"};
-  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":"已達本輪 100 次死亡上限","boss-defeated":"高維存在已擊破","stage-crossed":"高維存在跨入新強化階段","five-point-front":"5% 戰線鎖定","progress-event":"高維整體進度事件","active-runtime":"其他正式流程接管","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
+  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":"已達本輪 100 次死亡上限","boss-defeated":"高維存在已擊破","stage-crossed":"高維存在跨入新強化階段","five-point-front":"5% 戰線鎖定","progress-event":"高維整體進度事件","active-runtime":"其他正式流程接管","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","battle-error":"連戰流程發生異常","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
   const fallback={completion:"目標完成",progression:"進度事件",limit:"達到本輪限制",interruption:"連戰中斷",error:"流程異常",other:"連戰結束"};
   return Object.freeze({version:STOP_REASON_PRESENTATION_VERSION,reason:value,category:String(meta?.category||"other"),label:exact[value]||fallback[meta?.category]||fallback.other});
  }
  function summaryTotals(result){
   const direct=result?.totals;
-  if(direct&&Number(direct.version)===Number(window.THIRD_WORLD_RUN_TOTALS_VERSION||1))return {effectivePermanentDamage:whole(direct.effectivePermanentDamage),xp:whole(direct.xp),dimensionalStrings:whole(direct.dimensionalStrings),itemCount:whole(direct.itemCount)};
-  return (Array.isArray(result?.results)?result.results:[]).reduce((acc,row)=>{acc.effectivePermanentDamage+=whole(row?.effectivePermanentDamage);acc.xp+=whole(row?.xp);acc.dimensionalStrings+=whole(row?.dimensionalStrings);acc.itemCount+=whole(row?.itemCount);return acc;},{effectivePermanentDamage:0,xp:0,dimensionalStrings:0,itemCount:0});
+  if(direct&&Number(direct.version)===Number(window.THIRD_WORLD_RUN_TOTALS_VERSION||1))return Object.freeze({complete:true,source:"run-totals",effectivePermanentDamage:whole(direct.effectivePermanentDamage),xp:whole(direct.xp),dimensionalStrings:whole(direct.dimensionalStrings),itemCount:whole(direct.itemCount)});
+  if(result?.resultsTruncated===true)return Object.freeze({complete:false,source:"truncated-history",effectivePermanentDamage:null,xp:null,dimensionalStrings:null,itemCount:null});
+  const fallback=(Array.isArray(result?.results)?result.results:[]).reduce((acc,row)=>{acc.effectivePermanentDamage+=whole(row?.effectivePermanentDamage);acc.xp+=whole(row?.xp);acc.dimensionalStrings+=whole(row?.dimensionalStrings);acc.itemCount+=whole(row?.itemCount);return acc;},{effectivePermanentDamage:0,xp:0,dimensionalStrings:0,itemCount:0});
+  return Object.freeze({complete:true,source:"complete-history",...fallback});
  }
+ function summaryValue(totals,key,{prefix="",suffix=""}={}){return totals?.complete===true?`${prefix}${fmt(totals[key])}${suffix}`:"無法完整還原";}
  function ensureRunSummaryModal(){
   if(typeof document==="undefined")return null;
   let modal=document.getElementById(SUMMARY_MODAL_ID);
@@ -186,12 +192,12 @@
  }
  function presentRunSummary(result,finalSnapshot){
   const final=finalSnapshot||null;if(!final)return Promise.resolve(false);
-  const reason=String(final.stopReason||result?.lastResult?.terminalReason||"");
+  const reason=String(final.stopReason||result?.lastResult?.terminalReason||result?.reason||"");
   if(["pagehide","reload"].includes(reason))return Promise.resolve(false);
   const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
   closeRunSummaryModal();const modal=ensureRunSummaryModal();if(!modal)return Promise.resolve(false);
-  const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`;
-  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${fmt(totals.effectivePermanentDamage)}</b></div><div class="stat">EXP<b>+${fmt(totals.xp)}</b></div><div class="stat">維度之弦<b>+${fmt(totals.dimensionalStrings)}</b></div><div class="stat">裝備取得<b>${fmt(totals.itemCount)} 件</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div><div class="muted" style="margin-top:10px">停止類型：${esc(stop.category)}</div></div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
+  const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`;
+  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}<div class="muted" style="margin-top:10px">停止類型：${esc(stop.category)}</div></div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
   modal.classList.add("show");return new Promise(resolve=>{summaryModalResolver=resolve;});
  }
  function syncCatchUpNotice(){
@@ -262,9 +268,9 @@
   }
   if(Array.isArray(step?.settlement?.eventSequence)&&step.settlement.eventSequence.length||step?.settlement?.completionReady===true)await presentProgressEvents(step);
  }
- function updateContextFromFinalSnapshot(){
+ function updateContextFromFinalSnapshot(expectedRunId){
   if(!activeContext)return null;
-  const final=typeof window.thirdWorldLastFinishedRunSnapshot==="function"?window.thirdWorldLastFinishedRunSnapshot():null;
+  const final=typeof window.thirdWorldLastFinishedRunSnapshot==="function"?window.thirdWorldLastFinishedRunSnapshot(expectedRunId):null;
   if(final){activeContext.deaths=whole(final.deaths);activeContext.stopReason=String(final.stopReason||activeContext.stopReason||"");}
   return final;
  }
@@ -279,15 +285,15 @@
   if(typeof window.startThirdWorldContinuousRun!=="function"||typeof window.runThirdWorldContinuousLoop!=="function")return Object.freeze({ok:false,reason:"高維連戰 runtime 尚未載入完整。"});
   const started=window.startThirdWorldContinuousRun(index);
   if(started?.ok!==true)return started;
-  const boss=bossDefinition(index),snapshot=started.snapshot||runSnapshot(),cap=snapshot?.hpCap||{};
+  const boss=bossDefinition(index),snapshot=started.snapshot||runSnapshot(),cap=snapshot?.hpCap||{},runId=snapshot?.runId==null?null:whole(snapshot.runId);
   retainedContext=null;
-  activeContext={active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,catchingUp:false,catchUpCompleted:0,stopReason:""};
+  activeContext={runId,active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,catchingUp:false,catchUpCompleted:0,stopReason:""};
   if(typeof render==="function")render();
   flowPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});
   let completedResult=null,finalSnapshot=null;
   try{completedResult=await flowPromise;return completedResult;}
   finally{
-   finalSnapshot=updateContextFromFinalSnapshot();
+   finalSnapshot=updateContextFromFinalSnapshot(runId);
    if(activeContext){activeContext.active=false;activeContext.catchingUp=false;activeContext.catchUpCompleted=0;retainedContext={...activeContext};}
    activeContext=null;
    if(typeof document!=="undefined")document.getElementById("thirdWorldCatchUpStatus")?.remove();
@@ -346,14 +352,18 @@
   if(typeof window.continuousRunStopReasonMeta!=="function"||Number(window.CONTINUOUS_RUN_STOP_REASON_SEMANTICS_VERSION)!==2)errors.push("SHARED_STOP_REASON_OWNER_MISSING");
   if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function")errors.push("SHARED_TITLE_POST_FLOW_MISSING");
   if(Number(window.THIRD_WORLD_RUN_TOTALS_VERSION)!==1)errors.push("RUN_TOTALS_CONTRACT_MISSING");
+  if(Number(window.THIRD_WORLD_RUN_IDENTITY_VERSION)!==1||Number(window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION)!==1||Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==2)errors.push("RUN_IDENTITY_CONTRACT_MISSING");
   if(environmentSubscribed!==true)errors.push("BACKGROUND_ENVIRONMENT_SYNC_MISSING");
   if(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)!==100)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
-  const manual=stopReasonPresentation("manual"),boss=stopReasonPresentation("boss-defeated"),stage=stopReasonPresentation("stage-crossed"),limit=stopReasonPresentation("death-limit");
-  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||limit.category!=="limit")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
-  const flowSource=Function.prototype.toString.call(startFlow);
+  const manual=stopReasonPresentation("manual"),boss=stopReasonPresentation("boss-defeated"),stage=stopReasonPresentation("stage-crossed"),limit=stopReasonPresentation("death-limit"),battleError=stopReasonPresentation("battle-error");
+  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||limit.category!=="limit"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
+  const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
+  if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
+  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot);
   if(flowSource.indexOf("await presentRunSummary")<0||flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow")<flowSource.indexOf("await presentRunSummary"))errors.push("TITLE_POST_FLOW_SEQUENCE");
-  return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
+  return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  registerAdapter();
@@ -374,6 +384,8 @@
  window.THIRD_WORLD_PLAYER_FLOW_RUN_SUMMARY_PRESENTATION_VERSION=RUN_SUMMARY_PRESENTATION_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_TITLE_POST_FLOW_SEQUENCE_VERSION=TITLE_POST_FLOW_SEQUENCE_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_STOP_REASON_PRESENTATION_VERSION=STOP_REASON_PRESENTATION_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_RUN_IDENTITY_GUARD_VERSION=RUN_IDENTITY_GUARD_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_TOTALS_FAIL_CLOSED_VERSION=TOTALS_FAIL_CLOSED_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_ADAPTER_ID=ADAPTER_ID;
  window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY.passed)console.error("[文明戰線] Third-world player flow integrity error",window.THIRD_WORLD_PLAYER_FLOW_INTEGRITY.errors);
