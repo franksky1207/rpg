@@ -1,10 +1,12 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const RNG_PIPELINE_VERSION=1;
+ const METADATA_OWNER_VERSION=1;
+ const FALLBACK_TYPES=Object.freeze(["weapon","helmet","armor","shoes","accessory"]);
 
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
- function equipmentTypes(){return typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)&&EQUIPMENT_TYPES.length?EQUIPMENT_TYPES.slice():["weapon","helmet","armor","shoes","accessory"];}
- function typeLabel(type){return typeof equipmentTypeLabel==="function"?equipmentTypeLabel(type):String(type||"裝備");}
+ function sharedEquipmentTypes(){return typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)&&EQUIPMENT_TYPES.length?EQUIPMENT_TYPES.slice():FALLBACK_TYPES.slice();}
+ function sharedEquipmentTypeLabel(type){return typeof equipmentTypeLabel==="function"?equipmentTypeLabel(type):String(type||"裝備");}
  function withRng(rng,fn){
   const random=typeof rng==="function"?rng:Math.random;
   if(random===Math.random)return fn();
@@ -21,7 +23,7 @@
  }
  function makeEquipmentRewardItem(options={}){
   if(typeof QUALITY==="undefined"||typeof mainStatForType!=="function"||typeof mainStatValue!=="function"||typeof rollAffixes!=="function"||typeof addItemStat!=="function")return null;
-  const types=equipmentTypes(),rng=typeof options.rng==="function"?options.rng:Math.random;
+  const types=sharedEquipmentTypes(),rng=typeof options.rng==="function"?options.rng:Math.random;
   const forcedType=types.includes(options.type)?options.type:(types.includes(options.forcedType)?options.forcedType:null);
   const type=forcedType||types[Math.max(0,Math.min(types.length-1,Math.floor(rng()*types.length)))]||types[0];
   const maxLevel=Math.max(1,finiteWhole(window.ABSOLUTE_MAX_LEVEL,2000));
@@ -29,7 +31,7 @@
   const q=Math.max(0,Math.min(5,finiteWhole(options.q,0)));
   const quality=QUALITY[q];
   if(!quality)return null;
-  const name=String(options.name||`${String(options.namePrefix||"裝備")}・${typeLabel(type)}`);
+  const name=String(options.name||`${String(options.namePrefix||"裝備")}・${sharedEquipmentTypeLabel(type)}`);
   const mainStat=mainStatForType(type),mainValue=withRng(rng,()=>mainStatValue(type,level,quality.m,q)),affixes=withRng(rng,()=>rollAffixes(type,level,q,quality.m));
   const item={
    id:deterministicId(options,rng,type,level,q),
@@ -47,18 +49,22 @@
  }
  function sequenceRng(values){let index=0;const rows=Array.isArray(values)&&values.length?values:[.5];return()=>rows[index++%rows.length];}
  function validate(){
-  const errors=[];
+  const errors=[],types=sharedEquipmentTypes();
+  if(types.length!==5||!types.includes("weapon")||sharedEquipmentTypeLabel("weapon")!==equipmentTypeLabel("weapon"))errors.push({code:"SHARED_METADATA_OWNER",types,label:sharedEquipmentTypeLabel("weapon")});
   const item=makeEquipmentRewardItem({world:3,level:1000,q:4,type:"weapon",name:"共用裝備測試",sourceBossIndex:0,sourceBossId:"probe",rng:sequenceRng([.2,.7,.1,.8,.3,.6])});
   if(!item||item.world!==3||item.level!==1000||item.q!==4||item.type!=="weapon"||item.sourceBossIndex!==0||item.sourceBossId!=="probe"||!item.mainStat||!Array.isArray(item.affixes))errors.push({code:"SHARED_FACTORY",item});
   const seededOptions={world:3,level:1350,q:5,type:"accessory",name:"確定性測試",sourceBossIndex:2,sourceBossId:"probe-2",sourceOrdinal:1,sell:0,buy:0};
   const first=makeEquipmentRewardItem({...seededOptions,rng:sequenceRng([.11,.22,.33,.44,.55,.66,.77,.88,.99])});
   const second=makeEquipmentRewardItem({...seededOptions,rng:sequenceRng([.11,.22,.33,.44,.55,.66,.77,.88,.99])});
   if(JSON.stringify(first)!==JSON.stringify(second))errors.push({code:"SEEDED_REWARD_NOT_DETERMINISTIC",first,second});
-  return Object.freeze({version:VERSION,rngPipelineVersion:RNG_PIPELINE_VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice())});
+  return Object.freeze({version:VERSION,rngPipelineVersion:RNG_PIPELINE_VERSION,metadataOwnerVersion:METADATA_OWNER_VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice())});
  }
 
  window.SHARED_EQUIPMENT_REWARD_FACTORY_VERSION=VERSION;
  window.SHARED_EQUIPMENT_RNG_PIPELINE_VERSION=RNG_PIPELINE_VERSION;
+ window.SHARED_EQUIPMENT_METADATA_OWNER_VERSION=METADATA_OWNER_VERSION;
+ window.sharedEquipmentTypes=sharedEquipmentTypes;
+ window.sharedEquipmentTypeLabel=sharedEquipmentTypeLabel;
  window.makeEquipmentRewardItem=makeEquipmentRewardItem;
  window.EQUIPMENT_REWARD_CORE_INTEGRITY=validate();
  if(!window.EQUIPMENT_REWARD_CORE_INTEGRITY.passed)console.error("[文明戰線] Shared equipment reward core integrity error",window.EQUIPMENT_REWARD_CORE_INTEGRITY.errors);
