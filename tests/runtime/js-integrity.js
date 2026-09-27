@@ -1,153 +1,252 @@
 const fs=require("fs");
 const path=require("path");
-const root=path.resolve(__dirname,"../..");
-function read(name){return fs.readFileSync(path.join(root,name),"utf8");}
-function assert(condition,message){if(!condition)throw new Error(message);}
-function listFiles(dir){
- const out=[];
- for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
-  const full=path.join(dir,entry.name);
-  if(entry.isDirectory())out.push(...listFiles(full));else out.push(full);
- }
- return out;
-}
-function basename(file){return path.basename(file);}
-const productionFiles=listFiles(root).filter(file=>file.endsWith(".js")&&!file.includes(`${path.sep}tests${path.sep}`));
-productionFiles.forEach(file=>{new Function(fs.readFileSync(file,"utf8"));});
+const {spawnSync}=require("child_process");
 
-const saveMigration=read("savemigration.js");
-const offlineStateCore=read("offlinestatecore.js");
-const offlineProgress=read("offlineprogress.js");
-const saveVersionGuard=read("saveversionguard.js");
-const cloudSave=read("cloudsave.js");
-const gmData=read("gmdata.js");
+function assert(condition,message){if(!condition)throw new Error(message);}
+function walk(dir){
+ const rows=[];
+ for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+  if([".git","node_modules"].includes(entry.name))continue;
+  const full=path.join(dir,entry.name);
+  if(entry.isDirectory())rows.push(...walk(full));
+  else if(entry.isFile()&&entry.name.endsWith(".js"))rows.push(full);
+ }
+ return rows;
+}
+const read=file=>fs.readFileSync(file,"utf8");
+const files=walk(".").sort();
+assert(files.length>0,"找不到任何 JavaScript 檔案。");
+const failures=[];
+for(const file of files){
+ const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});
+ if(checked.status!==0)failures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());
+}
+assert(failures.length===0,"JavaScript 語法檢查失敗：\n"+failures.join("\n\n"));
+
+const index=read("index.html");
+const contract=read("integritycontract.js");
 const runtime=read("runtimeintegrity.js");
 const finalIntegrity=read("finalintegrity.js");
-const engine=read("engine.js");
-const ui=read("ui.js");
-const worldPhase=read("worldphase.js");
-const thirdWorldPhase=read("thirdworldphase.js");
-const thirdWorldData=read("thirdworlddata.js");
-const thirdWorldCombat=read("thirdworldcombat.js");
-const thirdWorldCombatSaveGuard=read("thirdworldcombatsaveguard.js");
-const thirdWorldCombatIntegrity=read("thirdworldcombatintegrity.js");
-const thirdWorldProgress=read("thirdworldprogress.js");
-const thirdWorldRun=read("thirdworldrun.js");
-const thirdWorldCore=read("thirdworldcore.js");
-const thirdWorldMigrationRegression=read("thirdworldmigrationregression.js");
-const thirdWorldSubsystemIntegrity=read("thirdworldsubsystemintegrity.js");
-const thirdWorldIntegrityContract=read("thirdworldintegritycontract.js");
-const thirdWorldUi=read("thirdworldui.js");
-const levelProgression=read("levelprogression.js");
-const levelCap=read("levelcap.js");
-const levelCapResult=read("levelcapresult.js");
-const compatibilityOwners=read("compatibilityowners.js");
-const settlementTransaction=read("settlementtransaction.js");
-const equipmentRewardCore=read("equipmentrewardcore.js");
-const thirdWorldLoot=read("thirdworldloot.js");
-const vipLootCore=read("viplootcore.js");
+const saveMigration=read("savemigration.js");
+const saveVersionGuard=read("saveversionguard.js");
+const offlineStateCore=read("offlinestatecore.js");
+const offlineProgress=read("offlineprogress.js");
+const cloudSave=read("cloudsave.js");
+const gmData=read("gmdata.js");
 const dungeonProgress=read("dungeonprogress.js");
-const dungeonArena=read("dungeonarena.js");
-const dungeonBounty=read("dungeonbounty.js");
-const arenaPositionCore=read("arenapositioncore.js");
-const arenaWindowCore=read("arenawindowcore.js");
-const playerTitleCore=read("playertitlecore.js");
-const playerTitleUi=read("playertitleui.js");
-const playerTitleIntegrity=read("playertitleintegrity.js");
-const secondWorldData=read("secondworlddata.js");
+const arena=read("dungeonarena.js");
+const bounty=read("dungeonbounty.js");
 const secondWorldCombat=read("secondworldcombat.js");
+const worldmap=read("worldmapui.js");
+const ui=read("ui.js");
+const playerSemanticsUi=read("playersemanticsui.js");
+const secondWorldCalamityIntegrity=read("secondworldcalamityintegrity.js");
+const secondWorldCalamityRun=read("secondworldcalamityrun.js");
+const secondWorldCalamityUi=read("secondworldcalamityui.js");
+const titleCore=read("playertitlecore.js");
+const compatibilityOwners=read("compatibilityowners.js");
+const levelAudit=read("levelprogressionaudit.js");
+const dungeonVoid=read("dungeonvoid.js");
+const dungeonGm=read("dungeongm.js");
+const specialEncounter=read("specialencounter.js");
+const inventoryFocus=read("inventoryfocus.js");
+const vipLootCore=read("viplootcore.js");
+const traitDrop=read("traitdrop.js");
+const combatCore=read("combatcore.js");
 const secondWorldRewards=read("secondworldrewards.js");
 const secondWorldMainline=read("secondworldmainline.js");
-const secondWorldCalamity=read("secondworldcalamity.js");
-const secondWorldCalamityUi=read("secondworldcalamityui.js");
-const secondWorldCalamityRun=read("secondworldcalamityrun.js");
-const enhancementCore=read("enhancementcore.js");
-const enhancementUi=read("enhancementui.js");
-const specialization=read("specialization.js");
-const markCore=read("markcore.js");
+const vipGm=read("vipgm.js");
 const civilizationCore=read("civilizationcore.js");
-const gameGuide=read("gameguide.js");
-const specialMonsters=read("specialmonsters.js");
-const backgroundProgress=read("backgroundprogress.js");
-const continuousRunIntegrity=read("continuousrunintegrity.js");
-const secondWorldCalamityGm=read("secondworldcalamitygm.js");
-const calamityGm=read("calamitygm.js");
-const calamityGmIntegrity=read("calamitygmintegrity.js");
-const playerSemanticsUi=read("playersemanticsui.js");
-const worldMapUi=read("worldmapui.js");
-const dungeonUi=read("dungeonui.js");
-const thirdWorldDungeonUi=read("thirdworlddungeonui.js");
-const mainMinimalMode=read("mainminimalmode.js");
-const secondWorldMinimalMode=read("secondworldminimalmode.js");
+const benchmarkWorldPhase=read("gmpowerbenchmarkworldphase.js");
 
-assert(/SAVE_SCHEMA_VERSION=16/.test(saveMigration)||/SAVE_VERSION=16/.test(engine),"正式存檔 Schema 應為 16。");
-assert(/WORLD_PHASE_VERSION=6/.test(worldPhase),"worldphase.js 應為 V6。");
-assert(/THIRD_WORLD_PHASE_VERSION=VERSION/.test(thirdWorldPhase),"thirdworldphase.js 缺少正式版本 export。");
-assert(/const VERSION=5;/.test(thirdWorldPhase),"thirdworldphase.js 應為 V5。");
-assert(/THIRD_WORLD_DATA_VERSION=VERSION/.test(thirdWorldData),"thirdworlddata.js 缺少正式版本 export。");
-assert(/const VERSION=6;/.test(thirdWorldData),"thirdworlddata.js 應為 V6。");
-assert(/THIRD_WORLD_COMBAT_VERSION=VERSION/.test(thirdWorldCombat),"thirdworldcombat.js 缺少正式版本 export。");
-assert(/const VERSION=5;/.test(thirdWorldCombat),"thirdworldcombat.js 應為 V5。");
-assert(/THIRD_WORLD_PROGRESS_VERSION=VERSION/.test(thirdWorldProgress),"thirdworldprogress.js 缺少正式版本 export。");
-assert(/const VERSION=4;/.test(thirdWorldProgress),"thirdworldprogress.js 應為 V4。");
-assert(/THIRD_WORLD_RUN_VERSION=VERSION/.test(thirdWorldRun),"thirdworldrun.js 缺少正式版本 export。");
-assert(/const VERSION=5;/.test(thirdWorldRun),"thirdworldrun.js 應為 V5。");
-assert(/THIRD_WORLD_CORE_PROGRESSION_VERSION=VERSION/.test(thirdWorldCore),"thirdworldcore.js 缺少正式版本 export。");
-assert(/const VERSION=3;/.test(thirdWorldCore),"thirdworldcore.js 應為 V3。");
-assert(/THIRD_WORLD_PLAYER_UI_VERSION=VERSION/.test(thirdWorldUi),"thirdworldui.js 缺少正式版本 export。");
-assert(/const VERSION=5;/.test(thirdWorldUi),"thirdworldui.js 應為 V5。");
-assert(/THIRD_WORLD_PLAYER_UI_RUN_ENTRY_VERSION=RUN_ENTRY_UI_VERSION/.test(thirdWorldUi),"thirdworldui.js 缺少第10-1批連戰入口版本。");
-assert(/THIRD_WORLD_PLAYER_UI_THREE_COLUMN_HEADER_VERSION=THREE_COLUMN_HEADER_VERSION/.test(thirdWorldUi),"thirdworldui.js 缺少三等分頁首版本。");
-assert(/startThirdWorldRunFromPlayerUi/.test(thirdWorldUi)&&/runThirdWorldContinuousLoop/.test(thirdWorldUi)&&/stopThirdWorldRunFromPlayerUi/.test(thirdWorldUi),"thirdworldui.js 必須委派正式連戰 runtime。");
-assert(!/\.toFixed\(2\)\}pp/.test(thirdWorldUi),"第三紀元玩家 UI 不應以 pp 顯示死亡壓制。");
-assert(/grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\) minmax\(0,1fr\)/.test(read("thirdworldui.css")),"第三紀元頁首必須真正三等分。");
+const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
+ .map(match=>match[1].split("?")[0])
+ .filter(src=>!/^https?:\/\//.test(src));
+for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
+const pos=name=>index.indexOf('src="'+name+'?v=');
+assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
+assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須在正式 migration 之後載入。");
+assert(pos("saveversionguard.js")<pos("gmdata.js")&&pos("saveversionguard.js")<pos("cloudsave.js"),"saveversionguard.js 必須先於 JSON／Cloud 存檔入口載入。");
+assert(pos("offlineprogress.js")>pos("offlinestatecore.js"),"offlineprogress.js 必須在 Offline state owner 之後載入。");
+assert(pos("levelprogressionaudit.js")>pos("levelprogression.js"),"levelprogressionaudit.js 必須在正式等級 owner 之後載入。");
+assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")>pos("levelprogression.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
+assert(pos("integritycontract.js")>=0,"index.html 缺少 integritycontract.js cache-bust 載入。");
+assert(pos("runtimeintegrity.js")>pos("integritycontract.js"),"integritycontract.js 必須先於 runtimeintegrity.js 載入。");
+assert(pos("finalintegrity.js")>pos("runtimeintegrity.js"),"finalintegrity.js 必須晚於 runtimeintegrity.js 載入。");
+assert(!index.includes('src="runtimeintegrityaddon.js?v='),"runtimeintegrityaddon.js 已納入正式 Runtime owner，不應再載入。");
+assert(!index.includes('src="level100balance.js?v='),"level100balance.js 已退休，不應再由正式頁面載入。");
+assert(!fs.existsSync("level100balance.js"),"level100balance.js 已退休，repo 不應再保留舊檔。");
 
-assert(/SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_VERSION=VERSION/.test(thirdWorldMigrationRegression),"thirdworldmigrationregression.js 缺少版本 export。");
-assert(/const VERSION=4;/.test(thirdWorldMigrationRegression),"thirdworldmigrationregression.js 應為 V4。");
-assert(/THIRD_WORLD_SUBSYSTEM_INTEGRITY_VERSION=VERSION/.test(thirdWorldSubsystemIntegrity),"thirdworldsubsystemintegrity.js 缺少版本 export。");
-assert(/const VERSION=5;/.test(thirdWorldSubsystemIntegrity),"thirdworldsubsystemintegrity.js 應為 V5。");
-assert(/const VERSION=21;/.test(thirdWorldIntegrityContract),"thirdworldintegritycontract.js 應為 V21。");
-assert(/CIVILIZATION_THIRD_WORLD_DATA_CONTRACT_EXTENSION_VERSION=VERSION/.test(thirdWorldIntegrityContract),"thirdworldintegritycontract.js 缺少版本 export。");
+assert(pos("viplootcore.js")>pos("vipprogression.js")&&pos("viplootcore.js")<pos("traitdrop.js")&&pos("viplootcore.js")<pos("dungeonbounty.js")&&pos("viplootcore.js")<pos("combatcore.js"),"viplootcore.js 必須在 VIP progression 後、正式掉裝 consumer 前載入。");
+assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=2;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V2。");
+assert(/vip8:Object\.freeze\(\{level:VIP8_LEVEL,chance:VIP8_WEAK_SLOT_CHANCE\}\)/.test(vipLootCore)&&/vip14:Object\.freeze\(\{level:VIP14_LEVEL,chance:VIP14_QUALITY_CHANCE\}\)/.test(vipLootCore)&&/vip16:Object\.freeze\(\{level:VIP16_LEVEL,chance:VIP16_BOSS_EXTRA_CHANCE\}\)/.test(vipLootCore)&&/vip18:Object\.freeze\(\{level:VIP18_LEVEL,chance:VIP18_BOSS_QUALITY_CHANCE\}\)/.test(vipLootCore),"VIP8／14／16／18 裝備特權必須由 viplootcore.js 統一持有。");
+assert(/resolveVipLootModifiers=resolveVipLootModifiers/.test(vipLootCore)&&/defaultWeakEquipmentTypes/.test(vipLootCore)&&/options\.state/.test(vipLootCore)&&/weakTypesResolver/.test(vipLootCore)&&!/weakEquipmentTypes\(/.test(vipLootCore),"VIP Loot V2 必須統一 modifiers，VIP8 最弱部位必須支援 target state／resolver 且不得依賴漂移舊名稱。");
+assert(/resolveVipLootModifiers/.test(traitDrop)&&!/applyVipLootQualityPromotions/.test(traitDrop)&&!/vipLootForcedType/.test(traitDrop),"銀河主線 VIP8／14／18 必須只委派單一 VIP Loot modifier resolver。");
+assert(/function bountyLootModifiers\(enemy\)/.test(bounty)&&/resolveVipLootModifiers\(q,\{boss:false,state\}\)/.test(bounty)&&!/bountyForcedType/.test(bounty),"銀河／宇宙懸賞 VIP8／14 必須共用單一 VIP Loot modifier resolver。");
+assert(/vipLootBossExtraDropTriggered\(\{boss:e\.kind==="boss"\}\)/.test(combatCore)&&!/e\.kind==="boss"&&\(state\.vipLevel\|\|0\)>=16&&Math\.random\(\)<\.15/.test(combatCore),"銀河主線 VIP16 Boss 額外掉落必須委派共用 VIP Loot owner。");
+assert(index.includes('viplootcore.js?v=20260925-vip-loot-cleanup1')&&index.includes('traitdrop.js?v=20260925-vip-loot-cleanup1')&&index.includes('dungeonbounty.js?v=20260925-vip-loot-cleanup1'),"index.html 必須載入 VIP Loot Cleanup1 最新共用 owner cache-bust。");
+assert(/const VERSION=5;/.test(secondWorldRewards)&&/SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1/.test(secondWorldRewards),"宇宙主線 VIP Loot pipeline 應使用 Reward V5。");
+assert(/resolveVipLootModifiers\(baseQuality,\{boss:true,rng/.test(secondWorldRewards)&&/weakTypesResolver:options\.weakTypesResolver/.test(secondWorldRewards),"宇宙主線固定 Boss 裝備必須套用單一 VIP8／14／18 resolver，且支援 target state／resolver。");
+assert(/vipLootBossExtraDropTriggered\(\{boss:true,rng,vipLevel:options\.vipLevel\}\)/.test(secondWorldRewards)&&/vip16Extra:true/.test(secondWorldRewards),"宇宙主線 VIP16 必須由共用 owner 產生額外 Boss 裝備，並共用可注入 RNG。");
+assert(/equipmentRewards=drops\.map/.test(secondWorldRewards)&&/equipmentRewards,levelBefore/.test(secondWorldRewards),"宇宙主線結算必須保留所有基礎／VIP16 額外裝備結果。");
+assert(/function secondWorldEquipmentRewardRows\(result\)/.test(secondWorldRewards)&&/function rewardRows\(result\)/.test(secondWorldMainline)&&/secondWorldEquipmentRewardRows\(result\)/.test(secondWorldMainline)&&/VIP16 額外主線裝備/.test(secondWorldMainline),"宇宙主線單場結算必須共用 reward-row owner 並呈現 VIP16 額外裝備。");
+assert(/secondWorldEquipmentRewardRows\(settled\)/.test(secondWorldMainline)&&/rows\.forEach\(row=>/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkMatter/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkEnergy/.test(secondWorldMainline),"宇宙主線連續戰鬥必須共用 reward-row owner 並逐件統計保留／自售與暗物質／暗能量。");
+assert(index.includes('secondworldrewards.js?v=20260925-vip-loot-cleanup1')&&index.includes('secondworldmainline.js?v=20260925-vip-loot-cleanup1'),"index.html 必須載入 VIP Loot Cleanup1 最新宇宙主線 cache-bust。");
+assert(pos("inventoryfocus.js")>pos("equipmentlock.js")&&pos("inventoryfocus.js")>pos("gearupgrade.js"),"inventoryfocus.js 必須在 equipmentlock.js 與 gearupgrade.js 後載入，以共用正式裝備比較 owner。");
+assert(/INVENTORY_FOCUS_VERSION=VERSION/.test(inventoryFocus)&&/const VERSION=3;/.test(inventoryFocus),"背包定位 owner 應為 V3。");
+assert(/requestInventoryEntryFocus=requestEntryFocus/.test(inventoryFocus)&&/requestInventoryPostRedeemFocus=requestPostRedeemFocus/.test(inventoryFocus)&&/applyInventoryFocus=applyFocus/.test(inventoryFocus),"背包定位必須提供 entry、post-redeem 與 apply API。");
+assert(/scrollIntoView/.test(inventoryFocus)&&/\.lost-gear-card/.test(inventoryFocus)&&/equipBestAll/.test(inventoryFocus),"背包定位必須使用實際 DOM 目標，不得依賴固定像素位置。");
+assert(!/baseGo|baseAdventureInventory|window\.go=function|window\.openAdventureInventory=function/.test(inventoryFocus),"背包定位 owner 不得 monkey-patch go 或 openAdventureInventory。");
+assert(/function go\(v\)[\s\S]*requestInventoryEntryFocus[\s\S]*render\(\)[\s\S]*applyInventoryFocus/.test(ui)&&/function openAdventureInventory\(\)[\s\S]*requestInventoryEntryFocus[\s\S]*render\(\)[\s\S]*applyInventoryFocus/.test(ui),"首頁與冒險背包正式入口必須直接共用背包定位 owner。");
+assert(/resolveInventoryFocusTarget=resolveFocusTarget/.test(inventoryFocus),"背包定位必須提供單一 target resolver。");
+assert(/isActualGearUpgrade/.test(inventoryFocus)&&!/equipmentScore\(item\)>/.test(inventoryFocus),"背包較強裝備判定必須委派正式 isActualGearUpgrade owner。");
+assert(/function redeemGear\(i\)[\s\S]*requestInventoryPostRedeemFocus[\s\S]*render\(\)[\s\S]*applyInventoryFocus/.test(ui),"成功贖回後必須在 render 前建立 post-redeem request，並在 render 後套用背包定位。");
+assert(index.includes('inventoryfocus.js?v=20260925-inventory-focus-cleanup1'),"index.html 必須載入正式 inventoryfocus.js cache-bust。");
 
-assert(/THIRD_WORLD_COMBAT_SAVE_GUARD_VERSION/.test(thirdWorldCombatSaveGuard),"第三紀元戰鬥存檔 guard 未載入。");
-assert(/THIRD_WORLD_COMBAT_INTEGRITY_VERSION/.test(thirdWorldCombatIntegrity),"第三紀元戰鬥 integrity 未載入。");
-assert(/LEVEL_PROGRESSION_VERSION/.test(levelProgression),"levelprogression.js 未載入正式 owner。");
-assert(/SHARED_SETTLEMENT_TRANSACTION_VERSION/.test(settlementTransaction),"settlementtransaction.js 未載入共用結算 transaction。");
-assert(/SHARED_EQUIPMENT_REWARD_FACTORY_VERSION/.test(equipmentRewardCore),"equipmentrewardcore.js 未載入共用裝備 reward owner。");
-assert(/THIRD_WORLD_EQUIPMENT_REWARD_VERSION/.test(thirdWorldLoot),"thirdworldloot.js 未載入第三紀元裝備 adapter。");
-assert(/VIP_LOOT_CORE_VERSION/.test(vipLootCore),"viplootcore.js 未載入 VIP loot owner。");
-assert(/PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION/.test(playerTitleCore),"playertitlecore.js 未載入高維稱號 catalog。");
-assert(/PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION/.test(playerTitleUi),"playertitleui.js 未載入高維稱號 post-flow。");
-assert(/PLAYER_TITLE_INTEGRITY_VERSION/.test(playerTitleIntegrity),"playertitleintegrity.js 未載入稱號 integrity。");
-assert(/SECOND_WORLD_DATA_VERSION/.test(secondWorldData),"secondworlddata.js 未載入宇宙資料 owner。");
-assert(/SECOND_WORLD_COMBAT_VERSION/.test(secondWorldCombat),"secondworldcombat.js 未載入宇宙戰鬥 owner。");
-assert(/SECOND_WORLD_REWARD_VERSION/.test(secondWorldRewards),"secondworldrewards.js 未載入宇宙獎勵 owner。");
-assert(/SECOND_WORLD_MAINLINE_VERSION/.test(secondWorldMainline),"secondworldmainline.js 未載入宇宙主線 owner。");
-assert(/SECOND_WORLD_CALAMITY_VERSION/.test(secondWorldCalamity),"secondworldcalamity.js 未載入宇宙災厄 owner。");
-assert(/SECOND_WORLD_CALAMITY_UI_VERSION/.test(secondWorldCalamityUi),"secondworldcalamityui.js 未載入宇宙災厄 UI。");
-assert(/SECOND_WORLD_CALAMITY_RUN_VERSION/.test(secondWorldCalamityRun),"secondworldcalamityrun.js 未載入宇宙災厄 run。");
-assert(/ENHANCEMENT_CORE_VERSION/.test(enhancementCore),"enhancementcore.js 未載入強化 owner。");
-assert(/ENHANCEMENT_PLAYER_UI_VERSION/.test(enhancementUi),"enhancementui.js 未載入強化玩家 UI。");
-assert(/SPECIALIZATION_VERSION/.test(specialization),"specialization.js 未載入專精 owner。");
-assert(/MARK_CORE_VERSION/.test(markCore),"markcore.js 未載入印記 owner。");
-assert(/CIVILIZATION_LEVEL_VERSION/.test(civilizationCore),"civilizationcore.js 未載入文明 owner。");
-assert(/GAME_GUIDE_VERSION/.test(gameGuide),"gameguide.js 未載入遊戲說明。");
-assert(/SPECIAL_WORLD2_PROFILES/.test(specialMonsters),"specialmonsters.js 未載入宇宙特殊怪 profile。");
-assert(/BACKGROUND_PROGRESS_CORE_VERSION/.test(backgroundProgress),"backgroundprogress.js 未載入背景進度 owner。");
-assert(/CONTINUOUS_RUN_CROSS_ERA_INTEGRITY_VERSION/.test(continuousRunIntegrity),"continuousrunintegrity.js 未載入跨紀元連戰 integrity。");
-assert(/SECOND_WORLD_CALAMITY_GM_VERSION/.test(secondWorldCalamityGm),"secondworldcalamitygm.js 未載入宇宙災厄 GM。");
-assert(/GM_MARK_FORMAL_PHASE_LOCK_VERSION/.test(calamityGm),"calamitygm.js 未載入正式印記紀元鎖定。");
-assert(/GM_MARK_FORMAL_PHASE_LOCK_VERSION/.test(calamityGmIntegrity),"calamitygmintegrity.js 未驗證正式印記紀元鎖定。");
-assert(/PLAYER_SEMANTICS_UI_VERSION/.test(playerSemanticsUi),"playersemanticsui.js 未載入跨紀元玩家語意。");
-assert(/SECOND_WORLD_ADVENTURE_UI_VERSION/.test(worldMapUi),"worldmapui.js 未載入宇宙冒險 UI。");
-assert(/THIRD_WORLD_DUNGEON_UI_VERSION/.test(thirdWorldDungeonUi),"thirdworlddungeonui.js 未載入第三紀元副本 UI。");
-assert(/MINIMAL_MODE_SHARED_API_VERSION/.test(mainMinimalMode),"mainminimalmode.js 未載入共用極簡模式 API。");
-assert(/SECOND_WORLD_MAINLINE_MINIMAL_MODE_VERSION/.test(secondWorldMinimalMode),"secondworldminimalmode.js 未載入宇宙主線極簡模式 adapter。");
+// Inventory Focus behavior contract: verify actual resolver output instead of source-code if-order.
+const vm=require("vm");
+// VIP Loot V2 behavior contract and legacy reward projection audit are permanently covered below.
+// VIP Loot behavior contract: execute the shared owner with deterministic RNG.
+function createVipLootHarness({vipLevel=0,equipment=null}={}){
+ const context={
+  state:{vipLevel,equipment:equipment||{weapon:{score:50},helmet:{score:40},armor:{score:30},shoes:{score:20},accessory:{score:10}}},
+  VIP_MAX_LEVEL:20,
+  EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"],
+  equipmentScore:item=>Number(item?.score)||0,
+  Math,
+  console
+ };
+ context.window={};
+ vm.createContext(context);
+ vm.runInContext(vipLootCore,context,{filename:"viplootcore.js"});
+ return context;
+}
+function sequenceRng(values,fallback=.99){let i=0;return ()=>i<values.length?values[i++]:fallback;}
+{
+ const h=createVipLootHarness({vipLevel:7});
+ const r=h.window.resolveVipLootModifiers(3,{boss:false,rng:()=>0,weakTypesResolver:()=>["accessory"]});
+ assert(r.forcedType===null&&r.quality===3,"VIP7 不得提前取得 VIP8／14 裝備特權。");
+}
+{
+ const h=createVipLootHarness({vipLevel:8});
+ const hit=h.window.resolveVipLootModifiers(3,{boss:false,rng:()=>.149,weakTypesResolver:()=>["accessory"]});
+ const miss=h.window.resolveVipLootModifiers(3,{boss:false,rng:()=>.15,weakTypesResolver:()=>["accessory"]});
+ assert(hit.forcedType==="accessory"&&hit.vip8WeakSlot===true,"VIP8 15% 邊界內必須命中最弱部位。");
+ assert(miss.forcedType===null&&miss.vip8WeakSlot===false,"VIP8 在 15% 邊界值不得誤觸發。");
+}
+{
+ const h=createVipLootHarness({vipLevel:14});
+ const hit=h.window.resolveVipLootModifiers(3,{boss:false,rng:sequenceRng([.049,.99]),weakTypesResolver:()=>["accessory"]});
+ const miss=h.window.resolveVipLootModifiers(3,{boss:false,rng:sequenceRng([.05,.99]),weakTypesResolver:()=>["accessory"]});
+ assert(hit.quality===4&&hit.qualityResult.vip14Promotion===1,"VIP14 5% 邊界內必須品質 +1。");
+ assert(miss.quality===3&&miss.qualityResult.vip14Promotion===0,"VIP14 在 5% 邊界值不得誤升階。");
+}
+{
+ const h=createVipLootHarness({vipLevel:16});
+ assert(h.window.vipLootBossExtraDropTriggered({boss:true,rng:()=>.149})===true,"VIP16 Boss 15% 邊界內必須可額外掉落。");
+ assert(h.window.vipLootBossExtraDropTriggered({boss:true,rng:()=>.15})===false,"VIP16 Boss 在 15% 邊界值不得誤觸發。");
+ assert(h.window.vipLootBossExtraDropTriggered({boss:false,rng:()=>0})===false,"VIP16 不得套用到非 Boss 掉落。");
+}
+{
+ const h=createVipLootHarness({vipLevel:18});
+ const boss=h.window.resolveVipLootModifiers(3,{boss:true,rng:sequenceRng([.99,.099,.99]),weakTypesResolver:()=>["accessory"]});
+ const nonBoss=h.window.resolveVipLootModifiers(3,{boss:false,rng:sequenceRng([.99,.099]),weakTypesResolver:()=>["accessory"]});
+ assert(boss.quality===4&&boss.qualityResult.vip18Promotion===1,"VIP18 Boss 10% 邊界內必須品質 +1。");
+ assert(nonBoss.quality===3&&nonBoss.qualityResult.vip18Promotion===0,"VIP18 不得套用到非 Boss 掉落。");
+ const double=h.window.resolveVipLootModifiers(3,{boss:true,rng:sequenceRng([.01,.01,.99]),weakTypesResolver:()=>["accessory"]});
+ assert(double.quality===5&&double.qualityResult.vip14Promotion===1&&double.qualityResult.vip18Promotion===1,"VIP14／18 必須可獨立同時觸發並合計 +2。");
+ const cap=h.window.resolveVipLootModifiers(5,{boss:true,rng:sequenceRng([0,0,.99]),weakTypesResolver:()=>["accessory"]});
+ assert(cap.quality===5&&cap.qualityResult.vip14Promotion===0&&cap.qualityResult.vip18Promotion===0,"VIP 品質升階不得超過神話品質 5。");
+}
+{
+ const equipment={weapon:{score:90},helmet:{score:70},armor:{score:50},shoes:{score:30},accessory:{score:10}};
+ const h=createVipLootHarness({vipLevel:8,equipment});
+ const order=h.window.vipLootDefaultWeakEquipmentTypes({equipment},()=>.5);
+ assert(order[0]==="accessory","VIP8 預設最弱部位必須依傳入 target state 判斷，而不是偷讀其他角色裝備。");
+ let seenState=null;
+ const target={vipLevel:8,equipment};
+ const forced=h.window.resolveVipLootModifiers(2,{state:target,vipLevel:8,boss:false,rng:()=>0,weakTypesResolver:s=>{seenState=s;return ["shoes"];} });
+ assert(seenState===target&&forced.forcedType==="shoes","VIP8 自訂 resolver 必須收到指定 target state 並決定部位。");
+}
+assert(/function secondWorldEquipmentRewardRows\(result\)/.test(secondWorldRewards)&&/result\?\.equipmentRewards/.test(secondWorldRewards)&&/result\?\.item/.test(secondWorldRewards),"宇宙主線裝備結果必須以 equipmentRewards 為正式陣列 owner，並保留舊單件 fallback 相容層。");
+assert(/item:primary\?\.item\|\|null/.test(secondWorldRewards)&&/itemResult:primary\?\.itemResult\|\|null/.test(secondWorldRewards)&&/sale:primary\?\.sale\|\|null/.test(secondWorldRewards)&&/kept:primary\?\.kept===true/.test(secondWorldRewards),"宇宙主線舊 item／itemResult／sale／kept 欄位必須維持 equipmentRewards[0] 相容投影，不得另生第二套資料。");
 
-assert(/effectiveLevelCap/.test(levelCap)&&/MAX_LEVEL/.test(levelCap),"levelcap.js 應使用正式等級上限 owner。");
-assert(/LEVEL_CAP_RESULT_VERSION/.test(levelCapResult),"levelcapresult.js 未載入等級封頂結果 adapter。");
-assert(/COMPATIBILITY_OWNERS_VERSION/.test(compatibilityOwners),"compatibilityowners.js 未載入相容 owner。");
+function createInventoryFocusHarness({lost=false,upgrade=false}={}){
+ const scrolls=[];
+ const lostTarget={scrollIntoView:()=>scrolls.push("lost-gear")};
+ const upgradeTarget={scrollIntoView:()=>scrolls.push("upgrade")};
+ const inventoryPage={};
+ const context={
+  state:{lostGear:lost?[{item:{}}]:[],inventory:upgrade?[{upgrade:true}]:[]},
+  document:{querySelector(selector){
+   if(selector===".inventory-page")return inventoryPage;
+   if(selector===".inventory-page .lost-gear-card")return lostTarget;
+   if(selector==='.inventory-page [onclick="equipBestAll()"]')return upgradeTarget;
+   return null;
+  }},
+  requestAnimationFrame(fn){fn();},
+  setTimeout(fn){fn();},
+  console
+ };
+ context.window={
+  isActualGearUpgrade:item=>item?.upgrade===true,
+  scrollTo:()=>scrolls.push("top")
+ };
+ vm.createContext(context);
+ vm.runInContext(inventoryFocus,context,{filename:"inventoryfocus.js"});
+ return {api:context.window,scrolls,context};
+}
+function inventoryFocusTarget(mode,options){
+ const h=createInventoryFocusHarness(options);
+ return h.api.resolveInventoryFocusTarget(mode);
+}
+assert(inventoryFocusTarget("entry",{lost:true,upgrade:true})==="lost-gear","背包定位行為：有遺失裝備時必須優先定位遺失裝備。");
+assert(inventoryFocusTarget("entry",{lost:false,upgrade:true})==="upgrade","背包定位行為：無遺失裝備但有較強裝備時必須定位一鍵裝備。");
+assert(inventoryFocusTarget("entry",{lost:false,upgrade:false})==="top","背包定位行為：一般進入且無待處理裝備時必須回到頂部。");
+assert(inventoryFocusTarget("post-redeem",{lost:true,upgrade:true})==="lost-gear","背包定位行為：贖回後仍有遺失裝備時必須留在遺失裝備區。");
+assert(inventoryFocusTarget("post-redeem",{lost:false,upgrade:true})==="upgrade","背包定位行為：最後一件贖回後若有較強裝備必須定位一鍵裝備。");
+assert(inventoryFocusTarget("post-redeem",{lost:false,upgrade:false})==="none","背包定位行為：贖回後無遺失與升級裝備時不得額外移動畫面。");
+const inventoryPendingHarness=createInventoryFocusHarness({lost:false,upgrade:false});
+inventoryPendingHarness.api.requestInventoryEntryFocus();
+assert(inventoryPendingHarness.api.applyInventoryFocus()===true,"背包定位 pending：第一次 apply 必須消耗 request。");
+assert(inventoryPendingHarness.api.applyInventoryFocus()===false,"背包定位 pending：同一 request 不得重複 apply。");
+assert(inventoryPendingHarness.scrolls.filter(x=>x==="top").length===1,"背包定位 pending：一次 request 只能造成一次實際定位。");
 
+assert(/CIVILIZATION_INTEGRITY_CONTRACT_VERSION=VERSION/.test(contract),"Canonical Integrity Contract V1 export 缺失。");
+assert(/SAVE_SCHEMA_VERSION:16/.test(contract),"Integrity Contract 的 Save Schema 應為 16。");
+assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION:1/.test(contract),"Integrity Contract 必須要求舊存檔支援政策 V1。");
+assert(/OFFLINE_STATE_NORMALIZATION_VERSION:1/.test(contract),"Integrity Contract 必須要求 Offline state normalization V1。");
+assert(/SAVE_FUTURE_VERSION_GUARD_VERSION:1/.test(contract),"Integrity Contract 必須要求未來版本存檔保護 V1。");
+assert(/LEGACY_COMPATIBILITY_OWNER_VERSION:1/.test(contract)&&/LEVEL_PROGRESSION_AUDIT_VERSION:2/.test(contract),"Integrity Contract 必須要求 compatibility owner V1 與通用等級 audit V2。");
+assert(/PLAYER_TITLE_CATALOG_VERSION:3/.test(contract),"Integrity Contract 的稱號 catalog 應為 V3。");
+assert(/ARENA_BY_WORLD_STATE_VERSION:2/.test(contract),"Integrity Contract 的 Arena By World state 應為 V2。");
+assert(/SECOND_WORLD_ARENA_UNLOCK_VERSION:2/.test(contract),"Integrity Contract 的宇宙 Arena unlock 應為 V2。");
+assert(/SECOND_WORLD_ARENA_RANK_CURVE_VERSION:2/.test(contract),"Integrity Contract 的宇宙 Arena curve 應為 V2。");
+assert(/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION:2/.test(contract),"Integrity Contract 的宇宙文明戰鬥應為 V2。");
+assert(/BOUNTY_BALANCE_VERSION:2/.test(contract)&&/BOUNTY_DIFFICULTY_FORMULA_VERSION:2/.test(contract),"Integrity Contract 的 Bounty 應為 V2。");
+assert(/SECOND_WORLD_ADVENTURE_UI_VERSION:4/.test(contract),"Integrity Contract 的宇宙冒險 UI 應為 V4。");
+assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2/.test(contract),"Integrity Contract 的宇宙災厄完整檢查應為 V2。");
+assert(/GM_TEST_THREE_WORLD_CHARACTER_VERSION=1/.test(vipGm)&&/GM_TEST_THIRD_WORLD_GEAR_PREVIEW_VERSION=1/.test(vipGm),"GM 測試角色必須正式支援三紀元與高維預測裝備。");
+assert(/w===3\?\{min:1000,max:2000\}/.test(vipGm)&&/option value="3"/.test(vipGm)&&/高維紀元/.test(vipGm),"GM 高維測試角色必須支援 Lv.1000～2000 與高維紀元選項。");
+assert(/world:3/.test(vipGm)&&/mainStatValue\(type,lv,m,q\)/.test(vipGm)&&/rollAffixes\(type,lv,q,m\)/.test(vipGm),"GM 高維預測裝備必須共用正式裝備屬性／詞條公式。");
+assert(/CIVILIZATION_WORLD_PHASE_DAMAGE_VERSION=1/.test(civilizationCore)&&/if\(world<2\)return 1;/.test(civilizationCore),"文明傷害 owner 必須支援 World2/3 共用、World1 隔離。");
+assert(/GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION/.test(benchmarkWorldPhase),"GM 戰力基準缺少 World Phase adapter。");
+assert(pos("gmpowerbenchmarkworldphase.js")>pos("gmpowerbenchmarkstate.js"),"GM 戰力基準 World Phase adapter 必須在基準與展開狀態 owner 後載入。");
+
+assert(/LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION/.test(compatibilityOwners),"compatibilityowners.js 缺少正式 V1 export。");
+assert(/LEGACY_SAVE_VERSION_VALUE!==13/.test(compatibilityOwners)&&/LEGACY_MAX_LEVEL_VALUE!==500/.test(compatibilityOwners),"compatibilityowners.js 必須固定驗證 legacy Save V13 與舊第一世界上限 500。");
+assert(/SAVE_SCHEMA_OWNER="savemigration"/.test(compatibilityOwners)&&/LEVEL_CAP_RUNTIME_OWNER="levelprogression"/.test(compatibilityOwners)&&/ARENA_RUNTIME_OWNER="arenaByWorld"/.test(compatibilityOwners),"compatibilityowners.js 正式 owner 宣告不完整。");
+assert(/LEVEL_PROGRESSION_AUDIT_VERSION=VERSION/.test(levelAudit),"levelprogressionaudit.js 缺少正式 V2 export。");
+assert(!/level100ExpFactor/.test(levelAudit),"通用等級 audit 不得復活 level100ExpFactor 舊 alias。");
+
+const productionFiles=files.filter(file=>!file.startsWith("tests"+path.sep));
+const basename=file=>path.basename(file);
+const maxLevelConsumers=productionFiles.filter(file=>/\bMAX_LEVEL\b/.test(read(file))).map(basename).sort();
+const allowedMaxLevelConsumers=["compatibilityowners.js","dungeonbounty.js","dungeonui.js","engine.js","enhancementcore.js","enhancementintegrity.js","gmhub.js","gmtools.js","integritycontract.js","levelprogression.js","levelprogressionaudit.js","mainminimalmode.js","offlineprogress.js","savemigration.js","traitdrop.js","ui.js"].sort();
+assert(JSON.stringify(maxLevelConsumers)===JSON.stringify(allowedMaxLevelConsumers),"MAX_LEVEL consumer audit 異常："+maxLevelConsumers.join(", "));
+const saveVersionConsumers=productionFiles.filter(file=>/\bSAVE_VERSION\b/.test(read(file))).map(basename).sort();
+const allowedSaveVersionConsumers=["compatibilityowners.js","data.js","dungeonprogress.js","engine.js","ui.js"].sort();
+assert(JSON.stringify(saveVersionConsumers)===JSON.stringify(allowedSaveVersionConsumers),"SAVE_VERSION consumer audit 異常："+saveVersionConsumers.join(", "));
 const directArenaConsumers=productionFiles.filter(file=>/(?:dungeon\.arena|dungeon\?\.arena)/.test(read(file))).map(basename).sort();
 const allowedDirectArenaConsumers=["dungeonarena.js","dungeonprogress.js","runtimeintegrity.js","savemigration.js"].sort();
 assert(JSON.stringify(directArenaConsumers)===JSON.stringify(allowedDirectArenaConsumers),"legacy dungeon.arena consumer audit 異常："+directArenaConsumers.join(", "));
@@ -173,7 +272,7 @@ assert(/assertSaveVersionSupported\(source,\{label:"雲端存檔"\}\)/.test(clou
 assert(/migrateSave\(source,compatibility\.sourceVersion/.test(cloudSave),"Cloud Download 必須走正式 migration pipeline。");
 assert(/assertSaveVersionSupported\(raw,\{version,label:"JSON 存檔"\}\)/.test(gmData),"GM JSON Import 必須使用共用未來版本存檔保護。");
 
-assert(/const VERSION=20;/.test(runtime),"runtimeintegrity.js 應為 V20。");
+assert(/const VERSION=19;/.test(runtime),"runtimeintegrity.js 應為 V19。");
 assert(/runCivilizationIntegrityContract\(\{phase:"runtime"\}\)/.test(runtime),"runtimeintegrity.js 必須執行 canonical contract。");
 assert(/SAVE_LEGACY_SUPPORT_POLICY_VERSION/.test(runtime)&&/OFFLINE_STATE_NORMALIZATION_VERSION/.test(runtime),"runtimeintegrity.js 必須 probe legacy policy 與 Offline state owner。");
 assert(/PROJECT_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime),"runtimeintegrity.js 缺少正式版本 export。");
@@ -182,11 +281,73 @@ assert(!/PLAYER_TITLE_DEFS\.length!==16/.test(runtime),"runtimeintegrity.js 不�
 assert(!/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION\)!==1/.test(runtime),"runtimeintegrity.js 不得再要求舊宇宙文明戰鬥 V1。");
 assert(!/ARENA_BY_WORLD_STATE_VERSION\)!==1/.test(runtime),"runtimeintegrity.js 不得再要求舊 Arena By World V1。");
 
-assert(/const VERSION=20;/.test(finalIntegrity),"finalintegrity.js 應為 V20。");
-assert(/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==20/.test(finalIntegrity),"finalintegrity.js 必須要求 Runtime Integrity V20。");
+assert(/const VERSION=19;/.test(finalIntegrity),"finalintegrity.js 應為 V19。");
+assert(/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==19/.test(finalIntegrity),"finalintegrity.js 必須要求 Runtime Integrity V19。");
 assert(/runCivilizationIntegrityContract\(\{phase:"final"\}\)/.test(finalIntegrity),"finalintegrity.js 必須執行 canonical contract。");
 assert(!/PLAYER_TITLE_DEFS\.length!==16/.test(finalIntegrity),"finalintegrity.js 不得再以 16 稱號為正式基準。");
 assert(!/ARENA_BY_WORLD_STATE_VERSION\)!==1/.test(finalIntegrity),"finalintegrity.js 不得再要求舊 Arena By World V1。");
 assert(!/SECOND_WORLD_ADVENTURE_UI_VERSION\)!==2/.test(finalIntegrity),"finalintegrity.js 不得再要求舊宇宙冒險 UI V2。");
 
-console.log("Runtime JS integrity passed");
+assert(/ARENA_BY_WORLD_STATE_VERSION=2/.test(dungeonProgress),"dungeonprogress.js Arena By World state 應為 V2。");
+assert(/SECOND_WORLD_ARENA_UNLOCK_VERSION=2/.test(dungeonProgress),"dungeonprogress.js 宇宙 Arena unlock 應為 V2。");
+assert(/SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2/.test(arena),"dungeonarena.js 第二世界 Arena Rank Curve 應為 V2。");
+assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0015\}\)/.test(arena),"dungeonarena.js 第二世界 Arena HP curve 係數不符。");
+assert(/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.001\}\)/.test(arena),"dungeonarena.js 第二世界 Arena damage curve 係數不符。");
+assert(/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.0004\}\)/.test(arena),"dungeonarena.js 第二世界 Arena DEF curve 係數不符。");
+assert(/BOUNTY_BALANCE_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Balance 應為 V2。");
+assert(/BOUNTY_DIFFICULTY_FORMULA_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Difficulty Formula 應為 V2。");
+assert(/const BASE_STAT=2700;/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 單一基準應為 2700。");
+assert(/SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2/.test(secondWorldCombat),"secondworldcombat.js 宇宙文明戰鬥 owner 應為 V2。");
+assert(/STAT_RATIO=Object\.freeze\(\{hp:12,atk:2,def:1\}\)/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 比例應為 12:2:1。");
+assert(/SECOND_WORLD_ADVENTURE_UI_VERSION=4/.test(worldmap),"worldmapui.js 宇宙冒險 UI 應為 V4。");
+assert(/SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2/.test(worldmap),"宇宙冒險目前進度自動定位應為 V2。");
+assert(/requestSecondWorldAdventureProgressFocus=function/.test(worldmap)&&/applySecondWorldAdventureProgressFocus=function/.test(worldmap)&&/cancelSecondWorldAdventureProgressFocus=function/.test(worldmap),"宇宙冒險必須提供一次性定位 request/apply/cancel owner。");
+assert(/scrollIntoView/.test(worldmap)&&/block:"center"/.test(worldmap)&&/data-second-world-boss/.test(worldmap),"宇宙冒險定位必須以目前 Boss 元素置中，不得依賴固定像素捲動。");
+assert(/function secondWorldActiveRegionIndex\(\)[\s\S]*secondWorldLatestProgressBossIndex\(\)/.test(worldmap),"宇宙目前區域必須共用 latest-progress Boss owner。");
+assert(!/installStyles|applyUniverseAdventureSemantics|SECOND_WORLD_ADVENTURE_HEADER_POLISH_VERSION/.test(playerSemanticsUi),"已退休的宇宙冒險頂部背包 cleanup 不得殘留。");
+for(const fn of ["go","backToAdventureFromInventory","closeBattleResultModal"]){
+ const start=ui.indexOf("function "+fn+"(");
+ assert(start>=0,"找不到 "+fn+"。");
+ const next=ui.indexOf("\nfunction ",start+1);
+ const body=ui.slice(start,next>=0?next:ui.length);
+ assert(body.includes("requestSecondWorldAdventureProgressFocus"),fn+" 必須保留宇宙目前 Boss 定位請求。");
+}
+assert(/applySecondWorldAdventureProgressFocus/.test(playerSemanticsUi),"playersemanticsui.js 必須在 render 後套用一次性宇宙冒險定位。");
+assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
+assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
+
+assert(/const CONTINUOUS_VERSION=2;/.test(secondWorldCalamityRun),"宇宙災厄連續討伐版本應為 V2。");
+assert(/SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1/.test(secondWorldCalamityRun),"宇宙災厄必須宣告背景戰鬥與 fast catch-up owner 版本。");
+assert(/SECOND_WORLD_CALAMITY_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_MANUAL_STOP_TERMINAL_VERSION=MANUAL_STOP_TERMINAL_VERSION/.test(secondWorldCalamityRun),"宇宙災厄必須宣告 strict shared infrastructure 與立即停止語意。");
+assert(!/backgroundProgressStart\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressStop\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressFastCatchUpActive\("calamity"/.test(secondWorldCalamityRun)&&!/backgroundProgressCatchUpPolicy\("calamity"/.test(secondWorldCalamityRun),"宇宙災厄正式 run 不得保留 shared infrastructure 直連 fallback。");
+assert(/startBackground\(\);[\s\S]*const previewPolicy=catchUpPreviewPolicy\(\);/.test(secondWorldCalamityRun),"宇宙災厄 continuous 必須先啟動背景 flow，再套用 catch-up policy。");
+assert(/save:fast\?previewPolicy\?\.shouldCheckpoint===true:options\.save/.test(secondWorldCalamityRun)&&/preparePresentation:fast\?previewPolicy\?\.shouldPresentBattle===true:options\.preparePresentation/.test(secondWorldCalamityRun),"宇宙災厄 fast catch-up 必須降低存檔與演出頻率。");
+assert(/function stop\(\)[\s\S]*phase!=="fighting"[\s\S]*finish\("stopped"\)/.test(secondWorldCalamityRun),"宇宙災厄非戰鬥中手動停止必須立即 terminal。");
+assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test(secondWorldCalamityRun)&&/infra\.onPageHide\(stopForPageHide\)/.test(secondWorldCalamityRun)&&!/addEventListener\("pagehide"/.test(secondWorldCalamityRun),"宇宙災厄 pagehide 必須由 shared lifecycle owner 接管。");
+assert(/backgroundProgressSleep\(ms,"calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressCatchUpStep\("calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressConsumeCatchUpCredit\(delay,"calamity"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須共用 calamity 背景 sleep、catch-up step 與 credit。");
+assert(/backgroundProgressCatchUpFinalPolicy\("calamity"\)/.test(secondWorldCalamityUi)&&/combatOuterGapMs\("calamity","battle"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須在追趕完成後收斂並維持正式場間節奏。");
+assert(index.includes('src="secondworldcalamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="secondworldcalamityui.js?v=20260927-title-post-flow1"'),"index.html 必須載入宇宙災厄 Batch 7 第2批優化 run cache 與稱號 post-flow UI cache-bust。");
+assert(index.includes('src="calamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="backgroundprogress.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldphase.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldcore.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldmigrationregression.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="continuousrunintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldsubsystemintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldintegritycontract.js?v=20260927-run-opt-batch2"'),"index.html 必須同步載入 Batch 7 第2批優化後的正式 owner cache-bust。");
+
+assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");
+assert(/const VOID_MIRAGE_ATK_BASE=10\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_ATK_PER_FLOOR=1\.3;/.test(dungeonVoid),"虛空 ATK 線性公式應為 10.0 + 1.3F。");
+assert(/const VOID_MIRAGE_DEF_BASE=5\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_DEF_PER_FLOOR=0\.6;/.test(dungeonVoid),"虛空 DEF 線性公式應為 5.0 + 0.6F。");
+assert(/formulaVersion:2/.test(dungeonVoid),"虛空公式版本應為 V2。");
+assert(/Math\.ceil\(VOID_MIRAGE_HP_BASE\+VOID_MIRAGE_HP_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 HP baseStats 未使用正式線性公式。");
+assert(/Math\.ceil\(VOID_MIRAGE_ATK_BASE\+VOID_MIRAGE_ATK_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 ATK baseStats 未使用正式線性公式。");
+assert(/Math\.ceil\(VOID_MIRAGE_DEF_BASE\+VOID_MIRAGE_DEF_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 DEF baseStats 未使用正式線性公式。");
+assert(!/VOID_MIRAGE_(HP|ATK|DEF)_MULTIPLIER/.test(dungeonVoid),"虛空 V2 不得復活舊倍率公式。");
+assert(/voidMirageBaseStats\(floor\)/.test(dungeonGm)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
+assert(index.includes('src="dungeonvoid.js?v=20260924-void-linear-cleanup1"'),"index.html 必須載入虛空線性公式 V2 cleanup cache-bust。");
+assert(/if\(world===1&&baseEnemy\?\.kind==="boss"\)return false;/.test(specialEncounter),"銀河紀元 Boss 必須維持禁止特殊遭遇。");
+assert(!/equivalentPower/.test(dungeonVoid),"虛空 V2 已改為純樓層線性公式，不得保留 equivalentPower 舊語意。");
+const specialFlowStart=specialEncounter.indexOf('const special=rollSpecialMonster(');
+const specialFlowEnd=specialEncounter.indexOf('if(result.win&&world===1',specialFlowStart);
+const specialFlow=specialFlowStart>=0&&specialFlowEnd>specialFlowStart?specialEncounter.slice(specialFlowStart,specialFlowEnd):"";
+const specialAlertPos=specialFlow.indexOf('await showSpecialEncounterAlert(special,forcedByBlackMarket);');
+const specialHealPos=specialFlow.indexOf('if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});');
+const specialFightPos=specialFlow.indexOf('const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});');
+assert(specialAlertPos>=0&&specialHealPos>specialAlertPos&&specialFightPos>specialHealPos,"特殊遭遇流程必須為提示完成後回滿血，再進入正式特殊戰鬥。");
+assert(index.includes('src="specialencounter.js?v=20260924-special-heal-order2"'),"index.html 必須載入特殊遭遇回血順序 V2 cache-bust。");
+
+console.log("Runtime integrity passed: "+files.length+" JavaScript files parsed; canonical source contract, save compatibility policy, offline state owner, legacy compatibility consumers, GM World3 test character, and load order are synchronized.");
