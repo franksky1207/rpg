@@ -24,13 +24,13 @@
   {persistedIndex:9,id:"higher-dimensional-boss-10",name:"高維原點",specialization:Object.freeze({id:"origin",atkMultiplier:1.08,defMultiplier:1.08})}
  ].map((row,index)=>Object.freeze({index,...row,maxHp:BOSS_MAX_HP})));
  const ABILITY_DEFS=Object.freeze([
-  Object.freeze({id:"composure",name:"鎮心",unlockRemainingPercent:70,unlockStage:3,playerCritRateReductionPoints:5}),
-  Object.freeze({id:"suppression",name:"壓制",unlockRemainingPercent:60,unlockStage:4,playerDodgeRateReductionPoints:5}),
-  Object.freeze({id:"resilience",name:"韌性",unlockRemainingPercent:50,unlockStage:5,playerCritBonusDamageReductionPercent:30}),
-  Object.freeze({id:"revenge",name:"復仇",unlockRemainingPercent:40,unlockStage:6,triggerChance:50,afterPlayerCrit:true,nextSuccessfulBossHitGuaranteedCrit:true}),
-  Object.freeze({id:"backlash",name:"反噬",unlockRemainingPercent:30,unlockStage:7,triggerChance:15,reflectActualHpLossPercent:30}),
-  Object.freeze({id:"ignore",name:"無視",unlockRemainingPercent:20,unlockStage:8,triggerChance:5,ignorePlayerDefensePercent:100}),
-  Object.freeze({id:"battleSpirit",name:"戰意",unlockRemainingPercent:10,unlockStage:9,battleStartTriggerChance:75,atkPercentPerTurn:2,maxStacks:10})
+  Object.freeze({id:"composure",name:"鎮心",unlockRemainingPercent:70,unlockStage:3}),
+  Object.freeze({id:"suppression",name:"壓制",unlockRemainingPercent:60,unlockStage:4}),
+  Object.freeze({id:"resilience",name:"韌性",unlockRemainingPercent:50,unlockStage:5}),
+  Object.freeze({id:"revenge",name:"復仇",unlockRemainingPercent:40,unlockStage:6}),
+  Object.freeze({id:"backlash",name:"反噬",unlockRemainingPercent:30,unlockStage:7}),
+  Object.freeze({id:"ignore",name:"無視",unlockRemainingPercent:20,unlockStage:8}),
+  Object.freeze({id:"battleSpirit",name:"戰意",unlockRemainingPercent:10,unlockStage:9})
  ]);
  const TITLE_ROWS=Object.freeze([
   {id:"higher-dimensional-title-01",name:"破界初臨",tier:1,thresholdRemainingPercentSum:900},
@@ -160,7 +160,8 @@
    if(specChecks.some(value=>value!==true))fail("BOSS_SPECIALIZATION",specChecks);
    const at70=thirdWorldBossAbilities(0,BOSS_MAX_HP*.7),above70=thirdWorldBossAbilities(0,Math.floor(BOSS_MAX_HP*.7)+1),at10=thirdWorldBossAbilities(0,BOSS_MAX_HP*.1);
    if(at70?.composure?.active!==true||at70?.suppression?.active!==false||above70?.composure?.active!==false||Object.values(at10||{}).some(row=>row.active!==true))fail("ABILITY_BOUNDARY",{at70,above70,at10});
-   if(at10?.revenge?.triggerChance!==50)fail("REVENGE_TRIGGER_CHANCE",at10?.revenge||null);
+   const allowedAbilityKeys=new Set(["id","name","unlockRemainingPercent","unlockStage"]);
+   if(ABILITY_DEFS.some(def=>Object.keys(def).some(key=>!allowedAbilityKeys.has(key))))fail("ABILITY_DESCRIPTOR_OWNS_COMBAT_VALUES",ABILITY_DEFS);
    const full=makeThirdWorldProbeState(Array(10).fill(BOSS_MAX_HP)),fullAgg=thirdWorldBossAggregateSnapshot(full);
    if(fullAgg.currentHp!==TOTAL_BOSS_MAX_HP||fullAgg.maxHp!==TOTAL_BOSS_MAX_HP||fullAgg.aliveCount!==10||fullAgg.defeatedCount!==0||fullAgg.remainingPercentSum!==1000||fullAgg.overallRemainingPercent!==100)fail("AGGREGATE_FULL",fullAgg);
    const hp951=Math.floor(BOSS_MAX_HP*951/1000),hp950=Math.floor(BOSS_MAX_HP*95/100),p951=makeThirdWorldProbeState([hp951,...Array(9).fill(BOSS_MAX_HP)]),p950=makeThirdWorldProbeState([hp950,...Array(9).fill(BOSS_MAX_HP)]);
