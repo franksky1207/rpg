@@ -1,8 +1,10 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const OFFLINE_BATTLE_SAMPLE_VERSION=4;
  const LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION=3;
- const OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=1;
+ const OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=2;
+ const OFFLINE_LEGACY_SAMPLE_POLICY_VERSION=1;
+ const UNSAFE_LEGACY_SAMPLE_VERSIONS=Object.freeze([1,2]);
  const OFFLINE_SAMPLE_OWNER_VERSION=1;
  const OFFLINE_RESET_OWNER_VERSION=1;
  const OFFLINE_SAMPLES_PER_SPEED=8;
@@ -22,6 +24,8 @@
   return null;
  }
  function sourceSampleVersion(row){return Math.max(0,finiteInteger(row?.sampleVersion,0));}
+ function migrationReport(action,sourceVersion,reason,recordedAt){return {policyVersion:OFFLINE_LEGACY_SAMPLE_POLICY_VERSION,action:String(action||"none"),sourceSampleVersion:Math.max(0,finiteInteger(sourceVersion,0)),targetSampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,reason:String(reason||""),recordedAt:Math.max(0,finiteInteger(recordedAt,0))};}
+ function normalizeMigrationReport(value){if(!isObject(value))return null;const action=String(value.action||"");if(!["migrated","discarded"].includes(action))return null;return migrationReport(action,value.sourceSampleVersion,value.reason,value.recordedAt);}
  function normalizeSample(row){
   if(!isObject(row))return null;
   const sourceVersion=sourceSampleVersion(row);
@@ -69,7 +73,7 @@
   return {...raw,sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION};
  }
  function freshOfflineState(now){
-  return {battleSampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[],maxObservedWallClock:now,timeLockUntil:0,pendingSettlement:null};
+  return {battleSampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,lastSettledAt:now,farmMap:null,farmEnemy:null,avgBattleMs:0,sampleCount:0,battleSamples:[],maxObservedWallClock:now,timeLockUntil:0,pendingSettlement:null,sampleMigration:null};
  }
  function restoreOfflineObject(target,snapshot){
   if(!isObject(target)||!isObject(snapshot))return false;
@@ -95,10 +99,16 @@
   const source=target.offline;
   const storedSampleVersion=Math.max(0,finiteInteger(source.battleSampleVersion,0));
   const migratable=storedSampleVersion===LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION||storedSampleVersion===OFFLINE_BATTLE_SAMPLE_VERSION;
+  source.sampleMigration=normalizeMigrationReport(source.sampleMigration);
   if(!migratable){
    source.battleSamples=[];
    source.farmMap=null;source.farmEnemy=null;source.avgBattleMs=0;source.sampleCount=0;source.pendingSettlement=null;
-  }else source.pendingSettlement=migratePendingSettlement(source.pendingSettlement,target);
+   if(UNSAFE_LEGACY_SAMPLE_VERSIONS.includes(storedSampleVersion))source.sampleMigration=migrationReport("discarded",storedSampleVersion,"legacy-v1-v2-format-not-canonical",now);
+   else if(storedSampleVersion>0)source.sampleMigration=migrationReport("discarded",storedSampleVersion,"unsupported-or-unknown-sample-version",now);
+  }else{
+   source.pendingSettlement=migratePendingSettlement(source.pendingSettlement,target);
+   if(storedSampleVersion===LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION)source.sampleMigration=migrationReport("migrated",storedSampleVersion,"v3-to-v4-compatible-normalization",now);
+  }
   source.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   const rawTime=source.lastSettledAt==null?NaN:Number(source.lastSettledAt);
   source.lastSettledAt=Number.isFinite(rawTime)&&rawTime>=0&&rawTime<=now?Math.floor(rawTime):now;
@@ -129,6 +139,7 @@
   if(options.persist===true){try{before=JSON.parse(JSON.stringify(offline));}catch(_){return Object.freeze({ok:false,reason:"snapshot-failed",persisted:false});}}
   offline.battleSampleVersion=OFFLINE_BATTLE_SAMPLE_VERSION;
   offline.battleSamples=retainSamples([...(Array.isArray(offline.battleSamples)?offline.battleSamples:[]),normalized]);
+  offline.sampleMigration=null;
   if(options.persist===true){
    const saveFn=typeof options.saveFn==="function"?options.saveFn:(typeof save==="function"?save:null);
    let saved=false;
@@ -143,15 +154,24 @@
   appendOfflineBattleSample(probe,{sampleVersion:4,world:3,targetType:"higher-dimensional",combatSpeed:1.5,actualMs:800,cycleMs:940,adjustedMs:940,playerLevel:1000,recordedAt:2010},{currentTime:2000});
   if(probe.offline.battleSamples.filter(row=>row.combatSpeed===1).length!==8)errors.push({code:"RETENTION_PER_SPEED"});
   if(probe.offline.battleSamples.filter(row=>row.combatSpeed===1.5).length!==1)errors.push({code:"SPEED_POOL_ISOLATION"});
+  const legacyProbe={saveVersion:16,level:777,gold:12345,inventory:[{id:"keep"}],offline:{battleSampleVersion:2,lastSettledAt:500,battleSamples:[{sampleVersion:2,map:1,enemy:0,avgBattleMs:999}],pendingSettlement:{sampleVersion:2,world:1},farmMap:1,farmEnemy:0,avgBattleMs:999,sampleCount:3,maxObservedWallClock:500,timeLockUntil:0}};
+  normalizeOfflineSaveState(legacyProbe,{sourceVersion:16,currentTime:2000});
+  if(legacyProbe.offline.battleSamples.length!==0||legacyProbe.offline.pendingSettlement!==null||legacyProbe.offline.sampleMigration?.action!=="discarded"||legacyProbe.offline.sampleMigration?.sourceSampleVersion!==2)errors.push({code:"LEGACY_V2_SAFE_DISCARD",offline:legacyProbe.offline});
+  if(legacyProbe.level!==777||legacyProbe.gold!==12345||legacyProbe.inventory?.[0]?.id!=="keep")errors.push({code:"LEGACY_DISCARD_SCOPE"});
+  const v3Probe={saveVersion:16,offline:{battleSampleVersion:3,lastSettledAt:1000,battleSamples:[{sampleVersion:3,world:1,targetType:"mapEnemy",combatSpeed:1,actualMs:1000,cycleMs:1140,adjustedMs:1140,playerLevel:10,enemyLevel:10,kind:"normal",map:0,enemy:0,multiplier:1,recordedAt:1000}],pendingSettlement:null,maxObservedWallClock:1000,timeLockUntil:0}};
+  normalizeOfflineSaveState(v3Probe,{sourceVersion:16,currentTime:2000});
+  if(v3Probe.offline.battleSamples.length!==1||v3Probe.offline.battleSamples[0]?.sampleVersion!==4||v3Probe.offline.sampleMigration?.action!=="migrated")errors.push({code:"LEGACY_V3_MIGRATION",offline:v3Probe.offline});
   resetOfflineSaveState(probe,{currentTime:3000});
-  if(probe.offline.battleSampleVersion!==4||probe.offline.battleSamples.length!==0||probe.offline.pendingSettlement!==null||probe.offline.lastSettledAt!==3000)errors.push({code:"RESET_OWNER"});
-  return Object.freeze({version:1,passed:errors.length===0,errors:Object.freeze(errors)});
+  if(probe.offline.battleSampleVersion!==4||probe.offline.battleSamples.length!==0||probe.offline.pendingSettlement!==null||probe.offline.lastSettledAt!==3000||probe.offline.sampleMigration!==null)errors.push({code:"RESET_OWNER"});
+  return Object.freeze({version:2,passed:errors.length===0,legacyPolicyVersion:OFFLINE_LEGACY_SAMPLE_POLICY_VERSION,unsafeLegacyVersions:Array.from(UNSAFE_LEGACY_SAMPLE_VERSIONS),errors:Object.freeze(errors)});
  }
 
  window.OFFLINE_STATE_NORMALIZATION_VERSION=VERSION;
  window.OFFLINE_BATTLE_SAMPLE_VERSION=OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION=LEGACY_OFFLINE_BATTLE_SAMPLE_VERSION;
  window.OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION=OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION;
+ window.OFFLINE_LEGACY_SAMPLE_POLICY_VERSION=OFFLINE_LEGACY_SAMPLE_POLICY_VERSION;
+ window.OFFLINE_UNSAFE_LEGACY_SAMPLE_VERSIONS=Array.from(UNSAFE_LEGACY_SAMPLE_VERSIONS);
  window.OFFLINE_SAMPLE_OWNER_VERSION=OFFLINE_SAMPLE_OWNER_VERSION;
  window.OFFLINE_RESET_OWNER_VERSION=OFFLINE_RESET_OWNER_VERSION;
  window.OFFLINE_STATE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
