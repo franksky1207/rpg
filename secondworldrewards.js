@@ -153,19 +153,14 @@
    equipmentLevel:Math.min(rewardPlayerLevel(s),boss.level)
   };
  }
- function snapshotState(){try{return JSON.stringify(state);}catch(e){return null;}}
- function restoreState(json){if(!json)return false;try{state=JSON.parse(json);return true;}catch(e){return false;}}
- function saveAtomicOrRollback(before){
-  let result;
-  try{result=save(false);}catch(e){result=false;}
-  if(result===false){restoreState(before);return false;}
-  return true;
+ function runRewardTransaction(label,mutate){
+  if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"共用正式結算 transaction owner 尚未載入。"};
+  return window.runSettlementTransaction({label,mutate});
  }
  function settleSecondWorldBossVictory(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=currentState();
   if(index<0||!boss||!s||s?.secondWorld?.entered!==true)return {ok:false,reason:"宇宙紀元主線狀態無效。"};
   if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,s)))return {ok:false,reason:"此 Boss 尚未解鎖。"};
-  const before=snapshotState();
   const reward=secondWorldMainlineRewardPreview(index,{state:s,useTestSpecializations:false});
   const rng=typeof options.rng==="function"?options.rng:Math.random;
   const lootOptions={state:s,rng,vipLevel:options.vipLevel,weakTypesResolver:options.weakTypesResolver};
@@ -177,52 +172,56 @@
    if(extraDrop?.item)drops.push({...extraDrop,vip16Extra:true});
   }
   const firstKill=s.secondWorld.mainline.bossKilled[index]!==true;
-  const logs=[];
-  const levelBefore=s.level;
-  if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(reward.xp,logs);else gainExp(reward.xp,logs);
-  s.secondWorld.darkMatter=Math.max(0,Math.floor(Number(s.secondWorld.darkMatter)||0))+reward.darkMatter;
-  s.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(s.secondWorld.darkEnergy)||0))+1;
-  const equipmentRewards=drops.map(drop=>{
-   const itemResult=addItem(drop.item);
-   return {item:drop.item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,vip16Extra:drop.vip16Extra===true,baseQuality:drop.baseQuality,qualityResult:drop.qualityResult,forcedType:drop.forcedType};
+  const tx=runRewardTransaction("second-world-boss-victory",live=>{
+   if(live?.secondWorld?.entered!==true||!live?.secondWorld?.mainline)return {ok:false,reason:"宇宙紀元主線狀態無效。"};
+   const logs=[];
+   const levelBefore=live.level;
+   if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(reward.xp,logs);else gainExp(reward.xp,logs);
+   live.secondWorld.darkMatter=Math.max(0,Math.floor(Number(live.secondWorld.darkMatter)||0))+reward.darkMatter;
+   live.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(live.secondWorld.darkEnergy)||0))+1;
+   const equipmentRewards=drops.map(drop=>{
+    const itemResult=addItem(drop.item);
+    return {item:drop.item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,vip16Extra:drop.vip16Extra===true,baseQuality:drop.baseQuality,qualityResult:drop.qualityResult,forcedType:drop.forcedType};
+   });
+   const primary=equipmentRewards[0]||null;
+   live.secondWorld.mainline.bossKilled[index]=true;
+   return {ok:true,equipmentRewards,primary,levelBefore,levelAfter:live.level,logs};
   });
-  const primary=equipmentRewards[0]||null;
-  s.secondWorld.mainline.bossKilled[index]=true;
-  if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item:primary?.item||null,itemResult:primary?.itemResult||null,sale:primary?.sale||null,kept:primary?.kept===true,equipmentRewards,levelBefore,levelAfter:state.level,logs};
+  if(!tx.ok)return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
+  const settled=tx.value||{},primary=settled.primary||null;
+  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item:primary?.item||null,itemResult:primary?.itemResult||null,sale:primary?.sale||null,kept:primary?.kept===true,equipmentRewards:settled.equipmentRewards||[],levelBefore:settled.levelBefore,levelAfter:settled.levelAfter,logs:settled.logs||[]};
  }
  function applySecondWorldDeathPenalty(options={}){
   const s=currentState();
   if(!s||s?.secondWorld?.entered!==true)return {ok:false,reason:"不是宇宙紀元正式死亡流程。"};
-  const before=snapshotState(),logs=[];
-  let dropped=null,protectedByVip20=false,redemptionPending=false,cost=null,currency=null;
-  const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
-  const worn=types.map(slot=>[slot,s.equipment?.[slot]]).filter(([,it])=>!!it);
-  if(worn.length&&Math.random()<.30){
-   if((Number(s.vipLevel)||0)>=20)protectedByVip20=true;
-   else{
-    const [slot,item]=worn[Math.floor(Math.random()*worn.length)];
-    s.equipment[slot]=null;dropped=item;
-    if(Number(item.world)===2){cost=secondWorldEquipmentRedemptionCost(item,false);currency="darkMatter";}
-    else{cost=0;currency="free";}
-    if(!Array.isArray(s.lostGear))s.lostGear=[];
-    s.lostGear.push({
-     id:Date.now().toString(36)+Math.random().toString(36).slice(2),
-     item,cost,currency,redemptionPending:false,lostAt:Date.now()
-    });
+  const tx=runRewardTransaction("second-world-death-penalty",live=>{
+   const logs=[];
+   let dropped=null,protectedByVip20=false,redemptionPending=false,cost=null,currency=null;
+   const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:["weapon","helmet","armor","shoes","accessory"];
+   const worn=types.map(slot=>[slot,live.equipment?.[slot]]).filter(([,it])=>!!it);
+   if(worn.length&&Math.random()<.30){
+    if((Number(live.vipLevel)||0)>=20)protectedByVip20=true;
+    else{
+     const [slot,item]=worn[Math.floor(Math.random()*worn.length)];
+     live.equipment[slot]=null;dropped=item;
+     if(Number(item.world)===2){cost=secondWorldEquipmentRedemptionCost(item,false);currency="darkMatter";}
+     else{cost=0;currency="free";}
+     if(!Array.isArray(live.lostGear))live.lostGear=[];
+     live.lostGear.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),item,cost,currency,redemptionPending:false,lostAt:Date.now()});
+    }
    }
-  }
-  s.hp=playerCombatStats().hp;
-  if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);
-  else logs.push("本次沒有遺失裝備。");
-  if(!saveAtomicOrRollback(before))return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
-  return {ok:true,dropped,protectedByVip20,redemptionPending:false,cost,currency,logs};
+   live.hp=playerCombatStats().hp;
+   if(dropped)logs.push(`裝備遺失：${itemHtmlPlain(dropped)}。`);
+   else logs.push("本次沒有遺失裝備。");
+   return {ok:true,dropped,protectedByVip20,redemptionPending,cost,currency,logs};
+  });
+  if(!tx.ok)return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
+  return {ok:true,...tx.value,redemptionPending:false};
  }
  function validate(){
   const errors=[];
   if(secondWorldBossDarkMatterBase(0)!==20||secondWorldBossDarkMatterBase(99)!==218)errors.push({code:"DARK_MATTER_BASE"});
   const probe={world:2,level:500,q:5};
-  const raw=typeof window.specializationMultiplier==="function"?window.specializationMultiplier:null;
   if(!Number.isFinite(secondWorldEquipmentSaleDarkMatter(probe,true)))errors.push({code:"SALE_FORMULA"});
   const saleProbe=equipmentSaleQuote(probe,{state:{secondWorld:{entered:true,darkMatter:0,darkEnergy:0}},useTestSpecializations:true});
   if(saleProbe.currency!=="darkMatter"||saleProbe.darkMatter<=0||saleProbe.darkEnergy!==1)errors.push({code:"SALE_OWNER",saleProbe});
@@ -232,11 +231,13 @@
   if(legacyProbe.amount!==0||legacyProbe.gold!==0||legacyProbe.darkMatter!==0||legacyProbe.darkEnergy!==0)errors.push({code:"LEGACY_SALE_GATE",legacyProbe});
   const first=bossMeta(0),last=bossMeta(99);
   if(!first||!last||first.level!==505||last.level!==1000)errors.push({code:"BOSS_REGISTRY"});
+  if(typeof window.runSettlementTransaction!=="function")errors.push({code:"SHARED_SETTLEMENT_TRANSACTION_OWNER"});
   return {passed:errors.length===0,version:VERSION,redemptionMultiplier:REDEMPTION_MULTIPLIER,errors};
  }
 
  window.SECOND_WORLD_REWARD_VERSION=VERSION;
  window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION=1;
+ window.SECOND_WORLD_SHARED_SETTLEMENT_TRANSACTION_VERSION=1;
  window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION=1;
  window.SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1;
  window.SECOND_WORLD_REDEMPTION_MULTIPLIER=REDEMPTION_MULTIPLIER;
