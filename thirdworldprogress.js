@@ -27,7 +27,7 @@
   if(effectivePermanentDamage!==Math.max(0,finiteWhole(basis.effectivePermanentDamage,0)))return reject("damage-mismatch","永久淨削血與正式 settlement basis 不一致。",{bossIndex:index,effectivePermanentDamage,basisDamage:basis.effectivePermanentDamage});
   return freeze({ok:true,bossIndex:index,boss,bossRow:row,currentHp,formalStartHp,combatEndHp,effectivePermanentDamage});
  }
- function settleThirdWorldCombatResult(result,options={}){
+ function settleThirdWorldCombatResult(result){
   const basis=basisFromResult(result);
   if(!basis)return reject("basis-ineligible","戰鬥結果不是可正式落帳的高維 settlement basis。");
   if(settledBasisObjects.has(basis))return reject("duplicate-result","同一場高維戰鬥結果已經完成正式結算。");
@@ -37,7 +37,6 @@
   if(typeof window.runSettlementTransaction!=="function")return reject("transaction-owner-missing","共用正式結算 transaction owner 尚未載入。");
   const tx=window.runSettlementTransaction({
    label:"third-world-permanent-hp",
-   saveFn:typeof options.saveFn==="function"?options.saveFn:undefined,
    mutate:liveState=>{
     const checked=validateBasisAgainstState(basis,liveState);
     if(!checked.ok)return checked;
