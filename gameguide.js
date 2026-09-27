@@ -74,6 +74,7 @@
    ["雲端存檔","登入帳號後，可在設定頁手動上傳或下載雲端存檔，用來在不同裝置之間搬移進度；雲端存檔不會自動同步，也不會在登入時自動覆蓋本機存檔。"]
   ]}
  ];
+ const SPECIAL_GUIDE_IDS=Object.freeze(["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"]);
  let activeGuideCategory="adventure";
  function guideUniverse(target=null){
   const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
@@ -124,11 +125,15 @@
   const universe=guideUniverse(target);
   if(title==="特殊遭遇")return universe?"宇宙主線 Boss 勝利後有機會觸發特殊遭遇。特殊戰鬥結束後 HP 回滿；勝利後繼續原本流程，失敗則結束連續戰鬥。":"普通怪與菁英怪勝利後有機會觸發特殊遭遇，Boss 不會觸發。特殊戰鬥結束後 HP 回滿；失敗會結束連續戰鬥。";
   if(title==="VIP 與特殊怪")return "部分 VIP 特權會提高特殊遭遇機率或增加特殊怪收益，詳細效果可在 VIP 特權中查看。";
-  const ids=["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"];
-  const idx=GUIDE_CATEGORIES.find(x=>x.id==="special")?.items?.findIndex(x=>x?.[0]===title)??-1;
-  if(idx<1||idx>9)return null;
-  const monster=typeof window.getSpecialMonsterById==="function"?window.getSpecialMonsterById(ids[idx-1],universe?2:1):null;
-  return monster?.description||null;
+  return null;
+ }
+ function specialGuideWorldItem(item,index,target=null){
+  if(index>=1&&index<=SPECIAL_GUIDE_IDS.length){
+   const monster=typeof window.getSpecialMonsterById==="function"?window.getSpecialMonsterById(SPECIAL_GUIDE_IDS[index-1],guideUniverse(target)?2:1):null;
+   if(monster)return [monster.name,monster.description||item?.[1]||""];
+  }
+  const text=specialGuideWorldText(item?.[0],target);
+  return text?[item[0],text]:item.slice();
  }
  function dungeonCommonGuideWorldText(title,target=null){
   const universe=guideUniverse(target);
@@ -171,32 +176,34 @@
   return guideUniverse(target)?"擊敗各區域最終 Boss 後會發現對應災厄，符合前置文明條件即可挑戰。每隻災厄完成 30 次完整擊殺後會完成該文明階段並提升文明等級；災厄不提供一般戰鬥獎勵。":"擊敗各區域最終 Boss 後解鎖對應災厄。成功討伐可取得並提升永久印記，最高 Lv.10；災厄不提供一般戰鬥獎勵。";
  }
  function gameGuideCategoriesForState(target=null){
-  return GUIDE_CATEGORIES.map(category=>({...category,items:(category.items||[]).map(item=>{
+  return GUIDE_CATEGORIES.map(category=>({...category,items:(category.items||[]).map((item,index)=>{
+   if(category.id==="special")return specialGuideWorldItem(item,index,target);
    const coreText=(category.id==="adventure"||category.id==="gear")?coreGuideWorldText(item?.[0],target):null;
    const combatText=category.id==="combat"?combatGuideWorldText(item?.[0],target):null;
-   const specialText=category.id==="special"?specialGuideWorldText(item?.[0],target):null;
    const dungeonCommonText=category.id==="dungeon"?dungeonCommonGuideWorldText(item?.[0],target):null;
    const specializationText=category.id==="growth"?specializationGuideWorldText(item?.[0],target):null;
    const civilizationText=category.id==="growth"?civilizationGuideWorldText(item?.[0],target):null;
    const bountyText=category.id==="dungeon"?bountyGuideWorldText(item?.[0],target):null;
    const arenaText=category.id==="dungeon"?arenaGuideWorldText(item?.[0],target):null;
    const calamityText=category.id==="dungeon"?calamityGuideWorldText(item?.[0],target):null;
-   const worldText=calamityText||arenaText||bountyText||dungeonCommonText||specialText||combatText||civilizationText||specializationText||coreText;
+   const worldText=calamityText||arenaText||bountyText||dungeonCommonText||combatText||civilizationText||specializationText||coreText;
    return worldText?[item[0],worldText]:item.slice();
   })}));
  }
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=19;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=6;
+ window.GAME_GUIDE_VERSION=20;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=7;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CALAMITY_WORLD_VERSION=2;
  window.GAME_GUIDE_BOUNTY_WORLD_VERSION=2;
  window.GAME_GUIDE_ARENA_WORLD_VERSION=2;
- window.GAME_GUIDE_SPECIAL_WORLD_VERSION=1;
+ window.GAME_GUIDE_SPECIAL_WORLD_VERSION=2;
+ window.GAME_GUIDE_SPECIAL_PROFILE_TITLE_VERSION=1;
  window.GAME_GUIDE_DUNGEON_COMMON_WORLD_VERSION=1;
  window.GAME_GUIDE_COMBAT_WORLD_VERSION=1;
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
+ window.GAME_GUIDE_SPECIAL_IDS=SPECIAL_GUIDE_IDS;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
  window.setGameGuideCategory=function(id){if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;activeGuideCategory=id;if(typeof render==="function")render();};
  window.gameGuidePage=function(){
