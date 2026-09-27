@@ -8,7 +8,6 @@
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
  const CORE_REDUCTION_PER_LEVEL=.04;
- const CORE_MAX_LEVEL=10;
  const FLOW_KIND="third-world";
  let runtime=null;
  let runSerial=0;
@@ -20,9 +19,10 @@
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function resolveBossIndex(value){return typeof window.thirdWorldBossIndex==="function"?window.thirdWorldBossIndex(value):-1;}
  function round2(value){return Math.round((Number(value)||0)*100)/100;}
- function coreLevel(target=currentState()){return clamp(finiteWhole(target?.thirdWorld?.coreLevel,0),0,CORE_MAX_LEVEL);}
+ function coreMaxLevel(){return Math.max(0,finiteWhole(window.THIRD_WORLD_CORE_MAX_LEVEL,0));}
+ function coreLevel(target=currentState()){return clamp(finiteWhole(target?.thirdWorld?.coreLevel,0),0,coreMaxLevel());}
  function suppressionPerDeathPoints(value=coreLevel()){
-  const level=clamp(finiteWhole(value,0),0,CORE_MAX_LEVEL);
+  const level=clamp(finiteWhole(value,0),0,coreMaxLevel());
   return round2(BASE_SUPPRESSION_PER_DEATH-level*CORE_REDUCTION_PER_LEVEL);
  }
  function playerMaxHp(target=currentState(),override=null){
@@ -33,14 +33,15 @@
  }
  function hpCapSnapshot(deaths,target=currentState(),maxHpOverride=null){
   const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevel(target),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round2(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
-  return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round2(fraction*100)});
+  return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,coreMaxLevel:coreMaxLevel(),perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round2(fraction*100)});
  }
  function runtimeSnapshot(source=runtime){
-  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,bossIndex:-1,deaths:0,battles:0,pendingEvents:freeze([]),stopReason:""});
+  if(!source)return freeze({version:RUNTIME_VERSION,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,pendingEvents:freeze([]),stopReason:""});
   return freeze({
    version:RUNTIME_VERSION,
    active:source.active===true,
    paused:source.paused===true,
+   looping:source.looping===true,
    bossIndex:finiteWhole(source.bossIndex,-1),
    deaths:clamp(finiteWhole(source.deaths,0),0,MAX_DEATHS),
    battles:Math.max(0,finiteWhole(source.battles,0)),
@@ -56,7 +57,7 @@
  function startBackgroundFlow(){if(typeof window.backgroundProgressStart==="function")window.backgroundProgressStart(FLOW_KIND,{mode:"continuous"});}
  function clearRuntime(reason="manual"){
   if(!runtime){stopBackgroundFlow();return freeze({...runtimeSnapshot(),stopReason:String(reason||"manual")});}
-  const finished={...runtime,active:false,paused:false,stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[]};
+  const finished={...runtime,active:false,paused:false,looping:false,stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[]};
   runtime=null;runSerial+=1;stopBackgroundFlow();
   return runtimeSnapshot(finished);
  }
@@ -70,7 +71,7 @@
   if(!target||typeof window.thirdWorldChallengeStatus!=="function")return freeze({ok:false,reason:"無法取得高維正式狀態。",snapshot:runtimeSnapshot()});
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
-  runtime={active:true,paused:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),pauseReason:"",stopReason:"",pendingEvents:[],lastSettlement:null};
+  runtime={active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),pauseReason:"",stopReason:"",pendingEvents:[],lastSettlement:null};
   runSerial+=1;startBackgroundFlow();
   return freeze({ok:true,started:true,snapshot:runtimeSnapshot()});
  }
@@ -84,6 +85,7 @@
  }
  function acknowledgeEvents(){
   if(!runtime?.active||runtime.paused!==true||runtime.pauseReason!=="progress-event")return freeze({ok:false,reason:"目前沒有待確認的高維進度事件。",snapshot:runtimeSnapshot()});
+  if(runtime.deaths>=MAX_DEATHS){const stopped=clearRuntime("death-limit");return freeze({ok:false,reason:"本輪已達 100 次死亡上限。",snapshot:stopped});}
   const target=currentState(),status=typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus(runtime.bossIndex,target):null;
   if(status?.allowed!==true){const stopped=clearRuntime(status?.reason||"challenge-blocked");return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),snapshot:stopped});}
   runtime.paused=false;runtime.pauseReason="";runtime.pendingEvents=[];startBackgroundFlow();
@@ -105,6 +107,7 @@
  function runOneBattle(options={}){
   if(!runtime?.active)return freeze({ok:false,reason:"高維連戰尚未開始。",snapshot:runtimeSnapshot()});
   if(runtime.paused)return freeze({ok:false,reason:"高維連戰正在等待進度事件確認。",snapshot:runtimeSnapshot()});
+  if(runtime.deaths>=MAX_DEATHS)return freeze({ok:false,reason:"本輪已達 100 次死亡上限。",snapshot:clearRuntime("death-limit")});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")return freeze({ok:false,reason:"高維戰鬥／結算 owner 尚未載入。",snapshot:clearRuntime("owner-missing")});
   const target=currentState(),status=typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus(runtime.bossIndex,target):null;
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:clearRuntime(status?.reason||"challenge-blocked")});
@@ -124,8 +127,8 @@
   const deathLimitReached=countsDeath&&deathsAfter>=MAX_DEATHS;
   let snapshot;
   if(terminalReason)snapshot=clearRuntime(terminalReason);
-  else if(progressEvent)snapshot=pauseForProgressEvents(settlement);
   else if(deathLimitReached)snapshot=clearRuntime("death-limit");
+  else if(progressEvent)snapshot=pauseForProgressEvents(settlement);
   else snapshot=runtimeSnapshot();
   return freeze({ok:true,world:3,combat,settlement,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEventPending:progressEvent,continuationAllowed:snapshot.active===true&&!snapshot.paused,snapshot});
  }
@@ -138,22 +141,29 @@
  async function runLoop(value,options={}){
   const started=startRun(value);
   if(!started.ok)return started;
+  if(runtime?.looping===true)return freeze({ok:false,reason:"此高維連戰已由另一個 loop 執行中。",snapshot:runtimeSnapshot()});
   const serial=runSerial,results=[];
-  while(runtime?.active===true&&runSerial===serial){
-   if(runtime.paused)break;
-   const step=runOneBattle(options);
-   results.push(step);
-   if(typeof options.onBattle==="function"){try{await options.onBattle(step);}catch(error){console.error(error);}}
-   if(step.ok!==true||runtime?.active!==true||runtime.paused||runSerial!==serial)break;
-   await sleepBetweenBattles();
+  runtime.looping=true;
+  try{
+   while(runtime?.active===true&&runSerial===serial){
+    if(runtime.paused)break;
+    const step=runOneBattle(options);
+    results.push(step);
+    if(typeof options.onBattle==="function"){try{await options.onBattle(step);}catch(error){console.error(error);}}
+    if(step.ok!==true||runtime?.active!==true||runtime.paused||runSerial!==serial)break;
+    await sleepBetweenBattles();
+   }
+  }finally{
+   if(runtime?.active===true&&runSerial===serial)runtime.looping=false;
   }
   return freeze({ok:true,world:3,battles:results.length,results:freeze(results.slice()),snapshot:runtimeSnapshot()});
  }
  function validate(){
   const errors=[];
-  const p0=suppressionPerDeathPoints(0),p10=suppressionPerDeathPoints(10),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),h10=hpCapSnapshot(100,{thirdWorld:{coreLevel:10}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000);
-  if(p0!==.5||p10!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,p10});
-  if(h0.hpCapPercent!==50||h0.hpCap!==5000||h10.hpCapPercent!==90||h10.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,h10});
+  const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000);
+  if(maxCore!==10)errors.push({code:"CORE_MAX_OWNER",maxCore});
+  if(p0!==.5||pMax!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,pMax,maxCore});
+  if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,hMax});
   if(hMid.perDeathSuppressionPoints!==.3||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
   if(["deaths","suppression","run","targetBossIndex","pendingEvents"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
