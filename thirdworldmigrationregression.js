@@ -1,9 +1,10 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const PRE_SCHEMA16_POLICY_REGRESSION_VERSION=1;
  const TRANSIENT_DROP_REGRESSION_VERSION=1;
+ const CORE_RECONCILIATION_REGRESSION_VERSION=1;
  function clone(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
- function baseSave(bosses){return {saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1,bosses},offline:{}};}
+ function baseSave(bosses){return {saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1,coreProgressionVersion:1,bosses},offline:{}};}
  function runThirdWorldBossMigrationRegression(){
   const errors=[],cases=[],max=Number(window.THIRD_WORLD_BOSS_MAX_HP),count=Number(window.THIRD_WORLD_BOSS_COUNT),previousReport=window.LAST_SAVE_MIGRATION_REPORT;
   const fail=(id,data=null)=>errors.push({code:id,data});
@@ -30,7 +31,11 @@
      const row=m?.thirdWorld||{},allowed=new Set(Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]));
      return ["deaths","suppression","run","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary"].every(key=>!Object.prototype.hasOwnProperty.call(row,key))&&Object.keys(row).every(key=>allowed.has(key));
     });
-    runCase("SCHEMA15_THIRD_WORLD_DISCARDED_AS_DEVELOPMENT_DATA",{saveVersion:15,level:1500,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,completed:true,entryVersion:99,dimensionalStrings:999999,coreLevel:10,bosses:distinct,deaths:100,run:{active:true}},offline:{}},(m,r)=>{
+    const legacyCore=baseSave(distinct);delete legacyCore.thirdWorld.coreProgressionVersion;legacyCore.thirdWorld.coreLevel=7;legacyCore.thirdWorld.dimensionalStrings=1234567890;
+    runCase("SCHEMA16_PRE_BATCH7_UNPAID_CORE_RESET",legacyCore,m=>Number(m?.thirdWorld?.coreLevel)===0&&Number(m?.thirdWorld?.coreProgressionVersion)===1&&Number(m?.thirdWorld?.dimensionalStrings)===1234567890);
+    const reconciledCore=baseSave(distinct);reconciledCore.thirdWorld.coreLevel=5;reconciledCore.thirdWorld.dimensionalStrings=3000000000;
+    runCase("SCHEMA16_RECONCILED_CORE_PRESERVED",reconciledCore,m=>Number(m?.thirdWorld?.coreLevel)===5&&Number(m?.thirdWorld?.coreProgressionVersion)===1&&Number(m?.thirdWorld?.dimensionalStrings)===3000000000);
+    runCase("SCHEMA15_THIRD_WORLD_DISCARDED_AS_DEVELOPMENT_DATA",{saveVersion:15,level:1500,exp:999,secondWorld:{entered:true},thirdWorld:{entered:true,completed:true,entryVersion:99,dimensionalStrings:999999,coreLevel:10,coreProgressionVersion:1,bosses:distinct,deaths:100,run:{active:true}},offline:{}},(m,r)=>{
      const row=m?.thirdWorld||{};
      return row.entered!==true&&row.completed!==true&&Number(row.dimensionalStrings||0)===0&&Number(row.coreLevel||0)===0&&Array.isArray(row.bosses)&&row.bosses.every(b=>b.currentHp===max)&&r?.legacyThirdWorldStateDiscarded===true;
     });
@@ -38,13 +43,14 @@
   }finally{
    if(typeof previousReport==="undefined")delete window.LAST_SAVE_MIGRATION_REPORT;else window.LAST_SAVE_MIGRATION_REPORT=previousReport;
   }
-  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,preSchema16Policy:"discard-development-data",passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
+  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,coreReconciliationRegressionVersion:CORE_RECONCILIATION_REGRESSION_VERSION,preSchema16Policy:"discard-development-data",passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
   window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_REPORT=report;
   return report;
  }
  window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_VERSION=VERSION;
  window.THIRD_WORLD_PRE_SCHEMA16_POLICY_REGRESSION_VERSION=PRE_SCHEMA16_POLICY_REGRESSION_VERSION;
  window.THIRD_WORLD_TRANSIENT_DROP_REGRESSION_VERSION=TRANSIENT_DROP_REGRESSION_VERSION;
+ window.THIRD_WORLD_CORE_RECONCILIATION_REGRESSION_VERSION=CORE_RECONCILIATION_REGRESSION_VERSION;
  window.runThirdWorldBossMigrationRegression=runThirdWorldBossMigrationRegression;
  window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_REPORT=runThirdWorldBossMigrationRegression();
 })();
