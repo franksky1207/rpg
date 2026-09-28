@@ -1,15 +1,18 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
  const CORE_UI_VERSION=2;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
  const RUN_ENTRY_UI_VERSION=1;
  const THREE_COLUMN_HEADER_VERSION=1;
  const COMBAT_PAGE_UI_VERSION=1;
+ const REVIEW_UI_VERSION=1;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
  let coreFeedbackOk=false;
  let pendingCoreConfirmation=null;
+ let reviewContext=null;
+ let reviewResultModal=null;
 
  function n(value){const x=Number(value);return Number.isFinite(x)?x:0;}
  function whole(value){return Math.max(0,Math.floor(n(value)));}
@@ -36,7 +39,7 @@
  function specializationPresentation(boss){return typeof window.thirdWorldBossSpecializationPresentation==="function"?(window.thirdWorldBossSpecializationPresentation(boss)||{label:"高維存在",effect:"個體特化"}):{label:"高維存在",effect:"個體特化"};}
  function activeAbilityNames(snapshot){if(!snapshot?.abilities||typeof snapshot.abilities!=="object")return [];return abilityDefs().filter(def=>snapshot.abilities?.[def.id]?.active===true).map(def=>def.name);}
  function challengePresentation(snapshot){
-  if(snapshot?.defeated)return {className:"defeated",label:"已擊破",detail:"永久 HP 已歸零"};
+  if(snapshot?.defeated)return {className:"defeated",label:"已擊破／回顧",detail:"固定 10% 最終型態、滿 HP 的單場無收益回顧"};
   const status=snapshot?.challengeStatus||{};
   if(status.allowed===true&&status.reason==="last-survivor")return {className:"ready final",label:"最終存活・可挑戰",detail:"僅存一名高維存在，5% 戰線限制自然解除"};
   if(status.allowed===true)return {className:"ready",label:"可挑戰",detail:"目前位於合法 5% 戰線內"};
@@ -45,7 +48,7 @@
  }
  function actionHtml(snapshot,status,index){
   const run=runSnapshot();
-  if(snapshot?.defeated)return `<button class="btn third-world-boss-action" type="button" disabled>已擊破</button>`;
+  if(snapshot?.defeated)return `<button class="btn blue third-world-boss-action third-world-boss-review-action" type="button" onclick="startThirdWorldBossReviewFromPlayerUi(${whole(index)})">回顧挑戰</button>`;
   if(run.active===true){
    if(whole(run.bossIndex)===whole(index))return `<button class="btn danger third-world-boss-action third-world-boss-action-stop" type="button" onclick="stopThirdWorldRunFromPlayerUi()">停止連續戰鬥</button>`;
    return `<button class="btn third-world-boss-action" type="button" disabled>其他高維存在連戰進行中</button>`;
@@ -110,6 +113,26 @@
  }
  function topBarHtml(withInventory=true){return `<div class="page-top third-world-page-top"><div class="third-world-page-top-cell left"><button class="btn back-btn" onclick="thirdWorldGoHomeFromPlayerUi()">← 返回主頁</button></div><div class="third-world-page-top-cell center"><h2 class="page-title">高維戰線</h2></div><div class="third-world-page-top-cell right">${withInventory?`<button class="btn" onclick="thirdWorldOpenInventoryFromPlayerUi()">背包</button>`:""}</div></div>`;}
  function unavailableHtml(message){return `<section class="map-screen third-world-adventure-screen">${topBarHtml(false)}<div class="notice"><b>${message}</b></div></section>`;}
+ function reviewCombatPageHtml(){
+  const ctx=reviewContext,combat=ctx?.combat;if(!ctx||!combat)return "";
+  const playerMax=Math.max(1,whole(combat.playerMaxHp||combat.playerStartHp||1)),playerStart=Math.max(0,Math.min(playerMax,whole(combat.playerStartHp??playerMax))),playerPct=playerStart/playerMax*100;
+  const enemyMax=Math.max(1,whole(combat.enemyMaxHp||combat.e?.hp||window.THIRD_WORLD_BOSS_MAX_HP||1)),enemyStart=Math.max(0,Math.min(enemyMax,whole(combat.enemyStartHp??enemyMax))),enemyPct=enemyStart/enemyMax*100;
+  return `<section class="combat-screen third-world-combat-screen third-world-review-combat-screen"><div class="combat-head main-minimal-mode-head third-world-combat-head"><span class="main-minimal-mode-head-label third-world-combat-head-label"><span>高維回顧・單場</span><small>Stage 9｜10% 最終型態｜Boss 滿 HP｜無正式收益</small></span></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${whole(state?.level)}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(playerStart)} / ${fmt(playerMax)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${ctx.bossName}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${enemyPct}%"></span></div></div></div></div><div class="combat-message" id="combatMessage">高維回顧進行中</div></section>`;
+ }
+ function closeReviewResult(){
+  reviewResultModal?.classList.remove("show");reviewResultModal?.remove();reviewResultModal=null;reviewContext=null;
+  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+  if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-review-end");
+  if(typeof window.render==="function")window.render();
+  return true;
+ }
+ function showReviewResult(result){
+  if(typeof document==="undefined"){closeReviewResult();return;}
+  reviewResultModal=document.createElement("div");reviewResultModal.className="modal show";reviewResultModal.id="thirdWorldReviewResultModal";reviewResultModal.setAttribute("role","dialog");reviewResultModal.setAttribute("aria-modal","true");
+  const outcome=result?.win===true?"回顧勝利":result?.playerDied===true?"回顧挑戰結束":"回顧戰結束";
+  reviewResultModal.innerHTML=`<div class="modal-box"><h3>${outcome}</h3><div class="notice"><b>${reviewContext?.bossName||"高維存在"}</b><div class="muted" style="margin-top:6px;line-height:1.55">固定 Stage 9／10% 最終型態，以完整 ${fmt(window.THIRD_WORLD_BOSS_MAX_HP)} HP 進行單場回顧。<br>本場不產生 EXP、維度之弦、裝備、Boss 永久削血、稱號、劇情、核心或任何正式進度。</div></div><div class="controls" style="margin-top:16px"><button class="btn primary" type="button" onclick="closeThirdWorldReviewResultModal()">返回高維戰線</button></div></div>`;
+  document.body.appendChild(reviewResultModal);
+ }
  function combatPageHtml(){
   const ctx=playerFlowContext(),combat=ctx?.currentCombat;if(!ctx||!combat)return "";
   const maxDeaths=Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)),deaths=Math.min(maxDeaths,whole(ctx.deaths)),round=Math.max(1,whole(ctx.battleNumber||1));
@@ -121,6 +144,7 @@
  function pageHtml(){
   clearCoreFeedbackOnFreshEntry();
   if(currentPhase()!==3)return unavailableHtml("目前尚未正式進入高維紀元。");
+  const reviewHtml=reviewCombatPageHtml();if(reviewHtml)return reviewHtml;
   const combatHtml=combatPageHtml();if(combatHtml)return combatHtml;
   const count=expectedBossCount(),agg=aggregate();if(count<=0||!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==count)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
   const defs=bossDefs();if(defs.length!==count)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
@@ -138,6 +162,8 @@
   if(typeof window.thirdWorldCoreSnapshot!=="function")errors.push("CORE_SNAPSHOT_OWNER_MISSING");
   if(typeof window.thirdWorldCoreInjectionPlan!=="function")errors.push("CORE_PLAN_OWNER_MISSING");
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
+  if(typeof window.runThirdWorldBossCombat!=="function"||Number(window.THIRD_WORLD_COMBAT_REVIEW_POLICY_VERSION)!==1)errors.push("REVIEW_COMBAT_OWNER_MISSING");
+  if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
   const playerCopy=[challengePresentation({challengeStatus:{allowed:true,reason:"last-survivor"}}).detail,challengePresentation({challengeStatus:{allowed:true,reason:"within-five-point-front"}}).detail,combatRuleHtml()].join(" ");
@@ -146,6 +172,32 @@
  }
 
  window.toggleThirdWorldCommonAbilities=function(){commonAbilitiesOpen=!commonAbilitiesOpen;if(typeof window.render==="function")window.render();};
+ window.startThirdWorldBossReviewFromPlayerUi=async function(value){
+  const index=whole(value),snap=bossSnapshot(index),run=runSnapshot();
+  if(currentPhase()!==3||snap?.defeated!==true)return false;
+  if(run.active===true||reviewContext||window.adventureEraViewLocked?.()===true)return false;
+  const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!player)return false;
+  if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")return false;
+  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true);
+  try{
+   const result=window.runThirdWorldBossCombat(index,{review:true,preparePresentation:true,logs:true,startHp:player.hp,playerHealCap:player.hp});
+   if(result?.ok!==true||result?.review!==true||result?.formalSettlementEligible===true)throw new Error(result?.reason||"高維回顧建立失敗。");
+   reviewContext={bossIndex:index,bossName:String(result.bossName||bossDefs()[index]?.name||"高維存在"),combat:result.combat,result};
+   if(typeof window.render==="function")window.render();
+   window.prepareCombatPresentation(result.combat,{logs:true});
+   await window.animateStructuredCombatPresentation(result.combat,{clearAfter:false,clearReason:"third-world-review-combat-end"});
+   showReviewResult(result);
+   return true;
+  }catch(error){
+   console.error("[文明戰線] 高維回顧失敗",error);reviewContext=null;
+   if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+   if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-review-error");
+   if(typeof window.render==="function")window.render();
+   alert("高維回顧發生錯誤，正式進度未受影響。");return false;
+  }
+ };
+ window.closeThirdWorldReviewResultModal=closeReviewResult;
+ window.isThirdWorldReviewBattleActive=function(){return !!reviewContext;};
  window.startThirdWorldRunFromPlayerUi=async function(value){
   const index=whole(value),current=runSnapshot();
   if(current.active===true)return current.bossIndex===index?true:false;
@@ -188,6 +240,7 @@
  window.THIRD_WORLD_PLAYER_UI_THREE_COLUMN_HEADER_VERSION=THREE_COLUMN_HEADER_VERSION;
  window.THIRD_WORLD_PLAYER_UI_COMBAT_PAGE_VERSION=COMBAT_PAGE_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_ERA_TABS_VERSION=1;
+ window.THIRD_WORLD_PLAYER_UI_REVIEW_VERSION=REVIEW_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
 })();

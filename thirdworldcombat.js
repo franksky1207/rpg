@@ -1,6 +1,8 @@
 (function(){
- const VERSION=5;
- const SNAPSHOT_VERSION=1;
+ const VERSION=6;
+ const SNAPSHOT_VERSION=2;
+ const REVIEW_POLICY_VERSION=1;
+ const REVIEW_STATE_ISOLATION_VERSION=1;
  const RESULT_CONTRACT_VERSION=2;
  const SETTLEMENT_BASIS_VERSION=2;
  const SETTLEMENT_AUTHORITY_VERSION=1;
@@ -111,13 +113,18 @@
   if(!boss)return null;
   const target=targetState(options);
   const progress=target&&typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,target):null;
-  const allowOverride=options.ignoreUnlock===true;
-  const storedHp=progress?finiteWhole(progress.currentHp,boss.maxHp):finiteWhole(boss.maxHp,1);
+  const reviewMode=options.review===true;
+  const bossMaxHp=Math.max(1,finiteWhole(boss.maxHp,1));
+  if(reviewMode&&progress?.defeated!==true)return null;
+  const allowOverride=!reviewMode&&options.ignoreUnlock===true;
+  const storedHp=progress?finiteWhole(progress.currentHp,bossMaxHp):bossMaxHp;
   const requestedHp=allowOverride&&options.formalStartHp!=null?finiteWhole(options.formalStartHp,storedHp):storedHp;
-  const formalStartHp=Math.max(0,Math.min(finiteWhole(boss.maxHp,1),requestedHp));
-  if(formalStartHp<=0)return null;
-  const stats=window.thirdWorldBossStats(index,formalStartHp);
-  const abilities=window.thirdWorldBossAbilities(index,formalStartHp);
+  const formalStartHp=reviewMode?0:Math.max(0,Math.min(bossMaxHp,requestedHp));
+  if(!reviewMode&&formalStartHp<=0)return null;
+  const stageBasisHp=reviewMode?Math.max(1,Math.floor(bossMaxHp*.1)):formalStartHp;
+  const enemyStartHp=reviewMode?bossMaxHp:formalStartHp;
+  const stats=window.thirdWorldBossStats(index,stageBasisHp);
+  const abilities=window.thirdWorldBossAbilities(index,stageBasisHp);
   if(!stats||!abilities)return null;
   const stage=finiteWhole(stats.stage,0);
   const enemy={
@@ -143,7 +150,10 @@
    bossName:enemy.name,
    bossMaxHp:enemy.hp,
    formalStartHp,
-   enemyHealCap:formalStartHp,
+   enemyStartHp,
+   enemyHealCap:enemyStartHp,
+   stageBasisHp,
+   reviewMode,
    stage,
    stats,
    abilities,
@@ -162,9 +172,10 @@
  }
  function runThirdWorldBossCombat(value,options={}){
   const target=targetState(options);
+  const reviewMode=options.review===true;
   const snapshot=createThirdWorldBossCombatSnapshot(value,options);
-  if(!snapshot)return Object.freeze({ok:false,world:3,reason:"找不到可戰鬥的高維 Boss，或該 Boss 已被擊破。"});
-  if(options.ignoreUnlock!==true){
+  if(!snapshot)return Object.freeze({ok:false,world:3,review:reviewMode,reason:reviewMode?"只有已擊破的高維 Boss 可以進行回顧。":"找不到可戰鬥的高維 Boss，或該 Boss 已被擊破。"});
+  if(!reviewMode&&options.ignoreUnlock!==true){
    if(!target)return Object.freeze({ok:false,world:3,reason:"無法取得正式角色狀態。"});
    const status=snapshot.challengeStatus;
    if(!status||status.allowed!==true)return Object.freeze({ok:false,reason:challengeReason(status),challengeStatus:status||null,bossIndex:snapshot.bossIndex,world:3});
@@ -173,7 +184,7 @@
   const player=options.player&&typeof options.player==="object"?options.player:(typeof window.playerCombatStats==="function"?window.playerCombatStats():null);
   if(!player)return Object.freeze({ok:false,world:3,reason:"無法取得玩家戰鬥能力。"});
   const playerMaxHp=Math.max(1,numberOr(player.hp,1));
-  const startHp=options.startHp==null?Math.max(0,numberOr(target?.hp,playerMaxHp)):Math.max(0,numberOr(options.startHp,playerMaxHp));
+  const startHp=options.startHp==null?(reviewMode?playerMaxHp:Math.max(0,numberOr(target?.hp,playerMaxHp))):Math.max(0,numberOr(options.startHp,playerMaxHp));
   const playerHealCap=options.playerHealCap==null?playerMaxHp:Math.max(1,Math.min(playerMaxHp,numberOr(options.playerHealCap,playerMaxHp)));
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
    ?window.civilizationCombatDamageMultiplier({world:3,state:target,civilizationLevel:options.civilizationLevel})
@@ -192,12 +203,12 @@
    preparePresentation:presentationRequested,
    playerFinalDamageMultiplier:civilizationDamageMultiplier,
    playerHealCap,
-   enemyStartHp:snapshot.formalStartHp,
+   enemyStartHp:snapshot.enemyStartHp,
    enemyHealCap:snapshot.enemyHealCap,
    enemyAbilityProfile:snapshot.enemyAbilityProfile,
    enemyEffectProfile:snapshot.enemyEffectProfile
   });
-  const combatEndHp=Math.max(0,Math.min(snapshot.formalStartHp,finiteWhole(combat.enemyHp,snapshot.formalStartHp)));
+  const combatEndHp=Math.max(0,Math.min(snapshot.enemyStartHp,finiteWhole(combat.enemyHp,snapshot.enemyStartHp)));
   const playerEndHp=Math.max(0,numberOr(combat.hp,0));
   const playerDied=playerEndHp<=0;
   const bossDefeated=combatEndHp<=0;
@@ -208,13 +219,13 @@
   const endReason=terminationReason(playerDied,bossDefeated,turnLimitReached,actionSafetyReached);
   const events=deepFreezeClone(Array.isArray(combat.events)?combat.events:[]);
   const logs=deepFreezeClone(Array.isArray(combat.logs)?combat.logs:[]);
-  const formalRun=options.ignoreUnlock!==true;
-  const challengeAllowedAtStart=snapshot.challengeStatus?.allowed===true;
+  const formalRun=!reviewMode&&options.ignoreUnlock!==true;
+  const challengeAllowedAtStart=!reviewMode&&snapshot.challengeStatus?.allowed===true;
   const settlementBasis=createSettlementBasis({
    bossIndex:snapshot.bossIndex,
    bossId:snapshot.bossId,
-   formalStartHp:snapshot.formalStartHp,
-   combatEndHp,
+   formalStartHp:reviewMode?0:snapshot.formalStartHp,
+   combatEndHp:reviewMode?0:combatEndHp,
    bossMaxHp:snapshot.bossMaxHp,
    bossStageAtStart:snapshot.stage,
    playerStartHp:combat.playerStartHp,
@@ -237,6 +248,7 @@
    contractSemantics:SETTLEMENT_AUTHORITY,
    ok:true,
    world:3,
+   review:reviewMode,
    headless:!presentationRequested,
    presentationRequested,
    win:combat.win===true,
@@ -250,9 +262,10 @@
    bossId:snapshot.bossId,
    bossName:snapshot.bossName,
    formalStartHp:settlementBasis.formalStartHp,
-   combatEndHp:settlementBasis.combatEndHp,
-   effectiveDamagePreview:settlementBasis.effectivePermanentDamage,
-   effectivePermanentDamage:settlementBasis.effectivePermanentDamage,
+   enemyStartHp:snapshot.enemyStartHp,
+   combatEndHp:reviewMode?combatEndHp:settlementBasis.combatEndHp,
+   effectiveDamagePreview:reviewMode?0:settlementBasis.effectivePermanentDamage,
+   effectivePermanentDamage:reviewMode?0:settlementBasis.effectivePermanentDamage,
    bossMaxHp:settlementBasis.bossMaxHp,
    bossStageAtStart:settlementBasis.bossStageAtStart,
    bossStatsAtStart:snapshot.stats,
@@ -305,6 +318,9 @@
    if(!stage9||stage9.stage!==9||Number(stage9.enemyAbilityProfile?.comboRate)!==40||markKeys.some(key=>stage9.enemyEffectProfile?.[key]?.active!==true||!markProfileMatchesOwner(stage9.enemyEffectProfile,key)))fail("MARK_EFFECT_OWNER",stage9?.enemyEffectProfile||null);
    const partial=createThirdWorldBossCombatSnapshot(7,{ignoreUnlock:true,formalStartHp:Math.floor(max*.55)});
    if(!partial||partial.enemyHealCap!==partial.formalStartHp||partial.enemyHealCap>=partial.bossMaxHp)fail("FORMAL_HP_HEAL_CAP",partial||null);
+   const reviewState={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:Number(window.THIRD_WORLD_BOSS_COUNT)||10},(_,index)=>({currentHp:index===4?0:max}))}};
+   const review=createThirdWorldBossCombatSnapshot(4,{state:reviewState,review:true});
+   if(!review||review.reviewMode!==true||review.stage!==9||review.formalStartHp!==0||review.enemyStartHp!==max||review.enemyHealCap!==max||review.stageBasisHp!==Math.floor(max*.1)||markKeys.some(key=>review.enemyEffectProfile?.[key]?.active!==true))fail("REVIEW_FINAL_FORM_FULL_HP",review||null);
    const formalStoredHp=Math.max(1,max-12345),formalProbeState={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:Number(window.THIRD_WORLD_BOSS_COUNT)||10},(_,index)=>({currentHp:index===0?formalStoredHp:max}))}};
    const guarded=createThirdWorldBossCombatSnapshot(0,{state:formalProbeState,allowFormalHpOverride:true,formalStartHp:1});
    if(!guarded||guarded.formalStartHp!==formalStoredHp)fail("FORMAL_HP_OVERRIDE_GUARD",{expected:formalStoredHp,actual:guarded?.formalStartHp||null});
@@ -314,11 +330,13 @@
    const incomplete=createSettlementBasis({formalStartHp:1000,combatEndHp:900,terminationReason:"turn-limit",combatCompleted:false});
    if(incomplete.effectivePermanentDamage!==100||incomplete.combatCompleted!==false||incomplete.settlementInputReady!==false||incomplete.formalSettlementEligible!==false||incomplete.terminationReason!=="turn-limit")fail("INCOMPLETE_BASIS_CONTRACT",incomplete);
   }catch(error){fail("EXCEPTION",String(error?.message||error));}
-  return Object.freeze({version:5,passed:errors.length===0,errors:Object.freeze(errors.slice())});
+  return Object.freeze({version:6,reviewPolicyVersion:REVIEW_POLICY_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice())});
  }
 
  window.THIRD_WORLD_COMBAT_VERSION=VERSION;
  window.THIRD_WORLD_COMBAT_SNAPSHOT_VERSION=SNAPSHOT_VERSION;
+ window.THIRD_WORLD_COMBAT_REVIEW_POLICY_VERSION=REVIEW_POLICY_VERSION;
+ window.THIRD_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;
  window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION=RESULT_CONTRACT_VERSION;
  window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION=SETTLEMENT_BASIS_VERSION;
  window.THIRD_WORLD_SETTLEMENT_AUTHORITY_VERSION=SETTLEMENT_AUTHORITY_VERSION;

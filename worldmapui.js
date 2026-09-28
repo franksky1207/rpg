@@ -94,6 +94,7 @@
   let galaxyReviewSelectedMap=0;
   let galaxyReviewSelectedEnemy=4;
   let galaxyReviewBattleActive=false;
+  let adventureReviewBattleActive=false;
   const reviewRegionOpenState=Object.create(null);
   let reviewRegionInitialized=false;
 
@@ -133,7 +134,7 @@
     const thirdRun=typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;
     const secondRun=window.activeSecondWorldMainlineContext||null;
     const globalBattleBusy=typeof battleBusy!=="undefined"&&battleBusy===true;
-    return galaxyReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;
+    return galaxyReviewBattleActive===true||adventureReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;
   }
   function eraTabButton(view,label){
     const active=adventureEraView===view,locked=adventureEraViewLocked()&&!active;
@@ -208,6 +209,8 @@
     return true;
   };
   window.getAdventureEraView=function(){return syncAdventureEraViewWorldPhase();};
+  window.setAdventureReviewBattleActive=function(value){adventureReviewBattleActive=value===true;return adventureReviewBattleActive;};
+  window.isAdventureReviewBattleActive=function(){return adventureReviewBattleActive===true;};
   window.adventureEraViewLocked=adventureEraViewLocked;
   window.adventureEraTabsHtml=adventureEraTabsHtml;
   // Legacy W2 API remains as a compatibility delegate; it no longer owns state.
@@ -400,6 +403,6 @@
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
   window.ADVENTURE_ERA_VIEW_OWNER_VERSION=1;
   window.ADVENTURE_ERA_SESSION_POLICY_VERSION=1;
-  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=1;
+  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=2;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();
