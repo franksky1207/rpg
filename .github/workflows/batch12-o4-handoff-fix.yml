@@ -1,0 +1,30 @@
+name: Batch 12-O4 Handoff Fix
+on:
+  push:
+    paths:
+      - '.github/workflows/batch12-o4-handoff-fix.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply handoff fix
+        run: python3 batch12_o4_handoff_fix.py
+      - name: Validate handoff
+        run: |
+          set -euo pipefail
+          grep -q 'completion-ready' PROJECT_HANDOFF.md
+          grep -q 'shared Story completion owner' PROJECT_HANDOFF.md
+          git diff --check
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PROJECT_HANDOFF.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'Align handoff with final Story completion owner'
+          git push origin HEAD:main
