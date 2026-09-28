@@ -1,11 +1,14 @@
 (function(){
  const MODAL_ID="civilizationStoryModal";
- const VERSION=9;
- const LIFECYCLE_WAIT_VERSION=1;
+ const VERSION=10;
+ const LIFECYCLE_WAIT_VERSION=2;
+ const INSTANCE_IDENTITY_VERSION=1;
  let activeStory=null;
  let activePage=0;
  let activeOptions=null;
- let storyCloseResolvers=[];
+ let activeToken=0;
+ let nextToken=1;
+ let storyCloseWaiters=[];
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function playerName(){
@@ -29,8 +32,24 @@
   }
   return "";
  }
- function resolveStoryClosed(){const rows=storyCloseResolvers.splice(0);rows.forEach(resolve=>{try{resolve(true);}catch(_){}});}
- function waitForStoryClosed(){return activeStory?new Promise(resolve=>storyCloseResolvers.push(resolve)):Promise.resolve(true);}
+ function activeStoryLifecycleSnapshot(){return activeStory?Object.freeze({token:activeToken,storyId:String(activeStory.id||""),page:activePage,pageCount:Array.isArray(activeStory.pages)?activeStory.pages.length:0}):null;}
+ function resolveStoryClosed(token,storyId,completed){
+  const remaining=[];
+  storyCloseWaiters.forEach(waiter=>{
+   if(waiter.token===token){try{waiter.resolve(Object.freeze({closed:true,matched:true,token,storyId,completed:completed===true}));}catch(_){}}
+   else remaining.push(waiter);
+  });
+  storyCloseWaiters=remaining;
+ }
+ function waitForStoryClosed(expected=null){
+  const current=activeStoryLifecycleSnapshot();
+  if(!current)return Promise.resolve(Object.freeze({closed:true,matched:false,reason:"no-active-story",token:0,storyId:null,completed:false}));
+  const expectedToken=typeof expected==="number"?expected:Number(expected?.token)||0;
+  const expectedStoryId=typeof expected==="string"?expected:String(expected?.storyId||"");
+  if(expectedToken&&expectedToken!==current.token)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"token-mismatch",token:current.token,storyId:current.storyId,completed:false}));
+  if(expectedStoryId&&expectedStoryId!==current.storyId)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"story-mismatch",token:current.token,storyId:current.storyId,completed:false}));
+  return new Promise(resolve=>storyCloseWaiters.push({token:current.token,storyId:current.storyId,resolve}));
+ }
  function ensureModal(){
   let modal=document.getElementById(MODAL_ID);
   if(modal)return modal;
@@ -72,23 +91,26 @@
  window.openStory=function(storyId,options=null){
   const story=window.CIVILIZATION_STORIES?.[storyId];
   if(!story||!Array.isArray(story.pages)||!story.pages.length)return false;
-  activeStory=story;activePage=0;activeOptions=options&&typeof options==="object"?options:null;renderPage();return true;
+  if(activeStory)return String(activeStory.id||"")===String(storyId||"");
+  activeStory=story;activePage=0;activeOptions=options&&typeof options==="object"?options:null;activeToken=nextToken++;renderPage();return true;
  };
  window.storyPreviousPage=function(){if(!activeStory||activePage<=0)return;activePage--;renderPage();};
  window.storyNextPage=function(){if(!activeStory||activePage>=activeStory.pages.length-1)return;activePage++;renderPage();};
  window.closeStory=function(){
   const modal=document.getElementById(MODAL_ID);
-  const story=activeStory,options=activeOptions;
+  const story=activeStory,options=activeOptions,token=activeToken,storyId=String(story?.id||"");
   const completed=!!story&&Array.isArray(story.pages)&&story.pages.length>0&&activePage===story.pages.length-1;
   if(modal)modal.classList.remove("open");
-  activeStory=null;activePage=0;activeOptions=null;
+  activeStory=null;activePage=0;activeOptions=null;activeToken=0;
   if(completed&&typeof options?.onComplete==="function"){
    try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
   }
-  resolveStoryClosed();
+  resolveStoryClosed(token,storyId,completed);
  };
- window.isStoryOpen=function(){return !!activeStory;};
+ window.isStoryOpen=function(storyId=null){return !!activeStory&&(storyId==null||String(activeStory.id||"")===String(storyId));};
+ window.activeStoryLifecycleSnapshot=activeStoryLifecycleSnapshot;
  window.waitForStoryClosed=waitForStoryClosed;
  window.STORY_UI_VERSION=VERSION;
  window.STORY_UI_LIFECYCLE_WAIT_VERSION=LIFECYCLE_WAIT_VERSION;
+ window.STORY_UI_INSTANCE_IDENTITY_VERSION=INSTANCE_IDENTITY_VERSION;
 })();
