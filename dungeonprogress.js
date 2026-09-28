@@ -1,5 +1,5 @@
 (function(){
- const ARENA_COMPATIBILITY_PROFILE=Object.freeze({positionModelVersion:1,assessmentRuleVersion:4,assessmentStateVersion:4,assessmentRuntimeVersion:4,balanceVersion:6,rankBalanceVersion:3,positionApiVersion:1,enemyProfileVersion:1,pacingSourceVersion:1});
+ const ARENA_COMPATIBILITY_PROFILE=Object.freeze({positionModelVersion:1,assessmentRuleVersion:4,assessmentStateVersion:4,assessmentRuntimeVersion:4,balanceVersion:7,rankBalanceVersion:4,positionApiVersion:1,enemyProfileVersion:1,pacingSourceVersion:1});
  const ARENA_POSITION_MODEL_VERSION=ARENA_COMPATIBILITY_PROFILE.positionModelVersion,ARENA_ASSESSMENT_RULE_VERSION=ARENA_COMPATIBILITY_PROFILE.assessmentRuleVersion,ARENA_BALANCE_COMPAT_VERSION=ARENA_COMPATIBILITY_PROFILE.balanceVersion,ARENA_ASSESS_RUNS=500,ARENA_ASSESS_CLEAR_TARGET=485;
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
