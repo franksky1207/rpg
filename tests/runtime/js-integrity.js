@@ -65,6 +65,8 @@ const engineSource=read("engine.js");
 const thirdWorldRun=read("thirdworldrun.js");
 const thirdWorldPlayerFlowSource=read("thirdworldplayerflow.js");
 const gameGuideSource=read("gameguide.js");
+const mirrorGuideSource=read("mirrordungeonguide.js");
+const cloudGuideSource=read("cloudsaveguide.js");
 const thirdWorldCombat=read("thirdworldcombat.js");
 const thirdWorldUi=read("thirdworldui.js");
 const thirdWorldDungeonUi=read("thirdworlddungeonui.js");
@@ -81,6 +83,8 @@ const localScripts=[...index.matchAll(/<script\s+src=["']([^"']+)["']/g)]
  .map(match=>match[1].split("?")[0])
  .filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
+const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguide-extension-integrity.js"],{encoding:"utf8"});
+assert(guideExtensionBehavior.status===0,"Guide shared extension behavior regression failed:\n"+String(guideExtensionBehavior.stderr||guideExtensionBehavior.stdout||"unknown error").trim());
 const pos=name=>index.indexOf('src="'+name+'?v=');
 assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
 assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須在正式 migration 之後載入。");
@@ -106,11 +110,14 @@ assert(/resolveDeathEquipmentPenalty\(\[\],\{rng:typeof options\.rng/.test(third
 assert(/VIP20｜裝備保護/.test(thirdWorldPlayerFlowSource)&&/原本的 30% 死亡裝備遺失判定仍照常進行/.test(thirdWorldPlayerFlowSource)&&/THIRD_WORLD_VIP20_DEATH_PROTECTION_PRESENTATION_VERSION/.test(thirdWorldPlayerFlowSource),"W3 結算必須明確呈現 VIP20 阻止裝備遺失的玩家體感。");
 const thirdWorldGuideSource=(gameGuideSource.match(/function thirdWorldBossSpecializationGuideText[\s\S]*?function guideUniverse/)||[""])[0];
 assert(/GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1/.test(gameGuideSource),"W3 Guide 必須使用正式 rule snapshot 與當前紀元分類驗證。");
+assert(/GAME_GUIDE_EXTENSION_REGISTRY_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_CATEGORY_RESOLVER_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_PAGE_EXTENSION_VERSION=1/.test(gameGuideSource)&&/registerGameGuideExtension/.test(gameGuideSource)&&/applyGameGuideCategoryExtensions/.test(gameGuideSource)&&/gameGuideBeforeLayoutHtml/.test(gameGuideSource),"Guide 必須由 gameguide.js 單一 owner 提供 shared category/page extension hook。");
+assert(/MIRROR_DUNGEON_GUIDE_VERSION=VERSION/.test(mirrorGuideSource)&&/const VERSION=4;/.test(mirrorGuideSource)&&/registerGameGuideExtension/.test(mirrorGuideSource)&&!/GAME_GUIDE_CATEGORIES/.test(mirrorGuideSource),"鏡像戰 Guide 必須註冊 shared extension，不得直接修改 legacy base categories。");
+assert(/CLOUD_SAVE_GUIDE_VERSION=VERSION/.test(cloudGuideSource)&&/const VERSION=4;/.test(cloudGuideSource)&&/registerGameGuideExtension/.test(cloudGuideSource)&&!/window\.gameGuidePage\s*=/.test(cloudGuideSource),"雲端 Guide 必須註冊 shared page extension，不得 monkey-patch gameGuidePage。");
 assert(/effectiveLevelCap/.test(gameGuideSource)&&/effectiveExpNeed/.test(gameGuideSource)&&/effectiveEnhancementCap/.test(gameGuideSource)&&/THIRD_WORLD_ENTRY_CONFIG/.test(gameGuideSource)&&/THIRD_WORLD_EQUIPMENT_BASE_POLICY/.test(gameGuideSource)&&/DEATH_EQUIPMENT_LOSS_CHANCE/.test(gameGuideSource)&&/OFFLINE_PROGRESS_MAX_HOURS/.test(gameGuideSource),"W3 Guide 正式數值必須委派 canonical owner，不得維護第二份玩家規則。");
 assert(/const categories=gameGuideCategoriesForState\(\);if\(!categories\.some\(x=>x\.id===id\)\)return/.test(gameGuideSource),"Guide 分類切換必須依當前紀元實際 categories 驗證。");
 assert(/OFFLINE_DURATION_POLICY_VERSION=1/.test(offlineProgress)&&/OFFLINE_PROGRESS_MAX_HOURS=OFFLINE_MAX_MS\/\(60\*60\*1000\)/.test(offlineProgress),"離線 12 小時上限必須由 offlineprogress canonical owner 對外提供。");
 assert(index.includes('offlineprogress.js?v=20260928-thirdworld-guide-opt1'),"Guide Opt1 修改 offlineprogress.js export 後必須同步 cache-bust。");
-assert(/GAME_GUIDE_VERSION=22/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_AWARE_VERSION=9/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2/.test(gameGuideSource)&&/GAME_GUIDE_THIRD_WORLD_VERSION=1/.test(gameGuideSource),"遊戲說明必須由同一 owner 正式支援三紀元，並提供 W3 Guide V1。");
+assert(/GAME_GUIDE_VERSION=23/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_AWARE_VERSION=10/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2/.test(gameGuideSource)&&/GAME_GUIDE_THIRD_WORLD_VERSION=1/.test(gameGuideSource),"遊戲說明必須由同一 owner 正式支援三紀元，並提供 W3 Guide V1。");
 assert(/if\(guidePhase\(target\)===3\)return thirdWorldGuideCategories\(target\)/.test(gameGuideSource)&&/phase===3\?"高維紀元"/.test(gameGuideSource),"W3 遊戲說明必須按 current world phase 路由，不得再誤投影宇宙紀元。");
 assert(/永久削血/.test(thirdWorldGuideSource)&&/5% 戰線/.test(thirdWorldGuideSource)&&/Stage 強化/.test(thirdWorldGuideSource)&&/共通能力/.test(thirdWorldGuideSource)&&/死亡壓制/.test(thirdWorldGuideSource)&&/界弦核心/.test(thirdWorldGuideSource)&&/維度之弦/.test(thirdWorldGuideSource)&&/高維離線/.test(thirdWorldGuideSource)&&/回顧戰/.test(thirdWorldGuideSource),"W3 Guide 必須涵蓋 10 名高維存在的正式核心規則、成長、離線與回顧。");
 assert(/thirdWorldBossSpecializationPresentation/.test(thirdWorldGuideSource)&&/THIRD_WORLD_BOSS_ABILITY_DEFINITIONS/.test(thirdWorldGuideSource)&&/THIRD_WORLD_BOSS_STAGE_CONFIG/.test(thirdWorldGuideSource),"W3 Guide 的高維存在特化、共通能力與 Stage 必須委派 canonical owner，不得複製第二份數值表。");
@@ -122,7 +129,7 @@ assert(/rules\.offlineMaxHours\.toLocaleString\(\)/.test(thirdWorldGuideSource)&
 const w3GuideRuleInterpolationLines=thirdWorldGuideSource.split("\n").filter(line=>line.includes("${rules."));
 assert(w3GuideRuleInterpolationLines.length>=7&&w3GuideRuleInterpolationLines.every(line=>line.includes("`")),"W3 Guide 的動態 rule 值必須存在可插值的 template literal 中。");
 assert(/10 名高維存在/.test(thirdWorldGuideSource),"W3 Guide 必須使用正式稱呼『10 名高維存在』。");
-assert(index.includes('gameguide.js?v=20260928-thirdworld-guide-opt1fix1'),"W3 正式用語修正後必須同步更新 gameguide.js cache-bust。");
+assert(index.includes('gameguide.js?v=20260928-thirdworld-guide-opt2')&&index.includes('mirrordungeonguide.js?v=20260928-thirdworld-guide-opt2')&&index.includes('cloudsaveguide.js?v=20260928-thirdworld-guide-opt2'),"Guide Opt2 touched JS 必須同步 cache-bust。");
 assert(/resolveVipLootModifiers/.test(thirdWorldLoot)&&/vipLootBossExtraDropTriggered/.test(thirdWorldLoot),"W3 VIP8／14／16／18 必須保持共用 VIP loot owner。");
 assert(index.includes('vipui.js?v=20260928-thirdworld-vip20-death-protection1')&&index.includes('thirdworlddungeonui.js?v=20260928-thirdworld-ui-text-batch3'),"W3 Batch 3／VIP20 touched JS 必須同步 cache-bust。");
 assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=2;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V2。");

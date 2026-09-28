@@ -265,7 +265,7 @@
   if(title!=="文明災厄")return null;
   return guideUniverse(target)?"擊敗各區域最終 Boss 後會發現對應災厄，符合前置文明條件即可挑戰。每隻災厄完成 30 次完整擊殺後會完成該文明階段並提升文明等級；災厄不提供一般戰鬥獎勵。":"擊敗各區域最終 Boss 後解鎖對應災厄。成功討伐可取得並提升永久印記，最高 Lv.10；災厄不提供一般戰鬥獎勵。";
  }
- function gameGuideCategoriesForState(target=null){
+ function baseGameGuideCategoriesForState(target=null){
   if(guidePhase(target)===3)return thirdWorldGuideCategories(target);
   return GUIDE_CATEGORIES.map(category=>({...category,items:(category.items||[]).map((item,index)=>{
    if(category.id==="special")return specialGuideWorldItem(item,index,target);
@@ -281,12 +281,40 @@
    return worldText?[item[0],worldText]:item.slice();
   })}));
  }
+ const GUIDE_EXTENSION_REGISTRY=new Map();
+ function normalizeGuideExtensionOrder(value){const n=Number(value);return Number.isFinite(n)?n:100;}
+ function registerGameGuideExtension(extension){
+  if(!extension||typeof extension!=="object")return false;
+  const id=String(extension.id||"").trim();if(!id)return false;
+  const normalized=Object.freeze({id,order:normalizeGuideExtensionOrder(extension.order),extendCategories:typeof extension.extendCategories==="function"?extension.extendCategories:null,renderBeforeLayout:typeof extension.renderBeforeLayout==="function"?extension.renderBeforeLayout:null});
+  GUIDE_EXTENSION_REGISTRY.set(id,normalized);return true;
+ }
+ function gameGuideExtensions(){return Array.from(GUIDE_EXTENSION_REGISTRY.values()).sort((a,b)=>a.order-b.order||a.id.localeCompare(b.id));}
+ function cloneGuideCategories(categories){return (Array.isArray(categories)?categories:[]).map(category=>({...category,items:(Array.isArray(category?.items)?category.items:[]).map(item=>Array.isArray(item)?item.slice():item)}));}
+ function gameGuideExtensionContext(target=null){const holder=guideState(target);return Object.freeze({target:holder,phase:guidePhase(holder)});}
+ function applyGameGuideCategoryExtensions(categories,target=null){
+  let current=cloneGuideCategories(categories),context=gameGuideExtensionContext(target);
+  for(const extension of gameGuideExtensions()){
+   if(typeof extension.extendCategories!=="function")continue;
+   const result=extension.extendCategories(current,context);
+   if(Array.isArray(result))current=result;
+  }
+  return current;
+ }
+ function gameGuideBeforeLayoutHtml(target=null){
+  const context=gameGuideExtensionContext(target);
+  return gameGuideExtensions().map(extension=>typeof extension.renderBeforeLayout==="function"?extension.renderBeforeLayout(context):"").filter(html=>typeof html==="string"&&html).join("");
+ }
+ function gameGuideCategoriesForState(target=null){return applyGameGuideCategoryExtensions(baseGameGuideCategoriesForState(target),target);}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=22;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=9;
+ window.GAME_GUIDE_VERSION=23;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=10;
  window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2;
  window.GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1;
  window.GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1;
+ window.GAME_GUIDE_EXTENSION_REGISTRY_VERSION=1;
+ window.GAME_GUIDE_CATEGORY_RESOLVER_VERSION=1;
+ window.GAME_GUIDE_PAGE_EXTENSION_VERSION=1;
  window.GAME_GUIDE_THIRD_WORLD_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
@@ -300,6 +328,8 @@
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.GAME_GUIDE_SPECIAL_IDS=SPECIAL_GUIDE_IDS;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
+ window.registerGameGuideExtension=registerGameGuideExtension;
+ window.gameGuideExtensionIds=function(){return gameGuideExtensions().map(extension=>extension.id);};
  window.thirdWorldGuideRuleSnapshot=thirdWorldGuideRuleSnapshot;
  window.setGameGuideCategory=function(id){const categories=gameGuideCategoriesForState();if(!categories.some(x=>x.id===id))return;activeGuideCategory=id;if(typeof render==="function")render();};
  window.gameGuidePage=function(){
@@ -307,6 +337,7 @@
   const current=categories.find(x=>x.id===activeGuideCategory)||categories[0];
   const tabs=categories.map(x=>`<button class="guide-category ${x.id===current.id?"active":""}" onclick="setGameGuideCategory('${x.id}')">${x.label}</button>`).join("");
   const phase=guidePhase(),worldLabel=phase===3?"高維紀元":phase===2?"宇宙紀元":"銀河紀元";
-  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">${worldLabel}｜查看目前紀元的玩法、系統、戰鬥與各項規則。</div></div><div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
+  const extensionHtml=gameGuideBeforeLayoutHtml();
+  return `<div class="function-page guide-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="guide-header"><h2>遊戲說明</h2><div class="muted">${worldLabel}｜查看目前紀元的玩法、系統、戰鬥與各項規則。</div></div>${extensionHtml}<div class="guide-layout"><nav class="guide-categories">${tabs}</nav><section class="guide-content card"><h3>${current.label}</h3><div class="guide-items">${current.items.map(itemHtml).join("")}</div></section></div></div>`;
  };
 })();
