@@ -1,5 +1,5 @@
 name: W3 UI Text Batch 1
-# retry after correcting source anchor counts
+# retry with split validation steps
 on:
   push:
     paths:
@@ -18,7 +18,7 @@ jobs:
           node-version: 24
       - name: Apply batch 1 patch
         run: python3 batch_w3_ui_text_1.py
-      - name: Self-check
+      - name: Syntax checks
         shell: bash
         run: |
           set -euo pipefail
@@ -27,12 +27,21 @@ jobs:
           node --check specialization.js
           node --check storyrecordtabs.js
           node --check specialguide.js
+          git diff --check
+      - name: Story checks
+        shell: bash
+        run: |
+          set -euo pipefail
           node tests/story/source-purity.js
           node tests/story/meta-language.js
           node tests/story/integrity.js
           node tests/story/flow.js
-          node tests/runtime/js-integrity.js
-          git diff --check
+      - name: Runtime checks
+        run: node tests/runtime/js-integrity.js
+      - name: Text semantics checks
+        shell: bash
+        run: |
+          set -euo pipefail
           ! grep -q '第三紀元不開放 +41' enhancementui.js
           ! grep -q '也不建立新的金幣／暗物質售價循環' specialization.js
           ! grep -q '高維裝備不建立新的出售貨幣循環' specialization.js
