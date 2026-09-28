@@ -23,6 +23,7 @@
  const BACKGROUND_GM_GATE_VERSION=1;
  const FOREGROUND_WAIT_VERSION=1;
  const BACKGROUND_POLICY_VERSION=1;
+ const VIP20_DEATH_PROTECTION_VERSION=1;
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
  const CORE_REDUCTION_PER_LEVEL=.04;
@@ -73,7 +74,7 @@
   return freeze({version:BACKGROUND_POLICY_VERSION,gmEnabled,environmentBackground:environmentIsBackground(),waitsForForeground:!gmEnabled,backgroundFlowActive:activeKind===FLOW_KIND,activeBackgroundKind:activeKind||null});
  }
  function runtimeSnapshot(source=runtime){
-  if(!source)return freeze({version:RUNTIME_VERSION,runId:null,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,coreLevelAtStart:null,perDeathSuppressionPointsAtStart:null,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
+  if(!source)return freeze({version:RUNTIME_VERSION,runId:null,active:false,paused:false,looping:false,bossIndex:-1,deaths:0,battles:0,vip20Protections:0,coreLevelAtStart:null,perDeathSuppressionPointsAtStart:null,pendingEvents:freeze([]),stopReason:"",stopMeta:null,recentBattleLimit:RECENT_HISTORY_LIMIT,recentBattles:freeze([]),lastBattleSummary:null});
   const stopReason=String(source.stopReason||""),levelAtStart=clamp(finiteWhole(source.coreLevelAtStart,coreLevel()),0,coreMaxLevel()),perDeathAtStart=suppressionPerDeathPoints(levelAtStart);
   return freeze({
    version:RUNTIME_VERSION,
@@ -84,6 +85,7 @@
    bossIndex:finiteWhole(source.bossIndex,-1),
    deaths:clamp(finiteWhole(source.deaths,0),0,MAX_DEATHS),
    battles:Math.max(0,finiteWhole(source.battles,0)),
+   vip20Protections:Math.max(0,finiteWhole(source.vip20Protections,0)),
    startedAt:Math.max(0,finiteWhole(source.startedAt,0)),
    coreLevelAtStart:levelAtStart,
    perDeathSuppressionPointsAtStart:perDeathAtStart,
@@ -154,7 +156,7 @@
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
   const levelAtStart=coreLevel(target),runId=runSerial+1;
-  runtime={runId,active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
+  runtime={runId,active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,vip20Protections:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
   runSerial=runId;
   if(gmBackgroundEnabled())startBackgroundFlow();else stopBackgroundFlow();
   return freeze({ok:true,started:true,snapshot:runtimeSnapshot()});
@@ -205,6 +207,7 @@
    bossDefeated:settlement?.bossDefeated===true,
    terminationReason:String(combat?.terminationReason||settlement?.terminationReason||""),
    countsDeath:data.countsDeath===true,
+   deathPenalty:data.deathPenalty&&typeof data.deathPenalty==="object"?freeze({...data.deathPenalty}):null,
    deathsAfter:clamp(finiteWhole(data.deathsAfter,0),0,MAX_DEATHS),
    deathLimitReached:data.deathLimitReached===true,
    terminalReason:String(data.terminalReason||""),
@@ -234,7 +237,13 @@
   if(settlement?.ok!==true)return freeze({ok:false,reason:String(settlement?.reason||settlement?.code||"settlement-failed"),combat,settlement:settlement||null,snapshot:clearRuntime("settlement-failed")});
   runtime.battles+=1;
   const countsDeath=settlement.playerDied===true&&settlement.bossDefeated!==true;
-  if(countsDeath)runtime.deaths=clamp(runtime.deaths+1,0,MAX_DEATHS);
+  let deathPenalty=null;
+  if(countsDeath){
+   if(typeof window.resolveDeathEquipmentPenalty!=="function")return freeze({ok:false,reason:"共用死亡裝備懲罰 owner 尚未載入。",combat,settlement,snapshot:clearRuntime("owner-missing")});
+   deathPenalty=window.resolveDeathEquipmentPenalty([],{rng:typeof options.rng==="function"?options.rng:undefined,forceProtected:true,source:"third-world"});
+   if(deathPenalty?.protectedByVip20===true)runtime.vip20Protections=Math.max(0,finiteWhole(runtime.vip20Protections,0))+1;
+   runtime.deaths=clamp(runtime.deaths+1,0,MAX_DEATHS);
+  }
   const deathsAfter=runtime.deaths;
   const continuation=settlement.continuation&&typeof settlement.continuation==="object"?settlement.continuation:{};
   const formalTerminalReason=String(continuation.terminalReason||"");
@@ -243,10 +252,10 @@
   if(progressEvent||Array.isArray(settlement?.eventSequence)&&settlement.eventSequence.length)settlePendingEvents(settlement);
   const terminalReason=terminalReasonForStep(formalTerminalReason,progressEvent,deathLimitReached);
   const willContinue=!terminalReason;
-  const summary=summaryFromStep(settlement,combat,{battleNumber:runtime.battles,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEvent,continuationAllowed:willContinue});
+  const summary=summaryFromStep(settlement,combat,{battleNumber:runtime.battles,countsDeath,deathPenalty,deathsAfter,deathLimitReached,terminalReason,progressEvent,continuationAllowed:willContinue});
   recordBattleSummary(summary);
   const snapshot=terminalReason?clearRuntime(terminalReason):runtimeSnapshot();
-  return freeze({ok:true,world:3,combat,settlement,summary,countsDeath,deathsAfter,deathLimitReached,terminalReason,progressEventPending:progressEvent,continuationAllowed:terminalReason===""&&snapshot.active===true,snapshot});
+  return freeze({ok:true,world:3,combat,settlement,summary,countsDeath,deathPenalty,deathsAfter,deathLimitReached,terminalReason,progressEventPending:progressEvent,continuationAllowed:terminalReason===""&&snapshot.active===true,snapshot});
  }
  async function sleepBetweenBattles(){return consumeCatchUpDelay(Math.max(0,numberOr(window.COMBAT_OUTER_GAP_MS,140)));}
  function shouldNotifyDuringCatchUp(step,policy){return step?.ok!==true||step?.terminalReason||step?.progressEventPending===true||step?.deathLimitReached===true||policy?.shouldRefreshUi===true||policy?.shouldPresentBattle===true;}
@@ -344,6 +353,7 @@
  if(sharedInfra){sharedInfra.onPageHide(onPageHide);pageHideSubscribed=true;blockerRegistered=sharedInfra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);}
 
  window.THIRD_WORLD_RUN_VERSION=VERSION;
+ window.THIRD_WORLD_VIP20_DEATH_PROTECTION_VERSION=VIP20_DEATH_PROTECTION_VERSION;
  window.THIRD_WORLD_SUPPRESSION_VERSION=SUPPRESSION_VERSION;
  window.THIRD_WORLD_CONTINUOUS_RUNTIME_VERSION=RUNTIME_VERSION;
  window.THIRD_WORLD_RUN_EVENT_PAUSE_VERSION=0;

@@ -13,6 +13,7 @@
  const STOP_REASON_PRESENTATION_VERSION=1;
  const RUN_IDENTITY_GUARD_VERSION=1;
  const TOTALS_FAIL_CLOSED_VERSION=1;
+ const VIP20_DEATH_PROTECTION_PRESENTATION_VERSION=1;
  const ADAPTER_ID="third-world-mainline";
  const EVENT_MODAL_ID="thirdWorldProgressEventModal";
  const SUMMARY_MODAL_ID="thirdWorldRunSummaryModal";
@@ -200,10 +201,10 @@
   const final=finalSnapshot||null;if(!final)return Promise.resolve(false);
   const reason=String(final.stopReason||result?.lastResult?.terminalReason||result?.reason||"");
   if(["pagehide","reload"].includes(reason))return Promise.resolve(false);
-  const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
+  const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),vip20Protections=whole(final.vip20Protections),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
   closeRunSummaryModal();const modal=ensureRunSummaryModal();if(!modal)return Promise.resolve(false);
-  const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`;
-  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}</div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
+  const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`,vip20Notice=deaths>0?`<div class="notice" style="margin-top:12px"><b>VIP20｜裝備保護</b><div class="muted" style="margin-top:6px;line-height:1.55">本輪死亡 ${fmt(deaths)} 次；原本的 30% 死亡裝備遺失判定仍照常進行。${vip20Protections>0?`其中 ${fmt(vip20Protections)} 次判定原本會遺失裝備，已由 VIP20 全部阻止。`:`本輪沒有抽中裝備遺失，但 VIP20 保護仍持續生效。`}第三紀元的死亡裝備保護來自 VIP20 特權。</div></div>`:"";
+  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}${vip20Notice}</div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
   modal.classList.add("show");return new Promise(resolve=>{summaryModalResolver=resolve;});
  }
  function syncCatchUpNotice(){
@@ -397,6 +398,7 @@
  window.closeThirdWorldRunSummaryModal=closeRunSummaryModal;
  window.thirdWorldRunStopReasonPresentation=stopReasonPresentation;
  window.THIRD_WORLD_PLAYER_FLOW_VERSION=VERSION;
+ window.THIRD_WORLD_VIP20_DEATH_PROTECTION_PRESENTATION_VERSION=VIP20_DEATH_PROTECTION_PRESENTATION_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_POST_FLOW_COORDINATOR_VERSION=POST_FLOW_COORDINATOR_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_STORY_POST_FLOW_SEQUENCE_VERSION=STORY_POST_FLOW_SEQUENCE_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_TITLE_NOTICE_HOLD_VERSION=TITLE_NOTICE_HOLD_VERSION;

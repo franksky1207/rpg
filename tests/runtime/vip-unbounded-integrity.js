@@ -25,11 +25,12 @@ assert(/let vipThreshold=null,vipLevelFromPoints=null,normalizeVipState=null,vip
 assert(/VIP progression owner not loaded/.test(engine),"playerCombatStats 必須 fail-fast 要求正式 VIP owner 已載入。");
 assert(/VIP progression owner not loaded for point gain/.test(engine),"addVipPoints 必須 fail-fast 要求正式 VIP progression owner。");
 assert(!/else\{state\.vipPoints=.*state\.vipLevel/.test(engine),"addVipPoints 不得再保留第二套 vipPoints／vipLevel fallback。");
-assert(/VIP_UI_VERSION=3/.test(vipUi),"VIP UI 應為 V3。");
-assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=1/.test(vipUi),"W3 VIP 呈現 policy 應存在。");
+assert(/VIP_UI_VERSION=4/.test(vipUi),"VIP UI 應為 V4。");
+assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=2/.test(vipUi),"W3 VIP 呈現 policy 應為 V2，包含 VIP20 死亡保護。");
 assert(/虛空幻境 VIP 積分 \+10%/.test(vipUi)&&/虛空幻境 VIP 積分總加成提升為 \+20%/.test(vipUi),"W3 VIP4／12 僅應描述共用虛空積分。");
 assert(/高維主線掉落裝備有 15% 機率優先目前最弱部位/.test(vipUi)&&/高維主線 Boss 有 15% 機率額外掉落 1 件裝備/.test(vipUi),"W3 VIP 裝備特權文案應對齊現行高維掉落 owner。");
 assert(/filter\(p=>Object\.prototype\.hasOwnProperty\.call\(THIRD_WORLD_PERK_TEXT,p\.level\)\)/.test(vipUi),"W3 VIP 清單應只投影目前仍適用的 canonical perk 等級。");
+assert(/20:"第三紀元死亡仍會進行原本的 30% 裝備遺失判定/.test(vipUi),"W3 VIP20 必須在玩家介面明確顯示死亡裝備保護價值。");
 assert(!/VIP\$\{VIP_MAX_LEVEL\} MAX/.test(vipUi)&&!/VIP20 MAX/.test(vipUi),"玩家 VIP UI 不得再顯示 VIP20 MAX。");
 assert(/VIP 等級沒有上限/.test(vipUi),"VIP UI 必須說明等級無上限。");
 assert(/VIP 等級沒有上限/.test(guide)&&/VIP21 以上不新增特權/.test(guide),"遊戲說明必須說明 VIP 無上限與特權止於20。");

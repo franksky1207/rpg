@@ -1,5 +1,5 @@
 (function(){
- const VIP_UI_VERSION=3;
+ const VIP_UI_VERSION=4;
  const VIP_PERKS=[
   {level:2,text:"主線裝備掉落率 +5 個百分點"},
   {level:4,text:"所有可取得 VIP 積分的副本，VIP 積分 +10%"},
@@ -18,7 +18,8 @@
   12:"虛空幻境 VIP 積分總加成提升為 +20%",
   14:"高維主線掉落裝備有 5% 機率品質 +1 階",
   16:"高維主線 Boss 有 15% 機率額外掉落 1 件裝備",
-  18:"高維主線 Boss 掉落裝備有 10% 機率品質 +1 階"
+  18:"高維主線 Boss 掉落裝備有 10% 機率品質 +1 階",
+  20:"第三紀元死亡仍會進行原本的 30% 裝備遺失判定，但所有裝備遺失都由 VIP20 完全阻止"
  });
  function currentPhase(){const s=typeof state!=="undefined"?state:null;return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));}
  function perksForPhase(phase=currentPhase()){
@@ -80,7 +81,7 @@
  window.setFormalVipPoints=setFormalVipPoints;
  window.vipPerksForPhase=perksForPhase;
  window.THIRD_WORLD_VIP_PERK_TEXT=THIRD_WORLD_PERK_TEXT;
- window.THIRD_WORLD_VIP_PRESENTATION_VERSION=1;
+ window.THIRD_WORLD_VIP_PRESENTATION_VERSION=2;
  window.VIP_UI_VERSION=VIP_UI_VERSION;
  ensureVipModal();
 })();
