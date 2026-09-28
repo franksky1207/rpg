@@ -1,7 +1,7 @@
 name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
-# manual retrigger: exact-head verification after batch 11-O2 review runtime convergence.
+# manual retrigger: exact-head verification after batch 11-O3 legacy cleanup and review presentation convergence.
 on:
   push:
     branches: [main]
