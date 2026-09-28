@@ -1,5 +1,5 @@
 name: W3 UI Text Batch 1
-# retry after fixing story-record ternary syntax
+# retry with runtime failure capture
 on:
   push:
     paths:
@@ -37,7 +37,20 @@ jobs:
           node tests/story/integrity.js
           node tests/story/flow.js
       - name: Runtime checks
-        run: node tests/runtime/js-integrity.js
+        shell: bash
+        run: |
+          set +e
+          node tests/runtime/js-integrity.js > batch1_runtime_failure.txt 2>&1
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add batch1_runtime_failure.txt
+            git commit -m 'Capture batch 1 runtime check failure'
+            git push origin HEAD:main
+            exit "$status"
+          fi
+          rm -f batch1_runtime_failure.txt
       - name: Text semantics checks
         shell: bash
         run: |
