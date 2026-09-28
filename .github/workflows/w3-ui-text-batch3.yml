@@ -1,0 +1,63 @@
+name: W3 UI Text Batch 3
+on:
+  push:
+    paths:
+      - '.github/workflows/w3-ui-text-batch3.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply batch 3 patch
+        run: python3 batch_w3_ui_text_3.py
+      - name: Syntax and diff checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check thirdworlddungeonui.js
+          node --check vipui.js
+          node --check tests/runtime/js-integrity.js
+          node --check tests/runtime/vip-unbounded-integrity.js
+          git diff --check
+      - name: Runtime checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/runtime/js-integrity.js
+          node tests/runtime/vip-unbounded-integrity.js
+      - name: Story checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+      - name: Batch 3 semantic checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'titleText:"高維競技場"' thirdworlddungeonui.js
+          grep -q 'rewardText:"尚未開放"' thirdworlddungeonui.js
+          grep -q '等待高維競技場開放' thirdworlddungeonui.js
+          grep -q 'THIRD_WORLD_VIP_PRESENTATION_VERSION=1' vipui.js
+          grep -q '虛空幻境 VIP 積分 +10%' vipui.js
+          grep -q '高維主線 Boss' vipui.js
+          grep -q 'vipui.js?v=20260928-thirdworld-ui-text-batch3' index.html
+          grep -q 'thirdworlddungeonui.js?v=20260928-thirdworld-ui-text-batch3' index.html
+      - name: Commit formal changes
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add thirdworlddungeonui.js vipui.js tests/runtime/js-integrity.js tests/runtime/vip-unbounded-integrity.js index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refine third-world dungeon and VIP presentation batch 3'
+          git push origin HEAD:main
