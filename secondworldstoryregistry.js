@@ -102,8 +102,7 @@
 
  window.registerCivilizationStoryEra=registerStoryEra;
  window.getCivilizationStoryEra=storyEraDefinition;
- window.getCivilizationStoryEraIds=getCivilizationStoryEraIds;
- function getCivilizationStoryEraIds(){return storyEraIds();}
+ window.getCivilizationStoryEraIds=storyEraIds;
  window.thirdWorldStoryTriggerDescriptors=thirdWorldStoryTriggerDescriptors;
  window.thirdWorldStoryTriggerForStage=thirdWorldStoryTriggerForStage;
  window.thirdWorldStoryTriggerDescriptor=thirdWorldStoryTriggerDescriptor;
