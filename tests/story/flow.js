@@ -4,6 +4,7 @@
 // Batch 12-2：高維 Eligibility／共用 Queue／Reload Recovery 必須沿用 storyProgress，不新增 W3 私有 persistent queue。
 // Batch 12-2 exact-head：placeholder zero-queue、順序補播、reload recovery 與 W1/W2 相容性需同時通過 Story／Runtime Integrity。
 // Batch 12-3 exact-head：settlement bridge、completion-ready、W3 entry trigger 與 deferred story presentation 必須同時通過 Story／Runtime Integrity。
+// Batch 12-4 exact-head：Run Summary → shared Story drain → Title Notice、modal hold 與 reload recovery 必須同時通過 Story／Runtime Integrity。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
