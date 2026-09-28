@@ -350,6 +350,7 @@ assert(/const VERSION=13;/.test(titleIntegrity)&&/POST_FLOW_REGRESSION_VERSION=2
 assert(/const VERSION=6;/.test(thirdWorldPlayerFlow)&&/POST_FLOW_COORDINATOR_VERSION=1/.test(thirdWorldPlayerFlow)&&/await presentRunSummary/.test(thirdWorldPlayerFlow)&&/await drainPostFlowStories/.test(thirdWorldPlayerFlow)&&/setTitlePostFlowHold\(false\)/.test(thirdWorldPlayerFlow),"W3 Player Flow V6 必須正式協調 Summary → Story → Title lifecycle。");
 assert(/const VERSION=16;/.test(storyProgress)&&/THIRD_WORLD_POST_FLOW_DRAIN_VERSION=1/.test(storyProgress)&&/function drainThirdWorldPostFlowStories/.test(storyProgress)&&!/thirdWorldPostFlowQueue\s*=/.test(storyProgress),"W3 Story post-flow 必須共用 storyProgress/pendingStory，不得新增私有 persistent queue。");
 assert(/const VERSION=10;/.test(storyUi)&&/LIFECYCLE_WAIT_VERSION=2/.test(storyUi)&&/waitForStoryClosed/.test(storyUi),"Story UI V10 必須提供 identity lifecycle wait API。");
+assert(/owner-mismatch/.test(storyUi)&&/lifecycleOwner/.test(storyUi)&&/lifecycleOwner:"formal"/.test(storyProgress),"Story lifecycle identity 必須區分 formal／generic owner，避免同 Story ID 的 replay／GM 預覽誤解鎖正式進度。");
 
 assert(/const CONTINUOUS_VERSION=2;/.test(secondWorldCalamityRun),"宇宙災厄連續討伐版本應為 V2。");
 assert(/SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1/.test(secondWorldCalamityRun)&&/SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1/.test(secondWorldCalamityRun),"宇宙災厄必須宣告背景戰鬥與 fast catch-up owner 版本。");

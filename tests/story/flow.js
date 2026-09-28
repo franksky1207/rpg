@@ -48,6 +48,8 @@ assert(/THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION=THIRD_WORLD_STORY_COMPLETION_
 assert(/function thirdWorldStoryCompletionGate\(id,target=state\)/.test(progress)&&/function applyThirdWorldStoryCompletion\(id,target=state,gate=null\)/.test(progress),'W3 Intro／Final completion owner 未建立');
 assert(/const VERSION=10;/.test(storyui)&&/LIFECYCLE_WAIT_VERSION=2/.test(storyui)&&/INSTANCE_IDENTITY_VERSION=1/.test(storyui),'Story UI lifecycle identity 版本未就緒');
 assert(/activeToken=nextToken\+\+/.test(storyui)&&/token-mismatch/.test(storyui)&&/story-mismatch/.test(storyui),'Story lifecycle 必須以 token／storyId 防止誤解鎖');
+assert(/owner-mismatch/.test(storyui)&&/lifecycleOwner/.test(storyui),'Story lifecycle 必須區分 formal 與 generic owner，避免同 storyId replay／GM 預覽冒充正式流程');
+assert(/lifecycleOwner:"formal"/.test(progress)&&/lifecycle\?\.owner==="formal"/.test(progress),'正式 Story flow 必須只接受 formal lifecycle owner');
 assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration reference recovery 應為 V6／Reference Recovery V1');
 assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migration),'Story migration 必須清理失效 pendingStory reference');
 assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
