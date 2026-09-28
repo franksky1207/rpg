@@ -65,11 +65,11 @@
   return Number.isFinite(threshold)?threshold:null;
  }
  const thirdWorldTriggers=freeze([
-  freeze({id:"higher-dimensional-intro",storyId:"higher-dimensional-intro",kind:"intro",stage:0,thresholdRemainingPercentSum:null,contentReady:false}),
+  freeze({id:"higher-dimensional-intro",storyId:"higher-dimensional-intro",kind:"intro",stage:0,thresholdRemainingPercentSum:null,contentReady:true}),
   ...Array.from({length:9},(_,index)=>{
    const stage=index+1;
    const storyId=`higher-dimensional-milestone-${String(stage).padStart(2,"0")}`;
-   return freeze({id:storyId,storyId,kind:"milestone",stage,thresholdRemainingPercentSum:titleThreshold(stage),contentReady:false});
+   return freeze({id:storyId,storyId,kind:"milestone",stage,thresholdRemainingPercentSum:titleThreshold(stage),contentReady:stage===1});
   }),
   freeze({id:"higher-dimensional-final",storyId:"higher-dimensional-final",kind:"final",stage:10,thresholdRemainingPercentSum:titleThreshold(10),completionGate:"all-bosses-defeated",contentReady:false})
  ]);
@@ -94,7 +94,8 @@
   if(JSON.stringify(milestones.map(row=>row.stage))!==JSON.stringify([1,2,3,4,5,6,7,8,9]))errors.push("THIRD_WORLD_MILESTONE_STAGES");
   if(JSON.stringify(milestones.map(row=>row.thresholdRemainingPercentSum))!==JSON.stringify(expectedThresholds))errors.push("THIRD_WORLD_MILESTONE_THRESHOLDS");
   if(finals[0]?.stage!==10||finals[0]?.thresholdRemainingPercentSum!==titleThreshold(10)||milestones.some(row=>row.stage===10))errors.push("THIRD_WORLD_FINAL_STAGE10");
-  if(thirdWorldTriggers.some(row=>row.contentReady!==false))errors.push("THIRD_WORLD_CONTENT_PLACEHOLDER");
+  const readyIds=thirdWorldTriggers.filter(row=>row.contentReady===true).map(row=>row.storyId);
+  if(JSON.stringify(readyIds)!==JSON.stringify(["higher-dimensional-intro","higher-dimensional-milestone-01"]))errors.push("THIRD_WORLD_CONTENT_READY_BATCH13_2");
   return freeze({version:SHARED_ERA_REGISTRY_VERSION,passed:errors.length===0,eraIds:ids,thirdWorldTriggerCount:thirdWorldTriggers.length,errors:freeze(errors)});
  }
 
