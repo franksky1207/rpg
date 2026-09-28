@@ -1,0 +1,37 @@
+name: Batch 12-O1 Retry
+on:
+  push:
+    paths:
+      - '.github/workflows/batch12-o1-retry.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply patch
+        run: python3 .github/batch12-o1-patch.py
+      - name: Self-check
+        run: |
+          set -euo pipefail
+          for f in storymigration.js thirdworldphase.js thirdworldmigrationregression.js storyruntimeintegrity.js thirdworldintegritycontract.js; do node --check "$f"; done
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storymigration.js thirdworldphase.js thirdworldmigrationregression.js storyruntimeintegrity.js thirdworldintegritycontract.js tests/story/flow.js index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Reconcile legacy higher-dimensional story state'
+          git push origin HEAD:main
