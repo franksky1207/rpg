@@ -2,7 +2,7 @@ const fs=require('fs');
 const vm=require('vm');
 const files=[
  'storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-cosmic-unification-war.js',
- 'storydata-higher-dimensional.js','storydata-higher-dimensional-stage2-3.js'
+ 'storydata-higher-dimensional.js','storydata-higher-dimensional-stage2-3.js','storydata-higher-dimensional-stage4-5.js'
 ];
 const context={console,Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error};context.window=context;vm.createContext(context);
 for(const file of files){if(!fs.existsSync(file))throw new Error(`缺少正式劇情來源檔：${file}`);vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});}
@@ -16,5 +16,5 @@ for(const [id,story] of Object.entries(context.CIVILIZATION_STORIES||{})){
 for(const row of reviews)console.log(`META REVIEW ${row.id} page ${row.page} (${row.terms.join('、')}): ${row.text}`);
 if(failures.length){console.error(`STORY META LANGUAGE FAILED: ${failures.length} page(s)`);for(const [i,row] of failures.entries())console.error(`${i+1}. ${row.id} page ${row.page} (${row.terms.join('、')}): ${row.text}`);process.exit(1);}
 const universeCount=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('universe-')).length;const w3Count=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('higher-dimensional-')).length;
-if(w3Count!==4){console.error(`Batch 13-3 高維 meta audit 應載入 4 篇，實際 ${w3Count}`);process.exit(2);}
-console.log(`STORY META LANGUAGE PASSED: universe=${universeCount} higher-dimensional=${w3Count}/11 approved=4, system-review=${reviews.length} page(s)`);
+if(w3Count!==6){console.error(`Batch 13-4 高維 meta audit 應載入 6 篇，實際 ${w3Count}`);process.exit(2);}
+console.log(`STORY META LANGUAGE PASSED: universe=${universeCount} higher-dimensional=${w3Count}/11 approved=6, system-review=${reviews.length} page(s)`);
