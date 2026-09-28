@@ -18,6 +18,7 @@ jobs:
       - name: Apply patch
         run: |
           python3 batch4_gameguide_patch.py
+          python3 batch4_gameguide_syntax_fix.py
           python3 batch4_gameguide_fix.py
       - name: Syntax and integrity
         run: |
