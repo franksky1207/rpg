@@ -1,4 +1,5 @@
 name: Batch 12-2 Story Queue
+# retry after relaxing source-format-only API assertion
 on:
   push:
     paths:
