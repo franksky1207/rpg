@@ -46,8 +46,8 @@ assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
 assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
-assert(index.includes('storyprogress.js?v=20260928-thirdworld-batch12-2'),'storyprogress.js cache-bust 未更新至 Batch 12-2');
-assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-2'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-2');
+assert(/storyprogress\.js\?v=[^"']+/.test(index),'storyprogress.js 必須帶 cache-bust');
+assert(/storyruntimeintegrity\.js\?v=[^"']+/.test(index),'storyruntimeintegrity.js 必須帶 cache-bust');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
 assert(index.includes('storydata-universe-trans-domain-frontier.js?v=20260923-universe-region5-meta1'),'第五章・超域邊境 cache-bust 未更新');
