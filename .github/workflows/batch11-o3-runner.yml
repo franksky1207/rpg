@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Normalize current O2 assertion anchor
+      - name: Normalize current O2 patch anchors
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -25,7 +25,19 @@ jobs:
           new='''assert(/ADVENTURE_ERA_VIEW_OWNER_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_SESSION_POLICY_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_RUNTIME_LOCK_VERSION=4/.test(worldmap)&&/ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=2/.test(worldmap)&&/GALAXY_REVIEW_SHARED_RUNTIME_DELEGATE_VERSION=1/.test(worldmap),\"三紀元冒險切換必須由單一 session-only owner 持有；銀河 legacy API 僅能作 shared review runtime delegate。\");\\n'''
           if old not in t:
               raise SystemExit('stale O2 assertion anchor not found')
-          p.write_text(t.replace(old,new,1),encoding='utf-8')
+          t=t.replace(old,new,1)
+          helper='''\ndef replace_if_present(path, old, new):\n    text=read(path)\n    if old in text:\n        write(path,text.replace(old,new,1))\n'''
+          marker='''def regex_once(path, pattern, repl):\n'''
+          if helper.strip() not in t:
+              if marker not in t: raise SystemExit('regex helper marker missing')
+              t=t.replace(marker,helper+'\n'+marker,1)
+          for oldcall,newcall in [
+            ("replace_once('tests/runtime/js-integrity.js','src=\\\"worldphase.js?v=20260927-offline-owner-batch8-o1\\\"','src=\\\"worldphase.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"worldphase.js?v=20260927-offline-owner-batch8-o1\\\"','src=\\\"worldphase.js?v=20260928-thirdworld-batch11-o3\\\"')"),
+            ("replace_once('tests/runtime/js-integrity.js','src=\\\"ui.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"ui.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"ui.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"ui.js?v=20260928-thirdworld-batch11-o3\\\"')"),
+            ("replace_once('tests/runtime/js-integrity.js','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3\\\"')"),
+            ("replace_once('tests/runtime/js-integrity.js','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o2\\\"','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o2\\\"','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o3\\\"')")]:
+              if oldcall in t: t=t.replace(oldcall,newcall,1)
+          p.write_text(t,encoding='utf-8')
           PY
       - name: Apply batch 11-O3 patch
         run: python .github/scripts/batch11-o3-patch.py
