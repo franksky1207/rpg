@@ -83,7 +83,7 @@
     ?`<div class="enhance-resources"><div><span>暗物質</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}</b></div><div><span>暗能量</span><b>${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</b></div></div>`
     :`<div class="enhance-resources"><div><span>基礎強化石</span><b>${state.enhancement.basicStones.toLocaleString()}</b></div><div><span>進階強化石</span><b>${state.enhancement.advancedStones.toLocaleString()}</b></div></div>`;
   const phaseNote=phase===3
-   ?`<div class="muted" style="margin-top:8px">高維紀元沿用宇宙紀元完成的 +40 裝備欄位強化；第三紀元不開放 +41 以上強化，也不再消耗暗物質或暗能量。</div>`
+   ?`<div class="muted" style="margin-top:8px">高維紀元沿用已完成的 +40 裝備欄位強化；第三紀元不再開放強化升級。</div>`
    :phase===2?`<div class="muted" style="margin-top:8px">宇宙紀元高階強化使用暗物質與暗能量；+21～+40 不設等級、區域或 Boss 進度門檻。</div>`:"";
   return `<div class="function-page enhancement-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="enhance-shell"><div class="card enhance-summary"><div class="enhance-title"><div><h2>裝備欄位強化</h2><div class="muted">永久提升裝備欄位主能力；更換或遺失裝備不影響強化等級。</div></div><div class="enhance-progress">強化進度 <b>${progress()} / ${ENHANCEMENT_SLOTS.length*effectiveCap}</b></div></div>${resourceHtml}${phaseNote}</div><div class="enhance-grid">${ENHANCEMENT_SLOTS.map(slotCard).join("")}</div></div></div>`;
  }
@@ -111,8 +111,8 @@
  };
  window.enhancementPage=page;
  window.performEnhancementUpgrade=settleUpgrade;
- window.ENHANCEMENT_UI_VERSION=7;
- window.ENHANCEMENT_CURRENT_PHASE_UI_VERSION=1;
+ window.ENHANCEMENT_UI_VERSION=8;
+ window.ENHANCEMENT_CURRENT_PHASE_UI_VERSION=2;
  window.SECOND_WORLD_ENHANCEMENT_PLAYER_FLOW_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_ATOMIC_UPGRADE_VERSION=1;
  window.ENHANCEMENT_PLAYER_FORMAL_RANGE_VERSION=1;

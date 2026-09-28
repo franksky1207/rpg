@@ -82,8 +82,8 @@
  window.specializationLevel=function(key,useTest=false){if(!SPECIALIZATION_DEFS[key])return 0;return useTest?clampSpecializationLevel(window.gmTestSpecializations?.[key]):formalLevel(key);};
  window.specializationLevelsSnapshot=function(useTest=false){return Object.fromEntries(SPECIALIZATION_KEYS.map(key=>[key,window.specializationLevel(key,useTest)]));};
  window.specializationWorldSemantics=specializationWorldSemantics;
- window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=2;
- window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=2;
+ window.SPECIALIZATION_WORLD_SEMANTICS_VERSION=3;
+ window.SPECIALIZATION_PLAYER_WORLD_UI_VERSION=3;
  window.SPECIALIZATION_COMBAT_RULE_SOURCE_VERSION=1;
  window.specializationCombatRuleSnapshot=combatRuleSnapshot;
  function specializationPercentForLevel(key,level){const lv=clampSpecializationLevel(level);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;}
@@ -99,12 +99,12 @@
   if(!def)return null;
   if(key==="training")return {name:def.name,perLevel:"每級 EXP +2.5%",desc:"提升擊敗敵人取得的經驗值。",effectLabel:"EXP",world:phase};
   if(key==="scavenge"){
-   if(phase===3)return {name:def.name,perLevel:"高維紀元不再提供直接資源加成",desc:"高維紀元的正式資源由對高維存在造成的有效永久削血結算為維度之弦；搜刮技巧不再額外放大此資源。",effectLabel:null,world:phase};
+   if(phase===3)return {name:def.name,perLevel:"高維紀元無額外效果",desc:"高維紀元不再提供此項額外效果。",effectLabel:null,world:phase};
    if(phase===2)return {name:def.name,perLevel:"每級主線暗物質 +2.5%",desc:"提升宇宙紀元主線 Boss 直接取得的暗物質；不影響裝備出售取得的暗物質。",effectLabel:"主線暗物質",world:phase};
    return {name:def.name,perLevel:"每級怪物金幣 +2.5%",desc:"提升銀河紀元怪物直接掉落的金幣；不影響裝備出售取得的金幣。",effectLabel:"怪物金幣",world:phase};
   }
   if(key==="appraisal"){
-   if(phase===3)return {name:def.name,perLevel:"高維紀元不建立裝備貨幣售價",desc:"高維紀元裝備不建立新的出售貨幣循環，因此鑑價技巧不再產生第三紀元貨幣售價加成。",effectLabel:null,world:phase};
+   if(phase===3)return {name:def.name,perLevel:"高維紀元無額外效果",desc:"高維紀元不再提供此項額外效果。",effectLabel:null,world:phase};
    if(phase===2)return {name:def.name,perLevel:"每級裝備暗物質售價 +2.5%",desc:"提升宇宙紀元裝備出售取得的暗物質；不放大暗能量。",effectLabel:"裝備暗物質售價",world:phase};
    return {name:def.name,perLevel:"每級裝備售價 +2.5%",desc:"提升銀河紀元出售裝備取得的金幣。",effectLabel:"裝備售價",world:phase};
   }
@@ -115,7 +115,7 @@
   const source=levels&&typeof levels==="object"?levels:null;
   const get=key=>source?specializationPercentForLevel(key,source[key]):window.specializationPercentBonus(key,useTest);
   const exp=get("training"),scavenge=get("scavenge"),appraisal=get("appraisal"),phase=currentPhase(target);
-  if(phase===3)return {world:3,exp,scavenge,appraisal,scavengeLabel:"第三紀元無直接資源加成",appraisalLabel:"第三紀元無裝備貨幣售價",text:`EXP +${exp}%　／　第三紀元無直接資源加成　／　第三紀元無裝備貨幣售價`};
+  if(phase===3)return {world:3,exp,scavenge,appraisal,scavengeLabel:"高維紀元無額外效果",appraisalLabel:"高維紀元無額外效果",text:`EXP +${exp}%　／　高維紀元無額外效果　／　高維紀元無額外效果`};
   const universe=phase===2;
   return {
    world:phase,
@@ -126,11 +126,11 @@
   };
  }
  window.specializationWorldEconomySummary=specializationWorldEconomySummary;
- window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=2;
+ window.SPECIALIZATION_GM_WORLD_SEMANTICS_VERSION=3;
  function effectLines(key,lv){
   const semantics=specializationWorldSemantics(key);
-  if(currentPhase()===3&&key==="scavenge")return ["第三紀元無直接資源加成","高維正式資源由永久削血結算為維度之弦。"];
-  if(currentPhase()===3&&key==="appraisal")return ["第三紀元無裝備貨幣售價","高維裝備不建立新的出售貨幣循環。"];
+  if(currentPhase()===3&&key==="scavenge")return ["高維紀元無額外效果","高維紀元不再提供此項額外效果。"];
+  if(currentPhase()===3&&key==="appraisal")return ["高維紀元無額外效果","高維紀元不再提供此項額外效果。"];
   if(key==="training"||key==="scavenge"||key==="appraisal")return [`${semantics?.effectLabel||key} +${lv*2.5}%`];
   if(key==="initiative")return [`第一擊傷害 +${lv}%`];
   const combatText=combatRuleText(key);
@@ -152,7 +152,7 @@
   ensureSpecializationState();
   const phase=currentPhase(),goldHtml=phase===1?`<div class="specialization-gold">金幣 <b>${state.gold.toLocaleString()}</b></div>`:"";
   const worldNote=phase===3
-   ?`<div class="notice" style="margin-top:12px"><b>高維紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精維持 Lv.${SPECIALIZATION_MAX_LEVEL}；實戰訓練與戰鬥類專精持續生效。第三紀元不再開放專精升級，也不建立新的金幣／暗物質售價循環。</div></div>`
+   ?`<div class="notice" style="margin-top:12px"><b>高維紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精維持 Lv.${SPECIALIZATION_MAX_LEVEL}；實戰訓練與戰鬥類專精持續生效。第三紀元不再開放專精升級。</div></div>`
    :phase===2?`<div class="notice" style="margin-top:12px"><b>宇宙紀元專精已完成</b><div class="muted" style="margin-top:5px">8 項專精在進入宇宙紀元前即需全部 Lv.${SPECIALIZATION_MAX_LEVEL}；效果會繼續套用到 EXP、暗物質、宇宙裝備出售與戰鬥能力。</div></div>`:"";
   return `<div class="function-page specialization-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card specialization-panel"><div class="specialization-title-row"><h2>專精</h2>${goldHtml}</div>${worldNote}${specializationGuideHtml(state)}<div class="specialization-grid">${SPECIALIZATION_KEYS.map(specializationCard).join("")}</div></div></div>`;
  }

@@ -1,5 +1,5 @@
 (function(){
- const VERSION=11;
+ const VERSION=12;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -83,10 +83,15 @@
    const desc=card.querySelector("span");
    if(!desc)return;
    if(title==="冒險")desc.textContent=current===3?"進入高維戰線，攻略十名高維存在":current===2?"進入宇宙主線並挑戰 Boss":"選擇地圖並挑戰怪物";
+   if(title==="背包"&&current===3)desc.textContent="整理、裝備與處理裝備";
    if(title==="強化"&&current===3)desc.textContent="查看已完成的 +40 裝備欄位強化";
    if(title==="專精"&&current===3)desc.textContent="查看已完成並持續生效的 Lv.60 專精";
-   if(title==="副本")desc.textContent=current===3?"競技場、虛空幻境與鏡像戰保留；懸賞戰已關閉":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
-   if(title==="文明災厄")desc.textContent=current===3?"回顧舊紀元文明災厄":current===2?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記";
+   if(title==="副本")desc.textContent=current===3?"競技場、虛空幻境與鏡像戰":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
+   if(title==="文明災厄"){
+    if(current===3){const heading=card.querySelector("b");if(heading)heading.textContent="災厄回顧";desc.textContent="回顧銀河紀元與宇宙紀元文明災厄";}
+    else desc.textContent=current===2?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記";
+   }
+   if(title==="設定"&&current===3)desc.textContent="裝備自動處理、存檔與遊戲設定";
   });
  }
  function statByLabel(grid,label){return Array.from(grid?.querySelectorAll(".stat")||[]).find(row=>String(row.childNodes?.[0]?.textContent||row.textContent||"").trim().startsWith(label))||null;}
@@ -110,17 +115,7 @@
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
-   ensureCharacterStat(grid,"文明等級",`Lv.${snap.civilizationLevel} / ${snap.civilizationMax}`);
-   ensureCharacterStat(grid,"最終傷害",`+${snap.civilizationDamageBonusPercent}%`);
    ensureCharacterStat(grid,"界弦核心",`Lv.${snap.coreLevel} / ${snap.coreMax}`);
-   let info=card.querySelector(".third-world-character-info");
-   if(!info){
-    info=document.createElement("div");
-    info.className="notice third-world-character-info";
-    info.style.marginTop="12px";
-    grid.insertAdjacentElement("afterend",info);
-   }
-   info.innerHTML=`<b>高維紀元完成態</b><div class="muted" style="margin-top:5px">文明 Lv.${snap.civilizationLevel} 的既有效果持續生效；裝備強化維持 +40、8 項專精維持 Lv.60、10 項印記維持 Lv.10。界弦核心只影響高維連戰死亡壓制，不增加一般戰鬥能力。</div>`;
   }
   return true;
  }
@@ -152,8 +147,8 @@
  window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=3;
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
  window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
- window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=2;
- window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=2;
+ window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=3;
+ window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;

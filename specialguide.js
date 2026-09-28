@@ -42,10 +42,12 @@
 
  const sgBaseAdventurePreparePage=adventurePreparePage;
  adventurePreparePage=function(){
+  const current=typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(state)):state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;
+  if(current===3)return sgBaseAdventurePreparePage();
   let html=sgBaseAdventurePreparePage();
   const insertAt=html.lastIndexOf("</section>");
   if(insertAt<0)return html+sgGuideHtml();
   return html.slice(0,insertAt)+sgGuideHtml()+html.slice(insertAt);
  };
-window.SPECIAL_GUIDE_WORLD_AWARE_VERSION=1;
+window.SPECIAL_GUIDE_WORLD_AWARE_VERSION=2;
 })();
