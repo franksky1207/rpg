@@ -1,0 +1,43 @@
+name: One-time Batch 11-O1 Review Isolation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/batch11-o1-runner.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply batch 11-O1 patch
+        run: python .github/scripts/batch11-o1-patch.py
+      - name: Syntax and runtime integrity self-check
+        run: |
+          set -euo pipefail
+          node --check ui.js
+          node --check galaxyreviewintegrity.js
+          node --check secondworldcombat.js
+          node --check secondworldmainline.js
+          node --check thirdworldintegritycontract.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          grep -q 'ui.js?v=20260928-thirdworld-batch11-o1' index.html
+          grep -q 'secondworldcombat.js?v=20260928-thirdworld-batch11-o1' index.html
+          grep -q 'secondworldmainline.js?v=20260928-thirdworld-batch11-o1' index.html
+          grep -q 'galaxyreviewintegrity.js?v=20260928-thirdworld-batch11-o1' index.html
+          grep -q 'thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o1' index.html
+      - name: Commit batch 11-O1 and remove temporary files
+        run: |
+          set -euo pipefail
+          rm .github/workflows/batch11-o1-runner.yml .github/scripts/batch11-o1-patch.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Harden cross-era review state isolation'
+          git push origin HEAD:main
