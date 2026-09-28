@@ -96,7 +96,7 @@
   if(finals[0]?.stage!==10||finals[0]?.thresholdRemainingPercentSum!==titleThreshold(10)||milestones.some(row=>row.stage===10))errors.push("THIRD_WORLD_FINAL_STAGE10");
   const readyIds=thirdWorldTriggers.filter(row=>row.contentReady===true).map(row=>row.storyId);
   const expectedReady=["higher-dimensional-intro","higher-dimensional-milestone-01","higher-dimensional-milestone-02","higher-dimensional-milestone-03","higher-dimensional-milestone-04","higher-dimensional-milestone-05","higher-dimensional-milestone-06","higher-dimensional-milestone-07","higher-dimensional-milestone-08","higher-dimensional-milestone-09","higher-dimensional-final"];
-  if(JSON.stringify(readyIds)!==JSON.stringify(expectedReady))errors.push("THIRD_WORLD_CONTENT_READY_BATCH13_7");
+  if(JSON.stringify(readyIds)!==JSON.stringify(expectedReady))errors.push("THIRD_WORLD_CONTENT_READY_COMPLETE");
   return freeze({version:SHARED_ERA_REGISTRY_VERSION,passed:errors.length===0,eraIds:ids,thirdWorldTriggerCount:thirdWorldTriggers.length,errors:freeze(errors)});
  }
 
