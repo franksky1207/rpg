@@ -5,6 +5,7 @@
 // Batch 12-2 exact-head：placeholder zero-queue、順序補播、reload recovery 與 W1/W2 相容性需同時通過 Story／Runtime Integrity。
 // Batch 12-3 exact-head：settlement bridge、completion-ready、W3 entry trigger 與 deferred story presentation 必須同時通過 Story／Runtime Integrity。
 // Batch 12-4 exact-head：Run Summary → shared Story drain → Title Notice、modal hold 與 reload recovery 必須同時通過 Story／Runtime Integrity。
+// Batch 12-O1：舊 W3 Story flags／Stage reconciliation 與 stale Story reference recovery 必須 fail-closed。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
@@ -14,6 +15,7 @@ const progress=fs.readFileSync('storyprogress.js','utf8');
 const record=fs.readFileSync('storyrecordtabs.js','utf8');
 const gm=fs.readFileSync('gmstorytest.js','utf8');
 const runtime=fs.readFileSync('storyruntimeintegrity.js','utf8');
+const migration=fs.readFileSync('storymigration.js','utf8');
 const integrity=fs.readFileSync('storyintegrity.js','utf8');
 const storyui=fs.readFileSync('storyui.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
@@ -44,8 +46,10 @@ assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
-assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=15;/.test(runtime),'Story Runtime Integrity 應為 V15');
+assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=16;/.test(runtime),'Story Runtime Integrity 應為 V16');
 assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
+assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration 必須提供 V6 stale reference recovery');
+assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未覆蓋 stale／placeholder pending recovery');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
 assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式載入 secondworldstoryregistry.js');

@@ -1,11 +1,12 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const PRE_SCHEMA16_POLICY_REGRESSION_VERSION=1;
  const TRANSIENT_DROP_REGRESSION_VERSION=1;
  const CORE_RECONCILIATION_REGRESSION_VERSION=1;
  const CORE_PROGRESS_REGRESSION_VERSION=2;
  const SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION=1;
  const LEGACY_CORE_POLICY_REGRESSION_VERSION=1;
+ const STORY_RECONCILIATION_REGRESSION_VERSION=1;
  function clone(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function baseSave(bosses){return {saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:2,bosses},offline:{}};}
  function runThirdWorldBossMigrationRegression(){
@@ -26,7 +27,7 @@
    }catch(error){cases.push({id,ok:false,error:String(error?.message||error)});fail(id,String(error?.message||error));}
   };
   try{
-   if(typeof window.migrateSave!=="function"||typeof window.normalizeThirdWorldCoreInvestment!=="function"||typeof window.reconcileThirdWorldCoreProgressionState!=="function"||!Number.isInteger(max)||max<=0||count!==10){fail("OWNER_MISSING",{migrateSave:typeof window.migrateSave,normalizeThirdWorldCoreInvestment:typeof window.normalizeThirdWorldCoreInvestment,reconcileThirdWorldCoreProgressionState:typeof window.reconcileThirdWorldCoreProgressionState,max,count});}
+   if(typeof window.migrateSave!=="function"||typeof window.normalizeThirdWorldCoreInvestment!=="function"||typeof window.reconcileThirdWorldCoreProgressionState!=="function"||typeof window.reconcileThirdWorldStoryState!=="function"||!Number.isInteger(max)||max<=0||count!==10){fail("OWNER_MISSING",{migrateSave:typeof window.migrateSave,normalizeThirdWorldCoreInvestment:typeof window.normalizeThirdWorldCoreInvestment,reconcileThirdWorldCoreProgressionState:typeof window.reconcileThirdWorldCoreProgressionState,max,count});}
    else{
     const distinct=Array.from({length:count},(_,index)=>({currentHp:max-index*1234567}));
     runCase("SCHEMA16_DISTINCT_HP_PRESERVED",baseSave(distinct),m=>Array.isArray(m?.thirdWorld?.bosses)&&m.thirdWorld.bosses.length===count&&m.thirdWorld.bosses.every((row,index)=>row.currentHp===distinct[index].currentHp));
@@ -36,6 +37,20 @@
     const runtimeTransientKeys=["deaths","suppression","run","runId","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart","runTotals","catchingUp","catchUpCompleted","playerFlowContext","stopReason","hpCap"];
     const transient=baseSave(distinct);Object.assign(transient.thirdWorld,{deaths:88,suppression:22.5,run:{active:true},runId:123,targetBossIndex:4,pendingEvents:[{type:"probe"}],recentBattles:[{bossIndex:4}],lastBattleSummary:{bossIndex:4},lastFinishedRun:{runId:122},lastFinishedRuntime:{runId:122},coreLevelAtStart:4,perDeathSuppressionPointsAtStart:.34,runTotals:{xp:999},catchingUp:true,catchUpCompleted:87,playerFlowContext:{active:true},stopReason:"manual",hpCap:{hpCapPercent:95.92}});
     runCase("SCHEMA16_THIRD_WORLD_RUNTIME_TRANSIENTS_DROPPED",transient,m=>{const row=m?.thirdWorld||{},allowed=new Set(Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]));return runtimeTransientKeys.every(key=>!Object.prototype.hasOwnProperty.call(row,key))&&Object.keys(row).every(key=>allowed.has(key));});
+    const fullBosses=Array.from({length:count},()=>({currentHp:max})),oneDead=[{currentHp:0},...Array.from({length:count-1},()=>({currentHp:max}))],fiveDead=[...Array.from({length:5},()=>({currentHp:0})),...Array.from({length:5},()=>({currentHp:max}))],allDead=Array.from({length:count},()=>({currentHp:0}));
+    const storyLag=baseSave(oneDead);storyLag.thirdWorld.story={introSeen:false,unlockedStage:0,finalSeen:false};
+    runCase("SCHEMA16_STORY_STAGE_LAG_RECONCILED",storyLag,m=>Number(m?.thirdWorld?.story?.unlockedStage)===1);
+    const storyAhead=baseSave(fullBosses);storyAhead.thirdWorld.story={introSeen:false,unlockedStage:9,finalSeen:false};
+    runCase("SCHEMA16_STORY_STAGE_AHEAD_RECONCILED",storyAhead,m=>Number(m?.thirdWorld?.story?.unlockedStage)===0);
+    const storyMissing=baseSave(fiveDead);storyMissing.thirdWorld.story={};
+    runCase("SCHEMA16_STORY_STAGE_MISSING_REBUILT",storyMissing,m=>Number(m?.thirdWorld?.story?.unlockedStage)===5);
+    const storyDead=baseSave(allDead);storyDead.thirdWorld.story={introSeen:false,unlockedStage:0,finalSeen:false};
+    runCase("SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT",storyDead,m=>Number(m?.thirdWorld?.story?.unlockedStage)===10);
+    const devFlags=baseSave(allDead);devFlags.thirdWorld.completed=true;devFlags.thirdWorld.story={introSeen:true,unlockedStage:10,finalSeen:true};
+    runCase("SCHEMA16_PRE_CONTENT_STORY_FLAGS_RESET",devFlags,m=>m?.thirdWorld?.story?.introSeen===false&&m?.thirdWorld?.story?.finalSeen===false&&m?.thirdWorld?.completed===false&&Number(m?.thirdWorld?.story?.unlockedStage)===10);
+    const impossibleCompleted=baseSave(fullBosses);impossibleCompleted.thirdWorld.completed=true;impossibleCompleted.thirdWorld.story={introSeen:true,unlockedStage:10,finalSeen:true};
+    runCase("SCHEMA16_IMPOSSIBLE_COMPLETION_RESET",impossibleCompleted,m=>m?.thirdWorld?.completed===false&&m?.thirdWorld?.story?.finalSeen===false&&Number(m?.thirdWorld?.story?.unlockedStage)===0);
+
     const missingProgress=baseSave(distinct);missingProgress.thirdWorld.coreLevel=4;missingProgress.thirdWorld.dimensionalStrings=2000000000;
     runCase("SCHEMA16_MISSING_CORE_PROGRESS_DEFAULTS_ZERO",missingProgress,m=>Number(m?.saveVersion)===16&&Number(m?.thirdWorld?.coreLevel)===4&&Number(m?.thirdWorld?.coreProgress)===0);
     const partialProgress=baseSave(distinct);partialProgress.thirdWorld.coreLevel=4;partialProgress.thirdWorld.coreProgress=345678901;
@@ -70,7 +85,7 @@
    if(typeof previousReport==="undefined")delete window.LAST_SAVE_MIGRATION_REPORT;else window.LAST_SAVE_MIGRATION_REPORT=previousReport;
   }
   const legacyCorePolicy=Object.freeze({developmentOnly:true,untrustedEntryVersionMax:trustedEntryVersion-1,trustedFromEntryVersion:trustedEntryVersion,untrustedTreatment:"reset-core-and-coreProgress-preserve-dimensionalStrings",trustedTreatment:"normalize-and-preserve-investment"});
-  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,coreReconciliationRegressionVersion:CORE_RECONCILIATION_REGRESSION_VERSION,coreProgressRegressionVersion:CORE_PROGRESS_REGRESSION_VERSION,schemaEvolutionPolicyRegressionVersion:SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION,legacyCorePolicyRegressionVersion:LEGACY_CORE_POLICY_REGRESSION_VERSION,preSchema16Policy:"discard-development-data",legacyCorePolicy,passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
+  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,coreReconciliationRegressionVersion:CORE_RECONCILIATION_REGRESSION_VERSION,coreProgressRegressionVersion:CORE_PROGRESS_REGRESSION_VERSION,schemaEvolutionPolicyRegressionVersion:SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION,legacyCorePolicyRegressionVersion:LEGACY_CORE_POLICY_REGRESSION_VERSION,storyReconciliationRegressionVersion:STORY_RECONCILIATION_REGRESSION_VERSION,preSchema16Policy:"discard-development-data",legacyCorePolicy,passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
   window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_REPORT=report;
   return report;
  }
@@ -81,6 +96,7 @@
  window.THIRD_WORLD_CORE_PROGRESS_REGRESSION_VERSION=CORE_PROGRESS_REGRESSION_VERSION;
  window.THIRD_WORLD_SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION=SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION;
  window.THIRD_WORLD_LEGACY_CORE_POLICY_REGRESSION_VERSION=LEGACY_CORE_POLICY_REGRESSION_VERSION;
+ window.THIRD_WORLD_STORY_RECONCILIATION_REGRESSION_VERSION=STORY_RECONCILIATION_REGRESSION_VERSION;
  window.runThirdWorldBossMigrationRegression=runThirdWorldBossMigrationRegression;
  window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_REPORT=runThirdWorldBossMigrationRegression();
 })();

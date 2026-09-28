@@ -1,5 +1,6 @@
 (function(){
- const VERSION=15;
+ const VERSION=16;
+ const LEGACY_REFERENCE_RECOVERY_VERSION=1;
  function run(){
   const errors=[],warnings=[],fail=(code,message,data=null)=>errors.push({code,message,data});
   const data=window.runCivilizationStoryIntegrity?.();
@@ -24,6 +25,16 @@
   const final=finals[0]||null,finalThreshold=Number(window.thirdWorldTitleDefinition?.(10)?.thresholdRemainingPercentSum);
   if(final?.stage!==10||final?.thresholdRemainingPercentSum!==finalThreshold||milestones.some(row=>row.stage===10))fail("STORY_RUNTIME_THIRD_WORLD_FINAL_STAGE10","stage 10／0% 必須只對應 final，不得再有第 10 段 milestone",final);
   if(triggers.some(row=>row.contentReady!==false))fail("STORY_RUNTIME_THIRD_WORLD_CONTENT_PLACEHOLDER","第 12-2 批仍不得宣告高維正式劇情內容已就緒");
+
+  if(Number(window.STORY_MIGRATION_VERSION)!==6||Number(window.STORY_REFERENCE_RECOVERY_VERSION)!==1)fail("STORY_RUNTIME_REFERENCE_RECOVERY_OWNER","Story migration reference recovery owner 未就緒");
+  try{
+   const migration=window.civilizationStoryMigration,stories=window.CIVILIZATION_STORIES||{},universeId=window.universeStoryIdForBossIndex?.(0),options={introStoryId:"earth-prologue",stories,regions:[],skipBackfill:true};
+   const probe=(pending,completed)=>({introSeen:true,storyProgress:{pendingStory:pending,completedStories:completed,introCompleted:true,starterGearReceived:true}});
+   const galaxy=probe("earth-prologue",["earth-prologue"]);migration?.migrate?.(galaxy,options);if(galaxy.storyProgress.pendingStory!=="earth-prologue")fail("STORY_RUNTIME_VALID_GALAXY_PENDING_REMOVED","合法銀河 pendingStory 不得被清除",galaxy.storyProgress);
+   if(universeId&&stories[universeId]){const universe=probe(universeId,["earth-prologue",universeId]);migration?.migrate?.(universe,options);if(universe.storyProgress.pendingStory!==universeId||!universe.storyProgress.completedStories.includes(universeId))fail("STORY_RUNTIME_VALID_UNIVERSE_REFERENCE_REMOVED","合法宇宙 Story reference 不得被清除",universe.storyProgress);}
+   const stale=probe("retired-story-probe",["earth-prologue","retired-story-probe","higher-dimensional-intro"]);migration?.migrate?.(stale,options);if(stale.storyProgress.pendingStory!==null||stale.storyProgress.completedStories.includes("retired-story-probe")||stale.storyProgress.completedStories.includes("higher-dimensional-intro"))fail("STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED","退休／placeholder Story reference 應於正式 catalog 可用時清除",stale.storyProgress);
+   const placeholder=probe("higher-dimensional-intro",["earth-prologue"]);migration?.migrate?.(placeholder,options);if(placeholder.storyProgress.pendingStory!==null)fail("STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED","尚未有正式資料的 W3 placeholder pendingStory 必須清除",placeholder.storyProgress);
+  }catch(error){fail("STORY_RUNTIME_REFERENCE_RECOVERY_FAILED","Story reference recovery regression 發生錯誤",String(error?.message||error));}
 
   if(typeof window.openStory!=="function"||typeof window.isStoryOpen!=="function"||typeof window.waitForStoryClosed!=="function"||Number(window.STORY_UI_VERSION)!==9||Number(window.STORY_UI_LIFECYCLE_WAIT_VERSION)!==1)fail("STORY_RUNTIME_UI_MISSING","共用正式劇情視窗／lifecycle wait owner 未完整載入");
   const progress=window.civilizationStoryProgress;
@@ -74,6 +85,7 @@
   return report;
  }
  window.STORY_RUNTIME_INTEGRITY_VERSION=VERSION;
+ window.STORY_RUNTIME_LEGACY_REFERENCE_RECOVERY_VERSION=LEGACY_REFERENCE_RECOVERY_VERSION;
  window.runCivilizationStoryRuntimeIntegrity=run;
  run();
 })();

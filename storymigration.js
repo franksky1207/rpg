@@ -1,5 +1,6 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
+ const STORY_REFERENCE_RECOVERY_VERSION=1;
  const LEGACY_FIELDS=["historyBackfillRegions"];
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
@@ -22,10 +23,13 @@
   const p=target.storyProgress;
   let changed=false;
 
-  const pending=typeof p.pendingStory==="string"&&p.pendingStory?p.pendingStory:null;
+  const stories=options?.stories&&typeof options.stories==="object"?options.stories:{},knownIds=Object.keys(stories),canValidateReferences=knownIds.length>0;
+  const pendingRaw=typeof p.pendingStory==="string"&&p.pendingStory?p.pendingStory:null;
+  const pending=pendingRaw&&(!canValidateReferences||Object.prototype.hasOwnProperty.call(stories,pendingRaw))?pendingRaw:null;
   if(p.pendingStory!==pending){p.pendingStory=pending;changed=true;}
 
-  const completed=uniqueStrings(p.completedStories);
+  let completed=uniqueStrings(p.completedStories);
+  if(canValidateReferences)completed=completed.filter(id=>Object.prototype.hasOwnProperty.call(stories,id));
   if(JSON.stringify(completed)!==JSON.stringify(p.completedStories)){p.completedStories=completed;changed=true;}
 
   const introCompleted=p.introCompleted===true;
@@ -89,10 +93,12 @@
 
  window.civilizationStoryMigration={
   version:VERSION,
+  referenceRecoveryVersion:STORY_REFERENCE_RECOVERY_VERSION,
   legacyFields:LEGACY_FIELDS.slice(),
   migrate,
   normalizeFields,
   backfillAvailableHistory
  };
  window.STORY_MIGRATION_VERSION=VERSION;
+ window.STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION;
 })();
