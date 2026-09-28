@@ -9,6 +9,7 @@
 // W3 terminology exact-head：玩家正式用語統一為「10 名高維存在」，不得使用對話簡稱「十王」。
 // Guide Opt1 exact-head：W3 Guide canonical owner snapshot、current-world category validation 與 offline duration owner 必須同時通過 Story／Runtime Integrity。
 // Guide Opt2 exact-head：三紀元共用 Guide extension registry、Mirror category extension、Cloud page extension 與 behavioral regression 必須同時通過 Story／Runtime Integrity。
+// Guide Opt3 exact-head：三紀元 Guide behavioral semantics、Fast Catch-up 正式結算文字、正式用語與 Schema16 無 migration 必須同時通過 Story／Runtime Integrity。
 const fs=require('fs');
 const vm=require('vm');
 
