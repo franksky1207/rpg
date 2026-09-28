@@ -1,8 +1,8 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const BACKGROUND_GM_GATE_VERSION=1;
  const REVIEW_FLOW_VERSION=1;
- const REVIEW_STATE_ISOLATION_VERSION=1;
+ const REVIEW_STATE_ISOLATION_VERSION=2;
  const REVIEW_RESULT_LOCK_VERSION=1;
  let busy=false;
  let activeContext=null;
@@ -174,14 +174,14 @@
   const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!player)return false;
   const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;if(!encounter)return false;
   const ctx=createContext(index,boss,false,true);ctx.currentEncounter=encounter;ctx.reviewPlayerMaxHp=Math.max(1,Number(player.hp)||1);ctx.reviewPlayerStartHp=ctx.reviewPlayerMaxHp;publishContext(ctx);
-  const before=JSON.stringify(targetState);busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"universe");
+  busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"universe");
   let combat=null,reviewResultQueued=false;
   try{
    if(typeof render==="function")render();
+   if(Number(window.SECOND_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION)<2)throw new Error("宇宙回顧 state-isolation owner 尚未更新。");
    combat=window.runSecondWorldBossCombat(index,{review:true,state:targetState,player,startHp:ctx.reviewPlayerStartHp,encounter,logs:true,preparePresentation:true});ctx.lastCombat=combat;
    if(!combat?.ok||combat.review!==true||combat.settlementReady!==false)throw new Error(combat?.reason||"宇宙回顧戰建立失敗。");
    ctx.presenting=true;try{await presentCombat(combat);}finally{ctx.presenting=false;}
-   if(JSON.stringify(targetState)!==before)throw new Error("宇宙回顧戰不應修改正式 state。");
    reviewResultQueued=true;setTimeout(()=>showReviewResult(boss,combat),0);
    return true;
   }catch(error){console.error("[文明戰線] 宇宙紀元回顧失敗",error);alert("宇宙紀元回顧發生錯誤，正式進度未受影響。");return false;}

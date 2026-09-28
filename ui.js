@@ -6,6 +6,7 @@ let gmTapCount=0;
 let gmTapTimer=null;
 let inventoryFilter="all";
 let inventoryReturnContext=null;
+let galaxyReviewCombatPlayerHp=null;
 
 const CONTINUOUS_BATTLE_COUNT="continuous";
 window.CONTINUOUS_BATTLE_COUNT=CONTINUOUS_BATTLE_COUNT;
@@ -218,8 +219,8 @@ function galaxyReviewPreparePage(){
  return `<section class="prepare-screen galaxy-review-prepare"><div class="page-top"><button class="btn back-btn" onclick="backToGalaxyReviewMaps()">← 返回銀河回顧</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="notice"><b>銀河紀元・回顧戰</b><div class="muted" style="margin-top:6px">單場純挑戰・無收益・無損失・不影響正式進度。</div></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><div class="prepare-actions" data-mobile-prepare-actions="1"><button class="btn primary" onclick="startGalaxyReviewBattle()">開始回顧戰</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
 }
 function galaxyReviewCombatPage(){
- const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex(),e=currentCombatEncounter||monsterObj(mapIdx,reviewEnemy),s=playerCombatStats(),hpPct=s.hp?state.hp/s.hp*100:0,traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
- return `<section class="combat-screen galaxy-review-combat"><div class="combat-head">銀河紀元・回顧戰</div><div class="muted" style="text-align:center;margin-bottom:10px">無收益・無損失・不影響正式進度</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備回顧戰</div></section>`;
+ const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex(),e=currentCombatEncounter||monsterObj(mapIdx,reviewEnemy),s=playerCombatStats(),reviewHp=Math.max(0,Math.min(s.hp,Number(galaxyReviewCombatPlayerHp??s.hp)||0)),hpPct=s.hp?reviewHp/s.hp*100:0,traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
+ return `<section class="combat-screen galaxy-review-combat"><div class="combat-head">銀河紀元・回顧戰</div><div class="muted" style="text-align:center;margin-bottom:10px">無收益・無損失・不影響正式進度</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${reviewHp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備回顧戰</div></section>`;
 }
 window.enterGalaxyReviewMap=function(){selectedBattleCount=1;adventureScreen="review-prepare";render()};
 window.selectGalaxyReviewEnemy=function(enemyIdx){window.setGalaxyReviewSelectedEnemy?.(enemyIdx);render()};
@@ -233,26 +234,29 @@ window.startGalaxyReviewBattle=async function(){
  const preview=makeEncounter(mapIdx,reviewEnemy);
  if(!preview){alert("無法建立回顧戰敵人。");return false;}
  const e={...preview,traits:Array.isArray(preview.traits)?preview.traits.slice():[]};
- const ps=playerCombatStats(),startHp=ps.hp,formalHp=Math.max(0,Math.floor(Number(state.hp)||0));
- battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;state.hp=startHp;adventureScreen="review-combat";render();
+ const ps=playerCombatStats(),startHp=ps.hp,before=JSON.stringify(state);
+ battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";render();
  try{
   const result=combatOwner(ps,e,startHp,{mainlineLogs:true});
+  if(JSON.stringify(state)!==before)throw new Error("銀河紀元回顧戰不應修改正式 state。");
   const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
-  state.hp=formalHp;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();
+  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=`<div class="notice"><b>銀河紀元・回顧戰結束</b><div class="muted" style="margin-top:6px">本場不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。</div></div>`;modal.classList.add("show")}
   return true;
  }catch(err){
-  state.hp=formalHp;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();
+  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();
   console.error("[文明戰線] 銀河紀元回顧戰失敗",err);
   alert("銀河紀元回顧戰啟動失敗，請重新整理後再試。");
   return false;
  }
 };
-window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=4;
+window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=5;
 window.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;
 window.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;
+window.GALAXY_REVIEW_LOCAL_HP_ISOLATION_VERSION=1;
+window.GALAXY_REVIEW_SYNC_STATE_VALIDATION_VERSION=1;
 function adventurePage(){
  if(secondWorldActive()){if(adventureScreen==="review-prepare")return galaxyReviewPreparePage();if(adventureScreen==="review-combat")return galaxyReviewCombatPage();return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');}
  if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
@@ -303,8 +307,9 @@ function closeBattleResultModal(){
  if(reviewSource==="galaxy"&&typeof window.setGalaxyReviewBattleActive==="function")window.setGalaxyReviewBattleActive(false);
  else if(reviewSource&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
  const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():null;
- if(secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ if(!reviewSource&&secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
  render();
+ if(reviewSource)return;
  const pendingStory=window.civilizationStoryProgress?.get?.().pendingStory;
  if(pendingStory)window.civilizationStoryProgress.resume();
  else if(typeof window.flushSecondWorldCalamityAppearanceNotice==="function")setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);

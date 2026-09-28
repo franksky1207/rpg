@@ -1,8 +1,8 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const SETTLEMENT_READY=true;
  const REVIEW_POLICY_VERSION=1;
- const REVIEW_STATE_ISOLATION_VERSION=1;
+ const REVIEW_STATE_ISOLATION_VERSION=2;
  const BASE_STAT=2700;
  const STAT_RATIO=Object.freeze({hp:12,atk:2,def:1});
  const STEP_RATE=.015;
@@ -90,6 +90,7 @@
    :1;
   const explicitHpLock=options.lockPlayerFullHp===true;
   const lockPlayerFullHp=explicitHpLock||formalMainlineHpLockActive();
+  const reviewStateBefore=reviewMode&&targetState?JSON.stringify(targetState):null;
   const combat=window.runCombatCore(player,enemy,startHp,{
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
@@ -101,6 +102,9 @@
    playerFinalDamageMultiplier:civilizationMultiplier,
    lockPlayerFullHp
   });
+  if(reviewMode&&reviewStateBefore!=null&&JSON.stringify(targetState)!==reviewStateBefore){
+   return {ok:false,review:true,reason:"宇宙回顧戰偵測到正式 state 變動，已拒絕戰鬥結果。",settlementReady:false,xp:0,darkMatter:0,darkEnergy:0,items:[],formalProgressChanged:false};
+  }
   return {
    ok:true,
    review:reviewMode,
