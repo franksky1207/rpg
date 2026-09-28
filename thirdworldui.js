@@ -1,12 +1,12 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const CORE_UI_VERSION=2;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
  const RUN_ENTRY_UI_VERSION=1;
  const THREE_COLUMN_HEADER_VERSION=1;
  const COMBAT_PAGE_UI_VERSION=1;
- const REVIEW_UI_VERSION=1;
+ const REVIEW_UI_VERSION=2;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
  let coreFeedbackOk=false;
@@ -163,7 +163,7 @@
   if(typeof window.thirdWorldCoreInjectionPlan!=="function")errors.push("CORE_PLAN_OWNER_MISSING");
   if(typeof window.injectAllThirdWorldCoreStrings!=="function")errors.push("CORE_INJECTION_OWNER_MISSING");
   if(typeof window.runThirdWorldBossCombat!=="function"||Number(window.THIRD_WORLD_COMBAT_REVIEW_POLICY_VERSION)!==1)errors.push("REVIEW_COMBAT_OWNER_MISSING");
-  if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");
+  if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function"||typeof window.getAdventureReviewBattleSource!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
   const playerCopy=[challengePresentation({challengeStatus:{allowed:true,reason:"last-survivor"}}).detail,challengePresentation({challengeStatus:{allowed:true,reason:"within-five-point-front"}}).detail,combatRuleHtml()].join(" ");
@@ -178,7 +178,7 @@
   if(run.active===true||reviewContext||window.adventureEraViewLocked?.()===true)return false;
   const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!player)return false;
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")return false;
-  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true);
+  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"higher-dimensional");
   try{
    const result=window.runThirdWorldBossCombat(index,{review:true,preparePresentation:true,logs:true,startHp:player.hp,playerHealCap:player.hp});
    if(result?.ok!==true||result?.review!==true||result?.formalSettlementEligible===true)throw new Error(result?.reason||"高維回顧建立失敗。");

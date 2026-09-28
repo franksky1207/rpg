@@ -239,7 +239,7 @@ window.startGalaxyReviewBattle=async function(){
   const result=combatOwner(ps,e,startHp,{mainlineLogs:true});
   const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
-  state.hp=formalHp;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();
+  state.hp=formalHp;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=`<div class="notice"><b>銀河紀元・回顧戰結束</b><div class="muted" style="margin-top:6px">本場不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。</div></div>`;modal.classList.add("show")}
   return true;
@@ -250,8 +250,9 @@ window.startGalaxyReviewBattle=async function(){
   return false;
  }
 };
-window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=3;
+window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=4;
 window.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;
+window.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;
 function adventurePage(){
  if(secondWorldActive()){if(adventureScreen==="review-prepare")return galaxyReviewPreparePage();if(adventureScreen==="review-combat")return galaxyReviewCombatPage();return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');}
  if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
@@ -297,8 +298,12 @@ function showBattleResult(ctx,defeat=null){
 }
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
- adventureScreen="prepare";
- if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ const reviewSource=typeof window.getAdventureReviewBattleSource==="function"?window.getAdventureReviewBattleSource():null;
+ adventureScreen=reviewSource==="galaxy"?"review-prepare":"prepare";
+ if(reviewSource==="galaxy"&&typeof window.setGalaxyReviewBattleActive==="function")window.setGalaxyReviewBattleActive(false);
+ else if(reviewSource&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+ const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():null;
+ if(secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
  render();
  const pendingStory=window.civilizationStoryProgress?.get?.().pendingStory;
  if(pendingStory)window.civilizationStoryProgress.resume();

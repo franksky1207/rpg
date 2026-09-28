@@ -95,6 +95,7 @@
   let galaxyReviewSelectedEnemy=4;
   let galaxyReviewBattleActive=false;
   let adventureReviewBattleActive=false;
+  let adventureReviewBattleSource=null;
   const reviewRegionOpenState=Object.create(null);
   let reviewRegionInitialized=false;
 
@@ -134,7 +135,7 @@
     const thirdRun=typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;
     const secondRun=window.activeSecondWorldMainlineContext||null;
     const globalBattleBusy=typeof battleBusy!=="undefined"&&battleBusy===true;
-    return galaxyReviewBattleActive===true||adventureReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;
+    return adventureReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;
   }
   function eraTabButton(view,label){
     const active=adventureEraView===view,locked=adventureEraViewLocked()&&!active;
@@ -193,7 +194,11 @@
     galaxyReviewSelectedEnemy=Math.max(0,Math.min(4,Math.floor(Number(value)||0)));
     return galaxyReviewSelectedEnemy;
   };
-  window.setGalaxyReviewBattleActive=function(value){galaxyReviewBattleActive=value===true;};
+  window.setGalaxyReviewBattleActive=function(value){
+    galaxyReviewBattleActive=value===true;
+    if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(galaxyReviewBattleActive,galaxyReviewBattleActive?"galaxy":null);
+    return galaxyReviewBattleActive;
+  };
   window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};
 
   window.setAdventureEraView=function(value){
@@ -209,8 +214,17 @@
     return true;
   };
   window.getAdventureEraView=function(){return syncAdventureEraViewWorldPhase();};
-  window.setAdventureReviewBattleActive=function(value){adventureReviewBattleActive=value===true;return adventureReviewBattleActive;};
+  window.setAdventureReviewBattleActive=function(value,source=null){
+    if(value===true){
+      adventureReviewBattleActive=true;
+      const next=String(source||adventureReviewBattleSource||"");
+      adventureReviewBattleSource=["galaxy","universe","higher-dimensional"].includes(next)?next:null;
+      return true;
+    }
+    adventureReviewBattleActive=false;adventureReviewBattleSource=null;return false;
+  };
   window.isAdventureReviewBattleActive=function(){return adventureReviewBattleActive===true;};
+  window.getAdventureReviewBattleSource=function(){return adventureReviewBattleActive===true?adventureReviewBattleSource:null;};
   window.adventureEraViewLocked=adventureEraViewLocked;
   window.adventureEraTabsHtml=adventureEraTabsHtml;
   // Legacy W2 API remains as a compatibility delegate; it no longer owns state.
@@ -410,6 +424,7 @@
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
   window.ADVENTURE_ERA_VIEW_OWNER_VERSION=1;
   window.ADVENTURE_ERA_SESSION_POLICY_VERSION=1;
-  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=2;
+  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=3;
+  window.ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=1;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();
