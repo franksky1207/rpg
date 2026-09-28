@@ -9,6 +9,7 @@ const pending=read("PROJECT_PENDING_STATUS.md");
 const vipUpdate=read("PROJECT_VIP_UNBOUNDED_UPDATE.md");
 const historical=read("LEVEL100_EXPANSION.md");
 const assets=read("assets/README.md");
+const worldphase=read("worldphase.js");
 
 assert(readme.includes("銀河紀元**：Lv.1～500")&&readme.includes("宇宙紀元**：Lv.501～1000"),"README 必須描述正式雙紀元 Lv.1～1000。");
 assert(readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 的正式 Save Schema 必須是 15。");
@@ -18,7 +19,8 @@ assert(readme.includes("PROJECT_VIP_UNBOUNDED_UPDATE.md"),"README 必須指向 V
 assert(!readme.includes("養成系統：8 種專精（各 Lv.60）、VIP20、"),"README 不得再把 VIP20 當正式等級上限。");
 assert(!readme.includes("正式 save schema：`12`"),"README 不得復活舊 Schema 12。");
 
-assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("WORLD_PHASE_VERSION = 6")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／World3 正式基準與 main 唯一真實來源原則。");
+assert(handoff.includes("SAVE_SCHEMA_VERSION = 16")&&handoff.includes("currentWorldPhase()")&&handoff.includes("3 = 高維紀元")&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema16／三紀元正式基準與 main 唯一真實來源原則。");
+assert(worldphase.includes("const WORLD_PHASE_VERSION=6;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V6／高維紀元正式 owner。");
 
 assert(pending.includes("第三紀元")&&pending.includes("VIP 無上限正式改版")&&pending.includes("VIP等級本身無上限"),"Pending 必須保留第三紀元與 VIP 無上限現行政策。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("Arena V2 額外500場驗收")&&pending.includes("Cloud Save 真實跨裝置驗證"),"Pending 必須保留已取消項目，避免日後自動復活。");
