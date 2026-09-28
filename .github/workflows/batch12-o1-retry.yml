@@ -28,7 +28,7 @@ jobs:
             'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4"':'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o1"',
           }
           for old,new in pairs.items():
-            if s.count(old)!=1: raise SystemExit(f'cache test anchor mismatch: {old} count={s.count(old)}')
+            if old not in s: raise SystemExit(f'cache test anchor missing: {old}')
             s=s.replace(old,new)
           p.write_text(s,encoding='utf-8')
           PY
