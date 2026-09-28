@@ -29,6 +29,16 @@ jobs:
           PY
       - name: Apply batch 11-O1 patch
         run: python .github/scripts/batch11-o1-patch.py
+      - name: Normalize unaffected UI cache expectations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/runtime/js-integrity.js')
+          t=p.read_text(encoding='utf-8')
+          t=t.replace('worldmapui.js?v=20260928-thirdworld-batch11-o1','worldmapui.js?v=20260928-thirdworld-batch11-4')
+          t=t.replace('thirdworldui.js?v=20260928-thirdworld-batch11-o1','thirdworldui.js?v=20260928-thirdworld-batch11-4')
+          p.write_text(t,encoding='utf-8')
+          PY
       - name: Syntax and runtime integrity self-check
         run: |
           set -euo pipefail
