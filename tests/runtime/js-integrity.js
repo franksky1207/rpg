@@ -344,9 +344,10 @@ assert(!/SECOND_WORLD_ADVENTURE_UI_VERSION\)!==2/.test(finalIntegrity),"finalint
 assert(/ARENA_BY_WORLD_STATE_VERSION=2/.test(dungeonProgress),"dungeonprogress.js Arena By World state 應為 V2。");
 assert(/SECOND_WORLD_ARENA_UNLOCK_VERSION=2/.test(dungeonProgress),"dungeonprogress.js 宇宙 Arena unlock 應為 V2。");
 assert(/SECOND_WORLD_ARENA_RANK_CURVE_VERSION=2/.test(arena),"dungeonarena.js 第二世界 Arena Rank Curve 應為 V2。");
-assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0015\}\)/.test(arena),"dungeonarena.js 第二世界 Arena HP curve 係數不符。");
-assert(/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.001\}\)/.test(arena),"dungeonarena.js 第二世界 Arena damage curve 係數不符。");
-assert(/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.0004\}\)/.test(arena),"dungeonarena.js 第二世界 Arena DEF curve 係數不符。");
+assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena),"dungeonarena.js 第二世界 Arena HP curve 係數不符。");
+assert(/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena),"dungeonarena.js 第二世界 Arena damage curve 係數不符。");
+assert(/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"dungeonarena.js 第二世界 Arena DEF curve 係數不符。");
+assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"dungeonprogress.js Arena Balance 應為 V7／Rank Balance V4。");
 assert(/BOUNTY_BALANCE_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Balance 應為 V2。");
 assert(/BOUNTY_DIFFICULTY_FORMULA_VERSION=2/.test(bounty),"dungeonbounty.js Bounty Difficulty Formula 應為 V2。");
 assert(/const BASE_STAT=2700;/.test(secondWorldCombat),"secondworldcombat.js 宇宙 Boss 單一基準應為 2700。");
@@ -418,7 +419,7 @@ assert(/Math\.ceil\(VOID_MIRAGE_HP_BASE\+VOID_MIRAGE_HP_PER_FLOOR\*f\)/.test(dun
 assert(/Math\.ceil\(VOID_MIRAGE_ATK_BASE\+VOID_MIRAGE_ATK_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 ATK baseStats 未使用正式線性公式。");
 assert(/Math\.ceil\(VOID_MIRAGE_DEF_BASE\+VOID_MIRAGE_DEF_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 DEF baseStats 未使用正式線性公式。");
 assert(!/VOID_MIRAGE_(HP|ATK|DEF)_MULTIPLIER/.test(dungeonVoid),"虛空 V2 不得復活舊倍率公式。");
-assert(/voidMirageBaseStats\(floor\)/.test(dungeonGm)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
+assert(/voidMirageBaseStats\(floor\)/.test(dungeonVoid)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
 assert(index.includes('src="dungeonvoid.js?v=20260924-void-linear-cleanup1"'),"index.html 必須載入虛空線性公式 V2 cleanup cache-bust。");
 assert(/if\(world===1&&baseEnemy\?\.kind==="boss"\)return false;/.test(specialEncounter),"銀河紀元 Boss 必須維持禁止特殊遭遇。");
 assert(!/equivalentPower/.test(dungeonVoid),"虛空 V2 已改為純樓層線性公式，不得保留 equivalentPower 舊語意。");
