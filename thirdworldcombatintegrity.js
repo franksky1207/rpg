@@ -91,7 +91,8 @@
   if(typeof window.runThirdWorldBossCombat!=="function")fail("THIRD_WORLD_COMBAT_MISSING","runThirdWorldBossCombat 未載入");
   if(typeof window.createThirdWorldBossCombatSnapshot!=="function")fail("THIRD_WORLD_SNAPSHOT_MISSING","高維戰鬥快照 owner 未載入");
   if(typeof window.thirdWorldSettlementBasisFromResult!=="function")fail("SETTLEMENT_AUTHORITY_API_MISSING","settlementBasis authority API 未載入");
-  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==5)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 5",window.THIRD_WORLD_COMBAT_VERSION);
+  if(Number(window.THIRD_WORLD_COMBAT_VERSION)!==6)fail("THIRD_WORLD_COMBAT_VERSION","第三紀元戰鬥 adapter 版本應為 6",window.THIRD_WORLD_COMBAT_VERSION);
+  if(Number(window.THIRD_WORLD_COMBAT_REVIEW_POLICY_VERSION)!==1||Number(window.THIRD_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION)!==1)fail("THIRD_WORLD_REVIEW_POLICY","高維回顧必須宣告固定最終型態與正式 state 隔離政策",{policy:window.THIRD_WORLD_COMBAT_REVIEW_POLICY_VERSION,isolation:window.THIRD_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION});
   if(Number(window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION)!==1)fail("FORMAL_HP_OVERRIDE_GUARD_VERSION","正式 Boss HP override guard 應為版本 1",window.THIRD_WORLD_FORMAL_HP_OVERRIDE_GUARD_VERSION);
   if(Number(window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION)!==2)fail("RESULT_CONTRACT_VERSION","高維戰鬥 result contract 版本應為 2",window.THIRD_WORLD_COMBAT_RESULT_CONTRACT_VERSION);
   if(Number(window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION)!==2)fail("SETTLEMENT_BASIS_VERSION","高維 settlement basis 版本應為 2",window.THIRD_WORLD_COMBAT_SETTLEMENT_BASIS_VERSION);
@@ -144,6 +145,12 @@
     if(actual!==expected)fail("ABILITY_UNLOCK_MATRIX","高維七能力累進啟動矩陣錯誤",{percent,key,expected,actual});
    });
   });
+
+  const reviewState=fakeState();reviewState.thirdWorld.bosses[4].currentHp=0;
+  const reviewBefore=stable(reviewState),reviewSnapshot=window.createThirdWorldBossCombatSnapshot(4,{state:reviewState,review:true});
+  if(!reviewSnapshot||reviewSnapshot.reviewMode!==true||Number(reviewSnapshot.stage)!==9||Number(reviewSnapshot.stageBasisHp)!==Math.floor(maxHp*.1)||Number(reviewSnapshot.enemyStartHp)!==maxHp||Number(reviewSnapshot.enemyHealCap)!==maxHp||Number(reviewSnapshot.formalStartHp)!==0)fail("REVIEW_FINAL_FORM_SNAPSHOT","高維回顧必須固定 Stage 9／10% 最終能力，但以完整 Boss HP 開場",reviewSnapshot||null);
+  const reviewResult=window.runThirdWorldBossCombat(4,{review:true,state:reviewState,player:{hp:1000000000,atk:9999999999,def:9999999999,crit:0,dodge:0},startHp:1000000000,playerHealCap:1000000000,civilizationLevel:0,logs:false,useTestSpecializations:true,markLevels:zeroMarks(),rng:constantRng(.99)});
+  if(reviewResult?.ok!==true||reviewResult?.review!==true||reviewResult?.formalSettlementEligible===true||Number(reviewResult?.effectivePermanentDamage)!==0||Number(reviewResult?.xp)!==0||Number(reviewResult?.dimensionalStrings)!==0||stable(reviewState)!==reviewBefore)fail("REVIEW_STATE_ISOLATION","高維回顧不得產生 settlement、永久削血、EXP、維度之弦或任何正式 state 變更",{result:summary(reviewResult),stateChanged:stable(reviewState)!==reviewBefore});
 
   const profile=window.createThirdWorldBossCombatSnapshot(7,{ignoreUnlock:true,formalStartHp:maxHp,state:fakeState()})?.enemyAbilityProfile;
   const expectedProfile={initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:40};
