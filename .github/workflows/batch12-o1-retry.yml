@@ -17,6 +17,21 @@ jobs:
           node-version: 24
       - name: Apply patch
         run: python3 .github/batch12-o1-patch.py
+      - name: Sync runtime cache expectations
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/runtime/js-integrity.js')
+          s=p.read_text(encoding='utf-8')
+          pairs={
+            'src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-4"':'src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1"',
+            'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4"':'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o1"',
+          }
+          for old,new in pairs.items():
+            if s.count(old)!=1: raise SystemExit(f'cache test anchor mismatch: {old} count={s.count(old)}')
+            s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Self-check
         run: |
           set -euo pipefail
@@ -31,7 +46,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add storymigration.js thirdworldphase.js thirdworldmigrationregression.js storyruntimeintegrity.js thirdworldintegritycontract.js tests/story/flow.js index.html
+          git add storymigration.js thirdworldphase.js thirdworldmigrationregression.js storyruntimeintegrity.js thirdworldintegritycontract.js tests/story/flow.js tests/runtime/js-integrity.js index.html
           git diff --cached --quiet && exit 0
           git commit -m 'Reconcile legacy higher-dimensional story state'
           git push origin HEAD:main
