@@ -36,7 +36,7 @@ assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VE
 assert(/THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION=THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION=THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION/.test(progress),'storyprogress 未建立 settlement bridge／completion framework');
 assert(/THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION/.test(progress),'storyprogress 未建立 W3 post-flow Story drain');
 assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
-assert(/function consumeThirdWorldSettlement\(settlementResult,\{resume=false\}=\{\}\)/.test(progress),'storyprogress 缺少 settlement→shared Story bridge');
+assert(/function consumeThirdWorldSettlement\(settlement,\{queue=true\}=\{\}\)/.test(progress),'storyprogress 缺少 settlement→shared Story bridge');
 assert(/function thirdWorldStoryCompletionFramework\(target=state\)/.test(progress),'storyprogress 缺少 completion-ready framework');
 assert(/function drainThirdWorldPostFlowStories\(/.test(progress),'storyprogress 缺少 Summary 後的 W3 Story drain');
 assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
