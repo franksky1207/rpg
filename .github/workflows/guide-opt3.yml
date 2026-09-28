@@ -1,0 +1,55 @@
+name: Guide Optimization Batch3
+on:
+  push:
+    paths:
+      - '.github/workflows/guide-opt3.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply patch
+        run: python3 guide_opt3_patch.py
+      - name: Syntax and diff
+        run: |
+          set -euo pipefail
+          node --check gameguide.js
+          node --check tests/runtime/gameguide-extension-integrity.js
+          node --check tests/runtime/js-integrity.js
+          git diff --check
+      - name: Runtime checks
+        run: |
+          set -euo pipefail
+          node tests/runtime/gameguide-extension-integrity.js
+          node tests/runtime/js-integrity.js
+          node tests/runtime/vip-unbounded-integrity.js
+      - name: Story checks
+        run: |
+          set -euo pipefail
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+      - name: Semantic checks
+        run: |
+          set -euo pipefail
+          grep -q 'GAME_GUIDE_BEHAVIORAL_INTEGRITY_VERSION=1' gameguide.js
+          grep -q 'GAME_GUIDE_FAST_CATCH_UP_TEXT_VERSION=1' gameguide.js
+          grep -q '實際戰鬥仍依正式戰鬥與結算流程落帳' gameguide.js
+          ! grep -q '十王' gameguide.js
+          grep -q 'gameguide.js?v=20260928-thirdworld-guide-opt3' index.html
+      - name: Commit formal changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gameguide.js index.html tests/runtime/gameguide-extension-integrity.js tests/runtime/js-integrity.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Finalize game guide behavior optimization batch3'
+          git push origin HEAD:main
