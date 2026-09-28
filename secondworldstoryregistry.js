@@ -1,6 +1,26 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
+ const SHARED_ERA_REGISTRY_VERSION=1;
+ const THIRD_WORLD_TRIGGER_REGISTRY_VERSION=1;
+ const THIRD_WORLD_TRIGGER_POLICY_VERSION=1;
  const ERA_ID="universe";
+ const eraDefinitions=new Map();
+
+ function freeze(value){return Object.freeze(value);}
+ function refreshEraSnapshot(){window.CIVILIZATION_STORY_ERAS=freeze(Object.fromEntries(Array.from(eraDefinitions.entries())));return window.CIVILIZATION_STORY_ERAS;}
+ function registerStoryEra(definition){
+  if(!definition||typeof definition!=="object")return null;
+  const id=String(definition.id||"").trim();
+  if(!id||typeof definition.regions!=="function")return null;
+  const normalized=freeze({...definition,id,name:String(definition.name||id),regions:definition.regions});
+  eraDefinitions.set(id,normalized);
+  refreshEraSnapshot();
+  return normalized;
+ }
+ function storyEraDefinition(id){return eraDefinitions.get(String(id||""))||null;}
+ function storyEraIds(){return freeze(Array.from(eraDefinitions.keys()));}
+
+ registerStoryEra({id:"galaxy",name:"銀河紀元",regions:()=>Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[]});
 
  function regions(){return Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];}
  function bosses(){return Array.isArray(window.SECOND_WORLD_BOSSES)?window.SECOND_WORLD_BOSSES:[];}
@@ -20,11 +40,11 @@
   return null;
  }
  function buildRegistry(){
-  return regions().map(region=>Object.freeze({
+  return regions().map(region=>freeze({
    id:String(region.id),
    name:String(region.name),
    era:ERA_ID,
-   stories:Object.freeze(bosses().filter(boss=>Number(boss.regionIndex)===Number(region.index)).map(boss=>Object.freeze({
+   stories:freeze(bosses().filter(boss=>Number(boss.regionIndex)===Number(region.index)).map(boss=>freeze({
     id:storyIdForBossIndex(boss.index),
     label:String(boss.name),
     bossIndex:Number(boss.index),
@@ -34,12 +54,61 @@
   }));
  }
 
- const registry=Object.freeze(buildRegistry());
+ const registry=freeze(buildRegistry());
  window.CIVILIZATION_UNIVERSE_STORY_REGIONS=registry;
- window.CIVILIZATION_STORY_ERAS=Object.freeze({
-  galaxy:Object.freeze({id:"galaxy",name:"銀河紀元",regions:()=>Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[]}),
-  universe:Object.freeze({id:ERA_ID,name:"宇宙紀元",regions:()=>registry})
- });
+ registerStoryEra({id:ERA_ID,name:"宇宙紀元",regions:()=>registry});
+
+ function titleThreshold(stage){
+  const value=Math.max(1,Math.min(10,Math.floor(Number(stage)||0)));
+  const def=typeof window.thirdWorldTitleDefinition==="function"?window.thirdWorldTitleDefinition(value):null;
+  const threshold=Number(def?.thresholdRemainingPercentSum);
+  return Number.isFinite(threshold)?threshold:null;
+ }
+ const thirdWorldTriggers=freeze([
+  freeze({id:"higher-dimensional-intro",storyId:"higher-dimensional-intro",kind:"intro",stage:0,thresholdRemainingPercentSum:null,contentReady:false}),
+  ...Array.from({length:9},(_,index)=>{
+   const stage=index+1;
+   const storyId=`higher-dimensional-milestone-${String(stage).padStart(2,"0")}`;
+   return freeze({id:storyId,storyId,kind:"milestone",stage,thresholdRemainingPercentSum:titleThreshold(stage),contentReady:false});
+  }),
+  freeze({id:"higher-dimensional-final",storyId:"higher-dimensional-final",kind:"final",stage:10,thresholdRemainingPercentSum:titleThreshold(10),completionGate:"all-bosses-defeated",contentReady:false})
+ ]);
+ function thirdWorldStoryTriggerDescriptors(){return thirdWorldTriggers;}
+ function thirdWorldStoryTriggerForStage(value){const stage=Math.floor(Number(value));return thirdWorldTriggers.find(row=>row.stage===stage&&row.kind!=="intro")||null;}
+ function thirdWorldStoryTriggerDescriptor(value){
+  if(typeof value==="number")return thirdWorldStoryTriggerForStage(value);
+  const id=String(value||"");
+  return thirdWorldTriggers.find(row=>row.id===id||row.storyId===id)||null;
+ }
+ registerStoryEra({id:"higher-dimensional",name:"高維紀元",regions:()=>[],triggers:thirdWorldStoryTriggerDescriptors});
+
+ function validateSharedRegistry(){
+  const errors=[];
+  const ids=storyEraIds();
+  if(JSON.stringify(ids)!==JSON.stringify(["galaxy","universe","higher-dimensional"]))errors.push("ERA_ORDER");
+  if(registry.length!==10||registry.some(row=>row.stories.length!==10))errors.push("UNIVERSE_REGISTRY");
+  if(thirdWorldTriggers.length!==11)errors.push("THIRD_WORLD_TRIGGER_COUNT");
+  const milestones=thirdWorldTriggers.filter(row=>row.kind==="milestone"),finals=thirdWorldTriggers.filter(row=>row.kind==="final"),intros=thirdWorldTriggers.filter(row=>row.kind==="intro");
+  if(intros.length!==1||milestones.length!==9||finals.length!==1)errors.push("THIRD_WORLD_TRIGGER_TYPES");
+  const expectedThresholds=Array.from({length:9},(_,index)=>titleThreshold(index+1));
+  if(JSON.stringify(milestones.map(row=>row.stage))!==JSON.stringify([1,2,3,4,5,6,7,8,9]))errors.push("THIRD_WORLD_MILESTONE_STAGES");
+  if(JSON.stringify(milestones.map(row=>row.thresholdRemainingPercentSum))!==JSON.stringify(expectedThresholds))errors.push("THIRD_WORLD_MILESTONE_THRESHOLDS");
+  if(finals[0]?.stage!==10||finals[0]?.thresholdRemainingPercentSum!==titleThreshold(10)||milestones.some(row=>row.stage===10))errors.push("THIRD_WORLD_FINAL_STAGE10");
+  if(thirdWorldTriggers.some(row=>row.contentReady!==false))errors.push("THIRD_WORLD_CONTENT_PLACEHOLDER");
+  return freeze({version:SHARED_ERA_REGISTRY_VERSION,passed:errors.length===0,eraIds:ids,thirdWorldTriggerCount:thirdWorldTriggers.length,errors:freeze(errors)});
+ }
+
+ window.registerCivilizationStoryEra=registerStoryEra;
+ window.getCivilizationStoryEra=storyEraDefinition;
+ window.getCivilizationStoryEraIds=storyEraIds;
+ window.thirdWorldStoryTriggerDescriptors=thirdWorldStoryTriggerDescriptors;
+ window.thirdWorldStoryTriggerForStage=thirdWorldStoryTriggerForStage;
+ window.thirdWorldStoryTriggerDescriptor=thirdWorldStoryTriggerDescriptor;
+ window.CIVILIZATION_STORY_ERA_REGISTRY_VERSION=SHARED_ERA_REGISTRY_VERSION;
+ window.THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION=THIRD_WORLD_TRIGGER_REGISTRY_VERSION;
+ window.THIRD_WORLD_STORY_TRIGGER_POLICY_VERSION=THIRD_WORLD_TRIGGER_POLICY_VERSION;
+ window.THIRD_WORLD_STORY_TRIGGER_DESCRIPTORS=thirdWorldTriggers;
+ window.CIVILIZATION_STORY_ERA_REGISTRY_INTEGRITY=validateSharedRegistry();
  window.universeStoryIdForBossIndex=storyIdForBossIndex;
  window.universeBossIndexForStoryId=bossIndexForStoryId;
  window.UNIVERSE_STORY_REGISTRY_VERSION=VERSION;
