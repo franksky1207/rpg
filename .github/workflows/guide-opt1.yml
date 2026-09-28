@@ -1,5 +1,5 @@
 name: Guide Optimization Batch1
-# post-commit follow-up: restore W1/W2 base text and finish W3 dynamic owner projection
+# retry post-commit follow-up after converting dynamic W3 guide items to template literals
 on:
   push:
     paths:
