@@ -1,5 +1,5 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -134,20 +134,7 @@
  }
  function applyThirdWorldUniverseReviewSemantics(){
   if(typeof document==="undefined"||phase()!==3||window.getAdventureEraView?.()!=="universe-review")return false;
-  const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");
-  if(!screen)return false;
-  const notice=screen.querySelector(".universe-adventure-notice");
-  const title=notice?.querySelector("b"),copy=notice?.querySelector(".muted");
-  if(title)title.textContent="宇宙紀元・回顧";
-  if(copy)copy.textContent="宇宙紀元主線已完成並轉為歷史回顧；此頁不再產生正式成長進度。";
-  screen.querySelectorAll(".universe-boss-action").forEach(button=>{
-   if(button.dataset.universeContextualInventory==="1"||button.textContent.trim()==="背包")return;
-   button.disabled=true;
-   button.onclick=null;
-   button.removeAttribute("onclick");
-   button.textContent="正式挑戰已結束";
-  });
-  return true;
+  return !!document.querySelector(".universe-review-adventure-screen");
  }
  function apply(){
   applyHomeSemantics();
@@ -168,7 +155,7 @@
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=2;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=2;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
- window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=1;
+ window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;
  window.applyThirdWorldCompletedSystemSemantics=function(){applySettingsSemantics();};
  window.applyThirdWorldUniverseReviewSemantics=applyThirdWorldUniverseReviewSemantics;

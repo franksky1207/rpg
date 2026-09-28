@@ -1,6 +1,8 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const BACKGROUND_GM_GATE_VERSION=1;
+ const REVIEW_FLOW_VERSION=1;
+ const REVIEW_STATE_ISOLATION_VERSION=1;
  let busy=false;
  let activeContext=null;
 
@@ -136,12 +138,18 @@
   const sleep=typeof window.mainBattlePresentationSleep==="function"?window.mainBattlePresentationSleep:undefined;
   await window.animateStructuredCombatPresentation(combat,{mode:"main",sleep,clearAfter:true,clearReason:"second-world-main-battle-end"});
  }
- function createContext(index,boss,continuous){
+ function createContext(index,boss,continuous,review=false){
   return {
-   bossIndex:index,boss,continuous:continuous===true,stopRequested:false,stopReason:null,
+   bossIndex:index,boss,continuous:continuous===true,review:review===true,stopRequested:false,stopReason:null,
    completed:0,wins:0,totalXp:0,totalDarkMatter:0,totalDarkEnergy:0,items:[],autoSoldCount:0,
-   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null,currentEncounter:null,presenting:false,catchUpNeedsFinalSync:false
+   startedAt:Date.now(),backgroundStarted:false,lastCombat:null,lastPenalty:null,currentEncounter:null,presenting:false,catchUpNeedsFinalSync:false,reviewPlayerStartHp:0,reviewPlayerMaxHp:0
   };
+ }
+ function showReviewResult(boss,combat){
+  const {title,detail,modal}=battleModal();if(!title||!detail||!modal)return;
+  title.textContent="宇宙紀元・回顧";
+  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${boss?.name||"宇宙紀元 Boss"} Lv.${boss?.level||"—"}</div><div class="notice"><b>${combat?.win===true?"回顧勝利":"回顧挑戰結束"}</b><div class="muted" style="margin-top:6px">本場為單場純回顧挑戰，不產生 EXP、暗物質、暗能量、裝備、主線進度、文明災厄、特殊遭遇、離線樣本或死亡懲罰；正式角色 HP 與所有正式 state 皆不變。</div></div><div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
+  modal.classList.add("show");
  }
  function publishContext(ctx){activeContext=ctx;window.activeSecondWorldMainlineContext=ctx;}
  function clearContext(ctx){if(activeContext===ctx)activeContext=null;if(window.activeSecondWorldMainlineContext===ctx)window.activeSecondWorldMainlineContext=null;}
@@ -157,6 +165,34 @@
    else if(row.sale)ctx.autoSoldCount++;
   });
  }
+ async function runReviewFlow(index){
+  if(busy||typeof battleBusy!=="undefined"&&battleBusy)return false;
+  const targetState=typeof state!=="undefined"&&state&&typeof state==="object"?state:null;
+  if(!(typeof window.canRunSecondWorldBossReview==="function"&&window.canRunSecondWorldBossReview(index,targetState)))return alert("此宇宙紀元 Boss 尚未完成，無法回顧。");
+  const boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(index):null;if(!boss)return false;
+  const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!player)return false;
+  const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;if(!encounter)return false;
+  const ctx=createContext(index,boss,false,true);ctx.currentEncounter=encounter;ctx.reviewPlayerMaxHp=Math.max(1,Number(player.hp)||1);ctx.reviewPlayerStartHp=ctx.reviewPlayerMaxHp;publishContext(ctx);
+  const before=JSON.stringify(targetState);busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true);
+  let combat=null;
+  try{
+   if(typeof render==="function")render();
+   combat=window.runSecondWorldBossCombat(index,{review:true,state:targetState,player,startHp:ctx.reviewPlayerStartHp,encounter,logs:true,preparePresentation:true});ctx.lastCombat=combat;
+   if(!combat?.ok||combat.review!==true||combat.settlementReady!==false)throw new Error(combat?.reason||"宇宙回顧戰建立失敗。");
+   ctx.presenting=true;try{await presentCombat(combat);}finally{ctx.presenting=false;}
+   if(JSON.stringify(targetState)!==before)throw new Error("宇宙回顧戰不應修改正式 state。");
+   setTimeout(()=>showReviewResult(boss,combat),0);
+   return true;
+  }catch(error){console.error("[文明戰線] 宇宙紀元回顧失敗",error);alert("宇宙紀元回顧發生錯誤，正式進度未受影響。");return false;}
+  finally{
+   ctx.currentEncounter=null;ctx.presenting=false;
+   if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("second-world-review-finalize");
+   if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+   busy=false;if(typeof battleBusy!=="undefined")battleBusy=false;clearContext(ctx);
+   if(typeof render==="function")render();
+  }
+ }
+
  async function runFlow(index,continuous){
   if(busy||typeof battleBusy!=="undefined"&&battleBusy)return false;
   if(!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index)))return alert("此 Boss 尚未解鎖。");
@@ -259,6 +295,7 @@
 
  window.startSecondWorldBossBattle=function(value){return runFlow(Math.floor(Number(value)),false);};
  window.startSecondWorldBossContinuous=function(value){return runFlow(Math.floor(Number(value)),true);};
+ window.startSecondWorldBossReview=function(value){return runReviewFlow(Math.floor(Number(value)));};
  window.requestSecondWorldContinuousStop=function(){
   const ctx=activeContext;
   if(!ctx?.continuous)return false;
@@ -269,13 +306,15 @@
  window.secondWorldMainlinePresentationActive=function(){return activeContext?.presenting===true;};
  window.secondWorldBackgroundBattleEnabled=function(){return gmBackgroundEnabled();};
  window.SECOND_WORLD_MAINLINE_VERSION=VERSION;
+ window.SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION=REVIEW_FLOW_VERSION;
+ window.SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;
  window.SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION=1;
  window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION=1;
  window.SECOND_WORLD_CALAMITY_APPEARANCE_TRIGGER_VERSION=1;
  window.SECOND_WORLD_SPECIAL_ENCOUNTER_HOOK_VERSION=1;
  window.SECOND_WORLD_MAINLINE_INTEGRITY={
-  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1&&Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)===1,
-  version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION
+  passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.startSecondWorldBossReview==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION)===1&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1&&Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)===1,
+  version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,reviewFlowVersion:REVIEW_FLOW_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION
  };
 })();

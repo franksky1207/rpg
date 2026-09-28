@@ -1,6 +1,8 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const SETTLEMENT_READY=true;
+ const REVIEW_POLICY_VERSION=1;
+ const REVIEW_STATE_ISOLATION_VERSION=1;
  const BASE_STAT=2700;
  const STAT_RATIO=Object.freeze({hp:12,atk:2,def:1});
  const STEP_RATE=.015;
@@ -55,6 +57,12 @@
   if(!secondWorldFormalCombatEnabled(targetState))return false;
   return typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState);
  }
+ function canRunSecondWorldBossReview(value,target=null){
+  const index=clampBossIndex(value);
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  if(index<0||holder?.thirdWorld?.entered!==true||holder?.secondWorld?.entered!==true)return false;
+  return typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(index,holder)===true;
+ }
  function formalMainlineHpLockActive(){
   return typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world2-mainline")===true;
  }
@@ -62,9 +70,14 @@
   const index=clampBossIndex(value);
   if(index<0)return {ok:false,reason:"找不到宇宙紀元 Boss。"};
   const targetState=options.state&&typeof options.state==="object"?options.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
-  if(options.ignoreUnlock!==true&&!secondWorldFormalCombatEnabled(targetState))return {ok:false,reason:"宇宙紀元已轉為回顧，無法產生正式主線進度。"};
-  if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState))){
-   return {ok:false,reason:"此宇宙紀元 Boss 尚未解鎖。"};
+  const reviewMode=options.review===true;
+  if(reviewMode){
+   if(!canRunSecondWorldBossReview(index,targetState))return {ok:false,review:true,reason:"只有已完成的宇宙紀元主線 Boss 可以進行回顧。"};
+  }else{
+   if(options.ignoreUnlock!==true&&!secondWorldFormalCombatEnabled(targetState))return {ok:false,reason:"宇宙紀元已轉為回顧，無法產生正式主線進度。"};
+   if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState))){
+    return {ok:false,reason:"此宇宙紀元 Boss 尚未解鎖。"};
+   }
   }
   if(typeof window.runCombatCore!=="function")return {ok:false,reason:"正式戰鬥核心尚未載入。"};
   const enemy=options.encounter&&typeof options.encounter==="object"?options.encounter:secondWorldBossEncounter(index,options);
@@ -90,6 +103,7 @@
   });
   return {
    ok:true,
+   review:reviewMode,
    win:combat.win===true,
    e:enemy,
    logs:combat.logs||[],
@@ -101,7 +115,7 @@
    bossIndex:index,
    world:2,
    civilizationDamageMultiplier:civilizationMultiplier,
-   settlementReady:SETTLEMENT_READY,
+   settlementReady:reviewMode?false:SETTLEMENT_READY,
    xp:0,darkMatter:0,darkEnergy:0,items:[],
    formalProgressChanged:false
   };
@@ -112,7 +126,15 @@
   if(!first||first.level!==505||first.hp!==32400||first.atk!==5400||first.def!==2700)errors.push({code:"FIRST_BOSS_BASE",first});
   if(!last||last.level!==1000||Math.abs(last.multiplier-2.485)>1e-9||last.hp!==80514||last.atk!==13419||last.def!==6710)errors.push({code:"LAST_BOSS_BASE",last});
   if(SETTLEMENT_READY!==true)errors.push({code:"SETTLEMENT_GATE"});
-  return {passed:errors.length===0,version:VERSION,settlementReady:SETTLEMENT_READY,errors};
+  try{
+   const reviewState={level:1000,hp:12345,secondWorld:{entered:true,civilizationLevel:10,mainline:{bossKilled:Array.from({length:100},()=>true)}},thirdWorld:{entered:true}};
+   const before=JSON.stringify(reviewState),player={hp:1000000,atk:1000000000,def:1000000,crit:0,dodge:0};
+   const review=runSecondWorldBossCombat(99,{review:true,state:reviewState,player,startHp:player.hp,encounter:secondWorldBossEncounter(99,{traits:[]}),logs:false,preparePresentation:false,rng:()=>.99});
+   if(review?.ok!==true||review?.review!==true||review?.settlementReady!==false||review?.formalProgressChanged!==false||review?.xp!==0||review?.darkMatter!==0||review?.darkEnergy!==0||!Array.isArray(review?.items)||review.items.length!==0)errors.push({code:"REVIEW_ZERO_PROGRESS",review});
+   if(JSON.stringify(reviewState)!==before)errors.push({code:"REVIEW_STATE_MUTATION"});
+   if(canRunSecondWorldBossCombat(99,{state:reviewState})!==false||canRunSecondWorldBossReview(99,reviewState)!==true)errors.push({code:"REVIEW_FORMAL_GATE_ISOLATION"});
+  }catch(error){errors.push({code:"REVIEW_INTEGRITY_EXCEPTION",error:String(error?.message||error)});}
+  return {passed:errors.length===0,version:VERSION,settlementReady:SETTLEMENT_READY,reviewPolicyVersion:REVIEW_POLICY_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION,errors};
  }
 
  window.SECOND_WORLD_COMBAT_VERSION=VERSION;
@@ -123,8 +145,11 @@
  window.secondWorldBossBaseStats=secondWorldBossBaseStats;
  window.secondWorldBossEncounter=secondWorldBossEncounter;
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
+ window.canRunSecondWorldBossReview=canRunSecondWorldBossReview;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
  window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
+ window.SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION=REVIEW_POLICY_VERSION;
+ window.SECOND_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;
  window.SECOND_WORLD_FORMAL_COMBAT_PHASE_GATE_VERSION=1;
  window.SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=2;
  window.SECOND_WORLD_COMBAT_INTEGRITY=validate();

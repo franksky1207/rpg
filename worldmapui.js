@@ -292,9 +292,10 @@
     return !!region&&typeof window.secondWorldRegionVisible==="function"&&window.secondWorldRegionVisible(region.index);
   }
 
-  function secondWorldVisibleBosses(region){
+  function secondWorldVisibleBosses(region,reviewMode=false){
     if(!region||typeof window.secondWorldBossesForRegion!=="function")return [];
-    return window.secondWorldBossesForRegion(region.index).filter(boss=>typeof window.secondWorldBossVisible==="function"&&window.secondWorldBossVisible(boss.index));
+    const bosses=window.secondWorldBossesForRegion(region.index);
+    return reviewMode?bosses:bosses.filter(boss=>typeof window.secondWorldBossVisible==="function"&&window.secondWorldBossVisible(boss.index));
   }
 
   function secondWorldRegionKilledCount(region){
@@ -302,17 +303,19 @@
     return window.secondWorldBossesForRegion(region.index).filter(boss=>typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(boss.index)).length;
   }
 
-  function secondWorldBossCardHtml(boss){
+  function secondWorldBossCardHtml(boss,reviewMode=false){
     const killed=typeof window.secondWorldBossKilled==="function"&&window.secondWorldBossKilled(boss.index);
-    const canChallenge=typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(boss.index);
-    const latestProgress=Number(boss.index)===secondWorldLatestProgressBossIndex();
+    const canChallenge=!reviewMode&&typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(boss.index);
+    const latestProgress=!reviewMode&&Number(boss.index)===secondWorldLatestProgressBossIndex();
     const stats=typeof window.secondWorldBossBaseStats==="function"?window.secondWorldBossBaseStats(boss.index):null;
-    const status=killed?"已擊敗":canChallenge?"可挑戰":"尚未開放";
+    const status=reviewMode?(killed?"已完成・可回顧":"未完成"):killed?"已擊敗":canChallenge?"可挑戰":"尚未開放";
     const statLine=stats?`<div class="universe-boss-stats">HP ${stats.hp.toLocaleString()}　ATK ${stats.atk.toLocaleString()}　DEF ${stats.def.toLocaleString()}</div>`:"";
     const active=window.activeSecondWorldMainlineContext;
     const activeHere=active?.continuous===true&&Number(active.bossIndex)===Number(boss.index);
     let action="";
-    if(activeHere)action=`<button class="btn danger universe-boss-action" type="button" onclick="requestSecondWorldContinuousStop()">本場結束後停止</button>`;
+    if(reviewMode){
+      action=killed&&typeof window.startSecondWorldBossReview==="function"?`<div class="universe-boss-actions"><button class="btn blue universe-boss-action universe-boss-review-action" type="button" onclick="startSecondWorldBossReview(${boss.index})">回顧挑戰</button></div>`:`<button class="btn universe-boss-action" type="button" disabled>未完成</button>`;
+    }else if(activeHere)action=`<button class="btn danger universe-boss-action" type="button" onclick="requestSecondWorldContinuousStop()">本場結束後停止</button>`;
     else{
       const buttons=[];
       if(canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"){
@@ -322,12 +325,12 @@
       if(latestProgress)buttons.push(`<button class="btn universe-boss-action" type="button" data-universe-contextual-inventory="1" onclick="openAdventureInventory()">背包</button>`);
       if(buttons.length)action=`<div class="universe-boss-actions">${buttons.join("")}</div>`;
     }
-    return `<div class="map-card universe-boss-card ${killed?"cleared":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${activeHere?"連續戰鬥中":status}</div>${action}</div>`;
+    return `<div class="map-card universe-boss-card ${killed?"cleared":""} ${reviewMode?"review":""}" data-second-world-boss="${boss.index}" aria-label="${boss.name} Lv.${boss.level}，${status}"><b>${boss.name}</b><div class="muted">Lv.${boss.level}</div>${statLine}<div class="map-status">${activeHere?"連續戰鬥中":status}</div>${action}</div>`;
   }
 
-  function secondWorldRegionHtml(region,activeIndex){
+  function secondWorldRegionHtml(region,activeIndex,reviewMode=false){
     const open=!!secondWorldRegionOpenState[region.id];
-    const visibleBosses=secondWorldVisibleBosses(region);
+    const visibleBosses=secondWorldVisibleBosses(region,reviewMode);
     const killed=secondWorldRegionKilledCount(region);
     const completed=killed>=10;
     const current=region.index===activeIndex;
@@ -337,7 +340,7 @@
         <span class="world-region-title-wrap"><b class="world-region-title">${region.name}</b><span class="world-region-level">Lv.${region.minLevel}～${region.maxLevel}</span></span>
         <span class="world-region-meta"><span>${progressText}</span><span class="world-region-toggle">${open?"▲":"▼"}</span></span>
       </button>
-      ${open?`<div class="world-region-body"><div class="map-grid universe-boss-grid">${visibleBosses.map(secondWorldBossCardHtml).join("")}</div></div>`:""}
+      ${open?`<div class="world-region-body"><div class="map-grid universe-boss-grid">${visibleBosses.map(boss=>secondWorldBossCardHtml(boss,reviewMode)).join("")}</div></div>`:""}
     </section>`;
   }
 
@@ -357,20 +360,21 @@
     const boss=ctx?.boss||encounter;
     if(!encounter||!boss)return "";
     const s=typeof playerCombatStats==="function"?playerCombatStats():{hp:1};
+    const review=ctx?.review===true,playerMax=review?Math.max(1,Number(ctx.reviewPlayerMaxHp)||Number(s.hp)||1):Math.max(1,Number(s.hp)||1),playerShownHp=review?Math.max(0,Number(ctx.reviewPlayerStartHp)||playerMax):Math.max(0,Number(state.hp)||0);
     const progress=typeof window.levelProgressSnapshot==="function"?window.levelProgressSnapshot(state):{atCap:false,exp:Number(state.exp)||0,need:1,percent:0};
-    const hpPct=s.hp?Math.max(0,Math.min(100,(Number(state.hp)||0)/s.hp*100)):0;
+    const hpPct=playerMax?Math.max(0,Math.min(100,playerShownHp/playerMax*100)):0;
     const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(encounter.traits):"";
     const round=Math.max(1,Math.floor(Number(ctx.completed)||0)+1);
     const continuous=ctx.continuous===true;
     const requested=ctx.stopRequested===true;
     const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
     const speedText=[1,1.5,2].includes(speed)?speed:1;
-    const head=continuous?`連續戰鬥・第 ${round} 場`:"單場戰鬥";
+    const head=review?"宇宙紀元・回顧｜單場":continuous?`連續戰鬥・第 ${round} 場`:"單場戰鬥";
     const stop=continuous?`<div class="continuous-stop-wrap"><button class="btn danger" onclick="requestSecondWorldContinuousStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
     return `<section class="combat-screen universe-combat-screen">
       <div class="combat-head">${head}<span class="universe-combat-speed">${speedText}×</span></div>
       <div class="combat-arena">
-       <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${state.level}</h2><div class="muted">暗物質 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}　暗能量 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.max(0,Math.floor(Number(state.hp)||0))} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+progress.need}</span></div><div class="bar"><span class="xp" style="width:${progress.percent}%"></span></div></div></div>
+       <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${state.level}</h2>${review?'<div class="muted">純回顧挑戰｜無正式收益</div>':`<div class="muted">暗物質 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}　暗能量 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</div>`}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.max(0,Math.floor(playerShownHp))} / ${Math.max(1,Math.floor(playerMax))}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div>${review?"":`<div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+progress.need}</span></div><div class="bar"><span class="xp" style="width:${progress.percent}%"></span></div></div>`}</div>
        <div class="combat-vs">VS</div>
        <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${encounter.name} Lv.${encounter.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${encounter.hp} / ${encounter.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
       </div>
@@ -391,15 +395,18 @@
     const regions=secondWorldRegions();
     if(!regions.length)return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">宇宙紀元主線</h2><span></span></div><div class="notice"><b>宇宙紀元主線資料尚未載入。</b></div></section>`;
     syncSecondWorldRegionOpenState();
-    const activeIndex=secondWorldActiveRegionIndex();
-    const visible=regions.filter(secondWorldRegionVisible);
-    if(window.getAdventureEraView?.()==="galaxy-review")return galaxyReviewAdventureHtml();
-    return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
+    const activeIndex=secondWorldActiveRegionIndex(),era=window.getAdventureEraView?.();
+    if(era==="galaxy-review")return galaxyReviewAdventureHtml();
+    const reviewMode=currentAdventureWorldPhase()===3&&era==="universe-review";
+    const visible=reviewMode?regions:regions.filter(secondWorldRegionVisible);
+    const notice=reviewMode?'<div class="notice universe-adventure-notice"><b>宇宙紀元・回顧</b><div class="muted" style="margin-top:6px">第二紀元已完成的 10 大區、100 名主線 Boss 均可進行單場回顧。回顧戰為純挑戰，不影響目前正式進度。</div></div>':'<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div>';
+    return `<section class="map-screen universe-adventure-screen ${reviewMode?"universe-review-adventure-screen":""}"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}${notice}<div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex,reviewMode)).join("")}</div></section>`;
   };
 
   window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2;
   window.SECOND_WORLD_ADVENTURE_UI_VERSION=5;
-  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=4;
+  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=5;
+  window.SECOND_WORLD_UNIVERSE_REVIEW_CARD_MODE_VERSION=1;
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
   window.ADVENTURE_ERA_VIEW_OWNER_VERSION=1;
   window.ADVENTURE_ERA_SESSION_POLICY_VERSION=1;
