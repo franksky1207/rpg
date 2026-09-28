@@ -38,7 +38,8 @@ if anchor not in s: raise SystemExit('terminology assertion missing')
 extra=r'''
 assert(!/十名高維存在/.test(thirdWorldGuideSource)&&/10 名高維存在/.test(thirdWorldGuideSource),"W3 Guide 正式玩家文字必須統一使用數字形式『10 名高維存在』。");
 assert(/rules\.offlineMaxHours\.toLocaleString\(\)/.test(thirdWorldGuideSource)&&/rules\.equipmentNameBandCount/.test(thirdWorldGuideSource),"W3 Guide 的離線上限與裝備命名階段數必須由 canonical owner 投影。");
-assert(!/"[^"\n]*\$\{rules\./.test(thirdWorldGuideSource),"W3 Guide 的動態 rule 值不得放在普通雙引號字串中；必須使用可插值的 template literal。");'''
+const w3GuideRuleInterpolationLines=thirdWorldGuideSource.split("\n").filter(line=>line.includes("${rules."));
+assert(w3GuideRuleInterpolationLines.length>=7&&w3GuideRuleInterpolationLines.every(line=>line.includes("`")),"W3 Guide 的動態 rule 值必須存在可插值的 template literal 中。");'''
 s=s.replace(anchor,anchor+extra,1)
 p.write_text(s,encoding='utf-8')
 print('guide optimization batch1 follow-up applied')
