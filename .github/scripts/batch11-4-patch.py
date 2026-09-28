@@ -1,0 +1,92 @@
+from pathlib import Path
+
+def read(path): return Path(path).read_text(encoding='utf-8')
+def write(path,text): Path(path).write_text(text,encoding='utf-8')
+def rep(path,old,new,count=1):
+    text=read(path); found=text.count(old)
+    if found!=count: raise SystemExit(f'{path}: expected {count} match(es), found {found}: {old[:140]!r}')
+    write(path,text.replace(old,new))
+
+# worldmapui.js: one shared review-runtime source/lock owner for all three eras.
+rep('worldmapui.js','  let adventureReviewBattleActive=false;\n','  let adventureReviewBattleActive=false;\n  let adventureReviewBattleSource=null;\n')
+rep('worldmapui.js','    return galaxyReviewBattleActive===true||adventureReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;\n','    return adventureReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;\n')
+rep('worldmapui.js','  window.setGalaxyReviewBattleActive=function(value){galaxyReviewBattleActive=value===true;};\n  window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};\n','''  window.setGalaxyReviewBattleActive=function(value){
+    galaxyReviewBattleActive=value===true;
+    if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(galaxyReviewBattleActive,galaxyReviewBattleActive?"galaxy":null);
+    return galaxyReviewBattleActive;
+  };
+  window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};
+''')
+rep('worldmapui.js','  window.setAdventureReviewBattleActive=function(value){adventureReviewBattleActive=value===true;return adventureReviewBattleActive;};\n  window.isAdventureReviewBattleActive=function(){return adventureReviewBattleActive===true;};\n','''  window.setAdventureReviewBattleActive=function(value,source=null){
+    if(value===true){
+      adventureReviewBattleActive=true;
+      const next=String(source||adventureReviewBattleSource||"");
+      adventureReviewBattleSource=["galaxy","universe","higher-dimensional"].includes(next)?next:null;
+      return true;
+    }
+    adventureReviewBattleActive=false;adventureReviewBattleSource=null;return false;
+  };
+  window.isAdventureReviewBattleActive=function(){return adventureReviewBattleActive===true;};
+  window.getAdventureReviewBattleSource=function(){return adventureReviewBattleActive===true?adventureReviewBattleSource:null;};
+''')
+rep('worldmapui.js','  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=2;\n','  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=3;\n  window.ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=1;\n')
+
+# thirdworldui.js: tag the shared review runtime as higher-dimensional.
+rep('thirdworldui.js',' const VERSION=8;\n',' const VERSION=9;\n')
+rep('thirdworldui.js',' const REVIEW_UI_VERSION=1;\n',' const REVIEW_UI_VERSION=2;\n')
+rep('thirdworldui.js','  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true);\n','  if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"higher-dimensional");\n')
+rep('thirdworldui.js','  if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");\n','  if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function"||typeof window.getAdventureReviewBattleSource!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");\n')
+
+# secondworldmainline.js: keep Universe review lock through the shared result modal.
+rep('secondworldmainline.js',' const VERSION=9;\n const BACKGROUND_GM_GATE_VERSION=1;\n const REVIEW_FLOW_VERSION=1;\n const REVIEW_STATE_ISOLATION_VERSION=1;\n',' const VERSION=10;\n const BACKGROUND_GM_GATE_VERSION=1;\n const REVIEW_FLOW_VERSION=1;\n const REVIEW_STATE_ISOLATION_VERSION=1;\n const REVIEW_RESULT_LOCK_VERSION=1;\n')
+rep('secondworldmainline.js','  const {title,detail,modal}=battleModal();if(!title||!detail||!modal)return;\n  title.textContent="宇宙紀元・回顧";\n','  const {title,detail,modal}=battleModal();if(!title||!detail||!modal){if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);return false;}\n  title.textContent="宇宙紀元・回顧";\n')
+rep('secondworldmainline.js','  modal.classList.add("show");\n }\n function publishContext','  modal.classList.add("show");return true;\n }\n function publishContext',1)
+rep('secondworldmainline.js','  const before=JSON.stringify(targetState);busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true);\n  let combat=null;\n','  const before=JSON.stringify(targetState);busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"universe");\n  let combat=null,reviewResultQueued=false;\n')
+rep('secondworldmainline.js','   setTimeout(()=>showReviewResult(boss,combat),0);\n   return true;\n','   reviewResultQueued=true;setTimeout(()=>showReviewResult(boss,combat),0);\n   return true;\n')
+rep('secondworldmainline.js','   if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);\n   busy=false;if(typeof battleBusy!=="undefined")battleBusy=false;clearContext(ctx);\n','   if(!reviewResultQueued&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);\n   busy=false;if(typeof battleBusy!=="undefined")battleBusy=false;clearContext(ctx);\n')
+rep('secondworldmainline.js',' window.SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;\n',' window.SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;\n window.SECOND_WORLD_MAINLINE_REVIEW_RESULT_LOCK_VERSION=REVIEW_RESULT_LOCK_VERSION;\n')
+rep('secondworldmainline.js','  version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,reviewFlowVersion:REVIEW_FLOW_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION\n','  version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,reviewFlowVersion:REVIEW_FLOW_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION,reviewResultLockVersion:REVIEW_RESULT_LOCK_VERSION\n')
+
+# ui.js: Galaxy review uses shared source; shared result close returns to the correct review surface.
+rep('ui.js','  state.hp=formalHp;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();\n','  state.hp=formalHp;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();\n')
+rep('ui.js','window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=3;\nwindow.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;\n','window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=4;\nwindow.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;\nwindow.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;\n')
+rep('ui.js','''function closeBattleResultModal(){
+ const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
+ adventureScreen="prepare";
+ if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ render();
+''','''function closeBattleResultModal(){
+ const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
+ const reviewSource=typeof window.getAdventureReviewBattleSource==="function"?window.getAdventureReviewBattleSource():null;
+ adventureScreen=reviewSource==="galaxy"?"review-prepare":"prepare";
+ if(reviewSource==="galaxy"&&typeof window.setGalaxyReviewBattleActive==="function")window.setGalaxyReviewBattleActive(false);
+ else if(reviewSource&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+ const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():null;
+ if(secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ render();
+''')
+
+# thirdworldintegritycontract.js versions/APIs.
+rep('thirdworldintegritycontract.js',' const VERSION=29;\n',' const VERSION=30;\n')
+rep('thirdworldintegritycontract.js','  THIRD_WORLD_PLAYER_UI_VERSION:8,','  THIRD_WORLD_PLAYER_UI_VERSION:9,')
+rep('thirdworldintegritycontract.js','THIRD_WORLD_PLAYER_UI_REVIEW_VERSION:1,','THIRD_WORLD_PLAYER_UI_REVIEW_VERSION:2,')
+rep('thirdworldintegritycontract.js','  SECOND_WORLD_COMBAT_VERSION:2,SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION:1,SECOND_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION:1,SECOND_WORLD_MAINLINE_VERSION:9,SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION:1,SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION:1,SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION:5,SECOND_WORLD_UNIVERSE_REVIEW_CARD_MODE_VERSION:1,\n','  SECOND_WORLD_COMBAT_VERSION:2,SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION:1,SECOND_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION:1,SECOND_WORLD_MAINLINE_VERSION:10,SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION:1,SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION:1,SECOND_WORLD_MAINLINE_REVIEW_RESULT_LOCK_VERSION:1,SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION:5,SECOND_WORLD_UNIVERSE_REVIEW_CARD_MODE_VERSION:1,\n')
+rep('thirdworldintegritycontract.js','  ADVENTURE_ERA_VIEW_OWNER_VERSION:1,ADVENTURE_ERA_SESSION_POLICY_VERSION:1,ADVENTURE_ERA_RUNTIME_LOCK_VERSION:2,\n','  ADVENTURE_ERA_VIEW_OWNER_VERSION:1,ADVENTURE_ERA_SESSION_POLICY_VERSION:1,ADVENTURE_ERA_RUNTIME_LOCK_VERSION:3,ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION:1,\n')
+rep('thirdworldintegritycontract.js','"setAdventureReviewBattleActive","isAdventureReviewBattleActive","canRunSecondWorldBossReview"','"setAdventureReviewBattleActive","isAdventureReviewBattleActive","getAdventureReviewBattleSource","canRunSecondWorldBossReview"')
+
+# tests/runtime/js-integrity.js convergence assertions and cache-busts.
+rep('tests/runtime/js-integrity.js','assert(/const VERSION=9;/.test(secondWorldMainline)&&/SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION=REVIEW_FLOW_VERSION/.test(secondWorldMainline)&&/startSecondWorldBossReview=function/.test(secondWorldMainline)&&/runSecondWorldBossCombat\\(index,\\{review:true/.test(secondWorldMainline),"宇宙回顧必須走獨立單場 review flow，共用 Combat/presentation 且不進正式 settlement。");\n','assert(/const VERSION=10;/.test(secondWorldMainline)&&/SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION=REVIEW_FLOW_VERSION/.test(secondWorldMainline)&&/SECOND_WORLD_MAINLINE_REVIEW_RESULT_LOCK_VERSION=REVIEW_RESULT_LOCK_VERSION/.test(secondWorldMainline)&&/startSecondWorldBossReview=function/.test(secondWorldMainline)&&/runSecondWorldBossCombat\\(index,\\{review:true/.test(secondWorldMainline)&&/setAdventureReviewBattleActive\\(true,"universe"\\)/.test(secondWorldMainline)&&/!reviewResultQueued/.test(secondWorldMainline),"宇宙回顧必須走獨立單場 review flow，且 shared review lock 要維持到結果視窗關閉。");\n')
+rep('tests/runtime/js-integrity.js','assert(/ADVENTURE_ERA_VIEW_OWNER_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_SESSION_POLICY_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_RUNTIME_LOCK_VERSION=2/.test(worldmap),"三紀元冒險切換必須由單一 session-only owner 持有，並具備 runtime lock。");\n','assert(/ADVENTURE_ERA_VIEW_OWNER_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_SESSION_POLICY_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_RUNTIME_LOCK_VERSION=3/.test(worldmap)&&/ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=1/.test(worldmap),"三紀元冒險切換必須由單一 session-only owner 持有，並具備可辨識來源的 shared review runtime lock。");\n')
+rep('tests/runtime/js-integrity.js','assert(/setAdventureReviewBattleActive=function/.test(worldmap)&&/isAdventureReviewBattleActive=function/.test(worldmap)&&/adventureReviewBattleActive===true/.test(worldmap),"共用冒險紀元 owner 必須鎖定回顧戰期間的紀元切換。");\n','assert(/setAdventureReviewBattleActive=function\\(value,source=null\\)/.test(worldmap)&&/getAdventureReviewBattleSource=function/.test(worldmap)&&/setAdventureReviewBattleActive\\(galaxyReviewBattleActive,galaxyReviewBattleActive\\?"galaxy":null\\)/.test(worldmap),"銀河／宇宙／高維回顧必須共用單一 review runtime source/lock owner。");\nassert(/GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=4/.test(ui)&&/GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1/.test(ui)&&/reviewSource==="galaxy"\\?"review-prepare":"prepare"/.test(ui)&&/setAdventureReviewBattleActive\\(false\\)/.test(ui),"共用結果視窗關閉時必須依 review source 返回正確畫面並解除 shared lock。");\n')
+rep('tests/runtime/js-integrity.js','assert(/startThirdWorldBossReviewFromPlayerUi=async function/.test(thirdWorldUi)&&/review:true/.test(thirdWorldUi)&&/formalSettlementEligible===true/.test(thirdWorldUi)&&/THIRD_WORLD_PLAYER_UI_REVIEW_VERSION=REVIEW_UI_VERSION/.test(thirdWorldUi),"高維已擊破王必須走獨立單場 review path，且拒絕正式 settlement。");\n','assert(/startThirdWorldBossReviewFromPlayerUi=async function/.test(thirdWorldUi)&&/review:true/.test(thirdWorldUi)&&/formalSettlementEligible===true/.test(thirdWorldUi)&&/setAdventureReviewBattleActive\\(true,"higher-dimensional"\\)/.test(thirdWorldUi)&&/THIRD_WORLD_PLAYER_UI_REVIEW_VERSION=REVIEW_UI_VERSION/.test(thirdWorldUi),"高維已擊破王必須走獨立單場 review path、標記 shared runtime source，且拒絕正式 settlement。");\n')
+
+pairs=[
+  ('ui.js?v=20260925-inventory-focus-cleanup1','ui.js?v=20260928-thirdworld-batch11-4'),
+  ('worldmapui.js?v=20260928-thirdworld-batch11-3','worldmapui.js?v=20260928-thirdworld-batch11-4'),
+  ('thirdworldui.js?v=20260928-thirdworld-batch11-2','thirdworldui.js?v=20260928-thirdworld-batch11-4'),
+  ('secondworldmainline.js?v=20260928-thirdworld-batch11-3','secondworldmainline.js?v=20260928-thirdworld-batch11-4'),
+  ('thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-3','thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-4')]
+for old,new in pairs: rep('index.html',old,new)
+t=read('tests/runtime/js-integrity.js')
+for old,new in pairs: t=t.replace(old,new)
+write('tests/runtime/js-integrity.js',t)
