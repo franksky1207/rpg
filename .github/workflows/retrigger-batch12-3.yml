@@ -1,0 +1,24 @@
+name: Retrigger Batch 12-3
+on:
+  push:
+    paths:
+      - '.github/workflows/retrigger-batch12-3.yml'
+permissions:
+  contents: write
+jobs:
+  retrigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Retrigger batch workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '\n# retry after batch-agnostic cache assertions\n' >> .github/workflows/batch12-3-story-completion.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/batch12-3-story-completion.yml
+          git commit -m 'Retrigger batch 12-3 story completion workflow'
+          git push origin HEAD:main
