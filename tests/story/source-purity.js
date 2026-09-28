@@ -6,6 +6,7 @@
 // W3 UI Text Batch 3 exact-head：副本首頁與 VIP 第三紀元呈現必須同時通過 Story／Runtime Integrity。
 // W3 VIP20 death protection exact-head：共用 30% 死亡掉裝 owner、第三紀元 VIP20 保護呈現與零實際遺失必須同時通過 Story／Runtime Integrity。
 // W3 Guide Batch 4 exact-head：三紀元遊戲說明與高維語意收尾必須同時通過 Story／Runtime Integrity。
+// W3 terminology exact-head：玩家正式用語統一為「10 名高維存在」，不得使用對話簡稱「十王」。
 const fs=require('fs');
 const vm=require('vm');
 
