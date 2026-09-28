@@ -1,5 +1,6 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
 // 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
+// Batch 12-1：三紀元 Story Registry／高維 Trigger 骨架完成後，同步觸發 Runtime 與 Story exact-head 驗證。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
@@ -26,6 +27,7 @@ assert(!/loadUniverseSample|data-universe-story-sample/.test(gm),'GM 不得再�
 assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
+assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
 assert(/CIVILIZATION_STORY_PROGRESS_VERSION=12/.test(progress),'story progress 版本應為 12');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
