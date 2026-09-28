@@ -62,6 +62,7 @@ const traitDrop=read("traitdrop.js");
 const combatCore=read("combatcore.js");
 const thirdWorldCombat=read("thirdworldcombat.js");
 const thirdWorldUi=read("thirdworldui.js");
+const thirdWorldData=read("thirdworlddata.js");
 const secondWorldRewards=read("secondworldrewards.js");
 const secondWorldMainline=read("secondworldmainline.js");
 const vipGm=read("vipgm.js");
@@ -111,6 +112,9 @@ assert(/resolveInventoryFocusTarget=resolveFocusTarget/.test(inventoryFocus),"�
 assert(/isActualGearUpgrade/.test(inventoryFocus)&&!/equipmentScore\(item\)>/.test(inventoryFocus),"背包較強裝備判定必須委派正式 isActualGearUpgrade owner。");
 assert(/function redeemGear\(i\)[\s\S]*requestInventoryPostRedeemFocus[\s\S]*render\(\)[\s\S]*applyInventoryFocus/.test(ui),"成功贖回後必須在 render 前建立 post-redeem request，並在 render 後套用背包定位。");
 assert(index.includes('inventoryfocus.js?v=20260925-inventory-focus-cleanup1'),"index.html 必須載入正式 inventoryfocus.js cache-bust。");
+
+assert(/const VERSION=7;/.test(thirdWorldData)&&/SPECIALIZATION_PRESENTATION_VERSION=2/.test(thirdWorldData),"W3 data／特化 presentation 應為 O4 最新版本。");
+assert(!/effect=`[^`]*pp`/.test(thirdWorldData)&&/暴擊 \+\$\{finiteWhole\(spec\.critPoints,0\)\}%/.test(thirdWorldData),"玩家可見高維 Boss 特化百分點必須顯示 %，不得再顯示 pp。");
 
 // Inventory Focus behavior contract: verify actual resolver output instead of source-code if-order.
 const vm=require("vm");
@@ -344,7 +348,7 @@ for(const fn of ["go","backToAdventureFromInventory","closeBattleResultModal"]){
 assert(/applySecondWorldAdventureProgressFocus/.test(playerSemanticsUi),"playersemanticsui.js 必須在 render 後套用一次性宇宙冒險定位。");
 assert(/SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION=VERSION/.test(secondWorldCalamityIntegrity)&&/const VERSION=2;/.test(secondWorldCalamityIntegrity),"secondworldcalamityintegrity.js 應為完整 Integrity V2。");
 assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");
-assert(index.includes('src="playertitleui.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="thirdworldplayerflow.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="playertitleintegrity.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="storyui.js?v=20260928-thirdworld-batch12-o2"')&&index.includes('src="storyprogress.js?v=20260928-thirdworld-batch12-o3"')&&index.includes('src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o3"')&&index.includes('src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o1"'),"Batch 12-4 所有 changed JS owner 必須同步 cache-bust。");
+assert(index.includes('src="playertitleui.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="thirdworldplayerflow.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="playertitleintegrity.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="storyui.js?v=20260928-thirdworld-batch12-o2"')&&index.includes('src="storyprogress.js?v=20260928-thirdworld-batch12-o3"')&&index.includes('src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o3"')&&index.includes('src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o4"'),"Batch 12-4 所有 changed JS owner 必須同步 cache-bust。");
 assert(/const PLAYER_TITLE_UI_VERSION=4;/.test(titleUi)&&/POST_FLOW_HOLD_VERSION=1/.test(titleUi)&&/function setPlayerTitlePostFlowHold/.test(titleUi)&&/thirdWorldStoryBlocksTitle/.test(titleUi),"稱號 UI V4 必須提供 session-only post-flow hold，並在 W3 Story recovery 前阻擋稱號 modal。");
 assert(/const VERSION=13;/.test(titleIntegrity)&&/POST_FLOW_REGRESSION_VERSION=2/.test(titleIntegrity),"稱號 Integrity 應升為 V13／Post-flow Regression V2。");
 assert(/const VERSION=6;/.test(thirdWorldPlayerFlow)&&/POST_FLOW_COORDINATOR_VERSION=1/.test(thirdWorldPlayerFlow)&&/await presentRunSummary/.test(thirdWorldPlayerFlow)&&/await drainPostFlowStories/.test(thirdWorldPlayerFlow)&&/setTitlePostFlowHold\(false\)/.test(thirdWorldPlayerFlow),"W3 Player Flow V6 必須正式協調 Summary → Story → Title lifecycle。");
@@ -363,7 +367,7 @@ assert(/if\(activeRun\.mode==="continuous"&&backgroundEnabled\(\)\)return;/.test
 assert(/backgroundProgressSleep\(ms,"calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressCatchUpStep\("calamity"\)/.test(secondWorldCalamityUi)&&/backgroundProgressConsumeCatchUpCredit\(delay,"calamity"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須共用 calamity 背景 sleep、catch-up step 與 credit。");
 assert(/backgroundProgressCatchUpFinalPolicy\("calamity"\)/.test(secondWorldCalamityUi)&&/combatOuterGapMs\("calamity","battle"\)/.test(secondWorldCalamityUi),"宇宙災厄 UI 必須在追趕完成後收斂並維持正式場間節奏。");
 assert(index.includes('src="secondworldcalamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="secondworldcalamityui.js?v=20260927-thirdworld-ui-opt9-2"'),"index.html 必須載入宇宙災厄正式 run 與目前 UI cache-bust。");
-assert(index.includes('src="calamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="backgroundprogress.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldphase.js?v=20260928-thirdworld-batch12-o1"')&&index.includes('src="thirdworldcore.js?v=20260927-thirdworld-ui-opt9-3fix1"')&&index.includes('src="thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1"')&&index.includes('src="thirdworldrun.js?v=20260928-thirdworld-batch10-opt1"')&&index.includes('src="continuousrunintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldsubsystemintegrity.js?v=20260928-thirdworld-batch10-opt1"')&&index.includes('src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o1"'),"index.html 必須同步載入目前正式連戰與第三紀元 owner cache-bust。");
+assert(index.includes('src="calamityrun.js?v=20260927-run-opt-batch2"')&&index.includes('src="backgroundprogress.js?v=20260927-run-opt-batch1"')&&index.includes('src="thirdworldphase.js?v=20260928-thirdworld-batch12-o1"')&&index.includes('src="thirdworldcore.js?v=20260927-thirdworld-ui-opt9-3fix1"')&&index.includes('src="thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1"')&&index.includes('src="thirdworldrun.js?v=20260928-thirdworld-batch10-opt1"')&&index.includes('src="continuousrunintegrity.js?v=20260927-run-opt-batch2"')&&index.includes('src="thirdworldsubsystemintegrity.js?v=20260928-thirdworld-batch10-opt1"')&&index.includes('src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o4"'),"index.html 必須同步載入目前正式連戰與第三紀元 owner cache-bust。");
 assert(index.includes('src="worldmapui.js?v=20260928-thirdworld-batch11-o2"')&&index.includes('src="thirdworldui.js?v=20260928-thirdworld-batch11-4"')&&index.includes('src="playersemanticsui.js?v=20260928-thirdworld-batch11-3"'),"index.html 必須同步載入第 11-1 批三紀元共用冒險視圖 owner cache-bust。");
 
 assert(/const VOID_MIRAGE_HP_BASE=100\.0;/.test(dungeonVoid)&&/const VOID_MIRAGE_HP_PER_FLOOR=9\.6;/.test(dungeonVoid),"虛空 HP 線性公式應為 100.0 + 9.6F。");

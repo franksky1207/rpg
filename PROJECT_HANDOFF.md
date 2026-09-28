@@ -13,55 +13,50 @@
 本次交接前 current `main` HEAD：
 
 ```text
-e21bde75813900f4e9bd425096a4fc1aae3c081f
+410b86acc7bd773e0af1c54b09cacf0df238f2a9
 ```
 
 目前已完成：
 
-- 第 9 大批：高維正式玩家 UI；
-- 第 9 優化-1～5；
-- 第 10 大批：10-1～10-5 正式連戰玩家流程與事件呈現；
-- 第 10 優化-1～3：runtime 安全、legacy/offline contract、owner/UI 收斂。
+- 第 9 大批與第 9 優化-1～5：高維正式玩家 UI／Core／裝備／離線等收斂；
+- 第 10 大批與第 10 優化-1～3：正式連戰玩家流程、事件呈現、runtime 安全、legacy/offline contract；
+- 第 11 大批＋11-O1～O3：三紀元冒險 Era View、W3／W2／W1 回顧戰、shared review runtime／W2 legacy transient cleanup；
+- 第 12 大批 12-1～12-4：三紀元共用 Story Registry、W3 trigger／queue／reload recovery、settlement→Story、completion-ready、Summary→Story→Title post-flow；
+- 第 12-O1：W3 Story 舊資料 reconciliation、失效 Story reference recovery、Schema16 migration regression；
+- 第 12-O2：W3 Story completion 單一 owner、formal/generic Story lifecycle identity；
+- 第 12-O3：Story normalization 收斂、shared pending arbitration、behavioral regression；
+- 第 12-O4：更新交接基準與高維 Boss 特化玩家文案 `%` 收尾。
 
 本檔更新本身會再產生一個新的 handoff commit，因此**下一個對話仍必須重新讀 current `main`，不可只使用本檔記載的 HEAD。**
 
-目前第三紀元主要版本／owner：
+目前第三紀元／Story 主要版本／owner（current main 摘要）：
 
 ```text
 SAVE_SCHEMA_VERSION = 16
-SAVE_SCHEMA_EVOLUTION_POLICY_VERSION = 1
 WORLD_PHASE_VERSION = 6
-THIRD_WORLD_PHASE_VERSION = 5
-THIRD_WORLD_DATA_VERSION = 6
-THIRD_WORLD_COMBAT_VERSION = 5
-THIRD_WORLD_PROGRESS_VERSION = 4
-THIRD_WORLD_SETTLEMENT_VERSION = 4
+THIRD_WORLD_PHASE_VERSION = 7
+THIRD_WORLD_DATA_VERSION = 7
+THIRD_WORLD_BOSS_SPECIALIZATION_PRESENTATION_VERSION = 2
+THIRD_WORLD_COMBAT_VERSION = 6
+THIRD_WORLD_PROGRESS_VERSION = 5
+THIRD_WORLD_SETTLEMENT_VERSION = 5
 THIRD_WORLD_RUN_VERSION = 7
 THIRD_WORLD_CONTINUOUS_RUNTIME_VERSION = 4
-THIRD_WORLD_RUN_TOTALS_VERSION = 1
-THIRD_WORLD_RUN_IDENTITY_VERSION = 1
-THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION = 1
-THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION = 2
 THIRD_WORLD_RUN_INTEGRITY_VERSION = 8
 THIRD_WORLD_CORE_PROGRESSION_VERSION = 3
 THIRD_WORLD_EQUIPMENT_REWARD_VERSION = 3
-THIRD_WORLD_PLAYER_UI_VERSION = 6
-THIRD_WORLD_PLAYER_FLOW_VERSION = 5
-THIRD_WORLD_PLAYER_FLOW_RUN_SUMMARY_PRESENTATION_VERSION = 1
-THIRD_WORLD_PLAYER_FLOW_TITLE_POST_FLOW_SEQUENCE_VERSION = 1
-THIRD_WORLD_PLAYER_FLOW_STOP_REASON_PRESENTATION_VERSION = 1
-THIRD_WORLD_PLAYER_FLOW_RUN_IDENTITY_GUARD_VERSION = 1
-THIRD_WORLD_PLAYER_FLOW_TOTALS_FAIL_CLOSED_VERSION = 1
-THIRD_WORLD_OFFLINE_SAMPLE_VERSION = 3
-SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_VERSION = 4
-THIRD_WORLD_INTEGRITY_CONTRACT_EXTENSION_VERSION = 26
+THIRD_WORLD_PLAYER_UI_VERSION = 9
+THIRD_WORLD_PLAYER_FLOW_VERSION = 6
+SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_VERSION = 5
+CIVILIZATION_STORY_PROGRESS_VERSION = 17
+STORY_RUNTIME_INTEGRITY_VERSION = 18
+STORY_UI_VERSION = 10
+STORY_UI_LIFECYCLE_WAIT_VERSION = 2
+STORY_UI_INSTANCE_IDENTITY_VERSION = 1
+CIVILIZATION_THIRD_WORLD_DATA_CONTRACT_EXTENSION_VERSION = 37
 ```
 
-實際 global 名稱最後一項為：
-
-```text
-CIVILIZATION_THIRD_WORLD_DATA_CONTRACT_EXTENSION_VERSION = 26
-```
+> 版本只做快速索引；下一個對話仍必須重新讀 current `main` owner，不能以本表取代實碼。
 
 ---
 
@@ -326,7 +321,33 @@ FIVE_POINT_HP_GAP = 55,000,000 HP
 - 本場合法開始後即使跨線仍完整結算，下一場才鎖；
 - 玩家戰線文案使用 **5%**，不顯示 `5pp`。
 
-**current-main 注意：** `thirdWorldBossSpecializationPresentation()` 目前對暴擊／閃避／連擊／穿透／反擊／汲取／先制的特化效果字串仍使用 `pp` 字樣，而 Boss 卡會顯示該 `spec.effect`。第 10 優化-3 已清掉「5pp 戰線」玩家文案，但尚未改這個特化效果 presentation。若之後要落實「所有玩家可見百分點一律顯示 `%`」，應另行處理，不要偷偷混入第 11 批。
+**玩家顯示政策（第 12-O4 已完成）：** `thirdWorldBossSpecializationPresentation()` 對暴擊／閃避／連擊／穿透／反擊／汲取／先制的玩家可見特化效果統一顯示 `%`；底層仍以 points 欄位做數值加成，未改任何戰鬥公式。5% 戰線也繼續只顯示 `%`。
+
+---
+
+
+# 5A. 第 11／12 大批：三紀元回顧與共用 Story Framework
+
+冒險／回顧：
+
+- `adventureEraView` 是 session-only 共用 Era View owner；W3 可切高維／宇宙回顧／銀河回顧，W2 可切宇宙／銀河回顧；
+- W3 defeated boss review、W2 100 Boss real review、W1 review 共用 review runtime lock／source owner；回顧一律零正式收益、零正式進度；
+- W2 normalization 保留未知 future fields，只清明確退休 transient；Schema 16 不因 cleanup 升版。
+
+高維 Story Framework：
+
+- Trigger 共 11 個：`intro ×1 + milestone(stage 1～9) ×9 + final(stage 10 / 0%) ×1`；**0% 不另有第 10 篇 milestone**；
+- W3 descriptor 在正式正文加入前維持 `contentReady:false`，placeholder 不得進 shared `pendingStory`；
+- 三紀元共用 `storyProgress.pendingStory / completedStories`，W3 不另建 persistent queue；
+- `story.unlockedStage` 由十王 canonical aggregate/title tier owner reconciliation，不另寫 900／800／…／0 公式；
+- Story 舊資料會清理不存在／placeholder reference；合法 W1／W2 reference 必須保留；
+- W3 Story completion 單一 owner：Intro 完成同步 `introSeen`；Final 只有在十王全滅＋stage10 後讀完，才原子寫入 `finalSeen=true` 與 `thirdWorld.completed=true`；
+- Story lifecycle 使用 session token＋storyId＋`formal/generic` owner，GM／戰線紀錄 replay 不得冒充正式流程；
+- W3 正式 post-flow：`Run Summary → Story → Title Notice`；title hold 為 session-only；
+- shared pending arbitration 能辨識 galaxy／universe／higher-dimensional／unknown；W3 遇 foreign pending 只 defer，不搶、不清；unknown fail-closed；
+- `CIVILIZATION_STORY_PROGRESS_VERSION=17` 已收斂重複 normalization，並由 Story Runtime Integrity 實際執行 behavioral regression。
+
+**尚未完成／不得自行創作：** 高維序章正文、900～100% 九段 milestone 正文、0% Final 正文與最終畫面仍屬第 13 批內容，現在只有 framework。
 
 ---
 

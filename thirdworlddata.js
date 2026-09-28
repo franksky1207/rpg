@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const BOSS_COUNT=Number(window.THIRD_WORLD_BOSS_COUNT);
  const BOSS_MAX_HP=Number(window.THIRD_WORLD_BOSS_MAX_HP);
  if(!Number.isInteger(BOSS_COUNT)||BOSS_COUNT<=0)throw new Error("Third-world data requires THIRD_WORLD_BOSS_COUNT owner.");
@@ -8,7 +8,7 @@
  const FIVE_POINT_PERCENT=5;
  const FIVE_POINT_HP_GAP=Math.floor(BOSS_MAX_HP*FIVE_POINT_PERCENT/100);
  const EQUIPMENT_NAME_BAND_VERSION=1;
- const SPECIALIZATION_PRESENTATION_VERSION=1;
+ const SPECIALIZATION_PRESENTATION_VERSION=2;
  const CHALLENGE_AUTHORITY=Object.freeze({decisionField:"allowed",gapField:"gapHp",thresholdField:"fivePointHpGap",displayOnlyFields:Object.freeze(["targetRemainingPercent","highestAliveRemainingPercent","gapPoints"])});
  const SNAPSHOT_USAGE_POLICY=Object.freeze({resolveAtBattleStart:true,reuseDuringCombatRun:true,refreshAfterSettlement:true,refreshAfterBossHpMutation:true,globalCache:false,combatTickRecompute:false});
  const BASE_STATS=Object.freeze({maxHp:BOSS_MAX_HP,atk:15000,def:10000,crit:10,dodge:10,initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:30});
@@ -74,13 +74,13 @@
   let effect="個體特化";
   if(id==="attack")effect=`ATK ×${Number(spec.atkMultiplier||1).toFixed(2)}`;
   else if(id==="defense")effect=`DEF ×${Number(spec.defMultiplier||1).toFixed(2)}`;
-  else if(id==="critical")effect=`暴擊 +${finiteWhole(spec.critPoints,0)}pp`;
-  else if(id==="dodge")effect=`閃避 +${finiteWhole(spec.dodgePoints,0)}pp`;
-  else if(id==="combo")effect=`連擊率 +${finiteWhole(spec.comboRatePoints,0)}pp`;
-  else if(id==="penetration")effect=`穿透率 +${finiteWhole(spec.penetrationRatePoints,0)}pp`;
-  else if(id==="counter")effect=`反擊率 +${finiteWhole(spec.counterRatePoints,0)}pp`;
-  else if(id==="drain")effect=`汲取率 +${finiteWhole(spec.drainRatePoints,0)}pp`;
-  else if(id==="initiative")effect=`第一擊加成 +${finiteWhole(spec.initiativeBonusPoints,0)}pp`;
+  else if(id==="critical")effect=`暴擊 +${finiteWhole(spec.critPoints,0)}%`;
+  else if(id==="dodge")effect=`閃避 +${finiteWhole(spec.dodgePoints,0)}%`;
+  else if(id==="combo")effect=`連擊率 +${finiteWhole(spec.comboRatePoints,0)}%`;
+  else if(id==="penetration")effect=`穿透率 +${finiteWhole(spec.penetrationRatePoints,0)}%`;
+  else if(id==="counter")effect=`反擊率 +${finiteWhole(spec.counterRatePoints,0)}%`;
+  else if(id==="drain")effect=`汲取率 +${finiteWhole(spec.drainRatePoints,0)}%`;
+  else if(id==="initiative")effect=`第一擊加成 +${finiteWhole(spec.initiativeBonusPoints,0)}%`;
   else if(id==="origin")effect=`ATK ×${Number(spec.atkMultiplier||1).toFixed(2)}、DEF ×${Number(spec.defMultiplier||1).toFixed(2)}`;
   return Object.freeze({id,label,effect});
  }
@@ -183,6 +183,8 @@
    if(new Set(BOSS_ROWS.map(row=>row.id)).size!==BOSS_COUNT)fail("BOSS_ID_UNIQUE");
    if(new Set(BOSS_ROWS.map(row=>row.name)).size!==BOSS_COUNT)fail("BOSS_NAME_UNIQUE");
    if(BOSS_ROWS.some(row=>{const p=thirdWorldBossSpecializationPresentation(row);return !p||!p.label||!p.effect;}))fail("BOSS_SPECIALIZATION_PRESENTATION");
+   const presentationEffects=BOSS_ROWS.map(row=>thirdWorldBossSpecializationPresentation(row)?.effect||"");
+   if(presentationEffects.some(effect=>effect.includes("pp"))||presentationEffects[2]!=="暴擊 +6%"||presentationEffects[4]!=="連擊率 +10%"||presentationEffects[8]!=="第一擊加成 +20%")fail("BOSS_SPECIALIZATION_PERCENT_PRESENTATION",presentationEffects);
    if(BOSS_MAX_HP!==1100000000||TOTAL_BOSS_MAX_HP!==11000000000||BOSS_ROWS.some(row=>row.maxHp!==BOSS_MAX_HP))fail("BOSS_MAX_HP",{BOSS_MAX_HP,TOTAL_BOSS_MAX_HP});
    if(BASE_STATS.atk!==15000||BASE_STATS.def!==10000||BASE_STATS.crit!==10||BASE_STATS.dodge!==10)fail("BASE_STATS",BASE_STATS);
    const hp900001=Math.floor(BOSS_MAX_HP*900001/1000000),hp90=Math.floor(BOSS_MAX_HP*90/100);
