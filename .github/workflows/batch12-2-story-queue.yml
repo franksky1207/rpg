@@ -1,0 +1,56 @@
+name: Batch 12-2 Story Queue
+on:
+  push:
+    paths:
+      - '.github/workflows/batch12-2-story-queue.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Update cache-bust
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          pairs={
+            'storyprogress.js?v=20260921-worldphase-batch2':'storyprogress.js?v=20260928-thirdworld-batch12-2',
+            'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-1':'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-2',
+          }
+          for old,new in pairs.items():
+            if s.count(old)!=1: raise SystemExit(f'cache anchor mismatch: {old} count={s.count(old)}')
+            s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Self-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check storyprogress.js
+          node --check storyruntimeintegrity.js
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          grep -q 'storyprogress.js?v=20260928-thirdworld-batch12-2' index.html
+          grep -q 'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-2' index.html
+      - name: Commit cache-bust
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Sync batch 12-2 story queue cache-bust'
+          git push origin HEAD:main
