@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: 24
       - name: Apply patch
-        run: python3 batch4_gameguide_patch.py
+        run: |
+          python3 batch4_gameguide_patch.py
+          python3 batch4_gameguide_fix.py
       - name: Syntax and integrity
         run: |
           set -euo pipefail
