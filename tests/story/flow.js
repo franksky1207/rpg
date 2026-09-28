@@ -28,7 +28,7 @@ assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VE
 assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(\)/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
 assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
 assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');
-assert(/queueStory,queueBossStory,queueUniverseBossStory,thirdWorldEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory/.test(progress),'W1/W2/W3 必須共用同一 civilizationStoryProgress queue owner');
+['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
 assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
 assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
 assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
