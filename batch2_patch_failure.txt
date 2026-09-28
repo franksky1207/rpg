@@ -1,3 +1,0 @@
-equipmentlock.js: expected 1 matches, got 0:   const stoneText=saleEnhancementText(r.enhancementStones);
-  const soldText=r.soldCount?`
-換下裝備自動出售 ${r.soldCount} 件，獲得 ${saleText(r.sale)}$
