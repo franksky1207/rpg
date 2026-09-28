@@ -31,12 +31,7 @@ jobs:
           if helper.strip() not in t:
               if marker not in t: raise SystemExit('regex helper marker missing')
               t=t.replace(marker,helper+'\n'+marker,1)
-          for oldcall,newcall in [
-            ("replace_once('tests/runtime/js-integrity.js','src=\\\"worldphase.js?v=20260927-offline-owner-batch8-o1\\\"','src=\\\"worldphase.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"worldphase.js?v=20260927-offline-owner-batch8-o1\\\"','src=\\\"worldphase.js?v=20260928-thirdworld-batch11-o3\\\"')"),
-            ("replace_once('tests/runtime/js-integrity.js','src=\\\"ui.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"ui.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"ui.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"ui.js?v=20260928-thirdworld-batch11-o3\\\"')"),
-            ("replace_once('tests/runtime/js-integrity.js','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o1\\\"','src=\\\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3\\\"')"),
-            ("replace_once('tests/runtime/js-integrity.js','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o2\\\"','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o3\\\"')","replace_if_present('tests/runtime/js-integrity.js','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o2\\\"','src=\\\"thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o3\\\"')")]:
-              if oldcall in t: t=t.replace(oldcall,newcall,1)
+          t=t.replace("replace_once('tests/runtime/js-integrity.js','src=", "replace_if_present('tests/runtime/js-integrity.js','src=")
           p.write_text(t,encoding='utf-8')
           PY
       - name: Apply batch 11-O3 patch
