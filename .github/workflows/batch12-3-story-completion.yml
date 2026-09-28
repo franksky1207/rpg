@@ -1,4 +1,5 @@
 name: Batch 12-3 Story Completion
+# retry after queue adapter signature regression fix
 on:
   push:
     paths:
