@@ -7,6 +7,7 @@
 // Batch 12-4 exact-head：Run Summary → shared Story drain → Title Notice、modal hold 與 reload recovery 必須同時通過 Story／Runtime Integrity。
 // Batch 12-O1：舊 W3 Story flags／Stage reconciliation 與 stale Story reference recovery 必須 fail-closed。
 // Batch 12-O1 exact-head：Schema16 Story reconciliation、合法 W1/W2 reference 保留與失效 W3 placeholder 清理需同時通過 Story／Runtime Integrity。
+// Batch 12-O2：W3 Intro／Final completion 必須由 shared storyProgress 單一 owner 同步，Story lifecycle 必須以 instance token／storyId 防止競態。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
@@ -30,7 +31,7 @@ assert(/queueStory\(universeBossStoryId\(index\)\)/.test(progress),'宇宙首殺
 assert(/UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1/.test(progress),'宇宙首殺 hook 版本遺失');
 assert(/result\?\.ok&&result\.firstKill===true/.test(progress),'宇宙首殺 hook 未綁 firstKill');
 assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 storyProgress 欄位遺失');
-assert(/const VERSION=15;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 15');
+assert(/const VERSION=16;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 16');
 assert(/THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION/.test(progress),'storyprogress 未建立高維共用 Queue／Eligibility owner');
 assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION/.test(progress)&&/THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION/.test(progress),'storyprogress 未建立 reload recovery／placeholder guard');
 assert(/THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION=THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION=THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION/.test(progress),'storyprogress 未建立 settlement bridge／completion framework');
@@ -43,6 +44,10 @@ assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(stor
 assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');
 ['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory','thirdWorldCompletionFramework','consumeThirdWorldSettlement','drainThirdWorldPostFlowStories'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
 assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
+assert(/THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION=THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION/.test(progress),'W3 Story completion 單一 owner 版本未就緒');
+assert(/function thirdWorldStoryCompletionGate\(id,target=state\)/.test(progress)&&/function applyThirdWorldStoryCompletion\(id,target=state,gate=null\)/.test(progress),'W3 Intro／Final completion owner 未建立');
+assert(/const VERSION=10;/.test(storyui)&&/LIFECYCLE_WAIT_VERSION=2/.test(storyui)&&/INSTANCE_IDENTITY_VERSION=1/.test(storyui),'Story UI lifecycle identity 版本未就緒');
+assert(/activeToken=nextToken\+\+/.test(storyui)&&/token-mismatch/.test(storyui)&&/story-mismatch/.test(storyui),'Story lifecycle 必須以 token／storyId 防止誤解鎖');
 assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration reference recovery 應為 V6／Reference Recovery V1');
 assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migration),'Story migration 必須清理失效 pendingStory reference');
 assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
@@ -58,7 +63,7 @@ assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
-assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=16;/.test(runtime),'Story Runtime Integrity 應為 V16');
+assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=17;/.test(runtime),'Story Runtime Integrity 應為 V17');
 assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
 assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未驗證 stale／placeholder Story reference recovery');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
@@ -68,7 +73,7 @@ universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇�
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
 assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
 assert(index.includes('storyprogress.js?v='),'storyprogress.js 必須帶 cache-bust 正式載入');
-assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o2'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('storymigration.js?v=20260928-thirdworld-batch12-o1'),'storymigration.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldphase.js?v=20260928-thirdworld-batch12-o1'),'thirdworldphase.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1'),'thirdworldmigrationregression.js cache-bust 未更新至 Batch 12-O1');
