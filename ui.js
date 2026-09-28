@@ -225,6 +225,12 @@ function galaxyReviewCombatPage(){
 window.enterGalaxyReviewMap=function(){selectedBattleCount=1;adventureScreen="review-prepare";render()};
 window.selectGalaxyReviewEnemy=function(enemyIdx){window.setGalaxyReviewSelectedEnemy?.(enemyIdx);render()};
 window.backToGalaxyReviewMaps=function(){currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);adventureScreen="maps";render()};
+function reviewResultPresentationHtml(options={}){
+ const heading=String(options.heading||"回顧挑戰結束"),extra=String(options.extra||"");
+ return `<div class="notice review-result-notice"><b>${heading}</b><div class="muted" style="margin-top:6px">本場為單場純回顧挑戰，不影響目前正式進度。${extra?`<br>${extra}`:""}</div></div>`;
+}
+window.REVIEW_RESULT_PRESENTATION_VERSION=1;
+window.reviewResultPresentationHtml=reviewResultPresentationHtml;
 window.startGalaxyReviewBattle=async function(){
  if(battleBusy){alert("目前仍有其他戰鬥進行中，請先結束後再開始回顧戰。");return false;}
  const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex();
@@ -243,7 +249,7 @@ window.startGalaxyReviewBattle=async function(){
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
   galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=`<div class="notice"><b>銀河紀元・回顧戰結束</b><div class="muted" style="margin-top:6px">本場不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。</div></div>`;modal.classList.add("show")}
+  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show")}
   return true;
  }catch(err){
   galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();

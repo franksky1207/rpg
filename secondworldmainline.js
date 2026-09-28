@@ -1,9 +1,10 @@
 (function(){
- const VERSION=11;
+ const VERSION=12;
  const BACKGROUND_GM_GATE_VERSION=1;
  const REVIEW_FLOW_VERSION=1;
  const REVIEW_STATE_ISOLATION_VERSION=2;
  const REVIEW_RESULT_LOCK_VERSION=1;
+ const REVIEW_PRESENTATION_VERSION=1;
  let busy=false;
  let activeContext=null;
 
@@ -149,7 +150,8 @@
  function showReviewResult(boss,combat){
   const {title,detail,modal}=battleModal();if(!title||!detail||!modal){if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);return false;}
   title.textContent="宇宙紀元・回顧";
-  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${boss?.name||"宇宙紀元 Boss"} Lv.${boss?.level||"—"}</div><div class="notice"><b>${combat?.win===true?"回顧勝利":"回顧挑戰結束"}</b><div class="muted" style="margin-top:6px">本場為單場純回顧挑戰，不產生 EXP、暗物質、暗能量、裝備、主線進度、文明災厄、特殊遭遇、離線樣本或死亡懲罰；正式角色 HP 與所有正式 state 皆不變。</div></div><div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
+  const reviewNotice=typeof window.reviewResultPresentationHtml==="function"?window.reviewResultPresentationHtml({heading:combat?.win===true?"回顧勝利":"回顧挑戰結束",extra:"不產生 EXP、暗物質、暗能量、裝備、主線進度、文明災厄、特殊遭遇、離線樣本或死亡懲罰；正式角色 HP 與所有正式 state 皆不變。"}):`<div class="notice"><b>${combat?.win===true?"回顧勝利":"回顧挑戰結束"}</b></div>`;
+  detail.innerHTML=`<div class="settlement-section"><div class="settlement-section-title">${boss?.name||"宇宙紀元 Boss"} Lv.${boss?.level||"—"}</div>${reviewNotice}<div class="muted" style="margin-top:10px">戰鬥回合：${Math.max(0,Number(combat?.turns)||0)}</div></div>`;
   modal.classList.add("show");return true;
  }
  function publishContext(ctx){activeContext=ctx;window.activeSecondWorldMainlineContext=ctx;}
@@ -310,6 +312,7 @@
  window.SECOND_WORLD_MAINLINE_REVIEW_FLOW_VERSION=REVIEW_FLOW_VERSION;
  window.SECOND_WORLD_MAINLINE_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;
  window.SECOND_WORLD_MAINLINE_REVIEW_RESULT_LOCK_VERSION=REVIEW_RESULT_LOCK_VERSION;
+ window.SECOND_WORLD_MAINLINE_REVIEW_PRESENTATION_VERSION=REVIEW_PRESENTATION_VERSION;
  window.SECOND_WORLD_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.SECOND_WORLD_FAST_CATCH_UP_POLICY_VERSION=1;
  window.SECOND_WORLD_FAST_CATCH_UP_ATOMIC_SAVE_POLICY_VERSION=1;

@@ -8,6 +8,10 @@
   3:Object.freeze({index:3,id:"higher-dimensional",stateKey:"thirdWorld",name:"高維紀元"})
  });
  const worldTransitionRuntimeBlockers=new Map();
+ const SECOND_WORLD_RETIRED_TRANSIENT_KEYS=Object.freeze(["activeRun","run","runId","pendingEvents","recentSummaries","runTotals","battleContext","continuousRun"]);
+ const SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS=Object.freeze(["activeRun","run","runId","pendingEvents","recentSummaries","runTotals","battleContext","continuousRun","selectedBossIndex","currentBossIndex"]);
+ const SECOND_WORLD_RETIRED_TRANSIENT_CLEANUP_VERSION=1;
+ const SECOND_WORLD_LEGACY_CLEANUP_REGRESSION_VERSION=1;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteCount(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:0;}
@@ -19,11 +23,19 @@
  function normalizeBossKilled(value){const source=Array.isArray(value)?value:[];return Array.from({length:SECOND_WORLD_MAIN_BOSS_COUNT},(_,index)=>source[index]===true);}
  function normalizeCalamities(value){const source=Array.isArray(value)?value:[];return Array.from({length:SECOND_WORLD_CALAMITY_COUNT},(_,index)=>isObject(source[index])?{...source[index]}:{currentHp:null,trueKills:0});}
  function civilizationFloorFromCalamities(value){const rows=Array.isArray(value)?value:[];let level=0;for(let index=0;index<SECOND_WORLD_CALAMITY_COUNT;index++){if(finiteCount(rows[index]?.trueKills)>=30)level=index+1;else break;}return level;}
+ function cleanupRetiredSecondWorldTransientState(target){
+  if(!isObject(target)||!isObject(target.secondWorld))return {removed:[],removedMainline:[]};
+  const removed=[],removedMainline=[],second=target.secondWorld;
+  SECOND_WORLD_RETIRED_TRANSIENT_KEYS.forEach(key=>{if(Object.prototype.hasOwnProperty.call(second,key)){delete second[key];removed.push(key);}});
+  if(isObject(second.mainline))SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS.forEach(key=>{if(Object.prototype.hasOwnProperty.call(second.mainline,key)){delete second.mainline[key];removedMainline.push(key);}});
+  return {removed,removedMainline};
+ }
  function normalizeSecondWorldState(target){
   if(!isObject(target))return target;
   const source=isObject(target.secondWorld)?target.secondWorld:{},mainline=isObject(source.mainline)?source.mainline:{},calamities=normalizeCalamities(source.calamities);
   const storedCivilizationLevel=Math.max(0,Math.min(10,finiteCount(source.civilizationLevel))),inferredCivilizationLevel=civilizationFloorFromCalamities(calamities);
   target.secondWorld={...source,entered:source.entered===true,mainline:{...mainline,bossKilled:normalizeBossKilled(mainline.bossKilled)},darkMatter:finiteCount(source.darkMatter),darkEnergy:finiteCount(source.darkEnergy),civilizationLevel:Math.max(storedCivilizationLevel,inferredCivilizationLevel),calamities};
+  cleanupRetiredSecondWorldTransientState(target);
   return target;
  }
  function secondWorldState(target=state){if(!isObject(target))return createBlankSecondWorldState();return isObject(target.secondWorld)?target.secondWorld:createBlankSecondWorldState();}
@@ -156,6 +168,18 @@
  }
  function enterSecondWorld(){return runWorldTransition({requirements:()=>secondWorldEntryRequirements(state),runtimeStatus:()=>worldTransitionRuntimeStatus(),mutate:target=>{const next=createBlankSecondWorldState();next.entered=true;target.secondWorld=next;target.gold=0;if(!isObject(target.enhancement))target.enhancement={};target.enhancement.basicStones=0;target.enhancement.advancedStones=0;target.lostGear=[];resetPendingBlackMarketForWorldTransition(target);clearFirstWorldCalamityResidualHp(target);resetOfflineStateForWorldTransition(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_second_world_just_entered_v1"});}
 
+ function runSecondWorldRetiredTransientCleanupRegression(){
+  const sample={secondWorld:{entered:true,darkMatter:12345,darkEnergy:67,civilizationLevel:4,unknownFutureField:{keep:true},activeRun:{legacy:true},runId:"legacy-top",pendingEvents:["legacy"],runTotals:{battles:9},mainline:{bossKilled:Array.from({length:SECOND_WORLD_MAIN_BOSS_COUNT},(_,index)=>index===3),run:{legacy:true},runId:"legacy-main",pendingEvents:["legacy"],selectedBossIndex:42,unknownMainlineField:9},calamities:[{currentHp:777,trueKills:30,unknownCalamityField:"keep"}]}};
+  normalizeSecondWorldState(sample);
+  const second=sample.secondWorld,mainline=second.mainline,firstCalamity=second.calamities[0];
+  const topRetiredGone=SECOND_WORLD_RETIRED_TRANSIENT_KEYS.every(key=>!Object.prototype.hasOwnProperty.call(second,key));
+  const mainlineRetiredGone=SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS.every(key=>!Object.prototype.hasOwnProperty.call(mainline,key));
+  const formalPreserved=second.entered===true&&second.darkMatter===12345&&second.darkEnergy===67&&second.civilizationLevel===4&&mainline.bossKilled[3]===true&&firstCalamity.currentHp===777&&firstCalamity.trueKills===30;
+  const unknownPreserved=second.unknownFutureField?.keep===true&&mainline.unknownMainlineField===9&&firstCalamity.unknownCalamityField==="keep";
+  const errors=[];if(!topRetiredGone)errors.push("top-retired-remains");if(!mainlineRetiredGone)errors.push("mainline-retired-remains");if(!formalPreserved)errors.push("formal-field-loss");if(!unknownPreserved)errors.push("unknown-field-loss");
+  return {version:SECOND_WORLD_LEGACY_CLEANUP_REGRESSION_VERSION,passed:errors.length===0,errors,formalPreserved,unknownPreserved,topRetiredGone,mainlineRetiredGone};
+ }
+
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
  window.WORLD_PHASE_SHARED_CORE_VERSION=3;
  window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=1;
@@ -191,7 +215,14 @@
  window.SECOND_WORLD_CALAMITY_COUNT=SECOND_WORLD_CALAMITY_COUNT;
  window.createBlankSecondWorldState=createBlankSecondWorldState;
  window.SECOND_WORLD_CIVILIZATION_STATE_VERSION=1;
- window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION=1;
+ window.SECOND_WORLD_STATE_PRESERVE_UNKNOWN_VERSION=2;
+ window.SECOND_WORLD_RETIRED_TRANSIENT_CLEANUP_VERSION=SECOND_WORLD_RETIRED_TRANSIENT_CLEANUP_VERSION;
+ window.SECOND_WORLD_LEGACY_CLEANUP_REGRESSION_VERSION=SECOND_WORLD_LEGACY_CLEANUP_REGRESSION_VERSION;
+ window.SECOND_WORLD_RETIRED_TRANSIENT_KEYS=Array.from(SECOND_WORLD_RETIRED_TRANSIENT_KEYS);
+ window.SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS=Array.from(SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS);
+ window.cleanupRetiredSecondWorldTransientState=cleanupRetiredSecondWorldTransientState;
+ window.runSecondWorldRetiredTransientCleanupRegression=runSecondWorldRetiredTransientCleanupRegression;
+ window.SECOND_WORLD_LEGACY_CLEANUP_REGRESSION=runSecondWorldRetiredTransientCleanupRegression();
  window.SECOND_WORLD_ENTRY_PURE_READ_VERSION=2;
  window.SECOND_WORLD_CIVILIZATION_RECONCILIATION_VERSION=1;
  window.SECOND_WORLD_CALAMITY_STRUCTURE_OWNER_VERSION=1;
