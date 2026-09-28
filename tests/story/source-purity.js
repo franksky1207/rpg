@@ -1,5 +1,6 @@
 // 永久回歸檢查：已建立的銀河與宇宙正式 storydata／Registry 顯示文字必須本身為中文；不得依賴 Story Integrity 先行修正。
 // Batch 12-O2 exact-head：W3 completion 單一 owner 與 Story formal／generic lifecycle identity 必須同時通過 Story／Runtime Integrity。
+// Batch 12-O3 exact-head：Story normalization 收斂、foreign pending 共用仲裁與 behavioral regression 必須同時通過 Story／Runtime Integrity。
 const fs=require('fs');
 const vm=require('vm');
 
