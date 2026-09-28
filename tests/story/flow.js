@@ -1,6 +1,7 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
 // 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
-// Batch 12-1：三紀元 Story Registry／高維 Trigger 骨架完成後，同步觸發 Runtime 與 Story exact-head 驗證。
+// Batch 12-1：三紀元 Story Registry／高維 Trigger 骨架完成。
+// Batch 12-2：高維 Eligibility／共用 Queue／Reload Recovery 必須沿用 storyProgress，不新增 W3 私有 persistent queue。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
@@ -21,6 +22,14 @@ assert(/queueStory\(universeBossStoryId\(index\)\)/.test(progress),'宇宙首殺
 assert(/UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1/.test(progress),'宇宙首殺 hook 版本遺失');
 assert(/result\?\.ok&&result\.firstKill===true/.test(progress),'宇宙首殺 hook 未綁 firstKill');
 assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 storyProgress 欄位遺失');
+assert(/const VERSION=13;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 13');
+assert(/THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION/.test(progress),'storyprogress 未建立高維共用 Queue／Eligibility owner');
+assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION/.test(progress)&&/THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION/.test(progress),'storyprogress 未建立 reload recovery／placeholder guard');
+assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(\)/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
+assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
+assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');
+assert(/queueStory,queueBossStory,queueUniverseBossStory,thirdWorldEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory/.test(progress),'W1/W2/W3 必須共用同一 civilizationStoryProgress queue owner');
+assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
 assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
 assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
 assert(!/loadUniverseSample|data-universe-story-sample/.test(gm),'GM 不得再動態載入宇宙 sample 劇情');
@@ -28,14 +37,17 @@ assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
-assert(/CIVILIZATION_STORY_PROGRESS_VERSION=12/.test(progress),'story progress 版本應為 12');
+assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=13;/.test(runtime),'Story Runtime Integrity 應為 V13');
+assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
 assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式載入 secondworldstoryregistry.js');
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
 assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
+assert(index.includes('storyprogress.js?v=20260928-thirdworld-batch12-2'),'storyprogress.js cache-bust 未更新至 Batch 12-2');
+assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-2'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-2');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
 assert(index.includes('storydata-universe-trans-domain-frontier.js?v=20260923-universe-region5-meta1'),'第五章・超域邊境 cache-bust 未更新');
-console.log('STORY FLOW PASSED | galaxy owner preserved | universe formal runtime load=yes | containers=10 | region5=10 | shared finale marker=yes | target=201');
+console.log('STORY FLOW PASSED | shared queue=yes | W3 eligibility/reload recovery=yes | placeholder queue=guarded | galaxy/universe preserved | target=201');
