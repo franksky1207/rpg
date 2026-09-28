@@ -1,5 +1,5 @@
 name: W3 UI Text Batch 1
-# retry with split validation steps
+# retry after fixing story-record ternary syntax
 on:
   push:
     paths:
