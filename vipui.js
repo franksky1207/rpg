@@ -1,5 +1,5 @@
 (function(){
- const VIP_UI_VERSION=2;
+ const VIP_UI_VERSION=3;
  const VIP_PERKS=[
   {level:2,text:"主線裝備掉落率 +5 個百分點"},
   {level:4,text:"所有可取得 VIP 積分的副本，VIP 積分 +10%"},
@@ -12,6 +12,19 @@
   {level:18,text:"主線 Boss 掉落裝備有 10% 機率品質 +1 階"},
   {level:20,text:"死亡時不再遺失裝備"}
  ];
+ const THIRD_WORLD_PERK_TEXT=Object.freeze({
+  4:"虛空幻境 VIP 積分 +10%",
+  8:"高維主線掉落裝備有 15% 機率優先目前最弱部位",
+  12:"虛空幻境 VIP 積分總加成提升為 +20%",
+  14:"高維主線掉落裝備有 5% 機率品質 +1 階",
+  16:"高維主線 Boss 有 15% 機率額外掉落 1 件裝備",
+  18:"高維主線 Boss 掉落裝備有 10% 機率品質 +1 階"
+ });
+ function currentPhase(){const s=typeof state!=="undefined"?state:null;return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));}
+ function perksForPhase(phase=currentPhase()){
+  if(Number(phase)!==3)return VIP_PERKS.slice();
+  return VIP_PERKS.filter(p=>Object.prototype.hasOwnProperty.call(THIRD_WORLD_PERK_TEXT,p.level)).map(p=>({...p,text:THIRD_WORLD_PERK_TEXT[p.level]}));
+ }
 
  function normalizeLevel(value){return typeof window.normalizeVipLevel==="function"?window.normalizeVipLevel(value):Math.max(0,Math.floor(Number(value)||0));}
  function perkMaxLevel(){return Math.max(20,Math.floor(Number(window.VIP_PERK_MAX_LEVEL)||20));}
@@ -21,10 +34,11 @@
  function vipStatusText(){const lv=vipLevel(),points=vipPoints();return `VIP${lv}｜${points.toLocaleString()} / ${nextThreshold(lv).toLocaleString()}`;}
  function ensureVipModal(){if(document.getElementById("vipDetailModal"))return;const modal=document.createElement("div");modal.className="modal";modal.id="vipDetailModal";modal.innerHTML=`<div class="modal-box"><h3>VIP 特權</h3><div id="vipDetailBody"></div><div class="controls"><button class="btn primary" onclick="closeVipDetails()">關閉</button></div></div>`;document.body.appendChild(modal);}
  function vipDetailsHtml(){
-  const lv=vipLevel(),points=vipPoints(),bonus=vipBonusStats(lv),nextPerk=VIP_PERKS.find(x=>x.level>lv)?.level||null;
+  const lv=vipLevel(),points=vipPoints(),bonus=vipBonusStats(lv),phase=currentPhase(),perks=perksForPhase(phase),nextPerk=perks.find(x=>x.level>lv)?.level||null;
   const status=`VIP${lv}｜${points.toLocaleString()} / ${nextThreshold(lv).toLocaleString()}`;
+  const phaseNote=phase===3?`<div class="muted" style="margin-top:10px;line-height:1.55">第三紀元僅顯示目前仍適用的特殊特權；銀河／宇宙紀元特權仍保留於原紀元規則。</div>`:"";
   const perkComplete=lv>=perkMaxLevel()?`<div class="notice" style="margin-top:10px"><b>特殊特權已全部解鎖。</b><div class="muted" style="margin-top:5px">VIP20 是最後一個特殊特權階段；VIP 等級本身沒有上限，之後仍可持續累積 VIP 積分並提升基本能力。</div></div>`:"";
-  return `<div class="vip-detail-head"><div class="vip-detail-level">${status}</div><div class="vip-bonus-grid"><div><span>HP</span><b>+${bonus.hp}%</b></div><div><span>ATK</span><b>+${bonus.atk}%</b></div><div><span>DEF</span><b>+${bonus.def}%</b></div><div><span>暴擊</span><b>+${bonus.crit}%</b></div><div><span>閃避</span><b>+${bonus.dodge}%</b></div></div><div class="vip-detail-note">每提升 1 級 VIP：HP／ATK +0.5%，DEF +0.25%，暴擊／閃避 +0.25%。VIP 等級沒有上限，升級門檻持續使用 1000 × 等級²；VIP20 為最後一個特殊特權階段。</div>${perkComplete}</div><div class="vip-perk-list">${VIP_PERKS.map(p=>{const cls=p.level<=lv?"unlocked":p.level===nextPerk?"next":"locked";return `<div class="vip-perk-row ${cls}"><div><div class="vip-perk-level">VIP${p.level}</div><div class="vip-perk-threshold">${vipThreshold(p.level).toLocaleString()} 積分</div></div><div>${p.text}</div></div>`;}).join("")}</div>`;
+  return `<div class="vip-detail-head"><div class="vip-detail-level">${status}</div><div class="vip-bonus-grid"><div><span>HP</span><b>+${bonus.hp}%</b></div><div><span>ATK</span><b>+${bonus.atk}%</b></div><div><span>DEF</span><b>+${bonus.def}%</b></div><div><span>暴擊</span><b>+${bonus.crit}%</b></div><div><span>閃避</span><b>+${bonus.dodge}%</b></div></div><div class="vip-detail-note">每提升 1 級 VIP：HP／ATK +0.5%，DEF +0.25%，暴擊／閃避 +0.25%。VIP 等級沒有上限，升級門檻持續使用 1000 × 等級²；VIP20 為最後一個特殊特權階段。</div>${perkComplete}${phaseNote}</div><div class="vip-perk-list">${perks.map(p=>{const cls=p.level<=lv?"unlocked":p.level===nextPerk?"next":"locked";return `<div class="vip-perk-row ${cls}"><div><div class="vip-perk-level">VIP${p.level}</div><div class="vip-perk-threshold">${vipThreshold(p.level).toLocaleString()} 積分</div></div><div>${p.text}</div></div>`;}).join("")}</div>`;
  }
  function vipHomeCardHtml(){return `<div class="vip-home-card"><div class="vip-home-row"><div><div class="muted">VIP 狀態</div><div class="vip-home-value">${vipStatusText()}</div></div><button class="btn vip-btn" onclick="openVipDetails()">查看特權</button></div></div>`;}
  function vipEventsHtml(ctx,defeat){
@@ -64,6 +78,9 @@
  window.gmVipManagementHtml=gmVipManagementHtml;
  window.gmApplyVipPoints=function(){const input=document.getElementById("gmVipPointsInput"),raw=input?input.value:null,n=Number(raw);if(!Number.isFinite(n)||n<0||!Number.isInteger(n)){alert("請輸入 0 以上的整數 VIP 積分。");return false;}const result=setFormalVipPoints(n);alert(`VIP 積分已更新為 ${result.points.toLocaleString()}，目前 VIP${result.level}。`);return true;};
  window.setFormalVipPoints=setFormalVipPoints;
+ window.vipPerksForPhase=perksForPhase;
+ window.THIRD_WORLD_VIP_PERK_TEXT=THIRD_WORLD_PERK_TEXT;
+ window.THIRD_WORLD_VIP_PRESENTATION_VERSION=1;
  window.VIP_UI_VERSION=VIP_UI_VERSION;
  ensureVipModal();
 })();

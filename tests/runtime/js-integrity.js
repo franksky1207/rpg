@@ -63,6 +63,9 @@ const traitDrop=read("traitdrop.js");
 const combatCore=read("combatcore.js");
 const thirdWorldCombat=read("thirdworldcombat.js");
 const thirdWorldUi=read("thirdworldui.js");
+const thirdWorldDungeonUi=read("thirdworlddungeonui.js");
+const thirdWorldLoot=read("thirdworldloot.js");
+const vipUi=read("vipui.js");
 const thirdWorldData=read("thirdworlddata.js");
 const secondWorldRewards=read("secondworldrewards.js");
 const secondWorldMainline=read("secondworldmainline.js");
@@ -89,6 +92,13 @@ assert(!index.includes('src="level100balance.js?v='),"level100balance.js 已退�
 assert(!fs.existsSync("level100balance.js"),"level100balance.js 已退休，repo 不應再保留舊檔。");
 
 assert(pos("viplootcore.js")>pos("vipprogression.js")&&pos("viplootcore.js")<pos("traitdrop.js")&&pos("viplootcore.js")<pos("dungeonbounty.js")&&pos("viplootcore.js")<pos("combatcore.js"),"viplootcore.js 必須在 VIP progression 後、正式掉裝 consumer 前載入。");
+assert(/const VERSION=2;/.test(thirdWorldDungeonUi)&&/DUNGEON_MODE_PRESENTATION_POLICY_VERSION=1/.test(thirdWorldDungeonUi),"W3 副本 adapter 應提供 V2 共用呈現 policy。");
+assert(/mode==="bounty"\)return \{visible:false,enabled:false/.test(thirdWorldDungeonUi),"W3 懸賞必須隱藏。");
+assert(/titleText:"高維競技場"/.test(thirdWorldDungeonUi)&&/rewardText:"尚未開放"/.test(thirdWorldDungeonUi)&&/buttonLabel:"等待高維競技場開放"/.test(thirdWorldDungeonUi),"W3 競技場必須只顯示高維未開放 placeholder。");
+assert(/wrapEntry\("enterBountyDungeon","bounty"\)/.test(thirdWorldDungeonUi)&&/wrapEntry\("enterVoidMirageDungeon","tower"\)/.test(thirdWorldDungeonUi),"W3 必須沿用共用副本入口 guard，不能另建平行 owner。");
+assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=1/.test(vipUi)&&/虛空幻境 VIP 積分 \+10%/.test(vipUi)&&/高維主線 Boss/.test(vipUi),"W3 VIP 呈現必須按現行共用 owner 投影。");
+assert(/resolveVipLootModifiers/.test(thirdWorldLoot)&&/vipLootBossExtraDropTriggered/.test(thirdWorldLoot),"W3 VIP8／14／16／18 必須保持共用 VIP loot owner。");
+assert(index.includes('vipui.js?v=20260928-thirdworld-ui-text-batch3')&&index.includes('thirdworlddungeonui.js?v=20260928-thirdworld-ui-text-batch3'),"W3 Batch 3 touched JS 必須同步 cache-bust。");
 assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=2;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V2。");
 assert(/vip8:Object\.freeze\(\{level:VIP8_LEVEL,chance:VIP8_WEAK_SLOT_CHANCE\}\)/.test(vipLootCore)&&/vip14:Object\.freeze\(\{level:VIP14_LEVEL,chance:VIP14_QUALITY_CHANCE\}\)/.test(vipLootCore)&&/vip16:Object\.freeze\(\{level:VIP16_LEVEL,chance:VIP16_BOSS_EXTRA_CHANCE\}\)/.test(vipLootCore)&&/vip18:Object\.freeze\(\{level:VIP18_LEVEL,chance:VIP18_BOSS_QUALITY_CHANCE\}\)/.test(vipLootCore),"VIP8／14／16／18 裝備特權必須由 viplootcore.js 統一持有。");
 assert(/resolveVipLootModifiers=resolveVipLootModifiers/.test(vipLootCore)&&/defaultWeakEquipmentTypes/.test(vipLootCore)&&/options\.state/.test(vipLootCore)&&/weakTypesResolver/.test(vipLootCore)&&!/weakEquipmentTypes\(/.test(vipLootCore),"VIP Loot V2 必須統一 modifiers，VIP8 最弱部位必須支援 target state／resolver 且不得依賴漂移舊名稱。");

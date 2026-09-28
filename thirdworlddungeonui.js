@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const policies=new Map();
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
@@ -9,15 +9,15 @@
  function unregisterPolicy(name){return policies.delete(String(name||"").trim());}
  function availability(mode,target=null){
   const key=String(mode||""),s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
-  const result={mode:key,visible:true,enabled:true,buttonLabel:"",statusText:"",reason:"",phase:currentPhase(s)};
-  policies.forEach((checker,name)=>{try{const next=checker(key,s,{...result});if(!next||typeof next!=="object")return;if(next.visible===false)result.visible=false;if(next.enabled===false)result.enabled=false;if(typeof next.buttonLabel==="string"&&next.buttonLabel)result.buttonLabel=next.buttonLabel;if(typeof next.statusText==="string"&&next.statusText)result.statusText=next.statusText;if(typeof next.reason==="string"&&next.reason)result.reason=next.reason;}catch(error){console.error("Dungeon mode availability policy failed",name,error);result.enabled=false;result.reason="副本狀態檢查失敗，請重新整理後再試。";}});
+  const result={mode:key,visible:true,enabled:true,buttonLabel:"",statusText:"",reason:"",titleText:null,rewardText:null,unlockText:null,descriptionText:null,phase:currentPhase(s)};
+  policies.forEach((checker,name)=>{try{const next=checker(key,s,{...result});if(!next||typeof next!=="object")return;if(next.visible===false)result.visible=false;if(next.enabled===false)result.enabled=false;if(typeof next.buttonLabel==="string"&&next.buttonLabel)result.buttonLabel=next.buttonLabel;if(typeof next.statusText==="string"&&next.statusText)result.statusText=next.statusText;if(typeof next.reason==="string"&&next.reason)result.reason=next.reason;["titleText","rewardText","unlockText","descriptionText"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(next,key)&&(next[key]===null||typeof next[key]==="string"))result[key]=next[key];});}catch(error){console.error("Dungeon mode availability policy failed",name,error);result.enabled=false;result.reason="副本狀態檢查失敗，請重新整理後再試。";}});
   if(result.visible===false)result.enabled=false;
   return result;
  }
  function thirdWorldPolicy(mode,target){
   if(currentPhase(target)!==3)return null;
   if(mode==="bounty")return {visible:false,enabled:false,reason:"高維紀元已關閉懸賞戰。"};
-  if(mode==="arena")return {visible:true,enabled:false,buttonLabel:"等待高維競技場開放",statusText:"高維競技場調整中",reason:"高維紀元競技場規則與戰力曲線尚未定案，既有競技場進度已完整保留。"};
+  if(mode==="arena")return {visible:true,enabled:false,titleText:"高維競技場",rewardText:"尚未開放",unlockText:"",descriptionText:"高維競技場尚未開放。",buttonLabel:"等待高維競技場開放",statusText:"等待高維競技場開放",reason:"高維競技場目前尚未開放，既有競技場進度已保留。"};
   return {visible:true,enabled:true};
  }
  function resourceSnapshot(target=null){
@@ -40,7 +40,11 @@
   const policy=availability(mode);
   card.hidden=policy.visible===false;
   if(policy.visible===false)return true;
-  const button=card.querySelector(".dungeon-entry-btn"),cost=card.querySelector(".dungeon-cost");
+  const button=card.querySelector(".dungeon-entry-btn"),cost=card.querySelector(".dungeon-cost"),title=card.querySelector(".dungeon-mode-head h3"),reward=card.querySelector(".dungeon-mode-reward"),unlock=card.querySelector(".dungeon-unlock-label"),description=card.querySelector("p");
+  if(policy.titleText!==null&&title)title.textContent=policy.titleText;
+  if(policy.rewardText!==null&&reward)reward.textContent=policy.rewardText;
+  if(policy.descriptionText!==null&&description)description.textContent=policy.descriptionText;
+  if(policy.unlockText!==null&&unlock){unlock.textContent=policy.unlockText;unlock.hidden=!policy.unlockText;}
   let note=card.querySelector("[data-dungeon-policy-note]");
   if(policy.enabled===false){
    card.classList.add("locked");
@@ -74,12 +78,13 @@
   wrapped.__dungeonPolicyWrapped=true;window[name]=wrapped;return true;
  }
  registerPolicy("third-world",thirdWorldPolicy);
- window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION=1;
+ window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION=2;
+ window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION=1;
  window.registerDungeonModeAvailabilityPolicy=registerPolicy;
  window.unregisterDungeonModeAvailabilityPolicy=unregisterPolicy;
  window.dungeonModeAvailability=availability;
  window.THIRD_WORLD_DUNGEON_UI_VERSION=VERSION;
- window.THIRD_WORLD_ARENA_PROVISIONAL_GATE_VERSION=1;
+ window.THIRD_WORLD_ARENA_PROVISIONAL_GATE_VERSION=2;
  window.thirdWorldDungeonModeVisible=function(mode,target=null){return availability(mode,target).visible!==false;};
  window.thirdWorldDungeonResourceSnapshot=resourceSnapshot;
  window.syncThirdWorldDungeonUi=syncDungeonPage;
