@@ -396,15 +396,17 @@ aggregate-progress
 boss-defeated
 stage-crossed
 five-point-front
+completion-ready
 ```
 
-十王全滅目前只產生：
+十王全滅會形成：
 
 ```text
 completionReady = true
+final eligibility = true
 ```
 
-**目前不會自行寫 `thirdWorld.completed=true`。** 正式 completion owner 留給第 12／13 批。
+但**十王全滅本身不直接完成第三紀元**。只有正式 Final Story 在「十王全滅＋stage10」條件下真正完成後，shared Story completion owner 才原子寫入 `story.finalSeen=true` 與 `thirdWorld.completed=true`。目前 Final 正文仍是 placeholder，因此不會提前完成。
 
 ---
 
