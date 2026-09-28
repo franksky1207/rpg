@@ -91,8 +91,11 @@ replace('specialguide.js',
   let html=sgBaseAdventurePreparePage();''')
 replace('specialguide.js','window.SPECIAL_GUIDE_WORLD_AWARE_VERSION=1;','window.SPECIAL_GUIDE_WORLD_AWARE_VERSION=2;')
 
-# Story static test version follows the permanent owner change.
+# Permanent static tests follow the player-facing owner/cache changes.
 replace('tests/story/flow.js','STORY_RECORD_TABS_VERSION=7','STORY_RECORD_TABS_VERSION=8')
+replace('tests/runtime/js-integrity.js',
+'''assert(index.includes('src="worldmapui.js?v=20260928-thirdworld-batch11-o2"')&&index.includes('src="thirdworldui.js?v=20260928-thirdworld-batch11-4"')&&index.includes('src="playersemanticsui.js?v=20260928-thirdworld-batch11-3"'),"index.html 必須同步載入第 11-1 批三紀元共用冒險視圖 owner cache-bust。");''',
+'''assert(index.includes('src="worldmapui.js?v=20260928-thirdworld-batch11-o2"')&&index.includes('src="thirdworldui.js?v=20260928-thirdworld-batch11-4"')&&index.includes('src="playersemanticsui.js?v=20260928-thirdworld-ui-text-batch1"'),"index.html 必須同步載入三紀元共用冒險視圖與目前第三紀元玩家語意 owner cache-bust。");''')
 
 # Cache bust all touched player JS owners.
 cache={
