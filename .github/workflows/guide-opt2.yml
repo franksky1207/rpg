@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: 24
       - name: Apply patch
-        run: python3 guide_opt2_patch.py
+        run: |
+          python3 guide_opt2_patch.py
+          python3 guide_opt2_fix.py
       - name: Syntax and diff
         run: |
           set -euo pipefail
@@ -54,7 +56,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add gameguide.js mirrordungeonguide.js cloudsaveguide.js index.html tests/runtime/js-integrity.js tests/runtime/gameguide-extension-integrity.js .github/workflows/runtime-integrity.yml
+          git add gameguide.js mirrordungeonguide.js cloudsaveguide.js index.html tests/runtime/js-integrity.js tests/runtime/gameguide-extension-integrity.js
           git diff --cached --quiet && exit 0
           git commit -m 'Unify game guide extensions optimization batch2'
           git push origin HEAD:main
