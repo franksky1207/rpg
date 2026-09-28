@@ -74,10 +74,6 @@ new=''' function thirdWorldStageGuideText(rules=null){
 '''
 s=one(s,old,new,'stage guide')
 
-old=''' function thirdWorldGuideCategories(target=null){
-  const bossCount=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||10)),bossHp=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1100000000)),gap=Math.max(1,Math.floor(Number(window.THIRD_WORLD_FIVE_POINT_HP_GAP)||55000000)),maxDeaths=Math.max(1,Math.floor(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)||100);
-'''
-# current source has syntax fixed and different exact ending. use regex instead
 pattern=r' function thirdWorldGuideCategories\(target=null\)\{\n  const bossCount=.*?;\n'
 m=re.search(pattern,s)
 if not m: raise SystemExit('thirdWorldGuideCategories header missing')
@@ -101,7 +97,6 @@ for old,newv in repls.items():
     if old not in s: raise SystemExit(f'guide text anchor missing: {old}')
     s=s.replace(old,newv,1)
 
-# version + exports + current-category validation
 s=one(s,' window.GAME_GUIDE_VERSION=21;',' window.GAME_GUIDE_VERSION=22;','guide version')
 s=one(s,' window.GAME_GUIDE_WORLD_AWARE_VERSION=8;',' window.GAME_GUIDE_WORLD_AWARE_VERSION=9;','world aware')
 s=one(s,' window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=1;',' window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2;\n window.GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1;\n window.GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1;','phase owner version')
@@ -122,11 +117,11 @@ s=s.replace('GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=1','GAME_GUIDE_WORLD_PHASE_OWN
 s=s.replace("gameguide.js?v=20260928-thirdworld-entity-term1",f"gameguide.js?v={TAG}")
 anchor='assert(/GAME_GUIDE_VERSION=22/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_AWARE_VERSION=9/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2/.test(gameGuideSource)&&/GAME_GUIDE_THIRD_WORLD_VERSION=1/.test(gameGuideSource),'
 if anchor not in s: raise SystemExit('updated guide version assertion anchor missing')
-insert='''assert(/GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1/.test(gameGuideSource),"W3 Guide 必須使用正式 rule snapshot 與當前紀元分類驗證。\");
-assert(/effectiveLevelCap/.test(gameGuideSource)&&/effectiveExpNeed/.test(gameGuideSource)&&/effectiveEnhancementCap/.test(gameGuideSource)&&/THIRD_WORLD_ENTRY_CONFIG/.test(gameGuideSource)&&/THIRD_WORLD_EQUIPMENT_BASE_POLICY/.test(gameGuideSource)&&/DEATH_EQUIPMENT_LOSS_CHANCE/.test(gameGuideSource)&&/OFFLINE_PROGRESS_MAX_HOURS/.test(gameGuideSource),"W3 Guide 正式數值必須委派 canonical owner，不得維護第二份玩家規則。\");
-assert(/const categories=gameGuideCategoriesForState\(\);if\(!categories\.some\(x=>x\.id===id\)\)return/.test(gameGuideSource),"Guide 分類切換必須依當前紀元實際 categories 驗證。\");
-assert(/OFFLINE_DURATION_POLICY_VERSION=1/.test(offline)&&/OFFLINE_PROGRESS_MAX_HOURS=OFFLINE_MAX_MS\/\(60\*60\*1000\)/.test(offline),"離線 12 小時上限必須由 offlineprogress canonical owner 對外提供。\");
-assert(index.includes('offlineprogress.js?v=20260928-thirdworld-guide-opt1'),"Guide Opt1 修改 offlineprogress.js export 後必須同步 cache-bust。\");
+insert=r'''assert(/GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1/.test(gameGuideSource),"W3 Guide 必須使用正式 rule snapshot 與當前紀元分類驗證。");
+assert(/effectiveLevelCap/.test(gameGuideSource)&&/effectiveExpNeed/.test(gameGuideSource)&&/effectiveEnhancementCap/.test(gameGuideSource)&&/THIRD_WORLD_ENTRY_CONFIG/.test(gameGuideSource)&&/THIRD_WORLD_EQUIPMENT_BASE_POLICY/.test(gameGuideSource)&&/DEATH_EQUIPMENT_LOSS_CHANCE/.test(gameGuideSource)&&/OFFLINE_PROGRESS_MAX_HOURS/.test(gameGuideSource),"W3 Guide 正式數值必須委派 canonical owner，不得維護第二份玩家規則。");
+assert(/const categories=gameGuideCategoriesForState\(\);if\(!categories\.some\(x=>x\.id===id\)\)return/.test(gameGuideSource),"Guide 分類切換必須依當前紀元實際 categories 驗證。");
+assert(/OFFLINE_DURATION_POLICY_VERSION=1/.test(offlineProgress)&&/OFFLINE_PROGRESS_MAX_HOURS=OFFLINE_MAX_MS\/\(60\*60\*1000\)/.test(offlineProgress),"離線 12 小時上限必須由 offlineprogress canonical owner 對外提供。");
+assert(index.includes('offlineprogress.js?v=20260928-thirdworld-guide-opt1'),"Guide Opt1 修改 offlineprogress.js export 後必須同步 cache-bust。");
 '''
 idx=s.find(anchor)
 if idx<0: raise SystemExit('cannot locate insertion point')
