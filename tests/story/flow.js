@@ -2,6 +2,7 @@
 // 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
 // Batch 12-1：三紀元 Story Registry／高維 Trigger 骨架完成。
 // Batch 12-2：高維 Eligibility／共用 Queue／Reload Recovery 必須沿用 storyProgress，不新增 W3 私有 persistent queue。
+// Batch 12-2 exact-head：placeholder zero-queue、順序補播、reload recovery 與 W1/W2 相容性需同時通過 Story／Runtime Integrity。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
