@@ -26,6 +26,8 @@ jobs:
           pairs={
             'src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-4"':'src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1"',
             'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4"':'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-o1"',
+            'src="thirdworldphase.js?v=20260928-thirdworld-batch12-3"':'src="thirdworldphase.js?v=20260928-thirdworld-batch12-o1"',
+            'src="thirdworldmigrationregression.js?v=20260928-thirdworld-batch10-opt2"':'src="thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1"',
           }
           for old,new in pairs.items():
             if old not in s: raise SystemExit(f'cache test anchor missing: {old}')
