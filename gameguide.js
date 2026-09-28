@@ -155,16 +155,16 @@
     ["高維競技場","高維競技場目前尚未開放，入口維持等待狀態，不會偷偷沿用舊紀元競技場規則。"],
     ["虛空幻境","虛空幻境不分紀元並完整承接既有進度；仍可依正式規則挑戰與取得對應 VIP 積分。"],
     ["鏡像戰","鏡像戰不分紀元並完整承接既有進度；仍使用開始挑戰時的角色戰力建立對手。"],
-    ["VIP 系統","VIP 等級沒有上限；VIP 等級沒有上限，第三紀元會繼續套用目前仍有效的 VIP 特權。"],
+    ["VIP 系統","VIP 等級沒有上限；第三紀元會繼續套用目前仍有效的 VIP 特權。"],
     ["VIP 裝備保護",`VIP${rules.vipRequired} 同時是進入第三紀元的必要條件，也是第三紀元死亡裝備保護的來源；高維結算會把這項保護明確呈現給玩家。`]
    ]},
    {id:"growth",label:"高維成長",items:[
     ["維度之弦","維度之弦是第三紀元的永久成長資源；正式戰鬥每造成 1 點有效永久削血，就取得 1 點維度之弦。"],
     ["界弦核心",thirdWorldCoreGuideText()],
     ["核心注入","可將目前持有的維度之弦一次注入界弦核心，連續跨級時進度會正確保留。高維連戰進行中不能注入，必須先停止該輪戰鬥。"],
-    ["高維稱號","10 名高維存在的總剩餘 HP 降到指定門檻時會推進高維稱號；稱號進度由10 名高維存在的總剩餘 HP 統一判定，不依單一 Boss 或回顧戰重複發放。"],
+    ["高維稱號","10 名高維存在的總剩餘 HP 降到指定門檻時會推進高維稱號；稱號進度由 10 名高維存在的總剩餘 HP 統一判定，不依單一 Boss 或回顧戰重複發放。"],
     ["既有養成","進入第三紀元前已完成的角色養成會依正式戰鬥 owner 繼續生效；第三紀元本身不再新增另一套平行養成資源或重複系統。"],
-    ["極簡模式","高維連續戰鬥可使用共用極簡模式；背景補播與快速追趕只處理演出／節奏，不會額外創造正式高維進度。"],
+    ["極簡模式","高維連續戰鬥可使用共用極簡模式；背景補播與快速追趕只加速等待與演出，不會因補播機制額外加發正式進度或收益；實際戰鬥仍依正式戰鬥與結算流程落帳。"],
     ["存檔","角色正式進度會持續寫入本機存檔；帳號登入後仍可使用設定頁的手動雲端上傳／下載。高維連戰的死亡次數、目前目標與最近戰鬥摘要都屬暫時狀態，不會寫入正式存檔。"]
    ]}
   ];
@@ -307,14 +307,16 @@
  }
  function gameGuideCategoriesForState(target=null){return applyGameGuideCategoryExtensions(baseGameGuideCategoriesForState(target),target);}
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=23;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=10;
+ window.GAME_GUIDE_VERSION=24;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=11;
  window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2;
  window.GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1;
  window.GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1;
  window.GAME_GUIDE_EXTENSION_REGISTRY_VERSION=1;
  window.GAME_GUIDE_CATEGORY_RESOLVER_VERSION=1;
  window.GAME_GUIDE_PAGE_EXTENSION_VERSION=1;
+ window.GAME_GUIDE_BEHAVIORAL_INTEGRITY_VERSION=1;
+ window.GAME_GUIDE_FAST_CATCH_UP_TEXT_VERSION=1;
  window.GAME_GUIDE_THIRD_WORLD_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
