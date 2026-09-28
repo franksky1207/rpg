@@ -59,6 +59,11 @@
  };
  window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=3;
 
+ function gmStoryTestSectionHtml(){
+  if(typeof window.gmStoryTestHtml==="function")return window.gmStoryTestHtml();
+  return '<div class="muted gm-hub-note">劇情測試模組載入中…</div>';
+ }
+
  function registerNativeSections(){
   const registrations=[
    ["manage","角色管理",window.gmGeneralManagementHtml,{id:"general-manage"}],
@@ -68,6 +73,7 @@
    ["manage","文明等級管理",window.gmCivilizationManagementHtml,{id:"civilization-manage"}],
    ["manage","副本管理",window.gmDungeonManagementHtml,{id:"dungeon-manage"}],
    ["test","角色能力測試",window.gmPlayerAbilityTestHtml,{id:"player-ability-test"}],
+   ["test","劇情測試",gmStoryTestSectionHtml,{id:"gm-story-test"}],
   ];
   registrations.forEach(args=>window.registerGmHubSection(...args));
  }
@@ -106,5 +112,6 @@
  window.GM_HUB_EXTENSION_VERSION=13;
  window.GM_HUB_REGISTRY_VERSION=1;
  window.GM_HUB_SECTION_RENDERER_REPLACE_VERSION=1;
+ window.GM_HUB_STORY_NATIVE_SECTION_VERSION=1;
  window.GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=2;
 })();
