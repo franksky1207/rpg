@@ -1,6 +1,7 @@
 (function(){
- const PLAYER_TITLE_UI_VERSION=3;
+ const PLAYER_TITLE_UI_VERSION=4;
  const UNIVERSE_NOTICE_VERSION=1;
+ const POST_FLOW_HOLD_VERSION=1;
  const THIRD_WORLD_NOTICE_VERSION=1;
  const POST_FLOW_NOTIFICATION_VERSION=1;
  const LEGACY_QUEUE_DELEGATE_VERSION=1;
@@ -10,6 +11,7 @@
  let titleNoticeOpen=false;
  let postFlowQueued=false;
  let lastPostFlowSource="";
+ const postFlowHolds=new Set();
 
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
@@ -83,9 +85,19 @@
   return "首次擊敗對應銀河紀元文明災厄後取得。";
  }
 
+ function thirdWorldStoryBlocksTitle(){
+  try{
+   if(typeof state==="undefined"||state?.thirdWorld?.entered!==true)return false;
+   if(!window.civilizationStoryProgress)return true;
+   if(typeof window.isStoryOpen==="function"&&window.isStoryOpen()===true)return true;
+   const pending=String(state?.storyProgress?.pendingStory||"");
+   if(pending&&typeof window.thirdWorldStoryTriggerDescriptor==="function"&&window.thirdWorldStoryTriggerDescriptor(pending))return true;
+   return !!window.civilizationStoryProgress?.nextThirdWorldStory?.(state,{requireContent:true});
+  }catch(_){return false;}
+ }
  function showPendingPlayerTitleNotice(){
   postFlowQueued=false;
-  if(titleNoticeOpen||document.hidden)return false;
+  if(titleNoticeOpen||document.hidden||postFlowHolds.size>0||thirdWorldStoryBlocksTitle())return false;
   const def=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!def)return false;
   const modal=ensureTitleNoticeModal();
@@ -108,9 +120,10 @@
   return true;
  }
 
+ function setPlayerTitlePostFlowHold(source,held=true){const key=String(source||"post-flow");if(held)postFlowHolds.add(key);else postFlowHolds.delete(key);return postFlowStatus();}
  function flushPendingPlayerTitleNoticeAfterFlow(options={}){
   lastPostFlowSource=String(options?.source||"");
-  if(document.hidden||titleNoticeOpen)return false;
+  if(document.hidden||titleNoticeOpen||postFlowHolds.size>0||thirdWorldStoryBlocksTitle())return false;
   const pending=typeof window.getPendingPlayerTitleNotice==="function"?window.getPendingPlayerTitleNotice():null;
   if(!pending)return false;
   if(postFlowQueued)return true;
@@ -121,7 +134,7 @@
  }
 
  function queuePendingPlayerTitleNotice(){return flushPendingPlayerTitleNoticeAfterFlow({source:"legacy-queue"});}
- function postFlowStatus(){return Object.freeze({queued:postFlowQueued,open:titleNoticeOpen,source:lastPostFlowSource,pendingId:typeof window.getPendingPlayerTitleNotice==="function"?(window.getPendingPlayerTitleNotice()?.id||null):null});}
+ function postFlowStatus(){return Object.freeze({queued:postFlowQueued,open:titleNoticeOpen,held:postFlowHolds.size>0,holdSources:Object.freeze(Array.from(postFlowHolds)),source:lastPostFlowSource,pendingId:typeof window.getPendingPlayerTitleNotice==="function"?(window.getPendingPlayerTitleNotice()?.id||null):null});}
 
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)flushPendingPlayerTitleNoticeAfterFlow({source:"visibilitychange"});});
  setTimeout(()=>flushPendingPlayerTitleNoticeAfterFlow({source:"startup"}),0);
@@ -130,6 +143,7 @@
  window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION=UNIVERSE_NOTICE_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION=THIRD_WORLD_NOTICE_VERSION;
  window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION=POST_FLOW_NOTIFICATION_VERSION;
+ window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION=POST_FLOW_HOLD_VERSION;
  window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION=LEGACY_QUEUE_DELEGATE_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION=THIRD_WORLD_POST_FLOW_READY_VERSION;
  window.PLAYER_TITLE_POST_FLOW_ERAS=Object.freeze(["galaxy","universe","higher-dimensional"]);
@@ -138,6 +152,7 @@
  window.selectPlayerTitle=selectPlayerTitle;
  window.showPendingPlayerTitleNotice=showPendingPlayerTitleNotice;
  window.closePlayerTitleNotice=closePlayerTitleNotice;
+ window.setPlayerTitlePostFlowHold=setPlayerTitlePostFlowHold;
  window.flushPendingPlayerTitleNoticeAfterFlow=flushPendingPlayerTitleNoticeAfterFlow;
  window.queuePendingPlayerTitleNotice=queuePendingPlayerTitleNotice;
  window.getPlayerTitlePostFlowStatus=postFlowStatus;

@@ -1,8 +1,11 @@
 (function(){
  const MODAL_ID="civilizationStoryModal";
+ const VERSION=9;
+ const LIFECYCLE_WAIT_VERSION=1;
  let activeStory=null;
  let activePage=0;
  let activeOptions=null;
+ let storyCloseResolvers=[];
 
  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
  function playerName(){
@@ -26,6 +29,8 @@
   }
   return "";
  }
+ function resolveStoryClosed(){const rows=storyCloseResolvers.splice(0);rows.forEach(resolve=>{try{resolve(true);}catch(_){}});}
+ function waitForStoryClosed(){return activeStory?new Promise(resolve=>storyCloseResolvers.push(resolve)):Promise.resolve(true);}
  function ensureModal(){
   let modal=document.getElementById(MODAL_ID);
   if(modal)return modal;
@@ -80,7 +85,10 @@
   if(completed&&typeof options?.onComplete==="function"){
    try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
   }
+  resolveStoryClosed();
  };
  window.isStoryOpen=function(){return !!activeStory;};
- window.STORY_UI_VERSION=8;
+ window.waitForStoryClosed=waitForStoryClosed;
+ window.STORY_UI_VERSION=VERSION;
+ window.STORY_UI_LIFECYCLE_WAIT_VERSION=LIFECYCLE_WAIT_VERSION;
 })();

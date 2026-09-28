@@ -24,7 +24,7 @@ assert(/queueStory\(universeBossStoryId\(index\)\)/.test(progress),'宇宙首殺
 assert(/UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1/.test(progress),'宇宙首殺 hook 版本遺失');
 assert(/result\?\.ok&&result\.firstKill===true/.test(progress),'宇宙首殺 hook 未綁 firstKill');
 assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 storyProgress 欄位遺失');
-assert(/const VERSION=14;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 14');
+assert(/const VERSION=15;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 15');
 assert(/THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION/.test(progress),'storyprogress 未建立高維共用 Queue／Eligibility owner');
 assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION/.test(progress)&&/THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION/.test(progress),'storyprogress 未建立 reload recovery／placeholder guard');
 assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
@@ -33,6 +33,8 @@ assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reloa
 ['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
 assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
 assert(/consumeThirdWorldSettlement/.test(progress)&&/thirdWorldCompletionFramework/.test(progress),'12-3 必須建立 settlement→shared Story bridge 與 Completion Framework');
+assert(/function drainThirdWorldPostFlowStories/.test(progress)&&/queueThirdWorldEligibleStory\(\{resume:false\}\)/.test(progress)&&/waitForStoryClosed/.test(progress),'12-4 必須以 shared pending/eligibility 建立 W3 post-flow Story drain，不得新增私有 queue');
+assert(/const VERSION=9;/.test(storyui)&&/STORY_UI_LIFECYCLE_WAIT_VERSION/.test(storyui)&&/waitForStoryClosed/.test(storyui),'Story UI 必須提供共用 lifecycle wait owner');
 assert(/queueThirdWorldEligibleStory\(\{resume:false\}\)/.test(progress),'settlement bridge 必須延後 Story presentation，等待 12-4 post-flow coordinator');
 assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
 assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
@@ -41,7 +43,7 @@ assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
-assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=14;/.test(runtime),'Story Runtime Integrity 應為 V14');
+assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=15;/.test(runtime),'Story Runtime Integrity 應為 V15');
 assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];

@@ -1,5 +1,5 @@
 (function(){
- const VERSION=14;
+ const VERSION=15;
  function run(){
   const errors=[],warnings=[],fail=(code,message,data=null)=>errors.push({code,message,data});
   const data=window.runCivilizationStoryIntegrity?.();
@@ -25,10 +25,10 @@
   if(final?.stage!==10||final?.thresholdRemainingPercentSum!==finalThreshold||milestones.some(row=>row.stage===10))fail("STORY_RUNTIME_THIRD_WORLD_FINAL_STAGE10","stage 10／0% 必須只對應 final，不得再有第 10 段 milestone",final);
   if(triggers.some(row=>row.contentReady!==false))fail("STORY_RUNTIME_THIRD_WORLD_CONTENT_PLACEHOLDER","第 12-2 批仍不得宣告高維正式劇情內容已就緒");
 
-  if(typeof window.openStory!=="function"||typeof window.isStoryOpen!=="function")fail("STORY_RUNTIME_UI_MISSING","共用正式劇情視窗未完整載入");
+  if(typeof window.openStory!=="function"||typeof window.isStoryOpen!=="function"||typeof window.waitForStoryClosed!=="function"||Number(window.STORY_UI_VERSION)!==9||Number(window.STORY_UI_LIFECYCLE_WAIT_VERSION)!==1)fail("STORY_RUNTIME_UI_MISSING","共用正式劇情視窗／lifecycle wait owner 未完整載入");
   const progress=window.civilizationStoryProgress;
-  ["normalize","resume","get","setPending","completeStory","queueStory","queueBossStory","queueUniverseBossStory","thirdWorldEligibility","nextThirdWorldStory","queueThirdWorldEligibleStory","thirdWorldCompletionFramework","consumeThirdWorldSettlement","bossStoryId","universeBossStoryId","universeBossIndexForStory","completedStories"].forEach(name=>{if(typeof progress?.[name]!=="function")fail("STORY_RUNTIME_PROGRESS_METHOD",`civilizationStoryProgress.${name} 未載入`);});
-  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)!==14||Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)!==1||Number(window.THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION)!==1||Number(window.THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION)!==1||Number(window.THIRD_WORLD_STORY_ELIGIBILITY_VERSION)!==1||Number(window.THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION)!==1||Number(window.THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION)!==1)fail("STORY_RUNTIME_THIRD_WORLD_QUEUE_VERSION","高維共用 Story Queue／Eligibility／Reload Recovery owner 版本未就緒");
+  ["normalize","resume","get","setPending","completeStory","queueStory","queueBossStory","queueUniverseBossStory","thirdWorldEligibility","nextThirdWorldStory","queueThirdWorldEligibleStory","thirdWorldCompletionFramework","consumeThirdWorldSettlement","drainThirdWorldPostFlowStories","bossStoryId","universeBossStoryId","universeBossIndexForStory","completedStories"].forEach(name=>{if(typeof progress?.[name]!=="function")fail("STORY_RUNTIME_PROGRESS_METHOD",`civilizationStoryProgress.${name} 未載入`);});
+  if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)!==15||Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)!==1||Number(window.THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION)!==1||Number(window.THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION)!==1||Number(window.THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION)!==1||Number(window.THIRD_WORLD_STORY_ELIGIBILITY_VERSION)!==1||Number(window.THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION)!==1||Number(window.THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION)!==1)fail("STORY_RUNTIME_THIRD_WORLD_QUEUE_VERSION","高維共用 Story Queue／Eligibility／Reload Recovery owner 版本未就緒");
   if(typeof window.thirdWorldStoryEligibilitySnapshot!=="function"||typeof window.nextThirdWorldStoryCandidate!=="function"||typeof window.queueThirdWorldEligibleStory!=="function")fail("STORY_RUNTIME_THIRD_WORLD_QUEUE_API","高維共用 Story Queue API 未完整載入");
   if(Number(window.UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION)!==1)fail("STORY_RUNTIME_UNIVERSE_FIRST_CLEAR_HOOK","宇宙紀元首次擊破劇情 hook 未載入");
   ["replayCompletedStory","storyRecordPageHtml","selectStoryRecordRegion","prepareStoryRecordEntry","setStoryRecordEraView"].forEach(name=>{if(typeof window[name]!=="function")fail("STORY_RUNTIME_RECORD_METHOD",`${name} 未載入`);});

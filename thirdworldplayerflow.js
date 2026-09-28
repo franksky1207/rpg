@@ -1,5 +1,8 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
+ const POST_FLOW_COORDINATOR_VERSION=1;
+ const STORY_POST_FLOW_SEQUENCE_VERSION=1;
+ const TITLE_NOTICE_HOLD_VERSION=1;
  const PRESENTATION_ADAPTER_VERSION=1;
  const MINIMAL_MODE_ADAPTER_VERSION=1;
  const HP_CAP_PRESENTATION_VERSION=1;
@@ -13,6 +16,7 @@
  const ADAPTER_ID="third-world-mainline";
  const EVENT_MODAL_ID="thirdWorldProgressEventModal";
  const SUMMARY_MODAL_ID="thirdWorldRunSummaryModal";
+ const TITLE_HOLD_SOURCE="third-world-player-flow";
  let activeContext=null;
  let retainedContext=null;
  let flowPromise=null;
@@ -34,6 +38,8 @@
  function activeFlow(){return !!activeContext&&activeContext.active===true;}
  function minimalOpen(){return window.getMinimalModeAdapterId?.()===ADAPTER_ID&&window.isMinimalModeOpen?.()===true;}
  function syncMinimal(){if(minimalOpen()&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();}
+ function setTitlePostFlowHold(held){return typeof window.setPlayerTitlePostFlowHold==="function"?window.setPlayerTitlePostFlowHold(TITLE_HOLD_SOURCE,held):null;}
+ async function drainPostFlowStories(){if(typeof window.civilizationStoryProgress?.drainThirdWorldPostFlowStories==="function")return await window.civilizationStoryProgress.drainThirdWorldPostFlowStories();window.civilizationStoryProgress?.resume?.();return Object.freeze({ok:false,deferred:true,reason:"story-post-flow-owner-missing"});}
  function capFromCombat(combat){
   const baseMax=Math.max(1,whole(combat?.playerMaxHp)),cap=Math.max(1,Math.min(baseMax,whole(combat?.playerHealCap||baseMax)));
   return {baseMax,cap,percent:baseMax>0?cap/baseMax*100:100};
@@ -285,11 +291,12 @@
   if(typeof window.runThirdWorldContinuousLoop!=="function")return Object.freeze({ok:false,reason:"高維連戰 runtime 尚未載入完整。"});
   const boss=bossDefinition(index);
   retainedContext=null;
-  const loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});
+  setTitlePostFlowHold(true);
+  let loopPromise;
+  try{loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});}catch(error){setTitlePostFlowHold(false);throw error;}
   const snapshot=runSnapshot();
   if(snapshot?.active!==true||whole(snapshot.bossIndex)!==index){
-   const failed=await loopPromise;
-   return failed;
+   try{return await loopPromise;}finally{setTitlePostFlowHold(false);}
   }
   const cap=snapshot?.hpCap||{},runId=snapshot?.runId==null?null:whole(snapshot.runId);
   activeContext={runId,active:true,bossIndex:index,bossName:String(boss?.name||"高維存在"),battleNumber:Math.max(1,whole(snapshot?.battles)+1),deaths:whole(snapshot?.deaths),hpCap:whole(cap.hpCap),hpCapPercent:clamp(cap.hpCapPercent??100,0,100),currentCombat:null,presenting:false,catchingUp:false,catchUpCompleted:0,stopReason:""};
@@ -306,8 +313,14 @@
    finishMinimalMode();
    flowPromise=null;
    if(typeof render==="function")render();
-   await presentRunSummary(completedResult,finalSnapshot);
-   if(typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")window.flushPendingPlayerTitleNoticeAfterFlow({source:"third-world-player-flow"});
+   try{
+    await presentRunSummary(completedResult,finalSnapshot);
+    await drainPostFlowStories();
+   }catch(error){console.error("Third-world post-flow presentation failed",error);window.civilizationStoryProgress?.resume?.();}
+   finally{
+    setTitlePostFlowHold(false);
+    if(typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")window.flushPendingPlayerTitleNoticeAfterFlow({source:"third-world-player-flow"});
+   }
   }
  }
  function stopFlow(reason="manual"){
@@ -355,7 +368,7 @@
   if(typeof window.thirdWorldRunBackgroundPolicySnapshot!=="function"||Number(window.THIRD_WORLD_RUN_BACKGROUND_GM_GATE_VERSION)!==1||Number(window.THIRD_WORLD_RUN_FOREGROUND_WAIT_VERSION)!==1)errors.push("THIRD_WORLD_BACKGROUND_POLICY_OWNER_MISSING");
   if(Number(window.GM_BACKGROUND_BATTLE_THIRD_WORLD_GATE_VERSION)!==1)errors.push("GM_BACKGROUND_THIRD_WORLD_GATE_MISSING");
   if(typeof window.continuousRunStopReasonMeta!=="function"||Number(window.CONTINUOUS_RUN_STOP_REASON_SEMANTICS_VERSION)!==2)errors.push("SHARED_STOP_REASON_OWNER_MISSING");
-  if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function")errors.push("SHARED_TITLE_POST_FLOW_MISSING");
+  if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function"||typeof window.setPlayerTitlePostFlowHold!=="function"||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1)errors.push("SHARED_TITLE_POST_FLOW_MISSING");
   if(Number(window.THIRD_WORLD_RUN_TOTALS_VERSION)!==1)errors.push("RUN_TOTALS_CONTRACT_MISSING");
   if(Number(window.THIRD_WORLD_RUN_IDENTITY_VERSION)!==1||Number(window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION)!==1||Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==2)errors.push("RUN_IDENTITY_CONTRACT_MISSING");
   if(environmentSubscribed!==true)errors.push("BACKGROUND_ENVIRONMENT_SYNC_MISSING");
@@ -366,11 +379,12 @@
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
   const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents);
-  if(flowSource.indexOf("await presentRunSummary")<0||flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow")<flowSource.indexOf("await presentRunSummary"))errors.push("TITLE_POST_FLOW_SEQUENCE");
+  const summaryIndex=flowSource.indexOf("await presentRunSummary"),storyIndex=flowSource.indexOf("await drainPostFlowStories"),releaseIndex=flowSource.indexOf("setTitlePostFlowHold(false)",storyIndex),titleIndex=flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow",storyIndex);
+  if(summaryIndex<0||storyIndex<summaryIndex||releaseIndex<storyIndex||titleIndex<releaseIndex)errors.push("POST_FLOW_SEQUENCE");
   if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
   if(flowSource.includes("startThirdWorldContinuousRun"))errors.push("DUPLICATE_START_OWNER");
   if(summarySource.includes("停止類型")||eventSource.includes("5pp"))errors.push("PLAYER_INTERNAL_TERMINOLOGY_LEAK");
-  return Object.freeze({version:VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  registerAdapter();
@@ -383,6 +397,9 @@
  window.closeThirdWorldRunSummaryModal=closeRunSummaryModal;
  window.thirdWorldRunStopReasonPresentation=stopReasonPresentation;
  window.THIRD_WORLD_PLAYER_FLOW_VERSION=VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_POST_FLOW_COORDINATOR_VERSION=POST_FLOW_COORDINATOR_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_STORY_POST_FLOW_SEQUENCE_VERSION=STORY_POST_FLOW_SEQUENCE_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_TITLE_NOTICE_HOLD_VERSION=TITLE_NOTICE_HOLD_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_PRESENTATION_ADAPTER_VERSION=PRESENTATION_ADAPTER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION=MINIMAL_MODE_ADAPTER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_HP_CAP_PRESENTATION_VERSION=HP_CAP_PRESENTATION_VERSION;
