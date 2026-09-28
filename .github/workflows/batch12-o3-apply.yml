@@ -15,6 +15,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Sync flow expectation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/story/flow.js')
+          s=p.read_text(encoding='utf-8')
+          old="assert(/if\\(queueThirdWorldEligibleStory\\(\\)\\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');"
+          new="assert(/if\\(queueThirdWorldEligibleStory\\(\\{progress:p\\}\\)\\)return true/.test(progress),'reload/resume 必須重用已 normalize progress 並重建下一篇高維正式故事');"
+          if s.count(old)!=1: raise SystemExit(f'flow expectation anchor count={s.count(old)}')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
       - name: Apply patch
         run: python3 batch12_o3_patch.py
       - name: Self-check
