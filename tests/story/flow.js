@@ -26,7 +26,7 @@ assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 
 assert(/const VERSION=13;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 13');
 assert(/THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION/.test(progress),'storyprogress 未建立高維共用 Queue／Eligibility owner');
 assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION/.test(progress)&&/THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION/.test(progress),'storyprogress 未建立 reload recovery／placeholder guard');
-assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(\)/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
+assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
 assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
 assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');
 ['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
