@@ -1,0 +1,65 @@
+name: One-time Batch 11-2 Retry
+
+on:
+  push:
+    paths:
+      - '.github/workflows/batch11-2-retry.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Reuse prepared patch and fix integrity declarations
+        shell: python
+        run: |
+          from pathlib import Path
+          import textwrap
+
+          src=Path('.github/workflows/batch11-2-runner.yml').read_text(encoding='utf-8').splitlines()
+          start=None
+          for i,line in enumerate(src):
+              if line.strip()=='- name: Apply batch 11-2 review patch':
+                  for j in range(i+1,len(src)):
+                      if src[j].strip()=='run: |':
+                          start=j+1; break
+                  break
+          if start is None: raise SystemExit('prepared patch block not found')
+          block=[]
+          for line in src[start:]:
+              if line.startswith('      - name:'): break
+              block.append(line)
+          code=textwrap.dedent('\n'.join(block))
+          exec(compile(code,'batch11-2-prepared','exec'),{})
+
+          p=Path('tests/runtime/js-integrity.js'); t=p.read_text(encoding='utf-8')
+          anchor='const combatCore=read("combatcore.js");\n'
+          addition=anchor+'const thirdWorldCombat=read("thirdworldcombat.js");\nconst thirdWorldUi=read("thirdworldui.js");\n'
+          if t.count(anchor)!=1: raise SystemExit('integrity declaration anchor mismatch')
+          t=t.replace(anchor,addition)
+          p.write_text(t,encoding='utf-8')
+      - name: Syntax and integrity self-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check thirdworldcombat.js
+          node --check worldmapui.js
+          node --check thirdworldui.js
+          node --check thirdworldintegritycontract.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+      - name: Commit batch 11-2 to main and remove runners
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/batch11-2-runner.yml .github/workflows/batch11-2-retry.yml
+          git add thirdworldcombat.js worldmapui.js thirdworldui.js thirdworldintegritycontract.js tests/runtime/js-integrity.js index.html
+          git commit -m 'Implement higher-dimensional boss review battles'
+          git push origin HEAD:main
