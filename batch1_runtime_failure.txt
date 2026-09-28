@@ -1,0 +1,16 @@
+/home/runner/work/rpg/rpg/tests/runtime/js-integrity.js:5
+function assert(condition,message){if(!condition)throw new Error(message);}
+                                                 ^
+
+Error: index.html 必須同步載入第 11-1 批三紀元共用冒險視圖 owner cache-bust。
+    at assert (/home/runner/work/rpg/rpg/tests/runtime/js-integrity.js:5:56)
+    at Object.<anonymous> (/home/runner/work/rpg/rpg/tests/runtime/js-integrity.js:371:1)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.21.0
