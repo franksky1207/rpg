@@ -69,9 +69,9 @@
   ...Array.from({length:9},(_,index)=>{
    const stage=index+1;
    const storyId=`higher-dimensional-milestone-${String(stage).padStart(2,"0")}`;
-   return freeze({id:storyId,storyId,kind:"milestone",stage,thresholdRemainingPercentSum:titleThreshold(stage),contentReady:stage===1});
+   return freeze({id:storyId,storyId,kind:"milestone",stage,thresholdRemainingPercentSum:titleThreshold(stage),contentReady:true});
   }),
-  freeze({id:"higher-dimensional-final",storyId:"higher-dimensional-final",kind:"final",stage:10,thresholdRemainingPercentSum:titleThreshold(10),completionGate:"all-bosses-defeated",contentReady:false})
+  freeze({id:"higher-dimensional-final",storyId:"higher-dimensional-final",kind:"final",stage:10,thresholdRemainingPercentSum:titleThreshold(10),completionGate:"all-bosses-defeated",contentReady:true})
  ]);
  function thirdWorldStoryTriggerDescriptors(){return thirdWorldTriggers;}
  function thirdWorldStoryTriggerForStage(value){const stage=Math.floor(Number(value));return thirdWorldTriggers.find(row=>row.stage===stage&&row.kind!=="intro")||null;}
@@ -95,7 +95,8 @@
   if(JSON.stringify(milestones.map(row=>row.thresholdRemainingPercentSum))!==JSON.stringify(expectedThresholds))errors.push("THIRD_WORLD_MILESTONE_THRESHOLDS");
   if(finals[0]?.stage!==10||finals[0]?.thresholdRemainingPercentSum!==titleThreshold(10)||milestones.some(row=>row.stage===10))errors.push("THIRD_WORLD_FINAL_STAGE10");
   const readyIds=thirdWorldTriggers.filter(row=>row.contentReady===true).map(row=>row.storyId);
-  if(JSON.stringify(readyIds)!==JSON.stringify(["higher-dimensional-intro","higher-dimensional-milestone-01"]))errors.push("THIRD_WORLD_CONTENT_READY_BATCH13_2");
+  const expectedReady=["higher-dimensional-intro",...Array.from({length:9},(_,index)=>`higher-dimensional-milestone-${String(index+1).padStart(2,"0")}`),"higher-dimensional-final"];
+  if(JSON.stringify(readyIds)!==JSON.stringify(expectedReady))errors.push("THIRD_WORLD_CONTENT_READY_BATCH13_7");
   return freeze({version:SHARED_ERA_REGISTRY_VERSION,passed:errors.length===0,eraIds:ids,thirdWorldTriggerCount:thirdWorldTriggers.length,errors:freeze(errors)});
  }
 
