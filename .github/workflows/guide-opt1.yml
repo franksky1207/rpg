@@ -1,5 +1,5 @@
 name: Guide Optimization Batch1
-# retry after converting VIP protection regression to dynamic guide-owner validation
+# post-commit follow-up: restore W1/W2 base text and finish W3 dynamic owner projection
 on:
   push:
     paths:
@@ -16,8 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Apply patch
-        run: python3 guide_opt1_patch.py
+      - name: Apply follow-up
+        run: python3 guide_opt1_followup.py
       - name: Syntax and diff
         run: |
           set -euo pipefail
@@ -40,18 +40,19 @@ jobs:
       - name: Semantic checks
         run: |
           set -euo pipefail
-          grep -q 'GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1' gameguide.js
-          grep -q 'GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1' gameguide.js
-          grep -q 'thirdWorldGuideRuleSnapshot' gameguide.js
-          grep -q 'OFFLINE_DURATION_POLICY_VERSION=1' offlineprogress.js
-          grep -q 'gameguide.js?v=20260928-thirdworld-guide-opt1' index.html
-          grep -q 'offlineprogress.js?v=20260928-thirdworld-guide-opt1' index.html
+          grep -q 'OFFLINE_PROGRESS_MAX_HOURS' gameguide.js
+          grep -q 'rules.offlineMaxHours.toLocaleString()' gameguide.js
+          grep -q 'rules.equipmentNameBandCount' gameguide.js
+          grep -q '10 名高維存在' gameguide.js
+          ! grep -q '十名高維存在' gameguide.js
           ! grep -q '十王' gameguide.js
-      - name: Commit formal changes
+          grep -q 'gameguide.js?v=20260928-thirdworld-guide-opt1fix1' index.html
+          grep -q 'offlineprogress.js?v=20260928-thirdworld-guide-opt1' index.html
+      - name: Commit formal follow-up
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add gameguide.js offlineprogress.js index.html tests/runtime/js-integrity.js
+          git add gameguide.js index.html tests/runtime/js-integrity.js
           git diff --cached --quiet && exit 0
-          git commit -m 'Converge third-world guide rule owners optimization batch1'
+          git commit -m 'Finish third-world guide owner convergence optimization batch1'
           git push origin HEAD:main
