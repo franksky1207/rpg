@@ -77,7 +77,7 @@ replace('storyrecordtabs.js',
 '''function eraTabsHtml(){if(!(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()))return "";const universeLabel=thirdWorldEntered()?"宇宙紀元・回顧":"宇宙紀元";return `<div class="era-view-tabs story-record-era-tabs" role="tablist" aria-label="戰線紀錄紀元"><button class="era-view-tab ${storyRecordEraView==="universe"?"active":""}" onclick="setStoryRecordEraView('universe')">${universeLabel}</button><button class="era-view-tab ${storyRecordEraView==="galaxy-review"?"active":""}" onclick="setStoryRecordEraView('galaxy-review')">銀河紀元・回顧</button></div>`;}''')
 replace('storyrecordtabs.js',
 '''const text=storyRecordEraView==="universe"?"查看宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。":"回顧銀河紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";''',
-'''const text=storyRecordEraView==="universe"?(thirdWorldEntered()?"回顧宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。":"查看宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。":"回顧銀河紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";''')
+'''const text=storyRecordEraView==="universe"?(thirdWorldEntered()?"回顧宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。":"查看宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。") : "回顧銀河紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";''')
 replace('storyrecordtabs.js','window.STORY_RECORD_TABS_VERSION=7;window.STORY_RECORD_WORLD_REVIEW_VERSION=2;',
 'window.STORY_RECORD_TABS_VERSION=8;window.STORY_RECORD_WORLD_REVIEW_VERSION=3;')
 
