@@ -90,19 +90,61 @@
   };
 
 
-  // 宇宙紀元冒險 UI：正式世界預設宇宙；銀河回顧只保留本次頁面生命週期，不寫正式 save/localStorage。
-  let secondWorldAdventureView="universe";
+  // 共用冒險紀元視圖 owner：只存在本次頁面 session；不寫 save／localStorage。世界正式切換時重設，普通 render 不重設。
   let galaxyReviewSelectedMap=0;
   let galaxyReviewSelectedEnemy=4;
   let galaxyReviewBattleActive=false;
   const reviewRegionOpenState=Object.create(null);
   let reviewRegionInitialized=false;
 
+  function currentAdventureWorldPhase(){
+    if(typeof window.currentWorldPhase==="function"){
+      const current=Number(window.currentWorldPhase(state));
+      if(Number.isInteger(current)&&current>=1&&current<=3)return current;
+    }
+    return state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;
+  }
+  function defaultAdventureEraView(current=currentAdventureWorldPhase()){
+    return current===3?"higher-dimensional":current===2?"universe":"galaxy";
+  }
+  let adventureEraWorldPhase=currentAdventureWorldPhase();
+  let adventureEraView=defaultAdventureEraView(adventureEraWorldPhase);
+  function adventureEraAllowedViews(current=currentAdventureWorldPhase()){
+    if(current===3)return ["higher-dimensional","universe-review","galaxy-review"];
+    if(current===2)return ["universe","galaxy-review"];
+    return ["galaxy"];
+  }
+  function syncAdventureEraViewWorldPhase(){
+    const current=currentAdventureWorldPhase();
+    if(current!==adventureEraWorldPhase){
+      adventureEraWorldPhase=current;
+      adventureEraView=defaultAdventureEraView(current);
+    }
+    if(!adventureEraAllowedViews(current).includes(adventureEraView))adventureEraView=defaultAdventureEraView(current);
+    return adventureEraView;
+  }
+  function normalizeAdventureEraView(value,current=currentAdventureWorldPhase()){
+    let next=String(value||"");
+    if(current===3&&next==="universe")next="universe-review";
+    if(current===2&&next==="universe-review")next="universe";
+    return adventureEraAllowedViews(current).includes(next)?next:null;
+  }
+  function adventureEraViewLocked(){
+    const thirdRun=typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;
+    const secondRun=window.activeSecondWorldMainlineContext||null;
+    const globalBattleBusy=typeof battleBusy!=="undefined"&&battleBusy===true;
+    return galaxyReviewBattleActive===true||thirdRun?.active===true||!!secondRun||globalBattleBusy;
+  }
+  function eraTabButton(view,label){
+    const active=adventureEraView===view,locked=adventureEraViewLocked()&&!active;
+    return `<button class="era-view-tab ${active?"active":""}" type="button" role="tab" aria-selected="${active?"true":"false"}" ${locked?'aria-disabled="true" disabled':''} onclick="setAdventureEraView('${view}')">${label}</button>`;
+  }
   function adventureEraTabsHtml(){
-    return `<div class="era-view-tabs" role="tablist" aria-label="冒險紀元">
-      <button class="era-view-tab ${secondWorldAdventureView==="universe"?"active":""}" type="button" role="tab" aria-selected="${secondWorldAdventureView==="universe"?"true":"false"}" onclick="setSecondWorldAdventureView('universe')">宇宙紀元</button>
-      <button class="era-view-tab ${secondWorldAdventureView==="galaxy-review"?"active":""}" type="button" role="tab" aria-selected="${secondWorldAdventureView==="galaxy-review"?"true":"false"}" onclick="setSecondWorldAdventureView('galaxy-review')">銀河紀元・回顧</button>
-    </div>`;
+    syncAdventureEraViewWorldPhase();
+    const current=currentAdventureWorldPhase();
+    if(current===1)return "";
+    const tabs=current===3?[["higher-dimensional","高維紀元"],["universe-review","宇宙紀元・回顧"],["galaxy-review","銀河紀元・回顧"]]:[["universe","宇宙紀元"],["galaxy-review","銀河紀元・回顧"]];
+    return `<div class="era-view-tabs" role="tablist" aria-label="冒險紀元">${tabs.map(([view,label])=>eraTabButton(view,label)).join("")}</div>`;
   }
 
   function initReviewRegions(){
@@ -136,7 +178,7 @@
   function galaxyReviewAdventureHtml(){
     initReviewRegions();
     const regions=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
-    return `<section class="map-screen universe-adventure-screen galaxy-review-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice galaxy-review-notice"><b>銀河紀元・回顧</b><div class="muted" style="margin-top:6px">第一紀元已完成的 10 大區、100 張地圖均可回顧。回顧戰為純挑戰，不影響宇宙紀元正式進度。</div></div><div class="world-region-list galaxy-review-region-list">${regions.map(reviewRegionHtml).join("")}</div></section>`;
+    return `<section class="map-screen universe-adventure-screen galaxy-review-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice galaxy-review-notice"><b>銀河紀元・回顧</b><div class="muted" style="margin-top:6px">第一紀元已完成的 10 大區、100 張地圖均可回顧。回顧戰為純挑戰，不影響目前正式進度。</div></div><div class="world-region-list galaxy-review-region-list">${regions.map(reviewRegionHtml).join("")}</div></section>`;
   }
 
   window.openGalaxyReviewMap=function(mapIndex){
@@ -153,19 +195,29 @@
   window.setGalaxyReviewBattleActive=function(value){galaxyReviewBattleActive=value===true;};
   window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};
 
-  window.setSecondWorldAdventureView=function(value){
-    const next=value==="galaxy-review"?"galaxy-review":"universe";
-    if(secondWorldAdventureView===next)return;
+  window.setAdventureEraView=function(value){
+    const current=currentAdventureWorldPhase();
+    syncAdventureEraViewWorldPhase();
+    const next=normalizeAdventureEraView(value,current);
+    if(!next)return false;
+    if(adventureEraView===next)return true;
+    if(adventureEraViewLocked())return false;
     if(next!=="universe"&&typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
-    secondWorldAdventureView=next;
+    adventureEraView=next;
     render();
+    return true;
   };
+  window.getAdventureEraView=function(){return syncAdventureEraViewWorldPhase();};
+  window.adventureEraViewLocked=adventureEraViewLocked;
+  window.adventureEraTabsHtml=adventureEraTabsHtml;
+  // Legacy W2 API remains as a compatibility delegate; it no longer owns state.
+  window.setSecondWorldAdventureView=function(value){return window.setAdventureEraView(value);};
+  window.getSecondWorldAdventureView=function(){return window.getAdventureEraView()==="galaxy-review"?"galaxy-review":"universe";};
   window.toggleGalaxyReviewAdventureRegion=function(id){
     initReviewRegions();
     reviewRegionOpenState[id]=!reviewRegionOpenState[id];
     render();
   };
-  window.getSecondWorldAdventureView=function(){return secondWorldAdventureView;};
 
   const secondWorldRegionOpenState=Object.create(null);
   let lastSecondWorldActiveRegionId=null;
@@ -338,13 +390,16 @@
     syncSecondWorldRegionOpenState();
     const activeIndex=secondWorldActiveRegionIndex();
     const visible=regions.filter(secondWorldRegionVisible);
-    if(secondWorldAdventureView==="galaxy-review")return galaxyReviewAdventureHtml();
+    if(window.getAdventureEraView?.()==="galaxy-review")return galaxyReviewAdventureHtml();
     return `<section class="map-screen universe-adventure-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險</h2><span></span></div>${adventureEraTabsHtml()}<div class="notice universe-adventure-notice"><b>宇宙主線戰線</b><div class="muted" style="margin-top:6px">宇宙主線正式開放：擊敗 Boss 可獲得 EXP、暗物質、暗能量與 1 件專屬裝備。</div></div><div class="world-region-list universe-region-list">${visible.map(region=>secondWorldRegionHtml(region,activeIndex)).join("")}</div></section>`;
   };
 
   window.SECOND_WORLD_ADVENTURE_AUTO_FOCUS_VERSION=2;
-  window.SECOND_WORLD_ADVENTURE_UI_VERSION=4;
-  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=3;
+  window.SECOND_WORLD_ADVENTURE_UI_VERSION=5;
+  window.SECOND_WORLD_ADVENTURE_REVIEW_VIEW_VERSION=4;
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
+  window.ADVENTURE_ERA_VIEW_OWNER_VERSION=1;
+  window.ADVENTURE_ERA_SESSION_POLICY_VERSION=1;
+  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=1;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();

@@ -1,5 +1,5 @@
 (function(){
- const VERSION=9;
+ const VERSION=10;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -62,6 +62,8 @@
  function phaseAwareAdventurePage(){
   if(phase()===3){
    if(typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
+   const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():"higher-dimensional";
+   if((era==="universe-review"||era==="galaxy-review")&&typeof window.secondWorldAdventurePageHtml==="function")return window.secondWorldAdventurePageHtml();
    return typeof window.thirdWorldAdventurePageHtml==="function"?window.thirdWorldAdventurePageHtml():thirdWorldAdventureFallback();
   }
   return baseAdventurePage?baseAdventurePage():`<section class="map-screen"><div class="notice"><b>冒險介面尚未載入。</b></div></section>`;
@@ -131,7 +133,7 @@
   return true;
  }
  function applyThirdWorldUniverseReviewSemantics(){
-  if(typeof document==="undefined"||phase()!==3)return false;
+  if(typeof document==="undefined"||phase()!==3||window.getAdventureEraView?.()!=="universe-review")return false;
   const screen=document.querySelector(".universe-adventure-screen:not(.galaxy-review-adventure-screen)");
   if(!screen)return false;
   const notice=screen.querySelector(".universe-adventure-notice");
@@ -161,7 +163,8 @@
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
  window.PLAYER_SEMANTICS_UI_VERSION=VERSION;
  window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=3;
- window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=1;
+ window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
+ window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=2;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=2;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;

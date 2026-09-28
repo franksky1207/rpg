@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const CORE_UI_VERSION=2;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
@@ -124,7 +124,8 @@
   const combatHtml=combatPageHtml();if(combatHtml)return combatHtml;
   const count=expectedBossCount(),agg=aggregate();if(count<=0||!agg||!Array.isArray(agg.bosses)||agg.bosses.length!==count)return unavailableHtml("高維戰線資料尚未載入完整，請重新整理後再試。");
   const defs=bossDefs();if(defs.length!==count)return unavailableHtml("十王資料尚未載入完整，請重新整理後再試。");
-  return `<section class="map-screen third-world-adventure-screen">${topBarHtml(true)}${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}${activeRunHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div>${corePanelHtml()}</section>`;
+  const eraTabs=typeof window.adventureEraTabsHtml==="function"?window.adventureEraTabsHtml():"";
+  return `<section class="map-screen third-world-adventure-screen">${topBarHtml(true)}${eraTabs}${summaryHtml(agg)}${commonAbilitiesHtml()}${combatRuleHtml()}${activeRunHtml()}<div class="map-grid universe-boss-grid third-world-boss-grid">${defs.map((boss,index)=>bossCardHtml(boss,index)).join("")}</div>${corePanelHtml()}</section>`;
  }
  function validate(){
   const errors=[],bossCount=expectedBossCount(),abilityCount=expectedAbilityCount();
@@ -186,6 +187,7 @@
  window.THIRD_WORLD_PLAYER_UI_RUN_ENTRY_VERSION=RUN_ENTRY_UI_VERSION;
  window.THIRD_WORLD_PLAYER_UI_THREE_COLUMN_HEADER_VERSION=THREE_COLUMN_HEADER_VERSION;
  window.THIRD_WORLD_PLAYER_UI_COMBAT_PAGE_VERSION=COMBAT_PAGE_UI_VERSION;
+ window.THIRD_WORLD_PLAYER_UI_ERA_TABS_VERSION=1;
  window.THIRD_WORLD_PLAYER_UI_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PLAYER_UI_INTEGRITY.passed)console.error("[文明戰線] Third-world player UI integrity error",window.THIRD_WORLD_PLAYER_UI_INTEGRITY.errors);
 })();
