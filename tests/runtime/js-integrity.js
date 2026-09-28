@@ -419,7 +419,7 @@ assert(/Math\.ceil\(VOID_MIRAGE_HP_BASE\+VOID_MIRAGE_HP_PER_FLOOR\*f\)/.test(dun
 assert(/Math\.ceil\(VOID_MIRAGE_ATK_BASE\+VOID_MIRAGE_ATK_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 ATK baseStats 未使用正式線性公式。");
 assert(/Math\.ceil\(VOID_MIRAGE_DEF_BASE\+VOID_MIRAGE_DEF_PER_FLOOR\*f\)/.test(dungeonVoid),"虛空 DEF baseStats 未使用正式線性公式。");
 assert(!/VOID_MIRAGE_(HP|ATK|DEF)_MULTIPLIER/.test(dungeonVoid),"虛空 V2 不得復活舊倍率公式。");
-assert(/voidMirageBaseStats\(floor\)/.test(dungeonVoid)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
+assert(/voidMirageBaseStats\(floor\)/.test(dungeonGm)&&/buildVoidMirageEnemy\(floor/.test(dungeonGm),"GM 虛空測試必須共用正式虛空公式 owner。");
 assert(index.includes('src="dungeonvoid.js?v=20260924-void-linear-cleanup1"'),"index.html 必須載入虛空線性公式 V2 cleanup cache-bust。");
 assert(/if\(world===1&&baseEnemy\?\.kind==="boss"\)return false;/.test(specialEncounter),"銀河紀元 Boss 必須維持禁止特殊遭遇。");
 assert(!/equivalentPower/.test(dungeonVoid),"虛空 V2 已改為純樓層線性公式，不得保留 equivalentPower 舊語意。");
