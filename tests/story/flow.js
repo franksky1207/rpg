@@ -6,6 +6,7 @@
 // Batch 12-3 exact-head：settlement bridge、completion-ready、W3 entry trigger 與 deferred story presentation 必須同時通過 Story／Runtime Integrity。
 // Batch 12-4 exact-head：Run Summary → shared Story drain → Title Notice、modal hold 與 reload recovery 必須同時通過 Story／Runtime Integrity。
 // Batch 12-O1：舊 W3 Story flags／Stage reconciliation 與 stale Story reference recovery 必須 fail-closed。
+// Batch 12-O1 exact-head：Schema16 Story reconciliation、合法 W1/W2 reference 保留與失效 W3 placeholder 清理需同時通過 Story／Runtime Integrity。
 // VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
@@ -15,8 +16,10 @@ const progress=fs.readFileSync('storyprogress.js','utf8');
 const record=fs.readFileSync('storyrecordtabs.js','utf8');
 const gm=fs.readFileSync('gmstorytest.js','utf8');
 const runtime=fs.readFileSync('storyruntimeintegrity.js','utf8');
-const migration=fs.readFileSync('storymigration.js','utf8');
 const integrity=fs.readFileSync('storyintegrity.js','utf8');
+const migration=fs.readFileSync('storymigration.js','utf8');
+const phase=fs.readFileSync('thirdworldphase.js','utf8');
+const migrationRegression=fs.readFileSync('thirdworldmigrationregression.js','utf8');
 const storyui=fs.readFileSync('storyui.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
 const region5=fs.readFileSync('storydata-universe-trans-domain-frontier.js','utf8');
@@ -30,15 +33,24 @@ assert(/completedStories/.test(progress)&&/pendingStory/.test(progress),'共用 
 assert(/const VERSION=15;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 15');
 assert(/THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION/.test(progress),'storyprogress 未建立高維共用 Queue／Eligibility owner');
 assert(/THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION/.test(progress)&&/THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION/.test(progress),'storyprogress 未建立 reload recovery／placeholder guard');
+assert(/THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION=THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION/.test(progress)&&/THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION=THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION/.test(progress),'storyprogress 未建立 settlement bridge／completion framework');
+assert(/THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION/.test(progress),'storyprogress 未建立 W3 post-flow Story drain');
 assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/function queueThirdWorldEligibleStory\(/.test(progress),'storyprogress 缺少高維純推導 eligibility／queue adapter');
+assert(/function consumeThirdWorldSettlement\(settlementResult,\{resume=false\}=\{\}\)/.test(progress),'storyprogress 缺少 settlement→shared Story bridge');
+assert(/function thirdWorldStoryCompletionFramework\(target=state\)/.test(progress),'storyprogress 缺少 completion-ready framework');
+assert(/function drainThirdWorldPostFlowStories\(/.test(progress),'storyprogress 缺少 Summary 後的 W3 Story drain');
 assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
 assert(/if\(queueThirdWorldEligibleStory\(\)\)return true/.test(progress),'reload/resume 必須能從 persistent state 重建下一篇高維正式故事');
-['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
+['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory','thirdWorldCompletionFramework','consumeThirdWorldSettlement','drainThirdWorldPostFlowStories'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
 assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
-assert(/consumeThirdWorldSettlement/.test(progress)&&/thirdWorldCompletionFramework/.test(progress),'12-3 必須建立 settlement→shared Story bridge 與 Completion Framework');
-assert(/function drainThirdWorldPostFlowStories/.test(progress)&&/queueThirdWorldEligibleStory\(\{resume:false\}\)/.test(progress)&&/waitForStoryClosed/.test(progress),'12-4 必須以 shared pending/eligibility 建立 W3 post-flow Story drain，不得新增私有 queue');
-assert(/const VERSION=9;/.test(storyui)&&/STORY_UI_LIFECYCLE_WAIT_VERSION/.test(storyui)&&/waitForStoryClosed/.test(storyui),'Story UI 必須提供共用 lifecycle wait owner');
-assert(/queueThirdWorldEligibleStory\(\{resume:false\}\)/.test(progress),'settlement bridge 必須延後 Story presentation，等待 12-4 post-flow coordinator');
+assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration reference recovery 應為 V6／Reference Recovery V1');
+assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migration),'Story migration 必須清理失效 pendingStory reference');
+assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
+assert(/THIRD_WORLD_STORY_RECONCILIATION_VERSION=1/.test(phase)&&/THIRD_WORLD_STORY_DEVELOPMENT_RESET_VERSION=1/.test(phase),'W3 Story reconciliation owner 未就緒');
+assert(/function reconcileThirdWorldStoryState\(target\)/.test(phase)&&/canonicalThirdWorldStoryStage/.test(phase),'W3 Story Stage 必須能由 canonical boss progress 重建');
+assert(/if\(!introReady\)story\.introSeen=false/.test(phase)&&/if\(!finalReady\|\|!bossesDefeated\)/.test(phase),'正式內容尚未上線時舊 intro/final/completed flags 必須 fail-closed');
+assert(/const VERSION=5;/.test(migrationRegression)&&/STORY_RECONCILIATION_REGRESSION_VERSION=1/.test(migrationRegression),'W3 migration regression 必須納入 Story reconciliation');
+['SCHEMA16_STORY_STAGE_LAG_RECONCILED','SCHEMA16_STORY_STAGE_AHEAD_RECONCILED','SCHEMA16_STORY_STAGE_MISSING_REBUILT','SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT','SCHEMA16_PRE_CONTENT_STORY_FLAGS_RESET','SCHEMA16_IMPOSSIBLE_COMPLETION_RESET'].forEach(id=>assert(migrationRegression.includes(id),'缺少 W3 Story 舊檔 regression：'+id));
 assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
 assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
 assert(!/loadUniverseSample|data-universe-story-sample/.test(gm),'GM 不得再動態載入宇宙 sample 劇情');
@@ -48,17 +60,19 @@ assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEA
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
 assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=16;/.test(runtime),'Story Runtime Integrity 應為 V16');
 assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
-assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration 必須提供 V6 stale reference recovery');
-assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未覆蓋 stale／placeholder pending recovery');
+assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未驗證 stale／placeholder Story reference recovery');
 assert(/STORY_RECORD_TABS_VERSION=7/.test(record),'story record tabs 版本應為 7');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
 assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式載入 secondworldstoryregistry.js');
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
 assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
-assert(/storyprogress\.js\?v=[^"']+/.test(index),'storyprogress.js 必須帶 cache-bust');
-assert(/storyruntimeintegrity\.js\?v=[^"']+/.test(index),'storyruntimeintegrity.js 必須帶 cache-bust');
+assert(index.includes('storyprogress.js?v='),'storyprogress.js 必須帶 cache-bust 正式載入');
+assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('storymigration.js?v=20260928-thirdworld-batch12-o1'),'storymigration.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('thirdworldphase.js?v=20260928-thirdworld-batch12-o1'),'thirdworldphase.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1'),'thirdworldmigrationregression.js cache-bust 未更新至 Batch 12-O1');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
 assert(index.includes('storydata-universe-trans-domain-frontier.js?v=20260923-universe-region5-meta1'),'第五章・超域邊境 cache-bust 未更新');
-console.log('STORY FLOW PASSED | shared queue=yes | W3 eligibility/reload recovery=yes | placeholder queue=guarded | galaxy/universe preserved | target=201');
+console.log('STORY FLOW PASSED | shared queue=yes | W3 settlement/completion/post-flow=yes | stale references recovered | W3 legacy story reconciled | galaxy/universe preserved | target=201');
