@@ -37,6 +37,7 @@
  function secondWorldActive(){
   return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;
  }
+ function thirdWorldActive(){return typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;}
  function saleOwnerMissingResult(item=null){return {ok:false,reason:"sale-owner-missing",item,quote:{ok:false,currency:"unavailable",amount:0,gold:0,darkMatter:0,darkEnergy:0}};}
  function settleSale(item,options={}){
   if(typeof window.settleEquipmentSale==="function")return window.settleEquipmentSale(item,options);
@@ -119,7 +120,9 @@
 
  window.equipmentCompareHtml=function(it){
   const old=state.equipment[it.type],newScore=equipmentScore(it),oldScore=equipmentScore(old),diff=round1(old?newScore-oldScore:newScore),locked=it.locked===true;
-  return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn ${locked?"ok":""}" onclick="toggleSelectedItemLock()">${locked?"🔒 已鎖定｜點擊解鎖":"🔓 鎖定裝備"}</button><button class="btn" onclick="sellSelected()" ${locked?"disabled":""}>出售</button></div>${locked?`<div class="muted" style="margin-top:7px">此裝備已鎖定，不會被手動出售、一鍵出售或自動出售。</div>`:""}</div>`;
+  const action=thirdWorldActive()?"處理":"出售";
+  const lockNote=thirdWorldActive()?"此裝備已鎖定，不會被手動處理、一鍵處理或自動處理。":"此裝備已鎖定，不會被手動出售、一鍵出售或自動出售。";
+  return `<div class="card" style="margin-top:14px"><h3>裝備比較</h3><div class="grid3"><div><div class="muted">目前</div>${itemHtml(old,true)}${old?gearAbilityHtml(old,true):""}</div><div><div class="muted">新裝備</div>${itemHtml(it,true)}${gearAbilityHtml(it,true)}</div><div><div class="muted">整體比較</div><div>目前 ${old?oldScore:"無"}</div><div>新裝備 ${newScore}</div><b style="color:${diff>0?"#76d587":diff<0?"#e27474":"#ccc"}">${diff>0?"+":""}${diff}</b></div></div><div class="controls"><button class="btn blue" onclick="equipSelected()">裝備</button><button class="btn ${locked?"ok":""}" onclick="toggleSelectedItemLock()">${locked?"🔒 已鎖定｜點擊解鎖":"🔓 鎖定裝備"}</button><button class="btn" onclick="sellSelected()" ${locked?"disabled":""}>${action}</button></div>${locked?`<div class="muted" style="margin-top:7px">${lockNote}</div>`:""}</div>`;
  };
  window.equipmentEquipSelected=function(){
   const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return {changed:false,enhancementStones:blankEnhancementReward()};
@@ -196,8 +199,8 @@
   const r=equipmentEquipSelected();if(!r.changed)return;
   save();render();
   if(r.handled?.sale){
-   const stoneText=saleEnhancementText(r.enhancementStones),reward=saleText(r.handled.sale);
-   alert(`已裝備新裝備。換下裝備自動出售，獲得 ${reward}${stoneText?`，另獲得 ${stoneText}`:""}。`);
+   if(thirdWorldActive())alert("已裝備新裝備。換下裝備已自動處理，不產生資源。");
+   else{const stoneText=saleEnhancementText(r.enhancementStones),reward=saleText(r.handled.sale);alert(`已裝備新裝備。換下裝備自動出售，獲得 ${reward}${stoneText?`，另獲得 ${stoneText}`:""}。`);}
   }
  };
  window.equipSelected=equipSelected;
@@ -205,31 +208,37 @@
   const r=equipmentEquipBestAll();save();render();
   if(!r.changed)return alert("目前裝備已是最佳。");
   const stoneText=saleEnhancementText(r.enhancementStones);
-  const soldText=r.soldCount?`\n換下裝備自動出售 ${r.soldCount} 件，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`:"";
+  const soldText=r.soldCount?(thirdWorldActive()?`
+換下裝備已自動處理 ${r.soldCount} 件，不產生資源。`:`
+換下裝備自動出售 ${r.soldCount} 件，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`):"";
   alert(`已更換 ${r.changed} 件較強裝備。${soldText}`);
  };
  window.equipBestAll=equipBestAll;
  sellSelected=function(){
   let r=equipmentSellSelected();
-  if(r.reason==="locked")return alert("這件裝備已鎖定，請先解鎖後再出售。");
+  if(r.reason==="locked")return alert(thirdWorldActive()?"這件裝備已鎖定，請先解鎖後再處理。":"這件裝備已鎖定，請先解鎖後再出售。");
   if(r.reason==="mythic"){
    const preview=saleQuote(r.item);
-   if(!confirm(`這是神話裝備，出售可獲得 ${saleText(preview)}。確定要出售嗎？`))return;
+   const question=thirdWorldActive()?"這是神話裝備，處理後將永久移除且不產生資源。確定要處理嗎？":`這是神話裝備，出售可獲得 ${saleText(preview)}。確定要出售嗎？`;
+   if(!confirm(question))return;
    r=equipmentSellSelected({confirmMythic:true});
   }
-  if(!r.ok)return alert("裝備出售失敗。");
+  if(!r.ok)return alert(thirdWorldActive()?"裝備處理失敗。":"裝備出售失敗。");
   const stoneText=saleEnhancementText(r.enhancementStones);
   save();render();
-  alert(`已出售裝備，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`);
+  if(thirdWorldActive())alert("已處理裝備，不產生資源。");
+  else alert(`已出售裝備，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`);
  };
  window.sellSelected=sellSelected;
  sellLowerAll=function(){
   const preview=equipmentLowerSalePreview();
-  if(!preview.targets.length)return alert("沒有可出售的未鎖定較低裝備。");
-  if(!confirm(`將出售 ${preview.targets.length} 件未鎖定的較低或同能力裝備，共獲得 ${saleText(preview.quote)}。確定出售嗎？`))return;
-  const r=equipmentSellLowerAll(preview);if(!r.ok)return alert("批量出售失敗。");save();render();
+  if(!preview.targets.length)return alert(thirdWorldActive()?"沒有可處理的未鎖定較低裝備。":"沒有可出售的未鎖定較低裝備。");
+  const question=thirdWorldActive()?`將處理 ${preview.targets.length} 件未鎖定的較低或同能力裝備；處理後永久移除且不產生資源。確定處理嗎？`:`將出售 ${preview.targets.length} 件未鎖定的較低或同能力裝備，共獲得 ${saleText(preview.quote)}。確定出售嗎？`;
+  if(!confirm(question))return;
+  const r=equipmentSellLowerAll(preview);if(!r.ok)return alert(thirdWorldActive()?"批量處理失敗。":"批量出售失敗。");save();render();
   const stoneText=saleEnhancementText(r.enhancementStones);
-  alert(`已出售 ${r.count} 件裝備，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`);
+  if(thirdWorldActive())alert(`已處理 ${r.count} 件裝備，不產生資源。`);
+  else alert(`已出售 ${r.count} 件裝備，獲得 ${saleText(r.sale)}${stoneText?`，另獲得 ${stoneText}`:""}。`);
  };
  window.sellLowerAll=sellLowerAll;
  discardLostGear=function(i){
@@ -271,7 +280,8 @@
  }
 
  window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=4;
- window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=1;
+ window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=2;
+ window.THIRD_WORLD_EQUIPMENT_PROCESSING_UI_VERSION=1;
  window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
  injectLockStyles();normalizeAllGearLocks();normalizeLostGearEconomy();save(false);
  const main=document.getElementById("main");

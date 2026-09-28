@@ -341,6 +341,7 @@ function lostGearCompareHtml(it){
  return `<div class="muted">目前</div>${currentHtml}<div style="margin-top:6px"><span class="muted">遺失裝備評分 ${itemScore}</span>　<b style="color:${diffColor}">${diffText}</b></div>`;
 }
 function lostGearSectionHtml(){
+ if(typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true)return "";
  const lost=Array.isArray(state.lostGear)?state.lostGear:[];
  if(!lost.length)return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="muted">目前沒有遺失裝備。</div></div>`;
  const rows=lost.map((x,i)=>{
@@ -354,8 +355,10 @@ function inventoryContent(){
  const items=state.inventory.filter(it=>inventoryFilter==="all"||it.type===inventoryFilter).slice().sort((a,b)=>equipmentScore(b)-equipmentScore(a)||b.q-a.q||b.level-a.level);
  const sel=items.find(x=>x.id===selectedItem)||items[0];selectedItem=sel?.id||null;
  const filterOptions=`<option value="all" ${inventoryFilter==="all"?"selected":""}>全部</option>${EQUIPMENT_TYPES.map(t=>`<option value="${t}" ${inventoryFilter===t?"selected":""}>${equipmentTypeLabel(t)}</option>`).join("")}`;
+ const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
+ const lowerAction=third?"一鍵處理較低裝備":"一鍵賣出較低裝備",valueLabel=third?"處理結果":"售價";
  const main=`<div class="grid"><div class="card"><h3>目前裝備</h3>${qualityLegend()}${EQUIPMENT_TYPES.map(t=>`<div class="item"><b>${equipmentTypeLabel(t)}</b><br>${itemHtml(state.equipment[t],true)}${state.equipment[t]?gearAbilityHtml(state.equipment[t],true):""}</div>`).join("")}</div>
- <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">一鍵賣出較低裝備</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>售價</th></tr></thead><tbody>${items.map(it=>{const quote=typeof window.equipmentSaleQuote==="function"?window.equipmentSaleQuote(it):null;const price=quote&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(quote):secondWorldActive()?"出售系統未載入":specializationSellValue(it).toLocaleString()+" 金幣";return `<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${price}</td></tr>`;}).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
+ <div class="card"><h2>背包（${state.inventory.length} 件）</h2><div class="controls"><select class="btn" onchange="setInventoryFilter(this.value)">${filterOptions}</select><span class="muted" style="align-self:center">排序：評分高→低</span></div><div class="controls"><button class="btn blue" onclick="equipBestAll()">一鍵裝備較強裝備</button><button class="btn" onclick="sellLowerAll()">${lowerAction}</button></div>${items.length?`<div style="overflow:auto"><table><thead><tr><th>裝備</th><th>類型</th><th>能力／詞條</th><th>評分</th><th>${valueLabel}</th></tr></thead><tbody>${items.map(it=>{const quote=typeof window.equipmentSaleQuote==="function"?window.equipmentSaleQuote(it):null;const price=third?"不產生資源":quote&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(quote):secondWorldActive()?"出售系統未載入":specializationSellValue(it).toLocaleString()+" 金幣";return `<tr onclick="selectItem('${it.id}')" style="cursor:pointer;background:${it.id===selectedItem?"#211d16":"transparent"}"><td>${itemHtml(it,true)}</td><td>${equipmentTypeLabel(it.type)}</td><td>${gearAbilityHtml(it,false)}</td><td>${equipmentScore(it)}</td><td>${price}</td></tr>`;}).join("")}</tbody></table></div>${sel?compareHtml(sel):""}`:`<div class="muted" style="margin-top:12px">${state.inventory.length?"目前篩選沒有裝備。":"背包是空的。"}</div>`}</div></div>`;
  return `${main}${lostGearSectionHtml()}`;
 }
 function inventoryPage(){
@@ -370,8 +373,10 @@ function settingsPage(){
  const s=state.settings,name=escapePlayerName(currentPlayerName());
  const speed=typeof window.playerCombatSpeed==="function"?window.playerCombatSpeed():1;
  const speedHtml=secondWorldActive()?`<div class="setting-row combat-speed-setting"><div><div style="margin-bottom:6px">戰鬥速度</div><div class="muted">宇宙紀元已解鎖 1.5×；可隨時切回標準速度。</div></div><div class="combat-speed-options"><label class="btn ${Number(speed)===1?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1" ${Number(speed)===1?"checked":""}> 1×　標準速度</label><label class="btn ${Number(speed)===1.5?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1.5" ${Number(speed)===1.5?"checked":""}> 1.5×　加速戰鬥</label></div></div>`:"";
+ const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
+ const autoTitle=third?"自動處理":"自動出售",mythicAuto=third?"不可自動處理":"不可自動出售";
  const body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
- <h3 style="margin-top:22px">自動出售</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">不可自動出售</span></div>
+ <h3 style="margin-top:22px">${autoTitle}</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">${mythicAuto}</span></div>
  <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row" style="align-items:flex-end"><div style="flex:1"><div style="margin-bottom:6px">角色名稱</div><input id="playerNameInput" type="text" maxlength="12" value="${name}" placeholder="玩家" style="width:100%;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff"></div><button class="btn blue" onclick="savePlayerName()">儲存名稱</button></div><div class="muted" style="margin-top:6px">最多 12 個字；空白名稱儲存時會自動恢復成「玩家」。</div>${speedHtml}<div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
  ${state.gm&&typeof gmHtml==="function"?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
@@ -452,7 +457,9 @@ function normalizeSaveState(target){
 window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
 window.SAVE_ROOT_NORMALIZATION_ORDER_VERSION=1;
 window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
-window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=1;
+window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=2;
+window.THIRD_WORLD_INVENTORY_PROCESSING_UI_VERSION=1;
+window.THIRD_WORLD_LOST_GEAR_UI_POLICY_VERSION=1;
 window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION=1;
 window.normalizeSaveItem=normalizeSaveItem;
 window.normalizeSaveState=normalizeSaveState;

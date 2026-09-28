@@ -57,6 +57,7 @@ const dungeonVoid=read("dungeonvoid.js");
 const dungeonGm=read("dungeongm.js");
 const specialEncounter=read("specialencounter.js");
 const inventoryFocus=read("inventoryfocus.js");
+const equipmentLock=read("equipmentlock.js");
 const vipLootCore=read("viplootcore.js");
 const traitDrop=read("traitdrop.js");
 const combatCore=read("combatcore.js");
@@ -101,7 +102,7 @@ assert(/vipLootBossExtraDropTriggered\(\{boss:true,rng,vipLevel:options\.vipLeve
 assert(/equipmentRewards=drops\.map/.test(secondWorldRewards)&&/equipmentRewards,levelBefore/.test(secondWorldRewards),"宇宙主線結算必須保留所有基礎／VIP16 額外裝備結果。");
 assert(/function secondWorldEquipmentRewardRows\(result\)/.test(secondWorldRewards)&&/function rewardRows\(result\)/.test(secondWorldMainline)&&/secondWorldEquipmentRewardRows\(result\)/.test(secondWorldMainline)&&/VIP16 額外主線裝備/.test(secondWorldMainline),"宇宙主線單場結算必須共用 reward-row owner 並呈現 VIP16 額外裝備。");
 assert(/secondWorldEquipmentRewardRows\(settled\)/.test(secondWorldMainline)&&/rows\.forEach\(row=>/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkMatter/.test(secondWorldMainline)&&/row\.sale\?\.quote\?\.darkEnergy/.test(secondWorldMainline),"宇宙主線連續戰鬥必須共用 reward-row owner 並逐件統計保留／自售與暗物質／暗能量。");
-assert(index.includes('secondworldrewards.js?v=20260925-vip-loot-cleanup1')&&index.includes('secondworldmainline.js?v=20260928-thirdworld-batch11-o3'),"index.html 必須載入 VIP Loot Cleanup1 最新宇宙主線 cache-bust。");
+assert(index.includes('secondworldrewards.js?v=20260928-thirdworld-ui-text-batch2')&&index.includes('secondworldmainline.js?v=20260928-thirdworld-batch11-o3'),"index.html 必須載入目前宇宙／高維共用裝備處理 reward owner cache-bust。");
 assert(pos("inventoryfocus.js")>pos("equipmentlock.js")&&pos("inventoryfocus.js")>pos("gearupgrade.js"),"inventoryfocus.js 必須在 equipmentlock.js 與 gearupgrade.js 後載入，以共用正式裝備比較 owner。");
 assert(/INVENTORY_FOCUS_VERSION=VERSION/.test(inventoryFocus)&&/const VERSION=3;/.test(inventoryFocus),"背包定位 owner 應為 V3。");
 assert(/requestInventoryEntryFocus=requestEntryFocus/.test(inventoryFocus)&&/requestInventoryPostRedeemFocus=requestPostRedeemFocus/.test(inventoryFocus)&&/applyInventoryFocus=applyFocus/.test(inventoryFocus),"背包定位必須提供 entry、post-redeem 與 apply API。");
@@ -112,6 +113,10 @@ assert(/resolveInventoryFocusTarget=resolveFocusTarget/.test(inventoryFocus),"�
 assert(/isActualGearUpgrade/.test(inventoryFocus)&&!/equipmentScore\(item\)>/.test(inventoryFocus),"背包較強裝備判定必須委派正式 isActualGearUpgrade owner。");
 assert(/function redeemGear\(i\)[\s\S]*requestInventoryPostRedeemFocus[\s\S]*render\(\)[\s\S]*applyInventoryFocus/.test(ui),"成功贖回後必須在 render 前建立 post-redeem request，並在 render 後套用背包定位。");
 assert(index.includes('inventoryfocus.js?v=20260925-inventory-focus-cleanup1'),"index.html 必須載入正式 inventoryfocus.js cache-bust。");
+assert(/THIRD_WORLD_INVENTORY_PROCESSING_UI_VERSION=1/.test(ui)&&/THIRD_WORLD_LOST_GEAR_UI_POLICY_VERSION=1/.test(ui)&&/一鍵處理較低裝備/.test(ui)&&/不產生資源/.test(ui),"W3 背包必須使用處理語意、零資源顯示與無贖回 UI policy。");
+assert(/THIRD_WORLD_EQUIPMENT_PROCESSING_UI_VERSION=1/.test(equipmentLock)&&/處理後將永久移除且不產生資源/.test(equipmentLock)&&/不會被手動處理、一鍵處理或自動處理/.test(equipmentLock),"W3 裝備操作提示必須統一使用處理語意。");
+assert(/THIRD_WORLD_EQUIPMENT_PROCESSING_REWARD_POLICY_VERSION=1/.test(secondWorldRewards)&&/if\(phase===3\)return \{currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase\}/.test(secondWorldRewards),"W3 裝備處理不得產生金幣、暗物質或暗能量。");
+assert(index.includes('ui.js?v=20260928-thirdworld-ui-text-batch2')&&index.includes('equipmentlock.js?v=20260928-thirdworld-ui-text-batch2'),"W3 Batch 2 玩家背包／設定 owner 必須同步 cache-bust。");
 
 assert(/const VERSION=7;/.test(thirdWorldData)&&/SPECIALIZATION_PRESENTATION_VERSION=2/.test(thirdWorldData),"W3 data／特化 presentation 應為 O4 最新版本。");
 assert(!/effect=`[^`]*pp`/.test(thirdWorldData)&&/暴擊 \+\$\{finiteWhole\(spec\.critPoints,0\)\}%/.test(thirdWorldData),"玩家可見高維 Boss 特化百分點必須顯示 %，不得再顯示 pp。");

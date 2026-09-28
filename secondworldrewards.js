@@ -64,8 +64,9 @@
   const useTest=options.useTestSpecializations===true,phase=currentRewardPhase(s);
   if(!item)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:0,phase};
   const rawWorld=Math.floor(Number(item.world)||1),world=rawWorld===3?3:(rawWorld===2?2:1);
+  if(phase===3)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase};
   if(world===3)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:3,phase};
-  if(phase>=2){
+  if(phase===2){
    if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase};
    const darkMatter=secondWorldEquipmentSaleDarkMatter(item,useTest);
    const darkEnergy=Number(item.q)===5?1:0;
@@ -238,6 +239,7 @@
  }
 
  window.SECOND_WORLD_REWARD_VERSION=VERSION;
+ window.THIRD_WORLD_EQUIPMENT_PROCESSING_REWARD_POLICY_VERSION=1;
  window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION=1;
  window.SECOND_WORLD_SHARED_SETTLEMENT_TRANSACTION_VERSION=1;
  window.SECOND_WORLD_SHARED_EQUIPMENT_FACTORY_VERSION=1;
