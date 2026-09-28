@@ -15,6 +15,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Sync Story Flow cache expectations
+        run: |
+          sed -i 's/storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1/storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
+          sed -i 's/storyui.js?v=20260928-thirdworld-batch12-4/storyui.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
+          sed -i 's/storyprogress.js?v=20260928-thirdworld-batch12-4/storyprogress.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
       - name: Apply patch
         run: python3 batch12_o2_patch.py
       - name: Self-check
