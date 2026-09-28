@@ -23,7 +23,8 @@
  window.gmStoryChangeEra=function(value){selectedEra=value==="higher-dimensional"?"higher-dimensional":value==="universe"?"universe":"galaxy";const first=regions()[0];selectedRegion=first?.id||"";selectedStory=first?.stories?.[0]?.id||"";if(typeof render==="function")render();};window.gmStoryChangeRegion=function(id){selectedRegion=String(id||"");selectedStory=currentRegion()?.stories?.[0]?.id||"";if(typeof render==="function")render();};window.gmStoryChangeEntry=function(id){selectedStory=String(id||"");if(typeof render==="function")render();};
  window.gmStoryMoveRegion=function(delta){const p=positions(),next=p.ri+Number(delta||0);if(next<0||next>=p.rs.length)return false;selectedRegion=p.rs[next].id;selectedStory=rows(p.rs[next])[0]?.id||"";if(typeof render==="function")render();return true;};window.gmStoryMoveEntry=function(delta){const p=positions(),next=p.si+Number(delta||0);if(next<0||next>=p.list.length)return false;selectedStory=p.list[next].id;if(typeof render==="function")render();return true;};
  window.gmStoryRunIntegrity=function(){window.runCivilizationStoryIntegrity?.();window.runCivilizationStoryRuntimeIntegrity?.();if(typeof render==="function")render();return true;};window.gmPreviewStory=function(){normalize();if(!stories()[selectedStory]){alert(`這篇${eraName()}正式劇情尚未建立。`);return false;}return window.openStory?.(selectedStory)===true;};
- if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("test","劇情測試",window.gmStoryTestHtml,{id:"gm-story-test",position:"prepend"});window.GM_STORY_TEST_VERSION=6;
+ window.GM_STORY_TEST_VERSION=6;
  window.GM_STORY_TEST_CURRENT_ERA_DEFAULT_VERSION=1;
  window.GM_STORY_TEST_HIGHER_DIMENSIONAL_PREVIEW_VERSION=1;
+ window.GM_STORY_TEST_NATIVE_HUB_SECTION_VERSION=1;
 })();
