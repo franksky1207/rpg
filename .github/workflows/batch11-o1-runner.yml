@@ -15,6 +15,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+      - name: Tighten cache-bust matching
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/scripts/batch11-o1-patch.py')
+          t=p.read_text(encoding='utf-8')
+          old="""for old,new in pairs:\n    rep('index.html',old,new)\n"""
+          new="""for old,new in pairs:\n    text=read('index.html')\n    needle=f'src=\\\"{old}\\\"'\n    replacement=f'src=\\\"{new}\\\"'\n    actual=text.count(needle)\n    if actual!=1:\n        raise SystemExit(f\"index.html: expected 1 exact script match, found {actual}: {needle!r}\")\n    write('index.html',text.replace(needle,replacement,1))\n"""
+          if t.count(old)!=1:
+              raise SystemExit('patch runner cache loop marker mismatch')
+          p.write_text(t.replace(old,new,1),encoding='utf-8')
+          PY
       - name: Apply batch 11-O1 patch
         run: python .github/scripts/batch11-o1-patch.py
       - name: Syntax and runtime integrity self-check
@@ -27,11 +39,11 @@ jobs:
           node --check thirdworldintegritycontract.js
           node tests/runtime/js-integrity.js
           git diff --check
-          grep -q 'ui.js?v=20260928-thirdworld-batch11-o1' index.html
-          grep -q 'secondworldcombat.js?v=20260928-thirdworld-batch11-o1' index.html
-          grep -q 'secondworldmainline.js?v=20260928-thirdworld-batch11-o1' index.html
-          grep -q 'galaxyreviewintegrity.js?v=20260928-thirdworld-batch11-o1' index.html
-          grep -q 'thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o1' index.html
+          grep -q 'src="ui.js?v=20260928-thirdworld-batch11-o1"' index.html
+          grep -q 'src="secondworldcombat.js?v=20260928-thirdworld-batch11-o1"' index.html
+          grep -q 'src="secondworldmainline.js?v=20260928-thirdworld-batch11-o1"' index.html
+          grep -q 'src="galaxyreviewintegrity.js?v=20260928-thirdworld-batch11-o1"' index.html
+          grep -q 'src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o1"' index.html
       - name: Commit batch 11-O1 and remove temporary files
         run: |
           set -euo pipefail
