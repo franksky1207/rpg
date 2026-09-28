@@ -7,7 +7,7 @@
    ["地圖推進","依目前紀元的主線條件推進。"],
    ["Boss","Boss 可依目前紀元規則進行挑戰。"],
    ["戰鬥模式","主線可依目前紀元支援單場或連續戰鬥。"],
-   ["離線收益","離線超過 1 分鐘後可依最近有效戰鬥紀錄取得部分收益，最多計算 ${rules.offlineMaxHours.toLocaleString()} 小時。"],
+   ["離線收益","離線超過 1 分鐘後可依最近有效戰鬥紀錄取得部分收益，最多計算 12 小時。"],
    ["目前等級上限","角色等級上限會依目前紀元決定。"]
   ]},
   {id:"gear",label:"角色與裝備",items:[
@@ -97,12 +97,12 @@
   const offlineMaxHours=Math.max(0,Number(window.OFFLINE_PROGRESS_MAX_HOURS)||0);
   return Object.freeze({
    phase:guidePhase(holder),entryLevel,levelCap,expPerLevel,enhancementCap,vipRequired,deathLossPercent,legendaryPercent,mythicPercent,offlineMaxHours,
-   bossCount:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||1)),bossMaxHp:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1)),fivePointHpGap:Math.max(1,Math.floor(Number(window.THIRD_WORLD_FIVE_POINT_HP_GAP)||1)),maxDeaths:Math.max(1,Math.floor(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)||1)),maxStage:Math.max(0,Math.floor(Number(stage.maxStage)||0))
+   bossCount:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||1)),bossMaxHp:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1)),fivePointHpGap:Math.max(1,Math.floor(Number(window.THIRD_WORLD_FIVE_POINT_HP_GAP)||1)),maxDeaths:Math.max(1,Math.floor(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)||1)),maxStage:Math.max(0,Math.floor(Number(stage.maxStage)||0)),equipmentNameBandCount:Math.max(1,Array.isArray(window.THIRD_WORLD_EQUIPMENT_NAME_ROWS)?window.THIRD_WORLD_EQUIPMENT_NAME_ROWS.length:1)
   });
  }
  function thirdWorldBossSpecializationGuideText(){
   const rows=Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS:[];
-  if(!rows.length)return "十名高維存在各自具有不同個體特化，詳細數值以冒險頁當前顯示為準。";
+  if(!rows.length)return "10 名高維存在各自具有不同個體特化，詳細數值以冒險頁當前顯示為準。";
   return rows.map((boss,index)=>{const profile=typeof window.thirdWorldBossSpecializationPresentation==="function"?window.thirdWorldBossSpecializationPresentation(index):null;return `${boss?.name||`高維存在 ${index+1}`}：${profile?.label||"個體特化"}${profile?.effect?`（${profile.effect}）`:""}`;}).join("；");
  }
  function thirdWorldAbilityGuideText(){
@@ -125,21 +125,21 @@
   return [
    {id:"adventure",label:"高維戰線",items:[
     ["高維紀元",`第三紀元以同時攻略 ${bossCount} 名高維存在為主線。正式成長只在高維紀元進行；銀河與宇宙內容改為回顧，不再產生正式成長。`],
-    ["10 名高維存在",`十名高維存在各有 ${bossHp.toLocaleString()} 最大 HP，全部保留各自永久 HP。玩家可以在仍存活且符合戰線限制的目標之間切換。`],
+    ["10 名高維存在",`10 名高維存在各有 ${bossHp.toLocaleString()} 最大 HP，全部保留各自永久 HP。玩家可以在仍存活且符合戰線限制的目標之間切換。`],
     ["永久削血","每場正式戰鬥以 Boss 目前永久 HP 開始；本場實際削掉的 HP 會永久保留。汲取只能在該場戰鬥內回復角色 HP，不會回復 Boss 已被永久削掉的 HP。"],
     ["5% 戰線",`存活 Boss 之間最多只能相差 5% 戰線；以目前 10 名高維存在的基準換算為 ${gap.toLocaleString()} HP。若目標已超前，該場若已合法開始仍完整結算，但下一場會鎖定，直到其他存活 Boss 跟上。最後一名存活 Boss 不受此限制。`],
     ["連續戰鬥",`高維主線以連續戰鬥為主要流程。沒有進度事件時，一輪最多累積 ${maxDeaths} 次死亡；玩家可手動停止。Boss 擊破、Stage 跨越、5% 戰線鎖定或整體進度事件都會結束本輪，確認後再開始下一輪。`],
     ["回顧戰","已擊破的高維存在可在原位置進行回顧戰；回顧固定使用最終高階狀態，角色以完整 HP 開場，不會取得 EXP、維度之弦、裝備，也不會改變任何正式 Boss 進度。冒險頁亦可切回銀河／宇宙回顧。"],
-    ["高維離線","完成正式前景高維戰鬥並成功結算後，可建立高維離線裝備樣本。離線只模擬裝備掉落機會，不取得 EXP、維度之弦，也不推進界弦核心、稱號、劇情或 Boss 永久 HP。最多計算 12 小時。"],
-    ["目前等級上限","高維紀元角色等級上限為 Lv${rules.levelCap}。Lv${rules.entryLevel}～${Math.max(rules.entryLevel,rules.levelCap-1)} 每級固定需要 ${rules.expPerLevel.toLocaleString()} EXP；到達 Lv${rules.levelCap} 後不再累積 EXP。"]
+    ["高維離線",`完成正式前景高維戰鬥並成功結算後，可建立高維離線裝備樣本。離線只模擬裝備掉落機會，不取得 EXP、維度之弦，也不推進界弦核心、稱號、劇情或 Boss 永久 HP。最多計算 ${rules.offlineMaxHours.toLocaleString()} 小時。`],
+    ["目前等級上限",`高維紀元角色等級上限為 Lv${rules.levelCap}。Lv${rules.entryLevel}～${Math.max(rules.entryLevel,rules.levelCap-1)} 每級固定需要 ${rules.expPerLevel.toLocaleString()} EXP；到達 Lv${rules.levelCap} 後不再累積 EXP。`]
    ]},
    {id:"gear",label:"角色與裝備",items:[
-    ["高維裝備","每場可正式落帳的高維戰鬥都會產生高維裝備。基礎品質池為 ${rules.legendaryPercent.toLocaleString()}% 傳說、${rules.mythicPercent.toLocaleString()}% 神話，並繼續套用目前仍有效的 VIP 裝備特權。"],
-    ["裝備等級","高維裝備等級依正式結算後的角色等級產生，最高 Lv${rules.levelCap}。"],
-    ["裝備命名","高維裝備名稱會隨10 名高維存在的整體永久 HP 進度分成 10 個階段變化；只影響名稱與風格，不另建第二套戰鬥公式。"],
+    ["高維裝備",`每場可正式落帳的高維戰鬥都會產生高維裝備。基礎品質池為 ${rules.legendaryPercent.toLocaleString()}% 傳說、${rules.mythicPercent.toLocaleString()}% 神話，並繼續套用目前仍有效的 VIP 裝備特權。`],
+    ["裝備等級",`高維裝備等級依正式結算後的角色等級產生，最高 Lv${rules.levelCap}。`],
+    ["裝備命名",`高維裝備名稱會隨 10 名高維存在的整體永久 HP 進度分成 ${rules.equipmentNameBandCount} 個階段變化；只影響名稱與風格，不另建第二套戰鬥公式。`],
     ["裝備處理","高維裝備可在背包比較、裝備與整理；高維裝備本身沒有販售價值，裝備處理不會額外產生主要資源。"],
-    ["裝備欄位強化","第三紀元沿用已完成的五部位 +${rules.enhancementCap} 強化，強化等級永久保留；高維紀元不再新增更高的欄位強化階段。"],
-    ["VIP20 裝備保護","第三紀元死亡仍會執行原本 ${rules.deathLossPercent.toLocaleString()}% 的裝備遺失判定，但進入第三紀元本來就要求 VIP${rules.vipRequired}，因此所有實際裝備遺失都會被 VIP20 阻止。高維連戰結算會顯示本輪成功阻止的次數。"]
+    ["裝備欄位強化",`第三紀元沿用已完成的五部位 +${rules.enhancementCap} 強化，強化等級永久保留；高維紀元不再新增更高的欄位強化階段。`],
+    [`VIP${rules.vipRequired} 裝備保護`,`第三紀元死亡仍會執行原本 ${rules.deathLossPercent.toLocaleString()}% 的裝備遺失判定，但進入第三紀元本來就要求 VIP${rules.vipRequired}，因此所有實際裝備遺失都會被 VIP${rules.vipRequired} 阻止。高維連戰結算會顯示本輪成功阻止的次數。`]
    ]},
    {id:"combat",label:"高維戰鬥",items:[
     ["戰鬥結算","正式戰鬥只在角色死亡或 Boss 被擊破後形成可落帳結果；有效永久削血等於該場開始時正式 Boss HP 減去戰鬥結束 HP。"],

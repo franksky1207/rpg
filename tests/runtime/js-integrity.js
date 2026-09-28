@@ -117,8 +117,12 @@ assert(/thirdWorldBossSpecializationPresentation/.test(thirdWorldGuideSource)&&/
 assert(!/(暗物質|暗能量|強化石|文明災厄|特殊怪|懸賞戰|印記)/.test(thirdWorldGuideSource),"W3 玩家說明不得殘留第一／二紀元專屬資源、特殊怪、懸賞、災厄或印記語意。");
 assert(/rules\.deathLossPercent\.toLocaleString\(\)/.test(thirdWorldGuideSource)&&/rules\.vipRequired/.test(thirdWorldGuideSource)&&/VIP 裝備保護/.test(thirdWorldGuideSource),"W3 Guide 必須由正式死亡判定與進入門檻 owner 動態呈現 VIP 裝備保護。");
 assert(!/十王/.test(thirdWorldGuideSource),"玩家可見的 W3 Guide 不得使用對話簡稱『十王』，正式用語統一為 10 名高維存在。");
+assert(!/十名高維存在/.test(thirdWorldGuideSource)&&/10 名高維存在/.test(thirdWorldGuideSource),"W3 Guide 正式玩家文字必須統一使用數字形式『10 名高維存在』。");
+assert(/rules\.offlineMaxHours\.toLocaleString\(\)/.test(thirdWorldGuideSource)&&/rules\.equipmentNameBandCount/.test(thirdWorldGuideSource),"W3 Guide 的離線上限與裝備命名階段數必須由 canonical owner 投影。");
+const w3GuideRuleInterpolationLines=thirdWorldGuideSource.split("\n").filter(line=>line.includes("${rules."));
+assert(w3GuideRuleInterpolationLines.length>=7&&w3GuideRuleInterpolationLines.every(line=>line.includes("`")),"W3 Guide 的動態 rule 值必須存在可插值的 template literal 中。");
 assert(/10 名高維存在/.test(thirdWorldGuideSource),"W3 Guide 必須使用正式稱呼『10 名高維存在』。");
-assert(index.includes('gameguide.js?v=20260928-thirdworld-guide-opt1'),"W3 正式用語修正後必須同步更新 gameguide.js cache-bust。");
+assert(index.includes('gameguide.js?v=20260928-thirdworld-guide-opt1fix1'),"W3 正式用語修正後必須同步更新 gameguide.js cache-bust。");
 assert(/resolveVipLootModifiers/.test(thirdWorldLoot)&&/vipLootBossExtraDropTriggered/.test(thirdWorldLoot),"W3 VIP8／14／16／18 必須保持共用 VIP loot owner。");
 assert(index.includes('vipui.js?v=20260928-thirdworld-vip20-death-protection1')&&index.includes('thirdworlddungeonui.js?v=20260928-thirdworld-ui-text-batch3'),"W3 Batch 3／VIP20 touched JS 必須同步 cache-bust。");
 assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=2;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V2。");
