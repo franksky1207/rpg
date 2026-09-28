@@ -14,12 +14,12 @@ try{
  if(Number(report.galaxyStories)!==101||Number(report.bossStoriesChecked)!==100){console.error(`銀河紀元劇情數量錯誤：${report.galaxyStories}/101, boss=${report.bossStoriesChecked}/100`);process.exit(7);}
  if(Number(report.universeRegions)!==10||Number(report.universeStoriesExpected)!==100||context.UNIVERSE_STORY_REGISTRY_READY!==true){console.error(`宇宙紀元 Registry 錯誤：regions=${report.universeRegions}, stories=${report.universeStoriesExpected}`);process.exit(8);}
  if(Number(report.universeStoriesLoaded)!==100){console.error(`目前宇宙正式文字應為 100/100，實際 ${report.universeStoriesLoaded}/100`);process.exit(10);}
- if(Number(report.thirdWorldStoriesExpected)!==11||Number(report.thirdWorldStoriesLoaded)!==11){console.error(`Batch 13-7 高維正式文字應為 11/11，實際 ${report.thirdWorldStoriesLoaded}/${report.thirdWorldStoriesExpected}`);process.exit(12);}
+ if(Number(report.thirdWorldStoriesExpected)!==11||Number(report.thirdWorldStoriesLoaded)!==11){console.error(`高維正式文字應維持 11/11，實際 ${report.thirdWorldStoriesLoaded}/${report.thirdWorldStoriesExpected}`);process.exit(12);}
  expectedReadyW3.forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少已上線高維正式劇情 ${id}`);});
  const loadedW3=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('higher-dimensional-'));
- if(JSON.stringify(loadedW3)!==JSON.stringify(expectedReadyW3)){console.error(`Batch 13-7 runtime catalog 應完整 11 篇：${JSON.stringify(loadedW3)}`);process.exit(13);}
+ if(JSON.stringify(loadedW3)!==JSON.stringify(expectedReadyW3)){console.error(`高維 runtime catalog 應完整 11 篇：${JSON.stringify(loadedW3)}`);process.exit(13);}
  const ready=(context.thirdWorldStoryTriggerDescriptors?.()||[]).filter(row=>row.contentReady===true).map(row=>row.storyId);
- if(JSON.stringify(ready)!==JSON.stringify(expectedReadyW3)){console.error(`Batch 13-7 contentReady 錯誤：${JSON.stringify(ready)}`);process.exit(14);}
+ if(JSON.stringify(ready)!==JSON.stringify(expectedReadyW3)){console.error(`高維 contentReady 錯誤：${JSON.stringify(ready)}`);process.exit(14);}
  ['universe-galaxy-beyond-boss-1','universe-galaxy-beyond-boss-10','universe-local-group-war-boss-1','universe-local-group-war-boss-10','universe-cosmic-unification-war-boss-10'].forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少既有宇宙正式樣板 ${id}`);});
  if(Number(report.totalStoriesTarget)!==201||Number(report.allEraStoriesTarget)!==212){console.error(`劇情目標錯誤：legacy=${report.totalStoriesTarget}, allEra=${report.allEraStoriesTarget}`);process.exit(9);}
  if(report.passed){console.log(`STORY INTEGRITY PASSED | galaxy=${report.galaxyStories}/101 universe=${report.universeStoriesLoaded}/100 higher-dimensional=${report.thirdWorldStoriesLoaded}/11 approved=11 allEraTarget=${report.allEraStoriesTarget}`);process.exit(0);}
