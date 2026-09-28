@@ -39,6 +39,8 @@ jobs:
         run: set -o pipefail; node tests/story/meta-language.js 2>&1 | tee story-meta-language-report.txt
       - name: Run story data integrity
         run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
+      - name: Run Story Record regressions
+        run: node tests/story/record.js
       - name: Upload story integrity diagnostics
         if: always()
         uses: actions/upload-artifact@v4
