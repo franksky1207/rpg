@@ -16,7 +16,10 @@ jobs:
         with:
           node-version: 24
       - name: Apply patch
-        run: python3 batch_w3_vip20_death_protection.py
+        shell: bash
+        run: |
+          python3 batch_w3_vip20_death_protection.py
+          python3 batch_w3_vip20_fix_integrity.py
       - name: Syntax and diff
         shell: bash
         run: |
