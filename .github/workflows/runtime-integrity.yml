@@ -1,7 +1,7 @@
 name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
-# manual retrigger: verify higher-dimensional review isolation after batch 11-2.
+# manual retrigger: verify universe boss review isolation after batch 11-3.
 on:
   push:
     branches: [main]
