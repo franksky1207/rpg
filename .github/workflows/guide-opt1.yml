@@ -1,5 +1,5 @@
 name: Guide Optimization Batch1
-# retry after fixing offlineprogress integrity source reference
+# retry after converting VIP protection regression to dynamic guide-owner validation
 on:
   push:
     paths:
