@@ -1,25 +1,24 @@
-// 永久回歸檢查：已建立的銀河、宇宙與高維正式 storydata／Registry 顯示文字必須本身為中文；不得依賴 Story Integrity 先行修正。
-// Batch 13-2：高維序章＋Stage 1 正式內容納入 source purity，正式文本不得使用「十王」或固定「主角」。
+// 永久回歸檢查：銀河、宇宙與高維正式 storydata／Registry 顯示文字必須本身為中文；不得依賴 Story Integrity 先行修正。
+// Batch 13-7：高維 11 篇正式內容全部納入 source purity，正式文本不得使用「十王」或固定「主角」。
 const fs=require('fs');
 const vm=require('vm');
-
 const files=[
  'data.js',
  'worldmaps-earth.js','worldmaps-solar.js','worldmaps-nearstar.js','worldmaps-frontier.js','worldmaps-orion.js','worldmaps-galactic-frontier.js','worldmaps-galactic-mid.js','worldmaps-core-outer.js','worldmaps-core-war.js','worldmaps-galactic-unification.js',
  'secondworlddata.js','secondworldstoryregistry.js',
  'storydata-earth.js','storydata-solar.js','storydata-nearstar.js','storydata-frontier.js','storydata-orion.js','storydata-galactic-frontier.js','storydata-galactic-mid.js','storydata-core-outer.js','storydata-core-war.js','storydata-galactic-unification.js',
  'storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js',
- 'storydata-higher-dimensional.js'
+ 'storydata-higher-dimensional.js','storydata-higher-dimensional-stage2-3.js','storydata-higher-dimensional-stage4-5.js','storydata-higher-dimensional-stage6-7.js','storydata-higher-dimensional-stage8-9.js','storydata-higher-dimensional-final.js'
 ];
 const context={console,Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error,Buffer,atob:s=>Buffer.from(String(s),'base64').toString('binary'),btoa:s=>Buffer.from(String(s),'binary').toString('base64')};context.window=context;vm.createContext(context);
 for(const file of files){if(!fs.existsSync(file))throw new Error(`缺少正式劇情來源檔：${file}`);vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});}
 const failures=[];const bannedNarrativeTerms=['小區域','關卡','第幾關','普通怪','菁英怪','Boss','Ｂｏｓｓ','玩家','頁數','遊戲','等級','首領戰'];const bannedPlayerReferences=['主角'];const hasEnglish=v=>/[A-Za-z]/.test(String(v??''));const plain=v=>typeof v==='string'?v:(v&&typeof v==='object'&&typeof v.em==='string'?v.em:'');
 function check(value,where){if(hasEnglish(value))failures.push({where,type:'english',text:String(value)});}function checkNarrative(value,where){const text=String(value??'');const found=bannedNarrativeTerms.filter(term=>text.includes(term));if(found.length)failures.push({where,type:'internal-term',terms:found,text});const playerRefs=bannedPlayerReferences.filter(term=>text.includes(term));if(playerRefs.length)failures.push({where,type:'player-reference',terms:playerRefs,text});}
 function checkRegistry(regions,era){for(const region of regions||[]){check(region?.name,`${era}:${region?.id||'unknown'} region.name`);for(const row of Array.isArray(region?.stories)?region.stories:[])check(row?.label,`${era}:${row?.id||'unknown'} registry.label`);}}
-checkRegistry(context.CIVILIZATION_STORY_REGIONS,'galaxy');
-checkRegistry(context.CIVILIZATION_UNIVERSE_STORY_REGIONS,'universe');
+checkRegistry(context.CIVILIZATION_STORY_REGIONS,'galaxy');checkRegistry(context.CIVILIZATION_UNIVERSE_STORY_REGIONS,'universe');
 for(const [id,story] of Object.entries(context.CIVILIZATION_STORIES||{})){check(story?.chapter,`${id} chapter`);check(story?.location,`${id} location`);check(story?.title,`${id} title`);(Array.isArray(story?.pages)?story.pages:[]).forEach((page,pageIndex)=>{const text=(Array.isArray(page)?page:[]).map(plain).filter(Boolean).join('\n');check(text,`${id} page ${pageIndex+1}`);checkNarrative(text,`${id} page ${pageIndex+1}`);if(id.startsWith('higher-dimensional-')&&text.includes('十王'))failures.push({where:`${id} page ${pageIndex+1}`,type:'third-world-formal-term',terms:['十王'],text});});}
+const expectedW3=['higher-dimensional-intro',...Array.from({length:9},(_,i)=>`higher-dimensional-milestone-${String(i+1).padStart(2,'0')}`),'higher-dimensional-final'];
 const w3Ids=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('higher-dimensional-'));
-if(JSON.stringify(w3Ids)!==JSON.stringify(['higher-dimensional-intro','higher-dimensional-milestone-01']))failures.push({where:'higher-dimensional catalog',type:'batch13-2-count',text:JSON.stringify(w3Ids)});
+if(JSON.stringify(w3Ids)!==JSON.stringify(expectedW3))failures.push({where:'higher-dimensional catalog',type:'batch13-7-count',text:JSON.stringify(w3Ids)});
 if(failures.length){console.error(`STORY SOURCE PURITY FAILED: ${failures.length} item(s)`);failures.forEach((row,index)=>console.error(`${index+1}. ${row.where} [${row.type}]${row.terms?.length?` (${row.terms.join('、')})`:''}: ${row.text}`));process.exit(1);}
 console.log(`STORY SOURCE PURITY PASSED: galaxyRegions=${(context.CIVILIZATION_STORY_REGIONS||[]).length} universeRegistry=${(context.CIVILIZATION_UNIVERSE_STORY_REGIONS||[]).length} higherDimensional=${w3Ids.length}/11 loadedStories=${Object.keys(context.CIVILIZATION_STORIES||{}).length}`);
