@@ -1,5 +1,5 @@
 name: Guide Optimization Batch1
-# retry post-commit follow-up after converting dynamic W3 guide items to template literals
+# retry post-commit follow-up with line-scoped dynamic interpolation regression
 on:
   push:
     paths:
