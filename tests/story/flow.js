@@ -1,16 +1,6 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
 // 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
-// W3 UI Text Batch 1 exact-head：第三紀元主畫面／角色／強化／專精／戰線紀錄／特殊遭遇語意需與 W1/W2 相容。
-// Batch 12-1：三紀元 Story Registry／高維 Trigger 骨架完成。
-// Batch 12-2：高維 Eligibility／共用 Queue／Reload Recovery 必須沿用 storyProgress，不新增 W3 私有 persistent queue。
-// Batch 12-2 exact-head：placeholder zero-queue、順序補播、reload recovery 與 W1/W2 相容性需同時通過 Story／Runtime Integrity。
-// Batch 12-3 exact-head：settlement bridge、completion-ready、W3 entry trigger 與 deferred story presentation 必須同時通過 Story／Runtime Integrity。
-// Batch 12-4 exact-head：Run Summary → shared Story drain → Title Notice、modal hold 與 reload recovery 必須同時通過 Story／Runtime Integrity。
-// Batch 12-O1：舊 W3 Story flags／Stage reconciliation 與 stale Story reference recovery 必須 fail-closed。
-// Batch 12-O1 exact-head：Schema16 Story reconciliation、合法 W1/W2 reference 保留與失效 W3 placeholder 清理需同時通過 Story／Runtime Integrity。
-// Batch 12-O2：W3 Intro／Final completion 必須由 shared storyProgress 單一 owner 同步，Story lifecycle 必須以 instance token／storyId 防止競態。
-// Batch 12-O3：normalize 呼叫收斂、foreign pending 共用仲裁，並由 runtime behavioral regression 驗證 arbitration／completion transition。
-// VIP Loot V2 行為契約與舊 reward projection audit 已納入，相關變更需經 exact-head Runtime／Story 雙重驗證。
+// Batch 13-2：高維序章＋Stage 1 正式內容必須沿用 shared Story owner；其餘 placeholder 維持不可 queue。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
 const combat=fs.readFileSync('combatcore.js','utf8');
@@ -24,8 +14,10 @@ const migration=fs.readFileSync('storymigration.js','utf8');
 const phase=fs.readFileSync('thirdworldphase.js','utf8');
 const migrationRegression=fs.readFileSync('thirdworldmigrationregression.js','utf8');
 const storyui=fs.readFileSync('storyui.js','utf8');
+const registry=fs.readFileSync('secondworldstoryregistry.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
 const region5=fs.readFileSync('storydata-universe-trans-domain-frontier.js','utf8');
+const w3Data=fs.readFileSync('storydata-higher-dimensional.js','utf8');
 assert((combat.match(/queueBossStory/g)||[]).length===2,'銀河 combatcore queueBossStory owner 契約改變');
 assert(!/queueBossStory/.test(pipeline),'battlepipeline 不得再次排銀河故事');
 assert(/function queueUniverseBossStory\(index\)/.test(progress),'storyprogress 缺少宇宙首殺 queue owner');
@@ -42,7 +34,7 @@ assert(/function thirdWorldStoryEligibility\(target=state\)/.test(progress)&&/fu
 assert(/function consumeThirdWorldSettlement\(settlement,\{queue=true\}=\{\}\)/.test(progress),'storyprogress 缺少 settlement→shared Story bridge');
 assert(/function thirdWorldStoryCompletionFramework\(target=state\)/.test(progress),'storyprogress 缺少 completion-ready framework');
 assert(/function drainThirdWorldPostFlowStories\(/.test(progress),'storyprogress 缺少 Summary 後的 W3 Story drain');
-assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'placeholder 必須同時有 descriptor ready 與正式 story pages 才可 queue');
+assert(/descriptor\?\.contentReady===true/.test(progress)&&/Array\.isArray\(story\.pages\)&&story\.pages\.length>0/.test(progress),'正式 W3 劇情必須同時有 descriptor ready 與正式 story pages 才可 queue');
 assert(/if\(queueThirdWorldEligibleStory\(\{progress:p\}\)\)return true/.test(progress),'reload/resume 必須重用已 normalize progress 並重建下一篇高維正式故事');
 ['queueStory','queueBossStory','queueUniverseBossStory','thirdWorldEligibility','nextThirdWorldStory','queueThirdWorldEligibleStory','thirdWorldCompletionFramework','consumeThirdWorldSettlement','drainThirdWorldPostFlowStories'].forEach(name=>assert(progress.includes(name),'civilizationStoryProgress 缺少共用 queue API：'+name));
 assert(!/thirdWorldPendingStory|thirdWorldStoryQueue\s*=\s*\[|pendingThirdWorldStory/.test(progress),'不得新增 W3 私有 persistent story queue');
@@ -60,31 +52,34 @@ assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migr
 assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
 assert(/THIRD_WORLD_STORY_RECONCILIATION_VERSION=1/.test(phase)&&/THIRD_WORLD_STORY_DEVELOPMENT_RESET_VERSION=1/.test(phase),'W3 Story reconciliation owner 未就緒');
 assert(/function reconcileThirdWorldStoryState\(target\)/.test(phase)&&/canonicalThirdWorldStoryStage/.test(phase),'W3 Story Stage 必須能由 canonical boss progress 重建');
-assert(/if\(!introReady\)story\.introSeen=false/.test(phase)&&/if\(!finalReady\|\|!bossesDefeated\)/.test(phase),'正式內容尚未上線時舊 intro/final/completed flags 必須 fail-closed');
+assert(/if\(!introReady\)story\.introSeen=false/.test(phase)&&/if\(!finalReady\|\|!bossesDefeated\)/.test(phase),'未上線 W3 內容與 final flags 必須 fail-closed');
 assert(/const VERSION=5;/.test(migrationRegression)&&/STORY_RECONCILIATION_REGRESSION_VERSION=1/.test(migrationRegression),'W3 migration regression 必須納入 Story reconciliation');
 ['SCHEMA16_STORY_STAGE_LAG_RECONCILED','SCHEMA16_STORY_STAGE_AHEAD_RECONCILED','SCHEMA16_STORY_STAGE_MISSING_REBUILT','SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT','SCHEMA16_PRE_CONTENT_STORY_FLAGS_RESET','SCHEMA16_IMPOSSIBLE_COMPLETION_RESET'].forEach(id=>assert(migrationRegression.includes(id),'缺少 W3 Story 舊檔 regression：'+id));
 assert(/storyRecordEraView="universe"/.test(record)&&/CIVILIZATION_UNIVERSE_STORY_REGIONS/.test(record),'戰線紀錄未支援宇宙紀元');
-assert(/gmStoryChangeEra/.test(gm)&&/宇宙紀元/.test(gm),'GM 劇情測試未支援紀元切換');
+assert(/gmStoryChangeEra/.test(gm)&&/高維紀元/.test(gm),'GM 劇情測試未支援三紀元切換');
 assert(!/loadUniverseSample|data-universe-story-sample/.test(gm),'GM 不得再動態載入宇宙 sample 劇情');
 assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
-assert(/universeStoriesExpected/.test(integrity)&&/totalStoriesTarget:201/.test(integrity),'資料 Integrity 未納入 201 篇最終目標');
+assert(/thirdWorldFormatPolicy/.test(integrity)&&/allEraStoriesTarget:212/.test(integrity),'資料 Integrity 未納入高維格式政策／212 篇總目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
 assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=18;/.test(runtime),'Story Runtime Integrity 應為 V18');
-assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 placeholder zero-queue／順序補播');
+assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證部分正式上線時 placeholder zero-queue／順序補播');
 assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未驗證 stale／placeholder Story reference recovery');
 assert(/STORY_RECORD_TABS_VERSION=8/.test(record),'story record tabs 版本應為 8');
+assert(/contentReady:true/.test(registry)&&/contentReady:stage===1/.test(registry),'Batch 13-2 Registry 必須只啟用序章與 Stage 1');
+assert((w3Data.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-2 必須有 2 篇高維正式故事');
+assert(/add\("higher-dimensional-intro"/.test(w3Data)&&/add\("higher-dimensional-milestone-01"/.test(w3Data),'Batch 13-2 缺少序章或 Stage 1 正式資料');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
 assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式載入 secondworldstoryregistry.js');
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
-assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-universe-galaxy-beyond.js?v='),'宇宙 Registry 必須早於正式劇情資料載入');
-assert(index.indexOf('storydata-universe-cosmic-unification-war.js?v=')<index.indexOf('storyintegrity.js?v='),'10 區宇宙劇情資料必須在 storyintegrity 前載入');
+assert(index.includes('storydata-higher-dimensional.js?v=20260928-thirdworld-batch13-2'),'index.html 缺少 Batch 13-2 高維正式劇情資料檔或 cache-bust');
+assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-higher-dimensional.js?v='),'高維 Trigger Registry 必須早於高維正式劇情資料載入');
+assert(index.indexOf('storydata-higher-dimensional.js?v=')<index.indexOf('storyintegrity.js?v='),'高維正式劇情資料必須在 Story Integrity 前載入');
 assert(index.includes('storyprogress.js?v='),'storyprogress.js 必須帶 cache-bust 正式載入');
-assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o3'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('storyruntimeintegrity.js?v=20260928-thirdworld-batch13-2-fix1'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 13-2 fix1');
 assert(index.includes('storymigration.js?v=20260928-thirdworld-batch12-o1'),'storymigration.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldphase.js?v=20260928-thirdworld-batch12-o1'),'thirdworldphase.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1'),'thirdworldmigrationregression.js cache-bust 未更新至 Batch 12-O1');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
-assert(index.includes('storydata-universe-trans-domain-frontier.js?v=20260923-universe-region5-meta1'),'第五章・超域邊境 cache-bust 未更新');
-console.log('STORY FLOW PASSED | shared queue=yes | W3 settlement/completion/post-flow=yes | stale references recovered | W3 legacy story reconciled | galaxy/universe preserved | target=201');
+console.log('STORY FLOW PASSED | W3 formal=2/11 | shared queue=yes | placeholders fail-closed | galaxy/universe preserved | all-era target=212');
