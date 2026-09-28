@@ -52,13 +52,13 @@ replace('enhancementui.js',
 replace('specialization.js',
 '高維紀元的正式資源由對高維存在造成的有效永久削血結算為維度之弦；搜刮技巧不再額外放大此資源。',
 '高維紀元不再提供此項額外效果。')
-replace('specialization.js','高維紀元不再提供直接資源加成','高維紀元無額外效果',2)
+replace('specialization.js','高維紀元不再提供直接資源加成','高維紀元無額外效果',1)
 replace('specialization.js',
 '高維紀元裝備不建立新的出售貨幣循環，因此鑑價技巧不再產生第三紀元貨幣售價加成。',
 '高維紀元不再提供此項額外效果。')
 replace('specialization.js','高維紀元不建立裝備貨幣售價','高維紀元無額外效果',1)
-replace('specialization.js','第三紀元無直接資源加成','高維紀元無額外效果',2)
-replace('specialization.js','第三紀元無裝備貨幣售價','高維紀元無額外效果',2)
+replace('specialization.js','第三紀元無直接資源加成','高維紀元無額外效果',3)
+replace('specialization.js','第三紀元無裝備貨幣售價','高維紀元無額外效果',3)
 replace('specialization.js','高維正式資源由永久削血結算為維度之弦。','高維紀元不再提供此項額外效果。')
 replace('specialization.js','高維裝備不建立新的出售貨幣循環。','高維紀元不再提供此項額外效果。')
 replace('specialization.js',
