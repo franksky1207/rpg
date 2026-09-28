@@ -263,4 +263,7 @@
  if(!window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY.passed)console.error("[文明戰線] Third-world offline settlement integrity error",window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY.errors);
  installSaveWrapper();
  settleOfflineOnLoad().finally(()=>installHeartbeat());
+window.OFFLINE_PROGRESS_MAX_MS=OFFLINE_MAX_MS;
+window.OFFLINE_PROGRESS_MAX_HOURS=OFFLINE_MAX_MS/(60*60*1000);
+window.OFFLINE_DURATION_POLICY_VERSION=1;
 })();

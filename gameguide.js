@@ -7,7 +7,7 @@
    ["地圖推進","依目前紀元的主線條件推進。"],
    ["Boss","Boss 可依目前紀元規則進行挑戰。"],
    ["戰鬥模式","主線可依目前紀元支援單場或連續戰鬥。"],
-   ["離線收益","離線超過 1 分鐘後可依最近有效戰鬥紀錄取得部分收益，最多計算 12 小時。"],
+   ["離線收益","離線超過 1 分鐘後可依最近有效戰鬥紀錄取得部分收益，最多計算 ${rules.offlineMaxHours.toLocaleString()} 小時。"],
    ["目前等級上限","角色等級上限會依目前紀元決定。"]
   ]},
   {id:"gear",label:"角色與裝備",items:[
@@ -76,14 +76,29 @@
  ];
  const SPECIAL_GUIDE_IDS=Object.freeze(["gold_slime","mimic","reaper","lucky_rabbit","ancient_guardian","relic_guardian","bandit_king","collector","mysterious_traveler"]);
  let activeGuideCategory="adventure";
+ function guideState(target=null){return target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);}
  function guidePhase(target=null){
-  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  const holder=guideState(target);
   if(typeof window.currentWorldPhase==="function"){
    try{const value=Number(window.currentWorldPhase(holder));if(Number.isInteger(value)&&value>=1&&value<=3)return value;}catch(_){}
   }
-  if(holder?.thirdWorld?.entered===true)return 3;
-  if(holder?.secondWorld?.entered===true)return 2;
-  return 1;
+  // 僅保留早期載入／測試相容 fallback；正式 runtime 以 currentWorldPhase 為唯一 owner。
+  return holder?.thirdWorld?.entered===true?3:(holder?.secondWorld?.entered===true?2:1);
+ }
+ function thirdWorldGuideRuleSnapshot(target=null){
+  const holder=guideState(target),entry=window.THIRD_WORLD_ENTRY_CONFIG||{},quality=window.THIRD_WORLD_EQUIPMENT_BASE_POLICY||{},stage=window.THIRD_WORLD_BOSS_STAGE_CONFIG||{};
+  const levelCap=typeof window.effectiveLevelCap==="function"?Math.max(1,Math.floor(Number(window.effectiveLevelCap(holder))||1)):Math.max(1,Math.floor(Number(window.THIRD_WORLD_LEVEL_CAP)||Number(window.ABSOLUTE_MAX_LEVEL)||1));
+  const entryLevel=Math.max(1,Math.floor(Number(entry.level)||Math.min(levelCap,1)));
+  const expPerLevel=typeof window.effectiveExpNeed==="function"?Math.max(0,Math.floor(Number(window.effectiveExpNeed(entryLevel,holder))||0)):Math.max(0,Math.floor(Number(window.THIRD_WORLD_EXP_PER_LEVEL)||0));
+  const enhancementCap=typeof window.effectiveEnhancementCap==="function"?Math.max(0,Math.floor(Number(window.effectiveEnhancementCap(holder))||0)):Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||0));
+  const vipRequired=Math.max(0,Math.floor(Number(entry.vipLevel)||0));
+  const deathLossPercent=Math.max(0,Number(window.DEATH_EQUIPMENT_LOSS_CHANCE)||0)*100;
+  const legendaryPercent=Math.max(0,Number(quality.legendaryChance)||0)*100,mythicPercent=Math.max(0,Number(quality.mythicChance)||0)*100;
+  const offlineMaxHours=Math.max(0,Number(window.OFFLINE_PROGRESS_MAX_HOURS)||0);
+  return Object.freeze({
+   phase:guidePhase(holder),entryLevel,levelCap,expPerLevel,enhancementCap,vipRequired,deathLossPercent,legendaryPercent,mythicPercent,offlineMaxHours,
+   bossCount:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||1)),bossMaxHp:Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1)),fivePointHpGap:Math.max(1,Math.floor(Number(window.THIRD_WORLD_FIVE_POINT_HP_GAP)||1)),maxDeaths:Math.max(1,Math.floor(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)||1)),maxStage:Math.max(0,Math.floor(Number(stage.maxStage)||0))
+  });
  }
  function thirdWorldBossSpecializationGuideText(){
   const rows=Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS:[];
@@ -95,17 +110,18 @@
   if(!rows.length)return "Boss 永久 HP 降低後會逐步解鎖共通能力，詳細門檻以高維戰線顯示為準。";
   return `Boss 剩餘 HP 降到指定門檻時依序解鎖：${rows.map(row=>`${Math.max(0,Number(row?.unlockRemainingPercent)||0)}% ${row?.name||"高維能力"}`).join("、")}。`;
  }
- function thirdWorldStageGuideText(){
-  const cfg=window.THIRD_WORLD_BOSS_STAGE_CONFIG||{};
-  const atk=Math.max(0,Math.floor(Number(cfg.atkPerStage)||600)),def=Math.max(0,Math.floor(Number(cfg.defPerStage)||1200)),crit=Math.max(0,Number(cfg.critPointsPerStage)||2),dodge=Math.max(0,Number(cfg.dodgePointsPerStage)||2);
-  return `Boss 永久 HP 每跨過 90%、80%……10% 門檻就進入下一個 Stage，最高 Stage 9。每提升 1 Stage：ATK +${atk.toLocaleString()}、DEF +${def.toLocaleString()}、暴擊 +${crit}%、閃避 +${dodge}%。`;
+ function thirdWorldStageGuideText(rules=null){
+  const cfg=window.THIRD_WORLD_BOSS_STAGE_CONFIG||{},snapshot=rules&&typeof rules==="object"?rules:thirdWorldGuideRuleSnapshot();
+  const atk=Math.max(0,Math.floor(Number(cfg.atkPerStage)||0)),def=Math.max(0,Math.floor(Number(cfg.defPerStage)||0)),crit=Math.max(0,Number(cfg.critPointsPerStage)||0),dodge=Math.max(0,Number(cfg.dodgePointsPerStage)||0),step=Math.max(1,Math.floor(Number(cfg.stepPercent)||10));
+  const firstThreshold=Math.max(step,100-step),lastThreshold=Math.max(step,100-snapshot.maxStage*step);
+  return `Boss 永久 HP 每跨過 ${firstThreshold}%、${Math.max(lastThreshold,step)}% 等 ${step}% 門檻就進入下一個 Stage，最高 Stage ${snapshot.maxStage}。每提升 1 Stage：ATK +${atk.toLocaleString()}、DEF +${def.toLocaleString()}、暴擊 +${crit}%、閃避 +${dodge}%。`;
  }
  function thirdWorldCoreGuideText(){
   const max=Math.max(0,Math.floor(Number(window.THIRD_WORLD_CORE_MAX_LEVEL)||10)),cost=Math.max(1,Math.floor(Number(window.THIRD_WORLD_CORE_COST_PER_LEVEL)||1000000000)),base=Math.max(0,Number(window.THIRD_WORLD_SUPPRESSION_BASE_POINTS)||.5),reduction=Math.max(0,Number(window.THIRD_WORLD_CORE_SUPPRESSION_REDUCTION_PER_LEVEL)||.04);
   return `界弦核心最高 Lv.${max}，每級需注入 ${cost.toLocaleString()} 維度之弦。高維連戰每次死亡基礎會把本輪 HP 上限再壓低 ${base.toFixed(2)}%；核心每提升 1 級，會把每次死亡的壓制幅度減少 ${reduction.toFixed(2)}%。連戰開始後核心等級會鎖定到該輪結束。`;
  }
  function thirdWorldGuideCategories(target=null){
-  const bossCount=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||10)),bossHp=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1100000000)),gap=Math.max(1,Math.floor(Number(window.THIRD_WORLD_FIVE_POINT_HP_GAP)||55000000)),maxDeaths=Math.max(1,Math.floor(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)||100));
+  const rules=thirdWorldGuideRuleSnapshot(target),bossCount=rules.bossCount,bossHp=rules.bossMaxHp,gap=rules.fivePointHpGap,maxDeaths=rules.maxDeaths;
   return [
    {id:"adventure",label:"高維戰線",items:[
     ["高維紀元",`第三紀元以同時攻略 ${bossCount} 名高維存在為主線。正式成長只在高維紀元進行；銀河與宇宙內容改為回顧，不再產生正式成長。`],
@@ -115,21 +131,21 @@
     ["連續戰鬥",`高維主線以連續戰鬥為主要流程。沒有進度事件時，一輪最多累積 ${maxDeaths} 次死亡；玩家可手動停止。Boss 擊破、Stage 跨越、5% 戰線鎖定或整體進度事件都會結束本輪，確認後再開始下一輪。`],
     ["回顧戰","已擊破的高維存在可在原位置進行回顧戰；回顧固定使用最終高階狀態，角色以完整 HP 開場，不會取得 EXP、維度之弦、裝備，也不會改變任何正式 Boss 進度。冒險頁亦可切回銀河／宇宙回顧。"],
     ["高維離線","完成正式前景高維戰鬥並成功結算後，可建立高維離線裝備樣本。離線只模擬裝備掉落機會，不取得 EXP、維度之弦，也不推進界弦核心、稱號、劇情或 Boss 永久 HP。最多計算 12 小時。"],
-    ["目前等級上限","高維紀元角色等級上限為 Lv2000。Lv1000～1999 每級固定需要 10,000,000 EXP；到達 Lv2000 後不再累積 EXP。"]
+    ["目前等級上限","高維紀元角色等級上限為 Lv${rules.levelCap}。Lv${rules.entryLevel}～${Math.max(rules.entryLevel,rules.levelCap-1)} 每級固定需要 ${rules.expPerLevel.toLocaleString()} EXP；到達 Lv${rules.levelCap} 後不再累積 EXP。"]
    ]},
    {id:"gear",label:"角色與裝備",items:[
-    ["高維裝備","每場可正式落帳的高維戰鬥都會產生高維裝備。基礎品質池為 95% 傳說、5% 神話，並繼續套用目前仍有效的 VIP 裝備特權。"],
-    ["裝備等級","高維裝備等級依正式結算後的角色等級產生，最高 Lv2000。"],
+    ["高維裝備","每場可正式落帳的高維戰鬥都會產生高維裝備。基礎品質池為 ${rules.legendaryPercent.toLocaleString()}% 傳說、${rules.mythicPercent.toLocaleString()}% 神話，並繼續套用目前仍有效的 VIP 裝備特權。"],
+    ["裝備等級","高維裝備等級依正式結算後的角色等級產生，最高 Lv${rules.levelCap}。"],
     ["裝備命名","高維裝備名稱會隨10 名高維存在的整體永久 HP 進度分成 10 個階段變化；只影響名稱與風格，不另建第二套戰鬥公式。"],
     ["裝備處理","高維裝備可在背包比較、裝備與整理；高維裝備本身沒有販售價值，裝備處理不會額外產生主要資源。"],
-    ["裝備欄位強化","第三紀元沿用已完成的五部位 +40 強化，強化等級永久保留；高維紀元不再新增更高的欄位強化階段。"],
-    ["VIP20 裝備保護","第三紀元死亡仍會執行原本 30% 的裝備遺失判定，但進入第三紀元本來就要求 VIP20，因此所有實際裝備遺失都會被 VIP20 阻止。高維連戰結算會顯示本輪成功阻止的次數。"]
+    ["裝備欄位強化","第三紀元沿用已完成的五部位 +${rules.enhancementCap} 強化，強化等級永久保留；高維紀元不再新增更高的欄位強化階段。"],
+    ["VIP20 裝備保護","第三紀元死亡仍會執行原本 ${rules.deathLossPercent.toLocaleString()}% 的裝備遺失判定，但進入第三紀元本來就要求 VIP${rules.vipRequired}，因此所有實際裝備遺失都會被 VIP20 阻止。高維連戰結算會顯示本輪成功阻止的次數。"]
    ]},
    {id:"combat",label:"高維戰鬥",items:[
     ["戰鬥結算","正式戰鬥只在角色死亡或 Boss 被擊破後形成可落帳結果；有效永久削血等於該場開始時正式 Boss HP 減去戰鬥結束 HP。"],
     ["戰鬥收益","每 1 點有效永久削血同時換算為 1 EXP 與 1 維度之弦。即使角色死亡，只要該場是合法且完整的正式戰鬥，仍可依實際永久削血完成結算。"],
     ["10 名高維存在的個體特化",thirdWorldBossSpecializationGuideText()],
-    ["Stage 強化",thirdWorldStageGuideText()],
+    ["Stage 強化",thirdWorldStageGuideText(rules)],
     ["共通能力",thirdWorldAbilityGuideText()],
     ["死亡壓制","高維連戰的死亡次數只在本輪 runtime 中累積，不寫入存檔。角色死亡且 Boss 尚未擊破時才增加 1 次死亡；下一場的可用 HP 上限會依本輪死亡壓制重新計算。"],
     ["戰鬥速度","第三紀元沿用已解鎖的 1.5× 戰鬥速度，可隨時切回 1×；GM 測試速度不改變正式玩家規則。"]
@@ -139,8 +155,8 @@
     ["高維競技場","高維競技場目前尚未開放，入口維持等待狀態，不會偷偷沿用舊紀元競技場規則。"],
     ["虛空幻境","虛空幻境不分紀元並完整承接既有進度；仍可依正式規則挑戰與取得對應 VIP 積分。"],
     ["鏡像戰","鏡像戰不分紀元並完整承接既有進度；仍使用開始挑戰時的角色戰力建立對手。"],
-    ["VIP 系統","VIP 等級沒有上限；VIP20 是最後一個特殊特權階段，之後仍可持續提升基本能力。第三紀元會繼續套用目前仍有效的 VIP 特權。"],
-    ["VIP20","VIP20 同時是進入第三紀元的必要條件，也是第三紀元死亡裝備保護的來源；高維結算會把這項保護明確呈現給玩家。"]
+    ["VIP 系統","VIP 等級沒有上限；VIP 等級沒有上限，第三紀元會繼續套用目前仍有效的 VIP 特權。"],
+    ["VIP 裝備保護",`VIP${rules.vipRequired} 同時是進入第三紀元的必要條件，也是第三紀元死亡裝備保護的來源；高維結算會把這項保護明確呈現給玩家。`]
    ]},
    {id:"growth",label:"高維成長",items:[
     ["維度之弦","維度之弦是第三紀元的永久成長資源；正式戰鬥每造成 1 點有效永久削血，就取得 1 點維度之弦。"],
@@ -266,9 +282,11 @@
   })}));
  }
  function itemHtml(item){return `<div class="guide-item"><h4>${item[0]}</h4><div class="guide-item-body">${item[1]}</div></div>`;}
- window.GAME_GUIDE_VERSION=21;
- window.GAME_GUIDE_WORLD_AWARE_VERSION=8;
- window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=1;
+ window.GAME_GUIDE_VERSION=22;
+ window.GAME_GUIDE_WORLD_AWARE_VERSION=9;
+ window.GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2;
+ window.GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1;
+ window.GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1;
  window.GAME_GUIDE_THIRD_WORLD_VERSION=1;
  window.GAME_GUIDE_SPECIALIZATION_WORLD_VERSION=1;
  window.GAME_GUIDE_CIVILIZATION_WORLD_VERSION=1;
@@ -282,7 +300,8 @@
  window.GAME_GUIDE_CATEGORIES=GUIDE_CATEGORIES;
  window.GAME_GUIDE_SPECIAL_IDS=SPECIAL_GUIDE_IDS;
  window.gameGuideCategoriesForState=gameGuideCategoriesForState;
- window.setGameGuideCategory=function(id){if(!GUIDE_CATEGORIES.some(x=>x.id===id))return;activeGuideCategory=id;if(typeof render==="function")render();};
+ window.thirdWorldGuideRuleSnapshot=thirdWorldGuideRuleSnapshot;
+ window.setGameGuideCategory=function(id){const categories=gameGuideCategoriesForState();if(!categories.some(x=>x.id===id))return;activeGuideCategory=id;if(typeof render==="function")render();};
  window.gameGuidePage=function(){
   const categories=gameGuideCategoriesForState();
   const current=categories.find(x=>x.id===activeGuideCategory)||categories[0];
