@@ -10,4 +10,11 @@ for old,new in replacements:
     if s.count(old)!=1: raise SystemExit(f'expected cache assertion token once, got {s.count(old)}: {old}')
     s=s.replace(old,new,1)
 p.write_text(s,encoding='utf-8')
-print('cache integrity assertions updated')
+
+p=Path('tests/runtime/vip-unbounded-integrity.js')
+s=p.read_text(encoding='utf-8')
+old='assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=1/.test(vipUi),"W3 VIP 呈現 policy 應存在。");'
+new='assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=2/.test(vipUi),"W3 VIP 呈現 policy 應為 V2，包含 VIP20 死亡保護。");'
+if s.count(old)!=1: raise SystemExit(f'expected W3 VIP presentation assertion once, got {s.count(old)}')
+p.write_text(s.replace(old,new,1),encoding='utf-8')
+print('cache and VIP presentation integrity assertions updated')
