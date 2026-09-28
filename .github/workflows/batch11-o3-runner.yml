@@ -23,8 +23,8 @@ jobs:
           t=p.read_text(encoding='utf-8')
           old='''assert(/ADVENTURE_ERA_VIEW_OWNER_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_SESSION_POLICY_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_RUNTIME_LOCK_VERSION=4/.test(worldmap)&&/ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=2/.test(worldmap),\"三紀元冒險切換必須由單一 session-only owner 持有，並具備可辨識來源的 shared review runtime lock。\");\\n'''
           new='''assert(/ADVENTURE_ERA_VIEW_OWNER_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_SESSION_POLICY_VERSION=1/.test(worldmap)&&/ADVENTURE_ERA_RUNTIME_LOCK_VERSION=4/.test(worldmap)&&/ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=2/.test(worldmap)&&/GALAXY_REVIEW_SHARED_RUNTIME_DELEGATE_VERSION=1/.test(worldmap),\"三紀元冒險切換必須由單一 session-only owner 持有；銀河 legacy API 僅能作 shared review runtime delegate。\");\\n'''
-          if t.count(old)!=1:
-              raise SystemExit(f'expected one stale O2 assertion anchor, found {t.count(old)}')
+          if old not in t:
+              raise SystemExit('stale O2 assertion anchor not found')
           p.write_text(t.replace(old,new,1),encoding='utf-8')
           PY
       - name: Apply batch 11-O3 patch
