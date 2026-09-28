@@ -52,7 +52,7 @@
     const before=JSON.stringify(blankCompleted),snapshot=progress.thirdWorldEligibility(blankCompleted);
     if(JSON.stringify(blankCompleted)!==before)fail("STORY_RUNTIME_THIRD_WORLD_ELIGIBILITY_MUTATED","高維 eligibility snapshot 必須是純讀取，不得修改傳入 state");
     if(snapshot?.rows?.length!==11||snapshot?.nextEligibleId!=="higher-dimensional-intro")fail("STORY_RUNTIME_THIRD_WORLD_RECOVERY_ORDER","重載恢復應先從尚未完成的高維序章開始",snapshot);
-    if(snapshot?.nextQueueableId!=="higher-dimensional-intro"||snapshot?.rows?.filter(row=>row.queueable).map(row=>row.storyId).join(",")!=="higher-dimensional-intro,higher-dimensional-milestone-01")fail("STORY_RUNTIME_THIRD_WORLD_BATCH13_2_QUEUEABLE","第 13-2 批完整解鎖測試只應讓序章與第一段正式內容可排隊",snapshot);
+    if(snapshot?.nextQueueableId!=="higher-dimensional-intro"||snapshot?.rows?.filter(row=>row.queueable).map(row=>row.storyId).join(",")!=="higher-dimensional-intro,higher-dimensional-milestone-01")fail("STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED","第 13-2 批只有序章與第一段正式內容可排隊，stage 2～Final placeholder 必須保持 zero-queue",snapshot);
     if(snapshot?.rows?.filter(row=>row.eligible).length!==11)fail("STORY_RUNTIME_THIRD_WORLD_FULL_UNLOCK_ELIGIBILITY","stage 10 且十名高維存在全數擊破時應能純推導 11 個未完成 trigger eligibility",snapshot);
     const partial={thirdWorld:{entered:true,bosses:Array.from({length:10},()=>({currentHp:1100000000})),story:{introSeen:false,unlockedStage:3,finalSeen:false}},storyProgress:{pendingStory:null,completedStories:["higher-dimensional-intro","higher-dimensional-milestone-01"],introCompleted:true,starterGearReceived:true}};
     const partialSnapshot=progress.thirdWorldEligibility(partial);
