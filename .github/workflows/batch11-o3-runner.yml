@@ -36,6 +36,20 @@ jobs:
           PY
       - name: Apply batch 11-O3 patch
         run: python .github/scripts/batch11-o3-patch.py
+      - name: Synchronize changed-owner cache expectations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/runtime/js-integrity.js')
+          t=p.read_text(encoding='utf-8')
+          for old,new in [
+            ('worldphase.js?v=20260927-offline-owner-batch8-o1','worldphase.js?v=20260928-thirdworld-batch11-o3'),
+            ('ui.js?v=20260928-thirdworld-batch11-o1','ui.js?v=20260928-thirdworld-batch11-o3'),
+            ('secondworldmainline.js?v=20260928-thirdworld-batch11-o1','secondworldmainline.js?v=20260928-thirdworld-batch11-o3'),
+            ('thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o2','thirdworldintegritycontract.js?v=20260928-thirdworld-batch11-o3')]:
+              t=t.replace(old,new)
+          p.write_text(t,encoding='utf-8')
+          PY
       - name: Syntax and runtime integrity self-check
         run: |
           set -euo pipefail
