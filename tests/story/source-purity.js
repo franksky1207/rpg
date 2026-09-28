@@ -3,6 +3,7 @@
 // Batch 12-O3 exact-head：Story normalization 收斂、foreign pending 共用仲裁與 behavioral regression 必須同時通過 Story／Runtime Integrity。
 // Batch 12-O4 exact-head：W3 Boss 特化玩家文案 % 收尾、handoff 更新與第 12 大批整體狀態必須同時通過 Story／Runtime Integrity。
 // W3 UI Text Batch 2 exact-head：背包／裝備處理／設定與 phase3 零資源政策必須同時通過 Story／Runtime Integrity。
+// W3 UI Text Batch 3 exact-head：副本首頁與 VIP 第三紀元呈現必須同時通過 Story／Runtime Integrity。
 const fs=require('fs');
 const vm=require('vm');
 
