@@ -32,23 +32,25 @@
   }
   return "";
  }
- function activeStoryLifecycleSnapshot(){return activeStory?Object.freeze({token:activeToken,storyId:String(activeStory.id||""),page:activePage,pageCount:Array.isArray(activeStory.pages)?activeStory.pages.length:0}):null;}
- function resolveStoryClosed(token,storyId,completed){
+ function activeStoryLifecycleSnapshot(){return activeStory?Object.freeze({token:activeToken,storyId:String(activeStory.id||""),owner:String(activeOptions?.lifecycleOwner||"generic"),page:activePage,pageCount:Array.isArray(activeStory.pages)?activeStory.pages.length:0}):null;}
+ function resolveStoryClosed(token,storyId,owner,completed){
   const remaining=[];
   storyCloseWaiters.forEach(waiter=>{
-   if(waiter.token===token){try{waiter.resolve(Object.freeze({closed:true,matched:true,token,storyId,completed:completed===true}));}catch(_){}}
+   if(waiter.token===token){try{waiter.resolve(Object.freeze({closed:true,matched:true,token,storyId,owner,completed:completed===true}));}catch(_){}}
    else remaining.push(waiter);
   });
   storyCloseWaiters=remaining;
  }
  function waitForStoryClosed(expected=null){
   const current=activeStoryLifecycleSnapshot();
-  if(!current)return Promise.resolve(Object.freeze({closed:true,matched:false,reason:"no-active-story",token:0,storyId:null,completed:false}));
+  if(!current)return Promise.resolve(Object.freeze({closed:true,matched:false,reason:"no-active-story",token:0,storyId:null,owner:null,completed:false}));
   const expectedToken=typeof expected==="number"?expected:Number(expected?.token)||0;
   const expectedStoryId=typeof expected==="string"?expected:String(expected?.storyId||"");
-  if(expectedToken&&expectedToken!==current.token)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"token-mismatch",token:current.token,storyId:current.storyId,completed:false}));
-  if(expectedStoryId&&expectedStoryId!==current.storyId)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"story-mismatch",token:current.token,storyId:current.storyId,completed:false}));
-  return new Promise(resolve=>storyCloseWaiters.push({token:current.token,storyId:current.storyId,resolve}));
+  const expectedOwner=expected&&typeof expected==="object"?String(expected.owner||""):"";
+  if(expectedToken&&expectedToken!==current.token)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"token-mismatch",token:current.token,storyId:current.storyId,owner:current.owner,completed:false}));
+  if(expectedStoryId&&expectedStoryId!==current.storyId)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"story-mismatch",token:current.token,storyId:current.storyId,owner:current.owner,completed:false}));
+  if(expectedOwner&&expectedOwner!==current.owner)return Promise.resolve(Object.freeze({closed:false,matched:false,reason:"owner-mismatch",token:current.token,storyId:current.storyId,owner:current.owner,completed:false}));
+  return new Promise(resolve=>storyCloseWaiters.push({token:current.token,storyId:current.storyId,owner:current.owner,resolve}));
  }
  function ensureModal(){
   let modal=document.getElementById(MODAL_ID);
@@ -91,21 +93,21 @@
  window.openStory=function(storyId,options=null){
   const story=window.CIVILIZATION_STORIES?.[storyId];
   if(!story||!Array.isArray(story.pages)||!story.pages.length)return false;
-  if(activeStory)return String(activeStory.id||"")===String(storyId||"");
+  if(activeStory)return String(activeStory.id||"")===String(storyId||"")&&String(activeOptions?.lifecycleOwner||"generic")===String(options?.lifecycleOwner||"generic");
   activeStory=story;activePage=0;activeOptions=options&&typeof options==="object"?options:null;activeToken=nextToken++;renderPage();return true;
  };
  window.storyPreviousPage=function(){if(!activeStory||activePage<=0)return;activePage--;renderPage();};
  window.storyNextPage=function(){if(!activeStory||activePage>=activeStory.pages.length-1)return;activePage++;renderPage();};
  window.closeStory=function(){
   const modal=document.getElementById(MODAL_ID);
-  const story=activeStory,options=activeOptions,token=activeToken,storyId=String(story?.id||"");
+  const story=activeStory,options=activeOptions,token=activeToken,storyId=String(story?.id||""),owner=String(activeOptions?.lifecycleOwner||"generic");
   const completed=!!story&&Array.isArray(story.pages)&&story.pages.length>0&&activePage===story.pages.length-1;
   if(modal)modal.classList.remove("open");
   activeStory=null;activePage=0;activeOptions=null;activeToken=0;
   if(completed&&typeof options?.onComplete==="function"){
    try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
   }
-  resolveStoryClosed(token,storyId,completed);
+  resolveStoryClosed(token,storyId,owner,completed);
  };
  window.isStoryOpen=function(storyId=null){return !!activeStory&&(storyId==null||String(activeStory.id||"")===String(storyId));};
  window.activeStoryLifecycleSnapshot=activeStoryLifecycleSnapshot;
