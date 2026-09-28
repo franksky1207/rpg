@@ -1,14 +1,15 @@
 (function(){
- const VERSION=19;
+ const VERSION=20;
  const LEGACY_REFERENCE_RECOVERY_VERSION=1;
  const expectedThirdWorldIds=Object.freeze(["higher-dimensional-intro",...Array.from({length:9},(_,index)=>`higher-dimensional-milestone-${String(index+1).padStart(2,"0")}`),"higher-dimensional-final"]);
+ const expectedReadyThirdWorldIds=Object.freeze(["higher-dimensional-intro","higher-dimensional-milestone-01","higher-dimensional-milestone-02","higher-dimensional-milestone-03"]);
  function run(){
   const errors=[],warnings=[],fail=(code,message,data=null)=>errors.push({code,message,data});
   const data=window.runCivilizationStoryIntegrity?.();
   if(!data||data.passed!==true)fail("STORY_RUNTIME_DATA_INTEGRITY_FAILED","正式劇情資料完整性檢查未通過",data?.errors||[]);
   if(Number(data?.galaxyStories)!==101)fail("STORY_RUNTIME_GALAXY_COUNT",`銀河紀元必須維持 101 篇，實際 ${Number(data?.galaxyStories)||0}`);
   if(Number(data?.universeStoriesExpected)!==100||Number(data?.universeStoriesLoaded)!==100)fail("STORY_RUNTIME_UNIVERSE_COUNT","宇宙紀元必須維持 100/100 正式劇情",data);
-  if(Number(data?.thirdWorldStoriesExpected)!==11||Number(data?.thirdWorldStoriesLoaded)!==11)fail("STORY_RUNTIME_THIRD_WORLD_COUNT","高維紀元必須維持 11/11 正式劇情",data);
+  if(Number(data?.thirdWorldStoriesExpected)!==11||Number(data?.thirdWorldStoriesLoaded)!==4)fail("STORY_RUNTIME_THIRD_WORLD_COUNT","第 13-3 批高維紀元正式內容必須為 4/11（序章＋Stage 1～3）",data);
   if(window.UNIVERSE_STORY_REGISTRY_READY!==true)fail("STORY_RUNTIME_UNIVERSE_REGISTRY_READY","宇宙紀元 10 區／100 Boss Registry 未就緒");
 
   if(Number(window.CIVILIZATION_STORY_ERA_REGISTRY_VERSION)!==1)fail("STORY_RUNTIME_SHARED_ERA_REGISTRY","三紀元共用 Story Era Registry owner 未就緒");
@@ -27,8 +28,9 @@
   const final=finals[0]||null,finalThreshold=Number(window.thirdWorldTitleDefinition?.(10)?.thresholdRemainingPercentSum);
   if(final?.stage!==10||final?.thresholdRemainingPercentSum!==finalThreshold||milestones.some(row=>row.stage===10))fail("STORY_RUNTIME_THIRD_WORLD_FINAL_STAGE10","stage 10／0% 必須只對應 final，不得再有第 10 段 milestone",final);
   const readyIds=triggers.filter(row=>row.contentReady===true).map(row=>row.storyId);
-  if(JSON.stringify(readyIds)!==JSON.stringify(expectedThirdWorldIds))fail("STORY_RUNTIME_THIRD_WORLD_CONTENT_READY_BATCH13_7","第 13-7 批應啟用全部 11 篇高維正式劇情",readyIds);
-  expectedThirdWorldIds.forEach(id=>{const story=window.CIVILIZATION_STORIES?.[id];if(!story||!Array.isArray(story.pages)||!story.pages.length)fail("STORY_RUNTIME_THIRD_WORLD_STORY_MISSING",`高維正式劇情缺少資料：${id}`);});
+  if(JSON.stringify(readyIds)!==JSON.stringify(expectedReadyThirdWorldIds))fail("STORY_RUNTIME_THIRD_WORLD_CONTENT_READY_BATCH13_3","第 13-3 批只應啟用序章＋Stage 1～3",readyIds);
+  expectedReadyThirdWorldIds.forEach(id=>{const story=window.CIVILIZATION_STORIES?.[id];if(!story||!Array.isArray(story.pages)||!story.pages.length)fail("STORY_RUNTIME_THIRD_WORLD_STORY_MISSING",`已上線高維正式劇情缺少資料：${id}`);});
+  expectedThirdWorldIds.filter(id=>!expectedReadyThirdWorldIds.includes(id)).forEach(id=>{if(window.CIVILIZATION_STORIES?.[id])fail("STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_LOADED",`尚未上線高維故事不得進正式 runtime catalog：${id}`);});
 
   if(Number(window.STORY_MIGRATION_VERSION)!==6||Number(window.STORY_REFERENCE_RECOVERY_VERSION)!==1)fail("STORY_RUNTIME_REFERENCE_RECOVERY_OWNER","Story migration reference recovery owner 未就緒");
   try{
@@ -37,6 +39,7 @@
    const galaxy=probe("earth-prologue",["earth-prologue"]);migration?.migrate?.(galaxy,options);if(galaxy.storyProgress.pendingStory!=="earth-prologue")fail("STORY_RUNTIME_VALID_GALAXY_PENDING_REMOVED","合法銀河 pendingStory 不得被清除",galaxy.storyProgress);
    if(universeId&&stories[universeId]){const universe=probe(universeId,["earth-prologue",universeId]);migration?.migrate?.(universe,options);if(universe.storyProgress.pendingStory!==universeId||!universe.storyProgress.completedStories.includes(universeId))fail("STORY_RUNTIME_VALID_UNIVERSE_REFERENCE_REMOVED","合法宇宙 Story reference 不得被清除",universe.storyProgress);}
    const w3=probe("higher-dimensional-milestone-02",["earth-prologue","higher-dimensional-intro","higher-dimensional-milestone-01"]);migration?.migrate?.(w3,options);if(w3.storyProgress.pendingStory!=="higher-dimensional-milestone-02")fail("STORY_RUNTIME_VALID_THIRD_WORLD_REFERENCE_REMOVED","已上線高維 Story reference 不得被清除",w3.storyProgress);
+   const placeholder=probe("higher-dimensional-milestone-04",["earth-prologue","higher-dimensional-intro","higher-dimensional-milestone-01","higher-dimensional-milestone-02","higher-dimensional-milestone-03","higher-dimensional-milestone-04"]);migration?.migrate?.(placeholder,options);if(placeholder.storyProgress.pendingStory!==null||placeholder.storyProgress.completedStories.includes("higher-dimensional-milestone-04"))fail("STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED","尚未上線高維 Story reference 應保持 fail-closed",placeholder.storyProgress);
    const stale=probe("retired-story-probe",["earth-prologue","retired-story-probe"]);migration?.migrate?.(stale,options);if(stale.storyProgress.pendingStory!==null||stale.storyProgress.completedStories.includes("retired-story-probe"))fail("STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED","退休 Story reference 應於正式 catalog 可用時清除",stale.storyProgress);
   }catch(error){fail("STORY_RUNTIME_REFERENCE_RECOVERY_FAILED","Story reference recovery regression 發生錯誤",String(error?.message||error));}
 
@@ -54,14 +57,17 @@
     const blankCompleted={thirdWorld:{entered:true,bosses:Array.from({length:10},()=>({currentHp:0})),story:{introSeen:false,unlockedStage:10,finalSeen:false}},storyProgress:{pendingStory:null,completedStories:[],introCompleted:true,starterGearReceived:true}};
     const before=JSON.stringify(blankCompleted),snapshot=progress.thirdWorldEligibility(blankCompleted);
     if(JSON.stringify(blankCompleted)!==before)fail("STORY_RUNTIME_THIRD_WORLD_ELIGIBILITY_MUTATED","高維 eligibility snapshot 必須是純讀取，不得修改傳入 state");
-    if(snapshot?.rows?.length!==11||snapshot?.nextEligibleId!=="higher-dimensional-intro"||snapshot?.nextQueueableId!=="higher-dimensional-intro")fail("STORY_RUNTIME_THIRD_WORLD_RECOVERY_ORDER","全內容上線後 reload recovery 應從首個未完成高維故事開始",snapshot);
-    if(snapshot?.rows?.filter(row=>row.queueable).length!==11)fail("STORY_RUNTIME_THIRD_WORLD_FULL_CATALOG_QUEUE","stage 10 且全數擊破時，11 篇未完成故事都應可按順序由 shared owner 排入",snapshot);
+    if(snapshot?.rows?.length!==11||snapshot?.nextEligibleId!=="higher-dimensional-intro"||snapshot?.nextQueueableId!=="higher-dimensional-intro")fail("STORY_RUNTIME_THIRD_WORLD_RECOVERY_ORDER","reload recovery 應從首個未完成且已上線高維故事開始",snapshot);
+    if(snapshot?.rows?.filter(row=>row.queueable).length!==4)fail("STORY_RUNTIME_THIRD_WORLD_BATCH13_3_QUEUE_COUNT","第 13-3 批最多只能有 4 篇已上線高維故事可 queue",snapshot);
     const partial={thirdWorld:{entered:true,bosses:Array.from({length:10},()=>({currentHp:1100000000})),story:{introSeen:true,unlockedStage:3,finalSeen:false}},storyProgress:{pendingStory:null,completedStories:["higher-dimensional-intro","higher-dimensional-milestone-01"],introCompleted:true,starterGearReceived:true}};
     const partialSnapshot=progress.thirdWorldEligibility(partial);
     if(partialSnapshot?.nextEligibleId!=="higher-dimensional-milestone-02"||partialSnapshot?.nextQueueableId!=="higher-dimensional-milestone-02")fail("STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY","已完成序章與第一段後，reload recovery 應按順序指向第二段正式內容",partialSnapshot);
     if(partialSnapshot?.rows?.find(row=>row.kind==="final")?.eligible===true)fail("STORY_RUNTIME_THIRD_WORLD_FINAL_GATE","十名高維存在尚未全數擊破時 final 不得 eligible",partialSnapshot);
+    const firstFourDone={thirdWorld:{entered:true,bosses:Array.from({length:10},()=>({currentHp:0})),story:{introSeen:true,unlockedStage:10,finalSeen:false}},storyProgress:{pendingStory:null,completedStories:[...expectedReadyThirdWorldIds],introCompleted:true,starterGearReceived:true}};
+    const gated=progress.thirdWorldEligibility(firstFourDone);
+    if(gated?.nextEligibleId!=="higher-dimensional-milestone-04"||gated?.nextQueueableId!==null||gated?.rows?.find(row=>row.storyId==="higher-dimensional-milestone-04")?.queueable===true)fail("STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED","Stage 4 尚未上線時可保留 eligibility，但不得進正式 queue",gated);
     const completion=progress.thirdWorldCompletionFramework?.(blankCompleted);
-    if(completion?.completionReady!==true||completion?.finalEligible!==true||completion?.finalQueueable!==true||completion?.storedCompleted!==false)fail("STORY_RUNTIME_THIRD_WORLD_COMPLETION_READY","十名高維存在全數擊破＋stage10 應形成 final queue/completion eligibility，不得自動 completed",completion);
+    if(completion?.completionReady!==true||completion?.finalEligible!==true||completion?.finalQueueable!==false||completion?.storedCompleted!==false)fail("STORY_RUNTIME_THIRD_WORLD_COMPLETION_READY","十名高維存在全數擊破＋stage10 可達 completion-ready，但 Final 未上線前不得 queue 或自動 completed",completion);
     const beforeCompletion=JSON.stringify(blankCompleted);progress.thirdWorldCompletionFramework?.(blankCompleted);if(JSON.stringify(blankCompleted)!==beforeCompletion)fail("STORY_RUNTIME_THIRD_WORLD_COMPLETION_MUTATED","Completion Framework 必須純推導，不得修改正式 state");
    }catch(error){fail("STORY_RUNTIME_THIRD_WORLD_ELIGIBILITY_FAILED","高維 queue eligibility regression 發生錯誤",String(error?.message||error));}
   }
@@ -71,7 +77,7 @@
   universeBosses.forEach((boss,index)=>{const id=progress?.universeBossStoryId?.(index);if(!id)fail("STORY_RUNTIME_UNIVERSE_MAPPING_EMPTY",`宇宙 Boss ${index} 無故事 id`);else universeIds.add(id);const reverse=progress?.universeBossIndexForStory?.(id);if(reverse!==index)fail("STORY_RUNTIME_UNIVERSE_MAPPING_REVERSE",`${id} 反向對應錯誤`,{expected:index,actual:reverse});if(Number(boss.level)!==505+index*5)fail("STORY_RUNTIME_UNIVERSE_LEVEL_SEQUENCE",`宇宙 Boss ${index} 等級序列錯誤`);});
   if(universeIds.size!==100)fail("STORY_RUNTIME_UNIVERSE_MAPPING_COUNT",`宇宙紀元應有 100 個唯一故事對應，實際 ${universeIds.size}`);
   if(typeof state!=="undefined"&&state&&progress?.get){try{const before=JSON.stringify(state.storyProgress??null),p=progress.get();if(JSON.stringify(state.storyProgress??null)!==before)fail("STORY_RUNTIME_PROGRESS_GET_MUTATED","讀取故事進度時不應修改 storyProgress");if(p?.pendingStory&&!window.CIVILIZATION_STORIES?.[p.pendingStory])fail("STORY_RUNTIME_PENDING_UNKNOWN",`pendingStory 找不到正式資料：${p.pendingStory}`);}catch(error){fail("STORY_RUNTIME_PROGRESS_GET_FAILED","讀取故事進度時發生錯誤",String(error?.message||error));}}
-  const report={passed:errors.length===0,version:VERSION,checkedAt:Date.now(),dataIntegrityPassed:data?.passed===true,galaxyStories:Number(data?.galaxyStories)||0,universeRegistry:universeIds.size,universeStoriesLoaded:Number(data?.universeStoriesLoaded)||0,thirdWorldStoriesLoaded:Number(data?.thirdWorldStoriesLoaded)||0,targetStories:212,eraIds,thirdWorldTriggerCount:triggers.length,thirdWorldQueueVersion:Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)||0,firstClearHook:Number(window.UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION)||0,errors,warnings};
+  const report={passed:errors.length===0,version:VERSION,checkedAt:Date.now(),dataIntegrityPassed:data?.passed===true,galaxyStories:Number(data?.galaxyStories)||0,universeRegistry:universeIds.size,universeStoriesLoaded:Number(data?.universeStoriesLoaded)||0,thirdWorldStoriesLoaded:Number(data?.thirdWorldStoriesLoaded)||0,targetStories:205,eraIds,thirdWorldTriggerCount:triggers.length,thirdWorldQueueVersion:Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)||0,firstClearHook:Number(window.UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION)||0,errors,warnings};
   window.STORY_RUNTIME_INTEGRITY_REPORT=report;if(!report.passed)console.error("[文明戰線] 劇情執行期完整性檢查失敗",report);else console.info("[文明戰線] 劇情執行期完整性檢查通過",report);return report;
  }
  window.STORY_RUNTIME_INTEGRITY_VERSION=VERSION;window.STORY_RUNTIME_LEGACY_REFERENCE_RECOVERY_VERSION=LEGACY_REFERENCE_RECOVERY_VERSION;window.runCivilizationStoryRuntimeIntegrity=run;run();
