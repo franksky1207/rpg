@@ -1,6 +1,6 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙紀元共用同一 Story Progress / Record / GM 架構。
 // 維護註記：此測試亦作為跨模組重構後的 exact-head 最終驗證觸發點。
-// Batch 13-4：高維序章＋Stage 1～5 正式內容必須沿用 shared Story owner；Stage 6～Final placeholder 維持不可 queue。
+// Batch 13-5：高維序章＋Stage 1～7 正式內容必須沿用 shared Story owner；Stage 8～Final placeholder 維持不可 queue。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
 const combat=fs.readFileSync('combatcore.js','utf8');
@@ -20,6 +20,7 @@ const region5=fs.readFileSync('storydata-universe-trans-domain-frontier.js','utf
 const w3Data=fs.readFileSync('storydata-higher-dimensional.js','utf8');
 const w3Stage23=fs.readFileSync('storydata-higher-dimensional-stage2-3.js','utf8');
 const w3Stage45=fs.readFileSync('storydata-higher-dimensional-stage4-5.js','utf8');
+const w3Stage67=fs.readFileSync('storydata-higher-dimensional-stage6-7.js','utf8');
 assert((combat.match(/queueBossStory/g)||[]).length===2,'銀河 combatcore queueBossStory owner 契約改變');
 assert(!/queueBossStory/.test(pipeline),'battlepipeline 不得再次排銀河故事');
 assert(/function queueUniverseBossStory\(index\)/.test(progress),'storyprogress 缺少宇宙首殺 queue owner');
@@ -64,31 +65,34 @@ assert(/GM_STORY_TEST_VERSION=6/.test(gm),'GM 劇情測試版本應為 6');
 assert(/thirdWorldFormatPolicy/.test(integrity)&&/allEraStoriesTarget:212/.test(integrity),'資料 Integrity 未納入高維格式政策／212 篇最終總目標');
 assert(/UNIVERSE_STORY_REGISTRY_READY/.test(runtime)&&/UNIVERSE_STORY_FIRST_CLEAR_HOOK/.test(runtime),'Runtime Integrity 未驗證宇宙 Registry／首殺 hook');
 assert(/CIVILIZATION_STORY_ERA_REGISTRY_VERSION/.test(runtime)&&/THIRD_WORLD_STORY_TRIGGER_REGISTRY_VERSION/.test(runtime),'Runtime Integrity 未驗證三紀元 Registry／高維 Trigger Registry');
-assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=21;/.test(runtime),'Story Runtime Integrity 應為 V21');
-assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 Batch13-4 placeholder zero-queue／順序補播');
+assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=22;/.test(runtime),'Story Runtime Integrity 應為 V22');
+assert(/STORY_RUNTIME_THIRD_WORLD_PLACEHOLDER_QUEUED/.test(runtime)&&/STORY_RUNTIME_THIRD_WORLD_SEQUENTIAL_RECOVERY/.test(runtime),'Runtime Integrity 未驗證 Batch13-5 placeholder zero-queue／順序補播');
 assert(/STORY_RUNTIME_STALE_REFERENCE_NOT_CLEANED/.test(runtime)&&/STORY_RUNTIME_PLACEHOLDER_PENDING_NOT_CLEANED/.test(runtime),'Runtime Integrity 未驗證 stale／placeholder Story reference recovery');
 assert(/STORY_RECORD_TABS_VERSION=8/.test(record),'story record tabs 版本應為 8');
-assert(/contentReady:true/.test(registry)&&/contentReady:stage<=5/.test(registry)&&/contentReady:false/.test(registry),'Batch 13-4 Registry 必須只啟用序章與 Stage 1～5');
+assert(/contentReady:true/.test(registry)&&/contentReady:stage<=7/.test(registry)&&/contentReady:false/.test(registry),'Batch 13-5 Registry 必須只啟用序章與 Stage 1～7');
 assert((w3Data.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-2 基礎檔必須維持序章＋Stage 1 共 2 篇');
 assert((w3Stage23.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-3 必須維持 Stage 2＋Stage 3 共 2 篇');
-assert((w3Stage45.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-4 必須新增 Stage 4＋Stage 5 共 2 篇');
-assert(/add\("higher-dimensional-milestone-04"/.test(w3Stage45)&&/add\("higher-dimensional-milestone-05"/.test(w3Stage45),'Batch 13-4 缺少 Stage 4 或 Stage 5 正式資料');
+assert((w3Stage45.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-4 必須維持 Stage 4＋Stage 5 共 2 篇');
+assert((w3Stage67.match(/add\("higher-dimensional-/g)||[]).length===2,'Batch 13-5 必須新增 Stage 6＋Stage 7 共 2 篇');
+assert(/add\("higher-dimensional-milestone-06"/.test(w3Stage67)&&/add\("higher-dimensional-milestone-07"/.test(w3Stage67),'Batch 13-5 缺少 Stage 6 或 Stage 7 正式資料');
 const universeFiles=['storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js'];
 assert(index.includes('secondworldstoryregistry.js?v='),'index.html 必須正式載入 secondworldstoryregistry.js');
 universeFiles.forEach(file=>{assert(fs.existsSync(file),'缺少宇宙正式劇情資料容器：'+file);assert(index.includes(file+'?v='),'index.html 缺少宇宙正式劇情資料檔：'+file);});
 assert(index.includes('storydata-higher-dimensional.js?v=20260928-thirdworld-batch13-2'),'index.html 缺少 Batch 13-2 高維基礎正式劇情資料檔或 cache-bust');
 assert(index.includes('storydata-higher-dimensional-stage2-3.js?v=20260929-thirdworld-batch13-3'),'index.html 缺少 Batch 13-3 Stage 2-3 正式劇情資料檔或 cache-bust');
 assert(index.includes('storydata-higher-dimensional-stage4-5.js?v=20260929-thirdworld-batch13-4'),'index.html 缺少 Batch 13-4 Stage 4-5 正式劇情資料檔或 cache-bust');
+assert(index.includes('storydata-higher-dimensional-stage6-7.js?v=20260929-thirdworld-batch13-5'),'index.html 缺少 Batch 13-5 Stage 6-7 正式劇情資料檔或 cache-bust');
 assert(index.indexOf('secondworldstoryregistry.js?v=')<index.indexOf('storydata-higher-dimensional.js?v='),'高維 Trigger Registry 必須早於高維正式劇情資料載入');
 assert(index.indexOf('storydata-higher-dimensional.js?v=')<index.indexOf('storydata-higher-dimensional-stage2-3.js?v='),'Stage 2-3 應接在高維基礎 Story data 後載入');
 assert(index.indexOf('storydata-higher-dimensional-stage2-3.js?v=')<index.indexOf('storydata-higher-dimensional-stage4-5.js?v='),'Stage 4-5 應接在 Stage 2-3 後載入');
-assert(index.indexOf('storydata-higher-dimensional-stage4-5.js?v=')<index.indexOf('storyintegrity.js?v='),'Stage 4-5 正式劇情資料必須在 Story Integrity 前載入');
+assert(index.indexOf('storydata-higher-dimensional-stage4-5.js?v=')<index.indexOf('storydata-higher-dimensional-stage6-7.js?v='),'Stage 6-7 應接在 Stage 4-5 後載入');
+assert(index.indexOf('storydata-higher-dimensional-stage6-7.js?v=')<index.indexOf('storyintegrity.js?v='),'Stage 6-7 正式劇情資料必須在 Story Integrity 前載入');
 assert(index.includes('storyprogress.js?v='),'storyprogress.js 必須帶 cache-bust 正式載入');
-assert(index.includes('storyruntimeintegrity.js?v=20260929-thirdworld-batch13-4'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 13-4');
-assert(index.includes('secondworldstoryregistry.js?v=20260929-thirdworld-batch13-4'),'secondworldstoryregistry.js cache-bust 未更新至 Batch 13-4');
+assert(index.includes('storyruntimeintegrity.js?v=20260929-thirdworld-batch13-5'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 13-5');
+assert(index.includes('secondworldstoryregistry.js?v=20260929-thirdworld-batch13-5'),'secondworldstoryregistry.js cache-bust 未更新至 Batch 13-5');
 assert(index.includes('storymigration.js?v=20260928-thirdworld-batch12-o1'),'storymigration.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldphase.js?v=20260928-thirdworld-batch12-o1'),'thirdworldphase.js cache-bust 未更新至 Batch 12-O1');
 assert(index.includes('thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1'),'thirdworldmigrationregression.js cache-bust 未更新至 Batch 12-O1');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
-console.log('STORY FLOW PASSED | W3 formal=6/11 | shared queue=yes | Stage6-Final placeholders fail-closed | galaxy/universe preserved | all-era final target=212');
+console.log('STORY FLOW PASSED | W3 formal=8/11 | shared queue=yes | Stage8-Final placeholders fail-closed | galaxy/universe preserved | all-era final target=212');
