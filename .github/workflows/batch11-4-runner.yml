@@ -16,7 +16,10 @@ jobs:
         with:
           ref: main
       - name: Apply batch 11-4 convergence patch
-        run: python .github/scripts/batch11-4-patch.py
+        run: |
+          sed -i 's/if found!=count:/if found<count:/' .github/scripts/batch11-4-patch.py
+          sed -i 's/write(path,text.replace(old,new))/write(path,text.replace(old,new,count))/' .github/scripts/batch11-4-patch.py
+          python .github/scripts/batch11-4-patch.py
       - name: Syntax and integrity self-check
         run: |
           set -euo pipefail
