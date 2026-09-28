@@ -115,6 +115,7 @@ s=read('tests/runtime/js-integrity.js')
 s=s.replace('GAME_GUIDE_VERSION=21','GAME_GUIDE_VERSION=22').replace('GAME_GUIDE_WORLD_AWARE_VERSION=8','GAME_GUIDE_WORLD_AWARE_VERSION=9')
 s=s.replace('GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=1','GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2')
 s=s.replace("gameguide.js?v=20260928-thirdworld-entity-term1",f"gameguide.js?v={TAG}")
+s=one(s,'assert(/第三紀元死亡仍會執行原本 30% 的裝備遺失判定/.test(thirdWorldGuideSource)&&/VIP20/.test(thirdWorldGuideSource),"W3 Guide 必須保留 VIP20 死亡裝備保護的玩家體感說明。");','assert(/rules\.deathLossPercent\.toLocaleString\(\)/.test(thirdWorldGuideSource)&&/rules\.vipRequired/.test(thirdWorldGuideSource)&&/VIP 裝備保護/.test(thirdWorldGuideSource),"W3 Guide 必須由正式死亡判定與進入門檻 owner 動態呈現 VIP 裝備保護。\");','dynamic VIP protection assertion')
 anchor='assert(/GAME_GUIDE_VERSION=22/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_AWARE_VERSION=9/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=2/.test(gameGuideSource)&&/GAME_GUIDE_THIRD_WORLD_VERSION=1/.test(gameGuideSource),'
 if anchor not in s: raise SystemExit('updated guide version assertion anchor missing')
 insert=r'''assert(/GAME_GUIDE_THIRD_WORLD_RULE_SNAPSHOT_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_CURRENT_CATEGORY_VALIDATION_VERSION=1/.test(gameGuideSource),"W3 Guide 必須使用正式 rule snapshot 與當前紀元分類驗證。");
