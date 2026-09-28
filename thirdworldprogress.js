@@ -1,6 +1,8 @@
 (function(){
- const VERSION=4;
- const SETTLEMENT_VERSION=4;
+ const VERSION=5;
+ const SETTLEMENT_VERSION=5;
+ const STORY_FRAMEWORK_BRIDGE_VERSION=1;
+ const COMPLETION_READY_FRAMEWORK_VERSION=1;
  const REPLAY_GUARD_VERSION=1;
  const ECONOMY_VERSION=1;
  const EQUIPMENT_VERSION=1;
@@ -113,6 +115,7 @@
   const stageTransition=stageTransitionSnapshot(checked.bossIndex,checked.formalStartHp,checked.combatEndHp,bossDefeatedNow);
   const challengeAfter=window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
   const fivePointBlocked=!bossDefeatedNow&&challengeAfter?.allowed===false&&challengeAfter?.reason==="five-point-front";
+  const completionReady=aggregateAfter.aliveCount===0&&storyAfter>=10;
   const titleChanged=titleGrant?.changed===true,progressEventPending=titleChanged||storyChanged;
   let terminalReason="";
   if(bossDefeatedNow)terminalReason="boss-defeated";
@@ -123,11 +126,12 @@
   if(bossDefeatedNow)eventSequence.push(freeze({type:"boss-defeated",bossIndex:checked.bossIndex,bossId:String(checked.boss.id||"")}));
   else if(stageTransition.changed)eventSequence.push(freeze({type:"stage-crossed",bossIndex:checked.bossIndex,from:stageTransition.from,to:stageTransition.to,crossedStages:stageTransition.crossedStages,newAbilityIds:stageTransition.newAbilityIds}));
   if(fivePointBlocked)eventSequence.push(freeze({type:"five-point-front",bossIndex:checked.bossIndex,gapHp:Number(challengeAfter?.gapHp)||0,gapPoints:Number(challengeAfter?.gapPoints)||0}));
+  if(completionReady)eventSequence.push(freeze({type:"completion-ready",storyStage:10,finalStoryId:"higher-dimensional-final"}));
   const continuationAllowed=!progressEventPending&&!terminalReason;
   const continuationReason=progressEventPending?"progress-event":terminalReason;
   return {
    ok:true,aggregateBefore,aggregateAfter,titleTierBefore,titleTierAfter,titleGrant,storyBefore,storyAfter,storyChanged,unlockedStoryStages,
-   bossDefeatedNow,stageTransition,challengeAfter,fivePointBlocked,completionReady:aggregateAfter.aliveCount===0,
+   bossDefeatedNow,stageTransition,challengeAfter,fivePointBlocked,completionReady,
    progressEventPending,eventSequence,continuation:freeze({allowed:continuationAllowed,reason:continuationReason,terminalReason,requiresEventHandling:progressEventPending})
   };
  }
@@ -169,7 +173,7 @@
   const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{},progression=value.progression||{};
   const equipmentRewards=Array.isArray(equipment.equipmentRewards)?equipment.equipmentRewards.map(row=>freeze({...row})):[],items=Array.isArray(equipment.items)?equipment.items.slice():[];
   const unlockedTitles=Array.isArray(progression.titleGrant?.unlockedTitles)?progression.titleGrant.unlockedTitles.map(row=>freeze({...row})):[];
-  return freeze({
+  const settlement={
    ok:true,world:3,settlementVersion:SETTLEMENT_VERSION,phase:"permanent-hp-exp-strings-equipment-progression",bossIndex:value.bossIndex,bossId:value.bossId,
    formalStartHp:value.formalStartHp,combatEndHp:value.combatEndHp,effectivePermanentDamage:value.effectivePermanentDamage,formalProgressChanged:Number(value.effectivePermanentDamage)>0,
    playerDied:value.playerDied===true,bossDefeated:value.bossDefeated===true,bossDefeatedNow:progression.bossDefeatedNow===true,terminationReason:value.terminationReason,
@@ -184,7 +188,9 @@
    stageTransition:progression.stageTransition||null,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
    eventSequence:freeze(Array.isArray(progression.eventSequence)?progression.eventSequence.slice():[]),continuation:progression.continuation||freeze({allowed:false,reason:"progression-missing",terminalReason:"",requiresEventHandling:false}),
    rewardsPending:false,equipmentPending:false,progressionPending:false,saved:true
-  });
+  };
+  const storyFramework=typeof window.civilizationStoryProgress?.consumeThirdWorldSettlement==="function"?window.civilizationStoryProgress.consumeThirdWorldSettlement(settlement,{queue:true}):freeze({version:STORY_FRAMEWORK_BRIDGE_VERSION,accepted:false,reason:"story-owner-missing",queuedStoryId:null,presentationDeferred:true});
+  return freeze({...settlement,storyFramework});
  }
  function validate(){
   const errors=[];
@@ -223,6 +229,8 @@
 
  window.THIRD_WORLD_PROGRESS_VERSION=VERSION;
  window.THIRD_WORLD_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
+ window.THIRD_WORLD_STORY_FRAMEWORK_BRIDGE_VERSION=STORY_FRAMEWORK_BRIDGE_VERSION;
+ window.THIRD_WORLD_COMPLETION_READY_FRAMEWORK_VERSION=COMPLETION_READY_FRAMEWORK_VERSION;
  window.THIRD_WORLD_SETTLEMENT_REPLAY_GUARD_VERSION=REPLAY_GUARD_VERSION;
  window.THIRD_WORLD_SETTLEMENT_ECONOMY_VERSION=ECONOMY_VERSION;
  window.THIRD_WORLD_SETTLEMENT_EQUIPMENT_VERSION=EQUIPMENT_VERSION;

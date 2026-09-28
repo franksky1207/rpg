@@ -1,6 +1,8 @@
 (function(){
- const VERSION=13;
+ const VERSION=14;
  const THIRD_WORLD_QUEUE_VERSION=1;
+ const THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION=1;
+ const THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION=1;
  const THIRD_WORLD_ELIGIBILITY_VERSION=1;
  const THIRD_WORLD_RELOAD_RECOVERY_VERSION=1;
  const THIRD_WORLD_PLACEHOLDER_GUARD_VERSION=1;
@@ -14,7 +16,7 @@
  function normalizeFreshState(target){normalizeProgress(target,{fresh:true});setTimeout(queueResume,0);return target;}if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshState);window.normalizeStoryProgressState=normalizeProgress;
  function readProgress(){const p=state?.storyProgress;return p&&typeof p==="object"&&!Array.isArray(p)?p:null;}function ensureProgress(options={}){normalizeProgress(state,options);return readProgress();}function persist(){if(typeof save==="function")save(false);}
  function setPending(id){const p=ensureProgress();if(!p)return false;p.pendingStory=id||null;persist();return true;}function completeStory(id){const p=ensureProgress();if(!p)return false;const first=!p.completedStories.includes(id);if(first)p.completedStories.push(id);if(p.pendingStory===id)p.pendingStory=null;if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}persist();if(first&&typeof window.showCivilizationCalamityUnlockNoticeForStory==="function")queueMicrotask(()=>window.showCivilizationCalamityUnlockNoticeForStory(id));if(first&&typeof window.handleSecondWorldStoryCompletion==="function")window.handleSecondWorldStoryCompletion(id);return true;}
- function queueStory(id){if(!id||!window.CIVILIZATION_STORIES?.[id])return null;normalizeProgress(state,{skipBackfill:true});const p=state.storyProgress;if(!p||p.completedStories.includes(id)||p.pendingStory&&p.pendingStory!==id)return null;if(p.pendingStory!==id){p.pendingStory=id;normalizeProgress(state);persist();}queueResume();return id;}function queueBossStory(mapIdx){return queueStory(galaxyBossStoryId(mapIdx));}function queueUniverseBossStory(index){return queueStory(universeBossStoryId(index));}
+ function queueStory(id,{resume=true}={}){if(!id||!window.CIVILIZATION_STORIES?.[id])return null;normalizeProgress(state,{skipBackfill:true});const p=state.storyProgress;if(!p||p.completedStories.includes(id)||p.pendingStory&&p.pendingStory!==id)return null;if(p.pendingStory!==id){p.pendingStory=id;normalizeProgress(state);persist();}if(resume)queueResume();return id;}function queueBossStory(mapIdx){return queueStory(galaxyBossStoryId(mapIdx));}function queueUniverseBossStory(index){return queueStory(universeBossStoryId(index));}
  function thirdWorldDescriptors(){return typeof window.thirdWorldStoryTriggerDescriptors==="function"?Array.from(window.thirdWorldStoryTriggerDescriptors()):[];}
  function formalStoryContentReady(descriptor){const id=String(descriptor?.storyId||"");const story=id?window.CIVILIZATION_STORIES?.[id]:null;return descriptor?.contentReady===true&&!!story&&Array.isArray(story.pages)&&story.pages.length>0;}
  function thirdWorldBossesDefeated(target){if(typeof window.thirdWorldBossesAllDefeated==="function")return window.thirdWorldBossesAllDefeated(target)===true;const rows=target?.thirdWorld?.bosses;return Array.isArray(rows)&&rows.length===10&&rows.every(row=>Number(row?.currentHp)===0);}
@@ -32,10 +34,21 @@
   return Object.freeze({version:THIRD_WORLD_ELIGIBILITY_VERSION,entered,unlockedStage,bossesDefeated,introSeen:story.introSeen===true,finalSeen:story.finalSeen===true,rows:Object.freeze(rows),nextEligibleId:nextEligible?.storyId||null,nextQueueableId:nextQueueable?.storyId||null});
  }
  function nextThirdWorldStory(target=state,{requireContent=true}={}){const snapshot=thirdWorldStoryEligibility(target);return snapshot.rows.find(row=>requireContent?row.queueable:row.eligible)||null;}
- function queueThirdWorldEligibleStory(){
+ function queueThirdWorldEligibleStory({resume=true}={}){
   if(typeof state==="undefined"||!state?.thirdWorld?.entered)return null;
   const p=ensureProgress({skipBackfill:true});if(!p||p.pendingStory)return null;
-  const row=nextThirdWorldStory(state,{requireContent:true});return row?queueStory(row.storyId):null;
+  const row=nextThirdWorldStory(state,{requireContent:true});return row?queueStory(row.storyId,{resume}):null;
+ }
+ function thirdWorldStoryCompletionFramework(target=state){
+  const third=target?.thirdWorld||{},snapshot=thirdWorldStoryEligibility(target),finalRow=snapshot.rows.find(row=>row.kind==="final")||null;
+  const completionReady=third.entered===true&&snapshot.bossesDefeated===true&&snapshot.unlockedStage>=10;
+  return Object.freeze({version:THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION,entered:third.entered===true,bossesDefeated:snapshot.bossesDefeated===true,unlockedStage:snapshot.unlockedStage,completionReady,finalEligible:completionReady&&finalRow?.eligible===true,finalQueueable:completionReady&&finalRow?.queueable===true,finalStoryId:finalRow?.storyId||"higher-dimensional-final",finalSeen:third.story?.finalSeen===true,storedCompleted:third.completed===true,readyForCompletionOwner:completionReady});
+ }
+ function consumeThirdWorldSettlement(settlement,{queue=true}={}){
+  if(!settlement||settlement.ok!==true||Number(settlement.world)!==3)return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:false,reason:"invalid-settlement",unlockedStages:Object.freeze([]),milestoneStages:Object.freeze([]),finalStageUnlocked:false,completion:thirdWorldStoryCompletionFramework(state),queuedStoryId:null});
+  const unlockedStages=Array.from(new Set((Array.isArray(settlement.unlockedStoryStages)?settlement.unlockedStoryStages:[]).map(value=>Math.floor(Number(value))).filter(value=>value>=1&&value<=10))).sort((a,b)=>a-b),milestoneStages=unlockedStages.filter(stage=>stage<=9),finalStageUnlocked=unlockedStages.includes(10),completion=thirdWorldStoryCompletionFramework(state);
+  const queuedStoryId=queue?queueThirdWorldEligibleStory({resume:false}):null;
+  return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:true,unlockedStages:Object.freeze(unlockedStages),milestoneStages:Object.freeze(milestoneStages),finalStageUnlocked,completion,queuedStoryId:queuedStoryId||null,presentationDeferred:true});
  }
  function starterTypes(){return Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:[];}function allStarterGearMissing(){const types=starterTypes();return !!types.length&&types.every(type=>!state?.equipment?.[type]);}function hasNoMainProgress(){if(Number(state?.level)!==1||Number(state?.exp)!==0||Number(state?.gold)!==0||Number(state?.unlockedMap)!==0)return false;if(Array.isArray(state?.inventory)&&state.inventory.length)return false;if(Array.isArray(state?.bossKilled)&&state.bossKilled.some(Boolean))return false;return true;}function brokenOnboardingGearState(){const p=readProgress();return !!p&&p.introCompleted===true&&p.starterGearReceived===true&&p.completedStories.length===1&&p.completedStories[0]===INTRO_STORY_ID&&hasNoMainProgress()&&allStarterGearMissing();}
  function ensureStarterEquipment(){const types=starterTypes();if(!types.length)return false;if(!state.equipment||typeof state.equipment!=="object"||Array.isArray(state.equipment))state.equipment={};const missing=types.filter(type=>!state.equipment[type]);if(!missing.length)return false;const generated=typeof starterEquipment==="function"?starterEquipment():null;missing.forEach(type=>{state.equipment[type]=generated?.[type]||makeItem(1,0,"normal",0,type);});if(typeof playerCombatStats==="function")state.hp=playerCombatStats().hp;persist();return true;}function repairBrokenOnboardingGear(){return brokenOnboardingGearState()?ensureStarterEquipment():false;}
@@ -49,15 +62,19 @@
   const continuous=window.startSecondWorldBossContinuous,single=window.startSecondWorldBossBattle;if(typeof continuous==="function"&&typeof single==="function")window.startSecondWorldBossContinuous=function(value){const index=Math.floor(Number(value));if(window.secondWorldBossKilled?.(index)!==true&&window.CIVILIZATION_STORIES?.[universeBossStoryId(index)])return single(index);return continuous(index);};
   window.__universeStoryFirstClearHook=true;window.UNIVERSE_STORY_FIRST_CLEAR_HOOK_VERSION=1;return true;
  }
- window.civilizationStoryProgress={version:VERSION,introStoryId:INTRO_STORY_ID,normalize:normalizeProgress,resume:queueResume,get:()=>readProgress(),setPending,completeStory,queueStory,queueBossStory,queueUniverseBossStory,thirdWorldEligibility:thirdWorldStoryEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory,bossStoryId:galaxyBossStoryId,universeBossStoryId,universeBossIndexForStory,backfillAvailableHistory:()=>{const changed=backfillAvailableHistory(state);if(changed)persist();return changed;},ensureStarterEquipment,completedStories:completedStoryRows};
+ window.civilizationStoryProgress={version:VERSION,introStoryId:INTRO_STORY_ID,normalize:normalizeProgress,resume:queueResume,get:()=>readProgress(),setPending,completeStory,queueStory,queueBossStory,queueUniverseBossStory,thirdWorldEligibility:thirdWorldStoryEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory,thirdWorldCompletionFramework:thirdWorldStoryCompletionFramework,consumeThirdWorldSettlement,bossStoryId:galaxyBossStoryId,universeBossStoryId,universeBossIndexForStory,backfillAvailableHistory:()=>{const changed=backfillAvailableHistory(state);if(changed)persist();return changed;},ensureStarterEquipment,completedStories:completedStoryRows};
  window.CIVILIZATION_STORY_PROGRESS_VERSION=VERSION;
  window.THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION;
+ window.THIRD_WORLD_STORY_SETTLEMENT_BRIDGE_VERSION=THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION;
+ window.THIRD_WORLD_STORY_COMPLETION_FRAMEWORK_VERSION=THIRD_WORLD_COMPLETION_FRAMEWORK_VERSION;
  window.THIRD_WORLD_STORY_ELIGIBILITY_VERSION=THIRD_WORLD_ELIGIBILITY_VERSION;
  window.THIRD_WORLD_STORY_RELOAD_RECOVERY_VERSION=THIRD_WORLD_RELOAD_RECOVERY_VERSION;
  window.THIRD_WORLD_STORY_PLACEHOLDER_GUARD_VERSION=THIRD_WORLD_PLACEHOLDER_GUARD_VERSION;
  window.thirdWorldStoryEligibilitySnapshot=thirdWorldStoryEligibility;
  window.nextThirdWorldStoryCandidate=nextThirdWorldStory;
  window.queueThirdWorldEligibleStory=queueThirdWorldEligibleStory;
+ window.thirdWorldStoryCompletionFramework=thirdWorldStoryCompletionFramework;
+ window.consumeThirdWorldStorySettlement=consumeThirdWorldSettlement;
  installUniverseFirstClearHook();
  if(typeof state!=="undefined"&&state){normalizeProgress(state);repairBrokenOnboardingGear();persist();}window.addEventListener("civilization-background-ready-before-reveal",queueResume);window.addEventListener("civilization-auth-ready",queueResume);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",queueResume,{once:true});else queueResume();
 })();

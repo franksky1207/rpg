@@ -1,5 +1,6 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
+ const THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION=1;
  const THIRD_WORLD_BOSS_COUNT=10;
  const THIRD_WORLD_BOSS_MAX_HP=1100000000;
  const THIRD_WORLD_CORE_MAX_LEVEL=10;
@@ -130,7 +131,7 @@
  function enterThirdWorld(){
   if(typeof window.runWorldTransition!=="function"||!thirdWorldEntryOwnersReady())return {ok:false,reason:"transition-owner-missing"};
   const runtimeStatus=()=>typeof window.worldTransitionRuntimeStatus==="function"?window.worldTransitionRuntimeStatus():{blocked:false,blockers:[]};
-  return window.runWorldTransition({requirements:()=>thirdWorldEntryRequirements(state),runtimeStatus,mutate:target=>{applyThirdWorldEntryState(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.resetWorldTransitionTransientRuntime==="function")window.resetWorldTransitionTransientRuntime();if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();},sessionMarker:"civilization_third_world_just_entered_v1"});
+  return window.runWorldTransition({requirements:()=>thirdWorldEntryRequirements(state),runtimeStatus,mutate:target=>{applyThirdWorldEntryState(target);if(typeof playerCombatStats==="function")target.hp=playerCombatStats().hp;else if(typeof normalizeHP==="function")normalizeHP();},prepareBeforeSave:()=>{if(typeof window.prepareOfflineCheckpointForWorldTransition==="function")window.prepareOfflineCheckpointForWorldTransition();},finalizeAfterSave:()=>{if(typeof window.resetWorldTransitionTransientRuntime==="function")window.resetWorldTransitionTransientRuntime();if(typeof window.finalizeOfflineCheckpointForWorldTransition==="function")window.finalizeOfflineCheckpointForWorldTransition();queueMicrotask(()=>window.civilizationStoryProgress?.resume?.());},sessionMarker:"civilization_third_world_just_entered_v1"});
  }
 
  window.THIRD_WORLD_PHASE_VERSION=VERSION;
@@ -148,6 +149,7 @@
  window.THIRD_WORLD_COMPLETION_DERIVATION_VERSION=1;
  window.THIRD_WORLD_ENTRY_REQUIREMENTS_VERSION=1;
  window.THIRD_WORLD_ENTRY_TRANSITION_VERSION=2;
+ window.THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION=THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION;
  window.THIRD_WORLD_ENTRY_STATE_MUTATION_VERSION=1;
  window.THIRD_WORLD_ENTRY_RESOURCE_RECONCILIATION_VERSION=THIRD_WORLD_ENTRY_RESOURCE_RECONCILIATION_VERSION;
  window.THIRD_WORLD_ENTRY_RECONCILIATION_VERSION=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION;
