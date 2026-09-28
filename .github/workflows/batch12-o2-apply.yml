@@ -1,0 +1,42 @@
+name: Batch 12-O2 Apply
+on:
+  push:
+    paths:
+      - '.github/workflows/batch12-o2-apply.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply patch
+        run: python3 batch12_o2_patch.py
+      - name: Self-check
+        run: |
+          set -euo pipefail
+          node --check storyui.js
+          node --check storyprogress.js
+          node --check storyruntimeintegrity.js
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          grep -q 'storyui.js?v=20260928-thirdworld-batch12-o2' index.html
+          grep -q 'storyprogress.js?v=20260928-thirdworld-batch12-o2' index.html
+          grep -q 'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o2' index.html
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storyprogress.js storyruntimeintegrity.js tests/story/flow.js tests/runtime/js-integrity.js index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Converge W3 story completion owner'
+          git push origin HEAD:main
