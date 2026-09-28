@@ -1,0 +1,150 @@
+name: Batch 12-4 Post Flow
+on:
+  push:
+    paths:
+      - '.github/workflows/batch12-4-post-flow.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply batch 12-4
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          def repl(path, old, new, count=1):
+              p=Path(path); s=p.read_text(encoding='utf-8')
+              actual=s.count(old)
+              if actual!=count: raise SystemExit(f'{path}: anchor count {actual} != {count}: {old[:140]}')
+              p.write_text(s.replace(old,new,count),encoding='utf-8')
+
+          # Shared Story UI lifecycle wait owner.
+          repl('storyui.js',' const MODAL_ID="civilizationStoryModal";\n let activeStory=null;\n let activePage=0;\n let activeOptions=null;', ' const MODAL_ID="civilizationStoryModal";\n const VERSION=9;\n const LIFECYCLE_WAIT_VERSION=1;\n let activeStory=null;\n let activePage=0;\n let activeOptions=null;\n let storyCloseResolvers=[];')
+          repl('storyui.js',' function ensureModal(){', ' function resolveStoryClosed(){const rows=storyCloseResolvers.splice(0);rows.forEach(resolve=>{try{resolve(true);}catch(_){}});}\n function waitForStoryClosed(){return activeStory?new Promise(resolve=>storyCloseResolvers.push(resolve)):Promise.resolve(true);}\n function ensureModal(){')
+          repl('storyui.js','  if(completed&&typeof options?.onComplete==="function"){\n   try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}\n  }\n };\n window.isStoryOpen=function(){return !!activeStory;};\n window.STORY_UI_VERSION=8;', '  if(completed&&typeof options?.onComplete==="function"){\n   try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}\n  }\n  resolveStoryClosed();\n };\n window.isStoryOpen=function(){return !!activeStory;};\n window.waitForStoryClosed=waitForStoryClosed;\n window.STORY_UI_VERSION=VERSION;\n window.STORY_UI_LIFECYCLE_WAIT_VERSION=LIFECYCLE_WAIT_VERSION;')
+
+          # Shared Story Progress W3 post-flow drain; no new persistent queue.
+          repl('storyprogress.js',' const VERSION=14;\n const THIRD_WORLD_QUEUE_VERSION=1;', ' const VERSION=15;\n const THIRD_WORLD_QUEUE_VERSION=1;\n const THIRD_WORLD_POST_FLOW_DRAIN_VERSION=1;')
+          anchor=''' function consumeThirdWorldSettlement(settlement,{queue=true}={}){\n  if(!settlement||settlement.ok!==true||Number(settlement.world)!==3)return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:false,reason:"invalid-settlement",unlockedStages:Object.freeze([]),milestoneStages:Object.freeze([]),finalStageUnlocked:false,completion:thirdWorldStoryCompletionFramework(state),queuedStoryId:null});\n  const unlockedStages=Array.from(new Set((Array.isArray(settlement.unlockedStoryStages)?settlement.unlockedStoryStages:[]).map(value=>Math.floor(Number(value))).filter(value=>value>=1&&value<=10))).sort((a,b)=>a-b),milestoneStages=unlockedStages.filter(stage=>stage<=9),finalStageUnlocked=unlockedStages.includes(10),completion=thirdWorldStoryCompletionFramework(state);\n  const queuedStoryId=queue?queueThirdWorldEligibleStory({resume:false}):null;\n  return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:true,unlockedStages:Object.freeze(unlockedStages),milestoneStages:Object.freeze(milestoneStages),finalStageUnlocked,completion,queuedStoryId:queuedStoryId||null,presentationDeferred:true});\n }'''
+          addition=anchor+'''\n async function drainThirdWorldPostFlowStories(){\n  if(typeof state==="undefined"||state?.thirdWorld?.entered!==true)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:false,presented:0,deferred:false,reason:"not-third-world"});\n  let presented=0;\n  for(let guard=0;guard<12;guard++){\n   if(typeof document!=="undefined"&&document.hidden)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:presented>0,presented,deferred:true,reason:"hidden"});\n   const p=ensureProgress({skipBackfill:true});if(!p)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:false,drained:presented>0,presented,deferred:true,reason:"progress-unavailable"});\n   if(!p.pendingStory){const queued=queueThirdWorldEligibleStory({resume:false});if(!queued)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:presented>0,presented,deferred:false,reason:"complete"});}\n   const pending=String(p.pendingStory||""),descriptor=thirdWorldDescriptors().find(row=>String(row?.storyId||row?.id||"")===pending)||null;\n   if(!descriptor)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:presented>0,presented,deferred:true,reason:"foreign-pending-story",pendingStory:pending});\n   if(typeof window.waitForStoryClosed!=="function")return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:false,drained:presented>0,presented,deferred:true,reason:"story-lifecycle-owner-missing",pendingStory:pending});\n   if(typeof window.isStoryOpen!=="function"||window.isStoryOpen()!==true){if(!openFormalStory(pending))return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:false,drained:presented>0,presented,deferred:true,reason:"story-open-failed",pendingStory:pending});}\n   await window.waitForStoryClosed();presented++;\n  }\n  return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:false,drained:presented>0,presented,deferred:true,reason:"guard-limit"});\n }'''
+          repl('storyprogress.js',anchor,addition)
+          repl('storyprogress.js','function resume(){resumeQueued=false;if(typeof state==="undefined"||!state||!authReady()||!backgroundReady())return false;repairBrokenOnboardingGear();const p=ensureProgress();if(!p)return false;if(p.pendingStory){if(openFormalStory(p.pendingStory))return true;console.error("Pending story is unavailable",p.pendingStory);return false;}if(!p.introCompleted){setPending(INTRO_STORY_ID);return openFormalStory(INTRO_STORY_ID);}if(!p.starterGearReceived)return showStarterGear();if(queueThirdWorldEligibleStory())return true;return false;}', 'function resume(){resumeQueued=false;if(typeof state==="undefined"||!state||!authReady()||!backgroundReady())return false;repairBrokenOnboardingGear();const p=ensureProgress();if(!p)return false;if(p.pendingStory){if(openFormalStory(p.pendingStory))return true;console.error("Pending story is unavailable",p.pendingStory);return false;}if(!p.introCompleted){setPending(INTRO_STORY_ID);return openFormalStory(INTRO_STORY_ID);}if(!p.starterGearReceived)return showStarterGear();if(queueThirdWorldEligibleStory())return true;if(state?.thirdWorld?.entered===true&&typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")window.flushPendingPlayerTitleNoticeAfterFlow({source:"third-world-story-idle"});return false;}')
+          repl('storyprogress.js','queueUniverseBossStory,thirdWorldEligibility:thirdWorldStoryEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory,thirdWorldCompletionFramework:thirdWorldStoryCompletionFramework,consumeThirdWorldSettlement,bossStoryId:', 'queueUniverseBossStory,thirdWorldEligibility:thirdWorldStoryEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory,thirdWorldCompletionFramework:thirdWorldStoryCompletionFramework,consumeThirdWorldSettlement,drainThirdWorldPostFlowStories,bossStoryId:')
+          repl('storyprogress.js',' window.THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION;', ' window.THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION;\n window.THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION;')
+          repl('storyprogress.js',' window.consumeThirdWorldStorySettlement=consumeThirdWorldSettlement;', ' window.consumeThirdWorldStorySettlement=consumeThirdWorldSettlement;\n window.drainThirdWorldPostFlowStories=drainThirdWorldPostFlowStories;')
+
+          # Shared title notice hold/mutex, session-only.
+          repl('playertitleui.js',' const PLAYER_TITLE_UI_VERSION=3;\n const UNIVERSE_NOTICE_VERSION=1;', ' const PLAYER_TITLE_UI_VERSION=4;\n const UNIVERSE_NOTICE_VERSION=1;\n const POST_FLOW_HOLD_VERSION=1;')
+          repl('playertitleui.js',' let postFlowQueued=false;\n let lastPostFlowSource="";', ' let postFlowQueued=false;\n let lastPostFlowSource="";\n const postFlowHolds=new Set();')
+          repl('playertitleui.js',' function showPendingPlayerTitleNotice(){\n  postFlowQueued=false;\n  if(titleNoticeOpen||document.hidden)return false;', ' function thirdWorldStoryBlocksTitle(){\n  try{\n   if(typeof state==="undefined"||state?.thirdWorld?.entered!==true)return false;\n   if(!window.civilizationStoryProgress)return true;\n   if(typeof window.isStoryOpen==="function"&&window.isStoryOpen()===true)return true;\n   const pending=String(state?.storyProgress?.pendingStory||"");\n   if(pending&&typeof window.thirdWorldStoryTriggerDescriptor==="function"&&window.thirdWorldStoryTriggerDescriptor(pending))return true;\n   return !!window.civilizationStoryProgress?.nextThirdWorldStory?.(state,{requireContent:true});\n  }catch(_){return false;}\n }\n function showPendingPlayerTitleNotice(){\n  postFlowQueued=false;\n  if(titleNoticeOpen||document.hidden||postFlowHolds.size>0||thirdWorldStoryBlocksTitle())return false;')
+          repl('playertitleui.js',' function flushPendingPlayerTitleNoticeAfterFlow(options={}){\n  lastPostFlowSource=String(options?.source||"");\n  if(document.hidden||titleNoticeOpen)return false;', ' function setPlayerTitlePostFlowHold(source,held=true){const key=String(source||"post-flow");if(held)postFlowHolds.add(key);else postFlowHolds.delete(key);return postFlowStatus();}\n function flushPendingPlayerTitleNoticeAfterFlow(options={}){\n  lastPostFlowSource=String(options?.source||"");\n  if(document.hidden||titleNoticeOpen||postFlowHolds.size>0||thirdWorldStoryBlocksTitle())return false;')
+          repl('playertitleui.js',' function postFlowStatus(){return Object.freeze({queued:postFlowQueued,open:titleNoticeOpen,source:lastPostFlowSource,pendingId:typeof window.getPendingPlayerTitleNotice==="function"?(window.getPendingPlayerTitleNotice()?.id||null):null});}', ' function postFlowStatus(){return Object.freeze({queued:postFlowQueued,open:titleNoticeOpen,held:postFlowHolds.size>0,holdSources:Object.freeze(Array.from(postFlowHolds)),source:lastPostFlowSource,pendingId:typeof window.getPendingPlayerTitleNotice==="function"?(window.getPendingPlayerTitleNotice()?.id||null):null});}')
+          repl('playertitleui.js',' window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION=POST_FLOW_NOTIFICATION_VERSION;', ' window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION=POST_FLOW_NOTIFICATION_VERSION;\n window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION=POST_FLOW_HOLD_VERSION;')
+          repl('playertitleui.js',' window.flushPendingPlayerTitleNoticeAfterFlow=flushPendingPlayerTitleNoticeAfterFlow;', ' window.setPlayerTitlePostFlowHold=setPlayerTitlePostFlowHold;\n window.flushPendingPlayerTitleNoticeAfterFlow=flushPendingPlayerTitleNoticeAfterFlow;')
+
+          # Player flow becomes the post-flow coordinator: Summary -> Story -> Title.
+          repl('thirdworldplayerflow.js',' const VERSION=5;\n const PRESENTATION_ADAPTER_VERSION=1;', ' const VERSION=6;\n const POST_FLOW_COORDINATOR_VERSION=1;\n const STORY_POST_FLOW_SEQUENCE_VERSION=1;\n const TITLE_NOTICE_HOLD_VERSION=1;\n const PRESENTATION_ADAPTER_VERSION=1;')
+          repl('thirdworldplayerflow.js',' const SUMMARY_MODAL_ID="thirdWorldRunSummaryModal";', ' const SUMMARY_MODAL_ID="thirdWorldRunSummaryModal";\n const TITLE_HOLD_SOURCE="third-world-player-flow";')
+          repl('thirdworldplayerflow.js',' function syncMinimal(){if(minimalOpen()&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();}', ' function syncMinimal(){if(minimalOpen()&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();}\n function setTitlePostFlowHold(held){return typeof window.setPlayerTitlePostFlowHold==="function"?window.setPlayerTitlePostFlowHold(TITLE_HOLD_SOURCE,held):null;}\n async function drainPostFlowStories(){if(typeof window.civilizationStoryProgress?.drainThirdWorldPostFlowStories==="function")return await window.civilizationStoryProgress.drainThirdWorldPostFlowStories();window.civilizationStoryProgress?.resume?.();return Object.freeze({ok:false,deferred:true,reason:"story-post-flow-owner-missing"});}')
+          old='''  const boss=bossDefinition(index);\n  retainedContext=null;\n  const loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});\n  const snapshot=runSnapshot();\n  if(snapshot?.active!==true||whole(snapshot.bossIndex)!==index){\n   const failed=await loopPromise;\n   return failed;\n  }'''
+          new='''  const boss=bossDefinition(index);\n  retainedContext=null;\n  setTitlePostFlowHold(true);\n  let loopPromise;\n  try{loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});}catch(error){setTitlePostFlowHold(false);throw error;}\n  const snapshot=runSnapshot();\n  if(snapshot?.active!==true||whole(snapshot.bossIndex)!==index){\n   try{return await loopPromise;}finally{setTitlePostFlowHold(false);}\n  }'''
+          repl('thirdworldplayerflow.js',old,new)
+          repl('thirdworldplayerflow.js','   await presentRunSummary(completedResult,finalSnapshot);\n   if(typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")window.flushPendingPlayerTitleNoticeAfterFlow({source:"third-world-player-flow"});', '   try{\n    await presentRunSummary(completedResult,finalSnapshot);\n    await drainPostFlowStories();\n   }catch(error){console.error("Third-world post-flow presentation failed",error);window.civilizationStoryProgress?.resume?.();}\n   finally{\n    setTitlePostFlowHold(false);\n    if(typeof window.flushPendingPlayerTitleNoticeAfterFlow==="function")window.flushPendingPlayerTitleNoticeAfterFlow({source:"third-world-player-flow"});\n   }')
+          repl('thirdworldplayerflow.js','  if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function")errors.push("SHARED_TITLE_POST_FLOW_MISSING");', '  if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function"||typeof window.setPlayerTitlePostFlowHold!=="function"||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1)errors.push("SHARED_TITLE_POST_FLOW_MISSING");')
+          repl('thirdworldplayerflow.js','  if(flowSource.indexOf("await presentRunSummary")<0||flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow")<flowSource.indexOf("await presentRunSummary"))errors.push("TITLE_POST_FLOW_SEQUENCE");', '  const summaryIndex=flowSource.indexOf("await presentRunSummary"),storyIndex=flowSource.indexOf("await drainPostFlowStories"),releaseIndex=flowSource.indexOf("setTitlePostFlowHold(false)",storyIndex),titleIndex=flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow",storyIndex);\n  if(summaryIndex<0||storyIndex<summaryIndex||releaseIndex<storyIndex||titleIndex<releaseIndex)errors.push("POST_FLOW_SEQUENCE");')
+          repl('thirdworldplayerflow.js','  return Object.freeze({version:VERSION,presentationAdapterVersion:', '  return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:')
+          repl('thirdworldplayerflow.js',' window.THIRD_WORLD_PLAYER_FLOW_VERSION=VERSION;', ' window.THIRD_WORLD_PLAYER_FLOW_VERSION=VERSION;\n window.THIRD_WORLD_PLAYER_FLOW_POST_FLOW_COORDINATOR_VERSION=POST_FLOW_COORDINATOR_VERSION;\n window.THIRD_WORLD_PLAYER_FLOW_STORY_POST_FLOW_SEQUENCE_VERSION=STORY_POST_FLOW_SEQUENCE_VERSION;\n window.THIRD_WORLD_PLAYER_FLOW_TITLE_NOTICE_HOLD_VERSION=TITLE_NOTICE_HOLD_VERSION;')
+
+          # Title integrity.
+          repl('playertitleintegrity.js',' const VERSION=12;\n const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;\n const POST_FLOW_REGRESSION_VERSION=1;', ' const VERSION=13;\n const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;\n const POST_FLOW_REGRESSION_VERSION=2;')
+          repl('playertitleintegrity.js','if(Number(window.PLAYER_TITLE_UI_VERSION)!==3||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)', 'if(Number(window.PLAYER_TITLE_UI_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)')
+          repl('playertitleintegrity.js','"closePlayerTitleNotice","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice"', '"closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice"')
+          repl('playertitleintegrity.js','  const status=window.getPlayerTitlePostFlowStatus?.();\n  if(!status||typeof status.queued!=="boolean"||typeof status.open!=="boolean")fail("TITLE_POST_FLOW_STATUS","共用稱號 post-flow status contract 異常",status);', '  const beforeHold=clone(state?.titles);window.setPlayerTitlePostFlowHold?.("__integrity__",true);const held=window.getPlayerTitlePostFlowStatus?.();window.setPlayerTitlePostFlowHold?.("__integrity__",false);const status=window.getPlayerTitlePostFlowStatus?.();\n  if(!held||held.held!==true||!Array.isArray(held.holdSources)||!held.holdSources.includes("__integrity__")||!status||status.held!==false||typeof status.queued!=="boolean"||typeof status.open!=="boolean")fail("TITLE_POST_FLOW_STATUS","共用稱號 post-flow hold/status contract 異常",{held,status});\n  if(JSON.stringify(beforeHold)!==JSON.stringify(state?.titles))fail("TITLE_POST_FLOW_HOLD_STATE","session-only title hold 不得修改正式稱號 state",{beforeHold,after:state?.titles});')
+
+          # Story runtime integrity.
+          repl('storyruntimeintegrity.js',' const VERSION=14;', ' const VERSION=15;')
+          repl('storyruntimeintegrity.js','  if(typeof window.openStory!=="function"||typeof window.isStoryOpen!=="function")fail("STORY_RUNTIME_UI_MISSING","共用正式劇情視窗未完整載入");', '  if(typeof window.openStory!=="function"||typeof window.isStoryOpen!=="function"||typeof window.waitForStoryClosed!=="function"||Number(window.STORY_UI_VERSION)!==9||Number(window.STORY_UI_LIFECYCLE_WAIT_VERSION)!==1)fail("STORY_RUNTIME_UI_MISSING","共用正式劇情視窗／lifecycle wait owner 未完整載入");')
+          repl('storyruntimeintegrity.js','"thirdWorldCompletionFramework","consumeThirdWorldSettlement","bossStoryId"', '"thirdWorldCompletionFramework","consumeThirdWorldSettlement","drainThirdWorldPostFlowStories","bossStoryId"')
+          repl('storyruntimeintegrity.js','if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)!==14||Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)!==1', 'if(Number(window.CIVILIZATION_STORY_PROGRESS_VERSION)!==15||Number(window.THIRD_WORLD_STORY_QUEUE_VERSION)!==1||Number(window.THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION)!==1')
+
+          # Third-world canonical contract only references sync-loaded owners.
+          repl('thirdworldintegritycontract.js',' const VERSION=34;', ' const VERSION=35;')
+          repl('thirdworldintegritycontract.js','PLAYER_TITLE_INTEGRITY_VERSION:12,PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION:1,PLAYER_TITLE_UI_VERSION:3,PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION:1,', 'PLAYER_TITLE_INTEGRITY_VERSION:13,PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION:2,PLAYER_TITLE_UI_VERSION:4,PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION:1,PLAYER_TITLE_POST_FLOW_HOLD_VERSION:1,')
+          repl('thirdworldintegritycontract.js','THIRD_WORLD_PLAYER_FLOW_VERSION:5,THIRD_WORLD_PLAYER_FLOW_PRESENTATION_ADAPTER_VERSION:1,', 'THIRD_WORLD_PLAYER_FLOW_VERSION:6,THIRD_WORLD_PLAYER_FLOW_POST_FLOW_COORDINATOR_VERSION:1,THIRD_WORLD_PLAYER_FLOW_STORY_POST_FLOW_SEQUENCE_VERSION:1,THIRD_WORLD_PLAYER_FLOW_TITLE_NOTICE_HOLD_VERSION:1,THIRD_WORLD_PLAYER_FLOW_PRESENTATION_ADAPTER_VERSION:1,')
+          repl('thirdworldintegritycontract.js','"grantPlayerTitlesForThirdWorldTier","flushPendingPlayerTitleNoticeAfterFlow","getPlayerTitlePostFlowStatus"', '"grantPlayerTitlesForThirdWorldTier","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","getPlayerTitlePostFlowStatus"')
+
+          # Permanent story flow regressions.
+          repl('tests/story/flow.js',"const storyui=fs.readFileSync('storyui.js','utf8');", "const storyui=fs.readFileSync('storyui.js','utf8');")
+          repl('tests/story/flow.js',"assert(/const VERSION=14;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 14');", "assert(/const VERSION=15;/.test(progress)&&/CIVILIZATION_STORY_PROGRESS_VERSION=VERSION/.test(progress),'story progress 版本應為 15');")
+          repl('tests/story/flow.js',"assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=14;/.test(runtime),'Story Runtime Integrity 應為 V14');", "assert(/STORY_RUNTIME_INTEGRITY_VERSION=VERSION/.test(runtime)&&/const VERSION=15;/.test(runtime),'Story Runtime Integrity 應為 V15');")
+          repl('tests/story/flow.js',"assert(/consumeThirdWorldSettlement/.test(progress)&&/thirdWorldCompletionFramework/.test(progress),'12-3 必須建立 settlement→shared Story bridge 與 Completion Framework');", "assert(/consumeThirdWorldSettlement/.test(progress)&&/thirdWorldCompletionFramework/.test(progress),'12-3 必須建立 settlement→shared Story bridge 與 Completion Framework');\nassert(/function drainThirdWorldPostFlowStories/.test(progress)&&/queueThirdWorldEligibleStory\\(\\{resume:false\\}\\)/.test(progress)&&/waitForStoryClosed/.test(progress),'12-4 必須以 shared pending/eligibility 建立 W3 post-flow Story drain，不得新增私有 queue');\nassert(/const VERSION=9;/.test(storyui)&&/STORY_UI_LIFECYCLE_WAIT_VERSION/.test(storyui)&&/waitForStoryClosed/.test(storyui),'Story UI 必須提供共用 lifecycle wait owner');")
+
+          # Runtime source checks for the presentation coordinator.
+          repl('tests/runtime/js-integrity.js','const titleCore=read("playertitlecore.js");', 'const titleCore=read("playertitlecore.js");\nconst titleUi=read("playertitleui.js");\nconst titleIntegrity=read("playertitleintegrity.js");\nconst thirdWorldPlayerFlow=read("thirdworldplayerflow.js");\nconst storyProgress=read("storyprogress.js");\nconst storyUi=read("storyui.js");')
+          anchor_rt='''assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");'''
+          add_rt=anchor_rt+'''\nassert(/const PLAYER_TITLE_UI_VERSION=4;/.test(titleUi)&&/POST_FLOW_HOLD_VERSION=1/.test(titleUi)&&/function setPlayerTitlePostFlowHold/.test(titleUi)&&/thirdWorldStoryBlocksTitle/.test(titleUi),"稱號 UI V4 必須提供 session-only post-flow hold，並在 W3 Story recovery 前阻擋稱號 modal。");\nassert(/const VERSION=13;/.test(titleIntegrity)&&/POST_FLOW_REGRESSION_VERSION=2/.test(titleIntegrity),"稱號 Integrity 應升為 V13／Post-flow Regression V2。");\nassert(/const VERSION=6;/.test(thirdWorldPlayerFlow)&&/POST_FLOW_COORDINATOR_VERSION=1/.test(thirdWorldPlayerFlow)&&/await presentRunSummary/.test(thirdWorldPlayerFlow)&&/await drainPostFlowStories/.test(thirdWorldPlayerFlow)&&/setTitlePostFlowHold\(false\)/.test(thirdWorldPlayerFlow),"W3 Player Flow V6 必須正式協調 Summary → Story → Title lifecycle。");\nassert(/const VERSION=15;/.test(storyProgress)&&/THIRD_WORLD_POST_FLOW_DRAIN_VERSION=1/.test(storyProgress)&&/function drainThirdWorldPostFlowStories/.test(storyProgress)&&!/thirdWorldPostFlowQueue\s*=/.test(storyProgress),"W3 Story post-flow 必須共用 storyProgress/pendingStory，不得新增私有 persistent queue。");\nassert(/const VERSION=9;/.test(storyUi)&&/LIFECYCLE_WAIT_VERSION=1/.test(storyUi)&&/waitForStoryClosed/.test(storyUi),"Story UI V9 必須提供 lifecycle wait API。");'''
+          repl('tests/runtime/js-integrity.js',anchor_rt,add_rt)
+
+          # Cache-bust changed owners.
+          cache={
+            'playertitleui.js?v=20260927-title-post-flow1':'playertitleui.js?v=20260928-thirdworld-batch12-4',
+            'thirdworldplayerflow.js?v=20260928-thirdworld-batch10-opt3':'thirdworldplayerflow.js?v=20260928-thirdworld-batch12-4',
+            'playertitleintegrity.js?v=20260927-thirdworld-progress-batch6-4':'playertitleintegrity.js?v=20260928-thirdworld-batch12-4',
+            'storyui.js?v=20260923-region-finale-marker2':'storyui.js?v=20260928-thirdworld-batch12-4',
+            'storyprogress.js?v=20260928-thirdworld-batch12-3':'storyprogress.js?v=20260928-thirdworld-batch12-4',
+            'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-3':'storyruntimeintegrity.js?v=20260928-thirdworld-batch12-4',
+            'thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-3':'thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4',
+          }
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          for old,new in cache.items():
+              if s.count(old)!=1: raise SystemExit(f'index cache anchor {old} count={s.count(old)}')
+              s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8')
+
+          # Runtime exact cache expectations for changed W3 contract owner.
+          repl('tests/runtime/js-integrity.js','thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-3', 'thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4')
+          # Explicit 12-4 cache regressions.
+          p=Path('tests/runtime/js-integrity.js'); s=p.read_text(encoding='utf-8')
+          marker='assert(/PLAYER_TITLE_CATALOG_VERSION=3/.test(titleCore),"playertitlecore.js 正式稱號 catalog 應為 V3。");'
+          cache_assert='''\nassert(index.includes('src="playertitleui.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="thirdworldplayerflow.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="playertitleintegrity.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="storyui.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="storyprogress.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="storyruntimeintegrity.js?v=20260928-thirdworld-batch12-4"')&&index.includes('src="thirdworldintegritycontract.js?v=20260928-thirdworld-batch12-4"'),"Batch 12-4 所有 changed JS owner 必須同步 cache-bust。");'''
+          if s.count(marker)!=1: raise SystemExit('runtime cache assertion marker mismatch')
+          s=s.replace(marker,marker+cache_assert,1); p.write_text(s,encoding='utf-8')
+          PY
+      - name: Self-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check storyui.js
+          node --check storyprogress.js
+          node --check playertitleui.js
+          node --check thirdworldplayerflow.js
+          node --check playertitleintegrity.js
+          node --check storyruntimeintegrity.js
+          node --check thirdworldintegritycontract.js
+          node tests/story/source-purity.js
+          node tests/story/meta-language.js
+          node tests/story/integrity.js
+          node tests/story/flow.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          grep -q 'THIRD_WORLD_PLAYER_FLOW_POST_FLOW_COORDINATOR_VERSION=POST_FLOW_COORDINATOR_VERSION' thirdworldplayerflow.js
+          grep -q 'THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION' storyprogress.js
+          grep -q 'PLAYER_TITLE_POST_FLOW_HOLD_VERSION=POST_FLOW_HOLD_VERSION' playertitleui.js
+          grep -q 'thirdworldplayerflow.js?v=20260928-thirdworld-batch12-4' index.html
+      - name: Commit batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add storyui.js storyprogress.js playertitleui.js thirdworldplayerflow.js playertitleintegrity.js storyruntimeintegrity.js thirdworldintegritycontract.js tests/story/flow.js tests/runtime/js-integrity.js index.html
+          git commit -m 'Coordinate high-dimensional post-flow presentation'
+          git push origin HEAD:main
