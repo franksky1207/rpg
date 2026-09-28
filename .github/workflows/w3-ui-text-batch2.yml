@@ -1,4 +1,5 @@
 name: W3 UI Text Batch 2
+# capture patch-anchor diagnostics before formal commit
 on:
   push:
     paths:
@@ -16,7 +17,20 @@ jobs:
         with:
           node-version: 24
       - name: Apply batch 2 patch
-        run: python3 batch_w3_ui_text_2.py
+        shell: bash
+        run: |
+          set +e
+          python3 batch_w3_ui_text_2.py > batch2_patch_failure.txt 2>&1
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add batch2_patch_failure.txt
+            git commit -m 'Capture batch 2 patch failure'
+            git push origin HEAD:main
+            exit "$status"
+          fi
+          rm -f batch2_patch_failure.txt
       - name: Syntax and diff checks
         shell: bash
         run: |
