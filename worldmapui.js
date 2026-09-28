@@ -93,7 +93,6 @@
   // 共用冒險紀元視圖 owner：只存在本次頁面 session；不寫 save／localStorage。世界正式切換時重設，普通 render 不重設。
   let galaxyReviewSelectedMap=0;
   let galaxyReviewSelectedEnemy=4;
-  let galaxyReviewBattleActive=false;
   let adventureReviewBattleActive=false;
   let adventureReviewBattleSource=null;
   const reviewRegionOpenState=Object.create(null);
@@ -194,12 +193,16 @@
     galaxyReviewSelectedEnemy=Math.max(0,Math.min(4,Math.floor(Number(value)||0)));
     return galaxyReviewSelectedEnemy;
   };
+  // Legacy Galaxy API is compatibility-only; shared adventureReviewBattleActive/source is the sole runtime truth.
   window.setGalaxyReviewBattleActive=function(value){
-    galaxyReviewBattleActive=value===true;
-    if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(galaxyReviewBattleActive,galaxyReviewBattleActive?"galaxy":null);
-    return galaxyReviewBattleActive;
+    if(value===true){
+      if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"galaxy");
+      return typeof window.getAdventureReviewBattleSource==="function"&&window.getAdventureReviewBattleSource()==="galaxy";
+    }
+    if(typeof window.getAdventureReviewBattleSource==="function"&&window.getAdventureReviewBattleSource()==="galaxy"&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+    return false;
   };
-  window.isGalaxyReviewBattleActive=function(){return galaxyReviewBattleActive===true;};
+  window.isGalaxyReviewBattleActive=function(){return typeof window.isAdventureReviewBattleActive==="function"&&window.isAdventureReviewBattleActive()===true&&typeof window.getAdventureReviewBattleSource==="function"&&window.getAdventureReviewBattleSource()==="galaxy";};
 
   window.setAdventureEraView=function(value){
     const current=currentAdventureWorldPhase();
@@ -225,6 +228,12 @@
   };
   window.isAdventureReviewBattleActive=function(){return adventureReviewBattleActive===true;};
   window.getAdventureReviewBattleSource=function(){return adventureReviewBattleActive===true?adventureReviewBattleSource:null;};
+  function adventureReviewWorldTransitionBlocker(){
+    if(adventureReviewBattleActive!==true)return false;
+    return {blocked:true,reasons:[adventureReviewBattleSource||"active"]};
+  }
+  const adventureReviewTransitionBlockerRegistered=typeof window.registerWorldTransitionRuntimeBlocker==="function"&&window.registerWorldTransitionRuntimeBlocker("adventure-review-runtime",adventureReviewWorldTransitionBlocker)===true;
+  if(typeof window.addEventListener==="function")window.addEventListener("pagehide",()=>{adventureReviewBattleActive=false;adventureReviewBattleSource=null;},{capture:false});
   window.adventureEraViewLocked=adventureEraViewLocked;
   window.adventureEraTabsHtml=adventureEraTabsHtml;
   // Legacy W2 API remains as a compatibility delegate; it no longer owns state.
@@ -424,7 +433,11 @@
   window.GALAXY_REVIEW_SELECTION_OWNER_VERSION=1;
   window.ADVENTURE_ERA_VIEW_OWNER_VERSION=1;
   window.ADVENTURE_ERA_SESSION_POLICY_VERSION=1;
-  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=3;
-  window.ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=1;
+  window.ADVENTURE_ERA_RUNTIME_LOCK_VERSION=4;
+  window.ADVENTURE_REVIEW_RUNTIME_SOURCE_VERSION=2;
+  window.GALAXY_REVIEW_SHARED_RUNTIME_DELEGATE_VERSION=1;
+  window.ADVENTURE_REVIEW_WORLD_TRANSITION_BLOCKER_VERSION=1;
+  window.ADVENTURE_REVIEW_PAGEHIDE_RESET_VERSION=1;
+  window.ADVENTURE_REVIEW_WORLD_TRANSITION_BLOCKER_REGISTERED=adventureReviewTransitionBlockerRegistered===true;
   window.PLAYER_SECOND_WORLD_BOSS_NUMBER_HIDDEN_VERSION=1;
 })();
