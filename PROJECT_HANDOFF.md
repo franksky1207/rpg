@@ -230,7 +230,7 @@ entryVersion >= 2    = trusted formal core
 
 ---
 
-# 5. 高維十王／Stage／能力／5% 戰線
+# 5. 高維10 名高維存在／Stage／能力／5% 戰線
 
 每王最大 HP：
 
@@ -238,7 +238,7 @@ entryVersion >= 2    = trusted formal core
 1,100,000,000
 ```
 
-十王總 HP：
+10 名高維存在總 HP：
 
 ```text
 11,000,000,000
@@ -258,7 +258,7 @@ DEF 10,000
 汲取 30%
 ```
 
-十王正式順序／特化：
+10 名高維存在正式順序／特化：
 
 ```text
 01 破界天裁：ATK ×1.15
@@ -339,9 +339,9 @@ FIVE_POINT_HP_GAP = 55,000,000 HP
 - Trigger 共 11 個：`intro ×1 + milestone(stage 1～9) ×9 + final(stage 10 / 0%) ×1`；**0% 不另有第 10 篇 milestone**；
 - W3 descriptor 在正式正文加入前維持 `contentReady:false`，placeholder 不得進 shared `pendingStory`；
 - 三紀元共用 `storyProgress.pendingStory / completedStories`，W3 不另建 persistent queue；
-- `story.unlockedStage` 由十王 canonical aggregate/title tier owner reconciliation，不另寫 900／800／…／0 公式；
+- `story.unlockedStage` 由10 名高維存在 canonical aggregate/title tier owner reconciliation，不另寫 900／800／…／0 公式；
 - Story 舊資料會清理不存在／placeholder reference；合法 W1／W2 reference 必須保留；
-- W3 Story completion 單一 owner：Intro 完成同步 `introSeen`；Final 只有在十王全滅＋stage10 後讀完，才原子寫入 `finalSeen=true` 與 `thirdWorld.completed=true`；
+- W3 Story completion 單一 owner：Intro 完成同步 `introSeen`；Final 只有在10 名高維存在全滅＋stage10 後讀完，才原子寫入 `finalSeen=true` 與 `thirdWorld.completed=true`；
 - Story lifecycle 使用 session token＋storyId＋`formal/generic` owner，GM／戰線紀錄 replay 不得冒充正式流程；
 - W3 正式 post-flow：`Run Summary → Story → Title Notice`；title hold 為 session-only；
 - shared pending arbitration 能辨識 galaxy／universe／higher-dimensional／unknown；W3 遇 foreign pending 只 defer，不搶、不清；unknown fail-closed；
@@ -399,14 +399,14 @@ five-point-front
 completion-ready
 ```
 
-十王全滅會形成：
+10 名高維存在全滅會形成：
 
 ```text
 completionReady = true
 final eligibility = true
 ```
 
-但**十王全滅本身不直接完成第三紀元**。只有正式 Final Story 在「十王全滅＋stage10」條件下真正完成後，shared Story completion owner 才原子寫入 `story.finalSeen=true` 與 `thirdWorld.completed=true`。目前 Final 正文仍是 placeholder，因此不會提前完成。
+但**10 名高維存在全滅本身不直接完成第三紀元**。只有正式 Final Story 在「10 名高維存在全滅＋stage10」條件下真正完成後，shared Story completion owner 才原子寫入 `story.finalSeen=true` 與 `thirdWorld.completed=true`。目前 Final 正文仍是 placeholder，因此不會提前完成。
 
 ---
 
@@ -481,7 +481,7 @@ Lv0～10
 - `sell=0 / buy=0`；
 - 強化封頂 +40；
 - 50 個正式 W3 裝備名稱已完成；
-- 名稱 band 依十王 aggregate remaining HP 決定。
+- 名稱 band 依10 名高維存在 aggregate remaining HP 決定。
 
 Offline：
 
@@ -529,7 +529,7 @@ Adventure：
 - aggregate 摘要；
 - 共通能力折疊區；
 - 正式連戰規則；
-- 2×5 十王卡；
+- 2×5 10 名高維存在卡；
 - inline 界弦核心；
 - 頂部功能列真正三等分：
   - 左 1/3：返回主頁；
@@ -565,7 +565,7 @@ Core UI：
 
 ## 10-1 連戰入口／選王頁
 
-- 十王正式接 player flow；
+- 10 名高維存在正式接 player flow；
 - 連戰時鎖其他王，不可中途換目標；
 - active 王可停止連戰；
 - 選王頁只顯示必要資訊：目標、死亡 X/100、目前最大 HP X%；
@@ -600,7 +600,7 @@ W3 透過 `registerMinimalModeAdapter()` 共用既有 Minimal Mode，不建立 W
 - 新能力解鎖併在 Stage 事件；
 - 5% front、Boss death、aggregate progress 直接使用 settlement `eventSequence`；
 - Fast Catch-up 不得吞終止事件；
-- 十王全滅只提示 `completionReady`，不寫 final story/completed；
+- 10 名高維存在全滅只提示 `completionReady`，不寫 final story/completed；
 - 高維稱號不做第三套 modal。
 
 ## 10-4 背景／Fast Catch-up
@@ -709,7 +709,7 @@ flushPendingPlayerTitleNoticeAfterFlow()
 
 - 高維正式管理頁完整化；
 - 界弦核心正式／測試控制整合；
-- 高維十王 benchmark 模式；
+- 高維10 名高維存在 benchmark 模式；
 - 100%／90%…10% Stage 選擇；
 - 100 死模擬；
 - 永久淨削血／回血／死亡／剩餘 HP／跨階詳細輸出；
@@ -737,11 +737,11 @@ flushPendingPlayerTitleNoticeAfterFlow()
 
 1. 高維序章具體故事文本。
 2. 10 個高維 milestone 的完整劇情／事件內容。
-3. 十王全滅後的最終通關故事／畫面。
+3. 10 名高維存在全滅後的最終通關故事／畫面。
 4. 是否銜接低維輪迴／轉生，以及任何 reset 設計。
 5. W3 Arena 正式形式與數值曲線。
 6. 高維專屬背景／動畫／特效細節。
-7. 十王大量實測後的最終平衡。
+7. 10 名高維存在大量實測後的最終平衡。
 8. 若要把 Boss 個體特化 presentation 中仍存在的 `pp` 全部改成玩家 `%` 顯示，需另外明確處理；目前 main 尚未改。
 
 ---
@@ -804,7 +804,7 @@ story.finalSeen
 - 序章 trigger；
 - 900／800／700／600／500／400／300／200／100／0% milestone trigger；
 - 讓 settlement 已產生的 `story.unlockedStage` 真正進入 presentation queue；
-- 十王全滅 → final flow 的 completion framework；
+- 10 名高維存在全滅 → final flow 的 completion framework；
 - placeholder registry／empty content contract；
 - shared title post-flow 與 story queue 的正式順序。
 
@@ -812,20 +812,20 @@ story.finalSeen
 
 ## 第 13 批：正式劇情內容＋最終通關流程
 
-**必須先與使用者另外討論並定案：高維序章、10 段主劇情、十王全滅事件。**
+**必須先與使用者另外討論並定案：高維序章、10 段主劇情、10 名高維存在全滅事件。**
 
 定案後才可實作：
 
 - 正式 story data files；
 - intro 正文；
 - 10 段 milestone 劇情；
-- 十王全滅 final event；
+- 10 名高維存在全滅 final event；
 - `story.finalSeen`；
 - `thirdWorld.completed` 正式原子寫入；
 - 最終畫面／正式事件順序；
 - completion owner。
 
-原則：`completed` 只能在十王全滅且 final flow 正式完成後由 completion owner 寫入，不能由 settlement 偷寫。
+原則：`completed` 只能在10 名高維存在全滅且 final flow 正式完成後由 completion owner 寫入，不能由 settlement 偷寫。
 
 ## 第 14 批：副本／舊系統整合＋競技場決策
 
@@ -844,7 +844,7 @@ story.finalSeen
 - W3 下虛空完整可玩；
 - resource／return／navigation／speed 語意正確；
 - Mirror/Void 不產 W3 維度之弦；
-- Mirror/Void 不修改十王永久 HP；
+- Mirror/Void 不修改10 名高維存在永久 HP；
 - 特殊怪／特殊遭遇不進 W3 正式流程；
 - 沒有 W3 文明災厄入口；
 - bounty 維持關閉。
@@ -861,7 +861,7 @@ Arena：
 - 高維 GM 正式管理；
 - 界弦核心測試控制；
 - 高維存在 benchmark；
-- 十王選擇；
+- 10 名高維存在選擇；
 - 100%／90%…10% Stage；
 - 100 死模擬；
 - 永久淨削血／回血／死亡／剩餘 HP／跨 Stage 輸出；
