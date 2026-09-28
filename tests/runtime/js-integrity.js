@@ -104,7 +104,14 @@ assert(/THIRD_WORLD_VIP_PRESENTATION_VERSION=2/.test(vipUi)&&/虛空幻境 VIP �
 assert(/DEATH_EQUIPMENT_LOSS_CHANCE=\.30/.test(engineSource)&&/resolveDeathEquipmentPenalty/.test(engineSource)&&/DEATH_EQUIPMENT_PENALTY_VERSION=1/.test(engineSource),"死亡裝備懲罰必須由 engine 共用 owner 持有 30% 判定與 VIP20 保護。");
 assert(/resolveDeathEquipmentPenalty\(\[\],\{rng:typeof options\.rng/.test(thirdWorldRun)&&/forceProtected:true/.test(thirdWorldRun)&&/vip20Protections/.test(thirdWorldRun),"W3 死亡必須共用正式死亡裝備判定，並在高維 formal flow 保證裝備不實際遺失。");
 assert(/VIP20｜裝備保護/.test(thirdWorldPlayerFlowSource)&&/原本的 30% 死亡裝備遺失判定仍照常進行/.test(thirdWorldPlayerFlowSource)&&/THIRD_WORLD_VIP20_DEATH_PROTECTION_PRESENTATION_VERSION/.test(thirdWorldPlayerFlowSource),"W3 結算必須明確呈現 VIP20 阻止裝備遺失的玩家體感。");
-assert(/第三紀元仍保留這個原判定/.test(gameGuideSource)&&/VIP20 完全攔下/.test(gameGuideSource),"遊戲說明必須明確解釋 W3 的 VIP20 死亡裝備保護。");
+const thirdWorldGuideSource=(gameGuideSource.match(/function thirdWorldBossSpecializationGuideText[\s\S]*?function guideUniverse/)||[""])[0];
+assert(/GAME_GUIDE_VERSION=21/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_AWARE_VERSION=8/.test(gameGuideSource)&&/GAME_GUIDE_WORLD_PHASE_OWNER_VERSION=1/.test(gameGuideSource)&&/GAME_GUIDE_THIRD_WORLD_VERSION=1/.test(gameGuideSource),"遊戲說明必須由同一 owner 正式支援三紀元，並提供 W3 Guide V1。");
+assert(/if\(guidePhase\(target\)===3\)return thirdWorldGuideCategories\(target\)/.test(gameGuideSource)&&/phase===3\?"高維紀元"/.test(gameGuideSource),"W3 遊戲說明必須按 current world phase 路由，不得再誤投影宇宙紀元。");
+assert(/永久削血/.test(thirdWorldGuideSource)&&/5% 戰線/.test(thirdWorldGuideSource)&&/Stage 強化/.test(thirdWorldGuideSource)&&/共通能力/.test(thirdWorldGuideSource)&&/死亡壓制/.test(thirdWorldGuideSource)&&/界弦核心/.test(thirdWorldGuideSource)&&/維度之弦/.test(thirdWorldGuideSource)&&/高維離線/.test(thirdWorldGuideSource)&&/回顧戰/.test(thirdWorldGuideSource),"W3 Guide 必須涵蓋十王正式核心規則、成長、離線與回顧。");
+assert(/thirdWorldBossSpecializationPresentation/.test(thirdWorldGuideSource)&&/THIRD_WORLD_BOSS_ABILITY_DEFINITIONS/.test(thirdWorldGuideSource)&&/THIRD_WORLD_BOSS_STAGE_CONFIG/.test(thirdWorldGuideSource),"W3 Guide 的十王特化、共通能力與 Stage 必須委派 canonical owner，不得複製第二份數值表。");
+assert(!/(暗物質|暗能量|強化石|文明災厄|特殊怪|懸賞戰|印記)/.test(thirdWorldGuideSource),"W3 玩家說明不得殘留第一／二紀元專屬資源、特殊怪、懸賞、災厄或印記語意。");
+assert(/第三紀元死亡仍會執行原本 30% 的裝備遺失判定/.test(thirdWorldGuideSource)&&/VIP20/.test(thirdWorldGuideSource),"W3 Guide 必須保留 VIP20 死亡裝備保護的玩家體感說明。");
+assert(index.includes('gameguide.js?v=20260928-thirdworld-guide-batch4'),"第4批修改 gameguide.js 後必須同步更新 index.html cache-bust。");
 assert(/resolveVipLootModifiers/.test(thirdWorldLoot)&&/vipLootBossExtraDropTriggered/.test(thirdWorldLoot),"W3 VIP8／14／16／18 必須保持共用 VIP loot owner。");
 assert(index.includes('vipui.js?v=20260928-thirdworld-vip20-death-protection1')&&index.includes('thirdworlddungeonui.js?v=20260928-thirdworld-ui-text-batch3'),"W3 Batch 3／VIP20 touched JS 必須同步 cache-bust。");
 assert(/VIP_LOOT_CORE_VERSION=VERSION/.test(vipLootCore)&&/const VERSION=2;/.test(vipLootCore),"VIP Loot 共用 owner 應為 V2。");
