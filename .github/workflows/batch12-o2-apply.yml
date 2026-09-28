@@ -15,11 +15,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Sync Story Flow cache expectations
+      - name: Sync permanent test expectations
         run: |
           sed -i 's/storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o1/storyruntimeintegrity.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
           sed -i 's/storyui.js?v=20260928-thirdworld-batch12-4/storyui.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
           sed -i 's/storyprogress.js?v=20260928-thirdworld-batch12-4/storyprogress.js?v=20260928-thirdworld-batch12-o2/g' tests/story/flow.js
+          sed -i 's/const VERSION=15;\/.test(storyProgress)/const VERSION=16;\/.test(storyProgress)/g' tests/runtime/js-integrity.js
+          sed -i 's/const VERSION=9;\/.test(storyUi)&&\/LIFECYCLE_WAIT_VERSION=1/const VERSION=10;\/.test(storyUi)\&\&\/LIFECYCLE_WAIT_VERSION=2/g' tests/runtime/js-integrity.js
+          sed -i 's/Story UI V9 必須提供 lifecycle wait API。/Story UI V10 必須提供 identity lifecycle wait API。/g' tests/runtime/js-integrity.js
       - name: Apply patch
         run: python3 batch12_o2_patch.py
       - name: Self-check
