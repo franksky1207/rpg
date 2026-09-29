@@ -1,7 +1,8 @@
 (function(){
- const VERSION=13;
+ const VERSION=14;
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
+ const HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=1;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
@@ -22,6 +23,8 @@
   const source=Array.from(window.THIRD_WORLD_TITLE_DEFINITIONS||[])[index];
   if(!source||def.id!==source.id||def.name!==source.name||def.tier!==index+1||def.series!=="higher-dimensional"||def.order!==27+index||Number(def.thresholdRemainingHp)!==Number(source.thresholdRemainingHp))fail("TITLE_THIRD_WORLD_ORDER",`高維第 ${index+1} 階稱號 metadata 異常`,{def,source});
  });
+ const visualOwner=document.querySelector('link[data-player-title-higher-dimensional-owner="1"]');
+ if(!visualOwner||!String(visualOwner.getAttribute("href")||"").includes("playertitleshigherdimensional.css"))fail("TITLE_HIGHER_VISUAL_OWNER","高維紀元稱號獨立視覺 owner V1 未載入",visualOwner?.getAttribute("href")||null);
  const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForUniverseCalamity","getPlayerTitleDefinitionForMirrorWins","getPlayerTitleDefinitionForThirdWorldTier","grantPlayerTitleForCalamityFirstKill","grantPlayerTitleForUniverseCalamityFirstKill","grantPlayerTitlesForMirrorWins","grantPlayerTitlesForThirdWorldTier","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice","getPlayerTitlePostFlowStatus","gmPlayerTitlePreviewHtml","gmSetPlayerTitlePreviewTier"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("TITLE_API_MISSING",`${name} 未載入`);});
 
@@ -65,21 +68,28 @@
  try{
   const ownedTarget={playerName:"Frank",titles:{version:1,unlocked:[calamityDefs[9]?.id,universeDefs[9]?.id,mirrorDefs[5]?.id,higherDefs[9]?.id].filter(Boolean),equipped:higherDefs[9]?.id,pendingNotice:null}};
   const higherHtml=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[9]?.id,target:ownedTarget});
-  if(!higherHtml.includes("player-title--higher-dimensional-10")||!higherHtml.includes(higherDefs[9]?.name||"")||!higherHtml.includes("player-identity-name"))fail("TITLE_THIRD_WORLD_RENDERER","高維稱號 renderer 異常",higherHtml);
+  if(!higherHtml.includes("player-title--higher-dimensional-10")||!higherHtml.includes(higherDefs[9]?.name||"")||!higherHtml.includes("data-title-text")||!higherHtml.includes("player-identity-name"))fail("TITLE_THIRD_WORLD_RENDERER","高維稱號 renderer 異常",higherHtml);
+  [1,5,9].forEach(tier=>{
+   const def=higherDefs[tier-1],html=def?window.playerTitleHtml(def.id):"";
+   if(!html.includes(`player-title--higher-dimensional-${tier}`)||!html.includes(`data-title-text=\"${def?.name||""}\"`))fail("TITLE_HIGHER_SAMPLE_RENDER",`高維第 ${tier} 階測試樣本 renderer 異常`,html);
+  });
   const blocked=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[8]?.id,target:ownedTarget});
   if(blocked.includes(higherDefs[8]?.name||""))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blocked);
  }catch(error){fail("TITLE_RENDER_PROBE","稱號 renderer probe 失敗",String(error?.message||error));}
 
  try{
   const before=clone(state?.titles),beforeSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null,html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"",after=clone(state?.titles),afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==6||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==3||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==3||!html.includes("實戰名稱預覽全部 36 個正式稱號")||!html.includes("高維紀元稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應使用 36 稱號正式 catalog",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,html});
+  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==7||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==3||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==3||Number(window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION)!==1||!html.includes("實戰名稱預覽全部 36 個正式稱號")||!html.includes("高維紀元稱號")||!html.includes("鏡像戰稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應使用 36 稱號正式 catalog 且鏡像置底",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,displayOrder:window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION,html});
+  const higherPos=html.indexOf("高維紀元稱號"),mirrorPos=html.indexOf("鏡像戰稱號");
+  if(!(higherPos>=0&&mirrorPos>higherPos))fail("TITLE_GM_PREVIEW_ORDER","GM 稱號預覽應維持高維在前、鏡像最後",{higherPos,mirrorPos});
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽 probe 失敗",String(error?.message||error));}
 
- const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_INTEGRITY_VERSION=VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_BACKFILL_REGRESSION_VERSION=THIRD_WORLD_BACKFILL_REGRESSION_VERSION;
  window.PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION=POST_FLOW_REGRESSION_VERSION;
+ window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION;
  window.PLAYER_TITLE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Player title integrity error",errors);
 })();
