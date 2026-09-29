@@ -2,7 +2,7 @@
  const VERSION=3;
  const MINIMUM_VERSIONS=Object.freeze({
   SAVE_SCHEMA_VERSION:16,SAVE_LOAD_PIPELINE_VERSION:2,SAVE_NORMALIZATION_PIPELINE_VERSION:2,SAVE_LEGACY_SUPPORT_POLICY_VERSION:1,SAVE_FUTURE_VERSION_GUARD_VERSION:1,
-  OFFLINE_STATE_NORMALIZATION_VERSION:4,LEGACY_COMPATIBILITY_OWNER_VERSION:1,SCRIPT_LOAD_POLICY_VERSION:2,
+  OFFLINE_STATE_NORMALIZATION_VERSION:4,OFFLINE_SAMPLE_OWNER_VERSION:2,OFFLINE_SAMPLE_POLICY_VERSION:1,LEGACY_COMPATIBILITY_OWNER_VERSION:1,SCRIPT_LOAD_POLICY_VERSION:2,
   WORLD_PHASE_VERSION:6,WORLD_PHASE_SHARED_CORE_VERSION:3,WORLD_PHASE_SAFE_TRANSITION_VERSION:3,WORLD_PHASE_METADATA_VERSION:2,WORLD_PHASE_PRIMARY_RESOURCE_VERSION:2,
   THIRD_WORLD_PHASE_VERSION:3,THIRD_WORLD_ENTRY_REQUIREMENTS_VERSION:1,THIRD_WORLD_ENTRY_TRANSITION_VERSION:2,THIRD_WORLD_DUNGEON_UI_VERSION:6,
   LEVEL_PROGRESSION_VERSION:1,LEVEL_WORLD_PHASE_CAP_OWNER_VERSION:1,THIRD_WORLD_LEVEL_PROGRESSION_VERSION:1,THIRD_WORLD_EXP_OWNER_VERSION:1,
@@ -13,7 +13,7 @@
   GAME_GUIDE_VERSION:24
  });
  const REQUIRED_APIS=Object.freeze([
-  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState",
+  "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState","appendOfflineBattleSample","offlineBattleSampleMultiplier","offlineBattleSamplePolicySnapshot",
   "currentWorldPhase","worldProgressionEnabled","worldPhaseSnapshot","primaryWorldResourceSnapshot","runWorldTransition","worldTransitionRuntimeStatus",
   "createBlankThirdWorldState","normalizeThirdWorldState","thirdWorldEntryRequirements","canEnterThirdWorld","thirdWorldDungeonModeVisible","thirdWorldDungeonResourceSnapshot",
   "currentLevelWorldPhase","effectiveLevelCap","effectiveExpNeed","thirdWorldExpNeed","levelProgressSnapshot","getArenaVersionProfile","getArenaRankCurveForWorld",
@@ -38,6 +38,9 @@
    const vipProbe={vipPoints:490000,vipLevel:20};window.normalizeVipState?.(vipProbe);if(vipProbe.vipLevel!==22||vipProbe.vipPoints!==490000)fail("VIP_POINTS_SOURCE_OF_TRUTH",vipProbe);
    const current=Number(window.SAVE_SCHEMA_VERSION)||0,legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION}),supported=window.saveCompatibilityFor?.({saveVersion:current}),future=window.saveCompatibilityFor?.({saveVersion:current+1});
    if(legacy?.supported!==true||supported?.supported!==true||future?.isFuture!==true||future?.supported!==false)fail("SAVE_COMPATIBILITY_POLICY",{legacy,supported,future});
+   const policy=window.offlineBattleSamplePolicySnapshot?.();
+   if(!policy||policy.version<1||policy.sampleVersion!==Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||policy.samplesPerSpeed!==8||JSON.stringify(policy.combatSpeeds)!==JSON.stringify([1,1.5,2]))fail("OFFLINE_SAMPLE_POLICY",policy||null);
+   if(window.offlineBattleSampleMultiplier?.(100,100)!==1||window.offlineBattleSampleMultiplier?.(100,94)!==1.3||window.offlineBattleSampleMultiplier?.(100,90)!==1.6||window.offlineBattleSampleMultiplier?.(100,85)!==2||window.offlineBattleSampleMultiplier?.(100,84)!==null)fail("OFFLINE_SAMPLE_MULTIPLIER_POLICY");
    const sampleVersion=Math.max(1,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0)),probe={saveVersion:current,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
    const first=window.normalizeOfflineSaveState?.(probe,{sourceVersion:current,currentTime:123456789}),snapshot=JSON.stringify(probe.offline),second=window.normalizeOfflineSaveState?.(probe,{sourceVersion:current,currentTime:123456789});
    if(!first||!second||probe.offline.battleSampleVersion!==sampleVersion||probe.offline.battleSamples.length!==0||probe.offline.farmMap!==null||probe.offline.farmEnemy!==null||JSON.stringify(probe.offline)!==snapshot)fail("OFFLINE_NORMALIZATION",probe.offline);
