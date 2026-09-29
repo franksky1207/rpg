@@ -8,14 +8,16 @@
   LEVEL_PROGRESSION_VERSION:1,LEVEL_WORLD_PHASE_CAP_OWNER_VERSION:1,THIRD_WORLD_LEVEL_PROGRESSION_VERSION:1,THIRD_WORLD_EXP_OWNER_VERSION:1,
   PLAYER_TITLE_CATALOG_VERSION:3,PLAYER_TITLE_INTEGRITY_VERSION:13,ARENA_BY_WORLD_STATE_VERSION:2,SECOND_WORLD_ARENA_UNLOCK_VERSION:2,SECOND_WORLD_ARENA_RANK_CURVE_VERSION:2,
   SECOND_WORLD_CIVILIZATION_COMBAT_VERSION:2,BOUNTY_BALANCE_VERSION:2,BOUNTY_DIFFICULTY_FORMULA_VERSION:2,SECOND_WORLD_ADVENTURE_UI_VERSION:5,
-  SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2,VIP_PROGRESSION_VERSION:14,VIP_UNBOUNDED_LEVEL_VERSION:1,VIP_UI_VERSION:2,GAME_GUIDE_VERSION:24
+  SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION:2,
+  VIP_PROGRESSION_VERSION:14,VIP_UNBOUNDED_LEVEL_VERSION:1,VIP_PERK_MAX_LEVEL:20,VIP_POINTS_SOURCE_OF_TRUTH_VERSION:1,VIP_STATE_RECONCILIATION_VERSION:1,VIP_ADD_POINTS_OWNER_REQUIRED_VERSION:1,VIP_UI_VERSION:4,
+  GAME_GUIDE_VERSION:24
  });
  const REQUIRED_APIS=Object.freeze([
   "normalizeSaveState","migrateSave","load","saveWriteGuardStatus","saveCompatibilityFor","assertSaveVersionSupported","normalizeOfflineSaveState",
   "currentWorldPhase","worldProgressionEnabled","worldPhaseSnapshot","primaryWorldResourceSnapshot","runWorldTransition","worldTransitionRuntimeStatus",
   "createBlankThirdWorldState","normalizeThirdWorldState","thirdWorldEntryRequirements","canEnterThirdWorld","thirdWorldDungeonModeVisible","thirdWorldDungeonResourceSnapshot",
   "currentLevelWorldPhase","effectiveLevelCap","effectiveExpNeed","thirdWorldExpNeed","levelProgressSnapshot","getArenaVersionProfile","getArenaRankCurveForWorld",
-  "normalizePlayerTitleState","civilizationCombatDamageMultiplier","gameGuideCategoriesForState"
+  "normalizePlayerTitleState","civilizationCombatDamageMultiplier","gameGuideCategoriesForState","vipThreshold","vipLevelFromPoints","normalizeVipState","vipBonusStats"
  ]);
  function finiteVersion(value){const n=Number(value);return Number.isFinite(n)?n:null;}
  function minimumVersionErrors(){const errors=[];Object.entries(MINIMUM_VERSIONS).forEach(([name,minimum])=>{const actual=finiteVersion(window[name]);if(actual==null||actual<minimum)errors.push({code:"VERSION_BELOW_MINIMUM",name,minimum,actual});});return errors;}
@@ -32,6 +34,8 @@
    const arenaPolicy=window.dungeonModeAvailability?.("arena",higher);if(arenaPolicy&&arenaPolicy.enabled!==true)fail("THIRD_WORLD_ARENA_LIVE",arenaPolicy);
    const profile=window.getArenaVersionProfile?.();if(!profile||Number(profile.balanceVersion)<7||Number(profile.rankBalanceVersion)<4||Number(profile.assessmentRuleVersion)<4)fail("ARENA_PROFILE",profile||null);
    const curve=window.getArenaRankCurveForWorld?.(2);if(!curve||Number(curve.hp?.base)!==1.68||Number(curve.damage?.base)!==1.52||Number(curve.def?.base)!==1.11)fail("ARENA_UNIVERSE_CURVE",curve||null);
+   if(window.vipThreshold?.(21)!==441000||window.vipLevelFromPoints?.(441000)!==21)fail("VIP_UNBOUNDED_PROGRESSION",{threshold21:window.vipThreshold?.(21),levelAt441k:window.vipLevelFromPoints?.(441000)});
+   const vipProbe={vipPoints:490000,vipLevel:20};window.normalizeVipState?.(vipProbe);if(vipProbe.vipLevel!==22||vipProbe.vipPoints!==490000)fail("VIP_POINTS_SOURCE_OF_TRUTH",vipProbe);
    const current=Number(window.SAVE_SCHEMA_VERSION)||0,legacy=window.saveCompatibilityFor?.({saveVersion:window.SAVE_MIN_SUPPORTED_VERSION}),supported=window.saveCompatibilityFor?.({saveVersion:current}),future=window.saveCompatibilityFor?.({saveVersion:current+1});
    if(legacy?.supported!==true||supported?.supported!==true||future?.isFuture!==true||future?.supported!==false)fail("SAVE_COMPATIBILITY_POLICY",{legacy,supported,future});
    const sampleVersion=Math.max(1,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0)),probe={saveVersion:current,offline:{battleSampleVersion:0,battleSamples:[{sampleVersion:999}],farmMap:999,farmEnemy:9,avgBattleMs:-1,sampleCount:999,lastSettledAt:-1,maxObservedWallClock:-1,timeLockUntil:-1}};
