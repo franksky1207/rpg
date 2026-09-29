@@ -1,7 +1,7 @@
-/* Higher-dimensional title series V4 — 第14-3批完整十稱號。
+/* Higher-dimensional title presentation V4 — 第14-O2批版本語意／極窄手機收尾。
    正式 owner 僅處理高維紀元稱號 presentation；不碰解鎖、裝備、存檔。
-   Tier 1／6／10 延續第14-1批實機確認通過之視覺錨點；本批完成 2／3／4／5／7／8／9。
-   視覺規則：十個高維稱號皆高於宇宙紀元第10階，彼此為同級不同理念，不做強弱階梯；鏡像19／20仍保留最高異象天花板。
+   Tier 1／6／10 延續第14-1批實機確認通過之視覺錨點；2／3／4／5／7／8／9 已於第14-3批完成。
+   視覺規則：十個高維稱號皆高於宇宙紀元第10階，彼此為同級不同理念，不做強弱階梯；鏡像15～20維持更高異象層級。
    技術語言：本體文字 + 相位文字 + 開放式高維異象；禁止封閉方框／底板。 */
 
 /* Shared W3 owner reset: fully override generic galaxy tier pseudo-elements. */
@@ -414,6 +414,30 @@
  .player-title--higher-dimensional-8::after{inset:-1.12em -2.38em}
  .player-title--higher-dimensional-9::after{inset:-1.10em -2.36em}
  .player-title--higher-dimensional-10::after{inset:-1.14em -2.42em}
+}
+
+@media(max-width:360px){
+ .player-title--higher-dimensional{letter-spacing:.040em}
+ .player-title--higher-dimensional-1{font-size:1.17em}
+ .player-title--higher-dimensional-2{font-size:1.18em}
+ .player-title--higher-dimensional-3{font-size:1.17em}
+ .player-title--higher-dimensional-4{font-size:1.19em}
+ .player-title--higher-dimensional-5{font-size:1.18em}
+ .player-title--higher-dimensional-6{font-size:1.18em}
+ .player-title--higher-dimensional-7{font-size:1.18em}
+ .player-title--higher-dimensional-8{font-size:1.19em}
+ .player-title--higher-dimensional-9{font-size:1.19em}
+ .player-title--higher-dimensional-10{font-size:1.20em}
+ .player-title--higher-dimensional-1::after{inset:-.96em -1.94em}
+ .player-title--higher-dimensional-2::after{inset:-.95em -1.98em}
+ .player-title--higher-dimensional-3::after{inset:-.96em -1.96em}
+ .player-title--higher-dimensional-4::after{inset:-.98em -1.96em}
+ .player-title--higher-dimensional-5::after{inset:-.96em -1.98em}
+ .player-title--higher-dimensional-6::after{inset:-.98em -1.97em}
+ .player-title--higher-dimensional-7::after{inset:-.96em -1.97em}
+ .player-title--higher-dimensional-8::after{inset:-1.00em -2.02em}
+ .player-title--higher-dimensional-9::after{inset:-.99em -2.00em}
+ .player-title--higher-dimensional-10::after{inset:-1.02em -2.05em}
 }
 
 @media(prefers-reduced-motion:reduce){
