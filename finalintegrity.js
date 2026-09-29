@@ -1,13 +1,13 @@
 (function(){
- const VERSION=19;
+ const VERSION=20;
  function run(){
   const errors=[],warnings=[];
   const fail=(code,message,data=null)=>errors.push({code,message,data});
   const warn=(code,message,data=null)=>warnings.push({code,message,data});
-  const reports=[["PROJECT_RUNTIME_REPORT",window.PROJECT_RUNTIME_REPORT],["MIRROR_DUNGEON_FINAL_INTEGRITY",window.MIRROR_DUNGEON_FINAL_INTEGRITY],["STORY_RUNTIME_INTEGRITY_REPORT",window.STORY_RUNTIME_INTEGRITY_REPORT],["SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT",window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT]];
+  const reports=[["PROJECT_RUNTIME_REPORT",window.PROJECT_RUNTIME_REPORT],["MIRROR_DUNGEON_FINAL_INTEGRITY",window.MIRROR_DUNGEON_FINAL_INTEGRITY],["STORY_RUNTIME_INTEGRITY_REPORT",window.STORY_RUNTIME_INTEGRITY_REPORT],["SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT",window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_REPORT],["GM_BATCH16_INTEGRITY",window.GM_BATCH16_INTEGRITY]];
   reports.forEach(([name,report])=>{if(report?.passed!==true)fail("FINAL_REPORT",`${name} 未通過或未載入`,report?.errors||null);if(Array.isArray(report?.warnings)&&report.warnings.length)warn("FINAL_REPORT_WARNING",`${name} 有 warning`,report.warnings);});
-  if(Number(window.PROJECT_RUNTIME_INTEGRITY_VERSION)!==19)fail("FINAL_RUNTIME_VERSION","Runtime Integrity 應為 V19",window.PROJECT_RUNTIME_INTEGRITY_VERSION);
-  if(Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)!==2||typeof window.runCivilizationIntegrityContract!=="function")fail("FINAL_CONTRACT_MISSING","Canonical Integrity Contract V2 未載入",{version:window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION,api:typeof window.runCivilizationIntegrityContract});else{const contract=window.runCivilizationIntegrityContract({phase:"final"});if(contract?.passed!==true)fail("FINAL_CONTRACT","Canonical Integrity Contract 最終檢查未通過",contract?.errors||null);}
+  if(Number(window.PROJECT_RUNTIME_INTEGRITY_VERSION)!==20)fail("FINAL_RUNTIME_VERSION","Runtime Integrity 應為 V20",window.PROJECT_RUNTIME_INTEGRITY_VERSION);
+  if(Number(window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION)!==3||typeof window.runCivilizationIntegrityContract!=="function")fail("FINAL_CONTRACT_MISSING","Canonical Integrity Contract V3 未載入",{version:window.CIVILIZATION_INTEGRITY_CONTRACT_VERSION,api:typeof window.runCivilizationIntegrityContract});else{const contract=window.runCivilizationIntegrityContract({phase:"final"});if(contract?.passed!==true)fail("FINAL_CONTRACT","Canonical Integrity Contract 最終檢查未通過",contract?.errors||null);}
   if(Number(window.STORY_RUNTIME_INTEGRITY_VERSION)!==9)fail("FINAL_STORY_RUNTIME_VERSION","Story Runtime Integrity 應為 V9",window.STORY_RUNTIME_INTEGRITY_VERSION);
   if(Number(window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION)!==5)fail("FINAL_MIRROR_VERSION","Mirror Final Integrity 應為 V5",window.MIRROR_DUNGEON_FINAL_INTEGRITY_VERSION);
   if(Number(window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION)!==2)fail("FINAL_UNIVERSE_CALAMITY_VERSION","宇宙文明災厄完整 Integrity 應為 V2",window.SECOND_WORLD_CALAMITY_FULL_INTEGRITY_VERSION);

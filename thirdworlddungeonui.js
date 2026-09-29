@@ -1,6 +1,5 @@
 (function(){
  const VERSION=6;
- /* Runtime legacy source token only; no runtime owner: const VERSION=2; DUNGEON_MODE_PRESENTATION_POLICY_VERSION=1; titleText:"高維競技場" rewardText:"尚未開放" buttonLabel:"等待高維競技場開放" */
  const policies=new Map();
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);

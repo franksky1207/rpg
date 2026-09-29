@@ -1,7 +1,7 @@
 name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
-# manual retrigger: exact-head verification after batch 11-O3 legacy cleanup and review presentation convergence.
+# browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
 on:
   push:
     branches: [main]
@@ -44,6 +44,24 @@ jobs:
       - name: Run full JavaScript syntax and owner integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+      - name: Install browser smoke dependency
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run real browser runtime smoke
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run unlimited VIP integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
