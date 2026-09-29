@@ -1,6 +1,7 @@
 (function(){
- const VERSION=3;
- const PLAYER_RULE_VERSION=3;
+ const VERSION=4;
+ const PLAYER_RULE_VERSION=4;
+ const PHASE_RULE_VERSION=1;
  const GM_OVERRIDE_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
@@ -18,21 +19,30 @@
   return id?`${STORAGE_PREFIX}${id}`:"";
  }
  function storageKey(){return storageKeyForUser(currentUserId());}
- function playerCombatSpeedOptions(){
-  const entered=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
-  return entered?[1,1.5]:[1];
- }
  function currentGameState(){
   try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}
   catch(e){return null;}
  }
+ function combatSpeedWorldPhase(target=null){
+  const gameState=target&&typeof target==="object"?target:currentGameState();
+  if(typeof window.currentWorldPhase==="function"){
+   const phase=Number(window.currentWorldPhase(gameState));
+   if(phase===1||phase===2||phase===3)return phase;
+  }
+  if(gameState?.thirdWorld?.entered===true)return 3;
+  if(gameState?.secondWorld?.entered===true)return 2;
+  return 1;
+ }
+ function playerCombatSpeedOptions(target=null){
+  return combatSpeedWorldPhase(target)>=2?[1,1.5]:[1];
+ }
  function playerCombatSpeed(){
-  const options=playerCombatSpeedOptions(),gameState=currentGameState();
+  const gameState=currentGameState(),options=playerCombatSpeedOptions(gameState);
   const stored=normalizeSpeed(gameState?.settings?.combatSpeed);
   return stored!=null&&options.includes(stored)?stored:1;
  }
  function setPlayerCombatSpeed(value){
-  const speed=normalizeSpeed(value),options=playerCombatSpeedOptions(),gameState=currentGameState();
+  const gameState=currentGameState(),speed=normalizeSpeed(value),options=playerCombatSpeedOptions(gameState);
   if(speed==null||!options.includes(speed)||speed===2||!gameState)return false;
   if(!gameState.settings||typeof gameState.settings!=="object"||Array.isArray(gameState.settings))gameState.settings={};
   const previous=gameState.settings.combatSpeed;
@@ -78,8 +88,10 @@
 
  window.COMBAT_SPEED_CORE_VERSION=VERSION;
  window.COMBAT_SPEED_PLAYER_RULE_VERSION=PLAYER_RULE_VERSION;
+ window.COMBAT_SPEED_PHASE_RULE_VERSION=PHASE_RULE_VERSION;
  window.COMBAT_SPEED_GM_OVERRIDE_VERSION=GM_OVERRIDE_VERSION;
  window.COMBAT_SPEED_ALLOWED=ALLOWED.slice();
+ window.combatSpeedWorldPhase=combatSpeedWorldPhase;
  window.playerCombatSpeedOptions=playerCombatSpeedOptions;
  window.playerCombatSpeed=playerCombatSpeed;
  window.setPlayerCombatSpeed=setPlayerCombatSpeed;
