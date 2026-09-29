@@ -1,5 +1,5 @@
 // 永久回歸檢查：銀河既有 owner 不回歸，宇宙／高維共用同一 Story Progress / Record / GM 架構。
-// 第 13-8 批最終封口：高維 11/11 正式內容、Final completion、三紀元 Story Record 與 exact-head cache contract。
+// 第 13 批後優化：高維 11/11 正式內容、Final completion、三紀元 Story Record、舊 W3 Story history 重建與單一 completion owner。
 const fs=require('fs');
 function assert(v,m){if(!v)throw new Error(m);}
 const combat=fs.readFileSync('combatcore.js','utf8');
@@ -51,14 +51,19 @@ assert(/lifecycleOwner:"formal"/.test(progress)&&/lifecycle\?\.owner==="formal"/
 assert(/STORY_NORMALIZATION_CONVERGENCE_VERSION=STORY_NORMALIZATION_CONVERGENCE_VERSION/.test(progress)&&/STORY_PENDING_ARBITRATION_VERSION=STORY_PENDING_ARBITRATION_VERSION/.test(progress),'O3 normalization／pending arbitration owner 未就緒');
 assert(/function storyPendingArbitration\(target=state,\{expectedEra=null\}=\{\}\)/.test(progress)&&/runStoryProgressBehaviorRegression/.test(progress),'O3 shared pending arbitration／behavior regression 未建立');
 assert(/queueStory\(row\.storyId,\{resume,progress:p\}\)/.test(progress)&&/setPending\(INTRO_STORY_ID,\{progress:p\}\)/.test(progress),'Story queue／resume 必須重用已 normalize 的 progress，避免重複 reconciliation');
-assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration reference recovery 應為 V6／Reference Recovery V1');
+assert(/const VERSION=6;/.test(migration)&&/STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION/.test(migration),'Story migration shared compatibility version 應維持 V6／Reference Recovery V1');
+assert(/THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION=THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION/.test(migration)&&/THIRD_WORLD_STORY_CONTENT_VERSION=THIRD_WORLD_STORY_CONTENT_VERSION/.test(migration),'Story migration 必須提供 W3 正式內容版本與一次性舊歷史重建 owner');
+assert(/function reconcileThirdWorldContentVersion\(target\)/.test(migration)&&/legacy-w3-story-history-reset/.test(migration),'Story migration 缺少舊 Schema16 W3 story history 正式重建邏輯');
 assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migration),'Story migration 必須清理失效 pendingStory reference');
 assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
-assert(/THIRD_WORLD_STORY_RECONCILIATION_VERSION=1/.test(phase)&&/THIRD_WORLD_STORY_DEVELOPMENT_RESET_VERSION=1/.test(phase),'W3 Story reconciliation owner 未就緒');
+assert(/THIRD_WORLD_STORY_RECONCILIATION_VERSION=1/.test(phase)&&/THIRD_WORLD_STORY_COMPLETION_SOURCE_VERSION=1/.test(phase),'W3 Stage reconciliation／completion source policy 未就緒');
 assert(/function reconcileThirdWorldStoryState\(target\)/.test(phase)&&/canonicalThirdWorldStoryStage/.test(phase),'W3 Story Stage 必須能由 canonical boss progress 重建');
-assert(/if\(!introReady\)story\.introSeen=false/.test(phase)&&/if\(!finalReady\|\|!bossesDefeated\)/.test(phase),'W3 Story flags 必須由正式 contentReady／Boss progress 共同約束');
-assert(/const VERSION=5;/.test(migrationRegression)&&/STORY_RECONCILIATION_REGRESSION_VERSION=1/.test(migrationRegression),'W3 migration regression 必須納入 Story reconciliation');
-['SCHEMA16_STORY_STAGE_LAG_RECONCILED','SCHEMA16_STORY_STAGE_AHEAD_RECONCILED','SCHEMA16_STORY_STAGE_MISSING_REBUILT','SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT','SCHEMA16_PRE_CONTENT_STORY_FLAGS_RESET','SCHEMA16_IMPOSSIBLE_COMPLETION_RESET'].forEach(id=>assert(migrationRegression.includes(id),'缺少 W3 Story 舊檔 regression：'+id));
+const phaseReconcile=(phase.match(/function reconcileThirdWorldStoryState\(target\)\{[\s\S]*?\n \}\n function reconcileThirdWorldCoreProgressionState/)||[''])[0];
+assert(/stageOnly:true/.test(phaseReconcile)&&/completionOwner:"civilizationStoryProgress"/.test(phaseReconcile),'thirdworldphase Story reconciliation 必須明確限制為 Stage-only');
+assert(!/story\.introSeen\s*=|story\.finalSeen\s*=|third\.completed\s*=/.test(phaseReconcile),'thirdworldphase 不得再寫入 Story completion flags');
+assert(/function reconcileThirdWorldStoryCompletionState\(target=state\)/.test(progress)&&/third\.story\.introSeen=completed\.has/.test(progress)&&/third\.story\.finalSeen=finalDone;third\.completed=finalDone/.test(progress),'W3 completion flags 必須只由 shared Story Progress owner 從 completedStories 推導');
+assert(/const VERSION=5;/.test(migrationRegression)&&/STORY_RECONCILIATION_REGRESSION_VERSION=1/.test(migrationRegression),'W3 migration regression 必須納入 Story stage reconciliation');
+['SCHEMA16_STORY_STAGE_LAG_RECONCILED','SCHEMA16_STORY_STAGE_AHEAD_RECONCILED','SCHEMA16_STORY_STAGE_MISSING_REBUILT','SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT','SCHEMA16_STORY_COMPLETION_FLAGS_DEFER_TO_SHARED_OWNER','SCHEMA16_STORY_STAGE_ONLY_RECONCILIATION'].forEach(id=>assert(migrationRegression.includes(id),'缺少 W3 Story owner 舊檔 regression：'+id));
 assert(/STORY_RECORD_TABS_VERSION=9/.test(record)&&/STORY_RECORD_WORLD_REVIEW_VERSION=4/.test(record)&&/THIRD_WORLD_STORY_RECORD_VERSION=1/.test(record),'Story Record 未完成三紀元正式版本');
 assert(/higher-dimensional/.test(record)&&/宇宙紀元・回顧/.test(record)&&/銀河紀元・回顧/.test(record),'Story Record 缺少 W3 三紀元 Era View');
 assert(/thirdWorldStoryTriggerDescriptors/.test(record)&&/higher-dimensional-main/.test(record),'W3 Story Record 必須直接由高維 trigger descriptor 建立正式順序，不得另造 registry');
@@ -102,9 +107,9 @@ assert(index.includes('storyprogress.js?v='),'storyprogress.js 必須帶 cache-b
 assert(index.includes('storyrecordtabs.js?v=20260929-thirdworld-batch13-8'),'storyrecordtabs.js cache-bust 未更新至 Batch 13-8');
 assert(index.includes('storyruntimeintegrity.js?v=20260929-thirdworld-batch13-8'),'storyruntimeintegrity.js cache-bust 未更新至 Batch 13-8');
 assert(index.includes('secondworldstoryregistry.js?v=20260929-thirdworld-batch13-8'),'secondworldstoryregistry.js cache-bust 未更新至 Batch 13-8');
-assert(index.includes('storymigration.js?v=20260928-thirdworld-batch12-o1'),'storymigration.js cache-bust 未更新至 Batch 12-O1');
-assert(index.includes('thirdworldphase.js?v=20260928-thirdworld-batch12-o1'),'thirdworldphase.js cache-bust 未更新至 Batch 12-O1');
-assert(index.includes('thirdworldmigrationregression.js?v=20260928-thirdworld-batch12-o1'),'thirdworldmigrationregression.js cache-bust 未更新至 Batch 12-O1');
+assert(index.includes('storymigration.js?v=20260929-thirdworld-story-legacy-opt1'),'storymigration.js cache-bust 未更新至 W3 Story legacy optimization');
+assert(index.includes('thirdworldphase.js?v=20260929-thirdworld-story-legacy-opt1'),'thirdworldphase.js cache-bust 未更新至 W3 Story owner convergence');
+assert(index.includes('thirdworldmigrationregression.js?v=20260929-thirdworld-story-legacy-opt1'),'thirdworldmigrationregression.js cache-bust 未更新至 W3 Story migration regression');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
-console.log('STORY FLOW PASSED | W3 formal=11/11 | Final completion owner=yes | Story Record three-era=yes | galaxy/universe preserved | all-era final target=212');
+console.log('STORY FLOW PASSED | W3 formal=11/11 | legacy story history reset=yes | completion owner=shared Story Progress | Story Record three-era=yes | galaxy/universe preserved');
