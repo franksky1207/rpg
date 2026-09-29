@@ -23,6 +23,6 @@
   };
   if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","enhancement-manage",()=>window.gmEnhancementManagementHtml());
  }
- window.GM_ENHANCEMENT_WORLD3_LOCK_VERSION=2;
+ window.GM_ENHANCEMENT_WORLD3_LOCK_VERSION=1;
  window.GM_ENHANCEMENT_WORLD3_FIXED_VALUE_UI_VERSION=1;
 })();
