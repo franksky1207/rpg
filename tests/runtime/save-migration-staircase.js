@@ -1,0 +1,13 @@
+const assert=require("assert");
+const fs=require("fs");
+const source=fs.readFileSync("saveversionguard.js","utf8");
+assert(/SAVE_MIGRATION_STAIRCASE_VERSION=1/.test(source),"缺少 Save Migration Staircase V1。");
+assert(/SAVE_MIGRATION_STAGES/.test(source),"缺少 migration stage registry。");
+assert(/saveMigrationPlanForVersion/.test(source),"缺少 migration plan API。");
+assert(/runSaveMigrationStaircaseRegression/.test(source),"缺少 migration staircase regression API。");
+assert(/legacy-exp-progress/.test(source)&&/pre-schema16-compatibility/.test(source)&&/canonical-normalization/.test(source)&&/finalize-current-schema/.test(source),"migration 階梯缺少必要 stage。");
+assert(/SAVE_CAPACITY_DIAGNOSTIC_VERSION=1/.test(source),"缺少 Save Capacity Diagnostic V1。");
+assert(/SAVE_CAPACITY_WARNING_BYTES/.test(source)&&/SAVE_CAPACITY_CRITICAL_BYTES/.test(source),"缺少容量診斷門檻。");
+assert(/projectedSaveBytes/.test(source)&&/capacityLevel/.test(source)&&/failureKind/.test(source),"存檔寫入報告缺少 projected bytes／容量級別／失敗分類。");
+assert(!/inventory\.splice\(|lostGear\.splice\(/.test(source),"Save Safety/Capacity owner 不得自動刪除玩家背包或遺失裝備。");
+console.log("Save migration staircase and capacity diagnostic static integrity passed.");
