@@ -1,7 +1,7 @@
 (function(){
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","mirrorDungeonIdentityHtml","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
+ const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","mirrorDungeonIdentityHtml","playerTitleHtml","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`鏡像戰必要函式 ${name} 未載入`);});
  const cfg=window.MIRROR_DUNGEON_CONFIG;
  if(!cfg||Number(window.MIRROR_DUNGEON_CONFIG_VERSION)!==1)fail("CONFIG","鏡像戰集中設定未載入");
@@ -32,14 +32,13 @@
   const probes=[[{secondWorld:{entered:false},thirdWorld:{entered:false}},1],[{secondWorld:{entered:true},thirdWorld:{entered:false}},2],[{secondWorld:{entered:true},thirdWorld:{entered:true}},3]];
   probes.forEach(([target,expected])=>{const actual=Number(window.mirrorCombatWorldForState(target));if(actual!==expected)fail("WORLD_PHASE_PROBE",`Mirror world phase 應為 ${expected}，實際 ${actual}`,{target,actual});});
  }
- if(typeof window.mirrorDungeonIdentityHtml==="function"){
+ if(typeof window.playerTitleHtml==="function"&&typeof window.mirrorDungeonIdentityHtml==="function"){
   [["higher-dimensional-title-01",1],["higher-dimensional-title-06",6],["higher-dimensional-title-10",10]].forEach(([titleId,tier])=>{
-   const player=String(window.mirrorDungeonIdentityHtml({name:"驗收玩家",titleId}));
-   const mirror=String(window.mirrorDungeonIdentityHtml({name:"驗收玩家",titleId,mirror:true}));
-   const common="player-title--higher-dimensional",specific=`player-title--higher-dimensional-${tier}`;
-   if(!player.includes(common)||!player.includes(specific)||!player.includes("驗收玩家"))fail("W3_PLAYER_TITLE_PRESENTATION",`高維稱號 ${tier} 未進入 Mirror 玩家身份`,player);
-   if(!mirror.includes(common)||!mirror.includes(specific)||!mirror.includes("鏡像・")||!mirror.includes("驗收玩家"))fail("W3_MIRROR_TITLE_PRESENTATION",`高維稱號 ${tier} 未進入 Mirror 鏡像身份`,mirror);
+   const title=String(window.playerTitleHtml(titleId)),common="player-title--higher-dimensional",specific=`player-title--higher-dimensional-${tier}`;
+   if(!title.includes(common)||!title.includes(specific))fail("W3_TITLE_RENDERER",`高維稱號 ${tier} renderer 未輸出正式 class`,title);
   });
+  const wiring=Function.prototype.toString.call(window.mirrorDungeonIdentityHtml);
+  if(!/playerIdentityNameHtml/.test(wiring)||!/[鏡]像・/.test(wiring)||!/compact\s*:\s*true/.test(wiring))fail("W3_TITLE_IDENTITY_WIRING","Mirror 玩家／鏡像身份未共用正式稱號 renderer",wiring);
  }
  if(typeof window.createMirrorCombatSnapshot==="function"&&typeof window.runMirrorCombatCore==="function"){try{const snap=window.createMirrorCombatSnapshot(),markKeys=Array.from(window.MARK_KEYS||[]);if(!snap?.stats||Number(snap.stats.hp)<=0)fail("SNAPSHOT","鏡像戰快照缺少有效戰鬥能力",snap||null);if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION))fail("SNAPSHOT_DAMAGE_MODEL","鏡像快照傷害模型版本未對齊共用傷害模型",snap||null);if(Number(snap.markRuleVersion)!==Number(window.MARK_COMBAT_RULE_VERSION)||markKeys.length!==10||markKeys.some(key=>!Number.isFinite(Number(snap.marks?.[key]))))fail("SNAPSHOT_MARKS","鏡像快照未完整包含 10 枚印記與規則版本",snap||null);const result=window.runMirrorCombatCore(snap,{logs:false});if(!result||!["player","mirror"].includes(result.winner)||!["player","mirror"].includes(result.firstActor)||!result.markState)fail("COMBAT_RESULT","Mirror Combat 單場結果格式／印記狀態異常",result||null);}catch(err){fail("COMBAT_PROBE","Mirror Combat 試跑失敗",String(err?.message||err));}}
  if(typeof window.normalizeMirrorCombatSnapshot==="function"){
