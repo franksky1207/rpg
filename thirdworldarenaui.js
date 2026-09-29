@@ -46,6 +46,15 @@
  function renderW3(){const rt=runtime();if(rt.status==="combat"&&rt.round)return combatHtml();if(rt.status==="complete"||rt.status==="stopped")return resultHtml();return selectHtml();}
  function sleep(ms){if(typeof window.backgroundProgressSleep==="function")return window.backgroundProgressSleep(ms,"arena");return new Promise(resolve=>setTimeout(resolve,ms));}
  function gap(){try{return typeof window.combatOuterGapMs==="function"?window.combatOuterGapMs("arena"):140;}catch(e){return 140;}}
+ async function playCurrentStage(){
+  const before=runtime(),round=before.round,enemy=round?.enemy?{...round.enemy}:null;
+  if(before.status!=="combat"||!round||!enemy||typeof window.runCombatCore!=="function")return false;
+  const startHp=Math.max(0,Number(state?.hp)||0),combatOptions=typeof window.getThirdWorldArenaCombatOptions==="function"?window.getThirdWorldArenaCombatOptions(enemy,state):{},combat=window.runCombatCore(round.player,enemy,startHp,{...combatOptions});
+  state.hp=combat.hp;
+  const settled=typeof window.settleThirdWorldArenaStage==="function"?window.settleThirdWorldArenaStage({win:combat.win,combatEndHp:combat.hp,startHp,turns:combat.turns}):null;
+  if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation({win:combat.win,logs:combat.logs,events:combat.events||[],e:enemy,combatEndHp:combat.hp,turns:combat.turns},{mode:"arena",clearAfter:true,clearReason:"w3-arena-stage-end",startHp});
+  return settled;
+ }
  async function playSelected(){
   if(uiState.running||!world3())return false;uiState.running=true;
   const startedBackground=uiState.requestedRuns>1&&typeof window.backgroundProgressStart==="function";
@@ -61,13 +70,10 @@
     rt=runtime();
     if(rt.status!=="combat"||!rt.round)break;
     while(rt.status==="combat"&&rt.round){
-     const before=rt,enemy=before.round.enemy?{...before.round.enemy}:null,startHp=Math.max(0,Number(state?.hp)||0);
      if(typeof battleBusy!=="undefined"&&battleBusy){await sleep(30);rt=runtime();continue;}
      if(typeof battleBusy!=="undefined")battleBusy=true;
-     let out=null;
-     try{out=typeof window.fightThirdWorldArenaCurrentStage==="function"?window.fightThirdWorldArenaCurrentStage():null;
-      if(out?.combat&&typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation({...out.combat,e:enemy,combatEndHp:out.combat.hp??out.combat.combatEndHp},{mode:"arena",clearAfter:true,clearReason:"w3-arena-stage-end",startHp});
-     }finally{if(typeof battleBusy!=="undefined")battleBusy=false;}
+     try{await playCurrentStage();}
+     finally{if(typeof battleBusy!=="undefined")battleBusy=false;}
      rt=runtime();if(typeof render==="function")render();
      if(rt.status==="combat")await sleep(gap());
     }
@@ -96,5 +102,6 @@
  window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION=1;
  window.THIRD_WORLD_ARENA_BATCH_BUTTON_VERSION=1;
  window.THIRD_WORLD_ARENA_RELOAD_SAFE_PRESENTATION_VERSION=1;
+ window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION=1;
  installStyles();
 })();
