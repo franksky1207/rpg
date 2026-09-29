@@ -3,7 +3,7 @@
  const fail=(code,message,detail=null)=>errors.push({code,message,detail});
  const levels=value=>Object.fromEntries((window.SPECIALIZATION_KEYS||[]).map(key=>[key,value]));
  try{
-  if(Number(window.GM_BATCH16_FORMAL_CONTROLS_VERSION)<3)fail("FORMAL_UI_OWNER","第16批正式控制 fixed-value owner 未更新");
+  if(Number(window.GM_BATCH16_FORMAL_CONTROLS_VERSION)!==1)fail("FORMAL_UI_OWNER","第16批正式控制 owner 未載入");
   if(Number(window.GM_BATCH16_FIXED_VALUE_UI_VERSION)<2)fail("FIXED_VALUE_UI_VERSION","固定值 UI owner 未載入");
   if(typeof window.gmBatch16FormalWorldPhase!=="function")fail("PHASE_API","第16批正式紀元判定 API 未載入");
   const galaxy={secondWorld:{entered:false},thirdWorld:{entered:false},specializations:levels(0),enhancement:{levels:{weapon:0,helmet:0,armor:0,shoes:0,accessory:0}}};
