@@ -16,7 +16,7 @@ const pos=name=>index.indexOf('src="'+name+'?v=');
 assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
 assert(pos("saveversionguard.js")>pos("savemigration.js")&&pos("saveversionguard.js")<pos("ui.js"),"saveversionguard.js 必須在 migration 之後、ui.js 啟動 load 前載入。");
 assert(/saveversionguard\.js\?v=20260930-audit-batch3/.test(index),"第3批 Save Safety/Capacity 修改後必須更新 index.html cache-bust。");
-assert(/offlinestatecore\.js\?v=20260930-audit-batch4/.test(index),"第4批 Offline owner 修改後必須更新 offlinestatecore.js cache-bust。");
+assert(/offlinestatecore\.js\?v=20260930-audit-batch4-fix1/.test(index),"第4批 Offline owner 修正後必須更新 offlinestatecore.js cache-bust。");
 assert(/battlepipeline\.js\?v=20260930-audit-batch4/.test(index),"第4批 Offline consumer 修改後必須更新 battlepipeline.js cache-bust。");
 assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
 assert(pos("integritycontract.js")<pos("runtimeintegrity.js")&&pos("runtimeintegrity.js")<pos("finalintegrity.js"),"Integrity Contract → Runtime → Final 載入順序錯誤。");
@@ -43,6 +43,7 @@ assert(/balanceVersion\)!==7/.test(runtime)&&/rankBalanceVersion\)!==4/.test(run
 assert(/const VERSION=21;/.test(finalIntegrity)&&/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==21/.test(finalIntegrity)&&/runCanonicalCivilizationIntegrityContract/.test(finalIntegrity),"Final Integrity 應同步 Runtime V21／Canonical Contract V3。");
 assert(/const VERSION=4;/.test(offlineStateCore)&&/OFFLINE_BATTLE_SAMPLE_VERSION=4/.test(offlineStateCore)&&/OFFLINE_SAMPLE_OWNER_VERSION=2/.test(offlineStateCore)&&/OFFLINE_SAMPLE_POLICY_VERSION=1/.test(offlineStateCore),"Offline canonical owner 應為 normalization/sample V4、owner V2、policy V1。");
 assert(/offlineBattleSampleMultiplier=sampleMultiplier/.test(offlineStateCore)&&/offlineBattleSamplePolicySnapshot=samplePolicySnapshot/.test(offlineStateCore)&&/appendOfflineBattleSample=appendOfflineBattleSample/.test(offlineStateCore),"Offline canonical owner 必須公開 multiplier／policy／append API。");
+assert(/\[10,3,1\.6\]/.test(offlineStateCore),"Offline owner multiplier regression fixture 的 gap=7 必須維持 1.6。");
 assert(/MAIN_REAL_BATTLE_SAMPLE_VERSION=4/.test(battlePipeline)&&/MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1/.test(battlePipeline),"第一紀元主線 Offline sample consumer 尚未升級到 owner convergence V1。");
 assert(/window\.offlineBattleSampleMultiplier/.test(battlePipeline)&&/window\.appendOfflineBattleSample/.test(battlePipeline),"第一紀元主線必須只透過 canonical Offline sample API 取得 multiplier 與 append sample。");
 assert(!/retainRealBattleSamplesBySpeed/.test(battlePipeline)&&!/function realBattleSampleMultiplier/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLES_PER_SPEED/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLE_SPEEDS/.test(battlePipeline),"battlepipeline.js 不得再維護自己的 sample retention／multiplier owner。");
