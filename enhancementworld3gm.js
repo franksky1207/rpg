@@ -5,6 +5,10 @@
   if(state?.secondWorld?.entered===true)return 2;
   return 1;
  }
+ function fixedValueHtml(text){
+  if(typeof window.gmBatch16FixedValueHtml==="function")return window.gmBatch16FixedValueHtml(text);
+  return `<div class="btn gm-formal-fixed-value" aria-disabled="true" tabindex="-1" style="cursor:default;pointer-events:none;opacity:.82">${String(text||"")}</div>`;
+ }
  const baseManagementHtml=window.gmEnhancementManagementHtml;
  if(typeof baseManagementHtml==="function"){
   window.gmEnhancementManagementHtml=function(){
@@ -13,10 +17,12 @@
    const slots=typeof window.gmTestEnhancementSlots==="function"?window.gmTestEnhancementSlots():["weapon","helmet","armor","shoes","accessory"];
    const rows=slots.map(type=>{
     const label=typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):String(type);
-    return `<label><span>${label}</span><select class="btn" id="gmEnhance-manage-${type}" disabled><option value="40" selected>+40</option></select></label>`;
+    return `<label><span>${label}</span>${fixedValueHtml("+40")}</label>`;
    }).join("");
-   return `<div class="muted gm-hub-note">直接修改玩家正式裝備欄位強化等級；高維紀元正式強化固定 +40，無法修改。此設定不影響 GM 測試沙盒。</div><div class="gm-enhancement-grid">${rows}</div><div class="controls"><button class="btn blue" onclick="gmApplyEnhancementLevels()" disabled>套用強化等級</button></div>`;
+   return `<div class="muted gm-hub-note">高維紀元正式強化固定 +40，無法修改。此設定不影響 GM 測試沙盒。</div><div class="gm-enhancement-grid">${rows}</div>`;
   };
+  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","enhancement-manage",()=>window.gmEnhancementManagementHtml());
  }
- window.GM_ENHANCEMENT_WORLD3_LOCK_VERSION=1;
+ window.GM_ENHANCEMENT_WORLD3_LOCK_VERSION=2;
+ window.GM_ENHANCEMENT_WORLD3_FIXED_VALUE_UI_VERSION=1;
 })();
