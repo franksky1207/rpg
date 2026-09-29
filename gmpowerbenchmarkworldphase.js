@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function testCharacter(){return typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;}
  function benchmarkWorld(){
@@ -69,6 +69,11 @@
    .replace(/文明等級：Lv\.\d+｜(?:宇宙紀元|高維紀元)最終傷害 ×[\d.]+/g,civSummary)
    .replace(/文明等級：Lv\.(\d+)｜宇宙紀元最終傷害/,"文明等級：Lv.$1｜高維紀元最終傷害");
  }
+ function refreshBenchmarkAfterFormalSync(){
+  if(typeof window.gmPowerBenchmarkRefreshUi==="function")return window.gmPowerBenchmarkRefreshUi({capture:true});
+  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  return false;
+ }
  function install(){
   const baseOutput=window.gmPowerBenchmarkRunOutput;
   if(typeof baseOutput==="function"&&!baseOutput.__worldPhaseAdapter){
@@ -95,12 +100,24 @@
    const wrapped=function(){return patchWorld3Text(baseHtml());};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkHtml=wrapped;
    if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("test","power-benchmark-test",wrapped,"戰力基準測試");
   }
+  const baseFormalSync=window.gmUseCurrentTestStatus;
+  if(typeof baseFormalSync==="function"&&!baseFormalSync.__benchmarkRefreshAdapter){
+   const wrapped=function(...args){
+    const result=baseFormalSync(...args);
+    refreshBenchmarkAfterFormalSync();
+    return result;
+   };
+   wrapped.__benchmarkRefreshAdapter=VERSION;
+   window.gmUseCurrentTestStatus=wrapped;
+  }
   return true;
  }
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=2;
+ window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=1;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
+ window.gmPowerBenchmarkRefreshAfterFormalSync=refreshBenchmarkAfterFormalSync;
  window.gmPowerBenchmarkCorrectedSnapshot=function(){const base=typeof window.gmPowerBenchmarkSnapshot==="function"?window.gmPowerBenchmarkSnapshot():null;return base?JSON.parse(JSON.stringify(base)):null;};
  install();
 })();
