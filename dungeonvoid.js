@@ -24,6 +24,16 @@
 
  function floorNumber(value){return Math.max(1,Math.floor(Number(value)||1));}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
+ function voidMirageCombatWorld(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
+  if(typeof window.currentWorldPhase==="function"){
+   const phase=Number(window.currentWorldPhase(holder));
+   if(phase===1||phase===2||phase===3)return phase;
+  }
+  if(holder?.thirdWorld?.entered===true)return 3;
+  if(holder?.secondWorld?.entered===true)return 2;
+  return 1;
+ }
  function cloneVoidSnapshotValue(value,seen=new WeakMap()){
   if(value===null||typeof value!=="object")return value;
   if(seen.has(value))return seen.get(value);
@@ -81,14 +91,15 @@
  function runFullHeal(){state.hp=runPlayerStats().hp;}
  function voidMirageFightCore(enemy,options={}){
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],e:enemy||null,combatEndHp:state.hp,turns:0};
-  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1,state}):1;
+  const world=voidMirageCombatWorld(state);
+  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state}):1;
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp,{
    logs:options.logs===false?false:true,
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier:civilizationMultiplier
   });
   state.hp=combat.hp;
-  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns,civilizationDamageMultiplier};
+  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns,world,civilizationDamageMultiplier:civilizationMultiplier};
  }
  function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function runSnapshot(){
@@ -183,9 +194,11 @@
  window.VOID_MIRAGE_FORMULA_VERSION=2;
  window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION=1;
  window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION=1;
- window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=2;
+ window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION=3;
+ window.VOID_MIRAGE_WORLD_PHASE_VERSION=1;
  window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION=1;
  window.VOID_MIRAGE_AUTO_OWNER_VERSION=1;
+ window.voidMirageCombatWorld=voidMirageCombatWorld;
  function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("void")===true;}
  function catchUpPreviewPolicy(){
   if(!fastCatchUp()||typeof window.backgroundProgressCatchUpPolicy!=="function")return null;
