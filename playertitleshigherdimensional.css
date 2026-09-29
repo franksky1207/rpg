@@ -1,8 +1,7 @@
-/* Higher-dimensional title series V3 — 第14-1批重做樣本。
+/* Higher-dimensional title series V4 — 第14-3批完整十稱號。
    正式 owner 僅處理高維紀元稱號 presentation；不碰解鎖、裝備、存檔。
-   本批只定案三個代表樣本：Tier 1 破界初臨、Tier 6 界律共主、Tier 10 萬維之上。
-   舊 1／5／9 樣本視為失敗版，已完全退出正式設計。
-   視覺規則：十個高維稱號最終皆須高於宇宙紀元第10階，但低於鏡像高階天花板；彼此為同級不同理念，不做強弱階梯。
+   Tier 1／6／10 延續第14-1批實機確認通過之視覺錨點；本批完成 2／3／4／5／7／8／9。
+   視覺規則：十個高維稱號皆高於宇宙紀元第10階，彼此為同級不同理念，不做強弱階梯；鏡像19／20仍保留最高異象天花板。
    技術語言：本體文字 + 相位文字 + 開放式高維異象；禁止封閉方框／底板。 */
 
 /* Shared W3 owner reset: fully override generic galaxy tier pseudo-elements. */
@@ -21,7 +20,7 @@
  clip-path:none;
  text-shadow:0 0 4px rgba(255,255,255,.94),0 0 14px rgba(138,224,255,.74),0 0 29px rgba(124,112,235,.48),0 0 43px rgba(105,79,184,.22);
  isolation:isolate;
- animation:higherDimV3BaseText 2.6s ease-in-out infinite;
+ animation:higherDimV4BaseText 2.6s ease-in-out infinite;
 }
 .player-title--higher-dimensional::before{
  content:attr(data-title-text);
@@ -49,7 +48,7 @@
  opacity:.48;
  transform:translate(.055em,.012em);
  text-shadow:-.045em 0 rgba(152,120,244,.18),.055em 0 rgba(112,225,255,.18);
- animation:higherDimV3BasePhase 2.35s ease-in-out infinite;
+ animation:higherDimV4BasePhase 2.35s ease-in-out infinite;
 }
 .player-title--higher-dimensional::after{
  content:"";
@@ -70,33 +69,26 @@
   linear-gradient(112deg,transparent 0 9%,rgba(160,232,255,.30) 10.2% 11.4%,transparent 12.8% 37%,rgba(255,255,255,.18) 38.2% 39.1%,transparent 40.5% 73%,rgba(196,168,255,.28) 74.2% 75.4%,transparent 76.8% 100%),
   radial-gradient(ellipse at 7% 51%,rgba(91,218,255,.28),transparent 28%),
   radial-gradient(ellipse at 93% 48%,rgba(154,113,244,.26),transparent 28%);
- animation:higherDimV3BaseField 2.9s ease-in-out infinite;
+ animation:higherDimV4BaseField 2.9s ease-in-out infinite;
 }
 
-/* --------------------------------------------------------------------------
-   Tier 1｜破界初臨 — 青綠裂界型
-   不是「低階」：直接以跨越宇宙第10階的光量與場域作為高維起點。
-   語意是第一次把三維邊界真正撕開：斜裂面、錯層、左右不對稱。
-   -------------------------------------------------------------------------- */
+/* Tier 1｜破界初臨 — 青綠裂界型 */
 .player-title--higher-dimensional-1{
  font-size:1.26em;
  letter-spacing:.062em;
  background-image:linear-gradient(98deg,#0d6f70 0%,#21d5bb 11%,#bafff2 23%,#ffffff 35%,#57e8d0 49%,#81dcff 63%,#ffffff 77%,#31c9b8 89%,#0f7277 100%);
  background-size:470% 100%;
  text-shadow:0 0 4px rgba(241,255,252,.98),0 0 12px rgba(67,244,214,.82),0 0 24px rgba(44,208,213,.64),0 0 38px rgba(76,169,244,.40),0 0 52px rgba(27,113,149,.18);
- animation:higherDimV3BreachText 1.92s ease-in-out infinite;
+ animation:higherDimV4BreachText 1.92s ease-in-out infinite;
 }
 .player-title--higher-dimensional-1::before{
- color:rgba(81,255,219,.54);
- -webkit-text-fill-color:rgba(81,255,219,.54);
- opacity:.62;
+ color:rgba(81,255,219,.54);-webkit-text-fill-color:rgba(81,255,219,.54);opacity:.62;
  transform:translate(.095em,-.018em) skewX(-1.4deg);
  text-shadow:-.14em .018em rgba(95,193,255,.36),.115em -.012em rgba(38,248,207,.28);
- animation:higherDimV3BreachPhase 1.76s cubic-bezier(.42,0,.34,1) infinite;
+ animation:higherDimV4BreachPhase 1.76s cubic-bezier(.42,0,.34,1) infinite;
 }
 .player-title--higher-dimensional-1::after{
- inset:-1.22em -2.62em;
- opacity:.98;
+ inset:-1.22em -2.62em;opacity:.98;
  background:
   radial-gradient(circle at 1% 18%,rgba(225,255,249,1) 0 1.25px,transparent 2.4px),
   radial-gradient(circle at 11% 87%,rgba(72,255,219,.86) 0 1.1px,transparent 2.1px),
@@ -107,33 +99,135 @@
   linear-gradient(62deg,transparent 0 17%,rgba(116,216,255,.27) 18.1% 19%,transparent 20.2% 78%,rgba(77,243,207,.30) 79% 80%,transparent 81.2%),
   radial-gradient(ellipse at 8% 50%,rgba(32,225,196,.34),transparent 29%),
   radial-gradient(ellipse at 92% 48%,rgba(75,174,241,.30),transparent 28%);
- animation:higherDimV3BreachField 2.05s cubic-bezier(.42,0,.32,1) infinite;
+ animation:higherDimV4BreachField 2.05s cubic-bezier(.42,0,.32,1) infinite;
 }
 
-/* --------------------------------------------------------------------------
-   Tier 6｜界律共主 — 金紫法則型
-   同級高維效果，不是第1的升級版；以「駕馭法則」取代裂界語言。
-   開放法則弧、斷續秩序線與紫金相位互相咬合，但永不形成封閉框。
-   -------------------------------------------------------------------------- */
+/* Tier 2｜維外行者 — 冰藍銀白漂移型 */
+.player-title--higher-dimensional-2{
+ font-size:1.27em;letter-spacing:.058em;
+ background-image:linear-gradient(94deg,#3b76a9 0%,#8edcff 12%,#ffffff 25%,#c8f4ff 39%,#88bfff 54%,#ffffff 69%,#d7edff 82%,#7cb8ea 93%,#365d86 100%);
+ background-size:480% 100%;
+ text-shadow:0 0 4px rgba(244,253,255,.98),0 0 13px rgba(131,218,255,.84),0 0 27px rgba(101,173,245,.58),0 0 42px rgba(165,209,255,.35),0 0 54px rgba(58,112,174,.18);
+ animation:higherDimV4WalkerText 2.18s ease-in-out infinite;
+}
+.player-title--higher-dimensional-2::before{
+ color:rgba(171,227,255,.52);-webkit-text-fill-color:rgba(171,227,255,.52);opacity:.64;
+ transform:translate(.14em,.002em);
+ text-shadow:-.18em 0 rgba(255,255,255,.24),.21em .01em rgba(96,183,255,.30),-.32em -.012em rgba(129,211,255,.14);
+ animation:higherDimV4WalkerPhase 2.00s ease-in-out infinite;
+}
+.player-title--higher-dimensional-2::after{
+ inset:-1.18em -2.72em;opacity:.98;
+ background:
+  radial-gradient(circle at 2% 31%,rgba(218,249,255,.98) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 98% 67%,rgba(142,216,255,.92) 0 1.2px,transparent 2.3px),
+  linear-gradient(90deg,transparent 0 3%,rgba(186,238,255,.16) 5% 12%,transparent 14% 27%,rgba(112,195,255,.22) 30% 37%,transparent 40% 61%,rgba(233,252,255,.18) 64% 72%,transparent 75% 87%,rgba(113,186,244,.18) 90% 96%,transparent 98%),
+  linear-gradient(104deg,transparent 0 9%,rgba(226,250,255,.34) 10% 11%,transparent 12.5% 34%,rgba(104,195,255,.28) 35% 36%,transparent 37.5% 66%,rgba(224,248,255,.29) 67% 68%,transparent 69.5% 88%,rgba(98,172,234,.31) 89% 90%,transparent 91.5%),
+  radial-gradient(ellipse at 14% 50%,rgba(105,205,255,.30),transparent 27%),
+  radial-gradient(ellipse at 86% 50%,rgba(176,230,255,.27),transparent 29%);
+ animation:higherDimV4WalkerField 2.28s ease-in-out infinite;
+}
+
+/* Tier 3｜超界之軀 — 洋紅紫紅雙重構型 */
+.player-title--higher-dimensional-3{
+ font-size:1.26em;letter-spacing:.056em;
+ background-image:linear-gradient(97deg,#6d174f 0%,#e543a9 11%,#ffc0eb 22%,#ffffff 34%,#fd6aaa 47%,#b775ff 61%,#ffffff 73%,#ff82c4 86%,#7c2a70 100%);
+ background-size:490% 100%;
+ text-shadow:0 0 4px rgba(255,244,252,.98),0 0 12px rgba(255,94,184,.80),0 0 25px rgba(208,72,178,.58),0 0 39px rgba(156,100,245,.42),0 0 52px rgba(91,34,112,.22);
+ animation:higherDimV4BodyText 1.96s ease-in-out infinite;
+}
+.player-title--higher-dimensional-3::before{
+ color:rgba(255,126,197,.52);-webkit-text-fill-color:rgba(255,126,197,.52);opacity:.67;
+ transform:translate(-.10em,.014em) skewX(1.2deg);
+ text-shadow:.17em -.012em rgba(170,114,255,.33),-.18em .018em rgba(255,219,243,.23);
+ animation:higherDimV4BodyPhase 1.82s cubic-bezier(.42,0,.31,1) infinite;
+}
+.player-title--higher-dimensional-3::after{
+ inset:-1.24em -2.66em;opacity:.99;
+ background:
+  radial-gradient(circle at 4% 17%,rgba(255,198,235,.96) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 95% 83%,rgba(198,153,255,.94) 0 1.2px,transparent 2.3px),
+  conic-gradient(from 228deg at 6% 52%,transparent 0 12%,rgba(255,86,181,.63) 15% 21%,rgba(255,215,240,.22) 22% 25%,transparent 28% 100%),
+  conic-gradient(from 48deg at 94% 49%,transparent 0 13%,rgba(174,107,255,.62) 15% 21%,rgba(255,255,255,.20) 22% 24%,transparent 27% 100%),
+  linear-gradient(73deg,transparent 0 12%,rgba(244,82,173,.36) 13.2% 14.4%,transparent 15.8% 42%,rgba(174,104,252,.28) 43% 44.2%,transparent 45.6% 72%,rgba(255,142,204,.31) 73% 74.2%,transparent 75.6%),
+  linear-gradient(109deg,transparent 0 26%,rgba(255,235,248,.20) 27% 28%,transparent 29.2% 62%,rgba(184,119,255,.22) 63% 64%,transparent 65.2%),
+  radial-gradient(ellipse at 10% 52%,rgba(239,72,169,.29),transparent 28%),
+  radial-gradient(ellipse at 90% 47%,rgba(154,93,236,.28),transparent 28%);
+ animation:higherDimV4BodyField 2.08s cubic-bezier(.43,0,.3,1) infinite;
+}
+
+/* Tier 4｜高維真形 — 深紫冷白穩定核心型 */
+.player-title--higher-dimensional-4{
+ font-size:1.28em;letter-spacing:.052em;
+ background-image:linear-gradient(92deg,#32145f 0%,#7955c8 10%,#d6c9ff 22%,#ffffff 36%,#bda9ff 50%,#ffffff 63%,#8b69dd 77%,#e1d8ff 89%,#3b1f6b 100%);
+ background-size:470% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.99),0 0 13px rgba(202,186,255,.86),0 0 27px rgba(142,112,235,.62),0 0 42px rgba(88,55,174,.42),0 0 55px rgba(44,23,91,.24);
+ animation:higherDimV4TrueFormText 2.34s ease-in-out infinite;
+}
+.player-title--higher-dimensional-4::before{
+ color:rgba(213,199,255,.48);-webkit-text-fill-color:rgba(213,199,255,.48);opacity:.58;
+ transform:translate(.045em,0);
+ text-shadow:-.11em 0 rgba(128,91,226,.27),.11em 0 rgba(255,255,255,.18);
+ animation:higherDimV4TrueFormPhase 2.18s ease-in-out infinite;
+}
+.player-title--higher-dimensional-4::after{
+ inset:-1.28em -2.64em;opacity:.98;
+ background:
+  radial-gradient(circle at 3% 50%,rgba(218,205,255,.96) 0 1.25px,transparent 2.4px),
+  radial-gradient(circle at 97% 50%,rgba(179,151,255,.94) 0 1.25px,transparent 2.4px),
+  conic-gradient(from 255deg at 5% 50%,transparent 0 14%,rgba(183,157,255,.60) 16% 22%,rgba(255,255,255,.22) 23% 25%,transparent 28% 100%),
+  conic-gradient(from 75deg at 95% 50%,transparent 0 14%,rgba(126,91,225,.58) 16% 22%,rgba(236,230,255,.21) 23% 25%,transparent 28% 100%),
+  linear-gradient(90deg,transparent 0 18%,rgba(214,202,255,.18) 19% 20%,transparent 21.5% 42%,rgba(255,255,255,.24) 43.5% 44.5%,transparent 46% 55%,rgba(255,255,255,.24) 56.5% 57.5%,transparent 59% 79%,rgba(172,145,250,.18) 80% 81%,transparent 82.5%),
+  radial-gradient(ellipse at center,rgba(156,126,241,.20) 0 20%,rgba(81,54,156,.16) 33%,transparent 52%),
+  radial-gradient(ellipse at 9% 50%,rgba(118,87,213,.28),transparent 28%),
+  radial-gradient(ellipse at 91% 50%,rgba(142,111,229,.28),transparent 28%);
+ animation:higherDimV4TrueFormField 2.42s ease-in-out infinite;
+}
+
+/* Tier 5｜萬維共鳴 — 青藍紫粉多維共振型 */
+.player-title--higher-dimensional-5{
+ font-size:1.27em;letter-spacing:.054em;
+ background-image:linear-gradient(95deg,#207b91 0%,#52d8ee 10%,#ffffff 22%,#8170ef 35%,#ef8ed4 49%,#ffffff 62%,#57d1e9 75%,#b395f3 88%,#6b2f8b 100%);
+ background-size:520% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.98),0 0 12px rgba(84,214,239,.82),0 0 24px rgba(125,101,233,.62),0 0 38px rgba(230,108,199,.43),0 0 52px rgba(81,51,157,.20);
+ animation:higherDimV4ResonanceText 1.92s linear infinite;
+}
+.player-title--higher-dimensional-5::before{
+ color:rgba(115,217,240,.48);-webkit-text-fill-color:rgba(115,217,240,.48);opacity:.69;
+ transform:translate(-.075em,.008em);
+ text-shadow:.14em 0 rgba(238,126,207,.33),-.15em -.012em rgba(139,111,241,.33),.28em .014em rgba(83,213,236,.14);
+ animation:higherDimV4ResonancePhase 1.76s ease-in-out infinite;
+}
+.player-title--higher-dimensional-5::after{
+ inset:-1.24em -2.72em;opacity:1;
+ background:
+  radial-gradient(circle at 2% 20%,rgba(150,239,255,.98) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 98% 78%,rgba(239,173,225,.94) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 17% 84%,rgba(164,137,255,.82) 0 1px,transparent 2px),
+  linear-gradient(112deg,transparent 0 7%,rgba(78,217,239,.41) 8% 9%,transparent 10.4% 31%,rgba(147,111,237,.32) 32% 33%,transparent 34.4% 62%,rgba(232,122,207,.34) 63% 64%,transparent 65.4% 88%,rgba(74,205,231,.34) 89% 90%,transparent 91.4%),
+  linear-gradient(67deg,transparent 0 15%,rgba(224,248,255,.21) 16% 17%,transparent 18.3% 45%,rgba(232,151,215,.24) 46% 47%,transparent 48.3% 74%,rgba(144,116,239,.24) 75% 76%,transparent 77.3%),
+  repeating-radial-gradient(ellipse at 50% 50%,transparent 0 12%,rgba(142,111,239,.055) 13% 14%,transparent 15% 23%),
+  radial-gradient(ellipse at 8% 51%,rgba(67,209,236,.29),transparent 28%),
+  radial-gradient(ellipse at 92% 48%,rgba(229,116,201,.27),transparent 28%);
+ animation:higherDimV4ResonanceField 1.98s ease-in-out infinite;
+}
+
+/* Tier 6｜界律共主 — 金紫法則型 */
 .player-title--higher-dimensional-6{
- font-size:1.27em;
- letter-spacing:.055em;
+ font-size:1.27em;letter-spacing:.055em;
  background-image:linear-gradient(92deg,#5c2f82 0%,#b77bff 10%,#fff0aa 22%,#ffffff 34%,#f3bd49 48%,#fff7cf 60%,#c793ff 73%,#ffffff 85%,#dca83e 94%,#573176 100%);
  background-size:500% 100%;
  text-shadow:0 0 4px rgba(255,255,255,.98),0 0 12px rgba(255,220,121,.82),0 0 25px rgba(235,168,58,.58),0 0 39px rgba(174,118,255,.48),0 0 54px rgba(96,55,151,.22);
- animation:higherDimV3LawText 2.08s ease-in-out infinite;
+ animation:higherDimV4LawText 2.08s ease-in-out infinite;
 }
 .player-title--higher-dimensional-6::before{
- color:rgba(255,218,123,.52);
- -webkit-text-fill-color:rgba(255,218,123,.52);
- opacity:.66;
+ color:rgba(255,218,123,.52);-webkit-text-fill-color:rgba(255,218,123,.52);opacity:.66;
  transform:translate(-.085em,.006em);
  text-shadow:.15em 0 rgba(182,126,255,.34),-.095em -.014em rgba(255,241,185,.24);
- animation:higherDimV3LawPhase 1.96s cubic-bezier(.4,0,.28,1) infinite;
+ animation:higherDimV4LawPhase 1.96s cubic-bezier(.4,0,.28,1) infinite;
 }
 .player-title--higher-dimensional-6::after{
- inset:-1.25em -2.68em;
- opacity:.99;
+ inset:-1.25em -2.68em;opacity:.99;
  background:
   radial-gradient(circle at 3% 24%,rgba(255,245,194,.98) 0 1.3px,transparent 2.4px),
   radial-gradient(circle at 96% 78%,rgba(213,177,255,.94) 0 1.3px,transparent 2.4px),
@@ -146,33 +240,108 @@
   linear-gradient(108deg,transparent 0 17%,rgba(255,241,183,.26) 18% 19%,transparent 20.3% 80%,rgba(192,139,255,.25) 81% 82%,transparent 83.3%),
   radial-gradient(ellipse at 7% 51%,rgba(237,176,57,.28),transparent 28%),
   radial-gradient(ellipse at 93% 48%,rgba(157,103,236,.31),transparent 29%);
- animation:higherDimV3LawField 2.20s ease-in-out infinite;
+ animation:higherDimV4LawField 2.20s ease-in-out infinite;
 }
 
-/* --------------------------------------------------------------------------
-   Tier 10｜萬維之上 — 黑白／受控虹彩超脫型
-   不靠單純「更亮」表現地位；以黑白反差、缺失區與光譜裂層表現超出單一維度分類。
-   效果仍刻意低於鏡像19／20的高頻 reality-mismatch 天花板。
-   -------------------------------------------------------------------------- */
+/* Tier 7｜維序凌駕 — 赤紅黑紫秩序壓制型 */
+.player-title--higher-dimensional-7{
+ font-size:1.27em;letter-spacing:.052em;
+ background-image:linear-gradient(94deg,#370d2c 0%,#9a1d55 10%,#ff5c7d 22%,#ffffff 34%,#d63767 47%,#7f42c5 60%,#ffffff 72%,#c92856 85%,#4a133e 100%);
+ background-size:490% 100%;
+ text-shadow:0 0 4px rgba(255,246,249,.98),0 0 12px rgba(255,83,117,.82),0 0 25px rgba(195,42,93,.60),0 0 39px rgba(120,63,190,.44),0 0 54px rgba(62,17,58,.24);
+ animation:higherDimV4DominionText 2.04s ease-in-out infinite;
+}
+.player-title--higher-dimensional-7::before{
+ color:rgba(255,93,127,.49);-webkit-text-fill-color:rgba(255,93,127,.49);opacity:.66;
+ transform:translate(.02em,-.075em);
+ text-shadow:0 .15em rgba(112,61,188,.33),0 -.14em rgba(255,198,212,.23);
+ animation:higherDimV4DominionPhase 1.84s cubic-bezier(.42,0,.3,1) infinite;
+}
+.player-title--higher-dimensional-7::after{
+ inset:-1.23em -2.68em;opacity:.99;
+ background:
+  radial-gradient(circle at 2% 76%,rgba(255,131,151,.94) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 98% 20%,rgba(186,127,255,.91) 0 1.2px,transparent 2.3px),
+  repeating-linear-gradient(0deg,transparent 0 12px,rgba(211,52,91,.10) 13px 14px,transparent 15px 29px),
+  linear-gradient(90deg,transparent 0 7%,rgba(255,91,119,.39) 8% 9%,transparent 10.3% 24%,rgba(99,53,161,.25) 25% 26%,transparent 27.3% 46%,rgba(255,255,255,.20) 47% 48%,transparent 49.3% 67%,rgba(196,46,91,.29) 68% 69%,transparent 70.3% 90%,rgba(132,73,205,.33) 91% 92%,transparent 93.3%),
+  linear-gradient(106deg,transparent 0 14%,rgba(255,182,196,.22) 15% 16%,transparent 17.3% 37%,rgba(171,51,103,.26) 38% 39%,transparent 40.3% 69%,rgba(116,63,190,.25) 70% 71%,transparent 72.3%),
+  radial-gradient(ellipse at 7% 50%,rgba(189,37,85,.30),transparent 28%),
+  radial-gradient(ellipse at 93% 49%,rgba(103,57,174,.29),transparent 28%);
+ animation:higherDimV4DominionField 2.16s cubic-bezier(.42,0,.3,1) infinite;
+}
+
+/* Tier 8｜超維至尊 — 冰白白金空間壓縮型 */
+.player-title--higher-dimensional-8{
+ font-size:1.28em;letter-spacing:.048em;
+ background-image:linear-gradient(90deg,#57758a 0%,#b7eaff 11%,#ffffff 24%,#f2e6bc 37%,#ffffff 50%,#a9dcff 63%,#ffffff 76%,#e7dba9 88%,#657b8c 100%);
+ background-size:500% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,1),0 0 13px rgba(204,241,255,.86),0 0 26px rgba(170,214,244,.58),0 0 40px rgba(242,222,165,.36),0 0 54px rgba(87,124,151,.21);
+ animation:higherDimV4SupremeText 2.14s ease-in-out infinite;
+}
+.player-title--higher-dimensional-8::before{
+ color:rgba(227,249,255,.50);-webkit-text-fill-color:rgba(227,249,255,.50);opacity:.65;
+ transform:translate(.075em,0) scaleX(1.015);
+ text-shadow:-.14em 0 rgba(255,237,184,.24),.14em 0 rgba(134,216,255,.29);
+ animation:higherDimV4SupremePhase 1.92s ease-in-out infinite;
+}
+.player-title--higher-dimensional-8::after{
+ inset:-1.30em -2.76em;opacity:1;
+ background:
+  radial-gradient(circle at 2% 18%,rgba(255,255,255,1) 0 1.3px,transparent 2.4px),
+  radial-gradient(circle at 98% 82%,rgba(198,240,255,.98) 0 1.3px,transparent 2.4px),
+  conic-gradient(from 247deg at 5% 50%,transparent 0 13%,rgba(209,244,255,.66) 15% 21%,rgba(255,240,191,.23) 22% 24%,transparent 27% 100%),
+  conic-gradient(from 67deg at 95% 50%,transparent 0 13%,rgba(159,220,255,.62) 15% 21%,rgba(255,255,255,.22) 22% 24%,transparent 27% 100%),
+  radial-gradient(ellipse at center,rgba(235,250,255,.18) 0 14%,rgba(163,218,247,.10) 24%,transparent 41%),
+  linear-gradient(90deg,transparent 0 17%,rgba(255,255,255,.20) 18% 19%,transparent 20.5% 39%,rgba(229,217,174,.20) 40% 41%,transparent 42.5% 58%,rgba(146,217,255,.22) 59% 60%,transparent 61.5% 80%,rgba(255,255,255,.20) 81% 82%,transparent 83.5%),
+  radial-gradient(ellipse at 8% 50%,rgba(150,221,255,.29),transparent 28%),
+  radial-gradient(ellipse at 92% 50%,rgba(236,221,170,.25),transparent 28%);
+ animation:higherDimV4SupremeField 2.22s ease-in-out infinite;
+}
+
+/* Tier 9｜諸維唯一 — 白金淡金多相收束型 */
+.player-title--higher-dimensional-9{
+ font-size:1.28em;letter-spacing:.047em;
+ background-image:linear-gradient(91deg,#575d69 0%,#e3cd8e 10%,#ffffff 22%,#9fe3f0 34%,#ffffff 47%,#d8b7ef 59%,#ffffff 71%,#efd99a 84%,#676a76 100%);
+ background-size:520% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.99),0 0 12px rgba(240,222,163,.80),0 0 25px rgba(132,209,226,.52),0 0 38px rgba(184,139,224,.40),0 0 52px rgba(104,91,119,.20);
+ animation:higherDimV4UniqueText 1.98s ease-in-out infinite;
+}
+.player-title--higher-dimensional-9::before{
+ color:rgba(246,232,184,.46);-webkit-text-fill-color:rgba(246,232,184,.46);opacity:.72;
+ transform:translate(.15em,0);
+ text-shadow:-.19em .012em rgba(102,211,234,.27),.19em -.012em rgba(202,151,235,.25),-.34em 0 rgba(255,255,255,.12);
+ animation:higherDimV4UniquePhase 1.82s cubic-bezier(.44,0,.3,1) infinite;
+}
+.player-title--higher-dimensional-9::after{
+ inset:-1.27em -2.74em;opacity:1;
+ background:
+  radial-gradient(circle at 1% 28%,rgba(255,242,193,.96) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 99% 70%,rgba(211,176,244,.94) 0 1.2px,transparent 2.3px),
+  radial-gradient(circle at 16% 84%,rgba(150,230,245,.84) 0 1px,transparent 2px),
+  linear-gradient(90deg,transparent 0 8%,rgba(241,215,144,.37) 9% 10%,transparent 11.4% 27%,rgba(135,218,235,.27) 28% 29%,transparent 30.4% 42%,rgba(255,255,255,.22) 44% 46%,transparent 48% 59%,rgba(197,149,232,.27) 60% 61%,transparent 62.4% 79%,rgba(237,211,143,.34) 80% 81%,transparent 82.4% 100%),
+  linear-gradient(108deg,transparent 0 17%,rgba(159,226,239,.20) 18% 19%,transparent 20.3% 36%,rgba(242,223,165,.19) 37% 38%,transparent 39.3% 64%,rgba(201,158,231,.21) 65% 66%,transparent 67.3% 85%,rgba(255,255,255,.18) 86% 87%,transparent 88.3%),
+  radial-gradient(ellipse at center,rgba(255,255,255,.12) 0 10%,rgba(225,209,158,.08) 19%,transparent 38%),
+  radial-gradient(ellipse at 8% 50%,rgba(221,193,126,.27),transparent 28%),
+  radial-gradient(ellipse at 92% 50%,rgba(176,132,214,.26),transparent 28%);
+ animation:higherDimV4UniqueField 2.02s cubic-bezier(.44,0,.3,1) infinite;
+}
+
+/* Tier 10｜萬維之上 — 黑白／受控虹彩超脫型 */
 .player-title--higher-dimensional-10{
- font-size:1.29em;
- letter-spacing:.045em;
+ font-size:1.29em;letter-spacing:.045em;
  background-image:linear-gradient(90deg,#05070c 0%,#6e7480 8%,#ffffff 18%,#bff8ff 29%,#ffffff 39%,#ffd8a0 49%,#e7b7ff 59%,#ffffff 69%,#a8ffe5 80%,#ffffff 90%,#555d6b 96%,#07090e 100%);
  background-size:530% 100%;
  text-shadow:0 0 4px rgba(255,255,255,.99),0 0 12px rgba(212,247,255,.78),0 0 24px rgba(255,218,166,.46),0 0 36px rgba(220,173,255,.42),0 0 49px rgba(141,235,216,.26);
- animation:higherDimV3BeyondText 1.86s cubic-bezier(.44,0,.28,1) infinite;
+ animation:higherDimV4BeyondText 1.86s cubic-bezier(.44,0,.28,1) infinite;
 }
 .player-title--higher-dimensional-10::before{
- color:rgba(236,250,255,.48);
- -webkit-text-fill-color:rgba(236,250,255,.48);
- opacity:.70;
+ color:rgba(236,250,255,.48);-webkit-text-fill-color:rgba(236,250,255,.48);opacity:.70;
  transform:translate(.12em,-.01em);
  text-shadow:-.18em .012em rgba(97,230,255,.30),.18em -.016em rgba(233,157,255,.28),-.31em 0 rgba(255,210,124,.16);
- animation:higherDimV3BeyondPhase 1.74s cubic-bezier(.45,0,.3,1) infinite;
+ animation:higherDimV4BeyondPhase 1.74s cubic-bezier(.45,0,.3,1) infinite;
 }
 .player-title--higher-dimensional-10::after{
- inset:-1.30em -2.82em;
- opacity:1;
+ inset:-1.30em -2.82em;opacity:1;
  background:
   radial-gradient(circle at 1% 14%,rgba(255,255,255,1) 0 1.35px,transparent 2.5px),
   radial-gradient(circle at 99% 77%,rgba(195,245,255,.98) 0 1.35px,transparent 2.5px),
@@ -185,76 +354,65 @@
   radial-gradient(ellipse at center,rgba(0,0,0,.62) 0 9%,rgba(7,10,18,.38) 16%,rgba(255,255,255,.07) 24%,transparent 43%),
   radial-gradient(ellipse at 7% 50%,rgba(159,240,255,.25),transparent 27%),
   radial-gradient(ellipse at 93% 48%,rgba(220,173,255,.24),transparent 27%);
- animation:higherDimV3BeyondField 1.98s cubic-bezier(.44,0,.30,1) infinite;
+ animation:higherDimV4BeyondField 1.98s cubic-bezier(.44,0,.30,1) infinite;
 }
 
-@keyframes higherDimV3BaseText{
- 0%,100%{background-position:0 50%;filter:brightness(1)}
- 50%{background-position:100% 50%;filter:brightness(1.06)}
-}
-@keyframes higherDimV3BasePhase{
- 0%,100%{transform:translate(.055em,.012em);opacity:.42}
- 50%{transform:translate(-.045em,-.01em);opacity:.57}
-}
-@keyframes higherDimV3BaseField{
- 0%,100%{transform:scaleX(.985) translateX(-.5%);opacity:.78}
- 50%{transform:scaleX(1.025) translateX(.6%);opacity:.96}
-}
+@keyframes higherDimV4BaseText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.06)}}
+@keyframes higherDimV4BasePhase{0%,100%{transform:translate(.055em,.012em);opacity:.42}50%{transform:translate(-.045em,-.01em);opacity:.57}}
+@keyframes higherDimV4BaseField{0%,100%{transform:scaleX(.985) translateX(-.5%);opacity:.78}50%{transform:scaleX(1.025) translateX(.6%);opacity:.96}}
 
-@keyframes higherDimV3BreachText{
- 0%,100%{background-position:0 50%;filter:brightness(1)}
- 42%{background-position:82% 50%;filter:brightness(1.10)}
- 54%{background-position:100% 50%;filter:brightness(1.03)}
-}
-@keyframes higherDimV3BreachPhase{
- 0%,100%{transform:translate(.095em,-.018em) skewX(-1.4deg);opacity:.52}
- 38%{transform:translate(-.105em,.018em) skewX(1.1deg);opacity:.72}
- 52%{transform:translate(.035em,-.006em) skewX(-.4deg);opacity:.64}
- 72%{transform:translate(.125em,.006em) skewX(-1deg);opacity:.57}
-}
-@keyframes higherDimV3BreachField{
- 0%,100%{transform:translateX(-1.2%) skewX(-1.1deg) scaleX(.985);opacity:.78}
- 43%{transform:translateX(1.1%) skewX(.9deg) scaleX(1.035);opacity:1}
- 57%{transform:translateX(-.2%) skewX(-.35deg) scaleX(.995);opacity:.90}
-}
+@keyframes higherDimV4BreachText{0%,100%{background-position:0 50%;filter:brightness(1)}42%{background-position:82% 50%;filter:brightness(1.10)}54%{background-position:100% 50%;filter:brightness(1.03)}}
+@keyframes higherDimV4BreachPhase{0%,100%{transform:translate(.095em,-.018em) skewX(-1.4deg);opacity:.52}38%{transform:translate(-.105em,.018em) skewX(1.1deg);opacity:.72}52%{transform:translate(.035em,-.006em) skewX(-.4deg);opacity:.64}72%{transform:translate(.125em,.006em) skewX(-1deg);opacity:.57}}
+@keyframes higherDimV4BreachField{0%,100%{transform:translateX(-1.2%) skewX(-1.1deg) scaleX(.985);opacity:.78}43%{transform:translateX(1.1%) skewX(.9deg) scaleX(1.035);opacity:1}57%{transform:translateX(-.2%) skewX(-.35deg) scaleX(.995);opacity:.90}}
 
-@keyframes higherDimV3LawText{
- 0%,100%{background-position:0 50%;filter:brightness(1)}
- 50%{background-position:100% 50%;filter:brightness(1.09)}
-}
-@keyframes higherDimV3LawPhase{
- 0%,100%{transform:translate(-.085em,.006em);opacity:.55}
- 36%{transform:translate(.09em,-.012em);opacity:.73}
- 62%{transform:translate(.018em,.01em);opacity:.67}
-}
-@keyframes higherDimV3LawField{
- 0%,100%{transform:scaleX(.98) rotate(-.15deg);opacity:.82}
- 50%{transform:scaleX(1.035) rotate(.15deg);opacity:1}
-}
+@keyframes higherDimV4WalkerText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.08)}}
+@keyframes higherDimV4WalkerPhase{0%,100%{transform:translate(.16em,.002em);opacity:.52}35%{transform:translate(-.15em,-.008em);opacity:.72}68%{transform:translate(.05em,.012em);opacity:.62}}
+@keyframes higherDimV4WalkerField{0%,100%{transform:translateX(-1.6%) scaleX(.97);opacity:.78}50%{transform:translateX(1.8%) scaleX(1.035);opacity:1}}
 
-@keyframes higherDimV3BeyondText{
- 0%,100%{background-position:0 50%;filter:brightness(.98) contrast(1.02)}
- 46%{background-position:100% 50%;filter:brightness(1.09) contrast(1.07)}
- 63%{background-position:78% 50%;filter:brightness(1.02) contrast(1.04)}
-}
-@keyframes higherDimV3BeyondPhase{
- 0%,100%{transform:translate(.12em,-.01em);opacity:.55}
- 32%{transform:translate(-.13em,.012em);opacity:.76}
- 53%{transform:translate(.025em,-.014em);opacity:.86}
- 70%{transform:translate(0,0);opacity:.62}
-}
-@keyframes higherDimV3BeyondField{
- 0%,100%{transform:scaleX(1.035) translateX(.6%);opacity:.80}
- 38%{transform:scaleX(.97) translateX(-.8%);opacity:1}
- 58%{transform:scaleX(.935) translateX(.1%);opacity:.94}
- 76%{transform:scaleX(1.015) translateX(.4%);opacity:.86}
-}
+@keyframes higherDimV4BodyText{0%,100%{background-position:0 50%;filter:brightness(1)}44%{background-position:100% 50%;filter:brightness(1.09)}58%{background-position:80% 50%;filter:brightness(1.03)}}
+@keyframes higherDimV4BodyPhase{0%,100%{transform:translate(-.10em,.014em) skewX(1.2deg);opacity:.55}36%{transform:translate(.12em,-.014em) skewX(-1.1deg);opacity:.75}60%{transform:translate(.02em,.006em);opacity:.66}}
+@keyframes higherDimV4BodyField{0%,100%{transform:scaleX(.98) skewX(.7deg);opacity:.80}47%{transform:scaleX(1.04) skewX(-.8deg);opacity:1}63%{transform:scaleX(.995) skewX(.2deg);opacity:.90}}
+
+@keyframes higherDimV4TrueFormText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.07)}}
+@keyframes higherDimV4TrueFormPhase{0%,100%{transform:translate(.045em,0);opacity:.49}50%{transform:translate(-.045em,0);opacity:.64}}
+@keyframes higherDimV4TrueFormField{0%,100%{transform:scaleX(.985) scaleY(.98);opacity:.82}50%{transform:scaleX(1.025) scaleY(1.015);opacity:1}}
+
+@keyframes higherDimV4ResonanceText{0%{background-position:0 50%}50%{background-position:100% 50%;filter:brightness(1.08)}100%{background-position:0 50%}}
+@keyframes higherDimV4ResonancePhase{0%,100%{transform:translate(-.075em,.008em);opacity:.54}33%{transform:translate(.09em,-.015em);opacity:.74}66%{transform:translate(.02em,.024em);opacity:.66}}
+@keyframes higherDimV4ResonanceField{0%,100%{transform:scaleX(.97) translateX(-.8%);opacity:.78}48%{transform:scaleX(1.04) translateX(.9%);opacity:1}66%{transform:scaleX(.99) translateX(-.2%);opacity:.88}}
+
+@keyframes higherDimV4LawText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.09)}}
+@keyframes higherDimV4LawPhase{0%,100%{transform:translate(-.085em,.006em);opacity:.55}36%{transform:translate(.09em,-.012em);opacity:.73}62%{transform:translate(.018em,.01em);opacity:.67}}
+@keyframes higherDimV4LawField{0%,100%{transform:scaleX(.98) rotate(-.15deg);opacity:.82}50%{transform:scaleX(1.035) rotate(.15deg);opacity:1}}
+
+@keyframes higherDimV4DominionText{0%,100%{background-position:0 50%;filter:brightness(1)}48%{background-position:100% 50%;filter:brightness(1.09)}}
+@keyframes higherDimV4DominionPhase{0%,100%{transform:translate(.02em,-.075em);opacity:.53}40%{transform:translate(-.02em,.085em);opacity:.73}65%{transform:translate(0,-.018em);opacity:.64}}
+@keyframes higherDimV4DominionField{0%,100%{transform:scaleY(.96) translateY(-1%);opacity:.80}50%{transform:scaleY(1.04) translateY(1%);opacity:1}}
+
+@keyframes higherDimV4SupremeText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.08)}}
+@keyframes higherDimV4SupremePhase{0%,100%{transform:translate(.075em,0) scaleX(1.015);opacity:.53}50%{transform:translate(-.075em,0) scaleX(.985);opacity:.70}}
+@keyframes higherDimV4SupremeField{0%,100%{transform:scaleX(1.04);opacity:.80}45%{transform:scaleX(.955);opacity:1}66%{transform:scaleX(1.01);opacity:.90}}
+
+@keyframes higherDimV4UniqueText{0%,100%{background-position:0 50%;filter:brightness(1)}46%{background-position:100% 50%;filter:brightness(1.08)}68%{background-position:78% 50%;filter:brightness(1.03)}}
+@keyframes higherDimV4UniquePhase{0%,100%{transform:translate(.15em,0);opacity:.54}34%{transform:translate(-.14em,.012em);opacity:.76}56%{transform:translate(.03em,-.01em);opacity:.84}74%{transform:translate(0,0);opacity:.62}}
+@keyframes higherDimV4UniqueField{0%,100%{transform:scaleX(1.04);opacity:.80}42%{transform:scaleX(.965);opacity:1}63%{transform:scaleX(.94);opacity:.94}78%{transform:scaleX(1.01);opacity:.86}}
+
+@keyframes higherDimV4BeyondText{0%,100%{background-position:0 50%;filter:brightness(.98) contrast(1.02)}46%{background-position:100% 50%;filter:brightness(1.09) contrast(1.07)}63%{background-position:78% 50%;filter:brightness(1.02) contrast(1.04)}}
+@keyframes higherDimV4BeyondPhase{0%,100%{transform:translate(.12em,-.01em);opacity:.55}32%{transform:translate(-.13em,.012em);opacity:.76}53%{transform:translate(.025em,-.014em);opacity:.86}70%{transform:translate(0,0);opacity:.62}}
+@keyframes higherDimV4BeyondField{0%,100%{transform:scaleX(1.035) translateX(.6%);opacity:.80}38%{transform:scaleX(.97) translateX(-.8%);opacity:1}58%{transform:scaleX(.935) translateX(.1%);opacity:.94}76%{transform:scaleX(1.015) translateX(.4%);opacity:.86}}
 
 @media(max-width:600px){
  .player-title--higher-dimensional{letter-spacing:.052em}
  .player-title--higher-dimensional::after{transform-origin:center}
  .player-title--higher-dimensional-1::after{inset:-1.08em -2.28em}
+ .player-title--higher-dimensional-2::after{inset:-1.06em -2.34em}
+ .player-title--higher-dimensional-3::after{inset:-1.08em -2.30em}
+ .player-title--higher-dimensional-4::after{inset:-1.10em -2.30em}
+ .player-title--higher-dimensional-5::after{inset:-1.08em -2.34em}
  .player-title--higher-dimensional-6::after{inset:-1.10em -2.32em}
+ .player-title--higher-dimensional-7::after{inset:-1.08em -2.32em}
+ .player-title--higher-dimensional-8::after{inset:-1.12em -2.38em}
+ .player-title--higher-dimensional-9::after{inset:-1.10em -2.36em}
  .player-title--higher-dimensional-10::after{inset:-1.14em -2.42em}
 }
 
