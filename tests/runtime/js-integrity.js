@@ -9,12 +9,13 @@ assert(files.length>0,"找不到任何 JavaScript 檔案。");
 const syntaxFailures=[];
 for(const file of files){const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});if(checked.status!==0)syntaxFailures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());}
 assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFailures.join("\n\n"));
-const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js");
+const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js");
 const localScripts=[...index.matchAll(/<script\s+(?:defer\s+)?(?:data-[^=]+="[^"]*"\s+)*src=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
 const pos=name=>index.indexOf('src="'+name+'?v=');
 assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
-assert(pos("saveversionguard.js")>pos("savemigration.js"),"saveversionguard.js 必須在正式 migration 之後載入。");
+assert(pos("saveversionguard.js")>pos("savemigration.js")&&pos("saveversionguard.js")<pos("ui.js"),"saveversionguard.js 必須在 migration 之後、ui.js 啟動 load 前載入。");
+assert(/saveversionguard\.js\?v=20260930-audit-batch2/.test(index),"Save Safety V1 修改後必須更新 index.html cache-bust。");
 assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
 assert(pos("integritycontract.js")<pos("runtimeintegrity.js")&&pos("runtimeintegrity.js")<pos("finalintegrity.js"),"Integrity Contract → Runtime → Final 載入順序錯誤。");
 assert(!index.includes("legacy Runtime Integrity cache-bust contract marker"),"index.html 不應再保留只為舊 regex 存在的 cache-bust marker。");
@@ -24,6 +25,12 @@ assert(/const VERSION=6;/.test(thirdWorldDungeonUi)&&/THIRD_WORLD_ARENA_LIVE_VER
 assert(/mode==="arena"\)return \{visible:true,enabled:true/.test(thirdWorldDungeonUi)&&/buttonLabel:"進入高維競技場"/.test(thirdWorldDungeonUi),"高維競技場正式 policy 必須可進入。");
 assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
 assert(/VERSION_BELOW_MINIMUM/.test(contract)&&/CIVILIZATION_INTEGRITY_MINIMUM_VERSIONS/.test(contract)&&/runCanonicalCivilizationIntegrityContract/.test(contract),"Canonical Integrity Contract 必須使用最低版本策略並保留不受 extension 覆寫的正式入口。");
+assert(/const SAVE_SAFETY_VERSION=1/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V1 與持久安全備份 key 缺失。");
+assert(/strictPreSchema16Backup/.test(saveGuard)&&/pre-schema16-backup-failed/.test(saveGuard)&&/original localStorage entry was preserved/.test(saveGuard),"Schema16 前 migration 必須在備份失敗時 fail-closed 並保留原存檔。");
+assert(/reset-game/.test(saveGuard)&&/已取消清除進度/.test(saveGuard),"resetGame 必須先建立安全備份，失敗時取消清除。");
+assert(/gm-import/.test(saveGuard)&&/已取消匯入/.test(saveGuard),"GM 匯入必須先建立安全備份，失敗時取消匯入。");
+assert(/storageSnapshot/.test(saveGuard)&&/inventoryCount/.test(saveGuard)&&/lostGearCount/.test(saveGuard),"Save Safety 必須提供 localStorage／背包容量診斷，不得靠刪玩家資料降容量。");
+assert(/localSaveSafetySnapshot/.test(saveGuard)&&/ensureLocalSaveSafetyBackup/.test(saveGuard)&&/installLocalSaveDestructiveGuards/.test(saveGuard),"Save Safety V1 公開 API 缺失。");
 assert(/const VERSION=21;/.test(runtime)&&/runCanonicalCivilizationIntegrityContract/.test(runtime)&&/LEGACY_DIAGNOSTIC/.test(runtime),"Runtime Integrity 應為 V21，並把歷史自測降為 diagnostics。");
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION\)<4/.test(runtime)&&/OFFLINE_BATTLE_SAMPLE_VERSION/.test(runtime),"Runtime Integrity 必須依正式 Offline V4 owner／動態 sample version 驗證。");
 assert(/balanceVersion\)!==7/.test(runtime)&&/rankBalanceVersion\)!==4/.test(runtime),"Runtime Integrity Arena profile 必須同步 Balance V7／Rank V4。");
@@ -35,4 +42,4 @@ assert(/GAME_GUIDE_VERSION=24/.test(gameGuideSource),"遊戲說明正式 owner �
 assert(fs.existsSync("tests/runtime/browser-smoke.js"),"缺少真正瀏覽器啟動 smoke test。");
 const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguide-extension-integrity.js"],{encoding:"utf8"});
 assert(guideExtensionBehavior.status===0,"Guide shared extension behavior regression failed：\n"+String(guideExtensionBehavior.stderr||guideExtensionBehavior.stdout||"unknown error").trim());
-console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, live W3 dungeon policy, offline V4 owner and Arena V7/V4 are synchronized.");
+console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, Save Safety V1, live W3 dungeon policy, offline V4 owner and Arena V7/V4 are synchronized.");
