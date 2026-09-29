@@ -8,6 +8,7 @@
  }
  function specializationLocked(target=null){return phase(target)>=2;}
  function markLocked(target=null){return phase(target)>=2;}
+ function fixedValueHtml(text){return `<div class="btn gm-formal-fixed-value" aria-disabled="true" tabindex="-1" style="cursor:default;pointer-events:none;opacity:.82">${String(text||"")}</div>`;}
 
  const baseSpecHtml=window.gmSpecializationManagementHtml;
  if(typeof baseSpecHtml==="function"){
@@ -17,9 +18,10 @@
    const defs=window.SPECIALIZATION_DEFS&&typeof window.SPECIALIZATION_DEFS==="object"?window.SPECIALIZATION_DEFS:{};
    const max=Math.max(0,Math.floor(Number(window.SPECIALIZATION_MAX_LEVEL)||60));
    const world=phase()===3?"高維紀元":"宇宙紀元";
-   const rows=keys.map(key=>`<label><span>${String(defs[key]?.name||key)}</span><select class="btn" id="gmSpec-manage-${key}" disabled><option value="${max}" selected>Lv.${max}</option></select></label>`).join("");
-   return `<div class="muted gm-hub-note">目前${world}正式專精固定 Lv.${max}，無法修改。GM 測試區仍可自由測試 Lv.0～Lv.${max}。</div><div class="gm-specialization-grid">${rows}</div><div class="controls"><button class="btn blue" onclick="gmApplySpecializations()" disabled>套用專精等級</button></div>`;
+   const rows=keys.map(key=>`<label><span>${String(defs[key]?.name||key)}</span>${fixedValueHtml(`Lv.${max}`)}</label>`).join("");
+   return `<div class="muted gm-hub-note">目前${world}正式專精固定 Lv.${max}，無法修改。GM 測試區仍可自由測試 Lv.0～Lv.${max}。</div><div class="gm-specialization-grid">${rows}</div>`;
   };
+  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","spec-manage",()=>window.gmSpecializationManagementHtml());
  }
 
  const baseMarkHtml=window.gmMarkManagementHtml;
@@ -27,14 +29,17 @@
   window.gmMarkManagementHtml=function(){
    if(!markLocked())return baseMarkHtml();
    const rows=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
-   const grid=rows.map(row=>`<label><span>${String(row?.markName||row?.markId||"")}</span><select class="btn" id="gmMark-manage-${String(row?.markId||"")}" disabled><option value="10" selected>Lv.10</option></select></label>`).join("");
+   const grid=rows.map(row=>`<label><span>${String(row?.markName||row?.markId||"")}</span>${fixedValueHtml("Lv.10")}</label>`).join("");
    const world=phase()===3?"高維紀元":"宇宙紀元";
-   return `<div class="muted gm-hub-note">目前${world}正式角色的 10 枚印記固定為 Lv.10，無法修改。GM 測試區仍可自由測試 Lv.0～Lv.10。</div><div class="gm-specialization-grid gm-mark-grid">${grid}</div><div class="controls"><button class="btn blue" onclick="gmApplyFormalMarks()" disabled>套用印記狀態</button></div>`;
+   return `<div class="muted gm-hub-note">目前${world}正式角色的 10 枚印記固定為 Lv.10，無法修改。GM 測試區仍可自由測試 Lv.0～Lv.10。</div><div class="gm-specialization-grid gm-mark-grid">${grid}</div>`;
   };
+  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","marks-manage",()=>window.gmMarkManagementHtml());
  }
 
  window.gmBatch16FormalWorldPhase=phase;
  window.gmBatch16SpecializationLocked=specializationLocked;
  window.gmBatch16MarkLocked=markLocked;
- window.GM_BATCH16_FORMAL_CONTROLS_VERSION=1;
+ window.gmBatch16FixedValueHtml=fixedValueHtml;
+ window.GM_BATCH16_FORMAL_CONTROLS_VERSION=2;
+ window.GM_BATCH16_FIXED_VALUE_UI_VERSION=1;
 })();
