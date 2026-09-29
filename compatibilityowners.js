@@ -1,34 +1,43 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
  const SAVE_SCHEMA_OWNER="savemigration";
  const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
  const ARENA_RUNTIME_OWNER="arenaByWorld";
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
- const SAVE_HOOK_CORE_VERSION=1;
- const SCRIPT_LOAD_POLICY_VERSION=2;
- const saveHooks=new Map();
+ const SAVE_HOOK_CORE_VERSION=2;
+ const SCRIPT_LOAD_POLICY_VERSION=3;
+ const beforeSaveHooks=new Map();
+ const afterSaveHooks=new Map();
+ const settlementSaveHooks=new Map();
  const baseSave=typeof window.save==="function"?window.save:null;
 
- function registerAfterSaveHook(id,fn){
-  const key=String(id||"").trim();
-  if(!key||typeof fn!=="function")return false;
-  saveHooks.set(key,fn);
-  return true;
- }
- function unregisterAfterSaveHook(id){return saveHooks.delete(String(id||"").trim());}
- function runAfterSaveHooks(context){
-  saveHooks.forEach((fn,id)=>{
-   try{fn(context);}catch(error){console.error(`[文明戰線] Save hook failed: ${id}`,error);}
+ function registerHook(map,id,fn){const key=String(id||"").trim();if(!key||typeof fn!=="function")return false;map.set(key,fn);return true;}
+ function unregisterHook(map,id){return map.delete(String(id||"").trim());}
+ function runHooks(map,context,label){
+  map.forEach((fn,id)=>{
+   try{const result=fn(context);if(label==="before"&&result===false){context.cancelled=true;if(!context.cancelReason)context.cancelReason=`hook:${id}`;}}
+   catch(error){console.error(`[文明戰線] Save ${label} hook failed: ${id}`,error);}
   });
  }
+ function registerBeforeSaveHook(id,fn){return registerHook(beforeSaveHooks,id,fn);}
+ function unregisterBeforeSaveHook(id){return unregisterHook(beforeSaveHooks,id);}
+ function registerAfterSaveHook(id,fn){return registerHook(afterSaveHooks,id,fn);}
+ function unregisterAfterSaveHook(id){return unregisterHook(afterSaveHooks,id);}
+ function registerSaveSettlementHook(id,fn){return registerHook(settlementSaveHooks,id,fn);}
+ function unregisterSaveSettlementHook(id){return unregisterHook(settlementSaveHooks,id);}
  if(baseSave){
   const hookedSave=function(show=true){
-   const ok=baseSave(show);
-   if(ok===true)runAfterSaveHooks({show:show!==false,state:typeof state!=="undefined"?state:null,savedAt:Date.now()});
-   return ok;
+   const context={show:show!==false,state:typeof state!=="undefined"?state:null,startedAt:Date.now(),cancelled:false,cancelReason:"",result:false,savedAt:0};
+   runHooks(beforeSaveHooks,context,"before");
+   if(!context.cancelled)context.result=baseSave(show)===true;
+   if(context.result===true){context.savedAt=Date.now();runHooks(afterSaveHooks,context,"after");}
+   context.finishedAt=Date.now();runHooks(settlementSaveHooks,context,"settlement");
+   return context.result===true;
   };
+  hookedSave.__saveHookOwner="compatibilityowners";
+  hookedSave.__saveHookCoreVersion=SAVE_HOOK_CORE_VERSION;
   window.save=hookedSave;
   try{save=hookedSave;}catch(e){}
  }
@@ -37,9 +46,13 @@
   if(!name)return "core";
   if(name.startsWith("storydata-")||["storyintegrity.js","storyui.js","storymigration.js","storyprogress.js","storyrecordtabs.js","storyruntimeintegrity.js"].includes(name))return "story";
   if(name.includes("integrity"))return "integrity";
-  if(name.startsWith("gm")||name.includes("gm.")||name.includes("gmp")||name.endsWith("gm.js")||["vipgm.js","civilizationgm.js","specialgmbatch.js","dungeongm.js","arenagm5.js","dungeonvoidgmmanage.js","batch5ui.js","mirrordungeongm.js","levelprogressionaudit.js"].includes(name))return "gm";
+  if(name.startsWith("gm")||name.includes("gm.")||name.includes("gmp")||name.endsWith("gm.js")||["vipgm.js","civilizationgm.js","specialgmbatch.js","dungeongm.js","arenagm5.js","dungeonvoidgmmanage.js","batch5ui.js","mirrordungeongm.js","levelprogressionaudit.js","enhancementworld3gm.js","thirdworldarenagm.js","secondworldcalamitygm.js","calamitygm.js"].includes(name))return "gm";
   if(name.startsWith("worldmaps-")||name.startsWith("secondworld")||name.startsWith("thirdworld")||name.startsWith("worldphase")||name.startsWith("worldmap"))return "world";
   return "core";
+ }
+ function scriptLoadPolicySnapshot(path){
+  const group=scriptLoadGroupFor(path),deferred=["gm","story","integrity"].includes(group);
+  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,group,startupCritical:!deferred,deferRecommended:deferred,fetchPriority:deferred?"low":"auto"});
  }
 
  window.LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION;
@@ -56,11 +69,18 @@
  window.ARENA_LEGACY_ALIAS_AUDIT_VERSION=1;
  window.SAVE_HOOK_CORE_VERSION=SAVE_HOOK_CORE_VERSION;
  window.SAVE_HOOK_RUNTIME_OWNER="compatibilityowners";
+ window.registerBeforeSaveHook=registerBeforeSaveHook;
+ window.unregisterBeforeSaveHook=unregisterBeforeSaveHook;
  window.registerAfterSaveHook=registerAfterSaveHook;
  window.unregisterAfterSaveHook=unregisterAfterSaveHook;
- window.getAfterSaveHookIds=function(){return Array.from(saveHooks.keys());};
+ window.registerSaveSettlementHook=registerSaveSettlementHook;
+ window.unregisterSaveSettlementHook=unregisterSaveSettlementHook;
+ window.getBeforeSaveHookIds=function(){return Array.from(beforeSaveHooks.keys());};
+ window.getAfterSaveHookIds=function(){return Array.from(afterSaveHooks.keys());};
+ window.getSaveSettlementHookIds=function(){return Array.from(settlementSaveHooks.keys());};
  window.SCRIPT_LOAD_POLICY_VERSION=SCRIPT_LOAD_POLICY_VERSION;
  window.scriptLoadGroupFor=scriptLoadGroupFor;
+ window.scriptLoadPolicySnapshot=scriptLoadPolicySnapshot;
  window.SCRIPT_LOAD_GROUPS=Object.freeze(["core","world","gm","story","integrity"]);
  window.LEVEL_CAP_THREE_WORLD_COMPATIBILITY_VERSION=1;
 
@@ -77,6 +97,6 @@
   if(typeof window.effectiveExpNeed!=="function"||window.effectiveExpNeed(1000,universe)!==0||window.effectiveExpNeed(1000,higher)!==10000000||window.effectiveExpNeed(1999,higher)!==10000000||window.effectiveExpNeed(2000,higher)!==0)errors.push({code:"LEVEL_EXP_RUNTIME_BEHAVIOR",u1000:window.effectiveExpNeed?.(1000,universe),h1000:window.effectiveExpNeed?.(1000,higher),h1999:window.effectiveExpNeed?.(1999,higher),h2000:window.effectiveExpNeed?.(2000,higher)});
  }catch(error){errors.push({code:"LEVEL_RUNTIME_PROBE_EXCEPTION",error:String(error?.message||error)});}
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
- if(!baseSave||typeof window.registerAfterSaveHook!=="function")errors.push({code:"SAVE_HOOK_OWNER"});
+ if(!baseSave||typeof window.registerBeforeSaveHook!=="function"||typeof window.registerAfterSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function")errors.push({code:"SAVE_HOOK_OWNER"});
  window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors};
 })();
