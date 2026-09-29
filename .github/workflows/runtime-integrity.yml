@@ -9,6 +9,7 @@ on:
       - '**/*.js'
       - 'index.html'
       - 'adventureuipolish.css'
+      - 'thirdworldarena.css'
       - 'assets/**'
       - 'README.md'
       - 'PROJECT_HANDOFF.md'
