@@ -10,13 +10,13 @@
 
 # 0. 本次交接基準
 
-第 13 批正式劇情內容與 Story 收尾已完成；本次 handoff 更新前的功能 HEAD 為：
+第 13 批正式劇情內容與 Story 收尾已完成；其後已完成一次 **W3 Story 舊資料／completion owner 優化**。本次 handoff 更新前的功能 HEAD 為：
 
 ```text
-89575a1279603d7ccd9d4538f350e303211d3079
+829cbb7fd412ab0eae974eec1d0e6527b867d9b7
 ```
 
-該 HEAD 已包含第 13-1～13-8 批正式 Story Framework／GM 預覽／322 頁高維正文／Final completion／三紀元 Story Record／Story Integrity 最終封口。此 handoff 本身會再產生 Markdown-only commit，因此下一個對話仍必須重新讀 current `main`，不可把這裡記載的 SHA 當成永久真實來源。
+該 HEAD 已包含第 13-1～13-8 批正式 Story Framework／GM 預覽／322 頁高維正文／Final completion／三紀元 Story Record／Story Integrity 最終封口，以及第 13 批後的舊 Schema16 W3 Story history migration 與 completion owner 收斂。此 handoff 本身會再產生 Markdown-only commit，因此下一個對話仍必須重新讀 current `main`，不可把這裡記載的 SHA 當成永久真實來源。
 
 已完成的第 13 批結構：
 
@@ -44,6 +44,7 @@ Final：31 頁
 
 - 第 9～12 大批及相關優化：高維正式 UI、成長、戰鬥、連戰、回顧、Story Framework 等完成；
 - 第 13 大批 13-1～13-8：**正式完成**；高維 11/11 Story、Final completion、GM 預覽、三紀元 Story Record 與 Story Integrity closure 都已進 current main；
+- 第 13 批後 Story legacy 優化：**已完成**；舊 Schema16 W3 開發期 Story refs 會一次性重建，Boss／Core／Stage／W1/W2 Story history 保留，W3 completion 收斂到 shared Story Progress owner；
 - 宇宙紀元 Arena Rank 8～10 高階平衡已重新校準；
 - **剩餘正式施工只剩第 14、15 批。**
 
@@ -57,6 +58,10 @@ THIRD_WORLD_RUN_VERSION = 7
 THIRD_WORLD_CONTINUOUS_RUNTIME_VERSION = 4
 THIRD_WORLD_RUN_INTEGRITY_VERSION = 8
 CIVILIZATION_STORY_PROGRESS_VERSION = 17
+STORY_MIGRATION_VERSION = 6
+THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION = 1
+THIRD_WORLD_STORY_CONTENT_VERSION = 1
+THIRD_WORLD_STORY_COMPLETION_SOURCE_VERSION = 1
 STORY_RUNTIME_INTEGRITY_VERSION = 25
 STORY_RECORD_TABS_VERSION = 9
 STORY_RECORD_WORLD_REVIEW_VERSION = 4
@@ -101,6 +106,7 @@ Arena rankBalanceVersion = 4
 15. Integrity／Actions 沒有實際回傳綠燈時，不可宣稱 CI 已綠。
 16. 玩家正式用語固定為 **「10 名高維存在」**；開發對話簡稱不得進正式玩家文案。
 17. 若 Arena 相關舊對話係數與 current main 衝突，必須重讀 `dungeonarena.js`／`dungeonprogress.js`，不可抄舊係數。
+18. W3 Story 完成歷史的唯一權威為 shared `storyProgress.completedStories`；`thirdworldphase.js` 只可依 Boss progress reconciliation `story.unlockedStage`，不得另行決定 Intro／Final completion。
 
 ---
 
@@ -205,6 +211,12 @@ story.unlockedStage
 story.finalSeen
 ```
 
+Shared Story Progress 另有 additive optional marker：
+
+```text
+storyProgress.thirdWorldContentVersion = 1
+```
+
 不得 persist 的 runtime／derived 狀態包含：
 
 ```text
@@ -232,6 +244,7 @@ title tier
 Schema 16 政策：
 
 - `coreProgress` 是 additive optional field，舊 Schema16 缺少時預設 0；
+- `storyProgress.thirdWorldContentVersion` 也是 additive optional field，因此仍維持 Schema16，不升 Schema17；
 - normalization-only 可維持同 schema；
 - semantic reinterpretation／persistent field removal／incompatible structure 才需升 schema；
 - Schema 1～15 若夾帶 W3，視為開發期資料並丟棄 W3 state；
@@ -260,7 +273,36 @@ entryVersion ≥2：
 - Lv10 overflow 回收到 `dimensionalStrings`；
 - 不吃掉合法已投入資源。
 
-第 13 批 Story 完整化沒有新增 persistent 欄位，Save Schema 仍為 16，不需要新 migration。
+## 第 13 批後 W3 Story 舊資料正式邊界
+
+第 13 批施工期間，正式 Story ID 已分批存在，因此舊 Schema16 測試存檔可能帶有與現在相同的 `higher-dimensional-*` pending／completed refs。只用 ID 是否仍存在已無法判斷它是開發期完成紀錄還是目前正式內容完成紀錄。
+
+current main 的處理方式：
+
+```text
+THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION = 1
+THIRD_WORLD_STORY_CONTENT_VERSION = 1
+```
+
+對 `thirdWorld` 已存在、但 `storyProgress.thirdWorldContentVersion` 缺少或低於 1 的舊 Schema16 存檔：
+
+- **只重置 W3 Story history refs**：移除 `completedStories` 中 `higher-dimensional-*` 項目；
+- 若 `pendingStory` 指向 W3 Story，清成 null；
+- W1／W2 的 `completedStories` 與 pending history 不受影響；
+- W3 `bosses[].currentHp`、`coreLevel`、`coreProgress`、`dimensionalStrings`、canonical Stage 與其他正式進度全部保留；
+- 寫入 `thirdWorldContentVersion = 1`，只做一次；
+- 之後 shared Story queue 會依 Boss progress 推導出的 canonical `story.unlockedStage`，從第一個尚未正式完成的 W3 Story 依序補播；
+- 如果讀到 **高於目前版本** 的 future `thirdWorldContentVersion`，fail-closed：不降版、不清 refs。
+
+新存檔與目前正式存檔直接標記 version 1，不會反覆清除合法 W3 Story 完成紀錄。
+
+### Completion owner 收斂
+
+- `storyProgress.completedStories` 是 W3 Story completion history 的唯一權威；
+- `storyprogress.js` 的 `reconcileThirdWorldStoryCompletionState()` 由正式 completed history 推導 `story.introSeen`、`story.finalSeen` 與 `thirdWorld.completed`；
+- `thirdworldphase.js` 的 `reconcileThirdWorldStoryState()` 現在只做 **Stage-only reconciliation**：由 Boss progress 修正 `story.unlockedStage`；
+- `thirdworldphase.js` 不再因 contentReady／Boss gate 直接寫 Intro／Final completion flags，避免雙 owner；
+- Final 仍必須 Boss 全滅＋Stage10＋正式 Final Story 完成才可 `thirdWorld.completed=true`。
 
 Arena 舊評估則有獨立 compatibility version；見第 13 節。
 
@@ -750,6 +792,7 @@ final stage 10 / 0% ×1
 - GM replay／紀錄 replay 不得冒充正式 completion；
 - post-flow：`Run Summary → Story → Title Notice`；
 - reload recovery／pending recovery／legacy reference cleanup 已完成；
+- 舊 Schema16 W3 開發期 Story refs 由 `thirdWorldContentVersion` migration 一次性重建；
 - Story Record 使用相同正式 Story catalog 與 completed history，不建立獨立完成狀態。
 
 正式資料檔：
@@ -765,7 +808,9 @@ storydata-higher-dimensional-final.js             Final
 
 ## Completion 單一 owner
 
-`storyprogress.js` 是 W3 Story completion framework 正式 shared owner。
+`storyprogress.js` 是 W3 Story completion framework 正式 shared owner，`storyProgress.completedStories` 是正式 completion history authority。
+
+`thirdworldphase.js` 只負責從 Boss progress 重建 `story.unlockedStage`，不得再直接清寫 Intro／Final／`thirdWorld.completed`。
 
 Final gate：
 
@@ -776,17 +821,17 @@ story.unlockedStage >= 10
 Final Story 有正式 content 且由正式流程完成
 ```
 
-Final 正式完成才原子寫：
+Final 正式完成才由 shared owner 原子寫：
 
 ```text
 thirdWorld.story.finalSeen = true
 thirdWorld.completed = true
 ```
 
-Intro 完成同步：
+Intro completion 同樣由 shared completed history 同步：
 
 ```text
-thirdWorld.story.introSeen = true
+thirdWorld.story.introSeen = completedStories.has("higher-dimensional-intro")
 ```
 
 10 名高維存在全部擊破、Stage10、Final eligibility 都不會自行把 `thirdWorld.completed` 寫成 true；必須真正完成 Formal Final Story lifecycle。
@@ -928,6 +973,9 @@ gmstorytest.js
 13. 宇宙 Arena Rank9 卡解鎖風險 → Rank 8～10 曲線已放鬆，版本升 Balance7／RankBalance4，舊評估自動失效重算。
 14. 第 13-7 初版 Final 第 20 頁超過 W3 155 字上限 → 已精簡並由 Story Integrity 綠燈驗證。
 15. 第 13-8 補上正式高維 Story Record，避免 W3 11/11 正文完成後只能從 GM 或即時流程查看、玩家紀錄頁仍缺高維入口。
+16. 第 13 批施工期 Schema16 W3 Story ID 與最終正式 ID 相同，舊測試 completed/pending refs 可能誤被視為正式完成 → 已用 `thirdWorldContentVersion=1` 一次性清理 W3 Story refs，保留 Boss／Core／Stage／W1/W2 history，並由 shared queue 正式補播。
+17. W3 completion 曾同時由 `thirdworldphase.js` 與 `storyprogress.js` reconciliation 涉及 → 已收斂；phase 只重建 Stage，Intro／Final／completed 只由 shared Story Progress completion history 推導。
+18. 本次自我檢查曾發現 `index.html` 誤動 `calamitystateintegrity.js` cache-bust → 已立即恢復原值；同時保留既有 Runtime Integrity 舊 cache-bust contract marker，實際載入仍使用新的 W3 Story optimization cache-bust。
 
 ---
 
@@ -958,7 +1006,8 @@ gmstorytest.js
 - Final eligibility／queue／completion owner；
 - `story.finalSeen`＋`thirdWorld.completed` 只由 shared completion owner 在 Formal Final 完成時寫入；
 - 高維 Story Record＋宇宙／銀河回顧；
-- Story source purity／meta language／format／flow／record behavioral regression。
+- Story source purity／meta language／format／flow／record behavioral regression；
+- 第 13 批後 legacy Story optimization：W3 content version boundary、舊 Schema16 W3 refs 一次性重建、completion owner 收斂、`tests/story/legacy-thirdworld.js` regression。
 
 ## 第14批：副本／舊系統整合＋W3 競技場決策
 
@@ -1061,6 +1110,7 @@ storyui.js
 storyrecordtabs.js
 gmstorytest.js
 thirdworldphase.js
+thirdworldmigrationregression.js
 thirdworldprogress.js
 tests/story/*
 ```
@@ -1106,6 +1156,10 @@ thirdworldprogress.js
 thirdworldrun.js
 thirdworldintegritycontract.js
 savemigration.js
+storymigration.js
+storyprogress.js
+thirdworldphase.js
+thirdworldmigrationregression.js
 offlinestatecore.js
 offlineworld3adapter.js
 runtimeintegrity.js
@@ -1136,6 +1190,8 @@ W3 foundation / entry / save / migration
 → shared Story Registry / W3 trigger / queue / reload recovery
 → settlement→Story / completion-ready / post-flow
 → Story normalization / pending arbitration / formal lifecycle identity
+→ W3 Story content-version legacy migration / canonical replay
+→ W3 Story completion owner convergence to shared Story Progress
 → W3 player semantics cleanup
 → W3 inventory processing / zero-resource policy
 → W3 Dungeon / VIP phase-aware presentation
@@ -1164,7 +1220,7 @@ W3 foundation / entry / save / migration
 
 若新對話要承接並先檢查第14批，直接貼：
 
-> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 current `main` 的實際程式碼，完整承接《文明戰線》專案。`main` 是唯一真實來源，不要只靠 handoff 或舊對話記憶。第13批 Story 已完成 13-1～13-8，高維正式內容為 11/11；現在剩第14～15批。先重新讀 Dungeon／Mirror／Void／Special／Arena 相關正式 owner，確認 W3 現有 bounty hidden、Arena provisional disabled、Mirror／Void shared、Story／Completion 不受副本污染，再和我討論或執行第14批。現在若我說先不要修改，就只能檢查與分析。
+> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 current `main` 的實際程式碼，完整承接《文明戰線》專案。`main` 是唯一真實來源，不要只靠 handoff 或舊對話記憶。第13批 Story 已完成 13-1～13-8，高維正式內容為 11/11；第13批後已完成 W3 Story content-version 舊資料重建與 completion owner 收斂。現在剩第14～15批。先重新讀 Dungeon／Mirror／Void／Special／Arena 相關正式 owner，確認 W3 現有 bounty hidden、Arena provisional disabled、Mirror／Void shared、Story／Completion 不受副本污染，再和我討論或執行第14批。現在若我說先不要修改，就只能檢查與分析。
 
 若使用者明確要求直接施工第14批，可改成：
 
