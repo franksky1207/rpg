@@ -15,7 +15,7 @@ for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存
 const pos=name=>index.indexOf('src="'+name+'?v=');
 assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
 assert(pos("saveversionguard.js")>pos("savemigration.js")&&pos("saveversionguard.js")<pos("ui.js"),"saveversionguard.js 必須在 migration 之後、ui.js 啟動 load 前載入。");
-assert(/saveversionguard\.js\?v=20260930-audit-batch2/.test(index),"Save Safety V1 修改後必須更新 index.html cache-bust。");
+assert(/saveversionguard\.js\?v=20260930-audit-batch3/.test(index),"第3批 Save Safety/Capacity 修改後必須更新 index.html cache-bust。");
 assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
 assert(pos("integritycontract.js")<pos("runtimeintegrity.js")&&pos("runtimeintegrity.js")<pos("finalintegrity.js"),"Integrity Contract → Runtime → Final 載入順序錯誤。");
 assert(!index.includes("legacy Runtime Integrity cache-bust contract marker"),"index.html 不應再保留只為舊 regex 存在的 cache-bust marker。");
@@ -25,12 +25,16 @@ assert(/const VERSION=6;/.test(thirdWorldDungeonUi)&&/THIRD_WORLD_ARENA_LIVE_VER
 assert(/mode==="arena"\)return \{visible:true,enabled:true/.test(thirdWorldDungeonUi)&&/buttonLabel:"進入高維競技場"/.test(thirdWorldDungeonUi),"高維競技場正式 policy 必須可進入。");
 assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
 assert(/VERSION_BELOW_MINIMUM/.test(contract)&&/CIVILIZATION_INTEGRITY_MINIMUM_VERSIONS/.test(contract)&&/runCanonicalCivilizationIntegrityContract/.test(contract),"Canonical Integrity Contract 必須使用最低版本策略並保留不受 extension 覆寫的正式入口。");
-assert(/const SAVE_SAFETY_VERSION=1/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V1 與持久安全備份 key 缺失。");
+assert(/const SAVE_SAFETY_VERSION=2/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V2 與持久安全備份 key 缺失。");
+assert(/SAVE_CAPACITY_DIAGNOSTIC_VERSION=1/.test(saveGuard)&&/SAVE_CAPACITY_WARNING_BYTES/.test(saveGuard)&&/SAVE_CAPACITY_CRITICAL_BYTES/.test(saveGuard),"Save Capacity Diagnostic V1 缺失。");
+assert(/projectedSaveBytes/.test(saveGuard)&&/capacityLevel/.test(saveGuard)&&/failureKind/.test(saveGuard),"Save write report 必須記錄 projected bytes／容量級別／失敗分類。");
+assert(/SAVE_MIGRATION_STAIRCASE_VERSION=1/.test(saveGuard)&&/SAVE_MIGRATION_STAGES/.test(saveGuard)&&/saveMigrationPlanForVersion/.test(saveGuard),"Save Migration Staircase V1 owner 缺失。");
+assert(/legacy-exp-progress/.test(saveGuard)&&/pre-schema16-compatibility/.test(saveGuard)&&/canonical-normalization/.test(saveGuard)&&/finalize-current-schema/.test(saveGuard),"Migration staircase stage 不完整。");
 assert(/strictPreSchema16Backup/.test(saveGuard)&&/pre-schema16-backup-failed/.test(saveGuard)&&/original localStorage entry was preserved/.test(saveGuard),"Schema16 前 migration 必須在備份失敗時 fail-closed 並保留原存檔。");
 assert(/reset-game/.test(saveGuard)&&/已取消清除進度/.test(saveGuard),"resetGame 必須先建立安全備份，失敗時取消清除。");
 assert(/gm-import/.test(saveGuard)&&/已取消匯入/.test(saveGuard),"GM 匯入必須先建立安全備份，失敗時取消匯入。");
 assert(/storageSnapshot/.test(saveGuard)&&/inventoryCount/.test(saveGuard)&&/lostGearCount/.test(saveGuard),"Save Safety 必須提供 localStorage／背包容量診斷，不得靠刪玩家資料降容量。");
-assert(/localSaveSafetySnapshot/.test(saveGuard)&&/ensureLocalSaveSafetyBackup/.test(saveGuard)&&/installLocalSaveDestructiveGuards/.test(saveGuard),"Save Safety V1 公開 API 缺失。");
+assert(/localSaveCapacitySnapshot/.test(saveGuard)&&/runSaveMigrationStaircaseRegression/.test(saveGuard),"Save Capacity／Migration regression 公開 API 缺失。");
 assert(/const VERSION=21;/.test(runtime)&&/runCanonicalCivilizationIntegrityContract/.test(runtime)&&/LEGACY_DIAGNOSTIC/.test(runtime),"Runtime Integrity 應為 V21，並把歷史自測降為 diagnostics。");
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION\)<4/.test(runtime)&&/OFFLINE_BATTLE_SAMPLE_VERSION/.test(runtime),"Runtime Integrity 必須依正式 Offline V4 owner／動態 sample version 驗證。");
 assert(/balanceVersion\)!==7/.test(runtime)&&/rankBalanceVersion\)!==4/.test(runtime),"Runtime Integrity Arena profile 必須同步 Balance V7／Rank V4。");
@@ -40,6 +44,9 @@ assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"Arena cano
 assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena)&&/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena)&&/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"第二紀元 Arena 最新三條 Rank 曲線不符。");
 assert(/GAME_GUIDE_VERSION=24/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");
 assert(fs.existsSync("tests/runtime/browser-smoke.js"),"缺少真正瀏覽器啟動 smoke test。");
+assert(fs.existsSync("tests/runtime/save-migration-staircase.js"),"缺少 save migration staircase static regression。");
 const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguide-extension-integrity.js"],{encoding:"utf8"});
 assert(guideExtensionBehavior.status===0,"Guide shared extension behavior regression failed：\n"+String(guideExtensionBehavior.stderr||guideExtensionBehavior.stdout||"unknown error").trim());
-console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, Save Safety V1, live W3 dungeon policy, offline V4 owner and Arena V7/V4 are synchronized.");
+const saveMigrationBehavior=spawnSync(process.execPath,["tests/runtime/save-migration-staircase.js"],{encoding:"utf8"});
+assert(saveMigrationBehavior.status===0,"Save migration staircase regression failed：\n"+String(saveMigrationBehavior.stderr||saveMigrationBehavior.stdout||"unknown error").trim());
+console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, Save Safety V2/Capacity V1/Migration Staircase V1, live W3 dungeon policy, offline V4 owner and Arena V7/V4 are synchronized.");
