@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  window.VOID_MIRAGE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -24,6 +24,10 @@
   if(Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)!==1)fail("ui-auto-adapter-version");
   if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
+  if(Number(window.VOID_MIRAGE_W3_INTEGRATION_VERSION)!==1)fail("w3-integration-version");
+  if(Number(window.VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION)!==1)fail("w3-title-presentation-version");
+  const w3Policy=window.VOID_MIRAGE_W3_RESOURCE_POLICY;
+  if(w3Policy?.reward!=="vip"||w3Policy?.sharedProgress!=="void-highest-floor"||w3Policy?.exp!==false||w3Policy?.dimensionalStrings!==false||w3Policy?.thirdWorldBossHp!==false||w3Policy?.thirdWorldCore!==false)fail("w3-resource-policy");
   if(Number(window.VOID_BACKGROUND_PRESENTATION_VERSION)!==1)fail("background-presentation-version");
   if(Number(window.VOID_BACKGROUND_UI_YIELD_VERSION)!==1)fail("background-ui-yield-version");
   if(Number(window.VOID_BACKGROUND_GM_GATE_VERSION)!==1)fail("background-gm-gate-version");
@@ -38,13 +42,20 @@
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
    "isVoidMirageBossFloor","rollVoidMirageTraits","beginVoidMirageRun",
    "requestVoidMirageExit","fightNextVoidMirageFloor","runVoidMirageAuto",
-   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode","voidMirageCombatWorld"
+   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode","voidMirageCombatWorld","voidMirageIdentityHtml"
   ];
   requiredApis.forEach(name=>{if(typeof window[name]!=="function")fail(`missing-api:${name}`);});
 
   if(typeof window.voidMirageCombatWorld==="function"){
    const probes=[[{secondWorld:{entered:false},thirdWorld:{entered:false}},1],[{secondWorld:{entered:true},thirdWorld:{entered:false}},2],[{secondWorld:{entered:true},thirdWorld:{entered:true}},3]];
    probes.forEach(([target,expected])=>{if(Number(window.voidMirageCombatWorld(target))!==expected)fail(`world-phase:${expected}`);});
+  }
+
+  if(typeof window.voidMirageIdentityHtml==="function"){
+   [["higher-dimensional-title-01",1],["higher-dimensional-title-06",6],["higher-dimensional-title-10",10]].forEach(([titleId,tier])=>{
+    const html=String(window.voidMirageIdentityHtml({name:"驗收玩家",titleId}));
+    if(!html.includes("player-title--higher-dimensional")||!html.includes(`player-title--higher-dimensional-${tier}`)||!html.includes("驗收玩家"))fail(`w3-title-presentation:${tier}`);
+   });
   }
 
   if(typeof window.canEnterVoidMirage==="function"){
@@ -91,6 +102,8 @@
   const uiStartSrc=src(window.startVoidMirageChallengeUI);
   if(!/gmBackgroundBattleEnabled/.test(uiStartSrc)||!/allowBackground/.test(uiStartSrc))fail("background-gm-gate-wiring");
   if(!/backgroundProgressStart\s*\(\s*["']void["']\s*\)/.test(uiStartSrc))fail("background-start-wiring");
+  const claimSrc=src(window.claimVoidMirageRewardUI);
+  if(!/claimVoidMirageDailyReward/.test(claimSrc)||!/VIP/.test(claimSrc)||/dimensionalStrings|thirdWorld/.test(claimSrc))fail("w3-vip-only-claim-wiring");
   const uiAutoSrc=src(typeof runVoidMirageUiAuto==="function"?runVoidMirageUiAuto:null);
   if(uiAutoSrc&&!/backgroundProgressUiYield\s*\(\s*["']void["']\s*\)/.test(uiAutoSrc))fail("background-ui-yield-wiring");
 
@@ -111,7 +124,7 @@
    keys.forEach(key=>{if(!(key in snapshot))fail(`snapshot-field:${key}`);});
   }
 
-  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,worldPhaseVersion:Number(window.VOID_MIRAGE_WORLD_PHASE_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0,fastCatchUpVersion:Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)||0};
+  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,worldPhaseVersion:Number(window.VOID_MIRAGE_WORLD_PHASE_VERSION)||0,w3IntegrationVersion:Number(window.VOID_MIRAGE_W3_INTEGRATION_VERSION)||0,w3TitlePresentationVersion:Number(window.VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0,fastCatchUpVersion:Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)||0};
   window.VOID_MIRAGE_INTEGRITY_REPORT=report;
   if(!report.ok)console.error("Void Mirage integrity check failed",report);
   return report;
