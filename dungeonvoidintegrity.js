@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  window.VOID_MIRAGE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -19,6 +19,8 @@
   if(Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)!==1)fail("auto-owner-version");
   if(Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)!==1)fail("snapshot-isolation-version");
   if(Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)!==1)fail("run-local-name-version");
+  if(Number(window.VOID_MIRAGE_CIVILIZATION_DAMAGE_VERSION)!==3)fail("civilization-damage-version");
+  if(Number(window.VOID_MIRAGE_WORLD_PHASE_VERSION)!==1)fail("world-phase-version");
   if(Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)!==1)fail("ui-auto-adapter-version");
   if(Number(window.VOID_MIRAGE_UI_STYLE_VERSION)!==1)fail("ui-style-version");
   if(Number(window.VOID_MINIMAL_MODE_HOOK_VERSION)!==1)fail("minimal-mode-hook-version");
@@ -36,9 +38,14 @@
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
    "isVoidMirageBossFloor","rollVoidMirageTraits","beginVoidMirageRun",
    "requestVoidMirageExit","fightNextVoidMirageFloor","runVoidMirageAuto",
-   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode"
+   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode","voidMirageCombatWorld"
   ];
   requiredApis.forEach(name=>{if(typeof window[name]!=="function")fail(`missing-api:${name}`);});
+
+  if(typeof window.voidMirageCombatWorld==="function"){
+   const probes=[[{secondWorld:{entered:false},thirdWorld:{entered:false}},1],[{secondWorld:{entered:true},thirdWorld:{entered:false}},2],[{secondWorld:{entered:true},thirdWorld:{entered:true}},3]];
+   probes.forEach(([target,expected])=>{if(Number(window.voidMirageCombatWorld(target))!==expected)fail(`world-phase:${expected}`);});
+  }
 
   if(typeof window.canEnterVoidMirage==="function"){
    const expected=Number(window.state?.level||0)>=25;
@@ -104,7 +111,7 @@
    keys.forEach(key=>{if(!(key in snapshot))fail(`snapshot-field:${key}`);});
   }
 
-  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0,fastCatchUpVersion:Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)||0};
+  const report={version:VERSION,ok:issues.length===0,issues,autoOwnerVersion:Number(window.VOID_MIRAGE_AUTO_OWNER_VERSION)||0,snapshotIsolationVersion:Number(window.VOID_MIRAGE_SNAPSHOT_ISOLATION_VERSION)||0,runLocalNameVersion:Number(window.VOID_MIRAGE_RUN_LOCAL_NAME_VERSION)||0,worldPhaseVersion:Number(window.VOID_MIRAGE_WORLD_PHASE_VERSION)||0,uiAdapterVersion:Number(window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION)||0,fastCatchUpVersion:Number(window.VOID_MIRAGE_FAST_CATCH_UP_POLICY_VERSION)||0};
   window.VOID_MIRAGE_INTEGRITY_REPORT=report;
   if(!report.ok)console.error("Void Mirage integrity check failed",report);
   return report;
