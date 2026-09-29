@@ -1,165 +1,268 @@
-/* Higher-dimensional title series V2 — 第14-2A批實機校準。
+/* Higher-dimensional title series V3 — 第14-1批重做樣本。
    正式 owner 僅處理高維紀元稱號 presentation；不碰解鎖、裝備、存檔。
-   目前完整個性樣本：Tier 1 破界初臨、Tier 5 萬維共鳴、Tier 9 諸維唯一。
-   實機修正：降低字體過曝、異象改為不完整／不對稱切面、拉開 1／5／9 的高維複雜度。
-   設計原則：本體文字 + 相位文字 + 開放式維度異象，不使用封閉方框底板。 */
+   本批只定案三個代表樣本：Tier 1 破界初臨、Tier 6 界律共主、Tier 10 萬維之上。
+   舊 1／5／9 樣本視為失敗版，已完全退出正式設計。
+   視覺規則：十個高維稱號最終皆須高於宇宙紀元第10階，但低於鏡像高階天花板；彼此為同級不同理念，不做強弱階梯。
+   技術語言：本體文字 + 相位文字 + 開放式高維異象；禁止封閉方框／底板。 */
+
+/* Shared W3 owner reset: fully override generic galaxy tier pseudo-elements. */
 .player-title--higher-dimensional{
- font-size:1.13em;
- letter-spacing:.075em;
- background-image:linear-gradient(96deg,#d8fbff 0%,#ffffff 25%,#b8c9ff 50%,#eadcff 75%,#ffffff 100%);
- background-size:300% 100%;
- text-shadow:0 0 2px rgba(255,255,255,.90),0 0 10px rgba(132,220,255,.56),0 0 20px rgba(128,102,230,.30);
- animation:higherDimBaseText 3.4s ease-in-out infinite;
+ position:relative;
+ font-size:1.24em;
+ font-weight:800;
+ letter-spacing:.07em;
+ line-height:1;
+ background-image:linear-gradient(96deg,#d9fbff 0%,#ffffff 22%,#9ed8ff 42%,#d7c4ff 63%,#ffffff 82%,#c9f8ff 100%);
+ background-size:430% 100%;
+ background-repeat:no-repeat;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ clip-path:none;
+ text-shadow:0 0 4px rgba(255,255,255,.94),0 0 14px rgba(138,224,255,.74),0 0 29px rgba(124,112,235,.48),0 0 43px rgba(105,79,184,.22);
+ isolation:isolate;
+ animation:higherDimV3BaseText 2.6s ease-in-out infinite;
 }
 .player-title--higher-dimensional::before{
  content:attr(data-title-text);
  position:absolute;
  inset:0;
  display:block;
- border:0;
- border-radius:0;
- box-shadow:none;
- clip-path:none;
- background:none;
- color:rgba(194,235,255,.30);
- -webkit-text-fill-color:rgba(194,235,255,.30);
+ z-index:-1;
+ pointer-events:none;
+ white-space:nowrap;
  font:inherit;
  font-weight:inherit;
  letter-spacing:inherit;
  line-height:inherit;
- white-space:nowrap;
- pointer-events:none;
- z-index:-1;
- opacity:.40;
- transform:translate(.03em,.02em);
+ color:rgba(196,232,255,.40);
+ -webkit-text-fill-color:rgba(196,232,255,.40);
+ background:none;
+ background-image:none;
+ background-clip:border-box;
+ -webkit-background-clip:border-box;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ clip-path:none;
  filter:none;
- animation:higherDimBasePhase 3.2s ease-in-out infinite;
+ opacity:.48;
+ transform:translate(.055em,.012em);
+ text-shadow:-.045em 0 rgba(152,120,244,.18),.055em 0 rgba(112,225,255,.18);
+ animation:higherDimV3BasePhase 2.35s ease-in-out infinite;
 }
 .player-title--higher-dimensional::after{
  content:"";
  position:absolute;
- inset:-.64em -1.28em;
- pointer-events:none;
+ inset:-1.14em -2.52em;
  z-index:-2;
+ pointer-events:none;
  border:0;
  border-radius:0;
  box-shadow:none;
+ clip-path:none;
  filter:none;
- opacity:.68;
+ opacity:.92;
+ background-color:transparent;
  background:
-  linear-gradient(113deg,transparent 0 17%,rgba(176,239,255,.15) 19% 21%,transparent 23% 77%,rgba(205,184,255,.15) 79% 81%,transparent 83%),
-  radial-gradient(ellipse at 8% 50%,rgba(106,220,255,.15),transparent 28%),
-  radial-gradient(ellipse at 92% 50%,rgba(154,112,239,.15),transparent 28%);
- animation:higherDimBaseField 3.8s ease-in-out infinite;
+  radial-gradient(circle at 2% 25%,rgba(255,255,255,.92) 0 1.1px,transparent 2.2px),
+  radial-gradient(circle at 97% 72%,rgba(205,188,255,.82) 0 1.1px,transparent 2.2px),
+  linear-gradient(112deg,transparent 0 9%,rgba(160,232,255,.30) 10.2% 11.4%,transparent 12.8% 37%,rgba(255,255,255,.18) 38.2% 39.1%,transparent 40.5% 73%,rgba(196,168,255,.28) 74.2% 75.4%,transparent 76.8% 100%),
+  radial-gradient(ellipse at 7% 51%,rgba(91,218,255,.28),transparent 28%),
+  radial-gradient(ellipse at 93% 48%,rgba(154,113,244,.26),transparent 28%);
+ animation:higherDimV3BaseField 2.9s ease-in-out infinite;
 }
 
-/* Tier 1｜破界初臨：第一道裂縫。保留少量、明確、不對稱的初次越界。 */
+/* --------------------------------------------------------------------------
+   Tier 1｜破界初臨 — 青綠裂界型
+   不是「低階」：直接以跨越宇宙第10階的光量與場域作為高維起點。
+   語意是第一次把三維邊界真正撕開：斜裂面、錯層、左右不對稱。
+   -------------------------------------------------------------------------- */
 .player-title--higher-dimensional-1{
- font-size:1.14em;
- background-image:linear-gradient(98deg,#58d9c6 0%,#d8fff8 22%,#ffffff 40%,#75cfe8 64%,#a7efe5 82%,#f7ffff 100%);
- background-size:300% 100%;
- text-shadow:0 0 2px rgba(235,255,252,.92),0 0 8px rgba(77,220,199,.62),0 0 17px rgba(66,160,211,.28);
- animation:higherDimBreachText 3.35s ease-in-out infinite;
+ font-size:1.26em;
+ letter-spacing:.062em;
+ background-image:linear-gradient(98deg,#0d6f70 0%,#21d5bb 11%,#bafff2 23%,#ffffff 35%,#57e8d0 49%,#81dcff 63%,#ffffff 77%,#31c9b8 89%,#0f7277 100%);
+ background-size:470% 100%;
+ text-shadow:0 0 4px rgba(241,255,252,.98),0 0 12px rgba(67,244,214,.82),0 0 24px rgba(44,208,213,.64),0 0 38px rgba(76,169,244,.40),0 0 52px rgba(27,113,149,.18);
+ animation:higherDimV3BreachText 1.92s ease-in-out infinite;
 }
 .player-title--higher-dimensional-1::before{
- color:rgba(75,222,202,.34);
- -webkit-text-fill-color:rgba(75,222,202,.34);
- opacity:.45;
- transform:translate(.035em,.012em);
- text-shadow:-.028em 0 rgba(109,190,241,.19);
- animation:higherDimBreachPhase 3.05s ease-in-out infinite;
+ color:rgba(81,255,219,.54);
+ -webkit-text-fill-color:rgba(81,255,219,.54);
+ opacity:.62;
+ transform:translate(.095em,-.018em) skewX(-1.4deg);
+ text-shadow:-.14em .018em rgba(95,193,255,.36),.115em -.012em rgba(38,248,207,.28);
+ animation:higherDimV3BreachPhase 1.76s cubic-bezier(.42,0,.34,1) infinite;
 }
 .player-title--higher-dimensional-1::after{
- inset:-.58em -1.28em;
- opacity:.72;
+ inset:-1.22em -2.62em;
+ opacity:.98;
  background:
-  linear-gradient(117deg,transparent 0 15%,rgba(94,229,207,.32) 16% 17.2%,transparent 18.6% 100%),
-  linear-gradient(117deg,transparent 0 78%,rgba(89,177,225,.25) 79.2% 80.3%,transparent 81.7% 100%),
-  radial-gradient(ellipse at 9% 54%,rgba(62,215,193,.18),transparent 24%),
-  radial-gradient(ellipse at 92% 45%,rgba(66,166,220,.16),transparent 23%);
- animation:higherDimBreachField 3.45s ease-in-out infinite;
+  radial-gradient(circle at 1% 18%,rgba(225,255,249,1) 0 1.25px,transparent 2.4px),
+  radial-gradient(circle at 11% 87%,rgba(72,255,219,.86) 0 1.1px,transparent 2.1px),
+  radial-gradient(circle at 99% 31%,rgba(137,221,255,.96) 0 1.2px,transparent 2.3px),
+  conic-gradient(from 244deg at 4% 54%,transparent 0 14%,rgba(70,255,218,.68) 16% 21%,rgba(191,255,245,.28) 22% 24%,transparent 27% 100%),
+  conic-gradient(from 57deg at 97% 43%,transparent 0 15%,rgba(99,203,255,.62) 17% 22%,rgba(255,255,255,.24) 23% 25%,transparent 28% 100%),
+  linear-gradient(119deg,transparent 0 5%,rgba(82,248,216,.58) 6.2% 7.2%,transparent 8.5% 29%,rgba(218,255,249,.25) 30.2% 31%,transparent 32.3% 64%,rgba(80,193,255,.42) 65.1% 66.1%,transparent 67.4% 84%,rgba(88,255,222,.34) 85.2% 86%,transparent 87.3% 100%),
+  linear-gradient(62deg,transparent 0 17%,rgba(116,216,255,.27) 18.1% 19%,transparent 20.2% 78%,rgba(77,243,207,.30) 79% 80%,transparent 81.2%),
+  radial-gradient(ellipse at 8% 50%,rgba(32,225,196,.34),transparent 29%),
+  radial-gradient(ellipse at 92% 48%,rgba(75,174,241,.30),transparent 28%);
+ animation:higherDimV3BreachField 2.05s cubic-bezier(.42,0,.32,1) infinite;
 }
 
-/* Tier 5｜萬維共鳴：多相位同步但不形成規則網格；以破碎波面與錯位切線呈現共振。 */
-.player-title--higher-dimensional-5{
- font-size:1.17em;
- background-image:linear-gradient(94deg,#59d5f0 0%,#f8ffff 17%,#8a70ee 36%,#e790d1 52%,#ffffff 69%,#64cee9 85%,#cab9f0 100%);
- background-size:360% 100%;
- text-shadow:0 0 2px rgba(255,255,255,.94),0 0 10px rgba(82,197,229,.67),0 0 22px rgba(126,91,221,.40),0 0 31px rgba(213,104,190,.15);
- animation:higherDimResonanceText 2.85s linear infinite;
+/* --------------------------------------------------------------------------
+   Tier 6｜界律共主 — 金紫法則型
+   同級高維效果，不是第1的升級版；以「駕馭法則」取代裂界語言。
+   開放法則弧、斷續秩序線與紫金相位互相咬合，但永不形成封閉框。
+   -------------------------------------------------------------------------- */
+.player-title--higher-dimensional-6{
+ font-size:1.27em;
+ letter-spacing:.055em;
+ background-image:linear-gradient(92deg,#5c2f82 0%,#b77bff 10%,#fff0aa 22%,#ffffff 34%,#f3bd49 48%,#fff7cf 60%,#c793ff 73%,#ffffff 85%,#dca83e 94%,#573176 100%);
+ background-size:500% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.98),0 0 12px rgba(255,220,121,.82),0 0 25px rgba(235,168,58,.58),0 0 39px rgba(174,118,255,.48),0 0 54px rgba(96,55,151,.22);
+ animation:higherDimV3LawText 2.08s ease-in-out infinite;
 }
-.player-title--higher-dimensional-5::before{
- color:rgba(117,196,233,.31);
- -webkit-text-fill-color:rgba(117,196,233,.31);
- opacity:.60;
- transform:translate(-.048em,.012em);
- text-shadow:.078em .008em rgba(211,108,196,.24),-.045em -.012em rgba(106,86,220,.22);
- animation:higherDimResonancePhase 2.30s ease-in-out infinite;
+.player-title--higher-dimensional-6::before{
+ color:rgba(255,218,123,.52);
+ -webkit-text-fill-color:rgba(255,218,123,.52);
+ opacity:.66;
+ transform:translate(-.085em,.006em);
+ text-shadow:.15em 0 rgba(182,126,255,.34),-.095em -.014em rgba(255,241,185,.24);
+ animation:higherDimV3LawPhase 1.96s cubic-bezier(.4,0,.28,1) infinite;
 }
-.player-title--higher-dimensional-5::after{
- inset:-.76em -1.62em;
- opacity:.86;
+.player-title--higher-dimensional-6::after{
+ inset:-1.25em -2.68em;
+ opacity:.99;
  background:
-  linear-gradient(116deg,transparent 0 8%,rgba(80,205,234,.18) 9% 10.2%,transparent 11.6% 31%,rgba(145,105,225,.13) 32% 33.1%,transparent 34.4% 100%),
-  linear-gradient(63deg,transparent 0 54%,rgba(214,116,202,.15) 55% 56.1%,transparent 57.4% 79%,rgba(91,198,229,.14) 80% 81.1%,transparent 82.4% 100%),
-  linear-gradient(103deg,transparent 0 69%,rgba(185,145,238,.12) 70% 71%,transparent 72.3% 100%),
-  radial-gradient(ellipse at 8% 51%,rgba(62,202,234,.23),transparent 26%),
-  radial-gradient(ellipse at 47% 54%,rgba(130,93,229,.12),transparent 37%),
-  radial-gradient(ellipse at 93% 46%,rgba(218,112,196,.21),transparent 26%);
- animation:higherDimResonanceField 2.55s ease-in-out infinite;
+  radial-gradient(circle at 3% 24%,rgba(255,245,194,.98) 0 1.3px,transparent 2.4px),
+  radial-gradient(circle at 96% 78%,rgba(213,177,255,.94) 0 1.3px,transparent 2.4px),
+  radial-gradient(circle at 15% 82%,rgba(255,190,70,.82) 0 1px,transparent 2px),
+  radial-gradient(circle at 83% 16%,rgba(196,142,255,.80) 0 1px,transparent 2px),
+  conic-gradient(from 251deg at 4% 55%,transparent 0 12%,rgba(255,215,99,.72) 14% 20%,rgba(255,247,203,.26) 21% 24%,transparent 27% 100%),
+  conic-gradient(from 72deg at 96% 47%,transparent 0 13%,rgba(185,126,255,.68) 15% 21%,rgba(255,255,255,.23) 22% 25%,transparent 28% 100%),
+  repeating-linear-gradient(90deg,transparent 0 13px,rgba(255,222,125,.10) 14px 15px,transparent 16px 30px),
+  linear-gradient(90deg,transparent 0 4%,rgba(255,225,128,.44) 7% 8.2%,transparent 10% 24%,rgba(191,136,255,.31) 26% 27%,transparent 29% 47%,rgba(255,255,255,.30) 49% 51%,transparent 53% 71%,rgba(238,181,67,.31) 73% 74%,transparent 76% 90%,rgba(191,139,255,.40) 92% 93.2%,transparent 96%),
+  linear-gradient(108deg,transparent 0 17%,rgba(255,241,183,.26) 18% 19%,transparent 20.3% 80%,rgba(192,139,255,.25) 81% 82%,transparent 83.3%),
+  radial-gradient(ellipse at 7% 51%,rgba(237,176,57,.28),transparent 28%),
+  radial-gradient(ellipse at 93% 48%,rgba(157,103,236,.31),transparent 29%);
+ animation:higherDimV3LawField 2.20s ease-in-out infinite;
 }
 
-/* Tier 9｜諸維唯一：多重可能性先分離、再向本體收束。白金核心由暗層與虹彩裂面托出。 */
-.player-title--higher-dimensional-9{
- font-size:1.20em;
- background-image:linear-gradient(90deg,#575d69 0%,#ead9a1 11%,#ffffff 27%,#a8dce8 40%,#ffffff 52%,#cfb8ea 65%,#ecdba7 80%,#ffffff 91%,#595c68 100%);
- background-size:390% 100%;
- text-shadow:0 0 2px rgba(255,255,255,.96),0 0 10px rgba(231,217,173,.66),0 0 23px rgba(136,194,214,.36),0 0 34px rgba(138,108,204,.20);
- animation:higherDimSingularityText 2.45s ease-in-out infinite;
+/* --------------------------------------------------------------------------
+   Tier 10｜萬維之上 — 黑白／受控虹彩超脫型
+   不靠單純「更亮」表現地位；以黑白反差、缺失區與光譜裂層表現超出單一維度分類。
+   效果仍刻意低於鏡像19／20的高頻 reality-mismatch 天花板。
+   -------------------------------------------------------------------------- */
+.player-title--higher-dimensional-10{
+ font-size:1.29em;
+ letter-spacing:.045em;
+ background-image:linear-gradient(90deg,#05070c 0%,#6e7480 8%,#ffffff 18%,#bff8ff 29%,#ffffff 39%,#ffd8a0 49%,#e7b7ff 59%,#ffffff 69%,#a8ffe5 80%,#ffffff 90%,#555d6b 96%,#07090e 100%);
+ background-size:530% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.99),0 0 12px rgba(212,247,255,.78),0 0 24px rgba(255,218,166,.46),0 0 36px rgba(220,173,255,.42),0 0 49px rgba(141,235,216,.26);
+ animation:higherDimV3BeyondText 1.86s cubic-bezier(.44,0,.28,1) infinite;
 }
-.player-title--higher-dimensional-9::before{
- color:rgba(245,232,190,.24);
- -webkit-text-fill-color:rgba(245,232,190,.24);
- opacity:.74;
- transform:translate(.11em,0);
- text-shadow:-.16em .018em rgba(111,195,218,.22),.16em -.012em rgba(180,137,224,.20),-.29em 0 rgba(255,255,255,.08);
- animation:higherDimSingularityPhase 2.08s cubic-bezier(.45,0,.28,1) infinite;
+.player-title--higher-dimensional-10::before{
+ color:rgba(236,250,255,.48);
+ -webkit-text-fill-color:rgba(236,250,255,.48);
+ opacity:.70;
+ transform:translate(.12em,-.01em);
+ text-shadow:-.18em .012em rgba(97,230,255,.30),.18em -.016em rgba(233,157,255,.28),-.31em 0 rgba(255,210,124,.16);
+ animation:higherDimV3BeyondPhase 1.74s cubic-bezier(.45,0,.3,1) infinite;
 }
-.player-title--higher-dimensional-9::after{
- inset:-.96em -2.02em;
- opacity:.92;
+.player-title--higher-dimensional-10::after{
+ inset:-1.30em -2.82em;
+ opacity:1;
  background:
-  linear-gradient(111deg,transparent 0 10%,rgba(225,204,145,.28) 11.5% 13%,transparent 14.6% 38%,rgba(142,207,225,.14) 39.4% 40.7%,transparent 42.2% 100%),
-  linear-gradient(69deg,transparent 0 61%,rgba(181,145,225,.20) 62.4% 63.8%,transparent 65.3% 84%,rgba(228,207,151,.18) 85.2% 86.4%,transparent 87.9% 100%),
-  radial-gradient(ellipse at 50% 50%,rgba(2,4,10,.62) 0 11%,rgba(13,15,24,.40) 18%,rgba(237,245,255,.08) 26%,transparent 47%),
-  radial-gradient(ellipse at 7% 51%,rgba(226,203,145,.20),transparent 24%),
-  radial-gradient(ellipse at 93% 48%,rgba(171,137,221,.20),transparent 24%);
- animation:higherDimSingularityField 2.22s cubic-bezier(.45,0,.3,1) infinite;
+  radial-gradient(circle at 1% 14%,rgba(255,255,255,1) 0 1.35px,transparent 2.5px),
+  radial-gradient(circle at 99% 77%,rgba(195,245,255,.98) 0 1.35px,transparent 2.5px),
+  radial-gradient(circle at 16% 88%,rgba(255,210,136,.82) 0 1px,transparent 2px),
+  radial-gradient(circle at 84% 10%,rgba(228,181,255,.84) 0 1px,transparent 2px),
+  conic-gradient(from 238deg at 4% 50%,transparent 0 11%,rgba(203,249,255,.68) 13% 18%,rgba(255,220,149,.30) 19% 22%,transparent 25% 100%),
+  conic-gradient(from 58deg at 96% 50%,transparent 0 12%,rgba(226,189,255,.66) 14% 19%,rgba(151,255,226,.28) 20% 23%,transparent 26% 100%),
+  linear-gradient(90deg,transparent 0 5%,rgba(255,255,255,.48) 7% 8%,transparent 9.5% 26%,rgba(130,235,255,.32) 28% 29%,transparent 30.5% 42%,rgba(0,0,0,.68) 45% 47%,transparent 49% 51%,rgba(0,0,0,.66) 53% 55%,transparent 57% 69%,rgba(237,177,255,.31) 71% 72%,transparent 73.5% 89%,rgba(255,224,157,.42) 91% 92%,transparent 94%),
+  linear-gradient(115deg,transparent 0 12%,rgba(116,232,255,.29) 13% 14%,transparent 15.3% 36%,rgba(255,215,146,.20) 37% 38%,transparent 39.3% 64%,rgba(221,160,255,.23) 65% 66%,transparent 67.3% 86%,rgba(142,255,226,.26) 87% 88%,transparent 89.3%),
+  radial-gradient(ellipse at center,rgba(0,0,0,.62) 0 9%,rgba(7,10,18,.38) 16%,rgba(255,255,255,.07) 24%,transparent 43%),
+  radial-gradient(ellipse at 7% 50%,rgba(159,240,255,.25),transparent 27%),
+  radial-gradient(ellipse at 93% 48%,rgba(220,173,255,.24),transparent 27%);
+ animation:higherDimV3BeyondField 1.98s cubic-bezier(.44,0,.30,1) infinite;
 }
 
-@keyframes higherDimBaseText{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
-@keyframes higherDimBasePhase{0%,100%{transform:translate(.025em,.018em);opacity:.32}50%{transform:translate(-.022em,-.01em);opacity:.46}}
-@keyframes higherDimBaseField{0%,100%{transform:scaleX(.985);opacity:.56}50%{transform:scaleX(1.02);opacity:.74}}
-@keyframes higherDimBreachText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.035)}}
-@keyframes higherDimBreachPhase{0%,100%{transform:translate(.035em,.012em);opacity:.38}48%{transform:translate(-.018em,-.006em);opacity:.51}52%{transform:translate(.052em,.01em);opacity:.44}}
-@keyframes higherDimBreachField{0%,100%{transform:translateX(-.7%) skewX(-.6deg);opacity:.58}50%{transform:translateX(.8%) skewX(.7deg);opacity:.76}}
-@keyframes higherDimResonanceText{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
-@keyframes higherDimResonancePhase{0%,100%{transform:translate(-.048em,.012em);opacity:.49}33%{transform:translate(.050em,-.016em);opacity:.65}66%{transform:translate(.012em,.027em);opacity:.57}}
-@keyframes higherDimResonanceField{0%,100%{transform:scaleX(.975) translateX(-.7%) skewX(-.45deg);opacity:.68}48%{transform:scaleX(1.025) translateX(.8%) skewX(.55deg);opacity:.88}52%{transform:scaleX(.99) translateX(-.2%) skewX(-.2deg);opacity:.78}}
-@keyframes higherDimSingularityText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.045)}}
-@keyframes higherDimSingularityPhase{0%,100%{transform:translate(.15em,0);opacity:.52}38%{transform:translate(-.12em,.012em);opacity:.76}58%{transform:translate(.025em,-.01em);opacity:.88}72%{transform:translate(0,0);opacity:.62}}
-@keyframes higherDimSingularityField{0%,100%{transform:scaleX(1.055);opacity:.68}44%{transform:scaleX(.975);opacity:.92}62%{transform:scaleX(.94);opacity:1}76%{transform:scaleX(1.005);opacity:.78}}
+@keyframes higherDimV3BaseText{
+ 0%,100%{background-position:0 50%;filter:brightness(1)}
+ 50%{background-position:100% 50%;filter:brightness(1.06)}
+}
+@keyframes higherDimV3BasePhase{
+ 0%,100%{transform:translate(.055em,.012em);opacity:.42}
+ 50%{transform:translate(-.045em,-.01em);opacity:.57}
+}
+@keyframes higherDimV3BaseField{
+ 0%,100%{transform:scaleX(.985) translateX(-.5%);opacity:.78}
+ 50%{transform:scaleX(1.025) translateX(.6%);opacity:.96}
+}
+
+@keyframes higherDimV3BreachText{
+ 0%,100%{background-position:0 50%;filter:brightness(1)}
+ 42%{background-position:82% 50%;filter:brightness(1.10)}
+ 54%{background-position:100% 50%;filter:brightness(1.03)}
+}
+@keyframes higherDimV3BreachPhase{
+ 0%,100%{transform:translate(.095em,-.018em) skewX(-1.4deg);opacity:.52}
+ 38%{transform:translate(-.105em,.018em) skewX(1.1deg);opacity:.72}
+ 52%{transform:translate(.035em,-.006em) skewX(-.4deg);opacity:.64}
+ 72%{transform:translate(.125em,.006em) skewX(-1deg);opacity:.57}
+}
+@keyframes higherDimV3BreachField{
+ 0%,100%{transform:translateX(-1.2%) skewX(-1.1deg) scaleX(.985);opacity:.78}
+ 43%{transform:translateX(1.1%) skewX(.9deg) scaleX(1.035);opacity:1}
+ 57%{transform:translateX(-.2%) skewX(-.35deg) scaleX(.995);opacity:.90}
+}
+
+@keyframes higherDimV3LawText{
+ 0%,100%{background-position:0 50%;filter:brightness(1)}
+ 50%{background-position:100% 50%;filter:brightness(1.09)}
+}
+@keyframes higherDimV3LawPhase{
+ 0%,100%{transform:translate(-.085em,.006em);opacity:.55}
+ 36%{transform:translate(.09em,-.012em);opacity:.73}
+ 62%{transform:translate(.018em,.01em);opacity:.67}
+}
+@keyframes higherDimV3LawField{
+ 0%,100%{transform:scaleX(.98) rotate(-.15deg);opacity:.82}
+ 50%{transform:scaleX(1.035) rotate(.15deg);opacity:1}
+}
+
+@keyframes higherDimV3BeyondText{
+ 0%,100%{background-position:0 50%;filter:brightness(.98) contrast(1.02)}
+ 46%{background-position:100% 50%;filter:brightness(1.09) contrast(1.07)}
+ 63%{background-position:78% 50%;filter:brightness(1.02) contrast(1.04)}
+}
+@keyframes higherDimV3BeyondPhase{
+ 0%,100%{transform:translate(.12em,-.01em);opacity:.55}
+ 32%{transform:translate(-.13em,.012em);opacity:.76}
+ 53%{transform:translate(.025em,-.014em);opacity:.86}
+ 70%{transform:translate(0,0);opacity:.62}
+}
+@keyframes higherDimV3BeyondField{
+ 0%,100%{transform:scaleX(1.035) translateX(.6%);opacity:.80}
+ 38%{transform:scaleX(.97) translateX(-.8%);opacity:1}
+ 58%{transform:scaleX(.935) translateX(.1%);opacity:.94}
+ 76%{transform:scaleX(1.015) translateX(.4%);opacity:.86}
+}
 
 @media(max-width:600px){
- .player-title--higher-dimensional{letter-spacing:.055em}
+ .player-title--higher-dimensional{letter-spacing:.052em}
  .player-title--higher-dimensional::after{transform-origin:center}
- .player-title--higher-dimensional-1::after{inset:-.54em -1.12em}
- .player-title--higher-dimensional-5::after{inset:-.70em -1.42em}
- .player-title--higher-dimensional-9::after{inset:-.88em -1.64em}
+ .player-title--higher-dimensional-1::after{inset:-1.08em -2.28em}
+ .player-title--higher-dimensional-6::after{inset:-1.10em -2.32em}
+ .player-title--higher-dimensional-10::after{inset:-1.14em -2.42em}
 }
 
 @media(prefers-reduced-motion:reduce){
  .player-title--higher-dimensional,
  .player-title--higher-dimensional::before,
- .player-title--higher-dimensional::after{animation:none!important;filter:none!important}
+ .player-title--higher-dimensional::after{
+  animation:none!important;
+  filter:none!important;
+ }
 }
