@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function testCharacter(){return typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;}
  function benchmarkWorld(){
@@ -70,8 +70,7 @@
    .replace(/文明等級：Lv\.(\d+)｜宇宙紀元最終傷害/,"文明等級：Lv.$1｜高維紀元最終傷害");
  }
  function refreshBenchmarkAfterFormalSync(){
-  if(typeof window.gmPowerBenchmarkRefreshUi==="function")return window.gmPowerBenchmarkRefreshUi({capture:true});
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(typeof render==="function"){render();return true;}
   return false;
  }
  function install(){
@@ -114,7 +113,7 @@
  }
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=2;
- window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=1;
+ window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=2;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
  window.gmPowerBenchmarkRefreshAfterFormalSync=refreshBenchmarkAfterFormalSync;
