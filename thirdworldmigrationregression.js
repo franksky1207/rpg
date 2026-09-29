@@ -46,10 +46,10 @@
     runCase("SCHEMA16_STORY_STAGE_MISSING_REBUILT",storyMissing,m=>Number(m?.thirdWorld?.story?.unlockedStage)===5);
     const storyDead=baseSave(allDead);storyDead.thirdWorld.story={introSeen:false,unlockedStage:0,finalSeen:false};
     runCase("SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT",storyDead,m=>Number(m?.thirdWorld?.story?.unlockedStage)===10);
-    const devFlags=baseSave(allDead);devFlags.thirdWorld.completed=true;devFlags.thirdWorld.story={introSeen:true,unlockedStage:10,finalSeen:true};
-    runCase("SCHEMA16_PRE_CONTENT_STORY_FLAGS_RESET",devFlags,m=>m?.thirdWorld?.story?.introSeen===false&&m?.thirdWorld?.story?.finalSeen===false&&m?.thirdWorld?.completed===false&&Number(m?.thirdWorld?.story?.unlockedStage)===10);
-    const impossibleCompleted=baseSave(fullBosses);impossibleCompleted.thirdWorld.completed=true;impossibleCompleted.thirdWorld.story={introSeen:true,unlockedStage:10,finalSeen:true};
-    runCase("SCHEMA16_IMPOSSIBLE_COMPLETION_RESET",impossibleCompleted,m=>m?.thirdWorld?.completed===false&&m?.thirdWorld?.story?.finalSeen===false&&Number(m?.thirdWorld?.story?.unlockedStage)===0);
+    const completionFlags=baseSave(allDead);completionFlags.thirdWorld.completed=true;completionFlags.thirdWorld.story={introSeen:true,unlockedStage:0,finalSeen:true};
+    runCase("SCHEMA16_STORY_COMPLETION_FLAGS_DEFER_TO_SHARED_OWNER",completionFlags,m=>m?.thirdWorld?.story?.introSeen===true&&m?.thirdWorld?.story?.finalSeen===true&&m?.thirdWorld?.completed===true&&Number(m?.thirdWorld?.story?.unlockedStage)===10);
+    const stageOnly=baseSave(fullBosses);stageOnly.thirdWorld.completed=true;stageOnly.thirdWorld.story={introSeen:true,unlockedStage:10,finalSeen:true};
+    runCase("SCHEMA16_STORY_STAGE_ONLY_RECONCILIATION",stageOnly,m=>m?.thirdWorld?.completed===true&&m?.thirdWorld?.story?.finalSeen===true&&Number(m?.thirdWorld?.story?.unlockedStage)===0);
 
     const missingProgress=baseSave(distinct);missingProgress.thirdWorld.coreLevel=4;missingProgress.thirdWorld.dimensionalStrings=2000000000;
     runCase("SCHEMA16_MISSING_CORE_PROGRESS_DEFAULTS_ZERO",missingProgress,m=>Number(m?.saveVersion)===16&&Number(m?.thirdWorld?.coreLevel)===4&&Number(m?.thirdWorld?.coreProgress)===0);
@@ -85,7 +85,7 @@
    if(typeof previousReport==="undefined")delete window.LAST_SAVE_MIGRATION_REPORT;else window.LAST_SAVE_MIGRATION_REPORT=previousReport;
   }
   const legacyCorePolicy=Object.freeze({developmentOnly:true,untrustedEntryVersionMax:trustedEntryVersion-1,trustedFromEntryVersion:trustedEntryVersion,untrustedTreatment:"reset-core-and-coreProgress-preserve-dimensionalStrings",trustedTreatment:"normalize-and-preserve-investment"});
-  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,coreReconciliationRegressionVersion:CORE_RECONCILIATION_REGRESSION_VERSION,coreProgressRegressionVersion:CORE_PROGRESS_REGRESSION_VERSION,schemaEvolutionPolicyRegressionVersion:SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION,legacyCorePolicyRegressionVersion:LEGACY_CORE_POLICY_REGRESSION_VERSION,storyReconciliationRegressionVersion:STORY_RECONCILIATION_REGRESSION_VERSION,preSchema16Policy:"discard-development-data",legacyCorePolicy,passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
+  const report=Object.freeze({version:VERSION,preSchema16PolicyRegressionVersion:PRE_SCHEMA16_POLICY_REGRESSION_VERSION,transientDropRegressionVersion:TRANSIENT_DROP_REGRESSION_VERSION,coreReconciliationRegressionVersion:CORE_RECONCILIATION_REGRESSION_VERSION,coreProgressRegressionVersion:CORE_PROGRESS_REGRESSION_VERSION,schemaEvolutionPolicyRegressionVersion:SCHEMA_EVOLUTION_POLICY_REGRESSION_VERSION,legacyCorePolicyRegressionVersion:LEGACY_CORE_POLICY_REGRESSION_VERSION,storyReconciliationRegressionVersion:STORY_RECONCILIATION_REGRESSION_VERSION,storyCompletionOwner:"civilizationStoryProgress",preSchema16Policy:"discard-development-data",legacyCorePolicy,passed:errors.length===0,errors:Object.freeze(errors.slice()),cases:Object.freeze(cases.slice()),checkedAt:Date.now()});
   window.SAVE_THIRD_WORLD_BOSS_MIGRATION_REGRESSION_REPORT=report;
   return report;
  }
