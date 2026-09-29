@@ -36,13 +36,26 @@
  }
 
  function specialFight(enemy,world=1){return specialFightCore(enemy,{world});}
- function pendingBlackMarketActive(target=state){return target?.pendingBlackMarketEncounter===true;}
- function grantPendingBlackMarket(target=state){if(!target||typeof target!=="object")return false;target.pendingBlackMarketEncounter=true;return true;}
+ function currentSpecialWorld(target=state){
+  const holder=target&&typeof target==="object"?target:null;
+  if(typeof window.currentWorldPhase==="function"){
+   const phase=Number(window.currentWorldPhase(holder));
+   if(phase===1||phase===2||phase===3)return phase;
+  }
+  if(holder?.thirdWorld?.entered===true)return 3;
+  if(holder?.secondWorld?.entered===true)return 2;
+  return 1;
+ }
+ function specialEncounterAllowed(target=state){return currentSpecialWorld(target)!==3;}
+ function pendingBlackMarketActive(target=state){return specialEncounterAllowed(target)&&target?.pendingBlackMarketEncounter===true;}
+ function grantPendingBlackMarket(target=state){if(!target||typeof target!=="object"||!specialEncounterAllowed(target))return false;target.pendingBlackMarketEncounter=true;return true;}
  function consumePendingBlackMarket(target=state){if(!target||typeof target!=="object")return false;const active=pendingBlackMarketActive(target);target.pendingBlackMarketEncounter=false;return active;}
  function specialWorld(options={}){
+  const phase=currentSpecialWorld(state);
+  if(phase===3)return 3;
   if(Number(options.world)===1)return 1;
   if(Number(options.world)===2)return 2;
-  return state?.secondWorld?.entered===true?2:1;
+  return phase;
  }
 
  async function animateSpecialFight(r,startPlayerHp,playerMax,enemyMax){
@@ -53,6 +66,7 @@
  window.SPECIAL_COMBAT_MARK_PRESENTATION_VERSION=1;
  window.SPECIAL_ENCOUNTER_FLOW_PACING_VERSION=1;
  window.SPECIAL_ENCOUNTER_COMBAT_SPEED_VERSION=1;
+ window.SPECIAL_ENCOUNTER_THIRD_WORLD_GUARD_VERSION=1;
 
  function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
@@ -104,6 +118,7 @@
 
  function grantSpecialReward(rewardCtx,baseXp,baseGold,dropLevel,mapIdx,options={}){
   const world=specialWorld(options);
+  if(world===3)return {blocked:true,reason:"third-world-disabled",world:3,rewardContext:rewardCtx,xp:0,convertedGold:0,gold:0,darkMatter:0,drops:[],saleEnhancementStones:normalizeEnhancementStoneReward(null),saleDarkMatter:0,saleDarkEnergy:0};
   const xpRaw=world===2?ceil((Number(baseXp)||0)*(Number(rewardCtx?.expMultiplier)||1)):specialRewardExpAmount(baseXp,rewardCtx);
   const xpPay=specialExpPayout(xpRaw,[]);
   const gold=world===2?0:specialRewardGoldAmount(baseGold,rewardCtx);
@@ -129,9 +144,10 @@
  }
 
  async function fightFormalSpecial(ctx,special,options={}){
+  const world=specialWorld(options);
+  if(world===3)return {blocked:true,reason:"third-world-disabled",win:false,world:3,rewardContext:null,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:state?.hp};
   const enemyScalingSnapshot=equippedStats();
   const playerSnapshot=playerCombatStats(enemyScalingSnapshot);
-  const world=specialWorld(options);
   const level=world===2?Math.max(500,Math.min(1000,Math.floor(Number(state.level)||500))):clampGameLevel(state.level);
   const map=world===1?MAPS[selectedMap]:null;
   const dropLevel=world===2?level:Math.max(map.min,Math.min(map.max,level));
@@ -200,6 +216,7 @@
  async function maybeHandleSpecialEncounter(ctx,mainResult=null,options={}){
   if(mainResult?.win!==true)return false;
   const world=specialWorld(options);
+  if(world===3)return false;
   const baseEnemy=mainResult.e||(world===1?monsterObj(selectedMap,selectedEnemy):null);
   if(world===1&&baseEnemy?.kind==="boss")return false;
   if(world===1&&state.level-(Number(baseEnemy?.level)||0)>=10)return false;
@@ -238,8 +255,10 @@
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
  window.MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION=1;
- window.SPECIAL_WORLD_FORMAL_FLOW_VERSION=1;
+ window.SPECIAL_WORLD_FORMAL_FLOW_VERSION=2;
+ window.specialEncounterWorldForState=currentSpecialWorld;
+ window.specialEncounterAllowed=specialEncounterAllowed;
  window.pendingBlackMarketActive=pendingBlackMarketActive;
- window.PENDING_BLACK_MARKET_CURRENT_PHASE_VERSION=1;
+ window.PENDING_BLACK_MARKET_CURRENT_PHASE_VERSION=2;
  ensureSpecialEncounterAlert();
 })();
