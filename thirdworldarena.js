@@ -3,7 +3,7 @@
  const PROJECTION_VERSION=1;
  const LINEUP_VERSION=1;
  const BALANCE_VERSION=1;
- const FLOW_VERSION=1;
+ const FLOW_VERSION=2;
  const REWARD_VERSION=1;
  const DAILY_VERSION=1;
  const WORLD=3;
@@ -177,11 +177,10 @@
   arenaRuntime.lastResult={type:clear?"clear":"defeat",stageIndex:round.stageIndex,roundIndex:round.index,basePoints:round.roundBasePoints,scaledPoints:round.roundScaledPoints,awardedPoints:actual,history:round.history.map(row=>({...row})),daily:{...dailyStatus()}};
   fullHeal(gameState);
   arenaRuntime.round=null;
-  if(!clear){arenaRuntime.status="stopped";arenaRuntime.stopReason="defeat";}
-  else if(arenaRuntime.stopRequested){arenaRuntime.status="stopped";arenaRuntime.stopReason="manual";}
+  if(arenaRuntime.stopRequested){arenaRuntime.status="stopped";arenaRuntime.stopReason="manual";}
   else if(arenaRuntime.startedRuns>=arenaRuntime.requestedRuns){arenaRuntime.status="complete";arenaRuntime.stopReason="selection-complete";}
   else if(dailyStatus().remaining<=0){arenaRuntime.status="complete";arenaRuntime.stopReason="daily-limit";}
-  else arenaRuntime.status="between";
+  else{arenaRuntime.status="between";arenaRuntime.stopReason=null;}
   saveState();
   return {ok:true,result:{...arenaRuntime.lastResult},runtime:runtimeSnapshot()};
  }
