@@ -1,4 +1,4 @@
-/* Mirror title series V4.1 — 第14-4B批最終校準。
+/* Mirror title presentation V4 — stable class ABI remains mirror-v3; 第14-O2批版本語意／極窄手機收尾。
    Galaxy / Universe / Higher-dimensional title rules are intentionally untouched.
    Main glyph = text only; ::before = text clone only; ::after = open outer anomaly only.
    Visual hierarchy target: Higher-dimensional titles < Mirror 15 < 16 < 17 < 18 < 19 < 20.
@@ -309,6 +309,22 @@
  .player-title--mirror-v3-18::after{inset:-1.22em -2.62em}
  .player-title--mirror-v3-19::after{inset:-1.25em -2.68em}
  .player-title--mirror-v3-20::after{inset:-1.30em -2.78em}
+}
+
+@media(max-width:360px){
+ .player-title--mirror-v3{letter-spacing:.030em}
+ .player-title--mirror-v3-15{--mirror-size:1.19em}
+ .player-title--mirror-v3-16{--mirror-size:1.20em}
+ .player-title--mirror-v3-17{--mirror-size:1.21em}
+ .player-title--mirror-v3-18{--mirror-size:1.22em}
+ .player-title--mirror-v3-19{--mirror-size:1.24em}
+ .player-title--mirror-v3-20{--mirror-size:1.27em}
+ .player-title--mirror-v3-15::after{inset:-1.02em -2.12em}
+ .player-title--mirror-v3-16::after{inset:-1.04em -2.15em}
+ .player-title--mirror-v3-17::after{inset:-1.06em -2.18em}
+ .player-title--mirror-v3-18::after{inset:-1.08em -2.22em}
+ .player-title--mirror-v3-19::after{inset:-1.10em -2.26em}
+ .player-title--mirror-v3-20::after{inset:-1.14em -2.34em}
 }
 
 @media (prefers-reduced-motion:reduce){
