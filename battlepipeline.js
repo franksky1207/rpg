@@ -1,7 +1,5 @@
 (function(){
  const CONTINUOUS_COUNT=window.CONTINUOUS_BATTLE_COUNT;
- const REAL_BATTLE_SAMPLES_PER_SPEED=8;
- const REAL_BATTLE_SAMPLE_SPEEDS=Object.freeze([1,1.5,2]);
  const battleGapMs=window.mainBattleGapMs;
  const battleFlowSleep=window.mainBattleFlowSleep;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
@@ -20,75 +18,25 @@
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
- function mainBackgroundEnabled(ctx){
-  return ctx?.continuous===true&&typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true&&typeof window.backgroundProgressStart==="function";
- }
- function startMainBackground(ctx){
-  if(!mainBackgroundEnabled(ctx)){
-   if(ctx?.continuous===true&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
-   return false;
-  }
-  window.backgroundProgressStart("main",{mode:"continuous"});
-  return true;
- }
- function stopMainBackground(started){
-  if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");
- }
- function mainFastCatchUp(){
-  return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("main")===true;
- }
- function mainCatchUpStep(){
-  return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("main"):null;
- }
- function mainCatchUpFinal(){
-  return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;
- }
- function mainStructuredDuration(result){
-  return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;
- }
- async function consumeMainCatchUpDelay(ms){
-  const delay=Math.max(0,Number(ms)||0);
-  if(delay<=0)return true;
-  if(mainFastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){
-   const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"main");
-   if(Number(consumed?.remaining)>0)await battleFlowSleep(consumed.remaining);
-   return Number(consumed?.remaining)<=0;
-  }
-  await battleFlowSleep(delay);
-  return false;
- }
- function refreshMainCatchUpUi(ctx){
-  adventureScreen="combat";
-  if(typeof render==="function")render();
-  if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx?.continuous===true});
-  if(ctx?.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
- }
- function retainRealBattleSamplesBySpeed(rows,sampleVersion){
-  const kept=[];
-  REAL_BATTLE_SAMPLE_SPEEDS.forEach(speed=>{
-   const matches=(Array.isArray(rows)?rows:[]).map((row,index)=>({row,index})).filter(entry=>Number(entry.row?.sampleVersion)===sampleVersion&&Number(entry.row?.combatSpeed)===speed).slice(-REAL_BATTLE_SAMPLES_PER_SPEED);
-   kept.push(...matches);
-  });
-  kept.sort((a,b)=>a.index-b.index);
-  return kept.map(entry=>entry.row);
- }
- function realBattleSampleMultiplier(playerLevel,enemyLevel){
-  const gap=Math.max(0,Math.floor(Number(playerLevel)||1)-Math.floor(Number(enemyLevel)||1));
-  if(gap<=3)return 1;
-  if(gap<=6)return 1.30;
-  if(gap<=10)return 1.60;
-  if(gap<=15)return 2;
-  return null;
- }
+ function mainBackgroundEnabled(ctx){return ctx?.continuous===true&&typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true&&typeof window.backgroundProgressStart==="function";}
+ function startMainBackground(ctx){if(!mainBackgroundEnabled(ctx)){if(ctx?.continuous===true&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");return false;}window.backgroundProgressStart("main",{mode:"continuous"});return true;}
+ function stopMainBackground(started){if(started&&typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("main");}
+ function mainFastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("main")===true;}
+ function mainCatchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("main"):null;}
+ function mainCatchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("main"):null;}
+ function mainStructuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
+ async function consumeMainCatchUpDelay(ms){const delay=Math.max(0,Number(ms)||0);if(delay<=0)return true;if(mainFastCatchUp()&&typeof window.backgroundProgressConsumeCatchUpCredit==="function"){const consumed=window.backgroundProgressConsumeCatchUpCredit(delay,"main");if(Number(consumed?.remaining)>0)await battleFlowSleep(consumed.remaining);return Number(consumed?.remaining)<=0;}await battleFlowSleep(delay);return false;}
+ function refreshMainCatchUpUi(ctx){adventureScreen="combat";if(typeof render==="function")render();if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx?.continuous===true});if(ctx?.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();}
  function beginRealBattleTiming(encounter,playerLevel,mapIdx,enemyIdx){
-  if(!encounter||encounter.kind==="boss")return null;
-  const multiplier=realBattleSampleMultiplier(playerLevel,encounter.level);
+  if(!encounter||encounter.kind==="boss"||typeof window.offlineBattleSampleMultiplier!=="function")return null;
+  const multiplier=window.offlineBattleSampleMultiplier(playerLevel,encounter.level);
   if(multiplier==null)return null;
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return null;
   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return null;
   const kind=encounter.kind==="elite"?"elite":"normal";
   const combatSpeed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
-  if(![1,1.5,2].includes(combatSpeed))return null;
+  const speeds=Array.isArray(window.OFFLINE_STATE_COMBAT_SPEEDS)?window.OFFLINE_STATE_COMBAT_SPEEDS:[1,1.5,2];
+  if(!speeds.includes(combatSpeed))return null;
   const token={startedAt:Date.now(),interrupted:false,playerLevel:Math.max(1,Math.floor(Number(playerLevel)||1)),enemyLevel:Math.max(1,Math.floor(Number(encounter.level)||1)),kind,map:Math.max(0,Math.floor(Number(mapIdx)||0)),enemy:Math.max(0,Math.floor(Number(enemyIdx)||0)),multiplier,gapMs:battleGapMs(kind),combatSpeed,unsubscribe:null};
   if(typeof window.backgroundProgressOnEnvironmentChange==="function")token.unsubscribe=window.backgroundProgressOnEnvironmentChange(isBackground=>{if(isBackground)token.interrupted=true;});
   return token;
@@ -99,40 +47,22 @@
   if(token.interrupted||result?.win!==true||result?.e?.kind==="boss")return false;
   if(typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground())return false;
   if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main"))return false;
+  if(typeof window.appendOfflineBattleSample!=="function")return false;
   const actualMs=Math.round(Date.now()-token.startedAt);
   if(!Number.isFinite(actualMs)||actualMs<100||actualMs>300000)return false;
-  const cycleMs=actualMs+token.gapMs;
-  const adjustedMs=Math.max(100,Math.round(cycleMs*token.multiplier));
-  const sampleVersion=Math.max(0,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0));
+  const cycleMs=actualMs+token.gapMs,adjustedMs=Math.max(100,Math.round(cycleMs*token.multiplier)),sampleVersion=Math.max(0,Math.floor(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)||0));
   if(sampleVersion<=0)return false;
-  if(!state.offline||typeof state.offline!=="object"||Array.isArray(state.offline))state.offline={};
-  const samples=retainRealBattleSamplesBySpeed(state.offline.battleSamples,sampleVersion);
-  samples.push({sampleVersion,combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()});
-  state.offline.battleSampleVersion=sampleVersion;
-  state.offline.battleSamples=retainRealBattleSamplesBySpeed(samples,sampleVersion);
-  return true;
+  const appended=window.appendOfflineBattleSample(state,{sampleVersion,world:1,targetType:"mapEnemy",combatSpeed:token.combatSpeed,actualMs,cycleMs,adjustedMs,playerLevel:token.playerLevel,enemyLevel:token.enemyLevel,kind:token.kind,map:token.map,enemy:token.enemy,multiplier:token.multiplier,recordedAt:Date.now()},{currentTime:Date.now()});
+  return appended?.ok===true;
  }
- function consumePendingStoryFromResult(ctx,result){
-  if(result?.win!==true)return null;
-  const storyId=typeof result.pendingStoryId==="string"&&result.pendingStoryId?result.pendingStoryId:null;
-  if(!storyId)return null;
-  ctx.pendingStoryId=storyId;
-  if(ctx.continuous)ctx.exitRequested=true;
-  return storyId;
- }
+ function consumePendingStoryFromResult(ctx,result){if(result?.win!==true)return null;const storyId=typeof result.pendingStoryId==="string"&&result.pendingStoryId?result.pendingStoryId:null;if(!storyId)return null;ctx.pendingStoryId=storyId;if(ctx.continuous)ctx.exitRequested=true;return storyId;}
 
- window.MAIN_REAL_BATTLE_SAMPLE_VERSION=3;
+ window.MAIN_REAL_BATTLE_SAMPLE_VERSION=4;
+ window.MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1;
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
  window.addBattleEnhancementReward=addContextEnhancementReward;
- window.requestContinuousBattleStop=function(){
-  const ctx=window.activeMainBattleContext;
-  if(!battleBusy||ctx?.continuous!==true)return false;
-  ctx.exitRequested=true;
-  const btn=document.getElementById("continuousBattleStopBtn");
-  if(btn){btn.disabled=true;btn.textContent="本場結束後停止";}
-  return true;
- };
+ window.requestContinuousBattleStop=function(){const ctx=window.activeMainBattleContext;if(!battleBusy||ctx?.continuous!==true)return false;ctx.exitRequested=true;const btn=document.getElementById("continuousBattleStopBtn");if(btn){btn.disabled=true;btn.textContent="本場結束後停止";}return true;};
 
  runBattles=async function(count,ctx=null){
   if(battleBusy)return;
@@ -140,11 +70,7 @@
   if(!ctx)ctx=createBattleContext(count);
   ensureEnhancementRewards(ctx);
   ctx.continuous=isContinuousCount(count,ctx);
-  if(ctx.continuous){ctx.originalCount=null;ctx.remaining=null;}
-  else{
-   ctx.originalCount=Math.max(1,Math.floor(Number(ctx.originalCount??count)||1));
-   ctx.remaining=Math.max(0,Math.floor(Number(ctx.remaining??ctx.originalCount)||0));
-  }
+  if(ctx.continuous){ctx.originalCount=null;ctx.remaining=null;}else{ctx.originalCount=Math.max(1,Math.floor(Number(ctx.originalCount??count)||1));ctx.remaining=Math.max(0,Math.floor(Number(ctx.remaining??ctx.originalCount)||0));}
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
   ctx.exitRequested=ctx.exitRequested===true;
   ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
@@ -164,11 +90,7 @@
    const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
    const fastCatchUp=mainFastCatchUp();
    const suppressPresentation=fastCatchUp;
-   if(!suppressPresentation){
-    adventureScreen="combat";
-    render();
-    if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});
-   }
+   if(!suppressPresentation){adventureScreen="combat";render();if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});}
 
    const psBefore=playerCombatStats(),startPlayerHp=state.hp;
    const r=fightOnce(selectedMap,selectedEnemy,encounter);
@@ -178,78 +100,26 @@
    if(!suppressPresentation)await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
    finishRealBattleTiming(realBattleTiming,r);
 
-   if(r.win){
-    ctx.wins++;
-    ctx.totalXp+=r.xp;
-    ctx.totalGold+=r.gold;
-    addContextEnhancementReward(ctx,"battle",r.enhancementStones);
-    addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);
-    if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);
-    else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});
-    consumePendingStoryFromResult(ctx,r);
-   }else defeat=r;
+   if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;addContextEnhancementReward(ctx,"battle",r.enhancementStones);addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});consumePendingStoryFromResult(ctx,r);}else defeat=r;
 
    ctx.completed++;
    if(!ctx.continuous)ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
    const catchUpPolicy=fastCatchUp?mainCatchUpStep():null;
-   if(fastCatchUp){
-    catchUpNeedsFinalSync=true;
-    if(catchUpPolicy?.shouldPresentBattle){
-     refreshMainCatchUpUi(ctx);
-     await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
-    }else{
-     await consumeMainCatchUpDelay(mainStructuredDuration(r));
-     if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
-    }
-    if((catchUpPolicy?.shouldRefreshUi||catchUpPolicy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");
-   }else if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
+   if(fastCatchUp){catchUpNeedsFinalSync=true;if(catchUpPolicy?.shouldPresentBattle){refreshMainCatchUpUi(ctx);await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);}else{await consumeMainCatchUpDelay(mainStructuredDuration(r));if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);}if((catchUpPolicy?.shouldRefreshUi||catchUpPolicy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");}else if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
    clearPreviewEncounter(selectedMap,selectedEnemy);
    currentCombatEncounter=null;
 
-   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
-   else state.hp=playerCombatStats().hp;
-
-   if(!r.win){
-    break;
-   }
-
+   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
+   if(!r.win)break;
    if(!fastCatchUp||catchUpPolicy?.shouldCheckpoint)save(false);
    if(ctx.pendingStoryId)break;
 
    let specialOutcome=false;
    if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r);
-   if(specialOutcome?.triggered){
-    if(!specialOutcome.win){
-     battleBusy=false;
-     window.activeMainBattleContext=null;
-     save();
-     return;
-    }
-    if(shouldStopContinuous(ctx))break;
-    if(hasMoreBattles(ctx)){
-     currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-     await consumeMainCatchUpDelay(battleGapMs(r.e.kind));
-     if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
-      const finalPolicy=mainCatchUpFinal();
-      if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
-      if(finalPolicy?.shouldCheckpoint)save(false);
-      catchUpNeedsFinalSync=false;
-     }
-    }
-    continue;
-   }
+   if(specialOutcome?.triggered){if(!specialOutcome.win){battleBusy=false;window.activeMainBattleContext=null;save();return;}if(shouldStopContinuous(ctx))break;if(hasMoreBattles(ctx)){currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}continue;}
 
    if(shouldStopContinuous(ctx))break;
-   if(hasMoreBattles(ctx)){
-    currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);
-    await consumeMainCatchUpDelay(battleGapMs(r.e.kind));
-    if(catchUpNeedsFinalSync&&!mainFastCatchUp()){
-     const finalPolicy=mainCatchUpFinal();
-     if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);
-     if(finalPolicy?.shouldCheckpoint)save(false);
-     catchUpNeedsFinalSync=false;
-    }
-   }
+   if(hasMoreBattles(ctx)){currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
   }
 
   currentCombatEncounter=null;
@@ -258,13 +128,8 @@
   window.activeMainBattleContext=null;
   save();
   render();
-   setTimeout(()=>{
-    showBattleResult(ctx,defeat);
-    if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);
-   },0);
-  }finally{
-   stopMainBackground(mainBackgroundStarted);
-  }
+  setTimeout(()=>{showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);
+  }finally{stopMainBackground(mainBackgroundStarted);}
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
  window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION=1;
