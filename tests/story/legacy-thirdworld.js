@@ -7,7 +7,7 @@ const w3Ids=['higher-dimensional-intro',...Array.from({length:9},(_,i)=>`higher-
 context.thirdWorldStoryTriggerDescriptor=value=>w3Ids.includes(String(value||''))?{storyId:String(value)}:null;
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('storymigration.js','utf8'),context,{filename:'storymigration.js'});
-assert(context.STORY_MIGRATION_VERSION===7,'Story Migration 必須升為 V7。');
+assert(context.STORY_MIGRATION_VERSION===6,'Story Migration shared compatibility version 必須維持 V6。');
 assert(context.THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION===1&&context.THIRD_WORLD_STORY_CONTENT_VERSION===1,'W3 Story content version owner 未就緒。');
 const stories={
  'earth-prologue':{},
