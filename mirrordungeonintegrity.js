@@ -1,7 +1,7 @@
 (function(){
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
+ const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","mirrorDungeonIdentityHtml","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`鏡像戰必要函式 ${name} 未載入`);});
  const cfg=window.MIRROR_DUNGEON_CONFIG;
  if(!cfg||Number(window.MIRROR_DUNGEON_CONFIG_VERSION)!==1)fail("CONFIG","鏡像戰集中設定未載入");
@@ -24,10 +24,22 @@
  if(Number(window.MIRROR_COMBAT_WORLD_PHASE_VERSION)!==1)fail("MIRROR_WORLD_PHASE_VERSION","Mirror 應正式識別三紀元 world phase",window.MIRROR_COMBAT_WORLD_PHASE_VERSION);
  if(Number(window.MIRROR_CIVILIZATION_DAMAGE_VERSION)!==1)fail("MIRROR_CIVILIZATION_DAMAGE","Mirror civilization damage layer missing",window.MIRROR_CIVILIZATION_DAMAGE_VERSION);
  if(Number(window.MIRROR_COMBAT_MARK_RULE_VERSION)!==Number(window.MARK_COMBAT_RULE_VERSION))fail("MIRROR_MARK_RULE_VERSION","鏡像印記規則版本未與共用 Mark Core 同步",{mirror:window.MIRROR_COMBAT_MARK_RULE_VERSION,mark:window.MARK_COMBAT_RULE_VERSION});
- if(Number(window.MIRROR_RUN_VERSION)!==3||Number(window.MIRROR_MARK_PRESENTATION_VERSION)!==1)fail("MIRROR_MARK_PRESENTATION","鏡像印記戰鬥呈現版本異常",{run:window.MIRROR_RUN_VERSION,presentation:window.MIRROR_MARK_PRESENTATION_VERSION});
+ if(Number(window.MIRROR_RUN_VERSION)!==4||Number(window.MIRROR_MARK_PRESENTATION_VERSION)!==1)fail("MIRROR_MARK_PRESENTATION","鏡像戰 run／印記戰鬥呈現版本異常",{run:window.MIRROR_RUN_VERSION,presentation:window.MIRROR_MARK_PRESENTATION_VERSION});
+ if(Number(window.MIRROR_W3_INTEGRATION_VERSION)!==1||Number(window.MIRROR_W3_TITLE_PRESENTATION_VERSION)!==1)fail("MIRROR_W3_INTEGRATION","鏡像戰 W3 整合契約未載入",{integration:window.MIRROR_W3_INTEGRATION_VERSION,title:window.MIRROR_W3_TITLE_PRESENTATION_VERSION});
+ const w3Policy=window.MIRROR_W3_RESOURCE_POLICY;
+ if(w3Policy?.reward!=="vip"||w3Policy?.sharedProgress!=="mirror-history"||w3Policy?.exp!==false||w3Policy?.dimensionalStrings!==false||w3Policy?.thirdWorldBossHp!==false||w3Policy?.thirdWorldCore!==false)fail("MIRROR_W3_RESOURCE_POLICY","鏡像戰不得成為高維主線資源／進度來源",w3Policy||null);
  if(typeof window.mirrorCombatWorldForState==="function"){
   const probes=[[{secondWorld:{entered:false},thirdWorld:{entered:false}},1],[{secondWorld:{entered:true},thirdWorld:{entered:false}},2],[{secondWorld:{entered:true},thirdWorld:{entered:true}},3]];
   probes.forEach(([target,expected])=>{const actual=Number(window.mirrorCombatWorldForState(target));if(actual!==expected)fail("WORLD_PHASE_PROBE",`Mirror world phase 應為 ${expected}，實際 ${actual}`,{target,actual});});
+ }
+ if(typeof window.mirrorDungeonIdentityHtml==="function"){
+  [["higher-dimensional-title-01",1],["higher-dimensional-title-06",6],["higher-dimensional-title-10",10]].forEach(([titleId,tier])=>{
+   const player=String(window.mirrorDungeonIdentityHtml({name:"驗收玩家",titleId}));
+   const mirror=String(window.mirrorDungeonIdentityHtml({name:"驗收玩家",titleId,mirror:true}));
+   const common="player-title--higher-dimensional",specific=`player-title--higher-dimensional-${tier}`;
+   if(!player.includes(common)||!player.includes(specific)||!player.includes("驗收玩家"))fail("W3_PLAYER_TITLE_PRESENTATION",`高維稱號 ${tier} 未進入 Mirror 玩家身份`,player);
+   if(!mirror.includes(common)||!mirror.includes(specific)||!mirror.includes("鏡像・")||!mirror.includes("驗收玩家"))fail("W3_MIRROR_TITLE_PRESENTATION",`高維稱號 ${tier} 未進入 Mirror 鏡像身份`,mirror);
+  });
  }
  if(typeof window.createMirrorCombatSnapshot==="function"&&typeof window.runMirrorCombatCore==="function"){try{const snap=window.createMirrorCombatSnapshot(),markKeys=Array.from(window.MARK_KEYS||[]);if(!snap?.stats||Number(snap.stats.hp)<=0)fail("SNAPSHOT","鏡像戰快照缺少有效戰鬥能力",snap||null);if(Number(snap.damageModelVersion)!==Number(window.COMBAT_DAMAGE_MODEL_VERSION))fail("SNAPSHOT_DAMAGE_MODEL","鏡像快照傷害模型版本未對齊共用傷害模型",snap||null);if(Number(snap.markRuleVersion)!==Number(window.MARK_COMBAT_RULE_VERSION)||markKeys.length!==10||markKeys.some(key=>!Number.isFinite(Number(snap.marks?.[key]))))fail("SNAPSHOT_MARKS","鏡像快照未完整包含 10 枚印記與規則版本",snap||null);const result=window.runMirrorCombatCore(snap,{logs:false});if(!result||!["player","mirror"].includes(result.winner)||!["player","mirror"].includes(result.firstActor)||!result.markState)fail("COMBAT_RESULT","Mirror Combat 單場結果格式／印記狀態異常",result||null);}catch(err){fail("COMBAT_PROBE","Mirror Combat 試跑失敗",String(err?.message||err));}}
  if(typeof window.normalizeMirrorCombatSnapshot==="function"){
@@ -52,6 +64,6 @@
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)warnings.push({code:"PREP_RETURN_UX",message:"懸賞／競技準備頁正式返回導覽尚未載入"});
  if(Number(window.GM_HUB_EXTENSION_VERSION)!==2)warnings.push({code:"GM_HUB_EXTENSION",message:"GM Hub 擴充 owner 尚未載入"});
  if(Number(window.MIRROR_DUNGEON_GUIDE_VERSION)!==2)warnings.push({code:"GUIDE",message:"鏡像戰遊戲說明模組版本異常"});
- window.MIRROR_DUNGEON_INTEGRITY={passed:errors.length===0,errors,warnings,worldPhaseVersion:Number(window.MIRROR_COMBAT_WORLD_PHASE_VERSION)||0,checkedAt:Date.now()};
+ window.MIRROR_DUNGEON_INTEGRITY={passed:errors.length===0,errors,warnings,worldPhaseVersion:Number(window.MIRROR_COMBAT_WORLD_PHASE_VERSION)||0,w3IntegrationVersion:Number(window.MIRROR_W3_INTEGRATION_VERSION)||0,w3TitlePresentationVersion:Number(window.MIRROR_W3_TITLE_PRESENTATION_VERSION)||0,checkedAt:Date.now()};
  if(errors.length)console.error("[Mirror Dungeon Integrity]",errors);else console.info("[Mirror Dungeon Integrity] passed",warnings.length?warnings:"");
 })();
