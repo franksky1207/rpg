@@ -4,6 +4,8 @@
  const SAVE_SAFETY_VERSION=2;
  const SAVE_CAPACITY_DIAGNOSTIC_VERSION=1;
  const SAVE_MIGRATION_STAIRCASE_VERSION=1;
+ const SAVE_SAFETY_HOOK_CONVERGENCE_VERSION=1;
+ const SAVE_SAFETY_HOOK_ID="save-capacity-diagnostic";
  const SAVE_SAFETY_BACKUP_SUFFIX=".safety-backup-v1";
  const SAVE_SAFETY_META_SUFFIX=".safety-backup-meta-v1";
  const PRE_SCHEMA16_BACKUP_SUFFIX=".pre-schema16-backup-v1";
@@ -88,6 +90,23 @@
   if(typeof window.resetGame==="function"&&window.resetGame.__saveSafetyWrapped!==true){const baseReset=window.resetGame,guarded=function(){const backup=createSafetyBackup("reset-game");if(backup.required&&(!backup.verified||backup.failed)){alert(`無法建立重置前安全備份，已取消清除進度。\n\n${backup.error||"請先匯出 JSON 或清理瀏覽器儲存空間。"}`);return false;}return baseReset.apply(this,arguments);};guarded.__saveSafetyWrapped=true;window.resetGame=guarded;}
   if(typeof window.gmImportSaveJsonFile==="function"&&window.gmImportSaveJsonFile.__saveSafetyWrapped!==true){const baseImport=window.gmImportSaveJsonFile,guardedImport=async function(input){const backup=createSafetyBackup("gm-import");if(backup.required&&(!backup.verified||backup.failed)){if(input)input.value="";alert(`無法建立匯入前安全備份，已取消匯入。\n\n${backup.error||"請先清理瀏覽器儲存空間。"}`);return false;}return baseImport.call(this,input);};guardedImport.__saveSafetyWrapped=true;window.gmImportSaveJsonFile=guardedImport;}
  }
+ function beforeSaveCapacity(context){
+  const before=storageSnapshot(),projected=serializeStateForCapacity();context.saveSafety={before,projected};
+  if(!projected.ok){context.cancelled=true;context.cancelReason="serialization-failed";const e=document.getElementById("saveStatus");if(e)e.textContent="存檔失敗・請先匯出 JSON";}
+ }
+ function settleSaveCapacity(context){
+  const before=context?.saveSafety?.before||storageSnapshot(),projected=context?.saveSafety?.projected||serializeStateForCapacity(),after=storageSnapshot(),capacityLevel=capacityLevelForBytes(projected.bytes||before.projectedSaveBytes),lastEngineError=window.LAST_SAVE_ERROR||null,ok=context?.result===true;
+  const failureKind=ok?null:context?.cancelReason==="serialization-failed"?"serialization-failed":capacityLevel==="critical"?"capacity-risk-write-failed":"storage-write-failed";
+  const report={version:SAVE_SAFETY_VERSION,capacityDiagnosticVersion:SAVE_CAPACITY_DIAGNOSTIC_VERSION,ok,before,after,projectedSaveBytes:projected.bytes,capacityLevel,failureKind,serializationError:projected.error,engineError:lastEngineError,inventoryCount:before.inventoryCount,lostGearCount:before.lostGearCount,checkedAt:Date.now()};window.LAST_LOCAL_SAVE_WRITE_REPORT=report;
+  if(capacityLevel!=="normal")console.warn(`[文明戰線] Local save capacity ${capacityLevel}: ${projected.bytes} bytes; inventory=${before.inventoryCount}, lostGear=${before.lostGearCount}.`);
+  if(!ok){const e=document.getElementById("saveStatus");if(e)e.textContent=capacityLevel==="critical"?"存檔空間風險・請先匯出 JSON":"存檔失敗・請先匯出 JSON";}
+ }
+ function installSaveSafetyHooks(){
+  if(typeof window.registerBeforeSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function")throw new Error("正式 Save Hook V2 owner 尚未載入。");
+  window.registerBeforeSaveHook(SAVE_SAFETY_HOOK_ID,beforeSaveCapacity);
+  window.registerSaveSettlementHook(SAVE_SAFETY_HOOK_ID,settleSaveCapacity);
+  return true;
+ }
 
  const baseMigrate=window.migrateSave;
  if(typeof baseMigrate==="function"){
@@ -104,19 +123,7 @@
   try{load=window.load;}catch(_){}
  }
 
- const baseSave=typeof window.save==="function"?window.save:null;
- if(baseSave){
-  window.save=function(show=true){
-   const before=storageSnapshot(),projected=serializeStateForCapacity(),ok=projected.ok?baseSave(show):false,after=storageSnapshot(),capacityLevel=capacityLevelForBytes(projected.bytes||before.projectedSaveBytes),lastEngineError=window.LAST_SAVE_ERROR||null;
-   const failureKind=ok!==false?null:!projected.ok?"serialization-failed":capacityLevel==="critical"?"capacity-risk-write-failed":"storage-write-failed";
-   const report={version:SAVE_SAFETY_VERSION,capacityDiagnosticVersion:SAVE_CAPACITY_DIAGNOSTIC_VERSION,ok:ok!==false,before,after,projectedSaveBytes:projected.bytes,capacityLevel,failureKind,serializationError:projected.error,engineError:lastEngineError,inventoryCount:before.inventoryCount,lostGearCount:before.lostGearCount,checkedAt:Date.now()};window.LAST_LOCAL_SAVE_WRITE_REPORT=report;
-   if(capacityLevel!=="normal")console.warn(`[文明戰線] Local save capacity ${capacityLevel}: ${projected.bytes} bytes; inventory=${before.inventoryCount}, lostGear=${before.lostGearCount}.`);
-   if(ok===false){const e=document.getElementById("saveStatus");if(e)e.textContent=capacityLevel==="critical"?"存檔空間風險・請先匯出 JSON":"存檔失敗・請先匯出 JSON";}
-   return ok!==false;
-  };
-  try{save=window.save;}catch(_){}
- }
-
+ installSaveSafetyHooks();
  window.SAVE_FUTURE_VERSION_GUARD_VERSION=VERSION;
  window.SAVE_SCHEMA_EVOLUTION_POLICY_VERSION=SCHEMA_EVOLUTION_POLICY_VERSION;
  window.SAVE_SCHEMA_EVOLUTION_POLICY=SCHEMA_EVOLUTION_POLICY;
@@ -126,6 +133,8 @@
  window.SAVE_CAPACITY_CRITICAL_BYTES=SAVE_CAPACITY_CRITICAL_BYTES;
  window.SAVE_MIGRATION_STAIRCASE_VERSION=SAVE_MIGRATION_STAIRCASE_VERSION;
  window.SAVE_MIGRATION_STAGES=SAVE_MIGRATION_STAGES.map(stage=>({...stage}));
+ window.SAVE_SAFETY_HOOK_CONVERGENCE_VERSION=SAVE_SAFETY_HOOK_CONVERGENCE_VERSION;
+ window.SAVE_SAFETY_HOOK_ID=SAVE_SAFETY_HOOK_ID;
  window.SAVE_SAFETY_BACKUP_SUFFIX=SAVE_SAFETY_BACKUP_SUFFIX;
  window.saveSchemaChangeRequiresBump=schemaChangeRequiresBump;
  window.saveCompatibilityFor=compatibility;
