@@ -9,10 +9,6 @@
  function civilizationWorldPhase(target=null){
   const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   if(!holder)return 1;
-  if(typeof window.currentWorldPhase==="function"){
-   const phase=Math.floor(Number(window.currentWorldPhase(holder))||1);
-   if(phase===1||phase===2||phase===3)return phase;
-  }
   if(holder?.thirdWorld?.entered===true)return 3;
   if(holder?.secondWorld?.entered===true)return 2;
   return 1;
@@ -59,13 +55,7 @@
   return Math.max(0,Math.ceil(base*civilizationDamageMultiplier(target)));
  }
  function normalizeWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
- function inferredWorldForTarget(target){
-  if(typeof window.currentWorldPhase==="function"&&target){
-   const world=Number(window.currentWorldPhase(target));
-   if(world===1||world===2||world===3)return world;
-  }
-  return target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
- }
+ function inferredWorldForTarget(target){return civilizationWorldPhase(target);}
  function civilizationCombatDamageMultiplier(options={}){
   const source=options&&typeof options==="object"?options:{};
   const target=source.state&&typeof source.state==="object"?source.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
