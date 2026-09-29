@@ -32,12 +32,11 @@
  }
  function simulate(modeValue,bossIndex,runs){
   const player=testPlayer(),level=testLevel(),markLevels=marks(),civ=civMultiplier();
-  const reached=[runs,0,0],wins=[0,0,0];let clearCount=0,totalTurns=0,clearHpTotal=0,totalScaled=0,totalVip=0;
+  const reached=[runs,runs,runs],wins=[0,0,0];let clearCount=0,totalTurns=0,clearHpTotal=0,totalScaled=0,totalVip=0;
   for(let run=0;run<runs;run++){
    const lineup=typeof window.rollThirdWorldArenaLineup==="function"?window.rollThirdWorldArenaLineup(modeValue,{bossIndex:bossIndex==null?undefined:bossIndex}):[];
    let hp=Math.max(1,Number(player.hp)||1),runScaled=0,cleared=true;
    for(let stage=0;stage<3;stage++){
-    if(stage>0)reached[stage]++;
     const row=lineup[stage];if(!row){cleared=false;break;}
     const enemy=typeof window.buildThirdWorldArenaEnemy==="function"?window.buildThirdWorldArenaEnemy(row.bossIndex,stage,player,level):null;if(!enemy){cleared=false;break;}
     const out=window.runCombatCore(player,enemy,hp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels,playerFinalDamageMultiplier:civ,enemyAbilityProfile:enemy.enemyAbilityProfile||enemy.arenaAbilityProfile||{},enemyEffectProfile:{}});
