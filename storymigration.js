@@ -1,12 +1,41 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const STORY_REFERENCE_RECOVERY_VERSION=1;
+ const THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION=1;
+ const THIRD_WORLD_STORY_CONTENT_VERSION=1;
+ const THIRD_WORLD_STORY_PREFIX="higher-dimensional-";
  const LEGACY_FIELDS=["historyBackfillRegions"];
 
  function isObject(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
  function uniqueStrings(values){return Array.from(new Set((Array.isArray(values)?values:[]).filter(v=>typeof v==="string"&&v)));}
- function freshProgress(){return {pendingStory:null,completedStories:[],introCompleted:false,starterGearReceived:false};}
- function legacyProgress(introStoryId){return {pendingStory:null,completedStories:[introStoryId],introCompleted:true,starterGearReceived:true};}
+ function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
+ function freshProgress(){return {pendingStory:null,completedStories:[],introCompleted:false,starterGearReceived:false,thirdWorldContentVersion:THIRD_WORLD_STORY_CONTENT_VERSION};}
+ function legacyProgress(introStoryId){return {pendingStory:null,completedStories:[introStoryId],introCompleted:true,starterGearReceived:true,thirdWorldContentVersion:THIRD_WORLD_STORY_CONTENT_VERSION};}
+ function thirdWorldStoryId(id){
+  const key=typeof id==="string"?id:"";
+  if(!key)return false;
+  if(typeof window.thirdWorldStoryTriggerDescriptor==="function")return !!window.thirdWorldStoryTriggerDescriptor(key);
+  return key.startsWith(THIRD_WORLD_STORY_PREFIX);
+ }
+ function reconcileThirdWorldContentVersion(target){
+  if(!isObject(target)||!isObject(target.storyProgress)||!isObject(target.thirdWorld))return {changed:false,applied:false,reason:"unavailable"};
+  const p=target.storyProgress,raw=Math.max(0,finiteWhole(p.thirdWorldContentVersion,0));
+  if(raw>THIRD_WORLD_STORY_CONTENT_VERSION){
+   const report={version:THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION,applied:false,changed:false,reason:"future-content-version",fromVersion:raw,toVersion:THIRD_WORLD_STORY_CONTENT_VERSION,removedCompleted:[],removedPending:null};
+   window.LAST_STORY_CONTENT_MIGRATION_REPORT=report;return report;
+  }
+  if(raw===THIRD_WORLD_STORY_CONTENT_VERSION){
+   const report={version:THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION,applied:false,changed:false,reason:"current",fromVersion:raw,toVersion:THIRD_WORLD_STORY_CONTENT_VERSION,removedCompleted:[],removedPending:null};
+   window.LAST_STORY_CONTENT_MIGRATION_REPORT=report;return report;
+  }
+  const completed=uniqueStrings(p.completedStories),removedCompleted=completed.filter(thirdWorldStoryId),keptCompleted=completed.filter(id=>!thirdWorldStoryId(id)),pending=typeof p.pendingStory==="string"&&thirdWorldStoryId(p.pendingStory)?p.pendingStory:null;
+  let changed=false;
+  if(JSON.stringify(keptCompleted)!==JSON.stringify(completed)){p.completedStories=keptCompleted;changed=true;}
+  if(pending){p.pendingStory=null;changed=true;}
+  if(p.thirdWorldContentVersion!==THIRD_WORLD_STORY_CONTENT_VERSION){p.thirdWorldContentVersion=THIRD_WORLD_STORY_CONTENT_VERSION;changed=true;}
+  const report={version:THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION,applied:true,changed,reason:"legacy-w3-story-history-reset",fromVersion:raw,toVersion:THIRD_WORLD_STORY_CONTENT_VERSION,removedCompleted,removedPending:pending};
+  window.LAST_STORY_CONTENT_MIGRATION_REPORT=report;return report;
+ }
 
  function ensureContainer(target,options){
   if(!isObject(target))return {changed:false,created:false};
@@ -44,6 +73,9 @@
    delete p.historyBackfillRegions;
    changed=true;
   }
+
+  const w3Content=reconcileThirdWorldContentVersion(target);
+  if(w3Content.changed===true)changed=true;
 
   if(p.introCompleted&&!p.completedStories.includes(introStoryId)){p.completedStories.unshift(introStoryId);changed=true;}
   if(target.introSeen!==p.introCompleted){target.introSeen=p.introCompleted;changed=true;}
@@ -94,11 +126,16 @@
  window.civilizationStoryMigration={
   version:VERSION,
   referenceRecoveryVersion:STORY_REFERENCE_RECOVERY_VERSION,
+  thirdWorldStoryContentMigrationVersion:THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION,
+  thirdWorldStoryContentVersion:THIRD_WORLD_STORY_CONTENT_VERSION,
   legacyFields:LEGACY_FIELDS.slice(),
   migrate,
   normalizeFields,
-  backfillAvailableHistory
+  backfillAvailableHistory,
+  reconcileThirdWorldContentVersion
  };
  window.STORY_MIGRATION_VERSION=VERSION;
  window.STORY_REFERENCE_RECOVERY_VERSION=STORY_REFERENCE_RECOVERY_VERSION;
+ window.THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION=THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION;
+ window.THIRD_WORLD_STORY_CONTENT_VERSION=THIRD_WORLD_STORY_CONTENT_VERSION;
 })();
