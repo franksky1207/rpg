@@ -1,8 +1,8 @@
 (function(){
- const PLAYER_TITLE_RENDERER_VERSION=3;
+ const PLAYER_TITLE_RENDERER_VERSION=4;
  const UNIVERSE_RENDERER_VERSION=1;
  const MIRROR_RENDERER_VERSION=3;
- const THIRD_WORLD_RENDERER_VERSION=1;
+ const THIRD_WORLD_RENDERER_VERSION=2;
 
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
@@ -18,7 +18,7 @@
    visualClass=`player-title--universe-calamity player-title--universe-calamity-${def.tier}`;
   }else if(def.series==="higher-dimensional"){
    series="higher-dimensional";
-   visualClass=`player-title--higher-dimensional player-title--higher-dimensional-${def.tier} player-title--tier-${def.tier}`;
+   visualClass=`player-title--higher-dimensional player-title--higher-dimensional-${def.tier}`;
   }
   return `<span class="player-title player-title--${series} ${visualClass}" data-player-title-id="${esc(def.id)}" data-title-text="${esc(def.name)}">${esc(def.name)}</span>`;
  }
