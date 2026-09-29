@@ -43,7 +43,10 @@ jobs:
           node-version: '24'
       - name: Run full JavaScript syntax and owner integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+        run: |
+          set -o pipefail
+          node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+          node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Install browser smoke dependency
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
