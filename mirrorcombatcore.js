@@ -1,6 +1,7 @@
 (function(){
  const CONFIG=window.MIRROR_DUNGEON_CONFIG;if(!CONFIG)throw new Error("Mirror dungeon config missing.");
- const MIRROR_COMBAT_CORE_VERSION=5;
+ const MIRROR_COMBAT_CORE_VERSION=6;
+ const MIRROR_WORLD_PHASE_VERSION=1;
  const MIRROR_MARK_RULE_VERSION=Math.max(0,Math.floor(Number(window.MARK_COMBAT_RULE_VERSION)||0));
  const RUN_BATTLES=CONFIG.runBattles;
  const MIRROR_COUNTER_SCALE=CONFIG.combat.counterScale;
@@ -14,6 +15,17 @@
  function markLevel(value){return typeof window.markClampLevel==="function"?window.markClampLevel(value):Math.max(0,Math.min(10,Math.floor(numberOr(value,0))));}
  function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function roll(rng,percent){return percent>0&&rng()*100<percent;}
+ function mirrorWorldForState(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
+  if(typeof window.currentWorldPhase==="function"){
+   const phase=Number(window.currentWorldPhase(holder));
+   if(phase===1||phase===2||phase===3)return phase;
+  }
+  if(holder?.thirdWorld?.entered===true)return 3;
+  if(holder?.secondWorld?.entered===true)return 2;
+  return 1;
+ }
+ function normalizeMirrorWorld(value,fallback=1){const world=Number(value);return world===1||world===2||world===3?world:fallback;}
  function specializationBonuses(levels){const source=levels&&typeof levels==="object"?levels:{};return {initiative:intLevel(source.initiative),combo:intLevel(source.combo)*.5,penetration:intLevel(source.penetration)*.5,counter:intLevel(source.counter)*.5,drain:intLevel(source.drain)*.5};}
  function currentSpecializationLevels(){if(typeof window.specializationLevelsSnapshot==="function")return window.specializationLevelsSnapshot(false);const source=state?.specializations&&typeof state.specializations==="object"?state.specializations:{};return {initiative:intLevel(source.initiative),combo:intLevel(source.combo),penetration:intLevel(source.penetration),counter:intLevel(source.counter),drain:intLevel(source.drain)};}
  function currentSpecializationBonuses(levels){const fallback=specializationBonuses(levels);if(typeof window.specializationPercentBonus!=="function")return fallback;return {initiative:Math.max(0,numberOr(window.specializationPercentBonus("initiative",false),fallback.initiative)),combo:Math.max(0,numberOr(window.specializationPercentBonus("combo",false),fallback.combo)),penetration:Math.max(0,numberOr(window.specializationPercentBonus("penetration",false),fallback.penetration)),counter:Math.max(0,numberOr(window.specializationPercentBonus("counter",false),fallback.counter)),drain:Math.max(0,numberOr(window.specializationPercentBonus("drain",false),fallback.drain))};}
@@ -26,7 +38,7 @@
 
  function createMirrorCombatSnapshot(){
   const stats=typeof playerCombatStats==="function"?playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0},levels=currentSpecializationLevels(),marks=currentMarkLevels();
-  const world=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1;
+  const world=mirrorWorldForState(state);
   const civilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state,civilizationLevel}):1;
   return {
@@ -50,8 +62,8 @@
  function normalizeSnapshot(snapshot){
   const source=snapshot&&typeof snapshot==="object"?snapshot:createMirrorCombatSnapshot(),stats=source.stats&&typeof source.stats==="object"?source.stats:{},levels=source.specializations&&typeof source.specializations==="object"?source.specializations:{};
   const civilizationLevel=Math.max(0,Math.min(Number(window.CIVILIZATION_LEVEL_MAX)||10,Math.floor(numberOr(source.civilizationLevel,0))));
-  const fallbackWorld=typeof window.isSecondWorldEntered==="function"&&typeof state!=="undefined"&&state?window.isSecondWorldEntered(state)===true?2:1:1;
-  const world=source.world==null?(civilizationLevel>0||numberOr(source.civilizationDamageMultiplier,1)>1?2:fallbackWorld):(Number(source.world)===2?2:1);
+  const fallbackWorld=mirrorWorldForState(typeof state!=="undefined"?state:null);
+  const world=source.world==null?fallbackWorld:normalizeMirrorWorld(source.world,fallbackWorld);
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,civilizationLevel}):Math.max(1,numberOr(source.civilizationDamageMultiplier,1));
   return {
    version:MIRROR_COMBAT_CORE_VERSION,
@@ -77,10 +89,12 @@
   if(!liveStats)issues.push("playerCombatStats missing");else ["hp","atk","def","crit","dodge"].forEach(key=>{if(Number(snap.stats[key])!==Number(liveStats[key]))issues.push(`stats.${key} mismatch`);});
   if(Number(snap.vipLevel)!==Math.max(0,Math.floor(numberOr(state?.vipLevel,0))))issues.push("vipLevel mismatch");
   const liveCivilizationLevel=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
-  const liveWorld=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1;
+  const liveWorld=mirrorWorldForState(state);
   const liveCivilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:liveWorld,state,civilizationLevel:liveCivilizationLevel}):1;
   if(Number(snap.world)!==Number(liveWorld))issues.push("world mismatch");
-  if(Number(snap.civilizationLevel)!==Number(liveCivilizationLevel))issues.push("civilizationLevel mismatch");
+  if(Number(snap.civilizationLevel)!==Math.max(0,Math.floor(numberOr(state?.secondWorld?.civilizationLevel,0)))){
+   if(Number(snap.civilizationLevel)!==Number(liveCivilizationLevel))issues.push("civilizationLevel mismatch");
+  }
   if(Math.abs(Number(snap.civilizationDamageMultiplier)-Number(liveCivilizationMultiplier))>1e-9)issues.push("civilizationDamageMultiplier mismatch");
   const liveLevels=currentSpecializationLevels();["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializations[key])!==Number(liveLevels[key]))issues.push(`specializations.${key} mismatch`);});
   const liveBonuses=currentSpecializationBonuses(liveLevels);["initiative","combo","penetration","counter","drain"].forEach(key=>{if(Number(snap.specializationBonuses[key])!==Number(liveBonuses[key]))issues.push(`specializationBonuses.${key} mismatch`);});
@@ -98,7 +112,7 @@
    player:{key:"player",name:names.player,hp:stats.hp,maxHp:stats.hp,initiativeUsed:false,shield:0,indomitableActivated:false,indomitableUsed:false,battleSpiritActivated:false,battleSpiritLayer:0,revengeReady:false},
    mirror:{key:"mirror",name:names.mirror,hp:stats.hp,maxHp:stats.hp,initiativeUsed:false,shield:0,indomitableActivated:false,indomitableUsed:false,battleSpiritActivated:false,battleSpiritLayer:0,revengeReady:false}
   };
-  let active=rng()<.5?"player":"mirror";const firstActor=active;let turns=0;
+  let active=rng()<.5?"player":"mirror",firstActor=active,turns=0;
   function other(key){return key==="player"?"mirror":"player";}
   function pushLog(text){if(logs)logs.push(text);}
   function markEvent(owner,mark,action,data={}){events.push({type:"mark",owner,mark,action,...data});}
@@ -239,10 +253,12 @@
   };
  };
  window.MIRROR_COMBAT_CORE_VERSION=MIRROR_COMBAT_CORE_VERSION;
+ window.MIRROR_COMBAT_WORLD_PHASE_VERSION=MIRROR_WORLD_PHASE_VERSION;
  window.MIRROR_COMBAT_MARK_RULE_VERSION=MIRROR_MARK_RULE_VERSION;
  window.MIRROR_COMBAT_BATTLE_LIMIT=RUN_BATTLES;
  window.MIRROR_CIVILIZATION_DAMAGE_VERSION=1;
  window.MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1;
+ window.mirrorCombatWorldForState=mirrorWorldForState;
  window.createMirrorCombatSnapshot=createMirrorCombatSnapshot;
  window.normalizeMirrorCombatSnapshot=normalizeSnapshot;
  window.mirrorSpecializationBonuses=specializationBonuses;
