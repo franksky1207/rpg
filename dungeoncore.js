@@ -5,8 +5,9 @@
   if(!enemy||typeof enemy!=="object")return {win:false,invalid:true,logs:[],events:[],e:enemy||null,combatEndHp:state.hp,turns:0};
   const explicitWorld=options.world==null?null:(Number(options.world)===2?2:1);
   const world=explicitWorld||(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1);
-  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state}):1;
-  const combat=runCombatCore(playerCombatStats(),enemy,state.hp,{playerFinalDamageMultiplier:civilizationMultiplier});
+  if(typeof window.runWorldCombatCore!=="function")return {win:false,invalid:true,reason:"world-combat-adapter-missing",logs:[],events:[],e:enemy,combatEndHp:state.hp,turns:0};
+  const resolved=window.runWorldCombatCore(playerCombatStats(),enemy,state.hp,{world,state});
+  const combat=resolved.combat;
   const combatEndHp=combat.hp;
   state.hp=combatEndHp;
   return {
@@ -16,8 +17,9 @@
    e:enemy,
    combatEndHp,
    turns:combat.turns,
-   civilizationDamageMultiplier
+   civilizationDamageMultiplier:resolved.playerFinalDamageMultiplier
   };
  };
- window.DUNGEON_CIVILIZATION_DAMAGE_VERSION=2;
+ window.DUNGEON_CIVILIZATION_DAMAGE_VERSION=3;
+ window.DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1;
 })();
