@@ -42,7 +42,7 @@
    "canEnterVoidMirage","getVoidMirageStartFloor","voidMirageStartFloorFromHistory",
    "isVoidMirageBossFloor","rollVoidMirageTraits","beginVoidMirageRun",
    "requestVoidMirageExit","fightNextVoidMirageFloor","runVoidMirageAuto",
-   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode","voidMirageCombatWorld","voidMirageIdentityHtml"
+   "getVoidMirageRunSnapshot","openVoidMirageMinimalMode","voidMirageCombatWorld","voidMirageIdentityHtml","playerTitleHtml"
   ];
   requiredApis.forEach(name=>{if(typeof window[name]!=="function")fail(`missing-api:${name}`);});
 
@@ -51,11 +51,13 @@
    probes.forEach(([target,expected])=>{if(Number(window.voidMirageCombatWorld(target))!==expected)fail(`world-phase:${expected}`);});
   }
 
-  if(typeof window.voidMirageIdentityHtml==="function"){
+  if(typeof window.playerTitleHtml==="function"&&typeof window.voidMirageIdentityHtml==="function"){
    [["higher-dimensional-title-01",1],["higher-dimensional-title-06",6],["higher-dimensional-title-10",10]].forEach(([titleId,tier])=>{
-    const html=String(window.voidMirageIdentityHtml({name:"驗收玩家",titleId}));
-    if(!html.includes("player-title--higher-dimensional")||!html.includes(`player-title--higher-dimensional-${tier}`)||!html.includes("驗收玩家"))fail(`w3-title-presentation:${tier}`);
+    const title=String(window.playerTitleHtml(titleId));
+    if(!title.includes("player-title--higher-dimensional")||!title.includes(`player-title--higher-dimensional-${tier}`))fail(`w3-title-renderer:${tier}`);
    });
+   const wiring=src(window.voidMirageIdentityHtml);
+   if(!/playerIdentityNameHtml/.test(wiring)||!/compact\s*:\s*true/.test(wiring))fail("w3-title-identity-wiring");
   }
 
   if(typeof window.canEnterVoidMirage==="function"){
