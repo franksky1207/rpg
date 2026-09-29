@@ -36,10 +36,22 @@
   if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","marks-manage",()=>window.gmMarkManagementHtml());
  }
 
+ const baseCivilizationHtml=window.gmCivilizationManagementHtml;
+ if(typeof baseCivilizationHtml==="function"){
+  window.gmCivilizationManagementHtml=function(){
+   if(phase()!==3)return baseCivilizationHtml();
+   const max=Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||10));
+   const bonus=max*Math.max(0,Number(window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL)||5);
+   const multiplier=(1+bonus/100).toFixed(2);
+   return `<div class="muted gm-hub-note">高維紀元正式文明等級固定 Lv.${max}，無法修改；正式戰鬥固定套用文明最終傷害。GM 測試沙盒仍可自由測試 Lv.0～Lv.${max}。</div><div class="controls" style="align-items:end"><label>文明等級<br>${fixedValueHtml(`Lv.${max}`)}</label><span class="muted">文明 Lv.${max}｜最終傷害 +${bonus}%｜×${multiplier}</span></div>`;
+  };
+  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","civilization-manage",()=>window.gmCivilizationManagementHtml());
+ }
+
  window.gmBatch16FormalWorldPhase=phase;
  window.gmBatch16SpecializationLocked=specializationLocked;
  window.gmBatch16MarkLocked=markLocked;
  window.gmBatch16FixedValueHtml=fixedValueHtml;
- window.GM_BATCH16_FORMAL_CONTROLS_VERSION=2;
- window.GM_BATCH16_FIXED_VALUE_UI_VERSION=1;
+ window.GM_BATCH16_FORMAL_CONTROLS_VERSION=3;
+ window.GM_BATCH16_FIXED_VALUE_UI_VERSION=2;
 })();
