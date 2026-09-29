@@ -1,5 +1,8 @@
 (function(){
  let voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
+ const VOID_MIRAGE_W3_INTEGRATION_VERSION=1;
+ const VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION=1;
+ const VOID_MIRAGE_W3_RESOURCE_POLICY=Object.freeze({reward:"vip",sharedProgress:"void-highest-floor",exp:false,dimensionalStrings:false,thirdWorldBossHp:false,thirdWorldCore:false});
  const sleep=ms=>typeof window.backgroundProgressSleep==="function"&&typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive("void")?window.backgroundProgressSleep(ms,"void"):new Promise(resolve=>setTimeout(resolve,ms));
  function floorGapMs(){
   if(typeof window.combatOuterGapMs!=="function")throw new Error("Combat Outer Pacing 未載入。");
@@ -36,6 +39,11 @@
  function dailySafe(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function startFloor(){return typeof getVoidMirageStartFloor==="function"?getVoidMirageStartFloor():Math.max(1,(progressSafe().highestCleared||0)-100);}
  function reasonText(reason){if(reason==="defeat")return "挑戰失敗";if(reason==="exit")return "已強制退出";return "本次挑戰結束";}
+ function voidIdentityHtml(options={}){
+  const name=String(options.name??(typeof currentPlayerName==="function"?currentPlayerName():state?.playerName||"玩家")),titleId=options.titleId===undefined?state?.titles?.equipped:options.titleId;
+  if(typeof window.playerIdentityNameHtml==="function")return window.playerIdentityNameHtml({name,titleId,compact:true});
+  return typeof escapePlayerName==="function"?escapePlayerName(name):name;
+ }
  function rewardLabel(daily){
   if(daily.claimed)return "今日已領取";
   if(daily.highestFloor<=0)return "尚無可領獎勵";
@@ -65,7 +73,7 @@
   const e=fr.enemy,s=run?.playerSnapshot||playerCombatStats(),floor=fr.floor,boss=e?.isBossFloor,daily=dailySafe();
   const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
   const exitLabel=voidUi.exitAfterFloor?"本層結束後將退出":"強制退出虛空幻境";
-  return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${voidIdentityHtml()} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
  }
 
  function resultHtml(run){
@@ -245,5 +253,9 @@
  window.VOID_MIRAGE_UI_STYLE_VERSION=1;
  window.VOID_MIRAGE_UI_AUTO_ADAPTER_VERSION=1;
  window.VOID_MINIMAL_MODE_HOOK_VERSION=1;
+ window.VOID_MIRAGE_W3_INTEGRATION_VERSION=VOID_MIRAGE_W3_INTEGRATION_VERSION;
+ window.VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION=VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION;
+ window.VOID_MIRAGE_W3_RESOURCE_POLICY=VOID_MIRAGE_W3_RESOURCE_POLICY;
+ window.voidMirageIdentityHtml=voidIdentityHtml;
  registerVoidMinimalModeAdapter();
 })();
