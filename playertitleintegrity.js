@@ -1,21 +1,37 @@
 (function(){
- const VERSION=16;
+ const VERSION=17;
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
  const HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=1;
  const HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION=1;
  const HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION=1;
  const MIRROR_VISUAL_CONTRACT_VERSION=4;
+ const NARROW_MOBILE_VISUAL_VERSION=1;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
  const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]),universeDefs=Array.from(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS||[]),mirrorDefs=Array.from(window.MIRROR_PLAYER_TITLE_DEFS||[]),higherDefs=Array.from(window.THIRD_WORLD_PLAYER_TITLE_DEFS||[]),catalogDefs=Array.from(window.PLAYER_TITLE_DEFS||[]),catalogIds=Array.from(window.PLAYER_TITLE_IDS||[]);
 
  function stylesheetSelectors(fragment){
-  const result={seen:false,selectors:new Set(),error:null};
-  const walk=rules=>Array.from(rules||[]).forEach(rule=>{
-   if(rule?.selectorText)String(rule.selectorText).split(",").map(value=>value.trim()).filter(Boolean).forEach(selector=>result.selectors.add(selector));
-   if(rule?.cssRules)walk(rule.cssRules);
+  const result={seen:false,selectors:new Set(),mediaSelectors:new Map(),error:null};
+  const addMedia=(condition,selector)=>{
+   const key=String(condition||"").replace(/\s+/g,"");
+   if(!key)return;
+   if(!result.mediaSelectors.has(key))result.mediaSelectors.set(key,new Set());
+   result.mediaSelectors.get(key).add(selector);
+  };
+  const walk=(rules,conditions=[])=>Array.from(rules||[]).forEach(rule=>{
+   if(rule?.selectorText){
+    const selectors=String(rule.selectorText).split(",").map(value=>value.trim()).filter(Boolean);
+    selectors.forEach(selector=>{
+     result.selectors.add(selector);
+     conditions.forEach(condition=>addMedia(condition,selector));
+    });
+   }
+   if(rule?.cssRules){
+    const next=rule?.conditionText?[...conditions,String(rule.conditionText)]:conditions;
+    walk(rule.cssRules,next);
+   }
   });
   Array.from(document.styleSheets||[]).forEach(sheet=>{
    if(!String(sheet?.href||"").includes(fragment))return;
@@ -24,12 +40,17 @@
   });
   return result;
  }
+ function hasMediaSelector(result,condition,selector){
+  const key=String(condition||"").replace(/\s+/g,"");
+  return result?.mediaSelectors?.get(key)?.has(selector)===true;
+ }
 
  if(Number(window.PLAYER_TITLE_STATE_VERSION)!==1)fail("TITLE_STATE_VERSION","玩家稱號 state 應為 V1",window.PLAYER_TITLE_STATE_VERSION);
  if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==3||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==2||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號應維持既有 catalog contract 並以 W3 Extension V1 擴充為 36 稱號",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION});
  if(window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_ALL_DEFS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_CATALOG_IDS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_ALL_IDS)fail("TITLE_CATALOG_SINGLE_OWNER","PLAYER_TITLE_DEFS／CATALOG／ALL 必須指向同一正式 catalog");
  if(Number(window.THIRD_WORLD_TITLE_BACKFILL_VERSION)!==1)fail("TITLE_THIRD_WORLD_BACKFILL_VERSION","高維稱號 backfill owner V1 未載入",window.THIRD_WORLD_TITLE_BACKFILL_VERSION);
  if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION)!==2)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 版本異常",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION});
+ if(Number(window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION)!==3||Number(window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION)!==4||Number(window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION)!==4)fail("TITLE_VISUAL_VERSION_SEMANTICS","鏡像 stable class ABI 與第14批 presentation 版本應分離標示",{mirrorClass:window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION,mirrorPresentation:window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION,higherPresentation:window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION});
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI／三紀元 post-flow 通知版本異常",{ui:window.PLAYER_TITLE_UI_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION,postFlow:window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION,legacyDelegate:window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION,higherReady:window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION});
  const postFlowEras=Array.from(window.PLAYER_TITLE_POST_FLOW_ERAS||[]);
  if(JSON.stringify(postFlowEras)!==JSON.stringify(["galaxy","universe","higher-dimensional"]))fail("TITLE_POST_FLOW_ERAS","稱號 post-flow owner 必須覆蓋三紀元",postFlowEras);
@@ -50,12 +71,14 @@
  if(!mirrorSheet.seen||mirrorSheet.error)fail("TITLE_MIRROR_VISUAL_STYLESHEET","鏡像稱號視覺 stylesheet 無法完整讀取",mirrorSheet);
  if(higherSheet.seen&&!higherSheet.error){
   [".player-title--higher-dimensional",...Array.from({length:10},(_,index)=>`.player-title--higher-dimensional-${index+1}`)].forEach(selector=>{if(!higherSheet.selectors.has(selector))fail("TITLE_HIGHER_VISUAL_SELECTOR",`缺少高維正式視覺 selector：${selector}`);});
+  [".player-title--higher-dimensional",...Array.from({length:10},(_,index)=>`.player-title--higher-dimensional-${index+1}::after`)].forEach(selector=>{if(!hasMediaSelector(higherSheet,"(max-width: 360px)",selector))fail("TITLE_HIGHER_NARROW_MOBILE",`缺少高維極窄手機保護：${selector}`);});
  }
  if(mirrorSheet.seen&&!mirrorSheet.error){
   [".player-title--mirror-v3",...mirrorDefs.map(def=>`.player-title--mirror-v3-${def.mirrorWins}`)].forEach(selector=>{if(!mirrorSheet.selectors.has(selector))fail("TITLE_MIRROR_VISUAL_SELECTOR",`缺少鏡像正式視覺 selector：${selector}`);});
+  [".player-title--mirror-v3",...mirrorDefs.map(def=>`.player-title--mirror-v3-${def.mirrorWins}::after`)].forEach(selector=>{if(!hasMediaSelector(mirrorSheet,"(max-width: 360px)",selector))fail("TITLE_MIRROR_NARROW_MOBILE",`缺少鏡像極窄手機保護：${selector}`);});
  }
 
- const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForUniverseCalamity","getPlayerTitleDefinitionForMirrorWins","getPlayerTitleDefinitionForThirdWorldTier","grantPlayerTitleForCalamityFirstKill","grantPlayerTitleForUniverseCalamityFirstKill","grantPlayerTitlesForMirrorWins","grantPlayerTitlesForThirdWorldTier","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice","getPlayerTitlePostFlowStatus","gmPlayerTitlePreviewHtml","gmSetPlayerTitlePreviewTier"];
+ const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForUniverseCalamity","getPlayerTitleDefinitionForMirrorWins","getPlayerTitleDefinitionForThirdWorldTier","grantPlayerTitleForCalamityFirstKill","grantPlayerTitleForUniverseCalamityFirstKill","grantPlayerTitlesForMirrorWins","grantPlayerTitlesForThirdWorldTier","getPendingPlayerTitleNotice","clearPendingTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice","getPlayerTitlePostFlowStatus","gmPlayerTitlePreviewHtml","gmSetPlayerTitlePreviewTier"].filter((name,index,self)=>self.indexOf(name)===index);
  required.forEach(name=>{if(typeof window[name]!=="function")fail("TITLE_API_MISSING",`${name} 未載入`);});
 
  try{
@@ -103,6 +126,10 @@
    const def=higherDefs[tier-1],html=def?window.playerTitleHtml(def.id):"";
    if(!html.includes(`player-title--higher-dimensional-${tier}`)||html.includes("player-title--tier-")||!html.includes(`data-title-text=\"${def?.name||""}\"`))fail("TITLE_HIGHER_ALL_RENDER",`高維第 ${tier} 階正式 renderer／視覺解耦異常`,html);
   });
+  mirrorDefs.forEach(def=>{
+   const html=window.playerTitleHtml(def.id);
+   if(!html.includes("player-title--mirror-v3")||!html.includes(`player-title--mirror-v3-${def.mirrorWins}`)||html.includes("player-title--tier-")||!html.includes(`data-title-text=\"${def.name}\"`))fail("TITLE_MIRROR_ALL_RENDER",`鏡像 ${def.mirrorWins} 勝稱號 stable class ABI／renderer 異常`,html);
+  });
   const blocked=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[8]?.id,target:ownedTarget});
   if(blocked.includes(higherDefs[8]?.name||""))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blocked);
  }catch(error){fail("TITLE_RENDER_PROBE","稱號 renderer probe 失敗",String(error?.message||error));}
@@ -115,7 +142,7 @@
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽 probe 失敗",String(error?.message||error));}
 
- const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,higherDimensionalVisualCompleteVersion:HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION,higherDimensionalVisualDecoupledVersion:HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION,mirrorVisualContractVersion:MIRROR_VISUAL_CONTRACT_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,higherDimensionalVisualCompleteVersion:HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION,higherDimensionalVisualDecoupledVersion:HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION,mirrorVisualContractVersion:MIRROR_VISUAL_CONTRACT_VERSION,narrowMobileVisualVersion:NARROW_MOBILE_VISUAL_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_INTEGRITY_VERSION=VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_BACKFILL_REGRESSION_VERSION=THIRD_WORLD_BACKFILL_REGRESSION_VERSION;
  window.PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION=POST_FLOW_REGRESSION_VERSION;
@@ -123,6 +150,7 @@
  window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION=HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION;
  window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION=HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION;
  window.PLAYER_TITLE_MIRROR_VISUAL_CONTRACT_VERSION=MIRROR_VISUAL_CONTRACT_VERSION;
+ window.PLAYER_TITLE_NARROW_MOBILE_VISUAL_VERSION=NARROW_MOBILE_VISUAL_VERSION;
  window.PLAYER_TITLE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Player title integrity error",errors);
 })();
