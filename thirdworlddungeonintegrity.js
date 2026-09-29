@@ -50,7 +50,7 @@
  if(typeof window.getThirdWorldArenaRoundReward==="function"){const a=window.getThirdWorldArenaRoundReward(1000),b=window.getThirdWorldArenaRoundReward(1100),c=window.getThirdWorldArenaRoundReward(2000);if(a?.scaledPoints!==1500||b?.scaledPoints!==1575||c?.scaledPoints!==2250)fail("w3-arena-reward-curve",{a,b,c});}
  if(typeof window.getArenaProgressForWorld==="function"&&window.getArenaProgressForWorld(3,w3)!==null)fail("w3-arena-rank-state",window.getArenaProgressForWorld(3,w3));
  if(typeof window.normalizeDungeonSaveState==="function"){
-  const rankProbe={secondWorld:{entered:true},thirdWorld:{entered:true},dungeon:{arenaByWorld:{1:{rank:1},2:{rank:1},3:{rank:9}}}};window.normalizeDungeonSaveState(rankProbe);if(Object.prototype.hasOwnProperty.call(rankProbe.dungeon.arenaByWorld,"3"))fail("w3-arena-retired-rank-not-removed",rankProbe.dungeon.arenaByWorld);
+  const rankProbe={secondWorld:{entered:true},thirdWorld:{entered:true},dungeon:{arenaByWorld:{1:{rank:1},2:{rank:1},3:{rank:9}}}};window.normalizeDungeonSaveState(rankProbe);if(Object.prototype.hasOwnProperty.call(rankProbe.dungeon["arenaByWorld"],"3"))fail("w3-arena-retired-rank-not-removed",rankProbe.dungeon["arenaByWorld"]);
  }
  const report=Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
  window.THIRD_WORLD_DUNGEON_INTEGRITY_VERSION=VERSION;window.THIRD_WORLD_DUNGEON_INTEGRITY=report;
