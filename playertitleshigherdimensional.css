@@ -1,0 +1,160 @@
+/* Higher-dimensional title series V1 — 第14-1批測試框架。
+   正式 owner 僅處理高維紀元稱號 presentation；不碰解鎖、裝備、存檔。
+   目前完整個性樣本：Tier 1 破界初臨、Tier 5 萬維共鳴、Tier 9 諸維唯一。
+   設計原則：本體文字 + 相位文字 + 開放式維度異象，不使用封閉方框底板。 */
+.player-title--higher-dimensional{
+ font-size:1.13em;
+ letter-spacing:.075em;
+ background-image:linear-gradient(96deg,#d8fbff 0%,#ffffff 25%,#b8c9ff 50%,#eadcff 75%,#ffffff 100%);
+ background-size:300% 100%;
+ text-shadow:0 0 4px rgba(255,255,255,.96),0 0 15px rgba(132,220,255,.74),0 0 30px rgba(128,102,230,.44);
+ animation:higherDimBaseText 3.4s ease-in-out infinite;
+}
+.player-title--higher-dimensional::before{
+ content:attr(data-title-text);
+ position:absolute;
+ inset:0;
+ display:block;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ clip-path:none;
+ background:none;
+ color:rgba(194,235,255,.34);
+ -webkit-text-fill-color:rgba(194,235,255,.34);
+ font:inherit;
+ font-weight:inherit;
+ letter-spacing:inherit;
+ line-height:inherit;
+ white-space:nowrap;
+ pointer-events:none;
+ z-index:-1;
+ opacity:.46;
+ transform:translate(.035em,.025em);
+ filter:none;
+ animation:higherDimBasePhase 3.2s ease-in-out infinite;
+}
+.player-title--higher-dimensional::after{
+ content:"";
+ position:absolute;
+ inset:-.64em -1.28em;
+ pointer-events:none;
+ z-index:-2;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ filter:none;
+ opacity:.74;
+ background:
+  linear-gradient(113deg,transparent 0 17%,rgba(176,239,255,.18) 19% 21%,transparent 23% 77%,rgba(205,184,255,.18) 79% 81%,transparent 83%),
+  radial-gradient(ellipse at 8% 50%,rgba(106,220,255,.18),transparent 28%),
+  radial-gradient(ellipse at 92% 50%,rgba(154,112,239,.18),transparent 28%);
+ animation:higherDimBaseField 3.8s ease-in-out infinite;
+}
+
+/* Tier 1｜破界初臨：第一道裂縫。青綠／冰青／白，輕微相位錯位。 */
+.player-title--higher-dimensional-1{
+ font-size:1.14em;
+ background-image:linear-gradient(98deg,#64e6d3 0%,#d9fff9 20%,#ffffff 39%,#81dff5 61%,#aaf6e9 81%,#ffffff 100%);
+ background-size:320% 100%;
+ text-shadow:0 0 4px rgba(236,255,252,.98),0 0 15px rgba(86,232,210,.80),0 0 29px rgba(74,177,224,.42);
+ animation:higherDimBreachText 3.15s ease-in-out infinite;
+}
+.player-title--higher-dimensional-1::before{
+ color:rgba(86,238,214,.42);
+ -webkit-text-fill-color:rgba(86,238,214,.42);
+ opacity:.55;
+ transform:translate(.045em,.018em);
+ text-shadow:-.035em 0 rgba(117,205,255,.24);
+ animation:higherDimBreachPhase 2.9s ease-in-out infinite;
+}
+.player-title--higher-dimensional-1::after{
+ inset:-.64em -1.42em;
+ opacity:.86;
+ background:
+  linear-gradient(117deg,transparent 0 13%,rgba(124,244,224,.34) 14% 15.5%,transparent 17% 48%,rgba(236,255,255,.18) 49% 50%,transparent 51% 84%,rgba(100,201,245,.30) 85.5% 87%,transparent 88.5%),
+  radial-gradient(ellipse at 7% 53%,rgba(74,236,212,.25),transparent 27%),
+  radial-gradient(ellipse at 93% 47%,rgba(75,181,239,.24),transparent 27%);
+ animation:higherDimBreachField 3.25s ease-in-out infinite;
+}
+
+/* Tier 5｜萬維共鳴：多個相位同時共振。青藍／紫／玫紅，雙向波面。 */
+.player-title--higher-dimensional-5{
+ font-size:1.17em;
+ background-image:linear-gradient(94deg,#6be5ff 0%,#ffffff 15%,#9476ff 34%,#f19de1 51%,#ffffff 68%,#72ddff 84%,#d9c7ff 100%);
+ background-size:380% 100%;
+ text-shadow:0 0 5px rgba(255,255,255,.98),0 0 17px rgba(91,220,255,.88),0 0 34px rgba(142,104,244,.60),0 0 48px rgba(226,116,203,.24);
+ animation:higherDimResonanceText 2.65s linear infinite;
+}
+.player-title--higher-dimensional-5::before{
+ color:rgba(132,215,255,.36);
+ -webkit-text-fill-color:rgba(132,215,255,.36);
+ opacity:.72;
+ transform:translate(-.055em,.015em);
+ text-shadow:.095em .01em rgba(225,118,211,.30),-.055em -.015em rgba(120,97,246,.26);
+ animation:higherDimResonancePhase 2.15s ease-in-out infinite;
+}
+.player-title--higher-dimensional-5::after{
+ inset:-.82em -1.76em;
+ opacity:.96;
+ background:
+  repeating-linear-gradient(116deg,transparent 0 13px,rgba(114,229,255,.09) 14px 15px,transparent 16px 27px),
+  repeating-linear-gradient(64deg,transparent 0 17px,rgba(223,137,235,.08) 18px 19px,transparent 20px 32px),
+  radial-gradient(ellipse at 8% 50%,rgba(78,222,255,.31),transparent 29%),
+  radial-gradient(ellipse at 50% 50%,rgba(154,113,255,.18),transparent 44%),
+  radial-gradient(ellipse at 92% 50%,rgba(232,120,210,.29),transparent 29%);
+ animation:higherDimResonanceField 2.45s ease-in-out infinite;
+}
+
+/* Tier 9｜諸維唯一：多重可能性收束成唯一。白金／黑／虹彩邊緣。 */
+.player-title--higher-dimensional-9{
+ font-size:1.20em;
+ background-image:linear-gradient(90deg,#6e7480 0%,#fff1bd 11%,#ffffff 25%,#b8f2ff 39%,#ffffff 51%,#e0c7ff 65%,#fff0c2 80%,#ffffff 91%,#6f7280 100%);
+ background-size:420% 100%;
+ text-shadow:0 0 5px rgba(255,255,255,1),0 0 19px rgba(241,226,177,.88),0 0 38px rgba(155,220,255,.58),0 0 54px rgba(157,124,229,.34);
+ animation:higherDimSingularityText 2.25s ease-in-out infinite;
+}
+.player-title--higher-dimensional-9::before{
+ color:rgba(255,244,205,.28);
+ -webkit-text-fill-color:rgba(255,244,205,.28);
+ opacity:.86;
+ transform:translate(.075em,0);
+ text-shadow:-.13em .02em rgba(130,221,255,.24),.14em -.015em rgba(203,157,255,.22),-.24em 0 rgba(255,255,255,.10);
+ animation:higherDimSingularityPhase 1.95s ease-in-out infinite;
+}
+.player-title--higher-dimensional-9::after{
+ inset:-1.02em -2.20em;
+ opacity:1;
+ background:
+  linear-gradient(111deg,transparent 0 12%,rgba(255,238,184,.34) 14% 16%,transparent 18% 42%,rgba(185,239,255,.20) 44% 46%,transparent 48% 74%,rgba(213,180,255,.30) 76% 78%,transparent 80%),
+  linear-gradient(69deg,transparent 0 20%,rgba(170,229,255,.18) 22% 24%,transparent 26% 72%,rgba(255,231,171,.18) 74% 76%,transparent 78%),
+  radial-gradient(ellipse at 50% 50%,rgba(7,9,16,.46) 0 10%,rgba(255,255,255,.12) 19%,transparent 44%),
+  radial-gradient(ellipse at 7% 50%,rgba(255,232,170,.27),transparent 27%),
+  radial-gradient(ellipse at 93% 50%,rgba(191,163,255,.27),transparent 27%);
+ animation:higherDimSingularityField 2.10s ease-in-out infinite;
+}
+
+@keyframes higherDimBaseText{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes higherDimBasePhase{0%,100%{transform:translate(.025em,.018em);opacity:.36}50%{transform:translate(-.025em,-.012em);opacity:.52}}
+@keyframes higherDimBaseField{0%,100%{transform:scaleX(.98);opacity:.60}50%{transform:scaleX(1.025);opacity:.82}}
+@keyframes higherDimBreachText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.08)}}
+@keyframes higherDimBreachPhase{0%,100%{transform:translate(.045em,.018em);opacity:.46}48%{transform:translate(-.025em,-.01em);opacity:.64}52%{transform:translate(.07em,.015em);opacity:.52}}
+@keyframes higherDimBreachField{0%,100%{transform:translateX(-1.2%) skewX(-1deg);opacity:.68}50%{transform:translateX(1.4%) skewX(1deg);opacity:.94}}
+@keyframes higherDimResonanceText{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+@keyframes higherDimResonancePhase{0%,100%{transform:translate(-.055em,.015em);opacity:.58}33%{transform:translate(.065em,-.02em);opacity:.80}66%{transform:translate(.015em,.035em);opacity:.67}}
+@keyframes higherDimResonanceField{0%,100%{transform:scaleX(.965) translateX(-1%);opacity:.78}50%{transform:scaleX(1.045) translateX(1%);opacity:1}}
+@keyframes higherDimSingularityText{0%,100%{background-position:0 50%;filter:brightness(1)}50%{background-position:100% 50%;filter:brightness(1.10)}}
+@keyframes higherDimSingularityPhase{0%,100%{transform:translate(.12em,0);opacity:.58}48%{transform:translate(-.10em,.015em);opacity:.94}52%{transform:translate(.025em,-.015em);opacity:.76}}
+@keyframes higherDimSingularityField{0%,100%{transform:scaleX(1.04);opacity:.80}50%{transform:scaleX(.965);opacity:1}}
+
+@media(max-width:600px){
+ .player-title--higher-dimensional{letter-spacing:.055em}
+ .player-title--higher-dimensional::after{transform-origin:center}
+ .player-title--higher-dimensional-9::after{inset:-.92em -1.72em}
+}
+
+@media(prefers-reduced-motion:reduce){
+ .player-title--higher-dimensional,
+ .player-title--higher-dimensional::before,
+ .player-title--higher-dimensional::after{animation:none!important;filter:none!important}
+}
