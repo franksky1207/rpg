@@ -9,13 +9,15 @@ assert(files.length>0,"找不到任何 JavaScript 檔案。");
 const syntaxFailures=[];
 for(const file of files){const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});if(checked.status!==0)syntaxFailures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());}
 assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFailures.join("\n\n"));
-const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js");
+const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js");
 const localScripts=[...index.matchAll(/<script\s+(?:defer\s+)?(?:data-[^=]+="[^"]*"\s+)*src=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
 const pos=name=>index.indexOf('src="'+name+'?v=');
 assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
 assert(pos("saveversionguard.js")>pos("savemigration.js")&&pos("saveversionguard.js")<pos("ui.js"),"saveversionguard.js 必須在 migration 之後、ui.js 啟動 load 前載入。");
 assert(/saveversionguard\.js\?v=20260930-audit-batch3/.test(index),"第3批 Save Safety/Capacity 修改後必須更新 index.html cache-bust。");
+assert(/offlinestatecore\.js\?v=20260930-audit-batch4/.test(index),"第4批 Offline owner 修改後必須更新 offlinestatecore.js cache-bust。");
+assert(/battlepipeline\.js\?v=20260930-audit-batch4/.test(index),"第4批 Offline consumer 修改後必須更新 battlepipeline.js cache-bust。");
 assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
 assert(pos("integritycontract.js")<pos("runtimeintegrity.js")&&pos("runtimeintegrity.js")<pos("finalintegrity.js"),"Integrity Contract → Runtime → Final 載入順序錯誤。");
 assert(!index.includes("legacy Runtime Integrity cache-bust contract marker"),"index.html 不應再保留只為舊 regex 存在的 cache-bust marker。");
@@ -23,7 +25,7 @@ assert(!thirdWorldDungeonUi.includes("Runtime legacy source token only"),"thirdw
 assert(!thirdWorldDungeonUi.includes('rewardText:"尚未開放"')&&!thirdWorldDungeonUi.includes('buttonLabel:"等待高維競技場開放"'),"高維競技場正式 owner 不應再含已退休的未開放 placeholder。");
 assert(/const VERSION=6;/.test(thirdWorldDungeonUi)&&/THIRD_WORLD_ARENA_LIVE_VERSION=1/.test(thirdWorldDungeonUi),"高維副本 adapter 應為 V6 並宣告競技場正式開放。");
 assert(/mode==="arena"\)return \{visible:true,enabled:true/.test(thirdWorldDungeonUi)&&/buttonLabel:"進入高維競技場"/.test(thirdWorldDungeonUi),"高維競技場正式 policy 必須可進入。");
-assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
+assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/OFFLINE_SAMPLE_OWNER_VERSION:2/.test(contract)&&/OFFLINE_SAMPLE_POLICY_VERSION:1/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
 assert(/VERSION_BELOW_MINIMUM/.test(contract)&&/CIVILIZATION_INTEGRITY_MINIMUM_VERSIONS/.test(contract)&&/runCanonicalCivilizationIntegrityContract/.test(contract),"Canonical Integrity Contract 必須使用最低版本策略並保留不受 extension 覆寫的正式入口。");
 assert(/const SAVE_SAFETY_VERSION=2/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V2 與持久安全備份 key 缺失。");
 assert(/SAVE_CAPACITY_DIAGNOSTIC_VERSION=1/.test(saveGuard)&&/SAVE_CAPACITY_WARNING_BYTES/.test(saveGuard)&&/SAVE_CAPACITY_CRITICAL_BYTES/.test(saveGuard),"Save Capacity Diagnostic V1 缺失。");
@@ -39,7 +41,13 @@ assert(/const VERSION=21;/.test(runtime)&&/runCanonicalCivilizationIntegrityCont
 assert(/OFFLINE_STATE_NORMALIZATION_VERSION\)<4/.test(runtime)&&/OFFLINE_BATTLE_SAMPLE_VERSION/.test(runtime),"Runtime Integrity 必須依正式 Offline V4 owner／動態 sample version 驗證。");
 assert(/balanceVersion\)!==7/.test(runtime)&&/rankBalanceVersion\)!==4/.test(runtime),"Runtime Integrity Arena profile 必須同步 Balance V7／Rank V4。");
 assert(/const VERSION=21;/.test(finalIntegrity)&&/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==21/.test(finalIntegrity)&&/runCanonicalCivilizationIntegrityContract/.test(finalIntegrity),"Final Integrity 應同步 Runtime V21／Canonical Contract V3。");
-assert(/const VERSION=4;/.test(offlineStateCore)&&/OFFLINE_BATTLE_SAMPLE_VERSION=4/.test(offlineStateCore),"Offline canonical owner 應為 normalization V4／sample V4。");
+assert(/const VERSION=4;/.test(offlineStateCore)&&/OFFLINE_BATTLE_SAMPLE_VERSION=4/.test(offlineStateCore)&&/OFFLINE_SAMPLE_OWNER_VERSION=2/.test(offlineStateCore)&&/OFFLINE_SAMPLE_POLICY_VERSION=1/.test(offlineStateCore),"Offline canonical owner 應為 normalization/sample V4、owner V2、policy V1。");
+assert(/offlineBattleSampleMultiplier=sampleMultiplier/.test(offlineStateCore)&&/offlineBattleSamplePolicySnapshot=samplePolicySnapshot/.test(offlineStateCore)&&/appendOfflineBattleSample=appendOfflineBattleSample/.test(offlineStateCore),"Offline canonical owner 必須公開 multiplier／policy／append API。");
+assert(/MAIN_REAL_BATTLE_SAMPLE_VERSION=4/.test(battlePipeline)&&/MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1/.test(battlePipeline),"第一紀元主線 Offline sample consumer 尚未升級到 owner convergence V1。");
+assert(/window\.offlineBattleSampleMultiplier/.test(battlePipeline)&&/window\.appendOfflineBattleSample/.test(battlePipeline),"第一紀元主線必須只透過 canonical Offline sample API 取得 multiplier 與 append sample。");
+assert(!/retainRealBattleSamplesBySpeed/.test(battlePipeline)&&!/function realBattleSampleMultiplier/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLES_PER_SPEED/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLE_SPEEDS/.test(battlePipeline),"battlepipeline.js 不得再維護自己的 sample retention／multiplier owner。");
+assert(!/state\.offline\.battleSamples\s*=/.test(battlePipeline)&&!/state\.offline\.battleSampleVersion\s*=/.test(battlePipeline),"battlepipeline.js 不得直接寫 Offline sample storage。");
+assert(/window\.appendOfflineBattleSample/.test(offlineProgress),"第二紀元 Offline sample consumer 必須維持 canonical append owner。");
 assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"Arena canonical profile 應為 Balance V7／Rank V4。");
 assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena)&&/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena)&&/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"第二紀元 Arena 最新三條 Rank 曲線不符。");
 assert(/GAME_GUIDE_VERSION=24/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");
@@ -49,4 +57,4 @@ const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguid
 assert(guideExtensionBehavior.status===0,"Guide shared extension behavior regression failed：\n"+String(guideExtensionBehavior.stderr||guideExtensionBehavior.stdout||"unknown error").trim());
 const saveMigrationBehavior=spawnSync(process.execPath,["tests/runtime/save-migration-staircase.js"],{encoding:"utf8"});
 assert(saveMigrationBehavior.status===0,"Save migration staircase regression failed：\n"+String(saveMigrationBehavior.stderr||saveMigrationBehavior.stdout||"unknown error").trim());
-console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, Save Safety V2/Capacity V1/Migration Staircase V1, live W3 dungeon policy, offline V4 owner and Arena V7/V4 are synchronized.");
+console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; canonical V3/V21 runtime guards, Save Safety V2/Capacity V1/Migration Staircase V1, Offline sample owner V2 convergence, live W3 dungeon policy and Arena V7/V4 are synchronized.");
