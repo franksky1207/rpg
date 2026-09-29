@@ -1,8 +1,9 @@
 (function(){
- const VERSION=14;
+ const VERSION=15;
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
  const HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=1;
+ const HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION=1;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
@@ -69,9 +70,9 @@
   const ownedTarget={playerName:"Frank",titles:{version:1,unlocked:[calamityDefs[9]?.id,universeDefs[9]?.id,mirrorDefs[5]?.id,higherDefs[9]?.id].filter(Boolean),equipped:higherDefs[9]?.id,pendingNotice:null}};
   const higherHtml=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[9]?.id,target:ownedTarget});
   if(!higherHtml.includes("player-title--higher-dimensional-10")||!higherHtml.includes(higherDefs[9]?.name||"")||!higherHtml.includes("data-title-text")||!higherHtml.includes("player-identity-name"))fail("TITLE_THIRD_WORLD_RENDERER","高維稱號 renderer 異常",higherHtml);
-  [1,5,9].forEach(tier=>{
+  Array.from({length:10},(_,index)=>index+1).forEach(tier=>{
    const def=higherDefs[tier-1],html=def?window.playerTitleHtml(def.id):"";
-   if(!html.includes(`player-title--higher-dimensional-${tier}`)||!html.includes(`data-title-text=\"${def?.name||""}\"`))fail("TITLE_HIGHER_SAMPLE_RENDER",`高維第 ${tier} 階測試樣本 renderer 異常`,html);
+   if(!html.includes(`player-title--higher-dimensional-${tier}`)||!html.includes(`data-title-text=\"${def?.name||""}\"`))fail("TITLE_HIGHER_ALL_RENDER",`高維第 ${tier} 階正式 renderer 異常`,html);
   });
   const blocked=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[8]?.id,target:ownedTarget});
   if(blocked.includes(higherDefs[8]?.name||""))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blocked);
@@ -85,11 +86,12 @@
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽 probe 失敗",String(error?.message||error));}
 
- const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,higherDimensionalVisualCompleteVersion:HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_INTEGRITY_VERSION=VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_BACKFILL_REGRESSION_VERSION=THIRD_WORLD_BACKFILL_REGRESSION_VERSION;
  window.PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION=POST_FLOW_REGRESSION_VERSION;
  window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION;
+ window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION=HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION;
  window.PLAYER_TITLE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Player title integrity error",errors);
 })();
