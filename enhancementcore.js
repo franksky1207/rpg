@@ -22,8 +22,15 @@
   if(typeof window.isSecondWorldEntered==="function")return window.isSecondWorldEntered(holder)===true;
   return holder?.secondWorld?.entered===true;
  }
- function effectiveEnhancementMin(target=null){return enteredSecondWorld(target)?SECOND_WORLD_ENHANCEMENT_MIN:0;}
- function effectiveEnhancementCap(target=null){return enteredSecondWorld(target)?SECOND_WORLD_ENHANCEMENT_CAP:FIRST_WORLD_ENHANCEMENT_CAP;}
+ function enteredThirdWorld(target=null){
+  const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
+  if(!holder)return false;
+  if(typeof window.isThirdWorldEntered==="function")return window.isThirdWorldEntered(holder)===true;
+  return holder?.thirdWorld?.entered===true;
+ }
+ function enhancementWorldPhase(target=null){if(enteredThirdWorld(target))return 3;if(enteredSecondWorld(target))return 2;return 1;}
+ function effectiveEnhancementMin(target=null){const phase=enhancementWorldPhase(target);return phase===3?SECOND_WORLD_ENHANCEMENT_CAP:phase===2?SECOND_WORLD_ENHANCEMENT_MIN:0;}
+ function effectiveEnhancementCap(target=null){return enhancementWorldPhase(target)>=2?SECOND_WORLD_ENHANCEMENT_CAP:FIRST_WORLD_ENHANCEMENT_CAP;}
  function clampEffectiveEnhancementLevel(value,target=null){return clampWhole(value,0,effectiveEnhancementCap(target));}
  function formalEnhancementLevelValid(value,target=null){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=effectiveEnhancementMin(target)&&n<=effectiveEnhancementCap(target);}
  function enhancementFormalStateIssues(target=null){
@@ -52,9 +59,8 @@
  function enhancementBonusPercent(level){return clampWhole(level,0,ABSOLUTE_MAX_LEVEL)*BONUS_PERCENT_PER_LEVEL;}
  function enhancementMultiplier(level){return 1+enhancementBonusPercent(level)/100;}
  function enhancementUpgradeCost(targetLevel,target=null){
-  const raw=Math.floor(Number(targetLevel)),cap=effectiveEnhancementCap(target);
-  const second=enteredSecondWorld(target);
-  if(!Number.isFinite(raw)||raw<1||raw>cap||(second&&raw<=SECOND_WORLD_ENHANCEMENT_MIN))return {available:false,targetLevel:Number.isFinite(raw)?raw:0,phase:second?2:1,basic:0,advanced:0,darkMatter:0,darkEnergy:0};
+  const raw=Math.floor(Number(targetLevel)),cap=effectiveEnhancementCap(target),phase=enhancementWorldPhase(target),second=phase===2;
+  if(!Number.isFinite(raw)||raw<1||raw>cap||phase===3||(second&&raw<=SECOND_WORLD_ENHANCEMENT_MIN))return {available:false,targetLevel:Number.isFinite(raw)?raw:0,phase,basic:0,advanced:0,darkMatter:0,darkEnergy:0};
   if(raw<=FIRST_WORLD_ENHANCEMENT_CAP)return {available:true,targetLevel:raw,phase:1,basic:BASIC_COST_PER_TARGET_LEVEL*raw,advanced:ADVANCED_COST_PER_TARGET_LEVEL*raw,darkMatter:0,darkEnergy:0};
   const k=raw-(FIRST_WORLD_ENHANCEMENT_CAP+1);
   return {available:true,targetLevel:raw,phase:2,basic:0,advanced:0,darkMatter:SECOND_WORLD_DARK_MATTER_BASE+SECOND_WORLD_DARK_MATTER_STEP*k,darkEnergy:SECOND_WORLD_DARK_ENERGY_BASE+SECOND_WORLD_DARK_ENERGY_STEP*k};
@@ -68,11 +74,13 @@
  window.ENHANCEMENT_MAX_LEVEL=MAX_LEVEL;
  window.ENHANCEMENT_WORLD_AWARE_CORE_VERSION=2;
  window.ENHANCEMENT_FORMAL_RANGE_VERSION=2;
+ window.ENHANCEMENT_THIRD_WORLD_FORMAL_LOCK_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_COST_VERSION=1;
  window.SECOND_WORLD_ENHANCEMENT_DATA_CAP_ACTIVE=true;
  window.ENHANCEMENT_BONUS_PERCENT_PER_LEVEL=BONUS_PERCENT_PER_LEVEL;
  window.ENHANCEMENT_SLOTS=Object.freeze(SLOTS.slice());
  window.createBlankEnhancementLevels=blankLevels;
+ window.enhancementWorldPhase=enhancementWorldPhase;
  window.effectiveEnhancementMin=effectiveEnhancementMin;
  window.effectiveEnhancementCap=effectiveEnhancementCap;
  window.clampEffectiveEnhancementLevel=clampEffectiveEnhancementLevel;
