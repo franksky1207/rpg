@@ -1,6 +1,8 @@
 (function(){
  function maxLevel(){return Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||10));}
  function clamp(value){return typeof window.clampCivilizationLevel==="function"?window.clampCivilizationLevel(value):Math.max(0,Math.min(maxLevel(),Math.floor(Number(value)||0)));}
+ function formalRange(){return typeof window.formalCivilizationRange==="function"?window.formalCivilizationRange(state):{phase:(state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1),enabled:state?.secondWorld?.entered===true,min:0,max:maxLevel(),fixed:false};}
+ function formalClamp(value){return typeof window.clampFormalCivilizationLevel==="function"?window.clampFormalCivilizationLevel(value,state):clamp(value);}
  function cloneState(){try{return JSON.parse(JSON.stringify(state));}catch(e){return null;}}
  function restoreStateSnapshot(snapshot){if(!snapshot||typeof snapshot!=="object")return false;state=snapshot;return true;}
  function saveOrRollback(snapshot){
@@ -12,11 +14,12 @@
  window.gmTestCivilizationLevel=0;
 
  function testLevel(){return clamp(window.gmTestCivilizationLevel);}
- function entered(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state);}
+ function entered(){return formalRange().enabled===true;}
  function testOptions(){return Array.from({length:maxLevel()+1},(_,i)=>`<option value="${i}" ${i===testLevel()?"selected":""}>Lv.${i}</option>`).join("");}
  function formalOptions(){
-  const current=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):clamp(state?.secondWorld?.civilizationLevel);
-  return Array.from({length:maxLevel()+1},(_,i)=>`<option value="${i}" ${i===current?"selected":""}>Lv.${i}</option>`).join("");
+  const range=formalRange();
+  const current=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):formalClamp(state?.secondWorld?.civilizationLevel);
+  return Array.from({length:Math.max(0,range.max-range.min+1)},(_,i)=>range.min+i).map(i=>`<option value="${i}" ${i===current?"selected":""}>Lv.${i}</option>`).join("");
  }
  function label(level=testLevel()){
   const lv=clamp(level);
@@ -49,20 +52,26 @@
  };
 
  window.gmCivilizationManagementHtml=function(){
-  if(!entered())return '<div class="muted gm-hub-note">文明等級自宇宙紀元起啟用；目前正式角色仍在銀河紀元，沒有可修改的文明等級。</div>';
-  const current=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
-  return `<div class="muted gm-hub-note">直接修改正式角色文明等級，範圍 Lv.0～Lv.${maxLevel()}；文明等級會保留至高維紀元，並對宇宙／高維戰鬥提供每級 5% 最終傷害。</div><div class="controls" style="align-items:end"><label>文明等級<br><select id="gmCivilizationManageLevel" class="btn">${formalOptions()}</select></label><span class="muted">${label(current)}</span><button class="btn blue" onclick="gmApplyCivilizationLevel()">套用文明等級</button></div>`;
+  const range=formalRange();
+  if(!range.enabled)return '<div class="muted gm-hub-note">文明等級自宇宙紀元起啟用；目前正式角色仍在銀河紀元，沒有可修改的文明等級。</div>';
+  const current=typeof window.civilizationLevel==="function"?window.civilizationLevel(state):formalClamp(state?.secondWorld?.civilizationLevel);
+  if(range.phase===3)return `<div class="muted gm-hub-note">高維紀元正式文明等級固定 Lv.${range.max}，無法修改；正式戰鬥固定套用每級 5% 的文明最終傷害。此鎖定不影響 GM 測試沙盒。</div><div class="controls" style="align-items:end"><label>文明等級<br><select id="gmCivilizationManageLevel" class="btn" disabled>${formalOptions()}</select></label><span class="muted">${label(current)}</span><button class="btn blue" onclick="gmApplyCivilizationLevel()" disabled>套用文明等級</button></div>`;
+  return `<div class="muted gm-hub-note">直接修改正式角色文明等級，範圍 Lv.${range.min}～Lv.${range.max}；文明等級會保留至高維紀元，並對宇宙／高維戰鬥提供每級 5% 最終傷害。</div><div class="controls" style="align-items:end"><label>文明等級<br><select id="gmCivilizationManageLevel" class="btn">${formalOptions()}</select></label><span class="muted">${label(current)}</span><button class="btn blue" onclick="gmApplyCivilizationLevel()">套用文明等級</button></div>`;
  };
  window.gmApplyCivilizationLevel=function(){
-  if(!entered())return alert("目前尚未進入宇宙紀元。");
-  const el=document.getElementById("gmCivilizationManageLevel");
-  const lv=clamp(el?el.value:state?.secondWorld?.civilizationLevel);
+  const range=formalRange();
+  if(!range.enabled)return alert("目前尚未進入宇宙紀元。");
   if(!state.secondWorld||typeof state.secondWorld!=="object")return alert("宇宙紀元 state 尚未載入。");
+  const el=document.getElementById("gmCivilizationManageLevel");
+  const requested=el?el.value:state.secondWorld.civilizationLevel;
+  const lv=formalClamp(requested);
   const snapshot=cloneState();if(!snapshot)return alert("無法建立文明等級修改前存檔快照。");
   state.secondWorld.civilizationLevel=lv;
   if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(state);
+  if(range.phase===3)state.secondWorld.civilizationLevel=maxLevel();
   if(!saveOrRollback(snapshot)){if(typeof render==="function")render();return alert("存檔失敗，已回復文明等級修改前狀態。");}
   if(typeof render==="function")render();
+  if(range.phase===3){alert(`高維紀元文明等級固定為 Lv.${maxLevel()}。`);return maxLevel();}
   alert(`文明等級已更新為 Lv.${lv}。`);
   return lv;
  };
@@ -71,9 +80,10 @@
  };
 
  window.GM_CIVILIZATION_VERSION=1;
- window.GM_CIVILIZATION_FORMAL_RANGE_VERSION=1;
+ window.GM_CIVILIZATION_FORMAL_RANGE_VERSION=2;
  window.GM_CIVILIZATION_TEST_RANGE_VERSION=1;
  window.GM_CIVILIZATION_ATOMIC_MUTATION_VERSION=1;
  window.GM_CIVILIZATION_TEST_BATCH_SYNC_VERSION=1;
- window.GM_CIVILIZATION_WORLD_PHASE_VERSION=1;
+ window.GM_CIVILIZATION_WORLD_PHASE_VERSION=2;
+ window.GM_CIVILIZATION_WORLD3_LOCK_VERSION=1;
 })();
