@@ -2,7 +2,10 @@
  const PLAYER_TITLE_RENDERER_VERSION=4;
  const UNIVERSE_RENDERER_VERSION=1;
  const MIRROR_RENDERER_VERSION=3;
+ const MIRROR_VISUAL_CLASS_VERSION=3;
+ const MIRROR_PRESENTATION_VERSION=4;
  const THIRD_WORLD_RENDERER_VERSION=2;
+ const THIRD_WORLD_PRESENTATION_VERSION=4;
 
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
@@ -12,6 +15,7 @@
   let series="calamity",visualClass=`player-title--tier-${def.tier}`;
   if(def.series==="mirror"){
    series="mirror";
+   // mirror-v3 is the stable CSS class ABI; presentation styling is versioned separately.
    visualClass=`player-title--mirror-v3 player-title--mirror-v3-${def.mirrorWins}`;
   }else if(def.series==="universe-calamity"){
    series="universe-calamity";
@@ -42,7 +46,10 @@
  window.PLAYER_TITLE_RENDERER_VERSION=PLAYER_TITLE_RENDERER_VERSION;
  window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION=UNIVERSE_RENDERER_VERSION;
  window.PLAYER_TITLE_MIRROR_RENDERER_VERSION=MIRROR_RENDERER_VERSION;
+ window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION=MIRROR_VISUAL_CLASS_VERSION;
+ window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION=MIRROR_PRESENTATION_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION=THIRD_WORLD_RENDERER_VERSION;
+ window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION=THIRD_WORLD_PRESENTATION_VERSION;
  window.playerTitleHtml=playerTitleHtml;
  window.playerIdentityNameHtml=playerIdentityNameHtml;
 })();
