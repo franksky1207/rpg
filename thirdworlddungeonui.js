@@ -1,5 +1,10 @@
 (function(){
  const VERSION=5;
+ function legacyPresentationContractV2(){
+  const VERSION=2;
+  const DUNGEON_MODE_PRESENTATION_POLICY_VERSION=1;
+  return Object.freeze({VERSION,DUNGEON_MODE_PRESENTATION_POLICY_VERSION,titleText:"高維競技場",rewardText:"尚未開放",buttonLabel:"等待高維競技場開放"});
+ }
  const policies=new Map();
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
@@ -128,6 +133,7 @@
  window.unregisterDungeonModeAvailabilityPolicy=unregisterPolicy;
  window.dungeonModeAvailability=availability;
  window.THIRD_WORLD_DUNGEON_UI_VERSION=VERSION;
+ window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_CONTRACT=legacyPresentationContractV2();
  window.THIRD_WORLD_ARENA_LIVE_VERSION=1;
  window.THIRD_WORLD_DUNGEON_HOME_POLICY_VERSION=2;
  window.THIRD_WORLD_DUNGEON_RESOURCE_BAR_VERSION=1;
