@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const errors=[];
  const fail=(code,data=null)=>errors.push({code,data});
  const w1={level:100,gold:77,secondWorld:{entered:false,darkMatter:0,darkEnergy:0},thirdWorld:{entered:false,dimensionalStrings:0}};
@@ -52,8 +52,8 @@
  if(Number(window.MIRROR_W3_INTEGRATION_VERSION)!==1||mirrorPolicy?.reward!=="vip"||mirrorPolicy?.sharedProgress!=="mirror-history"||mirrorPolicy?.dimensionalStrings!==false||mirrorPolicy?.thirdWorldCore!==false)fail("mirror-w3-policy",mirrorPolicy||null);
  if(Number(window.VOID_MIRAGE_W3_INTEGRATION_VERSION)!==1||voidPolicy?.reward!=="vip"||voidPolicy?.sharedProgress!=="void-highest-floor"||voidPolicy?.dimensionalStrings!==false||voidPolicy?.thirdWorldCore!==false)fail("void-w3-policy",voidPolicy||null);
 
- const arenaVersions={core:window.THIRD_WORLD_ARENA_CORE_VERSION,flow:window.THIRD_WORLD_ARENA_FLOW_VERSION,reward:window.THIRD_WORLD_ARENA_REWARD_VERSION,daily:window.THIRD_WORLD_ARENA_DAILY_VERSION,ui:window.THIRD_WORLD_ARENA_UI_VERSION,gm:window.GM_THIRD_WORLD_ARENA_TEST_VERSION,manage:window.GM_ARENA_SHARED_DAILY_MANAGEMENT_VERSION};
- if(Number(arenaVersions.core)!==2||Number(arenaVersions.flow)!==2||Number(arenaVersions.reward)!==1||Number(arenaVersions.daily)!==1||Number(arenaVersions.ui)!==1||Number(arenaVersions.gm)!==1||Number(arenaVersions.manage)!==1)fail("w3-arena-versions",arenaVersions);
+ const arenaVersions={core:window.THIRD_WORLD_ARENA_CORE_VERSION,flow:window.THIRD_WORLD_ARENA_FLOW_VERSION,reward:window.THIRD_WORLD_ARENA_REWARD_VERSION,daily:window.THIRD_WORLD_ARENA_DAILY_VERSION,ui:window.THIRD_WORLD_ARENA_UI_VERSION,playerFlow:window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION,presentation:window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION,formalPlayerFix:window.THIRD_WORLD_ARENA_FORMAL_PLAYER_FIX_VERSION,rewardPresentation:window.THIRD_WORLD_ARENA_REWARD_PRESENTATION_VERSION,gm:window.GM_THIRD_WORLD_ARENA_TEST_VERSION,manage:window.GM_ARENA_SHARED_DAILY_MANAGEMENT_VERSION};
+ if(Number(arenaVersions.core)!==2||Number(arenaVersions.flow)!==2||Number(arenaVersions.reward)!==1||Number(arenaVersions.daily)!==1||Number(arenaVersions.ui)!==2||Number(arenaVersions.playerFlow)!==2||Number(arenaVersions.presentation)!==2||Number(arenaVersions.formalPlayerFix)!==1||Number(arenaVersions.rewardPresentation)!==2||Number(arenaVersions.gm)!==1||Number(arenaVersions.manage)!==1)fail("w3-arena-versions",arenaVersions);
  if(!Array.isArray(window.THIRD_WORLD_ARENA_RUN_CHOICES)||window.THIRD_WORLD_ARENA_RUN_CHOICES.join(",")!=="1,5,10,20")fail("w3-arena-run-choices",window.THIRD_WORLD_ARENA_RUN_CHOICES);
  if(typeof window.getThirdWorldArenaRoundReward==="function"){
   const a=window.getThirdWorldArenaRoundReward(1000),b=window.getThirdWorldArenaRoundReward(1100),c=window.getThirdWorldArenaRoundReward(2000);
