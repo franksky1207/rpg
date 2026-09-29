@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const STAGE_NAMES=["第一戰","第二戰","第三戰"];
  const baseOpenArenaDungeon=window.openArenaDungeon;
  const baseRenderArenaDungeon=window.renderArenaDungeon;
@@ -10,6 +10,10 @@
  function daily(){return typeof window.getThirdWorldArenaDailyStatus==="function"?window.getThirdWorldArenaDailyStatus():typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus("arena"):{used:0,remaining:0,limit:20};}
  function runtime(){return typeof window.getThirdWorldArenaRuntimeState==="function"?window.getThirdWorldArenaRuntimeState():{status:"idle",requestedRuns:0,startedRuns:0,finishedRuns:0,fullClears:0,failedRuns:0,totalAwardedPoints:0,round:null,lastResult:null,daily:daily()};}
  function rewardPreview(){return typeof window.getThirdWorldArenaRewardPreview==="function"?window.getThirdWorldArenaRewardPreview():{actualPoints:0,scaledPoints:0};}
+ function formalPlayer(){
+  const stats=typeof window.playerCombatStats==="function"?window.playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0};
+  return typeof window.createThirdWorldArenaPlayerSnapshot==="function"?window.createThirdWorldArenaPlayerSnapshot(stats):stats;
+ }
  function installStyles(){
   if(typeof document==="undefined"||document.getElementById("thirdWorldArenaUiStyles"))return;
   const style=document.createElement("style");style.id="thirdWorldArenaUiStyles";style.textContent=`
@@ -35,13 +39,19 @@
  function progressHtml(rt){const stage=Math.max(0,Math.min(2,Number(rt?.round?.stageIndex)||0));return `<div class="w3-arena-progress">${STAGE_NAMES.map((name,i)=>`<div class="w3-arena-step ${i<stage?"done":i===stage?"current":""}">${name}</div>`).join("")}</div>`;}
  function lineupHtml(rt){const rows=rt?.round?.lineup||[];return `<div class="w3-arena-lineup">${rows.map((row,i)=>`<div><span>${STAGE_NAMES[i]}</span><b>${esc(row.name||"")}</b><small>${esc(row.typeLabel||"高維存在")}</small></div>`).join("")}</div>`;}
  function combatHtml(){
-  const rt=runtime(),round=rt.round,e=round?.enemy||{},stats=round?.player||{hp:1},hp=Math.max(0,Number(state?.hp)||0),maxHp=Math.max(1,Number(stats.hp)||1),mode=typeof window.getThirdWorldArenaMode==="function"?window.getThirdWorldArenaMode(rt.mode):null,stage=Math.max(0,Math.min(2,Number(round?.stageIndex)||0)),stop=rt.requestedRuns>1?`<div class="controls arena-actions"><button id="w3ArenaStopBtn" class="btn" onclick="requestThirdWorldArenaUiStop()">${rt.stopRequested?"本輪結束後停止":"停止後續場次"}</button></div>`:"";
+  const rt=runtime(),round=rt.round,e=round?.enemy||{},stats=formalPlayer(),hp=Math.max(0,Number(state?.hp)||0),maxHp=Math.max(1,Number(stats.hp)||1),mode=typeof window.getThirdWorldArenaMode==="function"?window.getThirdWorldArenaMode(rt.mode):null,stage=Math.max(0,Math.min(2,Number(round?.stageIndex)||0)),stop=rt.requestedRuns>1?`<div class="controls arena-actions"><button id="w3ArenaStopBtn" class="btn" onclick="requestThirdWorldArenaUiStop()">${rt.stopRequested?"本輪結束後停止":"停止後續場次"}</button></div>`:"";
   return `<section class="combat-screen arena-combat"><div class="combat-head arena-combat-head">【高維競技場・${esc(mode?.name||"")}】${STAGE_NAMES[stage]}・第 ${rt.startedRuns} / ${rt.requestedRuns} 輪</div>${progressHtml(rt)}${lineupHtml(rt)}<div class="combat-arena"><div class="combatant player arena-player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):esc(typeof currentPlayerName==="function"?currentPlayerName():"玩家")} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.round(hp)} / ${Math.round(maxHp)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,hp/maxHp*100))}%"></span></div></div></div><div class="combat-vs arena-vs">VS</div><div class="combatant enemy arena-enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="arena-combat-tier">${esc(e.typeLabel||"高維存在")}</div><h2 id="combatEnemyName">${esc(e.name||"高維投影")}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${Math.round(Number(e.hp)||0)} / ${Math.round(Number(e.hp)||0)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message arena-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
+ }
+ function actualHistoryRows(last){
+  const history=Array.isArray(last?.history)?last.history:[],totalScaled=Math.max(0,Number(last?.scaledPoints)||0),totalAwarded=Math.max(0,Number(last?.awardedPoints)||0);
+  if(totalScaled<=0||totalAwarded<=0)return history.map(row=>({...row,actualPoints:0}));
+  let remaining=Math.floor(totalAwarded);const winners=history.filter(row=>row?.win),lastWinner=winners[winners.length-1]||null;
+  return history.map(row=>{if(!row?.win)return {...row,actualPoints:0};if(row===lastWinner)return {...row,actualPoints:Math.max(0,remaining)};const actual=Math.max(0,Math.floor((Number(row.scaledPoints)||0)*totalAwarded/totalScaled));remaining=Math.max(0,remaining-actual);return {...row,actualPoints:actual};});
  }
  function resultHtml(){
   const rt=runtime(),last=rt.lastResult,d=daily(),mode=typeof window.getThirdWorldArenaMode==="function"?window.getThirdWorldArenaMode(rt.mode):null;
-  const lastRows=Array.isArray(last?.history)?last.history.map(row=>`${STAGE_NAMES[row.stageIndex]||"戰鬥"}：${row.win?`勝利　+${Number(row.scaledPoints||0).toLocaleString()}`:"敗北"}`).join("<br>"):"";
-  return `<div class="function-page dungeon-page-shell w3-arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><section class="w3-arena-panel"><div class="w3-arena-title">${esc(mode?.name||"高維競技場")}・挑戰結算</div><div class="w3-arena-attempts">今日競技場：<strong>${d.used} / ${d.limit}</strong>・剩餘 ${d.remaining} 輪</div><div class="w3-arena-result-grid"><div><span>完成</span><b>${rt.finishedRuns} 輪</b></div><div><span>三戰全勝</span><b>${rt.fullClears} 輪</b></div><div><span>未全勝</span><b>${rt.failedRuns} 輪</b></div><div><span>總獲得</span><b>${Number(rt.totalAwardedPoints||0).toLocaleString()}</b></div></div>${lastRows?`<div class="w3-arena-last"><b>最後一輪</b><br>${lastRows}<br>本輪實得：${Number(last?.awardedPoints||0).toLocaleString()} VIP積分</div>`:""}<div class="w3-arena-result-actions"><button class="btn primary" ${d.remaining>0?"":"disabled"} onclick="openArenaDungeon()">${d.remaining>0?"重新選擇":"今日競技場次數已用完"}</button><button class="btn" onclick="go('dungeon')">返回副本列表</button></div></section></div>`;
+  const lastRows=actualHistoryRows(last).map(row=>`${STAGE_NAMES[row.stageIndex]||"戰鬥"}：${row.win?`勝利　+${Number(row.actualPoints||0).toLocaleString()} VIP積分`:"敗北"}`).join("<br>");
+  return `<div class="function-page dungeon-page-shell w3-arena-shell"><div class="back-home"><button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button></div><section class="w3-arena-panel"><div class="w3-arena-title">${esc(mode?.name||"高維競技場")}・挑戰結算</div><div class="w3-arena-attempts">今日競技場：<strong>${d.used} / ${d.limit}</strong>・剩餘 ${d.remaining} 輪</div><div class="w3-arena-result-grid"><div><span>完成</span><b>${rt.finishedRuns} 輪</b></div><div><span>三戰全勝</span><b>${rt.fullClears} 輪</b></div><div><span>未全勝</span><b>${rt.failedRuns} 輪</b></div><div><span>總獲得</span><b>${Number(rt.totalAwardedPoints||0).toLocaleString()} VIP</b></div></div>${lastRows?`<div class="w3-arena-last"><b>最後一輪</b><br>${lastRows}<br>本輪實得：${Number(last?.awardedPoints||0).toLocaleString()} VIP積分</div>`:""}<div class="w3-arena-result-actions"><button class="btn primary" ${d.remaining>0?"":"disabled"} onclick="openArenaDungeon()">${d.remaining>0?"重新選擇":"今日競技場次數已用完"}</button><button class="btn" onclick="go('dungeon')">返回副本列表</button></div></section></div>`;
  }
  function renderW3(){const rt=runtime();if(rt.status==="combat"&&rt.round)return combatHtml();if(rt.status==="complete"||rt.status==="stopped")return resultHtml();return selectHtml();}
  function sleep(ms){if(typeof window.backgroundProgressSleep==="function")return window.backgroundProgressSleep(ms,"arena");return new Promise(resolve=>setTimeout(resolve,ms));}
@@ -49,11 +59,13 @@
  async function playCurrentStage(){
   const before=runtime(),round=before.round,enemy=round?.enemy?{...round.enemy}:null;
   if(before.status!=="combat"||!round||!enemy||typeof window.runCombatCore!=="function")return false;
-  const startHp=Math.max(0,Number(state?.hp)||0),combatOptions=typeof window.getThirdWorldArenaCombatOptions==="function"?window.getThirdWorldArenaCombatOptions(enemy,state):{},combat=window.runCombatCore(round.player,enemy,startHp,{...combatOptions});
+  const player=formalPlayer(),startHp=Math.max(0,Number(state?.hp)||0),combatOptions=typeof window.getThirdWorldArenaCombatOptions==="function"?window.getThirdWorldArenaCombatOptions(enemy,state):{},combat=window.runCombatCore(player,enemy,startHp,{...combatOptions});
   state.hp=combat.hp;
-  const settled=typeof window.settleThirdWorldArenaStage==="function"?window.settleThirdWorldArenaStage({win:combat.win,combatEndHp:combat.hp,startHp,turns:combat.turns}):null;
-  if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation({win:combat.win,logs:combat.logs,events:combat.events||[],e:enemy,combatEndHp:combat.hp,turns:combat.turns},{mode:"arena",clearAfter:true,clearReason:"w3-arena-stage-end",startHp});
-  return settled;
+  if(typeof window.animateStructuredCombatPresentation==="function"){
+   try{await window.animateStructuredCombatPresentation({win:combat.win,logs:combat.logs,events:combat.events||[],e:enemy,combatEndHp:combat.hp,turns:combat.turns},{mode:"arena",clearAfter:true,clearReason:"w3-arena-stage-end",startHp});}
+   catch(error){console.warn("World 3 Arena structured presentation failed; continuing settlement.",error);}
+  }
+  return typeof window.settleThirdWorldArenaStage==="function"?window.settleThirdWorldArenaStage({win:combat.win,combatEndHp:combat.hp,startHp,turns:combat.turns}):null;
  }
  async function playSelected(){
   if(uiState.running||!world3())return false;uiState.running=true;
@@ -99,9 +111,11 @@
  };
  window.requestThirdWorldArenaUiStop=function(){const out=typeof window.requestThirdWorldArenaStop==="function"?window.requestThirdWorldArenaStop():{ok:false};if(typeof render==="function")render();return out;};
  window.THIRD_WORLD_ARENA_UI_VERSION=VERSION;
- window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION=1;
+ window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION=2;
  window.THIRD_WORLD_ARENA_BATCH_BUTTON_VERSION=1;
  window.THIRD_WORLD_ARENA_RELOAD_SAFE_PRESENTATION_VERSION=1;
- window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION=1;
+ window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION=2;
+ window.THIRD_WORLD_ARENA_FORMAL_PLAYER_FIX_VERSION=1;
+ window.THIRD_WORLD_ARENA_REWARD_PRESENTATION_VERSION=2;
  installStyles();
 })();
