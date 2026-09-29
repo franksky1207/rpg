@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function testCharacter(){return typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;}
  function benchmarkWorld(){
@@ -69,6 +69,24 @@
    .replace(/文明等級：Lv\.\d+｜(?:宇宙紀元|高維紀元)最終傷害 ×[\d.]+/g,civSummary)
    .replace(/文明等級：Lv\.(\d+)｜宇宙紀元最終傷害/,"文明等級：Lv.$1｜高維紀元最終傷害");
  }
+ async function copyCurrentSummary(){
+  const text=typeof window.gmPowerBenchmarkSummaryText==="function"?String(window.gmPowerBenchmarkSummaryText()||""):"";
+  let ok=false;
+  try{
+   if(typeof navigator!=="undefined"&&navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+    await navigator.clipboard.writeText(text);ok=true;
+   }
+  }catch(e){}
+  if(!ok&&typeof document!=="undefined"){
+   const ta=document.createElement("textarea");
+   ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+   document.body.appendChild(ta);ta.focus();ta.select();
+   try{ok=document.execCommand("copy");}catch(e){}
+   ta.remove();
+  }
+  if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");
+  return ok;
+ }
  function refreshBenchmarkAfterFormalSync(){
   if(typeof render==="function"){render();return true;}
   return false;
@@ -94,6 +112,9 @@
   if(typeof baseSummary==="function"&&!baseSummary.__worldPhaseAdapter){
    const wrapped=function(){return patchWorld3Text(baseSummary());};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkSummaryText=wrapped;
   }
+  if(typeof window.gmPowerBenchmarkCopySummary==="function"&&!window.gmPowerBenchmarkCopySummary.__worldPhaseAdapter){
+   const wrapped=function(){return copyCurrentSummary();};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkCopySummary=wrapped;
+  }
   const baseHtml=window.gmPowerBenchmarkHtml;
   if(typeof baseHtml==="function"&&!baseHtml.__worldPhaseAdapter){
    const wrapped=function(){return patchWorld3Text(baseHtml());};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkHtml=wrapped;
@@ -114,6 +135,7 @@
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=2;
+ window.GM_POWER_BENCHMARK_WORLD3_COPY_SUMMARY_VERSION=1;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
  window.gmPowerBenchmarkRefreshAfterFormalSync=refreshBenchmarkAfterFormalSync;
