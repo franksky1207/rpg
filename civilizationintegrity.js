@@ -1,5 +1,5 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
 
  function clone(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function run(){
@@ -7,6 +7,7 @@
   const fail=(code,message,detail=null)=>errors.push({code,message,detail});
   try{
    if(Number(window.CIVILIZATION_CORE_VERSION)!==1||Number(window.CIVILIZATION_LEVEL_MAX)!==10||Number(window.CIVILIZATION_FINAL_DAMAGE_PERCENT_PER_LEVEL)!==5||Number(window.CIVILIZATION_COMBAT_DAMAGE_OWNER_VERSION)!==1||typeof window.civilizationCombatDamageMultiplier!=="function")fail("CORE_OWNER","文明等級 Core／統一戰鬥倍率 owner 異常");
+   if(Number(window.CIVILIZATION_FORMAL_WORLD_RANGE_VERSION)!==1||Number(window.CIVILIZATION_WORLD3_FORMAL_LOCK_VERSION)!==1||typeof window.formalCivilizationRange!=="function"||typeof window.clampFormalCivilizationLevel!=="function"||typeof window.formalCivilizationLevelValid!=="function")fail("FORMAL_RANGE_OWNER","三紀元文明正式範圍 owner 未完整載入");
    const expected={0:1,1:1.05,5:1.25,10:1.5};
    Object.entries(expected).forEach(([level,multi])=>{
     const actual=typeof window.civilizationDamageMultiplierForLevel==="function"?window.civilizationDamageMultiplierForLevel(Number(level)):NaN;
@@ -15,15 +16,24 @@
     if(bonus!==Number(level)*5)fail("BONUS","文明等級百分比異常",{level:Number(level),expected:Number(level)*5,actual:bonus});
    });
    if(window.clampCivilizationLevel?.(-1)!==0||window.clampCivilizationLevel?.(11)!==10||window.clampCivilizationLevel?.(5)!==5)fail("CLAMP","文明等級 0～10 clamp 異常");
-   const galaxy={secondWorld:{entered:false,civilizationLevel:10}};
-   const universe={secondWorld:{entered:true,civilizationLevel:10}};
+   const galaxy={secondWorld:{entered:false,civilizationLevel:10},thirdWorld:{entered:false}};
+   const universe={secondWorld:{entered:true,civilizationLevel:6},thirdWorld:{entered:false}};
+   const higher={secondWorld:{entered:true,civilizationLevel:0},thirdWorld:{entered:true}};
    if(window.civilizationLevel?.(galaxy)!==0||window.civilizationDamageMultiplier?.(galaxy)!==1)fail("GALAXY_ISOLATION","銀河紀元不得套文明等級");
-   if(window.civilizationLevel?.(universe)!==10||window.civilizationDamageMultiplier?.(universe)!==1.5)fail("UNIVERSE_LEVEL10","宇宙文明 Lv10 應為 1.50×");
+   if(window.civilizationLevel?.(universe)!==6||window.civilizationDamageMultiplier?.(universe)!==1.3)fail("UNIVERSE_LEVEL6","宇宙文明 Lv6 應為 1.30×");
+   if(window.civilizationLevel?.(higher)!==10||window.civilizationDamageMultiplier?.(higher)!==1.5)fail("WORLD3_FIXED10","高維紀元正式文明等級應固定 Lv10／1.50×",higher);
+   const r1=window.formalCivilizationRange?.(galaxy),r2=window.formalCivilizationRange?.(universe),r3=window.formalCivilizationRange?.(higher);
+   if(r1?.enabled!==false||r1?.phase!==1)fail("GALAXY_FORMAL_RANGE","銀河紀元文明正式管理應停用",r1);
+   if(r2?.enabled!==true||r2?.min!==0||r2?.max!==10||r2?.fixed!==false)fail("UNIVERSE_FORMAL_RANGE","宇宙紀元文明正式範圍應為 Lv0～10",r2);
+   if(r3?.enabled!==true||r3?.min!==10||r3?.max!==10||r3?.fixed!==true)fail("WORLD3_FORMAL_RANGE","高維紀元文明正式範圍應固定 Lv10",r3);
+   if(window.clampFormalCivilizationLevel?.(0,higher)!==10||window.clampFormalCivilizationLevel?.(7,higher)!==10||window.clampFormalCivilizationLevel?.(10,higher)!==10)fail("WORLD3_FORMAL_CLAMP","高維紀元正式文明 clamp 未固定 Lv10");
+   if(window.formalCivilizationLevelValid?.(9,higher)!==false||window.formalCivilizationLevelValid?.(10,higher)!==true||window.formalCivilizationLevelValid?.(11,higher)!==false)fail("WORLD3_FORMAL_VALIDITY","高維紀元正式文明邊界判定異常");
    if(typeof window.civilizationCombatDamageMultiplier==="function"){
     const galaxyCombat=window.civilizationCombatDamageMultiplier({world:1,civilizationLevel:10});
     const universeCombat=window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:10});
     const midCombat=window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:6});
-    if(galaxyCombat!==1||universeCombat!==1.5||midCombat!==1.3)fail("COMBAT_OWNER_PROBE","統一文明戰鬥倍率 owner world/context probe 異常",{galaxyCombat,universeCombat,midCombat});
+    const higherStateCombat=window.civilizationCombatDamageMultiplier({world:3,state:higher});
+    if(galaxyCombat!==1||universeCombat!==1.5||midCombat!==1.3||higherStateCombat!==1.5)fail("COMBAT_OWNER_PROBE","統一文明戰鬥倍率 owner world/context probe 異常",{galaxyCombat,universeCombat,midCombat,higherStateCombat});
    }
 
    if(typeof window.normalizeSecondWorldState==="function"){
@@ -75,7 +85,7 @@
    }else fail("COMBAT_API","runCombatCore 未載入");
 
    if(Number(window.CHARACTER_CIVILIZATION_UI_VERSION)!==1)fail("PLAYER_UI","角色頁文明等級 UI owner 未載入");
-   if(Number(window.GM_CIVILIZATION_VERSION)!==1||Number(window.GM_CIVILIZATION_FORMAL_RANGE_VERSION)!==1||Number(window.GM_CIVILIZATION_TEST_RANGE_VERSION)!==1)fail("GM_OWNER","GM 文明等級 owner 未完整載入");
+   if(Number(window.GM_CIVILIZATION_VERSION)!==1||Number(window.GM_CIVILIZATION_FORMAL_RANGE_VERSION)!==2||Number(window.GM_CIVILIZATION_TEST_RANGE_VERSION)!==1||Number(window.GM_CIVILIZATION_WORLD_PHASE_VERSION)!==2||Number(window.GM_CIVILIZATION_WORLD3_LOCK_VERSION)!==1)fail("GM_OWNER","GM 文明等級三紀元正式／沙盒範圍 owner 未完整載入");
    if(Number(window.GM_POWER_BENCHMARK_VERSION)!==21||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION)!==1||Number(window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION)!==1)fail("BENCHMARK_OWNER","GM 戰力基準文明等級／統一戰鬥倍率 owner 異常",{version:window.GM_POWER_BENCHMARK_VERSION,civilization:window.GM_POWER_BENCHMARK_CIVILIZATION_VERSION,combatOwner:window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION});
    if(Number(window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION)!==1)fail("GM_COMBAT_OWNER","GM 戰鬥模式未完整接統一文明倍率 owner",{dungeon:window.GM_DUNGEON_CIVILIZATION_COMBAT_OWNER_VERSION,arena:window.GM_ARENA_CIVILIZATION_COMBAT_OWNER_VERSION,special:window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION,mirror:window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION,calamity:window.GM_SECOND_WORLD_CALAMITY_CIVILIZATION_COMBAT_OWNER_VERSION});
   }catch(error){fail("EXCEPTION","文明等級 integrity 執行失敗",String(error?.message||error));}
