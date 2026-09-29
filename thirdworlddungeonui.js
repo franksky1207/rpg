@@ -128,6 +128,7 @@
  window.THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION=1;
  window.THIRD_WORLD_DUNGEON_CALAMITY_GATE_VERSION=1;
  window.THIRD_WORLD_DUNGEON_ARENA_COPY_VERSION=1;
+ window.THIRD_WORLD_DUNGEON_INITIAL_SYNC_VERSION=1;
  window.thirdWorldDungeonModeVisible=function(mode,target=null){return availability(mode,target).visible!==false;};
  window.thirdWorldDungeonResourceSnapshot=resourceSnapshot;
  window.thirdWorldDungeonNavigationPolicy=navigationPolicy;
@@ -139,4 +140,5 @@
  wrapEntry("enterVoidMirageDungeon","tower");
  if(typeof window.registerDungeonPostRenderHook==="function")window.registerDungeonPostRenderHook(syncDungeonPage);
  if(typeof window.registerDungeonNavigationGuard==="function")window.registerDungeonNavigationGuard(navigationGuard);
+ setTimeout(()=>{try{syncDungeonPage({view:typeof view==="undefined"?"":view,main:document.getElementById("main")});}catch(error){console.error("Third World dungeon initial sync failed",error);}},0);
 })();
