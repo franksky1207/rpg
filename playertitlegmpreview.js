@@ -1,8 +1,13 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  let selectedId=null;
 
- function defs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
+ function canonicalDefs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
+ function defs(){
+  const list=canonicalDefs();
+  const order=["calamity","universe-calamity","higher-dimensional","mirror"];
+  return order.flatMap(series=>list.filter(def=>def?.series===series));
+ }
  function current(){
   const list=defs();
   if(!selectedId&&list.length)selectedId=list[0].id;
@@ -15,14 +20,20 @@
   if(def.series==="higher-dimensional")return `高維紀元第 ${def.tier} 階｜${def.name}`;
   return `銀河災厄第 ${def.tier} 階｜${def.name}`;
  }
+ function divider(series){
+  if(series==="calamity")return "──── 銀河紀元災厄稱號 ────";
+  if(series==="universe-calamity")return "──── 宇宙紀元災厄稱號 ────";
+  if(series==="higher-dimensional")return "──── 高維紀元稱號 ────";
+  if(series==="mirror")return "──── 鏡像戰稱號 ────";
+  return "";
+ }
  function options(){
-  return defs().map((def,index)=>{
-   let divider="";
-   if(index===0)divider='<option disabled>──── 銀河紀元災厄稱號 ────</option>';
-   else if(index===10)divider='<option disabled>──── 宇宙紀元災厄稱號 ────</option>';
-   else if(index===20)divider='<option disabled>──── 鏡像戰稱號 ────</option>';
-   else if(index===26)divider='<option disabled>──── 高維紀元稱號 ────</option>';
-   return divider+`<option value="${def.id}" ${def.id===selectedId?"selected":""}>${label(def)}</option>`;
+  let previousSeries="";
+  return defs().map(def=>{
+   const series=String(def?.series||"");
+   const heading=series!==previousSeries?`<option disabled>${divider(series)}</option>`:"";
+   previousSeries=series;
+   return heading+`<option value="${def.id}" ${def.id===selectedId?"selected":""}>${label(def)}</option>`;
   }).join("");
  }
  function playerName(){
@@ -44,7 +55,7 @@
  }
  function html(){
   const def=current();
-  return `<div class="muted gm-hub-note">實戰名稱預覽全部 36 個正式稱號；依序為銀河災厄 10 個、宇宙災厄 10 個、鏡像戰 6 個、高維紀元 10 個。直接使用目前正式玩家名稱與正式 playerIdentityNameHtml()；此區只做視覺預覽，不解鎖、不裝備、不修改任何正式狀態，也不寫入存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${options()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px">${combatPreview(def)}<div class="muted" style="text-align:center;margin-top:8px">${label(def)}</div></div>`;
+  return `<div class="muted gm-hub-note">實戰名稱預覽全部 36 個正式稱號；依序為銀河災厄 10 個、宇宙災厄 10 個、高維紀元 10 個、鏡像戰 6 個。直接使用目前正式玩家名稱與正式 playerIdentityNameHtml()；此區只做視覺預覽，不解鎖、不裝備、不修改任何正式狀態，也不寫入存檔。</div><div class="controls" style="align-items:end"><label>稱號<br><select class="btn" onchange="gmSetPlayerTitlePreviewTier(this.value)">${options()}</select></label></div><div id="gmPlayerTitlePreviewBox" class="notice" style="margin-top:12px">${combatPreview(def)}<div class="muted" style="text-align:center;margin-top:8px">${label(def)}</div></div>`;
  }
 
  window.gmSetPlayerTitlePreviewTier=setPreview;
@@ -52,6 +63,7 @@
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=VERSION;
  window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=3;
  window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=3;
+ window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION=1;
  window.GM_PLAYER_TITLE_PREVIEW_OWNER_VERSION=1;
  let registered=false;
  if(typeof window.replaceGmHubSectionRenderer==="function")registered=window.replaceGmHubSectionRenderer("test","player-title-preview",html,"稱號預覽")===true;
