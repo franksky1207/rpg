@@ -1,5 +1,6 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
+ const STYLE_OWNER_VERSION=1;
  const STAGE_NAMES=["第一戰","第二戰","第三戰"];
  const baseOpenArenaDungeon=window.openArenaDungeon;
  const baseRenderArenaDungeon=window.renderArenaDungeon;
@@ -11,15 +12,6 @@
  function runtime(){return typeof window.getThirdWorldArenaRuntimeState==="function"?window.getThirdWorldArenaRuntimeState():{status:"idle",requestedRuns:0,startedRuns:0,finishedRuns:0,fullClears:0,failedRuns:0,totalAwardedPoints:0,round:null,lastResult:null,daily:daily()};}
  function rewardPreview(){return typeof window.getThirdWorldArenaRewardPreview==="function"?window.getThirdWorldArenaRewardPreview():{actualPoints:0,scaledPoints:0};}
  function displayPlayer(){return typeof window.playerCombatStats==="function"?window.playerCombatStats():{hp:1,atk:1,def:0,crit:0,dodge:0};}
- function installStyles(){if(typeof document==="undefined"||document.getElementById("thirdWorldArenaUiStyles"))return;const style=document.createElement("style");style.id="thirdWorldArenaUiStyles";style.textContent=`
-   .w3-arena-shell{max-width:900px;margin:0 auto}.w3-arena-panel{background:linear-gradient(180deg,#171b2a,#10131d);border:1px solid #57627f;border-radius:16px;padding:18px;box-shadow:0 16px 42px rgba(0,0,0,.28)}
-   .w3-arena-title{text-align:center;font-size:25px;font-weight:850;color:#dce8ff;letter-spacing:.08em}.w3-arena-attempts{text-align:center;color:#b7c4df;margin-top:7px}.w3-arena-note{text-align:center;color:#a8b5cc;margin:10px 0 0;line-height:1.55}
-   .w3-arena-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.w3-arena-mode{background:linear-gradient(180deg,#1a2031,#121724);border:1px solid #596b91;border-radius:14px;padding:16px;min-width:0}.w3-arena-mode h2{margin:0;color:#e5edff;font-size:20px}.w3-arena-mode p{color:#bdc9dc;line-height:1.6;min-height:52px}.w3-arena-reward{margin-top:10px;padding:10px 12px;border:1px solid #6f79a0;border-radius:10px;background:#101522;color:#dce7ff;font-weight:800}.w3-arena-reward small{display:block;margin-top:5px;color:#99a7bf;font-weight:500}.w3-arena-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}.w3-arena-actions .btn{width:100%;min-width:0;padding:10px 6px}.w3-arena-actions .btn:disabled{opacity:.45;cursor:not-allowed}
-   .w3-arena-lineup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.w3-arena-lineup>div{border:1px solid #45516f;border-radius:10px;padding:9px;background:#111723;min-width:0}.w3-arena-lineup span{display:block;color:#8fa0be;font-size:11px}.w3-arena-lineup b{display:block;color:#e0e8f7;margin-top:3px;overflow-wrap:anywhere}.w3-arena-lineup small{display:block;color:#a7b6d0;margin-top:3px}
-   .w3-arena-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px auto 14px;max-width:620px}.w3-arena-step{border:1px solid #3e4963;border-radius:8px;padding:7px;text-align:center;color:#7f8ca5;background:#11151f}.w3-arena-step.current{border-color:#8aa8e8;color:#eef4ff;background:#1b2943}.w3-arena-step.done{border-color:#557d72;color:#bce7d9;background:#14231f}
-   .w3-arena-result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.w3-arena-result-grid>div{border:1px solid #46516c;border-radius:10px;padding:10px;background:#111722;text-align:center}.w3-arena-result-grid span{display:block;color:#93a2bd;font-size:12px}.w3-arena-result-grid b{display:block;color:#e5edff;font-size:19px;margin-top:4px}.w3-arena-last{margin:12px 0;border:1px solid #45516f;border-radius:10px;padding:10px 12px;background:#10151f;color:#c2cee1;line-height:1.55}.w3-arena-result-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-   @media(max-width:760px){.w3-arena-panel{padding:13px}.w3-arena-modes{grid-template-columns:1fr}.w3-arena-mode p{min-height:0}.w3-arena-actions{grid-template-columns:repeat(2,1fr)}.w3-arena-lineup{grid-template-columns:1fr}.w3-arena-result-grid{grid-template-columns:repeat(2,1fr)}}
-  `;document.head.appendChild(style);}
  function attemptsHtml(){const d=daily();return `今日競技場：<strong>${d.used} / ${d.limit}</strong>・剩餘 ${d.remaining} 輪`;}
  function buttonLabel(count){return count===1?"單場":`${count}場`;}
  function modeCard(id,title,description){const preview=rewardPreview(),choices=Array.isArray(window.THIRD_WORLD_ARENA_RUN_CHOICES)?window.THIRD_WORLD_ARENA_RUN_CHOICES:[1,5,10,20];const buttons=choices.map(count=>{const s=typeof window.getThirdWorldArenaRunChoiceStatus==="function"?window.getThirdWorldArenaRunChoiceStatus(count):{enabled:daily().remaining>=count};return `<button class="btn${count===1?"":" primary"}" ${s.enabled?"":"disabled"} onclick="startThirdWorldArenaUi('${id}',${count})">${buttonLabel(count)}</button>`;}).join("");return `<section class="w3-arena-mode"><h2>${title}</h2><p>${description}</p><div class="w3-arena-reward">三戰全勝可得：${Number(preview.actualPoints||0).toLocaleString()} VIP積分<small>未全勝時，依已通過戰數結算。</small></div><div class="w3-arena-actions">${buttons}</div></section>`;}
@@ -40,6 +32,13 @@
  window.getArenaCoreState=function(){if(world3()){const rt=runtime();return {phase:rt.status==="combat"?"combat":rt.status==="complete"||rt.status==="stopped"||rt.status==="error"?"result":"select",world:3,thirdWorld:true,runtime:rt,daily:daily()};}return typeof baseGetArenaCoreState==="function"?baseGetArenaCoreState():null;};
  window.startThirdWorldArenaUi=function(mode,count){if(!world3())return false;const start=typeof window.startThirdWorldArenaSession==="function"?window.startThirdWorldArenaSession(mode,count):{ok:false,reason:"core-missing"};if(!start.ok){if(typeof alert==="function")alert(start.reason==="insufficient-daily"?"今日剩餘競技場次數不足。":"無法開始高維競技場挑戰。");return false;}uiState.selectedMode=String(mode||"");uiState.requestedRuns=Math.max(1,Number(count)||1);view="dungeon-arena";if(typeof render==="function")render();setTimeout(playSelected,0);return true;};
  window.requestThirdWorldArenaUiStop=function(){const out=typeof window.requestThirdWorldArenaStop==="function"?window.requestThirdWorldArenaStop():{ok:false};if(typeof render==="function")render();return out;};
- window.THIRD_WORLD_ARENA_UI_VERSION=VERSION;window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION=3;window.THIRD_WORLD_ARENA_BATCH_BUTTON_VERSION=1;window.THIRD_WORLD_ARENA_RELOAD_SAFE_PRESENTATION_VERSION=1;window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION=3;window.THIRD_WORLD_ARENA_FORMAL_PLAYER_FIX_VERSION=1;window.THIRD_WORLD_ARENA_REWARD_PRESENTATION_VERSION=2;window.THIRD_WORLD_ARENA_UI_CORE_DELEGATION_VERSION=1;
- installStyles();
+ window.THIRD_WORLD_ARENA_UI_VERSION=VERSION;
+ window.THIRD_WORLD_ARENA_STYLE_OWNER_VERSION=STYLE_OWNER_VERSION;
+ window.THIRD_WORLD_ARENA_PLAYER_FLOW_VERSION=3;
+ window.THIRD_WORLD_ARENA_BATCH_BUTTON_VERSION=1;
+ window.THIRD_WORLD_ARENA_RELOAD_SAFE_PRESENTATION_VERSION=1;
+ window.THIRD_WORLD_ARENA_STRUCTURED_PRESENTATION_VERSION=3;
+ window.THIRD_WORLD_ARENA_FORMAL_PLAYER_FIX_VERSION=1;
+ window.THIRD_WORLD_ARENA_REWARD_PRESENTATION_VERSION=2;
+ window.THIRD_WORLD_ARENA_UI_CORE_DELEGATION_VERSION=1;
 })();
