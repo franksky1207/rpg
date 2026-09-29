@@ -52,6 +52,6 @@
  window.gmBatch16SpecializationLocked=specializationLocked;
  window.gmBatch16MarkLocked=markLocked;
  window.gmBatch16FixedValueHtml=fixedValueHtml;
- window.GM_BATCH16_FORMAL_CONTROLS_VERSION=3;
+ window.GM_BATCH16_FORMAL_CONTROLS_VERSION=1;
  window.GM_BATCH16_FIXED_VALUE_UI_VERSION=2;
 })();
