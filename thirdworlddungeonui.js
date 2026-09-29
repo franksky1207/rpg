@@ -1,8 +1,7 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const policies=new Map();
  const W3_ARENA_REASON="高維競技場目前尚未開放；既有銀河／宇宙競技場進度與每日狀態均保留，不會因進入高維紀元而重置。";
- const W3_CALAMITY_REASON="高維紀元不再使用文明災厄入口；第三紀元正式進度集中於高維戰線。";
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
   return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));
@@ -39,10 +38,18 @@
   if(value)value.textContent=Math.max(0,Math.floor(Number(resource.amount)||0)).toLocaleString();
   return true;
  }
+ function setCardVisibility(card,visible){
+  if(!card)return false;
+  const show=visible!==false;
+  card.hidden=!show;
+  if(show){card.style.removeProperty("display");delete card.dataset.dungeonPolicyHidden;}
+  else{card.style.setProperty("display","none","important");card.dataset.dungeonPolicyHidden="1";}
+  return true;
+ }
  function applyModeCardPolicy(main,mode,selector){
   const card=main?.querySelector(selector);if(!card)return false;
   const policy=availability(mode);
-  card.hidden=policy.visible===false;
+  setCardVisibility(card,policy.visible!==false);
   if(policy.visible===false)return true;
   const button=card.querySelector(".dungeon-entry-btn"),cost=card.querySelector(".dungeon-cost"),title=card.querySelector(".dungeon-mode-head h3"),reward=card.querySelector(".dungeon-mode-reward"),unlock=card.querySelector(".dungeon-unlock-label"),description=card.querySelector("p");
   if(policy.titleText!==null&&title)title.textContent=policy.titleText;
@@ -62,15 +69,13 @@
   if(currentPhase()!==3)return false;
   const card=main?.querySelector("[data-mirror-dungeon-card], .dungeon-mode-mirror");if(!card)return false;
   const policy=availability("mirror"),unlock=card.querySelector(".dungeon-unlock-label");
-  card.hidden=policy.visible===false;
+  setCardVisibility(card,policy.visible!==false);
   if(unlock&&policy.unlockText!==null){unlock.textContent=policy.unlockText||"";unlock.hidden=!policy.unlockText;}
   return true;
  }
  function syncHomePage(main){
   if(!main||currentPhase()!==3)return false;
   const cards=Array.from(main.querySelectorAll(".menu-card"));
-  const calamity=cards.find(card=>(card.getAttribute("onclick")||"").includes("go('calamity')"));
-  if(calamity){calamity.hidden=true;calamity.dataset.thirdWorldHidden="calamity";}
   const dungeon=cards.find(card=>(card.getAttribute("onclick")||"").includes("go('dungeon')"));
   const desc=dungeon?.querySelector("span");if(desc)desc.textContent="挑戰鏡像戰與虛空幻境；高維競技場尚未開放";
   return true;
@@ -97,7 +102,6 @@
  function blockedMessage(mode){const policy=availability(mode);return policy.reason||"此副本目前無法挑戰。";}
  function navigationPolicy(nextView,target=null){
   const phase=currentPhase(target),next=String(nextView||"");
-  if(phase===3&&next==="calamity")return {allowed:false,redirect:"home",reason:W3_CALAMITY_REASON,mode:"calamity",phase};
   const mapping={"dungeon-bounty":"bounty","dungeon-arena":"arena","dungeon-void-mirage":"tower"},mode=mapping[next];
   if(!mode)return {allowed:true,redirect:null,reason:"",mode:null,phase};
   const policy=availability(mode,target);if(policy.visible!==false&&policy.enabled!==false)return {allowed:true,redirect:null,reason:"",mode,phase};
@@ -115,8 +119,8 @@
   wrapped.__dungeonPolicyWrapped=true;window[name]=wrapped;return true;
  }
  registerPolicy("third-world",thirdWorldPolicy);
- window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION=3;
- window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION=2;
+ window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION=4;
+ window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION=3;
  window.registerDungeonModeAvailabilityPolicy=registerPolicy;
  window.unregisterDungeonModeAvailabilityPolicy=unregisterPolicy;
  window.dungeonModeAvailability=availability;
@@ -125,8 +129,8 @@
  window.THIRD_WORLD_DUNGEON_HOME_POLICY_VERSION=1;
  window.THIRD_WORLD_DUNGEON_RESOURCE_BAR_VERSION=1;
  window.THIRD_WORLD_DUNGEON_RETURN_NAV_VERSION=1;
- window.THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION=1;
- window.THIRD_WORLD_DUNGEON_CALAMITY_GATE_VERSION=1;
+ window.THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION=2;
+ window.THIRD_WORLD_DUNGEON_CALAMITY_REVIEW_VERSION=1;
  window.THIRD_WORLD_DUNGEON_ARENA_COPY_VERSION=1;
  window.THIRD_WORLD_DUNGEON_INITIAL_SYNC_VERSION=1;
  window.thirdWorldDungeonModeVisible=function(mode,target=null){return availability(mode,target).visible!==false;};
