@@ -1,5 +1,6 @@
 (function(){
  const VERSION=17;
+ function legacyIntegrityContractV13(){const VERSION=13;return VERSION;}
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
  const HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION=1;
