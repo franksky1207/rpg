@@ -3,12 +3,16 @@
  const PROJECTION_VERSION=1;
  const LINEUP_VERSION=1;
  const BALANCE_VERSION=1;
- const FLOW_VERSION=2;
+ const FLOW_VERSION=3;
  const REWARD_VERSION=1;
  const DAILY_VERSION=1;
+ const TRANSACTION_VERSION=1;
+ const RECOVERY_VERSION=1;
+ const PREPARE_BEFORE_DAILY_VERSION=1;
  const WORLD=3;
  const W3_ARENA_MIN_LEVEL=1000;
  const W3_ARENA_MAX_LEVEL=2000;
+ const TRANSACTION_KEY="thirdWorldArenaTransaction";
  const RUN_CHOICES=Object.freeze([1,5,10,20]);
  const STAGE_BASE_POINTS=Object.freeze([300,400,800]);
  const LEVEL_STEP=100;
@@ -26,6 +30,7 @@
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
  function round1(value){return Math.round(finite(value,0)*10)/10;}
+ function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function targetState(target=null){if(target&&typeof target==="object")return target;try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(e){return null;}}
  function bosses(){return Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS.slice():[];}
  function bossByValue(value){
@@ -121,16 +126,47 @@
  function roundReward(level){const stages=STAGE_BASE_POINTS.map((_,index)=>stageReward(index,level)),basePoints=stages.reduce((sum,row)=>sum+row.basePoints,0),scaledPoints=stages.reduce((sum,row)=>sum+row.scaledPoints,0);return Object.freeze({level:rewardLevel(level),levelMultiplier:rewardMultiplier(level),basePoints,scaledPoints,stages:Object.freeze(stages)});}
  function projectedVipPoints(points){const base=Math.max(0,whole(points,0));return typeof window.adjustVipDungeonPoints==="function"?Math.max(0,whole(window.adjustVipDungeonPoints(base),0)):base;}
  function rewardPreview(level=null){const gameState=targetState(),reward=roundReward(level??gameState?.level??W3_ARENA_MIN_LEVEL);return Object.freeze({...reward,actualPoints:projectedVipPoints(reward.scaledPoints)});}
- function dailyStatus(){return typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus("arena"):{mode:"arena",used:0,remaining:0,limit:20};}
- function runChoice(value){const count=whole(value,0);return RUN_CHOICES.includes(count)?count:0;}
- function runChoiceStatus(value){const count=runChoice(value),daily=dailyStatus();return Object.freeze({count,valid:count>0,enabled:count>0&&daily.remaining>=count,used:daily.used,remaining:daily.remaining,limit:daily.limit});}
  function freshRuntime(){return {status:"idle",mode:null,requestedRuns:0,startedRuns:0,finishedRuns:0,fullClears:0,failedRuns:0,totalBasePoints:0,totalScaledPoints:0,totalAwardedPoints:0,stopRequested:false,stopReason:null,round:null,lastResult:null};}
  let arenaRuntime=freshRuntime();
+ function transactionHolder(gameState=targetState(),create=false){
+  if(!isObject(gameState))return null;
+  if(!isObject(gameState.dungeon)){if(!create)return null;gameState.dungeon={};}
+  return gameState.dungeon;
+ }
+ function transactionSnapshot(gameState=targetState()){
+  const holder=transactionHolder(gameState,false),txn=holder?.[TRANSACTION_KEY];
+  return isObject(txn)?{...txn,bossIds:Array.isArray(txn.bossIds)?txn.bossIds.slice():[]}:null;
+ }
+ function setTransaction(gameState,data){const holder=transactionHolder(gameState,true);if(!holder)return null;holder[TRANSACTION_KEY]={version:TRANSACTION_VERSION,status:"active",...data};return holder[TRANSACTION_KEY];}
+ function clearTransaction(gameState=targetState()){const holder=transactionHolder(gameState,false);if(!holder||!Object.prototype.hasOwnProperty.call(holder,TRANSACTION_KEY))return false;delete holder[TRANSACTION_KEY];return true;}
+ function saveState(){if(typeof window.save!=="function")return false;return window.save(false)!==false;}
+ function fullHeal(gameState=targetState()){if(!gameState)return 0;if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});else if(typeof window.playerCombatStats==="function")gameState.hp=Math.max(1,whole(window.playerCombatStats().hp,1));return Math.max(0,whole(gameState.hp,0));}
+ function recoverInterruptedRun(gameState=targetState(),options={}){
+  if(!isObject(gameState))return {recovered:false,reason:"no-state"};
+  if(arenaRuntime.status==="combat"&&arenaRuntime.round)return {recovered:false,reason:"live-runtime"};
+  const txn=transactionSnapshot(gameState);if(!txn)return {recovered:false,reason:"none"};
+  const wasActive=txn.status==="active";
+  const hpBefore=Math.max(0,whole(gameState.hp,0));
+  if(wasActive)fullHeal(gameState);
+  clearTransaction(gameState);
+  arenaRuntime=freshRuntime();
+  const saved=options.save===false?true:saveState();
+  return {recovered:true,wasActive,dailyUsePreserved:true,hpBefore,hpAfter:Math.max(0,whole(gameState.hp,0)),saveSucceeded:saved,transaction:txn};
+ }
+ function dailyStatus(){
+  const gameState=targetState();
+  if(gameState&&arenaRuntime.status==="idle"&&transactionSnapshot(gameState))recoverInterruptedRun(gameState);
+  return typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus("arena"):{mode:"arena",used:0,remaining:0,limit:20};
+ }
+ function runChoice(value){const count=whole(value,0);return RUN_CHOICES.includes(count)?count:0;}
+ function runChoiceStatus(value){const count=runChoice(value),daily=dailyStatus();return Object.freeze({count,valid:count>0,enabled:count>0&&daily.remaining>=count,used:daily.used,remaining:daily.remaining,limit:daily.limit});}
  function cloneLineup(rows){return Array.isArray(rows)?rows.map(row=>({...row})):[];}
  function runtimeSnapshot(){const round=arenaRuntime.round;return {status:arenaRuntime.status,mode:arenaRuntime.mode,requestedRuns:arenaRuntime.requestedRuns,startedRuns:arenaRuntime.startedRuns,finishedRuns:arenaRuntime.finishedRuns,remainingSelectedRuns:Math.max(0,arenaRuntime.requestedRuns-arenaRuntime.startedRuns),fullClears:arenaRuntime.fullClears,failedRuns:arenaRuntime.failedRuns,totalBasePoints:arenaRuntime.totalBasePoints,totalScaledPoints:arenaRuntime.totalScaledPoints,totalAwardedPoints:arenaRuntime.totalAwardedPoints,stopRequested:arenaRuntime.stopRequested,stopReason:arenaRuntime.stopReason,daily:{...dailyStatus()},round:round?{index:round.index,stageIndex:round.stageIndex,level:round.level,startHp:round.startHp,currentHp:round.currentHp,roundBasePoints:round.roundBasePoints,roundScaledPoints:round.roundScaledPoints,lineup:cloneLineup(round.lineup),enemy:round.enemy?{...round.enemy}:null,history:round.history.map(row=>({...row,enemy:row.enemy?{...row.enemy}:null}))}:null,lastResult:arenaRuntime.lastResult?{...arenaRuntime.lastResult}:null};}
  function world3Active(gameState){return !!gameState?.thirdWorld?.entered&&(typeof window.arenaWorldForState!=="function"||window.arenaWorldForState(gameState)===WORLD);}
  function startSession(modeValue,runCount){
-  const gameState=targetState(),selectedMode=mode(modeValue),choice=runChoiceStatus(runCount);
+  const gameState=targetState();
+  if(gameState&&arenaRuntime.status==="idle"&&transactionSnapshot(gameState))recoverInterruptedRun(gameState);
+  const selectedMode=mode(modeValue),choice=runChoiceStatus(runCount);
   if(!world3Active(gameState))return {ok:false,reason:"wrong-world",runtime:runtimeSnapshot()};
   if(!selectedMode)return {ok:false,reason:"invalid-mode",runtime:runtimeSnapshot()};
   if(!choice.valid)return {ok:false,reason:"invalid-run-count",runtime:runtimeSnapshot()};
@@ -138,27 +174,40 @@
   arenaRuntime={...freshRuntime(),status:"ready",mode:selectedMode.id,requestedRuns:choice.count};
   return {ok:true,runtime:runtimeSnapshot()};
  }
- function saveState(){if(typeof window.save==="function")window.save(false);}
- function fullHeal(gameState=targetState()){if(!gameState)return 0;if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});else if(typeof window.playerCombatStats==="function")gameState.hp=Math.max(1,whole(window.playerCombatStats().hp,1));return Math.max(0,whole(gameState.hp,0));}
+ function prepareRound(gameState,options={}){
+  const rows=lineup(arenaRuntime.mode,{rng:options.rng,bossIndex:options.bossIndex,bossId:options.bossId});
+  if(rows.length!==3)return {ok:false,reason:"lineup-unavailable"};
+  try{
+   const level=rewardLevel(gameState.level),formalStats=typeof window.playerCombatStats==="function"?window.playerCombatStats():{},player=playerSnapshot(formalStats),runIndex=arenaRuntime.startedRuns,firstEnemy=buildEnemy(rows[0].bossIndex,0,formalStats,level);
+   if(!firstEnemy)return {ok:false,reason:"enemy-unavailable"};
+   return {ok:true,rows,level,formalStats,player,runIndex,firstEnemy};
+  }catch(error){console.error("World 3 Arena round preparation failed",error);return {ok:false,reason:"prepare-failed",error:String(error?.message||error)};}
+ }
+ function restoreDailyUsed(gameState,usedBefore){
+  const row=gameState?.daily?.arena;if(!isObject(row))return false;
+  const limit=typeof window.dailyDungeonLimit==="function"?Math.max(0,whole(window.dailyDungeonLimit("arena"),20)):20;
+  row.used=clamp(whole(usedBefore,0),0,limit);return true;
+ }
  function beginRound(options={}){
   const gameState=targetState();
   if(!world3Active(gameState))return {ok:false,reason:"wrong-world",runtime:runtimeSnapshot()};
   if(arenaRuntime.status!=="ready"&&arenaRuntime.status!=="between")return {ok:false,reason:"session-not-ready",runtime:runtimeSnapshot()};
   if(arenaRuntime.startedRuns>=arenaRuntime.requestedRuns)return {ok:false,reason:"selection-complete",runtime:runtimeSnapshot()};
-  if(dailyStatus().remaining<=0)return {ok:false,reason:"daily-limit",runtime:runtimeSnapshot()};
-  const rows=lineup(arenaRuntime.mode,{rng:options.rng,bossIndex:options.bossIndex,bossId:options.bossId});
-  if(rows.length!==3)return {ok:false,reason:"lineup-unavailable",runtime:runtimeSnapshot()};
+  const dailyBefore=dailyStatus();if(dailyBefore.remaining<=0)return {ok:false,reason:"daily-limit",runtime:runtimeSnapshot()};
+  const prepared=prepareRound(gameState,options);if(!prepared.ok)return {ok:false,reason:prepared.reason,error:prepared.error||null,runtime:runtimeSnapshot()};
+  const previousRuntime=arenaRuntime,previousHp=gameState.hp;
   const use=typeof window.consumeDailyDungeonUse==="function"?window.consumeDailyDungeonUse("arena",1):{ok:false,reason:"daily-core-missing"};
   if(!use.ok)return {ok:false,reason:use.reason||"daily-limit",runtime:runtimeSnapshot()};
-  const level=rewardLevel(gameState.level),formalStats=typeof window.playerCombatStats==="function"?window.playerCombatStats():{},player=playerSnapshot(formalStats),runIndex=arenaRuntime.startedRuns;
-  gameState.hp=Math.max(1,whole(player.hp,1));
-  const firstEnemy=buildEnemy(rows[0].bossIndex,0,formalStats,level);
-  arenaRuntime.startedRuns++;
-  arenaRuntime.status="combat";
-  arenaRuntime.round={index:runIndex,stageIndex:0,level,startHp:gameState.hp,currentHp:gameState.hp,formalStats:{...formalStats},player:{...player},lineup:cloneLineup(rows),enemy:firstEnemy,roundBasePoints:0,roundScaledPoints:0,history:[]};
-  saveState();
-  return {ok:true,enemy:firstEnemy?{...firstEnemy}:null,runtime:runtimeSnapshot()};
+  gameState.hp=Math.max(1,whole(prepared.player.hp,1));
+  arenaRuntime={...previousRuntime,startedRuns:previousRuntime.startedRuns+1,status:"combat",round:{index:prepared.runIndex,stageIndex:0,level:prepared.level,startHp:gameState.hp,currentHp:gameState.hp,formalStats:{...prepared.formalStats},player:{...prepared.player},lineup:cloneLineup(prepared.rows),enemy:prepared.firstEnemy,roundBasePoints:0,roundScaledPoints:0,history:[]}};
+  setTransaction(gameState,{mode:arenaRuntime.mode,runIndex:prepared.runIndex,requestedRuns:arenaRuntime.requestedRuns,stageIndex:0,bossIds:prepared.rows.map(row=>row.bossId),dailyUsedBefore:dailyBefore.used,dailyUsedAfter:use.used,dateKey:String(gameState?.daily?.dateKey||""),startedAt:Date.now()});
+  if(!saveState()){
+   restoreDailyUsed(gameState,dailyBefore.used);gameState.hp=previousHp;clearTransaction(gameState);arenaRuntime=previousRuntime;
+   return {ok:false,reason:"save-failed",runtime:runtimeSnapshot()};
+  }
+  return {ok:true,enemy:{...prepared.firstEnemy},runtime:runtimeSnapshot()};
  }
+ function syncTransactionStage(gameState,round){const txn=transactionSnapshot(gameState);if(!txn||txn.status!=="active")return false;setTransaction(gameState,{...txn,stageIndex:round.stageIndex,currentHp:round.currentHp,updatedAt:Date.now()});return true;}
  function currentEnemy(){return arenaRuntime.round?.enemy?{...arenaRuntime.round.enemy}:null;}
  function creditRound(round){
   const scaled=Math.max(0,whole(round?.roundScaledPoints,0));
@@ -176,6 +225,7 @@
   arenaRuntime.totalAwardedPoints+=actual;
   arenaRuntime.lastResult={type:clear?"clear":"defeat",stageIndex:round.stageIndex,roundIndex:round.index,basePoints:round.roundBasePoints,scaledPoints:round.roundScaledPoints,awardedPoints:actual,history:round.history.map(row=>({...row})),daily:{...dailyStatus()}};
   fullHeal(gameState);
+  clearTransaction(gameState);
   arenaRuntime.round=null;
   if(arenaRuntime.stopRequested){arenaRuntime.status="stopped";arenaRuntime.stopReason="manual";}
   else if(arenaRuntime.startedRuns>=arenaRuntime.requestedRuns){arenaRuntime.status="complete";arenaRuntime.stopReason="selection-complete";}
@@ -195,7 +245,7 @@
   if(stageIndex>=2)return finishRound({type:"clear"});
   round.stageIndex=stageIndex+1;
   const next=round.lineup[round.stageIndex],enemy=buildEnemy(next?.bossIndex,round.stageIndex,round.formalStats,round.level);
-  round.enemy=enemy;
+  round.enemy=enemy;syncTransactionStage(gameState,round);
   saveState();
   return {ok:true,advanced:true,enemy:enemy?{...enemy}:null,runtime:runtimeSnapshot()};
  }
@@ -221,6 +271,7 @@
    if(r1100.scaledPoints!==1575||r1100.stages.map(row=>row.scaledPoints).join(",")!=="315,420,840")fail("reward-1100",r1100);
    if(r2000.scaledPoints!==2250||r2000.stages.map(row=>row.scaledPoints).join(",")!=="450,600,1200")fail("reward-2000",r2000);
    if(RUN_CHOICES.join(",")!=="1,5,10,20")fail("run-choices",RUN_CHOICES);
+   if(TRANSACTION_VERSION!==1||RECOVERY_VERSION!==1||PREPARE_BEFORE_DAILY_VERSION!==1)fail("transaction-versions",{TRANSACTION_VERSION,RECOVERY_VERSION,PREPARE_BEFORE_DAILY_VERSION});
    const sample={hp:49560,atk:13066,def:6082,crit:35.3,dodge:25.3};
    if(rows.length===10&&typeof window.specialBaseEnemyFromPlayer==="function"&&typeof window.createSpecialPlayerSnapshot==="function"){
     const attack=buildEnemy(0,2,sample,1000),defense=buildEnemy(1,2,sample,1000),critical=buildEnemy(2,2,sample,1000),dodger=buildEnemy(3,2,sample,1000),combo=buildEnemy(4,2,sample,1000),penetration=buildEnemy(5,2,sample,1000),counter=buildEnemy(6,2,sample,1000),drain=buildEnemy(7,2,sample,1000),initiative=buildEnemy(8,2,sample,1000),origin=buildEnemy(9,2,sample,1000);
@@ -243,7 +294,7 @@
     if(window.getArenaProgressForWorld(3,sampleState)!==null)fail("world3-rank-state",window.getArenaProgressForWorld(3,sampleState));
    }
   }catch(error){fail("exception",String(error?.message||error));}
-  return Object.freeze({version:2,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
+  return Object.freeze({version:3,passed:errors.length===0,errors:Object.freeze(errors.slice()),checkedAt:Date.now()});
  }
  window.THIRD_WORLD_ARENA_CORE_VERSION=CORE_VERSION;
  window.THIRD_WORLD_ARENA_PROJECTION_VERSION=PROJECTION_VERSION;
@@ -252,6 +303,10 @@
  window.THIRD_WORLD_ARENA_FLOW_VERSION=FLOW_VERSION;
  window.THIRD_WORLD_ARENA_REWARD_VERSION=REWARD_VERSION;
  window.THIRD_WORLD_ARENA_DAILY_VERSION=DAILY_VERSION;
+ window.THIRD_WORLD_ARENA_TRANSACTION_VERSION=TRANSACTION_VERSION;
+ window.THIRD_WORLD_ARENA_INTERRUPTED_RECOVERY_VERSION=RECOVERY_VERSION;
+ window.THIRD_WORLD_ARENA_PREPARE_BEFORE_DAILY_VERSION=PREPARE_BEFORE_DAILY_VERSION;
+ window.THIRD_WORLD_ARENA_TRANSACTION_KEY=TRANSACTION_KEY;
  window.THIRD_WORLD_ARENA_WORLD=WORLD;
  window.THIRD_WORLD_ARENA_MODES=MODE_DEFS;
  window.THIRD_WORLD_ARENA_STAGE_PROFILE=STAGE_PROFILE;
@@ -272,6 +327,8 @@
  window.getThirdWorldArenaRewardPreview=rewardPreview;
  window.getThirdWorldArenaDailyStatus=dailyStatus;
  window.getThirdWorldArenaRunChoiceStatus=runChoiceStatus;
+ window.getThirdWorldArenaTransaction=transactionSnapshot;
+ window.recoverInterruptedThirdWorldArenaRun=recoverInterruptedRun;
  window.startThirdWorldArenaSession=startSession;
  window.beginThirdWorldArenaRound=beginRound;
  window.getThirdWorldArenaCurrentEnemy=currentEnemy;
@@ -281,5 +338,5 @@
  window.getThirdWorldArenaRuntimeState=runtimeSnapshot;
  window.resetThirdWorldArenaRuntime=resetRuntime;
  window.runThirdWorldArenaCoreIntegrity=integrity;
- window.THIRD_WORLD_ARENA_CORE_INTEGRITY_VERSION=2;
+ window.THIRD_WORLD_ARENA_CORE_INTEGRITY_VERSION=3;
 })();
