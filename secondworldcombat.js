@@ -1,5 +1,5 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const SETTLEMENT_READY=true;
  const REVIEW_POLICY_VERSION=1;
  const REVIEW_STATE_ISOLATION_VERSION=2;
@@ -79,19 +79,19 @@
     return {ok:false,reason:"此宇宙紀元 Boss 尚未解鎖。"};
    }
   }
-  if(typeof window.runCombatCore!=="function")return {ok:false,reason:"正式戰鬥核心尚未載入。"};
+  if(typeof window.runWorldCombatCore!=="function")return {ok:false,reason:"正式世界戰鬥 adapter 尚未載入。"};
   const enemy=options.encounter&&typeof options.encounter==="object"?options.encounter:secondWorldBossEncounter(index,options);
   if(!enemy)return {ok:false,reason:"無法建立宇宙紀元 Boss。"};
   const player=options.player&&typeof options.player==="object"?options.player:(typeof window.playerCombatStats==="function"?window.playerCombatStats():null);
   if(!player)return {ok:false,reason:"無法取得玩家戰鬥能力。"};
   const startHp=options.startHp==null?Math.max(1,Number(player.hp)||1):Math.max(0,Number(options.startHp)||0);
-  const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
-   ?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel})
-   :1;
   const explicitHpLock=options.lockPlayerFullHp===true;
   const lockPlayerFullHp=explicitHpLock||formalMainlineHpLockActive();
   const reviewStateBefore=reviewMode&&targetState?JSON.stringify(targetState):null;
-  const combat=window.runCombatCore(player,enemy,startHp,{
+  const resolved=window.runWorldCombatCore(player,enemy,startHp,{
+   world:2,
+   state:targetState,
+   civilizationLevel:options.civilizationLevel,
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
    useTestSpecializations:options.useTestSpecializations===true,
@@ -99,9 +99,10 @@
    markLevels:options.markLevels||null,
    maxTurns:options.maxTurns||0,
    preparePresentation:options.preparePresentation!==false,
-   playerFinalDamageMultiplier:civilizationMultiplier,
    lockPlayerFullHp
   });
+  const combat=resolved.combat;
+  const civilizationMultiplier=resolved.playerFinalDamageMultiplier;
   if(reviewMode&&reviewStateBefore!=null&&JSON.stringify(targetState)!==reviewStateBefore){
    return {ok:false,review:true,reason:"宇宙回顧戰偵測到正式 state 變動，已拒絕戰鬥結果。",settlementReady:false,xp:0,darkMatter:0,darkEnergy:0,items:[],formalProgressChanged:false};
   }
@@ -130,6 +131,7 @@
   if(!first||first.level!==505||first.hp!==32400||first.atk!==5400||first.def!==2700)errors.push({code:"FIRST_BOSS_BASE",first});
   if(!last||last.level!==1000||Math.abs(last.multiplier-2.485)>1e-9||last.hp!==80514||last.atk!==13419||last.def!==6710)errors.push({code:"LAST_BOSS_BASE",last});
   if(SETTLEMENT_READY!==true)errors.push({code:"SETTLEMENT_GATE"});
+  if(Number(window.COMBAT_WORLD_ADAPTER_VERSION)!==1||typeof window.runWorldCombatCore!=="function")errors.push({code:"WORLD_COMBAT_ADAPTER"});
   try{
    const reviewState={level:1000,hp:12345,secondWorld:{entered:true,civilizationLevel:10,mainline:{bossKilled:Array.from({length:100},()=>true)}},thirdWorld:{entered:true}};
    const before=JSON.stringify(reviewState),player={hp:1000000,atk:1000000000,def:1000000,crit:0,dodge:0};
@@ -151,7 +153,8 @@
  window.canRunSecondWorldBossCombat=canRunSecondWorldBossCombat;
  window.canRunSecondWorldBossReview=canRunSecondWorldBossReview;
  window.runSecondWorldBossCombat=runSecondWorldBossCombat;
- window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=2;
+ window.SECOND_WORLD_CIVILIZATION_COMBAT_VERSION=3;
+ window.SECOND_WORLD_WORLD_COMBAT_ADAPTER_VERSION=1;
  window.SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION=REVIEW_POLICY_VERSION;
  window.SECOND_WORLD_COMBAT_REVIEW_STATE_ISOLATION_VERSION=REVIEW_STATE_ISOLATION_VERSION;
  window.SECOND_WORLD_FORMAL_COMBAT_PHASE_GATE_VERSION=1;
