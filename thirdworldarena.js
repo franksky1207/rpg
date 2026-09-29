@@ -7,8 +7,8 @@
  const REWARD_VERSION=1;
  const DAILY_VERSION=1;
  const WORLD=3;
- const MIN_LEVEL=1000;
- const MAX_LEVEL=2000;
+ const W3_ARENA_MIN_LEVEL=1000;
+ const W3_ARENA_MAX_LEVEL=2000;
  const RUN_CHOICES=Object.freeze([1,5,10,20]);
  const STAGE_BASE_POINTS=Object.freeze([300,400,800]);
  const LEVEL_STEP=100;
@@ -91,7 +91,7 @@
   const ability=enemyAbilityProfile(boss);
   return {
    name:projectionName(boss),
-   level:clamp(whole(level??targetState()?.level,MIN_LEVEL),MIN_LEVEL,MAX_LEVEL),
+   level:clamp(whole(level??targetState()?.level,W3_ARENA_MIN_LEVEL),W3_ARENA_MIN_LEVEL,W3_ARENA_MAX_LEVEL),
    kind:"dungeon-arena-third-world",
    style:"higher-dimensional-projection",
    world:WORLD,
@@ -115,12 +115,12 @@
   const finalDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:WORLD,state:gameState}):1;
   return {playerFinalDamageMultiplier:Math.max(0,finite(finalDamageMultiplier,1)),enemyAbilityProfile:enemy?.enemyAbilityProfile||enemy?.arenaAbilityProfile||enemyAbilityProfile(enemy?.higherDimensionalBossIndex),enemyEffectProfile:{}};
  }
- function rewardLevel(level){return clamp(whole(level,MIN_LEVEL),MIN_LEVEL,MAX_LEVEL);}
- function rewardMultiplier(level){const safe=rewardLevel(level),steps=Math.floor((safe-MIN_LEVEL)/LEVEL_STEP);return Math.round((1+steps*LEVEL_STEP_BONUS)*100)/100;}
- function stageReward(stageIndex,level){const index=clamp(whole(stageIndex,0),0,2),base=STAGE_BASE_POINTS[index],multiplier=rewardMultiplier(level);return Object.freeze({stageIndex:index,basePoints:base,level:rewardLevel(level),levelSteps:Math.floor((rewardLevel(level)-MIN_LEVEL)/LEVEL_STEP),levelMultiplier:multiplier,scaledPoints:Math.round(base*multiplier)});}
+ function rewardLevel(level){return clamp(whole(level,W3_ARENA_MIN_LEVEL),W3_ARENA_MIN_LEVEL,W3_ARENA_MAX_LEVEL);}
+ function rewardMultiplier(level){const safe=rewardLevel(level),steps=Math.floor((safe-W3_ARENA_MIN_LEVEL)/LEVEL_STEP);return Math.round((1+steps*LEVEL_STEP_BONUS)*100)/100;}
+ function stageReward(stageIndex,level){const index=clamp(whole(stageIndex,0),0,2),base=STAGE_BASE_POINTS[index],multiplier=rewardMultiplier(level);return Object.freeze({stageIndex:index,basePoints:base,level:rewardLevel(level),levelSteps:Math.floor((rewardLevel(level)-W3_ARENA_MIN_LEVEL)/LEVEL_STEP),levelMultiplier:multiplier,scaledPoints:Math.round(base*multiplier)});}
  function roundReward(level){const stages=STAGE_BASE_POINTS.map((_,index)=>stageReward(index,level)),basePoints=stages.reduce((sum,row)=>sum+row.basePoints,0),scaledPoints=stages.reduce((sum,row)=>sum+row.scaledPoints,0);return Object.freeze({level:rewardLevel(level),levelMultiplier:rewardMultiplier(level),basePoints,scaledPoints,stages:Object.freeze(stages)});}
  function projectedVipPoints(points){const base=Math.max(0,whole(points,0));return typeof window.adjustVipDungeonPoints==="function"?Math.max(0,whole(window.adjustVipDungeonPoints(base),0)):base;}
- function rewardPreview(level=null){const gameState=targetState(),reward=roundReward(level??gameState?.level??MIN_LEVEL);return Object.freeze({...reward,actualPoints:projectedVipPoints(reward.scaledPoints)});}
+ function rewardPreview(level=null){const gameState=targetState(),reward=roundReward(level??gameState?.level??W3_ARENA_MIN_LEVEL);return Object.freeze({...reward,actualPoints:projectedVipPoints(reward.scaledPoints)});}
  function dailyStatus(){return typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus("arena"):{mode:"arena",used:0,remaining:0,limit:20};}
  function runChoice(value){const count=whole(value,0);return RUN_CHOICES.includes(count)?count:0;}
  function runChoiceStatus(value){const count=runChoice(value),daily=dailyStatus();return Object.freeze({count,valid:count>0,enabled:count>0&&daily.remaining>=count,used:daily.used,remaining:daily.remaining,limit:daily.limit});}
