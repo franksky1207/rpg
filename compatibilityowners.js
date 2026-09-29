@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
  const SAVE_SCHEMA_OWNER="savemigration";
@@ -8,6 +8,7 @@
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
  const SAVE_HOOK_CORE_VERSION=2;
  const SCRIPT_LOAD_POLICY_VERSION=3;
+ const LEGACY_GLOBAL_ALIAS_POLICY_VERSION=1;
  const beforeSaveHooks=new Map();
  const afterSaveHooks=new Map();
  const settlementSaveHooks=new Map();
@@ -54,19 +55,30 @@
   const group=scriptLoadGroupFor(path),deferred=["gm","story","integrity"].includes(group);
   return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,group,startupCritical:!deferred,deferRecommended:deferred,fetchPriority:deferred?"low":"auto"});
  }
+ function legacyGlobalAliasSnapshot(){
+  return Object.freeze({
+   version:LEGACY_GLOBAL_ALIAS_POLICY_VERSION,
+   policy:"read-compatible-no-duplicate-write",
+   saveVersion:{legacy:LEGACY_SAVE_VERSION_VALUE,canonical:Number(window.SAVE_SCHEMA_VERSION)||0,owner:SAVE_SCHEMA_OWNER},
+   maxLevel:{legacy:LEGACY_MAX_LEVEL_VALUE,windowAlias:Number(window.MAX_LEVEL)||0,firstWorld:Number(window.FIRST_WORLD_LEVEL_CAP)||0,absolute:Number(window.ABSOLUTE_MAX_LEVEL)||0,owner:LEVEL_CAP_RUNTIME_OWNER},
+   arena:{policy:ARENA_ALIAS_POLICY,owner:ARENA_RUNTIME_OWNER}
+  });
+ }
 
  window.LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION;
  window.LEGACY_SAVE_VERSION=LEGACY_SAVE_VERSION_VALUE;
  window.LEGACY_SAVE_VERSION_ALIAS_VERSION=1;
  window.LEGACY_FIRST_WORLD_LEVEL_CAP=LEGACY_MAX_LEVEL_VALUE;
  window.LEGACY_MAX_LEVEL_ALIAS_VERSION=1;
- window.MAX_LEVEL=LEGACY_MAX_LEVEL_VALUE;
- window.LEGACY_MAX_LEVEL_WINDOW_ALIAS_VERSION=1;
+ window.LEGACY_MAX_LEVEL_WINDOW_ALIAS_VERSION=2;
  window.SAVE_SCHEMA_RUNTIME_OWNER=SAVE_SCHEMA_OWNER;
  window.LEVEL_CAP_RUNTIME_OWNER=LEVEL_CAP_RUNTIME_OWNER;
  window.ARENA_PROGRESS_RUNTIME_OWNER=ARENA_RUNTIME_OWNER;
  window.ARENA_LEGACY_ALIAS_POLICY=ARENA_ALIAS_POLICY;
  window.ARENA_LEGACY_ALIAS_AUDIT_VERSION=1;
+ window.LEGACY_GLOBAL_ALIAS_POLICY_VERSION=LEGACY_GLOBAL_ALIAS_POLICY_VERSION;
+ window.LEGACY_GLOBAL_DUPLICATE_WRITE_RETIREMENT_VERSION=1;
+ window.legacyGlobalAliasSnapshot=legacyGlobalAliasSnapshot;
  window.SAVE_HOOK_CORE_VERSION=SAVE_HOOK_CORE_VERSION;
  window.SAVE_HOOK_RUNTIME_OWNER="compatibilityowners";
  window.registerBeforeSaveHook=registerBeforeSaveHook;
@@ -88,6 +100,7 @@
  if(LEGACY_SAVE_VERSION_VALUE!==13)errors.push({code:"LEGACY_SAVE_VERSION",actual:LEGACY_SAVE_VERSION_VALUE});
  if(Number(window.SAVE_SCHEMA_VERSION)!==16)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION});
  if(LEGACY_MAX_LEVEL_VALUE!==500)errors.push({code:"LEGACY_MAX_LEVEL",actual:LEGACY_MAX_LEVEL_VALUE});
+ if(Number(window.MAX_LEVEL)!==LEGACY_MAX_LEVEL_VALUE)errors.push({code:"WINDOW_MAX_LEVEL_ALIAS",actual:window.MAX_LEVEL,expected:LEGACY_MAX_LEVEL_VALUE});
  if(Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000||Number(window.THIRD_WORLD_LEVEL_CAP)!==2000||Number(window.ABSOLUTE_MAX_LEVEL)!==2000)errors.push({code:"LEVEL_CAP_OWNER",first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP,third:window.THIRD_WORLD_LEVEL_CAP,absolute:window.ABSOLUTE_MAX_LEVEL});
  if(Number(window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION)!==1||Number(window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION)!==1||Number(window.THIRD_WORLD_EXP_OWNER_VERSION)!==1)errors.push({code:"THIRD_WORLD_LEVEL_OWNER_VERSION",phase:window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION,progression:window.THIRD_WORLD_LEVEL_PROGRESSION_VERSION,exp:window.THIRD_WORLD_EXP_OWNER_VERSION});
  try{
@@ -98,5 +111,5 @@
  }catch(error){errors.push({code:"LEVEL_RUNTIME_PROBE_EXCEPTION",error:String(error?.message||error)});}
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
  if(!baseSave||typeof window.registerBeforeSaveHook!=="function"||typeof window.registerAfterSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function")errors.push({code:"SAVE_HOOK_OWNER"});
- window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors};
+ window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors,legacyGlobals:legacyGlobalAliasSnapshot()};
 })();
