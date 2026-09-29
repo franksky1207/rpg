@@ -3,7 +3,8 @@
  const fail=(code,message,detail=null)=>errors.push({code,message,detail});
  const levels=value=>Object.fromEntries((window.SPECIALIZATION_KEYS||[]).map(key=>[key,value]));
  try{
-  if(Number(window.GM_BATCH16_FORMAL_CONTROLS_VERSION)!==1)fail("FORMAL_UI_OWNER","第16批正式控制鎖定 owner 未載入");
+  if(Number(window.GM_BATCH16_FORMAL_CONTROLS_VERSION)<3)fail("FORMAL_UI_OWNER","第16批正式控制 fixed-value owner 未更新");
+  if(Number(window.GM_BATCH16_FIXED_VALUE_UI_VERSION)<2)fail("FIXED_VALUE_UI_VERSION","固定值 UI owner 未載入");
   if(typeof window.gmBatch16FormalWorldPhase!=="function")fail("PHASE_API","第16批正式紀元判定 API 未載入");
   const galaxy={secondWorld:{entered:false},thirdWorld:{entered:false},specializations:levels(0),enhancement:{levels:{weapon:0,helmet:0,armor:0,shoes:0,accessory:0}}};
   const universe={secondWorld:{entered:true,civilizationLevel:5},thirdWorld:{entered:false},specializations:levels(60),enhancement:{levels:{weapon:20,helmet:25,armor:30,shoes:35,accessory:40}}};
@@ -45,17 +46,23 @@
   const currentPhase=window.gmBatch16FormalWorldPhase?.();
   if(currentPhase>=2){
    const spec=String(window.gmSpecializationManagementHtml?.()||"");
-   if(!spec.includes("disabled")||!spec.includes("Lv.60")||!spec.includes("套用專精等級"))fail("SPEC_UI_LOCK","宇宙／高維正式專精 UI 未完整鎖定");
+   if(spec.includes("<select")||spec.includes("套用專精等級")||!spec.includes("gm-formal-fixed-value")||!spec.includes("Lv.60"))fail("SPEC_UI_FIXED","宇宙／高維正式專精 UI 必須是純固定值，不得產生下拉或套用按鈕");
    const mark=String(window.gmMarkManagementHtml?.()||"");
-   if(!mark.includes("disabled")||!mark.includes("Lv.10")||!mark.includes("套用印記狀態"))fail("MARK_UI_LOCK","宇宙／高維正式印記 UI 未完整鎖定");
+   if(mark.includes("<select")||mark.includes("套用印記狀態")||!mark.includes("gm-formal-fixed-value")||!mark.includes("Lv.10"))fail("MARK_UI_FIXED","宇宙／高維正式印記 UI 必須是純固定值，不得產生下拉或套用按鈕");
+   if(currentPhase===3){
+    const enhancement=String(window.gmEnhancementManagementHtml?.()||"");
+    if(enhancement.includes("<select")||enhancement.includes("套用強化等級")||!enhancement.includes("gm-formal-fixed-value")||!enhancement.includes("+40"))fail("ENH_UI_FIXED","高維正式強化 UI 必須是純固定值");
+    const civilization=String(window.gmCivilizationManagementHtml?.()||"");
+    if(civilization.includes("<select")||civilization.includes("套用文明等級")||!civilization.includes("gm-formal-fixed-value")||!civilization.includes("Lv.10"))fail("CIV_UI_FIXED","高維正式文明 UI 必須是純固定值");
+   }
   }
   const specTest=String(window.gmSpecializationTestHtml?.()||"");
-  if(!specTest.includes("Lv.0")||!specTest.includes("Lv.60"))fail("SPEC_SANDBOX","專精 GM 沙盒未保留 Lv0～60");
+  if(!specTest.includes("Lv.0")||!specTest.includes("Lv.60")||!specTest.includes("<select"))fail("SPEC_SANDBOX","專精 GM 沙盒未保留 Lv0～60 下拉測試");
   const markTest=String(window.gmMarkTestHtml?.()||"");
-  if(!markTest.includes("Lv.0")||!markTest.includes("Lv.10"))fail("MARK_SANDBOX","印記 GM 沙盒未保留 Lv0～10");
+  if(!markTest.includes("Lv.0")||!markTest.includes("Lv.10")||!markTest.includes("<select"))fail("MARK_SANDBOX","印記 GM 沙盒未保留 Lv0～10 下拉測試");
  }catch(error){fail("EXCEPTION","第16批整體完整性檢查執行失敗",String(error?.message||error));}
- const report={version:1,passed:errors.length===0,errors,checkedAt:Date.now()};
- window.GM_BATCH16_INTEGRITY_VERSION=1;
+ const report={version:2,passed:errors.length===0,errors,checkedAt:Date.now()};
+ window.GM_BATCH16_INTEGRITY_VERSION=2;
  window.GM_BATCH16_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] GM Batch16 integrity error",errors);
 })();
