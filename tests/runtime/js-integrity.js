@@ -39,7 +39,7 @@ assert(!/window\.save\s*=\s*function/.test(saveGuard)&&!/try\{save=window\.save/
 assert(/const VERSION=5;/.test(worldTransitionSafety)&&/WORLD_TRANSITION_GUARD_INSTALL_VERSION=2/.test(worldTransitionSafety),"World Transition Safety 必須升級為 V5／single-install V2。");
 assert(!/setTimeout\(\(\)=>\{installBountyGate\(\);installOfflineWorldPhaseGuards\(\);\},0\)/.test(worldTransitionSafety),"World Transition guards 不得再靠 setTimeout 重複安裝。");
 for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+defer\\s+fetchpriority="low"\\s+data-load-group="${group}"`);assert(re.test(index),`${group} scripts 必須使用 deferred + low-priority 載入策略。`);}
-assert(/COMBAT_WORLD_ADAPTER_VERSION=1/.test(combatMath)&&/worldCombatDamageMultiplier/.test(combatMath)&&/runWorldCombatCore/.test(combatMath),"World Combat Adapter V1 owner 缺失。");
+assert(/WORLD_COMBAT_ADAPTER_VERSION=1/.test(combatMath)&&/worldCombatDamageMultiplier/.test(combatMath)&&/runWorldCombatCore/.test(combatMath),"World Combat Adapter V1 owner 缺失。");
 assert(/playerFinalDamageMultiplier:resolvedMultiplier/.test(combatMath)&&/window\.runCombatCore\(player,enemy,startHp,combatOptions\)/.test(combatMath),"World Combat Adapter 必須只解析世界倍率後轉交 runCombatCore。");
 assert(/DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1/.test(dungeonCore)&&/window\.runWorldCombatCore/.test(dungeonCore)&&!/civilizationCombatDamageMultiplier/.test(dungeonCore),"Dungeon combat 必須改走 World Combat Adapter，不再自行解析文明倍率。");
 assert(/const VERSION=4;/.test(secondWorldCombat)&&/SECOND_WORLD_WORLD_COMBAT_ADAPTER_VERSION=1/.test(secondWorldCombat)&&/window\.runWorldCombatCore/.test(secondWorldCombat),"第二紀元主線必須升級為 World Combat Adapter consumer V1。");
