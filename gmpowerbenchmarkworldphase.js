@@ -1,15 +1,38 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function testCharacter(){return typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;}
- function benchmarkWorld(){const session=typeof window.gmPowerBenchmarkSession==="function"?window.gmPowerBenchmarkSession():null;return clampWorld(session?.world);}
+ function benchmarkWorld(){
+  const character=testCharacter(),characterWorld=clampWorld(character?.world);
+  if(characterWorld===3)return 3;
+  const session=typeof window.gmPowerBenchmarkSession==="function"?window.gmPowerBenchmarkSession():null;
+  return clampWorld(session?.world);
+ }
+ function testCivilizationMultiplier(world=benchmarkWorld()){
+  const level=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  return typeof window.civilizationCombatDamageMultiplier==="function"
+   ?window.civilizationCombatDamageMultiplier({world:clampWorld(world),civilizationLevel:level})
+   :1;
+ }
  async function runWithBenchmarkWorld(base,args){
   if(typeof base!=="function")return false;
-  const original=window.gmTestCharacterSnapshot;
-  if(typeof original!=="function")return base(...args);
+  const originalSnapshot=window.gmTestCharacterSnapshot;
+  const originalCombat=window.runCombatCore;
   const modeWorld=benchmarkWorld();
-  window.gmTestCharacterSnapshot=function(){const snapshot=original();return snapshot&&typeof snapshot==="object"?{...snapshot,world:modeWorld}:snapshot;};
-  try{return await base(...args);}finally{window.gmTestCharacterSnapshot=original;}
+  const forceWorld3Civilization=modeWorld===3;
+  if(typeof originalSnapshot==="function"){
+   window.gmTestCharacterSnapshot=function(){const snapshot=originalSnapshot();return snapshot&&typeof snapshot==="object"?{...snapshot,world:modeWorld}:snapshot;};
+  }
+  if(forceWorld3Civilization&&typeof originalCombat==="function"){
+   window.runCombatCore=function(player,enemy,startHp,options={}){
+    const multiplier=testCivilizationMultiplier(3);
+    return originalCombat(player,enemy,startHp,{...(options&&typeof options==="object"?options:{}),playerFinalDamageMultiplier:multiplier});
+   };
+  }
+  try{return await base(...args);}finally{
+   if(typeof originalSnapshot==="function")window.gmTestCharacterSnapshot=originalSnapshot;
+   if(typeof originalCombat==="function")window.runCombatCore=originalCombat;
+  }
  }
  function correctedSnapshot(baseSnapshot){
   const current=testCharacter();
@@ -40,6 +63,10 @@
   if(typeof baseOutput==="function"&&!baseOutput.__worldPhaseAdapter){
    const wrapped=function(...args){return runWithBenchmarkWorld(baseOutput,args);};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkRunOutput=wrapped;
   }
+  const baseDefense=window.gmPowerBenchmarkRunDefense;
+  if(typeof baseDefense==="function"&&!baseDefense.__worldPhaseAdapter){
+   const wrapped=function(...args){return runWithBenchmarkWorld(baseDefense,args);};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkRunDefense=wrapped;
+  }
   const baseCombat=window.gmPowerBenchmarkRunCombat;
   if(typeof baseCombat==="function"&&!baseCombat.__worldPhaseAdapter){
    const wrapped=function(...args){return runWithBenchmarkWorld(baseCombat,args);};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkRunCombat=wrapped;
@@ -60,7 +87,9 @@
   return true;
  }
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
+ window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=1;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
+ window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
  window.gmPowerBenchmarkCorrectedSnapshot=function(){const base=typeof window.gmPowerBenchmarkSnapshot==="function"?window.gmPowerBenchmarkSnapshot():null;return base?JSON.parse(JSON.stringify(base)):null;};
  install();
 })();
