@@ -16,6 +16,8 @@ on:
       - 'storyprogress.js'
       - 'storyrecordtabs.js'
       - 'storyruntimeintegrity.js'
+      - 'thirdworldphase.js'
+      - 'thirdworldmigrationregression.js'
       - 'gmstorytest.js'
       - 'ui.js'
       - 'combatcore.js'
@@ -41,6 +43,8 @@ jobs:
         run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
       - name: Run Story Record regressions
         run: node tests/story/record.js
+      - name: Run legacy W3 Story migration regressions
+        run: node tests/story/legacy-thirdworld.js
       - name: Upload story integrity diagnostics
         if: always()
         uses: actions/upload-artifact@v4
