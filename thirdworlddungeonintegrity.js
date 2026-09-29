@@ -10,7 +10,7 @@
  if(Number(window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION)!==3)fail("availability-policy-version",window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION);
  if(Number(window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION)!==2)fail("presentation-policy-version",window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION);
  if(Number(window.THIRD_WORLD_ARENA_PROVISIONAL_GATE_VERSION)!==3)fail("arena-gate-version",window.THIRD_WORLD_ARENA_PROVISIONAL_GATE_VERSION);
- ["THIRD_WORLD_DUNGEON_HOME_POLICY_VERSION","THIRD_WORLD_DUNGEON_RESOURCE_BAR_VERSION","THIRD_WORLD_DUNGEON_RETURN_NAV_VERSION","THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION","THIRD_WORLD_DUNGEON_CALAMITY_GATE_VERSION","THIRD_WORLD_DUNGEON_ARENA_COPY_VERSION"].forEach(name=>{if(Number(window[name])!==1)fail(`missing-version:${name}`,window[name]);});
+ ["THIRD_WORLD_DUNGEON_HOME_POLICY_VERSION","THIRD_WORLD_DUNGEON_RESOURCE_BAR_VERSION","THIRD_WORLD_DUNGEON_RETURN_NAV_VERSION","THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION","THIRD_WORLD_DUNGEON_CALAMITY_GATE_VERSION","THIRD_WORLD_DUNGEON_ARENA_COPY_VERSION","THIRD_WORLD_DUNGEON_INITIAL_SYNC_VERSION"].forEach(name=>{if(Number(window[name])!==1)fail(`missing-version:${name}`,window[name]);});
  ["dungeonModeAvailability","thirdWorldDungeonModeVisible","thirdWorldDungeonResourceSnapshot","thirdWorldDungeonNavigationPolicy","syncThirdWorldDungeonUi"].forEach(name=>{if(typeof window[name]!=="function")fail(`missing-api:${name}`,typeof window[name]);});
  if(Number(window.DUNGEON_UI_EXTENSION_VERSION)!==1)fail("dungeon-ui-extension",window.DUNGEON_UI_EXTENSION_VERSION);
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)fail("dungeon-prep-return",window.DUNGEON_PREP_RETURN_UX_VERSION);
