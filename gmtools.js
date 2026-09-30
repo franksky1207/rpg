@@ -147,6 +147,79 @@ window.gmSecondWorldProgressSnapshot=gmSecondWorldProgressSnapshot;
 window.gmApplySecondWorldProgressCount=gmApplySecondWorldProgressCount;
 window.gmSetSecondWorldProgress=gmSetSecondWorldProgress;
 
+const GM_THIRD_WORLD_PROGRESS_MAX=100;
+function gmThirdWorldProgressPercent(value){
+ const n=Math.floor(Number(value));
+ return Number.isFinite(n)?Math.max(0,Math.min(GM_THIRD_WORLD_PROGRESS_MAX,n)):null;
+}
+function gmThirdWorldStoryDescriptors(){
+ return typeof window.thirdWorldStoryTriggerDescriptors==="function"?Array.from(window.thirdWorldStoryTriggerDescriptors()):[];
+}
+function gmThirdWorldProgressSnapshot(target=state){
+ const aggregate=typeof window.thirdWorldBossAggregateSnapshot==="function"?window.thirdWorldBossAggregateSnapshot(target):null;
+ if(!aggregate||!Number.isFinite(Number(aggregate.maxHp))||Number(aggregate.maxHp)<=0)return Object.freeze({version:1,completionPercent:0,titleTier:0,storyStage:0,defeatedBosses:0,totalBosses:10,currentHp:null,maxHp:null});
+ const completion=Math.max(0,Math.min(100,(1-Number(aggregate.currentHp)/Number(aggregate.maxHp))*100));
+ const titleTier=typeof window.thirdWorldTitleTier==="function"?Math.max(0,Math.min(10,Math.floor(Number(window.thirdWorldTitleTier(target))||0))):0;
+ return Object.freeze({version:1,completionPercent:Math.round(completion*100)/100,titleTier,storyStage:Math.max(0,Math.min(10,Math.floor(Number(target?.thirdWorld?.story?.unlockedStage)||0))),defeatedBosses:Math.max(0,Math.floor(Number(aggregate.defeatedCount)||0)),totalBosses:Math.max(0,Math.floor(Number(aggregate.bossCount)||10)),currentHp:Number(aggregate.currentHp),maxHp:Number(aggregate.maxHp)});
+}
+function gmApplyThirdWorldProgressPercent(value,target=state){
+ const percent=gmThirdWorldProgressPercent(value),holder=target&&typeof target==="object"?target:null;
+ if(!holder||percent==null)return {ok:false,reason:"invalid-target"};
+ if(holder?.thirdWorld?.entered!==true)return {ok:false,reason:"wrong-world"};
+ if(typeof window.thirdWorldBossAggregateSnapshot!=="function"||typeof window.thirdWorldTitleTier!=="function")return {ok:false,reason:"progress-owner-missing"};
+ const bossCount=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_COUNT)||10)),bossMaxHp=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||0));
+ if(bossCount!==10||bossMaxHp<=0)return {ok:false,reason:"boss-owner-missing"};
+ const descriptors=gmThirdWorldStoryDescriptors();
+ if(descriptors.length!==11)return {ok:false,reason:"story-owner-missing"};
+ const progress=holder?.storyProgress;
+ if(!progress||typeof progress!=="object"||!Array.isArray(progress.completedStories))return {ok:false,reason:"story-progress-missing"};
+ const remainingHp=Math.round(bossMaxHp*(100-percent)/100);
+ holder.thirdWorld.bosses=Array.from({length:bossCount},()=>({currentHp:remainingHp}));
+ const aggregate=window.thirdWorldBossAggregateSnapshot(holder),tier=Math.max(0,Math.min(10,Math.floor(Number(window.thirdWorldTitleTier(holder))||0))),full=percent===100;
+ const thirdIds=new Set(descriptors.map(row=>String(row?.storyId||row?.id||"")).filter(Boolean));
+ const intro=descriptors.find(row=>row?.kind==="intro")||null,final=descriptors.find(row=>row?.kind==="final")||null;
+ const introId=String(intro?.storyId||intro?.id||""),finalId=String(final?.storyId||final?.id||"");
+ const hadIntro=introId&&progress.completedStories.includes(introId),preserved=progress.completedStories.filter(id=>!thirdIds.has(id));
+ const completedThird=[];
+ if(hadIntro)completedThird.push(introId);
+ descriptors.filter(row=>row?.kind==="milestone"&&Math.floor(Number(row.stage)||0)<=tier).forEach(row=>{const id=String(row.storyId||row.id||"");if(id)completedThird.push(id);});
+ if(full&&finalId)completedThird.push(finalId);
+ progress.completedStories=Array.from(new Set([...preserved,...completedThird]));
+ if(thirdIds.has(String(progress.pendingStory||"")))progress.pendingStory=null;
+ if(!holder.thirdWorld.story||typeof holder.thirdWorld.story!=="object")holder.thirdWorld.story={introSeen:false,unlockedStage:0,finalSeen:false};
+ holder.thirdWorld.story.introSeen=hadIntro;
+ holder.thirdWorld.story.unlockedStage=tier;
+ holder.thirdWorld.story.finalSeen=full;
+ holder.thirdWorld.completed=full;
+ const thirdTitleIds=Array.from(window.THIRD_WORLD_PLAYER_TITLE_IDS||[]);
+ if(thirdTitleIds.length!==10)return {ok:false,reason:"title-owner-missing"};
+ if(!holder.titles||typeof holder.titles!=="object")holder.titles=typeof window.createBlankPlayerTitleState==="function"?window.createBlankPlayerTitleState():{version:1,unlocked:[],equipped:null,pendingNotice:null};
+ const titleIdSet=new Set(thirdTitleIds),existing=Array.isArray(holder.titles.unlocked)?holder.titles.unlocked:[];
+ holder.titles.unlocked=Array.from(new Set([...existing.filter(id=>!titleIdSet.has(id)),...thirdTitleIds.slice(0,tier)]));
+ if(titleIdSet.has(String(holder.titles.pendingNotice||"")))holder.titles.pendingNotice=null;
+ if(typeof window.normalizePlayerTitleState==="function")window.normalizePlayerTitleState(holder);
+ if(typeof window.reconcileThirdWorldStoryState==="function")window.reconcileThirdWorldStoryState(holder);
+ return {ok:true,...gmThirdWorldProgressSnapshot(holder),requestedPercent:percent,remainingHpPerBoss:remainingHp,aggregateCurrentHp:Number(aggregate.currentHp),completedThirdWorldStories:completedThird.length,completed:holder.thirdWorld.completed===true};
+}
+function gmSetThirdWorldProgress(){
+ if(state?.thirdWorld?.entered!==true)return alert("只有目前位於高維紀元時才能指定高維紀元進度。");
+ if(typeof window.runSettlementTransaction!=="function")return alert("正式存檔 transaction owner 尚未載入。");
+ const current=Math.round(Number(gmThirdWorldProgressSnapshot(state).completionPercent)||0);
+ const raw=prompt("指定高維紀元攻略完成度（0～100%）",current);
+ if(raw===null)return;
+ const number=Number(raw),percent=gmThirdWorldProgressPercent(number);
+ if(percent==null||!Number.isInteger(number)||number<0||number>GM_THIRD_WORLD_PROGRESS_MAX){alert("請輸入 0～100 的整數。");return;}
+ const tx=window.runSettlementTransaction({label:"gm-third-world-progress",mutate:live=>gmApplyThirdWorldProgressPercent(percent,live)});
+ if(!tx?.ok){alert(`高維紀元進度更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return;}
+ if(typeof render==="function")render();
+ const snapshot=gmThirdWorldProgressSnapshot(state);
+ alert(`高維紀元攻略完成度已指定為 ${percent}%：10 名高維存在的永久 HP、Stage、總體稱號 Tier 與高維故事階段已同步。${percent===100?"高維最終故事與紀元完成狀態亦已同步。":""}\n角色等級、EXP、維度之弦與高維核心養成維持原值。\n目前稱號 Tier：${snapshot.titleTier}｜故事 Stage：${snapshot.storyStage}`);
+}
+window.GM_THIRD_WORLD_PROGRESS_MANAGEMENT_VERSION=1;
+window.gmThirdWorldProgressSnapshot=gmThirdWorldProgressSnapshot;
+window.gmApplyThirdWorldProgressPercent=gmApplyThirdWorldProgressPercent;
+window.gmSetThirdWorldProgress=gmSetThirdWorldProgress;
+
 function gmCreateGear(){
  const q=Number(document.getElementById("gmGearQuality")?.value);
  const level=Number(document.getElementById("gmGearLevel")?.value);
