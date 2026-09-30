@@ -92,6 +92,20 @@
  }
  registerNativeSections();
 
+ function buildNativeLateBindingIntegrity(){
+  const marker="__gm-hub-native-late-binding__",original=window.gmGeneralManagementHtml;
+  let body=null,error="";
+  try{
+   window.gmGeneralManagementHtml=()=>marker;
+   body=window.gmHubRegisteredSectionBody("manage","general-manage");
+  }catch(err){error=String(err?.message||err);}
+  finally{window.gmGeneralManagementHtml=original;}
+  const passed=body===marker&&!error;
+  return Object.freeze({version:1,passed,body,error,checkedAt:Date.now()});
+ }
+ window.GM_HUB_NATIVE_LATE_BINDING_INTEGRITY_VERSION=1;
+ window.GM_HUB_NATIVE_LATE_BINDING_INTEGRITY=buildNativeLateBindingIntegrity();
+
  function buildVipUnboundedIntegrity(){
   const errors=[];
   const check=(ok,code,data=null)=>{if(!ok)errors.push({code,data});};
