@@ -47,6 +47,12 @@
  window.gmHubRegisteredSectionIds=function(mode){
   return orderedEntries(mode).map(entry=>entry.id);
  };
+ window.gmHubRegisteredSectionBody=function(mode,id){
+  const key=mode==="test"?"test":"manage",entry=sections[key].find(row=>row.id===String(id||""));
+  if(!entry)return null;
+  try{return String(entry.renderer()||"");}
+  catch(err){console.error("GM hub section renderer failed",err);return null;}
+ };
 
  function abilityTestSubsection(title,renderer){
   let body="";
@@ -64,16 +70,22 @@
   if(typeof window.gmStoryTestHtml==="function")return window.gmStoryTestHtml();
   return '<div class="muted gm-hub-note">劇情測試模組載入中…</div>';
  }
+ function lateWindowRenderer(name,fallbackHtml='GM 模組尚未載入。'){
+  return function(){
+   const renderer=window[name];
+   return typeof renderer==="function"?renderer():`<div class="muted gm-hub-note">${fallbackHtml}</div>`;
+  };
+ }
 
  function registerNativeSections(){
   const registrations=[
-   ["manage","角色管理",window.gmGeneralManagementHtml,{id:"general-manage"}],
-   ["manage","VIP 管理",window.gmVipManagementHtml,{id:"vip-manage"}],
-   ["manage","專精管理",window.gmSpecializationManagementHtml,{id:"spec-manage"}],
-   ["manage","強化管理",window.gmEnhancementManagementHtml,{id:"enhancement-manage"}],
-   ["manage","文明等級管理",window.gmCivilizationManagementHtml,{id:"civilization-manage"}],
-   ["manage","副本管理",window.gmDungeonManagementHtml,{id:"dungeon-manage"}],
-   ["test","角色能力測試",window.gmPlayerAbilityTestHtml,{id:"player-ability-test"}],
+   ["manage","角色管理",lateWindowRenderer("gmGeneralManagementHtml"),{id:"general-manage"}],
+   ["manage","VIP 管理",lateWindowRenderer("gmVipManagementHtml"),{id:"vip-manage"}],
+   ["manage","專精管理",lateWindowRenderer("gmSpecializationManagementHtml"),{id:"spec-manage"}],
+   ["manage","強化管理",lateWindowRenderer("gmEnhancementManagementHtml"),{id:"enhancement-manage"}],
+   ["manage","文明等級管理",lateWindowRenderer("gmCivilizationManagementHtml"),{id:"civilization-manage"}],
+   ["manage","副本管理",lateWindowRenderer("gmDungeonManagementHtml"),{id:"dungeon-manage"}],
+   ["test","角色能力測試",lateWindowRenderer("gmPlayerAbilityTestHtml"),{id:"player-ability-test"}],
    ["test","劇情測試",gmStoryTestSectionHtml,{id:"gm-story-test"}],
   ];
   registrations.forEach(args=>window.registerGmHubSection(...args));
@@ -110,10 +122,11 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=14;
- window.GM_HUB_REGISTRY_VERSION=2;
+ window.GM_HUB_EXTENSION_VERSION=15;
+ window.GM_HUB_REGISTRY_VERSION=3;
  window.GM_HUB_PHASE_VISIBILITY_REGISTRY_VERSION=1;
  window.GM_HUB_SECTION_RENDERER_REPLACE_VERSION=1;
+ window.GM_HUB_NATIVE_LATE_BINDING_VERSION=1;
  window.GM_HUB_STORY_NATIVE_SECTION_VERSION=1;
  window.GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=2;
 })();
