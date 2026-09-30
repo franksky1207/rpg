@@ -1,6 +1,6 @@
 (function(){
- const VERSION=2;
- const INTEGRITY_VERSION=1;
+ const VERSION=3;
+ const INTEGRITY_VERSION=2;
  const ID_BY_CATEGORY_AND_TITLE=Object.freeze({
   gear:Object.freeze({
    "高維裝備":"third-gear-loot",
@@ -78,7 +78,7 @@
   const stage=itemById(category(categories,"combat")?.items,"third-combat-stage");
   if(!stage||/ATK|DEF|\+\d+%/.test(String(stage[1]||"")))errors.push({code:"THIRD_STAGE_COPY_TOO_DETAILED"});
   const core=itemById(category(categories,"growth")?.items,"third-growth-core");
-  if(!core||/1,000,000,000|0\.50%|0\.04%/.test(String(core[1]||"")))errors.push({code:"THIRD_CORE_COPY_TOO_DETAILED"});
+  if(!core||/1,000,000,000|0\.100%|0\.008%|0\.50%|0\.04%/.test(String(core[1]||"")))errors.push({code:"THIRD_CORE_COPY_TOO_DETAILED"});
   if(mutation){
    const expectedReplacements=11;
    if(mutation.replaced!==expectedReplacements)errors.push({code:"COPY_REPLACEMENT_COUNT",expected:expectedReplacements,actual:mutation.replaced});
@@ -114,7 +114,7 @@
    replaced+=replaceById(growth?.items,"third-growth-infusion","持有維度之弦時可注入界弦核心；高維連戰進行中不能注入，需先結束本輪戰鬥。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-title","高維稱號會隨 10 名高維存在的整體攻略進度逐步解鎖。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-existing","進入第三紀元前已完成的專精、強化、印記與文明等級會繼續保留並套用。")?1:0;
-   replaced+=replaceById(growth?.items,"third-growth-minimal","高維連續戰鬥可使用極簡模式，只保留必要資訊；切回一般畫面後會正常接續戰鬥。")?1:0;
+   replaced+=replaceById(growth?.items,"third-growth-minimal","高維連續戰鬥可使用極簡模式，只保留必要資訊；戰鬥停止時會明確顯示停止狀態與原因，滑動即可查看後續結果。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-save","第三紀元正式進度會持續寫入本機存檔；登入帳號後仍可在設定頁手動使用雲端上傳／下載。")?1:0;
    const report=audit(categories,{replaced,removed});
    window.THIRD_WORLD_GUIDE_COPY_INTEGRITY_REPORT=report;
