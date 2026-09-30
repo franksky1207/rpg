@@ -1,11 +1,14 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  let selectedBossIndex=0;
  const baseRenderer=typeof window.gmGeneralManagementHtml==="function"?window.gmGeneralManagementHtml:null;
 
  function gameState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function active(){const s=gameState();return !!s?.thirdWorld?.entered;}
  function bosses(){return Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS:[];}
+ function equipmentTypes(){try{return Array.isArray(EQUIPMENT_TYPES)?EQUIPMENT_TYPES:[];}catch(_){return [];}}
+ function qualityName(index,fallback){try{return QUALITY?.[index]?.n||fallback;}catch(_){return fallback;}}
+ function typeLabel(type){try{return typeof equipmentTypeLabel==="function"?equipmentTypeLabel(type):String(type);}catch(_){return String(type);}}
  function normalizeBoss(){
   const rows=bosses();
   if(!rows.some(row=>Number(row?.index)===selectedBossIndex))selectedBossIndex=Number(rows[0]?.index)||0;
@@ -16,13 +19,11 @@
   return bosses().map(row=>`<option value="${Number(row.index)}" ${Number(row.index)===selectedBossIndex?"selected":""}>${row.name}</option>`).join("");
  }
  function typeOptions(){
-  const types=Array.isArray(window.EQUIPMENT_TYPES)?window.EQUIPMENT_TYPES:[];
-  const label=type=>typeof window.equipmentTypeLabel==="function"?window.equipmentTypeLabel(type):String(type);
-  return `<option value="all">全部 5 部位</option>${types.map(type=>`<option value="${type}">${label(type)}</option>`).join("")}`;
+  const types=equipmentTypes();
+  return `<option value="all">全部 5 部位</option>${types.map(type=>`<option value="${type}">${typeLabel(type)}</option>`).join("")}`;
  }
  function qualityOptions(){
-  const legendary=window.QUALITY?.[4]?.n||"傳說",mythic=window.QUALITY?.[5]?.n||"神話";
-  return `<option value="4">${legendary}</option><option value="5" selected>${mythic}</option>`;
+  return `<option value="4">${qualityName(4,"傳說")}</option><option value="5" selected>${qualityName(5,"神話")}</option>`;
  }
  function cardHtml(){
   if(!active())return "";
@@ -42,8 +43,8 @@
   const q=Math.floor(Number(document.getElementById("gmThirdWorldGearQuality")?.value));
   if(q!==4&&q!==5)return alert("高維紀元裝備品質只能選擇傳說或神話。");
   const selectedType=document.getElementById("gmThirdWorldGearType")?.value;
-  const equipmentTypes=Array.isArray(window.EQUIPMENT_TYPES)?window.EQUIPMENT_TYPES:[];
-  const types=selectedType==="all"?equipmentTypes.slice():equipmentTypes.includes(selectedType)?[selectedType]:[];
+  const allTypes=equipmentTypes();
+  const types=selectedType==="all"?allTypes.slice():allTypes.includes(selectedType)?[selectedType]:[];
   if(!types.length)return;
   const s=gameState();let created=0;
   types.forEach(type=>{
@@ -60,7 +61,7 @@
  window.GM_THIRD_WORLD_GEAR_QUALITY_POLICY=Object.freeze({allowed:Object.freeze([4,5]),defaultQuality:5});
  window.GM_THIRD_WORLD_GEAR_MANAGEMENT_INTEGRITY=Object.freeze({
   version:VERSION,
-  passed:typeof window.makeThirdWorldEquipmentForBoss==="function"&&Number(window.THIRD_WORLD_EQUIPMENT_QUALITY_POLICY_VERSION)>=1&&Number(window.THIRD_WORLD_EQUIPMENT_BASE_POLICY?.legendaryChance)===.95&&Number(window.THIRD_WORLD_EQUIPMENT_BASE_POLICY?.mythicChance)===.05,
+  passed:typeof window.makeThirdWorldEquipmentForBoss==="function"&&Number(window.THIRD_WORLD_EQUIPMENT_QUALITY_POLICY_VERSION)>=1&&Number(window.THIRD_WORLD_EQUIPMENT_BASE_POLICY?.legendaryChance)===.95&&Number(window.THIRD_WORLD_EQUIPMENT_BASE_POLICY?.mythicChance)===.05&&equipmentTypes().length===5,
   allowedQualities:Object.freeze([4,5]),
   defaultQuality:5
  });
