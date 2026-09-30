@@ -79,33 +79,32 @@
  window.gmDungeonManagementHtml=dungeonManagementHtml;
  window.gmDungeonManagementNoteForPhase=dungeonManagementNoteForPhase;
  window.gmApplyDungeonValues=function(){
-  if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return;}
-  if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再修改副本資料。");return;}
-  const points=finiteInt(document.getElementById("gmDungeonPoints")?.value),bounty=finiteInt(document.getElementById("gmBountyDailyUsed")?.value,0,20),arena=finiteInt(document.getElementById("gmArenaDailyUsed")?.value,0,20),highest=finiteInt(document.getElementById("gmVoidHistoricalHighest")?.value),dailyHighest=finiteInt(document.getElementById("gmVoidDailyHighest")?.value),claimed=document.getElementById("gmVoidDailyClaimed")?.value==="1";
-  if([points,bounty,arena,highest,dailyHighest].some(v=>v==null)){alert("請輸入有效的 0 以上整數；懸賞與競技場範圍為 0～20。");return;}
-  state.vipPoints=points;if(typeof normalizeVipState==="function")normalizeVipState(state);
-  const daily=gmDaily();if(daily){daily.bounty.used=bounty;daily.arena.used=arena;}
-  const historical=Math.max(highest,dailyHighest);
-  if(typeof gmSetVoidMirageState==="function")gmSetVoidMirageState(historical,dailyHighest,claimed);else{if(state?.dungeon?.voidMirage)state.dungeon.voidMirage.highestCleared=historical;if(daily?.voidMirage){daily.voidMirage.highestFloor=dailyHighest;daily.voidMirage.claimed=claimed;}if(typeof save==="function")save(false);if(typeof render==="function")render();}
+  if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return false;}
+  if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再修改副本資料。");return false;}
+  if(typeof window.gmCommitFormalDungeonMutation!=="function"){alert("正式 GM transaction owner 尚未載入。");return false;}
+  const values={points:document.getElementById("gmDungeonPoints")?.value,bounty:document.getElementById("gmBountyDailyUsed")?.value,arena:document.getElementById("gmArenaDailyUsed")?.value,highest:document.getElementById("gmVoidHistoricalHighest")?.value,dailyHighest:document.getElementById("gmVoidDailyHighest")?.value,claimed:document.getElementById("gmVoidDailyClaimed")?.value==="1"};
+  const points=Number(values.points),bounty=Number(values.bounty),arena=Number(values.arena),highest=Number(values.highest),dailyHighest=Number(values.dailyHighest);
+  if(!Number.isInteger(points)||points<0||!Number.isInteger(bounty)||bounty<0||bounty>20||!Number.isInteger(arena)||arena<0||arena>20||!Number.isInteger(highest)||highest<0||!Number.isInteger(dailyHighest)||dailyHighest<0){alert("請輸入有效的 0 以上整數；懸賞與競技場範圍為 0～20。");return false;}
+  const tx=window.gmCommitFormalDungeonMutation({points,bounty,arena,highest,dailyHighest,claimed:values.claimed});
+  if(!tx?.ok){alert(`副本／VIP資料更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+  if(typeof render==="function")render();
+  return true;
  };
  window.gmResetDailyDungeonState=function(){
   if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再重置今日副本。");return false;}
   if(mirrorRunActive()){alert("鏡像戰正在進行中，請先結束後再重置今日副本。");return false;}
   if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再重置今日副本。");return false;}
-  if(typeof resetMirrorDungeonToday!=="function"){alert("鏡像戰狀態模組尚未載入，無法完整重置今日副本。");return false;}
+  if(typeof window.gmCommitFormalDailyDungeonReset!=="function"){alert("正式 GM transaction owner 尚未載入。");return false;}
   if(!confirm("將重置今日全部副本狀態：懸賞、競技場、虛空與鏡像戰。\n\n虛空歷史最高、鏡像歷史最高與神蹟紀錄都會保留。\n\n確定重置？"))return false;
-  const daily=gmDaily();if(!daily)return false;
-  const fresh=typeof blankDailyState==="function"?blankDailyState(typeof gameDailyDateKey==="function"?gameDailyDateKey():daily.dateKey):{dateKey:daily.dateKey,bounty:{used:0},arena:{used:0},voidMirage:{highestFloor:0,claimed:false}};
-  Object.assign(daily,fresh);
-  const mirrorResult=resetMirrorDungeonToday();
-  if(!mirrorResult){if(typeof save==="function")save(false);alert("鏡像戰今日狀態重置失敗；其他今日副本已重置。");if(typeof render==="function")render();return false;}
+  const tx=window.gmCommitFormalDailyDungeonReset();
+  if(!tx?.ok){alert(`今日副本重置失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
   if(typeof render==="function")render();
   return true;
  };
 
  installStyles();ensureClock();tickClock();setInterval(tickClock,1000);
  window.BATCH5_CLOCK_CACHE_VERSION=1;
- window.GM_DUNGEON_DAILY_RESET_MERGE_VERSION=1;
+ window.GM_DUNGEON_DAILY_RESET_MERGE_VERSION=2;
  window.GM_ARENA_SHARED_DAILY_MANAGEMENT_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_MANAGEMENT_GUARD_VERSION=1;
  window.GM_DUNGEON_PHASE_COPY_VERSION=1;
