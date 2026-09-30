@@ -35,6 +35,7 @@
  window.COMBAT_HEAL_CAP_VERSION=1;
  window.COMBAT_COUNTER_RECURSION_GUARD_VERSION=1;
  window.COMBAT_PLAYER_FINAL_DAMAGE_LAYER_VERSION=1;
+ window.COMBAT_DODGE_INITIATIVE_EVENT_VERSION=1;
 
  window.runCombatCore=function(player,enemy,startHp=null,options={}){
   const p=player&&typeof player==="object"?player:{};
@@ -109,10 +110,11 @@
   function strike(actor,source="normal",initiative=false){
    const defender=other(actor),aStats=statsOf(actor),dStats=statsOf(defender),aAbility=abilityOf(actor),aEffects=effectsOf(actor),dEffects=effectsOf(defender),aRt=runtime[actor],dRt=runtime[defender];
    const scale=source==="combo"?STANDARD_ABILITY_RULES.comboScale:source==="counter"?STANDARD_ABILITY_RULES.counterScale:1;
+   const initiativeApplied=initiative&&aAbility.initiativeBonusPercent>0;
    const suppression=Math.max(0,numberOr(aEffects.suppression?.enemyDodgeReductionPoints??aEffects.suppression?.playerDodgeRateReductionPoints,0));
    const rawDodge=Math.max(0,numberOr(dStats.dodge,0)),finalDodge=Math.max(0,rawDodge-suppression),dodgeRoll=rng()*100;
    if(suppression>0&&dodgeRoll<rawDodge&&dodgeRoll>=finalDodge)markEvent(actor,"suppression","preventDodge",{target:defender,source,reductionPoints:suppression,originalRate:rawDodge,finalRate:finalDodge});
-   if(dodgeRoll<finalDodge){events.push({type:"dodge",actor,target:defender,source,rate:finalDodge});if(logs)logs.push(actor==="player"?(options.mainlineLogs?`你攻擊${name}，${name}閃避了攻擊。`:`${name}閃避了你的攻擊。`):`${name}攻擊你，你閃避了攻擊。`);return {hit:false,actualDamage:0,killed:false,crit:false};}
+   if(dodgeRoll<finalDodge){events.push({type:"dodge",actor,target:defender,source,rate:finalDodge,initiative:initiativeApplied});if(logs)logs.push(actor==="player"?(options.mainlineLogs?`你攻擊${name}，${name}閃避了攻擊。`:`${name}閃避了你的攻擊。`):`${name}攻擊你，你閃避了攻擊。`);return {hit:false,actualDamage:0,killed:false,crit:false};}
    const ignore=aEffects.ignore||{},ignoreDefense=ignore.active&&rollRate(ignore.triggerChance);
    let penetration=false;
    if(ignoreDefense)markEvent(actor,"ignore","trigger",{target:defender,source});else penetration=rollRate(aAbility.penetrationRate);
@@ -122,7 +124,7 @@
    let berserk=false;
    if(actor==="enemy"&&e.berserk&&ehp/enemyMaxHp<.5){berserk=true;atk=ceil(atk*1.20);if(!berserkShown){berserkShown=true;events.push({type:"berserk",actor:"enemy"});}}
    let damage=combatDamage(atk,effectiveDef);
-   const initiativeApplied=initiative&&aAbility.initiativeBonusPercent>0;if(initiativeApplied)damage=ceil(damage*(1+aAbility.initiativeBonusPercent/100));
+   if(initiativeApplied)damage=ceil(damage*(1+aAbility.initiativeBonusPercent/100));
    const composure=Math.max(0,numberOr(dEffects.composure?.enemyCritReductionPoints??dEffects.composure?.playerCritRateReductionPoints,0)),rawCrit=Math.max(0,numberOr(aStats.crit,0)),finalCrit=Math.max(0,rawCrit-composure);
    let crit=false,revengeCrit=false;
    if(aRt.revengeReady){crit=true;revengeCrit=true;aRt.revengeReady=false;markEvent(actor,"revenge","consume",{target:defender,source});}
