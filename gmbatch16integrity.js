@@ -64,6 +64,22 @@
    if(!n3.includes("銀河")||!n3.includes("宇宙")||!n3.includes("高維"))fail("DUNGEON_COPY_W3","W3 副本管理文案應涵蓋三紀元",n3);
   }
 
+  if(Number(window.GM_SECOND_WORLD_PROGRESS_MANAGEMENT_VERSION)!==1||typeof window.gmApplySecondWorldProgressCount!=="function"||typeof window.gmSetSecondWorldProgress!=="function")fail("GM_W2_PROGRESS_API","宇宙紀元正式進度管理 owner 未載入");
+  else{
+   const ids=Array.from({length:100},(_,index)=>window.universeStoryIdForBossIndex?.(index)).filter(Boolean);
+   const probe={level:600,secondWorld:{entered:true,civilizationLevel:5,mainline:{bossKilled:Array(100).fill(false)},calamities:[]},thirdWorld:{entered:false},storyProgress:{pendingStory:ids[50]||null,completedStories:["earth-prologue"]}};
+   const result=window.gmApplySecondWorldProgressCount(20,probe);
+   const completed=new Set(probe.storyProgress.completedStories);
+   if(result?.ok!==true||window.gmSecondWorldProgressSnapshot?.(probe)?.completedBosses!==20)fail("GM_W2_PROGRESS_APPLY","宇宙進度 20/100 套用失敗",result);
+   if(probe.secondWorld.mainline.bossKilled.slice(0,20).some(v=>v!==true)||probe.secondWorld.mainline.bossKilled.slice(20).some(v=>v===true))fail("GM_W2_PROGRESS_PREFIX","宇宙 bossKilled 必須保持連續前綴");
+   if(ids.length!==100||ids.slice(0,20).some(id=>!completed.has(id))||ids.slice(20).some(id=>completed.has(id))||!completed.has("earth-prologue"))fail("GM_W2_PROGRESS_STORY","宇宙 Story completion 未與主線同步");
+   if(probe.storyProgress.pendingStory!==null)fail("GM_W2_PROGRESS_PENDING","指定進度後不應殘留宇宙 pending story");
+   if(probe.secondWorld.civilizationLevel!==5)fail("GM_W2_PROGRESS_CIV_MUTATION","指定宇宙主線進度不得修改文明等級");
+   const full={level:1000,secondWorld:{entered:true,civilizationLevel:10,mainline:{bossKilled:Array(100).fill(false)},calamities:[]},thirdWorld:{entered:false},storyProgress:{pendingStory:null,completedStories:[]}};
+   const fullResult=window.gmApplySecondWorldProgressCount(100,full),finalId=window.universeStoryIdForBossIndex?.(99);
+   if(fullResult?.ok!==true||full.secondWorld.mainline.bossKilled[99]!==true||!full.storyProgress.completedStories.includes(finalId))fail("GM_W2_PROGRESS_FINAL","100/100 必須同步最終 Boss 與最終宇宙故事",fullResult);
+  }
+
   const currentPhase=window.gmBatch16FormalWorldPhase?.();
   if(currentPhase>=2){
    const spec=String(window.gmSpecializationManagementHtml?.()||"");
@@ -81,9 +97,9 @@
   if(!specTest.includes("Lv.0")||!specTest.includes("Lv.60")||!specTest.includes("<select"))fail("SPEC_SANDBOX","專精 GM 沙盒未保留 Lv0～60 下拉測試");
   const markTest=String(window.gmMarkTestHtml?.()||"");
   if(!markTest.includes("Lv.0")||!markTest.includes("Lv.10")||!markTest.includes("<select"))fail("MARK_SANDBOX","印記 GM 沙盒未保留 Lv0～10 下拉測試");
- }catch(error){fail("EXCEPTION","第16批／GM 紀元顯示完整性檢查執行失敗",String(error?.message||error));}
- const report={version:3,passed:errors.length===0,errors,checkedAt:Date.now()};
- window.GM_BATCH16_INTEGRITY_VERSION=3;
+ }catch(error){fail("EXCEPTION","第16批／GM 紀元顯示與宇宙進度完整性檢查執行失敗",String(error?.message||error));}
+ const report={version:4,passed:errors.length===0,errors,checkedAt:Date.now()};
+ window.GM_BATCH16_INTEGRITY_VERSION=4;
  window.GM_BATCH16_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] GM Batch16 integrity error",errors);
 })();
