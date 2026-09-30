@@ -33,7 +33,8 @@
   const key=mode==="test"?"test":"manage";
   const order=key==="test"?TEST_SECTION_ORDER:MANAGE_SECTION_ORDER;
   const rank=new Map(order.map((id,index)=>[id,index]));
-  return sections[key].slice().sort((a,b)=>{
+  const visible=sections[key].filter(entry=>key!=="manage"||typeof window.gmHubManageSectionVisible!=="function"||window.gmHubManageSectionVisible(entry.id)!==false);
+  return visible.slice().sort((a,b)=>{
    const ar=rank.has(a.id)?rank.get(a.id):order.length+a.registeredAt;
    const br=rank.has(b.id)?rank.get(b.id):order.length+b.registeredAt;
    return ar-br;
@@ -109,8 +110,9 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=13;
- window.GM_HUB_REGISTRY_VERSION=1;
+ window.GM_HUB_EXTENSION_VERSION=14;
+ window.GM_HUB_REGISTRY_VERSION=2;
+ window.GM_HUB_PHASE_VISIBILITY_REGISTRY_VERSION=1;
  window.GM_HUB_SECTION_RENDERER_REPLACE_VERSION=1;
  window.GM_HUB_STORY_NATIVE_SECTION_VERSION=1;
  window.GM_POWER_BENCHMARK_GROUP_REGISTRY_VERSION=2;

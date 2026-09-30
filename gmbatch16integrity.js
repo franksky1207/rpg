@@ -43,6 +43,27 @@
    if(w3?.enabled!==true||w3?.min!==10||w3?.max!==10||w3?.fixed!==true)fail("CIV_W3","高維文明等級不是固定 Lv10",w3);
   }
 
+  if(Number(window.GM_MANAGEMENT_PHASE_POLICY_VERSION)!==1||typeof window.gmGeneralManagementPolicy!=="function")fail("GM_PHASE_POLICY_API","GM 管理頁紀元政策未載入");
+  else{
+   const w1=window.gmGeneralManagementPolicy(galaxy),w2=window.gmGeneralManagementPolicy(universe),w3=window.gmGeneralManagementPolicy(higher);
+   if(w1?.phase!==1||w1?.resourceKind!=="gold"||w1?.progressKind!=="galaxy"||JSON.stringify(w1?.gearWorlds)!==JSON.stringify([1]))fail("GM_PHASE_POLICY_W1","W1 管理政策不符",w1);
+   if(w2?.phase!==2||w2?.resourceKind!=="universe"||w2?.progressKind!=="universe"||JSON.stringify(w2?.gearWorlds)!==JSON.stringify([1,2]))fail("GM_PHASE_POLICY_W2","W2 管理政策不符",w2);
+   if(w3?.phase!==3||w3?.resourceKind!=="dimensional-strings"||w3?.progressKind!=="higher"||JSON.stringify(w3?.gearWorlds)!==JSON.stringify([1,2,3]))fail("GM_PHASE_POLICY_W3","W3 管理政策不符",w3);
+  }
+  if(typeof window.gmHubManageSectionVisible!=="function")fail("GM_SECTION_VISIBILITY_API","GM 管理區塊紀元顯示 API 未載入");
+  else{
+   if(window.gmHubManageSectionVisible("civilization-manage",galaxy)!==false)fail("CIV_SECTION_W1","W1 不應顯示文明等級管理");
+   if(window.gmHubManageSectionVisible("civilization-manage",universe)!==true||window.gmHubManageSectionVisible("civilization-manage",higher)!==true)fail("CIV_SECTION_W23","W2/W3 應顯示文明等級管理");
+   if(window.gmHubManageSectionVisible("general-manage",galaxy)!==true)fail("GENERAL_SECTION_VISIBILITY","角色管理不應被紀元隱藏");
+  }
+  if(Number(window.GM_DUNGEON_PHASE_COPY_VERSION)!==1||typeof window.gmDungeonManagementNoteForPhase!=="function")fail("DUNGEON_PHASE_COPY_API","副本管理紀元文案 owner 未載入");
+  else{
+   const n1=String(window.gmDungeonManagementNoteForPhase(1)||""),n2=String(window.gmDungeonManagementNoteForPhase(2)||""),n3=String(window.gmDungeonManagementNoteForPhase(3)||"");
+   if(n1.includes("宇宙")||n1.includes("高維")||!n1.includes("銀河"))fail("DUNGEON_COPY_W1","W1 副本管理不應提前提到未進入紀元",n1);
+   if(n2.includes("高維")||!n2.includes("銀河")||!n2.includes("宇宙"))fail("DUNGEON_COPY_W2","W2 副本管理文案應只涵蓋銀河／宇宙",n2);
+   if(!n3.includes("銀河")||!n3.includes("宇宙")||!n3.includes("高維"))fail("DUNGEON_COPY_W3","W3 副本管理文案應涵蓋三紀元",n3);
+  }
+
   const currentPhase=window.gmBatch16FormalWorldPhase?.();
   if(currentPhase>=2){
    const spec=String(window.gmSpecializationManagementHtml?.()||"");
@@ -60,9 +81,9 @@
   if(!specTest.includes("Lv.0")||!specTest.includes("Lv.60")||!specTest.includes("<select"))fail("SPEC_SANDBOX","專精 GM 沙盒未保留 Lv0～60 下拉測試");
   const markTest=String(window.gmMarkTestHtml?.()||"");
   if(!markTest.includes("Lv.0")||!markTest.includes("Lv.10")||!markTest.includes("<select"))fail("MARK_SANDBOX","印記 GM 沙盒未保留 Lv0～10 下拉測試");
- }catch(error){fail("EXCEPTION","第16批整體完整性檢查執行失敗",String(error?.message||error));}
- const report={version:2,passed:errors.length===0,errors,checkedAt:Date.now()};
- window.GM_BATCH16_INTEGRITY_VERSION=2;
+ }catch(error){fail("EXCEPTION","第16批／GM 紀元顯示完整性檢查執行失敗",String(error?.message||error));}
+ const report={version:3,passed:errors.length===0,errors,checkedAt:Date.now()};
+ window.GM_BATCH16_INTEGRITY_VERSION=3;
  window.GM_BATCH16_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] GM Batch16 integrity error",errors);
 })();

@@ -90,21 +90,36 @@
  function normalizeThirdWorldGearBoss(){const rows=thirdWorldGearBosses();if(!rows.some(row=>Number(row?.index)===gmThirdWorldGearBoss))gmThirdWorldGearBoss=Number(rows[0]?.index)||0;return gmThirdWorldGearBoss;}
  function thirdWorldGearBossOptions(){normalizeThirdWorldGearBoss();return thirdWorldGearBosses().map(row=>`<option value="${Number(row.index)}" ${Number(row.index)===gmThirdWorldGearBoss?"selected":""}>${row.name}</option>`).join("");}
  function thirdWorldGearQualityOptions(){return `<option value="4">${QUALITY[4]?.n||"傳說"}</option><option value="5" selected>${QUALITY[5]?.n||"神話"}</option>`;}
+ function formalManagePhase(target=state){
+  if(typeof window.currentWorldPhase==="function"){
+   const value=Number(window.currentWorldPhase(target));
+   if(value===1||value===2||value===3)return value;
+  }
+  return target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
+ }
+ function generalManagementPolicy(target=state){
+  const phase=formalManagePhase(target);
+  return Object.freeze({version:1,phase,worldLabel:phase===3?"高維紀元":phase===2?"宇宙紀元":"銀河紀元",resourceKind:phase===3?"dimensional-strings":phase===2?"universe":"gold",progressKind:phase===3?"higher":phase===2?"universe":"galaxy",gearWorlds:Object.freeze(phase===3?[1,2,3]:phase===2?[1,2]:[1])});
+ }
+ function progressButtonForPolicy(policy){
+  if(policy.progressKind==="galaxy")return `<button class="btn" onclick="gmSetWorldProgress()">指定銀河紀元解鎖進度</button>`;
+  if(policy.progressKind==="universe"&&typeof window.gmSetSecondWorldProgress==="function")return `<button class="btn" onclick="gmSetSecondWorldProgress()">指定宇宙紀元進度</button>`;
+  if(policy.progressKind==="higher"&&typeof window.gmSetThirdWorldProgress==="function")return `<button class="btn" onclick="gmSetThirdWorldProgress()">指定高維紀元進度</button>`;
+  return "";
+ }
  function generalManagementHtml(){
-  const g=gearOptions();
-  const universe=typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered();
-  const higher=!!state?.thirdWorld?.entered;
+  const g=gearOptions(),policy=generalManagementPolicy(state),universe=policy.phase>=2,higher=policy.phase===3;
   const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
-  const worldLabel=higher?"高維紀元":universe?"宇宙紀元":"銀河紀元";
   const swRegionOptions=typeof gmSecondWorldGearRegionOptions==="function"?gmSecondWorldGearRegionOptions():"";
   const swBossOptions=typeof gmSecondWorldGearBossOptions==="function"?gmSecondWorldGearBossOptions():"";
   const swQuality=QUALITY.slice(1).map((q,i)=>`<option value="${i+1}" ${i+1===5?"selected":""}>${q.n}</option>`).join("");
   const swType=`<option value="all">全部 5 部位</option>`+EQUIPMENT_TYPES.map(type=>`<option value="${type}">${equipmentTypeLabel(type)}</option>`).join("");
-  const swGear=universe?`<div class="item" style="margin-top:12px"><b>產生宇宙紀元裝備</b><div class="muted" style="margin-top:5px">依正式「區域 → Boss」命名與世界 2 屬性公式產生；裝備等級自動取 min(目前角色等級, Boss 等級)。產生後的手動／批量／自動出售均走正式統一 sale owner。</div><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmSecondWorldGearRegion" class="btn" onchange="gmSecondWorldGearChangeRegion()">${swRegionOptions}</select></label><label>Boss<br><select id="gmSecondWorldGearBoss" class="btn" onchange="gmSecondWorldGearChangeBoss()">${swBossOptions}</select></label><label>品質<br><select id="gmSecondWorldGearQuality" class="btn">${swQuality}</select></label><label>部位<br><select id="gmSecondWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateSecondWorldGear()">產生裝備</button></div></div>`:"";
+  const swGear=policy.gearWorlds.includes(2)?`<div class="item" style="margin-top:12px"><b>產生宇宙紀元裝備</b><div class="muted" style="margin-top:5px">選擇區域、Boss、品質與部位後，可直接產生對應的宇宙紀元裝備；裝備等級依目前角色等級與 Boss 等級決定。</div><div class="controls" style="align-items:end;margin-top:8px"><label>區域<br><select id="gmSecondWorldGearRegion" class="btn" onchange="gmSecondWorldGearChangeRegion()">${swRegionOptions}</select></label><label>Boss<br><select id="gmSecondWorldGearBoss" class="btn" onchange="gmSecondWorldGearChangeBoss()">${swBossOptions}</select></label><label>品質<br><select id="gmSecondWorldGearQuality" class="btn">${swQuality}</select></label><label>部位<br><select id="gmSecondWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateSecondWorldGear()">產生裝備</button></div></div>`:"";
   const twLevel=Math.max(1000,Math.min(2000,Math.floor(Number(state?.level)||1000)));
-  const twGear=higher?`<div class="item" style="margin-top:12px"><b>產生高維紀元裝備</b><div class="muted" style="margin-top:5px">依第三紀元正式裝備規則產生；裝備等級使用目前角色等級（Lv.${twLevel}），名稱依目前高維整體進度決定。高維裝備只會出現傳說與神話品質。</div><div class="controls" style="align-items:end;margin-top:8px"><label>高維存在<br><select id="gmThirdWorldGearBoss" class="btn" onchange="gmThirdWorldGearChangeBoss()">${thirdWorldGearBossOptions()}</select></label><label>品質<br><select id="gmThirdWorldGearQuality" class="btn">${thirdWorldGearQualityOptions()}</select></label><label>部位<br><select id="gmThirdWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateThirdWorldGear()">產生裝備</button></div></div>`:"";
-  const resourceButtons=universe?`<button class="btn" onclick="gmDarkMatter()">指定暗物質</button><button class="btn" onclick="gmDarkEnergy()">指定暗能量</button>`:`<button class="btn" onclick="gmGold()">指定金幣</button>`;
-  return `<div class="notice gm-hub-note">目前世界：${worldLabel}　／　角色有效等級上限 Lv.${cap}</div><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button>${resourceButtons}<button class="btn" onclick="gmSetWorldProgress()">指定銀河紀元解鎖進度</button><button class="btn danger" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>
+  const twGear=policy.gearWorlds.includes(3)?`<div class="item" style="margin-top:12px"><b>產生高維紀元裝備</b><div class="muted" style="margin-top:5px">依第三紀元正式裝備規則產生；裝備等級使用目前角色等級（Lv.${twLevel}），名稱依目前高維整體進度決定。高維裝備只會出現傳說與神話品質。</div><div class="controls" style="align-items:end;margin-top:8px"><label>高維存在<br><select id="gmThirdWorldGearBoss" class="btn" onchange="gmThirdWorldGearChangeBoss()">${thirdWorldGearBossOptions()}</select></label><label>品質<br><select id="gmThirdWorldGearQuality" class="btn">${thirdWorldGearQualityOptions()}</select></label><label>部位<br><select id="gmThirdWorldGearType" class="btn">${swType}</select></label><button class="btn gm-create" onclick="gmCreateThirdWorldGear()">產生裝備</button></div></div>`:"";
+  const resourceButtons=policy.resourceKind==="dimensional-strings"?`<button class="btn" onclick="gmDimensionalStrings()">指定維度之弦</button>`:policy.resourceKind==="universe"?`<button class="btn" onclick="gmDarkMatter()">指定暗物質</button><button class="btn" onclick="gmDarkEnergy()">指定暗能量</button>`:`<button class="btn" onclick="gmGold()">指定金幣</button>`;
+  const progressButton=progressButtonForPolicy(policy);
+  return `<div class="notice gm-hub-note">目前世界：${policy.worldLabel}　／　角色有效等級上限 Lv.${cap}</div><div class="controls"><button class="btn" onclick="gmLevel()">指定等級</button>${resourceButtons}${progressButton}<button class="btn danger" onclick="gmResetVip()">重置 VIP（等級＋積分）</button></div>
   <div class="item" style="margin-top:12px"><b>產生銀河紀元裝備</b><div class="controls" style="align-items:end;margin-top:8px"><label>品質<br><select id="gmGearQuality" class="btn">${g.quality}</select></label><label>等級<br><input id="gmGearLevel" class="btn" type="number" inputmode="numeric" min="1" max="${MAX_LEVEL}" step="1" value="${Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(state.level)||1)))}"></label><label>部位<br><select id="gmGearType" class="btn">${g.type}</select></label><button class="btn gm-create" onclick="gmCreateGear()">產生裝備</button></div></div>${swGear}${twGear}`;
  }
  window.gmThirdWorldGearChangeBoss=function(){
@@ -124,6 +139,18 @@
   types.forEach(slot=>{const item=window.makeThirdWorldEquipmentForBoss(gmThirdWorldGearBoss,{state,forcedQ:q,forcedType:slot,sourceTag:"gm-third-world"});if(item){state.inventory.push(item);created++;}});
   if(!created)return alert("無法產生高維紀元裝備。");
   save();render();alert(`已產生 ${created} 件高維紀元裝備。`);
+ };
+ window.gmDimensionalStrings=function(){
+  if(formalManagePhase(state)!==3||!state?.thirdWorld||typeof state.thirdWorld!=="object")return alert("目前尚未進入高維紀元。");
+  const current=Math.max(0,Math.floor(Number(state.thirdWorld.dimensionalStrings)||0));
+  const raw=prompt("指定維度之弦（0 以上）",current);
+  if(raw===null)return false;
+  const value=Math.floor(Number(raw));
+  if(!Number.isFinite(value)||value<0){alert("請輸入 0 以上的整數。");return false;}
+  state.thirdWorld.dimensionalStrings=value;
+  if(typeof save==="function")save();
+  if(typeof render==="function")render();
+  return true;
  };
  function specialTestHtml(){
   const result=(typeof gmSpecialBatchResultHtml==="function"&&typeof gmSpecialBatchResult!=="undefined"&&gmSpecialBatchResult)?gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary):"";
@@ -146,7 +173,7 @@
   const el=document.getElementById("gmVoidMirageFloor");if(el&&String(el.value)!==String(gmVoidMirageFloorSession))el.value=String(gmVoidMirageFloorSession);
   return gmVoidMirageFloorSession;
  };
- function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?getVoidMirageGmTestHtml():"",next=gmVoidMirageSessionFloor();return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" onchange="gmSetVoidMirageTestFloor(this.value)" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
+ function voidMirageTestHtml(){const result=typeof getVoidMirageGmTestHtml==="function"?window.getVoidMirageGmTestHtml():"",next=gmVoidMirageSessionFloor();return `<div class="muted gm-hub-note">虛空敵人維持固定樓層公式；玩家戰鬥套用測試 VIP、測試專精、測試強化與測試印記。GM 測試不修改正式角色資料。</div><div class="controls" style="align-items:end"><label>指定樓層／起始樓層<br><input id="gmVoidMirageFloor" type="number" min="1" step="1" value="${next}" onchange="gmSetVoidMirageTestFloor(this.value)" style="width:180px"></label><button class="btn gm-create" onclick="gmPreviewVoidMirageFloor()">查看單層能力</button><button class="btn blue" onclick="gmSimulateVoidMirageClimb()">從此層連續爬塔</button></div><div id="gmVoidMirageTestResult" style="margin-top:12px">${result}</div>`;}
 
  function hubHtml(){
   const manage=gmHubTab==="manage";
@@ -158,6 +185,9 @@
  window.gmSpecialTestHtml=specialTestHtml;
  window.gmBountyTestHtml=bountyTestHtml;
  window.gmVoidMirageTestHtml=voidMirageTestHtml;
+ window.gmFormalManagePhase=formalManagePhase;
+ window.gmGeneralManagementPolicy=generalManagementPolicy;
+ window.gmHubManageSectionVisible=function(id,target=state){const key=String(id||"");if(key==="civilization-manage")return formalManagePhase(target)>=2;return true;};
 
  window.gmResetVip=function(){
   if(!confirm("確定要將 VIP 等級與 VIP 積分全部重置為 0 嗎？"))return;
@@ -182,6 +212,10 @@
  window.GM_GEAR_LEVEL_INPUT_VERSION=1;
  window.GM_THIRD_WORLD_GEAR_MANAGEMENT_VERSION=1;
  window.GM_THIRD_WORLD_GEAR_QUALITY_POLICY=Object.freeze({allowed:Object.freeze([4,5]),defaultQuality:5});
+ window.GM_MANAGEMENT_PHASE_POLICY_VERSION=1;
+ window.GM_MANAGEMENT_RESOURCE_POLICY_VERSION=1;
+ window.GM_MANAGEMENT_PROGRESS_VISIBILITY_VERSION=1;
+ window.GM_HUB_PHASE_SECTION_VISIBILITY_VERSION=1;
  window.GM_ENHANCEMENT_HUB_VERSION=5;
  window.GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1;
  gmHtml=function(){installGmHubStyles();return hubHtml();};

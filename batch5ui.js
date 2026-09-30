@@ -39,6 +39,20 @@
  }
 
  function finiteInt(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):null;}
+ function formalManagePhase(target=state){
+  if(typeof window.gmFormalManagePhase==="function")return window.gmFormalManagePhase(target);
+  if(typeof window.currentWorldPhase==="function"){
+   const phase=Number(window.currentWorldPhase(target));
+   if(phase===1||phase===2||phase===3)return phase;
+  }
+  return target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
+ }
+ function dungeonManagementNoteForPhase(phase=formalManagePhase()){
+  const value=Math.max(1,Math.min(3,Math.floor(Number(phase)||1)));
+  if(value===3)return "競技場每日 20 輪由銀河／宇宙／高維三個紀元共用；高維紀元沒有額外 Rank 或獨立每日計數器。";
+  if(value===2)return "銀河／宇宙競技場共用每日 20 輪計數；本區可調整今日已使用次數。";
+  return "銀河紀元競技場每日共 20 輪；本區可調整今日已使用次數。";
+ }
  function gmDaily(){return typeof ensureDailyState==="function"?ensureDailyState():state.daily;}
  function gmVoidInfo(){return typeof getVoidMirageGmManageInfo==="function"?getVoidMirageGmManageInfo():{highestCleared:0,startFloor:1,dailyHighest:0,claimed:false,reward:0};}
  function voidRunActive(){try{return typeof getVoidMirageRunSnapshot==="function"&&getVoidMirageRunSnapshot()?.active===true;}catch(e){return false;}}
@@ -55,14 +69,15 @@
   return {vip:Math.max(0,Math.floor(Number(state?.vipLevel)||0)),points:Math.max(0,Math.floor(Number(state?.vipPoints)||0)),bounty,arena,highest:Math.max(0,Math.floor(Number(info.highestCleared)||0)),start:Math.max(1,Math.floor(Number(info.startFloor)||1)),dailyHighest:Math.max(0,Math.floor(Number(info.dailyHighest)||0)),claimed:info.claimed===true,reward:Math.max(0,Math.floor(Number(info.reward)||0))};
  }
  function dungeonManagementHtml(){
-  const s=gmStatus();
+  const s=gmStatus(),phaseNote=dungeonManagementNoteForPhase();
   return `<div class="notice gm-hub-note gm-dungeon-summary"><div class="gm-dungeon-summary-item"><span class="gm-dungeon-summary-label">今日懸賞</span><span class="gm-dungeon-summary-value">${s.bounty} / 20</span></div><span class="gm-dungeon-summary-sep">／</span><div class="gm-dungeon-summary-item"><span class="gm-dungeon-summary-label">今日競技場</span><span class="gm-dungeon-summary-value">${s.arena} / 20</span></div><span class="gm-dungeon-summary-sep">／</span><div class="gm-dungeon-summary-item"><span class="gm-dungeon-summary-label">VIP 等級</span><span class="gm-dungeon-summary-value">VIP${s.vip}</span></div><span class="gm-dungeon-summary-sep">／</span><div class="gm-dungeon-summary-item"><span class="gm-dungeon-summary-label">VIP 積分</span><span class="gm-dungeon-summary-value">${s.points.toLocaleString()}</span></div></div>
-   <div class="muted gm-hub-note">競技場每日 20 輪由銀河／宇宙／高維三個紀元共用；高維紀元沒有額外 Rank 或獨立每日計數器。</div>
+   <div class="muted gm-hub-note">${phaseNote}</div>
    <div class="gm-batch5-grid"><label>VIP 積分<input id="gmDungeonPoints" type="number" min="0" step="1" value="${s.points}"></label><label>今日懸賞已用<input id="gmBountyDailyUsed" type="number" min="0" max="20" step="1" value="${s.bounty}"></label><label>今日競技場已用<input id="gmArenaDailyUsed" type="number" min="0" max="20" step="1" value="${s.arena}"></label><label>虛空歷史最高<input id="gmVoidHistoricalHighest" type="number" min="0" step="1" value="${s.highest}"></label><label>虛空當日最高<input id="gmVoidDailyHighest" type="number" min="0" step="1" value="${s.dailyHighest}"></label><label>虛空今日領獎<select id="gmVoidDailyClaimed" class="btn"><option value="0" ${s.claimed?"":"selected"}>尚未領取</option><option value="1" ${s.claimed?"selected":""}>已領取</option></select></label></div>
    <div class="muted" style="margin-top:9px">虛空挑戰起點目前為第 ${s.start.toLocaleString()} 層；當日最高對應目前可領 ${s.reward.toLocaleString()} VIP。若當日最高高於歷史最高，套用時會自動把歷史最高同步提高。</div>
    <div class="controls"><button class="btn blue" onclick="gmApplyDungeonValues()">套用副本／VIP資料</button><button class="btn" onclick="gmResetDailyDungeonState()">重置今日副本</button></div><div class="item" style="margin-top:14px"><b>鏡像戰</b><div style="margin-top:9px">${mirrorManageStatusHtml()}</div></div>`;
  }
  window.gmDungeonManagementHtml=dungeonManagementHtml;
+ window.gmDungeonManagementNoteForPhase=dungeonManagementNoteForPhase;
  window.gmApplyDungeonValues=function(){
   if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return;}
   if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再修改副本資料。");return;}
@@ -93,5 +108,6 @@
  window.GM_DUNGEON_DAILY_RESET_MERGE_VERSION=1;
  window.GM_ARENA_SHARED_DAILY_MANAGEMENT_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_MANAGEMENT_GUARD_VERSION=1;
+ window.GM_DUNGEON_PHASE_COPY_VERSION=1;
  window.BATCH5_UI_READY=true;
 })();
