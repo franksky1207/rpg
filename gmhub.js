@@ -142,13 +142,14 @@
  };
  window.gmDimensionalStrings=function(){
   if(formalManagePhase(state)!==3||!state?.thirdWorld||typeof state.thirdWorld!=="object")return alert("目前尚未進入高維紀元。");
+  if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
   const current=Math.max(0,Math.floor(Number(state.thirdWorld.dimensionalStrings)||0));
   const raw=prompt("指定維度之弦（0 以上）",current);
   if(raw===null)return false;
-  const value=Math.floor(Number(raw));
-  if(!Number.isFinite(value)||value<0){alert("請輸入 0 以上的整數。");return false;}
-  state.thirdWorld.dimensionalStrings=value;
-  if(typeof save==="function")save();
+  const value=Number(raw);
+  if(!Number.isFinite(value)||!Number.isInteger(value)||value<0){alert("請輸入 0 以上的整數。");return false;}
+  const tx=window.gmCommitFormalResourceMutation("dimensional-strings",value);
+  if(!tx?.ok){alert(`維度之弦更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
   if(typeof render==="function")render();
   return true;
  };
