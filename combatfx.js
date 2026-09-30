@@ -1,5 +1,6 @@
 (function(){
- const COMBAT_PRESENTATION_VERSION=2;
+ const COMBAT_PRESENTATION_VERSION=3;
+ const ACTOR_AWARE_PRESENTATION_VERSION=1;
  const FX_LABELS={
   initiative:{text:"先制！",className:"initiative"},
   combo:{text:"連擊！",className:"combo"},
@@ -18,6 +19,20 @@
  let syncingHp=false;
  let structuredPlayback=false;
 
+ function standardUiTarget(value){return value==="enemy"?"enemy":"player";}
+ function standardOtherTarget(value){return standardUiTarget(value)==="player"?"enemy":"player";}
+ function standardEventActor(evt){return standardUiTarget(evt?.actor);}
+ function standardEventTarget(evt){
+  const value=String(evt?.target||"");
+  return value==="player"||value==="enemy"?value:standardOtherTarget(standardEventActor(evt));
+ }
+ function standardMarkUiTarget(evt){
+  if(evt?.type!=="mark")return null;
+  if(evt.mark==="suppression"||evt.mark==="ignore"||evt.mark==="backlash")return standardEventTarget(evt);
+  return standardUiTarget(evt.owner);
+ }
+ window.combatStandardEventTarget=standardEventTarget;
+ window.combatStandardMarkUiTarget=standardMarkUiTarget;
 
  function combatScreen(){return document.querySelector("#main .combat-screen");}
  function combatCard(target){
@@ -135,50 +150,52 @@
 
  function markFxDescriptor(evt){
   if(evt?.type!=="mark")return null;
-  const mark=evt.mark,action=evt.action;
+  const mark=evt.mark,action=evt.action,target=standardMarkUiTarget(evt);
   if(mark==="ward"){
-   if(action==="activate")return {target:"player",kind:"markDefense",text:"護界！"};
-   if(action==="absorb")return {target:"player",kind:"markDefense",text:`護界 -${Math.max(0,Math.floor(Number(evt.amount)||0))}`};
+   if(action==="activate")return {target,kind:"markDefense",text:"護界！"};
+   if(action==="absorb")return {target,kind:"markDefense",text:`護界 -${Math.max(0,Math.floor(Number(evt.amount)||0))}`};
   }
-  if(mark==="suppression"&&action==="preventDodge")return {target:"enemy",kind:"markOffense",text:"壓制！"};
-  if(mark==="composure"&&action==="preventCrit")return {target:"player",kind:"markDefense",text:"鎮心！"};
+  if(mark==="suppression"&&action==="preventDodge")return {target,kind:"markOffense",text:"壓制！"};
+  if(mark==="composure"&&action==="preventCrit")return {target,kind:"markDefense",text:"鎮心！"};
   if(mark==="indomitable"){
-   if(action==="activate")return {target:"player",kind:"markDefense",text:"不屈！"};
-   if(action==="survive")return {target:"player",kind:"markDefense",text:"不屈・存活！"};
+   if(action==="activate")return {target,kind:"markDefense",text:"不屈！"};
+   if(action==="survive")return {target,kind:"markDefense",text:"不屈・存活！"};
   }
-  if(mark==="resilience"&&action==="reduceCritDamage")return {target:"player",kind:"markDefense",text:"韌性！"};
+  if(mark==="resilience"&&action==="reduceCritDamage")return {target,kind:"markDefense",text:"韌性！"};
   if(mark==="battleSpirit"){
-   if(action==="activate")return {target:"player",kind:"markPower",text:"戰意！"};
-   if(action==="layer")return {target:"player",kind:"markPower",text:`戰意 ×${Math.max(0,Math.floor(Number(evt.layer)||0))}`};
+   if(action==="activate")return {target,kind:"markPower",text:"戰意！"};
+   if(action==="layer")return {target,kind:"markPower",text:`戰意 ×${Math.max(0,Math.floor(Number(evt.layer)||0))}`};
   }
   if(mark==="absorption"&&action==="trigger"){
    const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
-   return {target:"player",kind:"markDefense",text:healed>0?`吸收！ +${healed} HP`:"吸收！"};
+   return {target,kind:"markDefense",text:healed>0?`吸收！ +${healed} HP`:"吸收！"};
   }
   if(mark==="revenge"){
-   if(action==="ready")return {target:"player",kind:"markPower",text:"復仇！"};
-   if(action==="consume")return {target:"player",kind:"markPower",text:"復仇暴擊！"};
+   if(action==="ready")return {target,kind:"markPower",text:"復仇！"};
+   if(action==="consume")return {target,kind:"markPower",text:"復仇暴擊！"};
   }
-  if(mark==="backlash"&&action==="trigger")return {target:"enemy",kind:"markOffense",text:`反噬 -${Math.max(0,Math.floor(Number(evt.actualDamage??evt.damage)||0))}`};
-  if(mark==="ignore"&&action==="trigger")return {target:"enemy",kind:"markOffense",text:"無視防禦！"};
+  if(mark==="backlash"&&action==="trigger")return {target,kind:"markOffense",text:`反噬 -${Math.max(0,Math.floor(Number(evt.actualDamage??evt.damage)||0))}`};
+  if(mark==="ignore"&&action==="trigger")return {target,kind:"markOffense",text:"無視防禦！"};
   return null;
  }
  window.combatMarkFxDescriptor=markFxDescriptor;
 
  function applyMarkPresentation(evt){
   const p=presentation;if(!p?.active||evt?.type!=="mark")return;
+  const owner=standardUiTarget(evt.owner),target=standardEventTarget(evt);
   if(evt.mark==="ward"&&evt.action==="activate"){
    const shield=Math.max(0,Math.floor(Number(evt.shield)||0));
-   p.playerShield=shield;p.playerShieldMax=Math.max(p.playerShieldMax,shield);
+   if(owner==="player"){p.playerShield=shield;p.playerShieldMax=Math.max(p.playerShieldMax,shield);}
+   else {p.enemyShield=shield;p.enemyShieldMax=Math.max(p.enemyShieldMax,shield);}
   }else if(evt.mark==="ward"&&evt.action==="absorb"){
-   const remaining=Number(evt.remainingShield);
-   p.playerShield=Number.isFinite(remaining)?Math.max(0,Math.floor(remaining)):Math.max(0,p.playerShield-Math.max(0,Math.floor(Number(evt.amount)||0)));
+   const remaining=Math.max(0,Math.floor(Number(evt.remainingShield)||0));
+   if(owner==="player")p.playerShield=remaining;else p.enemyShield=remaining;
   }else if(evt.mark==="absorption"&&evt.action==="trigger"){
    const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
-   p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
+   if(owner==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
   }else if(evt.mark==="backlash"&&evt.action==="trigger"){
    const damage=Math.max(0,Math.floor(Number(evt.actualDamage??evt.damage)||0));
-   p.enemyHp=Math.max(0,p.enemyHp-damage);
+   if(target==="player")p.playerHp=Math.max(0,p.playerHp-damage);else p.enemyHp=Math.max(0,p.enemyHp-damage);
   }
  }
  function emitMark(evt,delay=0){
@@ -195,7 +212,6 @@
    ||(evt.mark==="revenge"&&evt.action==="ready")
    ||(evt.mark==="backlash"&&evt.action==="trigger");
  }
-
 
  const fxClassCleanup=new WeakMap();
  function restartFxClass(card,className,animationNamePattern){
@@ -298,21 +314,27 @@
      if(desc)await sleep(Math.min(stepDelay,85));
      continue;
     }
-    if(evt.type==="combo"){spawnFx("enemy","combo");await sleep(Math.min(stepDelay,70));continue;}
-    if(evt.type==="counter"){spawnFx("enemy","counter");await sleep(Math.min(stepDelay,70));continue;}
+    if(evt.type==="combo"){
+     const actor=standardEventActor(evt),target=standardOtherTarget(actor);
+     spawnFx(target,"combo");await sleep(Math.min(stepDelay,70));continue;
+    }
+    if(evt.type==="counter"){
+     const actor=standardEventActor(evt),target=standardOtherTarget(actor);
+     spawnFx(target,"counter");await sleep(Math.min(stepDelay,70));continue;
+    }
     if(evt.type==="berserk"){spawnFx("enemy","berserk");await sleep(Math.min(stepDelay,70));continue;}
     if(evt.type==="drain"){
-     const healed=Math.max(0,Math.floor(Number(evt.healed)||0));
-     if(healed>0)p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);
-     spawnFx("player","drain");
-     if(healed>0)spawnFx("player","heal",`+${healed} HP`,70);
+     const actor=standardEventActor(evt),healed=Math.max(0,Math.floor(Number(evt.healed)||0));
+     if(actor==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
+     spawnFx(actor,"drain");
+     if(healed>0)spawnFx(actor,"heal",`+${healed} HP`,70);
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await sleep(stepDelay);
      continue;
     }
     if(evt.type==="dodge"){
-     const target=evt.target==="player"?"player":"enemy",attacker=target==="player"?"enemy":"player";
+     const target=standardEventTarget(evt),attacker=standardOtherTarget(target);
      directMotion(attacker);await sleep(impactDelay);
      directPulse(target,"閃避");
      syncCombatHpDom();
@@ -321,18 +343,18 @@
      continue;
     }
     if(evt.type==="attack"){
-     const actor=evt.actor==="enemy"?"enemy":"player",target=actor==="player"?"enemy":"player";
+     const actor=standardEventActor(evt),target=standardEventTarget(evt);
      directMotion(actor);await sleep(impactDelay);
-     if(actor==="player"){
-      p.enemyHp=Math.max(0,p.enemyHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
-      if(evt.initiative)spawnFx("enemy","initiative");
-      if(evt.penetration)spawnFx("enemy","penetration",null,70);
-     }else{
-      const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0));
+     const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0)),actualDamage=Math.max(0,Math.floor(Number(evt.actualDamage)||0));
+     if(target==="player"){
       if(shieldAbsorbed>0)p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);
-      if(p.lockPlayerFullHp)p.playerHp=p.playerMaxHp;
-      else p.playerHp=Math.max(0,p.playerHp-Math.max(0,Math.floor(Number(evt.actualDamage)||0)));
+      if(p.lockPlayerFullHp)p.playerHp=p.playerMaxHp;else p.playerHp=Math.max(0,p.playerHp-actualDamage);
+     }else{
+      if(shieldAbsorbed>0)p.enemyShield=Math.max(0,p.enemyShield-shieldAbsorbed);
+      p.enemyHp=Math.max(0,p.enemyHp-actualDamage);
      }
+     if(evt.initiative)spawnFx(target,"initiative");
+     if(evt.penetration)spawnFx(target,"penetration",null,70);
      if(evt.absorbed)directPulse(target,"吸收");
      else{
       const shown=Math.max(0,Math.floor(Number(evt.damage)||0));
@@ -353,7 +375,7 @@
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
  };
- window.COMBAT_STRUCTURED_PRESENTATION_VERSION=2;
+ window.COMBAT_STRUCTURED_PRESENTATION_VERSION=3;
  window.COMBAT_STRUCTURED_SLEEP_INJECTION_VERSION=1;
  window.COMBAT_PRESENTATION_UNIFIED_VERSION=1;
 
@@ -454,12 +476,26 @@
   const enemyMaxHp=Math.max(1,Math.floor(Number(result?.e?.hp)||1));
   const enemyStartHp=Math.max(0,Math.min(enemyMaxHp,Math.floor(Number(result?.enemyStartHp??enemyMaxHp)||enemyMaxHp)));
   const events=Array.isArray(result?.events)?result.events.slice():[];
-  const wardActivate=events.find(evt=>evt?.type==="mark"&&evt.mark==="ward"&&evt.action==="activate");
-  const openingShield=Math.max(0,Math.floor(Number(wardActivate?.shield)||0));
-  presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield:openingShield,playerShieldMax:openingShield,enemyShield:0,enemyShieldMax:0,lockPlayerFullHp};
+  const playerWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="player"&&evt.mark==="ward"&&evt.action==="activate");
+  const enemyWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="enemy"&&evt.mark==="ward"&&evt.action==="activate");
+  const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(enemyWard?.shield)||0));
+  presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield,playerShieldMax:playerShield,enemyShield,enemyShieldMax:enemyShield,lockPlayerFullHp};
   if(combatScreen())ensureCombatExtras();
   return window.getCombatPresentationSnapshot();
  };
+
+ const actorAwareCases=[
+  [standardEventTarget({actor:"enemy",target:"player"}),"player","enemy attack target"],
+  [standardEventTarget({actor:"player",target:"enemy"}),"enemy","player attack target"],
+  [standardMarkUiTarget({type:"mark",owner:"enemy",target:"player",mark:"composure"}),"enemy","enemy composure owner"],
+  [standardMarkUiTarget({type:"mark",owner:"enemy",target:"player",mark:"battleSpirit"}),"enemy","enemy battleSpirit owner"],
+  [standardMarkUiTarget({type:"mark",owner:"enemy",target:"player",mark:"suppression"}),"player","enemy suppression target"],
+  [standardMarkUiTarget({type:"mark",owner:"enemy",target:"player",mark:"backlash"}),"player","enemy backlash target"],
+  [standardMarkUiTarget({type:"mark",owner:"player",target:"enemy",mark:"ignore"}),"enemy","player ignore target"]
+ ];
+ const actorAwareErrors=actorAwareCases.filter(([actual,expected])=>actual!==expected).map(([actual,expected,label])=>({label,actual,expected}));
+ window.COMBAT_ACTOR_AWARE_PRESENTATION_VERSION=ACTOR_AWARE_PRESENTATION_VERSION;
+ window.COMBAT_ACTOR_AWARE_PRESENTATION_INTEGRITY=Object.freeze({version:1,passed:actorAwareErrors.length===0,errors:Object.freeze(actorAwareErrors)});
 
  document.addEventListener("animationstart",event=>{
   const el=event.target;
@@ -480,8 +516,7 @@
 
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
  window.COMBAT_FULL_HP_LOCK_PRESENTATION_VERSION=1;
-
- window.COMBAT_MARK_FX_VERSION=1;
+ window.COMBAT_MARK_FX_VERSION=2;
  window.COMBAT_FX_ANIMATION_LIFECYCLE_VERSION=1;
  installStyles();
 })();
