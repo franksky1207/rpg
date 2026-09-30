@@ -1,16 +1,16 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const POST_FLOW_COORDINATOR_VERSION=1;
  const STORY_POST_FLOW_SEQUENCE_VERSION=1;
  const TITLE_NOTICE_HOLD_VERSION=1;
  const PRESENTATION_ADAPTER_VERSION=1;
- const MINIMAL_MODE_ADAPTER_VERSION=1;
- const HP_CAP_PRESENTATION_VERSION=1;
+ const MINIMAL_MODE_ADAPTER_VERSION=2;
+ const HP_CAP_PRESENTATION_VERSION=2;
  const PROGRESS_EVENT_PRESENTATION_VERSION=1;
  const CATCH_UP_SYNC_VERSION=1;
  const RUN_SUMMARY_PRESENTATION_VERSION=1;
  const TITLE_POST_FLOW_SEQUENCE_VERSION=1;
- const STOP_REASON_PRESENTATION_VERSION=1;
+ const STOP_REASON_PRESENTATION_VERSION=2;
  const RUN_IDENTITY_GUARD_VERSION=1;
  const TOTALS_FAIL_CLOSED_VERSION=1;
  const VIP20_DEATH_PROTECTION_PRESENTATION_VERSION=1;
@@ -30,6 +30,8 @@
  function clamp(value,min,max){return Math.max(min,Math.min(max,Number(value)||0));}
  function fmt(value){return whole(value).toLocaleString();}
  function pct(value){return `${clamp(value,0,100).toFixed(2)}%`;}
+ function suppressionPct(value){return `${clamp(value,0,100).toFixed(3)}%`;}
+ function runMaxDeaths(){return Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500));}
  function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function runSnapshot(){return typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;}
  function bossDefinition(index){return typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(index):(Array.isArray(window.THIRD_WORLD_BOSS_DEFINITIONS)?window.THIRD_WORLD_BOSS_DEFINITIONS[index]:null);}
@@ -56,7 +58,7 @@
    bossName:String(source.bossName||"高維存在"),
    battleNumber:Math.max(1,whole(source.battleNumber||1)),
    deaths:whole(source.deaths),
-   maxDeaths:whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100),
+   maxDeaths:runMaxDeaths(),
    hpCap:whole(source.hpCap),
    hpCapPercent:clamp(source.hpCapPercent,0,100),
    presenting:source.presenting===true,
@@ -174,8 +176,8 @@
  }
  function stopReasonPresentation(reason=""){
   const value=String(reason||""),meta=typeof window.continuousRunStopReasonMeta==="function"?window.continuousRunStopReasonMeta(value):{category:"other"};
-  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":"已達本輪 100 次死亡上限","boss-defeated":"高維存在已擊破","stage-crossed":"高維存在跨入新強化階段","five-point-front":"5% 戰線鎖定","progress-event":"高維整體進度事件","active-runtime":"其他正式流程接管","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","battle-error":"連戰流程發生異常","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
-  const fallback={completion:"目標完成",progression:"進度事件",limit:"達到本輪限制",interruption:"連戰中斷",error:"流程異常",other:"連戰結束"};
+  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":`已達本輪 ${runMaxDeaths()} 次死亡上限`,"boss-defeated":"高維存在已擊破","stage-crossed":"Stage 已改變","five-point-front":"戰線進度已更新","progress-event":"戰線進度已更新","active-runtime":"其他正式流程接管","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","battle-error":"連戰流程發生異常","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
+  const fallback={completion:"目標完成",progression:"戰線進度已更新",limit:"達到本輪限制",interruption:"連戰中斷",error:"流程異常",other:"連戰結束"};
   return Object.freeze({version:STOP_REASON_PRESENTATION_VERSION,reason:value,category:String(meta?.category||"other"),label:exact[value]||fallback[meta?.category]||fallback.other});
  }
  function summaryTotals(result){
@@ -204,7 +206,7 @@
   const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),vip20Protections=whole(final.vip20Protections),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
   closeRunSummaryModal();const modal=ensureRunSummaryModal();if(!modal)return Promise.resolve(false);
   const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`,vip20Notice=deaths>0?`<div class="notice" style="margin-top:12px"><b>VIP20｜裝備保護</b><div class="muted" style="margin-top:6px;line-height:1.55">本輪死亡 ${fmt(deaths)} 次；原本的 30% 死亡裝備遺失判定仍照常進行。${vip20Protections>0?`其中 ${fmt(vip20Protections)} 次判定原本會遺失裝備，已由 VIP20 全部阻止。`:`本輪沒有抽中裝備遺失，但 VIP20 保護仍持續生效。`}第三紀元的死亡裝備保護來自 VIP20 特權。</div></div>`:"";
-  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}${vip20Notice}</div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
+  modal.innerHTML=`<div class="modal-box"><h3>高維紀元・連續戰鬥結算</h3><div class="settlement-section"><div class="settlement-section-title">${esc(boss?.name||"高維存在")}</div><div class="notice"><b>${esc(stop.label)}</b></div><div class="stats" style="margin-top:10px"><div class="stat">本輪戰鬥<b>${fmt(battles)} 場</b></div><div class="stat">本輪死亡<b>${fmt(deaths)} / ${fmt(runMaxDeaths())}</b></div><div class="stat">永久削血<b>${summaryValue(totals,"effectivePermanentDamage")}</b></div><div class="stat">EXP<b>${summaryValue(totals,"xp",{prefix:"+"})}</b></div><div class="stat">維度之弦<b>${summaryValue(totals,"dimensionalStrings",{prefix:"+"})}</b></div><div class="stat">裝備取得<b>${summaryValue(totals,"itemCount",{suffix:" 件"})}</b></div><div class="stat">Boss 剩餘 HP<b>${remainingText}</b></div></div>${totalsNotice}${vip20Notice}</div><div class="controls"><button class="btn primary" type="button" onclick="closeThirdWorldRunSummaryModal()">確認</button></div></div>`;
   modal.classList.add("show");return new Promise(resolve=>{summaryModalResolver=resolve;});
  }
  function syncCatchUpNotice(){
@@ -273,6 +275,7 @@
    try{await window.animateStructuredCombatPresentation(combat,{clearAfter:true,clearReason:"third-world-player-battle-end",onUpdate:syncMinimal});}
    finally{if(activeContext)activeContext.presenting=false;}
   }
+  if(step?.terminalReason)finishMinimalMode();
   if(Array.isArray(step?.settlement?.eventSequence)&&step.settlement.eventSequence.length||step?.settlement?.completionReady===true)await presentProgressEvents(step);
  }
  function updateContextFromFinalSnapshot(expectedRunId){
@@ -340,20 +343,21 @@
   const ctx=displayContext();
   return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前敵人</div><div class="main-minimal-mode-value" data-third-world-minimal-enemy>${ctx?.bossName||"高維存在"}</div></div>
    <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續戰鬥</div><div class="main-minimal-mode-value" data-third-world-minimal-round>第 ${Math.max(1,whole(ctx?.battleNumber||1))} 場</div></div>
-   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">死亡</div><div class="main-minimal-mode-value" data-third-world-minimal-deaths>${whole(ctx?.deaths)} / ${whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}</div></div>
-   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前最大 HP</div><div class="main-minimal-mode-value" data-third-world-minimal-cap>${pct(ctx?.hpCapPercent??100)}</div></div>
+   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">死亡</div><div class="main-minimal-mode-value" data-third-world-minimal-deaths>${whole(ctx?.deaths)} / ${runMaxDeaths()}</div></div>
+   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前最大 HP</div><div class="main-minimal-mode-value" data-third-world-minimal-cap>${suppressionPct(ctx?.hpCapPercent??100)}</div></div>
    <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">角色</div><div class="main-minimal-mode-value" data-third-world-minimal-level>Lv.${whole(state?.level)}</div></div>
    <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-third-world-minimal-exp>EXP　${expText()}</div><div data-third-world-minimal-strings>維度之弦　${fmt(state?.thirdWorld?.dimensionalStrings)}</div></div>`;
  }
- function syncMinimalValues(root){
-  const ctx=displayContext(),enemy=root.querySelector("[data-third-world-minimal-enemy]"),round=root.querySelector("[data-third-world-minimal-round]"),deaths=root.querySelector("[data-third-world-minimal-deaths]"),cap=root.querySelector("[data-third-world-minimal-cap]"),level=root.querySelector("[data-third-world-minimal-level]"),exp=root.querySelector("[data-third-world-minimal-exp]"),strings=root.querySelector("[data-third-world-minimal-strings]");
+ function syncMinimalValues(root,mode="running"){
+  const ctx=displayContext(),enemy=root.querySelector("[data-third-world-minimal-enemy]"),round=root.querySelector("[data-third-world-minimal-round]"),deaths=root.querySelector("[data-third-world-minimal-deaths]"),cap=root.querySelector("[data-third-world-minimal-cap]"),level=root.querySelector("[data-third-world-minimal-level]"),exp=root.querySelector("[data-third-world-minimal-exp]"),strings=root.querySelector("[data-third-world-minimal-strings]"),note=root.querySelector("[data-main-minimal-mode-note]");
   if(enemy)enemy.textContent=ctx?.bossName||"高維存在";
   if(round)round.textContent=`第 ${Math.max(1,whole(ctx?.battleNumber||1))} 場`;
-  if(deaths)deaths.textContent=`${whole(ctx?.deaths)} / ${whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}`;
-  if(cap)cap.textContent=pct(ctx?.hpCapPercent??100);
+  if(deaths)deaths.textContent=`${whole(ctx?.deaths)} / ${runMaxDeaths()}`;
+  if(cap)cap.textContent=suppressionPct(ctx?.hpCapPercent??100);
   if(level)level.textContent=`Lv.${whole(state?.level)}`;
   if(exp)exp.textContent=`EXP　${expText()}`;
   if(strings)strings.textContent=`維度之弦　${fmt(state?.thirdWorld?.dimensionalStrings)}`;
+  if(note&&mode==="stopped"){note.textContent=stopReasonPresentation(ctx?.stopReason).label;note.hidden=false;}
  }
  function registerAdapter(){
   if(typeof window.registerMinimalModeAdapter!=="function")return false;
@@ -373,18 +377,20 @@
   if(Number(window.THIRD_WORLD_RUN_TOTALS_VERSION)!==1)errors.push("RUN_TOTALS_CONTRACT_MISSING");
   if(Number(window.THIRD_WORLD_RUN_IDENTITY_VERSION)!==1||Number(window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION)!==1||Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==2)errors.push("RUN_IDENTITY_CONTRACT_MISSING");
   if(environmentSubscribed!==true)errors.push("BACKGROUND_ENVIRONMENT_SYNC_MISSING");
-  if(Number(window.THIRD_WORLD_RUN_MAX_DEATHS)!==100)errors.push("MAX_DEATHS_CONTRACT");
+  if(runMaxDeaths()!==500)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
-  const manual=stopReasonPresentation("manual"),boss=stopReasonPresentation("boss-defeated"),stage=stopReasonPresentation("stage-crossed"),limit=stopReasonPresentation("death-limit"),battleError=stopReasonPresentation("battle-error");
-  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||limit.category!=="limit"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
+  const manual=stopReasonPresentation("manual"),boss=stopReasonPresentation("boss-defeated"),stage=stopReasonPresentation("stage-crossed"),front=stopReasonPresentation("five-point-front"),limit=stopReasonPresentation("death-limit"),battleError=stopReasonPresentation("battle-error");
+  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||front.label!=="戰線進度已更新"||stage.label!=="Stage 已改變"||limit.category!=="limit"||limit.label!=="已達本輪 500 次死亡上限"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
-  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents);
+  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues);
   const summaryIndex=flowSource.indexOf("await presentRunSummary"),storyIndex=flowSource.indexOf("await drainPostFlowStories"),releaseIndex=flowSource.indexOf("setTitlePostFlowHold(false)",storyIndex),titleIndex=flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow",storyIndex);
   if(summaryIndex<0||storyIndex<summaryIndex||releaseIndex<storyIndex||titleIndex<releaseIndex)errors.push("POST_FLOW_SEQUENCE");
   if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
   if(flowSource.includes("startThirdWorldContinuousRun"))errors.push("DUPLICATE_START_OWNER");
   if(summarySource.includes("停止類型")||eventSource.includes("5pp"))errors.push("PLAYER_INTERNAL_TERMINOLOGY_LEAK");
+  if(!stepSource.includes("if(step?.terminalReason)finishMinimalMode()")||!minimalSource.includes("mode===\"stopped\"")||!minimalSource.includes("stopReasonPresentation"))errors.push("MINIMAL_STOP_PRESENTATION_WIRING");
+  if(suppressionPct(99.908)!=="99.908%")errors.push("HP_CAP_THREE_DECIMAL_PRESENTATION");
   return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
