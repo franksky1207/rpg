@@ -13,20 +13,21 @@
 本次 handoff 更新前的 current `main` **功能 HEAD**：
 
 ```text
-2d57568b4f19a78c291561c15c5db79223fe2cf9
+977d0bccbb61d65034b0180428a995809922f55c
 ```
 
 此 HEAD 已完成：
 
 - 第一紀元「銀河紀元」與第二紀元「宇宙紀元」既有正式內容；
-- 第三紀元「高維紀元」完整 foundation／entry／save／migration／Lv1000～2000／10 名高維存在／永久削血／100死連戰／界弦核心／Offline／Story／Final Completion；
+- 第三紀元「高維紀元」完整 foundation／entry／save／migration／Lv1000～2000／10 名高維存在／永久削血／500死連戰／界弦核心／Offline／Story／Final Completion；
 - 高維正式 Story 11/11、共 322 頁；
 - 高維10階稱號專屬視覺、Mirror 15～20 六階視覺；
 - W3 Dungeon／Mirror／Void／特殊遭遇 fail-closed／高維競技場；
 - 第16批 GM 正式管理三紀元合法範圍鎖定；
-- 第16批後 Save Hook／Save Safety／Migration Staircase／Offline V4／Battle Pipeline／World Transition／Script Load Policy／World Combat Adapter／Legacy Global Alias／Save Writer Audit／Browser Smoke 等技術債收斂；
-- 2026-09-30 本輪新增完成：第三紀元玩家說明收斂、GM 三紀元產裝與紀元顯示政策、W2/W3 正式進度管理 owner、GM Hub native renderer late binding、GM 正式資源／副本 transaction owner；
-- current exact-head `Runtime Integrity #1200`、`Story Integrity #887`、`Pages build and deployment #5141` 均已通過。
+- Save Hook／Save Safety／Migration Staircase／Offline V4／Battle Pipeline／World Transition／Script Load Policy／World Combat Adapter／Legacy Global Alias／Save Writer Audit／Browser Smoke 等技術債收斂；
+- 第三紀元玩家說明 stable-ID copy、GM 三紀元產裝與紀元顯示政策、W2/W3 正式進度管理 owner、GM Hub native renderer late binding、GM 正式資源／副本 transaction owner；
+- 2026-09-30 最近一輪新增完成：角色管理 VIP 重置去重、第三紀元背包返回、極簡模式停止呈現、500死新制、三位小數 HP cap 顯示、敵我雙方 combat FX、GM 高維十王／Stage benchmark、永久削血與能力統計、benchmark consistency／regression；
+- exact-head `Runtime Integrity #1233`、`Story Integrity #902`、`Pages build and deployment #5174` 均已通過。
 
 本 handoff 更新本身只修改 `PROJECT_HANDOFF.md`，**不修改 JS／CSS／HTML／戰鬥／存檔功能**，所以本次不需要更新 `index.html` cache-bust。
 
@@ -37,8 +38,9 @@
 第14批：完成
 第15批：完成
 第16批：完成
-第16批後優化 1～6：完成
-2026-09-30 遊戲說明／GM 管理收斂 4 批：完成
+第16批後架構優化：完成
+2026-09-30 Guide／GM 管理收斂：完成
+2026-09-30 第三紀元實機流程／500死／GM高維 benchmark 優化：完成
 目前進入：實機遊玩／數值觀察／針對性修正／後續設計階段
 ```
 
@@ -55,7 +57,7 @@
 7. 第一／第二／第三紀元能共用的邏輯優先走 shared owner；不要因 W3 特殊而建立平行架構。
 8. current main 已有 shared extension／registry／policy owner 時，優先擴充正式 owner，不再疊 monkey-patch。
 9. GM formal management 與 GM test sandbox 必須分離；sandbox／benchmark state 不得污染 formal save。
-10. `thirdWorld` persistent state 只存正式 root；Stage、能力、5% front、稱號 tier、run deaths、active target、run summary、Fast Catch-up state 等 derived/runtime 不得 persist。
+10. `thirdWorld` persistent state 只存正式 root；Stage、能力、5% front、稱號 tier、run deaths、active target、run summary、Fast Catch-up state、GM benchmark result 等 derived/runtime 不得 persist。
 11. W3 正式 Story／Final 已定案並完成；**不可自行重寫、替換或擴增既有 11 篇正式主線。**
 12. Mirror／Void 在 W3 沿用 shared owner，不另做 W3 平行副本。
 13. current main 若已完成某規格，承接現況，不重做。
@@ -69,12 +71,16 @@
 21. 角色等級與裝備等級的 GM 管理**不做三紀元硬鎖**；它們是 GM 數值測試欄位。正常玩家仍受正式 progression／loot 規則限制。
 22. 第16批 formal fixed value 不新增舊非法值 migration／repair；目前只有使用者本人測試，舊資料不需為此補修。
 23. 改動前先找真正 owner／consumer；能改 owner 就不要在 UI 後處理硬蓋。
-24. `offlineprogress.js` 目前是唯一經 audit 允許保留的 save compatibility wrapper；除非先完成等價的 Hook Core primitive 與 Browser regression，不可直接拔除。
+24. `offlineprogress.js` 目前是唯一經 audit 允許保留的 save compatibility wrapper；除非先完成等價 Hook Core primitive 與 Browser regression，不可直接拔除。
 25. W3 永久 HP／settlement basis 是高風險正式契約；任何 combat 共用化都不得改變 `formalStartHp → combatEndHp → permanent delta` 語意。
 26. GM native section registry 已改為 **late binding**；不要再恢復成「註冊時捕捉舊 renderer reference」，也不要重新加回已退休的 replace workaround。
 27. GM W2/W3 進度重建邏輯已移到正式 progression management owner；`gmtools.js` 只負責 prompt／驗證／transaction adapter，不要把 Story／Title／Boss 重建公式塞回 UI adapter。
 28. 正式 GM 資源與副本多欄位修改已統一走 `gmformaltransaction.js`＋shared settlement transaction；不要再改回直接 state mutation＋中途 save。
-29. 第三紀元遊戲說明玩家版由 `thirdworldguidecopy.js` 的 stable item ID／integrity 管理；不要用中文標題字串當唯一 patch key，也不要重新露出 VIP20、30%掉裝、Stage/Core 後台數值。
+29. 第三紀元遊戲說明玩家版由 `thirdworldguidecopy.js` 的 stable item ID／integrity 管理；不要用中文標題字串當唯一 patch key，也不要重新露出 VIP20、掉裝機率、Stage/Core 後台調參數值。
+30. 第三紀元主線連戰的最大死亡數與壓制公式只以 `thirdworldrun.js` 為正式 owner；UI／Guide／極簡模式不得另寫第二套公式。
+31. 高維戰鬥畫面敵方能力已改為 actor-aware／owner-aware；不要再把 enemy ability 當作 player-only FX 處理。
+32. GM 高維 benchmark 的 Boss／Stage／能力必須直接使用正式 W3 data／combat owner；不得另抄十王數值或第三套戰鬥公式。
+33. GM 高維 benchmark 結果是 runtime sandbox；任何會改 GM 測試角色能力的操作都必須讓舊結果失效，避免「新角色設定＋舊測試結果」混用。
 
 ---
 
@@ -180,7 +186,7 @@ Shared Story marker：
 storyProgress.thirdWorldContentVersion = 1
 ```
 
-不得 persist：run/deaths/suppression/active target/recent battle/summary/Fast Catch-up/player flow/Stage/abilities/5% front/title tier 等 runtime／derived state。
+不得 persist：run/deaths/suppression/active target/recent battle/summary/Fast Catch-up/player flow/Stage/abilities/5% front/title tier/GM benchmark result 等 runtime／derived state。
 
 Schema16 政策：
 
@@ -201,17 +207,27 @@ entryVersion >= 2   = trusted formal core
 entryVersion <2：Core Lv／progress 歸零、維度之弦保留，reconcile 到 entryVersion2。  
 entryVersion ≥2：正式投入保留；progress 可 carry-forward；Lv10 overflow 回收至維度之弦。
 
-## 2026-09-30 GM／Guide 本輪舊資料結論
+## 2026-09-30 最近功能的舊資料結論
 
-本輪新增的 Guide copy、GM phase UI、W2/W3 GM progress owner、GM transaction owner **都不改 persistent schema**，因此：
+最近完成的背包返回、500死、極簡模式、HP cap 顯示、actor-aware FX、GM 高維 benchmark／summary／regression **全部不新增 persistent 欄位**，因此：
 
-- 不升 Save Schema；
-- 不新增 migration；
-- 不替第16批 formal fixed value 加舊非法值 repair；
+- **不升 Save Schema；**
+- **不新增 migration；**
+- 第三紀元背包 return context 是 runtime；
+- 第三紀元連戰 deaths／HP suppression 是 runtime，每輪重新從 deaths=0 開始；
+- 500死新制只改正式連戰規則，不重新解讀舊 persistent state；
+- GM W3 benchmark result／角色 run-time snapshot 只存在 GM runtime，不寫 formal save；
+- combat event 新增 `dodge.initiative` 只是 event contract 擴充，不改存檔；
+- actor-aware combat FX 只改 presentation，不改 combat result persistence；
+- 既有 Schema16 正式 W3 Boss HP、Core、strings、Story、Title、裝備資料都照原規則保留。
+
+原有 GM／Guide 舊資料結論仍有效：
+
 - W2 GM 進度重建只操作既有 `secondWorld.mainline.bossKilled` 與 shared Story history；
 - W3 GM 進度重建只操作既有 Boss HP／Story／Title／completed；
-- W3 `introSeen` 以 `thirdWorld.story.introSeen === true` **或** shared completedStories 含 intro ID 任一成立視為已看過，屬 apply-time defensive reconciliation，不是 migration；
-- GM formal transaction 只改既有資源／daily／dungeon欄位，save 失敗由 shared transaction rollback。
+- W3 `introSeen` 以 `thirdWorld.story.introSeen === true` 或 shared completedStories 含 intro ID 任一成立視為已看過；
+- GM formal transaction 只改既有資源／daily／dungeon欄位，save 失敗由 shared transaction rollback；
+- 第16批 formal fixed value 不新增舊非法值 repair。
 
 ## Save Hook Core
 
@@ -231,13 +247,13 @@ warning = 2 MiB
 critical = 4 MiB
 ```
 
-- 存檔前做 serialization／容量診斷；
+- 存檔前 serialization／容量診斷；
 - 寫入後回報成功／失敗與容量級別；
 - reset／GM JSON import 前建立 verified safety backup；
-- pre-Schema16 load 先建立專用安全備份；備份失敗 fail-closed，原 localStorage 保留；
+- pre-Schema16 load 先建立專用安全備份；備份失敗 fail-closed；
 - future／too-old save 保護原始資料，不誤載。
 
-## Migration Staircase V1
+Migration Staircase V1：
 
 ```text
 legacy-exp-progress
@@ -252,7 +268,7 @@ V1／V9／V15／V16 fixture regression 已納入 Runtime Integrity。
 
 ---
 
-# 5. Legacy global／Save writer 現況
+# 5. Legacy global／Save writer／Offline 現況
 
 正式 policy：
 
@@ -262,21 +278,16 @@ LEGACY_GLOBAL_ALIAS_POLICY_VERSION = 1
 policy = read-compatible-no-duplicate-write
 ```
 
-Legacy compatibility：
+Canonical caps：
 
 ```text
-SAVE_VERSION legacy read value = 13
-Canonical SAVE_SCHEMA_VERSION = 16
-MAX_LEVEL legacy/window alias = 500
 FIRST_WORLD_LEVEL_CAP = 500
 SECOND_WORLD_LEVEL_CAP = 1000
 THIRD_WORLD_LEVEL_CAP = 2000
 ABSOLUTE_MAX_LEVEL = 2000
 ```
 
-不得把 legacy `SAVE_VERSION=13` 誤當正式 schema；不得再由多個 owner 重複寫 `window.MAX_LEVEL`。
-
-Global save writer audit 允許的鏈只有：
+Global save writer audit 允許鏈：
 
 ```text
 engine.js                 → base save()
@@ -284,11 +295,7 @@ compatibilityowners.js    → formal Save Hook Core wrapper
 offlineprogress.js        → audited Offline checkpoint compatibility wrapper
 ```
 
-`thirdworldcombatsaveguard.js` 已移除獨立 save wrapper，改走 before-save hook。
-
----
-
-# 6. Offline current owner
+Offline current：
 
 ```text
 OFFLINE_STATE_NORMALIZATION_VERSION = 4
@@ -296,24 +303,16 @@ OFFLINE_BATTLE_SAMPLE_VERSION = 4
 OFFLINE_LEGACY_BATTLE_SAMPLE_VERSION = 3
 OFFLINE_BATTLE_SAMPLE_MIGRATION_VERSION = 2
 OFFLINE_SAMPLE_OWNER_VERSION = 2
-OFFLINE_SAMPLE_POLICY_VERSION = 1
-OFFLINE_RESET_OWNER_VERSION = 1
 ```
 
 正式 sample policy：
 
-- 速度池：`1 / 1.5 / 2`；
-- 每個速度最多保留最近8筆；
-- sample actual battle 最小100ms；
-- W1 level gap multiplier：
-  - gap ≤3 → ×1.00
-  - gap ≤6 → ×1.30
-  - gap ≤10 → ×1.60
-  - gap ≤15 → ×2.00
-  - gap ≥16 → 不接受 sample；
-- legacy sample V1/V2 不安全，安全丟棄；
-- V3 可 canonical normalize 到 V4；
-- sample／pending settlement／reset 都由 `offlinestatecore.js` 正式 owner 管理。
+- 速度池 `1 / 1.5 / 2`；
+- 每速度最多最近8筆；
+- actual battle 最小100ms；
+- W1 level gap multiplier：gap≤3 ×1.00、≤6 ×1.30、≤10 ×1.60、≤15 ×2.00、≥16不接受；
+- legacy V1/V2 safe discard；V3 canonical normalize 到V4；
+- sample／pending settlement／reset 由 `offlinestatecore.js` 正式 owner 管理。
 
 W3 Offline：
 
@@ -324,11 +323,9 @@ W3 Offline：
 - W3 Offline 只給裝備機會；
 - 不削永久HP、不給EXP、不給strings、不推Core／Title／Story／Completion。
 
-`battlepipeline.js` 與 W2/W3 sample consumer 已收斂到 shared `appendOfflineBattleSample()`。
-
 ---
 
-# 7. 共用 Combat 與 Battle Pipeline
+# 6. 共用 Combat／Battle Pipeline／呈現層
 
 正式傷害基礎：
 
@@ -339,7 +336,7 @@ baseDamage = ceil((ATK - DEF × 0.55) × random)
 最低傷害 = 1
 ```
 
-`combatmath.js` current：
+`combatmath.js`：
 
 ```text
 COMBAT_DAMAGE_MODEL_VERSION = 1
@@ -352,11 +349,40 @@ World Combat Adapter：world／state／civilization level → civilizationCombat
 
 `battlepipeline.js` 已統整主線連續戰鬥、background lifecycle、Fast Catch-up、minimal mode、offline real-battle sample 與 Story-stop。
 
-**W3 主線 permanent-HP combat 尚未切到 World Combat Adapter**，因其多了 formalStartHp／combatEndHp／永久 settlement basis；目前保留已驗證的專用正式鏈。
+**W3 主線 permanent-HP combat 尚未切到 World Combat Adapter**，因其有 formalStartHp／combatEndHp／永久 settlement basis；目前保留已驗證的專用正式鏈。
+
+## 6.1 Combat actor-aware presentation（2026-09-30）
+
+`combatfx.js` current：
+
+```text
+COMBAT_PRESENTATION_VERSION = 3
+ACTOR_AWARE_PRESENTATION_VERSION = 1
+```
+
+一般 structured renderer 已從 player-only 假設改為 actor-aware／owner-aware：
+
+- 敵人先制／連擊／穿透／反擊／汲取可正確顯示；
+- enemy drain 回復 Boss 畫面 HP，不再錯補玩家；
+- 護界、吸收、反噬等 HP／shield presentation 依 owner／target 同步正確側；
+- Boss 的鎮心／韌性／復仇／戰意顯示在 Boss 側；壓制／反噬／無視依 target 顯示；
+- 玩家原有專精／印記呈現與 Mirror owner-aware 行為保留。
+
+`combatfxintegrity.js` 已同步 actor-aware regression。
+
+## 6.2 dodge initiative event contract（2026-09-30）
+
+`combatcore.js` 新增：
+
+```text
+COMBAT_DODGE_INITIATIVE_EVENT_VERSION = 1
+```
+
+第一次正常攻擊若帶 initiative 但被閃避，`dodge` event 也會帶 `initiative:true`。這只擴充事件語意，不改命中、閃避、先制傷害或 RNG 公式；GM benchmark 可因此正確統計「先制第一擊被閃避」的情況。
 
 ---
 
-# 8. 高維主線：10 名高維存在／Stage／永久削血
+# 7. 高維主線：10 名高維存在／Stage／永久削血
 
 每名最大 HP：`1,100,000,000`；總 HP：`11,000,000,000`。
 
@@ -393,6 +419,8 @@ Stage：`>90% Stage0`，`<=90% Stage1`，每下降10%再+1，`<=10% Stage9`。�
 
 共通能力：70%鎮心／60%壓制／50%韌性／40%復仇／30%反噬／20%無視／10%戰意。
 
+十王固定五能力、個體特化與上述 Stage 能力都會正式傳入 `runCombatCore()`；不是只做 UI。高維 combat integrity 已實戰驗證先制／連擊／穿透／反擊／汲取與 Stage ability matrix。
+
 5% 戰線：`55,000,000 HP`；只比較存活目標；落後最高存活 HP 至少55m者下一場鎖定；擊破者退出；最後一名存活免限制。
 
 Lv／settlement：
@@ -409,22 +437,114 @@ EXP = 有效永久削血
 
 ---
 
-# 9. 100死連戰／界弦核心／VIP20／Fast Catch-up
+# 8. 500死連戰／界弦核心／極簡模式／Fast Catch-up
+
+## 8.1 最新正式公式（舊100死規則已失效）
+
+`thirdworldrun.js` current：
 
 ```text
-最大死亡 = 100
-每死壓制 = 0.50pt - coreLv × 0.04pt
-Core Lv0：100死後最大HP約50%
-Core Lv10：100死後最大HP約90%
+MAX_DEATHS = 500
+BASE_SUPPRESSION_PER_DEATH = 0.100 pt
+CORE_REDUCTION_PER_LEVEL = 0.008 pt
+suppressionPerDeath = round3(0.100 - coreLv × 0.008)
 ```
+
+Core Lv0～10 對應每死壓制：
+
+```text
+Lv0  0.100%
+Lv1  0.092%
+Lv2  0.084%
+Lv3  0.076%
+Lv4  0.068%
+Lv5  0.060%
+Lv6  0.052%
+Lv7  0.044%
+Lv8  0.036%
+Lv9  0.028%
+Lv10 0.020%
+```
+
+500死最終壓制與舊制難度等價：
+
+```text
+Core Lv0：500死 → HP cap 50.000%
+Core Lv10：500死 → HP cap 90.000%
+Core Lv5：250死 → HP cap 85.000%
+```
+
+計算使用 `round3()`；玩家可見的每死壓制、累積壓制與目前最大 HP 百分比統一顯示到 **小數第3位**。
+
+Run：
+
+- 每輪 deaths=0；
+- 玩家死亡且目標未擊破才+1；
+- successful combat＋settlement 才+1 battle；
+- run start snapshot coreLv／per-death suppression；
+- run active 禁止 Core 注入；
+- boss defeat／Stage crossed／5% front／aggregate progress／death-limit 結束整輪；
+- `MAX_DEATHS` 是唯一正式上限 owner，Guide／UI／極簡模式讀正式值。
+
+## 8.2 HP cap 顯示修正
+
+曾出現理論應為 `99.100%` 卻顯示 `99.098%`，原因是 UI 用 `Math.floor()` 後的整數 HP 反推百分比。
+
+current main：
+
+- 優先顯示 `thirdworldrun.js` 正式 `hpCapPercent`；
+- `thirdworldplayerflow.js` fallback 先呼叫 `thirdWorldRunHpCapSnapshot()`；
+- 只有正式 owner 不可用時才最後退回整數 HP ratio；
+- 實際戰鬥 HP 仍維持整數化，沒有改平衡。
+
+## 8.3 極簡模式
+
+第三紀元 own minimal adapter：`third-world-mainline`。
+
+已修正：
+
+- 開極簡模式本身不再讓正式 W3 run 因 `minimal-mode-open` runtime conflict 自動停止；
+- 背景戰鬥／Fast Catch-up 仍依正式 GM background gate；
+- 正式 terminal 發生時，極簡模式先顯示醒目 **「戰鬥已停止」**，下方顯示玩家可讀原因；
+- 典型原因：`戰線進度已更新`、`Stage 已改變`、`已達本輪 500 次死亡上限`、`高維存在已擊破`；
+- 5% 戰線事件不再看起來像畫面卡死；玩家離開極簡後可接續正式高維進度事件 modal。
+
+## 8.4 Fast Catch-up／background
+
+- Fast Catch-up 只縮短等待／演出，不額外發收益；
+- 正式 combat＋settlement 照常；
+- W3 background／catch-up 不產 Offline sample；
+- own minimal mode 不應自行中止 background flow；
+- GM background battle 關閉時，W3 連戰在背景等待 foreground，不自行額外結算。
 
 界弦核心：Lv0～10；每級1,000,000,000維度之弦；總投入10,000,000,000。
 
-Run：每輪 deaths=0；玩家死亡且目標未擊破才+1；successful combat＋settlement 才+1 battle；run start snapshot coreLv／suppression；run active 禁止 Core 注入；defeat／Stage crossed／5% front／aggregate progress／death-limit 結束整輪。
+VIP20 death gear protection：正式引擎仍跑 shared 掉裝判定並阻止實際遺失；玩家遊戲說明不公開掉裝機率／VIP20攔截後台細節。
 
-VIP20 death gear protection：正式引擎仍跑 shared 掉裝判定並阻止實際遺失；**玩家遊戲說明已不再公開 30%／VIP20 攔截等後台細節**。
+---
 
-Fast Catch-up：只縮短等待／演出，不額外發收益；正式 combat＋settlement 照常；W3 background／catch-up 不產 Offline sample。
+# 9. 第三紀元背包返回／戰鬥後導航
+
+W1／W2 既有行為：戰鬥頁開背包後按返回，回原冒險／戰鬥上下文。
+
+W3 current main 已補正式 runtime return context：
+
+```text
+THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_VERSION = 2
+THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_MODE = "third-world-main"
+```
+
+正式 owner：`inventoryfocus.js`。
+
+行為：
+
+- 從第三紀元戰鬥／高維戰線進背包前，若 W3 continuous run active，先走正式 `stopThirdWorldRunFromPlayerUi()`；
+- 共用 `openAdventureInventory()` 仍是背包入口，不複製第二套背包流程；
+- 開啟後將 runtime `inventoryReturnContext` 明確標成 `third-world-main`；
+- 返回時不再假裝成 `universe-main`，也不會誤觸 `requestSecondWorldAdventureProgressFocus()`；
+- `THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY` 防止未來退回 W2 alias。
+
+這是純 runtime navigation，不需要 save migration。
 
 ---
 
@@ -445,94 +565,67 @@ Fast Catch-up：只縮短等待／演出，不額外發收益；正式 combat＋
 - 強化沿用+40；
 - 50個正式 W3 裝備名已完成；
 - name band 依 aggregate remaining HP；
-- `thirdworldloot.js` 正式 factory 只允許 q=4/5。
+- 正式 factory 只允許 q=4/5。
 
 W3 phase3 任意裝備處理：0金幣／0暗物質／0暗能量；殘留 W1/W2 裝備不能創造退休資源。
 
 W3 lost gear UI hidden；進入W3時舊lost gear回背包；W3由VIP20阻止實際掉裝，不建立W3贖回經濟。
 
-GM「產生高維紀元裝備」已正式加入角色管理：
+GM「產生高維紀元裝備」：
 
 - W3 才顯示；
 - 可選 10 名高維存在、品質、部位；
-- 品質只有傳說／神話；
-- **預設神話**；
-- 產裝使用正式 `makeThirdWorldEquipmentForBoss()`／W3 equipment factory，不維護平行裝備公式；
+- 品質只有傳說／神話；預設神話；
+- 使用正式 `makeThirdWorldEquipmentForBoss()`／W3 equipment factory；
 - 裝備等級採目前角色等級（W3 1000～2000）；
-- 名稱依正式高維整體進度 band；
-- GM UI 文案已移除 `sale owner` 等內部開發術語。
+- 名稱依正式高維整體進度 band。
 
 ---
 
-# 11. W3 Story／Completion
+# 11. W3 Story／Completion／Guide／Title
 
 正式 Story：序章12頁；Stage1～9 各31頁；Final31頁；總計11篇／322頁。
 
 - 0% 是 Final，不存在普通 Stage10 milestone；
 - 11 descriptors 全部 `contentReady:true`；
 - shared `pendingStory / completedStories`；
-- 不另建 W3 persistent queue；
 - formal lifecycle 有 storyId＋session identity＋owner；
 - GM／record replay 不冒充正式 completion；
 - post-flow：Run Summary → Story → Title Notice；
-- reload recovery／legacy reference cleanup 已完成。
-
-Completion owner：
-
-- `storyProgress.completedStories` 是 W3 Story completion 唯一權威；
-- `storyprogress.js` 推導 `story.introSeen`、`story.finalSeen`、`thirdWorld.completed`；
+- Completion 唯一權威：`storyProgress.completedStories`；
 - `thirdworldphase.js` 只做 Stage reconciliation；
 - Final 必須 Boss全滅＋Stage10＋Formal Final Story完成才可 completed。
 
-W3 Story content migration V1 只重建 W3 history refs，不動 W1/W2 history、Boss HP、Core、strings。
-
----
-
-# 12. 第三紀元玩家遊戲說明：2026-09-30 收斂完成
-
-正式玩家 copy extension：
+## Guide player copy
 
 ```text
 THIRD_WORLD_GUIDE_PLAYER_COPY_VERSION = 2
 THIRD_WORLD_GUIDE_COPY_INTEGRITY_VERSION = 1
 ```
 
-`thirdworldguidecopy.js` 已替 W3 Guide item 建立 stable ID，不再只靠中文標題做定位。玩家版說明目前：
+玩家版：
 
-- 移除獨立 `VIP20 裝備保護`／`VIP 裝備保護` 條目；
-- 不公開 30% 掉裝判定或 VIP20 攔截細節；
-- 10 名高維存在個體特化只說明「各自不同，詳細看 Boss 卡」；
-- Stage／共通能力不公開精確 ATK／DEF／百分比／門檻調參數值，詳細看 Boss 卡；
-- 高維競技場正式顯示為已開放，不得退回「尚未開放」；
-- 維度之弦／界弦核心／核心注入／高維稱號改成玩家導向說明，不公開 10億、0.50%、0.04% 等後台調參數值；
-- 既有養成／極簡模式／存檔文案移除 owner/runtime 等開發用語。
+- 移除獨立 VIP20 裝備保護條目；
+- 不公開掉裝機率／VIP20攔截細節；
+- 十王個體特化／Stage／Core 採玩家導向說明；
+- 不公開後台精確調參；
+- 高維競技場顯示為正式已開放；
+- 高維連續戰鬥的死亡上限由 `THIRD_WORLD_RUN_MAX_DEATHS` 動態讀取，因此 current 顯示500；
+- 極簡模式說明包含正式停止狀態與原因。
 
-`THIRD_WORLD_GUIDE_COPY_INTEGRITY_REPORT` 會檢查 stable ID、11個 replacement、2個 removal，以及 VIP20／30%／Stage／Core 後台數值是否重新洩漏。
+`THIRD_WORLD_GUIDE_COPY_INTEGRITY_REPORT` 防止 VIP／掉裝／Stage／Core 後台數值重新外洩。
 
-`gameguide.js` 仍保留 canonical game rules snapshot；玩家 W3 copy 由正式 extension layer 控制。不要再新增標題字串 monkey-patch。
+## 玩家稱號
 
----
-
-# 13. 玩家稱號
-
-正式 catalog 36個：銀河文明災厄10／宇宙文明災厄10／鏡像戰6／高維紀元10。
+正式 catalog 36個：銀河災厄10／宇宙災厄10／鏡像6／高維10。
 
 高維10階：破界初臨／維外行者／超界之軀／高維真形／萬維共鳴／界律共主／維序凌駕／超維至尊／諸維唯一／萬維之上。
 
-高維 renderer：
-
-```text
-player-title--higher-dimensional
-player-title--higher-dimensional-1 ... -10
-```
-
-正式視覺 owner：`playertitleshigherdimensional.css`。高維稱號是同級不同理念，不掛第一紀元 `tier-*`。
-
-Mirror 15～20 stable ABI 為 `player-title--mirror-v3`；六階字色／光感／殘影／aura 已拉開；Mirror異象層級仍高於高維稱號。
+高維 renderer 使用獨立 `player-title--higher-dimensional-*`；Mirror15～20 使用 `player-title--mirror-v3`，六階差異已拉開。
 
 ---
 
-# 14. W3 Dungeon／Mirror／Void／速度／特殊遭遇
+# 12. W3 Dungeon／Mirror／Void／速度／特殊遭遇
 
 W3 Dungeon：
 
@@ -544,9 +637,9 @@ void   → visible + enabled
 災厄   → 只保留W1/W2歷史回顧，不建W3災厄
 ```
 
-Mirror／Void 都是 shared owner，正式支援 world3；玩家文明最終傷害倍率照 current world；不改 W3 永久 Boss HP，不發 W3 主線 EXP／strings／Core／Story／Completion。
+Mirror／Void shared owner 正式支援 world3；文明 final damage 使用 current world；不改 W3 永久 Boss HP，不發 W3 主線 EXP／strings／Core／Story／Completion。
 
-Void 公式：
+Void：
 
 ```text
 HP  = ceil(100 + 9.6 × floor)
@@ -556,15 +649,18 @@ DEF = ceil(5 + 0.6 × floor)
 閃避基準8
 ```
 
-玩家速度：W1只1×；W2/W3可1×／1.5×；玩家不可2×。GM override仍可1×／1.5×／2×。
+玩家速度：W1只1×；W2/W3可1×／1.5×；玩家不可2×。GM override可1×／1.5×／2×。
 
-W3 special encounter 全面 fail-closed：不能建立有效 pending、reward=0、formal fight blocked。
+W3 special encounter formal flow fail-closed：不能建立有效 pending、reward=0、formal fight blocked。
 
 ---
 
-# 15. W3 高維競技場
+# 13. W3 高維競技場／W2 Arena
 
-正式模式：定相＝一輪三戰同一名隨機高維存在投影；異相＝三名不同投影、保證不重複。
+W3 Arena 正式模式：
+
+- 定相＝一輪三戰同一名隨機高維存在投影；
+- 異相＝三名不同投影、保證不重複。
 
 三戰倍率：
 
@@ -574,140 +670,76 @@ W3 special encounter 全面 fail-closed：不能建立有效 pending、reward=0�
 第三戰 HP 1.287  / Damage 1.2045 / DEF 1.353
 ```
 
-W3 Arena 不套 generic monster 30% crit/dodge cap；十名存在保留固定 specialization；不套 W3 主線 70%～10% 共通能力；界弦核心不參與 Arena。
+W3 Arena：
 
-一輪三戰：開始回滿HP；三戰間HP連續；輪結束回滿。每日 shared Arena limit 20；玩家可選 1／5／10／20 輪，不足次數 disabled，不自動縮短。
+- 不套 generic monster 30% crit/dodge cap；
+- 十名存在保留固定 specialization；
+- 不套 W3 主線 70%～10% 共通能力；
+- 界弦核心不參與；
+- 一輪三戰：開始回滿HP、三戰間HP連續、輪結束回滿；
+- shared Arena daily 20；玩家可選1／5／10／20輪；
+- Lv1000 points `300/400/800=1500`，每+100Lv全 stage points +5%；
+- transaction 支援 refresh／pagehide／中斷恢復；prepare成功後才扣daily，save fail rollback。
 
-Lv1000 base points：`300 / 400 / 800 = 1500`。每+100Lv全部stage points +5%。實得為 shared VIP積分並吃既有 VIP dungeon multiplier。
-
-W3 Arena transaction 支援 refresh／pagehide／中斷恢復：prepare成功後才扣daily；save fail rollback；active round中斷保留已消耗daily但清transaction並回滿HP，不追加其他處罰。
-
-GM 500輪測試直接委派 formal Arena player snapshot／enemy builder／civilization combat options，不維護平行公式。
-
----
-
-# 16. 宇宙紀元 Arena 高階平衡
-
-W2 Rank curve current：
+W2 Arena current：
 
 ```text
 x = Rank - 1
 HP     = 1.68 + 0.05x - 0.0027x²
 Damage = 1.52 + 0.04x - 0.0019x²
 DEF    = 1.11 + 0.022x - 0.00085x²
-```
-
-```text
 balanceVersion = 7
 rankBalanceVersion = 4
 ARENA_ASSESS_RUNS = 500
 ARENA_ASSESS_CLEAR_TARGET = 485 // 97%
 ```
 
-W2 Rank／position／trait 系統與 W3 Arena 完全分開。
+W2 Rank／position／trait 與 W3 Arena 分離。除非使用者明確要求，不自行調 Arena 平衡。
 
 ---
 
-# 17. GM 正式管理：最新三紀元政策
+# 14. GM 正式管理：三紀元政策
 
-## 17.1 正式養成合法範圍
+## 14.1 正式養成合法範圍
 
 | 系統 | W1 銀河 | W2 宇宙 | W3 高維 |
 |---|---|---|---|
 | 專精 | Lv0～60，可管理 | 固定Lv60 | 固定Lv60 |
 | 強化 | +0～+20，可管理 | +20～+40，可管理 | 固定+40 |
 | 印記 | 未取得／Lv0～10，可管理 | 固定Lv10 | 固定Lv10 |
-| 文明等級 | **整區不顯示** | Lv0～10，可管理 | 固定Lv10 |
+| 文明等級 | 整區不顯示 | Lv0～10，可管理 | 固定Lv10 |
 
-### fixed value UI 最新規則
+fixed value UI：純固定值 `<div class="gm-formal-fixed-value">`，不產生 select／下拉箭頭／套用按鈕；sandbox 不受影響。
 
-舊 handoff 的「disabled select＋disabled button」已失效。current main 最新規則：
+## 14.2 角色管理顯示政策
 
-- W2/W3 固定專精、固定印記，以及 W3 固定強化／文明，使用 **純固定值 `<div class="gm-formal-fixed-value">` 顯示**；
-- **不產生 `<select>`、沒有下拉箭頭、iOS 不會跳 picker、沒有正式套用按鈕**；
-- formal mutation 下層鎖仍保留；
-- GM test sandbox 完全不受影響：專精0～60、強化0～40、印記0～10、文明0～10。
-
-版本：
-
-```text
-GM_BATCH16_FORMAL_CONTROLS_VERSION = 1
-GM_BATCH16_FIXED_VALUE_UI_VERSION = 2
-GM_ENHANCEMENT_WORLD3_LOCK_VERSION = 1
-GM_ENHANCEMENT_WORLD3_FIXED_VALUE_UI_VERSION = 1
-```
-
-## 17.2 角色管理：紀元顯示政策
-
-**資源與主線進度只顯示「當前紀元」；歷史紀元產裝則累積保留供 GM 回測。**
-
-| 當前紀元 | 正式資源按鈕 | 正式進度按鈕 | 可產生裝備 |
+| 當前紀元 | 正式資源 | 正式進度 | 可產裝 |
 |---|---|---|---|
-| W1 | 指定金幣 | 指定銀河紀元解鎖進度 | 銀河 |
-| W2 | 指定暗物質＋指定暗能量 | 指定宇宙紀元進度 | 銀河＋宇宙 |
-| W3 | 指定維度之弦 | 指定高維紀元進度 | 銀河＋宇宙＋高維 |
+| W1 | 金幣 | 銀河 | 銀河 |
+| W2 | 暗物質＋暗能量 | 宇宙 | 銀河＋宇宙 |
+| W3 | 維度之弦 | 高維 | 銀河＋宇宙＋高維 |
 
-`GM_MANAGEMENT_PHASE_POLICY_VERSION = 1`。W1 完全隱藏文明等級 section；副本管理說明文字依 W1/W2/W3 phase-aware，不提前提未進入紀元。
+`GM_MANAGEMENT_PHASE_POLICY_VERSION = 1`。
 
-## 17.3 宇宙紀元正式進度管理
+### VIP 重置去重（2026-09-30）
 
-正式 owner：`secondworldprogressmanagement.js`
+角色管理原先也有「重置 VIP（等級＋積分）」按鈕，與獨立 VIP 管理重複。current main 已移除角色管理那顆，只保留 **VIP 管理**內的重置入口；`gmResetVip()` 函式仍保留供 VIP 管理使用，重置時維持原 HP 比例／滿血狀態語意。
 
-```text
-SECOND_WORLD_PROGRESS_MANAGEMENT_OWNER_VERSION = 1
-GM adapter version = 2
-```
+## 14.3 W2/W3 正式進度管理
 
-GM 輸入：**已擊破 Boss 數 0～100**。
+`secondworldprogressmanagement.js`：GM 輸入已擊破 Boss 數0～100，重建連續 bossKilled prefix、宇宙 Story completion、pending story、災厄出現條件；不改文明 trueKills／角色Lv／EXP／資源。
 
-重建時：
+`thirdworldprogressmanagement.js`：GM 輸入攻略完成度0～100%，十王統一永久 HP 完成度；正式 Stage／aggregate title／milestone story／Final completion 自然同步；不改角色Lv／EXP／strings／Core／裝備。
 
-- `secondWorld.mainline.bossKilled[100]` 重建成連續 true prefix；
-- 前 N 隻 Boss 對應的100段宇宙 Story completion 同步；
-- 往回調會移除超過進度的宇宙故事，但保留其他紀元 completedStories；
-- pending universe story 清除；
-- 呼叫 `normalizeSecondWorldCalamityState()` 讓災厄「出現」條件跟章末Boss同步；
-- **不改文明等級、不改災厄 trueKills／30場養成、不改角色等級／EXP／資源。**
+W3 intro defensive reconciliation：`story.introSeen===true || completedStories includes introId`。
 
-GM adapter 用 shared `runSettlementTransaction("gm-second-world-progress")` 落帳。
+## 14.4 GM Hub native late binding
 
-## 17.4 高維紀元正式進度管理
+`gmhubextensions.js` native sections 使用 `lateWindowRenderer(name)`；每次 render 才抓最新 `window.gm...Html`。不要改回 captured reference；已退休的 native replace workaround 不要加回。
 
-正式 owner：`thirdworldprogressmanagement.js`
+## 14.5 GM formal transaction
 
-```text
-THIRD_WORLD_PROGRESS_MANAGEMENT_OWNER_VERSION = 1
-GM adapter version = 2
-```
-
-GM 輸入：**攻略完成度 0～100% 整數**。
-
-重建方式：
-
-- 10 名 Boss 全部統一設定成相同完成度的永久剩餘 HP；
-- 個別 Stage 由正式 Boss HP owner 自然推導；
-- aggregate title tier、`story.unlockedStage`、高維 milestone stories、高維 titles 同步；
-- 100% 時同步 Final Story、`story.finalSeen=true`、`thirdWorld.completed=true`；
-- 往回調會收回超出目前 tier 的高維稱號與 milestone completion，但保留 W1/W2/Mirror 等其他稱號與故事；
-- 高維 intro 已看判定為 `thirdWorld.story.introSeen===true || completedStories includes introId`；往回調到0%不會誤清已看 intro；
-- **不改角色等級、EXP、維度之弦、Core Lv／progress、裝備、其他紀元資料。**
-
-GM adapter 用 shared `runSettlementTransaction("gm-third-world-progress")` 落帳。
-
-## 17.5 GM Hub renderer late binding
-
-`gmhubextensions.js` native sections 現在註冊 `lateWindowRenderer(name)`，每次 render 才讀取當下最新 `window.gm...Html`，不再在 registry 註冊時捕捉舊 function reference。
-
-```text
-GM_HUB_NATIVE_LATE_BINDING_VERSION = 1
-GM_HUB_NATIVE_LATE_BINDING_INTEGRITY_VERSION = 1
-```
-
-已退休：`gmbatch16formalcontrols.js`／`enhancementworld3gm.js` 針對 native section 的 `replaceGmHubSectionRenderer()` workaround。`replaceGmHubSectionRenderer()` API 本身保留給真正需要動態替換的 extension。
-
-## 17.6 GM 正式 transaction owner
-
-正式 owner：`gmformaltransaction.js`
+`gmformaltransaction.js`：
 
 ```text
 GM_FORMAL_TRANSACTION_OWNER_VERSION = 1
@@ -716,157 +748,263 @@ GM_FORMAL_DUNGEON_TRANSACTION_VERSION = 1
 GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION = 1
 ```
 
-正式資源：
-
-- W1 金幣；
-- W2 暗物質／暗能量；
-- W3 維度之弦；
-- 嚴格 phase guard，輸入必須為0以上整數；
-- 走 shared `runSettlementTransaction()`，save fail／mutation fail rollback。
-
-副本／VIP多欄位套用現在為單一 atomic transaction：VIP積分、懸賞daily used、Arena daily used、Void歷史最高、Void當日最高、Void claimed 一次落帳。
-
-「重置今日副本」現在單一 transaction 同步重置：懸賞／競技場／Void daily／Mirror daily；Void歷史最高、Mirror歷史最高與神蹟紀錄保留。transaction 中不再呼叫會自行中途 `save()` 的舊 wrapper，因此只在整批 mutation 成功後存一次。
-
-`GM_FORMAL_TRANSACTION_INTEGRITY` 會測 W1/W2/W3 資源 phase guard 與 dungeon atomic mutation。
+資源 phase guard：W1金幣、W2暗物質／暗能量、W3維度之弦。副本／VIP多欄位為 atomic transaction；daily reset 同步處理 bounty／arena／void／mirror daily，保留歷史最高／神蹟；save fail rollback。
 
 ---
 
-# 18. 第16批後與 2026-09-30 已完成的架構收斂
+# 15. GM 高維紀元戰力基準測試（2026-09-30 最新）
 
-以下不再列為 TODO：
+正式 adapter／owner：`gmpowerbenchmarkworldphase.js`。
 
-1. Save Hook convergence：Save Safety／Cloud metadata／W3 transient cleanup 走正式 hook registry；W3 save guard 不再包 `save()`。
-2. Save Safety／Migration Staircase：容量診斷、verified backup、future/legacy fail-closed、V1/V9/V15/V16 migration fixture regression 完成。
-3. Offline owner convergence：V4 canonical sample、每倍速8筆、legacy V1/V2 safe discard、V3→V4 migration、W1/W2/W3 sample consumer 收斂。
-4. Battle Pipeline cleanup：background lifecycle／Fast Catch-up／real battle timing／sample append／story-stop shared owner。
-5. World Transition single-install guards：bounty／offline phase guards 不重複安裝。
-6. Script Load Policy V3：GM／Story／Integrity deferred/low-priority；core/world startup critical。
-7. Legacy Global Alias cleanup：SAVE_VERSION／MAX_LEVEL read-compatible-no-duplicate-write。
-8. World Combat Adapter V1：Dungeon＋W2主線共用文明 final-damage → `runCombatCore()` adapter。
-9. Global Save Writer Audit：CI 永久掃描未授權 save writer。
-10. Runtime Browser Smoke：真實 Chromium 驗證正式頁面 owner、hooks、W3 Dungeon、Arena、Save、Offline、Adapter、Legacy alias。
-11. W3 玩家遊戲說明 stable item ID／player-copy／copy integrity 收斂。
-12. GM Hub native renderer late binding；native replace workaround 退休。
-13. W2/W3 GM progress rebuild 從 `gmtools.js` 收回正式 world progress management owner。
-14. GM 正式資源／副本 management 走 shared transaction／rollback owner。
-15. GM 管理頁三紀元 resource／progress／gear visibility policy 收斂。
+Current versions：
+
+```text
+GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION = 10
+GM_POWER_BENCHMARK_WORLD3_MAP_TEST_VERSION = 3
+GM_POWER_BENCHMARK_WORLD3_ANALYTICS_VERSION = 3
+GM_POWER_BENCHMARK_WORLD3_RESULT_CONSISTENCY_VERSION = 1
+GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION_VERSION = 1
+```
+
+## 15.1 地圖怪測試加入 W3
+
+「戰力基準測試 → 地圖怪」可切：銀河／宇宙／高維。
+
+W3 可選：
+
+- 10 名正式高維存在；
+- Stage 0～9；
+- 測試量100／1000場。
+
+Boss 名稱、HP／ATK／DEF／crit／dodge、固定五能力、specialization、Stage abilities 都直接讀正式：
+
+```text
+thirdWorldBoss()
+thirdWorldBossStats()
+thirdWorldBossAbilities()
+thirdWorldBossSpecializationPresentation()
+```
+
+實戰直接呼叫正式 `runThirdWorldBossCombat(..., ignoreUnlock:true)`，使用 GM sandbox player／專精／印記／文明；不 settlement、不寫正式十王永久 HP。
+
+## 15.2 W3 benchmark 核心報表
+
+第三紀元不再以「勝率」為主要平衡指標，正式顯示：
+
+- 平均每場永久削血；
+- 平均每回合削血；
+- 平均存活回合；
+- 測試總削血；
+- 等效 Boss HP 削減%；
+- **依目前 Stage 效率推估擊破**；
+- Stage0～8：預估推進下一 Stage；
+- Stage9：不顯示不存在的下一 Stage，改以擊破推估為準。
+
+## 15.3 玩家／Boss 五能力實測
+
+分別統計：
+
+- 先制；
+- 連擊；
+- 穿透；
+- 反擊；
+- 汲取；
+- 汲取回血量；
+- 玩家實際暴擊率／閃避率。
+
+先制統計同時接受：
+
+```text
+attack event + initiative
+或
+dodge event + initiative
+```
+
+因此第一擊被閃避不會漏算。
+
+## 15.4 Stage 能力實測
+
+依當前 Stage active abilities 統計：
+
+- 鎮心：實際阻止暴擊次數；
+- 壓制：實際阻止閃避次數；
+- 韌性：觸發次數＋累計減傷；
+- 復仇：ready／consume；
+- 反噬：觸發次數＋累計實際傷害；
+- 無視：觸發次數；
+- 戰意：啟動場數＋平均最高層數。
+
+## 15.5 result consistency／角色快照／失敗統計
+
+- W3 result 保存本次 run-time 角色快照；
+- GM 測試角色任何影響戰力的修改會透過 `gmPowerBenchmarkInvalidateSnapshot()` 同步清除舊 W3 result；
+- UI／複製摘要使用 result 內角色快照，避免新角色設定與舊結果混用；
+- 所有「每場平均」以 `completed` 有效完成場數為分母；
+- 顯示要求場數／有效完成／失敗場數／第一個失敗原因。
+
+## 15.6 統一複製摘要
+
+最下面「複製測試摘要」會把 W3 高維測試完整帶出：
+
+- 目標／Stage／個體特化／階段能力；
+- 本次角色快照；
+- 要求／有效／失敗場數；
+- 永久削血效率；
+- 擊破／下一 Stage 推估；
+- 玩家五能力；
+- Boss 五能力；
+- Stage 能力。
+
+可直接貼回 ChatGPT 做十王／Stage／角色配置比較。
+
+## 15.7 deterministic analytics regression
+
+`GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION` 會驗：
+
+- 五能力 event counting；
+- Stage ability counting；
+- dodge initiative contract；
+- completed 分母；
+- failed／firstFailureReason；
+- Stage9 summary 語意；
+- result invalidation；
+- 真正呼叫 `runThirdWorldBossCombat(ignoreUnlock)` 後正式 Boss `currentHp` 不變；
+- `effectivePermanentDamage = formalStartHp - combatEndHp` settlement basis 契約。
 
 ---
 
-# 19. 重要 bug 修正／風險收斂
+# 16. 最近完成的重要 bug 修正／風險收斂
 
-已完成的重要修正包括：
+以下已完成，不再列 TODO：
 
-1. W3 殘留 W2 裝備處理可能產暗物質／暗能量 → phase3 zero-resource。
+1. W3 殘留 W2 裝備可能產暗物質／暗能量 → phase3 zero-resource。
 2. W3 lost gear → 贖回UI hidden，VIP20 shared protection。
 3. Dungeon stale Universe 文案 → W3 phase-aware policy。
-4. bounty hidden 被舊 flex CSS 蓋回 → `display:none!important`。
+4. bounty hidden 被舊 flex CSS 蓋回 → hidden policy固定。
 5. W3 Guide 誤吃 Universe guide／數值漂移 → phase resolver＋canonical snapshot。
-6. Fast Catch-up → 只加速等待／演出，不額外發收益。
-7. Offline migration mismatch → canonical V4 owner 與 migration policy 完成。
+6. Fast Catch-up 只加速等待／演出，不額外發收益。
+7. Offline migration mismatch → canonical V4 owner。
 8. W2 Arena Rank9 解鎖風險 → Balance7／RankBalance4。
 9. Schema16 W3 Story 開發 refs 冒充完成 → content-version migration。
 10. W3 completion 雙 owner → shared Story Progress 唯一權威。
 11. W3 combat speed 不一致 → 玩家W2/W3只1×／1.5×，GM才2×。
-12. W3 special encounter 漏入 → formal flow fail-closed。
-13. Mirror／Void 原只辨識W1/W2 → 正式支援W3與文明倍率。
+12. W3 special encounter 漏入 → fail-closed。
+13. Mirror／Void 原只辨識W1/W2 → 正式支援W3。
 14. 高維稱號誤用銀河tier視覺 → 獨立高維CSS／renderer。
-15. Mirror 15～20差異不足 → 六階presentation拉開。
-16. W3 Arena placeholder → 正式定相／異相玩法。
-17. Arena refresh/pagehide daily／HP/runtime風險 → transaction recovery。
-18. Arena prepare失敗先扣daily → prepare後才consume，save fail rollback。
-19. Arena reward owner缺失 → fail-closed。
-20. GM W3 Arena平行公式 → 委派正式Core。
-21. GM W3 benchmark文明Lv10未吃×1.50 → 已修正。
-22. Arena UI dynamic style → `thirdworldarena.css`正式owner。
-23. W3 Dungeon／Title舊 executable compatibility owner → runtime owner退休。
-24. W3強化正式管理曾讓W3可20～40 → W3固定+40。
-25. W3文明正式管理曾讓W3可0～10 → W3固定Lv10。
-26. W2/W3專精／印記 fixed value UI仍可點 → **改成純固定值 div、無 select、無套用按鈕**。
-27. GM Hub registry 曾保存舊 renderer reference，導致 iOS 還跳 picker → native late binding，replace workaround退休。
-28. `compatibilityowners.js`重複寫 `window.MAX_LEVEL` → duplicate write退休。
-29. `thirdworldcombatsaveguard.js`後載再包 `save()` → before-save hook。
-30. Save Safety Browser Smoke 曾檢查錯 hook ID → 對齊正式 `save-capacity-diagnostic`。
-31. Save writer audit 曾把區域變數／測試字串誤判 global writer → 精確白名單／排除 false-positive。
-32. GM 角色管理在 W2/W3 顯示錯紀元資源／銀河進度 → current-phase resource/progress policy。
-33. W1 提前顯示「文明等級管理」 → W1整區隱藏。
-34. 副本 GM 說明提前暴露高紀元 → phase-aware copy。
-35. W2 缺正式「指定宇宙紀元進度」 → `secondworldprogressmanagement.js` owner＋Story sync。
-36. W3 缺正式「指定高維紀元進度」 → `thirdworldprogressmanagement.js` owner＋Boss HP／Title／Story sync。
-37. W3 GM progress 早期 Schema16 `introSeen=true` 但 completedStories缺 intro 時可能被清 → OR-compatible defensive reconciliation。
-38. GM 資源／副本多欄位直接 mutation、wrapper 中途save可能半套落帳 → `gmformaltransaction.js` atomic transaction。
-39. GM「產生高維紀元裝備」缺失 → 正式 factory、只傳說／神話、預設神話。
-40. W3 玩家 Guide 仍洩漏 VIP20／30%／Stage／Core 後台調參 → stable ID player-copy＋integrity 防退化。
+15. Mirror15～20差異不足 → 六階presentation拉開。
+16. W3 Arena placeholder → 正式定相／異相。
+17. Arena refresh/pagehide／prepare/save rollback 風險 → transaction recovery。
+18. GM W3 Arena平行公式 → 委派正式 Core。
+19. W3固定專精／印記／強化／文明曾可點 → 純 fixed-value UI。
+20. GM Hub registry 捕捉舊 renderer → native late binding。
+21. `compatibilityowners.js`重複寫 `window.MAX_LEVEL` → duplicate write退休。
+22. W3 save guard 再包 `save()` → before-save hook。
+23. GM resource/progress顯示錯紀元 → current-phase policy。
+24. W2/W3 缺正式進度管理 → world progress management owner。
+25. GM 正式多欄位直接 mutation／中途save → atomic transaction。
+26. GM 高維裝備產生缺失 → 正式 factory／legendary+mythic。
+27. W3 Guide 洩漏 VIP／Stage／Core 後台數值 → stable-ID copy integrity。
+28. 角色管理與 VIP 管理重複「重置 VIP」 → 角色管理移除，只留 VIP 管理。
+29. W3 開背包返回主畫面而非高維戰線 → `third-world-main` return context。
+30. 開高維極簡模式會讓 run 誤判 runtime conflict 而停止 → own minimal mode guard。
+31. 5%戰線／Stage等正式 terminal 在極簡畫面看似卡死 → 大黃字「戰鬥已停止」＋中文原因。
+32. 100死節奏過快 → 正式改為500死；0.5%／0.04% 同比例改為0.100%／0.008%。
+33. HP cap 顯示 `99.098%` 等整數反推誤差 → 直接讀正式 `hpCapPercent`，顯示三位小數。
+34. 敵方先制／穿透無飄字、enemy drain錯補玩家、Boss印記FX錯側 → combat presentation actor-aware／owner-aware。
+35. GM 地圖怪測試沒有 W3 十王 → 加入十王＋Stage0～9。
+36. W3 benchmark 原本勝率／Boss剩餘HP等指標無意義 → 改永久削血效率／能力事件統計。
+37. W3 benchmark 角色設定改後可能混用舊結果 → shared invalidation＋run-time character snapshot。
+38. benchmark 平均值使用要求 runs 而非有效 completed → 全部改 completed 分母並新增失敗統計。
+39. 「預估擊破」容易誤認全程精準 → 明確標示依目前 Stage 效率推估；Stage9不顯示下一Stage。
+40. 先制第一擊被閃避會漏算 → dodge event 加 `initiative`＋benchmark counter更新。
+41. W3 benchmark integrity過淺 → deterministic analytics regression＋正式 Boss HP non-mutation regression。
 
 ---
 
-# 20. 尚未完成／未來可優化
+# 17. 尚未完成／未來可優化
 
-以下才是 current main 真正尚未完成或有意延後的項目；**不要把已完成的第16批、優化1～6、或 2026-09-30 GM／Guide 4批重新做一次。**
+以下才是 current main 真正尚未完成或有意延後的項目；不要重做上面已完成項目。
 
-## 20.1 已知技術債／可再優化
+## 17.1 已知技術債／可再優化
 
 1. **Offline save compatibility wrapper**  
-   `offlineprogress.js` 仍是唯一經 audit 允許的 save wrapper。未來若要完全零 wrapper，先擴充 Save Hook Core 提供「skip base write but success」或等價 primitive，再以 Browser regression 證明 offline settlement／heartbeat／pagehide 完全等價。
+   `offlineprogress.js` 仍是唯一經 audit 允許的 save wrapper。若要完全零 wrapper，先擴充 Save Hook Core 提供等價 primitive，再做 Browser regression。
 
 2. **World Transition compatibility guards**  
-   `worldtransitionsafety.js` 仍以 single-install wrapper 為 bounty／W2 Offline begin/finish sample 補 phase gate。只有對應正式 owner 有原生 phase gate 後才可移除。
+   `worldtransitionsafety.js` 仍以 single-install compatibility guard 補 bounty／W2 Offline phase gate；只有正式 owner 有原生 phase gate 後才可移除。
 
 3. **SaveVersionGuard late wrappers**  
    resetGame／GM import safety backup guard、load／migrate compatibility wrapper 仍在 `saveversionguard.js`；屬資料保護層，不可為形式上的零 wrapper直接刪除。
 
 4. **W3 主線 Combat Adapter 共用化**  
-   若要把 W3 主線切 `runWorldCombatCore()`，必須先建立 fixed-RNG＋formalStartHp/combatEndHp＋death settlement regression，證明永久削血、汲取上限、stale guard、rollback 完全不變。
+   若要切 `runWorldCombatCore()`，必須先建立 fixed-RNG＋formalStartHp/combatEndHp＋death settlement regression，證明永久削血、汲取上限、stale guard、rollback完全不變。
 
-5. **效能／載入後續觀察**  
-   Script Load Policy V3 已完成第一輪分組；後續以手機實機載入、首次互動、GM頁／Story頁體感決定是否再 code-split／defer。
+5. **手機實機效能／載入觀察**  
+   Script Load Policy V3 已完成第一輪分組；後續依手機首次互動、GM頁／Story頁體感決定是否再 code-split／defer。
 
-6. **GM Hub 檔案責任仍偏大（低優先）**  
-   `gmhub.js` 同時承擔三紀元角色管理 UI、產裝與多種 test renderer；未來若有第四紀元或管理功能再增長，可考慮每世界提供管理 fragment renderer，再由 Hub 組裝。現況功能正常，不急拆。
+6. **GM Hub 檔案責任偏大（低優先）**  
+   若未來管理功能再大幅增加，可考慮每世界提供 fragment renderer；現況功能正常，不急拆。
 
 7. **formal fixed-value inline style（低優先）**  
-   `gm-formal-fixed-value` 仍含少量 inline style；未來可純 CSS class 化。這只是整潔度，不是功能問題。
+   可日後純 CSS class 化，屬整潔度。
 
-## 20.2 設計上尚未定案
+8. **500死玩家層少量 numeric fallback（低優先）**  
+   `thirdworldui.js`／`thirdworldplayerflow.js` 仍保留 `THIRD_WORLD_RUN_MAX_DEATHS || 500` 類 fail-safe；正式正常路徑都讀 owner。若未來常改上限，可再收斂成單一 accessor；目前不是功能 bug。
+
+9. **GM W3 1000場效能（低優先，只有實測卡頓才做）**  
+   每場正式 `runThirdWorldBossCombat()` 仍建立完整 result／events／diagnostics。若手機 GM 1000場明顯卡，可考慮在正式 combat owner 增加 compact diagnostics option；不得另抄戰鬥公式。
+
+## 17.2 設計上尚未定案
 
 1. 低維輪迴／轉生／reset 系統尚未定案，不可自行新增。
-2. 10 名高維存在、W3 Arena、W2 Arena 最終數值若要再調整，必須依使用者正式實測資料；目前 main 係數視為正式現況。
+2. 十名高維存在、W3 Arena、W2 Arena 最終數值若要再調整，必須依使用者正式實測資料；目前 main 係數視為正式現況。
 3. 額外 W3 背景／動畫／視覺特效未另行定案，不自行擴充。
 4. 不新增 W3 特殊怪、專精、印記、文明、強化、強化石、怪物特性、文明災厄第二套系統。
 5. 已完成的11篇／322頁 W3 Story 不得自行覆寫。
 
 ---
 
-# 21. Integrity／CI 現況
+# 18. Integrity／CI 現況
 
-current functional HEAD `2d57568b4f19a78c291561c15c5db79223fe2cf9`：
+current functional HEAD：
 
-- Runtime Integrity #1200：success；
-- 真實 Chromium Browser Runtime Smoke：success；
+```text
+977d0bccbb61d65034b0180428a995809922f55c
+```
+
+exact-head：
+
+- Runtime Integrity #1233：success；
+- real Browser Runtime Smoke：success；
 - Unlimited VIP integrity：success；
 - GM mainline HP lock integrity：success；
 - Background asset integrity：success；
 - Project documentation integrity：success；
-- Story Integrity #887：success；
-- Pages build and deployment #5141：success。
+- Story Integrity #902：success；
+- Pages build and deployment #5174：success。
 
-本輪新增／重要 integrity：
+近期重要 integrity／regression：
 
 ```text
 THIRD_WORLD_GUIDE_COPY_INTEGRITY
+THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY
+THIRD_WORLD_RUN_INTEGRITY（500死／0.100／0.008）
+COMBAT_ACTOR_AWARE_PRESENTATION_INTEGRITY
+COMBAT_DODGE_INITIATIVE_EVENT_VERSION
 GM_HUB_NATIVE_LATE_BINDING_INTEGRITY
 SECOND_WORLD_PROGRESS_MANAGEMENT_INTEGRITY
 THIRD_WORLD_PROGRESS_MANAGEMENT_INTEGRITY
 GM_FORMAL_TRANSACTION_INTEGRITY
+GM_POWER_BENCHMARK_WORLD3_MAP_TEST_INTEGRITY
+GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION
 GMBATCH16 / enhancement / civilization existing regressions
 ```
 
-任何未來功能修改仍要以 exact current HEAD Actions 回傳為準，不可沿用本節舊綠燈宣稱新提交已綠。
+未來任何功能修改仍以 exact current HEAD Actions 為準，不得沿用本節綠燈宣稱新提交已綠。
 
 ---
 
-# 22. current main 重要 owner 索引
+# 19. current main 重要 owner 索引
 
 ## World／W3
 
@@ -880,16 +1018,20 @@ thirdworldcombat.js
 thirdworldprogress.js
 thirdworldrun.js
 thirdworldplayerflow.js
+thirdworldui.js
+inventoryfocus.js
 thirdworldcombatsaveguard.js
 thirdworldmigrationregression.js
 thirdworldintegritycontract.js
 ```
 
-## Combat／Battle
+## Combat／Battle／Presentation
 
 ```text
 combatcore.js
 combatmath.js
+combatfx.js
+combatfxintegrity.js
 battlepipeline.js
 dungeoncore.js
 secondworldcombat.js
@@ -908,38 +1050,25 @@ offlineworld3adapter.js
 thirdworldcombatsaveguard.js
 ```
 
-## Guide
+## Guide／Story／Title
 
 ```text
 gameguide.js
 thirdworldguidecopy.js
 mirrordungeonguide.js
 cloudsaveguide.js
-```
-
-## Story
-
-```text
 storyprogress.js
 storymigration.js
 storyui.js
 storyrecordtabs.js
 storyruntimeintegrity.js
 storydata-higher-dimensional*.js
-```
-
-## Title
-
-```text
 playertitlecore.js
 playertitlerenderer.js
 playertitleui.js
-playertitles.css
-playertitlesera.css
-playertitlesmirror.css
 playertitleshigherdimensional.css
+playertitlesmirror.css
 playertitleintegrity.js
-playertitlegmpreview.js
 ```
 
 ## Dungeon／Mirror／Void／Arena
@@ -963,7 +1092,7 @@ specialencounter.js
 combatspeed.js
 ```
 
-## GM formal／sandbox／progress management
+## GM formal／sandbox／benchmark
 
 ```text
 gmhub.js
@@ -993,7 +1122,7 @@ thirdworldarenagm.js
 
 ---
 
-# 23. 目前正式完成鏈
+# 20. 目前正式完成鏈
 
 ```text
 W1/W2 existing formal game
@@ -1002,14 +1131,16 @@ W1/W2 existing formal game
 → 10名高維存在 / Stage / abilities / 5% front
 → permanent-damage combat / settlement
 → strings / String Core / loot / offline
-→ 100-death continuous run / Fast Catch-up / review
+→ 500-death continuous run / Fast Catch-up / review
+→ minimal-mode terminal presentation / 3-decimal HP cap
+→ W3 inventory explicit return context
 → Story Framework / 11篇322頁 / Final completion
 → Story content migration / completion owner convergence
 → high-dimensional title / Mirror15～20 visuals
 → W3 Dungeon / Mirror / Void / special fail-closed
 → W3 Arena formal Core / UI / transaction recovery / GM500-run
 → 第16批 GM formal phase lock
-→ pure fixed-value formal UI（無select／無套用）
+→ pure fixed-value formal UI
 → Save Hook / Save Safety / Migration Staircase
 → Offline V4 owner convergence
 → Battle Pipeline cleanup
@@ -1021,23 +1152,28 @@ W1/W2 existing formal game
 → real Chromium Runtime Smoke
 → W3 player Guide stable-ID copy / integrity
 → GM phase-aware resource/progress/gear visibility
-→ W3 GM gear generator（legendary/mythic，default mythic）
-→ W2 formal progress management owner
-→ W3 formal progress management owner
+→ W3 GM gear generator
+→ W2/W3 formal progress management owner
 → GM Hub native renderer late binding
 → GM formal resource/dungeon transaction owner
+→ duplicate VIP reset removed from Character Management
+→ combat presentation actor-aware / owner-aware
+→ W3 GM benchmark: 10 bosses / Stage0～9 / 100-1000 runs
+→ permanent-damage / five-ability / Stage-ability analytics
+→ result snapshot invalidation / completed denominator / failure reporting
+→ dodge initiative event contract / deterministic W3 analytics regression
 → exact-head Runtime / Story / Pages green
 ```
 
-目前沒有下一個必做的「功能批次」。下一階段以實機遊玩、數值觀察、使用者指定的新功能，或第20節列出的延後技術債為主。
+目前沒有下一個必做的功能批次。下一階段以實機遊玩、十王與各 Stage 數值觀察、使用者指定的新功能，或第17節延後技術債為主。
 
 ---
 
-# 24. 下一個對話如何接手（標準指令）
+# 21. 下一個對話如何接手（標準指令）
 
 新對話若只要承接、先不修改，直接貼：
 
-> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 current `main` 的實際程式碼，完整承接《文明戰線》專案。`main` 是唯一真實來源，不要只靠 handoff、舊對話或舊設計文件。請先確認 current main 的正式 owner、Save／Offline／Combat／GM／Arena／Story／Guide／Integrity 現況，以及 handoff 第20節真正尚未完成／未來可優化項目。現在先不要修改，只回報承接狀態與你重新檢查後的現況。
+> 讀取 `franksky1207/rpg` 的 `PROJECT_HANDOFF.md`，再重新檢查 current `main` 的實際程式碼，完整承接《文明戰線》專案。`main` 是唯一真實來源，不要只靠 handoff、舊對話或舊設計文件。請先確認 current main 的正式 owner、Save／Offline／Combat／第三紀元500死連戰／背包返回／極簡模式／GM高維benchmark／Arena／Story／Guide／Integrity 現況，以及 handoff 第17節真正尚未完成／未來可優化項目。現在先不要修改，只回報承接狀態與你重新檢查後的現況。
 
 若之後使用者要求修改，標準施工原則：
 
