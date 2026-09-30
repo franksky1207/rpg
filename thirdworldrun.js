@@ -13,7 +13,7 @@
  const RUN_TOTALS_VERSION=1;
  const RUN_IDENTITY_VERSION=1;
  const EXCEPTION_CLEANUP_VERSION=1;
- const INTEGRITY_VERSION=8;
+ const INTEGRITY_VERSION=9;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
  const SHARED_INFRA_STRICT_VERSION=1;
  const CORE_RUN_SNAPSHOT_VERSION=1;
@@ -24,6 +24,8 @@
  const FOREGROUND_WAIT_VERSION=1;
  const BACKGROUND_POLICY_VERSION=1;
  const VIP20_DEATH_PROTECTION_VERSION=1;
+ const OWN_MINIMAL_MODE_GUARD_VERSION=1;
+ const OWN_MINIMAL_MODE_ADAPTER_ID="third-world-mainline";
  const MAX_DEATHS=100;
  const BASE_SUPPRESSION_PER_DEATH=.50;
  const CORE_REDUCTION_PER_LEVEL=.04;
@@ -51,6 +53,13 @@
  }
  function gmBackgroundEnabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function environmentIsBackground(){return typeof window.backgroundProgressEnvironmentIsBackground==="function"&&window.backgroundProgressEnvironmentIsBackground()===true;}
+ function ownMinimalModeActive(){return typeof window.isMinimalModeOpen==="function"&&window.isMinimalModeOpen()===true&&typeof window.getMinimalModeAdapterId==="function"&&String(window.getMinimalModeAdapterId()||"")===OWN_MINIMAL_MODE_ADAPTER_ID;}
+ function normalizeRuntimeConflict(status,allowOwnMinimal=ownMinimalModeActive()){
+  const raw=status&&typeof status==="object"?status:{blocked:true,blockers:["runtime-status-missing"],activeBackgroundKind:null};
+  const blockers=(Array.isArray(raw.blockers)?raw.blockers:[]).map(reason=>String(reason||"")).filter(Boolean);
+  const filtered=allowOwnMinimal?blockers.filter(reason=>reason!=="minimal-mode-open"):blockers;
+  return freeze({...raw,blocked:filtered.length>0||raw.blocked===true&&blockers.length===0,blockers:freeze(filtered.slice())});
+ }
  function coreMaxLevel(){return Math.max(0,finiteWhole(window.THIRD_WORLD_CORE_MAX_LEVEL,0));}
  function coreLevel(target=currentState()){return clamp(finiteWhole(target?.thirdWorld?.coreLevel,0),0,coreMaxLevel());}
  function suppressionPerDeathPoints(value=coreLevel()){
@@ -108,7 +117,7 @@
  function runtimeConflictStatus(){
   const infra=runInfra();
   if(!infra)return freeze({blocked:true,blockers:freeze(["continuous-run-infrastructure-missing"]),activeBackgroundKind:null});
-  return infra.conflictStatus(BLOCKER_NAME);
+  return normalizeRuntimeConflict(infra.conflictStatus(BLOCKER_NAME));
  }
  function stopBackgroundFlow(){const infra=runInfra();return infra?infra.stopBackground():false;}
  function startBackgroundFlow(){const infra=runInfra();return infra?infra.startBackground():null;}
@@ -314,12 +323,16 @@
  function validate(){
   const errors=[];
   const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000),hOverride=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000,0),life=battleOptions({},freeze({hpCap:777})),backgroundPolicy=backgroundPolicySnapshot();
+  const ownMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open"],activeBackgroundKind:FLOW_KIND},true);
+  const foreignMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open"],activeBackgroundKind:FLOW_KIND},false);
+  const mixedMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open","arena-active"],activeBackgroundKind:FLOW_KIND},true);
   if(maxCore!==10)errors.push({code:"CORE_MAX_OWNER",maxCore});
   if(p0!==.5||pMax!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,pMax,maxCore});
   if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,hMax});
   if(hMid.perDeathSuppressionPoints!==.3||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
   if(hOverride.coreLevel!==0||hOverride.hpCapPercent!==50||hOverride.hpCap!==5000)errors.push({code:"RUN_START_CORE_OVERRIDE",hOverride});
   if(life.startHp!==777||life.playerHealCap!==777)errors.push({code:"HP_LIFECYCLE_CAP",life});
+  if(ownMinimalProbe.blocked||ownMinimalProbe.blockers.length!==0||foreignMinimalProbe.blocked!==true||foreignMinimalProbe.blockers[0]!=="minimal-mode-open"||mixedMinimalProbe.blocked!==true||mixedMinimalProbe.blockers.length!==1||mixedMinimalProbe.blockers[0]!=="arena-active")errors.push({code:"OWN_MINIMAL_MODE_GUARD",ownMinimalProbe,foreignMinimalProbe,mixedMinimalProbe});
   if(terminalReasonForStep("stage-crossed",true,true)!=="stage-crossed"||terminalReasonForStep("",true,true)!=="progress-event"||terminalReasonForStep("",false,true)!=="death-limit"||terminalReasonForStep("",false,false)!=="")errors.push({code:"TERMINAL_PRECEDENCE"});
   const persistent=Array.from(window.THIRD_WORLD_PERSISTENT_KEYS||[]);
   if(["deaths","suppression","run","runId","targetBossIndex","pendingEvents","recentBattles","lastBattleSummary","lastFinishedRun","lastFinishedRuntime","coreLevelAtStart","perDeathSuppressionPointsAtStart","runTotals"].some(key=>persistent.includes(key)))errors.push({code:"TRANSIENT_PERSISTENCE_LEAK",persistent});
@@ -329,6 +342,7 @@
   if(typeof window.thirdWorldCoreSnapshot!=="function"||typeof window.upgradeThirdWorldCore!=="function"||window.THIRD_WORLD_CORE_INTEGRITY?.passed!==true)errors.push({code:"CORE_PROGRESSION_OWNER_MISSING"});
   if(typeof window.backgroundProgressActiveKind!=="function"||typeof window.worldTransitionRuntimeStatus!=="function")errors.push({code:"ACTIVE_FLOW_GUARD_OWNER_MISSING"});
   if(typeof window.backgroundProgressEnvironmentIsBackground!=="function"||typeof window.backgroundProgressOnEnvironmentChange!=="function"||typeof window.gmBackgroundBattleEnabled!=="function")errors.push({code:"BACKGROUND_GM_GATE_OWNER_MISSING"});
+  if(typeof window.isMinimalModeOpen!=="function"||typeof window.getMinimalModeAdapterId!=="function")errors.push({code:"MINIMAL_MODE_OWNER_MISSING"});
   if(backgroundPolicy?.version!==BACKGROUND_POLICY_VERSION||backgroundPolicy?.waitsForForeground!==!gmBackgroundEnabled())errors.push({code:"BACKGROUND_POLICY_SNAPSHOT",backgroundPolicy});
   if(typeof window.backgroundProgressOnPageHide!=="function"||pageHideSubscribed!==true)errors.push({code:"PAGEHIDE_OWNER_MISSING"});
   if(typeof window.registerWorldTransitionRuntimeBlocker!=="function"||blockerRegistered!==true)errors.push({code:"RUNTIME_BLOCKER_OWNER_MISSING"});
@@ -344,8 +358,8 @@
   if(!/gmBackgroundEnabled\(\).*startBackgroundFlow/.test(startSource)||!/else stopBackgroundFlow/.test(startSource))errors.push({code:"BACKGROUND_GM_GATE_WIRING"});
   if(!/waitForForegroundIfBackgroundDisabled/.test(loopSource))errors.push({code:"FOREGROUND_WAIT_WIRING"});
   if(!/lastFinishedRuntime=finishedSnapshot/.test(clearSource)||lastFinishedRunSnapshot()!==null)errors.push({code:"LAST_FINISHED_SNAPSHOT_WIRING"});
-  if(!/continuous-run-infrastructure-missing/.test(conflictSource))errors.push({code:"STRICT_SHARED_INFRA_WIRING"});
-  return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,runIdentityVersion:RUN_IDENTITY_VERSION,exceptionCleanupVersion:EXCEPTION_CLEANUP_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
+  if(!/continuous-run-infrastructure-missing/.test(conflictSource)||!/normalizeRuntimeConflict/.test(conflictSource))errors.push({code:"STRICT_SHARED_INFRA_WIRING"});
+  return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,ownMinimalModeGuardVersion:OWN_MINIMAL_MODE_GUARD_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,runIdentityVersion:RUN_IDENTITY_VERSION,exceptionCleanupVersion:EXCEPTION_CLEANUP_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
  function onPageHide(){if(runtime?.active)clearRuntime("pagehide");}
@@ -378,6 +392,7 @@
  window.THIRD_WORLD_RUN_BACKGROUND_GM_GATE_VERSION=BACKGROUND_GM_GATE_VERSION;
  window.THIRD_WORLD_RUN_FOREGROUND_WAIT_VERSION=FOREGROUND_WAIT_VERSION;
  window.THIRD_WORLD_RUN_BACKGROUND_POLICY_VERSION=BACKGROUND_POLICY_VERSION;
+ window.THIRD_WORLD_RUN_OWN_MINIMAL_MODE_GUARD_VERSION=OWN_MINIMAL_MODE_GUARD_VERSION;
  window.THIRD_WORLD_RUN_MAX_DEATHS=MAX_DEATHS;
  window.THIRD_WORLD_RUN_RECENT_HISTORY_LIMIT=RECENT_HISTORY_LIMIT;
  window.THIRD_WORLD_SUPPRESSION_BASE_POINTS=BASE_SUPPRESSION_PER_DEATH;
