@@ -1,11 +1,11 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const CORE_UI_VERSION=3;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
  const RUN_ENTRY_UI_VERSION=1;
  const THREE_COLUMN_HEADER_VERSION=1;
- const COMBAT_PAGE_UI_VERSION=2;
+ const COMBAT_PAGE_UI_VERSION=3;
  const REVIEW_UI_VERSION=2;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
@@ -138,7 +138,7 @@
  function combatPageHtml(){
   const ctx=playerFlowContext(),combat=ctx?.currentCombat;if(!ctx||!combat)return "";
   const maxDeaths=runMaxDeaths(),deaths=Math.min(maxDeaths,whole(ctx.deaths)),round=Math.max(1,whole(ctx.battleNumber||1));
-  const playerBaseMax=Math.max(1,whole(combat.playerMaxHp)),playerCap=Math.max(1,Math.min(playerBaseMax,whole(combat.playerHealCap||playerBaseMax))),playerStart=Math.max(0,Math.min(playerCap,whole(combat.playerStartHp??playerCap))),playerPct=playerCap?Math.max(0,Math.min(100,playerStart/playerCap*100)):0,capPercent=playerBaseMax?playerCap/playerBaseMax*100:100;
+  const playerBaseMax=Math.max(1,whole(combat.playerMaxHp)),playerCap=Math.max(1,Math.min(playerBaseMax,whole(combat.playerHealCap||playerBaseMax))),playerStart=Math.max(0,Math.min(playerCap,whole(combat.playerStartHp??playerCap))),playerPct=playerCap?Math.max(0,Math.min(100,playerStart/playerCap*100)):0,capPercent=Number.isFinite(Number(ctx.hpCapPercent))?Math.max(0,Math.min(100,n(ctx.hpCapPercent))):(playerBaseMax?playerCap/playerBaseMax*100:100);
   const enemyMax=Math.max(1,whole(combat.enemyMaxHp||combat.e?.hp||1)),enemyStart=Math.max(0,Math.min(enemyMax,whole(combat.enemyStartHp??enemyMax))),enemyPct=enemyMax?Math.max(0,Math.min(100,enemyStart/enemyMax*100)):0;
   const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1,speedText=[1,1.5,2].includes(speed)?speed:1,bossName=String(ctx.bossName||combat.e?.name||"高維存在");
   return `<section class="combat-screen third-world-combat-screen"><div class="combat-head main-minimal-mode-head third-world-combat-head"><span class="main-minimal-mode-head-label third-world-combat-head-label"><span>高維連戰・第 ${round} 場</span><small>死亡 ${deaths} / ${maxDeaths}｜目前最大 HP ${suppressionPct(capPercent)}｜${speedText}×</small></span><button type="button" class="main-minimal-mode-enter" onclick="openThirdWorldMinimalMode()">極簡模式</button></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${whole(state?.level)}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(playerStart)} / ${fmt(playerCap)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${bossName}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${enemyPct}%"></span></div></div></div></div><div class="combat-message" id="combatMessage">高維連戰進行中</div><div class="continuous-stop-wrap"><button class="btn danger" onclick="stopThirdWorldRunFromPlayerUi()">停止連續戰鬥</button></div></section>`;
@@ -172,6 +172,7 @@
   const playerCopy=[challengePresentation({challengeStatus:{allowed:true,reason:"last-survivor"}}).detail,challengePresentation({challengeStatus:{allowed:true,reason:"within-five-point-front"}}).detail,combatRuleHtml()].join(" ");
   if(playerCopy.includes("5pp")||playerCopy.includes("100 次死亡"))errors.push("PLAYER_RULE_COPY_STALE");
   const p1=suppressionPerDeath(1);if(p1!==.092||`${p1.toFixed(3)}%`!=="0.092%")errors.push("SUPPRESSION_THREE_DECIMAL_PRESENTATION");
+  const combatSource=Function.prototype.toString.call(combatPageHtml);if(!combatSource.includes("ctx.hpCapPercent"))errors.push("COMBAT_HP_CAP_FORMAL_PERCENT_OWNER");
   return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,coreConfirmationVersion:CORE_CONFIRMATION_VERSION,runEntryUiVersion:RUN_ENTRY_UI_VERSION,threeColumnHeaderVersion:THREE_COLUMN_HEADER_VERSION,combatPageUiVersion:COMBAT_PAGE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
