@@ -68,6 +68,7 @@
   return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
  window.THIRD_WORLD_PROGRESS_MANAGEMENT_OWNER_VERSION=VERSION;
+ window.GM_THIRD_WORLD_PROGRESS_MANAGEMENT_VERSION=1;
  window.thirdWorldProgressManagementClamp=clampPercent;
  window.thirdWorldProgressManagementSnapshot=snapshot;
  window.rebuildThirdWorldFormalProgress=rebuild;
