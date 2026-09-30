@@ -12,8 +12,8 @@
   return target?.thirdWorld?.entered===true?3:target?.secondWorld?.entered===true?2:1;
  }
  function finiteInt(value,min=0,max=Number.MAX_SAFE_INTEGER){
-  const number=Number(value),n=Math.floor(number);
-  return Number.isFinite(number)&&Number.isInteger(number)&&n>=min&&n<=max?n:null;
+  const number=Number(value);
+  return Number.isFinite(number)&&Number.isInteger(number)&&number>=min&&number<=max?number:null;
  }
  function replaceRecord(target,next){
   if(!target||typeof target!=="object"||Array.isArray(target)||!next||typeof next!=="object"||Array.isArray(next))return false;
@@ -21,15 +21,9 @@
   Object.assign(target,next);
   return true;
  }
- function transaction(label,mutate,{renderAfter=true}={}){
-  if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"transaction-owner-missing",rolledBack:false,saved:false,label};
-  const result=window.runSettlementTransaction({label,mutate});
-  if(result?.ok&&renderAfter&&typeof render==="function")render();
-  return result;
- }
- function transactionError(name,result){
-  alert(`${name}更新失敗：${result?.reason||result?.value?.reason||"未知錯誤"}`);
-  return false;
+ function run(label,mutate){
+  if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",rolledBack:false,saved:false,label:String(label||"")});
+  return window.runSettlementTransaction({label,mutate});
  }
 
  function applyResource(kind,value,target=state){
@@ -51,14 +45,7 @@
   }else return {ok:false,reason:"unknown-resource"};
   return {ok:true,kind,value:amount,phase};
  }
- function promptResource(kind,label,current){
-  const raw=prompt(`指定${label}（0 以上）`,Math.max(0,Math.floor(Number(current)||0)));
-  if(raw===null)return false;
-  const value=finiteInt(raw);
-  if(value==null){alert("請輸入 0 以上的整數。");return false;}
-  const result=transaction(`gm-resource-${kind}`,live=>applyResource(kind,value,live));
-  return result?.ok?true:transactionError(label,result);
- }
+ function commitResource(kind,value){return run(`gm-resource-${kind}`,live=>applyResource(kind,value,live));}
 
  function ensureDungeonTarget(target){
   if(!target||typeof target!=="object")return null;
@@ -86,6 +73,8 @@
   holder.daily.voidMirage.claimed=claimed;
   return {ok:true,points,bounty,arena,historical,dailyHighest,claimed};
  }
+ function commitDungeonValues(values){return run("gm-dungeon-values",live=>applyDungeonValues(values,live));}
+
  function resetDailyDungeonState(target=state,timestamp=Date.now()){
   if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
   const key=typeof gameDailyDateKey==="function"?gameDailyDateKey(timestamp):String(target?.daily?.dateKey||"");
@@ -93,56 +82,11 @@
   const fresh=typeof blankDailyState==="function"?blankDailyState(key):{dateKey:key,bounty:{used:0},arena:{used:0},voidMirage:{highestFloor:0,claimed:false}};
   if(!replaceRecord(currentDaily,fresh))return {ok:false,reason:"daily-reset-failed"};
   if(typeof window.normalizeMirrorDungeonState!=="function"||typeof window.blankMirrorDungeonState!=="function")return {ok:false,reason:"mirror-owner-missing"};
-  const mirror=window.normalizeMirrorDungeonState(target,timestamp);
-  const blank=window.blankMirrorDungeonState(key);
+  const mirror=window.normalizeMirrorDungeonState(target,timestamp),blank=window.blankMirrorDungeonState(key);
   if(!mirror?.daily||!blank?.daily||!replaceRecord(mirror.daily,blank.daily))return {ok:false,reason:"mirror-reset-failed"};
   return {ok:true,dateKey:key};
  }
- function voidRunActive(){try{return typeof getVoidMirageRunSnapshot==="function"&&getVoidMirageRunSnapshot()?.active===true;}catch(_){return false;}}
- function mirrorRunActive(){try{return typeof getMirrorDungeonActiveRun==="function"&&getMirrorDungeonActiveRun()?.active===true;}catch(_){return false;}}
- function thirdWorldArenaRunActive(){try{const runtime=typeof window.getThirdWorldArenaRuntimeState==="function"?window.getThirdWorldArenaRuntimeState():null;return runtime?.status==="combat"||runtime?.status==="between"||runtime?.status==="ready";}catch(_){return false;}}
-
- window.gmGold=function(){
-  if(formalPhase(state)!==1)return alert("目前不是銀河紀元。");
-  return promptResource("gold","金幣",state.gold);
- };
- window.gmDarkMatter=function(){
-  if(formalPhase(state)!==2)return alert("目前不是宇宙紀元。");
-  return promptResource("dark-matter","暗物質",state.secondWorld?.darkMatter||0);
- };
- window.gmDarkEnergy=function(){
-  if(formalPhase(state)!==2)return alert("目前不是宇宙紀元。");
-  return promptResource("dark-energy","暗能量",state.secondWorld?.darkEnergy||0);
- };
- window.gmDimensionalStrings=function(){
-  if(formalPhase(state)!==3)return alert("目前不是高維紀元。");
-  return promptResource("dimensional-strings","維度之弦",state.thirdWorld?.dimensionalStrings||0);
- };
- window.gmApplyDungeonValues=function(){
-  if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再修改副本資料。");return false;}
-  if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再修改副本資料。");return false;}
-  const values={
-   points:document.getElementById("gmDungeonPoints")?.value,
-   bounty:document.getElementById("gmBountyDailyUsed")?.value,
-   arena:document.getElementById("gmArenaDailyUsed")?.value,
-   highest:document.getElementById("gmVoidHistoricalHighest")?.value,
-   dailyHighest:document.getElementById("gmVoidDailyHighest")?.value,
-   claimed:document.getElementById("gmVoidDailyClaimed")?.value==="1"
-  };
-  if([finiteInt(values.points),finiteInt(values.bounty,0,20),finiteInt(values.arena,0,20),finiteInt(values.highest),finiteInt(values.dailyHighest)].some(value=>value==null)){alert("請輸入有效的 0 以上整數；懸賞與競技場範圍為 0～20。");return false;}
-  const result=transaction("gm-dungeon-values",live=>applyDungeonValues(values,live));
-  return result?.ok?true:transactionError("副本／VIP資料",result);
- };
- window.gmResetDailyDungeonState=function(){
-  if(voidRunActive()){alert("虛空幻境挑戰進行中，請先結束或強制退出後再重置今日副本。");return false;}
-  if(mirrorRunActive()){alert("鏡像戰正在進行中，請先結束後再重置今日副本。");return false;}
-  if(thirdWorldArenaRunActive()){alert("高維競技場挑戰進行中，請先結束目前挑戰後再重置今日副本。");return false;}
-  if(typeof window.normalizeMirrorDungeonState!=="function"||typeof window.blankMirrorDungeonState!=="function"){alert("鏡像戰狀態模組尚未載入，無法完整重置今日副本。");return false;}
-  if(!confirm("將重置今日全部副本狀態：懸賞、競技場、虛空與鏡像戰。\n\n虛空歷史最高、鏡像歷史最高與神蹟紀錄都會保留。\n\n確定重置？"))return false;
-  const result=transaction("gm-dungeon-daily-reset",live=>resetDailyDungeonState(live));
-  if(!result?.ok)return transactionError("今日副本",result);
-  return true;
- };
+ function commitDailyDungeonReset(){return run("gm-dungeon-daily-reset",live=>resetDailyDungeonState(live));}
 
  function integrity(){
   const errors=[];
@@ -157,13 +101,17 @@
   if(applied?.ok!==true||dungeon.vipPoints!==99||dungeon.daily.bounty.used!==20||dungeon.daily.arena.used!==19||dungeon.dungeon.voidMirage.highestCleared!==15||dungeon.daily.voidMirage.highestFloor!==15||dungeon.daily.voidMirage.claimed!==true)errors.push({code:"DUNGEON_ATOMIC_MUTATION",applied});
   return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
+
  window.GM_FORMAL_TRANSACTION_OWNER_VERSION=VERSION;
  window.GM_FORMAL_RESOURCE_TRANSACTION_VERSION=RESOURCE_VERSION;
  window.GM_FORMAL_DUNGEON_TRANSACTION_VERSION=DUNGEON_VERSION;
  window.GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION=DAILY_RESET_VERSION;
  window.gmApplyFormalResourceMutation=applyResource;
+ window.gmCommitFormalResourceMutation=commitResource;
  window.gmApplyFormalDungeonMutation=applyDungeonValues;
+ window.gmCommitFormalDungeonMutation=commitDungeonValues;
  window.gmResetFormalDailyDungeonMutation=resetDailyDungeonState;
+ window.gmCommitFormalDailyDungeonReset=commitDailyDungeonReset;
  window.GM_FORMAL_TRANSACTION_INTEGRITY=integrity();
  if(!window.GM_FORMAL_TRANSACTION_INTEGRITY.passed)console.error("[文明戰線] GM formal transaction integrity error",window.GM_FORMAL_TRANSACTION_INTEGRITY.errors);
 })();
