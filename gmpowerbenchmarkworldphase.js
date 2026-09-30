@@ -1,10 +1,12 @@
 (function(){
- const VERSION=7;
- const WORLD3_MAP_TEST_VERSION=1;
+ const VERSION=8;
+ const WORLD3_MAP_TEST_VERSION=2;
+ const WORLD3_ANALYTICS_VERSION=1;
  const world3={modeOverride:null,bossIndex:0,stage:0,runs:100,busy:false,result:null};
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function whole(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Math.max(min,Math.min(max,Number.isFinite(n)?n:min));}
  function one(value){const n=Number(value);return Number.isFinite(n)?Math.round(n*10)/10:0;}
+ function pct3(value){const n=Number(value);return Number.isFinite(n)?(Math.round(n*1000)/1000).toFixed(3):"0.000";}
  function fmt(value){const n=Number(value);return Math.round(Number.isFinite(n)?n:0).toLocaleString();}
  function option(value,label,selected){return `<option value="${value}" ${selected?"selected":""}>${label}</option>`;}
  function testCharacter(){return typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;}
@@ -115,15 +117,37 @@
    `<div class="muted" style="margin-top:5px">特化：${spec?.effect||"—"}｜先制 +${one(stats.initiativeBonusPercent)}%｜連擊 ${one(stats.comboRate)}%｜穿透 ${one(stats.penetrationRate)}%｜反擊 ${one(stats.counterRate)}%｜汲取 ${one(stats.drainRate)}%</div>`+
    `<div class="muted" style="margin-top:5px">階段能力：${activeAbilityText()}</div></div>`;
  }
+ function metric(label,value){return `<div class="item gmpb-metric"><div class="muted">${label}</div><b>${value}</b></div>`;}
+ function ratePerRun(count,runs){return runs>0?one(Number(count||0)/runs):0;}
+ function abilityLine(label,row,runs,extra=""){
+  const count=Number(row?.count)||0;
+  return `<div class="muted">${label}：${fmt(count)} 次｜平均 ${ratePerRun(count,runs)} / 場${extra}</div>`;
+ }
+ function stageAbilityLines(r){
+  const s=r.stageAbilities||{},rows=[];
+  if(s.composure?.active)rows.push(`<div class="muted">鎮心：實際阻止暴擊 ${fmt(s.composure.count)} 次｜平均 ${ratePerRun(s.composure.count,r.runs)} / 場</div>`);
+  if(s.suppression?.active)rows.push(`<div class="muted">壓制：實際阻止閃避 ${fmt(s.suppression.count)} 次｜平均 ${ratePerRun(s.suppression.count,r.runs)} / 場</div>`);
+  if(s.resilience?.active)rows.push(`<div class="muted">韌性：削減暴擊傷害 ${fmt(s.resilience.count)} 次｜累計減傷 ${fmt(s.resilience.preventedDamage)}</div>`);
+  if(s.revenge?.active)rows.push(`<div class="muted">復仇：進入待命 ${fmt(s.revenge.ready)} 次｜實際必暴 ${fmt(s.revenge.consume)} 次</div>`);
+  if(s.backlash?.active)rows.push(`<div class="muted">反噬：觸發 ${fmt(s.backlash.count)} 次｜累計反噬傷害 ${fmt(s.backlash.damage)}</div>`);
+  if(s.ignore?.active)rows.push(`<div class="muted">無視：觸發 ${fmt(s.ignore.count)} 次｜平均 ${ratePerRun(s.ignore.count,r.runs)} / 場</div>`);
+  if(s.battleSpirit?.active)rows.push(`<div class="muted">戰意：啟動 ${fmt(s.battleSpirit.activations)} / ${r.runs} 場｜平均最高層數 ${one(s.battleSpirit.avgPeakLayer)}</div>`);
+  return rows.length?rows.join(""):'<div class="muted">此 Stage 尚未解鎖階段能力。</div>';
+ }
  function thirdResultHtml(){
   const r=world3.result;if(!r)return '<div class="muted">尚未執行高維存在實戰基準。</div>';
+  const player=r.playerAbilities||{},boss=r.bossAbilities||{};
   return `<div style="margin-top:10px"><div class="muted">${r.name}｜Stage ${r.stage}｜${r.runs.toLocaleString()} 場｜正式高維戰鬥 owner</div>`+
-   `<div class="gmpb-metrics"><div class="item gmpb-metric"><div class="muted">勝率</div><b>${r.winRate}%</b></div>`+
-   `<div class="item gmpb-metric"><div class="muted">平均戰鬥回合</div><b>${r.avgTurns}</b></div>`+
-   `<div class="item gmpb-metric"><div class="muted">勝利平均剩餘 HP</div><b>${r.avgWinHpPct}%</b></div>`+
-   `<div class="item gmpb-metric"><div class="muted">失敗時 Boss 剩餘 HP</div><b>${r.avgLossBossHpPct}%</b></div>`+
-   `<div class="item gmpb-metric"><div class="muted">勝／敗</div><b>${r.wins} / ${r.losses}</b></div>`+
-   `<div class="item gmpb-metric"><div class="muted">Stage</div><b>${r.stage}</b></div></div></div>`;
+   `<div class="gmpb-metrics">${metric("平均每場永久削血",fmt(r.avgPermanentDamage))}${metric("平均每回合削血",fmt(r.avgDamagePerTurn))}${metric("平均存活回合",r.avgTurns)}${metric("測試總削血",fmt(r.totalPermanentDamage))}${metric("等效 Boss HP 削減",pct3(r.equivalentBossHpPercent)+"%")} ${metric("預估擊破死亡數",r.estimatedDeathsToDefeat==null?"—":fmt(r.estimatedDeathsToDefeat))}${metric("推進下一 Stage",r.estimatedDeathsToNextStage==null?"—":fmt(r.estimatedDeathsToNextStage)+" 死")}</div>`+
+   `<details style="margin-top:9px"><summary><b>玩家戰鬥表現</b></summary><div style="margin-top:7px;line-height:1.65">`+
+    `<div class="muted">實際暴擊率：${one(r.playerCritRate)}%｜實際閃避率：${one(r.playerDodgeRate)}%</div>`+
+    abilityLine("先制",player.initiative,r.runs)+abilityLine("連擊",player.combo,r.runs)+abilityLine("穿透",player.penetration,r.runs)+abilityLine("反擊",player.counter,r.runs)+abilityLine("汲取",player.drain,r.runs,`｜回血 ${fmt(player.drain?.healed||0)}`)+
+   `</div></details>`+
+   `<details style="margin-top:8px"><summary><b>Boss 五能力實測</b></summary><div style="margin-top:7px;line-height:1.65">`+
+    abilityLine("先制",boss.initiative,r.runs)+abilityLine("連擊",boss.combo,r.runs)+abilityLine("穿透",boss.penetration,r.runs)+abilityLine("反擊",boss.counter,r.runs)+abilityLine("汲取",boss.drain,r.runs,`｜回血 ${fmt(boss.drain?.healed||0)}`)+
+   `</div></details>`+
+   `<details style="margin-top:8px"><summary><b>Stage 能力實測</b></summary><div style="margin-top:7px;line-height:1.65">${stageAbilityLines(r)}</div></details>`+
+   `</div>`;
  }
  function thirdWorldMapSectionHtml(){
   const open=typeof window.gmPowerBenchmarkModeIsOpen==="function"&&window.gmPowerBenchmarkModeIsOpen("map");
@@ -138,7 +162,7 @@
    `<label>測試量<br><select class="btn"${disabled} onchange="gmPowerBenchmarkSetThirdWorldRuns(this.value)">${option(100,"100",world3.runs===100)+option(1000,"1000",world3.runs===1000)}</select></label>`+
    `</div><div class="gmpb-actions"><button class="btn" type="button"${disabled} onclick="gmPowerBenchmarkResetThirdWorldMap()">重置高維測試</button></div></div>`+
    thirdSelectedSummary()+
-   `<div class="item"><b>實戰基準</b><div class="muted" style="margin-top:5px">每場直接呼叫正式 runThirdWorldBossCombat；沿用 GM 測試角色、專精、印記與文明最終傷害，但不進行 settlement。</div>`+
+   `<div class="item"><b>實戰基準</b><div class="muted" style="margin-top:5px">每場直接呼叫正式 runThirdWorldBossCombat；沿用 GM 測試角色、專精、印記與文明最終傷害，但不進行 settlement。第三紀元以永久削血效率、存活回合與能力觸發為主要平衡指標。</div>`+
    `<div class="gmpb-actions"><button class="btn blue" type="button"${disabled} onclick="gmPowerBenchmarkRunCombat('single')">${world3.busy?"測試中…":"測目前高維存在"}</button></div>${thirdResultHtml()}</div>`+
    `</div></details>`;
  }
@@ -154,15 +178,44 @@
   if(benchmarkWorld()===3)out=replaceMapSection(out);
   return out;
  }
+ function emptyAbilityStats(){return {initiative:{count:0},combo:{count:0},penetration:{count:0},counter:{count:0},drain:{count:0,healed:0}};}
+ function emptyStageStats(abilities){
+  const active=id=>abilities?.[id]?.active===true;
+  return {
+   composure:{active:active("composure"),count:0},suppression:{active:active("suppression"),count:0},
+   resilience:{active:active("resilience"),count:0,preventedDamage:0},revenge:{active:active("revenge"),ready:0,consume:0},
+   backlash:{active:active("backlash"),count:0,damage:0},ignore:{active:active("ignore"),count:0},
+   battleSpirit:{active:active("battleSpirit"),activations:0,totalPeakLayer:0,avgPeakLayer:0}
+  };
+ }
+ function recordAbilityEvent(stats,event,side){
+  if(event?.type==="attack"&&event.actor===side){if(event.initiative)stats.initiative.count++;if(event.penetration)stats.penetration.count++;return;}
+  if(event?.type==="combo"&&event.actor===side){stats.combo.count++;return;}
+  if(event?.type==="counter"&&event.actor===side){stats.counter.count++;return;}
+  if(event?.type==="drain"&&event.actor===side){stats.drain.count++;stats.drain.healed+=Math.max(0,Number(event.healed)||0);}
+ }
+ function recordStageEvent(stats,event){
+  if(event?.type!=="mark"||event.owner!=="enemy")return;
+  const mark=String(event.mark||""),action=String(event.action||"");
+  if(mark==="composure"&&action==="preventCrit")stats.composure.count++;
+  else if(mark==="suppression"&&action==="preventDodge")stats.suppression.count++;
+  else if(mark==="resilience"&&action==="reduceCritDamage"){stats.resilience.count++;stats.resilience.preventedDamage+=Math.max(0,(Number(event.originalDamage)||0)-(Number(event.finalDamage)||0));}
+  else if(mark==="revenge"&&action==="ready")stats.revenge.ready++;
+  else if(mark==="revenge"&&action==="consume")stats.revenge.consume++;
+  else if(mark==="backlash"&&action==="trigger"){stats.backlash.count++;stats.backlash.damage+=Math.max(0,Number(event.actualDamage??event.damage)||0);}
+  else if(mark==="ignore"&&action==="trigger")stats.ignore.count++;
+  else if(mark==="battleSpirit"&&action==="activate")stats.battleSpirit.activations++;
+ }
  async function runThirdWorldMapBenchmark(){
   if(world3.busy)return false;
   const boss=thirdBoss();if(!boss||typeof window.runThirdWorldBossCombat!=="function")return false;
   const player=typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():null;if(!player)return false;
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
-  const civilizationLevel=testCivilizationLevel(),runs=world3.runs,startBossHp=stageHp();
+  const civilizationLevel=testCivilizationLevel(),runs=world3.runs,startBossHp=stageHp(),bossMaxHp=Math.max(1,Number(boss.maxHp)||startBossHp);
+  const playerAbilities=emptyAbilityStats(),bossAbilities=emptyAbilityStats(),stageAbilities=emptyStageStats(thirdBossAbilities());
   world3.busy=true;world3.result=null;if(typeof render==="function")render();
   await new Promise(resolve=>setTimeout(resolve,0));
-  let wins=0,losses=0,totalTurns=0,winHpPct=0,lossBossPct=0;
+  let completed=0,totalTurns=0,totalPermanentDamage=0,playerAttackHits=0,playerCrits=0,enemyAttackAttempts=0,playerDodges=0;
   try{
    for(let i=0;i<runs;i++){
     const result=window.runThirdWorldBossCombat(world3.bossIndex,{
@@ -170,24 +223,53 @@
      civilizationLevel,logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks
     });
     if(!result?.ok)continue;
-    totalTurns+=Math.max(0,Number(result.turns)||0);
-    if(result.win===true){wins++;winHpPct+=Math.max(0,Number(result.hp)||0)/Math.max(1,Number(player.hp)||1)*100;}
-    else{losses++;lossBossPct+=Math.max(0,Number(result.combatEndHp)||0)/Math.max(1,startBossHp)*100;}
+    completed++;
+    const turns=Math.max(0,Number(result.turns)||0);totalTurns+=turns;
+    totalPermanentDamage+=Math.max(0,Number(result.effectivePermanentDamage??result.effectiveDamagePreview)||0);
+    let peakSpiritLayer=0;
+    (Array.isArray(result.events)?result.events:[]).forEach(event=>{
+     recordAbilityEvent(playerAbilities,event,"player");recordAbilityEvent(bossAbilities,event,"enemy");recordStageEvent(stageAbilities,event);
+     if(event?.type==="attack"&&event.actor==="player"){playerAttackHits++;if(event.crit)playerCrits++;}
+     if(event?.type==="attack"&&event.actor==="enemy")enemyAttackAttempts++;
+     if(event?.type==="dodge"&&event.target==="player")playerDodges++;
+     if(event?.type==="mark"&&event.owner==="enemy"&&event.mark==="battleSpirit"&&event.action==="layer")peakSpiritLayer=Math.max(peakSpiritLayer,Math.max(0,Number(event.layer)||0));
+    });
+    stageAbilities.battleSpirit.totalPeakLayer+=peakSpiritLayer;
     if((i+1)%25===0&&i+1<runs)await new Promise(resolve=>setTimeout(resolve,0));
    }
-   const completed=Math.max(1,wins+losses);
-   world3.result={world:3,bossIndex:world3.bossIndex,name:String(boss.name||"高維存在"),stage:world3.stage,runs,wins,losses,
-    winRate:one(wins/completed*100),avgTurns:one(totalTurns/completed),avgWinHpPct:wins?one(winHpPct/wins):0,avgLossBossHpPct:losses?one(lossBossPct/losses):0,
-    formalStartHp:startBossHp,civilizationLevel};
+   const divisor=Math.max(1,completed),avgPermanentDamage=totalPermanentDamage/divisor,avgTurns=totalTurns/divisor;
+   const avgDamagePerTurn=totalTurns>0?totalPermanentDamage/totalTurns:0;
+   const stageGapHp=Math.max(1,Math.floor(bossMaxHp*.10));
+   stageAbilities.battleSpirit.avgPeakLayer=stageAbilities.battleSpirit.totalPeakLayer/divisor;
+   const spec=thirdBossSpecialization();
+   world3.result={
+    world:3,bossIndex:world3.bossIndex,name:String(boss.name||"高維存在"),stage:world3.stage,runs,completed,formalStartHp:startBossHp,bossMaxHp,civilizationLevel,
+    specialization:{label:String(spec?.label||"個體特化"),effect:String(spec?.effect||"—")},activeAbilities:activeAbilityText(),
+    avgTurns:one(avgTurns),totalPermanentDamage,avgPermanentDamage,avgDamagePerTurn,equivalentBossHpPercent:totalPermanentDamage/bossMaxHp*100,
+    estimatedDeathsToDefeat:avgPermanentDamage>0?Math.ceil(startBossHp/avgPermanentDamage):null,
+    estimatedDeathsToNextStage:avgPermanentDamage>0?Math.ceil(stageGapHp/avgPermanentDamage):null,
+    playerCritRate:playerAttackHits>0?playerCrits/playerAttackHits*100:0,playerDodgeRate:enemyAttackAttempts+playerDodges>0?playerDodges/(enemyAttackAttempts+playerDodges)*100:0,
+    playerAbilities,bossAbilities,stageAbilities
+   };
    return true;
   }finally{
    world3.busy=false;if(typeof render==="function")render();
   }
  }
+ function abilitySummary(label,row,runs,extra=""){const count=Number(row?.count)||0;return `${label} ${fmt(count)} 次（${ratePerRun(count,runs)} / 場）${extra}`;}
  function appendWorld3Summary(text){
   if(!world3.result)return String(text||"");
-  const r=world3.result;
-  return String(text||"")+`\n\n【高維紀元・地圖怪】\n目標：${r.name}｜Stage ${r.stage}｜測試量 ${r.runs}\n實戰：${r.wins}勝/${r.losses}敗｜勝率 ${r.winRate}%｜平均回合 ${r.avgTurns}｜勝利剩餘HP ${r.avgWinHpPct}%｜失敗時Boss剩餘HP ${r.avgLossBossHpPct}%`;
+  const r=world3.result,p=r.playerAbilities||{},b=r.bossAbilities||{},s=r.stageAbilities||{};
+  const lines=["",`【高維紀元・地圖怪】`,`目標：${r.name}｜Stage ${r.stage}｜${r.specialization?.label||"個體特化"}｜${r.specialization?.effect||"—"}`,`階段能力：${r.activeAbilities}`,`測試量：${r.runs} 場｜有效完成 ${r.completed} 場`,`平均每場永久削血：${fmt(r.avgPermanentDamage)}｜平均每回合削血：${fmt(r.avgDamagePerTurn)}｜平均存活回合：${r.avgTurns}`,`測試總削血：${fmt(r.totalPermanentDamage)}｜等效 Boss HP 削減：${pct3(r.equivalentBossHpPercent)}%`,`預估擊破死亡數：${r.estimatedDeathsToDefeat==null?"—":fmt(r.estimatedDeathsToDefeat)}｜預估推進下一 Stage：${r.estimatedDeathsToNextStage==null?"—":fmt(r.estimatedDeathsToNextStage)}`,`玩家實際暴擊率：${one(r.playerCritRate)}%｜玩家實際閃避率：${one(r.playerDodgeRate)}%`,`【玩家五能力】`,abilitySummary("先制",p.initiative,r.runs),abilitySummary("連擊",p.combo,r.runs),abilitySummary("穿透",p.penetration,r.runs),abilitySummary("反擊",p.counter,r.runs),abilitySummary("汲取",p.drain,r.runs,`｜回血 ${fmt(p.drain?.healed||0)}`),`【Boss 五能力】`,abilitySummary("先制",b.initiative,r.runs),abilitySummary("連擊",b.combo,r.runs),abilitySummary("穿透",b.penetration,r.runs),abilitySummary("反擊",b.counter,r.runs),abilitySummary("汲取",b.drain,r.runs,`｜回血 ${fmt(b.drain?.healed||0)}`),`【Stage 能力】`];
+  if(s.composure?.active)lines.push(`鎮心：實際阻止暴擊 ${fmt(s.composure.count)} 次`);
+  if(s.suppression?.active)lines.push(`壓制：實際阻止閃避 ${fmt(s.suppression.count)} 次`);
+  if(s.resilience?.active)lines.push(`韌性：削減暴擊傷害 ${fmt(s.resilience.count)} 次｜累計減傷 ${fmt(s.resilience.preventedDamage)}`);
+  if(s.revenge?.active)lines.push(`復仇：進入待命 ${fmt(s.revenge.ready)} 次｜實際必暴 ${fmt(s.revenge.consume)} 次`);
+  if(s.backlash?.active)lines.push(`反噬：觸發 ${fmt(s.backlash.count)} 次｜累計反噬傷害 ${fmt(s.backlash.damage)}`);
+  if(s.ignore?.active)lines.push(`無視：觸發 ${fmt(s.ignore.count)} 次`);
+  if(s.battleSpirit?.active)lines.push(`戰意：啟動 ${fmt(s.battleSpirit.activations)} / ${r.runs} 場｜平均最高層數 ${one(s.battleSpirit.avgPeakLayer)}`);
+  if(!Object.values(s).some(row=>row?.active===true))lines.push("尚未解鎖階段能力");
+  return String(text||"")+lines.join("\n");
  }
  async function copyCurrentSummary(){
   const text=typeof window.gmPowerBenchmarkSummaryText==="function"?String(window.gmPowerBenchmarkSummaryText()||""):"";
@@ -229,8 +311,9 @@
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=2;
- window.GM_POWER_BENCHMARK_WORLD3_COPY_SUMMARY_VERSION=1;
+ window.GM_POWER_BENCHMARK_WORLD3_COPY_SUMMARY_VERSION=2;
  window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_VERSION=WORLD3_MAP_TEST_VERSION;
+ window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_VERSION=WORLD3_ANALYTICS_VERSION;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
  window.gmPowerBenchmarkRefreshAfterFormalSync=refreshBenchmarkAfterFormalSync;
@@ -251,5 +334,6 @@
   const actual=typeof window.thirdWorldBossStage==="function"?window.thirdWorldBossStage(hp,boss?.maxHp):stage;
   if(Number(actual)!==stage)integrityErrors.push(`third-world-stage-${stage}`);
  }
+ if(WORLD3_ANALYTICS_VERSION!==1)integrityErrors.push("world3-analytics-version");
  window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_INTEGRITY={passed:integrityErrors.length===0,errors:integrityErrors,checkedAt:Date.now()};
 })();
