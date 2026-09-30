@@ -80,6 +80,26 @@
    if(fullResult?.ok!==true||full.secondWorld.mainline.bossKilled[99]!==true||!full.storyProgress.completedStories.includes(finalId))fail("GM_W2_PROGRESS_FINAL","100/100 必須同步最終 Boss 與最終宇宙故事",fullResult);
   }
 
+  if(Number(window.GM_THIRD_WORLD_PROGRESS_MANAGEMENT_VERSION)!==1||typeof window.gmApplyThirdWorldProgressPercent!=="function"||typeof window.gmSetThirdWorldProgress!=="function")fail("GM_W3_PROGRESS_API","高維紀元正式進度管理 owner 未載入");
+  else{
+   const descriptors=window.thirdWorldStoryTriggerDescriptors?.()||[],intro=descriptors.find(row=>row.kind==="intro"),final=descriptors.find(row=>row.kind==="final"),introId=String(intro?.storyId||""),finalId=String(final?.storyId||""),thirdTitleIds=Array.from(window.THIRD_WORLD_PLAYER_TITLE_IDS||[]),otherTitle=window.CIVILIZATION_PLAYER_TITLE_IDS?.[0]||null;
+   const probe={level:1333,exp:777,secondWorld:{entered:true,civilizationLevel:10},thirdWorld:{entered:true,completed:false,dimensionalStrings:456789,coreLevel:4,coreProgress:123456,bosses:Array.from({length:10},()=>({currentHp:1100000000})),story:{introSeen:true,unlockedStage:0,finalSeen:false}},storyProgress:{pendingStory:descriptors.find(row=>row.kind==="milestone"&&row.stage===8)?.storyId||null,completedStories:["earth-prologue",introId]},titles:{version:1,unlocked:[otherTitle,...thirdTitleIds].filter(Boolean),equipped:thirdTitleIds[9]||null,pendingNotice:thirdTitleIds[8]||null}};
+   const before={level:probe.level,exp:probe.exp,strings:probe.thirdWorld.dimensionalStrings,coreLevel:probe.thirdWorld.coreLevel,coreProgress:probe.thirdWorld.coreProgress};
+   const half=window.gmApplyThirdWorldProgressPercent(50,probe),halfSnapshot=window.gmThirdWorldProgressSnapshot?.(probe),halfCompleted=new Set(probe.storyProgress.completedStories),halfTitles=new Set(probe.titles.unlocked);
+   if(half?.ok!==true||halfSnapshot?.completionPercent!==50||halfSnapshot?.titleTier!==5||halfSnapshot?.storyStage!==5)fail("GM_W3_PROGRESS_HALF","高維 50% 進度未同步 aggregate／Tier／Story Stage",half);
+   if(probe.thirdWorld.bosses.some(row=>Number(row.currentHp)!==550000000)||window.thirdWorldBossStage?.(probe.thirdWorld.bosses[0].currentHp,1100000000)!==5)fail("GM_W3_PROGRESS_HP_STAGE","高維 50% 必須讓十王永久 HP 與個別 Stage 同步");
+   const expectedMilestones=descriptors.filter(row=>row.kind==="milestone"&&row.stage<=5).map(row=>row.storyId),futureMilestones=descriptors.filter(row=>row.kind==="milestone"&&row.stage>5).map(row=>row.storyId);
+   if(!halfCompleted.has(introId)||expectedMilestones.some(id=>!halfCompleted.has(id))||futureMilestones.some(id=>halfCompleted.has(id))||halfCompleted.has(finalId)||!halfCompleted.has("earth-prologue"))fail("GM_W3_PROGRESS_STORY","高維 50% Story completion 未同步");
+   if(probe.storyProgress.pendingStory!==null||probe.thirdWorld.completed!==false||probe.thirdWorld.story.finalSeen!==false)fail("GM_W3_PROGRESS_PENDING_FINAL","50% 不應保留高維 pending story 或完成狀態");
+   if(thirdTitleIds.slice(0,5).some(id=>!halfTitles.has(id))||thirdTitleIds.slice(5).some(id=>halfTitles.has(id))||(otherTitle&&!halfTitles.has(otherTitle))||probe.titles.equipped!==null||probe.titles.pendingNotice!==null)fail("GM_W3_PROGRESS_TITLES","高維 50% 稱號應同步收斂並保留其他系列稱號");
+   if(probe.level!==before.level||probe.exp!==before.exp||probe.thirdWorld.dimensionalStrings!==before.strings||probe.thirdWorld.coreLevel!==before.coreLevel||probe.thirdWorld.coreProgress!==before.coreProgress)fail("GM_W3_PROGRESS_UNRELATED_MUTATION","指定高維進度不得修改等級／EXP／維度之弦／核心養成");
+   const full=window.gmApplyThirdWorldProgressPercent(100,probe),fullSnapshot=window.gmThirdWorldProgressSnapshot?.(probe);
+   if(full?.ok!==true||probe.thirdWorld.bosses.some(row=>Number(row.currentHp)!==0)||fullSnapshot?.titleTier!==10||fullSnapshot?.storyStage!==10||probe.thirdWorld.completed!==true||probe.thirdWorld.story.finalSeen!==true||!probe.storyProgress.completedStories.includes(finalId))fail("GM_W3_PROGRESS_FINAL","高維 100% 必須同步十王歸零、Tier10、Stage10 與最終故事完成",full);
+   const reset=window.gmApplyThirdWorldProgressPercent(0,probe),resetSnapshot=window.gmThirdWorldProgressSnapshot?.(probe),resetCompleted=new Set(probe.storyProgress.completedStories),resetTitles=new Set(probe.titles.unlocked);
+   if(reset?.ok!==true||probe.thirdWorld.bosses.some(row=>Number(row.currentHp)!==1100000000)||resetSnapshot?.titleTier!==0||resetSnapshot?.storyStage!==0||probe.thirdWorld.completed!==false||probe.thirdWorld.story.finalSeen!==false)fail("GM_W3_PROGRESS_RESET","高維進度往回調到 0% 未完整收斂",reset);
+   if(!resetCompleted.has(introId)||descriptors.filter(row=>row.kind!=="intro").some(row=>resetCompleted.has(row.storyId))||thirdTitleIds.some(id=>resetTitles.has(id))||(otherTitle&&!resetTitles.has(otherTitle)))fail("GM_W3_PROGRESS_RESET_HISTORY","高維回調 0% 必須保留開場故事／其他稱號並移除後續高維里程碑");
+  }
+
   const currentPhase=window.gmBatch16FormalWorldPhase?.();
   if(currentPhase>=2){
    const spec=String(window.gmSpecializationManagementHtml?.()||"");
@@ -97,9 +117,9 @@
   if(!specTest.includes("Lv.0")||!specTest.includes("Lv.60")||!specTest.includes("<select"))fail("SPEC_SANDBOX","專精 GM 沙盒未保留 Lv0～60 下拉測試");
   const markTest=String(window.gmMarkTestHtml?.()||"");
   if(!markTest.includes("Lv.0")||!markTest.includes("Lv.10")||!markTest.includes("<select"))fail("MARK_SANDBOX","印記 GM 沙盒未保留 Lv0～10 下拉測試");
- }catch(error){fail("EXCEPTION","第16批／GM 紀元顯示與宇宙進度完整性檢查執行失敗",String(error?.message||error));}
- const report={version:4,passed:errors.length===0,errors,checkedAt:Date.now()};
- window.GM_BATCH16_INTEGRITY_VERSION=4;
+ }catch(error){fail("EXCEPTION","第16批／GM 三紀元管理完整性檢查執行失敗",String(error?.message||error));}
+ const report={version:5,passed:errors.length===0,errors,checkedAt:Date.now()};
+ window.GM_BATCH16_INTEGRITY_VERSION=5;
  window.GM_BATCH16_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] GM Batch16 integrity error",errors);
 })();
