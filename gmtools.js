@@ -30,30 +30,20 @@ function gmLevel(){
  save();render();
 }
 
-function gmGold(){
- const raw=prompt("指定金幣（0 以上）",state.gold);
- if(raw===null)return;
- const n=Math.floor(Number(raw));
- if(!Number.isFinite(n)||n<0){alert("請輸入 0 以上的數字。");return}
- state.gold=n;save();render();
+function gmFormalResourceCommit(kind,label,current){
+ if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ const raw=prompt(`指定${label}（0 以上）`,Math.max(0,Math.floor(Number(current)||0)));
+ if(raw===null)return false;
+ const n=Number(raw);
+ if(!Number.isFinite(n)||!Number.isInteger(n)||n<0){alert("請輸入 0 以上的整數。");return false;}
+ const tx=window.gmCommitFormalResourceMutation(kind,n);
+ if(!tx?.ok){alert(`${label}更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+ if(typeof render==="function")render();
+ return true;
 }
-
-function gmDarkMatter(){
- if(!(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()))return alert("目前尚未進入宇宙紀元。");
- const raw=prompt("指定暗物質（0 以上）",state.secondWorld?.darkMatter||0);
- if(raw===null)return;
- const n=Math.floor(Number(raw));
- if(!Number.isFinite(n)||n<0){alert("請輸入 0 以上的數字。");return;}
- state.secondWorld.darkMatter=n;save();render();
-}
-function gmDarkEnergy(){
- if(!(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()))return alert("目前尚未進入宇宙紀元。");
- const raw=prompt("指定暗能量（0 以上）",state.secondWorld?.darkEnergy||0);
- if(raw===null)return;
- const n=Math.floor(Number(raw));
- if(!Number.isFinite(n)||n<0){alert("請輸入 0 以上的數字。");return;}
- state.secondWorld.darkEnergy=n;save();render();
-}
+function gmGold(){return gmFormalResourceCommit("gold","金幣",state.gold);}
+function gmDarkMatter(){return gmFormalResourceCommit("dark-matter","暗物質",state.secondWorld?.darkMatter||0);}
+function gmDarkEnergy(){return gmFormalResourceCommit("dark-energy","暗能量",state.secondWorld?.darkEnergy||0);}
 
 function gmSetWorldProgress(){
  const raw=prompt(`指定目前攻略到哪個等級關卡（1～${MAX_LEVEL}）`,state.level);
