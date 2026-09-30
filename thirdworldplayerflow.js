@@ -1,11 +1,11 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
  const POST_FLOW_COORDINATOR_VERSION=1;
  const STORY_POST_FLOW_SEQUENCE_VERSION=1;
  const TITLE_NOTICE_HOLD_VERSION=1;
  const PRESENTATION_ADAPTER_VERSION=1;
  const MINIMAL_MODE_ADAPTER_VERSION=2;
- const HP_CAP_PRESENTATION_VERSION=2;
+ const HP_CAP_PRESENTATION_VERSION=3;
  const PROGRESS_EVENT_PRESENTATION_VERSION=1;
  const CATCH_UP_SYNC_VERSION=1;
  const RUN_SUMMARY_PRESENTATION_VERSION=1;
@@ -70,13 +70,13 @@
  }
  function refreshContextFromStep(step){
   if(!activeContext)return null;
-  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),cap=capFromCombat(combat),deathsAfter=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths),deathsAtBattleStart=Math.max(0,deathsAfter-(step?.countsDeath===true?1:0));
+  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),derivedCap=capFromCombat(combat),formalCap=step?.snapshot?.hpCap||{},deathsAfter=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths),deathsAtBattleStart=Math.max(0,deathsAfter-(step?.countsDeath===true?1:0));
   activeContext.bossIndex=whole(summary.bossIndex??activeContext.bossIndex);
   activeContext.bossName=String(boss?.name||step?.combat?.bossName||combat?.e?.name||activeContext.bossName||"高維存在");
   activeContext.battleNumber=Math.max(1,whole(summary.battleNumber||activeContext.battleNumber||1));
   activeContext.deaths=deathsAtBattleStart;
-  activeContext.hpCap=cap.cap;
-  activeContext.hpCapPercent=cap.percent;
+  activeContext.hpCap=Number.isFinite(Number(formalCap.hpCap))?whole(formalCap.hpCap):derivedCap.cap;
+  activeContext.hpCapPercent=Number.isFinite(Number(formalCap.hpCapPercent))?clamp(formalCap.hpCapPercent,0,100):derivedCap.percent;
   activeContext.currentCombat=combat;
   activeContext.stopReason=String(step?.terminalReason||"");
   return combat;
@@ -383,7 +383,7 @@
   if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||front.label!=="戰線進度已更新"||stage.label!=="Stage 已改變"||limit.category!=="limit"||limit.label!=="已達本輪 500 次死亡上限"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
-  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues);
+  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues),refreshSource=Function.prototype.toString.call(refreshContextFromStep);
   const summaryIndex=flowSource.indexOf("await presentRunSummary"),storyIndex=flowSource.indexOf("await drainPostFlowStories"),releaseIndex=flowSource.indexOf("setTitlePostFlowHold(false)",storyIndex),titleIndex=flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow",storyIndex);
   if(summaryIndex<0||storyIndex<summaryIndex||releaseIndex<storyIndex||titleIndex<releaseIndex)errors.push("POST_FLOW_SEQUENCE");
   if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
@@ -391,6 +391,7 @@
   if(summarySource.includes("停止類型")||eventSource.includes("5pp"))errors.push("PLAYER_INTERNAL_TERMINOLOGY_LEAK");
   if(!stepSource.includes("if(step?.terminalReason)finishMinimalMode()")||!minimalSource.includes("mode===\"stopped\"")||!minimalSource.includes("stopReasonPresentation"))errors.push("MINIMAL_STOP_PRESENTATION_WIRING");
   if(suppressionPct(99.908)!=="99.908%")errors.push("HP_CAP_THREE_DECIMAL_PRESENTATION");
+  if(!refreshSource.includes("snapshot?.hpCap")||!refreshSource.includes("formalCap.hpCapPercent"))errors.push("HP_CAP_FORMAL_PERCENT_OWNER");
   return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
