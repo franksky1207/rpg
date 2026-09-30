@@ -93,6 +93,60 @@ function gmSetWorldProgress(){
  if(currentEnemy===4&&state.level<target)alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
 }
 
+const GM_SECOND_WORLD_PROGRESS_BOSS_COUNT=100;
+function gmSecondWorldProgressCount(value){
+ const n=Math.floor(Number(value));
+ return Number.isFinite(n)?Math.max(0,Math.min(GM_SECOND_WORLD_PROGRESS_BOSS_COUNT,n)):null;
+}
+function gmSecondWorldStoryIds(){
+ if(typeof window.universeStoryIdForBossIndex!=="function")return [];
+ return Array.from({length:GM_SECOND_WORLD_PROGRESS_BOSS_COUNT},(_,index)=>window.universeStoryIdForBossIndex(index)).filter(Boolean);
+}
+function gmSecondWorldProgressSnapshot(target=state){
+ const rows=target?.secondWorld?.mainline?.bossKilled;
+ let completed=0;
+ if(Array.isArray(rows))for(let i=0;i<GM_SECOND_WORLD_PROGRESS_BOSS_COUNT&&rows[i]===true;i++)completed++;
+ const nextBoss=completed<GM_SECOND_WORLD_PROGRESS_BOSS_COUNT&&typeof window.secondWorldBoss==="function"?window.secondWorldBoss(completed):null;
+ return Object.freeze({version:1,completedBosses:completed,totalBosses:GM_SECOND_WORLD_PROGRESS_BOSS_COUNT,highestClearedBossIndex:completed-1,nextBossIndex:nextBoss?.index??null,nextBossLevel:nextBoss?.level??null,nextBossName:nextBoss?.name||null});
+}
+function gmApplySecondWorldProgressCount(value,target=state){
+ const count=gmSecondWorldProgressCount(value),holder=target&&typeof target==="object"?target:null;
+ if(!holder||count==null)return {ok:false,reason:"invalid-target"};
+ if(holder?.secondWorld?.entered!==true||holder?.thirdWorld?.entered===true)return {ok:false,reason:"wrong-world"};
+ if(!holder.secondWorld.mainline||typeof holder.secondWorld.mainline!=="object")holder.secondWorld.mainline={};
+ const storyIds=gmSecondWorldStoryIds();
+ if(storyIds.length!==GM_SECOND_WORLD_PROGRESS_BOSS_COUNT||typeof window.universeBossIndexForStoryId!=="function")return {ok:false,reason:"story-owner-missing"};
+ const progress=holder?.storyProgress;
+ if(!progress||typeof progress!=="object"||!Array.isArray(progress.completedStories))return {ok:false,reason:"story-progress-missing"};
+ holder.secondWorld.mainline.bossKilled=Array.from({length:GM_SECOND_WORLD_PROGRESS_BOSS_COUNT},(_,index)=>index<count);
+ const universeIds=new Set(storyIds),preserved=progress.completedStories.filter(id=>!universeIds.has(id));
+ progress.completedStories=Array.from(new Set([...preserved,...storyIds.slice(0,count)]));
+ if(window.universeBossIndexForStoryId(progress.pendingStory)!=null)progress.pendingStory=null;
+ if(typeof window.normalizeSecondWorldCalamityState==="function")window.normalizeSecondWorldCalamityState(holder);
+ return {ok:true,...gmSecondWorldProgressSnapshot(holder),completedUniverseStories:count};
+}
+function gmSetSecondWorldProgress(){
+ if(state?.secondWorld?.entered!==true||state?.thirdWorld?.entered===true)return alert("只有目前位於宇宙紀元時才能指定宇宙紀元進度。");
+ if(typeof window.runSettlementTransaction!=="function")return alert("正式存檔 transaction owner 尚未載入。");
+ const current=gmSecondWorldProgressSnapshot(state).completedBosses;
+ const raw=prompt("指定宇宙紀元已擊破 Boss 數（0～100）",current);
+ if(raw===null)return;
+ const number=Number(raw),count=gmSecondWorldProgressCount(number);
+ if(count==null||!Number.isInteger(number)||number<0||number>GM_SECOND_WORLD_PROGRESS_BOSS_COUNT){alert("請輸入 0～100 的整數。");return;}
+ const tx=window.runSettlementTransaction({label:"gm-second-world-progress",mutate:live=>gmApplySecondWorldProgressCount(count,live)});
+ if(!tx?.ok){alert(`宇宙紀元進度更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return;}
+ if(typeof render==="function")render();
+ if(count>=GM_SECOND_WORLD_PROGRESS_BOSS_COUNT){alert("宇宙紀元主線已指定為 100 / 100 Boss 完成；對應宇宙故事進度已同步。文明等級與文明災厄養成維持原值。");return;}
+ const next=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(count):null;
+ const requirement=next?Math.max(500,Number(next.level)-5):null,level=Math.max(1,Math.floor(Number(state.level)||1));
+ const levelNote=next&&level<requirement?`\n下一隻 ${next.name} Lv.${next.level} 仍需角色至少 Lv.${requirement} 才能挑戰。`:"";
+ alert(`宇宙紀元主線已指定為 ${count} / 100 Boss 完成。對應宇宙故事進度已同步；文明等級與文明災厄養成維持原值。${levelNote}`);
+}
+window.GM_SECOND_WORLD_PROGRESS_MANAGEMENT_VERSION=1;
+window.gmSecondWorldProgressSnapshot=gmSecondWorldProgressSnapshot;
+window.gmApplySecondWorldProgressCount=gmApplySecondWorldProgressCount;
+window.gmSetSecondWorldProgress=gmSetSecondWorldProgress;
+
 function gmCreateGear(){
  const q=Number(document.getElementById("gmGearQuality")?.value);
  const level=Number(document.getElementById("gmGearLevel")?.value);
