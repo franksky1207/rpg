@@ -1,11 +1,11 @@
 (function(){
- const VERSION=9;
- const CORE_UI_VERSION=2;
+ const VERSION=10;
+ const CORE_UI_VERSION=3;
  const CORE_FEEDBACK_LIFECYCLE_VERSION=1;
  const CORE_CONFIRMATION_VERSION=1;
  const RUN_ENTRY_UI_VERSION=1;
  const THREE_COLUMN_HEADER_VERSION=1;
- const COMBAT_PAGE_UI_VERSION=1;
+ const COMBAT_PAGE_UI_VERSION=2;
  const REVIEW_UI_VERSION=2;
  let commonAbilitiesOpen=false;
  let coreFeedback="";
@@ -17,7 +17,9 @@
  function n(value){const x=Number(value);return Number.isFinite(x)?x:0;}
  function whole(value){return Math.max(0,Math.floor(n(value)));}
  function pct(value,digits=2){return `${Math.max(0,Math.min(100,n(value))).toFixed(digits)}%`;}
+ function suppressionPct(value){return `${Math.max(0,Math.min(100,n(value))).toFixed(3)}%`;}
  function fmt(value){return whole(value).toLocaleString();}
+ function runMaxDeaths(){return Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500));}
  function currentPhase(){return typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(state)):state?.thirdWorld?.entered===true?3:state?.secondWorld?.entered===true?2:1;}
  function expectedBossCount(){return Math.max(0,whole(window.THIRD_WORLD_BOSS_COUNT));}
  function expectedAbilityCount(){return Math.max(0,whole(window.THIRD_WORLD_BOSS_ABILITY_COUNT));}
@@ -59,7 +61,7 @@
  function bossCardHtml(boss,index){
   const snap=bossSnapshot(index);if(!boss||!snap)return "";
   const spec=specializationPresentation(boss),status=challengePresentation(snap),abilities=activeAbilityNames(snap),abilityText=abilities.length?abilities.join("、"):"尚無新增能力",remaining=Math.max(0,Math.min(100,n(snap.remainingPercent))),run=runSnapshot(),isActive=run.active===true&&whole(run.bossIndex)===whole(index);
-  return `<article class="map-card universe-boss-card third-world-boss-card ${snap.defeated?"cleared defeated":""} ${isActive?"running":""}" data-third-world-boss="${index}"><div class="third-world-boss-head"><div><h3>${boss.name}</h3><div class="third-world-boss-type">${spec.label}</div></div><div class="third-world-boss-stage">Stage ${whole(snap.stage)}</div></div><div class="third-world-boss-specialization">${spec.effect}</div><div class="third-world-boss-hp"><div class="status-label"><span>剩餘 HP</span><b>${fmt(snap.currentHp)}</b></div><div class="bar"><span class="hp" style="width:${remaining}%"></span></div><div class="third-world-boss-percent">${pct(remaining)}</div></div><div class="third-world-boss-abilities"><span class="muted">已解鎖：</span>${abilityText}</div><div class="third-world-boss-status ${isActive?"running":status.className}"><b>${isActive?"連戰進行中":status.label}</b><span>${isActive?`死亡 ${whole(run.deaths)} / ${whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}｜目前最大 HP ${pct(run.hpCap?.hpCapPercent??100)}`:status.detail}</span></div>${actionHtml(snap,status,index)}</article>`;
+  return `<article class="map-card universe-boss-card third-world-boss-card ${snap.defeated?"cleared defeated":""} ${isActive?"running":""}" data-third-world-boss="${index}"><div class="third-world-boss-head"><div><h3>${boss.name}</h3><div class="third-world-boss-type">${spec.label}</div></div><div class="third-world-boss-stage">Stage ${whole(snap.stage)}</div></div><div class="third-world-boss-specialization">${spec.effect}</div><div class="third-world-boss-hp"><div class="status-label"><span>剩餘 HP</span><b>${fmt(snap.currentHp)}</b></div><div class="bar"><span class="hp" style="width:${remaining}%"></span></div><div class="third-world-boss-percent">${pct(remaining)}</div></div><div class="third-world-boss-abilities"><span class="muted">已解鎖：</span>${abilityText}</div><div class="third-world-boss-status ${isActive?"running":status.className}"><b>${isActive?"連戰進行中":status.label}</b><span>${isActive?`死亡 ${whole(run.deaths)} / ${runMaxDeaths()}｜目前最大 HP ${suppressionPct(run.hpCap?.hpCapPercent??100)}`:status.detail}</span></div>${actionHtml(snap,status,index)}</article>`;
  }
  function summaryHtml(agg){
   const title=titleDefinition(),remaining=Math.max(0,Math.min(100,n(agg?.overallRemainingPercent)));
@@ -70,11 +72,11 @@
   const base=baseAbilityItems().map(([name,value])=>`<div class="third-world-common-item"><b>${name}</b><span>${value}</span></div>`).join(""),unlocks=abilityDefs().map(def=>`<div class="third-world-common-item"><b>${whole(def.unlockRemainingPercent)}%</b><span>${def.name}</span></div>`).join("");
   return `<section class="world-region third-world-common ${commonAbilitiesOpen?"open":""}"><button class="world-region-header" type="button" aria-expanded="${commonAbilitiesOpen?"true":"false"}" onclick="toggleThirdWorldCommonAbilities()"><span class="world-region-title-wrap"><b class="world-region-title">高維存在・共通能力</b><span class="world-region-level">十王共用，不在王卡重複</span></span><span class="world-region-toggle">${commonAbilitiesOpen?"▲":"▼"}</span></button>${commonAbilitiesOpen?`<div class="world-region-body"><div class="third-world-common-section"><h3>固定基礎能力</h3><div class="third-world-common-grid">${base}</div></div><div class="third-world-common-section"><h3>階段新增能力</h3><div class="third-world-common-grid third-world-common-unlocks">${unlocks}</div></div></div>`:""}</section>`;
  }
- function combatRuleHtml(){return `<div class="notice third-world-run-rule"><b>高維正式挑戰皆採連續戰鬥</b><div class="muted">玩家死亡後仍會繼續下一場；一輪最多累積 100 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡、跨入新強化階段或 5% 戰線鎖定時會停止下一場。</div></div>`;}
+ function combatRuleHtml(){return `<div class="notice third-world-run-rule"><b>高維正式挑戰皆採連續戰鬥</b><div class="muted">玩家死亡後仍會繼續下一場；一輪最多累積 ${runMaxDeaths()} 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡、跨入新強化階段或 5% 戰線鎖定時會停止下一場。</div></div>`;}
  function activeRunHtml(){
   const run=runSnapshot();if(run.active!==true)return "";
   const boss=bossDefs()[whole(run.bossIndex)]||null;
-  return `<div class="notice third-world-active-run" role="status"><b>連戰中｜${boss?.name||"高維存在"}</b><div class="muted">死亡 ${whole(run.deaths)} / ${whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)}｜目前最大 HP ${pct(run.hpCap?.hpCapPercent??100)}</div></div>`;
+  return `<div class="notice third-world-active-run" role="status"><b>連戰中｜${boss?.name||"高維存在"}</b><div class="muted">死亡 ${whole(run.deaths)} / ${runMaxDeaths()}｜目前最大 HP ${suppressionPct(run.hpCap?.hpCapPercent??100)}</div></div>`;
  }
  function coreButtonText(snap){if(!snap)return "核心資料未載入";if(snap.atMax)return "界弦核心已達 Lv.10";if(snap.runActive)return "連戰中不可注入";if(snap.dimensionalStrings<=0)return "目前沒有維度之弦可注入";return `全部注入 ${fmt(snap.availableInjection)} 維度之弦`;}
  function corePreviewHtml(snap,plan){
@@ -86,7 +88,7 @@
  function corePanelHtml(){
   const snap=coreSnapshot(),plan=corePlan();if(!snap)return `<section class="card third-world-core-panel"><h2>界弦核心</h2><div class="notice">核心資料尚未載入完整。</div></section>`;
   const progress=Math.max(0,Math.min(100,n(snap.progressPercent))),perDeath=suppressionPerDeath(snap.level),nextPerDeath=snap.atMax?null:suppressionPerDeath(Math.min(maxCore(),snap.level+1)),disabled=!snap.canInject,feedback=coreFeedback?`<div class="third-world-core-feedback ${coreFeedbackOk?"ok":"error"}" role="status">${coreFeedback}</div>`:"";
-  return `<section class="card third-world-core-panel"><div class="third-world-core-head"><div><h2>界弦核心</h2><div class="muted">注入維度之弦累積核心進度。界弦核心只降低高維連戰死亡壓制，不增加一般戰鬥能力。</div></div><div class="third-world-core-level">Lv.${whole(snap.level)} / ${whole(snap.maxLevel)}</div></div><div class="third-world-core-progress"><div class="status-label"><span>${snap.atMax?"核心完成":"目前等級注入進度"}</span><b>${snap.atMax?"MAX":`${fmt(snap.coreProgress)} / ${fmt(snap.progressRequired)}`}</b></div><div class="bar"><span class="hp" style="width:${progress}%"></span></div><div class="third-world-core-progress-meta"><span>${snap.atMax?"100.00%":pct(progress)}</span><span>${snap.atMax?"已達最高等級":`距下一級 ${fmt(snap.remainingToNext)}`}</span></div></div><div class="third-world-core-stats"><div class="stat">持有維度之弦<b>${fmt(snap.dimensionalStrings)}</b></div><div class="stat">本次可注入<b>${fmt(snap.availableInjection)}</b></div><div class="stat">每次死亡壓制<b>${perDeath==null?"—":`${perDeath.toFixed(2)}%`}</b></div><div class="stat">下一級壓制<b>${snap.atMax?"MAX":nextPerDeath==null?"—":`${nextPerDeath.toFixed(2)}%`}</b></div></div>${corePreviewHtml(snap,plan)}${feedback}<button class="btn primary third-world-core-inject" type="button" onclick="injectThirdWorldCoreFromPlayerUi()" ${disabled?"disabled":""}>${coreButtonText(snap)}</button>${snap.runActive?`<div class="muted third-world-core-lock-note">目前正式高維連戰進行中。核心等級會在一輪開始時固定，因此必須先停止連戰才能注入。</div>`:""}</section>`;
+  return `<section class="card third-world-core-panel"><div class="third-world-core-head"><div><h2>界弦核心</h2><div class="muted">注入維度之弦累積核心進度。界弦核心只降低高維連戰死亡壓制，不增加一般戰鬥能力。</div></div><div class="third-world-core-level">Lv.${whole(snap.level)} / ${whole(snap.maxLevel)}</div></div><div class="third-world-core-progress"><div class="status-label"><span>${snap.atMax?"核心完成":"目前等級注入進度"}</span><b>${snap.atMax?"MAX":`${fmt(snap.coreProgress)} / ${fmt(snap.progressRequired)}`}</b></div><div class="bar"><span class="hp" style="width:${progress}%"></span></div><div class="third-world-core-progress-meta"><span>${snap.atMax?"100.00%":pct(progress)}</span><span>${snap.atMax?"已達最高等級":`距下一級 ${fmt(snap.remainingToNext)}`}</span></div></div><div class="third-world-core-stats"><div class="stat">持有維度之弦<b>${fmt(snap.dimensionalStrings)}</b></div><div class="stat">本次可注入<b>${fmt(snap.availableInjection)}</b></div><div class="stat">每次死亡壓制<b>${perDeath==null?"—":`${perDeath.toFixed(3)}%`}</b></div><div class="stat">下一級壓制<b>${snap.atMax?"MAX":nextPerDeath==null?"—":`${nextPerDeath.toFixed(3)}%`}</b></div></div>${corePreviewHtml(snap,plan)}${feedback}<button class="btn primary third-world-core-inject" type="button" onclick="injectThirdWorldCoreFromPlayerUi()" ${disabled?"disabled":""}>${coreButtonText(snap)}</button>${snap.runActive?`<div class="muted third-world-core-lock-note">目前正式高維連戰進行中。核心等級會在一輪開始時固定，因此必須先停止連戰才能注入。</div>`:""}</section>`;
  }
  function ensureCoreConfirmModal(){
   if(typeof document==="undefined")return null;
@@ -135,11 +137,11 @@
  }
  function combatPageHtml(){
   const ctx=playerFlowContext(),combat=ctx?.currentCombat;if(!ctx||!combat)return "";
-  const maxDeaths=Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||100)),deaths=Math.min(maxDeaths,whole(ctx.deaths)),round=Math.max(1,whole(ctx.battleNumber||1));
+  const maxDeaths=runMaxDeaths(),deaths=Math.min(maxDeaths,whole(ctx.deaths)),round=Math.max(1,whole(ctx.battleNumber||1));
   const playerBaseMax=Math.max(1,whole(combat.playerMaxHp)),playerCap=Math.max(1,Math.min(playerBaseMax,whole(combat.playerHealCap||playerBaseMax))),playerStart=Math.max(0,Math.min(playerCap,whole(combat.playerStartHp??playerCap))),playerPct=playerCap?Math.max(0,Math.min(100,playerStart/playerCap*100)):0,capPercent=playerBaseMax?playerCap/playerBaseMax*100:100;
   const enemyMax=Math.max(1,whole(combat.enemyMaxHp||combat.e?.hp||1)),enemyStart=Math.max(0,Math.min(enemyMax,whole(combat.enemyStartHp??enemyMax))),enemyPct=enemyMax?Math.max(0,Math.min(100,enemyStart/enemyMax*100)):0;
   const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1,speedText=[1,1.5,2].includes(speed)?speed:1,bossName=String(ctx.bossName||combat.e?.name||"高維存在");
-  return `<section class="combat-screen third-world-combat-screen"><div class="combat-head main-minimal-mode-head third-world-combat-head"><span class="main-minimal-mode-head-label third-world-combat-head-label"><span>高維連戰・第 ${round} 場</span><small>死亡 ${deaths} / ${maxDeaths}｜目前最大 HP ${pct(capPercent)}｜${speedText}×</small></span><button type="button" class="main-minimal-mode-enter" onclick="openThirdWorldMinimalMode()">極簡模式</button></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${whole(state?.level)}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(playerStart)} / ${fmt(playerCap)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${bossName}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${enemyPct}%"></span></div></div></div></div><div class="combat-message" id="combatMessage">高維連戰進行中</div><div class="continuous-stop-wrap"><button class="btn danger" onclick="stopThirdWorldRunFromPlayerUi()">停止連續戰鬥</button></div></section>`;
+  return `<section class="combat-screen third-world-combat-screen"><div class="combat-head main-minimal-mode-head third-world-combat-head"><span class="main-minimal-mode-head-label third-world-combat-head-label"><span>高維連戰・第 ${round} 場</span><small>死亡 ${deaths} / ${maxDeaths}｜目前最大 HP ${suppressionPct(capPercent)}｜${speedText}×</small></span><button type="button" class="main-minimal-mode-enter" onclick="openThirdWorldMinimalMode()">極簡模式</button></div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${whole(state?.level)}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(playerStart)} / ${fmt(playerCap)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${playerPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${bossName}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${enemyPct}%"></span></div></div></div></div><div class="combat-message" id="combatMessage">高維連戰進行中</div><div class="continuous-stop-wrap"><button class="btn danger" onclick="stopThirdWorldRunFromPlayerUi()">停止連續戰鬥</button></div></section>`;
  }
  function pageHtml(){
   clearCoreFeedbackOnFreshEntry();
@@ -166,8 +168,10 @@
   if(typeof window.setAdventureReviewBattleActive!=="function"||typeof window.isAdventureReviewBattleActive!=="function"||typeof window.getAdventureReviewBattleSource!=="function")errors.push("REVIEW_RUNTIME_LOCK_OWNER_MISSING");
   if(bossCount<=0||bossDefs().length!==bossCount)errors.push("BOSS_DEFINITION_COUNT");
   if(abilityCount<=0||abilityDefs().length!==abilityCount)errors.push("ABILITY_DEFINITION_COUNT");
+  if(runMaxDeaths()!==500)errors.push("MAX_DEATHS_PRESENTATION_CONTRACT");
   const playerCopy=[challengePresentation({challengeStatus:{allowed:true,reason:"last-survivor"}}).detail,challengePresentation({challengeStatus:{allowed:true,reason:"within-five-point-front"}}).detail,combatRuleHtml()].join(" ");
-  if(playerCopy.includes("5pp"))errors.push("PLAYER_PERCENT_TERMINOLOGY");
+  if(playerCopy.includes("5pp")||playerCopy.includes("100 次死亡"))errors.push("PLAYER_RULE_COPY_STALE");
+  const p1=suppressionPerDeath(1);if(p1!==.092||`${p1.toFixed(3)}%`!=="0.092%")errors.push("SUPPRESSION_THREE_DECIMAL_PRESENTATION");
   return Object.freeze({version:VERSION,coreUiVersion:CORE_UI_VERSION,coreFeedbackLifecycleVersion:CORE_FEEDBACK_LIFECYCLE_VERSION,coreConfirmationVersion:CORE_CONFIRMATION_VERSION,runEntryUiVersion:RUN_ENTRY_UI_VERSION,threeColumnHeaderVersion:THREE_COLUMN_HEADER_VERSION,combatPageUiVersion:COMBAT_PAGE_UI_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
