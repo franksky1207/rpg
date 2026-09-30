@@ -21,8 +21,8 @@
    }).join("");
    return `<div class="muted gm-hub-note">高維紀元正式強化固定 +40，無法修改。此設定不影響 GM 測試沙盒。</div><div class="gm-enhancement-grid">${rows}</div>`;
   };
-  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("manage","enhancement-manage",()=>window.gmEnhancementManagementHtml());
  }
  window.GM_ENHANCEMENT_WORLD3_LOCK_VERSION=1;
  window.GM_ENHANCEMENT_WORLD3_FIXED_VALUE_UI_VERSION=1;
+ window.GM_ENHANCEMENT_HUB_REPLACE_WORKAROUND_RETIRED_VERSION=1;
 })();
