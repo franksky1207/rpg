@@ -1,6 +1,7 @@
 (function(){
- const VERSION=4;
- const THIRD_WORLD_ADVENTURE_RETURN_VERSION=1;
+ const VERSION=5;
+ const THIRD_WORLD_ADVENTURE_RETURN_VERSION=2;
+ const THIRD_WORLD_RETURN_MODE="third-world-main";
  const FOCUS_MODE_ENTRY="entry";
  const FOCUS_MODE_POST_REDEEM="post-redeem";
  let pendingMode=null;
@@ -40,20 +41,28 @@
   else setTimeout(run,0);
   return true;
  }
+ function setThirdWorldReturnContext(){
+  try{
+   inventoryReturnContext={mode:THIRD_WORLD_RETURN_MODE,screen:"maps"};
+   return inventoryReturnContext?.mode===THIRD_WORLD_RETURN_MODE;
+  }catch(_){return false;}
+ }
  function openThirdWorldAdventureInventory(){
   const run=typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;
   if(run?.active===true&&typeof window.stopThirdWorldRunFromPlayerUi==="function")window.stopThirdWorldRunFromPlayerUi();
   if(typeof window.openAdventureInventory!=="function")return false;
   window.openAdventureInventory();
-  return true;
+  return setThirdWorldReturnContext();
  }
  function thirdWorldReturnIntegrity(){
   const errors=[];
-  const source=Function.prototype.toString.call(openThirdWorldAdventureInventory);
+  const openSource=Function.prototype.toString.call(openThirdWorldAdventureInventory),contextSource=Function.prototype.toString.call(setThirdWorldReturnContext);
   if(typeof window.openAdventureInventory!=="function")errors.push({code:"SHARED_ADVENTURE_INVENTORY_OWNER_MISSING"});
-  if(!/openAdventureInventory/.test(source))errors.push({code:"THIRD_WORLD_SHARED_RETURN_WIRING_MISSING"});
-  if(!/stopThirdWorldRunFromPlayerUi/.test(source))errors.push({code:"THIRD_WORLD_RUN_STOP_WIRING_MISSING"});
-  return Object.freeze({version:THIRD_WORLD_ADVENTURE_RETURN_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  if(!/openAdventureInventory/.test(openSource))errors.push({code:"THIRD_WORLD_SHARED_RETURN_WIRING_MISSING"});
+  if(!/stopThirdWorldRunFromPlayerUi/.test(openSource))errors.push({code:"THIRD_WORLD_RUN_STOP_WIRING_MISSING"});
+  if(!/third-world-main/.test(String(THIRD_WORLD_RETURN_MODE))||!/inventoryReturnContext/.test(contextSource))errors.push({code:"THIRD_WORLD_EXPLICIT_RETURN_CONTEXT_MISSING"});
+  if(/universe-main/.test(contextSource))errors.push({code:"THIRD_WORLD_RETURN_CONTEXT_UNIVERSE_ALIAS"});
+  return Object.freeze({version:THIRD_WORLD_ADVENTURE_RETURN_VERSION,mode:THIRD_WORLD_RETURN_MODE,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.requestInventoryEntryFocus=requestEntryFocus;
@@ -64,6 +73,7 @@
  window.thirdWorldOpenInventoryFromPlayerUi=openThirdWorldAdventureInventory;
  window.INVENTORY_FOCUS_VERSION=VERSION;
  window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_VERSION=THIRD_WORLD_ADVENTURE_RETURN_VERSION;
+ window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_MODE=THIRD_WORLD_RETURN_MODE;
  window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY=thirdWorldReturnIntegrity();
  if(!window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY.passed)console.error("[文明戰線] Third-world inventory return integrity error",window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY.errors);
 })();
