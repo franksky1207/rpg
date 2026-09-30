@@ -1,5 +1,6 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
+ const THIRD_WORLD_ADVENTURE_RETURN_VERSION=1;
  const FOCUS_MODE_ENTRY="entry";
  const FOCUS_MODE_POST_REDEEM="post-redeem";
  let pendingMode=null;
@@ -39,11 +40,30 @@
   else setTimeout(run,0);
   return true;
  }
+ function openThirdWorldAdventureInventory(){
+  const run=typeof window.thirdWorldContinuousRunSnapshot==="function"?window.thirdWorldContinuousRunSnapshot():null;
+  if(run?.active===true&&typeof window.stopThirdWorldRunFromPlayerUi==="function")window.stopThirdWorldRunFromPlayerUi();
+  if(typeof window.openAdventureInventory!=="function")return false;
+  window.openAdventureInventory();
+  return true;
+ }
+ function thirdWorldReturnIntegrity(){
+  const errors=[];
+  const source=Function.prototype.toString.call(openThirdWorldAdventureInventory);
+  if(typeof window.openAdventureInventory!=="function")errors.push({code:"SHARED_ADVENTURE_INVENTORY_OWNER_MISSING"});
+  if(!/openAdventureInventory/.test(source))errors.push({code:"THIRD_WORLD_SHARED_RETURN_WIRING_MISSING"});
+  if(!/stopThirdWorldRunFromPlayerUi/.test(source))errors.push({code:"THIRD_WORLD_RUN_STOP_WIRING_MISSING"});
+  return Object.freeze({version:THIRD_WORLD_ADVENTURE_RETURN_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+ }
 
  window.requestInventoryEntryFocus=requestEntryFocus;
  window.requestInventoryPostRedeemFocus=requestPostRedeemFocus;
  window.applyInventoryFocus=applyFocus;
  window.resolveInventoryFocusTarget=resolveFocusTarget;
  window.inventoryHasEquipmentUpgrade=hasUpgrade;
+ window.thirdWorldOpenInventoryFromPlayerUi=openThirdWorldAdventureInventory;
  window.INVENTORY_FOCUS_VERSION=VERSION;
+ window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_VERSION=THIRD_WORLD_ADVENTURE_RETURN_VERSION;
+ window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY=thirdWorldReturnIntegrity();
+ if(!window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY.passed)console.error("[文明戰線] Third-world inventory return integrity error",window.THIRD_WORLD_ADVENTURE_INVENTORY_RETURN_INTEGRITY.errors);
 })();
