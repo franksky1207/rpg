@@ -47,6 +47,7 @@
   return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
  window.SECOND_WORLD_PROGRESS_MANAGEMENT_OWNER_VERSION=VERSION;
+ window.GM_SECOND_WORLD_PROGRESS_MANAGEMENT_VERSION=1;
  window.secondWorldProgressManagementClamp=clampCount;
  window.secondWorldProgressManagementSnapshot=snapshot;
  window.rebuildSecondWorldFormalProgress=rebuild;
