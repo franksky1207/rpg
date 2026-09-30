@@ -1,6 +1,6 @@
 (function(){
- const VERSION=7;
- const SUPPRESSION_VERSION=2;
+ const VERSION=8;
+ const SUPPRESSION_VERSION=3;
  const RUNTIME_VERSION=4;
  const EVENT_TERMINAL_VERSION=1;
  const LEGACY_EVENT_ACK_VERSION=1;
@@ -13,7 +13,7 @@
  const RUN_TOTALS_VERSION=1;
  const RUN_IDENTITY_VERSION=1;
  const EXCEPTION_CLEANUP_VERSION=1;
- const INTEGRITY_VERSION=9;
+ const INTEGRITY_VERSION=10;
  const SHARED_CONTINUOUS_INFRA_VERSION=1;
  const SHARED_INFRA_STRICT_VERSION=1;
  const CORE_RUN_SNAPSHOT_VERSION=1;
@@ -26,9 +26,9 @@
  const VIP20_DEATH_PROTECTION_VERSION=1;
  const OWN_MINIMAL_MODE_GUARD_VERSION=1;
  const OWN_MINIMAL_MODE_ADAPTER_ID="third-world-mainline";
- const MAX_DEATHS=100;
- const BASE_SUPPRESSION_PER_DEATH=.50;
- const CORE_REDUCTION_PER_LEVEL=.04;
+ const MAX_DEATHS=500;
+ const BASE_SUPPRESSION_PER_DEATH=.10;
+ const CORE_REDUCTION_PER_LEVEL=.008;
  const RECENT_HISTORY_LIMIT=20;
  const FLOW_KIND="third-world";
  const BLOCKER_NAME="third-world-run";
@@ -45,7 +45,7 @@
  function freeze(value){return Object.freeze(value);}
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function resolveBossIndex(value){return typeof window.thirdWorldBossIndex==="function"?window.thirdWorldBossIndex(value):-1;}
- function round2(value){return Math.round((Number(value)||0)*100)/100;}
+ function round3(value){return Math.round((Number(value)||0)*1000)/1000;}
  function runInfra(){
   if(sharedRunInfra)return sharedRunInfra;
   if(typeof window.createContinuousRunInfrastructure==="function")sharedRunInfra=window.createContinuousRunInfrastructure({flowKind:FLOW_KIND,mode:"continuous",historyLimit:RECENT_HISTORY_LIMIT,blockerName:BLOCKER_NAME});
@@ -64,7 +64,7 @@
  function coreLevel(target=currentState()){return clamp(finiteWhole(target?.thirdWorld?.coreLevel,0),0,coreMaxLevel());}
  function suppressionPerDeathPoints(value=coreLevel()){
   const level=clamp(finiteWhole(value,0),0,coreMaxLevel());
-  return round2(BASE_SUPPRESSION_PER_DEATH-level*CORE_REDUCTION_PER_LEVEL);
+  return round3(BASE_SUPPRESSION_PER_DEATH-level*CORE_REDUCTION_PER_LEVEL);
  }
  function playerMaxHp(target=currentState(),override=null){
   if(override!=null)return Math.max(1,finiteWhole(override,1));
@@ -73,8 +73,8 @@
   return Math.max(1,finiteWhole(stats?.hp,1));
  }
  function hpCapSnapshot(deaths,target=currentState(),maxHpOverride=null,coreLevelOverride=null){
-  const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevelOverride==null?coreLevel(target):clamp(finiteWhole(coreLevelOverride,0),0,coreMaxLevel()),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round2(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
-  return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,coreMaxLevel:coreMaxLevel(),perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round2(fraction*100)});
+  const deathCount=clamp(finiteWhole(deaths,0),0,MAX_DEATHS),level=coreLevelOverride==null?coreLevel(target):clamp(finiteWhole(coreLevelOverride,0),0,coreMaxLevel()),perDeath=suppressionPerDeathPoints(level),suppressionPoints=round3(deathCount*perDeath),maxHp=playerMaxHp(target,maxHpOverride),fraction=clamp(1-suppressionPoints/100,0,1),hpCap=Math.max(1,Math.floor(maxHp*fraction));
+  return freeze({version:SUPPRESSION_VERSION,deaths:deathCount,maxDeaths:MAX_DEATHS,coreLevel:level,coreMaxLevel:coreMaxLevel(),perDeathSuppressionPoints:perDeath,suppressionPoints,maxHp,hpCap,hpCapPercent:round3(fraction*100)});
  }
  function boundedSummaries(rows){const infra=runInfra();return freeze(infra?infra.boundedHistory(rows,RECENT_HISTORY_LIMIT):(Array.isArray(rows)?rows:[]).slice(-RECENT_HISTORY_LIMIT));}
  function activeBackgroundKind(){const infra=runInfra();return infra?infra.activeKind():"";}
@@ -233,7 +233,7 @@
  }
  function runOneBattle(options={}){
   if(!runtime?.active)return freeze({ok:false,reason:"高維連戰尚未開始。",snapshot:runtimeSnapshot()});
-  if(runtime.deaths>=MAX_DEATHS)return freeze({ok:false,reason:"本輪已達 100 次死亡上限。",snapshot:clearRuntime("death-limit")});
+  if(runtime.deaths>=MAX_DEATHS)return freeze({ok:false,reason:`本輪已達 ${MAX_DEATHS} 次死亡上限。`,snapshot:clearRuntime("death-limit")});
   const conflict=runtimeConflictStatus();
   if(conflict.blocked||!backgroundFlowOwned())return freeze({ok:false,reason:"其他正式戰鬥／背景流程已接管，停止高維連戰。",runtime:conflict,snapshot:clearRuntime("active-runtime")});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")return freeze({ok:false,reason:"高維戰鬥／結算 owner 尚未載入。",snapshot:clearRuntime("owner-missing")});
@@ -322,14 +322,14 @@
  }
  function validate(){
   const errors=[];
-  const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(100,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(50,{thirdWorld:{coreLevel:5}},10000),hOverride=hpCapSnapshot(100,{thirdWorld:{coreLevel:maxCore}},10000,0),life=battleOptions({},freeze({hpCap:777})),backgroundPolicy=backgroundPolicySnapshot();
+  const maxCore=coreMaxLevel(),p0=suppressionPerDeathPoints(0),p1=suppressionPerDeathPoints(1),pMax=suppressionPerDeathPoints(maxCore),h0=hpCapSnapshot(500,{thirdWorld:{coreLevel:0}},10000),hMax=hpCapSnapshot(500,{thirdWorld:{coreLevel:maxCore}},10000),hMid=hpCapSnapshot(250,{thirdWorld:{coreLevel:5}},10000),hOverride=hpCapSnapshot(500,{thirdWorld:{coreLevel:maxCore}},10000,0),life=battleOptions({},freeze({hpCap:777})),backgroundPolicy=backgroundPolicySnapshot();
   const ownMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open"],activeBackgroundKind:FLOW_KIND},true);
   const foreignMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open"],activeBackgroundKind:FLOW_KIND},false);
   const mixedMinimalProbe=normalizeRuntimeConflict({blocked:true,blockers:["minimal-mode-open","arena-active"],activeBackgroundKind:FLOW_KIND},true);
   if(maxCore!==10)errors.push({code:"CORE_MAX_OWNER",maxCore});
-  if(p0!==.5||pMax!==.1)errors.push({code:"SUPPRESSION_ENDPOINTS",p0,pMax,maxCore});
-  if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"HUNDRED_DEATH_CAP",h0,hMax});
-  if(hMid.perDeathSuppressionPoints!==.3||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
+  if(MAX_DEATHS!==500||p0!==.1||p1!==.092||pMax!==.02)errors.push({code:"SUPPRESSION_ENDPOINTS",maxDeaths:MAX_DEATHS,p0,p1,pMax,maxCore});
+  if(h0.hpCapPercent!==50||h0.hpCap!==5000||hMax.hpCapPercent!==90||hMax.hpCap!==9000)errors.push({code:"FIVE_HUNDRED_DEATH_CAP",h0,hMax});
+  if(hMid.perDeathSuppressionPoints!==.06||hMid.hpCapPercent!==85||hMid.hpCap!==8500)errors.push({code:"MID_CORE_CAP",hMid});
   if(hOverride.coreLevel!==0||hOverride.hpCapPercent!==50||hOverride.hpCap!==5000)errors.push({code:"RUN_START_CORE_OVERRIDE",hOverride});
   if(life.startHp!==777||life.playerHealCap!==777)errors.push({code:"HP_LIFECYCLE_CAP",life});
   if(ownMinimalProbe.blocked||ownMinimalProbe.blockers.length!==0||foreignMinimalProbe.blocked!==true||foreignMinimalProbe.blockers[0]!=="minimal-mode-open"||mixedMinimalProbe.blocked!==true||mixedMinimalProbe.blockers.length!==1||mixedMinimalProbe.blockers[0]!=="arena-active")errors.push({code:"OWN_MINIMAL_MODE_GUARD",ownMinimalProbe,foreignMinimalProbe,mixedMinimalProbe});
