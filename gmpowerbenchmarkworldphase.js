@@ -1,8 +1,9 @@
 (function(){
- const VERSION=9;
- const WORLD3_MAP_TEST_VERSION=3;
- const WORLD3_ANALYTICS_VERSION=2;
+ const VERSION=10;
+ const WORLD3_MAP_TEST_VERSION=4;
+ const WORLD3_ANALYTICS_VERSION=3;
  const WORLD3_RESULT_CONSISTENCY_VERSION=1;
+ const WORLD3_ANALYTICS_REGRESSION_VERSION=1;
  const world3={modeOverride:null,bossIndex:0,stage:0,runs:100,busy:false,result:null};
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
  function whole(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Math.max(min,Math.min(max,Number.isFinite(n)?n:min));}
@@ -205,6 +206,7 @@
  }
  function recordAbilityEvent(stats,event,side){
   if(event?.type==="attack"&&event.actor===side){if(event.initiative)stats.initiative.count++;if(event.penetration)stats.penetration.count++;return;}
+  if(event?.type==="dodge"&&event.actor===side){if(event.initiative)stats.initiative.count++;return;}
   if(event?.type==="combo"&&event.actor===side){stats.combo.count++;return;}
   if(event?.type==="counter"&&event.actor===side){stats.counter.count++;return;}
   if(event?.type==="drain"&&event.actor===side){stats.drain.count++;stats.drain.healed+=Math.max(0,Number(event.healed)||0);}
@@ -335,6 +337,43 @@
   if(typeof baseFormalSync==="function"&&!baseFormalSync.__benchmarkRefreshAdapter){const wrapped=function(...args){const result=baseFormalSync(...args);refreshBenchmarkAfterFormalSync();return result;};wrapped.__benchmarkRefreshAdapter=VERSION;window.gmUseCurrentTestStatus=wrapped;}
   return true;
  }
+ function buildWorld3AnalyticsRegression(){
+  const errors=[];const check=(ok,code,data=null)=>{if(!ok)errors.push({code,data});};
+  try{
+   const ability=emptyAbilityStats();
+   [{type:"attack",actor:"player",initiative:true,penetration:true},{type:"dodge",actor:"player",initiative:true},{type:"combo",actor:"player"},{type:"counter",actor:"player"},{type:"drain",actor:"player",healed:25}].forEach(event=>recordAbilityEvent(ability,event,"player"));
+   check(ability.initiative.count===2,"ability-initiative-count",ability.initiative.count);
+   check(ability.penetration.count===1&&ability.combo.count===1&&ability.counter.count===1&&ability.drain.count===1&&ability.drain.healed===25,"ability-event-counts",ability);
+   const active={composure:{active:true},suppression:{active:true},resilience:{active:true},revenge:{active:true},backlash:{active:true},ignore:{active:true},battleSpirit:{active:true}},stageStats=emptyStageStats(active);
+   [{type:"mark",owner:"enemy",mark:"composure",action:"preventCrit"},{type:"mark",owner:"enemy",mark:"suppression",action:"preventDodge"},{type:"mark",owner:"enemy",mark:"resilience",action:"reduceCritDamage",originalDamage:150,finalDamage:120},{type:"mark",owner:"enemy",mark:"revenge",action:"ready"},{type:"mark",owner:"enemy",mark:"revenge",action:"consume"},{type:"mark",owner:"enemy",mark:"backlash",action:"trigger",actualDamage:40},{type:"mark",owner:"enemy",mark:"ignore",action:"trigger"},{type:"mark",owner:"enemy",mark:"battleSpirit",action:"activate"}].forEach(event=>recordStageEvent(stageStats,event));
+   check(stageStats.composure.count===1&&stageStats.suppression.count===1&&stageStats.resilience.count===1&&stageStats.resilience.preventedDamage===30&&stageStats.revenge.ready===1&&stageStats.revenge.consume===1&&stageStats.backlash.count===1&&stageStats.backlash.damage===40&&stageStats.ignore.count===1&&stageStats.battleSpirit.activations===1,"stage-event-counts",stageStats);
+   check(ratePerRun(6,3)===2,"completed-denominator",ratePerRun(6,3));
+   if(typeof window.runCombatCore==="function"){
+    const dodgeProbe=window.runCombatCore({hp:100,atk:1,def:0,crit:0,dodge:100},{name:"initiative-dodge-probe",hp:100,atk:10,def:0,crit:0,dodge:0},100,{logs:false,preparePresentation:false,skipPlayerAction:true,maxTurns:1,enemyAbilityProfile:{initiativeBonusPercent:60},rng:()=>0});
+    const dodgeEvent=(dodgeProbe?.events||[]).find(event=>event?.type==="dodge"&&event.actor==="enemy");
+    check(dodgeEvent?.initiative===true,"combat-dodge-initiative-event",dodgeEvent||null);
+   }else errors.push({code:"combat-core-missing",data:null});
+   const previousResult=world3.result;
+   world3.result={world:3,bossIndex:0,name:"回歸測試",stage:9,runs:4,completed:3,failed:1,firstFailureReason:"probe",formalStartHp:1000,bossMaxHp:1000,civilizationLevel:10,characterSnapshot:{characterWorld:3,level:1000,vipLevel:20,stats:{hp:100,atk:10,def:5},civilizationLevel:10,equipmentSource:"generated"},specialization:{label:"測試",effect:"—"},activeAbilities:"測試",avgTurns:2,totalPermanentDamage:300,avgPermanentDamage:100,avgDamagePerTurn:50,equivalentBossHpPercent:30,estimatedDeathsToDefeat:10,estimatedDeathsToNextStage:null,playerCritRate:0,playerDodgeRate:0,playerAbilities:{initiative:{count:6},combo:{count:0},penetration:{count:0},counter:{count:0},drain:{count:0,healed:0}},bossAbilities:emptyAbilityStats(),stageAbilities:emptyStageStats({})};
+   const summary=appendWorld3Summary("");
+   check(summary.includes("有效完成 3 場｜失敗 1 場"),"summary-completed-failed",summary);
+   check(summary.includes("先制 6 次（2 / 場）"),"summary-completed-denominator",summary);
+   check(summary.includes("Stage 9：已無下一 Stage"),"summary-stage9",summary);
+   if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function"){window.gmPowerBenchmarkInvalidateSnapshot();check(world3.result===null,"result-invalidation",world3.result);}else errors.push({code:"invalidation-owner-missing",data:null});
+   world3.result=previousResult;
+   if(typeof window.runThirdWorldBossCombat==="function"){
+    const holder=typeof state!=="undefined"&&state&&typeof state==="object"?state:null;
+    const before=holder?.thirdWorld?.bosses?JSON.stringify(holder.thirdWorld.bosses.map(row=>row?.currentHp??null)):null;
+    const boss=thirdBoss(0),formalStartHp=Math.max(1,Math.floor(Number(boss?.maxHp)||1));
+    const probe=window.runThirdWorldBossCombat(0,{ignoreUnlock:true,formalStartHp,player:{hp:1,atk:1,def:0,crit:0,dodge:0},startHp:1,playerHealCap:1,civilizationLevel:0,logs:false,preparePresentation:false,rng:()=>.99,maxTurns:10});
+    const after=holder?.thirdWorld?.bosses?JSON.stringify(holder.thirdWorld.bosses.map(row=>row?.currentHp??null)):null;
+    check(probe?.ok===true,"third-world-headless-probe",probe?.reason||null);
+    if(probe?.ok)check(Number(probe.effectivePermanentDamage)===Math.max(0,Number(probe.formalStartHp)-Number(probe.combatEndHp)),"permanent-damage-contract",{formalStartHp:probe.formalStartHp,combatEndHp:probe.combatEndHp,effectivePermanentDamage:probe.effectivePermanentDamage});
+    check(before===after,"formal-boss-hp-mutated",{before,after});
+   }else errors.push({code:"third-world-combat-owner-missing",data:null});
+  }catch(error){errors.push({code:"regression-exception",data:String(error?.message||error)});}
+  return Object.freeze({version:WORLD3_ANALYTICS_REGRESSION_VERSION,passed:errors.length===0,errors:Object.freeze(errors),checkedAt:Date.now()});
+ }
  window.GM_POWER_BENCHMARK_WORLD_PHASE_ADAPTER_VERSION=VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_POWER_BENCHMARK_FORMAL_SYNC_REFRESH_VERSION=2;
@@ -342,6 +381,7 @@
  window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_VERSION=WORLD3_MAP_TEST_VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_VERSION=WORLD3_ANALYTICS_VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_RESULT_CONSISTENCY_VERSION=WORLD3_RESULT_CONSISTENCY_VERSION;
+ window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION_VERSION=WORLD3_ANALYTICS_REGRESSION_VERSION;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
  window.gmPowerBenchmarkRefreshAfterFormalSync=refreshBenchmarkAfterFormalSync;
@@ -353,21 +393,27 @@
  window.gmPowerBenchmarkThirdWorldResultSnapshot=function(){return world3.result?JSON.parse(JSON.stringify(world3.result)):null;};
  window.gmPowerBenchmarkThirdWorldSelection=function(){return {bossIndex:world3.bossIndex,stage:world3.stage,runs:world3.runs,formalStartHp:stageHp()};};
  install();
+ const analyticsRegression=buildWorld3AnalyticsRegression();
+ window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION=analyticsRegression;
  const integrityErrors=[];
  if(typeof window.thirdWorldBoss!=="function"||typeof window.thirdWorldBossStats!=="function"||typeof window.thirdWorldBossAbilities!=="function")integrityErrors.push("third-world-data-owner-missing");
  if(typeof window.runThirdWorldBossCombat!=="function")integrityErrors.push("third-world-combat-owner-missing");
+ if(Number(window.COMBAT_DODGE_INITIATIVE_EVENT_VERSION)!==1)integrityErrors.push("combat-dodge-initiative-event-version");
  if(thirdBossCount()!==10)integrityErrors.push("third-world-boss-count");
  for(let stage=0;stage<=9;stage++){
   const boss=thirdBoss(0),hp=(()=>{const max=Math.max(1,Math.floor(Number(boss?.maxHp)||1));return stage===0?max:Math.max(1,Math.floor(max*(100-stage*10)/100));})();
   const actual=typeof window.thirdWorldBossStage==="function"?window.thirdWorldBossStage(hp,boss?.maxHp):stage;
   if(Number(actual)!==stage)integrityErrors.push(`third-world-stage-${stage}`);
  }
- if(WORLD3_ANALYTICS_VERSION!==2)integrityErrors.push("world3-analytics-version");
+ if(WORLD3_ANALYTICS_VERSION!==3)integrityErrors.push("world3-analytics-version");
  if(WORLD3_RESULT_CONSISTENCY_VERSION!==1)integrityErrors.push("world3-result-consistency-version");
+ if(WORLD3_ANALYTICS_REGRESSION_VERSION!==1)integrityErrors.push("world3-analytics-regression-version");
  if(window.gmPowerBenchmarkInvalidateSnapshot?.__world3ResultInvalidationAdapter!==VERSION)integrityErrors.push("world3-result-invalidation-wiring");
- const runSource=Function.prototype.toString.call(runThirdWorldMapBenchmark),resultSource=Function.prototype.toString.call(thirdResultHtml),summarySource=Function.prototype.toString.call(appendWorld3Summary);
+ if(!analyticsRegression.passed)analyticsRegression.errors.forEach(row=>integrityErrors.push(`world3-regression:${row.code}`));
+ const runSource=Function.prototype.toString.call(runThirdWorldMapBenchmark),resultSource=Function.prototype.toString.call(thirdResultHtml),summarySource=Function.prototype.toString.call(appendWorld3Summary),abilitySource=Function.prototype.toString.call(recordAbilityEvent);
  if(!runSource.includes("firstFailureReason")||!runSource.includes("characterSnapshot")||!runSource.includes("failed++"))integrityErrors.push("world3-run-result-consistency");
  if(!resultSource.includes("r.completed")||!resultSource.includes("r.failed")||!resultSource.includes("依目前 Stage 效率推估擊破"))integrityErrors.push("world3-result-presentation-consistency");
  if(!summarySource.includes("有效完成")||!summarySource.includes("失敗")||!summarySource.includes("本次角色快照")||!summarySource.includes("Stage 9：已無下一 Stage"))integrityErrors.push("world3-summary-consistency");
- window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_INTEGRITY={passed:integrityErrors.length===0,errors:integrityErrors,checkedAt:Date.now()};
+ if(!abilitySource.includes('event?.type==="dodge"')||!abilitySource.includes("event.initiative"))integrityErrors.push("world3-dodge-initiative-counter");
+ window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_INTEGRITY={passed:integrityErrors.length===0,errors:integrityErrors,analyticsRegression,checkedAt:Date.now()};
 })();
