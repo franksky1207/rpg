@@ -1,11 +1,12 @@
 (function(){
- const VERSION=8;
+ const VERSION=9;
  const POST_FLOW_COORDINATOR_VERSION=1;
  const STORY_POST_FLOW_SEQUENCE_VERSION=1;
  const TITLE_NOTICE_HOLD_VERSION=1;
  const PRESENTATION_ADAPTER_VERSION=1;
  const MINIMAL_MODE_ADAPTER_VERSION=2;
- const HP_CAP_PRESENTATION_VERSION=3;
+ const HP_CAP_PRESENTATION_VERSION=4;
+ const HP_CAP_FALLBACK_OWNER_VERSION=1;
  const PROGRESS_EVENT_PRESENTATION_VERSION=1;
  const CATCH_UP_SYNC_VERSION=1;
  const RUN_SUMMARY_PRESENTATION_VERSION=1;
@@ -43,9 +44,14 @@
  function syncMinimal(){if(minimalOpen()&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();}
  function setTitlePostFlowHold(held){return typeof window.setPlayerTitlePostFlowHold==="function"?window.setPlayerTitlePostFlowHold(TITLE_HOLD_SOURCE,held):null;}
  async function drainPostFlowStories(){if(typeof window.civilizationStoryProgress?.drainThirdWorldPostFlowStories==="function")return await window.civilizationStoryProgress.drainThirdWorldPostFlowStories();window.civilizationStoryProgress?.resume?.();return Object.freeze({ok:false,deferred:true,reason:"story-post-flow-owner-missing"});}
- function capFromCombat(combat){
-  const baseMax=Math.max(1,whole(combat?.playerMaxHp)),cap=Math.max(1,Math.min(baseMax,whole(combat?.playerHealCap||baseMax)));
-  return {baseMax,cap,percent:baseMax>0?cap/baseMax*100:100};
+ function capFromCombat(combat,deathsOverride=null){
+  const baseMax=Math.max(1,whole(combat?.playerMaxHp)),ratioCap=Math.max(1,Math.min(baseMax,whole(combat?.playerHealCap||baseMax))),runtime=runSnapshot(),deaths=whole(deathsOverride??displayContext()?.deaths??runtime?.deaths),coreAtStart=runtime?.coreLevelAtStart;
+  if(typeof window.thirdWorldRunHpCapSnapshot==="function"){
+   const formal=window.thirdWorldRunHpCapSnapshot(deaths,undefined,baseMax,coreAtStart==null?null:coreAtStart);
+   const formalCap=Number(formal?.hpCap),formalPercent=Number(formal?.hpCapPercent);
+   if(Number.isFinite(formalCap)&&Number.isFinite(formalPercent))return {baseMax,cap:Math.max(1,Math.min(baseMax,whole(formalCap))),percent:clamp(formalPercent,0,100),source:"run-owner"};
+  }
+  return {baseMax,cap:ratioCap,percent:baseMax>0?ratioCap/baseMax*100:100,source:"combat-ratio"};
  }
  function coreCombat(step){return step?.combat?.combat&&typeof step.combat.combat==="object"?step.combat.combat:null;}
  function publicContext(source=activeContext){
@@ -70,7 +76,7 @@
  }
  function refreshContextFromStep(step){
   if(!activeContext)return null;
-  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),derivedCap=capFromCombat(combat),formalCap=step?.snapshot?.hpCap||{},deathsAfter=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths),deathsAtBattleStart=Math.max(0,deathsAfter-(step?.countsDeath===true?1:0));
+  const combat=coreCombat(step),summary=step?.summary||{},boss=bossDefinition(summary.bossIndex??activeContext.bossIndex),formalCap=step?.snapshot?.hpCap||{},deathsAfter=whole(step?.deathsAfter??step?.snapshot?.deaths??activeContext.deaths),deathsAtBattleStart=Math.max(0,deathsAfter-(step?.countsDeath===true?1:0)),derivedCap=capFromCombat(combat,deathsAtBattleStart);
   activeContext.bossIndex=whole(summary.bossIndex??activeContext.bossIndex);
   activeContext.bossName=String(boss?.name||step?.combat?.bossName||combat?.e?.name||activeContext.bossName||"高維存在");
   activeContext.battleNumber=Math.max(1,whole(summary.battleNumber||activeContext.battleNumber||1));
@@ -93,7 +99,7 @@
   }
  }
  function presentationResult(combat){
-  const cap=capFromCombat(combat),playerStart=Math.max(0,Math.min(cap.cap,whole(combat?.playerStartHp??cap.cap)));
+  const cap=capFromCombat(combat,displayContext()?.deaths),playerStart=Math.max(0,Math.min(cap.cap,whole(combat?.playerStartHp??cap.cap)));
   return {...combat,playerMaxHp:cap.cap,playerStartHp:playerStart,e:combat?.e?{...combat.e,hp:Math.max(1,whole(combat.enemyMaxHp||combat.e.hp||1))}:combat?.e};
  }
  function abilityName(id){
@@ -376,6 +382,7 @@
   if(typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function"||typeof window.setPlayerTitlePostFlowHold!=="function"||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1)errors.push("SHARED_TITLE_POST_FLOW_MISSING");
   if(Number(window.THIRD_WORLD_RUN_TOTALS_VERSION)!==1)errors.push("RUN_TOTALS_CONTRACT_MISSING");
   if(Number(window.THIRD_WORLD_RUN_IDENTITY_VERSION)!==1||Number(window.THIRD_WORLD_RUN_EXCEPTION_CLEANUP_VERSION)!==1||Number(window.THIRD_WORLD_RUN_LAST_FINISHED_SNAPSHOT_VERSION)!==2)errors.push("RUN_IDENTITY_CONTRACT_MISSING");
+  if(typeof window.thirdWorldRunHpCapSnapshot!=="function")errors.push("HP_CAP_FORMAL_FALLBACK_OWNER_MISSING");
   if(environmentSubscribed!==true)errors.push("BACKGROUND_ENVIRONMENT_SYNC_MISSING");
   if(runMaxDeaths()!==500)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
@@ -383,7 +390,7 @@
   if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||front.label!=="戰線進度已更新"||stage.label!=="Stage 已改變"||limit.category!=="limit"||limit.label!=="已達本輪 500 次死亡上限"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
-  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues),refreshSource=Function.prototype.toString.call(refreshContextFromStep);
+  const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues),refreshSource=Function.prototype.toString.call(refreshContextFromStep),capSource=Function.prototype.toString.call(capFromCombat);
   const summaryIndex=flowSource.indexOf("await presentRunSummary"),storyIndex=flowSource.indexOf("await drainPostFlowStories"),releaseIndex=flowSource.indexOf("setTitlePostFlowHold(false)",storyIndex),titleIndex=flowSource.indexOf("flushPendingPlayerTitleNoticeAfterFlow",storyIndex);
   if(summaryIndex<0||storyIndex<summaryIndex||releaseIndex<storyIndex||titleIndex<releaseIndex)errors.push("POST_FLOW_SEQUENCE");
   if(flowSource.indexOf("runId")<0||finalSource.indexOf("expectedRunId")<0||finalSource.indexOf("thirdWorldLastFinishedRunSnapshot(expectedRunId)")<0)errors.push("RUN_IDENTITY_GUARD");
@@ -392,7 +399,8 @@
   if(!stepSource.includes("if(step?.terminalReason)finishMinimalMode()")||!minimalSource.includes("mode===\"stopped\"")||!minimalSource.includes("stopReasonPresentation"))errors.push("MINIMAL_STOP_PRESENTATION_WIRING");
   if(suppressionPct(99.908)!=="99.908%")errors.push("HP_CAP_THREE_DECIMAL_PRESENTATION");
   if(!refreshSource.includes("snapshot?.hpCap")||!refreshSource.includes("formalCap.hpCapPercent"))errors.push("HP_CAP_FORMAL_PERCENT_OWNER");
-  return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  if(!capSource.includes("thirdWorldRunHpCapSnapshot")||!capSource.includes("source:\"run-owner\"")||!capSource.includes("source:\"combat-ratio\""))errors.push("HP_CAP_FALLBACK_OWNER_WIRING");
+  return Object.freeze({version:VERSION,postFlowCoordinatorVersion:POST_FLOW_COORDINATOR_VERSION,storyPostFlowSequenceVersion:STORY_POST_FLOW_SEQUENCE_VERSION,titleNoticeHoldVersion:TITLE_NOTICE_HOLD_VERSION,presentationAdapterVersion:PRESENTATION_ADAPTER_VERSION,minimalModeAdapterVersion:MINIMAL_MODE_ADAPTER_VERSION,hpCapPresentationVersion:HP_CAP_PRESENTATION_VERSION,hpCapFallbackOwnerVersion:HP_CAP_FALLBACK_OWNER_VERSION,progressEventPresentationVersion:PROGRESS_EVENT_PRESENTATION_VERSION,catchUpSyncVersion:CATCH_UP_SYNC_VERSION,runSummaryPresentationVersion:RUN_SUMMARY_PRESENTATION_VERSION,titlePostFlowSequenceVersion:TITLE_POST_FLOW_SEQUENCE_VERSION,stopReasonPresentationVersion:STOP_REASON_PRESENTATION_VERSION,runIdentityGuardVersion:RUN_IDENTITY_GUARD_VERSION,totalsFailClosedVersion:TOTALS_FAIL_CLOSED_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  registerAdapter();
@@ -412,6 +420,7 @@
  window.THIRD_WORLD_PLAYER_FLOW_PRESENTATION_ADAPTER_VERSION=PRESENTATION_ADAPTER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION=MINIMAL_MODE_ADAPTER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_HP_CAP_PRESENTATION_VERSION=HP_CAP_PRESENTATION_VERSION;
+ window.THIRD_WORLD_PLAYER_FLOW_HP_CAP_FALLBACK_OWNER_VERSION=HP_CAP_FALLBACK_OWNER_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_PROGRESS_EVENT_PRESENTATION_VERSION=PROGRESS_EVENT_PRESENTATION_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_CATCH_UP_SYNC_VERSION=CATCH_UP_SYNC_VERSION;
  window.THIRD_WORLD_PLAYER_FLOW_RUN_SUMMARY_PRESENTATION_VERSION=RUN_SUMMARY_PRESENTATION_VERSION;
