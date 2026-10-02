@@ -2,6 +2,7 @@ name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
+# temporary batch2 helper retry marker.
 on:
   push:
     branches: [main]
