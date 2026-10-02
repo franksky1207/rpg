@@ -2,7 +2,6 @@ name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
-# temporary batch2 helper retry marker.
 on:
   push:
     branches: [main]
@@ -19,33 +18,7 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  autoprocess-batch2-patch:
-    if: github.event_name == 'push' && github.event.head_commit.message == 'Execute auto-processing batch2 helper'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Apply and verify batch 2
-        shell: bash
-        run: |
-          python3 .github/auto-processing-batch2.py
-          node --check equipmentlock.js
-          node --check offlineprogress.js
-          node --check tests/runtime/js-integrity.js
-          node tests/runtime/js-integrity.js
-          git diff --check
-          git rm .github/auto-processing-batch2.py
-          git config user.name 'franksky1207'
-          git config user.email '131867380+franksky1207@users.noreply.github.com'
-          git add equipmentlock.js offlineprogress.js tests/runtime/js-integrity.js index.html
-          git commit -m 'Converge offline equipment auto-processing behavior'
-          git push origin HEAD:main
-
   runtime-integrity:
     runs-on: ubuntu-latest
     steps:
