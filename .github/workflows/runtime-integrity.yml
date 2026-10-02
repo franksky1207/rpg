@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   autoprocess-batch1-patch:
-    if: github.event_name == 'push' && github.event.head_commit.message == 'Execute auto-processing batch1 helper v2'
+    if: github.event_name == 'push' && github.event.head_commit.message == 'Execute auto-processing batch1 helper v3'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
       - name: Apply and verify batch 1
         shell: bash
         run: |
-          python3 .github/auto-processing-batch1-v2.py
+          python3 .github/auto-processing-batch1-v3.py
           node --check engine.js
           node --check ui.js
           node --check equipmentlock.js
@@ -40,7 +40,7 @@ jobs:
           node --check integritycontract.js
           node tests/runtime/js-integrity.js
           git diff --check
-          git rm .github/auto-processing-batch1.py .github/auto-processing-batch1-v2.py .github/workflows/temp-autoprocess-batch1.yml
+          git rm .github/auto-processing-batch1.py .github/auto-processing-batch1-v2.py .github/auto-processing-batch1-v3.py .github/workflows/temp-autoprocess-batch1.yml
           git show "31ce86c861413c5e60cddc55de9e916541f5ead7:.github/workflows/runtime-integrity.yml" > .github/workflows/runtime-integrity.yml
           git config user.name 'franksky1207'
           git config user.email '131867380+franksky1207@users.noreply.github.com'
