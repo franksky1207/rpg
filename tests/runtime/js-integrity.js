@@ -9,7 +9,7 @@ assert(files.length>0,"找不到任何 JavaScript 檔案。");
 const syntaxFailures=[];
 for(const file of files){const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});if(checked.status!==0)syntaxFailures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());}
 assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFailures.join("\n\n"));
-const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js"),compatibility=read("compatibilityowners.js"),worldTransitionSafety=read("worldtransitionsafety.js"),combatMath=read("combatmath.js"),dungeonCore=read("dungeoncore.js"),secondWorldCombat=read("secondworldcombat.js");
+const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js"),compatibility=read("compatibilityowners.js"),worldTransitionSafety=read("worldtransitionsafety.js"),combatMath=read("combatmath.js"),dungeonCore=read("dungeoncore.js"),secondWorldCombat=read("secondworldcombat.js"),engine=read("engine.js"),ui=read("ui.js"),equipmentLock=read("equipmentlock.js");
 const localScripts=[...index.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
 const pos=name=>index.indexOf('src="'+name+'?v=');
@@ -48,7 +48,7 @@ assert(!thirdWorldDungeonUi.includes("Runtime legacy source token only"),"thirdw
 assert(!thirdWorldDungeonUi.includes('rewardText:"尚未開放"')&&!thirdWorldDungeonUi.includes('buttonLabel:"等待高維競技場開放"'),"高維競技場正式 owner 不應再含已退休的未開放 placeholder。");
 assert(/const VERSION=6;/.test(thirdWorldDungeonUi)&&/THIRD_WORLD_ARENA_LIVE_VERSION=1/.test(thirdWorldDungeonUi),"高維副本 adapter 應為 V6 並宣告競技場正式開放。");
 assert(/mode==="arena"\)return \{visible:true,enabled:true/.test(thirdWorldDungeonUi)&&/buttonLabel:"進入高維競技場"/.test(thirdWorldDungeonUi),"高維競技場正式 policy 必須可進入。");
-assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/OFFLINE_SAMPLE_OWNER_VERSION:2/.test(contract)&&/OFFLINE_SAMPLE_POLICY_VERSION:1/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
+assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/OFFLINE_SAMPLE_OWNER_VERSION:2/.test(contract)&&/OFFLINE_SAMPLE_POLICY_VERSION:1/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:25/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
 assert(/VERSION_BELOW_MINIMUM/.test(contract)&&/CIVILIZATION_INTEGRITY_MINIMUM_VERSIONS/.test(contract)&&/runCanonicalCivilizationIntegrityContract/.test(contract),"Canonical Integrity Contract 必須使用最低版本策略並保留不受 extension 覆寫的正式入口。");
 assert(/const SAVE_SAFETY_VERSION=2/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V2 與持久安全備份 key 缺失。");
 assert(/SAVE_CAPACITY_DIAGNOSTIC_VERSION=1/.test(saveGuard)&&/SAVE_CAPACITY_WARNING_BYTES/.test(saveGuard)&&/SAVE_CAPACITY_CRITICAL_BYTES/.test(saveGuard),"Save Capacity Diagnostic V1 缺失。");
@@ -72,9 +72,13 @@ assert(/window\.offlineBattleSampleMultiplier/.test(battlePipeline)&&/window\.ap
 assert(!/retainRealBattleSamplesBySpeed/.test(battlePipeline)&&!/function realBattleSampleMultiplier/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLES_PER_SPEED/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLE_SPEEDS/.test(battlePipeline),"battlepipeline.js 不得再維護自己的 sample retention／multiplier owner。");
 assert(!/state\.offline\.battleSamples\s*=/.test(battlePipeline)&&!/state\.offline\.battleSampleVersion\s*=/.test(battlePipeline),"battlepipeline.js 不得直接寫 Offline sample storage。");
 assert(/window\.appendOfflineBattleSample/.test(offlineProgress),"第二紀元 Offline sample consumer 必須維持 canonical append owner。");
+assert(/EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6/.test(engine)&&/normalizeAutoSellQualitySettings/.test(engine)&&/autoSell:\[false,false,false,false,false,false\]/.test(engine),"六品質自動處理設定 owner／新角色預設未收斂。")
+assert(/normalizeAutoSellQualitySettings\(target\)/.test(ui)&&!/autoSell\.slice\(0,6\)/.test(ui),"UI save normalization 不得維護第二份六品質 autoSell 正規化。")
+assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")
+assert(/respectDisposition:true/.test(offlineProgress)&&/window\.equipmentDropDisposition/.test(offlineProgress),"高維 Offline 裝備必須使用正式自動處理 disposition owner。")
 assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"Arena canonical profile 應為 Balance V7／Rank V4。");
 assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena)&&/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena)&&/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"第二紀元 Arena 最新三條 Rank 曲線不符。");
-assert(/GAME_GUIDE_VERSION=24/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");
+assert(/GAME_GUIDE_VERSION=25/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");
 assert(fs.existsSync("tests/runtime/browser-smoke.js"),"缺少真正瀏覽器啟動 smoke test。");
 assert(fs.existsSync("tests/runtime/save-migration-staircase.js"),"缺少 save migration staircase static regression。");
 const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguide-extension-integrity.js"],{encoding:"utf8"});

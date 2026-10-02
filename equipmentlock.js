@@ -24,14 +24,6 @@
    entry.redemptionPending=false;
   });
  }
- function normalizeAutoSellQualitySettings(target){
-  if(!target||typeof target!=="object")return target;
-  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
-  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];
-  while(auto.length<6)auto.push(false);
-  target.settings.autoSell=auto.map(Boolean);
-  return target;
- }
  function restoreAfterEquipmentChange(){
   if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
   state.hp=playerCombatStats().hp;
@@ -68,11 +60,22 @@
  }
  window.restoreAfterEquipmentChange=restoreAfterEquipmentChange;
  window.isGearLocked=function(item){return item?.locked===true;};
- window.shouldAutoSellItem=function(item){
+ window.shouldAutoSellItem=function(item,target=state){
   if(!item||item.locked===true)return false;
-  const q=Math.floor(Number(item.q));
-  return q>=0&&q<=5&&state?.settings?.autoSell?.[q]===true;
+  const q=Math.floor(Number(item.q)),count=Math.max(1,Math.floor(Number(window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT)||6));
+  return q>=0&&q<count&&target?.settings?.autoSell?.[q]===true;
  };
+ function equipmentDropDisposition(item,target=state,{score=null}={}){
+  const s=target&&typeof target==="object"?target:state;
+  if(!item)return {keep:false,process:false,upgrade:false,locked:false,autoProcess:false,reason:"missing"};
+  const scoreItem=typeof score==="function"?score:(row=>equipmentScore(row)),locked=item.locked===true,current=s?.equipment?.[item.type]||null,upgrade=scoreItem(item)>scoreItem(current),autoProcess=window.shouldAutoSellItem(item,s),keepUpgrade=s?.settings?.keepUpgrade===true;
+  if(locked)return {keep:true,process:false,upgrade,locked:true,autoProcess:false,reason:"locked"};
+  if(keepUpgrade&&upgrade)return {keep:true,process:false,upgrade:true,locked:false,autoProcess,reason:"upgrade"};
+  if(autoProcess)return {keep:false,process:true,upgrade,locked:false,autoProcess:true,reason:"auto-process"};
+  return {keep:true,process:false,upgrade,locked:false,autoProcess:false,reason:"quality-kept"};
+ }
+ window.equipmentDropDisposition=equipmentDropDisposition;
+ window.EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1;
  window.handleUnequippedItem=function(item,options={}){
   if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
   normalizeLockFlag(item);
@@ -88,13 +91,13 @@
  addItem=function(item,options={}){
   if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
   normalizeLockFlag(item);
-  const upgrade=typeof isActualGearUpgrade==="function"?isActualGearUpgrade(item):equipmentScore(item)>equipmentScore(state.equipment[item.type]);
-  if((state.settings.keepUpgrade&&upgrade)||item.locked===true){
+  const disposition=equipmentDropDisposition(item,state),upgrade=disposition.upgrade===true;
+  if(disposition.keep){
    state.inventory.push(item);
    if(upgrade)upgradeDropNoticePending=true;
    return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
   }
-  if(shouldAutoSellItem(item)){
+  if(disposition.process){
    const sale=settleSale(item,options);
    if(!sale?.ok){state.inventory.push(item);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,item,sale:null,reason:sale?.reason||"sale",enhancementStones:blankEnhancementReward()};}
    return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),item,sale,enhancementStones:saleEnhancementReward(item,sale)};
@@ -284,11 +287,8 @@
  window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=2;
  window.THIRD_WORLD_EQUIPMENT_PROCESSING_UI_VERSION=1;
  window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
- window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6;
- window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=1;
+ window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=2;
  window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
- window.normalizeAutoSellQualitySettings=normalizeAutoSellQualitySettings;
- if(typeof window.registerNewStateNormalizer==="function")window.registerNewStateNormalizer(normalizeAutoSellQualitySettings);
  normalizeAutoSellQualitySettings(state);
  injectLockStyles();normalizeAllGearLocks();normalizeLostGearEconomy();save(false);
  const main=document.getElementById("main");

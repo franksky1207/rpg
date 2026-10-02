@@ -38,6 +38,19 @@ window.currentSaveVersion=currentSaveVersion;
 function registerNewStateNormalizer(fn){if(typeof fn!=="function"||newStateNormalizers.includes(fn))return false;newStateNormalizers.push(fn);return true}
 window.registerNewStateNormalizer=registerNewStateNormalizer;
 window.getNewStateNormalizerCount=function(){return newStateNormalizers.length;};
+const EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6;
+function normalizeAutoSellQualitySettings(target){
+ if(!target||typeof target!=="object")return target;
+ if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+ const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,EQUIPMENT_AUTO_SELL_QUALITY_COUNT):[];
+ while(auto.length<EQUIPMENT_AUTO_SELL_QUALITY_COUNT)auto.push(false);
+ target.settings.autoSell=auto.map(Boolean);
+ return target;
+}
+window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT=EQUIPMENT_AUTO_SELL_QUALITY_COUNT;
+window.EQUIPMENT_AUTO_SELL_SETTINGS_NORMALIZATION_VERSION=1;
+window.normalizeAutoSellQualitySettings=normalizeAutoSellQualitySettings;
+registerNewStateNormalizer(normalizeAutoSellQualitySettings);
 function clampGameLevel(level){return Math.max(1,Math.min(MAX_LEVEL,Math.floor(Number(level)||1)))}
 window.clampGameLevel=clampGameLevel;
 function baseHP(l){return ceil(110+12*(l-1))}
@@ -68,7 +81,7 @@ function newState(){
  const equipment=starterEquipment();
  const starterHp=baseHP(1)+EQUIPMENT_TYPES.reduce((sum,type)=>sum+(Number(equipment[type]?.hp)||0),0);
  const enhancement={basicStones:0,advancedStones:0,levels:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,0]))};
- let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),enhancement,equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false],keepUpgrade:true,dark:true,combatSpeed:1},gm:false};
+ let next={saveVersion:currentSaveVersion(),introSeen:false,playerName:"玩家",level:1,exp:0,hp:starterHp,gold:0,unlockedMap:0,vipLevel:0,vipPoints:0,specializations:createBlankSpecializations(),enhancement,equipment,inventory:[],mapProgress:blankMapProgress(),bossProgress:Array(MAPS.length).fill(0),bossLocked:Array(MAPS.length).fill(false),bossKilled:Array(MAPS.length).fill(false),lostGear:[],settings:{autoSell:[false,false,false,false,false,false],keepUpgrade:true,dark:true,combatSpeed:1},gm:false};
  newStateNormalizers.forEach(normalizer=>{const normalized=normalizer(next);if(normalized&&typeof normalized==="object")next=normalized;});
  return next;
 }

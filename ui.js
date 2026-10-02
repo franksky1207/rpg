@@ -442,8 +442,7 @@ function normalizeSaveState(target){
  }).filter(Boolean);
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
  if(typeof normalizePersistentFlags==="function")normalizePersistentFlags(target);else target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
- if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
- const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];while(auto.length<6)auto.push(false);target.settings.autoSell=auto.map(Boolean);
+ normalizeAutoSellQualitySettings(target);
  target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
  target.settings.dark=typeof target.settings.dark==="boolean"?target.settings.dark:true;
  const combatSpeed=Number(target.settings.combatSpeed);target.settings.combatSpeed=combatSpeed===1.5?1.5:1;
