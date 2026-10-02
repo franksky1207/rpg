@@ -65,11 +65,14 @@ replace_once('offlineprogress.js','return Object.freeze({version:6,passed:errors
 
 # 10) Cross-path + legacy regression locks.
 replace_once('tests/runtime/js-integrity.js',
- 'assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。");\n',
- 'assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。");\n'
+ 'assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")\n',
+ 'assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")\n'
  'assert(/EQUIPMENT_BOOT_NORMALIZATION_SAVE_VERSION=1/.test(equipmentLock)&&/normalizationBefore!==equipmentNormalizationSignature\\(state\\)/.test(equipmentLock)&&/if\\(normalizationChanged\\)save\\(false\\)/.test(equipmentLock),"裝備載入 normalization 不得再無條件寫存檔。")\n'
  'assert(/OFFLINE_GEAR_ACCUMULATOR_VERSION=5/.test(offlineProgress)&&/mythicSpecialContainerRetired:true/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"Offline 裝備 accumulator 應全面改用 shared disposition，且不得保留 mythic 特殊容器開關。")\n'
  'assert(/autoSell\\.slice\\(0,EQUIPMENT_AUTO_SELL_QUALITY_COUNT\\)/.test(engine)&&/while\\(auto\\.length<EQUIPMENT_AUTO_SELL_QUALITY_COUNT\\)auto\\.push\\(false\\)/.test(engine),"舊 5 格 autoSell 必須安全補第 6 格 false。")\n')
+replace_once('tests/runtime/js-integrity.js',
+ 'assert(/respectDisposition:true/.test(offlineProgress)&&/window\\.equipmentDropDisposition/.test(offlineProgress),"高維 Offline 裝備必須使用正式自動處理 disposition owner。")\n',
+ 'assert(/window\\.equipmentDropDisposition/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"三紀元 Offline 裝備必須全面使用正式自動處理 disposition owner。")\n')
 
 # Cache-bust touched browser JS.
 replace_once('index.html','equipmentlock.js?v=20261002-autoprocess-policy-batch1','equipmentlock.js?v=20261002-autoprocess-policy-batch2')
