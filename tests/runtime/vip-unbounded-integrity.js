@@ -31,7 +31,7 @@ assert(/VIP_POINTS_SOURCE_OF_TRUTH_VERSION:1/.test(contract),"Canonical Contract
 assert(/VIP_STATE_RECONCILIATION_VERSION:1/.test(contract),"Canonical Contract 必須鎖定 VIP 狀態一致性 V1。");
 assert(/VIP_ADD_POINTS_OWNER_REQUIRED_VERSION:1/.test(contract),"Canonical Contract 必須鎖定 addVipPoints owner requirement V1。");
 assert(/VIP_UI_VERSION:4/.test(contract),"Canonical Contract 必須至少要求 VIP UI V4。");
-assert(/GAME_GUIDE_VERSION:24/.test(contract),"Canonical Contract 應對齊 Game Guide V24。");
+assert(/GAME_GUIDE_VERSION:25/.test(contract),"Canonical Contract 應對齊 Game Guide V25。");
 assert(/VIP_UNBOUNDED_PROGRESSION/.test(contract)&&/VIP_POINTS_SOURCE_OF_TRUTH/.test(contract),"Canonical Contract 必須以行為 probe 驗證 VIP21+ 與積分唯一來源。");
 
 const context={state:{vipLevel:0,vipPoints:0},VIP_HP_ATK_PERCENT_PER_LEVEL:.5,VIP_DEF_PERCENT_PER_LEVEL:.25,VIP_RATE_STAT_PER_LEVEL:.25,registerNewStateNormalizer:()=>true,window:{},Math,console};
