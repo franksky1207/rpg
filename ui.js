@@ -97,6 +97,7 @@ function gearAbilityHtml(it,withScore=false){
 
 function homePage(){
  const secondWorldEntry=typeof window.secondWorldHomeEntryHtml==="function"?window.secondWorldHomeEntryHtml():"";
+ const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
  return `<section class="home-screen">
   <div class="home-title"><h2>文明戰線</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
   ${secondWorldEntry}
@@ -110,7 +111,7 @@ function homePage(){
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
    <button class="menu-card" onclick="go('calamity')"><b>文明災厄</b><span>${secondWorldActive()?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記"}</span></button>
    <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法與規則</span></button>
-   <button class="menu-card" onclick="go('settings')"><b>設定</b><span>自動出售、存檔與遊戲設定</span></button>
+   <button class="menu-card" onclick="go('settings')"><b>設定</b><span>${third?"自動處理":"自動出售"}、存檔與遊戲設定</span></button>
   </div>
  </section>`;
 }
@@ -348,7 +349,7 @@ function lostGearSectionHtml(){
   const universe=secondWorldActive(),free=universe&&Number(x.item?.world)!==2;
   const price=free?"免費":universe&&x.currency==="darkMatter"?`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 暗物質`:`${Math.max(0,Math.floor(Number(x.cost)||0)).toLocaleString()} 金幣`;
   return `<tr><td data-label="裝備" class="lost-gear-item-cell">${itemHtml(x.item,true)}</td><td data-label="能力" class="lost-gear-stats-cell">${gearAbilityHtml(x.item,false)}</td><td data-label="比較" class="lost-gear-compare-cell">${lostGearCompareHtml(x.item)}</td><td data-label="贖回價格" class="lost-gear-price-cell">${price}</td><td class="lost-gear-action-cell"><div class="controls lost-gear-row-actions"><button class="btn" onclick="redeemGear(${i})">${free?"免費贖回":"贖回"}</button><button class="btn danger" onclick="discardLostGear(${i})">放棄</button></div></td></tr>`;
-}).join("");
+ }).join("");
  return `<div class="card lost-gear-card"><h2>遺失裝備贖回</h2><div class="notice">可先和目前裝備比較；不值得贖回的裝備可直接放棄，放棄後永久刪除。</div><div class="lost-gear-table-wrap"><table class="lost-gear-table"><thead><tr><th>裝備</th><th>主能力／詞條</th><th>與目前裝備比較</th><th>贖回價格</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
 }
 function inventoryContent(){
@@ -374,9 +375,9 @@ function settingsPage(){
  const speed=typeof window.playerCombatSpeed==="function"?window.playerCombatSpeed():1;
  const speedHtml=secondWorldActive()?`<div class="setting-row combat-speed-setting"><div><div style="margin-bottom:6px">戰鬥速度</div><div class="muted">宇宙紀元已解鎖 1.5×；可隨時切回標準速度。</div></div><div class="combat-speed-options"><label class="btn ${Number(speed)===1?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1" ${Number(speed)===1?"checked":""}> 1×　標準速度</label><label class="btn ${Number(speed)===1.5?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1.5" ${Number(speed)===1.5?"checked":""}> 1.5×　加速戰鬥</label></div></div>`:"";
  const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
- const autoTitle=third?"自動處理":"自動出售",mythicAuto=third?"不可自動處理":"不可自動出售";
+ const autoTitle=third?"自動處理":"自動出售";
  const body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
- <h3 style="margin-top:22px">${autoTitle}</h3>${QUALITY.slice(0,5).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="setting-row"><span class="q-mythic">神話</span><span class="muted">${mythicAuto}</span></div>
+ <h3 style="margin-top:22px">${autoTitle}</h3>${QUALITY.slice(0,6).map((q,i)=>`<div class="setting-row"><label><input type="checkbox" data-autosell="${i}" ${s.autoSell[i]?"checked":""}> <span class="${qClass(i)}">${q.n}</span></label></div>`).join("")}<div class="muted" style="margin-top:6px">${third?"勾選的品質會自動處理；高維紀元處理裝備不產生資源。":"勾選的品質會依目前紀元規則自動出售。"}鎖定裝備不受影響；若開啟較強裝備自動保留，較強掉落仍會優先保留。</div>
  <h3 style="margin-top:22px">遊戲設定</h3><div class="setting-row" style="align-items:flex-end"><div style="flex:1"><div style="margin-bottom:6px">角色名稱</div><input id="playerNameInput" type="text" maxlength="12" value="${name}" placeholder="玩家" style="width:100%;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff"></div><button class="btn blue" onclick="savePlayerName()">儲存名稱</button></div><div class="muted" style="margin-top:6px">最多 12 個字；空白名稱儲存時會自動恢復成「玩家」。</div>${speedHtml}<div class="setting-row"><label><input id="keepUpgrade" type="checkbox" ${s.keepUpgrade?"checked":""}> 若新裝備比目前裝備強，自動保留</label></div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
  ${state.gm&&typeof gmHtml==="function"?gmHtml():""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
@@ -442,7 +443,7 @@ function normalizeSaveState(target){
  if(Object.prototype.hasOwnProperty.call(target,"shop"))delete target.shop;
  if(typeof normalizePersistentFlags==="function")normalizePersistentFlags(target);else target.pendingBlackMarketEncounter=target.pendingBlackMarketEncounter===true;
  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
- const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,5):[];while(auto.length<5)auto.push(false);target.settings.autoSell=auto.map(Boolean);
+ const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];while(auto.length<6)auto.push(false);target.settings.autoSell=auto.map(Boolean);
  target.settings.keepUpgrade=typeof target.settings.keepUpgrade==="boolean"?target.settings.keepUpgrade:true;
  target.settings.dark=typeof target.settings.dark==="boolean"?target.settings.dark:true;
  const combatSpeed=Number(target.settings.combatSpeed);target.settings.combatSpeed=combatSpeed===1.5?1.5:1;
@@ -461,6 +462,8 @@ window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=2;
 window.THIRD_WORLD_INVENTORY_PROCESSING_UI_VERSION=1;
 window.THIRD_WORLD_LOST_GEAR_UI_POLICY_VERSION=1;
 window.UI_LEGACY_INVENTORY_MUTATION_RETIRED_VERSION=1;
+window.UI_AUTO_SELL_QUALITY_COUNT=6;
+window.UI_MYTHIC_AUTO_SELL_SETTING_VERSION=1;
 window.normalizeSaveItem=normalizeSaveItem;
 window.normalizeSaveState=normalizeSaveState;
 function normalizeCurrentSaveState(){
