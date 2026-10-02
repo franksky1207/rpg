@@ -24,6 +24,14 @@
    entry.redemptionPending=false;
   });
  }
+ function normalizeAutoSellQualitySettings(target){
+  if(!target||typeof target!=="object")return target;
+  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];
+  while(auto.length<6)auto.push(false);
+  target.settings.autoSell=auto.map(Boolean);
+  return target;
+ }
  function restoreAfterEquipmentChange(){
   if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
   state.hp=playerCombatStats().hp;
@@ -61,9 +69,9 @@
  window.restoreAfterEquipmentChange=restoreAfterEquipmentChange;
  window.isGearLocked=function(item){return item?.locked===true;};
  window.shouldAutoSellItem=function(item){
-  if(!item||item.locked===true||Number(item.q)===5)return false;
+  if(!item||item.locked===true)return false;
   const q=Math.floor(Number(item.q));
-  return q>=0&&q<=4&&state?.settings?.autoSell?.[q]===true;
+  return q>=0&&q<=5&&state?.settings?.autoSell?.[q]===true;
  };
  window.handleUnequippedItem=function(item,options={}){
   if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
@@ -81,7 +89,7 @@
   if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
   normalizeLockFlag(item);
   const upgrade=typeof isActualGearUpgrade==="function"?isActualGearUpgrade(item):equipmentScore(item)>equipmentScore(state.equipment[item.type]);
-  if(Number(item.q)===5||(state.settings.keepUpgrade&&upgrade)||item.locked===true){
+  if((state.settings.keepUpgrade&&upgrade)||item.locked===true){
    state.inventory.push(item);
    if(upgrade)upgradeDropNoticePending=true;
    return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
@@ -154,11 +162,10 @@
   const sale=typeof window.mergeEquipmentSaleQuotes==="function"?window.mergeEquipmentSaleQuotes(saleQuotes):{currency:"gold",amount:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0),gold:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0)};
   return {changed,soldCount,sale,soldGold:Number(sale.gold)||0,enhancementStones};
  };
- window.equipmentSellSelected=function(options={}){
+ window.equipmentSellSelected=function(){
   const i=state.inventory.findIndex(x=>x.id===selectedItem);if(i<0)return {ok:false,reason:"missing"};
   const item=state.inventory[i];
   if(item.locked===true)return {ok:false,reason:"locked",item};
-  if(Number(item.q)===5&&options.confirmMythic!==true)return {ok:false,reason:"mythic",item};
   const sale=settleSale(item);
   if(!sale?.ok)return {ok:false,reason:sale?.reason||"sale",item};
   state.inventory.splice(i,1);selectedItem=null;
@@ -215,14 +222,8 @@
  };
  window.equipBestAll=equipBestAll;
  sellSelected=function(){
-  let r=equipmentSellSelected();
+  const r=equipmentSellSelected();
   if(r.reason==="locked")return alert(thirdWorldActive()?"這件裝備已鎖定，請先解鎖後再處理。":"這件裝備已鎖定，請先解鎖後再出售。");
-  if(r.reason==="mythic"){
-   const preview=saleQuote(r.item);
-   const question=thirdWorldActive()?"這是神話裝備，處理後將永久移除且不產生資源。確定要處理嗎？":`這是神話裝備，出售可獲得 ${saleText(preview)}。確定要出售嗎？`;
-   if(!confirm(question))return;
-   r=equipmentSellSelected({confirmMythic:true});
-  }
   if(!r.ok)return alert(thirdWorldActive()?"裝備處理失敗。":"裝備出售失敗。");
   const stoneText=saleEnhancementText(r.enhancementStones);
   save();render();
@@ -283,6 +284,12 @@
  window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=2;
  window.THIRD_WORLD_EQUIPMENT_PROCESSING_UI_VERSION=1;
  window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
+ window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6;
+ window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=1;
+ window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
+ window.normalizeAutoSellQualitySettings=normalizeAutoSellQualitySettings;
+ if(typeof window.registerNewStateNormalizer==="function")window.registerNewStateNormalizer(normalizeAutoSellQualitySettings);
+ normalizeAutoSellQualitySettings(state);
  injectLockStyles();normalizeAllGearLocks();normalizeLostGearEconomy();save(false);
  const main=document.getElementById("main");
  if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(enhanceEquippedLockControls,0)).observe(main,{childList:true,subtree:true});
