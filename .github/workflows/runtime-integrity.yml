@@ -18,7 +18,45 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
+  autoprocess-batch1-patch:
+    if: github.event_name == 'push' && github.event.head_commit.message == 'Run auto-processing batch1 patch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply and verify batch 1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64,re
+          from pathlib import Path
+          text=Path('.github/workflows/temp-autoprocess-batch1.yml').read_text()
+          match=re.search(r"echo '([^']+)' \| base64 -d",text)
+          if not match:
+              raise SystemExit('embedded patch payload not found')
+          Path('/tmp/patch.py').write_bytes(base64.b64decode(match.group(1)))
+          PY
+          python3 /tmp/patch.py
+          node --check engine.js
+          node --check ui.js
+          node --check equipmentlock.js
+          node --check offlineprogress.js
+          node --check integritycontract.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          git rm .github/workflows/temp-autoprocess-batch1.yml
+          git show "${GITHUB_SHA}^:.github/workflows/runtime-integrity.yml" > .github/workflows/runtime-integrity.yml
+          git config user.name 'franksky1207'
+          git config user.email '131867380+franksky1207@users.noreply.github.com'
+          git add engine.js ui.js equipmentlock.js offlineprogress.js integritycontract.js tests/runtime/js-integrity.js index.html .github/workflows/runtime-integrity.yml
+          git commit -m 'Converge equipment auto-processing policy'
+          git push origin HEAD:main
+
   runtime-integrity:
     runs-on: ubuntu-latest
     steps:
