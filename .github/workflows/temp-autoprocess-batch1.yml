@@ -1,0 +1,247 @@
+name: Temporary Auto Processing Batch 1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-autoprocess-batch1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply batch 1
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p=Path(path); s=p.read_text()
+              if old not in s:
+                  raise SystemExit(f"missing expected source in {path}: {old[:100]!r}")
+              p.write_text(s.replace(old,new,1))
+
+          # 1/4/5: canonical six-quality setting normalization lives in engine.
+          replace_once('engine.js',
+          'window.getNewStateNormalizerCount=function(){return newStateNormalizers.length;};\n',
+          '''window.getNewStateNormalizerCount=function(){return newStateNormalizers.length;};
+const EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6;
+function normalizeAutoSellQualitySettings(target){
+ if(!target||typeof target!=="object")return target;
+ if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+ const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,EQUIPMENT_AUTO_SELL_QUALITY_COUNT):[];
+ while(auto.length<EQUIPMENT_AUTO_SELL_QUALITY_COUNT)auto.push(false);
+ target.settings.autoSell=auto.map(Boolean);
+ return target;
+}
+window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT=EQUIPMENT_AUTO_SELL_QUALITY_COUNT;
+window.EQUIPMENT_AUTO_SELL_SETTINGS_NORMALIZATION_VERSION=1;
+window.normalizeAutoSellQualitySettings=normalizeAutoSellQualitySettings;
+registerNewStateNormalizer(normalizeAutoSellQualitySettings);
+''')
+          replace_once('engine.js','autoSell:[false,false,false,false,false],keepUpgrade:true','autoSell:[false,false,false,false,false,false],keepUpgrade:true')
+
+          replace_once('ui.js',
+          ''' if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+ const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];while(auto.length<6)auto.push(false);target.settings.autoSell=auto.map(Boolean);
+''',
+          ''' normalizeAutoSellQualitySettings(target);
+''')
+
+          # 1: one formal item disposition owner for foreground + offline consumers.
+          replace_once('equipmentlock.js',
+          ''' function normalizeAutoSellQualitySettings(target){
+  if(!target||typeof target!=="object")return target;
+  if(!target.settings||typeof target.settings!=="object"||Array.isArray(target.settings))target.settings={};
+  const auto=Array.isArray(target.settings.autoSell)?target.settings.autoSell.slice(0,6):[];
+  while(auto.length<6)auto.push(false);
+  target.settings.autoSell=auto.map(Boolean);
+  return target;
+ }
+''','')
+          replace_once('equipmentlock.js',
+          ''' window.isGearLocked=function(item){return item?.locked===true;};
+ window.shouldAutoSellItem=function(item){
+  if(!item||item.locked===true)return false;
+  const q=Math.floor(Number(item.q));
+  return q>=0&&q<=5&&state?.settings?.autoSell?.[q]===true;
+ };
+''',
+          ''' window.isGearLocked=function(item){return item?.locked===true;};
+ window.shouldAutoSellItem=function(item,target=state){
+  if(!item||item.locked===true)return false;
+  const q=Math.floor(Number(item.q)),count=Math.max(1,Math.floor(Number(window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT)||6));
+  return q>=0&&q<count&&target?.settings?.autoSell?.[q]===true;
+ };
+ function equipmentDropDisposition(item,target=state,{score=null}={}){
+  const s=target&&typeof target==="object"?target:state;
+  if(!item)return {keep:false,process:false,upgrade:false,locked:false,autoProcess:false,reason:"missing"};
+  const scoreItem=typeof score==="function"?score:(row=>equipmentScore(row)),locked=item.locked===true,current=s?.equipment?.[item.type]||null,upgrade=scoreItem(item)>scoreItem(current),autoProcess=window.shouldAutoSellItem(item,s),keepUpgrade=s?.settings?.keepUpgrade===true;
+  if(locked)return {keep:true,process:false,upgrade,locked:true,autoProcess:false,reason:"locked"};
+  if(keepUpgrade&&upgrade)return {keep:true,process:false,upgrade:true,locked:false,autoProcess,reason:"upgrade"};
+  if(autoProcess)return {keep:false,process:true,upgrade,locked:false,autoProcess:true,reason:"auto-process"};
+  return {keep:true,process:false,upgrade,locked:false,autoProcess:false,reason:"quality-kept"};
+ }
+ window.equipmentDropDisposition=equipmentDropDisposition;
+ window.EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1;
+''')
+          replace_once('equipmentlock.js',
+          ''' addItem=function(item,options={}){
+  if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
+  normalizeLockFlag(item);
+  const upgrade=typeof isActualGearUpgrade==="function"?isActualGearUpgrade(item):equipmentScore(item)>equipmentScore(state.equipment[item.type]);
+  if((state.settings.keepUpgrade&&upgrade)||item.locked===true){
+   state.inventory.push(item);
+   if(upgrade)upgradeDropNoticePending=true;
+   return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
+  }
+  if(shouldAutoSellItem(item)){
+   const sale=settleSale(item,options);
+   if(!sale?.ok){state.inventory.push(item);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,item,sale:null,reason:sale?.reason||"sale",enhancementStones:blankEnhancementReward()};}
+   return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),item,sale,enhancementStones:saleEnhancementReward(item,sale)};
+  }
+  state.inventory.push(item);
+  if(upgrade)upgradeDropNoticePending=true;
+  return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
+ };
+''',
+          ''' addItem=function(item,options={}){
+  if(!item)return {kept:false,sold:0,item:null,sale:null,enhancementStones:blankEnhancementReward()};
+  normalizeLockFlag(item);
+  const disposition=equipmentDropDisposition(item,state),upgrade=disposition.upgrade===true;
+  if(disposition.keep){
+   state.inventory.push(item);
+   if(upgrade)upgradeDropNoticePending=true;
+   return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
+  }
+  if(disposition.process){
+   const sale=settleSale(item,options);
+   if(!sale?.ok){state.inventory.push(item);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,item,sale:null,reason:sale?.reason||"sale",enhancementStones:blankEnhancementReward()};}
+   return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),item,sale,enhancementStones:saleEnhancementReward(item,sale)};
+  }
+  state.inventory.push(item);
+  if(upgrade)upgradeDropNoticePending=true;
+  return {kept:true,sold:0,item,sale:null,enhancementStones:blankEnhancementReward()};
+ };
+''')
+          replace_once('equipmentlock.js',
+          ''' window.EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6;
+ window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=1;
+ window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
+ window.normalizeAutoSellQualitySettings=normalizeAutoSellQualitySettings;
+ if(typeof window.registerNewStateNormalizer==="function")window.registerNewStateNormalizer(normalizeAutoSellQualitySettings);
+ normalizeAutoSellQualitySettings(state);
+''',
+          ''' window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=2;
+ window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
+ normalizeAutoSellQualitySettings(state);
+''')
+
+          # 2: offline gear uses the same disposition owner for every quality.
+          replace_once('offlineprogress.js','const OFFLINE_GEAR_ACCUMULATOR_VERSION=3;','const OFFLINE_GEAR_ACCUMULATOR_VERSION=4;')
+          old=''' function createGearAccumulator({target=null,reject,score,notifyUpgrade=true}={}){
+  const s=isObject(target)?target:state,scoreItem=typeof score==="function"?score:(item=>equipmentScore(item)),types=equipmentTypes(),bestByType=new Map(),mythics=[],rejected=[];let droppedCount=0;
+  function rejectItem(item){if(!item)return;rejected.push(item);if(typeof reject==="function")reject(item);}
+  function consider(raw){const item=normalizeOfflineDrop(raw);if(!item)return;droppedCount++;if(Number(item.q)===5){mythics.push(item);return;}const type=item.type;if(!types.includes(type)){rejectItem(item);return;}const previous=bestByType.get(type);if(!previous||scoreItem(item)>scoreItem(previous)){if(previous)rejectItem(previous);bestByType.set(type,item);}else rejectItem(item);}
+  function finalize(){
+   if(!Array.isArray(s.inventory))s.inventory=[];
+   const keptOrdinary=[],keptMythics=[];
+   bestByType.forEach((item,type)=>{const current=s.equipment?.[type]||null;if(scoreItem(item)>scoreItem(current))keptOrdinary.push(item);else rejectItem(item);});
+   const mythicAutoProcess=s?.settings?.autoSell?.[5]===true,keepUpgrade=s?.settings?.keepUpgrade===true;
+   mythics.forEach(item=>{const current=s.equipment?.[item.type]||null,upgrade=scoreItem(item)>scoreItem(current);if(mythicAutoProcess&&!(keepUpgrade&&upgrade))rejectItem(item);else keptMythics.push(item);});
+   keptOrdinary.forEach(item=>s.inventory.push(item));keptMythics.forEach(item=>s.inventory.push(item));
+   const keptUpgrade=keptOrdinary.length>0||keptMythics.some(item=>scoreItem(item)>scoreItem(s.equipment?.[item.type]||null));
+   if(keptUpgrade&&notifyUpgrade!==false&&isFormalStateTarget(s)){try{upgradeDropNoticePending=true;}catch(_){}}
+   return {droppedCount,rejected,keptOrdinary,mythics:keptMythics,keptCount:keptOrdinary.length+keptMythics.length};
+  }
+  return {consider,finalize};
+ }
+'''
+          new=''' function createGearAccumulator({target=null,reject,score,notifyUpgrade=true}={}){
+  const s=isObject(target)?target:state,scoreItem=typeof score==="function"?score:(item=>equipmentScore(item)),types=equipmentTypes(),kept=[],rejected=[];let droppedCount=0;
+  function rejectItem(item){if(!item)return;rejected.push(item);if(typeof reject==="function")reject(item);}
+  function decision(item){if(typeof window.equipmentDropDisposition!=="function")throw new Error("Equipment auto-process policy owner unavailable");return window.equipmentDropDisposition(item,s,{score:scoreItem});}
+  function consider(raw){const item=normalizeOfflineDrop(raw);if(!item)return;droppedCount++;if(!types.includes(item.type)){rejectItem(item);return;}const result=decision(item);if(result?.process===true)rejectItem(item);else kept.push(item);}
+  function finalize(){
+   if(!Array.isArray(s.inventory))s.inventory=[];
+   const keptOrdinary=kept.filter(item=>Number(item.q)!==5),keptMythics=kept.filter(item=>Number(item.q)===5);
+   keptOrdinary.forEach(item=>s.inventory.push(item));keptMythics.forEach(item=>s.inventory.push(item));
+   const keptUpgrade=kept.some(item=>scoreItem(item)>scoreItem(s.equipment?.[item.type]||null));
+   if(keptUpgrade&&notifyUpgrade!==false&&isFormalStateTarget(s)){try{upgradeDropNoticePending=true;}catch(_){}}
+   return {droppedCount,rejected,keptOrdinary,mythics:keptMythics,keptCount:kept.length};
+  }
+  return {consider,finalize};
+ }
+'''
+          replace_once('offlineprogress.js',old,new)
+          old_reg=''' function runGearAccumulatorRegression(){
+  const errors=[];
+  function probe(){const target={equipment:{weapon:{score:50},armor:{score:80},shoes:{score:1},accessory:{score:10}},inventory:[{id:"existing",score:1}],settings:{autoSell:[false,false,false,false,false,true],keepUpgrade:true}},rejected=[],gear=createGearAccumulator({target,reject:item=>rejected.push(item.id),score:item=>Number(item?.score)||0,notifyUpgrade:false});gear.consider({id:"weapon-best",type:"weapon",q:4,score:60});gear.consider({id:"weapon-lower",type:"weapon",q:4,score:55});gear.consider({id:"armor-lower",type:"armor",q:4,score:70});gear.consider({id:"mythic-equal",type:"shoes",q:5,score:1});gear.consider({id:"mythic-upgrade",type:"accessory",q:5,score:20});const result=gear.finalize();return {target,rejected,result};}
+  const a=probe(),b=probe();
+  if(JSON.stringify(a)!==JSON.stringify(b))errors.push({code:"ACCUMULATOR_NOT_DETERMINISTIC"});
+  if(a.target.inventory.map(item=>item.id).join("|")!=="existing|weapon-best|mythic-upgrade")errors.push({code:"TARGET_INVENTORY_RESULT",inventory:a.target.inventory});
+  if(a.rejected.join("|")!=="weapon-lower|armor-lower|mythic-equal"||a.result.keptCount!==2||a.result.droppedCount!==5)errors.push({code:"TARGET_SELECTION_RESULT",rejected:a.rejected,result:a.result});
+  if(a.target.equipment.weapon.score!==50||a.target.equipment.armor.score!==80||a.target.equipment.shoes.score!==1||a.target.equipment.accessory.score!==10)errors.push({code:"TARGET_EQUIPMENT_MUTATED"});
+  return Object.freeze({version:2,passed:errors.length===0,targetIsolation:true,deterministic:true,mythicAutoProcess:true,errors:Object.freeze(errors)});
+ }
+'''
+          new_reg=''' function runGearAccumulatorRegression(){
+  const errors=[];
+  function probe(){const target={equipment:{weapon:{score:50},armor:{score:80},helmet:{score:100},shoes:{score:1},accessory:{score:10}},inventory:[{id:"existing",score:1}],settings:{autoSell:[false,false,false,false,true,true],keepUpgrade:true}},rejected=[],gear=createGearAccumulator({target,reject:item=>rejected.push(item.id),score:item=>Number(item?.score)||0,notifyUpgrade:false});gear.consider({id:"legendary-upgrade",type:"weapon",q:4,score:60});gear.consider({id:"legendary-equal",type:"armor",q:4,score:80});gear.consider({id:"epic-kept",type:"helmet",q:3,score:1});gear.consider({id:"mythic-equal",type:"shoes",q:5,score:1});gear.consider({id:"mythic-upgrade",type:"accessory",q:5,score:20});const result=gear.finalize();return {target,rejected,result};}
+  const a=probe(),b=probe();
+  if(JSON.stringify(a)!==JSON.stringify(b))errors.push({code:"ACCUMULATOR_NOT_DETERMINISTIC"});
+  if(a.target.inventory.map(item=>item.id).join("|")!=="existing|legendary-upgrade|epic-kept|mythic-upgrade")errors.push({code:"TARGET_INVENTORY_RESULT",inventory:a.target.inventory});
+  if(a.rejected.join("|")!=="legendary-equal|mythic-equal"||a.result.keptCount!==3||a.result.droppedCount!==5)errors.push({code:"TARGET_SELECTION_RESULT",rejected:a.rejected,result:a.result});
+  const strictTarget={equipment:{weapon:{score:50}},inventory:[],settings:{autoSell:[false,false,false,false,false,true],keepUpgrade:false}},strictRejected=[],strict=createGearAccumulator({target:strictTarget,reject:item=>strictRejected.push(item.id),score:item=>Number(item?.score)||0,notifyUpgrade:false});strict.consider({id:"mythic-upgrade-no-keep",type:"weapon",q:5,score:99});const strictResult=strict.finalize();if(strictTarget.inventory.length!==0||strictRejected.join("|")!=="mythic-upgrade-no-keep"||strictResult.keptCount!==0)errors.push({code:"KEEP_UPGRADE_DISABLED",strictRejected,strictResult});
+  if(a.target.equipment.weapon.score!==50||a.target.equipment.armor.score!==80||a.target.equipment.helmet.score!==100||a.target.equipment.shoes.score!==1||a.target.equipment.accessory.score!==10)errors.push({code:"TARGET_EQUIPMENT_MUTATED"});
+  return Object.freeze({version:3,passed:errors.length===0,targetIsolation:true,deterministic:true,sharedDispositionOwner:true,allQualitySettings:true,errors:Object.freeze(errors)});
+ }
+'''
+          replace_once('offlineprogress.js',old_reg,new_reg)
+          replace_once('offlineprogress.js','function validateThirdWorldOfflineSettlement(){\n  const errors=[];','function validateThirdWorldOfflineSettlement(){\n  const errors=[];if(Number(window.EQUIPMENT_AUTO_PROCESS_POLICY_VERSION)!==1||typeof window.equipmentDropDisposition!=="function")errors.push({code:"EQUIPMENT_AUTO_PROCESS_POLICY"});')
+          replace_once('offlineprogress.js','return Object.freeze({version:5,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE','return Object.freeze({version:6,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE')
+
+          # 3: synchronize guide minimum with current formal owner V25.
+          replace_once('integritycontract.js','GAME_GUIDE_VERSION:24','GAME_GUIDE_VERSION:25')
+          replace_once('tests/runtime/js-integrity.js','/GAME_GUIDE_VERSION:24/.test(contract)','/GAME_GUIDE_VERSION:25/.test(contract)')
+          replace_once('tests/runtime/js-integrity.js','/GAME_GUIDE_VERSION=24/.test(gameGuideSource)','/GAME_GUIDE_VERSION=25/.test(gameGuideSource)')
+          replace_once('tests/runtime/js-integrity.js',
+          'const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js"),compatibility=read("compatibilityowners.js"),worldTransitionSafety=read("worldtransitionsafety.js"),combatMath=read("combatmath.js"),dungeonCore=read("dungeoncore.js"),secondWorldCombat=read("secondworldcombat.js");',
+          'const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js"),compatibility=read("compatibilityowners.js"),worldTransitionSafety=read("worldtransitionsafety.js"),combatMath=read("combatmath.js"),dungeonCore=read("dungeoncore.js"),secondWorldCombat=read("secondworldcombat.js"),engine=read("engine.js"),ui=read("ui.js"),equipmentLock=read("equipmentlock.js");')
+          marker='assert(/window\\.appendOfflineBattleSample/.test(offlineProgress),"第二紀元 Offline sample consumer 必須維持 canonical append owner。")\n'
+          insert='''assert(/EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6/.test(engine)&&/normalizeAutoSellQualitySettings/.test(engine)&&/autoSell:\\[false,false,false,false,false,false\\]/.test(engine),"六品質自動處理設定 owner／新角色預設未收斂。")
+assert(/normalizeAutoSellQualitySettings\\(target\\)/.test(ui)&&!/autoSell\\.slice\\(0,6\\)/.test(ui),"UI save normalization 不得維護第二份六品質 autoSell 正規化。")
+assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")
+assert(/window\\.equipmentDropDisposition/.test(offlineProgress)&&!/mythicAutoProcess/.test(offlineProgress)&&!/bestByType/.test(offlineProgress),"Offline 裝備不得再維護神話／傳說獨立保留判定。")
+'''
+          replace_once('tests/runtime/js-integrity.js',marker,marker+insert)
+
+          # cache-bust every changed browser JS.
+          for old,new in [
+            ('engine.js?v=20260928-thirdworld-vip20-death-protection1','engine.js?v=20261002-autoprocess-policy-batch1'),
+            ('ui.js?v=20261002-mythic-autosell-batch2','ui.js?v=20261002-autoprocess-policy-batch1'),
+            ('equipmentlock.js?v=20261002-mythic-autosell-batch1','equipmentlock.js?v=20261002-autoprocess-policy-batch1'),
+            ('offlineprogress.js?v=20261002-mythic-autosell-offline-fix1','offlineprogress.js?v=20261002-autoprocess-policy-batch1'),
+            ('integritycontract.js?v=20260930-audit-batch4','integritycontract.js?v=20261002-autoprocess-policy-batch1'),
+          ]:
+              replace_once('index.html',old,new)
+          PY
+          node --check engine.js
+          node --check ui.js
+          node --check equipmentlock.js
+          node --check offlineprogress.js
+          node --check integritycontract.js
+          node tests/runtime/js-integrity.js
+          git diff --check
+          git config user.name 'franksky1207'
+          git config user.email '131867380+franksky1207@users.noreply.github.com'
+          git add engine.js ui.js equipmentlock.js offlineprogress.js integritycontract.js tests/runtime/js-integrity.js index.html
+          git commit -m 'Converge equipment auto-processing policy'
+          git push origin HEAD:main
