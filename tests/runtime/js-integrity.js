@@ -75,7 +75,10 @@ assert(/window\.appendOfflineBattleSample/.test(offlineProgress),"第二紀元 O
 assert(/EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6/.test(engine)&&/normalizeAutoSellQualitySettings/.test(engine)&&/autoSell:\[false,false,false,false,false,false\]/.test(engine),"六品質自動處理設定 owner／新角色預設未收斂。")
 assert(/normalizeAutoSellQualitySettings\(target\)/.test(ui)&&!/autoSell\.slice\(0,6\)/.test(ui),"UI save normalization 不得維護第二份六品質 autoSell 正規化。")
 assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")
-assert(/respectDisposition:true/.test(offlineProgress)&&/window\.equipmentDropDisposition/.test(offlineProgress),"高維 Offline 裝備必須使用正式自動處理 disposition owner。")
+assert(/EQUIPMENT_BOOT_NORMALIZATION_SAVE_VERSION=1/.test(equipmentLock)&&/normalizationBefore!==equipmentNormalizationSignature\(state\)/.test(equipmentLock)&&/if\(normalizationChanged\)save\(false\)/.test(equipmentLock),"裝備載入 normalization 不得再無條件寫存檔。")
+assert(/OFFLINE_GEAR_ACCUMULATOR_VERSION=5/.test(offlineProgress)&&/mythicSpecialContainerRetired:true/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"Offline 裝備 accumulator 應全面改用 shared disposition，且不得保留 mythic 特殊容器開關。")
+assert(/autoSell\.slice\(0,EQUIPMENT_AUTO_SELL_QUALITY_COUNT\)/.test(engine)&&/while\(auto\.length<EQUIPMENT_AUTO_SELL_QUALITY_COUNT\)auto\.push\(false\)/.test(engine),"舊 5 格 autoSell 必須安全補第 6 格 false。")
+assert(/window\.equipmentDropDisposition/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"三紀元 Offline 裝備必須全面使用正式自動處理 disposition owner。")
 assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"Arena canonical profile 應為 Balance V7／Rank V4。");
 assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena)&&/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena)&&/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"第二紀元 Arena 最新三條 Rank 曲線不符。");
 assert(/GAME_GUIDE_VERSION=25/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");

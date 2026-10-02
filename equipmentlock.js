@@ -24,6 +24,13 @@
    entry.redemptionPending=false;
   });
  }
+ function equipmentNormalizationSignature(target=state){
+  const lockValue=item=>item?.locked===true?1:item?.locked===false?0:null;
+  const equipmentLocks=EQUIPMENT_TYPES.map(type=>lockValue(target?.equipment?.[type]));
+  const inventoryLocks=(target?.inventory||[]).map(lockValue);
+  const lost=(target?.lostGear||[]).map(entry=>[lockValue(entry?.item),entry?.currency??null,Number.isFinite(Number(entry?.cost))?Number(entry.cost):null,entry?.redemptionPending??null]);
+  return JSON.stringify([target?.settings?.autoSell??null,equipmentLocks,inventoryLocks,lost]);
+ }
  function restoreAfterEquipmentChange(){
   if(typeof restorePlayerHp==="function")return restorePlayerHp({save:false});
   state.hp=playerCombatStats().hp;
@@ -289,8 +296,13 @@
  window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
  window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=2;
  window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
+ window.EQUIPMENT_BOOT_NORMALIZATION_SAVE_VERSION=1;
+ const normalizationBefore=equipmentNormalizationSignature(state);
  normalizeAutoSellQualitySettings(state);
- injectLockStyles();normalizeAllGearLocks();normalizeLostGearEconomy();save(false);
+ normalizeAllGearLocks();normalizeLostGearEconomy();
+ const normalizationChanged=normalizationBefore!==equipmentNormalizationSignature(state);
+ window.EQUIPMENT_BOOT_NORMALIZATION_CHANGED=normalizationChanged;
+ injectLockStyles();if(normalizationChanged)save(false);
  const main=document.getElementById("main");
  if(main&&typeof MutationObserver!=="undefined")new MutationObserver(()=>setTimeout(enhanceEquippedLockControls,0)).observe(main,{childList:true,subtree:true});
  setTimeout(enhanceEquippedLockControls,0);
