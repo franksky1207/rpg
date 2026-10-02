@@ -18,35 +18,7 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  autoprocess-batch1-patch:
-    if: github.event_name == 'push' && github.event.head_commit.message == 'Execute auto-processing batch1 helper v4'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Apply and verify batch 1
-        shell: bash
-        run: |
-          python3 .github/auto-processing-batch1-v3.py
-          node --check engine.js
-          node --check ui.js
-          node --check equipmentlock.js
-          node --check offlineprogress.js
-          node --check integritycontract.js
-          node tests/runtime/js-integrity.js
-          git diff --check
-          git rm .github/auto-processing-batch1.py .github/auto-processing-batch1-v2.py .github/auto-processing-batch1-v3.py
-          git config user.name 'franksky1207'
-          git config user.email '131867380+franksky1207@users.noreply.github.com'
-          git add engine.js ui.js equipmentlock.js offlineprogress.js integritycontract.js tests/runtime/js-integrity.js index.html
-          git commit -m 'Converge equipment auto-processing policy'
-          git push origin HEAD:main
-
   runtime-integrity:
     runs-on: ubuntu-latest
     steps:
