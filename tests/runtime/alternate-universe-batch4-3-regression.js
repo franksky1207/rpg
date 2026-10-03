@@ -32,7 +32,7 @@ for(const depth of [1,10,100,500,1000]){
  assert(s.crit===20&&s.dodge===20,`AU crit/dodge baseline drift at layer ${depth}`);
 }
 assert(sandbox.ALTERNATE_UNIVERSE_UNIVERSE_COUNT===200&&sandbox.ALTERNATE_UNIVERSE_DEPTHS_PER_UNIVERSE===5,"AU structure must remain 200 universes x 5 layers");
-assert(sandbox.alternateUniverseDepthInfo(1000)?.depth===1000&&sandbox.alternateUniverseDepthInfo(1001)===null,"AU public data contract must cap at layer 1000");
+assert(sandbox.alternateUniverseDepthInfo(1000)?.depth===1000&&sandbox.alternateUniverseDepthFromUniverse(200,5)===1000&&sandbox.alternateUniverseDepthFromUniverse(201,1)===0,"AU data mapping must terminate at universe 200 / layer 1000");
 assert(Array.isArray(sandbox.ALTERNATE_UNIVERSE_TRAIT_IDS)&&sandbox.ALTERNATE_UNIVERSE_TRAIT_IDS.join(",")===TRAITS.join(","),"AU must continue reusing the canonical seven traits");
 
 // Formal lifecycle: F5/resume keeps traits; a win advances exactly one layer and does not award resources.
