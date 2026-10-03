@@ -1,9 +1,10 @@
 (function(){
  const REINCARNATION_CORE_VERSION=1;
  const REINCARNATION_ELIGIBILITY_VERSION=1;
- const REINCARNATION_RESET_MUTATION_VERSION=1;
+ const REINCARNATION_RESET_MUTATION_VERSION=2;
  const REINCARNATION_TRANSACTION_VERSION=1;
  const REINCARNATION_RUNTIME_GUARD_VERSION=1;
+ const REINCARNATION_HP_OWNER_VERSION=1;
  const REINCARNATION_SESSION_MARKER="civilization_reincarnation_just_committed_v1";
  const REQUIRED_LEVEL=2000;
  const REQUIRED_CORE_LEVEL=10;
@@ -83,13 +84,8 @@
   target.specializations=window.createBlankSpecializations();
  }
  function reincarnationHpAfterReset(target){
-  if(typeof baseHP!=="function")throw new Error("Base HP owner unavailable.");
-  const gearHp=EQUIPMENT_SLOTS.reduce((sum,type)=>sum+Math.max(0,Number(target?.equipment?.[type]?.hp)||0),0);
-  const raw={hp:gearHp,atk:0,def:0};
-  const breakthrough=typeof window.breakthroughRawEquipmentBonuses==="function"?window.breakthroughRawEquipmentBonuses(raw,target):{hp:0};
-  const beforeVip=Math.max(1,Number(baseHP(1))||1)+Math.max(0,Number(gearHp)||0)+Math.max(0,Number(breakthrough?.hp)||0);
-  const vip=typeof window.vipBonusStats==="function"?window.vipBonusStats(target?.vipLevel):{hp:0};
-  return Math.max(1,Math.ceil(beforeVip*(1+Math.max(0,Number(vip?.hp)||0)/100)));
+  if(typeof window.playerCombatStatsForState!=="function")throw new Error("State-aware formal combat stats owner unavailable.");
+  return Math.max(1,Math.ceil(Number(window.playerCombatStatsForState(target)?.hp)||1));
  }
  function applyReincarnationResetState(target,options={}){
   if(!isObject(target))throw new Error("Reincarnation target state is invalid.");
@@ -182,6 +178,7 @@
  window.REINCARNATION_RESET_MUTATION_VERSION=REINCARNATION_RESET_MUTATION_VERSION;
  window.REINCARNATION_TRANSACTION_VERSION=REINCARNATION_TRANSACTION_VERSION;
  window.REINCARNATION_RUNTIME_GUARD_VERSION=REINCARNATION_RUNTIME_GUARD_VERSION;
+ window.REINCARNATION_HP_OWNER_VERSION=REINCARNATION_HP_OWNER_VERSION;
  window.REINCARNATION_SESSION_MARKER=REINCARNATION_SESSION_MARKER;
  window.REINCARNATION_REQUIRED_LEVEL=REQUIRED_LEVEL;
  window.REINCARNATION_REQUIRED_CORE_LEVEL=REQUIRED_CORE_LEVEL;
