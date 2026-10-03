@@ -1,14 +1,36 @@
 (function(){
  const UI_VERSION=4;
  const SHARED_UI_VERSION=3;
+ const MAJOR_TRANSITION_UI_VERSION=1;
  const IDS=Object.freeze({notice:"worldPhaseUnlockNotice",requirements:"worldPhaseRequirementsModal",confirm:"worldPhaseConfirmModal",welcome:"secondWorldWelcomeModal"});
  const WELCOME_MARKERS=Object.freeze({2:"civilization_second_world_just_entered_v1",3:"civilization_third_world_just_entered_v1"});
- function esc(v){return window.majorTransitionEscape(v);}
- function ensureOverlay(id,className="world-phase-overlay"){return window.majorTransitionEnsureOverlay(id,className);}
- function closeOverlay(id){return window.majorTransitionCloseOverlay(id);}
- function statusMark(ok){return window.majorTransitionStatusMark(ok);}
- function requirementRow(ok,label,value){return window.majorTransitionRequirementRow(ok,label,value);}
- function requirementSummary(r){return window.majorTransitionRequirementSummary(r);}
+ function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+ function ensureOverlay(id,className="world-phase-overlay"){let el=document.getElementById(id);if(el)return el;el=document.createElement("div");el.id=id;el.className=className;el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");document.body.appendChild(el);return el;}
+ function closeOverlay(id){const el=document.getElementById(id);if(el)el.classList.remove("open");}
+ function statusMark(ok){return ok?'<span class="world-phase-check ok">✓</span>':'<span class="world-phase-check pending">•</span>';}
+ function requirementRow(ok,label,value){return `<div class="world-phase-requirement-row">${statusMark(ok)}<div class="world-phase-requirement-copy"><b>${esc(label)}</b><span>${esc(value)}</span></div></div>`;}
+ function requirementSummary(r){return `${Number(r?.completed)||0} / ${Number(r?.total)||0}`;}
+ function requirementsCardHtml(options={}){
+  const kicker=esc(options.kicker||""),title=esc(options.title||""),description=esc(options.description||"");
+  const rows=Array.isArray(options.rows)?options.rows.join(""):String(options.rowsHtml||"");
+  const closeAction=String(options.closeAction||""),primaryAction=String(options.primaryAction||""),primaryLabel=esc(options.primaryLabel||"");
+  return `<div class="world-phase-card world-phase-requirements-card"><div class="world-phase-modal-head"><div class="world-phase-kicker">${kicker}</div><h2>${title}</h2><div class="muted">${description}</div></div><div class="world-phase-requirement-list">${rows}</div><div class="world-phase-modal-actions"><button class="btn" onclick="${closeAction}">關閉</button>${primaryAction?`<button class="btn primary" onclick="${primaryAction}">${primaryLabel}</button>`:""}</div></div>`;
+ }
+ function confirmationCardHtml(options={}){
+  const kicker=esc(options.kicker||""),title=esc(options.title||""),body=String(options.bodyHtml||"");
+  const danger=esc(options.dangerText||"此操作無法復原。"),cancelAction=String(options.cancelAction||"");
+  const buttonId=esc(options.confirmButtonId||"majorTransitionConfirmButton"),confirmAction=String(options.confirmAction||""),confirmLabel=esc(options.confirmLabel||"確認");
+  return `<div class="world-phase-card world-phase-confirm-card"><div class="world-phase-scroll"><div class="world-phase-modal-head"><div class="world-phase-kicker">${kicker}</div><h2>${title}</h2></div>${body}<div class="world-phase-danger-text">${danger}</div></div><div class="world-phase-modal-actions fixed"><button class="btn" onclick="${cancelAction}">取消</button><button id="${buttonId}" class="btn primary" onclick="${confirmAction}">${confirmLabel}</button></div></div>`;
+ }
+ window.MAJOR_TRANSITION_UI_VERSION=MAJOR_TRANSITION_UI_VERSION;
+ window.majorTransitionEscape=esc;
+ window.majorTransitionEnsureOverlay=ensureOverlay;
+ window.majorTransitionCloseOverlay=closeOverlay;
+ window.majorTransitionStatusMark=statusMark;
+ window.majorTransitionRequirementRow=requirementRow;
+ window.majorTransitionRequirementSummary=requirementSummary;
+ window.majorTransitionRequirementsCardHtml=requirementsCardHtml;
+ window.majorTransitionConfirmationCardHtml=confirmationCardHtml;
  function phaseConfig(targetWorld){
   const world=Number(targetWorld);
   if(world===2)return {world:2,fromName:"銀河紀元",toName:"宇宙紀元",requirements:()=>typeof window.secondWorldEntryRequirements==="function"?window.secondWorldEntryRequirements():null,entered:()=>typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(),visible:r=>!!r?.mainline?.bossCompleted,homePending:"銀河紀元主線已完成。完成所有突破條件後，即可正式進入宇宙紀元。",homeReady:"突破條件已全部完成。文明已準備跨越銀河疆界。",rows:r=>[requirementRow(r.level?.ok,"角色等級",`Lv.${Number(r.level?.current)||0} / Lv.${Number(r.level?.required)||500}`),requirementRow(r.mainline?.ok,"完成銀河紀元主線",r.mainline?.ok?"已完成":"尚未完成"),requirementRow(r.specializations?.ok,"專精全滿",`${Number(r.specializations?.completed)||0} / ${Number(r.specializations?.total)||8}`),requirementRow(r.enhancement?.ok,"五個裝備欄位強化 +20",`${Number(r.enhancement?.completed)||0} / ${Number(r.enhancement?.total)||5}`),requirementRow(r.marks?.ok,"十種印記 Lv.10",`${Number(r.marks?.completed)||0} / ${Number(r.marks?.total)||10}`)],confirmation:`<p>進入後將結束「銀河紀元」的正式成長，並開啟新的成長階段。</p><div class="world-phase-info-block"><b>會保留</b><span>等級、VIP、所有裝備、專精、強化等級、印記、鏡像戰、虛空與歷史紀錄。</span></div><div class="world-phase-info-block warning"><b>會清空</b><span>金幣、基礎／進階強化石、待贖回裝備、特殊遭遇，以及銀河紀元未結算的離線狀態。</span></div><div class="world-phase-info-block speed"><b>宇宙紀元新功能</b><span>解鎖 <strong>1.5× 戰鬥速度</strong>，可於設定中自由切換。</span></div><p class="world-phase-review-note">銀河紀元之後仍可回顧，但不再產生收益、損失或正式進度。</p>`,enter:()=>typeof window.enterSecondWorld==="function"?window.enterSecondWorld():{ok:false,reason:"transition-owner-missing"}};
