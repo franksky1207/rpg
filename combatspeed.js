@@ -3,6 +3,7 @@
  const PLAYER_RULE_VERSION=4;
  const PHASE_RULE_VERSION=1;
  const GM_OVERRIDE_VERSION=1;
+ const REINCARNATION_UNLOCK_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
 
@@ -33,8 +34,12 @@
   if(gameState?.secondWorld?.entered===true)return 2;
   return 1;
  }
+ function reincarnationSpeedUnlocked(target=null){
+  const gameState=target&&typeof target==="object"?target:currentGameState();
+  return Math.max(0,Math.floor(Number(gameState?.reincarnation?.count)||0))>0;
+ }
  function playerCombatSpeedOptions(target=null){
-  return combatSpeedWorldPhase(target)>=2?[1,1.5]:[1];
+  return combatSpeedWorldPhase(target)>=2||reincarnationSpeedUnlocked(target)?[1,1.5]:[1];
  }
  function playerCombatSpeed(){
   const gameState=currentGameState(),options=playerCombatSpeedOptions(gameState);
@@ -90,8 +95,10 @@
  window.COMBAT_SPEED_PLAYER_RULE_VERSION=PLAYER_RULE_VERSION;
  window.COMBAT_SPEED_PHASE_RULE_VERSION=PHASE_RULE_VERSION;
  window.COMBAT_SPEED_GM_OVERRIDE_VERSION=GM_OVERRIDE_VERSION;
+ window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION=REINCARNATION_UNLOCK_VERSION;
  window.COMBAT_SPEED_ALLOWED=ALLOWED.slice();
  window.combatSpeedWorldPhase=combatSpeedWorldPhase;
+ window.reincarnationCombatSpeedUnlocked=reincarnationSpeedUnlocked;
  window.playerCombatSpeedOptions=playerCombatSpeedOptions;
  window.playerCombatSpeed=playerCombatSpeed;
  window.setPlayerCombatSpeed=setPlayerCombatSpeed;
