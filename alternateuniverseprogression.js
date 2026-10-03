@@ -34,8 +34,9 @@
   if(!source)return "";
   try{return new URL(source,document.baseURI).search||"";}catch(_){const i=source.indexOf("?");return i>=0?source.slice(i):"";}
  }
+ function injectStyle(path,marker){if(typeof document==="undefined")return false;if(document.querySelector(`link[data-${marker}]`))return true;const link=document.createElement("link");link.rel="stylesheet";link.href=path+loaderQuery();link.setAttribute(`data-${marker}`,"1");document.head.appendChild(link);return true;}
  function injectScript(path,marker,onload){if(typeof document==="undefined")return false;const existing=document.querySelector(`script[data-${marker}]`);if(existing){if(typeof onload==="function"&&existing.dataset.loaded==="1")onload();return true;}const script=document.createElement("script");script.src=path+loaderQuery();script.setAttribute(`data-${marker}`,"1");script.onload=()=>{script.dataset.loaded="1";if(typeof onload==="function")onload();};document.body.appendChild(script);return true;}
- function loadPlayerUi(){injectScript("alternateuniverseaccess.js","alternate-universe-access",()=>injectScript("alternateuniverseui.js","alternate-universe-player-ui"));}
+ function loadPlayerUi(){injectStyle("alternateuniverse.css","alternate-universe-style");injectScript("alternateuniverseaccess.js","alternate-universe-access",()=>injectScript("alternateuniverseui.js","alternate-universe-player-ui"));}
  function schedulePlayerUi(){if(typeof document==="undefined"||typeof window.addEventListener!=="function")return false;if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",loadPlayerUi,{once:true});else setTimeout(loadPlayerUi,0);return true;}
 
  window.ALTERNATE_UNIVERSE_PROGRESSION_VERSION=ALTERNATE_UNIVERSE_PROGRESSION_VERSION;
