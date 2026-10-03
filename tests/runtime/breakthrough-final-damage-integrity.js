@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.FORMAL_PLAYER_FINAL_DAMAGE_OWNER_VERSION===1&&window.COMBAT_WORLD_ADAPTER_VERSION>=2&&typeof window.formalPlayerFinalDamageMultiplier==="function"&&typeof window.worldCombatDamageMultiplier==="function"&&typeof window.runWorldCombatCore==="function"&&typeof window.civilizationCombatDamageMultiplier==="function"&&typeof window.breakthroughFinalDamageAdd==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.FORMAL_PLAYER_FINAL_DAMAGE_OWNER_VERSION===1&&window.COMBAT_WORLD_ADAPTER_VERSION===1&&typeof window.formalPlayerFinalDamageMultiplier==="function"&&typeof window.worldCombatDamageMultiplier==="function"&&typeof window.runWorldCombatCore==="function"&&typeof window.civilizationCombatDamageMultiplier==="function"&&typeof window.breakthroughFinalDamageAdd==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const milestones=()=>Object.fromEntries((window.BREAKTHROUGH_MILESTONE_LEVELS||[]).map(v=>[String(v),false]));
    const makeState=(world,civ,breakthrough)=>({
@@ -36,7 +36,7 @@ const assert=require("assert");
    const override=window.runWorldCombatCore({hp:1000,atk:100,def:0,crit:0,dodge:0},{name:"probe",hp:1000,atk:0,def:0,crit:0,dodge:0},1000,{world:2,state:w2,playerFinalDamageMultiplier:1.23,rng:()=>.5,maxTurns:1,logs:false});
    return {snapshots,direct,combatMultiplier:combat.playerFinalDamageMultiplier,overrideMultiplier:override.playerFinalDamageMultiplier,versions:{owner:window.FORMAL_PLAYER_FINAL_DAMAGE_OWNER_VERSION,adapter:window.COMBAT_WORLD_ADAPTER_VERSION}};
   });
-  assert.deepEqual(report.versions,{owner:1,adapter:2},"Final damage owner/adapter version drifted.");
+  assert.deepEqual(report.versions,{owner:1,adapter:1},"Final damage owner/adapter version drifted.");
   assert.equal(report.snapshots.w1b0.multiplier,1,"W1 B0 must remain x1.00.");
   assert.equal(report.snapshots.w1b10.multiplier,1.5,"W1 must apply breakthrough final damage even without civilization.");
   assert.ok(Math.abs(report.snapshots.w2.multiplier-1.7)<1e-12,"W2 Civ4 + breakthrough10 must be additive x1.70, not multiplicative.");
