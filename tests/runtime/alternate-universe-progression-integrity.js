@@ -29,6 +29,7 @@ vm.runInContext(attemptSource,sandbox,{filename:"alternateuniverseattempt.js"});
 
 assert(sandbox.ALTERNATE_UNIVERSE_PROGRESSION_VERSION===1,"AU progression policy version 缺失。");
 assert(sandbox.ALTERNATE_UNIVERSE_COMPLETION_VERSION===1,"AU completion policy version 缺失。");
+assert(sandbox.ALTERNATE_UNIVERSE_PLAYER_UI_LOADER_VERSION===1,"AU player UI loader version 缺失。");
 let snap=sandbox.alternateUniverseProgressionSnapshot(state);
 assert(snap.unlocked&&snap.deepestCleared===998&&snap.nextDepth===999&&!snap.completed&&snap.remainingDepths===2,"U998 應只開放 U999 為下一正式前線。");
 assert(sandbox.alternateUniverseChallengeAccess(999,state).ok,"U999 應可正式挑戰。");
@@ -60,9 +61,10 @@ assert(review?.alternateUniverseMode==="review","U1000 完成後應可建立 U10
 assert(JSON.stringify(state)===beforeReview&&saveCount===beforeSave,"回顧戰建立不得修改 deepestCleared／failure／activeAttempt 或 save。");
 assert(sandbox.alternateUniverseCanAdvance(998,999)&&sandbox.alternateUniverseCanAdvance(999,1000)&&!sandbox.alternateUniverseCanAdvance(1000,1001),"progression policy 必須只允許 +1 且封頂 1000U。");
 
-assert(index.includes('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"'),"3-5 AU progression owner cache-bust／script 載入缺失。");
-assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"')>index.indexOf('src="alternateuniversedata.js?v=20261003-reincarnation-batch3-1"'),"AU progression owner 必須在 AU data owner 後載入。");
-assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"')<index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"'),"AU progression policy 應在 attempt consumer 前載入。");
+assert(index.includes('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-6"'),"3-6 AU progression owner cache-bust／script 載入缺失。");
+assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-6"')>index.indexOf('src="alternateuniversedata.js?v=20261003-reincarnation-batch3-1"'),"AU progression owner 必須在 AU data owner 後載入。");
+assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-6"')<index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"'),"AU progression policy 應在 attempt consumer 前載入。");
 assert(workflow.includes("node tests/runtime/alternate-universe-progression-integrity.js"),"Runtime Integrity workflow 必須執行 AU progression regression。");
 assert(!/gold|darkMatter|darkEnergy|exp\s*[+]?=|loot|equipment/i.test(progressionSource),"AU progression policy 不得偷偷加入資源、EXP 或裝備收益。");
+require("./alternate-universe-ui-integrity.js");
 console.log("Alternate Universe U1-U1000 progression integrity passed.");
