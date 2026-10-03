@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.BREAKTHROUGH_CORE_VERSION===1&&window.BREAKTHROUGH_CORE_INTEGRITY&&window.BREAKTHROUGH_COMBAT_STATS_OWNER_VERSION===1&&window.LEVEL_PROGRESSION_VERSION>=3&&window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION===1&&typeof window.breakthroughSnapshot==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function"&&typeof window.gainEffectiveExpForState==="function"&&typeof window.equippedRawBreakthroughStats==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.BREAKTHROUGH_CORE_VERSION===1&&window.BREAKTHROUGH_CORE_INTEGRITY&&window.BREAKTHROUGH_COMBAT_STATS_OWNER_VERSION===2&&window.LEVEL_PROGRESSION_VERSION>=3&&window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION===1&&typeof window.breakthroughSnapshot==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function"&&typeof window.gainEffectiveExpForState==="function"&&typeof window.equippedRawBreakthroughStats==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const milestones=Array.from(window.BREAKTHROUGH_MILESTONE_LEVELS||[]);
    const blankMilestones=()=>Object.fromEntries(milestones.map(v=>[String(v),false]));
@@ -100,7 +100,7 @@ const assert=require("assert");
   });
 
   assert.equal(report.core?.passed,true,"Breakthrough core self-integrity failed: "+JSON.stringify(report.core?.errors||null));
-  assert.deepEqual(report.constants,{percent:2.5,finalAdd:.05,maxPerLife:10,stats:["hp","atk","def"],milestones:[100,200,300,400,500,600,700,800,900,1000],bridge:1,levelVersion:3,combatOwner:1},"Breakthrough/level canonical constants drifted.");
+  assert.deepEqual(report.constants,{percent:2.5,finalAdd:.05,maxPerLife:10,stats:["hp","atk","def"],milestones:[100,200,300,400,500,600,700,800,900,1000],bridge:1,levelVersion:3,combatOwner:2},"Breakthrough/level canonical constants drifted.");
   assert.equal(report.b0.equipmentBonusPercent,0,"B0 must not change raw equipment stats.");
   assert.equal(report.b0.finalDamageAdd,0,"B0 final-damage add must be zero.");
   assert.equal(report.b10.equipmentBonusPercent,25,"B10 raw-equipment bonus must be +25%.");
