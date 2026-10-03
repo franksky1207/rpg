@@ -82,7 +82,7 @@
   const result=window.grantBreakthroughMilestonesForLevelCrossing(fromLevel,toLevel,target);
   if(result?.awarded>0&&Array.isArray(logs)){
    const labels=Array.isArray(result.milestones)?result.milestones.map(level=>`Lv.${level}`).join("、"):"";
-   logs.push(`突破！跨越 ${labels} 里程碑，永久突破 B+${result.awarded}（目前 B${result.permanentAfter}）。`);
+   logs.push(`突破成功！跨越 ${labels} 里程碑，突破等級提升 ${result.awarded} 級，目前為 Lv.${result.permanentAfter}。`);
   }
   return result||null;
  }
