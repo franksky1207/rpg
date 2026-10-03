@@ -23,7 +23,7 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙實際玩法")&&handoff.includes("尚未施工"),"Handoff 必須同步轉生已完成基礎與異宇宙尚未施工現況。");
-assert(worldphase.includes("const WORLD_PHASE_VERSION=6;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V6／高維紀元正式 owner。");
+assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元本身不再列為 pending"),"Pending 必須同步 Schema17 與高維紀元已完成現況。");
 assert(pending.includes("異宇宙實際玩法")&&pending.includes("轉生後 W1／W2／W3 自由重征服")&&pending.includes("四大副本永久解鎖"),"Pending 必須列出目前真正的轉生後／異宇宙主線。");
