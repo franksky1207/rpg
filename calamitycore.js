@@ -1,7 +1,8 @@
 (function(){
- const CALAMITY_CORE_VERSION=1;
+ const CALAMITY_CORE_VERSION=2;
  const CALAMITY_COMBAT_RULE_VERSION=3;
  const CALAMITY_HP_RESTORE_OWNER_VERSION=1;
+ const CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=1;
  const ATK_MULTIPLIER=1.10;
  const DEF_MULTIPLIER=1.05;
  const FIXED_CRIT=10;
@@ -30,6 +31,8 @@
  function definition(id){return DEFS.find(def=>def.id===String(id||""))||null;}
  function unlocked(id,target=state){
   const def=definition(id);if(!def)return false;
+  const rerun=typeof window.isFirstWorldReincarnationRerun==="function"&&window.isFirstWorldReincarnationRerun(target)===true;
+  if(rerun&&typeof window.firstWorldRerunKeyBossCoverage==="function")return window.firstWorldRerunKeyBossCoverage(target)>=def.index+1;
   return target?.bossKilled?.[def.mapIndex]===true;
  }
  function baseBoss(id){
@@ -160,6 +163,7 @@
  window.CALAMITY_CORE_VERSION=CALAMITY_CORE_VERSION;
  window.CALAMITY_COMBAT_RULE_VERSION=CALAMITY_COMBAT_RULE_VERSION;
  window.CALAMITY_HP_RESTORE_OWNER_VERSION=CALAMITY_HP_RESTORE_OWNER_VERSION;
+ window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION;
  window.CALAMITY_MAXED_REPLAY_HP_VERSION=1;
  window.CALAMITY_ATK_MULTIPLIER=ATK_MULTIPLIER;
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
