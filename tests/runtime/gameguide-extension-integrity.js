@@ -52,5 +52,5 @@ const cloud=fs.readFileSync("cloudsaveguide.js","utf8"),mirror=fs.readFileSync("
 assert(!/window\.gameGuidePage\s*=/.test(cloud),"Cloud guide must not monkey-patch gameGuidePage.");
 assert(!/GAME_GUIDE_CATEGORIES/.test(mirror),"Mirror guide must not mutate legacy base categories directly.");
 const saveMigration=fs.readFileSync("savemigration.js","utf8");
-assert(/const SAVE_SCHEMA_VERSION=16;/.test(saveMigration),"Guide optimization must not change Save Schema 16.");
-console.log("GAME GUIDE EXTENSION INTEGRITY PASSED: W1/W2/W3 behavior, terminology, canonical values, catch-up semantics, extensions, schema16");
+assert(/const SAVE_SCHEMA_VERSION=17;/.test(saveMigration),"Guide optimization must preserve current Save Schema 17.");
+console.log("GAME GUIDE EXTENSION INTEGRITY PASSED: W1/W2/W3 behavior, terminology, canonical values, catch-up semantics, extensions, schema17");
