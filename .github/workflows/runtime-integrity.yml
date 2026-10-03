@@ -47,6 +47,7 @@ jobs:
           set -o pipefail
           node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Install browser smoke dependency
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
@@ -66,6 +67,7 @@ jobs:
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run unlimited VIP integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
