@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.MAJOR_TRANSITION_UI_VERSION===1&&window.WORLD_PHASE_SHARED_UI_VERSION===3&&window.REINCARNATION_MAJOR_TRANSITION_SHELL_VERSION===1&&window.REINCARNATION_PRECOMMIT_BACKUP_VERSION===1&&typeof window.createVerifiedReincarnationBackup==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.MAJOR_TRANSITION_UI_VERSION===1&&window.WORLD_PHASE_SHARED_UI_VERSION===4&&window.REINCARNATION_MAJOR_TRANSITION_SHELL_VERSION===1&&window.REINCARNATION_PRECOMMIT_BACKUP_VERSION===1&&typeof window.createVerifiedReincarnationBackup==="function",{timeout:30000});
 
   const uiReport=await page.evaluate(()=>{
    const oldSecond=window.secondWorldEntryRequirements,oldThird=window.thirdWorldEntryRequirements;
@@ -30,7 +30,7 @@ const assert=require("assert");
    try{return {w2:capture(2,w2),w3:capture(3,w3),versions:{major:window.MAJOR_TRANSITION_UI_VERSION,worldShared:window.WORLD_PHASE_SHARED_UI_VERSION,reincarnationShell:window.REINCARNATION_MAJOR_TRANSITION_SHELL_VERSION}};}
    finally{window.secondWorldEntryRequirements=oldSecond;window.thirdWorldEntryRequirements=oldThird;}
   });
-  assert.deepEqual(uiReport.versions,{major:1,worldShared:3,reincarnationShell:1});
+  assert.deepEqual(uiReport.versions,{major:1,worldShared:4,reincarnationShell:1});
   assert.equal(uiReport.w2.requirements.open,true);assert.equal(uiReport.w2.confirmation.open,true);
   for(const text of ["銀河紀元 → 宇宙紀元","宇宙紀元突破條件","角色等級","完成銀河紀元主線","專精全滿","五個裝備欄位強化 +20","十種印記 Lv.10","進入宇宙紀元"])assert.ok(uiReport.w2.requirements.text.includes(text),`W2 requirements missing: ${text}`);
   for(const text of ["不可逆世界突破","確定進入「宇宙紀元」？","會保留","會清空","宇宙紀元新功能","1.5× 戰鬥速度","此操作無法復原"])assert.ok(uiReport.w2.confirmation.text.includes(text),`W2 confirmation missing: ${text}`);
