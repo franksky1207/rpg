@@ -1,0 +1,68 @@
+const fs=require("fs");
+const vm=require("vm");
+function assert(condition,message){if(!condition)throw new Error(message);}
+const progressionSource=fs.readFileSync("alternateuniverseprogression.js","utf8");
+const attemptSource=fs.readFileSync("alternateuniverseattempt.js","utf8");
+const index=fs.readFileSync("index.html","utf8");
+const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8");
+const TRAITS=["strong","ferocious","hard","swift","deadly","berserk","giant"];
+let saveCount=0;
+const state={saveVersion:17,reincarnation:{count:3,breakthrough:{permanent:10,milestoneLifeId:3,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:998,activeAttempt:null,lifeFailures:{lifeId:3,failures:{}}}}};
+const sandbox={console,Date,Math,JSON,Object,Array,Set,Number,String,Boolean,state,window:{},globalThis:null};
+sandbox.globalThis=sandbox;sandbox.window=sandbox;
+sandbox.ALTERNATE_UNIVERSE_TRAIT_IDS=TRAITS.slice();
+sandbox.MONSTER_TRAIT_IDS=TRAITS.slice();
+sandbox.ALTERNATE_UNIVERSE_DATA_MAX_DEPTH=1000;
+sandbox.ALTERNATE_UNIVERSE_MAX_DEPTH=1000;
+sandbox.reincarnationCount=target=>Math.max(0,Math.floor(Number(target?.reincarnation?.count)||0));
+sandbox.alternateUniverseUnlocked=target=>target?.reincarnation?.alternateUniverse?.unlocked===true;
+sandbox.alternateUniverseDeepestCleared=target=>Math.max(0,Math.min(1000,Math.floor(Number(target?.reincarnation?.alternateUniverse?.deepestCleared)||0)));
+sandbox.alternateUniverseFailureCount=(target,depth)=>Math.max(0,Math.min(10,Math.floor(Number(target?.reincarnation?.alternateUniverse?.lifeFailures?.failures?.[String(depth)])||0)));
+sandbox.alternateUniverseDepthLocked=(target,depth)=>sandbox.alternateUniverseFailureCount(target,depth)>=10;
+sandbox.alternateUniverseDepthInfo=depth=>({depth,universeNumber:Math.floor((depth-1)/5)+1,stageIndex:(depth-1)%5,stageLabel:["外環","神庭","聖域","天座","主宰"][(depth-1)%5],universeName:depth>=996?"無盡海神宇宙":"測試宇宙"});
+sandbox.alternateUniverseEnemyStats=depth=>({depth,hp:1,atk:1,def:1,crit:20,dodge:20});
+sandbox.applyMonsterTraits=(enemy,traits)=>({...enemy,traits:traits.slice()});
+sandbox.runSettlementTransaction=({label,mutate})=>{const before=JSON.stringify(state);try{const value=mutate(state);if(value===false||value?.ok===false){Object.keys(state).forEach(k=>delete state[k]);Object.assign(state,JSON.parse(before));return {ok:false,reason:value?.reason||"mutation-rejected",rolledBack:true,saved:false,label};}saveCount++;return {ok:true,saved:true,label,value};}catch(error){Object.keys(state).forEach(k=>delete state[k]);Object.assign(state,JSON.parse(before));return {ok:false,reason:"mutation-exception",rolledBack:true,saved:false,label,error:String(error)}}};
+vm.createContext(sandbox);
+vm.runInContext(progressionSource,sandbox,{filename:"alternateuniverseprogression.js"});
+vm.runInContext(attemptSource,sandbox,{filename:"alternateuniverseattempt.js"});
+
+assert(sandbox.ALTERNATE_UNIVERSE_PROGRESSION_VERSION===1,"AU progression policy version 缺失。");
+assert(sandbox.ALTERNATE_UNIVERSE_COMPLETION_VERSION===1,"AU completion policy version 缺失。");
+let snap=sandbox.alternateUniverseProgressionSnapshot(state);
+assert(snap.unlocked&&snap.deepestCleared===998&&snap.nextDepth===999&&!snap.completed&&snap.remainingDepths===2,"U998 應只開放 U999 為下一正式前線。");
+assert(sandbox.alternateUniverseChallengeAccess(999,state).ok,"U999 應可正式挑戰。");
+assert(!sandbox.alternateUniverseChallengeAccess(1000,state).ok&&sandbox.alternateUniverseChallengeAccess(1000,state).reason==="depth-not-reached","不得由 U998 跳打 U1000。");
+assert(sandbox.alternateUniverseReviewAccess(998,state).ok&&!sandbox.alternateUniverseReviewAccess(999,state).ok,"已通關 U 才可回顧，未通關前線不可回顧。");
+
+const rng=()=>0;
+let begin=sandbox.beginAlternateUniverseAttempt(999,{rng,attemptId:"u999"});
+assert(begin.ok&&begin.depth===999,"應可建立 U999 正式 attempt。");
+let settled=sandbox.settleAlternateUniverseAttempt("win",{attemptId:"u999"});
+assert(settled.ok&&state.reincarnation.alternateUniverse.deepestCleared===999,"U999 勝利應精確推進至 999。");
+snap=sandbox.alternateUniverseProgressionSnapshot(state);
+assert(snap.nextDepth===1000&&!snap.completed&&snap.remainingDepths===1,"U999 後唯一正式前線必須是 U1000。");
+
+begin=sandbox.beginAlternateUniverseAttempt(1000,{rng,attemptId:"u1000"});
+assert(begin.ok&&begin.depth===1000,"U1000 應可建立最後正式 attempt。");
+settled=sandbox.settleAlternateUniverseAttempt("win",{attemptId:"u1000"});
+assert(settled.ok&&state.reincarnation.alternateUniverse.deepestCleared===1000,"U1000 勝利必須保存 deepestCleared=1000。");
+snap=sandbox.alternateUniverseProgressionSnapshot(state);
+assert(snap.completed&&snap.deepestCleared===1000&&snap.nextDepth===null&&snap.remainingDepths===0,"U1000 勝利後應成為完整 1000/1000 completed 狀態。");
+assert(snap.completedUniverses===200&&snap.totalUniverses===200&&snap.completionText==="1000 / 1000","完成狀態應標示 200/200 宇宙與 1000/1000 深度。");
+assert(!sandbox.alternateUniverseChallengeAccess(1000,state).ok&&sandbox.alternateUniverseChallengeAccess(1000,state).reason==="alternate-universe-completed","全通關後不得再把 U1000 當正式 progression challenge。");
+assert(!sandbox.alternateUniverseChallengeAccess(1001,state).ok,"U1001 不得存在。");
+assert(sandbox.alternateUniverseReviewAccess(1,state).ok&&sandbox.alternateUniverseReviewAccess(1000,state).ok,"全通關後 U1～U1000 應全部可作回顧戰。");
+
+const beforeReview=JSON.stringify(state),beforeSave=saveCount;
+const review=sandbox.createAlternateUniverseReviewEncounter(1000,()=>0.5,state);
+assert(review?.alternateUniverseMode==="review","U1000 完成後應可建立 U1000 回顧 encounter。");
+assert(JSON.stringify(state)===beforeReview&&saveCount===beforeSave,"回顧戰建立不得修改 deepestCleared／failure／activeAttempt 或 save。");
+assert(sandbox.alternateUniverseCanAdvance(998,999)&&sandbox.alternateUniverseCanAdvance(999,1000)&&!sandbox.alternateUniverseCanAdvance(1000,1001),"progression policy 必須只允許 +1 且封頂 1000U。");
+
+assert(index.includes('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"'),"3-5 AU progression owner cache-bust／script 載入缺失。");
+assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"')>index.indexOf('src="alternateuniversedata.js?v=20261003-reincarnation-batch3-1"'),"AU progression owner 必須在 AU data owner 後載入。");
+assert(index.indexOf('src="alternateuniverseprogression.js?v=20261003-reincarnation-batch3-5"')<index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"'),"AU progression policy 應在 attempt consumer 前載入。");
+assert(workflow.includes("node tests/runtime/alternate-universe-progression-integrity.js"),"Runtime Integrity workflow 必須執行 AU progression regression。");
+assert(!/gold|darkMatter|darkEnergy|exp\s*[+]?=|loot|equipment/i.test(progressionSource),"AU progression policy 不得偷偷加入資源、EXP 或裝備收益。");
+console.log("Alternate Universe U1-U1000 progression integrity passed.");
