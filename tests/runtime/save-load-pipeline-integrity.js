@@ -123,15 +123,17 @@ const assert=require("assert");
    const currentRaw=localStorage.getItem(SAVE_KEY_VALUE)||"";
    const current=JSON.parse(currentRaw);
    const backupKey=`${SAVE_KEY_VALUE}.pre-schema17-backup-v1`,backupRaw=localStorage.getItem(backupKey)||"";
-   const report=clone(window.LAST_SAVE_LOAD_REPORT||{}),backupReport=clone(window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT||{});
-   return {loaded,raw,currentRaw,backupRaw,backupKey,expected,actual:stableSnapshot(current),currentVersion:current.saveVersion,currentReincarnation:clone(current.reincarnation),report,backupReport};
+   const report=clone(window.LAST_SAVE_LOAD_REPORT||{}),backupReport=clone(window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT||{}),actual=stableSnapshot(current);
+   const changedKeys=Object.keys(expected).filter(key=>JSON.stringify(expected[key])!==JSON.stringify(actual[key]));
+   const differences=Object.fromEntries(changedKeys.map(key=>[key,{expected:expected[key],actual:actual[key]}]));
+   return {loaded,raw,currentRaw,backupRaw,backupKey,expected,actual,changedKeys,differences,currentVersion:current.saveVersion,currentReincarnation:clone(current.reincarnation),report,backupReport};
   });
 
   assert.equal(first.loaded,true,"Schema16 realistic fixture failed canonical load.");
   assert.equal(first.backupRaw,first.raw,"Pre-Schema17 backup must be byte-for-byte identical to the original save.");
   assert.equal(first.currentVersion,17,"Canonical load did not persist Schema17.");
   assert.equal(first.currentReincarnation?.count,0,"Legacy Schema16 load must initialize first-run reincarnation state.");
-  assert.deepEqual(first.actual,first.expected,"Realistic Schema16 W3 gameplay fields changed during migration/load.");
+  assert.deepEqual(first.changedKeys,[],"Realistic Schema16 W3 gameplay fields changed during migration/load: "+JSON.stringify(first.differences));
   assert.equal(first.report?.failed,false,"Canonical load report unexpectedly failed.");
   assert.equal(first.report?.sourceVersion,16,"Canonical load report lost Schema16 source version.");
   assert.equal(first.report?.versionBackupOwner,"saveversionguard","Version backup owner must remain saveversionguard.");
@@ -159,18 +161,17 @@ const assert=require("assert");
    Storage.prototype.setItem=function(key,value){if(String(key)===backupKey)throw new DOMException("intentional integrity quota failure","QuotaExceededError");return originalSetItem.call(this,key,value);};
    let result,error="";
    try{result=window.load();}catch(e){error=String(e?.message||e);}finally{Storage.prototype.setItem=originalSetItem;}
-   return {result,error,rawAfter:localStorage.getItem(SAVE_KEY_VALUE)||"",backupAfter:localStorage.getItem(backupKey),report:JSON.parse(JSON.stringify(window.LAST_SAVE_LOAD_REPORT||{})),safetyReport:JSON.parse(JSON.stringify(window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT||{}))};
+   return {result,error,raw,rawAfter:localStorage.getItem(SAVE_KEY_VALUE)||"",backupAfter:localStorage.getItem(backupKey),report:JSON.parse(JSON.stringify(window.LAST_SAVE_LOAD_REPORT||{})),safetyReport:JSON.parse(JSON.stringify(window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT||{}))};
   });
   assert.equal(failClosed.error,"","Backup failure path must be handled without throwing to the page.");
   assert.equal(failClosed.result,false,"Backup verification failure must fail closed.");
-  assert.equal(failClosed.rawAfter,JSON.stringify({...JSON.parse(failClosed.rawAfter)}),"Protected legacy save must remain valid JSON.");
-  assert.equal(JSON.parse(failClosed.rawAfter).playerName,"Schema16 Backup Failure Probe","Fail-closed path overwrote the original localStorage save.");
+  assert.equal(failClosed.rawAfter,failClosed.raw,"Fail-closed path overwrote the original localStorage save.");
   assert.equal(failClosed.backupAfter,null,"Failed version backup must not leave a false verified backup.");
   assert.equal(failClosed.report?.failed,true,"Fail-closed load report must be marked failed.");
   assert.equal(failClosed.report?.reason,"pre-schema17-backup-failed","Fail-closed reason must identify pre-Schema17 backup failure.");
   assert.equal(failClosed.safetyReport?.ok,false,"Strict backup report must expose the failed verification.");
 
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("Save load pipeline integrity passed:",JSON.stringify({realisticSchema16:{backupExact:first.backupRaw===first.raw,gameplayPreserved:true,sourceVersion:first.report.sourceVersion,targetVersion:first.currentVersion},reload:{sourceVersion:reloaded.report.sourceVersion,targetVersion:reloaded.saveVersion,backupPreserved:reloaded.backupRaw===first.raw},failClosed:{reason:failClosed.report.reason,originalPreserved:JSON.parse(failClosed.rawAfter).playerName==="Schema16 Backup Failure Probe"}}));
+  console.log("Save load pipeline integrity passed:",JSON.stringify({realisticSchema16:{backupExact:first.backupRaw===first.raw,gameplayPreserved:true,sourceVersion:first.report.sourceVersion,targetVersion:first.currentVersion},reload:{sourceVersion:reloaded.report.sourceVersion,targetVersion:reloaded.saveVersion,backupPreserved:reloaded.backupRaw===first.raw},failClosed:{reason:failClosed.report.reason,originalPreserved:failClosed.rawAfter===failClosed.raw}}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
