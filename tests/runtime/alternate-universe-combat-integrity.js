@@ -95,7 +95,7 @@ assert(!sandbox.settleAlternateUniverseCombat(incomplete).ok,"未完成戰鬥不
 assert(!source.includes("thirdWorldBoss")&&!source.includes("five-point")&&!source.includes("permanentDamage"),"AU combat 不得帶入 W3 十王專用戰鬥規則。");
 assert(source.includes("runWorldCombatCore"),"AU combat 必須共用正式 World Combat Adapter。");
 assert(index.includes('src="alternateuniversecombat.js?v=20261003-reincarnation-batch3-3"'),"3-3 AU combat cache-bust／script 載入缺失。");
-assert(index.indexOf('src="alternateuniversecombat.js?v=20261003-reincarnation-batch3-3"')>index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-2"'),"AU combat owner 必須在 AU attempt owner 後載入。");
+assert(index.indexOf('src="alternateuniversecombat.js?v=20261003-reincarnation-batch3-3"')>index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"'),"AU combat owner 必須在 AU attempt owner 後載入。");
 assert(index.indexOf('src="alternateuniversecombat.js?v=20261003-reincarnation-batch3-3"')>index.indexOf('src="combatmath.js?'),"AU combat owner 必須在 shared world combat adapter 後載入。");
 assert(workflow.includes("node tests/runtime/alternate-universe-combat-integrity.js"),"Runtime Integrity workflow 必須正式執行 AU combat test。");
 console.log("Alternate Universe combat adapter integrity passed.");
