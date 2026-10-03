@@ -29,6 +29,9 @@ const assert=require("assert");
      accessory:{type:"accessory",hp:0,atk:0,def:0,crit:0,dodge:0,mainStat:{stat:"crit",value:0}}
     };
     const detachedStats=window.playerCombatStatsForState(detached);
+    const resetProbe=clone(detached);
+    const resetResult=window.applyReincarnationResetState(resetProbe,{currentTime:7000,requireEligible:false});
+    const resetOwnerHp=window.playerCombatStatsForState(resetProbe).hp;
 
     const probe=newState();
     probe.saveVersion=17;probe.level=600;probe.vipLevel=0;
@@ -44,14 +47,16 @@ const assert=require("assert");
     state.reincarnation.breakthrough.permanent=0;
     const snapB0=window.createMirrorCombatSnapshot();
     const audit=window.auditCurrentMirrorCombatSnapshotSources();
-    return {detachedStats,snapB10:{civilizationLevel:snapB10.civilizationLevel,breakthroughLevel:snapB10.breakthroughLevel,civilizationDamageMultiplier:snapB10.civilizationDamageMultiplier,finalDamageMultiplier:snapB10.finalDamageMultiplier},snapB0:{breakthroughLevel:snapB0.breakthroughLevel,finalDamageMultiplier:snapB0.finalDamageMultiplier},firstAttack,audit,versions:{mirror:window.MIRROR_COMBAT_CORE_VERSION,mirrorOwner:window.MIRROR_FORMAL_FINAL_DAMAGE_OWNER_VERSION,stateAware:window.STATE_AWARE_COMBAT_STATS_OWNER_VERSION,reincarnationHp:window.REINCARNATION_HP_OWNER_VERSION}};
+    return {detachedStats,reset:{ok:resetResult?.ok===true,hp:resetProbe.hp,ownerHp:resetOwnerHp,count:resetProbe.reincarnation?.count,permanent:resetProbe.reincarnation?.breakthrough?.permanent},snapB10:{civilizationLevel:snapB10.civilizationLevel,breakthroughLevel:snapB10.breakthroughLevel,civilizationDamageMultiplier:snapB10.civilizationDamageMultiplier,finalDamageMultiplier:snapB10.finalDamageMultiplier},snapB0:{breakthroughLevel:snapB0.breakthroughLevel,finalDamageMultiplier:snapB0.finalDamageMultiplier},firstAttack,audit,versions:{mirror:window.MIRROR_COMBAT_CORE_VERSION,mirrorOwner:window.MIRROR_FORMAL_FINAL_DAMAGE_OWNER_VERSION,stateAware:window.STATE_AWARE_COMBAT_STATS_OWNER_VERSION,reincarnationHp:window.REINCARNATION_HP_OWNER_VERSION,resetMutation:window.REINCARNATION_RESET_MUTATION_VERSION}};
    }finally{state=original;}
   });
 
-  assert.deepEqual(report.versions,{mirror:7,mirrorOwner:1,stateAware:1,reincarnationHp:1});
+  assert.deepEqual(report.versions,{mirror:7,mirrorOwner:1,stateAware:1,reincarnationHp:1,resetMutation:1});
   assert.equal(report.detachedStats.hp,235,"Detached state HP must include raw gear + B bonus without depending on global state.");
   assert.equal(report.detachedStats.atk,115,"Detached state ATK must include base + raw gear + B bonus.");
   assert.equal(report.detachedStats.def,57,"Detached state DEF must include base + raw gear + B bonus.");
+  assert.equal(report.reset.ok,true);assert.equal(report.reset.count,3);assert.equal(report.reset.permanent,10);
+  assert.equal(report.reset.hp,report.reset.ownerHp,"Reincarnation reset HP must be exactly the shared state-aware formal max HP.");
   assert.equal(report.snapB10.civilizationLevel,10);assert.equal(report.snapB10.breakthroughLevel,10);
   assert.ok(Math.abs(report.snapB10.civilizationDamageMultiplier-1.5)<1e-9);
   assert.ok(Math.abs(report.snapB10.finalDamageMultiplier-2)<1e-9,"Mirror must use shared formal final damage owner: 1 + civ 0.5 + breakthrough 0.5.");
