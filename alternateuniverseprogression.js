@@ -1,13 +1,11 @@
 (function(){
- const ALTERNATE_UNIVERSE_PROGRESSION_VERSION=2;
+ const ALTERNATE_UNIVERSE_PROGRESSION_VERSION=3;
  const ALTERNATE_UNIVERSE_COMPLETION_VERSION=1;
- const ALTERNATE_UNIVERSE_PLAYER_UI_LOADER_VERSION=3;
- const ACCESS_SRC="alternateuniverseaccess.js?v=20261003-reincarnation-batch3-6";
- const UI_SRC="alternateuniverseui.js?v=20261003-reincarnation-batch4-2";
+ const ALTERNATE_UNIVERSE_PLAYER_UI_LOADER_VERSION=4;
 
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
- function maxDepth(){return Math.max(1,whole(window.ALTERNATE_UNIVERSE_DATA_MAX_DEPTH||window.ALTERNATE_UNIVERSE_MAX_DEPTH,1000));}
+ function maxDepth(){return Math.max(1,whole(window.ALTERNATE_UNIVERSE_MAX_DEPTH,1));}
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:(window.state&&typeof window.state==="object"?window.state:null);}catch(_){return window.state&&typeof window.state==="object"?window.state:null;}}
  function unlocked(target=currentState()){return typeof window.alternateUniverseUnlocked==="function"?window.alternateUniverseUnlocked(target)===true:target?.reincarnation?.alternateUniverse?.unlocked===true;}
  function deepest(target=currentState()){const raw=typeof window.alternateUniverseDeepestCleared==="function"?window.alternateUniverseDeepestCleared(target):target?.reincarnation?.alternateUniverse?.deepestCleared;return clamp(whole(raw,0),0,maxDepth());}
@@ -29,8 +27,15 @@
   return Object.freeze({ok:!reason,reason,depth:u,status,formal:!reason});
  }
  function canAdvance(fromDepth,toDepth){const limit=maxDepth(),from=clamp(whole(fromDepth,0),0,limit),to=whole(toDepth,0);return from<limit&&to===from+1&&to>=1&&to<=limit;}
- function injectScript(src,marker,onload){if(typeof document==="undefined")return false;const existing=document.querySelector(`script[data-${marker}]`);if(existing){if(typeof onload==="function"&&existing.dataset.loaded==="1")onload();return true;}const script=document.createElement("script");script.src=src;script.setAttribute(`data-${marker}`,"1");script.onload=()=>{script.dataset.loaded="1";if(typeof onload==="function")onload();};document.body.appendChild(script);return true;}
- function loadPlayerUi(){injectScript(ACCESS_SRC,"alternate-universe-access",()=>injectScript(UI_SRC,"alternate-universe-player-ui"));}
+ function loaderQuery(){
+  if(typeof document==="undefined")return "";
+  const current=document.currentScript;
+  const source=current?.src||Array.from(document.scripts||[]).find(row=>String(row.src||"").includes("alternateuniverseprogression.js"))?.src||"";
+  if(!source)return "";
+  try{return new URL(source,document.baseURI).search||"";}catch(_){const i=source.indexOf("?");return i>=0?source.slice(i):"";}
+ }
+ function injectScript(path,marker,onload){if(typeof document==="undefined")return false;const existing=document.querySelector(`script[data-${marker}]`);if(existing){if(typeof onload==="function"&&existing.dataset.loaded==="1")onload();return true;}const script=document.createElement("script");script.src=path+loaderQuery();script.setAttribute(`data-${marker}`,"1");script.onload=()=>{script.dataset.loaded="1";if(typeof onload==="function")onload();};document.body.appendChild(script);return true;}
+ function loadPlayerUi(){injectScript("alternateuniverseaccess.js","alternate-universe-access",()=>injectScript("alternateuniverseui.js","alternate-universe-player-ui"));}
  function schedulePlayerUi(){if(typeof document==="undefined"||typeof window.addEventListener!=="function")return false;if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",loadPlayerUi,{once:true});else setTimeout(loadPlayerUi,0);return true;}
 
  window.ALTERNATE_UNIVERSE_PROGRESSION_VERSION=ALTERNATE_UNIVERSE_PROGRESSION_VERSION;
