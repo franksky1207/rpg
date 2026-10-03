@@ -41,6 +41,7 @@
   daily.voidMirage.claimed=daily.voidMirage.claimed===true;
   return daily;
  }
+ function normalizeFreshDailyState(target){normalizeDailyState(target);return target;}
  function ensureDailyState(timestamp=Date.now()){
   return normalizeDailyState(state,timestamp);
  }
@@ -93,6 +94,7 @@
 
  window.DAILY_TIMEZONE_OFFSET_MINUTES=480;
  window.DAILY_DUNGEON_LIMITS=DEFAULT_DAILY_LIMITS;
+ window.DAILY_NEW_STATE_NORMALIZER_VERSION=1;
  window.gameDailyDateKey=gameDailyDateKey;
  window.blankDailyState=blankDailyState;
  window.normalizeDailyState=normalizeDailyState;
@@ -104,5 +106,5 @@
  window.voidMirageDailyStatus=voidMirageDailyStatus;
  window.recordVoidMirageDailyFloor=recordVoidMirageDailyFloor;
  window.claimVoidMirageDailyReward=claimVoidMirageDailyReward;
- if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeDailyState);
+ if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshDailyState);
 })();
