@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.REINCARNATION_STATE_VERSION===6&&window.REINCARNATION_FIRST_RUN_BREAKTHROUGH_ISOLATION_VERSION===1&&window.REINCARNATION_BREAKTHROUGH_RECONCILIATION_VERSION===1&&window.ALTERNATE_UNIVERSE_UNLOCK_SALVAGE_VERSION===1&&typeof window.migrateSave==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.REINCARNATION_STATE_VERSION===7&&window.REINCARNATION_FIRST_RUN_BREAKTHROUGH_ISOLATION_VERSION===1&&window.REINCARNATION_BREAKTHROUGH_RECONCILIATION_VERSION===1&&window.ALTERNATE_UNIVERSE_UNLOCK_SALVAGE_VERSION===1&&window.ALTERNATE_UNIVERSE_ACTIVE_ATTEMPT_REPAIR_VERSION===1&&typeof window.migrateSave==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const run=source=>window.migrateSave(clone(source),17,null,clone(source));
@@ -55,6 +55,8 @@ const assert=require("assert");
   assert.equal(report.auSalvage.reincarnation.alternateUniverse.activeAttempt?.depth,13);
   assert.equal(report.auSalvage.reincarnation.alternateUniverse.lifeFailures?.failures?.["13"],3);
   assert.equal(report.auReport.alternateUniverseUnlockSalvaged,true);
+  assert.equal(report.auReport.activeAttemptCleared,false);
+  assert.equal(report.auReport.activeAttemptExpectedFrontierDepth,13);
 
   assert.equal(report.noEvidence.reincarnation.breakthrough.permanent,30);
   assert.ok(Object.values(report.noEvidence.reincarnation.breakthrough.milestones).every(v=>v===false),"缺 owner 且無 milestone 證據時不得依角色等級猜測");
