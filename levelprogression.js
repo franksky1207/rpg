@@ -1,10 +1,11 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const FIRST_WORLD_LEVEL_CAP=500;
  const SECOND_WORLD_LEVEL_CAP=1000;
  const THIRD_WORLD_LEVEL_CAP=2000;
  const ABSOLUTE_MAX_LEVEL=2000;
  const THIRD_WORLD_EXP_PER_LEVEL=10000000;
+ const BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION=1;
 
  function currentState(){
   try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}
@@ -76,6 +77,16 @@
   return target;
  }
 
+ function awardBreakthroughForNaturalLevelGain(target,fromLevel,toLevel,logs=[]){
+  if(!(Number(toLevel)>Number(fromLevel))||typeof window.grantBreakthroughMilestonesForLevelCrossing!=="function")return null;
+  const result=window.grantBreakthroughMilestonesForLevelCrossing(fromLevel,toLevel,target);
+  if(result?.awarded>0&&Array.isArray(logs)){
+   const labels=Array.isArray(result.milestones)?result.milestones.map(level=>`Lv.${level}`).join("、"):"";
+   logs.push(`突破！跨越 ${labels} 里程碑，永久突破 B+${result.awarded}（目前 B${result.permanentAfter}）。`);
+  }
+  return result||null;
+ }
+
  function gainEffectiveExpForState(amount,target,logs=[]){
   const s=targetState(target);
   if(!s)return 0;
@@ -86,6 +97,7 @@
    s.exp=0;
    return 0;
   }
+  const startLevel=Math.max(1,Math.floor(Number(s.level)||1));
   s.exp=Math.max(0,Number(s.exp)||0)+add;
   let ups=0;
   while(s.level<cap){
@@ -101,6 +113,8 @@
    s.level=cap;
    s.exp=0;
   }
+  const breakthroughResult=ups>0?awardBreakthroughForNaturalLevelGain(s,startLevel,s.level,logs):null;
+  if(breakthroughResult?.awarded>0&&s===currentState()&&typeof playerCombatStats==="function")s.hp=playerCombatStats().hp;
   return ups;
  }
  function gainEffectiveExp(amount,logs=[]){return gainEffectiveExpForState(amount,currentState(),logs);}
@@ -128,6 +142,7 @@
  window.ABSOLUTE_MAX_LEVEL=ABSOLUTE_MAX_LEVEL;
  window.THIRD_WORLD_EXP_PER_LEVEL=THIRD_WORLD_EXP_PER_LEVEL;
  window.LEVEL_PROGRESSION_VERSION=VERSION;
+ window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION=BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION;
  window.LEVEL_RUNTIME_WORLD_CAP_OWNER_VERSION=1;
  window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION=1;
  window.LEVEL_TARGET_EXP_OWNER_VERSION=1;
@@ -144,6 +159,7 @@
  window.effectiveExpNeed=effectiveExpNeed;
  window.normalizeLevelProgressionState=normalizeLevelProgressionState;
  window.levelProgressSnapshot=levelProgressSnapshot;
+ window.awardBreakthroughForNaturalLevelGain=awardBreakthroughForNaturalLevelGain;
  window.gainEffectiveExpForState=gainEffectiveExpForState;
  window.gainEffectiveExp=gainEffectiveExp;
  window.clampGameLevel=clampGameLevel;
