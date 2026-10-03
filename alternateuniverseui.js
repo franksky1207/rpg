@@ -1,10 +1,8 @@
 (function(){
- const ALTERNATE_UNIVERSE_PLAYER_UI_VERSION=4;
+ const ALTERNATE_UNIVERSE_PLAYER_UI_VERSION=5;
  const ALTERNATE_UNIVERSE_COMBAT_PRESENTATION_VERSION=1;
- const HOME_BRIDGE_VERSION=1;
  let lastBattleReport=null;
  let battleContext=null;
- let battleBusy=false;
  function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
  function whole(v,fallback=0){const n=Math.floor(Number(v));return Number.isFinite(n)?n:fallback;}
  function fmt(v){return Math.max(0,whole(v,0)).toLocaleString();}
@@ -20,7 +18,6 @@
  function infoTitle(info){return info?`第 ${fmt(info.depth)} 層域｜${esc(info.universeName)}・${esc(info.stageName||info.stageLabel||"")}`:"異宇宙";}
  function playerName(){try{return typeof currentPlayerName==="function"?currentPlayerName():String(currentState()?.playerName||"玩家");}catch(_){return String(currentState()?.playerName||"玩家");}}
  function homeEntryHtml(){if(typeof window.alternateUniverseHomeEntryVisible!=="function"||window.alternateUniverseHomeEntryVisible(currentState())!==true)return "";const snap=progress();const text=snap?.unlocked?`已征服 ${whole(snap.deepestCleared,0)} / ${whole(snap.maxDepth,1000)} 層域`:"已擊敗 10 名高維存在，異宇宙已開放。";return `<section class="world-phase-home-card au-home-entry" data-alternate-universe-home-entry="1"><div class="world-phase-home-copy"><div class="world-phase-kicker">終局挑戰</div><h3>異宇宙</h3><div class="world-phase-home-desc">跨越既有紀元，挑戰 200 個異宇宙、1000 個層域。無資源收益，只記錄征服進度。</div><div class="world-phase-progress">${esc(text)}</div></div><div class="world-phase-home-actions"><button class="btn primary" onclick="openAlternateUniversePage()">進入異宇宙</button></div></section>`;}
- function installHomeBridge(){if(Number(window.ALTERNATE_UNIVERSE_HOME_BRIDGE_VERSION)>=HOME_BRIDGE_VERSION)return true;const base=window.secondWorldHomeEntryHtml;if(typeof base!=="function")return false;window.secondWorldHomeEntryHtml=function(){return String(base.apply(this,arguments)||"")+homeEntryHtml();};window.ALTERNATE_UNIVERSE_HOME_BRIDGE_VERSION=HOME_BRIDGE_VERSION;return true;}
  function unlockForEntry(){if(typeof window.ensureAlternateUniversePermanentUnlock!=="function")return {ok:false,reason:"access-owner-missing"};return window.ensureAlternateUniversePermanentUnlock(currentState());}
  function openPage(){const access=unlockForEntry();if(!access?.ok){alert(access?.reason==="third-world-bosses-incomplete"?"擊敗 10 名高維存在後才會解鎖異宇宙。":"異宇宙入口尚未完成解鎖，請重新整理後再試。");return false;}try{view="alternateuniverse";}catch(_){}lastBattleReport=null;battleContext=null;renderPage();return true;}
  function progressHtml(snap){return `<div class="au-progress-grid"><div><span>征服層域</span><b>${fmt(snap?.deepestCleared)} / ${fmt(snap?.maxDepth||1000)}</b></div><div><span>已征服宇宙</span><b>${fmt(snap?.completedUniverses)} / ${fmt(snap?.totalUniverses||200)}</b></div><div><span>下一層域</span><b>${snap?.nextDepth?`第 ${fmt(snap.nextDepth)} 層域`:"完成"}</b></div><div><span>剩餘層域</span><b>${fmt(snap?.remainingDepths)}</b></div></div>`;}
@@ -39,11 +36,11 @@
  function presentationSleep(){return typeof window.mainBattlePresentationSleep==="function"?window.mainBattlePresentationSleep:undefined;}
  async function presentCombat(combat){if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");await window.animateStructuredCombatPresentation(combat,{mode:"main",sleep:presentationSleep(),clearAfter:true,clearReason:"alternate-universe-battle-end"});}
  async function challengeFormal(){
-  if(battleBusy)return false;const snap=progress();if(!snap?.nextDepth)return false;
+  if(battleContext)return false;const snap=progress();if(!snap?.nextDepth)return false;
   let attempt=activeAttempt();if(!attempt){const begun=typeof window.beginAlternateUniverseAttempt==="function"?window.beginAlternateUniverseAttempt(snap.nextDepth):{ok:false,reason:"attempt-owner-missing"};if(!begun?.ok){alert(begun?.reason==="depth-locked-for-life"?"本輪此層域已鎖定，完成下一次轉生後可再次挑戰。":"無法建立異宇宙挑戰，請重新整理後再試。");return false;}attempt=activeAttempt();}
   if(!attempt||attempt.depth!==snap.nextDepth)return false;
   const enemy=typeof window.alternateUniverseCurrentAttemptEncounter==="function"?window.alternateUniverseCurrentAttemptEncounter(currentState()):null;const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!enemy||!player){alert("異宇宙戰鬥資料尚未完整載入。");return false;}
-  battleBusy=true;lastBattleReport=null;battleContext={depth:attempt.depth,attempt,enemy,info:depthInfo(attempt.depth),playerMaxHp:Math.max(1,whole(player.hp,1))};renderPage();
+  lastBattleReport=null;battleContext={depth:attempt.depth,attempt,enemy,info:depthInfo(attempt.depth),playerMaxHp:Math.max(1,whole(player.hp,1))};renderPage();
   try{
    const result=typeof window.runAlternateUniverseCombat==="function"?window.runAlternateUniverseCombat({logs:true,preparePresentation:true,startHp:player.hp,playerHealCap:player.hp}):{ok:false};
    if(!result?.ok)throw new Error(result?.reason||"combat-failed");
@@ -51,10 +48,10 @@
    let settlement=null;if(result.settlementReady===true){settlement=typeof window.settleAlternateUniverseCombat==="function"?window.settleAlternateUniverseCombat(result):{ok:false};if(!settlement?.ok)throw new Error(settlement?.reason||"settlement-failed");}
    lastBattleReport={depth:attempt.depth,traits:Array.from(attempt.traits||[]),result,settlement};return true;
   }catch(error){console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。");return false;}
-  finally{battleContext=null;battleBusy=false;renderPage();}
+  finally{battleContext=null;renderPage();}
  }
- function abandonFormal(){const attempt=activeAttempt();if(!attempt||battleBusy)return false;if(!confirm("放棄尚未結算的異宇宙挑戰會記 1 次失敗。確定放棄？"))return false;const result=typeof window.abandonAlternateUniverseAttempt==="function"?window.abandonAlternateUniverseAttempt({attemptId:attempt.attemptId}):{ok:false};if(!result?.ok){alert("無法放棄本次挑戰，請重新整理後再試。");return false;}lastBattleReport=null;renderPage();return true;}
- function install(){installHomeBridge();try{if(typeof view!=="undefined"&&view==="home"&&typeof render==="function")setTimeout(()=>render(),0);}catch(_){}return true;}
+ function abandonFormal(){const attempt=activeAttempt();if(!attempt||battleContext)return false;if(!confirm("放棄尚未結算的異宇宙挑戰會記 1 次失敗。確定放棄？"))return false;const result=typeof window.abandonAlternateUniverseAttempt==="function"?window.abandonAlternateUniverseAttempt({attemptId:attempt.attemptId}):{ok:false};if(!result?.ok){alert("無法放棄本次挑戰，請重新整理後再試。");return false;}lastBattleReport=null;renderPage();return true;}
+ function install(){try{if(typeof view!=="undefined"&&view==="home"&&typeof render==="function")setTimeout(()=>render(),0);}catch(_){}return true;}
  window.ALTERNATE_UNIVERSE_PLAYER_UI_VERSION=ALTERNATE_UNIVERSE_PLAYER_UI_VERSION;
  window.ALTERNATE_UNIVERSE_COMBAT_PRESENTATION_VERSION=ALTERNATE_UNIVERSE_COMBAT_PRESENTATION_VERSION;
  window.alternateUniverseHomeEntryHtml=homeEntryHtml;
