@@ -13,7 +13,7 @@ const state={
 };
 let saves=0;
 const sandbox={console,Date,Math,JSON,Object,Array,Set,Number,String,Boolean,state,window:{},globalThis:null};sandbox.globalThis=sandbox;sandbox.window=sandbox;
-sandbox.MONSTER_TRAIT_IDS=TRAITS.slice();sandbox.ALTERNATE_UNIVERSE_TRAIT_IDS=TRAITS.slice();
+sandbox.MONSTER_TRAIT_IDS=TRAITS.slice();sandbox.ALTERNATE_UNIVERSE_TRAIT_IDS=TRAITS.slice();sandbox.ALTERNATE_UNIVERSE_MAX_DEPTH=1000;
 sandbox.reincarnationCount=t=>Number(t.reincarnation.count)||0;
 sandbox.alternateUniverseUnlocked=t=>t.reincarnation.alternateUniverse.unlocked===true;
 sandbox.alternateUniverseDeepestCleared=t=>Number(t.reincarnation.alternateUniverse.deepestCleared)||0;
