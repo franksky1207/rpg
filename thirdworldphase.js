@@ -1,6 +1,6 @@
 (function(){
- const VERSION=7;
- const THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION=1;
+ const VERSION=8;
+ const THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION=2;
  const THIRD_WORLD_BOSS_COUNT=10;
  const THIRD_WORLD_BOSS_MAX_HP=1100000000;
  const THIRD_WORLD_CORE_MAX_LEVEL=10;
@@ -122,14 +122,16 @@
   const levelCurrent=Math.max(1,finiteWhole(target?.level,1)),level={ok:levelCurrent>=THIRD_WORLD_ENTRY_LEVEL,current:levelCurrent,required:THIRD_WORLD_ENTRY_LEVEL};
   const secondWorldEntered=typeof window.isSecondWorldEntered==="function"?window.isSecondWorldEntered(target)===true:target?.secondWorld?.entered===true;
   const bossCompleted=finalSecondWorldBossKilled(target),finalStoryCompleted=finalSecondWorldStoryCompleted(target);
-  const mainline={ok:secondWorldEntered&&bossCompleted&&finalStoryCompleted,secondWorldEntered,bossCompleted,finalStoryCompleted,finalStoryId:finalSecondWorldStoryId(),finalBossIndex:finalSecondWorldBossIndex()};
+  const story=typeof window.worldEntryStoryRequirement==="function"?window.worldEntryStoryRequirement(target,finalSecondWorldStoryId(),finalStoryCompleted):Object.freeze({ok:finalStoryCompleted,storyId:finalSecondWorldStoryId(),actualCompleted:finalStoryCompleted,bypassedForRerun:false,requiredOnFirstRun:true});
+  const mainline={ok:secondWorldEntered&&bossCompleted&&story.ok,secondWorldEntered,bossCompleted,finalStoryCompleted,storyRequirement:story,finalStoryId:finalSecondWorldStoryId(),finalBossIndex:finalSecondWorldBossIndex()};
   const enhancement=typeof window.worldPhaseEnhancementRequirement==="function"?window.worldPhaseEnhancementRequirement(target,THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL):{ok:false,completed:0,total:5,requiredLevel:THIRD_WORLD_ENTRY_ENHANCEMENT_LEVEL};
   const civilization=civilizationEntryRequirement(target),vip=vipEntryRequirement(target);
   const specializations=typeof window.worldPhaseSpecializationRequirement==="function"?window.worldPhaseSpecializationRequirement(target,THIRD_WORLD_ENTRY_SPECIALIZATION_LEVEL):{ok:false,completed:0,total:8,requiredLevel:THIRD_WORLD_ENTRY_SPECIALIZATION_LEVEL};
   const marks=typeof window.worldPhaseMarkRequirement==="function"?window.worldPhaseMarkRequirement(target,THIRD_WORLD_ENTRY_MARK_LEVEL):{ok:false,completed:0,total:10,requiredLevel:THIRD_WORLD_ENTRY_MARK_LEVEL};
   const rows=[level,mainline,enhancement,civilization,vip,specializations,marks],alreadyEntered=target?.thirdWorld?.entered===true;
-  if(typeof window.summarizeWorldEntryRequirements==="function")return window.summarizeWorldEntryRequirements(rows,alreadyEntered,{level,mainline,enhancement,civilization,vip,specializations,marks});
-  const completed=rows.filter(row=>row.ok===true).length;return {eligible:completed===rows.length&&!alreadyEntered,alreadyEntered,completed,total:rows.length,level,mainline,enhancement,civilization,vip,specializations,marks};
+  const rerun=typeof window.worldEntryRerunContext==="function"?window.worldEntryRerunContext(target):null;
+  if(typeof window.summarizeWorldEntryRequirements==="function")return window.summarizeWorldEntryRequirements(rows,alreadyEntered,{level,mainline,enhancement,civilization,vip,specializations,marks,rerun});
+  const completed=rows.filter(row=>row.ok===true).length;return {eligible:completed===rows.length&&!alreadyEntered,alreadyEntered,completed,total:rows.length,level,mainline,enhancement,civilization,vip,specializations,marks,rerun};
  }
  function canEnterThirdWorld(target=state){return thirdWorldEntryRequirements(target).eligible===true;}
  function applyThirdWorldEntryState(target){
@@ -167,7 +169,7 @@
  window.THIRD_WORLD_BOSS_PERSISTENT_KEYS=Array.from(THIRD_WORLD_BOSS_PERSISTENT_KEYS);
  window.THIRD_WORLD_STORY_PERSISTENT_KEYS=Array.from(THIRD_WORLD_STORY_PERSISTENT_KEYS);
  window.THIRD_WORLD_COMPLETION_DERIVATION_VERSION=1;
- window.THIRD_WORLD_ENTRY_REQUIREMENTS_VERSION=1;
+ window.THIRD_WORLD_ENTRY_REQUIREMENTS_VERSION=2;
  window.THIRD_WORLD_ENTRY_TRANSITION_VERSION=2;
  window.THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION=THIRD_WORLD_ENTRY_STORY_TRIGGER_VERSION;
  window.THIRD_WORLD_ENTRY_STATE_MUTATION_VERSION=1;
