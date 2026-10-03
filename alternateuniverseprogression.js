@@ -3,7 +3,7 @@
  const ALTERNATE_UNIVERSE_COMPLETION_VERSION=1;
  const ALTERNATE_UNIVERSE_PLAYER_UI_LOADER_VERSION=2;
  const ACCESS_SRC="alternateuniverseaccess.js?v=20261003-reincarnation-batch3-6";
- const UI_SRC="alternateuniverseui.js?v=20261003-reincarnation-batch4-1fix1";
+ const UI_SRC="alternateuniverseui.js?v=20261003-reincarnation-batch4-1fix2";
 
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
