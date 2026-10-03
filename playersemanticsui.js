@@ -1,5 +1,5 @@
 (function(){
- const VERSION=12;
+ const VERSION=13;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -25,6 +25,19 @@
   if(typeof window.permanentBreakthroughLevel==="function")return Math.max(0,Math.floor(Number(window.permanentBreakthroughLevel(s))||0));
   return Math.max(0,Math.floor(Number(s?.reincarnation?.breakthrough?.permanent)||0));
  }
+ function percentText(value){const n=Number(value);if(!Number.isFinite(n))return "0";return Number.isInteger(n)?String(n):String(Math.round(n*100)/100);}
+ function breakthroughDisplay(target=null){
+  const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
+  const level=playerBreakthroughLevel(s);
+  const snap=typeof window.breakthroughSnapshot==="function"?window.breakthroughSnapshot(s):null;
+  const equipmentBonusPercent=Math.max(0,Number(snap?.equipmentBonusPercent));
+  const finalDamageBonusPercent=Math.max(0,Number(snap?.finalDamageAdd)*100);
+  return {
+   level,
+   equipmentBonusPercent:Number.isFinite(equipmentBonusPercent)?equipmentBonusPercent:level*(Number(window.BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL)||2.5),
+   finalDamageBonusPercent:Number.isFinite(finalDamageBonusPercent)?finalDamageBonusPercent:level*(Number(window.BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL)||.05)*100
+  };
+ }
  function characterSnapshot(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
   const base=baseCharacterWorldSnapshot&&s?baseCharacterWorldSnapshot(s):{};
@@ -36,6 +49,7 @@
   const civilizationDamageBonusPercent=current>=2&&typeof window.civilizationDamageBonusPercent==="function"?window.civilizationDamageBonusPercent(s):Math.max(0,Number(base?.civilizationDamageBonusPercent)||0);
   const civilizationDamageMultiplier=current>=2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(s):Math.max(1,Number(base?.civilizationDamageMultiplier)||1);
   const equippedWorlds=typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=s?.equipment?.[type];const world=Number(item?.world);return [type,item?(world===3?3:world===2?2:1):null];})):base?.equippedWorlds||{};
+  const breakthrough=breakthroughDisplay(s);
   return {
    ...base,
    world:current,
@@ -57,7 +71,9 @@
    civilizationMax,
    civilizationDamageBonusPercent,
    civilizationDamageMultiplier,
-   breakthroughLevel:playerBreakthroughLevel(s),
+   breakthroughLevel:breakthrough.level,
+   breakthroughEquipmentBonusPercent:breakthrough.equipmentBonusPercent,
+   breakthroughFinalDamageBonusPercent:breakthrough.finalDamageBonusPercent,
    equippedWorlds
   };
  }
@@ -120,6 +136,8 @@
   if(copy)copy.textContent=`目前角色等級上限 Lv.${snap.cap}`;
   const grid=card.querySelector(".character-stats-grid");
   ensureCharacterStat(grid,"突破等級",`Lv.${snap.breakthroughLevel}`);
+  ensureCharacterStat(grid,"裝備能力倍率",`+${percentText(snap.breakthroughEquipmentBonusPercent)}%`);
+  ensureCharacterStat(grid,"最終傷害加成",`+${percentText(snap.breakthroughFinalDamageBonusPercent)}%`);
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
@@ -156,7 +174,7 @@
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
  window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=3;
- window.CHARACTER_BREAKTHROUGH_UI_VERSION=1;
+ window.CHARACTER_BREAKTHROUGH_UI_VERSION=2;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
