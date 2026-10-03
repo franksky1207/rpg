@@ -5,6 +5,7 @@
  const REINCARNATION_TRANSACTION_VERSION=1;
  const REINCARNATION_RUNTIME_GUARD_VERSION=1;
  const REINCARNATION_HP_OWNER_VERSION=1;
+ const REINCARNATION_PRECOMMIT_BACKUP_VERSION=1;
  const REINCARNATION_SESSION_MARKER="civilization_reincarnation_just_committed_v1";
  const REQUIRED_LEVEL=2000;
  const REQUIRED_CORE_LEVEL=10;
@@ -142,11 +143,31 @@
   }catch(error){blockers.push("background-flow-check-error");}
   return Object.freeze({version:REINCARNATION_RUNTIME_GUARD_VERSION,blocked:blockers.length>0,blockers:Object.freeze(blockers.slice()),committed:reincarnationCommitted});
  }
+ function createVerifiedReincarnationBackup(target=null,options={}){
+  const s=isObject(target)?target:(typeof state!=="undefined"&&isObject(state)?state:null);
+  const report={version:REINCARNATION_PRECOMMIT_BACKUP_VERSION,ok:false,verified:false,failed:false,reason:"formal-reincarnation",error:"",rawBytes:0,ownerReport:null};
+  let raw="";
+  try{raw=JSON.stringify(s);if(!raw)throw new Error("轉生前狀態無法序列化。");report.rawBytes=typeof Blob==="function"?new Blob([raw]).size:raw.length*2;}catch(error){report.failed=true;report.error=String(error?.message||error);return Object.freeze(report);}
+  const backupFn=typeof options.backupFn==="function"?options.backupFn:window.ensureLocalSaveSafetyBackup;
+  if(typeof backupFn!=="function"){report.failed=true;report.error="安全備份 owner 尚未載入。";return Object.freeze(report);}
+  try{
+   const ownerReport=backupFn("formal-reincarnation",raw);report.ownerReport=ownerReport||null;
+   report.verified=ownerReport?.verified===true&&ownerReport?.failed!==true;
+   report.failed=!report.verified;
+   report.error=report.verified?"":String(ownerReport?.error||"轉生前安全備份驗證失敗。");
+   report.ok=report.verified;
+  }catch(error){report.failed=true;report.error=String(error?.message||error);}
+  return Object.freeze(report);
+ }
  function executeFormalReincarnation(options={}){
   const requirements=reincarnationEligibilitySnapshot();
   if(reincarnationCommitted)return Object.freeze({ok:false,reason:"reincarnation-committed",requirements,runtime:Object.freeze({version:REINCARNATION_RUNTIME_GUARD_VERSION,blocked:true,blockers:Object.freeze(["reincarnation-committed"]),committed:true}),saved:true,reloading:true});
   if(requirements.eligible!==true)return Object.freeze({ok:false,reason:"requirements-incomplete",requirements,saved:false,reloading:false});
   if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",requirements,saved:false,reloading:false});
+  const preflightRuntime=reincarnationRuntimeStatus();
+  if(preflightRuntime.blocked)return Object.freeze({ok:false,reason:"active-runtime",requirements,runtime:preflightRuntime,saved:false,reloading:false});
+  const backup=createVerifiedReincarnationBackup(typeof state!=="undefined"?state:null,options);
+  if(backup.ok!==true)return Object.freeze({ok:false,reason:"backup-failed",requirements,runtime:preflightRuntime,backup,saved:false,reloading:false});
   const currentTime=Math.max(0,whole(options.currentTime,Date.now()));
   const txOptions={
    label:"formal-reincarnation",
@@ -160,8 +181,8 @@
   };
   if(typeof options.saveFn==="function")txOptions.saveFn=options.saveFn;
   const transaction=window.runSettlementTransaction(txOptions);
-  const runtime=transaction?.value?.runtime||null;
-  if(transaction?.ok!==true)return Object.freeze({ok:false,reason:String(transaction?.reason||"transaction-failed"),requirements,runtime,transaction,saved:false,reloading:false});
+  const runtime=transaction?.value?.runtime||preflightRuntime;
+  if(transaction?.ok!==true)return Object.freeze({ok:false,reason:String(transaction?.reason||"transaction-failed"),requirements,runtime,backup,transaction,saved:false,reloading:false});
   reincarnationCommitted=true;
   try{sessionStorage.setItem(REINCARNATION_SESSION_MARKER,"1");}catch(_){}
   let postCommitError="";
@@ -170,7 +191,7 @@
    const reloadFn=typeof options.reloadFn==="function"?options.reloadFn:()=>location.reload();
    try{setTimeout(()=>{try{reloadFn();}catch(error){console.error("[文明戰線] Reincarnation committed, but reload failed.",error);}},0);}catch(error){postCommitError=String(error?.message||error);}
   }
-  return Object.freeze({ok:true,reason:"",version:REINCARNATION_TRANSACTION_VERSION,requirements,runtime,transaction,reset:transaction.value?.reset||null,saved:true,reloading:shouldReload,postCommitError});
+  return Object.freeze({ok:true,reason:"",version:REINCARNATION_TRANSACTION_VERSION,requirements,runtime,backup,transaction,reset:transaction.value?.reset||null,saved:true,reloading:shouldReload,postCommitError});
  }
 
  window.REINCARNATION_CORE_VERSION=REINCARNATION_CORE_VERSION;
@@ -179,6 +200,7 @@
  window.REINCARNATION_TRANSACTION_VERSION=REINCARNATION_TRANSACTION_VERSION;
  window.REINCARNATION_RUNTIME_GUARD_VERSION=REINCARNATION_RUNTIME_GUARD_VERSION;
  window.REINCARNATION_HP_OWNER_VERSION=REINCARNATION_HP_OWNER_VERSION;
+ window.REINCARNATION_PRECOMMIT_BACKUP_VERSION=REINCARNATION_PRECOMMIT_BACKUP_VERSION;
  window.REINCARNATION_SESSION_MARKER=REINCARNATION_SESSION_MARKER;
  window.REINCARNATION_REQUIRED_LEVEL=REQUIRED_LEVEL;
  window.REINCARNATION_REQUIRED_CORE_LEVEL=REQUIRED_CORE_LEVEL;
@@ -187,6 +209,7 @@
  window.canReincarnate=canReincarnate;
  window.applyReincarnationResetState=applyReincarnationResetState;
  window.reincarnationRuntimeStatus=reincarnationRuntimeStatus;
+ window.createVerifiedReincarnationBackup=createVerifiedReincarnationBackup;
  window.executeFormalReincarnation=executeFormalReincarnation;
  window.reincarnationCommitPending=function(){return reincarnationCommitted;};
 })();
