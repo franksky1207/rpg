@@ -1,13 +1,15 @@
-const MONSTER_TRAITS={
- strong:{name:"強壯",desc:"HP +20%",color:"#79c982",border:"#4d8455"},
- ferocious:{name:"兇猛",desc:"攻擊 +15%",color:"#ff7d73",border:"#9c4c46"},
- hard:{name:"堅硬",desc:"防禦 +20%",color:"#8fb3d9",border:"#536e89"},
- swift:{name:"迅捷",desc:"閃避 +8%",color:"#69d9d0",border:"#3e8984"},
- deadly:{name:"致命",desc:"暴擊 +8%",color:"#c58aff",border:"#76529b"},
- berserk:{name:"狂暴",desc:"HP 低於 50% 時攻擊 +20%",color:"#ff9d5c",border:"#9d6038"},
- giant:{name:"巨體",desc:"HP +30%、攻擊 +5%、閃避 -5%",color:"#d9c36b",border:"#88793f"}
+const MONSTER_TRAIT_IDENTITY_ROWS=Array.isArray(window.ALTERNATE_UNIVERSE_TRAIT_ROWS)?window.ALTERNATE_UNIVERSE_TRAIT_ROWS.map(row=>({id:String(row.id||""),name:String(row.name||"")})):[];
+const MONSTER_TRAIT_PRESENTATION={
+ strong:{desc:"HP +20%",color:"#79c982",border:"#4d8455"},
+ ferocious:{desc:"攻擊 +15%",color:"#ff7d73",border:"#9c4c46"},
+ hard:{desc:"防禦 +20%",color:"#8fb3d9",border:"#536e89"},
+ swift:{desc:"閃避 +8%",color:"#69d9d0",border:"#3e8984"},
+ deadly:{desc:"暴擊 +8%",color:"#c58aff",border:"#76529b"},
+ berserk:{desc:"HP 低於 50% 時攻擊 +20%",color:"#ff9d5c",border:"#9d6038"},
+ giant:{desc:"HP +30%、攻擊 +5%、閃避 -5%",color:"#d9c36b",border:"#88793f"}
 };
-const MONSTER_TRAIT_IDS=Object.keys(MONSTER_TRAITS);
+const MONSTER_TRAITS=Object.fromEntries(MONSTER_TRAIT_IDENTITY_ROWS.map(row=>[row.id,{name:row.name,...MONSTER_TRAIT_PRESENTATION[row.id]}]).filter(([id,meta])=>id&&meta.desc));
+const MONSTER_TRAIT_IDS=MONSTER_TRAIT_IDENTITY_ROWS.map(row=>row.id).filter(id=>Object.prototype.hasOwnProperty.call(MONSTER_TRAITS,id));
 const baseMonsterObj=monsterObj;
 let monsterPreviewCache={};
 let currentCombatEncounter=null;
