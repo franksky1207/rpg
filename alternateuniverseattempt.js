@@ -1,5 +1,5 @@
 (function(){
- const ALTERNATE_UNIVERSE_ATTEMPT_VERSION=3;
+ const ALTERNATE_UNIVERSE_ATTEMPT_VERSION=4;
  const ALTERNATE_UNIVERSE_ATTEMPT_TRAIT_COUNT=2;
  const ALTERNATE_UNIVERSE_FAILURE_LIMIT=10;
  const ALTERNATE_UNIVERSE_FAILURE_POLICY_VERSION=1;
@@ -7,11 +7,12 @@
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:(window.state&&typeof window.state==="object"?window.state:null);}catch(_){return window.state&&typeof window.state==="object"?window.state:null;}}
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
  function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
+ function maxDepth(){return Math.max(1,whole(window.ALTERNATE_UNIVERSE_MAX_DEPTH,1));}
  function fail(reason,extra={}){return Object.freeze({ok:false,reason:String(reason||"alternate-universe-attempt-failed"),saved:false,resumed:false,...extra});}
  function success(extra={}){return Object.freeze({ok:true,reason:"",...extra});}
  function lifeId(target=currentState()){return Math.max(0,whole(typeof window.reincarnationCount==="function"?window.reincarnationCount(target):target?.reincarnation?.count,0));}
  function auState(target=currentState()){return target?.reincarnation?.alternateUniverse&&typeof target.reincarnation.alternateUniverse==="object"?target.reincarnation.alternateUniverse:null;}
- function validDepth(value){const depth=whole(value,0),max=Math.max(1,whole(window.ALTERNATE_UNIVERSE_DATA_MAX_DEPTH||window.ALTERNATE_UNIVERSE_MAX_DEPTH,1000));return depth>=1&&depth<=max?depth:0;}
+ function validDepth(value){const depth=whole(value,0),max=maxDepth();return depth>=1&&depth<=max?depth:0;}
  function canonicalTraitPool(){
   const canonical=Array.isArray(window.ALTERNATE_UNIVERSE_TRAIT_IDS)?window.ALTERNATE_UNIVERSE_TRAIT_IDS:[];
   const live=Array.isArray(window.MONSTER_TRAIT_IDS)?window.MONSTER_TRAIT_IDS:[];
@@ -34,7 +35,7 @@
   if(traits.some(id=>!allowed.includes(id)))return null;
   return Object.freeze({lifeId:currentLife,depth,attemptId:row.attemptId.trim(),traits:Object.freeze(traits)});
  }
- function deepestCleared(target=currentState()){return clamp(whole(typeof window.alternateUniverseDeepestCleared==="function"?window.alternateUniverseDeepestCleared(target):auState(target)?.deepestCleared,0),0,1000);}
+ function deepestCleared(target=currentState()){return clamp(whole(typeof window.alternateUniverseDeepestCleared==="function"?window.alternateUniverseDeepestCleared(target):auState(target)?.deepestCleared,0),0,maxDepth());}
  function failureCount(target=currentState(),depth=0){return clamp(whole(typeof window.alternateUniverseFailureCount==="function"?window.alternateUniverseFailureCount(target,depth):auState(target)?.lifeFailures?.failures?.[String(validDepth(depth))],0),0,ALTERNATE_UNIVERSE_FAILURE_LIMIT);}
  function depthLocked(target=currentState(),depth=0){return typeof window.alternateUniverseDepthLocked==="function"?window.alternateUniverseDepthLocked(target,depth)===true:failureCount(target,depth)>=ALTERNATE_UNIVERSE_FAILURE_LIMIT;}
  function unlocked(target=currentState()){return typeof window.alternateUniverseUnlocked==="function"?window.alternateUniverseUnlocked(target)===true:auState(target)?.unlocked===true;}
