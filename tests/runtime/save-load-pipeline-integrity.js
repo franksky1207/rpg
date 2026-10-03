@@ -56,7 +56,8 @@ const assert=require("assert");
     ];
     s.inventory[0].locked=true;s.inventory[1].locked=false;
     const lostItem=window.makeThirdWorldEquipment({state:gearState,level:1980,forcedQ:5,forcedType:"accessory",nameBand:10,rng:()=>0.27,sourceTag:"schema16-realistic-lost",sourceOrdinal:12});
-    s.lostGear=[{id:"schema16-lost-gear-1",item:lostItem,cost:246800,lostAt:now-10000}];
+    // Formal W3 equipment is created with buy=0, so the existing death-loss owner produces cost=ceil(buy*2)=0.
+    s.lostGear=[{id:"schema16-lost-gear-1",item:lostItem,cost:0,lostAt:now-10000}];
 
     s.daily={dateKey:today,bounty:{used:17},arena:{used:12},voidMirage:{highestFloor:321,claimed:true}};
     if(!s.dungeon||typeof s.dungeon!=="object")s.dungeon={};
