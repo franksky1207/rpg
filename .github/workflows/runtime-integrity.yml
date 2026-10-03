@@ -50,6 +50,7 @@ jobs:
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-data-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-attempt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/alternate-universe-combat-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Install browser smoke dependency
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
