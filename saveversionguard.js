@@ -9,21 +9,24 @@
  const SAVE_SAFETY_BACKUP_SUFFIX=".safety-backup-v1";
  const SAVE_SAFETY_META_SUFFIX=".safety-backup-meta-v1";
  const PRE_SCHEMA16_BACKUP_SUFFIX=".pre-schema16-backup-v1";
+ const PRE_SCHEMA17_BACKUP_SUFFIX=".pre-schema17-backup-v1";
  const SAVE_CAPACITY_WARNING_BYTES=2*1024*1024;
  const SAVE_CAPACITY_CRITICAL_BYTES=4*1024*1024;
  const SAVE_MIGRATION_STAGES=Object.freeze([
   Object.freeze({id:"legacy-exp-progress",label:"Legacy EXP progress",minVersion:1,maxVersion:9,conditional:true}),
   Object.freeze({id:"pre-schema16-compatibility",label:"Pre-Schema16 compatibility",minVersion:1,maxVersion:15,conditional:true}),
-  Object.freeze({id:"canonical-normalization",label:"Canonical root normalization",minVersion:1,maxVersion:16,conditional:false}),
-  Object.freeze({id:"world-phase-normalization",label:"World phase and level normalization",minVersion:1,maxVersion:16,conditional:false}),
-  Object.freeze({id:"subsystem-normalization",label:"Subsystem normalization",minVersion:1,maxVersion:16,conditional:false}),
-  Object.freeze({id:"finalize-current-schema",label:"Finalize current schema",minVersion:1,maxVersion:16,conditional:false})
+  Object.freeze({id:"pre-schema17-reincarnation",label:"Pre-Schema17 reincarnation initialization",minVersion:1,maxVersion:16,conditional:true}),
+  Object.freeze({id:"canonical-normalization",label:"Canonical root normalization",minVersion:1,maxVersion:17,conditional:false}),
+  Object.freeze({id:"world-phase-normalization",label:"World phase and level normalization",minVersion:1,maxVersion:17,conditional:false}),
+  Object.freeze({id:"subsystem-normalization",label:"Subsystem normalization",minVersion:1,maxVersion:17,conditional:false}),
+  Object.freeze({id:"finalize-current-schema",label:"Finalize current schema",minVersion:1,maxVersion:17,conditional:false})
  ]);
  const SCHEMA_EVOLUTION_POLICY=Object.freeze({
-  currentSchema:16,
+  currentSchema:17,
   sameSchemaAllowed:Object.freeze(["additive-optional-field","normalization-only"]),
   schemaBumpRequired:Object.freeze(["semantic-reinterpretation","persistent-field-removal","incompatible-structure"]),
-  schema16ThirdWorld:Object.freeze({coreProgressOptional:true,missingCoreProgressDefaultsTo:0,preSchema16ThirdWorld:"discard-development-data"})
+  schema16ThirdWorld:Object.freeze({coreProgressOptional:true,missingCoreProgressDefaultsTo:0,preSchema16ThirdWorld:"discard-development-data"}),
+  schema17Reincarnation:Object.freeze({root:"reincarnation",preSchema17DefaultsToFirstRun:true,firstRunCount:0})
  });
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function currentVersion(){return Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||1));}
@@ -60,11 +63,13 @@
   try{writeVerified(report.key,raw);report.created=true;report.verified=true;try{localStorage.setItem(safetyMetaKey(),JSON.stringify({version:SAVE_SAFETY_VERSION,reason:report.reason,createdAt:Date.now(),bytes:report.bytes}));}catch(_){}}catch(error){report.failed=true;report.error=String(error?.message||error);}
   report.snapshotAfter=storageSnapshot();window.LAST_LOCAL_SAVE_SAFETY_REPORT=report;return report;
  }
- function strictPreSchema16Backup(rawText,parsed){
-  const source=sourceVersion(parsed),report={version:SAVE_SAFETY_VERSION,required:source<16,sourceVersion:source,ok:true,created:false,verified:false,usedSafetyBackup:false,key:`${SAVE_KEY}${PRE_SCHEMA16_BACKUP_SUFFIX}`,error:""};
+ function strictVersionBackup(rawText,parsed,targetVersion,suffix,reason){
+  const source=sourceVersion(parsed),report={version:SAVE_SAFETY_VERSION,required:source<targetVersion,sourceVersion:source,targetVersion,ok:true,created:false,verified:false,usedSafetyBackup:false,key:`${SAVE_KEY}${suffix}`,error:""};
   if(!report.required||typeof rawText!=="string"||!rawText){report.verified=true;return report;}
-  try{const existing=localStorage.getItem(report.key);if(existing===rawText){report.verified=true;return report;}if(existing==null){writeVerified(report.key,rawText);report.created=true;report.verified=true;return report;}const rolling=createSafetyBackup("pre-schema16-current",rawText);if(rolling.verified===true&&!rolling.failed){report.usedSafetyBackup=true;report.verified=true;return report;}throw new Error(rolling.error||"無法建立目前舊存檔的安全備份。");}catch(error){report.ok=false;report.error=String(error?.message||error);return report;}
+  try{const existing=localStorage.getItem(report.key);if(existing===rawText){report.verified=true;return report;}if(existing==null){writeVerified(report.key,rawText);report.created=true;report.verified=true;return report;}const rolling=createSafetyBackup(reason,rawText);if(rolling.verified===true&&!rolling.failed){report.usedSafetyBackup=true;report.verified=true;return report;}throw new Error(rolling.error||"無法建立目前舊存檔的安全備份。");}catch(error){report.ok=false;report.error=String(error?.message||error);return report;}
  }
+ function strictPreSchema16Backup(rawText,parsed){return strictVersionBackup(rawText,parsed,16,PRE_SCHEMA16_BACKUP_SUFFIX,"pre-schema16-current");}
+ function strictPreSchema17Backup(rawText,parsed){return strictVersionBackup(rawText,parsed,17,PRE_SCHEMA17_BACKUP_SUFFIX,"pre-schema17-current");}
  function protectedLoadFailure(reason,sourceVersionValue,error=""){
   try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}
   const status=document.getElementById("saveStatus");if(status)status.textContent="本機存檔備份失敗・已保護";
@@ -72,16 +77,17 @@
  }
  function migrationPlanForVersion(version){
   const source=Math.max(minimumVersion(),Math.floor(Number(version)||minimumVersion()));
-  return SAVE_MIGRATION_STAGES.filter(stage=>!stage.conditional||(stage.id==="legacy-exp-progress"?source<=9:stage.id==="pre-schema16-compatibility"?source<16:true)).map(stage=>({id:stage.id,label:stage.label,sourceVersion:source,targetVersion:currentVersion()}));
+  return SAVE_MIGRATION_STAGES.filter(stage=>{if(!stage.conditional)return true;if(stage.id==="legacy-exp-progress")return source<=9;if(stage.id==="pre-schema16-compatibility")return source<16;if(stage.id==="pre-schema17-reincarnation")return source<17;return true;}).map(stage=>({id:stage.id,label:stage.label,sourceVersion:source,targetVersion:currentVersion()}));
  }
  function augmentMigrationReport(source,plan){const previous=isObject(window.LAST_SAVE_MIGRATION_REPORT)?window.LAST_SAVE_MIGRATION_REPORT:{};window.LAST_SAVE_MIGRATION_REPORT={...previous,migrationStaircaseVersion:SAVE_MIGRATION_STAIRCASE_VERSION,migrationStageCount:plan.length,migrationStages:plan.map(stage=>stage.id),migrationPlan:plan,sourceVersion:Number(previous.sourceVersion)||source,targetVersion:Number(previous.targetVersion)||currentVersion()};return window.LAST_SAVE_MIGRATION_REPORT;}
  function runSaveMigrationStaircaseRegression(){
   const previous=window.LAST_SAVE_MIGRATION_REPORT,errors=[],cases=[];
   const fixtures=[
-   {id:"V1_LEGACY_CORE",source:{saveVersion:1,level:10,exp:0},expected:["legacy-exp-progress","pre-schema16-compatibility","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
-   {id:"V9_LEGACY_EXP",source:{saveVersion:9,level:100,exp:1},expected:["legacy-exp-progress","pre-schema16-compatibility","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
-   {id:"V15_PRE_WORLD3",source:{saveVersion:15,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true}},expected:["pre-schema16-compatibility","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
-   {id:"V16_CURRENT",source:{saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:false}},expected:["canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]}
+   {id:"V1_LEGACY_CORE",source:{saveVersion:1,level:10,exp:0},expected:["legacy-exp-progress","pre-schema16-compatibility","pre-schema17-reincarnation","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
+   {id:"V9_LEGACY_EXP",source:{saveVersion:9,level:100,exp:1},expected:["legacy-exp-progress","pre-schema16-compatibility","pre-schema17-reincarnation","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
+   {id:"V15_PRE_WORLD3",source:{saveVersion:15,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:true}},expected:["pre-schema16-compatibility","pre-schema17-reincarnation","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
+   {id:"V16_PRE_REINCARNATION",source:{saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:false}},expected:["pre-schema17-reincarnation","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]},
+   {id:"V17_CURRENT",source:{saveVersion:17,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:false},reincarnation:{count:0}},expected:["canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"]}
   ];
   try{fixtures.forEach(fixture=>{const plan=migrationPlanForVersion(fixture.source.saveVersion),ids=plan.map(x=>x.id),ok=JSON.stringify(ids)===JSON.stringify(fixture.expected);cases.push({id:fixture.id,ok,stages:ids});if(!ok)errors.push({code:fixture.id,expected:fixture.expected,actual:ids});});}finally{window.LAST_SAVE_MIGRATION_REPORT=previous;}
   const report={version:SAVE_MIGRATION_STAIRCASE_VERSION,passed:errors.length===0,errors,cases,checkedAt:Date.now()};window.SAVE_MIGRATION_STAIRCASE_REGRESSION_REPORT=report;return report;
@@ -117,7 +123,7 @@
  if(typeof baseLoad==="function"){
   window.load=function(){
    let raw=null,parsed=null;
-   try{raw=localStorage.getItem(SAVE_KEY);if(raw){parsed=JSON.parse(raw);const info=compatibility(parsed);if(info.isFuture||info.isTooOld){try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}const status=document.getElementById("saveStatus");if(status)status.textContent=info.isFuture?"本機存檔版本較新・已保護":"本機存檔版本過舊・已保護";const reason=info.isFuture?"future-version":"unsupported-legacy-version";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,minSupportedVersion:info.minSupportedVersion,failed:true,reason,error:""};console.error(`[文明戰線] Local save v${info.sourceVersion} is outside supported range v${info.minSupportedVersion}–v${info.currentVersion}; original localStorage entry was preserved.`);return false;}if(info.sourceVersion<16){const backup=strictPreSchema16Backup(raw,parsed);window.LAST_PRE_SCHEMA16_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema16-backup-failed",info.sourceVersion,backup.error);}}}catch(_){/* parse/shape errors stay owned by the canonical load pipeline */}
+   try{raw=localStorage.getItem(SAVE_KEY);if(raw){parsed=JSON.parse(raw);const info=compatibility(parsed);if(info.isFuture||info.isTooOld){try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}const status=document.getElementById("saveStatus");if(status)status.textContent=info.isFuture?"本機存檔版本較新・已保護":"本機存檔版本過舊・已保護";const reason=info.isFuture?"future-version":"unsupported-legacy-version";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,minSupportedVersion:info.minSupportedVersion,failed:true,reason,error:""};console.error(`[文明戰線] Local save v${info.sourceVersion} is outside supported range v${info.minSupportedVersion}–v${info.currentVersion}; original localStorage entry was preserved.`);return false;}if(info.sourceVersion<16){const backup=strictPreSchema16Backup(raw,parsed);window.LAST_PRE_SCHEMA16_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema16-backup-failed",info.sourceVersion,backup.error);}if(info.sourceVersion<17){const backup=strictPreSchema17Backup(raw,parsed);window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema17-backup-failed",info.sourceVersion,backup.error);}}}catch(_){/* parse/shape errors stay owned by the canonical load pipeline */}
    return baseLoad();
   };
   try{load=window.load;}catch(_){}
