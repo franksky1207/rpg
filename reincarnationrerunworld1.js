@@ -24,8 +24,8 @@
   return Object.freeze({version:VERSION,active,count:Math.max(0,finiteWhole(context?.count,0)),lifeId:Math.max(0,finiteWhole(context?.lifeId,0)),firstRun:context?.firstRun!==false&&!active,reincarnationRun:context?.reincarnationRun===true,world:worldPhase(target),source:context?"reincarnation-context":"fail-closed"});
  }
  function rerunActive(target=state){return rerunContext(target).active===true;}
- function regions(){return Array.isArray(window.WORLD_REGIONS)?window.WORLD_REGIONS:[];}
- function maps(){return Array.isArray(window.MAPS)?window.MAPS:[];}
+ function regions(){try{return typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];}catch(_){return [];}}
+ function maps(){try{return typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[];}catch(_){return [];}}
  function actualBossKilled(mapIndex,target=state){return target?.bossKilled?.[Math.max(0,finiteWhole(mapIndex,0))]===true;}
  function keyBossCoverage(target=state){
   if(!rerunActive(target))return 0;
