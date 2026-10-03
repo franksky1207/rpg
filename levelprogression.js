@@ -6,6 +6,7 @@
  const ABSOLUTE_MAX_LEVEL=2000;
  const THIRD_WORLD_EXP_PER_LEVEL=10000000;
  const BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION=1;
+ const BREAKTHROUGH_PLAYER_NOTICE_BRIDGE_VERSION=1;
 
  function currentState(){
   try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}
@@ -80,9 +81,12 @@
  function awardBreakthroughForNaturalLevelGain(target,fromLevel,toLevel,logs=[]){
   if(!(Number(toLevel)>Number(fromLevel))||typeof window.grantBreakthroughMilestonesForLevelCrossing!=="function")return null;
   const result=window.grantBreakthroughMilestonesForLevelCrossing(fromLevel,toLevel,target);
-  if(result?.awarded>0&&Array.isArray(logs)){
-   const labels=Array.isArray(result.milestones)?result.milestones.map(level=>`Lv.${level}`).join("、"):"";
-   logs.push(`突破成功！跨越 ${labels} 里程碑，突破等級提升 ${result.awarded} 級，目前為 Lv.${result.permanentAfter}。`);
+  if(result?.awarded>0){
+   if(Array.isArray(logs)){
+    const labels=Array.isArray(result.milestones)?result.milestones.map(level=>`Lv.${level}`).join("、"):"";
+    logs.push(`突破成功！跨越 ${labels} 里程碑，突破等級提升 ${result.awarded} 級，目前為 Lv.${result.permanentAfter}。`);
+   }
+   if(target===currentState()&&typeof window.queueBreakthroughPlayerNotice==="function")window.queueBreakthroughPlayerNotice(result);
   }
   return result||null;
  }
@@ -143,6 +147,7 @@
  window.THIRD_WORLD_EXP_PER_LEVEL=THIRD_WORLD_EXP_PER_LEVEL;
  window.LEVEL_PROGRESSION_VERSION=VERSION;
  window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION=BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION;
+ window.BREAKTHROUGH_PLAYER_NOTICE_BRIDGE_VERSION=BREAKTHROUGH_PLAYER_NOTICE_BRIDGE_VERSION;
  window.LEVEL_RUNTIME_WORLD_CAP_OWNER_VERSION=1;
  window.LEVEL_WORLD_PHASE_CAP_OWNER_VERSION=1;
  window.LEVEL_TARGET_EXP_OWNER_VERSION=1;
