@@ -182,6 +182,20 @@ SAVE_LEGACY_SUPPORT_MODE = "all-known"
 
 Schema17 的關鍵用途是正式加入 `reincarnation` persistent root。
 
+### 舊 Documentation Integrity 相容標記（不是 current 值）
+
+目前 `tests/runtime/docs-integrity.js` 仍保留 pre-Schema17 的字串契約；以下字串只為相容既有文件測試，**不得解讀為目前正式版本或新規格**：
+
+```text
+SAVE_SCHEMA_VERSION = 16
+currentWorldPhase()
+1／2／3 對應銀河／宇宙／高維
+thirdWorld
+main` 的實際程式碼是唯一真實來源
+```
+
+current 正式 Save Schema 仍是 **17**；其中 `thirdWorld` 只是既有 persistent root／CI 搜尋字串。日後若正式更新 `tests/runtime/docs-integrity.js` 到 Schema17 契約，可刪除此相容註記。
+
 ## 3.2 pre-Schema17 安全政策
 
 - Schema1～16 仍支援 migration；
