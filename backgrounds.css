@@ -5,6 +5,7 @@
 @media (min-width:761px){
   #main>.home-screen,
   #main>.map-screen,
+  #main>.alternate-universe-page,
   #main>.prepare-screen,
   #main>.combat-screen,
   #main>.function-page:has(>.character-layout),
@@ -39,7 +40,7 @@
   }
 
   #main>.home-screen{padding-top:42px;border-radius:0;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),url("assets/backgrounds/home/desktop.webp?v=20260913-home-desktop3")}
-  #main>.map-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1")}
+  #main>.map-screen,#main>.alternate-universe-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/desktop.webp?v=20260913-adventure-map-desktop1")}
   #main>.prepare-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/desktop.webp?v=20260913-prepare-desktop1")}
   #main>.combat-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/desktop.webp?v=20260913-battle-main-desktop1")}
   #main>.combat-screen.mirror-combat-shell{
@@ -88,6 +89,7 @@
 @media (max-width:760px){
   #main>.home-screen,
   #main>.map-screen,
+  #main>.alternate-universe-page,
   #main>.prepare-screen,
   #main>.combat-screen,
   #main>.function-page:has(>.character-layout),
@@ -108,7 +110,7 @@
     width:100vw;min-height:calc(100vh - 52px);min-height:calc(100dvh - 52px);margin-top:-10px;margin-bottom:-24px;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding-top:20px;padding-right:12px;padding-bottom:28px;padding-left:12px;background-position:center center,center center;background-size:cover,cover;background-repeat:no-repeat,no-repeat
   }
   #main>.home-screen{padding-top:24px;background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.20)),url("assets/backgrounds/home/mobile.webp?v=20260913-home-mobile1")}
-  #main>.map-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1")}
+  #main>.map-screen,#main>.alternate-universe-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/adventure-map/mobile.webp?v=20260913-adventure-map-mobile1")}
   #main>.prepare-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/prepare/mobile.webp?v=20260913-prepare-mobile1")}
   #main>.combat-screen{background-image:linear-gradient(180deg,rgba(5,10,18,.10),rgba(5,10,18,.20)),url("assets/backgrounds/battle-main/mobile.webp?v=20260913-battle-main-mobile1")}
   #main>.function-page:has(>.character-layout),#main>.specialization-page{background-image:linear-gradient(180deg,rgba(5,10,18,.12),rgba(5,10,18,.22)),url("assets/backgrounds/character/mobile.webp?v=20260913-character-mobile1")}
