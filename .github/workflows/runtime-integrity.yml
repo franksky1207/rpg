@@ -75,6 +75,7 @@ jobs:
             sleep 0.25
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
