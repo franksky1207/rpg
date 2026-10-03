@@ -1,17 +1,18 @@
 (function(){
- const SAVE_SCHEMA_VERSION=16;
+ const SAVE_SCHEMA_VERSION=17;
  const SAVE_LOAD_PIPELINE_VERSION=2;
- const SAVE_NORMALIZATION_PIPELINE_VERSION=2;
- const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["worldPhase.secondWorld","worldPhase.thirdWorld","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);
+ const SAVE_NORMALIZATION_PIPELINE_VERSION=3;
+ const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["reincarnation","worldPhase.secondWorld","worldPhase.thirdWorld","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);
  const SAVE_LEGACY_SUPPORT_POLICY_VERSION=1;
  const SAVE_MIN_SUPPORTED_VERSION=1;
  const SAVE_LEGACY_SUPPORT_MODE="all-known";
  const LEGACY_EXP_LAST_VERSION=9;
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const PRE_SCHEMA16_BACKUP_SUFFIX=".pre-schema16-backup-v1";
+ const PRE_SCHEMA17_BACKUP_SUFFIX=".pre-schema17-backup-v1";
  const MIGRATE_EXP_TARGET_OWNER_VERSION=1;
  const SAVE_LEVEL_EXP_CLAMP_REPORT_VERSION=1;
- const SAVE_LEVEL_MIGRATION_REGRESSION_VERSION=1;
+ const SAVE_LEVEL_MIGRATION_REGRESSION_VERSION=2;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -40,12 +41,15 @@
  function normalizeVoidMirage(target){if(!isObject(target))return;if(!isObject(target.dungeon))target.dungeon={};if(!isObject(target.dungeon.voidMirage))target.dungeon.voidMirage={};target.dungeon.voidMirage.highestCleared=Math.floor(finiteNonNegative(target.dungeon.voidMirage.highestCleared,0));}
  function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function preSchema16BackupKey(){return `${SAVE_KEY}${PRE_SCHEMA16_BACKUP_SUFFIX}`;}
- function ensurePreSchema16Backup(rawText,sourceVersion){const result={required:sourceVersion<16,created:false,alreadyExists:false,failed:false,key:""};if(!result.required||typeof rawText!=="string"||!rawText)return result;const key=preSchema16BackupKey();result.key=key;try{const existing=localStorage.getItem(key);if(existing){result.alreadyExists=true;return result;}localStorage.setItem(key,rawText);result.created=true;}catch(error){result.failed=true;console.warn("[文明戰線] Unable to create pre-Schema16 local backup.",error);}return result;}
+ function preSchema17BackupKey(){return `${SAVE_KEY}${PRE_SCHEMA17_BACKUP_SUFFIX}`;}
+ function ensureVersionBackup(rawText,sourceVersion,targetVersion,key,label){const result={required:sourceVersion<targetVersion,created:false,alreadyExists:false,failed:false,key:""};if(!result.required||typeof rawText!=="string"||!rawText)return result;result.key=key;try{const existing=localStorage.getItem(key);if(existing){result.alreadyExists=true;return result;}localStorage.setItem(key,rawText);result.created=true;}catch(error){result.failed=true;console.warn(`[文明戰線] Unable to create ${label} local backup.`,error);}return result;}
+ function ensurePreSchema16Backup(rawText,sourceVersion){return ensureVersionBackup(rawText,sourceVersion,16,preSchema16BackupKey(),"pre-Schema16");}
+ function ensurePreSchema17Backup(rawText,sourceVersion){return ensureVersionBackup(rawText,sourceVersion,17,preSchema17BackupKey(),"pre-Schema17");}
 
  window.SAVE_SCHEMA_VERSION=SAVE_SCHEMA_VERSION;
  window.SAVE_LOAD_PIPELINE_VERSION=SAVE_LOAD_PIPELINE_VERSION;
  window.SAVE_NORMALIZATION_PIPELINE_VERSION=SAVE_NORMALIZATION_PIPELINE_VERSION;
- window.SAVE_NORMALIZATION_PIPELINE_STAGE_LABELS_VERSION=1;
+ window.SAVE_NORMALIZATION_PIPELINE_STAGE_LABELS_VERSION=2;
  window.SAVE_NORMALIZATION_PIPELINE_ORDER=Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER);
  window.SAVE_LEGACY_SUPPORT_POLICY_VERSION=SAVE_LEGACY_SUPPORT_POLICY_VERSION;
  window.SAVE_MIN_SUPPORTED_VERSION=SAVE_MIN_SUPPORTED_VERSION;
@@ -54,6 +58,7 @@
  window.THIRD_WORLD_STATE_MIGRATION_VERSION=1;
  window.THIRD_WORLD_PRE_SCHEMA16_DISCARD_VERSION=1;
  window.SAVE_PRE_SCHEMA16_BACKUP_VERSION=1;
+ window.SAVE_PRE_SCHEMA17_BACKUP_VERSION=1;
  window.GEAR_WORLD_FIELD_MIGRATION_VERSION=2;
  window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.MIGRATE_EXP_TARGET_OWNER_VERSION=MIGRATE_EXP_TARGET_OWNER_VERSION;
@@ -70,11 +75,14 @@
  if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizePersistentFlags);
  window.migrateSave=function(rawState,fromVersion=null,normalizer=null,sourceRaw=null){
   let target=isObject(rawState)?rawState:(typeof newState==="function"?newState():{});
-  const source=isObject(sourceRaw)?sourceRaw:target,version=sourceVersionOf(fromVersion??source.saveVersion,SAVE_MIN_SUPPORTED_VERSION),introWasBoolean=typeof source.introSeen==="boolean",introValue=introWasBoolean?source.introSeen:true,hadCalamityState=isObject(source.calamities),hadMarkState=isObject(source.marks),hadTitleState=isObject(source.titles),hadSecondWorldState=isObject(source.secondWorld),hadThirdWorldState=isObject(source.thirdWorld),legacyThirdWorldStateDiscarded=version<16&&Object.prototype.hasOwnProperty.call(source,"thirdWorld"),hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel)),hadArenaByWorld=isObject(source?.dungeon?.arenaByWorld),hadLegacyArena=isObject(source?.dungeon?.arena);
+  const source=isObject(sourceRaw)?sourceRaw:target,version=sourceVersionOf(fromVersion??source.saveVersion,SAVE_MIN_SUPPORTED_VERSION),introWasBoolean=typeof source.introSeen==="boolean",introValue=introWasBoolean?source.introSeen:true,hadCalamityState=isObject(source.calamities),hadMarkState=isObject(source.marks),hadTitleState=isObject(source.titles),hadSecondWorldState=isObject(source.secondWorld),hadThirdWorldState=isObject(source.thirdWorld),hadReincarnationState=isObject(source.reincarnation),sourceReincarnationCount=Math.max(0,Math.floor(Number(source?.reincarnation?.count)||0)),legacyThirdWorldStateDiscarded=version<16&&Object.prototype.hasOwnProperty.call(source,"thirdWorld"),hadCivilizationLevel=Number.isFinite(Number(source?.secondWorld?.civilizationLevel)),hadArenaByWorld=isObject(source?.dungeon?.arenaByWorld),hadLegacyArena=isObject(source?.dungeon?.arena),reincarnationBefore=cloneJson(target.reincarnation);
   if(version<16&&Object.prototype.hasOwnProperty.call(target,"thirdWorld"))delete target.thirdWorld;
   prepareAllGear(target,version);if(!introWasBoolean)target.introSeen=true;
   const retiredShopStateRemoved=cleanupRetiredShopState(target),legacyDungeonFieldsRemoved=cleanupLegacyDungeonFields(target),transientGmTestStateRemoved=cleanupTransientGmTestState(target),normalize=typeof normalizer==="function"?normalizer:null;
   if(normalize)target=normalize(target);cleanupRetiredShopState(target);const expProgressMigrated=migrateExpProgress(target,version,source);
+  if(typeof window.normalizeReincarnationState!=="function")throw new Error("Reincarnation state normalization owner unavailable");
+  window.normalizeReincarnationState(target);
+  const reincarnationAfter=cloneJson(target.reincarnation),targetReincarnationCount=Math.max(0,Math.floor(Number(target?.reincarnation?.count)||0)),reincarnationStateNormalized=JSON.stringify(reincarnationBefore)!==JSON.stringify(reincarnationAfter);
   if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
   if(typeof window.normalizeThirdWorldState==="function")window.normalizeThirdWorldState(target);
   if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);
@@ -92,7 +100,7 @@
   cleanupLegacyDungeonFields(target);cleanupRetiredShopState(target);normalizeVoidMirage(target);
   if(typeof window.normalizeOfflineSaveState!=="function")throw new Error("Offline save normalization owner unavailable");
   window.normalizeOfflineSaveState(target,{sourceVersion:version});normalizePersistentFlags(target);target.introSeen=introValue;target.saveVersion=SAVE_SCHEMA_VERSION;
-  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,levelExpClamped,levelBeforeNormalization,levelAfterNormalization,expBeforeNormalization,expAfterNormalization,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:version<16||!hadThirdWorldState,legacyThirdWorldStateDiscarded,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};return target;
+  window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated,levelExpClamped,levelBeforeNormalization,levelAfterNormalization,expBeforeNormalization,expAfterNormalization,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,reincarnationStateInitialized:!hadReincarnationState,reincarnationStateNormalized,sourceReincarnationCount,targetReincarnationCount,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:version<16||!hadThirdWorldState,legacyThirdWorldStateDiscarded,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};return target;
  };
  function runLevelMigrationRegression(){
   const errors=[],cases=[];
@@ -100,33 +108,34 @@
    try{
     const original=cloneJson(source),seed=cloneJson(source),migrated=window.migrateSave(seed,source.saveVersion,null,original),report=cloneJson(window.LAST_SAVE_MIGRATION_REPORT)||{};
     const ok=check(migrated,report)===true;
-    cases.push({id,ok,level:migrated?.level,exp:migrated?.exp,phase:typeof window.currentWorldPhase==="function"?window.currentWorldPhase(migrated):null,levelExpClamped:report.levelExpClamped===true});
+    cases.push({id,ok,level:migrated?.level,exp:migrated?.exp,phase:typeof window.currentWorldPhase==="function"?window.currentWorldPhase(migrated):null,reincarnationCount:migrated?.reincarnation?.count,levelExpClamped:report.levelExpClamped===true});
     if(!ok)errors.push({code:id,migrated,report});
    }catch(error){cases.push({id,ok:false,error:String(error?.message||error)});errors.push({code:id,error:String(error?.message||error)});}
   };
   const world3=(level,exp)=>({saveVersion:16,level,exp,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1}});
-  runCase("SCHEMA16_WORLD3_LV1000",world3(1000,0),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1000&&m?.exp===0&&r?.levelExpClamped===false);
-  runCase("SCHEMA16_WORLD3_LV1500",world3(1500,1234567),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1500&&m?.exp===1234567&&r?.levelExpClamped===false);
-  runCase("SCHEMA16_WORLD3_LV2000",world3(2000,9876543),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===2000&&m?.exp===0&&r?.levelExpClamped===true&&r?.expBeforeNormalization===9876543&&r?.expAfterNormalization===0);
-  runCase("SCHEMA16_WORLD2_FAKE_LV1500",{saveVersion:16,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:false}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&r?.levelExpClamped===true&&r?.levelBeforeNormalization===1500&&r?.levelAfterNormalization===1000);
-  runCase("SCHEMA15_FAKE_WORLD3_LV1500",{saveVersion:15,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&r?.legacyThirdWorldStateDiscarded===true&&r?.levelExpClamped===true);
+  runCase("SCHEMA16_WORLD3_LV1000",world3(1000,0),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.reincarnationStateInitialized===true&&r?.targetReincarnationCount===0&&r?.levelExpClamped===false);
+  runCase("SCHEMA16_WORLD3_LV1500",world3(1500,1234567),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1500&&m?.exp===1234567&&m?.reincarnation?.count===0&&r?.levelExpClamped===false);
+  runCase("SCHEMA16_WORLD3_LV2000",world3(2000,9876543),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===2000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.levelExpClamped===true&&r?.expBeforeNormalization===9876543&&r?.expAfterNormalization===0);
+  runCase("SCHEMA16_WORLD2_FAKE_LV1500",{saveVersion:16,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:false}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.levelExpClamped===true&&r?.levelBeforeNormalization===1500&&r?.levelAfterNormalization===1000);
+  runCase("SCHEMA15_FAKE_WORLD3_LV1500",{saveVersion:15,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.legacyThirdWorldStateDiscarded===true&&r?.levelExpClamped===true);
   const report={version:SAVE_LEVEL_MIGRATION_REGRESSION_VERSION,passed:errors.length===0,errors,cases,checkedAt:Date.now()};
   window.SAVE_LEVEL_MIGRATION_REGRESSION_REPORT=report;
   return report;
  }
  window.runLevelMigrationRegression=runLevelMigrationRegression;
  window.load=function(){
-  let rawSnapshot=null,rawText="",sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false,preSchema16Backup={required:false,created:false,alreadyExists:false,failed:false,key:""};
+  let rawSnapshot=null,rawText="",sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false,preSchema16Backup={required:false,created:false,alreadyExists:false,failed:false,key:""},preSchema17Backup={required:false,created:false,alreadyExists:false,failed:false,key:""};
   try{const raw=localStorage.getItem(SAVE_KEY);rawText=raw||"";hadRaw=!!raw;if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,SAVE_MIN_SUPPORTED_VERSION);}}catch(e){rawSnapshot=null;parseFailed=true;}
-  const failProtectedLoad=(reason,error=null)=>{try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:SAVE_SCHEMA_VERSION};}const e=document.getElementById("saveStatus");if(e)e.textContent="本機存檔讀取失敗・已保護";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:true,reason:String(reason||"load-failed"),error:error?String(error?.message||error):"",preSchema16Backup};console.error("[文明戰線] Local save load failed; original localStorage entry was preserved.",error||reason);return false;};
+  const failProtectedLoad=(reason,error=null)=>{try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:SAVE_SCHEMA_VERSION};}const e=document.getElementById("saveStatus");if(e)e.textContent="本機存檔讀取失敗・已保護";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:true,reason:String(reason||"load-failed"),error:error?String(error?.message||error):"",preSchema16Backup,preSchema17Backup};console.error("[文明戰線] Local save load failed; original localStorage entry was preserved.",error||reason);return false;};
   if(hadRaw&&(parseFailed||!isObject(rawSnapshot)))return failProtectedLoad(parseFailed?"parse-failed":"invalid-root");
   try{
    if(hadRaw&&sourceVersion<16)preSchema16Backup=ensurePreSchema16Backup(rawText,sourceVersion);
+   if(hadRaw&&sourceVersion<17)preSchema17Backup=ensurePreSchema17Backup(rawText,sourceVersion);
    const seed=isObject(rawSnapshot)?(cloneJson(rawSnapshot)||rawSnapshot):(typeof newState==="function"?newState():{}),normalizer=typeof window.normalizeSaveState==="function"?window.normalizeSaveState:null;
    state=window.migrateSave(seed,sourceVersion,normalizer,rawSnapshot);
    const dungeonFinalize=typeof window.finalizeDungeonLoadedState==="function"?window.finalizeDungeonLoadedState():null;
    if(typeof ensureDailyState==="function")ensureDailyState();selectedMap=Math.max(0,Math.min(Number(state.unlockedMap)||0,MAPS.length-1));if(typeof normalizeHP==="function")normalizeHP();cleanupRetiredShopState(state);normalizePersistentFlags(state);state.saveVersion=SAVE_SCHEMA_VERSION;if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("local-load");if(typeof save==="function")save(false);
-   window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:false,preSchema16Backup,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,levelExpClamped:window.LAST_SAVE_MIGRATION_REPORT?.levelExpClamped===true,levelBeforeNormalization:window.LAST_SAVE_MIGRATION_REPORT?.levelBeforeNormalization,levelAfterNormalization:window.LAST_SAVE_MIGRATION_REPORT?.levelAfterNormalization,expBeforeNormalization:window.LAST_SAVE_MIGRATION_REPORT?.expBeforeNormalization,expAfterNormalization:window.LAST_SAVE_MIGRATION_REPORT?.expAfterNormalization,legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,transientGmTestStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.transientGmTestStateRemoved===true,calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,thirdWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.thirdWorldStateInitialized===true,legacyThirdWorldStateDiscarded:window.LAST_SAVE_MIGRATION_REPORT?.legacyThirdWorldStateDiscarded===true,civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,arenaByWorldInitialized:window.LAST_SAVE_MIGRATION_REPORT?.arenaByWorldInitialized===true,legacyArenaMigrated:window.LAST_SAVE_MIGRATION_REPORT?.legacyArenaMigrated===true,recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true};return true;
+   window.LAST_SAVE_LOAD_REPORT={pipelineVersion:SAVE_LOAD_PIPELINE_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),hadRaw,parseFailed,sourceVersion,targetVersion:SAVE_SCHEMA_VERSION,failed:false,preSchema16Backup,preSchema17Backup,legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,expProgressMigrated:window.LAST_SAVE_MIGRATION_REPORT?.expProgressMigrated===true,levelExpClamped:window.LAST_SAVE_MIGRATION_REPORT?.levelExpClamped===true,levelBeforeNormalization:window.LAST_SAVE_MIGRATION_REPORT?.levelBeforeNormalization,levelAfterNormalization:window.LAST_SAVE_MIGRATION_REPORT?.levelAfterNormalization,expBeforeNormalization:window.LAST_SAVE_MIGRATION_REPORT?.expBeforeNormalization,expAfterNormalization:window.LAST_SAVE_MIGRATION_REPORT?.expAfterNormalization,legacyDungeonFieldsRemoved:window.LAST_SAVE_MIGRATION_REPORT?.legacyDungeonFieldsRemoved===true,retiredShopStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.retiredShopStateRemoved===true,transientGmTestStateRemoved:window.LAST_SAVE_MIGRATION_REPORT?.transientGmTestStateRemoved===true,reincarnationStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.reincarnationStateInitialized===true,reincarnationStateNormalized:window.LAST_SAVE_MIGRATION_REPORT?.reincarnationStateNormalized===true,sourceReincarnationCount:window.LAST_SAVE_MIGRATION_REPORT?.sourceReincarnationCount,targetReincarnationCount:window.LAST_SAVE_MIGRATION_REPORT?.targetReincarnationCount,calamityStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.calamityStateInitialized===true,markStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.markStateInitialized===true,titleStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.titleStateInitialized===true,secondWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.secondWorldStateInitialized===true,thirdWorldStateInitialized:window.LAST_SAVE_MIGRATION_REPORT?.thirdWorldStateInitialized===true,legacyThirdWorldStateDiscarded:window.LAST_SAVE_MIGRATION_REPORT?.legacyThirdWorldStateDiscarded===true,civilizationLevelInitialized:window.LAST_SAVE_MIGRATION_REPORT?.civilizationLevelInitialized===true,arenaByWorldInitialized:window.LAST_SAVE_MIGRATION_REPORT?.arenaByWorldInitialized===true,legacyArenaMigrated:window.LAST_SAVE_MIGRATION_REPORT?.legacyArenaMigrated===true,recoveredInterruptedDungeonRun:dungeonFinalize?.recoveredInterruptedRun===true,recoveredInterruptedMirrorRun:dungeonFinalize?.recoveredInterruptedMirrorRun===true};return true;
   }catch(error){return failProtectedLoad("migration-failed",error);}
  };
 })();
