@@ -148,15 +148,23 @@
  }
  function executeFormalReincarnation(options={}){
   const requirements=reincarnationEligibilitySnapshot();
-  if(reincarnationCommitted)return Object.freeze({ok:false,reason:"reincarnation-committed",requirements,runtime:reincarnationRuntimeStatus(),saved:true,reloading:true});
+  if(reincarnationCommitted)return Object.freeze({ok:false,reason:"reincarnation-committed",requirements,runtime:Object.freeze({version:REINCARNATION_RUNTIME_GUARD_VERSION,blocked:true,blockers:Object.freeze(["reincarnation-committed"]),committed:true}),saved:true,reloading:true});
   if(requirements.eligible!==true)return Object.freeze({ok:false,reason:"requirements-incomplete",requirements,saved:false,reloading:false});
-  const runtime=reincarnationRuntimeStatus();
-  if(runtime.blocked)return Object.freeze({ok:false,reason:"active-runtime",requirements,runtime,saved:false,reloading:false});
-  if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",requirements,runtime,saved:false,reloading:false});
+  if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",requirements,saved:false,reloading:false});
   const currentTime=Math.max(0,whole(options.currentTime,Date.now()));
-  const txOptions={label:"formal-reincarnation",mutate:target=>applyReincarnationResetState(target,{currentTime,requireEligible:true})};
+  const txOptions={
+   label:"formal-reincarnation",
+   mutate:target=>{
+    const runtime=reincarnationRuntimeStatus();
+    if(runtime.blocked)return {ok:false,reason:"active-runtime",runtime};
+    const reset=applyReincarnationResetState(target,{currentTime,requireEligible:true});
+    if(reset?.ok!==true)return reset;
+    return {ok:true,runtime,reset};
+   }
+  };
   if(typeof options.saveFn==="function")txOptions.saveFn=options.saveFn;
   const transaction=window.runSettlementTransaction(txOptions);
+  const runtime=transaction?.value?.runtime||null;
   if(transaction?.ok!==true)return Object.freeze({ok:false,reason:String(transaction?.reason||"transaction-failed"),requirements,runtime,transaction,saved:false,reloading:false});
   reincarnationCommitted=true;
   try{sessionStorage.setItem(REINCARNATION_SESSION_MARKER,"1");}catch(_){}
@@ -166,7 +174,7 @@
    const reloadFn=typeof options.reloadFn==="function"?options.reloadFn:()=>location.reload();
    try{setTimeout(()=>{try{reloadFn();}catch(error){console.error("[文明戰線] Reincarnation committed, but reload failed.",error);}},0);}catch(error){postCommitError=String(error?.message||error);}
   }
-  return Object.freeze({ok:true,reason:"",version:REINCARNATION_TRANSACTION_VERSION,requirements,runtime,transaction,saved:true,reloading:shouldReload,postCommitError});
+  return Object.freeze({ok:true,reason:"",version:REINCARNATION_TRANSACTION_VERSION,requirements,runtime,transaction,reset:transaction.value?.reset||null,saved:true,reloading:shouldReload,postCommitError});
  }
 
  window.REINCARNATION_CORE_VERSION=REINCARNATION_CORE_VERSION;
