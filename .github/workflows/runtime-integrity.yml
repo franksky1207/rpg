@@ -67,6 +67,7 @@ jobs:
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run unlimited VIP integrity
