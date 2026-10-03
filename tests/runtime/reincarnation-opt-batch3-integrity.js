@@ -72,11 +72,11 @@ const assert=require("assert");
    try{
     const s=newState();s.reincarnation={count:3,breakthrough:{permanent:7,milestoneLifeId:3,milestones:milestones()},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:3,failures:{}}}};
     state=s;view="character";render();
-    const lv7=rowText();
+    const lv7=rowText(),snapshot7=window.characterWorldSnapshot(state).breakthroughLevel;
     state.reincarnation={count:0,breakthrough:{permanent:0,milestoneLifeId:0,milestones:milestones()},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:0,failures:{}}}};
     render();
     const lv0=rowText();
-    return {lv7,lv0,snapshot7:(()=>{state=s;return window.characterWorldSnapshot(state).breakthroughLevel;})()};
+    return {lv7,lv0,snapshot7};
    }finally{state=originalState;view=originalView;render();}
   });
   assert.ok(character.lv7.replace(/\s+/g,"").includes("突破等級Lv.7"),"Character page must show permanent breakthrough level.");
