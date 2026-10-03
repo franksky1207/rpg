@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.BREAKTHROUGH_CORE_VERSION===1&&window.BREAKTHROUGH_CORE_INTEGRITY&&window.LEVEL_PROGRESSION_VERSION>=3&&window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION===1&&typeof window.breakthroughSnapshot==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function"&&typeof window.gainEffectiveExpForState==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.BREAKTHROUGH_CORE_VERSION===1&&window.BREAKTHROUGH_CORE_INTEGRITY&&window.BREAKTHROUGH_COMBAT_STATS_OWNER_VERSION===1&&window.LEVEL_PROGRESSION_VERSION>=3&&window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION===1&&typeof window.breakthroughSnapshot==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function"&&typeof window.gainEffectiveExpForState==="function"&&typeof window.equippedRawBreakthroughStats==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const milestones=Array.from(window.BREAKTHROUGH_MILESTONE_LEVELS||[]);
    const blankMilestones=()=>Object.fromEntries(milestones.map(v=>[String(v),false]));
@@ -50,7 +50,7 @@ const assert=require("assert");
 
    return {
     core:window.BREAKTHROUGH_CORE_INTEGRITY,
-    constants:{percent:window.BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL,finalAdd:window.BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL,maxPerLife:window.BREAKTHROUGH_MAX_PER_LIFE,stats:window.BREAKTHROUGH_STAT_IDS,milestones,bridge:window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION,levelVersion:window.LEVEL_PROGRESSION_VERSION},
+    constants:{percent:window.BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL,finalAdd:window.BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL,maxPerLife:window.BREAKTHROUGH_MAX_PER_LIFE,stats:window.BREAKTHROUGH_STAT_IDS,milestones,bridge:window.BREAKTHROUGH_EXP_MILESTONE_BRIDGE_VERSION,levelVersion:window.LEVEL_PROGRESSION_VERSION,combatOwner:window.BREAKTHROUGH_COMBAT_STATS_OWNER_VERSION},
     b0:window.breakthroughSnapshot(b0),
     b10:window.breakthroughSnapshot(b10),
     b37:window.breakthroughSnapshot(b37),
@@ -67,8 +67,40 @@ const assert=require("assert");
     }
    };
   });
+
+  const combat=await page.evaluate(()=>{
+   const previousState=state;
+   const milestones=Object.fromEntries((window.BREAKTHROUGH_MILESTONE_LEVELS||[]).map(v=>[String(v),false]));
+   const levels={weapon:10,helmet:10,armor:10,shoes:10,accessory:10};
+   const fixture={
+    saveVersion:17,level:1,exp:0,hp:1,vipLevel:0,vipPoints:0,
+    secondWorld:{entered:false},thirdWorld:{entered:false},
+    enhancement:{basicStones:0,advancedStones:0,levels:{...levels}},
+    equipment:{
+     weapon:{hp:100,atk:80,def:40,crit:5,dodge:4,mainStat:{stat:"atk",value:80}},
+     helmet:{hp:200,atk:0,def:20,crit:0,dodge:0,mainStat:{stat:"hp",value:200}},
+     armor:null,shoes:null,accessory:null
+    },
+    reincarnation:{count:1,breakthrough:{permanent:0,milestoneLifeId:1,milestones},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:1,failures:{}}}}
+   };
+   try{
+    state=fixture;
+    const rawGear=window.equippedRawBreakthroughStats();
+    const b0=window.equippedStatsWithEnhancementLevels(levels);
+    const b0Combat=window.playerCombatStats(b0,0);
+    state.reincarnation.breakthrough.permanent=10;
+    const b10=window.equippedStatsWithEnhancementLevels(levels);
+    const b10Combat=window.playerCombatStats(b10,0);
+    const levels20={weapon:20,helmet:20,armor:20,shoes:20,accessory:20};
+    const b10Enh20=window.equippedStatsWithEnhancementLevels(levels20);
+    state.equipment={};
+    const baseOnlyB10=window.equippedStatsWithEnhancementLevels(levels);
+    return {rawGear,b0,b0Combat,b10,b10Combat,b10Enh20,baseOnlyB10};
+   }finally{state=previousState;}
+  });
+
   assert.equal(report.core?.passed,true,"Breakthrough core self-integrity failed: "+JSON.stringify(report.core?.errors||null));
-  assert.deepEqual(report.constants,{percent:2.5,finalAdd:.05,maxPerLife:10,stats:["hp","atk","def"],milestones:[100,200,300,400,500,600,700,800,900,1000],bridge:1,levelVersion:3},"Breakthrough/level canonical constants drifted.");
+  assert.deepEqual(report.constants,{percent:2.5,finalAdd:.05,maxPerLife:10,stats:["hp","atk","def"],milestones:[100,200,300,400,500,600,700,800,900,1000],bridge:1,levelVersion:3,combatOwner:1},"Breakthrough/level canonical constants drifted.");
   assert.equal(report.b0.equipmentBonusPercent,0,"B0 must not change raw equipment stats.");
   assert.equal(report.b0.finalDamageAdd,0,"B0 final-damage add must be zero.");
   assert.equal(report.b10.equipmentBonusPercent,25,"B10 raw-equipment bonus must be +25%.");
@@ -79,6 +111,15 @@ const assert=require("assert");
   assert.ok(Math.abs(report.b10RawBonuses.hp-258.45)<1e-9,"B10 HP raw bonus formula drifted.");
   assert.ok(Math.abs(report.b10RawBonuses.atk-73.5875)<1e-9,"B10 ATK raw bonus formula drifted.");
   assert.ok(Math.abs(report.b10RawBonuses.def-37.55625)<1e-9,"B10 DEF raw bonus formula drifted.");
+
+  assert.deepEqual(combat.rawGear,{hp:300,atk:80,def:60},"Breakthrough combat owner must derive only raw equipped HP/ATK/DEF.");
+  assert.deepEqual(combat.b0,{hp:460,atk:115,def:67,crit:5,dodge:4},"B0 combat stats must remain exactly the pre-breakthrough formula.");
+  assert.deepEqual(combat.b0Combat,{hp:460,atk:115,def:67,crit:5,dodge:4},"VIP0 must not change B0 fixture stats.");
+  assert.deepEqual(combat.b10,{hp:535,atk:135,def:82,crit:5,dodge:4},"B10 must add exactly +25% of raw equipped HP/ATK/DEF only.");
+  assert.deepEqual(combat.b10Combat,{hp:535,atk:135,def:82,crit:5,dodge:4},"playerCombatStats must consume the breakthrough-adjusted equipped stats before VIP.");
+  assert.deepEqual(combat.b10Enh20,{hp:585,atk:155,def:82,crit:5,dodge:4},"Breakthrough and enhancement must add independently from raw values without mutual compounding.");
+  assert.deepEqual(combat.baseOnlyB10,{hp:110,atk:15,def:7,crit:0,dodge:0},"Breakthrough must not multiply character base stats when no equipment is equipped.");
+
   assert.equal(report.firstRunGrant.awarded,0,"First run must never receive milestone B.");
   assert.equal(report.multiGrant.awarded,3,"Lv73→312 must grant exactly three milestones on a reincarnated life.");
   assert.deepEqual(report.multiGrant.milestones,[100,200,300],"Multi-level milestone list drifted.");
@@ -102,6 +143,6 @@ const assert=require("assert");
   assert.deepEqual({ups:report.natural.w3NoExtra.ups,level:report.natural.w3NoExtra.level,permanent:report.natural.w3NoExtra.permanent,currentLife:report.natural.w3NoExtra.currentLife},{ups:1,level:1001,permanent:40,currentLife:1},"W3 Lv1000→1001 must not award any new B.");
   assert.ok(!report.natural.w3NoExtra.logs.some(line=>line.includes("突破等級提升")),"W3 above Lv1000 must not emit breakthrough award logs.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("Breakthrough EXP bridge integrity passed:",JSON.stringify({first:report.natural.first,single:report.natural.single,multi:{level:report.natural.multi.level,permanent:report.natural.multi.permanent,currentLife:report.natural.multi.currentLife},gmDirect:report.natural.gmDirect,w2Final:report.natural.w2Final,w3NoExtra:report.natural.w3NoExtra}));
+  console.log("Breakthrough combat integrity passed:",JSON.stringify({combat,first:report.natural.first,single:report.natural.single,multi:{level:report.natural.multi.level,permanent:report.natural.multi.permanent,currentLife:report.natural.multi.currentLife},gmDirect:report.natural.gmDirect,w2Final:report.natural.w2Final,w3NoExtra:report.natural.w3NoExtra}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
