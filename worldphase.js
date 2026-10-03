@@ -1,5 +1,5 @@
 (function(){
- const WORLD_PHASE_VERSION=6;
+ const WORLD_PHASE_VERSION=7;
  const SECOND_WORLD_MAIN_BOSS_COUNT=100;
  const SECOND_WORLD_CALAMITY_COUNT=10;
  const WORLD_PHASE_METADATA=Object.freeze({
@@ -12,6 +12,7 @@
  const SECOND_WORLD_MAINLINE_RETIRED_TRANSIENT_KEYS=Object.freeze(["activeRun","run","runId","pendingEvents","recentSummaries","runTotals","battleContext","continuousRun","selectedBossIndex","currentBossIndex"]);
  const SECOND_WORLD_RETIRED_TRANSIENT_CLEANUP_VERSION=1;
  const SECOND_WORLD_LEGACY_CLEANUP_REGRESSION_VERSION=1;
+ const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteCount(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?n:0;}
@@ -48,6 +49,15 @@
  function secondWorldProgressionEnabled(target=state){return worldProgressionEnabled(2,target);}
  function thirdWorldProgressionEnabled(target=state){return worldProgressionEnabled(3,target);}
  function worldPhaseSnapshot(target=state){const current=currentWorldPhase(target),meta=worldPhaseMeta(current);return {current,currentId:meta?.id||"",currentName:meta?.name||"",entered:{1:true,2:isSecondWorldEntered(target),3:isThirdWorldEntered(target)},progression:{1:worldProgressionEnabled(1,target),2:worldProgressionEnabled(2,target),3:worldProgressionEnabled(3,target)}};}
+ function worldEntryRerunContext(target=state){
+  const context=typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(target):null;
+  const reincarnationRun=context?.reincarnationRun===true;
+  return Object.freeze({version:WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION,count:Math.max(0,Math.floor(Number(context?.count)||0)),lifeId:Math.max(0,Math.floor(Number(context?.lifeId)||0)),firstRun:!reincarnationRun,reincarnationRun,source:context?"reincarnation-context":"fail-closed"});
+ }
+ function worldEntryStoryRequirement(target,storyId,completed){
+  const rerun=worldEntryRerunContext(target),actualCompleted=completed===true,bypassed=rerun.reincarnationRun&&!actualCompleted;
+  return Object.freeze({ok:actualCompleted||rerun.reincarnationRun,storyId:storyId||null,actualCompleted,bypassedForRerun:bypassed,requiredOnFirstRun:true,rerun});
+ }
 
  function specializationRequirement(target,requiredLevel=null){
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
@@ -81,9 +91,9 @@
  function finalFirstWorldStoryCompleted(target){const storyId=finalFirstWorldStoryId();if(!storyId)return false;const completed=target?.storyProgress?.completedStories;return Array.isArray(completed)&&completed.includes(storyId);}
  function secondWorldEntryRequirements(target=state){
   const levelCurrent=Math.max(1,Math.floor(Number(target?.level)||1)),level={ok:levelCurrent>=500,current:levelCurrent,required:500};
-  const bossCompleted=finalFirstWorldBossKilled(target),finalStoryCompleted=finalFirstWorldStoryCompleted(target),mainline={ok:bossCompleted&&finalStoryCompleted,bossCompleted,finalStoryCompleted,finalStoryId:finalFirstWorldStoryId()};
+  const bossCompleted=finalFirstWorldBossKilled(target),finalStoryCompleted=finalFirstWorldStoryCompleted(target),story=worldEntryStoryRequirement(target,finalFirstWorldStoryId(),finalStoryCompleted),mainline={ok:bossCompleted&&story.ok,bossCompleted,finalStoryCompleted,storyRequirement:story,finalStoryId:finalFirstWorldStoryId()};
   const specializations=specializationRequirement(target),enhancement=enhancementRequirement(target),marks=markRequirement(target);
-  return summarizeWorldEntryRequirements([level,mainline,specializations,enhancement,marks],isSecondWorldEntered(target),{level,mainline,specializations,enhancement,marks});
+  return summarizeWorldEntryRequirements([level,mainline,specializations,enhancement,marks],isSecondWorldEntered(target),{level,mainline,specializations,enhancement,marks,rerun:worldEntryRerunContext(target)});
  }
  function canEnterSecondWorld(target=state){return secondWorldEntryRequirements(target).eligible===true;}
  function primaryResourceSnapshot(target=state){const phase=currentWorldPhase(target);if(phase===3)return {label:"維度之弦",amount:finiteCount(target?.thirdWorld?.dimensionalStrings),secondaryLabel:null,secondaryAmount:0};if(phase===2)return {label:"暗物質",amount:finiteCount(target?.secondWorld?.darkMatter),secondaryLabel:"暗能量",secondaryAmount:finiteCount(target?.secondWorld?.darkEnergy)};return {label:"金幣",amount:finiteCount(target?.gold),secondaryLabel:null,secondaryAmount:0};}
@@ -182,7 +192,8 @@
 
  window.WORLD_PHASE_VERSION=WORLD_PHASE_VERSION;
  window.WORLD_PHASE_SHARED_CORE_VERSION=3;
- window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=1;
+ window.WORLD_PHASE_ENTRY_REQUIREMENT_CORE_VERSION=2;
+ window.WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION;
  window.WORLD_PHASE_METADATA=WORLD_PHASE_METADATA;
  window.WORLD_PHASE_METADATA_VERSION=2;
  window.worldPhaseMeta=worldPhaseMeta;
@@ -190,6 +201,8 @@
  window.isWorldEntered=isWorldEntered;
  window.worldProgressionEnabled=worldProgressionEnabled;
  window.worldPhaseSnapshot=worldPhaseSnapshot;
+ window.worldEntryRerunContext=worldEntryRerunContext;
+ window.worldEntryStoryRequirement=worldEntryStoryRequirement;
  window.worldPhaseSpecializationRequirement=specializationRequirement;
  window.worldPhaseEnhancementRequirement=enhancementRequirement;
  window.worldPhaseMarkRequirement=markRequirement;
