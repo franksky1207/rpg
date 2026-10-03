@@ -13,6 +13,15 @@ const assert=require("assert");
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const stable=v=>Array.isArray(v)?v.map(stable):(v&&typeof v==="object"?Object.fromEntries(Object.keys(v).sort().map(key=>[key,stable(v[key])])):v);
+   const diffPaths=(a,b,path="",out=[])=>{
+    if(out.length>=20)return out;
+    if(Object.is(a,b))return out;
+    const aa=Array.isArray(a),ab=Array.isArray(b);
+    if(aa||ab){if(!(aa&&ab)){out.push(path||"$");return out;}if(a.length!==b.length)out.push(`${path||"$"}.length:${a.length}->${b.length}`);for(let i=0;i<Math.max(a.length,b.length)&&out.length<20;i++)diffPaths(a[i],b[i],`${path}[${i}]`,out);return out;}
+    const oa=a&&typeof a==="object",ob=b&&typeof b==="object";
+    if(oa||ob){if(!(oa&&ob)){out.push(path||"$");return out;}const keys=[...new Set([...Object.keys(a),...Object.keys(b)])].sort();for(const key of keys){if(out.length>=20)break;if(!Object.prototype.hasOwnProperty.call(a,key)||!Object.prototype.hasOwnProperty.call(b,key)){out.push(`${path?path+".":""}${key}:${Object.prototype.hasOwnProperty.call(a,key)?"present":"missing"}->${Object.prototype.hasOwnProperty.call(b,key)?"present":"missing"}`);continue;}diffPaths(a[key],b[key],path?`${path}.${key}`:key,out);}return out;}
+    out.push(`${path||"$"}:${String(a)}->${String(b)}`);return out;
+   };
    const makeQualified=()=>{
     const s=newState();
     s.saveVersion=17;s.level=2000;s.exp=123;s.hp=99999;s.gold=777;s.vipPoints=625000;window.normalizeVipState(s);
@@ -34,7 +43,7 @@ const assert=require("assert");
    state=makeQualified();window.backgroundProgressStart("reincarnation-test",{mode:"continuous"});cases.background=window.executeFormalReincarnation({reload:false,saveFn:()=>true});window.backgroundProgressStop("reincarnation-test");
    state=makeQualified();window.activeSpecialEncounter={test:true};cases.special=window.executeFormalReincarnation({reload:false,saveFn:()=>true});window.activeSpecialEncounter=null;
    state=makeQualified();let nestedResult=null;window.runSettlementTransaction({label:"outer-test",saveFn:()=>false,mutate:()=>{nestedResult=window.executeFormalReincarnation({reload:false,saveFn:()=>true});return {ok:false,reason:"outer-test-stop"};}});cases.transactionBusy=nestedResult;
-   state=makeQualified();const root=state,equipmentRef=state.equipment,reincarnationRef=state.reincarnation,before=JSON.stringify(stable(state));cases.saveFail=window.executeFormalReincarnation({reload:false,currentTime:5000,saveFn:()=>false});cases.rollback={sameRoot:state===root,sameEquipment:state.equipment===equipmentRef,sameReincarnation:state.reincarnation===reincarnationRef,semanticExact:JSON.stringify(stable(state))===before,count:state.reincarnation.count,level:state.level};
+   state=makeQualified();const root=state,equipmentRef=state.equipment,reincarnationRef=state.reincarnation,beforeStable=stable(clone(state));cases.saveFail=window.executeFormalReincarnation({reload:false,currentTime:5000,saveFn:()=>false});const afterStable=stable(clone(state));cases.rollback={sameRoot:state===root,sameEquipment:state.equipment===equipmentRef,sameReincarnation:state.reincarnation===reincarnationRef,semanticExact:JSON.stringify(afterStable)===JSON.stringify(beforeStable),diffPaths:diffPaths(beforeStable,afterStable),count:state.reincarnation.count,level:state.level};
    state=makeQualified();const preserved={vipPoints:state.vipPoints,daily:clone(state.daily),story:clone(state.storyProgress),mirror:clone(state.dungeon.mirror),voidMirage:clone(state.dungeon.voidMirage)};cases.success=window.executeFormalReincarnation({reload:false,currentTime:6000,saveFn:()=>true});cases.after={count:state.reincarnation.count,level:state.level,exp:state.exp,vipPoints:state.vipPoints,daily:clone(state.daily),story:clone(state.storyProgress),mirror:clone(state.dungeon.mirror),voidMirage:clone(state.dungeon.voidMirage),commitPending:window.reincarnationCommitPending()};cases.second=window.executeFormalReincarnation({reload:false,saveFn:()=>true});
    return {cases,preserved,versions:{transaction:window.REINCARNATION_TRANSACTION_VERSION,runtime:window.REINCARNATION_RUNTIME_GUARD_VERSION}};
   });
@@ -46,7 +55,8 @@ const assert=require("assert");
   assert.ok(report.cases.special.runtime.blockers.some(x=>x.includes("special-encounter-active")));
   assert.equal(report.cases.transactionBusy.ok,false);assert.equal(report.cases.transactionBusy.reason,"transaction-busy");
   assert.equal(report.cases.saveFail.ok,false);assert.equal(report.cases.saveFail.reason,"save-failed");assert.equal(report.cases.saveFail.transaction.rolledBack,true);
-  assert.deepEqual(report.cases.rollback,{sameRoot:true,sameEquipment:true,sameReincarnation:true,semanticExact:true,count:2,level:2000});
+  if(!report.cases.rollback.semanticExact)console.error("Rollback semantic drift:",JSON.stringify(report.cases.rollback.diffPaths));
+  assert.equal(report.cases.rollback.sameRoot,true);assert.equal(report.cases.rollback.sameEquipment,true);assert.equal(report.cases.rollback.sameReincarnation,true);assert.equal(report.cases.rollback.semanticExact,true);assert.equal(report.cases.rollback.count,2);assert.equal(report.cases.rollback.level,2000);
   assert.equal(report.cases.success.ok,true);assert.equal(report.cases.success.saved,true);assert.equal(report.cases.success.reloading,false);
   assert.equal(report.cases.after.count,3);assert.equal(report.cases.after.level,1);assert.equal(report.cases.after.exp,0);assert.equal(report.cases.after.commitPending,true);
   assert.equal(report.cases.after.vipPoints,report.preserved.vipPoints);assert.deepEqual(report.cases.after.daily,report.preserved.daily);assert.deepEqual(report.cases.after.story,report.preserved.story);assert.deepEqual(report.cases.after.mirror,report.preserved.mirror);assert.deepEqual(report.cases.after.voidMirage,report.preserved.voidMirage);
