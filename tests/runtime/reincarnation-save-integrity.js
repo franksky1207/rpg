@@ -11,7 +11,7 @@ const assert=require("assert");
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
    window.SAVE_SCHEMA_VERSION===17&&
-   window.REINCARNATION_STATE_VERSION>=5&&
+   window.REINCARNATION_STATE_VERSION>=6&&
    window.ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION===2&&
    window.ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION===1&&
    window.ALTERNATE_UNIVERSE_FAILURES_FORMAT_VERSION===1&&
@@ -64,7 +64,7 @@ const assert=require("assert");
    const invalid={saveVersion:17,reincarnation:{count:-5,breakthrough:{permanent:-20,milestones:{100:true,200:"true",300:1}},alternateUniverse:{unlocked:false,deepestCleared:5000,activeAttempt:{lifeId:9,depth:4,attemptId:"bad",traits:["strong","swift"]},lifeFailures:{lifeId:9,failures:{4:99}}}}};
    window.normalizeReincarnationState(invalid);
    record("INVALID_REINCARNATION_NORMALIZES_TO_SAFE_FIRST_RUN",
-    invalid.reincarnation.count===0&&invalid.reincarnation.breakthrough.permanent===0&&invalid.reincarnation.breakthrough.milestoneLifeId===0&&invalid.reincarnation.breakthrough.milestones["100"]===true&&invalid.reincarnation.breakthrough.milestones["200"]===false&&invalid.reincarnation.breakthrough.milestones["300"]===false&&invalid.reincarnation.alternateUniverse.unlocked===false&&invalid.reincarnation.alternateUniverse.deepestCleared===0&&invalid.reincarnation.alternateUniverse.activeAttempt===null&&invalid.reincarnation.alternateUniverse.lifeFailures?.lifeId===0&&Object.keys(invalid.reincarnation.alternateUniverse.lifeFailures?.failures||{}).length===0,
+    invalid.reincarnation.count===0&&invalid.reincarnation.breakthrough.permanent===0&&invalid.reincarnation.breakthrough.milestoneLifeId===0&&Object.values(invalid.reincarnation.breakthrough.milestones).every(v=>v===false)&&invalid.reincarnation.alternateUniverse.unlocked===true&&invalid.reincarnation.alternateUniverse.deepestCleared===1000&&invalid.reincarnation.alternateUniverse.activeAttempt===null&&invalid.reincarnation.alternateUniverse.lifeFailures?.lifeId===0&&Object.keys(invalid.reincarnation.alternateUniverse.lifeFailures?.failures||{}).length===0,
     {actual:clone(invalid.reincarnation)});
 
    const canonical={saveVersion:17,reincarnation:{count:2,breakthrough:{permanent:7,milestoneLifeId:2,milestones:{100:true,200:true}},alternateUniverse:{unlocked:true,deepestCleared:5000,activeAttempt:{lifeId:2,depth:124,attemptId:"attempt-124",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{124:99,125:4,1001:2,0:8}}}}};
