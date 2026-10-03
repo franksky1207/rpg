@@ -54,10 +54,11 @@ sandbox.runSettlementTransaction=({label,mutate})=>{
 vm.createContext(sandbox);
 vm.runInContext(source,sandbox,{filename:"alternateuniverseattempt.js"});
 
-assert(sandbox.ALTERNATE_UNIVERSE_ATTEMPT_VERSION===1,"AU attempt owner version 應為 1。");
+assert(sandbox.ALTERNATE_UNIVERSE_ATTEMPT_VERSION===2,"AU attempt owner version 應為 2。");
 assert(sandbox.ALTERNATE_UNIVERSE_ATTEMPT_TRAIT_COUNT===2,"AU 每場必須固定兩個 traits。");
 assert(sandbox.ALTERNATE_UNIVERSE_FAILURE_LIMIT===10,"AU 同 U／同輪迴失敗上限必須為 10。");
 assert(sandbox.ALTERNATE_UNIVERSE_REVIEW_EPHEMERAL_VERSION===1,"AU 回顧戰 ephemeral policy 缺失。");
+assert(sandbox.ALTERNATE_UNIVERSE_FAILURE_POLICY_VERSION===1,"AU failure lifecycle policy 缺失。");
 
 const seq=(...values)=>{let i=0;return ()=>values[Math.min(i++,values.length-1)];};
 const first=sandbox.beginAlternateUniverseAttempt(1,{rng:seq(0,0.99),attemptId:"attempt-1"});
@@ -94,7 +95,7 @@ assert(!sandbox.beginAlternateUniverseAttempt(1,{rng:seq(0,0.5)}).ok,"已通關 
 const u2=sandbox.beginAlternateUniverseAttempt(2,{rng:seq(0.2,0.7),attemptId:"attempt-2"});
 assert(u2.ok,"通過 U1 後應可正式挑戰 U2。");
 const abandon=sandbox.abandonAlternateUniverseAttempt({attemptId:"attempt-2"});
-assert(abandon.ok&&abandon.outcome==="abandon"&&abandon.failures===1,"放棄未結算 attempt 必須計 1 次 failure。");
+assert(abandon.ok&&abandon.outcome==="abandon"&&abandon.failures===1&&abandon.abandoned===true,"放棄未結算 attempt 必須計 1 次 failure。");
 
 state.reincarnation.alternateUniverse.lifeFailures.failures["2"]=9;
 const ninthRetry=sandbox.beginAlternateUniverseAttempt(2,{rng:seq(0.3,0.6),attemptId:"attempt-2-lock"});
@@ -118,9 +119,9 @@ assert(reviewStatus.ok&&reviewStatus.ephemeral&&reviewStatus.writesActiveAttempt
 assert(sandbox.createAlternateUniverseReviewEncounter(4,seq(0,0.5),state)===null,"未通關 U 不得開回顧戰。");
 
 assert(index.includes('src="traits.js?v=20260922-universe-adventure-batch4"'),"traits.js 正式 owner 載入缺失。");
-assert(index.includes('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-2"'),"3-2 AU attempt owner cache-bust／script 載入缺失。");
-assert(index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-2"')>index.indexOf('src="traits.js?v=20260922-universe-adventure-batch4"'),"AU attempt owner 必須在既有 traits owner 後載入。");
-assert(index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-2"')>index.indexOf('src="settlementtransaction.js?'),"AU attempt owner 必須在共享 transaction owner 後載入。");
+assert(index.includes('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"'),"3-4 AU attempt owner cache-bust／script 載入缺失。");
+assert(index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"')>index.indexOf('src="traits.js?v=20260922-universe-adventure-batch4"'),"AU attempt owner 必須在既有 traits owner 後載入。");
+assert(index.indexOf('src="alternateuniverseattempt.js?v=20261003-reincarnation-batch3-4"')>index.indexOf('src="settlementtransaction.js?'),"AU attempt owner 必須在共享 transaction owner 後載入。");
 assert(workflow.includes("node tests/runtime/alternate-universe-attempt-integrity.js"),"Runtime Integrity workflow 必須正式執行 AU attempt lifecycle test。");
 assert(!/activeAttempt\s*=.*review/i.test(source),"回顧流程不得寫 activeAttempt。");
 console.log("Alternate Universe attempt lifecycle integrity passed.");
