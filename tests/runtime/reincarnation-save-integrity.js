@@ -11,10 +11,11 @@ const assert=require("assert");
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
    window.SAVE_SCHEMA_VERSION===17&&
-   window.REINCARNATION_STATE_VERSION>=6&&
+   window.REINCARNATION_STATE_VERSION>=7&&
    window.ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION===2&&
    window.ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION===1&&
    window.ALTERNATE_UNIVERSE_FAILURES_FORMAT_VERSION===1&&
+   window.ALTERNATE_UNIVERSE_ACTIVE_ATTEMPT_REPAIR_VERSION===1&&
    typeof window.migrateSave==="function"&&
    typeof window.normalizeReincarnationState==="function"&&
    typeof window.alternateUniverseFailureCount==="function"&&
@@ -69,9 +70,10 @@ const assert=require("assert");
 
    const canonical={saveVersion:17,reincarnation:{count:2,breakthrough:{permanent:7,milestoneLifeId:2,milestones:{100:true,200:true}},alternateUniverse:{unlocked:true,deepestCleared:5000,activeAttempt:{lifeId:2,depth:124,attemptId:"attempt-124",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{124:99,125:4,1001:2,0:8}}}}};
    window.normalizeReincarnationState(canonical);
+   const canonicalNormalization=clone(window.LAST_REINCARNATION_NORMALIZATION_REPORT||{});
    record("CANONICAL_REINCARNATION_VALUES_ARE_BOUNDED",
-    canonical.reincarnation.count===2&&window.currentLifeBreakthrough(canonical)===2&&canonical.reincarnation.alternateUniverse.deepestCleared===1000&&JSON.stringify(canonical.reincarnation.alternateUniverse.activeAttempt?.traits)===JSON.stringify(["strong","swift"])&&canonical.reincarnation.alternateUniverse.lifeFailures?.lifeId===2&&canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["124"]===10&&canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["125"]===4&&!canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["1001"]&&window.alternateUniverseFailureCount(canonical,124)===10&&window.alternateUniverseDepthLocked(canonical,124)===true&&window.alternateUniverseDepthLocked(canonical,125)===false,
-    {actual:clone(canonical.reincarnation)});
+    canonical.reincarnation.count===2&&window.currentLifeBreakthrough(canonical)===2&&canonical.reincarnation.alternateUniverse.deepestCleared===1000&&canonical.reincarnation.alternateUniverse.activeAttempt===null&&canonicalNormalization.activeAttemptCleared===true&&canonicalNormalization.activeAttemptFrontierMismatch===true&&canonicalNormalization.activeAttemptExpectedFrontierDepth===0&&canonical.reincarnation.alternateUniverse.lifeFailures?.lifeId===2&&canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["124"]===10&&canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["125"]===4&&!canonical.reincarnation.alternateUniverse.lifeFailures?.failures?.["1001"]&&window.alternateUniverseFailureCount(canonical,124)===10&&window.alternateUniverseDepthLocked(canonical,124)===true&&window.alternateUniverseDepthLocked(canonical,125)===false,
+    {actual:clone(canonical.reincarnation),normalization:canonicalNormalization});
 
    const legacyRows={saveVersion:17,reincarnation:{count:4,breakthrough:{permanent:20,milestoneLifeId:4,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:80,lifeFailures:{81:{lifeId:4,failures:3},82:{lifeId:3,failures:9},83:{lifeId:4,failures:12},84:5}}}};
    window.normalizeReincarnationState(legacyRows);
