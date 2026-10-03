@@ -14,7 +14,7 @@
   const source=isObject(value)?value:{};
   return Object.fromEntries(BREAKTHROUGH_MILESTONES.map(level=>[String(level),source[String(level)]===true]));
  }
- function currentLifeId(target){return normalizedCount(target?.reincarnation?.count);}
+ function currentLifeId(target=window.state){return normalizedCount(target?.reincarnation?.count);}
  function normalizeLifeFailures(value,lifeId){
   const source=isObject(value)?value:{};
   const out={};
