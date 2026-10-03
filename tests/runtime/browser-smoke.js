@@ -101,7 +101,7 @@ const assert=require("assert");
   assert.equal(snapshot.legacyGlobals?.maxLevel?.legacy,500,"Legacy MAX_LEVEL 應維持 500");
   assert.equal(snapshot.legacyGlobals?.maxLevel?.windowAlias,500,"window.MAX_LEVEL alias 應由 engine 維持 500");
   assert.equal(snapshot.legacyGlobals?.saveVersion?.legacy,13,"Legacy SAVE_VERSION 應維持 13 僅供相容讀取");
-  assert.equal(snapshot.legacyGlobals?.saveVersion?.canonical,16,"Canonical save schema 應維持 16");
+  assert.equal(snapshot.legacyGlobals?.saveVersion?.canonical,17,"Canonical save schema 應維持 17");
   assert.equal(snapshot.adapterProbe?.multiplier,1.5,"W2 文明 Lv10 最終傷害倍率應維持 1.5");
   assert.equal(snapshot.adapterProbe?.adaptedMultiplier,snapshot.adapterProbe?.multiplier,"World Adapter 使用的倍率應與 canonical civilization owner 一致");
   assert.deepEqual(snapshot.adapterProbe?.adapted,snapshot.adapterProbe?.direct,"相同 RNG 與參數下 World Adapter 不得改變 runCombatCore 結果");
