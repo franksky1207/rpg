@@ -2,9 +2,13 @@
  const REINCARNATION_CORE_VERSION=1;
  const REINCARNATION_ELIGIBILITY_VERSION=1;
  const REINCARNATION_RESET_MUTATION_VERSION=1;
+ const REINCARNATION_TRANSACTION_VERSION=1;
+ const REINCARNATION_RUNTIME_GUARD_VERSION=1;
+ const REINCARNATION_SESSION_MARKER="civilization_reincarnation_just_committed_v1";
  const REQUIRED_LEVEL=2000;
  const REQUIRED_CORE_LEVEL=10;
  const EQUIPMENT_SLOTS=Object.freeze(["weapon","helmet","armor","shoes","accessory"]);
+ let reincarnationCommitted=false;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
@@ -124,14 +128,60 @@
    previousReincarnation:before
   });
  }
+ function reincarnationRuntimeStatus(){
+  const blockers=[];
+  if(reincarnationCommitted)blockers.push("reincarnation-committed");
+  if(typeof window.worldTransitionRuntimeStatus!=="function")blockers.push("world-transition-runtime-owner-missing");
+  else{
+   try{
+    const status=window.worldTransitionRuntimeStatus();
+    (Array.isArray(status?.blockers)?status.blockers:[]).forEach(reason=>{const text=String(reason||"");if(text&&!blockers.includes(text))blockers.push(text);});
+   }catch(error){blockers.push("world-transition-runtime-check-error");}
+  }
+  try{
+   if(typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive()===true){
+    const kind=typeof window.backgroundProgressActiveKind==="function"?String(window.backgroundProgressActiveKind()||""):"";
+    const reason=`background-flow:${kind||"active"}`;if(!blockers.includes(reason))blockers.push(reason);
+   }
+  }catch(error){blockers.push("background-flow-check-error");}
+  return Object.freeze({version:REINCARNATION_RUNTIME_GUARD_VERSION,blocked:blockers.length>0,blockers:Object.freeze(blockers.slice()),committed:reincarnationCommitted});
+ }
+ function executeFormalReincarnation(options={}){
+  const requirements=reincarnationEligibilitySnapshot();
+  if(reincarnationCommitted)return Object.freeze({ok:false,reason:"reincarnation-committed",requirements,runtime:reincarnationRuntimeStatus(),saved:true,reloading:true});
+  if(requirements.eligible!==true)return Object.freeze({ok:false,reason:"requirements-incomplete",requirements,saved:false,reloading:false});
+  const runtime=reincarnationRuntimeStatus();
+  if(runtime.blocked)return Object.freeze({ok:false,reason:"active-runtime",requirements,runtime,saved:false,reloading:false});
+  if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",requirements,runtime,saved:false,reloading:false});
+  const currentTime=Math.max(0,whole(options.currentTime,Date.now()));
+  const txOptions={label:"formal-reincarnation",mutate:target=>applyReincarnationResetState(target,{currentTime,requireEligible:true})};
+  if(typeof options.saveFn==="function")txOptions.saveFn=options.saveFn;
+  const transaction=window.runSettlementTransaction(txOptions);
+  if(transaction?.ok!==true)return Object.freeze({ok:false,reason:String(transaction?.reason||"transaction-failed"),requirements,runtime,transaction,saved:false,reloading:false});
+  reincarnationCommitted=true;
+  try{sessionStorage.setItem(REINCARNATION_SESSION_MARKER,"1");}catch(_){}
+  let postCommitError="";
+  const shouldReload=options.reload!==false;
+  if(shouldReload){
+   const reloadFn=typeof options.reloadFn==="function"?options.reloadFn:()=>location.reload();
+   try{setTimeout(()=>{try{reloadFn();}catch(error){console.error("[文明戰線] Reincarnation committed, but reload failed.",error);}},0);}catch(error){postCommitError=String(error?.message||error);}
+  }
+  return Object.freeze({ok:true,reason:"",version:REINCARNATION_TRANSACTION_VERSION,requirements,runtime,transaction,saved:true,reloading:shouldReload,postCommitError});
+ }
 
  window.REINCARNATION_CORE_VERSION=REINCARNATION_CORE_VERSION;
  window.REINCARNATION_ELIGIBILITY_VERSION=REINCARNATION_ELIGIBILITY_VERSION;
  window.REINCARNATION_RESET_MUTATION_VERSION=REINCARNATION_RESET_MUTATION_VERSION;
+ window.REINCARNATION_TRANSACTION_VERSION=REINCARNATION_TRANSACTION_VERSION;
+ window.REINCARNATION_RUNTIME_GUARD_VERSION=REINCARNATION_RUNTIME_GUARD_VERSION;
+ window.REINCARNATION_SESSION_MARKER=REINCARNATION_SESSION_MARKER;
  window.REINCARNATION_REQUIRED_LEVEL=REQUIRED_LEVEL;
  window.REINCARNATION_REQUIRED_CORE_LEVEL=REQUIRED_CORE_LEVEL;
  window.isReincarnationPermanentGear=qualifyingPermanentGear;
  window.reincarnationEligibilitySnapshot=reincarnationEligibilitySnapshot;
  window.canReincarnate=canReincarnate;
  window.applyReincarnationResetState=applyReincarnationResetState;
+ window.reincarnationRuntimeStatus=reincarnationRuntimeStatus;
+ window.executeFormalReincarnation=executeFormalReincarnation;
+ window.reincarnationCommitPending=function(){return reincarnationCommitted;};
 })();
