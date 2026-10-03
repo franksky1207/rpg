@@ -112,7 +112,7 @@
   const hasMilestoneLifeId=Object.prototype.hasOwnProperty.call(breakthroughSource,"milestoneLifeId");
   const milestoneLifeId=hasMilestoneLifeId?normalizedCount(breakthroughSource.milestoneLifeId):null;
   const explicitLifeMismatch=hasMilestoneLifeId&&milestoneLifeId!==lifeId;
-  const missingLifeOwnerSalvaged=count>0&&!hasMilestoneLifeId;
+  const missingMilestoneLifeOwnerSalvaged=count>0&&!hasMilestoneLifeId;
   let milestones=count===0?blankMilestones():(explicitLifeMismatch?blankMilestones():normalizeMilestones(breakthroughSource.milestones));
   const currentLifeEarned=count===0?0:milestoneCount(milestones);
   const sourcePermanent=normalizedBreakthrough(breakthroughSource.permanent);
