@@ -54,6 +54,7 @@ jobs:
           node tests/runtime/alternate-universe-failure-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-progression-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-batch4-3-regression.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/alternate-universe-old-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Install browser smoke dependency
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
