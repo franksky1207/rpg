@@ -19,6 +19,12 @@
   if(meta?.name)return String(meta.name);
   return current===3?"高維紀元":current===2?"宇宙紀元":"銀河紀元";
  }
+ function playerBreakthroughLevel(target=null){
+  const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
+  if(typeof window.breakthroughLevel==="function")return Math.max(0,Math.floor(Number(window.breakthroughLevel(s))||0));
+  if(typeof window.permanentBreakthroughLevel==="function")return Math.max(0,Math.floor(Number(window.permanentBreakthroughLevel(s))||0));
+  return Math.max(0,Math.floor(Number(s?.reincarnation?.breakthrough?.permanent)||0));
+ }
  function characterSnapshot(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
   const base=baseCharacterWorldSnapshot&&s?baseCharacterWorldSnapshot(s):{};
@@ -51,6 +57,7 @@
    civilizationMax,
    civilizationDamageBonusPercent,
    civilizationDamageMultiplier,
+   breakthroughLevel:playerBreakthroughLevel(s),
    equippedWorlds
   };
  }
@@ -112,6 +119,7 @@
   if(title)title.textContent=snap.worldLabel;
   if(copy)copy.textContent=`目前角色等級上限 Lv.${snap.cap}`;
   const grid=card.querySelector(".character-stats-grid");
+  ensureCharacterStat(grid,"突破等級",`Lv.${snap.breakthroughLevel}`);
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
@@ -148,6 +156,7 @@
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
  window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=3;
+ window.CHARACTER_BREAKTHROUGH_UI_VERSION=1;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
