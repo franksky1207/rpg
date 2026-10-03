@@ -55,7 +55,7 @@
   const enemy=typeof window.alternateUniverseCurrentAttemptEncounter==="function"?window.alternateUniverseCurrentAttemptEncounter(currentState()):null;const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!enemy||!player){alert("異宇宙戰鬥資料尚未完整載入。");return false;}
   battleBusy=true;lastBattleReport=null;battleContext={depth:attempt.depth,attempt,enemy,info:depthInfo(attempt.depth),playerMaxHp:Math.max(1,whole(player.hp,1))};renderPage();
   try{
-   const result=typeof window.runAlternateUniverseCombat==="function"?window.runAlternateUniverseCombat({logs:true,preparePresentation:false,startHp:player.hp,playerHealCap:player.hp}):{ok:false};
+   const result=typeof window.runAlternateUniverseCombat==="function"?window.runAlternateUniverseCombat({logs:true,preparePresentation:true,startHp:player.hp,playerHealCap:player.hp}):{ok:false};
    if(!result?.ok)throw new Error(result?.reason||"combat-failed");
    await presentCombat(result.combat);
    let settlement=null;if(result.settlementReady===true){settlement=typeof window.settleAlternateUniverseCombat==="function"?window.settleAlternateUniverseCombat(result):{ok:false};if(!settlement?.ok)throw new Error(settlement?.reason||"settlement-failed");}
