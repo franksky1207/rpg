@@ -9,9 +9,10 @@
  function w2Active(target){return typeof window.isSecondWorldReincarnationRerun==="function"&&window.isSecondWorldReincarnationRerun(target)===true;}
 
  function backfillFirstWorld(mapIndex,target=null){
-  const s=targetState(target),maps=Array.isArray(window.MAPS)?window.MAPS:(typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[]);
+  const s=targetState(target),maps=Array.isArray(window.MAPS)?window.MAPS:(typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[]),raw=whole(mapIndex,-1);
   if(!s||!w1Active(s)||!maps.length)return {ok:false,reason:"not-rerun",changed:false};
-  const end=Math.max(0,Math.min(maps.length-1,whole(mapIndex,-1)));if(end<0)return {ok:false,reason:"invalid-map",changed:false};
+  if(raw<0||raw>=maps.length)return {ok:false,reason:"invalid-map",changed:false};
+  const end=Math.min(maps.length-1,raw);
   if(!Array.isArray(s.mapProgress))s.mapProgress=[];if(!Array.isArray(s.bossProgress))s.bossProgress=[];if(!Array.isArray(s.bossLocked))s.bossLocked=[];if(!Array.isArray(s.bossKilled))s.bossKilled=[];
   let changed=false;
   for(let i=0;i<=end;i++){
@@ -28,10 +29,10 @@
  }
 
  function backfillSecondWorld(bossIndex,target=null,options={}){
-  const s=targetState(target),list=s?.secondWorld?.mainline?.bossKilled,count=Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100));
+  const s=targetState(target),list=s?.secondWorld?.mainline?.bossKilled,count=Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100)),raw=whole(bossIndex,-1);
   if(!s||!w2Active(s)||!Array.isArray(list)||count<=0)return {ok:false,reason:"not-rerun",changed:false};
-  const end=Math.max(0,Math.min(count-1,whole(bossIndex,-1)));if(end<0)return {ok:false,reason:"invalid-boss",changed:false};
-  const includeTarget=options.includeTarget!==false,limit=includeTarget?end:end-1;let changed=false;
+  if(raw<0||raw>=count)return {ok:false,reason:"invalid-boss",changed:false};
+  const end=Math.min(count-1,raw),includeTarget=options.includeTarget!==false,limit=includeTarget?end:end-1;let changed=false;
   for(let i=0;i<=limit;i++)if(list[i]!==true){list[i]=true;changed=true;}
   return {ok:true,world:2,endBoss:end,completedBosses:Math.max(0,limit+1),includeTarget,changed};
  }
@@ -47,15 +48,16 @@
  };
 
  if(typeof baseSecondWorldSettlement==="function")window.settleSecondWorldBossVictory=function(value,...args){
-  const s=targetState(),index=whole(value,-1),rerun=w2Active(s)&&index>=0&&index<Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100));
+  const s=targetState(),index=whole(value,-1),count=Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100)),rerun=w2Active(s)&&index>=0&&index<count;
   if(!rerun)return baseSecondWorldSettlement.call(this,value,...args);
-  const list=s?.secondWorld?.mainline?.bossKilled;
-  const previous=Array.isArray(list)?list.slice(0,index):[];
+  const list=s?.secondWorld?.mainline?.bossKilled,previous=Array.isArray(list)?list.slice(0,index):[];
+  const restore=()=>{if(Array.isArray(s?.secondWorld?.mainline?.bossKilled))for(let i=0;i<index;i++)s.secondWorld.mainline.bossKilled[i]=previous[i]===true;};
   backfillSecondWorld(index,s,{includeTarget:false});
-  const result=baseSecondWorldSettlement.call(this,value,...args);
-  if(result?.ok===true)return result;
-  if(Array.isArray(s?.secondWorld?.mainline?.bossKilled))for(let i=0;i<index;i++)s.secondWorld.mainline.bossKilled[i]=previous[i]===true;
-  return result;
+  try{
+   const result=baseSecondWorldSettlement.call(this,value,...args);
+   if(result?.ok===true)return result;
+   restore();return result;
+  }catch(error){restore();throw error;}
  };
 
  window.REINCARNATION_RERUN_MAINLINE_BACKFILL_INSTALL_REPORT=Object.freeze({version:VERSION,w1FightWrapped:typeof baseFightOnce==="function",w2SettlementWrapped:typeof baseSecondWorldSettlement==="function"});
