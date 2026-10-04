@@ -6,7 +6,7 @@ const { chromium } = require('playwright');
  const pageErrors=[];
  page.on('pageerror',error=>pageErrors.push(error.message));
  await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION===1&&typeof window.firstWorldRerunKeyBossCoverage==='function');
+ await page.waitForFunction(()=>window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION===1&&window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION===1&&typeof window.firstWorldRerunKeyBossCoverage==='function');
  const result=await page.evaluate(()=>{
   function reincarnation(count){return {count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:{}},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}};}
   function blankWorld(count){
@@ -16,7 +16,7 @@ const { chromium } = require('playwright');
   const originalState=state;
   const rows=Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
   const calamities=typeof window.getCivilizationCalamityDefinitions==='function'?window.getCivilizationCalamityDefinitions():[];
-  const out={versions:{rerun:window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION,calamity:window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION},counts:{maps:Array.isArray(MAPS)?MAPS.length:0,regions:rows.length,calamities:calamities.length}};
+  const out={versions:{rerun:window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION,targetIdentity:window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION,calamity:window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION},counts:{maps:Array.isArray(MAPS)?MAPS.length:0,regions:rows.length,calamities:calamities.length}};
 
   state=blankWorld(0);
   out.firstRun={enemyBoss:enemyUnlocked(99,4),canBoss:canBoss(99),html:adventureMapPage(),context:window.firstWorldReincarnationRerunContext(state)};
@@ -26,7 +26,11 @@ const { chromium } = require('playwright');
   const oldRender=render,oldReset=window.resetMonsterPreviewCache;
   render=()=>{};window.resetMonsterPreviewCache=()=>{};
   out.rerun.opened=window.openReincarnationRerunWorld1Map(99);
-  out.rerun.selection={selectedMap,selectedEnemy,adventureScreen};
+  selectEnemy(4);
+  const prepareHtml=adventurePreparePage();
+  const target=monsterObj(selectedMap,selectedEnemy);
+  const combatHtml=adventureCombatPage();
+  out.rerun.selection={selectedMap,selectedEnemy,adventureScreen,unlockedMap:state.unlockedMap,prepareShowsMap:prepareHtml.includes(MAPS[99].name),prepareShowsLv500:prepareHtml.includes('Lv.500'),combatShowsLv500:combatHtml.includes('Lv.500'),targetLevel:Number(target?.level),targetName:String(target?.name||'')};
   render=oldRender;window.resetMonsterPreviewCache=oldReset;
 
   state=blankWorld(1);
@@ -43,14 +47,15 @@ const { chromium } = require('playwright');
  });
  const fail=(code,detail)=>{throw new Error(`${code}: ${JSON.stringify(detail)}`);};
  if(pageErrors.length)fail('PAGE_ERRORS',pageErrors);
- if(result.versions.rerun!==1||result.versions.calamity!==1)fail('VERSIONS',result.versions);
+ if(result.versions.rerun!==1||result.versions.targetIdentity!==1||result.versions.calamity!==1)fail('VERSIONS',result.versions);
  if(result.counts.maps!==100||result.counts.regions!==10||result.counts.calamities!==10)fail('COUNTS',result.counts);
  if(result.firstRun.context.active!==false||result.firstRun.enemyBoss!==false||result.firstRun.canBoss!==false)fail('FIRST_RUN_GATE_CHANGED',result.firstRun);
  if(result.firstRun.html.includes('data-rerun-world1="1"')||result.firstRun.html.includes('data-rerun-world1-region="10"'))fail('FIRST_RUN_UI_CONTAMINATED',result.firstRun.html.slice(0,500));
  if(result.rerun.context.active!==true||result.rerun.enemySlots.some(value=>value!==true)||result.rerun.canBoss!==true)fail('RERUN_DIRECT_CHALLENGE',result.rerun);
  if(!result.rerun.html.includes('data-rerun-world1="1"')||!result.rerun.html.includes('data-rerun-world1-region="10"')||!result.rerun.html.includes('100 張地圖'))fail('RERUN_ALL_MAP_UI',result.rerun.html.slice(0,1000));
  if(result.rerun.unlockedMap!==0||result.rerun.bossKilled.some(Boolean))fail('RERUN_FAKE_PROGRESS',result.rerun);
- if(result.rerun.opened!==true||result.rerun.selection.selectedMap!==99||result.rerun.selection.selectedEnemy!==0||result.rerun.selection.adventureScreen!=='prepare')fail('RERUN_MAP_SELECTION',result.rerun.selection);
+ if(result.rerun.opened!==true||result.rerun.selection.selectedMap!==99||result.rerun.selection.selectedEnemy!==4||result.rerun.selection.adventureScreen!=='prepare')fail('RERUN_MAP_SELECTION',result.rerun.selection);
+ if(result.rerun.selection.unlockedMap!==0||result.rerun.selection.prepareShowsMap!==true||result.rerun.selection.prepareShowsLv500!==true||result.rerun.selection.combatShowsLv500!==true||result.rerun.selection.targetLevel!==500)fail('RERUN_TARGET_IDENTITY',result.rerun.selection);
  if(result.coverage6.coverage!==6||result.coverage6.unlocks.slice(0,6).some(value=>value!==true)||result.coverage6.unlocks.slice(6).some(value=>value!==false))fail('KEY_BOSS_COVERAGE_6',result.coverage6);
  if(result.coverage6.bossKilled.filter(Boolean).length!==1||result.coverage6.bossKilled[result.coverage6.sixthKey]!==true)fail('KEY_BOSS_NO_FAKE_HISTORY_6',result.coverage6);
  if(result.firstRunCalamity.coverage!==0||result.firstRunCalamity.unlocks[5]!==true||result.firstRunCalamity.unlocks[0]!==false)fail('FIRST_RUN_CALAMITY_SEMANTICS',result.firstRunCalamity);
