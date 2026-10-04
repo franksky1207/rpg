@@ -36,6 +36,7 @@ const assert=require("assert");
     const review=window.createFirstWorldTargetContext({mode:"review",mapIndex:7,enemyIndex:4,source:"test"},first);
     const uniqueA=window.createFirstWorldTargetContext({mode:"formal",mapIndex:0,enemyIndex:0},first);
     const uniqueB=window.createFirstWorldTargetContext({mode:"formal",mapIndex:0,enemyIndex:0},first);
+    const ownerDetachedStateStable=detachedBefore===JSON.stringify({first,rerun});
 
     state=rerun;selectedMap=99;selectedEnemy=4;
     const compat=window.firstWorldReincarnationTargetContext(state);
@@ -55,7 +56,7 @@ const assert=require("assert");
      noMutableRefs:!["state","map","enemy"].some(key=>Object.prototype.hasOwnProperty.call(formalNormal,key)),
      rerunDelegates:rerunSource.includes("firstWorldTargetContextFromSelection")&&rerunSource.includes("canonicalContext:canonical||null"),
      ownerReadOnlySource:!ownerSource.includes("localStorage")&&!/\bsave\s*\(/.test(ownerSource),
-     detachedStateStable:detachedBefore===JSON.stringify({first,rerun})
+     ownerDetachedStateStable
     };
    }finally{
     state=originalState;selectedMap=originalUi.selectedMap;selectedEnemy=originalUi.selectedEnemy;adventureScreen=originalUi.adventureScreen;render=originalRender;
@@ -76,8 +77,8 @@ const assert=require("assert");
   assert.equal(report.validation.formal.passed,true);assert.equal(report.validation.invalid.passed,true,"Fail-closed invalid contexts are still structurally valid contexts.");
   assert.equal(report.compat.authorized,true);assert.equal(report.compat.mapIndex,99);assert.equal(report.compat.enemyIndex,4);assert.equal(report.canonical.mode,"rerun");assert.equal(report.sameIdentity,true);assert.equal(report.rerunDelegates,true);
   assert.equal(report.reviewSelection.mapIndex,6);assert.equal(report.reviewSelection.enemyIndex,3);assert.equal(report.reviewSelection.mode,"review");assert.equal(report.reviewSelection.source,"review-test");
-  assert.equal(report.detachedStateStable,true);assert.equal(report.ownerReadOnlySource,true,"Target Context owner must not write save/localStorage.");
+  assert.equal(report.ownerDetachedStateStable,true);assert.equal(report.ownerReadOnlySource,true,"Target Context owner must not write save/localStorage.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("First-world target context owner Batch1 integrity passed:",JSON.stringify({versions:report.versions,formal:{normal:report.formalNormal.identity,elite:report.formalElite.identity,boss:report.formalBoss.identity},rerun:report.canonical.identity,review:report.reviewSelection.identity,frozen:report.frozen,uniqueIds:report.uniqueIds,detachedStateStable:report.detachedStateStable,ownerReadOnlySource:report.ownerReadOnlySource}));
+  console.log("First-world target context owner Batch1 integrity passed:",JSON.stringify({versions:report.versions,formal:{normal:report.formalNormal.identity,elite:report.formalElite.identity,boss:report.formalBoss.identity},rerun:report.canonical.identity,review:report.reviewSelection.identity,frozen:report.frozen,uniqueIds:report.uniqueIds,ownerDetachedStateStable:report.ownerDetachedStateStable,ownerReadOnlySource:report.ownerReadOnlySource}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
