@@ -25,15 +25,15 @@ assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWo
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
-assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元 Lv.1000～2000")&&pending.includes("轉生後重征服 Batch5-1～5-5 已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch5 已完成現況。");
-assert(pending.includes("Batch5 後續架構優化共 4 批已全部完成")&&pending.includes("W1 Target Context")&&pending.includes("W2 Visibility Owner")&&pending.includes("共用 UI Renderer")&&pending.includes("完整端到端 Regression"),"Pending 必須同步 Batch5 後續架構優化全數完成現況。");
-assert(pending.includes("第6-1批（轉生越級 Online 收益）")&&pending.includes("reincarnationoverlevelrewards.js")&&pending.includes("首輪 `count=0`")&&pending.includes("ceil(base × M)"),"Pending 必須同步 Batch6-1 共用越級 owner、首輪隔離與 ceil 規則。");
-assert(pending.includes("第6-2批（一鍵平均專精／平均最大強化）")&&pending.includes("playerbatchupgrades.js")&&pending.includes("專精「一鍵平均提升」只在第一紀元")&&pending.includes("強化「平均最大強化」在第一、第二紀元"),"Pending 必須同步 Batch6-2 共用批次成長 owner 與紀元範圍。");
-assert(pending.includes("第6-3批（轉生越級 Offline 收益）")&&pending.includes("offlineprogress.js")&&pending.includes("playerLevel / enemyLevel")&&pending.includes("舊 pending")&&pending.includes("W3 Offline 完全不接越級倍率"),"Pending 必須同步 Batch6-3 Offline 共用越級 owner、sample identity 與舊 pending 相容策略。");
-assert(pending.includes("第6-4批（首次轉生後四大副本永久解鎖）")&&pending.includes("reincarnationdungeonaccess.js")&&pending.includes("firstWorldRerunKeyBossCoverage()")&&pending.includes("coverage 0／6／10 對應 rank cap 1／6／10")&&pending.includes("首輪高維紀元仍維持「懸賞戰關閉」"),"Pending 必須同步 Batch6-4 四副本永久解鎖、W1 Arena downward coverage 與首輪隔離。");
-assert(pending.includes("第6-5批（Batch6 完整封箱 Regression）")&&pending.includes("reincarnation-batch6-closure.js")&&pending.includes("500 場／485 勝")&&pending.includes("目前主要施工剩餘：Batch7")&&!pending.includes("第6-5批：Batch6 完整封箱 Regression\n\n- 首輪 reward 計算隔離"),"Pending 必須同步 Batch6-5 已完成，且目前 pending 只剩 Batch7。");
-assert(pending.includes("第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  完成（6-1～6-5）"),"Pending 必須標記原第6大批已完整完成。");
-assert(pending.includes("reincarnation-rerun-batch5-e2e-regression.js")&&pending.includes("W1／W2／W3 Fast Catch-up"),"Pending 必須記錄 Batch5 第4批端到端 regression 與 Fast Catch-up 封箱範圍。");
+assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元為 Lv.1000～2000")&&pending.includes("第6大批 6-1～6-5 均已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch6 已完成現況。");
+assert(pending.includes("reincarnationoverlevelrewards.js")&&pending.includes("ceil(base × M)")&&pending.includes("首輪 `count=0` 永遠為 1×")&&pending.includes("W3 Offline 完全不接越級倍率"),"Pending 必須同步 Batch6 越級 Online／Offline 正式規則。");
+assert(pending.includes("playerbatchupgrades.js")&&pending.includes("專精「一鍵平均提升」只在第一紀元")&&pending.includes("強化「平均最大強化」在第一、第二紀元"),"Pending 必須同步 Batch6 共用批次成長 owner 與紀元範圍。");
+assert(pending.includes("四大副本永久入口")&&pending.includes("首輪高維紀元仍維持「懸賞戰關閉」")&&pending.includes("500 場／485 勝（97%）"),"Pending 必須同步四副本永久入口與 Arena 原晉階規則。");
+assert(pending.includes("W1／W2 轉生主線正式向下征服")&&pending.includes("Lv.500以前的普通／菁英進度")&&pending.includes("Boss0～99 正式完成")&&pending.includes("首輪 `count=0` 永遠拒絕這項 rerun 回填"),"Pending 必須以正式向下征服回填覆蓋舊的只記最高 Boss 語意。");
+assert(!pending.includes("只寫入 `bossKilled[99]`")&&!pending.includes("不得偽造低階 key boss flag")&&!pending.includes("只寫入實際 Boss99"),"Pending 不得保留已失效的『只記最高 Boss、不回填低階』正式語意。");
+assert(pending.includes("第6大批程式碼優化第1批：Schema17 舊轉生資料一致化")&&pending.includes("normalizeExistingReincarnationRerunProgress()")&&pending.includes("冪等")&&pending.includes("不升 Save Schema"),"Pending 必須同步第6大批優化第1批的 Schema17 舊轉生 normalization 與首輪隔離。");
+assert(pending.includes("優化第2批：四大副本永久入口架構整理")&&pending.includes("優化第3批：一鍵專精／強化交易安全")&&pending.includes("優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須保留第6大批後續優化第2～5批排程。");
+assert(pending.includes("目前主要施工剩餘：Batch7")&&pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 尚待施工與 GM milestone 規則。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
