@@ -13,8 +13,8 @@
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
 - Batch5 後續架構優化共 4 批已全部完成：第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」、第4批「完整端到端 regression 封箱」。
-- 第6大批已開始；6-1「轉生越級 Online 收益」、6-2「一鍵平均專精／平均最大強化」、6-3「轉生越級 Offline 收益」、6-4「首次轉生後四大副本永久解鎖」已完成；6-5 待做。
-- 目前主要施工剩餘：Batch6-5、Batch7。
+- 第6大批 6-1～6-5 已全部完成：轉生越級 Online／Offline 收益、一鍵平均專精／平均最大強化、首次轉生後四大副本永久解鎖，以及 Batch6 完整封箱 Regression。
+- 目前主要施工剩餘：Batch7。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -115,20 +115,22 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - 新增 `tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js`，真實瀏覽器固定驗證首輪隔離、轉生 Lv.1 四入口、正式等級不被 adapter 污染、W1 downward coverage、首輪／轉生 W3 懸賞差異，以及版本契約。
 - `index.html` 已同步加入 adapter 與 `worldtransitionsafety.js` cache-bust；此批沒有新增 Save Schema／存檔欄位，不需要 migration。
 
+## 2026-10-04 已完成：第6-5批（Batch6 完整封箱 Regression）
+
+- 新增 `tests/runtime/reincarnation-batch6-closure.js`，在真實瀏覽器 runtime 將第6-1～6-4批整體串起來驗收，不另建 production owner。
+- 首輪 reward 隔離固定為 1×；轉生 Online／Offline 都直接對照 `reincarnationOverlevelRewardMultiplier()`，並驗證 Offline 使用已記錄的 `playerLevel / enemyLevel` 目標 identity。
+- 一鍵專精／強化固定驗證首輪與轉生共用同一套 preview／成本 owner；專精只允許 W1，強化維持 W1／W2 範圍。
+- 正式轉生 reset 再驗證 Daily 原樣保留、Mirror／Void permanent history 原樣保留、W1／W2 Arena current-life progress 清空；轉生後 Lv.1 的四大副本入口仍保持永久資格。
+- W1／W2 Arena key boss downward coverage 皆封箱到 rank cap 10；`arenapositioncore.js` 的 500 場／485 勝門檻固定為 97%，未被永久解鎖功能改寫。
+- 裝備出售 first-run／rerun quote 必須完全一致；Online 越級 adapter 不得改寫 `saleEnhancementStones`，Offline 仍透過既有 `settleEquipmentSaleBatch()` 結算出售轉換資源。
+- Runtime Integrity workflow 已加入本 closure regression，並保留第6-1／6-2／6-4各自的專項 regression 先跑，再跑整批 closure。
+- 此批只新增／收斂 regression、workflow 與文件，不修改正式 production JS／CSS、不變更 Save Schema，因此不需要 `index.html` cache-bust 或 migration。
+
 ---
 
 # 目前真正 pending
 
-## 1. 第6-5批：Batch6 完整封箱 Regression
-
-- 首輪 reward 計算隔離。
-- Online／Offline 同倍率 owner 與同目標 identity。
-- 一鍵專精／強化首輪與轉生共用 owner，專精僅 W1、強化 W1／W2。
-- Daily 保留、Mirror／Void 保留、W1／W2 Arena reset。
-- 四副本入口永久資格、Arena key boss downward coverage、97% 晉階規則。
-- 裝備出售與出售轉換資源不得被越級倍率污染。
-
-## 2. 第7批：GM／測試／完整 Integrity 收尾
+## 1. 第7批：GM／測試／完整 Integrity 收尾
 
 - GM 指定轉生次數／永久突破等級。
 - GM 正式轉生 transaction 按鈕。
@@ -157,7 +159,7 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 第3批：異宇宙最小可玩版                       完成
 第4批：異宇宙完整化與平衡測試                 完成
 第5批：第一、第二、第三紀元轉生後重征服規則   完成（5-1～5-5）
-第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  進行中（6-1、6-2、6-3、6-4 完成）
+第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  完成（6-1～6-5）
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
