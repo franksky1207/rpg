@@ -62,8 +62,9 @@ const assert=require('assert');
     out.singleSave={result:performBalancedSpecializationUpgrade({skipConfirm:true,silent:true}),saveCalls};
     save=originalSave;
 
-    // save(false) rollback: formal state root and nested enhancement references must survive unchanged.
+    // save(false) rollback: normalize the fixture before the transaction boundary, then require exact state/reference restoration.
     const rollback=makeW1(1);ENHANCEMENT_SLOTS.forEach(key=>rollback.enhancement.levels[key]=12);rollback.enhancement.basicStones=2000;rollback.enhancement.advancedStones=200;state=rollback;
+    enhancementBalancedUpgradePreview(state);
     const rollbackRoot=state,rollbackEnhancement=state.enhancement,rollbackLevels=state.enhancement.levels,rollbackBefore=JSON.stringify(state);
     save=()=>false;
     const rollbackResult=performBalancedEnhancementUpgrade({skipConfirm:true,silent:true});
@@ -72,6 +73,7 @@ const assert=require('assert');
 
     // save() exception rollback: specialization resources/levels and all captured identities must also survive.
     const throwState=makeW1(1);throwState.gold=3500;state=throwState;
+    specializationBalancedUpgradePreview(state);
     const throwRoot=state,throwSpecializations=state.specializations,throwBefore=JSON.stringify(state);
     save=()=>{throw new Error('batch-save-throw');};
     const throwResult=performBalancedSpecializationUpgrade({skipConfirm:true,silent:true});
