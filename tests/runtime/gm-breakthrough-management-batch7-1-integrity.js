@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_BREAKTHROUGH_MANAGEMENT_VERSION===1&&window.GM_BREAKTHROUGH_MANAGEMENT_INTEGRITY?.passed===true&&typeof window.gmApplyFormalBreakthroughMutation==="function"&&typeof window.gmBreakthroughManagementHtml==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_BREAKTHROUGH_MANAGEMENT_VERSION===2&&window.GM_BREAKTHROUGH_MANAGEMENT_INTEGRITY?.passed===true&&window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION===1&&typeof window.gmApplyFormalBreakthroughMutation==="function"&&typeof window.gmBreakthroughManagementHtml==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const milestoneRows=()=>Object.fromEntries((window.BREAKTHROUGH_MILESTONE_LEVELS||[]).map(v=>[String(v),false]));
    const fixture=count=>({
@@ -40,10 +40,11 @@ const assert=require("assert");
    const after20={count:reincarnated.reincarnation.count,current:window.breakthroughCurrentLifeEarned(reincarnated),permanent:window.breakthroughLevel(reincarnated),milestones:{...reincarnated.reincarnation.breakthrough.milestones}};
    const to0=window.gmApplyFormalBreakthroughMutation(0,reincarnated);
    const after0={count:reincarnated.reincarnation.count,current:window.breakthroughCurrentLifeEarned(reincarnated),permanent:window.breakthroughLevel(reincarnated),snapshot:window.breakthroughSnapshot(reincarnated)};
-   return {self:window.GM_BREAKTHROUGH_MANAGEMENT_INTEGRITY,plans:[0,1,10,11,20,25,30,31].map(n=>window.gmBreakthroughManagementPlan(n)),first:{result:firstResult,unchanged:firstBefore===firstAfter,html:firstHtml},reincarnatedHtml,to25,after25Stats,after25Character,after25Damage,milestones25,au25,to20,after20,to0,after0,pageVersion:window.GM_BREAKTHROUGH_MANAGEMENT_VERSION};
+   return {self:window.GM_BREAKTHROUGH_MANAGEMENT_INTEGRITY,plans:[0,1,10,11,20,25,30,31].map(n=>window.gmBreakthroughManagementPlan(n)),first:{result:firstResult,unchanged:firstBefore===firstAfter,html:firstHtml},reincarnatedHtml,to25,after25Stats,after25Character,after25Damage,milestones25,au25,to20,after20,to0,after0,pageVersion:window.GM_BREAKTHROUGH_MANAGEMENT_VERSION,formalOwnerVersion:window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION};
   });
 
   assert.equal(report.self.passed,true,"GM breakthrough self-integrity failed: "+JSON.stringify(report.self.errors||null));
+  assert.equal(report.formalOwnerVersion,1,"GM breakthrough must use the formal canonical rebuild owner.");
   assert.deepEqual(report.plans.map(x=>[x.total,x.count,x.currentLife]),[[0,1,0],[1,1,1],[10,1,10],[11,2,1],[20,2,10],[25,3,5],[30,3,10],[31,4,1]],"Breakthrough total -> reincarnation/current-life mapping drifted.");
   assert.equal(report.first.result.reason,"first-run-locked","First run must reject GM breakthrough mutation.");
   assert.equal(report.first.unchanged,true,"First-run rejection must not mutate state.");
