@@ -12,8 +12,8 @@
 - 轉生／突破核心、正式轉生流程與優化第1～4批已完成。
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
-- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」已完成，第2～4批待做。
-- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第2～4批。
+- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」與第2批「W2 visibility owner 收斂」已完成，第3～4批待做。
+- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第3～4批。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -35,7 +35,17 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - prepare 只在同步 render 期間使用 presentation state view 讓既有首輪 UI owner 正常渲染；離開後一定恢復原正式 `state` 參照與原 `selectedMap / selectedEnemy`。
 - 首輪 `count=0` 仍完整委派原 `adventurePreparePage()`，首輪 sequential progression 不變。
 - regression 已固定驗證 map99 + Boss 的 target context 為 `99 / 4`、prepare 前後正式 state JSON 完全不變、全域 `state` 參照正確恢復、`unlockedMap` 仍為 0。
-- 此批只處理 W1 target identity／prepare 正式 state 隔離；後續第2批再處理 W2 visibility owner 收斂，第3批處理共用 UI renderer，第4批做完整 settlement 端到端 regression。
+
+## 2026-10-04 已完成：Batch5 後續架構優化第2批（W2 Visibility Owner）
+
+- 第二紀元冒險區域顯示與 Arena 區域資格正式拆成不同語意 owner：`secondWorldAdventureRegionVisible()` 與 `secondWorldArenaRegionEligible()`。
+- `secondWorldRegionVisible()` 恢復／保留原本「冒險主線區域是否顯示」的相容語意，不再承擔 Arena qualification。
+- `dungeonprogress.js` 的第二紀元 Arena cap 改為優先讀 `secondWorldArenaRegionEligible()`；若新 owner 不存在才 fallback 舊 API。
+- rerun 冒險頁不再為了顯示 10 區而暫時覆寫 `window.secondWorldRegionVisible`；所有 10 區直接由 adventure owner 判定為可顯示。
+- rerun Arena 仍依本輪最高 key boss downward coverage 限制；零 coverage 時最低仍為第1區，coverage 6 時為前6區，coverage 10 時全10區。
+- 首輪 `count=0` 的冒險顯示與 Arena cap 均委派原本第二紀元 progression 規則，不改首輪行為。
+- regression 已固定驗證 rerun 冒險 render 前後三個 region owner 函式 identity 不變、正式 state JSON 不變、10區全顯示，而 Arena eligibility 仍依 coverage 分離運作。
+- 此批沒有新增存檔欄位、沒有變更 Save Schema，不需要 migration。
 
 ---
 
@@ -84,12 +94,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 - rerun／overlevel／dungeon／AU 全生命週期 regression。
 - 最終完整 closure。
 
-## 4. Batch5 後續架構優化第2～4批
-
-### 第2批：第二紀元 visibility owner 收斂
-- 拆開冒險主線區域顯示與 Arena 區域 eligibility。
-- 移除 rerun 冒險頁暫時覆寫 `window.secondWorldRegionVisible` 的做法。
-- rerun 主線仍須 10 區全顯示；Arena 仍依 key boss downward coverage。
+## 4. Batch5 後續架構優化第3～4批
 
 ### 第3批：共用 UI renderer 收斂
 - W1 戰鬥速度徽章改為正式共用 renderer，不再靠 regex 改 HTML。
@@ -116,7 +121,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
-Batch5 後續架構優化為獨立 4 批；目前第1批已完成，第2～4批待做，不與原第6／7批混寫。
+Batch5 後續架構優化為獨立 4 批；目前第1～2批已完成，第3～4批待做，不與原第6／7批混寫。
 
 ---
 
