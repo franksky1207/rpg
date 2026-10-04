@@ -20,9 +20,11 @@ const assert=require("assert");
    const ids=typeof window.gmHubRegisteredSectionIds==="function"?window.gmHubRegisteredSectionIds("test"):[];
    const html=window.gmAlternateUniverseBenchmarkHtml();
    const powerHtml=window.gmPowerBenchmarkHtml();
+   const countIndex=powerHtml.indexOf("已測模式"),auIndex=powerHtml.indexOf("異宇宙測試");
    return {
     versions:{benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,diagnostics:window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwner:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION,integration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,hub:window.GM_HUB_EXTENSION_VERSION},
-    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,ids,html,powerHtml,install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT
+    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,ids,html,powerHtml,install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,
+    integrationProbe:{hasAu:auIndex>=0,hasZero8:powerHtml.includes("0 / 8"),hasZero7:powerHtml.includes("0 / 7"),hasOne8:powerHtml.includes("1 / 8"),hasOne7:powerHtml.includes("1 / 7"),countSlice:countIndex>=0?powerHtml.slice(Math.max(0,countIndex-160),countIndex+260):"missing-count",auSlice:auIndex>=0?powerHtml.slice(Math.max(0,auIndex-120),auIndex+240):"missing-au"}
    };
   });
 
@@ -49,10 +51,10 @@ const assert=require("assert");
   assert.ok(report.html.includes("測試沙盒")&&report.html.includes("不寫入正式存檔"));
   assert.ok(report.html.includes("王編號")&&report.html.includes("上一隻")&&report.html.includes("下一隻"));
   assert.ok(!report.html.includes("檢查 21 組雙特性")&&!report.html.includes("特性 A"),"21-pair diagnostics are internal and must not clutter the GM UI.");
-  assert.ok(report.powerHtml.includes("異宇宙測試")&&report.powerHtml.includes("0 / 8"),"AU must be the eighth mode inside the shared power benchmark.");
+  assert.ok(report.powerHtml.includes("異宇宙測試")&&report.powerHtml.includes("0 / 8"),"AU must be the eighth mode inside the shared power benchmark. Probe="+JSON.stringify(report.integrationProbe));
   assert.ok(report.html.includes("層域"));
   assert.ok(!report.html.includes("1000U")&&!/\bU\d+\b/.test(report.html),"AU benchmark UI must not expose internal U shorthand.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("GM alternate universe Batch7-4 benchmark integrity passed:",JSON.stringify({versions:report.versions,pairCount:report.pairs.length,benchmark:{depth:report.bench.depth,runs:report.bench.runs,winRate:report.bench.winRate,avgTurns:report.bench.avgTurns,completed:report.bench.completed,formalStateStable:report.bench.formalStateStable},diagnostics:{pairCount:report.diagnostics.pairCount,failedCount:report.diagnostics.failedCount,formalStateStable:report.diagnostics.formalStateStable}}));
+  console.log("GM alternate universe Batch7-4 benchmark integrity passed:",JSON.stringify({versions:report.versions,pairCount:report.pairs.length,benchmark:{depth:report.bench.depth,runs:report.bench.runs,winRate:report.bench.winRate,avgTurns:report.bench.avgTurns,completed:report.bench.completed,formalStateStable:report.bench.formalStateStable},diagnostics:{pairCount:report.diagnostics.pairCount,failedCount:report.diagnostics.failedCount,formalStateStable:report.diagnostics.formalStateStable},integrationProbe:report.integrationProbe}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
