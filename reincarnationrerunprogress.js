@@ -1,0 +1,62 @@
+(function(){
+ const VERSION=1;
+ const baseFightOnce=typeof window.fightOnce==="function"?window.fightOnce:null;
+ const baseSecondWorldSettlement=typeof window.settleSecondWorldBossVictory==="function"?window.settleSecondWorldBossVictory:null;
+
+ function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
+ function targetState(target=null){return target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);}
+ function w1Active(target){return typeof window.isFirstWorldReincarnationRerun==="function"&&window.isFirstWorldReincarnationRerun(target)===true;}
+ function w2Active(target){return typeof window.isSecondWorldReincarnationRerun==="function"&&window.isSecondWorldReincarnationRerun(target)===true;}
+
+ function backfillFirstWorld(mapIndex,target=null){
+  const s=targetState(target),maps=Array.isArray(window.MAPS)?window.MAPS:(typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[]);
+  if(!s||!w1Active(s)||!maps.length)return {ok:false,reason:"not-rerun",changed:false};
+  const end=Math.max(0,Math.min(maps.length-1,whole(mapIndex,-1)));if(end<0)return {ok:false,reason:"invalid-map",changed:false};
+  if(!Array.isArray(s.mapProgress))s.mapProgress=[];if(!Array.isArray(s.bossProgress))s.bossProgress=[];if(!Array.isArray(s.bossLocked))s.bossLocked=[];if(!Array.isArray(s.bossKilled))s.bossKilled=[];
+  let changed=false;
+  for(let i=0;i<=end;i++){
+   const row=Array.isArray(s.mapProgress[i])?s.mapProgress[i]:[0,0,0,0];
+   const next=[0,1,2,3].map(slot=>Math.max(10,whole(row[slot],0)));
+   if(!Array.isArray(s.mapProgress[i])||next.some((value,slot)=>Number(row[slot])!==value)){s.mapProgress[i]=next;changed=true;}
+   if(whole(s.bossProgress[i],0)<10){s.bossProgress[i]=10;changed=true;}
+   if(s.bossLocked[i]!==false){s.bossLocked[i]=false;changed=true;}
+   if(s.bossKilled[i]!==true){s.bossKilled[i]=true;changed=true;}
+  }
+  const unlocked=Math.min(maps.length-1,end+1),before=Math.max(0,whole(s.unlockedMap,0));
+  if(before<unlocked){s.unlockedMap=unlocked;changed=true;}
+  return {ok:true,world:1,endMap:end,completedMaps:end+1,changed,unlockedMap:Math.max(0,whole(s.unlockedMap,0))};
+ }
+
+ function backfillSecondWorld(bossIndex,target=null,options={}){
+  const s=targetState(target),list=s?.secondWorld?.mainline?.bossKilled,count=Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100));
+  if(!s||!w2Active(s)||!Array.isArray(list)||count<=0)return {ok:false,reason:"not-rerun",changed:false};
+  const end=Math.max(0,Math.min(count-1,whole(bossIndex,-1)));if(end<0)return {ok:false,reason:"invalid-boss",changed:false};
+  const includeTarget=options.includeTarget!==false,limit=includeTarget?end:end-1;let changed=false;
+  for(let i=0;i<=limit;i++)if(list[i]!==true){list[i]=true;changed=true;}
+  return {ok:true,world:2,endBoss:end,completedBosses:Math.max(0,limit+1),includeTarget,changed};
+ }
+
+ window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION=VERSION;
+ window.applyFirstWorldReincarnationRerunConquest=backfillFirstWorld;
+ window.applySecondWorldReincarnationRerunConquest=backfillSecondWorld;
+
+ if(typeof baseFightOnce==="function")window.fightOnce=function(mapIdx,enemyIdx,...args){
+  const result=baseFightOnce.call(this,mapIdx,enemyIdx,...args);
+  if(result?.win===true&&result?.e?.kind==="boss"&&w1Active(state))backfillFirstWorld(mapIdx,state);
+  return result;
+ };
+
+ if(typeof baseSecondWorldSettlement==="function")window.settleSecondWorldBossVictory=function(value,...args){
+  const s=targetState(),index=whole(value,-1),rerun=w2Active(s)&&index>=0&&index<Math.max(0,whole(window.SECOND_WORLD_BOSS_COUNT,100));
+  if(!rerun)return baseSecondWorldSettlement.call(this,value,...args);
+  const list=s?.secondWorld?.mainline?.bossKilled;
+  const previous=Array.isArray(list)?list.slice(0,index):[];
+  backfillSecondWorld(index,s,{includeTarget:false});
+  const result=baseSecondWorldSettlement.call(this,value,...args);
+  if(result?.ok===true)return result;
+  if(Array.isArray(s?.secondWorld?.mainline?.bossKilled))for(let i=0;i<index;i++)s.secondWorld.mainline.bossKilled[i]=previous[i]===true;
+  return result;
+ };
+
+ window.REINCARNATION_RERUN_MAINLINE_BACKFILL_INSTALL_REPORT=Object.freeze({version:VERSION,w1FightWrapped:typeof baseFightOnce==="function",w2SettlementWrapped:typeof baseSecondWorldSettlement==="function"});
+})();
