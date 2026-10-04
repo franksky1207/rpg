@@ -244,10 +244,13 @@
   items.forEach(row=>{const saleText=row.sale&&typeof window.equipmentSaleText==="function"?window.equipmentSaleText(row.sale):row.sold?`${row.sold} 金幣`:"";logs.push(`${row.sale||row.sold?`自動出售 ${itemHtmlPlain(row.item)}，獲得 ${saleText}`:`獲得裝備 ${itemHtmlPlain(row.item)}`}`);});
   let pendingStoryId=null;
   if(firstBossKill&&window.civilizationStoryProgress?.queueBossStory)pendingStoryId=window.civilizationStoryProgress.queueBossStory(mapIdx);
+  let result={ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns,firstBossKill,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId};
+  if(typeof window.applyWorld1OnlineOverlevelReward==="function")result=window.applyWorld1OnlineOverlevelReward(result,playerLevelBefore,state,{persist:false})||result;
   save(false);
-  return {ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns,firstBossKill,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId};
+  return result;
  };
  window.fightOnce=fightOnce;
  window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION=2;
  window.MAINLINE_BOSS_FIRST_CLEAR_SIGNAL_VERSION=2;
+ window.MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION=1;
 })();
