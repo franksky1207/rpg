@@ -11,6 +11,9 @@ const assert=require('assert');
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
   await page.waitForFunction(()=>
    window.REINCARNATION_OVERLEVEL_REWARD_VERSION===1&&
+   window.REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION===2&&
+   window.REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION===1&&
+   window.MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION===1&&
    window.OFFLINE_REINCARNATION_OVERLEVEL_VERSION===1&&
    window.PLAYER_BATCH_UPGRADE_VERSION===2&&
    window.PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION===1&&
@@ -22,7 +25,9 @@ const assert=require('assert');
    typeof window.offlineOverlevelRewardContext==='function'&&
    typeof window.specializationBalancedUpgradePreview==='function'&&
    typeof window.enhancementBalancedUpgradePreview==='function'&&
-   typeof window.normalizeExistingReincarnationRerunProgress==='function',
+   typeof window.normalizeExistingReincarnationRerunProgress==='function'&&
+   typeof window.getArenaAssessmentStatus==='function'&&
+   typeof window.getArenaAssessmentSignature==='function',
    {timeout:30000}
   );
 
@@ -31,6 +36,7 @@ const assert=require('assert');
    const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:milestones(count)},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
    const makeW1=count=>{const s=newState();s.saveVersion=17;s.reincarnation=reincarnation(count);s.secondWorld=createBlankSecondWorldState();s.thirdWorld=createBlankThirdWorldState();return s;};
    const makeW2=count=>{const s=makeW1(count);s.level=500;s.secondWorld.entered=true;return s;};
+   const overpower=s=>{Object.values(s.equipment||{}).filter(Boolean).forEach(item=>{item.atk=Math.max(0,Number(item.atk)||0)+1000000000;item.def=Math.max(0,Number(item.def)||0)+1000000000;item.hp=Math.max(0,Number(item.hp)||0)+1000000000;});};
    const makeQualifiedForReset=()=>{
     const s=makeW1(0);s.level=2000;s.thirdWorld=createBlankThirdWorldState();s.thirdWorld.entered=true;s.thirdWorld.completed=true;s.thirdWorld.coreLevel=10;s.thirdWorld.bosses=s.thirdWorld.bosses.map(row=>({...row,currentHp:0}));
     s.daily={dateKey:'closure-day',bountyUsed:17,arenaUsed:19,rewardClaimed:true};
@@ -38,7 +44,7 @@ const assert=require('assert');
     return s;
    };
    const clone=v=>JSON.parse(JSON.stringify(v));
-   const originalState=state,originalView=view;
+   const originalState=state,originalView=view,originalRandom=Math.random,originalSave=save,originalSelected={map:selectedMap,enemy:selectedEnemy};
    const out={};
    try{
     const first=makeW1(0),rerun=makeW1(1),pending={playerLevel:100,enemyLevel:500,overlevelContextRecorded:true};
@@ -64,8 +70,15 @@ const assert=require('assert');
     const w1Coverage=firstWorldRerunKeyBossCoverage(state),w1Cap=getArenaRankCapForWorld(1,state);
     state=makeW2(1);state.secondWorld.mainline.bossKilled[99]=true;
     const w2Coverage=secondWorldRerunKeyBossCoverage(state),w2Cap=getArenaRankCapForWorld(2,state);
-    const arenaSource=await (await fetch('arenapositioncore.js')).text();
-    out.arena={w1Coverage,w1Cap,w2Coverage,w2Cap,assessment500:arenaSource.includes('const ASSESS_RUNS=500;'),target485:arenaSource.includes('const ASSESS_CLEAR_TARGET=485;')};
+    state=makeW1(1);state.level=500;state.bossKilled[WORLD_REGIONS[9].mapEnd]=true;
+    const arenaProfile=getCurrentArenaProgress(state),arenaVersions=getArenaVersionProfile();
+    Object.assign(arenaProfile,{positionModelVersion:arenaVersions.positionModelVersion,assessmentRuleVersion:arenaVersions.assessmentRuleVersion,balanceVersion:arenaVersions.balanceVersion,highestArenaUnlocked:1,rank:1,activeRank:null,promotionReady:false,lastCheckRuns:0,lastCheckClearCount:0,lastCheckSignature:null});
+    const assessmentSignature=getArenaAssessmentSignature(1);
+    arenaProfile.lastCheckRuns=ARENA_ASSESS_RUNS;arenaProfile.lastCheckClearCount=ARENA_ASSESS_CLEAR_TARGET-1;arenaProfile.lastCheckSignature=assessmentSignature;arenaProfile.promotionReady=true;
+    const belowThreshold=getArenaAssessmentStatus();
+    arenaProfile.lastCheckRuns=ARENA_ASSESS_RUNS;arenaProfile.lastCheckClearCount=ARENA_ASSESS_CLEAR_TARGET;arenaProfile.lastCheckSignature=assessmentSignature;arenaProfile.promotionReady=false;
+    const atThreshold=getArenaAssessmentStatus();
+    out.arena={w1Coverage,w1Cap,w2Coverage,w2Cap,assessmentRuns:ARENA_ASSESS_RUNS,clearTarget:ARENA_ASSESS_CLEAR_TARGET,belowThreshold:{clears:belowThreshold.clears,ready:belowThreshold.promotionReady},atThreshold:{clears:atThreshold.clears,ready:atThreshold.promotionReady}};
 
     const stale=makeW1(1);stale.bossKilled[99]=true;const normalized=normalizeExistingReincarnationRerunProgress(stale),secondPass=normalizeExistingReincarnationRerunProgress(stale);
     const firstRun=makeW1(0);firstRun.bossKilled[99]=true;const firstRunBefore=JSON.stringify(firstRun),firstRunNormalize=normalizeExistingReincarnationRerunProgress(firstRun);
@@ -73,10 +86,18 @@ const assert=require('assert');
 
     const saleItem={world:2,level:500,q:5,type:'weapon',sell:123,buy:456};
     const saleFirst=equipmentSaleQuote(saleItem,{state:makeW2(0)}),saleRerun=equipmentSaleQuote(saleItem,{state:makeW2(1)});
-    const overlevelSource=await (await fetch('reincarnationoverlevelrewards.js')).text();
-    const offlineSource=await (await fetch('offlineprogress.js')).text();
-    out.sale={first:saleFirst,rerun:saleRerun,onlineTouchesSaleStones:overlevelSource.includes('saleEnhancementStones='),offlineUsesSaleOwner:offlineSource.includes('settleEquipmentSaleBatch'),offlineSharedMultiplier:offlineSource.includes('window.reincarnationOverlevelRewardMultiplier')};
-   }finally{state=originalState;view=originalView;if(typeof render==='function')render();}
+    state=makeW1(1);state.level=100;
+    const synthetic={ok:true,win:true,e:{name:'越級出售隔離測試',level:500},xp:10,gold:20,logs:['越級出售隔離測試被擊敗。獲得 EXP +10、金幣 +20。'],enhancementStones:{basic:2,advanced:1},saleEnhancementStones:{basic:7,advanced:9}};
+    const syntheticSaleBefore=clone(synthetic.saleEnhancementStones),adapted=applyWorld1OnlineOverlevelReward(synthetic,100,state,{persist:false});
+    out.sale={first:saleFirst,rerun:saleRerun,onlineAdapter:{multiplier:adapted.overlevelRewardMultiplier,xp:adapted.xp,gold:adapted.gold,battleStones:clone(adapted.enhancementStones),saleBefore:syntheticSaleBefore,saleAfter:clone(adapted.saleEnhancementStones)}};
+
+    state=makeW1(1);state.level=100;overpower(state);state.hp=playerCombatStats().hp;selectedMap=99;selectedEnemy=0;
+    const encounter=createMonsterEncounter(99,0),baseXp=expReward(encounter),multiplier=reincarnationOverlevelRewardMultiplier(100,encounter.level,state);let saveCalls=0;
+    const countingSave=function(...args){saveCalls++;return originalSave(...args);};save=countingSave;window.save=countingSave;Math.random=()=>.99;
+    const integratedResult=fightOnce(99,0,encounter);
+    Math.random=originalRandom;save=originalSave;window.save=originalSave;
+    out.wrapperConvergence={mainlineIntegrationVersion:MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION,adapterVersion:REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION,retiredVersion:REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION,saveCalls,multiplier:integratedResult.overlevelRewardMultiplier,resultXp:integratedResult.xp,expectedXp:Math.ceil(baseXp*multiplier)};
+   }finally{Math.random=originalRandom;save=originalSave;window.save=originalSave;state=originalState;view=originalView;selectedMap=originalSelected.map;selectedEnemy=originalSelected.enemy;if(typeof render==='function')render();}
    return out;
   });
 
@@ -87,9 +108,10 @@ const assert=require('assert');
   assert.equal(report.batch.enhW1First.steps,report.batch.enhW1Rerun.steps);assert.deepEqual(report.batch.enhW1First.levelsAfter,report.batch.enhW1Rerun.levelsAfter);
   assert.equal(report.batch.enhW2First.steps,report.batch.enhW2Rerun.steps);assert.deepEqual(report.batch.enhW2First.levelsAfter,report.batch.enhW2Rerun.levelsAfter);
   assert.equal(report.lifecycle.resetOk,true);assert.equal(report.lifecycle.count,1);assert.equal(report.lifecycle.level,1);assert.deepEqual(report.lifecycle.preservedAfter,report.lifecycle.preservedBefore);assert.deepEqual(report.lifecycle.arenaByWorld,{1:{},2:{}});assert.equal(report.lifecycle.permanent,true);report.lifecycle.cards.forEach(card=>{assert.equal(card.exists,true);assert.equal(card.locked,false);assert.equal(card.hidden,false);});
-  assert.deepEqual(report.arena,{w1Coverage:10,w1Cap:10,w2Coverage:10,w2Cap:10,assessment500:true,target485:true});
+  assert.equal(report.arena.w1Coverage,10);assert.equal(report.arena.w1Cap,10);assert.equal(report.arena.w2Coverage,10);assert.equal(report.arena.w2Cap,10);assert.equal(report.arena.assessmentRuns,500);assert.equal(report.arena.clearTarget,485);assert.deepEqual(report.arena.belowThreshold,{clears:484,ready:false});assert.deepEqual(report.arena.atThreshold,{clears:485,ready:true});
   assert.equal(report.progressNormalization.version,1);assert.equal(report.progressNormalization.firstChanged,true);assert.equal(report.progressNormalization.full,true);assert.equal(report.progressNormalization.secondPassChanged,false);assert.equal(report.progressNormalization.firstRunChanged,false);assert.equal(report.progressNormalization.firstRunStable,true);
-  assert.deepEqual(report.sale.first,report.sale.rerun);assert.equal(report.sale.onlineTouchesSaleStones,false);assert.equal(report.sale.offlineUsesSaleOwner,true);assert.equal(report.sale.offlineSharedMultiplier,true);
+  assert.deepEqual(report.sale.first,report.sale.rerun);assert.equal(report.sale.onlineAdapter.multiplier,13);assert.equal(report.sale.onlineAdapter.xp,130);assert.equal(report.sale.onlineAdapter.gold,260);assert.deepEqual(report.sale.onlineAdapter.battleStones,{basic:26,advanced:13});assert.deepEqual(report.sale.onlineAdapter.saleAfter,report.sale.onlineAdapter.saleBefore);
+  assert.deepEqual(report.wrapperConvergence,{mainlineIntegrationVersion:1,adapterVersion:2,retiredVersion:1,saveCalls:1,multiplier:report.wrapperConvergence.multiplier,resultXp:report.wrapperConvergence.expectedXp,expectedXp:report.wrapperConvergence.expectedXp});assert.ok(report.wrapperConvergence.multiplier>1);
   console.log('Reincarnation Batch6 closure regression passed:',JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1)});
