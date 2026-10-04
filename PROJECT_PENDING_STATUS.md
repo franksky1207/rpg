@@ -12,8 +12,8 @@
 - 轉生／突破核心、正式轉生流程與優化第1～4批已完成。
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
-- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」與第2批「W2 visibility owner 收斂」已完成，第3～4批待做。
-- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第3～4批。
+- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」已完成，第4批待做。
+- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第4批。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -46,6 +46,15 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - 首輪 `count=0` 的冒險顯示與 Arena cap 均委派原本第二紀元 progression 規則，不改首輪行為。
 - regression 已固定驗證 rerun 冒險 render 前後三個 region owner 函式 identity 不變、正式 state JSON 不變、10區全顯示，而 Arena eligibility 仍依 coverage 分離運作。
 - 此批沒有新增存檔欄位、沒有變更 Save Schema，不需要 migration。
+
+## 2026-10-04 已完成：Batch5 後續架構優化第3批（共用 UI Renderer）
+
+- `combatspeed.js` 新增正式共用速度徽章／標頭 renderer：`combatSpeedBadgeHtml()`、`combatSpeedHeaderHtml()`；W1 rerun 戰鬥標頭改由共用 renderer 產出，不再用 regex 改寫首輪 HTML。
+- W1 首輪 `count=0` 不顯示額外速度徽章；轉生後 1.5× 解鎖時，rerun 戰鬥標頭使用正式 `.universe-combat-speed` 徽章，Minimal Mode 仍直接讀相同徽章節點。
+- W3 rerun 不再對首輪 HTML 使用 `replaceAll()`；改為結構化讀取 `thirdWorldReincarnationRerunContext()` 與各 Boss `challengeStatus.fivePointBypassed`，只改對應 Boss 狀態文字與 rerun 戰鬥規則說明。
+- W3 首輪 UI 不經 rerun presentation owner，5% 戰線原規則與文案維持不變；rerun 只在正式 policy 已解除 `five-point-front` 時顯示「可集中攻略」文案。
+- regression 已固定驗證 W1 共用速度 renderer、舊 inline／regex 路徑消失；W3 驗證無 `replaceAll()`、確實讀取 `fivePointBypassed`／rerun context，且首輪不被污染。
+- 此批只有 UI owner／renderer 收斂；不改 formal combat、settlement、Save Schema 或任何存檔欄位。
 
 ---
 
@@ -94,11 +103,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 - rerun／overlevel／dungeon／AU 全生命週期 regression。
 - 最終完整 closure。
 
-## 4. Batch5 後續架構優化第3～4批
-
-### 第3批：共用 UI renderer 收斂
-- W1 戰鬥速度徽章改為正式共用 renderer，不再靠 regex 改 HTML。
-- W3 rerun 文案直接由 rerun context／`fivePointBypassed` 決定，不再對首輪 HTML 做 `replaceAll()`。
+## 4. Batch5 後續架構優化第4批
 
 ### 第4批：完整端到端 regression
 - W1 真實選 Boss → combat → settlement → `bossKilled` → key coverage → calamity eligibility。
@@ -121,7 +126,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
-Batch5 後續架構優化為獨立 4 批；目前第1～2批已完成，第3～4批待做，不與原第6／7批混寫。
+Batch5 後續架構優化為獨立 4 批；目前第1～3批已完成，第4批待做，不與原第6／7批混寫。
 
 ---
 
