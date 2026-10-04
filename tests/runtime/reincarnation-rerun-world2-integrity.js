@@ -20,7 +20,9 @@ const { chromium } = require('playwright');
 
   state=blankSecondWorld(1);
   const html=window.secondWorldAdventurePageHtml();
-  out.rerunBlank={context:window.secondWorldReincarnationRerunContext(state),allChallengeable:Array.from({length:100},(_,i)=>window.canChallengeSecondWorldBoss(i,state)).every(Boolean),allVisible:Array.from({length:100},(_,i)=>window.secondWorldBossVisible(i,state)).every(Boolean),regionSections:(html.match(/class="world-region universe-region/g)||[]).length,regionCap:window.getSecondWorldArenaRegionCap(state),postRenderRegion9:window.secondWorldRegionVisible(9,state),bossKilledCount:state.secondWorld.mainline.bossKilled.filter(Boolean).length};
+  const boss99=typeof window.secondWorldBoss==='function'?window.secondWorldBoss(99):null;
+  const encounter99=typeof window.secondWorldBossEncounter==='function'?window.secondWorldBossEncounter(99):null;
+  out.rerunBlank={context:window.secondWorldReincarnationRerunContext(state),allChallengeable:Array.from({length:100},(_,i)=>window.canChallengeSecondWorldBoss(i,state)).every(Boolean),allVisible:Array.from({length:100},(_,i)=>window.secondWorldBossVisible(i,state)).every(Boolean),regionSections:(html.match(/class="world-region universe-region/g)||[]).length,regionCap:window.getSecondWorldArenaRegionCap(state),postRenderRegion9:window.secondWorldRegionVisible(9,state),bossKilledCount:state.secondWorld.mainline.bossKilled.filter(Boolean).length,target99:{bossIndex:Number(boss99?.index),bossLevel:Number(boss99?.level),bossName:String(boss99?.name||''),encounterLevel:Number(encounter99?.level),encounterName:String(encounter99?.name||'')}};
 
   state=blankSecondWorld(1);state.secondWorld.mainline.bossKilled[59]=true;
   const calamityVisible6=Array.from({length:10},(_,i)=>window.isSecondWorldCalamityVisible(i,state));
@@ -45,6 +47,7 @@ const { chromium } = require('playwright');
  if(result.rerunBlank.regionSections!==10)fail('RERUN_ALL_REGIONS_UI',result.rerunBlank);
  if(result.rerunBlank.regionCap!==1||result.rerunBlank.postRenderRegion9!==false)fail('RERUN_UI_ARENA_ISOLATION',result.rerunBlank);
  if(result.rerunBlank.bossKilledCount!==0)fail('RERUN_FAKE_PROGRESS_BLANK',result.rerunBlank);
+ if(result.rerunBlank.target99.bossIndex!==99||result.rerunBlank.target99.bossLevel!==1000||result.rerunBlank.target99.encounterLevel!==1000||result.rerunBlank.target99.bossName!==result.rerunBlank.target99.encounterName)fail('RERUN_TARGET_IDENTITY_99',result.rerunBlank.target99);
  if(result.coverage6.coverage!==6||result.coverage6.arenaCap!==6)fail('KEY_BOSS_COVERAGE_6',result.coverage6);
  if(result.coverage6.regionVisible.slice(0,6).some(v=>v!==true)||result.coverage6.regionVisible.slice(6).some(v=>v!==false))fail('ARENA_REGION_COVERAGE_6',result.coverage6.regionVisible);
  if(result.coverage6.calamityVisible.slice(0,6).some(v=>v!==true)||result.coverage6.calamityVisible.slice(6).some(v=>v!==false))fail('CALAMITY_VISIBLE_COVERAGE_6',result.coverage6.calamityVisible);
