@@ -2,7 +2,7 @@
  const VERSION=2;
  const TRAIT_PAIR_DIAGNOSTICS_VERSION=1;
  const COMBAT_OWNER_VERSION=1;
- const INTEGRATION_VERSION=1;
+ const INTEGRATION_VERSION=2;
  const BATCH_SIZE=25;
  const model={depth:1,runs:100,busy:false,result:null,diagnostics:null};
 
@@ -158,8 +158,8 @@
  }
  function decorateUnifiedSummary(source){
   let out=String(source||""),has=!!model.result;
-  out=out.replace(/(<div class="muted">已測模式<\/div><b>)(\d+)\s*\/\s*7(<\/b>)/,(all,a,n,b)=>`${a}${Number(n)+(has?1:0)} / 8${b}`);
-  out=out.replace(/(<div class="muted">包含內容<\/div><b>)([^<]*)(<\/b>)/,(all,a,value,b)=>{
+  out=out.replace(/(<div class="muted"[^>]*>已測模式<\/div><b[^>]*>)(\d+)\s*\/\s*7(<\/b>)/,(all,a,n,b)=>`${a}${Number(n)+(has?1:0)} / 8${b}`);
+  out=out.replace(/(<div class="muted"[^>]*>包含內容<\/div><b[^>]*>)([^<]*)(<\/b>)/,(all,a,value,b)=>{
    if(!has)return `${a}${value}${b}`;
    const current=String(value||"").trim();return `${a}${current==="尚未測試"?"異宇宙":(current.includes("異宇宙")?current:`${current}、異宇宙`)}${b}`;
   });
@@ -180,13 +180,20 @@
   return Object.freeze({version:VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
  }
  function installIntegration(){
-  const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseCopy=window.gmPowerBenchmarkCopySummary,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset;
+  const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
   if(typeof baseHtml!=="function")return false;
   const wrapped=function(){
    let source=String(baseHtml()||""),marker='<div id="gmPowerBenchmarkUnifiedSummary"';
    const index=source.indexOf(marker);if(index>=0)source=source.slice(0,index)+subsectionHtml()+source.slice(index);else source+=subsectionHtml();
    return decorateUnifiedSummary(source);
   };
+  function refreshIntegratedSummaryDom(){
+   if(typeof document==="undefined")return false;
+   const current=document.getElementById("gmPowerBenchmarkUnifiedSummary");if(!current)return false;
+   const host=document.createElement("div");host.innerHTML=wrapped();
+   const next=host.querySelector("#gmPowerBenchmarkUnifiedSummary");if(!next)return false;
+   current.replaceWith(next);return true;
+  }
   wrapped.__alternateUniverseIntegrationVersion=INTEGRATION_VERSION;
   window.gmPowerBenchmarkHtml=wrapped;
   window.gmPowerBenchmarkSummaryText=function(){
@@ -196,13 +203,15 @@
   };
   window.gmPowerBenchmarkCopySummary=async function(){
    const text=window.gmPowerBenchmarkSummaryText();let ok=false;
-   try{if(navigator?.clipboard&&typeof navigator.clipboard.writeText==="function"){await navigator.clipboard.writeText(text);ok=true;}}catch(_){ }
+   try{if(typeof navigator!=="undefined"&&navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){await navigator.clipboard.writeText(text);ok=true;}}catch(_){ }
    if(!ok&&typeof document!=="undefined"){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();try{ok=document.execCommand("copy");}catch(_){ }ta.remove();}
    if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");return ok;
   };
   if(typeof baseInvalidate==="function")window.gmPowerBenchmarkInvalidateSnapshot=function(){clearResult();return baseInvalidate.apply(this,arguments);};
-  if(typeof baseClear==="function")window.gmPowerBenchmarkClearAllResults=function(){clearResult();return baseClear.apply(this,arguments);};
-  if(typeof baseReset==="function")window.gmPowerBenchmarkReset=function(){clearResult();return baseReset.apply(this,arguments);};
+  if(typeof baseClear==="function")window.gmPowerBenchmarkClearAllResults=function(){clearResult();const out=baseClear.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
+  if(typeof baseReset==="function")window.gmPowerBenchmarkReset=function(){clearResult();const out=baseReset.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
+  if(typeof baseRefresh==="function")window.gmPowerBenchmarkRefreshUi=function(){const out=baseRefresh.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
+  if(typeof baseRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary=function(){const out=baseRefreshSummary.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
   if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("test","power-benchmark-test",wrapped,"戰力基準測試");
   return true;
  }
