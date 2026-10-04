@@ -2,6 +2,7 @@
  const CONTINUOUS_COUNT=window.CONTINUOUS_BATTLE_COUNT;
  const battleGapMs=window.mainBattleGapMs;
  const battleFlowSleep=window.mainBattleFlowSleep;
+ const TARGET_CONTEXT_PIPELINE_VERSION=1;
  function isContinuousCount(count,ctx=null){return count===CONTINUOUS_COUNT||ctx?.continuous===true;}
  function blankEnhancementRewards(){return {battle:{basic:0,advanced:0},autoSale:{basic:0,advanced:0}};}
  function ensureEnhancementRewards(ctx){
@@ -11,10 +12,39 @@
   return ctx.enhancementRewards;
  }
  function addContextEnhancementReward(ctx,key,reward){const summary=ensureEnhancementRewards(ctx);summary[key]=mergeEnhancementStoneRewards(summary[key],reward);return summary[key];}
- function createBattleContext(count){
+ function resolveBattleTargetContext(explicit=null,ctx=null){
+  let context=explicit||ctx?.targetContext||null;
+  if(!context&&typeof window.getPreparedFirstWorldTargetContext==="function")context=window.getPreparedFirstWorldTargetContext();
+  if(!context&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({source:"battle-pipeline-legacy-entry"},state);
+  if(typeof window.bindFirstWorldBattleTargetContext==="function")return window.bindFirstWorldBattleTargetContext(context,state);
+  const valid=typeof window.validateFirstWorldTargetContext==="function"?window.validateFirstWorldTargetContext(context)?.passed===true:false;
+  return valid&&context?.valid===true&&context?.authorized===true&&context?.mode!=="review"&&context?.policy?.formalRewardsAllowed===true&&context?.policy?.formalProgressAllowed===true?context:null;
+ }
+ function targetIdentity(ctx){const target=ctx?.targetContext;return target&&target.valid===true?{mapIndex:target.mapIndex,enemyIndex:target.enemyIndex}:null;}
+ function encounterMatchesTarget(encounter,target){
+  if(!encounter||!target)return false;
+  if(String(encounter.name||"")!==String(target.enemyName||""))return false;
+  if(Math.max(0,Math.floor(Number(encounter.level)||0))!==Math.max(0,Math.floor(Number(target.enemyLevel)||0)))return false;
+  const expected=target.targetType==="boss"?"boss":target.targetType==="elite"?"elite":"normal";
+  return String(encounter.kind||"")===expected;
+ }
+ function encounterForContext(ctx,{preview=false,existing=null}={}){
+  const target=ctx?.targetContext;
+  if(!target)return null;
+  if(existing&&encounterMatchesTarget(existing,target))return existing;
+  if(typeof window.firstWorldEncounterFromTargetContext==="function")return window.firstWorldEncounterFromTargetContext(target,{preview});
+  return typeof createMonsterEncounter==="function"?createMonsterEncounter(target.mapIndex,target.enemyIndex):null;
+ }
+ function clearPreviewForContext(ctx){
+  const target=ctx?.targetContext;if(!target)return false;
+  if(typeof window.clearFirstWorldPreviewForTargetContext==="function")return window.clearFirstWorldPreviewForTargetContext(target);
+  if(typeof clearPreviewEncounter==="function"){clearPreviewEncounter(target.mapIndex,target.enemyIndex);return true;}
+  return false;
+ }
+ function createBattleContext(count,targetContext=null){
   const continuous=isContinuousCount(count);
   const total=continuous?null:Math.max(1,Math.floor(Number(count)||1));
-  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],enhancementRewards:blankEnhancementRewards(),continuous,exitRequested:false,pendingStoryId:null};
+  return {wins:0,totalXp:0,totalGold:0,items:[],originalCount:total,completed:0,remaining:total,specialEncounters:[],enhancementRewards:blankEnhancementRewards(),continuous,exitRequested:false,pendingStoryId:null,targetContext:targetContext||null,targetIdentity:targetContext?.identity||null};
  }
  function hasMoreBattles(ctx){return ctx?.continuous===true||Number(ctx?.remaining)>0;}
  function shouldStopContinuous(ctx){return ctx?.continuous===true&&ctx?.exitRequested===true;}
@@ -59,15 +89,25 @@
 
  window.MAIN_REAL_BATTLE_SAMPLE_VERSION=4;
  window.MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1;
+ window.MAIN_BATTLE_TARGET_CONTEXT_VERSION=TARGET_CONTEXT_PIPELINE_VERSION;
+ window.createMainBattleContext=createBattleContext;
+ window.resolveMainBattleTargetContext=resolveBattleTargetContext;
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
  window.addBattleEnhancementReward=addContextEnhancementReward;
  window.requestContinuousBattleStop=function(){const ctx=window.activeMainBattleContext;if(!battleBusy||ctx?.continuous!==true)return false;ctx.exitRequested=true;const btn=document.getElementById("continuousBattleStopBtn");if(btn){btn.disabled=true;btn.textContent="本場結束後停止";}return true;};
 
- runBattles=async function(count,ctx=null){
-  if(battleBusy)return;
+ runBattles=async function(count,ctx=null,targetContext=null){
+  if(battleBusy)return false;
+  const boundTarget=resolveBattleTargetContext(targetContext,ctx);
+  if(!boundTarget)return false;
   battleBusy=true;
-  if(!ctx)ctx=createBattleContext(count);
+  if(!ctx)ctx=createBattleContext(count,boundTarget);
+  ctx.targetContext=boundTarget;
+  ctx.targetIdentity=boundTarget.identity;
+  const identity=targetIdentity(ctx);
+  if(!identity){battleBusy=false;return false;}
+  const mapIndex=identity.mapIndex,enemyIndex=identity.enemyIndex;
   ensureEnhancementRewards(ctx);
   ctx.continuous=isContinuousCount(count,ctx);
   if(ctx.continuous){ctx.originalCount=null;ctx.remaining=null;}else{ctx.originalCount=Math.max(1,Math.floor(Number(ctx.originalCount??count)||1));ctx.remaining=Math.max(0,Math.floor(Number(ctx.remaining??ctx.originalCount)||0));}
@@ -82,18 +122,19 @@
    while(ctx.continuous||local<ctx.originalCount){
    if(shouldStopContinuous(ctx))break;
    local++;
-   let encounter=currentCombatEncounter||getPreviewEncounter(selectedMap,selectedEnemy)||createMonsterEncounter(selectedMap,selectedEnemy);
+   let encounter=encounterForContext(ctx,{preview:local===1,existing:currentCombatEncounter});
+   if(!encounter)break;
    currentCombatEncounter=encounter;
    combatRound=ctx.completed+1;
    combatTotal=ctx.continuous?0:ctx.originalCount;
    const playerLevelBefore=state.level;
-   const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy);
+   const realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,mapIndex,enemyIndex);
    const fastCatchUp=mainFastCatchUp();
    const suppressPresentation=fastCatchUp;
    if(!suppressPresentation){adventureScreen="combat";render();if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});}
 
    const psBefore=playerCombatStats(),startPlayerHp=state.hp;
-   const r=fightOnce(selectedMap,selectedEnemy,encounter);
+   const r=fightOnce(mapIndex,enemyIndex,encounter);
    if(!r.ok){if(typeof realBattleTiming?.unsubscribe==="function")realBattleTiming.unsubscribe();alert(r.reason);break}
 
    const roundLabel=ctx.continuous?`連續戰鬥・第 ${combatRound} 場`:ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"";
@@ -106,7 +147,7 @@
    if(!ctx.continuous)ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
    const catchUpPolicy=fastCatchUp?mainCatchUpStep():null;
    if(fastCatchUp){catchUpNeedsFinalSync=true;if(catchUpPolicy?.shouldPresentBattle){refreshMainCatchUpUi(ctx);await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);}else{await consumeMainCatchUpDelay(mainStructuredDuration(r));if(catchUpPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);}if((catchUpPolicy?.shouldRefreshUi||catchUpPolicy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("main");}else if(ctx.continuous&&typeof window.syncMinimalMode==="function"&&window.getMinimalModeAdapterId?.()==="main")window.syncMinimalMode();
-   clearPreviewEncounter(selectedMap,selectedEnemy);
+   clearPreviewForContext(ctx);
    currentCombatEncounter=null;
 
    if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
@@ -115,21 +156,22 @@
    if(ctx.pendingStoryId)break;
 
    let specialOutcome=false;
-   if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r);
-   if(specialOutcome?.triggered){if(!specialOutcome.win){battleBusy=false;window.activeMainBattleContext=null;save();return;}if(shouldStopContinuous(ctx))break;if(hasMoreBattles(ctx)){currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}continue;}
+   if(typeof maybeHandleSpecialEncounter==="function")specialOutcome=await maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget});
+   if(specialOutcome?.triggered){if(!specialOutcome.win){battleBusy=false;window.activeMainBattleContext=null;save();return false;}if(shouldStopContinuous(ctx))break;if(hasMoreBattles(ctx)){currentCombatEncounter=encounterForContext(ctx,{preview:false});await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}continue;}
 
    if(shouldStopContinuous(ctx))break;
-   if(hasMoreBattles(ctx)){currentCombatEncounter=createMonsterEncounter(selectedMap,selectedEnemy);await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
+   if(hasMoreBattles(ctx)){currentCombatEncounter=encounterForContext(ctx,{preview:false});await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
   }
 
   currentCombatEncounter=null;
-  if(typeof clearPreviewEncounter==="function")clearPreviewEncounter(selectedMap,selectedEnemy);
+  clearPreviewForContext(ctx);
   battleBusy=false;
   window.activeMainBattleContext=null;
   save();
   render();
   setTimeout(()=>{showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);
-  }finally{stopMainBackground(mainBackgroundStarted);}
+  return true;
+  }finally{stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}}
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
  window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION=1;
