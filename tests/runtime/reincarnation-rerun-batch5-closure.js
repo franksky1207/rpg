@@ -47,7 +47,7 @@ const assert=require('assert');
    state=makeW1(1);openWorldPhaseConfirmation(2);
    const rerunTransition=document.getElementById('worldPhaseConfirmModal')?.textContent||'';closeWorldPhaseConfirmation();
    window.secondWorldEntryRequirements=originalSecondWorldEntryRequirements;
-   out.speedUi={firstSettingsHidden:!firstSettings.includes('combat-speed-setting'),rerunSettingsVisible:rerunSettings.includes('combat-speed-setting')&&rerunSettings.includes('1.5×'),rerunCombat15:rerunCombat.includes('class="universe-combat-speed">1.5×</span>'),gmCombat2:gmCombat.includes('class="universe-combat-speed">2×</span>'),rerunContinuousBadge,firstTransitionUnlock:firstTransition.includes('1.5× 戰鬥速度'),rerunTransitionUnlock:rerunTransition.includes('1.5× 戰鬥速度')};
+   out.speedUi={firstSettingsHidden:!firstSettings.includes('combat-speed-setting'),rerunSettingsVisible:rerunSettings.includes('combat-speed-setting')&&rerunSettings.includes('1.5×'),rerunCombat15:rerunCombat.includes('data-combat-speed-badge="1"')&&rerunCombat.includes('1.5×'),gmCombat2:gmCombat.includes('data-combat-speed-badge="1"')&&gmCombat.includes('2×'),rerunContinuousBadge,firstTransitionUnlock:firstTransition.includes('1.5× 戰鬥速度'),rerunTransitionUnlock:rerunTransition.includes('1.5× 戰鬥速度')};
 
    state=makeW2(0);
    out.w2First={context:secondWorldReincarnationRerunContext(state),boss0:canChallengeSecondWorldBoss(0,state),boss99:canChallengeSecondWorldBoss(99,state)};
@@ -63,7 +63,7 @@ const assert=require('assert');
    out.w3First={context:thirdWorldReincarnationRerunContext(state),challenge:thirdWorldChallengeStatus(0,state)};
    state=makeW3(1);state.thirdWorld.bosses.forEach(row=>row.currentHp=maxHp);state.thirdWorld.bosses[0].currentHp=Math.floor(maxHp*.90);
    const beforeHp=state.thirdWorld.bosses.map(row=>row.currentHp),w3Html=thirdWorldAdventurePageHtml();
-   out.w3Rerun={context:thirdWorldReincarnationRerunContext(state),challenge:thirdWorldChallengeStatus(0,state),uiRerun:w3Html.includes('轉生重征服：可集中攻略任一存活高維存在'),hpUnchanged:JSON.stringify(beforeHp)===JSON.stringify(state.thirdWorld.bosses.map(row=>row.currentHp))};
+   out.w3Rerun={context:thirdWorldReincarnationRerunContext(state),challenge:thirdWorldChallengeStatus(0,state),uiRerun:w3Html.includes('轉生重征服：可集中攻略任一存活高維存在')||w3Html.includes('轉生重征服：已解除 5% 戰線限制，可集中攻略此高維存在'),hpUnchanged:JSON.stringify(beforeHp)===JSON.stringify(state.thirdWorld.bosses.map(row=>row.currentHp))};
    state=clone(state);out.w3Reload={active:isThirdWorldReincarnationRerun(state),challenge:thirdWorldChallengeStatus(0,state)};
 
    const storyFirst=makeW1(0),storyRerun=makeW1(1);
