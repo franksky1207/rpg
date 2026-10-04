@@ -11,7 +11,7 @@
 - 銀河紀元、宇宙紀元、高維紀元三紀元 runtime 已完成；高維紀元為 Lv.1000～2000。
 - 轉生／突破核心、異宇宙 Batch3～4、轉生後重征服 Batch5、Batch5 後續架構優化，以及第6大批 6-1～6-5 均已完成。
 - 第6大批完成內容：轉生越級 Online／Offline 收益、一鍵平均專精／平均最大強化、首次轉生後四大副本永久入口、主線正式向下征服回填，以及 Batch6 完整封箱 Regression。
-- 目前主要施工剩餘：Batch7；另有第6大批程式碼優化第2～5批依序待處理。
+- 第6大批程式碼優化第1～2批已完成；目前主要施工剩餘：Batch7，以及優化第3～5批。
 
 ## 第6大批正式規則
 
@@ -61,16 +61,24 @@
 - 不新增欄位、不升 Save Schema；正式 production JS 有改動時仍須更新 `index.html` cache-bust。
 - `tests/runtime/reincarnation-rerun-batch5-e2e-regression.js` 已改為驗證目前正式語意：真實高階勝利會正式向下回填，並新增 Schema17 舊轉生 fixture、冪等與首輪隔離 regression。
 
+## 2026-10-04 第6大批程式碼優化第2批：四大副本永久入口架構整理
+
+- `reincarnationdungeonaccess.js` 升為 V2，新增唯一共用 `dungeonModeAccessSnapshot()`／`isDungeonModeEntryUnlocked()`；四大副本的轉生永久入口資格集中由同一 access snapshot 表達。
+- 已完全移除舊 `withMinimumEntryLevel()` 與暫時把 global `state` 換成假 `level` presentation view 的做法；正式 `state` 參照與 `state.level` 在副本入口判定期間不再被偽裝。
+- 懸賞戰、競技場、虛空幻境的正式入口函式改為直接動態讀共用 access owner；鏡像戰沿用原正式 daily/history owner，只由同一 access snapshot 放寬轉生後入口，不建立第二套副本狀態。
+- 副本首頁最終卡片狀態與正式入口共用相同 access snapshot；轉生後顯示「轉生後永久解鎖」，Daily 用盡仍維持按鈕停用。
+- 首輪 `count=0` 完整保留原門檻：懸賞 Lv.5、競技場 Lv.15、虛空 Lv.25、鏡像依既有 config；首輪高維紀元懸賞仍關閉。
+- W1 rerun Arena cap 仍依本輪主線 key boss coverage；W2 Arena owner、500場／485勝 97% 驗收、Daily、Mirror/Void 歷史與轉生 reset 規則均未改。
+- 本批不新增存檔欄位、不改 Save Schema、不改戰鬥／收益公式；只收斂入口與 UI 資格架構。
+- `tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js` 已升級為架構 regression：同時驗證首輪門檻、轉生 Lv.1 四入口、正式 state identity／level 穩定、W3 懸賞政策、Arena cap，以及 production source 已無暫時 level presentation helper。
+
 ## 第6大批後續優化排程
 
-1. **優化第2批：四大副本永久入口架構整理**
-   - 移除以暫時 global `state.level` presentation view 繞過最低等級的方式。
-   - 功能資格與 UI 卡片改共用同一 access snapshot。
-2. **優化第3批：一鍵專精／強化交易安全**
+1. **優化第3批：一鍵專精／強化交易安全**
    - 改共用既有 `runSettlementTransaction()`；補 save throw／rollback／state identity regression。
-3. **優化第4批：Offline 舊樣本 provenance 安全化**
+2. **優化第4批：Offline 舊樣本 provenance 安全化**
    - V3→V4 明確區分可靠與缺失的 player/enemy level；不可靠越級 context 固定 1×。
-4. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
+3. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
    - 收斂 W1 `fightOnce` 多層 wrapper；將 Arena 97% 與出售隔離由 source-string 檢查提升為正式行為測試。
 
 ## Batch7 尚待施工
