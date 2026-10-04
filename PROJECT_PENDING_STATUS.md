@@ -13,8 +13,8 @@
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
 - Batch5 後續架構優化共 4 批已全部完成：第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」、第4批「完整端到端 regression 封箱」。
-- 第6大批已開始；6-1「轉生越級 Online 收益」、6-2「一鍵平均專精／平均最大強化」、6-3「轉生越級 Offline 收益」已完成，6-4～6-5 待做。
-- 目前主要施工剩餘：Batch6-4～6-5、Batch7。
+- 第6大批已開始；6-1「轉生越級 Online 收益」、6-2「一鍵平均專精／平均最大強化」、6-3「轉生越級 Offline 收益」、6-4「首次轉生後四大副本永久解鎖」已完成；6-5 待做。
+- 目前主要施工剩餘：Batch6-5、Batch7。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -103,22 +103,23 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - 既有 `tests/runtime/reincarnation-overlevel-batch6-1-integrity.js` 已延伸為 Batch6-1／6-3 browser regression，固定驗證首輪 Offline 1×、W1／W2 rerun Offline 共用 owner、W2 暗能量、sample target identity、舊 pending 1× 相容與出售排除。
 - `index.html` 已同步更新 `offlineprogress.js` cache-bust；此批沒有新增存檔欄位或 Save Schema。
 
+## 2026-10-04 已完成：第6-4批（首次轉生後四大副本永久解鎖）
+
+- 新增 `reincarnationdungeonaccess.js` 作為轉生副本 access adapter；永久資格只由既有 `dungeonReincarnationContext()` 的 `reincarnationRun` 派生，不新增 Save 欄位、不另建生命週期判定。
+- 首輪 `count=0` 完整沿用原本等級解鎖與高維紀元副本規則；首次轉生後，懸賞戰、競技場、鏡像戰、虛空幻境四個入口永久可使用，並沿用既有副本首頁與各模式 UI。
+- 轉生後即使角色重回 Lv.1，四個入口仍可開啟；adapter 僅在呼叫原副本 owner 的初始入口期間使用舊解鎖等級作 presentation floor，正式角色 `state.level` 不會被寫入、保存或永久改變。
+- 首輪高維紀元仍維持「懸賞戰關閉」；只有 `reincarnation.count > 0` 的高維紀元重征服會恢復懸賞入口。`worldtransitionsafety.js` 仍維持 World Transition Safety V5，只把具體 `BOUNTY_WORLD_PHASE_GATE_VERSION` 升為 2。
+- Daily 使用次數與獎勵狀態不因轉生刷新；正式轉生 reset 既有 owner 仍保留 Mirror／Void permanent history，並重置 W1／W2 本輪 Arena Rank，沒有新增第二套 reset。
+- W1 Arena 區域上限正式補齊：轉生輪改讀既有 `firstWorldRerunKeyBossCoverage()`，只依實際 key Boss 勝利向下推導 eligibility；coverage 0／6／10 對應 rank cap 1／6／10，不偽造任何較低階 `bossKilled`。W2 仍沿用 Batch5-3 已完成的 `secondWorldArenaRegionEligible()`。
+- 原 Arena 戰鬥、晉階與 97% 驗收公式完全未改；本批只處理入口資格與區域 cap。
+- 新增 `tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js`，真實瀏覽器固定驗證首輪隔離、轉生 Lv.1 四入口、正式等級不被 adapter 污染、W1 downward coverage、首輪／轉生 W3 懸賞差異，以及版本契約。
+- `index.html` 已同步加入 adapter 與 `worldtransitionsafety.js` cache-bust；此批沒有新增 Save Schema／存檔欄位，不需要 migration。
+
 ---
 
 # 目前真正 pending
 
-## 1. 第6-4批：首次轉生後四大副本永久解鎖
-
-- 懸賞、競技場、鏡像、虛空首次轉生後永久可進。
-- 完全沿用現有首輪副本首頁／各模式 UI，不新增轉生專用介面。
-- daily 不因轉生刷新。
-- Mirror／Void permanent history 保留。
-- W1／W2 Arena Rank 每輪重置。
-- 區域 eligibility 依本輪最高 key boss downward coverage。
-- W2 Arena downward coverage 已由 Batch5-3 接上；W1 Arena 尚待補齊。
-- 原 97% 晉階驗收保留。
-
-## 2. 第6-5批：Batch6 完整封箱 Regression
+## 1. 第6-5批：Batch6 完整封箱 Regression
 
 - 首輪 reward 計算隔離。
 - Online／Offline 同倍率 owner 與同目標 identity。
@@ -127,7 +128,7 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - 四副本入口永久資格、Arena key boss downward coverage、97% 晉階規則。
 - 裝備出售與出售轉換資源不得被越級倍率污染。
 
-## 3. 第7批：GM／測試／完整 Integrity 收尾
+## 2. 第7批：GM／測試／完整 Integrity 收尾
 
 - GM 指定轉生次數／永久突破等級。
 - GM 正式轉生 transaction 按鈕。
@@ -156,7 +157,7 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 第3批：異宇宙最小可玩版                       完成
 第4批：異宇宙完整化與平衡測試                 完成
 第5批：第一、第二、第三紀元轉生後重征服規則   完成（5-1～5-5）
-第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  進行中（6-1、6-2、6-3 完成）
+第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  進行中（6-1、6-2、6-3、6-4 完成）
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
