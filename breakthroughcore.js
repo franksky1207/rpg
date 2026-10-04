@@ -1,6 +1,7 @@
 (function(){
  const BREAKTHROUGH_CORE_VERSION=1;
  const BREAKTHROUGH_CANONICAL_REBUILD_VERSION=1;
+ const BREAKTHROUGH_LIFE_CHANGE_DELEGATION_VERSION=1;
  const BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL=2.5;
  const BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL=.05;
  const BREAKTHROUGH_MAX_PER_LIFE=10;
@@ -77,15 +78,13 @@
   if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(s);
   if(!isObject(s.reincarnation))return {ok:false,reason:"reincarnation-owner-missing"};
   const beforeCount=Math.max(0,Math.floor(Number(s.reincarnation.count)||0));
-  const au=isObject(s.reincarnation.alternateUniverse)?s.reincarnation.alternateUniverse:null;
+  if(beforeCount!==next.count&&typeof window.reconcileReincarnationLifeChange!=="function")return {ok:false,reason:"life-change-owner-missing"};
   s.reincarnation.count=next.count;
   s.reincarnation.breakthrough={permanent:next.total,milestoneLifeId:next.count,milestones:milestonesForCurrentLife(next.currentLife)};
-  if(au&&beforeCount!==next.count){
-   au.activeAttempt=null;
-   au.lifeFailures={lifeId:next.count,failures:{}};
-  }
+  const lifeReconciliation=typeof window.reconcileReincarnationLifeChange==="function"?window.reconcileReincarnationLifeChange(s,beforeCount):Object.freeze({version:0,ok:true,reason:"",changed:false,beforeLifeId:beforeCount,afterLifeId:next.count,clearedActiveAttempt:false,resetLifeFailures:false});
+  if(!lifeReconciliation?.ok)return {ok:false,reason:lifeReconciliation?.reason||"life-change-reconcile-failed"};
   if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(s);
-  return {ok:true,total:next.total,count:next.count,currentLife:next.currentLife,currentLifeMax:next.currentLifeMax,beforeCount,afterCount:next.count};
+  return {ok:true,total:next.total,count:next.count,currentLife:next.currentLife,currentLifeMax:next.currentLifeMax,beforeCount,afterCount:next.count,lifeReconciliation};
  }
  function snapshot(target=null){
   const s=targetState(target),permanent=level(s),currentLife=currentLifeEarned(s);
@@ -124,14 +123,18 @@
   if(planFromPermanentTotal(-1).ok||planFromPermanentTotal(1.5).ok)errors.push({code:"CANONICAL_REBUILD_INPUT_GUARD"});
   const rebuildFixture=makeState(2,20);rebuildFixture.reincarnation.alternateUniverse={unlocked:true,deepestCleared:40,activeAttempt:{lifeId:2,depth:41,attemptId:"core-rebuild",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"41":3}}};
   const rebuilt=rebuildFromPermanentTotal(25,rebuildFixture);
-  if(!rebuilt.ok||rebuildFixture.reincarnation.count!==3||rebuildFixture.reincarnation.breakthrough.permanent!==25||currentLifeEarned(rebuildFixture)!==5||rebuildFixture.reincarnation.alternateUniverse.activeAttempt!==null||rebuildFixture.reincarnation.alternateUniverse.lifeFailures.lifeId!==3)errors.push({code:"CANONICAL_REBUILD_STATE",actual:{rebuilt,state:rebuildFixture.reincarnation}});
+  if(!rebuilt.ok||rebuilt.lifeReconciliation?.changed!==true||rebuildFixture.reincarnation.count!==3||rebuildFixture.reincarnation.breakthrough.permanent!==25||currentLifeEarned(rebuildFixture)!==5||rebuildFixture.reincarnation.alternateUniverse.activeAttempt!==null||rebuildFixture.reincarnation.alternateUniverse.lifeFailures.lifeId!==3)errors.push({code:"CANONICAL_REBUILD_STATE",actual:{rebuilt,state:rebuildFixture.reincarnation}});
+  const sameLifeFixture=makeState(3,25);sameLifeFixture.reincarnation.alternateUniverse={unlocked:true,deepestCleared:40,activeAttempt:{lifeId:3,depth:41,attemptId:"same-life",traits:["strong","swift"]},lifeFailures:{lifeId:3,failures:{"41":3}}};
+  const sameLife=rebuildFromPermanentTotal(27,sameLifeFixture);
+  if(!sameLife.ok||sameLife.lifeReconciliation?.changed!==false||sameLifeFixture.reincarnation.alternateUniverse.activeAttempt?.attemptId!=="same-life"||sameLifeFixture.reincarnation.alternateUniverse.lifeFailures.failures["41"]!==3)errors.push({code:"CANONICAL_REBUILD_SAME_LIFE_PRESERVES_AU",actual:{sameLife,state:sameLifeFixture.reincarnation.alternateUniverse}});
   const firstRebuild=makeState(0,0),firstSnapshot=JSON.stringify(firstRebuild),locked=rebuildFromPermanentTotal(5,firstRebuild);
   if(locked?.reason!=="first-run-locked"||JSON.stringify(firstRebuild)!==firstSnapshot)errors.push({code:"CANONICAL_REBUILD_FIRST_RUN_LOCK",actual:locked});
-  return Object.freeze({version:BREAKTHROUGH_CORE_VERSION,canonicalRebuildVersion:BREAKTHROUGH_CANONICAL_REBUILD_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:BREAKTHROUGH_CORE_VERSION,canonicalRebuildVersion:BREAKTHROUGH_CANONICAL_REBUILD_VERSION,lifeChangeDelegationVersion:BREAKTHROUGH_LIFE_CHANGE_DELEGATION_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.BREAKTHROUGH_CORE_VERSION=BREAKTHROUGH_CORE_VERSION;
  window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION=BREAKTHROUGH_CANONICAL_REBUILD_VERSION;
+ window.BREAKTHROUGH_LIFE_CHANGE_DELEGATION_VERSION=BREAKTHROUGH_LIFE_CHANGE_DELEGATION_VERSION;
  window.BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL=BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL;
  window.BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL=BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL;
  window.BREAKTHROUGH_MAX_PER_LIFE=BREAKTHROUGH_MAX_PER_LIFE;
