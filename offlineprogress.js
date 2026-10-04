@@ -24,6 +24,7 @@
  const OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION=1;
  const THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION=1;
  const THIRD_WORLD_OFFLINE_PERFORMANCE_VERSION=1;
+ const OFFLINE_REINCARNATION_OVERLEVEL_VERSION=1;
  const THIRD_WORLD_OFFLINE_STATE_ALLOWLIST=Object.freeze(["inventory","offline"]);
  const baseSave=typeof save==="function"?save:null;
  let heartbeatTimer=null;
@@ -95,16 +96,19 @@
  function resolveRowsAverage(rows,speed){
   if(!rows.length)return null;const exact=rows.filter(row=>Number(row?.combatSpeed)===speed),selected=exact.length?exact:rows,avg=averageTargetMs(selected,speed);if(avg<=0)return null;const latest=selected[selected.length-1];return {avgBattleMs:avg,combatSpeed:speed,fallbackSpeed:exact.length?null:Number(latest?.combatSpeed)||null,sampleCount:selected.length,latest};
  }
+ function recordedRewardLevels(row,enemyLevel){
+  const playerRaw=Number(row?.playerLevel),enemyRaw=Number(row?.enemyLevel),recorded=Number.isFinite(playerRaw)&&playerRaw>=1&&Number.isFinite(enemyRaw)&&enemyRaw>=1;
+  return {playerLevel:recorded?Math.max(1,Math.floor(playerRaw)):Math.max(1,Math.floor(Number(state?.level)||1)),enemyLevel:Math.max(1,Math.floor(Number(enemyLevel)||enemyRaw||1)),overlevelContextRecorded:recorded};
+ }
  function resolveFarmTarget(){
   const o=ensureOfflineState(),speed=currentCombatSpeed(),phase=currentPhase(),all=Array.isArray(o.battleSamples)?o.battleSamples:[];
   if(phase===3){const resolved=resolveRowsAverage(all.filter(legalThirdWorldSample),speed);return resolved?{world:3,targetType:THIRD_WORLD_TARGET_TYPE,avgBattleMs:resolved.avgBattleMs,combatSpeed:speed,fallbackSpeed:resolved.fallbackSpeed,sampleCount:resolved.sampleCount}:null;}
   if(phase===2){
    const rows=all.filter(legalSecondWorldBossSample);if(!rows.length)return null;const exactRows=rows.filter(row=>Number(row?.combatSpeed)===speed),latest=(exactRows.length?exactRows:rows)[(exactRows.length?exactRows:rows).length-1],bossIndex=Math.floor(Number(latest.bossIndex)),boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(bossIndex):null;if(!boss)return null;
-   const sameTarget=rows.filter(row=>Math.floor(Number(row?.bossIndex))===bossIndex&&String(row?.bossId||"")===String(boss.id||"")),resolved=resolveRowsAverage(sameTarget,speed);return resolved?{world:2,targetType:"boss",bossIndex,bossId:boss.id,boss,avgBattleMs:resolved.avgBattleMs,combatSpeed:speed,fallbackSpeed:resolved.fallbackSpeed}:null;
+   const sameTarget=rows.filter(row=>Math.floor(Number(row?.bossIndex))===bossIndex&&String(row?.bossId||"")===String(boss.id||"")),resolved=resolveRowsAverage(sameTarget,speed);if(!resolved)return null;const levels=recordedRewardLevels(resolved.latest,boss.level);return {world:2,targetType:"boss",bossIndex,bossId:boss.id,boss,avgBattleMs:resolved.avgBattleMs,combatSpeed:speed,fallbackSpeed:resolved.fallbackSpeed,...levels};
   }
   const rows=all.filter(row=>Number(row?.sampleVersion)===OFFLINE_BATTLE_SAMPLE_VERSION&&Number(row?.world)===1&&legalFarmTarget(Math.floor(Number(row?.map)),Math.floor(Number(row?.enemy))));if(!rows.length)return null;
-  const exactRows=rows.filter(row=>Number(row?.combatSpeed)===speed),latest=(exactRows.length?exactRows:rows)[(exactRows.length?exactRows:rows).length-1],map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy)),sameTarget=rows.filter(row=>Math.floor(Number(row?.map))===map&&Math.floor(Number(row?.enemy))===enemy),resolved=resolveRowsAverage(sameTarget,speed);
-  return resolved?{world:1,targetType:"mapEnemy",map,enemy,avgBattleMs:resolved.avgBattleMs,combatSpeed:speed,fallbackSpeed:resolved.fallbackSpeed}:null;
+  const exactRows=rows.filter(row=>Number(row?.combatSpeed)===speed),latest=(exactRows.length?exactRows:rows)[(exactRows.length?exactRows:rows).length-1],map=Math.floor(Number(latest?.map)),enemy=Math.floor(Number(latest?.enemy)),sameTarget=rows.filter(row=>Math.floor(Number(row?.map))===map&&Math.floor(Number(row?.enemy))===enemy),resolved=resolveRowsAverage(sameTarget,speed);if(!resolved)return null;const monster=farmEnemyObject({map,enemy}),levels=recordedRewardLevels(resolved.latest,monster?.level);return {world:1,targetType:"mapEnemy",map,enemy,avgBattleMs:resolved.avgBattleMs,combatSpeed:speed,fallbackSpeed:resolved.fallbackSpeed,...levels};
  }
  function formatDuration(ms){const total=Math.max(0,Math.floor(ms/60000)),h=Math.floor(total/60),m=total%60;if(h>0&&m>0)return `${h} 小時 ${m} 分`;if(h>0)return `${h} 小時`;if(total>0)return `${total} 分`;return `${Math.max(1,Math.floor(ms/1000))} 秒`;}
  function farmEnemyObject(target){try{const full=monsterObj(target.map,target.enemy);return full?.kind==="boss"?null:full;}catch(_){return null;}}
@@ -112,16 +116,35 @@
  function normalizeOfflineDrop(item){if(item&&typeof item==="object"&&typeof item.locked!=="boolean")item.locked=false;return item;}
  function expSnapshot(){if(typeof window.levelProgressSnapshot==="function"){const p=window.levelProgressSnapshot(state);return {level:Math.max(1,Math.floor(Number(p.level)||1)),exp:Math.max(0,Math.floor(Number(p.exp)||0)),need:Math.max(0,Math.floor(Number(p.need)||0)),atCap:p.atCap===true};}const level=clampGameLevel(state.level),exp=Math.max(0,Math.floor(Number(state.exp)||0));return {level,exp,need:Math.max(1,Math.floor(Number(expNeed(level))||1)),atCap:false};}
  function expProgressDelta(before,after){if(!before||!after)return 0;const bl=Math.max(1,Math.floor(Number(before.level)||1)),al=Math.max(bl,Math.floor(Number(after.level)||bl));if(al===bl)return Math.max(0,Math.floor(Number(after.exp)||0)-Math.floor(Number(before.exp)||0));let total=Math.max(0,Math.floor(Number(before.need)||0)-Math.floor(Number(before.exp)||0));for(let level=bl+1;level<al;level++){const need=typeof window.effectiveExpNeed==="function"?window.effectiveExpNeed(level,state):typeof expNeed==="function"?expNeed(level):0;total+=Math.max(0,Math.floor(Number(need)||0));}if(after.atCap!==true)total+=Math.max(0,Math.floor(Number(after.exp)||0));return Math.max(0,total);}
- function offlineEnhancementStoneReward(enemy,battleCount,playerLevel){const count=Math.max(0,Math.floor(Number(battleCount)||0));if(!enemy||count<1||typeof expectedMainlineEnhancementStoneReward!=="function")return {basic:0,advanced:0};const expected=expectedMainlineEnhancementStoneReward(enemy,playerLevel);return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:0};}
+ function offlineOverlevelRewardContext(pending,enemyLevelFallback=null){
+  const playerRaw=Number(pending?.playerLevel),enemyRaw=Number(pending?.enemyLevel),recorded=pending?.overlevelContextRecorded===true&&Number.isFinite(playerRaw)&&playerRaw>=1&&Number.isFinite(enemyRaw)&&enemyRaw>=1,playerLevel=recorded?Math.max(1,Math.floor(playerRaw)):Math.max(1,Math.floor(Number(state?.level)||1)),enemyLevel=recorded?Math.max(1,Math.floor(enemyRaw)):Math.max(1,Math.floor(Number(enemyLevelFallback)||1));
+  const multiplier=recorded&&typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(playerLevel,enemyLevel,state):1;
+  return Object.freeze({playerLevel,enemyLevel,multiplier:Number.isFinite(Number(multiplier))?Math.max(1,Number(multiplier)):1,recorded});
+ }
+ function offlineOverlevelIntegerReward(amount,context){
+  const base=Math.max(0,Math.floor(Number(amount)||0));if(!context?.recorded||typeof window.applyReincarnationOverlevelIntegerReward!=="function")return base;
+  return window.applyReincarnationOverlevelIntegerReward(base,context.playerLevel,context.enemyLevel,state);
+ }
+ function offlineEnhancementStoneReward(enemy,battleCount,playerLevel,context=null){
+  const count=Math.max(0,Math.floor(Number(battleCount)||0));if(!enemy||count<1||typeof expectedMainlineEnhancementStoneReward!=="function")return {basic:0,advanced:0};
+  const expected=expectedMainlineEnhancementStoneReward(enemy,playerLevel),multiplier=context?.recorded?Math.max(1,Number(context.multiplier)||1):1;
+  return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*multiplier*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:Math.floor(Math.max(0,Number(expected?.advanced)||0)*multiplier*count*OFFLINE_ENHANCEMENT_STONE_RATE)};
+ }
  function normalizePending(raw){
   const speed=currentCombatSpeed(),phase=currentPhase();if(!isObject(raw)||Number(raw.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION||Number(raw.combatSpeed)!==speed)return null;
   const avg=Math.max(REAL_BATTLE_MIN_MS,Math.min(REAL_BATTLE_MAX_MS,Math.round(Number(raw.avgBattleMs)||DEFAULT_BATTLE_MS))),elapsedRaw=Math.max(0,Number(raw.elapsedRaw)||0),elapsedUsed=Math.min(OFFLINE_MAX_MS,Math.max(0,Number(raw.elapsedUsed)||0)),battles=Math.max(0,Math.min(Math.floor(elapsedUsed/avg),Math.floor(Number(raw.battles)||0)));if(elapsedRaw<OFFLINE_MIN_MS||battles<1)return null;
-  const common={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed:speed,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now())};
+  const playerRaw=Number(raw.playerLevel),enemyRaw=Number(raw.enemyLevel),recorded=raw.overlevelContextRecorded===true&&Number.isFinite(playerRaw)&&playerRaw>=1&&Number.isFinite(enemyRaw)&&enemyRaw>=1;
+  const common={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,combatSpeed:speed,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:Math.max(0,Number(raw.createdAt)||now()),overlevelContextRecorded:recorded};
   if(phase===3){if(Number(raw.world)!==3||raw.targetType!==THIRD_WORLD_TARGET_TYPE)return null;return {...common,world:3,targetType:THIRD_WORLD_TARGET_TYPE};}
-  if(phase===2){const bossIndex=Math.floor(Number(raw.bossIndex)),boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(bossIndex):null;if(Number(raw.world)!==2||raw.targetType!=="boss"||!boss||String(raw.bossId||"")!==String(boss.id||""))return null;return {...common,world:2,targetType:"boss",bossIndex,bossId:boss.id};}
-  const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));if(Number(raw.world)!==1||raw.targetType!=="mapEnemy"||!legalFarmTarget(map,enemy))return null;return {...common,world:1,targetType:"mapEnemy",map,enemy};
+  if(phase===2){const bossIndex=Math.floor(Number(raw.bossIndex)),boss=typeof window.secondWorldBoss==="function"?window.secondWorldBoss(bossIndex):null;if(Number(raw.world)!==2||raw.targetType!=="boss"||!boss||String(raw.bossId||"")!==String(boss.id||""))return null;return {...common,world:2,targetType:"boss",bossIndex,bossId:boss.id,playerLevel:recorded?Math.floor(playerRaw):Math.max(1,Math.floor(Number(state?.level)||1)),enemyLevel:recorded?Math.floor(enemyRaw):Math.max(1,Math.floor(Number(boss.level)||1))};}
+  const map=Math.floor(Number(raw.map)),enemy=Math.floor(Number(raw.enemy));if(Number(raw.world)!==1||raw.targetType!=="mapEnemy"||!legalFarmTarget(map,enemy))return null;const monster=farmEnemyObject({map,enemy});return {...common,world:1,targetType:"mapEnemy",map,enemy,playerLevel:recorded?Math.floor(playerRaw):Math.max(1,Math.floor(Number(state?.level)||1)),enemyLevel:recorded?Math.floor(enemyRaw):Math.max(1,Math.floor(Number(monster?.level)||1))};
  }
- function pendingFromTarget(target,avg,elapsedRaw,elapsedUsed,battles,t){const common={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:target.world,targetType:target.targetType,combatSpeed:target.combatSpeed,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};if(target.world===3)return common;if(target.world===2)return {...common,bossIndex:target.bossIndex,bossId:target.bossId};return {...common,map:target.map,enemy:target.enemy};}
+ function pendingFromTarget(target,avg,elapsedRaw,elapsedUsed,battles,t){
+  const common={sampleVersion:OFFLINE_BATTLE_SAMPLE_VERSION,world:target.world,targetType:target.targetType,combatSpeed:target.combatSpeed,avgBattleMs:avg,elapsedRaw,elapsedUsed,battles,createdAt:t};
+  if(target.world===3)return common;
+  const rewardContext={playerLevel:Math.max(1,Math.floor(Number(target.playerLevel)||Number(state?.level)||1)),enemyLevel:Math.max(1,Math.floor(Number(target.enemyLevel)||1)),overlevelContextRecorded:target.overlevelContextRecorded===true};
+  if(target.world===2)return {...common,...rewardContext,bossIndex:target.bossIndex,bossId:target.bossId};return {...common,...rewardContext,map:target.map,enemy:target.enemy};
+ }
  function buildPendingSettlement(){
   const o=ensureOfflineState(),t=now(),clock=wallClockGuard(o,t);if(clock.blocked||clock.released){if(baseSave)baseSave(false);return null;}const existing=normalizePending(o.pendingSettlement);if(existing)return existing;o.pendingSettlement=null;
   const elapsedRaw=Math.max(0,t-o.lastSettledAt);if(elapsedRaw<OFFLINE_MIN_MS){o.lastSettledAt=t;if(baseSave)baseSave(false);return null;}const target=resolveFarmTarget();if(!target){o.lastSettledAt=t;o.maxObservedWallClock=Math.max(Number(o.maxObservedWallClock)||0,t);if(baseSave)baseSave(false);return {unavailable:true,world:currentPhase(),elapsedRaw,elapsedUsed:Math.min(OFFLINE_MAX_MS,elapsedRaw),createdAt:t,sampleMigration:isObject(o.sampleMigration)?{...o.sampleMigration}:null};}
@@ -155,27 +178,28 @@
   return hits;
  }
  async function grantOfflineRewards(pending,enemy){
-  const count=Math.max(0,Math.floor(Number(pending.battles)||0)),settlementPlayerLevel=Math.max(1,Math.floor(Number(state.level)||1));let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0,eligibleRolls=0,soldCount=0,soldGold=0,saleStones=normalizeEnhancementStoneReward(null);const expBefore=expSnapshot();
+  const count=Math.max(0,Math.floor(Number(pending.battles)||0)),context=offlineOverlevelRewardContext(pending,enemy?.level),rewardPlayerLevel=context.playerLevel;let xpCarry=0,goldCarry=0,convertedCarry=0,totalXp=0,eligibleRolls=0,soldCount=0,soldGold=0,saleStones=normalizeEnhancementStoneReward(null);const expBefore=expSnapshot();
+  const formalGold=offlineOverlevelIntegerReward(goldReward(enemy),context),formalXp=offlineOverlevelIntegerReward(expReward(enemy),context);
   const gear=createGearAccumulator({target:state,reject:item=>{soldCount++;soldGold+=offlineSellValue(item);saleStones=mergeEnhancementStoneRewards(saleStones,enhancementStoneSaleReward(item));}});
   for(let i=0;i<count;i++){
-   goldCarry+=Math.max(0,Number(goldReward(enemy))||0)*OFFLINE_GOLD_RATE;const xpValue=Math.max(0,Number(expReward(enemy))||0)*OFFLINE_EXP_RATE;if(state.level>=MAX_LEVEL)convertedCarry+=xpValue;else{xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}}
+   goldCarry+=formalGold*OFFLINE_GOLD_RATE;const xpValue=formalXp*OFFLINE_EXP_RATE;if(state.level>=MAX_LEVEL)convertedCarry+=xpValue;else{xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}}
    if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;let encounter=null;try{encounter=typeof createMonsterEncounter==="function"?createMonsterEncounter(pending.map,pending.enemy):monsterObj(pending.map,pending.enemy);}catch(_){encounter=null;}if(encounter&&encounter.kind!=="boss"){const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;if(item)gear.consider(item);}}
    if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
-  const finalized=gear.finalize(),directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);state.gold+=directGold+convertedGold+soldGold;const battleStones=offlineEnhancementStoneReward(enemy,count,settlementPlayerLevel),totalStones=mergeEnhancementStoneRewards(battleStones,saleStones);if(totalStones.basic||totalStones.advanced)addEnhancementStones(totalStones.basic,totalStones.advanced);if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
-  return {world:1,totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleStones.basic,saleBasic:saleStones.basic,saleAdvanced:saleStones.advanced,totalBasic:totalStones.basic,totalAdvanced:totalStones.advanced},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount,soldGold,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
+  const finalized=gear.finalize(),directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);state.gold+=directGold+convertedGold+soldGold;const battleStones=offlineEnhancementStoneReward(enemy,count,rewardPlayerLevel,context),totalStones=mergeEnhancementStoneRewards(battleStones,saleStones);if(totalStones.basic||totalStones.advanced)addEnhancementStones(totalStones.basic,totalStones.advanced);if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
+  return {world:1,totalXp,totalGold:directGold+convertedGold+soldGold,directGold,convertedGold,overlevelRewardMultiplier:context.multiplier,overlevelContextRecorded:context.recorded,expProgress:{before:expBefore,after:expSnapshot()},enhancement:{battleBasic:battleStones.basic,battleAdvanced:battleStones.advanced,saleBasic:saleStones.basic,saleAdvanced:saleStones.advanced,totalBasic:totalStones.basic,totalAdvanced:totalStones.advanced},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount,soldGold,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
  }
  async function grantSecondWorldOfflineRewards(pending,boss){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0)),bossIndex=Math.floor(Number(pending.bossIndex));if(!boss||bossIndex<0||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function")throw new Error("Second-world offline reward owner unavailable");
-  const expBefore=expSnapshot(),soldItems=[];let xpCarry=0,darkMatterCarry=0,eligibleRolls=0;const gear=createGearAccumulator({target:state,reject:item=>soldItems.push(item)});
+  const context=offlineOverlevelRewardContext(pending,boss.level),formalXp=offlineOverlevelIntegerReward(window.secondWorldBossExpReward(bossIndex,false,state),context),formalDarkMatter=offlineOverlevelIntegerReward(window.secondWorldBossDarkMatterReward(bossIndex,false),context),formalDarkEnergy=offlineOverlevelIntegerReward(1,context),expBefore=expSnapshot(),soldItems=[];let xpCarry=0,darkMatterCarry=0,eligibleRolls=0;const gear=createGearAccumulator({target:state,reject:item=>soldItems.push(item)});
   for(let i=0;i<count;i++){
-   const xpValue=Math.max(0,Number(window.secondWorldBossExpReward(bossIndex,false,state))||0)*OFFLINE_EXP_RATE;xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}darkMatterCarry+=Math.max(0,Number(window.secondWorldBossDarkMatterReward(bossIndex,false))||0)*OFFLINE_GOLD_RATE;
+   const xpValue=formalXp*OFFLINE_EXP_RATE;xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}darkMatterCarry+=formalDarkMatter*OFFLINE_GOLD_RATE;
    if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;const item=window.makeSecondWorldEquipmentForBoss(bossIndex,{state});if(item)gear.consider(item);}if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
-  const finalized=gear.finalize(),directDarkMatter=Math.floor(darkMatterCarry),directDarkEnergy=Math.floor(count*OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE);state.secondWorld.darkMatter=Math.max(0,Math.floor(Number(state.secondWorld.darkMatter)||0))+directDarkMatter;state.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(state.secondWorld.darkEnergy)||0))+directDarkEnergy;
+  const finalized=gear.finalize(),directDarkMatter=Math.floor(darkMatterCarry),directDarkEnergy=Math.floor(count*formalDarkEnergy*OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE);state.secondWorld.darkMatter=Math.max(0,Math.floor(Number(state.secondWorld.darkMatter)||0))+directDarkMatter;state.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(state.secondWorld.darkEnergy)||0))+directDarkEnergy;
   let sale={ok:true,quote:{darkMatter:0,darkEnergy:0,gold:0,amount:0},count:0};if(soldItems.length){if(typeof window.settleEquipmentSaleBatch!=="function")throw new Error("Second-world offline sale owner unavailable");sale=window.settleEquipmentSaleBatch(soldItems,{state});if(!sale?.ok)throw new Error("Second-world offline equipment sale failed");}if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
   const saleDarkMatter=Math.max(0,Math.floor(Number(sale?.quote?.darkMatter)||0)),saleDarkEnergy=Math.max(0,Math.floor(Number(sale?.quote?.darkEnergy)||0)),expAfter=expSnapshot(),totalXp=expProgressDelta(expBefore,expAfter);
-  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
+  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,overlevelRewardMultiplier:context.multiplier,overlevelContextRecorded:context.recorded,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
  }
  async function grantThirdWorldOfflineRewards(pending){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));if(typeof window.makeThirdWorldEquipmentDrops!=="function")throw new Error("Third-world offline equipment owner unavailable");
@@ -243,9 +267,10 @@
  window.beginSecondWorldOfflineBattleSample=beginSecondWorldOfflineBattleSample;
  window.finishSecondWorldOfflineBattleSample=finishSecondWorldOfflineBattleSample;
  window.SECOND_WORLD_OFFLINE_SAMPLE_VERSION=1;
- window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=1;
+ window.SECOND_WORLD_OFFLINE_SETTLEMENT_VERSION=2;
  window.THIRD_WORLD_OFFLINE_SETTLEMENT_VERSION=1;
  window.OFFLINE_THREE_ERA_SETTLEMENT_VERSION=1;
+ window.OFFLINE_REINCARNATION_OVERLEVEL_VERSION=OFFLINE_REINCARNATION_OVERLEVEL_VERSION;
  window.OFFLINE_GEAR_ACCUMULATOR_VERSION=OFFLINE_GEAR_ACCUMULATOR_VERSION;
  window.OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION=OFFLINE_GEAR_ACCUMULATOR_TARGET_VERSION;
  window.THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION=THIRD_WORLD_OFFLINE_ALLOWLIST_VERSION;
@@ -258,12 +283,15 @@
  window.THIRD_WORLD_OFFLINE_PERFORMANCE_INTEGRITY=runThirdWorldOfflinePerformanceIntegrity();
  window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE=OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE;
  window.OFFLINE_THIRD_WORLD_GEAR_RATE=OFFLINE_GEAR_RATE;
+ window.grantFirstWorldOfflineRewards=grantOfflineRewards;
  window.grantSecondWorldOfflineRewards=grantSecondWorldOfflineRewards;
  window.grantThirdWorldOfflineRewards=grantThirdWorldOfflineRewards;
  window.resolveOfflineFarmTarget=resolveFarmTarget;
+ window.normalizeOfflinePendingSettlement=normalizePending;
+ window.offlineOverlevelRewardContext=offlineOverlevelRewardContext;
  window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
- window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=3;
+ window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=4;
  window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION=1;
  window.THIRD_WORLD_OFFLINE_SETTLEMENT_INTEGRITY=validateThirdWorldOfflineSettlement();
  if(!window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY.passed)console.error("[文明戰線] Offline gear accumulator integrity error",window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY.errors);
