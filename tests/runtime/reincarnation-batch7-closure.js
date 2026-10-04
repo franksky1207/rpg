@@ -47,13 +47,11 @@ const assert=require("assert");
    const readOnlyBefore=JSON.stringify(first),auSnapshot=window.gmAlternateUniverseFormalSnapshot(first),readOnlyAfter=JSON.stringify(first);
 
    const originalState=state,originalSave=window.save,originalBreakthrough=window.gmTestBreakthroughLevelValue?.()??0;
-   let saveCalls=0,sandboxSaveCalls=0,sandboxStable=false,refreshFormalStable=false,summary0="",summary1="",summaryAfterChange="",html0="",html1="",htmlAfterChange="",benchmark=null,session637=null,registered=[],liveSummaryAfterChange="";
+   let saveCalls=0,sandboxSaveCalls=0,sandboxStable=false,uiRunFormalStable=false,refreshFormalStable=false,summary0="",summary1="",summaryAfterChange="",html0="",html1="",htmlAfterChange="",benchmark=null,directBenchmark=null,session637=null,registered=[],liveSummaryAfterChange="";
    try{
     state=clone(first);
-    window.save=()=>{saveCalls++;return true;};
     window.gmPowerBenchmarkClearAllResults();
     window.gmPowerBenchmarkInvalidateSnapshot();
-    saveCalls=0;
     html0=window.gmPowerBenchmarkHtml();summary0=window.gmPowerBenchmarkSummaryText();
     const host=document.createElement("div");host.id="batch7ClosureHost";host.innerHTML=html0;document.body.appendChild(host);
     const formalBeforeSandbox=JSON.stringify(state);
@@ -62,10 +60,16 @@ const assert=require("assert");
     window.gmAlternateUniverseBenchmarkSetDepth(637);
     session637=window.gmAlternateUniverseBenchmarkSession();
     window.gmAlternateUniverseBenchmarkSetDepth(1);
-    benchmark=await window.gmAlternateUniverseBenchmarkRunSelected();
+
+    window.save=()=>{saveCalls++;return true;};
+    directBenchmark=await window.gmRunAlternateUniverseBenchmark({depth:1,runs:100});
     sandboxSaveCalls=saveCalls;
-    html1=window.gmPowerBenchmarkHtml();summary1=window.gmPowerBenchmarkSummaryText();
     window.save=originalSave;
+
+    const formalBeforeUiRun=JSON.stringify(state);
+    benchmark=await window.gmAlternateUniverseBenchmarkRunSelected();
+    uiRunFormalStable=formalBeforeUiRun===JSON.stringify(state);
+    html1=window.gmPowerBenchmarkHtml();summary1=window.gmPowerBenchmarkSummaryText();
     const formalBeforeRefresh=JSON.stringify(state);
     window.gmSetTestBreakthroughLevel(38,true);
     refreshFormalStable=formalBeforeRefresh===JSON.stringify(state);
@@ -81,7 +85,7 @@ const assert=require("assert");
     versions:{auBenchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,auIntegration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,modeState:window.GM_POWER_BENCHMARK_MODE_STATE_VERSION},
     install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,modeIds:Array.from(window.GM_POWER_BENCHMARK_MODE_IDS||[]),
     firstGrant,firstBefore,firstReset,life1AfterReset,life1Grant,life1Repeat,life1Late,access,overlevel,mirrorBefore,voidBefore,life2Reset,life2AfterReset,life2Grant,life2Repeat,life2Down,
-    readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,sandboxSaveCalls,sandboxStable,refreshFormalStable,html0,summary0,session637,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,liveSummaryAfterChange,registered,
+    readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,sandboxSaveCalls,sandboxStable,uiRunFormalStable,refreshFormalStable,html0,summary0,session637,directBenchmark,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,liveSummaryAfterChange,registered,
     benchmarkResultAfterChange:window.gmAlternateUniverseBenchmarkResultSnapshot?.()||null
    };
   });
@@ -113,7 +117,9 @@ const assert=require("assert");
   assert.equal(report.readOnlyStable,true,"GM AU snapshot must be read-only.");assert.equal(report.auSnapshot.lifeId,2);
 
   assert.equal(report.sandboxStable,true,"GM test breakthrough changes must not alter formal state.");
-  assert.equal(report.sandboxSaveCalls,0,"GM test sandbox and AU benchmark must not call formal save.");
+  assert.equal(report.sandboxSaveCalls,0,"Detached AU benchmark engine and GM test breakthrough setter must not call formal save.");
+  assert.equal(report.directBenchmark.formalStateStable,true);assert.equal(report.directBenchmark.completed,100);
+  assert.equal(report.uiRunFormalStable,true,"Using the visible AU benchmark controls must not mutate formal state.");
   assert.equal(report.refreshFormalStable,true,"Refreshing the GM test UI after a sandbox change must not mutate formal state.");
   assert.ok(report.html0.includes("異宇宙測試"));assert.ok(report.html0.includes("王編號")&&report.html0.includes("上一隻")&&report.html0.includes("下一隻"));
   assert.ok(!report.html0.includes("特性 A")&&!report.html0.includes("檢查 21 組雙特性"),"Internal trait diagnostics must not clutter the GM benchmark UI.");
