@@ -13,8 +13,8 @@
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
 - Batch5 後續架構優化共 4 批已全部完成：第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」、第4批「完整端到端 regression 封箱」。
-- 第6大批已開始；6-1「轉生越級 Online 收益」已完成，6-2～6-4 待做。
-- 目前主要施工剩餘：Batch6-2～6-4、Batch7。
+- 第6大批已開始；6-1「轉生越級 Online 收益」與 6-2「一鍵平均專精／平均最大強化」已完成，6-3～6-5 待做。
+- 目前主要施工剩餘：Batch6-3～6-5、Batch7。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -76,13 +76,25 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - W2 Online：`secondWorldMainlineRewardPreview()` 在原 EXP／暗物質／暗能量計算完成後才套共用倍率；正式 settlement 依 preview 的最終暗能量數量入帳，不再寫死 +1。首輪 preview 與 settlement 數值維持原值。
 - 裝備出售 owner `equipmentSaleQuote()`／出售價值公式完全不接越級倍率。
 - 新增 `tests/runtime/reincarnation-overlevel-batch6-1-integrity.js`，固定驗證首輪隔離、W1 Lv.100→Lv.500 的 13×、W2 Lv.500→Lv.1000 的 16×、ceil、出售排除與 W2 正式 settlement。
-- 此批沒有新增 Save Schema／存檔欄位，不需要 migration；Offline 尚未套用，留待 6-2。
+- 此批沒有新增 Save Schema／存檔欄位，不需要 migration；Offline 尚未套用，留待後續第6-3批。
+
+## 2026-10-04 已完成：第6-2批（一鍵平均專精／平均最大強化）
+
+- 新增唯一共用 `playerbatchupgrades.js`；首輪與轉生輪完全走同一套批次規劃與結算，不以 `reincarnation.count` 分叉。
+- 專精「一鍵平均提升」只在第一紀元顯示與可用；每次優先提升目前最低等級的專精，沿用既有 `SPECIALIZATION_KEYS`、`SPECIALIZATION_MAX_LEVEL=60`、`specializationUpgradeCost()` 與金幣資源。第二紀元因進入條件已要求 8 項 Lv.60，不再提供提升按鈕。
+- 強化「平均最大強化」在第一、第二紀元共用同一套演算法；每次優先提升目前最低強化欄位，第一紀元沿用 +0～+20 與基礎／進階強化石，第二紀元沿用 +20～+40 與暗物質／暗能量，正式成本與上下限直接讀 `enhancementUpgradeCost()`／`effectiveEnhancementCap()`／正式 state owner。
+- 高維紀元不顯示這兩個批次提升按鈕；印記與文明等級不納入本功能。
+- 批次操作只新增操作便利性，不修改任何首輪專精／強化成本公式；先建立完整 plan、確認後再重算一次，最後一次正式存檔，若 save 失敗整批 rollback。
+- UI 直接放在現有專精總覽與強化總覽，不新增轉生專用頁面；既有逐項升級按鈕完全保留。
+- 新增 `tests/runtime/player-batch-upgrades-batch6-2-integrity.js`，固定驗證首輪／轉生同結果、專精僅 W1、強化 W1／W2、W3 禁用、資源扣除與 save rollback。
+- 自我檢查移除了一份未載入且功能重複的 `growthbatchui.js` 草稿，避免同功能雙 owner；正式唯一 owner 為 `playerbatchupgrades.js`。
+- 此批沒有新增 Save Schema／存檔欄位，不需要 migration。
 
 ---
 
 # 目前真正 pending
 
-## 1. 第6-2批：越級 Offline 共用正式 multiplier owner
+## 1. 第6-3批：越級 Offline 共用正式 multiplier owner
 
 正式倍率沿用第6-1批唯一 owner：
 
@@ -98,7 +110,7 @@ Offline 套用：
 - 裝備出售收入／出售轉換資源不套倍率。
 - online／offline 必須共用第6-1批 `reincarnationOverlevelRewardMultiplier()`／`applyReincarnationOverlevelIntegerReward()`，不得複製公式。
 
-## 2. 第6-3批：首次轉生後四大副本永久解鎖
+## 2. 第6-4批：首次轉生後四大副本永久解鎖
 
 - 懸賞、競技場、鏡像、虛空首次轉生後永久可進。
 - 完全沿用現有首輪副本首頁／各模式 UI，不新增轉生專用介面。
@@ -109,10 +121,11 @@ Offline 套用：
 - W2 Arena downward coverage 已由 Batch5-3 接上；W1 Arena 尚待補齊。
 - 原 97% 晉階驗收保留。
 
-## 3. 第6-4批：Batch6 完整封箱 Regression
+## 3. 第6-5批：Batch6 完整封箱 Regression
 
 - 首輪 reward 計算隔離。
 - Online／Offline 同倍率 owner 與同目標 identity。
+- 一鍵專精／強化首輪與轉生共用 owner，專精僅 W1、強化 W1／W2。
 - Daily 保留、Mirror／Void 保留、W1／W2 Arena reset。
 - 四副本入口永久資格、Arena key boss downward coverage、97% 晉階規則。
 - 裝備出售與出售轉換資源不得被越級倍率污染。
@@ -146,7 +159,7 @@ Offline 套用：
 第3批：異宇宙最小可玩版                       完成
 第4批：異宇宙完整化與平衡測試                 完成
 第5批：第一、第二、第三紀元轉生後重征服規則   完成（5-1～5-5）
-第6批：越級 EXP／資源／離線＋四副本永久解鎖  進行中（6-1 完成）
+第6批：越級 EXP／資源／離線＋共用批次成長＋四副本永久解鎖  進行中（6-1、6-2 完成）
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
