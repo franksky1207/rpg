@@ -82,7 +82,6 @@
     return {ok:true,steps:preview.steps};
    });
    if(!result.ok){
-    if(typeof render==="function")render();
     if(options.silent!==true)alert(result.reason==="save"?"存檔失敗，已回復一鍵專精提升前狀態。":"一鍵專精提升失敗，狀態已安全回復。");
     return result;
    }
@@ -111,7 +110,6 @@
     return {ok:true,steps:preview.steps};
    });
    if(!result.ok){
-    if(typeof render==="function")render();
     if(options.silent!==true)alert(result.reason==="save"?"存檔失敗，已回復平均最大強化前狀態。":"平均最大強化失敗，狀態已安全回復。");
     return result;
    }
