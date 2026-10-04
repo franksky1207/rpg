@@ -1,6 +1,6 @@
 (function(){
- const VERSION=1;
- const MODE_IDS=new Set(["map","special","bounty","arena","void","mirror","calamity"]);
+ const VERSION=2;
+ const MODE_IDS=new Set(["map","special","bounty","arena","void","mirror","calamity","alternate"]);
  const openModes=new Set();
  function toggle(id,open){const key=String(id||"");if(!MODE_IDS.has(key))return false;if(open)openModes.add(key);else openModes.delete(key);return true;}
  function decorate(html){
@@ -23,5 +23,6 @@
  window.gmPowerBenchmarkModeIsOpen=id=>openModes.has(String(id||""));
  window.gmPowerBenchmarkOpenModes=()=>Array.from(openModes);
  window.GM_POWER_BENCHMARK_MODE_STATE_VERSION=VERSION;
+ window.GM_POWER_BENCHMARK_MODE_IDS=Object.freeze(Array.from(MODE_IDS));
  install();
 })();
