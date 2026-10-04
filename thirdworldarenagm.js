@@ -1,8 +1,9 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const CORE_DELEGATION_VERSION=1;
  const FORMAL_SNAPSHOT_VERSION=1;
  const FORMAL_OPTIONS_VERSION=1;
+ const RESULT_SNAPSHOT_VERSION=2;
  const baseHtml=window.gmArena5TestHtml;
  const baseSetWorld=window.gmArena5SetWorld;
  const baseTestWorld=window.gmArena5TestWorld;
@@ -96,7 +97,11 @@
  window.gmArenaW3SetMode=function(value){mode=String(value)==="varied"?"varied":"fixed";resultHtml="";results=[];if(typeof render==="function")render();return mode;};
  window.gmArenaW3SetBoss=function(value){bossChoice=String(value)==="all"?"all":String(whole(value,0,9));return bossChoice;};
  window.gmArenaW3Run500=run500;
- window.gmArena5ResultSnapshot=function(){const legacy=typeof baseSnapshot==="function"?baseSnapshot():null,legacyRows=Array.isArray(legacy)?legacy:(legacy?[legacy]:[]);return legacyRows.concat(results.map(row=>JSON.parse(JSON.stringify(row))));};
+ window.gmArena5ResultSnapshot=function(){
+  const legacy=typeof baseSnapshot==="function"?baseSnapshot():null;
+  const legacyRows=Array.isArray(legacy)?legacy:(legacy?[legacy]:[]),rows=legacyRows.concat(results.map(row=>JSON.parse(JSON.stringify(row))));
+  return rows.length?rows:null;
+ };
  window.gmClearArena5Result=function(){resultHtml="";results=[];if(typeof baseClear==="function")baseClear();return true;};
  if(typeof baseSummaryText==="function"){
   window.gmPowerBenchmarkSummaryText=function(){
@@ -109,6 +114,7 @@
  window.GM_THIRD_WORLD_ARENA_CORE_DELEGATION_VERSION=CORE_DELEGATION_VERSION;
  window.GM_THIRD_WORLD_ARENA_FORMAL_SNAPSHOT_VERSION=FORMAL_SNAPSHOT_VERSION;
  window.GM_THIRD_WORLD_ARENA_FORMAL_OPTIONS_VERSION=FORMAL_OPTIONS_VERSION;
+ window.GM_THIRD_WORLD_ARENA_RESULT_SNAPSHOT_VERSION=RESULT_SNAPSHOT_VERSION;
  window.GM_THIRD_WORLD_ARENA_500_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_ALL_BOSSES_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_SUMMARY_VERSION=1;
