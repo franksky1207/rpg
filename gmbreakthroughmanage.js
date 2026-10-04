@@ -24,7 +24,7 @@
   return Object.freeze({ok:true,total:value,count,currentLife,currentLifeMax:10});
  }
  function blankMilestones(currentLife){
-  const earned=Math.max(0,Math.min(10,Math.floor(Number(currentLife)||0));
+  const earned=Math.max(0,Math.min(10,Math.floor(Number(currentLife)||0)));
   const rows=milestones();
   return Object.fromEntries(rows.map((level,index)=>[String(level),index<earned]));
  }
