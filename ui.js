@@ -208,7 +208,11 @@ function adventureCombatPage(){
  const s=playerCombatStats(),need=progress.need,hpPct=s.hp?state.hp/s.hp*100:0,expPct=progress.percent;
  const continuous=window.activeMainBattleContext?.continuous===true||combatTotal===0||combatTotal===CONTINUOUS_BATTLE_COUNT;
  const requested=window.activeMainBattleContext?.exitRequested===true;
- const head=continuous?`連續戰鬥・第 ${Math.max(1,Number(combatRound)||1)} 場`:`單場戰鬥`;
+ const speedOptions=typeof window.playerCombatSpeedOptions==="function"?window.playerCombatSpeedOptions(state).map(Number):[1];
+ const effectiveSpeed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
+ const displaySpeed=[1,1.5,2].includes(effectiveSpeed)?effectiveSpeed:1;
+ const speedText=speedOptions.includes(1.5)||displaySpeed!==1?`｜${displaySpeed}×`:"";
+ const head=(continuous?`連續戰鬥・第 ${Math.max(1,Number(combatRound)||1)} 場`:`單場戰鬥`)+speedText;
  const stop=continuous?`<div class="continuous-stop-wrap"><button id="continuousBattleStopBtn" class="btn danger" onclick="requestContinuousBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
  return `<section class="combat-screen"><div class="combat-head">${head}</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">${currentWorldResource().label} ${currentWorldResource().amount.toLocaleString()}${currentWorldResource().secondaryLabel?`　${currentWorldResource().secondaryLabel} ${currentWorldResource().secondaryAmount.toLocaleString()}`:""}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}</section>`;
 }
@@ -373,7 +377,8 @@ function redeemGear(i){const r=redeemLostGear(i);if(!r.ok)return alert(r.reason)
 function settingsPage(){
  const s=state.settings,name=escapePlayerName(currentPlayerName());
  const speed=typeof window.playerCombatSpeed==="function"?window.playerCombatSpeed():1;
- const speedHtml=secondWorldActive()?`<div class="setting-row combat-speed-setting"><div><div style="margin-bottom:6px">戰鬥速度</div><div class="muted">宇宙紀元已解鎖 1.5×；可隨時切回標準速度。</div></div><div class="combat-speed-options"><label class="btn ${Number(speed)===1?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1" ${Number(speed)===1?"checked":""}> 1×　標準速度</label><label class="btn ${Number(speed)===1.5?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1.5" ${Number(speed)===1.5?"checked":""}> 1.5×　加速戰鬥</label></div></div>`:"";
+ const speedOptions=typeof window.playerCombatSpeedOptions==="function"?window.playerCombatSpeedOptions(state).map(Number):[1];
+ const speedHtml=speedOptions.includes(1.5)?`<div class="setting-row combat-speed-setting"><div><div style="margin-bottom:6px">戰鬥速度</div><div class="muted">已解鎖 1.5×；可隨時切回標準速度。</div></div><div class="combat-speed-options"><label class="btn ${Number(speed)===1?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1" ${Number(speed)===1?"checked":""}> 1×　標準速度</label><label class="btn ${Number(speed)===1.5?"blue":""}"><input type="radio" name="playerCombatSpeed" data-player-combat-speed="1.5" ${Number(speed)===1.5?"checked":""}> 1.5×　加速戰鬥</label></div></div>`:"";
  const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
  const autoTitle=third?"自動處理":"自動出售";
  const body=`<div class="card"><h2 id="settingsTitle">設定</h2><div class="muted">連續點擊「設定」3 下可開啟管理功能。</div>
