@@ -1,5 +1,6 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
+ const TRANSACTION_VERSION=1;
  let busy=false;
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
@@ -13,13 +14,12 @@
   if(s?.secondWorld?.entered===true)return 2;
   return 1;
  }
- function snapshotState(){try{return JSON.parse(JSON.stringify(currentState()));}catch(_){return null;}}
- function restoreState(snapshot){if(!snapshot||typeof snapshot!=="object")return false;state=snapshot;return true;}
- function commitOrRollback(snapshot){
-  const ok=typeof save==="function"&&save(false)===true;
-  if(ok)return true;
-  restoreState(snapshot);
-  return false;
+ function executeTransaction(label,mutate){
+  if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"transaction-owner-missing",rolledBack:false,transaction:null};
+  const transaction=window.runSettlementTransaction({label,mutate});
+  if(transaction?.ok===true)return {ok:true,reason:"",rolledBack:false,transaction};
+  const txReason=String(transaction?.reason||"transaction-failed"),reason=txReason==="save-failed"||txReason==="save-exception"?"save":txReason;
+  return {ok:false,reason,rolledBack:transaction?.rolledBack===true,transaction};
  }
  function balancedPlan(keys,startLevels,cap,wallet,quote,canAfford,spend){
   const levels=Object.fromEntries(keys.map(key=>[key,Math.max(0,Math.floor(Number(startLevels[key])||0))]));
@@ -76,17 +76,19 @@
   try{
    preview=specializationPreview();
    if(!preview.available||preview.steps<=0)return {ok:false,reason:"state-changed"};
-   const snapshot=snapshotState();if(!snapshot)return {ok:false,reason:"snapshot"};
-   state.gold=preview.goldAfter;
-   Object.entries(preview.levelsAfter).forEach(([key,level])=>{state.specializations[key]=level;});
-   if(!commitOrRollback(snapshot)){
+   const result=executeTransaction("player-batch-specialization",root=>{
+    root.gold=preview.goldAfter;
+    Object.entries(preview.levelsAfter).forEach(([key,level])=>{root.specializations[key]=level;});
+    return {ok:true,steps:preview.steps};
+   });
+   if(!result.ok){
     if(typeof render==="function")render();
-    if(options.silent!==true)alert("存檔失敗，已回復一鍵專精提升前狀態。");
-    return {ok:false,reason:"save",rolledBack:true};
+    if(options.silent!==true)alert(result.reason==="save"?"存檔失敗，已回復一鍵專精提升前狀態。":"一鍵專精提升失敗，狀態已安全回復。");
+    return result;
    }
    if(typeof render==="function")render();
    if(options.silent!==true)alert(`一鍵平均提升完成：共提升 ${preview.steps} 級，消耗金幣 ${preview.goldSpent.toLocaleString()}。`);
-   return {ok:true,...preview};
+   return {ok:true,...preview,transaction:result.transaction};
   }finally{busy=false;}
  }
 
@@ -101,19 +103,21 @@
   try{
    preview=enhancementPreview();
    if(!preview.available||preview.steps<=0)return {ok:false,reason:"state-changed"};
-   const snapshot=snapshotState();if(!snapshot)return {ok:false,reason:"snapshot"};
-   Object.entries(preview.levelsAfter).forEach(([key,level])=>{state.enhancement.levels[key]=level;});
-   if(preview.phase===2){state.secondWorld.darkMatter=preview.resourcesAfter.darkMatter;state.secondWorld.darkEnergy=preview.resourcesAfter.darkEnergy;}
-   else{state.enhancement.basicStones=preview.resourcesAfter.basic;state.enhancement.advancedStones=preview.resourcesAfter.advanced;}
-   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else if(typeof normalizeHP==="function")normalizeHP();
-   if(!commitOrRollback(snapshot)){
+   const result=executeTransaction("player-batch-enhancement",root=>{
+    Object.entries(preview.levelsAfter).forEach(([key,level])=>{root.enhancement.levels[key]=level;});
+    if(preview.phase===2){root.secondWorld.darkMatter=preview.resourcesAfter.darkMatter;root.secondWorld.darkEnergy=preview.resourcesAfter.darkEnergy;}
+    else{root.enhancement.basicStones=preview.resourcesAfter.basic;root.enhancement.advancedStones=preview.resourcesAfter.advanced;}
+    if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else if(typeof normalizeHP==="function")normalizeHP();
+    return {ok:true,steps:preview.steps};
+   });
+   if(!result.ok){
     if(typeof render==="function")render();
-    if(options.silent!==true)alert("存檔失敗，已回復平均最大強化前狀態。");
-    return {ok:false,reason:"save",rolledBack:true};
+    if(options.silent!==true)alert(result.reason==="save"?"存檔失敗，已回復平均最大強化前狀態。":"平均最大強化失敗，狀態已安全回復。");
+    return result;
    }
    if(typeof render==="function")render();
    if(options.silent!==true)alert(`平均最大強化完成：共強化 ${preview.steps} 次。`);
-   return {ok:true,...preview};
+   return {ok:true,...preview,transaction:result.transaction};
   }finally{busy=false;}
  }
 
@@ -139,6 +143,7 @@
  }
 
  window.PLAYER_BATCH_UPGRADE_VERSION=VERSION;
+ window.PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION=TRANSACTION_VERSION;
  window.balancedUpgradePlan=balancedPlan;
  window.specializationBalancedUpgradePreview=specializationPreview;
  window.enhancementBalancedUpgradePreview=enhancementPreview;
