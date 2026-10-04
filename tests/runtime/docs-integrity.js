@@ -30,7 +30,8 @@ assert(pending.includes("Batch5 後續架構優化共 4 批已全部完成")&&pe
 assert(pending.includes("第6-1批（轉生越級 Online 收益）")&&pending.includes("reincarnationoverlevelrewards.js")&&pending.includes("首輪 `count=0`")&&pending.includes("ceil(base × M)"),"Pending 必須同步 Batch6-1 共用越級 owner、首輪隔離與 ceil 規則。");
 assert(pending.includes("第6-2批（一鍵平均專精／平均最大強化）")&&pending.includes("playerbatchupgrades.js")&&pending.includes("專精「一鍵平均提升」只在第一紀元")&&pending.includes("強化「平均最大強化」在第一、第二紀元"),"Pending 必須同步 Batch6-2 共用批次成長 owner 與紀元範圍。");
 assert(pending.includes("第6-3批（轉生越級 Offline 收益）")&&pending.includes("offlineprogress.js")&&pending.includes("playerLevel / enemyLevel")&&pending.includes("舊 pending")&&pending.includes("W3 Offline 完全不接越級倍率"),"Pending 必須同步 Batch6-3 Offline 共用越級 owner、sample identity 與舊 pending 相容策略。");
-assert(pending.includes("第6-4批：首次轉生後四大副本永久解鎖")&&pending.includes("第6-5批：Batch6 完整封箱 Regression"),"Pending 必須保留 Batch6-4～6-5 後續施工範圍。");
+assert(pending.includes("第6-4批（首次轉生後四大副本永久解鎖）")&&pending.includes("reincarnationdungeonaccess.js")&&pending.includes("firstWorldRerunKeyBossCoverage()")&&pending.includes("coverage 0／6／10 對應 rank cap 1／6／10")&&pending.includes("首輪高維紀元仍維持「懸賞戰關閉」"),"Pending 必須同步 Batch6-4 四副本永久解鎖、W1 Arena downward coverage 與首輪隔離。");
+assert(pending.includes("第6-5批：Batch6 完整封箱 Regression")&&!pending.includes("## 1. 第6-4批：首次轉生後四大副本永久解鎖"),"Pending 必須只保留 Batch6-5 作為第6批尚未完成施工範圍。");
 assert(pending.includes("reincarnation-rerun-batch5-e2e-regression.js")&&pending.includes("W1／W2／W3 Fast Catch-up"),"Pending 必須記錄 Batch5 第4批端到端 regression 與 Fast Catch-up 封箱範圍。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
