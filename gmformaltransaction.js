@@ -1,8 +1,9 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const RESOURCE_VERSION=1;
  const DUNGEON_VERSION=1;
  const DAILY_RESET_VERSION=1;
+ const ENHANCEMENT_VERSION=1;
 
  function formalPhase(target=state){
   if(typeof window.currentWorldPhase==="function"){
@@ -46,6 +47,53 @@
   return {ok:true,kind,value:amount,phase};
  }
  function commitResource(kind,value){return run(`gm-resource-${kind}`,live=>applyResource(kind,value,live));}
+
+ function enhancementSlots(){
+  const source=Array.isArray(window.ENHANCEMENT_SLOTS)?window.ENHANCEMENT_SLOTS:[];
+  return source.map(String).filter(Boolean);
+ }
+ function enhancementRange(target=state){
+  const min=typeof window.effectiveEnhancementMin==="function"?Math.max(0,Math.floor(Number(window.effectiveEnhancementMin(target))||0)):0;
+  const max=typeof window.effectiveEnhancementCap==="function"?Math.max(min,Math.floor(Number(window.effectiveEnhancementCap(target))||min)):Math.max(min,Math.floor(Number(window.ENHANCEMENT_MAX_LEVEL)||20));
+  return Object.freeze({min,max});
+ }
+ function applyEnhancementLevels(values,target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  const slots=enhancementSlots();if(!slots.length)return {ok:false,reason:"enhancement-slots-missing"};
+  if(typeof window.normalizeEnhancementState!=="function")return {ok:false,reason:"enhancement-owner-missing"};
+  window.normalizeEnhancementState(target);
+  const range=enhancementRange(target),next={};
+  for(const type of slots){
+   const raw=Number(values?.[type]);
+   if(!Number.isFinite(raw)||!Number.isInteger(raw)||raw<range.min||raw>range.max)return {ok:false,reason:"invalid-enhancement-level",type,value:values?.[type],min:range.min,max:range.max};
+   next[type]=raw;
+  }
+  if(!target.enhancement||typeof target.enhancement!=="object"||!target.enhancement.levels||typeof target.enhancement.levels!=="object")return {ok:false,reason:"enhancement-state-missing"};
+  slots.forEach(type=>{target.enhancement.levels[type]=next[type];});
+  window.normalizeEnhancementState(target);
+  return {ok:true,levels:Object.freeze({...next}),min:range.min,max:range.max,phase:formalPhase(target)};
+ }
+ function commitEnhancementLevels(values){return run("gm-enhancement-levels",live=>applyEnhancementLevels(values,live));}
+ function enhancementValuesFromUi(target=state){
+  const values={};
+  enhancementSlots().forEach(type=>{
+   const current=Math.floor(Number(target?.enhancement?.levels?.[type])||0),el=document.getElementById(`gmEnhance-manage-${type}`);
+   values[type]=Number(el?el.value:current);
+  });
+  return values;
+ }
+ function installEnhancementUiCommit(){
+  const handler=function(){
+   const tx=commitEnhancementLevels(enhancementValuesFromUi(state));
+   if(!tx?.ok){alert(`強化等級更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+   if(typeof render==="function")render();
+   alert("強化等級已更新。");
+   return true;
+  };
+  handler.__gmFormalTransactionVersion=ENHANCEMENT_VERSION;
+  window.gmApplyEnhancementLevels=handler;
+  return true;
+ }
 
  function ensureDungeonTarget(target){
   if(!target||typeof target!=="object")return null;
@@ -96,22 +144,33 @@
   if(applyResource("dark-matter",8,w2)?.ok!==true||applyResource("dark-energy",7,w2)?.ok!==true||w2.secondWorld.darkMatter!==8||w2.secondWorld.darkEnergy!==7)errors.push({code:"RESOURCE_W2"});
   if(applyResource("dimensional-strings",6,w3)?.ok!==true||w3.thirdWorld.dimensionalStrings!==6)errors.push({code:"RESOURCE_W3"});
   if(applyResource("gold",5,w2)?.ok!==false||applyResource("dark-matter",5,w3)?.ok!==false)errors.push({code:"RESOURCE_PHASE_GUARD"});
+  const makeEnhancement=(phase)=>({secondWorld:{entered:phase>=2},thirdWorld:{entered:phase>=3},enhancement:{basicStones:0,advancedStones:0,levels:{weapon:phase>=3?40:phase===2?20:0,helmet:phase>=3?40:phase===2?20:0,armor:phase>=3?40:phase===2?20:0,shoes:phase>=3?40:phase===2?20:0,accessory:phase>=3?40:phase===2?20:0}}});
+  const e1=makeEnhancement(1),e2=makeEnhancement(2),e3=makeEnhancement(3),slots=enhancementSlots();
+  const values1=Object.fromEntries(slots.map(type=>[type,20])),values2=Object.fromEntries(slots.map(type=>[type,30])),values3=Object.fromEntries(slots.map(type=>[type,40]));
+  if(applyEnhancementLevels(values1,e1)?.ok!==true||slots.some(type=>e1.enhancement.levels[type]!==20))errors.push({code:"ENHANCEMENT_W1"});
+  if(applyEnhancementLevels(values2,e2)?.ok!==true||slots.some(type=>e2.enhancement.levels[type]!==30))errors.push({code:"ENHANCEMENT_W2"});
+  if(applyEnhancementLevels(values3,e3)?.ok!==true||slots.some(type=>e3.enhancement.levels[type]!==40))errors.push({code:"ENHANCEMENT_W3"});
+  const invalidW2=Object.fromEntries(slots.map(type=>[type,19]));if(applyEnhancementLevels(invalidW2,e2)?.ok!==false)errors.push({code:"ENHANCEMENT_MIN_GUARD"});
   const dungeon={vipPoints:1,daily:{dateKey:"2099-01-01",bounty:{used:1},arena:{used:2},voidMirage:{highestFloor:3,claimed:false}},dungeon:{voidMirage:{highestCleared:4}}};
   const applied=applyDungeonValues({points:99,bounty:20,arena:19,highest:12,dailyHighest:15,claimed:true},dungeon,{normalizeVip:false});
   if(applied?.ok!==true||dungeon.vipPoints!==99||dungeon.daily.bounty.used!==20||dungeon.daily.arena.used!==19||dungeon.dungeon.voidMirage.highestCleared!==15||dungeon.daily.voidMirage.highestFloor!==15||dungeon.daily.voidMirage.claimed!==true)errors.push({code:"DUNGEON_ATOMIC_MUTATION",applied});
-  return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,enhancementVersion:ENHANCEMENT_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.GM_FORMAL_TRANSACTION_OWNER_VERSION=VERSION;
  window.GM_FORMAL_RESOURCE_TRANSACTION_VERSION=RESOURCE_VERSION;
  window.GM_FORMAL_DUNGEON_TRANSACTION_VERSION=DUNGEON_VERSION;
  window.GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION=DAILY_RESET_VERSION;
+ window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION=ENHANCEMENT_VERSION;
  window.gmApplyFormalResourceMutation=applyResource;
  window.gmCommitFormalResourceMutation=commitResource;
+ window.gmApplyFormalEnhancementMutation=applyEnhancementLevels;
+ window.gmCommitFormalEnhancementMutation=commitEnhancementLevels;
  window.gmApplyFormalDungeonMutation=applyDungeonValues;
  window.gmCommitFormalDungeonMutation=commitDungeonValues;
  window.gmResetFormalDailyDungeonMutation=resetDailyDungeonState;
  window.gmCommitFormalDailyDungeonReset=commitDailyDungeonReset;
  window.GM_FORMAL_TRANSACTION_INTEGRITY=integrity();
+ installEnhancementUiCommit();
  if(!window.GM_FORMAL_TRANSACTION_INTEGRITY.passed)console.error("[文明戰線] GM formal transaction integrity error",window.GM_FORMAL_TRANSACTION_INTEGRITY.errors);
 })();
