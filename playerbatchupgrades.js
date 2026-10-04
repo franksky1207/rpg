@@ -30,7 +30,7 @@
    if(target==null)break;
    const next=levels[target]+1,cost=quote(target,next);
    if(!cost||canAfford(wallet,cost)!==true)break;
-   spend(wallet,cost);levels[target]=next;plan.push({key,from:next-1,to:next,cost});
+   spend(wallet,cost);levels[target]=next;plan.push({key:target,from:next-1,to:next,cost});
   }
   return {steps:plan.length,plan,levels,wallet};
  }
