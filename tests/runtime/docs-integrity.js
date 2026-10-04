@@ -34,7 +34,8 @@ assert(!pending.includes("只寫入 `bossKilled[99]`")&&!pending.includes("不�
 assert(pending.includes("第6大批程式碼優化第1批：Schema17 舊轉生資料一致化")&&pending.includes("normalizeExistingReincarnationRerunProgress()")&&pending.includes("冪等")&&pending.includes("不升 Save Schema"),"Pending 必須同步第6大批優化第1批的 Schema17 舊轉生 normalization 與首輪隔離。");
 assert(pending.includes("第6大批程式碼優化第2批：四大副本永久入口架構整理")&&pending.includes("dungeonModeAccessSnapshot()")&&pending.includes("state.level")&&pending.includes("不再被偽裝"),"Pending 必須同步第6大批優化第2批的共用副本 access owner 與正式 state 隔離。");
 assert(pending.includes("第6大批程式碼優化第3批：一鍵專精／強化交易安全")&&pending.includes("runSettlementTransaction()")&&pending.includes("save exception rollback")&&pending.includes("root identity")&&pending.includes("nested reference identity")&&pending.includes("PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1"),"Pending 必須同步第6大批優化第3批的 shared transaction、save exception rollback 與 identity 安全。");
-assert(pending.includes("第6大批程式碼優化第1～3批已完成")&&pending.includes("優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須標記優化第1～3批完成，並保留第4～5批排程。");
+assert(pending.includes("第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1")&&pending.includes("overlevelContextRecorded=true")&&pending.includes("舊 V4 pending")&&pending.includes("保守 1×"),"Pending 必須同步第6大批優化第4批的 Offline provenance 與舊樣本保守倍率策略。");
+assert(pending.includes("第6大批程式碼優化第1～4批已完成")&&!pending.includes("優化第4批：Offline 舊樣本 provenance 安全化\n   -")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須標記優化第1～4批完成，後續排程只保留第5批。");
 assert(pending.includes("目前主要施工剩餘：Batch7")&&pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 尚待施工與 GM milestone 規則。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
