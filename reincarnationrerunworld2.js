@@ -1,11 +1,11 @@
 (function(){
  const VERSION=1;
+ const REGION_OWNER_SPLIT_VERSION=1;
  const KEY_BOSS_INDEXES=Object.freeze(Array.from({length:10},(_,index)=>9+index*10));
  const base=Object.freeze({
   canChallengeBoss:typeof window.canChallengeSecondWorldBoss==="function"?window.canChallengeSecondWorldBoss:null,
   bossVisible:typeof window.secondWorldBossVisible==="function"?window.secondWorldBossVisible:null,
   regionVisible:typeof window.secondWorldRegionVisible==="function"?window.secondWorldRegionVisible:null,
-  adventurePage:typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml:null,
   calamityVisible:typeof window.isSecondWorldCalamityVisible==="function"?window.isSecondWorldCalamityVisible:null,
   calamityUnlockStatus:typeof window.getSecondWorldCalamityUnlockStatus==="function"?window.getSecondWorldCalamityUnlockStatus:null,
   calamityCanChallenge:typeof window.canChallengeSecondWorldCalamity==="function"?window.canChallengeSecondWorldCalamity:null,
@@ -42,10 +42,15 @@
   KEY_BOSS_INDEXES.forEach((bossIndex,index)=>{if(bossKilled(bossIndex,holder))coverage=Math.max(coverage,index+1);});
   return coverage;
  }
- function arenaRegionVisible(value,target=null){
-  const holder=stateTarget(target);
-  if(!active(holder))return typeof base.regionVisible==="function"?base.regionVisible(value,holder):false;
-  const index=validRegion(value);if(index<0)return false;
+ function baseRegionVisible(value,holder){return typeof base.regionVisible==="function"?base.regionVisible(value,holder):false;}
+ function adventureRegionVisible(value,target=null){
+  const holder=stateTarget(target),index=validRegion(value);if(index<0)return false;
+  if(active(holder))return true;
+  return baseRegionVisible(value,holder);
+ }
+ function arenaRegionEligible(value,target=null){
+  const holder=stateTarget(target),index=validRegion(value);if(index<0)return false;
+  if(!active(holder))return baseRegionVisible(value,holder);
   return index<Math.max(1,keyBossCoverage(holder));
  }
  function calamityDefinition(value){return typeof window.getSecondWorldCalamityDefinition==="function"?window.getSecondWorldCalamityDefinition(value):null;}
@@ -65,11 +70,14 @@
  }
 
  window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
+ window.SECOND_WORLD_REINCARNATION_REGION_OWNER_SPLIT_VERSION=REGION_OWNER_SPLIT_VERSION;
  window.SECOND_WORLD_REINCARNATION_KEY_BOSSES=KEY_BOSS_INDEXES.slice();
  window.secondWorldReincarnationRerunContext=context;
  window.isSecondWorldReincarnationRerun=active;
  window.secondWorldRerunKeyBossCoverage=keyBossCoverage;
- window.secondWorldRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,keyBossCoverage:keyBossCoverage(holder),bossCount:Number(window.SECOND_WORLD_BOSS_COUNT||100),regionCount:Number(window.SECOND_WORLD_REGION_COUNT||10)};};
+ window.secondWorldAdventureRegionVisible=adventureRegionVisible;
+ window.secondWorldArenaRegionEligible=arenaRegionEligible;
+ window.secondWorldRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,keyBossCoverage:keyBossCoverage(holder),bossCount:Number(window.SECOND_WORLD_BOSS_COUNT||100),regionCount:Number(window.SECOND_WORLD_REGION_COUNT||10),regionOwnerSplitVersion:REGION_OWNER_SPLIT_VERSION};};
 
  window.canChallengeSecondWorldBoss=function(value,target=null){
   const holder=stateTarget(target),index=validBoss(value);
@@ -81,7 +89,9 @@
   if(active(holder))return index>=0;
   return typeof base.bossVisible==="function"?base.bossVisible(value,holder):false;
  };
- window.secondWorldRegionVisible=function(value,target=null){return arenaRegionVisible(value,target);};
+ // Legacy compatibility: historical callers of secondWorldRegionVisible keep the Arena/progression meaning.
+ // Adventure UI now consumes secondWorldAdventureRegionVisible explicitly, so rendering no longer monkey-patches this global owner.
+ window.secondWorldRegionVisible=function(value,target=null){return arenaRegionEligible(value,target);};
 
  window.isSecondWorldCalamityVisible=function(value,target=null){
   const holder=stateTarget(target);
@@ -95,14 +105,4 @@
   return typeof base.calamityCanChallenge==="function"?base.calamityCanChallenge(value,holder):false;
  };
  window.getSecondWorldCalamityStatus=calamityStatus;
-
- if(typeof base.adventurePage==="function"){
-  window.secondWorldAdventurePageHtml=function(){
-   if(!active(stateTarget(null)))return base.adventurePage();
-   const coverageVisible=window.secondWorldRegionVisible;
-   window.secondWorldRegionVisible=function(value){return validRegion(value)>=0;};
-   try{return base.adventurePage();}
-   finally{window.secondWorldRegionVisible=coverageVisible;}
-  };
- }
 })();
