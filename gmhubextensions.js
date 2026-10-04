@@ -62,9 +62,9 @@
  }
  window.gmPlayerAbilityTestHtml=function(){
   const status=typeof window.gmTestCurrentStatusHtml==="function"?window.gmTestCurrentStatusHtml():"";
-  return `${status}<div class="gm-ability-test-stack">${abilityTestSubsection("角色基準",window.gmTestCharacterBaseHtml)}${abilityTestSubsection("VIP 測試",window.gmTestVipControlHtml)}${abilityTestSubsection("專精測試",window.gmSpecializationTestHtml)}${abilityTestSubsection("強化測試",window.gmEnhancementTestHtml)}${abilityTestSubsection("印記測試",window.gmMarkTestHtml)}${abilityTestSubsection("文明等級測試",window.gmCivilizationTestHtml)}</div>`;
+  return `${status}<div class="gm-ability-test-stack">${abilityTestSubsection("角色基準",window.gmTestCharacterBaseHtml)}${abilityTestSubsection("VIP 測試",window.gmTestVipControlHtml)}${abilityTestSubsection("突破測試",window.gmTestBreakthroughControlHtml)}${abilityTestSubsection("專精測試",window.gmSpecializationTestHtml)}${abilityTestSubsection("強化測試",window.gmEnhancementTestHtml)}${abilityTestSubsection("印記測試",window.gmMarkTestHtml)}${abilityTestSubsection("文明等級測試",window.gmCivilizationTestHtml)}</div>`;
  };
- window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=3;
+ window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION=4;
 
  function gmStoryTestSectionHtml(){
   if(typeof window.gmStoryTestHtml==="function")return window.gmStoryTestHtml();
@@ -136,7 +136,7 @@
 
  window.GM_HUB_MANAGE_ORDER=MANAGE_SECTION_ORDER.slice();
  window.GM_HUB_TEST_ORDER=TEST_SECTION_ORDER.slice();
- window.GM_HUB_EXTENSION_VERSION=15;
+ window.GM_HUB_EXTENSION_VERSION=16;
  window.GM_HUB_REGISTRY_VERSION=3;
  window.GM_HUB_PHASE_VISIBILITY_REGISTRY_VERSION=1;
  window.GM_HUB_SECTION_RENDERER_REPLACE_VERSION=1;
