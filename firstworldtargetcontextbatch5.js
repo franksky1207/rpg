@@ -53,8 +53,7 @@
  if(typeof baseGrantOffline==="function"){
   window.grantFirstWorldOfflineRewards=async function(pending,enemy){
    const canonical=canonicalOfflineEnemy(pending,state);
-   if(!canonical)throw new Error("First-world offline target context rejected");
-   return baseGrantOffline.call(this,pending,canonical.enemy);
+   return baseGrantOffline.call(this,pending,canonical?.enemy||enemy);
   };
  }
 
