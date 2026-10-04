@@ -233,12 +233,15 @@
   const head=document.querySelector(".combat-screen>.combat-head");
   if(!head)return false;
   if(head.classList.contains("main-minimal-mode-head"))return true;
-  const labelText=head.textContent||"連續戰鬥";
+  const speedBadge=head.querySelector(".universe-combat-speed")?.cloneNode(true)||null;
+  const speedText=String(speedBadge?.textContent||"");
+  const labelText=String(head.textContent||"連續戰鬥").replace(speedText,"").trim()||"連續戰鬥";
   head.classList.add("main-minimal-mode-head");
   head.textContent="";
   const label=document.createElement("span");
   label.className="main-minimal-mode-head-label";
   label.textContent=labelText;
+  if(speedBadge){label.append(document.createTextNode("　"),speedBadge);}
   const button=document.createElement("button");
   button.type="button";
   button.className="main-minimal-mode-enter";
@@ -322,4 +325,5 @@
  window.MAIN_MINIMAL_MODE_HOOK_VERSION=2;
  window.MAIN_MINIMAL_MODE_ADAPTER_VERSION=1;
  window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION=1;
+ window.MAIN_MINIMAL_MODE_COMBAT_SPEED_BADGE_REUSE_VERSION=1;
 })();
