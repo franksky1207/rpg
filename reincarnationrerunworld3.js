@@ -1,5 +1,6 @@
 (function(){
  const VERSION=1;
+ const UI_PRESENTATION_VERSION=1;
  const base=Object.freeze({
   challengeStatus:typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus:null,
   challengeAllowed:typeof window.thirdWorldChallengeAllowed==="function"?window.thirdWorldChallengeAllowed:null,
@@ -37,21 +38,32 @@
   const challenge=rerunChallengeStatus(value,holder);
   return Object.freeze({...original,challengeAllowed:challenge?.allowed===true,challengeStatus:challenge});
  }
- function rerunAdventureHtml(html){
-  if(!active(stateTarget(null))||typeof html!=="string")return html;
-  return html
-   .replaceAll("目前位於合法 5% 戰線內","轉生重征服：可集中攻略任一存活高維存在")
-   .replaceAll("僅存一名高維存在，5% 戰線限制自然解除","轉生重征服：可持續集中攻略此高維存在")
-   .replaceAll("王死亡、跨入新強化階段或 5% 戰線鎖定時會停止下一場。","王死亡或跨入新強化階段時會停止下一場；轉生重征服不受 5% 戰線限制。");
+ function applyRerunAdventurePresentation(html){
+  const holder=stateTarget(null),ctx=context(holder);
+  if(ctx.active!==true||typeof html!=="string"||typeof document==="undefined")return html;
+  const shell=document.createElement("template");shell.innerHTML=html.trim();
+  const screen=shell.content.querySelector(".third-world-adventure-screen");if(!screen)return html;
+  screen.dataset.thirdWorldRerunPresentation="1";
+  shell.content.querySelectorAll(".third-world-boss-card[data-third-world-boss]").forEach(card=>{
+   const index=whole(card.getAttribute("data-third-world-boss"),-1),snap=typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,holder):null,status=snap?.challengeStatus||null;
+   const statusBox=card.querySelector(".third-world-boss-status"),detail=statusBox?.querySelector("span");
+   if(!detail||statusBox?.classList.contains("running")||snap?.defeated===true)return;
+   if(status?.fivePointBypassed===true)detail.textContent="轉生重征服：可集中攻略任一存活高維存在";
+   else if(status?.allowed===true&&status?.reason==="last-survivor")detail.textContent="轉生重征服：可持續集中攻略此高維存在";
+  });
+  const rule=shell.content.querySelector(".third-world-run-rule .muted");
+  if(rule)rule.textContent=`玩家死亡後仍會繼續下一場；一輪最多累積 ${Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500))} 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡或跨入新強化階段時會停止下一場；轉生重征服不受 5% 戰線限制。`;
+  return shell.innerHTML;
  }
 
  window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
+ window.THIRD_WORLD_REINCARNATION_RERUN_UI_PRESENTATION_VERSION=UI_PRESENTATION_VERSION;
  window.thirdWorldReincarnationRerunContext=context;
  window.isThirdWorldReincarnationRerun=active;
- window.thirdWorldReincarnationRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,bossCount:Number(window.THIRD_WORLD_BOSS_COUNT||10),fivePointBypassed:ctx.active===true};};
+ window.thirdWorldReincarnationRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,bossCount:Number(window.THIRD_WORLD_BOSS_COUNT||10),fivePointBypassed:ctx.active===true,uiPresentationVersion:UI_PRESENTATION_VERSION};};
  window.thirdWorldChallengeStatus=rerunChallengeStatus;
  window.thirdWorldChallengeAllowed=function(value,target=null){const status=rerunChallengeStatus(value,target);return status?.allowed===true;};
  window.canChallengeThirdWorldBoss=function(value,target=null){const status=rerunChallengeStatus(value,target);return status?.allowed===true;};
  window.thirdWorldBossProgressSnapshot=rerunBossProgress;
- if(typeof base.adventurePage==="function")window.thirdWorldAdventurePageHtml=function(){return rerunAdventureHtml(base.adventurePage());};
+ if(typeof base.adventurePage==="function")window.thirdWorldAdventurePageHtml=function(){return applyRerunAdventurePresentation(base.adventurePage());};
 })();
