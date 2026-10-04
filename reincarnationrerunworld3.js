@@ -1,6 +1,6 @@
 (function(){
  const VERSION=1;
- const UI_PRESENTATION_VERSION=1;
+ const UI_PRESENTATION_VERSION=2;
  const base=Object.freeze({
   challengeStatus:typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus:null,
   challengeAllowed:typeof window.thirdWorldChallengeAllowed==="function"?window.thirdWorldChallengeAllowed:null,
@@ -47,9 +47,9 @@
   shell.content.querySelectorAll(".third-world-boss-card[data-third-world-boss]").forEach(card=>{
    const index=whole(card.getAttribute("data-third-world-boss"),-1),snap=typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,holder):null,status=snap?.challengeStatus||null;
    const statusBox=card.querySelector(".third-world-boss-status"),detail=statusBox?.querySelector("span");
-   if(!detail||statusBox?.classList.contains("running")||snap?.defeated===true)return;
-   if(status?.fivePointBypassed===true)detail.textContent="轉生重征服：可集中攻略任一存活高維存在";
-   else if(status?.allowed===true&&status?.reason==="last-survivor")detail.textContent="轉生重征服：可持續集中攻略此高維存在";
+   if(!detail||statusBox?.classList.contains("running")||snap?.defeated===true||status?.allowed!==true)return;
+   if(status?.reason==="last-survivor")detail.textContent="轉生重征服：可持續集中攻略此高維存在";
+   else detail.textContent=status?.fivePointBypassed===true?"轉生重征服：已解除 5% 戰線限制，可集中攻略此高維存在":"轉生重征服：可集中攻略任一存活高維存在";
   });
   const rule=shell.content.querySelector(".third-world-run-rule .muted");
   if(rule)rule.textContent=`玩家死亡後仍會繼續下一場；一輪最多累積 ${Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500))} 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡或跨入新強化階段時會停止下一場；轉生重征服不受 5% 戰線限制。`;
