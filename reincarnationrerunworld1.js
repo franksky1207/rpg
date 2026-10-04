@@ -2,7 +2,7 @@
  const VERSION=1;
  const TARGET_IDENTITY_FIX_VERSION=1;
  const TARGET_CONTEXT_VERSION=1;
- const COMBAT_SPEED_BADGE_REUSE_VERSION=1;
+ const COMBAT_SPEED_BADGE_REUSE_VERSION=2;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
   canBoss:typeof window.canBoss==="function"?window.canBoss:null,
@@ -99,11 +99,21 @@
   }
   return html;
  }
+ function rerunCombatHeaderLabel(){
+  const ctx=window.activeMainBattleContext||null;
+  const continuous=ctx?.continuous===true||selectedBattleCount===window.CONTINUOUS_BATTLE_COUNT||combatTotal===0||combatTotal===window.CONTINUOUS_BATTLE_COUNT;
+  return continuous?`連續戰鬥・第 ${Math.max(1,finiteWhole(combatRound,1))} 場`:"單場戰鬥";
+ }
  function rerunAdventureCombatPage(){
   if(typeof firstRunOwners.adventureCombatPage!=="function")return "";
   const html=firstRunOwners.adventureCombatPage();
-  if(!rerunActive(state)||typeof html!=="string")return html;
-  return html.replace(/<div class="combat-head">([\s\S]*?)｜(1(?:\.5)?|2)×<\/div>/,`<div class="combat-head">$1<span class="universe-combat-speed">$2×</span></div>`);
+  if(!rerunActive(state)||typeof html!=="string"||typeof document==="undefined"||typeof window.combatSpeedHeaderHtml!=="function")return html;
+  const shell=document.createElement("template");shell.innerHTML=html.trim();
+  const head=shell.content.querySelector(".combat-screen>.combat-head");if(!head)return html;
+  const rendered=document.createElement("template");rendered.innerHTML=window.combatSpeedHeaderHtml(rerunCombatHeaderLabel(),{target:state,force:true}).trim();
+  const replacement=rendered.content.firstElementChild;if(!replacement)return html;
+  head.replaceWith(replacement);
+  return shell.innerHTML;
  }
 
  window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
