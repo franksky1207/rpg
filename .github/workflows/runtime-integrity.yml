@@ -92,6 +92,7 @@ jobs:
           node tests/runtime/breakthrough-final-damage-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-breakthrough-management-batch7-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-character-breakthrough-batch7-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-reset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-transaction-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
