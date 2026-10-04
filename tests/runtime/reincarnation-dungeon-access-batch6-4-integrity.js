@@ -8,7 +8,7 @@ const assert=require('assert');
  const url=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  try{
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.waitForFunction(()=>window.REINCARNATION_DUNGEON_ACCESS_VERSION===1&&window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION===6&&typeof window.firstWorldRerunKeyBossCoverage==='function',{timeout:30000});
+  await page.waitForFunction(()=>window.REINCARNATION_DUNGEON_ACCESS_VERSION===1&&window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION===5&&typeof window.firstWorldRerunKeyBossCoverage==='function',{timeout:30000});
   const report=await page.evaluate(()=>{
    const originalState=state,originalView=view;
    const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries([100,200,300,400,500,600,700,800,900,1000].map(x=>[String(x),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
@@ -40,7 +40,7 @@ const assert=require('assert');
   assert.deepEqual(report.voidEntry,{ok:true,levelStable:true});assert.equal(report.mirrorEntry.ok,true);assert.equal(report.mirrorEntry.levelStable,true);assert.equal(report.bountyEntry.view,'dungeon-bounty');assert.equal(report.bountyEntry.levelStable,true);assert.equal(report.arenaEntry.view,'dungeon-arena');assert.equal(report.arenaEntry.levelStable,true);
   assert.deepEqual(report.w1Zero,{coverage:0,cap:1});assert.equal(report.w1Six.coverage,6);assert.equal(report.w1Six.cap,6);assert.equal(report.w1Six.actualKills,1);assert.equal(report.w1Six.lowerKeyFake,false);assert.equal(report.w1Ten.coverage,10);assert.equal(report.w1Ten.cap,10);assert.equal(report.w1Ten.actualKills,2);
   assert.equal(report.w3First.bountyWorld,false);assert.equal(report.w3First.bountyMode.visible,false);assert.equal(report.w3Rerun.bountyWorld,true);assert.equal(report.w3Rerun.bountyMode.visible,true);assert.equal(report.w3Rerun.bountyMode.enabled,true);
-  assert.deepEqual(report.versions,{access:1,worldSafety:6,bountyGate:2});
+  assert.deepEqual(report.versions,{access:1,worldSafety:5,bountyGate:2});
   console.log('Reincarnation Batch6-4 dungeon access integrity passed:',JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
