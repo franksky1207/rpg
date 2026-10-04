@@ -1,15 +1,23 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const allowed=Array.isArray(window.COMBAT_SPEED_ALLOWED)?window.COMBAT_SPEED_ALLOWED.map(Number):[];
  const expectedAllowed=[1,1.5,2];
 
- if(Number(window.COMBAT_SPEED_CORE_VERSION)!==4)fail("CORE_VERSION","Combat Speed core 應為 V4",window.COMBAT_SPEED_CORE_VERSION);
+ if(Number(window.COMBAT_SPEED_CORE_VERSION)!==5)fail("CORE_VERSION","Combat Speed core 應為 V5",window.COMBAT_SPEED_CORE_VERSION);
  if(Number(window.COMBAT_SPEED_PLAYER_RULE_VERSION)!==4)fail("PLAYER_RULE_VERSION","玩家正式倍速規則 owner 應為 V4",window.COMBAT_SPEED_PLAYER_RULE_VERSION);
  if(Number(window.COMBAT_SPEED_PHASE_RULE_VERSION)!==1)fail("PHASE_RULE_VERSION","玩家倍速應依 current world phase 判定",window.COMBAT_SPEED_PHASE_RULE_VERSION);
  if(Number(window.COMBAT_SPEED_GM_OVERRIDE_VERSION)!==1)fail("GM_OVERRIDE_VERSION","GM 倍速覆寫 owner 應為 V1",window.COMBAT_SPEED_GM_OVERRIDE_VERSION);
  if(Number(window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION)!==1)fail("REINCARNATION_UNLOCK_VERSION","轉生永久 1.5× 解鎖 owner 應為 V1",window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION);
+ if(Number(window.COMBAT_SPEED_BADGE_RENDERER_VERSION)!==1||typeof window.combatSpeedBadgeHtml!=="function"||typeof window.combatSpeedHeaderHtml!=="function")fail("BADGE_RENDERER","共用戰鬥速度徽章／標頭 renderer 應為 V1",{version:window.COMBAT_SPEED_BADGE_RENDERER_VERSION,badge:typeof window.combatSpeedBadgeHtml,header:typeof window.combatSpeedHeaderHtml});
+ else{
+  const first={secondWorld:{entered:false},thirdWorld:{entered:false},reincarnation:{count:0}},rerun={secondWorld:{entered:false},thirdWorld:{entered:false},reincarnation:{count:1}};
+  const hidden=window.combatSpeedBadgeHtml({target:first,speed:1}),badge15=window.combatSpeedBadgeHtml({target:rerun,speed:1.5}),header2=window.combatSpeedHeaderHtml("單場戰鬥",{target:rerun,speed:2,force:true});
+  if(hidden!=="")fail("BADGE_FIRST_RUN_HIDDEN","首輪 W1 1× 不應額外顯示速度徽章",hidden);
+  if(!badge15.includes('data-combat-speed-badge="1"')||!badge15.includes('1.5×'))fail("BADGE_15_RENDER","共用速度徽章未正確渲染 1.5×",badge15);
+  if(!header2.includes('data-combat-speed-header="1"')||!header2.includes('data-combat-speed-badge="1"')||!header2.includes('2×'))fail("HEADER_2_RENDER","共用速度標頭未正確渲染 2×",header2);
+ }
  if(JSON.stringify(allowed)!==JSON.stringify(expectedAllowed))fail("ALLOWED_SPEEDS","正式合法倍速應為 1／1.5／2",allowed);
  if(typeof window.playerCombatSpeedOptions!=="function"||typeof window.playerCombatSpeed!=="function"||typeof window.setPlayerCombatSpeed!=="function"||typeof window.combatSpeedWorldPhase!=="function"||typeof window.reincarnationCombatSpeedUnlocked!=="function")fail("PLAYER_SPEED_API","玩家正式倍速 API 未完整載入",{options:typeof window.playerCombatSpeedOptions,get:typeof window.playerCombatSpeed,set:typeof window.setPlayerCombatSpeed,phase:typeof window.combatSpeedWorldPhase,reincarnation:typeof window.reincarnationCombatSpeedUnlocked});
  else{
@@ -64,7 +72,7 @@
  if(Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)!==3||Number(window.MAIN_REAL_BATTLE_SAMPLE_VERSION)!==3||Number(window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION)!==1)fail("OFFLINE_SPEED_SAMPLE","離線收益應使用 speed-aware V3 sample",{offline:window.OFFLINE_BATTLE_SAMPLE_VERSION,main:window.MAIN_REAL_BATTLE_SAMPLE_VERSION,speed:window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION});
  if(Number(window.GM_COMBAT_SPEED_VERSION)!==2||typeof window.gmSetCombatSpeedOverride!=="function"||typeof window.gmCombatSpeedOverride!=="function"||typeof window.clearGmCombatSpeedOverrideForUser!=="function")fail("GM_SPEED_UI","GM 倍速管理 API 未完整載入",{version:window.GM_COMBAT_SPEED_VERSION,set:typeof window.gmSetCombatSpeedOverride,get:typeof window.gmCombatSpeedOverride,clear:typeof window.clearGmCombatSpeedOverrideForUser});
 
- const report={version:VERSION,phaseRuleVersion:Number(window.COMBAT_SPEED_PHASE_RULE_VERSION)||0,reincarnationUnlockVersion:Number(window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION)||0,specialThirdWorldGuardVersion:Number(window.SPECIAL_ENCOUNTER_THIRD_WORLD_GUARD_VERSION)||0,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,phaseRuleVersion:Number(window.COMBAT_SPEED_PHASE_RULE_VERSION)||0,reincarnationUnlockVersion:Number(window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION)||0,badgeRendererVersion:Number(window.COMBAT_SPEED_BADGE_RENDERER_VERSION)||0,specialThirdWorldGuardVersion:Number(window.SPECIAL_ENCOUNTER_THIRD_WORLD_GUARD_VERSION)||0,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.COMBAT_SPEED_INTEGRITY_VERSION=VERSION;
  window.COMBAT_SPEED_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Combat speed integrity error",errors);
