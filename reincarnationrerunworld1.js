@@ -2,6 +2,7 @@
  const VERSION=1;
  const TARGET_IDENTITY_FIX_VERSION=1;
  const TARGET_CONTEXT_VERSION=1;
+ const TARGET_CONTEXT_DELEGATE_VERSION=1;
  const COMBAT_SPEED_BADGE_REUSE_VERSION=2;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
@@ -47,8 +48,13 @@
  function validMapIndex(value){const index=finiteWhole(value,-1);return index>=0&&index<maps().length?index:-1;}
  function validEnemyIndex(value){const index=finiteWhole(value,-1);return index>=0&&index<=4?index:-1;}
  function currentTargetContext(target=state){
-  const rerun=rerunContext(target),mapIndex=validMapIndex(typeof selectedMap!=="undefined"?selectedMap:-1),enemyIndex=validEnemyIndex(typeof selectedEnemy!=="undefined"?selectedEnemy:-1),valid=mapIndex>=0&&enemyIndex>=0;
-  return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid,authorized:rerun.active===true&&valid,mapIndex,enemyIndex,count:rerun.count,lifeId:rerun.lifeId,world:rerun.world});
+  const rerun=rerunContext(target);
+  if(typeof window.firstWorldTargetContextFromSelection==="function"){
+   const canonical=window.firstWorldTargetContextFromSelection({mode:"rerun",source:"rerun-ui-selection"},target);
+   return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid:canonical?.valid===true,authorized:canonical?.authorized===true,mapIndex:Number(canonical?.mapIndex??-1),enemyIndex:Number(canonical?.enemyIndex??-1),count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:canonical||null});
+  }
+  const mapIndex=validMapIndex(typeof selectedMap!=="undefined"?selectedMap:-1),enemyIndex=validEnemyIndex(typeof selectedEnemy!=="undefined"?selectedEnemy:-1),valid=mapIndex>=0&&enemyIndex>=0;
+  return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid,authorized:rerun.active===true&&valid,mapIndex,enemyIndex,count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:null});
  }
  function presentationStateForTarget(formalState,targetContext){
   if(!formalState||typeof formalState!=="object"||targetContext?.authorized!==true)return formalState;
@@ -119,13 +125,14 @@
  window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION=TARGET_IDENTITY_FIX_VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION=TARGET_CONTEXT_VERSION;
+ window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_DELEGATE_VERSION=TARGET_CONTEXT_DELEGATE_VERSION;
  window.FIRST_WORLD_REINCARNATION_COMBAT_SPEED_BADGE_REUSE_VERSION=COMBAT_SPEED_BADGE_REUSE_VERSION;
  window.firstWorldReincarnationRerunContext=rerunContext;
  window.firstWorldReincarnationTargetContext=currentTargetContext;
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
