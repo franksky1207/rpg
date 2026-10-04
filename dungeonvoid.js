@@ -102,6 +102,7 @@
   return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns,world,civilizationDamageMultiplier:civilizationMultiplier};
  }
  function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
+ function voidMirageEntryUnlocked(){return typeof window.isDungeonModeEntryUnlocked==="function"?window.isDungeonModeEntryUnlocked("tower",state):Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;}
  function runSnapshot(){
   if(!voidMirageRun)return null;
   const daily=dailyStatus();
@@ -145,7 +146,7 @@
   bossNames:VOID_MIRAGE_BOSS_NAMES.slice()
  };};
  window.ensureVoidMirageState=function(){return normalizeVoidMirageState(state);};
- window.canEnterVoidMirage=function(){return Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;};
+ window.canEnterVoidMirage=function(){return voidMirageEntryUnlocked();};
  window.voidMirageBaseStats=baseStats;
  window.isVoidMirageBossFloor=isBossFloor;
  window.voidMirageBossNameForFloor=bossNameForFloor;
@@ -157,7 +158,7 @@
  window.recordVoidMirageClear=function(floor){const result=recordClear(floor);if(typeof save==="function")save(false);return result;};
 
  window.beginVoidMirageRun=function(){
-  if(Number(state?.level||0)<VOID_MIRAGE_UNLOCK_LEVEL)return {ok:false,reason:"level_locked",unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL};
+  if(!voidMirageEntryUnlocked())return {ok:false,reason:"level_locked",unlockLevel:VOID_MIRAGE_UNLOCK_LEVEL};
   if(voidMirageRun?.active)return {ok:false,reason:"already_active",run:runSnapshot()};
   const startFloor=startFloorFromHistory();
   voidMirageRun={active:true,phase:"ready",startFloor,currentFloor:startFloor,lastClearedFloor:startFloor-1,cleared:0,totalTurns:0,exitRequested:false,endedReason:"",failedFloor:0,lastEnemy:null,lastResult:null,previousRegularName:"",playerSnapshot:null,runStarted:false};
