@@ -11,7 +11,7 @@
 - 銀河紀元、宇宙紀元、高維紀元三紀元 runtime 已完成；高維紀元為 Lv.1000～2000。
 - 轉生／突破核心、異宇宙 Batch3～4、轉生後重征服 Batch5、Batch5 後續架構優化，以及第6大批 6-1～6-5 均已完成。
 - 第6大批完成內容：轉生越級 Online／Offline 收益、一鍵平均專精／平均最大強化、首次轉生後四大副本永久入口、主線正式向下征服回填，以及 Batch6 完整封箱 Regression。
-- 第6大批程式碼優化第1～2批已完成；目前主要施工剩餘：Batch7，以及優化第3～5批。
+- 第6大批程式碼優化第1～3批已完成；目前主要施工剩餘：Batch7，以及優化第4～5批。
 
 ## 第6大批正式規則
 
@@ -72,13 +72,22 @@
 - 本批不新增存檔欄位、不改 Save Schema、不改戰鬥／收益公式；只收斂入口與 UI 資格架構。
 - `tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js` 已升級為架構 regression：同時驗證首輪門檻、轉生 Lv.1 四入口、正式 state identity／level 穩定、W3 懸賞政策、Arena cap，以及 production source 已無暫時 level presentation helper。
 
+## 2026-10-04 第6大批程式碼優化第3批：一鍵專精／強化交易安全
+
+- `playerbatchupgrades.js` 升為 V2，批次寫入正式改為共用既有 `runSettlementTransaction()`；不再自行建立 JSON snapshot，也不再以 `state = snapshot` 取代正式 root state。
+- 專精與強化的 preview、成本 owner、最低等級優先演算法、按鈕位置、紀元範圍與首輪／轉生共用規則全部不變；本批只收斂正式交易與 rollback 架構。
+- 每次一鍵操作只做一次正式 save；`save(false)` 回傳 false 或 `save()` 丟出例外時，都由 shared transaction 完整 rollback。
+- rollback 會保留原本 formal `state` root identity，也保留已存在的 `specializations`、`enhancement`、`enhancement.levels` 等 nested reference identity，避免舊 UI／runtime 持有的參照失效。
+- 交易成功仍沿用原本正式資源扣除與等級結果；交易失敗則不留下部分扣款、部分升級或 HP normalization 殘留。
+- `PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1`；正式共用 transaction owner 維持 `SHARED_SETTLEMENT_TRANSACTION_VERSION = 2`。
+- `tests/runtime/player-batch-upgrades-batch6-2-integrity.js` 已擴充驗證：單次 save、save false rollback、save exception rollback、root/nested identity、首輪／轉生結果一致、W2 專精鎖定及 W3 操作隱藏。
+- 本批不新增存檔欄位、不升 Save Schema，也不修改任何專精／強化成本公式。
+
 ## 第6大批後續優化排程
 
-1. **優化第3批：一鍵專精／強化交易安全**
-   - 改共用既有 `runSettlementTransaction()`；補 save throw／rollback／state identity regression。
-2. **優化第4批：Offline 舊樣本 provenance 安全化**
+1. **優化第4批：Offline 舊樣本 provenance 安全化**
    - V3→V4 明確區分可靠與缺失的 player/enemy level；不可靠越級 context 固定 1×。
-3. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
+2. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
    - 收斂 W1 `fightOnce` 多層 wrapper；將 Arena 97% 與出售隔離由 source-string 檢查提升為正式行為測試。
 
 ## Batch7 尚待施工
