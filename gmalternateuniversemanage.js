@@ -1,7 +1,8 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const CANONICAL_MUTATION_VERSION=2;
  const TRANSACTION_VERSION=1;
+ const FORMAL_SNAPSHOT_OWNER_VERSION=1;
 
  function whole(value){const n=Number(value);return Number.isFinite(n)&&Number.isSafeInteger(n)?n:null;}
  function maxDepth(){return Math.max(1,Math.floor(Number(window.ALTERNATE_UNIVERSE_MAX_DEPTH)||1000));}
@@ -12,19 +13,19 @@
  function normalize(target){if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(target);return target;}
  function alternate(target=state){return target?.reincarnation?.alternateUniverse&&typeof target.reincarnation.alternateUniverse==="object"?target.reincarnation.alternateUniverse:null;}
  function formalSnapshot(target=state){
+  const lifecycle=typeof window.alternateUniverseLifecycleSnapshot==="function"?window.alternateUniverseLifecycleSnapshot(target):null;
+  if(!lifecycle)return Object.freeze({version:VERSION,formalSnapshotOwnerVersion:FORMAL_SNAPSHOT_OWNER_VERSION,lifeId:lifeId(target),unlocked:false,deepestCleared:0,maxDepth:maxDepth(),completed:false,frontier:null,activeAttempt:null,failures:Object.freeze({}),ownerMissing:true});
   const progression=typeof window.alternateUniverseProgressionSnapshot==="function"?window.alternateUniverseProgressionSnapshot(target):null;
-  const au=alternate(target),currentLife=lifeId(target);
-  const active=typeof window.alternateUniverseActiveAttempt==="function"?window.alternateUniverseActiveAttempt(target):au?.activeAttempt||null;
-  const failureOwner=au?.lifeFailures&&Number(au.lifeFailures.lifeId)===currentLife&&au.lifeFailures.failures&&typeof au.lifeFailures.failures==="object"?au.lifeFailures.failures:{};
-  const failures=Object.fromEntries(Object.entries(failureOwner).map(([depth,count])=>[String(Math.max(1,Math.floor(Number(depth)||1))),Math.max(0,Math.min(10,Math.floor(Number(count)||0)))]).filter(([,count])=>count>0).sort((a,b)=>Number(a[0])-Number(b[0])));
-  const deepest=Math.max(0,Math.min(maxDepth(),Math.floor(Number(progression?.deepestCleared??au?.deepestCleared)||0)));
-  const unlocked=progression?.unlocked===true||au?.unlocked===true;
-  return Object.freeze({version:VERSION,lifeId:currentLife,unlocked,deepestCleared:unlocked?deepest:0,maxDepth:maxDepth(),completed:unlocked&&deepest>=maxDepth(),frontier:unlocked&&deepest<maxDepth()?deepest+1:null,activeAttempt:active?JSON.parse(JSON.stringify(active)):null,failures:Object.freeze({...failures})});
+  const deepest=Math.max(0,Math.min(maxDepth(),Math.floor(Number(progression?.deepestCleared??lifecycle.deepestCleared)||0)));
+  const unlocked=progression?.unlocked===true||lifecycle.unlocked===true;
+  const active=lifecycle.activeAttempt?JSON.parse(JSON.stringify(lifecycle.activeAttempt)):null;
+  return Object.freeze({version:VERSION,formalSnapshotOwnerVersion:FORMAL_SNAPSHOT_OWNER_VERSION,lifeId:lifecycle.lifeId,unlocked,deepestCleared:unlocked?deepest:0,maxDepth:lifecycle.maxDepth||maxDepth(),completed:unlocked&&deepest>=maxDepth(),frontier:unlocked&&deepest<maxDepth()?deepest+1:null,activeAttempt:active,failures:Object.freeze({...lifecycle.failures}),ownerMissing:false});
  }
  function plan(values,target=state){
   const depth=whole(values?.deepestCleared);
   if(depth==null||depth<0||depth>maxDepth())return Object.freeze({ok:false,reason:"invalid-depth"});
   const before=formalSnapshot(target);
+  if(before.ownerMissing)return Object.freeze({ok:false,reason:"alternate-universe-lifecycle-owner-missing",before});
   const unlocked=depth>0?true:before.unlocked;
   return Object.freeze({
    ok:true,reason:"",before,lifeId:before.lifeId,unlocked,deepestCleared:depth,maxDepth:before.maxDepth,completed:unlocked&&depth>=before.maxDepth,frontier:unlocked&&depth<before.maxDepth?depth+1:null,
@@ -99,6 +100,7 @@
  function validate(){
   const errors=[];
   const fixture={saveVersion:17,reincarnation:{count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:37,activeAttempt:{lifeId:2,depth:38,attemptId:"gm-au-probe",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"38":4,"50":2}}}}};
+  const beforeRead=JSON.stringify(fixture),readSnapshot=formalSnapshot(fixture),afterRead=JSON.stringify(fixture);if(beforeRead!==afterRead||readSnapshot.failures["38"]!==4||readSnapshot.failures["50"]!==2||readSnapshot.activeAttempt?.attemptId!=="gm-au-probe")errors.push({code:"FORMAL_SNAPSHOT_OWNER",actual:{readSnapshot,beforeRead,afterRead}});
   const p=plan({deepestCleared:150},fixture);if(!p.ok||p.deepestCleared!==150||p.frontier!==151||p.clearsActiveAttempt!==true||p.resetsLifeFailures!==true)errors.push({code:"PLAN_150",actual:p});
   const out=apply({deepestCleared:150},fixture),snap=formalSnapshot(fixture);if(!out.ok||snap.deepestCleared!==150||snap.frontier!==151||snap.activeAttempt!==null||Object.keys(snap.failures).length!==0)errors.push({code:"CANONICAL_150",actual:{out,snap}});
   const zero=apply({deepestCleared:0},fixture),zeroSnap=formalSnapshot(fixture);if(!zero.ok||zeroSnap.unlocked!==true||zeroSnap.deepestCleared!==0||zeroSnap.frontier!==1)errors.push({code:"ZERO_PRESERVES_UNLOCK",actual:{zero,zeroSnap}});
@@ -106,12 +108,13 @@
   const lockedZero=apply({deepestCleared:0},lockedFixture),lockedZeroSnap=formalSnapshot(lockedFixture);if(!lockedZero.ok||lockedZeroSnap.unlocked!==false||lockedZeroSnap.deepestCleared!==0||lockedZeroSnap.frontier!==null)errors.push({code:"LOCKED_ZERO_STAYS_LOCKED",actual:{lockedZero,lockedZeroSnap}});
   const forced=apply({deepestCleared:12},lockedFixture),forcedSnap=formalSnapshot(lockedFixture);if(!forced.ok||forcedSnap.unlocked!==true||forcedSnap.deepestCleared!==12||forcedSnap.frontier!==13)errors.push({code:"DEPTH_FORCES_UNLOCK",actual:{forced,forcedSnap}});
   if(plan({deepestCleared:maxDepth()+1},fixture).ok)errors.push({code:"DEPTH_RANGE_GUARD"});
-  return Object.freeze({version:VERSION,canonicalMutationVersion:CANONICAL_MUTATION_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,canonicalMutationVersion:CANONICAL_MUTATION_VERSION,formalSnapshotOwnerVersion:FORMAL_SNAPSHOT_OWNER_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION=VERSION;
  window.GM_ALTERNATE_UNIVERSE_CANONICAL_MUTATION_VERSION=CANONICAL_MUTATION_VERSION;
  window.GM_ALTERNATE_UNIVERSE_TRANSACTION_VERSION=TRANSACTION_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_FORMAL_SNAPSHOT_OWNER_VERSION=FORMAL_SNAPSHOT_OWNER_VERSION;
  window.gmAlternateUniverseFormalSnapshot=formalSnapshot;
  window.gmAlternateUniverseProgressPlan=plan;
  window.gmApplyFormalAlternateUniverseProgress=apply;
