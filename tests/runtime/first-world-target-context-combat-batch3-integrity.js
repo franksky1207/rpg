@@ -60,6 +60,7 @@ const assert=require("assert");
     const finiteCtx=window.createMainBattleContext(2,target);
     const finiteOk=await runBattles(2,finiteCtx,target);
     const uiAfterFinite={map:selectedMap,enemy:selectedEnemy};
+    const finitePreviewClears=deep(previewClears);
 
     // Continuous mode: target must stay bound after each regenerated encounter as well.
     state=makeState(0);selectedMap=4;selectedEnemy=0;battleBusy=false;currentCombatEncounter=null;window.clearPreparedFirstWorldTargetContext();
@@ -88,7 +89,7 @@ const assert=require("assert");
     return {
      versions:{context:window.FIRST_WORLD_TARGET_CONTEXT_VERSION,binding:window.FIRST_WORLD_TARGET_BATTLE_BINDING_VERSION,pipeline:window.MAIN_BATTLE_TARGET_CONTEXT_VERSION},
      integrity:window.FIRST_WORLD_TARGET_CONTEXT_INTEGRITY,
-     finite:{ok:finiteOk,target:{contextId:target.contextId,identity:target.identity},expected:{name:expected.name,level:expected.level,kind:expected.kind},calls,previewClears,uiAfter:uiAfterFinite,ctx:{completed:finiteCtx.completed,wins:finiteCtx.wins,targetContextId:finiteCtx.targetContext?.contextId,targetIdentity:finiteCtx.targetIdentity},saveCalls:saveCalls.length},
+     finite:{ok:finiteOk,target:{contextId:target.contextId,identity:target.identity},expected:{name:expected.name,level:expected.level,kind:expected.kind},calls,previewClears:finitePreviewClears,uiAfter:uiAfterFinite,ctx:{completed:finiteCtx.completed,wins:finiteCtx.wins,targetContextId:finiteCtx.targetContext?.contextId,targetIdentity:finiteCtx.targetIdentity},saveCalls:saveCalls.length},
      continuous:{ok:continuousOk,target:{contextId:continuousTarget.contextId,identity:continuousTarget.identity},calls:continuousCalls,uiAfter:{map:selectedMap,enemy:selectedEnemy}},
      failClosed:{staleValidation,staleBound,reviewBound},
      source:{noFightSelection:!source.includes("fightOnce(selectedMap,selectedEnemy,encounter)"),noTimingSelection:!source.includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),noRegenerateSelection:!source.includes("createMonsterEncounter(selectedMap,selectedEnemy)"),passesContextToSpecial:source.includes("maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget})"),contextSettlement:source.includes("fightOnce(mapIndex,enemyIndex,encounter)")}
