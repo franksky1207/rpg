@@ -63,6 +63,13 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 - GM 指定轉生次數／永久突破等級。
 - GM 正式轉生 transaction 按鈕。
 - GM AU unlock／deepest。
+- **GM 指定角色等級時，若目前為轉生輪次，必須依實際跨越的 Lv.100／200／…／1000 突破里程碑同步增加本輪突破；直接沿用 `grantBreakthroughMilestonesForLevelCrossing(fromLevel, toLevel, state)` 正式 owner，不另寫公式。**
+  - 首輪 `count=0`：GM 調等級不得增加突破。
+  - 轉生輪 `Lv.1 → Lv.500`：應增加 5 級突破。
+  - `Lv.500 → Lv.1000`：再增加 5 級突破。
+  - 已取得里程碑不得重複給予。
+  - GM 往下調等級不得倒扣突破。
+  - Lv.1000 以上不再增加本輪突破。
 - 角色能力測試新增突破值與正式角色同步。
 - AU benchmark。
 - 21 種雙 trait diagnostic。
