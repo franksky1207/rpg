@@ -14,11 +14,13 @@ const assert=require('assert');
    window.OFFLINE_REINCARNATION_OVERLEVEL_VERSION===1&&
    window.PLAYER_BATCH_UPGRADE_VERSION===1&&
    window.REINCARNATION_DUNGEON_ACCESS_VERSION===1&&
-   window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===1&&
+   window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2&&
+   window.REINCARNATION_RERUN_PROGRESS_NORMALIZATION_VERSION===1&&
    typeof window.applyReincarnationResetState==='function'&&
    typeof window.offlineOverlevelRewardContext==='function'&&
    typeof window.specializationBalancedUpgradePreview==='function'&&
-   typeof window.enhancementBalancedUpgradePreview==='function',
+   typeof window.enhancementBalancedUpgradePreview==='function'&&
+   typeof window.normalizeExistingReincarnationRerunProgress==='function',
    {timeout:30000}
   );
 
@@ -79,30 +81,55 @@ const assert=require('assert');
     const arenaSource=await (await fetch('arenapositioncore.js')).text();
     out.arena={w1Coverage,w1Cap,w2Coverage,w2Cap,assessment500:arenaSource.includes('const ASSESS_RUNS=500;'),target485:arenaSource.includes('const ASSESS_CLEAR_TARGET=485;')};
 
-    // Equipment sales and sale-conversion resources are outside the overlevel multiplier adapter.
-    const saleItem={world:2,level:500,q:5,type:'weapon',sell:123,buy:456};
-    const saleFirst=equipmentSaleQuote(saleItem,{state:makeW2(0)}),saleRerun=equipmentSaleQuote(saleItem,{state:makeW2(1)});
+    // The formal rerun progress owner is now V2 and includes idempotent Schema17 normalization; first run remains excluded.
+    const stale=makeW1(1);stale.bossKilled[99]=true;const normalized=normalizeExistingReincarnationRerunProgress(stale),secondPass=normalizeExistingReincarnationRerunProgress(stale);
+    const firstRun=makeW1(0);firstRun.bossKilled[99]=true;const firstRunBefore=JSON.stringify(firstRun),firstRunNormalize=normalizeExistingReincarnationRerunProgress(firstRun);
+    out.progressNormalization={version:REINCARNATION_RERUN_PROGRESS_NORMALIZATION_VERSION,firstChanged:normalized.changed,full:stale.bossKilled.every(Boolean),secondPassChanged:secondPass.changed,firstRunChanged:firstRunNormalize.changed,firstRunStable:firstRunBefore===JSON.stringify(firstRun)};
+
+    // Equipment sale is explicitly outside the overlevel multiplier; the same item quote must be identical in first run/rerun.
+    const item={world:2,level:800,q:5,type:'weapon',sell:123,buy:456};
+    state=makeW2(0);const firstSale=equipmentSaleQuote(item);
+    state=makeW2(1);const rerunSale=equipmentSaleQuote(item);
     const overlevelSource=await (await fetch('reincarnationoverlevelrewards.js')).text();
     const offlineSource=await (await fetch('offlineprogress.js')).text();
-    out.sale={
-     first:saleFirst,rerun:saleRerun,
-     onlineTouchesSaleStones:overlevelSource.includes('saleEnhancementStones='),
-     offlineUsesSaleOwner:offlineSource.includes('settleEquipmentSaleBatch'),
-     offlineSharedMultiplier:offlineSource.includes('window.reincarnationOverlevelRewardMultiplier')
-    };
-   }finally{state=originalState;view=originalView;if(typeof render==='function')render();}
+    out.sale={firstSale,rerunSale,onlineSaleExcluded:overlevelSource.includes('saleEnhancementStones'),offlineFormalSaleOwner:offlineSource.includes('settleEquipmentSaleBatch')};
+   }finally{state=originalState;view=originalView;render();}
    return out;
   });
 
-  assert.deepEqual(pageErrors,[],'Browser pageerror:\n'+pageErrors.join('\n\n'));
-  assert.equal(report.overlevel.firstOnline,1);assert.equal(report.overlevel.firstOffline.multiplier,1);
-  assert.equal(report.overlevel.rerunOnline,13);assert.equal(report.overlevel.rerunOffline.multiplier,13);assert.equal(report.overlevel.rerunOffline.playerLevel,100);assert.equal(report.overlevel.rerunOffline.enemyLevel,500);assert.equal(report.overlevel.rerunOffline.recorded,true);assert.equal(report.overlevel.noCap,30.97);
-  assert.equal(report.batch.specFirst.steps,report.batch.specRerun.steps);assert.deepEqual(report.batch.specFirst.levelsAfter,report.batch.specRerun.levelsAfter);
-  assert.equal(report.batch.enhW1First.steps,report.batch.enhW1Rerun.steps);assert.deepEqual(report.batch.enhW1First.levelsAfter,report.batch.enhW1Rerun.levelsAfter);
-  assert.equal(report.batch.enhW2First.steps,report.batch.enhW2Rerun.steps);assert.deepEqual(report.batch.enhW2First.levelsAfter,report.batch.enhW2Rerun.levelsAfter);
-  assert.equal(report.lifecycle.resetOk,true);assert.equal(report.lifecycle.count,1);assert.equal(report.lifecycle.level,1);assert.deepEqual(report.lifecycle.preservedAfter,report.lifecycle.preservedBefore);assert.deepEqual(report.lifecycle.arenaByWorld,{1:{},2:{}});assert.equal(report.lifecycle.permanent,true);report.lifecycle.cards.forEach(card=>{assert.equal(card.exists,true);assert.equal(card.locked,false);assert.equal(card.hidden,false);});
-  assert.deepEqual(report.arena,{w1Coverage:10,w1Cap:10,w2Coverage:10,w2Cap:10,assessment500:true,target485:true});
-  assert.deepEqual(report.sale.first,report.sale.rerun);assert.equal(report.sale.onlineTouchesSaleStones,false);assert.equal(report.sale.offlineUsesSaleOwner,true);assert.equal(report.sale.offlineSharedMultiplier,true);
-  console.log('Reincarnation Batch6 closure regression passed:',JSON.stringify(report));
+  assert.deepStrictEqual(pageErrors,[],`page errors: ${JSON.stringify(pageErrors)}`);
+  assert.strictEqual(report.overlevel.firstOnline,1);
+  assert.strictEqual(report.overlevel.firstOffline.multiplier,1);
+  assert.strictEqual(report.overlevel.rerunOnline,13);
+  assert.strictEqual(report.overlevel.rerunOffline.multiplier,13);
+  assert.strictEqual(report.overlevel.noCap,30.97);
+  assert.deepStrictEqual(report.batch.specFirst.levelsAfter,report.batch.specRerun.levelsAfter);
+  assert.deepStrictEqual(report.batch.enhW1First.levelsAfter,report.batch.enhW1Rerun.levelsAfter);
+  assert.deepStrictEqual(report.batch.enhW2First.levelsAfter,report.batch.enhW2Rerun.levelsAfter);
+  assert.strictEqual(report.lifecycle.resetOk,true);
+  assert.strictEqual(report.lifecycle.count,1);
+  assert.strictEqual(report.lifecycle.level,1);
+  assert.deepStrictEqual(report.lifecycle.preservedAfter,report.lifecycle.preservedBefore);
+  assert.strictEqual(report.lifecycle.arenaByWorld['1'].highestArenaUnlocked,1);
+  assert.strictEqual(report.lifecycle.arenaByWorld['2'].highestArenaUnlocked,1);
+  assert.strictEqual(report.lifecycle.permanent,true);
+  assert.strictEqual(report.lifecycle.cards.every(row=>row.exists&&!row.locked&&!row.hidden&&!row.disabled),true);
+  assert.strictEqual(report.arena.w1Coverage,10);
+  assert.strictEqual(report.arena.w1Cap,10);
+  assert.strictEqual(report.arena.w2Coverage,10);
+  assert.strictEqual(report.arena.w2Cap,10);
+  assert.strictEqual(report.arena.assessment500,true);
+  assert.strictEqual(report.arena.target485,true);
+  assert.strictEqual(report.progressNormalization.version,1);
+  assert.strictEqual(report.progressNormalization.firstChanged,true);
+  assert.strictEqual(report.progressNormalization.full,true);
+  assert.strictEqual(report.progressNormalization.secondPassChanged,false);
+  assert.strictEqual(report.progressNormalization.firstRunChanged,false);
+  assert.strictEqual(report.progressNormalization.firstRunStable,true);
+  assert.deepStrictEqual(report.sale.firstSale,report.sale.rerunSale);
+  assert.strictEqual(report.sale.onlineSaleExcluded,true);
+  assert.strictEqual(report.sale.offlineFormalSaleOwner,true);
+
+  console.log('Reincarnation Batch6 closure passed:',JSON.stringify(report));
  }finally{await browser.close();}
-})().catch(error=>{console.error(error?.stack||error);process.exit(1);});
+})().catch(error=>{console.error(error);process.exit(1);});
