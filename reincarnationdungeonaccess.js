@@ -1,0 +1,141 @@
+(function(){
+ const VERSION=1;
+ const MIN_LEVELS=Object.freeze({bounty:5,arena:15,void:25,mirror:Math.max(1,Math.floor(Number(window.MIRROR_DUNGEON_CONFIG?.unlockLevel)||50))});
+ const base=Object.freeze({
+  enterBountyDungeon:typeof window.enterBountyDungeon==="function"?window.enterBountyDungeon:null,
+  openArenaDungeon:typeof window.openArenaDungeon==="function"?window.openArenaDungeon:null,
+  startArenaDungeon:typeof window.startArenaDungeon==="function"?window.startArenaDungeon:null,
+  canEnterVoidMirage:typeof window.canEnterVoidMirage==="function"?window.canEnterVoidMirage:null,
+  beginVoidMirageRun:typeof window.beginVoidMirageRun==="function"?window.beginVoidMirageRun:null,
+  mirrorDungeonStatus:typeof window.mirrorDungeonStatus==="function"?window.mirrorDungeonStatus:null,
+  beginMirrorDungeonState:typeof window.beginMirrorDungeonState==="function"?window.beginMirrorDungeonState:null,
+  getArenaRankCapForWorld:typeof window.getArenaRankCapForWorld==="function"?window.getArenaRankCapForWorld:null
+ });
+
+ function targetState(target=null){return target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);}
+ function permanent(target=null){
+  const s=targetState(target),context=typeof window.dungeonReincarnationContext==="function"?window.dungeonReincarnationContext(s):null;
+  return context?.reincarnationRun===true;
+ }
+ function currentPhase(target=null){
+  const s=targetState(target);
+  return typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(s))||1:(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));
+ }
+ function withMinimumEntryLevel(minimum,callback){
+  if(typeof callback!=="function")return undefined;
+  const formal=state,actual=Math.max(1,Math.floor(Number(formal?.level)||1)),floor=Math.max(actual,Math.max(1,Math.floor(Number(minimum)||1)));
+  if(floor===actual)return callback();
+  const view={...formal,level:floor};
+  try{state=view;return callback();}finally{state=formal;}
+ }
+ function replaceDaily(target,next){
+  const row=target&&typeof target==="object"?target:null;if(!row)return false;
+  Object.keys(row).forEach(key=>{if(!(key in next))delete row[key];});Object.assign(row,next);return true;
+ }
+ function dateKey(timestamp){return typeof window.gameDailyDateKey==="function"?window.gameDailyDateKey(timestamp):new Date(Number(timestamp)||Date.now()).toISOString().slice(0,10);}
+
+ window.reincarnationDungeonPermanentAccessUnlocked=permanent;
+ window.REINCARNATION_DUNGEON_ACCESS_VERSION=VERSION;
+
+ if(typeof base.enterBountyDungeon==="function")window.enterBountyDungeon=function(...args){
+  if(!permanent(state))return base.enterBountyDungeon.apply(this,args);
+  return withMinimumEntryLevel(MIN_LEVELS.bounty,()=>base.enterBountyDungeon.apply(this,args));
+ };
+ if(typeof base.openArenaDungeon==="function")window.openArenaDungeon=function(...args){
+  if(!permanent(state))return base.openArenaDungeon.apply(this,args);
+  return withMinimumEntryLevel(MIN_LEVELS.arena,()=>base.openArenaDungeon.apply(this,args));
+ };
+ if(typeof base.startArenaDungeon==="function")window.startArenaDungeon=function(...args){
+  if(!permanent(state))return base.startArenaDungeon.apply(this,args);
+  return withMinimumEntryLevel(MIN_LEVELS.arena,()=>base.startArenaDungeon.apply(this,args));
+ };
+ if(typeof base.canEnterVoidMirage==="function")window.canEnterVoidMirage=function(...args){return permanent(state)||base.canEnterVoidMirage.apply(this,args);};
+ if(typeof base.beginVoidMirageRun==="function")window.beginVoidMirageRun=function(...args){
+  if(!permanent(state))return base.beginVoidMirageRun.apply(this,args);
+  return withMinimumEntryLevel(MIN_LEVELS.void,()=>base.beginVoidMirageRun.apply(this,args));
+ };
+
+ if(typeof base.mirrorDungeonStatus==="function")window.mirrorDungeonStatus=function(...args){
+  const info=base.mirrorDungeonStatus.apply(this,args);
+  if(!info||!permanent(state)||info.unlocked===true)return info;
+  return {...info,unlocked:true,canStart:info.status==="idle"};
+ };
+ if(typeof base.beginMirrorDungeonState==="function")window.beginMirrorDungeonState=function(timestamp=Date.now()){
+  if(!permanent(state)||base.mirrorDungeonStatus(timestamp)?.unlocked===true)return base.beginMirrorDungeonState.call(this,timestamp);
+  const info=window.mirrorDungeonStatus(timestamp);
+  if(!info?.unlocked)return {ok:false,reason:"locked",...(info||{})};
+  if(info.status!=="idle")return {ok:false,reason:"already_used",...info};
+  if(typeof window.ensureMirrorDungeonState!=="function")return {ok:false,reason:"missing_state",...info};
+  const mirror=window.ensureMirrorDungeonState(timestamp),key=dateKey(timestamp),now=Math.max(0,Math.floor(Number(timestamp)||Date.now()));
+  if(!mirror?.daily)return {ok:false,reason:"missing_state",...info};
+  const previous={...mirror.daily};
+  replaceDaily(mirror.daily,{dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0});
+  let persisted=false;
+  try{persisted=typeof save==="function"&&save(false)===true;}catch(error){console.error("Reincarnation mirror dungeon start save failed",error);}
+  if(!persisted){replaceDaily(mirror.daily,previous);return {ok:false,reason:"save_failed",...window.mirrorDungeonStatus(timestamp)};}
+  return {ok:true,...window.mirrorDungeonStatus(timestamp)};
+ };
+
+ if(typeof base.getArenaRankCapForWorld==="function")window.getArenaRankCapForWorld=function(world,target=state){
+  const w=Number(world)===2?2:1;
+  if(w===1&&permanent(target)&&typeof window.firstWorldRerunKeyBossCoverage==="function"){
+   const coverage=Math.max(0,Math.floor(Number(window.firstWorldRerunKeyBossCoverage(target))||0));
+   const max=typeof window.getArenaMaxRankForWorld==="function"?Math.max(1,Math.floor(Number(window.getArenaMaxRankForWorld(1))||1)):10;
+   return Math.max(1,Math.min(max,coverage||1));
+  }
+  return base.getArenaRankCapForWorld.call(this,w,target);
+ };
+
+ function reinstallThirdWorldPolicy(){
+  if(typeof window.unregisterDungeonModeAvailabilityPolicy!=="function"||typeof window.registerDungeonModeAvailabilityPolicy!=="function")return false;
+  window.unregisterDungeonModeAvailabilityPolicy("third-world");
+  return window.registerDungeonModeAvailabilityPolicy("third-world",function(mode,target){
+   if(currentPhase(target)!==3)return null;
+   if(mode==="bounty"){
+    if(permanent(target))return {visible:true,enabled:true,unlockText:"轉生後永久解鎖"};
+    return {visible:false,enabled:false,reason:"高維紀元已關閉懸賞戰。"};
+   }
+   if(mode==="arena")return {visible:true,enabled:true,titleText:"高維競技場",rewardText:"VIP 積分",unlockText:"高維紀元可挑戰",descriptionText:"選擇定相或異相競技場，完成三戰取得 VIP 積分。",buttonLabel:"進入高維競技場"};
+   if(mode==="tower")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
+   if(mode==="mirror")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
+   return {visible:true,enabled:true};
+  });
+ }
+
+ function dailyRemaining(mode){const row=typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus(mode):null;return row?Math.max(0,Math.floor(Number(row.remaining)||0)):0;}
+ function unlockCard(main,selector,mode){
+  const card=main?.querySelector(selector);if(!card)return false;
+  card.hidden=false;card.style.removeProperty("display");delete card.dataset.dungeonPolicyHidden;card.classList.remove("locked");
+  const unlock=card.querySelector(".dungeon-unlock-label"),button=card.querySelector(".dungeon-entry-btn");
+  if(unlock){unlock.textContent="轉生後永久解鎖";unlock.hidden=false;}
+  if(!button)return true;
+  let disabled=false,onclick="",label="";
+  if(mode==="bounty"){disabled=dailyRemaining("bounty")<=0;onclick="enterBountyDungeon()";label=disabled?"今日次數已用完":"進入懸賞戰";}
+  else if(mode==="arena"){disabled=dailyRemaining("arena")<=0;onclick="openArenaDungeon()";label=disabled?"今日次數已用完":(currentPhase()===3?"進入高維競技場":"進入競技場");}
+  else if(mode==="tower"){onclick="enterVoidMirageDungeon()";label="進入虛空幻境";}
+  else if(mode==="mirror"){onclick="openMirrorDungeon()";const info=typeof window.mirrorDungeonStatus==="function"?window.mirrorDungeonStatus():null;label=info?.ended?"查看鏡像戰":"進入鏡像戰";}
+  button.disabled=disabled;
+  if(onclick)button.setAttribute("onclick",disabled?"void(0)":onclick);
+  if(label)button.textContent=label;
+  return true;
+ }
+ function syncUi(context={}){
+  if(!permanent(state))return false;
+  const main=context.main||document.getElementById("main"),viewName=String(context.view??(typeof view!=="undefined"?view:""));if(!main)return false;
+  if(viewName==="dungeon"){
+   unlockCard(main,".dungeon-mode-bounty","bounty");
+   unlockCard(main,".dungeon-mode-arena","arena");
+   unlockCard(main,".dungeon-mode-tower","tower");
+   unlockCard(main,"[data-mirror-dungeon-card], .dungeon-mode-mirror","mirror");
+  }else if(viewName==="home"&&currentPhase()===3){
+   const cards=Array.from(main.querySelectorAll(".menu-card")),dungeon=cards.find(card=>(card.getAttribute("onclick")||"").includes("go('dungeon')")),desc=dungeon?.querySelector("span");
+   if(desc)desc.textContent="挑戰懸賞戰、競技場、鏡像戰與虛空幻境";
+  }
+  return true;
+ }
+
+ const policyReinstalled=reinstallThirdWorldPolicy();
+ if(typeof window.registerDungeonPostRenderHook==="function")window.registerDungeonPostRenderHook(syncUi);
+ window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT=Object.freeze({version:VERSION,policyReinstalled,wrapped:{bounty:typeof base.enterBountyDungeon==="function",arena:typeof base.openArenaDungeon==="function"&&typeof base.startArenaDungeon==="function",void:typeof base.beginVoidMirageRun==="function",mirror:typeof base.beginMirrorDungeonState==="function",arenaCap:typeof base.getArenaRankCapForWorld==="function"}});
+ window.syncReincarnationDungeonAccessUi=syncUi;
+})();
