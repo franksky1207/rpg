@@ -3,6 +3,9 @@
  const TRAIT_PAIR_DIAGNOSTICS_VERSION=1;
  const COMBAT_OWNER_VERSION=1;
  const INTEGRATION_VERSION=2;
+ const OPTIMIZATION_VERSION=1;
+ const FORMAL_STATE_GUARD_VERSION=1;
+ const PREPARED_CONTEXT_VERSION=1;
  const BATCH_SIZE=25;
  const model={depth:1,runs:100,busy:false,result:null,diagnostics:null};
 
@@ -44,7 +47,7 @@
   if(!stats)return null;
   const world=whole(character?.world??1,1,3),civilizationLevel=typeof window.gmTestCivilizationLevelValue==="function"?whole(window.gmTestCivilizationLevelValue(),0,10):0;
   const breakthroughLevel=Math.max(0,whole(character?.breakthroughLevel??0,0));
-  return Object.freeze({character:clone(character),world,civilizationLevel,breakthroughLevel,player:{hp:Math.max(1,num(stats.hp,1)),atk:Math.max(1,num(stats.atk,1)),def:Math.max(0,num(stats.def,0)),crit:Math.max(0,num(stats.crit,0)),dodge:Math.max(0,num(stats.dodge,0))}});
+  return Object.freeze({character:clone(character),world,civilizationLevel,breakthroughLevel,player:Object.freeze({hp:Math.max(1,num(stats.hp,1)),atk:Math.max(1,num(stats.atk,1)),def:Math.max(0,num(stats.def,0)),crit:Math.max(0,num(stats.crit,0)),dodge:Math.max(0,num(stats.dodge,0))})});
  }
  function depthInfo(depth){return typeof window.alternateUniverseDepthInfo==="function"?window.alternateUniverseDepthInfo(depth):null;}
  function baseEnemyFor(depth){
@@ -54,16 +57,44 @@
   const info=depthInfo(u),name=info?.universeName?`${info.universeName}・${info.depthLabel||`第 ${u} 層域`}`:`異宇宙第 ${u} 層域`;
   return Object.freeze({...base,name,alternateUniverse:true,alternateUniverseDepth:u,alternateUniverseMode:"gm-benchmark"});
  }
- function enemyFor(depth,traits){
-  const base=baseEnemyFor(depth),pair=canonicalPair(traits?.[0],traits?.[1]);
+ function enemyFromBase(base,traits){
+  const pair=canonicalPair(traits?.[0],traits?.[1]);
   if(!base||!pair||typeof window.applyMonsterTraits!=="function")return null;
   const enemy=window.applyMonsterTraits({...base},pair);
   return enemy?Object.freeze({...enemy,traits:Object.freeze(pair.slice())}):null;
  }
+ function enemyFor(depth,traits){return enemyFromBase(baseEnemyFor(depth),traits);}
  function seededRng(seed){let x=(whole(seed,1,0x7fffffff)||1)>>>0;return function(){x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;};}
- function runOne(depth,traits=null,{rng=Math.random}={}){
-  const pair=traits?canonicalPair(traits?.[0],traits?.[1]):rollPair(rng),ctx=playerContext(),enemy=enemyFor(depth,pair);
-  if(!ctx)return {ok:false,reason:"player-test-context-missing"};
+ function formalStateFingerprint(target){
+  const root=arguments.length?target:(typeof state!=="undefined"?state:null);
+  let h1=2166136261>>>0,h2=5381>>>0,nodes=0;
+  const seen=typeof WeakSet==="function"?new WeakSet():null;
+  function mix(text){const s=String(text);for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,16777619)>>>0;h2=(((h2<<5)+h2)^c)>>>0;}}
+  function visit(value){
+   nodes++;
+   if(value===null){mix("null;");return;}
+   const type=typeof value;mix(type);mix(":");
+   if(type==="number"){mix(Number.isNaN(value)?"NaN":Object.is(value,-0)?"-0":String(value));mix(";");return;}
+   if(type==="string"||type==="boolean"||type==="undefined"||type==="bigint"){mix(String(value));mix(";");return;}
+   if(type==="function"||type==="symbol"){mix("ignored;");return;}
+   if(seen){if(seen.has(value)){mix("[cycle];");return;}seen.add(value);}
+   if(Array.isArray(value)){mix("[");for(let i=0;i<value.length;i++){mix(i);mix("=");visit(value[i]);}mix("]");return;}
+   const keys=Object.keys(value);mix("{");for(const key of keys){mix(key);mix("=");visit(value[key]);}mix("}");
+  }
+  visit(root);
+  return Object.freeze({version:FORMAL_STATE_GUARD_VERSION,fingerprint:`${h1.toString(16).padStart(8,"0")}:${h2.toString(16).padStart(8,"0")}:${nodes}`,nodes});
+ }
+ function formalStateGuard(){return formalStateFingerprint(typeof state!=="undefined"?state:null);}
+ function guardStable(before,after){return !!before&&!!after&&before.fingerprint===after.fingerprint;}
+ function prepareContext(depth){
+  const u=whole(depth,1,maxDepth()),ctx=playerContext(),baseEnemy=baseEnemyFor(u);
+  if(!ctx)return Object.freeze({ok:false,reason:"player-test-context-missing",version:PREPARED_CONTEXT_VERSION,depth:u});
+  if(!baseEnemy)return Object.freeze({ok:false,reason:"enemy-context-missing",version:PREPARED_CONTEXT_VERSION,depth:u});
+  return Object.freeze({ok:true,version:PREPARED_CONTEXT_VERSION,depth:u,ctx,baseEnemy,pairs:allPairs()});
+ }
+ function runOnePrepared(prepared,traits=null,{rng=Math.random}={}){
+  if(!prepared?.ok)return {ok:false,reason:prepared?.reason||"prepared-context-missing"};
+  const pair=traits?canonicalPair(traits?.[0],traits?.[1]):rollPair(rng),ctx=prepared.ctx,enemy=enemyFromBase(prepared.baseEnemy,pair);
   if(!pair||!enemy)return {ok:false,reason:"enemy-context-missing"};
   if(typeof window.runWorldCombatCore!=="function")return {ok:false,reason:"world-combat-owner-missing"};
   const resolved=window.runWorldCombatCore(ctx.player,enemy,ctx.player.hp,{world:ctx.world,state:typeof state!=="undefined"?state:null,civilizationLevel:ctx.civilizationLevel,breakthroughLevel:ctx.breakthroughLevel,logs:false,rng,useTestSpecializations:true,useTestMarks:true,playerHealCap:ctx.player.hp,maxActions:200000,maxActionsPerChain:1024});
@@ -85,38 +116,39 @@
   const hpBounds=playerEnd<=ctx.player.hp+1e-9&&enemyEnd<=num(enemy.hp,1)+1e-9;
   return Object.freeze({ok:true,pair:Object.freeze(pair.slice()),ctx,enemy,combat,completed,win,finite,hpBounds,actionSafety:combat.actionBudgetReached===true||combat.chainBudgetReached===true,playerEnd,enemyEnd,turns:Math.max(0,whole(combat.turns,0)),playerDamage,enemyDamage,playerCrits,enemyCrits,dodges,berserkTriggers,playerFinalDamageMultiplier:num(resolved?.playerFinalDamageMultiplier,1)});
  }
- function aggregateStart(depth,runs,ctx,enemy){return {version:VERSION,depth,runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),traitCounts:{},traitPairCounts:{},formalStateStable:true};}
+ function runOne(depth,traits=null,{rng=Math.random}={}){return runOnePrepared(prepareContext(depth),traits,{rng});}
+ function aggregateStart(depth,runs,ctx,enemy){return {version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,depth,runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),traitCounts:{},traitPairCounts:{},formalStateStable:true};}
  async function runBenchmark(options={}){
   const depth=whole(options.depth??model.depth,1,maxDepth()),runs=[100,500,1000].includes(Number(options.runs))?Number(options.runs):100,fixedPair=options.traits?canonicalPair(options.traits?.[0],options.traits?.[1]):null;
   if(options.traits&&!fixedPair)return {ok:false,reason:"invalid-trait-pair"};
-  const ctx=playerContext(),baseEnemy=baseEnemyFor(depth);if(!ctx||!baseEnemy)return {ok:false,reason:!ctx?"player-test-context-missing":"enemy-context-missing"};
-  const formalBefore=typeof state!=="undefined"?JSON.stringify(state):"",out=aggregateStart(depth,runs,ctx,baseEnemy);
+  const prepared=prepareContext(depth);if(!prepared.ok)return {ok:false,reason:prepared.reason};
+  const formalBefore=formalStateGuard(),out=aggregateStart(depth,runs,prepared.ctx,prepared.baseEnemy);
   for(let i=0;i<runs;i++){
-   const row=runOne(depth,fixedPair,{rng:Math.random});
+   const row=runOnePrepared(prepared,fixedPair,{rng:Math.random});
    if(!row.ok){out.failed++;out.invalid++;continue;}
    const pairKey=row.pair.join("+");out.traitPairCounts[pairKey]=(out.traitPairCounts[pairKey]||0)+1;row.pair.forEach(id=>{out.traitCounts[id]=(out.traitCounts[id]||0)+1;});
    if(row.completed)out.completed++;else out.failed++;
    if(row.win)out.wins++;
-   out.turns+=row.turns;out.playerEndPct+=row.playerEnd/Math.max(1,row.ctx.player.hp)*100;out.enemyEndPct+=row.enemyEnd/Math.max(1,row.enemy.hp)*100;
+   out.turns+=row.turns;out.playerEndPct+=row.playerEnd/Math.max(1,prepared.ctx.player.hp)*100;out.enemyEndPct+=row.enemyEnd/Math.max(1,row.enemy.hp)*100;
    out.playerDamage+=row.playerDamage;out.enemyDamage+=row.enemyDamage;out.playerCrits+=row.playerCrits;out.enemyCrits+=row.enemyCrits;out.dodges+=row.dodges;out.berserkTriggers+=row.berserkTriggers;
    if(row.actionSafety)out.actionSafety++;
    if(!row.finite||!row.hpBounds)out.invalid++;
    if((i+1)%BATCH_SIZE===0&&i+1<runs)await new Promise(resolve=>setTimeout(resolve,0));
   }
-  const formalAfter=typeof state!=="undefined"?JSON.stringify(state):"";out.formalStateStable=formalBefore===formalAfter;
+  const formalAfter=formalStateGuard();out.formalStateStable=guardStable(formalBefore,formalAfter);out.formalStateFingerprintBefore=formalBefore.fingerprint;out.formalStateFingerprintAfter=formalAfter.fingerprint;
   const divisor=Math.max(1,out.completed||runs);
   out.winRate=one(out.wins/runs*100);out.avgTurns=one(out.turns/divisor);out.avgPlayerEndPct=one(out.playerEndPct/runs);out.avgEnemyEndPct=one(out.enemyEndPct/runs);out.avgPlayerDamage=Math.round(out.playerDamage/runs);out.avgEnemyDamage=Math.round(out.enemyDamage/runs);
   out.passed=out.invalid===0&&out.actionSafety===0&&out.formalStateStable&&out.completed===runs;
   return Object.freeze(out);
  }
- function diagnosticPair(depth,pair,index){
-  const enemy=enemyFor(depth,pair),base=baseEnemyFor(depth),errors=[];
+ function diagnosticPair(prepared,pair,index){
+  const enemy=enemyFromBase(prepared?.baseEnemy,pair),base=prepared?.baseEnemy,errors=[];
   if(!enemy||!base)errors.push("enemy-init");
   if(enemy&&(!Array.isArray(enemy.traits)||enemy.traits.length!==2||enemy.traits[0]!==pair[0]||enemy.traits[1]!==pair[1]))errors.push("trait-identity");
   if(enemy&&pair.includes("berserk")&&enemy.berserk!==true)errors.push("berserk-flag");
   if(enemy&&![enemy.hp,enemy.atk,enemy.def,enemy.crit,enemy.dodge].every(Number.isFinite))errors.push("enemy-finite");
   if(enemy&&(enemy.hp<1||enemy.atk<1||enemy.def<0||enemy.crit<0||enemy.dodge<0))errors.push("enemy-bounds");
-  const combat=runOne(depth,pair,{rng:seededRng(7000+depth*31+index*97)});
+  const combat=runOnePrepared(prepared,pair,{rng:seededRng(7000+prepared.depth*31+index*97)});
   if(!combat.ok)errors.push(combat.reason||"combat");
   else{
    if(!combat.completed)errors.push("combat-incomplete");
@@ -127,10 +159,11 @@
   return Object.freeze({pair:pair.slice(),names:pair.map(traitName),passed:errors.length===0,errors:Object.freeze(errors),enemy:enemy?{hp:enemy.hp,atk:enemy.atk,def:enemy.def,crit:enemy.crit,dodge:enemy.dodge,berserk:enemy.berserk===true}:null,combat:combat.ok?{win:combat.win,turns:combat.turns,playerEnd:combat.playerEnd,enemyEnd:combat.enemyEnd,berserkTriggers:combat.berserkTriggers}:null});
  }
  async function runDiagnostics(options={}){
-  const depth=whole(options.depth??model.depth,1,maxDepth()),pairs=allPairs(),formalBefore=typeof state!=="undefined"?JSON.stringify(state):"";
-  const rows=[];for(let i=0;i<pairs.length;i++){rows.push(diagnosticPair(depth,pairs[i],i));if((i+1)%7===0&&i+1<pairs.length)await new Promise(resolve=>setTimeout(resolve,0));}
-  const formalAfter=typeof state!=="undefined"?JSON.stringify(state):"",failed=rows.filter(row=>!row.passed);
-  return Object.freeze({version:TRAIT_PAIR_DIAGNOSTICS_VERSION,depth,pairCount:pairs.length,passed:failed.length===0&&formalBefore===formalAfter,formalStateStable:formalBefore===formalAfter,failedCount:failed.length,failedPairs:Object.freeze(failed.map(row=>({pair:row.pair.slice(),errors:Array.from(row.errors)}))),rows:Object.freeze(rows)});
+  const depth=whole(options.depth??model.depth,1,maxDepth()),prepared=prepareContext(depth);if(!prepared.ok)return Object.freeze({version:TRAIT_PAIR_DIAGNOSTICS_VERSION,depth,pairCount:0,passed:false,formalStateStable:true,failedCount:1,failedPairs:Object.freeze([{pair:[],errors:[prepared.reason]}]),rows:Object.freeze([])});
+  const pairs=prepared.pairs,formalBefore=formalStateGuard(),rows=[];
+  for(let i=0;i<pairs.length;i++){rows.push(diagnosticPair(prepared,pairs[i],i));if((i+1)%7===0&&i+1<pairs.length)await new Promise(resolve=>setTimeout(resolve,0));}
+  const formalAfter=formalStateGuard(),failed=rows.filter(row=>!row.passed),formalStateStable=guardStable(formalBefore,formalAfter);
+  return Object.freeze({version:TRAIT_PAIR_DIAGNOSTICS_VERSION,optimizationVersion:OPTIMIZATION_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,depth,pairCount:pairs.length,passed:failed.length===0&&formalStateStable,formalStateStable,formalStateFingerprintBefore:formalBefore.fingerprint,formalStateFingerprintAfter:formalAfter.fingerprint,failedCount:failed.length,failedPairs:Object.freeze(failed.map(row=>({pair:row.pair.slice(),errors:Array.from(row.errors)}))),rows:Object.freeze(rows)});
  }
  function metrics(r){if(!r)return '<div class="muted">尚未執行異宇宙測試。</div>';return `<div class="gmpb-metrics">${[["勝率",`${r.winRate}%`],["平均回合",r.avgTurns],["玩家平均剩餘 HP",`${r.avgPlayerEndPct}%`],["敵人平均剩餘 HP",`${r.avgEnemyEndPct}%`],["玩家平均輸出",fmt(r.avgPlayerDamage)],["玩家平均承傷",fmt(r.avgEnemyDamage)]].map(([label,value])=>`<div class="item gmpb-metric"><div class="muted">${label}</div><b>${value}</b></div>`).join("")}</div><div class="muted" style="margin-top:7px">完成 ${r.completed}/${r.runs}｜動作安全異常 ${r.actionSafety}｜無效結果 ${r.invalid}｜正式資料${r.formalStateStable?"未變動":"⚠ 發生變動"}</div>`;}
  function html(){
@@ -177,7 +210,9 @@
   if(pairs.some(pair=>pair.length!==2||pair[0]===pair[1]))errors.push({code:"PAIR_SHAPE"});
   if(model.depth!==1)errors.push({code:"SESSION_DEFAULT_DEPTH",actual:model.depth});
   const sample=ids.length>=2?enemyFor(1,[ids[1],ids[0]]):null;if(ids.length>=2&&(!sample||sample.traits[0]!==ids[0]||sample.traits[1]!==ids[1]))errors.push({code:"CANONICAL_ORDER"});
-  return Object.freeze({version:VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
+  const guardA=formalStateFingerprint({a:1,b:{c:2}}),guardB=formalStateFingerprint({a:1,b:{c:3}});if(guardA.fingerprint===guardB.fingerprint)errors.push({code:"FORMAL_STATE_GUARD_COLLISION_PROBE"});
+  const prepared=prepareContext(1);if(!prepared.ok||prepared.version!==PREPARED_CONTEXT_VERSION)errors.push({code:"PREPARED_CONTEXT",actual:prepared});
+  return Object.freeze({version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
  }
  function installIntegration(){
   const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
@@ -220,8 +255,13 @@
  window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION=TRAIT_PAIR_DIAGNOSTICS_VERSION;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION=COMBAT_OWNER_VERSION;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION=INTEGRATION_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_OPTIMIZATION_VERSION=OPTIMIZATION_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION=FORMAL_STATE_GUARD_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_PREPARED_CONTEXT_VERSION=PREPARED_CONTEXT_VERSION;
  window.gmAlternateUniverseTraitPairs=()=>allPairs().map(pair=>pair.slice());
  window.gmAlternateUniverseBenchmarkEnemy=(depth,traits)=>clone(enemyFor(depth,traits||rollPair()));
+ window.gmAlternateUniverseBenchmarkFormalStateFingerprint=formalStateFingerprint;
+ window.gmAlternateUniverseBenchmarkPrepareContext=prepareContext;
  window.gmRunAlternateUniverseBenchmark=runBenchmark;
  window.gmRunAlternateUniverseTraitDiagnostics=runDiagnostics;
  window.gmAlternateUniverseBenchmarkHtml=html;
@@ -233,6 +273,6 @@
  window.gmAlternateUniverseBenchmarkSetRuns=setRuns;
  window.gmAlternateUniverseBenchmarkRunSelected=runSelected;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY=validate();
- window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT=Object.freeze({version:VERSION,integrationVersion:INTEGRATION_VERSION,integrated:installIntegration(),separateHubSection:false,defaultDepth:1});
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT=Object.freeze({version:VERSION,integrationVersion:INTEGRATION_VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,integrated:installIntegration(),separateHubSection:false,defaultDepth:1});
  if(!window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY.passed)console.error("[文明戰線] GM AU benchmark integrity error",window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY.errors);
 })();
