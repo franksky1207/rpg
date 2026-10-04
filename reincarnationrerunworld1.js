@@ -1,12 +1,14 @@
 (function(){
  const VERSION=1;
+ const TARGET_IDENTITY_FIX_VERSION=1;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
   canBoss:typeof window.canBoss==="function"?window.canBoss:null,
   mapStatusText:typeof window.mapStatusText==="function"?window.mapStatusText:null,
   enemyProgressHtml:typeof window.enemyProgressHtml==="function"?window.enemyProgressHtml:null,
   enemyNoteHtml:typeof window.enemyNoteHtml==="function"?window.enemyNoteHtml:null,
-  adventureMapPage:typeof window.adventureMapPage==="function"?window.adventureMapPage:null
+  adventureMapPage:typeof window.adventureMapPage==="function"?window.adventureMapPage:null,
+  adventurePreparePage:typeof window.adventurePreparePage==="function"?window.adventurePreparePage:null
  });
  const regionOpenState=Object.create(null);
  let regionOpenInitialized=false;
@@ -70,13 +72,26 @@
   const coverage=keyBossCoverage(state);
   return `<section class="map-screen reincarnation-rerun-world1" data-rerun-world1="1"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="notice"><b>轉生重征服・銀河紀元</b><div class="muted" style="margin-top:6px">100 張地圖與所有普通／菁英／Boss 均可直接挑戰；只有實際擊敗的 Boss 會寫入正式通關紀錄。</div><div class="muted" style="margin-top:4px">目前關鍵王向下資格：${coverage} / ${regions().length}</div></div><div class="world-region-list">${regions().map(rerunRegionHtml).join("")}</div></section>`;
  }
+ function rerunAdventurePreparePage(){
+  if(typeof firstRunOwners.adventurePreparePage!=="function")return "";
+  if(!rerunActive(state))return firstRunOwners.adventurePreparePage();
+  const index=validMapIndex(selectedMap);if(index<0)return firstRunOwners.adventurePreparePage();
+  const originalUnlocked=state?.unlockedMap;
+  try{
+   if(state&&typeof state==="object")state.unlockedMap=Math.max(finiteWhole(originalUnlocked,0),index);
+   return firstRunOwners.adventurePreparePage();
+  }finally{
+   if(state&&typeof state==="object")state.unlockedMap=originalUnlocked;
+  }
+ }
 
  window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
+ window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION=TARGET_IDENTITY_FIX_VERSION;
  window.firstWorldReincarnationRerunContext=rerunContext;
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
@@ -118,4 +133,5 @@
   if(rerunActive(state))return rerunAdventureMapPage();
   return typeof firstRunOwners.adventureMapPage==="function"?firstRunOwners.adventureMapPage():"";
  };
+ if(typeof firstRunOwners.adventurePreparePage==="function")window.adventurePreparePage=rerunAdventurePreparePage;
 })();
