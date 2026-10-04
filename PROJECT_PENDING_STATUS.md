@@ -11,7 +11,7 @@
 - 銀河紀元、宇宙紀元、高維紀元三紀元 runtime 已完成；高維紀元為 Lv.1000～2000。
 - 轉生／突破核心、異宇宙 Batch3～4、轉生後重征服 Batch5、Batch5 後續架構優化，以及第6大批 6-1～6-5 均已完成。
 - 第6大批完成內容：轉生越級 Online／Offline 收益、一鍵平均專精／平均最大強化、首次轉生後四大副本永久入口、主線正式向下征服回填，以及 Batch6 完整封箱 Regression。
-- 第6大批程式碼優化第1～3批已完成；目前主要施工剩餘：Batch7，以及優化第4～5批。
+- 第6大批程式碼優化第1～4批已完成；目前主要施工剩餘：Batch7，以及優化第5批。
 
 ## 第6大批正式規則
 
@@ -22,7 +22,7 @@
 - 首輪 `count=0` 永遠為 1×，既有首輪 EXP／資源公式不改。
 - W1 Online：EXP、金幣、戰鬥來源基礎／進階強化石可吃倍率；裝備出售與出售轉換資源排除。
 - W2 Online：EXP、暗物質、暗能量可吃倍率；裝備出售排除。
-- W1／W2 Offline 共用同一 multiplier owner，並以正式樣本的 `playerLevel / enemyLevel` 為準；沒有可靠等級 context 的舊 pending 採保守 1×。
+- W1／W2 Offline 共用同一 multiplier owner，並以正式樣本的 `playerLevel / enemyLevel` 為準；沒有可靠等級 context 的舊 sample／pending 採保守 1×。
 - W3 Offline 完全不接越級倍率。
 
 ### 2. 共用批次成長
@@ -83,11 +83,21 @@
 - `tests/runtime/player-batch-upgrades-batch6-2-integrity.js` 已擴充驗證：單次 save、save false rollback、save exception rollback、root/nested identity、首輪／轉生結果一致、W2 專精鎖定及 W3 操作隱藏。
 - 本批不新增存檔欄位、不升 Save Schema，也不修改任何專精／強化成本公式。
 
+## 2026-10-04 第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化
+
+- `offlinestatecore.js` 新增 `OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1`，正式區分 Offline timing sample 是否同時具有可被越級收益使用的玩家／敵人等級來源。
+- V3→V4 normalization：原 V3 sample／pending 只有在原始 `playerLevel` 與 `enemyLevel` 都存在且有效時，才會標記 `overlevelContextRecorded=true`；缺任一欄位即保守標記 false。
+- 舊 V3 缺失等級 context 仍可在原本 timing multiplier 可驗證時保留為離線速度樣本，但不保留假的預設 Lv.1 等級，因此不可能誤吃轉生越級收益倍率。
+- 既有 V4 sample 若沒有明確 provenance 標記，即使殘留數字型 `playerLevel / enemyLevel` 也一律視為不可靠，移除該 reward-level context 並固定越級倍率 1×；避免早期 V3→V4 曾把缺失值補成 1 後被誤認為正式紀錄。
+- 新 runtime W1／W2 正式前景樣本經唯一 `appendOfflineBattleSample()` owner 寫入時，只要捕捉到有效玩家／敵人等級，就由 owner 明確標記為可靠 provenance；不要求各戰鬥 producer 重複實作判定。
+- V4 pending 只有既存 `overlevelContextRecorded=true` 且兩個等級都有效才保留可靠資格；沒有 marker 的舊 V4 pending 同樣降為保守 1×。
+- W3 Offline 不使用這項越級 reward context，原 timing／裝備離線流程不變；首輪 `count=0` 即使 provenance 可靠，既有 shared multiplier owner 仍回傳 1×。
+- `OFFLINE_SAMPLE_OWNER_INTEGRITY` 升級檢查 V3 有／無等級、舊 V4 無 marker、新正式 append provenance；另新增 `tests/runtime/offline-sample-provenance-opt4-integrity.js` 做真實 browser regression，覆蓋 W1／W2 sample、pending、首輪隔離與 W3 不受影響。
+- 本批不新增 Save Schema 欄位、不升 Schema18、不改 Offline 收益公式或戰鬥公式；只讓舊樣本的等級來源從「猜測」改為可驗證 provenance。
+
 ## 第6大批後續優化排程
 
-1. **優化第4批：Offline 舊樣本 provenance 安全化**
-   - V3→V4 明確區分可靠與缺失的 player/enemy level；不可靠越級 context 固定 1×。
-2. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
+1. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
    - 收斂 W1 `fightOnce` 多層 wrapper；將 Arena 97% 與出售隔離由 source-string 檢查提升為正式行為測試。
 
 ## Batch7 尚待施工
