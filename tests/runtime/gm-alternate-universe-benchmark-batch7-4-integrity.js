@@ -27,7 +27,7 @@ const assert=require("assert");
   });
 
   assert.equal(report.self.passed,true,"Batch7-4 self-integrity failed: "+JSON.stringify(report.self.errors||null));
-  assert.deepEqual(report.versions,{benchmark:2,diagnostics:1,combatOwner:1,integration:1,hub:17});
+  assert.deepEqual(report.versions,{benchmark:2,diagnostics:1,combatOwner:1,integration:2,hub:17});
   assert.equal(report.install.integrated,true);assert.equal(report.install.separateHubSection,false);assert.equal(report.install.defaultDepth,1);
   assert.equal(report.pairs.length,21,"7 canonical traits must yield exactly 21 unordered pairs.");
   assert.equal(new Set(report.pairs.map(pair=>pair.join("+"))).size,21,"Trait pairs must be unique.");
