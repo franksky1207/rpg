@@ -86,15 +86,15 @@
    let context=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
    if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state))&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({mode:"review",source:"review-battle-start"},state);
    if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&context.policy?.formalRewardsAllowed===false&&context.policy?.formalProgressAllowed===false))return false;
-   const oldMap=typeof window.getGalaxyReviewSelectedMap==="function"?window.getGalaxyReviewSelectedMap():null;
-   const oldEnemy=typeof window.getGalaxyReviewSelectedEnemy==="function"?window.getGalaxyReviewSelectedEnemy():null;
+   const originalGetMap=window.getGalaxyReviewSelectedMap;
+   const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
    try{
-    if(typeof window.setGalaxyReviewSelectedMap==="function")window.setGalaxyReviewSelectedMap(context.mapIndex);
-    if(typeof window.setGalaxyReviewSelectedEnemy==="function")window.setGalaxyReviewSelectedEnemy(context.enemyIndex);
+    window.getGalaxyReviewSelectedMap=()=>context.mapIndex;
+    window.getGalaxyReviewSelectedEnemy=()=>context.enemyIndex;
     return await baseReviewStart.apply(this,arguments);
    }finally{
-    if(oldMap!=null&&typeof window.setGalaxyReviewSelectedMap==="function")window.setGalaxyReviewSelectedMap(oldMap);
-    if(oldEnemy!=null&&typeof window.setGalaxyReviewSelectedEnemy==="function")window.setGalaxyReviewSelectedEnemy(oldEnemy);
+    window.getGalaxyReviewSelectedMap=originalGetMap;
+    window.getGalaxyReviewSelectedEnemy=originalGetEnemy;
    }
   };
  }
