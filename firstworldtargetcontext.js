@@ -5,6 +5,7 @@
  const PREPARED_CONTEXT_VERSION=1;
  const ENCOUNTER_BRIDGE_VERSION=1;
  const UI_PREPARE_BRIDGE_VERSION=1;
+ const BATTLE_BINDING_VERSION=1;
  const MODES=Object.freeze(["formal","rerun","review"]);
  let sequence=0;
  let preparedContext=null;
@@ -129,6 +130,23 @@
   }
   return Object.freeze({version:VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
+ function validateCurrent(context,target=null){
+  const s=targetState(target),base=validate(context),errors=[...base.errors],life=lifeSnapshot(s),phase=currentPhase(s);
+  if(base.passed===true&&context?.valid===true){
+   if(context.count!==life.count)errors.push("stale-count");
+   if(context.lifeId!==life.lifeId)errors.push("stale-life");
+   if(context.mode==="formal"&&(phase!==1||life.firstRun!==true))errors.push("formal-life-mismatch");
+   if(context.mode==="rerun"&&(phase!==1||life.reincarnationRun!==true))errors.push("rerun-life-mismatch");
+  }
+  return Object.freeze({version:BATTLE_BINDING_VERSION,passed:errors.length===0,errors:Object.freeze(errors),phase,count:life.count,lifeId:life.lifeId});
+ }
+ function bindForBattle(context,target=null){
+  const check=validateCurrent(context,target);
+  if(check.passed!==true||context?.valid!==true||context?.authorized!==true)return null;
+  if(context.mode==="review")return null;
+  if(context.policy?.formalRewardsAllowed!==true||context.policy?.formalProgressAllowed!==true)return null;
+  return context;
+ }
  function preparedMatches(context,mode,picked,life){
   return !!context&&context.valid===true&&context.authorized===true&&context.mode===mode&&context.mapIndex===validMapIndex(picked.mapIndex)&&context.enemyIndex===validEnemyIndex(picked.enemyIndex)&&context.lifeId===life.lifeId&&context.count===life.count;
  }
@@ -180,7 +198,7 @@
   }
   const baseBegin=window.beginCombat;
   if(typeof baseBegin==="function"){
-   window.beginCombat=function(count){const context=preparedSnapshot()||prepareFromSelection({source:"begin-combat"},targetState());if(context?.valid!==true||context?.authorized!==true)return false;const encounter=encounterFromContext(context,{preview:true});if(!encounter)return false;combatRound=1;combatTotal=count;currentCombatEncounter=encounter;adventureScreen="combat";if(typeof render==="function")render();if(typeof runBattles==="function")runBattles(count);return true;};
+   window.beginCombat=function(count){const context=preparedSnapshot()||prepareFromSelection({source:"begin-combat"},targetState());const bound=bindForBattle(context,targetState());if(!bound)return false;const encounter=encounterFromContext(bound,{preview:true});if(!encounter)return false;combatRound=1;combatTotal=count;currentCombatEncounter=encounter;adventureScreen="combat";if(typeof render==="function")render();if(typeof runBattles==="function")runBattles(count,null,bound);return true;};
   }
   const baseEnter=window.enterMap;
   if(typeof baseEnter==="function"){
@@ -214,7 +232,7 @@
   if(invalid.valid!==false||invalid.authorized!==false)errors.push("invalid-fail-closed");
   if(Object.isFrozen(invalid)!==true||Object.isFrozen(invalid.identity)!==true||Object.isFrozen(invalid.policy)!==true)errors.push("immutable");
   if(invalid.policy.formalRewardsAllowed!==false||invalid.policy.formalProgressAllowed!==false)errors.push("invalid-policy");
-  return Object.freeze({version:VERSION,identityVersion:IDENTITY_VERSION,policyVersion:POLICY_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,encounterBridgeVersion:ENCOUNTER_BRIDGE_VERSION,uiPrepareBridgeVersion:UI_PREPARE_BRIDGE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  return Object.freeze({version:VERSION,identityVersion:IDENTITY_VERSION,policyVersion:POLICY_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,encounterBridgeVersion:ENCOUNTER_BRIDGE_VERSION,uiPrepareBridgeVersion:UI_PREPARE_BRIDGE_VERSION,battleBindingVersion:BATTLE_BINDING_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.FIRST_WORLD_TARGET_CONTEXT_VERSION=VERSION;
@@ -223,6 +241,7 @@
  window.FIRST_WORLD_PREPARED_TARGET_CONTEXT_VERSION=PREPARED_CONTEXT_VERSION;
  window.FIRST_WORLD_TARGET_ENCOUNTER_BRIDGE_VERSION=ENCOUNTER_BRIDGE_VERSION;
  window.FIRST_WORLD_TARGET_UI_PREPARE_BRIDGE_VERSION=UI_PREPARE_BRIDGE_VERSION;
+ window.FIRST_WORLD_TARGET_BATTLE_BINDING_VERSION=BATTLE_BINDING_VERSION;
  window.FIRST_WORLD_TARGET_CONTEXT_MODES=MODES;
  window.createFirstWorldTargetContext=create;
  window.firstWorldTargetContextFromSelection=fromSelection;
@@ -231,6 +250,8 @@
  window.firstWorldTargetIdentity=identityOf;
  window.sameFirstWorldTargetIdentity=sameIdentity;
  window.validateFirstWorldTargetContext=validate;
+ window.validateCurrentFirstWorldTargetContext=validateCurrent;
+ window.bindFirstWorldBattleTargetContext=bindForBattle;
  window.prepareFirstWorldTargetContextFromSelection=prepareFromSelection;
  window.prepareFirstWorldTargetContext=prepareExplicit;
  window.getPreparedFirstWorldTargetContext=preparedSnapshot;
