@@ -19,7 +19,12 @@ const assert=require("assert");
     if(s.thirdWorld&&typeof s.thirdWorld==="object")s.thirdWorld.entered=false;
     if(!s.reincarnation||typeof s.reincarnation!=="object")s.reincarnation={};
     s.reincarnation.count=count;
+    s.level=500;
     s.unlockedMap=99;
+    s.mapProgress=Array.from({length:MAPS.length},()=>[10,10,10,10]);
+    s.bossProgress=Array(MAPS.length).fill(10);
+    s.bossLocked=Array(MAPS.length).fill(false);
+    s.bossKilled=Array(MAPS.length).fill(false);
     return s;
    };
    try{
