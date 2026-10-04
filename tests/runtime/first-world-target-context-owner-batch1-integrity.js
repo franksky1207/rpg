@@ -10,11 +10,13 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>window.FIRST_WORLD_TARGET_CONTEXT_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_DELEGATE_VERSION===1&&window.FIRST_WORLD_TARGET_CONTEXT_INTEGRITY?.passed===true,{timeout:30000});
-  const report=await page.evaluate(()=>{
+  const report=await page.evaluate(async()=>{
    const deep=value=>JSON.parse(JSON.stringify(value));
-   const originalState=deep(state),beforeStorage=localStorage.getItem(SAVE_KEY);
+   const originalState=deep(state);
    const originalUi={selectedMap,selectedEnemy,adventureScreen};
    const originalRender=render;
+   const ownerSource=await (await fetch("firstworldtargetcontext.js",{cache:"no-store"})).text();
+   const rerunSource=await (await fetch("reincarnationrerunworld1.js",{cache:"no-store"})).text();
    const makeFirstWorldState=count=>{
     const s=deep(originalState);
     if(s.secondWorld&&typeof s.secondWorld==="object")s.secondWorld.entered=false;
@@ -43,8 +45,7 @@ const assert=require("assert");
     window.openGalaxyReviewMap(6);window.setGalaxyReviewSelectedEnemy(3);
     const reviewSelection=window.firstWorldTargetContextFromSelection({mode:"review",source:"review-test"},first);
 
-    const sourcePromise=fetch("reincarnationrerunworld1.js",{cache:"no-store"}).then(r=>r.text());
-    return Promise.resolve(sourcePromise).then(source=>({
+    return {
      versions:{context:window.FIRST_WORLD_TARGET_CONTEXT_VERSION,identity:window.FIRST_WORLD_TARGET_IDENTITY_VERSION,policy:window.FIRST_WORLD_TARGET_POLICY_VERSION,delegate:window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_DELEGATE_VERSION},
      self:window.FIRST_WORLD_TARGET_CONTEXT_INTEGRITY,
      formalNormal,formalElite,formalBoss,invalid,rerunBoss,wrongFormalOnRerun,review,uniqueIds:[uniqueA.contextId,uniqueB.contextId],compat,canonical,reviewSelection,
@@ -52,10 +53,10 @@ const assert=require("assert");
      validation:{formal:window.validateFirstWorldTargetContext(formalNormal),invalid:window.validateFirstWorldTargetContext(invalid)},
      frozen:{context:Object.isFrozen(formalNormal),identity:Object.isFrozen(formalNormal.identity),policy:Object.isFrozen(formalNormal.policy)},
      noMutableRefs:!["state","map","enemy"].some(key=>Object.prototype.hasOwnProperty.call(formalNormal,key)),
-     rerunDelegates:source.includes("firstWorldTargetContextFromSelection")&&source.includes("canonicalContext:canonical||null"),
-     detachedStateStable:detachedBefore===JSON.stringify({first,rerun}),
-     storageStable:beforeStorage===localStorage.getItem(SAVE_KEY)
-    }));
+     rerunDelegates:rerunSource.includes("firstWorldTargetContextFromSelection")&&rerunSource.includes("canonicalContext:canonical||null"),
+     ownerReadOnlySource:!ownerSource.includes("localStorage")&&!/\bsave\s*\(/.test(ownerSource),
+     detachedStateStable:detachedBefore===JSON.stringify({first,rerun})
+    };
    }finally{
     state=originalState;selectedMap=originalUi.selectedMap;selectedEnemy=originalUi.selectedEnemy;adventureScreen=originalUi.adventureScreen;render=originalRender;
    }
@@ -75,8 +76,8 @@ const assert=require("assert");
   assert.equal(report.validation.formal.passed,true);assert.equal(report.validation.invalid.passed,true,"Fail-closed invalid contexts are still structurally valid contexts.");
   assert.equal(report.compat.authorized,true);assert.equal(report.compat.mapIndex,99);assert.equal(report.compat.enemyIndex,4);assert.equal(report.canonical.mode,"rerun");assert.equal(report.sameIdentity,true);assert.equal(report.rerunDelegates,true);
   assert.equal(report.reviewSelection.mapIndex,6);assert.equal(report.reviewSelection.enemyIndex,3);assert.equal(report.reviewSelection.mode,"review");assert.equal(report.reviewSelection.source,"review-test");
-  assert.equal(report.detachedStateStable,true);assert.equal(report.storageStable,true);
+  assert.equal(report.detachedStateStable,true);assert.equal(report.ownerReadOnlySource,true,"Target Context owner must not write save/localStorage.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("First-world target context owner Batch1 integrity passed:",JSON.stringify({versions:report.versions,formal:{normal:report.formalNormal.identity,elite:report.formalElite.identity,boss:report.formalBoss.identity},rerun:report.canonical.identity,review:report.reviewSelection.identity,frozen:report.frozen,uniqueIds:report.uniqueIds,detachedStateStable:report.detachedStateStable,storageStable:report.storageStable}));
+  console.log("First-world target context owner Batch1 integrity passed:",JSON.stringify({versions:report.versions,formal:{normal:report.formalNormal.identity,elite:report.formalElite.identity,boss:report.formalBoss.identity},rerun:report.canonical.identity,review:report.reviewSelection.identity,frozen:report.frozen,uniqueIds:report.uniqueIds,detachedStateStable:report.detachedStateStable,ownerReadOnlySource:report.ownerReadOnlySource}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
