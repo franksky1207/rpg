@@ -1,8 +1,13 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  function currentPhase(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):s?.thirdWorld?.entered===true?3:s?.secondWorld?.entered===true?2:1;}
  function activeView(){try{return String(view||"");}catch(e){return "";}}
- function bountyAllowed(){return currentPhase()!==3;}
+ function reincarnationDungeonPermanentAccess(target=null){
+  const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
+  const context=typeof window.dungeonReincarnationContext==="function"?window.dungeonReincarnationContext(s):null;
+  return context?.reincarnationRun===true;
+ }
+ function bountyAllowed(target=null){return currentPhase(target)!==3||reincarnationDungeonPermanentAccess(target);}
  function subsystemRuntimeStatus(){
   const reasons=[],v=activeView();
   try{const bounty=typeof window.getBountyTestSnapshot==="function"?window.getBountyTestSnapshot():null;if(v==="dungeon-bounty"||bounty?.phase==="ready"||bounty?.phase==="transition"||bounty?.phase==="combat"||bounty?.continuous===true)reasons.push("bounty-active");}catch(e){reasons.push("bounty-check-error");}
@@ -41,7 +46,7 @@
  window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION=VERSION;
  window.WORLD_TRANSITION_GUARD_INSTALL_VERSION=2;
  window.WORLD_TRANSITION_GUARD_LOAD_ORDER_VERSION=1;
- window.BOUNTY_WORLD_PHASE_GATE_VERSION=1;
+ window.BOUNTY_WORLD_PHASE_GATE_VERSION=2;
  window.OFFLINE_WORLD_PHASE_POLICY_VERSION=3;
  window.OFFLINE_WORLD3_LEGACY_SETTLEMENT_GATE_VERSION=2;
  window.WORLD_PHASE_STALE_WELCOME_CLEANUP_VERSION=1;
