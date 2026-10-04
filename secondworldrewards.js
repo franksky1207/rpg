@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const QUALITY_MULTIPLIERS=[.10,.15,.25,.40,.70,1.00];
  const REDEMPTION_MULTIPLIER=10;
 
@@ -152,7 +152,11 @@
  function secondWorldMainlineRewardPreview(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=options.state||currentState();
   if(index<0||!boss||!s)return null;
-  return {bossIndex:index,xp:secondWorldBossExpReward(index,options.useTestSpecializations===true,s),darkMatter:secondWorldBossDarkMatterReward(index,options.useTestSpecializations===true),darkEnergy:1,equipmentLevel:Math.min(rewardPlayerLevel(s),boss.level)};
+  const xp=secondWorldBossExpReward(index,options.useTestSpecializations===true,s),darkMatter=secondWorldBossDarkMatterReward(index,options.useTestSpecializations===true),darkEnergy=1,equipmentLevel=Math.min(rewardPlayerLevel(s),boss.level);
+  const multiplier=typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(s.level,boss.level,s):1;
+  if(!(multiplier>1))return {bossIndex:index,xp,darkMatter,darkEnergy,equipmentLevel,overlevelRewardMultiplier:1};
+  const apply=typeof window.applyReincarnationOverlevelIntegerReward==="function"?window.applyReincarnationOverlevelIntegerReward:(amount=>Math.ceil(Math.max(0,Number(amount)||0)*multiplier));
+  return {bossIndex:index,xp:apply(xp,s.level,boss.level,s),darkMatter:apply(darkMatter,s.level,boss.level,s),darkEnergy:apply(darkEnergy,s.level,boss.level,s),equipmentLevel,overlevelRewardMultiplier:multiplier};
  }
  function runRewardTransaction(label,mutate){
   if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"共用正式結算 transaction owner 尚未載入。"};
@@ -179,7 +183,7 @@
    const levelBefore=live.level;
    if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(reward.xp,logs);else gainExp(reward.xp,logs);
    live.secondWorld.darkMatter=Math.max(0,Math.floor(Number(live.secondWorld.darkMatter)||0))+reward.darkMatter;
-   live.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(live.secondWorld.darkEnergy)||0))+1;
+   live.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(live.secondWorld.darkEnergy)||0))+reward.darkEnergy;
    const equipmentRewards=drops.map(drop=>{
     const itemResult=addItem(drop.item);
     return {item:drop.item,itemResult,sale:itemResult?.sale||null,kept:itemResult?.kept===true,vip16Extra:drop.vip16Extra===true,baseQuality:drop.baseQuality,qualityResult:drop.qualityResult,forcedType:drop.forcedType};
@@ -190,7 +194,7 @@
   });
   if(!tx.ok)return {ok:false,reason:"存檔失敗，已回復戰鬥前狀態。"};
   const settled=tx.value||{},primary=settled.primary||null;
-  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:1,item:primary?.item||null,itemResult:primary?.itemResult||null,sale:primary?.sale||null,kept:primary?.kept===true,equipmentRewards:settled.equipmentRewards||[],levelBefore:settled.levelBefore,levelAfter:settled.levelAfter,logs:settled.logs||[]};
+  return {ok:true,bossIndex:index,boss,firstKill,xp:reward.xp,darkMatter:reward.darkMatter,darkEnergy:reward.darkEnergy,overlevelRewardMultiplier:reward.overlevelRewardMultiplier||1,item:primary?.item||null,itemResult:primary?.itemResult||null,sale:primary?.sale||null,kept:primary?.kept===true,equipmentRewards:settled.equipmentRewards||[],levelBefore:settled.levelBefore,levelAfter:settled.levelAfter,logs:settled.logs||[]};
  }
  function applySecondWorldDeathPenalty(options={}){
   const s=currentState();
@@ -245,6 +249,7 @@
  window.SECOND_WORLD_SHARED_EQUIPMENT_FACTORY_VERSION=1;
  window.SECOND_WORLD_SPECIALIZATION_ECONOMY_VERSION=1;
  window.SECOND_WORLD_VIP_LOOT_PIPELINE_VERSION=1;
+ window.SECOND_WORLD_OVERLEVEL_REWARD_ADAPTER_VERSION=1;
  window.SECOND_WORLD_REDEMPTION_MULTIPLIER=REDEMPTION_MULTIPLIER;
  window.SECOND_WORLD_QUALITY_MULTIPLIERS=QUALITY_MULTIPLIERS.slice();
  window.secondWorldBossExpReward=secondWorldBossExpReward;
