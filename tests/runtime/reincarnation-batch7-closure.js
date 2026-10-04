@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===1&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===2&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
   const report=await page.evaluate(async()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const qualify=s=>{
@@ -47,13 +47,14 @@ const assert=require("assert");
    const readOnlyBefore=JSON.stringify(first),auSnapshot=window.gmAlternateUniverseFormalSnapshot(first),readOnlyAfter=JSON.stringify(first);
 
    const originalState=state,originalSave=window.save,originalBreakthrough=window.gmTestBreakthroughLevelValue?.()??0;
-   let saveCalls=0,sandboxStable=false,summary0="",summary1="",summaryAfterChange="",html0="",html1="",htmlAfterChange="",benchmark=null,session637=null,registered=[];
+   let saveCalls=0,sandboxStable=false,summary0="",summary1="",summaryAfterChange="",html0="",html1="",htmlAfterChange="",benchmark=null,session637=null,registered=[],liveSummaryAfterChange="";
    try{
     state=clone(first);
     window.save=()=>{saveCalls++;return true;};
     window.gmPowerBenchmarkClearAllResults();
     window.gmPowerBenchmarkInvalidateSnapshot();
     html0=window.gmPowerBenchmarkHtml();summary0=window.gmPowerBenchmarkSummaryText();
+    const host=document.createElement("div");host.id="batch7ClosureHost";host.innerHTML=html0;document.body.appendChild(host);
     const formalBeforeSandbox=JSON.stringify(state);
     window.gmSetTestBreakthroughLevel(37,false);
     sandboxStable=formalBeforeSandbox===JSON.stringify(state);
@@ -64,6 +65,8 @@ const assert=require("assert");
     html1=window.gmPowerBenchmarkHtml();summary1=window.gmPowerBenchmarkSummaryText();
     window.gmSetTestBreakthroughLevel(38,true);
     htmlAfterChange=window.gmPowerBenchmarkHtml();summaryAfterChange=window.gmPowerBenchmarkSummaryText();
+    liveSummaryAfterChange=document.getElementById("gmPowerBenchmarkUnifiedSummary")?.textContent||"";
+    host.remove();
     registered=typeof window.gmHubRegisteredSectionIds==="function"?window.gmHubRegisteredSectionIds("test"):[];
    }finally{
     state=originalState;window.save=originalSave;
@@ -73,12 +76,12 @@ const assert=require("assert");
     versions:{auBenchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,auIntegration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,modeState:window.GM_POWER_BENCHMARK_MODE_STATE_VERSION},
     install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,modeIds:Array.from(window.GM_POWER_BENCHMARK_MODE_IDS||[]),
     firstGrant,firstBefore,firstReset,life1AfterReset,life1Grant,life1Repeat,life1Late,access,overlevel,mirrorBefore,voidBefore,life2Reset,life2AfterReset,life2Grant,life2Repeat,life2Down,
-    readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,saveCalls,sandboxStable,html0,summary0,session637,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,registered,
+    readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,saveCalls,sandboxStable,html0,summary0,session637,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,liveSummaryAfterChange,registered,
     benchmarkResultAfterChange:window.gmAlternateUniverseBenchmarkResultSnapshot?.()||null
    };
   });
 
-  assert.deepEqual(report.versions,{auBenchmark:2,auIntegration:1,modeState:2});
+  assert.deepEqual(report.versions,{auBenchmark:2,auIntegration:2,modeState:2});
   assert.equal(report.install.integrated,true);assert.equal(report.install.separateHubSection,false);assert.equal(report.install.defaultDepth,1);
   assert.equal(report.modeIds.length,8);assert.ok(report.modeIds.includes("alternate"));
   assert.equal(report.registered.includes("alternate-universe-benchmark-test"),false,"AU benchmark must live inside the existing power benchmark section, not as a ninth GM test section.");
@@ -113,6 +116,7 @@ const assert=require("assert");
   assert.equal(report.benchmark.formalStateStable,true);assert.equal(report.benchmark.completed,100);assert.equal(report.benchmark.invalid,0);assert.equal(report.benchmark.actionSafety,0);
   assert.ok(report.html1.includes("1 / 8"));assert.ok(report.html1.includes("異宇宙"));assert.ok(report.summary1.includes("【異宇宙】")&&report.summary1.includes("第 1 層域"));
   assert.ok(report.htmlAfterChange.includes("0 / 8"),"Changing test character power must invalidate old AU benchmark result.");assert.ok(!report.summaryAfterChange.includes("【異宇宙】"));
+  assert.ok(report.liveSummaryAfterChange.includes("0 / 8")&&!report.liveSummaryAfterChange.includes("1 / 7"),"Live summary DOM must also stay synchronized after test-character changes.");
   assert.equal(report.benchmarkResultAfterChange,null);
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
 
@@ -122,6 +126,6 @@ const assert=require("assert");
   const freshDepth=await page2.evaluate(()=>window.gmAlternateUniverseBenchmarkSession().depth);
   assert.equal(freshDepth,1,"Reload/new page must reset AU boss selection to boss 1.");
   await page2.close();
-  console.log("Batch7 final closure passed:",JSON.stringify({versions:report.versions,life1:{permanent:report.life1Grant.permanentAfter},life2:{count:report.life2AfterReset.reincarnation.count,permanent:report.life2Grant.permanentAfter,auDepth:report.life2AfterReset.reincarnation.alternateUniverse.deepestCleared},benchmark:{completed:report.benchmark.completed,formalStateStable:report.benchmark.formalStateStable},summary:{zero:report.html0.includes("0 / 8"),one:report.html1.includes("1 / 8"),invalidated:report.htmlAfterChange.includes("0 / 8")},freshDepth}));
+  console.log("Batch7 final closure passed:",JSON.stringify({versions:report.versions,life1:{permanent:report.life1Grant.permanentAfter},life2:{count:report.life2AfterReset.reincarnation.count,permanent:report.life2Grant.permanentAfter,auDepth:report.life2AfterReset.reincarnation.alternateUniverse.deepestCleared},benchmark:{completed:report.benchmark.completed,formalStateStable:report.benchmark.formalStateStable},summary:{zero:report.html0.includes("0 / 8"),one:report.html1.includes("1 / 8"),invalidated:report.htmlAfterChange.includes("0 / 8"),live:report.liveSummaryAfterChange.includes("0 / 8")},freshDepth}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
