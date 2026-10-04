@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===1&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY?.passed===true&&typeof window.gmRunAlternateUniverseTraitDiagnostics==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY?.passed===true&&typeof window.gmRunAlternateUniverseTraitDiagnostics==="function",{timeout:30000});
   const report=await page.evaluate(async()=>{
    const formalBefore=JSON.stringify(state);
    const pairs=window.gmAlternateUniverseTraitPairs();
@@ -19,14 +19,16 @@ const assert=require("assert");
    const formalAfter=JSON.stringify(state);
    const ids=typeof window.gmHubRegisteredSectionIds==="function"?window.gmHubRegisteredSectionIds("test"):[];
    const html=window.gmAlternateUniverseBenchmarkHtml();
+   const powerHtml=window.gmPowerBenchmarkHtml();
    return {
-    versions:{benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,diagnostics:window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwner:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION,hub:window.GM_HUB_EXTENSION_VERSION},
-    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,ids,html
+    versions:{benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,diagnostics:window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwner:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION,integration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,hub:window.GM_HUB_EXTENSION_VERSION},
+    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,ids,html,powerHtml,install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT
    };
   });
 
   assert.equal(report.self.passed,true,"Batch7-4 self-integrity failed: "+JSON.stringify(report.self.errors||null));
-  assert.deepEqual(report.versions,{benchmark:1,diagnostics:1,combatOwner:1,hub:17});
+  assert.deepEqual(report.versions,{benchmark:2,diagnostics:1,combatOwner:1,integration:1,hub:17});
+  assert.equal(report.install.integrated,true);assert.equal(report.install.separateHubSection,false);assert.equal(report.install.defaultDepth,1);
   assert.equal(report.pairs.length,21,"7 canonical traits must yield exactly 21 unordered pairs.");
   assert.equal(new Set(report.pairs.map(pair=>pair.join("+"))).size,21,"Trait pairs must be unique.");
   assert.ok(report.pairs.every(pair=>pair.length===2&&pair[0]!==pair[1]),"Every diagnostic pair must contain two distinct traits.");
@@ -42,11 +44,12 @@ const assert=require("assert");
   assert.equal(report.diagnostics.passed,true);
   assert.equal(report.diagnostics.formalStateStable,true,"Trait diagnostics must not mutate formal save state.");
   assert.equal(report.formalStable,true,"Batch7-4 test sandbox must leave formal state byte-equivalent.");
-  assert.ok(report.ids.includes("alternate-universe-benchmark-test"),"AU benchmark must register through GM Hub test registry.");
-  const powerIndex=report.ids.indexOf("power-benchmark-test"),auIndex=report.ids.indexOf("alternate-universe-benchmark-test");
-  assert.ok(powerIndex>=0&&auIndex===powerIndex+1,"AU benchmark should appear immediately after the shared power benchmark section.");
+  assert.equal(report.ids.includes("alternate-universe-benchmark-test"),false,"AU benchmark must not create a separate GM test section.");
+  assert.ok(report.ids.includes("power-benchmark-test"),"Shared power benchmark section must remain registered.");
   assert.ok(report.html.includes("測試沙盒")&&report.html.includes("不寫入正式存檔"));
-  assert.ok(report.html.includes("21 組雙特性"));
+  assert.ok(report.html.includes("王編號")&&report.html.includes("上一隻")&&report.html.includes("下一隻"));
+  assert.ok(!report.html.includes("檢查 21 組雙特性")&&!report.html.includes("特性 A"),"21-pair diagnostics are internal and must not clutter the GM UI.");
+  assert.ok(report.powerHtml.includes("異宇宙測試")&&report.powerHtml.includes("0 / 8"),"AU must be the eighth mode inside the shared power benchmark.");
   assert.ok(report.html.includes("層域"));
   assert.ok(!report.html.includes("1000U")&&!/\bU\d+\b/.test(report.html),"AU benchmark UI must not expose internal U shorthand.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
