@@ -21,7 +21,6 @@ const assert=require("assert");
     window.clearPreparedFirstWorldTargetContext();
     const target=window.prepareFirstWorldTargetContext({mode:"formal",mapIndex:4,enemyIndex:3,source:"batch4-main"},state);
     const drift=window.createFirstWorldTargetContext({mode:"formal",mapIndex:9,enemyIndex:0,source:"batch4-drift"},state);
-    const expected={name:target.enemyName,level:target.enemyLevel};
     const calls=[];
     window.render=()=>{};window.animateFight=async()=>{};window.save=()=>true;window.restorePlayerHp=()=>{state.hp=playerCombatStats().hp;return state.hp;};window.showBattleResult=()=>{};window.maybeHandleSpecialEncounter=async()=>false;
     window.backgroundProgressFastCatchUpActive=()=>true;window.backgroundProgressCatchUpStep=()=>({shouldPresentBattle:false,shouldRefreshUi:false,shouldCheckpoint:false});window.backgroundProgressConsumeCatchUpCredit=ms=>({active:true,requested:ms,consumed:ms,remaining:0,credit:1000});window.structuredCombatPresentationDurationMs=()=>0;
@@ -31,9 +30,12 @@ const assert=require("assert");
     const continuousOk=await runBattles(window.CONTINUOUS_BATTLE_COUNT,ctx,target);
 
     state=makeState();selectedMap=99;selectedEnemy=4;adventureScreen="combat";combatTotal=0;combatRound=7;currentCombatEncounter=null;
+    window.clearPreparedFirstWorldTargetContext();
     const minimalTarget=window.prepareFirstWorldTargetContext({mode:"formal",mapIndex:7,enemyIndex:3,source:"batch4-minimal"},state);
     window.activeMainBattleContext=window.createMainBattleContext(window.CONTINUOUS_BATTLE_COUNT,minimalTarget);
     const minimalOpened=window.openMainMinimalMode();
+    window.syncMainMinimalMode?.();
+    await Promise.resolve();
     const minimalEnemy=document.querySelector("[data-main-minimal-mode-enemy]")?.textContent||"";
     window.closeMainMinimalMode();
 
@@ -42,14 +44,15 @@ const assert=require("assert");
     const reviewParent=window.resolveFirstWorldSpecialParentTargetContext({targetContext:review},{parentTargetContext:review});
     const minimalSource=await (await fetch("mainminimalmode.js",{cache:"no-store"})).text();
     const bridgeSource=await (await fetch("firstworldtargetcontextbatch4.js",{cache:"no-store"})).text();
-    return {versions:{bridge:window.FIRST_WORLD_TARGET_CONTEXT_BATCH4_BRIDGE_VERSION,continuous:window.FIRST_WORLD_CONTINUOUS_TARGET_LOCK_VERSION,fast:window.FIRST_WORLD_FAST_CATCH_UP_TARGET_LOCK_VERSION,special:window.FIRST_WORLD_SPECIAL_PARENT_TARGET_VERSION,minimal:window.MAIN_MINIMAL_MODE_TARGET_CONTEXT_VERSION},continuous:{ok:continuousOk,targetId:target.contextId,calls,ctxTargetId:ctx.targetContext?.contextId},minimal:{opened:minimalOpened,text:minimalEnemy,expected},special:{parentId:parent?.contextId||null,expectedId:minimalTarget.contextId,reviewParent},source:{minimalNoPreviewSelection:!minimalSource.includes("getPreviewEncounter(selectedMap,selectedEnemy)"),minimalNoMonsterSelection:!minimalSource.includes("monsterObj(selectedMap,selectedEnemy)"),bridgeLocksTarget:bridgeSource.includes('Object.defineProperty(ctx,"targetContext"'),bridgeCarriesParent:bridgeSource.includes("parentTargetContext"),bridgeRestoresSelection:bridgeSource.includes("selectedMap=beforeMap")&&bridgeSource.includes("selectedEnemy=beforeEnemy")}};
+    return {versions:{bridge:window.FIRST_WORLD_TARGET_CONTEXT_BATCH4_BRIDGE_VERSION,continuous:window.FIRST_WORLD_CONTINUOUS_TARGET_LOCK_VERSION,fast:window.FIRST_WORLD_FAST_CATCH_UP_TARGET_LOCK_VERSION,special:window.FIRST_WORLD_SPECIAL_PARENT_TARGET_VERSION,minimal:window.MAIN_MINIMAL_MODE_TARGET_CONTEXT_VERSION},continuous:{ok:continuousOk,targetId:target.contextId,calls,ctxTargetId:ctx.targetContext?.contextId},minimal:{opened:minimalOpened,text:minimalEnemy,target:{contextId:minimalTarget.contextId,valid:minimalTarget.valid,authorized:minimalTarget.authorized,name:minimalTarget.enemyName,level:minimalTarget.enemyLevel},active:{contextId:window.activeMainBattleContext?.targetContext?.contextId,name:window.activeMainBattleContext?.targetContext?.enemyName,level:window.activeMainBattleContext?.targetContext?.enemyLevel}},special:{parentId:parent?.contextId||null,expectedId:minimalTarget.contextId,reviewParent},source:{minimalNoPreviewSelection:!minimalSource.includes("getPreviewEncounter(selectedMap,selectedEnemy)"),minimalNoMonsterSelection:!minimalSource.includes("monsterObj(selectedMap,selectedEnemy)"),bridgeLocksTarget:bridgeSource.includes('Object.defineProperty(ctx,"targetContext"'),bridgeCarriesParent:bridgeSource.includes("parentTargetContext"),bridgeRestoresSelection:bridgeSource.includes("selectedMap=beforeMap")&&bridgeSource.includes("selectedEnemy=beforeEnemy")}};
    }finally{
     window.closeMainMinimalMode?.();state=originalState;selectedMap=originalGlobals.selectedMap;selectedEnemy=originalGlobals.selectedEnemy;selectedBattleCount=originalGlobals.selectedBattleCount;adventureScreen=originalGlobals.adventureScreen;battleBusy=originalGlobals.battleBusy;currentCombatEncounter=originalGlobals.currentCombatEncounter;combatRound=originalGlobals.combatRound;combatTotal=originalGlobals.combatTotal;window.activeMainBattleContext=originalGlobals.activeMainBattleContext;Object.assign(window,originals);window.clearPreparedFirstWorldTargetContext?.();
    }
   });
+  console.log("Batch4 diagnostic:",JSON.stringify(report));
   assert.deepEqual(report.versions,{bridge:1,continuous:1,fast:1,special:1,minimal:1});
   assert.equal(report.continuous.ok,true);assert.equal(report.continuous.calls.length,2);assert.equal(report.continuous.ctxTargetId,report.continuous.targetId);report.continuous.calls.forEach(call=>{assert.equal(call.map,4);assert.equal(call.enemy,3);assert.equal(call.contextId,report.continuous.targetId);});
-  assert.equal(report.minimal.opened,true);assert.ok(report.minimal.text.includes(report.minimal.expected.name));assert.ok(report.minimal.text.includes(String(report.minimal.expected.level)));
+  assert.equal(report.minimal.opened,true);assert.equal(report.minimal.active.contextId,report.minimal.target.contextId);assert.ok(report.minimal.text.includes(report.minimal.target.name));assert.ok(report.minimal.text.includes(String(report.minimal.target.level)));
   assert.equal(report.special.parentId,report.special.expectedId);assert.equal(report.special.reviewParent,null);
   Object.entries(report.source).forEach(([name,value])=>assert.equal(value,true,`Batch4 source contract failed: ${name}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
