@@ -1,15 +1,17 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const TRAIT_PAIR_DIAGNOSTICS_VERSION=1;
  const COMBAT_OWNER_VERSION=1;
+ const INTEGRATION_VERSION=1;
  const BATCH_SIZE=25;
- const model={depth:1,runs:100,traits:["strong","ferocious"],busy:false,busyKind:"",result:null,diagnostics:null};
+ const model={depth:1,runs:100,busy:false,result:null,diagnostics:null};
 
  function num(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
  function whole(value,min=0,max=Number.MAX_SAFE_INTEGER){const n=Math.floor(Number(value));return Math.max(min,Math.min(max,Number.isFinite(n)?n:min));}
  function one(value){return Math.round(num(value,0)*10)/10;}
  function fmt(value){return Math.round(num(value,0)).toLocaleString();}
  function clone(value){try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}}
+ function escapeHtml(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
  function maxDepth(){return Math.max(1,whole(window.ALTERNATE_UNIVERSE_MAX_DEPTH||window.ALTERNATE_UNIVERSE_DATA_MAX_DEPTH||1000,1));}
  function traitRows(){
   const rows=Array.isArray(window.ALTERNATE_UNIVERSE_TRAIT_ROWS)?window.ALTERNATE_UNIVERSE_TRAIT_ROWS:[];
@@ -27,12 +29,14 @@
   for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)pairs.push(Object.freeze([ids[i],ids[j]]));
   return Object.freeze(pairs);
  }
- function setDefaultDepth(){
-  if(model.depth>1)return;
-  try{
-   const snap=typeof window.gmAlternateUniverseFormalSnapshot==="function"?window.gmAlternateUniverseFormalSnapshot(state):null;
-   model.depth=whole(snap?.frontier||snap?.deepestCleared||1,1,maxDepth());
-  }catch(_){model.depth=1;}
+ function rollPair(rng=Math.random){
+  if(typeof window.rollAlternateUniverseTraits==="function"){
+   const rolled=window.rollAlternateUniverseTraits(rng),pair=canonicalPair(rolled?.[0],rolled?.[1]);
+   if(pair)return pair;
+  }
+  const pairs=allPairs();if(!pairs.length)return null;
+  const value=Math.max(0,Math.min(.999999999999,num(rng(),0)));
+  return pairs[Math.floor(value*pairs.length)].slice();
  }
  function playerContext(){
   const character=typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;
@@ -42,20 +46,25 @@
   const breakthroughLevel=Math.max(0,whole(character?.breakthroughLevel??0,0));
   return Object.freeze({character:clone(character),world,civilizationLevel,breakthroughLevel,player:{hp:Math.max(1,num(stats.hp,1)),atk:Math.max(1,num(stats.atk,1)),def:Math.max(0,num(stats.def,0)),crit:Math.max(0,num(stats.crit,0)),dodge:Math.max(0,num(stats.dodge,0))}});
  }
- function enemyFor(depth,traits){
-  const u=whole(depth,1,maxDepth()),pair=canonicalPair(traits?.[0],traits?.[1]);
-  if(!pair||typeof window.alternateUniverseEnemyStats!=="function"||typeof window.applyMonsterTraits!=="function")return null;
+ function depthInfo(depth){return typeof window.alternateUniverseDepthInfo==="function"?window.alternateUniverseDepthInfo(depth):null;}
+ function baseEnemyFor(depth){
+  const u=whole(depth,1,maxDepth());
+  if(typeof window.alternateUniverseEnemyStats!=="function")return null;
   const base=window.alternateUniverseEnemyStats(u);if(!base)return null;
-  const info=typeof window.alternateUniverseDepthInfo==="function"?window.alternateUniverseDepthInfo(u):null;
-  const named={...base,name:info?.universeName?`${info.universeName}・${info.depthLabel||`第 ${u} 層域`}`:`異宇宙第 ${u} 層域`,alternateUniverse:true,alternateUniverseDepth:u,alternateUniverseMode:"gm-benchmark"};
-  const enemy=window.applyMonsterTraits(named,pair);
+  const info=depthInfo(u),name=info?.universeName?`${info.universeName}・${info.depthLabel||`第 ${u} 層域`}`:`異宇宙第 ${u} 層域`;
+  return Object.freeze({...base,name,alternateUniverse:true,alternateUniverseDepth:u,alternateUniverseMode:"gm-benchmark"});
+ }
+ function enemyFor(depth,traits){
+  const base=baseEnemyFor(depth),pair=canonicalPair(traits?.[0],traits?.[1]);
+  if(!base||!pair||typeof window.applyMonsterTraits!=="function")return null;
+  const enemy=window.applyMonsterTraits({...base},pair);
   return enemy?Object.freeze({...enemy,traits:Object.freeze(pair.slice())}):null;
  }
  function seededRng(seed){let x=(whole(seed,1,0x7fffffff)||1)>>>0;return function(){x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296;};}
- function runOne(depth,traits,{rng=Math.random}={}){
-  const ctx=playerContext(),enemy=enemyFor(depth,traits);
+ function runOne(depth,traits=null,{rng=Math.random}={}){
+  const pair=traits?canonicalPair(traits?.[0],traits?.[1]):rollPair(rng),ctx=playerContext(),enemy=enemyFor(depth,pair);
   if(!ctx)return {ok:false,reason:"player-test-context-missing"};
-  if(!enemy)return {ok:false,reason:"enemy-context-missing"};
+  if(!pair||!enemy)return {ok:false,reason:"enemy-context-missing"};
   if(typeof window.runWorldCombatCore!=="function")return {ok:false,reason:"world-combat-owner-missing"};
   const resolved=window.runWorldCombatCore(ctx.player,enemy,ctx.player.hp,{world:ctx.world,state:typeof state!=="undefined"?state:null,civilizationLevel:ctx.civilizationLevel,breakthroughLevel:ctx.breakthroughLevel,logs:false,rng,useTestSpecializations:true,useTestMarks:true,playerHealCap:ctx.player.hp,maxActions:200000,maxActionsPerChain:1024});
   const combat=resolved?.combat;
@@ -74,18 +83,18 @@
   });
   const finite=[playerEnd,enemyEnd,combat.turns,playerDamage,enemyDamage].every(Number.isFinite);
   const hpBounds=playerEnd<=ctx.player.hp+1e-9&&enemyEnd<=num(enemy.hp,1)+1e-9;
-  return Object.freeze({ok:true,ctx,enemy,combat,completed,win,finite,hpBounds,actionSafety:combat.actionBudgetReached===true||combat.chainBudgetReached===true,playerEnd,enemyEnd,turns:Math.max(0,whole(combat.turns,0)),playerDamage,enemyDamage,playerCrits,enemyCrits,dodges,berserkTriggers,playerFinalDamageMultiplier:num(resolved?.playerFinalDamageMultiplier,1)});
+  return Object.freeze({ok:true,pair:Object.freeze(pair.slice()),ctx,enemy,combat,completed,win,finite,hpBounds,actionSafety:combat.actionBudgetReached===true||combat.chainBudgetReached===true,playerEnd,enemyEnd,turns:Math.max(0,whole(combat.turns,0)),playerDamage,enemyDamage,playerCrits,enemyCrits,dodges,berserkTriggers,playerFinalDamageMultiplier:num(resolved?.playerFinalDamageMultiplier,1)});
  }
- function aggregateStart(depth,traits,runs,ctx,enemy){return {version:VERSION,depth,traits:traits.slice(),traitNames:traits.map(traitName),runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),formalStateStable:true};}
+ function aggregateStart(depth,runs,ctx,enemy){return {version:VERSION,depth,runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),traitCounts:{},traitPairCounts:{},formalStateStable:true};}
  async function runBenchmark(options={}){
-  const depth=whole(options.depth??model.depth,1,maxDepth()),runs=[100,500,1000].includes(Number(options.runs))?Number(options.runs):100,pair=canonicalPair(options.traits?.[0]??model.traits[0],options.traits?.[1]??model.traits[1]);
-  if(!pair)return {ok:false,reason:"invalid-trait-pair"};
-  const ctx=playerContext(),enemy=enemyFor(depth,pair);if(!ctx||!enemy)return {ok:false,reason:!ctx?"player-test-context-missing":"enemy-context-missing"};
-  const formalBefore=typeof state!=="undefined"?JSON.stringify(state):"";
-  const out=aggregateStart(depth,pair,runs,ctx,enemy);
+  const depth=whole(options.depth??model.depth,1,maxDepth()),runs=[100,500,1000].includes(Number(options.runs))?Number(options.runs):100,fixedPair=options.traits?canonicalPair(options.traits?.[0],options.traits?.[1]):null;
+  if(options.traits&&!fixedPair)return {ok:false,reason:"invalid-trait-pair"};
+  const ctx=playerContext(),baseEnemy=baseEnemyFor(depth);if(!ctx||!baseEnemy)return {ok:false,reason:!ctx?"player-test-context-missing":"enemy-context-missing"};
+  const formalBefore=typeof state!=="undefined"?JSON.stringify(state):"",out=aggregateStart(depth,runs,ctx,baseEnemy);
   for(let i=0;i<runs;i++){
-   const row=runOne(depth,pair,{rng:Math.random});
+   const row=runOne(depth,fixedPair,{rng:Math.random});
    if(!row.ok){out.failed++;out.invalid++;continue;}
+   const pairKey=row.pair.join("+");out.traitPairCounts[pairKey]=(out.traitPairCounts[pairKey]||0)+1;row.pair.forEach(id=>{out.traitCounts[id]=(out.traitCounts[id]||0)+1;});
    if(row.completed)out.completed++;else out.failed++;
    if(row.win)out.wins++;
    out.turns+=row.turns;out.playerEndPct+=row.playerEnd/Math.max(1,row.ctx.player.hp)*100;out.enemyEndPct+=row.enemyEnd/Math.max(1,row.enemy.hp)*100;
@@ -101,8 +110,7 @@
   return Object.freeze(out);
  }
  function diagnosticPair(depth,pair,index){
-  const enemy=enemyFor(depth,pair),base=typeof window.alternateUniverseEnemyStats==="function"?window.alternateUniverseEnemyStats(depth):null;
-  const errors=[];
+  const enemy=enemyFor(depth,pair),base=baseEnemyFor(depth),errors=[];
   if(!enemy||!base)errors.push("enemy-init");
   if(enemy&&(!Array.isArray(enemy.traits)||enemy.traits.length!==2||enemy.traits[0]!==pair[0]||enemy.traits[1]!==pair[1]))errors.push("trait-identity");
   if(enemy&&pair.includes("berserk")&&enemy.berserk!==true)errors.push("berserk-flag");
@@ -124,45 +132,98 @@
   const formalAfter=typeof state!=="undefined"?JSON.stringify(state):"",failed=rows.filter(row=>!row.passed);
   return Object.freeze({version:TRAIT_PAIR_DIAGNOSTICS_VERSION,depth,pairCount:pairs.length,passed:failed.length===0&&formalBefore===formalAfter,formalStateStable:formalBefore===formalAfter,failedCount:failed.length,failedPairs:Object.freeze(failed.map(row=>({pair:row.pair.slice(),errors:Array.from(row.errors)}))),rows:Object.freeze(rows)});
  }
- function traitOptions(selected,exclude=""){return traitRows().filter(row=>row.id!==exclude).map(row=>`<option value="${row.id}" ${row.id===selected?"selected":""}>${row.name}</option>`).join("");}
- function metrics(r){if(!r)return '<div class="muted">尚未執行異宇宙戰力基準。</div>';return `<div class="gmpb-metrics">${[["勝率",`${r.winRate}%`],["平均回合",r.avgTurns],["玩家平均剩餘 HP",`${r.avgPlayerEndPct}%`],["敵人平均剩餘 HP",`${r.avgEnemyEndPct}%`],["玩家平均輸出",fmt(r.avgPlayerDamage)],["玩家平均承傷",fmt(r.avgEnemyDamage)]].map(([label,value])=>`<div class="item gmpb-metric"><div class="muted">${label}</div><b>${value}</b></div>`).join("")}</div><div class="muted" style="margin-top:7px">完成 ${r.completed}/${r.runs}｜動作安全異常 ${r.actionSafety}｜無效結果 ${r.invalid}｜正式資料${r.formalStateStable?"未變動":"⚠ 發生變動"}｜狂暴實際觸發 ${r.berserkTriggers} 次</div>`;}
- function diagnosticsHtml(d){if(!d)return '<div class="muted">尚未執行 21 組雙特性診斷。</div>';const failed=d.failedPairs.map(row=>`${row.pair.map(traitName).join("＋")}：${row.errors.join(", ")}`).join("<br>");return `<div class="item" style="margin-top:8px"><b>${d.passed?"21 組雙特性診斷全部通過":"雙特性診斷發現異常"}</b><div class="muted" style="margin-top:5px">第 ${d.depth} 層域｜組合 ${d.pairCount}｜失敗 ${d.failedCount}｜正式資料${d.formalStateStable?"未變動":"⚠ 發生變動"}</div>${failed?`<div class="muted" style="margin-top:6px">${failed}</div>`:""}</div>`;}
+ function metrics(r){if(!r)return '<div class="muted">尚未執行異宇宙測試。</div>';return `<div class="gmpb-metrics">${[["勝率",`${r.winRate}%`],["平均回合",r.avgTurns],["玩家平均剩餘 HP",`${r.avgPlayerEndPct}%`],["敵人平均剩餘 HP",`${r.avgEnemyEndPct}%`],["玩家平均輸出",fmt(r.avgPlayerDamage)],["玩家平均承傷",fmt(r.avgEnemyDamage)]].map(([label,value])=>`<div class="item gmpb-metric"><div class="muted">${label}</div><b>${value}</b></div>`).join("")}</div><div class="muted" style="margin-top:7px">完成 ${r.completed}/${r.runs}｜動作安全異常 ${r.actionSafety}｜無效結果 ${r.invalid}｜正式資料${r.formalStateStable?"未變動":"⚠ 發生變動"}</div>`;}
  function html(){
-  setDefaultDepth();const pair=canonicalPair(model.traits[0],model.traits[1])||allPairs()[0]||["strong","ferocious"];model.traits=pair.slice();
-  const busy=model.busy?" disabled":"",ctx=playerContext(),enemy=enemyFor(model.depth,pair),character=ctx?.character||{};
-  return `<div class="gm-power-benchmark"><div class="muted gm-hub-note">測試沙盒｜不寫入正式存檔。異宇宙基準直接使用正式 AU 敵人曲線、正式雙特性 owner 與共用 combat core；角色使用目前 GM 角色測試設定。這裡不建立第二套戰鬥公式，也不呼叫異宇宙正式 settlement。</div><div class="item"><div class="gmpb-title"><b>異宇宙戰力基準</b><span class="muted">角色：${character.world===3?"高維紀元":character.world===2?"宇宙紀元":"銀河紀元"} Lv.${whole(character.level||1,1,2000)}｜突破等級 Lv.${whole(character.breakthroughLevel||0,0)}</span></div><div class="gmpb-controls"><label>層域<input id="gmAuBenchmarkDepth" class="btn" type="number" min="1" max="${maxDepth()}" step="1" value="${model.depth}" onchange="gmAlternateUniverseBenchmarkSetDepth(this.value)"></label><label>場數<select class="btn" onchange="gmAlternateUniverseBenchmarkSetRuns(this.value)">${[100,500,1000].map(n=>`<option value="${n}" ${model.runs===n?"selected":""}>${n} 場</option>`).join("")}</select></label><label>特性 A<select class="btn" onchange="gmAlternateUniverseBenchmarkSetTrait(0,this.value)">${traitOptions(pair[0],pair[1])}</select></label><label>特性 B<select class="btn" onchange="gmAlternateUniverseBenchmarkSetTrait(1,this.value)">${traitOptions(pair[1],pair[0])}</select></label></div><div class="muted" style="margin-top:8px">敵人：${enemy?`${enemy.name}｜HP ${fmt(enemy.hp)}｜ATK ${fmt(enemy.atk)}｜DEF ${fmt(enemy.def)}｜暴擊 ${one(enemy.crit)}%｜閃避 ${one(enemy.dodge)}%`:"資料未載入"}</div><div class="gmpb-actions"><button class="btn blue"${busy} onclick="gmAlternateUniverseBenchmarkRunSelected()">${model.busy&&model.busyKind==="benchmark"?"測試中…":"執行戰力基準"}</button><button class="btn"${busy} onclick="gmAlternateUniverseBenchmarkRunDiagnostics()">${model.busy&&model.busyKind==="diagnostics"?"診斷中…":"檢查 21 組雙特性"}</button></div>${metrics(model.result)}${diagnosticsHtml(model.diagnostics)}</div></div>`;
+  const depth=whole(model.depth,1,maxDepth()),ctx=playerContext(),enemy=baseEnemyFor(depth),character=ctx?.character||{},busy=model.busy?" disabled":"";
+  return `<div class="muted gm-hub-note">測試沙盒｜不寫入正式存檔。直接輸入 1～${maxDepth()} 的王編號；每場依正式異宇宙規則隨機取得兩種怪物特性，角色使用目前「角色能力測試」設定。</div><div class="item"><div class="gmpb-title"><b>異宇宙各王測試</b><span class="muted">角色：${character.world===3?"高維紀元":character.world===2?"宇宙紀元":"銀河紀元"} Lv.${whole(character.level||1,1,2000)}｜突破等級 Lv.${whole(character.breakthroughLevel||0,0)}</span></div><div class="gmpb-controls"><label>王編號<br><input id="gmAuBenchmarkDepth" class="btn" type="number" min="1" max="${maxDepth()}" step="1" value="${depth}" onchange="gmAlternateUniverseBenchmarkSetDepth(this.value)"></label><label>測試量<br><select class="btn" onchange="gmAlternateUniverseBenchmarkSetRuns(this.value)">${[100,500,1000].map(n=>`<option value="${n}" ${model.runs===n?"selected":""}>${n}</option>`).join("")}</select></label></div><div class="gmpb-actions"><button class="btn"${busy||depth<=1?" disabled":""} onclick="gmAlternateUniverseBenchmarkStep(-1)">上一隻</button><button class="btn"${busy||depth>=maxDepth()?" disabled":""} onclick="gmAlternateUniverseBenchmarkStep(1)">下一隻</button><button class="btn blue"${busy} onclick="gmAlternateUniverseBenchmarkRunSelected()">${model.busy?"測試中…":"開始測試"}</button></div><div class="muted" style="margin-top:8px">${enemy?`${enemy.name}｜基礎 HP ${fmt(enemy.hp)}｜ATK ${fmt(enemy.atk)}｜DEF ${fmt(enemy.def)}｜每場正式隨機雙特性`:"異宇宙資料未載入"}</div>${metrics(model.result)}</div>`;
  }
- async function withBusy(kind,task){if(model.busy)return false;model.busy=true;model.busyKind=kind;if(typeof render==="function")render();await new Promise(resolve=>setTimeout(resolve,0));try{return await task();}finally{model.busy=false;model.busyKind="";if(typeof render==="function")render();}}
- async function runSelected(){return withBusy("benchmark",async()=>{model.result=await runBenchmark({depth:model.depth,runs:model.runs,traits:model.traits});return model.result;});}
- async function runAllDiagnostics(){return withBusy("diagnostics",async()=>{model.diagnostics=await runDiagnostics({depth:model.depth});return model.diagnostics;});}
- function setTrait(index,value){const next=model.traits.slice(),ids=traitIds(),id=String(value||"");if(!ids.includes(id))return false;next[index===1?1:0]=id;if(next[0]===next[1]){next[index===1?0:1]=ids.find(x=>x!==id)||next[index===1?0:1];}const pair=canonicalPair(next[0],next[1]);if(!pair)return false;model.traits=pair.slice();model.result=null;if(typeof render==="function")render();return true;}
+ async function runSelected(){
+  if(model.busy)return false;model.busy=true;if(typeof render==="function")render();await new Promise(resolve=>setTimeout(resolve,0));
+  try{model.result=await runBenchmark({depth:model.depth,runs:model.runs});return model.result;}
+  finally{model.busy=false;if(typeof render==="function")render();}
+ }
+ function clearResult({diagnostics=true}={}){model.result=null;if(diagnostics)model.diagnostics=null;return true;}
+ function setDepth(value){model.depth=whole(value,1,maxDepth());clearResult();if(typeof render==="function")render();return model.depth;}
+ function stepDepth(delta){return setDepth(model.depth+(Number(delta)<0?-1:1));}
+ function setRuns(value){model.runs=[100,500,1000].includes(Number(value))?Number(value):100;clearResult({diagnostics:false});return model.runs;}
+ function resultSnapshot(){return model.result?clone(model.result):null;}
+ function summaryTextForResult(result=model.result){
+  if(!result)return "";
+  const enemy=result.enemy||{};
+  return `【異宇宙】\n目標：第 ${result.depth} 層域｜${enemy.name||`異宇宙第 ${result.depth} 層域`}｜${result.runs} 場\n勝率 ${result.winRate}%｜平均回合 ${result.avgTurns}｜玩家平均剩餘HP ${result.avgPlayerEndPct}%｜敵人平均剩餘HP ${result.avgEnemyEndPct}%｜平均輸出 ${fmt(result.avgPlayerDamage)}｜平均承傷 ${fmt(result.avgEnemyDamage)}`;
+ }
+ function subsectionHtml(){
+  const open=typeof window.gmPowerBenchmarkModeIsOpen==="function"&&window.gmPowerBenchmarkModeIsOpen("alternate");
+  return `<details class="gm-ability-test-sub gmpb-mode-sub" data-gmpb-mode="alternate" ${open?"open ":""}ontoggle="gmPowerBenchmarkModeToggle('alternate',this.open)"><summary>異宇宙測試</summary><div class="gm-ability-test-sub-body">${html()}</div></details>`;
+ }
+ function decorateUnifiedSummary(source){
+  let out=String(source||""),has=!!model.result;
+  out=out.replace(/(<div class="muted">已測模式<\/div><b>)(\d+)\s*\/\s*7(<\/b>)/,(all,a,n,b)=>`${a}${Number(n)+(has?1:0)} / 8${b}`);
+  out=out.replace(/(<div class="muted">包含內容<\/div><b>)([^<]*)(<\/b>)/,(all,a,value,b)=>{
+   if(!has)return `${a}${value}${b}`;
+   const current=String(value||"").trim();return `${a}${current==="尚未測試"?"異宇宙":(current.includes("異宇宙")?current:`${current}、異宇宙`)}${b}`;
+  });
+  if(has){
+   const add=escapeHtml(summaryTextForResult());
+   out=out.replace(/(<div class="gmpb-summary-text">)([\s\S]*?)(<\/div><\/details>)/,(all,a,text,b)=>`${a}${text.replace(/\n?尚未執行任何戰鬥測試。/g,"")}${text.trim()?"\n\n":""}${add}${b}`);
+  }
+  return out;
+ }
  function validate(){
   const errors=[],ids=traitIds(),pairs=allPairs();
   if(ids.length!==7)errors.push({code:"TRAIT_COUNT",actual:ids.length});
   if(pairs.length!==21)errors.push({code:"PAIR_COUNT",actual:pairs.length});
   const keys=pairs.map(pair=>pair.join("+"));if(new Set(keys).size!==21)errors.push({code:"PAIR_UNIQUENESS"});
   if(pairs.some(pair=>pair.length!==2||pair[0]===pair[1]))errors.push({code:"PAIR_SHAPE"});
-  if(ids.length>=2&&typeof window.alternateUniverseEnemyStats==="function"&&typeof window.applyMonsterTraits==="function"){
-   const enemy=enemyFor(1,[ids[1],ids[0]]);if(!enemy||enemy.traits[0]!==ids[0]||enemy.traits[1]!==ids[1])errors.push({code:"CANONICAL_ORDER"});
-  }
-  return Object.freeze({version:VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
+  if(model.depth!==1)errors.push({code:"SESSION_DEFAULT_DEPTH",actual:model.depth});
+  const sample=ids.length>=2?enemyFor(1,[ids[1],ids[0]]):null;if(ids.length>=2&&(!sample||sample.traits[0]!==ids[0]||sample.traits[1]!==ids[1]))errors.push({code:"CANONICAL_ORDER"});
+  return Object.freeze({version:VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
+ }
+ function installIntegration(){
+  const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseCopy=window.gmPowerBenchmarkCopySummary,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset;
+  if(typeof baseHtml!=="function")return false;
+  const wrapped=function(){
+   let source=String(baseHtml()||""),marker='<div id="gmPowerBenchmarkUnifiedSummary"';
+   const index=source.indexOf(marker);if(index>=0)source=source.slice(0,index)+subsectionHtml()+source.slice(index);else source+=subsectionHtml();
+   return decorateUnifiedSummary(source);
+  };
+  wrapped.__alternateUniverseIntegrationVersion=INTEGRATION_VERSION;
+  window.gmPowerBenchmarkHtml=wrapped;
+  window.gmPowerBenchmarkSummaryText=function(){
+   let text=typeof baseSummary==="function"?String(baseSummary()||""):"";
+   if(model.result){text=text.replace(/\n?尚未執行任何戰鬥測試。/g,"");text+=(text.trim()?"\n\n":"")+summaryTextForResult();}
+   return text;
+  };
+  window.gmPowerBenchmarkCopySummary=async function(){
+   const text=window.gmPowerBenchmarkSummaryText();let ok=false;
+   try{if(navigator?.clipboard&&typeof navigator.clipboard.writeText==="function"){await navigator.clipboard.writeText(text);ok=true;}}catch(_){ }
+   if(!ok&&typeof document!=="undefined"){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();try{ok=document.execCommand("copy");}catch(_){ }ta.remove();}
+   if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");return ok;
+  };
+  if(typeof baseInvalidate==="function")window.gmPowerBenchmarkInvalidateSnapshot=function(){clearResult();return baseInvalidate.apply(this,arguments);};
+  if(typeof baseClear==="function")window.gmPowerBenchmarkClearAllResults=function(){clearResult();return baseClear.apply(this,arguments);};
+  if(typeof baseReset==="function")window.gmPowerBenchmarkReset=function(){clearResult();return baseReset.apply(this,arguments);};
+  if(typeof window.replaceGmHubSectionRenderer==="function")window.replaceGmHubSectionRenderer("test","power-benchmark-test",wrapped,"戰力基準測試");
+  return true;
  }
 
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION=VERSION;
  window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION=TRAIT_PAIR_DIAGNOSTICS_VERSION;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION=COMBAT_OWNER_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION=INTEGRATION_VERSION;
  window.gmAlternateUniverseTraitPairs=()=>allPairs().map(pair=>pair.slice());
- window.gmAlternateUniverseBenchmarkEnemy=(depth,traits)=>clone(enemyFor(depth,traits));
+ window.gmAlternateUniverseBenchmarkEnemy=(depth,traits)=>clone(enemyFor(depth,traits||rollPair()));
  window.gmRunAlternateUniverseBenchmark=runBenchmark;
  window.gmRunAlternateUniverseTraitDiagnostics=runDiagnostics;
  window.gmAlternateUniverseBenchmarkHtml=html;
  window.gmAlternateUniverseBenchmarkSession=()=>clone(model);
- window.gmAlternateUniverseBenchmarkSetDepth=value=>{model.depth=whole(value,1,maxDepth());model.result=null;model.diagnostics=null;if(typeof render==="function")render();return model.depth;};
- window.gmAlternateUniverseBenchmarkSetRuns=value=>{model.runs=[100,500,1000].includes(Number(value))?Number(value):100;return model.runs;};
- window.gmAlternateUniverseBenchmarkSetTrait=setTrait;
+ window.gmAlternateUniverseBenchmarkResultSnapshot=resultSnapshot;
+ window.gmClearAlternateUniverseBenchmarkResult=()=>clearResult();
+ window.gmAlternateUniverseBenchmarkSetDepth=setDepth;
+ window.gmAlternateUniverseBenchmarkStep=stepDepth;
+ window.gmAlternateUniverseBenchmarkSetRuns=setRuns;
  window.gmAlternateUniverseBenchmarkRunSelected=runSelected;
- window.gmAlternateUniverseBenchmarkRunDiagnostics=runAllDiagnostics;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY=validate();
- if(typeof window.registerGmHubSection==="function")window.registerGmHubSection("test","異宇宙基準測試",html,{id:"alternate-universe-benchmark-test"});
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT=Object.freeze({version:VERSION,integrationVersion:INTEGRATION_VERSION,integrated:installIntegration(),separateHubSection:false,defaultDepth:1});
  if(!window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY.passed)console.error("[文明戰線] GM AU benchmark integrity error",window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY.errors);
 })();
