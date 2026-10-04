@@ -1,9 +1,10 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const PLAYER_RULE_VERSION=4;
  const PHASE_RULE_VERSION=1;
  const GM_OVERRIDE_VERSION=1;
  const REINCARNATION_UNLOCK_VERSION=1;
+ const BADGE_RENDERER_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
 
@@ -66,6 +67,18 @@
  function effectiveCombatSpeed(){
   return gmOverride()??playerCombatSpeed();
  }
+ function displaySpeed(value=effectiveCombatSpeed()){
+  return normalizeSpeed(value)??1;
+ }
+ function combatSpeedBadgeHtml(options={}){
+  const target=options?.target&&typeof options.target==="object"?options.target:currentGameState(),speed=displaySpeed(options?.speed),force=options?.force===true;
+  const visible=force||playerCombatSpeedOptions(target).includes(1.5)||speed!==1;
+  return visible?`<span class="universe-combat-speed" data-combat-speed-badge="1">${speed}×</span>`:"";
+ }
+ function combatSpeedHeaderHtml(label,options={}){
+  const badge=combatSpeedBadgeHtml(options),gap=badge?"":"";
+  return `<div class="combat-head" data-combat-speed-header="1">${String(label??"")}${gap}${badge}</div>`;
+ }
  function scaledDelay(baseMs,speed=effectiveCombatSpeed()){
   const base=Math.max(0,Number(baseMs)||0);
   const resolved=normalizeSpeed(speed)??playerCombatSpeed();
@@ -96,6 +109,7 @@
  window.COMBAT_SPEED_PHASE_RULE_VERSION=PHASE_RULE_VERSION;
  window.COMBAT_SPEED_GM_OVERRIDE_VERSION=GM_OVERRIDE_VERSION;
  window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION=REINCARNATION_UNLOCK_VERSION;
+ window.COMBAT_SPEED_BADGE_RENDERER_VERSION=BADGE_RENDERER_VERSION;
  window.COMBAT_SPEED_ALLOWED=ALLOWED.slice();
  window.combatSpeedWorldPhase=combatSpeedWorldPhase;
  window.reincarnationCombatSpeedUnlocked=reincarnationSpeedUnlocked;
@@ -104,6 +118,9 @@
  window.setPlayerCombatSpeed=setPlayerCombatSpeed;
  window.gmCombatSpeedOverride=gmOverride;
  window.effectiveCombatSpeed=effectiveCombatSpeed;
+ window.combatSpeedDisplayValue=displaySpeed;
+ window.combatSpeedBadgeHtml=combatSpeedBadgeHtml;
+ window.combatSpeedHeaderHtml=combatSpeedHeaderHtml;
  window.combatSpeedScaledDelay=scaledDelay;
  window.setGmCombatSpeedOverride=setGmOverride;
  window.clearGmCombatSpeedOverride=clearCurrent;
