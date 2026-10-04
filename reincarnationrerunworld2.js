@@ -89,9 +89,9 @@
   if(active(holder))return index>=0;
   return typeof base.bossVisible==="function"?base.bossVisible(value,holder):false;
  };
- // Legacy compatibility: historical callers of secondWorldRegionVisible keep the Arena/progression meaning.
- // Adventure UI now consumes secondWorldAdventureRegionVisible explicitly, so rendering no longer monkey-patches this global owner.
- window.secondWorldRegionVisible=function(value,target=null){return arenaRegionEligible(value,target);};
+ // secondWorldRegionVisible retains its original adventure-visibility meaning for compatibility.
+ // Arena progression consumes secondWorldArenaRegionEligible explicitly, so the two semantics no longer share one owner.
+ window.secondWorldRegionVisible=function(value,target=null){return adventureRegionVisible(value,target);};
 
  window.isSecondWorldCalamityVisible=function(value,target=null){
   const holder=stateTarget(target);
