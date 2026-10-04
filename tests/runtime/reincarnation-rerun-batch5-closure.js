@@ -12,11 +12,13 @@ const assert=require('assert');
   await page.waitForFunction(()=>window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&typeof window.applyReincarnationResetState==='function'&&window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_INTEGRITY?.passed===true&&window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION>=1,{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
-   const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries((window.BREAKTHROUGH_MILESTONE_LEVELS||[100,200,300,400,500,600,700,800,900,1000]).map(level=>[String(level),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
+   const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries((window.BREAKTHROUGH_MILESTONES||window.BREAKTHROUGH_MILESTONE_LEVELS||[100,200,300,400,500,600,700,800,900,1000]).map(level=>[String(level),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
    const makeW1=count=>{const s=newState();s.saveVersion=17;s.reincarnation=reincarnation(count);s.secondWorld=createBlankSecondWorldState();s.thirdWorld=createBlankThirdWorldState();return s;};
    const makeW2=count=>{const s=makeW1(count);s.level=500;s.secondWorld=createBlankSecondWorldState();s.secondWorld.entered=true;s.thirdWorld=createBlankThirdWorldState();return s;};
    const makeW3=count=>{const s=makeW2(count);s.level=1000;s.thirdWorld=createBlankThirdWorldState();s.thirdWorld.entered=true;return s;};
    const originalState=state;
+   const originalEffectiveCombatSpeed=window.effectiveCombatSpeed;
+   const originalSecondWorldEntryRequirements=window.secondWorldEntryRequirements;
    const out={};
 
    state=makeW1(0);
@@ -27,6 +29,22 @@ const assert=require('assert');
    const w1RegionIndex=5,w1KeyIndex=Number(WORLD_REGIONS[w1RegionIndex].mapEnd);state.bossKilled[w1KeyIndex]=true;
    out.w1Coverage={coverage:firstWorldRerunKeyBossCoverage(state),actualKills:state.bossKilled.filter(Boolean).length,keyKilled:state.bossKilled[w1KeyIndex]};
    state=clone(state);out.w1Reload={active:isFirstWorldReincarnationRerun(state),coverage:firstWorldRerunKeyBossCoverage(state),actualKills:state.bossKilled.filter(Boolean).length};
+
+   state=makeW1(0);
+   const firstSettings=settingsPage();
+   state=makeW1(1);state.settings.combatSpeed=1.5;
+   const rerunSettings=settingsPage();
+   const rerunCombat=adventureCombatPage();
+   window.effectiveCombatSpeed=()=>2;
+   const gmCombat=adventureCombatPage();
+   window.effectiveCombatSpeed=originalEffectiveCombatSpeed;
+   window.secondWorldEntryRequirements=()=>({eligible:true});
+   state=makeW1(0);openWorldPhaseConfirmation(2);
+   const firstTransition=document.getElementById('worldPhaseConfirmModal')?.textContent||'';closeWorldPhaseConfirmation();
+   state=makeW1(1);openWorldPhaseConfirmation(2);
+   const rerunTransition=document.getElementById('worldPhaseConfirmModal')?.textContent||'';closeWorldPhaseConfirmation();
+   window.secondWorldEntryRequirements=originalSecondWorldEntryRequirements;
+   out.speedUi={firstSettingsHidden:!firstSettings.includes('combat-speed-setting'),rerunSettingsVisible:rerunSettings.includes('combat-speed-setting')&&rerunSettings.includes('1.5×'),rerunCombat15:rerunCombat.includes('1.5×'),gmCombat2:gmCombat.includes('2×'),firstTransitionUnlock:firstTransition.includes('1.5× 戰鬥速度'),rerunTransitionUnlock:rerunTransition.includes('1.5× 戰鬥速度')};
 
    state=makeW2(0);
    out.w2First={context:secondWorldReincarnationRerunContext(state),boss0:canChallengeSecondWorldBoss(0,state),boss99:canChallengeSecondWorldBoss(99,state)};
@@ -58,6 +76,8 @@ const assert=require('assert');
    const resetResult=applyReincarnationResetState(resetProbe,{requireEligible:false,currentTime:123456});
    out.nextLife={ok:resetResult?.ok===true,count:resetProbe.reincarnation.count,w1Kills:resetProbe.bossKilled.filter(Boolean).length,w2Entered:resetProbe.secondWorld.entered,w2Kills:resetProbe.secondWorld.mainline.bossKilled.filter(Boolean).length,w3Entered:resetProbe.thirdWorld.entered,w3AllFresh:resetProbe.thirdWorld.bosses.every(row=>Number(row.currentHp)===maxHp),storyPreserved:resetProbe.storyProgress.completedStories.includes('closure-read-story')};
 
+   window.effectiveCombatSpeed=originalEffectiveCombatSpeed;
+   window.secondWorldEntryRequirements=originalSecondWorldEntryRequirements;
    state=originalState;
    return out;
   });
@@ -66,6 +86,7 @@ const assert=require('assert');
   assert.equal(report.w1First.context.active,false);assert.equal(report.w1First.lastBoss,false);assert.equal(report.w1First.lastEnemy,false);assert.equal(report.w1First.uiRerun,false);
   assert.equal(report.w1Rerun.context.active,true);assert.equal(report.w1Rerun.allEnemies,true);assert.equal(report.w1Rerun.allBosses,true);assert.equal(report.w1Rerun.regionSections,10);assert.equal(report.w1Rerun.uiRerun,true);
   assert.deepEqual(report.w1Coverage,{coverage:6,actualKills:1,keyKilled:true});assert.deepEqual(report.w1Reload,{active:true,coverage:6,actualKills:1});
+  assert.equal(report.speedUi.firstSettingsHidden,true);assert.equal(report.speedUi.rerunSettingsVisible,true);assert.equal(report.speedUi.rerunCombat15,true);assert.equal(report.speedUi.gmCombat2,true);assert.equal(report.speedUi.firstTransitionUnlock,true);assert.equal(report.speedUi.rerunTransitionUnlock,false);
   assert.equal(report.w2First.context.active,false);assert.equal(report.w2First.boss0,true);assert.equal(report.w2First.boss99,false);
   assert.equal(report.w2Rerun.context.active,true);assert.equal(report.w2Rerun.allBosses,true);assert.equal(report.w2Rerun.regionSections,10);
   assert.equal(report.w2Coverage.coverage,6);assert.equal(report.w2Coverage.actualKills,1);assert.equal(report.w2Coverage.keyKilled,true);if(report.w2Coverage.reviewAvailable!==null)assert.equal(report.w2Coverage.reviewAvailable,false,'Formal rerun availability must not unlock review history.');
