@@ -12,7 +12,6 @@
  function normalize(target){if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(target);return target;}
  function alternate(target=state){return target?.reincarnation?.alternateUniverse&&typeof target.reincarnation.alternateUniverse==="object"?target.reincarnation.alternateUniverse:null;}
  function formalSnapshot(target=state){
-  normalize(target);
   const progression=typeof window.alternateUniverseProgressionSnapshot==="function"?window.alternateUniverseProgressionSnapshot(target):null;
   const au=alternate(target),currentLife=lifeId(target);
   const active=typeof window.alternateUniverseActiveAttempt==="function"?window.alternateUniverseActiveAttempt(target):au?.activeAttempt||null;
