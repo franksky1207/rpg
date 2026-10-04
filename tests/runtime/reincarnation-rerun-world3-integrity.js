@@ -6,7 +6,7 @@ const { chromium } = require('playwright');
  const pageErrors=[];
  page.on('pageerror',error=>pageErrors.push(error.message));
  await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.THIRD_WORLD_REINCARNATION_RERUN_UI_PRESENTATION_VERSION===1&&typeof window.thirdWorldReincarnationRerunContext==='function'&&typeof window.thirdWorldChallengeStatus==='function');
+ await page.waitForFunction(()=>window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.THIRD_WORLD_REINCARNATION_RERUN_UI_PRESENTATION_VERSION===2&&typeof window.thirdWorldReincarnationRerunContext==='function'&&typeof window.thirdWorldChallengeStatus==='function');
  const result=await page.evaluate(async()=>{
   function reincarnation(count){return {count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}};}
   function third(count){
@@ -23,7 +23,7 @@ const { chromium } = require('playwright');
   const rerunBefore=JSON.stringify(state.thirdWorld.bosses);
   out.rerun={context:window.thirdWorldReincarnationRerunContext(state),status:window.thirdWorldChallengeStatus(0,state),snapshot:window.thirdWorldBossProgressSnapshot(0,state),canChallenge:window.canChallengeThirdWorldBoss(0,state),unchanged:JSON.stringify(state.thirdWorld.bosses)===rerunBefore};
   const html=typeof window.thirdWorldAdventurePageHtml==='function'?window.thirdWorldAdventurePageHtml():'';
-  out.ui={hasStructuredOwner:html.includes('data-third-world-rerun-presentation="1"'),hasRerunCopy:html.includes('轉生重征服：可集中攻略任一存活高維存在'),hasRerunRule:html.includes('轉生重征服不受 5% 戰線限制'),hasOldReadyCopy:html.includes('目前位於合法 5% 戰線內'),firstRunStructuredOwner:out.firstRun.html.includes('data-third-world-rerun-presentation="1"')};
+  out.ui={hasStructuredOwner:html.includes('data-third-world-rerun-presentation="1"'),hasRerunCopy:html.includes('轉生重征服：可集中攻略任一存活高維存在')||html.includes('轉生重征服：已解除 5% 戰線限制，可集中攻略此高維存在'),hasRerunRule:html.includes('轉生重征服不受 5% 戰線限制'),hasOldReadyCopy:html.includes('目前位於合法 5% 戰線內'),firstRunStructuredOwner:out.firstRun.html.includes('data-third-world-rerun-presentation="1"')};
 
   state=third(1);state.thirdWorld.bosses[0].currentHp=0;
   out.defeated=window.thirdWorldChallengeStatus(0,state);
@@ -49,7 +49,7 @@ const { chromium } = require('playwright');
  });
  const fail=(code,detail)=>{throw new Error(`${code}: ${JSON.stringify(detail)}`);};
  if(pageErrors.length)fail('PAGE_ERRORS',pageErrors);
- if(result.version!==1||result.uiVersion!==1)fail('VERSION',{version:result.version,uiVersion:result.uiVersion});
+ if(result.version!==1||result.uiVersion!==2)fail('VERSION',{version:result.version,uiVersion:result.uiVersion});
  if(result.firstRun.context.active!==false||result.firstRun.status?.allowed!==false||result.firstRun.status?.reason!=='five-point-front'||result.firstRun.snapshot?.challengeAllowed!==false||result.firstRun.unchanged!==true)fail('FIRST_RUN_5PP_CHANGED',result.firstRun);
  if(result.rerun.context.active!==true||result.rerun.status?.allowed!==true||result.rerun.status?.reason!=='reincarnation-rerun'||result.rerun.status?.fivePointBypassed!==true||result.rerun.snapshot?.challengeAllowed!==true||result.rerun.canChallenge!==true||result.rerun.unchanged!==true)fail('RERUN_5PP_NOT_BYPASSED',result.rerun);
  if(result.ui.hasStructuredOwner!==true||result.ui.hasRerunCopy!==true||result.ui.hasRerunRule!==true||result.ui.hasOldReadyCopy!==false||result.ui.firstRunStructuredOwner!==false)fail('RERUN_UI_COPY',result.ui);
