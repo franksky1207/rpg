@@ -59,7 +59,7 @@ const assert=require("assert");
     const rerunHtml=adventurePreparePage();
     const rerunPrepared=window.getPreparedFirstWorldTargetContext();
 
-    window.setGalaxyReviewSelectedMap?.(6);window.setGalaxyReviewSelectedEnemy?.(3);window.clearPreparedFirstWorldTargetContext();
+    window.openGalaxyReviewMap(6);window.setGalaxyReviewSelectedEnemy(3);window.clearPreparedFirstWorldTargetContext();
     const reviewHtml=galaxyReviewPreparePage();
     const reviewPrepared=window.getPreparedFirstWorldTargetContext();
     const reviewHtml2=galaxyReviewPreparePage();
