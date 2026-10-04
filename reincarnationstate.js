@@ -6,11 +6,13 @@
  const REINCARNATION_PRE_SCHEMA17_POLICY_VERSION=1;
  const REINCARNATION_FIRST_RUN_BREAKTHROUGH_ISOLATION_VERSION=1;
  const REINCARNATION_BREAKTHROUGH_RECONCILIATION_VERSION=1;
+ const REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION=1;
  const ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION=2;
  const ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION=1;
  const ALTERNATE_UNIVERSE_FAILURES_FORMAT_VERSION=1;
  const ALTERNATE_UNIVERSE_UNLOCK_SALVAGE_VERSION=1;
  const ALTERNATE_UNIVERSE_ACTIVE_ATTEMPT_REPAIR_VERSION=1;
+ const ALTERNATE_UNIVERSE_LIFECYCLE_SNAPSHOT_VERSION=1;
  const ALTERNATE_UNIVERSE_MAX_DEPTH=1000;
  const BREAKTHROUGH_MILESTONES=Object.freeze([100,200,300,400,500,600,700,800,900,1000]);
  const REINCARNATION_CONTEXT_DOMAINS=Object.freeze(["world","level","story","dungeon","speed"]);
@@ -183,6 +185,15 @@
   const count=reincarnationCount(target),reincarnationRun=count>0;
   return Object.freeze({version:REINCARNATION_LIFECYCLE_POLICY_VERSION,count,lifeId:count,mode:reincarnationRun?"reincarnation-run":"first-run",firstRun:!reincarnationRun,reincarnationRun});
  }
+ function reconcileReincarnationLifeChange(target=window.state,previousLifeId=null){
+  if(!isObject(target)||!isObject(target.reincarnation))return Object.freeze({version:REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION,ok:false,reason:"reincarnation-state-missing",changed:false,beforeLifeId:normalizedCount(previousLifeId),afterLifeId:0,clearedActiveAttempt:false,resetLifeFailures:false});
+  const beforeLifeId=normalizedCount(previousLifeId),afterLifeId=currentLifeId(target),changed=beforeLifeId!==afterLifeId;
+  const au=isObject(target.reincarnation.alternateUniverse)?target.reincarnation.alternateUniverse:null;
+  const clearedActiveAttempt=changed&&!!au?.activeAttempt;
+  const resetLifeFailures=changed&&!!au&&(normalizedCount(au?.lifeFailures?.lifeId)!==afterLifeId||Object.keys(isObject(au?.lifeFailures?.failures)?au.lifeFailures.failures:{}).length>0);
+  if(changed&&au){au.activeAttempt=null;au.lifeFailures=blankLifeFailures(afterLifeId);}
+  return Object.freeze({version:REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION,ok:true,reason:"",changed,beforeLifeId,afterLifeId,clearedActiveAttempt,resetLifeFailures});
+ }
  function reincarnationContextForDomain(domain,target=window.state){
   const key=String(domain||"").trim().toLowerCase();
   if(!REINCARNATION_CONTEXT_DOMAINS.includes(key))return null;
@@ -204,6 +215,17 @@
   return clamp(finiteWhole(failures.failures[key],0),0,10);
  }
  function alternateUniverseDepthLocked(target=window.state,depth=0){return alternateUniverseFailureCount(target,depth)>=10;}
+ function alternateUniverseLifecycleSnapshot(target=window.state){
+  const lifeId=currentLifeId(target),source=isObject(target?.reincarnation?.alternateUniverse)?target.reincarnation.alternateUniverse:{};
+  const deepestRaw=normalizedDepth(source.deepestCleared),unlocked=source.unlocked===true||deepestRaw>0,deepestCleared=unlocked?deepestRaw:0;
+  const lifeFailures=unlocked?normalizeLifeFailures(source.lifeFailures,lifeId):blankLifeFailures(lifeId);
+  const frontier=unlocked&&deepestCleared<ALTERNATE_UNIVERSE_MAX_DEPTH?deepestCleared+1:null;
+  const candidate=unlocked?normalizeActiveAttempt(source.activeAttempt,lifeId):null;
+  const activeLocked=!!candidate&&clamp(finiteWhole(lifeFailures.failures[String(candidate.depth)],0),0,10)>=10;
+  const activeAttempt=candidate&&candidate.depth===frontier&&!activeLocked?candidate:null;
+  const frozenAttempt=activeAttempt?Object.freeze({...activeAttempt,traits:Object.freeze(activeAttempt.traits.slice())}):null;
+  return Object.freeze({version:ALTERNATE_UNIVERSE_LIFECYCLE_SNAPSHOT_VERSION,lifeId,unlocked,deepestCleared,maxDepth:ALTERNATE_UNIVERSE_MAX_DEPTH,completed:unlocked&&deepestCleared>=ALTERNATE_UNIVERSE_MAX_DEPTH,frontier,activeAttempt:frozenAttempt,failures:Object.freeze({...lifeFailures.failures})});
+ }
  function runReincarnationLifecycleIntegrity(){
   const first={saveVersion:17,reincarnation:createBlankReincarnationState()},later={saveVersion:17,reincarnation:createBlankReincarnationState()};later.reincarnation.count=3;later.reincarnation.breakthrough.milestoneLifeId=3;
   const contaminatedFirst={saveVersion:17,reincarnation:{count:0,breakthrough:{permanent:9,milestoneLifeId:0,milestones:{100:true}},alternateUniverse:{unlocked:true,deepestCleared:0}}};normalizeReincarnationState(contaminatedFirst);
@@ -211,6 +233,10 @@
   const missingOwner={saveVersion:17,reincarnation:{count:2,breakthrough:{permanent:1,milestones:{100:true,200:true}},alternateUniverse:{unlocked:false,deepestCleared:0}}};normalizeReincarnationState(missingOwner);
   const auSalvage={saveVersion:17,reincarnation:{count:1,breakthrough:{permanent:0,milestoneLifeId:1,milestones:{}},alternateUniverse:{unlocked:false,deepestCleared:8}}};normalizeReincarnationState(auSalvage);
   const legacy={saveVersion:16,reincarnation:{count:9,breakthrough:{permanent:99,milestoneLifeId:9,milestones:{100:true}},alternateUniverse:{unlocked:true,deepestCleared:999}}};normalizeReincarnationState(legacy);
+  const lifeChange={saveVersion:17,reincarnation:{count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:40,activeAttempt:{lifeId:2,depth:41,attemptId:"life-change",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"41":3}}}}};
+  lifeChange.reincarnation.count=3;const lifeChangeReport=reconcileReincarnationLifeChange(lifeChange,2);
+  const snapshotProbe={saveVersion:17,reincarnation:{count:3,breakthrough:{permanent:25,milestoneLifeId:3,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:40,activeAttempt:{lifeId:3,depth:41,attemptId:"snapshot",traits:["強壯","迅捷"]},lifeFailures:{lifeId:3,failures:{"41":4,"1001":9}}}}};
+  const snapshotBefore=JSON.stringify(snapshotProbe),auSnapshot=alternateUniverseLifecycleSnapshot(snapshotProbe),snapshotAfter=JSON.stringify(snapshotProbe);
   const firstLife=reincarnationLifecycleSnapshot(first),laterLife=reincarnationLifecycleSnapshot(later),domains={};
   REINCARNATION_CONTEXT_DOMAINS.forEach(domain=>{domains[domain]={first:reincarnationContextForDomain(domain,first),later:reincarnationContextForDomain(domain,later)};});
   const errors=[];
@@ -221,8 +247,10 @@
   if(missingOwner.reincarnation.breakthrough.milestoneLifeId!==2||currentLifeBreakthrough(missingOwner)!==2||missingOwner.reincarnation.breakthrough.permanent!==2)errors.push({code:"BREAKTHROUGH_SAME_SCHEMA_RECONCILIATION",actual:missingOwner.reincarnation.breakthrough});
   if(auSalvage.reincarnation.alternateUniverse.unlocked!==true||auSalvage.reincarnation.alternateUniverse.deepestCleared!==8)errors.push({code:"ALTERNATE_UNIVERSE_UNLOCK_SALVAGE",actual:auSalvage.reincarnation.alternateUniverse});
   if(legacy.reincarnation.count!==0||legacy.reincarnation.breakthrough.permanent!==0||legacy.reincarnation.alternateUniverse.unlocked!==false)errors.push({code:"PRE_SCHEMA17_MUST_BE_FIRST_RUN",actual:legacy.reincarnation});
+  if(!lifeChangeReport.ok||lifeChangeReport.changed!==true||lifeChange.reincarnation.alternateUniverse.deepestCleared!==40||lifeChange.reincarnation.alternateUniverse.activeAttempt!==null||lifeChange.reincarnation.alternateUniverse.lifeFailures.lifeId!==3||Object.keys(lifeChange.reincarnation.alternateUniverse.lifeFailures.failures).length!==0)errors.push({code:"LIFE_CHANGE_OWNER",actual:{lifeChangeReport,state:lifeChange.reincarnation.alternateUniverse}});
+  if(snapshotBefore!==snapshotAfter||auSnapshot.lifeId!==3||auSnapshot.frontier!==41||auSnapshot.failures["41"]!==4||Object.prototype.hasOwnProperty.call(auSnapshot.failures,"1001")||JSON.stringify(auSnapshot.activeAttempt?.traits)!==JSON.stringify(["strong","swift"]))errors.push({code:"AU_LIFECYCLE_SNAPSHOT_READ_ONLY",actual:{auSnapshot,before:snapshotBefore,after:snapshotAfter}});
   REINCARNATION_CONTEXT_DOMAINS.forEach(domain=>{const row=domains[domain];if(row.first?.firstRun!==true||row.first?.reincarnationRun!==false||row.later?.firstRun!==false||row.later?.reincarnationRun!==true||row.later?.lifeId!==3)errors.push({code:"DOMAIN_CONTEXT_DRIFT",domain,row});});
-  return Object.freeze({version:REINCARNATION_LIFECYCLE_POLICY_VERSION,passed:errors.length===0,errors:Object.freeze(errors),domains:Object.freeze(REINCARNATION_CONTEXT_DOMAINS.slice())});
+  return Object.freeze({version:REINCARNATION_LIFECYCLE_POLICY_VERSION,lifeChangeVersion:REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION,alternateUniverseLifecycleSnapshotVersion:ALTERNATE_UNIVERSE_LIFECYCLE_SNAPSHOT_VERSION,passed:errors.length===0,errors:Object.freeze(errors),domains:Object.freeze(REINCARNATION_CONTEXT_DOMAINS.slice())});
  }
 
  window.REINCARNATION_STATE_VERSION=REINCARNATION_STATE_VERSION;
@@ -232,11 +260,13 @@
  window.REINCARNATION_PRE_SCHEMA17_POLICY_VERSION=REINCARNATION_PRE_SCHEMA17_POLICY_VERSION;
  window.REINCARNATION_FIRST_RUN_BREAKTHROUGH_ISOLATION_VERSION=REINCARNATION_FIRST_RUN_BREAKTHROUGH_ISOLATION_VERSION;
  window.REINCARNATION_BREAKTHROUGH_RECONCILIATION_VERSION=REINCARNATION_BREAKTHROUGH_RECONCILIATION_VERSION;
+ window.REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION=REINCARNATION_LIFE_CHANGE_RECONCILIATION_VERSION;
  window.ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION=ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION;
  window.ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION=ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION;
  window.ALTERNATE_UNIVERSE_FAILURES_FORMAT_VERSION=ALTERNATE_UNIVERSE_FAILURES_FORMAT_VERSION;
  window.ALTERNATE_UNIVERSE_UNLOCK_SALVAGE_VERSION=ALTERNATE_UNIVERSE_UNLOCK_SALVAGE_VERSION;
  window.ALTERNATE_UNIVERSE_ACTIVE_ATTEMPT_REPAIR_VERSION=ALTERNATE_UNIVERSE_ACTIVE_ATTEMPT_REPAIR_VERSION;
+ window.ALTERNATE_UNIVERSE_LIFECYCLE_SNAPSHOT_VERSION=ALTERNATE_UNIVERSE_LIFECYCLE_SNAPSHOT_VERSION;
  window.REINCARNATION_CONTEXT_DOMAINS=Array.from(REINCARNATION_CONTEXT_DOMAINS);
  window.ALTERNATE_UNIVERSE_MAX_DEPTH=ALTERNATE_UNIVERSE_MAX_DEPTH;
  window.ALTERNATE_UNIVERSE_TRAIT_ROWS=ALTERNATE_UNIVERSE_TRAIT_ROWS.map(row=>({...row}));
@@ -252,6 +282,7 @@
  window.isReincarnationRun=isReincarnationRun;
  window.isFirstRun=isFirstRun;
  window.reincarnationLifecycleSnapshot=reincarnationLifecycleSnapshot;
+ window.reconcileReincarnationLifeChange=reconcileReincarnationLifeChange;
  window.reincarnationContextForDomain=reincarnationContextForDomain;
  window.worldReincarnationContext=worldReincarnationContext;
  window.levelReincarnationContext=levelReincarnationContext;
@@ -262,6 +293,7 @@
  window.alternateUniverseDeepestCleared=alternateUniverseDeepestCleared;
  window.alternateUniverseFailureCount=alternateUniverseFailureCount;
  window.alternateUniverseDepthLocked=alternateUniverseDepthLocked;
+ window.alternateUniverseLifecycleSnapshot=alternateUniverseLifecycleSnapshot;
  window.runReincarnationLifecycleIntegrity=runReincarnationLifecycleIntegrity;
  window.REINCARNATION_LIFECYCLE_INTEGRITY=runReincarnationLifecycleIntegrity();
  if(typeof window.registerNewStateNormalizer==="function")window.registerNewStateNormalizer(normalizeReincarnationState);
