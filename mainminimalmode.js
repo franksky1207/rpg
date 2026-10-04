@@ -24,8 +24,9 @@
 
  function currentEncounter(){
   if(typeof currentCombatEncounter!=="undefined"&&currentCombatEncounter)return currentCombatEncounter;
-  if(typeof getPreviewEncounter==="function")return getPreviewEncounter(selectedMap,selectedEnemy);
-  return typeof monsterObj==="function"?monsterObj(selectedMap,selectedEnemy):null;
+  const target=window.activeMainBattleContext?.targetContext||null;
+  if(target?.valid===true&&target?.authorized===true)return {name:String(target.enemyName||""),level:Math.max(0,Math.floor(Number(target.enemyLevel)||0)),kind:String(target.targetType||"")};
+  return null;
  }
 
  function expText(){
@@ -326,4 +327,5 @@
  window.MAIN_MINIMAL_MODE_ADAPTER_VERSION=1;
  window.MAIN_MINIMAL_MODE_BACKGROUND_POLICY_VERSION=1;
  window.MAIN_MINIMAL_MODE_COMBAT_SPEED_BADGE_REUSE_VERSION=1;
+ window.MAIN_MINIMAL_MODE_TARGET_CONTEXT_VERSION=1;
 })();
