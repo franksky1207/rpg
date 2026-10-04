@@ -1,7 +1,8 @@
 (function(){
- const GM_TEST_STATE_VERSION=2;
- const GM_TEST_CHARACTER_SANDBOX_VERSION=1;
+ const GM_TEST_STATE_VERSION=3;
+ const GM_TEST_CHARACTER_SANDBOX_VERSION=2;
  const GM_UNBOUNDED_VIP_TEST_VERSION=1;
+ const GM_TEST_BREAKTHROUGH_VERSION=1;
  window.gmTestVipLevel=0;
 
  function cloneValue(value){
@@ -27,6 +28,8 @@
   return Math.max(range.min,Math.min(range.max,n));
  }
  function normalizeTestVip(value){return typeof window.normalizeVipLevel==="function"?window.normalizeVipLevel(value):Math.max(0,Math.floor(Number(value)||0));}
+ function normalizeTestBreakthrough(value){const n=Math.floor(Number(value));return Number.isFinite(n)&&n>=0?Math.min(Number.MAX_SAFE_INTEGER,n):0;}
+ function formalBreakthroughLevel(){return typeof window.breakthroughLevel==="function"?normalizeTestBreakthrough(window.breakthroughLevel(state)):normalizeTestBreakthrough(state?.reincarnation?.breakthrough?.permanent);}
  function equipmentSlots(){return Array.isArray(EQUIPMENT_TYPES)?Array.from(EQUIPMENT_TYPES):["weapon","helmet","armor","shoes","accessory"];}
  function formalEquipmentSnapshot(){
   return Object.fromEntries(equipmentSlots().map(type=>[type,cloneValue(state?.equipment?.[type]||null)]));
@@ -79,12 +82,28 @@
  window.gmTestLevel=clampTestLevel(state?.level,window.gmTestWorld);
  window.gmTestEquipment=formalEquipmentSnapshot();
  window.gmTestEquipmentSource="synced";
+ window.gmTestBreakthroughLevel=formalBreakthroughLevel();
  function testVip(){return normalizeTestVip(window.gmTestVipLevel);}
+ function testBreakthrough(){return normalizeTestBreakthrough(window.gmTestBreakthroughLevel);}
  function enhancementSlots(){return Array.isArray(window.ENHANCEMENT_SLOTS)?Array.from(window.ENHANCEMENT_SLOTS):["weapon","helmet","armor","shoes","accessory"];}
  function enhancementMax(){return Math.max(0,Math.floor(Number(window.ENHANCEMENT_ABSOLUTE_MAX_LEVEL)||Number(window.SECOND_WORLD_ENHANCEMENT_CAP)||Number(window.ENHANCEMENT_MAX_LEVEL)||0));}
  function clampEnhancement(value){return Math.max(0,Math.min(enhancementMax(),Math.floor(Number(value)||0)));}
  function blankEnhancementLevels(){return typeof window.createBlankEnhancementLevels==="function"?window.createBlankEnhancementLevels():Object.fromEntries(enhancementSlots().map(type=>[type,0]));}
  window.gmTestEnhancementLevels=blankEnhancementLevels();
+ function blankBreakthroughMilestones(){const levels=Array.isArray(window.BREAKTHROUGH_MILESTONE_LEVELS)?window.BREAKTHROUGH_MILESTONE_LEVELS:[100,200,300,400,500,600,700,800,900,1000];return Object.fromEntries(levels.map(level=>[String(level),false]));}
+ function testBreakthroughState(){
+  const breakthrough=testBreakthrough();
+  return {
+   level:clampTestLevel(window.gmTestLevel),vipLevel:testVip(),equipment:cloneValue(window.gmTestEquipment||{}),
+   secondWorld:{entered:clampWorld(window.gmTestWorld)>=2},thirdWorld:{entered:clampWorld(window.gmTestWorld)>=3},
+   reincarnation:{count:breakthrough>0?1:0,breakthrough:{permanent:breakthrough,milestoneLifeId:breakthrough>0?1:0,milestones:blankBreakthroughMilestones()},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:breakthrough>0?1:0,failures:{}}}}
+  };
+ }
+ function testBreakthroughSnapshot(){
+  const target=testBreakthroughState();
+  if(typeof window.breakthroughSnapshot==="function")return window.breakthroughSnapshot(target);
+  return {permanent:testBreakthrough(),equipmentBonusPercent:0,finalDamageAdd:0};
+ }
 
  function equipmentLabel(type){
   return typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):({weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"}[type]||type);
@@ -110,6 +129,10 @@
   const input=document.getElementById("gmTestVipLevel");if(input)input.value=String(testVip());
   const info=document.getElementById("gmTestVipInfo");if(info)info.textContent=window.gmTestVipLabel();
  }
+ function refreshBreakthroughControls(){
+  const input=document.getElementById("gmTestBreakthroughLevel");if(input)input.value=String(testBreakthrough());
+  const info=document.getElementById("gmTestBreakthroughInfo");if(info)info.textContent=window.gmTestBreakthroughLabel();
+ }
  function refreshSpecializationControls(){
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
   keys.forEach(key=>{
@@ -129,6 +152,7 @@
  window.gmRefreshTestControls=function(){
   refreshCharacterBaseControls();
   refreshVipControls();
+  refreshBreakthroughControls();
   refreshSpecializationControls();
   refreshEnhancementControls();
   if(typeof window.refreshGmCivilizationTestControls==="function")window.refreshGmCivilizationTestControls();
@@ -140,6 +164,18 @@
   if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testVip();
+ };
+ window.gmSetTestBreakthroughLevel=function(value,refresh=true){
+  window.gmTestBreakthroughLevel=normalizeTestBreakthrough(value);
+  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
+  return testBreakthrough();
+ };
+ window.gmUseCurrentBreakthroughTestStatus=function(refresh=true){
+  window.gmSetTestBreakthroughLevel(formalBreakthroughLevel(),false);
+  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  return testBreakthrough();
  };
  window.gmSetTestEnhancement=function(type,value,refresh=true){
   if(!enhancementSlots().includes(type))return false;
@@ -178,11 +214,11 @@
   return cloneValue(window.gmTestEquipment);
  };
  window.gmTestCharacterSnapshot=function(){
-  return {world:clampWorld(window.gmTestWorld),level:clampTestLevel(window.gmTestLevel),equipment:cloneValue(window.gmTestEquipment||{}),equipmentSource:window.gmTestEquipmentSource==="synced"?"synced":"generated"};
+  return {world:clampWorld(window.gmTestWorld),level:clampTestLevel(window.gmTestLevel),breakthroughLevel:testBreakthrough(),equipment:cloneValue(window.gmTestEquipment||{}),equipmentSource:window.gmTestEquipmentSource==="synced"?"synced":"generated"};
  };
  window.gmTestCharacterLabel=function(){
   const source=window.gmTestEquipmentSource==="synced"?"正式角色實穿裝備":"同級神話預測裝備";
-  return `${worldLabel()}｜Lv.${window.gmTestLevel}｜${source}`;
+  return `${worldLabel()}｜Lv.${window.gmTestLevel}｜突破等級 Lv.${testBreakthrough()}｜${source}`;
  };
  window.gmTestCharacterBaseHtml=function(){
   const range=levelRange();
@@ -193,6 +229,7 @@
   setTestCharacterBase(formalWorld(),state?.level,formalEquipmentSnapshot(),"synced");
   const currentVip=normalizeTestVip(state?.vipLevel);
   window.gmSetTestVipLevel(currentVip,false);
+  window.gmUseCurrentBreakthroughTestStatus(false);
   if(typeof ensureSpecializationState==="function")ensureSpecializationState();
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:[];
   if(!window.gmTestSpecializations||typeof window.gmTestSpecializations!=="object")window.gmTestSpecializations={};
@@ -207,41 +244,56 @@
   if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
   if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   if(typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
-  return {character:window.gmTestCharacterSnapshot(),vip:testVip(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
+  return {character:window.gmTestCharacterSnapshot(),vip:testVip(),breakthroughLevel:testBreakthrough(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
  };
  window.gmTestEnhancementSlots=function(){return enhancementSlots();};
  window.gmClampTestEnhancementLevel=clampEnhancement;
  window.gmTestEnhancementLevel=function(type){return enhancementSlots().includes(type)?clampEnhancement(window.gmTestEnhancementLevels?.[type]):0;};
+ window.gmTestBreakthroughLevelValue=function(){return testBreakthrough();};
+ window.gmTestBreakthroughState=function(){return cloneValue(testBreakthroughState());};
+ window.gmTestBreakthroughSnapshot=function(){return cloneValue(testBreakthroughSnapshot());};
  window.gmTestEnhancedEquippedStats=function(){
+  const target=testBreakthroughState();
+  if(typeof window.stateAwareEquippedStatsWithEnhancementLevels==="function")return window.stateAwareEquippedStatsWithEnhancementLevels(target,window.gmTestEnhancementLevels);
   const lv=clampTestLevel(window.gmTestLevel),gear=window.gmTestEquipment||{};
-  const out={hp:typeof baseHP==="function"?baseHP(lv):1,atk:typeof baseATK==="function"?baseATK(lv):1,def:typeof baseDEF==="function"?baseDEF(lv):0,crit:0,dodge:0};
+  const out={hp:typeof baseHP==="function"?baseHP(lv):1,atk:typeof baseATK==="function"?baseATK(lv):1,def:typeof baseDEF==="function"?baseDEF(lv):0,crit:0,dodge:0},rawGear={hp:0,atk:0,def:0};
   equipmentSlots().forEach(type=>{
    const item=gear[type];if(!item)return;
-   out.hp+=Number(item.hp)||0;out.atk+=Number(item.atk)||0;out.def+=Number(item.def)||0;out.crit+=Number(item.crit)||0;out.dodge+=Number(item.dodge)||0;
+   const hp=Number(item.hp)||0,atk=Number(item.atk)||0,def=Number(item.def)||0;
+   out.hp+=hp;out.atk+=atk;out.def+=def;rawGear.hp+=Math.max(0,hp);rawGear.atk+=Math.max(0,atk);rawGear.def+=Math.max(0,def);out.crit+=Number(item.crit)||0;out.dodge+=Number(item.dodge)||0;
    const stat=item.mainStat?.stat,raw=Math.max(0,Number(item.mainStat?.value)||0),enhance=window.gmTestEnhancementLevel(type);
    if(raw&&["hp","atk","def","crit","dodge"].includes(stat)&&typeof window.enhancedMainStatValue==="function"){
     const enhanced=window.enhancedMainStatValue(raw,enhance);
     out[stat]+=Math.max(0,Number(enhanced)||0)-raw;
    }
   });
+  if(typeof window.breakthroughRawEquipmentBonuses==="function"){
+   const bonus=window.breakthroughRawEquipmentBonuses(rawGear,target);out.hp+=Number(bonus.hp)||0;out.atk+=Number(bonus.atk)||0;out.def+=Number(bonus.def)||0;
+  }
   out.hp=Math.max(0,Number(out.hp)||0);out.atk=Math.max(0,Number(out.atk)||0);out.def=Math.max(0,Number(out.def)||0);
   out.crit=typeof round1==="function"?round1(Math.max(0,Number(out.crit)||0)):Math.max(0,Number(out.crit)||0);
   out.dodge=typeof round1==="function"?round1(Math.max(0,Number(out.dodge)||0)):Math.max(0,Number(out.dodge)||0);
   return out;
  };
  window.gmTestPlayerStats=function(baseStats=null){
-  const equipment=baseStats||window.gmTestEnhancedEquippedStats();
-  const combat=playerCombatStats(equipment,testVip());
+  let combat;
+  if(baseStats)combat=playerCombatStats(baseStats,testVip());
+  else if(typeof window.playerCombatStatsForState==="function")combat=window.playerCombatStatsForState(testBreakthroughState(),window.gmTestEnhancementLevels,testVip());
+  else combat=playerCombatStats(window.gmTestEnhancedEquippedStats(),testVip());
   return typeof createSpecialPlayerSnapshot==="function"?createSpecialPlayerSnapshot(combat):combat;
  };
  window.gmTestVipLabel=function(){const lv=testVip(),b=vipBonusStats(lv);return `VIP${lv}｜HP/ATK +${b.hp}%｜DEF +${b.def}%｜暴擊/閃避 +${b.crit}%`;};
+ window.gmTestBreakthroughLabel=function(){const snap=testBreakthroughSnapshot(),equipment=Number(snap?.equipmentBonusPercent)||0,damage=(Number(snap?.finalDamageAdd)||0)*100;return `突破等級 Lv.${testBreakthrough()}｜裝備 HP／ATK／DEF +${equipment}%｜最終傷害 +${damage}%`;};
  window.gmTestEnhancementLabel=function(){return `強化｜${enhancementSlots().map(type=>`${typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):type} +${window.gmTestEnhancementLevel(type)}`).join("｜")}`;};
  window.gmTestVipOptions=function(){return "";};
- window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="muted" style="margin-top:6px">${window.gmTestCharacterLabel()}</div><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步正式角色到測試設定</button><span class="muted">完整同步正式角色的紀元、等級、五件實穿裝備（含品質／主屬性／詞條）、VIP、專精、強化、印記與文明等級；只寫入 GM 測試沙盒，不修改正式角色。</span></div></div>`;};
+ window.gmTestCurrentStatusHtml=function(){return `<div class="item gm-test-current-status" style="margin:0 0 12px"><b>目前測試狀態</b><div class="muted" style="margin-top:6px">${window.gmTestCharacterLabel()}</div><div class="controls" style="margin-top:8px;align-items:center"><button class="btn blue" type="button" onclick="gmUseCurrentTestStatus()">同步正式角色到測試設定</button><span class="muted">完整同步正式角色的紀元、等級、五件實穿裝備（含品質／主屬性／詞條）、VIP、突破等級、專精、強化、印記與文明等級；只寫入 GM 測試沙盒，不修改正式角色。</span></div></div>`;};
  window.gmTestVipControlHtml=function(){const lv=testVip();return `<div class="muted gm-hub-note">設定本次工作階段使用的測試 VIP 等級；VIP 測試沒有上限，只影響 GM 測試，不修改正式角色 VIP。</div><div class="controls" style="align-items:end"><label>VIP<br><input id="gmTestVipLevel" class="btn" type="number" min="0" step="1" value="${lv}" onchange="gmSetTestVipLevel(this.value)" style="width:140px"></label><span id="gmTestVipInfo" class="muted">${window.gmTestVipLabel()}</span></div>`;};
+ window.gmTestBreakthroughControlHtml=function(){const lv=testBreakthrough();return `<div class="muted gm-hub-note">設定本次工作階段使用的永久突破等級。可測試多輪轉生累積值；能力計算直接使用正式突破 owner，只影響 GM 測試沙盒，不修改正式角色或存檔。</div><div class="controls" style="align-items:end"><label>突破等級<br><input id="gmTestBreakthroughLevel" class="btn" type="number" inputmode="numeric" min="0" step="1" value="${lv}" onchange="gmSetTestBreakthroughLevel(this.value)" style="width:140px"></label><span id="gmTestBreakthroughInfo" class="muted">${window.gmTestBreakthroughLabel()}</span></div>`;};
  window.GM_TEST_STATE_VERSION=GM_TEST_STATE_VERSION;
  window.GM_TEST_CHARACTER_SANDBOX_VERSION=GM_TEST_CHARACTER_SANDBOX_VERSION;
  window.GM_UNBOUNDED_VIP_TEST_VERSION=GM_UNBOUNDED_VIP_TEST_VERSION;
+ window.GM_TEST_BREAKTHROUGH_VERSION=GM_TEST_BREAKTHROUGH_VERSION;
+ window.GM_TEST_BREAKTHROUGH_FORMAL_OWNER_VERSION=1;
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
  window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
