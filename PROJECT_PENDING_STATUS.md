@@ -11,7 +11,7 @@
 - 銀河紀元、宇宙紀元、高維紀元三紀元 runtime 已完成；高維紀元為 Lv.1000～2000。
 - 轉生／突破核心、異宇宙 Batch3～4、轉生後重征服 Batch5、Batch5 後續架構優化，以及第6大批 6-1～6-5 均已完成。
 - 第6大批完成內容：轉生越級 Online／Offline 收益、一鍵平均專精／平均最大強化、首次轉生後四大副本永久入口、主線正式向下征服回填，以及 Batch6 完整封箱 Regression。
-- 第6大批程式碼優化第1～4批已完成；目前主要施工剩餘：Batch7，以及優化第5批。
+- 第6大批程式碼優化第1～5批已完成；目前主要施工剩餘：Batch7。
 
 ## 第6大批正式規則
 
@@ -95,10 +95,20 @@
 - `OFFLINE_SAMPLE_OWNER_INTEGRITY` 升級檢查 V3 有／無等級、舊 V4 無 marker、新正式 append provenance；另新增 `tests/runtime/offline-sample-provenance-opt4-integrity.js` 做真實 browser regression，覆蓋 W1／W2 sample、pending、首輪隔離與 W3 不受影響。
 - 本批不新增 Save Schema 欄位、不升 Schema18、不改 Offline 收益公式或戰鬥公式；只讓舊樣本的等級來源從「猜測」改為可驗證 provenance。
 
-## 第6大批後續優化排程
+## 2026-10-04 第6大批程式碼優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression
 
-1. **優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression**
-   - 收斂 W1 `fightOnce` 多層 wrapper；將 Arena 97% 與出售隔離由 source-string 檢查提升為正式行為測試。
+- W1 正式主線 `fightOnce` 重新成為唯一戰鬥結算 owner；`reincarnationoverlevelrewards.js` 不再攔截、覆寫或包裝 `fightOnce`，消除原本「combatcore 先 save、wrapper 再補收益再 save」的雙層 settlement。
+- `combatcore.js` 在原本主線進度、掉落、故事 queue 與戰鬥文字建立完成後、唯一一次最終 `save(false)` 前，直接呼叫共用 `applyWorld1OnlineOverlevelReward(...,{persist:false})`；因此轉生越級收益仍共用原倍率 owner，但正式戰鬥只有單一 save 邊界。
+- `MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION = 1`；`REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION = 2`；`REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION = 1`。
+- 首輪 `count=0` 的 W1 戰鬥數值與流程保持原樣；轉生輪 EXP、金幣與戰鬥來源強化石仍套用既有越級倍率；`saleEnhancementStones` 與裝備出售收益仍完全排除倍率。
+- `tests/runtime/reincarnation-batch6-closure.js` 已把原本的 source-string 驗證升級成正式 browser 行為 regression：Arena 484 / 500 必須不可晉階、485 / 500 必須可晉階；W1 synthetic adapter 驗證出售來源強化石不變；真實 W1 rerun `fightOnce` 驗證越級收益正確且正式 save 只呼叫一次。
+- W1／W2 Arena rank cap、主線向下征服、四副本永久入口、Offline provenance、批次成長與轉生 reset 封箱 regression 仍一起執行；Batch6 最終測試不再依賴讀 production source 文字來判定 Arena 97% 或出售隔離。
+- 本批不新增存檔欄位、不升 Save Schema、不改越級公式、不改 Arena 500／485 規則、不改出售公式；只收斂 W1 settlement owner 與提高最終 regression 的行為層級。
+
+## 第6大批程式碼優化封箱
+
+- 優化第1～5批全部完成；目前沒有第6大批尚待施工項目。
+- 後續正式施工進入 Batch7；開始前仍須重新讀取 current `main` 實碼。
 
 ## Batch7 尚待施工
 
