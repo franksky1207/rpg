@@ -32,7 +32,9 @@ assert(pending.includes("四大副本永久入口")&&pending.includes("首輪高
 assert(pending.includes("W1／W2 轉生主線正式向下征服")&&pending.includes("Lv.500以前的普通／菁英進度")&&pending.includes("Boss0～99 正式完成")&&pending.includes("首輪 `count=0` 永遠拒絕這項 rerun 回填"),"Pending 必須以正式向下征服回填覆蓋舊的只記最高 Boss 語意。");
 assert(!pending.includes("只寫入 `bossKilled[99]`")&&!pending.includes("不得偽造低階 key boss flag")&&!pending.includes("只寫入實際 Boss99"),"Pending 不得保留已失效的『只記最高 Boss、不回填低階』正式語意。");
 assert(pending.includes("第6大批程式碼優化第1批：Schema17 舊轉生資料一致化")&&pending.includes("normalizeExistingReincarnationRerunProgress()")&&pending.includes("冪等")&&pending.includes("不升 Save Schema"),"Pending 必須同步第6大批優化第1批的 Schema17 舊轉生 normalization 與首輪隔離。");
-assert(pending.includes("優化第2批：四大副本永久入口架構整理")&&pending.includes("優化第3批：一鍵專精／強化交易安全")&&pending.includes("優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須保留第6大批後續優化第2～5批排程。");
+assert(pending.includes("第6大批程式碼優化第2批：四大副本永久入口架構整理")&&pending.includes("dungeonModeAccessSnapshot()")&&pending.includes("state.level")&&pending.includes("不再被偽裝"),"Pending 必須同步第6大批優化第2批的共用副本 access owner 與正式 state 隔離。");
+assert(pending.includes("第6大批程式碼優化第3批：一鍵專精／強化交易安全")&&pending.includes("runSettlementTransaction()")&&pending.includes("save exception rollback")&&pending.includes("root identity")&&pending.includes("nested reference identity")&&pending.includes("PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1"),"Pending 必須同步第6大批優化第3批的 shared transaction、save exception rollback 與 identity 安全。");
+assert(pending.includes("第6大批程式碼優化第1～3批已完成")&&pending.includes("優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須標記優化第1～3批完成，並保留第4～5批排程。");
 assert(pending.includes("目前主要施工剩餘：Batch7")&&pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 尚待施工與 GM milestone 規則。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
