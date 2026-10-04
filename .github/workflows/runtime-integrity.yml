@@ -98,6 +98,7 @@ jobs:
           node tests/runtime/reincarnation-batch7-closure.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/batch7-post-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/batch7-post-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/batch7-post-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-reset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-transaction-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
