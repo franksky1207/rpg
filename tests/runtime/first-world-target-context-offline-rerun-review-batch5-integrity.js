@@ -52,12 +52,13 @@ const assert=require("assert");
      offline:{context:{mode:offline?.mode,map:offline?.mapIndex,enemy:offline?.enemyIndex,allowed:offline?.policy?.offlineSampleAllowed},canonical:{map:canonicalEnemy?.context?.mapIndex,enemy:canonicalEnemy?.context?.enemyIndex,name:canonicalEnemy?.enemy?.name},ui:{map:selectedMap,enemy:selectedEnemy}},
      rerun:{preparedId:rerunPrepared?.contextId,resolvedId:rerunResolved?.canonicalContext?.contextId,selectionId:rerunFromSelection?.contextId,map:rerunResolved?.mapIndex,enemy:rerunResolved?.enemyIndex},
      review:{ok:reviewOk,prepared:{id:reviewPrepared?.contextId,map:reviewPrepared?.mapIndex,enemy:reviewPrepared?.enemyIndex,name:reviewPrepared?.enemyName},combatEnemy,stateStable:stateBefore===stateAfter,formalStable:JSON.stringify(formalBefore)===JSON.stringify(formalAfter),selectionAfter:reviewSelectionAfter},
-     source:{offlineExplicitIdentity:source.includes("offline-persisted-identity")&&source.includes("createFirstWorldTargetContext"),offlineNoBoss:source.includes("offlineSampleAllowed"),rerunPreparedBoundary:source.includes('prepared?.mode==="rerun"'),reviewPreparedBoundary:source.includes('context?.mode==="review"'),reviewRestoresSelection:source.includes("setGalaxyReviewSelectedMap(oldMap)")&&source.includes("setGalaxyReviewSelectedEnemy(oldEnemy)")}
+     source:{offlineExplicitIdentity:source.includes("offline-persisted-identity")&&source.includes("createFirstWorldTargetContext"),offlineNoBoss:source.includes("offlineSampleAllowed"),rerunPreparedBoundary:source.includes('prepared?.mode==="rerun"'),reviewPreparedBoundary:source.includes('context?.mode==="review"'),reviewRestoresSelection:source.includes("window.getGalaxyReviewSelectedMap=originalGetMap")&&source.includes("window.getGalaxyReviewSelectedEnemy=originalGetEnemy")}
     };
    }finally{
     window.clearPreparedFirstWorldTargetContext?.();state=originalState;selectedMap=originals.selectedMap;selectedEnemy=originals.selectedEnemy;selectedBattleCount=originals.selectedBattleCount;adventureScreen=originals.adventureScreen;battleBusy=originals.battleBusy;currentCombatEncounter=originals.currentCombatEncounter;window.runCombatCore=originals.runCombatCore;window.render=originals.render;window.animateFight=originals.animateFight;window.alert=originals.alert;
    }
   });
+  console.log("Batch5 diagnostic:",JSON.stringify(report));
   assert.deepEqual(report.versions,{batch5:1,offline:1,rerun:1,review:1});
   assert.equal(report.offline.context.mode,"rerun");assert.equal(report.offline.context.map,4);assert.equal(report.offline.context.enemy,3);assert.equal(report.offline.context.allowed,true);assert.equal(report.offline.canonical.map,4);assert.equal(report.offline.canonical.enemy,3);
   assert.equal(report.rerun.resolvedId,report.rerun.preparedId);assert.equal(report.rerun.selectionId,report.rerun.preparedId);assert.equal(report.rerun.map,9);assert.equal(report.rerun.enemy,4);
