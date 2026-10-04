@@ -23,6 +23,7 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
+assert(handoff.includes("Batch7：GM／測試工具正式收尾")&&handoff.includes("7-1～7-5全部完成")&&handoff.includes("第一紀元完整 Target Context 重構"),"Handoff 必須同步 Batch7 已封箱與下一個 W1 Target Context 工程。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元為 Lv.1000～2000")&&pending.includes("第6大批 6-1～6-5 均已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch6 已完成現況。");
@@ -36,8 +37,10 @@ assert(pending.includes("第6大批程式碼優化第2批：四大副本永久�
 assert(pending.includes("第6大批程式碼優化第3批：一鍵專精／強化交易安全")&&pending.includes("runSettlementTransaction()")&&pending.includes("save exception rollback")&&pending.includes("root identity")&&pending.includes("nested reference identity")&&pending.includes("PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1"),"Pending 必須同步第6大批優化第3批的 shared transaction、save exception rollback 與 identity 安全。");
 assert(pending.includes("第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1")&&pending.includes("overlevelContextRecorded=true")&&pending.includes("舊 V4 pending")&&pending.includes("保守 1×"),"Pending 必須同步第6大批優化第4批的 Offline provenance 與舊樣本保守倍率策略。");
 assert(pending.includes("第6大批程式碼優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression")&&pending.includes("MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION = 1")&&pending.includes("REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION = 2")&&pending.includes("REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION = 1")&&pending.includes("484 / 500")&&pending.includes("485 / 500")&&pending.includes("正式 save 只呼叫一次"),"Pending 必須同步第6大批優化第5批的 W1 settlement owner 收斂與行為 regression。");
-assert(pending.includes("第6大批程式碼優化第1～5批已完成")&&pending.includes("優化第1～5批全部完成")&&!pending.includes("第6大批後續優化排程")&&pending.includes("目前主要施工剩餘：Batch7"),"Pending 必須標記第6大批優化第1～5批全部完成，後續只保留 Batch7。");
-assert(pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 GM milestone 規則。");
+assert(pending.includes("第6大批程式碼優化第1～5批已完成")&&pending.includes("優化第1～5批全部完成")&&!pending.includes("第6大批後續優化排程"),"Pending 必須標記第6大批優化第1～5批全部完成。");
+assert(pending.includes("Batch7：GM／測試工具正式收尾 7-1～7-5 已完成")&&pending.includes("reincarnation-batch7-closure.js")&&pending.includes("0 / 8")&&pending.includes("1 / 8"),"Pending 必須同步 Batch7 7-1～7-5 已完成與8模式封箱結果。");
+assert(pending.includes("GM 正式 level")&&pending.includes("共用突破 milestone owner"),"Pending 必須保留 Batch7 GM milestone 規則。");
+assert(pending.includes("第一紀元完整 Target Context 重構")&&pending.includes("mapIndex / enemyIndex")&&pending.includes("尚未施工"),"Pending 必須明確指出下一個尚未完成工程為 W1 Target Context 重構。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
