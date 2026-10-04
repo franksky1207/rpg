@@ -53,6 +53,7 @@ const assert=require("assert");
     const beginOk=beginCombat(1);
     const beginEncounter=currentCombatEncounter?{name:currentCombatEncounter.name,level:currentCombatEncounter.level,kind:currentCombatEncounter.kind}:null;
     const expectedPreparedEncounter=monsterObj(explicitPrepared.mapIndex,explicitPrepared.enemyIndex);
+    const beginUiCursorAfter={map:selectedMap,enemy:selectedEnemy};
 
     state=makeFirstWorldState(2);selectedMap=99;selectedEnemy=4;adventureScreen="prepare";window.clearPreparedFirstWorldTargetContext();
     const rerunHtml=adventurePreparePage();
@@ -73,7 +74,7 @@ const assert=require("assert");
      install:window.FIRST_WORLD_TARGET_UI_BRIDGE_INSTALL_REPORT,
      formal:{preparedA,preparedB,samePrepareId,htmlHasTarget:htmlA.includes(expectedA.name),repeatHtmlStable:htmlA===htmlB,encounter:{name:encounterA?.name,level:encounterA?.level,kind:encounterA?.kind},expected:{name:expectedA.name,level:expectedA.level,kind:expectedA.kind}},
      selectionChange:{clearedImmediately:preparedAfterSelect===null,preparedC,htmlHasBoss:htmlC.includes(monsterObj(4,4).name)},
-     begin:{beginOk,prepared:explicitPrepared,encounter:beginEncounter,expected:{name:expectedPreparedEncounter.name,level:expectedPreparedEncounter.level,kind:expectedPreparedEncounter.kind},runCall,uiCursorAfter:{map:selectedMap,enemy:selectedEnemy}},
+     begin:{beginOk,prepared:explicitPrepared,encounter:beginEncounter,expected:{name:expectedPreparedEncounter.name,level:expectedPreparedEncounter.level,kind:expectedPreparedEncounter.kind},runCall,uiCursorAfter:beginUiCursorAfter},
      rerun:{prepared:rerunPrepared,htmlHasBoss:rerunHtml.includes(monsterObj(99,4).name)},
      review:{prepared:reviewPrepared,stableId:reviewPrepared?.contextId===reviewPrepared2?.contextId,htmlStable:reviewHtml===reviewHtml2,htmlHasElite:reviewHtml.includes(monsterObj(6,3).name)},
      invalid:{context:invalid,encounter:invalidEncounter}
