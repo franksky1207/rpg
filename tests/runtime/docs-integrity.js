@@ -35,8 +35,9 @@ assert(pending.includes("第6大批程式碼優化第1批：Schema17 舊轉生�
 assert(pending.includes("第6大批程式碼優化第2批：四大副本永久入口架構整理")&&pending.includes("dungeonModeAccessSnapshot()")&&pending.includes("state.level")&&pending.includes("不再被偽裝"),"Pending 必須同步第6大批優化第2批的共用副本 access owner 與正式 state 隔離。");
 assert(pending.includes("第6大批程式碼優化第3批：一鍵專精／強化交易安全")&&pending.includes("runSettlementTransaction()")&&pending.includes("save exception rollback")&&pending.includes("root identity")&&pending.includes("nested reference identity")&&pending.includes("PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1"),"Pending 必須同步第6大批優化第3批的 shared transaction、save exception rollback 與 identity 安全。");
 assert(pending.includes("第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1")&&pending.includes("overlevelContextRecorded=true")&&pending.includes("舊 V4 pending")&&pending.includes("保守 1×"),"Pending 必須同步第6大批優化第4批的 Offline provenance 與舊樣本保守倍率策略。");
-assert(pending.includes("第6大批程式碼優化第1～4批已完成")&&!pending.includes("優化第4批：Offline 舊樣本 provenance 安全化\n   -")&&pending.includes("優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression"),"Pending 必須標記優化第1～4批完成，後續排程只保留第5批。");
-assert(pending.includes("目前主要施工剩餘：Batch7")&&pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 尚待施工與 GM milestone 規則。");
+assert(pending.includes("第6大批程式碼優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression")&&pending.includes("MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION = 1")&&pending.includes("REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION = 2")&&pending.includes("REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION = 1")&&pending.includes("484 / 500")&&pending.includes("485 / 500")&&pending.includes("正式 save 只呼叫一次"),"Pending 必須同步第6大批優化第5批的 W1 settlement owner 收斂與行為 regression。");
+assert(pending.includes("第6大批程式碼優化第1～5批已完成")&&pending.includes("優化第1～5批全部完成")&&!pending.includes("第6大批後續優化排程")&&pending.includes("目前主要施工剩餘：Batch7"),"Pending 必須標記第6大批優化第1～5批全部完成，後續只保留 Batch7。");
+assert(pending.includes("GM 等級設定器必須共用突破 milestone owner"),"Pending 必須保留 Batch7 GM milestone 規則。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
