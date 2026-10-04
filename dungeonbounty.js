@@ -29,6 +29,7 @@
 
  function universePhase(){return typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered()===true;}
  function dailyStatus(){return typeof dailyDungeonStatus==="function"?dailyDungeonStatus("bounty"):{used:0,remaining:0,limit:20};}
+ function bountyEntryUnlocked(){return typeof window.isDungeonModeEntryUnlocked==="function"?window.isDungeonModeEntryUnlocked("bounty",state):Number(state?.level||0)>=5;}
  function newContinuousSummary(){return {runs:0,wins:0,totalExp:0,totalGold:0,totalDarkMatter:0,convertedGold:0,soldGold:0,soldDarkMatter:0,soldDarkEnergy:0,gearCount:0,keptCount:0,soldCount:0,stopReason:null};}
  let bountyState={phase:"idle",tier:null,enemy:null,result:null,startHp:0,playerMaxHp:0,rewardWorld:1,rewardLevel:0,rewardBossIndex:null,continuous:false,stopRequested:false,summary:newContinuousSummary()};
 
@@ -140,7 +141,7 @@
  window.buildBountyEnemyForTest=function(tierId,playerStats=null,level=null,world=null,civilizationLevel=null){const t=BOUNTY_TIER_META.find(x=>x.id===tierId);const w=world==null?(universePhase()?2:1):(Number(world)===2?2:1);return t?buildBountyEnemy(t,playerStats,level,{world:w,civilizationLevel}):null;};
  window.bountyTraitNames=function(enemy){return traitNames(enemy);};
  window.enterBountyDungeon=function(){
-  if(state.level<5)return;
+  if(!bountyEntryUnlocked())return;
   if(dailyStatus().remaining<=0){view="dungeon";render();return;}
   const tier=rollTier();
   bountyState={phase:"ready",tier,enemy:buildBountyEnemy(tier),result:null,startHp:0,playerMaxHp:0,rewardWorld:universePhase()?2:1,rewardLevel:0,rewardBossIndex:null,continuous:false,stopRequested:false,summary:newContinuousSummary()};
@@ -222,7 +223,7 @@
   const saleLine=saleParts.length?`<div class="dungeon-bounty-result-line">自動出售所得：${saleParts.join("＋")}</div>`:"";
   const currentResource=isUniverse?`暗物質 ${Math.floor(Number(state?.secondWorld?.darkMatter)||0).toLocaleString()}`:`金幣 ${Math.floor(Number(state.gold)||0).toLocaleString()}`;
   return `<section class="dungeon-bounty-shell dungeon-page-shell"><div class="dungeon-bounty-card card dungeon-bounty-result-card dungeon-continuous-result"><div class="dungeon-bounty-title">懸賞連續挑戰結算</div><div class="dungeon-bounty-result-line">共挑戰：${s.runs} 次・勝利 ${s.wins} 次</div><div class="dungeon-bounty-reward-grid"><div><span>總 EXP</span><strong>+${s.totalExp.toLocaleString()}</strong></div><div><span>${resourceLabel}</span><strong>+${resourceTotal.toLocaleString()}</strong></div><div><span>裝備</span><strong>${s.gearCount} 件</strong><small>保留 ${s.keptCount}・出售 ${s.soldCount}</small></div></div>${!isUniverse&&s.convertedGold?`<div class="dungeon-bounty-result-line">滿等 EXP 轉金幣：+${s.convertedGold.toLocaleString()}</div>`:""}${saleLine}<div class="dungeon-bounty-result-line">停止原因：${stopReasonText(s.stopReason)}</div><div class="dungeon-bounty-result-line">目前狀態：Lv.${state.level}・${atBountyLevelCap()?"EXP MAX":`EXP ${currentExpText()}`}・${currentResource}</div><div class="dungeon-bounty-result-line">今日懸賞：${ds.used} / ${ds.limit}　・　剩餘 ${ds.remaining} 次</div><div class="controls dungeon-bounty-result-actions"><button class="btn" onclick="go('dungeon')">返回副本</button></div></div></section>`;
-}
+ }
  function bountyResultHtml(){
   if(bountyState.continuous)return continuousResultHtml();
   const ds=dailyStatus(),r=bountyState.result||{},isUniverse=r.rewardWorld===2||bountyState.rewardWorld===2,title=r.win?"懸賞完成":"懸賞失敗",items=Array.isArray(r.rewardItems)?r.rewardItems:[],kept=items.filter(x=>!x.sold).length,sold=items.filter(x=>!!x.sold).length,er=r.expResult||{},levelLine=er.afterLevel>er.beforeLevel?`Lv.${er.beforeLevel} → Lv.${er.afterLevel}`:`Lv.${state.level}`,expLine=atBountyLevelCap()?"EXP MAX":`EXP ${currentExpText()}`;
@@ -232,6 +233,6 @@
   const saleLine=saleParts.length?`<div class="dungeon-bounty-result-line">自動出售所得：${saleParts.join("＋")}</div>`:"";
   const currentResource=isUniverse?`暗物質 ${Math.floor(Number(state?.secondWorld?.darkMatter)||0).toLocaleString()}`:`金幣 ${Math.floor(Number(state.gold)||0).toLocaleString()}`;
   return `<section class="dungeon-bounty-shell dungeon-page-shell"><div class="dungeon-bounty-card card dungeon-bounty-result-card"><div class="dungeon-bounty-title">${title}</div><div class="${tierClass(bountyState.tier.id)} dungeon-bounty-tier">${bountyState.tier.name}</div><h2>${bountyState.enemy.name}</h2>${r.win?`<div class="dungeon-bounty-reward-grid"><div><span>懸賞 EXP</span><strong>+${Number(r.rewardExp||0).toLocaleString()}</strong></div><div><span>${rewardLabel}</span><strong>+${rewardAmount.toLocaleString()}</strong></div><div><span>裝備</span><strong>${items.length} 件</strong><small>保留 ${kept}・出售 ${sold}</small></div></div>${!isUniverse&&Number(er.convertedGold||0)>0?`<div class="dungeon-bounty-result-line">滿等 EXP 轉金幣：+${Number(er.convertedGold).toLocaleString()}</div>`:""}${saleLine}${bountyLootHtml(items)}`:`<div class="dungeon-bounty-result-line">本次沒有獲得獎勵。</div>`}<div class="dungeon-bounty-result-line">目前狀態：${levelLine}・${expLine}・${currentResource}</div><div class="dungeon-bounty-result-line">今日懸賞：${ds.used} / ${ds.limit}　・　剩餘 ${ds.remaining} 次</div><div class="controls dungeon-bounty-result-actions"><button class="btn dungeon-bounty-start-btn" ${ds.remaining>0?"":"disabled"} onclick="${ds.remaining>0?"enterBountyDungeon()":"void(0)"}">${ds.remaining>0?"再次進入懸賞戰":"今日懸賞次數已用完"}</button><button class="btn" onclick="go('dungeon')">返回副本</button></div></div></section>`;
-}
+ }
  window.getBountyTestSnapshot=function(){return bountyState.enemy?{phase:bountyState.phase,tier:{...bountyState.tier},enemy:{...bountyState.enemy},rewardWorld:bountyState.rewardWorld,rewardLevel:bountyState.rewardLevel,rewardBossIndex:bountyState.rewardBossIndex,continuous:bountyState.continuous,stopRequested:bountyState.stopRequested,summary:{...bountyState.summary},daily:dailyStatus()}:null;};
 })();
