@@ -12,8 +12,8 @@
 - 轉生／突破核心、正式轉生流程與優化第1～4批已完成。
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
-- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」已完成，第4批待做。
-- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第4批。
+- Batch5 後續架構優化共 4 批已全部完成：第1批「W1 Target Context／prepare 正式 state 隔離」、第2批「W2 visibility owner 收斂」、第3批「共用 UI renderer 收斂」、第4批「完整端到端 regression 封箱」。
+- 目前主要施工剩餘：Batch6、Batch7。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -55,6 +55,16 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - W3 首輪 UI 不經 rerun presentation owner，5% 戰線原規則與文案維持不變；rerun 只在正式 policy 已解除 `five-point-front` 時顯示「可集中攻略」文案。
 - regression 已固定驗證 W1 共用速度 renderer、舊 inline／regex 路徑消失；W3 驗證無 `replaceAll()`、確實讀取 `fivePointBypassed`／rerun context，且首輪不被污染。
 - 此批只有 UI owner／renderer 收斂；不改 formal combat、settlement、Save Schema 或任何存檔欄位。
+
+## 2026-10-04 已完成：Batch5 後續架構優化第4批（完整端到端 Regression）
+
+- 新增 `tests/runtime/reincarnation-rerun-batch5-e2e-regression.js`，由真實瀏覽器 runtime 驗證，不只做 policy-level probe。
+- W1 固定驗證：rerun 真實選 map99 / Boss → prepare 保持 Lv.500 → encounter Lv.500 → `fightOnce()` 正式 combat／settlement → 只寫入 `bossKilled[99]` → downward key coverage = 10 → 第10文明災厄解鎖；不得偽造低階 key boss flag，且 prepare 前後正式 state 不變。
+- W2 固定驗證：Boss index99 / Lv.1000 → 正式 combat → `settleSecondWorldBossVictory(99)` → 只寫入實際 Boss99 → downward key coverage = 10 → 首／末宇宙文明災厄 eligibility 正確；不得偽造 Boss9 等低階 key flag。
+- W3 固定驗證：rerun 可以且只能 bypass `five-point-front`；`defeated`、`invalid`、`world-locked` 仍維持拒絕。
+- 同一支 closure regression 一併封箱首輪隔離、pre-Schema17 normalization、下一輪 reincarnation reset、1×／1.5× speed UI、Minimal Mode 與 W1／W2／W3 Fast Catch-up owner 版本。
+- Runtime Integrity workflow 已納入此端到端測試，之後每次相關 JS／文件／workflow push 都會自動重跑。
+- 此批只新增／收斂 regression 與文件，不改正式 combat／settlement 規則、不改 Save Schema，不需要 migration，也沒有 production JS／CSS cache-bust 需求。
 
 ---
 
@@ -103,14 +113,6 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 - rerun／overlevel／dungeon／AU 全生命週期 regression。
 - 最終完整 closure。
 
-## 4. Batch5 後續架構優化第4批
-
-### 第4批：完整端到端 regression
-- W1 真實選 Boss → combat → settlement → `bossKilled` → key coverage → calamity eligibility。
-- W2 真實 Boss index → settlement → key coverage／calamity eligibility。
-- W3 驗證 rerun 只解除 5% 戰線，不解除其他 blocker。
-- 首輪隔離、舊存檔 normalization、轉生 reset、速度 UI、Minimal／Fast Catch-up 一併封箱。
-
 ---
 
 # 原定 7 大批進度
@@ -126,7 +128,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
-Batch5 後續架構優化為獨立 4 批；目前第1～3批已完成，第4批待做，不與原第6／7批混寫。
+Batch5 後續架構優化為獨立 4 批；第1～4批已全部完成，不與原第6／7批混寫。
 
 ---
 
