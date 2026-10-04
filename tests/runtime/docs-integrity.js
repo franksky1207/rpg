@@ -22,12 +22,12 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
-assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙實際玩法")&&handoff.includes("尚未施工"),"Handoff 必須同步轉生已完成基礎與異宇宙尚未施工現況。");
+assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
-assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元本身不再列為 pending"),"Pending 必須同步 Schema17 與高維紀元已完成現況。");
-assert(pending.includes("異宇宙實際玩法")&&pending.includes("轉生後 W1／W2／W3 自由重征服")&&pending.includes("四大副本永久解鎖"),"Pending 必須列出目前真正的轉生後／異宇宙主線。");
-assert(pending.includes("已取消／不得自動復活")&&pending.includes("Arena V2 額外500場驗收")&&pending.includes("Cloud Save 真實跨裝置驗證"),"Pending 必須保留已取消項目，避免日後自動復活。");
+assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元 Lv.1000～2000")&&pending.includes("轉生後重征服 Batch5-1～5-5 已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch5 已完成現況。");
+assert(pending.includes("越級 EXP／核心資源／Offline")&&pending.includes("四大副本永久解鎖")&&pending.includes("第一紀元 Target Context 架構重構"),"Pending 必須只保留目前真正的 Batch6／Batch7／延後重構主線。");
+assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
 assert(vipUpdate.includes("VIP_PROGRESSION_VERSION = 14")&&vipUpdate.includes("VIP_UNBOUNDED_INTEGRITY_VERSION = 1"),"VIP 補充文件必須記錄正式 owner／Integrity 版本。");
