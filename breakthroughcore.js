@@ -1,5 +1,6 @@
 (function(){
- const BREAKTHROUGH_CORE_VERSION=1;
+ const BREAKTHROUGH_CORE_VERSION=2;
+ const BREAKTHROUGH_CANONICAL_REBUILD_VERSION=1;
  const BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL=2.5;
  const BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL=.05;
  const BREAKTHROUGH_MAX_PER_LIFE=10;
@@ -57,6 +58,35 @@
   const after=level(s),lifeAfter=currentLifeEarned(s);
   return Object.freeze({ok:true,awarded:awarded.length,milestones:Object.freeze(awarded.slice()),permanentBefore:before,permanentAfter:after,currentLifeBefore:lifeBefore,currentLifeAfter:lifeAfter,reason:awarded.length?"awarded":"none"});
  }
+ function planFromPermanentTotal(total){
+  const value=Number(total);
+  if(!Number.isSafeInteger(value)||value<0)return Object.freeze({ok:false,reason:"invalid-value"});
+  const count=Math.max(1,Math.ceil(value/BREAKTHROUGH_MAX_PER_LIFE));
+  const currentLife=value===0?0:value-(count-1)*BREAKTHROUGH_MAX_PER_LIFE;
+  return Object.freeze({ok:true,total:value,count,currentLife,currentLifeMax:BREAKTHROUGH_MAX_PER_LIFE});
+ }
+ function milestonesForCurrentLife(currentLife){
+  const earned=Math.max(0,Math.min(BREAKTHROUGH_MAX_PER_LIFE,wholeNonNegative(currentLife)));
+  return Object.fromEntries(BREAKTHROUGH_MILESTONE_LEVELS.map((milestone,index)=>[String(milestone),index<earned]));
+ }
+ function rebuildFromPermanentTotal(total,target=null){
+  const s=targetState(target);
+  if(!s)return {ok:false,reason:"invalid-target"};
+  if(typeof window.isReincarnationRun!=="function"||window.isReincarnationRun(s)!==true)return {ok:false,reason:"first-run-locked"};
+  const next=planFromPermanentTotal(total);if(!next.ok)return next;
+  if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(s);
+  if(!isObject(s.reincarnation))return {ok:false,reason:"reincarnation-owner-missing"};
+  const beforeCount=Math.max(0,Math.floor(Number(s.reincarnation.count)||0));
+  const au=isObject(s.reincarnation.alternateUniverse)?s.reincarnation.alternateUniverse:null;
+  s.reincarnation.count=next.count;
+  s.reincarnation.breakthrough={permanent:next.total,milestoneLifeId:next.count,milestones:milestonesForCurrentLife(next.currentLife)};
+  if(au&&beforeCount!==next.count){
+   au.activeAttempt=null;
+   au.lifeFailures={lifeId:next.count,failures:{}};
+  }
+  if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(s);
+  return {ok:true,total:next.total,count:next.count,currentLife:next.currentLife,currentLifeMax:next.currentLifeMax,beforeCount,afterCount:next.count};
+ }
  function snapshot(target=null){
   const s=targetState(target),permanent=level(s),currentLife=currentLifeEarned(s);
   return Object.freeze({
@@ -89,10 +119,19 @@
   if(repeat.awarded!==0||repeat.permanentAfter!==3)errors.push({code:"DUPLICATE_AWARD_GUARD",actual:repeat});
   if(late.awarded!==1||late.milestones[0]!==1000||late.permanentAfter!==4||late.currentLifeAfter!==4)errors.push({code:"MILESTONE_CAP_1000",actual:late});
   if(BREAKTHROUGH_MILESTONE_LEVELS.length!==BREAKTHROUGH_MAX_PER_LIFE||BREAKTHROUGH_MILESTONE_LEVELS[0]!==100||BREAKTHROUGH_MILESTONE_LEVELS[BREAKTHROUGH_MILESTONE_LEVELS.length-1]!==1000)errors.push({code:"MILESTONE_CONTRACT",actual:BREAKTHROUGH_MILESTONE_LEVELS});
-  return Object.freeze({version:BREAKTHROUGH_CORE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  const plans=[[0,1,0],[1,1,1],[10,1,10],[11,2,1],[25,3,5],[30,3,10],[31,4,1]];
+  plans.forEach(([total,count,currentLife])=>{const plan=planFromPermanentTotal(total);if(!plan.ok||plan.count!==count||plan.currentLife!==currentLife)errors.push({code:"CANONICAL_REBUILD_PLAN",total,actual:plan});});
+  if(planFromPermanentTotal(-1).ok||planFromPermanentTotal(1.5).ok)errors.push({code:"CANONICAL_REBUILD_INPUT_GUARD"});
+  const rebuildFixture=makeState(2,20);rebuildFixture.reincarnation.alternateUniverse={unlocked:true,deepestCleared:40,activeAttempt:{lifeId:2,depth:41,attemptId:"core-rebuild",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"41":3}}};
+  const rebuilt=rebuildFromPermanentTotal(25,rebuildFixture);
+  if(!rebuilt.ok||rebuildFixture.reincarnation.count!==3||rebuildFixture.reincarnation.breakthrough.permanent!==25||currentLifeEarned(rebuildFixture)!==5||rebuildFixture.reincarnation.alternateUniverse.activeAttempt!==null||rebuildFixture.reincarnation.alternateUniverse.lifeFailures.lifeId!==3)errors.push({code:"CANONICAL_REBUILD_STATE",actual:{rebuilt,state:rebuildFixture.reincarnation}});
+  const firstRebuild=makeState(0,0),firstSnapshot=JSON.stringify(firstRebuild),locked=rebuildFromPermanentTotal(5,firstRebuild);
+  if(locked?.reason!=="first-run-locked"||JSON.stringify(firstRebuild)!==firstSnapshot)errors.push({code:"CANONICAL_REBUILD_FIRST_RUN_LOCK",actual:locked});
+  return Object.freeze({version:BREAKTHROUGH_CORE_VERSION,canonicalRebuildVersion:BREAKTHROUGH_CANONICAL_REBUILD_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.BREAKTHROUGH_CORE_VERSION=BREAKTHROUGH_CORE_VERSION;
+ window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION=BREAKTHROUGH_CANONICAL_REBUILD_VERSION;
  window.BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL=BREAKTHROUGH_EQUIPMENT_PERCENT_PER_LEVEL;
  window.BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL=BREAKTHROUGH_FINAL_DAMAGE_ADD_PER_LEVEL;
  window.BREAKTHROUGH_MAX_PER_LIFE=BREAKTHROUGH_MAX_PER_LIFE;
@@ -107,6 +146,8 @@
  window.breakthroughRawEquipmentBonuses=rawEquipmentBonuses;
  window.breakthroughMilestoneLevelsCrossed=milestoneLevelsCrossed;
  window.grantBreakthroughMilestonesForLevelCrossing=grantMilestonesForLevelCrossing;
+ window.breakthroughPlanFromPermanentTotal=planFromPermanentTotal;
+ window.rebuildBreakthroughFromPermanentTotal=rebuildFromPermanentTotal;
  window.breakthroughSnapshot=snapshot;
  window.BREAKTHROUGH_CORE_INTEGRITY=validate();
  if(!window.BREAKTHROUGH_CORE_INTEGRITY.passed)console.error("[文明戰線] Breakthrough core integrity error",window.BREAKTHROUGH_CORE_INTEGRITY.errors);
