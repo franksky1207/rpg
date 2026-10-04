@@ -78,6 +78,8 @@ Batch7：GM／測試工具正式收尾 7-1～7-5     ✅ 完成
 3 = 高維紀元
 ```
 
+正式 persistent world roots 維持 `secondWorld` 與 `thirdWorld`；不得以 UI 暫態或相容層取代正式 root。
+
 正式等級：
 
 ```text
