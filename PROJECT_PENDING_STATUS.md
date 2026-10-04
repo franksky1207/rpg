@@ -12,7 +12,8 @@
 - 轉生／突破核心、正式轉生流程與優化第1～4批已完成。
 - 異宇宙 Batch3～4 已完成。
 - 轉生後重征服 Batch5-1～5-5 已完成。
-- 目前主要施工剩餘：Batch6、Batch7，以及整套轉生完成後另開的第一紀元 Target Context 架構重構。
+- Batch5 後續架構優化共 4 批；第1批「W1 Target Context／prepare 正式 state 隔離」已完成，第2～4批待做。
+- 目前主要施工剩餘：Batch6、Batch7，以及 Batch5 後續架構優化第2～4批。
 
 ## 2026-10-04 已修：W1／W2 轉生重征服目標一致性
 
@@ -27,7 +28,14 @@ W1 曾發生轉生後點 Lv.500 Boss，舊 `adventurePreparePage()` 以 `selecte
 - W2 重新檢查後沒有同類 production bug；既有流程仍由 Boss `index` 從 UI → challenge → encounter → combat → settlement 一路直傳。
 - W2 regression 已固定驗證 Boss index99 的正式定義與 encounter 均為 Lv.1000 且同一 Boss。
 
-這次只做安全 bugfix，不提前執行完整 W1 Target Context 重構。
+## 2026-10-04 已完成：Batch5 後續架構優化第1批（W1 Target Context）
+
+- 新增正式 `firstWorldReincarnationTargetContext()`，把 rerun 當前 `mapIndex / enemyIndex` 以不可變 context 固定下來。
+- W1 rerun prepare 不再直接暫時改寫正式 `state.unlockedMap`。
+- prepare 只在同步 render 期間使用 presentation state view 讓既有首輪 UI owner 正常渲染；離開後一定恢復原正式 `state` 參照與原 `selectedMap / selectedEnemy`。
+- 首輪 `count=0` 仍完整委派原 `adventurePreparePage()`，首輪 sequential progression 不變。
+- regression 已固定驗證 map99 + Boss 的 target context 為 `99 / 4`、prepare 前後正式 state JSON 完全不變、全域 `state` 參照正確恢復、`unlockedMap` 仍為 0。
+- 此批只處理 W1 target identity／prepare 正式 state 隔離；後續第2批再處理 W2 visibility owner 收斂，第3批處理共用 UI renderer，第4批做完整 settlement 端到端 regression。
 
 ---
 
@@ -76,21 +84,22 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 - rerun／overlevel／dungeon／AU 全生命週期 regression。
 - 最終完整 closure。
 
-## 4. 轉生系統全部完成後：第一紀元 Target Context 架構重構【刻意延後】
+## 4. Batch5 後續架構優化第2～4批
 
-執行時機：Batch6、Batch7 與整套轉生正式完成、穩定後再做。
+### 第2批：第二紀元 visibility owner 收斂
+- 拆開冒險主線區域顯示與 Arena 區域 eligibility。
+- 移除 rerun 冒險頁暫時覆寫 `window.secondWorldRegionVisible` 的做法。
+- rerun 主線仍須 10 區全顯示；Arena 仍依 key boss downward coverage。
 
-核心原則：
+### 第3批：共用 UI renderer 收斂
+- W1 戰鬥速度徽章改為正式共用 renderer，不再靠 regex 改 HTML。
+- W3 rerun 文案直接由 rerun context／`fivePointBypassed` 決定，不再對首輪 HTML 做 `replaceAll()`。
 
-> 「能不能打」由 eligibility／unlock policy 判定；一旦合法目標確定，實際 map／enemy／boss index 必須從 UI → prepare → encounter → combat → settlement → progression 一路保持一致，不得再由 UI session 進度偷偷改寫。
-
-預定涵蓋：UI 選擇、prepare、單場／連戰、Minimal Mode、Fast Catch-up、特殊遭遇、encounter、reward／equipment source、Boss 首殺／Story／calamity、offline sample、inventory return、review/formal isolation、settlement。
-
-安全要求：
-- 首輪 sequential progression 行為不得改變。
-- `unlockedMap`、`enemyUnlocked()`、`canBoss()`、`highestUnlockedEnemy()` 仍只負責首輪 eligibility。
-- W2 現行 index 直傳架構作為行為參考，不複製不必要 owner。
-- 重構時建立完整 target identity regression，覆蓋 normal／elite／boss、單場／連戰、Minimal、特殊遭遇、offline、回顧與正式戰隔離。
+### 第4批：完整端到端 regression
+- W1 真實選 Boss → combat → settlement → `bossKilled` → key coverage → calamity eligibility。
+- W2 真實 Boss index → settlement → key coverage／calamity eligibility。
+- W3 驗證 rerun 只解除 5% 戰線，不解除其他 blocker。
+- 首輪隔離、舊存檔 normalization、轉生 reset、速度 UI、Minimal／Fast Catch-up 一併封箱。
 
 ---
 
@@ -107,7 +116,7 @@ M = 1 + 0.03 * (enemyLevel - playerLevel)
 第7批：GM 管理／測試／完整 Integrity 收尾      未開始
 ```
 
-第一紀元 Target Context 架構重構不塞入第6／7批，等轉生系統完成後另開獨立批次。
+Batch5 後續架構優化為獨立 4 批；目前第1批已完成，第2～4批待做，不與原第6／7批混寫。
 
 ---
 
