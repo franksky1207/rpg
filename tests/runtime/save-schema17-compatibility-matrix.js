@@ -27,7 +27,7 @@ const assert=require("assert");
   const report=await page.evaluate(()=>{
    const clone=value=>JSON.parse(JSON.stringify(value));
    const matrixVersions=[1,9,15,16,17,18];
-   const compatibility=matrixVersions.map(version=>({version,...window.saveCompatibilityFor({saveVersion:version})}));
+   const compatibility=matrixVersions.map(sourceSchema=>({sourceSchema,...window.saveCompatibilityFor({saveVersion:sourceSchema})}));
    const migrationPlans=matrixVersions.filter(version=>version<=17).map(version=>({version,stages:window.saveMigrationPlanForVersion(version).map(row=>row.id)}));
    const schemaPolicy={
     additiveOptional:window.saveSchemaChangeRequiresBump("additive-optional-field"),
@@ -98,7 +98,6 @@ const assert=require("assert");
    const stateBefore=clone(state);
    const storageBefore={};
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);storageBefore[key]=localStorage.getItem(key);}
-   // All matrix migration calls above operate on detached clones and must not mutate formal runtime state or localStorage.
    const stateAfter=clone(state);
    const storageAfter={};
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);storageAfter[key]=localStorage.getItem(key);}
@@ -106,14 +105,17 @@ const assert=require("assert");
    return {compatibility,migrationPlans,schemaPolicy,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
   });
 
-  const compatByVersion=Object.fromEntries(report.compatibility.map(row=>[row.version,row]));
+  const compatByVersion=Object.fromEntries(report.compatibility.map(row=>[row.sourceSchema,row]));
   [1,9,15,16].forEach(version=>{
+   assert.equal(compatByVersion[version].sourceVersion,version,`Schema${version} source-version diagnostic drifted.`);
    assert.equal(compatByVersion[version].supported,true,`Schema${version} must remain supported legacy.`);
    assert.equal(compatByVersion[version].isLegacy,true,`Schema${version} must be classified legacy.`);
    assert.equal(compatByVersion[version].isFuture,false,`Schema${version} must not be future.`);
   });
+  assert.equal(compatByVersion[17].sourceVersion,17,"Schema17 source-version diagnostic drifted.");
   assert.equal(compatByVersion[17].supported,true,"Schema17 must be supported current schema.");
   assert.equal(compatByVersion[17].isLegacy,false,"Schema17 must not be legacy.");
+  assert.equal(compatByVersion[18].sourceVersion,18,"Schema18 source-version diagnostic drifted.");
   assert.equal(compatByVersion[18].supported,false,"Schema18 must fail closed until explicitly supported.");
   assert.equal(compatByVersion[18].isFuture,true,"Schema18 must be classified future.");
 
@@ -169,7 +171,7 @@ const assert=require("assert");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
 
   console.log("Schema17 compatibility matrix passed:",JSON.stringify({
-   compatibility:report.compatibility.map(row=>({version:row.version,supported:row.supported,isLegacy:row.isLegacy,isFuture:row.isFuture})),
+   compatibility:report.compatibility.map(row=>({sourceSchema:row.sourceSchema,sourceVersion:row.sourceVersion,supported:row.supported,isLegacy:row.isLegacy,isFuture:row.isFuture})),
    migrationPlans:report.migrationPlans,
    legacy:report.legacy.map(row=>({version:row.version,targetVersion:row.targetVersion,count:row.count,auUnlocked:row.auUnlocked})),
    current:{count:report.current.first.reincarnation.count,permanent:report.current.first.reincarnation.breakthrough.permanent,auDepth:report.current.first.reincarnation.alternateUniverse.deepestCleared},
