@@ -26,7 +26,9 @@ assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元 Lv.1000～2000")&&pending.includes("轉生後重征服 Batch5-1～5-5 已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch5 已完成現況。");
-assert(pending.includes("越級 EXP／核心資源／Offline")&&pending.includes("四大副本永久解鎖")&&pending.includes("Batch5 後續架構優化共 4 批已全部完成")&&pending.includes("W1 Target Context")&&pending.includes("W2 Visibility Owner")&&pending.includes("共用 UI Renderer")&&pending.includes("完整端到端 Regression"),"Pending 必須同步 Batch6／Batch7 與 Batch5 後續架構優化全數完成現況。");
+assert(pending.includes("Batch5 後續架構優化共 4 批已全部完成")&&pending.includes("W1 Target Context")&&pending.includes("W2 Visibility Owner")&&pending.includes("共用 UI Renderer")&&pending.includes("完整端到端 Regression"),"Pending 必須同步 Batch5 後續架構優化全數完成現況。");
+assert(pending.includes("第6-1批（轉生越級 Online 收益）")&&pending.includes("reincarnationoverlevelrewards.js")&&pending.includes("首輪 `count=0`")&&pending.includes("ceil(base × M)"),"Pending 必須同步 Batch6-1 共用越級 owner、首輪隔離與 ceil 規則。");
+assert(pending.includes("第6-2批：越級 Offline")&&pending.includes("第6-3批：首次轉生後四大副本永久解鎖")&&pending.includes("第6-4批：Batch6 完整封箱 Regression"),"Pending 必須保留 Batch6-2～6-4 後續施工範圍。");
 assert(pending.includes("reincarnation-rerun-batch5-e2e-regression.js")&&pending.includes("W1／W2／W3 Fast Catch-up"),"Pending 必須記錄 Batch5 第4批端到端 regression 與 Fast Catch-up 封箱範圍。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
