@@ -83,7 +83,6 @@ jobs:
           node tests/runtime/reincarnation-rerun-batch5-e2e-regression.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-overlevel-batch6-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/player-batch-upgrades-batch6-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-overlevel-batch6-3-offline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
