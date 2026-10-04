@@ -26,7 +26,8 @@ assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元 Lv.1000～2000")&&pending.includes("轉生後重征服 Batch5-1～5-5 已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch5 已完成現況。");
-assert(pending.includes("越級 EXP／核心資源／Offline")&&pending.includes("四大副本永久解鎖")&&pending.includes("Batch5 後續架構優化第4批")&&pending.includes("W1 Target Context")&&pending.includes("W2 Visibility Owner")&&pending.includes("共用 UI Renderer"),"Pending 必須同步 Batch6／Batch7 與 Batch5 後續架構優化現況。");
+assert(pending.includes("越級 EXP／核心資源／Offline")&&pending.includes("四大副本永久解鎖")&&pending.includes("Batch5 後續架構優化共 4 批已全部完成")&&pending.includes("W1 Target Context")&&pending.includes("W2 Visibility Owner")&&pending.includes("共用 UI Renderer")&&pending.includes("完整端到端 Regression"),"Pending 必須同步 Batch6／Batch7 與 Batch5 後續架構優化全數完成現況。");
+assert(pending.includes("reincarnation-rerun-batch5-e2e-regression.js")&&pending.includes("W1／W2／W3 Fast Catch-up"),"Pending 必須記錄 Batch5 第4批端到端 regression 與 Fast Catch-up 封箱範圍。");
 assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
