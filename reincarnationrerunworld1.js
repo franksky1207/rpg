@@ -1,6 +1,7 @@
 (function(){
  const VERSION=1;
  const TARGET_IDENTITY_FIX_VERSION=1;
+ const COMBAT_SPEED_BADGE_REUSE_VERSION=1;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
   canBoss:typeof window.canBoss==="function"?window.canBoss:null,
@@ -8,7 +9,8 @@
   enemyProgressHtml:typeof window.enemyProgressHtml==="function"?window.enemyProgressHtml:null,
   enemyNoteHtml:typeof window.enemyNoteHtml==="function"?window.enemyNoteHtml:null,
   adventureMapPage:typeof window.adventureMapPage==="function"?window.adventureMapPage:null,
-  adventurePreparePage:typeof window.adventurePreparePage==="function"?window.adventurePreparePage:null
+  adventurePreparePage:typeof window.adventurePreparePage==="function"?window.adventurePreparePage:null,
+  adventureCombatPage:typeof window.adventureCombatPage==="function"?window.adventureCombatPage:null
  });
  const regionOpenState=Object.create(null);
  let regionOpenInitialized=false;
@@ -84,14 +86,21 @@
    if(state&&typeof state==="object")state.unlockedMap=originalUnlocked;
   }
  }
+ function rerunAdventureCombatPage(){
+  if(typeof firstRunOwners.adventureCombatPage!=="function")return "";
+  const html=firstRunOwners.adventureCombatPage();
+  if(!rerunActive(state)||typeof html!=="string")return html;
+  return html.replace(/<div class="combat-head">([\s\S]*?)｜(1(?:\.5)?|2)×<\/div>/,`<div class="combat-head">$1<span class="universe-combat-speed">$2×</span></div>`);
+ }
 
  window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION=TARGET_IDENTITY_FIX_VERSION;
+ window.FIRST_WORLD_REINCARNATION_COMBAT_SPEED_BADGE_REUSE_VERSION=COMBAT_SPEED_BADGE_REUSE_VERSION;
  window.firstWorldReincarnationRerunContext=rerunContext;
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
@@ -134,4 +143,5 @@
   return typeof firstRunOwners.adventureMapPage==="function"?firstRunOwners.adventureMapPage():"";
  };
  if(typeof firstRunOwners.adventurePreparePage==="function")window.adventurePreparePage=rerunAdventurePreparePage;
+ if(typeof firstRunOwners.adventureCombatPage==="function")window.adventureCombatPage=rerunAdventureCombatPage;
 })();
