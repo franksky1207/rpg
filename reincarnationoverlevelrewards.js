@@ -1,6 +1,8 @@
 (function(){
  const VERSION=1;
  const RATE_PER_LEVEL=.03;
+ const W1_ADAPTER_VERSION=2;
+ const FIGHT_WRAPPER_RETIRED_VERSION=1;
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function targetState(target=null){return target&&typeof target==="object"?target:currentState();}
@@ -28,8 +30,8 @@
   if((bonusBasic>0||bonusAdvanced>0)&&typeof window.addEnhancementStones==="function")window.addEnhancementStones(bonusBasic,bonusAdvanced);
   return {basic:finalBasic,advanced:finalAdvanced};
  }
- function applyWorld1OnlineOverlevelReward(result,playerLevel,target=null){
-  const s=targetState(target);
+ function applyWorld1OnlineOverlevelReward(result,playerLevel,target=null,options={}){
+  const s=targetState(target),persist=options?.persist!==false,rewriteLog=options?.rewriteLog!==false;
   if(!s||result?.ok!==true||result?.win!==true)return result;
   const enemyLevel=wholeLevel(result?.e?.level),multiplier=reincarnationOverlevelRewardMultiplier(playerLevel,enemyLevel,s);
   if(!(multiplier>1))return result;
@@ -42,7 +44,7 @@
    if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(bonusXp,logs);else if(typeof gainExp==="function")gainExp(bonusXp,logs);
   }
   const enhancementStones=applyBattleStoneBonus(result,playerLevel,enemyLevel,s);
-  if(Array.isArray(result.logs)){
+  if(rewriteLog&&Array.isArray(result.logs)){
    const exact=`${result.e?.name||"敵人"}被擊敗。獲得 EXP +${baseXp}、金幣 +${baseGold}。`;
    const index=result.logs.indexOf(exact);
    if(index>=0)result.logs[index]=`${result.e?.name||"敵人"}被擊敗。獲得 EXP +${finalXp}、金幣 +${finalGold}。`;
@@ -51,18 +53,8 @@
   result.gold=finalGold;
   result.enhancementStones=enhancementStones;
   result.overlevelRewardMultiplier=multiplier;
-  if(typeof save==="function")save(false);
+  if(persist&&typeof save==="function")save(false);
   return result;
- }
-
- const originalFightOnce=typeof window.fightOnce==="function"?window.fightOnce:null;
- if(originalFightOnce){
-  const wrapped=function(...args){
-   const target=currentState(),playerLevel=wholeLevel(target?.level),result=originalFightOnce.apply(this,args);
-   return applyWorld1OnlineOverlevelReward(result,playerLevel,target);
-  };
-  fightOnce=wrapped;
-  window.fightOnce=wrapped;
  }
 
  function validate(){
@@ -72,11 +64,13 @@
   if(Math.abs(reincarnationOverlevelRewardMultiplier(100,500,rerun)-13)>1e-9)errors.push({code:"GAP_400",actual:reincarnationOverlevelRewardMultiplier(100,500,rerun)});
   if(Math.abs(reincarnationOverlevelRewardMultiplier(1,1000,rerun)-30.97)>1e-9)errors.push({code:"NO_CAP",actual:reincarnationOverlevelRewardMultiplier(1,1000,rerun)});
   if(applyReincarnationOverlevelIntegerReward(1,100,105,rerun)!==2)errors.push({code:"INTEGER_CEIL"});
-  return {passed:errors.length===0,version:VERSION,ratePerLevel:RATE_PER_LEVEL,errors};
+  return {passed:errors.length===0,version:VERSION,ratePerLevel:RATE_PER_LEVEL,w1AdapterVersion:W1_ADAPTER_VERSION,fightWrapperRetiredVersion:FIGHT_WRAPPER_RETIRED_VERSION,errors};
  }
 
  window.REINCARNATION_OVERLEVEL_REWARD_VERSION=VERSION;
  window.REINCARNATION_OVERLEVEL_RATE_PER_LEVEL=RATE_PER_LEVEL;
+ window.REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION=W1_ADAPTER_VERSION;
+ window.REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION=FIGHT_WRAPPER_RETIRED_VERSION;
  window.reincarnationOverlevelRewardMultiplier=reincarnationOverlevelRewardMultiplier;
  window.applyReincarnationOverlevelIntegerReward=applyReincarnationOverlevelIntegerReward;
  window.applyWorld1OnlineOverlevelReward=applyWorld1OnlineOverlevelReward;
