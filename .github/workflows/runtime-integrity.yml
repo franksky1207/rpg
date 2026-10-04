@@ -76,6 +76,7 @@ jobs:
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-world1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-world2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
