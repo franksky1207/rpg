@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=5;
  function currentPhase(target=null){const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):s?.thirdWorld?.entered===true?3:s?.secondWorld?.entered===true?2:1;}
  function activeView(){try{return String(view||"");}catch(e){return "";}}
  function reincarnationDungeonPermanentAccess(target=null){
