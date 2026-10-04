@@ -12,7 +12,8 @@ const assert=require('assert');
   await page.waitForFunction(()=>
    window.REINCARNATION_OVERLEVEL_REWARD_VERSION===1&&
    window.OFFLINE_REINCARNATION_OVERLEVEL_VERSION===1&&
-   window.PLAYER_BATCH_UPGRADE_VERSION===1&&
+   window.PLAYER_BATCH_UPGRADE_VERSION===2&&
+   window.PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION===1&&
    window.REINCARNATION_DUNGEON_ACCESS_VERSION===2&&
    window.REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION===1&&
    window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2&&
@@ -40,41 +41,25 @@ const assert=require('assert');
    const originalState=state,originalView=view;
    const out={};
    try{
-    // 6-1 / 6-3: first run stays 1x, rerun online and offline share the same owner and exact recorded target identity.
     const first=makeW1(0),rerun=makeW1(1),pending={playerLevel:100,enemyLevel:500,overlevelContextRecorded:true};
     state=first;const firstOffline=offlineOverlevelRewardContext(pending,500);
     state=rerun;const rerunOffline=offlineOverlevelRewardContext(pending,500);
-    out.overlevel={
-     firstOnline:reincarnationOverlevelRewardMultiplier(100,500,first),firstOffline,
-     rerunOnline:reincarnationOverlevelRewardMultiplier(100,500,rerun),rerunOffline,
-     noCap:reincarnationOverlevelRewardMultiplier(1,1000,rerun)
-    };
+    out.overlevel={firstOnline:reincarnationOverlevelRewardMultiplier(100,500,first),firstOffline,rerunOnline:reincarnationOverlevelRewardMultiplier(100,500,rerun),rerunOffline,noCap:reincarnationOverlevelRewardMultiplier(1,1000,rerun)};
 
-    // 6-2: the exact same batch-growth owner is used by first run and rerun; phase scope remains W1 specialization and W1/W2 enhancement only.
     const specFirst=makeW1(0),specRerun=makeW1(1);specFirst.gold=3500;specRerun.gold=3500;
     const enhW1First=makeW1(0),enhW1Rerun=makeW1(1);
     [enhW1First,enhW1Rerun].forEach(s=>{ENHANCEMENT_SLOTS.forEach(key=>s.enhancement.levels[key]=12);s.enhancement.basicStones=2000;s.enhancement.advancedStones=200;});
     const enhW2First=makeW2(0),enhW2Rerun=makeW2(1);
     [enhW2First,enhW2Rerun].forEach(s=>{ENHANCEMENT_SLOTS.forEach(key=>s.enhancement.levels[key]=20);s.secondWorld.darkMatter=100000;s.secondWorld.darkEnergy=950;SPECIALIZATION_KEYS.forEach(key=>s.specializations[key]=60);});
-    out.batch={
-     specFirst:specializationBalancedUpgradePreview(specFirst),specRerun:specializationBalancedUpgradePreview(specRerun),
-     enhW1First:enhancementBalancedUpgradePreview(enhW1First),enhW1Rerun:enhancementBalancedUpgradePreview(enhW1Rerun),
-     enhW2First:enhancementBalancedUpgradePreview(enhW2First),enhW2Rerun:enhancementBalancedUpgradePreview(enhW2Rerun)
-    };
+    out.batch={specFirst:specializationBalancedUpgradePreview(specFirst),specRerun:specializationBalancedUpgradePreview(specRerun),enhW1First:enhancementBalancedUpgradePreview(enhW1First),enhW1Rerun:enhancementBalancedUpgradePreview(enhW1Rerun),enhW2First:enhancementBalancedUpgradePreview(enhW2First),enhW2Rerun:enhancementBalancedUpgradePreview(enhW2Rerun)};
 
-    // 6-4 lifecycle: Daily/Mirror/Void survive reincarnation, W1/W2 Arena current-life progress resets, then four dungeon entries become permanent at Lv.1.
     state=makeQualifiedForReset();const preservedBefore={daily:clone(state.daily),mirror:clone(state.dungeon.mirror),voidMirage:clone(state.dungeon.voidMirage)};
     const resetResult=applyReincarnationResetState(state,{currentTime:123456789});
     const preservedAfter={daily:clone(state.daily),mirror:clone(state.dungeon.mirror),voidMirage:clone(state.dungeon.voidMirage)};
     view='dungeon';render();
     const selectors=['.dungeon-mode-bounty','.dungeon-mode-arena','.dungeon-mode-tower','[data-mirror-dungeon-card]'];
-    out.lifecycle={
-     resetOk:resetResult?.ok===true,count:state.reincarnation?.count,level:state.level,preservedBefore,preservedAfter,
-     arenaByWorld:clone(state.dungeon?.arenaByWorld||{}),permanent:reincarnationDungeonPermanentAccessUnlocked(state),
-     cards:selectors.map(sel=>{const card=document.querySelector(sel),button=card?.querySelector('.dungeon-entry-btn');return {exists:!!card,locked:card?.classList.contains('locked')===true,hidden:card?.hidden===true,disabled:button?.disabled===true};})
-    };
+    out.lifecycle={resetOk:resetResult?.ok===true,count:state.reincarnation?.count,level:state.level,preservedBefore,preservedAfter,arenaByWorld:clone(state.dungeon?.arenaByWorld||{}),permanent:reincarnationDungeonPermanentAccessUnlocked(state),cards:selectors.map(sel=>{const card=document.querySelector(sel),button=card?.querySelector('.dungeon-entry-btn');return {exists:!!card,locked:card?.classList.contains('locked')===true,hidden:card?.hidden===true,disabled:button?.disabled===true};})};
 
-    // Arena mainline qualification derives downward from current-life key boss coverage; promotion assessment remains exactly 485 / 500 = 97%.
     state=makeW1(1);state.bossKilled[WORLD_REGIONS[9].mapEnd]=true;
     const w1Coverage=firstWorldRerunKeyBossCoverage(state),w1Cap=getArenaRankCapForWorld(1,state);
     state=makeW2(1);state.secondWorld.mainline.bossKilled[99]=true;
@@ -82,22 +67,15 @@ const assert=require('assert');
     const arenaSource=await (await fetch('arenapositioncore.js')).text();
     out.arena={w1Coverage,w1Cap,w2Coverage,w2Cap,assessment500:arenaSource.includes('const ASSESS_RUNS=500;'),target485:arenaSource.includes('const ASSESS_CLEAR_TARGET=485;')};
 
-    // Optimization Batch1: stale Schema17 rerun progression is normalized idempotently, while first-run state is never backfilled.
     const stale=makeW1(1);stale.bossKilled[99]=true;const normalized=normalizeExistingReincarnationRerunProgress(stale),secondPass=normalizeExistingReincarnationRerunProgress(stale);
     const firstRun=makeW1(0);firstRun.bossKilled[99]=true;const firstRunBefore=JSON.stringify(firstRun),firstRunNormalize=normalizeExistingReincarnationRerunProgress(firstRun);
     out.progressNormalization={version:REINCARNATION_RERUN_PROGRESS_NORMALIZATION_VERSION,firstChanged:normalized.changed,full:stale.bossKilled.every(Boolean),secondPassChanged:secondPass.changed,firstRunChanged:firstRunNormalize.changed,firstRunStable:firstRunBefore===JSON.stringify(firstRun)};
 
-    // Equipment sales and sale-conversion resources are outside the overlevel multiplier adapter.
     const saleItem={world:2,level:500,q:5,type:'weapon',sell:123,buy:456};
     const saleFirst=equipmentSaleQuote(saleItem,{state:makeW2(0)}),saleRerun=equipmentSaleQuote(saleItem,{state:makeW2(1)});
     const overlevelSource=await (await fetch('reincarnationoverlevelrewards.js')).text();
     const offlineSource=await (await fetch('offlineprogress.js')).text();
-    out.sale={
-     first:saleFirst,rerun:saleRerun,
-     onlineTouchesSaleStones:overlevelSource.includes('saleEnhancementStones='),
-     offlineUsesSaleOwner:offlineSource.includes('settleEquipmentSaleBatch'),
-     offlineSharedMultiplier:offlineSource.includes('window.reincarnationOverlevelRewardMultiplier')
-    };
+    out.sale={first:saleFirst,rerun:saleRerun,onlineTouchesSaleStones:overlevelSource.includes('saleEnhancementStones='),offlineUsesSaleOwner:offlineSource.includes('settleEquipmentSaleBatch'),offlineSharedMultiplier:offlineSource.includes('window.reincarnationOverlevelRewardMultiplier')};
    }finally{state=originalState;view=originalView;if(typeof render==='function')render();}
    return out;
   });
