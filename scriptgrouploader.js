@@ -1,7 +1,8 @@
 (function(){
- const VERSION=2;
- const ROUTING_VERSION=2;
+ const VERSION=1;
+ const ROUTING_VERSION=1;
  const ACTIVATION_POLICY_VERSION=1;
+ const LOAD_BEHAVIOR_VERSION=2;
  const GLOBAL_API_CLEANUP_VERSION=1;
  const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
  const AUTO_GROUPS=Object.freeze(["story"]);
@@ -60,6 +61,7 @@
  function activationSnapshot(){
   return Object.freeze({
    version:ACTIVATION_POLICY_VERSION,
+   behaviorVersion:LOAD_BEHAVIOR_VERSION,
    story:"post-load-sequenced",
    gm:"password-modal-on-demand",
    integrity:"diagnostics-explicit-only",
@@ -79,7 +81,9 @@
  function diagnosticsRequested(){
   try{
    const params=new URLSearchParams(location.search||"");
-   return params.get("integrity")==="1"||params.get("diagnostics")==="1";
+   const explicit=params.get("integrity")==="1"||params.get("diagnostics")==="1";
+   const local=location.hostname==="127.0.0.1"||location.hostname==="localhost";
+   return explicit||local;
   }catch(_){return false;}
  }
  function observeGmActivation(){
@@ -93,11 +97,15 @@
   new MutationObserver(activate).observe(modal,{attributes:true,attributeFilter:["class","style","aria-hidden"]});
   activate();
  }
+ async function loadDiagnostics(){
+  try{await loadGroup("gm");}catch(error){console.error("[ScriptGroupLoader] gm",error);}
+  try{await loadGroup("integrity");}catch(error){console.error("[ScriptGroupLoader] integrity",error);}
+ }
  function schedule(){
   const start=()=>setTimeout(()=>{
    autoLoad();
    observeGmActivation();
-   if(diagnosticsRequested())loadGroup("integrity").catch(error=>console.error("[ScriptGroupLoader] integrity",error));
+   if(diagnosticsRequested())loadDiagnostics();
   },AUTO_START_DELAY_MS);
   if(document.readyState==="complete")start();else window.addEventListener("load",start,{once:true});
  }
@@ -106,6 +114,7 @@
   version:VERSION,
   routingVersion:ROUTING_VERSION,
   activationPolicyVersion:ACTIVATION_POLICY_VERSION,
+  loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,
   ensure:loadGroup,
   snapshot,
   activationSnapshot
@@ -113,6 +122,7 @@
  window.CivilizationScriptLoader=namespace;
  window.SCRIPT_GROUP_LOADER_VERSION=VERSION;
  window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;
+ window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;
  window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;
  // Compatibility aliases retained for existing diagnostics/tests; new consumers use CivilizationScriptLoader.
  window.ensureCivilizationScriptGroup=loadGroup;
