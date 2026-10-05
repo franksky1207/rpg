@@ -108,7 +108,7 @@ UI → prepare → encounter → combat → settlement → progression
 ```text
 world = 1
 mapIndex
-敌人索引 enemyIndex
+敵人索引 enemyIndex
 lifeId
 reincarnation count
 mode = formal / rerun / review
