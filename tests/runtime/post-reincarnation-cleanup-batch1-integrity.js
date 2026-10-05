@@ -24,12 +24,14 @@ assert.ok(workflow.includes("post-reincarnation-cleanup-batch1-integrity.js"),"R
 assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 legacy compatibility matrix 必須繼續保留");
 
 assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
-assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2"'),"W1 rerun 必須使用單一 canonical Batch2 cache token");
+assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1"'),"W1 rerun 必須使用修正後 canonical Batch2 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2"'),"W2 rerun 必須使用單一 canonical Batch2 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2"'),"W3 rerun 必須使用單一 canonical Batch2 cache token");
 assert.ok(/PRESENTATION_STATE_SWAP_RETIRED_VERSION=1/.test(rerun1),"W1 rerun 必須標記 presentation state swap 已退役");
 assert.ok(!/state=presentationState/.test(rerun1),"W1 rerun 不得再替換 global state 進行 prepare render");
 assert.ok(!/const formalState=state/.test(rerun1),"W1 rerun 不得保留舊 formalState swap path");
+assert.ok(/prepareFirstWorldTargetContextFromSelection/.test(rerun1),"W1 rerun prepare 必須建立 canonical prepared Target Context");
+assert.ok(/mode:"rerun",source:"rerun-prepare-render"/.test(rerun1),"W1 rerun prepare 必須以 rerun mode 建立 prepared Target Context");
 assert.ok(/if\(Number\(window\.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION\)>=1\)return;/.test(rerun2),"W2 rerun wrapper 必須防止重複安裝");
 assert.ok(/SECOND_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_VERSION/.test(rerun2),"W2 rerun 必須公開 wrapper owner boundary");
 assert.ok(/if\(Number\(window\.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION\)>=1\)return;/.test(rerun3),"W3 rerun wrapper 必須防止重複安裝");
