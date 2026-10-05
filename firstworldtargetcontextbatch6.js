@@ -3,12 +3,12 @@
  const DRIFT_VERSION=1;
  const FALLBACK_RETIREMENT_VERSION=1;
  const CLOSURE_VERSION=1;
+ const EXECUTION_VALIDATOR_REQUIRED_VERSION=1;
 
  function currentValidation(context,target=state){
   if(!context||typeof context!=="object")return {passed:false,errors:["missing-context"]};
-  if(typeof window.validateCurrentFirstWorldTargetContext==="function")return window.validateCurrentFirstWorldTargetContext(context,target);
-  if(typeof window.validateFirstWorldTargetContext==="function")return window.validateFirstWorldTargetContext(context);
-  return {passed:false,errors:["validator-missing"]};
+  if(typeof window.validateCurrentFirstWorldTargetContext!=="function")return {passed:false,errors:["current-validator-missing"]};
+  return window.validateCurrentFirstWorldTargetContext(context,target);
  }
  function validateExecution(context,target=state,requirements={}){
   const errors=[];
@@ -45,7 +45,7 @@
  function closureSnapshot(target=state){
   const prepared=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
   const preparedCheck=prepared?validateExecution(prepared,target):null;
-  return Object.freeze({version:CLOSURE_VERSION,owner:Number(window.FIRST_WORLD_TARGET_CONTEXT_VERSION)||0,identity:Number(window.FIRST_WORLD_TARGET_IDENTITY_VERSION)||0,batch4:Number(window.FIRST_WORLD_TARGET_CONTEXT_BATCH4_BRIDGE_VERSION)||0,batch5:Number(window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_VERSION)||0,batch6:VERSION,driftGuard:DRIFT_VERSION,fallbackRetirement:FALLBACK_RETIREMENT_VERSION,saveSchemaVersion:Number(window.SAVE_SCHEMA_VERSION)||Number(target?.saveVersion)||0,prepared:prepared?Object.freeze({contextId:String(prepared.contextId||""),mode:String(prepared.mode||""),mapIndex:prepared.mapIndex,enemyIndex:prepared.enemyIndex,passed:preparedCheck?.passed===true}):null});
+  return Object.freeze({version:CLOSURE_VERSION,owner:Number(window.FIRST_WORLD_TARGET_CONTEXT_VERSION)||0,identity:Number(window.FIRST_WORLD_TARGET_IDENTITY_VERSION)||0,batch4:Number(window.FIRST_WORLD_TARGET_CONTEXT_BATCH4_BRIDGE_VERSION)||0,batch5:Number(window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_VERSION)||0,batch6:VERSION,driftGuard:DRIFT_VERSION,fallbackRetirement:FALLBACK_RETIREMENT_VERSION,executionValidatorRequired:EXECUTION_VALIDATOR_REQUIRED_VERSION,saveSchemaVersion:Number(window.SAVE_SCHEMA_VERSION)||Number(target?.saveVersion)||0,prepared:prepared?Object.freeze({contextId:String(prepared.contextId||""),mode:String(prepared.mode||""),mapIndex:prepared.mapIndex,enemyIndex:prepared.enemyIndex,passed:preparedCheck?.passed===true}):null});
  }
 
  // Post-prepare execution must never reconstruct a rerun target from mutable UI selection.
@@ -58,4 +58,5 @@
  window.FIRST_WORLD_TARGET_DRIFT_GUARD_VERSION=DRIFT_VERSION;
  window.FIRST_WORLD_TARGET_FALLBACK_RETIREMENT_VERSION=FALLBACK_RETIREMENT_VERSION;
  window.FIRST_WORLD_TARGET_CONTEXT_FINAL_CLOSURE_VERSION=CLOSURE_VERSION;
+ window.FIRST_WORLD_EXECUTION_VALIDATOR_REQUIRED_VERSION=EXECUTION_VALIDATOR_REQUIRED_VERSION;
 })();
