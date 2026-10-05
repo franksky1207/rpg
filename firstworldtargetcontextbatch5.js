@@ -3,6 +3,7 @@
  const OFFLINE_VERSION=1;
  const RERUN_VERSION=1;
  const REVIEW_VERSION=1;
+ const CURRENT_VALIDATOR_REQUIRED_VERSION=1;
 
  function currentMode(target=state){
   const phase=typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(target))||1:(target?.secondWorld?.entered===true?2:1);
@@ -12,8 +13,8 @@
  }
  function currentCheck(context,target=state){
   if(!context||typeof context!=="object")return false;
-  if(typeof window.validateCurrentFirstWorldTargetContext==="function")return window.validateCurrentFirstWorldTargetContext(context,target)?.passed===true;
-  return typeof window.validateFirstWorldTargetContext==="function"&&window.validateFirstWorldTargetContext(context)?.passed===true;
+  if(typeof window.validateCurrentFirstWorldTargetContext!=="function")return false;
+  return window.validateCurrentFirstWorldTargetContext(context,target)?.passed===true;
  }
  function offlineContext(raw,target=state,source="offline-persisted-identity"){
   if(!raw||Number(raw.world)!==1||raw.targetType!=="mapEnemy")return null;
@@ -84,7 +85,7 @@
   window.startGalaxyReviewBattle=async function(){
    let context=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
    if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state))&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({mode:"review",source:"review-battle-start"},state);
-   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&context.policy?.formalRewardsAllowed===false&&context.policy?.formalProgressAllowed===false))return false;
+   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state)&&context.policy?.formalRewardsAllowed===false&&context.policy?.formalProgressAllowed===false))return false;
    const originalGetMap=window.getGalaxyReviewSelectedMap;
    const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
    try{
@@ -104,4 +105,5 @@
  window.FIRST_WORLD_OFFLINE_TARGET_CONTEXT_VERSION=OFFLINE_VERSION;
  window.FIRST_WORLD_RERUN_TARGET_CONTEXT_BOUNDARY_VERSION=RERUN_VERSION;
  window.FIRST_WORLD_REVIEW_TARGET_CONTEXT_BOUNDARY_VERSION=REVIEW_VERSION;
+ window.FIRST_WORLD_CURRENT_CONTEXT_VALIDATOR_REQUIRED_VERSION=CURRENT_VALIDATOR_REQUIRED_VERSION;
 })();
