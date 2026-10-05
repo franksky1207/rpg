@@ -24,9 +24,9 @@ assert.ok(workflow.includes("post-reincarnation-cleanup-batch1-integrity.js"),"R
 assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 legacy compatibility matrix 必須繼續保留");
 
 assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
-assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1"'),"W1 rerun 必須使用修正後 canonical Batch2 cache token");
-assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2"'),"W2 rerun 必須使用單一 canonical Batch2 cache token");
-assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2"'),"W3 rerun 必須使用單一 canonical Batch2 cache token");
+assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3"'),"W1 rerun 必須使用 Batch3 canonical cache token");
+assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3"'),"W2 rerun 必須使用 Batch3 canonical cache token");
+assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3"'),"W3 rerun 必須使用 Batch3 canonical cache token");
 assert.ok(/PRESENTATION_STATE_SWAP_RETIRED_VERSION=1/.test(rerun1),"W1 rerun 必須標記 presentation state swap 已退役");
 assert.ok(!/state=presentationState/.test(rerun1),"W1 rerun 不得再替換 global state 進行 prepare render");
 assert.ok(!/const formalState=state/.test(rerun1),"W1 rerun 不得保留舊 formalState swap path");
@@ -39,4 +39,4 @@ assert.ok(/THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_V
 assert.ok(/automaticDelete:false/.test(backupRetention),"Backup retention 不得自動刪除玩家備份");
 assert.ok(/manualPruneEligible/.test(backupRetention),"Backup retention 必須有 canonical save 後的手動清理資格判定");
 assert.ok(/pruneLegacyMigrationBackups/.test(backupRetention),"Backup retention 必須提供明確的手動清理 API");
-console.log("Post-reincarnation cleanup Batch1-2 integrity passed.");
+console.log("Post-reincarnation cleanup Batch1-3 integrity passed.");
