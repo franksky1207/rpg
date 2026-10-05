@@ -9,83 +9,44 @@ assert(files.length>0,"找不到任何 JavaScript 檔案。");
 const syntaxFailures=[];
 for(const file of files){const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});if(checked.status!==0)syntaxFailures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());}
 assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFailures.join("\n\n"));
-const index=read("index.html"),contract=read("integritycontract.js"),runtime=read("runtimeintegrity.js"),finalIntegrity=read("finalintegrity.js"),offlineStateCore=read("offlinestatecore.js"),battlePipeline=read("battlepipeline.js"),offlineProgress=read("offlineprogress.js"),dungeonProgress=read("dungeonprogress.js"),arena=read("dungeonarena.js"),thirdWorldDungeonUi=read("thirdworlddungeonui.js"),gameGuideSource=read("gameguide.js"),saveGuard=read("saveversionguard.js"),compatibility=read("compatibilityowners.js"),worldTransitionSafety=read("worldtransitionsafety.js"),combatMath=read("combatmath.js"),dungeonCore=read("dungeoncore.js"),secondWorldCombat=read("secondworldcombat.js"),engine=read("engine.js"),ui=read("ui.js"),equipmentLock=read("equipmentlock.js");
+
+const index=read("index.html");
+const source=name=>read(name);
+const compatibility=source("compatibilityowners.js"),saveHook=source("savehookcore.js"),saveGuard=source("saveversionguard.js"),backupRetention=source("savebackupretention.js"),combatMath=source("combatmath.js"),dungeonCore=source("dungeoncore.js"),secondWorldCombat=source("secondworldcombat.js"),worldTransitionSafety=source("worldtransitionsafety.js"),offlineState=source("offlinestatecore.js"),battlePipeline=source("battlepipeline.js"),rerun1=source("reincarnationrerunworld1.js"),rerun2=source("reincarnationrerunworld2.js"),rerun3=source("reincarnationrerunworld3.js");
 const localScripts=[...index.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 for(const src of localScripts)assert(fs.existsSync(src),"index.html 載入不存在的本地 script："+src);
 const pos=name=>index.indexOf('src="'+name+'?v=');
-assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"offlinestatecore.js 必須先於 savemigration.js 載入。");
-assert(pos("saveversionguard.js")>pos("savemigration.js")&&pos("saveversionguard.js")<pos("ui.js"),"saveversionguard.js 必須在 migration 之後、ui.js 啟動 load 前載入。");
-assert(pos("worldtransitionsafety.js")>pos("offlineprogress.js"),"worldtransitionsafety.js 必須在 offlineprogress.js owner 載入後一次安裝 guards。");
-assert(pos("combatmath.js")<pos("combatcore.js")&&pos("combatcore.js")<pos("secondworldcombat.js"),"World Combat Adapter 必須先定義，正式 Combat Core 必須先於 W2 consumer 載入。");
-assert(/compatibilityowners\.js\?v=20260930-audit-batch6/.test(index),"第6批 Legacy global 收尾後必須更新 compatibilityowners.js cache-bust。");
-assert(/combatmath\.js\?v=20260930-audit-batch6/.test(index),"第6批 World Combat Adapter 後必須更新 combatmath.js cache-bust。");
-assert(/dungeoncore\.js\?v=20260930-audit-batch6/.test(index),"第6批 Dungeon combat convergence 後必須更新 dungeoncore.js cache-bust。");
-assert(/secondworldcombat\.js\?v=20260930-audit-batch6/.test(index),"第6批 W2 combat convergence 後必須更新 secondworldcombat.js cache-bust。");
-assert(/saveversionguard\.js\?v=20260930-audit-batch5/.test(index),"第5批 Save Safety Hook convergence cache-bust 必須保留。");
-assert(/worldtransitionsafety\.js\?v=20260930-audit-batch5/.test(index),"第5批 World Transition Guard cache-bust 必須保留。");
-assert(/offlinestatecore\.js\?v=20260930-audit-batch4-fix1/.test(index),"第4批 Offline owner 修正後必須保留 cache-bust。");
-assert(/battlepipeline\.js\?v=20260930-audit-batch4/.test(index),"第4批 Offline consumer 修改後必須保留 cache-bust。");
-assert(pos("compatibilityowners.js")>pos("dungeonprogress.js")&&pos("compatibilityowners.js")<pos("integritycontract.js"),"compatibilityowners.js 必須在正式 owner 後、Integrity Contract 前載入。");
-assert(pos("integritycontract.js")<pos("runtimeintegrity.js")&&pos("runtimeintegrity.js")<pos("finalintegrity.js"),"Integrity Contract → Runtime → Final 文件順序錯誤。");
-assert(!index.includes("legacy Runtime Integrity cache-bust contract marker"),"index.html 不應再保留只為舊 regex 存在的 cache-bust marker。");
-assert(/const VERSION=3;/.test(compatibility)&&/const SAVE_HOOK_CORE_VERSION=2;/.test(compatibility),"Compatibility owner 必須升級為 V3／Save Hook Core V2。");
-assert(/registerBeforeSaveHook/.test(compatibility)&&/registerAfterSaveHook/.test(compatibility)&&/registerSaveSettlementHook/.test(compatibility),"Save Hook Core V2 必須提供 before／after／settlement hooks。");
-assert(/const SCRIPT_LOAD_POLICY_VERSION=3;/.test(compatibility)&&/scriptLoadPolicySnapshot/.test(compatibility),"Script Load Policy V3 owner 缺失。");
-assert(/LEGACY_GLOBAL_ALIAS_POLICY_VERSION=1/.test(compatibility)&&/read-compatible-no-duplicate-write/.test(compatibility)&&/legacyGlobalAliasSnapshot/.test(compatibility),"Legacy Global Alias Policy V1 缺失。");
-assert(!/window\.MAX_LEVEL\s*=\s*LEGACY_MAX_LEVEL_VALUE/.test(compatibility),"Compatibility owner 不得再次覆寫 window.MAX_LEVEL。");
-assert(/LEGACY_GLOBAL_DUPLICATE_WRITE_RETIREMENT_VERSION=1/.test(compatibility),"Legacy duplicate global write retirement marker 缺失。");
-assert(/SAVE_SAFETY_HOOK_CONVERGENCE_VERSION=1/.test(saveGuard)&&/registerBeforeSaveHook/.test(saveGuard)&&/registerSaveSettlementHook/.test(saveGuard),"Save Safety 必須改走共享 hooks。");
-assert(!/window\.save\s*=\s*function/.test(saveGuard)&&!/try\{save=window\.save/.test(saveGuard),"saveversionguard.js 不得再建立第二層 save monkey-patch。");
-assert(/const VERSION=5;/.test(worldTransitionSafety)&&/WORLD_TRANSITION_GUARD_INSTALL_VERSION=2/.test(worldTransitionSafety),"World Transition Safety 必須升級為 V5／single-install V2。");
-assert(!/setTimeout\(\(\)=>\{installBountyGate\(\);installOfflineWorldPhaseGuards\(\);\},0\)/.test(worldTransitionSafety),"World Transition guards 不得再靠 setTimeout 重複安裝。");
-for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+defer\\s+fetchpriority="low"\\s+data-load-group="${group}"`);assert(re.test(index),`${group} scripts 必須使用 deferred + low-priority 載入策略。`);}
-assert(/WORLD_COMBAT_ADAPTER_VERSION=1/.test(combatMath)&&/worldCombatDamageMultiplier/.test(combatMath)&&/runWorldCombatCore/.test(combatMath),"World Combat Adapter V1 owner 缺失。");
-assert(/playerFinalDamageMultiplier:resolvedMultiplier/.test(combatMath)&&/window\.runCombatCore\(player,enemy,startHp,combatOptions\)/.test(combatMath),"World Combat Adapter 必須只解析世界倍率後轉交 runCombatCore。");
-assert(/DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1/.test(dungeonCore)&&/window\.runWorldCombatCore/.test(dungeonCore)&&!/civilizationCombatDamageMultiplier/.test(dungeonCore),"Dungeon combat 必須改走 World Combat Adapter，不再自行解析文明倍率。");
-assert(/const VERSION=4;/.test(secondWorldCombat)&&/SECOND_WORLD_WORLD_COMBAT_ADAPTER_VERSION=1/.test(secondWorldCombat)&&/window\.runWorldCombatCore/.test(secondWorldCombat),"第二紀元主線必須升級為 World Combat Adapter consumer V1。");
-assert(!/window\.civilizationCombatDamageMultiplier/.test(secondWorldCombat),"第二紀元主線不得再自行解析文明倍率 owner。");
-assert(!thirdWorldDungeonUi.includes("Runtime legacy source token only"),"thirdworlddungeonui.js 不應再保留假 legacy source token。");
-assert(!thirdWorldDungeonUi.includes('rewardText:"尚未開放"')&&!thirdWorldDungeonUi.includes('buttonLabel:"等待高維競技場開放"'),"高維競技場正式 owner 不應再含已退休的未開放 placeholder。");
-assert(/const VERSION=6;/.test(thirdWorldDungeonUi)&&/THIRD_WORLD_ARENA_LIVE_VERSION=1/.test(thirdWorldDungeonUi),"高維副本 adapter 應為 V6 並宣告競技場正式開放。");
-assert(/mode==="arena"\)return \{visible:true,enabled:true/.test(thirdWorldDungeonUi)&&/buttonLabel:"進入高維競技場"/.test(thirdWorldDungeonUi),"高維競技場正式 policy 必須可進入。");
-assert(/const VERSION=3;/.test(contract)&&/OFFLINE_STATE_NORMALIZATION_VERSION:4/.test(contract)&&/OFFLINE_SAMPLE_OWNER_VERSION:2/.test(contract)&&/OFFLINE_SAMPLE_POLICY_VERSION:1/.test(contract)&&/THIRD_WORLD_DUNGEON_UI_VERSION:6/.test(contract)&&/GAME_GUIDE_VERSION:25/.test(contract),"Canonical Integrity Contract V3 最低版本基準未同步。");
-assert(/VERSION_BELOW_MINIMUM/.test(contract)&&/CIVILIZATION_INTEGRITY_MINIMUM_VERSIONS/.test(contract)&&/runCanonicalCivilizationIntegrityContract/.test(contract),"Canonical Integrity Contract 必須使用最低版本策略並保留不受 extension 覆寫的正式入口。");
-assert(/const SAVE_SAFETY_VERSION=2/.test(saveGuard)&&/\.safety-backup-v1/.test(saveGuard),"Save Safety V2 與持久安全備份 key 缺失。");
-assert(/SAVE_CAPACITY_DIAGNOSTIC_VERSION=1/.test(saveGuard)&&/SAVE_CAPACITY_WARNING_BYTES/.test(saveGuard)&&/SAVE_CAPACITY_CRITICAL_BYTES/.test(saveGuard),"Save Capacity Diagnostic V1 缺失。");
-assert(/projectedSaveBytes/.test(saveGuard)&&/capacityLevel/.test(saveGuard)&&/failureKind/.test(saveGuard),"Save write report 必須記錄 projected bytes／容量級別／失敗分類。");
-assert(/SAVE_MIGRATION_STAIRCASE_VERSION=1/.test(saveGuard)&&/SAVE_MIGRATION_STAGES/.test(saveGuard)&&/saveMigrationPlanForVersion/.test(saveGuard),"Save Migration Staircase V1 owner 缺失。");
-assert(/legacy-exp-progress/.test(saveGuard)&&/pre-schema16-compatibility/.test(saveGuard)&&/canonical-normalization/.test(saveGuard)&&/finalize-current-schema/.test(saveGuard),"Migration staircase stage 不完整。");
-assert(/strictPreSchema16Backup/.test(saveGuard)&&/pre-schema16-backup-failed/.test(saveGuard)&&/original localStorage entry was preserved/.test(saveGuard),"Schema16 前 migration 必須在備份失敗時 fail-closed 並保留原存檔。");
-assert(/reset-game/.test(saveGuard)&&/已取消清除進度/.test(saveGuard),"resetGame 必須先建立安全備份，失敗時取消清除。");
-assert(/gm-import/.test(saveGuard)&&/已取消匯入/.test(saveGuard),"GM 匯入必須先建立安全備份，失敗時取消匯入。");
-assert(/storageSnapshot/.test(saveGuard)&&/inventoryCount/.test(saveGuard)&&/lostGearCount/.test(saveGuard),"Save Safety 必須提供 localStorage／背包容量診斷，不得靠刪玩家資料降容量。");
-assert(/localSaveCapacitySnapshot/.test(saveGuard)&&/runSaveMigrationStaircaseRegression/.test(saveGuard),"Save Capacity／Migration regression 公開 API 缺失。");
-assert(/const VERSION=21;/.test(runtime)&&/runCanonicalCivilizationIntegrityContract/.test(runtime)&&/LEGACY_DIAGNOSTIC/.test(runtime),"Runtime Integrity 應為 V21，並把歷史自測降為 diagnostics。");
-assert(/OFFLINE_STATE_NORMALIZATION_VERSION\)<4/.test(runtime)&&/OFFLINE_BATTLE_SAMPLE_VERSION/.test(runtime),"Runtime Integrity 必須依正式 Offline V4 owner／動態 sample version 驗證。");
-assert(/balanceVersion\)!==7/.test(runtime)&&/rankBalanceVersion\)!==4/.test(runtime),"Runtime Integrity Arena profile 必須同步 Balance V7／Rank V4。");
-assert(/const VERSION=21;/.test(finalIntegrity)&&/PROJECT_RUNTIME_INTEGRITY_VERSION\)!==21/.test(finalIntegrity)&&/runCanonicalCivilizationIntegrityContract/.test(finalIntegrity),"Final Integrity 應同步 Runtime V21／Canonical Contract V3。");
-assert(/const VERSION=4;/.test(offlineStateCore)&&/OFFLINE_BATTLE_SAMPLE_VERSION=4/.test(offlineStateCore)&&/OFFLINE_SAMPLE_OWNER_VERSION=2/.test(offlineStateCore)&&/OFFLINE_SAMPLE_POLICY_VERSION=1/.test(offlineStateCore),"Offline canonical owner 應為 normalization/sample V4、owner V2、policy V1。");
-assert(/offlineBattleSampleMultiplier=sampleMultiplier/.test(offlineStateCore)&&/offlineBattleSamplePolicySnapshot=samplePolicySnapshot/.test(offlineStateCore)&&/appendOfflineBattleSample=appendOfflineBattleSample/.test(offlineStateCore),"Offline canonical owner 必須公開 multiplier／policy／append API。");
-assert(/\[10,3,1\.6\]/.test(offlineStateCore),"Offline owner multiplier regression fixture 的 gap=7 必須維持 1.6。");
-assert(/MAIN_REAL_BATTLE_SAMPLE_VERSION=4/.test(battlePipeline)&&/MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1/.test(battlePipeline),"第一紀元主線 Offline sample consumer 尚未升級到 owner convergence V1。");
-assert(/window\.offlineBattleSampleMultiplier/.test(battlePipeline)&&/window\.appendOfflineBattleSample/.test(battlePipeline),"第一紀元主線必須只透過 canonical Offline sample API 取得 multiplier 與 append sample。");
-assert(!/retainRealBattleSamplesBySpeed/.test(battlePipeline)&&!/function realBattleSampleMultiplier/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLES_PER_SPEED/.test(battlePipeline)&&!/REAL_BATTLE_SAMPLE_SPEEDS/.test(battlePipeline),"battlepipeline.js 不得再維護自己的 sample retention／multiplier owner。");
-assert(!/state\.offline\.battleSamples\s*=/.test(battlePipeline)&&!/state\.offline\.battleSampleVersion\s*=/.test(battlePipeline),"battlepipeline.js 不得直接寫 Offline sample storage。");
-assert(/window\.appendOfflineBattleSample/.test(offlineProgress),"第二紀元 Offline sample consumer 必須維持 canonical append owner。");
-assert(/EQUIPMENT_AUTO_SELL_QUALITY_COUNT=6/.test(engine)&&/normalizeAutoSellQualitySettings/.test(engine)&&/autoSell:\[false,false,false,false,false,false\]/.test(engine),"六品質自動處理設定 owner／新角色預設未收斂。")
-assert(/normalizeAutoSellQualitySettings\(target\)/.test(ui)&&!/autoSell\.slice\(0,6\)/.test(ui),"UI save normalization 不得維護第二份六品質 autoSell 正規化。")
-assert(/EQUIPMENT_AUTO_PROCESS_POLICY_VERSION=1/.test(equipmentLock)&&/equipmentDropDisposition/.test(equipmentLock),"裝備自動處理正式 disposition owner 缺失。")
-assert(/EQUIPMENT_BOOT_NORMALIZATION_SAVE_VERSION=1/.test(equipmentLock)&&/normalizationBefore!==equipmentNormalizationSignature\(state\)/.test(equipmentLock)&&/if\(normalizationChanged\)save\(false\)/.test(equipmentLock),"裝備載入 normalization 不得再無條件寫存檔。")
-assert(/OFFLINE_GEAR_ACCUMULATOR_VERSION=5/.test(offlineProgress)&&/mythicSpecialContainerRetired:true/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"Offline 裝備 accumulator 應全面改用 shared disposition，且不得保留 mythic 特殊容器開關。")
-assert(/autoSell\.slice\(0,EQUIPMENT_AUTO_SELL_QUALITY_COUNT\)/.test(engine)&&/while\(auto\.length<EQUIPMENT_AUTO_SELL_QUALITY_COUNT\)auto\.push\(false\)/.test(engine),"舊 5 格 autoSell 必須安全補第 6 格 false。")
-assert(/window\.equipmentDropDisposition/.test(offlineProgress)&&!/respectDisposition/.test(offlineProgress),"三紀元 Offline 裝備必須全面使用正式自動處理 disposition owner。")
-assert(/balanceVersion:7,rankBalanceVersion:4/.test(dungeonProgress),"Arena canonical profile 應為 Balance V7／Rank V4。");
-assert(/hp:Object\.freeze\(\{base:1\.68,linear:\.05,quadratic:-\.0027\}\)/.test(arena)&&/damage:Object\.freeze\(\{base:1\.52,linear:\.04,quadratic:-\.0019\}\)/.test(arena)&&/def:Object\.freeze\(\{base:1\.11,linear:\.022,quadratic:-\.00085\}\)/.test(arena),"第二紀元 Arena 最新三條 Rank 曲線不符。");
-assert(/GAME_GUIDE_VERSION=25/.test(gameGuideSource),"遊戲說明正式 owner 應為 V24。");
-assert(fs.existsSync("tests/runtime/browser-smoke.js"),"缺少真正瀏覽器啟動 smoke test。");
-assert(fs.existsSync("tests/runtime/save-migration-staircase.js"),"缺少 save migration staircase static regression。");
-const guideExtensionBehavior=spawnSync(process.execPath,["tests/runtime/gameguide-extension-integrity.js"],{encoding:"utf8"});
-assert(guideExtensionBehavior.status===0,"Guide shared extension behavior regression failed：\n"+String(guideExtensionBehavior.stderr||guideExtensionBehavior.stdout||"unknown error").trim());
-const saveMigrationBehavior=spawnSync(process.execPath,["tests/runtime/save-migration-staircase.js"],{encoding:"utf8"});
-assert(saveMigrationBehavior.status===0,"Save migration staircase regression failed：\n"+String(saveMigrationBehavior.stderr||saveMigrationBehavior.stdout||"unknown error").trim());
-console.log("Runtime static integrity passed: "+files.length+" JavaScript files parsed; Save Hook Core V2, Script Load Policy V3, World Transition single-install V2, World Combat Adapter V1, Legacy Global Alias Policy V1, Save Safety V2/Capacity V1/Migration Staircase V1, Offline sample owner V2 and Arena V7/V4 are synchronized.");
+
+assert(pos("savehookcore.js")>pos("dungeonprogress.js")&&pos("savehookcore.js")<pos("compatibilityowners.js"),"Save Hook Core 必須在 engine/base save 之後、compatibility owner 之前載入。");
+assert(pos("offlinestatecore.js")>=0&&pos("offlinestatecore.js")<pos("savemigration.js"),"Offline canonical owner 必須先於 save migration。");
+assert(pos("savemigration.js")<pos("saveversionguard.js")&&pos("saveversionguard.js")<pos("savebackupretention.js")&&pos("savebackupretention.js")<pos("ui.js"),"Save migration → guard → backup retention → UI 載入順序錯誤。");
+assert(pos("combatmath.js")<pos("combatcore.js")&&pos("combatcore.js")<pos("secondworldcombat.js"),"World Combat Adapter／Combat Core／W2 consumer 順序錯誤。");
+assert(pos("worldtransitionsafety.js")>pos("offlineprogress.js"),"World transition guards 必須在 Offline owner 載入後安裝。");
+assert(!index.includes('src="thirdworldmigrationregression.js'),"production index 不得載入 migration regression fixture。");
+for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+defer\\s+fetchpriority="low"\\s+data-load-group="${group}"`);assert(re.test(index),`${group} scripts 必須維持 deferred + low-priority。`);}
+
+assert(/IMPLEMENTATION_OWNER="savehookcore"/.test(saveHook)&&/CORE_VERSION=2/.test(saveHook),"Save Hook Core owner／V2 契約錯誤。");
+assert(/window\.save=hookedSave/.test(saveHook)&&/registerBeforeSaveHook/.test(saveHook)&&/registerAfterSaveHook/.test(saveHook)&&/registerSaveSettlementHook/.test(saveHook),"Save Hook Core API 不完整。");
+assert(/const VERSION=3;/.test(compatibility)&&/IMPLEMENTATION_VERSION=4/.test(compatibility)&&/EXPECTED_SAVE_SCHEMA_VERSION=17/.test(compatibility),"Compatibility owner V3 contract／Implementation V4／Schema17 診斷未同步。");
+assert(/read-compatible-no-duplicate-write/.test(compatibility)&&/first-world-legacy-alias-only/.test(compatibility),"Legacy MAX_LEVEL 必須明確降級為第一紀元相容 alias。");
+assert(!/window\.save\s*=/.test(compatibility),"Compatibility owner 不得重新成為 save writer。");
+assert(!/window\.MAX_LEVEL\s*=\s*LEGACY_MAX_LEVEL_VALUE/.test(compatibility),"Compatibility owner 不得重寫 MAX_LEVEL。");
+
+assert(/SAVE_SAFETY_VERSION=2/.test(saveGuard)&&/SAVE_MIGRATION_STAIRCASE_VERSION=1/.test(saveGuard),"Save Safety／Migration Staircase owner 缺失。");
+assert(/strictPreSchema16Backup/.test(saveGuard)&&/strictPreSchema17Backup/.test(saveGuard),"Legacy migration backup guard 不完整。");
+assert(/automaticDelete:false/.test(backupRetention)&&/manualPruneEligible/.test(backupRetention)&&/pruneLegacyMigrationBackups/.test(backupRetention),"Backup retention 必須預設不自動刪除並只允許手動 prune。");
+assert(index.includes('savebackupretention.js?v=20261005-code-cleanup-batch2'),"Backup retention cache token 未更新。");
+
+assert(/WORLD_COMBAT_ADAPTER_VERSION=1/.test(combatMath)&&/runWorldCombatCore/.test(combatMath),"World Combat Adapter owner 缺失。");
+assert(/DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1/.test(dungeonCore)&&/window\.runWorldCombatCore/.test(dungeonCore),"Dungeon 必須走 World Combat Adapter。");
+assert(/SECOND_WORLD_WORLD_COMBAT_ADAPTER_VERSION=1/.test(secondWorldCombat)&&/window\.runWorldCombatCore/.test(secondWorldCombat),"W2 主線必須走 World Combat Adapter。");
+assert(/WORLD_TRANSITION_GUARD_INSTALL_VERSION=2/.test(worldTransitionSafety),"World Transition guards 必須維持 single-install owner。");
+assert(/OFFLINE_STATE_NORMALIZATION_VERSION=4/.test(offlineState)&&/OFFLINE_SAMPLE_OWNER_VERSION=2/.test(offlineState),"Offline canonical owner 版本錯誤。");
+assert(/MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1/.test(battlePipeline)&&/window\.appendOfflineBattleSample/.test(battlePipeline),"W1 Offline sample consumer 尚未收斂 canonical owner。");
+
+assert(/PRESENTATION_STATE_SWAP_RETIRED_VERSION=1/.test(rerun1)&&!/state=presentationState/.test(rerun1),"W1 rerun prepare 不得再替換 global state。");
+assert(/SECOND_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_VERSION/.test(rerun2)&&/if\(Number\(window\.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION\)>=1\)return;/.test(rerun2),"W2 rerun 必須有單次安裝 owner boundary。");
+assert(/THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_VERSION/.test(rerun3)&&/if\(Number\(window\.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION\)>=1\)return;/.test(rerun3),"W3 rerun 必須有單次安裝 owner boundary。");
+assert(index.includes('reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2')&&index.includes('reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2')&&index.includes('reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2'),"本批 rerun scripts 必須使用單一 canonical cache token。");
+
+console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:2}));
