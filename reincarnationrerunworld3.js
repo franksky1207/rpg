@@ -3,6 +3,7 @@
  const VERSION=2;
  const UI_PRESENTATION_VERSION=2;
  const WRAPPER_BOUNDARY_VERSION=1;
+ const GLOBAL_API_CLEANUP_VERSION=1;
  const base=Object.freeze({
   challengeStatus:typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus:null,
   challengeAllowed:typeof window.thirdWorldChallengeAllowed==="function"?window.thirdWorldChallengeAllowed:null,
@@ -13,8 +14,11 @@
 
  function stateTarget(target){if(target&&typeof target==="object")return target;try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
- function phase(target){if(typeof window.currentWorldPhase==="function")return Number(window.currentWorldPhase(target))||1;if(target?.thirdWorld?.entered===true)return 3;if(target?.secondWorld?.entered===true)return 2;return 1;}
- function context(target=null){const holder=stateTarget(target),lifecycle=typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(holder):null,active=!!holder&&holder?.thirdWorld?.entered===true&&lifecycle?.reincarnationRun===true&&phase(holder)===3;return Object.freeze({version:VERSION,active,count:Math.max(0,whole(lifecycle?.count,0)),lifeId:Math.max(0,whole(lifecycle?.lifeId,0)),firstRun:lifecycle?.reincarnationRun!==true,reincarnationRun:lifecycle?.reincarnationRun===true,world:phase(holder),source:lifecycle?"reincarnation-context":"fail-closed"});}
+ function context(target=null){
+  const holder=stateTarget(target);
+  if(typeof window.worldRerunPolicy!=="function")return Object.freeze({version:VERSION,active:false,count:0,lifeId:0,firstRun:false,reincarnationRun:false,world:1,targetWorld:3,source:"fail-closed"});
+  return window.worldRerunPolicy(3,holder,{version:VERSION,source:"reincarnation-context"});
+ }
  function active(target=null){return context(target).active===true;}
  function rerunChallengeStatus(value,target=null){const holder=stateTarget(target),original=typeof base.challengeStatus==="function"?base.challengeStatus(value,holder):null;if(!original||!active(holder))return original;if(original.allowed===true||original.reason!=="five-point-front")return original;return Object.freeze({...original,allowed:true,challengeable:true,reason:"reincarnation-rerun",fivePointBypassed:true,originalReason:"five-point-front",originalBlockingBossIndexes:Array.isArray(original.blockingBossIndexes)?Object.freeze(Array.from(original.blockingBossIndexes)):Object.freeze([]),blockingBossIndexes:Object.freeze([]),rerun:context(holder)});}
  function rerunBossProgress(value,target=null){const holder=stateTarget(target),original=typeof base.bossProgress==="function"?base.bossProgress(value,holder):null;if(!original||!active(holder))return original;const challenge=rerunChallengeStatus(value,holder);return Object.freeze({...original,challengeAllowed:challenge?.allowed===true,challengeStatus:challenge});}
@@ -39,10 +43,10 @@
  window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
  window.THIRD_WORLD_REINCARNATION_RERUN_UI_PRESENTATION_VERSION=UI_PRESENTATION_VERSION;
  window.THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_VERSION;
- window.THIRD_WORLD_REINCARNATION_BASE_OWNERS=base;
+ window.THIRD_WORLD_REINCARNATION_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;
  window.thirdWorldReincarnationRerunContext=context;
  window.isThirdWorldReincarnationRerun=active;
- window.thirdWorldReincarnationRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,bossCount:Number(window.THIRD_WORLD_BOSS_COUNT||10),fivePointBypassed:ctx.active===true,uiPresentationVersion:UI_PRESENTATION_VERSION,wrapperBoundaryVersion:WRAPPER_BOUNDARY_VERSION};};
+ window.thirdWorldReincarnationRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,bossCount:Number(window.THIRD_WORLD_BOSS_COUNT||10),fivePointBypassed:ctx.active===true,uiPresentationVersion:UI_PRESENTATION_VERSION,wrapperBoundaryVersion:WRAPPER_BOUNDARY_VERSION,sharedContextOwnerVersion:Number(window.REINCARNATION_WORLD_RERUN_CONTEXT_OWNER_VERSION)||0,globalApiCleanupVersion:GLOBAL_API_CLEANUP_VERSION};};
  window.thirdWorldChallengeStatus=rerunChallengeStatus;
  window.thirdWorldChallengeAllowed=function(value,target=null){const status=rerunChallengeStatus(value,target);return status?.allowed===true;};
  window.canChallengeThirdWorldBoss=function(value,target=null){const status=rerunChallengeStatus(value,target);return status?.allowed===true;};
