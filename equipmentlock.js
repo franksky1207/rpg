@@ -1,4 +1,5 @@
 (function(){
+ function equipmentWorld(item){return typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(item):(Number(item?.world)===3?3:Number(item?.world)===2?2:1);}
  function normalizeLockFlag(item){
   if(item&&typeof item==="object")item.locked=item.locked===true;
   return item;
@@ -12,7 +13,7 @@
   const universe=secondWorldActive();
   (state?.lostGear||[]).forEach(entry=>{
    const item=entry?.item;if(!item)return;
-   const world=Number(item.world)===2?2:1;
+   const world=equipmentWorld(item);
    const rawCost=Number(entry.cost);
    if(world===2){
     entry.currency="darkMatter";
@@ -56,7 +57,7 @@
  function saleQuote(item,options={}){
   if(typeof window.equipmentSaleQuote==="function")return window.equipmentSaleQuote(item,options);
   if(secondWorldActive())return saleOwnerMissingResult(item).quote;
-  const gold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
+  const gold=typeof specializationSellValue==="function"?window.specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
   return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0};
  }
  function saleText(value){
@@ -169,7 +170,7 @@
    }
   });
   restoreAfterEquipmentChange();selectedItem=null;
-  const sale=typeof window.mergeEquipmentSaleQuotes==="function"?window.mergeEquipmentSaleQuotes(saleQuotes):{currency:"gold",amount:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0),gold:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0)};
+  const sale=typeof window.mergeEquipmentSaleQuotes==="function"?window.mergeEquipmentSaleQuotes(saleQuotes):{currency:"gold",amount:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0),gold:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0,0))};
   return {changed,soldCount,sale,soldGold:Number(sale.gold)||0,enhancementStones};
  };
  window.equipmentSellSelected=function(){
@@ -293,7 +294,8 @@
  window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION=4;
  window.EQUIPMENT_SALE_FAIL_CLOSED_VERSION=2;
  window.THIRD_WORLD_EQUIPMENT_PROCESSING_UI_VERSION=1;
- window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=1;
+ window.EQUIPMENT_LOST_GEAR_ECONOMY_NORMALIZATION_VERSION=2;
+ window.EQUIPMENT_WORLD_SEMANTICS_VERSION=1;
  window.EQUIPMENT_MYTHIC_AUTO_SELL_VERSION=2;
  window.EQUIPMENT_MYTHIC_MANUAL_CONFIRM_RETIRED_VERSION=1;
  window.EQUIPMENT_BOOT_NORMALIZATION_SAVE_VERSION=1;
