@@ -1,13 +1,17 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
  const AUTO_START_DELAY_MS=120;
  const groupPromises=new Map();
  const groupReports=new Map();
 
- function declarations(group){
-  return Array.from(document.querySelectorAll(`script[type="application/x-civilization-deferred"][data-load-group="${group}"][data-src]`));
+ function declaredNodes(){return Array.from(document.querySelectorAll('script[type="application/x-civilization-deferred"][data-load-group][data-src]'));}
+ function effectiveGroup(node){
+  const declared=String(node?.dataset?.loadGroup||"").trim().toLowerCase(),src=String(node?.dataset?.src||"").split("?")[0].toLowerCase();
+  if(src==="storyruntimeintegrity.js")return "integrity";
+  return declared;
  }
+ function declarations(group){return declaredNodes().filter(node=>effectiveGroup(node)===group);}
  function report(group,status,extra={}){
   const row=Object.freeze({version:VERSION,group,status,...extra});
   groupReports.set(group,row);
@@ -23,7 +27,7 @@
    });
    script.src=node.dataset.src;
    script.async=false;
-   script.dataset.loadGroup=node.dataset.loadGroup||"";
+   script.dataset.loadGroup=effectiveGroup(node);
    script.onload=()=>{node.dataset.loaded="1";resolve(script.src);};
    script.onerror=()=>reject(new Error(`script-group-load-failed:${node.dataset.src||"unknown"}`));
    node.after(script);
@@ -52,7 +56,7 @@
  function snapshot(){
   const groups={};
   GROUP_ORDER.forEach(group=>{groups[group]=groupReports.get(group)||Object.freeze({version:VERSION,group,status:"pending",count:declarations(group).length});});
-  return Object.freeze({version:VERSION,order:Array.from(GROUP_ORDER),groups:Object.freeze(groups)});
+  return Object.freeze({version:VERSION,order:Array.from(GROUP_ORDER),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});
  }
  async function autoLoad(){
   for(const group of GROUP_ORDER){
