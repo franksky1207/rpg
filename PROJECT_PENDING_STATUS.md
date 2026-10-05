@@ -1,174 +1,192 @@
 # 《文明戰線》目前待辦狀態
 
-更新日期：2026-10-04  
+更新日期：2026-10-05（UTC+8）  
 分支：`main`
 
-> `main` 是唯一真實來源。本檔只保留 current main 的正式現況、仍有效相容策略，以及真正尚未完成工程。
+> **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
+> 本檔只保留 current main 的正式現況、仍有效相容策略，以及真正尚未完成工程。若本檔、舊對話、舊設計文件或其他摘要與 current main 衝突，一律以 current main 為準。
 
-## 目前正式狀態
+---
 
-- `SAVE_SCHEMA_VERSION = 17`；Batch7 沒有新增正式 persistent root，因此不升 Schema18。
-- 銀河紀元、宇宙紀元、高維紀元三紀元 runtime 已完成；高維紀元為 Lv.1000～2000。
-- 轉生／突破核心、異宇宙 Batch3～4、AU 架構優化、Batch5 重征服、Batch6 與 Batch6 程式碼優化第1～5批均已完成。
-- **Batch7：GM／測試工具正式收尾 7-1～7-5 已完成。**
-- 下一個獨立大型工程：**第一紀元完整 Target Context 重構**；目前尚未施工，不能與 Batch7 混在一起。
+# 目前正式狀態
 
-## 第6大批正式規則（仍有效）
+目前主要既定工程均已完成：
 
-### 1. 轉生越級 Online／Offline 收益
+```text
+三大紀元正式 runtime                          ✅ 完成並維護／實測中
+裝備自動處理政策                              ✅ 完成
+轉生核心資料與首輪隔離                        ✅ 完成
+突破系統＋正式轉生                            ✅ 完成
+異宇宙 Batch3～4                              ✅ 完成
+AU 架構優化第1～3批                           ✅ 完成
+Batch5：W1／W2／W3 轉生後重征服               ✅ 完成
+Batch5 後續架構優化／主線向下征服              ✅ 完成
+Batch6：越級收益／批次成長／副本／封箱         ✅ 完成
+Batch6 程式碼優化第1～5批                     ✅ 完成
+Batch7：GM／測試工具正式收尾 7-1～7-5全部完成   ✅ 完成
+Batch7 封箱後程式碼優化第1～4批                ✅ 完成
+第一紀元完整 Target Context 重構 Batch0～6      ✅ 完成
+第一紀元 Target Context 重構後優化第1～4批      ✅ 完成
+目前已排定工程                                 ✅ 全部完成
+```
 
-- 共用 `reincarnationoverlevelrewards.js`。
-- 倍率：`M = 1 + 0.03 × (enemyLevel - playerLevel)`，只在 `reincarnation.count > 0` 且敵人高於玩家時啟用；整數收益採 `ceil(base × M)`。
-- 首輪 `count=0` 永遠為 1×。
-- W1 Online：EXP、金幣、戰鬥來源基礎／進階強化石可吃倍率；出售收益排除。
-- W2 Online：EXP、暗物質、暗能量可吃倍率；出售收益排除。
-- W1／W2 Offline 共用相同 multiplier owner；沒有可靠等級 provenance 的舊 sample／pending 採保守 1×。
-- W3 Offline 完全不接越級倍率。
+**目前沒有已經定案、等待施工的下一個功能批次。**
 
-### 2. 共用批次成長
+後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立新的施工範圍，不得把已完成的舊批次重新當成待辦。
 
-- 唯一 owner：`playerbatchupgrades.js`。
-- 專精「一鍵平均提升」只在第一紀元。
-- 強化「平均最大強化」在第一、第二紀元。
-- 共用正式成本 owner；第三紀元不提供玩家強化操作。
+---
 
-### 3. 四大副本永久入口
+# Current main 重要正式基準
 
-- 第一次轉生後，懸賞戰、競技場、鏡像戰、虛空幻境入口永久可用。
-- 首輪高維紀元仍維持「懸賞戰關閉」。
-- Daily 不因轉生重置；Mirror／Void 永久歷史保留；W1／W2 Arena current-life 進度每次轉生重置。
-- Arena 晉階驗收仍為 500 場／485 勝（97%）。
+## 三紀元
 
-### 4. W1／W2 轉生主線正式向下征服
+`currentWorldPhase()` 正式 mapping：
 
-- W1 rerun 高階 Boss 勝利會正式回填此前主線；例如 Lv.500 Boss 代表 Lv.500以前的普通／菁英進度、Boss 前置、`bossKilled`、`unlockedMap` 一致完成。
-- W2 rerun 高階 Boss 勝利同樣正式回填；Lv.1000 Boss 代表 Boss0～99 正式完成。
-- 首輪 `count=0` 永遠拒絕這項 rerun 回填。
-- 正式 owner：`reincarnationrerunprogress.js`。
+```text
+1 = 銀河紀元
+2 = 宇宙紀元
+3 = 高維紀元
+```
 
-## 2026-10-04 第6大批程式碼優化第1批：Schema17 舊轉生資料一致化
+正式等級：
 
-- `normalizeExistingReincarnationRerunProgress()` 只處理 `count>0`，依既有最高正式 Boss 補齊早期 Schema17 rerun 主線缺口。
-- normalization 冪等，首輪隔離，不升 Save Schema。
+```text
+銀河紀元：Lv.1～500
+宇宙紀元：Lv.501～1000
+高維紀元：Lv.1000～2000
+```
 
-## 2026-10-04 第6大批程式碼優化第2批：四大副本永久入口架構整理
+正式 persistent world roots 維持 `secondWorld` 與 `thirdWorld`。
 
-- 共用 `dungeonModeAccessSnapshot()`／`isDungeonModeEntryUnlocked()`。
-- 已移除暫時偽裝 `state.level` 的方案；正式 `state.level` 不再被偽裝。
-- UI 與正式入口共用同一 eligibility owner。
+## Save／Migration
 
-## 2026-10-04 第6大批程式碼優化第3批：一鍵專精／強化交易安全
+```text
+SAVE_SCHEMA_VERSION = 17
+SAVE_LOAD_PIPELINE_VERSION = 3
+SAVE_NORMALIZATION_PIPELINE_VERSION = 3
+SAVE_MIN_SUPPORTED_VERSION = 1
+SAVE_LEGACY_SUPPORT_MODE = "all-known"
+```
 
-- 共用 `runSettlementTransaction()`。
-- 成功單一 save；`save(false)` 與 save exception rollback。
-- rollback 保留 root identity 與 nested reference identity。
-- `PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1`。
+目前完成的 Batch5／6／7、Batch7 後優化與 W1 Target Context 重構都沒有新增必要 persistent root，因此仍不升 Schema18。
 
-## 2026-10-04 第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化
+Future schema 必須 fail closed；正式大型 mutation 必須共用 Save Safety 與 transaction owner。
 
-- `OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1`。
-- 只有可驗證等級來源才標記 `overlevelContextRecorded=true`。
-- 舊 V4 pending 沒有明確 marker 時固定保守 1×。
+## 轉生／突破
 
-## 2026-10-04 第6大批程式碼優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression
+- 首輪 `reincarnation.count = 0`，突破固定 Lv.0。
+- 只有 `count > 0` 啟用 rerun。
+- 轉生輪跨 Lv.100／200／…／1000，各取得1突破；每輪最多10。
+- Lv.1000以上不再增加本輪突破。
+- 已領不重複、降級不扣。
+- 正式轉生資格：Lv.2000＋本輪10名高維存在全滅＋界弦核心 Lv.10。
+- Story completion 不列正式轉生資格。
+- 正式轉生需 verified backup，再走 shared settlement transaction。
 
-- W1 `fightOnce` 回到唯一 settlement/save owner。
-- `MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION = 1`。
-- `REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION = 2`。
-- `REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION = 1`。
-- Regression 鎖定 Arena 484 / 500 不通過、485 / 500 通過，以及 W1 正式 save 只呼叫一次。
+## 異宇宙
 
-## 第6大批程式碼優化封箱
+- 異宇宙不是第四紀元。
+- 200宇宙 × 5層域 = 1000層域。
+- 第一次 W3 10名高維存在全滅後永久解鎖。
+- AU replay／review 已完整移除，不得自行復活。
+- 玩家／GM正式進度用語固定為「層域」。
 
-- 第6大批 6-1～6-5 均已完成。
-- 第6大批程式碼優化第1～5批已完成；優化第1～5批全部完成。
+---
 
-# Batch7：GM／測試工具正式收尾（已完成）
+# 第一紀元 Target Context：已完成，不是待辦
 
-## 7-1 GM 正式突破管理
+第一紀元完整 Target Context 重構已完成 Batch0～6，後續優化第1～4批亦已完成。
 
-- 只有 `reincarnation.count > 0` 才顯示／可用；首輪完全隔離。
-- GM 只設定「總突破次數」。
-- 系統自動 canonical rebuild 轉生次數與本輪 milestones；例如 25 次突破 = 第3次轉生、本輪5次突破。
-- GM 可上下調；正式能力、戰鬥、存檔與相關 UI 一致更新。
-- 正式 mutation 走 transaction，不以 GM UI 維護第二套狀態。
-
-## 7-2 角色能力測試同步突破能力
-
-- 突破不是獨立戰鬥模式，而是測試角色能力的一部分。
-- 「同步正式角色到測試設定」會同步正式突破等級。
-- 首輪同步固定突破 Lv.0；轉生後才有突破能力。
-- sandbox 不寫正式 save。
-
-## 7-3 GM 異宇宙正式進度管理
-
-- GM 只需要設定「最深已完成層域」，不再手動選已解鎖／未解鎖。
-- 正數進度自動維持／建立 AU 解鎖；0 層域不會任意反轉既有解鎖狀態。
-- 正式操作走 shared transaction；調整 frontier 時清理舊 activeAttempt 與 current-life failures。
-- 玩家／GM可見進度用語固定「層域」。
-
-## 7-4 異宇宙戰力基準＋21 雙特性 diagnostics
-
-- 異宇宙已整合進既有「戰力基準測試」，成為第8種模式；不是另外增加第9個 GM 測試大區塊。
-- 異宇宙各王以王編號 1～1000 直接輸入，支援上一隻／下一隻；同一頁 session 保留目前王編號，重新整理／新開頁面回第1隻。
-- 測試角色共用既有角色能力測試 snapshot。
-- 7種 traits 兩兩組合 `C(7,2)=21` 全部由內部 diagnostics 驗證；不把 trait diagnostics 塞到 GM UI。
-- AU benchmark 共用正式敵人、trait、combat/stat owner，不建立第二套戰鬥公式。
-
-## 7-5 最終多生命週期／GM formal-sandbox／摘要封箱
-
-- 新增 `tests/runtime/reincarnation-batch7-closure.js` 並納入 Runtime Integrity。
-- 首輪不發突破；Life1 跨100～1000正式取得10次，重複／Lv1000以上不再發；Life2 milestones 重新歸零但永久突破保留。
-- AU deepest 永久保留；新生命 activeAttempt 與 `lifeFailures` 重置到新 lifeId。
-- Offline samples／pending settlement 在轉生時清空並重設 settlement 時點。
-- W1/W2 Arena current-life reset；Mirror/Void 永久歷史保留。
-- 第一次轉生後四大副本永久入口、rerun overlevel 等既有規則在多生命週期下維持有效。
-- GM AU formal snapshot 為 read-only；GM 角色測試與 AU benchmark 不污染 formal state、不呼叫 formal save。
-- 戰力基準正式為 **8模式**；清空後顯示 `0 / 8`，跑 AU 後 `1 / 8`。
-- 角色測試能力變更後舊 benchmark 結果立即失效，摘要回 `0 / 8`；修正原先未測卻殘留 `1 / 7` 的問題。
-- AU 王編號 session 行為：同頁切換保留；reload／new page 回第1隻。
-
-# Batch7 硬規則（後續不得倒退）
-
-- GM 正式 level 若未來會被其他控制器調整，仍必須共用突破 milestone owner：首輪不發；轉生輪只對實際跨過 100／200／…／1000 發；降級不扣、已領不重複、Lv.1000以上不再增加本輪突破。
-- formal management 與 test sandbox 永遠分離。
-- 突破正式用語是「突破等級」。
-- AU 正式進度用語是「層域」。
-- 戰力基準模式數量 current = 8。
-
-# 真正下一個尚未完成工程：第一紀元完整 Target Context 重構
-
-這是 Batch7 之後的**獨立大型工程**，目前尚未施工。
-
-目標不是改玩法，而是讓同一次 W1 battle 自 UI 到 settlement 使用同一份明確 target context：
+現在 W1 battle authority 已由 Target Context 正式接管：
 
 ```text
 UI → prepare → encounter → combat → settlement → progression
 ```
 
-核心 target identity：
+核心 identity：
 
 ```text
-mapIndex / enemyIndex
+world = 1
+mapIndex
+敌人索引 enemyIndex
+lifeId
+reincarnation count
+mode = formal / rerun / review
 ```
 
-範圍需覆蓋：普通、菁英、Boss、單場、連續、Minimal Mode、Fast Catch-up、特殊遭遇、Offline sample、回顧戰隔離、settlement、progression。
+正式規則：
 
-必須保留現有玩法語意：首輪 sequential progression、地圖/Boss解鎖、回顧戰零正式收益、轉生向下征服、越級收益、Offline、特殊遭遇與 Fast Catch-up。
+- `selectedMap / selectedEnemy` 只作 UI／navigation selection，不再作戰鬥執行期 target authority。
+- Target Context post-prepare execution 必須 fail closed。
+- lifecycle owner 缺失、context stale、life/count 不一致、identity 不一致時不得 fallback 回 UI selection。
+- formal／rerun／review policy 已集中於 Target Context owner。
+- W1 單場、連戰、Fast Catch-up、offline sample、rerun、review、settlement／progression 已有對應 regression coverage。
+- 不建立第二套 progression／combat／offline／target owner。
 
-開工前必須 fresh-read W1 battle／encounter／settlement／offline／progression consumer；不可新增第二套 progression/combat/offline/target owner。
+因此，任何「第一紀元 Target Context 尚未施工」、「Target Context 是下一個大型工程」的舊敘述均已失效。
 
-## 已取消／不得自動復活
+---
+
+# 仍有效的既有硬規則
+
+## 第6大批
+
+- 轉生越級收益共用 `reincarnationoverlevelrewards.js`。
+- 倍率 `M = 1 + 0.03 × (enemyLevel - playerLevel)`，僅在 `reincarnation.count > 0` 且敵人高於玩家時啟用。
+- 首輪永遠 1×。
+- W1／W2 Online 與 Offline 依正式 provenance 規則處理；舊 sample 無可靠 provenance 時保守 1×。
+- W3 Offline 不接越級倍率。
+- 共用批次成長 owner：`playerbatchupgrades.js`。
+- 第一次轉生後四大副本永久入口可用；首輪高維紀元仍維持懸賞戰關閉。
+- W1／W2 rerun 高階 Boss 正式向下回填前段主線；首輪禁止此 rerun 回填。
+
+## Batch7
+
+- GM formal management 與 GM test sandbox 永遠分離。
+- 突破正式用語固定「突破等級」。
+- AU 正式進度用語固定「層域」。
+- 戰力基準 current = 8 模式。
+- GM 正式 level 若未來新增／修改控制器，突破 milestone 必須共用正式 owner。
+
+## 高維紀元
+
+- W3 Story／Final 已完成，不自行重寫或擴增既有11篇正式主線。
+- 玩家正式用語：「10 名高維存在」。
+- W3 永久 HP settlement 契約不得改變：
+
+```text
+formalStartHp → combatEndHp → permanent delta
+```
+
+---
+
+# 已取消／不得自動復活
 
 - AU 作為 Lv.2001+ 或第四紀元。
 - VIP21+ 新增特殊特權。
 - AU replay／review。
 - 高階 Boss 只記自身、不正式回填前段主線的舊規則。
 - 任何 GM sandbox 寫正式 save 的做法。
+- 以 `selectedMap / selectedEnemy` 重新作為 W1 battle execution authority。
+- 已完成的 Batch5／6／7 或 Target Context 工程重新列成待辦。
 
-## 操作規範
+---
 
-- `main` 是唯一真實來源；修改前先重新讀相關正式 owner／consumer。
-- 使用者說「先討論／先檢查／先不要修改」時不得修改；說「修改／做／執行／第N批」可直接修改 `main`。
-- JS／CSS production 變更必須同步更新 `index.html` cache-bust。
-- 每批完成後 fresh-read current main、compare base→head，自我檢查 UI、邏輯、正式 state、舊檔、transaction、regression；沒有 exact HEAD 的 Actions success 不可宣稱完成。
+# 後續操作規範
+
+1. `main` 是唯一真實來源；每次修改前 fresh-read current main 的相關正式 owner／consumer。
+2. 使用者說「先討論／先檢查／先不要修改」時不得修改 GitHub；說「修改／做／執行／第N批」時可直接改 `main`。
+3. JS／CSS production 修改必須同步更新 `index.html` cache-bust；Markdown-only 不需要。
+4. 每批修改後 fresh-read current main、compare base→head，自我檢查 UI／邏輯／正式 state／舊檔相容／transaction／runtime／Integrity。
+5. Integrity／Actions 沒有 exact HEAD 的 success 不可宣稱綠燈。
+6. 優先延伸正式 registry／policy／transaction／normalizer／combat／offline／progression／target owner，不建立第二套相同責任的 wrapper 或 fallback。
+7. `offlineprogress.js` 是正式 compatibility/offline consumer；不得建立第二套 Offline pipeline。
+8. 正式轉生與其他大型 state mutation 必須走 shared transaction／backup owner。
+
+---
+
+# 真正待辦
+
+**目前沒有已定案、等待施工的功能批次。**
+
+下一個工作應由使用者的新需求開始，重新依 current main 分析、定義範圍與分批施工。
