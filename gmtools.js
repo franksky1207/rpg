@@ -19,15 +19,16 @@ function gmRewardSummaryHtml(summary,extraRows=""){
 }
 
 function gmLevel(){
+ if(typeof window.gmCommitFormalCharacterLevelMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
  const raw=prompt(`指定等級（1～${cap}）`,state.level);
- if(raw===null)return;
- const n=Math.floor(Number(raw));
- if(!Number.isFinite(n)||n<1||n>cap){alert(`請輸入 1～${cap} 的整數。`);return;}
- state.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(n,state):clampGameLevel(n);
- state.exp=0;
- state.hp=playerCombatStats().hp;
- save();render();
+ if(raw===null)return false;
+ const n=Number(raw);
+ if(!Number.isFinite(n)||!Number.isInteger(n)||n<1||n>cap){alert(`請輸入 1～${cap} 的整數。`);return false;}
+ const tx=window.gmCommitFormalCharacterLevelMutation(n);
+ if(!tx?.ok){alert(`等級更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+ if(typeof render==="function")render();
+ return true;
 }
 
 function gmFormalResourceCommit(kind,label,current){
@@ -46,41 +47,19 @@ function gmDarkMatter(){return gmFormalResourceCommit("dark-matter","暗物質",
 function gmDarkEnergy(){return gmFormalResourceCommit("dark-energy","暗能量",state.secondWorld?.darkEnergy||0);}
 
 function gmSetWorldProgress(){
+ if(typeof window.gmFirstWorldProgressPlan!=="function"||typeof window.gmCommitFormalFirstWorldProgressMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
  const raw=prompt(`指定目前攻略到哪個等級關卡（1～${MAX_LEVEL}）`,state.level);
- if(raw===null)return;
- const target=Math.floor(Number(raw));
- if(!Number.isFinite(target)||target<1||target>MAX_LEVEL){alert(`請輸入 1～${MAX_LEVEL} 的整數。`);return}
-
- const count=MAPS.length;
- const currentMap=Math.max(0,Math.min(count-1,Math.floor((target-1)/5)));
- const currentEnemy=(target-1)%5;
- const mapProgress=Array.from({length:count},()=>[0,0,0,0]);
- const bossProgress=Array(count).fill(0);
- const bossLocked=Array(count).fill(false);
- const bossKilled=Array(count).fill(false);
-
- for(let i=0;i<currentMap;i++){
-  mapProgress[i]=[10,10,10,10];
-  bossKilled[i]=true;
- }
-
- const p=mapProgress[currentMap];
- if(currentEnemy>=1)p[0]=10;
- if(currentEnemy>=2)p[1]=10;
- if(currentEnemy>=3)p[2]=10;
- if(currentEnemy>=4)p[3]=10;
-
- state.unlockedMap=currentMap;
- state.mapProgress=mapProgress;
- state.bossProgress=bossProgress;
- state.bossLocked=bossLocked;
- state.bossKilled=bossKilled;
- selectedMap=currentMap;
- selectedEnemy=currentEnemy;
+ if(raw===null)return false;
+ const target=Number(raw),plan=Number.isInteger(target)?window.gmFirstWorldProgressPlan(target):{ok:false};
+ if(!plan?.ok){alert(`請輸入 1～${MAX_LEVEL} 的整數。`);return false;}
+ const tx=window.gmCommitFormalFirstWorldProgressMutation(target);
+ if(!tx?.ok){alert(`銀河紀元進度更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+ selectedMap=plan.currentMap;
+ selectedEnemy=plan.currentEnemy;
  selectedBattleCount=1;
- save();render();
-
- if(currentEnemy===4&&state.level<target)alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
+ if(typeof render==="function")render();
+ if(plan.currentEnemy===4&&state.level<target)alert(`主線進度已指定到 Lv.${target} Boss。依原本規則，角色需達 Lv.${target} 後 Boss 才會顯示。`);
+ return true;
 }
 
 const GM_SECOND_WORLD_PROGRESS_BOSS_COUNT=100;
@@ -135,16 +114,18 @@ window.gmApplyThirdWorldProgressPercent=gmApplyThirdWorldProgressPercent;
 window.gmSetThirdWorldProgress=gmSetThirdWorldProgress;
 
 function gmCreateGear(){
+ if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
  const q=Number(document.getElementById("gmGearQuality")?.value);
  const level=Number(document.getElementById("gmGearLevel")?.value);
  const type=document.getElementById("gmGearType")?.value;
- if(!Number.isInteger(q)||q<0||q>=QUALITY.length)return;
- if(!Number.isInteger(level)||level<1||level>MAX_LEVEL)return;
+ if(!Number.isInteger(q)||q<0||q>=QUALITY.length)return false;
+ if(!Number.isInteger(level)||level<1||level>MAX_LEVEL)return false;
  const types=type==="all"?EQUIPMENT_TYPES.slice():EQUIPMENT_TYPES.includes(type)?[type]:[];
- if(!types.length)return;
- const mapIdx=Math.max(0,Math.min(MAPS.length-1,Math.floor((level-1)/5)));
- types.forEach(slot=>state.inventory.push(makeItem(level,mapIdx,"normal",q,slot)));
- save();render();
+ if(!types.length)return false;
+ const tx=window.gmCommitFormalGeneratedEquipmentMutation({world:1,q,level,types});
+ if(!tx?.ok){alert(`銀河紀元裝備產生失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+ if(typeof render==="function")render();
+ return true;
 }
 
 let gmSecondWorldGearRegion=0;
@@ -177,17 +158,18 @@ function gmSecondWorldGearChangeBoss(){
  gmSecondWorldGearBoss=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
 }
 function gmCreateSecondWorldGear(){
- if(typeof window.makeSecondWorldEquipmentForBoss!=="function")return alert("宇宙紀元裝備 owner 尚未載入。");
+ if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
  gmSecondWorldGearChangeBoss();
  const q=Math.floor(Number(document.getElementById("gmSecondWorldGearQuality")?.value));
  const type=document.getElementById("gmSecondWorldGearType")?.value;
- if(!Number.isInteger(q)||q<1||q>5)return;
+ if(!Number.isInteger(q)||q<1||q>5)return false;
  const types=type==="all"?EQUIPMENT_TYPES.slice():EQUIPMENT_TYPES.includes(type)?[type]:[];
- if(!types.length)return;
- let created=0;
- types.forEach(slot=>{const item=window.makeSecondWorldEquipmentForBoss(gmSecondWorldGearBoss,{forcedQ:q,forcedType:slot,state});if(item){state.inventory.push(item);created++;}});
- if(!created)return alert("無法產生宇宙紀元裝備。");
- save();render();alert(`已產生 ${created} 件宇宙紀元裝備。`);
+ if(!types.length)return false;
+ const tx=window.gmCommitFormalGeneratedEquipmentMutation({world:2,q,bossIndex:gmSecondWorldGearBoss,types});
+ if(!tx?.ok){alert(`宇宙紀元裝備產生失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
+ if(typeof render==="function")render();
+ alert(`已產生 ${tx?.value?.created||types.length} 件宇宙紀元裝備。`);
+ return true;
 }
 
 function gmRefreshShop(){freeShopRefresh(currentShopMap());save(false);render()}
@@ -198,3 +180,5 @@ function gmResetShopPrice(){
  save(false);render();
 }
 function gmResetShop(){gmResetShopPrice()}
+
+window.GM_TOOLS_FORMAL_WRITER_CONVERGENCE_VERSION=1;
