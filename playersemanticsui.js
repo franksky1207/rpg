@@ -1,5 +1,5 @@
 (function(){
- const VERSION=14;
+ const VERSION=15;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -77,7 +77,7 @@
    equippedWorlds
   };
  }
- if(baseCharacterWorldSnapshot)window.characterWorldSnapshot=characterSnapshot;
+ window.characterWorldSnapshot=characterSnapshot;
  function thirdWorldAdventureFallback(){
   if(typeof window.wrapFunctionPage==="function")return window.wrapFunctionPage(`<div class="card"><h2>高維戰線</h2><div class="notice"><b>高維正式玩家介面尚未載入。</b><div class="muted" style="margin-top:6px">高維紀元已由共用玩家 UI 正確接管；十王正式玩家 UI 將由第三紀元介面 owner 提供。</div></div></div>`);
   return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維正式玩家介面尚未載入。</b></div></section>`;
@@ -173,7 +173,9 @@
  window.PLAYER_SEMANTICS_WORLD_PHASE_VERSION=3;
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
  window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
- window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=3;
+ window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=4;
+ window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION=1;
+ window.CHARACTER_WORLD_SNAPSHOT_OWNER="playersemanticsui";
  window.CHARACTER_EQUIPMENT_WORLD_SEMANTICS_VERSION=1;
  window.CHARACTER_BREAKTHROUGH_UI_VERSION=2;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
