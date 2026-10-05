@@ -1,5 +1,6 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
+ const ROUTING_VERSION=1;
  const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
  const AUTO_START_DELAY_MS=120;
  const groupPromises=new Map();
@@ -56,7 +57,7 @@
  function snapshot(){
   const groups={};
   GROUP_ORDER.forEach(group=>{groups[group]=groupReports.get(group)||Object.freeze({version:VERSION,group,status:"pending",count:declarations(group).length});});
-  return Object.freeze({version:VERSION,order:Array.from(GROUP_ORDER),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});
+  return Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,order:Array.from(GROUP_ORDER),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});
  }
  async function autoLoad(){
   for(const group of GROUP_ORDER){
@@ -69,6 +70,7 @@
  }
 
  window.SCRIPT_GROUP_LOADER_VERSION=VERSION;
+ window.SCRIPT_GROUP_ROUTING_VERSION=ROUTING_VERSION;
  window.SCRIPT_GROUP_AUTO_START_DELAY_MS=AUTO_START_DELAY_MS;
  window.ensureCivilizationScriptGroup=loadGroup;
  window.civilizationScriptGroupSnapshot=snapshot;
