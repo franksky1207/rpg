@@ -6,6 +6,8 @@
  const CURRENT_VALIDATOR_REQUIRED_VERSION=1;
  const LIFECYCLE_DELEGATE_VERSION=1;
  const POLICY_GATE_VERSION=1;
+ const PERSISTED_TARGET_DELEGATE_VERSION=1;
+ const TARGET_METADATA_BRIDGE_VERSION=1;
 
  function currentMode(target=state){
   return typeof window.resolveFirstWorldTargetRuntimeMode==="function"?window.resolveFirstWorldTargetRuntimeMode(target):null;
@@ -17,19 +19,21 @@
  }
  function policyAllows(context,requirements){return typeof window.firstWorldTargetPolicyAllows==="function"&&window.firstWorldTargetPolicyAllows(context,requirements)===true;}
  function offlineContext(raw,target=state,source="offline-persisted-identity"){
-  if(!raw||Number(raw.world)!==1||raw.targetType!=="mapEnemy")return null;
-  const mapIndex=Math.floor(Number(raw.map)),enemyIndex=Math.floor(Number(raw.enemy)),mode=currentMode(target);
-  if(!mode||!Number.isInteger(mapIndex)||!Number.isInteger(enemyIndex)||enemyIndex<0||enemyIndex>3||typeof window.createFirstWorldTargetContext!=="function")return null;
-  const context=window.createFirstWorldTargetContext({mode,mapIndex,enemyIndex,source},target);
-  if(!currentCheck(context,target)||context.valid!==true||context.authorized!==true||!policyAllows(context,{offlineSampleAllowed:true}))return null;
-  return context;
+  if(typeof window.firstWorldTargetContextFromPersisted!=="function")return null;
+  return window.firstWorldTargetContextFromPersisted(raw,{source,policy:{offlineSampleAllowed:true}},target);
+ }
+ function targetMetadata(context){return typeof window.firstWorldTargetMetadata==="function"?window.firstWorldTargetMetadata(context):null;}
+ function attachOfflineTarget(result,context){
+  if(!result||!context)return null;const metadata=targetMetadata(context);if(!metadata)return null;
+  return {...result,targetContext:context,targetIdentity:context.identity,targetMetadata:metadata};
  }
  function canonicalOfflineEnemy(raw,target=state){
   const context=offlineContext(raw,target,"offline-settlement-target");
   if(!context)return null;
   const enemy=typeof window.firstWorldEncounterFromTargetContext==="function"?window.firstWorldEncounterFromTargetContext(context,{preview:false}):null;
-  if(!enemy||enemy.kind==="boss")return null;
-  return Object.freeze({context,identity:context.identity,enemy});
+  const metadata=targetMetadata(context);
+  if(!enemy||enemy.kind==="boss"||!metadata)return null;
+  return Object.freeze({context,identity:context.identity,metadata,enemy});
  }
 
  const baseResolveOffline=window.resolveOfflineFarmTarget;
@@ -38,7 +42,7 @@
    const result=baseResolveOffline.apply(this,arguments);
    if(!result||Number(result.world)!==1)return result;
    const context=offlineContext(result,state,"offline-sample-selection");
-   return context?{...result,targetContext:context,targetIdentity:context.identity}:null;
+   return attachOfflineTarget(result,context);
   };
  }
  const baseNormalizePending=window.normalizeOfflinePendingSettlement;
@@ -47,14 +51,15 @@
    const result=baseNormalizePending.apply(this,arguments);
    if(!result||Number(result.world)!==1)return result;
    const context=offlineContext(result,state,"offline-pending-normalization");
-   return context?{...result,targetContext:context,targetIdentity:context.identity}:null;
+   return attachOfflineTarget(result,context);
   };
  }
  const baseGrantOffline=window.grantFirstWorldOfflineRewards;
  if(typeof baseGrantOffline==="function"){
   window.grantFirstWorldOfflineRewards=async function(pending,enemy){
    const canonical=canonicalOfflineEnemy(pending,state);
-   return baseGrantOffline.call(this,pending,canonical?.enemy||enemy);
+   if(!canonical)return false;
+   return baseGrantOffline.call(this,pending,canonical.enemy);
   };
  }
 
@@ -108,4 +113,6 @@
  window.FIRST_WORLD_CURRENT_CONTEXT_VALIDATOR_REQUIRED_VERSION=CURRENT_VALIDATOR_REQUIRED_VERSION;
  window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_LIFECYCLE_DELEGATE_VERSION=LIFECYCLE_DELEGATE_VERSION;
  window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_POLICY_GATE_VERSION=POLICY_GATE_VERSION;
+ window.FIRST_WORLD_OFFLINE_PERSISTED_TARGET_DELEGATE_VERSION=PERSISTED_TARGET_DELEGATE_VERSION;
+ window.FIRST_WORLD_OFFLINE_TARGET_METADATA_BRIDGE_VERSION=TARGET_METADATA_BRIDGE_VERSION;
 })();
