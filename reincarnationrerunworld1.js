@@ -1,10 +1,11 @@
 (function(){
- const VERSION=1;
+ const VERSION=2;
  const TARGET_IDENTITY_FIX_VERSION=1;
  const TARGET_CONTEXT_VERSION=1;
  const TARGET_CONTEXT_DELEGATE_VERSION=1;
  const LIFECYCLE_DELEGATE_VERSION=1;
  const COMBAT_SPEED_BADGE_REUSE_VERSION=2;
+ const PRESENTATION_STATE_SWAP_RETIRED_VERSION=1;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
   canBoss:typeof window.canBoss==="function"?window.canBoss:null,
@@ -54,10 +55,6 @@
   const canonical=window.firstWorldTargetContextFromSelection({mode:"rerun",source:"rerun-ui-selection"},target);
   return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid:canonical?.valid===true,authorized:canonical?.authorized===true,mapIndex:Number(canonical?.mapIndex??-1),enemyIndex:Number(canonical?.enemyIndex??-1),count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:canonical||null,reason:canonical?"canonical-target":"canonical-target-missing"});
  }
- function presentationStateForTarget(formalState,targetContext){
-  if(!formalState||typeof formalState!=="object"||targetContext?.authorized!==true)return formalState;
-  return {...formalState,unlockedMap:Math.max(finiteWhole(formalState.unlockedMap,0),targetContext.mapIndex)};
- }
  function rerunMapStatus(mapIndex,target=state){return actualBossKilled(mapIndex,target)?"Boss 已擊敗":"全怪可挑戰";}
  function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
  function initializeRegionOpenState(){
@@ -88,20 +85,20 @@
   return `<section class="map-screen reincarnation-rerun-world1" data-rerun-world1="1"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="notice"><b>轉生重征服・銀河紀元</b><div class="muted" style="margin-top:6px">100 張地圖與所有普通／菁英／Boss 均可直接挑戰；只有實際擊敗的 Boss 會寫入正式通關紀錄。</div><div class="muted" style="margin-top:4px">目前關鍵王向下資格：${coverage} / ${regions().length}</div></div><div class="world-region-list">${regions().map(rerunRegionHtml).join("")}</div></section>`;
  }
  function rerunAdventurePreparePage(){
-  if(typeof firstRunOwners.adventurePreparePage!=="function")return "";
-  const formalState=state,targetContext=currentTargetContext(formalState);
-  if(targetContext.authorized!==true)return firstRunOwners.adventurePreparePage();
-  const formalMap=selectedMap,formalEnemy=selectedEnemy,presentationState=presentationStateForTarget(formalState,targetContext);
-  let html="";
-  try{
-   state=presentationState;
-   html=firstRunOwners.adventurePreparePage();
-  }finally{
-   state=formalState;
-   selectedMap=formalMap;
-   selectedEnemy=formalEnemy;
-  }
-  return html;
+  if(!rerunActive(state))return typeof firstRunOwners.adventurePreparePage==="function"?firstRunOwners.adventurePreparePage():"";
+  const targetContext=currentTargetContext(state);
+  if(targetContext.authorized!==true)return "<section class=\"prepare-screen\"><div class=\"notice\"><b>目標已失效</b><div class=\"muted\" style=\"margin-top:6px\">請返回冒險地圖重新選擇挑戰目標。</div></div></section>";
+  const mapIndex=validMapIndex(targetContext.mapIndex),enemyIndex=validEnemyIndex(targetContext.enemyIndex);
+  if(mapIndex<0||enemyIndex<0)return "";
+  selectedMap=mapIndex;selectedEnemy=enemyIndex;
+  const map=maps()[mapIndex],e=monsterObj(mapIndex,enemyIndex),modes=battleModesForEnemy(e);
+  if(!modes.includes(selectedBattleCount))selectedBattleCount=1;
+  const enemies=map.enemies.map((_,i)=>{
+   const mo=monsterObj(mapIndex,i),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"",traits=typeof traitDetailsHtml==="function"?traitDetailsHtml(mo.traits):"";
+   return `<button class="enemy-card ${i===enemyIndex?"active":""}" onclick="selectEnemy(${i})"><div class="enemy-card-top"><div class="enemy-card-title"><b>${mo.name} Lv.${mo.level}</b>${badge}</div>${enemyProgressHtml(mapIndex,i)}</div>${traits}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div>${enemyNoteHtml(mapIndex,i)}</button>`;
+  }).join("");
+  const modeButtons=modes.map(mode=>`<button class="count-card ${mode===selectedBattleCount?"active":""}" onclick="setBattleMode(${mode===window.CONTINUOUS_BATTLE_COUNT?`'${window.CONTINUOUS_BATTLE_COUNT}'`:1},this)">${battleModeLabel(mode)}</button>`).join("");
+  return `<section class="prepare-screen reincarnation-rerun-world1-prepare" data-rerun-world1-prepare="1"><div class="page-top"><button class="btn back-btn" onclick="backToMaps()">← 返回冒險地圖</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><h3 class="battle-count-title">戰鬥模式</h3><div class="battle-count-panel" data-mobile-battle-panel="1"><div class="count-grid" style="--battle-count-columns:${modes.length}">${modeButtons}</div></div><div class="prepare-actions" data-mobile-prepare-actions="1"><button class="btn primary" onclick="startBattles()">${e.kind==="boss"?"挑戰 Boss":"開始戰鬥"}</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
  }
  function rerunCombatHeaderLabel(){
   const ctx=window.activeMainBattleContext||null;
@@ -126,12 +123,13 @@
  window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_DELEGATE_VERSION=TARGET_CONTEXT_DELEGATE_VERSION;
  window.FIRST_WORLD_REINCARNATION_LIFECYCLE_DELEGATE_VERSION=LIFECYCLE_DELEGATE_VERSION;
  window.FIRST_WORLD_REINCARNATION_COMBAT_SPEED_BADGE_REUSE_VERSION=COMBAT_SPEED_BADGE_REUSE_VERSION;
+ window.FIRST_WORLD_RERUN_PRESENTATION_STATE_SWAP_RETIRED_VERSION=PRESENTATION_STATE_SWAP_RETIRED_VERSION;
  window.firstWorldReincarnationRerunContext=rerunContext;
  window.firstWorldReincarnationTargetContext=currentTargetContext;
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION,presentationStateSwapRetiredVersion:PRESENTATION_STATE_SWAP_RETIRED_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
@@ -173,6 +171,6 @@
   if(rerunActive(state))return rerunAdventureMapPage();
   return typeof firstRunOwners.adventureMapPage==="function"?firstRunOwners.adventureMapPage():"";
  };
- if(typeof firstRunOwners.adventurePreparePage==="function")window.adventurePreparePage=rerunAdventurePreparePage;
+ window.adventurePreparePage=rerunAdventurePreparePage;
  if(typeof firstRunOwners.adventureCombatPage==="function")window.adventureCombatPage=rerunAdventureCombatPage;
 })();
