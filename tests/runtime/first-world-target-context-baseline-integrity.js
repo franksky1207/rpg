@@ -26,12 +26,10 @@ const assert=require("assert");
    }
    const scenarios={};
    try{
-    // Core enemy identity + currently supported battle modes (single / continuous only).
     const normal=monsterObj(0,0),elite=monsterObj(0,3),boss=monsterObj(0,4);
     scenarios.enemyKinds={normal:normal?.kind,elite:elite?.kind,boss:boss?.kind};
     scenarios.battleModes={normal:battleModesForEnemy(normal),elite:battleModesForEnemy(elite),boss:battleModesForEnemy(boss)};
 
-    // First-run sequential gating baseline.
     state=firstWorldClone(0);
     state.level=1;state.unlockedMap=0;
     state.mapProgress=Array.from({length:MAPS.length},()=>[0,0,0,0]);
@@ -40,14 +38,12 @@ const assert=require("assert");
     state.mapProgress[0]=[10,10,10,10];state.level=MAPS[0].max;
     scenarios.firstRunBossReady={boss:enemyUnlocked(0,4),canBoss:canBoss(0)};
 
-    // Existing rerun target context baseline + fail-closed invalid selection.
     state=firstWorldClone(1);selectedMap=99;selectedEnemy=4;
     const rerunValid=window.firstWorldReincarnationTargetContext(state);
     selectedMap=-1;selectedEnemy=9;
     const rerunInvalid=window.firstWorldReincarnationTargetContext(state);
     scenarios.rerunTarget={valid:rerunValid,invalid:rerunInvalid};
 
-    // Rerun overlevel + downward conquest + W1 Arena key-boss coverage.
     state=firstWorldClone(1);
     const rerunMultiplier=window.reincarnationOverlevelRewardMultiplier(100,500,state);
     const firstRunState=firstWorldClone(0);
@@ -63,7 +59,6 @@ const assert=require("assert");
     const arenaCoverage=window.firstWorldRerunKeyBossCoverage(arenaState);
     scenarios.rerunProgress={rerunMultiplier,firstRunMultiplier,conquestOk,conquest,arenaCoverage};
 
-    // Galaxy review baseline: normal + boss are single pure challenges and formal state remains exact.
     state=firstWorldClone(0);selectedMap=55;selectedEnemy=2;battleBusy=false;
     window.runCombatCore=(ps,e,startHp)=>({win:true,logs:[],events:[],hp:startHp,enemyHp:0,turns:1});
     render=()=>{};animateFight=async()=>{};window.alert=()=>{};
@@ -76,7 +71,6 @@ const assert=require("assert");
     const reviewAfterBoss=JSON.stringify(state),formalAfterBoss={selectedMap,selectedEnemy};
     scenarios.review={reviewNormalOk,reviewBossOk,formalStateStable:reviewBefore===reviewAfterNormal&&reviewBefore===reviewAfterBoss,formalSelectionStable:JSON.stringify(formalSelectionBefore)===JSON.stringify(formalAfterNormal)&&JSON.stringify(formalSelectionBefore)===JSON.stringify(formalAfterBoss),runtimeVersion:window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION,stateGuardVersion:window.GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION};
 
-    // Runtime contracts for continuous/minimal/fast-catch-up/special/offline/story pipelines.
     scenarios.runtimeContracts={
      continuous:window.MAIN_BOSS_CONTINUOUS_VERSION,
      minimal:window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION,
@@ -89,7 +83,6 @@ const assert=require("assert");
      rerunBackfill:window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION
     };
 
-    // Source-level behavior locks for paths too expensive/nondeterministic to replay on every CI run.
     scenarios.sourceContracts={
      continuousUsesStableContext:sources["battlepipeline.js"].includes("window.activeMainBattleContext=ctx")&&sources["battlepipeline.js"].includes("requestContinuousBattleStop"),
      fastCatchUpUsesContext:sources["battlepipeline.js"].includes("mainCatchUpStep()")&&sources["battlepipeline.js"].includes("refreshMainCatchUpUi(ctx)"),
@@ -97,10 +90,9 @@ const assert=require("assert");
      offlineExcludesBoss:sources["offlineprogress.js"].includes("e<0||e>3")&&sources["offlineprogress.js"].includes('targetType:"mapEnemy"'),
      storyPendingPipeline:sources["battlepipeline.js"].includes("pendingStoryId")&&sources["battlepipeline.js"].includes("consumePendingStoryFromResult"),
      minimalHasCurrentEncounter:sources["mainminimalmode.js"].includes("currentCombatEncounter"),
-     rerunContextFailClosed:sources["reincarnationrerunworld1.js"].includes("validMapIndex")&&sources["reincarnationrerunworld1.js"].includes("authorized:rerun.active===true&&valid")
+     rerunContextFailClosed:sources["reincarnationrerunworld1.js"].includes("canonical-target-owner-missing")&&sources["reincarnationrerunworld1.js"].includes("firstWorldTargetContextFromSelection")
     };
 
-    // Record, but deliberately do not bless, the pre-refactor global-selection coupling.
     scenarios.preRefactorDebt={
      battlePipelineReadsUiSelection:sources["battlepipeline.js"].includes("fightOnce(selectedMap,selectedEnemy,encounter)")&&sources["battlepipeline.js"].includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),
      minimalFallsBackToUiSelection:sources["mainminimalmode.js"].includes("getPreviewEncounter(selectedMap,selectedEnemy)")&&sources["mainminimalmode.js"].includes("monsterObj(selectedMap,selectedEnemy)"),
