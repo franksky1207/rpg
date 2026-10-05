@@ -2,7 +2,7 @@ name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
-# W1 target-context optimization 2 exact-head retrigger.
+# W1 target-context optimization 3 exact-head retrigger.
 on:
   push:
     branches: [main]
@@ -85,6 +85,7 @@ jobs:
           node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/first-world-target-context-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-world1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-rerun-world2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
