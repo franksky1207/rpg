@@ -27,8 +27,8 @@ for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+d
 
 assert(/IMPLEMENTATION_OWNER="savehookcore"/.test(saveHook)&&/CORE_VERSION=2/.test(saveHook),"Save Hook Core owner／V2 契約錯誤。");
 assert(/window\.save=hookedSave/.test(saveHook)&&/registerBeforeSaveHook/.test(saveHook)&&/registerAfterSaveHook/.test(saveHook)&&/registerSaveSettlementHook/.test(saveHook),"Save Hook Core API 不完整。");
-assert(/const VERSION=3;/.test(compatibility)&&/IMPLEMENTATION_VERSION=4/.test(compatibility)&&/EXPECTED_SAVE_SCHEMA_VERSION=17/.test(compatibility),"Compatibility owner V3 contract／Implementation V4／Schema17 診斷未同步。");
-assert(/read-compatible-no-duplicate-write/.test(compatibility)&&/first-world-legacy-alias-only/.test(compatibility),"Legacy MAX_LEVEL 必須明確降級為第一紀元相容 alias。");
+assert(/const VERSION=4;/.test(compatibility)&&/EXPECTED_SAVE_SCHEMA_VERSION=17/.test(compatibility),"Compatibility owner V4／Schema17 診斷未同步。");
+assert(/read-compatible-no-duplicate-write/.test(compatibility)&&/legacyGlobalAliasSnapshot/.test(compatibility),"Legacy global alias policy 缺失。");
 assert(!/window\.save\s*=/.test(compatibility),"Compatibility owner 不得重新成為 save writer。");
 assert(!/window\.MAX_LEVEL\s*=\s*LEGACY_MAX_LEVEL_VALUE/.test(compatibility),"Compatibility owner 不得重寫 MAX_LEVEL。");
 
