@@ -7,7 +7,8 @@ const readme=read("README.md");
 const handoff=read("PROJECT_HANDOFF.md");
 const pending=read("PROJECT_PENDING_STATUS.md");
 const vipUpdate=read("PROJECT_VIP_UNBOUNDED_UPDATE.md");
-const historical=read("LEVEL100_EXPANSION.md");
+const historical=read("docs/archive/LEVEL100_EXPANSION.md");
+const archiveIndex=read("docs/archive/README.md");
 const assets=read("assets/README.md");
 const worldphase=read("worldphase.js");
 
@@ -41,12 +42,15 @@ assert(vipUpdate.includes("VIP_PROGRESSION_VERSION = 14")&&vipUpdate.includes("V
 assert(vipUpdate.includes("490,000")&&vipUpdate.includes("VIP22"),"VIP 補充文件必須記錄舊積分自然重算案例。");
 assert(vipUpdate.includes("worldmaps-core-war.js")&&vipUpdate.includes("已立即還原"),"VIP 補充文件必須保留本次自我檢查修正紀錄。");
 
-assert(historical.includes("歷史文件／已失效基準"),"LEVEL100_EXPANSION 必須明確標示為歷史文件。");
-assert(historical.includes("level100balance.js` 已退休"),"歷史文件頂部必須指出早期 level100 owner 已退休。");
+assert(historical.includes("歷史文件／已失效基準"),"封存 LEVEL100_EXPANSION 必須明確標示為歷史文件。");
+assert(historical.includes("level100balance.js` 已退休"),"歷史文件必須指出早期 level100 owner 已退休。");
 assert(!historical.includes("目前 `main` 正式基準為：**Lv1～500"),"歷史文件不得再宣稱 current main 只有 Lv500。");
+assert(archiveIndex.includes("main` 的實際程式碼永遠是唯一真實來源")&&archiveIndex.includes("不得作為 current runtime owner"),"Archive index 必須明示 current／historical 邊界。");
+assert(fs.existsSync("docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-28_ARENA.md")&&fs.existsSync("docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-29_GM_BATCH16.md"),"歷史 handoff 補充必須位於 docs/archive。");
+assert(!fs.existsSync("LEVEL100_EXPANSION.md")&&!fs.existsSync("PROJECT_HANDOFF_UPDATE_2026-09-28_ARENA.md")&&!fs.existsSync("PROJECT_HANDOFF_UPDATE_2026-09-29_GM_BATCH16.md"),"已封存歷史文件不得留在 project root。");
 
 assert(assets.includes("backgrounds-source/`)：原始製作素材")||assets.includes("backgrounds-source/`：原始製作素材"),"素材規範必須區分 source 原稿角色。");
 assert(assets.includes("`backgrounds/`：正式部署素材"),"素材規範必須區分正式 runtime 背景角色。");
 
 console.log("Documentation Integrity OK");
-console.log("README / HANDOFF / PENDING / VIP supplement / historical / asset policy are synchronized with the current main baseline.");
+console.log("README / HANDOFF / PENDING / VIP supplement / docs/archive / asset policy are synchronized with the current main baseline.");
