@@ -36,6 +36,7 @@ const assert=require("assert");
 
     const specialSource=await (await fetch("specialencounter.js",{cache:"no-store"})).text();
     const batch4Source=await (await fetch("firstworldtargetcontextbatch4.js",{cache:"no-store"})).text();
+    const pipelineSource=await (await fetch("battlepipeline.js",{cache:"no-store"})).text();
     const batch5Source=await (await fetch("firstworldtargetcontextbatch5.js",{cache:"no-store"})).text();
     const batch6Source=await (await fetch("firstworldtargetcontextbatch6.js",{cache:"no-store"})).text();
     const closure=window.firstWorldTargetContextClosureSnapshot(state);
@@ -46,7 +47,7 @@ const assert=require("assert");
      offline:{missingValidatorResult:missingOffline},
      selection:{before:uiBefore,after:uiAfter},
      closure,
-     source:{specialNoSelectedMap:!specialSource.includes("selectedMap"),specialNoSelectedEnemy:!specialSource.includes("selectedEnemy"),specialUsesExplicitTarget:specialSource.includes("firstWorldSpecialTarget")&&specialSource.includes("w1Target.mapIndex"),batch4NoSelectionProjection:!batch4Source.includes("selectedMap=")&&!batch4Source.includes("selectedEnemy="),batch4PassesExplicitIdentity:batch4Source.includes("mapIndex:parentTargetContext.mapIndex")&&batch4Source.includes("enemyIndex:parentTargetContext.enemyIndex"),batch5RequiresCurrentValidator:batch5Source.includes('typeof window.validateCurrentFirstWorldTargetContext!=="function")return false')&&!batch5Source.includes("validateFirstWorldTargetContext(context)?.passed"),batch6FailsClosedMissingValidator:batch6Source.includes('errors:["current-validator-missing"]')&&!batch6Source.includes("validateFirstWorldTargetContext(context)")}
+     source:{specialNoSelectedMap:!specialSource.includes("selectedMap"),specialNoSelectedEnemy:!specialSource.includes("selectedEnemy"),specialUsesExplicitTarget:specialSource.includes("firstWorldSpecialTarget")&&specialSource.includes("w1Target.mapIndex"),batch4NoSelectionProjection:!batch4Source.includes("selectedMap=")&&!batch4Source.includes("selectedEnemy="),pipelinePassesExplicitIdentity:pipelineSource.includes("targetContext:boundTarget,parentTargetContext:boundTarget"),batch4WrapperRetired:!batch4Source.includes("window.maybeHandleSpecialEncounter=")&&!batch4Source.includes("window.runBattles="),batch5RequiresCurrentValidator:batch5Source.includes('typeof window.validateCurrentFirstWorldTargetContext!=="function")return false')&&!batch5Source.includes("validateFirstWorldTargetContext(context)?.passed"),batch6FailsClosedMissingValidator:batch6Source.includes('errors:["current-validator-missing"]')&&!batch6Source.includes("validateFirstWorldTargetContext(context)")}
     };
    }finally{
     window.validateCurrentFirstWorldTargetContext=originalValidator;window.clearPreparedFirstWorldTargetContext?.();state=originalState;selectedMap=originalMap;selectedEnemy=originalEnemy;
