@@ -1,7 +1,10 @@
 (function(){
- const VERSION=1;
- const ROUTING_VERSION=1;
+ const VERSION=2;
+ const ROUTING_VERSION=2;
+ const ACTIVATION_POLICY_VERSION=1;
+ const GLOBAL_API_CLEANUP_VERSION=1;
  const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
+ const AUTO_GROUPS=Object.freeze(["story"]);
  const AUTO_START_DELAY_MS=120;
  const groupPromises=new Map();
  const groupReports=new Map();
@@ -54,24 +57,64 @@
   groupPromises.set(key,promise);
   return promise;
  }
+ function activationSnapshot(){
+  return Object.freeze({
+   version:ACTIVATION_POLICY_VERSION,
+   story:"post-load-sequenced",
+   gm:"password-modal-on-demand",
+   integrity:"diagnostics-explicit-only",
+   autoGroups:Array.from(AUTO_GROUPS)
+  });
+ }
  function snapshot(){
   const groups={};
   GROUP_ORDER.forEach(group=>{groups[group]=groupReports.get(group)||Object.freeze({version:VERSION,group,status:"pending",count:declarations(group).length});});
-  return Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,order:Array.from(GROUP_ORDER),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});
+  return Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,order:Array.from(GROUP_ORDER),autoGroups:Array.from(AUTO_GROUPS),activation:activationSnapshot(),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});
  }
  async function autoLoad(){
-  for(const group of GROUP_ORDER){
+  for(const group of AUTO_GROUPS){
    try{await loadGroup(group);}catch(error){console.error(`[ScriptGroupLoader] ${group}`,error);}
   }
  }
+ function diagnosticsRequested(){
+  try{
+   const params=new URLSearchParams(location.search||"");
+   return params.get("integrity")==="1"||params.get("diagnostics")==="1";
+  }catch(_){return false;}
+ }
+ function observeGmActivation(){
+  const modal=document.getElementById("passwordModal");
+  if(!modal||typeof MutationObserver!=="function")return;
+  const activate=()=>{
+   const className=String(modal.className||"");
+   const visible=className!=="modal"||modal.getAttribute("aria-hidden")==="false"||modal.style.display==="block";
+   if(visible)loadGroup("gm").catch(error=>console.error("[ScriptGroupLoader] gm",error));
+  };
+  new MutationObserver(activate).observe(modal,{attributes:true,attributeFilter:["class","style","aria-hidden"]});
+  activate();
+ }
  function schedule(){
-  const start=()=>setTimeout(()=>autoLoad(),AUTO_START_DELAY_MS);
+  const start=()=>setTimeout(()=>{
+   autoLoad();
+   observeGmActivation();
+   if(diagnosticsRequested())loadGroup("integrity").catch(error=>console.error("[ScriptGroupLoader] integrity",error));
+  },AUTO_START_DELAY_MS);
   if(document.readyState==="complete")start();else window.addEventListener("load",start,{once:true});
  }
 
+ const namespace=Object.freeze({
+  version:VERSION,
+  routingVersion:ROUTING_VERSION,
+  activationPolicyVersion:ACTIVATION_POLICY_VERSION,
+  ensure:loadGroup,
+  snapshot,
+  activationSnapshot
+ });
+ window.CivilizationScriptLoader=namespace;
  window.SCRIPT_GROUP_LOADER_VERSION=VERSION;
- window.SCRIPT_GROUP_ROUTING_VERSION=ROUTING_VERSION;
- window.SCRIPT_GROUP_AUTO_START_DELAY_MS=AUTO_START_DELAY_MS;
+ window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;
+ window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;
+ // Compatibility aliases retained for existing diagnostics/tests; new consumers use CivilizationScriptLoader.
  window.ensureCivilizationScriptGroup=loadGroup;
  window.civilizationScriptGroupSnapshot=snapshot;
  schedule();
