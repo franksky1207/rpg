@@ -2,6 +2,7 @@
  const VERSION=1;
  const POLICY_VERSION=1;
  const SECTION_POLICY_VERSION=1;
+ const COMPAT_ALIAS_VERSION=1;
  function phase(target=null){
   const holder=target&&typeof target==="object"?target:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   if(!holder)return 1;
@@ -48,11 +49,18 @@
   return `<div class="muted gm-hub-note">高維紀元正式文明等級固定 Lv.${max}，無法修改；正式戰鬥固定套用文明最終傷害。GM 測試沙盒仍可自由測試 Lv.0～Lv.${max}。</div><div class="controls" style="align-items:end"><label>文明等級<br>${fixedValueHtml(`Lv.${max}`)}</label><span class="muted">文明 Lv.${max}｜最終傷害 +${bonus}%｜×${multiplier}</span></div>`;
  }
  function installSectionPolicies(){
-  if(typeof window.replaceGmHubSectionRenderer!=="function")return false;
-  const spec=window.replaceGmHubSectionRenderer("manage","spec-manage",specializationRenderer);
-  const mark=window.replaceGmHubSectionRenderer("manage","marks-manage",markRenderer);
-  const civ=window.replaceGmHubSectionRenderer("manage","civilization-manage",civilizationRenderer);
-  return spec||mark||civ;
+  let installed=false;
+  if(typeof window.replaceGmHubSectionRenderer==="function"){
+   installed=window.replaceGmHubSectionRenderer("manage","spec-manage",specializationRenderer)||installed;
+   installed=window.replaceGmHubSectionRenderer("manage","marks-manage",markRenderer)||installed;
+   installed=window.replaceGmHubSectionRenderer("manage","civilization-manage",civilizationRenderer)||installed;
+  }
+  // Compatibility aliases: old GM diagnostics/callers still resolve these names,
+  // but all three now delegate to the same canonical policy renderers above.
+  window.gmSpecializationManagementHtml=specializationRenderer;
+  window.gmMarkManagementHtml=markRenderer;
+  window.gmCivilizationManagementHtml=civilizationRenderer;
+  return installed;
  }
 
  window.gmBatch16FormalWorldPhase=phase;
@@ -68,6 +76,6 @@
  window.GM_BATCH16_SECTION_POLICY_VERSION=SECTION_POLICY_VERSION;
  window.GM_BATCH16_FIXED_VALUE_UI_VERSION=3;
  window.GM_BATCH16_HUB_REPLACE_WORKAROUND_RETIRED_VERSION=2;
- window.GM_BATCH16_GLOBAL_RENDERER_OVERRIDE_RETIRED_VERSION=1;
+ window.GM_BATCH16_GLOBAL_RENDERER_COMPAT_ALIAS_VERSION=COMPAT_ALIAS_VERSION;
  window.GM_BATCH16_SECTION_POLICY_INSTALLED=installSectionPolicies();
 })();
