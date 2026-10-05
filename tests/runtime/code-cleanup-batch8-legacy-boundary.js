@@ -30,7 +30,7 @@ assert.equal((migration.match(/const retiredCleanup=cleanupRetiredMigrationState
 assert.ok(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(migration),"Migration-only cleanup contract 不得遺失");
 
 assert.ok(index.includes('data-load-group="story"')&&index.includes('data-load-group="gm"')&&index.includes('data-load-group="integrity"'),"Batch8 不得為了合併碎片破壞 Batch7 lazy-loading boundaries");
-assert.ok(index.includes('scriptgrouploader.js?v=20261005-code-cleanup-batch7'),"Batch8 不得退回 eager loading");
+assert.ok(index.includes('scriptgrouploader.js?v=20261005-gm-authorized-restore1'),"Batch8 必須保留 lazy-loading 並允許已授權 GM runtime restore");
 
 const archived=[
  "docs/archive/LEVEL100_EXPANSION.md",
