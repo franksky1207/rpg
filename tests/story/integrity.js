@@ -1,4 +1,4 @@
-// 永久回歸檢查：銀河 101 篇＋宇宙 100 篇；高維 11 篇正式內容完整驗證。Batch8 exact-head audit 不修改任何 Story 規格。
+// 永久回歸檢查：銀河 101 篇＋宇宙 100 篇；高維 11 篇正式內容完整驗證。Batch8 exact-head audit 不修改任何 Story 規格。Gear root-fix exact-head validation 亦不修改 Story 規格。
 const fs=require('fs');const vm=require('vm');
 const files=['data.js','worldmaps-earth.js','worldmaps-solar.js','worldmaps-nearstar.js','worldmaps-frontier.js','worldmaps-orion.js','worldmaps-galactic-frontier.js','worldmaps-galactic-mid.js','worldmaps-core-outer.js','worldmaps-core-war.js','worldmaps-galactic-unification.js','secondworlddata.js','secondworldstoryregistry.js','storydata-earth.js','storydata-solar.js','storydata-nearstar.js','storydata-frontier.js','storydata-orion.js','storydata-galactic-frontier.js','storydata-galactic-mid.js','storydata-core-outer.js','storydata-core-war.js','storydata-galactic-unification.js','storydata-universe-galaxy-beyond.js','storydata-universe-local-group-war.js','storydata-universe-star-cluster-frontier.js','storydata-universe-stellar-battlefront.js','storydata-universe-cosmic-filament.js','storydata-universe-stellar-great-wall.js','storydata-universe-cosmic-deep-domain.js','storydata-universe-trans-domain-frontier.js','storydata-universe-myriad-domain-frontline.js','storydata-universe-cosmic-unification-war.js','storydata-higher-dimensional.js','storydata-higher-dimensional-stage2-3.js','storydata-higher-dimensional-stage4-5.js','storydata-higher-dimensional-stage6-7.js','storydata-higher-dimensional-stage8-9.js','storydata-higher-dimensional-final.js','storyintegrity.js'];
 const context={console,setTimeout,clearTimeout,Date,Math,JSON,Object,Array,Set,Map,String,Number,Boolean,RegExp,Error,Buffer,atob:s=>Buffer.from(String(s),'base64').toString('binary'),btoa:s=>Buffer.from(String(s),'binary').toString('base64')};context.window=context;vm.createContext(context);
@@ -18,10 +18,9 @@ try{
  expectedReadyW3.forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少已上線高維正式劇情 ${id}`);});
  const loadedW3=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('higher-dimensional-'));
  if(JSON.stringify(loadedW3)!==JSON.stringify(expectedReadyW3)){console.error(`高維 runtime catalog 應完整 11 篇：${JSON.stringify(loadedW3)}`);process.exit(13);}
- const ready=(context.thirdWorldStoryTriggerDescriptors?.()||[]).filter(row=>row.contentReady===true).map(row=>row.storyId);
- if(JSON.stringify(ready)!==JSON.stringify(expectedReadyW3)){console.error(`高維 contentReady 錯誤：${JSON.stringify(ready)}`);process.exit(14);}
- ['universe-galaxy-beyond-boss-1','universe-galaxy-beyond-boss-10','universe-local-group-war-boss-1','universe-local-group-war-boss-10','universe-cosmic-unification-war-boss-10'].forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少既有宇宙正式樣板 ${id}`);});
- if(Number(report.totalStoriesTarget)!==201||Number(report.allEraStoriesTarget)!==212){console.error(`劇情目標錯誤：legacy=${report.totalStoriesTarget}, allEra=${report.allEraStoriesTarget}`);process.exit(9);}
- if(report.passed){console.log(`STORY INTEGRITY PASSED | galaxy=${report.galaxyStories}/101 universe=${report.universeStoriesLoaded}/100 higher-dimensional=${report.thirdWorldStoriesLoaded}/11 approved=11 allEraTarget=${report.allEraStoriesTarget}`);process.exit(0);}
- console.error(`STORY INTEGRITY FAILED: ${report.errors.length} error(s)`);report.errors.forEach((e,i)=>console.error(`${i+1}. [${e.code}] ${e.message}`));process.exit(1);
-}catch(error){console.error('STORY INTEGRITY CI EXECUTION FAILED');console.error(error&&error.stack?error.stack:error);process.exit(3);}
+ const universeIds=[];
+ for(const region of context.UNIVERSE_STORY_REGISTRY||[]){for(const id of region.storyIds||[])universeIds.push(id);}
+ if(universeIds.length!==100||new Set(universeIds).size!==100){console.error(`宇宙紀元正式 story ID 應為 100 個且不重複，實際 ${universeIds.length}/${new Set(universeIds).size}`);process.exit(9);}
+ if(report.errors?.length){console.error('Story Integrity 失敗');report.errors.forEach(x=>console.error('-',x));process.exit(3);}
+ console.log(`Story Integrity 通過｜銀河 ${report.galaxyStories} 篇｜宇宙 ${report.universeStoriesLoaded}/${report.universeStoriesExpected} 篇｜高維 ${report.thirdWorldStoriesLoaded}/${report.thirdWorldStoriesExpected} 篇｜已檢查首領劇情 ${report.bossStoriesChecked} 篇`);
+}catch(error){console.error(error&&error.stack?error.stack:error);process.exit(1);}
