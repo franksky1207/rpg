@@ -81,6 +81,7 @@
  function diagnosticsRequested(){
   try{
    const params=new URLSearchParams(location.search||"");
+   if(params.get("production")==="1")return false;
    const explicit=params.get("integrity")==="1"||params.get("diagnostics")==="1";
    const local=location.hostname==="127.0.0.1"||location.hostname==="localhost";
    return explicit||local;
