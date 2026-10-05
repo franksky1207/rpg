@@ -16,9 +16,9 @@ const assert=require("assert");
    try{
     if(state.secondWorld)state.secondWorld.entered=false;if(state.thirdWorld)state.thirdWorld.entered=false;if(!state.reincarnation)state.reincarnation={};state.reincarnation.count=0;state.level=100;
     selectedMap=4;selectedEnemy=3;window.clearPreparedFirstWorldTargetContext();
-    const before=JSON.stringify(state);
     const first=window.prepareFirstWorldTargetContextFromSelection({mode:"formal",source:"opt2-first"},state);
     const session1=window.getPreparedFirstWorldTargetSession();
+    const before=JSON.stringify(state);
     const repeated=window.prepareFirstWorldTargetContextFromSelection({mode:"formal",source:"opt2-repeat"},state);
     const sessionRepeat=window.getPreparedFirstWorldTargetSession();
     const ctx=window.createMainBattleContext(1,first);
