@@ -4,24 +4,24 @@
  const RERUN_VERSION=1;
  const REVIEW_VERSION=1;
  const CURRENT_VALIDATOR_REQUIRED_VERSION=1;
+ const LIFECYCLE_DELEGATE_VERSION=1;
+ const POLICY_GATE_VERSION=1;
 
  function currentMode(target=state){
-  const phase=typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(target))||1:(target?.secondWorld?.entered===true?2:1);
-  if(phase!==1)return null;
-  const life=typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(target):null;
-  return life?.reincarnationRun===true||Number(target?.reincarnation?.count)>0?"rerun":"formal";
+  return typeof window.resolveFirstWorldTargetRuntimeMode==="function"?window.resolveFirstWorldTargetRuntimeMode(target):null;
  }
  function currentCheck(context,target=state){
   if(!context||typeof context!=="object")return false;
   if(typeof window.validateCurrentFirstWorldTargetContext!=="function")return false;
   return window.validateCurrentFirstWorldTargetContext(context,target)?.passed===true;
  }
+ function policyAllows(context,requirements){return typeof window.firstWorldTargetPolicyAllows==="function"&&window.firstWorldTargetPolicyAllows(context,requirements)===true;}
  function offlineContext(raw,target=state,source="offline-persisted-identity"){
   if(!raw||Number(raw.world)!==1||raw.targetType!=="mapEnemy")return null;
   const mapIndex=Math.floor(Number(raw.map)),enemyIndex=Math.floor(Number(raw.enemy)),mode=currentMode(target);
   if(!mode||!Number.isInteger(mapIndex)||!Number.isInteger(enemyIndex)||enemyIndex<0||enemyIndex>3||typeof window.createFirstWorldTargetContext!=="function")return null;
   const context=window.createFirstWorldTargetContext({mode,mapIndex,enemyIndex,source},target);
-  if(!currentCheck(context,target)||context.valid!==true||context.authorized!==true||context.policy?.offlineSampleAllowed!==true)return null;
+  if(!currentCheck(context,target)||context.valid!==true||context.authorized!==true||!policyAllows(context,{offlineSampleAllowed:true}))return null;
   return context;
  }
  function canonicalOfflineEnemy(raw,target=state){
@@ -85,7 +85,7 @@
   window.startGalaxyReviewBattle=async function(){
    let context=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
    if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state))&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({mode:"review",source:"review-battle-start"},state);
-   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state)&&context.policy?.formalRewardsAllowed===false&&context.policy?.formalProgressAllowed===false))return false;
+   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state)&&policyAllows(context,{formalRewardsAllowed:false,formalProgressAllowed:false})))return false;
    const originalGetMap=window.getGalaxyReviewSelectedMap;
    const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
    try{
@@ -106,4 +106,6 @@
  window.FIRST_WORLD_RERUN_TARGET_CONTEXT_BOUNDARY_VERSION=RERUN_VERSION;
  window.FIRST_WORLD_REVIEW_TARGET_CONTEXT_BOUNDARY_VERSION=REVIEW_VERSION;
  window.FIRST_WORLD_CURRENT_CONTEXT_VALIDATOR_REQUIRED_VERSION=CURRENT_VALIDATOR_REQUIRED_VERSION;
+ window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_LIFECYCLE_DELEGATE_VERSION=LIFECYCLE_DELEGATE_VERSION;
+ window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_POLICY_GATE_VERSION=POLICY_GATE_VERSION;
 })();
