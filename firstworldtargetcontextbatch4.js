@@ -3,6 +3,7 @@
  const CONTINUOUS_TARGET_LOCK_VERSION=1;
  const FAST_CATCH_UP_TARGET_LOCK_VERSION=1;
  const SPECIAL_PARENT_TARGET_VERSION=1;
+ const SPECIAL_SELECTION_PROJECTION_RETIRED_VERSION=1;
 
  function currentFirstWorldTarget(context){
   if(typeof window.bindFirstWorldBattleTargetContext!=="function")return null;
@@ -43,24 +44,15 @@
    if(world!==1)return baseSpecial.call(this,ctx,mainResult,options);
    const parentTargetContext=resolveSpecialParent(ctx,options);
    if(!parentTargetContext)return false;
-   const hadMap=typeof selectedMap!=="undefined",hadEnemy=typeof selectedEnemy!=="undefined";
-   const beforeMap=hadMap?selectedMap:undefined,beforeEnemy=hadEnemy?selectedEnemy:undefined;
-   try{
-    if(hadMap)selectedMap=parentTargetContext.mapIndex;
-    if(hadEnemy)selectedEnemy=parentTargetContext.enemyIndex;
-    const outcome=await baseSpecial.call(this,ctx,mainResult,{...options,mapIndex:parentTargetContext.mapIndex,enemyIndex:parentTargetContext.enemyIndex,targetContext:parentTargetContext,parentTargetContext});
-    if(outcome?.triggered){
-     outcome.parentTargetContext=parentTargetContext;
-     outcome.parentTargetIdentity=parentTargetContext.identity;
-     const rows=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters:null;
-     const row=rows?.[rows.length-1];
-     if(row&&row.result===outcome.result){row.parentTargetContext=parentTargetContext;row.parentTargetIdentity=parentTargetContext.identity;}
-    }
-    return outcome;
-   }finally{
-    if(hadMap)selectedMap=beforeMap;
-    if(hadEnemy)selectedEnemy=beforeEnemy;
+   const outcome=await baseSpecial.call(this,ctx,mainResult,{...options,mapIndex:parentTargetContext.mapIndex,enemyIndex:parentTargetContext.enemyIndex,targetContext:parentTargetContext,parentTargetContext});
+   if(outcome?.triggered){
+    outcome.parentTargetContext=parentTargetContext;
+    outcome.parentTargetIdentity=parentTargetContext.identity;
+    const rows=Array.isArray(ctx?.specialEncounters)?ctx.specialEncounters:null;
+    const row=rows?.[rows.length-1];
+    if(row&&row.result===outcome.result){row.parentTargetContext=parentTargetContext;row.parentTargetIdentity=parentTargetContext.identity;}
    }
+   return outcome;
   };
  }
 
@@ -69,4 +61,5 @@
  window.FIRST_WORLD_CONTINUOUS_TARGET_LOCK_VERSION=CONTINUOUS_TARGET_LOCK_VERSION;
  window.FIRST_WORLD_FAST_CATCH_UP_TARGET_LOCK_VERSION=FAST_CATCH_UP_TARGET_LOCK_VERSION;
  window.FIRST_WORLD_SPECIAL_PARENT_TARGET_VERSION=SPECIAL_PARENT_TARGET_VERSION;
+ window.FIRST_WORLD_SPECIAL_SELECTION_PROJECTION_RETIRED_VERSION=SPECIAL_SELECTION_PROJECTION_RETIRED_VERSION;
 })();
