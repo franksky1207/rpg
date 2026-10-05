@@ -52,7 +52,6 @@ const assert=require("assert");
     window.syncMinimalMode=()=>{};
     window.fightOnce=(map,enemy,encounter)=>{
      calls.push({map,enemy,name:encounter?.name,level:encounter?.level,kind:encounter?.kind,contextId:window.activeMainBattleContext?.targetContext?.contextId,identity:deep(window.activeMainBattleContext?.targetIdentity||null),ui:{map:selectedMap,enemy:selectedEnemy}});
-     // Deliberately drift the UI cursor after the first settlement input has been captured.
      selectedMap=calls.length===1?55:88;selectedEnemy=calls.length===1?2:4;
      return {ok:true,win:true,logs:[],events:[],e:encounter,xp:0,gold:0,items:[],enhancementStones:{basic:0,advanced:0},saleEnhancementStones:{basic:0,advanced:0},combatEndHp:state.hp,turns:1,pendingStoryId:null};
     };
@@ -62,7 +61,6 @@ const assert=require("assert");
     const uiAfterFinite={map:selectedMap,enemy:selectedEnemy};
     const finitePreviewClears=deep(previewClears);
 
-    // Continuous mode: target must stay bound after each regenerated encounter as well.
     state=makeState(0);selectedMap=4;selectedEnemy=0;battleBusy=false;currentCombatEncounter=null;window.clearPreparedFirstWorldTargetContext();
     const continuousTarget=window.prepareFirstWorldTargetContext({mode:"formal",mapIndex:4,enemyIndex:3,source:"batch3-continuous"},state);
     selectedMap=0;selectedEnemy=0;
@@ -76,7 +74,6 @@ const assert=require("assert");
     currentCombatEncounter=window.firstWorldEncounterFromTargetContext(continuousTarget,{preview:true});
     const continuousOk=await runBattles(window.CONTINUOUS_BATTLE_COUNT,null,continuousTarget);
 
-    // Current-life validation must reject stale and review contexts before combat mutation.
     state=makeState(0);window.clearPreparedFirstWorldTargetContext();
     const stale=window.prepareFirstWorldTargetContext({mode:"formal",mapIndex:2,enemyIndex:0,source:"batch3-stale"},state);
     state.reincarnation.count=1;
@@ -92,7 +89,7 @@ const assert=require("assert");
      finite:{ok:finiteOk,target:{contextId:target.contextId,identity:target.identity},expected:{name:expected.name,level:expected.level,kind:expected.kind},calls,previewClears:finitePreviewClears,uiAfter:uiAfterFinite,ctx:{completed:finiteCtx.completed,wins:finiteCtx.wins,targetContextId:finiteCtx.targetContext?.contextId,targetIdentity:finiteCtx.targetIdentity},saveCalls:saveCalls.length},
      continuous:{ok:continuousOk,target:{contextId:continuousTarget.contextId,identity:continuousTarget.identity},calls:continuousCalls,uiAfter:{map:selectedMap,enemy:selectedEnemy}},
      failClosed:{staleValidation,staleBound,reviewBound},
-     source:{noFightSelection:!source.includes("fightOnce(selectedMap,selectedEnemy,encounter)"),noTimingSelection:!source.includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),noRegenerateSelection:!source.includes("createMonsterEncounter(selectedMap,selectedEnemy)"),passesContextToSpecial:source.includes("maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget})"),contextSettlement:source.includes("fightOnce(mapIndex,enemyIndex,encounter)")}
+     source:{noFightSelection:!source.includes("fightOnce(selectedMap,selectedEnemy,encounter)"),noTimingSelection:!source.includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),noRegenerateSelection:!source.includes("createMonsterEncounter(selectedMap,selectedEnemy)"),passesContextToSpecial:source.includes("maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget,parentTargetContext:boundTarget})"),contextSettlement:source.includes("fightOnce(mapIndex,enemyIndex,encounter)")}
     };
    }finally{
     state=originalState;selectedMap=originalGlobals.selectedMap;selectedEnemy=originalGlobals.selectedEnemy;selectedBattleCount=originalGlobals.selectedBattleCount;adventureScreen=originalGlobals.adventureScreen;battleBusy=originalGlobals.battleBusy;currentCombatEncounter=originalGlobals.currentCombatEncounter;combatRound=originalGlobals.combatRound;combatTotal=originalGlobals.combatTotal;window.activeMainBattleContext=originalGlobals.activeMainBattleContext;
