@@ -9,7 +9,7 @@ const assert=require('assert');
  const url=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  try{
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.waitForFunction(()=>window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION===1&&typeof window.applyReincarnationResetState==='function'&&window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_INTEGRITY?.passed===true&&window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION>=1,{timeout:30000});
+  await page.waitForFunction(()=>window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION===2&&window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION===2&&window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION===2&&window.FIRST_WORLD_RERUN_PRESENTATION_STATE_SWAP_RETIRED_VERSION===1&&window.SECOND_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION===1&&window.THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION===1&&typeof window.applyReincarnationResetState==='function'&&window.SECOND_WORLD_MAINLINE_MINIMAL_MODE_INTEGRITY?.passed===true&&window.THIRD_WORLD_PLAYER_FLOW_MINIMAL_MODE_ADAPTER_VERSION>=1,{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries((window.BREAKTHROUGH_MILESTONES||window.BREAKTHROUGH_MILESTONE_LEVELS||[100,200,300,400,500,600,700,800,900,1000]).map(level=>[String(level),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
@@ -18,7 +18,7 @@ const assert=require('assert');
    const makeW3=count=>{const s=makeW2(count);s.level=1000;s.thirdWorld=createBlankThirdWorldState();s.thirdWorld.entered=true;return s;};
    const originalState=state;
    const originalSecondWorldEntryRequirements=window.secondWorldEntryRequirements;
-   const out={};
+   const out={versions:{w1:window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION,w2:window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION,w3:window.THIRD_WORLD_REINCARNATION_RERUN_POLICY_VERSION,w1SwapRetired:window.FIRST_WORLD_RERUN_PRESENTATION_STATE_SWAP_RETIRED_VERSION,w2Boundary:window.SECOND_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION,w3Boundary:window.THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION}};
 
    state=makeW1(0);
    out.w1First={context:firstWorldReincarnationRerunContext(state),lastBoss:canBoss(MAPS.length-1),lastEnemy:enemyUnlocked(MAPS.length-1,4),uiRerun:adventureMapPage().includes('data-rerun-world1="1"')};
@@ -82,6 +82,7 @@ const assert=require('assert');
   });
 
   assert.deepEqual(pageErrors,[],'Browser pageerror:\n'+pageErrors.join('\n\n'));
+  assert.deepEqual(report.versions,{w1:2,w2:2,w3:2,w1SwapRetired:1,w2Boundary:1,w3Boundary:1});
   assert.equal(report.w1First.context.active,false);assert.equal(report.w1First.lastBoss,false);assert.equal(report.w1First.lastEnemy,false);assert.equal(report.w1First.uiRerun,false);
   assert.equal(report.w1Rerun.context.active,true);assert.equal(report.w1Rerun.allEnemies,true);assert.equal(report.w1Rerun.allBosses,true);assert.equal(report.w1Rerun.regionSections,10);assert.equal(report.w1Rerun.uiRerun,true);
   assert.deepEqual(report.w1Coverage,{coverage:6,actualKills:1,keyKilled:true});assert.deepEqual(report.w1Reload,{active:true,coverage:6,actualKills:1});
@@ -97,6 +98,6 @@ const assert=require('assert');
   assert.deepEqual(report.boundaries,{w1:1,w2:2,w3:3});
   assert.equal(report.minimal.shared,1);assert.equal(report.minimal.w2.passed,true);assert.ok(report.minimal.w3>=1);assert.equal(report.minimal.w2Continuous,true);assert.equal(report.minimal.w3Continuous,true);
   assert.equal(report.nextLife.ok,true);assert.equal(report.nextLife.count,2);assert.equal(report.nextLife.w1Kills,0);assert.equal(report.nextLife.w2Entered,false);assert.equal(report.nextLife.w2Kills,0);assert.equal(report.nextLife.w3Entered,false);assert.equal(report.nextLife.w3AllFresh,true);assert.equal(report.nextLife.storyPreserved,true);
-  console.log('Reincarnation rerun batch 5 closure passed:',JSON.stringify(report));
+  console.log('Reincarnation rerun batch 5 closure V2 passed:',JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
