@@ -117,6 +117,7 @@ jobs:
           node tests/runtime/batch7-post-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-reset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/equipment-world-semantics-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-transaction-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
