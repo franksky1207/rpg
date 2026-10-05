@@ -3,6 +3,7 @@
  const TARGET_IDENTITY_FIX_VERSION=1;
  const TARGET_CONTEXT_VERSION=1;
  const TARGET_CONTEXT_DELEGATE_VERSION=1;
+ const LIFECYCLE_DELEGATE_VERSION=1;
  const COMBAT_SPEED_BADGE_REUSE_VERSION=2;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
@@ -25,9 +26,9 @@
   return 1;
  }
  function rerunContext(target=state){
-  const context=typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(target):null;
-  const active=context?.reincarnationRun===true&&worldPhase(target)===1;
-  return Object.freeze({version:VERSION,active,count:Math.max(0,finiteWhole(context?.count,0)),lifeId:Math.max(0,finiteWhole(context?.lifeId,0)),firstRun:context?.firstRun!==false&&!active,reincarnationRun:context?.reincarnationRun===true,world:worldPhase(target),source:context?"reincarnation-context":"fail-closed"});
+  const lifecycle=typeof window.firstWorldTargetLifecycleSnapshot==="function"?window.firstWorldTargetLifecycleSnapshot(target):null;
+  const world=worldPhase(target),available=lifecycle?.available===true,active=available&&lifecycle.reincarnationRun===true&&world===1;
+  return Object.freeze({version:VERSION,active,count:available?Math.max(0,finiteWhole(lifecycle.count,0)):0,lifeId:available?Math.max(0,finiteWhole(lifecycle.lifeId,0)):0,firstRun:available&&lifecycle.firstRun===true,reincarnationRun:available&&lifecycle.reincarnationRun===true,world,source:available?"first-world-target-lifecycle":"fail-closed"});
  }
  function rerunActive(target=state){return rerunContext(target).active===true;}
  function regions(){try{return typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];}catch(_){return [];}}
@@ -49,12 +50,9 @@
  function validEnemyIndex(value){const index=finiteWhole(value,-1);return index>=0&&index<=4?index:-1;}
  function currentTargetContext(target=state){
   const rerun=rerunContext(target);
-  if(typeof window.firstWorldTargetContextFromSelection==="function"){
-   const canonical=window.firstWorldTargetContextFromSelection({mode:"rerun",source:"rerun-ui-selection"},target);
-   return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid:canonical?.valid===true,authorized:canonical?.authorized===true,mapIndex:Number(canonical?.mapIndex??-1),enemyIndex:Number(canonical?.enemyIndex??-1),count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:canonical||null});
-  }
-  const mapIndex=validMapIndex(typeof selectedMap!=="undefined"?selectedMap:-1),enemyIndex=validEnemyIndex(typeof selectedEnemy!=="undefined"?selectedEnemy:-1),valid=mapIndex>=0&&enemyIndex>=0;
-  return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid,authorized:rerun.active===true&&valid,mapIndex,enemyIndex,count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:null});
+  if(typeof window.firstWorldTargetContextFromSelection!=="function")return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid:false,authorized:false,mapIndex:-1,enemyIndex:-1,count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:null,reason:"canonical-target-owner-missing"});
+  const canonical=window.firstWorldTargetContextFromSelection({mode:"rerun",source:"rerun-ui-selection"},target);
+  return Object.freeze({version:TARGET_CONTEXT_VERSION,active:rerun.active===true,valid:canonical?.valid===true,authorized:canonical?.authorized===true,mapIndex:Number(canonical?.mapIndex??-1),enemyIndex:Number(canonical?.enemyIndex??-1),count:rerun.count,lifeId:rerun.lifeId,world:rerun.world,canonicalContext:canonical||null,reason:canonical?"canonical-target":"canonical-target-missing"});
  }
  function presentationStateForTarget(formalState,targetContext){
   if(!formalState||typeof formalState!=="object"||targetContext?.authorized!==true)return formalState;
@@ -126,13 +124,14 @@
  window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION=TARGET_IDENTITY_FIX_VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION=TARGET_CONTEXT_VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_DELEGATE_VERSION=TARGET_CONTEXT_DELEGATE_VERSION;
+ window.FIRST_WORLD_REINCARNATION_LIFECYCLE_DELEGATE_VERSION=LIFECYCLE_DELEGATE_VERSION;
  window.FIRST_WORLD_REINCARNATION_COMBAT_SPEED_BADGE_REUSE_VERSION=COMBAT_SPEED_BADGE_REUSE_VERSION;
  window.firstWorldReincarnationRerunContext=rerunContext;
  window.firstWorldReincarnationTargetContext=currentTargetContext;
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
