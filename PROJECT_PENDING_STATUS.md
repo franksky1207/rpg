@@ -27,6 +27,7 @@ Batch7：GM／測試工具正式收尾 7-1～7-5全部完成   ✅ 完成
 Batch7 封箱後程式碼優化第1～4批                ✅ 完成
 第一紀元完整 Target Context 重構 Batch0～6      ✅ 完成
 第一紀元 Target Context 重構後優化第1～4批      ✅ 完成
+Code Cleanup Batch1～8                         ✅ 完成
 目前已排定工程                                 ✅ 全部完成
 ```
 
@@ -68,9 +69,27 @@ SAVE_MIN_SUPPORTED_VERSION = 1
 SAVE_LEGACY_SUPPORT_MODE = "all-known"
 ```
 
-目前完成的 Batch5／6／7、Batch7 後優化與 W1 Target Context 重構都沒有新增必要 persistent root，因此仍不升 Schema18。
+目前完成的 Batch5／6／7、Batch7 後優化、W1 Target Context 重構與 Code Cleanup Batch1～8 都沒有新增必要 persistent root，因此仍不升 Schema18。
+
+正式相容邊界維持：
+
+- Schema1～16：legacy import，必須走 canonical migration pipeline。
+- Schema17：current canonical schema。
+- Schema18 以上：未明示支援前一律 fail closed。
+- legacy `SAVE_VERSION = 13` 與 `MAX_LEVEL = 500` 仍只作相容 alias，不是 current schema／absolute level owner。
+- `savemigration.js` 內的舊 dungeon／retired shop／GM sandbox cleanup 仍只屬 migration owner；因 V1～V16 仍正式支援，現階段不得為了「乾淨」直接刪除。
 
 Future schema 必須 fail closed；正式大型 mutation 必須共用 Save Safety 與 transaction owner。
+
+## Code Cleanup Batch8 封箱
+
+第8批針對「舊存檔支援邊界／legacy cleanup／碎片合併／歷史文件」完成以下收斂：
+
+- 不縮減 V1～V17 正式支援範圍。
+- legacy cleanup 不建立第二套 runtime pipeline；繼續只由 `migrateSave()` 單一路徑持有。
+- 不為了減少檔案數而破壞 Batch7 已建立的 Story／GM／Integrity lazy-loading 邊界；這三組目前是有意義的 runtime ownership boundary，不應硬合併。
+- 歷史文件集中至 `docs/archive/`；封存文件不得作為 current runtime owner，也不得重新列成 current 待辦。
+- Runtime Integrity 永久執行 `tests/runtime/code-cleanup-batch8-legacy-boundary.js`，守住上述邊界。
 
 ## 轉生／突破
 
@@ -168,7 +187,8 @@ formalStartHp → combatEndHp → permanent delta
 - 高階 Boss 只記自身、不正式回填前段主線的舊規則。
 - 任何 GM sandbox 寫正式 save 的做法。
 - 以 `selectedMap / selectedEnemy` 重新作為 W1 battle execution authority。
-- 已完成的 Batch5／6／7 或 Target Context 工程重新列成待辦。
+- 已完成的 Batch5／6／7、Code Cleanup Batch1～8 或 Target Context 工程重新列成待辦。
+- 將 `docs/archive/` 內歷史文件重新視為 current 規格。
 
 ---
 
@@ -182,6 +202,7 @@ formalStartHp → combatEndHp → permanent delta
 6. 優先延伸正式 registry／policy／transaction／normalizer／combat／offline／progression／target owner，不建立第二套相同責任的 wrapper 或 fallback。
 7. `offlineprogress.js` 是正式 compatibility/offline consumer；不得建立第二套 Offline pipeline。
 8. 正式轉生與其他大型 state mutation 必須走 shared transaction／backup owner。
+9. `docs/archive/` 只供歷史追溯；current 規格一律回到正式 owner、`PROJECT_HANDOFF.md` 與本檔確認。
 
 ---
 
