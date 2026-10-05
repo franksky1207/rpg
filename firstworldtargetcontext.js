@@ -9,6 +9,8 @@
  const BATTLE_BINDING_VERSION=1;
  const LIFECYCLE_DELEGATE_VERSION=1;
  const POLICY_GATE_VERSION=1;
+ const TARGET_METADATA_VERSION=1;
+ const PERSISTED_TARGET_ADAPTER_VERSION=1;
  const MODES=Object.freeze(["formal","rerun","review"]);
  let sequence=0;
  let sessionSequence=0;
@@ -47,6 +49,24 @@
   return Object.freeze({mapName:String(map?.name||""),enemyName:String(encounter?.name||raw?.name||""),enemyLevel:Math.max(0,whole(encounter?.level??raw?.level,0)),targetType:targetType(enemyIndex)});
  }
  function immutableIdentity(mapIndex,enemyIndex){return Object.freeze({version:IDENTITY_VERSION,world:1,mapIndex,enemyIndex});}
+ function metadataOf(context){
+  const identity=identityOf(context);if(!identity||context?.valid!==true)return null;
+  return Object.freeze({version:TARGET_METADATA_VERSION,world:1,mapIndex:identity.mapIndex,enemyIndex:identity.enemyIndex,targetType:String(context.targetType||targetType(identity.enemyIndex)),enemyLevel:Math.max(0,whole(context.enemyLevel,0)),mapName:String(context.mapName||""),enemyName:String(context.enemyName||"")});
+ }
+ function persistedCoordinates(raw){
+  if(!raw||typeof raw!=="object"||Number(raw.world)!==1||String(raw.targetType||"")!=="mapEnemy")return null;
+  const mapIndex=validMapIndex(raw.mapIndex??raw.map),enemyIndex=validEnemyIndex(raw.enemyIndex??raw.enemy);
+  if(mapIndex<0||enemyIndex<0||enemyIndex>3)return null;
+  return Object.freeze({version:PERSISTED_TARGET_ADAPTER_VERSION,world:1,mapIndex,enemyIndex});
+ }
+ function contextFromPersisted(raw,options={},target=null){
+  const s=targetState(target),coords=persistedCoordinates(raw),mode=runtimeMode(s);if(!coords||!mode)return null;
+  const context=create({mode,mapIndex:coords.mapIndex,enemyIndex:coords.enemyIndex,source:String(options.source||"persisted-target")},s);
+  const current=validateCurrent(context,s);if(current.passed!==true||context.valid!==true||context.authorized!==true)return null;
+  const requirements=options.policy&&typeof options.policy==="object"?options.policy:{offlineSampleAllowed:true};
+  if(!policyAllows(context,requirements))return null;
+  return context;
+ }
  function denyPolicy(){return Object.freeze({version:POLICY_VERSION,formalRewardsAllowed:false,formalProgressAllowed:false,offlineSampleAllowed:false,specialEncounterAllowed:false,storyAllowed:false,deathPenaltyAllowed:false});}
  function policyFor(mode,type,valid=true){
   if(!valid||mode==="review")return denyPolicy();
@@ -150,7 +170,7 @@
   const baseReviewBack=window.backToGalaxyReviewMaps;if(typeof baseReviewBack==="function"){window.backToGalaxyReviewMaps=function(){clearPrepared();return baseReviewBack.apply(this,arguments);};report.reviewBack=true;}
   return Object.freeze(report);
  }
- function selfIntegrity(){const invalid=create({mode:"formal",mapIndex:-1,enemyIndex:99,source:"self-integrity"},targetState());const errors=[];if(invalid.valid!==false||invalid.authorized!==false)errors.push("invalid-fail-closed");if(Object.isFrozen(invalid)!==true||Object.isFrozen(invalid.identity)!==true||Object.isFrozen(invalid.policy)!==true)errors.push("immutable");if(policyAllows(invalid,{formalRewardsAllowed:false,formalProgressAllowed:false})!==true)errors.push("invalid-policy");if(typeof window.worldReincarnationContext!=="function")errors.push("lifecycle-owner-missing");return Object.freeze({version:VERSION,identityVersion:IDENTITY_VERSION,policyVersion:POLICY_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,preparedSessionVersion:PREPARED_SESSION_VERSION,encounterBridgeVersion:ENCOUNTER_BRIDGE_VERSION,uiPrepareBridgeVersion:UI_PREPARE_BRIDGE_VERSION,battleBindingVersion:BATTLE_BINDING_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,policyGateVersion:POLICY_GATE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});}
+ function selfIntegrity(){const invalid=create({mode:"formal",mapIndex:-1,enemyIndex:99,source:"self-integrity"},targetState());const errors=[];if(invalid.valid!==false||invalid.authorized!==false)errors.push("invalid-fail-closed");if(Object.isFrozen(invalid)!==true||Object.isFrozen(invalid.identity)!==true||Object.isFrozen(invalid.policy)!==true)errors.push("immutable");if(policyAllows(invalid,{formalRewardsAllowed:false,formalProgressAllowed:false})!==true)errors.push("invalid-policy");if(typeof window.worldReincarnationContext!=="function")errors.push("lifecycle-owner-missing");const metaProbe=create({mode:runtimeMode(targetState())||"formal",mapIndex:0,enemyIndex:0,source:"metadata-integrity"},targetState()),metadata=metadataOf(metaProbe);if(metaProbe.valid===true&&(!metadata||metadata.version!==TARGET_METADATA_VERSION||Object.isFrozen(metadata)!==true))errors.push("target-metadata");return Object.freeze({version:VERSION,identityVersion:IDENTITY_VERSION,policyVersion:POLICY_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,preparedSessionVersion:PREPARED_SESSION_VERSION,encounterBridgeVersion:ENCOUNTER_BRIDGE_VERSION,uiPrepareBridgeVersion:UI_PREPARE_BRIDGE_VERSION,battleBindingVersion:BATTLE_BINDING_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,policyGateVersion:POLICY_GATE_VERSION,targetMetadataVersion:TARGET_METADATA_VERSION,persistedTargetAdapterVersion:PERSISTED_TARGET_ADAPTER_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});}
 
  window.FIRST_WORLD_TARGET_CONTEXT_VERSION=VERSION;
  window.FIRST_WORLD_TARGET_IDENTITY_VERSION=IDENTITY_VERSION;
@@ -162,6 +182,8 @@
  window.FIRST_WORLD_TARGET_BATTLE_BINDING_VERSION=BATTLE_BINDING_VERSION;
  window.FIRST_WORLD_TARGET_LIFECYCLE_DELEGATE_VERSION=LIFECYCLE_DELEGATE_VERSION;
  window.FIRST_WORLD_TARGET_POLICY_GATE_VERSION=POLICY_GATE_VERSION;
+ window.FIRST_WORLD_TARGET_METADATA_VERSION=TARGET_METADATA_VERSION;
+ window.FIRST_WORLD_PERSISTED_TARGET_ADAPTER_VERSION=PERSISTED_TARGET_ADAPTER_VERSION;
  window.FIRST_WORLD_TARGET_CONTEXT_MODES=MODES;
  window.createFirstWorldTargetContext=create;
  window.firstWorldTargetContextFromSelection=fromSelection;
@@ -171,6 +193,9 @@
  window.firstWorldTargetPolicy=policySnapshot;
  window.firstWorldTargetPolicyAllows=policyAllows;
  window.firstWorldTargetIdentity=identityOf;
+ window.firstWorldTargetMetadata=metadataOf;
+ window.firstWorldPersistedTargetCoordinates=persistedCoordinates;
+ window.firstWorldTargetContextFromPersisted=contextFromPersisted;
  window.sameFirstWorldTargetIdentity=sameIdentity;
  window.validateFirstWorldTargetContext=validate;
  window.validateCurrentFirstWorldTargetContext=validateCurrent;
