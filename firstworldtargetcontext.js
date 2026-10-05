@@ -62,7 +62,8 @@
  function contextFromPersisted(raw,options={},target=null){
   const s=targetState(target),coords=persistedCoordinates(raw),mode=runtimeMode(s);if(!coords||!mode)return null;
   const context=create({mode,mapIndex:coords.mapIndex,enemyIndex:coords.enemyIndex,source:String(options.source||"persisted-target")},s);
-  const current=validateCurrent(context,s);if(current.passed!==true||context.valid!==true||context.authorized!==true)return null;
+  if(typeof window.validateCurrentFirstWorldTargetContext!=="function")return null;
+  const current=window.validateCurrentFirstWorldTargetContext(context,s);if(current?.passed!==true||context.valid!==true||context.authorized!==true)return null;
   const requirements=options.policy&&typeof options.policy==="object"?options.policy:{offlineSampleAllowed:true};
   if(!policyAllows(context,requirements))return null;
   return context;
