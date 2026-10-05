@@ -23,25 +23,18 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
-assert(handoff.includes("Batch7：GM／測試工具正式收尾")&&handoff.includes("7-1～7-5全部完成")&&handoff.includes("第一紀元完整 Target Context 重構"),"Handoff 必須同步 Batch7 已封箱與下一個 W1 Target Context 工程。");
+assert(handoff.includes("Batch7：GM／測試工具正式收尾")&&handoff.includes("7-1～7-5全部完成")&&handoff.includes("第一紀元完整 Target Context 重構"),"Handoff 必須同步 Batch7 與 W1 Target Context 已完成現況。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
-assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元為 Lv.1000～2000")&&pending.includes("第6大批 6-1～6-5 均已完成"),"Pending 必須同步 Schema17、高維紀元與 Batch6 已完成現況。");
-assert(pending.includes("reincarnationoverlevelrewards.js")&&pending.includes("ceil(base × M)")&&pending.includes("首輪 `count=0` 永遠為 1×")&&pending.includes("W3 Offline 完全不接越級倍率"),"Pending 必須同步 Batch6 越級 Online／Offline 正式規則。");
-assert(pending.includes("playerbatchupgrades.js")&&pending.includes("專精「一鍵平均提升」只在第一紀元")&&pending.includes("強化「平均最大強化」在第一、第二紀元"),"Pending 必須同步 Batch6 共用批次成長 owner 與紀元範圍。");
-assert(pending.includes("四大副本永久入口")&&pending.includes("首輪高維紀元仍維持「懸賞戰關閉」")&&pending.includes("500 場／485 勝（97%）"),"Pending 必須同步四副本永久入口與 Arena 原晉階規則。");
-assert(pending.includes("W1／W2 轉生主線正式向下征服")&&pending.includes("Lv.500以前的普通／菁英進度")&&pending.includes("Boss0～99 正式完成")&&pending.includes("首輪 `count=0` 永遠拒絕這項 rerun 回填"),"Pending 必須以正式向下征服回填覆蓋舊的只記最高 Boss 語意。");
-assert(!pending.includes("只寫入 `bossKilled[99]`")&&!pending.includes("不得偽造低階 key boss flag")&&!pending.includes("只寫入實際 Boss99"),"Pending 不得保留已失效的『只記最高 Boss、不回填低階』正式語意。");
-assert(pending.includes("第6大批程式碼優化第1批：Schema17 舊轉生資料一致化")&&pending.includes("normalizeExistingReincarnationRerunProgress()")&&pending.includes("冪等")&&pending.includes("不升 Save Schema"),"Pending 必須同步第6大批優化第1批的 Schema17 舊轉生 normalization 與首輪隔離。");
-assert(pending.includes("第6大批程式碼優化第2批：四大副本永久入口架構整理")&&pending.includes("dungeonModeAccessSnapshot()")&&pending.includes("state.level")&&pending.includes("不再被偽裝"),"Pending 必須同步第6大批優化第2批的共用副本 access owner 與正式 state 隔離。");
-assert(pending.includes("第6大批程式碼優化第3批：一鍵專精／強化交易安全")&&pending.includes("runSettlementTransaction()")&&pending.includes("save exception rollback")&&pending.includes("root identity")&&pending.includes("nested reference identity")&&pending.includes("PLAYER_BATCH_UPGRADE_TRANSACTION_VERSION = 1"),"Pending 必須同步第6大批優化第3批的 shared transaction、save exception rollback 與 identity 安全。");
-assert(pending.includes("第6大批程式碼優化第4批：Offline 舊樣本 provenance 安全化")&&pending.includes("OFFLINE_REWARD_CONTEXT_PROVENANCE_VERSION = 1")&&pending.includes("overlevelContextRecorded=true")&&pending.includes("舊 V4 pending")&&pending.includes("保守 1×"),"Pending 必須同步第6大批優化第4批的 Offline provenance 與舊樣本保守倍率策略。");
-assert(pending.includes("第6大批程式碼優化第5批：戰鬥 wrapper 收斂＋Batch6 最終行為 regression")&&pending.includes("MAINLINE_OVERLEVEL_REWARD_INTEGRATION_VERSION = 1")&&pending.includes("REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION = 2")&&pending.includes("REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION = 1")&&pending.includes("484 / 500")&&pending.includes("485 / 500")&&pending.includes("正式 save 只呼叫一次"),"Pending 必須同步第6大批優化第5批的 W1 settlement owner 收斂與行為 regression。");
-assert(pending.includes("第6大批程式碼優化第1～5批已完成")&&pending.includes("優化第1～5批全部完成")&&!pending.includes("第6大批後續優化排程"),"Pending 必須標記第6大批優化第1～5批全部完成。");
-assert(pending.includes("Batch7：GM／測試工具正式收尾 7-1～7-5 已完成")&&pending.includes("reincarnation-batch7-closure.js")&&pending.includes("0 / 8")&&pending.includes("1 / 8"),"Pending 必須同步 Batch7 7-1～7-5 已完成與8模式封箱結果。");
-assert(pending.includes("GM 正式 level")&&pending.includes("共用突破 milestone owner"),"Pending 必須保留 Batch7 GM milestone 規則。");
-assert(pending.includes("第一紀元完整 Target Context 重構")&&pending.includes("mapIndex / enemyIndex")&&pending.includes("尚未施工"),"Pending 必須明確指出下一個尚未完成工程為 W1 Target Context 重構。");
-assert(pending.includes("已取消／不得自動復活")&&pending.includes("AU 作為 Lv.2001+ 或第四紀元")&&pending.includes("VIP21+ 新增特殊特權"),"Pending 必須保留目前已取消項目，避免日後自動復活。");
+assert(pending.includes("main` 的實際程式碼是唯一真實來源"),"Pending 必須保留 main 唯一真實來源原則。");
+assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元：Lv.1000～2000"),"Pending 必須同步 Schema17 與高維紀元 Lv.1000～2000。");
+assert(pending.includes("Batch6：越級收益／批次成長／副本／封箱")&&pending.includes("Batch6 程式碼優化第1～5批")&&pending.includes("✅ 完成"),"Pending 必須同步 Batch6 與其優化已完成。");
+assert(pending.includes("Batch7：GM／測試工具正式收尾 7-1～7-5全部完成")&&pending.includes("Batch7 封箱後程式碼優化第1～4批"),"Pending 必須同步 Batch7 與封箱後優化已完成。");
+assert(pending.includes("第一紀元完整 Target Context 重構 Batch0～6")&&pending.includes("第一紀元 Target Context 重構後優化第1～4批"),"Pending 必須同步 W1 Target Context 重構與優化全部完成。");
+assert(pending.includes("目前已排定工程")&&pending.includes("全部完成")&&pending.includes("目前沒有已經定案、等待施工的下一個功能批次"),"Pending 必須反映目前沒有已排定待施工批次。");
+assert(!pending.includes("第一紀元完整 Target Context 重構：❌ 尚未施工")&&!pending.includes("下一個尚未完成工程為 W1 Target Context 重構"),"Pending 不得把已完成的 W1 Target Context 工程重新列為待辦。");
+assert(pending.includes("Future schema 必須 fail closed")&&pending.includes("transaction owner"),"Pending 必須保留 Save／Migration 安全原則。");
+assert(pending.includes("首輪 `reincarnation.count = 0`")&&pending.includes("只有 `count > 0` 啟用 rerun"),"Pending 必須保留首輪／轉生輪隔離規則。");
 
 assert(vipUpdate.includes("VIP 等級無上限")&&vipUpdate.includes("VIP20 是最後一個特殊特權階段"),"VIP 補充文件必須記錄正式無上限規則。");
 assert(vipUpdate.includes("VIP_PROGRESSION_VERSION = 14")&&vipUpdate.includes("VIP_UNBOUNDED_INTEGRITY_VERSION = 1"),"VIP 補充文件必須記錄正式 owner／Integrity 版本。");
