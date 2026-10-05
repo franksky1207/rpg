@@ -37,7 +37,7 @@ assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-clean
 assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4'),"Batch4 必須載入 canonical runtime API owner");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W3 rerun 必須更新 Batch4 cache token");
-assert.ok(index.includes('src="savemigration.js?v=20261005-reincarnation-gear-carryover-batch1"'),"轉生永久裝備修復 savemigration cache token 必須更新");
+assert.ok(index.includes('src="savemigration.js?v=20261005-reincarnation-gear-carryover-batch1&v2=20261005-reincarnation-gear-root-fix1"'),"轉生永久裝備 root-fix savemigration cache token 必須更新");
 assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 presentation adapter 之後接管 shared legacy alias");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld3.js'),"runtime API owner 必須先於 W3 rerun consumer");
@@ -63,7 +63,7 @@ assert.ok(/GLOBAL_API_CLEANUP_VERSION=2/.test(rerun3),"W3 namespace consumer cle
 assert.ok(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(migration),"retired state cleanup 必須繼續限定 migration-only");
 assert.ok(/SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=2/.test(migration),"Batch6 migration global API cleanup 必須為 V2");
 assert.ok(/SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=1/.test(migration),"Batch6 migration regression separation contract 缺失");
-assert.ok(/REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_VERSION=1/.test(migration)&&/normalizeReincarnationPermanentGearLevels/.test(migration),"轉生永久 W3 裝備 lower-world load repair owner 缺失");
+assert.ok(/REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION=1/.test(migration)&&!/function normalizeReincarnationPermanentGearLevels/.test(migration),"重複的轉生永久 W3 裝備 migration load repair 應已退休");
 assert.ok(!/runLevelMigrationRegression/.test(migration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_VERSION/.test(migration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_REPORT/.test(migration),"production migration owner 不得保留 regression runner/fixtures");
 assert.ok(/SCHEMA16_WORLD3_LV1000/.test(migrationRegression)&&/SCHEMA15_FAKE_WORLD3_LV1500/.test(migrationRegression)&&/SCHEMA16_CONTAMINATED_REINCARNATION/.test(migrationRegression),"分離後 CI migration fixtures 不完整");
 
@@ -79,4 +79,4 @@ assert.ok(/THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_V
 assert.ok(/automaticDelete:false/.test(backupRetention),"Backup retention 不得自動刪除玩家備份");
 assert.ok(/manualPruneEligible/.test(backupRetention),"Backup retention 必須有 canonical save 後的手動清理資格判定");
 assert.ok(/pruneLegacyMigrationBackups/.test(backupRetention),"Backup retention 必須提供明確的手動清理 API");
-console.log("Post-reincarnation cleanup Batch1-7 integrity passed.");
+console.log("Post-reincarnation cleanup Batch1-8 integrity passed.");
