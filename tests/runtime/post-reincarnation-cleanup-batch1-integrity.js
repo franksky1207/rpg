@@ -30,13 +30,14 @@ assert.ok(workflow.includes("post-reincarnation-cleanup-batch1-integrity.js"),"R
 assert.ok(workflow.includes("code-cleanup-batch7-lazy-loading.js"),"Runtime Integrity 必須永久執行 Batch7 lazy-loading regression");
 assert.ok(workflow.includes("save-level-migration-regression.js"),"Runtime Integrity 必須永久執行分離後 migration regression");
 assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 legacy compatibility matrix 必須繼續保留");
+assert.ok(workflow.includes("reincarnation-permanent-gear-carryover-integrity.js"),"Runtime Integrity 必須永久執行轉生永久裝備 carryover regression");
 
 assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
 assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch5"'),"W1 rerun 必須更新 Batch5 lifecycle convergence cache token");
 assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4'),"Batch4 必須載入 canonical runtime API owner");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W3 rerun 必須更新 Batch4 cache token");
-assert.ok(index.includes('src="savemigration.js?v=20261003-reincarnation-opt-batch2&v2=20261005-code-cleanup-batch6"'),"Batch6 savemigration cache token 必須更新");
+assert.ok(index.includes('src="savemigration.js?v=20261005-reincarnation-gear-carryover-batch1"'),"轉生永久裝備修復 savemigration cache token 必須更新");
 assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 presentation adapter 之後接管 shared legacy alias");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld3.js'),"runtime API owner 必須先於 W3 rerun consumer");
@@ -62,6 +63,7 @@ assert.ok(/GLOBAL_API_CLEANUP_VERSION=2/.test(rerun3),"W3 namespace consumer cle
 assert.ok(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(migration),"retired state cleanup 必須繼續限定 migration-only");
 assert.ok(/SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=2/.test(migration),"Batch6 migration global API cleanup 必須為 V2");
 assert.ok(/SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=1/.test(migration),"Batch6 migration regression separation contract 缺失");
+assert.ok(/REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_VERSION=1/.test(migration)&&/normalizeReincarnationPermanentGearLevels/.test(migration),"轉生永久 W3 裝備 lower-world load repair owner 缺失");
 assert.ok(!/runLevelMigrationRegression/.test(migration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_VERSION/.test(migration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_REPORT/.test(migration),"production migration owner 不得保留 regression runner/fixtures");
 assert.ok(/SCHEMA16_WORLD3_LV1000/.test(migrationRegression)&&/SCHEMA15_FAKE_WORLD3_LV1500/.test(migrationRegression)&&/SCHEMA16_CONTAMINATED_REINCARNATION/.test(migrationRegression),"分離後 CI migration fixtures 不完整");
 
