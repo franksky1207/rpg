@@ -86,11 +86,10 @@
  }
  function rerunAdventurePreparePage(){
   if(!rerunActive(state))return typeof firstRunOwners.adventurePreparePage==="function"?firstRunOwners.adventurePreparePage():"";
-  const targetContext=currentTargetContext(state);
-  if(targetContext.authorized!==true)return "<section class=\"prepare-screen\"><div class=\"notice\"><b>目標已失效</b><div class=\"muted\" style=\"margin-top:6px\">請返回冒險地圖重新選擇挑戰目標。</div></div></section>";
+  const targetContext=typeof window.prepareFirstWorldTargetContextFromSelection==="function"?window.prepareFirstWorldTargetContextFromSelection({mode:"rerun",source:"rerun-prepare-render"},state):null;
+  if(targetContext?.valid!==true||targetContext.authorized!==true)return "<section class=\"prepare-screen\"><div class=\"notice\"><b>目標已失效</b><div class=\"muted\" style=\"margin-top:6px\">請返回冒險地圖重新選擇挑戰目標。</div></div></section>";
   const mapIndex=validMapIndex(targetContext.mapIndex),enemyIndex=validEnemyIndex(targetContext.enemyIndex);
   if(mapIndex<0||enemyIndex<0)return "";
-  selectedMap=mapIndex;selectedEnemy=enemyIndex;
   const map=maps()[mapIndex],e=monsterObj(mapIndex,enemyIndex),modes=battleModesForEnemy(e);
   if(!modes.includes(selectedBattleCount))selectedBattleCount=1;
   const enemies=map.enemies.map((_,i)=>{
