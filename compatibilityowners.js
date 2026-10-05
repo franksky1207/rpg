@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
  const EXPECTED_SAVE_SCHEMA_VERSION=17;
@@ -7,7 +7,7 @@
  const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
  const ARENA_RUNTIME_OWNER="arenaByWorld";
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
- const SCRIPT_LOAD_POLICY_VERSION=3;
+ const SCRIPT_LOAD_POLICY_VERSION=4;
  const LEGACY_GLOBAL_ALIAS_POLICY_VERSION=1;
  const LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION=1;
 
@@ -22,7 +22,12 @@
  }
  function scriptLoadPolicySnapshot(path){
   const group=scriptLoadGroupFor(path),deferred=["gm","story","integrity"].includes(group);
-  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,group,startupCritical:!deferred,deferRecommended:deferred,fetchPriority:deferred?"low":"auto"});
+  const activationMode=group==="gm"?"on-demand-or-post-load":group==="story"?"post-load-sequenced":group==="integrity"?"post-story-gm-diagnostics":"startup";
+  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,group,startupCritical:!deferred,deferRecommended:deferred,fetchPriority:deferred?"low":"auto",activationMode,loaderRequired:deferred});
+ }
+ function scriptLoadRuntimeSnapshot(){
+  const loader=typeof window.civilizationScriptGroupSnapshot==="function"?window.civilizationScriptGroupSnapshot():null;
+  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,loaderVersion:Number(window.SCRIPT_GROUP_LOADER_VERSION)||0,loaderAvailable:typeof window.ensureCivilizationScriptGroup==="function",groups:loader?.groups||null});
  }
  function legacyGlobalAliasSnapshot(){
   return Object.freeze({
@@ -67,7 +72,7 @@
   if(typeof window.save!=="function"||typeof window.registerBeforeSaveHook!=="function"||typeof window.registerAfterSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function"||window.SAVE_HOOK_IMPLEMENTATION_OWNER!=="savehookcore"||hookSnapshot?.implementationOwner!=="savehookcore"||Number(hookSnapshot?.coreVersion)!==2)errors.push({code:"SAVE_HOOK_OWNER",implementation:window.SAVE_HOOK_IMPLEMENTATION_OWNER||null,currentWrapper:window.save?.__saveHookOwner||null,snapshot:hookSnapshot});
   const legacySupport=legacySaveSupportSnapshot();
   if(legacySupport.currentSchema!==EXPECTED_SAVE_SCHEMA_VERSION||legacySupport.minSupportedVersion!==1||legacySupport.configuredMode!=="all-known"||legacySupport.legacyReadPath!=="migration-only"||legacySupport.canonicalWriteSchema!==EXPECTED_SAVE_SCHEMA_VERSION)errors.push({code:"LEGACY_SAVE_SUPPORT_BOUNDARY",actual:legacySupport});
-  const report={version:VERSION,passed:errors.length===0,errors,legacyGlobals:legacyGlobalAliasSnapshot(),legacySaveSupport:legacySupport,saveHookImplementation:hookSnapshot,checkedAt:Date.now()};
+  const report={version:VERSION,passed:errors.length===0,errors,legacyGlobals:legacyGlobalAliasSnapshot(),legacySaveSupport:legacySupport,scriptLoad:scriptLoadRuntimeSnapshot(),saveHookImplementation:hookSnapshot,checkedAt:Date.now()};
   window.LEGACY_COMPATIBILITY_OWNER_REPORT=report;
   return report;
  }
@@ -90,8 +95,8 @@
  window.legacySaveSupportSnapshot=legacySaveSupportSnapshot;
  window.runLegacyCompatibilityOwnerDiagnostics=runDiagnostics;
  window.SCRIPT_LOAD_POLICY_VERSION=SCRIPT_LOAD_POLICY_VERSION;
- window.scriptLoadGroupFor=scriptLoadGroupFor;
  window.scriptLoadPolicySnapshot=scriptLoadPolicySnapshot;
+ window.scriptLoadRuntimeSnapshot=scriptLoadRuntimeSnapshot;
  window.SCRIPT_LOAD_GROUPS=Object.freeze(["core","world","gm","story","integrity"]);
  window.LEVEL_CAP_THREE_WORLD_COMPATIBILITY_VERSION=1;
  window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:null,pending:true,errors:[],checkedAt:0};
