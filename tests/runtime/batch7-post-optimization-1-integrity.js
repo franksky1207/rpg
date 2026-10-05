@@ -15,7 +15,7 @@ const fs=require("fs");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION===1&&window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION===1&&window.GM_BREAKTHROUGH_CANONICAL_REBUILD_VERSION===2&&typeof window.gmCommitFormalEnhancementMutation==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.BREAKTHROUGH_CANONICAL_REBUILD_VERSION===1&&window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION===2&&window.GM_BREAKTHROUGH_CANONICAL_REBUILD_VERSION===2&&typeof window.gmCommitFormalEnhancementMutation==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=value=>JSON.parse(JSON.stringify(value));
    const milestones=()=>Object.fromEntries((window.BREAKTHROUGH_MILESTONE_LEVELS||[]).map(level=>[String(level),false]));
