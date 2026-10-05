@@ -23,7 +23,7 @@ assert(!index.includes('src="thirdworldmigrationregression.js')&&!index.includes
 for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+type="application/x-civilization-deferred"\\s+data-load-group="${group}"\\s+data-src=`);assert(re.test(index),`${group} scripts 必須由 Script Group Loader 延後載入。`);}
 
 const loaderRef=assetRef("scriptgrouploader.js");
-assert(loaderRef==="?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1","Script Group Loader Batch3 canonical cache token 未同步。");
+assert(loaderRef==="?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2","Script Group Loader Batch3 canonical cache token 未同步。");
 assert(assetRef("compatibilityowners.js")==="?v=20261005-code-cleanup-batch7","Compatibility owner canonical cache token 漂移。");
 assert(!/<script\s+defer\s+fetchpriority="low"\s+data-load-group="(?:gm|story|integrity)"/.test(index),"舊 defer-only 非核心載入方式必須退休。");
 assert(/GROUP_ORDER=Object\.freeze\(\["story","gm","integrity"\]\)/.test(scriptLoader)&&/AUTO_GROUPS=Object\.freeze\(\["story"\]\)/.test(scriptLoader),"Loader 必須只自動載入 Story。");
