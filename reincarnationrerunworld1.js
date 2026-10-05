@@ -6,6 +6,7 @@
  const LIFECYCLE_DELEGATE_VERSION=1;
  const COMBAT_SPEED_BADGE_REUSE_VERSION=2;
  const PRESENTATION_STATE_SWAP_RETIRED_VERSION=1;
+ const WORLD_RERUN_CONTEXT_OWNER_VERSION=1;
  const firstRunOwners=Object.freeze({
   enemyUnlocked:typeof window.enemyUnlocked==="function"?window.enemyUnlocked:null,
   canBoss:typeof window.canBoss==="function"?window.canBoss:null,
@@ -20,16 +21,36 @@
  let regionOpenInitialized=false;
 
  function finiteWhole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
+ function stateTarget(target){if(target&&typeof target==="object")return target;try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function worldPhase(target=state){
   if(typeof window.currentWorldPhase==="function")return Number(window.currentWorldPhase(target))||1;
   if(target?.thirdWorld?.entered===true)return 3;
   if(target?.secondWorld?.entered===true)return 2;
   return 1;
  }
+ function worldRerunPolicy(world,target=state,options={}){
+  const holder=stateTarget(target),targetWorld=Math.max(1,Math.min(3,finiteWhole(world,1))),phase=holder?worldPhase(holder):1;
+  const suppliedLifecycle=options&&typeof options==="object"?options.lifecycle:null;
+  const lifecycle=suppliedLifecycle||(typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(holder):null);
+  const available=options?.available===undefined?!!lifecycle:options.available===true;
+  const entered=targetWorld===1?true:targetWorld===2?holder?.secondWorld?.entered===true&&holder?.thirdWorld?.entered!==true:holder?.thirdWorld?.entered===true;
+  const reincarnationRun=available&&lifecycle?.reincarnationRun===true;
+  const active=!!holder&&available&&entered&&reincarnationRun&&phase===targetWorld;
+  return Object.freeze({
+   version:Math.max(1,finiteWhole(options?.version,1)),
+   active,
+   count:available?Math.max(0,finiteWhole(lifecycle?.count,0)):0,
+   lifeId:available?Math.max(0,finiteWhole(lifecycle?.lifeId,0)):0,
+   firstRun:available&&lifecycle?.firstRun===true,
+   reincarnationRun,
+   world:phase,
+   targetWorld,
+   source:available?String(options?.source||"reincarnation-context"):"fail-closed"
+  });
+ }
  function rerunContext(target=state){
   const lifecycle=typeof window.firstWorldTargetLifecycleSnapshot==="function"?window.firstWorldTargetLifecycleSnapshot(target):null;
-  const world=worldPhase(target),available=lifecycle?.available===true,active=available&&lifecycle.reincarnationRun===true&&world===1;
-  return Object.freeze({version:VERSION,active,count:available?Math.max(0,finiteWhole(lifecycle.count,0)):0,lifeId:available?Math.max(0,finiteWhole(lifecycle.lifeId,0)):0,firstRun:available&&lifecycle.firstRun===true,reincarnationRun:available&&lifecycle.reincarnationRun===true,world,source:available?"first-world-target-lifecycle":"fail-closed"});
+  return worldRerunPolicy(1,target,{version:VERSION,lifecycle,available:lifecycle?.available===true,source:"first-world-target-lifecycle"});
  }
  function rerunActive(target=state){return rerunContext(target).active===true;}
  function regions(){try{return typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];}catch(_){return [];}}
@@ -116,6 +137,8 @@
   return shell.innerHTML;
  }
 
+ window.REINCARNATION_WORLD_RERUN_CONTEXT_OWNER_VERSION=WORLD_RERUN_CONTEXT_OWNER_VERSION;
+ window.worldRerunPolicy=worldRerunPolicy;
  window.FIRST_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_IDENTITY_FIX_VERSION=TARGET_IDENTITY_FIX_VERSION;
  window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION=TARGET_CONTEXT_VERSION;
@@ -128,7 +151,7 @@
  window.isFirstWorldReincarnationRerun=rerunActive;
  window.firstWorldRerunKeyBossCoverage=keyBossCoverage;
  window.firstWorldRerunRegionQualified=regionQualified;
- window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION,presentationStateSwapRetiredVersion:PRESENTATION_STATE_SWAP_RETIRED_VERSION};};
+ window.firstWorldRerunPolicySnapshot=function(target=state){const context=rerunContext(target);return {...context,keyBossCoverage:keyBossCoverage(target),regionCount:regions().length,mapCount:maps().length,targetIdentityFixVersion:TARGET_IDENTITY_FIX_VERSION,targetContextVersion:TARGET_CONTEXT_VERSION,targetContextDelegateVersion:TARGET_CONTEXT_DELEGATE_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,combatSpeedBadgeReuseVersion:COMBAT_SPEED_BADGE_REUSE_VERSION,presentationStateSwapRetiredVersion:PRESENTATION_STATE_SWAP_RETIRED_VERSION,sharedContextOwnerVersion:WORLD_RERUN_CONTEXT_OWNER_VERSION};};
  window.toggleReincarnationRerunWorld1Region=function(id){initializeRegionOpenState();const key=String(id||"");if(!key)return false;regionOpenState[key]=regionOpenState[key]!==true;if(typeof render==="function")render();return regionOpenState[key];};
  window.openReincarnationRerunWorld1Map=function(mapIndex){
   if(!rerunActive(state))return false;
