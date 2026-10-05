@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=5;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
  const EXPECTED_SAVE_SCHEMA_VERSION=17;
@@ -7,7 +7,8 @@
  const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
  const ARENA_RUNTIME_OWNER="arenaByWorld";
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
- const SCRIPT_LOAD_POLICY_VERSION=5;
+ const SCRIPT_LOAD_POLICY_VERSION=4;
+ const SCRIPT_ON_DEMAND_ACTIVATION_VERSION=1;
  const LEGACY_GLOBAL_ALIAS_POLICY_VERSION=1;
  const LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION=1;
 
@@ -22,13 +23,13 @@
  }
  function scriptLoadPolicySnapshot(path){
   const group=scriptLoadGroupFor(path),deferred=["gm","story","integrity"].includes(group);
-  const activationMode=group==="gm"?"password-modal-on-demand":group==="story"?"post-load-sequenced":group==="integrity"?"diagnostics-explicit-only":"startup";
+  const activationMode=group==="gm"?"on-demand-or-post-load":group==="story"?"post-load-sequenced":group==="integrity"?"post-story-gm-diagnostics":"startup";
   return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,group,startupCritical:!deferred,deferRecommended:deferred,fetchPriority:deferred?"low":"auto",activationMode,loaderRequired:deferred});
  }
  function scriptLoadRuntimeSnapshot(){
   const loader=window.CivilizationScriptLoader;
   const snapshot=loader&&typeof loader.snapshot==="function"?loader.snapshot():typeof window.civilizationScriptGroupSnapshot==="function"?window.civilizationScriptGroupSnapshot():null;
-  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,loaderVersion:Number(loader?.version||window.SCRIPT_GROUP_LOADER_VERSION)||0,loaderAvailable:typeof loader?.ensure==="function"||typeof window.ensureCivilizationScriptGroup==="function",activation:snapshot?.activation||null,groups:snapshot?.groups||null});
+  return Object.freeze({version:SCRIPT_LOAD_POLICY_VERSION,onDemandActivationVersion:SCRIPT_ON_DEMAND_ACTIVATION_VERSION,loaderVersion:Number(loader?.version||window.SCRIPT_GROUP_LOADER_VERSION)||0,loaderAvailable:typeof loader?.ensure==="function"||typeof window.ensureCivilizationScriptGroup==="function",activation:snapshot?.activation||null,groups:snapshot?.groups||null});
  }
  function legacyGlobalAliasSnapshot(){
   return Object.freeze({
@@ -96,6 +97,7 @@
  window.legacySaveSupportSnapshot=legacySaveSupportSnapshot;
  window.runLegacyCompatibilityOwnerDiagnostics=runDiagnostics;
  window.SCRIPT_LOAD_POLICY_VERSION=SCRIPT_LOAD_POLICY_VERSION;
+ window.SCRIPT_ON_DEMAND_ACTIVATION_VERSION=SCRIPT_ON_DEMAND_ACTIVATION_VERSION;
  window.scriptLoadPolicySnapshot=scriptLoadPolicySnapshot;
  window.scriptLoadRuntimeSnapshot=scriptLoadRuntimeSnapshot;
  window.SCRIPT_LOAD_GROUPS=Object.freeze(["core","world","gm","story","integrity"]);
