@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
  const POLICY_VERSION=1;
  const SECTION_POLICY_VERSION=1;
  function phase(target=null){
