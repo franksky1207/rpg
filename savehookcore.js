@@ -1,5 +1,6 @@
 (function(){
- const VERSION=3;
+ const CORE_VERSION=2;
+ const IMPLEMENTATION_VERSION=1;
  const LEGACY_RUNTIME_OWNER_ALIAS="compatibilityowners";
  const IMPLEMENTATION_OWNER="savehookcore";
  const beforeSaveHooks=new Map();
@@ -33,12 +34,13 @@
   return context.result===true;
  };
  hookedSave.__saveHookOwner=IMPLEMENTATION_OWNER;
- hookedSave.__saveHookCoreVersion=VERSION;
+ hookedSave.__saveHookCoreVersion=CORE_VERSION;
  hookedSave.__saveHookBase=baseSave;
  window.save=hookedSave;
  try{save=hookedSave;}catch(_){}
 
- window.SAVE_HOOK_CORE_VERSION=VERSION;
+ window.SAVE_HOOK_CORE_VERSION=CORE_VERSION;
+ window.SAVE_HOOK_IMPLEMENTATION_VERSION=IMPLEMENTATION_VERSION;
  window.SAVE_HOOK_IMPLEMENTATION_OWNER=IMPLEMENTATION_OWNER;
  window.SAVE_HOOK_RUNTIME_OWNER=LEGACY_RUNTIME_OWNER_ALIAS;
  window.SAVE_HOOK_RUNTIME_OWNER_ALIAS_VERSION=1;
@@ -51,5 +53,5 @@
  window.getBeforeSaveHookIds=function(){return Array.from(beforeSaveHooks.keys());};
  window.getAfterSaveHookIds=function(){return Array.from(afterSaveHooks.keys());};
  window.getSaveSettlementHookIds=function(){return Array.from(settlementSaveHooks.keys());};
- window.saveHookOwnerSnapshot=function(){return Object.freeze({version:VERSION,implementationOwner:IMPLEMENTATION_OWNER,runtimeOwnerAlias:LEGACY_RUNTIME_OWNER_ALIAS,before:Array.from(beforeSaveHooks.keys()),after:Array.from(afterSaveHooks.keys()),settlement:Array.from(settlementSaveHooks.keys())});};
+ window.saveHookOwnerSnapshot=function(){return Object.freeze({coreVersion:CORE_VERSION,implementationVersion:IMPLEMENTATION_VERSION,implementationOwner:IMPLEMENTATION_OWNER,runtimeOwnerAlias:LEGACY_RUNTIME_OWNER_ALIAS,before:Array.from(beforeSaveHooks.keys()),after:Array.from(afterSaveHooks.keys()),settlement:Array.from(settlementSaveHooks.keys())});};
 })();
