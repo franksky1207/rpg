@@ -18,9 +18,10 @@ try{
  expectedReadyW3.forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少已上線高維正式劇情 ${id}`);});
  const loadedW3=Object.keys(context.CIVILIZATION_STORIES||{}).filter(id=>id.startsWith('higher-dimensional-'));
  if(JSON.stringify(loadedW3)!==JSON.stringify(expectedReadyW3)){console.error(`高維 runtime catalog 應完整 11 篇：${JSON.stringify(loadedW3)}`);process.exit(13);}
- const universeIds=[];
- for(const region of context.UNIVERSE_STORY_REGISTRY||[]){for(const id of region.storyIds||[])universeIds.push(id);}
- if(universeIds.length!==100||new Set(universeIds).size!==100){console.error(`宇宙紀元正式 story ID 應為 100 個且不重複，實際 ${universeIds.length}/${new Set(universeIds).size}`);process.exit(9);}
- if(report.errors?.length){console.error('Story Integrity 失敗');report.errors.forEach(x=>console.error('-',x));process.exit(3);}
- console.log(`Story Integrity 通過｜銀河 ${report.galaxyStories} 篇｜宇宙 ${report.universeStoriesLoaded}/${report.universeStoriesExpected} 篇｜高維 ${report.thirdWorldStoriesLoaded}/${report.thirdWorldStoriesExpected} 篇｜已檢查首領劇情 ${report.bossStoriesChecked} 篇`);
-}catch(error){console.error(error&&error.stack?error.stack:error);process.exit(1);}
+ const ready=(context.thirdWorldStoryTriggerDescriptors?.()||[]).filter(row=>row.contentReady===true).map(row=>row.storyId);
+ if(JSON.stringify(ready)!==JSON.stringify(expectedReadyW3)){console.error(`高維 contentReady 錯誤：${JSON.stringify(ready)}`);process.exit(14);}
+ ['universe-galaxy-beyond-boss-1','universe-galaxy-beyond-boss-10','universe-local-group-war-boss-1','universe-local-group-war-boss-10','universe-cosmic-unification-war-boss-10'].forEach(id=>{if(!context.CIVILIZATION_STORIES?.[id])throw new Error(`缺少既有宇宙正式樣板 ${id}`);});
+ if(Number(report.totalStoriesTarget)!==201||Number(report.allEraStoriesTarget)!==212){console.error(`劇情目標錯誤：legacy=${report.totalStoriesTarget}, allEra=${report.allEraStoriesTarget}`);process.exit(9);}
+ if(report.passed){console.log(`STORY INTEGRITY PASSED | galaxy=${report.galaxyStories}/101 universe=${report.universeStoriesLoaded}/100 higher-dimensional=${report.thirdWorldStoriesLoaded}/11 approved=11 allEraTarget=${report.allEraStoriesTarget}`);process.exit(0);}
+ console.error(`STORY INTEGRITY FAILED: ${report.errors.length} error(s)`);report.errors.forEach((e,i)=>console.error(`${i+1}. [${e.code}] ${e.message}`));process.exit(1);
+}catch(error){console.error('STORY INTEGRITY CI EXECUTION FAILED');console.error(error&&error.stack?error.stack:error);process.exit(3);}
