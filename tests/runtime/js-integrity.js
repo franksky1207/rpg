@@ -41,7 +41,7 @@ assert(/WORLD_COMBAT_ADAPTER_VERSION=1/.test(combatMath)&&/runWorldCombatCore/.t
 assert(/DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1/.test(dungeonCore)&&/window\.runWorldCombatCore/.test(dungeonCore),"Dungeon 必須走 World Combat Adapter。");
 assert(/SECOND_WORLD_WORLD_COMBAT_ADAPTER_VERSION=1/.test(secondWorldCombat)&&/window\.runWorldCombatCore/.test(secondWorldCombat),"W2 主線必須走 World Combat Adapter。");
 assert(/WORLD_TRANSITION_GUARD_INSTALL_VERSION=2/.test(worldTransitionSafety),"World Transition guards 必須維持 single-install owner。");
-assert(/OFFLINE_STATE_NORMALIZATION_VERSION=4/.test(offlineState)&&/OFFLINE_SAMPLE_OWNER_VERSION=2/.test(offlineState),"Offline canonical owner 版本錯誤。");
+assert(/const VERSION=4;/.test(offlineState)&&/const OFFLINE_BATTLE_SAMPLE_VERSION=4;/.test(offlineState)&&/const OFFLINE_SAMPLE_OWNER_VERSION=2;/.test(offlineState),"Offline canonical owner 版本錯誤。");
 assert(/MAIN_OFFLINE_SAMPLE_OWNER_CONVERGENCE_VERSION=1/.test(battlePipeline)&&/window\.appendOfflineBattleSample/.test(battlePipeline),"W1 Offline sample consumer 尚未收斂 canonical owner。");
 
 assert(/PRESENTATION_STATE_SWAP_RETIRED_VERSION=1/.test(rerun1)&&!/state=presentationState/.test(rerun1),"W1 rerun prepare 不得再替換 global state。");
