@@ -30,7 +30,7 @@
  function installSaveBoundary(){
   if(typeof window.registerBeforeSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function")return false;
   window.registerBeforeSaveHook(GM_SAVE_HOOK_ID,context=>{try{if(context?.state?.gm===true){context.__gmRuntimeAuthorizationRestore=true;context.state.gm=false;}}catch(_){ }});
-  window.registerSaveSettlementHook(GM_SAVE_HOOK_ID,context=>{if(context?.__gmRuntimeAuthorizationRestore===true&&gmAuthorized())setRuntimeGmFlag(true);});
+  window.registerSaveSettlementHook(GM_SAVE_HOOK_ID,context=>{if(context?.__gmRuntimeAuthorizationRestore===true)setRuntimeGmFlag(true);});
   return true;
  }
  function stripLegacySaveAuthorization(){try{if(typeof state==="undefined"||!state||state.gm!==true)return false;state.gm=false;if(typeof save==="function")save(false);return true;}catch(_){return false;}}
