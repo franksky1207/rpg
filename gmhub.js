@@ -54,19 +54,6 @@
   const range=enhancementRange("manage");
   return `<div class="muted gm-hub-note">直接修改玩家正式裝備欄位強化等級；目前正式範圍 +${range.min}～+${range.max}。套用後寫入正式存檔，不影響目前持有的強化資源。</div>${enhancementGrid("manage")}<div class="controls"><button class="btn blue" onclick="gmApplyEnhancementLevels()">套用強化等級</button></div>`;
  };
- window.gmApplyEnhancementLevels=function(){
-  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
-  const range=enhancementRange("manage");
-  window.gmTestEnhancementSlots().forEach(type=>{
-   const el=document.getElementById(`gmEnhance-manage-${type}`);
-   const raw=Math.floor(Number(el?el.value:state.enhancement.levels[type])||0);
-   state.enhancement.levels[type]=Math.max(range.min,Math.min(range.max,raw));
-  });
-  if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
-  if(typeof save==="function")save();
-  if(typeof render==="function")render();
-  alert("強化等級已更新。");
- };
  window.gmEnhancementTestHtml=function(){return `<div class="muted gm-hub-note">選擇本次工作階段的裝備欄位強化測試等級；沙盒固定可測 +0～+40，只影響 GM 測試快照，不消耗資源、不修改正式角色資料。</div>${enhancementGrid("test")}<div id="gmEnhancementTestInfo" class="muted" style="margin-top:10px">${gmTestEnhancementLabel()}</div>`;};
 
  window.gmTestSpecializationLabel=function(){
@@ -126,20 +113,6 @@
   const rows=thirdWorldGearBosses(),requested=Math.floor(Number(document.getElementById("gmThirdWorldGearBoss")?.value));
   gmThirdWorldGearBoss=rows.some(row=>Number(row?.index)===requested)?requested:(Number(rows[0]?.index)||0);
  };
- window.gmCreateThirdWorldGear=function(){
-  if(!state?.thirdWorld?.entered)return alert("目前尚未進入高維紀元。");
-  if(typeof window.makeThirdWorldEquipmentForBoss!=="function")return alert("高維紀元裝備 owner 尚未載入。");
-  window.gmThirdWorldGearChangeBoss();
-  const q=Math.floor(Number(document.getElementById("gmThirdWorldGearQuality")?.value));
-  if(q!==4&&q!==5)return alert("高維紀元裝備品質只能選擇傳說或神話。");
-  const type=document.getElementById("gmThirdWorldGearType")?.value;
-  const types=type==="all"?EQUIPMENT_TYPES.slice():EQUIPMENT_TYPES.includes(type)?[type]:[];
-  if(!types.length)return;
-  let created=0;
-  types.forEach(slot=>{const item=window.makeThirdWorldEquipmentForBoss(gmThirdWorldGearBoss,{state,forcedQ:q,forcedType:slot,sourceTag:"gm-third-world"});if(item){state.inventory.push(item);created++;}});
-  if(!created)return alert("無法產生高維紀元裝備。");
-  save();render();alert(`已產生 ${created} 件高維紀元裝備。`);
- };
  window.gmDimensionalStrings=function(){
   if(formalManagePhase(state)!==3||!state?.thirdWorld||typeof state.thirdWorld!=="object")return alert("目前尚未進入高維紀元。");
   if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
@@ -189,19 +162,6 @@
  window.gmFormalManagePhase=formalManagePhase;
  window.gmGeneralManagementPolicy=generalManagementPolicy;
  window.gmHubManageSectionVisible=function(id,target=state){const key=String(id||"");if(key==="civilization-manage")return formalManagePhase(target)>=2;return true;};
-
- window.gmResetVip=function(){
-  if(!confirm("確定要將 VIP 等級與 VIP 積分全部重置為 0 嗎？"))return;
-  const beforeMax=playerCombatStats().hp;
-  const beforeHp=Math.max(0,Math.min(beforeMax,Number(state.hp)||0));
-  const ratio=beforeMax>0?beforeHp/beforeMax:1;
-  const wasFull=beforeHp>=beforeMax;
-  state.vipLevel=0;
-  state.vipPoints=0;
-  const afterMax=playerCombatStats().hp;
-  state.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));
-  save();render();
- };
  window.gmHubSectionToggle=function(id,open){const key=String(id||"");if(!key)return;if(open)gmHubOpenSections.add(key);else gmHubOpenSections.delete(key);};
  window.gmHubSectionIsOpen=function(id){return gmHubOpenSections.has(String(id||""));};
  window.gmHubSwitch=function(tab){gmHubTab=tab==="test"?"test":"manage";render();};
@@ -219,6 +179,8 @@
  window.GM_HUB_PHASE_SECTION_VISIBILITY_VERSION=1;
  window.GM_ENHANCEMENT_HUB_VERSION=5;
  window.GM_ENHANCEMENT_FORMAL_RANGE_VERSION=1;
+ window.GM_HUB_FORMAL_WRITER_RETIRED_VERSION=1;
+ window.GM_HUB_ENHANCEMENT_WRITER_RETIRED_VERSION=1;
  gmHtml=function(){installGmHubStyles();return hubHtml();};
  installGmHubStyles();
 })();
