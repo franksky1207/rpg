@@ -1,47 +1,16 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
+ const EXPECTED_SAVE_SCHEMA_VERSION=17;
  const SAVE_SCHEMA_OWNER="savemigration";
  const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
  const ARENA_RUNTIME_OWNER="arenaByWorld";
  const ARENA_ALIAS_POLICY="legacy-read-through-only";
- const SAVE_HOOK_CORE_VERSION=2;
  const SCRIPT_LOAD_POLICY_VERSION=3;
  const LEGACY_GLOBAL_ALIAS_POLICY_VERSION=1;
- const beforeSaveHooks=new Map();
- const afterSaveHooks=new Map();
- const settlementSaveHooks=new Map();
- const baseSave=typeof window.save==="function"?window.save:null;
+ const LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION=1;
 
- function registerHook(map,id,fn){const key=String(id||"").trim();if(!key||typeof fn!=="function")return false;map.set(key,fn);return true;}
- function unregisterHook(map,id){return map.delete(String(id||"").trim());}
- function runHooks(map,context,label){
-  map.forEach((fn,id)=>{
-   try{const result=fn(context);if(label==="before"&&result===false){context.cancelled=true;if(!context.cancelReason)context.cancelReason=`hook:${id}`;}}
-   catch(error){console.error(`[文明戰線] Save ${label} hook failed: ${id}`,error);}
-  });
- }
- function registerBeforeSaveHook(id,fn){return registerHook(beforeSaveHooks,id,fn);}
- function unregisterBeforeSaveHook(id){return unregisterHook(beforeSaveHooks,id);}
- function registerAfterSaveHook(id,fn){return registerHook(afterSaveHooks,id,fn);}
- function unregisterAfterSaveHook(id){return unregisterHook(afterSaveHooks,id);}
- function registerSaveSettlementHook(id,fn){return registerHook(settlementSaveHooks,id,fn);}
- function unregisterSaveSettlementHook(id){return unregisterHook(settlementSaveHooks,id);}
- if(baseSave){
-  const hookedSave=function(show=true){
-   const context={show:show!==false,state:typeof state!=="undefined"?state:null,startedAt:Date.now(),cancelled:false,cancelReason:"",result:false,savedAt:0};
-   runHooks(beforeSaveHooks,context,"before");
-   if(!context.cancelled)context.result=baseSave(show)===true;
-   if(context.result===true){context.savedAt=Date.now();runHooks(afterSaveHooks,context,"after");}
-   context.finishedAt=Date.now();runHooks(settlementSaveHooks,context,"settlement");
-   return context.result===true;
-  };
-  hookedSave.__saveHookOwner="compatibilityowners";
-  hookedSave.__saveHookCoreVersion=SAVE_HOOK_CORE_VERSION;
-  window.save=hookedSave;
-  try{save=hookedSave;}catch(e){}
- }
  function scriptLoadGroupFor(path){
   const name=String(path||"").split("/").pop().split("?")[0].toLowerCase();
   if(!name)return "core";
@@ -64,6 +33,21 @@
    arena:{policy:ARENA_ALIAS_POLICY,owner:ARENA_RUNTIME_OWNER}
   });
  }
+ function legacySaveSupportSnapshot(){
+  const current=Math.max(1,Math.floor(Number(window.SAVE_SCHEMA_VERSION)||EXPECTED_SAVE_SCHEMA_VERSION));
+  const minimum=Math.max(1,Math.floor(Number(window.SAVE_MIN_SUPPORTED_VERSION)||1));
+  return Object.freeze({
+   version:LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION,
+   currentSchema:current,
+   minSupportedVersion:minimum,
+   configuredMode:String(window.SAVE_LEGACY_SUPPORT_MODE||""),
+   legacyReadPath:"migration-only",
+   canonicalWriteSchema:current,
+   canonicalizeAfterLoad:true,
+   legacyDuplicateWrites:false,
+   futureSchemaPolicy:"fail-closed"
+  });
+ }
 
  window.LEGACY_COMPATIBILITY_OWNER_VERSION=VERSION;
  window.LEGACY_SAVE_VERSION=LEGACY_SAVE_VERSION_VALUE;
@@ -79,17 +63,8 @@
  window.LEGACY_GLOBAL_ALIAS_POLICY_VERSION=LEGACY_GLOBAL_ALIAS_POLICY_VERSION;
  window.LEGACY_GLOBAL_DUPLICATE_WRITE_RETIREMENT_VERSION=1;
  window.legacyGlobalAliasSnapshot=legacyGlobalAliasSnapshot;
- window.SAVE_HOOK_CORE_VERSION=SAVE_HOOK_CORE_VERSION;
- window.SAVE_HOOK_RUNTIME_OWNER="compatibilityowners";
- window.registerBeforeSaveHook=registerBeforeSaveHook;
- window.unregisterBeforeSaveHook=unregisterBeforeSaveHook;
- window.registerAfterSaveHook=registerAfterSaveHook;
- window.unregisterAfterSaveHook=unregisterAfterSaveHook;
- window.registerSaveSettlementHook=registerSaveSettlementHook;
- window.unregisterSaveSettlementHook=unregisterSaveSettlementHook;
- window.getBeforeSaveHookIds=function(){return Array.from(beforeSaveHooks.keys());};
- window.getAfterSaveHookIds=function(){return Array.from(afterSaveHooks.keys());};
- window.getSaveSettlementHookIds=function(){return Array.from(settlementSaveHooks.keys());};
+ window.LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION=LEGACY_SAVE_SUPPORT_BOUNDARY_VERSION;
+ window.legacySaveSupportSnapshot=legacySaveSupportSnapshot;
  window.SCRIPT_LOAD_POLICY_VERSION=SCRIPT_LOAD_POLICY_VERSION;
  window.scriptLoadGroupFor=scriptLoadGroupFor;
  window.scriptLoadPolicySnapshot=scriptLoadPolicySnapshot;
@@ -98,7 +73,7 @@
 
  const errors=[];
  if(LEGACY_SAVE_VERSION_VALUE!==13)errors.push({code:"LEGACY_SAVE_VERSION",actual:LEGACY_SAVE_VERSION_VALUE});
- if(Number(window.SAVE_SCHEMA_VERSION)!==16)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION});
+ if(Number(window.SAVE_SCHEMA_VERSION)!==EXPECTED_SAVE_SCHEMA_VERSION)errors.push({code:"SAVE_SCHEMA_VERSION",actual:window.SAVE_SCHEMA_VERSION,expected:EXPECTED_SAVE_SCHEMA_VERSION});
  if(LEGACY_MAX_LEVEL_VALUE!==500)errors.push({code:"LEGACY_MAX_LEVEL",actual:LEGACY_MAX_LEVEL_VALUE});
  if(Number(window.MAX_LEVEL)!==LEGACY_MAX_LEVEL_VALUE)errors.push({code:"WINDOW_MAX_LEVEL_ALIAS",actual:window.MAX_LEVEL,expected:LEGACY_MAX_LEVEL_VALUE});
  if(Number(window.FIRST_WORLD_LEVEL_CAP)!==500||Number(window.SECOND_WORLD_LEVEL_CAP)!==1000||Number(window.THIRD_WORLD_LEVEL_CAP)!==2000||Number(window.ABSOLUTE_MAX_LEVEL)!==2000)errors.push({code:"LEVEL_CAP_OWNER",first:window.FIRST_WORLD_LEVEL_CAP,second:window.SECOND_WORLD_LEVEL_CAP,third:window.THIRD_WORLD_LEVEL_CAP,absolute:window.ABSOLUTE_MAX_LEVEL});
@@ -110,6 +85,9 @@
   if(typeof window.effectiveExpNeed!=="function"||window.effectiveExpNeed(1000,universe)!==0||window.effectiveExpNeed(1000,higher)!==10000000||window.effectiveExpNeed(1999,higher)!==10000000||window.effectiveExpNeed(2000,higher)!==0)errors.push({code:"LEVEL_EXP_RUNTIME_BEHAVIOR",u1000:window.effectiveExpNeed?.(1000,universe),h1000:window.effectiveExpNeed?.(1000,higher),h1999:window.effectiveExpNeed?.(1999,higher),h2000:window.effectiveExpNeed?.(2000,higher)});
  }catch(error){errors.push({code:"LEVEL_RUNTIME_PROBE_EXCEPTION",error:String(error?.message||error)});}
  if(Number(window.ARENA_BY_WORLD_STATE_VERSION)!==2||typeof window.getArenaProgressForWorld!=="function")errors.push({code:"ARENA_OWNER"});
- if(!baseSave||typeof window.registerBeforeSaveHook!=="function"||typeof window.registerAfterSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function")errors.push({code:"SAVE_HOOK_OWNER"});
- window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors,legacyGlobals:legacyGlobalAliasSnapshot()};
+ const hookSnapshot=typeof window.saveHookOwnerSnapshot==="function"?window.saveHookOwnerSnapshot():null;
+ if(typeof window.save!=="function"||typeof window.registerBeforeSaveHook!=="function"||typeof window.registerAfterSaveHook!=="function"||typeof window.registerSaveSettlementHook!=="function"||window.SAVE_HOOK_IMPLEMENTATION_OWNER!=="savehookcore"||window.save?.__saveHookOwner!=="savehookcore")errors.push({code:"SAVE_HOOK_OWNER",implementation:window.SAVE_HOOK_IMPLEMENTATION_OWNER||null,wrapper:window.save?.__saveHookOwner||null,snapshot:hookSnapshot});
+ const legacySupport=legacySaveSupportSnapshot();
+ if(legacySupport.currentSchema!==EXPECTED_SAVE_SCHEMA_VERSION||legacySupport.minSupportedVersion!==1||legacySupport.configuredMode!=="all-known"||legacySupport.legacyReadPath!=="migration-only"||legacySupport.canonicalWriteSchema!==EXPECTED_SAVE_SCHEMA_VERSION)errors.push({code:"LEGACY_SAVE_SUPPORT_BOUNDARY",actual:legacySupport});
+ window.LEGACY_COMPATIBILITY_OWNER_REPORT={version:VERSION,passed:errors.length===0,errors,legacyGlobals:legacyGlobalAliasSnapshot(),legacySaveSupport:legacySupport,saveHookImplementation:hookSnapshot};
 })();
