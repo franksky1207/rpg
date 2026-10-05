@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=1;
  const ROUTING_VERSION=1;
  const ACTIVATION_POLICY_VERSION=3;
  const LOAD_BEHAVIOR_VERSION=4;
