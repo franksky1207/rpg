@@ -8,7 +8,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.EQUIPMENT_SAVE_LEVEL_WORLD_OWNER_VERSION===1&&window.SHARED_EQUIPMENT_LEVEL_SEMANTICS_VERSION===1&&window.REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION===1&&typeof window.normalizeSaveState==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.EQUIPMENT_SAVE_LEVEL_WORLD_OWNER_VERSION===1&&window.SHARED_EQUIPMENT_LEVEL_SEMANTICS_VERSION===2&&window.SHARED_EQUIPMENT_FACTORY_WORLD_LEVEL_GUARD_VERSION===1&&window.REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION===1&&typeof window.normalizeSaveState==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const canonical=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries([100,200,300,400,500,600,700,800,900,1000].map(level=>[String(level),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
@@ -23,13 +23,15 @@ const assert=require("assert");
    const first=newState();first.saveVersion=17;first.reincarnation=canonical(0);first.secondWorld=createBlankSecondWorldState();first.thirdWorld=createBlankThirdWorldState();first.equipment.weapon=item(1,900,"first-w1-invalid");window.normalizeSaveState(first);
    const w3=newState();w3.saveVersion=17;w3.reincarnation=canonical(2);w3.secondWorld=createBlankSecondWorldState();w3.secondWorld.entered=true;w3.thirdWorld=createBlankThirdWorldState();w3.thirdWorld.entered=true;w3.level=1350;w3.equipment.weapon=item(3,1350,"w3-current");window.normalizeSaveState(w3);
 
-   return {w1:{before:w1Before,after:w1After},w2:w2After,first:identity(first.equipment.weapon),w3:identity(w3.equipment.weapon),caps:{w1:window.sharedEquipmentLevelCap(1),w2:window.sharedEquipmentLevelCap(2),w3:window.sharedEquipmentLevelCap(3)},legacyRepairType:typeof window.normalizeReincarnationPermanentGearLevels};
+   const factory={w1:item(1,2000,"factory-w1").level,w2:item(2,2000,"factory-w2").level,w3:item(3,2000,"factory-w3").level};
+   return {w1:{before:w1Before,after:w1After},w2:w2After,first:identity(first.equipment.weapon),w3:identity(w3.equipment.weapon),caps:{w1:window.sharedEquipmentLevelCap(1),w2:window.sharedEquipmentLevelCap(2),w3:window.sharedEquipmentLevelCap(3)},factory,legacyRepairType:typeof window.normalizeReincarnationPermanentGearLevels};
   });
   assert.deepEqual(report.w1.after,report.w1.before,"W1 rerun normalization must preserve W3 Lv.2000 equipment/inventory/lostGear.");
   assert.equal(report.w2.level,600);assert.equal(report.w2.retained.world,3);assert.equal(report.w2.retained.level,2000);assert.equal(report.w2.native.world,2);assert.equal(report.w2.native.level,1000);
   assert.equal(report.first.world,1);assert.equal(report.first.level,500,"W1 native gear remains capped by its own world.");
   assert.equal(report.w3.level,1350,"Active W3 sub-2000 gear must remain unchanged.");
   assert.deepEqual(report.caps,{w1:500,w2:1000,w3:2000});
+  assert.deepEqual(report.factory,{w1:500,w2:1000,w3:2000},"Shared factory must enforce the source-world equipment cap.");
   assert.equal(report.legacyRepairType,"undefined","Duplicate migration load-repair API must be retired.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
   console.log("World-owned reincarnation gear carryover integrity passed:",JSON.stringify(report));
