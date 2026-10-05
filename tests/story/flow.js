@@ -109,7 +109,7 @@ assert(index.includes('storyruntimeintegrity.js?v=20260929-thirdworld-batch13-8'
 assert(index.includes('secondworldstoryregistry.js?v=20260929-thirdworld-batch13-8'),'secondworldstoryregistry.js cache-bust 未更新至 Batch 13-8');
 assert(index.includes('storymigration.js?v=20260929-thirdworld-story-legacy-opt1'),'storymigration.js cache-bust 未更新至 W3 Story legacy optimization');
 assert(index.includes('thirdworldphase.js?v='),'thirdworldphase.js 必須帶 cache-bust 正式載入');
-assert(index.includes('thirdworldmigrationregression.js?v=20260929-thirdworld-story-legacy-opt1'),'thirdworldmigrationregression.js cache-bust 未更新至 W3 Story migration regression');
+assert(!index.includes('thirdworldmigrationregression.js?v='),'thirdworldmigrationregression.js 已退役為 production script，不得重新載入 index');
 assert((region5.match(/add\("universe-trans-domain-frontier-boss-\d+"/g)||[]).length===10,'第五章・超域邊境必須有 10 篇正式劇情');
 assert(/function regionFinaleLabel\(story\)/.test(storyui)&&/story-em/.test(storyui),'宇宙區域完成標記必須由共用 Story UI 自動產生');
 console.log('STORY FLOW PASSED | W3 formal=11/11 | legacy story history reset=yes | completion owner=shared Story Progress | Story Record three-era=yes | galaxy/universe preserved');
