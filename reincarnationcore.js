@@ -6,6 +6,7 @@
  const REINCARNATION_RUNTIME_GUARD_VERSION=1;
  const REINCARNATION_HP_OWNER_VERSION=1;
  const REINCARNATION_PRECOMMIT_BACKUP_VERSION=1;
+ const REINCARNATION_PERMANENT_GEAR_MARKER_VERSION=1;
  const REINCARNATION_SESSION_MARKER="civilization_reincarnation_just_committed_v1";
  const REQUIRED_LEVEL=2000;
  const REQUIRED_CORE_LEVEL=10;
@@ -18,6 +19,11 @@
  function cloneJson(value){try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}}
  function blankMilestones(){const levels=Array.isArray(window.BREAKTHROUGH_MILESTONE_LEVELS)?window.BREAKTHROUGH_MILESTONE_LEVELS:(Array.isArray(window.BREAKTHROUGH_MILESTONES)?window.BREAKTHROUGH_MILESTONES:[100,200,300,400,500,600,700,800,900,1000]);return Object.fromEntries(levels.map(level=>[String(level),false]));}
  function qualifyingPermanentGear(item){return isObject(item)&&whole(item.world,0)===3&&whole(item.level,0)===2000;}
+ function markPermanentGear(item,lifeId){
+  if(!qualifyingPermanentGear(item))return item;
+  item.reincarnationPermanentGear={version:REINCARNATION_PERMANENT_GEAR_MARKER_VERSION,retainedWorld:3,retainedLevel:2000,lifeId:Math.max(1,whole(lifeId,1))};
+  return item;
+ }
  function thirdWorldBossesDefeated(target){
   if(typeof window.thirdWorldBossesAllDefeated==="function")return window.thirdWorldBossesAllDefeated(target)===true;
   const rows=target?.thirdWorld?.bosses;
@@ -39,12 +45,12 @@
   if(typeof makeItem!=="function")throw new Error("Starter equipment owner unavailable.");
   return makeItem(1,0,"normal",0,type);
  }
- function resetEquipmentForReincarnation(target){
+ function resetEquipmentForReincarnation(target,lifeId){
   const source=isObject(target.equipment)?target.equipment:{};
   const equipment={};
-  EQUIPMENT_SLOTS.forEach(type=>{equipment[type]=qualifyingPermanentGear(source[type])?source[type]:starterItem(type);});
+  EQUIPMENT_SLOTS.forEach(type=>{equipment[type]=qualifyingPermanentGear(source[type])?markPermanentGear(source[type],lifeId):starterItem(type);});
   target.equipment=equipment;
-  target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).filter(qualifyingPermanentGear);
+  target.inventory=(Array.isArray(target.inventory)?target.inventory:[]).filter(qualifyingPermanentGear).map(item=>markPermanentGear(item,lifeId));
   target.lostGear=[];
   return {equippedRetained:EQUIPMENT_SLOTS.filter(type=>qualifyingPermanentGear(source[type])).length,inventoryRetained:target.inventory.length};
  }
@@ -100,7 +106,7 @@
   const alternate=target?.reincarnation?.alternateUniverse||{};
   const auUnlocked=alternate.unlocked===true||bossesDefeatedBefore;
   const deepestCleared=auUnlocked?Math.max(0,whole(alternate.deepestCleared,0)):0;
-  const equipmentReport=resetEquipmentForReincarnation(target);
+  const equipmentReport=resetEquipmentForReincarnation(target,newCount);
   resetEnhancementForReincarnation(target);
   resetSpecializationsForReincarnation(target);
   resetFirstWorldForReincarnation(target);
@@ -201,10 +207,12 @@
  window.REINCARNATION_RUNTIME_GUARD_VERSION=REINCARNATION_RUNTIME_GUARD_VERSION;
  window.REINCARNATION_HP_OWNER_VERSION=REINCARNATION_HP_OWNER_VERSION;
  window.REINCARNATION_PRECOMMIT_BACKUP_VERSION=REINCARNATION_PRECOMMIT_BACKUP_VERSION;
+ window.REINCARNATION_PERMANENT_GEAR_MARKER_VERSION=REINCARNATION_PERMANENT_GEAR_MARKER_VERSION;
  window.REINCARNATION_SESSION_MARKER=REINCARNATION_SESSION_MARKER;
  window.REINCARNATION_REQUIRED_LEVEL=REQUIRED_LEVEL;
  window.REINCARNATION_REQUIRED_CORE_LEVEL=REQUIRED_CORE_LEVEL;
  window.isReincarnationPermanentGear=qualifyingPermanentGear;
+ window.markReincarnationPermanentGear=markPermanentGear;
  window.reincarnationEligibilitySnapshot=reincarnationEligibilitySnapshot;
  window.canReincarnate=canReincarnate;
  window.applyReincarnationResetState=applyReincarnationResetState;
