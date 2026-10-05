@@ -49,7 +49,7 @@ function characterWorldSnapshot(target=state){
   civilizationMax:Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||10)),
   civilizationDamageBonusPercent:universe&&typeof window.civilizationDamageBonusPercent==="function"?window.civilizationDamageBonusPercent(target):0,
   civilizationDamageMultiplier:universe&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(target):1,
-  equippedWorlds:Object.fromEntries(EQUIPMENT_TYPES.map(type=>[type,target?.equipment?.[type]?Number(target.equipment[type].world)===2?2:1:null]))
+  equippedWorlds:Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=target?.equipment?.[type];return [type,item?(typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(item):(Number(item.world)===3?3:Number(item.world)===2?2:1)):null]}))
  };
 }
 window.characterWorldSnapshot=characterWorldSnapshot;
@@ -405,8 +405,9 @@ function normalizeSaveItem(it,forcedType=null,target=null){
  if(!it||typeof it!=="object"||Array.isArray(it))return null;
  const type=forcedType||it.type;if(!EQUIPMENT_TYPES.includes(type))return null;
  const q=Math.max(0,Math.min(QUALITY.length-1,Math.floor(Number(it.q)||0)));
- const level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(it.level,target):Math.max(1,Math.min(target?.secondWorld?.entered===true?1000:MAX_LEVEL,Math.floor(Number(it.level)||1)));
- const out={...it,type,q,level};
+ const itemWorld=typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(it):(Number(it.world)===3?3:Number(it.world)===2?2:1);
+ const level=typeof window.sharedNormalizeEquipmentLevelForWorld==="function"?window.sharedNormalizeEquipmentLevelForWorld({...it,world:itemWorld},it.level):Math.max(1,Math.min(itemWorld===3?2000:itemWorld===2?1000:500,Math.floor(Number(it.level)||1)));
+ const out={...it,type,q,world:itemWorld,level};
  out.id=typeof it.id==="string"&&it.id?it.id:Date.now().toString(36)+Math.random().toString(36).slice(2);
  out.name=typeof it.name==="string"&&it.name.trim()?it.name.trim().slice(0,80):"未知裝備";
  ["hp","atk","def","crit","dodge"].forEach(k=>{const n=Number(it[k]);out[k]=Number.isFinite(n)&&n>0?round1(n):0});
@@ -437,7 +438,7 @@ function normalizeSaveState(target){
  target.lostGear=(Array.isArray(target.lostGear)?target.lostGear:[]).map(x=>{
   if(!x||typeof x!=="object")return null;
   const item=normalizeSaveItem(x.item,null,target);if(!item)return null;
-  const rawCost=Number(x.cost),lostAt=Number(x.lostAt),world=Number(item.world)===2?2:1;
+  const rawCost=Number(x.cost),lostAt=Number(x.lostAt),world=typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(item):(Number(item.world)===3?3:Number(item.world)===2?2:1);
   const universe=target?.secondWorld?.entered===true;
   const currency=world===2?"darkMatter":universe?"free":"gold";
   const officialDarkMatterCost=typeof window.secondWorldEquipmentRedemptionCost==="function"?window.secondWorldEquipmentRedemptionCost(item,false):null;
@@ -459,9 +460,10 @@ function normalizeSaveState(target){
  target.saveVersion=typeof currentSaveVersion==="function"?currentSaveVersion():SAVE_VERSION;
  return target;
 }
-window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=1;
+window.SAVE_NORMALIZATION_WORLD_AWARE_VERSION=2;
 window.SAVE_ROOT_NORMALIZATION_ORDER_VERSION=1;
-window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=1;
+window.LOST_GEAR_WORLD_AWARE_NORMALIZATION_VERSION=2;
+window.EQUIPMENT_SAVE_LEVEL_WORLD_OWNER_VERSION=1;
 window.INVENTORY_SALE_DISPLAY_FAIL_CLOSED_VERSION=2;
 window.THIRD_WORLD_INVENTORY_PROCESSING_UI_VERSION=1;
 window.THIRD_WORLD_LOST_GEAR_UI_POLICY_VERSION=1;
