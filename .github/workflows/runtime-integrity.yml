@@ -13,10 +13,10 @@ on:
       - 'adventureuipolish.css'
       - 'thirdworldarena.css'
       - 'assets/**'
+      - 'docs/archive/**'
       - 'README.md'
       - 'PROJECT_HANDOFF.md'
       - 'PROJECT_PENDING_STATUS.md'
-      - 'LEVEL100_EXPANSION.md'
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
@@ -77,6 +77,7 @@ jobs:
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
