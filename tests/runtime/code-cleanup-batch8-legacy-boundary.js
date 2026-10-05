@@ -25,8 +25,8 @@ assert.ok(matrix.includes("Schema17 must be supported current schema"),"Current 
 assert.ok(/function cleanupLegacyDungeonFields\(/.test(migration),"仍支援 legacy import 時不得誤刪舊 dungeon cleanup");
 assert.ok(/function cleanupRetiredShopState\(/.test(migration),"仍支援 legacy import 時不得誤刪 retired shop cleanup");
 assert.ok(/function cleanupTransientGmTestState\(/.test(migration),"仍支援 legacy import 時不得誤刪 GM sandbox cleanup");
-assert.ok(/function cleanupRetiredMigrationState\(/.test(migration)&&/cleanupRetiredMigrationState\(target\)/.test(migration),"Legacy cleanup 必須維持在 migrateSave migration owner 內");
-assert.equal((migration.match(/cleanupRetiredMigrationState\(target\)/g)||[]).length,1,"Retired cleanup 不得擴散成第二套 runtime pipeline");
+assert.ok(/function cleanupRetiredMigrationState\(/.test(migration),"Legacy cleanup owner 缺失");
+assert.equal((migration.match(/const retiredCleanup=cleanupRetiredMigrationState\(target\)/g)||[]).length,1,"Retired cleanup 必須只由 migrateSave 單一路徑呼叫");
 assert.ok(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(migration),"Migration-only cleanup contract 不得遺失");
 
 assert.ok(index.includes('data-load-group="story"')&&index.includes('data-load-group="gm"')&&index.includes('data-load-group="integrity"'),"Batch8 不得為了合併碎片破壞 Batch7 lazy-loading boundaries");
