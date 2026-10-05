@@ -1,6 +1,6 @@
 (function(){
  const VERSION=1;
- const GROUP_ORDER=Object.freeze(["gm","story","integrity"]);
+ const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
  const AUTO_START_DELAY_MS=120;
  const groupPromises=new Map();
  const groupReports=new Map();
