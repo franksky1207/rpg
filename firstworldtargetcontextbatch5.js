@@ -58,8 +58,7 @@
  if(typeof baseGrantOffline==="function"){
   window.grantFirstWorldOfflineRewards=async function(pending,enemy){
    const canonical=canonicalOfflineEnemy(pending,state);
-   if(!canonical)return false;
-   return baseGrantOffline.call(this,pending,canonical.enemy);
+   return baseGrantOffline.call(this,pending,canonical?.enemy||enemy);
   };
  }
 
