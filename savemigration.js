@@ -10,9 +10,9 @@
  const STAT_KEYS=["hp","atk","def","crit","dodge"];
  const MIGRATE_EXP_TARGET_OWNER_VERSION=1;
  const SAVE_LEVEL_EXP_CLAMP_REPORT_VERSION=1;
- const SAVE_LEVEL_MIGRATION_REGRESSION_VERSION=3;
  const RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1;
- const SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=1;
+ const SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=2;
+ const SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=1;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -59,9 +59,9 @@
  window.ARENA_BY_WORLD_MIGRATION_VERSION=1;
  window.MIGRATE_EXP_TARGET_OWNER_VERSION=MIGRATE_EXP_TARGET_OWNER_VERSION;
  window.SAVE_LEVEL_EXP_CLAMP_REPORT_VERSION=SAVE_LEVEL_EXP_CLAMP_REPORT_VERSION;
- window.SAVE_LEVEL_MIGRATION_REGRESSION_VERSION=SAVE_LEVEL_MIGRATION_REGRESSION_VERSION;
  window.RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION;
  window.SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION;
+ window.SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION;
  window.normalizePendingBlackMarketEncounter=normalizePendingBlackMarketEncounter;
  window.PENDING_BLACK_MARKET_FLAG_SEMANTICS_VERSION=1;
  window.GM_TEST_SAVE_ISOLATION_VERSION=1;
@@ -97,28 +97,6 @@
   window.normalizeOfflineSaveState(target,{sourceVersion:version});normalizePersistentFlags(target);target.introSeen=introValue;target.saveVersion=SAVE_SCHEMA_VERSION;
   window.LAST_SAVE_MIGRATION_REPORT={sourceVersion:version,targetVersion:SAVE_SCHEMA_VERSION,normalizationPipelineVersion:SAVE_NORMALIZATION_PIPELINE_VERSION,normalizationOrder:Array.from(SAVE_NORMALIZATION_PIPELINE_ORDER),legacySupportPolicyVersion:SAVE_LEGACY_SUPPORT_POLICY_VERSION,minSupportedVersion:SAVE_MIN_SUPPORTED_VERSION,legacySupportMode:SAVE_LEGACY_SUPPORT_MODE,retiredStateMigrationOnlyVersion:RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION,expProgressMigrated,levelExpClamped,levelBeforeNormalization,levelAfterNormalization,expBeforeNormalization,expAfterNormalization,legacyDungeonFieldsRemoved,retiredShopStateRemoved,transientGmTestStateRemoved,reincarnationStateInitialized:version<17||!hadReincarnationState,reincarnationStateNormalized,sourceHadReincarnationRoot,sourceReincarnationCountRaw,preSchema17ReincarnationDiscarded,sourceReincarnationCount,targetReincarnationCount,calamityStateInitialized:!hadCalamityState,markStateInitialized:!hadMarkState,titleStateInitialized:!hadTitleState,secondWorldStateInitialized:!hadSecondWorldState,thirdWorldStateInitialized:version<16||!hadThirdWorldState,legacyThirdWorldStateDiscarded,civilizationLevelInitialized:!hadCivilizationLevel,arenaByWorldInitialized:!hadArenaByWorld,legacyArenaMigrated:hadLegacyArena&&!hadArenaByWorld};return target;
  };
- function runLevelMigrationRegression(){
-  const errors=[],cases=[];
-  const runCase=(id,source,check)=>{
-   try{
-    const original=cloneJson(source),seed=cloneJson(source),migrated=window.migrateSave(seed,source.saveVersion,null,original),report=cloneJson(window.LAST_SAVE_MIGRATION_REPORT)||{};
-    const ok=check(migrated,report)===true;
-    cases.push({id,ok,level:migrated?.level,exp:migrated?.exp,phase:typeof window.currentWorldPhase==="function"?window.currentWorldPhase(migrated):null,reincarnationCount:migrated?.reincarnation?.count,levelExpClamped:report.levelExpClamped===true});
-    if(!ok)errors.push({code:id,migrated,report});
-   }catch(error){cases.push({id,ok:false,error:String(error?.message||error)});errors.push({code:id,error:String(error?.message||error)});}
-  };
-  const world3=(level,exp)=>({saveVersion:16,level,exp,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1}});
-  runCase("SCHEMA16_WORLD3_LV1000",world3(1000,0),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.reincarnationStateInitialized===true&&r?.targetReincarnationCount===0&&r?.levelExpClamped===false);
-  runCase("SCHEMA16_WORLD3_LV1500",world3(1500,1234567),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===1500&&m?.exp===1234567&&m?.reincarnation?.count===0&&r?.levelExpClamped===false);
-  runCase("SCHEMA16_WORLD3_LV2000",world3(2000,9876543),(m,r)=>m?.thirdWorld?.entered===true&&m?.level===2000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.levelExpClamped===true&&r?.expBeforeNormalization===9876543&&r?.expAfterNormalization===0);
-  runCase("SCHEMA16_WORLD2_FAKE_LV1500",{saveVersion:16,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:false}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.levelExpClamped===true&&r?.levelBeforeNormalization===1500&&r?.levelAfterNormalization===1000);
-  runCase("SCHEMA15_FAKE_WORLD3_LV1500",{saveVersion:15,level:1500,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,entryVersion:1}},(m,r)=>m?.thirdWorld?.entered!==true&&m?.level===1000&&m?.exp===0&&m?.reincarnation?.count===0&&r?.legacyThirdWorldStateDiscarded===true&&r?.levelExpClamped===true);
-  runCase("SCHEMA16_CONTAMINATED_REINCARNATION",{saveVersion:16,level:1000,exp:0,secondWorld:{entered:true},thirdWorld:{entered:false},reincarnation:{count:9,breakthrough:{permanent:88,milestoneLifeId:9,milestones:{100:true}},alternateUniverse:{unlocked:true,deepestCleared:900}}},(m,r)=>m?.reincarnation?.count===0&&m?.reincarnation?.breakthrough?.permanent===0&&m?.reincarnation?.alternateUniverse?.unlocked===false&&r?.sourceHadReincarnationRoot===true&&r?.sourceReincarnationCountRaw===9&&r?.sourceReincarnationCount===0&&r?.preSchema17ReincarnationDiscarded===true&&r?.targetReincarnationCount===0);
-  const report={version:SAVE_LEVEL_MIGRATION_REGRESSION_VERSION,passed:errors.length===0,errors,cases,checkedAt:Date.now()};
-  window.SAVE_LEVEL_MIGRATION_REGRESSION_REPORT=report;
-  return report;
- }
- window.runLevelMigrationRegression=runLevelMigrationRegression;
  window.load=function(){
   let rawSnapshot=null,sourceVersion=SAVE_SCHEMA_VERSION,hadRaw=false,parseFailed=false;
   try{const raw=localStorage.getItem(SAVE_KEY);hadRaw=!!raw;if(raw){rawSnapshot=JSON.parse(raw);sourceVersion=sourceVersionOf(rawSnapshot?.saveVersion,SAVE_MIN_SUPPORTED_VERSION);}}catch(e){rawSnapshot=null;parseFailed=true;}
