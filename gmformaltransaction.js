@@ -1,9 +1,14 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const RESOURCE_VERSION=1;
  const DUNGEON_VERSION=1;
  const DAILY_RESET_VERSION=1;
- const ENHANCEMENT_VERSION=1;
+ const ENHANCEMENT_VERSION=2;
+ const CHARACTER_VERSION=1;
+ const MAINLINE_VERSION=1;
+ const GEAR_VERSION=1;
+ const VIP_RESET_VERSION=1;
+ const UI_CONVERGENCE_VERSION=1;
 
  function formalPhase(target=state){
   if(typeof window.currentWorldPhase==="function"){
@@ -26,6 +31,48 @@
   if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",rolledBack:false,saved:false,label:String(label||"")});
   return window.runSettlementTransaction({label,mutate});
  }
+ function txReason(tx){return tx?.reason||tx?.value?.reason||"未知錯誤";}
+
+ function applyCharacterLevel(value,target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  const cap=typeof window.effectiveLevelCap==="function"?Math.max(1,Math.floor(Number(window.effectiveLevelCap(target))||1)):Math.max(1,Math.floor(Number(window.ABSOLUTE_MAX_LEVEL||window.MAX_LEVEL)||500));
+  const level=finiteInt(value,1,cap);
+  if(level==null)return {ok:false,reason:"invalid-level",min:1,max:cap};
+  target.level=typeof window.clampEffectiveGameLevel==="function"?window.clampEffectiveGameLevel(level,target):level;
+  target.exp=0;
+  if(target===window.state&&typeof window.playerCombatStats==="function")target.hp=Math.max(1,Math.floor(Number(window.playerCombatStats().hp)||1));
+  else if(typeof window.playerCombatStatsForState==="function")target.hp=Math.max(1,Math.floor(Number(window.playerCombatStatsForState(target).hp)||1));
+  return {ok:true,level:target.level,exp:target.exp,hp:target.hp,cap,phase:formalPhase(target)};
+ }
+ function commitCharacterLevel(value){return run("gm-character-level",live=>applyCharacterLevel(value,live));}
+
+ function firstWorldProgressPlan(value){
+  const max=Math.max(1,Math.floor(Number(window.MAX_LEVEL)||500)),target=finiteInt(value,1,max);
+  if(target==null)return {ok:false,reason:"invalid-progress",min:1,max};
+  const maps=Array.isArray(window.MAPS)?window.MAPS:[];
+  if(!maps.length)return {ok:false,reason:"first-world-map-owner-missing"};
+  const count=maps.length,currentMap=Math.max(0,Math.min(count-1,Math.floor((target-1)/5))),currentEnemy=(target-1)%5;
+  const mapProgress=Array.from({length:count},()=>[0,0,0,0]),bossProgress=Array(count).fill(0),bossLocked=Array(count).fill(false),bossKilled=Array(count).fill(false);
+  for(let i=0;i<currentMap;i++){mapProgress[i]=[10,10,10,10];bossKilled[i]=true;}
+  const p=mapProgress[currentMap];
+  if(currentEnemy>=1)p[0]=10;
+  if(currentEnemy>=2)p[1]=10;
+  if(currentEnemy>=3)p[2]=10;
+  if(currentEnemy>=4)p[3]=10;
+  return {ok:true,target,currentMap,currentEnemy,mapProgress,bossProgress,bossLocked,bossKilled};
+ }
+ function applyFirstWorldProgress(value,target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  if(formalPhase(target)!==1)return {ok:false,reason:"wrong-world"};
+  const plan=firstWorldProgressPlan(value);if(!plan.ok)return plan;
+  target.unlockedMap=plan.currentMap;
+  target.mapProgress=plan.mapProgress;
+  target.bossProgress=plan.bossProgress;
+  target.bossLocked=plan.bossLocked;
+  target.bossKilled=plan.bossKilled;
+  return {ok:true,target:plan.target,currentMap:plan.currentMap,currentEnemy:plan.currentEnemy};
+ }
+ function commitFirstWorldProgress(value){return run("gm-first-world-progress",live=>applyFirstWorldProgress(value,live));}
 
  function applyResource(kind,value,target=state){
   const amount=finiteInt(value);
@@ -82,18 +129,52 @@
   });
   return values;
  }
- function installEnhancementUiCommit(){
-  const handler=function(){
-   const tx=commitEnhancementLevels(enhancementValuesFromUi(state));
-   if(!tx?.ok){alert(`強化等級更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
-   if(typeof render==="function")render();
-   alert("強化等級已更新。");
-   return true;
-  };
-  handler.__gmFormalTransactionVersion=ENHANCEMENT_VERSION;
-  window.gmApplyEnhancementLevels=handler;
-  return true;
+
+ function ensureInventory(target){if(!Array.isArray(target?.inventory))target.inventory=[];return target.inventory;}
+ function applyGeneratedEquipment(request,target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  const world=finiteInt(request?.world,1,3),q=finiteInt(request?.q,0,5),types=Array.isArray(request?.types)?request.types.filter(type=>Array.isArray(window.EQUIPMENT_TYPES)&&window.EQUIPMENT_TYPES.includes(type)):[];
+  if(world==null||q==null||!types.length)return {ok:false,reason:"invalid-gear-request"};
+  const inventory=ensureInventory(target),created=[];
+  if(world===1){
+   const level=finiteInt(request?.level,1,Math.max(1,Math.floor(Number(window.MAX_LEVEL)||500)));
+   if(level==null||typeof window.makeItem!=="function")return {ok:false,reason:level==null?"invalid-level":"gear-owner-missing"};
+   const mapCount=Array.isArray(window.MAPS)?window.MAPS.length:0;if(!mapCount)return {ok:false,reason:"first-world-map-owner-missing"};
+   const mapIdx=Math.max(0,Math.min(mapCount-1,Math.floor((level-1)/5)));
+   for(const type of types){const item=window.makeItem(level,mapIdx,"normal",q,type);if(item){inventory.push(item);created.push(item);}}
+  }else if(world===2){
+   if(formalPhase(target)<2)return {ok:false,reason:"wrong-world"};
+   if(typeof window.makeSecondWorldEquipmentForBoss!=="function")return {ok:false,reason:"gear-owner-missing"};
+   const bossIndex=finiteInt(request?.bossIndex,0,99);if(bossIndex==null)return {ok:false,reason:"invalid-boss"};
+   for(const type of types){const item=window.makeSecondWorldEquipmentForBoss(bossIndex,{forcedQ:q,forcedType:type,state:target});if(item){inventory.push(item);created.push(item);}}
+  }else{
+   if(formalPhase(target)!==3)return {ok:false,reason:"wrong-world"};
+   if(q!==4&&q!==5)return {ok:false,reason:"invalid-quality"};
+   if(typeof window.makeThirdWorldEquipmentForBoss!=="function")return {ok:false,reason:"gear-owner-missing"};
+   const bossIndex=finiteInt(request?.bossIndex,0,9);if(bossIndex==null)return {ok:false,reason:"invalid-boss"};
+   for(const type of types){const item=window.makeThirdWorldEquipmentForBoss(bossIndex,{state:target,forcedQ:q,forcedType:type,sourceTag:"gm-third-world"});if(item){inventory.push(item);created.push(item);}}
+  }
+  if(!created.length)return {ok:false,reason:"gear-generation-failed"};
+  return {ok:true,world,q,created:created.length,levels:Object.freeze(created.map(item=>Math.floor(Number(item?.level)||0)))};
  }
+ function commitGeneratedEquipment(request){return run(`gm-generate-world${request?.world||0}-equipment`,live=>applyGeneratedEquipment(request,live));}
+
+ function applyVipReset(target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  let beforeMax=null,beforeHp=Math.max(0,Number(target.hp)||0),ratio=1,wasFull=true;
+  if(target===window.state&&typeof window.playerCombatStats==="function"){
+   beforeMax=Math.max(1,Number(window.playerCombatStats().hp)||1);beforeHp=Math.max(0,Math.min(beforeMax,Number(target.hp)||0));ratio=beforeHp/beforeMax;wasFull=beforeHp>=beforeMax;
+  }else if(typeof window.playerCombatStatsForState==="function"){
+   beforeMax=Math.max(1,Number(window.playerCombatStatsForState(target).hp)||1);beforeHp=Math.max(0,Math.min(beforeMax,Number(target.hp)||0));ratio=beforeHp/beforeMax;wasFull=beforeHp>=beforeMax;
+  }
+  target.vipLevel=0;target.vipPoints=0;
+  let afterMax=beforeMax;
+  if(target===window.state&&typeof window.playerCombatStats==="function")afterMax=Math.max(1,Number(window.playerCombatStats().hp)||1);
+  else if(typeof window.playerCombatStatsForState==="function")afterMax=Math.max(1,Number(window.playerCombatStatsForState(target).hp)||1);
+  if(afterMax!=null)target.hp=wasFull?afterMax:Math.max(0,Math.min(afterMax,Math.round(afterMax*ratio)));
+  return {ok:true,vipLevel:0,vipPoints:0,hp:target.hp};
+ }
+ function commitVipReset(){return run("gm-vip-reset",live=>applyVipReset(live));}
 
  function ensureDungeonTarget(target){
   if(!target||typeof target!=="object")return null;
@@ -136,25 +217,69 @@
  }
  function commitDailyDungeonReset(){return run("gm-dungeon-daily-reset",live=>resetDailyDungeonState(live));}
 
+ function uiTypes(value){return value==="all"?(Array.isArray(window.EQUIPMENT_TYPES)?window.EQUIPMENT_TYPES.slice():[]):Array.isArray(window.EQUIPMENT_TYPES)&&window.EQUIPMENT_TYPES.includes(value)?[value]:[];}
+ function installFormalUiWriters(){
+  const levelHandler=function(){
+   const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):window.MAX_LEVEL,raw=prompt(`指定等級（1～${cap}）`,state.level);if(raw===null)return false;
+   const n=Number(raw),tx=Number.isInteger(n)?commitCharacterLevel(n):{ok:false,reason:"invalid-level"};if(!tx?.ok){alert(`等級更新失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();return true;
+  };
+  const progressHandler=function(){
+   const max=Math.max(1,Math.floor(Number(window.MAX_LEVEL)||500)),raw=prompt(`指定目前攻略到哪個等級關卡（1～${max}）`,state.level);if(raw===null)return false;
+   const n=Number(raw),plan=Number.isInteger(n)?firstWorldProgressPlan(n):{ok:false,reason:"invalid-progress"};if(!plan.ok){alert(`請輸入 1～${max} 的整數。`);return false;}
+   const tx=commitFirstWorldProgress(n);if(!tx?.ok){alert(`銀河紀元進度更新失敗：${txReason(tx)}`);return false;}
+   window.selectedMap=plan.currentMap;window.selectedEnemy=plan.currentEnemy;window.selectedBattleCount=1;if(typeof render==="function")render();if(plan.currentEnemy===4&&state.level<n)alert(`主線進度已指定到 Lv.${n} Boss。依原本規則，角色需達 Lv.${n} 後 Boss 才會顯示。`);return true;
+  };
+  const w1GearHandler=function(){
+   const q=Number(document.getElementById("gmGearQuality")?.value),level=Number(document.getElementById("gmGearLevel")?.value),type=document.getElementById("gmGearType")?.value,types=uiTypes(type);
+   if(!Number.isInteger(q)||q<0||q>5||!Number.isInteger(level)||level<1||level>Math.max(1,Math.floor(Number(window.MAX_LEVEL)||500))||!types.length)return false;
+   const tx=commitGeneratedEquipment({world:1,q,level,types});if(!tx?.ok){alert(`銀河紀元裝備產生失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();return true;
+  };
+  const w2GearHandler=function(){
+   if(typeof window.gmSecondWorldGearChangeBoss==="function")window.gmSecondWorldGearChangeBoss();
+   const q=Math.floor(Number(document.getElementById("gmSecondWorldGearQuality")?.value)),bossIndex=Math.floor(Number(document.getElementById("gmSecondWorldGearBoss")?.value)),type=document.getElementById("gmSecondWorldGearType")?.value,types=uiTypes(type);
+   if(!Number.isInteger(q)||q<1||q>5||!Number.isInteger(bossIndex)||!types.length)return false;
+   const tx=commitGeneratedEquipment({world:2,q,bossIndex,types});if(!tx?.ok){alert(`宇宙紀元裝備產生失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();alert(`已產生 ${tx?.value?.created||types.length} 件宇宙紀元裝備。`);return true;
+  };
+  const w3GearHandler=function(){
+   if(typeof window.gmThirdWorldGearChangeBoss==="function")window.gmThirdWorldGearChangeBoss();
+   const q=Math.floor(Number(document.getElementById("gmThirdWorldGearQuality")?.value)),bossIndex=Math.floor(Number(document.getElementById("gmThirdWorldGearBoss")?.value)),type=document.getElementById("gmThirdWorldGearType")?.value,types=uiTypes(type);
+   if((q!==4&&q!==5)||!Number.isInteger(bossIndex)||!types.length)return false;
+   const tx=commitGeneratedEquipment({world:3,q,bossIndex,types});if(!tx?.ok){alert(`高維紀元裝備產生失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();alert(`已產生 ${tx?.value?.created||types.length} 件高維紀元裝備。`);return true;
+  };
+  const enhancementHandler=function(){
+   const tx=commitEnhancementLevels(enhancementValuesFromUi(state));if(!tx?.ok){alert(`強化等級更新失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();alert("強化等級已更新。");return true;
+  };
+  const vipResetHandler=function(){
+   if(!confirm("確定要將 VIP 等級與 VIP 積分全部重置為 0 嗎？"))return false;
+   const tx=commitVipReset();if(!tx?.ok){alert(`VIP 重置失敗：${txReason(tx)}`);return false;}if(typeof render==="function")render();return true;
+  };
+  for(const [name,handler] of Object.entries({gmLevel:levelHandler,gmSetWorldProgress:progressHandler,gmCreateGear:w1GearHandler,gmCreateSecondWorldGear:w2GearHandler,gmCreateThirdWorldGear:w3GearHandler,gmApplyEnhancementLevels:enhancementHandler,gmResetVip:vipResetHandler})){
+   handler.__gmFormalTransactionVersion=UI_CONVERGENCE_VERSION;window[name]=handler;
+  }
+  return true;
+ }
+
  function integrity(){
   const errors=[];
   if(typeof window.runSettlementTransaction!=="function")errors.push({code:"TRANSACTION_OWNER"});
-  const w1={gold:1,secondWorld:{entered:false},thirdWorld:{entered:false}},w2={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:false}},w3={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:true,dimensionalStrings:4}};
+  const w1={level:100,exp:20,hp:1,gold:1,secondWorld:{entered:false},thirdWorld:{entered:false}},w2={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:false}},w3={gold:1,secondWorld:{entered:true,darkMatter:2,darkEnergy:3},thirdWorld:{entered:true,dimensionalStrings:4}};
   if(applyResource("gold",9,w1)?.ok!==true||w1.gold!==9)errors.push({code:"RESOURCE_W1"});
   if(applyResource("dark-matter",8,w2)?.ok!==true||applyResource("dark-energy",7,w2)?.ok!==true||w2.secondWorld.darkMatter!==8||w2.secondWorld.darkEnergy!==7)errors.push({code:"RESOURCE_W2"});
   if(applyResource("dimensional-strings",6,w3)?.ok!==true||w3.thirdWorld.dimensionalStrings!==6)errors.push({code:"RESOURCE_W3"});
   if(applyResource("gold",5,w2)?.ok!==false||applyResource("dark-matter",5,w3)?.ok!==false)errors.push({code:"RESOURCE_PHASE_GUARD"});
-  const makeEnhancement=(phase)=>({secondWorld:{entered:phase>=2},thirdWorld:{entered:phase>=3},enhancement:{basicStones:0,advancedStones:0,levels:{weapon:phase>=3?40:phase===2?20:0,helmet:phase>=3?40:phase===2?20:0,armor:phase>=3?40:phase===2?20:0,shoes:phase>=3?40:phase===2?20:0,accessory:phase>=3?40:phase===2?20:0}}});
-  const e1=makeEnhancement(1),e2=makeEnhancement(2),e3=makeEnhancement(3),slots=enhancementSlots();
-  const values1=Object.fromEntries(slots.map(type=>[type,20])),values2=Object.fromEntries(slots.map(type=>[type,30])),values3=Object.fromEntries(slots.map(type=>[type,40]));
+  const makeEnhancement=phase=>({secondWorld:{entered:phase>=2},thirdWorld:{entered:phase>=3},enhancement:{basicStones:0,advancedStones:0,levels:{weapon:phase>=3?40:phase===2?20:0,helmet:phase>=3?40:phase===2?20:0,armor:phase>=3?40:phase===2?20:0,shoes:phase>=3?40:phase===2?20:0,accessory:phase>=3?40:phase===2?20:0}}});
+  const e1=makeEnhancement(1),e2=makeEnhancement(2),e3=makeEnhancement(3),slots=enhancementSlots(),values1=Object.fromEntries(slots.map(type=>[type,20])),values2=Object.fromEntries(slots.map(type=>[type,30])),values3=Object.fromEntries(slots.map(type=>[type,40]));
   if(applyEnhancementLevels(values1,e1)?.ok!==true||slots.some(type=>e1.enhancement.levels[type]!==20))errors.push({code:"ENHANCEMENT_W1"});
   if(applyEnhancementLevels(values2,e2)?.ok!==true||slots.some(type=>e2.enhancement.levels[type]!==30))errors.push({code:"ENHANCEMENT_W2"});
   if(applyEnhancementLevels(values3,e3)?.ok!==true||slots.some(type=>e3.enhancement.levels[type]!==40))errors.push({code:"ENHANCEMENT_W3"});
   const invalidW2=Object.fromEntries(slots.map(type=>[type,19]));if(applyEnhancementLevels(invalidW2,e2)?.ok!==false)errors.push({code:"ENHANCEMENT_MIN_GUARD"});
-  const dungeon={vipPoints:1,daily:{dateKey:"2099-01-01",bounty:{used:1},arena:{used:2},voidMirage:{highestFloor:3,claimed:false}},dungeon:{voidMirage:{highestCleared:4}}};
-  const applied=applyDungeonValues({points:99,bounty:20,arena:19,highest:12,dailyHighest:15,claimed:true},dungeon,{normalizeVip:false});
+  const dungeon={vipPoints:1,daily:{dateKey:"2099-01-01",bounty:{used:1},arena:{used:2},voidMirage:{highestFloor:3,claimed:false}},dungeon:{voidMirage:{highestCleared:4}}},applied=applyDungeonValues({points:99,bounty:20,arena:19,highest:12,dailyHighest:15,claimed:true},dungeon,{normalizeVip:false});
   if(applied?.ok!==true||dungeon.vipPoints!==99||dungeon.daily.bounty.used!==20||dungeon.daily.arena.used!==19||dungeon.dungeon.voidMirage.highestCleared!==15||dungeon.daily.voidMirage.highestFloor!==15||dungeon.daily.voidMirage.claimed!==true)errors.push({code:"DUNGEON_ATOMIC_MUTATION",applied});
-  return Object.freeze({version:VERSION,enhancementVersion:ENHANCEMENT_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
+  const progressFixture={secondWorld:{entered:false},thirdWorld:{entered:false}},progress=applyFirstWorldProgress(17,progressFixture);
+  if(progress?.ok!==true||progressFixture.unlockedMap!==3||progress.currentEnemy!==1||progressFixture.mapProgress[0][0]!==10||progressFixture.bossKilled[0]!==true)errors.push({code:"FIRST_WORLD_PROGRESS",progress});
+  const vipFixture={vipLevel:8,vipPoints:123,hp:50,secondWorld:{entered:false},thirdWorld:{entered:false}},vip=applyVipReset(vipFixture);
+  if(vip?.ok!==true||vipFixture.vipLevel!==0||vipFixture.vipPoints!==0)errors.push({code:"VIP_RESET"});
+  return Object.freeze({version:VERSION,characterVersion:CHARACTER_VERSION,mainlineVersion:MAINLINE_VERSION,gearVersion:GEAR_VERSION,enhancementVersion:ENHANCEMENT_VERSION,vipResetVersion:VIP_RESET_VERSION,uiConvergenceVersion:UI_CONVERGENCE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
  window.GM_FORMAL_TRANSACTION_OWNER_VERSION=VERSION;
@@ -162,15 +287,29 @@
  window.GM_FORMAL_DUNGEON_TRANSACTION_VERSION=DUNGEON_VERSION;
  window.GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION=DAILY_RESET_VERSION;
  window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION=ENHANCEMENT_VERSION;
+ window.GM_FORMAL_CHARACTER_TRANSACTION_VERSION=CHARACTER_VERSION;
+ window.GM_FORMAL_MAINLINE_TRANSACTION_VERSION=MAINLINE_VERSION;
+ window.GM_FORMAL_GEAR_TRANSACTION_VERSION=GEAR_VERSION;
+ window.GM_FORMAL_VIP_RESET_TRANSACTION_VERSION=VIP_RESET_VERSION;
+ window.GM_FORMAL_UI_WRITER_CONVERGENCE_VERSION=UI_CONVERGENCE_VERSION;
+ window.gmApplyFormalCharacterLevelMutation=applyCharacterLevel;
+ window.gmCommitFormalCharacterLevelMutation=commitCharacterLevel;
+ window.gmFirstWorldProgressPlan=firstWorldProgressPlan;
+ window.gmApplyFormalFirstWorldProgressMutation=applyFirstWorldProgress;
+ window.gmCommitFormalFirstWorldProgressMutation=commitFirstWorldProgress;
  window.gmApplyFormalResourceMutation=applyResource;
  window.gmCommitFormalResourceMutation=commitResource;
  window.gmApplyFormalEnhancementMutation=applyEnhancementLevels;
  window.gmCommitFormalEnhancementMutation=commitEnhancementLevels;
+ window.gmApplyFormalGeneratedEquipmentMutation=applyGeneratedEquipment;
+ window.gmCommitFormalGeneratedEquipmentMutation=commitGeneratedEquipment;
+ window.gmApplyFormalVipResetMutation=applyVipReset;
+ window.gmCommitFormalVipResetMutation=commitVipReset;
  window.gmApplyFormalDungeonMutation=applyDungeonValues;
  window.gmCommitFormalDungeonMutation=commitDungeonValues;
  window.gmResetFormalDailyDungeonMutation=resetDailyDungeonState;
  window.gmCommitFormalDailyDungeonReset=commitDailyDungeonReset;
+ installFormalUiWriters();
  window.GM_FORMAL_TRANSACTION_INTEGRITY=integrity();
- installEnhancementUiCommit();
  if(!window.GM_FORMAL_TRANSACTION_INTEGRITY.passed)console.error("[文明戰線] GM formal transaction integrity error",window.GM_FORMAL_TRANSACTION_INTEGRITY.errors);
 })();
