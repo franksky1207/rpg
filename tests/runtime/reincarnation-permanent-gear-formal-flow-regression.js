@@ -4,77 +4,51 @@ const assert=require("assert");
 (async()=>{
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage();
- const pageErrors=[];
- page.on("pageerror",error=>pageErrors.push(String(error?.stack||error?.message||error)));
+ const pageErrors=[];page.on("pageerror",error=>pageErrors.push(String(error?.stack||error?.message||error)));
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_VERSION===1&&typeof window.enforceReincarnationPermanentGearLevels==="function"&&typeof window.applyReincarnationResetState==="function"&&typeof window.runSettlementTransaction==="function"&&typeof window.load==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_VERSION===2&&window.REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_POLICY==="fallback-only"&&typeof window.applyReincarnationResetState==="function"&&typeof window.runSettlementTransaction==="function"&&typeof window.normalizeSaveState==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const saveKey=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save";
    const slots=["weapon","helmet","armor","shoes","accessory"];
-   const make=(type,index)=>window.makeEquipmentRewardItem({id:`reward-3-2000-5-${type}-${index}-formalflow`,world:3,level:2000,q:5,type,name:`formal-${type}`,sourceTag:"third-world-boss",sourceBossId:`higher-dimensional-boss-0${Math.min(9,index+1)}`,sourceBossIndex:index,sourceOrdinal:0,sell:0,buy:0,rng:()=>.42});
-   const identity=item=>({id:item.id,world:item.world,level:item.level,type:item.type,hp:item.hp||0,atk:item.atk||0,def:item.def||0,crit:item.crit||0,dodge:item.dodge||0,mainStat:clone(item.mainStat),affixes:clone(item.affixes),sourceTag:item.sourceTag||"",sourceBossId:item.sourceBossId||""});
-   const all2000=target=>slots.every(type=>target?.equipment?.[type]?.world===3&&target.equipment[type].level===2000);
-   const snapshotGear=target=>Object.fromEntries(slots.map(type=>[type,identity(target.equipment[type])]));
+   const make=(type,index)=>window.makeEquipmentRewardItem({id:`reward-3-2000-5-${type}-${index}-rootfix`,world:3,level:2000,q:5,type,name:`root-${type}`,sourceTag:"third-world-boss",sourceBossId:`higher-dimensional-boss-0${Math.min(9,index+1)}`,sourceBossIndex:index,sourceOrdinal:0,sell:0,buy:0,rng:()=>.42});
+   const snapshot=target=>Object.fromEntries(slots.map(type=>[type,{id:target.equipment[type].id,world:target.equipment[type].world,level:target.equipment[type].level,hp:target.equipment[type].hp||0,atk:target.equipment[type].atk||0,def:target.equipment[type].def||0,crit:target.equipment[type].crit||0,dodge:target.equipment[type].dodge||0}]));
 
-   const first=newState();
-   first.saveVersion=17;first.level=2000;first.secondWorld=createBlankSecondWorldState();first.secondWorld.entered=true;first.thirdWorld=createBlankThirdWorldState();first.thirdWorld.entered=true;first.thirdWorld.coreLevel=10;first.thirdWorld.bosses=Array.from({length:10},()=>({currentHp:0}));
-   if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(first);first.reincarnation.count=0;
-   slots.forEach((type,index)=>{first.equipment[type]=make(type,index);});
-   const before=snapshotGear(first);
-   state=first;if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("formal-gear-regression");
+   const first=newState();first.saveVersion=17;first.level=2000;first.secondWorld=createBlankSecondWorldState();first.secondWorld.entered=true;first.thirdWorld=createBlankThirdWorldState();first.thirdWorld.entered=true;first.thirdWorld.coreLevel=10;first.thirdWorld.bosses=Array.from({length:10},()=>({currentHp:0}));if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(first);first.reincarnation.count=0;slots.forEach((type,index)=>{first.equipment[type]=make(type,index);});
+   const before=snapshot(first);state=first;if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("root-fix-regression");
+   const tx=window.runSettlementTransaction({label:"root-fix-regression",mutate:target=>window.applyReincarnationResetState(target,{requireEligible:true,currentTime:Date.now()})});
+   const afterTx=snapshot(state),guardAfterTx=clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null),persistedTx=snapshot(JSON.parse(localStorage.getItem(saveKey)));
 
-   const tx=window.runSettlementTransaction({label:"formal-gear-regression",mutate:target=>{
-    const reset=window.applyReincarnationResetState(target,{requireEligible:true,currentTime:Date.now()});
-    if(reset?.ok!==true)return reset;
-    // Reproduce the observed historical corruption before the formal save boundary.
-    slots.forEach(type=>{target.equipment[type].level=500;});
-    return {ok:true,reset};
-   }});
-   const afterTxMemory=snapshotGear(state);
-   const afterTxSaved=JSON.parse(localStorage.getItem(saveKey)||"null");
-   const afterTxPersisted=afterTxSaved?snapshotGear(afterTxSaved):null;
-   const guardAfterTx=clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null);
+   // The current-schema UI normalizer is the historical root writer. It must now be harmless in W1/W2.
+   window.normalizeSaveState(state);const afterW1Normalize=snapshot(state);save(false);const guardAfterW1=clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null);
+   state.secondWorld.entered=true;state.level=600;window.normalizeSaveState(state);const afterW2Normalize=snapshot(state);save(false);const guardAfterW2=clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null);
 
-   const loaded=window.load();
-   const afterReload=snapshotGear(state);
-   const afterReloadSaved=JSON.parse(localStorage.getItem(saveKey)||"null");
+   // Explicitly corrupted historical Schema17 data is still recovered by the save-boundary fallback.
+   state.secondWorld.entered=false;state.thirdWorld.entered=false;state.level=1;slots.forEach(type=>{state.equipment[type].level=500;});
+   const corruptBefore=snapshot(state);save(false);const corruptAfter=snapshot(state),guardFallback=clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null),corruptPersisted=snapshot(JSON.parse(localStorage.getItem(saveKey)));
 
-   // W2 rerun must still preserve the higher-world permanent gear while native W2 cap stays 1000.
-   state.secondWorld.entered=true;state.level=600;slots.forEach(type=>{state.equipment[type].level=1000;});
-   save(false);
-   const w2Saved=JSON.parse(localStorage.getItem(saveKey)||"null");
-   const w2={level:state.level,gear:snapshotGear(state),persisted:snapshotGear(w2Saved),guard:clone(window.LAST_REINCARNATION_PERMANENT_GEAR_SAVE_GUARD_REPORT||null)};
-
-   // First-life saves must never get the rerun repair.
-   const firstLife=newState();firstLife.saveVersion=17;firstLife.secondWorld=createBlankSecondWorldState();firstLife.thirdWorld=createBlankThirdWorldState();if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(firstLife);firstLife.reincarnation.count=0;firstLife.equipment.weapon=make("weapon",0);firstLife.equipment.weapon.level=500;state=firstLife;save(false);const firstLifeSaved=JSON.parse(localStorage.getItem(saveKey)||"null");
-
-   // Active W3 normal sub-2000 equipment must also remain untouched.
-   const activeW3=newState();activeW3.saveVersion=17;activeW3.secondWorld=createBlankSecondWorldState();activeW3.secondWorld.entered=true;activeW3.thirdWorld=createBlankThirdWorldState();activeW3.thirdWorld.entered=true;if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(activeW3);activeW3.reincarnation.count=2;activeW3.equipment.weapon=window.makeEquipmentRewardItem({id:"w3-normal-1350",world:3,level:1350,q:5,type:"weapon",name:"w3-normal",sourceTag:"third-world-boss",sell:0,buy:0,rng:()=>.42});state=activeW3;save(false);const activeW3Saved=JSON.parse(localStorage.getItem(saveKey)||"null");
-
-   return {before,tx:{ok:tx?.ok===true,afterMemory:afterTxMemory,afterPersisted:afterTxPersisted,guard:guardAfterTx},reload:{loaded,gear:afterReload,persisted:afterReloadSaved?snapshotGear(afterReloadSaved):null},w2,firstLife:{memory:identity(firstLife.equipment.weapon),persisted:identity(firstLifeSaved.equipment.weapon)},activeW3:{memory:identity(activeW3.equipment.weapon),persisted:identity(activeW3Saved.equipment.weapon)},all2000:{txMemory:all2000(afterTxSaved),reload:all2000(state)}};
+   const firstLife=newState();firstLife.saveVersion=17;firstLife.secondWorld=createBlankSecondWorldState();firstLife.thirdWorld=createBlankThirdWorldState();if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(firstLife);firstLife.reincarnation.count=0;firstLife.equipment.weapon=make("weapon",0);firstLife.equipment.weapon.level=500;state=firstLife;save(false);const firstLifeSaved=JSON.parse(localStorage.getItem(saveKey));
+   const activeW3=newState();activeW3.saveVersion=17;activeW3.secondWorld=createBlankSecondWorldState();activeW3.secondWorld.entered=true;activeW3.thirdWorld=createBlankThirdWorldState();activeW3.thirdWorld.entered=true;if(typeof normalizeReincarnationState==="function")normalizeReincarnationState(activeW3);activeW3.reincarnation.count=2;activeW3.equipment.weapon=window.makeEquipmentRewardItem({id:"w3-normal-1350",world:3,level:1350,q:5,type:"weapon",name:"w3-normal",sell:0,buy:0,rng:()=>.42});state=activeW3;save(false);const activeSaved=JSON.parse(localStorage.getItem(saveKey));
+   return {before,tx:{ok:tx?.ok===true,after:afterTx,persisted:persistedTx,guard:guardAfterTx},w1:{after:afterW1Normalize,guard:guardAfterW1},w2:{after:afterW2Normalize,guard:guardAfterW2},fallback:{before:corruptBefore,after:corruptAfter,persisted:corruptPersisted,guard:guardFallback,snapshot:window.reincarnationPermanentGearSaveGuardSnapshot?.()},firstLife:{memory:firstLife.equipment.weapon.level,persisted:firstLifeSaved.equipment.weapon.level},activeW3:{memory:activeW3.equipment.weapon.level,persisted:activeSaved.equipment.weapon.level}};
   });
 
-  assert.equal(report.tx.ok,true,"Formal reincarnation settlement must succeed.");
-  Object.keys(report.before).forEach(type=>{
-   assert.equal(report.tx.afterMemory[type].level,2000,`${type} must be restored before the formal save returns.`);
-   assert.equal(report.tx.afterPersisted[type].level,2000,`${type} must persist as Lv.2000.`);
-   assert.equal(report.tx.afterPersisted[type].world,3,`${type} must remain W3 gear.`);
-   const expected={...report.before[type],level:2000};assert.deepEqual(report.tx.afterPersisted[type],expected,`${type} identity/stats must remain unchanged.`);
-   assert.equal(report.reload.gear[type].level,2000,`${type} must remain Lv.2000 after reload.`);
-   assert.equal(report.reload.persisted[type].level,2000,`${type} persisted reload must remain Lv.2000.`);
-   assert.equal(report.w2.gear[type].level,2000,`${type} must remain Lv.2000 in W2 rerun.`);
-   assert.equal(report.w2.persisted[type].level,2000,`${type} W2 save must persist Lv.2000.`);
-  });
-  assert.equal(report.tx.guard?.applied,true);assert.equal(report.tx.guard?.repaired,5,"Save guard must repair all five observed corrupted equipped items.");
-  assert.equal(report.reload.loaded,true);
-  assert.equal(report.w2.level,600,"Player W2 level must remain independent of permanent gear level.");
-  assert.equal(report.w2.guard?.applied,true);assert.equal(report.w2.guard?.repaired,5);
-  assert.equal(report.firstLife.memory.level,500,"First-life gear must not be promoted by the rerun guard.");assert.equal(report.firstLife.persisted.level,500);
-  assert.equal(report.activeW3.memory.level,1350,"Active W3 normal equipment must not be promoted.");assert.equal(report.activeW3.persisted.level,1350);
+  assert.equal(report.tx.ok,true);
+  for(const type of Object.keys(report.before)){
+   assert.deepEqual(report.tx.after[type],report.before[type],`${type}: reset transaction must preserve W3 Lv.2000 identity.`);
+   assert.deepEqual(report.tx.persisted[type],report.before[type],`${type}: formal persisted state must stay Lv.2000.`);
+   assert.deepEqual(report.w1.after[type],report.before[type],`${type}: current-schema W1 normalization must not clamp higher-world gear.`);
+   assert.deepEqual(report.w2.after[type],report.before[type],`${type}: current-schema W2 normalization must not clamp higher-world gear.`);
+   assert.equal(report.fallback.before[type].level,500);assert.equal(report.fallback.after[type].level,2000);assert.equal(report.fallback.persisted[type].level,2000);
+  }
+  assert.equal(report.tx.guard?.repaired,0,"Healthy formal reincarnation flow must not depend on the fallback guard.");
+  assert.equal(report.w1.guard?.repaired,0,"Root-fixed W1 normalization must leave the fallback idle.");
+  assert.equal(report.w2.guard?.repaired,0,"Root-fixed W2 normalization must leave the fallback idle.");
+  assert.equal(report.fallback.guard?.policy,"fallback-only");assert.equal(report.fallback.guard?.repaired,5,"Historical corruption must still be recovered at save boundary.");assert.ok(report.fallback.snapshot?.repairRuns>=1);
+  assert.equal(report.firstLife.memory,500);assert.equal(report.firstLife.persisted,500,"First-life state must not be promoted by fallback guard.");
+  assert.equal(report.activeW3.memory,1350);assert.equal(report.activeW3.persisted,1350,"Active W3 normal sub-2000 gear must remain untouched.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("Formal reincarnation permanent gear save-boundary regression passed:",JSON.stringify(report));
+  console.log("Root-fixed formal reincarnation gear flow regression passed:",JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
