@@ -12,7 +12,7 @@ assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFail
 
 const index=read("index.html");
 const source=name=>read(name);
-const compatibility=source("compatibilityowners.js"),saveHook=source("savehookcore.js"),saveGuard=source("saveversionguard.js"),backupRetention=source("savebackupretention.js"),saveMigration=source("savemigration.js"),scriptLoader=source("scriptgrouploader.js"),runtimeApi=source("runtimeapi.js"),combatMath=source("combatmath.js"),dungeonCore=source("dungeoncore.js"),secondWorldCombat=source("secondworldcombat.js"),worldTransitionSafety=source("worldtransitionsafety.js"),offlineState=source("offlinestatecore.js"),battlePipeline=source("battlepipeline.js"),rerun1=source("reincarnationrerunworld1.js"),rerun2=source("reincarnationrerunworld2.js"),rerun3=source("reincarnationrerunworld3.js");
+const compatibility=source("compatibilityowners.js"),saveHook=source("savehookcore.js"),saveGuard=source("saveversionguard.js"),backupRetention=source("savebackupretention.js"),saveMigration=source("savemigration.js"),migrationRegression=source("tests/runtime/save-level-migration-regression.js"),workflow=source(".github/workflows/runtime-integrity.yml"),scriptLoader=source("scriptgrouploader.js"),runtimeApi=source("runtimeapi.js"),combatMath=source("combatmath.js"),dungeonCore=source("dungeoncore.js"),secondWorldCombat=source("secondworldcombat.js"),worldTransitionSafety=source("worldtransitionsafety.js"),offlineState=source("offlinestatecore.js"),battlePipeline=source("battlepipeline.js"),rerun1=source("reincarnationrerunworld1.js"),rerun2=source("reincarnationrerunworld2.js"),rerun3=source("reincarnationrerunworld3.js");
 const normalScripts=[...index.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 const delayedScripts=[...index.matchAll(/<script\b[^>]*\bdata-src=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 const localScripts=[...new Set([...normalScripts,...delayedScripts])];
@@ -25,6 +25,7 @@ assert(pos("savemigration.js")<pos("saveversionguard.js")&&pos("saveversionguard
 assert(pos("combatmath.js")<pos("combatcore.js")&&pos("combatcore.js")<pos("secondworldcombat.js"),"World Combat Adapter／Combat Core／W2 consumer 順序錯誤。");
 assert(pos("worldtransitionsafety.js")>pos("offlineprogress.js"),"World transition guards 必須在 Offline owner 載入後安裝。");
 assert(!index.includes('src="thirdworldmigrationregression.js'),"production index 不得載入 migration regression fixture。");
+assert(!index.includes('save-level-migration-regression.js'),"production index 不得載入 level migration CI regression fixture。");
 for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+type="application/x-civilization-deferred"\\s+data-load-group="${group}"\\s+data-src=`);assert(re.test(index),`${group} scripts 必須由 Script Group Loader 延後載入。`);}
 assert(index.includes('scriptgrouploader.js?v=20261005-code-cleanup-batch3'),"Script Group Loader cache token 未更新。");
 assert(!/<script\s+defer\s+fetchpriority="low"\s+data-load-group="(?:gm|story|integrity)"/.test(index),"舊 defer-only 非核心載入方式必須退休。");
@@ -45,6 +46,10 @@ assert(index.includes('savebackupretention.js?v=20261005-code-cleanup-batch2'),"
 assert(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(saveMigration)&&/cleanupRetiredMigrationState/.test(saveMigration),"Retired save state 必須集中在 migration-only owner。");
 assert(/function normalizePersistentFlags\(target\)\{if\(!isObject\(target\)\)return target;normalizePendingBlackMarketEncounter\(target\);return target;\}/.test(saveMigration),"Current-state persistent normalizer 不得持續清理 retired GM state。");
 assert(!/window\.cleanupLegacyDungeonFields=/.test(saveMigration)&&!/window\.cleanupRetiredShopState=/.test(saveMigration)&&!/window\.cleanupTransientGmTestState=/.test(saveMigration),"Migration-only cleanup helpers 不應暴露為 global API。");
+assert(/SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=2/.test(saveMigration)&&/SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=1/.test(saveMigration),"Batch6 migration regression separation contract 未安裝。");
+assert(!/runLevelMigrationRegression/.test(saveMigration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_VERSION/.test(saveMigration)&&!/SAVE_LEVEL_MIGRATION_REGRESSION_REPORT/.test(saveMigration),"production savemigration owner 不得再含 regression runner／fixture globals。");
+assert(/SCHEMA16_WORLD3_LV1000/.test(migrationRegression)&&/SCHEMA16_CONTAMINATED_REINCARNATION/.test(migrationRegression),"CI migration regression fixtures 缺失。");
+assert(workflow.includes("save-level-migration-regression.js"),"Runtime Integrity 必須永久執行分離後的 migration regression。");
 
 assert(/WORLD_COMBAT_ADAPTER_VERSION=1/.test(combatMath)&&/runWorldCombatCore/.test(combatMath),"World Combat Adapter owner 缺失。");
 assert(/DUNGEON_WORLD_COMBAT_ADAPTER_VERSION=1/.test(dungeonCore)&&/window\.runWorldCombatCore/.test(dungeonCore),"Dungeon 必須走 World Combat Adapter。");
@@ -63,5 +68,6 @@ assert(/CivilizationReincarnation\?\.lifecycle\?\.worldRerunPolicy\|\|window\.wo
 assert(/CivilizationReincarnation\?\.lifecycle\?\.worldRerunPolicy\|\|window\.worldRerunPolicy/.test(rerun3)&&/THIRD_WORLD_REINCARNATION_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION/.test(rerun3)&&!/THIRD_WORLD_REINCARNATION_BASE_OWNERS=/.test(rerun3),"W3 必須 namespace-first 委派共用 lifecycle 並退休內部 globals。");
 assert(pos("reincarnationrerunworld1.js")<pos("runtimeapi.js")&&pos("runtimeapi.js")<pos("reincarnationrerunworld2.js")&&pos("runtimeapi.js")<pos("reincarnationrerunworld3.js"),"runtime API owner 載入順序錯誤。");
 assert(index.includes('reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch5')&&index.includes('runtimeapi.js?v=20261005-code-cleanup-batch4')&&index.includes('reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4')&&index.includes('reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4'),"第5批 rerun lifecycle cache token 未同步。");
+assert(index.includes('savemigration.js?v=20261003-reincarnation-opt-batch2&v2=20261005-code-cleanup-batch6'),"第6批 savemigration cache token 未同步。");
 
-console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:5,runtimeApi:1}));
+console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:6,runtimeApi:1,migrationRegression:"ci-only"}));
