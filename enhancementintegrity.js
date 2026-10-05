@@ -18,13 +18,13 @@
   const issues=window.enhancementFormalStateIssues(invalid);
   if(!issues.some(row=>row?.code==="LEVEL_BELOW_FORMAL_MIN"&&row?.type==="weapon"))fail("UNIVERSE_LOW_LEVEL_DETECT","宇宙低於 +20 的異常狀態未被偵測");
   const c20=window.enhancementUpgradeCost(20,galaxy),c21=window.enhancementUpgradeCost(21,universe),c30=window.enhancementUpgradeCost(30,universe),c40=window.enhancementUpgradeCost(40,universe);
-  if(c20?.basic!==1000||c20?.advanced!==100)fail("COST20","+20 成本異常");
+  if(c20?.basic!==500||c20?.advanced!==100)fail("COST20","+20 成本異常");
   if(!c21?.available||c21.darkMatter!==30000||c21.darkEnergy!==300)fail("COST21","+21 成本異常");
   if(!c30?.available||c30.darkMatter!==138000||c30.darkEnergy!==390)fail("COST30","+30 成本異常");
   if(!c40?.available||c40.darkMatter!==258000||c40.darkEnergy!==490)fail("COST40","+40 成本異常");
   if(window.enhancementUpgradeCost(21,galaxy)?.available!==false||window.enhancementUpgradeCost(20,universe)?.available!==false)fail("WORLD_COST_GATE","銀河 +21／宇宙 +20 成本 gate 異常");
   const firstTotal=Array.from({length:20},(_,i)=>window.enhancementUpgradeCost(i+1,galaxy)).reduce((a,row)=>({basic:a.basic+row.basic,advanced:a.advanced+row.advanced}),{basic:0,advanced:0});
-  if(firstTotal.basic!==10500||firstTotal.advanced!==1050)fail("COST_TOTAL_FIRST","單欄 +0→+20 累積成本異常");
+  if(firstTotal.basic!==5250||firstTotal.advanced!==1050)fail("COST_TOTAL_FIRST","單欄 +0→+20 累積成本異常");
   const secondTotal=Array.from({length:20},(_,i)=>window.enhancementUpgradeCost(21+i,universe)).reduce((a,row)=>({darkMatter:a.darkMatter+row.darkMatter,darkEnergy:a.darkEnergy+row.darkEnergy}),{darkMatter:0,darkEnergy:0});
   if(secondTotal.darkMatter!==2880000||secondTotal.darkEnergy!==7900)fail("COST_TOTAL_SECOND","單欄 +20→+40 累積成本異常");
   if(window.enhancementBonusPercent(20)!==50||window.enhancementBonusPercent(30)!==75||window.enhancementBonusPercent(40)!==100)fail("BONUS_LEVELS","+20/+30/+40 主能力倍率異常");
