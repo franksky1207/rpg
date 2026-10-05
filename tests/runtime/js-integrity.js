@@ -28,17 +28,18 @@ assert(pos("worldtransitionsafety.js")>pos("offlineprogress.js"),"World transiti
 assert(!index.includes('src="thirdworldmigrationregression.js'),"production index 不得載入 migration regression fixture。");
 assert(!index.includes('save-level-migration-regression.js'),"production index 不得載入 level migration CI regression fixture。");
 for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+type="application/x-civilization-deferred"\\s+data-load-group="${group}"\\s+data-src=`);assert(re.test(index),`${group} scripts 必須由 Script Group Loader 延後載入。`);}
-assert(index.includes('scriptgrouploader.js?v=20261005-code-cleanup-batch7'),"Script Group Loader Batch7 canonical cache token 未更新。");
+assert(index.includes('scriptgrouploader.js?v=20261005-gm-authorized-restore1'),"Script Group Loader GM restore canonical cache token 未更新。");
 assert(index.includes('compatibilityowners.js?v=20261005-code-cleanup-batch7'),"Compatibility owner Batch7 canonical cache token 未更新。");
-assert(assetRef("scriptgrouploader.js")==="?v=20261005-code-cleanup-batch7","Script Group Loader 必須只保留單一 canonical ?v= token。");
+assert(assetRef("scriptgrouploader.js")==="?v=20261005-gm-authorized-restore1","Script Group Loader 必須只保留單一 canonical ?v= token。");
 assert(assetRef("compatibilityowners.js")==="?v=20261005-code-cleanup-batch7","Compatibility owner 必須只保留單一 canonical ?v= token。");
 assert(!/<script\s+defer\s+fetchpriority="low"\s+data-load-group="(?:gm|story|integrity)"/.test(index),"舊 defer-only 非核心載入方式必須退休。");
 assert(/GROUP_ORDER=Object\.freeze\(\["story","gm","integrity"\]\)/.test(scriptLoader)&&/AUTO_GROUPS=Object\.freeze\(\["story"\]\)/.test(scriptLoader),"Batch7 loader 必須只自動載入 Story。");
 assert(/CivilizationScriptLoader=namespace/.test(scriptLoader)&&/SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION/.test(scriptLoader)&&/SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION/.test(scriptLoader),"Batch7 canonical script-loader namespace／activation contract 缺失。");
-assert(/gm:"password-modal-on-demand"/.test(scriptLoader)&&/integrity:"diagnostics-explicit-only"/.test(scriptLoader)&&/story:"post-load-sequenced"/.test(scriptLoader),"Batch7 lazy-load activation policy 錯誤。");
+assert(/gm:"authorized-save-or-password-modal-on-demand"/.test(scriptLoader)&&/integrity:"diagnostics-explicit-only"/.test(scriptLoader)&&/story:"post-load-sequenced"/.test(scriptLoader),"GM authorized restore lazy-load activation policy 錯誤。");
+assert(/savedGmAuthorized/.test(scriptLoader)&&/ensureAuthorizedGmRuntime/.test(scriptLoader)&&/SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=1/.test(scriptLoader),"已授權 GM reload runtime restore 契約缺失。");
 assert(/MutationObserver/.test(scriptLoader)&&/passwordModal/.test(scriptLoader)&&/production/.test(scriptLoader),"GM modal on-demand trigger／production probe 缺失。");
 assert(!/window\.SCRIPT_GROUP_ROUTING_VERSION=/.test(scriptLoader)&&!/window\.SCRIPT_GROUP_AUTO_START_DELAY_MS=/.test(scriptLoader),"Batch7 不得重新暴露低價值 loader internals globals。");
-assert(workflow.includes("code-cleanup-batch7-lazy-loading.js")&&/production=1/.test(batch7Lazy)&&/CivilizationScriptLoader\.ensure\("integrity"\)/.test(batch7Lazy),"Runtime Integrity 必須永久驗證 production lazy-loading 行為。");
+assert(workflow.includes("code-cleanup-batch7-lazy-loading.js")&&/production=1/.test(batch7Lazy)&&/CivilizationScriptLoader\.ensure\("integrity"\)/.test(batch7Lazy)&&/applyReincarnationResetState/.test(batch7Lazy)&&/gmBackgroundBattleEnabled/.test(batch7Lazy),"Runtime Integrity 必須永久驗證 production lazy-loading、首輪與轉生後 GM runtime restore。");
 
 assert(/IMPLEMENTATION_OWNER="savehookcore"/.test(saveHook)&&/CORE_VERSION=2/.test(saveHook),"Save Hook Core owner／V2 契約錯誤。");
 assert(/window\.save=hookedSave/.test(saveHook)&&/registerBeforeSaveHook/.test(saveHook)&&/registerAfterSaveHook/.test(saveHook)&&/registerSaveSettlementHook/.test(saveHook),"Save Hook Core API 不完整。");
@@ -80,4 +81,4 @@ assert(pos("reincarnationrerunworld1.js")<pos("runtimeapi.js")&&pos("runtimeapi.
 assert(index.includes('reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch5')&&index.includes('runtimeapi.js?v=20261005-code-cleanup-batch4')&&index.includes('reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4')&&index.includes('reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4'),"第5批 rerun lifecycle cache token 未同步。");
 assert(index.includes('savemigration.js?v=20261003-reincarnation-opt-batch2&v2=20261005-code-cleanup-batch6'),"第6批 savemigration cache token 未同步。");
 
-console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:7,runtimeApi:1,migrationRegression:"ci-only",lazyLoading:"story-auto-gm-modal-integrity-explicit",canonicalCacheTokens:["compatibilityowners.js","scriptgrouploader.js"]}));
+console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:7,runtimeApi:1,migrationRegression:"ci-only",lazyLoading:"story-auto-gm-authorized-or-modal-integrity-explicit",canonicalCacheTokens:["compatibilityowners.js","scriptgrouploader.js"]}));
