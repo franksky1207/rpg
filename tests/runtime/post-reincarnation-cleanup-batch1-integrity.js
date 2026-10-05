@@ -27,14 +27,19 @@ assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 l
 
 assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
 assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3"'),"W1 rerun 必須保留 Batch3 canonical cache token");
-assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4"'),"Batch4 必須載入 canonical runtime API owner");
+assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4'),"Batch4 必須載入 canonical runtime API owner");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W3 rerun 必須更新 Batch4 cache token");
 assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 legacy presentation owner 之後接管 shared alias");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld3.js'),"runtime API owner 必須先於 W3 rerun consumer");
 
+assert.ok(/const VERSION=1;/.test(runtimeApi),"Batch4 runtime API public version 必須維持 V1");
 assert.ok(/CIVILIZATION_RUNTIME_API_VERSION=VERSION/.test(runtimeApi),"Batch4 必須公開 runtime API namespace version");
+assert.ok(/CIVILIZATION_RUNTIME_LATE_BOUND_NAMESPACE_VERSION=LATE_BOUND_NAMESPACE_VERSION/.test(runtimeApi),"Batch4 namespace 必須公開 late-bound contract");
+assert.ok(/function late\(name,code\)/.test(runtimeApi),"canonical namespace 必須晚綁定 owner，避免後載入 API 被凍結成 undefined");
+assert.ok(/metadata:late\("firstWorldTargetMetadata"/.test(runtimeApi),"W1 metadata namespace 必須晚綁定 Batch4-6 owner");
+assert.ok(/preparedSession:late\("getPreparedFirstWorldTargetSession"/.test(runtimeApi),"W1 prepared session namespace 必須晚綁定後載入 owner");
 assert.ok(/CivilizationReincarnation=reincarnation/.test(runtimeApi),"Reincarnation 必須有 canonical namespace");
 assert.ok(/CivilizationFirstWorldTarget=firstWorldTarget/.test(runtimeApi),"W1 Target Context 必須有 canonical namespace");
 assert.ok(/CivilizationSaveMigration=saveMigration/.test(runtimeApi),"Save Migration 必須有 canonical namespace");
