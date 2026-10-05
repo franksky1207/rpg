@@ -57,7 +57,7 @@
  function saleQuote(item,options={}){
   if(typeof window.equipmentSaleQuote==="function")return window.equipmentSaleQuote(item,options);
   if(secondWorldActive())return saleOwnerMissingResult(item).quote;
-  const gold=typeof specializationSellValue==="function"?window.specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
+  const gold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
   return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0};
  }
  function saleText(value){
@@ -170,7 +170,7 @@
    }
   });
   restoreAfterEquipmentChange();selectedItem=null;
-  const sale=typeof window.mergeEquipmentSaleQuotes==="function"?window.mergeEquipmentSaleQuotes(saleQuotes):{currency:"gold",amount:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0),gold:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0,0))};
+  const sale=typeof window.mergeEquipmentSaleQuotes==="function"?window.mergeEquipmentSaleQuotes(saleQuotes):{currency:"gold",amount:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0),gold:saleQuotes.reduce((n,q)=>n+(Number(q?.gold)||0),0)};
   return {changed,soldCount,sale,soldGold:Number(sale.gold)||0,enhancementStones};
  };
  window.equipmentSellSelected=function(){
