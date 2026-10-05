@@ -1,5 +1,5 @@
 (function(){
- const VERSION=13;
+ const VERSION=14;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -48,7 +48,7 @@
   const civilizationMax=Math.max(0,Math.floor(Number(window.CIVILIZATION_LEVEL_MAX)||Number(base?.civilizationMax)||10));
   const civilizationDamageBonusPercent=current>=2&&typeof window.civilizationDamageBonusPercent==="function"?window.civilizationDamageBonusPercent(s):Math.max(0,Number(base?.civilizationDamageBonusPercent)||0);
   const civilizationDamageMultiplier=current>=2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(s):Math.max(1,Number(base?.civilizationDamageMultiplier)||1);
-  const equippedWorlds=typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=s?.equipment?.[type];const world=Number(item?.world);return [type,item?(world===3?3:world===2?2:1):null];})):base?.equippedWorlds||{};
+  const equippedWorlds=typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=s?.equipment?.[type];return [type,item?(typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(item):(Number(item?.world)===3?3:Number(item?.world)===2?2:1)):null];})):base?.equippedWorlds||{};
   const breakthrough=breakthroughDisplay(s);
   return {
    ...base,
@@ -174,6 +174,7 @@
  window.PLAYER_ADVENTURE_WORLD_PHASE_ROUTING_VERSION=2;
  window.PLAYER_ADVENTURE_ERA_VIEW_ROUTING_VERSION=1;
  window.CHARACTER_WORLD_PHASE_SEMANTICS_VERSION=3;
+ window.CHARACTER_EQUIPMENT_WORLD_SEMANTICS_VERSION=1;
  window.CHARACTER_BREAKTHROUGH_UI_VERSION=2;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
