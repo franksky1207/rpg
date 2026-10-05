@@ -15,6 +15,11 @@ const assert=require("assert");
    window.SAVE_NORMALIZATION_PIPELINE_VERSION===3&&
    window.SAVE_MIGRATION_STAIRCASE_VERSION===1&&
    window.REINCARNATION_STATE_VERSION>=7&&
+   window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION>=2&&
+   Array.isArray(window.GM_TEST_TRANSIENT_STATE_KEYS)&&
+   window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION>=1&&
+   window.CHARACTER_WORLD_SNAPSHOT_OWNER==="playersemanticsui"&&
+   typeof window.characterWorldSnapshot==="function"&&
    typeof window.saveCompatibilityFor==="function"&&
    typeof window.saveMigrationPlanForVersion==="function"&&
    typeof window.saveSchemaChangeRequiresBump==="function"&&
@@ -53,8 +58,18 @@ const assert=require("assert");
    const migrate=source=>{
     const original=clone(source);
     const migrated=window.migrateSave(clone(source),source.saveVersion,null,original);
-    return {migrated:clone(migrated),migration:clone(window.LAST_SAVE_MIGRATION_REPORT||{}),normalization:clone(window.LAST_REINCARNATION_NORMALIZATION_REPORT||{})};
+    return {migrated:clone(migrated),migration:clone(window.LAST_SAVE_MIGRATION_REPORT||{}),normalization:clone(window.LAST_REINCARNATION_NORMALIZATION_REPORT||{}),gmCleanup:clone(window.LAST_GM_TEST_TRANSIENT_CLEANUP_REPORT||{})};
    };
+
+   const gmTransientKeys=Array.from(window.GM_TEST_TRANSIENT_STATE_KEYS||[]);
+   const gmTransientMatrix=[];
+   for(let version=1;version<=17;version++){
+    const phase=version>=16?3:version>=10?2:1;
+    const source=makeBase(version,phase===3?1500:phase===2?750:100,phase);
+    gmTransientKeys.forEach((key,index)=>{source[key]={legacy:true,key,index,version};});
+    const out=migrate(source);
+    gmTransientMatrix.push({version,leftovers:gmTransientKeys.filter(key=>Object.prototype.hasOwnProperty.call(out.migrated,key)),cleanup:out.gmCleanup,migration:out.migration});
+   }
 
    const legacy=[];
    [
@@ -91,6 +106,12 @@ const assert=require("assert");
    frontierMismatch.reincarnation={count:2,breakthrough:{permanent:12,milestoneLifeId:2,milestones:{100:true,200:true}},alternateUniverse:{unlocked:true,deepestCleared:30,activeAttempt:{lifeId:2,depth:40,attemptId:"wrong-frontier",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"31":3,"40":8}}}};
    const frontier=migrate(frontierMismatch);
 
+   const characterWorlds=[
+    {phase:1,state:makeBase(17,500,1)},
+    {phase:2,state:makeBase(17,1000,2)},
+    {phase:3,state:makeBase(17,1500,3)}
+   ].map(row=>({phase:row.phase,snapshot:clone(window.characterWorldSnapshot(row.state))}));
+
    let futureAssert={threw:false,code:"",sourceVersion:null,currentVersion:null};
    try{window.assertSaveVersionSupported({saveVersion:18},{label:"compat-matrix"});}
    catch(error){futureAssert={threw:true,code:String(error?.code||""),sourceVersion:error?.saveCompatibility?.sourceVersion??null,currentVersion:error?.saveCompatibility?.currentVersion??null};}
@@ -102,8 +123,27 @@ const assert=require("assert");
    const storageAfter={};
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);storageAfter[key]=localStorage.getItem(key);}
 
-   return {compatibility,migrationPlans,schemaPolicy,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
+   return {compatibility,migrationPlans,schemaPolicy,gmTransientKeys,gmTransientInventoryVersion:window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION,gmTransientMatrix,characterWorldOwner:window.CHARACTER_WORLD_SNAPSHOT_OWNER,characterWorldVersion:window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION,characterWorlds,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
   });
+
+  const expectedTransientKeys=["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmPowerBenchmark","gmTestResults"];
+  assert.equal(report.gmTransientInventoryVersion,2,"GM transient key inventory version drifted.");
+  assert.deepEqual(report.gmTransientKeys,expectedTransientKeys,"GM transient key inventory drifted.");
+  assert.equal(report.gmTransientMatrix.length,17,"Schema1-17 GM transient migration matrix incomplete.");
+  for(const row of report.gmTransientMatrix){
+   assert.deepEqual(row.leftovers,[],`Schema${row.version} leaked historical GM-only transient keys.`);
+   assert.equal(row.cleanup?.inventorySize,expectedTransientKeys.length,`Schema${row.version} cleanup inventory size drifted.`);
+   assert.equal(row.cleanup?.removedCount,expectedTransientKeys.length,`Schema${row.version} did not remove every historical GM transient key.`);
+   assert.deepEqual(row.cleanup?.removed,expectedTransientKeys,`Schema${row.version} cleanup diagnostics drifted.`);
+   assert.equal(row.migration?.transientGmTestStateRemoved,true,`Schema${row.version} did not report transient cleanup.`);
+  }
+
+  assert.equal(report.characterWorldOwner,"playersemanticsui","Character snapshot canonical owner drifted.");
+  assert.equal(report.characterWorldVersion,1,"Character snapshot canonical phase version drifted.");
+  const characterByPhase=Object.fromEntries(report.characterWorlds.map(row=>[row.phase,row.snapshot]));
+  assert.deepEqual({world:characterByPhase[1].world,label:characterByPhase[1].worldLabel,cap:characterByPhase[1].cap},{world:1,label:"銀河紀元",cap:500},"W1 character snapshot semantics drifted.");
+  assert.deepEqual({world:characterByPhase[2].world,label:characterByPhase[2].worldLabel,cap:characterByPhase[2].cap},{world:2,label:"宇宙紀元",cap:1000},"W2 character snapshot semantics drifted.");
+  assert.deepEqual({world:characterByPhase[3].world,label:characterByPhase[3].worldLabel,cap:characterByPhase[3].cap},{world:3,label:"高維紀元",cap:2000},"W3 character snapshot semantics drifted.");
 
   const compatByVersion=Object.fromEntries(report.compatibility.map(row=>[row.sourceSchema,row]));
   [1,9,15,16].forEach(version=>{
@@ -173,6 +213,9 @@ const assert=require("assert");
   console.log("Schema17 compatibility matrix passed:",JSON.stringify({
    compatibility:report.compatibility.map(row=>({sourceSchema:row.sourceSchema,sourceVersion:row.sourceVersion,supported:row.supported,isLegacy:row.isLegacy,isFuture:row.isFuture})),
    migrationPlans:report.migrationPlans,
+   gmTransientSchemas:report.gmTransientMatrix.length,
+   gmTransientKeyCount:report.gmTransientKeys.length,
+   characterWorlds:report.characterWorlds.map(row=>({phase:row.phase,world:row.snapshot.world,label:row.snapshot.worldLabel,cap:row.snapshot.cap})),
    legacy:report.legacy.map(row=>({version:row.version,targetVersion:row.targetVersion,count:row.count,auUnlocked:row.auUnlocked})),
    current:{count:report.current.first.reincarnation.count,permanent:report.current.first.reincarnation.breakthrough.permanent,auDepth:report.current.first.reincarnation.alternateUniverse.deepestCleared},
    future:report.futureAssert,
