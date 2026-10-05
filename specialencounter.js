@@ -57,6 +57,14 @@
   if(Number(options.world)===2)return 2;
   return phase;
  }
+ function firstWorldSpecialTarget(options={}){
+  const context=options?.parentTargetContext||options?.targetContext||null;
+  const mapIndex=Math.floor(Number(context?.mapIndex??options?.mapIndex));
+  const enemyIndex=Math.floor(Number(context?.enemyIndex??options?.enemyIndex));
+  if(!Number.isInteger(mapIndex)||!Number.isInteger(enemyIndex)||mapIndex<0||enemyIndex<0||enemyIndex>4||!Array.isArray(MAPS)||mapIndex>=MAPS.length)return null;
+  return Object.freeze({mapIndex,enemyIndex});
+ }
+ function blockedSpecialResult(reason,world=1){return {blocked:true,reason,win:false,world,rewardContext:null,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:state?.hp};}
 
  async function animateSpecialFight(r,startPlayerHp,playerMax,enemyMax){
   if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");
@@ -67,6 +75,7 @@
  window.SPECIAL_ENCOUNTER_FLOW_PACING_VERSION=1;
  window.SPECIAL_ENCOUNTER_COMBAT_SPEED_VERSION=1;
  window.SPECIAL_ENCOUNTER_THIRD_WORLD_GUARD_VERSION=1;
+ window.SPECIAL_ENCOUNTER_W1_EXPLICIT_TARGET_VERSION=1;
 
  function fallbackPriorRewardsHtml(ctx){
   if(!ctx?.completed)return "";
@@ -145,11 +154,13 @@
 
  async function fightFormalSpecial(ctx,special,options={}){
   const world=specialWorld(options);
-  if(world===3)return {blocked:true,reason:"third-world-disabled",win:false,world:3,rewardContext:null,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:state?.hp};
+  if(world===3)return blockedSpecialResult("third-world-disabled",3);
+  const w1Target=world===1?firstWorldSpecialTarget(options):null;
+  if(world===1&&!w1Target)return blockedSpecialResult("first-world-target-required",1);
   const enemyScalingSnapshot=equippedStats();
   const playerSnapshot=playerCombatStats(enemyScalingSnapshot);
   const level=world===2?Math.max(500,Math.min(1000,Math.floor(Number(state.level)||500))):clampGameLevel(state.level);
-  const map=world===1?MAPS[selectedMap]:null;
+  const map=world===1?MAPS[w1Target.mapIndex]:null;
   const dropLevel=world===2?level:Math.max(map.min,Math.min(map.max,level));
   const bossIndex=world===2?(Number.isInteger(options.bossIndex)?options.bossIndex:(typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(level):-1)):-1;
   const resolvedSpecial=typeof window.specialMonsterForWorld==="function"?window.specialMonsterForWorld(special,world):special;
@@ -164,7 +175,7 @@
   if(r.win){
    const baseXp=world===2&&typeof window.secondWorldBossExpReward==="function"?window.secondWorldBossExpReward(bossIndex,false,state):ceil(sameExp(level)*expLevelFactor(level,state.level));
    const baseGold=world===2&&typeof window.secondWorldBossDarkMatterReward==="function"?window.secondWorldBossDarkMatterReward(bossIndex,false):goldBase(level);
-   const first=grantSpecialReward(firstRewardCtx,baseXp,baseGold,dropLevel,world===1?selectedMap:null,{world,bossIndex});
+   const first=grantSpecialReward(firstRewardCtx,baseXp,baseGold,dropLevel,world===1?w1Target.mapIndex:null,{world,bossIndex});
    result.xp+=first.xp;
    result.convertedGold+=first.convertedGold;
    result.gold+=first.gold;
@@ -193,7 +204,7 @@
      result.bonusRewardContext={blackMarketGoldOnly:world===1,blackMarketResourceOnly:true};
     }else{
      const bonusCtx=getSpecialRewardContext(resolvedSpecial,world);
-     const bonus=grantSpecialReward(bonusCtx,baseXp,baseGold,dropLevel,world===1?selectedMap:null,{world,bossIndex});
+     const bonus=grantSpecialReward(bonusCtx,baseXp,baseGold,dropLevel,world===1?w1Target.mapIndex:null,{world,bossIndex});
      result.bonusRewardContext=bonusCtx;
      result.xp+=bonus.xp;
      result.convertedGold+=bonus.convertedGold;
@@ -217,7 +228,9 @@
   if(mainResult?.win!==true)return false;
   const world=specialWorld(options);
   if(world===3)return false;
-  const baseEnemy=mainResult.e||(world===1?monsterObj(selectedMap,selectedEnemy):null);
+  const w1Target=world===1?firstWorldSpecialTarget(options):null;
+  if(world===1&&!w1Target)return false;
+  const baseEnemy=mainResult.e||(world===1?monsterObj(w1Target.mapIndex,w1Target.enemyIndex):null);
   if(world===1&&baseEnemy?.kind==="boss")return false;
   if(world===1&&state.level-(Number(baseEnemy?.level)||0)>=10)return false;
 
@@ -232,7 +245,8 @@
   await showSpecialEncounterAlert(special,forcedByBlackMarket);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
-  const result=await fightFormalSpecial(ctx,special,{world,bossIndex:options.bossIndex});
+  const result=await fightFormalSpecial(ctx,special,{...options,world,mapIndex:w1Target?.mapIndex,enemyIndex:w1Target?.enemyIndex,bossIndex:options.bossIndex});
+  if(result.blocked===true)return false;
   if(result.win&&world===1&&typeof addBattleEnhancementReward==="function")addBattleEnhancementReward(ctx,"autoSale",result.saleEnhancementStones);
   if(result.win&&world===2&&ctx){
    ctx.totalXp=Math.max(0,Number(ctx.totalXp)||0)+Math.max(0,Number(result.xp)||0);
@@ -248,9 +262,11 @@
    save(false);
   }
   if(!Array.isArray(ctx.specialEncounters))ctx.specialEncounters=[];
-  ctx.specialEncounters.push({special,result,forcedByBlackMarket});
+  const parentTargetContext=world===1?(options?.parentTargetContext||options?.targetContext||null):null;
+  const parentTargetIdentity=parentTargetContext?.identity||null;
+  ctx.specialEncounters.push({special,result,forcedByBlackMarket,parentTargetContext,parentTargetIdentity});
   if(!result.win||(world===2&&ctx?.continuous!==true))showSpecialResult(ctx,special,result);
-  return {triggered:true,win:result.win,special,result,forcedByBlackMarket};
+  return {triggered:true,win:result.win,special,result,forcedByBlackMarket,parentTargetContext,parentTargetIdentity};
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
