@@ -1,8 +1,8 @@
 (function(){
  const VERSION=1;
  const ROUTING_VERSION=1;
- const ACTIVATION_POLICY_VERSION=1;
- const LOAD_BEHAVIOR_VERSION=2;
+ const ACTIVATION_POLICY_VERSION=2;
+ const LOAD_BEHAVIOR_VERSION=3;
  const GLOBAL_API_CLEANUP_VERSION=1;
  const GROUP_ORDER=Object.freeze(["story","gm","integrity"]);
  const AUTO_GROUPS=Object.freeze(["story"]);
@@ -58,14 +58,18 @@
   groupPromises.set(key,promise);
   return promise;
  }
+ function savedGmAuthorized(){
+  try{return typeof state!=="undefined"&&state&&state.gm===true;}catch(_){return false;}
+ }
  function activationSnapshot(){
   return Object.freeze({
    version:ACTIVATION_POLICY_VERSION,
    behaviorVersion:LOAD_BEHAVIOR_VERSION,
    story:"post-load-sequenced",
-   gm:"password-modal-on-demand",
+   gm:"authorized-save-or-password-modal-on-demand",
    integrity:"diagnostics-explicit-only",
-   autoGroups:Array.from(AUTO_GROUPS)
+   autoGroups:Array.from(AUTO_GROUPS),
+   savedGmAuthorized:savedGmAuthorized()
   });
  }
  function snapshot(){
@@ -87,6 +91,10 @@
    return explicit||local;
   }catch(_){return false;}
  }
+ function ensureAuthorizedGmRuntime(){
+  if(!savedGmAuthorized())return Promise.resolve(false);
+  return loadGroup("gm").then(()=>true).catch(error=>{console.error("[ScriptGroupLoader] gm authorized restore",error);return false;});
+ }
  function observeGmActivation(){
   const modal=document.getElementById("passwordModal");
   if(!modal||typeof MutationObserver!=="function")return;
@@ -105,6 +113,7 @@
  function schedule(){
   const start=()=>setTimeout(()=>{
    autoLoad();
+   ensureAuthorizedGmRuntime();
    observeGmActivation();
    if(diagnosticsRequested())loadDiagnostics();
   },AUTO_START_DELAY_MS);
@@ -117,6 +126,7 @@
   activationPolicyVersion:ACTIVATION_POLICY_VERSION,
   loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,
   ensure:loadGroup,
+  ensureAuthorizedGmRuntime,
   snapshot,
   activationSnapshot
  });
@@ -125,6 +135,7 @@
  window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;
  window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;
  window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;
+ window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=1;
  // Compatibility aliases retained for existing diagnostics/tests; new consumers use CivilizationScriptLoader.
  window.ensureCivilizationScriptGroup=loadGroup;
  window.civilizationScriptGroupSnapshot=snapshot;
