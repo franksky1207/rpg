@@ -1,5 +1,19 @@
 const {chromium}=require("playwright");
 const assert=require("assert");
+const fs=require("fs");
+
+const gmHubSource=fs.readFileSync("gmhub.js","utf8");
+const gmToolsSource=fs.readFileSync("gmtools.js","utf8");
+assert.ok(gmHubSource.includes("GM_HUB_FORMAL_WRITER_RETIRED_VERSION=1"),"GM Hub formal writer retirement marker missing.");
+assert.ok(gmHubSource.includes("GM_HUB_ENHANCEMENT_WRITER_RETIRED_VERSION=1"),"GM Hub enhancement writer retirement marker missing.");
+assert.ok(!gmHubSource.includes("window.gmApplyEnhancementLevels=function"),"GM Hub must not own formal enhancement writes.");
+assert.ok(!gmHubSource.includes("window.gmCreateThirdWorldGear=function"),"GM Hub must not own formal W3 gear writes.");
+assert.ok(!gmHubSource.includes("window.gmResetVip=function"),"GM Hub must not own formal VIP reset writes.");
+assert.ok(gmToolsSource.includes("GM_TOOLS_FORMAL_WRITER_CONVERGENCE_VERSION=1"),"GM tools convergence marker missing.");
+assert.ok(!/function gmLevel\(\)[\s\S]*?state\.level\s*=/.test(gmToolsSource),"gmLevel must not write state.level directly.");
+assert.ok(!/function gmSetWorldProgress\(\)[\s\S]*?state\.mapProgress\s*=/.test(gmToolsSource),"W1 GM progress must not write formal state directly.");
+assert.ok(!/function gmCreateGear\(\)[\s\S]*?state\.inventory\.push/.test(gmToolsSource),"W1 GM gear creation must not push formal inventory directly.");
+assert.ok(!/function gmCreateSecondWorldGear\(\)[\s\S]*?state\.inventory\.push/.test(gmToolsSource),"W2 GM gear creation must not push formal inventory directly.");
 
 (async()=>{
  const browser=await chromium.launch({headless:true});
@@ -26,10 +40,10 @@ const assert=require("assert");
    const wrongW2=firstLife?window.gmApplyFormalGeneratedEquipmentMutation({world:2,q:5,bossIndex:0,types:["weapon"]},firstLife):null;
    const vip={vipLevel:8,vipPoints:123,hp:100,level:1,equipment:{},secondWorld:{entered:false},thirdWorld:{entered:false}};
    const vipReset=window.gmApplyFormalVipResetMutation(vip);
-   return {self:window.GM_FORMAL_TRANSACTION_INTEGRITY,versions:{owner:window.GM_FORMAL_TRANSACTION_OWNER_VERSION,character:window.GM_FORMAL_CHARACTER_TRANSACTION_VERSION,mainline:window.GM_FORMAL_MAINLINE_TRANSACTION_VERSION,gear:window.GM_FORMAL_GEAR_TRANSACTION_VERSION,enhancement:window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION,vip:window.GM_FORMAL_VIP_RESET_TRANSACTION_VERSION,ui:window.GM_FORMAL_UI_WRITER_CONVERGENCE_VERSION},handlers,progress,w1,wrongProgress,enhancement,enhancementFixture,gear,firstLifeInventory:firstLife?.inventory?.map(item=>({world:item.world??1,level:item.level,q:item.q,type:item.type}))||[],wrongW2,vipReset,vip};
+   return {self:window.GM_FORMAL_TRANSACTION_INTEGRITY,versions:{owner:window.GM_FORMAL_TRANSACTION_OWNER_VERSION,character:window.GM_FORMAL_CHARACTER_TRANSACTION_VERSION,mainline:window.GM_FORMAL_MAINLINE_TRANSACTION_VERSION,gear:window.GM_FORMAL_GEAR_TRANSACTION_VERSION,enhancement:window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION,vip:window.GM_FORMAL_VIP_RESET_TRANSACTION_VERSION,ui:window.GM_FORMAL_UI_WRITER_CONVERGENCE_VERSION,hubRetired:window.GM_HUB_FORMAL_WRITER_RETIRED_VERSION,toolsConverged:window.GM_TOOLS_FORMAL_WRITER_CONVERGENCE_VERSION},handlers,progress,w1,wrongProgress,enhancement,enhancementFixture,gear,firstLifeInventory:firstLife?.inventory?.map(item=>({world:item.world??1,level:item.level,q:item.q,type:item.type}))||[],wrongW2,vipReset,vip};
   });
   assert.equal(report.self.passed,true,"GM formal transaction self-integrity failed: "+JSON.stringify(report.self.errors||null));
-  assert.deepEqual(report.versions,{owner:3,character:1,mainline:1,gear:1,enhancement:2,vip:1,ui:1},"GM formal owner versions drifted.");
+  assert.deepEqual(report.versions,{owner:3,character:1,mainline:1,gear:1,enhancement:2,vip:1,ui:1,hubRetired:1,toolsConverged:1},"GM formal owner versions drifted.");
   for(const [name,row] of Object.entries(report.handlers)){assert.equal(row.type,"function",`${name} missing`);assert.equal(row.owner,1,`${name} must be installed by gmformaltransaction canonical owner`);}
   assert.equal(report.progress.ok,true);assert.equal(report.w1.unlockedMap,3);assert.equal(report.progress.currentEnemy,1);assert.equal(report.w1.bossKilled[0],true);
   assert.equal(report.wrongProgress.ok,false);assert.equal(report.wrongProgress.reason,"wrong-world","W1 progress writer must reject W2/W3 formal state.");
