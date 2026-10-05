@@ -3,6 +3,7 @@
  const VERSION=2;
  const REGION_OWNER_SPLIT_VERSION=1;
  const WRAPPER_BOUNDARY_VERSION=1;
+ const GLOBAL_API_CLEANUP_VERSION=1;
  const KEY_BOSS_INDEXES=Object.freeze(Array.from({length:10},(_,index)=>9+index*10));
  const base=Object.freeze({
   canChallengeBoss:typeof window.canChallengeSecondWorldBoss==="function"?window.canChallengeSecondWorldBoss:null,
@@ -16,8 +17,11 @@
 
  function stateTarget(target){if(target&&typeof target==="object")return target;try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
  function whole(value,fallback=0){const n=Math.floor(Number(value));return Number.isFinite(n)?n:fallback;}
- function phase(target){if(typeof window.currentWorldPhase==="function")return Number(window.currentWorldPhase(target))||1;if(target?.thirdWorld?.entered===true)return 3;if(target?.secondWorld?.entered===true)return 2;return 1;}
- function context(target=null){const holder=stateTarget(target),lifecycle=typeof window.worldReincarnationContext==="function"?window.worldReincarnationContext(holder):null,active=!!holder&&holder?.secondWorld?.entered===true&&holder?.thirdWorld?.entered!==true&&lifecycle?.reincarnationRun===true&&phase(holder)===2;return Object.freeze({version:VERSION,active,count:Math.max(0,whole(lifecycle?.count,0)),lifeId:Math.max(0,whole(lifecycle?.lifeId,0)),firstRun:!active&&lifecycle?.reincarnationRun!==true,reincarnationRun:lifecycle?.reincarnationRun===true,world:phase(holder),source:lifecycle?"reincarnation-context":"fail-closed"});}
+ function context(target=null){
+  const holder=stateTarget(target);
+  if(typeof window.worldRerunPolicy!=="function")return Object.freeze({version:VERSION,active:false,count:0,lifeId:0,firstRun:false,reincarnationRun:false,world:1,targetWorld:2,source:"fail-closed"});
+  return window.worldRerunPolicy(2,holder,{version:VERSION,source:"reincarnation-context"});
+ }
  function active(target=null){return context(target).active===true;}
  function validBoss(value){const n=whole(value,-1);return n>=0&&n<100?n:-1;}
  function validRegion(value){const row=typeof window.secondWorldRegion==="function"?window.secondWorldRegion(value):null;return row&&Number.isInteger(Number(row.index))?Math.floor(Number(row.index)):-1;}
@@ -33,14 +37,13 @@
  window.SECOND_WORLD_REINCARNATION_RERUN_POLICY_VERSION=VERSION;
  window.SECOND_WORLD_REINCARNATION_REGION_OWNER_SPLIT_VERSION=REGION_OWNER_SPLIT_VERSION;
  window.SECOND_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_VERSION;
- window.SECOND_WORLD_REINCARNATION_KEY_BOSSES=KEY_BOSS_INDEXES.slice();
- window.SECOND_WORLD_REINCARNATION_BASE_OWNERS=base;
+ window.SECOND_WORLD_REINCARNATION_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;
  window.secondWorldReincarnationRerunContext=context;
  window.isSecondWorldReincarnationRerun=active;
  window.secondWorldRerunKeyBossCoverage=keyBossCoverage;
  window.secondWorldAdventureRegionVisible=adventureRegionVisible;
  window.secondWorldArenaRegionEligible=arenaRegionEligible;
- window.secondWorldRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,keyBossCoverage:keyBossCoverage(holder),bossCount:Number(window.SECOND_WORLD_BOSS_COUNT||100),regionCount:Number(window.SECOND_WORLD_REGION_COUNT||10),regionOwnerSplitVersion:REGION_OWNER_SPLIT_VERSION,wrapperBoundaryVersion:WRAPPER_BOUNDARY_VERSION};};
+ window.secondWorldRerunPolicySnapshot=function(target=null){const holder=stateTarget(target),ctx=context(holder);return {...ctx,keyBossCoverage:keyBossCoverage(holder),bossCount:Number(window.SECOND_WORLD_BOSS_COUNT||100),regionCount:Number(window.SECOND_WORLD_REGION_COUNT||10),regionOwnerSplitVersion:REGION_OWNER_SPLIT_VERSION,wrapperBoundaryVersion:WRAPPER_BOUNDARY_VERSION,sharedContextOwnerVersion:Number(window.REINCARNATION_WORLD_RERUN_CONTEXT_OWNER_VERSION)||0,globalApiCleanupVersion:GLOBAL_API_CLEANUP_VERSION};};
  window.canChallengeSecondWorldBoss=function(value,target=null){const holder=stateTarget(target),index=validBoss(value);if(active(holder))return index>=0;return typeof base.canChallengeBoss==="function"?base.canChallengeBoss(value,holder):false;};
  window.secondWorldBossVisible=function(value,target=null){const holder=stateTarget(target),index=validBoss(value);if(active(holder))return index>=0;return typeof base.bossVisible==="function"?base.bossVisible(value,holder):false;};
  window.secondWorldRegionVisible=function(value,target=null){return adventureRegionVisible(value,target);};
