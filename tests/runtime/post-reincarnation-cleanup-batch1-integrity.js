@@ -3,9 +3,11 @@ const assert=require("assert");
 const index=fs.readFileSync("index.html","utf8");
 const compatibility=fs.readFileSync("compatibilityowners.js","utf8");
 const hookCore=fs.readFileSync("savehookcore.js","utf8");
+const runtimeApi=fs.readFileSync("runtimeapi.js","utf8");
 const rerun1=fs.readFileSync("reincarnationrerunworld1.js","utf8");
 const rerun2=fs.readFileSync("reincarnationrerunworld2.js","utf8");
 const rerun3=fs.readFileSync("reincarnationrerunworld3.js","utf8");
+const migration=fs.readFileSync("savemigration.js","utf8");
 const backupRetention=fs.readFileSync("savebackupretention.js","utf8");
 const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8");
 
@@ -24,9 +26,26 @@ assert.ok(workflow.includes("post-reincarnation-cleanup-batch1-integrity.js"),"R
 assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 legacy compatibility matrix 必須繼續保留");
 
 assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
-assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3"'),"W1 rerun 必須使用 Batch3 canonical cache token");
-assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3"'),"W2 rerun 必須使用 Batch3 canonical cache token");
-assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3"'),"W3 rerun 必須使用 Batch3 canonical cache token");
+assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3"'),"W1 rerun 必須保留 Batch3 canonical cache token");
+assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4"'),"Batch4 必須載入 canonical runtime API owner");
+assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
+assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W3 rerun 必須更新 Batch4 cache token");
+assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 legacy presentation owner 之後接管 shared alias");
+assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
+assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld3.js'),"runtime API owner 必須先於 W3 rerun consumer");
+
+assert.ok(/CIVILIZATION_RUNTIME_API_VERSION=VERSION/.test(runtimeApi),"Batch4 必須公開 runtime API namespace version");
+assert.ok(/CivilizationReincarnation=reincarnation/.test(runtimeApi),"Reincarnation 必須有 canonical namespace");
+assert.ok(/CivilizationFirstWorldTarget=firstWorldTarget/.test(runtimeApi),"W1 Target Context 必須有 canonical namespace");
+assert.ok(/CivilizationSaveMigration=saveMigration/.test(runtimeApi),"Save Migration 必須有 canonical namespace");
+assert.ok(/window\.worldRerunPolicy=worldRerunPolicy/.test(runtimeApi),"舊 worldRerunPolicy 只能保留為 canonical namespace 的相容 alias");
+assert.ok(/worldRerunPolicy\n \}\);/.test(runtimeApi),"Reincarnation lifecycle namespace 必須直接持有 worldRerunPolicy");
+assert.ok(/window\.CivilizationReincarnation\?\.lifecycle\?\.worldRerunPolicy\|\|window\.worldRerunPolicy/.test(rerun2),"W2 rerun 必須 namespace 優先、legacy alias fallback");
+assert.ok(/window\.CivilizationReincarnation\?\.lifecycle\?\.worldRerunPolicy\|\|window\.worldRerunPolicy/.test(rerun3),"W3 rerun 必須 namespace 優先、legacy alias fallback");
+assert.ok(/GLOBAL_API_CLEANUP_VERSION=2/.test(rerun2),"W2 namespace consumer cleanup version 必須升級");
+assert.ok(/GLOBAL_API_CLEANUP_VERSION=2/.test(rerun3),"W3 namespace consumer cleanup version 必須升級");
+assert.ok(/RETIRED_SAVE_STATE_MIGRATION_ONLY_VERSION=1/.test(migration),"retired state cleanup 必須繼續限定 migration-only");
+
 assert.ok(/PRESENTATION_STATE_SWAP_RETIRED_VERSION=1/.test(rerun1),"W1 rerun 必須標記 presentation state swap 已退役");
 assert.ok(!/state=presentationState/.test(rerun1),"W1 rerun 不得再替換 global state 進行 prepare render");
 assert.ok(!/const formalState=state/.test(rerun1),"W1 rerun 不得保留舊 formalState swap path");
@@ -39,4 +58,4 @@ assert.ok(/THIRD_WORLD_REINCARNATION_WRAPPER_BOUNDARY_VERSION=WRAPPER_BOUNDARY_V
 assert.ok(/automaticDelete:false/.test(backupRetention),"Backup retention 不得自動刪除玩家備份");
 assert.ok(/manualPruneEligible/.test(backupRetention),"Backup retention 必須有 canonical save 後的手動清理資格判定");
 assert.ok(/pruneLegacyMigrationBackups/.test(backupRetention),"Backup retention 必須提供明確的手動清理 API");
-console.log("Post-reincarnation cleanup Batch1-3 integrity passed.");
+console.log("Post-reincarnation cleanup Batch1-4 integrity passed.");
