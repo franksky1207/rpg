@@ -17,4 +17,4 @@
 1. 不刪歷史內容，只改變文件位置與 current／historical 邊界。
 2. 封存文件內的版本、公式、待辦與 commit 狀態都只代表當時時間點。
 3. 若封存文件和 current `main`、`PROJECT_HANDOFF.md`、正式 owner 衝突，一律以 current `main` 為準。
-4. 新的 current handoff／pending 文件不得依賴本目錄作正式 runtime owner。
+4. 本目錄任何文件都不得作為 current runtime owner，也不得重新被列成 current 待辦。
