@@ -230,10 +230,10 @@
   if(!capEconomy.ok||capEconomy.xp!==500||capEconomy.dimensionalStrings!==500||capProbe.level!==2000||capProbe.exp!==0||capProbe.thirdWorld.dimensionalStrings!==511||capEconomy.levelUps!==0)errors.push({code:"LEVEL_CAP_STRINGS_CONTINUE",capEconomy,state:capProbe});
   const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}},zeroEconomy=applyEconomyRewards(zeroProbe,0);
   if(!zeroEconomy.ok||zeroEconomy.xp!==0||zeroEconomy.dimensionalStrings!==0||zeroProbe.exp!==123||zeroProbe.thirdWorld.dimensionalStrings!==9)errors.push({code:"ZERO_DAMAGE_ZERO_ECONOMY",zeroEconomy,state:zeroProbe});
-  const firstRunStagePolicy={reincarnation:{count:0}},rerunStagePolicy={reincarnation:{count:1}};
+  const firstRunStagePolicy={reincarnation:{count:0},secondWorld:{entered:true},thirdWorld:{entered:true}},rerunStagePolicy={reincarnation:{count:1},secondWorld:{entered:true},thirdWorld:{entered:true}};
   const originalRerunOwner=window.CivilizationReincarnation?.lifecycle?.worldRerunPolicy||null;
   const firstPolicy=thirdWorldRerunPolicy(firstRunStagePolicy),rerunPolicy=thirdWorldRerunPolicy(rerunStagePolicy);
-  if(firstPolicy?.active===true||rerunPolicy?.targetWorld!==3)errors.push({code:"REINCARNATION_RERUN_POLICY_OWNER",{firstPolicy,rerunPolicy,owner:typeof originalRerunOwner}});
+  if(firstPolicy?.active!==false||rerunPolicy?.active!==true||rerunPolicy?.targetWorld!==3)errors.push({code:"REINCARNATION_RERUN_POLICY_OWNER",firstPolicy,rerunPolicy,owner:typeof originalRerunOwner});
   const stageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),Math.floor(max*.69),false);
   if(!stageProbe.changed||stageProbe.from!==0||stageProbe.to!==3||JSON.stringify(stageProbe.crossedStages)!==JSON.stringify([1,2,3])||!stageProbe.newAbilityIds.includes("composure"))errors.push({code:"MULTI_STAGE_CROSS",stageProbe});
   const deathStageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),0,true);
