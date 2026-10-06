@@ -126,8 +126,9 @@
  try{
   const oldAu={reincarnation:{alternateUniverse:{unlocked:true,deepestCleared:680}},marks:{entries:{}},secondWorld:{entered:false,calamities:[]},thirdWorld:{entered:false,bosses:[]},dungeon:{mirror:{history:{bestWins:0}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
   window.normalizePlayerTitleState(oldAu);
-  const expectedAu=alternateDefs.slice(0,6).map(def=>def.id),actualAu=oldAu.titles.unlocked.filter(id=>expectedAu.includes(id));
-  if(JSON.stringify(actualAu)!==JSON.stringify(expectedAu)||oldAu.titles.pendingNotice!==null)fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL","舊存檔異宇宙 680 層應靜默補齊前 6 階稱號",{expectedAu,actualAu,titles:oldAu.titles});
+  const expectedAu=alternateDefs.filter(def=>680>=def.depthThreshold).map(def=>def.id),actualAu=oldAu.titles.unlocked.filter(id=>expectedAu.includes(id)),diagnostics=window.LAST_PLAYER_TITLE_NORMALIZATION_REPORT;
+  if(JSON.stringify(actualAu)!==JSON.stringify(expectedAu)||oldAu.titles.pendingNotice!==null)fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL","舊存檔異宇宙 680 層應依正式門檻靜默補齊稱號",{expectedAu,actualAu,titles:oldAu.titles});
+  if(Number(diagnostics?.alternateUniverseBackfilledCount)!==expectedAu.length||JSON.stringify(diagnostics?.alternateUniverseBackfilledIds||[])!==JSON.stringify(expectedAu))fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL_DIAGNOSTICS","異宇宙稱號 normalization diagnostics 應回報實際補發 IDs",{diagnostics,expectedAu});
  }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL_PROBE","異宇宙稱號 backfill regression 失敗",String(error?.message||error));}
 
  try{
