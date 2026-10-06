@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const TITLE_POST_FLOW_VERSION=1;
  const LEGACY_REVIEW_VERSION=1;
  const noticeQueue=[];
@@ -45,6 +45,19 @@
  function thirdWorldReviewOnly(){return currentPhase()===3;}
  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
  function fmt(v){return Math.max(0,Math.floor(Number(v)||0)).toLocaleString();}
+ function resetSecondWorldCalamityBattleViewport(){
+  if(typeof window==="undefined"||typeof document==="undefined")return false;
+  const apply=()=>{
+   try{window.scrollTo(0,0);}catch(_){}
+   const root=document.scrollingElement||document.documentElement;
+   if(root)root.scrollTop=0;
+   if(document.body)document.body.scrollTop=0;
+  };
+  apply();
+  if(typeof window.requestAnimationFrame==="function")window.requestAnimationFrame(apply);
+  setTimeout(apply,0);
+  return true;
+ }
  function defs(){return typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];}
  function status(id){return typeof window.getSecondWorldCalamityStatus==="function"?window.getSecondWorldCalamityStatus(id):null;}
  function visibleDefs(){return defs().filter(d=>window.isSecondWorldCalamityVisible?.(d.id));}
@@ -321,7 +334,7 @@
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   if(thirdWorldReviewOnly())return false;
   const st=status(id);if(!st?.challengeable)return false;
-  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();
+  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();resetSecondWorldCalamityBattleViewport();
   if(ui.mode==="continuous")continuous();else single();return true;
  };
  window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};
@@ -350,6 +363,7 @@
   document.getElementById("secondWorldCalamityAppearanceModal")?.classList.remove("show");
   if(noticeQueue.length)setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
  };
+ window.SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION=1;
  window.getSecondWorldCalamityPresentationSnapshot=function(){
   const view=ui.battleView;
   return Object.freeze({
