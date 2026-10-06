@@ -1,5 +1,5 @@
 (function(){
- const VERSION=5;
+ const VERSION=6;
  const SETTLEMENT_VERSION=5;
  const STORY_FRAMEWORK_BRIDGE_VERSION=1;
  const COMPLETION_READY_FRAMEWORK_VERSION=1;
@@ -10,7 +10,8 @@
  const TITLE_SETTLEMENT_VERSION=1;
  const STORY_STAGE_SETTLEMENT_VERSION=1;
  const BOSS_DEFEAT_SETTLEMENT_VERSION=1;
- const STAGE_CROSSING_SETTLEMENT_VERSION=1;
+ const STAGE_CROSSING_SETTLEMENT_VERSION=2;
+ const REINCARNATION_STAGE_CONTINUATION_VERSION=1;
  const POST_SETTLEMENT_FIVE_POINT_VERSION=1;
  const CONTINUATION_DECISION_VERSION=1;
  const settledBasisObjects=new WeakSet();
@@ -94,6 +95,9 @@
   const profile=typeof window.thirdWorldBossAbilities==="function"?window.thirdWorldBossAbilities(bossIndex,hp):null;
   return profile&&typeof profile==="object"?Object.entries(profile).filter(([,row])=>row?.active===true).map(([id])=>id):[];
  }
+ function reincarnationStageContinuation(target){
+  return typeof window.isReincarnationRun==="function"&&window.isReincarnationRun(target)===true;
+ }
  function stageTransitionSnapshot(bossIndex,formalStartHp,combatEndHp,bossDefeatedNow=false){
   const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(bossIndex):null;
   if(!boss||typeof window.thirdWorldBossStage!=="function")return freeze({changed:false,from:0,to:0,crossedStages:freeze([]),newAbilityIds:freeze([]),beforeStats:null,afterStats:null});
@@ -113,25 +117,26 @@
   const unlockedStoryStages=storyChanged?Array.from({length:storyAfter-storyBefore},(_,index)=>storyBefore+index+1):[];
   const bossDefeatedNow=checked.formalStartHp>0&&checked.combatEndHp===0;
   const stageTransition=stageTransitionSnapshot(checked.bossIndex,checked.formalStartHp,checked.combatEndHp,bossDefeatedNow);
+  const stageTransitionBypassed=stageTransition.changed&&reincarnationStageContinuation(target);
   const challengeAfter=window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
   const fivePointBlocked=!bossDefeatedNow&&challengeAfter?.allowed===false&&challengeAfter?.reason==="five-point-front";
   const completionReady=aggregateAfter.aliveCount===0&&storyAfter>=10;
   const titleChanged=titleGrant?.changed===true,progressEventPending=titleChanged||storyChanged;
   let terminalReason="";
   if(bossDefeatedNow)terminalReason="boss-defeated";
-  else if(stageTransition.changed)terminalReason="stage-crossed";
+  else if(stageTransition.changed&&!stageTransitionBypassed)terminalReason="stage-crossed";
   else if(fivePointBlocked)terminalReason="five-point-front";
   const eventSequence=[];
   if(progressEventPending)eventSequence.push(freeze({type:"aggregate-progress",titleChanged,storyChanged,titleTier:titleTierAfter,storyStage:storyAfter,titleId:titleGrant?.noticeTitle?.id||null,storyStages:freeze(unlockedStoryStages.slice())}));
   if(bossDefeatedNow)eventSequence.push(freeze({type:"boss-defeated",bossIndex:checked.bossIndex,bossId:String(checked.boss.id||"")}));
-  else if(stageTransition.changed)eventSequence.push(freeze({type:"stage-crossed",bossIndex:checked.bossIndex,from:stageTransition.from,to:stageTransition.to,crossedStages:stageTransition.crossedStages,newAbilityIds:stageTransition.newAbilityIds}));
+  else if(stageTransition.changed&&!stageTransitionBypassed)eventSequence.push(freeze({type:"stage-crossed",bossIndex:checked.bossIndex,from:stageTransition.from,to:stageTransition.to,crossedStages:stageTransition.crossedStages,newAbilityIds:stageTransition.newAbilityIds}));
   if(fivePointBlocked)eventSequence.push(freeze({type:"five-point-front",bossIndex:checked.bossIndex,gapHp:Number(challengeAfter?.gapHp)||0,gapPoints:Number(challengeAfter?.gapPoints)||0}));
   if(completionReady)eventSequence.push(freeze({type:"completion-ready",storyStage:10,finalStoryId:"higher-dimensional-final"}));
   const continuationAllowed=!progressEventPending&&!terminalReason;
   const continuationReason=progressEventPending?"progress-event":terminalReason;
   return {
    ok:true,aggregateBefore,aggregateAfter,titleTierBefore,titleTierAfter,titleGrant,storyBefore,storyAfter,storyChanged,unlockedStoryStages,
-   bossDefeatedNow,stageTransition,challengeAfter,fivePointBlocked,completionReady,
+   bossDefeatedNow,stageTransition,stageTransitionBypassed,challengeAfter,fivePointBlocked,completionReady,
    progressEventPending,eventSequence,continuation:freeze({allowed:continuationAllowed,reason:continuationReason,terminalReason,requiresEventHandling:progressEventPending})
   };
  }
@@ -185,7 +190,7 @@
    aggregateBefore:progression.aggregateBefore||null,aggregateAfter:progression.aggregateAfter||null,titleTierBefore:Math.max(0,finiteWhole(progression.titleTierBefore,0)),titleTierAfter:Math.max(0,finiteWhole(progression.titleTierAfter,0)),
    unlockedTitles:freeze(unlockedTitles),titleNoticeId:progression.titleGrant?.noticeTitle?.id||null,storyStageBefore:Math.max(0,finiteWhole(progression.storyBefore,0)),storyStageAfter:Math.max(0,finiteWhole(progression.storyAfter,0)),
    unlockedStoryStages:freeze(Array.isArray(progression.unlockedStoryStages)?progression.unlockedStoryStages.slice():[]),progressEventPending:progression.progressEventPending===true,
-   stageTransition:progression.stageTransition||null,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
+   stageTransition:progression.stageTransition||null,stageTransitionBypassed:progression.stageTransitionBypassed===true,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
    eventSequence:freeze(Array.isArray(progression.eventSequence)?progression.eventSequence.slice():[]),continuation:progression.continuation||freeze({allowed:false,reason:"progression-missing",terminalReason:"",requiresEventHandling:false}),
    rewardsPending:false,equipmentPending:false,progressionPending:false,saved:true
   };
@@ -213,6 +218,8 @@
   if(!capEconomy.ok||capEconomy.xp!==500||capEconomy.dimensionalStrings!==500||capProbe.level!==2000||capProbe.exp!==0||capProbe.thirdWorld.dimensionalStrings!==511||capEconomy.levelUps!==0)errors.push({code:"LEVEL_CAP_STRINGS_CONTINUE",capEconomy,state:capProbe});
   const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}},zeroEconomy=applyEconomyRewards(zeroProbe,0);
   if(!zeroEconomy.ok||zeroEconomy.xp!==0||zeroEconomy.dimensionalStrings!==0||zeroProbe.exp!==123||zeroProbe.thirdWorld.dimensionalStrings!==9)errors.push({code:"ZERO_DAMAGE_ZERO_ECONOMY",zeroEconomy,state:zeroProbe});
+  const firstRunStagePolicy={reincarnation:{count:0}},rerunStagePolicy={reincarnation:{count:1}};
+  if(reincarnationStageContinuation(firstRunStagePolicy)!==false||reincarnationStageContinuation(rerunStagePolicy)!==true)errors.push({code:"REINCARNATION_STAGE_CONTINUATION_POLICY"});
   const stageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),Math.floor(max*.69),false);
   if(!stageProbe.changed||stageProbe.from!==0||stageProbe.to!==3||JSON.stringify(stageProbe.crossedStages)!==JSON.stringify([1,2,3])||!stageProbe.newAbilityIds.includes("composure"))errors.push({code:"MULTI_STAGE_CROSS",stageProbe});
   const deathStageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),0,true);
@@ -239,6 +246,8 @@
  window.THIRD_WORLD_STORY_STAGE_SETTLEMENT_VERSION=STORY_STAGE_SETTLEMENT_VERSION;
  window.THIRD_WORLD_BOSS_DEFEAT_SETTLEMENT_VERSION=BOSS_DEFEAT_SETTLEMENT_VERSION;
  window.THIRD_WORLD_STAGE_CROSSING_SETTLEMENT_VERSION=STAGE_CROSSING_SETTLEMENT_VERSION;
+ window.THIRD_WORLD_REINCARNATION_STAGE_CONTINUATION_VERSION=REINCARNATION_STAGE_CONTINUATION_VERSION;
+ window.thirdWorldReincarnationStageContinuation=reincarnationStageContinuation;
  window.THIRD_WORLD_POST_SETTLEMENT_FIVE_POINT_VERSION=POST_SETTLEMENT_FIVE_POINT_VERSION;
  window.THIRD_WORLD_CONTINUATION_DECISION_VERSION=CONTINUATION_DECISION_VERSION;
  window.settleThirdWorldCombatResult=settleThirdWorldCombatResult;
