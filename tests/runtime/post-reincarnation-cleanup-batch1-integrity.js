@@ -36,7 +36,7 @@ assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-ba
 assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch5"'),"W1 rerun 必須更新 Batch5 lifecycle convergence cache token");
 assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4'),"Batch4 必須載入 canonical runtime API owner");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
-assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W3 rerun 必須更新 Batch4 cache token");
+assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4&v4=20261006-rerun-stage-continuation1"'),"W3 rerun 必須更新轉生 Stage 不中斷 cache token");
 assert.ok(index.includes('src="savemigration.js?v=20261005-reincarnation-gear-carryover-batch1&v2=20261005-reincarnation-gear-root-fix1&v3=20261006-batch4-gm-transient"'),"轉生永久裝備 root-fix／Batch4 GM transient savemigration cache token 必須更新");
 assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 presentation adapter 之後接管 shared legacy alias");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
