@@ -1,5 +1,6 @@
 (function(){
- const ALTERNATE_UNIVERSE_ATTEMPT_VERSION=4;
+ const ALTERNATE_UNIVERSE_ATTEMPT_VERSION=5;
+ const ALTERNATE_UNIVERSE_TITLE_SETTLEMENT_VERSION=1;
  const ALTERNATE_UNIVERSE_ATTEMPT_TRAIT_COUNT=2;
  const ALTERNATE_UNIVERSE_FAILURE_LIMIT=10;
  const ALTERNATE_UNIVERSE_FAILURE_POLICY_VERSION=1;
@@ -79,7 +80,7 @@
   if(!attempt)return fail("active-attempt-missing");
   if(!["win","loss","abandon"].includes(kind))return fail("invalid-outcome",{attempt});
   if(typeof options.attemptId==="string"&&options.attemptId.trim()&&options.attemptId.trim()!==attempt.attemptId)return fail("attempt-id-mismatch",{attempt});
-  const tx=runMutation(`alternate-universe-${kind}`,root=>{const live=activeAttempt(root);if(!live||live.attemptId!==attempt.attemptId)return {ok:false,reason:"active-attempt-changed"};const alternate=auState(root),currentLife=lifeId(root);if(!alternate)return {ok:false,reason:"alternate-universe-state-missing"};let failures=failureCount(root,live.depth);if(kind==="win")alternate.deepestCleared=Math.max(deepestCleared(root),live.depth);else{const rows=ensureFailureOwner(alternate,currentLife);failures=Math.min(ALTERNATE_UNIVERSE_FAILURE_LIMIT,failures+1);rows[String(live.depth)]=failures;}alternate.activeAttempt=null;return {outcome:kind,depth:live.depth,attemptId:live.attemptId,lifeId:currentLife,failures,failureLimit:ALTERNATE_UNIVERSE_FAILURE_LIMIT,failuresRemainingBeforeLock:Math.max(0,ALTERNATE_UNIVERSE_FAILURE_LIMIT-failures),locked:kind!=="win"&&failures>=ALTERNATE_UNIVERSE_FAILURE_LIMIT,unlockRequiresReincarnation:kind!=="win"&&failures>=ALTERNATE_UNIVERSE_FAILURE_LIMIT,deepestCleared:kind==="win"?Math.max(deepestCleared(root),live.depth):deepestCleared(root)};});
+  const tx=runMutation(`alternate-universe-${kind}`,root=>{const live=activeAttempt(root);if(!live||live.attemptId!==attempt.attemptId)return {ok:false,reason:"active-attempt-changed"};const alternate=auState(root),currentLife=lifeId(root);if(!alternate)return {ok:false,reason:"alternate-universe-state-missing"};let failures=failureCount(root,live.depth),titleSettlement=null;const beforeDepth=deepestCleared(root);if(kind==="win"){const afterDepth=Math.max(beforeDepth,live.depth);alternate.deepestCleared=afterDepth;if(Math.floor(afterDepth/100)>Math.floor(beforeDepth/100)){if(typeof window.grantPlayerTitlesForAlternateUniverseDepth!=="function")return {ok:false,reason:"alternate-universe-title-owner-missing"};titleSettlement=window.grantPlayerTitlesForAlternateUniverseDepth(afterDepth,root,{previousDepth:beforeDepth});}}else{const rows=ensureFailureOwner(alternate,currentLife);failures=Math.min(ALTERNATE_UNIVERSE_FAILURE_LIMIT,failures+1);rows[String(live.depth)]=failures;}alternate.activeAttempt=null;return {outcome:kind,depth:live.depth,attemptId:live.attemptId,lifeId:currentLife,failures,failureLimit:ALTERNATE_UNIVERSE_FAILURE_LIMIT,failuresRemainingBeforeLock:Math.max(0,ALTERNATE_UNIVERSE_FAILURE_LIMIT-failures),locked:kind!=="win"&&failures>=ALTERNATE_UNIVERSE_FAILURE_LIMIT,unlockRequiresReincarnation:kind!=="win"&&failures>=ALTERNATE_UNIVERSE_FAILURE_LIMIT,deepestCleared:kind==="win"?Math.max(deepestCleared(root),live.depth):deepestCleared(root),titleSettlement};});
   if(!tx.ok)return tx;
   return success({saved:true,...(tx.value||{})});
  }
@@ -88,6 +89,7 @@
  function currentAttemptEncounter(target=currentState()){const attempt=activeAttempt(target);if(!attempt)return null;return buildEncounter(attempt.depth,attempt.traits);}
 
  window.ALTERNATE_UNIVERSE_ATTEMPT_VERSION=ALTERNATE_UNIVERSE_ATTEMPT_VERSION;
+ window.ALTERNATE_UNIVERSE_TITLE_SETTLEMENT_VERSION=ALTERNATE_UNIVERSE_TITLE_SETTLEMENT_VERSION;
  window.ALTERNATE_UNIVERSE_ATTEMPT_TRAIT_COUNT=ALTERNATE_UNIVERSE_ATTEMPT_TRAIT_COUNT;
  window.ALTERNATE_UNIVERSE_FAILURE_LIMIT=ALTERNATE_UNIVERSE_FAILURE_LIMIT;
  window.ALTERNATE_UNIVERSE_FAILURE_POLICY_VERSION=ALTERNATE_UNIVERSE_FAILURE_POLICY_VERSION;
