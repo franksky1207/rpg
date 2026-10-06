@@ -3,6 +3,7 @@
  const UNIVERSE_NOTICE_VERSION=1;
  const POST_FLOW_HOLD_VERSION=1;
  const THIRD_WORLD_NOTICE_VERSION=1;
+ const ALTERNATE_UNIVERSE_NOTICE_VERSION=1;
  const POST_FLOW_NOTIFICATION_VERSION=1;
  const LEGACY_QUEUE_DELEGATE_VERSION=1;
  const THIRD_WORLD_POST_FLOW_READY_VERSION=1;
@@ -82,6 +83,7 @@
   if(def?.series==="mirror")return `鏡像戰歷史最高達 ${Math.max(0,Math.floor(Number(def.mirrorWins)||0))} 勝後取得。`;
   if(def?.series==="universe-calamity")return "首次擊敗對應宇宙紀元文明災厄後取得。";
   if(def?.series==="higher-dimensional")return `高維戰線十王總剩餘 HP 達成第 ${Math.max(1,Math.floor(Number(def.tier)||1))} 階門檻後取得。`;
+  if(def?.series==="alternate-universe")return `異宇宙最深已完成層域達 ${Math.max(100,Math.floor(Number(def.depthThreshold)||100))} 後取得。`;
   return "首次擊敗對應銀河紀元文明災厄後取得。";
  }
 
@@ -142,6 +144,7 @@
  window.PLAYER_TITLE_UI_VERSION=PLAYER_TITLE_UI_VERSION;
  window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION=UNIVERSE_NOTICE_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION=THIRD_WORLD_NOTICE_VERSION;
+ window.PLAYER_TITLE_ALTERNATE_UNIVERSE_NOTICE_VERSION=ALTERNATE_UNIVERSE_NOTICE_VERSION;
  window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION=POST_FLOW_NOTIFICATION_VERSION;
  window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION=POST_FLOW_HOLD_VERSION;
  window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION=LEGACY_QUEUE_DELEGATE_VERSION;
