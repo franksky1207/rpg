@@ -1,12 +1,13 @@
 (function(){
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- if(Number(window.SECOND_WORLD_CALAMITY_UI_VERSION)!==5)fail("UI_VERSION","第二世界文明災厄玩家 UI 應為 V5",window.SECOND_WORLD_CALAMITY_UI_VERSION);
+ if(Number(window.SECOND_WORLD_CALAMITY_UI_VERSION)!==6)fail("UI_VERSION","第二世界文明災厄玩家 UI 應為 V6",window.SECOND_WORLD_CALAMITY_UI_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_TITLE_POST_FLOW_VERSION)!==1)fail("TITLE_POST_FLOW","第二世界文明災厄稱號 post-flow 應為 V1",window.SECOND_WORLD_CALAMITY_TITLE_POST_FLOW_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION)!==2)fail("PLAYER_SEMANTICS","第二世界文明災厄三紀元玩家語意 owner 未載入",window.SECOND_WORLD_CALAMITY_PLAYER_SEMANTICS_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_LEGACY_REVIEW_VERSION)!==1)fail("LEGACY_REVIEW","高維紀元舊文明災厄回顧語意應為 V1",window.SECOND_WORLD_CALAMITY_LEGACY_REVIEW_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION)!==2)fail("APPEARANCE_NOTICE","第二世界文明災厄現身通知應為 V2",window.SECOND_WORLD_CALAMITY_APPEARANCE_NOTICE_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_LIVE_PRESENTATION_VERSION)!==1||typeof window.getSecondWorldCalamityPresentationSnapshot!=="function")fail("LIVE_PRESENTATION","第二世界文明災厄即時戰鬥呈現 owner 未載入",{version:window.SECOND_WORLD_CALAMITY_LIVE_PRESENTATION_VERSION,api:typeof window.getSecondWorldCalamityPresentationSnapshot});
+ if(Number(window.SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION)!==1)fail("BATTLE_ENTRY_SCROLL_RESET","第二世界文明災厄進入戰鬥時必須重設 viewport",window.SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION);
  if(Number(window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION)!==3||Number(window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_LIVE_HP_SYNC_VERSION)!==1)fail("MINIMAL_LIVE_HP","第二世界文明災厄極簡模式即時 HP 同步未載入",{version:window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION,live:window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_LIVE_HP_SYNC_VERSION});
  if(Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||typeof window.flushPendingPlayerTitleNoticeAfterFlow!=="function")fail("SHARED_TITLE_POST_FLOW_OWNER","三紀元共用稱號 post-flow owner 未載入",{version:window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION,api:typeof window.flushPendingPlayerTitleNoticeAfterFlow});
  const required=[
@@ -34,6 +35,7 @@
   if(!/completed/.test(startSource)||!/continuous/.test(startSource)||!/single/.test(startSource))fail("COMPLETED_SINGLE_ONLY_WIRING","完成災厄必須強制單場重打",startSource);
   if(!/challengeable/.test(startSource))fail("CHALLENGE_GATE_WIRING","第二紀元正式入口必須使用正式 challengeable 判定",startSource);
   if(!/thirdWorldReviewOnly/.test(startSource))fail("THIRD_WORLD_FORMAL_GATE","高維紀元必須阻擋第二紀元正式文明災厄入口",startSource);
+  if(!/resetSecondWorldCalamityBattleViewport/.test(startSource))fail("BATTLE_ENTRY_SCROLL_WIRING","第二世界文明災厄單場／連續戰鬥入口必須在 render 後重設 viewport",startSource);
   if(!/universeReview/.test(pageSource)||!/thirdWorldReviewOnly/.test(pageSource))fail("THIRD_WORLD_REVIEW_RENDERER","高維紀元文明災厄頁必須改走宇宙回顧 renderer",pageSource);
   if(!/thirdWorldReviewOnly/.test(reviewSource)||!/runCombatCore/.test(reviewSource)||!/civilizationCombatDamageMultiplier/.test(reviewSource))fail("UNIVERSE_REVIEW_SANDBOX","宇宙災厄回顧必須使用無正式結算的戰鬥 sandbox，並沿用宇宙文明傷害層",reviewSource);
   if(!/AppearanceRequirement/.test(flushSource)||!/challengeable/.test(flushSource)||!/thirdWorldReviewOnly/.test(flushSource))fail("NOTICE_REQUIREMENT_WIRING","現身通知必須顯示當下是否可挑戰，且高維紀元不得再跳第二紀元現身通知",flushSource);
@@ -47,7 +49,7 @@
   if(first&&Number(first.previousCivilizationLevel)!==0)fail("FIRST_CIV_REQUIREMENT","第一隻災厄不應有前置文明等級",first);
  }catch(error){fail("DATA_LINK","第二世界文明災厄 UI data probe 失敗",String(error?.message||error));}
  const report={passed:errors.length===0,errors,checkedAt:Date.now()};
- window.SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION=4;
+ window.SECOND_WORLD_CALAMITY_UI_INTEGRITY_VERSION=5;
  window.SECOND_WORLD_CALAMITY_UI_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Second World Calamity UI integrity error",errors);
 })();
