@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY?.passed===true&&typeof window.gmCommitFormalAlternateUniverseProgress==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===3&&window.GM_ALTERNATE_UNIVERSE_TITLE_SYNC_VERSION===1&&window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY?.passed===true&&typeof window.gmCommitFormalAlternateUniverseProgress==="function"&&typeof window.gmAlternateUniverseTitleSnapshot==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const fixture=()=>({
     saveVersion:17,level:1,exp:0,hp:100,vipLevel:0,vipPoints:0,equipment:{},enhancement:{levels:{}},secondWorld:{entered:false},thirdWorld:{entered:false},
@@ -24,6 +24,8 @@ const assert=require("assert");
    const preview=window.gmAlternateUniverseProgressPlan({deepestCleared:150},direct);
    const applied=window.gmApplyFormalAlternateUniverseProgress({deepestCleared:150},direct);
    const after=window.gmAlternateUniverseFormalSnapshot(direct);
+   const down=window.gmApplyFormalAlternateUniverseProgress({deepestCleared:50},direct);
+   const afterDown=window.gmAlternateUniverseFormalSnapshot(direct);
    const zero=window.gmApplyFormalAlternateUniverseProgress({deepestCleared:0},direct);
    const afterZero=window.gmAlternateUniverseFormalSnapshot(direct);
    const locked=lockedFixture();
@@ -52,11 +54,11 @@ const assert=require("assert");
    }finally{
     state=originalState;window.save=originalSave;window.render=originalRender;
    }
-   return {versions:{manage:window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION,canonical:window.GM_ALTERNATE_UNIVERSE_CANONICAL_MUTATION_VERSION,transaction:window.GM_ALTERNATE_UNIVERSE_TRANSACTION_VERSION},self:window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY,before,preview,applied,after,zero,afterZero,lockedZero,afterLockedZero,forced,afterForced,invalid,invalidExact,registered,html,failedTx,failedExact,successTx,saveCalls,successSnapshot};
+   return {versions:{manage:window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION,canonical:window.GM_ALTERNATE_UNIVERSE_CANONICAL_MUTATION_VERSION,transaction:window.GM_ALTERNATE_UNIVERSE_TRANSACTION_VERSION,formalSnapshot:window.GM_ALTERNATE_UNIVERSE_FORMAL_SNAPSHOT_OWNER_VERSION,titleSync:window.GM_ALTERNATE_UNIVERSE_TITLE_SYNC_VERSION},self:window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY,before,preview,applied,after,down,afterDown,zero,afterZero,lockedZero,afterLockedZero,forced,afterForced,invalid,invalidExact,registered,html,failedTx,failedExact,successTx,saveCalls,successSnapshot};
   });
 
   assert.equal(report.self.passed,true,"Batch7-3 self-integrity failed: "+JSON.stringify(report.self.errors||null));
-  assert.deepEqual(report.versions,{manage:2,canonical:2,transaction:1});
+  assert.deepEqual(report.versions,{manage:3,canonical:3,transaction:1,formalSnapshot:2,titleSync:1});
   assert.equal(report.before.deepestCleared,37);
   assert.equal(report.before.frontier,38);
   assert.equal(report.before.activeAttempt.depth,38);
@@ -73,6 +75,15 @@ const assert=require("assert");
   assert.equal(report.after.activeAttempt,null);
   assert.deepEqual(report.after.failures,{});
   assert.equal(report.after.lifeId,2);
+  assert.equal(report.after.title.acquiredCount,1,"150 層應同步取得異宇宙第1階稱號");
+  assert.equal(report.after.title.current.tier,1);
+  assert.equal(report.after.title.current.name,"異界凌越");
+  assert.equal(report.applied.titleSync.changed,true);
+  assert.equal(report.down.ok,true);
+  assert.equal(report.afterDown.deepestCleared,50);
+  assert.equal(report.afterDown.title.acquiredCount,1,"GM 降低異宇宙進度不得回收已取得稱號");
+  assert.equal(report.afterDown.title.current.name,"異界凌越");
+  assert.equal(report.down.titleRetainedOnDecrease,true);
   assert.equal(report.zero.ok,true);
   assert.equal(report.afterZero.unlocked,true,"Setting progress to 0 must not silently relock an already unlocked AU.");
   assert.equal(report.afterZero.deepestCleared,0);
@@ -91,6 +102,8 @@ const assert=require("assert");
   assert.ok(report.registered.includes("alternate-universe-manage"),"GM AU management section must register through the GM hub registry.");
   assert.ok(report.html.includes("異宇宙管理")||report.html.includes("正式異宇宙狀態"));
   assert.ok(report.html.includes("層域"),"GM AU UI must use player-facing 層域 terminology.");
+  assert.ok(report.html.includes("異宇宙稱號")&&report.html.includes("下一稱號"),"GM AU management must expose formal AU title status.");
+  assert.ok(report.html.includes("降低進度")&&report.html.includes("不會回收"),"GM AU UI must state the permanent-title retention policy.");
   assert.ok(!report.html.includes("gmAlternateUniverseUnlocked"),"GM AU management must not expose a separate unlock selector.");
   assert.ok(!report.html.includes("<select"),"GM AU progress control should stay simple and avoid a redundant unlock dropdown.");
   assert.ok(!report.html.includes("1000U")&&!/\bU\d+\b/.test(report.html),"GM AU UI must not expose internal U shorthand.");
@@ -101,10 +114,12 @@ const assert=require("assert");
   assert.equal(report.successTx.saved,true);
   assert.equal(report.saveCalls,1,"Successful AU formal mutation must save exactly once.");
   assert.equal(report.successSnapshot.deepestCleared,222);
+  assert.equal(report.successSnapshot.title.acquiredCount,2,"GM transaction to 222 must atomically grant AU title tiers 1-2.");
+  assert.equal(report.successSnapshot.title.current.name,"萬界破境");
   assert.equal(report.successSnapshot.frontier,223);
   assert.equal(report.successSnapshot.activeAttempt,null);
   assert.deepEqual(report.successSnapshot.failures,{});
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("GM alternate universe Batch7-3 integrity passed:",JSON.stringify({versions:report.versions,before:report.before,after:report.after,afterZero:report.afterZero,afterLockedZero:report.afterLockedZero,afterForced:report.afterForced,success:report.successSnapshot}));
+  console.log("GM alternate universe Batch7-3 integrity passed:",JSON.stringify({versions:report.versions,before:report.before,after:report.after,afterDown:report.afterDown,afterZero:report.afterZero,afterLockedZero:report.afterLockedZero,afterForced:report.afterForced,success:report.successSnapshot}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
