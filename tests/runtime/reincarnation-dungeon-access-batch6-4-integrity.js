@@ -8,7 +8,7 @@ const assert=require('assert');
  const url=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  try{
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.waitForFunction(()=>window.REINCARNATION_DUNGEON_ACCESS_VERSION===2&&window.REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION===1&&window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION===5&&typeof window.firstWorldRerunKeyBossCoverage==='function'&&typeof window.dungeonModeAccessSnapshot==='function'&&typeof window.isDungeonModeEntryUnlocked==='function',{timeout:30000});
+  await page.waitForFunction(()=>window.REINCARNATION_DUNGEON_ACCESS_VERSION===3&&window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION===1&&window.REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION===1&&window.WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION===5&&typeof window.firstWorldRerunKeyBossCoverage==='function'&&typeof window.dungeonModeAccessSnapshot==='function'&&typeof window.isDungeonModeEntryUnlocked==='function',{timeout:30000});
   const report=await page.evaluate(async()=>{
    const originalState=state,originalView=view;
    const reincarnation=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries([100,200,300,400,500,600,700,800,900,1000].map(x=>[String(x),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});
@@ -41,7 +41,7 @@ const assert=require('assert');
 
     const accessSource=await (await fetch('reincarnationdungeonaccess.js')).text(),bountySource=await (await fetch('dungeonbounty.js')).text(),arenaSource=await (await fetch('dungeonarena.js')).text(),voidSource=await (await fetch('dungeonvoid.js')).text();
     out.architecture={install:REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT,noTemporaryLevelHelper:!accessSource.includes('withMinimumEntryLevel')&&!accessSource.includes('state=view'),bountyShared:bountySource.includes('isDungeonModeEntryUnlocked("bounty"'),arenaShared:arenaSource.includes('isDungeonModeEntryUnlocked("arena"'),voidShared:voidSource.includes('isDungeonModeEntryUnlocked("tower"'),arenaDeathOwnerClean:!arenaSource.includes('bountyState.summary.stopReason')};
-    out.versions={access:REINCARNATION_DUNGEON_ACCESS_VERSION,snapshot:REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION,worldSafety:WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION,bountyGate:BOUNTY_WORLD_PHASE_GATE_VERSION};
+    out.versions={access:REINCARNATION_DUNGEON_ACCESS_VERSION,eraRestriction:REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION,snapshot:REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION,worldSafety:WORLD_TRANSITION_SUBSYSTEM_SAFETY_VERSION,bountyGate:BOUNTY_WORLD_PHASE_GATE_VERSION};
    }finally{state=originalState;view=originalView;if(typeof render==='function')render();}
    return out;
   });
@@ -52,9 +52,9 @@ const assert=require('assert');
   assert.equal(report.rerunLow.permanent,true);assert.equal(report.rerunLow.void,true);assert.equal(report.rerunLow.mirror,true);Object.values(report.rerunLow.access).forEach(v=>{assert.equal(v.unlocked,true);assert.equal(v.permanent,true);assert.equal(v.source,'reincarnation-permanent');});assert.equal(report.rerunLow.cards.length,4);report.rerunLow.cards.forEach(c=>{assert.equal(c.exists,true);assert.equal(c.locked,false);assert.equal(c.hidden,false);assert.match(c.unlock,/轉生後永久解鎖|高維紀元可挑戰/);});
   assert.deepEqual(report.voidEntry,{ok:true,sameState:true,levelStable:true});assert.equal(report.mirrorEntry.ok,true);assert.equal(report.mirrorEntry.sameState,true);assert.equal(report.mirrorEntry.levelStable,true);assert.equal(report.bountyEntry.view,'dungeon-bounty');assert.equal(report.bountyEntry.sameState,true);assert.equal(report.bountyEntry.levelStable,true);assert.equal(report.arenaEntry.view,'dungeon-arena');assert.equal(report.arenaEntry.sameState,true);assert.equal(report.arenaEntry.levelStable,true);
   assert.deepEqual(report.w1Zero,{coverage:0,cap:1});assert.equal(report.w1Six.coverage,6);assert.equal(report.w1Six.cap,6);assert.equal(report.w1Six.actualKills,1);assert.equal(report.w1Six.lowerKeyFake,false);assert.equal(report.w1Ten.coverage,10);assert.equal(report.w1Ten.cap,10);assert.equal(report.w1Ten.actualKills,2);
-  assert.equal(report.w3First.bountyWorld,false);assert.equal(report.w3First.bountyMode.visible,false);assert.equal(report.w3Rerun.bountyWorld,true);assert.equal(report.w3Rerun.bountyMode.visible,true);assert.equal(report.w3Rerun.bountyMode.enabled,true);assert.equal(report.w3Rerun.access.permanent,true);
+  assert.equal(report.w3First.bountyWorld,false);assert.equal(report.w3First.bountyMode.visible,false);assert.equal(report.w3Rerun.bountyWorld,true);assert.equal(report.w3Rerun.bountyMode.visible,false);assert.equal(report.w3Rerun.bountyMode.enabled,false);assert.equal(report.w3Rerun.access.permanent,true);
   assert.equal(report.architecture.install.temporaryLevelPresentation,false);assert.equal(report.architecture.install.entryOwner,'shared-access-snapshot');assert.equal(report.architecture.install.wrapped.bounty,false);assert.equal(report.architecture.install.wrapped.arena,false);assert.equal(report.architecture.install.wrapped.void,false);assert.equal(report.architecture.noTemporaryLevelHelper,true);assert.equal(report.architecture.bountyShared,true);assert.equal(report.architecture.arenaShared,true);assert.equal(report.architecture.voidShared,true);assert.equal(report.architecture.arenaDeathOwnerClean,true);
-  assert.deepEqual(report.versions,{access:2,snapshot:1,worldSafety:5,bountyGate:2});
+  assert.deepEqual(report.versions,{access:3,eraRestriction:1,snapshot:1,worldSafety:5,bountyGate:2});
   console.log('Reincarnation dungeon access optimization Batch2 integrity passed:',JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});
