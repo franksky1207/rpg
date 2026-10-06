@@ -18,7 +18,7 @@ assert.ok(!access.includes("unregisterDungeonModeAvailabilityPolicy")&&!access.i
 for(const key of ["qualificationUnlocked","permanentUnlocked","eraAllowed","effectiveEnabled"])assert.ok(access.includes(key),`Batch1 effective access field missing: ${key}`);
 
 assert.ok(/MIRROR_DUNGEON_STATE_VERSION=3/.test(mirror)&&/MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION=1/.test(mirror)&&/MIRROR_MIRACLE_DATE_DEDUP_VERSION=1/.test(mirror),"Batch2 mirror settlement owner drifted.");
-assert.ok(/function settleMirrorDungeonResult(/.test(mirror)&&/settleMirrorDungeonResult\(state,wins,timestamp,\{requireRunning:true\}\)/.test(mirror),"Player mirror completion must delegate to canonical settlement.");
+assert.ok(mirror.includes("function settleMirrorDungeonResult(")&&mirror.includes("settleMirrorDungeonResult(state,wins,timestamp,{requireRunning:true})"),"Player mirror completion must delegate to canonical settlement.");
 assert.ok(/Array\.from\(new Set\(history\.miracleDates/.test(mirror),"Mirror old-save miracle dates must dedupe.");
 assert.ok(/GM_MIRROR_FORMAL_RESULT_VERSION=2/.test(mirrorGm)&&/GM_MIRROR_FORMAL_MIN_WINS=15/.test(mirrorGm),"GM mirror formal range drifted.");
 assert.ok(/settleMirrorDungeonResult\(target,w,timestamp,\{requireRunning:false,requireUpgrade:true\}\)/.test(mirrorGm),"GM mirror result must delegate to canonical settlement.");
