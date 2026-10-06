@@ -4,24 +4,13 @@
  let mirrorTestResult=null;
  function pct(value,total){return total?Math.round(value/total*10000)/100:0;}
  function currentInfo(){return typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():{status:"idle",history:{bestWins:0,bestDate:null,miracleDates:[]}};}
- const GM_MIRROR_FORMAL_RESULT_VERSION=1;
- function mirrorDateKey(timestamp=Date.now()){return typeof window.gameDailyDateKey==="function"?window.gameDailyDateKey(timestamp):new Date(Number(timestamp)||Date.now()).toISOString().slice(0,10);}
+ const GM_MIRROR_FORMAL_RESULT_VERSION=2;
+ const GM_MIRROR_FORMAL_MIN_WINS=15;
  function applyFormalMirrorResult(target,wins,timestamp=Date.now()){
-  if(!target||typeof target!=="object")return {ok:false,reason:"state-missing"};
-  if(typeof window.normalizeMirrorDungeonState!=="function")return {ok:false,reason:"mirror-owner-missing"};
-  if(typeof window.grantPlayerTitlesForMirrorWins!=="function")return {ok:false,reason:"title-owner-missing"};
   const w=Math.floor(Number(wins)),max=Math.max(1,Math.floor(Number(CONFIG.runBattles)||20));
-  if(!Number.isInteger(w)||w<0||w>max)return {ok:false,reason:"invalid-wins"};
-  const mirror=window.normalizeMirrorDungeonState(target,timestamp);if(!mirror?.history||!mirror?.daily)return {ok:false,reason:"mirror-state-missing"};
-  const previousBestWins=Math.max(0,Math.floor(Number(mirror.history.bestWins)||0));
-  if(w<=previousBestWins)return {ok:false,reason:"not-an-upgrade",previousBestWins};
-  const now=Math.max(0,Math.floor(Number(timestamp)||Date.now())),dateKey=mirrorDateKey(now),losses=max-w;
-  mirror.history.bestWins=w;mirror.history.bestDate=dateKey;
-  if(!Array.isArray(mirror.history.miracleDates))mirror.history.miracleDates=[];
-  if(w===max&&!mirror.history.miracleDates.includes(dateKey))mirror.history.miracleDates.push(dateKey);
-  Object.assign(mirror.daily,{dateKey,status:"completed",challengeDate:dateKey,startedAt:now,wins:w,losses,completedAt:now});
-  const titleSettlement=window.grantPlayerTitlesForMirrorWins(w,target,{previousBestWins});
-  return {ok:true,wins:w,losses,dateKey,previousBestWins,titleSettlement,miracle:w===max,history:{bestWins:mirror.history.bestWins,bestDate:mirror.history.bestDate,miracleDates:mirror.history.miracleDates.slice()}};
+  if(!Number.isInteger(w)||w<GM_MIRROR_FORMAL_MIN_WINS||w>max)return {ok:false,reason:"invalid-wins"};
+  if(typeof window.settleMirrorDungeonResult!=="function")return {ok:false,reason:"mirror-settlement-owner-missing"};
+  return window.settleMirrorDungeonResult(target,w,timestamp,{requireRunning:false,requireUpgrade:true});
  }
  function commitFormalMirrorResult(wins,timestamp=Date.now()){
   const active=typeof window.getMirrorDungeonActiveRun==="function"?window.getMirrorDungeonActiveRun():null;
@@ -67,7 +56,7 @@
   const w=Math.floor(Number(wins)),title=typeof window.mirrorDungeonRecordTitle==="function"?window.mirrorDungeonRecordTitle(w):"",label=title?`${w} 勝・${title}`:`${w} 勝`;
   if(!confirm(`GM 正式裁定鏡像戰成績\n\n將今天的正式鏡像戰直接裁定為「${label}」。\n今日挑戰會立即視為完成，歷史最高與對應稱號會同步更新；不補發 VIP 積分。\n\n此管理功能只允許提升正式最高紀錄。\n\n確定執行？`))return false;
   const tx=commitFormalMirrorResult(w,Date.now());
-  if(!tx?.ok){const reason=tx?.reason==="not-an-upgrade"?"指定勝場必須高於目前歷史最高。":tx?.reason==="mirror-run-active"?"鏡像戰正在進行中，無法介入正式結果。":tx?.reason||"unknown";alert(`GM 鏡像戰裁定失敗：${reason}`);return false;}
+  if(!tx?.ok){const reason=tx?.reason==="not-an-upgrade"?"指定勝場必須高於目前歷史最高。":tx?.reason==="invalid-wins"?"GM 正式裁定只接受 15～20 勝。":tx?.reason==="mirror-run-active"?"鏡像戰正在進行中，無法介入正式結果。":tx?.reason||"unknown";alert(`GM 鏡像戰裁定失敗：${reason}`);return false;}
   if(typeof render==="function")render();
   alert(`GM 正式裁定完成：今日鏡像戰 ${tx.value.wins} 勝 ${tx.value.losses} 敗${tx.value.miracle?"・神蹟":""}。\n未補發 VIP 積分。`);
   return true;
@@ -89,6 +78,7 @@
  window.GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.GM_MIRROR_FORMAL_RESULT_VERSION=GM_MIRROR_FORMAL_RESULT_VERSION;
+ window.GM_MIRROR_FORMAL_MIN_WINS=GM_MIRROR_FORMAL_MIN_WINS;
  window.gmApplyMirrorFormalResultMutation=applyFormalMirrorResult;
  window.gmCommitMirrorFormalResult=commitFormalMirrorResult;
 })();
