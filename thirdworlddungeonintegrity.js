@@ -1,12 +1,13 @@
 (function(){
- const VERSION=10;
+ const VERSION=11;
  const errors=[];
  const fail=(code,data=null)=>errors.push({code,data});
  const w1={level:100,gold:77,secondWorld:{entered:false,darkMatter:0,darkEnergy:0},thirdWorld:{entered:false,dimensionalStrings:0}};
  const w2={level:800,gold:77,secondWorld:{entered:true,darkMatter:88,darkEnergy:9},thirdWorld:{entered:false,dimensionalStrings:0}};
  const w3={level:1200,gold:77,secondWorld:{entered:true,darkMatter:88,darkEnergy:9},thirdWorld:{entered:true,dimensionalStrings:123456789},dungeon:{}};
  const w3Rerun={...w3,reincarnation:{count:1},secondWorld:{...w3.secondWorld},thirdWorld:{...w3.thirdWorld},dungeon:{}};
- if(Number(window.THIRD_WORLD_DUNGEON_UI_VERSION)!==6)fail("ui-version",window.THIRD_WORLD_DUNGEON_UI_VERSION);
+ if(Number(window.THIRD_WORLD_DUNGEON_UI_VERSION)!==7)fail("ui-version",window.THIRD_WORLD_DUNGEON_UI_VERSION);
+ if(Number(window.THIRD_WORLD_DUNGEON_WORLD_PHASE_OWNER_VERSION)!==1||window.THIRD_WORLD_DUNGEON_ERA_POLICY_OWNER!=="thirdworlddungeonui")fail("world-phase-era-owner",{worldPhase:window.THIRD_WORLD_DUNGEON_WORLD_PHASE_OWNER_VERSION,eraOwner:window.THIRD_WORLD_DUNGEON_ERA_POLICY_OWNER});
  if(Number(window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION)!==5)fail("availability-policy-version",window.DUNGEON_MODE_AVAILABILITY_POLICY_VERSION);
  if(Number(window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION)!==4)fail("presentation-policy-version",window.DUNGEON_MODE_PRESENTATION_POLICY_VERSION);
  if(Number(window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_RETIRED_VERSION)!==1||typeof window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_CONTRACT!=="undefined")fail("legacy-presentation-retirement",{retired:window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_RETIRED_VERSION,legacy:window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_CONTRACT});
@@ -19,7 +20,13 @@
  if(Number(window.DUNGEON_UI_EXTENSION_VERSION)!==1)fail("dungeon-ui-extension",window.DUNGEON_UI_EXTENSION_VERSION);
  if(Number(window.DUNGEON_PREP_RETURN_UX_VERSION)<2)fail("dungeon-prep-return",window.DUNGEON_PREP_RETURN_UX_VERSION);
  if(Number(window.DUNGEON_RETURN_LABELS_VERSION)!==1)fail("return-label-owner",window.DUNGEON_RETURN_LABELS_VERSION);
- if(Number(window.REINCARNATION_DUNGEON_ACCESS_VERSION)!==3||Number(window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION)!==1)fail("reincarnation-era-restriction",{access:window.REINCARNATION_DUNGEON_ACCESS_VERSION,era:window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION});
+ if(Number(window.REINCARNATION_DUNGEON_ACCESS_VERSION)!==4||Number(window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION)!==2||Number(window.REINCARNATION_DUNGEON_ERA_POLICY_DELEGATION_VERSION)!==1)fail("reincarnation-era-restriction",{access:window.REINCARNATION_DUNGEON_ACCESS_VERSION,era:window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION,delegation:window.REINCARNATION_DUNGEON_ERA_POLICY_DELEGATION_VERSION});
+ const install=window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT;
+ if(install?.policyReinstalled!==false||install?.eraPolicyOwner!=="thirdworlddungeonui"||install?.entryOwner!=="effective-access-snapshot")fail("reincarnation-era-owner-duplication",install||null);
+ if(typeof window.dungeonModeAccessSnapshot==="function"){
+  const a=window.dungeonModeAccessSnapshot("bounty",w3Rerun);
+  if(a?.permanentUnlocked!==true||a?.qualificationUnlocked!==true||a?.eraAllowed!==false||a?.effectiveEnabled!==false||a?.unlocked!==false||a?.effectiveSource!=="era-blocked")fail("w3-rerun-effective-access",a);
+ }
  if(typeof window.dungeonModeAvailability==="function"){
   const w3Bounty=window.dungeonModeAvailability("bounty",w3),w3RerunBounty=window.dungeonModeAvailability("bounty",w3Rerun),w3Arena=window.dungeonModeAvailability("arena",w3),w3Tower=window.dungeonModeAvailability("tower",w3),w3Mirror=window.dungeonModeAvailability("mirror",w3);
   if(w3Bounty?.visible!==false||w3Bounty?.enabled!==false)fail("w3-bounty-hidden",w3Bounty);
