@@ -10,11 +10,12 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
-   window.PLAYER_TITLE_INTEGRITY_VERSION===21&&
+   window.PLAYER_TITLE_INTEGRITY_VERSION===22&&
    window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CLOSURE_VERSION===1&&
    window.PLAYER_TITLE_INTEGRITY?.passed===true&&
    window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===3&&
-   window.GM_PLAYER_TITLE_PREVIEW_VERSION===10&&
+   window.GM_PLAYER_TITLE_PREVIEW_VERSION===11&&
+   window.GM_PLAYER_TITLE_PREVIEW_REDUNDANT_AU_QUICK_RETIRED_VERSION===1&&
    window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2,
    {timeout:30000}
   );
@@ -62,7 +63,7 @@ const assert=require("assert");
 
    const formalBefore=JSON.stringify(state);
    const saveBefore=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-   const quick=au.map(def=>window.gmSetPlayerTitlePreviewTier(def.id));
+   const dropdownSelections=au.map(def=>window.gmSetPlayerTitlePreviewTier(def.id));
    const previewHtml=window.gmPlayerTitlePreviewHtml();
    const formalAfter=JSON.stringify(state);
    const saveAfter=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
@@ -88,13 +89,13 @@ const assert=require("assert");
     names,normalizedIds,equipOk,grant,permanentHonor,
     life:{report:lifeReport,before:beforeLifeTitles,after:afterLifeTitles,deepest:life.reincarnation.alternateUniverse.deepestCleared},
     gm:{up,upSnapshot,down,downSnapshot},
-    sandbox:{quick,previewHtml,formalStable:formalBefore===formalAfter,saveStable:saveBefore===saveAfter},
+    sandbox:{dropdownSelections,previewHtml,formalStable:formalBefore===formalAfter,saveStable:saveBefore===saveAfter},
     cssReady,rendered,
     benchmark:{guardVersion:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION,fingerprintStable:fpBefore.fingerprint===fpAfter.fingerprint}
    };
   });
 
-  assert.deepEqual(report.versions,{title:21,closure:1,gmManage:3,gmPreview:10,benchmark:2});
+  assert.deepEqual(report.versions,{title:22,closure:1,gmManage:3,gmPreview:11,benchmark:2});
   assert.equal(report.defs.length,46,"正式稱號 catalog 必須維持 46 個。");
   assert.ok(report.defs.slice(0,10).every(def=>def.series==="calamity"));
   assert.ok(report.defs.slice(10,20).every(def=>def.series==="universe-calamity"));
@@ -131,8 +132,9 @@ const assert=require("assert");
   assert.equal(report.gm.downSnapshot.title.acquiredCount,8,"GM 降低進度不得回收正式異宇宙稱號。");
   assert.equal(report.gm.down.titleRetainedOnDecrease,true);
 
-  assert.deepEqual(report.sandbox.quick,report.au.map(def=>def.id),"GM 快速視覺測試應可逐階切換10個 AU 稱號。");
-  assert.ok(report.sandbox.previewHtml.includes("異宇宙 1～10 階快速視覺測試"));
+  assert.deepEqual(report.sandbox.dropdownSelections,report.au.map(def=>def.id),"GM 唯一稱號下拉選單應可逐階切換10個 AU 稱號。");
+  assert.ok(!report.sandbox.previewHtml.includes("異宇宙 1～10 階快速視覺測試"),"GM 稱號預覽不得保留重複的異宇宙快速按鈕區。");
+  assert.ok(!report.sandbox.previewHtml.includes("純沙盒預覽：直接切換正式異宇宙稱號 renderer"));
   assert.equal(report.sandbox.formalStable,true,"GM 視覺測試不得修改正式 state。");
   assert.equal(report.sandbox.saveStable,true,"GM 視覺測試不得寫入存檔。");
 
