@@ -22,8 +22,8 @@
   "isCombatPresentationActive"
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("CALAMITY_UI_API",`${name} 未載入`);});
- if(Number(window.CALAMITY_UI_VERSION)!==4)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V4",window.CALAMITY_UI_VERSION);
- if(Number(window.CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION)!==1)fail("CALAMITY_BATTLE_ENTRY_SCROLL_RESET","文明災厄進入戰鬥時必須重設 viewport",window.CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION);
+ if(Number(window.CALAMITY_UI_VERSION)!==5)fail("CALAMITY_UI_VERSION","文明災厄 UI 應為 V5",window.CALAMITY_UI_VERSION);
+ if(Number(window.CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION)!==2||Number(window.BATTLE_ENTRY_VIEWPORT_RESET_VERSION)!==1||typeof window.resetBattleEntryViewport!=="function")fail("CALAMITY_BATTLE_ENTRY_SCROLL_RESET","文明災厄進入戰鬥時必須使用共用 viewport reset owner",{calamity:window.CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION,shared:window.BATTLE_ENTRY_VIEWPORT_RESET_VERSION,api:typeof window.resetBattleEntryViewport});
  if(Number(window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION)!==1)fail("CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI","滿印記災厄應只保留單場重打",window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION);
  if(Number(window.CALAMITY_MINIMAL_MODE_VERSION)!==1)fail("CALAMITY_MINIMAL_VERSION","文明災厄極簡模式應為 V1",window.CALAMITY_MINIMAL_MODE_VERSION);
  if(Number(window.CALAMITY_BATTLE_VIEW_VERSION)!==1)fail("CALAMITY_BATTLE_VIEW_VERSION","文明災厄戰鬥 UI 應使用單一 battleView snapshot",window.CALAMITY_BATTLE_VIEW_VERSION);
@@ -34,7 +34,7 @@
  if(Number(window.CALAMITY_FAST_CATCH_UP_UI_VERSION)!==1||Number(window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION)!==1||typeof window.structuredCombatPresentationDurationMs!=="function")fail("CALAMITY_FAST_CATCH_UP_UI","文明災厄 Fast Catch-up UI／headless timing owner 未完整載入",{ui:window.CALAMITY_FAST_CATCH_UP_UI_VERSION,durationVersion:window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION,duration:typeof window.structuredCombatPresentationDurationMs});
  const startSource=(()=>{try{return Function.prototype.toString.call(window.startCivilizationCalamityUI);}catch(e){return "";}})();
  const pageSource=typeof window.civilizationCalamityPageHtml==="function"?Function.prototype.toString.call(window.civilizationCalamityPageHtml):"";
- if(!/resetCalamityBattleViewport/.test(startSource))fail("CALAMITY_BATTLE_ENTRY_SCROLL_WIRING","文明災厄單場／連續戰鬥入口必須在 render 後重設 viewport",startSource);
+ if(!/resetBattleEntryViewport/.test(startSource)||/resetCalamityBattleViewport/.test(startSource))fail("CALAMITY_BATTLE_ENTRY_SCROLL_WIRING","文明災厄單場／連續戰鬥入口必須使用共用 viewport reset owner",startSource);
  if(Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_PRESENTATION_INTERVAL)!==100)fail("CALAMITY_FAST_CATCH_UP_PRESENTATION_INTERVAL","文明災厄抽樣 presentation 應共用每 100 場 policy",window.BACKGROUND_PROGRESS_FAST_CATCH_UP_PRESENTATION_INTERVAL);
 
  try{
