@@ -1,5 +1,6 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
+ const ERA_RESTRICTION_VERSION=1;
  const ACCESS_SNAPSHOT_VERSION=1;
  const MIN_LEVELS=Object.freeze({bounty:5,arena:15,tower:25,mirror:Math.max(1,Math.floor(Number(window.MIRROR_DUNGEON_CONFIG?.unlockLevel)||50))});
  const base=Object.freeze({
@@ -75,11 +76,7 @@
   window.unregisterDungeonModeAvailabilityPolicy("third-world");
   return window.registerDungeonModeAvailabilityPolicy("third-world",function(mode,target){
    if(currentPhase(target)!==3)return null;
-   if(mode==="bounty"){
-    const access=accessSnapshot("bounty",target);
-    if(access.permanent)return {visible:true,enabled:true,unlockText:access.unlockText};
-    return {visible:false,enabled:false,reason:"高維紀元已關閉懸賞戰。"};
-   }
+   if(mode==="bounty")return {visible:false,enabled:false,reason:"高維紀元已關閉懸賞戰。"};
    if(mode==="arena")return {visible:true,enabled:true,titleText:"高維競技場",rewardText:"VIP 積分",unlockText:"高維紀元可挑戰",descriptionText:"選擇定相或異相競技場，完成三戰取得 VIP 積分。",buttonLabel:"進入高維競技場"};
    if(mode==="tower")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
    if(mode==="mirror")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
@@ -90,6 +87,11 @@
  function dailyRemaining(mode){const row=typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus(mode):null;return row?Math.max(0,Math.floor(Number(row.remaining)||0)):0;}
  function syncAccessCard(main,selector,mode){
   const card=main?.querySelector(selector);if(!card)return false;
+  const policy=typeof window.dungeonModeAvailability==="function"?window.dungeonModeAvailability(mode,state):null;
+  if(policy?.visible===false){
+   card.hidden=true;card.style.setProperty("display","none","important");card.dataset.dungeonPolicyHidden="1";
+   return true;
+  }
   const access=accessSnapshot(mode,state);if(!access.permanent)return false;
   card.hidden=false;card.style.removeProperty("display");delete card.dataset.dungeonPolicyHidden;card.classList.remove("locked");
   const unlock=card.querySelector(".dungeon-unlock-label"),button=card.querySelector(".dungeon-entry-btn");
@@ -115,13 +117,14 @@
    syncAccessCard(main,"[data-mirror-dungeon-card], .dungeon-mode-mirror","mirror");
   }else if(viewName==="home"&&currentPhase()===3){
    const cards=Array.from(main.querySelectorAll(".menu-card")),dungeon=cards.find(card=>(card.getAttribute("onclick")||"").includes("go('dungeon')")),desc=dungeon?.querySelector("span");
-   if(desc)desc.textContent="挑戰懸賞戰、競技場、鏡像戰與虛空幻境";
+   if(desc)desc.textContent="挑戰高維競技場、鏡像戰與虛空幻境";
   }
   return true;
  }
 
  const policyReinstalled=reinstallThirdWorldPolicy();
  if(typeof window.registerDungeonPostRenderHook==="function")window.registerDungeonPostRenderHook(syncUi);
- window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT=Object.freeze({version:VERSION,snapshotVersion:ACCESS_SNAPSHOT_VERSION,policyReinstalled,temporaryLevelPresentation:false,entryOwner:"shared-access-snapshot",wrapped:{bounty:false,arena:false,void:false,mirror:typeof base.beginMirrorDungeonState==="function",arenaCap:typeof base.getArenaRankCapForWorld==="function"}});
+ window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION=ERA_RESTRICTION_VERSION;
+ window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT=Object.freeze({version:VERSION,snapshotVersion:ACCESS_SNAPSHOT_VERSION,eraRestrictionVersion:ERA_RESTRICTION_VERSION,policyReinstalled,temporaryLevelPresentation:false,entryOwner:"shared-access-snapshot",wrapped:{bounty:false,arena:false,void:false,mirror:typeof base.beginMirrorDungeonState==="function",arenaCap:typeof base.getArenaRankCapForWorld==="function"}});
  window.syncReincarnationDungeonAccessUi=syncUi;
 })();
