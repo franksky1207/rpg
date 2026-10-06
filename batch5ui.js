@@ -64,6 +64,12 @@
   const h=info.history||{},record=h.bestDate?`${Math.max(0,Number(h.bestWins)||0)} 勝（${h.bestDate}）`:"尚無紀錄",miracles=Array.isArray(h.miracleDates)?h.miracleDates.length:0;
   return `<div class="muted gm-hub-note">今日狀態：${info.status==="idle"?"尚未挑戰":"今日鏡像戰已結束／進行中"}　・　歷史最高：${record}　・　神蹟 ${miracles} 次</div><div class="muted gm-hub-note" style="margin-top:6px">「重置今日副本」會一併恢復今日鏡像戰正式挑戰機會；歷史最高與神蹟紀錄不受影響。</div>`;
  }
+ function mirrorManagementHtml(){
+  if(typeof window.gmMirrorManagementHtml==="function"){
+   try{return window.gmMirrorManagementHtml();}catch(error){console.error("GM mirror management renderer failed",error);}
+  }
+  return mirrorManageStatusHtml();
+ }
  function gmStatus(){
   const daily=gmDaily()||{},bounty=Math.max(0,Math.min(20,Math.floor(Number(daily?.bounty?.used)||0))),arena=Math.max(0,Math.min(20,Math.floor(Number(daily?.arena?.used)||0))),info=gmVoidInfo();
   return {vip:Math.max(0,Math.floor(Number(state?.vipLevel)||0)),points:Math.max(0,Math.floor(Number(state?.vipPoints)||0)),bounty,arena,highest:Math.max(0,Math.floor(Number(info.highestCleared)||0)),start:Math.max(1,Math.floor(Number(info.startFloor)||1)),dailyHighest:Math.max(0,Math.floor(Number(info.dailyHighest)||0)),claimed:info.claimed===true,reward:Math.max(0,Math.floor(Number(info.reward)||0))};
@@ -74,7 +80,7 @@
    <div class="muted gm-hub-note">${phaseNote}</div>
    <div class="gm-batch5-grid"><label>VIP 積分<input id="gmDungeonPoints" type="number" min="0" step="1" value="${s.points}"></label><label>今日懸賞已用<input id="gmBountyDailyUsed" type="number" min="0" max="20" step="1" value="${s.bounty}"></label><label>今日競技場已用<input id="gmArenaDailyUsed" type="number" min="0" max="20" step="1" value="${s.arena}"></label><label>虛空歷史最高<input id="gmVoidHistoricalHighest" type="number" min="0" step="1" value="${s.highest}"></label><label>虛空當日最高<input id="gmVoidDailyHighest" type="number" min="0" step="1" value="${s.dailyHighest}"></label><label>虛空今日領獎<select id="gmVoidDailyClaimed" class="btn"><option value="0" ${s.claimed?"":"selected"}>尚未領取</option><option value="1" ${s.claimed?"selected":""}>已領取</option></select></label></div>
    <div class="muted" style="margin-top:9px">虛空挑戰起點目前為第 ${s.start.toLocaleString()} 層；當日最高對應目前可領 ${s.reward.toLocaleString()} VIP。若當日最高高於歷史最高，套用時會自動把歷史最高同步提高。</div>
-   <div class="controls"><button class="btn blue" onclick="gmApplyDungeonValues()">套用副本／VIP資料</button><button class="btn" onclick="gmResetDailyDungeonState()">重置今日副本</button></div><div class="item" style="margin-top:14px"><b>鏡像戰</b><div style="margin-top:9px">${mirrorManageStatusHtml()}</div></div>`;
+   <div class="controls"><button class="btn blue" onclick="gmApplyDungeonValues()">套用副本／VIP資料</button><button class="btn" onclick="gmResetDailyDungeonState()">重置今日副本</button></div><div class="item" style="margin-top:14px"><b>鏡像戰</b><div style="margin-top:9px">${mirrorManagementHtml()}</div></div>`;
  }
  window.gmDungeonManagementHtml=dungeonManagementHtml;
  window.gmDungeonManagementNoteForPhase=dungeonManagementNoteForPhase;
@@ -108,5 +114,6 @@
  window.GM_ARENA_SHARED_DAILY_MANAGEMENT_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_MANAGEMENT_GUARD_VERSION=1;
  window.GM_DUNGEON_PHASE_COPY_VERSION=1;
+ window.GM_DUNGEON_MIRROR_MANAGEMENT_WIRING_VERSION=1;
  window.BATCH5_UI_READY=true;
 })();
