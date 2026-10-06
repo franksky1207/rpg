@@ -237,7 +237,7 @@ const assert=require("assert");
   assert.equal(report.diagnostics.migration?.mirrorMiracleDatesRemoved,1,"舊鏡像 history 應診斷移除1筆重複神蹟日期。");
   assert.equal(report.diagnostics.mirror?.history?.miracleDates?.length,1,"舊鏡像重複神蹟日期應實際去重。");
 
-  assert.equal(report.titleEvolution.old36.titles.unlocked.length,46,"舊36稱號 catalog 存檔在 AU 850 層時應正規化成完整46稱號 catalog。");
+  assert.equal(report.titleEvolution.old36.titles.unlocked.length,44,"舊36稱號 catalog 存檔在 AU 850 層時應保留36個舊稱號並補入前8階 AU 稱號，共44個。");
   assert.equal(report.titleEvolution.old36.titles.equipped,"mirror_title_19","舊存檔已裝備鏡像19勝稱號不得因 catalog 插入 AU 稱號而遺失。");
   assert.equal(report.titleEvolution.old36.titles.pendingNotice,"mirror_title_20","舊存檔鏡像 pendingNotice 不得因 catalog 重排而遺失。");
   assert.equal(report.titleEvolution.old36.mirror.history.bestWins,20,"舊鏡像20勝歷史不得被稱號 catalog migration 改寫。");
