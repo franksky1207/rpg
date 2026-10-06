@@ -1,6 +1,8 @@
 (function(){
  const CONFIG=window.MIRROR_DUNGEON_CONFIG;if(!CONFIG)throw new Error("Mirror dungeon config missing.");
- const MIRROR_DUNGEON_STATE_VERSION=2;
+ const MIRROR_DUNGEON_STATE_VERSION=3;
+ const MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION=1;
+ const MIRROR_MIRACLE_DATE_DEDUP_VERSION=1;
  const RUN_BATTLES=CONFIG.runBattles;
  const MIRROR_STATUSES=new Set(["idle","running","completed","failed"]);
 
@@ -21,7 +23,7 @@
   const history=isObject(source)?source:{};
   let bestDate=validDateKey(history.bestDate);
   let bestWins=Math.max(0,Math.min(RUN_BATTLES,finiteInt(history.bestWins,0)));
-  let miracleDates=Array.isArray(history.miracleDates)?history.miracleDates.map(validDateKey).filter(Boolean):[];
+  let miracleDates=Array.isArray(history.miracleDates)?Array.from(new Set(history.miracleDates.map(validDateKey).filter(Boolean))):[];
   if(miracleDates.length){bestWins=RUN_BATTLES;bestDate=miracleDates[0];}
   else if(bestDate&&bestWins===RUN_BATTLES)miracleDates=[bestDate];
   if(!bestDate){bestWins=0;miracleDates=[];}
@@ -95,19 +97,31 @@
   if(typeof save==="function")save(false);
   return {ok:true,...mirrorDungeonStatus(timestamp)};
  }
- function recordMirrorDungeonCompletion(wins,timestamp=Date.now(),options={}){
-  const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return {ok:false,reason:"missing_state"};
-  if(mirror.daily.status!=="running")return {ok:false,reason:"not_running",...mirrorDungeonStatus(timestamp)};
-  const w=window.mirrorDungeonClampWins(wins),losses=RUN_BATTLES-w,dateKey=mirror.daily.challengeDate||mirror.daily.dateKey||todayKey(timestamp);
-  const history=mirror.history,firstRecord=!history.bestDate,previousBestWins=firstRecord?0:Math.max(0,Math.floor(Number(history.bestWins)||0));
-  if(firstRecord||w>history.bestWins){history.bestWins=w;history.bestDate=dateKey;}
-  if(w===RUN_BATTLES)history.miracleDates.push(dateKey);
+ function settleMirrorDungeonResult(target,wins,timestamp=Date.now(),options={}){
+  if(!isObject(target))return {ok:false,reason:"state-missing"};
+  const mirror=normalizeMirrorDungeonState(target,timestamp);if(!mirror?.history||!mirror?.daily)return {ok:false,reason:"missing_state"};
+  const requireRunning=options?.requireRunning!==false,requireUpgrade=options?.requireUpgrade===true;
+  if(requireRunning&&mirror.daily.status!=="running")return {ok:false,reason:"not_running"};
+  const raw=Math.floor(Number(wins));if(!Number.isInteger(raw)||raw<0||raw>RUN_BATTLES)return {ok:false,reason:"invalid-wins"};
+  const w=raw,losses=RUN_BATTLES-w,history=mirror.history,firstRecord=!history.bestDate,previousBestWins=firstRecord?0:Math.max(0,Math.floor(Number(history.bestWins)||0));
+  if(requireUpgrade&&w<=previousBestWins)return {ok:false,reason:"not-an-upgrade",previousBestWins};
+  const now=Math.max(0,Math.floor(Number(timestamp)||Date.now()));
+  const dateKey=requireRunning?(mirror.daily.challengeDate||mirror.daily.dateKey||todayKey(timestamp)):todayKey(timestamp);
+  if(firstRecord||w>previousBestWins){history.bestWins=w;history.bestDate=dateKey;}
+  if(w===RUN_BATTLES&&!history.miracleDates.includes(dateKey))history.miracleDates.push(dateKey);
+  normalizeHistory(history);
   const titleSettlement=typeof window.grantPlayerTitlesForMirrorWins==="function"
-   ?window.grantPlayerTitlesForMirrorWins(history.bestWins,state,{previousBestWins})
+   ?window.grantPlayerTitlesForMirrorWins(history.bestWins,target,{previousBestWins})
    :null;
-  replaceObject(mirror.daily,{...mirror.daily,dateKey,status:"completed",challengeDate:dateKey,wins:w,losses,completedAt:Math.max(0,Math.floor(Number(timestamp)||Date.now()))});
+  const startedAt=requireRunning?Math.max(0,finiteInt(mirror.daily.startedAt,0)):now;
+  replaceObject(mirror.daily,{dateKey,status:"completed",challengeDate:dateKey,startedAt,wins:w,losses,completedAt:now});
+  return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,previousBestWins,titleSettlement,miracle:w===RUN_BATTLES,history:{bestWins:history.bestWins,bestDate:history.bestDate,miracleDates:history.miracleDates.slice()}};
+ }
+ function recordMirrorDungeonCompletion(wins,timestamp=Date.now(),options={}){
+  const result=settleMirrorDungeonResult(state,wins,timestamp,{requireRunning:true});
+  if(!result?.ok)return {...result,...mirrorDungeonStatus(timestamp)};
   if(options?.save!==false&&typeof save==="function")save(false);
-  return {ok:true,status:"completed",dateKey,challengeDate:dateKey,wins:w,losses,titleSettlement,history:{...history,miracleDates:history.miracleDates.slice()}};
+  return result;
  }
  function resetMirrorDungeonToday(timestamp=Date.now()){
   const mirror=ensureMirrorDungeonState(timestamp);if(!mirror)return null;
@@ -117,12 +131,15 @@
  }
 
  window.MIRROR_DUNGEON_STATE_VERSION=MIRROR_DUNGEON_STATE_VERSION;
+ window.MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION=MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION;
+ window.MIRROR_MIRACLE_DATE_DEDUP_VERSION=MIRROR_MIRACLE_DATE_DEDUP_VERSION;
  window.blankMirrorDungeonState=blankMirrorState;
  window.normalizeMirrorDungeonState=normalizeMirrorDungeonState;
  window.ensureMirrorDungeonState=ensureMirrorDungeonState;
  window.mirrorDungeonStatus=mirrorDungeonStatus;
  window.beginMirrorDungeonState=beginMirrorDungeonState;
  window.failMirrorDungeonState=failMirrorDungeonState;
+ window.settleMirrorDungeonResult=settleMirrorDungeonResult;
  window.recordMirrorDungeonCompletion=recordMirrorDungeonCompletion;
  window.resetMirrorDungeonToday=resetMirrorDungeonToday;
  window.isValidMirrorDateKey=value=>validDateKey(value)!==null;
