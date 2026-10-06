@@ -1,5 +1,5 @@
 (function(){
- const UI_VERSION=3;
+ const UI_VERSION=4;
  const MINIMAL_VERSION=1;
  let ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
 
@@ -25,6 +25,19 @@
  }
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  const fmt=value=>Math.max(0,Math.floor(Number(value)||0)).toLocaleString();
+ function resetCalamityBattleViewport(){
+  if(typeof window==="undefined"||typeof document==="undefined")return false;
+  const apply=()=>{
+   try{window.scrollTo(0,0);}catch(_){}
+   const root=document.scrollingElement||document.documentElement;
+   if(root)root.scrollTop=0;
+   if(document.body)document.body.scrollTop=0;
+  };
+  apply();
+  if(typeof window.requestAnimationFrame==="function")window.requestAnimationFrame(apply);
+  setTimeout(apply,0);
+  return true;
+ }
 
  function defs(){return typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];}
  function unlockedDefs(){return defs().filter(def=>typeof window.isCivilizationCalamityUnlocked==="function"&&window.isCivilizationCalamityUnlocked(def.id));}
@@ -254,7 +267,7 @@
   const def=window.getCivilizationCalamityDefinition?.(id);
   if(!def||!window.isCivilizationCalamityUnlocked?.(id))return false;
   ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
-  view="calamity";render();
+  view="calamity";render();resetCalamityBattleViewport();
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}
   setTimeout(runSingleUi,80);return true;
  };
@@ -311,6 +324,7 @@
  };
  window.closeCivilizationCalamityUnlockNotice=function(){document.getElementById("calamityUnlockModal")?.classList.remove("show");};
 
+ window.CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION=1;
  window.CALAMITY_MAXED_REPLAY_SINGLE_ONLY_UI_VERSION=1;
  window.CALAMITY_UI_VERSION=UI_VERSION;
  window.CALAMITY_BATTLE_VIEW_VERSION=1;
