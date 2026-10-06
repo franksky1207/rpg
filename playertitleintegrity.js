@@ -1,5 +1,5 @@
 (function(){
- const VERSION=18;
+ const VERSION=19;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -11,7 +11,7 @@
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
- const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]),universeDefs=Array.from(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS||[]),mirrorDefs=Array.from(window.MIRROR_PLAYER_TITLE_DEFS||[]),higherDefs=Array.from(window.THIRD_WORLD_PLAYER_TITLE_DEFS||[]),catalogDefs=Array.from(window.PLAYER_TITLE_DEFS||[]),catalogIds=Array.from(window.PLAYER_TITLE_IDS||[]);
+ const calamityDefs=Array.from(window.CIVILIZATION_PLAYER_TITLE_DEFS||[]),universeDefs=Array.from(window.UNIVERSE_CALAMITY_PLAYER_TITLE_DEFS||[]),mirrorDefs=Array.from(window.MIRROR_PLAYER_TITLE_DEFS||[]),higherDefs=Array.from(window.THIRD_WORLD_PLAYER_TITLE_DEFS||[]),alternateDefs=Array.from(window.ALTERNATE_UNIVERSE_PLAYER_TITLE_DEFS||[]),catalogDefs=Array.from(window.PLAYER_TITLE_DEFS||[]),catalogIds=Array.from(window.PLAYER_TITLE_IDS||[]);
 
  function stylesheetSelectors(fragment){
   const result={seen:false,selectors:new Set(),mediaSelectors:new Map(),error:null};
@@ -47,7 +47,7 @@
  }
 
  if(Number(window.PLAYER_TITLE_STATE_VERSION)!==1)fail("TITLE_STATE_VERSION","玩家稱號 state 應為 V1",window.PLAYER_TITLE_STATE_VERSION);
- if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==4||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號 catalog 必須維持三紀元順序並固定鏡像稱號最後",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION,mirrorLast:window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION});
+ if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==5||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==4||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==2||Number(window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號 catalog 必須維持銀河／宇宙／高維／異宇宙順序並固定鏡像稱號最後",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,alternateExtension:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION,mirrorLast:window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION});
  if(window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_ALL_DEFS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_CATALOG_IDS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_ALL_IDS)fail("TITLE_CATALOG_SINGLE_OWNER","PLAYER_TITLE_DEFS／CATALOG／ALL 必須指向同一正式 catalog");
  if(Number(window.THIRD_WORLD_TITLE_BACKFILL_VERSION)!==1)fail("TITLE_THIRD_WORLD_BACKFILL_VERSION","高維稱號 backfill owner V1 未載入",window.THIRD_WORLD_TITLE_BACKFILL_VERSION);
  if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION)!==2)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 版本異常",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION});
@@ -55,14 +55,15 @@
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI／三紀元 post-flow 通知版本異常",{ui:window.PLAYER_TITLE_UI_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION,postFlow:window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION,legacyDelegate:window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION,higherReady:window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION});
  const postFlowEras=Array.from(window.PLAYER_TITLE_POST_FLOW_ERAS||[]);
  if(JSON.stringify(postFlowEras)!==JSON.stringify(["galaxy","universe","higher-dimensional"]))fail("TITLE_POST_FLOW_ERAS","稱號 post-flow owner 必須覆蓋三紀元",postFlowEras);
- if(calamityDefs.length!==10||universeDefs.length!==10||mirrorDefs.length!==6||higherDefs.length!==10||catalogDefs.length!==36||catalogIds.length!==36)fail("TITLE_DEFINITION_COUNT","正式 catalog 應為銀河10＋宇宙10＋高維10＋鏡像6",{calamity:calamityDefs.length,universe:universeDefs.length,mirror:mirrorDefs.length,higher:higherDefs.length,total:catalogDefs.length});
- const expectedOrder=[...calamityDefs,...universeDefs,...higherDefs,...mirrorDefs].map(def=>def.id);
- if(JSON.stringify(catalogIds)!==JSON.stringify(expectedOrder))fail("TITLE_UNIFIED_ORDER","稱號順序必須固定為銀河10、宇宙10、高維10、鏡像6；鏡像系列永遠置底",catalogIds);
+ if(calamityDefs.length!==10||universeDefs.length!==10||higherDefs.length!==10||alternateDefs.length!==10||mirrorDefs.length!==6||catalogDefs.length!==46||catalogIds.length!==46)fail("TITLE_DEFINITION_COUNT","正式 catalog 應為銀河10＋宇宙10＋高維10＋異宇宙10＋鏡像6",{calamity:calamityDefs.length,universe:universeDefs.length,higher:higherDefs.length,alternate:alternateDefs.length,mirror:mirrorDefs.length,total:catalogDefs.length});
+ const expectedOrder=[...calamityDefs,...universeDefs,...higherDefs,...alternateDefs,...mirrorDefs].map(def=>def.id);
+ if(JSON.stringify(catalogIds)!==JSON.stringify(expectedOrder))fail("TITLE_UNIFIED_ORDER","稱號順序必須固定為銀河10、宇宙10、高維10、異宇宙10、鏡像6；鏡像系列永遠置底",catalogIds);
  higherDefs.forEach((def,index)=>{
   const source=Array.from(window.THIRD_WORLD_TITLE_DEFINITIONS||[])[index];
   if(!source||def.id!==source.id||def.name!==source.name||def.tier!==index+1||def.series!=="higher-dimensional"||def.order!==21+index||Number(def.thresholdRemainingHp)!==Number(source.thresholdRemainingHp))fail("TITLE_THIRD_WORLD_ORDER",`高維第 ${index+1} 階稱號 metadata 異常`,{def,source});
  });
-  mirrorDefs.forEach((def,index)=>{if(def.series!=="mirror"||def.order!==31+index)fail("TITLE_MIRROR_LAST_ORDER",`鏡像 ${def.mirrorWins} 勝稱號必須位於正式 catalog 最後一組`,def);});
+  alternateDefs.forEach((def,index)=>{const source=Array.from(window.ALTERNATE_UNIVERSE_TITLE_ROWS||[])[index];if(!source||def.id!==source.id||def.name!==source.name||def.tier!==index+1||def.series!=="alternate-universe"||def.depthThreshold!==(index+1)*100||def.order!==31+index)fail("TITLE_ALTERNATE_UNIVERSE_ORDER",`異宇宙第 ${index+1} 階稱號 metadata 異常`,{def,source});});
+  mirrorDefs.forEach((def,index)=>{if(def.series!=="mirror"||def.order!==41+index)fail("TITLE_MIRROR_LAST_ORDER",`鏡像 ${def.mirrorWins} 勝稱號必須位於正式 catalog 最後一組`,def);});
 
  const higherVisualOwner=document.querySelector('link[data-player-title-higher-dimensional-owner="1"]');
  const mirrorVisualOwner=document.querySelector('link[data-player-title-mirror-owner="3"]');
@@ -80,20 +81,20 @@
   [".player-title--mirror-v3",...mirrorDefs.map(def=>`.player-title--mirror-v3-${def.mirrorWins}::after`)].forEach(selector=>{if(!hasMediaSelector(mirrorSheet,"(max-width: 360px)",selector))fail("TITLE_MIRROR_NARROW_MOBILE",`缺少鏡像極窄手機保護：${selector}`);});
  }
 
- const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForUniverseCalamity","getPlayerTitleDefinitionForMirrorWins","getPlayerTitleDefinitionForThirdWorldTier","grantPlayerTitleForCalamityFirstKill","grantPlayerTitleForUniverseCalamityFirstKill","grantPlayerTitlesForMirrorWins","grantPlayerTitlesForThirdWorldTier","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice","getPlayerTitlePostFlowStatus","gmPlayerTitlePreviewHtml","gmSetPlayerTitlePreviewTier"];
+ const required=["normalizePlayerTitleState","getPlayerTitleDefinition","getPlayerTitleDefinitionForCalamity","getPlayerTitleDefinitionForUniverseCalamity","getPlayerTitleDefinitionForMirrorWins","getPlayerTitleDefinitionForThirdWorldTier","getPlayerTitleDefinitionForAlternateUniverseTier","getPlayerTitleDefinitionForAlternateUniverseDepth","grantPlayerTitleForCalamityFirstKill","grantPlayerTitleForUniverseCalamityFirstKill","grantPlayerTitlesForMirrorWins","grantPlayerTitlesForThirdWorldTier","grantPlayerTitlesForAlternateUniverseDepth","getPendingPlayerTitleNotice","clearPendingPlayerTitleNotice","getUnlockedPlayerTitleDefinitions","getEquippedPlayerTitleDefinition","playerTitleHtml","playerIdentityNameHtml","equipPlayerTitle","openPlayerTitlePicker","closePlayerTitlePicker","selectPlayerTitle","showPendingPlayerTitleNotice","closePlayerTitleNotice","setPlayerTitlePostFlowHold","flushPendingPlayerTitleNoticeAfterFlow","queuePendingPlayerTitleNotice","getPlayerTitlePostFlowStatus","gmPlayerTitlePreviewHtml","gmSetPlayerTitlePreviewTier"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("TITLE_API_MISSING",`${name} 未載入`);});
 
  try{
   const max=Math.max(1,Math.floor(Number(window.THIRD_WORLD_BOSS_MAX_HP)||1));
-  const probe={marks:{entries:{}},secondWorld:{entered:true,calamities:universeDefs.map((def,index)=>({calamityId:def.calamityId,trueKills:index===0?1:0}))},thirdWorld:{entered:true,bosses:Array.from({length:10},(_,index)=>({currentHp:index===0?0:max})),story:{introSeen:false,unlockedStage:1,finalSeen:false}},dungeon:{mirror:{history:{bestWins:15}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+  const probe={marks:{entries:{}},secondWorld:{entered:true,calamities:universeDefs.map((def,index)=>({calamityId:def.calamityId,trueKills:index===0?1:0}))},thirdWorld:{entered:true,bosses:Array.from({length:10},(_,index)=>({currentHp:index===0?0:max})),story:{introSeen:false,unlockedStage:1,finalSeen:false}},reincarnation:{alternateUniverse:{unlocked:true,deepestCleared:350}},dungeon:{mirror:{history:{bestWins:15}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
   calamityDefs.forEach(def=>{probe.marks.entries[def.markId]={acquired:false,level:0,progress:0};});
   if(calamityDefs[0])probe.marks.entries[calamityDefs[0].markId].acquired=true;
   window.normalizePlayerTitleState(probe);
   const first=JSON.stringify(probe.titles);window.normalizePlayerTitleState(probe);const second=JSON.stringify(probe.titles);
   if(first!==second)fail("TITLE_NORMALIZE_IDEMPOTENT","稱號 normalization 必須 idempotent",{first,second});
   if(probe.titles.pendingNotice!==null)fail("TITLE_BACKFILL_NOTICE","靜默 backfill 不得建立 pendingNotice",probe.titles);
-  const expected=[calamityDefs[0]?.id,universeDefs[0]?.id,mirrorDefs[0]?.id,higherDefs[0]?.id].filter(Boolean);
-  if(JSON.stringify(probe.titles.unlocked)!==JSON.stringify(expected))fail("TITLE_BACKFILL_UNION","四系列靜默補發結果異常",{expected,actual:probe.titles.unlocked});
+  const expected=[calamityDefs[0]?.id,universeDefs[0]?.id,higherDefs[0]?.id,...alternateDefs.slice(0,3).map(def=>def.id),mirrorDefs[0]?.id].filter(Boolean);
+  if(JSON.stringify(probe.titles.unlocked)!==JSON.stringify(expected))fail("TITLE_BACKFILL_UNION","五系列靜默補發結果異常",{expected,actual:probe.titles.unlocked});
  }catch(error){fail("TITLE_NORMALIZE_PROBE","稱號 normalization probe 失敗",String(error?.message||error));}
 
  try{
@@ -113,6 +114,21 @@
   const again=window.grantPlayerTitlesForThirdWorldTier(3,target,{previousTier:3});
   if(again?.changed!==false||again?.unlockedTitles?.length!==0)fail("TITLE_THIRD_WORLD_ONCE","已取得高維稱號不得重複取得",again);
  }catch(error){fail("TITLE_THIRD_WORLD_GRANT_PROBE","高維稱號取得 probe 失敗",String(error?.message||error));}
+
+ try{
+  const oldAu={reincarnation:{alternateUniverse:{unlocked:true,deepestCleared:680}},marks:{entries:{}},secondWorld:{entered:false,calamities:[]},thirdWorld:{entered:false,bosses:[]},dungeon:{mirror:{history:{bestWins:0}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+  window.normalizePlayerTitleState(oldAu);
+  const expectedAu=alternateDefs.slice(0,6).map(def=>def.id),actualAu=oldAu.titles.unlocked.filter(id=>expectedAu.includes(id));
+  if(JSON.stringify(actualAu)!==JSON.stringify(expectedAu)||oldAu.titles.pendingNotice!==null)fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL","舊存檔異宇宙 680 層應靜默補齊前 6 階稱號",{expectedAu,actualAu,titles:oldAu.titles});
+ }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_BACKFILL_PROBE","異宇宙稱號 backfill regression 失敗",String(error?.message||error));}
+
+ try{
+  const target={titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+  const grant=window.grantPlayerTitlesForAlternateUniverseDepth(300,target,{previousDepth:299});
+  if(grant?.changed!==true||grant?.unlockedTitles?.length!==3||grant?.noticeTitle?.id!==alternateDefs[2]?.id||target.titles.pendingNotice!==alternateDefs[2]?.id)fail("TITLE_ALTERNATE_UNIVERSE_MULTI_UNLOCK","異宇宙 299→300 應補齊 1～3 階並只通知第 3 階",{grant,titles:target.titles});
+  const again=window.grantPlayerTitlesForAlternateUniverseDepth(300,target,{previousDepth:300});
+  if(again?.changed!==false||again?.unlockedTitles?.length!==0)fail("TITLE_ALTERNATE_UNIVERSE_ONCE","已取得異宇宙稱號不得重複取得",again);
+ }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_GRANT_PROBE","異宇宙稱號取得 probe 失敗",String(error?.message||error));}
 
  try{
   const beforeHold=clone(state?.titles);window.setPlayerTitlePostFlowHold?.("__integrity__",true);const held=window.getPlayerTitlePostFlowStatus?.();window.setPlayerTitlePostFlowHold?.("__integrity__",false);const status=window.getPlayerTitlePostFlowStatus?.();
