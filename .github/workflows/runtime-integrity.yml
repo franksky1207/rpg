@@ -125,6 +125,7 @@ jobs:
           node tests/runtime/reincarnation-opt-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-opt-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-opt-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run unlimited VIP integrity
