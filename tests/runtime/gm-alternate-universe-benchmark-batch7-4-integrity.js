@@ -12,18 +12,20 @@ const assert=require("assert");
   await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY?.passed===true&&typeof window.gmRunAlternateUniverseTraitDiagnostics==="function",{timeout:30000});
   const report=await page.evaluate(async()=>{
    const formalBefore=JSON.stringify(state);
+   const titlesBefore=JSON.stringify(state?.titles??null);
    const pairs=window.gmAlternateUniverseTraitPairs();
    const firstEnemy=window.gmAlternateUniverseBenchmarkEnemy(25,[pairs[0][1],pairs[0][0]]);
    const bench=await window.gmRunAlternateUniverseBenchmark({depth:25,runs:100,traits:pairs[0]});
    const diagnostics=await window.gmRunAlternateUniverseTraitDiagnostics({depth:25});
    const formalAfter=JSON.stringify(state);
+   const titlesAfter=JSON.stringify(state?.titles??null);
    const ids=typeof window.gmHubRegisteredSectionIds==="function"?window.gmHubRegisteredSectionIds("test"):[];
    const html=window.gmAlternateUniverseBenchmarkHtml();
    const powerHtml=window.gmPowerBenchmarkHtml();
    const countIndex=powerHtml.indexOf("已測模式"),auIndex=powerHtml.indexOf("異宇宙測試");
    return {
     versions:{benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,diagnostics:window.GM_ALTERNATE_UNIVERSE_TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwner:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_COMBAT_OWNER_VERSION,integration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,hub:window.GM_HUB_EXTENSION_VERSION},
-    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,ids,html,powerHtml,install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,
+    self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,pairs,firstEnemy,bench,diagnostics,formalStable:formalBefore===formalAfter,titleStateStable:titlesBefore===titlesAfter,ids,html,powerHtml,install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,
     integrationProbe:{hasAu:auIndex>=0,hasZero8:powerHtml.includes("0 / 8"),hasZero7:powerHtml.includes("0 / 7"),hasOne8:powerHtml.includes("1 / 8"),hasOne7:powerHtml.includes("1 / 7"),countSlice:countIndex>=0?powerHtml.slice(Math.max(0,countIndex-160),countIndex+260):"missing-count",auSlice:auIndex>=0?powerHtml.slice(Math.max(0,auIndex-120),auIndex+240):"missing-au"}
    };
   });
@@ -46,6 +48,7 @@ const assert=require("assert");
   assert.equal(report.diagnostics.passed,true);
   assert.equal(report.diagnostics.formalStateStable,true,"Trait diagnostics must not mutate formal save state.");
   assert.equal(report.formalStable,true,"Batch7-4 test sandbox must leave formal state byte-equivalent.");
+  assert.equal(report.titleStateStable,true,"異宇宙戰力基準測試不得因新增稱號系統而修改正式 titles state.");
   assert.equal(report.ids.includes("alternate-universe-benchmark-test"),false,"AU benchmark must not create a separate GM test section.");
   assert.ok(report.ids.includes("power-benchmark-test"),"Shared power benchmark section must remain registered.");
   assert.ok(report.html.includes("測試沙盒")&&report.html.includes("不寫入正式存檔"));
