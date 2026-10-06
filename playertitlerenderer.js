@@ -1,11 +1,13 @@
 (function(){
- const PLAYER_TITLE_RENDERER_VERSION=4;
+ const PLAYER_TITLE_RENDERER_VERSION=5;
  const UNIVERSE_RENDERER_VERSION=1;
  const MIRROR_RENDERER_VERSION=3;
  const MIRROR_VISUAL_CLASS_VERSION=3;
  const MIRROR_PRESENTATION_VERSION=4;
  const THIRD_WORLD_RENDERER_VERSION=2;
  const THIRD_WORLD_PRESENTATION_VERSION=4;
+ const ALTERNATE_UNIVERSE_RENDERER_VERSION=1;
+ const ALTERNATE_UNIVERSE_PRESENTATION_VERSION=1;
 
  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
@@ -23,6 +25,9 @@
   }else if(def.series==="higher-dimensional"){
    series="higher-dimensional";
    visualClass=`player-title--higher-dimensional player-title--higher-dimensional-${def.tier}`;
+  }else if(def.series==="alternate-universe"){
+   series="alternate-universe";
+   visualClass=`player-title--alternate-universe player-title--alternate-universe-${def.tier}`;
   }
   return `<span class="player-title player-title--${series} ${visualClass}" data-player-title-id="${esc(def.id)}" data-title-text="${esc(def.name)}">${esc(def.name)}</span>`;
  }
@@ -50,6 +55,8 @@
  window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION=MIRROR_PRESENTATION_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION=THIRD_WORLD_RENDERER_VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION=THIRD_WORLD_PRESENTATION_VERSION;
+ window.PLAYER_TITLE_ALTERNATE_UNIVERSE_RENDERER_VERSION=ALTERNATE_UNIVERSE_RENDERER_VERSION;
+ window.PLAYER_TITLE_ALTERNATE_UNIVERSE_PRESENTATION_VERSION=ALTERNATE_UNIVERSE_PRESENTATION_VERSION;
  window.playerTitleHtml=playerTitleHtml;
  window.playerIdentityNameHtml=playerIdentityNameHtml;
 })();
