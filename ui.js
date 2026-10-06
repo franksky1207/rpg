@@ -11,6 +11,21 @@ let galaxyReviewCombatPlayerHp=null;
 const CONTINUOUS_BATTLE_COUNT="continuous";
 window.CONTINUOUS_BATTLE_COUNT=CONTINUOUS_BATTLE_COUNT;
 window.MAIN_BOSS_CONTINUOUS_VERSION=1;
+function resetBattleEntryViewport(){
+ if(typeof window==="undefined"||typeof document==="undefined")return false;
+ const apply=()=>{
+  try{window.scrollTo(0,0);}catch(_){}
+  const root=document.scrollingElement||document.documentElement;
+  if(root)root.scrollTop=0;
+  if(document.body)document.body.scrollTop=0;
+ };
+ apply();
+ if(typeof window.requestAnimationFrame==="function")window.requestAnimationFrame(apply);
+ setTimeout(apply,0);
+ return true;
+}
+window.resetBattleEntryViewport=resetBattleEntryViewport;
+window.BATTLE_ENTRY_VIEWPORT_RESET_VERSION=1;
 function battleModesForEnemy(enemy){return [1,CONTINUOUS_BATTLE_COUNT]}
 function battleModeLabel(mode){return mode===CONTINUOUS_BATTLE_COUNT?"連續戰鬥":"單場"}
 function setBattleMode(mode,el){
