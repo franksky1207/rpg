@@ -4,6 +4,31 @@
  let mirrorTestResult=null;
  function pct(value,total){return total?Math.round(value/total*10000)/100:0;}
  function currentInfo(){return typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():{status:"idle",history:{bestWins:0,bestDate:null,miracleDates:[]}};}
+ const GM_MIRROR_FORMAL_RESULT_VERSION=1;
+ function mirrorDateKey(timestamp=Date.now()){return typeof window.gameDailyDateKey==="function"?window.gameDailyDateKey(timestamp):new Date(Number(timestamp)||Date.now()).toISOString().slice(0,10);}
+ function applyFormalMirrorResult(target,wins,timestamp=Date.now()){
+  if(!target||typeof target!=="object")return {ok:false,reason:"state-missing"};
+  if(typeof window.normalizeMirrorDungeonState!=="function")return {ok:false,reason:"mirror-owner-missing"};
+  if(typeof window.grantPlayerTitlesForMirrorWins!=="function")return {ok:false,reason:"title-owner-missing"};
+  const w=Math.floor(Number(wins)),max=Math.max(1,Math.floor(Number(CONFIG.runBattles)||20));
+  if(!Number.isInteger(w)||w<0||w>max)return {ok:false,reason:"invalid-wins"};
+  const mirror=window.normalizeMirrorDungeonState(target,timestamp);if(!mirror?.history||!mirror?.daily)return {ok:false,reason:"mirror-state-missing"};
+  const previousBestWins=Math.max(0,Math.floor(Number(mirror.history.bestWins)||0));
+  if(w<=previousBestWins)return {ok:false,reason:"not-an-upgrade",previousBestWins};
+  const now=Math.max(0,Math.floor(Number(timestamp)||Date.now())),dateKey=mirrorDateKey(now),losses=max-w;
+  mirror.history.bestWins=w;mirror.history.bestDate=dateKey;
+  if(!Array.isArray(mirror.history.miracleDates))mirror.history.miracleDates=[];
+  if(w===max&&!mirror.history.miracleDates.includes(dateKey))mirror.history.miracleDates.push(dateKey);
+  Object.assign(mirror.daily,{dateKey,status:"completed",challengeDate:dateKey,startedAt:now,wins:w,losses,completedAt:now});
+  const titleSettlement=window.grantPlayerTitlesForMirrorWins(w,target,{previousBestWins});
+  return {ok:true,wins:w,losses,dateKey,previousBestWins,titleSettlement,miracle:w===max,history:{bestWins:mirror.history.bestWins,bestDate:mirror.history.bestDate,miracleDates:mirror.history.miracleDates.slice()}};
+ }
+ function commitFormalMirrorResult(wins,timestamp=Date.now()){
+  const active=typeof window.getMirrorDungeonActiveRun==="function"?window.getMirrorDungeonActiveRun():null;
+  if(active?.active)return Object.freeze({ok:false,reason:"mirror-run-active",rolledBack:false,saved:false});
+  if(typeof window.runSettlementTransaction!=="function")return Object.freeze({ok:false,reason:"transaction-owner-missing",rolledBack:false,saved:false});
+  return window.runSettlementTransaction({label:"gm-mirror-formal-result",mutate:target=>applyFormalMirrorResult(target,wins,timestamp)});
+ }
  function resultBox(){const box=document.getElementById("gmMirrorTestResult");if(box)box.innerHTML=mirrorTestHtml;}
  function snapshot(){
   if(typeof window.normalizeMirrorCombatSnapshot!=="function")return typeof createMirrorCombatSnapshot==="function"?createMirrorCombatSnapshot():null;
@@ -38,10 +63,24 @@
  window.gmMirrorTest=function(runs){const n=runs===100?100:1,button=document.getElementById(n===100?"gmMirrorTest100":"gmMirrorTest1");if(button){button.disabled=true;button.textContent="測試中…";}setTimeout(()=>{try{const s=simulate(n);if(s)mirrorTestResult={...(mirrorTestResult||{}),simulation:JSON.parse(JSON.stringify(s))};mirrorTestHtml=s?summaryHtml(s,n===100?`100 次完整挑戰（${(100*CONFIG.runBattles).toLocaleString()} 場）`:`1 次完整挑戰（${CONFIG.runBattles} 場）`):`<div class="notice">鏡像戰核心尚未載入。</div>`;}catch(err){console.error("Mirror GM simulation failed",err);mirrorTestHtml=`<div class="notice">鏡像戰測試失敗，請重新整理後再試。</div>`;}resultBox();if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();if(button){button.disabled=false;button.textContent=n===100?`測試 100 次（${(100*CONFIG.runBattles).toLocaleString()} 場）`:`測試 1 次（${CONFIG.runBattles} 場）`;}},20);};
  window.gmMirrorSymmetryTest=function(){const button=document.getElementById("gmMirrorSymmetry");if(button){button.disabled=true;button.textContent="回歸測試中…";}setTimeout(()=>{try{const result=symmetryRegression(64);if(result)mirrorTestResult={...(mirrorTestResult||{}),symmetry:JSON.parse(JSON.stringify(result))};mirrorTestHtml=result?`<div class="notice"><b>鏡像戰・64 組對稱回歸</b><div class="muted gm-test-context">使用固定亂數序列、滿級戰鬥專精與 10 枚 Lv.10 印記，成對交換先攻方，共測試 128 場；不修改正式資料。</div><div style="margin-top:10px;font-weight:800">${result.passed?"通過：64 / 64 組完全鏡像對稱":`未通過：${result.errors.length} 個異常`}</div>${result.errors.length?`<div class="muted" style="margin-top:6px">${result.errors.slice(0,8).join("；")}</div>`:""}</div>`:`<div class="notice">鏡像戰核心尚未載入。</div>`;}catch(err){console.error("Mirror symmetry regression failed",err);mirrorTestHtml=`<div class="notice">鏡像戰對稱回歸失敗。</div>`;}resultBox();if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();if(button){button.disabled=false;button.textContent="對稱回歸（64 組）";}},20);};
  window.gmResetMirrorDungeonToday=function(){const active=typeof getMirrorDungeonActiveRun==="function"?getMirrorDungeonActiveRun():null;if(active?.active)return alert("鏡像戰正在進行中，無法重置今日狀態。");if(!confirm("重置今日鏡像戰後，可重新取得今天唯一一次正式挑戰機會。\n\n歷史最高與神蹟紀錄不會變更；重新進行的正式挑戰仍會正常發放獎勵並更新紀錄。\n\n確定重置？"))return;if(typeof resetMirrorDungeonToday!=="function")return alert("鏡像戰狀態模組尚未載入。");resetMirrorDungeonToday();if(typeof render==="function")render();};
+ window.gmSetMirrorFormalResult=function(wins){
+  const w=Math.floor(Number(wins)),title=typeof window.mirrorDungeonRecordTitle==="function"?window.mirrorDungeonRecordTitle(w):"",label=title?`${w} 勝・${title}`:`${w} 勝`;
+  if(!confirm(`GM 正式裁定鏡像戰成績\n\n將今天的正式鏡像戰直接裁定為「${label}」。\n今日挑戰會立即視為完成，歷史最高與對應稱號會同步更新；不補發 VIP 積分。\n\n此管理功能只允許提升正式最高紀錄。\n\n確定執行？`))return false;
+  const tx=commitFormalMirrorResult(w,Date.now());
+  if(!tx?.ok){const reason=tx?.reason==="not-an-upgrade"?"指定勝場必須高於目前歷史最高。":tx?.reason==="mirror-run-active"?"鏡像戰正在進行中，無法介入正式結果。":tx?.reason||"unknown";alert(`GM 鏡像戰裁定失敗：${reason}`);return false;}
+  if(typeof render==="function")render();
+  alert(`GM 正式裁定完成：今日鏡像戰 ${tx.value.wins} 勝 ${tx.value.losses} 敗${tx.value.miracle?"・神蹟":""}。\n未補發 VIP 積分。`);
+  return true;
+ };
  window.getMirrorGmTestHtml=function(){return mirrorTestHtml;};
  window.gmMirrorTestResultSnapshot=function(){return mirrorTestResult?JSON.parse(JSON.stringify(mirrorTestResult)):null;};
  window.gmClearMirrorTestResult=function(){mirrorTestHtml="";mirrorTestResult=null;return true;};
- function mirrorManageBody(){const info=currentInfo(),h=info.history||{},record=h.bestDate?`${Math.max(0,Number(h.bestWins)||0)} 勝（${h.bestDate}）`:"尚無紀錄",miracles=Array.isArray(h.miracleDates)?h.miracleDates.length:0;return `<div class="muted gm-hub-note">今日狀態：${info.status==="idle"?"尚未挑戰":"今日鏡像戰已結束／進行中"}　・　歷史最高：${record}　・　神蹟 ${miracles} 次</div><div class="controls"><button class="btn danger" onclick="gmResetMirrorDungeonToday()">重置今日鏡像戰</button></div>`;}
+ function mirrorManageBody(){
+  const info=currentInfo(),h=info.history||{},best=Math.max(0,Number(h.bestWins)||0),record=h.bestDate?`${best} 勝（${h.bestDate}）`:"尚無紀錄",miracles=Array.isArray(h.miracleDates)?h.miracleDates.length:0;
+  const choices=[15,16,17,18,19,20].filter(w=>w>best).map(w=>{const title=typeof window.mirrorDungeonRecordTitle==="function"?window.mirrorDungeonRecordTitle(w):"";const label=w===20?`GM 授予 ${w} 勝・${title}`:`GM 裁定 ${w} 勝・${title}`;return `<button class="btn ${w===20?"primary":"blue"}" onclick="gmSetMirrorFormalResult(${w})">${label}</button>`;}).join("");
+  const intervention=choices?`<div class="notice" style="margin-top:12px"><b>GM・鏡像戰正式紀錄介入</b><div class="muted gm-hub-note" style="margin-top:6px">直接裁定今天的正式鏡像戰成績，只允許提升歷史最高；今日挑戰會立即完成並同步正式歷史與稱號，不補發 VIP 積分。</div><div class="controls" style="margin-top:10px">${choices}</div></div>`:`<div class="notice" style="margin-top:12px"><b>GM・鏡像戰正式紀錄介入</b><div class="muted gm-hub-note" style="margin-top:6px">正式歷史最高已達 20 勝「神蹟」，沒有更高紀錄可裁定。</div></div>`;
+  return `<div class="muted gm-hub-note">今日狀態：${info.status==="idle"?"尚未挑戰":info.status==="completed"?`已完成 ${info.wins} 勝 ${info.losses} 敗`:"今日鏡像戰已結束／進行中"}　・　歷史最高：${record}　・　神蹟 ${miracles} 次</div><div class="controls"><button class="btn danger" onclick="gmResetMirrorDungeonToday()">重置今日鏡像戰</button></div>${intervention}`;
+ }
  window.gmMirrorManagementHtml=mirrorManageBody;
  function mirrorTestBody(){const result=typeof getMirrorGmTestHtml==="function"?getMirrorGmTestHtml():"";return `<div class="muted gm-hub-note">以目前 GM 測試角色建立鏡像快照。鏡像戰不分紀元；測試不消耗正式每日機會、不發 VIP、不更新歷史與神蹟。</div><div class="gm-test-button-grid"><button id="gmMirrorTest1" class="btn blue" onclick="gmMirrorTest(1)">測試 1 次（${CONFIG.runBattles} 場）</button><button id="gmMirrorTest100" class="btn blue" onclick="gmMirrorTest(100)">測試 100 次（${(100*CONFIG.runBattles).toLocaleString()} 場）</button><button id="gmMirrorSymmetry" class="btn blue" onclick="gmMirrorSymmetryTest()">對稱回歸（64 組）</button></div><div id="gmMirrorTestResult" style="margin-top:12px">${result}</div>`;}
  window.gmMirrorTestHtml=mirrorTestBody;
@@ -49,4 +88,7 @@
  window.GM_MIRROR_SUMMARY_EXPORT_VERSION=1;
  window.GM_MIRROR_CIVILIZATION_DAMAGE_VERSION=2;
  window.GM_MIRROR_CIVILIZATION_COMBAT_OWNER_VERSION=1;
+ window.GM_MIRROR_FORMAL_RESULT_VERSION=GM_MIRROR_FORMAL_RESULT_VERSION;
+ window.gmApplyMirrorFormalResultMutation=applyFormalMirrorResult;
+ window.gmCommitMirrorFormalResult=commitFormalMirrorResult;
 })();
