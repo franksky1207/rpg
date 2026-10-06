@@ -62,7 +62,7 @@ const fs=require("fs");
    };
   });
 
-  assert.deepEqual(report.versions,{lifeChange:1,auSnapshot:1,breakthroughDelegation:1,gmSnapshotOwner:1},"Owner convergence versions drifted.");
+  assert.deepEqual(report.versions,{lifeChange:1,auSnapshot:1,breakthroughDelegation:1,gmSnapshotOwner:2},"Owner convergence versions drifted.");
   assert.equal(report.malformed.before,report.malformed.after,"Read-only AU lifecycle snapshot mutated its target.");
   assert.equal(report.malformed.lifecycleSnapshot.lifeId,3);
   assert.equal(report.malformed.lifecycleSnapshot.frontier,41);
