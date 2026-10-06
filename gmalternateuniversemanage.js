@@ -1,9 +1,10 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
  const CANONICAL_MUTATION_VERSION=3;
  const TRANSACTION_VERSION=1;
  const FORMAL_SNAPSHOT_OWNER_VERSION=2;
- const TITLE_SYNC_VERSION=1;
+ const TITLE_SYNC_VERSION=2;
+ const TITLE_THRESHOLD_OWNER_VERSION=1;
 
  function whole(value){const n=Number(value);return Number.isFinite(n)&&Number.isSafeInteger(n)?n:null;}
  function maxDepth(){return Math.max(1,Math.floor(Number(window.ALTERNATE_UNIVERSE_MAX_DEPTH)||1000));}
@@ -14,11 +15,12 @@
  function normalize(target){if(typeof window.normalizeReincarnationState==="function")window.normalizeReincarnationState(target);return target;}
  function alternate(target=state){return target?.reincarnation?.alternateUniverse&&typeof target.reincarnation.alternateUniverse==="object"?target.reincarnation.alternateUniverse:null;}
  function titleDefs(){return Array.from(window.ALTERNATE_UNIVERSE_PLAYER_TITLE_DEFS||[]).filter(def=>def?.series==="alternate-universe").sort((a,b)=>(Number(a?.tier)||0)-(Number(b?.tier)||0));}
+ function eligibleTitleDefs(depth){const value=Math.max(0,Math.floor(Number(depth)||0));return titleDefs().filter(def=>value>=Math.max(0,Math.floor(Number(def?.depthThreshold)||0)));}
  function titleSnapshot(target=state,depth=null){
   const defs=titleDefs(),unlocked=new Set(Array.isArray(target?.titles?.unlocked)?target.titles.unlocked:[]);
   const acquired=defs.filter(def=>unlocked.has(def.id)),current=acquired[acquired.length-1]||null;
   const deepest=Math.max(0,Math.min(maxDepth(),Math.floor(Number(depth??alternate(target)?.deepestCleared)||0)));
-  const eligibleTier=Math.max(0,Math.min(defs.length,Math.floor(deepest/100)));
+  const eligibleTier=eligibleTitleDefs(deepest).length;
   const next=defs.find(def=>!unlocked.has(def.id))||null;
   return Object.freeze({version:TITLE_SYNC_VERSION,count:defs.length,acquiredCount:acquired.length,eligibleTier,current:current?Object.freeze({id:current.id,name:current.name,tier:current.tier,depthThreshold:current.depthThreshold}):null,next:next?Object.freeze({id:next.id,name:next.name,tier:next.tier,depthThreshold:next.depthThreshold}):null,acquired:Object.freeze(acquired.map(def=>Object.freeze({id:def.id,name:def.name,tier:def.tier,depthThreshold:def.depthThreshold})))});
  }
@@ -78,7 +80,7 @@
  function previewText(next){
   if(!next?.ok)return `預覽失敗：${next?.reason||"未知錯誤"}`;
   const notes=[];
-  const titleBefore=next.before?.title||titleSnapshot(state,next.before?.deepestCleared||0),defs=titleDefs(),targetTier=Math.min(defs.length,Math.floor(next.deepestCleared/100)),targetDef=targetTier>0?defs[targetTier-1]:null;
+  const titleBefore=next.before?.title||titleSnapshot(state,next.before?.deepestCleared||0),eligible=eligibleTitleDefs(next.deepestCleared),targetTier=eligible.length,targetDef=eligible[eligible.length-1]||null;
   if(targetDef&&targetTier>titleBefore.acquiredCount)notes.push(`將同步補發至異宇宙第 ${targetTier} 階「${targetDef.name}」`);
   if(next.deepestCleared<next.before.deepestCleared&&titleBefore.acquiredCount>0)notes.push("降低進度不回收已取得異宇宙稱號");
   if(next.forcedUnlock)notes.push("設定正式進度後會自動解鎖異宇宙");
@@ -93,7 +95,8 @@
   const currentTitle=t.current?`第 ${t.current.tier} 階「${esc(t.current.name)}」`:"尚未取得";
   const nextTitle=t.next?`第 ${t.next.tier} 階「${esc(t.next.name)}」｜${t.next.depthThreshold} 層域`:"10 階全部取得";
   const acquiredNames=t.acquired.length?t.acquired.map(row=>`第 ${row.tier} 階「${esc(row.name)}」`).join("、"):"尚無";
-  return `<div class="muted gm-hub-note">正式資料管理：只需設定「最深已完成層域」。設定大於 0 時會自動維持解鎖；達到 100、200…1000 層域會在同一個 shared transaction 內同步補發正式異宇宙稱號。GM 若降低正式進度，已取得稱號視為永久榮譽，不會回收。套用時仍會清除進行中的異宇宙挑戰與本輪失敗次數，避免留下不屬於新 frontier 的生命週期資料。</div><div class="item"><b>目前正式異宇宙狀態</b><div class="muted" style="margin-top:6px;line-height:1.65">生命週期：第 ${s.lifeId} 次轉生｜${s.unlocked?"已解鎖":"未解鎖"}<br>已征服：${s.deepestCleared} / ${s.maxDepth} 層域｜下一層域：${frontier}<br>異宇宙稱號：${currentTitle}｜已取得 ${t.acquiredCount} / ${t.count}<br>下一稱號：${nextTitle}<br>已取得：${acquiredNames}<br>進行中挑戰：${esc(active)}<br>本輪失敗：${esc(failure)}</div></div><div class="item" style="margin-top:10px"><b>指定正式異宇宙進度</b><div class="controls" style="align-items:end;margin-top:8px"><label>最深已完成層域<br><input id="gmAlternateUniverseDeepest" class="btn" type="number" inputmode="numeric" min="0" max="${s.maxDepth}" step="1" value="${s.deepestCleared}"></label><button class="btn" type="button" onclick="gmPreviewAlternateUniverseProgress()">預覽變更</button><button class="btn blue" type="button" onclick="gmApplyAlternateUniverseProgress()">套用正式進度</button></div><div id="gmAlternateUniversePreview" class="muted" style="margin-top:8px">只需輸入最深已完成層域；稱號達標會同步補發，降低進度不回收既有稱號。</div></div>`;
+  const thresholds=titleDefs().map(def=>def.depthThreshold).join("、");
+  return `<div class="muted gm-hub-note">正式資料管理：只需設定「最深已完成層域」。設定大於 0 時會自動維持解鎖；達到 ${thresholds} 層域會在同一個 shared transaction 內同步補發正式異宇宙稱號。GM 若降低正式進度，已取得稱號視為永久榮譽，不會回收。套用時仍會清除進行中的異宇宙挑戰與本輪失敗次數，避免留下不屬於新 frontier 的生命週期資料。</div><div class="item"><b>目前正式異宇宙狀態</b><div class="muted" style="margin-top:6px;line-height:1.65">生命週期：第 ${s.lifeId} 次轉生｜${s.unlocked?"已解鎖":"未解鎖"}<br>已征服：${s.deepestCleared} / ${s.maxDepth} 層域｜下一層域：${frontier}<br>異宇宙稱號：${currentTitle}｜已取得 ${t.acquiredCount} / ${t.count}<br>下一稱號：${nextTitle}<br>已取得：${acquiredNames}<br>進行中挑戰：${esc(active)}<br>本輪失敗：${esc(failure)}</div></div><div class="item" style="margin-top:10px"><b>指定正式異宇宙進度</b><div class="controls" style="align-items:end;margin-top:8px"><label>最深已完成層域<br><input id="gmAlternateUniverseDeepest" class="btn" type="number" inputmode="numeric" min="0" max="${s.maxDepth}" step="1" value="${s.deepestCleared}"></label><button class="btn" type="button" onclick="gmPreviewAlternateUniverseProgress()">預覽變更</button><button class="btn blue" type="button" onclick="gmApplyAlternateUniverseProgress()">套用正式進度</button></div><div id="gmAlternateUniversePreview" class="muted" style="margin-top:8px">只需輸入最深已完成層域；稱號達標會同步補發，降低進度不回收既有稱號。</div></div>`;
  }
  function valuesFromUi(){
   const depth=document.getElementById("gmAlternateUniverseDeepest");
@@ -133,6 +136,7 @@
  }
 
  window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION=VERSION;
+ window.GM_ALTERNATE_UNIVERSE_TITLE_THRESHOLD_OWNER_VERSION=TITLE_THRESHOLD_OWNER_VERSION;
  window.GM_ALTERNATE_UNIVERSE_CANONICAL_MUTATION_VERSION=CANONICAL_MUTATION_VERSION;
  window.GM_ALTERNATE_UNIVERSE_TRANSACTION_VERSION=TRANSACTION_VERSION;
  window.GM_ALTERNATE_UNIVERSE_FORMAL_SNAPSHOT_OWNER_VERSION=FORMAL_SNAPSHOT_OWNER_VERSION;
