@@ -1,5 +1,5 @@
 (function(){
- const VERSION=2;
+ const VERSION=3;
  const ADAPTER_ID="second-world-calamity";
  const originalPage=window.secondWorldCivilizationCalamityPageHtml;
  const originalContinuous=window.runSecondWorldCalamityContinuous;
@@ -18,14 +18,18 @@
  function fmt(v){return Math.max(0,Math.floor(Number(v)||0)).toLocaleString();}
  function pct(v){return Math.max(0,Math.min(100,Number(v)||0)).toFixed(2).replace(/\.00$/,"")+"%";}
  function playerMaxHp(){return typeof window.playerCombatStats==="function"?Math.max(1,Number(window.playerCombatStats()?.hp)||1):1;}
+ function presentationSnapshot(){return typeof window.getSecondWorldCalamityPresentationSnapshot==="function"?window.getSecondWorldCalamityPresentationSnapshot():null;}
  function contentHtml(){
-  const run=displayRun(),st=currentStatus(),maxHp=Math.max(1,Number(st?.maxHp)||1),playerHp=playerMaxHp();
+  const run=displayRun(),st=currentStatus(),presentation=presentationSnapshot(),view=presentation?.battleView||null,maxHp=Math.max(1,Number(view?.enemyMax)||Number(st?.maxHp)||1),pMax=Math.max(1,Number(view?.playerMax)||playerMaxHp());
+  const round=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));
+  const enemyHp=view?.enemyHp??st?.currentHp??maxHp,playerHp=view?.playerHp??state?.hp??pMax;
   return `<div class="main-minimal-mode-block"><div class="main-minimal-mode-label">目前災厄</div><div class="main-minimal-mode-value" data-second-world-calamity-minimal-name>${run?.calamityName||"文明災厄"}</div></div>
-   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續討伐</div><div class="main-minimal-mode-value" data-second-world-calamity-minimal-round>第 ${Math.max(1,(Number(run?.battleCount)||0)+1)} 場</div></div>
-   <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-second-world-calamity-minimal-enemy-hp>災厄 HP　${fmt(st?.currentHp)} / ${fmt(maxHp)}</div><div data-second-world-calamity-minimal-player-hp>玩家 HP　${fmt(state?.hp)} / ${fmt(playerHp)}</div><div data-second-world-calamity-minimal-progress>文明進度　${pct(st?.progressPercent)}</div><div data-second-world-calamity-minimal-kills>完整擊殺　${Math.max(0,Math.min(30,Math.floor(Number(st?.trueKills)||0)))} / 30</div></div>`;
+   <div class="main-minimal-mode-block"><div class="main-minimal-mode-label">連續討伐</div><div class="main-minimal-mode-value" data-second-world-calamity-minimal-round>第 ${round} 場</div></div>
+   <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-second-world-calamity-minimal-enemy-hp>災厄 HP　${fmt(enemyHp)} / ${fmt(maxHp)}</div><div data-second-world-calamity-minimal-player-hp>玩家 HP　${fmt(playerHp)} / ${fmt(pMax)}</div><div data-second-world-calamity-minimal-progress>文明進度　${pct(st?.progressPercent)}</div><div data-second-world-calamity-minimal-kills>完整擊殺　${Math.max(0,Math.min(30,Math.floor(Number(st?.trueKills)||0)))} / 30</div></div>`;
  }
  function sync(root,mode){
-  const run=displayRun(),st=currentStatus(),last=run?.lastBattle||null,maxHp=Math.max(1,Number(st?.maxHp)||Number(last?.maxHp)||1),pMax=playerMaxHp();
+  const run=displayRun(),st=currentStatus(),last=run?.lastBattle||null,presentation=presentationSnapshot(),view=presentation?.battleView||null;
+  const maxHp=Math.max(1,Number(view?.enemyMax)||Number(st?.maxHp)||Number(last?.maxHp)||1),pMax=Math.max(1,Number(view?.playerMax)||playerMaxHp());
   const name=root.querySelector("[data-second-world-calamity-minimal-name]");
   const round=root.querySelector("[data-second-world-calamity-minimal-round]");
   const enemyHp=root.querySelector("[data-second-world-calamity-minimal-enemy-hp]");
@@ -33,9 +37,9 @@
   const progress=root.querySelector("[data-second-world-calamity-minimal-progress]");
   const kills=root.querySelector("[data-second-world-calamity-minimal-kills]");
   if(name)name.textContent=run?.calamityName||st?.definition?.name||"文明災厄";
-  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0));round.textContent=`第 ${mode==="running"?count+1:Math.max(1,count)} 場`;}
-  if(enemyHp){const hp=mode==="running"?Math.max(0,Number(st?.currentHp)||Number(last?.enemyEndHp)||maxHp):Math.max(0,Number(st?.currentHp)||maxHp);enemyHp.textContent=`災厄 HP　${fmt(hp)} / ${fmt(maxHp)}`;}
-  if(playerHp){const hp=mode==="running"?Math.max(0,Number(last?.playerEndHp ?? state?.hp)||0):Math.max(0,Number(state?.hp)||pMax);playerHp.textContent=`玩家 HP　${fmt(hp)} / ${fmt(pMax)}`;}
+  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0)),display=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));round.textContent=`第 ${mode==="running"?display:Math.max(1,count)} 場`;}
+  if(enemyHp){const hp=mode==="running"?(view?.enemyHp??st?.currentHp??last?.enemyEndHp??maxHp):(st?.currentHp??maxHp);enemyHp.textContent=`災厄 HP　${fmt(hp)} / ${fmt(maxHp)}`;}
+  if(playerHp){const hp=mode==="running"?(view?.playerHp??last?.playerEndHp??state?.hp??pMax):(state?.hp??pMax);playerHp.textContent=`玩家 HP　${fmt(hp)} / ${fmt(pMax)}`;}
   if(progress)progress.textContent=`文明進度　${pct(st?.progressPercent)}`;
   if(kills)kills.textContent=`完整擊殺　${Math.max(0,Math.min(30,Math.floor(Number(st?.trueKills)||0)))} / 30`;
  }
@@ -88,5 +92,6 @@
  registerAdapter();
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_COMPLETION_SYNC_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_LIVE_HP_SYNC_VERSION=1;
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_INTEGRITY={version:VERSION,passed:typeof window.openSecondWorldCalamityMinimalMode==="function"&&typeof window.secondWorldCivilizationCalamityPageHtml==="function"&&typeof window.runSecondWorldCalamityContinuous==="function"&&typeof window.registerMinimalModeAdapter==="function"};
 })();
