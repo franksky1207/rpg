@@ -10,17 +10,17 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
-   window.PLAYER_TITLE_INTEGRITY_VERSION===22&&
+   window.PLAYER_TITLE_INTEGRITY_VERSION===23&&
    window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CLOSURE_VERSION===1&&
    window.PLAYER_TITLE_INTEGRITY?.passed===true&&
-   window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===3&&
+   window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===4&&
    window.GM_PLAYER_TITLE_PREVIEW_VERSION===11&&
    window.GM_PLAYER_TITLE_PREVIEW_REDUNDANT_AU_QUICK_RETIRED_VERSION===1&&
    window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2,
    {timeout:30000}
   );
 
-  const report=await page.evaluate(()=>{
+  const report=await page.evaluate(async()=>{
    const clone=value=>JSON.parse(JSON.stringify(value));
    const defs=Array.from(window.PLAYER_TITLE_DEFS||[]);
    const au=Array.from(window.ALTERNATE_UNIVERSE_PLAYER_TITLE_DEFS||[]);
@@ -74,6 +74,13 @@ const assert=require("assert");
 
    const fpBefore=window.gmAlternateUniverseBenchmarkFormalStateFingerprint(state);
    const fpAfter=window.gmAlternateUniverseBenchmarkFormalStateFingerprint(state);
+   const [titleSource,gmSource]=await Promise.all([fetch("playertitlecore.js").then(r=>r.text()),fetch("gmalternateuniversemanage.js").then(r=>r.text())]);
+   const architecture={
+    thresholdOwner:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_THRESHOLD_OWNER_VERSION,
+    gmThresholdOwner:window.GM_ALTERNATE_UNIVERSE_TITLE_THRESHOLD_OWNER_VERSION,
+    noTitleHundredsFormula:!titleSource.includes("deepest/100")&&!titleSource.includes("currentDepth/100")&&!titleSource.includes("previousDepth/100"),
+    noGmHundredsFormula:!gmSource.includes("deepest/100")&&!gmSource.includes("next.deepestCleared/100")
+   };
 
    return {
     versions:{
@@ -84,18 +91,19 @@ const assert=require("assert");
      benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION
     },
     defs:defs.map(def=>({id:def.id,name:def.name,series:def.series,order:def.order,tier:def.tier,depthThreshold:def.depthThreshold,mirrorWins:def.mirrorWins})),
-    au:au.map(def=>({id:def.id,name:def.name,tier:def.tier,depthThreshold:def.depthThreshold,order:def.order})),
+    au:au.map((def,index)=>({id:def.id,name:def.name,tier:def.tier,depthThreshold:def.depthThreshold,sourceThreshold:Number(window.ALTERNATE_UNIVERSE_TITLE_ROWS?.[index]?.depthThreshold),order:def.order})),
     mirror:mirror.map(def=>({id:def.id,order:def.order,mirrorWins:def.mirrorWins})),
     names,normalizedIds,equipOk,grant,permanentHonor,
     life:{report:lifeReport,before:beforeLifeTitles,after:afterLifeTitles,deepest:life.reincarnation.alternateUniverse.deepestCleared},
     gm:{up,upSnapshot,down,downSnapshot},
     sandbox:{dropdownSelections,previewHtml,formalStable:formalBefore===formalAfter,saveStable:saveBefore===saveAfter},
     cssReady,rendered,
-    benchmark:{guardVersion:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION,fingerprintStable:fpBefore.fingerprint===fpAfter.fingerprint}
+    benchmark:{guardVersion:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION,fingerprintStable:fpBefore.fingerprint===fpAfter.fingerprint},
+    architecture
    };
   });
 
-  assert.deepEqual(report.versions,{title:22,closure:1,gmManage:3,gmPreview:11,benchmark:2});
+  assert.deepEqual(report.versions,{title:23,closure:1,gmManage:4,gmPreview:11,benchmark:2});
   assert.equal(report.defs.length,46,"正式稱號 catalog 必須維持 46 個。");
   assert.ok(report.defs.slice(0,10).every(def=>def.series==="calamity"));
   assert.ok(report.defs.slice(10,20).every(def=>def.series==="universe-calamity"));
@@ -105,7 +113,7 @@ const assert=require("assert");
   assert.deepEqual(report.au.map(def=>def.name),report.names);
   report.au.forEach((def,index)=>{
    assert.equal(def.tier,index+1);
-   assert.equal(def.depthThreshold,(index+1)*100);
+   assert.equal(def.depthThreshold,def.sourceThreshold);
    assert.equal(def.order,31+index);
    assert.equal(def.name.length,4);
   });
@@ -146,6 +154,10 @@ const assert=require("assert");
   });
   assert.equal(report.benchmark.guardVersion,1);
   assert.equal(report.benchmark.fingerprintStable,true);
+  assert.equal(report.architecture.thresholdOwner,1);
+  assert.equal(report.architecture.gmThresholdOwner,1);
+  assert.equal(report.architecture.noTitleHundredsFormula,true,"正式稱號 owner 不得再以 /100 推導異宇宙階級。");
+  assert.equal(report.architecture.noGmHundredsFormula,true,"GM 異宇宙管理不得再以 /100 推導稱號階級。");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
 
   console.log("Alternate Universe title Batch4 closure passed:",JSON.stringify({
