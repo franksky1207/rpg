@@ -1,57 +1,57 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-10-06（UTC+8）  
+更新日期：2026-10-07（UTC+8）  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
-> 本檔只負責交接、索引、正式現況、已完成工程與仍有效規則整理；若本檔、舊對話、舊設計文件、歷史文件或其他摘要與 current main 衝突，一律以 current main 為準。
+> 本檔只負責交接、索引與正式現況整理；若本檔、舊對話、舊設計文件、歷史文件或其他摘要與 current main 衝突，一律以 current main 為準。
 
 ---
 
 # 0. 本次交接基準
 
-本次交接已重新 fresh-read current `main` 的實際程式碼、現行 migration／GM／runtime／world semantics／enhancement owner 與 regression。
+本次交接已重新 fresh-read current `main` 的實際程式碼、近期 125 個 commit、正式 owner／consumer、Save migration、GM、稱號、異宇宙、鏡像戰、第三紀元副本／重征服與 Runtime regression。
 
-更新交接前 current gameplay HEAD：
+更新本交接檔前的 gameplay HEAD：
 
 ```text
-d71aff23c353c34b819bc0a12b3a323be698055c
+3555bd7e8014837e6c241da054efe541a20ec413
 ```
 
 該 exact HEAD 已確認：
 
 ```text
-Runtime Integrity #1948：success
-Story Integrity   #1046：success
-GitHub Pages      #5912：success
+Runtime Integrity #2073 = success
+GitHub Pages      #6038 = success
 ```
+
+Runtime Integrity #2073 的 syntax／owner、Chromium browser smoke、VIP、GM mainline HP lock、asset、documentation 與新增 closure regression 全部 success。
 
 目前正式開發狀態：
 
 ```text
-三大紀元正式 runtime                              ✅ 完成並維護／實測中
-裝備自動處理政策                                  ✅ 完成
-轉生核心資料與首輪隔離                            ✅ 完成
-突破系統＋正式轉生                                ✅ 完成
-異宇宙 Batch3～4                                  ✅ 完成
-AU 架構優化第1～3批                               ✅ 完成
-Batch5：W1／W2／W3 轉生後重征服                   ✅ 完成
-Batch5 後續架構優化／主線向下征服                  ✅ 完成
-Batch6：越級收益／批次成長／副本／封箱             ✅ 完成
-Batch6 程式碼優化第1～5批                         ✅ 完成
-Batch7：GM／測試工具正式收尾 7-1～7-5全部完成       ✅ 完成
-Batch7 封箱後程式碼優化第1～4批                    ✅ 完成
-第一紀元完整 Target Context 重構 Batch0～6          ✅ 完成
-第一紀元 Target Context 重構後優化第1～4批          ✅ 完成
-Code Cleanup Batch1～8                             ✅ 完成
-轉生／GM／三紀元語義四批優化                       ✅ 完成
-第一紀元基礎強化石成本平衡調整                     ✅ 完成
-目前已排定工程                                     ✅ 全部完成
+三大紀元正式 runtime                                   ✅ 完成並維護／實測中
+裝備自動處理政策                                       ✅ 完成
+轉生核心資料與首輪隔離                                 ✅ 完成
+突破系統＋正式轉生                                     ✅ 完成
+異宇宙 Batch3～4                                       ✅ 完成
+AU 架構優化第1～3批                                    ✅ 完成
+Batch5：W1／W2／W3 轉生後重征服                        ✅ 完成
+Batch6：越級收益／批次成長／副本／封箱                 ✅ 完成
+Batch7：GM／測試工具正式收尾                           ✅ 完成
+第一紀元 Target Context Batch0～6＋優化1～4             ✅ 完成
+Code Cleanup Batch1～8                                  ✅ 完成
+轉生／GM／三紀元語義四批優化                            ✅ 完成
+異宇宙稱號 Batch1～4                                   ✅ 完成
+GM 異宇宙重複稱號快速預覽入口退休                      ✅ 完成
+第三紀元副本 era／qualification access 收斂             ✅ 完成
+鏡像戰正式 settlement／GM 正式裁定收斂                  ✅ 完成
+AU 稱號門檻 data owner／migration diagnostics 收斂       ✅ 完成
+Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
+目前已排定工程                                          ✅ 全部完成
 ```
 
 **目前沒有已經定案、等待施工的下一個功能批次。**
-
-`PROJECT_PENDING_STATUS.md` 目前亦已更新為 Code Cleanup Batch1～8 全部完成、沒有已定案待辦；後續仍以 current main 為準。
 
 ---
 
@@ -72,17 +72,18 @@ Code Cleanup Batch1～8                             ✅ 完成
 13. 正式轉生與其他大型 state mutation 必須走 shared transaction／backup owner。
 14. 轉生／重征服硬原則：`reincarnation.count = 0` 維持首輪；只有 `count > 0` 啟用 rerun。
 15. AU replay/review 已完整移除，不復活。
-16. Batch5／6／7、Code Cleanup Batch1～8、W1 Target Context Batch0～6＋優化1～4、2026-10-06 四批優化都已完成，不要因舊文件重做。
-17. GM 正式 level 若未來新增／修改控制器，突破 milestone 必須共用正式 owner：首輪不發；轉生輪只在實際跨 100／200／…／1000 時發；已領不重複；降級不扣；Lv.1000 以上不再增加本輪突破。
-18. 第一紀元正式 battle authority 是 Target Context；`selectedMap / selectedEnemy` 只作 UI/navigation selection，不得再作 battle execution target authority。
-19. Target Context post-prepare execution 必須 fail closed；validator／lifecycle owner 缺失、context stale、identity 不一致時不得 fallback 回 UI selection。
-20. 三紀元角色／裝備 world semantics 優先共用 `currentWorldPhase()`、`sharedEquipmentWorld()`、`characterWorldSnapshot()` 的 canonical owner，不自行重算 1/2/3 紀元。
+16. 第一紀元正式 battle authority 是 Target Context；`selectedMap / selectedEnemy` 只作 UI/navigation selection，不得再作 battle execution target authority。
+17. Target Context post-prepare execution 必須 fail closed；validator／lifecycle owner 缺失、context stale、identity 不一致時不得 fallback 回 UI selection。
+18. 三紀元角色／裝備 world semantics 優先共用 `currentWorldPhase()`、`sharedEquipmentWorld()`、`characterWorldSnapshot()`。
+19. 異宇宙稱號門檻以 `alternateuniversedata.js` 的 `depthThreshold` 為唯一資料來源，不得重新寫 `depth/100` 第二套公式。
+20. 第三紀元副本「永久資格」不得繞過紀元 availability；尤其懸賞戰在 W3 必須保持關閉。
+21. 鏡像玩家結算與 GM 正式裁定共用 `settleMirrorDungeonResult()`，不得重做第二套歷史／稱號 settlement。
 
 ---
 
-# 2. current main：三紀元正式基準
+# 2. 三紀元正式基準
 
-`currentWorldPhase()` 正式 mapping：
+`currentWorldPhase()`：
 
 ```text
 1 = 銀河紀元
@@ -90,7 +91,7 @@ Code Cleanup Batch1～8                             ✅ 完成
 3 = 高維紀元
 ```
 
-正式 persistent world roots 維持 `secondWorld` 與 `thirdWorld`；不得以 UI 暫態或相容層取代正式 root。
+正式 persistent world roots 維持 `secondWorld` 與 `thirdWorld`。
 
 正式等級：
 
@@ -100,13 +101,13 @@ Code Cleanup Batch1～8                             ✅ 完成
 高維紀元：Lv.1000～2000
 ```
 
-current 正式 level owners：
+正式 level owner：
 
 ```text
-FIRST_WORLD_LEVEL_CAP = 500
+FIRST_WORLD_LEVEL_CAP  = 500
 SECOND_WORLD_LEVEL_CAP = 1000
-THIRD_WORLD_LEVEL_CAP = 2000
-ABSOLUTE_MAX_LEVEL = 2000
+THIRD_WORLD_LEVEL_CAP  = 2000
+ABSOLUTE_MAX_LEVEL     = 2000
 THIRD_WORLD_EXP_PER_LEVEL = 10,000,000
 ```
 
@@ -115,8 +116,6 @@ W1→W2：Lv500＋W1 final boss＋8專精60＋五部位+20＋10印記10；首輪
 W2→W3：Lv1000＋W2 entered/final boss＋五部位+40＋文明10＋VIP20＋8專精60＋10印記10；首輪要求 final Story，rerun Story bypass。
 
 轉生不取消 Lv500／Lv1000 世界邊界與養成條件。
-
-W3 正式包含10名高維存在、首輪5%戰線限制、永久削血／正式HP settlement、500死連戰、Fast Catch-up、極簡模式、維度之弦、界弦核心、W3 loot/offline、11篇322頁 Story＋Final、W3 Arena、Mirror／Void shared 系統、稱號／Guide／GM benchmark。
 
 ---
 
@@ -132,25 +131,23 @@ SAVE_MIN_SUPPORTED_VERSION = 1
 SAVE_LEGACY_SUPPORT_MODE = "all-known"
 ```
 
-目前所有後續優化與平衡修改都沒有新增必要 persistent root，因此 **仍不升 Schema18**。
+仍**不升 Schema18**。異宇宙稱號沿用既有 `titles` root：
 
-正式相容邊界：
-
-- Schema1～16：legacy import，必須走 canonical migration pipeline。
-- Schema17：current canonical schema。
-- Schema18+：未明示支援前 fail closed。
-- legacy `SAVE_VERSION = 13`、`MAX_LEVEL = 500` 只作 compatibility alias，不是 current schema／absolute level owner。
-- legacy cleanup 只由 `migrateSave()` 正式路徑持有，不建立第二套 runtime cleanup pipeline。
-
-## GM transient save cleanup（2026-10-06 第4批完成）
-
-`savemigration.js` current：
-
-```text
-GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION = 2
+```js
+{ version: 1, unlocked: [], equipped: null, pendingNotice: null }
 ```
 
-正式 migration inventory 共 11 個歷史 GM-only transient root：
+相容邊界：
+
+- Schema1～16：legacy import，走 canonical migration。
+- Schema17：current canonical schema。
+- Schema18+：未明示支援前 fail closed。
+- legacy `SAVE_VERSION=13`、`MAX_LEVEL=500` 只作 compatibility alias。
+- legacy cleanup 只屬 `migrateSave()` 正式 migration owner。
+
+## GM transient cleanup
+
+`GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION = 2`，正式 migration 清除 11 個歷史 GM-only transient keys：
 
 ```text
 gmTestWorld
@@ -166,15 +163,19 @@ gmPowerBenchmark
 gmTestResults
 ```
 
-`cleanupTransientGmTestState()` 只在 migration owner 處理，並輸出 `LAST_GM_TEST_TRANSIENT_CLEANUP_REPORT` diagnostics；不新增正式 save state。
+## 2026-10-07 migration diagnostics
 
-`tests/runtime/save-schema17-compatibility-matrix.js` 已擴充成：
+`SAVE_MIGRATION_DIAGNOSTICS_VERSION = 1`。
 
-```text
-Schema1～17 × 全11個 GM transient keys
-```
+`LAST_SAVE_MIGRATION_REPORT` 現在另外記錄：
 
-全部必須 migration 後清空，並驗證 diagnostics、formal runtime state 與 localStorage 不被 compatibility diagnostics 污染。
+- `alternateUniverseTitlesBackfilled`
+- `alternateUniverseTitlesBackfilledIds`
+- `mirrorHistoryInitialized`
+- `mirrorHistoryRepaired`
+- `mirrorMiracleDatesRemoved`
+
+用途是讓舊存檔稱號／鏡像歷史修復可被 regression 明確驗證，不建立新的 persistent state。
 
 ---
 
@@ -182,13 +183,7 @@ Schema1～17 × 全11個 GM transient keys
 
 首輪 `count=0` 突破固定 Lv.0。
 
-轉生輪每一 life 跨：
-
-```text
-Lv.100 / 200 / 300 / 400 / 500 / 600 / 700 / 800 / 900 / 1000
-```
-
-各 +1，每輪最多10；Lv1000～2000不再給。一次跨多級補發；已領不重複；降級不扣。
+轉生輪跨 Lv.100／200／…／1000，各 +1，每輪最多10；Lv1000～2000不再給。一次跨多級補發；已領不重複；降級不扣。
 
 每1突破：
 
@@ -205,9 +200,9 @@ final damage +0.05
 
 ---
 
-# 5. 轉生永久裝備安全邊界（2026-10-06 四批優化第1批）
+# 5. 轉生永久裝備安全邊界
 
-`reincarnationpermanentgearguard.js` current：
+`reincarnationpermanentgearguard.js`：
 
 ```text
 VERSION = 3
@@ -218,34 +213,15 @@ REQUIRED_LEVEL = 2000
 
 只在「已轉生、尚未重新進入 W3 的 lower-world rerun」檢查 W3 永久裝備。
 
-只接受以下證據作歷史損壞修復：
-
-1. `reincarnationPermanentGear` marker 明確標記 retainedWorld=3、retainedLevel=2000。
-2. legacy reward id 符合 `reward-3-2000-`。
-
-有證據但 level 錯誤才修復為 Lv2000；模糊的 W3 裝備只記錄 warning，**不自動猜測修復**。
-
-before-save hook：
-
-```text
-reincarnation-permanent-gear-levels
-```
-
-`savemigration.js` 已正式標記舊的 permanent gear load repair 退休：
-
-```text
-REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION = 1
-```
-
-shared equipment factory／world semantics 已改為依 W1/W2/W3 正式紀元上限，不再把 W3 裝備語義壓回兩紀元。
+只接受明確 marker 或 legacy `reward-3-2000-` 證據作歷史損壞修復；模糊 W3 裝備只 warning，不猜測修復。
 
 ---
 
-# 6. 異宇宙
+# 6. 異宇宙正式基準
 
-異宇宙不是第四紀元：200宇宙×5層域＝1000層域。
+異宇宙不是第四紀元：200宇宙 × 5層域 = 1000層域。
 
-敵人固定基礎公式：
+正式敵人基礎公式：
 
 ```text
 HP    = 320000 + 30000U + 1500U²
@@ -255,33 +231,331 @@ CRIT  = 20%
 DODGE = 20%
 ```
 
-7種 canonical traits：strong／ferocious／hard／swift／deadly／berserk／giant；每次正式 attempt 固定2個不同 traits。
+7種 canonical traits：
 
-同一 life 同一 frontier 第10敗鎖到下一次轉生。正式轉生保留 deepestCleared，清 current-life attempt/failures。
+```text
+strong / ferocious / hard / swift / deadly / berserk / giant
+```
 
-AU 共用正式 combat/stat/specialization/marks/VIP/equipment/breakthrough/final-damage owner；不建立第二套戰鬥公式；不給 EXP／資源／裝備收益。
+每次正式 attempt 固定2個不同 traits。
+
+同一 life、同一 frontier 第10敗鎖到下一次轉生。正式轉生保留 deepestCleared，清 activeAttempt/current-life failures。
+
+AU 共用正式 combat/stat/specialization/marks/VIP/equipment/breakthrough/final-damage owner；無 EXP／資源／裝備收益。
 
 第一次 W3 10名高維存在全滅後永久解鎖；之後任何轉生輪／任何紀元／任何等級可進。
 
 ---
 
-# 7. Batch5／Batch6 正式現況
+# 7. 異宇宙稱號系統（2026-10-06～10-07，Batch1～4 完成）
+
+## 正式 catalog
+
+`playertitlecore.js` current：
+
+```text
+PLAYER_TITLE_STATE_VERSION = 1
+PLAYER_TITLE_CATALOG_VERSION = 5
+PLAYER_TITLE_CANONICAL_CATALOG_VERSION = 4
+PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION = 1
+PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION = 1
+PLAYER_TITLE_UNIFIED_DEFS_VERSION = 2
+PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION = 1
+PLAYER_TITLE_ALTERNATE_UNIVERSE_THRESHOLD_OWNER_VERSION = 1
+PLAYER_TITLE_NORMALIZATION_DIAGNOSTICS_VERSION = 1
+```
+
+正式稱號共 **46 個**：
+
+```text
+銀河災厄 10
+宇宙災厄 10
+高維 10
+異宇宙 10
+鏡像戰 6
+```
+
+正式顯示／持久化順序固定：
+
+```text
+銀河 → 宇宙 → 高維 → 異宇宙 → 鏡像
+```
+
+鏡像稱號永遠最後，保留其最稀有系列定位。
+
+## 異宇宙10階門檻與名稱
+
+唯一資料來源是 `alternateuniversedata.js` 的 `ALTERNATE_UNIVERSE_TITLE_ROWS`：
+
+```text
+100  層域：異界凌越
+200  層域：萬界破境
+300  層域：異律掌御
+400  層域：諸宇錯序
+500  層域：萬律凌駕
+600  層域：諸界超脫
+700  層域：萬宇無疆
+800  層域：諸界歸一
+900  層域：宇外凌絕
+1000 層域：宇外無極
+```
+
+稱號 owner 依 `depthThreshold` 判定，不再維護 `deepest/100` 第二套推導。
+
+## 取得／補發／永久性
+
+- 正式越過門檻時可一次補齊跨過的多階稱號。
+- 若一次跨多階，只把**最高新階**設成 `pendingNotice`。
+- 舊存檔 normalization 會依正式 deepestCleared **靜默補發**應有 AU 稱號，不建立 pending notice。
+- 已取得 AU 稱號是永久榮譽；之後 deepestCleared 降低也不回收 `unlocked`、`equipped`、`pendingNotice`。
+- 正式轉生保留 AU 稱號、裝備中的稱號與待通知狀態。
+- `LAST_PLAYER_TITLE_NORMALIZATION_REPORT` 會記錄 AU backfill IDs。
+
+## 視覺
+
+`playertitlesalternateuniverse.css` 是 AU 稱號專屬視覺 owner，10階各自有正式 selector；風格語義為重疊宇宙／法則干涉／phase displacement，不回到封閉方框。含 600px 與 360px mobile protection。
+
+renderer current：
+
+```text
+PLAYER_TITLE_RENDERER_VERSION = 5
+PLAYER_TITLE_ALTERNATE_UNIVERSE_RENDERER_VERSION = 1
+PLAYER_TITLE_ALTERNATE_UNIVERSE_PRESENTATION_VERSION = 1
+```
+
+---
+
+# 8. GM 稱號預覽與異宇宙正式管理
+
+## GM 稱號預覽：只保留單一46稱號選單
+
+`playertitlegmpreview.js` current：
+
+```text
+GM_PLAYER_TITLE_PREVIEW_VERSION = 11
+GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION = 6
+GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION = 6
+GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION = 4
+GM_PLAYER_TITLE_PREVIEW_REDUNDANT_AU_QUICK_RETIRED_VERSION = 1
+```
+
+目前 GM 稱號預覽只有既有的**完整46稱號下拉選單**＋實戰名稱預覽。
+
+先前曾新增的「異宇宙 1～10 階快速視覺測試」十顆按鈕已確認與上方下拉重複，已完整退休；相關 integrity 也已改成明確禁止該區塊復活。
+
+GM 稱號預覽是 sandbox：
+
+- 不解鎖正式稱號。
+- 不改 equipped。
+- 不改 AU deepest。
+- 不改正式 save。
+
+## GM 異宇宙正式管理
+
+`gmalternateuniversemanage.js` current：
+
+```text
+GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION = 4
+GM_ALTERNATE_UNIVERSE_CANONICAL_MUTATION_VERSION = 3
+GM_ALTERNATE_UNIVERSE_TRANSACTION_VERSION = 1
+GM_ALTERNATE_UNIVERSE_FORMAL_SNAPSHOT_OWNER_VERSION = 2
+GM_ALTERNATE_UNIVERSE_TITLE_SYNC_VERSION = 2
+GM_ALTERNATE_UNIVERSE_TITLE_THRESHOLD_OWNER_VERSION = 1
+```
+
+正式管理只設定「最深已完成層域」：
+
+- 正數 progress 會維持／建立 AU unlock。
+- 同一 shared transaction 內同步補發達標 AU 稱號。
+- 降低 progress 不回收已取得 AU 稱號。
+- 調整 formal frontier 會清 activeAttempt 與 current-life failures。
+- 0 不會把已解鎖 AU 自動鎖回。
+- UI 會顯示目前稱號、下一稱號與門檻。
+
+---
+
+# 9. 鏡像戰：正式 settlement 與 GM 裁定收斂
+
+`mirrordungeonstate.js` current：
+
+```text
+MIRROR_DUNGEON_STATE_VERSION = 3
+MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION = 1
+MIRROR_MIRACLE_DATE_DEDUP_VERSION = 1
+```
+
+玩家正式鏡像戰完成統一走：
+
+```js
+settleMirrorDungeonResult(...)
+```
+
+該 owner 同時負責：
+
+- daily 結束狀態。
+- history bestWins／bestDate。
+- 15～20勝稱號 settlement。
+- 20勝神蹟日期。
+- miracleDates 去重。
+
+舊存檔若有重複神蹟日期，normalization 會去重並由 migration diagnostics 回報移除數量。
+
+## GM 正式鏡像戰結果
+
+`mirrordungeongm.js`：
+
+```text
+GM_MIRROR_FORMAL_RESULT_VERSION = 2
+GM_MIRROR_FORMAL_MIN_WINS = 15
+```
+
+GM 正式裁定：
+
+- 只接受 **15～20勝**。
+- 只允許提升歷史最高，不能降。
+- 直接委派給 `settleMirrorDungeonResult(..., {requireRunning:false, requireUpgrade:true})`。
+- 同步正式歷史與稱號。
+- 20勝同步神蹟紀錄。
+- 不補發 VIP 積分。
+- 鏡像戰正在進行時不得介入正式結果。
+
+GM 副本管理頁已正式接入 15～20 勝裁定按鈕。
+
+---
+
+# 10. 第三紀元副本 access 收斂
+
+第三紀元副本紀元規則唯一 owner 是：
+
+```text
+thirdworlddungeonui.js
+THIRD_WORLD_DUNGEON_ERA_POLICY_OWNER = "thirdworlddungeonui"
+```
+
+current：
+
+```text
+THIRD_WORLD_DUNGEON_UI_VERSION = 7
+DUNGEON_MODE_AVAILABILITY_POLICY_VERSION = 5
+THIRD_WORLD_DUNGEON_BOUNTY_HIDDEN_VERSION = 2
+```
+
+`reincarnationdungeonaccess.js` current：
+
+```text
+REINCARNATION_DUNGEON_ACCESS_VERSION = 4
+REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION = 2
+REINCARNATION_DUNGEON_ERA_POLICY_DELEGATION_VERSION = 1
+REINCARNATION_DUNGEON_ACCESS_SNAPSHOT_VERSION = 2
+```
+
+access 已正式拆成兩層：
+
+1. **qualification**：等級或「轉生後永久入口資格」。
+2. **era availability**：目前紀元是否允許該副本。
+
+snapshot 明確提供：
+
+```text
+permanentUnlocked
+levelUnlocked
+qualificationUnlocked
+eraVisible
+eraEnabled
+eraAllowed
+effectiveEnabled
+unlocked = effectiveEnabled
+```
+
+因此「第一次轉生後永久入口」只代表 qualification 永久成立，**不能繞過紀元禁用**。
+
+最重要的 current 規則：
+
+> **高維紀元懸賞戰仍關閉。即使玩家已轉生、permanentUnlocked=true，W3 仍必須 eraAllowed=false、effectiveEnabled=false、visible=false、enabled=false。**
+
+Arena／Void／Mirror 依各自 current era policy，不可把「永久入口」誤解成所有紀元無條件可用。
+
+---
+
+# 11. W3 重征服／settlement continuation 最新規則
+
+W3 rerun 仍只對 `count>0` 生效；首輪不吃 rerun bypass。
+
+`thirdworldprogress.js` current：
+
+```text
+THIRD_WORLD_PROGRESS_VERSION = 7
+THIRD_WORLD_SETTLEMENT_VERSION = 5
+THIRD_WORLD_STAGE_CROSSING_SETTLEMENT_VERSION = 2
+THIRD_WORLD_REINCARNATION_STAGE_CONTINUATION_VERSION = 2
+THIRD_WORLD_REINCARNATION_PROGRESS_EVENT_CONTINUATION_VERSION = 1
+THIRD_WORLD_CONTINUATION_DECISION_VERSION = 2
+```
+
+正式 rerun policy 由 reincarnation lifecycle 的 `worldRerunPolicy` 提供；owner 缺失時 fail closed。
+
+rerun current 行為：
+
+- 仍解除首輪 5% 戰線限制。
+- Boss HP／能力／phase／永久 HP settlement 不變。
+- rerun 中跨 boss stage 時，不再因首輪能力解鎖 stage transition 強制中斷連續戰鬥。
+- rerun 中 title/story aggregate progress event 可 bypass presentation stop，不重複把已完成首輪流程當成必要停點。
+- **Boss 正式擊破仍是 terminal reason，不能被 rerun continuation 吃掉。**
+- 首輪仍保留正常 title/story/stage event presentation。
+
+新增 regression 鎖住：stage crossing、progress event、boss defeat、5% front 與正式 settlement 的順序不可倒退。
+
+---
+
+# 12. 災厄／戰鬥入口 transient UI 收斂
+
+近期 UI 優化把戰鬥入口 viewport reset 收斂成共用 owner：
+
+```js
+resetBattleEntryViewport()
+```
+
+銀河文明災厄與宇宙文明災厄進戰鬥後共用該 owner，不再各自維護不同 scroll reset。
+
+宇宙文明災厄 current：
+
+```text
+SECOND_WORLD_CALAMITY_UI_VERSION = 7
+SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION = 2
+SECOND_WORLD_CALAMITY_UI_TRANSIENT_STATE_VERSION = 1
+SECOND_WORLD_CALAMITY_LIVE_PRESENTATION_VERSION = 1
+SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION = 3
+```
+
+transient UI lifecycle 已收斂，live／minimal mode 完成後同步正式畫面，不把 UI 暫態資料寫進 formal save。
+
+第一紀元特殊遭遇也已接入共用 Fast Catch-up presentation policy：
+
+```text
+SPECIAL_ENCOUNTER_FAST_CATCH_UP_PRESENTATION_VERSION = 1
+SPECIAL_ENCOUNTER_W1_EXPLICIT_TARGET_VERSION = 1
+SPECIAL_ENCOUNTER_THIRD_WORLD_GUARD_VERSION = 1
+```
+
+---
+
+# 13. Batch5／6／7 仍有效基準
 
 ## Batch5 rerun
 
 - W1/W2/W3 轉生後重征服完成。
 - W1/W2 高階 Boss 勝利正式向下回填前段主線。
-- W3 rerun 只解除5%戰線限制；Boss HP／能力／phase／永久HP settlement維持。
+- W3 rerun 只解除5%戰線限制；Boss能力與永久HP settlement維持。
 
 ## Batch6 overlevel
 
-正式 owner `reincarnationoverlevelrewards.js`：
+`reincarnationoverlevelrewards.js`：
 
 ```text
 M = 1 + 0.03 × (enemyLevel - playerLevel)
 ```
 
-只在 `count>0 && enemyLevel>playerLevel`；整數收益 `ceil(base × M)`；無 hard cap；裝備出售收益排除；W3 Offline 不接。
+只在 `count>0 && enemyLevel>playerLevel`；整數收益 `ceil(base × M)`；無 hard cap；裝備出售排除；W3 Offline 不接。
 
 ## Batch6 批次成長
 
@@ -292,54 +566,23 @@ M = 1 + 0.03 × (enemyLevel - playerLevel)
 - 共用正式成本與 shared transaction。
 - W3 不提供。
 
-## Batch6 四大副本永久入口
-
-第一次轉生後 bounty／arena／mirror／void 入口永久；Daily 不刷新；Mirror/Void歷史保留；W1/W2 Arena current-life reset；永久入口不等於永久全 rank 解鎖。
-
 ## Batch6 Offline provenance
 
 `OFFLINE_BATTLE_SAMPLE_VERSION = 4`；只有可靠 player/enemy level provenance 才可吃 overlevel；舊不可靠 sample／pending 固定1×。
 
----
+## Batch7 GM
 
-# 8. Batch7：GM／測試工具正式收尾
-
-## 7-1 GM 正式突破管理
-
-- 只有 `count>0` 才顯示／可用。
-- GM只設定總突破次數；系統 canonical rebuild 轉生次數與本輪 milestones。
-- 可上下調；正式能力、存檔、戰鬥與相關UI同步。
-
-## 7-2 角色能力測試同步突破
-
-- 突破是測試角色能力，不是獨立模式。
-- 「同步正式角色到測試設定」同步正式突破等級。
-- sandbox 不寫正式 save。
-
-## 7-3 GM 異宇宙正式管理
-
-- 只設定「最深已完成層域」。
-- 正數正式進度自動維持／建立解鎖。
-- 正式操作走 shared transaction。
-- 調整 frontier 會清理舊 attempt/current-life failures。
-
-## 7-4 AU benchmark＋21雙trait diagnostics
-
-- 異宇宙是既有戰力基準第8模式。
-- GM UI 不暴露 21 trait diagnostics 操作面板。
-- benchmark 共用正式 AU enemy/trait/combat/stat owner。
-
-## 7-5 multi-life closure
-
-鎖定首輪隔離、突破 milestone、AU deepest 跨life保留、offline reset、Arena current-life reset、Mirror/Void history、永久副本入口、overlevel、GM sandbox 隔離與8模式 benchmark。
+- GM 正式突破管理 only count>0。
+- 角色能力測試突破是 sandbox，不污染 save。
+- AU benchmark 是戰力基準第8模式。
+- 21 trait diagnostics 不暴露成 GM 操作面板。
+- multi-life closure 鎖定 milestone、AU deepest、Offline reset、Arena reset、Mirror/Void history、永久副本資格、overlevel、sandbox 隔離。
 
 ---
 
-# 9. GM 正式寫入與授權／lazy runtime（2026-10-06 四批優化第2～3批）
+# 14. GM 正式寫入／授權／lazy runtime
 
-## 第2批：GM formal write 收斂
-
-`gmformaltransaction.js` current：
+`gmformaltransaction.js`：
 
 ```text
 VERSION = 3
@@ -347,40 +590,22 @@ ENHANCEMENT_VERSION = 2
 UI_CONVERGENCE_VERSION = 1
 ```
 
-formal GM mutation 以 `runSettlementTransaction()` 為正式交易 owner；transaction owner 缺失時 fail closed。
+formal GM mutation 以 `runSettlementTransaction()` 為正式交易 owner；缺失時 fail closed。
 
-已集中處理：
-
-- 角色等級。
-- W1正式進度。
-- 金幣／暗物質／暗能量／維度之弦。
-- 強化等級。
-- 正式生成裝備。
-- VIP reset。
-- 副本正式值。
-- Daily dungeon reset。
-- 其他既有 formal writers。
-
-GM Hub／GM tools 應以 UI／input 為主，不再維護第二套 `state → save()` 正式寫入責任。
-
-## 第3批：GM 授權與 lazy runtime
-
-GM authorization current 採 browser-local runtime semantics，不把授權本身作正式 save 進度。
+GM authorization 採 browser-local runtime semantics，不把授權本身作正式玩家進度。
 
 正式原則：
 
-- `state.gm` 只保留 runtime compatibility 用途。
-- formal save 前暫時剝離 GM runtime authorization，save 後再還原 runtime flag。
-- stale legacy save authorization 會被清除。
-- lazy GM script group 失敗後可 retry，不把 rejected promise 永久卡死。
-- 已授權 browser runtime reload 時可重新 lazy-load GM，再恢復 runtime GM 狀態。
-- Story／GM／Integrity lazy-loading boundary 是 Code Cleanup 後刻意保留的 ownership boundary，不要為了減少檔案硬合併。
+- formal save 前剝離 GM runtime authorization，save 後還原 runtime flag。
+- stale legacy save authorization 會清除。
+- lazy GM script group 失敗後可 retry。
+- Story／GM／Integrity lazy-loading boundary 是正式 runtime ownership boundary，不硬合併。
 
 ---
 
-# 10. 角色／裝備三紀元 snapshot semantics（2026-10-06 四批優化第4批）
+# 15. 三紀元角色／裝備 semantics
 
-`playersemanticsui.js` current：
+`playersemanticsui.js`：
 
 ```text
 PLAYER_SEMANTICS_UI_VERSION = 15
@@ -388,7 +613,7 @@ CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION = 1
 CHARACTER_WORLD_SNAPSHOT_OWNER = "playersemanticsui"
 ```
 
-`window.characterWorldSnapshot()` 的 runtime canonical result 現在正式以 `currentWorldPhase()` 為優先，輸出：
+`characterWorldSnapshot()` 優先用 `currentWorldPhase()`：
 
 ```text
 W1 → world=1 / 銀河紀元 / cap=500
@@ -396,72 +621,48 @@ W2 → world=2 / 宇宙紀元 / cap=1000
 W3 → world=3 / 高維紀元 / cap=2000
 ```
 
-角色裝備來源共用 `sharedEquipmentWorld(item)` 的 1/2/3 紀元 semantics。
-
-因此後續不得再自行用「是否 entered secondWorld」二分 character world，也不得重新建立兩紀元 snapshot fallback。
-
-`tests/runtime/equipment-world-semantics-batch2-integrity.js` 與 Schema17 compatibility matrix 都已鎖定 W1/W2/W3 snapshot。
+裝備來源共用 `sharedEquipmentWorld(item)`；不要回到「是否 entered secondWorld」二分法。
 
 ---
 
-# 11. 第一紀元強化正式成本（2026-10-06 最新平衡）
+# 16. 第一紀元強化正式成本
 
-current `enhancementcore.js`：
+`enhancementcore.js`：
 
 ```text
 FIRST_WORLD_ENHANCEMENT_CAP = 20
 SECOND_WORLD_ENHANCEMENT_CAP = 40
 BONUS_PERCENT_PER_LEVEL = 2.5
-
 BASIC_COST_PER_TARGET_LEVEL = 25
 ADVANCED_COST_PER_TARGET_LEVEL = 5
 ```
 
-第一紀元 +1～+20 單次成本：
+W1 +1～+20 單次：
 
 ```text
 基礎強化石 = 25 × 目標強化等級
 進階強化石 = 5 × 目標強化等級
 ```
 
-這個成本**首輪第一紀元與所有轉生後第一紀元共用**，不做轉生特例。
-
-單一部位 +0→+20：
+單部位 +0→+20：
 
 ```text
-基礎強化石：5,250
-進階強化石：1,050
+基礎 5,250
+進階 1,050
 ```
 
-五部位全部 +20：
+五部位：
 
 ```text
-基礎強化石：26,250
-進階強化石：5,250
+基礎 26,250
+進階 5,250
 ```
 
-本次只把基礎石需求從原本 `50 × 目標等級` 減半為 `25 × 目標等級`；以下完全不變：
-
-- 進階強化石公式。
-- 每級 +2.5% 主能力。
-- +20／+40 上限。
-- 第二紀元 +21～+40 暗物質／暗能量成本。
-- 強化石掉落量。
-- 越級收益倍率。
-- Save Schema。
-
-`enhancementintegrity.js` current 已鎖定：
-
-```text
-+20 單次：basic=500 / advanced=100
-單欄 +0→+20：basic=5250 / advanced=1050
-```
-
-`tests/runtime/player-batch-upgrades-batch6-2-integrity.js` 已同步新成本。
+不要自行改回舊的 50×target。
 
 ---
 
-# 12. 第一紀元完整 Target Context 重構（Batch0～6＋優化1～4 已完成）
+# 17. 第一紀元 Target Context
 
 正式鏈路：
 
@@ -471,133 +672,215 @@ UI / selection
 → encounter
 → battle context lock
 → combat
-→ special / continuous / fast catch-up
+→ special / continuous / Fast Catch-up
 → settlement / progression / offline sample
 ```
 
 核心 identity：
 
 ```text
-world = 1
+world=1
 mapIndex
 enemyIndex
-mode = formal / rerun / review
+mode=formal / rerun / review
+lifeId
+reincarnation count
 ```
 
-`selectedMap / selectedEnemy` 只作 UI/navigation selection。
+hard rules：
 
-正式 hard rules：
-
-- post-prepare execution 不回頭用 selection reconstruction target。
+- `selectedMap / selectedEnemy` 只作 UI/navigation。
+- post-prepare 不回頭用 selection reconstruction target。
 - validator／lifecycle owner 缺失 fail closed。
-- context stale、identity、life/count 不一致 fail closed。
-- review formalRewards/formalProgress=false。
-- rerun 沒有合法 prepared target 回 `prepared-target-required`。
-- Special Encounter 吃 explicit parent Target Context。
-- W1 Offline persisted map/enemy identity 轉 canonical Target Context。
-- Offline sample 格式仍 V4，不因 Target Context 重構升版。
+- stale／identity／life/count mismatch fail closed。
+- review 不給 formal rewards/progress。
+- rerun 無合法 prepared target → `prepared-target-required`。
+- Special Encounter 吃 explicit parent context。
+- W1 Offline persisted identity 轉 canonical Target Context。
 - Boss 不進 W1 offline sample。
-- 重構沒有改 EXP、金幣、掉落率、Boss能力、special機率、Fast Catch-up 規則。
 
 ---
 
-# 13. Code Cleanup Batch1～8（全部完成）
+# 18. Code Cleanup Batch1～8
 
-current `PROJECT_PENDING_STATUS.md` 已確認 Code Cleanup Batch1～8 全部完成。
+全部完成。
 
-核心正式邊界：
+核心邊界：
 
 - legacy Schema1～17 支援保留。
 - legacy cleanup 只屬 migration owner。
 - Story／GM／Integrity lazy-loading boundary 保留。
-- 歷史文件集中 `docs/archive/`，只供追溯，不作 current runtime owner。
-- Runtime Integrity 有專門 regression 守住 legacy boundary。
-- runtime API／compatibility owner／save hook owner 已收斂，不應再新增同責任 second owner。
+- `docs/archive/` 只供歷史追溯。
+- runtime API／compatibility owner／save hook owner 已收斂，不再新增同責任 second owner。
 
 ---
 
-# 14. Runtime／Integrity current baseline
+# 19. Schema17 舊檔相容矩陣與近期四批封箱（2026-10-07）
+
+`tests/runtime/save-schema17-compatibility-matrix.js` 已加入以下正式 regression：
+
+## 舊36稱號 catalog → AU稱號擴充
+
+模擬舊 catalog：
+
+```text
+銀河10 + 宇宙10 + 高維10 + 鏡像6 = 36
+```
+
+若舊存檔 AU deepest=850：
+
+- 舊36稱號完整保留。
+- 靜默補發 AU 前8階。
+- 總數 = 44。
+- 已裝備 `mirror_title_19` 保留。
+- `pendingNotice=mirror_title_20` 保留。
+- 鏡像20勝歷史保留。
+- migration diagnostics 回報補發8個 AU 稱號。
+
+## AU 永久榮譽舊檔
+
+即使現在 deepestCleared 比過去低，已取得／已裝備／pending AU 稱號不回收。
+
+## W3 rerun 懸賞戰
+
+Schema17 轉生角色即使：
+
+```text
+permanentUnlocked = true
+qualificationUnlocked = true
+```
+
+W3 仍必須：
+
+```text
+eraAllowed = false
+effectiveEnabled = false
+unlocked = false
+visible = false
+enabled = false
+```
+
+## 鏡像 history repair
+
+重複 miracleDates 會去重，migration diagnostics 會回報修復與移除數量。
+
+## Recent optimization Batch4 closure
+
+新增：
+
+```text
+tests/runtime/recent-optimization-batch4-closure.js
+```
+
+永久鎖定：
+
+- W3 era policy 單一 owner。
+- dungeon qualification／era availability 分離。
+- 玩家／GM 鏡像共用 canonical settlement。
+- miracleDates 去重。
+- GM鏡像15～20勝範圍。
+- AU title threshold data owner。
+- migration diagnostics。
+- Schema17 不升版。
+- 第4批 old-save matrix 不得被移除。
+
+該 closure 已加入 Runtime Integrity 並於 exact HEAD #2073 實際通過。
+
+---
+
+# 20. Runtime／Integrity current baseline
 
 `.github/workflows/runtime-integrity.yml` current 涵蓋：
 
 - 全 JS syntax／owner integrity。
-- Save/global writer／new-state/load pipeline。
 - 真實 Chromium browser smoke。
-- AU data／attempt／combat／failure／progression／UI／old-save。
-- Batch5 rerun closure＋E2E。
-- Batch6 overlevel／Offline provenance／batch upgrades／dungeon access／closure。
-- Breakthrough core／final damage。
-- Batch7 GM突破／角色sandbox／AU管理／AU benchmark／multi-life closure。
+- Save/global writer/new-state/load pipeline。
 - Schema17 compatibility matrix。
-- GM transient Schema1～17 cleanup matrix。
-- 三紀元 character/equipment world semantics。
-- 正式轉生 reset／transaction／UI／save migration。
+- AU data／attempt／combat／failure／progression／UI／old-save。
+- AU title Batch4 closure。
+- W3 rerun settlement stage regression。
+- Batch5／6／7 closure。
+- Breakthrough core／final damage。
+- GM突破／角色sandbox／AU管理／AU benchmark。
+- 鏡像正式 settlement／GM adjudication。
+- W3 dungeon effective access。
 - W1 Target Context Batch0～6＋優化1～4。
-- VIP unlimited integrity。
-- GM mainline HP lock integrity。
+- VIP unlimited。
+- GM mainline HP lock。
 - asset integrity。
 - documentation integrity。
-- 第一紀元 batch enhancement regression。
+- recent optimization Batch4 closure。
 
-current exact gameplay HEAD `d71aff23c353c34b819bc0a12b3a323be698055c`：
+最新已驗證 gameplay HEAD：
 
 ```text
-Runtime Integrity #1948 = success
-Story Integrity   #1046 = success
-GitHub Pages      #5912 = success
+3555bd7e8014837e6c241da054efe541a20ec413
+Runtime Integrity #2073 = success
+GitHub Pages #6038 = success
 ```
 
 ---
 
-# 15. current owner 索引
+# 21. current owner 索引
 
 ## World／Player semantics
-
 `worldphase.js`、`thirdworldphase.js`、`levelprogression.js`、`playersemanticsui.js`、`equipmentrewardcore.js`。
 
 ## Reincarnation／Breakthrough
-
 `reincarnationstate.js`、`reincarnationcore.js`、`breakthroughcore.js`、`reincarnationui.js`、`reincarnationrerunworld1.js`、`reincarnationrerunworld2.js`、`reincarnationrerunworld3.js`、`reincarnationrerunprogress.js`、`reincarnationoverlevelrewards.js`、`reincarnationdungeonaccess.js`、`reincarnationpermanentgearguard.js`。
 
-## First World Target Context
+## W3 progression／dungeon
+`thirdworldprogress.js`、`thirdworlddungeonui.js`、`thirdworldarena.js`、`thirdworldarenaui.js`。
 
+## First World Target Context
 `firstworldtargetcontext.js`、`battlepipeline.js`、`firstworldtargetcontextbatch4.js`、`firstworldtargetcontextbatch5.js`、`firstworldtargetcontextbatch6.js`、`specialencounter.js`、`offlineprogress.js`、`offlinestatecore.js`。
 
 ## Enhancement
-
 `enhancementcore.js`、`enhancementui.js`、`enhancementrewards.js`、`enhancementcombat.js`、`playerbatchupgrades.js`、`enhancementintegrity.js`。
 
 ## Alternate Universe
-
 `alternateuniversedata.js`、`alternateuniverseattempt.js`、`alternateuniversecombat.js`、`alternateuniverseprogression.js`、`alternateuniverseaccess.js`、`alternateuniverseui.js`、`traits.js`。
 
-## Save／Offline／Runtime
+## Player titles
+`playertitlecore.js`、`playertitlerenderer.js`、`playertitleui.js`、`playertitleintegrity.js`、`playertitlesalternateuniverse.css`、`playertitlesmirror.css`、`playertitleshigherdimensional.css`。
 
+## Mirror
+`mirrorconfig.js`、`mirrordungeonstate.js`、`mirrorcombatcore.js`、`mirrordungeongm.js`。
+
+## Save／Offline／Runtime
 `savemigration.js`、`saveversionguard.js`、`savehookcore.js`、`settlementtransaction.js`、`compatibilityowners.js`、`runtimeapi.js`、`scriptgrouploader.js`、`offlinestatecore.js`、`offlinefarmtarget.js`、`offlineprogress.js`、`offlineworld3adapter.js`。
 
 ## GM
-
-`gmhub.js`、`gmhubextensions.js`、`gmformaltransaction.js`、`gmbreakthroughmanage.js`、`gmalternateuniversemanage.js`、`gmpowerbenchmark.js`、`gmpowerbenchmarkstate.js`、`gmpowerbenchmarkworldphase.js`、`gmalternateuniversebenchmark.js`、`vipgm.js`、`thirdworldarenagm.js`、`gmbatch16formalcontrols.js`。
-
----
-
-# 16. 重要 bug 修正／防倒退規則
-
-1. **永久 W3 裝備誤修**：只依 evidence-backed marker／legacy id 修歷史錯誤，ambiguous item 不猜測。
-2. **GM formal writer 重複 owner**：正式 mutation 走 `gmformaltransaction.js`／shared transaction，不回復 direct `state→save()` 第二套寫入。
-3. **GM lazy-load failure 卡死**：rejected lazy promise 必須可清除後 retry。
-4. **GM 授權污染 save**：browser-local runtime authorization 不得當成正式玩家存檔進度。
-5. **Schema1～17 GM test junk**：11個歷史 transient keys 全部 migration 清除。
-6. **Character snapshot W3 被判成 W2**：canonical `characterWorldSnapshot()` 必須回正確 1/2/3 phase。
-7. **Target Drift**：戰鬥開始後 UI selection 改變不得改變 active target。
-8. **missing validator fallback**：正式 Target Context validator 缺失時 fail closed。
-9. **review 污染 formal progression**：review 不得給 formal rewards/progress。
-10. **rerun post-prepare 回讀 selection**：禁止。
-11. **第一紀元基礎強化石過重**：正式成本已由 50×target 降為 25×target；不要讓 regression／guide／UI 回到舊公式。
+`gmhub.js`、`gmhubextensions.js`、`gmformaltransaction.js`、`gmbreakthroughmanage.js`、`gmalternateuniversemanage.js`、`playertitlegmpreview.js`、`mirrordungeongm.js`、`gmpowerbenchmark.js`、`gmpowerbenchmarkstate.js`、`gmpowerbenchmarkworldphase.js`、`gmalternateuniversebenchmark.js`、`vipgm.js`、`thirdworldarenagm.js`、`gmbatch16formalcontrols.js`。
 
 ---
 
-# 17. 明確不要自行復活／擴充
+# 22. 重要 bug 修正／防倒退規則
+
+1. 永久 W3 裝備只依 evidence 修復，ambiguous item 不猜。
+2. GM formal mutation 共用 shared transaction，不回復 direct `state→save()` 第二 owner。
+3. GM lazy-load rejected promise 必須可 retry。
+4. GM authorization 不得污染 formal save。
+5. Schema1～17 歷史 GM test transient keys 全部 migration 清除。
+6. W3 character snapshot 不得再誤判 W2。
+7. W1 Target Drift：戰鬥開始後 UI selection 不得改 active target。
+8. Target Context validator 缺失必須 fail closed。
+9. review 不得污染 formal progression。
+10. rerun post-prepare 禁止回讀 selection。
+11. W1 基礎強化成本維持 25×target。
+12. W3 rerun stage/progress event continuation 不得把「Boss正式擊破」當成可 bypass 的中間事件。
+13. 轉生永久副本資格不得重開 W3 懸賞戰。
+14. GM 鏡像正式裁定不得建立自己的 history/title 結算。
+15. mirror miracleDates 必須去重。
+16. AU 稱號門檻不得重新寫 `deepest/100`。
+17. AU 稱號已取得後不得因 progress 降低或轉生回收。
+18. GM 稱號預覽不得復活第二套 AU 1～10 快速按鈕。
+19. 鏡像稱號必須保持 catalog 最後一組。
+20. migration／runtime-only diagnostics 不得因此升 Schema18。
+
+---
+
+# 23. 明確不要自行復活／擴充
 
 1. 不把 AU 做成 Lv2001+ 或第四紀元。
 2. 不讓 AU 敵人依玩家突破 dynamic scaling。
@@ -609,26 +892,32 @@ GitHub Pages      #5912 = success
 8. 不讓 UI／GM 自行維護可衍生 lifeId／lock 等第二套狀態。
 9. 不重做第二套 final damage、transaction、save backup、combat、offline、progression、target、world semantics owner。
 10. 不恢復高階 Boss 只記自身、不正式回填前段主線的舊規則。
-11. 不把四副本永久入口誤做成全部 Arena rank 永久全開。
+11. 不把四副本永久入口誤做成全部 Arena rank 永久全開或 W3 bounty 永久可用。
 12. 首輪 `count=0` 不可吃 rerun backfill、Story bypass、W3 5% bypass、overlevel 或突破。
 13. 不把21 trait diagnostics塞進 GM 操作介面。
 14. 不把戰力基準退回7模式；current正式為8模式。
-15. 不讓 W1 battle execution 回頭用 `selectedMap / selectedEnemy` 作 target fallback。
+15. 不讓 W1 battle execution 回頭用 `selectedMap / selectedEnemy` fallback。
 16. 不把舊 GM transient test state 重新寫進 formal save。
-17. 不因純 migration cleanup、runtime-only snapshot、GM runtime auth 而升 Schema18。
-18. 不把第一紀元基礎強化石成本改回 50×target，除非使用者重新做平衡決策。
+17. 不因 migration cleanup、runtime-only snapshot、GM runtime auth、AU titles 而升 Schema18。
+18. 不把 W1 基礎強化石成本改回 50×target，除非使用者重新做平衡決策。
+19. 不復活 GM 稱號預覽「異宇宙1～10階快速視覺測試」按鈕區。
+20. 不把 AU 稱號門檻 hardcode 成另一份 100倍數公式；正式資料只看 `depthThreshold`。
+21. 不讓 reincarnation permanent qualification 覆蓋 `thirdworlddungeonui` 的 era policy。
+22. 不讓 GM mirror 直接改 history/titles；必須委派 canonical settlement。
 
 ---
 
-# 18. 目前尚未完成項目
+# 24. 目前尚未完成項目
 
 **目前沒有已定案、等待施工的功能批次。**
 
-現階段屬於正式遊玩／轉生實測與持續平衡調整期；後續若使用者提出新功能、新平衡、新 UI 或新重構，需重新 fresh-read current main 後再建立施工範圍。
+現階段是正式遊玩／轉生實測與持續平衡調整期。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
+
+`PROJECT_PENDING_STATUS.md` 的「沒有已定案待辦」結論仍有效；其更新日期比本檔早，因此若其中缺少本次已完成的 AU title／Mirror／W3 access／Schema17 closure 細節，以本檔與 current main 為準。
 
 ---
 
-# 19. 下一個對話如何接手
+# 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
 
@@ -640,9 +929,15 @@ GitHub Pages      #5912 = success
 以 GitHub main 為唯一真實來源；不要只靠對話記憶、舊交接檔或歷史設計文件。
 先確認目前 HEAD、Save Schema、相關 runtime/integrity、current world semantics 與既有正式 owner。
 
-已完成的 Batch5／6／7、Batch7 封箱後優化、Code Cleanup Batch1～8、
+已完成的 Batch5／6／7、Code Cleanup Batch1～8、
 第一紀元 Target Context Batch0～6與優化1～4、
-轉生／GM／三紀元語義四批優化都不得重做或倒退。
+轉生／GM／三紀元語義四批優化、
+異宇宙稱號 Batch1～4、
+第三紀元副本 access 收斂、
+鏡像 canonical settlement／GM正式裁定、
+AU threshold owner／migration diagnostics、
+Schema17 舊檔相容矩陣與近期 Batch4 closure，
+都不得因舊文件重新施工或倒退。
 
 若我說「先討論／先檢查／先不要修改」，只分析不要改 GitHub；
 若我說「修改／做／執行／第N批」，可直接修改 main。
@@ -650,7 +945,7 @@ GitHub Pages      #5912 = success
 修改時優先改正式來源，不要另外堆 wrapper、fallback、第二套公式或第二套 owner。
 JS／CSS production 改動要同步更新 index.html cache-bust。
 修改後 fresh-read、compare base→head、自我檢查，
-並以 exact HEAD 的 Runtime／Story／Pages Actions 結果為準。
+並以 exact HEAD 的 Runtime／Story（若該變更有觸發）／Pages Actions 結果為準。
 
 現在先不要修改。
 ```
