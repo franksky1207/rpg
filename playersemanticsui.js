@@ -1,5 +1,5 @@
 (function(){
- const VERSION=15;
+ const VERSION=16;
  const baseCharacterWorldSnapshot=typeof window.characterWorldSnapshot==="function"?window.characterWorldSnapshot:null;
  const baseAdventurePage=typeof window.adventurePage==="function"?window.adventurePage:null;
  function phase(target=null){
@@ -50,8 +50,10 @@
   const civilizationDamageMultiplier=current>=2&&typeof window.civilizationDamageMultiplier==="function"?window.civilizationDamageMultiplier(s):Math.max(1,Number(base?.civilizationDamageMultiplier)||1);
   const equippedWorlds=typeof EQUIPMENT_TYPES!=="undefined"&&Array.isArray(EQUIPMENT_TYPES)?Object.fromEntries(EQUIPMENT_TYPES.map(type=>{const item=s?.equipment?.[type];return [type,item?(typeof window.sharedEquipmentWorld==="function"?window.sharedEquipmentWorld(item):(Number(item?.world)===3?3:Number(item?.world)===2?2:1)):null];})):base?.equippedWorlds||{};
   const breakthrough=breakthroughDisplay(s);
+  const reincarnationCount=Math.max(0,Math.floor(Number(s?.reincarnation?.count)||0));
   return {
    ...base,
+   reincarnationCount,
    world:current,
    worldLabel:worldLabelForPhase(current),
    level:Math.max(1,Math.floor(Number(progress?.level??s?.level)||1)),
@@ -135,9 +137,15 @@
   if(title)title.textContent=snap.worldLabel;
   if(copy)copy.textContent=`目前角色等級上限 Lv.${snap.cap}`;
   const grid=card.querySelector(".character-stats-grid");
+  ensureCharacterStat(grid,"轉生次數",snap.reincarnationCount>0?`${snap.reincarnationCount} 次`:"尚未轉生");
   ensureCharacterStat(grid,"突破等級",`Lv.${snap.breakthroughLevel}`);
-  ensureCharacterStat(grid,"裝備能力倍率",`+${percentText(snap.breakthroughEquipmentBonusPercent)}%`);
-  ensureCharacterStat(grid,"最終傷害加成",`+${percentText(snap.breakthroughFinalDamageBonusPercent)}%`);
+  ensureCharacterStat(grid,"突破裝備加成",`+${percentText(snap.breakthroughEquipmentBonusPercent)}%`);
+  ensureCharacterStat(grid,"突破最終傷害",`+${percentText(snap.breakthroughFinalDamageBonusPercent)}%`);
+  if(grid){
+   let note=card.querySelector('[data-character-breakthrough-note="1"]');
+   if(!note){note=document.createElement("div");note.dataset.characterBreakthroughNote="1";note.className="muted";note.style.marginTop="8px";grid.insertAdjacentElement("afterend",note);}
+   note.textContent="突破每級：裝備原始 HP／攻擊／防禦 +2.5%，最終傷害 +5%。";
+  }
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
@@ -177,7 +185,7 @@
  window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION=1;
  window.CHARACTER_WORLD_SNAPSHOT_OWNER="playersemanticsui";
  window.CHARACTER_EQUIPMENT_WORLD_SEMANTICS_VERSION=1;
- window.CHARACTER_BREAKTHROUGH_UI_VERSION=2;
+ window.CHARACTER_BREAKTHROUGH_UI_VERSION=3;
  window.THIRD_WORLD_COMPLETED_SYSTEM_UI_VERSION=3;
  window.SECOND_WORLD_CONTEXTUAL_INVENTORY_BUTTON_VERSION=1;
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
