@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.BREAKTHROUGH_PLAYER_UI_VERSION===1&&window.BREAKTHROUGH_PLAYER_NOTICE_BRIDGE_VERSION===1&&window.CHARACTER_BREAKTHROUGH_UI_VERSION===2&&typeof window.queueBreakthroughPlayerNotice==="function"&&typeof window.breakthroughPlayerNoticeSnapshot==="function"&&typeof window.gainEffectiveExpForState==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.BREAKTHROUGH_PLAYER_UI_VERSION===1&&window.BREAKTHROUGH_PLAYER_NOTICE_BRIDGE_VERSION===1&&window.CHARACTER_BREAKTHROUGH_UI_VERSION===3&&typeof window.queueBreakthroughPlayerNotice==="function"&&typeof window.breakthroughPlayerNoticeSnapshot==="function"&&typeof window.gainEffectiveExpForState==="function",{timeout:30000});
 
   const snapshot=await page.evaluate(()=>window.breakthroughPlayerNoticeSnapshot({awarded:3,milestones:[100,200,300],permanentBefore:7,permanentAfter:10,currentLifeBefore:0,currentLifeAfter:3}));
   assert.equal(snapshot.title,"突破成功！");
@@ -72,20 +72,25 @@ const assert=require("assert");
    try{
     const s=newState();s.reincarnation={count:3,breakthrough:{permanent:7,milestoneLifeId:3,milestones:milestones()},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:3,failures:{}}}};
     state=s;view="character";render();
-    const lv7=rowText("突破等級"),equipment7=rowText("裝備能力倍率"),damage7=rowText("最終傷害加成"),snapshot7=window.characterWorldSnapshot(state).breakthroughLevel;
+    const reincarnation7=rowText("轉生次數"),lv7=rowText("突破等級"),equipment7=rowText("突破裝備加成"),damage7=rowText("突破最終傷害"),note7=document.querySelector('[data-character-breakthrough-note="1"]')?.textContent||"",snapshot7=window.characterWorldSnapshot(state);
     state.reincarnation={count:0,breakthrough:{permanent:0,milestoneLifeId:0,milestones:milestones()},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:0,failures:{}}}};
     render();
-    const lv0=rowText("突破等級"),equipment0=rowText("裝備能力倍率"),damage0=rowText("最終傷害加成");
-    return {lv7,equipment7,damage7,lv0,equipment0,damage0,snapshot7};
+    const reincarnation0=rowText("轉生次數"),lv0=rowText("突破等級"),equipment0=rowText("突破裝備加成"),damage0=rowText("突破最終傷害"),note0=document.querySelector('[data-character-breakthrough-note="1"]')?.textContent||"";
+    return {reincarnation7,lv7,equipment7,damage7,note7,reincarnation0,lv0,equipment0,damage0,note0,snapshot7};
    }finally{state=originalState;view=originalView;render();}
   });
+  assert.ok(character.reincarnation7.replace(/\s+/g,"").includes("轉生次數3次"),"Reincarnated character page must show reincarnation count.");
   assert.ok(character.lv7.replace(/\s+/g,"").includes("突破等級Lv.7"),"Character page must show permanent breakthrough level.");
-  assert.ok(character.equipment7.replace(/\s+/g,"").includes("裝備能力倍率+17.5%"),"Character page must show breakthrough equipment multiplier bonus.");
-  assert.ok(character.damage7.replace(/\s+/g,"").includes("最終傷害加成+35%"),"Character page must show breakthrough final damage bonus.");
+  assert.ok(character.equipment7.replace(/\s+/g,"").includes("突破裝備加成+17.5%"),"Character page must show breakthrough equipment bonus with explicit breakthrough wording.");
+  assert.ok(character.damage7.replace(/\s+/g,"").includes("突破最終傷害+35%"),"Character page must show breakthrough final damage bonus with explicit breakthrough wording.");
+  assert.equal(character.note7.trim(),"突破每級：裝備原始 HP／攻擊／防禦 +2.5%，最終傷害 +5%。");
+  assert.ok(character.reincarnation0.replace(/\s+/g,"").includes("轉生次數尚未轉生"),"First-run character page must explicitly show not yet reincarnated.");
   assert.ok(character.lv0.replace(/\s+/g,"").includes("突破等級Lv.0"),"First-run character page must explicitly show breakthrough Lv.0.");
-  assert.ok(character.equipment0.replace(/\s+/g,"").includes("裝備能力倍率+0%")&&character.damage0.replace(/\s+/g,"").includes("最終傷害加成+0%"),"First-run character page must show zero breakthrough bonuses.");
-  assert.equal(character.snapshot7,7);
-  assert.ok(!/(?:^|\s)B(?:\+|\d)/.test(character.lv7+character.equipment7+character.damage7+character.lv0+character.equipment0+character.damage0),"Character page must not expose internal B notation.");
+  assert.ok(character.equipment0.replace(/\s+/g,"").includes("突破裝備加成+0%")&&character.damage0.replace(/\s+/g,"").includes("突破最終傷害+0%"),"First-run character page must show zero breakthrough bonuses.");
+  assert.equal(character.note0.trim(),"突破每級：裝備原始 HP／攻擊／防禦 +2.5%，最終傷害 +5%。");
+  assert.equal(character.snapshot7.breakthroughLevel,7);
+  assert.equal(character.snapshot7.reincarnationCount,3);
+  assert.ok(!/(?:^|\s)B(?:\+|\d)/.test(character.reincarnation7+character.lv7+character.equipment7+character.damage7+character.reincarnation0+character.lv0+character.equipment0+character.damage0),"Character page must not expose internal B notation.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
   console.log("Reincarnation optimization batch 3 integrity passed:",JSON.stringify({snapshot,modal,bridge,character}));
  }finally{await browser.close();}
