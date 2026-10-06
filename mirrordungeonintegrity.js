@@ -1,7 +1,7 @@
 (function(){
  const errors=[],warnings=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
- const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmSetMirrorFormalResult","gmApplyMirrorFormalResultMutation","gmCommitMirrorFormalResult","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","mirrorDungeonIdentityHtml","playerTitleHtml","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
+ const required=["createMirrorCombatSnapshot","normalizeMirrorCombatSnapshot","runMirrorCombatCore","mirrorDungeonStatus","beginMirrorDungeonState","settleMirrorDungeonResult","recordMirrorDungeonCompletion","resetMirrorDungeonToday","startMirrorCombatRun","mirrorDungeonRewardForWins","mirrorDungeonResultComment","mirrorDungeonRecordTitle","mirrorDungeonClampWins","gmResetMirrorDungeonToday","gmSetMirrorFormalResult","gmApplyMirrorFormalResultMutation","gmCommitMirrorFormalResult","gmMirrorTest","gmMirrorSymmetryTest","combatDamageWithRng","auditCurrentMirrorCombatSnapshotSources","mirrorCombatWorldForState","mirrorDungeonIdentityHtml","playerTitleHtml","registerDungeonViewRenderer","registerDungeonHomeCardRenderer","registerDungeonNavigationGuard","isValidMirrorDateKey","mirrorMarkPresentationTarget"];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("MISSING_FUNCTION",`鏡像戰必要函式 ${name} 未載入`);});
  const cfg=window.MIRROR_DUNGEON_CONFIG;
  if(!cfg||Number(window.MIRROR_DUNGEON_CONFIG_VERSION)!==1)fail("CONFIG","鏡像戰集中設定未載入");
@@ -13,7 +13,8 @@
  }
  if(Number(window.COMBAT_DAMAGE_MODEL_VERSION)!==1)fail("DAMAGE_MODEL_VERSION",`共用傷害模型版本異常：${window.COMBAT_DAMAGE_MODEL_VERSION}`);
  if(Number(window.DUNGEON_UI_EXTENSION_VERSION)!==1)fail("DUNGEON_UI_EXTENSION","副本 UI 擴充 owner 未載入");
- if(Number(window.GM_MIRROR_FORMAL_RESULT_VERSION)!==1)fail("GM_MIRROR_FORMAL_RESULT_VERSION","GM 鏡像正式裁定 owner 未載入",window.GM_MIRROR_FORMAL_RESULT_VERSION);
+ if(Number(window.MIRROR_DUNGEON_STATE_VERSION)!==3||Number(window.MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION)!==1||Number(window.MIRROR_MIRACLE_DATE_DEDUP_VERSION)!==1)fail("MIRROR_SETTLEMENT_OWNER","鏡像正式結算 owner／神蹟去重版本異常",{state:window.MIRROR_DUNGEON_STATE_VERSION,settlement:window.MIRROR_DUNGEON_SETTLEMENT_OWNER_VERSION,dedup:window.MIRROR_MIRACLE_DATE_DEDUP_VERSION});
+ if(Number(window.GM_MIRROR_FORMAL_RESULT_VERSION)!==2||Number(window.GM_MIRROR_FORMAL_MIN_WINS)!==15)fail("GM_MIRROR_FORMAL_RESULT_VERSION","GM 鏡像正式裁定 owner 未收斂至 15～20 勝",{version:window.GM_MIRROR_FORMAL_RESULT_VERSION,min:window.GM_MIRROR_FORMAL_MIN_WINS});
  if(typeof window.combatDamageWithRng==="function"){const low=window.combatDamageWithRng(100,20,()=>0),mid=window.combatDamageWithRng(100,20,()=>.5),high=window.combatDamageWithRng(100,20,()=>1);if(low!==85||mid!==89||high!==94)fail("SHARED_DAMAGE_MODEL",`共用傷害公式結果異常：${low}/${mid}/${high}`);}
  if(typeof window.getNewStateNormalizerCount==="function"&&Number(window.getNewStateNormalizerCount())!==5)fail("NORMALIZER_COUNT",`正式 newState normalizer 應為 5 個，實際 ${window.getNewStateNormalizerCount()}`);
  if(typeof window.mirrorDungeonRewardForWins==="function")[[0,0],[1,20],[10,2000],[20,8000]].forEach(([wins,reward])=>{const actual=window.mirrorDungeonRewardForWins(wins);if(Number(actual)!==reward)fail("REWARD_FORMULA",`${wins} 勝應得 ${reward} VIP，實際 ${actual}`);});
@@ -23,6 +24,8 @@
  if(typeof window.gmApplyMirrorFormalResultMutation==="function"){
   try{
    const ts=Date.parse("2026-09-16T04:00:00Z"),probe={level:50,vipPoints:321,dungeon:{mirror:{version:2,history:{bestWins:16,bestDate:"2026-09-10",miracleDates:[]},daily:{dateKey:"2026-09-16",status:"idle",challengeDate:null,startedAt:0,wins:0,losses:0,completedAt:0}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+   const beforeInvalid=JSON.stringify(probe),r14=window.gmApplyMirrorFormalResultMutation(probe,14,ts);
+   if(r14?.ok!==false||r14?.reason!=="invalid-wins"||JSON.stringify(probe)!==beforeInvalid)fail("GM_FORMAL_RANGE","GM 正式裁定底層必須拒絕 15 勝以下且不得改資料",{r14,probe});
    const vipBefore=probe.vipPoints,r18=window.gmApplyMirrorFormalResultMutation(probe,18,ts),dateKey=r18?.dateKey,ids18=Array.from(probe.titles?.unlocked||[]);
    if(!r18?.ok||probe.dungeon.mirror.daily.status!=="completed"||probe.dungeon.mirror.daily.wins!==18||probe.dungeon.mirror.daily.losses!==2||probe.dungeon.mirror.history.bestWins!==18||probe.dungeon.mirror.history.bestDate!==dateKey||probe.vipPoints!==vipBefore)fail("GM_FORMAL_18_RESULT","GM 裁定 18 勝必須同步 daily/history 且不得增加 VIP",{r18,mirror:probe.dungeon.mirror,vip:probe.vipPoints});
    ["mirror_title_15","mirror_title_16","mirror_title_17","mirror_title_18"].forEach(id=>{if(!ids18.includes(id))fail("GM_FORMAL_18_TITLE",`GM 裁定 18 勝應解鎖 ${id}`,ids18);});
