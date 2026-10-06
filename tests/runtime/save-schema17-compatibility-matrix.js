@@ -113,6 +113,24 @@ const assert=require("assert");
    diagnosticSource.dungeon.mirror={version:2,history:{bestWins:20,bestDate:"2026-09-16",miracleDates:["2026-09-16","2026-09-16"]},daily:{dateKey:"2026-09-16",status:"idle",challengeDate:null,startedAt:0,wins:0,losses:0,completedAt:0}};
    const diagnostics=migrate(diagnosticSource);
 
+   const calamityIds=Array.from(window.CIVILIZATION_PLAYER_TITLE_IDS||[]),universeIds=Array.from(window.UNIVERSE_CALAMITY_PLAYER_TITLE_IDS||[]),higherIds=Array.from(window.THIRD_WORLD_PLAYER_TITLE_IDS||[]),mirrorIds=Array.from(window.MIRROR_PLAYER_TITLE_IDS||[]);
+   const old36=makeBase(17,1500,3);
+   old36.reincarnation={count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:850,activeAttempt:null,lifeFailures:{lifeId:2,failures:{}}}};
+   old36.titles={version:1,unlocked:[...calamityIds,...universeIds,...higherIds,...mirrorIds],equipped:mirrorIds[4],pendingNotice:mirrorIds[5]};
+   old36.dungeon.mirror={version:2,history:{bestWins:20,bestDate:"2026-09-15",miracleDates:["2026-09-15"]},daily:{dateKey:"2026-09-16",status:"idle",challengeDate:null,startedAt:0,wins:0,losses:0,completedAt:0}};
+   const old36Migrated=migrate(old36);
+
+   const auHonor=makeBase(17,1200,3);
+   auHonor.reincarnation={count:3,breakthrough:{permanent:30,milestoneLifeId:3,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:25,activeAttempt:null,lifeFailures:{lifeId:3,failures:{}}}};
+   auHonor.titles={version:1,unlocked:auIds.slice(0,7),equipped:auIds[5],pendingNotice:auIds[6]};
+   const auHonorMigrated=migrate(auHonor);
+
+   const w3Rerun=makeBase(17,1500,3);
+   w3Rerun.reincarnation={count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:200,activeAttempt:null,lifeFailures:{lifeId:2,failures:{}}}};
+   const w3RerunMigrated=migrate(w3Rerun);
+   const w3BountyAccess=clone(window.dungeonModeAccessSnapshot("bounty",w3RerunMigrated.migrated));
+   const w3BountyAvailability=clone(window.dungeonModeAvailability("bounty",w3RerunMigrated.migrated));
+
    const characterWorlds=[
     {phase:1,state:makeBase(17,500,1)},
     {phase:2,state:makeBase(17,1000,2)},
@@ -130,7 +148,7 @@ const assert=require("assert");
    const storageAfter={};
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);storageAfter[key]=localStorage.getItem(key);}
 
-   return {compatibility,migrationPlans,schemaPolicy,gmTransientKeys,gmTransientInventoryVersion:window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION,gmTransientMatrix,characterWorldOwner:window.CHARACTER_WORLD_SNAPSHOT_OWNER,characterWorldVersion:window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION,characterWorlds,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},diagnostics:{migration:diagnostics.migration,titles:diagnostics.migrated.titles,mirror:diagnostics.migrated.dungeon?.mirror},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
+   return {compatibility,migrationPlans,schemaPolicy,gmTransientKeys,gmTransientInventoryVersion:window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION,gmTransientMatrix,characterWorldOwner:window.CHARACTER_WORLD_SNAPSHOT_OWNER,characterWorldVersion:window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION,characterWorlds,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},diagnostics:{migration:diagnostics.migration,titles:diagnostics.migrated.titles,mirror:diagnostics.migrated.dungeon?.mirror},titleEvolution:{old36:{titles:old36Migrated.migrated.titles,mirror:old36Migrated.migrated.dungeon?.mirror,migration:old36Migrated.migration},auHonor:{titles:auHonorMigrated.migrated.titles,migration:auHonorMigrated.migration}},w3Rerun:{access:w3BountyAccess,availability:w3BountyAvailability},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
   });
 
   const expectedTransientKeys=["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmPowerBenchmark","gmTestResults"];
@@ -218,6 +236,25 @@ const assert=require("assert");
   assert.equal(report.diagnostics.migration?.mirrorHistoryRepaired,true,"重複神蹟日期的舊鏡像 history 應回報已修復。");
   assert.equal(report.diagnostics.migration?.mirrorMiracleDatesRemoved,1,"舊鏡像 history 應診斷移除1筆重複神蹟日期。");
   assert.equal(report.diagnostics.mirror?.history?.miracleDates?.length,1,"舊鏡像重複神蹟日期應實際去重。");
+
+  assert.equal(report.titleEvolution.old36.titles.unlocked.length,46,"舊36稱號 catalog 存檔在 AU 850 層時應正規化成完整46稱號 catalog。");
+  assert.equal(report.titleEvolution.old36.titles.equipped,"mirror_title_19","舊存檔已裝備鏡像19勝稱號不得因 catalog 插入 AU 稱號而遺失。");
+  assert.equal(report.titleEvolution.old36.titles.pendingNotice,"mirror_title_20","舊存檔鏡像 pendingNotice 不得因 catalog 重排而遺失。");
+  assert.equal(report.titleEvolution.old36.mirror.history.bestWins,20,"舊鏡像20勝歷史不得被稱號 catalog migration 改寫。");
+  assert.deepEqual(report.titleEvolution.old36.mirror.history.miracleDates,["2026-09-15"],"既有唯一神蹟日期必須保留。");
+  assert.equal(report.titleEvolution.old36.migration.alternateUniverseTitlesBackfilled,8,"舊36 catalog＋AU 850 層應補發8個異宇宙稱號。");
+
+  assert.equal(report.titleEvolution.auHonor.titles.equipped,"alternate-universe-title-06","已裝備異宇宙永久稱號不得因目前 AU 深度降低而移除。");
+  assert.equal(report.titleEvolution.auHonor.titles.pendingNotice,"alternate-universe-title-07","異宇宙永久稱號 pendingNotice 必須保留。");
+  assert.ok(report.titleEvolution.auHonor.titles.unlocked.includes("alternate-universe-title-07"),"已取得 AU 稱號不得依較低 deepestCleared 回收。");
+
+  assert.equal(report.w3Rerun.access.permanentUnlocked,true,"轉生後 W3 副本資格應維持永久解鎖。");
+  assert.equal(report.w3Rerun.access.qualificationUnlocked,true,"轉生後 W3 懸賞戰資格層應保持解鎖。");
+  assert.equal(report.w3Rerun.access.eraAllowed,false,"W3 紀元規則必須繼續禁止懸賞戰。");
+  assert.equal(report.w3Rerun.access.effectiveEnabled,false,"永久資格不得繞過 W3 懸賞戰禁用。");
+  assert.equal(report.w3Rerun.access.unlocked,false,"最終有效 access 不得把 W3 懸賞戰視為可進入。");
+  assert.equal(report.w3Rerun.availability.visible,false);
+  assert.equal(report.w3Rerun.availability.enabled,false);
 
   assert.deepEqual(report.futureAssert,{threw:true,code:"FUTURE_SAVE_VERSION",sourceVersion:18,currentVersion:17},"Future schema guard drifted.");
   assert.equal(report.stateStable,true,"Compatibility diagnostics mutated formal runtime state.");
