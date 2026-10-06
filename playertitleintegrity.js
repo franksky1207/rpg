@@ -1,5 +1,5 @@
 (function(){
- const VERSION=20;
+ const VERSION=21;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -8,6 +8,7 @@
  const HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION=1;
  const MIRROR_VISUAL_CONTRACT_VERSION=4;
  const NARROW_MOBILE_VISUAL_VERSION=1;
+ const ALTERNATE_UNIVERSE_CLOSURE_VERSION=1;
  const errors=[];
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
@@ -138,6 +139,31 @@
  }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_GRANT_PROBE","異宇宙稱號取得 probe 失敗",String(error?.message||error));}
 
  try{
+  const target={
+   reincarnation:{count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:680,activeAttempt:{lifeId:2,depth:681,attemptId:"title-closure",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"681":2}}}},
+   marks:{entries:{}},secondWorld:{entered:false,calamities:[]},thirdWorld:{entered:false,bosses:[]},dungeon:{mirror:{history:{bestWins:0}}},
+   titles:{version:1,unlocked:alternateDefs.slice(0,6).map(def=>def.id),equipped:alternateDefs[5]?.id||null,pendingNotice:alternateDefs[5]?.id||null}
+  };
+  const equippedBefore=target.titles.equipped,pendingBefore=target.titles.pendingNotice;
+  target.reincarnation.count=3;
+  const life=typeof window.reconcileReincarnationLifeChange==="function"?window.reconcileReincarnationLifeChange(target,2):null;
+  window.normalizePlayerTitleState(target);
+  const expectedIds=alternateDefs.slice(0,6).map(def=>def.id),actualIds=target.titles.unlocked.filter(id=>expectedIds.includes(id));
+  if(!life?.ok||life.changed!==true||target.reincarnation.alternateUniverse.deepestCleared!==680||JSON.stringify(actualIds)!==JSON.stringify(expectedIds)||target.titles.equipped!==equippedBefore||target.titles.pendingNotice!==pendingBefore)fail("TITLE_ALTERNATE_UNIVERSE_REINCARNATION_PRESERVE","異宇宙永久稱號／裝備／待通知必須跨轉生保留",{life,target,expectedIds,actualIds,equippedBefore,pendingBefore});
+ }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_REINCARNATION_PROBE","異宇宙稱號跨轉生保留 probe 失敗",String(error?.message||error));}
+
+ try{
+  const target={reincarnation:{alternateUniverse:{unlocked:true,deepestCleared:300}},marks:{entries:{}},secondWorld:{entered:false,calamities:[]},thirdWorld:{entered:false,bosses:[]},dungeon:{mirror:{history:{bestWins:0}}},titles:{version:1,unlocked:[],equipped:null,pendingNotice:null}};
+  window.normalizePlayerTitleState(target);
+  const tier3=alternateDefs[2],tier4=alternateDefs[3];
+  const equipped=window.equipPlayerTitle(tier3?.id,target);
+  const grant=window.grantPlayerTitlesForAlternateUniverseDepth(400,target,{previousDepth:300});
+  target.reincarnation.alternateUniverse.deepestCleared=50;
+  window.normalizePlayerTitleState(target);
+  if(equipped!==true||grant?.noticeTitle?.id!==tier4?.id||target.titles.equipped!==tier3?.id||target.titles.pendingNotice!==tier4?.id||!target.titles.unlocked.includes(tier4?.id))fail("TITLE_ALTERNATE_UNIVERSE_PERMANENT_HONOR","異宇宙稱號達成後即為永久榮譽；降低進度不得回收解鎖、裝備或待通知",{equipped,grant,titles:target.titles});
+ }catch(error){fail("TITLE_ALTERNATE_UNIVERSE_PERMANENT_HONOR_PROBE","異宇宙永久榮譽 probe 失敗",String(error?.message||error));}
+
+ try{
   const beforeHold=clone(state?.titles);window.setPlayerTitlePostFlowHold?.("__integrity__",true);const held=window.getPlayerTitlePostFlowStatus?.();window.setPlayerTitlePostFlowHold?.("__integrity__",false);const status=window.getPlayerTitlePostFlowStatus?.();
   if(!held||held.held!==true||!Array.isArray(held.holdSources)||!held.holdSources.includes("__integrity__")||!status||status.held!==false||typeof status.queued!=="boolean"||typeof status.open!=="boolean")fail("TITLE_POST_FLOW_STATUS","共用稱號 post-flow hold/status contract 異常",{held,status});
   if(JSON.stringify(beforeHold)!==JSON.stringify(state?.titles))fail("TITLE_POST_FLOW_HOLD_STATE","session-only title hold 不得修改正式稱號 state",{beforeHold,after:state?.titles});
@@ -171,7 +197,7 @@
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
  }catch(error){fail("TITLE_GM_PROBE","GM 稱號預覽 probe 失敗",String(error?.message||error));}
 
- const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,higherDimensionalVisualCompleteVersion:HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION,higherDimensionalVisualDecoupledVersion:HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION,mirrorVisualContractVersion:MIRROR_VISUAL_CONTRACT_VERSION,narrowMobileVisualVersion:NARROW_MOBILE_VISUAL_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
+ const report={version:VERSION,thirdWorldBackfillRegressionVersion:THIRD_WORLD_BACKFILL_REGRESSION_VERSION,postFlowRegressionVersion:POST_FLOW_REGRESSION_VERSION,higherDimensionalVisualOwnerVersion:HIGHER_DIMENSIONAL_VISUAL_OWNER_VERSION,higherDimensionalVisualCompleteVersion:HIGHER_DIMENSIONAL_VISUAL_COMPLETE_VERSION,higherDimensionalVisualDecoupledVersion:HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION,mirrorVisualContractVersion:MIRROR_VISUAL_CONTRACT_VERSION,narrowMobileVisualVersion:NARROW_MOBILE_VISUAL_VERSION,alternateUniverseClosureVersion:ALTERNATE_UNIVERSE_CLOSURE_VERSION,passed:errors.length===0,errors,checkedAt:Date.now()};
  window.PLAYER_TITLE_INTEGRITY_VERSION=VERSION;
  window.PLAYER_TITLE_THIRD_WORLD_BACKFILL_REGRESSION_VERSION=THIRD_WORLD_BACKFILL_REGRESSION_VERSION;
  window.PLAYER_TITLE_POST_FLOW_REGRESSION_VERSION=POST_FLOW_REGRESSION_VERSION;
@@ -180,6 +206,7 @@
  window.PLAYER_TITLE_HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION=HIGHER_DIMENSIONAL_VISUAL_DECOUPLED_VERSION;
  window.PLAYER_TITLE_MIRROR_VISUAL_CONTRACT_VERSION=MIRROR_VISUAL_CONTRACT_VERSION;
  window.PLAYER_TITLE_NARROW_MOBILE_VISUAL_VERSION=NARROW_MOBILE_VISUAL_VERSION;
+ window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CLOSURE_VERSION=ALTERNATE_UNIVERSE_CLOSURE_VERSION;
  window.PLAYER_TITLE_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Player title integrity error",errors);
 })();
