@@ -18,8 +18,10 @@
   if(!(galaxyPos>=0&&galaxyPos<universePos&&universePos<higherPos&&higherPos<alternatePos&&alternatePos<mirrorPos))fail("GM_TITLE_DISPLAY_ORDER","GM 稱號預覽顯示順序必須為銀河10、宇宙10、高維10、異宇宙10、鏡像6",{galaxyPos,universePos,higherPos,alternatePos,mirrorPos});
   const higherFirst=html.indexOf('value="higher-dimensional-title-01"'),mirrorFirst=html.indexOf('value="mirror_title_15"');
   if(!(higherFirst>=0&&mirrorFirst>higherFirst))fail("GM_TITLE_MIRROR_LAST","鏡像稱號必須位於高維紀元稱號之後",{higherFirst,mirrorFirst});
+  const quickResults=alternateDefs.map(def=>({id:def.id,result:window.gmSetPlayerTitlePreviewTier?.(def.id)}));
+  if(quickResults.some(row=>row.result!==row.id))fail("GM_TITLE_ALTERNATE_QUICK_SELECT","異宇宙快速視覺測試必須能逐階切換正式 renderer",quickResults);
   const after=clone(state?.titles),afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("GM_TITLE_SIDE_EFFECT","GM 稱號預覽不得修改正式 title state 或存檔",{before,after});
+  if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("GM_TITLE_SIDE_EFFECT","GM 稱號預覽／異宇宙快速視覺測試不得修改正式 title state 或存檔",{before,after,quickResults});
   const sectionIds=typeof window.gmHubRegisteredSectionIds==="function"?window.gmHubRegisteredSectionIds("test"):[];
   if(sectionIds.filter(id=>id==="player-title-preview").length!==1)fail("GM_TITLE_SECTION","GM 測試頁應且只應存在一個稱號預覽 section",sectionIds);
  }catch(error){fail("EXCEPTION","GM 46 稱號預覽完整性檢查失敗",String(error?.message||error));}
