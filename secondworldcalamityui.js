@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const TITLE_POST_FLOW_VERSION=1;
  const LEGACY_REVIEW_VERSION=1;
  const noticeQueue=[];
@@ -45,19 +45,6 @@
  function thirdWorldReviewOnly(){return currentPhase()===3;}
  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
  function fmt(v){return Math.max(0,Math.floor(Number(v)||0)).toLocaleString();}
- function resetSecondWorldCalamityBattleViewport(){
-  if(typeof window==="undefined"||typeof document==="undefined")return false;
-  const apply=()=>{
-   try{window.scrollTo(0,0);}catch(_){}
-   const root=document.scrollingElement||document.documentElement;
-   if(root)root.scrollTop=0;
-   if(document.body)document.body.scrollTop=0;
-  };
-  apply();
-  if(typeof window.requestAnimationFrame==="function")window.requestAnimationFrame(apply);
-  setTimeout(apply,0);
-  return true;
- }
  function defs(){return typeof window.getSecondWorldCalamityDefinitions==="function"?window.getSecondWorldCalamityDefinitions():[];}
  function status(id){return typeof window.getSecondWorldCalamityStatus==="function"?window.getSecondWorldCalamityStatus(id):null;}
  function visibleDefs(){return defs().filter(d=>window.isSecondWorldCalamityVisible?.(d.id));}
@@ -268,7 +255,7 @@
    },
    async onEnd(run){ui.finalRun=run;}
   });
-  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;render();notifyTitlePostFlow("universe-calamity-continuous");
+  ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-continuous");
  }
  function ensureNotice(){
   let modal=document.getElementById("secondWorldCalamityAppearanceModal");if(modal)return modal;
@@ -334,7 +321,7 @@
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   if(thirdWorldReviewOnly())return false;
   const st=status(id);if(!st?.challengeable)return false;
-  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();resetSecondWorldCalamityBattleViewport();
+  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
   if(ui.mode==="continuous")continuous();else single();return true;
  };
  window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};
@@ -363,7 +350,9 @@
   document.getElementById("secondWorldCalamityAppearanceModal")?.classList.remove("show");
   if(noticeQueue.length)setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
  };
- window.SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_BATTLE_ENTRY_SCROLL_RESET_VERSION=2;
+ window.SECOND_WORLD_CALAMITY_UI_TRANSIENT_STATE_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_UI_TRANSIENT_FIELDS=Object.freeze(["displayBattleNumber","battleView"]);
  window.getSecondWorldCalamityPresentationSnapshot=function(){
   const view=ui.battleView;
   return Object.freeze({
