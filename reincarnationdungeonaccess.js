@@ -1,7 +1,8 @@
 (function(){
- const VERSION=3;
- const ERA_RESTRICTION_VERSION=1;
- const ACCESS_SNAPSHOT_VERSION=1;
+ const VERSION=4;
+ const ERA_RESTRICTION_VERSION=2;
+ const ERA_POLICY_DELEGATION_VERSION=1;
+ const ACCESS_SNAPSHOT_VERSION=2;
  const MIN_LEVELS=Object.freeze({bounty:5,arena:15,tower:25,mirror:Math.max(1,Math.floor(Number(window.MIRROR_DUNGEON_CONFIG?.unlockLevel)||50))});
  const base=Object.freeze({
   mirrorDungeonStatus:typeof window.mirrorDungeonStatus==="function"?window.mirrorDungeonStatus:null,
@@ -15,15 +16,25 @@
   const s=targetState(target),context=typeof window.dungeonReincarnationContext==="function"?window.dungeonReincarnationContext(s):null;
   return context?.reincarnationRun===true;
  }
+ function eraPolicy(mode,target=null){
+  const key=modeKey(mode),s=targetState(target);
+  if(typeof window.dungeonModeAvailability!=="function")return Object.freeze({mode:key,visible:false,enabled:false,reason:"副本紀元規則尚未載入。",ownerMissing:true});
+  const policy=window.dungeonModeAvailability(key,s);
+  return Object.freeze({...policy,mode:key,ownerMissing:false});
+ }
  function accessSnapshot(mode,target=null){
   const key=modeKey(mode),s=targetState(target),minimum=Math.max(1,Math.floor(Number(MIN_LEVELS[key])||1)),level=Math.max(1,Math.floor(Number(s?.level)||1));
-  const permanentUnlocked=permanent(s),levelUnlocked=level>=minimum,unlocked=permanentUnlocked||levelUnlocked;
-  return Object.freeze({version:ACCESS_SNAPSHOT_VERSION,mode:key,minimumLevel:minimum,level,permanent:permanentUnlocked,levelUnlocked,unlocked,source:permanentUnlocked?"reincarnation-permanent":(levelUnlocked?"level":"locked"),unlockText:permanentUnlocked?"轉生後永久解鎖":`Lv.${minimum}${levelUnlocked?" 已解鎖":" 解鎖"}`});
+  const permanentUnlocked=permanent(s),levelUnlocked=level>=minimum,qualificationUnlocked=permanentUnlocked||levelUnlocked,qualificationSource=permanentUnlocked?"reincarnation-permanent":(levelUnlocked?"level":"locked");
+  const policy=eraPolicy(key,s),eraVisible=policy.visible!==false,eraEnabled=policy.enabled!==false,eraAllowed=eraVisible&&eraEnabled&&!policy.ownerMissing,effectiveEnabled=qualificationUnlocked&&eraAllowed;
+  return Object.freeze({version:ACCESS_SNAPSHOT_VERSION,mode:key,minimumLevel:minimum,level,permanent:permanentUnlocked,permanentUnlocked,levelUnlocked,qualificationUnlocked,qualificationSource,eraVisible,eraEnabled,eraAllowed,effectiveEnabled,unlocked:effectiveEnabled,source:qualificationSource,effectiveSource:!qualificationUnlocked?"qualification-locked":(!eraAllowed?"era-blocked":qualificationSource),reason:!eraAllowed?String(policy.reason||"此紀元目前無法挑戰此副本。"):"",unlockText:permanentUnlocked?"轉生後永久解鎖":`Lv.${minimum}${levelUnlocked?" 已解鎖":" 解鎖"}`});
  }
- function entryUnlocked(mode,target=null){return accessSnapshot(mode,target).unlocked===true;}
+ function entryUnlocked(mode,target=null){return accessSnapshot(mode,target).effectiveEnabled===true;}
  function currentPhase(target=null){
   const s=targetState(target);
-  return typeof window.currentWorldPhase==="function"?Number(window.currentWorldPhase(s))||1:(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));
+  if(typeof window.currentWorldPhase!=="function")throw new Error("Canonical world phase owner unavailable.");
+  const phase=Number(window.currentWorldPhase(s));
+  if(phase!==1&&phase!==2&&phase!==3)throw new Error("Canonical world phase owner returned an invalid phase.");
+  return phase;
  }
  function replaceDaily(target,next){
   const row=target&&typeof target==="object"?target:null;if(!row)return false;
@@ -71,19 +82,6 @@
   return base.getArenaRankCapForWorld.call(this,w,target);
  };
 
- function reinstallThirdWorldPolicy(){
-  if(typeof window.unregisterDungeonModeAvailabilityPolicy!=="function"||typeof window.registerDungeonModeAvailabilityPolicy!=="function")return false;
-  window.unregisterDungeonModeAvailabilityPolicy("third-world");
-  return window.registerDungeonModeAvailabilityPolicy("third-world",function(mode,target){
-   if(currentPhase(target)!==3)return null;
-   if(mode==="bounty")return {visible:false,enabled:false,reason:"高維紀元已關閉懸賞戰。"};
-   if(mode==="arena")return {visible:true,enabled:true,titleText:"高維競技場",rewardText:"VIP 積分",unlockText:"高維紀元可挑戰",descriptionText:"選擇定相或異相競技場，完成三戰取得 VIP 積分。",buttonLabel:"進入高維競技場"};
-   if(mode==="tower")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
-   if(mode==="mirror")return {visible:true,enabled:true,unlockText:"高維紀元可挑戰"};
-   return {visible:true,enabled:true};
-  });
- }
-
  function dailyRemaining(mode){const row=typeof window.dailyDungeonStatus==="function"?window.dailyDungeonStatus(mode):null;return row?Math.max(0,Math.floor(Number(row.remaining)||0)):0;}
  function syncAccessCard(main,selector,mode){
   const card=main?.querySelector(selector);if(!card)return false;
@@ -92,7 +90,7 @@
    card.hidden=true;card.style.setProperty("display","none","important");card.dataset.dungeonPolicyHidden="1";
    return true;
   }
-  const access=accessSnapshot(mode,state);if(!access.permanent)return false;
+  const access=accessSnapshot(mode,state);if(!access.permanentUnlocked||!access.effectiveEnabled)return false;
   card.hidden=false;card.style.removeProperty("display");delete card.dataset.dungeonPolicyHidden;card.classList.remove("locked");
   const unlock=card.querySelector(".dungeon-unlock-label"),button=card.querySelector(".dungeon-entry-btn");
   if(unlock){unlock.textContent=access.unlockText;unlock.hidden=false;}
@@ -122,9 +120,9 @@
   return true;
  }
 
- const policyReinstalled=reinstallThirdWorldPolicy();
  if(typeof window.registerDungeonPostRenderHook==="function")window.registerDungeonPostRenderHook(syncUi);
  window.REINCARNATION_DUNGEON_ERA_RESTRICTION_VERSION=ERA_RESTRICTION_VERSION;
- window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT=Object.freeze({version:VERSION,snapshotVersion:ACCESS_SNAPSHOT_VERSION,eraRestrictionVersion:ERA_RESTRICTION_VERSION,policyReinstalled,temporaryLevelPresentation:false,entryOwner:"shared-access-snapshot",wrapped:{bounty:false,arena:false,void:false,mirror:typeof base.beginMirrorDungeonState==="function",arenaCap:typeof base.getArenaRankCapForWorld==="function"}});
+ window.REINCARNATION_DUNGEON_ERA_POLICY_DELEGATION_VERSION=ERA_POLICY_DELEGATION_VERSION;
+ window.REINCARNATION_DUNGEON_ACCESS_INSTALL_REPORT=Object.freeze({version:VERSION,snapshotVersion:ACCESS_SNAPSHOT_VERSION,eraRestrictionVersion:ERA_RESTRICTION_VERSION,eraPolicyDelegationVersion:ERA_POLICY_DELEGATION_VERSION,eraPolicyOwner:"thirdworlddungeonui",policyReinstalled:false,temporaryLevelPresentation:false,entryOwner:"effective-access-snapshot",wrapped:{bounty:false,arena:false,void:false,mirror:typeof base.beginMirrorDungeonState==="function",arenaCap:typeof base.getArenaRankCapForWorld==="function"}});
  window.syncReincarnationDungeonAccessUi=syncUi;
 })();
