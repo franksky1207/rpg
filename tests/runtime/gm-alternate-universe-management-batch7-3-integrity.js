@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===3&&window.GM_ALTERNATE_UNIVERSE_TITLE_SYNC_VERSION===1&&window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY?.passed===true&&typeof window.gmCommitFormalAlternateUniverseProgress==="function"&&typeof window.gmAlternateUniverseTitleSnapshot==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===4&&window.GM_ALTERNATE_UNIVERSE_TITLE_SYNC_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_TITLE_THRESHOLD_OWNER_VERSION===1&&window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_INTEGRITY?.passed===true&&typeof window.gmCommitFormalAlternateUniverseProgress==="function"&&typeof window.gmAlternateUniverseTitleSnapshot==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const fixture=()=>({
     saveVersion:17,level:1,exp:0,hp:100,vipLevel:0,vipPoints:0,equipment:{},enhancement:{levels:{}},secondWorld:{entered:false},thirdWorld:{entered:false},
@@ -58,7 +58,7 @@ const assert=require("assert");
   });
 
   assert.equal(report.self.passed,true,"Batch7-3 self-integrity failed: "+JSON.stringify(report.self.errors||null));
-  assert.deepEqual(report.versions,{manage:3,canonical:3,transaction:1,formalSnapshot:2,titleSync:1});
+  assert.deepEqual(report.versions,{manage:4,canonical:3,transaction:1,formalSnapshot:2,titleSync:2});
   assert.equal(report.before.deepestCleared,37);
   assert.equal(report.before.frontier,38);
   assert.equal(report.before.activeAttempt.depth,38);
