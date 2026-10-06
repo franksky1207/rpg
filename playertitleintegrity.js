@@ -1,5 +1,5 @@
 (function(){
- const VERSION=19;
+ const VERSION=20;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -50,8 +50,8 @@
  if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==5||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==4||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==2||Number(window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號 catalog 必須維持銀河／宇宙／高維／異宇宙順序並固定鏡像稱號最後",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,alternateExtension:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION,mirrorLast:window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION});
  if(window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_ALL_DEFS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_CATALOG_IDS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_ALL_IDS)fail("TITLE_CATALOG_SINGLE_OWNER","PLAYER_TITLE_DEFS／CATALOG／ALL 必須指向同一正式 catalog");
  if(Number(window.THIRD_WORLD_TITLE_BACKFILL_VERSION)!==1)fail("TITLE_THIRD_WORLD_BACKFILL_VERSION","高維稱號 backfill owner V1 未載入",window.THIRD_WORLD_TITLE_BACKFILL_VERSION);
- if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION)!==2)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 版本異常",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION});
- if(Number(window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION)!==3||Number(window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION)!==4||Number(window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION)!==4)fail("TITLE_VISUAL_VERSION_SEMANTICS","鏡像 stable class ABI 與第14批 presentation 版本應分離標示",{mirrorClass:window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION,mirrorPresentation:window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION,higherPresentation:window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION});
+ if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==5||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION)!==2||Number(window.PLAYER_TITLE_ALTERNATE_UNIVERSE_RENDERER_VERSION)!==1)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 版本異常",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION,alternate:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_RENDERER_VERSION});
+ if(Number(window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION)!==3||Number(window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION)!==4||Number(window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION)!==4||Number(window.PLAYER_TITLE_ALTERNATE_UNIVERSE_PRESENTATION_VERSION)!==1)fail("TITLE_VISUAL_VERSION_SEMANTICS","鏡像／高維／異宇宙 presentation 版本異常",{mirrorClass:window.PLAYER_TITLE_MIRROR_VISUAL_CLASS_VERSION,mirrorPresentation:window.PLAYER_TITLE_MIRROR_PRESENTATION_VERSION,higherPresentation:window.PLAYER_TITLE_THIRD_WORLD_PRESENTATION_VERSION,alternatePresentation:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_PRESENTATION_VERSION});
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_ALTERNATE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI／異宇宙來源文案／三紀元 post-flow 通知版本異常",{ui:window.PLAYER_TITLE_UI_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION,alternate:window.PLAYER_TITLE_ALTERNATE_UNIVERSE_NOTICE_VERSION,postFlow:window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION,legacyDelegate:window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION,higherReady:window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION});
  const postFlowEras=Array.from(window.PLAYER_TITLE_POST_FLOW_ERAS||[]);
  if(JSON.stringify(postFlowEras)!==JSON.stringify(["galaxy","universe","higher-dimensional"]))fail("TITLE_POST_FLOW_ERAS","稱號 post-flow owner 必須覆蓋三紀元",postFlowEras);
@@ -66,15 +66,22 @@
   mirrorDefs.forEach((def,index)=>{if(def.series!=="mirror"||def.order!==41+index)fail("TITLE_MIRROR_LAST_ORDER",`鏡像 ${def.mirrorWins} 勝稱號必須位於正式 catalog 最後一組`,def);});
 
  const higherVisualOwner=document.querySelector('link[data-player-title-higher-dimensional-owner="1"]');
+ const alternateVisualOwner=document.querySelector('link[data-player-title-alternate-universe-owner="1"]');
  const mirrorVisualOwner=document.querySelector('link[data-player-title-mirror-owner="3"]');
  if(!higherVisualOwner||!String(higherVisualOwner.getAttribute("href")||"").includes("playertitleshigherdimensional.css"))fail("TITLE_HIGHER_VISUAL_OWNER","高維紀元稱號獨立視覺 owner V1 未載入",higherVisualOwner?.getAttribute("href")||null);
+ if(!alternateVisualOwner||!String(alternateVisualOwner.getAttribute("href")||"").includes("playertitlesalternateuniverse.css"))fail("TITLE_ALTERNATE_VISUAL_OWNER","異宇宙稱號獨立視覺 owner V1 未載入",alternateVisualOwner?.getAttribute("href")||null);
  if(!mirrorVisualOwner||!String(mirrorVisualOwner.getAttribute("href")||"").includes("playertitlesmirror.css"))fail("TITLE_MIRROR_VISUAL_OWNER","鏡像稱號獨立視覺 owner 未載入",mirrorVisualOwner?.getAttribute("href")||null);
- const higherSheet=stylesheetSelectors("playertitleshigherdimensional.css"),mirrorSheet=stylesheetSelectors("playertitlesmirror.css");
+ const higherSheet=stylesheetSelectors("playertitleshigherdimensional.css"),alternateSheet=stylesheetSelectors("playertitlesalternateuniverse.css"),mirrorSheet=stylesheetSelectors("playertitlesmirror.css");
  if(!higherSheet.seen||higherSheet.error)fail("TITLE_HIGHER_VISUAL_STYLESHEET","高維稱號視覺 stylesheet 無法完整讀取",higherSheet);
+ if(!alternateSheet.seen||alternateSheet.error)fail("TITLE_ALTERNATE_VISUAL_STYLESHEET","異宇宙稱號視覺 stylesheet 無法完整讀取",alternateSheet);
  if(!mirrorSheet.seen||mirrorSheet.error)fail("TITLE_MIRROR_VISUAL_STYLESHEET","鏡像稱號視覺 stylesheet 無法完整讀取",mirrorSheet);
  if(higherSheet.seen&&!higherSheet.error){
   [".player-title--higher-dimensional",...Array.from({length:10},(_,index)=>`.player-title--higher-dimensional-${index+1}`)].forEach(selector=>{if(!higherSheet.selectors.has(selector))fail("TITLE_HIGHER_VISUAL_SELECTOR",`缺少高維正式視覺 selector：${selector}`);});
   [".player-title--higher-dimensional",...Array.from({length:10},(_,index)=>`.player-title--higher-dimensional-${index+1}::after`)].forEach(selector=>{if(!hasMediaSelector(higherSheet,"(max-width: 360px)",selector))fail("TITLE_HIGHER_NARROW_MOBILE",`缺少高維極窄手機保護：${selector}`);});
+ }
+ if(alternateSheet.seen&&!alternateSheet.error){
+  [".player-title--alternate-universe",...Array.from({length:10},(_,index)=>`.player-title--alternate-universe-${index+1}`)].forEach(selector=>{if(!alternateSheet.selectors.has(selector))fail("TITLE_ALTERNATE_VISUAL_SELECTOR",`缺少異宇宙正式視覺 selector：${selector}`);});
+  [".player-title--alternate-universe",...Array.from({length:10},(_,index)=>`.player-title--alternate-universe-${index+1}::after`)].forEach(selector=>{if(!hasMediaSelector(alternateSheet,"(max-width: 360px)",selector))fail("TITLE_ALTERNATE_NARROW_MOBILE",`缺少異宇宙極窄手機保護：${selector}`);});
  }
  if(mirrorSheet.seen&&!mirrorSheet.error){
   [".player-title--mirror-v3",...mirrorDefs.map(def=>`.player-title--mirror-v3-${def.mirrorWins}`)].forEach(selector=>{if(!mirrorSheet.selectors.has(selector))fail("TITLE_MIRROR_VISUAL_SELECTOR",`缺少鏡像正式視覺 selector：${selector}`);});
@@ -143,6 +150,10 @@
   Array.from({length:10},(_,index)=>index+1).forEach(tier=>{
    const def=higherDefs[tier-1],html=def?window.playerTitleHtml(def.id):"";
    if(!html.includes(`player-title--higher-dimensional-${tier}`)||html.includes("player-title--tier-")||!html.includes(`data-title-text=\"${def?.name||""}\"`))fail("TITLE_HIGHER_ALL_RENDER",`高維第 ${tier} 階正式 renderer／視覺解耦異常`,html);
+  });
+  alternateDefs.forEach(def=>{
+   const html=window.playerTitleHtml(def.id);
+   if(!html.includes("player-title--alternate-universe")||!html.includes(`player-title--alternate-universe-${def.tier}`)||html.includes("player-title--tier-")||!html.includes(`data-title-text=\"${def.name}\"`))fail("TITLE_ALTERNATE_ALL_RENDER",`異宇宙第 ${def.tier} 階 renderer／專屬 class 異常`,html);
   });
   mirrorDefs.forEach(def=>{
    const html=window.playerTitleHtml(def.id);
