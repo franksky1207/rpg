@@ -1,9 +1,13 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
+ const WORLD_PHASE_OWNER_VERSION=1;
  const policies=new Map();
  function currentPhase(target=null){
   const s=target&&typeof target==="object"?target:(typeof state!=="undefined"?state:null);
-  return typeof window.currentWorldPhase==="function"?window.currentWorldPhase(s):(s?.thirdWorld?.entered===true?3:(s?.secondWorld?.entered===true?2:1));
+  if(typeof window.currentWorldPhase!=="function")throw new Error("Canonical world phase owner unavailable.");
+  const phase=Number(window.currentWorldPhase(s));
+  if(phase!==1&&phase!==2&&phase!==3)throw new Error("Canonical world phase owner returned an invalid phase.");
+  return phase;
  }
  function registerPolicy(name,checker){const key=String(name||"").trim();if(!key||typeof checker!=="function")return false;policies.set(key,checker);return true;}
  function unregisterPolicy(name){return policies.delete(String(name||"").trim());}
@@ -128,6 +132,8 @@
  window.unregisterDungeonModeAvailabilityPolicy=unregisterPolicy;
  window.dungeonModeAvailability=availability;
  window.THIRD_WORLD_DUNGEON_UI_VERSION=VERSION;
+ window.THIRD_WORLD_DUNGEON_WORLD_PHASE_OWNER_VERSION=WORLD_PHASE_OWNER_VERSION;
+ window.THIRD_WORLD_DUNGEON_ERA_POLICY_OWNER="thirdworlddungeonui";
  window.THIRD_WORLD_DUNGEON_LEGACY_PRESENTATION_RETIRED_VERSION=1;
  window.THIRD_WORLD_ARENA_LIVE_VERSION=1;
  window.THIRD_WORLD_DUNGEON_HOME_POLICY_VERSION=2;
