@@ -26,8 +26,9 @@
  const ALTERNATE_UNIVERSE_SOURCE=Array.from(window.ALTERNATE_UNIVERSE_TITLE_ROWS||[]);
  if(ALTERNATE_UNIVERSE_SOURCE.length!==10)throw new Error("Player title core requires exactly 10 Alternate Universe title definitions.");
  const ALTERNATE_UNIVERSE_DEFS=Object.freeze(ALTERNATE_UNIVERSE_SOURCE.map((entry,index)=>{
-  const id=String(entry?.id||""),name=String(entry?.name||""),tier=Math.max(1,Math.floor(Number(entry?.tier)||index+1)),depthThreshold=Math.max(100,Math.floor(Number(entry?.depthThreshold)||((index+1)*100)));
-  if(!id||!name||name.length!==4||tier!==index+1||depthThreshold!==(index+1)*100)throw new Error(`Alternate Universe title metadata missing at index ${index}.`);
+  const id=String(entry?.id||""),name=String(entry?.name||""),tier=Math.floor(Number(entry?.tier)),depthThreshold=Math.floor(Number(entry?.depthThreshold));
+  const previousThreshold=index>0?Math.floor(Number(ALTERNATE_UNIVERSE_SOURCE[index-1]?.depthThreshold)):0;
+  if(!id||!name||name.length!==4||tier!==index+1||!Number.isInteger(depthThreshold)||depthThreshold<=previousThreshold||depthThreshold<=0)throw new Error(`Alternate Universe title metadata missing at index ${index}.`);
   return Object.freeze({id,name,tier,depthThreshold,series:"alternate-universe",order:DEFS.length+UNIVERSE_DEFS.length+THIRD_WORLD_DEFS.length+index+1});
  }));
  const MIRROR_UNLOCKS=Array.from(window.MIRROR_DUNGEON_CONFIG?.titleUnlocks||[]);
@@ -67,15 +68,19 @@
   if(target?.thirdWorld?.entered!==true||typeof window.thirdWorldTitleTier!=="function")return 0;
   return Math.max(0,Math.min(10,Math.floor(Number(window.thirdWorldTitleTier(target))||0)));
  }
+ function alternateUniverseEligibleTierForDepth(value){
+  const deepest=Math.max(0,Math.floor(Number(value)||0));
+  return ALTERNATE_UNIVERSE_DEFS.filter(def=>deepest>=def.depthThreshold).length;
+ }
  function alternateUniverseEligibleTier(target){
   const raw=typeof window.alternateUniverseDeepestCleared==="function"?window.alternateUniverseDeepestCleared(target):target?.reincarnation?.alternateUniverse?.deepestCleared;
-  const deepest=Math.max(0,Math.min(1000,Math.floor(Number(raw)||0)));
-  return Math.max(0,Math.min(10,Math.floor(deepest/100)));
+  return alternateUniverseEligibleTierForDepth(raw);
  }
  function normalizePlayerTitleState(target){
   if(!isObject(target))return target;
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState();
-  const unlocked=validUnlockedSet(source.unlocked);
+  const beforeUnlocked=validUnlockedSet(source.unlocked),beforeIds=CATALOG_IDS.filter(id=>beforeUnlocked.has(id));
+  const unlocked=new Set(beforeUnlocked);
   DEFS.forEach(def=>{if(target?.marks?.entries?.[def.markId]?.acquired===true)unlocked.add(def.id);});
   UNIVERSE_DEFS.forEach((def,index)=>{const kills=Math.max(0,Math.floor(Number(universeCalamityRow(target,def,index)?.trueKills)||0));if(kills>=1)unlocked.add(def.id);});
   const mirrorBestWins=Math.max(0,Math.floor(Number(target?.dungeon?.mirror?.history?.bestWins)||0));
@@ -85,6 +90,10 @@
   const alternateTier=alternateUniverseEligibleTier(target);
   ALTERNATE_UNIVERSE_DEFS.forEach(def=>{if(alternateTier>=def.tier)unlocked.add(def.id);});
   target.titles=sanitizePlayerTitleState(source,unlocked).source;
+  const afterIds=Array.isArray(target.titles?.unlocked)?target.titles.unlocked.slice():[];
+  const addedIds=afterIds.filter(id=>!beforeUnlocked.has(id)),removedIds=beforeIds.filter(id=>!afterIds.includes(id));
+  const alternateUniverseBackfilledIds=addedIds.filter(id=>ALTERNATE_UNIVERSE_IDS.includes(id));
+  window.LAST_PLAYER_TITLE_NORMALIZATION_REPORT=Object.freeze({version:1,addedCount:addedIds.length,removedCount:removedIds.length,addedIds:Object.freeze(addedIds),removedIds:Object.freeze(removedIds),alternateUniverseBackfilledCount:alternateUniverseBackfilledIds.length,alternateUniverseBackfilledIds:Object.freeze(alternateUniverseBackfilledIds)});
   return target;
  }
  function titleDefinition(id){return BY_ID[String(id||"")]||null;}
@@ -137,8 +146,9 @@
  }
  function grantAlternateUniverseTitlesForDepth(depth,target=state,options={}){
   if(!isObject(target))return {changed:false,unlockedTitles:[],noticeTitle:null,depth:0,previousDepth:0,tier:0,previousTier:0};
-  const currentDepth=Math.max(0,Math.min(1000,Math.floor(Number(depth)||0))),previousDepth=Math.max(0,Math.min(1000,Math.floor(Number(options?.previousDepth)||0)));
-  const currentTier=Math.max(0,Math.min(10,Math.floor(currentDepth/100))),previousTier=Math.max(0,Math.min(10,Math.floor(previousDepth/100)));
+  const maxDepth=ALTERNATE_UNIVERSE_DEFS.length?ALTERNATE_UNIVERSE_DEFS[ALTERNATE_UNIVERSE_DEFS.length-1].depthThreshold:0;
+  const currentDepth=Math.max(0,Math.min(maxDepth,Math.floor(Number(depth)||0))),previousDepth=Math.max(0,Math.min(maxDepth,Math.floor(Number(options?.previousDepth)||0)));
+  const currentTier=alternateUniverseEligibleTierForDepth(currentDepth),previousTier=alternateUniverseEligibleTierForDepth(previousDepth);
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState(),unlocked=validUnlockedSet(source.unlocked),newlyUnlocked=[];
   ALTERNATE_UNIVERSE_DEFS.filter(def=>currentDepth>=def.depthThreshold).forEach(def=>{if(!unlocked.has(def.id)){unlocked.add(def.id);newlyUnlocked.push(def);}});
   const sanitized=sanitizePlayerTitleState(source,unlocked).source;
@@ -176,6 +186,8 @@
  window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION=1;
  window.PLAYER_TITLE_UNIFIED_DEFS_VERSION=2;
  window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CATALOG_EXTENSION_VERSION=1;
+ window.PLAYER_TITLE_ALTERNATE_UNIVERSE_THRESHOLD_OWNER_VERSION=1;
+ window.PLAYER_TITLE_NORMALIZATION_DIAGNOSTICS_VERSION=1;
  window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION=1;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
@@ -186,6 +198,7 @@
  window.getPlayerTitleDefinitionForThirdWorldTier=titleForThirdWorldTier;
  window.getPlayerTitleDefinitionForAlternateUniverseTier=titleForAlternateUniverseTier;
  window.getPlayerTitleDefinitionForAlternateUniverseDepth=titleForAlternateUniverseDepth;
+ window.getAlternateUniversePlayerTitleEligibleTierForDepth=alternateUniverseEligibleTierForDepth;
  window.grantPlayerTitleForCalamityFirstKill=grantFirstKillTitle;
  window.grantPlayerTitleForUniverseCalamityFirstKill=grantUniverseFirstKillTitle;
  window.grantPlayerTitlesForMirrorWins=grantMirrorTitlesForWins;
