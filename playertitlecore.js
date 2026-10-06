@@ -146,7 +146,7 @@
  }
  function grantAlternateUniverseTitlesForDepth(depth,target=state,options={}){
   if(!isObject(target))return {changed:false,unlockedTitles:[],noticeTitle:null,depth:0,previousDepth:0,tier:0,previousTier:0};
-  const maxDepth=ALTERNATE_UNIVERSE_DEFS.length?ALTERNATE_UNIVERSE_DEFS[ALTERNATE_UNIVERSE_DEFS.length-1].depthThreshold:0;
+  const lastThreshold=ALTERNATE_UNIVERSE_DEFS.length?ALTERNATE_UNIVERSE_DEFS[ALTERNATE_UNIVERSE_DEFS.length-1].depthThreshold:0,maxDepth=Math.max(lastThreshold,Math.floor(Number(window.ALTERNATE_UNIVERSE_MAX_DEPTH)||lastThreshold));
   const currentDepth=Math.max(0,Math.min(maxDepth,Math.floor(Number(depth)||0))),previousDepth=Math.max(0,Math.min(maxDepth,Math.floor(Number(options?.previousDepth)||0)));
   const currentTier=alternateUniverseEligibleTierForDepth(currentDepth),previousTier=alternateUniverseEligibleTierForDepth(previousDepth);
   const source=isObject(target.titles)?target.titles:createBlankPlayerTitleState(),unlocked=validUnlockedSet(source.unlocked),newlyUnlocked=[];
