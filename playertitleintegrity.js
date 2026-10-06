@@ -1,5 +1,5 @@
 (function(){
- const VERSION=21;
+ const VERSION=22;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -191,7 +191,7 @@
 
  try{
   const before=clone(state?.titles),beforeSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null,html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"",after=clone(state?.titles),afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==10||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==6||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==6||Number(window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION)!==4||Number(window.GM_PLAYER_TITLE_PREVIEW_ALTERNATE_UNIVERSE_QUICK_VERSION)!==1||!html.includes("實戰名稱預覽全部 46 個正式稱號")||!html.includes("高維紀元稱號")||!html.includes("異宇宙稱號")||!html.includes("異宇宙 1～10 階快速視覺測試")||!html.includes("鏡像戰稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應相容 46 稱號正式 catalog、異宇宙快速測試且鏡像置底",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,displayOrder:window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION,alternateQuick:window.GM_PLAYER_TITLE_PREVIEW_ALTERNATE_UNIVERSE_QUICK_VERSION,html});
+  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==11||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==6||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==6||Number(window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION)!==4||Number(window.GM_PLAYER_TITLE_PREVIEW_REDUNDANT_AU_QUICK_RETIRED_VERSION)!==1||!html.includes("實戰名稱預覽全部 46 個正式稱號")||!html.includes("高維紀元稱號")||!html.includes("異宇宙稱號")||!html.includes("鏡像戰稱號")||html.includes("異宇宙 1～10 階快速視覺測試"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應維持 46 稱號唯一選單、異宇宙重複快速入口已退休且鏡像置底",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,displayOrder:window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION,redundantAuQuickRetired:window.GM_PLAYER_TITLE_PREVIEW_REDUNDANT_AU_QUICK_RETIRED_VERSION,html});
   const higherPos=html.indexOf("高維紀元稱號"),alternatePos=html.indexOf("異宇宙稱號"),mirrorPos=html.indexOf("鏡像戰稱號");
   if(!(higherPos>=0&&alternatePos>higherPos&&mirrorPos>alternatePos))fail("TITLE_GM_PREVIEW_ORDER","GM 稱號預覽應維持高維→異宇宙→鏡像最後",{higherPos,alternatePos,mirrorPos});
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
