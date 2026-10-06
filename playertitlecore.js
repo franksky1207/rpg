@@ -16,17 +16,18 @@
   if(!id||!name)throw new Error(`Universe Calamity title metadata missing at index ${index}.`);
   return Object.freeze({id,name,calamityId:String(entry.id||""),tier:Math.max(1,Math.floor(Number(entry.titleTier)||index+1)),series:"universe-calamity",order:DEFS.length+index+1});
  }));
- const MIRROR_UNLOCKS=Array.from(window.MIRROR_DUNGEON_CONFIG?.titleUnlocks||[]);
- if(MIRROR_UNLOCKS.length!==6)throw new Error("Player title core requires exactly 6 Mirror Dungeon title unlocks.");
- const MIRROR_DEFS=Object.freeze(MIRROR_UNLOCKS.map((entry,index)=>Object.freeze({id:String(entry.id),name:String(entry.name),mirrorWins:Math.floor(Number(entry.wins)||0),series:"mirror",order:DEFS.length+UNIVERSE_DEFS.length+index+1})));
  const THIRD_WORLD_SOURCE=Array.from(window.THIRD_WORLD_TITLE_DEFINITIONS||[]);
  if(THIRD_WORLD_SOURCE.length!==10)throw new Error("Player title core requires exactly 10 Higher-dimensional title definitions.");
  const THIRD_WORLD_DEFS=Object.freeze(THIRD_WORLD_SOURCE.map((entry,index)=>{
   const id=String(entry?.id||""),name=String(entry?.name||""),tier=Math.max(1,Math.floor(Number(entry?.tier)||index+1));
   if(!id||!name||tier!==index+1)throw new Error(`Higher-dimensional title metadata missing at index ${index}.`);
-  return Object.freeze({id,name,tier,series:"higher-dimensional",thresholdRemainingPercentSum:Number(entry?.thresholdRemainingPercentSum),thresholdRemainingHp:Number(entry?.thresholdRemainingHp),order:DEFS.length+UNIVERSE_DEFS.length+MIRROR_DEFS.length+index+1});
+  return Object.freeze({id,name,tier,series:"higher-dimensional",thresholdRemainingPercentSum:Number(entry?.thresholdRemainingPercentSum),thresholdRemainingHp:Number(entry?.thresholdRemainingHp),order:DEFS.length+UNIVERSE_DEFS.length+index+1});
  }));
- const CATALOG_DEFS=Object.freeze([...DEFS,...UNIVERSE_DEFS,...MIRROR_DEFS,...THIRD_WORLD_DEFS]);
+ const MIRROR_UNLOCKS=Array.from(window.MIRROR_DUNGEON_CONFIG?.titleUnlocks||[]);
+ if(MIRROR_UNLOCKS.length!==6)throw new Error("Player title core requires exactly 6 Mirror Dungeon title unlocks.");
+ const MIRROR_DEFS=Object.freeze(MIRROR_UNLOCKS.map((entry,index)=>Object.freeze({id:String(entry.id),name:String(entry.name),mirrorWins:Math.floor(Number(entry.wins)||0),series:"mirror",order:DEFS.length+UNIVERSE_DEFS.length+THIRD_WORLD_DEFS.length+index+1})));
+ // Canonical display/persistence order policy: chronological era titles first; Mirror titles are always last because they are the rarest series.
+ const CATALOG_DEFS=Object.freeze([...DEFS,...UNIVERSE_DEFS,...THIRD_WORLD_DEFS,...MIRROR_DEFS]);
  const IDS=Object.freeze(DEFS.map(row=>row.id));
  const UNIVERSE_IDS=Object.freeze(UNIVERSE_DEFS.map(row=>row.id));
  const MIRROR_IDS=Object.freeze(MIRROR_DEFS.map(row=>row.id));
@@ -138,10 +139,11 @@
  window.PLAYER_TITLE_CATALOG_IDS=CATALOG_IDS;
  window.PLAYER_TITLE_ALL_DEFS=CATALOG_DEFS;
  window.PLAYER_TITLE_ALL_IDS=CATALOG_IDS;
- window.PLAYER_TITLE_CATALOG_VERSION=3;
- window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION=2;
+ window.PLAYER_TITLE_CATALOG_VERSION=4;
+ window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION=3;
  window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION=1;
  window.PLAYER_TITLE_UNIFIED_DEFS_VERSION=1;
+ window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION=1;
  window.createBlankPlayerTitleState=createBlankPlayerTitleState;
  window.normalizePlayerTitleState=normalizePlayerTitleState;
  window.getPlayerTitleDefinition=titleDefinition;
