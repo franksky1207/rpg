@@ -56,6 +56,11 @@
    if(window.gmHubManageSectionVisible("civilization-manage",universe)!==true||window.gmHubManageSectionVisible("civilization-manage",higher)!==true)fail("CIV_SECTION_W23","W2/W3 應顯示文明等級管理");
    if(window.gmHubManageSectionVisible("general-manage",galaxy)!==true)fail("GENERAL_SECTION_VISIBILITY","角色管理不應被紀元隱藏");
   }
+  if(Number(window.GM_DUNGEON_MIRROR_MANAGEMENT_WIRING_VERSION)!==1||typeof window.gmDungeonManagementHtml!=="function")fail("DUNGEON_MIRROR_MANAGEMENT_WIRING","副本管理未接上鏡像正式管理 renderer",{version:window.GM_DUNGEON_MIRROR_MANAGEMENT_WIRING_VERSION,renderer:typeof window.gmDungeonManagementHtml});
+  else{
+   const html=String(window.gmDungeonManagementHtml()||"");
+   if(typeof window.gmMirrorManagementHtml==="function"&&!html.includes("GM・鏡像戰正式紀錄介入"))fail("DUNGEON_MIRROR_MANAGEMENT_RENDER","副本管理未顯示 GM 鏡像正式紀錄介入",html);
+  }
   if(Number(window.GM_DUNGEON_PHASE_COPY_VERSION)!==1||typeof window.gmDungeonManagementNoteForPhase!=="function")fail("DUNGEON_PHASE_COPY_API","副本管理紀元文案 owner 未載入");
   else{
    const n1=String(window.gmDungeonManagementNoteForPhase(1)||""),n2=String(window.gmDungeonManagementNoteForPhase(2)||""),n3=String(window.gmDungeonManagementNoteForPhase(3)||"");
