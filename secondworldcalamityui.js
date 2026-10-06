@@ -1,9 +1,9 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const TITLE_POST_FLOW_VERSION=1;
  const LEGACY_REVIEW_VERSION=1;
  const noticeQueue=[];
- const ui={selectedId:null,mode:"single",phase:"idle",running:false,message:"",lastBattle:null,finalRun:null};
+ const ui={selectedId:null,mode:"single",phase:"idle",running:false,message:"",lastBattle:null,finalRun:null,displayBattleNumber:1,battleView:null};
  let calamityEraView="universe";
  let reviewSelectedId=null;
  let reviewBattle=null;
@@ -138,10 +138,11 @@
  function combat(){
   const st=status(ui.selectedId),def=st?.definition,run=window.getSecondWorldCalamityRunSnapshot?.(),e=window.buildSecondWorldCalamityEnemy?.(ui.selectedId),p=window.playerCombatStats?.();
   if(!def||!e||!p)return idle();
-  const last=ui.lastBattle,ehp=last?.enemyEndHp??st.currentHp,php=last?.playerEndHp??p.hp;
+  const last=ui.lastBattle,view=ui.battleView;
+  const ehp=view?.enemyHp??last?.enemyEndHp??st.currentHp,php=view?.playerHp??last?.playerEndHp??p.hp;
   const continuous=ui.mode==="continuous";
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
-   <div class="calamity-combat-head"><span>${continuous?`連續討伐・第 ${Math.max(1,(run?.battleCount||0)+1)} 場`:"單場挑戰"}</span></div>
+   <div class="calamity-combat-head"><span>${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:"單場挑戰"}</span></div>
    ${continuous?`<div class="calamity-stop-wrap"><button class="btn danger" onclick="stopSecondWorldCalamityContinuousUI()">停止連續討伐</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerName()} Lv.${state.level}</h2><div class="muted">ATK ${fmt(p.atk)}　DEF ${fmt(p.def)}<br>暴擊 ${Number(p.crit||0).toFixed(1)}%　閃避 ${Number(p.dodge||0).toFixed(1)}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(p.hp)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,php/p.hp*100))}%"></span></div></div></div>
@@ -167,30 +168,79 @@
    <div class="calamity-result-actions">${completed?`<button class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場重打</button>`:`<button class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場挑戰</button><button class="btn danger" onclick="startSecondWorldCalamityUI('${def.id}','continuous')">連續討伐</button>`}<button class="btn" onclick="returnToSecondWorldCalamityList()">返回文明災厄</button></div>
   </div></section>`;
  }
+ function battleViewFromSnapshot(snapshot){
+  if(!snapshot)return null;
+  return {
+   enemyHp:Math.max(0,Number(snapshot.enemyHp)||0),
+   enemyMax:Math.max(1,Number(snapshot.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(snapshot.playerHp)||0),
+   playerMax:Math.max(1,Number(snapshot.playerMaxHp)||1)
+  };
+ }
+ function syncSecondWorldCalamityPresentation(snapshot){
+  const next=battleViewFromSnapshot(snapshot);if(!next)return;
+  ui.battleView=next;
+  if(window.getMinimalModeAdapterId?.()==="second-world-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
+ }
+ function primeDisplay(result){
+  if(!result){ui.battleView=null;return;}
+  const combat=result.combat||result;
+  ui.battleView={
+   enemyHp:Math.max(0,Number(result.enemyStartHp)||0),
+   enemyMax:Math.max(1,Number(result.enemy?.hp)||Number(combat.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(result.playerStartHp)||0),
+   playerMax:Math.max(1,Number(combat.playerMaxHp)||Number(result.playerStartHp)||1)
+  };
+ }
+ function finalDisplay(result){
+  if(!result){ui.battleView=null;return;}
+  const combat=result.combat||result;
+  ui.battleView={
+   enemyHp:Math.max(0,Number(result.enemyEndHp)||0),
+   enemyMax:Math.max(1,Number(result.enemy?.hp)||Number(combat.enemyMaxHp)||1),
+   playerHp:Math.max(0,Number(result.playerEndHp)||0),
+   playerMax:Math.max(1,Number(combat.playerMaxHp)||Number(result.playerStartHp)||1)
+  };
+ }
+ function refreshCatchUpUi(result){
+  finalDisplay(result);
+  render();
+  if(window.getMinimalModeAdapterId?.()==="second-world-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
+ }
  async function animate(result){
   if(!result?.combat||typeof window.animateStructuredCombatPresentation!=="function")return;
-  try{await window.animateStructuredCombatPresentation(result.combat,{mode:"calamity",clearAfter:true,clearReason:"second-world-calamity-end"});}catch(e){}
+  try{
+   syncSecondWorldCalamityPresentation(window.getCombatPresentationSnapshot?.());
+   await window.animateStructuredCombatPresentation(result.combat,{
+    mode:"calamity",
+    onUpdate:syncSecondWorldCalamityPresentation,
+    clearAfter:true,
+    clearReason:"second-world-calamity-end"
+   });
+   finalDisplay(result);
+   if(window.getMinimalModeAdapterId?.()==="second-world-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
+  }catch(e){}
  }
  async function single(){
   const res=window.runSecondWorldCalamitySingle?.(ui.selectedId);
   if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始此文明災厄挑戰。";render();return;}
-  ui.lastBattle=res.result;ui.finalRun=res.run;render();await animate(res.result);ui.running=false;ui.phase="result";render();notifyTitlePostFlow("universe-calamity-single");
+  ui.lastBattle=res.result;ui.finalRun=res.run;ui.displayBattleNumber=1;primeDisplay(res.result);render();await animate(res.result);ui.running=false;ui.phase="result";ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-single");
  }
  async function continuous(){
   const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{
    async onBattleComplete(step){
-    ui.lastBattle=step.result;ui.finalRun=step.run;ui.phase="combat";
+    ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
     const fast=fastCatchUp();
     const policy=fast?catchUpStep():null;
     if(fast){
-     if(policy?.shouldPresentBattle){render();await animate(step.result);}
+     if(policy?.shouldPresentBattle){primeDisplay(step.result);render();await animate(step.result);}
      else{
       await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
-      if(policy?.shouldRefreshUi)render();
+      if(policy?.shouldRefreshUi)refreshCatchUpUi(step.result);
      }
      if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }else{
-     render();await animate(step.result);
+     primeDisplay(step.result);render();await animate(step.result);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }
     if(!step.ended&&window.getSecondWorldCalamityRunSnapshot?.()?.active){
@@ -198,7 +248,7 @@
      else await sleep(continuousGapMs());
      if(fast&&!fastCatchUp()){
       const finalPolicy=catchUpFinal();
-      if(finalPolicy?.shouldRefreshUi)render();
+      if(finalPolicy?.shouldRefreshUi)refreshCatchUpUi(step.result);
       if(finalPolicy?.shouldCheckpoint&&typeof save==="function")save(false);
      }
     }
@@ -223,7 +273,7 @@
 
  window.prepareSecondWorldCivilizationCalamityEntry=function(){
   if(ui.running||reviewBattle?.phase==="combat"||universeReviewBattle?.phase==="combat")return false;
-  ui.selectedId=null;ui.mode="single";ui.phase="idle";ui.message="";ui.lastBattle=null;ui.finalRun=null;
+  ui.selectedId=null;ui.mode="single";ui.phase="idle";ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;
   reviewSelectedId=null;reviewBattle=null;universeReviewSelectedId=null;universeReviewBattle=null;
   if(thirdWorldReviewOnly())calamityEraView="universe";
   notifyTitlePostFlow("universe-calamity-entry");
@@ -271,11 +321,11 @@
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   if(thirdWorldReviewOnly())return false;
   const st=status(id);if(!st?.challengeable)return false;
-  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;render();
+  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();
   if(ui.mode==="continuous")continuous();else single();return true;
  };
  window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};
- window.returnToSecondWorldCalamityList=function(){ui.phase="idle";ui.running=false;ui.lastBattle=null;ui.finalRun=null;render();};
+ window.returnToSecondWorldCalamityList=function(){ui.phase="idle";ui.running=false;ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();};
  window.leaveSecondWorldCalamityUI=function(){ui.phase="idle";ui.running=false;reviewBattle=null;universeReviewBattle=null;view="home";render();};
  window.queueSecondWorldCalamityAppearanceNotice=function(value){
   if(thirdWorldReviewOnly())return false;
@@ -300,6 +350,14 @@
   document.getElementById("secondWorldCalamityAppearanceModal")?.classList.remove("show");
   if(noticeQueue.length)setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
  };
+ window.getSecondWorldCalamityPresentationSnapshot=function(){
+  const view=ui.battleView;
+  return Object.freeze({
+   displayBattleNumber:Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1)),
+   battleView:view?Object.freeze({...view}):null
+  });
+ };
+ window.SECOND_WORLD_CALAMITY_LIVE_PRESENTATION_VERSION=1;
  window.SECOND_WORLD_CALAMITY_UI_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_TITLE_POST_FLOW_VERSION=TITLE_POST_FLOW_VERSION;
  window.SECOND_WORLD_CALAMITY_REVIEW_VERSION=1;
