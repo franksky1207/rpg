@@ -1,13 +1,9 @@
 (function(){
- const VERSION=7;
+ const VERSION=8;
  let selectedId=null;
 
  function canonicalDefs(){return Array.from(window.PLAYER_TITLE_DEFS||[]);}
- function defs(){
-  const list=canonicalDefs();
-  const order=["calamity","universe-calamity","higher-dimensional","mirror"];
-  return order.flatMap(series=>list.filter(def=>def?.series===series));
- }
+ function defs(){return canonicalDefs();}
  function current(){
   const list=defs();
   if(!selectedId&&list.length)selectedId=list[0].id;
@@ -61,9 +57,9 @@
  window.gmSetPlayerTitlePreviewTier=setPreview;
  window.gmPlayerTitlePreviewHtml=html;
  window.GM_PLAYER_TITLE_PREVIEW_VERSION=VERSION;
- window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=3;
- window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=3;
- window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION=1;
+ window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION=4;
+ window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION=4;
+ window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION=2;
  window.GM_PLAYER_TITLE_PREVIEW_OWNER_VERSION=1;
  let registered=false;
  if(typeof window.replaceGmHubSectionRenderer==="function")registered=window.replaceGmHubSectionRenderer("test","player-title-preview",html,"稱號預覽")===true;
