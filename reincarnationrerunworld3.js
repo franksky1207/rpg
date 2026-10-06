@@ -37,7 +37,7 @@
    else detail.textContent=status?.fivePointBypassed===true?"轉生重征服：已解除 5% 戰線限制，可集中攻略此高維存在":"轉生重征服：可集中攻略任一存活高維存在";
   });
   const rule=shell.content.querySelector(".third-world-run-rule .muted");
-  if(rule)rule.textContent=`玩家死亡後仍會繼續下一場；一輪最多累積 ${Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500))} 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡時才會結束本輪；跨入新強化階段會直接套用新能力並繼續下一場；轉生重征服不受 5% 戰線限制。`;
+  if(rule)rule.textContent=`玩家死亡後仍會繼續下一場；一輪最多累積 ${Math.max(1,whole(window.THIRD_WORLD_RUN_MAX_DEATHS||500))} 次死亡。停止連戰後死亡次數與高維壓制歸零；王死亡時才會結束本輪；跨入新強化階段或整體高維進度門檻都會直接套用並繼續下一場；轉生重征服不受 5% 戰線限制。`;
   return shell.innerHTML;
  }
 
