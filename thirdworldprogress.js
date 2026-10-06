@@ -1,5 +1,5 @@
 (function(){
- const VERSION=6;
+ const VERSION=7;
  const SETTLEMENT_VERSION=5;
  const STORY_FRAMEWORK_BRIDGE_VERSION=1;
  const COMPLETION_READY_FRAMEWORK_VERSION=1;
@@ -11,9 +11,10 @@
  const STORY_STAGE_SETTLEMENT_VERSION=1;
  const BOSS_DEFEAT_SETTLEMENT_VERSION=1;
  const STAGE_CROSSING_SETTLEMENT_VERSION=2;
- const REINCARNATION_STAGE_CONTINUATION_VERSION=1;
+ const REINCARNATION_STAGE_CONTINUATION_VERSION=2;
+ const REINCARNATION_PROGRESS_EVENT_CONTINUATION_VERSION=1;
  const POST_SETTLEMENT_FIVE_POINT_VERSION=1;
- const CONTINUATION_DECISION_VERSION=1;
+ const CONTINUATION_DECISION_VERSION=2;
  const settledBasisObjects=new WeakSet();
  const preparedLootByBasis=new WeakMap();
 
@@ -95,8 +96,16 @@
   const profile=typeof window.thirdWorldBossAbilities==="function"?window.thirdWorldBossAbilities(bossIndex,hp):null;
   return profile&&typeof profile==="object"?Object.entries(profile).filter(([,row])=>row?.active===true).map(([id])=>id):[];
  }
+ function thirdWorldRerunPolicy(target){
+  const owner=window.CivilizationReincarnation?.lifecycle?.worldRerunPolicy||window.worldRerunPolicy;
+  if(typeof owner!=="function")return freeze({active:false,targetWorld:3,source:"fail-closed"});
+  try{
+   const policy=owner(3,target,{version:REINCARNATION_STAGE_CONTINUATION_VERSION,source:"third-world-progression"});
+   return policy&&typeof policy==="object"?policy:freeze({active:false,targetWorld:3,source:"fail-closed"});
+  }catch(_){return freeze({active:false,targetWorld:3,source:"fail-closed"});}
+ }
  function reincarnationStageContinuation(target){
-  return typeof window.isReincarnationRun==="function"&&window.isReincarnationRun(target)===true;
+  return thirdWorldRerunPolicy(target)?.active===true;
  }
  function stageTransitionSnapshot(bossIndex,formalStartHp,combatEndHp,bossDefeatedNow=false){
   const boss=typeof window.thirdWorldBoss==="function"?window.thirdWorldBoss(bossIndex):null;
@@ -116,12 +125,15 @@
   target.thirdWorld.story.unlockedStage=storyAfter;
   const unlockedStoryStages=storyChanged?Array.from({length:storyAfter-storyBefore},(_,index)=>storyBefore+index+1):[];
   const bossDefeatedNow=checked.formalStartHp>0&&checked.combatEndHp===0;
+  const rerunPolicy=thirdWorldRerunPolicy(target),rerunActive=rerunPolicy?.active===true;
   const stageTransition=stageTransitionSnapshot(checked.bossIndex,checked.formalStartHp,checked.combatEndHp,bossDefeatedNow);
-  const stageTransitionBypassed=stageTransition.changed&&reincarnationStageContinuation(target);
+  const stageTransitionBypassed=stageTransition.changed&&rerunActive;
   const challengeAfter=window.thirdWorldChallengeStatus?.(checked.bossIndex,target)||null;
   const fivePointBlocked=!bossDefeatedNow&&challengeAfter?.allowed===false&&challengeAfter?.reason==="five-point-front";
   const completionReady=aggregateAfter.aliveCount===0&&storyAfter>=10;
-  const titleChanged=titleGrant?.changed===true,progressEventPending=titleChanged||storyChanged;
+  const titleChanged=titleGrant?.changed===true,progressEventDetected=titleChanged||storyChanged;
+  const progressEventBypassed=progressEventDetected&&rerunActive;
+  const progressEventPending=progressEventDetected&&!progressEventBypassed;
   let terminalReason="";
   if(bossDefeatedNow)terminalReason="boss-defeated";
   else if(stageTransition.changed&&!stageTransitionBypassed)terminalReason="stage-crossed";
@@ -136,8 +148,8 @@
   const continuationReason=progressEventPending?"progress-event":terminalReason;
   return {
    ok:true,aggregateBefore,aggregateAfter,titleTierBefore,titleTierAfter,titleGrant,storyBefore,storyAfter,storyChanged,unlockedStoryStages,
-   bossDefeatedNow,stageTransition,stageTransitionBypassed,challengeAfter,fivePointBlocked,completionReady,
-   progressEventPending,eventSequence,continuation:freeze({allowed:continuationAllowed,reason:continuationReason,terminalReason,requiresEventHandling:progressEventPending})
+   bossDefeatedNow,rerunPolicy,stageTransition,stageTransitionBypassed,challengeAfter,fivePointBlocked,completionReady,
+   progressEventDetected,progressEventBypassed,progressEventPending,eventSequence,continuation:freeze({allowed:continuationAllowed,reason:continuationReason,terminalReason,requiresEventHandling:progressEventPending})
   };
  }
  function settleThirdWorldCombatResult(result,options={}){
@@ -189,8 +201,8 @@
    logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),items:freeze(items),equipmentRewards:freeze(equipmentRewards),equipmentDropCount:Math.max(0,finiteWhole(equipment.dropCount,items.length)),
    aggregateBefore:progression.aggregateBefore||null,aggregateAfter:progression.aggregateAfter||null,titleTierBefore:Math.max(0,finiteWhole(progression.titleTierBefore,0)),titleTierAfter:Math.max(0,finiteWhole(progression.titleTierAfter,0)),
    unlockedTitles:freeze(unlockedTitles),titleNoticeId:progression.titleGrant?.noticeTitle?.id||null,storyStageBefore:Math.max(0,finiteWhole(progression.storyBefore,0)),storyStageAfter:Math.max(0,finiteWhole(progression.storyAfter,0)),
-   unlockedStoryStages:freeze(Array.isArray(progression.unlockedStoryStages)?progression.unlockedStoryStages.slice():[]),progressEventPending:progression.progressEventPending===true,
-   stageTransition:progression.stageTransition||null,stageTransitionBypassed:progression.stageTransitionBypassed===true,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
+   unlockedStoryStages:freeze(Array.isArray(progression.unlockedStoryStages)?progression.unlockedStoryStages.slice():[]),progressEventDetected:progression.progressEventDetected===true,progressEventBypassed:progression.progressEventBypassed===true,progressEventPending:progression.progressEventPending===true,
+   rerunPolicy:progression.rerunPolicy||null,stageTransition:progression.stageTransition||null,stageTransitionBypassed:progression.stageTransitionBypassed===true,fivePointStatus:progression.challengeAfter||null,fivePointBlocked:progression.fivePointBlocked===true,completionReady:progression.completionReady===true,
    eventSequence:freeze(Array.isArray(progression.eventSequence)?progression.eventSequence.slice():[]),continuation:progression.continuation||freeze({allowed:false,reason:"progression-missing",terminalReason:"",requiresEventHandling:false}),
    rewardsPending:false,equipmentPending:false,progressionPending:false,saved:true
   };
@@ -219,7 +231,9 @@
   const zeroProbe={level:1000,exp:123,secondWorld:{entered:true},thirdWorld:{entered:true,dimensionalStrings:9}},zeroEconomy=applyEconomyRewards(zeroProbe,0);
   if(!zeroEconomy.ok||zeroEconomy.xp!==0||zeroEconomy.dimensionalStrings!==0||zeroProbe.exp!==123||zeroProbe.thirdWorld.dimensionalStrings!==9)errors.push({code:"ZERO_DAMAGE_ZERO_ECONOMY",zeroEconomy,state:zeroProbe});
   const firstRunStagePolicy={reincarnation:{count:0}},rerunStagePolicy={reincarnation:{count:1}};
-  if(reincarnationStageContinuation(firstRunStagePolicy)!==false||reincarnationStageContinuation(rerunStagePolicy)!==true)errors.push({code:"REINCARNATION_STAGE_CONTINUATION_POLICY"});
+  const originalRerunOwner=window.CivilizationReincarnation?.lifecycle?.worldRerunPolicy||null;
+  const firstPolicy=thirdWorldRerunPolicy(firstRunStagePolicy),rerunPolicy=thirdWorldRerunPolicy(rerunStagePolicy);
+  if(firstPolicy?.active===true||rerunPolicy?.targetWorld!==3)errors.push({code:"REINCARNATION_RERUN_POLICY_OWNER",{firstPolicy,rerunPolicy,owner:typeof originalRerunOwner}});
   const stageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),Math.floor(max*.69),false);
   if(!stageProbe.changed||stageProbe.from!==0||stageProbe.to!==3||JSON.stringify(stageProbe.crossedStages)!==JSON.stringify([1,2,3])||!stageProbe.newAbilityIds.includes("composure"))errors.push({code:"MULTI_STAGE_CROSS",stageProbe});
   const deathStageProbe=stageTransitionSnapshot(0,Math.floor(max*.91),0,true);
@@ -247,6 +261,8 @@
  window.THIRD_WORLD_BOSS_DEFEAT_SETTLEMENT_VERSION=BOSS_DEFEAT_SETTLEMENT_VERSION;
  window.THIRD_WORLD_STAGE_CROSSING_SETTLEMENT_VERSION=STAGE_CROSSING_SETTLEMENT_VERSION;
  window.THIRD_WORLD_REINCARNATION_STAGE_CONTINUATION_VERSION=REINCARNATION_STAGE_CONTINUATION_VERSION;
+ window.THIRD_WORLD_REINCARNATION_PROGRESS_EVENT_CONTINUATION_VERSION=REINCARNATION_PROGRESS_EVENT_CONTINUATION_VERSION;
+ window.thirdWorldProgressRerunPolicySnapshot=thirdWorldRerunPolicy;
  window.thirdWorldReincarnationStageContinuation=reincarnationStageContinuation;
  window.THIRD_WORLD_POST_SETTLEMENT_FIVE_POINT_VERSION=POST_SETTLEMENT_FIVE_POINT_VERSION;
  window.THIRD_WORLD_CONTINUATION_DECISION_VERSION=CONTINUATION_DECISION_VERSION;
