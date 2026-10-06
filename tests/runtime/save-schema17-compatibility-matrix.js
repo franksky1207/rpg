@@ -106,6 +106,13 @@ const assert=require("assert");
    frontierMismatch.reincarnation={count:2,breakthrough:{permanent:12,milestoneLifeId:2,milestones:{100:true,200:true}},alternateUniverse:{unlocked:true,deepestCleared:30,activeAttempt:{lifeId:2,depth:40,attemptId:"wrong-frontier",traits:["strong","swift"]},lifeFailures:{lifeId:2,failures:{"31":3,"40":8}}}};
    const frontier=migrate(frontierMismatch);
 
+   const diagnosticSource=makeBase(17,1500,3);
+   diagnosticSource.reincarnation={count:2,breakthrough:{permanent:20,milestoneLifeId:2,milestones:{}},alternateUniverse:{unlocked:true,deepestCleared:680,activeAttempt:null,lifeFailures:{lifeId:2,failures:{}}}};
+   const auIds=Array.from(window.ALTERNATE_UNIVERSE_PLAYER_TITLE_IDS||[]);
+   diagnosticSource.titles={version:1,unlocked:auIds.slice(0,2),equipped:null,pendingNotice:null};
+   diagnosticSource.dungeon.mirror={version:2,history:{bestWins:20,bestDate:"2026-09-16",miracleDates:["2026-09-16","2026-09-16"]},daily:{dateKey:"2026-09-16",status:"idle",challengeDate:null,startedAt:0,wins:0,losses:0,completedAt:0}};
+   const diagnostics=migrate(diagnosticSource);
+
    const characterWorlds=[
     {phase:1,state:makeBase(17,500,1)},
     {phase:2,state:makeBase(17,1000,2)},
@@ -123,7 +130,7 @@ const assert=require("assert");
    const storageAfter={};
    for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);storageAfter[key]=localStorage.getItem(key);}
 
-   return {compatibility,migrationPlans,schemaPolicy,gmTransientKeys,gmTransientInventoryVersion:window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION,gmTransientMatrix,characterWorldOwner:window.CHARACTER_WORLD_SNAPSHOT_OWNER,characterWorldVersion:window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION,characterWorlds,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
+   return {compatibility,migrationPlans,schemaPolicy,gmTransientKeys,gmTransientInventoryVersion:window.GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION,gmTransientMatrix,characterWorldOwner:window.CHARACTER_WORLD_SNAPSHOT_OWNER,characterWorldVersion:window.CHARACTER_WORLD_SNAPSHOT_CANONICAL_PHASE_VERSION,characterWorlds,legacy,missing:{saveVersion:missingMigrated.saveVersion,count:missingMigrated.reincarnation?.count,permanent:missingMigrated.reincarnation?.breakthrough?.permanent,auUnlocked:missingMigrated.reincarnation?.alternateUniverse?.unlocked,migration:missingReport},current:{first:first.migrated,firstMigration:first.migration,second:second.migrated,secondMigration:second.migration},stale:{state:stale.migrated,normalization:stale.normalization},frontier:{state:frontier.migrated,normalization:frontier.normalization},diagnostics:{migration:diagnostics.migration,titles:diagnostics.migrated.titles,mirror:diagnostics.migrated.dungeon?.mirror},futureAssert,stateStable:JSON.stringify(stateBefore)===JSON.stringify(stateAfter),storageStable:JSON.stringify(storageBefore)===JSON.stringify(storageAfter)};
   });
 
   const expectedTransientKeys=["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmPowerBenchmark","gmTestResults"];
@@ -204,6 +211,13 @@ const assert=require("assert");
   assert.equal(report.frontier.normalization?.activeAttemptFrontierMismatch,true,"Frontier mismatch must be diagnosed explicitly.");
   assert.equal(report.frontier.normalization?.activeAttemptExpectedFrontierDepth,31,"Frontier diagnostic expected depth drifted.");
   assert.equal(report.frontier.state.reincarnation.alternateUniverse.lifeFailures.failures["31"],3,"Valid current-life frontier failure count must survive canonicalization.");
+
+  assert.equal(report.diagnostics.migration?.diagnosticsVersion,1,"Save migration diagnostics version drifted.");
+  assert.equal(report.diagnostics.migration?.alternateUniverseTitlesBackfilled,4,"680 層且既有前2階稱號時應診斷補發4個異宇宙稱號。");
+  assert.deepEqual(report.diagnostics.migration?.alternateUniverseTitlesBackfilledIds,Array.from({length:4},(_,i)=>`alternate-universe-title-${String(i+3).padStart(2,"0")}`),"AU backfill diagnostics IDs drifted.");
+  assert.equal(report.diagnostics.migration?.mirrorHistoryRepaired,true,"重複神蹟日期的舊鏡像 history 應回報已修復。");
+  assert.equal(report.diagnostics.migration?.mirrorMiracleDatesRemoved,1,"舊鏡像 history 應診斷移除1筆重複神蹟日期。");
+  assert.equal(report.diagnostics.mirror?.history?.miracleDates?.length,1,"舊鏡像重複神蹟日期應實際去重。");
 
   assert.deepEqual(report.futureAssert,{threw:true,code:"FUTURE_SAVE_VERSION",sourceVersion:18,currentVersion:17},"Future schema guard drifted.");
   assert.equal(report.stateStable,true,"Compatibility diagnostics mutated formal runtime state.");
