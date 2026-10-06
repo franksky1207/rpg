@@ -1,5 +1,5 @@
 (function(){
- const VERSION=17;
+ const VERSION=18;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -47,7 +47,7 @@
  }
 
  if(Number(window.PLAYER_TITLE_STATE_VERSION)!==1)fail("TITLE_STATE_VERSION","玩家稱號 state 應為 V1",window.PLAYER_TITLE_STATE_VERSION);
- if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==3||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==2||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號應維持既有 catalog contract 並以 W3 Extension V1 擴充為 36 稱號",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION});
+ if(Number(window.PLAYER_TITLE_CATALOG_VERSION)!==4||Number(window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION)!==1||Number(window.PLAYER_TITLE_UNIFIED_DEFS_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION)!==1)fail("TITLE_CATALOG_VERSION","玩家稱號 catalog 必須維持三紀元順序並固定鏡像稱號最後",{catalog:window.PLAYER_TITLE_CATALOG_VERSION,canonical:window.PLAYER_TITLE_CANONICAL_CATALOG_VERSION,higherExtension:window.PLAYER_TITLE_THIRD_WORLD_CATALOG_EXTENSION_VERSION,unified:window.PLAYER_TITLE_UNIFIED_DEFS_VERSION,mirrorLast:window.PLAYER_TITLE_MIRROR_LAST_ORDER_VERSION});
  if(window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_CATALOG_DEFS||window.PLAYER_TITLE_DEFS!==window.PLAYER_TITLE_ALL_DEFS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_CATALOG_IDS||window.PLAYER_TITLE_IDS!==window.PLAYER_TITLE_ALL_IDS)fail("TITLE_CATALOG_SINGLE_OWNER","PLAYER_TITLE_DEFS／CATALOG／ALL 必須指向同一正式 catalog");
  if(Number(window.THIRD_WORLD_TITLE_BACKFILL_VERSION)!==1)fail("TITLE_THIRD_WORLD_BACKFILL_VERSION","高維稱號 backfill owner V1 未載入",window.THIRD_WORLD_TITLE_BACKFILL_VERSION);
  if(Number(window.PLAYER_TITLE_RENDERER_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION)!==1||Number(window.PLAYER_TITLE_MIRROR_RENDERER_VERSION)!==3||Number(window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION)!==2)fail("TITLE_RENDERER_VERSION","玩家稱號 renderer 版本異常",{base:window.PLAYER_TITLE_RENDERER_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_RENDERER_VERSION,mirror:window.PLAYER_TITLE_MIRROR_RENDERER_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_RENDERER_VERSION});
@@ -55,13 +55,14 @@
  if(Number(window.PLAYER_TITLE_UI_VERSION)!==4||Number(window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION)!==1||Number(window.PLAYER_TITLE_POST_FLOW_HOLD_VERSION)!==1||Number(window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION)!==1||Number(window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION)!==1)fail("TITLE_UI_VERSION","玩家稱號 UI／三紀元 post-flow 通知版本異常",{ui:window.PLAYER_TITLE_UI_VERSION,universe:window.PLAYER_TITLE_UNIVERSE_NOTICE_VERSION,higher:window.PLAYER_TITLE_THIRD_WORLD_NOTICE_VERSION,postFlow:window.PLAYER_TITLE_POST_FLOW_NOTIFICATION_VERSION,legacyDelegate:window.PLAYER_TITLE_LEGACY_QUEUE_DELEGATE_VERSION,higherReady:window.PLAYER_TITLE_THIRD_WORLD_POST_FLOW_READY_VERSION});
  const postFlowEras=Array.from(window.PLAYER_TITLE_POST_FLOW_ERAS||[]);
  if(JSON.stringify(postFlowEras)!==JSON.stringify(["galaxy","universe","higher-dimensional"]))fail("TITLE_POST_FLOW_ERAS","稱號 post-flow owner 必須覆蓋三紀元",postFlowEras);
- if(calamityDefs.length!==10||universeDefs.length!==10||mirrorDefs.length!==6||higherDefs.length!==10||catalogDefs.length!==36||catalogIds.length!==36)fail("TITLE_DEFINITION_COUNT","正式 catalog 應為銀河10＋宇宙10＋鏡像6＋高維10",{calamity:calamityDefs.length,universe:universeDefs.length,mirror:mirrorDefs.length,higher:higherDefs.length,total:catalogDefs.length});
- const expectedOrder=[...calamityDefs,...universeDefs,...mirrorDefs,...higherDefs].map(def=>def.id);
- if(JSON.stringify(catalogIds)!==JSON.stringify(expectedOrder))fail("TITLE_UNIFIED_ORDER","稱號順序必須固定為銀河10、宇宙10、鏡像6、高維10",catalogIds);
+ if(calamityDefs.length!==10||universeDefs.length!==10||mirrorDefs.length!==6||higherDefs.length!==10||catalogDefs.length!==36||catalogIds.length!==36)fail("TITLE_DEFINITION_COUNT","正式 catalog 應為銀河10＋宇宙10＋高維10＋鏡像6",{calamity:calamityDefs.length,universe:universeDefs.length,mirror:mirrorDefs.length,higher:higherDefs.length,total:catalogDefs.length});
+ const expectedOrder=[...calamityDefs,...universeDefs,...higherDefs,...mirrorDefs].map(def=>def.id);
+ if(JSON.stringify(catalogIds)!==JSON.stringify(expectedOrder))fail("TITLE_UNIFIED_ORDER","稱號順序必須固定為銀河10、宇宙10、高維10、鏡像6；鏡像系列永遠置底",catalogIds);
  higherDefs.forEach((def,index)=>{
   const source=Array.from(window.THIRD_WORLD_TITLE_DEFINITIONS||[])[index];
-  if(!source||def.id!==source.id||def.name!==source.name||def.tier!==index+1||def.series!=="higher-dimensional"||def.order!==27+index||Number(def.thresholdRemainingHp)!==Number(source.thresholdRemainingHp))fail("TITLE_THIRD_WORLD_ORDER",`高維第 ${index+1} 階稱號 metadata 異常`,{def,source});
+  if(!source||def.id!==source.id||def.name!==source.name||def.tier!==index+1||def.series!=="higher-dimensional"||def.order!==21+index||Number(def.thresholdRemainingHp)!==Number(source.thresholdRemainingHp))fail("TITLE_THIRD_WORLD_ORDER",`高維第 ${index+1} 階稱號 metadata 異常`,{def,source});
  });
+  mirrorDefs.forEach((def,index)=>{if(def.series!=="mirror"||def.order!==31+index)fail("TITLE_MIRROR_LAST_ORDER",`鏡像 ${def.mirrorWins} 勝稱號必須位於正式 catalog 最後一組`,def);});
 
  const higherVisualOwner=document.querySelector('link[data-player-title-higher-dimensional-owner="1"]');
  const mirrorVisualOwner=document.querySelector('link[data-player-title-mirror-owner="3"]');
@@ -137,7 +138,7 @@
 
  try{
   const before=clone(state?.titles),beforeSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null,html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"",after=clone(state?.titles),afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
-  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==7||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==3||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==3||Number(window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION)!==1||!html.includes("實戰名稱預覽全部 36 個正式稱號")||!html.includes("高維紀元稱號")||!html.includes("鏡像戰稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應使用 36 稱號正式 catalog 且鏡像置底",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,displayOrder:window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION,html});
+  if(Number(window.GM_PLAYER_TITLE_PREVIEW_VERSION)!==8||Number(window.GM_PLAYER_TITLE_PREVIEW_ALL_CATALOG_VERSION)!==4||Number(window.GM_PLAYER_TITLE_PREVIEW_CANONICAL_CATALOG_VERSION)!==4||Number(window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION)!==2||!html.includes("實戰名稱預覽全部 36 個正式稱號")||!html.includes("高維紀元稱號")||!html.includes("鏡像戰稱號"))fail("TITLE_GM_PREVIEW","GM 稱號預覽應使用 36 稱號正式 catalog 且鏡像置底",{preview:window.GM_PLAYER_TITLE_PREVIEW_VERSION,displayOrder:window.GM_PLAYER_TITLE_PREVIEW_DISPLAY_ORDER_VERSION,html});
   const higherPos=html.indexOf("高維紀元稱號"),mirrorPos=html.indexOf("鏡像戰稱號");
   if(!(higherPos>=0&&mirrorPos>higherPos))fail("TITLE_GM_PREVIEW_ORDER","GM 稱號預覽應維持高維在前、鏡像最後",{higherPos,mirrorPos});
   if(JSON.stringify(before)!==JSON.stringify(after)||beforeSave!==afterSave)fail("TITLE_GM_SIDE_EFFECT","GM 稱號預覽不得修改正式 state 或存檔",{before,after});
