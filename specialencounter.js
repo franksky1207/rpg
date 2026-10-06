@@ -4,6 +4,12 @@
  function specialBattleReadyDelay(){
   return typeof window.combatSpeedScaledDelay==="function"?window.combatSpeedScaledDelay(SPECIAL_BATTLE_READY_DELAY_1X):SPECIAL_BATTLE_READY_DELAY_1X;
  }
+ function specialFastCatchUpActive(){
+  return typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("main")===true;
+ }
+ function specialPresentationSuppressed(options={}){
+  return options?.suppressPresentation===true||specialFastCatchUpActive();
+ }
  function ensureSpecialEncounterAlert(){
   if(document.getElementById("specialEncounterAlert"))return;
   const el=document.createElement("div");
@@ -155,6 +161,7 @@
  async function fightFormalSpecial(ctx,special,options={}){
   const world=specialWorld(options);
   if(world===3)return blockedSpecialResult("third-world-disabled",3);
+  const suppressPresentation=specialPresentationSuppressed(options);
   const w1Target=world===1?firstWorldSpecialTarget(options):null;
   if(world===1&&!w1Target)return blockedSpecialResult("first-world-target-required",1);
   const enemyScalingSnapshot=equippedStats();
@@ -166,11 +173,13 @@
   const resolvedSpecial=typeof window.specialMonsterForWorld==="function"?window.specialMonsterForWorld(special,world):special;
   const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,resolvedSpecial,level);
   const firstRewardCtx=getSpecialRewardContext(resolvedSpecial,world);
-  adventureScreen="combat";
-  document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
-  await specialFlowSleep(specialBattleReadyDelay());
+  if(!suppressPresentation){
+   adventureScreen="combat";
+   document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
+   await specialFlowSleep(specialBattleReadyDelay());
+  }
   const startHp=state.hp,r=specialFight(enemy,world);
-  await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
+  if(!suppressPresentation)await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
   const result={win:r.win,world,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=world===2&&typeof window.secondWorldBossExpReward==="function"?window.secondWorldBossExpReward(bossIndex,false,state):ceil(sameExp(level)*expLevelFactor(level,state.level));
@@ -242,10 +251,11 @@
 
   const special=rollSpecialMonster(forcedByBlackMarket?["bandit_king"]:null,world);
   if(!special)return false;
-  await showSpecialEncounterAlert(special,forcedByBlackMarket);
+  const suppressPresentation=specialPresentationSuppressed(options);
+  if(!suppressPresentation)await showSpecialEncounterAlert(special,forcedByBlackMarket);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
-  const result=await fightFormalSpecial(ctx,special,{...options,world,mapIndex:w1Target?.mapIndex,enemyIndex:w1Target?.enemyIndex,bossIndex:options.bossIndex});
+  const result=await fightFormalSpecial(ctx,special,{...options,world,mapIndex:w1Target?.mapIndex,enemyIndex:w1Target?.enemyIndex,bossIndex:options.bossIndex,suppressPresentation});
   if(result.blocked===true)return false;
   if(result.win&&world===1&&typeof addBattleEnhancementReward==="function")addBattleEnhancementReward(ctx,"autoSale",result.saleEnhancementStones);
   if(result.win&&world===2&&ctx){
@@ -270,6 +280,9 @@
  }
 
  window.maybeHandleSpecialEncounter=maybeHandleSpecialEncounter;
+ window.specialEncounterFastCatchUpActive=specialFastCatchUpActive;
+ window.specialEncounterPresentationSuppressed=specialPresentationSuppressed;
+ window.SPECIAL_ENCOUNTER_FAST_CATCH_UP_PRESENTATION_VERSION=1;
  window.MAIN_MINIMAL_MODE_SPECIAL_HOOK_VERSION=1;
  window.SPECIAL_WORLD_FORMAL_FLOW_VERSION=2;
  window.specialEncounterWorldForState=currentSpecialWorld;
