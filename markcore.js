@@ -144,12 +144,12 @@
   if(!validKey(key))return false;
   if(!window.gmTestMarkLevels||typeof window.gmTestMarkLevels!=="object")window.gmTestMarkLevels=blankTestLevels();
   window.gmTestMarkLevels[key]=clampLevel(value);
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(refresh&&typeof window.gmNotifyTestConfigurationChanged==="function")window.gmNotifyTestConfigurationChanged({reason:"mark",refresh:true});
   return true;
  };
  window.gmUseCurrentMarkTestStatus=function(refresh=true){
   MARK_KEYS.forEach(key=>window.gmSetTestMarkLevel(key,markLevel(key,false),false));
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
+  if(refresh&&typeof window.gmNotifyTestConfigurationChanged==="function")window.gmNotifyTestConfigurationChanged({reason:"mark-sync",refresh:true});
   return levelsSnapshot(true);
  };
  window.GM_MARK_TEST_BATCH_SYNC_VERSION=1;
