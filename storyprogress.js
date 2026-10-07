@@ -26,7 +26,10 @@
   if(!migration?.migrate){console.error("Story migration module is unavailable");return target;}
   migration.migrate(target,migrationOptions({...options,skipBackfill:options.skipBackfill===true||reincarnationStoryRun(target)}));
   const pending=target?.storyProgress?.pendingStory;
-  if(pending&&suppressRerunStory(pending,target))target.storyProgress.pendingStory=null;
+  if(pending&&suppressRerunStory(pending,target)){
+   target.storyProgress.pendingStory=null;
+   window.LAST_STORY_PENDING_RERUN_REPAIR=Object.freeze({version:1,originalId:pending,era:storyEraForId(pending),reason:"reincarnation-formal-story-suppressed",lifeCount:Number(target?.reincarnation?.count)||0});
+  }
   reconcileThirdWorldStoryCompletionState(target);
   return target;
  }function backfillAvailableHistory(target){return reincarnationStoryRun(target)?false:window.civilizationStoryMigration?.backfillAvailableHistory?.(target,migrationOptions())===true;}
@@ -48,11 +51,9 @@
   if(!third.story||typeof third.story!=="object"||Array.isArray(third.story))third.story={introSeen:false,unlockedStage:0,finalSeen:false};
   const before={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};
   if(reincarnationStoryRun(target)){
-   // Re-conquest completion comes from this life's formal boss/stage state, never historical Story records.
-   const battleComplete=thirdWorldBossesDefeated(target);
+   // Historical Story flags are read-only on reruns; the formal W3 phase owns combat completion.
    third.story.introSeen=false;
    third.story.finalSeen=false;
-   third.completed=battleComplete;
   }else{
    const completed=new Set(p.completedStories),intro=thirdWorldDescriptors().find(row=>row?.kind==="intro")||null,final=thirdWorldDescriptors().find(row=>row?.kind==="final")||null;
    if(intro&&formalStoryContentReady(intro))third.story.introSeen=completed.has(String(intro.storyId||intro.id||""));
@@ -87,7 +88,7 @@
  }
  function consumeThirdWorldSettlement(settlement,{queue=true}={}){
   if(!settlement||settlement.ok!==true||Number(settlement.world)!==3)return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:false,reason:"invalid-settlement",unlockedStages:Object.freeze([]),milestoneStages:Object.freeze([]),finalStageUnlocked:false,completion:thirdWorldStoryCompletionFramework(state),queuedStoryId:null});
-  if(reincarnationStoryRun(state))reconcileThirdWorldStoryCompletionState(state);
+  if(reincarnationStoryRun(state)){window.reconcileThirdWorldRerunCombatCompletion?.(state);reconcileThirdWorldStoryCompletionState(state);}
   const unlockedStages=Array.from(new Set((Array.isArray(settlement.unlockedStoryStages)?settlement.unlockedStoryStages:[]).map(value=>Math.floor(Number(value))).filter(value=>value>=1&&value<=10))).sort((a,b)=>a-b),milestoneStages=unlockedStages.filter(stage=>stage<=9),finalStageUnlocked=unlockedStages.includes(10),completion=thirdWorldStoryCompletionFramework(state);
   const queuedStoryId=queue?queueThirdWorldEligibleStory({resume:false}):null;
   return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:true,unlockedStages:Object.freeze(unlockedStages),milestoneStages:Object.freeze(milestoneStages),finalStageUnlocked,completion,queuedStoryId:queuedStoryId||null,presentationDeferred:true});
@@ -141,6 +142,7 @@
  window.CIVILIZATION_STORY_PROGRESS_VERSION=VERSION;
  window.STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION=STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION;
  window.STORY_REINCARNATION_W3_ISOLATION_VERSION=STORY_REINCARNATION_W3_ISOLATION_VERSION;
+ window.STORY_PENDING_REPAIR_DIAGNOSTICS_VERSION=1;
  window.THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION;
  window.THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION;
  window.THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION=THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION;
