@@ -1073,6 +1073,18 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 更新 `tests/runtime/gm-character-breakthrough-batch7-2-integrity.js`：鎖住 GM final owner＝正式 owner、戰力基準 snapshot 必須保存突破、B25 銀河總 final damage 為 ×2.25，且摘要必須顯示突破與總倍率。
 - 本批不改正式角色突破公式、不改文明公式、不改 Save Schema17；只修 GM sandbox／benchmark 對正式 owner 的引用與顯示。相關 GM JS 已更新 `index.html` cache-bust。
 
+
+## 2026-10-08 銀河災厄／GM 測試優化第1批（項目1、11）
+
+- 正式第一紀元文明災厄 `calamitycore.js` 現在在進入 Combat Core 前直接呼叫正式唯一 final-damage owner：`formalPlayerFinalDamageMultiplier({world:1,state})`，並把結果作為 `playerFinalDamageMultiplier` 傳入 `runCombatCore()`。因此轉生後永久突破每級 +5% 最終傷害會正式套用到銀河災厄，不再出現「GM 有算突破、正式災厄沒算」的落差。
+- 新增 `CALAMITY_FORMAL_FINAL_DAMAGE_VERSION=1`；若正式 final-damage owner 未載入，銀河災厄直接 fail closed，不另寫突破公式或使用第二套 fallback。
+- `calamitygm.js` 的銀河災厄單場／完整擊殺結果 snapshot 現保存該次測試的 `breakthroughLevel` 與 `finalDamageMultiplier`。
+- `gmpowerbenchmark.js` 的銀河文明災厄摘要現在會顯示「突破 Lv.X｜總最終傷害 ×X.XX」，與宇宙災厄的倍率資訊一致。
+- `calamitycoreintegrity.js` 同步修正既有 Core V2 版本檢查，並新增正式 final-damage owner 契約檢查。
+- `index.html` 已更新 `calamitycore.js`、`calamitygm.js`、`gmpowerbenchmark.js`、`calamitycoreintegrity.js` cache-bust。
+- 本批沒有修改災厄 HP 250,000×階級、印記升級、舊 HP clamp、Save Schema17、GM 正式印記寫入、GM stale-result 管理與完整擊殺 no-progress；後者仍屬後續批次。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
