@@ -26,7 +26,7 @@
   if(!def||typeof window.runCivilizationCalamityHeadlessCombat!=="function")fail("GM_CALAMITY_FORMAL_HEADLESS_OWNER","正式銀河災厄 headless owner 未載入",{def:!!def,owner:typeof window.runCivilizationCalamityHeadlessCombat});
   else{
    const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;
-   const marks=typeof window.markFormalSnapshot==="function"?window.markFormalSnapshot():null;
+   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(false):null;
    const finalMultiplier=typeof window.formalPlayerFinalDamageMultiplier==="function"?window.formalPlayerFinalDamageMultiplier({world:1,state}):1;
    if(!player||!marks)fail("GM_CALAMITY_CONSISTENCY_CONTEXT","無法建立正式銀河災厄一致性測試 context",{player:!!player,marks:!!marks});
    else{
