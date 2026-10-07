@@ -105,6 +105,7 @@ jobs:
           node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-level-migration-regression.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-schema17-compatibility-matrix.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/story/reincarnation-three-era-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/recent-optimization-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
