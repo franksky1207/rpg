@@ -75,9 +75,14 @@ async function main(){
   assert.equal(target.thirdWorld.story.introSeen,false,"本輪序章未重播");
   assert.equal(battle.queuedStoryId,null,"戰鬥完成不觸發 W3 Final");
   assert.equal(JSON.stringify(target.storyProgress.completedStories),priorHistory,"本輪 Boss 全滅不能影響永久 Story archive");
+  const staleStage=setup(count,{allDead:true,stage:0,history:ids,pending:null});
+  staleStage.api.normalize(staleStage.target);
+  assert.equal(staleStage.target.thirdWorld.completed,true,"10王確實全滅時，轉生通關不得依賴舊 Story stage");
+  assert.equal(staleStage.target.thirdWorld.story.unlockedStage,0,"Story isolation owner 不得擅自補寫本輪 stage");
+  assert.equal(staleStage.target.thirdWorld.story.finalSeen,false,"歷史 Final 不得將 stale-stage rerun 冒充為已播放");
  }
  assert.equal(first.ctx.STORY_REINCARNATION_W3_ISOLATION_VERSION,1);
  assert.ok(index.includes("storyprogress.js?v=20260928-thirdworld-batch12-o3&v2=20261007-reincarnation-story-batch2&v3=20261007-reincarnation-story-batch3"),"Story Batch3 cache-bust missing");
- console.log("Story reincarnation W3 Batch3 passed: first-run queue/Final unchanged; 1/2/3/7 life no playback; stale W3 pending removed; all 11 archived; actual 10 Boss battle completion independent of history.");
+ console.log("Story reincarnation W3 Batch3 passed: first-run queue/Final unchanged; 1/2/3/7 life no playback; stale W3 pending removed; all 11 archived; actual 10 Boss battle completion independent of history and stale story stage.");
 }
 main().catch(e=>{console.error(e);process.exitCode=1});
