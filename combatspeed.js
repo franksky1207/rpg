@@ -3,6 +3,7 @@
  const PLAYER_RULE_VERSION=4;
  const PHASE_RULE_VERSION=1;
  const GM_OVERRIDE_VERSION=1;
+ const GM_AUTH_SYNC_VERSION=1;
  const REINCARNATION_UNLOCK_VERSION=1;
  const BADGE_RENDERER_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
@@ -103,11 +104,19 @@
   }catch(e){return false;}
  }
  function clearCurrent(){return clearForUser(currentUserId());}
+ function syncGmOverrideFromAuth(source="auth-ready"){
+  const userId=currentUserId(),override=gmOverride(),effective=effectiveCombatSpeed();
+  try{window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed:override,effectiveSpeed:effective,source:String(source||"auth-ready"),userId}}));}catch(_){}
+  return Object.freeze({version:GM_AUTH_SYNC_VERSION,userId,override,effectiveSpeed:effective,ready:!!userId});
+ }
+ window.addEventListener?.("civilization-auth-ready",()=>syncGmOverrideFromAuth("auth-ready"));
+ if(currentUserId())syncGmOverrideFromAuth("initial-session");
 
  window.COMBAT_SPEED_CORE_VERSION=VERSION;
  window.COMBAT_SPEED_PLAYER_RULE_VERSION=PLAYER_RULE_VERSION;
  window.COMBAT_SPEED_PHASE_RULE_VERSION=PHASE_RULE_VERSION;
  window.COMBAT_SPEED_GM_OVERRIDE_VERSION=GM_OVERRIDE_VERSION;
+ window.COMBAT_SPEED_GM_AUTH_SYNC_VERSION=GM_AUTH_SYNC_VERSION;
  window.COMBAT_SPEED_REINCARNATION_UNLOCK_VERSION=REINCARNATION_UNLOCK_VERSION;
  window.COMBAT_SPEED_BADGE_RENDERER_VERSION=BADGE_RENDERER_VERSION;
  window.COMBAT_SPEED_ALLOWED=ALLOWED.slice();
@@ -126,4 +135,5 @@
  window.clearGmCombatSpeedOverride=clearCurrent;
  window.clearGmCombatSpeedOverrideForUser=clearForUser;
  window.gmCombatSpeedStorageKey=storageKey;
+ window.gmSyncCombatSpeedFromAuth=syncGmOverrideFromAuth;
 })();
