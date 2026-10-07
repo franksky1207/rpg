@@ -51,6 +51,7 @@ jobs:
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-runtime-early-restore-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-runtime-auth-preferences-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-data-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-attempt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/alternate-universe-combat-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
