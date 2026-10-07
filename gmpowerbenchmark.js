@@ -670,7 +670,7 @@
    ?'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
     '<label>區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseRegion(this.value)">'+universeRegionOptions()+'</select></label>'+
     '<label style="grid-column:span 2">怪物<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetUniverseBoss(this.value)">'+universeBossOptions()+'</select></label>'+
-    '<label>文明等級<br><select class="btn"'+disabled+' onchange="gmSetTestCivilizationLevel(this.value);gmPowerBenchmarkInvalidateSnapshot()">'+(typeof window.gmCivilizationTestOptionsHtml==="function"?window.gmCivilizationTestOptionsHtml():"")+'</select></label>'+
+    '<label>文明等級<br><select class="btn"'+disabled+' onchange="gmSetTestCivilizationLevel(this.value)">'+(typeof window.gmCivilizationTestOptionsHtml==="function"?window.gmCivilizationTestOptionsHtml():"")+'</select></label>'+
     '<label>測試量<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRuns(this.value)">'+option(100,"100",MODEL.runs===100)+option(1000,"1000",MODEL.runs===1000)+'</select></label>'
    :'<label>紀元<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetWorld(this.value)">'+benchmarkWorldOptions()+'</select></label>'+
     '<label>大區域<br><select class="btn"'+disabled+' onchange="gmPowerBenchmarkSetRegion(this.value)">'+regionOptions()+'</select></label>'+
