@@ -151,9 +151,10 @@
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
   if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
   ensureState();
-  const preview=runHeadlessCombat(id,options);if(!preview?.ok)return preview;
-  const {enemy:e,enemyStartHp:startEnemyHp,player,playerFinalDamageMultiplier,combat}=preview;
+  const player=playerCombatStats();
   state.hp=player.hp;
+  const preview=runHeadlessCombat(id,{...options,player});if(!preview?.ok)return preview;
+  const {enemy:e,enemyStartHp:startEnemyHp,playerFinalDamageMultiplier,combat}=preview;
   const settlement=applyBattleResult(id,combat,{save:options.save!==false});
   return {
    ok:true,
