@@ -10,7 +10,7 @@ function build({second=false,third=false}={}){
   'universe-probe':{id:'universe-probe',chapter:'宇宙測試區',location:'宇宙',title:'宇宙測試'}
  };
  w3Ids.forEach((id,index)=>stories[id]={id,chapter:'高維紀元',location:'高維',title:index===0?'觀測之外':index===10?'觀測者也必須接受被選擇':`高維測試${index}`});
- const context={console,state:{secondWorld:{entered:second},thirdWorld:{entered:third}},render(){},CIVILIZATION_STORIES:stories,CIVILIZATION_STORY_REGIONS:[{id:'galaxy',name:'銀河測試區',stories:[{id:'galaxy-probe'}]}],CIVILIZATION_UNIVERSE_STORY_REGIONS:[{id:'universe',name:'宇宙測試區',stories:[{id:'universe-probe'}]}],civilizationStoryProgress:{get:()=>({completedStories:completed})},thirdWorldStoryTriggerDescriptors:()=>w3Ids.map((storyId,index)=>({storyId,kind:index===0?'intro':index===10?'final':'milestone',stage:index})),isSecondWorldEntered:()=>second||third,isThirdWorldEntered:()=>third};
+ const context={console,state:{secondWorld:{entered:second},thirdWorld:{entered:third}},storyReincarnationContext(target){return {reincarnationRun:Number(target?.reincarnation?.count)>=1};},render(){},CIVILIZATION_STORIES:stories,CIVILIZATION_STORY_REGIONS:[{id:'galaxy',name:'銀河測試區',stories:[{id:'galaxy-probe'}]}],CIVILIZATION_UNIVERSE_STORY_REGIONS:[{id:'universe',name:'宇宙測試區',stories:[{id:'universe-probe'}]}],civilizationStoryProgress:{get:()=>({completedStories:completed})},thirdWorldStoryTriggerDescriptors:()=>w3Ids.map((storyId,index)=>({storyId,kind:index===0?'intro':index===10?'final':'milestone',stage:index})),isSecondWorldEntered:()=>second||third,isThirdWorldEntered:()=>third};
  context.window=context;vm.createContext(context);vm.runInContext(source,context,{filename:'storyrecordtabs.js'});return context;
 }
 const w3=build({second:true,third:true});let html=w3.storyRecordPageHtml();
@@ -34,7 +34,7 @@ function buildArchive({count=0,second=false,third=false,loaded=true}={}){
  const stories=Object.fromEntries(ids.map(id=>[id,{id,title:id,chapter:id.startsWith('universe')?'宇宙紀元':'銀河紀元',location:'測試',pages:loaded?['正文']:[]}]));
  const archiveState={reincarnation:{count},secondWorld:{entered:second||third},thirdWorld:{entered:third,completed:false,story:{introSeen:false,unlockedStage:0,finalSeen:false},bosses:Array.from({length:10},()=>({currentHp:100}))},storyProgress:{completedStories:[],pendingStory:null}};
  const opened=[];
- const ctx={console,state:archiveState,render(){},CIVILIZATION_STORIES:stories,
+ const ctx={console,state:archiveState,storyReincarnationContext(target){return {reincarnationRun:Number(target?.reincarnation?.count)>=1};},render(){},CIVILIZATION_STORIES:stories,
   CIVILIZATION_STORY_REGIONS:[{id:'galaxy',name:'銀河',stories:galaxyIds.map(id=>({id}))}],
   CIVILIZATION_UNIVERSE_STORY_REGIONS:[{id:'universe',name:'宇宙',stories:universeIds.map(id=>({id}))}],
   thirdWorldStoryTriggerDescriptors:()=>w3Ids.map((storyId,index)=>({storyId,kind:index===0?'intro':index===10?'final':'milestone',stage:index})),
@@ -79,4 +79,13 @@ assert(!first.ctx.storyRecordPageHtml().includes('story-record-entry'),'首輪�
 assert(first.ctx.replayStoryRecordEntry('higher-dimensional-final')===false,'首輪不可偷看未完成 Final');
 const unloaded=buildArchive({count:2,second:true,third:true,loaded:false});
 assert(!unloaded.ctx.storyRecordPageHtml().includes('story-record-entry'),'尚未載入正式頁面的紀錄不可誤視為已就緒');
+assert(source.includes("STORY_RECORD_ARCHIVE_CONTEXT_UNIFICATION_VERSION=1"),'戰線紀錄使用正式 storyReincarnationContext owner');
+assert(source.includes("STORY_RECORD_RENDER_SET_REUSE_VERSION=1"),'單次 render 共用同一 completed set');
+assert(!source.includes("Number.isInteger(count)"),'戰線紀錄不得再自行建立轉生判定');
+const oldMalformed=buildArchive({count:2,second:true});
+oldMalformed.archiveState.reincarnation.count="2";
+assert((oldMalformed.ctx.storyRecordPageHtml().match(/story-record-entry/g)||[]).length===101,'正式 lifecycle owner 統一解讀可規範化的舊數字轉生資料');
+const copy=buildArchive({count:2,second:true});
+assert(copy.ctx.storyRecordPageHtml().includes('文明歷史已永久歸檔'),'轉生後 UI 應採永久歷史文案');
+assert(!first.ctx.storyRecordPageHtml().includes('文明歷史已永久歸檔'),'首輪應維持原有正式劇情文案');
 console.log('REINCARNATION STORY ARCHIVE BATCH1 PASSED | count 0/1/2/3 | 101/100/11 | entry without bosses | read-only | final isolated');
