@@ -18,6 +18,7 @@
  if(Number(window.CALAMITY_HP_PER_LEVEL)!==250000||typeof window.getCivilizationCalamityConfiguredMaxHp!=="function")fail("CALAMITY_HP_CURVE","文明災厄 HP 應為 250,000 × 災厄等級",{perLevel:window.CALAMITY_HP_PER_LEVEL,api:typeof window.getCivilizationCalamityConfiguredMaxHp});
  if(Number(window.MARK_STATE_VERSION)!==1)fail("MARK_STATE_VERSION","印記 state version 應為 1",window.MARK_STATE_VERSION);
  if(Number(window.MARK_MAX_LEVEL)!==10)fail("MARK_MAX_LEVEL","印記最高等級應為 10",window.MARK_MAX_LEVEL);
+ if(Number(window.MARK_STATE_PROGRESS_CANONICAL_VERSION)!==1)fail("MARK_PROGRESS_CANONICAL_VERSION","印記 progress 持久資料 canonical owner 應為 V1",window.MARK_STATE_PROGRESS_CANONICAL_VERSION);
 
  const calamityIds=Array.from(window.CIVILIZATION_CALAMITY_IDS||[]);
  const markIds=Array.from(window.CIVILIZATION_MARK_IDS||[]);
@@ -40,13 +41,13 @@
 
   const malformed={
    calamities:{version:999,balanceVersion:0,entries:{[calamityIds[0]]:{currentHp:-50},[calamityIds[1]]:{currentHp:2500000},extra:{currentHp:100}}},
-   marks:{version:999,entries:{[markIds[0]]:{acquired:false,level:99,progress:7},[markIds[1]]:{acquired:false,level:0,progress:5},extra:{acquired:true,level:10,progress:9}}}
+   marks:{version:999,entries:{[markIds[0]]:{acquired:false,level:99,progress:7},[markIds[1]]:{acquired:false,level:0,progress:5},[markIds[2]]:{acquired:true,level:4,progress:99},extra:{acquired:true,level:10,progress:9}}}
   };
   window.normalizeCivilizationCalamityState(malformed);
   if(malformed.calamities.version!==1||malformed.calamities.balanceVersion!==3||Object.keys(malformed.calamities.entries).length!==10||malformed.calamities.entries[calamityIds[0]].currentHp!==null||malformed.calamities.entries[calamityIds[1]].currentHp!==500000)fail("CALAMITY_NORMALIZE","災厄 state normalizer／分級 HP clamp 異常",malformed.calamities);
   if(window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[0])!==250000||window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[9])!==2500000)fail("CALAMITY_HP_CURVE_VALUES","災厄 HP 曲線端點異常",{first:window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[0]),last:window.getCivilizationCalamityConfiguredMaxHp?.(calamityIds[9])});
-  const m0=malformed.marks.entries[markIds[0]],m1=malformed.marks.entries[markIds[1]];
-  if(malformed.marks.version!==1||Object.keys(malformed.marks.entries).length!==10||m0.acquired!==true||m0.level!==10||m0.progress!==0||m1.acquired!==false||m1.level!==0||m1.progress!==0)fail("MARK_NORMALIZE","印記 state normalizer 異常",malformed.marks);
+  const m0=malformed.marks.entries[markIds[0]],m1=malformed.marks.entries[markIds[1]],m2=malformed.marks.entries[markIds[2]];
+  if(malformed.marks.version!==1||Object.keys(malformed.marks.entries).length!==10||m0.acquired!==true||m0.level!==10||m0.progress!==0||m1.acquired!==false||m1.level!==0||m1.progress!==0||m2.acquired!==true||m2.level!==4||m2.progress!==2)fail("MARK_NORMALIZE","印記 state normalizer／progress canonical 異常",malformed.marks);
  }
 
  if(typeof newState==="function"){
