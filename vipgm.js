@@ -252,6 +252,17 @@
  window.gmTestBreakthroughLevelValue=function(){return testBreakthrough();};
  window.gmTestBreakthroughState=function(){return cloneValue(testBreakthroughState());};
  window.gmTestBreakthroughSnapshot=function(){return cloneValue(testBreakthroughSnapshot());};
+ window.gmTestFinalDamageSnapshot=function(world=null,civilizationLevel=null,breakthroughLevel=null){
+  if(typeof window.formalPlayerFinalDamageSnapshot!=="function")throw new Error("Formal player final damage owner unavailable for GM test.");
+  const character=window.gmTestCharacterSnapshot();
+  const activeWorld=world==null?clampWorld(character?.world):clampWorld(world);
+  const civ=civilizationLevel==null?(typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0):civilizationLevel;
+  const breakthrough=breakthroughLevel==null?testBreakthrough():normalizeTestBreakthrough(breakthroughLevel);
+  return cloneValue(window.formalPlayerFinalDamageSnapshot({world:activeWorld,civilizationLevel:civ,breakthroughLevel:breakthrough}));
+ };
+ window.gmTestFinalDamageMultiplier=function(world=null,civilizationLevel=null,breakthroughLevel=null){
+  return Number(window.gmTestFinalDamageSnapshot(world,civilizationLevel,breakthroughLevel)?.multiplier)||1;
+ };
  window.gmTestEnhancedEquippedStats=function(){
   const target=testBreakthroughState();
   if(typeof window.stateAwareEquippedStatsWithEnhancementLevels==="function")return window.stateAwareEquippedStatsWithEnhancementLevels(target,window.gmTestEnhancementLevels);
@@ -294,6 +305,7 @@
  window.GM_UNBOUNDED_VIP_TEST_VERSION=GM_UNBOUNDED_VIP_TEST_VERSION;
  window.GM_TEST_BREAKTHROUGH_VERSION=GM_TEST_BREAKTHROUGH_VERSION;
  window.GM_TEST_BREAKTHROUGH_FORMAL_OWNER_VERSION=1;
+ window.GM_TEST_FINAL_DAMAGE_FORMAL_OWNER_VERSION=1;
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
  window.GM_ENHANCEMENT_TEST_RANGE_VERSION=1;
