@@ -13,6 +13,8 @@ const index=read("index.html");
 assert.ok(background.includes("CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION=1"),"Shared calamity battle presentation owner version missing.");
 assert.ok(background.includes("battlePresentationPlan(baseOptions={})"),"Shared continuous-run infrastructure must own battlePresentationPlan.");
 assert.ok(background.includes("backgroundProgressCatchUpStep(flowKind)"),"Shared battle presentation plan must consume the catch-up step before combat.");
+assert.ok(background.includes("window.calamityContinuousUiDecision=function(policy,ended=false)"),"Two calamity UIs must share terminal presentation owner.");
+assert.ok(background.includes("shouldConsumeDuration:fast&&!present&&ended!==true"),"Shared policy must skip terminal headless battle duration.");
 
 for(const [name,source] of [["W1",w1Run],["W2",w2Run]]){
   assert.ok(source.includes("battlePresentationPlan(options)"),name+" calamity run must consume shared battle presentation plan.");
@@ -22,11 +24,11 @@ for(const [name,source] of [["W1",w1Run],["W2",w2Run]]){
 assert.ok(w1Core.includes("preparePresentation:options.preparePresentation!==false"),"W1 calamity core must support headless Fast Catch-up combat presentation.");
 
 assert.ok(w1Ui.includes("const policy=battle?.presentationPolicy||null"),"W1 UI must use the battle-start presentation decision after mark-maxed terminal settlement.");
-assert.ok(w1Ui.includes("if(!battle.ended)await consumeCatchUpDelay"),"W1 terminal Fast Catch-up battle must not wait a full structured-combat duration after background flow has stopped.");
+assert.ok(w1Ui.includes("if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay"),"W1 terminal Fast Catch-up UI must delegate structured-duration skip to canonical shared decision.");
 assert.ok(!w1Ui.includes("function catchUpStep()"),"W1 UI must not re-decide catch-up presentation after settlement.");
 
 assert.ok(w2Ui.includes("const policy=step?.presentationPolicy||null"),"W2 UI must use the same carried battle-start presentation decision.");
-assert.ok(w2Ui.includes("if(!step.ended)await consumeCatchUpDelay"),"W2 terminal Fast Catch-up battle must skip redundant terminal presentation delay.");
+assert.ok(w2Ui.includes("if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay"),"W2 terminal Fast Catch-up UI must delegate structured-duration skip to canonical shared decision.");
 assert.ok(!w2Ui.includes("function catchUpStep()"),"W2 UI must not own a second catch-up-step decision.");
 
 for(const token of [
