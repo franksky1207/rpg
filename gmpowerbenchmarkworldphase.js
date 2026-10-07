@@ -330,10 +330,8 @@
    const wrapped=function(value){const world=clampWorld(value);world3.modeOverride=world;world3.result=null;if(world===3){if(typeof render==="function")render();return 3;}return baseSetWorld(world);};
    wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkSetWorld=wrapped;
   }
-  const baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot;
-  if(typeof baseInvalidate==="function"&&!baseInvalidate.__world3ResultInvalidationAdapter){
-   const wrapped=function(...args){const result=baseInvalidate(...args);world3.result=null;return result;};
-   wrapped.__world3ResultInvalidationAdapter=VERSION;window.gmPowerBenchmarkInvalidateSnapshot=wrapped;
+  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function"){
+   window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>{world3.result=null;});
   }
   const baseSnapshot=window.gmPowerBenchmarkSnapshot;
   if(typeof baseSnapshot==="function"&&!baseSnapshot.__worldPhaseAdapter){const wrapped=function(){return correctedSnapshot(baseSnapshot());};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkSnapshot=wrapped;}
@@ -371,7 +369,7 @@
    check(summary.includes("有效完成 3 場｜失敗 1 場"),"summary-completed-failed",summary);
    check(summary.includes("先制 6 次（2 / 場）"),"summary-completed-denominator",summary);
    check(summary.includes("Stage 9：已無下一 Stage"),"summary-stage9",summary);
-   if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function"){window.gmPowerBenchmarkInvalidateSnapshot();check(world3.result===null,"result-invalidation",world3.result);}else errors.push({code:"invalidation-owner-missing",data:null});
+   if(typeof window.gmPowerBenchmarkInvalidateTestContext==="function"){window.gmPowerBenchmarkInvalidateTestContext({reason:"world3-regression"});check(world3.result===null,"result-invalidation",world3.result);}else errors.push({code:"invalidation-owner-missing",data:null});
    world3.result=previousResult;
    if(typeof window.runThirdWorldBossCombat==="function"){
     const holder=typeof state!=="undefined"&&state&&typeof state==="object"?state:null;
@@ -422,7 +420,7 @@
  if(WORLD3_RESULT_CONSISTENCY_VERSION!==1)integrityErrors.push("world3-result-consistency-version");
  if(WORLD3_RESULT_CONTEXT_VERSION!==1||typeof window.gmAttachTestResultContext!=="function")integrityErrors.push("world3-result-context-version");
  if(WORLD3_ANALYTICS_REGRESSION_VERSION!==1)integrityErrors.push("world3-analytics-regression-version");
- if(window.gmPowerBenchmarkInvalidateSnapshot?.__world3ResultInvalidationAdapter!==VERSION)integrityErrors.push("world3-result-invalidation-wiring");
+ if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator!=="function")integrityErrors.push("world3-result-invalidation-registry");
  if(!analyticsRegression.passed)analyticsRegression.errors.forEach(row=>integrityErrors.push(`world3-regression:${row.code}`));
  const runSource=Function.prototype.toString.call(runThirdWorldMapBenchmark),resultSource=Function.prototype.toString.call(thirdResultHtml),summarySource=Function.prototype.toString.call(appendWorld3Summary),abilitySource=Function.prototype.toString.call(recordAbilityEvent);
  if(!runSource.includes("firstFailureReason")||!runSource.includes("characterSnapshot")||!runSource.includes("failed++"))integrityErrors.push("world3-run-result-consistency");
