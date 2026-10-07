@@ -43,6 +43,8 @@ jobs:
         run: set -o pipefail; node tests/story/integrity.js 2>&1 | tee story-integrity-report.txt
       - name: Run Story Record regressions
         run: node tests/story/record.js
+      - name: Run reincarnation W1 W2 Story trigger isolation
+        run: node tests/story/reincarnation-trigger-batch2.js
       - name: Run legacy W3 Story migration regressions
         run: node tests/story/legacy-thirdworld.js
       - name: Upload story integrity diagnostics
