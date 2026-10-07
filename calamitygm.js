@@ -100,9 +100,10 @@
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
   const p=player(),enemyStart=startHp==null?enemy.hp:Math.max(1,Math.min(enemy.hp,Math.floor(Number(startHp)||enemy.hp)));
   const markLevels=testMarks();
-  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0):1;
+  const breakthroughLevel=typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0;
+  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1;
   const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
-  return {enemy,player:p,enemyStart,result,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
+  return {enemy,player:p,enemyStart,result,breakthroughLevel,finalDamageMultiplier,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
  }
  function singleHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
@@ -126,7 +127,9 @@
     await new Promise(resolve=>setTimeout(resolve,0));
    }
   }
-  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed,lastPlayerHp,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT};
+  const breakthroughLevel=typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0;
+  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1;
+  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed,lastPlayerHp,breakthroughLevel,finalDamageMultiplier,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT};
  }
  function fullHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
@@ -140,7 +143,7 @@
   busy=true;
   try{
    const data=simulateAttempt(id);
-   gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
+   gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
    singleResultHtml=singleHtml(data);
    if(box)box.innerHTML=singleResultHtml;
    if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
@@ -153,7 +156,7 @@
   busy=true;if(button){button.disabled=true;button.textContent="模擬中…";}
   try{
    const data=await simulateFullKill(id,(attempts,hp,maxHp)=>{if(box)box.innerHTML=`<div class="notice">完整擊殺模擬中…<div class="muted" style="margin-top:8px">已完成 ${attempts.toLocaleString()} 場｜災厄 HP ${hp.toLocaleString()} / ${maxHp.toLocaleString()}</div></div>`;});
-   gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
+   gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
    fullResultHtml=fullHtml(data);
    if(box)box.innerHTML=fullResultHtml;
    if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
