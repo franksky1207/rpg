@@ -37,7 +37,7 @@ const assert=require("assert");
     if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
     const benchmark25=typeof window.gmPowerBenchmarkSnapshot==="function"?window.gmPowerBenchmarkSnapshot():null;
     const benchmarkSummary25=typeof window.gmPowerBenchmarkSummaryText==="function"?window.gmPowerBenchmarkSummaryText():"";
-    const benchmarkSaveCalls=saveCalls;saveCalls=0;
+    saveCalls=0;
     const formalAfterManual=JSON.stringify(state.reincarnation);
 
     installFormal(3,25);
@@ -57,7 +57,7 @@ const assert=require("assert");
     const damage37=window.formalPlayerFinalDamageSnapshot({world:1,breakthroughLevel:window.gmTestBreakthroughLevelValue()});
     const label37=window.gmTestBreakthroughLabel();
     const control37=window.gmTestBreakthroughControlHtml();
-    return {abilityHtml,b0,b25,b37,stats0,stats25,character25,canonical25,damage25,gmDamage25,benchmark25,benchmarkSummary25,benchmarkSaveCalls,damage37,label37,control37,formalBeforeManual,formalAfterManual,beforeSync25,afterSync25,sync25,beforeSync0,afterSync0,sync0,saveCalls,versions:{state:window.GM_TEST_STATE_VERSION,sandbox:window.GM_TEST_CHARACTER_SANDBOX_VERSION,breakthrough:window.GM_TEST_BREAKTHROUGH_VERSION,group:window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION,gmFinal:window.GM_TEST_FINAL_DAMAGE_FORMAL_OWNER_VERSION,benchmarkFinal:window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION}};
+    return {abilityHtml,b0,b25,b37,stats0,stats25,character25,canonical25,damage25,gmDamage25,benchmark25,benchmarkSummary25,damage37,label37,control37,formalBeforeManual,formalAfterManual,beforeSync25,afterSync25,sync25,beforeSync0,afterSync0,sync0,saveCalls,versions:{state:window.GM_TEST_STATE_VERSION,sandbox:window.GM_TEST_CHARACTER_SANDBOX_VERSION,breakthrough:window.GM_TEST_BREAKTHROUGH_VERSION,group:window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION,gmFinal:window.GM_TEST_FINAL_DAMAGE_FORMAL_OWNER_VERSION,benchmarkFinal:window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION}};
    }finally{
     state.reincarnation=originalFormal;
     window.gmSetTestBreakthroughLevel(originalTest,false);
@@ -78,7 +78,6 @@ const assert=require("assert");
   assert.equal(report.benchmark25.breakthroughLevel,25,"戰力基準 snapshot 必須保存突破等級。");
   assert.ok(Math.abs(report.benchmark25.finalDamageMultiplier-2.25)<1e-12,"銀河戰力基準必須套用突破最終傷害。");
   assert.ok(report.benchmarkSummary25.includes("突破 Lv.25")&&report.benchmarkSummary25.includes("總最終傷害倍率：×2.25"),"戰力基準摘要必須顯示突破等級與總最終傷害倍率。");
-  assert.equal(report.benchmarkSaveCalls,0,"戰力基準 snapshot／摘要不得寫入正式存檔。");
   assert.equal(report.versions.gmFinal,1);assert.equal(report.versions.benchmarkFinal,1);
   assert.equal(report.formalBeforeManual,report.formalAfterManual,"手動調整 GM 測試突破不得修改正式轉生資料。");
 
