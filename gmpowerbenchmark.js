@@ -171,9 +171,11 @@
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:Number(character?.world)===2?2:1,civilizationLevel}):1;
   const finalDamageSnapshot=typeof window.gmTestFinalDamageSnapshot==="function"?window.gmTestFinalDamageSnapshot(Number(character?.world)===2?2:1,civilizationLevel,breakthroughLevel):null;
   if(!finalDamageSnapshot)throw new Error("GM benchmark final damage owner unavailable.");
+  const testContext=typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null;
   MODEL.snapshot={
    capturedAt:Date.now(),
    testContextRevision:typeof window.gmTestContextRevision==="function"?window.gmTestContextRevision():0,
+   testContext,
    characterWorld:Number(character?.world)===2?2:1,
    equipmentSource:character?.equipmentSource==="synced"?"synced":"generated",
    level:whole(character?.level??window.gmTestLevel??(typeof state!=="undefined"?state.level:1),1,1000),
@@ -190,6 +192,7 @@
   return MODEL.snapshot;
  }
  function snapshot(){return MODEL.snapshot||captureSnapshot();}
+ function snapshotStillCurrent(s){return !s||typeof window.gmTestContextRevision!=="function"||window.gmTestContextRevision()===whole(s.testContextRevision,0);}
  function specText(s){
   const defs=window.SPECIALIZATION_DEFS||{};
   const keys=Array.isArray(window.SPECIALIZATION_KEYS)?window.SPECIALIZATION_KEYS:Object.keys(s.specs||{});
@@ -361,8 +364,9 @@
     if(ev.initiative){initiativeHits++;initiativeDamage+=d;}
    });
   });
+  if(!snapshotStillCurrent(s))return false;
   MODEL.outputResult={
-   world:benchmarkWorld(),sourceLabel:sourceLabel(source,"DEF"),targetDef,runs,
+   testContext:s.testContext,world:benchmarkWorld(),sourceLabel:sourceLabel(source,"DEF"),targetDef,runs,
    avgRoundDamage:total/runs,avgHitDamage:hits?total/hits:0,minHit:min===Infinity?0:min,maxHit:max,
    critRate:pct(crits,hits),avgCritDamage:crits?critDamage/crits:0,avgNormalDamage:normalHits?normalDamage/normalHits:0,
    avgCombos:one(combos/runs),comboDamageShare:pct(comboDamage,total),penetrationRate:pct(penetrations,hits),ignoreRate:pct(ignores,hits),
@@ -394,8 +398,9 @@
     if(ev.type==="mark"&&ev.mark==="indomitable"&&ev.action==="survive")indomitable++;
    });
   });
+  if(!snapshotStillCurrent(s))return false;
   MODEL.defenseResult={
-   world:benchmarkWorld(),sourceLabel:sourceLabel(source,"ATK"),targetAtk,runs,
+   testContext:s.testContext,world:benchmarkWorld(),sourceLabel:sourceLabel(source,"ATK"),targetAtk,runs,
    avgSurvivalTurns:one(totalTurns/runs),avgTurnLoss:totalTurns?totalLoss/totalTurns:0,avgHitLoss:landed?totalLoss/landed:0,minLoss:min===Infinity?0:min,maxLoss:max,
    dodgeRate:pct(dodges,totalTurns),enemyCritRate:pct(crits,landed),avgShieldAbsorb:shield/runs,absorptionRate:pct(absorptions,totalTurns),
    avgCounters:one(counters/runs),avgBacklashDamage:backlash/runs,indomitableRate:pct(indomitable,runs),capped
@@ -472,7 +477,8 @@
    const row=await universeCombatRow(MODEL.universeBossIndex,runs,s);
    if(!row)return false;
    const region=universeRegionMeta(MODEL.universeRegionIndex);
-   MODEL.combatResult={world:2,mode:"single",bossIndex:MODEL.universeBossIndex,mapName:region?String(region.name||"宇宙紀元"):"宇宙紀元",runs,rows:[row]};
+   if(!snapshotStillCurrent(s))return false;
+   MODEL.combatResult={testContext:s.testContext,world:2,mode:"single",bossIndex:MODEL.universeBossIndex,mapName:region?String(region.name||"宇宙紀元"):"宇宙紀元",runs,rows:[row]};
    return true;
   }
   const m=mapAt(MODEL.mapIndex);
@@ -482,7 +488,8 @@
    const row=await combatRow(MODEL.mapIndex,i,runs,s);
    if(row)rows.push(row);
   }
-  MODEL.combatResult={world:1,mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
+  if(!snapshotStillCurrent(s))return false;
+  MODEL.combatResult={testContext:s.testContext,world:1,mode:mode==="map"?"map":"single",mapIndex:MODEL.mapIndex,mapName:String(m.name||""),runs,rows};
   return true;
  }
  function runCombatBenchmark(mode){
@@ -766,6 +773,8 @@
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION=1;
  window.GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_VERSION=1;
+ window.GM_POWER_BENCHMARK_RESULT_CONTEXT_VERSION=1;
+ window.GM_POWER_BENCHMARK_STALE_RESULT_GUARD_VERSION=1;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSnapshot=function(){const s=snapshot();return s?JSON.parse(JSON.stringify(s)):null;};
  window.gmPowerBenchmarkSetCalamityWorld=function(v){if(MODEL.busy)return;MODEL.calamityWorld=Number(v)===2?2:1;if(typeof render==="function")render();return MODEL.calamityWorld;};
