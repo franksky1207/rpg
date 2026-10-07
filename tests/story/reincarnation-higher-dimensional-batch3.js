@@ -77,6 +77,7 @@ async function main(){
   assert.equal(battle.queuedStoryId,null,"戰鬥完成不觸發 W3 Final");
   assert.equal(JSON.stringify(target.storyProgress.completedStories),priorHistory,"本輪 Boss 全滅不能影響永久 Story archive");
   const staleStage=setup(count,{allDead:true,stage:0,history:ids,pending:null});
+  staleStage.ctx.reconcileThirdWorldRerunCombatCompletion(staleStage.target);
   staleStage.api.normalize(staleStage.target);
   assert.equal(staleStage.target.thirdWorld.completed,true,"10王確實全滅時，轉生通關不得依賴舊 Story stage");
   assert.equal(staleStage.target.thirdWorld.story.unlockedStage,0,"Story isolation owner 不得擅自補寫本輪 stage");
