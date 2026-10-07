@@ -98,11 +98,19 @@
   const trustedCore=entered&&entryVersion>=THIRD_WORLD_ENTRY_RECONCILIATION_VERSION;
   const investment=normalizeThirdWorldCoreInvestment(source.coreLevel,source.coreProgress,source.dimensionalStrings,{preserveOverflow:trustedCore});
   target.thirdWorld={entered,completed:source.completed===true,entryVersion,dimensionalStrings:investment.dimensionalStrings,coreLevel:investment.level,coreProgress:investment.progress,bosses:normalizeBosses(source.bosses),story:normalizeStory(source.story)};
-  if(entered){if(!isObject(target.secondWorld))target.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:true};target.secondWorld.entered=true;reconcileThirdWorldEntryState(target);reconcileThirdWorldStoryState(target);}
+  if(entered){if(!isObject(target.secondWorld))target.secondWorld=typeof window.createBlankSecondWorldState==="function"?window.createBlankSecondWorldState():{entered:true};target.secondWorld.entered=true;reconcileThirdWorldEntryState(target);reconcileThirdWorldStoryState(target);reconcileThirdWorldRerunCombatCompletion(target);}
   return target;
  }
  function thirdWorldState(target=state){if(!isObject(target))return createBlankThirdWorldState();return isObject(target.thirdWorld)?target.thirdWorld:createBlankThirdWorldState();}
  function thirdWorldBossesAllDefeated(target=state){const rows=thirdWorldState(target).bosses;return Array.isArray(rows)&&rows.length===THIRD_WORLD_BOSS_COUNT&&rows.every(row=>finiteWhole(row?.currentHp,THIRD_WORLD_BOSS_MAX_HP)===0);}
+ function reconcileThirdWorldRerunCombatCompletion(target=state){
+  if(!isObject(target)||target.thirdWorld?.entered!==true)return Object.freeze({applied:false,reason:"third-world-not-entered"});
+  if(window.storyReincarnationContext?.(target)?.reincarnationRun!==true)return Object.freeze({applied:false,reason:"first-run"});
+  const before=target.thirdWorld.completed===true;
+  const completed=thirdWorldBossesAllDefeated(target);
+  target.thirdWorld.completed=completed;
+  return Object.freeze({applied:before!==completed,reason:"rerun-formal-ten-boss-completion",completed});
+ }
  function thirdWorldCompletionSnapshot(target=state){const data=thirdWorldState(target),bossesDefeated=thirdWorldBossesAllDefeated(target);return {storedCompleted:data.completed===true,bossesDefeated,finalSeen:data.story?.finalSeen===true,readyForCompletionOwner:bossesDefeated};}
 
  function finalSecondWorldBossIndex(){const count=Math.max(1,finiteWhole(window.SECOND_WORLD_MAIN_BOSS_COUNT,100));return count-1;}
@@ -186,6 +194,8 @@
  window.canonicalThirdWorldStoryStage=canonicalThirdWorldStoryStage;
  window.thirdWorldState=thirdWorldState;
  window.thirdWorldBossesAllDefeated=thirdWorldBossesAllDefeated;
+ window.THIRD_WORLD_RERUN_COMBAT_COMPLETION_OWNER_VERSION=1;
+ window.reconcileThirdWorldRerunCombatCompletion=reconcileThirdWorldRerunCombatCompletion;
  window.thirdWorldCompletionSnapshot=thirdWorldCompletionSnapshot;
  window.finalSecondWorldBossIndex=finalSecondWorldBossIndex;
  window.finalSecondWorldStoryId=finalSecondWorldStoryId;
