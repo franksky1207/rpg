@@ -3,11 +3,11 @@
  function enabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
  function mainlineHpLockEnabled(){return typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;}
  function setEnabled(next){
-  if(typeof window.gmSetDeviceBooleanPreference!=="function"||!window.gmSetDeviceBooleanPreference("civilization_frontline_gm_background_battle_v1_",next===true))return false;
+  if(typeof window.gmSetBackgroundBattlePreference!=="function"||!window.gmSetBackgroundBattlePreference(next===true))return false;
   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");window.backgroundProgressStop("third-world");}
   return true;
  }
- function setMainlineHpLockEnabled(next){return typeof window.gmSetDeviceBooleanPreference==="function"&&window.gmSetDeviceBooleanPreference("civilization_frontline_gm_mainline_hp_lock_v1_",next===true);}
+ function setMainlineHpLockEnabled(next){return typeof window.gmSetMainlineHpLockPreference==="function"&&window.gmSetMainlineHpLockPreference(next===true);}
  function installStyles(){
   if(document.getElementById("gmBackgroundBattleStyles"))return;
   const style=document.createElement("style");
