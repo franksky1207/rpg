@@ -757,6 +757,7 @@
  window.GM_POWER_BENCHMARK_CIVILIZATION_COMBAT_OWNER_VERSION=1;
  window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
+ window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION=1;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSnapshot=function(){const s=snapshot();return s?JSON.parse(JSON.stringify(s)):null;};
  window.gmPowerBenchmarkSetCalamityWorld=function(v){if(MODEL.busy)return;MODEL.calamityWorld=Number(v)===2?2:1;if(typeof render==="function")render();return MODEL.calamityWorld;};
