@@ -1,6 +1,6 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-10-07（UTC+8）  
+更新日期：2026-10-08（UTC+8）  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
@@ -10,22 +10,15 @@
 
 # 0. 本次交接基準
 
-本次交接以 **2026-10-07 current `main`** 的實際檔案為依據，重新讀取本交接檔與 Story migration／progress／record、兩紀元文明災厄 core／run／UI、共用 Background Progress、第三紀元 phase／正式 settlement、轉生 lifecycle／core、HTML 引用與最近新增的測試。其他較早完工的正式 GM／異宇宙／裝備／突破／副本細節，仍依本檔下方 owner 索引與 current main 驗證，**不把早期交接當作實碼已重新驗證的替代品**。
+本次交接以 **2026-10-08 current `main`** 的實際程式碼為依據。更新交接檔前重新讀取了本檔，以及本次對話直接修改／依賴的正式 owner 與 regression，包括：`calamitycore.js`、`calamitygm.js`、`calamitygmintegrity.js`、`gmpowerbenchmark.js`、`savemigration.js`、`gmruntimeauthorization.js`、`scriptgrouploader.js`、`gmdevicepreferences.js`、`gmbackground.js`、`combatspeed.js`、相關 Runtime Integrity 測試與 `index.html`。其他既有系統仍以本檔 owner 索引＋current main 為準；**本檔不是 main 的替代品**。
 
-此次僅更新 `PROJECT_HANDOFF.md`。更新交接檔前的 gameplay HEAD：
-
-```text
-4e0c521940c915972a4f6a9ddb15d7cc80951e58
-```
-
-該 exact HEAD：
+此次只更新 `PROJECT_HANDOFF.md`；更新前 gameplay HEAD：
 
 ```text
-Runtime Integrity #2155 = success
-GitHub Pages      #6124 = success
+d1cd0a4a5becf753cbd45beb578236780822a1cc
 ```
 
-最近一次 Story Integrity #1111 = success，對應較早 gameplay HEAD `a54691cf1f4ebe06afab3b81acf7d2613c8e0294`；**不是**上述最終 HEAD 的 Story CI，不能混稱同 SHA。後續 Runtime 靜態契約修正不涉及 Story production JS，且 exact HEAD Runtime browser smoke／Story 相容測試已通過。
+該 exact HEAD 查詢時 GitHub combined status／workflow runs 仍為空集合，因此**不可宣稱 current HEAD CI 已綠**。本檔內較早的 #2155／#6124／#1111 等 success 僅屬歷史驗證紀錄，不可套用到 current HEAD。
 
 目前正式開發狀態：
 
@@ -34,27 +27,18 @@ GitHub Pages      #6124 = success
 裝備自動處理政策                                       ✅ 完成
 轉生核心資料與首輪隔離                                 ✅ 完成
 突破系統＋正式轉生                                     ✅ 完成
-異宇宙 Batch3～4                                       ✅ 完成
-AU 架構優化第1～3批                                    ✅ 完成
-Batch5：W1／W2／W3 轉生後重征服                        ✅ 完成
-Batch6：越級收益／批次成長／副本／封箱                 ✅ 完成
-Batch7：GM／測試工具正式收尾 7-1～7-5全部完成             ✅ 完成
-第一紀元完整 Target Context 重構 Batch0～6＋優化1～4     ✅ 完成
-Code Cleanup Batch1～8                                  ✅ 完成
-轉生／GM／三紀元語義四批優化                            ✅ 完成
-異宇宙稱號 Batch1～4                                   ✅ 完成
-GM 異宇宙重複稱號快速預覽入口退休                      ✅ 完成
-第三紀元副本 era／qualification access 收斂             ✅ 完成
-鏡像戰正式 settlement／GM 正式裁定收斂                  ✅ 完成
-AU 稱號門檻 data owner／migration diagnostics 收斂       ✅ 完成
-Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
-劇情轉生分流 Batch1～4（W1 101／W2 100／W3 11）          ✅ 完成
-劇情／災厄後續優化 Batch1～3（原優先項目1～12）           ✅ 完成
-災厄最後一場 Fast Catch-up／checkpoint 動態回歸          ✅ 完成
-目前已排定工程                                          ✅ 全部完成
+異宇宙／稱號／鏡像／第三紀元副本 access 收斂           ✅ 完成
+Batch5～7、Target Context、Code Cleanup                ✅ 完成
+劇情轉生分流 Batch1～4                                 ✅ 完成
+劇情／災厄安全與 Fast Catch-up 優化                    ✅ 完成
+銀河災厄 HP 平衡＋正式 final-damage owner 修正          ✅ 完成
+GM 測試 context／結果 snapshot／正式印記 transaction    ✅ 完成
+GM 災厄 no-progress＋formal-vs-GM parity regression     ✅ 完成
+GM 授權首次 render／lazy group／auth-ready preference   ✅ 完成
+目前已核准工程                                          ✅ 全部完成
 ```
 
-**截至本次 gameplay HEAD，劇情／轉生分流四批＋劇情／災厄安全與效能優化三批皆已封箱。** 轉生後只在戰線紀錄回顧歷史，劇情不參與本輪正式戰鬥／養成／通關；兩紀元災厄最後一場共用 Fast Catch-up 呈現判定、checkpoint 安全及 UI 決策。首輪劇情流程、Schema17、戰鬥公式、GM 正式與 sandbox 邊界不因此改動。
+本次對話沒有留下已核准但未施工的功能批次。下一輪若要再做 GM 載入最佳化，必須重新 fresh-read current main；不要把本次分析中尚未執行的低優先建議自動視為待辦。
 
 ---
 
@@ -150,7 +134,7 @@ SAVE_LEGACY_SUPPORT_MODE = "all-known"
 
 ## GM transient cleanup
 
-`GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION = 2`，正式 migration 清除 11 個歷史 GM-only transient keys：
+`GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION = 3`，正式 migration 目前清除 **14 個**歷史 GM-only transient keys：
 
 ```text
 gmTestWorld
@@ -158,13 +142,18 @@ gmTestLevel
 gmTestEquipment
 gmTestEquipmentSource
 gmTestVipLevel
+gmTestBreakthroughLevel
 gmTestEnhancementLevels
 gmTestSpecializations
 gmTestMarkLevels
 gmTestCivilizationLevel
+gmTestContext
+gmTestContextRevision
 gmPowerBenchmark
 gmTestResults
 ```
+
+這些只屬 GM sandbox／benchmark runtime；舊存檔若曾誤寫入，migration 會移除。正式角色 save／Cloud Save 不應持久化上述欄位。
 
 ## 2026-10-07 migration diagnostics
 
@@ -585,24 +574,80 @@ M = 1 + 0.03 × (enemyLevel - playerLevel)
 
 # 14. GM 正式寫入／授權／lazy runtime
 
-`gmformaltransaction.js`：
+## GM formal transaction
+
+`gmformaltransaction.js` 的 formal GM mutation 仍以 shared `runSettlementTransaction()` 為唯一正式交易 owner；缺失時 fail closed。GM 正式印記修改已走 `gmCommitFormalMarkMutation()`，不得回到 direct `state → save()`。
+
+## GM browser-local authorization
+
+正式 startup owner 是 `gmruntimeauthorization.js`：
 
 ```text
-VERSION = 3
-ENHANCEMENT_VERSION = 2
-UI_CONVERGENCE_VERSION = 1
+GM_RUNTIME_AUTHORIZATION_CORE_VERSION = 1
+GM_RUNTIME_AUTHORIZATION_VERSION = 2
+GM_RUNTIME_EARLY_RESTORE_VERSION = 2
+GM_RUNTIME_SAVE_BOUNDARY_VERSION = 2
+GM_RUNTIME_LEGACY_RECONCILE_VERSION = 1
+scope = browser-local-runtime
+key = civilization-war-gm-authorized-v1
 ```
 
-formal GM mutation 以 `runSettlementTransaction()` 為正式交易 owner；缺失時 fail closed。
+啟動流程：
 
-GM authorization 採 browser-local runtime semantics，不把授權本身作正式玩家進度。
+```text
+load()
+→ normalizeCurrentSaveState()
+→ gmReconcileRuntimeAuthorizationAfterLoad(state)
+→ 原啟動 save(false)
+→ 第一次 render()
+```
 
-正式原則：
+因此已授權裝置在**第一次 main render 前**就恢復 `state.gm=true`。未授權但舊 save 殘留 `gm:true` 時只做 in-memory reconcile，再由原啟動 save 順手清乾淨；已移除舊 `stripLegacySaveAuthorization()+額外 save` 路徑。
 
-- formal save 前剝離 GM runtime authorization，save 後還原 runtime flag。
-- stale legacy save authorization 會清除。
-- lazy GM script group 失敗後可 retry。
-- Story／GM／Integrity lazy-loading boundary 是正式 runtime ownership boundary，不硬合併。
+正式 save boundary 仍使用 hook ID `gm-runtime-authorization-v1`：save 前暫時剝離 runtime `state.gm`，settlement 後恢復；GM authorization 不進正式角色 save／Cloud Save。
+
+## Deferred GM group
+
+`scriptgrouploader.js`：
+
+```text
+SCRIPT_GROUP_LOADER_VERSION = 1
+SCRIPT_GROUP_ACTIVATION_POLICY_VERSION = 3
+SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION = 4
+GM_AUTHORIZED_GROUP_RETRY_VERSION = 1
+```
+
+完整 GM Hub／benchmark／管理工具維持 deferred，不提前載全部 GM scripts。已授權恢復與首次密碼通過都共用 `ensureAuthorizedGmRuntime({retry:true})`；GM group 首次載入失敗會在 250ms 後 bounded retry 一次。即使兩次載入都失敗，也不把既有 browser-local authorization 誤判為失效。
+
+## 背景戰鬥／主線鎖血／GM 倍速
+
+早期常駐 owner：`gmdevicepreferences.js`
+
+```text
+GM_RUNTIME_DEVICE_PREFERENCE_CORE_VERSION = 2
+GM_RUNTIME_DEVICE_PREFERENCE_AUTH_SYNC_VERSION = 2
+GM_RUNTIME_DEVICE_PREFERENCE_ACCOUNT_RECONCILE_VERSION = 1
+GM_DEVICE_BOOLEAN_PREFERENCE_VERSION = 2
+```
+
+它正式擁有背景戰鬥與主線鎖血 storage key／gate／semantic setter：
+
+```text
+civilization_frontline_gm_background_battle_v1_<userId>
+civilization_frontline_gm_mainline_hp_lock_v1_<userId>
+```
+
+`gmbackground.js` 只保留 GM 管理 UI，不得再知道上述 key；寫入必須委派 `gmSetBackgroundBattlePreference()`／`gmSetMainlineHpLockPreference()`。
+
+`combatspeed.js` 的帳號型 GM override key 維持：
+
+```text
+civilization_frontline_gm_combat_speed_v1_<userId>
+```
+
+且 `COMBAT_SPEED_GM_AUTH_SYNC_VERSION = 2`。收到 `civilization-auth-ready` 後會立刻恢復目前帳號的 background／HP-lock／GM speed；同帳號同值的重複 auth-ready 由 signature 去重，不重複廣播。帳號切換時若新帳號 background=false，而舊帳號仍有 active background flow，會立即呼叫共享 `backgroundProgressStop()`。
+
+GM authorization 本身仍是**裝置 browser-local**，不是 account-scoped；背景戰鬥／主線鎖血／GM speed 才是 account-scoped。除非使用者重新決策，不要自行改成帳號型授權。
 
 ---
 
@@ -799,31 +844,20 @@ tests/runtime/recent-optimization-batch4-closure.js
 - 真實 Chromium browser smoke。
 - Save/global writer/new-state/load pipeline。
 - Schema17 compatibility matrix。
-- AU data／attempt／combat／failure／progression／UI／old-save。
-- AU title Batch4 closure。
-- W3 rerun settlement stage regression。
-- Batch5／6／7 closure。
-- Breakthrough core／final damage。
-- GM突破／角色sandbox／AU管理／AU benchmark。
-- 鏡像正式 settlement／GM adjudication。
-- W3 dungeon effective access。
-- W1 Target Context Batch0～6＋優化1～4。
-- VIP unlimited。
-- GM mainline HP lock。
-- asset integrity。
-- documentation integrity。
-- recent optimization Batch4 closure。
+- AU／稱號／鏡像／W3 access／Target Context／轉生／突破／GM sandbox 等既有 closure。
+- 災厄 shared terminal Fast Catch-up、formal-vs-GM regression 與 GM result-context。
+- `tests/runtime/gm-runtime-early-restore-integrity.js`。
+- `tests/runtime/gm-runtime-auth-preferences-integrity.js`。
+- Playwright `tests/runtime/gm-first-render-browser.js`，直接驗證 browser-local GM authorization 在 `#main` 第一次 render 時已恢復。
+- GM mainline HP lock／runtime preference owner regression。
 
-本次已驗證 gameplay HEAD（交接檔更新前）：
+本次 handoff 更新前 gameplay HEAD：
 
 ```text
-4e0c521940c915972a4f6a9ddb15d7cc80951e58
-Runtime Integrity #2155 = success
-GitHub Pages #6124 = success
-Story Integrity #1111 = success（較早的 a54691cf...，非上述 exact HEAD）
+d1cd0a4a5becf753cbd45beb578236780822a1cc
 ```
 
-Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js`、`calamity-terminal-dynamic-opt-batch2.js`、`calamity-shared-ui-policy-opt-batch3.js`，及三紀元 Story／Schema17 closure。Story Integrity 則包含 W1/W2/W3 首輪與轉生、11篇高維、舊版歷史遷移和戰線紀錄回顧測試。**執行新修改時重新看新 HEAD 的 Actions，不沿用上述結果。**
+查詢該 exact HEAD 時 combined status／workflow runs 為空集合，故本檔**不宣稱 current HEAD Runtime／Story／Pages 已 success**。歷史 success 可供追溯，但下一次修改後必須重新查看新的 exact HEAD Actions。
 
 ---
 
@@ -854,7 +888,7 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 `mirrorconfig.js`、`mirrordungeonstate.js`、`mirrorcombatcore.js`、`mirrordungeongm.js`。
 
 ## Save／Offline／Runtime
-`savemigration.js`、`saveversionguard.js`、`savehookcore.js`、`settlementtransaction.js`、`compatibilityowners.js`、`runtimeapi.js`、`scriptgrouploader.js`、`offlinestatecore.js`、`offlinefarmtarget.js`、`offlineprogress.js`、`offlineworld3adapter.js`。
+`savemigration.js`、`saveversionguard.js`、`savehookcore.js`、`settlementtransaction.js`、`compatibilityowners.js`、`runtimeapi.js`、`gmruntimeauthorization.js`、`scriptgrouploader.js`、`gmdevicepreferences.js`、`combatspeed.js`、`backgroundprogress.js`、`offlinestatecore.js`、`offlinefarmtarget.js`、`offlineprogress.js`、`offlineworld3adapter.js`。
 
 ## Story／三紀元轉生後歷史
 `reincarnationstate.js`（唯一轉生 context）、`storymigration.js`（舊 ID、待播資料安全）、`storyprogress.js`（首輪正式劇情／轉生不重播）、`storyrecordtabs.js`（唯讀歷史 UI）、`secondworldstoryregistry.js`（宇宙／高維 registry）、`thirdworldphase.js`（轉生後十王通關 owner）、`thirdworldprogress.js`（正式 HP／通關同交易）。
@@ -863,7 +897,7 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 `calamitycore.js`、`calamityrun.js`、`calamityui.js`、`secondworldcalamityrun.js`、`secondworldcalamityui.js`、`backgroundprogress.js`（共用 presentation／UI policy 與 Fast Catch-up）及 `tests/runtime/calamity-*.js`。
 
 ## GM
-`gmhub.js`、`gmhubextensions.js`、`gmformaltransaction.js`、`gmbreakthroughmanage.js`、`gmalternateuniversemanage.js`、`playertitlegmpreview.js`、`mirrordungeongm.js`、`gmpowerbenchmark.js`、`gmpowerbenchmarkstate.js`、`gmpowerbenchmarkworldphase.js`、`gmalternateuniversebenchmark.js`、`vipgm.js`、`thirdworldarenagm.js`、`gmbatch16formalcontrols.js`。
+`gmhub.js`、`gmhubextensions.js`、`gmformaltransaction.js`、`gmbreakthroughmanage.js`、`gmalternateuniversemanage.js`、`playertitlegmpreview.js`、`mirrordungeongm.js`、`gmpowerbenchmark.js`、`gmpowerbenchmarkstate.js`、`gmpowerbenchmarkworldphase.js`、`gmalternateuniversebenchmark.js`、`vipgm.js`、`thirdworldarenagm.js`、`gmbatch16formalcontrols.js`、`calamitygm.js`、`secondworldcalamitygm.js`；GM runtime authorization／preferences 則分別由 `gmruntimeauthorization.js`、`gmdevicepreferences.js`、`combatspeed.js` 擁有。
 
 ---
 
@@ -894,6 +928,13 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 23. Story group 尚未 ready，不可清理尚未完整載入的合法歷史；舊 W3 content migration 應保護 rerun 已完成的11篇。
 24. 兩紀元災厄 terminal 最多一次正常 checkpoint，跳過 checkpoint 的終止場必補存；W1 正式存檔失敗回報須保留補存，W2 正式存檔回復快照不可取消。
 25. 災厄最後一場 headless Fast Catch-up 不多等待 structured duration；兩 UI 決策共用既有 `backgroundprogress.js`，不可退回各自重複公式。
+26. 銀河災厄正式戰鬥必須使用 formal final-damage owner；GM 與正式同條件 regression 不得另寫第二套倍率。
+27. GM 災厄完整擊殺模擬連續100場零傷害時必須 no-progress 提前停止，不可空轉到100,000場。
+28. GM browser-local authorization 必須在第一次 main render 前 reconcile；不得重新引入 deferred loader 後才恢復的時序。
+29. 已授權 runtime `state.gm=true` 不得被當成 legacy save flag 再清除／額外 save。
+30. 背景戰鬥／主線鎖血 storage key 只能由 `gmdevicepreferences.js` 擁有；`gmbackground.js` 只作 UI delegate。
+31. 同帳號同值的重複 `civilization-auth-ready` 不得重複廣播 GM preference／speed；切換到 background=false 的帳號必須停止既有 active background flow。
+32. 首次輸入 GM 密碼與既有授權恢復必須共用 `ensureAuthorizedGmRuntime({retry:true})`，不要再維護第二套 group load。
 
 ---
 
@@ -926,14 +967,15 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 
 # 24. 目前尚未完成項目
 
-**劇情／轉生隔離第1～4批維持封箱；後續優化工程第1～3批（舊資料與高維 owner、安全存檔與最後一場動態回歸、共用 UI／Story Record 收斂）已完成。**
+目前**沒有使用者已核准但尚未施工的工程批次**。
 
-現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
+本次對話已完成：銀河災厄 HP 砍半、突破 final-damage 正式／GM 收斂、GM testContext/result snapshot、正式印記 transaction、印記 progress canonical、GM transient cleanup V3、災厄 no-progress、formal-vs-GM parity，以及 GM authorization／first-render／auth-ready preference／帳號切換／retry owner 收斂。
 
-`PROJECT_PENDING_STATUS.md` 的「沒有已定案待辦」結論仍有效；其更新日期比本檔早，因此若其中缺少本次已完成的 AU title／Mirror／W3 access／Schema17 closure 細節，以本檔與 current main 為準。
+先前檢查曾提出仍可考慮的低優先 GM 載入整理（例如 deferred GM group 的 runtime readiness contract、共用 current-user-id helper、localStorage 非法值 canonical cleanup、false key remove policy），**都尚未經使用者下令施工，不能視為既定待辦**。若下一個對話要處理，必須 fresh-read current main 後重新評估。
+
+現階段仍屬正式遊玩、轉生、GM 工具與平衡實測期。若使用者提出新功能、新平衡、新 UI 或重構，先依第1節規範重新讀 main，再建立施工範圍。
 
 ---
-
 
 ## 2026-10-07 劇情／轉生隔離：第1批已完成
 
@@ -1125,88 +1167,43 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 
 
 
-## 2026-10-08 GM 授權／runtime gate 早期恢復第1批
+## 2026-10-08 GM runtime／載入正式現況（覆蓋前兩版沿革）
 
-- 問題根因：GM 授權雖已保存在 browser-local `localStorage`（`civilization-war-gm-authorized-v1`），但舊流程要等 `window load` + 120ms，再等整個 deferred GM group 載完後才把 `state.gm=true`；因此同裝置已輸入過密碼，剛進遊戲仍可能暫時呈現未授權，甚至 GM group 某次載入失敗時看起來像「GM 消失」。
-- `scriptgrouploader.js` 新增 `GM_EARLY_RUNTIME_RESTORE_VERSION=1` 與 `restoreAuthorizedGmFlagEarly()`：loader 一執行就先讀 browser-local 授權並恢復 runtime `state.gm`，不再等待 31 支 GM deferred scripts 全部完成。
-- `ensureAuthorizedGmRuntime()` 現在先恢復 runtime flag，再背景載入 GM group；若 GM group 載入失敗，既有 browser-local 授權仍保持為 runtime 已授權，不把載入錯誤誤判成授權失效。
-- 密碼首次通過後，`authorizeGmRuntime()` 也先設 runtime GM flag，再載完整 GM group；授權與管理 UI 載入正式拆開。
-- 已授權時再次打開密碼 modal，retry 路徑改走 `ensureAuthorizedGmRuntime()`，成功後會重新補齊 runtime 授權，而不是只單純 retry `loadGroup("gm")`。
-- 原 save boundary 完整保留：`state.gm` 仍是 runtime-only，不寫入角色 save／Cloud Save。
-- 新增 `tests/runtime/gm-runtime-early-restore-integrity.js` 並加入 Runtime Integrity workflow，鎖住「已授權在 window load／GM group 完成前即恢復」以及「未授權 fail closed」。
-- 本批尚未改背景戰鬥、GM 2×、主線鎖血這三個帳號／裝置 preference owner 與 auth-ready 同步；這些留待第2批。
+- 早期「等 deferred GM group 載完才恢復 `state.gm`」的做法已失效；current 正式 owner 是 `gmruntimeauthorization.js`，並在 `ui.js` 第一次 render 前 reconcile。
+- 舊 `stripLegacySaveAuthorization()+額外 save(false)` 路徑已移除；未授權舊 save 的 `gm:true` 由 startup reconcile 清理，已授權 runtime flag 不再被誤判為 legacy。
+- `scriptgrouploader.js` 只管理 lazy groups／password bridge／bounded retry；authorization key 與 save boundary 不再由 loader 擁有。
+- `gmdevicepreferences.js` V2 是背景戰鬥／主線鎖血唯一 runtime preference owner；`gmbackground.js` 只作 UI delegate，不得含 storage key。
+- `combatspeed.js` auth sync V2 會在登入帳號 ready 時恢復 account-scoped GM speed；background／HP-lock／speed 對重複 auth-ready 做 signature 去重。
+- 帳號切換到 background=false 時會立即停止 active background flow。
+- 首次輸入 GM 密碼與已授權恢復共用 `ensureAuthorizedGmRuntime({retry:true})`；GM group 首次失敗 250ms 後再試一次。
+- Playwright `gm-first-render-browser.js`、VM `gm-runtime-early-restore-integrity.js`、`gm-runtime-auth-preferences-integrity.js` 已鎖住上述行為。
+- 三個 account-scoped key 名稱均維持 v1，相容既有 localStorage；GM authorization key 仍是 browser-local、非 account-scoped。
 
-
-
-## 2026-10-08 GM runtime preference／auth-ready 同步第2批
-
-- 新增早期常駐 `gmdevicepreferences.js`（`GM_RUNTIME_DEVICE_PREFERENCE_CORE_VERSION=1`）：背景戰鬥與主線鎖血的 localStorage key 格式完全不變，但正式 gate／storage helper 不再依賴 deferred `gmbackground.js` 才存在；帳號 session 未就緒時 fail closed，`civilization-auth-ready` 後立即按目前 user id 讀回既有偏好並廣播 `gm-runtime-preferences-ready`。
-- `gmbackground.js` 升為 UI delegate V2，只保留 GM 管理介面與寫入操作，正式 `gmBackgroundBattleEnabled()`／`gmMainlineHpLockActive()` owner 移至早期 runtime core；不提前載整個 GM Hub。
-- `combatspeed.js` 新增 `COMBAT_SPEED_GM_AUTH_SYNC_VERSION=1`／`gmSyncCombatSpeedFromAuth()`；帳號 session ready 後立即重新讀取 `civilization_frontline_gm_combat_speed_v1_<userId>`，並送出 `combat-speed-change`，因此既有 GM 2× 不必等下一次戰鬥流程才重新取得。
-- 新增 `tests/runtime/gm-runtime-auth-preferences-integrity.js`：鎖住未登入時背景／鎖血／2× fail closed，以及 auth-ready 後同帳號既有 background=true、HP lock=true、2× 都立即恢復並廣播。
-- `tests/runtime/gm-mainline-hp-lock-integrity.js` 已同步新 owner；`GM_DEVICE_BOOLEAN_PREFERENCE_VERSION` 升為 V2。
-- `scriptgrouploader.js` 補 `GM_AUTHORIZED_GROUP_RETRY_VERSION=1`：已授權 GM group 首次載入失敗後 250ms 自動重試一次；兩次都失敗仍保留已恢復的 runtime GM 授權，不把載入錯誤誤判為密碼失效。
-- 本批不改三個既有 localStorage key、不寫角色 save／Cloud Save、不改正式戰鬥公式與 Save Schema17；完整 GM 管理仍維持 deferred。
-
-
-
-## 2026-10-08 GM 載入優化第1批（首次 render／legacy cleanup／browser regression）
-
-- 新增極小 startup owner `gmruntimeauthorization.js`（`GM_RUNTIME_AUTHORIZATION_CORE_VERSION=1`、`GM_RUNTIME_EARLY_RESTORE_VERSION=2`）：正式擁有 browser-local GM 授權 key、runtime flag reconcile 與 save boundary；完整 GM 管理仍維持 deferred。
-- `index.html` 將此 owner 放在 `savehookcore.js` 之後、`ui.js` 之前。正式啟動流程現在為：`load()` → normalize → `gmReconcileRuntimeAuthorizationAfterLoad(state)` → 原本的 `save(false)` → 第一次 `render()`。因此已授權裝置第一次 main render 時 `state.gm` 就必須為 true，不再等頁面之後切換／重繪。
-- 未授權但舊存檔殘留 `state.gm=true` 時，同一 reconcile 只在記憶體把它清為 false；由既有啟動 `save(false)` 順手保存乾淨狀態，不再由 deferred loader 額外做一次 `stripLegacySaveAuthorization() + save(false)`。
-- `scriptgrouploader.js` 已移除自己的授權 key／legacy save cleanup／save-boundary owner，改委派 `gmruntimeauthorization.js`；仍負責 deferred GM group 載入、retry 與 password bridge。
-- save boundary 仍使用原 ID `gm-runtime-authorization-v1`，正式 save 前移除 runtime `state.gm`，settlement 後恢復；不把授權寫入角色 save／Cloud Save，Save Schema17 不變。
-- `tests/runtime/gm-runtime-early-restore-integrity.js` 已改為鎖住 owner 順序、authorized／legacy／clean 三種 reconcile 與 save-boundary single install。
-- 新增 Playwright `tests/runtime/gm-first-render-browser.js`：預先寫入 GM authorization localStorage，直接攔截 `#main` 第一次 innerHTML render，要求該瞬間 authorization=true、runtimeFlag=true、startup owner V1、early restore V2；已加入 Runtime Integrity browser smoke。
-
-
-
-## 2026-10-08 GM 載入優化第2批（帳號切換／retry owner／semantic preference／事件去重）
-
-- `gmdevicepreferences.js` 升為 runtime preference owner V2（`GM_RUNTIME_DEVICE_PREFERENCE_AUTH_SYNC_VERSION=2`、`GM_RUNTIME_DEVICE_PREFERENCE_ACCOUNT_RECONCILE_VERSION=1`）。它現在記住上一個已同步帳號與偏好 signature；同帳號、同 background／HP-lock 狀態的重複 `civilization-auth-ready` 不再重複廣播。
-- 帳號切換時若新帳號的背景戰鬥為 OFF，而舊帳號已有 active background flow，owner 會立即呼叫共享 `backgroundProgressStop()` 停止目前唯一 flow，避免舊帳號的背景連戰延續到新帳號。
-- 新增語意寫入 API `gmSetBackgroundBattlePreference()`／`gmSetMainlineHpLockPreference()`；`gmbackground.js` 不再知道 `civilization_frontline_gm_*_v1_` storage prefix，只負責管理 UI 與呼叫語意 owner。既有 localStorage key 格式完全保留。
-- `combatspeed.js` 的 auth sync 升為 V2，加入 `lastAuthSyncSignature`；同帳號、同 override／effective speed 的重複 auth-ready 不再重複送 `combat-speed-change`。
-- `scriptgrouploader.js` 的首次密碼授權 `authorizeGmRuntime()` 現在直接委派 `ensureAuthorizedGmRuntime({retry:true})`；首次輸入密碼與既有授權恢復共用同一 250ms bounded retry owner，不再維護第二套 GM group 載入流程。
-- `tests/runtime/gm-runtime-auth-preferences-integrity.js` 擴充：驗證 duplicate auth-ready 去重、user-a→user-b 切換時讀取新帳號偏好、background=false 主動停止既有 flow、1.5×／2× 帳號速度切換，以及 semantic setters 仍寫回既有 v1 key。
-- `tests/runtime/gm-mainline-hp-lock-integrity.js` 已同步新 owner：storage key 必須存在 runtime preference owner，GM UI 反而不得再包含 key。
-- 本批不改 localStorage key 名稱、不改正式 save／Cloud Save／Save Schema17，也不改任何戰鬥公式；只收斂 owner、帳號切換 runtime reconciliation、retry 與事件生命週期。
-
+---
 
 # 25. 下一個對話如何接手
 
-新對話請直接使用以下標準指令：
+新對話請直接使用：
 
 ```text
 讀取 franksky1207/rpg 的 PROJECT_HANDOFF.md，
-再重新檢查 main 的實際程式碼與這次要處理功能的正式 owner／consumer，
+再重新檢查 GitHub main 的實際程式碼與這次要處理功能的正式 owner／consumer，
 完整承接《文明戰線》專案。
 
-以 GitHub main 為唯一真實來源；不要只靠對話記憶、舊交接檔或歷史設計文件。
-先確認目前 HEAD、Save Schema、相關 runtime/integrity、current world semantics 與既有正式 owner；不要把歷史 CI 當成當前 HEAD 的驗證。
+最高原則：main 是唯一真實來源。
+不要只靠對話記憶、舊交接檔、歷史設計文件或舊 CI 結果。
 
-已完成的 Batch5／6／7、Code Cleanup Batch1～8、
-第一紀元 Target Context Batch0～6與優化1～4、
-轉生／GM／三紀元語義四批優化、
-異宇宙稱號 Batch1～4、
-第三紀元副本 access 收斂、
-鏡像 canonical settlement／GM正式裁定、
-AU threshold owner／migration diagnostics、
-Schema17 舊檔相容矩陣與近期 Batch4 closure，
-本次劇情轉生四批（101／100／11篇唯讀回顧、W3十王正式通關）、
-劇情／災厄優化三批（Story migration舊檔安全、W1/W2最後一場存檔與Fast Catch-up、共用 UI policy），
-都不得因舊文件重新施工或倒退。
+操作規範：
+1. 修改前先 fresh-read 相關正式檔案與 consumer。
+2. 使用者說「先討論／先檢查／先不要修改」時，不得修改 GitHub。
+3. 使用者說「做／修改／執行／第N批」時，可直接修改 GitHub main，不必再重複確認。
+4. 優先修改正式來源；已有 owner 時延伸 owner，不要額外建立 wrapper、fallback、第二套公式、第二套 transaction 或第二套 state。
+5. JS／CSS production 修改要同步更新 index.html cache-bust。
+6. 修改後必須重新 fresh-read current main、compare base→head、自我檢查 UI／邏輯／正式資料寫入／舊資料相容／Integrity。
+7. exact HEAD 沒有 Actions success 證據時，不可宣稱 CI 已綠。
+8. GM formal management 與 GM sandbox／benchmark 必須分離，sandbox 不得污染正式 save。
+9. Save Schema current=17；不要因 runtime-only GM authorization／preference／diagnostics 自行升 Schema。
+10. 若 handoff 與 main 衝突，以 main 為準並直接修正 handoff。
 
-若我說「先討論／先檢查／先不要修改」，只分析不要改 GitHub；
-若我說「修改／做／執行／第N批」，可直接修改 main。
-
-修改時優先改正式來源，不要另外堆 wrapper、fallback、第二套公式或第二套 owner。
-JS／CSS production 改動要同步更新 index.html cache-bust。
-修改後 fresh-read、compare base→head、自我檢查，
-並以 exact HEAD 的 Runtime／Story（若該變更有觸發）／Pages Actions 結果為準。
-轉生後劇情只進戰線紀錄，不補入 formal completedStories、不重播；
-W3 完成只看本輪10王正式 HP；災厄最後一場勿重複存檔／額外等待。
-
-現在先不要修改。
+目前沒有已核准待施工批次。若要做新優化，先重新檢查 main 再規劃。
 ```
