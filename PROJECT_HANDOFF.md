@@ -909,7 +909,7 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**劇情／轉生隔離第1～4批維持封箱；新增優化工程第1批（舊歷史安全／高維通關 owner／待播診斷）已施工。其餘先前建議的災厄與程式整理優化尚未施工。**
+**劇情／轉生隔離第1～4批維持封箱；後續優化工程第1～3批（舊資料與高維 owner、安全存檔與最後一場動態回歸、共用 UI／Story Record 收斂）已完成。**
 
 現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
@@ -979,6 +979,16 @@ GitHub Pages #6038 = success
 - 新增 `tests/runtime/calamity-terminal-dynamic-opt-batch2.js`，使用真正的 `backgroundprogress.js` 共用 Fast Catch-up owner 與 W1/W2 正式 run/settle owner，在 VM 中模擬前景、背景回播、最後一場印記滿級／文明完成、初次稱號、手動停止、checkpoint 失敗回復及 save 次數。測試納入 `.github/workflows/runtime-integrity.yml`。
 - JS 改動已更新 `index.html` cache-bust。兩紀元仍共用原有戰前 `battlePresentationPlan()`，未修改 UI 內容、戰鬥傷害、30次擊殺或 Save Schema17。
 - 原清單其他編號（6／8／10／11／12）未在本批修改；往後依使用者指示再確認優先度。 
+
+
+## 2026-10-07 劇情／災厄檢查後優化：第3批（原清單6、8、10、11、12）
+
+- `storyrecordtabs.js` 的轉生歸檔可見性改為**直接委派** `storyReincarnationContext(state).reincarnationRun`，不再自算轉生 count，與正式 Story owner 一致；未新增持久化狀態。單次 `storyRecordPageHtml()` 重用同一組 `completedIds()` 計算結果，避免 render 內反覆建立 Set；不新增快取。
+- 轉生後戰線紀錄文案改為「文明歷史已永久歸檔，可隨時回顧；不播放正式劇情、不給予獎勵，也不影響本輪任何進度。」首輪仍維持原先已完成正式劇情說明。
+- `backgroundprogress.js` 既有共用 owner 新增純唯讀 `calamityContinuousUiDecision(policy,ended)`，集中解讀 W1／W2 災厄 UI 的 Fast Catch-up 呈現、刷新、yield 與最後一場略過 structured duration 條件；`calamityui.js` 與 `secondworldcalamityui.js` 使用同一判定，但各自保留原有美術動畫、render、UI、資源與正式結算，不另建第三套 UI runner／wrapper。
+- `calamityrun.js`、`secondworldcalamityrun.js` 移除未被呼叫的 **run-local** `catchUpPreviewPolicy()`；保留共用 `backgroundprogress.js` 的 `previewCatchUp()` 公開 API，避免破壞其他 consumer 與 Integrity 契約。
+- 新增 `tests/runtime/calamity-shared-ui-policy-opt-batch3.js`，覆蓋普通、Fast 預覽／跳過／刷新、最後一場的 immutable decision 與兩 UI consumer 接線；加入 Runtime Integrity。同步擴增 `tests/story/record.js`，測正式轉生 Context／文案／首輪不受影響。
+- JS/CSS cache-bust 在 `index.html` 已更新；Save Schema 維持17，舊資料不需要遷移，永久 Story 紀錄與災厄養成欄位沒有任何新增或清空。本批完成後原清單1～12均已處理或明確保留既有正確機制。
 
 # 25. 下一個對話如何接手
 
