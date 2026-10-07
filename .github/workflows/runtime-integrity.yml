@@ -106,6 +106,7 @@ jobs:
           node tests/runtime/save-level-migration-regression.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-schema17-compatibility-matrix.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/recent-optimization-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-final-damage-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
