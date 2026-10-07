@@ -74,6 +74,8 @@ async function gmStartSpecialBattle(){
  battleBusy=true;
  try{
   const world=gmSpecialBatchWorldValue(),level=gmSpecialBatchLevel(),mapIdx=gmSpecialMapForLevel(level);
+  const testContext=typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null;
+  const startRevision=Math.max(0,Math.floor(Number(testContext?.revision)||0));
   const bossIndex=world===2&&typeof window.secondWorldBossIndexForPlayerLevel==="function"?window.secondWorldBossIndexForPlayerLevel(level):-1;
   const enemyScalingSnapshot=typeof window.gmTestEnhancedEquippedStats==="function"?window.gmTestEnhancedEquippedStats():createSpecialPlayerSnapshot(equippedStats());
   const playerSnapshot=typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats(enemyScalingSnapshot):createSpecialPlayerSnapshot(playerCombatStats(enemyScalingSnapshot,gmSpecialTestVip()));
@@ -83,6 +85,7 @@ async function gmStartSpecialBattle(){
   const civMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,civilizationLevel:civLevel}):1;
   const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(world,civLevel):civMultiplier;
   const summary={world,level,count:GM_TEST_RUNS,wins:0,losses:0,totalTurns:0,totalXp:0,totalResource:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
+  const testVipLevel=Math.max(0,Math.floor(Number(testContext?.vipLevel??gmSpecialTestVip())||0));
 
   function rewardOnce(ctx){
    let xp=0,resource=0;
@@ -118,18 +121,21 @@ async function gmStartSpecialBattle(){
    if(r.win){
     summary.wins++;summary.winHpTotal+=Math.max(0,Number(r.hp)||0);
     const firstCtx=getSpecialRewardContext(special,world);rewardOnce(firstCtx);
-    if(gmSpecialTestVip()>=10&&Math.random()<.10){
+    if(testVipLevel>=10&&Math.random()<.10){
      summary.vip10Triggers++;
      if(special.id==="bandit_king")blackMarketResourceOnly(firstCtx);
      else rewardOnce(getSpecialRewardContext(special,world));
     }
    }else summary.losses++;
-   if((i+1)%25===0&&i+1<GM_TEST_RUNS)await new Promise(resolve=>setTimeout(resolve,0));
+   if((i+1)%25===0&&i+1<GM_TEST_RUNS){
+    await new Promise(resolve=>setTimeout(resolve,0));
+    if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision)throw new Error("GM test context changed during special benchmark.");
+   }
   }
   summary.winRate=round1(summary.wins/GM_TEST_RUNS*100);
   summary.avgWinHp=summary.wins?round1(summary.winHpTotal/summary.wins/playerMax*100):0;
   summary.avgTurns=round1(summary.totalTurns/GM_TEST_RUNS);
-  gmSpecialBatchResult={special,summary};
+  gmSpecialBatchResult=typeof window.gmAttachTestResultContext==="function"?window.gmAttachTestResultContext({special,summary},testContext):{special,summary,testContext};
   gmSpecialBatchResults[(summary.world===2?"2":"1")+":"+special.id]=JSON.parse(JSON.stringify(gmSpecialBatchResult));
   const result=document.getElementById("gmSpecialBatchResult");if(result)result.innerHTML=gmSpecialBatchResultHtml(gmSpecialBatchResult.special,gmSpecialBatchResult.summary);
  }catch(error){
@@ -155,3 +161,4 @@ window.GM_SPECIAL_WEAK_SLOT_SANDBOX_VERSION=1;
 window.GM_SPECIAL_CIVILIZATION_COMBAT_OWNER_VERSION=1;
 window.GM_SPECIAL_UNBOUNDED_VIP_OWNER_VERSION=1;
 window.GM_SPECIAL_TEST_CLEANUP_VERSION=1;
+window.GM_SPECIAL_TEST_RESULT_CONTEXT_VERSION=1;
