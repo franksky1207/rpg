@@ -14,8 +14,34 @@
  if(Number(window.GM_MARK_FORMAL_TRANSACTION_VERSION)!==1||Number(window.GM_FORMAL_MARK_TRANSACTION_VERSION)!==1||typeof window.gmCommitFormalMarkMutation!=="function")fail("GM_MARK_FORMAL_TRANSACTION","GM 正式印記必須使用 shared transaction owner",{consumer:window.GM_MARK_FORMAL_TRANSACTION_VERSION,owner:window.GM_FORMAL_MARK_TRANSACTION_VERSION,commit:typeof window.gmCommitFormalMarkMutation});
  if(Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1)fail("GM_MARK_CONFIG_OWNER_VERSION","GM 印記工具應直接使用統一災厄設定",window.GM_MARK_CONFIG_OWNER_VERSION);
  if(Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("GM_CALAMITY_SAFETY_LIMIT","完整擊殺安全上限應為 100000",window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT);
+ if(Number(window.GM_CALAMITY_NO_PROGRESS_GUARD_VERSION)!==1||Number(window.GM_CALAMITY_FULL_KILL_NO_PROGRESS_LIMIT)!==100||typeof window.gmCalamityShouldStopForNoProgress!=="function")fail("GM_CALAMITY_NO_PROGRESS_GUARD","完整擊殺 no-progress guard 未完整載入",{version:window.GM_CALAMITY_NO_PROGRESS_GUARD_VERSION,limit:window.GM_CALAMITY_FULL_KILL_NO_PROGRESS_LIMIT,api:typeof window.gmCalamityShouldStopForNoProgress});
  if(Number(window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION)!==1||Number(window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION)!==1)fail("GM_CALAMITY_TEST_CONTEXT","銀河災厄 GM 結果必須保存測試 context 並防止設定變更後回填舊結果",{context:window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION,stale:window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION});
  if(Number(window.GM_TEST_CONTEXT_OWNER_VERSION)!==1||typeof window.gmTestContextSnapshot!=="function"||typeof window.gmTestContextRevision!=="function")fail("GM_TEST_CONTEXT_OWNER","GM 測試 context owner 未完整載入",{version:window.GM_TEST_CONTEXT_OWNER_VERSION,snapshot:typeof window.gmTestContextSnapshot,revision:typeof window.gmTestContextRevision});
+ try{
+  if(window.gmCalamityShouldStopForNoProgress?.(99)!==false||window.gmCalamityShouldStopForNoProgress?.(100)!==true)fail("GM_CALAMITY_NO_PROGRESS_THRESHOLD","no-progress 應於連續 100 場零傷害才停止",{at99:window.gmCalamityShouldStopForNoProgress?.(99),at100:window.gmCalamityShouldStopForNoProgress?.(100)});
+ }catch(error){fail("GM_CALAMITY_NO_PROGRESS_PROBE","no-progress threshold 檢查失敗",String(error&&error.message||error));}
+ try{
+  const defs=typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];
+  const def=defs[0];
+  if(!def||typeof window.runCivilizationCalamityHeadlessCombat!=="function")fail("GM_CALAMITY_FORMAL_HEADLESS_OWNER","正式銀河災厄 headless owner 未載入",{def:!!def,owner:typeof window.runCivilizationCalamityHeadlessCombat});
+  else{
+   const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;
+   const marks=typeof window.markFormalSnapshot==="function"?window.markFormalSnapshot():null;
+   const finalMultiplier=typeof window.formalPlayerFinalDamageMultiplier==="function"?window.formalPlayerFinalDamageMultiplier({world:1,state}):1;
+   if(!player||!marks)fail("GM_CALAMITY_CONSISTENCY_CONTEXT","無法建立正式銀河災厄一致性測試 context",{player:!!player,marks:!!marks});
+   else{
+    const sequence=[.11,.72,.33,.94,.27,.58,.41,.86,.19,.63,.48,.79,.05,.55,.24,.68,.37,.91,.14,.61];
+    const rngA=(()=>{let i=0;return()=>sequence[(i++)%sequence.length];})();
+    const rngB=(()=>{let i=0;return()=>sequence[(i++)%sequence.length];})();
+    const enemy=window.buildCivilizationCalamityEnemy(def.id),startHp=Math.max(1,Math.floor(Number(enemy?.hp)||1));
+    const formal=window.runCivilizationCalamityHeadlessCombat(def.id,{player:{...player},enemyStartHp:startHp,markLevels:marks,rng:rngA,logs:false,preparePresentation:false});
+    const gm=window.runGmCalamitySingleSimulation(def.id,{player:{...player},startHp,markLevels:marks,playerFinalDamageMultiplier:finalMultiplier,useTestSpecializations:false,rng:rngB,testContext:{version:1,revision:0,breakthroughLevel:0,finalDamage:{multiplier:finalMultiplier}}});
+    const a=formal?.combat,b=gm?.result;
+    const same=!!formal?.ok&&!!gm&&a?.win===b?.win&&Number(a?.enemyHp)===Number(b?.enemyHp)&&Number(a?.hp)===Number(b?.hp)&&Number(a?.turns)===Number(b?.turns)&&Number(formal?.playerFinalDamageMultiplier)===Number(gm?.finalDamageMultiplier);
+    if(!same)fail("GM_CALAMITY_FORMAL_PARITY","正式銀河災厄與 GM 同條件單場結果不一致",{formal:{ok:formal?.ok,win:a?.win,enemyHp:a?.enemyHp,hp:a?.hp,turns:a?.turns,multiplier:formal?.playerFinalDamageMultiplier},gm:{win:b?.win,enemyHp:b?.enemyHp,hp:b?.hp,turns:b?.turns,multiplier:gm?.finalDamageMultiplier}});
+   }
+  }
+ }catch(error){fail("GM_CALAMITY_FORMAL_PARITY_EXCEPTION","正式／GM 銀河災厄一致性 regression 執行失敗",String(error&&error.message||error));}
  try{
   const galaxy={secondWorld:{entered:false},thirdWorld:{entered:false}},universe={secondWorld:{entered:true},thirdWorld:{entered:false}},higher={secondWorld:{entered:true},thirdWorld:{entered:true}};
   if(window.gmFormalMarkMinimum?.(galaxy)!==0)fail("GM_MARK_GALAXY_MIN","銀河紀元正式印記最低等級應為 0",window.gmFormalMarkMinimum?.(galaxy));
@@ -33,6 +59,7 @@
   ["解鎖災厄","設定災厄 HP","瀕死","近死","擊殺數"].forEach(function(text){if(calamity.includes(text))fail("GM_CALAMITY_FORBIDDEN_CONTROL","文明災厄 GM 不應提供「"+text+"」作弊控制");});
   if(!calamity.includes("VIP／專精／強化／印記"))fail("GM_CALAMITY_CAPABILITY_NOTE","文明災厄 GM 測試應明示統一能力快照");
  }catch(error){fail("GM_CALAMITY_RENDER_PROBE","GM 災厄／印記 renderer 檢查失敗",String(error&&error.message||error));}
+ window.GM_CALAMITY_FORMAL_PARITY_REGRESSION_VERSION=1;
  const report={passed:errors.length===0,errors:errors,checkedAt:Date.now()};
  window.CALAMITY_GM_INTEGRITY=report;
  if(errors.length)console.error("[文明戰線] Calamity GM integrity error",errors);
