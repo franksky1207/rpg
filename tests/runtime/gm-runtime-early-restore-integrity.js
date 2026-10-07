@@ -5,8 +5,10 @@ const source=fs.readFileSync("scriptgrouploader.js","utf8");
 
 assert(/GM_EARLY_RUNTIME_RESTORE_VERSION=1/.test(source),"GM early runtime restore version must be V1.");
 assert(/function restoreAuthorizedGmFlagEarly\(\)\{if\(!gmAuthorized\(\)\)return false;return setRuntimeGmFlag\(true\);\}/.test(source),"Authorized GM runtime must have an early restore owner.");
-assert(/const restored=restoreAuthorizedGmFlagEarly\(\);return loadGroup\("gm"\)/.test(source),"Authorized GM restore must set runtime before deferred GM group loading.");
-assert(/catch\(error\)=>\{console\.error\("\[ScriptGroupLoader\] gm authorized restore",error\);return restored;\}/.test(source),"GM group load failure must not invalidate an already-restored runtime authorization.");
+assert(/const restored=restoreAuthorizedGmFlagEarly\(\),allowRetry=options\.retry!==false/.test(source),"Authorized GM restore must set runtime before deferred GM group loading.");
+assert(/GM_AUTHORIZED_GROUP_RETRY_VERSION=1/.test(source),"Authorized GM group retry must be versioned.");
+assert(/await new Promise\(resolve=>setTimeout\(resolve,250\)\)/.test(source),"Authorized GM group load failure must schedule one bounded retry.");
+assert(/catch\(retryError\)\{console\.error\("\[ScriptGroupLoader\] gm authorized retry",retryError\);return restored;\}/.test(source),"Retry failure must preserve the already-restored runtime authorization.");
 assert(/function schedule\(\)\{restoreAuthorizedGmFlagEarly\(\);/.test(source),"Early GM restore must run immediately when scriptgrouploader executes.");
 assert(/GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=installSaveBoundary\(\)/.test(source),"GM runtime authorization must remain excluded from formal saves.");
 
