@@ -205,7 +205,7 @@
  };
  window.gmUseCurrentBreakthroughTestStatus=function(refresh=true){
   window.gmSetTestBreakthroughLevel(formalBreakthroughLevel(),false);
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"breakthrough-sync",refresh:true});
   return testBreakthrough();
  };
  window.gmSetTestEnhancement=function(type,value,refresh=true){
@@ -217,7 +217,7 @@
  window.gmUseCurrentEnhancementTestStatus=function(refresh=true){
   if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
   enhancementSlots().forEach(type=>window.gmSetTestEnhancement(type,typeof enhancementLevel==="function"?enhancementLevel(state,type):state?.enhancement?.levels?.[type],false));
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"enhancement-sync",refresh:true});
   return Object.fromEntries(enhancementSlots().map(type=>[type,window.gmTestEnhancementLevel(type)]));
  };
  window.gmSetTestWorld=function(value,refresh=true){
