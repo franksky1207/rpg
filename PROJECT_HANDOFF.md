@@ -51,7 +51,7 @@ Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
 目前已排定工程                                          ✅ 全部完成
 ```
 
-**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖、第2批第一／二紀元正式劇情觸發隔離已完成；第3批高維 Final 與本輪完成隔離、第4批整體回歸待施工。**
+**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖、第2批第一／二紀元正式劇情觸發隔離、第3批高維正式劇情與本輪戰鬥完成判定隔離已完成；第4批整體回歸待施工。**
 
 ---
 
@@ -909,7 +909,7 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**目前已定案劇情／轉生隔離共4批：第1批戰線紀錄唯讀解鎖、第2批 W1/W2 觸發隔離已完成；第3批 W3 高維 Final 隔離與第4批整體回歸待施工。其他歷史工程維持封箱。**
+**目前已定案劇情／轉生隔離共4批：第1～3批已完成（戰線紀錄唯讀、W1/W2正式觸發隔離、W3 Story／本輪戰鬥完成隔離）；第4批整體回歸仍待施工。其他歷史工程維持封箱。**
 
 現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
@@ -923,7 +923,7 @@ GitHub Pages #6038 = success
 - `storyrecordtabs.js` 在 `reincarnation.count >= 1` 時，用「現已進入的紀元」與正式 Story catalog **唯讀推導**戰線紀錄：銀河101、宇宙100、高維11；同時保留既有 completed 歷史。
 - 不寫 `storyProgress.completedStories`、不寫 `pendingStory`、不改 `thirdWorld.story`、`thirdWorld.completed`，也不觸發 `completeStory()` 或任何 formal progress；回顧使用 generic `openStory`、沒有 onComplete callback。
 - 首輪 `count=0` 仍按既有已完成紀錄顯示。正式故事資料尚未就緒時，不把缺少 pages 的新回顧條目提前加入。
-- 第1批僅處理**紀錄顯示與回顧**；第一、二紀元轉生後的正式劇情排隊／播放與舊 pending 清理由第2批完成；高維自動 queue、Final 與本輪完成完全隔離仍屬第3批待施工。
+- 第1批僅處理**紀錄顯示與回顧**；第一、二紀元轉生後的正式劇情排隊／播放與舊 pending 清理由第2批完成；高維自動 queue、Final 與本輪完成完全隔離由第3批完成。
 - 新增 `tests/story/record.js` 的 count 0／1／2／3、101／100／11、未入世界不提前開放、唯讀、高維 Final generic replay 驗證；`index.html` 更新 cache-bust。
 
 
@@ -935,7 +935,19 @@ GitHub Pages #6038 = success
 - Story Progress normalization 對已轉生存檔只清理已辨識的 W1/W2 舊 `pendingStory`，不改 `completedStories`、不呼叫 `completeStory`、不發通知；W3 pending／正式 W3 Story 流程保持原狀等待第3批。轉生輪也停止依本輪 W1 Boss 擊殺補寫 Story history，交由第1批唯讀戰線紀錄顯示。
 - `resume()` 的 W1 序章強制播放只對首輪執行；保留配裝等其他原有流程。W3 pending 在尚未進 W3 時不於低紀元提前顯示。
 - 新增 `tests/story/reincarnation-trigger-batch2.js`（count 0／1／2／3／7、首輪保留、W1/W2 首殺及 W2 連戰、舊 pending、安全保留既有銀河序章與 W3 pending）；加入 Story Integrity CI；`index.html` cache-bust 已更新。Save Schema 仍為17。
-- **未完成：第3批高維劇情播放與本輪 Final 成長判定隔離；第4批三紀元舊檔和整體回歸。**
+- **已完成：第3批高維劇情與本輪 Final／成長隔離。尚未完成：第4批三紀元舊檔和整體回歸。**
+
+
+## 2026-10-07 劇情／轉生隔離：第3批已完成
+
+- 仍用 `storyprogress.js` 正式 Story Progress owner 與既有 `storyReincarnationContext()`，`STORY_REINCARNATION_W3_ISOLATION_VERSION=1`；不新增 persistent story 欄位、第二套進度 owner 或 Schema18。
+- 轉生 `count>=1` 時，11篇 W3 正式劇情僅由第1批 `storyrecordtabs.js` 以唯讀方式提供回顧；`queueStory()`／`setPending()`／`completeStory()`／`queueThirdWorldEligibleStory()`／`drainThirdWorldPostFlowStories()`／`consumeThirdWorldSettlement()` 均不再建立／播出 W3 正式劇情，也不會藉高維 Final 的故事歷史污染本輪完成判定。
+- Story Progress normalization 會清理轉生輪已辨識 W3 舊 `pendingStory`，但保留既有 `completedStories` 永久歷史；首輪仍保留原 W3 順序隊列、序章／階段／Final 正式完成與原結算。
+- 轉生輪 `thirdWorld.story.introSeen=false`、`thirdWorld.story.finalSeen=false` 表示**本輪不重新播放**，不能從永久故事歷史推導；`thirdWorld.completed` 由**本輪10名高維存在正式血量全歸零且 `unlockedStage>=10`**推導，並於接受 W3 戰鬥 settlement 時同步。不得用 `completedStories` 的歷史 Final 當成本輪通關條件。
+- 高維10王、永久血量、維度之弦／核心、突破／轉生資格與正式戰鬥公式未改動。轉生輪達到本輪十王全滅時 `thirdWorld.completed` 可正常成立，但 `finalSeen` 仍不被冒充為重播過 Final。
+- 新增 `tests/story/reincarnation-higher-dimensional-batch3.js`：首輪流程、轉生1／2／3／7次、歷史11篇全保留、舊 W3 pending 清理、W3 queue／drain／formal completeStory 阻擋、Boss 未打與全部打完的區別、Final gate 不得繞過、零自動播放及無額外 Story save；加入 Story Integrity CI。生產 JS cache-bust 已更新。
+- **第4批三紀元舊檔相容、正式流程與端對端封箱尚未施工。**
+
 
 # 25. 下一個對話如何接手
 
