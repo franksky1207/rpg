@@ -173,6 +173,7 @@
   if(!finalDamageSnapshot)throw new Error("GM benchmark final damage owner unavailable.");
   MODEL.snapshot={
    capturedAt:Date.now(),
+   testContextRevision:typeof window.gmTestContextRevision==="function"?window.gmTestContextRevision():0,
    characterWorld:Number(character?.world)===2?2:1,
    equipmentSource:character?.equipmentSource==="synced"?"synced":"generated",
    level:whole(character?.level??window.gmTestLevel??(typeof state!=="undefined"?state.level:1),1,1000),
@@ -728,6 +729,12 @@
  function clearExternalModeResults(){
   ["gmClearSpecialBatchResult","gmClearBountyTestResult","gmClearArena5Result","gmClearVoidMirageTestResult","gmClearMirrorTestResult","gmClearCalamityTestResult","gmClearSecondWorldCalamityTestResult"].forEach(name=>{try{if(typeof window[name]==="function")window[name]();}catch(error){console.error("GM result clear failed",name,error);}});
  }
+ function invalidateTestContext(options={}){
+  MODEL.snapshot=null;
+  clearSelectionResults();
+  clearExternalModeResults();
+  return {ok:true,revision:whole(options?.revision,0),reason:String(options?.reason||"test-context-change")};
+ }
  function clearAllBenchmarkResults(){clearSelectionResults();clearExternalModeResults();if(typeof render==="function")render();return true;}
  function gmTestArchitectureManifest(){
   const transientKeys=Array.isArray(window.GM_TEST_TRANSIENT_STATE_KEYS)?window.GM_TEST_TRANSIENT_STATE_KEYS:[];
@@ -758,6 +765,7 @@
  window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION=1;
+ window.GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_VERSION=1;
  window.gmPowerBenchmarkHtml=html;
  window.gmPowerBenchmarkSnapshot=function(){const s=snapshot();return s?JSON.parse(JSON.stringify(s)):null;};
  window.gmPowerBenchmarkSetCalamityWorld=function(v){if(MODEL.busy)return;MODEL.calamityWorld=Number(v)===2?2:1;if(typeof render==="function")render();return MODEL.calamityWorld;};
@@ -805,7 +813,8 @@
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
- window.gmPowerBenchmarkInvalidateSnapshot=function(){MODEL.snapshot=null;clearSelectionResults();clearExternalModeResults();return true;};
+ window.gmPowerBenchmarkInvalidateTestContext=invalidateTestContext;
+ window.gmPowerBenchmarkInvalidateSnapshot=function(options={}){return invalidateTestContext(options);};
  window.gmPowerBenchmarkClearAllResults=clearAllBenchmarkResults;
  window.gmPowerBenchmarkRefreshUi=refreshBenchmarkUi;
  window.gmPowerBenchmarkRefreshSummary=function(){return refreshBenchmarkUi({capture:false});};
