@@ -108,6 +108,7 @@ jobs:
           node tests/story/reincarnation-three-era-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/recent-optimization-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/calamity-terminal-dynamic-opt-batch2.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/breakthrough-final-damage-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
