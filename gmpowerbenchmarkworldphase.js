@@ -3,6 +3,7 @@
  const WORLD3_MAP_TEST_VERSION=4;
  const WORLD3_ANALYTICS_VERSION=3;
  const WORLD3_RESULT_CONSISTENCY_VERSION=1;
+ const WORLD3_RESULT_CONTEXT_VERSION=1;
  const WORLD3_ANALYTICS_REGRESSION_VERSION=1;
  const world3={modeOverride:null,bossIndex:0,stage:0,runs:100,busy:false,result:null};
  function clampWorld(value){const world=Math.floor(Number(value));return world===2||world===3?world:1;}
@@ -235,12 +236,14 @@
   const player=typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():null;if(!player)return false;
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
   const civilizationLevel=testCivilizationLevel(),runs=world3.runs,startBossHp=stageHp(),bossMaxHp=Math.max(1,Number(boss.maxHp)||startBossHp),characterSnapshot=runCharacterSnapshot();
+  const testContext=typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null,startRevision=Math.max(0,Math.floor(Number(testContext?.revision)||0));
   const playerAbilities=emptyAbilityStats(),bossAbilities=emptyAbilityStats(),stageAbilities=emptyStageStats(thirdBossAbilities());
   world3.busy=true;world3.result=null;if(typeof render==="function")render();
   await new Promise(resolve=>setTimeout(resolve,0));
   let completed=0,failed=0,firstFailureReason="",totalTurns=0,totalPermanentDamage=0,playerAttackHits=0,playerCrits=0,enemyAttackAttempts=0,playerDodges=0;
   try{
    for(let i=0;i<runs;i++){
+    if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){world3.result=null;return false;}
     const result=window.runThirdWorldBossCombat(world3.bossIndex,{
      ignoreUnlock:true,formalStartHp:startBossHp,player:{...player},startHp:player.hp,playerHealCap:player.hp,
      civilizationLevel,logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks
@@ -265,7 +268,8 @@
    const stageGapHp=Math.max(1,Math.floor(bossMaxHp*.10));
    stageAbilities.battleSpirit.avgPeakLayer=completed>0?stageAbilities.battleSpirit.totalPeakLayer/divisor:0;
    const spec=thirdBossSpecialization();
-   world3.result={
+   if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){world3.result=null;return false;}
+   const payload={
     world:3,bossIndex:world3.bossIndex,name:String(boss.name||"高維存在"),stage:world3.stage,runs,completed,failed,firstFailureReason,formalStartHp:startBossHp,bossMaxHp,civilizationLevel,characterSnapshot,
     specialization:{label:String(spec?.label||"個體特化"),effect:String(spec?.effect||"—")},activeAbilities:activeAbilityText(),
     avgTurns:one(avgTurns),totalPermanentDamage,avgPermanentDamage,avgDamagePerTurn,equivalentBossHpPercent:totalPermanentDamage/bossMaxHp*100,
@@ -274,6 +278,7 @@
     playerCritRate:playerAttackHits>0?playerCrits/playerAttackHits*100:0,playerDodgeRate:enemyAttackAttempts+playerDodges>0?playerDodges/(enemyAttackAttempts+playerDodges)*100:0,
     playerAbilities,bossAbilities,stageAbilities
    };
+   world3.result=typeof window.gmAttachTestResultContext==="function"?window.gmAttachTestResultContext(payload,testContext):{...payload,testContext};
    return true;
   }finally{
    world3.busy=false;if(typeof render==="function")render();
@@ -387,6 +392,7 @@
  window.GM_POWER_BENCHMARK_WORLD3_MAP_TEST_VERSION=WORLD3_MAP_TEST_VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_VERSION=WORLD3_ANALYTICS_VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_RESULT_CONSISTENCY_VERSION=WORLD3_RESULT_CONSISTENCY_VERSION;
+ window.GM_POWER_BENCHMARK_WORLD3_RESULT_CONTEXT_VERSION=WORLD3_RESULT_CONTEXT_VERSION;
  window.GM_POWER_BENCHMARK_WORLD3_ANALYTICS_REGRESSION_VERSION=WORLD3_ANALYTICS_REGRESSION_VERSION;
  window.gmPowerBenchmarkModeWorld=function(){return benchmarkWorld();};
  window.gmPowerBenchmarkWorld3CivilizationMultiplier=function(){return testCivilizationMultiplier(3);};
@@ -413,6 +419,7 @@
  }
  if(WORLD3_ANALYTICS_VERSION!==3)integrityErrors.push("world3-analytics-version");
  if(WORLD3_RESULT_CONSISTENCY_VERSION!==1)integrityErrors.push("world3-result-consistency-version");
+ if(WORLD3_RESULT_CONTEXT_VERSION!==1||typeof window.gmAttachTestResultContext!=="function")integrityErrors.push("world3-result-context-version");
  if(WORLD3_ANALYTICS_REGRESSION_VERSION!==1)integrityErrors.push("world3-analytics-regression-version");
  if(window.gmPowerBenchmarkInvalidateSnapshot?.__world3ResultInvalidationAdapter!==VERSION)integrityErrors.push("world3-result-invalidation-wiring");
  if(!analyticsRegression.passed)analyticsRegression.errors.forEach(row=>integrityErrors.push(`world3-regression:${row.code}`));
