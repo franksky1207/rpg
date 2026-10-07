@@ -138,6 +138,11 @@
   if(options.refreshBenchmark!==false&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
   return gmTestContextRevision;
  }
+ function attachTestResultContext(result,context=null){
+  if(!result||typeof result!=="object")return result;
+  const snapshot=context&&typeof context==="object"?cloneValue(context):testContextSnapshot();
+  return cloneValue({...result,testContext:snapshot});
+ }
 
  function equipmentLabel(type){
   return typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):({weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"}[type]||type);
@@ -334,6 +339,8 @@
  window.gmTestContextSnapshot=testContextSnapshot;
  window.gmTestContextRevision=function(){return gmTestContextRevision;};
  window.gmNotifyTestConfigurationChanged=notifyTestConfigurationChanged;
+ window.gmAttachTestResultContext=attachTestResultContext;
+ window.GM_TEST_RESULT_CONTEXT_CONTRACT_VERSION=1;
  window.GM_TEST_FINAL_DAMAGE_FORMAL_OWNER_VERSION=1;
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
