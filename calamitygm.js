@@ -63,18 +63,15 @@
   return `<div class="muted gm-hub-note">${note}</div>${manageGrid()}<div class="controls"><button class="btn blue" onclick="gmApplyFormalMarks()">套用印記狀態</button></div>`;
  };
  window.gmApplyFormalMarks=function(){
-  if(typeof window.ensureCivilizationCalamityState==="function")window.ensureCivilizationCalamityState();
-  if(!state?.marks?.entries)return false;
-  const minimum=formalMarkMinimum(state);
+  const minimum=formalMarkMinimum(state),values={};
   keys().forEach(key=>{
-   const entry=state.marks.entries[key]||(state.marks.entries[key]={acquired:false,level:0,progress:0});
-   if(minimum>=10){entry.acquired=true;entry.level=10;entry.progress=0;return;}
+   if(minimum>=10){values[key]=10;return;}
    const el=document.getElementById(`gmMark-manage-${key}`),raw=el?.value??"none";
-   if(raw==="none"){entry.acquired=false;entry.level=0;entry.progress=0;}
-   else{entry.acquired=true;entry.level=clampMark(raw);entry.progress=0;}
+   values[key]=raw==="none"?null:clampMark(raw);
   });
-  if(typeof window.normalizeCivilizationCalamityState==="function")window.normalizeCivilizationCalamityState(state);
-  if(typeof save==="function")save();
+  if(typeof window.gmCommitFormalMarkMutation!=="function")return alert("正式印記 transaction owner 尚未載入。"),false;
+  const tx=window.gmCommitFormalMarkMutation(values);
+  if(!tx?.ok){if(typeof render==="function")render();alert(`正式印記更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return false;}
   if(typeof render==="function")render();
   alert(minimum>=10?"正式印記已維持於 Lv.10。":"正式印記狀態已更新。");
   return true;
@@ -188,6 +185,7 @@
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
  window.GM_MARK_CONFIG_OWNER_VERSION=GM_MARK_CONFIG_OWNER_VERSION;
  window.GM_MARK_FORMAL_PHASE_LOCK_VERSION=GM_MARK_FORMAL_PHASE_LOCK_VERSION;
+ window.GM_MARK_FORMAL_TRANSACTION_VERSION=1;
  window.gmFormalMarkMinimum=formalMarkMinimum;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
  window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
