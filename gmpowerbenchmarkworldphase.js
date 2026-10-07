@@ -27,6 +27,10 @@
    ?window.civilizationCombatDamageMultiplier({world:clampWorld(world),civilizationLevel:level})
    :1;
  }
+ function testFinalDamageMultiplier(world=benchmarkWorld()){
+  if(typeof window.gmTestFinalDamageMultiplier!=="function")throw new Error("GM formal final damage owner unavailable.");
+  return window.gmTestFinalDamageMultiplier(clampWorld(world),testCivilizationLevel());
+ }
  function testCivilizationBonusPercent(){
   const level=testCivilizationLevel();
   return typeof window.civilizationDamageBonusPercentForLevel==="function"?Number(window.civilizationDamageBonusPercentForLevel(level))||0:level*5;
@@ -62,7 +66,9 @@
   if(current.equipment&&typeof current.equipment==="object")out.equipment=JSON.parse(JSON.stringify(current.equipment));
   const civilizationLevel=testCivilizationLevel();
   out.civilizationLevel=civilizationLevel;
+  out.breakthroughLevel=Math.max(0,Math.floor(Number(current.breakthroughLevel)||0));
   out.civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:out.characterWorld,civilizationLevel}):1;
+  out.finalDamageMultiplier=testFinalDamageMultiplier(out.characterWorld);
   return out;
  }
  function runCharacterSnapshot(){
@@ -73,7 +79,7 @@
   if(!snapshot||typeof snapshot!=="object")return "本次角色快照不可用";
   const world=clampWorld(snapshot.characterWorld??snapshot.world),label=world===3?"高維紀元":world===2?"宇宙紀元":"銀河紀元",stats=snapshot.stats||{};
   const source=snapshot.equipmentSource==="synced"?"正式角色實穿裝備":"GM 預測裝備";
-  return `${label}｜Lv.${whole(snapshot.level,1,2000)}｜VIP${whole(snapshot.vipLevel,0)}｜HP ${fmt(stats.hp)}｜ATK ${fmt(stats.atk)}｜DEF ${fmt(stats.def)}｜文明 Lv.${whole(snapshot.civilizationLevel,0,10)}｜${source}`;
+  return `${label}｜Lv.${whole(snapshot.level,1,2000)}｜VIP${whole(snapshot.vipLevel,0)}｜突破 Lv.${whole(snapshot.breakthroughLevel,0)}｜HP ${fmt(stats.hp)}｜ATK ${fmt(stats.atk)}｜DEF ${fmt(stats.def)}｜文明 Lv.${whole(snapshot.civilizationLevel,0,10)}｜總最終傷害 ×${Number(snapshot.finalDamageMultiplier||1).toFixed(2)}｜${source}`;
  }
  function patchWorld3Text(html){
   const current=testCharacter();
