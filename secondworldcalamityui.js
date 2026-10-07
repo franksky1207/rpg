@@ -16,7 +16,6 @@
   return window.combatOuterGapMs("calamity","battle");
  }
  function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
- function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("calamity"):null;}
  function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("calamity"):null;}
  function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
  async function consumeCatchUpDelay(ms){
@@ -230,13 +229,13 @@
   const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{
    async onBattleComplete(step){
     ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
-    const fast=fastCatchUp();
-    const policy=fast?catchUpStep():null;
+    const policy=step?.presentationPolicy||null;
+    const fast=policy?.fastCatchUp===true;
     if(fast){
      if(policy?.shouldPresentBattle){primeDisplay(step.result);render();await animate(step.result);}
      else{
-      await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
-      if(policy?.shouldRefreshUi)refreshCatchUpUi(step.result);
+      if(!step.ended)await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
+      if(policy?.shouldRefreshUi&&!step.ended)refreshCatchUpUi(step.result);
      }
      if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }else{
@@ -361,6 +360,7 @@
   });
  };
  window.SECOND_WORLD_CALAMITY_LIVE_PRESENTATION_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_TERMINAL_FAST_CATCH_UP_VERSION=1;
  window.SECOND_WORLD_CALAMITY_UI_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_TITLE_POST_FLOW_VERSION=TITLE_POST_FLOW_VERSION;
  window.SECOND_WORLD_CALAMITY_REVIEW_VERSION=1;
