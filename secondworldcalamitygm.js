@@ -138,14 +138,16 @@
   const e=window.buildSecondWorldCalamityEnemy(d.id),p=testPlayer(options.snapshot);if(!e||!p)return null;
   const startHp=options.startHp==null?e.hp:Math.max(1,Math.min(e.hp,Math.floor(Number(options.startHp)||e.hp)));
   const civ=testCiv(options.snapshot);
-  const multi=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:civ}):1;
+  const breakthrough=options.snapshot&&Number.isFinite(Number(options.snapshot.breakthroughLevel))?Math.max(0,Math.floor(Number(options.snapshot.breakthroughLevel))):null;
+  const civMulti=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,civilizationLevel:civ}):1;
+  const multi=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(2,civ,breakthrough):civMulti;
   const markLevels=options.snapshot?.marks||(typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null);
   const result=window.runCombatCore(p,e,p.hp,{logs:false,preparePresentation:false,enemyStartHp:startHp,playerFinalDamageMultiplier:multi,markLevels,useTestSpecializations:!options.snapshot,useTestMarks:!options.snapshot});
-  return {definition:d,enemy:e,player:p,startHp,civilizationLevel:civ,civilizationDamageMultiplier:multi,result,damage:Math.max(0,startHp-Math.max(0,Number(result.enemyHp)||0))};
+  return {definition:d,enemy:e,player:p,startHp,civilizationLevel:civ,civilizationDamageMultiplier:civMulti,finalDamageMultiplier:multi,breakthroughLevel:breakthrough??(typeof window.gmTestBreakthroughLevelValue==="function"?window.gmTestBreakthroughLevelValue():0),result,damage:Math.max(0,startHp-Math.max(0,Number(result.enemyHp)||0))};
  }
  function singleTestHtml(data){
   if(!data)return '<div class="notice">無法建立宇宙文明災厄測試。</div>';
-  return `<div class="notice"><b>${data.definition.name}・單場沙盒</b><div class="muted" style="margin-top:5px">文明 Lv.${data.civilizationLevel}｜最終傷害 ×${Number(data.civilizationDamageMultiplier).toFixed(2)}｜不修改正式 HP、進度或存檔。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div class="stat">最大 HP<b>${fmt(data.enemy.hp)}</b></div><div class="stat">造成傷害<b>${fmt(data.damage)}</b></div><div class="stat">剩餘 HP<b>${fmt(data.result.enemyHp)}</b></div><div class="stat">玩家結果<b>${data.result.win?"勝利":"未擊殺"}</b></div><div class="stat">回合<b>${fmt(data.result.turns)}</b></div></div></div>`;
+  return `<div class="notice"><b>${data.definition.name}・單場沙盒</b><div class="muted" style="margin-top:5px">文明 Lv.${data.civilizationLevel}｜突破 Lv.${Math.max(0,Math.floor(Number(data.breakthroughLevel)||0))}｜總最終傷害 ×${Number(data.finalDamageMultiplier||data.civilizationDamageMultiplier).toFixed(2)}｜不修改正式 HP、進度或存檔。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><div class="stat">最大 HP<b>${fmt(data.enemy.hp)}</b></div><div class="stat">造成傷害<b>${fmt(data.damage)}</b></div><div class="stat">剩餘 HP<b>${fmt(data.result.enemyHp)}</b></div><div class="stat">玩家結果<b>${data.result.win?"勝利":"未擊殺"}</b></div><div class="stat">回合<b>${fmt(data.result.turns)}</b></div></div></div>`;
  }
  async function fullKill(d,snapshot=null){
   if(!d)return null;
@@ -186,7 +188,7 @@
  window.gmSecondWorldCalamitySelectTest=function(v){selectedIndex=clampIndex(v);testResultHtml="";if(typeof render==="function")render();return selectedIndex;};
  window.gmSecondWorldCalamitySingleTest=function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=simulate(d);
-  gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
+  gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,finalDamageMultiplier:data.finalDamageMultiplier,breakthroughLevel:data.breakthroughLevel,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
   testResultHtml=singleTestHtml(data);
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
