@@ -92,18 +92,25 @@
  function player(){
   return typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():createSpecialPlayerSnapshot(playerCombatStats());
  }
+ function testContext(){
+  return typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null;
+ }
+ function contextRevision(context){
+  return Math.max(0,Math.floor(Number(context?.revision)||0));
+ }
  function summary(title,runLabel){
   const vipText=typeof window.gmTestVipLabel==="function"?window.gmTestVipLabel():`VIP${Math.max(0,Number(window.gmTestVipLevel)||0)}`;
   return typeof window.gmTestSummaryHtml==="function"?window.gmTestSummaryHtml(title,runLabel,vipText):`<div class="gm-test-summary-title">${title}・${runLabel}</div>`;
  }
- function simulateAttempt(calamityId,startHp=null,rng=null){
+ function simulateAttempt(calamityId,startHp=null,rng=null,capturedContext=null){
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
+  const context=capturedContext||testContext();
   const p=player(),enemyStart=startHp==null?enemy.hp:Math.max(1,Math.min(enemy.hp,Math.floor(Number(startHp)||enemy.hp)));
   const markLevels=testMarks();
-  const breakthroughLevel=typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0;
-  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1;
+  const breakthroughLevel=context?.breakthroughLevel??(typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0);
+  const finalDamageMultiplier=Number(context?.finalDamage?.multiplier)||(typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1);
   const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
-  return {enemy,player:p,enemyStart,result,breakthroughLevel,finalDamageMultiplier,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
+  return {enemy,player:p,enemyStart,result,testContext:context,breakthroughLevel,finalDamageMultiplier,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
  }
  function singleHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
@@ -112,9 +119,11 @@
  }
  async function simulateFullKill(calamityId,onProgress=null){
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
-  let hp=enemy.hp,attempts=0,totalTurns=0,totalDamage=0,lastPlayerHp=0,completed=false;
+  const context=testContext(),startRevision=contextRevision(context);
+  let hp=enemy.hp,attempts=0,totalTurns=0,totalDamage=0,lastPlayerHp=0,completed=false,stale=false;
   while(hp>0&&attempts<FULL_KILL_SAFETY_LIMIT){
-   const attempt=simulateAttempt(calamityId,hp);
+   if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){stale=true;break;}
+   const attempt=simulateAttempt(calamityId,hp,null,context);
    if(!attempt)break;
    attempts++;
    totalTurns+=Math.max(0,Number(attempt.result.turns)||0);
@@ -127,9 +136,10 @@
     await new Promise(resolve=>setTimeout(resolve,0));
    }
   }
-  const breakthroughLevel=typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0;
-  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1;
-  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed,lastPlayerHp,breakthroughLevel,finalDamageMultiplier,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT};
+  if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision)stale=true;
+  const breakthroughLevel=context?.breakthroughLevel??0;
+  const finalDamageMultiplier=Number(context?.finalDamage?.multiplier)||1;
+  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed:completed&&!stale,stale,lastPlayerHp,testContext:context,breakthroughLevel,finalDamageMultiplier,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT};
  }
  function fullHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
@@ -143,7 +153,7 @@
   busy=true;
   try{
    const data=simulateAttempt(id);
-   gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
+   gmCalamityLastResult=data?{type:"single",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},testContext:data.testContext,breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
    singleResultHtml=singleHtml(data);
    if(box)box.innerHTML=singleResultHtml;
    if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
@@ -156,8 +166,13 @@
   busy=true;if(button){button.disabled=true;button.textContent="模擬中…";}
   try{
    const data=await simulateFullKill(id,(attempts,hp,maxHp)=>{if(box)box.innerHTML=`<div class="notice">完整擊殺模擬中…<div class="muted" style="margin-top:8px">已完成 ${attempts.toLocaleString()} 場｜災厄 HP ${hp.toLocaleString()} / ${maxHp.toLocaleString()}</div></div>`;});
-   gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
-   fullResultHtml=fullHtml(data);
+   if(data?.stale){
+    gmCalamityLastResult=null;
+    fullResultHtml='<div class="notice">測試期間角色設定已變更，本次完整擊殺結果已作廢；請以目前設定重新測試。</div>';
+   }else{
+    gmCalamityLastResult=data?{type:"full",calamityId:id,enemy:{name:data.enemy.name,hp:data.enemy.hp},testContext:data.testContext,breakthroughLevel:data.breakthroughLevel,finalDamageMultiplier:data.finalDamageMultiplier,attempts:data.attempts,totalTurns:data.totalTurns,totalDamage:data.totalDamage,remainingHp:data.remainingHp,completed:!!data.completed,avgDamage:data.avgDamage,avgTurns:data.avgTurns}:null;
+    fullResultHtml=fullHtml(data);
+   }
    if(box)box.innerHTML=fullResultHtml;
    if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
   }finally{busy=false;if(button){button.disabled=false;button.textContent="完整擊殺模擬";}}
@@ -167,7 +182,7 @@
   return `<div class="muted gm-hub-note">文明災厄 GM 模擬不受正式解鎖狀態限制。玩家使用目前 GM 測試 VIP／專精／強化／印記；災厄固定使用正式數值。所有結果皆為沙盒，不修改正式災厄 HP 或印記。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmCalamityTarget" class="btn" onchange="gmSetCalamityTestTarget(this.value)">${calamityOptions()}</select></label><button class="btn blue" onclick="gmCalamitySingle()">單次挑戰模擬</button><button id="gmCalamityFullBtn" class="btn gm-create" onclick="gmCalamityFullKill()">完整擊殺模擬</button></div><div id="gmCalamityResult" style="margin-top:12px">${fullResultHtml||singleResultHtml}</div>`;
  };
 
- window.runGmCalamitySingleSimulation=function(id,options={}){return simulateAttempt(id,options.startHp??null,options.rng);};
+ window.runGmCalamitySingleSimulation=function(id,options={}){return simulateAttempt(id,options.startHp??null,options.rng,options.testContext||null);};
  window.runGmCalamityFullKillSimulation=simulateFullKill;
  window.GM_CALAMITY_TEST_VERSION=GM_CALAMITY_TEST_VERSION;
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
@@ -178,6 +193,8 @@
  window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
  window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
+ window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION=1;
+ window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION=1;
  window.GM_CALAMITY_SUMMARY_EXPORT_VERSION=1;
  window.GM_CALAMITY_SESSION_SETTINGS_VERSION=1;
  window.GM_CALAMITY_LEGACY_TITLE_PREVIEW_RETIRED_VERSION=1;
