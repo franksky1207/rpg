@@ -1,6 +1,8 @@
 const fs=require("fs"),vm=require("vm"),assert=require("assert");
 const migration=fs.readFileSync("storymigration.js","utf8");
 const phase=fs.readFileSync("thirdworldphase.js","utf8");
+const formalProgress=fs.readFileSync("thirdworldprogress.js","utf8");
+const storyProgress=fs.readFileSync("storyprogress.js","utf8");
 const intro="higher-dimensional-intro",final="higher-dimensional-final";
 const w3=[intro,...Array.from({length:9},(_,i)=>"higher-dimensional-milestone-"+String(i+1).padStart(2,"0")),final];
 function load(){
@@ -20,6 +22,8 @@ function state(count,{version=1,dead=false}={}){
   secondWorld:{entered:true},thirdWorld:{entered:true,completed:false,entryVersion:2,coreLevel:0,coreProgress:0,dimensionalStrings:0,
    story:{introSeen:false,finalSeen:false,unlockedStage:0},bosses:Array.from({length:10},()=>({currentHp:dead?0:1100000000}))}};
 }
+assert.ok(formalProgress.includes("window.reconcileThirdWorldRerunCombatCompletion?.(liveState);"),"W3 formal HP transaction must commit current-life completion");
+assert.ok(!storyProgress.includes("window.reconcileThirdWorldRerunCombatCompletion?.(state);"),"Story settlement must not own W3 gameplay completion");
 const ctx=load();
 const catalog={"earth-prologue":{},"universe-boss-1":{},"universe-boss-2":{},...Object.fromEntries(w3.map(id=>[id,{}]))};
 const sparse={"earth-prologue":{}};
