@@ -49,7 +49,7 @@
    catch(retryError){console.error("[ScriptGroupLoader] gm authorized retry",retryError);return restored;}
   }
  }
- async function authorizeGmRuntime(){if(!setGmAuthorized(true))return false;setRuntimeGmFlag(true);try{await loadGroup("gm");setRuntimeGmFlag(true);return true;}catch(error){console.error("[ScriptGroupLoader] gm authorization load",error);return false;}}
+ async function authorizeGmRuntime(){if(!setGmAuthorized(true))return false;setRuntimeGmFlag(true);return ensureAuthorizedGmRuntime({retry:true});}
  function revokeGmRuntimeAuthorization(){const ok=setGmAuthorized(false);setRuntimeGmFlag(false);return ok;}
  function installGmPasswordBridge(){
   const base=window.unlockGM;if(typeof base!=="function")return false;if(base.__gmRuntimeAuthorizationVersion===GM_AUTHORIZATION_VERSION)return true;
