@@ -4,6 +4,7 @@
  const CALAMITY_HP_RESTORE_OWNER_VERSION=1;
  const CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=1;
  const CALAMITY_FORMAL_FINAL_DAMAGE_VERSION=1;
+ const CALAMITY_HEADLESS_COMBAT_VERSION=1;
  const ATK_MULTIPLIER=1.10;
  const DEF_MULTIPLIER=1.05;
  const FIXED_CRIT=10;
@@ -129,14 +130,13 @@
    titleSettlement
   };
  }
- function battle(id,options={}){
+ function runHeadlessCombat(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
-  if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
-  ensureState();
-  const e=enemy(id),startEnemyHp=currentHp(id),player=playerCombatStats();
+  const e=enemy(id);if(!e)return {ok:false,reason:"enemy-missing",calamityId:def.id};
+  const player=options.player&&typeof options.player==="object"?{...options.player}:playerCombatStats();
+  const startEnemyHp=options.enemyStartHp==null?currentHp(id):Math.max(1,Math.min(e.hp,Math.floor(Number(options.enemyStartHp)||e.hp)));
   if(typeof window.formalPlayerFinalDamageMultiplier!=="function")throw new Error("Formal player final damage owner is required for Civilization Calamity.");
   const playerFinalDamageMultiplier=window.formalPlayerFinalDamageMultiplier({world:1,state});
-  state.hp=player.hp;
   const combat=window.runCombatCore(player,e,player.hp,{
    logs:options.logs===false?false:true,
    rng:typeof options.rng==="function"?options.rng:undefined,
@@ -145,6 +145,15 @@
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier
   });
+  return {ok:true,calamityId:def.id,definition:def,enemy:e,enemyStartHp:startEnemyHp,player,playerFinalDamageMultiplier,combat};
+ }
+ function battle(id,options={}){
+  const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
+  if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
+  ensureState();
+  const preview=runHeadlessCombat(id,options);if(!preview?.ok)return preview;
+  const {enemy:e,enemyStartHp:startEnemyHp,player,playerFinalDamageMultiplier,combat}=preview;
+  state.hp=player.hp;
   const settlement=applyBattleResult(id,combat,{save:options.save!==false});
   return {
    ok:true,
@@ -172,6 +181,7 @@
  window.CALAMITY_HP_RESTORE_OWNER_VERSION=CALAMITY_HP_RESTORE_OWNER_VERSION;
  window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION;
  window.CALAMITY_FORMAL_FINAL_DAMAGE_VERSION=CALAMITY_FORMAL_FINAL_DAMAGE_VERSION;
+ window.CALAMITY_HEADLESS_COMBAT_VERSION=CALAMITY_HEADLESS_COMBAT_VERSION;
  window.CALAMITY_MAXED_REPLAY_HP_VERSION=1;
  window.CALAMITY_ATK_MULTIPLIER=ATK_MULTIPLIER;
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
@@ -186,5 +196,6 @@
  window.getCivilizationCalamityCurrentHp=currentHp;
  window.getCivilizationCalamityStatus=status;
  window.applyCivilizationCalamityBattleResult=applyBattleResult;
+ window.runCivilizationCalamityHeadlessCombat=runHeadlessCombat;
  window.runCivilizationCalamityBattle=battle;
 })();
