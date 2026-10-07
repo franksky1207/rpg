@@ -1,63 +1,61 @@
 const fs=require("fs");
 const vm=require("vm");
 function assert(condition,message){if(!condition)throw new Error(message);}
-const source=fs.readFileSync("scriptgrouploader.js","utf8");
+const authCore=fs.readFileSync("gmruntimeauthorization.js","utf8");
+const loader=fs.readFileSync("scriptgrouploader.js","utf8");
+const ui=fs.readFileSync("ui.js","utf8");
+const index=fs.readFileSync("index.html","utf8");
 
-assert(/GM_EARLY_RUNTIME_RESTORE_VERSION=1/.test(source),"GM early runtime restore version must be V1.");
-assert(/function restoreAuthorizedGmFlagEarly\(\)\{if\(!gmAuthorized\(\)\)return false;return setRuntimeGmFlag\(true\);\}/.test(source),"Authorized GM runtime must have an early restore owner.");
-assert(/const restored=restoreAuthorizedGmFlagEarly\(\),allowRetry=options\.retry!==false/.test(source),"Authorized GM restore must set runtime before deferred GM group loading.");
-assert(/GM_AUTHORIZED_GROUP_RETRY_VERSION=1/.test(source),"Authorized GM group retry must be versioned.");
-assert(/await new Promise\(resolve=>setTimeout\(resolve,250\)\)/.test(source),"Authorized GM group load failure must schedule one bounded retry.");
-assert(/catch\(retryError\)\{console\.error\("\[ScriptGroupLoader\] gm authorized retry",retryError\);return restored;\}/.test(source),"Retry failure must preserve the already-restored runtime authorization.");
-assert(/function schedule\(\)\{restoreAuthorizedGmFlagEarly\(\);/.test(source),"Early GM restore must run immediately when scriptgrouploader executes.");
-assert(/GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=installSaveBoundary\(\)/.test(source),"GM runtime authorization must remain excluded from formal saves.");
+assert(/GM_RUNTIME_AUTHORIZATION_CORE_VERSION=VERSION/.test(authCore),"GM runtime authorization must have a startup owner.");
+assert(/GM_RUNTIME_EARLY_RESTORE_VERSION=EARLY_RESTORE_VERSION/.test(authCore),"GM early restore must be owned by startup authorization core.");
+assert(/GM_RUNTIME_LEGACY_RECONCILE_VERSION=LEGACY_RECONCILE_VERSION/.test(authCore),"Legacy GM save reconcile must be versioned.");
+assert(/gmReconcileRuntimeAuthorizationAfterLoad=reconcileAfterLoad/.test(authCore),"Startup owner must expose post-load reconciliation.");
+assert(!/stripLegacySaveAuthorization/.test(loader),"Deferred script loader must not perform legacy GM save cleanup.");
+assert(/gmRuntimeAuthorizationAuthorized/.test(loader)&&/gmSetRuntimeAuthorization/.test(loader),"Deferred loader must delegate authorization state to startup owner.");
+assert(/gmReconcileRuntimeAuthorizationAfterLoad/.test(ui),"UI startup must reconcile GM authorization after load.");
+assert(/normalizeCurrentSaveState\(\);if\(typeof window\.gmReconcileRuntimeAuthorizationAfterLoad/.test(ui),"GM authorization must reconcile before startup save/render.");
+const authPos=index.indexOf("gmruntimeauthorization.js");
+const uiPos=index.indexOf("ui.js?");
+assert(authPos>=0&&uiPos>authPos,"GM authorization startup owner must load before ui.js.");
 
-function runtimeContext(authorized){
+function makeContext(authorized,initialGm){
  const storage=new Map(authorized?[["civilization-war-gm-authorized-v1","1"]]:[]);
- const state={gm:false};
- const listeners={};
+ const before=[],settlement=[];
+ const state={gm:initialGm===true};
  const window={
-  addEventListener:(name,fn)=>{listeners[name]=fn;},
-  dispatchEvent:()=>true
+  registerBeforeSaveHook:(id,fn)=>{before.push({id,fn});return true;},
+  registerSaveSettlementHook:(id,fn)=>{settlement.push({id,fn});return true;},
+  getBeforeSaveHookIds:()=>before.map(x=>x.id),
+  getSaveSettlementHookIds:()=>settlement.map(x=>x.id)
  };
- const document={
-  readyState:"loading",
-  querySelectorAll:()=>[],
-  getElementById:()=>null,
-  addEventListener:(name,fn)=>{listeners["document:"+name]=fn;}
- };
- const context={
-  window,document,state,
-  localStorage:{
-   getItem:key=>storage.has(key)?storage.get(key):null,
-   setItem:(key,value)=>storage.set(key,String(value)),
-   removeItem:key=>storage.delete(key)
-  },
-  location:{search:"",hostname:"example.test"},
-  CustomEvent:function(name,options){this.type=name;this.detail=options?.detail;},
-  MutationObserver:function(){this.observe=()=>{};},
-  setTimeout:()=>0,
-  console,
-  Promise,
-  Map,
-  Object,
-  Array,
-  String,
-  Date,
-  URLSearchParams
- };
+ const context={window,state,localStorage:{
+  getItem:key=>storage.has(key)?storage.get(key):null,
+  setItem:(key,value)=>storage.set(key,String(value)),
+  removeItem:key=>storage.delete(key)
+ },Object,String,console};
  vm.createContext(context);
- vm.runInContext(source,context,{filename:"scriptgrouploader.js"});
- return {context,state,window,storage,listeners};
+ vm.runInContext(authCore,context,{filename:"gmruntimeauthorization.js"});
+ return {window,state,before,settlement,storage};
 }
 
-const authorized=runtimeContext(true);
-assert(authorized.state.gm===true,"Existing browser-local GM authorization must restore state.gm immediately, before window load or GM group completion.");
-assert(authorized.window.GM_RUNTIME_EARLY_RESTORE_VERSION===1,"Runtime must expose early restore version V1.");
-assert(authorized.window.CivilizationScriptLoader?.gmAuthorizationSnapshot().authorized===true,"Authorization snapshot must remain authoritative from localStorage.");
+const authorized=makeContext(true,false);
+const a=authorized.window.gmReconcileRuntimeAuthorizationAfterLoad(authorized.state);
+assert(a.authorized===true&&authorized.state.gm===true,"Authorized device must restore runtime GM immediately after save load.");
+assert(a.legacyCleared===false,"Authorized runtime restore must not be misclassified as legacy cleanup.");
+assert(authorized.window.GM_RUNTIME_EARLY_RESTORE_VERSION===2,"Early restore version must be V2.");
+assert(authorized.before.length===1&&authorized.settlement.length===1,"GM save boundary must install exactly once.");
+const saveContext={state:authorized.state};
+authorized.before[0].fn(saveContext);
+assert(saveContext.state.gm===false,"Before-save boundary must strip runtime GM flag.");
+authorized.settlement[0].fn(saveContext);
+assert(authorized.state.gm===true,"Save settlement must restore runtime GM flag.");
 
-const unauthorized=runtimeContext(false);
-assert(unauthorized.state.gm===false,"Without browser-local authorization, early restore must fail closed.");
-assert(unauthorized.window.CivilizationScriptLoader?.gmAuthorizationSnapshot().authorized===false,"Unauthorized browser must remain unauthorized.");
+const legacy=makeContext(false,true);
+const l=legacy.window.gmReconcileRuntimeAuthorizationAfterLoad(legacy.state);
+assert(l.authorized===false&&l.legacyCleared===true&&legacy.state.gm===false,"Unauthorized legacy save gm=true must be cleared in-memory without a second save owner.");
 
-console.log("GM runtime early restore integrity passed");
+const clean=makeContext(false,false);
+const n=clean.window.gmReconcileRuntimeAuthorizationAfterLoad(clean.state);
+assert(n.authorized===false&&n.legacyCleared===false&&clean.state.gm===false,"Unauthorized clean save must remain fail-closed.");
+
+console.log("GM runtime first-render authorization integrity passed");
