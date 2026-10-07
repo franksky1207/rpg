@@ -100,7 +100,8 @@
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
   const p=player(),enemyStart=startHp==null?enemy.hp:Math.max(1,Math.min(enemy.hp,Math.floor(Number(startHp)||enemy.hp)));
   const markLevels=testMarks();
-  const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined});
+  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0):1;
+  const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
   return {enemy,player:p,enemyStart,result,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
  }
  function singleHtml(data){
