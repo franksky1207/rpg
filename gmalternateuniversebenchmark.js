@@ -249,7 +249,6 @@
    if(!ok&&typeof document!=="undefined"){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();try{ok=document.execCommand("copy");}catch(_){ }ta.remove();}
    if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");return ok;
   };
-  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function")window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>clearResult());
   if(typeof baseClear==="function")window.gmPowerBenchmarkClearAllResults=function(){clearResult();const out=baseClear.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
   if(typeof baseReset==="function")window.gmPowerBenchmarkReset=function(){clearResult();const out=baseReset.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
   if(typeof baseRefresh==="function")window.gmPowerBenchmarkRefreshUi=function(){const out=baseRefresh.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
