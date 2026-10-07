@@ -16,8 +16,8 @@ function seed(count,{second=false,third=false,dead=false,history=[],pending=null
   secondWorld:{entered:second||third},thirdWorld:{entered:third,completed:false,story:{introSeen:false,unlockedStage:stage,finalSeen:false},bosses:Array.from({length:10},()=>({currentHp:dead?0:1100000000}))}};
 }
 function browserContext(serialized){
- const writes=[],opened=[],actions={single:0,continuous:0,settle:0};
- const ctx={console,setTimeout(){},queueMicrotask(){},
+ const writes=[],opened=[],scheduled=[],actions={single:0,continuous:0,settle:0};
+ const ctx={console,setTimeout(){},queueMicrotask(fn){scheduled.push(fn);},
   document:{readyState:"loading",hidden:false,addEventListener(){}},addEventListener(){},
   CIVILIZATION_STORIES:stories,CIVILIZATION_STORY_REGIONS:galaxyRegions,CIVILIZATION_UNIVERSE_STORY_REGIONS:universeRegions,
   CIVILIZATION_AUTH_REQUIRED:false,BACKGROUND_PRELOAD_READY:true,WORLD_REGIONS:[{id:"galaxy-closure",mapStart:0,mapEnd:99}],
@@ -38,7 +38,7 @@ function browserContext(serialized){
  vm.runInContext(progressSrc,ctx,{filename:"storyprogress.js"});
  vm.runInContext(recordSrc,ctx,{filename:"storyrecordtabs.js"});
  ctx.state=JSON.parse(JSON.stringify(serialized));
- return {ctx,opened,writes,actions,progress:ctx.civilizationStoryProgress};
+ return {ctx,opened,writes,actions,progress:ctx.civilizationStoryProgress,flushResume(){ctx.civilizationStoryProgress.resume();for(let guard=0;scheduled.length&&guard<20;guard++)scheduled.shift()();assert.equal(scheduled.length,0,"Story resume must settle without recursive replay");}};
 }
 function renderCount(ctx,era){
  ctx.setStoryRecordEraView(era);
@@ -66,6 +66,7 @@ async function run(){
   let life=browserContext(seed(count,{history:rerunArchive,pending:galaxy[20]}));
   life.progress.normalize(life.ctx.state);
   assert.equal(life.ctx.state.storyProgress.pendingStory,null,"W1 stale pending repaired after legacy load");
+  life.flushResume();assert.equal(life.opened.length,0,"W1 rerun resume must not open formal Story");
   assert.equal(renderCount(life.ctx,"galaxy-review"),101,"W1 all 101 archive at reincarnation without boss");
   archiveCheck(life,"galaxy-review",101);
   assert.equal(life.progress.queueBossStory(30),null,"W1 rerun boss must not create formal Story");
@@ -84,11 +85,13 @@ async function run(){
   life=browserContext(saved);
   life.progress.normalize(life.ctx.state);
   assert.equal(renderCount(life.ctx,"universe"),100,"W2 full archive survives JSON reload");
+  life.flushResume();assert.equal(life.opened.length,0,"W2 rerun resume must not open formal Story");
   life.ctx.state.thirdWorld.entered=true;
   const historyBefore=JSON.stringify(life.ctx.state.storyProgress.completedStories);
   life.ctx.state.storyProgress.pendingStory=higher[10];
   life.progress.normalize(life.ctx.state);
   assert.equal(life.ctx.state.storyProgress.pendingStory,null,"W3 historical Final pending repaired");
+  life.flushResume();assert.equal(life.opened.length,0,"W3 rerun resume must not open formal Story");
   assert.equal(renderCount(life.ctx,"higher-dimensional"),11,"W3 all 11 archive at entrance without boss");
   archiveCheck(life,"higher-dimensional",11);
   assert.equal(life.ctx.state.thirdWorld.completed,false,"W3 archive must not complete boss conquest");
@@ -103,6 +106,8 @@ async function run(){
   assert.equal(renderCount(life.ctx,"galaxy-review"),101,"W1 review remains visible from W3");
   const persisted=JSON.parse(JSON.stringify(life.ctx.state));
   const recovered=browserContext(persisted);
+  recovered.flushResume();
+  assert.equal(recovered.opened.length,0,"W3 rerun reload must not auto-open historical Final");
   recovered.progress.normalize(recovered.ctx.state);
   archiveCheck(recovered,"higher-dimensional",11);
   assert.equal(recovered.ctx.state.thirdWorld.completed,false,"Reload after archived W3 entry must not complete conquest");
