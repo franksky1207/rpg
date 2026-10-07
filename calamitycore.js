@@ -137,7 +137,8 @@
    logs:options.logs===false?false:true,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,
-   markLevels:options.markLevels&&typeof options.markLevels==="object"?options.markLevels:undefined
+   markLevels:options.markLevels&&typeof options.markLevels==="object"?options.markLevels:undefined,
+   preparePresentation:options.preparePresentation!==false
   });
   const settlement=applyBattleResult(id,combat,{save:options.save!==false});
   return {
