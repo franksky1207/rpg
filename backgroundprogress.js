@@ -17,6 +17,7 @@
  ]);
  const FAST_CATCH_UP_PRESENTATION_INTERVAL=100;
  const CONTINUOUS_RUN_INFRA_VERSION=1;
+ const CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION=1;
  const STOP_REASON_SEMANTICS_VERSION=2;
  function nextPaintBoundary(){
   if(typeof window.requestAnimationFrame!=="function")return nativeSleep(0).then(()=>true);
@@ -279,6 +280,23 @@
     return window.backgroundProgressCatchUpPolicy(flowKind,next,false);
    },
    catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(flowKind):null;},
+   battlePresentationPlan(baseOptions={}){
+    const policy=this.fastCatchUp()&&typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep(flowKind):null;
+    const fast=policy?.active===true,shouldPresentBattle=fast?policy?.shouldPresentBattle===true:true;
+    return Object.freeze({
+     version:CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION,
+     fastCatchUp:fast,
+     shouldPresentBattle,
+     shouldRefreshUi:fast?policy?.shouldRefreshUi===true:true,
+     shouldCheckpoint:fast?policy?.shouldCheckpoint===true:baseOptions?.save!==false,
+     policy:policy?Object.freeze({...policy}):null,
+     combatOptions:Object.freeze({
+      save:fast?policy?.shouldCheckpoint===true:baseOptions?.save,
+      logs:fast?shouldPresentBattle:baseOptions?.logs,
+      preparePresentation:fast?shouldPresentBattle:baseOptions?.preparePresentation
+     })
+    });
+   },
    catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy(flowKind):null;},
    async consumeDelay(ms){
     const delay=Math.max(0,Number(ms)||0);
@@ -302,6 +320,7 @@
   });
  }
  window.CONTINUOUS_RUN_INFRA_VERSION=CONTINUOUS_RUN_INFRA_VERSION;
+ window.CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION=CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION;
  window.CONTINUOUS_RUN_STOP_REASON_SEMANTICS_VERSION=STOP_REASON_SEMANTICS_VERSION;
  window.createContinuousRunInfrastructure=createContinuousRunInfrastructure;
  window.continuousRunStopReasonMeta=continuousRunStopReasonMeta;
@@ -310,7 +329,7 @@
  window.CONTINUOUS_RUN_INFRA_INTEGRITY=(function(){
   const errors=[];
   const api=createContinuousRunInfrastructure({flowKind:"probe",historyLimit:2,blockerName:"probe-run"});
-  if(api.version!==CONTINUOUS_RUN_INFRA_VERSION||api.flowKind!=="probe"||typeof api.startBackground!=="function"||typeof api.stopBackground!=="function"||typeof api.fastCatchUp!=="function"||typeof api.previewCatchUp!=="function"||typeof api.consumeDelay!=="function"||typeof api.conflictStatus!=="function"||typeof api.onPageHide!=="function")errors.push({code:"API_SHAPE"});
+  if(api.version!==CONTINUOUS_RUN_INFRA_VERSION||api.flowKind!=="probe"||typeof api.startBackground!=="function"||typeof api.stopBackground!=="function"||typeof api.fastCatchUp!=="function"||typeof api.previewCatchUp!=="function"||typeof api.battlePresentationPlan!=="function"||typeof api.consumeDelay!=="function"||typeof api.conflictStatus!=="function"||typeof api.onPageHide!=="function")errors.push({code:"API_SHAPE"});
   const bounded=api.boundedHistory([1,2,3]);if(bounded.length!==2||bounded[0]!==2||bounded[1]!==3)errors.push({code:"BOUNDED_HISTORY"});
   const manual=api.stopReasonMeta("manual"),progress=api.stopReasonMeta("stage-crossed"),failed=api.stopReasonMeta("settlement-failed"),boss=api.stopReasonMeta("boss-defeated"),civilization=api.stopReasonMeta("civilization-complete");
   if(manual.category!=="interruption"||progress.category!=="progression"||failed.category!=="error"||boss.category!=="completion"||civilization.category!=="completion"||boss.version!==STOP_REASON_SEMANTICS_VERSION)errors.push({code:"STOP_REASON_CLASSIFICATION",manual,progress,failed,boss,civilization});
