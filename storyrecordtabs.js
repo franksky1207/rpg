@@ -7,7 +7,7 @@
  function ensureEra(){if(!storyRecordEraView)storyRecordEraView=defaultEra();else storyRecordEraView=normalizeEra(storyRecordEraView);return storyRecordEraView;}
  function esc(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));}
  function progress(){return window.civilizationStoryProgress?.get?.()||{completedStories:[]};}function stories(){return window.CIVILIZATION_STORIES||{};}
- function recordArchiveRerun(){const count=Number(state?.reincarnation?.count);return Number.isInteger(count)&&count>=1;}
+ function recordArchiveRerun(){return window.storyReincarnationContext?.(state)?.reincarnationRun===true;}
  function canonicalRecordIds(era){
   if(era==="higher-dimensional")return thirdWorldEntered()?thirdWorldRegion().stories.map(row=>row.id):[];
   if(era==="universe"||era==="universe-review")return secondWorldEntered()?(Array.isArray(window.CIVILIZATION_UNIVERSE_STORY_REGIONS)?window.CIVILIZATION_UNIVERSE_STORY_REGIONS:[]).flatMap(region=>(region.stories||[]).map(row=>row.id)):[];
@@ -22,7 +22,7 @@
  }
  function thirdWorldRegion(){const rows=(typeof window.thirdWorldStoryTriggerDescriptors==="function"?Array.from(window.thirdWorldStoryTriggerDescriptors()):[]).map(row=>({id:String(row?.storyId||row?.id||"")})).filter(row=>row.id);return {id:"higher-dimensional-main",name:"高維紀元",era:"higher-dimensional",stories:rows};}
  function regions(){const era=ensureEra();if(era==="higher-dimensional")return [thirdWorldRegion()];if(era==="universe"||era==="universe-review")return Array.isArray(window.CIVILIZATION_UNIVERSE_STORY_REGIONS)?window.CIVILIZATION_UNIVERSE_STORY_REGIONS:[];return Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];}
- function visibleRegions(){const completed=completedIds();return regions().map(region=>({region,rows:(region.stories||[]).filter(row=>completed.has(row.id)&&stories()[row.id]).map(row=>stories()[row.id])})).filter(group=>group.rows.length);}
+ function visibleRegions(completed=completedIds()){return regions().map(region=>({region,rows:(region.stories||[]).filter(row=>completed.has(row.id)&&stories()[row.id]).map(row=>stories()[row.id])})).filter(group=>group.rows.length);}
  function ensureSelection(groups){if(!groups.length){selectedRegionId=null;return null;}if(!groups.some(g=>g.region.id===selectedRegionId))selectedRegionId=groups[groups.length-1].region.id;return groups.find(g=>g.region.id===selectedRegionId)||groups[groups.length-1];}
  function prepareEntry(){ensureEra();const groups=visibleRegions();selectedRegionId=groups.length?groups[groups.length-1].region.id:null;return selectedRegionId;}
  function entryHtml(story){return `<button class="story-record-entry" onclick="replayStoryRecordEntry('${esc(story.id)}')"><b>${esc(story.title||story.id)}</b><span>${esc(story.location||"")}</span></button>`;}
@@ -31,16 +31,18 @@
  function eraTabsHtml(){const era=ensureEra();if(thirdWorldEntered())return `<div class="era-view-tabs story-record-era-tabs" role="tablist" aria-label="戰線紀錄紀元"><button class="era-view-tab ${era==="higher-dimensional"?"active":""}" onclick="setStoryRecordEraView('higher-dimensional')">高維紀元</button><button class="era-view-tab ${era==="universe-review"?"active":""}" onclick="setStoryRecordEraView('universe-review')">宇宙紀元・回顧</button><button class="era-view-tab ${era==="galaxy-review"?"active":""}" onclick="setStoryRecordEraView('galaxy-review')">銀河紀元・回顧</button></div>`;if(secondWorldEntered())return `<div class="era-view-tabs story-record-era-tabs" role="tablist" aria-label="戰線紀錄紀元"><button class="era-view-tab ${era==="universe"?"active":""}" onclick="setStoryRecordEraView('universe')">宇宙紀元</button><button class="era-view-tab ${era==="galaxy-review"?"active":""}" onclick="setStoryRecordEraView('galaxy-review')">銀河紀元・回顧</button></div>`;return "";}
  function eraLabel(){const era=ensureEra();return era==="higher-dimensional"?"高維紀元":era==="universe"||era==="universe-review"?"宇宙紀元":"銀河紀元";}
  function selectedHtml(group){if(!group)return `<div class="card"><div class="story-record-empty">目前還沒有已完成的${eraLabel()}戰線紀錄。</div></div>`;const chapter=ensureEra()==="higher-dimensional"?"高維紀元":String(group.rows[0]?.chapter||group.region.name||"戰線紀錄");return `<div class="card story-record-card story-record-selected"><h2 class="story-record-chapter">${esc(chapter)}</h2><div class="story-record-list">${group.rows.map(entryHtml).join("")}</div></div>`;}
- function description(){const era=ensureEra();if(era==="higher-dimensional")return "查看高維紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";if(era==="universe-review")return "回顧宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";if(era==="universe")return "查看宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";return "回顧銀河紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";}
+ function description(){if(recordArchiveRerun())return "文明歷史已永久歸檔，可隨時回顧；不播放正式劇情、不給予獎勵，也不影響本輪任何進度。";const era=ensureEra();if(era==="higher-dimensional")return "查看高維紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";if(era==="universe-review")return "回顧宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";if(era==="universe")return "查看宇宙紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";return "回顧銀河紀元已完成的正式劇情；重播不會給予獎勵或改變進度。";}
  window.replayStoryRecordEntry=function(id){
   const key=String(id||""),story=stories()[key];
   if(!completedIds().has(key)||!story||!Array.isArray(story.pages)||!story.pages.length)return false;
   return typeof window.openStory==="function"?window.openStory(key,{lifecycleOwner:"generic"}):false;
  };
  window.STORY_RECORD_REINCARNATION_ARCHIVE_VERSION=1;
+ window.STORY_RECORD_ARCHIVE_CONTEXT_UNIFICATION_VERSION=1;
+ window.STORY_RECORD_RENDER_SET_REUSE_VERSION=1;
  window.prepareStoryRecordEntry=prepareEntry;
  window.setStoryRecordEraView=function(value){const next=normalizeEra(value);if(next===storyRecordEraView)return next;storyRecordEraView=next;prepareEntry();if(typeof render==="function")render();return storyRecordEraView;};window.getStoryRecordEraView=()=>ensureEra();
  window.selectStoryRecordRegion=function(id){const groups=visibleRegions();if(!groups.some(g=>g.region.id===id))return false;selectedRegionId=id;if(typeof render==="function")render();return true;};
- window.storyRecordPageHtml=function(){ensureEra();const completed=completedIds(),groups=visibleRegions(),selected=ensureSelection(groups),back=typeof homeBackHtml==="function"?homeBackHtml():`<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`;return `<div class="function-page story-record-page">${back}<div class="card"><h2>戰線紀錄</h2>${eraTabsHtml()}<div class="muted">${description()}</div></div>${introHtml(completed)}${tabsHtml(groups)}${selectedHtml(selected)}</div>`;};
+ window.storyRecordPageHtml=function(){ensureEra();const completed=completedIds(),groups=visibleRegions(completed),selected=ensureSelection(groups),back=typeof homeBackHtml==="function"?homeBackHtml():`<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`;return `<div class="function-page story-record-page">${back}<div class="card"><h2>戰線紀錄</h2>${eraTabsHtml()}<div class="muted">${description()}</div></div>${introHtml(completed)}${tabsHtml(groups)}${selectedHtml(selected)}</div>`;};
  window.STORY_RECORD_TABS_VERSION=9;window.STORY_RECORD_WORLD_REVIEW_VERSION=4;window.THIRD_WORLD_STORY_RECORD_VERSION=1;
 })();
