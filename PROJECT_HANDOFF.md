@@ -10,22 +10,22 @@
 
 # 0. 本次交接基準
 
-本次交接已重新 fresh-read current `main` 的實際程式碼、近期 125 個 commit、正式 owner／consumer、Save migration、GM、稱號、異宇宙、鏡像戰、第三紀元副本／重征服與 Runtime regression。
+本次交接以 **2026-10-07 current `main`** 的實際檔案為依據，重新讀取本交接檔與 Story migration／progress／record、兩紀元文明災厄 core／run／UI、共用 Background Progress、第三紀元 phase／正式 settlement、轉生 lifecycle／core、HTML 引用與最近新增的測試。其他較早完工的正式 GM／異宇宙／裝備／突破／副本細節，仍依本檔下方 owner 索引與 current main 驗證，**不把早期交接當作實碼已重新驗證的替代品**。
 
-更新本交接檔前的 gameplay HEAD：
-
-```text
-3555bd7e8014837e6c241da054efe541a20ec413
-```
-
-該 exact HEAD 已確認：
+此次僅更新 `PROJECT_HANDOFF.md`。更新交接檔前的 gameplay HEAD：
 
 ```text
-Runtime Integrity #2073 = success
-GitHub Pages      #6038 = success
+4e0c521940c915972a4f6a9ddb15d7cc80951e58
 ```
 
-Runtime Integrity #2073 的 syntax／owner、Chromium browser smoke、VIP、GM mainline HP lock、asset、documentation 與新增 closure regression 全部 success。
+該 exact HEAD：
+
+```text
+Runtime Integrity #2155 = success
+GitHub Pages      #6124 = success
+```
+
+最近一次 Story Integrity #1111 = success，對應較早 gameplay HEAD `a54691cf1f4ebe06afab3b81acf7d2613c8e0294`；**不是**上述最終 HEAD 的 Story CI，不能混稱同 SHA。後續 Runtime 靜態契約修正不涉及 Story production JS，且 exact HEAD Runtime browser smoke／Story 相容測試已通過。
 
 目前正式開發狀態：
 
@@ -48,10 +48,13 @@ GM 異宇宙重複稱號快速預覽入口退休                      ✅ 完成
 鏡像戰正式 settlement／GM 正式裁定收斂                  ✅ 完成
 AU 稱號門檻 data owner／migration diagnostics 收斂       ✅ 完成
 Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
+劇情轉生分流 Batch1～4（W1 101／W2 100／W3 11）          ✅ 完成
+劇情／災厄後續優化 Batch1～3（原優先項目1～12）           ✅ 完成
+災厄最後一場 Fast Catch-up／checkpoint 動態回歸          ✅ 完成
 目前已排定工程                                          ✅ 全部完成
 ```
 
-**劇情／轉生隔離新工程第1～4批已全部完成：戰線紀錄唯讀解鎖、三紀元轉生後劇情觸發分流、高維本輪10王戰鬥完成判定、Schema17 舊檔與跨紀元重新載入整體回歸均已封箱。**
+**截至本次 gameplay HEAD，劇情／轉生分流四批＋劇情／災厄安全與效能優化三批皆已封箱。** 轉生後只在戰線紀錄回顧歷史，劇情不參與本輪正式戰鬥／養成／通關；兩紀元災厄最後一場共用 Fast Catch-up 呈現判定、checkpoint 安全及 UI 決策。首輪劇情流程、Schema17、戰鬥公式、GM 正式與 sandbox 邊界不因此改動。
 
 ---
 
@@ -811,13 +814,16 @@ tests/runtime/recent-optimization-batch4-closure.js
 - documentation integrity。
 - recent optimization Batch4 closure。
 
-最新已驗證 gameplay HEAD：
+本次已驗證 gameplay HEAD（交接檔更新前）：
 
 ```text
-3555bd7e8014837e6c241da054efe541a20ec413
-Runtime Integrity #2073 = success
-GitHub Pages #6038 = success
+4e0c521940c915972a4f6a9ddb15d7cc80951e58
+Runtime Integrity #2155 = success
+GitHub Pages #6124 = success
+Story Integrity #1111 = success（較早的 a54691cf...，非上述 exact HEAD）
 ```
+
+Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js`、`calamity-terminal-dynamic-opt-batch2.js`、`calamity-shared-ui-policy-opt-batch3.js`，及三紀元 Story／Schema17 closure。Story Integrity 則包含 W1/W2/W3 首輪與轉生、11篇高維、舊版歷史遷移和戰線紀錄回顧測試。**執行新修改時重新看新 HEAD 的 Actions，不沿用上述結果。**
 
 ---
 
@@ -850,6 +856,12 @@ GitHub Pages #6038 = success
 ## Save／Offline／Runtime
 `savemigration.js`、`saveversionguard.js`、`savehookcore.js`、`settlementtransaction.js`、`compatibilityowners.js`、`runtimeapi.js`、`scriptgrouploader.js`、`offlinestatecore.js`、`offlinefarmtarget.js`、`offlineprogress.js`、`offlineworld3adapter.js`。
 
+## Story／三紀元轉生後歷史
+`reincarnationstate.js`（唯一轉生 context）、`storymigration.js`（舊 ID、待播資料安全）、`storyprogress.js`（首輪正式劇情／轉生不重播）、`storyrecordtabs.js`（唯讀歷史 UI）、`secondworldstoryregistry.js`（宇宙／高維 registry）、`thirdworldphase.js`（轉生後十王通關 owner）、`thirdworldprogress.js`（正式 HP／通關同交易）。
+
+## 兩紀元文明災厄／背景連戰
+`calamitycore.js`、`calamityrun.js`、`calamityui.js`、`secondworldcalamityrun.js`、`secondworldcalamityui.js`、`backgroundprogress.js`（共用 presentation／UI policy 與 Fast Catch-up）及 `tests/runtime/calamity-*.js`。
+
 ## GM
 `gmhub.js`、`gmhubextensions.js`、`gmformaltransaction.js`、`gmbreakthroughmanage.js`、`gmalternateuniversemanage.js`、`playertitlegmpreview.js`、`mirrordungeongm.js`、`gmpowerbenchmark.js`、`gmpowerbenchmarkstate.js`、`gmpowerbenchmarkworldphase.js`、`gmalternateuniversebenchmark.js`、`vipgm.js`、`thirdworldarenagm.js`、`gmbatch16formalcontrols.js`。
 
@@ -877,6 +889,11 @@ GitHub Pages #6038 = success
 18. GM 稱號預覽不得復活第二套 AU 1～10 快速按鈕。
 19. 鏡像稱號必須保持 catalog 最後一組。
 20. migration／runtime-only diagnostics 不得因此升 Schema18。
+21. 轉生後 W1／W2／W3 歷史直接開放戰線紀錄，**不補寫 completedStories**、不自動 queue／播放正式劇情。
+22. 轉生後 W3 十王通關只能由正式 W3 phase／settlement owner 判定，不因歷史 Final 設 `thirdWorld.completed`；首輪維持舊正式劇情完成契約。
+23. Story group 尚未 ready，不可清理尚未完整載入的合法歷史；舊 W3 content migration 應保護 rerun 已完成的11篇。
+24. 兩紀元災厄 terminal 最多一次正常 checkpoint，跳過 checkpoint 的終止場必補存；W1 正式存檔失敗回報須保留補存，W2 正式存檔回復快照不可取消。
+25. 災厄最後一場 headless Fast Catch-up 不多等待 structured duration；兩 UI 決策共用既有 `backgroundprogress.js`，不可退回各自重複公式。
 
 ---
 
@@ -920,7 +937,7 @@ GitHub Pages #6038 = success
 
 ## 2026-10-07 劇情／轉生隔離：第1批已完成
 
-- `storyrecordtabs.js` 在 `reincarnation.count >= 1` 時，用「現已進入的紀元」與正式 Story catalog **唯讀推導**戰線紀錄：銀河101、宇宙100、高維11；同時保留既有 completed 歷史。
+- `storyrecordtabs.js` 在正式 `storyReincarnationContext(state).reincarnationRun===true` 時，用「現已進入的紀元」與正式 Story catalog **唯讀推導**戰線紀錄：銀河101、宇宙100、高維11；同時保留既有 completed 歷史。
 - 不寫 `storyProgress.completedStories`、不寫 `pendingStory`、不改 `thirdWorld.story`、`thirdWorld.completed`，也不觸發 `completeStory()` 或任何 formal progress；回顧使用 generic `openStory`、沒有 onComplete callback。
 - 首輪 `count=0` 仍按既有已完成紀錄顯示。正式故事資料尚未就緒時，不把缺少 pages 的新回顧條目提前加入。
 - 第1批僅處理**紀錄顯示與回顧**；第一、二紀元轉生後的正式劇情排隊／播放與舊 pending 清理由第2批完成；高維自動 queue、Final 與本輪完成完全隔離由第3批完成。
@@ -932,10 +949,10 @@ GitHub Pages #6038 = success
 - `storyprogress.js` 接入正式 `storyReincarnationContext(target)` 生命週期 owner，新增 `STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION=1`，由同一個 `suppressRerunStory()` 判定銀河／宇宙故事是否停止 formal queue。
 - 轉生 `count>=1` 後，W1 `queueBossStory()` 與 W2 `queueUniverseBossStory()` 不再建立 `pendingStory`／播放；首輪 `count=0` 維持原有首殺 Story 流程。
 - 宇宙 `settleSecondWorldBossVictory` 仍執行原正式 Boss 結算，但轉生輪不再追加劇情排隊；宇宙 `startSecondWorldBossContinuous` 不再因首殺劇情強制改為單場。
-- Story Progress normalization 對已轉生存檔只清理已辨識的 W1/W2 舊 `pendingStory`，不改 `completedStories`、不呼叫 `completeStory`、不發通知；W3 pending／正式 W3 Story 流程保持原狀等待第3批。轉生輪也停止依本輪 W1 Boss 擊殺補寫 Story history，交由第1批唯讀戰線紀錄顯示。
+- Story Progress normalization 清理轉生輪已辨識的 W1/W2 舊 `pendingStory`，不補寫 `completedStories`、不呼叫 `completeStory`、不發通知；W3 pending 清理由後續第3批實作並已完成。轉生輪停止依本輪 W1 Boss 擊殺補寫 Story history，由唯讀戰線紀錄顯示。
 - `resume()` 的 W1 序章強制播放只對首輪執行；保留配裝等其他原有流程。W3 pending 在尚未進 W3 時不於低紀元提前顯示。
-- 新增 `tests/story/reincarnation-trigger-batch2.js`（count 0／1／2／3／7、首輪保留、W1/W2 首殺及 W2 連戰、舊 pending、安全保留既有銀河序章與 W3 pending）；加入 Story Integrity CI；`index.html` cache-bust 已更新。Save Schema 仍為17。
-- **已完成：第3批高維劇情與本輪 Final／成長隔離。尚未完成：第4批三紀元舊檔和整體回歸。**
+- 新增 `tests/story/reincarnation-trigger-batch2.js`（count 0／1／2／3／7、首輪保留、W1/W2 首殺及 W2 連戰、舊 pending、安全保留既有銀河序章；第3批後 W3 pending 同樣清除）；加入 Story Integrity CI；`index.html` cache-bust 已更新。Save Schema 仍為17。
+- **此段為第2批施工沿革；第3／4批均已完成，不存在待做的 W3 pending／closure。**
 
 
 ## 2026-10-07 劇情／轉生隔離：第3批已完成
@@ -943,7 +960,7 @@ GitHub Pages #6038 = success
 - 仍用 `storyprogress.js` 正式 Story Progress owner 與既有 `storyReincarnationContext()`，`STORY_REINCARNATION_W3_ISOLATION_VERSION=1`；不新增 persistent story 欄位、第二套進度 owner 或 Schema18。
 - 轉生 `count>=1` 時，11篇 W3 正式劇情僅由第1批 `storyrecordtabs.js` 以唯讀方式提供回顧；`queueStory()`／`setPending()`／`completeStory()`／`queueThirdWorldEligibleStory()`／`drainThirdWorldPostFlowStories()`／`consumeThirdWorldSettlement()` 均不再建立／播出 W3 正式劇情，也不會藉高維 Final 的故事歷史污染本輪完成判定。
 - Story Progress normalization 會清理轉生輪已辨識 W3 舊 `pendingStory`，但保留既有 `completedStories` 永久歷史；首輪仍保留原 W3 順序隊列、序章／階段／Final 正式完成與原結算。
-- 轉生輪 `thirdWorld.story.introSeen=false`、`thirdWorld.story.finalSeen=false` 表示**本輪不重新播放**，不能從永久故事歷史推導；`thirdWorld.completed` **只由本輪10名高維存在正式血量全歸零**推導，並於接受 W3 戰鬥 settlement 時同步；即使 `story.unlockedStage` 因舊檔而落後也不阻擋 Boss 完成判定。不得用 `completedStories` 的歷史 Final 當成本輪通關條件。
+- 轉生輪 `thirdWorld.story.introSeen=false`、`thirdWorld.story.finalSeen=false` 表示**本輪不重新播放**，不能從永久故事歷史推導；`thirdWorld.completed` **只由本輪10名高維存在正式血量全歸零**推導，並由後續優化移至 `thirdworldphase.js` 正式 owner、於 `thirdworldprogress.js` 正式戰鬥 transaction 同步落帳；即使 `story.unlockedStage` 因舊檔落後也不阻擋 Boss 完成判定。不得用 `completedStories` 的歷史 Final 當成本輪通關條件。
 - 高維10王、永久血量、維度之弦／核心、突破／轉生資格與正式戰鬥公式未改動。轉生輪達到本輪十王全滅時 `thirdWorld.completed` 可正常成立，但 `finalSeen` 仍不被冒充為重播過 Final。
 - 新增 `tests/story/reincarnation-higher-dimensional-batch3.js`：首輪流程、轉生1／2／3／7次、歷史11篇全保留、舊 W3 pending 清理、W3 queue／drain／formal completeStory 阻擋、Boss 未打與全部打完的區別、Final gate 不得繞過、零自動播放及無額外 Story save；加入 Story Integrity CI。生產 JS cache-bust 已更新。
 - **第4批三紀元舊檔、跨紀元與重新載入回歸已完成並納入 Story／Runtime Integrity。**
@@ -978,7 +995,7 @@ GitHub Pages #6038 = success
 - `calamityrun.js`／`secondworldcalamityrun.js` 的 `finish(reason,{checkpoint})` 在已完成該場 checkpoint 時不重複寫入；原本 `save:false` 且因印記滿級、文明完成、首次稱號、單場或該場末尾手動停止而終止時，改由 `finish()` **只做一次** terminal checkpoint。第一紀元 `calamitycore.js` 會回報 `checkpointSaved`，若正常場次的第一個存檔明確失敗，terminal runner 會補存一次，避免消除重複存檔時損害既有失敗重試能力。非戰鬥停止／錯誤仍保留終止安全存檔。
 - 新增 `tests/runtime/calamity-terminal-dynamic-opt-batch2.js`，使用真正的 `backgroundprogress.js` 共用 Fast Catch-up owner 與 W1/W2 正式 run/settle owner，在 VM 中模擬前景、背景回播、最後一場印記滿級／文明完成、初次稱號、手動停止、checkpoint 失敗回復及 save 次數。測試納入 `.github/workflows/runtime-integrity.yml`。
 - JS 改動已更新 `index.html` cache-bust。兩紀元仍共用原有戰前 `battlePresentationPlan()`，未修改 UI 內容、戰鬥傷害、30次擊殺或 Save Schema17。
-- 原清單其他編號（6／8／10／11／12）未在本批修改；往後依使用者指示再確認優先度。 
+- **施工沿革備註：** 第2批當時沒有改 6／8／10／11／12；這些已在後續第3批完成，不再是待辦。
 
 
 ## 2026-10-07 劇情／災厄檢查後優化：第3批（原清單6、8、10、11、12）
@@ -990,6 +1007,53 @@ GitHub Pages #6038 = success
 - 新增 `tests/runtime/calamity-shared-ui-policy-opt-batch3.js`，覆蓋普通、Fast 預覽／跳過／刷新、最後一場的 immutable decision 與兩 UI consumer 接線；加入 Runtime Integrity。同步擴增 `tests/story/record.js`，測正式轉生 Context／文案／首輪不受影響。
 - JS/CSS cache-bust 在 `index.html` 已更新；Save Schema 維持17，舊資料不需要遷移，永久 Story 紀錄與災厄養成欄位沒有任何新增或清空。本批完成後原清單1～12均已處理或明確保留既有正確機制。
 
+
+## 2026-10-07 最終功能狀態統整（跨七批正式封箱）
+
+### 一、目前唯一生效的劇情／轉生規則
+
+| 條件 | W1 銀河 | W2 宇宙 | W3 高維 |
+|---|---|---|---|
+| 首輪（`count=0`） | 101篇依原劇情流程解鎖、播放 | 100篇依 Boss 首殺劇情解鎖、播放 | 序章＋9篇階段＋Final 共11篇依原流程 |
+| 轉生（`count>0`） | 轉生完成立即在戰線紀錄開放101篇 | 再入宇宙立即在戰線紀錄開放100篇 | 再入高維立即在戰線紀錄開放11篇 |
+| 轉生後正式劇情 | 不排隊、不自動播放、不需打 Boss | 不排隊、不自動播放、首殺不切斷連戰 | 不排隊、不自動播放、不補播 Final |
+| 歷史回顧 | `openStory(id,{lifecycleOwner:"generic"})`，純閱讀，不產生正式完成事件 | 同左 | 同左，包含 Final |
+
+- 可回顧的212篇是各紀元進入時由正式 registry／catalog **唯讀衍生**；不得批次向 `completedStories` 寫入212篇，也不得因閱讀觸發獎勵、Boss、災厄、印記、文明、核心、突破、存檔進度改動。首輪的正式 `completedStories` 仍保留其原有意義。
+- `storyrecordtabs.js` 以 `storyReincarnationContext()` 判定轉生、單次 render 共用 completed Set；首輪保留原說明，轉生輪顯示「文明歷史已永久歸檔，可隨時回顧；不播放正式劇情、不給予獎勵，也不影響本輪任何進度。」
+- W3 轉生輪 `introSeen/finalSeen` 不從舊歷史改寫；正式 `thirdWorld.completed` 由本輪10名高維存在的**永久 HP 全部歸零**決定。owner 是 `thirdworldphase.js` 的 `reconcileThirdWorldRerunCombatCompletion()`；`thirdworldprogress.js` 正式 `runSettlementTransaction` 同筆落帳，載入 normalization 亦由 W3 phase 調和。**Story Progress 不得回頭擁有通關寫入。**
+- `storyprogress.js` 統一阻擋轉生後三紀元 `queueStory`、`setPending`、`completeStory`、W3 eligible/drain 及 W2 首殺 queue；無法用直接 API 呼叫繞過。正常首輪／配裝／世界進入條件不變。
+
+### 二、舊存檔與 Story migration 安全邊界
+
+- **Save Schema17** 不升版，不新增永久解鎖欄位。首輪／轉生輪皆保留合法的 `completedStories`；轉生輪載入時清除 W1／W2／W3 舊正式 `pendingStory`，避免重播。
+- `storymigration.js` 只在正式延遲 Story group 回報 `ready` 後執行未知 ID 清理；目錄部分載入時不能刪合法歷史。對 `thirdWorldContentVersion<1` 的 rerun 舊存檔，以正式11篇 trigger descriptor 保留合法 W3 已完成紀錄、處理退休 ID；descriptor 尚未完整時延後版本遷移。首輪舊開發版 W3 migration 路線保留。
+- `LAST_STORY_PENDING_MIGRATION_REPAIR` 與 `LAST_STORY_PENDING_RERUN_REPAIR` 是**runtime-only 唯讀診斷**，不持久化、不造成 Schema18。
+- 三紀元 JSON round-trip／重新整理、轉生 count 0／1／2／3／8、進入紀元不打王即有歷史、W3 Final 只回顧不通關皆有 VM／CI 封箱測試；不應自行再寫一套 migration/backfill 或把 legacy 開發版紀錄當本輪成長。
+
+### 三、災厄最後一場、背景 Fast Catch-up、checkpoint
+
+- W1 `calamitycore.js` 回報 `settlement.checkpointSaved`；W1 `calamityrun.js` 與 W2 `secondworldcalamityrun.js` 的 `finish(reason,{checkpoint})` 避免同一場已保存又重複保存；`save:false` 的終止場（滿級／文明完成／首次稱號／單場／停止）須補一次 checkpoint。W1 首次存檔**明確失敗**須保留 terminal 補存路徑。
+- W2 只有 `options.save!==false` 才執行完整 `JSON.stringify(state)` rollback 快照；真正的 checkpoint 場仍有 `saveAtomic(before)` 回復保障；背景非 checkpoint 場只在記憶體累進，由終止或後續正式 checkpoint 保存。**不可為減少快照而破壞 rollback。**
+- 兩紀元都在戰鬥開始前取得共用 `battlePresentationPlan(options)`，用 pre-battle policy 決定呈現、structured duration、刷新與 checkpoint；最後一場即使背景 flow 在 `finish()` 停止，也不得又等待完整戰鬥動畫時間。
+- 共用 `backgroundprogress.js` 的 `calamityContinuousUiDecision(policy,ended)` 是純 policy 判定，W1 `calamityui.js`、W2 `secondworldcalamityui.js` 共同採用；W1／W2 各自動畫、畫面、獎勵、災厄 state／Boss settlement 保持獨立，不新增 UI wrapper。兩個 runner 沒用到的 local `catchUpPreviewPolicy()` 已刪；共用 infra `previewCatchUp()` API **仍保留**。
+- Runtime 動態 CI 同時測 W1 印記滿級／W2 文明完成最後場、前景／背景 headless、非終止場、首次稱號、手動停止、terminal 存檔一次、W1 save retry、W2 rollback；並有 shared UI policy 六情境與舊 static integrity 對齊新 owner。
+
+### 四、其他正式數值、GM／UI 基準（沿用既有 owner，不在七批重算）
+
+- W1 Lv1～500、W2 Lv501～1000、W3 Lv1000～2000；世界進入條件依本檔第2節，絕不能以永久故事回顧繞過 Boss／專精／強化／印記／文明／VIP 條件。
+- W3 每級 EXP `10,000,000`（正式 `levelprogression.js`）；W1 強化基礎石 `25×目標等級`、進階石 `5×目標等級`、+20上限；W2 +40；強化每級能力加成2.5%。不得復活舊 50×。
+- 轉生越級收益：`M=1+0.03×(enemyLevel-playerLevel)` 僅 rerun 且對方等級較高；適用範圍、向上取整、Offline provenance、裝備出售排除依第13節正式 owner。
+- GM 正式修改必須走 shared transaction；GM 測試／預測角色／AU benchmark 與正式角色分離；原有 GM 突破、鏡像正式裁定、異宇宙管理與 benchmark 八模式、VIP 無上限但特殊特權至20、稱號視覺／AU title 門檻 owner 均維持原規則。這七批**沒有**更改這些 GM／平衡公式。
+- 三紀元入口／回顧、災厄 UI、戰線紀錄回顧與轉生文案，仍按本檔 UI 索引與 `index.html` 正式資產載入；JS 改動已做 cache-bust。任何舊設計文檔與本段有衝突，請直接 fresh-read 正式 source。
+
+### 五、CI、已知風險與待辦邊界
+
+- 本對話**沒有未完成的已核准工程批次**；劇情四批、後續安全／災厄／UI 三批均完成。後續剩正式遊玩實測、效能與平衡觀察；不因歷史編號再自動開一批。
+- 最新已驗證 gameplay HEAD `4e0c521940c915972a4f6a9ddb15d7cc80951e58`：Runtime Integrity **#2155 success**（含 Chrome browser smoke、新災厄測試、docs integrity），GitHub Pages **#6124 success**；Story Integrity **#1111 success** 位於前一 gameplay HEAD `a54691cf...`。之後只修改 Runtime 靜態契約測試；**不要誤稱 Story #1111 為最終 SHA 的 exact-HEAD success**。
+- 尚無經實機存檔重現而確認的本批新 Bug；VM／CI 模擬不等同所有玩家設備的實際操作。若用戶回報現場問題，請先讀 `main` 與明確的實際數據／存檔，再查相關 owner，勿先宣稱無問題。
+- 此次**只更新交接 Markdown，不修改任何正式 JS、CSS、Schema、GM、UI 或測試**；GitHub workflow 若只因文件變更而重新執行，也應比對新的 exact HEAD 狀態。
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
@@ -1000,7 +1064,7 @@ GitHub Pages #6038 = success
 完整承接《文明戰線》專案。
 
 以 GitHub main 為唯一真實來源；不要只靠對話記憶、舊交接檔或歷史設計文件。
-先確認目前 HEAD、Save Schema、相關 runtime/integrity、current world semantics 與既有正式 owner。
+先確認目前 HEAD、Save Schema、相關 runtime/integrity、current world semantics 與既有正式 owner；不要把歷史 CI 當成當前 HEAD 的驗證。
 
 已完成的 Batch5／6／7、Code Cleanup Batch1～8、
 第一紀元 Target Context Batch0～6與優化1～4、
@@ -1010,6 +1074,8 @@ GitHub Pages #6038 = success
 鏡像 canonical settlement／GM正式裁定、
 AU threshold owner／migration diagnostics、
 Schema17 舊檔相容矩陣與近期 Batch4 closure，
+本次劇情轉生四批（101／100／11篇唯讀回顧、W3十王正式通關）、
+劇情／災厄優化三批（Story migration舊檔安全、W1/W2最後一場存檔與Fast Catch-up、共用 UI policy），
 都不得因舊文件重新施工或倒退。
 
 若我說「先討論／先檢查／先不要修改」，只分析不要改 GitHub；
@@ -1019,6 +1085,8 @@ Schema17 舊檔相容矩陣與近期 Batch4 closure，
 JS／CSS production 改動要同步更新 index.html cache-bust。
 修改後 fresh-read、compare base→head、自我檢查，
 並以 exact HEAD 的 Runtime／Story（若該變更有觸發）／Pages Actions 結果為準。
+轉生後劇情只進戰線紀錄，不補入 formal completedStories、不重播；
+W3 完成只看本輪10王正式 HP；災厄最後一場勿重複存檔／額外等待。
 
 現在先不要修改。
 ```
