@@ -13,6 +13,7 @@ function setup(count,{allDead=false,stage=0,history=ids,pending="higher-dimensio
   WORLD_REGIONS:[],state:undefined,registerNewStateNormalizer(){},
   thirdWorldStoryTriggerDescriptors:()=>ids.map((storyId,i)=>({storyId,kind:i===0?"intro":i===10?"final":"milestone",stage:i,contentReady:true})),
   storyReincarnationContext(x){const n=Number(x?.reincarnation?.count)||0;return {reincarnationRun:n>0,firstRun:n===0,count:n};},
+  reconcileThirdWorldRerunCombatCompletion(target){if(Number(target?.reincarnation?.count)>0&&target?.thirdWorld?.entered){target.thirdWorld.completed=target.thirdWorld.bosses.length===10&&target.thirdWorld.bosses.every(row=>row.currentHp===0);}return {applied:true};},
   save(){calls.save++;return true;},addEventListener(){},openStory(){calls.open++;return true;}
  };
  ctx.window=ctx;
