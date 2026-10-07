@@ -49,7 +49,7 @@
   const before={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};
   if(reincarnationStoryRun(target)){
    // Re-conquest completion comes from this life's formal boss/stage state, never historical Story records.
-   const battleComplete=thirdWorldBossesDefeated(target)&&Number(third.story.unlockedStage)>=10;
+   const battleComplete=thirdWorldBossesDefeated(target);
    third.story.introSeen=false;
    third.story.finalSeen=false;
    third.completed=battleComplete;
