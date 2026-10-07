@@ -13,7 +13,7 @@ function harness(era,{fast=false,kills=29,failSave=false,title=false}={}){
   getCivilizationCalamityStatus:()=>({currentHp:100000,maxHp:100000,mark:{level:9,progress:29}}),
   isCivilizationCalamityUnlocked:()=>true,playerCombatStats:()=>({hp:100,atk:10,def:10}),
   runCivilizationCalamityBattle(id,options){if(options.save!==false&&typeof ctx.save==="function")ctx.save(false);return {ok:true,win:true,calamityId:id,enemy:{hp:100000},enemyStartHp:100000,enemyEndHp:0,playerStartHp:100,playerEndHp:100,turns:1,settlement:{markMaxed:true,titleSettlement:null,markSettlement:{level:10}}};},
-  getSecondWorldCalamityDefinition:id=>id===def.id?def:null,
+  getSecondWorldCalamityDefinition:value=>value===def||value===def.id?def:null,
   canChallengeSecondWorldCalamity:()=>true,secondWorldBossBaseStats:()=>({atk:10,def:10}),
   getSecondWorldCalamityCurrentHp:()=>100000,civilizationCombatDamageMultiplier:()=>1,
   runCombatCore(){return {win:true,enemyHp:0,hp:95,turns:1,logs:[],events:[]};},
