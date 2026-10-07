@@ -27,7 +27,6 @@
  function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();return infra?!!infra.startBackground():false;}
  function stopBackground(){const infra=runInfra();return infra?infra.stopBackground():false;}
  function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():false;}
- function catchUpPreviewPolicy(){const infra=runInfra();return infra?infra.previewCatchUp():null;}
  function definition(id){return typeof window.getCivilizationCalamityDefinition==="function"?window.getCivilizationCalamityDefinition(id):null;}
  function playerMaxHp(){return typeof playerCombatStats==="function"?Math.max(1,Math.floor(Number(playerCombatStats().hp)||1)):Math.max(1,Math.floor(Number(state?.hp)||1));}
  function runStatus(){
