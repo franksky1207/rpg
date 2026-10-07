@@ -4,6 +4,7 @@
  const CALAMITY_HP_PER_LEVEL=250000;
  const MARK_STATE_VERSION=1;
  const MARK_MAX_LEVEL=10;
+ const MARK_UPGRADE_KILLS=Object.freeze([1,1,2,2,3,3,4,4,5,5]);
 
  const CALAMITY_IDS=Array.from(window.CIVILIZATION_CALAMITY_IDS||[]);
  const MARK_IDS=Array.from(window.CIVILIZATION_MARK_IDS||[]);
@@ -32,7 +33,11 @@
   let acquired=entry.acquired===true||level>0;
   let progress=Math.max(0,Math.floor(Number(entry.progress)||0));
   if(!acquired){level=0;progress=0;}
-  if(level>=MARK_MAX_LEVEL)progress=0;
+  else if(level>=MARK_MAX_LEVEL)progress=0;
+  else{
+   const required=Math.max(1,Math.floor(Number(MARK_UPGRADE_KILLS[level])||1));
+   progress=Math.min(required-1,progress);
+  }
   entry.acquired=acquired;
   entry.level=level;
   entry.progress=progress;
@@ -72,6 +77,7 @@
  window.CALAMITY_BALANCE_VERSION=CALAMITY_BALANCE_VERSION;
  window.MARK_STATE_VERSION=MARK_STATE_VERSION;
  window.MARK_MAX_LEVEL=MARK_MAX_LEVEL;
+ window.MARK_STATE_PROGRESS_CANONICAL_VERSION=1;
  window.createBlankCalamityState=createBlankCalamityState;
  window.createBlankMarkState=createBlankMarkState;
  window.normalizeCivilizationCalamityState=normalizeCivilizationCalamityState;
