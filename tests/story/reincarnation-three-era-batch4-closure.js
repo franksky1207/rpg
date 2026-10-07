@@ -23,6 +23,7 @@ function browserContext(serialized){
   CIVILIZATION_AUTH_REQUIRED:false,BACKGROUND_PRELOAD_READY:true,WORLD_REGIONS:[{id:"galaxy-closure",mapStart:0,mapEnd:99}],
   thirdWorldStoryTriggerDescriptors:()=>higher.map((storyId,i)=>({storyId,kind:i===0?"intro":i===10?"final":"milestone",stage:i,contentReady:true})),
   storyReincarnationContext(target){const count=Number(target?.reincarnation?.count)||0;return {reincarnationRun:count>0,count};},
+  reconcileThirdWorldRerunCombatCompletion(target){if(Number(target?.reincarnation?.count)>0&&target?.thirdWorld?.entered){target.thirdWorld.completed=target.thirdWorld.bosses.length===10&&target.thirdWorld.bosses.every(row=>row.currentHp===0);}return {applied:true};},
   universeStoryIdForBossIndex(i){return universe[i]||null;},universeBossIndexForStoryId(id){const i=universe.indexOf(id);return i<0?null:i;},
   isSecondWorldEntered(){return ctx.state?.secondWorld?.entered===true;},
   isThirdWorldEntered(){return ctx.state?.thirdWorld?.entered===true;},
