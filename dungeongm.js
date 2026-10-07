@@ -20,15 +20,16 @@
  function enemyLine(e){return `HP ${e.hp}　ATK ${e.atk}　DEF ${e.def}　暴擊 ${e.crit}%　閃避 ${e.dodge}%`;}
  function showBountyTest(html){bountyTestHtml=html;showTestResult("gmBountyTestResult",html);if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
  function showVoidMirageTest(html){voidMirageTestHtml=html;showTestResult("gmVoidMirageTestResult",html);if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
- function gmTestCivilizationMultiplier(world=null){
+ function gmTestFinalDamageMultiplierForWorld(world=null){
   const character=typeof window.gmTestCharacterSnapshot==="function"?window.gmTestCharacterSnapshot():null;
   const activeWorld=world==null?(Number(character?.world)===2?2:1):(Number(world)===2?2:1);
   const level=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
-  return typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:activeWorld,civilizationLevel:level}):1;
+  if(typeof window.gmTestFinalDamageMultiplier!=="function")throw new Error("GM formal final damage owner unavailable.");
+  return window.gmTestFinalDamageMultiplier(activeWorld,level);
  }
  function simulateFight(player,enemy,startHp=player.hp,world=null){
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):null;
-  return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:gmTestCivilizationMultiplier(world)});
+  return runCombatCore(player,enemy,startHp,{logs:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:gmTestFinalDamageMultiplierForWorld(world)});
  }
  function gmTestLevelForWorld(world){const raw=Math.floor(Number(window.gmTestLevel)||Number(state?.level)||1);return Number(world)===2?Math.max(500,Math.min(1000,raw)):Math.max(1,Math.min(500,raw));}
  window.gmSetBountyTestWorld=function(value){bountyTestWorld=Number(value)===2?2:1;bountyTestHtml="";if(typeof render==="function")render();return bountyTestWorld;};
