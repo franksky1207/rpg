@@ -4,6 +4,7 @@
  const GM_MARK_CONFIG_OWNER_VERSION=1;
  const GM_MARK_FORMAL_PHASE_LOCK_VERSION=1;
  const FULL_KILL_SAFETY_LIMIT=100000;
+ const FULL_KILL_NO_PROGRESS_LIMIT=100;
  let singleResultHtml="";
  let fullResultHtml="";
  let gmCalamityLastResult=null;
@@ -99,13 +100,13 @@
   const vipText=typeof window.gmTestVipLabel==="function"?window.gmTestVipLabel():`VIP${Math.max(0,Number(window.gmTestVipLevel)||0)}`;
   return typeof window.gmTestSummaryHtml==="function"?window.gmTestSummaryHtml(title,runLabel,vipText):`<div class="gm-test-summary-title">${title}・${runLabel}</div>`;
  }
- function simulateAttempt(calamityId,startHp=null,rng=null,capturedContext=null){
+ function simulateAttempt(calamityId,startHp=null,rng=null,capturedContext=null,overrides={}){
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
   const context=capturedContext||testContext();
-  const p=player(),enemyStart=startHp==null?enemy.hp:Math.max(1,Math.min(enemy.hp,Math.floor(Number(startHp)||enemy.hp)));
-  const markLevels=testMarks();
+  const p=overrides.player&&typeof overrides.player==="object"?{...overrides.player}:player(),enemyStart=startHp==null?enemy.hp:Math.max(1,Math.min(enemy.hp,Math.floor(Number(startHp)||enemy.hp)));
+  const markLevels=overrides.markLevels&&typeof overrides.markLevels==="object"?overrides.markLevels:testMarks();
   const breakthroughLevel=context?.breakthroughLevel??(typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0);
-  const finalDamageMultiplier=Number(context?.finalDamage?.multiplier)||(typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1);
+  const finalDamageMultiplier=Number(overrides.playerFinalDamageMultiplier)||(Number(context?.finalDamage?.multiplier)||(typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1));
   const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
   return {enemy,player:p,enemyStart,result,testContext:context,breakthroughLevel,finalDamageMultiplier,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
  }
@@ -117,7 +118,7 @@
  async function simulateFullKill(calamityId,onProgress=null){
   const enemy=window.buildCivilizationCalamityEnemy?.(calamityId);if(!enemy)return null;
   const context=testContext(),startRevision=contextRevision(context);
-  let hp=enemy.hp,attempts=0,totalTurns=0,totalDamage=0,lastPlayerHp=0,completed=false,stale=false;
+  let hp=enemy.hp,attempts=0,totalTurns=0,totalDamage=0,lastPlayerHp=0,completed=false,stale=false,noProgressStreak=0,noProgress=false;
   while(hp>0&&attempts<FULL_KILL_SAFETY_LIMIT){
    if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){stale=true;break;}
    const attempt=simulateAttempt(calamityId,hp,null,context);
@@ -126,8 +127,10 @@
    totalTurns+=Math.max(0,Number(attempt.result.turns)||0);
    totalDamage+=attempt.damage;
    hp=Math.max(0,Number(attempt.result.enemyHp)||0);
+   noProgressStreak=attempt.damage>0?0:noProgressStreak+1;
    lastPlayerHp=Math.max(0,Number(attempt.result.hp)||0);
    if(attempt.result.win||hp<=0){hp=0;completed=true;break;}
+   if(noProgressStreak>=FULL_KILL_NO_PROGRESS_LIMIT){noProgress=true;break;}
    if(attempts%100===0){
     if(onProgress)onProgress(attempts,hp,enemy.hp);
     await new Promise(resolve=>setTimeout(resolve,0));
@@ -136,12 +139,14 @@
   if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision)stale=true;
   const breakthroughLevel=context?.breakthroughLevel??0;
   const finalDamageMultiplier=Number(context?.finalDamage?.multiplier)||1;
-  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed:completed&&!stale,stale,lastPlayerHp,testContext:context,breakthroughLevel,finalDamageMultiplier,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT};
+  return {enemy,attempts,totalTurns,totalDamage,remainingHp:hp,completed:completed&&!stale,stale,noProgress,lastPlayerHp,testContext:context,breakthroughLevel,finalDamageMultiplier,avgDamage:attempts?Math.round(totalDamage/attempts):0,avgTurns:attempts?Math.round(totalTurns/attempts*10)/10:0,safetyLimit:FULL_KILL_SAFETY_LIMIT,noProgressLimit:FULL_KILL_NO_PROGRESS_LIMIT};
  }
  function fullHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
   const def=window.getCivilizationCalamityDefinition?.(data.enemy.calamityId),pct=data.enemy.hp?Math.round(data.remainingHp/data.enemy.hp*1000)/10:0;
-  return `<div class="notice">${summary(def?.name||data.enemy.name,"完整擊殺模擬")}<div class="muted gm-test-context">每一次挑戰玩家都重新滿血，災厄剩餘 HP 跨挑戰延續；逐場呼叫正式 Combat Core，直到完整擊殺或達安全上限。此測試不修改正式資料。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">結果<b>${data.completed?"完整擊殺":"達安全上限"}</b></div><div class="stat">需要挑戰次數<b>${data.attempts.toLocaleString()}</b></div><div class="stat">總戰鬥回合<b>${data.totalTurns.toLocaleString()}</b></div><div class="stat">平均每場回合<b>${data.avgTurns}</b></div><div class="stat">平均每場傷害<b>${data.avgDamage.toLocaleString()}</b></div><div class="stat">災厄最大 HP<b>${data.enemy.hp.toLocaleString()}</b></div><div class="stat">剩餘 HP<b>${data.remainingHp.toLocaleString()}（${pct}%）</b></div></div>${data.completed?"":`<div class="muted" style="margin-top:10px">已達 ${data.safetyLimit.toLocaleString()} 場安全上限；結果未以平均值外推，因此不偽造完整擊殺次數。</div>`}</div>`;
+  const resultLabel=data.completed?"完整擊殺":data.noProgress?"無有效進度":"達安全上限";
+  const note=data.completed?"":data.noProgress?`<div class="muted" style="margin-top:10px">已連續 ${data.noProgressLimit.toLocaleString()} 場造成 0 傷害，判定目前角色無法形成有效削血，提前停止模擬。</div>`:`<div class="muted" style="margin-top:10px">已達 ${data.safetyLimit.toLocaleString()} 場安全上限；結果未以平均值外推，因此不偽造完整擊殺次數。</div>`;
+  return `<div class="notice">${summary(def?.name||data.enemy.name,"完整擊殺模擬")}<div class="muted gm-test-context">每一次挑戰玩家都重新滿血，災厄剩餘 HP 跨挑戰延續；逐場呼叫正式 Combat Core，直到完整擊殺、無有效進度或達安全上限。此測試不修改正式資料。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><div class="stat">結果<b>${resultLabel}</b></div><div class="stat">需要挑戰次數<b>${data.attempts.toLocaleString()}</b></div><div class="stat">總戰鬥回合<b>${data.totalTurns.toLocaleString()}</b></div><div class="stat">平均每場回合<b>${data.avgTurns}</b></div><div class="stat">平均每場傷害<b>${data.avgDamage.toLocaleString()}</b></div><div class="stat">災厄最大 HP<b>${data.enemy.hp.toLocaleString()}</b></div><div class="stat">剩餘 HP<b>${data.remainingHp.toLocaleString()}（${pct}%）</b></div></div>${note}</div>`;
  }
 
  window.gmCalamitySingle=function(){
@@ -179,7 +184,7 @@
   return `<div class="muted gm-hub-note">文明災厄 GM 模擬不受正式解鎖狀態限制。玩家使用目前 GM 測試 VIP／專精／強化／印記；災厄固定使用正式數值。所有結果皆為沙盒，不修改正式災厄 HP 或印記。</div><div class="controls" style="align-items:end"><label>文明災厄<br><select id="gmCalamityTarget" class="btn" onchange="gmSetCalamityTestTarget(this.value)">${calamityOptions()}</select></label><button class="btn blue" onclick="gmCalamitySingle()">單次挑戰模擬</button><button id="gmCalamityFullBtn" class="btn gm-create" onclick="gmCalamityFullKill()">完整擊殺模擬</button></div><div id="gmCalamityResult" style="margin-top:12px">${fullResultHtml||singleResultHtml}</div>`;
  };
 
- window.runGmCalamitySingleSimulation=function(id,options={}){return simulateAttempt(id,options.startHp??null,options.rng,options.testContext||null);};
+ window.runGmCalamitySingleSimulation=function(id,options={}){return simulateAttempt(id,options.startHp??null,options.rng,options.testContext||null,options);};
  window.runGmCalamityFullKillSimulation=simulateFullKill;
  window.GM_CALAMITY_TEST_VERSION=GM_CALAMITY_TEST_VERSION;
  window.GM_MARK_MANAGEMENT_VERSION=GM_MARK_MANAGEMENT_VERSION;
@@ -188,11 +193,13 @@
  window.GM_MARK_FORMAL_TRANSACTION_VERSION=1;
  window.gmFormalMarkMinimum=formalMarkMinimum;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
+ window.GM_CALAMITY_FULL_KILL_NO_PROGRESS_LIMIT=FULL_KILL_NO_PROGRESS_LIMIT;
  window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
  window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
  window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION=1;
  window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION=1;
+ window.GM_CALAMITY_NO_PROGRESS_GUARD_VERSION=1;
  window.GM_CALAMITY_SUMMARY_EXPORT_VERSION=1;
  window.GM_CALAMITY_SESSION_SETTINGS_VERSION=1;
  window.GM_CALAMITY_LEGACY_TITLE_PREVIEW_RETIRED_VERSION=1;
