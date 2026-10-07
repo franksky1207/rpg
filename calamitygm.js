@@ -107,9 +107,11 @@
   const markLevels=overrides.markLevels&&typeof overrides.markLevels==="object"?overrides.markLevels:testMarks();
   const breakthroughLevel=context?.breakthroughLevel??(typeof window.gmTestBreakthroughLevelValue==="function"?Math.max(0,Math.floor(Number(window.gmTestBreakthroughLevelValue())||0)):0);
   const finalDamageMultiplier=Number(overrides.playerFinalDamageMultiplier)||(Number(context?.finalDamage?.multiplier)||(typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(1,0,breakthroughLevel):1));
-  const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations:true,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
+  const useTestSpecializations=overrides.useTestSpecializations!==false;
+  const result=window.runCombatCore(p,enemy,p.hp,{logs:false,useTestSpecializations,markLevels,enemyStartHp:enemyStart,rng:typeof rng==="function"?rng:undefined,playerFinalDamageMultiplier:finalDamageMultiplier});
   return {enemy,player:p,enemyStart,result,testContext:context,breakthroughLevel,finalDamageMultiplier,damage:Math.max(0,enemyStart-Math.max(0,Number(result.enemyHp)||0))};
  }
+ function shouldStopForNoProgress(streak){return Math.max(0,Math.floor(Number(streak)||0))>=FULL_KILL_NO_PROGRESS_LIMIT;}
  function singleHtml(data){
   if(!data)return `<div class="notice">找不到文明災厄測試資料。</div>`;
   const def=window.getCivilizationCalamityDefinition?.(data.enemy.calamityId),remaining=Math.max(0,Number(data.result.enemyHp)||0),pct=data.enemy.hp?Math.round(remaining/data.enemy.hp*1000)/10:0;
@@ -130,7 +132,7 @@
    noProgressStreak=attempt.damage>0?0:noProgressStreak+1;
    lastPlayerHp=Math.max(0,Number(attempt.result.hp)||0);
    if(attempt.result.win||hp<=0){hp=0;completed=true;break;}
-   if(noProgressStreak>=FULL_KILL_NO_PROGRESS_LIMIT){noProgress=true;break;}
+   if(shouldStopForNoProgress(noProgressStreak)){noProgress=true;break;}
    if(attempts%100===0){
     if(onProgress)onProgress(attempts,hp,enemy.hp);
     await new Promise(resolve=>setTimeout(resolve,0));
@@ -194,6 +196,7 @@
  window.gmFormalMarkMinimum=formalMarkMinimum;
  window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT=FULL_KILL_SAFETY_LIMIT;
  window.GM_CALAMITY_FULL_KILL_NO_PROGRESS_LIMIT=FULL_KILL_NO_PROGRESS_LIMIT;
+ window.gmCalamityShouldStopForNoProgress=shouldStopForNoProgress;
  window.gmCalamityTestResultSnapshot=function(){return gmCalamityLastResult?JSON.parse(JSON.stringify(gmCalamityLastResult)):null;};
  window.gmClearCalamityTestResult=function(){singleResultHtml="";fullResultHtml="";gmCalamityLastResult=null;return true;};
  window.GM_CALAMITY_TEST_EMBEDDED_VERSION=1;
