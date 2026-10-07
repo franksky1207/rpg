@@ -28,6 +28,7 @@
    if(window.effectiveEnhancementMin(higher)!==40||window.effectiveEnhancementCap(higher)!==40)fail("ENH_W3","高維強化正式範圍不是固定 +40");
   }
 
+  if(Number(window.GM_FORMAL_MARK_TRANSACTION_VERSION)!==1||typeof window.gmApplyFormalMarkMutation!=="function"||typeof window.gmCommitFormalMarkMutation!=="function")fail("MARK_TRANSACTION_API","正式印記 shared transaction owner 未載入",{version:window.GM_FORMAL_MARK_TRANSACTION_VERSION,apply:typeof window.gmApplyFormalMarkMutation,commit:typeof window.gmCommitFormalMarkMutation});
   if(typeof window.gmFormalMarkMinimum!=="function")fail("MARK_API","印記正式紀元鎖定 API 未載入");
   else{
    if(window.gmFormalMarkMinimum(galaxy)!==0)fail("MARK_W1","銀河正式印記最低值應為 0");
