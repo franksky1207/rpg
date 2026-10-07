@@ -69,6 +69,7 @@ async function main(){
   assert.equal(calls.save,0,"Story history isolation should not create standalone save writes");
   target.thirdWorld.bosses.forEach(x=>x.currentHp=0);
   target.thirdWorld.story.unlockedStage=10;
+  ctx.reconcileThirdWorldRerunCombatCompletion(target);
   const battle=api.consumeThirdWorldSettlement({ok:true,world:3,unlockedStoryStages:[10]});
   assert.equal(battle.completion.completionReady,true,"本輪10王全滅仍正常報告 completion-ready");
   assert.equal(target.thirdWorld.completed,true,"轉生後完成標記只能依本輪10王與 stage10 實際進度");
