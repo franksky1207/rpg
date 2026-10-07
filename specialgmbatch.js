@@ -81,6 +81,7 @@ async function gmStartSpecialBattle(){
   const marks=typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{};
   const civLevel=world===2&&typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
   const civMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,civilizationLevel:civLevel}):1;
+  const finalDamageMultiplier=typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(world,civLevel):civMultiplier;
   const summary={world,level,count:GM_TEST_RUNS,wins:0,losses:0,totalTurns:0,totalXp:0,totalResource:0,dropCount:0,qualityCounts:Array(QUALITY.length).fill(0),vip10Triggers:0,winHpTotal:0,randomRewards:{},testVipLabel:gmSpecialVipLabel(),testSpecLabel:gmTestSpecializationLabel()};
 
   function rewardOnce(ctx){
@@ -112,7 +113,7 @@ async function gmStartSpecialBattle(){
 
   for(let i=0;i<GM_TEST_RUNS;i++){
    const enemy=buildSpecialMonsterFromPlayer(enemyScalingSnapshot,special,level);
-   const r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:civMultiplier});
+   const r=runCombatCore(playerSnapshot,enemy,playerMax,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:marks,playerFinalDamageMultiplier:finalDamageMultiplier});
    summary.totalTurns+=Math.max(0,Number(r.turns)||0);
    if(r.win){
     summary.wins++;summary.winHpTotal+=Math.max(0,Number(r.hp)||0);
