@@ -9,7 +9,6 @@
   return window.combatOuterGapMs("calamity","battle");
  }
  function fastCatchUp(){return typeof window.backgroundProgressFastCatchUpActive==="function"&&window.backgroundProgressFastCatchUpActive("calamity")===true;}
- function catchUpStep(){return typeof window.backgroundProgressCatchUpStep==="function"?window.backgroundProgressCatchUpStep("calamity"):null;}
  function catchUpFinal(){return typeof window.backgroundProgressCatchUpFinalPolicy==="function"?window.backgroundProgressCatchUpFinalPolicy("calamity"):null;}
  function structuredDuration(result){return typeof window.structuredCombatPresentationDurationMs==="function"?Math.max(0,Number(window.structuredCombatPresentationDurationMs(result))||0):0;}
  async function consumeCatchUpDelay(ms){
@@ -207,15 +206,15 @@
      ui.finalRun=battle.run;
      ui.displayBattleNumber=Math.max(1,Number(battle.battleNumber)||1);
      ui.phase="combat";
-     const fast=fastCatchUp();
-     const policy=fast?catchUpStep():null;
+     const policy=battle?.presentationPolicy||null;
+     const fast=policy?.fastCatchUp===true;
      if(fast){
       if(policy?.shouldPresentBattle){
        primeDisplay(battle.result);render();
        await animateBattle(battle);
       }else{
-       await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
-       if(policy?.shouldRefreshUi)refreshCatchUpUi(battle.result);
+       if(!battle.ended)await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
+       if(policy?.shouldRefreshUi&&!battle.ended)refreshCatchUpUi(battle.result);
       }
       if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }else{
@@ -318,6 +317,7 @@
  window.CALAMITY_STRUCTURED_PRESENTATION_VERSION=2;
  window.CALAMITY_BACKGROUND_PRESENTATION_VERSION=1;
  window.CALAMITY_FAST_CATCH_UP_UI_VERSION=1;
+ window.CALAMITY_TERMINAL_FAST_CATCH_UP_VERSION=1;
  window.CALAMITY_MINIMAL_MODE_VERSION=MINIMAL_VERSION;
  registerMinimal();
 })();
