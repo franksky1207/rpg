@@ -220,6 +220,7 @@
   return Object.freeze({version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,resultContextVersion:RESULT_CONTEXT_VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
  }
  function installIntegration(){
+  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function")window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>{clearResult();});
   const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
   if(typeof baseHtml!=="function")return false;
   const wrapped=function(){
