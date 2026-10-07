@@ -116,9 +116,10 @@
   if(markIsMaxed)calamityEntry.currentHp=null;
   if(typeof window.restorePlayerHp==="function")window.restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
-  if(options.save!==false&&typeof save==="function")save(false);
+  const checkpointSaved=options.save!==false&&typeof save==="function"?save(false)!==false:false;
   return {
    calamityId:def.id,
+   checkpointSaved,
    win:combat.win===true,
    currentHp:combat.win?maxHp(id):calamityEntry.currentHp,
    maxHp:maxHp(id),
