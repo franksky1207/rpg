@@ -16,7 +16,7 @@
  function thirdWorldStoryId(id){
   const key=typeof id==="string"?id:"";
   if(!key)return false;
-  if(typeof window.thirdWorldStoryTriggerDescriptor==="function")return !!window.thirdWorldStoryTriggerDescriptor(key);
+  if(typeof window.thirdWorldStoryTriggerDescriptor==="function"&&window.thirdWorldStoryTriggerDescriptor(key))return true;
   return key.startsWith(THIRD_WORLD_STORY_PREFIX);
  }
  function canonicalThirdWorldStoryIds(){return typeof window.thirdWorldStoryTriggerDescriptors==="function"?new Set(Array.from(window.thirdWorldStoryTriggerDescriptors()).map(x=>String(x?.storyId||x?.id||"")).filter(Boolean)):null;}
