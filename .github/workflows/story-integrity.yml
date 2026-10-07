@@ -51,6 +51,8 @@ jobs:
         run: node tests/story/reincarnation-three-era-batch4-closure.js
       - name: Run legacy W3 Story migration regressions
         run: node tests/story/legacy-thirdworld.js
+      - name: Run Story migration and W3 completion optimization Batch1
+        run: node tests/story/optimization-batch1-history-safety.js
       - name: Upload story integrity diagnostics
         if: always()
         uses: actions/upload-artifact@v4
