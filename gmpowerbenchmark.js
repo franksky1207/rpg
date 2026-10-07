@@ -166,7 +166,11 @@
    return [type,it?{name:String(it.name||""),level:whole(it.level,1),q:whole(it.q,0,5),world:Number(it.world)===2?2:1}:null];
   }));
   const civilizationLevel=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  const breakthroughLevel=whole(character?.breakthroughLevel??(typeof window.gmTestBreakthroughLevelValue==="function"?window.gmTestBreakthroughLevelValue():0),0);
+  const breakthroughSnapshot=typeof window.gmTestBreakthroughSnapshot==="function"?window.gmTestBreakthroughSnapshot():{};
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:Number(character?.world)===2?2:1,civilizationLevel}):1;
+  const finalDamageSnapshot=typeof window.gmTestFinalDamageSnapshot==="function"?window.gmTestFinalDamageSnapshot(Number(character?.world)===2?2:1,civilizationLevel,breakthroughLevel):null;
+  if(!finalDamageSnapshot)throw new Error("GM benchmark final damage owner unavailable.");
   MODEL.snapshot={
    capturedAt:Date.now(),
    characterWorld:Number(character?.world)===2?2:1,
@@ -176,6 +180,10 @@
    vipPoints:0,
    stats:{hp:whole(stats.hp,1),atk:whole(stats.atk,1),def:whole(stats.def,0),crit:one(stats.crit),dodge:one(stats.dodge)},
    civilizationLevel,civilizationDamageMultiplier,
+   breakthroughLevel,
+   breakthroughEquipmentBonusPercent:Number(breakthroughSnapshot?.equipmentBonusPercent)||0,
+   breakthroughFinalDamageAdd:Number(breakthroughSnapshot?.finalDamageAdd)||0,
+   finalDamageMultiplier:Number(finalDamageSnapshot.multiplier)||1,
    specs,marks,enhancements,equipment
   };
   return MODEL.snapshot;
@@ -294,7 +302,7 @@
    '<div style="margin-top:9px">'+(s.characterWorld===2?"宇宙紀元角色":"銀河紀元角色")+'｜Lv.'+s.level+'　VIP'+s.vipLevel+'｜'+(s.equipmentSource==="synced"?"正式實穿裝備":"同級神話預測裝備")+'</div>'+
    '<div style="margin-top:6px"><b>HP '+fmt(st.hp)+'</b>　ATK '+fmt(st.atk)+'　DEF '+fmt(st.def)+'　暴擊 '+st.crit+'%　閃避 '+st.dodge+'%</div>'+
    '<details style="margin-top:9px"><summary>養成狀態</summary><div class="muted" style="margin-top:7px;line-height:1.6">'+
-   '<div>'+enhancementText(s)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+civilizationText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
+   '<div>'+enhancementText(s)+'</div><div>突破｜Lv.'+whole(s.breakthroughLevel,0)+'｜裝備 HP／ATK／DEF +'+one(s.breakthroughEquipmentBonusPercent)+'%｜最終傷害 +'+one((Number(s.breakthroughFinalDamageAdd)||0)*100)+'%</div><div>總最終傷害倍率｜×'+Number(s.finalDamageMultiplier||1).toFixed(2)+'</div><div>'+specText(s)+'</div><div>經濟專精｜'+benchmarkSpecializationEconomyText(s)+'</div><div>'+civilizationText(s)+'</div><div>'+markText(s)+'</div><div>'+equipmentText(s)+'</div></div></details></div>';
  }
  function sourceOptions(selected){
   const rows=benchmarkWorld()===2?[["selected","目前選擇怪物"],["custom","自訂"]]:[["selected","目前選擇怪物"],["normal","本地圖最高普通怪"],["elite","本地圖菁英"],["boss","本地圖 Boss"],["custom","自訂"]];
@@ -338,7 +346,7 @@
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
   await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:benchmarkWorld()===2?Number(s.civilizationDamageMultiplier)||1:1});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
     if(ev.type==="drain"){drains++;return;}
@@ -372,7 +380,7 @@
   let totalTurns=0,totalLoss=0,landed=0,min=Infinity,max=0,dodges=0,crits=0,shield=0,absorptions=0,counters=0,backlash=0,indomitable=0,capped=0;
   await runBatched(runs,()=>{
    const e={name:"承傷木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:targetAtk,def:Math.max(0,num(base&&base.def,0)),crit:Math.max(0,num(base&&base.crit,0)),dodge:Math.max(0,num(base&&base.dodge,0))};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    totalTurns+=result.turns;if(result.hp>0)capped++;
    (result.events||[]).forEach(ev=>{
     if(ev.type==="dodge"&&ev.target==="player"){dodges++;return;}
@@ -420,7 +428,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -524,7 +532,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.civilizationDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -606,7 +614,7 @@
   return {special:externalResult("gmSpecialBatchResultSnapshot"),bounty:externalResult("gmBountyTestResultSnapshot"),arena:externalResult("gmArena5ResultSnapshot"),void:externalResult("gmVoidMirageTestResultSnapshot"),mirror:externalResult("gmMirrorTestResultSnapshot"),calamity1:externalResult("gmCalamityTestResultSnapshot"),calamity2:externalResult("gmSecondWorldCalamityTestResultSnapshot")};
  }
  function testedModeCount(results){let count=(MODEL.outputResult||MODEL.defenseResult||MODEL.combatResult)?1:0;if(results.special)count++;if(results.bounty)count++;if(results.arena)count++;if(results.void)count++;if(results.mirror)count++;if(results.calamity1||results.calamity2)count++;return count;}
- function characterSummaryLines(s){const st=s.stats||{};return ["【角色測試設定】","角色來源："+(s.equipmentSource==="synced"?"同步正式角色／實穿裝備":"GM 預測角色／同級神話裝備"),"角色紀元："+(s.characterWorld===2?"宇宙紀元":"銀河紀元")+"｜Lv."+s.level+"｜VIP"+s.vipLevel,"能力：HP "+fmt(st.hp)+"｜ATK "+fmt(st.atk)+"｜DEF "+fmt(st.def)+"｜暴擊 "+one(st.crit)+"%｜閃避 "+one(st.dodge)+"%","強化："+enhancementText(s),"專精："+specText(s),"印記："+markText(s),"文明等級：Lv."+whole(s.civilizationLevel,0,10)+"｜宇宙紀元最終傷害 ×"+Number(s.civilizationDamageMultiplier||1).toFixed(2),"裝備："+equipmentText(s)];}
+ function characterSummaryLines(s){const st=s.stats||{};return ["【角色測試設定】","角色來源："+(s.equipmentSource==="synced"?"同步正式角色／實穿裝備":"GM 預測角色／同級神話裝備"),"角色紀元："+(s.characterWorld===2?"宇宙紀元":"銀河紀元")+"｜Lv."+s.level+"｜VIP"+s.vipLevel+"｜突破 Lv."+whole(s.breakthroughLevel,0),"能力：HP "+fmt(st.hp)+"｜ATK "+fmt(st.atk)+"｜DEF "+fmt(st.def)+"｜暴擊 "+one(st.crit)+"%｜閃避 "+one(st.dodge)+"%","強化："+enhancementText(s),"突破：Lv."+whole(s.breakthroughLevel,0)+"｜裝備 HP／ATK／DEF +"+one(s.breakthroughEquipmentBonusPercent)+"%｜最終傷害 +"+one((Number(s.breakthroughFinalDamageAdd)||0)*100)+"%","專精："+specText(s),"印記："+markText(s),"文明等級：Lv."+whole(s.civilizationLevel,0,10)+"｜文明最終傷害 ×"+Number(s.civilizationDamageMultiplier||1).toFixed(2),"總最終傷害倍率：×"+Number(s.finalDamageMultiplier||1).toFixed(2),"裝備："+equipmentText(s)];}
  function appendMapSummary(lines){
   const enemy=benchmarkSelectedEnemy(),cmb=MODEL.combatResult;if(!MODEL.outputResult&&!MODEL.defenseResult&&!cmb)return;
   lines.push("");lines.push("【"+benchmarkWorldLabel()+"・地圖怪】");if(enemy)lines.push("目標：Lv."+enemy.level+" "+enemy.name+"（"+(KIND_LABELS[enemy.kind]||enemy.kind)+"）｜測試量 "+MODEL.runs);
@@ -639,7 +647,7 @@
   const s=snapshot(),r=collectedModeResults(),count=testedModeCount(r),tested=[];
   if(MODEL.outputResult||MODEL.defenseResult||MODEL.combatResult)tested.push("地圖怪");if(r.special)tested.push("特殊怪");if(r.bounty)tested.push("懸賞");if(r.arena)tested.push("競技場");if(r.void)tested.push("虛空");if(r.mirror)tested.push("鏡像");if(r.calamity1||r.calamity2)tested.push("災厄");
   return '<div id="gmPowerBenchmarkUnifiedSummary" class="item"><div class="gmpb-title"><b>統一測試摘要</b><span class="muted">只收錄本次實際跑過的模式，可直接貼給 ChatGPT 分析平衡</span></div>'+
-   '<div class="gmpb-summary-main">'+metric("測試角色","Lv."+s.level+" / VIP"+s.vipLevel)+metric("角色來源",s.equipmentSource==="synced"?"正式角色同步":"神話預測裝備")+metric("已測模式",count+" / 7")+metric("包含內容",tested.length?tested.join("、"):"尚未測試")+metric("文明等級","Lv."+s.civilizationLevel)+metric("角色紀元",s.characterWorld===2?"宇宙紀元":"銀河紀元")+'</div>'+
+   '<div class="gmpb-summary-main">'+metric("測試角色","Lv."+s.level+" / VIP"+s.vipLevel+" / 突破"+whole(s.breakthroughLevel,0))+metric("角色來源",s.equipmentSource==="synced"?"正式角色同步":"神話預測裝備")+metric("已測模式",count+" / 7")+metric("包含內容",tested.length?tested.join("、"):"尚未測試")+metric("文明等級","Lv."+s.civilizationLevel)+metric("角色紀元",s.characterWorld===2?"宇宙紀元":"銀河紀元")+'</div>'+
    '<div class="gmpb-actions"><button class="btn blue" type="button" onclick="gmPowerBenchmarkCopySummary()">複製測試摘要</button><button class="btn" type="button" onclick="gmPowerBenchmarkClearAllResults()">清除全部測試結果</button></div>'+
    '<details style="margin-top:8px"><summary>查看純文字摘要</summary><div class="gmpb-summary-text">'+summaryText().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</div></details></div>';
  }
