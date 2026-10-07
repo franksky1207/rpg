@@ -70,7 +70,8 @@
   const pendingRaw=typeof p.pendingStory==="string"&&p.pendingStory?p.pendingStory:null;
   const pending=pendingRaw&&(!canValidateReferences||Object.prototype.hasOwnProperty.call(stories,pendingRaw))?pendingRaw:null;
   if(p.pendingStory!==pending){
-   window.LAST_STORY_PENDING_MIGRATION_REPAIR=Object.freeze({version:STORY_PENDING_MIGRATION_DIAGNOSTICS_VERSION,originalId:pendingRaw,reason:"unrecognized-after-catalog-ready",catalogReady:canValidateReferences});
+   const retired=pendingRaw&&canValidateReferences&&!Object.prototype.hasOwnProperty.call(stories,pendingRaw);
+   window.LAST_STORY_PENDING_MIGRATION_REPAIR=Object.freeze({version:STORY_PENDING_MIGRATION_DIAGNOSTICS_VERSION,originalId:pendingRaw,reason:retired?"unrecognized-after-catalog-ready":"pending-field-normalization",catalogReady:canValidateReferences});
    p.pendingStory=pending;changed=true;
   }
 
