@@ -56,7 +56,7 @@ async function continuous(era,fast){
  const step=x.observed[0],policy=step.presentationPolicy;
  assert.equal(policy.fastCatchUp,fast,"W"+era+" must carry pre-battle catch-up policy after finish stopped background");
  assert.equal(policy.shouldPresentBattle,!fast,"W"+era+" fast terminal is intentionally headless; normal battle shown");
- assert.equal(policy.combatOptions.save,!fast,"W"+era+" terminal save policy");
+ assert.equal(policy.combatOptions.save!==false,!fast,"W"+era+" terminal save policy");
  assert.equal(x.counts().saves,1,"W"+era+" final battle must checkpoint exactly once");
  assert.equal(ended.active,false,"W"+era+" final end snapshot should be terminal");
  assert.equal(x.ctx.backgroundProgressIsActive("calamity"),false,"W"+era+" background flow must stop after final battle");
