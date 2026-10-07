@@ -1092,7 +1092,7 @@ d1cd0a4a5becf753cbd45beb578236780822a1cc
 ### 五、CI、已知風險與待辦邊界
 
 - 本對話**沒有未完成的已核准工程批次**；劇情四批、後續安全／災厄／UI 三批均完成。後續剩正式遊玩實測、效能與平衡觀察；不因歷史編號再自動開一批。
-- 最新已驗證 gameplay HEAD `4e0c521940c915972a4f6a9ddb15d7cc80951e58`：Runtime Integrity **#2155 success**（含 Chrome browser smoke、新災厄測試、docs integrity），GitHub Pages **#6124 success**；Story Integrity **#1111 success** 位於前一 gameplay HEAD `a54691cf...`。之後只修改 Runtime 靜態契約測試；**不要誤稱 Story #1111 為最終 SHA 的 exact-HEAD success**。
+- 歷史驗證紀錄：gameplay HEAD `4e0c521940c915972a4f6a9ddb15d7cc80951e58` 曾有 Runtime Integrity **#2155 success** 與 GitHub Pages **#6124 success**；Story Integrity **#1111 success** 對應更早的 `a54691cf...`。這些都不是 2026-10-08 current HEAD 的 exact-HEAD 證據，只供追溯，不得宣稱為目前 CI 狀態。
 - 尚無經實機存檔重現而確認的本批新 Bug；VM／CI 模擬不等同所有玩家設備的實際操作。若用戶回報現場問題，請先讀 `main` 與明確的實際數據／存檔，再查相關 owner，勿先宣稱無問題。
 - 此次**只更新交接 Markdown，不修改任何正式 JS、CSS、Schema、GM、UI 或測試**；GitHub workflow 若只因文件變更而重新執行，也應比對新的 exact HEAD 狀態。
 
