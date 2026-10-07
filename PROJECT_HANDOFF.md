@@ -51,7 +51,7 @@ Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
 目前已排定工程                                          ✅ 全部完成
 ```
 
-**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖、第2批第一／二紀元正式劇情觸發隔離、第3批高維正式劇情與本輪戰鬥完成判定隔離已完成；第4批整體回歸待施工。**
+**劇情／轉生隔離新工程第1～4批已全部完成：戰線紀錄唯讀解鎖、三紀元轉生後劇情觸發分流、高維本輪10王戰鬥完成判定、Schema17 舊檔與跨紀元重新載入整體回歸均已封箱。**
 
 ---
 
@@ -909,7 +909,7 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**目前已定案劇情／轉生隔離共4批：第1～3批已完成（戰線紀錄唯讀、W1/W2正式觸發隔離、W3 Story／本輪戰鬥完成隔離）；第4批整體回歸仍待施工。其他歷史工程維持封箱。**
+**劇情／轉生隔離第1～4批已全部完成；目前沒有已定案待施工批次。其他歷史工程維持封箱。**
 
 現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
@@ -946,8 +946,20 @@ GitHub Pages #6038 = success
 - 轉生輪 `thirdWorld.story.introSeen=false`、`thirdWorld.story.finalSeen=false` 表示**本輪不重新播放**，不能從永久故事歷史推導；`thirdWorld.completed` **只由本輪10名高維存在正式血量全歸零**推導，並於接受 W3 戰鬥 settlement 時同步；即使 `story.unlockedStage` 因舊檔而落後也不阻擋 Boss 完成判定。不得用 `completedStories` 的歷史 Final 當成本輪通關條件。
 - 高維10王、永久血量、維度之弦／核心、突破／轉生資格與正式戰鬥公式未改動。轉生輪達到本輪十王全滅時 `thirdWorld.completed` 可正常成立，但 `finalSeen` 仍不被冒充為重播過 Final。
 - 新增 `tests/story/reincarnation-higher-dimensional-batch3.js`：首輪流程、轉生1／2／3／7次、歷史11篇全保留、舊 W3 pending 清理、W3 queue／drain／formal completeStory 阻擋、Boss 未打與全部打完的區別、Final gate 不得繞過、零自動播放及無額外 Story save；加入 Story Integrity CI。生產 JS cache-bust 已更新。
-- **第4批三紀元舊檔相容、正式流程與端對端封箱尚未施工。**
+- **第4批三紀元舊檔、跨紀元與重新載入回歸已完成並納入 Story／Runtime Integrity。**
 
+
+
+## 2026-10-07 劇情／轉生隔離：第4批整體封箱已完成
+
+- 新增 `tests/story/reincarnation-three-era-batch4-closure.js`，以正式 `storymigration.js`、`storyprogress.js`、`storyrecordtabs.js` 三個 owner 組成實際 VM 整合測試；不是只比對字串。
+- 覆蓋首輪 count=0 與轉生 count=1／2／3／8：在轉生後不打 Boss，銀河101篇、宇宙100篇、高維11篇在進入對應紀元後即由唯讀戰線紀錄開放；首輪 W3 未完成故事仍鎖定且可照原規則 queue。
+- 模擬 Schema17 既有欄位結構與 JSON 存檔／重新載入：W1/W2/W3 舊 `pendingStory` 清理、Story resume／reload 不自動播放、切換紀元後回顧前紀元仍有效、`completedStories` 永久歷史不被覆寫、不額外產生 Story formal save。
+- 高維 Final 只以 `generic` 生命周期由戰線紀錄回顧，沒有 `onComplete`；未擊敗本輪10王時 `thirdWorld.completed=false`，十王全滅時即使 `story.unlockedStage=0` 也完成正式戰鬥判定，且不設定 `finalSeen`、不自動 queue Final。
+- 宇宙首殺不再迫使轉生後連戰切為單場；正式 Boss settlement 照常運作，Story 只是紀錄展示，不干預養成、戰鬥、世界進入與轉生資格。
+- 封箱 regression 已加入 `.github/workflows/story-integrity.yml` 與 `.github/workflows/runtime-integrity.yml`（Schema17相容矩陣後執行），避免後續非 Story 程式修改造成倒退。
+- 本批只動測試、CI 與本交接檔；前3批 production 行為已由 latest main 確認，不需重改；沒有修改正式 Boss/Story/Save JS、不需 index cache-bust，Save Schema 仍為17。
+- 注意：`PROJECT_HANDOFF.md` 為狀態索引，不取代 current `main` 正式 owner；後續改動仍需 fresh-read 並核對 exact HEAD Actions。
 
 # 25. 下一個對話如何接手
 
