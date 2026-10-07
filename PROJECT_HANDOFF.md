@@ -1062,6 +1062,17 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 使用者表示目前只有本人測試，**不要另外新增舊存檔災厄殘餘 HP 百分比換算或專用 migration**；既有 normalizer 仍照新上限 clamp 舊數值即可，不升 Save Schema17。
 - 先前「銀河第10階500萬」等數字均視為**歷史測試基準、已失效**；之後平衡與 GM 實測應以最新 main 的250萬為準。
 
+## 2026-10-08 GM 戰力基準／突破最終傷害修正
+
+- 發現「同步正式角色 → GM 角色能力測試 → 戰力基準測試」原本只把突破對裝備 HP／ATK／DEF 的加成帶入 `gmTestPlayerStats()`，但多個 GM 戰鬥模式仍只傳文明倍率，**漏掉永久突破每級 +5% 的正式 final damage layer**；戰力基準純文字摘要也沒有列出突破等級。
+- `vipgm.js` 新增 GM 測試共用 `gmTestFinalDamageSnapshot()`／`gmTestFinalDamageMultiplier()`，**直接委派正式 `formalPlayerFinalDamageSnapshot()`**；不得在 GM 各模式另寫 `突破×5%` 第二套公式。
+- `gmpowerbenchmark.js` snapshot 現保存 `breakthroughLevel`、突破裝備加成、突破 final-damage add、`finalDamageMultiplier`；銀河／宇宙地圖怪、輸出診斷及戰力基準實戰一律使用總 final multiplier。摘要新增「突破 Lv.」「突破裝備加成／最終傷害」與「總最終傷害倍率」。
+- `gmpowerbenchmarkworldphase.js` 高維 adapter 同樣使用 GM 共用正式 final-damage owner；高維角色快照文字會列突破與總 final multiplier。
+- 同步修正 GM 模式：銀河／宇宙文明災厄、特殊怪、競技場、懸賞／虛空等 dungeon GM simulation，以及鏡像 GM snapshot；鏡像 snapshot 現明確攜帶 `breakthroughLevel`，由既有 mirror formal final-damage owner 正規化。
+- 文明倍率欄位仍保留作為「文明單獨加成」的診斷值；真正戰鬥使用 `finalDamageMultiplier = 1 + civilizationAdd + breakthroughAdd` 的正式 owner 結果。**不是把兩個 multiplier 相乘。**
+- 更新 `tests/runtime/gm-character-breakthrough-batch7-2-integrity.js`：鎖住 GM final owner＝正式 owner、戰力基準 snapshot 必須保存突破、B25 銀河總 final damage 為 ×2.25，且摘要必須顯示突破與總倍率。
+- 本批不改正式角色突破公式、不改文明公式、不改 Save Schema17；只修 GM sandbox／benchmark 對正式 owner 的引用與顯示。相關 GM JS 已更新 `index.html` cache-bust。
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
