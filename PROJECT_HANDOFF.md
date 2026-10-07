@@ -1054,6 +1054,14 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 尚無經實機存檔重現而確認的本批新 Bug；VM／CI 模擬不等同所有玩家設備的實際操作。若用戶回報現場問題，請先讀 `main` 與明確的實際數據／存檔，再查相關 owner，勿先宣稱無問題。
 - 此次**只更新交接 Markdown，不修改任何正式 JS、CSS、Schema、GM、UI 或測試**；GitHub workflow 若只因文件變更而重新執行，也應比對新的 exact HEAD 狀態。
 
+## 2026-10-07 銀河紀元文明災厄 HP 平衡調整（本次定案）
+
+- 使用者確認**直接將銀河紀元 10 階災厄 HP 全部砍半**，首輪與轉生輪共用：正式唯一血量 owner `calamitystate.js` 的 `CALAMITY_HP_PER_LEVEL` 由 `500000` 調為 **`250000`**；血量公式 **`HP = 250,000 × 階級`**，第1階 250,000，第10階 2,500,000。
+- `calamitycore.js` 同步對齊防禦性備援值，`calamitystateintegrity.js` 與 `calamitycoreintegrity.js` 同步修改端點、敵方戰鬥數值與 normalization clamp 測試；`index.html` 已更新上述 JS 的 cache-bust。
+- **僅銀河 HP 調整**：銀河印記首次取得＋後續30次完整擊殺（合計31次）、ATK／DEF／暴擊／閃避、解鎖、Fast Catch-up、結算與存檔流程皆維持不變；宇宙紀元災厄仍維持 `1,000,000 + (階級−1)×200,000`、每隻30次完整擊殺。
+- 使用者表示目前只有本人測試，**不要另外新增舊存檔災厄殘餘 HP 百分比換算或專用 migration**；既有 normalizer 仍照新上限 clamp 舊數值即可，不升 Save Schema17。
+- 先前「銀河第10階500萬」等數字均視為**歷史測試基準、已失效**；之後平衡與 GM 實測應以最新 main 的250萬為準。
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
