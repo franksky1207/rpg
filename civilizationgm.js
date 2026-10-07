@@ -47,7 +47,8 @@
  window.gmUseCurrentCivilizationTestStatus=function(refresh=true){
   const current=entered()&&typeof window.civilizationLevel==="function"?window.civilizationLevel(state):0;
   window.gmTestCivilizationLevel=clamp(current);
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh&&typeof window.gmNotifyTestConfigurationChanged==="function")window.gmNotifyTestConfigurationChanged({reason:"civilization-sync",refresh:true});
+  else if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testLevel();
  };
 
