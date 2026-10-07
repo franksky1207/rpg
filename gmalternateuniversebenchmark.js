@@ -6,6 +6,7 @@
  const OPTIMIZATION_VERSION=1;
  const FORMAL_STATE_GUARD_VERSION=1;
  const PREPARED_CONTEXT_VERSION=1;
+ const RESULT_CONTEXT_VERSION=1;
  const BATCH_SIZE=25;
  const model={depth:1,runs:100,busy:false,result:null,diagnostics:null};
 
@@ -117,13 +118,15 @@
   return Object.freeze({ok:true,pair:Object.freeze(pair.slice()),ctx,enemy,combat,completed,win,finite,hpBounds,actionSafety:combat.actionBudgetReached===true||combat.chainBudgetReached===true,playerEnd,enemyEnd,turns:Math.max(0,whole(combat.turns,0)),playerDamage,enemyDamage,playerCrits,enemyCrits,dodges,berserkTriggers,playerFinalDamageMultiplier:num(resolved?.playerFinalDamageMultiplier,1)});
  }
  function runOne(depth,traits=null,{rng=Math.random}={}){return runOnePrepared(prepareContext(depth),traits,{rng});}
- function aggregateStart(depth,runs,ctx,enemy){return {version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,depth,runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),traitCounts:{},traitPairCounts:{},formalStateStable:true};}
+ function aggregateStart(depth,runs,ctx,enemy,testContext=null){return {version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,resultContextVersion:RESULT_CONTEXT_VERSION,testContext:clone(testContext),depth,runs,completed:0,wins:0,failed:0,turns:0,playerEndPct:0,enemyEndPct:0,playerDamage:0,enemyDamage:0,playerCrits:0,enemyCrits:0,dodges:0,berserkTriggers:0,actionSafety:0,invalid:0,player:clone(ctx?.player),character:clone(ctx?.character),world:ctx?.world||1,civilizationLevel:ctx?.civilizationLevel||0,breakthroughLevel:ctx?.breakthroughLevel||0,enemy:clone(enemy),traitCounts:{},traitPairCounts:{},formalStateStable:true,stale:false};}
  async function runBenchmark(options={}){
   const depth=whole(options.depth??model.depth,1,maxDepth()),runs=[100,500,1000].includes(Number(options.runs))?Number(options.runs):100,fixedPair=options.traits?canonicalPair(options.traits?.[0],options.traits?.[1]):null;
   if(options.traits&&!fixedPair)return {ok:false,reason:"invalid-trait-pair"};
   const prepared=prepareContext(depth);if(!prepared.ok)return {ok:false,reason:prepared.reason};
-  const formalBefore=formalStateGuard(),out=aggregateStart(depth,runs,prepared.ctx,prepared.baseEnemy);
+  const testContext=typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null,startRevision=Math.max(0,Math.floor(Number(testContext?.revision)||0));
+  const formalBefore=formalStateGuard(),out=aggregateStart(depth,runs,prepared.ctx,prepared.baseEnemy,testContext);
   for(let i=0;i<runs;i++){
+   if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){out.stale=true;break;}
    const row=runOnePrepared(prepared,fixedPair,{rng:Math.random});
    if(!row.ok){out.failed++;out.invalid++;continue;}
    const pairKey=row.pair.join("+");out.traitPairCounts[pairKey]=(out.traitPairCounts[pairKey]||0)+1;row.pair.forEach(id=>{out.traitCounts[id]=(out.traitCounts[id]||0)+1;});
@@ -135,10 +138,11 @@
    if(!row.finite||!row.hpBounds)out.invalid++;
    if((i+1)%BATCH_SIZE===0&&i+1<runs)await new Promise(resolve=>setTimeout(resolve,0));
   }
+  if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision)out.stale=true;
   const formalAfter=formalStateGuard();out.formalStateStable=guardStable(formalBefore,formalAfter);out.formalStateFingerprintBefore=formalBefore.fingerprint;out.formalStateFingerprintAfter=formalAfter.fingerprint;
   const divisor=Math.max(1,out.completed||runs);
   out.winRate=one(out.wins/runs*100);out.avgTurns=one(out.turns/divisor);out.avgPlayerEndPct=one(out.playerEndPct/runs);out.avgEnemyEndPct=one(out.enemyEndPct/runs);out.avgPlayerDamage=Math.round(out.playerDamage/runs);out.avgEnemyDamage=Math.round(out.enemyDamage/runs);
-  out.passed=out.invalid===0&&out.actionSafety===0&&out.formalStateStable&&out.completed===runs;
+  out.passed=!out.stale&&out.invalid===0&&out.actionSafety===0&&out.formalStateStable&&out.completed===runs;
   return Object.freeze(out);
  }
  function diagnosticPair(prepared,pair,index){
@@ -172,7 +176,7 @@
  }
  async function runSelected(){
   if(model.busy)return false;model.busy=true;if(typeof render==="function")render();await new Promise(resolve=>setTimeout(resolve,0));
-  try{model.result=await runBenchmark({depth:model.depth,runs:model.runs});return model.result;}
+  try{const result=await runBenchmark({depth:model.depth,runs:model.runs});model.result=result?.stale?null:result;return result;}
   finally{model.busy=false;if(typeof render==="function")render();}
  }
  function clearResult({diagnostics=true}={}){model.result=null;if(diagnostics)model.diagnostics=null;return true;}
@@ -212,7 +216,8 @@
   const sample=ids.length>=2?enemyFor(1,[ids[1],ids[0]]):null;if(ids.length>=2&&(!sample||sample.traits[0]!==ids[0]||sample.traits[1]!==ids[1]))errors.push({code:"CANONICAL_ORDER"});
   const guardA=formalStateFingerprint({a:1,b:{c:2}}),guardB=formalStateFingerprint({a:1,b:{c:3}});if(guardA.fingerprint===guardB.fingerprint)errors.push({code:"FORMAL_STATE_GUARD_COLLISION_PROBE"});
   const prepared=prepareContext(1);if(!prepared.ok||prepared.version!==PREPARED_CONTEXT_VERSION)errors.push({code:"PREPARED_CONTEXT",actual:prepared});
-  return Object.freeze({version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
+  if(RESULT_CONTEXT_VERSION!==1||typeof window.gmTestContextSnapshot!=="function")errors.push({code:"RESULT_CONTEXT_OWNER"});
+  return Object.freeze({version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,resultContextVersion:RESULT_CONTEXT_VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
  }
  function installIntegration(){
   const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
@@ -258,6 +263,7 @@
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_OPTIMIZATION_VERSION=OPTIMIZATION_VERSION;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION=FORMAL_STATE_GUARD_VERSION;
  window.GM_ALTERNATE_UNIVERSE_BENCHMARK_PREPARED_CONTEXT_VERSION=PREPARED_CONTEXT_VERSION;
+ window.GM_ALTERNATE_UNIVERSE_BENCHMARK_RESULT_CONTEXT_VERSION=RESULT_CONTEXT_VERSION;
  window.gmAlternateUniverseTraitPairs=()=>allPairs().map(pair=>pair.slice());
  window.gmAlternateUniverseBenchmarkEnemy=(depth,traits)=>clone(enemyFor(depth,traits||rollPair()));
  window.gmAlternateUniverseBenchmarkFormalStateFingerprint=formalStateFingerprint;
