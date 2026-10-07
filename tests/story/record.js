@@ -84,6 +84,7 @@ assert(source.includes("STORY_RECORD_RENDER_SET_REUSE_VERSION=1"),'單次 render
 assert(!source.includes("Number.isInteger(count)"),'戰線紀錄不得再自行建立轉生判定');
 const oldMalformed=buildArchive({count:2,second:true});
 oldMalformed.archiveState.reincarnation.count="2";
+oldMalformed.ctx.setStoryRecordEraView("galaxy-review");
 assert((oldMalformed.ctx.storyRecordPageHtml().match(/story-record-entry/g)||[]).length===101,'正式 lifecycle owner 統一解讀可規範化的舊數字轉生資料');
 const copy=buildArchive({count:2,second:true});
 assert(copy.ctx.storyRecordPageHtml().includes('文明歷史已永久歸檔'),'轉生後 UI 應採永久歷史文案');
