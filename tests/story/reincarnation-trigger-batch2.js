@@ -47,7 +47,7 @@ for(const count of [1,2,3,7]){
  source.pendingStory=universeId;p.normalize(ctx.state);
  assert.equal(source.pendingStory,null,"W2 historic pending must be cleared on rerun load");
  source.pendingStory=higherId;p.normalize(ctx.state);
- assert.equal(source.pendingStory,higherId,"W3 pending stays untouched until Batch3");
+ assert.equal(source.pendingStory,null,"Batch3: reincarnated W3 pending must also be cleared without playback");
  assert.deepEqual(Array.from(source.completedStories),["earth-prologue"],"Rerun suppression must preserve legacy intro but not fabricate W1/W2 Boss history");
  assert.equal(log.storyOpen,0,"Rerun must not replay formal W1 or W2 story");
  assert.equal(ctx.state.thirdWorld.entered,false,"Rerun must not unlock W3");
