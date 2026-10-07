@@ -196,7 +196,7 @@
  };
  window.gmSecondWorldCalamityFullKillTest=async function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=await fullKill(d);
-  gmSecondWorldCalamityLastResult=data?{type:"full",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},attempts:data.attempts,totalDamage:data.totalDamage,totalTurns:data.totalTurns,remainingHp:data.remainingHp,completed:!!data.completed,civilizationLevel:testCiv()}:null;
+  gmSecondWorldCalamityLastResult=data?{type:"full",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},attempts:data.attempts,totalDamage:data.totalDamage,totalTurns:data.totalTurns,remainingHp:data.remainingHp,completed:!!data.completed,civilizationLevel:testCiv(),breakthroughLevel:typeof window.gmTestBreakthroughLevelValue==="function"?window.gmTestBreakthroughLevelValue():0,finalDamageMultiplier:typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(2,testCiv()):1}:null;
   testResultHtml=data?`<div class="notice"><b>${d.name}・完整擊殺沙盒</b><div class="stats" style="margin-top:10px"><div class="stat">結果<b>${data.completed?"完整擊殺":"安全上限"}</b></div><div class="stat">需要場次<b>${fmt(data.attempts)}</b></div><div class="stat">總傷害<b>${fmt(data.totalDamage)}</b></div><div class="stat">總回合<b>${fmt(data.totalTurns)}</b></div></div></div>`:'<div class="notice">測試失敗。</div>';
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
