@@ -230,14 +230,15 @@
    async onBattleComplete(step){
     ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
     const policy=step?.presentationPolicy||null;
-    const fast=policy?.fastCatchUp===true;
+    const uiDecision=window.calamityContinuousUiDecision(policy,step.ended);
+     const fast=uiDecision.fastCatchUp;
     if(fast){
-     if(policy?.shouldPresentBattle){primeDisplay(step.result);render();await animate(step.result);}
+     if(uiDecision.shouldPresentBattle){primeDisplay(step.result);render();await animate(step.result);}
      else{
-      if(!step.ended)await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
-      if(policy?.shouldRefreshUi&&!step.ended)refreshCatchUpUi(step.result);
+      if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
+      if(uiDecision.shouldRefreshUi)refreshCatchUpUi(step.result);
      }
-     if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+     if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }else{
      primeDisplay(step.result);render();await animate(step.result);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
