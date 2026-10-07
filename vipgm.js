@@ -3,6 +3,8 @@
  const GM_TEST_CHARACTER_SANDBOX_VERSION=2;
  const GM_UNBOUNDED_VIP_TEST_VERSION=1;
  const GM_TEST_BREAKTHROUGH_VERSION=1;
+ const GM_TEST_CONTEXT_OWNER_VERSION=1;
+ let gmTestContextRevision=0;
  window.gmTestVipLevel=0;
 
  function cloneValue(value){
@@ -105,6 +107,38 @@
   return {permanent:testBreakthrough(),equipmentBonusPercent:0,finalDamageAdd:0};
  }
 
+ function testContextSnapshot(){
+  const character=window.gmTestCharacterSnapshot();
+  const world=clampWorld(character?.world),civilizationLevel=typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
+  const breakthroughLevel=testBreakthrough(),finalDamage=typeof window.formalPlayerFinalDamageSnapshot==="function"
+   ?window.formalPlayerFinalDamageSnapshot({world,civilizationLevel,breakthroughLevel})
+   :{world,civilizationAdd:0,breakthroughLevel,breakthroughAdd:0,multiplier:1};
+  return cloneValue({
+   version:GM_TEST_CONTEXT_OWNER_VERSION,
+   revision:gmTestContextRevision,
+   capturedAt:Date.now(),
+   character,
+   vipLevel:testVip(),
+   breakthroughLevel,
+   enhancements:Object.fromEntries(enhancementSlots().map(type=>[type,window.gmTestEnhancementLevel(type)])),
+   specializations:typeof window.specializationLevelsSnapshot==="function"?window.specializationLevelsSnapshot(true):{},
+   civilizationLevel,
+   marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{},
+   stats:typeof window.gmTestPlayerStats==="function"?window.gmTestPlayerStats():null,
+   finalDamage
+  });
+ }
+ function notifyTestConfigurationChanged(options={}){
+  gmTestContextRevision++;
+  const invalidate=typeof window.gmPowerBenchmarkInvalidateTestContext==="function"
+   ?window.gmPowerBenchmarkInvalidateTestContext
+   :typeof window.gmPowerBenchmarkInvalidateSnapshot==="function"?window.gmPowerBenchmarkInvalidateSnapshot:null;
+  if(invalidate)invalidate({revision:gmTestContextRevision,reason:String(options.reason||"test-setting-change")});
+  if(options.refresh!==false&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(options.refreshBenchmark===true&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
+  return gmTestContextRevision;
+ }
+
  function equipmentLabel(type){
   return typeof window.gmEnhancementSlotLabel==="function"?window.gmEnhancementSlotLabel(type):({weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"}[type]||type);
  }
@@ -161,15 +195,12 @@
  };
  window.gmSetTestVipLevel=function(value,refresh=true){
   window.gmTestVipLevel=normalizeTestVip(value);
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"vip",refresh:true});
   return testVip();
  };
  window.gmSetTestBreakthroughLevel=function(value,refresh=true){
   window.gmTestBreakthroughLevel=normalizeTestBreakthrough(value);
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-  if(refresh&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
+  if(refresh)notifyTestConfigurationChanged({reason:"breakthrough",refresh:true,refreshBenchmark:true});
   return testBreakthrough();
  };
  window.gmUseCurrentBreakthroughTestStatus=function(refresh=true){
@@ -180,8 +211,7 @@
  window.gmSetTestEnhancement=function(type,value,refresh=true){
   if(!enhancementSlots().includes(type))return false;
   window.gmTestEnhancementLevels[type]=clampEnhancement(value);
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"enhancement",refresh:true});
   return true;
  };
  window.gmUseCurrentEnhancementTestStatus=function(refresh=true){
@@ -195,22 +225,19 @@
   let nextLevel=Math.floor(Number(window.gmTestLevel)||range.min);
   if(nextLevel<range.min||nextLevel>range.max)nextLevel=range.min;
   setTestCharacterBase(next,nextLevel,generateTestEquipment(next,nextLevel),"generated");
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"character-world",refresh:true});
   return window.gmTestWorld;
  };
  window.gmSetTestLevel=function(value,refresh=true){
   const lv=clampTestLevel(value);
   setTestCharacterBase(window.gmTestWorld,lv,generateTestEquipment(window.gmTestWorld,lv),"generated");
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"character-level",refresh:true});
   return window.gmTestLevel;
  };
  window.gmRegenerateTestEquipment=function(refresh=true){
   window.gmTestEquipment=generateTestEquipment(window.gmTestWorld,window.gmTestLevel);
   window.gmTestEquipmentSource="generated";
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh)notifyTestConfigurationChanged({reason:"equipment-regenerate",refresh:true});
   return cloneValue(window.gmTestEquipment);
  };
  window.gmTestCharacterSnapshot=function(){
@@ -241,9 +268,7 @@
   window.gmUseCurrentEnhancementTestStatus(false);
   if(typeof window.gmUseCurrentCivilizationTestStatus==="function")window.gmUseCurrentCivilizationTestStatus(false);
   if(typeof window.gmUseCurrentMarkTestStatus==="function")window.gmUseCurrentMarkTestStatus(false);
-  if(typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-  if(typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
+  notifyTestConfigurationChanged({reason:"sync-formal-character",refresh:true,refreshBenchmark:true});
   return {character:window.gmTestCharacterSnapshot(),vip:testVip(),breakthroughLevel:testBreakthrough(),specializations:{...(window.gmTestSpecializations||{})},enhancements:{...(window.gmTestEnhancementLevels||{})},civilizationLevel:typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0,marks:typeof window.markLevelsSnapshot==="function"?window.markLevelsSnapshot(true):{}};
  };
  window.gmTestEnhancementSlots=function(){return enhancementSlots();};
@@ -305,6 +330,10 @@
  window.GM_UNBOUNDED_VIP_TEST_VERSION=GM_UNBOUNDED_VIP_TEST_VERSION;
  window.GM_TEST_BREAKTHROUGH_VERSION=GM_TEST_BREAKTHROUGH_VERSION;
  window.GM_TEST_BREAKTHROUGH_FORMAL_OWNER_VERSION=1;
+ window.GM_TEST_CONTEXT_OWNER_VERSION=GM_TEST_CONTEXT_OWNER_VERSION;
+ window.gmTestContextSnapshot=testContextSnapshot;
+ window.gmTestContextRevision=function(){return gmTestContextRevision;};
+ window.gmNotifyTestConfigurationChanged=notifyTestConfigurationChanged;
  window.GM_TEST_FINAL_DAMAGE_FORMAL_OWNER_VERSION=1;
  window.GM_TEST_CHARACTER_EQUIPMENT_MODE_VERSION=1;
  window.GM_ENHANCEMENT_TEST_PIPELINE_VERSION=6;
