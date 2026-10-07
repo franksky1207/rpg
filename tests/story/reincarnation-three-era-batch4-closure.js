@@ -114,6 +114,7 @@ async function run(){
   assert.equal(recovered.ctx.state.thirdWorld.completed,false,"Reload after archived W3 entry must not complete conquest");
   recovered.ctx.state.thirdWorld.bosses.forEach(row=>row.currentHp=0);
   recovered.ctx.state.thirdWorld.story.unlockedStage=0;
+  recovered.ctx.reconcileThirdWorldRerunCombatCompletion(recovered.ctx.state);
   const combat=recovered.progress.consumeThirdWorldSettlement({ok:true,world:3,unlockedStoryStages:[]});
   assert.equal(combat.completion.completionReady,false,"Stage readiness snapshot is separate from true battle completion");
   assert.equal(recovered.ctx.state.thirdWorld.completed,true,"Rerun 10 bosses down must be reflected without Final/story stage");
