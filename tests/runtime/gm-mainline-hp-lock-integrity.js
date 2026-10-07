@@ -33,7 +33,8 @@ assert(/SECOND_WORLD_MAINLINE_HP_LOCK_SCOPE_VERSION=2/.test(universe),"宇宙主
 assert(/gmMainlineHpLockActive\("world2-mainline"\)/.test(universe),"宇宙正式鎖血必須只走共享 GM gate。");
 assert(/explicitHpLock=options\.lockPlayerFullHp===true/.test(universe),"宇宙 explicit test override 必須與正式 GM gate 分離命名。");
 assert(/GM_MAINLINE_HP_LOCK_MANAGEMENT_VERSION=1/.test(gmBackground),"GM 主線鎖血管理版本缺失。");
-assert(/civilization_frontline_gm_mainline_hp_lock_v1_/.test(gmBackground),"GM 主線鎖血必須沿用既有 v1 帳號本機 key。");
+assert(/civilization_frontline_gm_mainline_hp_lock_v1_/.test(gmDevicePreferences),"GM 主線鎖血必須由 runtime preference owner 沿用既有 v1 帳號本機 key。");
+assert(!/civilization_frontline_gm_mainline_hp_lock_v1_|civilization_frontline_gm_background_battle_v1_/.test(gmBackground),"GM 管理 UI 不得直接知道 runtime preference storage key。");
 assert(/gm-background-battle","gm-mainline-hp-lock","gm-combat-speed/.test(gmHub),"GM 管理排序必須為背景戰鬥 → 主線鎖血 → 戰鬥速度。");
 
 const excluded=[
