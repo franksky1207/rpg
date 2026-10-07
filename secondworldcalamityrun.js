@@ -1,10 +1,11 @@
 (function(){
  const VERSION=1;
  const SETTLEMENT_VERSION=1;
- const CONTINUOUS_VERSION=2;
+ const CONTINUOUS_VERSION=3;
  const TITLE_FIRST_KILL_VERSION=2;
  const GLOBAL_MUTEX_VERSION=1;
  const SHARED_INFRA_STRICT_VERSION=1;
+ const SHARED_BATTLE_PRESENTATION_POLICY_VERSION=1;
  const MANUAL_STOP_TERMINAL_VERSION=1;
  const BLOCKER_NAME="second-world-calamity-run";
  let activeRun=null;
@@ -174,13 +175,15 @@
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
   startBackground();
   while(activeRun?.active){
-   const previewPolicy=catchUpPreviewPolicy();
-   const fast=!!previewPolicy?.active;
-   const step=fightNext({...options,
-    save:fast?previewPolicy?.shouldCheckpoint===true:options.save,
-    logs:fast?previewPolicy?.shouldPresentBattle===true:options.logs,
-    preparePresentation:fast?previewPolicy?.shouldPresentBattle===true:options.preparePresentation
-   });
+   const infra=runInfra();
+   if(!infra||typeof infra.battlePresentationPlan!=="function"){
+    const run=finish("owner-missing");
+    if(onEnd)await onEnd(run);
+    return {ok:false,reason:"battle-presentation-owner-missing",run};
+   }
+   const presentationPlan=infra.battlePresentationPlan(options);
+   const step=fightNext({...options,...presentationPlan.combatOptions});
+   if(step&&typeof step==="object")step.presentationPolicy=presentationPlan;
    if(!step.ok){if(onEnd)await onEnd(step.run);return step;}
    if(onBattle)await onBattle(step);
    if(step.ended||!activeRun?.active){const run=step.run||runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:step.reason,result:step,run};}
@@ -227,6 +230,7 @@
  window.SECOND_WORLD_CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
  window.SECOND_WORLD_CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.SECOND_WORLD_CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
+ window.SECOND_WORLD_CALAMITY_SHARED_BATTLE_PRESENTATION_POLICY_VERSION=SHARED_BATTLE_PRESENTATION_POLICY_VERSION;
  window.buildSecondWorldCalamityEnemy=enemy;
  window.runSecondWorldCalamityCombat=runCombat;
  window.settleSecondWorldCalamityBattle=settle;
