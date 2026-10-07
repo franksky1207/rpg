@@ -2,7 +2,7 @@ const fs=require("fs"),vm=require("vm"),assert=require("assert");
 const backgroundSource=fs.readFileSync("backgroundprogress.js","utf8");
 const w1Source=fs.readFileSync("calamityrun.js","utf8");
 const w2Source=fs.readFileSync("secondworldcalamityrun.js","utf8");
-function harness(era,{fast=false,kills=29,failSave=false,title=false}={}){
+function harness(era,{fast=false,kills=29,failSave=false,failSaveOnce=false,title=false}={}){
  let clock=1000,saves=0,serializes=0;const docEvents={},winEvents={},observed=[];
  const document={visibilityState:"visible",hasFocus:()=>true,addEventListener(name,fn){docEvents[name]=fn;}};
  const def={id:era===1?"galaxy-calamity-probe":"universe-calamity-probe",name:"Probe",markId:"mark-probe",index:0,targetCivilizationLevel:1,maxHp:100000,bossIndex:0,level:600,atkMultiplier:1,defMultiplier:1,crit:0,dodge:0};
@@ -12,14 +12,14 @@ function harness(era,{fast=false,kills=29,failSave=false,title=false}={}){
   getCivilizationCalamityDefinition:id=>id===def.id?def:null,
   getCivilizationCalamityStatus:()=>({currentHp:100000,maxHp:100000,mark:{level:9,progress:29}}),
   isCivilizationCalamityUnlocked:()=>true,playerCombatStats:()=>({hp:100,atk:10,def:10}),
-  runCivilizationCalamityBattle(id,options){if(options.save!==false&&typeof ctx.save==="function")ctx.save(false);return {ok:true,win:true,calamityId:id,enemy:{hp:100000},enemyStartHp:100000,enemyEndHp:0,playerStartHp:100,playerEndHp:100,turns:1,settlement:{markMaxed:true,titleSettlement:null,markSettlement:{level:10}}};},
+  runCivilizationCalamityBattle(id,options){const checkpointSaved=options.save!==false&&typeof ctx.save==="function"?ctx.save(false)!==false:false;return {ok:true,win:true,calamityId:id,enemy:{hp:100000},enemyStartHp:100000,enemyEndHp:0,playerStartHp:100,playerEndHp:100,turns:1,settlement:{checkpointSaved,markMaxed:true,titleSettlement:null,markSettlement:{level:10}}};},
   getSecondWorldCalamityDefinition:value=>value===def||value===def.id?def:null,
   canChallengeSecondWorldCalamity:()=>true,secondWorldBossBaseStats:()=>({atk:10,def:10}),
   getSecondWorldCalamityCurrentHp:()=>100000,civilizationCombatDamageMultiplier:()=>1,
   runCombatCore(){return {win:true,enemyHp:0,hp:95,turns:1,logs:[],events:[]};},
   normalizeSecondWorldCalamityState(){},isSecondWorldCalamityCompleted:()=>ctx.state.secondWorld.calamities[0].trueKills>=30,
   restorePlayerHp(){ctx.state.hp=100;},grantPlayerTitleForUniverseCalamityFirstKill:()=>title?{firstAcquisition:true}:null,
-  save(){saves++;return !failSave;},
+  save(){saves++;if(failSaveOnce&&saves===1)return false;return !failSave;},
   registerWorldTransitionRuntimeBlocker(){return true;}
  };
  // Count expensive full-state JSON copies, excluding compact battle/settlement serialization.
@@ -86,6 +86,15 @@ async function main(){
   assert.equal(step.reason,"title-first-kill");
   assert.equal(x.counts().saves,1);
   assert.equal(x.counts().serializes,saveNow?1:0);
+ }
+ // W1 core exposes a failed normal checkpoint so the terminal runner can safely retry once.
+ {
+  const x=harness(1,{failSaveOnce:true});
+  assert.equal(x.ctx.beginCivilizationCalamityRun(x.def.id,"continuous").ok,true);
+  const step=x.ctx.fightNextCivilizationCalamityBattle({save:true});
+  assert.equal(step.ok,true,"W1 formal mark-maxed settlement remains valid when initial save reports failure");
+  assert.equal(step.reason,"mark-maxed","W1 terminal must still stop on max mark");
+  assert.equal(x.counts().saves,2,"W1 terminal retries exactly once if core checkpoint fails");
  }
  // An actual checkpoint failure must roll back W2 formal combat progress.
  {
