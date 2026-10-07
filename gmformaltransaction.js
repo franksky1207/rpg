@@ -8,6 +8,7 @@
  const MAINLINE_VERSION=1;
  const GEAR_VERSION=1;
  const VIP_RESET_VERSION=1;
+ const MARK_VERSION=1;
  const UI_CONVERGENCE_VERSION=1;
 
  function formalPhase(target=state){
@@ -86,6 +87,27 @@
  function commitEnhancementLevels(values){return run("gm-enhancement-levels",live=>applyEnhancementLevels(values,live));}
  function enhancementValuesFromUi(target=state){const values={};enhancementSlots().forEach(type=>{const current=Math.floor(Number(target?.enhancement?.levels?.[type])||0),el=document.getElementById(`gmEnhance-manage-${type}`);values[type]=Number(el?el.value:current);});return values;}
 
+ function markKeys(){return Array.from(window.MARK_KEYS||[]).map(String).filter(Boolean);}
+ function formalMarkMinimum(target=state){return formalPhase(target)>=2?10:0;}
+ function applyMarkLevels(values,target=state){
+  if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
+  if(typeof window.normalizeCivilizationCalamityState!=="function")return {ok:false,reason:"mark-state-owner-missing"};
+  window.normalizeCivilizationCalamityState(target);
+  const keys=markKeys();if(!keys.length||!target?.marks?.entries)return {ok:false,reason:"mark-config-missing"};
+  const minimum=formalMarkMinimum(target),applied={};
+  for(const key of keys){
+   const entry=target.marks.entries[key]||(target.marks.entries[key]={acquired:false,level:0,progress:0});
+   if(minimum>=10){entry.acquired=true;entry.level=10;entry.progress=0;applied[key]=10;continue;}
+   const raw=values?.[key];
+   if(raw==null||raw==="none"){entry.acquired=false;entry.level=0;entry.progress=0;applied[key]=null;continue;}
+   const level=finiteInt(raw,0,10);if(level==null)return {ok:false,reason:"invalid-mark-level",key,value:raw};
+   entry.acquired=true;entry.level=level;entry.progress=0;applied[key]=level;
+  }
+  window.normalizeCivilizationCalamityState(target);
+  return {ok:true,phase:formalPhase(target),minimum,levels:Object.freeze({...applied})};
+ }
+ function commitMarkLevels(values){return run("gm-mark-levels",live=>applyMarkLevels(values,live));}
+
  function ensureInventory(target){if(!Array.isArray(target?.inventory))target.inventory=[];return target.inventory;}
  function applyGeneratedEquipment(request,target=state){
   if(!target||typeof target!=="object")return {ok:false,reason:"invalid-target"};
@@ -158,7 +180,7 @@
   return Object.freeze({version:VERSION,characterVersion:CHARACTER_VERSION,mainlineVersion:MAINLINE_VERSION,gearVersion:GEAR_VERSION,enhancementVersion:ENHANCEMENT_VERSION,vipResetVersion:VIP_RESET_VERSION,uiConvergenceVersion:UI_CONVERGENCE_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});
  }
 
- window.GM_FORMAL_TRANSACTION_OWNER_VERSION=VERSION;window.GM_FORMAL_RESOURCE_TRANSACTION_VERSION=RESOURCE_VERSION;window.GM_FORMAL_DUNGEON_TRANSACTION_VERSION=DUNGEON_VERSION;window.GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION=DAILY_RESET_VERSION;window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION=ENHANCEMENT_VERSION;window.GM_FORMAL_CHARACTER_TRANSACTION_VERSION=CHARACTER_VERSION;window.GM_FORMAL_MAINLINE_TRANSACTION_VERSION=MAINLINE_VERSION;window.GM_FORMAL_GEAR_TRANSACTION_VERSION=GEAR_VERSION;window.GM_FORMAL_VIP_RESET_TRANSACTION_VERSION=VIP_RESET_VERSION;window.GM_FORMAL_UI_WRITER_CONVERGENCE_VERSION=UI_CONVERGENCE_VERSION;
- window.gmApplyFormalCharacterLevelMutation=applyCharacterLevel;window.gmCommitFormalCharacterLevelMutation=commitCharacterLevel;window.gmFirstWorldProgressPlan=firstWorldProgressPlan;window.gmApplyFormalFirstWorldProgressMutation=applyFirstWorldProgress;window.gmCommitFormalFirstWorldProgressMutation=commitFirstWorldProgress;window.gmApplyFormalResourceMutation=applyResource;window.gmCommitFormalResourceMutation=commitResource;window.gmApplyFormalEnhancementMutation=applyEnhancementLevels;window.gmCommitFormalEnhancementMutation=commitEnhancementLevels;window.gmApplyFormalGeneratedEquipmentMutation=applyGeneratedEquipment;window.gmCommitFormalGeneratedEquipmentMutation=commitGeneratedEquipment;window.gmApplyFormalVipResetMutation=applyVipReset;window.gmCommitFormalVipResetMutation=commitVipReset;window.gmApplyFormalDungeonMutation=applyDungeonValues;window.gmCommitFormalDungeonMutation=commitDungeonValues;window.gmResetFormalDailyDungeonMutation=resetDailyDungeonState;window.gmCommitFormalDailyDungeonReset=commitDailyDungeonReset;
+ window.GM_FORMAL_TRANSACTION_OWNER_VERSION=VERSION;window.GM_FORMAL_RESOURCE_TRANSACTION_VERSION=RESOURCE_VERSION;window.GM_FORMAL_DUNGEON_TRANSACTION_VERSION=DUNGEON_VERSION;window.GM_FORMAL_DAILY_RESET_TRANSACTION_VERSION=DAILY_RESET_VERSION;window.GM_FORMAL_ENHANCEMENT_TRANSACTION_VERSION=ENHANCEMENT_VERSION;window.GM_FORMAL_CHARACTER_TRANSACTION_VERSION=CHARACTER_VERSION;window.GM_FORMAL_MAINLINE_TRANSACTION_VERSION=MAINLINE_VERSION;window.GM_FORMAL_GEAR_TRANSACTION_VERSION=GEAR_VERSION;window.GM_FORMAL_VIP_RESET_TRANSACTION_VERSION=VIP_RESET_VERSION;window.GM_FORMAL_MARK_TRANSACTION_VERSION=MARK_VERSION;window.GM_FORMAL_UI_WRITER_CONVERGENCE_VERSION=UI_CONVERGENCE_VERSION;
+ window.gmApplyFormalCharacterLevelMutation=applyCharacterLevel;window.gmCommitFormalCharacterLevelMutation=commitCharacterLevel;window.gmFirstWorldProgressPlan=firstWorldProgressPlan;window.gmApplyFormalFirstWorldProgressMutation=applyFirstWorldProgress;window.gmCommitFormalFirstWorldProgressMutation=commitFirstWorldProgress;window.gmApplyFormalResourceMutation=applyResource;window.gmCommitFormalResourceMutation=commitResource;window.gmApplyFormalEnhancementMutation=applyEnhancementLevels;window.gmCommitFormalEnhancementMutation=commitEnhancementLevels;window.gmApplyFormalMarkMutation=applyMarkLevels;window.gmCommitFormalMarkMutation=commitMarkLevels;window.gmApplyFormalGeneratedEquipmentMutation=applyGeneratedEquipment;window.gmCommitFormalGeneratedEquipmentMutation=commitGeneratedEquipment;window.gmApplyFormalVipResetMutation=applyVipReset;window.gmCommitFormalVipResetMutation=commitVipReset;window.gmApplyFormalDungeonMutation=applyDungeonValues;window.gmCommitFormalDungeonMutation=commitDungeonValues;window.gmResetFormalDailyDungeonMutation=resetDailyDungeonState;window.gmCommitFormalDailyDungeonReset=commitDailyDungeonReset;
  installFormalUiWriters();window.GM_FORMAL_TRANSACTION_INTEGRITY=integrity();if(!window.GM_FORMAL_TRANSACTION_INTEGRITY.passed)console.error("[文明戰線] GM formal transaction integrity error",window.GM_FORMAL_TRANSACTION_INTEGRITY.errors);
 })();
