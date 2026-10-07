@@ -909,7 +909,7 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**劇情／轉生隔離第1～4批已全部完成；目前沒有已定案待施工批次。其他歷史工程維持封箱。**
+**劇情／轉生隔離第1～4批維持封箱；新增優化工程第1批（舊歷史安全／高維通關 owner／待播診斷）已施工。其餘先前建議的災厄與程式整理優化尚未施工。**
 
 現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
@@ -960,6 +960,15 @@ GitHub Pages #6038 = success
 - 封箱 regression 已加入 `.github/workflows/story-integrity.yml` 與 `.github/workflows/runtime-integrity.yml`（Schema17相容矩陣後執行），避免後續非 Story 程式修改造成倒退。
 - 本批只動測試、CI 與本交接檔；前3批 production 行為已由 latest main 確認，不需重改；沒有修改正式 Boss/Story/Save JS、不需 index cache-bust，Save Schema 仍為17。
 - 注意：`PROJECT_HANDOFF.md` 為狀態索引，不取代 current `main` 正式 owner；後續改動仍需 fresh-read 並核對 exact HEAD Actions。
+
+
+## 2026-10-07 劇情／災厄檢查後優化：第1批（項目1、2、7、9）
+
+- **劇情 reference 資料安全：** `storymigration.js` 的 `normalizeFields()` 僅在正式 Story group 已回報 `ready` 時清理已退休的 `completedStories`／`pendingStory` ID；部分延遲載入的 catalog 不再被誤當成完整目錄。非 browser 的 VM 測試仍可透過 `catalogReady` 指定判定；未建立 Script Group Loader 的舊測試 harness 維持兼容。
+- **舊版高維歷史：** 當 `thirdWorldContentVersion<1` 且玩家已轉生，migration 會用正式高維11篇 trigger descriptor 保留合法的歷史 completed ID；只清理退休 W3 ID／舊 pending。若正式 descriptor 尚未完整就緒，延後版本遷移，不先刪除也不先將 content version 標為最新。首輪 `count=0` 的舊開發版 W3 歷史重建政策維持原樣。
+- **轉生高維正式完成 owner：** `thirdworldphase.js` 新增 `reconcileThirdWorldRerunCombatCompletion()`，由正式 W3 phase normalizer 與 W3 settlement adapter 呼叫，依本輪10名高維存在永久 HP 全歸零更新 `thirdWorld.completed`。Story Progress 不再直接寫入轉生輪 `completed`，僅對 `introSeen/finalSeen` 遵循不重播政策。首輪 Final 正式流程不變。
+- **待播診斷：** `LAST_STORY_PENDING_MIGRATION_REPAIR`、`LAST_STORY_PENDING_RERUN_REPAIR` 僅為 runtime 診斷，分別標記 catalogue-ready 退休 ID 與轉生歷史 Story pending 清理；不新增永久存檔欄位、不升 Schema17。
+- **驗證：** 新增 `tests/story/optimization-batch1-history-safety.js`，加入 Story Integrity；更新 W3 Batch3/Batch4 harness 與 legacy/source-owner 合約。正式 JS 修改已更新 `index.html` cache-bust。**災厄 Fast Catch-up、重複存檔及 W2 snapshot 優化均未在本批修改。**
 
 # 25. 下一個對話如何接手
 
