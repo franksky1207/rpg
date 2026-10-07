@@ -3,6 +3,7 @@
  const CALAMITY_COMBAT_RULE_VERSION=3;
  const CALAMITY_HP_RESTORE_OWNER_VERSION=1;
  const CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=1;
+ const CALAMITY_FORMAL_FINAL_DAMAGE_VERSION=1;
  const ATK_MULTIPLIER=1.10;
  const DEF_MULTIPLIER=1.05;
  const FIXED_CRIT=10;
@@ -133,13 +134,16 @@
   if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
   ensureState();
   const e=enemy(id),startEnemyHp=currentHp(id),player=playerCombatStats();
+  if(typeof window.formalPlayerFinalDamageMultiplier!=="function")throw new Error("Formal player final damage owner is required for Civilization Calamity.");
+  const playerFinalDamageMultiplier=window.formalPlayerFinalDamageMultiplier({world:1,state});
   state.hp=player.hp;
   const combat=window.runCombatCore(player,e,player.hp,{
    logs:options.logs===false?false:true,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,
    markLevels:options.markLevels&&typeof options.markLevels==="object"?options.markLevels:undefined,
-   preparePresentation:options.preparePresentation!==false
+   preparePresentation:options.preparePresentation!==false,
+   playerFinalDamageMultiplier
   });
   const settlement=applyBattleResult(id,combat,{save:options.save!==false});
   return {
@@ -157,6 +161,7 @@
    logs:combat.logs,
    events:combat.events,
    combat,
+   playerFinalDamageMultiplier,
    settlement,
    rewards:{exp:0,gold:0,equipment:0,vip:0,basicStones:0,advancedStones:0}
   };
@@ -166,6 +171,7 @@
  window.CALAMITY_COMBAT_RULE_VERSION=CALAMITY_COMBAT_RULE_VERSION;
  window.CALAMITY_HP_RESTORE_OWNER_VERSION=CALAMITY_HP_RESTORE_OWNER_VERSION;
  window.CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION=CALAMITY_RERUN_KEY_BOSS_UNLOCK_VERSION;
+ window.CALAMITY_FORMAL_FINAL_DAMAGE_VERSION=CALAMITY_FORMAL_FINAL_DAMAGE_VERSION;
  window.CALAMITY_MAXED_REPLAY_HP_VERSION=1;
  window.CALAMITY_ATK_MULTIPLIER=ATK_MULTIPLIER;
  window.CALAMITY_DEF_MULTIPLIER=DEF_MULTIPLIER;
