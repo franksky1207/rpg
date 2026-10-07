@@ -3,9 +3,10 @@
  const fail=(code,message,data=null)=>errors.push({code,message,data});
  const config=Array.from(window.CIVILIZATION_CALAMITY_CONFIG||[]);
  const defs=typeof window.getCivilizationCalamityDefinitions==="function"?window.getCivilizationCalamityDefinitions():[];
- if(Number(window.CALAMITY_CORE_VERSION)!==1)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V1",window.CALAMITY_CORE_VERSION);
+ if(Number(window.CALAMITY_CORE_VERSION)!==2)fail("CALAMITY_CORE_VERSION","文明災厄 Core 應為 V2",window.CALAMITY_CORE_VERSION);
  if(Number(window.CALAMITY_COMBAT_RULE_VERSION)!==3||Number(window.CALAMITY_MAXED_REPLAY_HP_VERSION)!==1)fail("CALAMITY_COMBAT_RULE_VERSION","文明災厄戰鬥規則應為 V3，滿印記重打每場滿 HP",{rules:window.CALAMITY_COMBAT_RULE_VERSION,replayHp:window.CALAMITY_MAXED_REPLAY_HP_VERSION});
  if(Number(window.COMBAT_PERSISTENT_ENEMY_HP_VERSION)!==1)fail("PERSISTENT_ENEMY_HP_VERSION","Combat Core 持久敵方 HP 支援未載入",window.COMBAT_PERSISTENT_ENEMY_HP_VERSION);
+ if(Number(window.CALAMITY_FORMAL_FINAL_DAMAGE_VERSION)!==1||typeof window.formalPlayerFinalDamageMultiplier!=="function")fail("CALAMITY_FORMAL_FINAL_DAMAGE_OWNER","銀河文明災厄正式戰鬥必須使用正式玩家最終傷害 owner",{version:window.CALAMITY_FORMAL_FINAL_DAMAGE_VERSION,owner:typeof window.formalPlayerFinalDamageMultiplier});
  if(Number(window.CALAMITY_HP_PER_LEVEL)!==250000||typeof window.getCivilizationCalamityConfiguredMaxHp!=="function"||Number(window.CALAMITY_ATK_MULTIPLIER)!==1.1||Number(window.CALAMITY_DEF_MULTIPLIER)!==1.05)fail("CALAMITY_BALANCE","文明災厄分級 HP／攻防倍率異常",{hpPerLevel:window.CALAMITY_HP_PER_LEVEL,hpApi:typeof window.getCivilizationCalamityConfiguredMaxHp,atk:window.CALAMITY_ATK_MULTIPLIER,def:window.CALAMITY_DEF_MULTIPLIER});
  if(Number(window.CALAMITY_FIXED_CRIT)!==10||Number(window.CALAMITY_FIXED_DODGE)!==10)fail("CALAMITY_RATES","文明災厄固定暴擊／閃避應為 10% / 10%",{crit:window.CALAMITY_FIXED_CRIT,dodge:window.CALAMITY_FIXED_DODGE});
  if(defs.length!==10)fail("CALAMITY_DEF_COUNT","文明災厄應有 10 隻",defs);
