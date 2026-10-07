@@ -135,7 +135,7 @@
    :typeof window.gmPowerBenchmarkInvalidateSnapshot==="function"?window.gmPowerBenchmarkInvalidateSnapshot:null;
   if(invalidate)invalidate({revision:gmTestContextRevision,reason:String(options.reason||"test-setting-change")});
   if(options.refresh!==false&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
-  if(options.refreshBenchmark===true&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
+  if(options.refreshBenchmark!==false&&typeof window.gmPowerBenchmarkRefreshUi==="function")window.gmPowerBenchmarkRefreshUi();
   return gmTestContextRevision;
  }
 
