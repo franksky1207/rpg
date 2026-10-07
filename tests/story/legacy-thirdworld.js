@@ -56,6 +56,6 @@ const phaseReconcile=(phase.match(/function reconcileThirdWorldStoryState\(targe
 assert(phaseReconcile.includes('stageOnly:true')&&phaseReconcile.includes('completionOwner:"civilizationStoryProgress"'),'W3 phase reconciliation 必須明確為 Stage-only。');
 assert(!/story\.introSeen\s*=|story\.finalSeen\s*=|third\.completed\s*=/.test(phaseReconcile),'thirdworldphase 不得再寫入 W3 Story completion flags。');
 assert(/function reconcileThirdWorldStoryCompletionState\(target=state\)/.test(progress),'shared Story Progress 必須保有 W3 completion reconciliation owner。');
-assert(/third\.story\.introSeen=completed\.has/.test(progress)&&/third\.story\.finalSeen=finalDone;third\.completed=finalDone/.test(progress),'Intro／Final／thirdWorld.completed 必須只由 shared Story completion owner 從 completedStories 推導。');
+assert(/third\.story\.introSeen=completed\.has/.test(progress)&&/third\.story\.finalSeen=finalDone;third\.completed=finalDone/.test(progress)&&/function reconcileThirdWorldRerunCombatCompletion\(target=state\)/.test(phase),'首輪 Intro／Final 維持 Story 完成 owner，轉生後由正式 W3 戰鬥 owner 判定完成。');
 
 console.log('LEGACY W3 STORY MIGRATION PASSED | contentVersion=1 | dev story refs reset once | boss/core/stage preserved | shared completion owner only');
