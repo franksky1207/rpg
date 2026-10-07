@@ -1149,6 +1149,18 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 本批不改三個既有 localStorage key、不寫角色 save／Cloud Save、不改正式戰鬥公式與 Save Schema17；完整 GM 管理仍維持 deferred。
 
 
+
+## 2026-10-08 GM 載入優化第1批（首次 render／legacy cleanup／browser regression）
+
+- 新增極小 startup owner `gmruntimeauthorization.js`（`GM_RUNTIME_AUTHORIZATION_CORE_VERSION=1`、`GM_RUNTIME_EARLY_RESTORE_VERSION=2`）：正式擁有 browser-local GM 授權 key、runtime flag reconcile 與 save boundary；完整 GM 管理仍維持 deferred。
+- `index.html` 將此 owner 放在 `savehookcore.js` 之後、`ui.js` 之前。正式啟動流程現在為：`load()` → normalize → `gmReconcileRuntimeAuthorizationAfterLoad(state)` → 原本的 `save(false)` → 第一次 `render()`。因此已授權裝置第一次 main render 時 `state.gm` 就必須為 true，不再等頁面之後切換／重繪。
+- 未授權但舊存檔殘留 `state.gm=true` 時，同一 reconcile 只在記憶體把它清為 false；由既有啟動 `save(false)` 順手保存乾淨狀態，不再由 deferred loader 額外做一次 `stripLegacySaveAuthorization() + save(false)`。
+- `scriptgrouploader.js` 已移除自己的授權 key／legacy save cleanup／save-boundary owner，改委派 `gmruntimeauthorization.js`；仍負責 deferred GM group 載入、retry 與 password bridge。
+- save boundary 仍使用原 ID `gm-runtime-authorization-v1`，正式 save 前移除 runtime `state.gm`，settlement 後恢復；不把授權寫入角色 save／Cloud Save，Save Schema17 不變。
+- `tests/runtime/gm-runtime-early-restore-integrity.js` 已改為鎖住 owner 順序、authorized／legacy／clean 三種 reconcile 與 save-boundary single install。
+- 新增 Playwright `tests/runtime/gm-first-render-browser.js`：預先寫入 GM authorization localStorage，直接攔截 `#main` 第一次 innerHTML render，要求該瞬間 authorization=true、runtimeFlag=true、startup owner V1、early restore V2；已加入 Runtime Integrity browser smoke。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
