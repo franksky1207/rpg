@@ -7,6 +7,8 @@
  const SHARED_INFRA_STRICT_VERSION=1;
  const SHARED_BATTLE_PRESENTATION_POLICY_VERSION=1;
  const MANUAL_STOP_TERMINAL_VERSION=1;
+ const CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION=1;
+ const CALAMITY_SNAPSHOT_CONDITIONAL_VERSION=1;
  const BLOCKER_NAME="second-world-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
@@ -73,7 +75,7 @@
   if(!state?.secondWorld?.entered)return {ok:false,reason:"目前不是宇宙紀元。"};
   if(typeof window.normalizeSecondWorldCalamityState==="function")window.normalizeSecondWorldCalamityState(state);
   const row=state.secondWorld?.calamities?.[d.index];if(!row)return {ok:false,reason:"文明災厄 state 不存在。"};
-  const before=JSON.stringify(state);
+  const before=options.save!==false?JSON.stringify(state):null;
   const completedBefore=typeof window.isSecondWorldCalamityCompleted==="function"&&window.isSecondWorldCalamityCompleted(d.id,state);
   const killsBefore=Math.max(0,Math.min(30,Math.floor(Number(row.trueKills)||0)));
   const civBefore=Math.max(0,Math.min(10,Math.floor(Number(state.secondWorld.civilizationLevel)||0)));
@@ -123,9 +125,9 @@
   const reason=activeRun.reason||"";
   return {...activeRun,stopMeta:runInfra()?.stopReasonMeta(reason)||null,lastBattle:clone(activeRun.lastBattle)};
  }
- function finish(reason){
+ function finish(reason,{checkpoint=true}={}){
   if(!activeRun)return null;
-  if(typeof save==="function")save(false);
+  if(checkpoint&&typeof save==="function")save(false);
   stopBackground();
   activeRun.active=false;activeRun.phase="ended";activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
   return runSnapshot();
@@ -155,17 +157,16 @@
   };
   activeRun.phase="between";
   if(activeRun.mode==="single"){
-   const run=finish("single-complete");return {ok:true,ended:true,reason:"single-complete",result,run,battleNumber:activeRun.battleCount};
+   const run=finish("single-complete",{checkpoint:options.save===false});return {ok:true,ended:true,reason:"single-complete",result,run,battleNumber:activeRun.battleCount};
   }
   if(result.settlement?.titleSettlement?.firstAcquisition===true){
-   if(options.save===false&&typeof save==="function")save(false);
-   const run=finish("title-first-kill");return {ok:true,ended:true,reason:"title-first-kill",result,run,battleNumber:activeRun.battleCount};
+   const run=finish("title-first-kill",{checkpoint:options.save===false});return {ok:true,ended:true,reason:"title-first-kill",result,run,battleNumber:activeRun.battleCount};
   }
   if(result.settlement?.completed===true){
-   const run=finish("civilization-complete");return {ok:true,ended:true,reason:"civilization-complete",result,run,battleNumber:activeRun.battleCount};
+   const run=finish("civilization-complete",{checkpoint:options.save===false});return {ok:true,ended:true,reason:"civilization-complete",result,run,battleNumber:activeRun.battleCount};
   }
   if(activeRun.stopRequested){
-   const run=finish("stopped");return {ok:true,ended:true,reason:"stopped",result,run,battleNumber:activeRun.battleCount};
+   const run=finish("stopped",{checkpoint:options.save===false});return {ok:true,ended:true,reason:"stopped",result,run,battleNumber:activeRun.battleCount};
   }
   return {ok:true,ended:false,result,run:runSnapshot(),battleNumber:activeRun.battleCount};
  }
@@ -222,6 +223,8 @@
  window.SECOND_WORLD_CALAMITY_COMBAT_VERSION=VERSION;
  window.SECOND_WORLD_CALAMITY_SETTLEMENT_VERSION=SETTLEMENT_VERSION;
  window.SECOND_WORLD_CALAMITY_CONTINUOUS_VERSION=CONTINUOUS_VERSION;
+ window.SECOND_WORLD_CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION=CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION;
+ window.SECOND_WORLD_CALAMITY_SNAPSHOT_CONDITIONAL_VERSION=CALAMITY_SNAPSHOT_CONDITIONAL_VERSION;
  window.SECOND_WORLD_CALAMITY_TITLE_FIRST_KILL_VERSION=TITLE_FIRST_KILL_VERSION;
  window.SECOND_WORLD_CALAMITY_BACKGROUND_VERSION=1;
  window.SECOND_WORLD_CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
