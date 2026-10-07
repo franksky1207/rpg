@@ -318,6 +318,7 @@
  }
  function refreshBenchmarkAfterFormalSync(){if(typeof render==="function"){render();return true;}return false;}
  function install(){
+  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function")window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>{world3.result=null;});
   const baseOutput=window.gmPowerBenchmarkRunOutput;
   if(typeof baseOutput==="function"&&!baseOutput.__worldPhaseAdapter){const wrapped=function(...args){if(benchmarkWorld()===3)return false;return runWithBenchmarkWorld(baseOutput,args);};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkRunOutput=wrapped;}
   const baseDefense=window.gmPowerBenchmarkRunDefense;
