@@ -207,16 +207,17 @@
      ui.displayBattleNumber=Math.max(1,Number(battle.battleNumber)||1);
      ui.phase="combat";
      const policy=battle?.presentationPolicy||null;
-     const fast=policy?.fastCatchUp===true;
+     const uiDecision=window.calamityContinuousUiDecision(policy,battle.ended);
+     const fast=uiDecision.fastCatchUp;
      if(fast){
-      if(policy?.shouldPresentBattle){
+      if(uiDecision.shouldPresentBattle){
        primeDisplay(battle.result);render();
        await animateBattle(battle);
       }else{
-       if(!battle.ended)await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
-       if(policy?.shouldRefreshUi&&!battle.ended)refreshCatchUpUi(battle.result);
+       if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
+       if(uiDecision.shouldRefreshUi)refreshCatchUpUi(battle.result);
       }
-      if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
+      if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }else{
       primeDisplay(battle.result);render();
       await animateBattle(battle);
