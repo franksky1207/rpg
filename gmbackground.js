@@ -1,43 +1,13 @@
 (function(){
- const VERSION=1;
- const STORAGE_PREFIX="civilization_frontline_gm_background_battle_v1_";
- const MAINLINE_HP_LOCK_STORAGE_PREFIX="civilization_frontline_gm_mainline_hp_lock_v1_";
-
- function currentUserId(){
-  const id=window.civilizationAuth?.getUser?.()?.id||window.civilizationAuthSession?.user?.id||"";
-  return String(id||"");
- }
- function devicePreferenceStorageKey(prefix){
-  const id=currentUserId();
-  return id?`${String(prefix||"")}${id}`:"";
- }
- function deviceBooleanPreferenceEnabled(prefix){
-  const key=devicePreferenceStorageKey(prefix);
-  if(!key)return false;
-  try{return localStorage.getItem(key)==="1";}catch(e){return false;}
- }
- function setDeviceBooleanPreference(prefix,next){
-  const key=devicePreferenceStorageKey(prefix);
-  if(!key)return false;
-  try{localStorage.setItem(key,next?"1":"0");return true;}catch(e){return false;}
- }
- function storageKey(){return devicePreferenceStorageKey(STORAGE_PREFIX);}
- function mainlineHpLockStorageKey(){return devicePreferenceStorageKey(MAINLINE_HP_LOCK_STORAGE_PREFIX);}
- function enabled(){return deviceBooleanPreferenceEnabled(STORAGE_PREFIX);}
- function mainlineHpLockEnabled(){return deviceBooleanPreferenceEnabled(MAINLINE_HP_LOCK_STORAGE_PREFIX);}
- function mainlineHpLockActive(scope=""){
-  if(!mainlineHpLockEnabled())return false;
-  if(scope==="world1-mainline")return true;
-  if(scope==="world2-mainline")return !!window.activeSecondWorldMainlineContext;
-  if(scope==="special")return !!(window.activeMainBattleContext||window.activeSecondWorldMainlineContext);
-  return false;
- }
+ const VERSION=2;
+ function enabled(){return typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;}
+ function mainlineHpLockEnabled(){return typeof window.gmMainlineHpLockEnabled==="function"&&window.gmMainlineHpLockEnabled()===true;}
  function setEnabled(next){
-  if(!setDeviceBooleanPreference(STORAGE_PREFIX,next))return false;
+  if(typeof window.gmSetDeviceBooleanPreference!=="function"||!window.gmSetDeviceBooleanPreference("civilization_frontline_gm_background_battle_v1_",next===true))return false;
   if(!next&&typeof window.backgroundProgressStop==="function"){window.backgroundProgressStop("main");window.backgroundProgressStop("void");window.backgroundProgressStop("calamity");window.backgroundProgressStop("third-world");}
   return true;
  }
- function setMainlineHpLockEnabled(next){return setDeviceBooleanPreference(MAINLINE_HP_LOCK_STORAGE_PREFIX,next);}
+ function setMainlineHpLockEnabled(next){return typeof window.gmSetDeviceBooleanPreference==="function"&&window.gmSetDeviceBooleanPreference("civilization_frontline_gm_mainline_hp_lock_v1_",next===true);}
  function installStyles(){
   if(document.getElementById("gmBackgroundBattleStyles"))return;
   const style=document.createElement("style");
@@ -73,16 +43,8 @@
   if(typeof render==="function")render();
   return true;
  };
- window.gmDevicePreferenceStorageKey=devicePreferenceStorageKey;
- window.gmDeviceBooleanPreferenceEnabled=deviceBooleanPreferenceEnabled;
- window.gmSetDeviceBooleanPreference=setDeviceBooleanPreference;
- window.gmBackgroundBattleEnabled=enabled;
- window.gmBackgroundBattleStorageKey=storageKey;
- window.gmMainlineHpLockEnabled=mainlineHpLockEnabled;
- window.gmMainlineHpLockStorageKey=mainlineHpLockStorageKey;
- window.gmMainlineHpLockActive=mainlineHpLockActive;
- window.GM_DEVICE_BOOLEAN_PREFERENCE_VERSION=1;
  window.GM_BACKGROUND_BATTLE_VERSION=VERSION;
+ window.GM_BACKGROUND_BATTLE_UI_DELEGATE_VERSION=1;
  window.GM_BACKGROUND_BATTLE_ALL_COMBAT_GATE_VERSION=1;
  window.GM_BACKGROUND_BATTLE_THIRD_WORLD_GATE_VERSION=1;
  window.GM_MAINLINE_HP_LOCK_MANAGEMENT_VERSION=1;
