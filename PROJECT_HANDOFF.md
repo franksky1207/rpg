@@ -1137,6 +1137,18 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 本批尚未改背景戰鬥、GM 2×、主線鎖血這三個帳號／裝置 preference owner 與 auth-ready 同步；這些留待第2批。
 
 
+
+## 2026-10-08 GM runtime preference／auth-ready 同步第2批
+
+- 新增早期常駐 `gmdevicepreferences.js`（`GM_RUNTIME_DEVICE_PREFERENCE_CORE_VERSION=1`）：背景戰鬥與主線鎖血的 localStorage key 格式完全不變，但正式 gate／storage helper 不再依賴 deferred `gmbackground.js` 才存在；帳號 session 未就緒時 fail closed，`civilization-auth-ready` 後立即按目前 user id 讀回既有偏好並廣播 `gm-runtime-preferences-ready`。
+- `gmbackground.js` 升為 UI delegate V2，只保留 GM 管理介面與寫入操作，正式 `gmBackgroundBattleEnabled()`／`gmMainlineHpLockActive()` owner 移至早期 runtime core；不提前載整個 GM Hub。
+- `combatspeed.js` 新增 `COMBAT_SPEED_GM_AUTH_SYNC_VERSION=1`／`gmSyncCombatSpeedFromAuth()`；帳號 session ready 後立即重新讀取 `civilization_frontline_gm_combat_speed_v1_<userId>`，並送出 `combat-speed-change`，因此既有 GM 2× 不必等下一次戰鬥流程才重新取得。
+- 新增 `tests/runtime/gm-runtime-auth-preferences-integrity.js`：鎖住未登入時背景／鎖血／2× fail closed，以及 auth-ready 後同帳號既有 background=true、HP lock=true、2× 都立即恢復並廣播。
+- `tests/runtime/gm-mainline-hp-lock-integrity.js` 已同步新 owner；`GM_DEVICE_BOOLEAN_PREFERENCE_VERSION` 升為 V2。
+- `scriptgrouploader.js` 補 `GM_AUTHORIZED_GROUP_RETRY_VERSION=1`：已授權 GM group 首次載入失敗後 250ms 自動重試一次；兩次都失敗仍保留已恢復的 runtime GM 授權，不把載入錯誤誤判為密碼失效。
+- 本批不改三個既有 localStorage key、不寫角色 save／Cloud Save、不改正式戰鬥公式與 Save Schema17；完整 GM 管理仍維持 deferred。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
