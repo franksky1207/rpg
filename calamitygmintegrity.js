@@ -11,6 +11,7 @@
  if(Number(window.GM_CALAMITY_TEST_VERSION)!==1)fail("GM_CALAMITY_TEST_VERSION","文明災厄 GM 測試版本應為 1",window.GM_CALAMITY_TEST_VERSION);
  if(Number(window.GM_MARK_MANAGEMENT_VERSION)!==2)fail("GM_MARK_MANAGEMENT_VERSION","GM 印記管理版本應為 2",window.GM_MARK_MANAGEMENT_VERSION);
  if(Number(window.GM_MARK_FORMAL_PHASE_LOCK_VERSION)!==1)fail("GM_MARK_FORMAL_PHASE_LOCK_VERSION","GM 正式印記紀元鎖定應為 V1",window.GM_MARK_FORMAL_PHASE_LOCK_VERSION);
+ if(Number(window.GM_MARK_FORMAL_TRANSACTION_VERSION)!==1||Number(window.GM_FORMAL_MARK_TRANSACTION_VERSION)!==1||typeof window.gmCommitFormalMarkMutation!=="function")fail("GM_MARK_FORMAL_TRANSACTION","GM 正式印記必須使用 shared transaction owner",{consumer:window.GM_MARK_FORMAL_TRANSACTION_VERSION,owner:window.GM_FORMAL_MARK_TRANSACTION_VERSION,commit:typeof window.gmCommitFormalMarkMutation});
  if(Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1)fail("GM_MARK_CONFIG_OWNER_VERSION","GM 印記工具應直接使用統一災厄設定",window.GM_MARK_CONFIG_OWNER_VERSION);
  if(Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("GM_CALAMITY_SAFETY_LIMIT","完整擊殺安全上限應為 100000",window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT);
  if(Number(window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION)!==1||Number(window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION)!==1)fail("GM_CALAMITY_TEST_CONTEXT","銀河災厄 GM 結果必須保存測試 context 並防止設定變更後回填舊結果",{context:window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION,stale:window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION});
