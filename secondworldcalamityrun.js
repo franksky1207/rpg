@@ -25,7 +25,6 @@
  function startBackground(){if(!backgroundEnabled())return false;const infra=runInfra();return infra?!!infra.startBackground():false;}
  function stopBackground(){const infra=runInfra();return infra?infra.stopBackground():false;}
  function fastCatchUp(){const infra=runInfra();return infra?infra.fastCatchUp():false;}
- function catchUpPreviewPolicy(){const infra=runInfra();return infra?infra.previewCatchUp():null;}
 
  function clone(value){try{return value==null?value:JSON.parse(JSON.stringify(value));}catch(e){return null;}}
  function def(value){return typeof window.getSecondWorldCalamityDefinition==="function"?window.getSecondWorldCalamityDefinition(value):null;}
