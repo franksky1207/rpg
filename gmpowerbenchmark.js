@@ -1,6 +1,7 @@
 (function(){
  const VERSION=21;
  const BATCH_SIZE=25;
+ const TEST_CONTEXT_INVALIDATORS=new Set();
  const SLOT_LABELS={weapon:"武器",helmet:"頭盔",armor:"鎧甲",shoes:"鞋子",accessory:"飾品"};
  const KIND_LABELS={normal:"普通",elite:"菁英",boss:"Boss"};
  const MODEL={
@@ -740,7 +741,14 @@
   MODEL.snapshot=null;
   clearSelectionResults();
   clearExternalModeResults();
-  return {ok:true,revision:whole(options?.revision,0),reason:String(options?.reason||"test-context-change")};
+  const failures=[];
+  TEST_CONTEXT_INVALIDATORS.forEach(fn=>{try{fn(options);}catch(error){failures.push(String(error?.message||error));console.error("GM test-context invalidator failed",error);}});
+  return {ok:failures.length===0,revision:whole(options?.revision,0),reason:String(options?.reason||"test-context-change"),listenerCount:TEST_CONTEXT_INVALIDATORS.size,failures};
+ }
+ function registerTestContextInvalidator(fn){
+  if(typeof fn!=="function")return false;
+  TEST_CONTEXT_INVALIDATORS.add(fn);
+  return true;
  }
  function clearAllBenchmarkResults(){clearSelectionResults();clearExternalModeResults();if(typeof render==="function")render();return true;}
  function gmTestArchitectureManifest(){
@@ -773,7 +781,8 @@
  window.GM_POWER_BENCHMARK_CALAMITY_INTEGRATION_VERSION=1;
  window.GM_POWER_BENCHMARK_BATCH_SIZE=BATCH_SIZE;
  window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION=1;
- window.GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_VERSION=1;
+ window.GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_VERSION=2;
+ window.GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_REGISTRY_VERSION=1;
  window.GM_POWER_BENCHMARK_RESULT_CONTEXT_VERSION=1;
  window.GM_POWER_BENCHMARK_ALL_RESULT_CONTEXT_VERSION=1;
  window.GM_POWER_BENCHMARK_STALE_RESULT_GUARD_VERSION=1;
@@ -824,6 +833,7 @@
  window.gmPowerBenchmarkIsBusy=function(){return MODEL.busy===true;};
  window.gmPowerBenchmarkSummaryText=summaryText;
  window.gmPowerBenchmarkCopySummary=copySummary;
+ window.gmPowerBenchmarkRegisterTestContextInvalidator=registerTestContextInvalidator;
  window.gmPowerBenchmarkInvalidateTestContext=invalidateTestContext;
  window.gmPowerBenchmarkInvalidateSnapshot=function(options={}){return invalidateTestContext(options);};
  window.gmPowerBenchmarkClearAllResults=clearAllBenchmarkResults;
