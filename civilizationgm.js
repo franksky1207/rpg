@@ -33,8 +33,8 @@
  window.gmTestCivilizationLabel=function(){return label(testLevel());};
  window.gmSetTestCivilizationLevel=function(value,refresh=true){
   window.gmTestCivilizationLevel=clamp(value);
-  if(refresh&&typeof window.gmPowerBenchmarkInvalidateSnapshot==="function")window.gmPowerBenchmarkInvalidateSnapshot();
-  if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
+  if(refresh&&typeof window.gmNotifyTestConfigurationChanged==="function")window.gmNotifyTestConfigurationChanged({reason:"civilization",refresh:true});
+  else if(refresh&&typeof window.gmRefreshTestControls==="function")window.gmRefreshTestControls();
   return testLevel();
  };
  window.refreshGmCivilizationTestControls=function(){
