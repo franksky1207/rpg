@@ -1085,6 +1085,19 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 本批沒有修改災厄 HP 250,000×階級、印記升級、舊 HP clamp、Save Schema17、GM 正式印記寫入、GM stale-result 管理與完整擊殺 no-progress；後者仍屬後續批次。
 
 
+
+## 2026-10-08 GM 測試結果可信度優化第2批（項目2、8、9）
+
+- 新增共用 GM 測試 context owner（`GM_TEST_CONTEXT_OWNER_VERSION=1`）：以 session-only `revision` 管理角色測試設定變更，`gmTestContextSnapshot()` 會保存角色紀元／等級／裝備來源與裝備、VIP、突破、強化、專精、文明、印記、能力值與正式 final-damage snapshot。
+- VIP／突破／強化／角色紀元／等級／重新生成裝備／專精／印記／文明等級，以及「同步正式角色到測試設定」，統一改走 `gmNotifyTestConfigurationChanged()`；不再由各 setter 分散直接呼叫 benchmark invalidation。批次同步使用 `refresh=false` 時只在最後統一通知一次。
+- `gmpowerbenchmark.js` 新增 `gmPowerBenchmarkInvalidateTestContext()`（`GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_VERSION=1`）；角色測試設定一變更會同時清除 benchmark snapshot、地圖輸出／承傷／實戰結果與所有外部模式結果，再重新擷取目前角色 snapshot／刷新摘要。舊 `gmPowerBenchmarkInvalidateSnapshot()` 保留為相容別名並委派新 owner。
+- 移除戰力基準宇宙文明等級下拉原本的「setter 後再手動 invalidate」重複清除，避免同一次設定變更重複 invalidation。
+- 銀河文明災厄 GM 單場／完整擊殺結果現在保存完整 `testContext`；完整擊殺長迴圈用 context revision guard，若測試中途變更角色設定，該次結果直接作廢，不會在清除後又回填成舊結果。
+- 宇宙文明災厄 GM 同步保存完整 `testContext` 並加入同樣的長迴圈 stale-result guard；context 僅作為 metadata／revision guard，不改原本 Combat Core、測試專精／印記或 benchmark snapshot 的戰鬥來源。
+- `calamitygmintegrity.js`、`secondworldcalamitygmintegrity.js` 已加入 test-context／stale-result 契約檢查；相關 JS／integrity 已更新 `index.html` cache-bust。
+- 本批仍不修改正式存檔、Save Schema17、正式災厄／印記資料、GM 正式管理 transaction、舊 HP migration、印記 progress canonical 與完整擊殺 no-progress；這些屬後續批次。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
