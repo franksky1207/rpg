@@ -319,6 +319,14 @@
    registerRuntimeBlocker(name,checker){return typeof window.registerWorldTransitionRuntimeBlocker==="function"?window.registerWorldTransitionRuntimeBlocker(String(name||blockerName||""),checker)===true:false;}
   });
  }
+ // UI adapters share only immutable policy interpretation; animation and era screens stay separate.
+ window.CALAMITY_CONTINUOUS_UI_POLICY_VERSION=1;
+ window.calamityContinuousUiDecision=function(policy,ended=false){
+  const fast=policy?.fastCatchUp===true;
+  const present=!fast||policy?.shouldPresentBattle===true;
+  const refresh=fast&&policy?.shouldRefreshUi===true&&ended!==true&&!present;
+  return Object.freeze({fastCatchUp:fast,shouldPresentBattle:present,shouldRefreshUi:refresh,shouldYield:!fast||policy?.shouldPresentBattle===true||policy?.shouldRefreshUi===true,shouldConsumeDuration:fast&&!present&&ended!==true});
+ };
  window.CONTINUOUS_RUN_INFRA_VERSION=CONTINUOUS_RUN_INFRA_VERSION;
  window.CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION=CONTINUOUS_RUN_BATTLE_PRESENTATION_POLICY_VERSION;
  window.CONTINUOUS_RUN_STOP_REASON_SEMANTICS_VERSION=STOP_REASON_SEMANTICS_VERSION;
