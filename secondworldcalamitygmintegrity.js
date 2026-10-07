@@ -6,6 +6,7 @@
  if(Number(window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION)!==1)fail("TEST_VERSION","沙盒測試 owner 應為 V1",window.GM_SECOND_WORLD_CALAMITY_TEST_VERSION);
  if(Number(window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION)!==1)fail("MANAGE_RETIRED","宇宙文明災厄管理應已正式退休",window.GM_SECOND_WORLD_CALAMITY_MANAGE_RETIRED_VERSION);
  if(Number(window.GM_POWER_BENCHMARK_CALAMITY_VERSION)!==1)fail("BENCHMARK_VERSION","災厄 Benchmark owner 應為 V1",window.GM_POWER_BENCHMARK_CALAMITY_VERSION);
+ if(Number(window.GM_SECOND_WORLD_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION)!==1||Number(window.GM_SECOND_WORLD_CALAMITY_STALE_RESULT_GUARD_VERSION)!==1)fail("TEST_CONTEXT_VERSION","宇宙災厄 GM 結果必須保存測試 context 並防止設定變更後回填舊結果",{context:window.GM_SECOND_WORLD_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION,stale:window.GM_SECOND_WORLD_CALAMITY_STALE_RESULT_GUARD_VERSION});
  const required=[
   "gmSecondWorldCalamityTestHtml","gmSecondWorldCalamitySingleTest","gmSecondWorldCalamityFullKillTest","gmSecondWorldCalamityUnlockProbe","gmSecondWorldCalamityRunUnlockProbe",
   "runGmSecondWorldCalamitySimulation","runGmSecondWorldCalamityFullKill","runGmSecondWorldCalamityBenchmark",
