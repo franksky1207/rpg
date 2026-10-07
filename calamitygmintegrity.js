@@ -13,6 +13,8 @@
  if(Number(window.GM_MARK_FORMAL_PHASE_LOCK_VERSION)!==1)fail("GM_MARK_FORMAL_PHASE_LOCK_VERSION","GM 正式印記紀元鎖定應為 V1",window.GM_MARK_FORMAL_PHASE_LOCK_VERSION);
  if(Number(window.GM_MARK_CONFIG_OWNER_VERSION)!==1)fail("GM_MARK_CONFIG_OWNER_VERSION","GM 印記工具應直接使用統一災厄設定",window.GM_MARK_CONFIG_OWNER_VERSION);
  if(Number(window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT)!==100000)fail("GM_CALAMITY_SAFETY_LIMIT","完整擊殺安全上限應為 100000",window.GM_CALAMITY_FULL_KILL_SAFETY_LIMIT);
+ if(Number(window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION)!==1||Number(window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION)!==1)fail("GM_CALAMITY_TEST_CONTEXT","銀河災厄 GM 結果必須保存測試 context 並防止設定變更後回填舊結果",{context:window.GM_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION,stale:window.GM_CALAMITY_TEST_STALE_RESULT_GUARD_VERSION});
+ if(Number(window.GM_TEST_CONTEXT_OWNER_VERSION)!==1||typeof window.gmTestContextSnapshot!=="function"||typeof window.gmTestContextRevision!=="function")fail("GM_TEST_CONTEXT_OWNER","GM 測試 context owner 未完整載入",{version:window.GM_TEST_CONTEXT_OWNER_VERSION,snapshot:typeof window.gmTestContextSnapshot,revision:typeof window.gmTestContextRevision});
  try{
   const galaxy={secondWorld:{entered:false},thirdWorld:{entered:false}},universe={secondWorld:{entered:true},thirdWorld:{entered:false}},higher={secondWorld:{entered:true},thirdWorld:{entered:true}};
   if(window.gmFormalMarkMinimum?.(galaxy)!==0)fail("GM_MARK_GALAXY_MIN","銀河紀元正式印記最低等級應為 0",window.gmFormalMarkMinimum?.(galaxy));
