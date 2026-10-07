@@ -5,6 +5,7 @@
  const SHARED_INFRA_STRICT_VERSION=1;
  const SHARED_BATTLE_PRESENTATION_POLICY_VERSION=1;
  const MANUAL_STOP_TERMINAL_VERSION=2;
+ const CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION=1;
  const BLOCKER_NAME="galaxy-calamity-run";
  let activeRun=null;
  let sharedRunInfra=null;
@@ -59,9 +60,9 @@
    lastBattle:clone(activeRun.lastBattle)
   };
  }
- function finish(reason){
+ function finish(reason,{checkpoint=true}={}){
   if(!activeRun)return null;
-  if(typeof save==="function")save(false);
+  if(checkpoint&&typeof save==="function")save(false);
   stopBackground();
   activeRun.active=false;
   activeRun.phase="ended";
@@ -143,21 +144,19 @@
   activeRun.phase="between";
 
   if(activeRun.mode==="single"){
-   const run=finish("single-complete");
+   const run=finish("single-complete",{checkpoint:options.save===false});
    return {ok:true,ended:true,reason:"single-complete",battleNumber,result,run};
   }
   if(result?.settlement?.titleSettlement?.firstAcquisition===true){
-   if(options.save===false&&typeof save==="function")save(false);
-   const run=finish("title-first-kill");
+   const run=finish("title-first-kill",{checkpoint:options.save===false});
    return {ok:true,ended:true,reason:"title-first-kill",battleNumber,result,run};
   }
   if(result?.settlement?.markMaxed===true){
-   if(options.save===false&&typeof save==="function")save(false);
-   const run=finish("mark-maxed");
+   const run=finish("mark-maxed",{checkpoint:options.save===false});
    return {ok:true,ended:true,reason:"mark-maxed",battleNumber,result,run};
   }
   if(activeRun.stopRequested){
-   const run=finish("stopped");
+   const run=finish("stopped",{checkpoint:options.save===false});
    return {ok:true,ended:true,reason:"stopped",battleNumber,result,run};
   }
   return {ok:true,ended:false,battleNumber,result,run:runStatus()};
@@ -245,6 +244,7 @@
  setTimeout(subscribeSharedLifecycle,0);
 
  window.CALAMITY_RUN_VERSION=CALAMITY_RUN_VERSION;
+ window.CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION=CALAMITY_TERMINAL_CHECKPOINT_OPT_VERSION;
  window.CALAMITY_CONTINUOUS_RULE_VERSION=CALAMITY_CONTINUOUS_RULE_VERSION;
  window.CALAMITY_SHARED_CONTINUOUS_INFRA_VERSION=1;
  window.CALAMITY_SHARED_INFRA_STRICT_VERSION=SHARED_INFRA_STRICT_VERSION;
