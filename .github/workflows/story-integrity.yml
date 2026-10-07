@@ -47,6 +47,8 @@ jobs:
         run: node tests/story/reincarnation-trigger-batch2.js
       - name: Run reincarnation W3 Story and combat completion isolation
         run: node tests/story/reincarnation-higher-dimensional-batch3.js
+      - name: Run three-era reincarnation Story old-save and reload closure
+        run: node tests/story/reincarnation-three-era-batch4-closure.js
       - name: Run legacy W3 Story migration regressions
         run: node tests/story/legacy-thirdworld.js
       - name: Upload story integrity diagnostics
