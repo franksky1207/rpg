@@ -1112,6 +1112,18 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 相關 integrity 與 `index.html` cache-bust 已同步。完整擊殺 no-progress 提前停止與 formal-vs-GM 災厄同條件 regression 留給第4批。
 
 
+
+## 2026-10-08 銀河災厄／GM 測試優化第4批（項目4、12）
+
+- 銀河文明災厄 GM「完整擊殺模擬」新增 no-progress guard：若連續 **100 場**完全造成 0 傷害，提前停止，不再空轉至 100,000 場安全上限；100,000 場 safety limit 仍保留作最後防線。UI 與統一摘要會明確顯示「無有效進度」及連續零傷害場數。
+- 新增純判定 API `gmCalamityShouldStopForNoProgress()`，integrity 鎖住 99 場不停止、100 場停止；`GM_CALAMITY_NO_PROGRESS_GUARD_VERSION=1`。
+- `calamitycore.js` 新增唯讀正式 headless combat owner：`runCivilizationCalamityHeadlessCombat()`（`CALAMITY_HEADLESS_COMBAT_VERSION=1`）。它只建立正式玩家／敵人／印記／final-damage Combat Core 輸入並回傳 combat，不做 settlement、不改災厄 HP、不升印記、不存檔。
+- 正式 `runCivilizationCalamityBattle()` 已委派此 headless owner 執行 Combat Core，再走原本 settlement；並維持原先「進 Combat Core 前先把正式角色 HP 回滿」的時序。
+- `calamitygmintegrity.js` 新增 formal-vs-GM 同條件 parity regression：以同一正式玩家能力、正式印記等級 map、相同災厄、相同 enemyStartHp、相同正式 final-damage multiplier、相同固定 RNG 序列，對比正式 headless 與 GM 單場沙盒的 win／enemyHp／playerHp／turns／倍率；GM regression 明確關閉 test specialization，避免拿 GM 專精污染正式對照。
+- `calamitycoreintegrity.js` 鎖住正式 headless owner 契約；相關 JS／integrity／benchmark summary 已更新 `index.html` cache-bust。
+- 本批不改正式災厄 HP、ATK／DEF、印記升級規則、Save Schema17、正式 settlement 與舊資料 migration。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
