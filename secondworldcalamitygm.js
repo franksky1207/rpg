@@ -133,6 +133,12 @@
   if(snapshot&&Number.isFinite(Number(snapshot.civilizationLevel)))return Math.max(0,Math.min(10,Math.floor(Number(snapshot.civilizationLevel))));
   return typeof window.gmTestCivilizationLevelValue==="function"?window.gmTestCivilizationLevelValue():0;
  }
+ function testContext(){
+  return typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null;
+ }
+ function contextRevision(context){
+  return Math.max(0,Math.floor(Number(context?.revision??context?.testContextRevision)||0));
+ }
  function simulate(d,options={}){
   if(!d||typeof window.runCombatCore!=="function"||typeof window.buildSecondWorldCalamityEnemy!=="function")return null;
   const e=window.buildSecondWorldCalamityEnemy(d.id),p=testPlayer(options.snapshot);if(!e||!p)return null;
@@ -151,15 +157,18 @@
  }
  async function fullKill(d,snapshot=null){
   if(!d)return null;
-  let hp=d.maxHp,attempts=0,totalDamage=0,totalTurns=0;
+  const context=snapshot||testContext(),startRevision=contextRevision(context);
+  let hp=d.maxHp,attempts=0,totalDamage=0,totalTurns=0,stale=false;
   while(hp>0&&attempts<100000){
-   const r=simulate(d,{startHp:hp,snapshot});if(!r)break;
+   if(!snapshot&&typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){stale=true;break;}
+   const r=simulate(d,{startHp:hp,snapshot:context});if(!r)break;
    attempts++;totalDamage+=r.damage;totalTurns+=Math.max(0,Number(r.result.turns)||0);
    hp=Math.max(0,Number(r.result.enemyHp)||0);
    if(r.result.win||hp<=0){hp=0;break;}
    if(attempts%100===0)await new Promise(resolve=>setTimeout(resolve,0));
   }
-  return {definition:d,attempts,totalDamage,totalTurns,remainingHp:hp,completed:hp<=0};
+  if(!snapshot&&typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision)stale=true;
+  return {definition:d,attempts,totalDamage,totalTurns,remainingHp:hp,completed:hp<=0&&!stale,stale,testContext:context};
  }
  function unlockProbe(d,bossCleared,civLevel){
   if(!d)return null;
@@ -187,8 +196,8 @@
  };
  window.gmSecondWorldCalamitySelectTest=function(v){selectedIndex=clampIndex(v);testResultHtml="";if(typeof render==="function")render();return selectedIndex;};
  window.gmSecondWorldCalamitySingleTest=function(){
-  const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=simulate(d);
-  gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,finalDamageMultiplier:data.finalDamageMultiplier,breakthroughLevel:data.breakthroughLevel,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
+  const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),context=testContext(),data=simulate(d,{snapshot:context});
+  gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},testContext:context,civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,finalDamageMultiplier:data.finalDamageMultiplier,breakthroughLevel:data.breakthroughLevel,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
   testResultHtml=singleTestHtml(data);
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
@@ -196,8 +205,14 @@
  };
  window.gmSecondWorldCalamityFullKillTest=async function(){
   const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),data=await fullKill(d);
-  gmSecondWorldCalamityLastResult=data?{type:"full",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},attempts:data.attempts,totalDamage:data.totalDamage,totalTurns:data.totalTurns,remainingHp:data.remainingHp,completed:!!data.completed,civilizationLevel:testCiv(),breakthroughLevel:typeof window.gmTestBreakthroughLevelValue==="function"?window.gmTestBreakthroughLevelValue():0,finalDamageMultiplier:typeof window.gmTestFinalDamageMultiplier==="function"?window.gmTestFinalDamageMultiplier(2,testCiv()):1}:null;
-  testResultHtml=data?`<div class="notice"><b>${d.name}・完整擊殺沙盒</b><div class="stats" style="margin-top:10px"><div class="stat">結果<b>${data.completed?"完整擊殺":"安全上限"}</b></div><div class="stat">需要場次<b>${fmt(data.attempts)}</b></div><div class="stat">總傷害<b>${fmt(data.totalDamage)}</b></div><div class="stat">總回合<b>${fmt(data.totalTurns)}</b></div></div></div>`:'<div class="notice">測試失敗。</div>';
+  const context=data?.testContext||null;
+  if(data?.stale){
+   gmSecondWorldCalamityLastResult=null;
+   testResultHtml='<div class="notice">測試期間角色設定已變更，本次完整擊殺結果已作廢；請以目前設定重新測試。</div>';
+  }else{
+   gmSecondWorldCalamityLastResult=data?{type:"full",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},testContext:context,attempts:data.attempts,totalDamage:data.totalDamage,totalTurns:data.totalTurns,remainingHp:data.remainingHp,completed:!!data.completed,civilizationLevel:testCiv(context),breakthroughLevel:Math.max(0,Math.floor(Number(context?.breakthroughLevel)||0)),finalDamageMultiplier:Number(context?.finalDamage?.multiplier)||1}:null;
+   testResultHtml=data?`<div class="notice"><b>${d.name}・完整擊殺沙盒</b><div class="stats" style="margin-top:10px"><div class="stat">結果<b>${data.completed?"完整擊殺":"安全上限"}</b></div><div class="stat">需要場次<b>${fmt(data.attempts)}</b></div><div class="stat">總傷害<b>${fmt(data.totalDamage)}</b></div><div class="stat">總回合<b>${fmt(data.totalTurns)}</b></div></div></div>`:'<div class="notice">測試失敗。</div>';
+  }
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
   if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();
   return data;
@@ -245,5 +260,7 @@
  window.gmClearSecondWorldCalamityTestResult=function(){testResultHtml="";benchmarkResultHtml="";gmSecondWorldCalamityLastResult=null;return true;};
  window.GM_SECOND_WORLD_CALAMITY_TEST_EMBEDDED_VERSION=1;
  window.GM_SECOND_WORLD_CALAMITY_SUMMARY_EXPORT_VERSION=1;
+ window.GM_SECOND_WORLD_CALAMITY_TEST_CONTEXT_SNAPSHOT_VERSION=1;
+ window.GM_SECOND_WORLD_CALAMITY_STALE_RESULT_GUARD_VERSION=1;
  window.GM_SECOND_WORLD_CALAMITY_SESSION_SETTINGS_VERSION=1;
 })();
