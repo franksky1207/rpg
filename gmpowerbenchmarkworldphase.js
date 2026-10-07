@@ -330,9 +330,6 @@
    const wrapped=function(value){const world=clampWorld(value);world3.modeOverride=world;world3.result=null;if(world===3){if(typeof render==="function")render();return 3;}return baseSetWorld(world);};
    wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkSetWorld=wrapped;
   }
-  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function"){
-   window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>{world3.result=null;});
-  }
   const baseSnapshot=window.gmPowerBenchmarkSnapshot;
   if(typeof baseSnapshot==="function"&&!baseSnapshot.__worldPhaseAdapter){const wrapped=function(){return correctedSnapshot(baseSnapshot());};wrapped.__worldPhaseAdapter=VERSION;window.gmPowerBenchmarkSnapshot=wrapped;}
   const baseSummary=window.gmPowerBenchmarkSummaryText;
