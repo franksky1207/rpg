@@ -8,6 +8,7 @@ const combatFx=read("combatfx.js");
 const special=read("specialcore.js");
 const universe=read("secondworldcombat.js");
 const gmBackground=read("gmbackground.js");
+const gmDevicePreferences=read("gmdevicepreferences.js");
 const gmHub=read("gmhubextensions.js");
 
 assert(/COMBAT_OPTIONAL_FULL_HP_LOCK_VERSION=1/.test(combat),"Combat Core 必須提供 opt-in 滿血鎖 V1。");
@@ -17,12 +18,13 @@ assert(/gmMainlineHpLockActive\("world1-mainline"\)/.test(combat),"銀河紀元 
 assert(/COMBAT_FULL_HP_LOCK_PRESENTATION_VERSION=1/.test(combatFx),"Combat FX 必須正式擁有鎖血呈現 V1。");
 assert(/lockPlayerFullHp=options\.lockPlayerFullHp===true/.test(combatFx),"Combat FX 必須直接理解 lockPlayerFullHp option。");
 assert(/if\(p\.lockPlayerFullHp\)p\.playerHp=p\.playerMaxHp/.test(combatFx),"鎖血呈現時玩家 HP 不得下降。");
-assert(/GM_MAINLINE_HP_LOCK_GATE_VERSION=1/.test(gmBackground),"GM 主線鎖血必須有統一正式 gate。");
-assert(/gmMainlineHpLockActive=mainlineHpLockActive/.test(gmBackground),"GM 主線鎖血正式 gate 必須由 GM preference owner 輸出。");
-assert(/GM_DEVICE_BOOLEAN_PREFERENCE_VERSION=1/.test(gmBackground),"GM 裝置布林偏好必須有共用 owner V1。");
-assert(/gmDevicePreferenceStorageKey=devicePreferenceStorageKey/.test(gmBackground),"GM 裝置偏好 storage key helper 必須正式輸出。");
-assert(/gmDeviceBooleanPreferenceEnabled=deviceBooleanPreferenceEnabled/.test(gmBackground),"GM 裝置偏好讀取 helper 必須正式輸出。");
-assert(/gmSetDeviceBooleanPreference=setDeviceBooleanPreference/.test(gmBackground),"GM 裝置偏好寫入 helper 必須正式輸出。");
+assert(/GM_MAINLINE_HP_LOCK_GATE_VERSION=1/.test(gmBackground),"GM 主線鎖血管理 UI 必須宣告正式 gate 版本。");
+assert(/GM_RUNTIME_DEVICE_PREFERENCE_CORE_VERSION=VERSION/.test(gmDevicePreferences),"GM runtime device preference core 必須正式輸出。");
+assert(/gmMainlineHpLockActive=mainlineHpLockActive/.test(gmDevicePreferences),"GM 主線鎖血正式 gate 必須由早期 runtime preference owner 輸出。");
+assert(/GM_DEVICE_BOOLEAN_PREFERENCE_VERSION=2/.test(gmDevicePreferences),"GM 裝置布林偏好 owner 必須升為 V2。");
+assert(/gmDevicePreferenceStorageKey=storageKey/.test(gmDevicePreferences),"GM 裝置偏好 storage key helper 必須由早期 owner 輸出。");
+assert(/gmDeviceBooleanPreferenceEnabled=booleanEnabled/.test(gmDevicePreferences),"GM 裝置偏好讀取 helper 必須由早期 owner 輸出。");
+assert(/gmSetDeviceBooleanPreference=setBoolean/.test(gmDevicePreferences),"GM 裝置偏好寫入 helper 必須由早期 owner 輸出。");
 assert(!/installMainlineHpLockPresentationBridge|gmMainlineHpLockPresentationResult|__gmMainlineHpLockWrapped/.test(gmBackground),"GM 設定 owner 不得再 monkey-patch Combat Presentation。");
 assert(/SPECIAL_MAINLINE_HP_LOCK_SCOPE_VERSION=2/.test(special),"特殊怪必須使用共享主線鎖血 scope V2。");
 assert(/gmMainlineHpLockActive\("special"\)/.test(special),"特殊怪正式鎖血必須只走共享 GM gate。");
@@ -90,9 +92,13 @@ const preferenceContext={
  Math
 };
 vm.createContext(preferenceContext);
+preferenceContext.window.addEventListener=()=>{};
+preferenceContext.window.dispatchEvent=()=>true;
+preferenceContext.CustomEvent=function(name,options){this.type=name;this.detail=options?.detail;};
+vm.runInContext(gmDevicePreferences,preferenceContext,{filename:"gmdevicepreferences.js"});
 vm.runInContext(gmBackground,preferenceContext,{filename:"gmbackground.js"});
 const pref=preferenceContext.window;
-assert(pref.GM_DEVICE_BOOLEAN_PREFERENCE_VERSION===1,"GM device preference runtime 版本必須為1。");
+assert(pref.GM_DEVICE_BOOLEAN_PREFERENCE_VERSION===2,"GM device preference runtime 版本必須為2。");
 assert(pref.gmMainlineHpLockStorageKey()==="civilization_frontline_gm_mainline_hp_lock_v1_legacy-user","既有 v1 主線鎖血 key 格式不得改名。");
 assert(pref.gmMainlineHpLockEnabled()===true,"既有 v1 localStorage=1 必須直接沿用，不得要求 migration。");
 assert(pref.gmMainlineHpLockActive("world1-mainline")===true,"銀河正式主線在既有開啟狀態下必須生效。");
