@@ -88,7 +88,7 @@
  }
  function consumeThirdWorldSettlement(settlement,{queue=true}={}){
   if(!settlement||settlement.ok!==true||Number(settlement.world)!==3)return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:false,reason:"invalid-settlement",unlockedStages:Object.freeze([]),milestoneStages:Object.freeze([]),finalStageUnlocked:false,completion:thirdWorldStoryCompletionFramework(state),queuedStoryId:null});
-  if(reincarnationStoryRun(state)){window.reconcileThirdWorldRerunCombatCompletion?.(state);reconcileThirdWorldStoryCompletionState(state);}
+  if(reincarnationStoryRun(state))reconcileThirdWorldStoryCompletionState(state);
   const unlockedStages=Array.from(new Set((Array.isArray(settlement.unlockedStoryStages)?settlement.unlockedStoryStages:[]).map(value=>Math.floor(Number(value))).filter(value=>value>=1&&value<=10))).sort((a,b)=>a-b),milestoneStages=unlockedStages.filter(stage=>stage<=9),finalStageUnlocked=unlockedStages.includes(10),completion=thirdWorldStoryCompletionFramework(state);
   const queuedStoryId=queue?queueThirdWorldEligibleStory({resume:false}):null;
   return Object.freeze({version:THIRD_WORLD_SETTLEMENT_BRIDGE_VERSION,accepted:true,unlockedStages:Object.freeze(unlockedStages),milestoneStages:Object.freeze(milestoneStages),finalStageUnlocked,completion,queuedStoryId:queuedStoryId||null,presentationDeferred:true});
