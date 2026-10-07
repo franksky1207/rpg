@@ -3,7 +3,8 @@
  const CORE_DELEGATION_VERSION=1;
  const FORMAL_SNAPSHOT_VERSION=1;
  const FORMAL_OPTIONS_VERSION=1;
- const RESULT_SNAPSHOT_VERSION=2;
+ const RESULT_SNAPSHOT_VERSION=3;
+ const RESULT_CONTEXT_VERSION=1;
  const baseHtml=window.gmArena5TestHtml;
  const baseSetWorld=window.gmArena5SetWorld;
  const baseTestWorld=window.gmArena5TestWorld;
@@ -48,7 +49,7 @@
   if(source.includes('value="3"'))return source;
   return source.replace(/(<select id="gmArenaWorld5"[^>]*>)([\s\S]*?)(<\/select>)/,(all,start,opts,end)=>`${start}${opts}<option value="3" ${world===3?"selected":""}>高維紀元</option>${end}`);
  }
- function simulate(modeValue,bossIndex,runs){
+ function simulate(modeValue,bossIndex,runs,testContext=null){
   if(typeof window.rollThirdWorldArenaLineup!=="function"||typeof window.buildThirdWorldArenaEnemy!=="function"||typeof window.getThirdWorldArenaStageReward!=="function")throw new Error("World 3 Arena formal benchmark owners unavailable.");
   const player=formalTestPlayer(),level=testLevel(),markLevels=marks(),sampleOptions=formalCombatOptions(null),civ=Math.max(0,Number(sampleOptions?.playerFinalDamageMultiplier)||1);
   const wins=[0,0,0];let clearCount=0,totalTurns=0,clearHpTotal=0,totalScaled=0,totalVip=0;
@@ -69,19 +70,26 @@
    totalVip+=typeof window.adjustVipDungeonPoints==="function"?window.adjustVipDungeonPoints(runScaled,vip()):runScaled;
   }
   const boss=Number.isInteger(bossIndex)?bosses()[bossIndex]:null,modeName=modeValue==="varied"?"異相競技場":"定相競技場",bossLabel=modeValue==="varied"?"三名不同高維投影":boss?.name||"高維投影";
-  return {world:3,rank:0,positionId:modeValue,mode:modeValue,modeName,bossIndex:Number.isInteger(bossIndex)?bossIndex:null,bossLabel,runs,reached:[runs,wins[0],wins[1]],wins,clearCount,totalPoints:totalScaled,totalVipPoints:totalVip,totalTurns,avgPoints:one(totalScaled/runs),avgVipPoints:one(totalVip/runs),avgTurns:one(totalTurns/runs),avgClearHp:clearCount?one(clearHpTotal/clearCount/player.hp*100):0,cfg:{name:`高維：${modeName}｜${bossLabel}`,totalPoints:typeof window.getThirdWorldArenaRoundReward==="function"?window.getThirdWorldArenaRoundReward(level).scaledPoints:0},assessment:false,level,civilizationDamageMultiplier:civ,formalCoreDelegated:true};
+  const payload={world:3,rank:0,positionId:modeValue,mode:modeValue,modeName,bossIndex:Number.isInteger(bossIndex)?bossIndex:null,bossLabel,runs,reached:[runs,wins[0],wins[1]],wins,clearCount,totalPoints:totalScaled,totalVipPoints:totalVip,totalTurns,avgPoints:one(totalScaled/runs),avgVipPoints:one(totalVip/runs),avgTurns:one(totalTurns/runs),avgClearHp:clearCount?one(clearHpTotal/clearCount/player.hp*100):0,cfg:{name:`高維：${modeName}｜${bossLabel}`,totalPoints:typeof window.getThirdWorldArenaRoundReward==="function"?window.getThirdWorldArenaRoundReward(level).scaledPoints:0},assessment:false,level,civilizationDamageMultiplier:civ,formalCoreDelegated:true};
+  return typeof window.gmAttachTestResultContext==="function"?window.gmAttachTestResultContext(payload,testContext):{...payload,testContext};
  }
  function resultCard(s){
   return `<div class="notice" style="margin-top:10px"><b>${s.modeName}・${s.bossLabel}</b><div class="muted gm-test-context">Lv.${s.level}・${s.runs} 輪完整三連戰；玩家套用目前 GM 測試 VIP／專精／強化／印記／文明等級，敵人與戰鬥參數直接共用正式高維競技場 Core。</div><div class="stats" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(135px,1fr))"><div class="stat">第一戰通過率<b>${pct(s.wins[0],s.runs)}%</b></div><div class="stat">第二戰累積通過率<b>${pct(s.wins[1],s.runs)}%</b></div><div class="stat">第三戰／完整三連勝<b>${pct(s.clearCount,s.runs)}%</b></div><div class="stat">平均 VIP 實得積分<b>${s.avgVipPoints}</b></div><div class="stat">全通平均剩餘 HP<b>${s.avgClearHp}%</b></div><div class="stat">平均總回合<b>${s.avgTurns}</b></div></div></div>`;
  }
  async function run500(){
   if(busy)return false;busy=true;resultHtml='<div class="notice">高維競技場測試執行中…</div>';if(typeof render==="function")render();
+  const testContext=typeof window.gmTestContextSnapshot==="function"?window.gmTestContextSnapshot():null;
+  const startRevision=Math.max(0,Math.floor(Number(testContext?.revision)||0));
   try{
    const rows=[];
    if(mode==="fixed"&&bossChoice==="all"){
-    for(let i=0;i<bosses().length;i++){rows.push(simulate("fixed",i,500));await new Promise(resolve=>setTimeout(resolve,0));}
-   }else if(mode==="fixed")rows.push(simulate("fixed",whole(bossChoice,0,9),500));
-   else rows.push(simulate("varied",null,500));
+    for(let i=0;i<bosses().length;i++){
+     if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){results=[];resultHtml='<div class="notice">測試期間角色設定已變更，本次高維競技場結果已作廢；請重新測試。</div>';return false;}
+     rows.push(simulate("fixed",i,500,testContext));await new Promise(resolve=>setTimeout(resolve,0));
+    }
+   }else if(mode==="fixed")rows.push(simulate("fixed",whole(bossChoice,0,9),500,testContext));
+   else rows.push(simulate("varied",null,500,testContext));
+   if(typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){results=[];resultHtml='<div class="notice">測試期間角色設定已變更，本次高維競技場結果已作廢；請重新測試。</div>';return false;}
    results=rows;resultHtml=rows.map(resultCard).join("");
   }catch(error){console.error("GM World 3 arena benchmark failed",error);resultHtml='<div class="notice">高維競技場測試失敗，請重新整理後再試。</div>';}
   finally{busy=false;if(typeof render==="function")render();if(typeof window.gmPowerBenchmarkRefreshSummary==="function")window.gmPowerBenchmarkRefreshSummary();}
@@ -115,6 +123,7 @@
  window.GM_THIRD_WORLD_ARENA_FORMAL_SNAPSHOT_VERSION=FORMAL_SNAPSHOT_VERSION;
  window.GM_THIRD_WORLD_ARENA_FORMAL_OPTIONS_VERSION=FORMAL_OPTIONS_VERSION;
  window.GM_THIRD_WORLD_ARENA_RESULT_SNAPSHOT_VERSION=RESULT_SNAPSHOT_VERSION;
+ window.GM_THIRD_WORLD_ARENA_RESULT_CONTEXT_VERSION=RESULT_CONTEXT_VERSION;
  window.GM_THIRD_WORLD_ARENA_500_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_ALL_BOSSES_VERSION=1;
  window.GM_THIRD_WORLD_ARENA_SUMMARY_VERSION=1;
