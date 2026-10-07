@@ -38,8 +38,8 @@ Runtime Integrity #2073 的 syntax／owner、Chromium browser smoke、VIP、GM m
 AU 架構優化第1～3批                                    ✅ 完成
 Batch5：W1／W2／W3 轉生後重征服                        ✅ 完成
 Batch6：越級收益／批次成長／副本／封箱                 ✅ 完成
-Batch7：GM／測試工具正式收尾                           ✅ 完成
-第一紀元 Target Context Batch0～6＋優化1～4             ✅ 完成
+Batch7：GM／測試工具正式收尾 7-1～7-5全部完成             ✅ 完成
+第一紀元完整 Target Context 重構 Batch0～6＋優化1～4     ✅ 完成
 Code Cleanup Batch1～8                                  ✅ 完成
 轉生／GM／三紀元語義四批優化                            ✅ 完成
 異宇宙稱號 Batch1～4                                   ✅ 完成
@@ -51,7 +51,7 @@ Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
 目前已排定工程                                          ✅ 全部完成
 ```
 
-**目前沒有已經定案、等待施工的下一個功能批次。**
+**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖已完成；第2批第一、二紀元觸發隔離、第3批高維 Final 與本輪完成隔離、第4批整體回歸尚待施工。**
 
 ---
 
@@ -909,13 +909,22 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**目前沒有已定案、等待施工的功能批次。**
+**目前已定案劇情／轉生隔離共4批：第1批戰線紀錄只讀解鎖已完成；第2～4批待施工。其他歷史工程維持封箱。**
 
-現階段是正式遊玩／轉生實測與持續平衡調整期。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
+現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
 `PROJECT_PENDING_STATUS.md` 的「沒有已定案待辦」結論仍有效；其更新日期比本檔早，因此若其中缺少本次已完成的 AU title／Mirror／W3 access／Schema17 closure 細節，以本檔與 current main 為準。
 
 ---
+
+
+## 2026-10-07 劇情／轉生隔離：第1批已完成
+
+- `storyrecordtabs.js` 在 `reincarnation.count >= 1` 時，用「現已進入的紀元」與正式 Story catalog **唯讀推導**戰線紀錄：銀河101、宇宙100、高維11；同時保留既有 completed 歷史。
+- 不寫 `storyProgress.completedStories`、不寫 `pendingStory`、不改 `thirdWorld.story`、`thirdWorld.completed`，也不觸發 `completeStory()` 或任何 formal progress；回顧使用 generic `openStory`、沒有 onComplete callback。
+- 首輪 `count=0` 仍按既有已完成紀錄顯示。正式故事資料尚未就緒時，不把缺少 pages 的新回顧條目提前加入。
+- 第1批僅處理**紀錄顯示與回顧**；轉生後取消第一、二紀元首殺強制播放／高維自動 queue 及 pending 清理，分別屬第2、3批，尚未修改，不得誤報已完成。
+- 新增 `tests/story/record.js` 的 count 0／1／2／3、101／100／11、未入世界不提前開放、唯讀、高維 Final generic replay 驗證；`index.html` 更新 cache-bust。
 
 # 25. 下一個對話如何接手
 
