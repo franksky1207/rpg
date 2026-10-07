@@ -157,11 +157,11 @@
  }
  async function fullKill(d,snapshot=null){
   if(!d)return null;
-  const context=snapshot||testContext(),startRevision=contextRevision(context);
+  const context=snapshot?null:testContext(),startRevision=contextRevision(context);
   let hp=d.maxHp,attempts=0,totalDamage=0,totalTurns=0,stale=false;
   while(hp>0&&attempts<100000){
    if(!snapshot&&typeof window.gmTestContextRevision==="function"&&window.gmTestContextRevision()!==startRevision){stale=true;break;}
-   const r=simulate(d,{startHp:hp,snapshot:context});if(!r)break;
+   const r=simulate(d,{startHp:hp,snapshot});if(!r)break;
    attempts++;totalDamage+=r.damage;totalTurns+=Math.max(0,Number(r.result.turns)||0);
    hp=Math.max(0,Number(r.result.enemyHp)||0);
    if(r.result.win||hp<=0){hp=0;break;}
@@ -196,7 +196,7 @@
  };
  window.gmSecondWorldCalamitySelectTest=function(v){selectedIndex=clampIndex(v);testResultHtml="";if(typeof render==="function")render();return selectedIndex;};
  window.gmSecondWorldCalamitySingleTest=function(){
-  const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),context=testContext(),data=simulate(d,{snapshot:context});
+  const d=selectedFromDom("gmSecondWorldCalamityTestTarget"),context=testContext(),data=simulate(d);
   gmSecondWorldCalamityLastResult=data?{type:"single",definition:{id:d.id,name:d.name,level:d.level,maxHp:d.maxHp},testContext:context,civilizationLevel:data.civilizationLevel,civilizationDamageMultiplier:data.civilizationDamageMultiplier,finalDamageMultiplier:data.finalDamageMultiplier,breakthroughLevel:data.breakthroughLevel,damage:data.damage,remainingHp:Math.max(0,Number(data.result.enemyHp)||0),turns:data.result.turns,win:!!data.result.win,playerHp:Math.max(0,Number(data.result.hp)||0)}:null;
   testResultHtml=singleTestHtml(data);
   const box=document.getElementById("gmSecondWorldCalamityTestResult");if(box)box.innerHTML=testResultHtml;
