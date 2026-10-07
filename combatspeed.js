@@ -3,11 +3,12 @@
  const PLAYER_RULE_VERSION=4;
  const PHASE_RULE_VERSION=1;
  const GM_OVERRIDE_VERSION=1;
- const GM_AUTH_SYNC_VERSION=1;
+ const GM_AUTH_SYNC_VERSION=2;
  const REINCARNATION_UNLOCK_VERSION=1;
  const BADGE_RENDERER_VERSION=1;
  const STORAGE_PREFIX="civilization_frontline_gm_combat_speed_v1_";
  const ALLOWED=Object.freeze([1,1.5,2]);
+ let lastAuthSyncSignature="";
 
  function normalizeSpeed(value){
   const n=Number(value);
@@ -105,9 +106,13 @@
  }
  function clearCurrent(){return clearForUser(currentUserId());}
  function syncGmOverrideFromAuth(source="auth-ready"){
-  const userId=currentUserId(),override=gmOverride(),effective=effectiveCombatSpeed();
-  try{window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed:override,effectiveSpeed:effective,source:String(source||"auth-ready"),userId}}));}catch(_){}
-  return Object.freeze({version:GM_AUTH_SYNC_VERSION,userId,override,effectiveSpeed:effective,ready:!!userId});
+  const userId=currentUserId(),override=gmOverride(),effective=effectiveCombatSpeed(),signature=[userId,override==null?"":String(override),String(effective)].join("|");
+  const changed=signature!==lastAuthSyncSignature;
+  const detail=Object.freeze({version:GM_AUTH_SYNC_VERSION,userId,override,effectiveSpeed:effective,ready:!!userId,changed,source:String(source||"auth-ready")});
+  if(!changed)return detail;
+  lastAuthSyncSignature=signature;
+  try{window.dispatchEvent(new CustomEvent("combat-speed-change",{detail:{speed:override,effectiveSpeed:effective,source:detail.source,userId,changed:true}}));}catch(_){}
+  return detail;
  }
  window.addEventListener?.("civilization-auth-ready",()=>syncGmOverrideFromAuth("auth-ready"));
  if(currentUserId())syncGmOverrideFromAuth("initial-session");
