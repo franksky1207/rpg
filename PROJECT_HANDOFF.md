@@ -1124,6 +1124,19 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 本批不改正式災厄 HP、ATK／DEF、印記升級規則、Save Schema17、正式 settlement 與舊資料 migration。
 
 
+
+## 2026-10-08 GM 授權／runtime gate 早期恢復第1批
+
+- 問題根因：GM 授權雖已保存在 browser-local `localStorage`（`civilization-war-gm-authorized-v1`），但舊流程要等 `window load` + 120ms，再等整個 deferred GM group 載完後才把 `state.gm=true`；因此同裝置已輸入過密碼，剛進遊戲仍可能暫時呈現未授權，甚至 GM group 某次載入失敗時看起來像「GM 消失」。
+- `scriptgrouploader.js` 新增 `GM_EARLY_RUNTIME_RESTORE_VERSION=1` 與 `restoreAuthorizedGmFlagEarly()`：loader 一執行就先讀 browser-local 授權並恢復 runtime `state.gm`，不再等待 31 支 GM deferred scripts 全部完成。
+- `ensureAuthorizedGmRuntime()` 現在先恢復 runtime flag，再背景載入 GM group；若 GM group 載入失敗，既有 browser-local 授權仍保持為 runtime 已授權，不把載入錯誤誤判成授權失效。
+- 密碼首次通過後，`authorizeGmRuntime()` 也先設 runtime GM flag，再載完整 GM group；授權與管理 UI 載入正式拆開。
+- 已授權時再次打開密碼 modal，retry 路徑改走 `ensureAuthorizedGmRuntime()`，成功後會重新補齊 runtime 授權，而不是只單純 retry `loadGroup("gm")`。
+- 原 save boundary 完整保留：`state.gm` 仍是 runtime-only，不寫入角色 save／Cloud Save。
+- 新增 `tests/runtime/gm-runtime-early-restore-integrity.js` 並加入 Runtime Integrity workflow，鎖住「已授權在 window load／GM group 完成前即恢復」以及「未授權 fail closed」。
+- 本批尚未改背景戰鬥、GM 2×、主線鎖血這三個帳號／裝置 preference owner 與 auth-ready 同步；這些留待第2批。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
