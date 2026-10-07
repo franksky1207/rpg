@@ -51,7 +51,7 @@ Schema17 舊檔相容矩陣＋近期優化 Batch4 closure          ✅ 完成
 目前已排定工程                                          ✅ 全部完成
 ```
 
-**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖已完成；第2批第一、二紀元觸發隔離、第3批高維 Final 與本輪完成隔離、第4批整體回歸尚待施工。**
+**劇情／轉生隔離新工程：第1批戰線紀錄唯讀解鎖、第2批第一／二紀元正式劇情觸發隔離已完成；第3批高維 Final 與本輪完成隔離、第4批整體回歸待施工。**
 
 ---
 
@@ -909,7 +909,7 @@ GitHub Pages #6038 = success
 
 # 24. 目前尚未完成項目
 
-**目前已定案劇情／轉生隔離共4批：第1批戰線紀錄只讀解鎖已完成；第2～4批待施工。其他歷史工程維持封箱。**
+**目前已定案劇情／轉生隔離共4批：第1批戰線紀錄唯讀解鎖、第2批 W1/W2 觸發隔離已完成；第3批 W3 高維 Final 隔離與第4批整體回歸待施工。其他歷史工程維持封箱。**
 
 現階段也是正式遊玩／轉生實測與持續平衡調整期。本次新工程以劇情歷史回顧／正式成長完全分離為硬規則。後續若使用者提出新功能、新平衡、新 UI 或新重構，必須重新 fresh-read current main 後再建立施工範圍。
 
@@ -923,8 +923,19 @@ GitHub Pages #6038 = success
 - `storyrecordtabs.js` 在 `reincarnation.count >= 1` 時，用「現已進入的紀元」與正式 Story catalog **唯讀推導**戰線紀錄：銀河101、宇宙100、高維11；同時保留既有 completed 歷史。
 - 不寫 `storyProgress.completedStories`、不寫 `pendingStory`、不改 `thirdWorld.story`、`thirdWorld.completed`，也不觸發 `completeStory()` 或任何 formal progress；回顧使用 generic `openStory`、沒有 onComplete callback。
 - 首輪 `count=0` 仍按既有已完成紀錄顯示。正式故事資料尚未就緒時，不把缺少 pages 的新回顧條目提前加入。
-- 第1批僅處理**紀錄顯示與回顧**；轉生後取消第一、二紀元首殺強制播放／高維自動 queue 及 pending 清理，分別屬第2、3批，尚未修改，不得誤報已完成。
+- 第1批僅處理**紀錄顯示與回顧**；第一、二紀元轉生後的正式劇情排隊／播放與舊 pending 清理由第2批完成；高維自動 queue、Final 與本輪完成完全隔離仍屬第3批待施工。
 - 新增 `tests/story/record.js` 的 count 0／1／2／3、101／100／11、未入世界不提前開放、唯讀、高維 Final generic replay 驗證；`index.html` 更新 cache-bust。
+
+
+## 2026-10-07 劇情／轉生隔離：第2批已完成
+
+- `storyprogress.js` 接入正式 `storyReincarnationContext(target)` 生命週期 owner，新增 `STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION=1`，由同一個 `suppressRerunStory()` 判定銀河／宇宙故事是否停止 formal queue。
+- 轉生 `count>=1` 後，W1 `queueBossStory()` 與 W2 `queueUniverseBossStory()` 不再建立 `pendingStory`／播放；首輪 `count=0` 維持原有首殺 Story 流程。
+- 宇宙 `settleSecondWorldBossVictory` 仍執行原正式 Boss 結算，但轉生輪不再追加劇情排隊；宇宙 `startSecondWorldBossContinuous` 不再因首殺劇情強制改為單場。
+- Story Progress normalization 對已轉生存檔只清理已辨識的 W1/W2 舊 `pendingStory`，不改 `completedStories`、不呼叫 `completeStory`、不發通知；W3 pending／正式 W3 Story 流程保持原狀等待第3批。轉生輪也停止依本輪 W1 Boss 擊殺補寫 Story history，交由第1批唯讀戰線紀錄顯示。
+- `resume()` 的 W1 序章強制播放只對首輪執行；保留配裝等其他原有流程。W3 pending 在尚未進 W3 時不於低紀元提前顯示。
+- 新增 `tests/story/reincarnation-trigger-batch2.js`（count 0／1／2／3／7、首輪保留、W1/W2 首殺及 W2 連戰、舊 pending、安全保留既有銀河序章與 W3 pending）；加入 Story Integrity CI；`index.html` cache-bust 已更新。Save Schema 仍為17。
+- **未完成：第3批高維劇情播放與本輪 Final 成長判定隔離；第4批三紀元舊檔和整體回歸。**
 
 # 25. 下一個對話如何接手
 
