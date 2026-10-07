@@ -144,19 +144,19 @@
   activeRun.phase="between";
 
   if(activeRun.mode==="single"){
-   const run=finish("single-complete",{checkpoint:options.save===false});
+   const run=finish("single-complete",{checkpoint:options.save===false||result?.settlement?.checkpointSaved===false});
    return {ok:true,ended:true,reason:"single-complete",battleNumber,result,run};
   }
   if(result?.settlement?.titleSettlement?.firstAcquisition===true){
-   const run=finish("title-first-kill",{checkpoint:options.save===false});
+   const run=finish("title-first-kill",{checkpoint:options.save===false||result?.settlement?.checkpointSaved===false});
    return {ok:true,ended:true,reason:"title-first-kill",battleNumber,result,run};
   }
   if(result?.settlement?.markMaxed===true){
-   const run=finish("mark-maxed",{checkpoint:options.save===false});
+   const run=finish("mark-maxed",{checkpoint:options.save===false||result?.settlement?.checkpointSaved===false});
    return {ok:true,ended:true,reason:"mark-maxed",battleNumber,result,run};
   }
   if(activeRun.stopRequested){
-   const run=finish("stopped",{checkpoint:options.save===false});
+   const run=finish("stopped",{checkpoint:options.save===false||result?.settlement?.checkpointSaved===false});
    return {ok:true,ended:true,reason:"stopped",battleNumber,result,run};
   }
   return {ok:true,ended:false,battleNumber,result,run:runStatus()};
