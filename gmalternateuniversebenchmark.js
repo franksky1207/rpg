@@ -217,11 +217,12 @@
   const guardA=formalStateFingerprint({a:1,b:{c:2}}),guardB=formalStateFingerprint({a:1,b:{c:3}});if(guardA.fingerprint===guardB.fingerprint)errors.push({code:"FORMAL_STATE_GUARD_COLLISION_PROBE"});
   const prepared=prepareContext(1);if(!prepared.ok||prepared.version!==PREPARED_CONTEXT_VERSION)errors.push({code:"PREPARED_CONTEXT",actual:prepared});
   if(RESULT_CONTEXT_VERSION!==1||typeof window.gmTestContextSnapshot!=="function")errors.push({code:"RESULT_CONTEXT_OWNER"});
+  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator!=="function")errors.push({code:"RESULT_INVALIDATION_REGISTRY"});
   return Object.freeze({version:VERSION,optimizationVersion:OPTIMIZATION_VERSION,formalStateGuardVersion:FORMAL_STATE_GUARD_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,resultContextVersion:RESULT_CONTEXT_VERSION,traitPairDiagnosticsVersion:TRAIT_PAIR_DIAGNOSTICS_VERSION,combatOwnerVersion:COMBAT_OWNER_VERSION,integrationVersion:INTEGRATION_VERSION,passed:errors.length===0,pairCount:pairs.length,errors:Object.freeze(errors)});
  }
  function installIntegration(){
   if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function")window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>{clearResult();});
-  const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseInvalidate=window.gmPowerBenchmarkInvalidateSnapshot,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
+  const baseHtml=window.gmPowerBenchmarkHtml,baseSummary=window.gmPowerBenchmarkSummaryText,baseClear=window.gmPowerBenchmarkClearAllResults,baseReset=window.gmPowerBenchmarkReset,baseRefresh=window.gmPowerBenchmarkRefreshUi,baseRefreshSummary=window.gmPowerBenchmarkRefreshSummary;
   if(typeof baseHtml!=="function")return false;
   const wrapped=function(){
    let source=String(baseHtml()||""),marker='<div id="gmPowerBenchmarkUnifiedSummary"';
@@ -248,7 +249,7 @@
    if(!ok&&typeof document!=="undefined"){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();try{ok=document.execCommand("copy");}catch(_){ }ta.remove();}
    if(typeof alert==="function")alert(ok?"測試摘要已複製。":"無法自動複製，請長按下方摘要文字手動複製。");return ok;
   };
-  if(typeof baseInvalidate==="function")window.gmPowerBenchmarkInvalidateSnapshot=function(){clearResult();return baseInvalidate.apply(this,arguments);};
+  if(typeof window.gmPowerBenchmarkRegisterTestContextInvalidator==="function")window.gmPowerBenchmarkRegisterTestContextInvalidator(()=>clearResult());
   if(typeof baseClear==="function")window.gmPowerBenchmarkClearAllResults=function(){clearResult();const out=baseClear.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
   if(typeof baseReset==="function")window.gmPowerBenchmarkReset=function(){clearResult();const out=baseReset.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
   if(typeof baseRefresh==="function")window.gmPowerBenchmarkRefreshUi=function(){const out=baseRefresh.apply(this,arguments);refreshIntegratedSummaryDom();return out;};
