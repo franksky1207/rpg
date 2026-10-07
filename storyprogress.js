@@ -12,13 +12,14 @@
  const THIRD_WORLD_RELOAD_RECOVERY_VERSION=1;
  const THIRD_WORLD_PLACEHOLDER_GUARD_VERSION=1;
  const STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION=1;
+ const STORY_REINCARNATION_W3_ISOLATION_VERSION=1;
  const INTRO_STORY_ID="earth-prologue",MODAL_ID="civilizationStarterGearModal";let resumeQueued=false,starterGearOpen=false;
  function loadedFromExistingSave(){return window.LAST_SAVE_LOAD_REPORT?.hadRaw===true;}
  function galaxyBossStoryId(mapIdx){const index=Math.floor(Number(mapIdx));if(!Number.isInteger(index)||index<0||!Array.isArray(WORLD_REGIONS))return null;const region=WORLD_REGIONS.find(r=>index>=Number(r.mapStart)&&index<=Number(r.mapEnd));return region?`${region.id}-boss-${index-Number(region.mapStart)+1}`:null;}
  function galaxyBossMapIndexForStory(id){if(typeof id!=="string"||!Array.isArray(WORLD_REGIONS))return null;for(const region of WORLD_REGIONS){for(let i=Number(region.mapStart);i<=Number(region.mapEnd);i++)if(galaxyBossStoryId(i)===id)return i;}return null;}
  function universeBossStoryId(index){return typeof window.universeStoryIdForBossIndex==="function"?window.universeStoryIdForBossIndex(index):null;}function universeBossIndexForStory(id){return typeof window.universeBossIndexForStoryId==="function"?window.universeBossIndexForStoryId(id):null;}
  function reincarnationStoryRun(target=state){return window.storyReincarnationContext?.(target)?.reincarnationRun===true;}
- function suppressRerunStory(id,target=state){if(!reincarnationStoryRun(target))return false;const era=storyEraForId(id);return era==="galaxy"||era==="universe";}
+ function suppressRerunStory(id,target=state){if(!reincarnationStoryRun(target))return false;const era=storyEraForId(id);return era==="galaxy"||era==="universe"||era==="higher-dimensional";}
  function availableStoryRegions(){return Array.isArray(window.CIVILIZATION_STORY_REGIONS)?window.CIVILIZATION_STORY_REGIONS:[];}function migrationOptions(options={}){return {introStoryId:INTRO_STORY_ID,fresh:options.fresh===true,legacy:options.legacy===true||(!options.fresh&&loadedFromExistingSave()),skipBackfill:options.skipBackfill===true,regions:availableStoryRegions(),stories:window.CIVILIZATION_STORIES||{},bossMapIndexForStory:galaxyBossMapIndexForStory};}
  function normalizeProgress(target,options={}){
   const migration=window.civilizationStoryMigration;
@@ -31,7 +32,7 @@
  }function backfillAvailableHistory(target){return reincarnationStoryRun(target)?false:window.civilizationStoryMigration?.backfillAvailableHistory?.(target,migrationOptions())===true;}
  function normalizeFreshState(target){normalizeProgress(target,{fresh:true});setTimeout(queueResume,0);return target;}if(typeof registerNewStateNormalizer==="function")registerNewStateNormalizer(normalizeFreshState);window.normalizeStoryProgressState=normalizeProgress;
  function readProgress(){const p=state?.storyProgress;return p&&typeof p==="object"&&!Array.isArray(p)?p:null;}function ensureProgress(options={}){normalizeProgress(state,options);return readProgress();}function persist(){if(typeof save==="function")save(false);}
- function setPending(id,{progress=null}={}){const p=progress||ensureProgress();if(!p)return false;p.pendingStory=id||null;persist();return true;}function completeStory(id){const p=ensureProgress();if(!p)return false;const thirdGate=thirdWorldStoryCompletionGate(id,state);if(thirdGate.handled&&thirdGate.allowed!==true)return false;const first=!p.completedStories.includes(id);if(first)p.completedStories.push(id);if(p.pendingStory===id)p.pendingStory=null;if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}if(thirdGate.handled)applyThirdWorldStoryCompletion(id,state,thirdGate);persist();if(first&&typeof window.showCivilizationCalamityUnlockNoticeForStory==="function")queueMicrotask(()=>window.showCivilizationCalamityUnlockNoticeForStory(id));if(first&&typeof window.handleSecondWorldStoryCompletion==="function")window.handleSecondWorldStoryCompletion(id);return true;}
+ function setPending(id,{progress=null}={}){if(suppressRerunStory(id))return false;const p=progress||ensureProgress();if(!p)return false;p.pendingStory=id||null;persist();return true;}function completeStory(id){if(suppressRerunStory(id))return false;const p=ensureProgress();if(!p)return false;const thirdGate=thirdWorldStoryCompletionGate(id,state);if(thirdGate.handled&&thirdGate.allowed!==true)return false;const first=!p.completedStories.includes(id);if(first)p.completedStories.push(id);if(p.pendingStory===id)p.pendingStory=null;if(id===INTRO_STORY_ID){p.introCompleted=true;state.introSeen=true;}if(thirdGate.handled)applyThirdWorldStoryCompletion(id,state,thirdGate);persist();if(first&&typeof window.showCivilizationCalamityUnlockNoticeForStory==="function")queueMicrotask(()=>window.showCivilizationCalamityUnlockNoticeForStory(id));if(first&&typeof window.handleSecondWorldStoryCompletion==="function")window.handleSecondWorldStoryCompletion(id);return true;}
  function queueStory(id,{resume=true,progress=null}={}){if(!id||suppressRerunStory(id)||!window.CIVILIZATION_STORIES?.[id])return null;const p=progress||ensureProgress({skipBackfill:true});if(!p||p.completedStories.includes(id)||p.pendingStory&&p.pendingStory!==id)return null;if(p.pendingStory!==id){p.pendingStory=id;persist();}if(resume)queueResume();return id;}function queueBossStory(mapIdx){return queueStory(galaxyBossStoryId(mapIdx));}function queueUniverseBossStory(index){return queueStory(universeBossStoryId(index));}
  function thirdWorldDescriptors(){return typeof window.thirdWorldStoryTriggerDescriptors==="function"?Array.from(window.thirdWorldStoryTriggerDescriptors()):[];}
  function formalStoryContentReady(descriptor){const id=String(descriptor?.storyId||"");const story=id?window.CIVILIZATION_STORIES?.[id]:null;return descriptor?.contentReady===true&&!!story&&Array.isArray(story.pages)&&story.pages.length>0;}
@@ -41,7 +42,25 @@
  function storyPendingArbitration(target=state,{expectedEra=null}={}){const pending=String(target?.storyProgress?.pendingStory||"");const expected=expectedEra==null?null:String(expectedEra);if(!pending)return Object.freeze({version:STORY_PENDING_ARBITRATION_VERSION,pendingStory:null,era:null,expectedEra:expected,known:true,catalogReady:false,own:false,foreign:false,disposition:"empty"});const era=storyEraForId(pending),known=!!era,catalogReady=!!window.CIVILIZATION_STORIES?.[pending],own=known&&(!expected||era===expected),foreign=known&&!!expected&&era!==expected,disposition=!known?"unknown":foreign?"foreign":"own";return Object.freeze({version:STORY_PENDING_ARBITRATION_VERSION,pendingStory:pending,era,expectedEra:expected,known,catalogReady,own,foreign,disposition});}
  function thirdWorldStoryCompletionGate(id,target=state){const descriptor=thirdWorldDescriptorForStory(id);if(!descriptor)return Object.freeze({handled:false,allowed:true,reason:"not-third-world-story",storyId:String(id||"")});const third=target?.thirdWorld,story=third?.story||{},stage=Math.max(0,Math.floor(Number(descriptor.stage)||0)),entered=third?.entered===true,bossesDefeated=thirdWorldBossesDefeated(target),unlockedStage=Math.max(0,Math.min(10,Math.floor(Number(story.unlockedStage)||0)));let allowed=entered,reason=entered?"eligible":"third-world-not-entered";if(allowed&&descriptor.kind==="milestone"&&unlockedStage<stage){allowed=false;reason="milestone-not-unlocked";}if(allowed&&descriptor.kind==="final"&&(!bossesDefeated||unlockedStage<10)){allowed=false;reason="final-not-ready";}return Object.freeze({handled:true,allowed,reason,storyId:String(descriptor.storyId||descriptor.id||id),kind:String(descriptor.kind||""),stage,entered,bossesDefeated,unlockedStage});}
  function applyThirdWorldStoryCompletion(id,target=state,gate=null){const decision=gate?.handled?gate:thirdWorldStoryCompletionGate(id,target);if(!decision.handled||decision.allowed!==true)return Object.freeze({...decision,applied:false});const third=target.thirdWorld;if(!third.story||typeof third.story!=="object"||Array.isArray(third.story))third.story={introSeen:false,unlockedStage:0,finalSeen:false};if(decision.kind==="intro")third.story.introSeen=true;if(decision.kind==="final"){third.story.finalSeen=true;third.completed=true;}return Object.freeze({...decision,applied:true,finalSeen:third.story.finalSeen===true,storedCompleted:third.completed===true});}
- function reconcileThirdWorldStoryCompletionState(target=state){const third=target?.thirdWorld,p=target?.storyProgress;if(third?.entered!==true||!p||!Array.isArray(p.completedStories))return {applied:false,reason:"unavailable"};if(!third.story||typeof third.story!=="object"||Array.isArray(third.story))third.story={introSeen:false,unlockedStage:0,finalSeen:false};const before={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};const completed=new Set(p.completedStories),intro=thirdWorldDescriptors().find(row=>row?.kind==="intro")||null,final=thirdWorldDescriptors().find(row=>row?.kind==="final")||null;if(intro&&formalStoryContentReady(intro))third.story.introSeen=completed.has(String(intro.storyId||intro.id||""));if(final&&formalStoryContentReady(final)){const finalDone=completed.has(String(final.storyId||final.id||""))&&thirdWorldBossesDefeated(target)&&Number(third.story.unlockedStage)>=10;third.story.finalSeen=finalDone;third.completed=finalDone;}const after={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};return {applied:JSON.stringify(before)!==JSON.stringify(after),before,after};}
+ function reconcileThirdWorldStoryCompletionState(target=state){
+  const third=target?.thirdWorld,p=target?.storyProgress;
+  if(third?.entered!==true||!p||!Array.isArray(p.completedStories))return {applied:false,reason:"unavailable"};
+  if(!third.story||typeof third.story!=="object"||Array.isArray(third.story))third.story={introSeen:false,unlockedStage:0,finalSeen:false};
+  const before={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};
+  if(reincarnationStoryRun(target)){
+   // Re-conquest completion comes from this life's formal boss/stage state, never historical Story records.
+   const battleComplete=thirdWorldBossesDefeated(target)&&Number(third.story.unlockedStage)>=10;
+   third.story.introSeen=false;
+   third.story.finalSeen=false;
+   third.completed=battleComplete;
+  }else{
+   const completed=new Set(p.completedStories),intro=thirdWorldDescriptors().find(row=>row?.kind==="intro")||null,final=thirdWorldDescriptors().find(row=>row?.kind==="final")||null;
+   if(intro&&formalStoryContentReady(intro))third.story.introSeen=completed.has(String(intro.storyId||intro.id||""));
+   if(final&&formalStoryContentReady(final)){const finalDone=completed.has(String(final.storyId||final.id||""))&&thirdWorldBossesDefeated(target)&&Number(third.story.unlockedStage)>=10;third.story.finalSeen=finalDone;third.completed=finalDone;}
+  }
+  const after={introSeen:third.story.introSeen===true,finalSeen:third.story.finalSeen===true,completed:third.completed===true};
+  return {applied:JSON.stringify(before)!==JSON.stringify(after),before,after};
+ }
  function thirdWorldStoryEligibility(target=state){
   const third=target?.thirdWorld,entered=third?.entered===true,story=third?.story&&typeof third.story==="object"?third.story:{},unlockedStage=Math.max(0,Math.min(10,Math.floor(Number(story.unlockedStage)||0))),completed=new Set(Array.isArray(target?.storyProgress?.completedStories)?target.storyProgress.completedStories:[]),bossesDefeated=thirdWorldBossesDefeated(target);
   const rows=thirdWorldDescriptors().map(descriptor=>{
@@ -49,7 +68,7 @@
    const seen=kind==="intro"?story.introSeen===true:kind==="final"?story.finalSeen===true:false;
    const unlocked=kind==="intro"?entered:entered&&unlockedStage>=stage;
    const gateSatisfied=kind==="final"?bossesDefeated:true;
-   const completedByHistory=completed.has(id),eligible=!!id&&unlocked&&gateSatisfied&&!seen&&!completedByHistory,contentReady=formalStoryContentReady(descriptor),queueable=eligible&&contentReady;
+   const completedByHistory=completed.has(id),eligible=!!id&&!reincarnationStoryRun(target)&&unlocked&&gateSatisfied&&!seen&&!completedByHistory,contentReady=formalStoryContentReady(descriptor),queueable=eligible&&contentReady;
    return Object.freeze({id,storyId:id,kind,stage,thresholdRemainingPercentSum:descriptor?.thresholdRemainingPercentSum??null,unlocked,gateSatisfied,seen,completed:completedByHistory,eligible,contentReady,queueable});
   });
   const nextEligible=rows.find(row=>row.eligible)||null,nextQueueable=rows.find(row=>row.queueable)||null;
@@ -57,7 +76,7 @@
  }
  function nextThirdWorldStory(target=state,{requireContent=true}={}){const snapshot=thirdWorldStoryEligibility(target);return snapshot.rows.find(row=>requireContent?row.queueable:row.eligible)||null;}
  function queueThirdWorldEligibleStory({resume=true,progress=null}={}){
-  if(typeof state==="undefined"||!state?.thirdWorld?.entered)return null;
+  if(typeof state==="undefined"||!state?.thirdWorld?.entered||reincarnationStoryRun(state))return null;
   const p=progress||ensureProgress({skipBackfill:true});if(!p||storyPendingArbitration(state,{expectedEra:"higher-dimensional"}).disposition!=="empty")return null;
   const row=nextThirdWorldStory(state,{requireContent:true});return row?queueStory(row.storyId,{resume,progress:p}):null;
  }
@@ -74,6 +93,7 @@
  }
  async function drainThirdWorldPostFlowStories(){
   if(typeof state==="undefined"||state?.thirdWorld?.entered!==true)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:false,presented:0,deferred:false,reason:"not-third-world"});
+  if(reincarnationStoryRun(state))return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:false,presented:0,deferred:false,reason:"reincarnation-story-archived"});
   let presented=0;
   for(let guard=0;guard<12;guard++){
    if(typeof document!=="undefined"&&document.hidden)return Object.freeze({version:THIRD_WORLD_POST_FLOW_DRAIN_VERSION,ok:true,drained:presented>0,presented,deferred:true,reason:"hidden"});
@@ -119,6 +139,7 @@
  window.civilizationStoryProgress={version:VERSION,thirdWorldStoryCompletionGate,applyThirdWorldStoryCompletion,reconcileThirdWorldStoryCompletionState,storyPendingArbitration,runBehaviorRegression:runStoryProgressBehaviorRegression,introStoryId:INTRO_STORY_ID,normalize:normalizeProgress,resume:queueResume,get:()=>readProgress(),setPending,completeStory,queueStory,queueBossStory,queueUniverseBossStory,thirdWorldEligibility:thirdWorldStoryEligibility,nextThirdWorldStory,queueThirdWorldEligibleStory,thirdWorldCompletionFramework:thirdWorldStoryCompletionFramework,consumeThirdWorldSettlement,drainThirdWorldPostFlowStories,bossStoryId:galaxyBossStoryId,universeBossStoryId,universeBossIndexForStory,backfillAvailableHistory:()=>{const changed=backfillAvailableHistory(state);if(changed)persist();return changed;},ensureStarterEquipment,completedStories:completedStoryRows};
  window.CIVILIZATION_STORY_PROGRESS_VERSION=VERSION;
  window.STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION=STORY_REINCARNATION_W1_W2_SUPPRESSION_VERSION;
+ window.STORY_REINCARNATION_W3_ISOLATION_VERSION=STORY_REINCARNATION_W3_ISOLATION_VERSION;
  window.THIRD_WORLD_STORY_QUEUE_VERSION=THIRD_WORLD_QUEUE_VERSION;
  window.THIRD_WORLD_STORY_POST_FLOW_DRAIN_VERSION=THIRD_WORLD_POST_FLOW_DRAIN_VERSION;
  window.THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION=THIRD_WORLD_STORY_COMPLETION_OWNER_VERSION;
