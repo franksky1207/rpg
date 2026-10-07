@@ -1161,6 +1161,19 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 新增 Playwright `tests/runtime/gm-first-render-browser.js`：預先寫入 GM authorization localStorage，直接攔截 `#main` 第一次 innerHTML render，要求該瞬間 authorization=true、runtimeFlag=true、startup owner V1、early restore V2；已加入 Runtime Integrity browser smoke。
 
 
+
+## 2026-10-08 GM 載入優化第2批（帳號切換／retry owner／semantic preference／事件去重）
+
+- `gmdevicepreferences.js` 升為 runtime preference owner V2（`GM_RUNTIME_DEVICE_PREFERENCE_AUTH_SYNC_VERSION=2`、`GM_RUNTIME_DEVICE_PREFERENCE_ACCOUNT_RECONCILE_VERSION=1`）。它現在記住上一個已同步帳號與偏好 signature；同帳號、同 background／HP-lock 狀態的重複 `civilization-auth-ready` 不再重複廣播。
+- 帳號切換時若新帳號的背景戰鬥為 OFF，而舊帳號已有 active background flow，owner 會立即呼叫共享 `backgroundProgressStop()` 停止目前唯一 flow，避免舊帳號的背景連戰延續到新帳號。
+- 新增語意寫入 API `gmSetBackgroundBattlePreference()`／`gmSetMainlineHpLockPreference()`；`gmbackground.js` 不再知道 `civilization_frontline_gm_*_v1_` storage prefix，只負責管理 UI 與呼叫語意 owner。既有 localStorage key 格式完全保留。
+- `combatspeed.js` 的 auth sync 升為 V2，加入 `lastAuthSyncSignature`；同帳號、同 override／effective speed 的重複 auth-ready 不再重複送 `combat-speed-change`。
+- `scriptgrouploader.js` 的首次密碼授權 `authorizeGmRuntime()` 現在直接委派 `ensureAuthorizedGmRuntime({retry:true})`；首次輸入密碼與既有授權恢復共用同一 250ms bounded retry owner，不再維護第二套 GM group 載入流程。
+- `tests/runtime/gm-runtime-auth-preferences-integrity.js` 擴充：驗證 duplicate auth-ready 去重、user-a→user-b 切換時讀取新帳號偏好、background=false 主動停止既有 flow、1.5×／2× 帳號速度切換，以及 semantic setters 仍寫回既有 v1 key。
+- `tests/runtime/gm-mainline-hp-lock-integrity.js` 已同步新 owner：storage key 必須存在 runtime preference owner，GM UI 反而不得再包含 key。
+- 本批不改 localStorage key 名稱、不改正式 save／Cloud Save／Save Schema17，也不改任何戰鬥公式；只收斂 owner、帳號切換 runtime reconciliation、retry 與事件生命週期。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
