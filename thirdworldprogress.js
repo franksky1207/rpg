@@ -177,6 +177,8 @@
     if(!equipment.ok)return equipment;
     const progression=applyAggregateProgression(liveState,checked,aggregateBefore);
     if(!progression.ok)return progression;
+    // The formal boss-HP transaction also owns rerun ten-boss completion.
+    window.reconcileThirdWorldRerunCombatCompletion?.(liveState);
     return {
      ok:true,bossIndex:checked.bossIndex,bossId:String(checked.boss.id||""),formalStartHp:checked.formalStartHp,combatEndHp:checked.combatEndHp,
      effectivePermanentDamage:checked.effectivePermanentDamage,playerDied:basis.playerDied===true,bossDefeated:basis.bossDefeated===true,
