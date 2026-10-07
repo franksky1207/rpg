@@ -1,8 +1,9 @@
 (function(){
  const CALAMITY_RUN_VERSION=1;
- const CALAMITY_CONTINUOUS_RULE_VERSION=5;
+ const CALAMITY_CONTINUOUS_RULE_VERSION=6;
  const GLOBAL_MUTEX_VERSION=1;
  const SHARED_INFRA_STRICT_VERSION=1;
+ const SHARED_BATTLE_PRESENTATION_POLICY_VERSION=1;
  const MANUAL_STOP_TERMINAL_VERSION=2;
  const BLOCKER_NAME="galaxy-calamity-run";
  let activeRun=null;
@@ -120,6 +121,7 @@
     logs:options.logs===false?false:true,
     rng:typeof options.rng==="function"?options.rng:undefined,
     markLevels:options.markLevels&&typeof options.markLevels==="object"?options.markLevels:undefined,
+    preparePresentation:options.preparePresentation!==false,
     save:options.save!==false
    });
   }catch(error){
@@ -187,9 +189,15 @@
     if(onEnd)await onEnd(ended);
     return {ok:true,ended:true,reason:"stopped",run:ended};
    }
-   const previewPolicy=catchUpPreviewPolicy();
-   const fast=!!previewPolicy?.active;
-   const battle=fightNext({...options,save:fast?previewPolicy?.shouldCheckpoint===true:options.save});
+   const infra=runInfra();
+   if(!infra||typeof infra.battlePresentationPlan!=="function"){
+    const ended=finish("owner-missing");
+    if(onEnd)await onEnd(ended);
+    return {ok:false,reason:"battle-presentation-owner-missing",run:ended};
+   }
+   const presentationPlan=infra.battlePresentationPlan(options);
+   const battle=fightNext({...options,...presentationPlan.combatOptions});
+   if(battle&&typeof battle==="object")battle.presentationPolicy=presentationPlan;
    if(!battle.ok){
     if(onEnd)await onEnd(battle.run);
     return battle;
@@ -244,6 +252,7 @@
  window.CALAMITY_GLOBAL_RUN_MUTEX_VERSION=GLOBAL_MUTEX_VERSION;
  window.CALAMITY_RUN_BLOCKER_NAME=BLOCKER_NAME;
  window.CALAMITY_FAST_CATCH_UP_POLICY_VERSION=1;
+ window.CALAMITY_SHARED_BATTLE_PRESENTATION_POLICY_VERSION=SHARED_BATTLE_PRESENTATION_POLICY_VERSION;
  window.CALAMITY_MAXED_MARK_CONTINUOUS_STOP_VERSION=1;
  window.beginCivilizationCalamityRun=begin;
  window.runCivilizationCalamitySingle=runSingle;
