@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.GM_TEST_BREAKTHROUGH_VERSION===1&&window.GM_TEST_CHARACTER_SANDBOX_VERSION>=2&&window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION>=4&&typeof window.gmSetTestBreakthroughLevel==="function"&&typeof window.gmTestBreakthroughSnapshot==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.GM_TEST_BREAKTHROUGH_VERSION===1&&window.GM_TEST_CHARACTER_SANDBOX_VERSION>=2&&window.GM_PLAYER_ABILITY_TEST_GROUP_VERSION>=4&&window.GM_POWER_BENCHMARK_BREAKTHROUGH_FINAL_DAMAGE_VERSION===1&&typeof window.gmSetTestBreakthroughLevel==="function"&&typeof window.gmTestBreakthroughSnapshot==="function"&&typeof window.gmPowerBenchmarkSnapshot==="function"&&typeof window.gmPowerBenchmarkSummaryText==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const originalFormal=JSON.parse(JSON.stringify(state.reincarnation||{}));
    const originalTest=window.gmTestBreakthroughLevelValue();
