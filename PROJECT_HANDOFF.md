@@ -1098,6 +1098,20 @@ Runtime Integrity 現已包含 `tests/runtime/calamity-shared-terminal-fast-catc
 - 本批仍不修改正式存檔、Save Schema17、正式災厄／印記資料、GM 正式管理 transaction、舊 HP migration、印記 progress canonical 與完整擊殺 no-progress；這些屬後續批次。
 
 
+
+## 2026-10-08 GM result-context／舊資料安全優化第3批
+
+- GM 測試結果全面採用共用 `testContext` envelope：`vipgm.js` 的 `gmAttachTestResultContext()` 為統一結果包裝入口，會把當次角色紀元／等級／裝備、VIP、突破、強化、專精、文明、印記、能力值與 final-damage snapshot 一起封進 result。
+- 已套用於特殊怪、懸賞、虛空、銀河／宇宙／高維競技場、鏡像、銀河／宇宙災厄、地圖／輸出／承傷 benchmark、高維地圖怪，以及異宇宙 benchmark；結果 snapshot 可以自證「當時用什麼角色設定跑的」，摘要不再只能依賴目前畫面設定。
+- 高維競技場、高維地圖怪與異宇宙 benchmark 補上 context revision guard；批次／非同步測試中途若改變 GM 角色設定，舊執行不得在 invalidation 後重新回填結果。
+- `gmpowerbenchmark.js` 的 test-context invalidation 升為 V2，新增 listener registry（`GM_POWER_BENCHMARK_TEST_CONTEXT_INVALIDATION_REGISTRY_VERSION=1`）；高維地圖與異宇宙等延伸模式以 listener 註冊自己的 result clear，不再只靠包裝舊 `gmPowerBenchmarkInvalidateSnapshot()`。後續新增模式應註冊 listener，而不是再堆 wrapper。
+- GM 正式印記修改已收斂到 `gmformaltransaction.js` 的 `gmCommitFormalMarkMutation()`，由 shared `runSettlementTransaction` 負責存檔與 rollback；`calamitygm.js` 不再直接修改正式 `state.marks` 後自行 save。
+- `calamitystate.js` 的 persisted mark progress normalization 已 canonicalize：未取得固定 0、滿級固定 0、Lv.0～9 依 `MARK_UPGRADE_KILLS` 把 progress clamp 到下一級需求以下；`MARK_STATE_PROGRESS_CANONICAL_VERSION=1`。
+- 舊存檔仍維持銀河災厄 HP 依新最大值直接 clamp，不做舊血量比例換算、不升 Save Schema17。
+- `savemigration.js` 的 GM transient cleanup inventory 已涵蓋 `gmTestBreakthroughLevel`、`gmTestContext`、`gmTestContextRevision`、benchmark／result 暫存等 GM-only key；載入舊檔若曾誤存這些欄位會清除，正式 save 不會保存 GM sandbox context。
+- 相關 integrity 與 `index.html` cache-bust 已同步。完整擊殺 no-progress 提前停止與 formal-vs-GM 災厄同條件 regression 留給第4批。
+
+
 # 25. 下一個對話如何接手
 
 新對話請直接使用以下標準指令：
