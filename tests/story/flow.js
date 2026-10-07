@@ -56,12 +56,13 @@ assert(/THIRD_WORLD_STORY_CONTENT_MIGRATION_VERSION=THIRD_WORLD_STORY_CONTENT_MI
 assert(/function reconcileThirdWorldContentVersion\(target\)/.test(migration)&&/legacy-w3-story-history-reset/.test(migration),'Story migration 缺少舊 Schema16 W3 story history 正式重建邏輯');
 assert(/Object\.prototype\.hasOwnProperty\.call\(stories,pendingRaw\)/.test(migration),'Story migration 必須清理失效 pendingStory reference');
 assert(/completed=completed\.filter\(id=>Object\.prototype\.hasOwnProperty\.call\(stories,id\)\)/.test(migration),'Story migration 必須清理失效 completedStories reference');
+assert(/groupSnapshot\.groups\?\.story\?\.status==="ready"/.test(migration),"Story history reference cleanup must wait for deferred group-ready");
 assert(/THIRD_WORLD_STORY_RECONCILIATION_VERSION=1/.test(phase)&&/THIRD_WORLD_STORY_COMPLETION_SOURCE_VERSION=1/.test(phase),'W3 Stage reconciliation／completion source policy 未就緒');
 assert(/function reconcileThirdWorldStoryState\(target\)/.test(phase)&&/canonicalThirdWorldStoryStage/.test(phase),'W3 Story Stage 必須能由 canonical boss progress 重建');
 const phaseReconcile=(phase.match(/function reconcileThirdWorldStoryState\(target\)\{[\s\S]*?\n \}\n function reconcileThirdWorldCoreProgressionState/)||[''])[0];
 assert(/stageOnly:true/.test(phaseReconcile)&&/completionOwner:"civilizationStoryProgress"/.test(phaseReconcile),'thirdworldphase Story reconciliation 必須明確限制為 Stage-only');
 assert(!/story\.introSeen\s*=|story\.finalSeen\s*=|third\.completed\s*=/.test(phaseReconcile),'thirdworldphase 不得再寫入 Story completion flags');
-assert(/function reconcileThirdWorldStoryCompletionState\(target=state\)/.test(progress)&&/third\.story\.introSeen=completed\.has/.test(progress)&&/third\.story\.finalSeen=finalDone;third\.completed=finalDone/.test(progress),'W3 completion flags 必須只由 shared Story Progress owner 從 completedStories 推導');
+assert(/function reconcileThirdWorldStoryCompletionState\(target=state\)/.test(progress)&&/third\.story\.introSeen=completed\.has/.test(progress)&&/third\.story\.finalSeen=finalDone;third\.completed=finalDone/.test(progress)&&/function reconcileThirdWorldRerunCombatCompletion\(target=state\)/.test(phase),'W3 首輪 Story 完成由 Story owner；轉生輪10王完成由正式 W3 phase owner');
 assert(/const VERSION=5;/.test(migrationRegression)&&/STORY_RECONCILIATION_REGRESSION_VERSION=1/.test(migrationRegression),'W3 migration regression 必須納入 Story stage reconciliation');
 ['SCHEMA16_STORY_STAGE_LAG_RECONCILED','SCHEMA16_STORY_STAGE_AHEAD_RECONCILED','SCHEMA16_STORY_STAGE_MISSING_REBUILT','SCHEMA16_STORY_STAGE_ALL_DEAD_REBUILT','SCHEMA16_STORY_COMPLETION_FLAGS_DEFER_TO_SHARED_OWNER','SCHEMA16_STORY_STAGE_ONLY_RECONCILIATION'].forEach(id=>assert(migrationRegression.includes(id),'缺少 W3 Story owner 舊檔 regression：'+id));
 assert(/STORY_RECORD_TABS_VERSION=9/.test(record)&&/STORY_RECORD_WORLD_REVIEW_VERSION=4/.test(record)&&/THIRD_WORLD_STORY_RECORD_VERSION=1/.test(record),'Story Record 未完成三紀元正式版本');
