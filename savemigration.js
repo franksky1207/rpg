@@ -14,7 +14,7 @@
  const SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION=2;
  const SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION=1;
  const REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION=1;
- const GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION=2;
+ const GM_TEST_TRANSIENT_KEY_INVENTORY_VERSION=3;
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
  function finiteNonNegative(value,fallback=0){const n=Number(value);return Number.isFinite(n)&&n>=0?n:fallback;}
@@ -22,7 +22,7 @@
  function defaultMainStat(type){return typeof mainStatForType==="function"?mainStatForType(type):(type==="weapon"?"atk":type==="helmet"||type==="shoes"?"hp":type==="armor"?"def":"crit");}
  function cleanupLegacyDungeonFields(target){if(!isObject(target?.dungeon))return false;let removed=false;["progress","attempts","activeRun","points"].forEach(key=>{if(Object.prototype.hasOwnProperty.call(target.dungeon,key)){delete target.dungeon[key];removed=true;}});return removed;}
  function cleanupRetiredShopState(target){if(!isObject(target))return false;if(!Object.prototype.hasOwnProperty.call(target,"shop"))return false;delete target.shop;return true;}
- const TRANSIENT_GM_TEST_STATE_KEYS=Object.freeze(["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmPowerBenchmark","gmTestResults"]);
+ const TRANSIENT_GM_TEST_STATE_KEYS=Object.freeze(["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestBreakthroughLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmTestContext","gmTestContextRevision","gmPowerBenchmark","gmTestResults"]);
  function cleanupTransientGmTestState(target){
   if(!isObject(target))return false;
   const removed=[];
