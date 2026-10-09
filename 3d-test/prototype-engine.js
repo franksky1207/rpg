@@ -457,24 +457,43 @@
     const ground=B.MeshBuilder.CreateCylinder("frontier-ground",{diameter:10.6,height:.3,tessellation:48},scene);
     ground.position.y=-.7;ground.material=iron;
     if(mode==="alternate"){
-      // Deterministic visual-only universe identities: 200 universes share four lightweight templates.
+      // Visual identity is owned by the formal universe culture table, never U-number modulo.
       const universe=Math.max(1,Math.min(200,Math.floor(Number(args.alternateUniverse)||Math.min(200,Math.floor(progress/5)+1))));
       const depth=Math.max(1,Math.min(5,Math.floor(Number(args.alternateDepth)||Math.floor(progress%5)+1)));
       const segment=Math.ceil(universe/10),first=(segment-1)*10+1,selected=universe-first;
-      const template=(universe-1)%4,seed=n=>((n*73+universe*131)%997)/997;
-      const palettes=[[.18,.72,.95],[.65,.37,.97],[.23,.89,.7],[.96,.51,.31]];
-      const tint=palettes[template],luminosity=.68+depth*.115;
+      const cultures=global.ALTERNATE_UNIVERSE_CULTURES||[];
+      const rows=global.ALTERNATE_UNIVERSE_NAME_CULTURES||[];
+      const names=global.ALTERNATE_UNIVERSE_NAMES||[];
+      const culture=rows[universe-1]||"";
+      const cultureIndex=Math.max(0,cultures.indexOf(culture));
+      const cultureMembers=rows.map((v,i)=>v===culture?i+1:0).filter(Boolean);
+      const cultureTier=Math.max(1,cultureMembers.indexOf(universe)+1);
+      const seed=n=>((n*73+universe*131)%997)/997;
+      // Twenty distinct chromatic identities; culture tiers vary texture and density, not battle strength.
+      const palettes=[
+        [.42,.75,.98],[.98,.39,.13],[.52,.72,1],[.34,.50,.74],[.12,.65,.88],
+        [.29,.84,.43],[.73,.42,.96],[.36,.82,.92],[.81,.59,.93],[.47,.59,.99],
+        [.95,.48,.26],[.94,.75,.34],[.57,.28,.77],[.74,.48,.92],[.96,.88,.54],
+        [.73,.23,.39],[.78,.64,.42],[.95,.67,.30],[.38,.85,.61],[.60,.83,.98]
+      ];
+      const tint=palettes[cultureIndex],luminosity=.61+depth*.09+cultureTier*.018;
       const accent=make("alternate-accent-"+universe,tint.map(v=>Math.min(1,v*luminosity)),true);
-      const depthAccent=make("alternate-depth-focus-"+universe,tint.map(v=>Math.min(1,v*(.78+depth*.12))),true);
-      scene.clearColor=new B.Color4(.009+template*.003,.014,.045+depth*.004,1);
+      const depthAccent=make("alternate-depth-focus-"+universe,tint.map(v=>Math.min(1,v*(.8+depth*.085))),true);
+      scene.clearColor=new B.Color4(.008+cultureIndex%4*.003,.014,.042+depth*.003,1);
+      const motif=cultureIndex%5;
+      const shape=(name,size,variant)=>{
+        if(variant===0)return B.MeshBuilder.CreateSphere(name,{diameter:size*1.65,segments:12},scene);
+        if(variant===1)return B.MeshBuilder.CreatePolyhedron(name,{type:2,size},scene);
+        if(variant===2)return B.MeshBuilder.CreateCylinder(name,{height:size*1.9,diameterTop:size*.5,diameterBottom:size*1.3,tessellation:6+cultureIndex%4},scene);
+        if(variant===3)return B.MeshBuilder.CreateBox(name,{size:size*1.46},scene);
+        return B.MeshBuilder.CreateTorus(name,{diameter:size*1.9,thickness:size*.28,tessellation:16+cultureIndex%4*4},scene);
+      };
       for(let i=0;i<10;i++){
         const number=first+i,theta=2*Math.PI*i/10,x=Math.cos(theta)*3.8,z=Math.sin(theta)*3.8;
-        const cleared=progress>=number*5,focused=i===selected,variant=(number-1)%4;
+        const cleared=progress>=number*5,focused=i===selected;
+        const rowCulture=rows[number-1]||"",rowIndex=Math.max(0,cultures.indexOf(rowCulture));
         const size=focused?.75:cleared?.54:.43;
-        const node=variant===0?B.MeshBuilder.CreateSphere("alternate-universe-"+number,{diameter:size*1.7,segments:10},scene):
-          variant===1?B.MeshBuilder.CreatePolyhedron("alternate-universe-"+number,{type:2,size},scene):
-          variant===2?B.MeshBuilder.CreateCylinder("alternate-universe-"+number,{height:size*1.9,diameterTop:size*.45,diameterBottom:size*1.35,tessellation:7},scene):
-          B.MeshBuilder.CreateBox("alternate-universe-"+number,{size:size*1.45},scene);
+        const node=shape("alternate-universe-"+number,size,rowIndex%5);
         node.position.set(x,focused?.5:.18,z);
         node.rotation.y=seed(number)*Math.PI;
         node.material=focused?accent:cleared?complete:sealed;
@@ -494,11 +513,14 @@
           spire.material=i===depth?depthAccent:accent;
         }
       }
-      // One of four reusable silhouettes with a depth-dependent energy crown.
-      const core=template===0?B.MeshBuilder.CreateSphere("alternate-selected-core",{diameter:1.5,segments:16},scene):
-        template===1?B.MeshBuilder.CreatePolyhedron("alternate-selected-core",{type:2,size:1.15},scene):
-        template===2?B.MeshBuilder.CreateCylinder("alternate-selected-core",{height:1.8,diameterTop:.32,diameterBottom:1.1,tessellation:7},scene):
-        B.MeshBuilder.CreateBox("alternate-selected-core",{size:1.38},scene);
+      // Culture-specific geometry plus tier-based embellishment, under bounded mesh counts.
+      const core=shape("alternate-selected-core",1.15,motif);
+      for(let i=0;i<Math.min(10,cultureTier);i++){
+        const theta=2*Math.PI*i/Math.min(10,cultureTier);
+        const relic=shape("alternate-culture-relic-"+i,.12+(cultureTier%3)*.025,(motif+i)%5);
+        relic.position.set(Math.cos(theta)*(.8+cultureTier*.045),.7+Math.sin(i*1.7)*.22,Math.sin(theta)*(.8+cultureTier*.045));
+        relic.material=accent;
+      }
       core.position.y=1.35;core.material=accent;
       for(let i=0;i<depth;i++){
         const theta=2*Math.PI*i/Math.max(3,depth),satellite=B.MeshBuilder.CreateSphere("alternate-energy-"+i,{diameter:.10+.035*depth,segments:6},scene);
@@ -506,7 +528,7 @@
         satellite.material=depthAccent;
       }
       scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*(.0001+depth*.000025);});
-      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,depth,template,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
+      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,universeName:names[universe-1]||"",culture,cultureIndex,cultureTier,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
       return scene;
     }
     const count=mode==="calamity"?10:12;
