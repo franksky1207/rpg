@@ -367,6 +367,18 @@
 - 以上改動未修改正式戰鬥、存檔或進度，亦未宣稱通過無法執行的實機驗收；使用者要求的五類缺口均已處理可安全完成的程式基礎，**尚餘本地化、正式路由整合、真實測試三大阻擋事項**。
 - 程式 commits：`3522f287bc6243cd32a039fd8b84fd7acffee8f8`、`b80da7bf5f1a92dfeddb9734da95b363c6be0502`、`ecf8f4e2df34dfc030655c2565055b0fcd3d3010`、`2fda9c306eab8e519a93f98a2b099ef26113a7d3`。僅程式碼及 GitHub 檔案回讀驗證；exact HEAD CI/瀏覽器實測待查。
 
+
+### 2026-10-09｜第 01～03 批基礎架構收尾（使用者指定四項）
+
+- **本次已施工**：runtime 防重入、engine stop/dispose 次序及 WebGL context-lost fail-closed；原型測試頁中斷後可按「重新啟動」重新建立獨立 runtime，並清除舊 host children；GM iframe 與主遊戲原畫面之間採同源／source 驗證的 close 訊息，返回時還原 window 與 #main scroll、焦點；正式首頁 3D 預覽關閉／切頁／錯誤的 runtime 清理及新版本 cache bust。
+- **B01-G1 尚未完成，阻擋正式啟用**：無法取得可信的 Babylon.js 7.54.3 完整發行檔 bytes，故尚未提交引擎與其授權文件到 repo。未製造空白/仿冒 vendor 檔，不得宣稱本地化或外部 CDN 已移除。下一次可取得資產後，應先驗證來源、hash、授權，再將獨立測試頁和正式 home loader 同時改指本地資產。
+- **B01-G2 部分完成**：GM return、再進入、Esc 處理有程式保護；尚無真實操作及手機實測證據，未完全結案。
+- **B02-G1 部分完成**：正式首頁 opt-in 3D 預覽已接入獨立 Canvas，其他 route、登入與完整首頁 L1 仍屬後續正式介面批次；不是全面接入。
+- **B02-G2 部分完成**：現有 lifecycle / AbortSignal 具安全入口，未實際測試 GLB 取消；refcount 與 GPU profiler 隨 26/34 批資產建成後驗證。
+- **B02-G3 部分完成**：context loss 轉安全模式、測試頁可手動重建 engine；但 WebGL restoration 在實機及長時間壓力測試尚待驗證。
+- **驗收限制**：本次僅 GitHub 原始檔回讀、靜態檢查與差異核對；無可信的瀏覽器/手機操作、GPU instrumentation 或 current HEAD CI 通過證據，不應標示「四項均完整驗收」。正式戰鬥、state、Save Schema 17、GM 結算未更動。
+- **主要程式 commits**：`7bf64ac4c61a5d5ec801c055bbe46808952a74d2`、`a73bf889bcbe6938e0466365de2c343a019edcf1`、`c447f83351043a0ce6b29319f3e47f8a31bc92bf`、`e46165b6b5bd313fbe35117042137fb7ebd2a0de`、`9faa1c3b1ecd1787491ea8e63e0c370593a2f0bb`。
+
 ## 7. 新對話可直接複製的指令
 
 ```text
