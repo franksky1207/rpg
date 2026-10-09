@@ -79,6 +79,13 @@ const assert = require("node:assert/strict");
       try{
         const result=await runtime.show("camera-test",()=>scene);
         const canvas=runtime.canvas;
+        const initialCanvas=runtime.canvas;
+        const initialCamera=scene.activeCamera;
+        host.querySelector(".civilization-3d-layout-button").click();
+        const expanded=host.classList.contains("civilization-3d-expanded");
+        const canvasUnchanged=runtime.canvas===initialCanvas&&scene.activeCamera===initialCamera;
+        host.querySelector(".civilization-3d-layout-button").click();
+        const restored=!host.classList.contains("civilization-3d-expanded");
         const wheel=new WheelEvent("wheel",{bubbles:true,cancelable:true,deltaY:100});
         const wheelNotCancelled=canvas.dispatchEvent(wheel);
         const wheelBlocked=wheel.defaultPrevented&&!wheelNotCancelled;
@@ -88,9 +95,12 @@ const assert = require("node:assert/strict");
         const afterButtons=camera.radius;
         camera.alpha=2.4;camera.beta=.6;camera.radius=14;
         host.querySelector('[data-camera-action="reset"]').click();
-        return {sceneOk:result.ok,wheelBlocked,closer,afterButtons,reset:camera.radius===10&&camera.alpha===1&&camera.beta===1.2,buttons:host.querySelectorAll(".civilization-3d-camera-button").length};
+        return {expanded,restored,canvasUnchanged,sceneOk:result.ok,wheelBlocked,closer,afterButtons,reset:camera.radius===10&&camera.alpha===1&&camera.beta===1.2,buttons:host.querySelectorAll(".civilization-3d-camera-button").length};
       }finally{runtime.dispose();host.remove();window.BABYLON=original;}
     });
+    assert.equal(cameraChecks.expanded,true,"preview did not expand");
+    assert.equal(cameraChecks.restored,true,"preview did not restore");
+    assert.equal(cameraChecks.canvasUnchanged,true,"scene/canvas replaced during resize");
     assert.equal(cameraChecks.sceneOk,true,"mocked 3D runtime scene not ready");
     assert.equal(cameraChecks.wheelBlocked,true,"wheel event over active 3D canvas must be cancelled");
     assert.equal(cameraChecks.closer,true,"zoom-in did not move camera");
