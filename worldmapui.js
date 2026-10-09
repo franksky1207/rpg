@@ -86,7 +86,7 @@
     syncRegionOpenState();
     const activeIndex=activeRegionIndex();
     const visible=WORLD_REGIONS.filter(regionUnlocked);
-    return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div>${typeof galaxy3dPreviewControl==="function"?galaxy3dPreviewControl():""}<div class="world-region-list">${visible.map(region=>regionHtml(region,activeIndex,WORLD_REGIONS.indexOf(region))).join("")}</div></section>`;
+    return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div>${`<div class="galaxy-3d-controls"><button id="civilization3dGalaxyToggle" class="btn" type="button" aria-pressed="false" onclick="window.civilization3dToggleGalaxy?.()">預覽 3D 銀河星圖</button><span class="muted">僅為立體展示；正式地圖與戰鬥仍由下方地圖卡操作。</span></div>`}<div class="world-region-list">${visible.map(region=>regionHtml(region,activeIndex,WORLD_REGIONS.indexOf(region))).join("")}</div></section>`;
   };
 
 
