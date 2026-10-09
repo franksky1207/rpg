@@ -1,3 +1,10 @@
+## 2026-10-10｜雙模式前置第 1 批交接（已完成，正式 40 批進度不變）
+
+- 已核對現行 `main` 的 3D 第 01～15 批主要正式接點、`index.html`、`3d-test/formal-home.js`、`appearance-snapshot.js`、`runtime.js`、`test-center.js`、`scriptgrouploader.js`。新增 [雙模式架構邊界契約](docs/DUAL_MODE_ARCHITECTURE_BOUNDARY_2026-10-10.md)，明示文字 UI 永久保留、3D 為另一套完整視覺、共用唯一正式 state／戰鬥／裝備／交易／存檔 owner。
+- 確認現行 `civilization3dHomeRouteRendered(view)` 對文字頁 render／DOM 仍有耦合，因此**尚未**具有獨立 3D 導航；`Civilization3DAppearance.capture()/scene()` 提供正式唯讀外觀資料，`Civilization3DRuntime.create()/show()/dispose()` 提供獨立 Canvas，GM 測試 fixture 保持隔離。後續不得直接移除文字頁，也不得讓 3D 重算戰鬥、收益或存檔。
+- **本批只完成依賴盤點與架構契約**，未變更 runtime JS/CSS/HTML，未建立登入選擇器／遊戲模式管理者，沒有可宣稱的瀏覽器、手機或 exact-HEAD CI 新驗收。下一步優先**前置第 2 批：資源分層與依賴準備**；原 3D 40 批仍第 01～15 批已施工、第 16 批未開始。
+- 仍須依規範於後續每完成一批，同步更新本檔與 `3D_IMPLEMENTATION_PLAN.md`，按當時最新 main 與測試證據回報。
+
 ## 2026-10-10｜近期修正及雙模式規劃交接（最新）
 
 - **銀河回顧戰已修的範圍**：`ui.js`、`playersemanticsui.js`、`firstworldtargetcontextbatch5.js` 處理點擊／高維畫面覆蓋／開戰 context／結算重打；`tests/runtime/galaxy-review-combat-browser.js` 有真實流程回歸。第 16、18、37、40 批需防退化；舊回顧不得取得正式收益、進度或影響存檔。最新 exact-HEAD CI／實機仍須另驗。
