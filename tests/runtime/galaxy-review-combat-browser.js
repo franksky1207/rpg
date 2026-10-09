@@ -9,17 +9,18 @@ const assert=require("node:assert/strict");
   await page.waitForFunction(()=>typeof window.startGalaxyReviewBattle==="function"&&typeof window.openGalaxyReviewMap==="function"&&typeof window.runCombatCore==="function",{timeout:30000});
   const setup=await page.evaluate(()=>{
    const before=JSON.stringify(state);
-   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
+   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
    // Use the genuine combat core; only its time-based visual playback is accelerated.
    window.runCombatCore=(player,enemy,hp,options)=>window.__reviewBrowserCleanup.combat(player,enemy,hp,options);
-   window.animateStructuredCombatPresentation=async()=>{await new Promise(resolve=>setTimeout(resolve,500));};
+   window.mainBattlePresentationSleep=async()=>{await new Promise(resolve=>setTimeout(resolve,1));};
    view="adventure";battleBusy=false;window.setAdventureReviewBattleActive?.(false);
-   window.openGalaxyReviewMap(0);
+   window.setAdventureEraView("galaxy-review");
    window.__reviewBrowserCleanup.before=JSON.stringify(state);
    return {hasPrepare:!!document.querySelector(".galaxy-review-prepare"),hasEnemy:!!document.querySelector(".enemy-card"),hasButton:!!document.querySelector('button[onclick="startGalaxyReviewBattle()"]')};
   });
-  assert.equal(setup.hasPrepare,true);assert.equal(setup.hasEnemy,true);assert.equal(setup.hasButton,true);
+  if(!setup.hasPrepare){await page.locator(".galaxy-review-action").first().click();}
+  assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(setup.hasEnemy,true);assert.equal(setup.hasButton,true);
   for(let n=0;n<2;n++){
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
@@ -36,7 +37,7 @@ const assert=require("node:assert/strict");
   }
   await page.evaluate(()=>{
    const x=window.__reviewBrowserCleanup;
-   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;
+   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;window.mainBattlePresentationSleep=x.sleep;
    view=x.originalView;adventureScreen=x.originalScreen;battleBusy=x.originalBusy;
    window.setAdventureReviewBattleActive?.(false);render();
    delete window.__reviewBrowserCleanup;
