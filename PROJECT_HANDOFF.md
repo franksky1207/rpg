@@ -1,3 +1,15 @@
+## 2026-10-10｜雙模式前置第 3 批：程式接點與 3D 資源按需載入（已施工，待瀏覽器／手機驗收）
+
+- **實際修改**：`index.html` 移除啟動時同步引入 `3d-test/runtime.js`、`3d-test/appearance-snapshot.js`；新增輕量 `3d-test/mode-foundation.js`（不存偏好、不改正式 save，現階段唯一有效文字正式模式）；保留 `3d-test/formal-home.js` 的既有文字 DOM 可選預覽入口。點選預覽後才平行載入 runtime、appearance、Babylon 與共用 3D scene，並以原 `Civilization3DRuntime.create/show/dispose` 管理畫面；暫時不改 `onRendered` 全路由 DOM 掛載方式。
+- **資源政策**：現有一般文字入口不再於 DOMContentLoaded 無條件 prefetch Babylon／scene；`CivilizationPresentationMode.shouldWarm3DAtStartup()` 現為 false。正式 3D 預覽點擊時仍走 manifest digest URL 與原失敗重試；GM 已授權 ready 中原有的 3D bytes 預熱邏輯可獨立保留，這不等於無 GM 帳號啟動載入 3D。今後第 17 批需要依玩家選定模式與實際首屏政策重新啟用適量預抓。
+- **基礎模式管理者已建立，但未啟用正式雙模式**：`CivilizationPresentationMode` 暴露 `modeIds`、`currentMode()`（目前永遠為 text）、`isFull3DAvailable()`（false）、`canPreview3D()`（true）、`shouldWarm3DAtStartup()`（false）。這是**刻意不持久化**的展示政策接點，非真正的帳號模式選擇／切換實作。模式偏好不進正式角色存檔。
+- **三個原問題的處理狀態**：① 3D 的 Canvas/外觀與既有文字 DOM 預覽入口已有載入生命週期解耦，但正式 3D 路由不再依文字 DOM 的最後階段**未完成**；② runtime 與 appearance 已由同步改按需，formal-home 維持輕量入口且一般啟動不預抓大量 3D bytes；③ 有統一模式政策雛形但尚沒有帳號綁定／首次選擇／模式切換或交易中斷保護。**不得宣稱三個問題都已全面解決**。
+- **第 17 批後續硬性施工**：完成帳號登入後「文字模式／3D 模式」首次選擇、帳號 ID＋裝置瀏覽器偏好隔離、同帳號同裝置直接恢復、設定頁安全保存與重新載入、進行中戰鬥／離線／交易阻斷策略、模式專用 boot/loader；完整 3D 尚未完成前不得對一般玩家開放空殼模式。將本批靜態策略接點升級為真實模式 manager 時，必須有測試且不得讓瀏覽器偏好變成正式 Save 規則。
+- **第 18 批後續硬性驗收**：所有正式頁、三紀元、故事／轉生／回顧、子頁、modal、帳號／GM 權限、戰鬥與結算、離線、手機、3D 原型入口、錯誤回退、切換後記住偏好；驗證完整文字玩法不受 3D 影響、L0/L1/L2 模式資源隔離及前 01～15 批舊預覽功能回歸，缺瀏覽器／手機證據標記待驗。
+- **第 19～40 批後續硬性規劃**：第 19～26 批建立真正可獨立操作的正式 3D 各路由／場景與按頁載入，第 27～34 批 GLB 人物／裝備／怪物／動畫／材質映射與資源指紋分層，第 35～39 批只讀正式戰鬥事件驅動 3D 全模式戰鬥演出（不複製戰鬥或獎勵 owner），第 40 批全功能雙模式與同存檔、跨模式切換、網路下載量、手機 GPU 長測、錯誤回退與上線驗收。**文字模式永久完整保留**，不得刪掉舊玩法或以 3D 取代。
+- **檢查界線**：提交後 GitHub main 回讀、兩支改動 JS 語法解析、入口引入和延遲模組文字檢核可做；未取得真實瀏覽器／手機點擊與 exact HEAD CI 證據前，不得聲稱 3D 預覽全部正常。若發生 3D 舊入口未載入或 GM 共用衝突，先按本批修改重新查實際依賴，修正並加回歸測試；不得先回復所有 3D 同步下載。
+- **交接規則**：本前置批不佔原 40 批，正式仍第 01～15 批已施工、**下一批第 16 批**；往後每完成正式一批，同步改本檔與 `PROJECT_HANDOFF.md`、更新 JS/CSS 的 index cache-bust、核對最新 main 與 CI／實機結果。
+
 ## 2026-10-10｜雙模式前置第 2 批交接（已完成，無程式變更）
 
 - 依 `main` 重新核對 `index.html` 161 一般同步 script、97 deferred（32 GM）、`scriptgrouploader.js` GM 先驗證與 ready、`backgroundpreload.js` 啟動屏障、`3d-test/formal-home.js` 預取 Babylon／場景、`3d-test/test-center.js` GM 入口、`scripts/generate-resource-manifest.py` 指紋生成。**現有快取與 3D 預熱不等於已按文字／3D 模式拆分載入**，正式 index 仍直接載入 3D runtime／appearance／formal-home。
