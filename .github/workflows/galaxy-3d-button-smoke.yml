@@ -1,0 +1,37 @@
+name: Galaxy 3D Button Browser Smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worldmapui.js'
+      - 'ui.js'
+      - '3d-test/formal-home.js'
+      - 'index.html'
+      - 'tests/runtime/galaxy-3d-button-browser.js'
+      - '.github/workflows/galaxy-3d-button-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Chromium render of canonical galaxy adventure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/galaxy-web.log 2>&1 &
+          srv=$!
+          trap 'kill "$srv" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep .3
+          done
+          node tests/runtime/galaxy-3d-button-browser.js
