@@ -6,14 +6,31 @@ const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
 function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
+const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-3d-load-opt1";
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createCharacterScene)return;
- if(!loading)loading=(async()=>{
-  if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
-  if(!global.Civilization3DPrototype?.createCharacterScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05&v4=20261009-b05-region-lock&v5=20261009-b06&v6=20261009-b07&v7=20261009-b08");
- })().catch(error=>{loading=null;throw error;});
+ if(!loading)loading=Promise.all([
+   global.BABYLON?.Engine?Promise.resolve():script(BABYLON_SRC),
+   global.Civilization3DPrototype?.createCharacterScene?Promise.resolve():script(SCENE_SRC)
+ ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createCharacterScene)throw new Error("3d-modules-unavailable");})
+ .catch(error=>{loading=null;throw error;});
  return loading;
 }
+/* Warm network cache only; WebGL and GPU allocations begin on explicit user action. */
+function schedule3dPrefetch(){
+ const run=()=>{
+  for(const src of [BABYLON_SRC,SCENE_SRC]){
+   if(document.querySelector('link[data-civilization-3d-prefetch="'+src+'"]'))continue;
+   const link=document.createElement("link");
+   link.rel="prefetch";link.as="script";link.href=src;link.dataset.civilization3dPrefetch=src;
+   document.head.appendChild(link);
+  }
+ };
+ const idle=()=>typeof global.requestIdleCallback==="function"?global.requestIdleCallback(run,{timeout:3000}):setTimeout(run,900);
+ if(document.readyState==="complete")idle();else global.addEventListener("load",idle,{once:true});
+}
+schedule3dPrefetch();
 let activeRoute="home",activeEra="";
 async function toggle(route="home"){
  if(enabled){hide();return;}
