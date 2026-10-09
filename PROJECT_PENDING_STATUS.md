@@ -208,6 +208,6 @@ formalStartHp → combatEndHp → permanent delta
 
 # 真正待辦
 
-**目前沒有已定案、等待施工的功能批次。**
+**既有遊戲優化目前沒有另外核准、等待施工的功能批次；但已新增《文明戰線》3D 全面升級 40 批施工規劃，詳見 [`3D_IMPLEMENTATION_PLAN.md`](3D_IMPLEMENTATION_PLAN.md)。40 批目前全部尚未施工，須由使用者逐批指示才執行。**
 
 下一個工作應由使用者的新需求開始，重新依 current main 分析、定義範圍與分批施工。
