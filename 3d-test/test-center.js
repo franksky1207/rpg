@@ -203,7 +203,7 @@ async function start(){
      :c.kind==="marks"?(appearanceMode==="formal"?Object.values(activeVisual.markLevels||{}):freeAppearance.markLevels).slice(0,10).map(v=>Number(v)||0):[],
    growthLevel:Number(c.kind==="civilization"?activeVisual.civilizationLevel:activeVisual.coreLevel)||0
  }:{};
- const visual=c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonExtraUnlocked:true}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
+ const visual=c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonAvailableModes:[true,true,true,true]}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
@@ -239,7 +239,7 @@ renderCategories();renderCases();renderInfo();
   await Promise.all([
     window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
     window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
-    window.Civilization3DPrototype?.createDungeonScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12")
+    window.Civilization3DPrototype?.createDungeonScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state")
   ]);
   if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createDungeonScene)throw new Error("3D 模組載入不完整。");
   start();
