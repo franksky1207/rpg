@@ -17,10 +17,12 @@ const assert=require("node:assert/strict");
    window.runCombatCore=(player,enemy,hp,options)=>window.__reviewBrowserCleanup.combat(player,enemy,hp,options);
    window.mainBattlePresentationSleep=async()=>{await new Promise(resolve=>setTimeout(resolve,1));};
    view="adventure";battleBusy=false;window.setAdventureReviewBattleActive?.(false);
-   window.setAdventureEraView("galaxy-review");
+   const selected=window.setAdventureEraView("galaxy-review");
+   render();
    window.__reviewBrowserCleanup.before=JSON.stringify(state);
-   return {hasPrepare:!!document.querySelector(".galaxy-review-prepare"),hasEnemy:!!document.querySelector(".enemy-card"),hasButton:!!document.querySelector('button[onclick="startGalaxyReviewBattle()"]')};
+   return {selected,phase:window.currentWorldPhase(state),era:window.getAdventureEraView?.(),locked:window.adventureEraViewLocked?.(),view,preview:document.querySelector("#main")?.textContent?.slice(0,260),hasPrepare:!!document.querySelector(".galaxy-review-prepare"),hasEnemy:!!document.querySelector(".enemy-card"),hasButton:!!document.querySelector('button[onclick="startGalaxyReviewBattle()"]')};
   });
+  assert.equal(setup.era,"galaxy-review",JSON.stringify(setup));
   if(!setup.hasPrepare){await page.locator(".galaxy-review-action").first().click();}
   assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(await page.locator(".galaxy-review-prepare .enemy-card").count(),5);assert.equal(await page.locator('button[onclick="startGalaxyReviewBattle()"]').count(),1);
   for(let n=0;n<2;n++){
