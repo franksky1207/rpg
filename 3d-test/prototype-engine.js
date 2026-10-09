@@ -208,5 +208,34 @@
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(50,args.engine.getDeltaTime());core.rotation.y+=dt*.00025;orbit.rotation.z+=dt*.000022;});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.7.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene});
+
+  /* B08: visual-only full-body character stand-in; no equipment/save mutation. */
+  function createCharacterScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.015,.02,.045,1);
+    const camera=new B.ArcRotateCamera("character-camera",Math.PI/2.25,Math.PI/2.5,8.5,new B.Vector3(0,1.05,0),scene);
+    camera.lowerRadiusLimit=5;camera.upperRadiusLimit=13;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("character-light",new B.Vector3(0,1,0),scene).intensity=.9;
+    const metal=new B.StandardMaterial("character-metal",scene);metal.diffuseColor=new B.Color3(.18,.23,.33);
+    const glow=new B.StandardMaterial("character-glow",scene);
+    const world=Math.max(1,Math.min(3,Math.floor(Number(args.world)||1)));
+    glow.emissiveColor=world===3?new B.Color3(.6,.25,.92):world===2?new B.Color3(.13,.7,.8):new B.Color3(.22,.5,.95);
+    const body=B.MeshBuilder.CreateCylinder("character-body",{height:1.8,diameterTop:.88,diameterBottom:.65,tessellation:8},scene);
+    body.position.y=1.8;body.material=metal;
+    const head=B.MeshBuilder.CreateSphere("character-head",{diameter:.65,segments:16},scene);
+    head.position.y=3.05;head.material=glow;
+    for(const side of [-1,1]){
+      const arm=B.MeshBuilder.CreateCylinder("character-arm-"+side,{height:1.55,diameter:.28,tessellation:8},scene);
+      arm.position.set(side*.72,1.75,0);arm.rotation.z=side*.14;arm.material=metal;
+      const leg=B.MeshBuilder.CreateCylinder("character-leg-"+side,{height:1.5,diameter:.37,tessellation:8},scene);
+      leg.position.set(side*.24,.45,0);leg.material=metal;
+    }
+    const platform=B.MeshBuilder.CreateCylinder("character-platform",{height:.2,diameter:3.2,tessellation:48},scene);
+    platform.position.y=-.4;platform.material=glow;
+    const orbit=B.MeshBuilder.CreateTorus("character-aura",{diameter:3.5,thickness:.065,tessellation:72},scene);
+    orbit.rotation.x=Math.PI/2;orbit.position.y=-.18;orbit.material=glow;
+    scene.onBeforeRenderObservable.add(()=>{orbit.rotation.z+=Math.min(args.engine.getDeltaTime(),50)*.00003;});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.8.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene});
 })(window);
