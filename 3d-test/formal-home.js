@@ -4,7 +4,7 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 八種專精":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11";
@@ -80,7 +80,7 @@ async function toggle(route="home",growthKind=null){
     coreLevel:Math.max(0,Math.min(10,Number(formalState?.thirdWorld?.coreLevel)||0))
   }:{};
   if(growth){
-    const choice=activeGrowthKind||document.getElementById("civilization3dGrowthKind")?.value||"specialization";
+    const choice=activeGrowthKind||"specialization";
     growthState.growthKind=choice;
     growthState.growthLevels=choice==="marks"?growthState.marks:growthState.growthLevels;
     growthState.growthLevel=choice==="civilization"?growthState.civilizationLevel:growthState.coreLevel;
@@ -200,36 +200,43 @@ function ensureForgeControl(view){
 }
 function ensureGrowthControl(view){
  if(view!=="specialization")return;
- const page=document.querySelector("#main .function-page")||document.getElementById("main");
+ const page=document.querySelector("#main .function-page");
  if(!page||page.querySelector("#civilization3dGrowthToggle"))return;
  const controls=document.createElement("div");controls.className="galaxy-3d-controls";
  const button=document.createElement("button");button.id="civilization3dGrowthToggle";button.className="btn";button.type="button";
- button.textContent="預覽 3D 養成星環";button.setAttribute("aria-pressed","false");
- button.onclick=()=>toggle("specialization");
- const select=document.createElement("select");select.id="civilization3dGrowthKind";select.className="btn";
- for(const [value,label] of [["specialization","八種專精"],["marks","十種印記"],["civilization","文明等級"],["core","界弦核心"]]){
-  const option=document.createElement("option");option.value=value;option.textContent=label;select.append(option);
- }
- select.onchange=()=>{if(enabled){hide();toggle("specialization");}};
- const hint=document.createElement("span");hint.className="muted";hint.textContent="僅觀看正式養成進度；升級、注入與資源消耗仍由原介面處理。";
- controls.append(button,select,hint);page.prepend(controls);
+ button.textContent="預覽 3D 八種專精";button.setAttribute("aria-pressed","false");
+ button.onclick=()=>toggle("specialization","specialization");
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="只顯示八種專精的正式等級；升級仍在原頁操作。";
+ controls.append(button,hint);page.prepend(controls);
 }
 function ensureGrowthPageControls(view){
- const world=Number(global.currentWorldPhase?.()||1);
- const contexts=[
-  {route:"calamity",kind:world===1?"marks":"civilization",label:world===1?"預覽 3D 印記星環":"預覽 3D 文明核心"},
-  {route:"adventure",kind:"core",label:"預覽 3D 界弦核心"}
- ];
- for(const ctx of contexts){
-  if(view!==ctx.route||(ctx.route==="adventure"&&(world!==3||global.getAdventureEraView?.()!=="higher-dimensional")))continue;
-  const page=document.querySelector(ctx.route==="calamity"?"#main .function-page, #main .calamity-page, #main .second-world-calamity-page":"#main .third-world-adventure-screen");
-  if(!page||page.querySelector("#civilization3dGrowthPageToggle"))continue;
-  const controls=document.createElement("div");controls.className="galaxy-3d-controls";
-  const button=document.createElement("button");button.id="civilization3dGrowthPageToggle";button.className="btn";button.type="button";button.textContent=ctx.label;
-  button.setAttribute("aria-pressed","false");button.dataset.previewLabel=ctx.label;button.onclick=()=>toggle(ctx.route,ctx.kind);
-  const hint=document.createElement("span");hint.className="muted";hint.textContent="唯讀視覺展示，實際養成、資源與確認操作維持原版。";
-  controls.append(button,hint);page.prepend(controls);
+ const main=document.getElementById("main");
+ if(!main)return;
+ let kind=null,label="",anchor=null;
+ if(view==="calamity"){
+  const shell=main.querySelector(".calamity-shell.calamity-home");
+  if(!shell)return; // No 3D preview while a calamity battle/result is open.
+  if(shell.querySelector(".calamity-mark-grid")){
+   kind="marks";label="預覽 3D 十種印記";anchor=shell.querySelector(".calamity-mark-grid");
+  }else if(shell.querySelector(".universe-civilization-summary")||shell.querySelector(".calamity-grid")){
+   // Only the actual universe civilization screen; never infer the era from currentWorldPhase alone.
+   const universe=Number(global.currentWorldPhase?.()||0)>=2&&
+     !shell.querySelector(".calamity-mark-grid")&&
+     (shell.querySelector(".universe-civilization-summary")||shell.textContent.includes("宇宙災厄"));
+   if(universe){kind="civilization";label="預覽 3D 文明等級";anchor=shell.querySelector(".universe-civilization-summary")||shell.querySelector(".calamity-grid");}
+  }
+ }else if(view==="adventure"&&Number(global.currentWorldPhase?.()||0)===3&&global.getAdventureEraView?.()==="higher-dimensional"){
+  const screen=main.querySelector(".third-world-adventure-screen");
+  const core=screen?.querySelector(".third-world-core-panel");
+  if(core){kind="core";label="預覽 3D 界弦核心";anchor=core;}
  }
+ if(!kind||!anchor||main.querySelector("#civilization3dGrowthPageToggle"))return;
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.id="civilization3dGrowthPageToggle";button.className="btn";button.type="button";
+ button.textContent=label;button.dataset.previewLabel=label;button.setAttribute("aria-pressed","false");
+ button.onclick=()=>toggle(view,kind);
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="僅顯示正式進度，不影響戰鬥、注入或養成操作。";
+ controls.append(button,hint);anchor.before(controls);
 }
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
@@ -255,7 +262,7 @@ global.civilization3dToggleHigher=()=>toggle("adventure");
 global.civilization3dToggleCharacter=()=>toggle("character");
 global.civilization3dToggleInventory=()=>toggle("inventory");
 global.civilization3dToggleForge=()=>toggle("enhancement");
-global.civilization3dToggleGrowth=()=>toggle("specialization");
+global.civilization3dToggleGrowth=()=>toggle("specialization","specialization");
 global.civilization3dHomeRouteRendered=onRendered;
 global.CIVILIZATION_3D_HOME_BRIDGE_VERSION=1;
 })(window);
