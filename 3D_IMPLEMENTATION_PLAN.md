@@ -85,7 +85,7 @@
 
 ### 第 05 批｜銀河紀元冒險與選怪
 - **施工範圍**：銀河區域、五怪選取、進度、鎖定、準備、背包返回、回顧入口。
-- **2026-10-09 本次程式施工**：`ui.js` 的銀河正式「冒險地圖」與「選擇怪物／準備」新增「預覽 3D 銀河星圖」開關，保持原版區域卡、怪物卡、HP／ATK／DEF、進度與鎖定、開始戰鬥／背包／回地圖按鈕。3D 顯示由 `3d-test/formal-home.js` 沿用隔離的 Canvas runtime，採按鈕 opt-in、本地 Babylon.js、離開冒險或進正式戰鬥自動釋放。新 `createGalaxyScene` 僅描繪十個主線區域節點（以正式 MAPS 數量為上限）、依 `state.unlockedMap` 標識鎖定，以及五個怪物象徵幾何；只讀選取資訊，沒有新戰鬥輸入通道。新 `3d-test/galaxy-b05.css` 強化銀河區域與怪物卡的立體視覺及手機排版，`index.html` 更新 CSS/JS cache-bust。
+- **2026-10-09 本次程式施工**：正式 `worldmapui.js`（覆寫地圖頁 owner）和 `ui.js`「選擇怪物／準備」新增「預覽 3D 銀河星圖」開關，保持原版區域卡、怪物卡、HP／ATK／DEF、進度與鎖定、開始戰鬥／背包／回地圖按鈕。3D 顯示由 `3d-test/formal-home.js` 沿用隔離的 Canvas runtime，採按鈕 opt-in、本地 Babylon.js、離開冒險或進正式戰鬥自動釋放。新 `createGalaxyScene` 僅描繪十個主線大區節點（依正式 `WORLD_REGIONS` 的 `mapStart` 門檻）、依 `state.unlockedMap` 判斷各大區鎖定，以及五個怪物象徵幾何；只讀選取資訊，沒有新戰鬥輸入通道。新 `3d-test/galaxy-b05.css` 強化銀河區域與怪物卡的立體視覺及手機排版，`index.html` 更新 CSS/JS cache-bust。最後對照正式地圖 owner 及進入戰鬥時的清理 hook 補修。
 - **正式規則不變**：`enterMap`、`selectEnemy`、`enemyUnlocked`、`monsterObj`、`startBattles`、正式 Target Context 與既有背包返回 owner 維持原運作；3D 幾何不可點選來改變正式 selectedMap 或 selectedEnemy。已在 `render()` 的戰鬥畫面分支關閉 3D。
 - **可由玩家測試**：主畫面 →「冒險」→「預覽 3D 銀河星圖」，可見可轉動、縮放的十區節點與象徵怪物，其他原版地圖卡正常；任選已解鎖地圖後在準備頁仍可看到 3D 預覽，選五怪之一、回地圖、背包返回應維持原規則；關閉預覽或正式開戰時畫面自動清除。未解鎖地圖不得可進入。進入宇宙／高維正式冒險本批不改，由第 06～07 批處理。
 - **驗收限制**：第 05 批目前為**可開關的真正 WebGL 3D 銀河星圖 + 原版 HTML 完整功能共存**，而非全部地圖／怪物卡改為 3D 直接操作；未實測真機、長時間手機 GPU、回顧入口及不同存檔實際視覺，因此 L1 全覆蓋 **未完全驗收**。不應將程式靜態檢查當作實機成功證據。
