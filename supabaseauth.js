@@ -159,6 +159,9 @@
   mountAccountSettings();
  }
  function notifySignedIn(session){
+  const previousId=String(currentSession?.user?.id||"");
+  const nextId=String(session?.user?.id||"");
+  if(previousId&&previousId!==nextId){window.gmSetRuntimeAuthorizationFlag?.(false);}
   currentSession=session||null;
   window.civilizationAuthSession=currentSession;
   if(currentSession){
@@ -166,7 +169,7 @@
    hideGate();
    mountAccountSettings();
    window.dispatchEvent(new CustomEvent("civilization-auth-ready",{detail:{session:currentSession}}));
-  }else showGate();
+  }else{window.gmSetRuntimeAuthorizationFlag?.(false);try{window.dispatchEvent(new CustomEvent("civilization-auth-signed-out"));}catch(_){}showGate();}
  }
  function renderGate(){
   if(gate())return;
@@ -294,6 +297,8 @@
   try{
    const {error}=await client.auth.signOut({scope:"local"});
    if(error)throw error;
+   window.gmClearCurrentRuntimeAuthorization?.();
+   try{window.dispatchEvent(new CustomEvent("civilization-auth-signed-out"));}catch(_){}
    if(signingOutUserId&&typeof window.clearGmCombatSpeedOverrideForUser==="function")window.clearGmCombatSpeedOverrideForUser(signingOutUserId);
    currentSession=null;
    window.civilizationAuthSession=null;
