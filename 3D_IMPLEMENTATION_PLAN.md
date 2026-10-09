@@ -91,6 +91,8 @@
 - **驗收限制**：第 05 批目前為**可開關的真正 WebGL 3D 銀河星圖 + 原版 HTML 完整功能共存**，而非全部地圖／怪物卡改為 3D 直接操作；未實測真機、長時間手機 GPU、回顧入口及不同存檔實際視覺，因此 L1 全覆蓋 **未完全驗收**。不應將程式靜態檢查當作實機成功證據。
 - **狀態**：第 05 批功能已提交並靜態檢查；正式全頁 3D L1 與實機回歸待補。
 
+- **第 05 批 CI 補充（2026-10-09）**：GitHub exact-HEAD Runtime Integrity 在 `tests/runtime/js-integrity.js` 的既有 GM script-group loader cache 契約失敗（production `index.html` 已累積 v5～v8 cache token，但舊測試只允許到 v4）；暫時核對完整字串後下一項既有 GM 授權 owner 契約仍失敗。此為跨模組舊測試／正式程式不一致，非第 05 批新 JavaScript 語法失敗；已撤回臨時修改該舊測試的提交內容，未在本批放寬其他 GM 驗收。**Runtime Integrity 未通過；Playwright 瀏覽器 smoke 因前段失敗未執行**。詳見 [CI run 37894390745](https://github.com/franksky1207/rpg/actions/runs/37894390745)、[後續 CI run 37894599615](https://github.com/franksky1207/rpg/actions/runs/37894599615)。
+
 ### 第 06 批｜宇宙紀元冒險與回顧
 - **施工範圍**：十區百 Boss、準備、宇宙主線、銀河／宇宙回顧與紀元視圖。
 - **完成與自我檢查**：切換與返回保持正式回顧視圖；進度/鎖定不變。
