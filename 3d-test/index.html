@@ -4,56 +4,63 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>文明戰線｜3D 引擎獨立測試</title>
-<link rel="stylesheet" href="./prototype.css?v=20261009-b01">
+<link rel="stylesheet" href="./prototype.css?v=20261009-b02">
 </head>
 <body>
 <main class="shell">
 <header><div><small>文明戰線 / PROTOTYPE 01</small><h1>3D 引擎測試平台</h1></div><a id="backToGame" href="../index.html">返回正式遊戲 ↗</a></header>
 <section class="stage" aria-label="3D 測試展示區">
-<canvas id="prototypeCanvas" aria-label="3D 測試場景"></canvas>
+<div id="prototypeHost" class="prototype-host"></div>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
 <div class="status" id="status" role="status" aria-live="polite">準備啟動測試引擎…</div>
 </section>
-<footer><p>本頁使用獨立展示物件及程式，完全不讀取玩家存檔，也不修改正式戰鬥。</p><div class="actions"><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button></div></footer>
+<footer><p>本頁使用獨立展示物件及程式，完全不讀取玩家存檔，也不修改正式戰鬥。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button></div></footer>
 </main>
 <script>
 (function(){
 "use strict";
-if(new URLSearchParams(location.search).get("embedded")==="1")document.getElementById("backToGame").hidden=true;
-const status=document.getElementById("status");
-const fallback=document.getElementById("fallback");
-const fallbackReason=document.getElementById("fallbackReason");
-const canvas=document.getElementById("prototypeCanvas");
-const toggle=document.getElementById("toggle");
-let instance=null, disabled=false;
-function displayFallback(reason){
-  canvas.hidden=true;fallback.hidden=false;fallbackReason.textContent=reason;
-  status.textContent="原版安全模式：可返回正式遊戲";
+const embedded=new URLSearchParams(location.search).get("embedded")==="1";
+if(embedded)document.getElementById("backToGame").hidden=true;
+const status=document.getElementById("status"),fallback=document.getElementById("fallback");
+const fallbackReason=document.getElementById("fallbackReason"),host=document.getElementById("prototypeHost");
+const toggle=document.getElementById("toggle"),quality=document.getElementById("quality");
+let runtime=null,disabled=false,serial=0;
+function fail(reason){
+  host.hidden=true;fallback.hidden=false;fallbackReason.textContent=reason;
+  status.textContent="3D 安全模式：可隨時返回 GM 測試畫面";
 }
 function stop(){
-  instance?.dispose();
-  instance=null;
+  serial++;
+  runtime?.dispose();runtime=null;
 }
-function start(){
-  stop();
-  if(disabled){displayFallback("3D 已由測試開關停用；正式遊戲不受影響。");return;}
-  if(!window.Civilization3DPrototype){displayFallback("引擎模組尚未載入，請檢查網路或重新啟動。");return;}
-  instance=window.Civilization3DPrototype.mount(canvas);
-  if(instance.ok){
-    canvas.hidden=false;fallback.hidden=true;
-    status.textContent="Babylon.js 渲染中 · 測試引擎 "+instance.version+" · 可滑動旋轉或縮放";
-  }else displayFallback(instance.reason==="webgl-unavailable"?"此裝置不支援 WebGL 或已停用硬體加速。":"3D 引擎啟動失敗："+instance.reason);
+async function start(){
+  stop();const ticket=serial;
+  if(disabled){fail("3D 已停用；不會影響正式遊戲。");return;}
+  if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){
+    fail("3D 模組尚未載入；請重新啟動或返回正式遊戲。");return;
+  }
+  host.hidden=false;
+  runtime=window.Civilization3DRuntime.create({host,onFallback:reason=>fail("3D 場景失敗："+reason)});
+  runtime.setQuality(quality.value);
+  const result=await runtime.show("prototype-hub",window.Civilization3DPrototype.createScene);
+  if(ticket!==serial)return;
+  if(result.ok){fallback.hidden=true;status.textContent="共用 3D Canvas 運行中 · 可旋轉縮放 · 畫質："+quality.options[quality.selectedIndex].text;}
+  else fail("3D 不可用："+result.reason);
 }
 toggle.addEventListener("click",()=>{
   disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();
 });
+quality.addEventListener("change",()=>{if(runtime)runtime.setQuality(quality.value);});
 document.getElementById("restart").addEventListener("click",start);
 window.addEventListener("pagehide",stop);
 function script(src,next){
-  const s=document.createElement("script");s.src=src;s.onload=next;s.onerror=()=>displayFallback("引擎載入失敗；請確認固定版本資源是否可用。");document.head.appendChild(s);
+  const el=document.createElement("script");el.src=src;el.onload=next;
+  el.onerror=()=>fail("模組載入失敗，仍可返回正式遊戲。");document.head.appendChild(el);
 }
 script("https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js",()=>{
-  script("./prototype-engine.js?v=20261009-b01",start);
+  script("./runtime.js?v=20261009-b02",()=>{
+    script("./prototype-engine.js?v=20261009-b02",start);
+  });
 });
 })();
 </script>
