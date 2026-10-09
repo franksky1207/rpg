@@ -4,16 +4,16 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-3d-load-opt1";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b09";
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createCharacterScene)return;
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createEquipmentScene)return;
  if(!loading)loading=Promise.all([
    global.BABYLON?.Engine?Promise.resolve():script(BABYLON_SRC),
-   global.Civilization3DPrototype?.createCharacterScene?Promise.resolve():script(SCENE_SRC)
- ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createCharacterScene)throw new Error("3d-modules-unavailable");})
+   global.Civilization3DPrototype?.createEquipmentScene?Promise.resolve():script(SCENE_SRC)
+ ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createEquipmentScene)throw new Error("3d-modules-unavailable");})
  .catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -50,7 +50,8 @@ async function toggle(route="home"){
   const universe=activeRoute==="adventure"&&((world===2&&era==="universe")||(world===3&&era==="universe-review"));
   const higher=activeRoute==="adventure"&&world===3&&era==="higher-dimensional";
   const character=activeRoute==="character";
-  const create=character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const inventory=activeRoute==="inventory";
+  const create=inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
   const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
@@ -68,7 +69,10 @@ async function toggle(route="home"){
     return {defeated:p?.defeated===true,available:p?.challengeStatus?.allowed===true,remainingPercent:Number(p?.remainingPercent??100)};
   }):[];
   const higherSnapshot=higher?{presences,selectedPresence:Math.max(0,presences.findIndex(p=>!p.defeated))}:{};
-  const snapshot=character?{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:[];
+  const slotData=inventory?types.slice(0,5).map(type=>{const item=formalState?.equipment?.[type];return {present:!!item,quality:Number(item?.q)||0};}):[];
+  const sampleData=inventory?(Array.isArray(formalState?.inventory)?formalState.inventory:[]).slice(0,5).map(item=>({present:true,quality:Number(item?.q)||0})):[];
+  const snapshot=inventory?{slots:slotData,inventorySamples:sampleData}:character?{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
@@ -156,6 +160,18 @@ function ensureCharacterControl(view){
  const hint=document.createElement("span");hint.className="muted";hint.textContent="立體角色為展示佔位；能力、穿戴、稱號與突破以正式頁面為準。";
  controls.append(button,hint);screen.before(controls);
 }
+function ensureInventoryControl(view){
+ if(view!=="inventory")return;
+ const page=document.querySelector("#main .inventory-page");
+ if(!page||page.querySelector("#civilization3dInventoryToggle"))return;
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.id="civilization3dInventoryToggle";button.className="btn";button.type="button";
+ button.setAttribute("aria-pressed","false");button.textContent="預覽 3D 裝備陳列";
+ button.addEventListener("click",()=>toggle("inventory"));
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="僅展示五個穿戴槽與背包樣本；換裝、鎖定、出售及贖回仍在下方操作。";
+ controls.append(button,hint);
+ const grid=page.querySelector(".grid");if(grid)grid.before(controls);else page.prepend(controls);
+}
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
@@ -167,6 +183,7 @@ function onRendered(view){
  ensureUniverseControl(view);
  ensureHigherControl(view);
  ensureCharacterControl(view);
+ ensureInventoryControl(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
@@ -174,6 +191,7 @@ global.civilization3dToggleGalaxy=()=>toggle("adventure");
 global.civilization3dToggleUniverse=()=>toggle("adventure");
 global.civilization3dToggleHigher=()=>toggle("adventure");
 global.civilization3dToggleCharacter=()=>toggle("character");
+global.civilization3dToggleInventory=()=>toggle("inventory");
 global.civilization3dHomeRouteRendered=onRendered;
 global.CIVILIZATION_3D_HOME_BRIDGE_VERSION=1;
 })(window);
