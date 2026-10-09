@@ -15,16 +15,17 @@ function create(options={}){
   canvas.style.cssText="display:block;width:100%;height:100%;touch-action:none";
   root.appendChild(canvas);
   host.appendChild(root);
-  let epoch=0,scene=null,engine=null,disposed=false,reason="",quality="medium",activeId=null;
+  let epoch=0,scene=null,engine=null,disposed=false,reason="",quality="medium",activeId=null,controller=null,contextLost=false;
   const assets=new Map();
   const qualityFor=q=>QUALITY[q]||QUALITY.medium;
   function resize(){if(!disposed&&engine){engine.resize();}}
+  function abortPending(){if(controller){controller.abort();controller=null;}}
   function releaseScene(){
     if(scene){try{scene.dispose();}catch(err){console.warn("3D scene disposal failed",err);}scene=null;}
     activeId=null;
   }
   function stop(reasonText="disabled"){
-    epoch++;releaseScene();reason=reasonText;
+    epoch++;abortPending();releaseScene();reason=reasonText;
     if(engine){try{engine.stopRenderLoop();engine.dispose();}catch(err){console.warn("3D engine disposal failed",err);}engine=null;}
     canvas.hidden=true;root.dataset.state="fallback";
     return {ok:false,reason};
@@ -45,13 +46,15 @@ function create(options={}){
   async function show(id,factory){
     if(disposed)return {ok:false,reason:"disposed"};
     const ticket=++epoch;
+    abortPending();controller=new AbortController();
+    const signal=controller.signal;
     releaseScene();
     try{
       ensureEngine();
-      const next=await factory({BABYLON:global.BABYLON,engine,canvas,epoch:ticket,assets,isCurrent:()=>!disposed&&epoch===ticket});
+      const next=await factory({BABYLON:global.BABYLON,engine,canvas,epoch:ticket,assets,signal,isCurrent:()=>!disposed&&epoch===ticket&&!signal.aborted});
       if(disposed||epoch!==ticket){next?.dispose?.();return {ok:false,reason:"stale-scene"};}
       if(!next||typeof next.render!=="function")throw new Error("invalid-scene");
-      scene=next;activeId=String(id);canvas.hidden=false;root.dataset.state="active";
+      controller=null;scene=next;activeId=String(id);canvas.hidden=false;root.dataset.state="active";
       resize();
       return {ok:true,sceneId:activeId,epoch:ticket};
     }catch(err){
@@ -72,17 +75,24 @@ function create(options={}){
     stop("disposed");disposed=true;
     global.removeEventListener("resize",resize);
     global.visualViewport?.removeEventListener("resize",resize);
+    canvas.removeEventListener("webglcontextlost",onContextLost);
+    canvas.removeEventListener("webglcontextrestored",onContextRestored);
     root.remove();
+    for(const entry of assets.values()){try{entry?.dispose?.();}catch(err){console.warn("3D asset cleanup failed",err);}}
     assets.clear();
   }
+  function onContextLost(event){event.preventDefault();contextLost=true;stop("webgl-context-lost");options.onFallback?.("webgl-context-lost");}
+  function onContextRestored(){contextLost=false;options.onContextRestored?.();}
+  canvas.addEventListener("webglcontextlost",onContextLost,false);
+  canvas.addEventListener("webglcontextrestored",onContextRestored,false);
   global.addEventListener("resize",resize);
   global.visualViewport?.addEventListener("resize",resize);
   canvas.hidden=true;
   root.dataset.state="idle";
   return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,
-    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size}),
-    cacheAsset:(key,value)=>{if(disposed)return false;assets.set(String(key),value);return true;},
-    clearAssets:()=>assets.clear()});
+    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,contextLost}),
+    cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assets.has(k)&&assets.get(k)!==value){try{assets.get(k)?.dispose?.();}catch(_){}}assets.set(k,value);return true;},
+    clearAssets:()=>{for(const entry of assets.values()){try{entry?.dispose?.();}catch(_){}}assets.clear();}});
 }
 global.Civilization3DRuntime=Object.freeze({VERSION,QUALITY,create});
 })(window);
