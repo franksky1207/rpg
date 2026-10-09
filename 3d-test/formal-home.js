@@ -7,7 +7,7 @@ function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispos
 function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle","civilization3dDungeonToggle","civilization3dAdvancedToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 八種專精":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):id==="civilization3dDungeonToggle"?(b.dataset.previewLabel||"預覽 3D 副本作戰中心") :id==="civilization3dAdvancedToggle"?(b.dataset.previewLabel||"預覽 3D 副本"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub";
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createDungeonAdvancedScene)return;
  if(!loading)loading=Promise.all([
@@ -91,9 +91,16 @@ async function toggle(route="home",growthKind=null){
     const phase=activeRoute==="dungeon-arena"?global.getArenaCoreState?.():activeRoute==="dungeon-bounty"?global.getBountyTestSnapshot?.():null;
     const dungeonKind=activeRoute==="dungeon-arena"?"arena":activeRoute==="dungeon-bounty"?"bounty":"hub";
     const remaining=phase?.daily?.remaining;
-    const dungeonAvailableModes=activeRoute==="dungeon"?["bounty","arena","tower","mirror"].map(key=>!!document.querySelector("#main .dungeon-mode-"+key+" .dungeon-entry-btn:not(:disabled)")):[];
+    const dungeonModeKeys=["bounty","arena","tower","mirror"];
+    const dungeonVisibleModes=activeRoute==="dungeon"?dungeonModeKeys.filter(key=>{
+      const policy=global.dungeonModeAvailability?.(key);
+      if(policy?.visible===false)return false;
+      const card=document.querySelector("#main .dungeon-mode-"+key);
+      return !!card&&!card.hidden&&card.dataset.dungeonPolicyHidden!=="1"&&getComputedStyle(card).display!=="none";
+    }):[];
+    const dungeonAvailableModes=activeRoute==="dungeon"?dungeonModeKeys.map(key=>dungeonVisibleModes.includes(key)&&!!document.querySelector("#main .dungeon-mode-"+key+" .dungeon-entry-btn:not(:disabled)")):[];
     const available=dungeonAvailableModes.filter(Boolean).length;
-    return {dungeonKind,dungeonPhase:phase?.phase==="ready"?"ready":"select",dungeonRemaining:Number.isFinite(Number(remaining))?Math.max(0,Number(remaining)):available,dungeonUnlocked:activeRoute==="dungeon"||!!phase,dungeonAvailableModes};
+    return {dungeonKind,dungeonPhase:phase?.phase==="ready"?"ready":"select",dungeonRemaining:Number.isFinite(Number(remaining))?Math.max(0,Number(remaining)):available,dungeonUnlocked:activeRoute==="dungeon"||!!phase,dungeonAvailableModes,dungeonVisibleModes};
   })();
   const advancedSnapshot=(()=>{if(!advanced)return {};
     if(activeRoute==="dungeon-arena"){
