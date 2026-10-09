@@ -180,6 +180,7 @@
   })().catch(error=>{lastFailure=error;showFailure();throw error;}).finally(()=>{running=null;});
   return running;
  }
+ for(const entry of window.CivilizationStartupPreTasks||[]){if(Array.isArray(entry))registerStartupTask(entry[0],entry[1]);}
  window.preloadGameBackgrounds=startStartup;
  window.CivilizationStartupCoordinator=Object.freeze({version:VERSION,register:registerStartupTask,snapshot:startupSnapshot,retry:()=>startStartup()});
  window.BACKGROUND_PRELOAD_POLICY_VERSION=VERSION;
