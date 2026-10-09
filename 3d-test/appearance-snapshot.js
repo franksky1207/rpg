@@ -29,7 +29,7 @@ function capture(){
  const markLevels=Object.fromEntries(marks.map(k=>[k,bound(s.marks?.entries?.[k]?.level,0,10)]));
  return clone({version:2,source:"formal",abilities,specializations,markLevels,
   civilizationLevel:bound(s.secondWorld?.civilizationLevel,0,10),
-  coreLevel:bound(s.thirdWorld?.coreLevel,0,10),,world,level:bound(s.level,1,9999),vip:bound(s.vipLevel,0,9999),
+  coreLevel:bound(s.thirdWorld?.coreLevel,0,10),world,level:bound(s.level,1,9999),vip:bound(s.vipLevel,0,9999),
   breakthrough:bound(s.breakthrough?.level??s.breakthroughLevel,0,9999),equipment,enhancements,
   enhancementMin:min,enhancementCap:cap,inventorySamples});
 }
