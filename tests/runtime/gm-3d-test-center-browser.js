@@ -42,6 +42,29 @@ const assert=require("node:assert/strict");
   await page.locator("#alternateSegment").selectOption("20");
   await page.locator("#alternateUniverse").selectOption("200");
   await page.locator("#alternateDepth").selectOption("5");
+  // Validate 3D scene identity, not just dropdown values. No player state is written.
+  const visualProbe=await page.evaluate(()=>{
+    const B=window.BABYLON,P=window.Civilization3DPrototype;
+    if(!B?.NullEngine||!P?.createFrontierScene)return {supported:false};
+    const engine=new B.NullEngine({renderWidth:300,renderHeight:300});
+    const canvas=document.createElement("canvas");
+    const inspect=(universe,depth)=>{
+      const scene=P.createFrontierScene({BABYLON:B,engine,canvas,frontierKind:"alternate",frontierProgress:0,alternateUniverse:universe,alternateDepth:depth,world:3});
+      const metadata={...scene.metadata.civilization3dFrontier};
+      const signals=scene.meshes.filter(m=>m.name.startsWith("alternate-depth-signal-")).length;
+      const nodes=scene.meshes.filter(m=>/^alternate-universe-\\d+$/.test(m.name)).length;
+      const core=scene.getMeshByName("alternate-selected-core")?.getClassName();
+      scene.dispose();
+      return {metadata,signals,nodes,core};
+    };
+    const results=[inspect(137,1),inspect(137,4),inspect(138,4),inspect(200,5)];
+    engine.dispose();return {supported:true,results};
+  });
+  assert.equal(visualProbe.supported,true);
+  for(const sample of visualProbe.results)assert.equal(sample.nodes,10);
+  assert.deepEqual(visualProbe.results.map(v=>v.signals),[1,4,4,5]);
+  assert.deepEqual(visualProbe.results.map(v=>v.metadata.template),[0,0,1,3]);
+  assert.deepEqual(visualProbe.results.map(v=>[v.metadata.universe,v.metadata.depth]),[[137,1],[137,4],[138,4],[200,5]]);
   assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[20,200,5]);
   await page.getByRole("button",{name:"副本作戰中心"}).click();
   await page.locator("#fixtureWorld").selectOption("2");
