@@ -337,7 +337,17 @@ function ensureFrontierControl(view){
  button.dataset.previewLabel=label;button.textContent=label;button.setAttribute("aria-pressed","false");
  button.addEventListener("click",()=>toggle(view));
  const hint=document.createElement("span");hint.className="muted";hint.textContent="立體預覽僅反映既有進度，不更動挑戰門檻、血量或獎勵。";
- controls.append(button,hint);shell.prepend(controls);
+ if(view==="alternateuniverse"){
+  const formal=typeof state!=="undefined"?state:global.state;
+  const progress=global.alternateUniverseProgressionSnapshot?.(formal)||{};
+  const deepest=Math.max(0,Math.min(1000,Math.floor(Number(progress.deepestCleared)||0)));
+  const next=Math.max(1,Math.min(1000,deepest+1));
+  const universe=Math.ceil(next/5),depth=(next-1)%5+1,segment=Math.ceil(universe/10);
+  const info=document.createElement("span");info.className="muted civilization-3d-alternate-progress";
+  info.textContent=`第 ${segment} 區 · U${String(universe).padStart(3,"0")} · 深度 ${depth}/5 · 已通過 ${deepest}/1000 層（僅預覽）`;
+  controls.append(button,info);
+ }else controls.append(button,hint);
+ shell.prepend(controls);
 }
 function ensureBattlePreviewControl(view){
  const main=document.getElementById("main");if(!main||main.querySelector("#civilization3dBattleToggle"))return;
