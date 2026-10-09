@@ -38,7 +38,7 @@ const assert=require("node:assert/strict");
    });
    const before=await formalSnapshot();
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
-   const beforeClick=await page.evaluate(()=>({view,screen:adventureScreen,era:window.getAdventureEraView?.(),phase:window.currentWorldPhase?.(state),buttons:document.querySelectorAll('button[onclick="startGalaxyReviewBattle()"]').length,content:document.getElementById("main")?.textContent?.slice(0,220)}));
+   const beforeClick=await page.evaluate(()=>({view,screen:adventureScreen,era:window.getAdventureEraView?.(),phase:window.currentWorldPhase?.(state),buttons:document.querySelectorAll('button[onclick="startGalaxyReviewBattle()"]').length,content:document.getElementById("main")?.textContent?.slice(0,220),direct:typeof adventurePage==="function"?adventurePage().slice(0,220):"missing",renderSource:String(render).slice(0,270),isEntered:window.isSecondWorldEntered?.()}));
    assert.equal(beforeClick.buttons,1,JSON.stringify(beforeClick));
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
    await page.waitForSelector(".galaxy-review-combat",{timeout:10000});
