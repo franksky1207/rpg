@@ -4,7 +4,7 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){const b=document.getElementById("civilization3dHomeToggle");if(b){b.textContent=enabled?"關閉 3D 艦橋":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createScene)return;
@@ -14,9 +14,11 @@ async function load(){
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
-async function toggle(){
+let activeRoute="home";
+async function toggle(route="home"){
  if(enabled){hide();return;}
  const h=host();if(!h||!global.Civilization3DRuntime)return;
+ activeRoute=route;
  const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
  try{
   await load();
@@ -26,7 +28,7 @@ async function toggle(){
   runtime.setQuality("low");
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const create=global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene;
-  const result=await runtime.show("home-command-bridge-era-"+world,args=>create({...args,world}));
+  const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
   h.dataset.threeDFormalMount="active";
@@ -34,10 +36,11 @@ async function toggle(){
  }catch(error){if(ticket===epoch)hide();}
 }
 function onRendered(view){
- if(view!=="home"&&(enabled||runtime))hide();
+ if(view!==activeRoute&&(enabled||runtime))hide();
  else syncButton();
 }
-global.civilization3dToggleHome=toggle;
+global.civilization3dToggleHome=()=>toggle("home");
+global.civilization3dToggleGalaxy=()=>toggle("adventure");
 global.civilization3dHomeRouteRendered=onRendered;
 global.CIVILIZATION_3D_HOME_BRIDGE_VERSION=1;
 })(window);
