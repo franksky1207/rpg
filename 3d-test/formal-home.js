@@ -344,7 +344,9 @@ function ensureFrontierControl(view){
   const next=Math.max(1,Math.min(1000,deepest+1));
   const universe=Math.ceil(next/5),depth=(next-1)%5+1,segment=Math.ceil(universe/10);
   const info=document.createElement("span");info.className="muted civilization-3d-alternate-progress";
-  info.textContent=`第 ${segment} 區 · U${String(universe).padStart(3,"0")} · 深度 ${depth}/5 · 已通過 ${deepest}/1000 層（僅預覽）`;
+  const details=global.alternateUniverseUniverseInfo?.(universe),members=(global.ALTERNATE_UNIVERSE_NAME_CULTURES||[]).map((c,i)=>c===details?.culture?i+1:0).filter(Boolean);
+  const tier=members.indexOf(universe)+1;
+  info.textContent=`${details?.culture||"異宇宙"} · ${details?.name||"U"+String(universe).padStart(3,"0")} · 體系內第 ${Math.max(1,tier)}/10 階 · ${global.ALTERNATE_UNIVERSE_DEPTH_LABELS?.[depth-1]||"深度 "+depth} · 已通過 ${deepest}/1000 層（僅預覽）`;
   controls.append(button,info);
  }else controls.append(button,hint);
  shell.prepend(controls);
