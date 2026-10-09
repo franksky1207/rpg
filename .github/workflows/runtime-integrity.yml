@@ -79,6 +79,7 @@ jobs:
           done
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
