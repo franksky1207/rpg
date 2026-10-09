@@ -52,7 +52,7 @@ const assert=require("node:assert/strict");
       const scene=P.createFrontierScene({BABYLON:B,engine,canvas,frontierKind:"alternate",frontierProgress:0,alternateUniverse:universe,alternateDepth:depth,world:3});
       const metadata={...scene.metadata.civilization3dFrontier};
       const signals=scene.meshes.filter(m=>m.name.startsWith("alternate-depth-signal-")).length;
-      const nodes=scene.meshes.filter(m=>/^alternate-universe-\\d+$/.test(m.name)).length;
+      const nodes=scene.meshes.filter(m=>/^alternate-universe-\d+$/.test(m.name)).length;
       const core=scene.getMeshByName("alternate-selected-core")?.getClassName();
       scene.dispose();
       return {metadata,signals,nodes,core};
