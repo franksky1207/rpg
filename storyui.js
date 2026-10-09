@@ -60,7 +60,7 @@
   modal.className="story-overlay";
   modal.setAttribute("role","dialog");
   modal.setAttribute("aria-modal","true");
-  modal.innerHTML=`<div class="story-card"><div class="story-head"><div id="storyChapter" class="story-chapter"></div><div id="storyLocation" class="story-location"></div><div id="storyTitle" class="story-title"></div></div><div id="storyBody" class="story-body"></div><div id="storyActions" class="story-actions"></div></div>`;
+  modal.innerHTML=`<div class="story-card"><div class="story-head"><div id="storyChapter" class="story-chapter"></div><div id="storyLocation" class="story-location"></div><div id="storyTitle" class="story-title"></div></div><div id="storyBody" class="story-body"></div><div class="story-3d-preview"><button type="button" class="btn" onclick="window.civilization3dToggleStory?.()">預覽 3D 文明史書</button><div id="civilization3dStoryHost" hidden style="position:relative;min-height:260px;width:100%;"></div></div><div id="storyActions" class="story-actions"></div></div>`;
   document.body.appendChild(modal);
   return modal;
  }
@@ -102,7 +102,8 @@
   const modal=document.getElementById(MODAL_ID);
   const story=activeStory,options=activeOptions,token=activeToken,storyId=String(story?.id||""),owner=String(activeOptions?.lifecycleOwner||"generic");
   const completed=!!story&&Array.isArray(story.pages)&&story.pages.length>0&&activePage===story.pages.length-1;
-  if(modal)modal.classList.remove("open");
+  window.civilization3dHideStoryPreview?.();
+   if(modal)modal.classList.remove("open");
   activeStory=null;activePage=0;activeOptions=null;activeToken=0;
   if(completed&&typeof options?.onComplete==="function"){
    try{options.onComplete(story.id,story);}catch(error){console.error("Story completion callback failed",error);}
