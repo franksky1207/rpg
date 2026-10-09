@@ -8,7 +8,7 @@ const assert=require("node:assert/strict");
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===3,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),7);
-  assert.equal(await page.locator("#caseList .center-case").count(),20);
+  assert.equal(await page.locator("#caseList .center-case").count(),24);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
   assert.equal(await page.locator("#caseMetadata").count(),0);
@@ -31,6 +31,12 @@ const assert=require("node:assert/strict");
   await page.getByRole("button",{name:"副本作戰中心"}).click();
   await page.locator("#fixtureWorld").selectOption("2");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
+  await page.locator("#categoryList .center-category").filter({hasText:"戰鬥、動畫與特效"}).click();
+  assert.equal(await page.locator("#caseList .center-case").count(),4);
+  for(const title of ["戰場與生命顯示","護盾防護演出","特殊遭遇演出","結算與戰利品"]){
+    await page.getByRole("button",{name:title}).click();
+    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
+  }
   // Verify one shared readonly snapshot contract and independent GM test inputs.
   await page.locator("#categoryList .center-category").filter({hasText:"玩家、裝備與養成"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),7);
@@ -103,6 +109,6 @@ const assert=require("node:assert/strict");
   assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 6 categories, 20 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  console.log("PASS GM visual center: 6 categories, 24 scenes, no engineering text, mobile maximize/restore",mobile,restore);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
