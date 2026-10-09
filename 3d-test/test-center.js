@@ -145,7 +145,7 @@ function renderInfo(){
  $("caseTitle").textContent=c.title;
 
  $("caseDetail").textContent=c.detail;
- $("fixturePanel").hidden=false;
+ $("fixturePanel").hidden=!["epoch","galaxy","universe","higher"].includes(c.kind);
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||c.kind!=="epoch";
  $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher";
