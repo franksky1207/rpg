@@ -14,7 +14,7 @@ const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8")
 
 assert.ok(index.includes('src="savehookcore.js?v=20261005-code-cleanup-batch1'),"index 必須載入 canonical Save Hook Core");
 assert.ok(index.includes('src="compatibilityowners.js?v=20261005-code-cleanup-batch7"'),"index 必須使用 Batch7 compatibility owner canonical cache token");
-assert.ok(index.includes('src="scriptgrouploader.js?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2"'),"index 必須使用 Batch3 GM runtime policy Script Group Loader canonical cache token");
+assert.ok(index.includes('src="scriptgrouploader.js?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2&v5=20261008-gm-early-runtime-restore1&v6=20261008-gm-auth-pref-sync1&v7=20261008-gm-first-render1&v8=20261008-gm-load-opt2&v9=20261009-gm-dom-ready"'),"index 必須使用 Batch3 GM runtime policy Script Group Loader canonical cache token");
 assert.ok(index.indexOf('src="savehookcore.js')<index.indexOf('src="compatibilityowners.js'),"Save Hook Core 必須先於 compatibility owner 載入");
 assert.ok(!index.includes('src="thirdworldmigrationregression.js'),"production index 不應再載入 thirdworld migration regression");
 assert.ok(!index.includes('save-level-migration-regression.js'),"production index 不應載入 level migration CI regression");
