@@ -68,7 +68,9 @@ function syncAppearancePanel(){
  appearancePanel.querySelectorAll("#appearanceFreeControls > label, .center-appearance-slots").forEach(el=>el.hidden=!["character","equipment","forge"].includes(entry().kind));
  growthControls.querySelectorAll("label").forEach(el=>{const inp=el.querySelector("input");el.hidden=!(entry().kind==="specialization"?inp.dataset.specIndex!==undefined:entry().kind==="marks"?inp.dataset.markIndex!==undefined:["civilization","core"].includes(entry().kind)?inp.dataset.growthSingle===entry().kind:entry().kind==="character"?inp.dataset.ability!==undefined:false);});
  $("appearanceRefresh").hidden=appearanceMode!=="formal";
- $("appearanceSource").textContent=appearanceMode==="formal"?(formalAppearance?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][formalAppearance.world-1]+"｜Lv."+formalAppearance.level+"｜VIP"+formalAppearance.vip+"｜唯讀展示":"等待正式角色資料同步；不會改變遊戲資料。"):"自由展示｜僅影響本次 3D 預覽，不寫入正式角色。";
+ const a=formalAppearance,c=entry(),fmt=x=>Number.isFinite(Number(x))?Number(x).toLocaleString("zh-TW"):"—";
+ const detail=a?(c.kind==="character"?"｜HP "+fmt(a.abilities?.hp)+"｜ATK "+fmt(a.abilities?.atk)+"｜DEF "+fmt(a.abilities?.def)+"｜暴擊 "+fmt(a.abilities?.crit)+"%｜閃避 "+fmt(a.abilities?.dodge)+"%｜突破 "+fmt(a.breakthrough):c.kind==="specialization"?"｜八專精 "+Object.values(a.specializations||{}).map(fmt).join("／"):c.kind==="marks"?"｜十印記 "+Object.values(a.markLevels||{}).map(fmt).join("／"):c.kind==="civilization"?"｜文明 Lv."+fmt(a.civilizationLevel):c.kind==="core"?"｜界弦核心 Lv."+fmt(a.coreLevel):""):"";
+ $("appearanceSource").textContent=appearanceMode==="formal"?(a?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][a.world-1]+"｜Lv."+fmt(a.level)+"｜VIP"+fmt(a.vip)+detail+"｜唯讀展示":"等待正式角色資料同步；不會改變遊戲資料。"):"自訂測試資料｜僅影響本次 3D 預覽，不寫入正式角色。";
 
 }
 $("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();else requestAppearance();};
