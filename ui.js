@@ -509,4 +509,21 @@ function normalizeCurrentSaveState(){
 function resetGame(){if(confirm("確定要清除全部遊戲進度嗎？此操作無法復原。")){state=newState();selectedMap=0;selectedEnemy=0;battleLogs=[];adventureScreen="maps";inventoryFilter="all";inventoryReturnContext=null;save();view="home";render()}}
 document.getElementById("brandTitle").onclick=()=>go("home");
 const initialLoadOk=load();if(initialLoadOk!==false){normalizeCurrentSaveState();if(typeof window.gmReconcileRuntimeAuthorizationAfterLoad==="function")window.gmReconcileRuntimeAuthorizationAfterLoad(state);save(false);}render();
+// Late home-entry owners (world transition, reincarnation, alternate universe)
+// register after ui.js. Reconcile only once after parser completion, and only
+// if an entry expected by the authoritative HTML is absent from the first DOM.
+function reconcileDeferredHomeEntries(){
+ if(view!=="home")return;
+ const main=document.getElementById("main");
+ if(!main)return;
+ const expected=homePage();
+ const missing=[
+  ['data-world-phase-target', '[data-world-phase-target]'],
+  ['data-major-transition="reincarnation"', '[data-major-transition="reincarnation"]'],
+  ['data-alternate-universe-home-entry', '[data-alternate-universe-home-entry]']
+ ].some(([token,selector])=>expected.includes(token)&&!main.querySelector(selector));
+ if(missing)render();
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",reconcileDeferredHomeEntries,{once:true});
+else queueMicrotask(reconcileDeferredHomeEntries);
 window.GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2;
