@@ -5,17 +5,31 @@
  const SAVE_BOUNDARY_VERSION=2;
  const LEGACY_RECONCILE_VERSION=1;
  const KEY="civilization-war-gm-authorized-v1";
+ const ACCOUNT_PREFIX="civilization-war-gm-authorized-v2-account-";
+ function accountId(){return String(window.civilizationAuth?.getUser?.()?.id||window.civilizationAuthSession?.user?.id||"").trim();}
+ function accountKey(id=accountId()){return id?ACCOUNT_PREFIX+id:"";}
  const SAVE_HOOK_ID="gm-runtime-authorization-v1";
 
  function authorized(){
-  try{return localStorage.getItem(KEY)==="1";}catch(_){return false;}
+  const key=accountKey();if(!key)return false;
+  try{return localStorage.getItem(key)==="1";}catch(_){return false;}
  }
  function setAuthorized(value){
+  const key=accountKey();
   try{
-   if(value===true)localStorage.setItem(KEY,"1");
-   else localStorage.removeItem(KEY);
+   // Legacy device-wide authorization is not an identity proof; never migrate it across accounts.
+   localStorage.removeItem(KEY);
+   if(!key)return false;
+   if(value===true)localStorage.setItem(key,"1");
+   else localStorage.removeItem(key);
    return true;
   }catch(_){return false;}
+ }
+ function clearCurrentAuthorization(){
+  const id=accountId();
+  try{localStorage.removeItem(KEY);if(id)localStorage.removeItem(accountKey(id));}catch(_){}
+  setRuntimeFlag(false);
+  return true;
  }
  function runtimeState(){
   try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}
@@ -45,10 +59,12 @@
  }
  function snapshot(){
   const target=runtimeState();
-  return Object.freeze({version:VERSION,authorizationVersion:AUTHORIZATION_VERSION,scope:"browser-local-runtime",authorized:authorized(),runtimeFlag:target?.gm===true,saveStateAuthoritative:false,key:KEY,saveBoundaryInstalled:installSaveBoundary()});
+  return Object.freeze({version:VERSION,authorizationVersion:AUTHORIZATION_VERSION,scope:"account-local-runtime",accountBound:true,accountPresent:!!accountId(),authorized:authorized(),runtimeFlag:target?.gm===true,saveStateAuthoritative:false,key:accountKey(),saveBoundaryInstalled:installSaveBoundary()});
  }
 
  window.gmRuntimeAuthorizationAuthorized=authorized;
+ window.gmClearCurrentRuntimeAuthorization=clearCurrentAuthorization;
+ window.gmRuntimeAuthorizationAccountId=accountId;
  window.gmSetRuntimeAuthorization=setAuthorized;
  window.gmSetRuntimeAuthorizationFlag=setRuntimeFlag;
  window.gmReconcileRuntimeAuthorizationAfterLoad=reconcileAfterLoad;
@@ -59,7 +75,7 @@
  window.GM_RUNTIME_EARLY_RESTORE_VERSION=EARLY_RESTORE_VERSION;
  window.GM_RUNTIME_SAVE_BOUNDARY_VERSION=SAVE_BOUNDARY_VERSION;
  window.GM_RUNTIME_LEGACY_RECONCILE_VERSION=LEGACY_RECONCILE_VERSION;
- window.GM_RUNTIME_AUTHORIZATION_SCOPE="browser-local-runtime";
+ window.GM_RUNTIME_AUTHORIZATION_SCOPE="account-local-runtime";
  window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;
  window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=installSaveBoundary();
 })();
