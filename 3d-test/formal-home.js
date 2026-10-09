@@ -52,6 +52,7 @@ async function toggle(route="home"){
   const character=activeRoute==="character";
   const inventory=activeRoute==="inventory";
   const forge=activeRoute==="enhancement";
+  const growth=activeRoute==="specialization";
   const create=growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
@@ -71,7 +72,20 @@ async function toggle(route="home"){
   }):[];
   const higherSnapshot=higher?{presences,selectedPresence:Math.max(0,presences.findIndex(p=>!p.defeated))}:{};
   const appearance=global.Civilization3DAppearance?.capture();
-  const snapshot=forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const growthState=growth?{
+    growthKind:"specialization",
+    growthLevels:(Array.isArray(global.SPECIALIZATION_KEYS)?global.SPECIALIZATION_KEYS:[]).map(key=>Math.max(0,Math.min(60,Number(formalState?.specializations?.[key])||0))),
+    marks:(Array.isArray(global.MARK_KEYS)?global.MARK_KEYS:[]).map(key=>Math.max(0,Math.min(10,Number(formalState?.marks?.entries?.[key]?.level)||0))),
+    civilizationLevel:Math.max(0,Math.min(10,Number(formalState?.secondWorld?.civilizationLevel)||0)),
+    coreLevel:Math.max(0,Math.min(10,Number(formalState?.thirdWorld?.coreLevel)||0))
+  }:{};
+  if(growth){
+    const choice=document.getElementById("civilization3dGrowthKind")?.value||"specialization";
+    growthState.growthKind=choice;
+    growthState.growthLevels=choice==="marks"?growthState.marks:growthState.growthLevels;
+    growthState.growthLevel=choice==="civilization"?growthState.civilizationLevel:growthState.coreLevel;
+  }
+  const snapshot=growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
