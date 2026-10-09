@@ -98,7 +98,7 @@ function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
- const fn={home:homePage,adventure:adventurePage,storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
+ const fn={home:homePage,adventure:()=>adventureScreen==="review-prepare"?galaxyReviewPreparePage():adventureScreen==="review-combat"?galaxyReviewCombatPage():adventurePage(),storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
  document.getElementById("main").innerHTML=fn();wireSettings();if(typeof window.civilization3dHomeRouteRendered==="function")window.civilization3dHomeRouteRendered(view==="adventure"&&adventureScreen==="combat"?"combat":view);setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
@@ -282,7 +282,7 @@ window.startGalaxyReviewBattle=async function(){
   return false;
  }
 };
-window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=7;
+window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=8;
 window.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;
 window.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;
 window.GALAXY_REVIEW_LOCAL_HP_ISOLATION_VERSION=1;
