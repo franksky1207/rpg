@@ -37,6 +37,18 @@ const quality=$("quality"),toggle=$("toggle"),caseList=$("caseList"),categoryLis
 
 let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
+let alternateSelection={segment:1,universe:1,depth:1};
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||min)));
+function fillAlternateSelectors(){
+ const segment=$("alternateSegment"),universe=$("alternateUniverse"),depth=$("alternateDepth");
+ if(!segment||!universe||!depth)return;
+ if(!segment.options.length)for(let i=1;i<=20;i++)segment.add(new Option(`第 ${i} 區 · U${String((i-1)*10+1).padStart(3,"0")}～U${String(i*10).padStart(3,"0")}`,String(i)));
+ alternateSelection.segment=clamp(alternateSelection.segment,1,20);
+ alternateSelection.universe=clamp(alternateSelection.universe,(alternateSelection.segment-1)*10+1,alternateSelection.segment*10);
+ universe.replaceChildren();for(let i=(alternateSelection.segment-1)*10+1;i<=alternateSelection.segment*10;i++)universe.add(new Option(`U${String(i).padStart(3,"0")}`,String(i)));
+ segment.value=String(alternateSelection.segment);universe.value=String(alternateSelection.universe);depth.value=String(alternateSelection.depth);
+}
+
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
 let appearanceMode=embedded?"formal":"free",formalAppearance=null;
 const freeAppearance={world:1,level:500,quality:5,enhancement:20,equipped:[true,true,true,true,true],specializations:Array(8).fill(60),markLevels:Array(10).fill(10),civilizationLevel:10,coreLevel:10,hp:20000,atk:5200,def:2600,crit:27,dodge:21,vip:10,breakthrough:0};
@@ -177,7 +189,9 @@ function renderInfo(){
  $("fixturePanel").hidden=!["epoch","galaxy","universe","higher","dungeon-hub","dungeon-bounty","dungeon-arena","advanced-higher-arena","advanced-mirror","advanced-void","frontier-galaxy","frontier-universe","frontier-alternate"].includes(c.kind);
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||!(c.kind==="epoch"||c.kind==="dungeon-hub"||c.kind==="dungeon-bounty"||c.kind==="dungeon-arena");
- $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("advanced-")&&!c.kind.startsWith("frontier-");
+ $("alternateSegmentLabel").hidden=$("alternateUniverseLabel").hidden=$("alternateDepthLabel").hidden=c.kind!=="frontier-alternate";
+ if(c.kind==="frontier-alternate")fillAlternateSelectors();
+ $("fixtureProgress").closest("label").hidden=c.kind==="frontier-alternate"||c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("advanced-")&&!c.kind.startsWith("frontier-");
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
 function safeStop(){
@@ -213,7 +227,7 @@ async function start(){
      :c.kind==="marks"?(appearanceMode==="formal"?Object.values(activeVisual.markLevels||{}):freeAppearance.markLevels).slice(0,10).map(v=>Number(v)||0):[],
    growthLevel:Number(c.kind==="civilization"?activeVisual.civilizationLevel:activeVisual.coreLevel)||0
  }:{};
- const visual=c.kind.startsWith("battle-")?{battleVisualKind:c.kind.slice(7),playerHpRatio:.85,enemyHpRatio:.55,shieldRatio:c.kind==="battle-shield"?1:0}:c.kind.startsWith("frontier-")?{frontierKind:c.kind==="frontier-alternate"?"alternate":"calamity",frontierProgress:c.kind==="frontier-alternate"?(Number(snapshot.regionProgress)-1)*100:Number(snapshot.regionProgress),world:c.kind==="frontier-galaxy"?1:c.kind==="frontier-universe"?2:3}:c.kind.startsWith("advanced-")?{advancedKind:c.kind.slice(9),advancedStage:Math.min(2,Math.floor((Number(snapshot.regionProgress)-1)/3)),advancedProgress:c.kind==="advanced-void"?(Number(snapshot.regionProgress)-1)*100:c.kind==="advanced-mirror"?(Number(snapshot.regionProgress)-1)*2:0,advancedUnlocked:true}:c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonAvailableModes:[true,true,true,true],dungeonVisibleModes:c.kind==="dungeon-hub"&&Number(snapshot.world)===3?["arena","tower","mirror"]:["bounty","arena","tower","mirror"]}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
+ const visual=c.kind.startsWith("battle-")?{battleVisualKind:c.kind.slice(7),playerHpRatio:.85,enemyHpRatio:.55,shieldRatio:c.kind==="battle-shield"?1:0}:c.kind.startsWith("frontier-")?{frontierKind:c.kind==="frontier-alternate"?"alternate":"calamity",frontierProgress:c.kind==="frontier-alternate"?(alternateSelection.universe-1)*5+alternateSelection.depth-1:Number(snapshot.regionProgress),alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth,world:c.kind==="frontier-galaxy"?1:c.kind==="frontier-universe"?2:3}:c.kind.startsWith("advanced-")?{advancedKind:c.kind.slice(9),advancedStage:Math.min(2,Math.floor((Number(snapshot.regionProgress)-1)/3)),advancedProgress:c.kind==="advanced-void"?(Number(snapshot.regionProgress)-1)*100:c.kind==="advanced-mirror"?(Number(snapshot.regionProgress)-1)*2:0,advancedUnlocked:true}:c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonAvailableModes:[true,true,true,true],dungeonVisibleModes:c.kind==="dungeon-hub"&&Number(snapshot.world)===3?["arena","tower","mirror"]:["bounty","arena","tower","mirror"]}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
@@ -230,6 +244,9 @@ if(embedded)$("backToGame").hidden=true;
 $("fixtureWorld").onchange=updateFixture;
 $("fixtureSelected").onchange=updateFixture;
 $("fixtureProgress").onchange=updateFixture;
+$("alternateSegment").onchange=()=>{alternateSelection.segment=clamp($("alternateSegment").value,1,20);alternateSelection.universe=(alternateSelection.segment-1)*10+1;fillAlternateSelectors();start();};
+$("alternateUniverse").onchange=()=>{alternateSelection.universe=clamp($("alternateUniverse").value,1,200);alternateSelection.segment=Math.ceil(alternateSelection.universe/10);fillAlternateSelectors();start();};
+$("alternateDepth").onchange=()=>{alternateSelection.depth=clamp($("alternateDepth").value,1,5);start();};
 search.oninput=renderCases;
 toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();};
 $("restart").onclick=()=>{disabled=false;toggle.textContent="停用 3D";start();};
@@ -242,7 +259,7 @@ window.addEventListener("keydown",event=>{
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:3,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:3,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 (async()=>{
  try{
