@@ -160,7 +160,7 @@
     for(let index=region.mapStart;index<=region.mapEnd;index++){
       const map=MAPS[index];
       if(!map)continue;
-      cards.push(`<div class="map-card cleared galaxy-review-map-card"><b>${index+1}. ${map.name}</b><div class="muted">Lv.${map.min}～${map.max}</div><div class="map-status">已完成・可回顧</div><button class="btn blue galaxy-review-action" type="button" onclick="openGalaxyReviewMap(${index})">回顧挑戰</button></div>`);
+      cards.push(`<div class="map-card cleared galaxy-review-map-card"><b>${index+1}. ${map.name}</b><div class="muted">Lv.${map.min}～${map.max}</div><div class="map-status">已完成・可回顧</div><button class="btn blue galaxy-review-action" type="button" data-galaxy-review-map-index="${index}">回顧挑戰</button></div>`);
     }
     return cards.join("");
   }
@@ -187,6 +187,16 @@
     galaxyReviewSelectedEnemy=4;
     if(typeof window.enterGalaxyReviewMap==="function")window.enterGalaxyReviewMap();
   };
+  // Delegate review-card actions from the persistent document: protects navigation
+  // across repeated render() calls and avoids dependence on inline onclick.
+  document.addEventListener("click",event=>{
+    const button=event.target?.closest?.(".galaxy-review-action[data-galaxy-review-map-index]");
+    if(!button||!button.closest(".galaxy-review-adventure-screen"))return;
+    event.preventDefault();
+    const index=Number(button.dataset.galaxyReviewMapIndex);
+    if(!Number.isInteger(index)||index<0||index>=MAPS.length)return;
+    window.openGalaxyReviewMap(index);
+  });
   window.getGalaxyReviewSelectedMap=function(){return galaxyReviewSelectedMap;};
   window.getGalaxyReviewSelectedEnemy=function(){return galaxyReviewSelectedEnemy;};
   window.setGalaxyReviewSelectedEnemy=function(value){
