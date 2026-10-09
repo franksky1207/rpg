@@ -8,3 +8,7 @@ body.background-preloading>.app,body.background-preloading>.bottom-nav{visibilit
 .background-preload-track{height:4px;margin-top:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.10)}
 .background-preload-bar{height:100%;width:0;border-radius:inherit;background:#d8c08b;transition:width .12s linear}
 body.background-preload-complete>.app,body.background-preload-complete>.bottom-nav{visibility:visible;opacity:1}
+
+.background-preload-percent{margin-top:12px;color:#ebd19b;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.background-preload-retry{margin-top:18px;padding:10px 24px;background:#293446;border:1px solid #aa956d;border-radius:9px;color:#f4ead7;font:600 14px system-ui;cursor:pointer}
+.background-preload-retry[hidden]{display:none}
