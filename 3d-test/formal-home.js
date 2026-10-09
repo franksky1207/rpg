@@ -10,7 +10,7 @@ async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createGalaxyScene)return;
  if(!loading)loading=(async()=>{
   if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
-  if(!global.Civilization3DPrototype?.createGalaxyScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05");
+  if(!global.Civilization3DPrototype?.createGalaxyScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05&v4=20261009-b05-region-lock");
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
