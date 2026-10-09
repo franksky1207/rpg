@@ -584,5 +584,30 @@
     scene.metadata={civilization3dBattlePresentation:{kind:mode,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene});
+  /* Batch 16: display-only chronicle and reincarnation visual compositions. */
+  function createChronicleTransitionScene(args={}){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    const kind=["record","story","reincarnation"].includes(args.kind)?args.kind:"record";
+    scene.clearColor=new B.Color4(.008,.019,.045,1);
+    const camera=new B.ArcRotateCamera("chronicle-camera",Math.PI/2,Math.PI/2.6,9,new B.Vector3(0,0,0),scene);
+    camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("chronicle-fill",new B.Vector3(0,1,0),scene).intensity=.8;
+    const material=(n,c)=>{const m=new B.StandardMaterial(n,scene);m.diffuseColor=new B.Color3(...c);m.emissiveColor=new B.Color3(...c).scale(.35);return m;};
+    const steel=material("chronicle-steel",[.11,.23,.38]),cyan=material("chronicle-cyan",[.13,.72,.89]),gold=material("chronicle-gold",[.84,.61,.24]);
+    const base=B.MeshBuilder.CreateCylinder("chronicle-base",{diameter:7.5,height:.3,tessellation:48},scene);base.position.y=-1.15;base.material=steel;
+    for(let i=0;i<5;i++){
+      const slab=B.MeshBuilder.CreateBox("chronicle-page-"+i,{width:1.1,height:1.6,depth:.14},scene);
+      slab.position.set((i-2)*1.25,-.1,kind==="story"?Math.abs(i-2)*.32:0);
+      slab.rotation.y=kind==="story"?(i-2)*.18:0;slab.material=i===2?gold:cyan;
+    }
+    if(kind==="reincarnation"){
+      const ring=B.MeshBuilder.CreateTorus("reincarnation-cycle",{diameter:5.7,thickness:.12,tessellation:64},scene);
+      ring.rotation.x=Math.PI/2.8;ring.position.y=.2;ring.material=gold;
+      const core=B.MeshBuilder.CreatePolyhedron("reincarnation-core",{type:2,size:.8},scene);
+      core.position.y=.35;core.material=cyan;
+    }
+    scene.metadata={civilization3dChronicle:{kind,visualOnly:true,readOnly:true}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene});
 })(window);
