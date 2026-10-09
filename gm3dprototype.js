@@ -1,7 +1,7 @@
 /* GM 3D prototype bridge: session-only presentation, no gameplay mutation. */
 (function(){
 "use strict";
-let overlay=null, previousFocus=null, previousOverflow=null;
+let overlay=null, previousFocus=null, previousOverflow=null, previousScrollX=0,previousScrollY=0;
 function allowed(){return typeof state!=="undefined" && state?.gm===true;}
 function close(){
   if(!overlay)return false;
@@ -9,6 +9,7 @@ function close(){
   node.remove();
   if(previousOverflow!==null)document.body.style.overflow=previousOverflow;
   previousOverflow=null;
+  window.scrollTo(previousScrollX,previousScrollY);
   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
   previousFocus=null;
   return true;
@@ -18,6 +19,7 @@ function open(){
   if(overlay)return true;
   previousFocus=document.activeElement;
   previousOverflow=document.body.style.overflow;
+  previousScrollX=window.scrollX;previousScrollY=window.scrollY;
   const layer=document.createElement("div");
   layer.id="gm3dPrototypeOverlay";
   layer.setAttribute("role","dialog");
@@ -35,6 +37,7 @@ function open(){
   frame.title="文明戰線 3D 測試場景";
   frame.style.cssText="display:block;flex:1;min-height:0;width:100%;border:0;background:#060c18";
   layer.append(bar,frame);
+  frame.addEventListener("load",()=>{try{frame.contentWindow?.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();close();}});}catch(_){}});
   document.body.appendChild(layer);
   overlay=layer;
   document.body.style.overflow="hidden";
