@@ -150,3 +150,11 @@ html{scroll-behavior:auto!important}
  #growthFreeControls[data-mode="civilization"],#growthFreeControls[data-mode="core"]{grid-template-columns:minmax(0,1fr)}
  #growthFreeControls[data-mode="civilization"] .center-growth-field,#growthFreeControls[data-mode="core"] .center-growth-field{max-width:270px}
 }
+
+/* Alternate-universe navigation stays compact and touch-friendly. */
+.alternate-quick-controls{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.alternate-quick-controls[hidden]{display:none!important}
+.alternate-quick-controls button{min-width:0;min-height:42px;padding:9px 5px;color:#e9edf4;border:1px solid #74684f;background:#17202b;border-radius:8px;font:inherit;font-size:12px;cursor:pointer}
+.alternate-quick-controls button:focus-visible{outline:2px solid #d4af66;outline-offset:2px}
+.alternate-preview-summary{grid-column:1/-1;margin:3px 0 0;font-size:12px;line-height:1.5;color:#d9c9a7;text-align:center;overflow-wrap:anywhere}
+@media(max-width:770px){.alternate-quick-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
