@@ -28,6 +28,7 @@ const assert=require("node:assert/strict");
   await page.locator("#fixtureProgress").selectOption("7");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().regionProgress),7);
   await page.waitForFunction(()=>document.querySelector("#status")?.hidden===true||!document.querySelector("#fallback")?.hidden,{timeout:20000});
+  await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
   const initialCanvas=await page.locator("#prototypeHost canvas").count();
   await page.locator("#maximizePreview").click();
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),true);
