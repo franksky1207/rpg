@@ -1,3 +1,9 @@
+## 2026-10-10｜3D 40 批進度與雙文件同步規範（現行有效）
+
+- **目前第 01～15 批已施工 3D 預覽與基礎，第 16～40 批未開始；下一批第 16 批。** 已施工不代表正式 3D 全覆蓋／實機完整驗收。GM 3D 測試中心 24 項預覽永久保留，正式預覽按鈕為過渡功能。
+- **每完成一批 3D 工程（含補修或驗收結案），當次交付必須同時更新 `3D_IMPLEMENTATION_PLAN.md` 與本檔**：前者修訂該批狀態、日期、commit、測試證據、待驗項目、進度摘要及下一批；後者更新最新實作、重要決策、已知限制、交接位置。提交後重新讀取 current main 驗證兩檔一致。只改程式、只改其中一份文件或沿用過時進度都不能宣告批次完成。
+- 此規範不改原定 40 批數量；另行完成的啟動載入 5 批、異宇宙 3D 補修不占用第 16 批。歷史紀錄若與現行摘要矛盾，須更正或標示為歷史，嚴禁將舊進度當成目前事實。
+
 - **2026-10-10 GM 3D 測試中心與過渡預覽資源預載修正**：正式介面的 3D 預覽是過渡入口，`3d-test/formal-home.js` 改於 DOMContentLoaded 後短延遲啟動 versioned Babylon/scene prefetch（先前等到 window.load+idle），但**不阻塞一般玩家、也不提前建立 GPU 3D 場景**；提供 `window.Civilization3DSharedAssetWarm()` 下載共用 3D bytes。永久保留的 GM `3d-test/test-center.js` 由同源 `../resource-manifest.json` 解析 Babylon、`runtime.js`、`prototype-engine.js` 的逐檔 hash URL，與正式預覽共用相同版本引擎及場景快取，清單取得失敗時可沿用既有帶版本參數的 fallback。`scriptgrouploader.js` 僅於已授權 GM 啟動資源 ready 後，在等待遮罩內額外預熱共用 3D 引擎與場景，以及測試中心 runtime/test-center/alternate-universe 資料 JS 靜態 bytes（不執行、不建立 WebGL），預熱失敗不中斷正式 GM 遊戲。`index.html`、`3d-test/index.html` 更新快取版本，GM loader canonical integrity tests 同步修訂。這些 3D 預覽將來正式 3D 全覆蓋後需移除正式介面按鈕與對應 bridge 入口，但**不可移除 GM 測試中心**；未來正式 3D 場景本身轉為首屏必需時，要另調 boot critical policies。
 
 - **2026-10-10 啟動載入優化第 5／5 批（資源版本與 3D 分層）**：新增 `scripts/generate-resource-manifest.py` 依當前 `index.html` 入口本地 JS/CSS、3D 引擎／正式場景程式及正式背景檔案產生逐檔 SHA-256 指紋清單 `resource-manifest.json`，目前約 326 項；`.github/workflows/asset-version-manifest.yml` 在本地資源更新時自動以最新 main 生成清單，發生並行提交時重試，只有資源內容指紋改變才發布額外清單 commit。這個額外 commit 會觸發 GitHub Pages 再部署，故正式資源以已部署 Pages 內容為準，不能以 main 尚未部署的提交視為可用。`3d-test/formal-home.js` 保留 **3D 僅按需建立 WebGL/GPU**，閒置時只預抓網路資源，從同站 `resource-manifest.json`（`cache:no-store`）為 Babylon 引擎與 3D 場景生成各自 `asset=<digest>` 的獨立版本 URL；缺清單時以既有版本 URL fallback。`scriptgrouploader.js` 在已授權 GM 啟動預抓前以同一清單為 32 個 GM 模組各自寫入內容版本 URL，保留 HTTP 條件驗證、逐檔 SHA-256 快取內容比較、原腳本執行順序及進遊戲前 ready 屏障；一般玩家不阻塞等待 GM。`tests/runtime/gm-startup-preload-browser.js` 增加冷／熱啟動實際耗時與快取辨識記錄，另新增 `tests/runtime/resource-manifest-integrity.js`，納入 Runtime Integrity；index.html 已更新 cache-bust，維持等待 UI 中性百分比不暴露 GM。**界限：** GitHub Pages 的先後部署不能視為完整的跨檔案原子交易，清單更新與同時部署存在短暫版本切換窗口，清單失效時 3D fallback 舊規則；現有正式頁主要為可選 3D 預覽，未來正式 3D 首頁／角色模型與材質檔加入時，必須依首屏必載 vs 其他場景延後再修資源清單與 GPU 初始化政策。冷／熱時間為 CI 環境觀察值，不保證任一用戶裝置實際加速比例。正式存檔／戰鬥規則未更動。第 1～5 批實作與待追蹤的部署原子性限制已記錄；以 main 唯一來源，更新後須依 CI 與頁面實測判定。
@@ -140,7 +146,7 @@
 - 唯一完整批次表：[`3D_IMPLEMENTATION_PLAN.md`](3D_IMPLEMENTATION_PLAN.md)，含 **40 批**：A1 全正式介面 18 批 → A2 真 3D 場景 8 批 → B 人物／裝備／怪物 8 批 → C 正式 3D 戰鬥與總驗收 6 批。
 - 使用者優先度：**先覆蓋進入遊戲能看到的所有正式介面／子頁面／動態彈窗**，不是先完成 3D 戰鬥。正式遊戲核心、存檔、Target Context、轉生與高速補播規則不得因視覺改造而變動。
 - 素材、程式、GLB、資產登錄表原則留在單一 `franksky1207/rpg` GitHub 儲存庫，保留原版回退。
-- **狀態：第 01 批程式已提交／靜態核對；瀏覽器與手機實測待補。第 02 批共用 runtime 程式已提交、實機仍待驗；第 03 批安全預覽程式已提交但正式 L1 尚未全驗收；第 04～40 批未開始。** 其他批次只依使用者指定執行。
+- **狀態：第 01 批程式已提交／靜態核對；瀏覽器與手機實測待補。第 02 批共用 runtime 程式已提交、實機仍待驗；第 03 批安全預覽程式已提交但正式 L1 尚未全驗收；第 04～15 批後續已施工、第 16～40 批未開始（2026-10-10 進度更正）。** 其他批次只依使用者指定執行。
 - **2026-10-09 第 02 批共用 3D runtime**：新增 `3d-test/runtime.js`，提供外部 host Canvas、scene epoch/過期結果取消、同一 engine 跨場景重用、dispose、記憶體暫存 Map、low/medium/high 硬體縮放、fallback callback 與手機 Safe Area；`3d-test/index.html`/`prototype-engine.js`/`prototype.css` 已改成共用 runtime 驅動及畫質操作。正式 `#main`/正式存檔/正式戰鬥未更動，GM iframe 返回方式保留。程式提交至 `5bf7b093b7117d300be88ef0e8d563c16798ce59`，完整紀錄見 3D 計畫。**靜態檢查完成，尚無實機 GPU leak／瀏覽器或 exact HEAD CI 成功證據**。
 - **2026-10-09 追加 GM 同頁測試入口**：GM → 測試 → 3D 場景測試。`gmhubextensions.js` 註冊測試 section；`gm3dprototype.js` 在原有授權 GM lazy group 載入，使用覆蓋層與 `3d-test/?embedded=1` iframe；點「返回原本畫面」或 Esc 只移除覆蓋層，不呼叫主遊戲 `go/render/reload`，保留原頁面 DOM、GM 展開狀態與捲動。`index.html` 已更新 GM JS cache-bust。靜態核對完成、真實瀏覽器與手機操作仍待驗證。
 - 本次新增 `3d-test/index.html`、`3d-test/prototype-engine.js`、`3d-test/prototype.css`，固定 Babylon.js 7.54.3 測試載入；獨立 WebGL 場景、停用與重啟、失敗 fallback 和 dispose，不觸及正式首頁、存檔與戰鬥。測試頁現用外部固定版 CDN，正式使用前仍需將相依檔納回 GitHub。施工 commits：`b5e664268a9fc11bc83679f22d451398f77bec6a`、`23a229628dca1f91fcdf6f15442d7b7c259f35f2`、`a70438a14f8e7c2a7d3b0e122839d635e052c231`；本次沒有完整瀏覽器 E2E / 手機實測或 exact HEAD CI success。
@@ -1354,5 +1360,5 @@ d1cd0a4a5becf753cbd45beb578236780822a1cc
 9. Save Schema current=17；不要因 runtime-only GM authorization／preference／diagnostics 自行升 Schema。
 10. 若 handoff 與 main 衝突，以 main 為準並直接修正 handoff。
 
-目前《文明戰線》3D 全面升級 40 批規劃，詳見 `3D_IMPLEMENTATION_PLAN.md`；**第 01 批獨立原型已提交（瀏覽器實測待補），第 02～40 批未開始**。其他新優化仍須依需求重查 main。
+目前《文明戰線》3D 全面升級 40 批規劃，詳見 `3D_IMPLEMENTATION_PLAN.md`；**第 01 批獨立原型已提交（瀏覽器實測待補），第 02～15 批後續已施工、第 16～40 批未開始（2026-10-10 進度更正）**。其他新優化仍須依需求重查 main。
 ```
