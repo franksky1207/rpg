@@ -9,6 +9,7 @@ const assert=require("node:assert/strict");
   await page.waitForFunction(()=>typeof window.startGalaxyReviewBattle==="function"&&typeof window.openGalaxyReviewMap==="function"&&typeof window.runCombatCore==="function",{timeout:30000});
   const setup=await page.evaluate(()=>{
    document.getElementById("civilizationAuthGate")?.remove();
+   document.getElementById("gameIntroModal")?.classList.remove("show");
    const before=JSON.stringify(state);
    window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,phase:window.currentWorldPhase,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
