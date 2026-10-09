@@ -1,5 +1,5 @@
 (function(){
- const VERSION=23;
+ const VERSION=24;
  /* Runtime legacy source token only; no executable owner: const VERSION=13; */
  const THIRD_WORLD_BACKFILL_REGRESSION_VERSION=1;
  const POST_FLOW_REGRESSION_VERSION=2;
@@ -189,6 +189,26 @@
   const blocked=window.playerIdentityNameHtml({name:"Frank",titleId:higherDefs[8]?.id,target:ownedTarget});
   if(blocked.includes(higherDefs[8]?.name||""))fail("TITLE_UNOWNED_RENDER_BLOCK","正式 renderer 不得顯示未取得稱號",blocked);
  }catch(error){fail("TITLE_RENDER_PROBE","稱號 renderer probe 失敗",String(error?.message||error));}
+
+ try{
+  // Pure renderer fixtures: no formal state mutation or save writes.
+  const au=alternateDefs[0];
+  if(!au)throw new Error("alternate-universe title fixture missing");
+  const fixture={playerName:"A<&\"'B",titles:{version:1,unlocked:[au.id],equipped:au.id,pendingNotice:null}};
+  const beforeFormal=clone(state?.titles);
+  const equipped=window.playerIdentityNameHtml({target:fixture,compact:true});
+  if(!equipped.includes("player-identity--compact")||!equipped.includes(`data-player-title-id="${au.id}"`)||!equipped.includes("player-title--alternate-universe")||!equipped.includes("A&lt;&amp;&quot;&#39;B")||(equipped.match(/data-player-title-id=/g)||[]).length!==1)fail("TITLE_AU_COMBAT_EQUIPPED","異宇宙戰鬥共用 renderer：裝備稱號、特殊字元與唯一稱號節點異常",equipped);
+  fixture.titles.equipped=null;
+  const unequipped=window.playerIdentityNameHtml({target:fixture,compact:true});
+  if(unequipped.includes("data-player-title-id=")||!unequipped.includes("A&lt;&amp;&quot;&#39;B"))fail("TITLE_AU_COMBAT_UNEQUIPPED","已取得但未裝備的稱號不應顯示",unequipped);
+  fixture.titles.unlocked=[];
+  const noTitle=window.playerIdentityNameHtml({target:fixture,compact:true});
+  if(noTitle.includes("data-player-title-id=")||!noTitle.includes("player-identity-name"))fail("TITLE_AU_COMBAT_NO_TITLE","未取得稱號時應只顯示玩家名稱",noTitle);
+  fixture.titles.equipped=au.id;
+  const unowned=window.playerIdentityNameHtml({target:fixture,compact:true});
+  if(unowned.includes("data-player-title-id="))fail("TITLE_AU_COMBAT_UNOWNED","未解鎖稱號即使 equipped 指向其 ID 也不得顯示",unowned);
+  if(JSON.stringify(beforeFormal)!==JSON.stringify(clone(state?.titles)))fail("TITLE_AU_COMBAT_FORMAL_STATE","renderer fixture 不得更動正式角色稱號資料");
+ }catch(error){fail("TITLE_AU_COMBAT_RENDER_PROBE","異宇宙戰鬥身分 renderer regression 失敗",String(error?.message||error));}
 
  try{
   const before=clone(state?.titles),beforeSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null,html=typeof window.gmPlayerTitlePreviewHtml==="function"?String(window.gmPlayerTitlePreviewHtml()||""):"",after=clone(state?.titles),afterSave=typeof localStorage!=="undefined"?localStorage.getItem(SAVE_KEY):null;
