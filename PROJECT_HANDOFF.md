@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 GM 3D 測試中心最新視覺版（覆蓋舊九類／八案例展示）**：使用者明確要求 GM 只顯示實際 3D 視覺成果；目前介面六類，僅「三紀元主畫面」「銀河紀元星圖」兩個展示入口，其餘只有後續真正有可見成果時才新增。技術性 ID、Bxx、Babylon.js/WebGL/Canvas、測試狀態及診斷按鈕從使用者 UI 移除，但保留程式／CI 內部檢查。測試情境選單僅提供對場景有可見影響者：主畫面紀元切換，星圖區域進度及聚焦位置。最大化還原後透過視窗捲動定位到目前預覽（避免手機跳回上方選單），不建立新 Canvas。最新版 `3D_GM_TEST_CENTER_CATALOG.md` 逐批區分視覺／非視覺；`3D_IMPLEMENTATION_PLAN.md` 全 40 批義務改成條件式視覺預覽或正式／CI 驗收，舊規定「每批都需要 GM 測試入口」失效。須看最新 CI／實機測試結果，不得以舊驗收狀態替代。
+
 - **2026-10-09 GM 3D 測試中心新增「標準／最大化」雙模式：在同一場景舞台右上角切換；最大化填滿內嵌 GM iframe 允許的桌機／直式手機畫面，Esc 還原且不關閉 GM iframe；相機、選取案例、fixture 不重新建立。`3d-test/index.html`、`test-center.js`、`test-center.css`、`tests/runtime/gm-3d-test-center-browser.js` 同步更新，包含手機窄螢幕回歸測試。**
 
 - **2026-10-09 GM 3D 狀態文字遮擋再修正**：使用者實機反映前次成功隱藏仍會看到底部文字，且當時 GitHub Pages 已成功部署；此回合將 `#status` DOM **徹底從 `.stage` 搬到 `.center-workspace` 內的 3D 畫面上方**，通知只在 loading／錯誤／WebGL 事件顯示，正常時 hidden；同步 CSS、JS cache bust、GM iframe URL 版本化及 `index.html` cache bust，並新增 DOM 位置瀏覽器回歸斷言。原本只是 hidden 的修法不可視為已驗收。須待 GitHub Pages 部署與使用者桌機／手機再次確認。
