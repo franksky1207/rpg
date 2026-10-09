@@ -89,7 +89,7 @@ function syncAppearancePanel(){
  $("appearanceSource").textContent=appearanceMode==="formal"?(a?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][a.world-1]+"｜Lv."+fmt(a.level)+"｜VIP"+fmt(a.vip)+detail+"｜唯讀展示":"等待正式角色資料同步；不會改變遊戲資料。"):"自訂測試資料｜僅影響本次 3D 預覽，不寫入正式角色。";
 
 }
-$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();else requestAppearance();};
+$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();start();if(!formalAppearance)requestAppearance();};
 $("appearanceFree").onclick=()=>{appearanceMode="free";syncAppearancePanel();start();};
 $("appearanceRefresh").onclick=()=>{formalAppearance=null;syncAppearancePanel();requestAppearance();};
 $("appearanceWorld").onchange=e=>{freeAppearance.world=Math.max(1,Math.min(3,Number(e.target.value)||1));start();};
