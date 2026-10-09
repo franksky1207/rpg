@@ -7,10 +7,10 @@ function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispos
 function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createScene)return;
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createGalaxyScene)return;
  if(!loading)loading=(async()=>{
   if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
-  if(!global.Civilization3DPrototype?.createScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04");
+  if(!global.Civilization3DPrototype?.createGalaxyScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05");
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -27,8 +27,10 @@ async function toggle(route="home"){
   runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
   runtime.setQuality("low");
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
-  const create=global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene;
-  const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world}));
+  const galaxy=activeRoute==="adventure"&&world===1;
+  const create=galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const snapshot=galaxy?{mapCount:Array.isArray(global.MAPS)?global.MAPS.length:10,selectedMap:typeof selectedMap==="number"?selectedMap:0,unlockedMap:Number(global.state?.unlockedMap)||0,enemyCount:5}:{};
+  const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
   h.dataset.threeDFormalMount="active";
