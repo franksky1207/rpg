@@ -344,9 +344,9 @@
   function createDungeonScene(args){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     const mode=["hub","bounty","arena"].includes(args.dungeonKind)?args.dungeonKind:"hub";
-    const world=Math.max(1,Math.min(2,Number(args.world)||1));
+    const world=Math.max(1,Math.min(3,Number(args.world)||1));
     const phase=["select","ready"].includes(args.dungeonPhase)?args.dungeonPhase:"select";
-    scene.clearColor=new B.Color4(world===2?.02:.013,.016,world===2?.053:.038,1);
+    scene.clearColor=new B.Color4(world===3?.015:world===2?.02:.013,.016,world===3?.075:world===2?.053:.038,1);
     const camera=new B.ArcRotateCamera("dungeon-camera",Math.PI/2.18,Math.PI/2.75,mode==="hub"?14.8:13,new B.Vector3(0,.25,0),scene);
     camera.lowerRadiusLimit=7;camera.upperRadiusLimit=23;camera.attachControl(args.canvas,true);
     new B.HemisphericLight("dungeon-light",new B.Vector3(0,1,0),scene).intensity=.91;
@@ -365,21 +365,25 @@
     platform.position.y=-.72;platform.material=floor;
     const base=B.MeshBuilder.CreateTorus("dungeon-command-ring",{diameter:10.4,thickness:.055,tessellation:64},scene);
     base.rotation.x=Math.PI/2;base.position.y=-.48;base.material=teal;
-    const modeTotal=mode==="hub"?4:mode==="bounty"?5:3;
+    const canonicalModes=["bounty","arena","tower","mirror"];
+    const visibleModes=mode==="hub"?(Array.isArray(args.dungeonVisibleModes)?canonicalModes.filter(key=>args.dungeonVisibleModes.includes(key)):canonicalModes.filter(key=>world!==3||key!=="bounty")):[];
+    const modeTotal=mode==="hub"?visibleModes.length:mode==="bounty"?5:3;
     const count=Math.max(0,Math.min(40,Math.floor(Number(args.dungeonRemaining)||0)));
     const modeUnlocked=args.dungeonUnlocked!==false;
     for(let i=0;i<modeTotal;i++){
+      const modeKey=mode==="hub"?visibleModes[i]:mode;
       const angle=(i-(modeTotal-1)/2)*.46;
       const x=Math.sin(angle)*6.8,z=Math.cos(angle)*2.1;
-      const active=mode==="hub"?(Array.isArray(args.dungeonAvailableModes)?args.dungeonAvailableModes[i]===true:false):modeUnlocked&&count>0;
-      const surface=active?(mode==="arena"?purple:mode==="bounty"?gold:i===0?gold:purple):inactive;
-      const disk=B.MeshBuilder.CreateCylinder("dungeon-node-base-"+i,{diameter:1.45,height:.25,tessellation:32},scene);
+      const canonicalIndex=canonicalModes.indexOf(modeKey);
+      const active=mode==="hub"?(Array.isArray(args.dungeonAvailableModes)?args.dungeonAvailableModes[canonicalIndex]===true:false):modeUnlocked&&count>0;
+      const surface=active?(modeKey==="arena"?purple:modeKey==="bounty"?gold:teal):inactive;
+      const disk=B.MeshBuilder.CreateCylinder("dungeon-node-base-"+modeKey+"-"+i,{diameter:1.45,height:.25,tessellation:32},scene);
       disk.position.set(x,-.38,z);disk.material=iron;
-      const column=B.MeshBuilder.CreateBox("dungeon-node-"+i,{width:.7,height:mode==="arena"?2.3:1.35,depth:.65},scene);
-      column.position.set(x,mode==="arena"?.8:.35,z);column.material=surface;
-      const loop=B.MeshBuilder.CreateTorus("dungeon-node-portal-"+i,{diameter:mode==="arena"?2.05:1.42,thickness:.075,tessellation:36},scene);
-      loop.position.set(x,mode==="arena"?1.03:.65,z);loop.material=surface;
-      if(mode==="arena"){loop.rotation.y=Math.PI/2.9;}else{loop.rotation.x=.18;}
+      const column=B.MeshBuilder.CreateBox("dungeon-node-"+modeKey+"-"+i,{width:.7,height:modeKey==="arena"?2.3:1.35,depth:.65},scene);
+      column.position.set(x,modeKey==="arena"?.8:.35,z);column.material=surface;
+      const loop=B.MeshBuilder.CreateTorus("dungeon-node-portal-"+modeKey+"-"+i,{diameter:modeKey==="arena"?2.05:1.42,thickness:.075,tessellation:36},scene);
+      loop.position.set(x,modeKey==="arena"?1.03:.65,z);loop.material=surface;
+      if(modeKey==="arena")loop.rotation.y=Math.PI/2.9;else loop.rotation.x=.18;
     }
     if(mode!=="hub"){
       const core=B.MeshBuilder.CreatePolyhedron("dungeon-center-"+mode,{type:2,size:mode==="arena"?.83:1},scene);
@@ -391,7 +395,7 @@
         hoop.rotation.z+=dt*.00012;
       });
     }
-    scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked}};
+    scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked,visibleModes}};
     return scene;
   }
 
@@ -436,5 +440,5 @@
     scene.metadata={civilization3dAdvanced:{kind,progress:value,stage,unlocked:args.advancedUnlocked===true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.13.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.13.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene});
 })(window);
