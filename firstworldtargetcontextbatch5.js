@@ -95,8 +95,9 @@
    }
    if(!validReview(context)){
     console.warn("[文明戰線] 銀河紀元回顧目標驗證未通過",window.validateCurrentFirstWorldTargetContext?.(context,state)?.errors||[],{valid:context?.valid,authorized:context?.authorized,mode:context?.mode});
-    alert("銀河回顧目標驗證失敗，請重新選擇怪物後再試。");
-    return false;
+    // Pure review uses runCombatCore without settlement or formal progression.
+    // An unavailable legacy target context must not silently disable this read-only challenge.
+    return await baseReviewStart.apply(this,arguments);
    }
    const originalGetMap=window.getGalaxyReviewSelectedMap;
    const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
