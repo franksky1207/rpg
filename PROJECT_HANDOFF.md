@@ -1,3 +1,5 @@
+**既有正式工程完成基準（2026-10-09 核對）**：Batch7：GM／測試工具正式收尾，7-1～7-5全部完成；第一紀元完整 Target Context 重構（Batch0～6）已完成。以上是既有正式工程歷史完成狀態，不代表 3D 第 12～40 批也已完成；以 main 實際 owner 和 PROJECT_PENDING_STATUS.md 為準。
+
 - **2026-10-09 原始 3D 規格書已入庫**：已確認 `main` 根目錄存在 `《文明戰線》3D 全面升級・完整規劃與施工規格書.docx`（53,209 bytes）。此 Word 為設計歷史參考，不是強制施工清單；現行 `main` 程式與 40 批施工計畫優先。往後應直接讀取根目錄原檔，不再使用 `docs/reference/` 作為有效路徑。
 
 - **2026-10-09 3D 前置補修**：現行 11 個 GM 視覺項目對應測試已由舊 v2／7 場景調整至 v3／11 場景，增加分場景自訂與來源隔離檢查。第 1～11 批為 opt-in WebGL 幾何預覽；Canvas runtime 提供 epoch、AbortController、dispose、WebGL fail 回退，維持按需開關策略，無須為歷史 Word 硬改常駐 Engine。第 18 批依玩家正式可見路由補驗 L1 覆蓋。原始 Word 僅供參考，現行 main、40 批計畫及最新定案優先，未必逐條施作；已確認 Word 原檔位於 GitHub main 根目錄。
