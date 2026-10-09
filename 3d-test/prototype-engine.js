@@ -394,5 +394,47 @@
     scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.12.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene});
+
+  /* B13: readonly higher arena, mirror record and void floor holograms. */
+  function createDungeonAdvancedScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    const kind=["higher-arena","mirror","void"].includes(args.advancedKind)?args.advancedKind:"mirror";
+    const color=kind==="higher-arena"?[.22,.84,.87]:kind==="mirror"?[.72,.49,.92]:[.35,.63,.94];
+    scene.clearColor=new B.Color4(.012,.014,.04,1);
+    const camera=new B.ArcRotateCamera("advanced-dungeon-camera",Math.PI/2.3,Math.PI/2.8,13,new B.Vector3(0,.25,0),scene);
+    camera.lowerRadiusLimit=7;camera.upperRadiusLimit=21;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("advanced-dungeon-light",new B.Vector3(0,1,0),scene).intensity=.86;
+    const metal=new B.StandardMaterial("advanced-dungeon-metal",scene);metal.diffuseColor=new B.Color3(.12,.17,.24);
+    const glow=new B.StandardMaterial("advanced-dungeon-glow",scene);glow.emissiveColor=new B.Color3(...color);
+    const dim=new B.StandardMaterial("advanced-dungeon-dim",scene);dim.diffuseColor=new B.Color3(.11,.14,.18);
+    const floor=B.MeshBuilder.CreateCylinder("advanced-dungeon-platform",{diameter:9,height:.3,tessellation:48},scene);
+    floor.position.y=-.75;floor.material=metal;
+    const portal=B.MeshBuilder.CreateTorus("advanced-dungeon-outer-ring",{diameter:8.5,thickness:.07,tessellation:56},scene);
+    portal.position.y=-.52;portal.rotation.x=Math.PI/2;portal.material=glow;
+    const count=kind==="higher-arena"?3:kind==="mirror"?6:8;
+    const stage=Math.max(0,Math.floor(Number(args.advancedStage)||0));
+    const value=Math.max(0,Math.floor(Number(args.advancedProgress)||0));
+    const maximum=kind==="higher-arena"?3:kind==="mirror"?20:100;
+    const ratio=Math.min(1,value/maximum);
+    const nodes=[];
+    for(let i=0;i<count;i++){
+      const theta=2*Math.PI*i/count;
+      const x=Math.cos(theta)*3.2,z=Math.sin(theta)*3.2;
+      const active=kind==="higher-arena"?i<=Math.min(2,stage):i/Math.max(1,count-1)<=ratio;
+      const foundation=B.MeshBuilder.CreateCylinder("advanced-dungeon-base-"+i,{diameter:.92,height:.24,tessellation:18},scene);
+      foundation.position.set(x,-.32,z);foundation.material=metal;
+      const shard=B.MeshBuilder.CreatePolyhedron("advanced-dungeon-node-"+i,{type:2,size:active?.53:.29},scene);
+      shard.position.set(x,active?.45:.14,z);shard.material=active?glow:dim;nodes.push(shard);
+    }
+    const center=B.MeshBuilder.CreatePolyhedron("advanced-dungeon-core-"+kind,{type:2,size:kind==="higher-arena"?1.3:1},scene);
+    center.position.y=1.2;center.material=glow;
+    if(kind==="mirror"){
+      const reflection=B.MeshBuilder.CreatePolyhedron("advanced-dungeon-reflection",{type:2,size:1},scene);
+      reflection.position.set(0,1.2,-2.1);reflection.material=dim;
+    }
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);center.rotation.y+=dt*.0002;});
+    scene.metadata={civilization3dAdvanced:{kind,progress:value,stage,unlocked:args.advancedUnlocked===true}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.13.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene});
 })(window);
