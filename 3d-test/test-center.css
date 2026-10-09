@@ -89,3 +89,4 @@ html{scroll-behavior:auto!important}
 .center-workspace .civilization-3d-camera-controls button:hover,.center-workspace .civilization-3d-layout-controls button:hover{background:#473a28!important}
 @media(max-width:770px){.center-layout{gap:12px}.center-sidebar{max-height:44dvh;padding:12px}.center-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.center-categories::before{grid-column:1/-1}.center-category{font-size:12px}.center-cases{max-height:190px;overflow:auto;padding-left:10px}}
 @media(max-width:480px){.center-sidebar{max-height:46dvh}.center-fixtures{padding:10px}.center-description{padding:12px}.center-workspace .prototype-host{height:min(54dvh,500px)}}
+\n/* Appearance-mode switch is part of the GM visual viewer, not the gameplay interface. */\n.center-workspace.center-maximized>.center-appearance-panel{display:none!important}\n
