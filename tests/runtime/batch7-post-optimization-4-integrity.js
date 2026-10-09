@@ -22,6 +22,7 @@ const assert=require("assert");
     const formalBefore=JSON.stringify(state);
     const guardBefore=window.gmAlternateUniverseBenchmarkFormalStateFingerprint(state);
     const prepared=window.gmAlternateUniverseBenchmarkPrepareContext(25);
+    const expectedCalls={characterCalls,statsCalls,civCalls};
     characterCalls=0;statsCalls=0;civCalls=0;
     const bench=await window.gmRunAlternateUniverseBenchmark({depth:25,runs:100,traits:window.gmAlternateUniverseTraitPairs()[0]});
     const benchCalls={characterCalls,statsCalls,civCalls};
@@ -34,7 +35,7 @@ const assert=require("assert");
     const changedGuard=window.gmAlternateUniverseBenchmarkFormalStateFingerprint(clone);
     return {
      versions:{benchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,optimization:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_OPTIMIZATION_VERSION,guard:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_FORMAL_STATE_GUARD_VERSION,prepared:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_PREPARED_CONTEXT_VERSION},
-     self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,prepared,bench,diagnostics,benchCalls,diagnosticCalls,
+     self:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRITY,prepared,bench,diagnostics,expectedCalls,benchCalls,diagnosticCalls,
      formalExact:formalBefore===formalAfter,guardStable:guardBefore.fingerprint===guardAfter.fingerprint,guardDetectsMutation:guardBefore.fingerprint!==changedGuard.fingerprint,
      guardBefore,guardAfter,changedGuard
     };
@@ -49,9 +50,9 @@ const assert=require("assert");
   assert.equal(report.prepared.ok,true);assert.equal(report.prepared.version,1);assert.equal(report.prepared.depth,25);assert.equal(report.prepared.pairs.length,21);
   assert.equal(report.bench.completed,100);assert.equal(report.bench.invalid,0);assert.equal(report.bench.actionSafety,0);assert.equal(report.bench.formalStateStable,true);
   assert.equal(report.bench.optimizationVersion,1);assert.equal(report.bench.preparedContextVersion,1);assert.equal(report.bench.formalStateGuardVersion,1);
-  assert.deepEqual(report.benchCalls,{characterCalls:1,statsCalls:1,civCalls:1},"100-run benchmark must prepare the fixed player context once per batch.");
+  assert.deepEqual(report.benchCalls,report.expectedCalls,"100-run benchmark must prepare the fixed player context once per batch; calls="+JSON.stringify({baseline:report.expectedCalls,benchmark:report.benchCalls}));
   assert.equal(report.diagnostics.pairCount,21);assert.equal(report.diagnostics.failedCount,0);assert.equal(report.diagnostics.formalStateStable,true);
-  assert.deepEqual(report.diagnosticCalls,{characterCalls:1,statsCalls:1,civCalls:1},"21 trait-pair diagnostics must share one prepared player context.");
+  assert.deepEqual(report.diagnosticCalls,report.expectedCalls,"21 trait-pair diagnostics must share one prepared player context; calls="+JSON.stringify({baseline:report.expectedCalls,diagnostics:report.diagnosticCalls}));
   assert.equal(report.formalExact,true,"CI full deep compare must remain byte-equivalent across benchmark + diagnostics.");
   assert.equal(report.guardStable,true,"Lightweight runtime fingerprint must remain stable when formal state is untouched.");
   assert.equal(report.guardDetectsMutation,true,"Lightweight runtime fingerprint must detect a representative formal-state mutation.");
