@@ -8,19 +8,34 @@ function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14&v7=20261010-b15&v8=20261010-au-3d-b1&v9=20261010-au-3d-b2&v10=20261010-au-cultures&v11=20261010-au-tier-power";
+let resourceVersionPromise=null;
+async function resolveSceneResources(){
+ if(!resourceVersionPromise)resourceVersionPromise=fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"})
+  .then(response=>{if(!response.ok)throw new Error("manifest-unavailable");return response.json();})
+  .then(manifest=>{
+   if(manifest?.schema!==1||typeof manifest.files!=="object")throw new Error("invalid-resource-manifest");
+   const version=path=>{
+    const hash=manifest.files[path];
+    return typeof hash==="string"&&/^[0-9a-f]{24}$/.test(hash)?path+(path.includes("?")?"&":"?")+"asset="+hash:path;
+   };
+   return [version(BABYLON_SRC),version("3d-test/prototype-engine.js")];
+  }).catch(()=>[BABYLON_SRC,SCENE_SRC]);
+ return resourceVersionPromise;
+}
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createBattlePresentationScene)return;
- if(!loading)loading=Promise.all([
-   global.BABYLON?.Engine?Promise.resolve():script(BABYLON_SRC),
-   global.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(SCENE_SRC)
- ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createBattlePresentationScene)throw new Error("3d-modules-unavailable");})
+ if(!loading)loading=resolveSceneResources().then(([engineUrl,sceneUrl])=>Promise.all([
+   global.BABYLON?.Engine?Promise.resolve():script(engineUrl),
+   global.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
+ ])).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createBattlePresentationScene)throw new Error("3d-modules-unavailable");})
  .catch(error=>{loading=null;throw error;});
  return loading;
 }
 /* Warm network cache only; WebGL and GPU allocations begin on explicit user action. */
 function schedule3dPrefetch(){
- const run=()=>{
-  for(const src of [BABYLON_SRC,SCENE_SRC]){
+ const run=async()=>{
+  const sources=await resolveSceneResources();
+  for(const src of sources){
    if(document.querySelector('link[data-civilization-3d-prefetch="'+src+'"]'))continue;
    const link=document.createElement("link");
    link.rel="prefetch";link.as="script";link.href=src;link.dataset.civilization3dPrefetch=src;
