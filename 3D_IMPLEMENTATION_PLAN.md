@@ -355,6 +355,16 @@
 - **R01～R30 的其他功能**：例如稱號、全部怪物名稱、背包、離線收益、正式戰鬥 UI 等，原本就屬後續批次，不能反向判作前兩批完成或漏實作。前兩批的「已施工」不等於這些功能「已驗收」。
 - **追蹤規則**：後續在正式主畫面啟用 3D 之前先通過 B01-G1、B02-G1 的最小可用門檻；所有尚未完成的 B01/B02 缺口須在相應指定批次補測並記錄，不准在第 40 批才首次發現。
 
+### 2026-10-09｜第 01～02 批缺口提前補修（實作／驗收狀態）
+
+- **B01-G1 部分未完成**：原型仍載入外部 jsDelivr 固定版 Babylon.js 7.54.3，尚未真正將引擎 JS 及公開部署所需 license 檔以 bytes 提交至同一 GitHub repo。**不得宣稱完成本地化或封閉外部依賴**；正式開放 3D 前為阻擋條件。
+- **B01-G2 部分補修／實測仍待**：`gm3dprototype.js` 新增退出還原 scrollX/Y、iframe 內 Esc 關閉；`3d-test/index.html` 新增「測試 WebGL 中斷」故障注入控制。尚無真實瀏覽器／手機測試結果，不能宣稱已通過。
+- **B02-G1 部分補修**：正式 `index.html` 新增 `#civilization3dFormalHost`，設在 `#main` 外、預設 `hidden`/`aria-hidden`，並載入唯讀共用 `3d-test/runtime.js`；但**尚未接上正式路由、scene factory 或開關**，預設完全不渲染 3D。正式頁面導入仍屬第 03 批。
+- **B02-G2 部分補修**：`3d-test/runtime.js` 新增 AbortController 給非同步 scene factory 的 `signal`、切場景／停用時中止並失效 epoch、asset Map 清空時呼叫可用 `dispose()`。這提供 cancellation contract，**不保證未來 GLB loader 會遵守 signal**；仍缺 per-asset refcount 與實測 GPU profiler 驗證。
+- **B02-G3 部分補修**：runtime 加入 `webglcontextlost` 停止及 fallback 通知、`webglcontextrestored` callback，測試頁有故障注入按鈕；但自動還原場景、手機長時間掛機及高頻重入壓測仍未驗收。
+- 以上改動未修改正式戰鬥、存檔或進度，亦未宣稱通過無法執行的實機驗收；使用者要求的五類缺口均已處理可安全完成的程式基礎，**尚餘本地化、正式路由整合、真實測試三大阻擋事項**。
+- 程式 commits：`3522f287bc6243cd32a039fd8b84fd7acffee8f8`、`b80da7bf5f1a92dfeddb9734da95b363c6be0502`、`ecf8f4e2df34dfc030655c2565055b0fcd3d3010`、`2fda9c306eab8e519a93f98a2b099ef26113a7d3`。僅程式碼及 GitHub 檔案回讀驗證；exact HEAD CI/瀏覽器實測待查。
+
 ## 7. 新對話可直接複製的指令
 
 ```text
