@@ -174,5 +174,39 @@
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);core.rotation.y+=dt*.0002;orbit.rotation.z+=dt*.000025;});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.6.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene});
+
+  /* High-dimensional front: visual-only ten presences, persistent HP proportions from formal snapshots. */
+  function createHigherDimensionalScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.025,.01,.055,1);
+    const camera=new B.ArcRotateCamera("higher-dimensional-camera",Math.PI/2.2,Math.PI/2.8,17,new B.Vector3(0,0,0),scene);
+    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=27;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("higher-dimensional-ambient",new B.Vector3(0,1,0),scene).intensity=.7;
+    const ready=new B.StandardMaterial("higher-ready",scene);ready.emissiveColor=new B.Color3(.53,.29,.95);
+    const cleared=new B.StandardMaterial("higher-cleared",scene);cleared.emissiveColor=new B.Color3(.16,.78,.7);
+    const locked=new B.StandardMaterial("higher-locked",scene);locked.diffuseColor=new B.Color3(.1,.085,.17);
+    const fractured=new B.StandardMaterial("higher-fractured",scene);fractured.emissiveColor=new B.Color3(.8,.35,.56);
+    const profiles=Array.isArray(args.presences)?args.presences:[];
+    const selected=Math.max(0,Math.min(9,Math.floor(Number(args.selectedPresence)||0)));
+    const core=B.MeshBuilder.CreatePolyhedron("higher-dimensional-core",{type:2,size:1.55},scene);core.material=ready;
+    for(let i=0;i<10;i++){
+      const p=profiles[i]||{},angle=2*Math.PI*i/10;
+      const x=Math.cos(angle)*5.3,z=Math.sin(angle)*5.3;
+      const remaining=Math.max(0,Math.min(100,Number(p.remainingPercent??100)));
+      const completed=p.defeated===true;
+      const available=p.available!==false;
+      const pillar=B.MeshBuilder.CreateCylinder("higher-presence-"+i,{height:1.2+remaining/120,diameterTop:.16,diameterBottom:i===selected?.9:.65,tessellation:6},scene);
+      pillar.position.set(x,(1.2+remaining/120)/2-.7,z);
+      pillar.material=completed?cleared:!available?locked:remaining<100?fractured:ready;
+      const base=B.MeshBuilder.CreateTorus("higher-presence-base-"+i,{diameter:1.15,thickness:.05,tessellation:30},scene);
+      base.position.set(x,-.7,z);base.rotation.x=Math.PI/2;base.material=pillar.material;
+      const route=B.MeshBuilder.CreateLines("higher-route-"+i,{points:[new B.Vector3(0,0,0),new B.Vector3(x,-.65,z)]},scene);
+      route.color=available?new B.Color3(.4,.2,.64):new B.Color3(.12,.1,.2);
+    }
+    const orbit=B.MeshBuilder.CreateTorus("higher-dimensional-orbit",{diameter:10.5,thickness:.035,tessellation:80},scene);
+    orbit.rotation.x=Math.PI/2;orbit.material=ready;
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(50,args.engine.getDeltaTime());core.rotation.y+=dt*.00025;orbit.rotation.z+=dt*.000022;});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.7.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene});
 })(window);
