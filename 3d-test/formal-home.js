@@ -12,8 +12,8 @@ async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createForgeScene)return;
  if(!loading)loading=Promise.all([
    global.BABYLON?.Engine?Promise.resolve():script(BABYLON_SRC),
-   global.Civilization3DPrototype?.createEquipmentScene?Promise.resolve():script(SCENE_SRC)
- ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createEquipmentScene)throw new Error("3d-modules-unavailable");})
+   global.Civilization3DPrototype?.createForgeScene?Promise.resolve():script(SCENE_SRC)
+ ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createForgeScene)throw new Error("3d-modules-unavailable");})
  .catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -70,17 +70,8 @@ async function toggle(route="home"){
     return {defeated:p?.defeated===true,available:p?.challengeStatus?.allowed===true,remainingPercent:Number(p?.remainingPercent??100)};
   }):[];
   const higherSnapshot=higher?{presences,selectedPresence:Math.max(0,presences.findIndex(p=>!p.defeated))}:{};
-  const types=typeof EQUIPMENT_TYPES!=="undefined"?EQUIPMENT_TYPES:[];
-  const slotData=inventory?types.slice(0,5).map(type=>{const item=formalState?.equipment?.[type];return {present:!!item,quality:Number(item?.q)||0};}):[];
-  const sampleData=inventory?(Array.isArray(formalState?.inventory)?formalState.inventory:[]).slice(0,5).map(item=>({present:true,quality:Number(item?.q)||0})):[];
-  const forgeTypes=Array.isArray(global.ENHANCEMENT_SLOTS)?global.ENHANCEMENT_SLOTS:(typeof ENHANCEMENT_SLOTS!=="undefined"?ENHANCEMENT_SLOTS:[]);
-  const min=typeof global.effectiveEnhancementMin==="function"?Number(global.effectiveEnhancementMin(formalState)):0;
-  const cap=typeof global.effectiveEnhancementCap==="function"?Number(global.effectiveEnhancementCap(formalState)):20;
-  const forgeSlots=forge?forgeTypes.slice(0,5).map(type=>{
-    const level=typeof global.enhancementLevel==="function"?Number(global.enhancementLevel(formalState,type)):Number(formalState?.enhancement?.levels?.[type]||0);
-    return {level,invalid:level<min};
-  }):[];
-  const snapshot=forge?{slots:forgeSlots,cap}:inventory?{slots:slotData,inventorySamples:sampleData}:character?{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const appearance=global.Civilization3DAppearance?.capture();
+  const snapshot=forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
