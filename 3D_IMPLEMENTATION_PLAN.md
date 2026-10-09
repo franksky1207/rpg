@@ -1,3 +1,11 @@
+## 2026-10-10｜雙模式前置第 2 批完成：啟動依賴與模式別資源分層準備
+
+- 新增 [`docs/DUAL_MODE_RESOURCE_LAYERING_PREP_2026-10-10.md`](docs/DUAL_MODE_RESOURCE_LAYERING_PREP_2026-10-10.md)，重新核對 `main` 的 `index.html`：161 個一般同步 script、97 個 deferred 宣告（其中 32 GM），及 `scriptgrouploader.js`、`backgroundpreload.js`、`3d-test/formal-home.js`、GM 測試中心與 Manifest 生成器。
+- **已完成：資源依賴盤點／模式別 L0～L4 安全分層與遷移順序／正式文字版、3D 預覽、登入 GM、銀河回顧、異宇宙、離線、冷熱載入測試矩陣。** 目前正式 `index.html` 直接引用三支 3D bridge JS；Babylon 與場景按需執行且可預抓 bytes，故尚未做到「文字模式完全不載 3D JS」。
+- **未實作／待證明**：全部 161 檔的逐符號依賴圖、登入模式選擇 boot gate、模式專用下載隔離、獨立正式 3D router、GLB 模型依路由分包、實際冷熱／手機效能測量；不能將規劃文件冒稱 runtime 功能或實機通過。
+- **安全禁止事項**：在完成腳本副作用／依賴分析及對應測試前，不能直接搬動 161 個 sync JS 或移除正式 3D bridge。第 17 批先做 L0 決策／帳號本機偏好與受控載入遷移，第 18 批驗收文字完整性；第 19～40 批承接 3D 模型與場景資源。前置第 1～2 批皆為 40 批以外的施工準備；**正式下一批仍為第 16 批**。
+- 本批只更新文件，正式遊戲、JS/CSS/HTML、GM 授權、戰鬥、存檔及進度無變動；沒有觸發 cache-bust 的程式變更。遵守每批同步更新本檔與 `PROJECT_HANDOFF.md` 的規範。
+
 ## 2026-10-10｜雙模式前置第 1 批已完成：第 01～15 批架構盤點與邊界契約
 
 - 新增 [`docs/DUAL_MODE_ARCHITECTURE_BOUNDARY_2026-10-10.md`](docs/DUAL_MODE_ARCHITECTURE_BOUNDARY_2026-10-10.md)，逐類核對第 01～15 批 opt-in 3D 預覽與正式文字介面、`Civilization3DAppearance` 唯讀資料來源、`Civilization3DRuntime` Canvas 生命週期、GM fixture 及啟動依賴。
