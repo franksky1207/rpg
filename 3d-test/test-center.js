@@ -118,12 +118,6 @@ search.oninput=renderCases;
 toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();};
 $("restart").onclick=()=>{disabled=false;toggle.textContent="停用 3D";start();};
 quality.onchange=()=>runtime?.setQuality(quality.value);
-$("contextTest").onclick=()=>{
- const canvas=host.querySelector("canvas");
- const gl=canvas?.getContext("webgl2")||canvas?.getContext("webgl");
- const ext=gl?.getExtension("WEBGL_lose_context");
- if(ext)ext.loseContext();else {status.hidden=false;status.textContent="此裝置不支援 WebGL 中斷測試擴充。";}
-};
 window.addEventListener("pagehide",()=>{setMaximized(false);safeStop();});
 window.addEventListener("keydown",event=>{
  if(event.key==="Escape"&&maximized){event.preventDefault();event.stopImmediatePropagation();setMaximized(false);return;}
