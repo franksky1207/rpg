@@ -25,7 +25,36 @@ function create(options={}){
     button.style.cssText="min-width:42px;height:42px;padding:0 10px;border:1px solid #6696c4;border-radius:9px;background:#091b30e8;color:#eaf6ff;font:700 22px system-ui;cursor:pointer;touch-action:manipulation";
     controls.appendChild(button);return button;
   });
-  root.appendChild(controls);
+  const layoutControls=document.createElement("div");
+  layoutControls.className="civilization-3d-layout-controls";
+  const expandButton=document.createElement("button");
+  expandButton.type="button";
+  expandButton.className="civilization-3d-layout-button";
+  expandButton.setAttribute("aria-label","放大 3D 預覽");
+  expandButton.textContent="⛶ 放大視窗";
+  const closeButton=document.createElement("button");
+  closeButton.type="button";
+  closeButton.className="civilization-3d-layout-button";
+  closeButton.setAttribute("aria-label","關閉 3D 預覽");
+  closeButton.textContent="× 關閉";
+  layoutControls.append(expandButton,closeButton);
+  root.appendChild(layoutControls);
+  let expanded=false;
+  function setExpanded(value){
+    expanded=!!value;
+    host.classList.toggle("civilization-3d-expanded",expanded);
+    expandButton.textContent=expanded?"⛶ 還原視窗":"⛶ 放大視窗";
+    expandButton.setAttribute("aria-label",expanded?"還原 3D 預覽":"放大 3D 預覽");
+    root.dataset.expanded=String(expanded);
+    resize();
+    if(typeof global.requestAnimationFrame==="function")global.requestAnimationFrame(resize);
+  }
+  const onExpand=()=>setExpanded(!expanded);
+  const onClose=()=>typeof options.onClose==="function"?options.onClose():stop("user-close");
+  expandButton.addEventListener("click",onExpand);
+  closeButton.addEventListener("click",onClose);
+  const onEscape=event=>{if(event.key==="Escape"&&expanded){event.preventDefault();setExpanded(false);}};
+  document.addEventListener("keydown",onEscape);
   const preventCanvasWheel=event=>{if(!canvas.hidden&&scene?.activeCamera)event.preventDefault();};
   canvas.addEventListener("wheel",preventCanvasWheel,{passive:false});
   const controlClick=event=>{
@@ -110,6 +139,10 @@ function create(options={}){
     global.visualViewport?.removeEventListener("resize",resize);
     canvas.removeEventListener("webglcontextlost",onContextLost);
     canvas.removeEventListener("webglcontextrestored",onContextRestored);
+    setExpanded(false);
+    document.removeEventListener("keydown",onEscape);
+    expandButton.removeEventListener("click",onExpand);
+    closeButton.removeEventListener("click",onClose);
     canvas.removeEventListener("wheel",preventCanvasWheel);
     buttons.forEach(button=>button.removeEventListener("click",controlClick));
     root.remove();
@@ -124,7 +157,7 @@ function create(options={}){
   global.visualViewport?.addEventListener("resize",resize);
   canvas.hidden=true;
   root.dataset.state="idle";
-  return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,
+  return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,setExpanded,resize,
     getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,contextLost}),
     cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assets.has(k)&&assets.get(k)!==value){try{assets.get(k)?.dispose?.();}catch(_){}}assets.set(k,value);return true;},
     clearAssets:()=>{for(const entry of assets.values()){try{entry?.dispose?.();}catch(_){}}assets.clear();}});
