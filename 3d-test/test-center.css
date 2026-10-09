@@ -22,3 +22,6 @@
 .center-workspace .prototype-host{height:clamp(360px,55vh,650px)}
 @media(max-width:770px){.center-layout{display:flex;flex-direction:column}.center-sidebar{width:100%;max-height:48dvh}.center-workspace{width:100%}.center-fixtures{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.center-fixtures{grid-template-columns:minmax(0,1fr)}.center-sidebar{max-height:40dvh}.center-workspace .prototype-host{height:min(54dvh,500px)}}
+
+/* Status notices must never cover the camera controls after a successful scene load. */
+.center-workspace .status[hidden]{display:none!important}
