@@ -1,5 +1,8 @@
 (function(){
- const VERSION=3;
+ const VERSION=4;
+ const startupTasks=new Map();let running=null,finished=false,lastFailure=null;
+ function registerStartupTask(id,run){if(running||finished||typeof run!=="function"||!id||startupTasks.has(id))return false;startupTasks.set(id,run);return true;}
+ function startupSnapshot(){return Object.freeze({version:VERSION,status:finished?"ready":lastFailure?"failed":running?"loading":"pending",tasks:startupTasks.size,failed:!!lastFailure});}
  const BACKGROUND_PATH_TOKEN="/assets/backgrounds/";
  const SOURCE_PATH_TOKEN="/backgrounds-source/";
  const CRITICAL_MAX_WAIT_MS=4500;
@@ -61,10 +64,18 @@
   return Array.from(current);
  }
  function updateProgress(done,total){
+  const value=total?Math.min(99,Math.floor(done/total*100)):0;
   const text=document.getElementById("backgroundPreloadStatus");
   const bar=document.getElementById("backgroundPreloadBar");
-  if(text)text.textContent=total>0?`必要背景載入中 ${done} / ${total}`:"準備遊戲中…";
-  if(bar)bar.style.width=total>0?`${Math.max(0,Math.min(100,done/total*100))}%`:"100%";
+  const percent=document.getElementById("backgroundPreloadPercent");
+  if(text)text.textContent="正在載入遊戲資源…";
+  if(percent)percent.textContent=value+"%";
+  if(bar)bar.style.width=value+"%";
+ }
+ function showFailure(){
+  const status=document.getElementById("backgroundPreloadStatus"),retry=document.getElementById("backgroundPreloadRetry");
+  if(status)status.textContent="部分資源載入失敗，請重新嘗試。";
+  if(retry)retry.hidden=false;
  }
  function preloadOne(url){
   return new Promise(resolve=>{
@@ -122,30 +133,60 @@
   setTimeout(schedule,DEFERRED_START_DELAY_MS);
  }
 
- window.preloadGameBackgrounds=async function(){
-  const urls=collectActiveBackgroundUrls();
-  const critical=collectCurrentSceneBackgroundUrls(urls);
-  const criticalSet=new Set(critical);
-  const deferred=urls.filter(url=>!criticalSet.has(url));
-  window.BACKGROUND_PRELOAD_URLS=urls.slice();
-  window.BACKGROUND_PRELOAD_CRITICAL_URLS=critical.slice();
-  window.BACKGROUND_PRELOAD_DEFERRED_URLS=deferred.slice();
-  updateProgress(0,critical.length);
-  let done=0;
-  const jobs=critical.map(url=>preloadOne(url).then(()=>{done++;updateProgress(done,critical.length);}));
-  let timedOut=false;
-  const timeout=new Promise(resolve=>setTimeout(()=>{timedOut=true;resolve();},CRITICAL_MAX_WAIT_MS));
-  await Promise.race([Promise.all(jobs),timeout]);
-  await waitForDomReady();
-  window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:done,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
-  signalReadyBeforeReveal();
-  revealGame();
-  scheduleDeferredPreload(deferred);
-  return {...window.BACKGROUND_PRELOAD_REPORT};
- };
-
+ async function startStartup(){
+  if(running)return running;
+  running=(async()=>{
+   const retry=document.getElementById("backgroundPreloadRetry");
+   if(retry)retry.hidden=true;
+   lastFailure=null;
+   const urls=collectActiveBackgroundUrls();
+   const critical=collectCurrentSceneBackgroundUrls(urls),criticalSet=new Set(critical);
+   const deferred=urls.filter(url=>!criticalSet.has(url));
+   window.BACKGROUND_PRELOAD_URLS=urls.slice();
+   window.BACKGROUND_PRELOAD_CRITICAL_URLS=critical.slice();
+   window.BACKGROUND_PRELOAD_DEFERRED_URLS=deferred.slice();
+   // Each completed prerequisite contributes one actual step; no timer-driven progress.
+   const total=2+critical.length+startupTasks.size;
+   let done=0;
+   const complete=()=>updateProgress(++done,total);
+   updateProgress(0,total);
+   await waitForDomReady();complete();
+   if(!document.getElementById("main")||typeof window.render!=="function")throw new Error("startup-main-not-ready");
+   complete();
+   let loaded=0,failed=0,timedOut=false;
+   const criticalJobs=critical.map(url=>new Promise(resolve=>{
+    const image=new Image();let settled=false;
+    const finish=ok=>{if(settled)return;settled=true;loaded+=ok?1:0;failed+=ok?0:1;complete();resolve();};
+    image.onload=()=>finish(true);
+    image.onerror=()=>finish(false);
+    image.decoding="async";image.src=url;
+    if(image.complete&&image.naturalWidth>0)finish(true);
+   }));
+   // Retain the legacy 4.5s image timeout, but do not mistake a timeout for readiness.
+   const timeout=criticalJobs.length?setTimeout(()=>{timedOut=true;},CRITICAL_MAX_WAIT_MS):null;
+   try{
+    await Promise.race([Promise.all(criticalJobs),new Promise((_,reject)=>{
+     if(!criticalJobs.length)return;
+     setTimeout(()=>reject(new Error("startup-critical-background-timeout")),CRITICAL_MAX_WAIT_MS);
+    })]);
+   }finally{if(timeout!==null)clearTimeout(timeout);}
+   if(failed)throw new Error("startup-critical-background-failed");
+   for(const [id,run] of startupTasks){await run();complete();}
+   window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:loaded,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
+   const bar=document.getElementById("backgroundPreloadBar"),pct=document.getElementById("backgroundPreloadPercent");
+   if(bar)bar.style.width="100%";if(pct)pct.textContent="100%";
+   signalReadyBeforeReveal();finished=true;revealGame();scheduleDeferredPreload(deferred);
+   return {...window.BACKGROUND_PRELOAD_REPORT};
+  })().catch(error=>{lastFailure=error;showFailure();throw error;}).finally(()=>{running=null;});
+  return running;
+ }
+ window.preloadGameBackgrounds=startStartup;
+ window.CivilizationStartupCoordinator=Object.freeze({version:VERSION,register:registerStartupTask,snapshot:startupSnapshot,retry:()=>startStartup()});
  window.BACKGROUND_PRELOAD_POLICY_VERSION=VERSION;
  window.BACKGROUND_PRELOAD_CRITICAL_MAX_WAIT_MS=CRITICAL_MAX_WAIT_MS;
  window.BACKGROUND_PRELOAD_DEFERRED_CONCURRENCY=DEFERRED_CONCURRENCY;
- Promise.resolve().then(()=>window.preloadGameBackgrounds()).catch(async()=>{await waitForDomReady();signalReadyBeforeReveal();revealGame();});
+ const retry=document.getElementById("backgroundPreloadRetry");
+ if(retry)retry.addEventListener("click",()=>startStartup().catch(()=>{}));
+ Promise.resolve().then(()=>startStartup()).catch(()=>{});
+
 })();
