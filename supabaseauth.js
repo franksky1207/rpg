@@ -161,7 +161,7 @@
  function notifySignedIn(session){
   const previousId=String(currentSession?.user?.id||"");
   const nextId=String(session?.user?.id||"");
-  if(previousId&&previousId!==nextId){window.gmSetRuntimeAuthorizationFlag?.(false);}
+  if(previousId&&previousId!==nextId){if(!nextId)window.gmClearCurrentRuntimeAuthorization?.(previousId);window.gmSetRuntimeAuthorizationFlag?.(false);}
   currentSession=session||null;
   window.civilizationAuthSession=currentSession;
   if(currentSession){
@@ -297,7 +297,7 @@
   try{
    const {error}=await client.auth.signOut({scope:"local"});
    if(error)throw error;
-   window.gmClearCurrentRuntimeAuthorization?.();
+   window.gmClearCurrentRuntimeAuthorization?.(signingOutUserId);
    try{window.dispatchEvent(new CustomEvent("civilization-auth-signed-out"));}catch(_){}
    if(signingOutUserId&&typeof window.clearGmCombatSpeedOverrideForUser==="function")window.clearGmCombatSpeedOverrideForUser(signingOutUserId);
    currentSession=null;
