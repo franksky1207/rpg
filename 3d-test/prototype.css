@@ -23,3 +23,25 @@ button:focus-visible,a:focus-visible{outline:3px solid #b8ebff;outline-offset:3p
 .actions label{display:flex;align-items:center;gap:8px;color:#d5eaff;font-size:14px}
 .actions select{border:1px solid #6bb4ed;background:#123656;color:#fff;padding:10px;border-radius:8px}
 @media(max-width:600px){.actions{flex-wrap:wrap}.actions label{width:100%}.actions select{flex:1}}
+
+
+/* GM viewer shell follows main game palette; the actual 3D scenes retain independent colors. */
+:root{background:#0b0e13;color:#ece6d9}
+body{background:radial-gradient(ellipse at 50% 0,#27272a,#0b0e13 66%)}
+.shell{width:min(1320px,100%)}
+header{padding-bottom:13px;border-bottom:1px solid #554b3a}
+header small{color:#bca473;letter-spacing:.12em}
+h1{color:#ebcb84;letter-spacing:.02em}
+a{color:#ead8b2;border:1px solid #766242;background:#221e17}
+a:hover{background:#3b3020;border-color:#c9a45c}
+.stage{background:radial-gradient(circle at 50% 40%,#242a33,#080b10);border-color:#6c5e47}
+.fallback{background:linear-gradient(125deg,#23201b,#101217);color:#e9dcc4}
+.status{background:#211f1bde;border-color:#736044;color:#f1deb9}
+footer{border-top:1px solid #514738;margin-top:16px;padding-top:16px;color:#c4bbaa}
+.actions{align-items:center;flex-wrap:wrap}
+button{background:#29231b;border:1px solid #7b6846;color:#f1dfb7}
+button:hover{background:#433520;border-color:#caab70}
+button:focus-visible,a:focus-visible{outline:3px solid #dfbc77;outline-offset:3px}
+.actions label{color:#dfcda8}
+.actions select{background:#181b20;color:#efe6d4;border:1px solid #7b6846}
+@media(max-width:600px){.shell{padding:12px}.actions{gap:8px}.actions button{min-height:44px}}
