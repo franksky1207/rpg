@@ -4,13 +4,13 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createGalaxyScene)return;
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createUniverseScene)return;
  if(!loading)loading=(async()=>{
   if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
-  if(!global.Civilization3DPrototype?.createGalaxyScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05&v4=20261009-b05-region-lock");
+  if(!global.Civilization3DPrototype?.createUniverseScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04&v3=20261009-b05&v4=20261009-b05-region-lock&v5=20261009-b06");
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -27,8 +27,10 @@ async function toggle(route="home"){
   runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onClose:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
   runtime.setQuality("low");
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
-  const galaxy=activeRoute==="adventure"&&world===1;
-  const create=galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const era=global.getAdventureEraView?.()||"";
+  const galaxy=activeRoute==="adventure"&&world===1&&era==="galaxy";
+  const universe=activeRoute==="adventure"&&((world===2&&era==="universe")||(world===3&&era==="universe-review"));
+  const create=universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
   const mapIndex=typeof selectedMap==="number"?selectedMap:0;
@@ -36,7 +38,11 @@ async function toggle(route="home"){
   const regionList=Array.isArray(regions)?regions:[];
   const selectedRegion=regionList.reduce((last,region,i)=>mapIndex>=Number(region.mapStart)?i:last,0);
   const unlockedRegions=regionList.map(region=>unlockedIndex>=Number(region.mapStart));
-  const snapshot=galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:{};
+  const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
+  const highest=typeof global.secondWorldHighestUnlockedBossIndex==="function"?Number(global.secondWorldHighestUnlockedBossIndex()):0;
+  const cleared=bosses.filter(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)).length;
+  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,selectedMap:Math.max(0,Math.min(9,Math.floor(highest/10))),review:era==="universe-review"}:{};
+  const snapshot=galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
@@ -69,13 +75,34 @@ function ensureGalaxyMainlineControl(view){
  controls.append(button,hint);
  regions.before(controls);
 }
+function ensureUniverseControl(view){
+ if(view!=="adventure")return;
+ const world=Number(global.currentWorldPhase?.()||0),era=global.getAdventureEraView?.();
+ if(!((world===2&&era==="universe")||(world===3&&era==="universe-review")))return;
+ const screen=document.querySelector("#main .universe-adventure-screen:not(.galaxy-review-adventure-screen)");
+ if(!screen||screen.querySelector("#civilization3dUniverseToggle"))return;
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.id="civilization3dUniverseToggle";button.className="btn";button.type="button";
+ button.setAttribute("aria-pressed","false");button.textContent="預覽 3D 宇宙星圖";
+ button.addEventListener("click",()=>toggle("adventure"));
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="立體展示不改變正式 Boss、進度或回顧規則。";
+ controls.append(button,hint);
+ const list=screen.querySelector(".universe-region-list");
+ if(list)list.before(controls);
+}
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
+ if(view==="adventure"&&enabled){
+  const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
+  if(!((world===1&&era==="galaxy")||(world===2&&era==="universe")||(world===3&&era==="universe-review")))hide();
+ }
  ensureGalaxyMainlineControl(view);
+ ensureUniverseControl(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
 global.civilization3dToggleGalaxy=()=>toggle("adventure");
+global.civilization3dToggleUniverse=()=>toggle("adventure");
 global.civilization3dHomeRouteRendered=onRendered;
 global.CIVILIZATION_3D_HOME_BRIDGE_VERSION=1;
 })(window);
