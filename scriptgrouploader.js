@@ -36,10 +36,29 @@
  function snapshot(){const groups={};GROUP_ORDER.forEach(group=>{groups[group]=groupReports.get(group)||Object.freeze({version:VERSION,group,status:"pending",count:declarations(group).length});});return Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,order:Array.from(GROUP_ORDER),autoGroups:Array.from(AUTO_GROUPS),activation:activationSnapshot(),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});}
  async function autoLoad(){for(const group of AUTO_GROUPS){try{await loadGroup(group);}catch(error){console.error(`[ScriptGroupLoader] ${group}`,error);}}}
  function diagnosticsRequested(){try{const params=new URLSearchParams(location.search||"");if(params.get("production")==="1")return false;const explicit=params.get("integrity")==="1"||params.get("diagnostics")==="1",local=location.hostname==="127.0.0.1"||location.hostname==="localhost";return explicit||local;}catch(_){return false;}}
+ // Concurrent conditional HTTP revalidation reuses unchanged responses while keeping JS execution ordered.
+ // Works with ordinary browser HTTP cache; never stores credentials or mutable player data.
+ async function warmAuthorizedGmScripts(){
+  if(!gmAuthorized())return false;
+  if(typeof fetch!=="function")return false;
+  const nodes=declarations("gm"),urls=nodes.map(node=>node.dataset.src);
+  let index=0;
+  const workers=Array.from({length:Math.min(6,urls.length)},async()=>{
+   while(index<urls.length){
+    if(!gmAuthorized())return;
+    const url=urls[index++];
+    const response=await fetch(url,{cache:"no-cache",credentials:"same-origin"});
+    if(!response.ok)throw new Error("startup-resource-revalidation-failed");
+    // Drain body to complete cache entry before ordered <script src> evaluation.
+    await response.arrayBuffer();
+   }
+  });
+  await Promise.all(workers);return true;
+ }
  async function ensureAuthorizedGmRuntime(options={}){
   if(!gmAuthorized())return false;
   const restored=restoreAuthorizedGmFlagEarly(),allowRetry=options.retry!==false;
-  try{await loadGroup("gm");setRuntimeGmFlag(true);return true;}
+  try{if(options.warm===true)await warmAuthorizedGmScripts();await loadGroup("gm");setRuntimeGmFlag(true);return true;}
   catch(error){
    console.error("[ScriptGroupLoader] gm authorized restore",error);
    if(!allowRetry)return restored;
@@ -87,7 +106,7 @@
  const bootTask=async()=>{
   await accountSettled();
   if(!gmAuthorized())return true;
-  const ready=await ensureAuthorizedGmRuntime({retry:true});
+  const ready=await ensureAuthorizedGmRuntime({retry:true,warm:true});
   if(!ready||snapshot().groups.gm.status!=="ready"||typeof window.gmHtml!=="function")throw new Error("startup-optional-scripts-not-ready");
   return true;
  };
@@ -95,6 +114,6 @@
  function schedule(){restoreAuthorizedGmFlagEarly();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",restoreAuthorizedGmFlagEarly,{once:true});const start=()=>setTimeout(()=>{restoreAuthorizedGmFlagEarly();installGmPasswordBridge();autoLoad();ensureAuthorizedGmRuntime();observeGmActivation();if(diagnosticsRequested())loadDiagnostics();},AUTO_START_DELAY_MS);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();}
 
  const namespace=Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,activationPolicyVersion:ACTIVATION_POLICY_VERSION,loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,gmAuthorizationVersion:GM_AUTHORIZATION_VERSION,gmEarlyRuntimeRestoreVersion:GM_EARLY_RUNTIME_RESTORE_VERSION,gmAuthorizedGroupRetryVersion:GM_AUTHORIZED_GROUP_RETRY_VERSION,ensure:loadGroup,restoreAuthorizedGmFlagEarly,ensureAuthorizedGmRuntime,authorizeGmRuntime,revokeGmRuntimeAuthorization,gmAuthorizationSnapshot,snapshot,activationSnapshot});
- window.CivilizationScriptLoader=namespace;window.SCRIPT_GROUP_LOADER_VERSION=VERSION;window.GM_RUNTIME_EARLY_RESTORE_VERSION=GM_EARLY_RUNTIME_RESTORE_VERSION;window.GM_AUTHORIZED_GROUP_RETRY_VERSION=GM_AUTHORIZED_GROUP_RETRY_VERSION;window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2;window.GM_RUNTIME_AUTHORIZATION_VERSION=GM_AUTHORIZATION_VERSION;window.GM_RUNTIME_AUTHORIZATION_SCOPE="account-local-runtime";window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=typeof window.gmInstallRuntimeAuthorizationSaveBoundary==="function"?window.gmInstallRuntimeAuthorizationSaveBoundary():false;
+ window.CivilizationScriptLoader=namespace;window.SCRIPT_GROUP_LOADER_VERSION=VERSION;window.GM_RUNTIME_EARLY_RESTORE_VERSION=GM_EARLY_RUNTIME_RESTORE_VERSION;window.GM_AUTHORIZED_GROUP_RETRY_VERSION=GM_AUTHORIZED_GROUP_RETRY_VERSION;window.GM_STARTUP_REVALIDATION_VERSION=1;window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2;window.GM_RUNTIME_AUTHORIZATION_VERSION=GM_AUTHORIZATION_VERSION;window.GM_RUNTIME_AUTHORIZATION_SCOPE="account-local-runtime";window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=typeof window.gmInstallRuntimeAuthorizationSaveBoundary==="function"?window.gmInstallRuntimeAuthorizationSaveBoundary():false;
  window.ensureCivilizationScriptGroup=loadGroup;window.civilizationScriptGroupSnapshot=snapshot;schedule();
 })();
