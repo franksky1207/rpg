@@ -64,8 +64,10 @@
 
 ### 第 02 批｜共用 Canvas、路由、效能與回退
 - **施工範圍**：Canvas 脫離 #main.innerHTML；場景 epoch/取消、dispose、資產快取、畫質、手機 safe-area。
-- **完成與自我檢查**：快速切頁不重建引擎、不漏 GPU 資源；失敗回退不阻塞操作。
-- **狀態**：未開始。
+- **實作（2026-10-09）**：新增 `3d-test/runtime.js` 共用 presentation runtime；root/canvas 由 host 獨立持有，不放在正式 `#main.innerHTML`；`show(sceneId,factory)` 具 epoch 取消過期結果、場景 dispose、同一引擎重用，`stop/dispose` 釋放 GPU 與 event listener，提供本階段簡易資產 Map、low/medium/high 硬體縮放及 fallback callback。測試頁已改採 runtime，保留 GM iframe 返回前一畫面，提供畫質切換和手機 Safe Area。
+- **驗證與限制**：GitHub 回讀／靜態檢查及 base→head compare；未取得實際瀏覽器／手機 GPU profiler 與 exact HEAD Actions success，故不可宣稱無 GPU 洩漏或所有手機已通過。正式頁面批次接入及正式路由 owner 對接屬第 03 批起；目前 scene factory 與場景管理先在 3D 測試頁驗證，不插入正式主流程。Babylon.js 仍由固定版 CDN 測試載入，正式部署前須本地化。
+- **程式提交**：`5002c766a08cda7fd01bbc9d2e7c3dddffba08c9`、`7788cd41dce369886728812e476d0ebcaa7a8f25`、`c1c0dbdd38a8dae96456f63479ae707dacc09e5b`、`5bf7b093b7117d300be88ef0e8d563c16798ce59`。
+- **狀態**：程式已提交、靜態核對完成；瀏覽器實測與效能驗收待補。
 
 ### 第 03 批｜啟動、登入、主畫面 3D 基礎
 - **施工範圍**：背景預載、帳號介面、主畫面艦橋、全域導覽、狀態列；保留原本 HTML 與登入安全。
@@ -313,5 +315,5 @@
 ## 8. 版本與計畫狀態
 
 - 2026-10-09：首次建立 40 批規劃。
-- 2026-10-09：第 01 批獨立 3D prototype 程式已提交；瀏覽器／手機與 CI 驗證待補。第 02～40 批尚未開始。
+- 2026-10-09：第 01 批獨立 3D prototype 程式已提交；瀏覽器／手機與 CI 驗證待補。第 02 批共用 runtime 已施工（實機待驗）；第 03～40 批尚未開始。
 - 若後續 main 的正式功能新增／刪除，先更新介面覆蓋表與依賴，再調整未開始批次；不要讓這份計畫凌駕實碼。
