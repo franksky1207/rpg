@@ -1,6 +1,6 @@
 (function(){
  const VERSION=4;
- const startupTasks=new Map();let running=null,finished=false,lastFailure=null;
+ const startupTasks=new Map();let running=null,finished=false,lastFailure=null,startupAttempt=0;
  function registerStartupTask(id,run){if(running||finished||typeof run!=="function"||!id||startupTasks.has(id))return false;startupTasks.set(id,run);return true;}
  function startupSnapshot(){return Object.freeze({version:VERSION,status:finished?"ready":lastFailure?"failed":running?"loading":"pending",tasks:startupTasks.size,failed:!!lastFailure});}
  const BACKGROUND_PATH_TOKEN="/assets/backgrounds/";
@@ -135,6 +135,7 @@
 
  async function startStartup(){
   if(running)return running;
+  const attempt=++startupAttempt;
   running=(async()=>{
    const retry=document.getElementById("backgroundPreloadRetry");
    if(retry)retry.hidden=true;
@@ -148,7 +149,7 @@
    // Each completed prerequisite contributes one actual step; no timer-driven progress.
    const total=2+critical.length+startupTasks.size;
    let done=0;
-   const complete=()=>updateProgress(++done,total);
+   const complete=()=>{done++;if(attempt===startupAttempt)updateProgress(done,total);};
    updateProgress(0,total);
    await waitForDomReady();complete();
    if(!document.getElementById("main")||typeof window.render!=="function")throw new Error("startup-main-not-ready");
