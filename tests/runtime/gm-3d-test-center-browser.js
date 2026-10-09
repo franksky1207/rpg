@@ -26,6 +26,19 @@ const assert=require("node:assert/strict");
   assert.equal(snapshot.fixture.life,"rerun");
   assert.equal(snapshot.fixture.regionProgress,7);
   assert.equal(snapshot.factories,true,"Shared formal 3D factories were not loaded");
+  // When the scene is active, the success banner must not cover the camera controls.
+  await page.waitForFunction(()=>document.querySelector("#status")?.hidden===true||!document.querySelector("#fallback")?.hidden,{timeout:20000});
+  const presentation=await page.evaluate(()=>({
+    fallback:!document.querySelector("#fallback").hidden,
+    bannerHidden:document.querySelector("#status").hidden,
+    cameraButtons:document.querySelectorAll("#prototypeHost .civilization-3d-camera-button").length
+  }));
+  if(!presentation.fallback){
+    assert.equal(presentation.bannerHidden,true,"Successful scene status is covering camera buttons");
+    assert.equal(presentation.cameraButtons,3,"Camera controls missing after banner hide");
+  }
+  console.log("GM 3D status visibility: "+JSON.stringify(presentation));
+
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.locator("#caseList .center-case").count(),2);
   assert.equal(await page.locator(".center-workspace").isVisible(),true);
