@@ -492,7 +492,7 @@
         const number=first+i,theta=2*Math.PI*i/10,x=Math.cos(theta)*3.8,z=Math.sin(theta)*3.8;
         const cleared=progress>=number*5,focused=i===selected;
         const rowCulture=rows[number-1]||"",rowIndex=Math.max(0,cultures.indexOf(rowCulture));
-        const size=focused?.75:cleared?.54:.43;
+        const size=focused?.75+(cultureTier-1)*.025:cleared?.54:.43;
         const node=shape("alternate-universe-"+number,size,rowIndex%5);
         node.position.set(x,focused?.5:.18,z);
         node.rotation.y=seed(number)*Math.PI;
@@ -514,10 +514,10 @@
         }
       }
       // Culture-specific geometry plus tier-based embellishment, under bounded mesh counts.
-      const core=shape("alternate-selected-core",1.15,motif);
+      const core=shape("alternate-selected-core",.88+cultureTier*.075,motif);
       for(let i=0;i<Math.min(10,cultureTier);i++){
         const theta=2*Math.PI*i/Math.min(10,cultureTier);
-        const relic=shape("alternate-culture-relic-"+i,.12+(cultureTier%3)*.025,(motif+i)%5);
+        const relic=shape("alternate-culture-relic-"+i,.11+cultureTier*.009,(motif+i)%5);
         relic.position.set(Math.cos(theta)*(.8+cultureTier*.045),.7+Math.sin(i*1.7)*.22,Math.sin(theta)*(.8+cultureTier*.045));
         relic.material=accent;
       }
@@ -527,7 +527,7 @@
         satellite.position.set(Math.cos(theta)*(1.05+depth*.11),1.3+Math.sin(i*2.1)*.4,Math.sin(theta)*(1.05+depth*.11));
         satellite.material=depthAccent;
       }
-      scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*(.0001+depth*.000025);});
+      scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*(.00009+depth*.000022+cultureTier*.000009);});
       scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,universeName:names[universe-1]||"",culture,cultureIndex,cultureTier,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
       return scene;
     }
