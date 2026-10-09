@@ -8,7 +8,7 @@ const assert=require("node:assert/strict");
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===2,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),7);
-  assert.equal(await page.locator("#caseList .center-case").count(),6);
+  assert.equal(await page.locator("#caseList .center-case").count(),7);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
   assert.equal(await page.locator("#caseMetadata").count(),0);
@@ -61,6 +61,6 @@ const assert=require("node:assert/strict");
   assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 6 categories, 6 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  console.log("PASS GM visual center: 6 categories, 7 scenes, no engineering text, mobile maximize/restore",mobile,restore);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
