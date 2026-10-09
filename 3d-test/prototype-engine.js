@@ -63,5 +63,31 @@
       return {ok:false,reason:"engine-start-failed",error:String(error?.message||error),dispose(){}};
     }
   }
-  global.Civilization3DPrototype=Object.freeze({version:VERSION,supported,mount});
+  function createScene({BABYLON,engine,canvas}){
+    const scene=new BABYLON.Scene(engine);
+    scene.clearColor=new BABYLON.Color4(0.015,0.026,0.065,1);
+    const camera=new BABYLON.ArcRotateCamera("prototype-camera",Math.PI/2,Math.PI/2.7,9,new BABYLON.Vector3(0,0.3,0),scene);
+    camera.attachControl(canvas,true);
+    camera.lowerRadiusLimit=4;camera.upperRadiusLimit=14;
+    new BABYLON.HemisphericLight("ambient",new BABYLON.Vector3(0,1,0),scene).intensity=0.75;
+    new BABYLON.DirectionalLight("key",new BABYLON.Vector3(-0.5,-1,0.6),scene).intensity=1.3;
+    const hub=BABYLON.MeshBuilder.CreateCylinder("hub",{diameterTop:3.1,diameterBottom:3.9,height:0.4,tessellation:48},scene);
+    hub.position.y=-1.25;
+    const core=BABYLON.MeshBuilder.CreatePolyhedron("core",{type:2,size:1.3},scene);
+    core.position.y=0.45;
+    const mat=new BABYLON.PBRMaterial("core-metal",scene);
+    mat.metallic=0.68;mat.roughness=0.28;mat.albedoColor=new BABYLON.Color3(0.12,0.37,0.62);core.material=mat;
+    const ring=BABYLON.MeshBuilder.CreateTorus("orbit",{diameter:4.7,thickness:0.055,tessellation:80},scene);
+    ring.rotation.x=Math.PI/2.7;
+    const ringMat=new BABYLON.StandardMaterial("orbit-light",scene);
+    ringMat.emissiveColor=new BABYLON.Color3(0.15,0.7,1);ring.material=ringMat;
+    const platform=new BABYLON.StandardMaterial("platform-metal",scene);
+    platform.diffuseColor=new BABYLON.Color3(0.065,0.11,0.18);hub.material=platform;
+    scene.onBeforeRenderObservable.add(()=>{
+      const delta=Math.min(engine.getDeltaTime()/1000,0.05);
+      core.rotation.y+=delta*0.22;ring.rotation.z+=delta*0.11;
+    });
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.2.0",supported,mount,createScene});
 })(window);
