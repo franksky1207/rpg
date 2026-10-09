@@ -82,13 +82,13 @@ jobs:
           node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-ui-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
