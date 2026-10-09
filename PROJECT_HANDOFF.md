@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 3D 相機操作改善**：`3d-test/runtime.js` 共用 3D 預覽新增「＋」「－」「⟲ 重置視角」三控制鈕，並以 `{passive:false}` 於啟用中之 canvas 攔截 wheel 預設頁面捲動，畫布外維持原本滾動；scene 啟動時保存相機初始 radius/alpha/beta，dispose 移除新事件監聽。`index.html` 已更新 cache-bust。`tests/runtime/galaxy-3d-button-browser.js` 增加 mock engine + Chromium DOM 視角控制／wheel event 驗證，獨立 browser smoke workflow 已納入 3D runtime 檔案變更觸發。仍需實際桌機滾輪／手機觸控驗收。
+
 - **2026-10-09 轉生銀河預覽入口補修**：使用者實測確認首輪銀河有入口、轉生重返正式銀河卻無。針對不同 world1 rerun HTML owner，新增正式 `render()` 後的 `civilization3dHomeRouteRendered()` 容錯補入口：只在 `currentWorldPhase()===1` 且正式 `getAdventureEraView()==='galaxy'` 的冒險區域列表補上按鈕，已存在則不重複；回顧世界不補。未更動世界判定與正式戰鬥 owner。 `tests/runtime/galaxy-3d-button-browser.js` 新增首輪銀河／轉生銀河／銀河回顧三情境（測試虛擬紀元路由與 DOM，不冒充真實轉生完整 E2E）。
 
 - **2026-10-09 第 05 批實機入口修正：使用者確認是在正式銀河紀元冒險十區列表，不是回顧戰；`worldmapui.js` 的正式 `adventureMapPage()` 原本以 `typeof galaxy3dPreviewControl` 的條件式輸出按鈕，會在跨 script 作用域不可見時靜默省略。現已改為正式地圖 owner 直接輸出按鈕，`index.html` 更新 worldmapui cache-bust；另新增 `tests/runtime/galaxy-3d-button-browser.js` 和獨立 CI `.github/workflows/galaxy-3d-button-smoke.yml`，以 Chromium 真正 render `go('adventure')` 驗證按鈕與正式區域列表。非轉生回顧頁問題，未修改戰鬥或存檔。**
