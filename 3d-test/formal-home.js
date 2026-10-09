@@ -22,13 +22,20 @@ async function resolveSceneResources(){
   }).catch(()=>[BABYLON_SRC,SCENE_SRC]);
  return resourceVersionPromise;
 }
+const RUNTIME_SRC="3d-test/runtime.js?v=20261010-dual-mode-preflight3";
+const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-dual-mode-preflight3";
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createBattlePresentationScene)return;
- if(!loading)loading=resolveSceneResources().then(([engineUrl,sceneUrl])=>Promise.all([
-   global.BABYLON?.Engine?Promise.resolve():script(engineUrl),
-   global.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
- ])).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createBattlePresentationScene)throw new Error("3d-modules-unavailable");})
- .catch(error=>{loading=null;throw error;});
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createBattlePresentationScene&&global.Civilization3DRuntime?.create&&global.Civilization3DAppearance?.capture)return;
+ if(!loading)loading=resolveSceneResources().then(async ([engineUrl,sceneUrl])=>{
+   // Runtime and appearance are needed only after clicking a preview, never for text startup.
+   await Promise.all([
+     global.Civilization3DRuntime?.create?Promise.resolve():script(RUNTIME_SRC),
+     global.Civilization3DAppearance?.capture?Promise.resolve():script(APPEARANCE_SRC),
+     global.BABYLON?.Engine?Promise.resolve():script(engineUrl),
+     global.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
+   ]);
+   if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createBattlePresentationScene||!global.Civilization3DRuntime?.create||!global.Civilization3DAppearance?.capture)throw new Error("3d-modules-unavailable");
+ }).catch(error=>{loading=null;throw error;});
  return loading;
 }
 /* Preload network bytes only; neither WebGL nor GPU resources are created. */
@@ -59,11 +66,11 @@ function schedule3dPrefetch(){
  const schedule=()=>setTimeout(()=>run().catch(()=>{}),150);
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",schedule,{once:true});else schedule();
 }
-schedule3dPrefetch();
+if(global.CivilizationPresentationMode?.shouldWarm3DAtStartup?.()===true)schedule3dPrefetch();
 let activeRoute="home",activeEra="",activeGrowthKind=null;
 async function toggle(route="home",growthKind=null){
  if(enabled){hide();return;}
- const h=host();if(!h||!global.Civilization3DRuntime)return;
+ const h=host();if(!h||global.CivilizationPresentationMode?.canPreview3D?.()===false)return;
  activeRoute=route;activeGrowthKind=growthKind;
  activeEra=route==="adventure"?(global.getAdventureEraView?.()||""):"";
  const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
