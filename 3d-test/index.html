@@ -31,7 +31,9 @@ function fail(reason){
 }
 function stop(){
   serial++;
-  runtime?.dispose();runtime=null;
+  const previous=runtime;runtime=null;
+  previous?.dispose();
+  host.replaceChildren();
 }
 async function start(){
   stop();const ticket=serial;
@@ -40,7 +42,7 @@ async function start(){
     fail("3D 模組尚未載入；請重新啟動或返回正式遊戲。");return;
   }
   host.hidden=false;
-  runtime=window.Civilization3DRuntime.create({host,onFallback:reason=>fail("3D 場景失敗："+reason)});
+  runtime=window.Civilization3DRuntime.create({host,onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.textContent="WebGL 已復原，可按「重新啟動」恢復 3D。";}});
   runtime.setQuality(quality.value);
   const result=await runtime.show("prototype-hub",window.Civilization3DPrototype.createScene);
   if(ticket!==serial)return;
@@ -54,6 +56,7 @@ quality.addEventListener("change",()=>{if(runtime)runtime.setQuality(quality.val
 document.getElementById("restart").addEventListener("click",start);
 document.getElementById("contextTest").addEventListener("click",()=>{const canvas=host.querySelector("canvas");const ext=canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")||canvas?.getContext("webgl")?.getExtension("WEBGL_lose_context");if(ext)ext.loseContext();else fail("此裝置不支援 WEBGL_lose_context 測試擴充；可手動停用 3D。");});
 window.addEventListener("pagehide",stop);
+window.addEventListener("keydown",event=>{if(embedded&&event.key==="Escape"){event.preventDefault();try{window.parent?.postMessage({type:"civilization3d:close"} ,location.origin);}catch(_){}}});
 function script(src,next){
   const el=document.createElement("script");el.src=src;el.onload=next;
   el.onerror=()=>fail("模組載入失敗，仍可返回正式遊戲。");document.head.appendChild(el);
