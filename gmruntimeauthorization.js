@@ -25,8 +25,8 @@
    return true;
   }catch(_){return false;}
  }
- function clearCurrentAuthorization(){
-  const id=accountId();
+ function clearCurrentAuthorization(explicitId){
+  const id=String(explicitId||accountId()).trim();
   try{localStorage.removeItem(KEY);if(id)localStorage.removeItem(accountKey(id));}catch(_){}
   setRuntimeFlag(false);
   return true;
