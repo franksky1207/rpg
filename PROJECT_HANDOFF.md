@@ -11,6 +11,8 @@
 
 # 《文明戰線》PROJECT HANDOFF
 
+- **2026-10-09 3D 外觀快照前置整合**：新增 `3d-test/appearance-snapshot.js`（唯讀正式角色外觀資料，世界、等級、VIP、突破、五槽裝備基本辨識、強化等級和背包樣本；不採集 HP/ATK/DEF，不寫 Save）；`3d-test/formal-home.js` 的角色／裝備／鍛造場景改走同一份快照。GM `gm3dprototype.js` 經 iframe 同源及授權雙重檢查提供 request/response；`3d-test/test-center.js` 預設正式角色模式，自由展示獨立 session-only，支援重新同步與基本外觀選項；模型仍為佔位物件，尚無真 GLB 換裝或高階效果。原 40 批編號不變，11～40 批逐批接入視覺快照，不以快照取代戰鬥／交易 owner；瀏覽器與手機待驗。
+
 - **2026-10-09 第 10 批階段施工**：新增五槽強化鍛造台 WebGL 場景，正式強化頁可開關預覽、GM「強化鍛造台」測試案例；僅唯讀展示正式強化等級／上下限。未變更 `enhancementui.js` 交易、確認、扣資源及 rollback，成功失敗 3D 動畫與完整 L1 待後續施工，實機未驗收。
 
 
