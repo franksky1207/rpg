@@ -26,12 +26,13 @@ function create(options={}){
   }
   function stop(reasonText="disabled"){
     epoch++;abortPending();releaseScene();reason=reasonText;
-    if(engine){try{engine.stopRenderLoop();engine.dispose();}catch(err){console.warn("3D engine disposal failed",err);}engine=null;}
+    if(engine){const previous=engine;engine=null;try{previous.stopRenderLoop();}catch(err){console.warn("3D loop stop failed",err);}try{previous.dispose();}catch(err){console.warn("3D engine disposal failed",err);}}
     canvas.hidden=true;root.dataset.state="fallback";
     return {ok:false,reason};
   }
   function ensureEngine(){
     if(engine)return engine;
+    if(contextLost)throw new Error("webgl-context-lost");
     if(!global.BABYLON?.Engine)throw new Error("babylon-unavailable");
     const supported=typeof global.BABYLON.Engine.isSupported==="function"?global.BABYLON.Engine.isSupported():true;
     if(!supported)throw new Error("webgl-unavailable");
@@ -72,7 +73,7 @@ function create(options={}){
   }
   function dispose(){
     if(disposed)return;
-    stop("disposed");disposed=true;
+    disposed=true;stop("disposed");
     global.removeEventListener("resize",resize);
     global.visualViewport?.removeEventListener("resize",resize);
     canvas.removeEventListener("webglcontextlost",onContextLost);
