@@ -2,7 +2,7 @@
   "schema": 1,
   "algorithm": "sha256-96",
   "files": {
-    "3d-test/formal-home.js": "7d7fdddf0f731cce217ac55c",
+    "3d-test/formal-home.js": "87a0c222eedf9721d8b500d8",
     "3d-test/galaxy-b05.css": "e26a8e93120a471eb8971342",
     "3d-test/mode-foundation.js": "cbef2eda480cc6063ccb8a0c",
     "3d-test/preview-expand.css": "4f43585217d3953bd9fe3e4a",
@@ -272,7 +272,7 @@
     "storyprogress.js": "c183d5da9b4e943183da83ea",
     "storyrecordtabs.js": "43cdb80922e04cf0f0bc5d2f",
     "storyruntimeintegrity.js": "259805ce13175a29d8e37ef0",
-    "storyui.js": "9264b4949520313a25b7e201",
+    "storyui.js": "d54291a02054606b38debf48",
     "style.css": "74a444eca3fac3a9ec8f1eef",
     "supabaseauth.css": "584268621bd236a4cf6a0bfc",
     "supabaseauth.js": "3525fb8249677faf3a7cc75b",
