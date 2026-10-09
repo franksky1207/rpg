@@ -58,7 +58,7 @@
   }
   return true;
  }
- async function warmAuthorizedGmScripts(){
+ async function warmAuthorizedGmScripts(onProgress){
   if(!gmAuthorized()||typeof fetch!=="function")return false;
   await applyDeployedGmVersions();
   const nodes=declarations("gm"),urls=nodes.map(node=>node.dataset.src);
@@ -81,6 +81,7 @@
      next[key]=digest;
     }
     counts.checked++;
+    if(typeof onProgress==="function")onProgress(counts.checked/Math.max(1,urls.length));
    }
   });
   await Promise.all(workers);
@@ -92,7 +93,7 @@
  async function ensureAuthorizedGmRuntime(options={}){
   if(!gmAuthorized())return false;
   const restored=restoreAuthorizedGmFlagEarly(),allowRetry=options.retry!==false;
-  try{if(options.warm===true)await warmAuthorizedGmScripts();await loadGroup("gm");setRuntimeGmFlag(true);return true;}
+  try{if(options.warm===true)await warmAuthorizedGmScripts(options.onWarmProgress);options.onWarmProgress?.(1);await loadGroup("gm");options.onScriptsProgress?.(1);setRuntimeGmFlag(true);return true;}
   catch(error){
    console.error("[ScriptGroupLoader] gm authorized restore",error);
    if(!allowRetry)return restored;
@@ -141,10 +142,14 @@
    if(window.civilizationAuthSession?.user?.id)settle();
   });
  }
- const bootTask=async()=>{
+ const bootTask=async reportProgress=>{
   await accountSettled();
+  reportProgress?.(.12);
   if(!gmAuthorized())return true;
-  const ready=await ensureAuthorizedGmRuntime({retry:true,warm:true});
+  const ready=await ensureAuthorizedGmRuntime({retry:true,warm:true,
+   onWarmProgress:p=>reportProgress?.(.12+p*.58),
+   onScriptsProgress:p=>reportProgress?.(.70+p*.20)
+  });
   if(!ready||snapshot().groups.gm.status!=="ready"||typeof window.gmHtml!=="function")throw new Error("startup-optional-scripts-not-ready");
   // The GM 3D center is permanent: warm its shared engine/scene and own runtime,
   // while keeping scene/GPU creation exclusively inside an opened preview.
@@ -163,6 +168,7 @@
    }
   }catch(error){console.warn("[3D cache] Optional prefetch skipped",error);}
 
+  reportProgress?.(1);
   return true;
  };
  (window.CivilizationStartupPreTasks||(window.CivilizationStartupPreTasks=[])).push(["account-resources",bootTask]);
