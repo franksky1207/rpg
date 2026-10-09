@@ -4,7 +4,7 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":id==="civilization3dGrowthPageToggle"?"預覽 3D 養成星環":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11";
@@ -31,11 +31,11 @@ function schedule3dPrefetch(){
  if(document.readyState==="complete")idle();else global.addEventListener("load",idle,{once:true});
 }
 schedule3dPrefetch();
-let activeRoute="home",activeEra="";
-async function toggle(route="home"){
+let activeRoute="home",activeEra="",activeGrowthKind=null;
+async function toggle(route="home",growthKind=null){
  if(enabled){hide();return;}
  const h=host();if(!h||!global.Civilization3DRuntime)return;
- activeRoute=route;
+ activeRoute=route;activeGrowthKind=growthKind;
  activeEra=route==="adventure"?(global.getAdventureEraView?.()||""):"";
  const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
  try{
@@ -52,7 +52,7 @@ async function toggle(route="home"){
   const character=activeRoute==="character";
   const inventory=activeRoute==="inventory";
   const forge=activeRoute==="enhancement";
-  const growth=activeRoute==="specialization";
+  const growth=activeRoute==="specialization"||!!activeGrowthKind;
   const create=growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
@@ -80,7 +80,7 @@ async function toggle(route="home"){
     coreLevel:Math.max(0,Math.min(10,Number(formalState?.thirdWorld?.coreLevel)||0))
   }:{};
   if(growth){
-    const choice=document.getElementById("civilization3dGrowthKind")?.value||"specialization";
+    const choice=activeGrowthKind||document.getElementById("civilization3dGrowthKind")?.value||"specialization";
     growthState.growthKind=choice;
     growthState.growthLevels=choice==="marks"?growthState.marks:growthState.growthLevels;
     growthState.growthLevel=choice==="civilization"?growthState.civilizationLevel:growthState.coreLevel;
@@ -214,6 +214,23 @@ function ensureGrowthControl(view){
  const hint=document.createElement("span");hint.className="muted";hint.textContent="僅觀看正式養成進度；升級、注入與資源消耗仍由原介面處理。";
  controls.append(button,select,hint);page.prepend(controls);
 }
+function ensureGrowthPageControls(view){
+ const world=Number(global.currentWorldPhase?.()||1);
+ const contexts=[
+  {route:"calamity",kind:world===1?"marks":"civilization",label:world===1?"預覽 3D 印記星環":"預覽 3D 文明核心"},
+  {route:"adventure",kind:"core",label:"預覽 3D 界弦核心"}
+ ];
+ for(const ctx of contexts){
+  if(view!==ctx.route||(ctx.route==="adventure"&&(world!==3||global.getAdventureEraView?.()!=="higher-dimensional")))continue;
+  const page=document.querySelector(ctx.route==="calamity"?"#main .function-page, #main .calamity-page, #main .second-world-calamity-page":"#main .third-world-adventure-screen");
+  if(!page||page.querySelector("#civilization3dGrowthPageToggle"))continue;
+  const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+  const button=document.createElement("button");button.id="civilization3dGrowthPageToggle";button.className="btn";button.type="button";button.textContent=ctx.label;
+  button.setAttribute("aria-pressed","false");button.onclick=()=>toggle(ctx.route,ctx.kind);
+  const hint=document.createElement("span");hint.className="muted";hint.textContent="唯讀視覺展示，實際養成、資源與確認操作維持原版。";
+  controls.append(button,hint);page.prepend(controls);
+ }
+}
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
@@ -228,6 +245,7 @@ function onRendered(view){
  ensureInventoryControl(view);
  ensureForgeControl(view);
  ensureGrowthControl(view);
+ ensureGrowthPageControls(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
