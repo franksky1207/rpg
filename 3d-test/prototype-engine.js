@@ -457,26 +457,56 @@
     const ground=B.MeshBuilder.CreateCylinder("frontier-ground",{diameter:10.6,height:.3,tessellation:48},scene);
     ground.position.y=-.7;ground.material=iron;
     if(mode==="alternate"){
+      // Deterministic visual-only universe identities: 200 universes share four lightweight templates.
       const universe=Math.max(1,Math.min(200,Math.floor(Number(args.alternateUniverse)||Math.min(200,Math.floor(progress/5)+1))));
       const depth=Math.max(1,Math.min(5,Math.floor(Number(args.alternateDepth)||Math.floor(progress%5)+1)));
       const segment=Math.ceil(universe/10),first=(segment-1)*10+1,selected=universe-first;
+      const template=(universe-1)%4,seed=n=>((n*73+universe*131)%997)/997;
+      const palettes=[[.18,.72,.95],[.65,.37,.97],[.23,.89,.7],[.96,.51,.31]];
+      const tint=palettes[template],luminosity=.68+depth*.115;
+      const accent=make("alternate-accent-"+universe,tint.map(v=>Math.min(1,v*luminosity)),true);
+      const depthAccent=make("alternate-depth-focus-"+universe,tint.map(v=>Math.min(1,v*(.78+depth*.12))),true);
+      scene.clearColor=new B.Color4(.009+template*.003,.014,.045+depth*.004,1);
       for(let i=0;i<10;i++){
         const number=first+i,theta=2*Math.PI*i/10,x=Math.cos(theta)*3.8,z=Math.sin(theta)*3.8;
-        const cleared=progress>=number*5,focused=i===selected;
-        const node=B.MeshBuilder.CreatePolyhedron("alternate-universe-"+number,{type:2,size:focused?.82:cleared?.57:.44},scene);
-        node.position.set(x,focused?.48:.18,z);node.material=focused?active:cleared?complete:sealed;
-        const ring=B.MeshBuilder.CreateTorus("alternate-universe-ring-"+number,{diameter:focused?1.55:1.15,thickness:.05,tessellation:28},scene);
-        ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused?active:cleared?complete:sealed;
+        const cleared=progress>=number*5,focused=i===selected,variant=(number-1)%4;
+        const size=focused?.75:cleared?.54:.43;
+        const node=variant===0?B.MeshBuilder.CreateSphere("alternate-universe-"+number,{diameter:size*1.7,segments:10},scene):
+          variant===1?B.MeshBuilder.CreatePolyhedron("alternate-universe-"+number,{type:2,size},scene):
+          variant===2?B.MeshBuilder.CreateCylinder("alternate-universe-"+number,{height:size*1.9,diameterTop:size*.45,diameterBottom:size*1.35,tessellation:7},scene):
+          B.MeshBuilder.CreateBox("alternate-universe-"+number,{size:size*1.45},scene);
+        node.position.set(x,focused?.5:.18,z);
+        node.rotation.y=seed(number)*Math.PI;
+        node.material=focused?accent:cleared?complete:sealed;
+        const ring=B.MeshBuilder.CreateTorus("alternate-universe-ring-"+number,{diameter:focused?1.55:1.15,thickness:.05,tessellation:24},scene);
+        ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused?accent:cleared?complete:sealed;
       }
+      // Depth always progresses from stable outer structure to denser, brighter inner pressure.
       for(let i=1;i<=5;i++){
-        const layer=B.MeshBuilder.CreateTorus("alternate-depth-"+i,{diameter:.7+i*.42,thickness:i===depth?.13:.05,tessellation:36},scene);
-        layer.rotation.x=Math.PI/2;layer.position.y=.1+(i-1)*.15;
-        layer.material=i===depth?active:progress>=(universe-1)*5+i?complete:sealed;
+        const cleared=progress>=(universe-1)*5+i,focused=i===depth;
+        const layer=B.MeshBuilder.CreateTorus("alternate-depth-"+i,{diameter:.7+i*.42,thickness:focused?.12:.045,tessellation:32},scene);
+        layer.rotation.x=Math.PI/2;layer.position.y=.10+(i-1)*.15;
+        layer.material=focused?depthAccent:cleared?complete:sealed;
+        if(i<=depth){
+          const spire=B.MeshBuilder.CreateCylinder("alternate-depth-signal-"+i,{height:.27+i*.09,diameterTop:.055,diameterBottom:.15,tessellation:5},scene);
+          const angle=2*Math.PI*(i-1)/5;
+          spire.position.set(Math.cos(angle)*(1.25+i*.14),.08,Math.sin(angle)*(1.25+i*.14));
+          spire.material=i===depth?depthAccent:accent;
+        }
       }
-      const core=B.MeshBuilder.CreatePolyhedron("alternate-selected-core",{type:2,size:1.1},scene);
-      core.position.y=1.15;core.material=active;
-      scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.00016;});
-      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
+      // One of four reusable silhouettes with a depth-dependent energy crown.
+      const core=template===0?B.MeshBuilder.CreateSphere("alternate-selected-core",{diameter:1.5,segments:16},scene):
+        template===1?B.MeshBuilder.CreatePolyhedron("alternate-selected-core",{type:2,size:1.15},scene):
+        template===2?B.MeshBuilder.CreateCylinder("alternate-selected-core",{height:1.8,diameterTop:.32,diameterBottom:1.1,tessellation:7},scene):
+        B.MeshBuilder.CreateBox("alternate-selected-core",{size:1.38},scene);
+      core.position.y=1.35;core.material=accent;
+      for(let i=0;i<depth;i++){
+        const theta=2*Math.PI*i/Math.max(3,depth),satellite=B.MeshBuilder.CreateSphere("alternate-energy-"+i,{diameter:.10+.035*depth,segments:6},scene);
+        satellite.position.set(Math.cos(theta)*(1.05+depth*.11),1.3+Math.sin(i*2.1)*.4,Math.sin(theta)*(1.05+depth*.11));
+        satellite.material=depthAccent;
+      }
+      scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*(.0001+depth*.000025);});
+      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,depth,template,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
       return scene;
     }
     const count=mode==="calamity"?10:12;
