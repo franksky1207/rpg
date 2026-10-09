@@ -255,7 +255,7 @@ function ensureHigherControl(view){
 function ensureCharacterControl(view){
  if(view!=="character")return;
  const screen=document.querySelector("#main .character-layout");
- if(!screen||screen.querySelector("#civilization3dCharacterToggle"))return;
+ if(!screen||document.getElementById("civilization3dCharacterToggle"))return;
  const controls=document.createElement("div");controls.className="galaxy-3d-controls";
  const button=document.createElement("button");button.id="civilization3dCharacterToggle";button.className="btn";button.type="button";
  button.setAttribute("aria-pressed","false");button.textContent="預覽 3D 角色";
@@ -389,6 +389,8 @@ function ensureFrontierControl(view){
  shell.prepend(controls);
 }
 function ensureBattlePreviewControl(view){
+ // Void has its own floor preview; GM retains the universal battle/settlement preview.
+ if(view==="dungeon-void-mirage")return;
  const main=document.getElementById("main");if(!main||main.querySelector("#civilization3dBattleToggle"))return;
  const combat=main.querySelector(".combat-screen,.calamity-battle-shell,.void-combat");
  const result=main.querySelector(".arena-result-panel,.dungeon-bounty-result-card,.calamity-result-shell,.void-result,.alternate-universe-result");
