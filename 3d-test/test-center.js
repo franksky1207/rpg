@@ -290,12 +290,33 @@ function script(src){
 }
 window.Civilization3DTestCenter=Object.freeze({version:3,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
+async function versionedSceneUrls(){
+ try{
+  const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
+  if(!response.ok)throw new Error("version-file-unavailable");
+  const manifest=await response.json();
+  if(manifest?.schema!==1||!manifest.files)throw new Error("invalid-version-file");
+  const version=(path,url)=>{
+   const digest=manifest.files[path];
+   if(!/^[a-f0-9]{24}$/.test(String(digest||"")))throw new Error("missing-version");
+   return url+(url.includes("?")?"&":"?")+"asset="+digest;
+  };
+  return [
+   version("vendor/babylonjs/7.54.3/babylon.js","../vendor/babylonjs/7.54.3/babylon.js"),
+   version("3d-test/runtime.js","./runtime.js"),
+   version("3d-test/prototype-engine.js","./prototype-engine.js")
+  ];
+ }catch(_){
+  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261009-camera-center-v1","./prototype-engine.js?v=20261010-au-tier-power"];
+ }
+}
 (async()=>{
  try{
+  const [engineUrl,runtimeUrl,sceneUrl]=await versionedSceneUrls();
   await Promise.all([
-    window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
-    window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
-    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14&v7=20261010-b15&v8=20261010-au-3d-b1&v9=20261010-au-3d-b2&v10=20261010-au-tier-power")
+    window.BABYLON?.Engine?Promise.resolve():script(engineUrl),
+    window.Civilization3DRuntime?.create?Promise.resolve():script(runtimeUrl),
+    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
   ]);
   if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createBattlePresentationScene)throw new Error("3D 模組載入不完整。");
   start();
