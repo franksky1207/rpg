@@ -25,16 +25,16 @@ async function resolveSceneResources(){
 const RUNTIME_SRC="3d-test/runtime.js?v=20261010-dual-mode-preflight3";
 const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-dual-mode-preflight3";
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createBattlePresentationScene&&global.Civilization3DRuntime?.create&&global.Civilization3DAppearance?.capture)return;
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createChronicleTransitionScene&&global.Civilization3DRuntime?.create&&global.Civilization3DAppearance?.capture)return;
  if(!loading)loading=resolveSceneResources().then(async ([engineUrl,sceneUrl])=>{
    // Runtime and appearance are needed only after clicking a preview, never for text startup.
    await Promise.all([
      global.Civilization3DRuntime?.create?Promise.resolve():script(RUNTIME_SRC),
      global.Civilization3DAppearance?.capture?Promise.resolve():script(APPEARANCE_SRC),
      global.BABYLON?.Engine?Promise.resolve():script(engineUrl),
-     global.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
+     global.Civilization3DPrototype?.createChronicleTransitionScene?Promise.resolve():script(sceneUrl)
    ]);
-   if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createBattlePresentationScene||!global.Civilization3DRuntime?.create||!global.Civilization3DAppearance?.capture)throw new Error("3d-modules-unavailable");
+   if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createChronicleTransitionScene||!global.Civilization3DRuntime?.create||!global.Civilization3DAppearance?.capture)throw new Error("3d-modules-unavailable");
  }).catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -90,10 +90,11 @@ async function toggle(route="home",growthKind=null){
   const forge=activeRoute==="enhancement";
   const growth=activeRoute==="specialization"||!!activeGrowthKind;
   const battlePreview=activeGrowthKind==="battle-preview";
+   const chroniclePreview=activeGrowthKind==="chronicle-record"||activeGrowthKind==="chronicle-story"||activeGrowthKind==="chronicle-reincarnation";
   const frontier=activeRoute==="calamity"||activeRoute==="alternateuniverse";
   const dungeon=["dungeon","dungeon-bounty","dungeon-arena"].includes(activeRoute);
   const advanced=(activeRoute==="dungeon-arena"&&Number(global.currentWorldPhase?.()||0)===3)||["dungeon-mirror","dungeon-void-mirage"].includes(activeRoute);
-  const create=battlePreview?global.Civilization3DPrototype.createBattlePresentationScene:frontier?global.Civilization3DPrototype.createFrontierScene:advanced?global.Civilization3DPrototype.createDungeonAdvancedScene:dungeon?global.Civilization3DPrototype.createDungeonScene:growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const create=chroniclePreview?global.Civilization3DPrototype.createChronicleTransitionScene:battlePreview?global.Civilization3DPrototype.createBattlePresentationScene:frontier?global.Civilization3DPrototype.createFrontierScene:advanced?global.Civilization3DPrototype.createDungeonAdvancedScene:dungeon?global.Civilization3DPrototype.createDungeonScene:growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
   const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
@@ -174,7 +175,7 @@ async function toggle(route="home",growthKind=null){
     const shield=!!main?.querySelector(".combat-shield,.shield-bar,.hp-shield,.combat-shield-bar");
     return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":isCombat?"battle":"shield",playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0};
   })();
-  const snapshot=battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const snapshot=chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
@@ -401,6 +402,23 @@ function ensureBattlePreviewControl(view){
  const hint=document.createElement("span");hint.className="muted";hint.textContent="此為獨立立體外觀預覽；正式戰鬥、護盾與結算仍由原介面執行。";
  controls.append(button,hint);anchor.before(controls);
 }
+function ensureChronicleControls(view){
+  const main=document.getElementById("main");
+  if(!main)return;
+  const record=main.querySelector(".story-record-page");
+  const reincarnation=main.querySelector('[data-major-transition="reincarnation"]');
+  const target=record||reincarnation;
+  if(!target||target.querySelector("[data-chronicle-preview]"))return;
+  const kind=record?"chronicle-record":"chronicle-reincarnation";
+  const button=document.createElement("button");
+  button.type="button";button.className="btn";button.dataset.chroniclePreview=kind;
+  button.textContent=record?"預覽 3D 文明紀錄":"預覽 3D 文明轉生";
+  button.setAttribute("aria-pressed","false");
+  button.addEventListener("click",()=>toggle(view,kind));
+  const container=document.createElement("div");
+  container.className="galaxy-3d-controls";container.appendChild(button);
+  target.insertBefore(container,target.firstChild);
+}
 function onRendered(view){
  if(enabled&&(activeGrowthKind==="battle-preview"||["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage","calamity","alternateuniverse"].includes(view))&&view===activeRoute)hide();
  if(view!==activeRoute&&(enabled||runtime))hide();
@@ -421,6 +439,7 @@ function onRendered(view){
  ensureAdvancedDungeonControl(view);
  ensureFrontierControl(view);
  ensureBattlePreviewControl(view);
+ ensureChronicleControls(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
