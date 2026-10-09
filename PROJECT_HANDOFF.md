@@ -1,3 +1,5 @@
+- **2026-10-09 3D 高維副本三入口補修**：高維紀元沒有懸賞戰，正式 `thirdworlddungeonui.js` 會隱藏其副本卡。`createDungeonScene` 現按正式可見副本模式生成 3D 門戶並自動居中，高維只展示高維競技場／虛空／鏡像，銀河與宇宙依正式頁面保留各自入口。GM 副本作戰中心可切三紀元。GM Browser 測試修正字面 `\\n` 導致案例未執行的舊問題。只讀 UI，不改戰鬥／獎勵／次數／存檔。
+
 - **2026-10-09 3D 第 13 批（高維競技場／鏡像紀錄／虛空樓層）**：正式副本延續 B12 opt-in WebGL 機制：`3d-test/prototype-engine.js` 新增共用 `createDungeonAdvancedScene`，由 `3d-test/formal-home.js` 透過現有 `registerDungeonPostRenderHook` 在高維競技場選擇頁、鏡像戰紀錄及虛空非戰鬥頁添加唯讀視覺預覽。GM「副本、災厄與特殊演出」新增同源三場景，共 17 項；場景按需載入、離頁或 rerender 釋放，不接管正式戰鬥、次數、陣容、VIP 積分、紀錄、樓層或存檔。第 14 批接災厄與異宇宙，第 15 批接戰鬥 HUD／結果；目前幾何佔位不等同完整 L1 或正式模型，手機真機待驗。
 
 - **2026-10-09 3D 第 12 批（副本首頁／懸賞／銀河與宇宙一般競技場）**：`3d-test/prototype-engine.js` 共用 `createDungeonScene` 支援副本作戰中心、懸賞戰準備區、一般競技場三類 Babylon 幾何場景。透過既有 `registerDungeonPostRenderHook` 在正式 `dungeon`、`dungeon-bounty` ready、`dungeon-arena` select/ready 頁插入 opt-in 3D 預覽；離頁、rerender、combat/result 立即關閉／釋放。GM 六分類中既有「副本、災厄與特殊演出」新增三個視覺案例，使用相同 scene factory、測試資料僅在 GM session。沒有動正式副本 owner、戰鬥、每日次數、獎勵或存檔。第 13 批承接高維競技場、鏡像與虛空；第 15 批負責戰鬥／結果 3D；第 18 批驗收全頁 L1。手機真機與 GPU 長測仍待後續指定批次，切勿把幾何預覽冒稱最終美術。
