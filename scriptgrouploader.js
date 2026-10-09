@@ -93,11 +93,15 @@
  });
  // Boot task is declared before backgroundpreload.js starts, so that an existing GM
  // session cannot outrun the startup readiness barrier.
+ let initialAuthResolved=false;
+ window.addEventListener("civilization-auth-ready",()=>{initialAuthResolved=true;});
+ window.addEventListener("civilization-auth-signed-out",()=>{initialAuthResolved=true;});
  function accountSettled(){
-  if(window.civilizationAuthSession?.user?.id)return Promise.resolve(true);
-  return new Promise(resolve=>{
+  if(initialAuthResolved||window.civilizationAuthSession?.user?.id)return Promise.resolve(true);
+  return new Promise((resolve,reject)=>{
+   const deadline=setTimeout(()=>{if(done)return;done=true;reject(new Error("startup-account-resolution-timeout"));},12000);
    let done=false;
-   const settle=()=>{if(done)return;done=true;window.removeEventListener("civilization-auth-ready",settle);window.removeEventListener("civilization-auth-signed-out",settle);resolve(true);};
+   const settle=()=>{if(done)return;done=true;clearTimeout(deadline);initialAuthResolved=true;window.removeEventListener("civilization-auth-ready",settle);window.removeEventListener("civilization-auth-signed-out",settle);resolve(true);};
    window.addEventListener("civilization-auth-ready",settle);
    window.addEventListener("civilization-auth-signed-out",settle);
    if(window.civilizationAuthSession?.user?.id)settle();
