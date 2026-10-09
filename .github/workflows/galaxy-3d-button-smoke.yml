@@ -6,6 +6,7 @@ on:
       - 'worldmapui.js'
       - 'ui.js'
       - '3d-test/formal-home.js'
+      - '3d-test/runtime.js'
       - 'index.html'
       - 'tests/runtime/galaxy-3d-button-browser.js'
       - '.github/workflows/galaxy-3d-button-smoke.yml'
