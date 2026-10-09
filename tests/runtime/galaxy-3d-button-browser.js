@@ -89,6 +89,7 @@ const assert = require("node:assert/strict");
       window.go("adventure");
       const gate=document.querySelector(".civilization-auth-gate");if(gate)gate.hidden=true;
       document.body.classList.remove("auth-gate-open");
+      document.querySelectorAll(".modal.show").forEach(el=>el.classList.remove("show"));
       const button=document.querySelector(".galaxy-review-action");button?.scrollIntoView({block:"center",inline:"center"});const box=button?.getBoundingClientRect();
       const hit=box?document.elementFromPoint(box.x+box.width/2,box.y+box.height/2):null;
       return {hasButton:!!button,hitTag:hit?.tagName,hitClass:hit?.className,contains:!!(hit&&(button===hit||button?.contains(hit))),box:box?{x:box.x,y:box.y,width:box.width,height:box.height}:null};
