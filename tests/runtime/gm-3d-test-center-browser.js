@@ -69,7 +69,7 @@ const assert=require("node:assert/strict");
   assert.equal(visualProbe.supported,true);
   for(const sample of visualProbe.results)assert.equal(sample.nodes,10);
   assert.deepEqual(visualProbe.results.map(v=>v.signals),[1,4,4,5]);
-  assert.deepEqual(visualProbe.results.map(v=>v.metadata.culture),["夢境心靈","夢境心靈","機械神性","海洋深淵"]);
+  assert.deepEqual(visualProbe.results.map(v=>v.metadata.culture),["巨人泰坦","巨人泰坦","超維法則","海洋深淵"]);
   assert.deepEqual(visualProbe.results.map(v=>[v.metadata.universe,v.metadata.depth]),[[137,1],[137,4],[138,4],[200,5]]);
   assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[20,200,5]);
   assert.equal(await page.locator("#alternateQuickControls").isVisible(),true);
