@@ -58,4 +58,16 @@
  window.openAlternateUniversePage=openPage;
  window.challengeAlternateUniverseFormal=challengeFormal;
  window.abandonAlternateUniverseFormal=abandonFormal;
+ // ui.js performs its first render before this module is registered. Refresh only
+ // the home screen after all synchronous scripts have registered their entry owners.
+ // Never touch the save, unlock state, current route or active combat.
+ function reconcileInitialHome(){
+  if(typeof view==="undefined"||view!=="home"||typeof render!=="function")return;
+  const main=document.getElementById("main");
+  if(!main||main.querySelector(".alternate-universe-home-entry"))return;
+  const entry=homeEntryHtml();
+  if(!entry)return;
+  render();
+ }
+ queueMicrotask(reconcileInitialHome);
 })();
