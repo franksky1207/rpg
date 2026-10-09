@@ -12,7 +12,11 @@ const cases=[
 {id:"C-07-HIGHER",cat:"map",title:"高維紀元戰線",kind:"higher",detail:"觀察十名高維存在與持續生命狀態的立體象徵。"},
 {id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看三紀元角色的立體全身展示雛形。"},
 {id:"C-09-EQUIPMENT",cat:"character",title:"五槽裝備陳列",kind:"equipment",detail:"查看五個穿戴槽及背包裝備的立體展示雛形。"},
-{id:"C-10-FORGE",cat:"character",title:"強化鍛造台",kind:"forge",detail:"五個裝備欄位的強化進度立體展示，實際強化仍由正式系統處理。"}
+{id:"C-10-FORGE",cat:"character",title:"強化鍛造台",kind:"forge",detail:"五個裝備欄位的強化進度立體展示，實際強化仍由正式系統處理。"},
+{id:"C-11-SPECIALIZATION",cat:"character",title:"八種專精星環",kind:"specialization",detail:"八種專精的立體能量節點；僅展示進度。"},
+{id:"C-11-MARKS",cat:"character",title:"十印記星環",kind:"marks",detail:"十種印記的立體封印節點；不影響正式效果。"},
+{id:"C-11-CIVILIZATION",cat:"character",title:"文明等級核心",kind:"civilization",detail:"文明等級的十階立體光環。"},
+{id:"C-11-CORE",cat:"character",title:"界弦核心",kind:"core",detail:"高維核心的十階立體能量結構。"}
 ];
 const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
@@ -130,7 +134,7 @@ function renderInfo(){
  $("fixturePanel").hidden=false;
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||c.kind!=="epoch";
- $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher";
+ $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!["specialization","marks","civilization","core"].includes(c.kind);
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
 function safeStop(){
@@ -151,7 +155,7 @@ async function start(){
  if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){fail("共用 3D 模組尚未載入。");return;}
  status.hidden=false;status.textContent="正在載入 3D 測試場景…";
  const c=entry(),B=window.Civilization3DPrototype;
- const factory=c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
+ const factory=["specialization","marks","civilization","core"].includes(c.kind)?B.createGrowthScene:c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
  if(typeof factory!=="function"){fail("此場景尚未實作。");return;}
  fallback.hidden=true;host.hidden=false;
  runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.hidden=false;status.textContent="WebGL 已復原，可按重新啟動。";}});
@@ -159,7 +163,12 @@ async function start(){
  const progress=Math.max(1,Math.min(10,Number(snapshot.regionProgress)||1));
  const activeVisual=appearanceMode==="formal"?formalAppearance:freeVisual();
  if(appearanceKinds.has(c.kind)&&!activeVisual){status.hidden=false;status.textContent="等待正式角色外觀快照…";return;}
- const visual=appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
+ const growthKinds=["specialization","marks","civilization","core"];
+ const growth= growthKinds.includes(c.kind)?{
+   growthKind:c.kind,growthLevels:Array.from({length:c.kind==="specialization"?8:10},(_,i)=>Math.max(0,Math.min(c.kind==="specialization"?60:10,Math.round((i+1)*progress*(c.kind==="specialization"?60/80:1/10))))),
+   growthLevel:progress
+ }:{};
+ const visual=appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):growth;
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
@@ -195,9 +204,9 @@ renderCategories();renderCases();renderInfo();
   await Promise.all([
     window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
     window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
-    window.Civilization3DPrototype?.createCharacterScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b10")
+    window.Civilization3DPrototype?.createGrowthScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11")
   ]);
-  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createCharacterScene)throw new Error("3D 模組載入不完整。");
+  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createGrowthScene)throw new Error("3D 模組載入不完整。");
   start();
   if(embedded)requestAppearance();
  }catch(error){fail(error.message);}
