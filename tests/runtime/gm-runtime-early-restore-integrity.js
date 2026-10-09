@@ -15,7 +15,7 @@ assert(/gmRuntimeAuthorizationAuthorized/.test(loader)&&/gmSetRuntimeAuthorizati
 assert(/gmReconcileRuntimeAuthorizationAfterLoad/.test(ui),"UI startup must reconcile GM authorization after load.");
 assert(/normalizeCurrentSaveState\(\);if\(typeof window\.gmReconcileRuntimeAuthorizationAfterLoad/.test(ui),"GM authorization must reconcile before startup save/render.");
 const authPos=index.indexOf("gmruntimeauthorization.js");
-const uiPos=index.indexOf("ui.js?");
+const uiPos=index.indexOf('src="ui.js?');
 assert(authPos>=0&&uiPos>authPos,"GM authorization startup owner must load before ui.js.");
 
 function makeContext(authorized,initialGm){
