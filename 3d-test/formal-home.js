@@ -31,7 +31,20 @@ async function load(){
  .catch(error=>{loading=null;throw error;});
  return loading;
 }
-/* Warm network cache only; WebGL and GPU allocations begin on explicit user action. */
+/* Preload network bytes only; neither WebGL nor GPU resources are created. */
+let sharedWarmPromise=null;
+function warmShared3dAssets(){
+ if(!sharedWarmPromise)sharedWarmPromise=resolveSceneResources().then(async sources=>{
+  await Promise.all(sources.map(async src=>{
+   const response=await fetch(src,{cache:"no-cache",credentials:"same-origin"});
+   if(!response.ok)throw new Error("3d-cache-warm-failed");
+   await response.arrayBuffer();
+  }));
+  return sources;
+ }).catch(error=>{sharedWarmPromise=null;throw error;});
+ return sharedWarmPromise;
+}
+global.Civilization3DSharedAssetWarm=warmShared3dAssets;
 function schedule3dPrefetch(){
  const run=async()=>{
   const sources=await resolveSceneResources();
@@ -42,8 +55,9 @@ function schedule3dPrefetch(){
    document.head.appendChild(link);
   }
  };
- const idle=()=>typeof global.requestIdleCallback==="function"?global.requestIdleCallback(run,{timeout:3000}):setTimeout(run,900);
- if(document.readyState==="complete")idle();else global.addEventListener("load",idle,{once:true});
+ // Begin before window.load: waiting for all images delays the current 3D preview unnecessarily.
+ const schedule=()=>setTimeout(()=>run().catch(()=>{}),150);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",schedule,{once:true});else schedule();
 }
 schedule3dPrefetch();
 let activeRoute="home",activeEra="",activeGrowthKind=null;
