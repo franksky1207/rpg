@@ -102,3 +102,11 @@ GM 測試中心是 **同一套 3D 模組的集中驗收入口**，正式畫面�
 - **先行額外施工（第 06 批前）：** 建立 GM 測試中心可用的分類導航、案例註冊與搜尋／狀態；將 B01～B05 的既有可用 3D factory 接入，標示缺口；保留 GM 的原始獨立測試（WebGL 故障模式）。
 - **第 06～40 批：** 每批同步接入自己負責的案例，無須重新設計頂層分類。
 - **目前已存在的 GM 入口：** `gm3dprototype.js` → `3d-test/index.html`（單頁 3D 原型測試）。**正式的分類導航、全 40 批註冊與批次篩選尚未實作。** 此目錄不代表那些功能已存在。
+
+## 8. 2026-10-09｜GM 測試中心基礎架構與 B01～B05 回填施工實況
+
+**已實作**：GM 測試選單已改名「3D 測試中心」（`gmhubextensions.js`／`gm3dprototype.js`），`3d-test/index.html` 改為九類折疊式／響應式目錄、關鍵字搜尋、測試案例清單、場景展示及 session fixture。案例註冊於 `3d-test/test-center.js`：A-01-ENGINE、A-02-LIFECYCLE、A-02-CAMERA、B-03-HOME、B-04-ENTRY、C-05-GALAXY-MAP、C-05-ENEMY、I-05-RERUN。場景 factory 直接從既有 `prototype-engine.js` 共用 `createScene`／`createEpochScene`／`createGalaxyScene`，Canvas 使用 `runtime.js`；GM 3D 測試保留 WebGL context-loss、品質切換、重新啟動、停用／啟用與返回原本 GM 子頁。手動切換 fixture 不寫正式資料。
+
+**部分實作邊界**：B04 只含紀元 portal 外觀，不在 GM 中模擬正式突破資格、不可逆流程與所有 Modal；C05 怪物只有 5 個立體象徵，沒有可操作的完整怪物模型或正式選怪；I05 是純展示情境標籤，不能取代正式轉生／回顧存檔 E2E。其他 B06～B40 的具體模型、動畫、場景仍未製作，目錄主類別已預留但不能誤判完工。
+
+**測試**：`tests/runtime/gm-3d-test-center-browser.js` 與 `.github/workflows/gm-3d-test-center-browser.yml` 在真正 Chromium 瀏覽器驗證九類、八案例、搜尋篩選、B05 場景切換、session fixture 與手機窄螢幕版面。首輪專屬 CI [run 37900894410](https://github.com/franksky1207/rpg/actions/runs/37900894410) 通過。該 CI 不驗證真實手機 GPU FPS、轉生存檔或完整 3D 戰鬥，仍須人工與後續批次驗收。
