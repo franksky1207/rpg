@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  const startupTasks=new Map();let running=null,finished=false,lastFailure=null,startupAttempt=0;
  function registerStartupTask(id,run){if(running||finished||typeof run!=="function"||!id||startupTasks.has(id))return false;startupTasks.set(id,run);return true;}
  function startupSnapshot(){return Object.freeze({version:VERSION,status:finished?"ready":lastFailure?"failed":running?"loading":"pending",tasks:startupTasks.size,failed:!!lastFailure});}
@@ -63,8 +63,10 @@
   }
   return Array.from(current);
  }
+ let lastProgress=0;
  function updateProgress(done,total){
-  const value=total?Math.min(99,Math.floor(done/total*100)):0;
+  const value=Math.max(lastProgress,total?Math.min(99,Math.floor(done/total*100)):0);
+  lastProgress=value;
   const text=document.getElementById("backgroundPreloadStatus");
   const bar=document.getElementById("backgroundPreloadBar");
   const percent=document.getElementById("backgroundPreloadPercent");
@@ -147,9 +149,10 @@
    window.BACKGROUND_PRELOAD_CRITICAL_URLS=critical.slice();
    window.BACKGROUND_PRELOAD_DEFERRED_URLS=deferred.slice();
    // Each completed prerequisite contributes one actual step; no timer-driven progress.
-   const total=2+critical.length+startupTasks.size;
-   let done=0;
-   const complete=()=>{done++;if(attempt===startupAttempt)updateProgress(done,total);};
+   const taskWeight=id=>id==="account-resources"?8:1;
+   const total=2+critical.length+Array.from(startupTasks.keys()).reduce((sum,id)=>sum+taskWeight(id),0);
+   let done=0;lastProgress=0;
+   const complete=(amount=1)=>{done=Math.min(total,done+amount);if(attempt===startupAttempt)updateProgress(done,total);};
    updateProgress(0,total);
    await waitForDomReady();complete();
    if(!document.getElementById("main")||typeof window.render!=="function")throw new Error("startup-main-not-ready");
@@ -171,7 +174,15 @@
    try{await Promise.race([Promise.all(criticalJobs),deadline]);}
    finally{if(timeoutId!==null)clearTimeout(timeoutId);}
    if(failed)throw new Error("startup-critical-background-failed");
-   for(const [id,run] of startupTasks){await run();complete();}
+   for(const [id,run] of startupTasks){
+    const weight=taskWeight(id);let fraction=0;
+    const progress=value=>{
+     if(attempt!==startupAttempt)return;
+     const next=Math.max(fraction,Math.min(1,Number(value)||0));
+     complete((next-fraction)*weight);fraction=next;
+    };
+    await run(progress);progress(1);
+   }
    window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:loaded,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
    const bar=document.getElementById("backgroundPreloadBar"),pct=document.getElementById("backgroundPreloadPercent");
    if(bar)bar.style.width="100%";if(pct)pct.textContent="100%";
