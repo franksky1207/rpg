@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 3D 第 04 批第一階段已施工**：正式 `worldphaseui.js` 三種既有紀元 overlay 加入只讀 `data-world-phase-target`，CSS `3d-test/worldphase-b04.css` 加入宇宙／高維入口與條件、確認、解鎖通知差異；正式主畫面自選 3D 預覽新增讀取 `currentWorldPhase()` 的實體 portal torus。正式解鎖、轉換與存檔 owner 未改。`index.html` 同步更新 CSS 與 JS cache-bust。**完整導航/全部彈窗 WebGL L1、手機及瀏覽器實測仍待驗收**；第 05 批未開始。詳見 3D 計畫第 04 批。
+
 - **2026-10-09 補強施工契約已入 GitHub**：`3D_IMPLEMENTATION_PLAN.md` 新增第 `6A` 節，將原版功能比對結果明確列為 **R01～R30 共 30 項驗收要求**、5 項全域硬性規範，以及第 18／34／40 批結案門檻。包括玩家名稱、46 種稱號／正式怪物名稱、HP／護盾、技能浮字、結算、各紀元資源、GM／離線／雲端、完整 route/subview/Modal/狀態矩陣。往後每批必核對相關編號，不准只完成主要畫面就宣布全功能完成。
 
 - **2026-10-09 B01-G1 本地化完成**：GitHub Action `Vendor Babylon.js 7.54.3` 自官方 npm registry 取得完整 UMD 引擎（6,794,120 bytes），檢查 npm dist.integrity、`babylonjs@7.54.3`/Apache-2.0，將 `babylon.js`、`LICENSE`、`SOURCE.md` 放入 `vendor/babylonjs/7.54.3/`；正式 3D 預覽與 GM 3D 測試均已改用 repo 內本地路徑，且更新 `index.html` cache-bust。引擎 SHA-256：`420088fc4c31c22591703ce207c7736f15419faa556b0678d28f71dbf7ea523a`。GitHub Actions run `37892987459` 通過，vendor commit `51492689189566b053b3dd3e637d345aa22c34e7`。B01-G1 本地化已完成，但 GM/正式介面真實操作、手機、GPU 回退 E2E 仍未驗收。
