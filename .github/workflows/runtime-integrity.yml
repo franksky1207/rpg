@@ -88,6 +88,7 @@ jobs:
           node tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
