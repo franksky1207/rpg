@@ -41,6 +41,7 @@ const assert=require("node:assert/strict");
   assert.equal(await page.locator("#appearanceFreeControls").isVisible(),false);
   // Embedded preview without a formal host must wait, not substitute free fixture values.
   await page.waitForFunction(()=>document.querySelector("#status")?.textContent?.includes("等待正式角色"),null,{timeout:10000});
+  await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
   await page.locator("#caseSearch").fill("銀河紀元星圖");
   assert.equal(await page.locator("#caseList .center-case").count(),1);
   await page.locator("#caseSearch").fill("");
