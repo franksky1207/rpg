@@ -117,3 +117,14 @@ html{scroll-behavior:auto!important}
 .center-workspace.center-maximized>.center-appearance-panel{display:none!important}
 @media(max-width:950px){.center-appearance-free{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.center-appearance-panel details[open]>:not(summary){margin-left:10px;margin-right:10px}.center-appearance-free{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.center-appearance-modes button{font-size:12px}.center-appearance-slots{gap:10px 12px}}
+
+/* Mobile catalog: do not clip scene items beneath the category grid.
+   Let the document scroll naturally; keep the scene list itself usable. */
+@media(max-width:770px){
+ .center-sidebar{height:auto;max-height:none;overflow:visible;overscroll-behavior:auto}
+ .center-categories{flex:0 0 auto}
+ .center-cases{height:auto;max-height:none;overflow:visible;flex:0 0 auto}
+}
+@media(max-width:480px){
+ .center-sidebar{max-height:none}
+}
