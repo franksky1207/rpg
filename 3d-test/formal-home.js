@@ -3,7 +3,7 @@
 "use strict";
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
-function hide(){epoch++;enabled=false;runtime?.dispose();runtime=null;const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.3dFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
+function hide(){epoch++;enabled=false;runtime?.dispose();runtime=null;const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
 function syncButton(){const b=document.getElementById("civilization3dHomeToggle");if(b){b.textContent=enabled?"關閉 3D 艦橋":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 async function load(){
@@ -17,7 +17,7 @@ async function load(){
 async function toggle(){
  if(enabled){hide();return;}
  const h=host();if(!h||!global.Civilization3DRuntime)return;
- const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.3dFormalMount="loading";syncButton();
+ const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
  try{
   await load();
   if(ticket!==epoch||!enabled)return;
@@ -26,7 +26,7 @@ async function toggle(){
   const result=await runtime.show("home-command-bridge",global.Civilization3DPrototype.createScene);
   if(ticket!==epoch||!enabled)return;
   if(!result.ok){hide();return;}
-  h.dataset.3dFormalMount="active";
+  h.dataset.threeDFormalMount="active";
   document.body.classList.add("civilization-3d-home-on");
  }catch(error){if(ticket===epoch)hide();}
 }
