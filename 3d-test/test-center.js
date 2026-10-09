@@ -20,6 +20,53 @@ const quality=$("quality"),toggle=$("toggle"),caseList=$("caseList"),categoryLis
 
 let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
+const embedded=new URLSearchParams(location.search).get("embedded")==="1";
+let appearanceMode=embedded?"formal":"free",formalAppearance=null;
+const freeAppearance={world:1,level:500,quality:5,enhancement:20};
+const appearanceKinds=new Set(["epoch","character","equipment","forge"]);
+const appearancePanel=document.createElement("section");
+appearancePanel.className="center-appearance-panel";
+appearancePanel.innerHTML='<div class="center-appearance-title">角色外觀來源</div><div class="center-appearance-modes"><button type="button" id="appearanceFormal">正式角色外觀</button><button type="button" id="appearanceFree">自由展示模式</button></div><p id="appearanceSource" class="muted"></p><div id="appearanceFreeControls" class="center-appearance-free"><label>展示等級 <input id="appearanceLevel" type="number" min="1" max="2000" value="500"></label><label>裝備品質 <select id="appearanceQuality"><option value="0">普通</option><option value="1">精良</option><option value="2">稀有</option><option value="3">史詩</option><option value="4">傳說</option><option value="5" selected>神話</option></select></label><label>強化等級 <input id="appearanceEnhancement" type="number" min="0" max="40" value="20"></label></div><button type="button" id="appearanceRefresh">重新同步正式角色</button>';
+$("centerWorkspace").insertBefore(appearancePanel,$("centerWorkspace").querySelector(".center-description"));
+function requestAppearance(){
+ if(!embedded||window.parent===window)return;
+ window.parent.postMessage({type:"civilization3d:appearance-request"},location.origin);
+}
+function freeVisual(){
+ const world=Number($("fixtureWorld").value)||freeAppearance.world;
+ const cap=world===1?20:40;
+ const level=Math.max(0,Math.min(cap,freeAppearance.enhancement));
+ return {world,level:freeAppearance.level,equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,{present:true,quality:freeAppearance.quality,level:freeAppearance.level,world}])),enhancements:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,level])),enhancementCap:cap,enhancementMin:0,inventorySamples:Array.from({length:5},()=>({present:true,quality:freeAppearance.quality}))};
+}
+function visualScene(kind,a){
+ const types=["weapon","helmet","armor","shoes","accessory"];
+ if(kind==="equipment")return {world:a.world,slots:types.map(t=>a.equipment?.[t]||{}),inventorySamples:a.inventorySamples||[],appearance:a};
+ if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:types.map(t=>({level:Number(a.enhancements?.[t])||0,invalid:Number(a.enhancements?.[t])<Number(a.enhancementMin)})),appearance:a};
+ return {world:a.world,appearance:a};
+}
+function syncAppearancePanel(){
+ const relevant=appearanceKinds.has(entry().kind);
+ appearancePanel.hidden=!relevant;
+ $("appearanceFormal").classList.toggle("active",appearanceMode==="formal");
+ $("appearanceFree").classList.toggle("active",appearanceMode==="free");
+ $("appearanceFreeControls").hidden=appearanceMode!=="free";
+ $("appearanceRefresh").hidden=appearanceMode!=="formal";
+ $("appearanceSource").textContent=appearanceMode==="formal"?(formalAppearance?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][formalAppearance.world-1]+"｜Lv."+formalAppearance.level+"｜VIP"+formalAppearance.vip+"｜唯讀展示":"等待正式角色外觀快照；不會改變遊戲資料。"):"自由展示｜僅影響本次 3D 預覽，不寫入正式角色。";
+ if(appearanceMode==="formal"&&relevant)requestAppearance();
+}
+$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();};
+$("appearanceFree").onclick=()=>{appearanceMode="free";syncAppearancePanel();start();};
+$("appearanceRefresh").onclick=()=>{formalAppearance=null;syncAppearancePanel();};
+$("appearanceLevel").onchange=e=>{freeAppearance.level=Math.max(1,Math.min(2000,Number(e.target.value)||1));start();};
+$("appearanceQuality").onchange=e=>{freeAppearance.quality=Math.max(0,Math.min(5,Number(e.target.value)||0));start();};
+$("appearanceEnhancement").onchange=e=>{freeAppearance.enhancement=Math.max(0,Math.min(40,Number(e.target.value)||0));start();};
+window.addEventListener("message",event=>{
+ if(!embedded||event.source!==window.parent||event.origin!==location.origin||event.data?.type!=="civilization3d:appearance-response")return;
+ const a=event.data.appearance;
+ if(!a||a.source!=="formal"||a.version!==1)return;
+ formalAppearance=a;syncAppearancePanel();
+ if(appearanceMode==="formal"&&appearanceKinds.has(entry().kind))start();
+});
 const entry=()=>cases.find(c=>c.id===selected)||cases[0];
 let maximized=false;
 const maximizeButton=$("maximizePreview");
@@ -78,6 +125,7 @@ function renderInfo(){
 
  $("caseDetail").textContent=c.detail;
  $("fixturePanel").hidden=false;
+ syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=c.kind!=="epoch"&&c.kind!=="character";
  $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher";
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
@@ -106,9 +154,12 @@ async function start(){
  runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.hidden=false;status.textContent="WebGL 已復原，可按重新啟動。";}});
  runtime.setQuality(quality.value);
  const progress=Math.max(1,Math.min(10,Number(snapshot.regionProgress)||1));
+ const activeVisual=appearanceMode==="formal"?formalAppearance:freeVisual();
+ if(appearanceKinds.has(c.kind)&&!activeVisual){status.hidden=false;status.textContent="等待正式角色外觀快照…";return;}
+ const visual=appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
- const result=await current.show(c.id,args=>factory({...args,...fixture,...(c.kind==="forge"?{slots:Array.from({length:5},(_,i)=>({level:i*5+5,invalid:false})),cap:40}:{}),...(c.kind==="equipment"?{slots:Array.from({length:5},(_,i)=>({present:i<4,quality:i+1})),inventorySamples:Array.from({length:5},(_,i)=>({present:i<3,quality:5-i}))}:{}),...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
+ const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
  if(ticket!==serial||current!==runtime)return;
  status.textContent=result.ok?"":"3D 場景載入失敗："+result.reason;
  if(result.ok)status.hidden=true;
@@ -118,7 +169,6 @@ function updateFixture(){
  snapshot={world:Number($("fixtureWorld").value),selectedMap:Number($("fixtureSelected").value),regionProgress:Number($("fixtureProgress").value)};
  renderInfo();start();
 }
-const embedded=new URLSearchParams(location.search).get("embedded")==="1";
 if(embedded)$("backToGame").hidden=true;
 $("fixtureWorld").onchange=updateFixture;
 $("fixtureSelected").onchange=updateFixture;
@@ -135,7 +185,7 @@ window.addEventListener("keydown",event=>{
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:2,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:3,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 (async()=>{
  try{
@@ -146,6 +196,7 @@ renderCategories();renderCases();renderInfo();
   ]);
   if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createCharacterScene)throw new Error("3D 模組載入不完整。");
   start();
+  if(embedded)requestAppearance();
  }catch(error){fail(error.message);}
 })();
 })();
