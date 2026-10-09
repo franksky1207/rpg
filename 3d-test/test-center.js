@@ -23,11 +23,11 @@ let snapshot={world:1,selectedMap:0,regionProgress:1};
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
 let appearanceMode=embedded?"formal":"free",formalAppearance=null;
 const freeAppearance={world:1,level:500,quality:5,enhancement:20,equipped:[true,true,true,true,true]};
-const appearanceKinds=new Set(["epoch","character","equipment","forge"]);
+const appearanceKinds=new Set(["character","equipment","forge"]);
 const appearancePanel=document.createElement("section");
 appearancePanel.className="center-appearance-panel";
-appearancePanel.innerHTML='<div class="center-appearance-title">角色外觀來源</div><div class="center-appearance-modes"><button type="button" id="appearanceFormal">正式角色外觀</button><button type="button" id="appearanceFree">自由展示模式</button></div><p id="appearanceSource" class="muted"></p><div id="appearanceFreeControls" class="center-appearance-free"><label>展示紀元 <select id="appearanceWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label><label>展示等級 <input id="appearanceLevel" type="number" min="1" max="2000" value="500"></label><label>裝備品質 <select id="appearanceQuality"><option value="0">普通</option><option value="1">精良</option><option value="2">稀有</option><option value="3">史詩</option><option value="4">傳說</option><option value="5" selected>神話</option></select></label><label>強化等級 <input id="appearanceEnhancement" type="number" min="0" max="40" value="20"></label><div class="center-appearance-slots">五槽穿戴：<label><input type="checkbox" data-appearance-slot="0" checked>武器</label><label><input type="checkbox" data-appearance-slot="1" checked>頭盔</label><label><input type="checkbox" data-appearance-slot="2" checked>鎧甲</label><label><input type="checkbox" data-appearance-slot="3" checked>鞋子</label><label><input type="checkbox" data-appearance-slot="4" checked>飾品</label></div></div><button type="button" id="appearanceRefresh">重新同步正式角色</button>';
-$("centerWorkspace").insertBefore(appearancePanel,$("centerWorkspace").querySelector(".center-description"));
+appearancePanel.innerHTML='<details id="appearanceDetails"><summary id="appearanceSummary">展示設定 · 正式角色外觀</summary><div class="center-appearance-modes"><button type="button" id="appearanceFormal">正式角色外觀</button><button type="button" id="appearanceFree">自由展示模式</button></div><p id="appearanceSource" class="muted"></p><div id="appearanceFreeControls" class="center-appearance-free"><label>展示紀元 <select id="appearanceWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label><label>展示等級 <input id="appearanceLevel" type="number" min="1" max="2000" value="500"></label><label>裝備品質 <select id="appearanceQuality"><option value="0">普通</option><option value="1">精良</option><option value="2">稀有</option><option value="3">史詩</option><option value="4">傳說</option><option value="5" selected>神話</option></select></label><label>強化等級 <input id="appearanceEnhancement" type="number" min="0" max="40" value="20"></label><div class="center-appearance-slots">五槽穿戴：<label><input type="checkbox" data-appearance-slot="0" checked>武器</label><label><input type="checkbox" data-appearance-slot="1" checked>頭盔</label><label><input type="checkbox" data-appearance-slot="2" checked>鎧甲</label><label><input type="checkbox" data-appearance-slot="3" checked>鞋子</label><label><input type="checkbox" data-appearance-slot="4" checked>飾品</label></div></div><button type="button" id="appearanceRefresh">重新同步正式角色</button></details>';
+$("centerWorkspace").querySelector(".center-description").after(appearancePanel);
 function requestAppearance(){
  if(!embedded||window.parent===window)return;
  window.parent.postMessage({type:"civilization3d:appearance-request"},location.origin);
@@ -47,6 +47,7 @@ function visualScene(kind,a){
 function syncAppearancePanel(){
  const relevant=appearanceKinds.has(entry().kind);
  appearancePanel.hidden=!relevant;
+ $("appearanceSummary").textContent="展示設定 · "+(appearanceMode==="formal"?"正式角色外觀":"自由展示模式");
  $("appearanceFormal").classList.toggle("active",appearanceMode==="formal");
  $("appearanceFree").classList.toggle("active",appearanceMode==="free");
  $("appearanceFreeControls").hidden=appearanceMode!=="free";
