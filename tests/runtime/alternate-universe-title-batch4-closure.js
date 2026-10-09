@@ -9,6 +9,8 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
+  await page.waitForFunction(()=>!!window.CivilizationScriptLoader?.ensure,{timeout:30000});
+  await page.evaluate(async()=>{await window.CivilizationScriptLoader.ensure("gm");await window.CivilizationScriptLoader.ensure("integrity");});
   await page.waitForFunction(()=>
    window.PLAYER_TITLE_INTEGRITY_VERSION===23&&
    window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CLOSURE_VERSION===1&&
