@@ -85,6 +85,9 @@
   return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維正式玩家介面尚未載入。</b></div></section>`;
  }
  function phaseAwareAdventurePage(){
+  // Galaxy review owns its prepare/combat screens even when the current phase is Higher Dimensional.
+  // The epoch tabs select the map view only; they must not replace an active review battle screen.
+  if(typeof adventureScreen!=="undefined"&&(adventureScreen==="review-prepare"||adventureScreen==="review-combat")&&baseAdventurePage)return baseAdventurePage();
   if(phase()===3){
    if(typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
    const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():"higher-dimensional";
