@@ -133,9 +133,12 @@ window.Civilization3DTestCenter=Object.freeze({version:2,caseIds:cases.map(c=>c.
 renderCategories();renderCases();renderInfo();
 (async()=>{
  try{
-  if(!window.BABYLON?.Engine)await script("../vendor/babylonjs/7.54.3/babylon.js");
-  await script("./runtime.js?v=20261009-camera-center-v1");
-  await script("./prototype-engine.js?v=20261009-shared-center-v1&v2=20261009-b06&v3=20261009-b07&v4=20261009-b08");
+  await Promise.all([
+    window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
+    window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
+    window.Civilization3DPrototype?.createCharacterScene?Promise.resolve():script("./prototype-engine.js?v=20261009-3d-load-opt1")
+  ]);
+  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createCharacterScene)throw new Error("3D 模組載入不完整。");
   start();
  }catch(error){fail(error.message);}
 })();
