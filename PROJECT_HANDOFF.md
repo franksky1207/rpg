@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 GM 3D 測試中心基礎架構已實作、前五批回填**：正式 GM 測試選單改稱「3D 測試中心」，`3d-test/index.html`＋`test-center.js`＋`test-center.css` 已建九大分類、搜尋、八筆案例、session 進度／紀元／情境、共用 Babylon scene factory 顯示、WebGL 故障測試及原 GM 入口返回。仍只有 B01～B05 既有的 3D 能力，B04 突破 Modal、B05 正式 3D 選怪及轉生完整 E2E 尚未完成。新增 Chromium 專屬 CI：run 37900894410 通過；其餘批次必須持續擴充 catalog。
+
 - **2026-10-09 GM 3D 開發測試中心總目錄已建立（規劃文件，尚非 UI 施工）**：新增 `3D_GM_TEST_CENTER_CATALOG.md`，將第 01～40 批逐一分配到九大分類 A～I，含主次分類、正式／GM 同源場景、fixture、測試 IDs、回歸／裝置矩陣與未來新增分類規範；B01～B05 八個補登測試項目已定義。同步於 `3D_IMPLEMENTATION_PLAN.md` **每一批**新增 GM 同步義務與強制驗收規範。**下一步先升級 `gm3dprototype.js` → `3d-test/index.html` 的 GM 測試中心目錄、場景註冊與 B01～B05 回填，之後再施工 B06**。目錄規劃已入庫，但分類 UI、搜尋、真實案例接入尚未實作，不可標記完成。各批須同步正式預覽與 GM 分類入口，無 GM 對照者不得標記該批全數完成。
 
 - **2026-10-09 共用 3D 大小模式**：`3d-test/runtime.js` 新增「放大視窗／還原視窗／關閉」操作（原 ＋／－／視角重置保留），直接切換 host class，不建立新場景／相機，並呼叫 engine.resize；`3d-test/preview-expand.css` 桌機中央寬約 85vw、高 80dvh、手機直式寬 95vw／高 88dvh、橫式矮螢幕 94vw／92dvh，沒有強制旋轉。`3d-test/formal-home.js` 關閉走正式 bridge；`index.html` 已更新快取。Chromium 專屬測試增加 class 與 Canvas/Camera identity 驗證；真機手機、桌機視覺布局仍須人工確認。
