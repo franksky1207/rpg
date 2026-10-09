@@ -10,7 +10,7 @@ async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createScene)return;
  if(!loading)loading=(async()=>{
   if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
-  if(!global.Civilization3DPrototype?.createScene)await script("3d-test/prototype-engine.js?v=20261009-b03");
+  if(!global.Civilization3DPrototype?.createScene)await script("3d-test/prototype-engine.js?v=20261009-b03&v2=20261009-b04");
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -24,7 +24,9 @@ async function toggle(){
   if(runtime){runtime.dispose();runtime=null;}
   runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
   runtime.setQuality("low");
-  const result=await runtime.show("home-command-bridge",global.Civilization3DPrototype.createScene);
+  const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
+  const create=global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene;
+  const result=await runtime.show("home-command-bridge-era-"+world,args=>create({...args,world}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
   h.dataset.threeDFormalMount="active";
