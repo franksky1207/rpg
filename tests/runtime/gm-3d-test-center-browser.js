@@ -17,7 +17,7 @@ const assert=require("node:assert/strict");
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
   // Verify one shared readonly snapshot contract and independent GM test inputs.
-  await page.getByRole("button",{name:"玩家、裝備與養成"}).click();
+  await page.locator("#categoryList .center-category").filter({hasText:"玩家、裝備與養成"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),7);
   await page.getByRole("button",{name:"八種專精星環"}).click();
   await page.locator("#appearanceDetails summary").click();
@@ -40,12 +40,12 @@ const assert=require("node:assert/strict");
   await page.locator("#appearanceFormal").click();
   assert.equal(await page.locator("#appearanceFreeControls").isVisible(),false);
   // Embedded preview without a formal host must wait, not substitute free fixture values.
-  assert.ok((await page.locator("#status").innerText()).includes("等待正式角色"));
+  await page.waitForFunction(()=>document.querySelector("#status")?.textContent?.includes("等待正式角色"),null,{timeout:10000});
   await page.locator("#caseSearch").fill("銀河紀元星圖");
   assert.equal(await page.locator("#caseList .center-case").count(),1);
   await page.locator("#caseSearch").fill("");
-  await page.getByRole("button",{name:"全部場景"}).click();
-  await page.getByRole("button",{name:"冒險與宇宙地圖"}).click();
+  await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
+  await page.locator("#categoryList .center-category").filter({hasText:"冒險與宇宙地圖"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),3);
   await page.getByRole("button",{name:"銀河紀元星圖"}).click();
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getCurrent()),"C-05-GALAXY-MAP");
