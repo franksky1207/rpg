@@ -72,6 +72,26 @@
  window.addEventListener("civilization-script-group-ready",event=>{
   if(event.detail?.group==="gm")refreshGmStartupSlot();
  });
+ // Boot task is declared before backgroundpreload.js starts, so that an existing GM
+ // session cannot outrun the startup readiness barrier.
+ function accountSettled(){
+  if(window.civilizationAuthSession?.user?.id)return Promise.resolve(true);
+  return new Promise(resolve=>{
+   let done=false;
+   const settle=()=>{if(done)return;done=true;window.removeEventListener("civilization-auth-ready",settle);window.removeEventListener("civilization-auth-signed-out",settle);resolve(true);};
+   window.addEventListener("civilization-auth-ready",settle);
+   window.addEventListener("civilization-auth-signed-out",settle);
+   if(window.civilizationAuthSession?.user?.id)settle();
+  });
+ }
+ const bootTask=async()=>{
+  await accountSettled();
+  if(!gmAuthorized())return true;
+  const ready=await ensureAuthorizedGmRuntime({retry:true});
+  if(!ready||snapshot().groups.gm.status!=="ready"||typeof window.gmHtml!=="function")throw new Error("startup-optional-scripts-not-ready");
+  return true;
+ };
+ (window.CivilizationStartupPreTasks||(window.CivilizationStartupPreTasks=[])).push(["account-resources",bootTask]);
  function schedule(){restoreAuthorizedGmFlagEarly();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",restoreAuthorizedGmFlagEarly,{once:true});const start=()=>setTimeout(()=>{restoreAuthorizedGmFlagEarly();installGmPasswordBridge();autoLoad();ensureAuthorizedGmRuntime();observeGmActivation();if(diagnosticsRequested())loadDiagnostics();},AUTO_START_DELAY_MS);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();}
 
  const namespace=Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,activationPolicyVersion:ACTIVATION_POLICY_VERSION,loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,gmAuthorizationVersion:GM_AUTHORIZATION_VERSION,gmEarlyRuntimeRestoreVersion:GM_EARLY_RUNTIME_RESTORE_VERSION,gmAuthorizedGroupRetryVersion:GM_AUTHORIZED_GROUP_RETRY_VERSION,ensure:loadGroup,restoreAuthorizedGmFlagEarly,ensureAuthorizedGmRuntime,authorizeGmRuntime,revokeGmRuntimeAuthorization,gmAuthorizationSnapshot,snapshot,activationSnapshot});
