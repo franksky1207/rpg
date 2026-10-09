@@ -1,6 +1,6 @@
 # 《文明戰線》PROJECT HANDOFF
 
-更新日期：2026-10-08（UTC+8）  
+更新日期：2026-10-09（UTC+8）  
 分支：`main`
 
 > **最高原則：GitHub `main` 的實際程式碼是唯一真實來源。**  
@@ -41,6 +41,17 @@ GM 授權首次 render／lazy group／auth-ready preference   ✅ 完成
 本次對話沒有留下已核准但未施工的功能批次。下一輪若要再做 GM 載入最佳化，必須重新 fresh-read current main；不要把本次分析中尚未執行的低優先建議自動視為待辦。
 
 ---
+
+## 2026-10-09 異宇宙戰鬥稱號顯示統一（Batch 1～3）
+
+以當日 main 的 `alternateuniverseui.js`、`playertitlerenderer.js`、`playertitleintegrity.js`、`index.html` 為準：
+
+- 異宇宙正式攻略玩家名稱已改用唯一正式 renderer `window.playerIdentityNameHtml({compact:true})`，與銀河／宇宙一般競技場及其他正式戰鬥的稱號判定來源一致；仍由共用 renderer 執行已解鎖、裝備中稱號判定及安全跳脫。異宇宙未載入 renderer 時僅以跳脫後純名稱降級顯示，不另行實作稱號規則。
+- `alternateuniverseui.js` 的 `ALTERNATE_UNIVERSE_PLAYER_UI_VERSION=6`；已移除原本只回傳純玩家名稱的 `playerName()` helper，以及載入時 `install()` 安排的額外首頁 `render()`，保留正式對外入口／戰鬥 API。
+- `index.html` 現在只載入一次 `alternateuniverseui.js`，且在 `playertitlerenderer.js` 之後；JS 修改均已更新對應 cache-bust。
+- `playertitleintegrity.js` `VERSION=24`：新增使用假資料、不修改正式 `state` 的異宇宙戰鬥身分 renderer 回歸案例，涵蓋已裝備稱號、已解鎖未裝備、未解鎖、名稱 HTML 特殊字元跳脫、單一稱號節點和正式稱號 state 不變。這是 renderer 層的程式化驗證，不等於實際瀏覽器完整戰鬥 E2E。
+- **資料相容：** 本次僅調整顯示／啟動與 Integrity，`titles` 仍為既有 root（`version/unlocked/equipped/pendingNotice`），不變更稱號取得或異宇宙進度，不新增正式存檔欄位；維持 `SAVE_SCHEMA_VERSION=17`，不需清舊資料、不需新 migration。
+- **驗證界線：** 在沒有取得 exact HEAD 的 GitHub Actions 成功結果或實際瀏覽器畫面測試前，不得宣稱 CI 或完整戰鬥 E2E 已通過。
 
 # 1. 下一個 ChatGPT 必須遵守的操作規範
 
