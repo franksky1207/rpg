@@ -139,5 +139,40 @@
     scene.onBeforeRenderObservable.add(()=>{ring.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.000035;center.rotation.y+=.0015;});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.5.0",supported,mount,createScene,createEpochScene,createGalaxyScene});
+
+  /* Universe mainline: ten regions, one hundred symbolic Boss markers; visual-only. */
+  function createUniverseScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.014,.009,.038,1);
+    const camera=new B.ArcRotateCamera("universe-camera",Math.PI/2.2,Math.PI/2.9,20,new B.Vector3(0,0,0),scene);
+    camera.lowerRadiusLimit=11;camera.upperRadiusLimit=30;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("universe-light",new B.Vector3(0,1,0),scene).intensity=.7;
+    const lit=new B.StandardMaterial("universe-lit",scene);lit.emissiveColor=new B.Color3(.24,.52,.96);
+    const won=new B.StandardMaterial("universe-won",scene);won.emissiveColor=new B.Color3(.1,.76,.65);
+    const dim=new B.StandardMaterial("universe-dim",scene);dim.diffuseColor=new B.Color3(.07,.08,.15);
+    const bossMat=new B.StandardMaterial("universe-boss-mat",scene);bossMat.emissiveColor=new B.Color3(.63,.28,.9);
+    const progress=Math.max(0,Math.min(100,Math.floor(Number(args.clearedBossCount)||0)));
+    const highest=Math.max(0,Math.min(99,Math.floor(Number(args.highestUnlockedBossIndex)||0)));
+    const selected=Math.max(0,Math.min(9,Math.floor(Number(args.selectedMap)||0)));
+    const review=args.review===true;
+    const core=B.MeshBuilder.CreatePolyhedron("universe-core",{type:2,size:1.1},scene);core.material=lit;
+    for(let i=0;i<10;i++){
+      const a=Math.PI*2*i/10,x=Math.cos(a)*6.4,z=Math.sin(a)*6.4;
+      const node=B.MeshBuilder.CreateSphere("universe-region-"+(i+1),{diameter:i===selected?1:.7,segments:14},scene);
+      node.position.set(x,.25*Math.sin(a*3),z);node.material=i*10+9<progress?won:review||i*10<=highest?lit:dim;
+      const line=B.MeshBuilder.CreateLines("universe-link-"+i,{points:[new B.Vector3(0,0,0),node.position.clone()]},scene);
+      line.color=review||i*10<=highest?new B.Color3(.22,.44,.72):new B.Color3(.1,.1,.17);
+      for(let j=0;j<10;j++){
+        const t=Math.PI*2*j/10,index=i*10+j;
+        const marker=B.MeshBuilder.CreatePolyhedron("universe-boss-"+(index+1),{type:1,size:.13},scene);
+        marker.position.set(x+Math.cos(t)*1.27,.5+Math.sin(t*2)*.17,z+Math.sin(t)*1.27);
+        marker.material=index<progress?won:review||index<=highest?bossMat:dim;
+      }
+    }
+    const orbit=B.MeshBuilder.CreateTorus("universe-orbit",{diameter:12.8,thickness:.045,tessellation:96},scene);
+    orbit.rotation.x=Math.PI/2;orbit.material=lit;
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);core.rotation.y+=dt*.0002;orbit.rotation.z+=dt*.000025;});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.6.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene});
 })(window);
