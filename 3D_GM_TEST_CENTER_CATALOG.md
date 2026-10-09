@@ -19,7 +19,7 @@ GM 測試中心 **只展示可親眼觀察與操作的 3D 場景、人物、裝�
 | 戰鬥、動畫與特效 | 攻防、技能、護盾、結算、各模式戰鬥 |
 | 副本、災厄與特殊演出 | 副本、災厄、異宇宙、劇情與轉生場景 |
 
-第 06 批起顯示三個有場景 factory 的項目：「三紀元主畫面」（`createEpochScene`）與「銀河紀元星圖」（`createGalaxyScene`）及「宇宙紀元星圖」（`createUniverseScene`）；怪物目前為銀河星圖五個象徵及宇宙星圖一百名 Boss 象徵，尚非獨立模型展示。不可將尚未實作的 B07～B40 項目冒稱已可預覽。
+第 07 批起顯示四個有場景 factory 的項目：「三紀元主畫面」（`createEpochScene`）與「銀河紀元星圖」（`createGalaxyScene`）及「宇宙紀元星圖」（`createUniverseScene`）及「高維紀元戰線」（`createHigherDimensionalScene`）；怪物目前為銀河星圖五個象徵及宇宙星圖一百名 Boss 象徵，尚非獨立模型展示。不可將尚未實作的 B08～B40 項目冒稱已可預覽。
 
 ## 3. 第 01～40 批的顯示責任
 
