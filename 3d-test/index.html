@@ -8,7 +8,7 @@
 </head>
 <body>
 <main class="shell">
-<header><div><small>文明戰線 / PROTOTYPE 01</small><h1>3D 引擎測試平台</h1></div><a href="../index.html">返回正式遊戲 ↗</a></header>
+<header><div><small>文明戰線 / PROTOTYPE 01</small><h1>3D 引擎測試平台</h1></div><a id="backToGame" href="../index.html">返回正式遊戲 ↗</a></header>
 <section class="stage" aria-label="3D 測試展示區">
 <canvas id="prototypeCanvas" aria-label="3D 測試場景"></canvas>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
@@ -19,6 +19,7 @@
 <script>
 (function(){
 "use strict";
+if(new URLSearchParams(location.search).get("embedded")==="1")document.getElementById("backToGame").hidden=true;
 const status=document.getElementById("status");
 const fallback=document.getElementById("fallback");
 const fallbackReason=document.getElementById("fallbackReason");
