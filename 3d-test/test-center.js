@@ -52,11 +52,11 @@ function syncAppearancePanel(){
  $("appearanceFreeControls").hidden=appearanceMode!=="free";
  $("appearanceRefresh").hidden=appearanceMode!=="formal";
  $("appearanceSource").textContent=appearanceMode==="formal"?(formalAppearance?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][formalAppearance.world-1]+"｜Lv."+formalAppearance.level+"｜VIP"+formalAppearance.vip+"｜唯讀展示":"等待正式角色外觀快照；不會改變遊戲資料。"):"自由展示｜僅影響本次 3D 預覽，不寫入正式角色。";
- if(appearanceMode==="formal"&&relevant)requestAppearance();
+
 }
-$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();};
+$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();else requestAppearance();};
 $("appearanceFree").onclick=()=>{appearanceMode="free";syncAppearancePanel();start();};
-$("appearanceRefresh").onclick=()=>{formalAppearance=null;syncAppearancePanel();};
+$("appearanceRefresh").onclick=()=>{formalAppearance=null;syncAppearancePanel();requestAppearance();};
 $("appearanceLevel").onchange=e=>{freeAppearance.level=Math.max(1,Math.min(2000,Number(e.target.value)||1));start();};
 $("appearanceQuality").onchange=e=>{freeAppearance.quality=Math.max(0,Math.min(5,Number(e.target.value)||0));start();};
 $("appearanceEnhancement").onchange=e=>{freeAppearance.enhancement=Math.max(0,Math.min(40,Number(e.target.value)||0));start();};
