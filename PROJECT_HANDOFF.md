@@ -1,3 +1,11 @@
+## 2026-10-10｜正式第 16 批交接：劇情／戰線紀錄／文明轉生 3D 視覺預覽已施工
+
+- 原 40 批目前 **第 01～16 批已有 3D 幾何預覽與介面接點施工，第 17～40 批未開始**；下一批第 17 批。完成施工不是完整 3D 遊戲或手機 GPU 驗收。
+- `3d-test/prototype-engine.js` 的 `createChronicleTransitionScene` 新增「戰線紀錄、劇情閱讀、文明轉生」三種純視覺場景；`3d-test/formal-home.js` 把可選入口接至正式戰線紀錄與主畫面轉生卡，`storyui.js` 則在既有劇情 modal 提供獨立 3D 史書預覽、劇情關閉時 dispose。劇情文字、已解鎖紀元、回顧紀錄、上一頁／下一頁、獎勵與不可逆轉生確認依原 owner，沒有新增 3D 交易或第二套存檔。
+- GM 3D 測試中心六大分類新增三個共用 factory 場景，案例 **24→27**；`tests/runtime/gm-3d-test-center-browser.js` 同步調整場景數與點擊案例；`3D_GM_TEST_CENTER_CATALOG.md` 記錄。正式與 GM HTML cache-bust 皆已更新。純文字啟動仍保留前置第三批的懶載入策略。
+- **驗收界線**：已做 GitHub main 回讀與 JS 語法／靜態接點檢查；尚無本次 exact HEAD 全部 CI 成功或真實手機／桌機 3D/轉生彈窗點擊驗收證據，須繼續追蹤。若回顧戰／轉生確認回歸出錯，優先查正式 UI event/modal 與新增預覽生命週期，不可更動戰鬥結算或轉生交易 owner。
+- **後續施工**：第 17 批完成設定／帳號／雲端及正式雙模式選擇、記住帳號裝置偏好、安全切換／重載與模式 loader；第 18 批重驗文字完整功能、雙模式相容、1～16 批預覽及所有 route/modal；第 19～40 批逐步獨立完整 3D，文字模式永久保留。每一批都要同步更新本檔及 `3D_IMPLEMENTATION_PLAN.md`。
+
 ## 2026-10-10｜雙模式前置第 3 批：程式接點與 3D 資源按需載入（已施工，待瀏覽器／手機驗收）
 
 - **實際修改**：`index.html` 移除啟動時同步引入 `3d-test/runtime.js`、`3d-test/appearance-snapshot.js`；新增輕量 `3d-test/mode-foundation.js`（不存偏好、不改正式 save，現階段唯一有效文字正式模式）；保留 `3d-test/formal-home.js` 的既有文字 DOM 可選預覽入口。點選預覽後才平行載入 runtime、appearance、Babylon 與共用 3D scene，並以原 `Civilization3DRuntime.create/show/dispose` 管理畫面；暫時不改 `onRendered` 全路由 DOM 掛載方式。
