@@ -128,3 +128,25 @@ html{scroll-behavior:auto!important}
 @media(max-width:480px){
  .center-sidebar{max-height:none}
 }
+
+/* B11: compact per-scene growth editor. Never use the outer four-column
+   equipment grid for individual growth controls. */
+#growthFreeControls{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;min-width:0;margin:0;padding:0}
+#growthFreeControls[hidden],#growthFreeControls .center-growth-field[hidden]{display:none!important}
+#growthFreeControls .center-growth-field{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0;color:#e1d4b9;font-size:12px;line-height:1.3}
+#growthFreeControls .center-growth-field-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#growthFreeControls .center-growth-field-counter{display:flex;align-items:center;gap:5px;min-width:0}
+#growthFreeControls input[type=number]{box-sizing:border-box;display:block;flex:1 1 auto;width:100%;min-width:0;max-width:100%;height:36px;padding:5px 8px;border-radius:7px;border:1px solid #826d4c;background:#11151b;color:#fff2d7;font-size:15px;font-weight:650;font-variant-numeric:tabular-nums}
+#growthFreeControls .center-growth-cap{flex:0 0 auto;color:#b3a383;font-size:11px}
+#growthFreeControls[data-mode="civilization"],#growthFreeControls[data-mode="core"]{grid-template-columns:minmax(170px,260px)}
+#growthFreeControls[data-mode="civilization"] .center-growth-field,#growthFreeControls[data-mode="core"] .center-growth-field{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+#growthFreeControls[data-mode="civilization"] .center-growth-field-counter,#growthFreeControls[data-mode="core"] .center-growth-field-counter{width:94px;flex:0 0 94px}
+@media(max-width:600px){
+ #growthFreeControls{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px 6px}
+ #growthFreeControls .center-growth-field{font-size:11px}
+ #growthFreeControls .center-growth-field-counter{gap:2px}
+ #growthFreeControls input[type=number]{height:36px;padding:4px 3px;text-align:center;font-size:14px}
+ #growthFreeControls .center-growth-cap{display:none}
+ #growthFreeControls[data-mode="civilization"],#growthFreeControls[data-mode="core"]{grid-template-columns:minmax(0,1fr)}
+ #growthFreeControls[data-mode="civilization"] .center-growth-field,#growthFreeControls[data-mode="core"] .center-growth-field{max-width:270px}
+}
