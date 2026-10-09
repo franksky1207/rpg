@@ -41,9 +41,30 @@ const assert=require("node:assert/strict");
   }
   console.log("GM 3D status visibility: "+JSON.stringify(presentation));
 
+  const initialCanvas=await page.locator("#prototypeHost canvas").count();
+  await page.locator("#maximizePreview").click();
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),true);
+  assert.equal(await page.locator("#prototypeHost canvas").count(),initialCanvas,"maximize recreated Canvas");
+  await page.keyboard.press("Escape");
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),false,"Esc failed to restore");
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.locator("#caseList .center-case").count(),2);
   assert.equal(await page.locator(".center-workspace").isVisible(),true);
+  await page.locator("#maximizePreview").click();
+  const mobile=await page.evaluate(()=>{
+    const stage=document.querySelector(".center-workspace .stage").getBoundingClientRect();
+    const button=document.querySelector("#maximizePreview").getBoundingClientRect();
+    const controls=document.querySelector(".civilization-3d-camera-controls")?.getBoundingClientRect();
+    return {maximized:window.Civilization3DTestCenter.isMaximized(),stageWidth:stage.width,stageHeight:stage.height,buttonWithin:button.left>=0&&button.right<=innerWidth&&button.bottom<=innerHeight,controlsWithin:!controls||(controls.left>=0&&controls.right<=innerWidth&&controls.bottom<=innerHeight)};
+  });
+  assert.equal(mobile.maximized,true);
+  assert.equal(mobile.buttonWithin,true,"Portrait restore button outside viewport");
+  assert.equal(mobile.controlsWithin,true,"Portrait camera controls outside viewport");
+  assert.ok(mobile.stageWidth>=380&&mobile.stageHeight>=780,"Portrait stage not viewport-sized");
+  await page.locator("#maximizePreview").click();
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),false);
+  console.log("PASS Mobile maximize",mobile);
+
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\.js/.test(e)),[]);
   console.log("PASS GM 3D Test Center categories, B01-B05 case registry, search, fixtures and mobile viewport",snapshot);
  }finally{await browser.close();}
