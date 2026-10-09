@@ -51,7 +51,7 @@ function ensureGalaxyMainlineControl(view){
  if(world!==1||era!=="galaxy")return;
  const main=document.getElementById("main");
  if(!main||main.querySelector("#civilization3dGalaxyToggle"))return;
- const screen=main.querySelector(".map-screen:not(.galaxy-review-adventure-screen):not(.universe-adventure-screen)");
+ const screen=main.querySelector(".map-screen:not(.galaxy-review-adventure-screen)");
  const regions=screen?.querySelector(".world-region-list");
  if(!regions)return;
  const controls=document.createElement("div");
