@@ -12,7 +12,7 @@ const assert=require("assert");
   await page.waitForFunction(()=>!!window.CivilizationScriptLoader?.ensure,{timeout:30000});
   await page.evaluate(async()=>{await window.CivilizationScriptLoader.ensure("gm");await window.CivilizationScriptLoader.ensure("integrity");});
   await page.waitForFunction(()=>
-   window.PLAYER_TITLE_INTEGRITY_VERSION===23&&
+   window.PLAYER_TITLE_INTEGRITY_VERSION===24&&
    window.PLAYER_TITLE_ALTERNATE_UNIVERSE_CLOSURE_VERSION===1&&
    window.PLAYER_TITLE_INTEGRITY?.passed===true&&
    window.GM_ALTERNATE_UNIVERSE_MANAGEMENT_VERSION===4&&
