@@ -59,6 +59,44 @@ const assert = require("node:assert/strict");
     });
     for(const entry of matrix)assert.equal(entry.count,entry.expected,entry.name+" incorrect preview button");
     console.log("PASS Galaxy route matrix "+JSON.stringify(matrix));
+    const cameraChecks = await page.evaluate(async()=>{
+      const original=window.BABYLON;
+      const callbacks=[];
+      class Engine {
+        static isSupported(){return true;}
+        constructor(){this.resize=()=>{};}
+        setHardwareScalingLevel(){}
+        runRenderLoop(callback){callbacks.push(callback);}
+        stopRenderLoop(){}
+        dispose(){}
+      }
+      window.BABYLON={Engine};
+      const host=document.createElement("div");
+      document.body.appendChild(host);
+      const runtime=window.Civilization3DRuntime.create({host});
+      const camera={radius:10,alpha:1,beta:1.2,lowerRadiusLimit:4,upperRadiusLimit:18,metadata:{}};
+      const scene={activeCamera:camera,render(){},dispose(){}};
+      try{
+        const result=await runtime.show("camera-test",()=>scene);
+        const canvas=runtime.canvas;
+        const wheel=new WheelEvent("wheel",{bubbles:true,cancelable:true,deltaY:100});
+        const wheelNotCancelled=canvas.dispatchEvent(wheel);
+        const wheelBlocked=wheel.defaultPrevented&&!wheelNotCancelled;
+        host.querySelector('[data-camera-action="zoom-in"]').click();
+        const closer=camera.radius<10;
+        host.querySelector('[data-camera-action="zoom-out"]').click();
+        const afterButtons=camera.radius;
+        camera.alpha=2.4;camera.beta=.6;camera.radius=14;
+        host.querySelector('[data-camera-action="reset"]').click();
+        return {sceneOk:result.ok,wheelBlocked,closer,afterButtons,reset:camera.radius===10&&camera.alpha===1&&camera.beta===1.2,buttons:host.querySelectorAll(".civilization-3d-camera-button").length};
+      }finally{runtime.dispose();host.remove();window.BABYLON=original;}
+    });
+    assert.equal(cameraChecks.sceneOk,true,"mocked 3D runtime scene not ready");
+    assert.equal(cameraChecks.wheelBlocked,true,"wheel event over active 3D canvas must be cancelled");
+    assert.equal(cameraChecks.closer,true,"zoom-in did not move camera");
+    assert.equal(cameraChecks.reset,true,"camera reset did not restore baseline");
+    assert.equal(cameraChecks.buttons,3,"camera control buttons missing");
+    console.log("PASS 3D camera controls "+JSON.stringify(cameraChecks));
     const relevantErrors = failures.filter(x => /worldmapui|formal-home|galaxy|adventureMapPage/i.test(x));
     assert.equal(relevantErrors.length, 0, relevantErrors.join("\n"));
   } finally { await browser.close(); }
