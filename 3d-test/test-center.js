@@ -72,7 +72,7 @@ function renderInfo(){
  $("fixturePanel").hidden=false;
  $("fixtureWorld").closest("label").hidden=c.kind!=="epoch";
  $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
- $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy";
+ $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
 function safeStop(){
  serial++;
