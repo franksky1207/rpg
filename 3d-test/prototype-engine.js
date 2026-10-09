@@ -270,5 +270,38 @@
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);scene.meshes.forEach(mesh=>{if(mesh.name.startsWith("equipment-slot-")&&!mesh.name.includes("ring")&&!mesh.name.includes("base"))mesh.rotation.y+=dt*.00012;});});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.9.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene});
+
+  /* B10: read-only five-slot forge. Formal transaction and cost confirmation remain in enhancementui.js. */
+  function createForgeScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.025,.021,.022,1);
+    const camera=new B.ArcRotateCamera("forge-camera",Math.PI/2.3,Math.PI/2.85,13.7,new B.Vector3(0,.35,0),scene);
+    camera.lowerRadiusLimit=8;camera.upperRadiusLimit=22;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("forge-light",new B.Vector3(0,1,0),scene).intensity=.9;
+    const iron=new B.StandardMaterial("forge-iron",scene);iron.diffuseColor=new B.Color3(.16,.18,.21);
+    const gold=new B.StandardMaterial("forge-gold",scene);gold.emissiveColor=new B.Color3(.7,.46,.16);
+    const capped=new B.StandardMaterial("forge-max",scene);capped.emissiveColor=new B.Color3(.19,.66,.52);
+    const blocked=new B.StandardMaterial("forge-blocked",scene);blocked.diffuseColor=new B.Color3(.12,.12,.14);
+    const slots=Array.isArray(args.slots)?args.slots.slice(0,5):[];
+    const cap=Math.max(1,Math.floor(Number(args.cap)||20));
+    for(let i=0;i<5;i++){
+      const item=slots[i]||{},x=(i-2)*2.18;
+      const level=Math.max(0,Math.floor(Number(item.level)||0));
+      const invalid=item.invalid===true,complete=level>=cap;
+      const mat=invalid?blocked:complete?capped:gold;
+      const base=B.MeshBuilder.CreateCylinder("forge-base-"+i,{diameter:1.65,height:.22,tessellation:28},scene);
+      base.position.set(x,-.6,0);base.material=iron;
+      const anvil=B.MeshBuilder.CreateBox("forge-slot-"+i,{width:.98,height:.45,depth:.78},scene);
+      anvil.position.set(x,.06,0);anvil.material=mat;
+      const energy=B.MeshBuilder.CreatePolyhedron("forge-energy-"+i,{type:2,size:.28+Math.min(level/cap,1)*.26},scene);
+      energy.position.set(x,.86,0);energy.material=mat;
+      const ring=B.MeshBuilder.CreateTorus("forge-ring-"+i,{diameter:1.5,thickness:.045,tessellation:32},scene);
+      ring.rotation.x=Math.PI/2;ring.position.set(x,-.39,0);ring.material=mat;
+    }
+    const core=B.MeshBuilder.CreateCylinder("forge-central-core",{diameter:1.1,height:.25,tessellation:36},scene);
+    core.position.set(0,-.63,-2.35);core.material=iron;
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);for(const mesh of scene.meshes){if(mesh.name.startsWith("forge-energy-"))mesh.rotation.y+=dt*.00015;}});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.10.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene});
 })(window);
