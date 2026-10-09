@@ -28,6 +28,37 @@ const assert = require("node:assert/strict");
     assert.equal(result.hasControl, true, "3D toggle bridge missing");
     assert.match(result.caption, /預覽 3D 銀河星圖/);
     console.log("PASS Galaxy mainline 3D button: " + JSON.stringify(result));
+    // Regression matrix: first-run mainline, reincarnated world-1 mainline,
+    // and galaxy review after crossing into world 2. Rendering only; no save writes.
+    const matrix = await page.evaluate(() => {
+      const main=document.getElementById("main");
+      const saved=main.innerHTML;
+      const savedPhase=window.currentWorldPhase;
+      const savedEra=window.getAdventureEraView;
+      const fixtures=[
+        {name:"first-run-galaxy",phase:1,era:"galaxy",review:false,expected:1},
+        {name:"reincarnation-galaxy",phase:1,era:"galaxy",review:false,expected:1},
+        {name:"galaxy-review",phase:2,era:"galaxy-review",review:true,expected:0}
+      ];
+      try{
+        return fixtures.map(f=>{
+          window.currentWorldPhase=()=>f.phase;
+          window.getAdventureEraView=()=>f.era;
+          main.innerHTML='<section class="map-screen '+(f.review?'galaxy-review-adventure-screen':'')+'"><div class="world-region-list"><button class="map-card">銀河大區</button></div></section>';
+          window.civilization3dHomeRouteRendered("adventure");
+          window.civilization3dHomeRouteRendered("adventure");
+          const count=main.querySelectorAll("#civilization3dGalaxyToggle").length;
+          return {name:f.name,count,expected:f.expected};
+        });
+      }finally{
+        window.currentWorldPhase=savedPhase;
+        window.getAdventureEraView=savedEra;
+        main.innerHTML=saved;
+        window.civilization3dHomeRouteRendered("adventure");
+      }
+    });
+    for(const entry of matrix)assert.equal(entry.count,entry.expected,entry.name+" incorrect preview button");
+    console.log("PASS Galaxy route matrix "+JSON.stringify(matrix));
     const relevantErrors = failures.filter(x => /worldmapui|formal-home|galaxy|adventureMapPage/i.test(x));
     assert.equal(relevantErrors.length, 0, relevantErrors.join("\n"));
   } finally { await browser.close(); }
