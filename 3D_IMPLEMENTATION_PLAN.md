@@ -300,6 +300,16 @@
 驗收完成後，更新 3D_IMPLEMENTATION_PLAN.md 的該批狀態與 PROJECT_HANDOFF.md 交接，回報 commit 與測試結果。
 ```
 
+## 7A. 第 01 批追加：GM 同頁 3D 測試入口（2026-10-09）
+
+- 正式入口：GM 模式 → 測試 → 「3D 場景測試」 → 「進入 3D 測試」。
+- `gmhubextensions.js` 使用既有 GM section registry，新增 `gm-3d-prototype-test`；`gm3dprototype.js` 隨既有授權 GM lazy group 載入。
+- 使用全螢幕覆蓋層與同源 iframe `3d-test/?embedded=1`，保留底下原有 DOM、GM tab／section 狀態、捲動位置、輸入及玩家 runtime，不呼叫 `render()`、`go()` 或 `location.reload()`。
+- 「返回原本畫面」及 Esc 會移除 iframe；原型 `pagehide` 清理 Babylon 引擎。GM 權限以既有 `state.gm===true` 檢查。嵌入模式隱藏獨立頁面返回正式遊戲連結。
+- 更新正式 `index.html` 的 GM lazy script 引用及 `gmhubextensions.js` cache-bust；未更動正式存檔、戰鬥 owner。
+- 施工 commits：`fe1fb8105e6de99994719ccd67e072b50c43dd2a`、`a10949acbd5e21cc1c95297e1bdeaa03f577a02e`、`f53317f4f0376cf312cec42a5e735c4ac7549210`、`a7f058b5f9f73c41920c7e8f55405f38f75fdc15`。
+- GitHub 檔案回讀及靜態核對完成；瀏覽器互動／手機與 exact HEAD CI 仍未取得驗證證據。
+
 ## 8. 版本與計畫狀態
 
 - 2026-10-09：首次建立 40 批規劃。
