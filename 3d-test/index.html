@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>文明戰線｜GM 3D 開發測試中心</title>
-<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas">
+<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas&v4=20261009-maximized">
 </head>
 <body>
 <main class="shell">
@@ -24,12 +24,13 @@
 <label>聚焦區域 <select id="fixtureSelected"><option value="0">大區 1</option><option value="1">大區 2</option><option value="2">大區 3</option><option value="3">大區 4</option><option value="4">大區 5</option><option value="5">大區 6</option><option value="6">大區 7</option><option value="7">大區 8</option><option value="8">大區 9</option><option value="9">大區 10</option></select></label>
 </div><div id="scenarioLabel" class="center-scenario"></div>
 <section class="stage" aria-label="3D 測試展示區">
+<button id="maximizePreview" class="center-maximize-button" type="button" aria-pressed="false" aria-label="最大化 3D 預覽">⛶ 最大化預覽</button>
 <div id="prototypeHost" class="prototype-host"></div>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
 
 </section></div></section>
 <footer><p>GM 測試使用 session 展示資料，不讀取或修改正式玩家存檔。可預覽與部分完成案例已分開標示。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
 </main>
-<script src="./test-center.js?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas"></script>
+<script src="./test-center.js?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas&v4=20261009-maximized"></script>
 </body>
 </html>
