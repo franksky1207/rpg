@@ -239,9 +239,9 @@ renderCategories();renderCases();renderInfo();
   await Promise.all([
     window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
     window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
-    window.Civilization3DPrototype?.createGrowthScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11")
+    window.Civilization3DPrototype?.createDungeonScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12")
   ]);
-  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createGrowthScene)throw new Error("3D 模組載入不完整。");
+  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createDungeonScene)throw new Error("3D 模組載入不完整。");
   start();
   if(embedded)requestAppearance();
  }catch(error){fail(error.message);}
