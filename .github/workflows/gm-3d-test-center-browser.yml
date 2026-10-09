@@ -1,0 +1,35 @@
+name: GM 3D Test Center Browser
+on:
+  push:
+    branches: [main]
+    paths:
+      - '3d-test/**'
+      - 'gm3dprototype.js'
+      - 'tests/runtime/gm-3d-test-center-browser.js'
+      - '.github/workflows/gm-3d-test-center-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Check live GM test center navigation and fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-3d-server.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/3d-test/ >/dev/null; then break; fi
+            sleep 0.3
+          done
+          node tests/runtime/gm-3d-test-center-browser.js
