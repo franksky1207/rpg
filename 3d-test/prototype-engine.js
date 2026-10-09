@@ -440,5 +440,36 @@
     scene.metadata={civilization3dAdvanced:{kind,progress:value,stage,unlocked:args.advancedUnlocked===true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.13.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene});
+
+  /* B14 readonly civilization calamity seals and alternate-frontier depth visual. */
+  function createFrontierScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine),mode=args.frontierKind==="alternate"?"alternate":"calamity";
+    const world=Math.max(1,Math.min(3,Number(args.world)||1));
+    const progress=Math.max(0,Math.min(mode==="alternate"?1000:10,Number(args.frontierProgress)||0));
+    scene.clearColor=new B.Color4(.012,.016,world===2?.075:.05,1);
+    const cam=new B.ArcRotateCamera("frontier-camera",Math.PI/2.35,Math.PI/2.75,14,new B.Vector3(0,.2,0),scene);
+    cam.lowerRadiusLimit=7;cam.upperRadiusLimit=23;cam.attachControl(args.canvas,true);
+    new B.HemisphericLight("frontier-light",new B.Vector3(0,1,0),scene).intensity=.88;
+    const make=(name,c,glow=false)=>{const m=new B.StandardMaterial(name,scene);if(glow)m.emissiveColor=new B.Color3(...c);else m.diffuseColor=new B.Color3(...c);return m;};
+    const iron=make("frontier-metal",[.12,.17,.25]),sealed=make("frontier-sealed",[.11,.13,.2]);
+    const active=make("frontier-active",world===2?[.5,.3,.87]:[.18,.73,.9],true);
+    const complete=make("frontier-complete",[.83,.61,.25],true);
+    const ground=B.MeshBuilder.CreateCylinder("frontier-ground",{diameter:10.6,height:.3,tessellation:48},scene);
+    ground.position.y=-.7;ground.material=iron;
+    const count=mode==="calamity"?10:12;
+    for(let i=0;i<count;i++){
+      const theta=2*Math.PI*i/count,x=Math.cos(theta)*3.75,z=Math.sin(theta)*3.75;
+      const reached=mode==="calamity"?i<progress:i<Math.ceil(progress/1000*count);
+      const node=B.MeshBuilder.CreatePolyhedron("frontier-seal-"+i,{type:2,size:reached?.61:.43},scene);
+      node.position.set(x,.18,z);node.material=reached?complete:sealed;
+      const ring=B.MeshBuilder.CreateTorus("frontier-ring-"+i,{diameter:1.25,thickness:.045,tessellation:26},scene);
+      ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=reached?active:sealed;
+    }
+    const core=B.MeshBuilder.CreatePolyhedron("frontier-central-core",{type:2,size:1.25},scene);
+    core.position.set(0,1,-.2);core.material=active;
+    scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.00016;});
+    scene.metadata={civilization3dFrontier:{mode,world,progress,review:args.frontierReview===true}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.14.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene});
 })(window);
