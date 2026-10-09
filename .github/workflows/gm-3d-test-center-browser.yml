@@ -6,6 +6,7 @@ on:
       - '3d-test/**'
       - 'gm3dprototype.js'
       - 'tests/runtime/gm-3d-test-center-browser.js'
+      - 'tests/runtime/3d-player-snapshot-contract.js'
       - '.github/workflows/gm-3d-test-center-browser.yml'
   workflow_dispatch:
 permissions:
@@ -21,6 +22,8 @@ jobs:
           node-version: '24'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
+      - name: Verify readonly formal player snapshot
+        run: node tests/runtime/3d-player-snapshot-contract.js
       - name: Check live GM test center navigation and fixtures
         shell: bash
         run: |
