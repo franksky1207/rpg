@@ -12,6 +12,7 @@
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
 - **2026-10-09 補強施工契約已入 GitHub**：`3D_IMPLEMENTATION_PLAN.md` 新增第 `6A` 節，將原版功能比對結果明確列為 **R01～R30 共 30 項驗收要求**、5 項全域硬性規範，以及第 18／34／40 批結案門檻。包括玩家名稱、46 種稱號／正式怪物名稱、HP／護盾、技能浮字、結算、各紀元資源、GM／離線／雲端、完整 route/subview/Modal/狀態矩陣。往後每批必核對相關編號，不准只完成主要畫面就宣布全功能完成。
+- **2026-10-09 第 01～02 批缺口提前補修**：`3d-test/runtime.js` 增加 AbortController signal、epoch 取消、asset dispose、WebGL context lost/restored callbacks；`3d-test/index.html` 新增 WebGL 中斷測試；`gm3dprototype.js` 增加 GM iframe Esc 與返回原捲動位置；正式 `index.html` 增加 `#civilization3dFormalHost`（設於 `#main` 外、預設 hidden）與 runtime 腳本、更新 GM cache-bust。**這不是正式 3D 介面啟用**；未完成項目仍包括 Babylon engine bytes 入庫與 license、正式 route/scene 整合、非同步 GLB loader 真正配合 abort、GPU refcount 與瀏覽器/手機實測。完整紀錄在 `3D_IMPLEMENTATION_PLAN.md` 第 6A 節「缺口提前補修」。
 - **第 01～02 批缺口追蹤**：新增 B01-G1 外部 Babylon CDN 尚未本地化、B01-G2 GM 返回及 WebGL/手機實測不足、B02-G1 Canvas 僅在獨立測試 iframe／正式 route 未接、B02-G2 epoch 不等於實際素材載入 abort 且 Map 未具正式 GPU refcount/dispose、B02-G3 context loss/重入及長時間 GPU 壓測未驗。這些是仍須完成的工程／驗收債務；第 01～02 批「程式已施工」不得誤寫「實機完全通過」。其餘 R01～R30 的正式 UI/稱號/怪物/戰鬥功能屬第 03～40 批，不得假稱前兩批已交付。
 - 唯一完整批次表：[`3D_IMPLEMENTATION_PLAN.md`](3D_IMPLEMENTATION_PLAN.md)，含 **40 批**：A1 全正式介面 18 批 → A2 真 3D 場景 8 批 → B 人物／裝備／怪物 8 批 → C 正式 3D 戰鬥與總驗收 6 批。
 - 使用者優先度：**先覆蓋進入遊戲能看到的所有正式介面／子頁面／動態彈窗**，不是先完成 3D 戰鬥。正式遊戲核心、存檔、Target Context、轉生與高速補播規則不得因視覺改造而變動。
