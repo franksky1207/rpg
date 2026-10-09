@@ -8,6 +8,15 @@
 
 ---
 
+
+## 3D 全面升級新計畫（2026-10-09，規劃已建立、尚未施工）
+
+- 唯一完整批次表：[`3D_IMPLEMENTATION_PLAN.md`](3D_IMPLEMENTATION_PLAN.md)，含 **40 批**：A1 全正式介面 18 批 → A2 真 3D 場景 8 批 → B 人物／裝備／怪物 8 批 → C 正式 3D 戰鬥與總驗收 6 批。
+- 使用者優先度：**先覆蓋進入遊戲能看到的所有正式介面／子頁面／動態彈窗**，不是先完成 3D 戰鬥。正式遊戲核心、存檔、Target Context、轉生與高速補播規則不得因視覺改造而變動。
+- 素材、程式、GLB、資產登錄表原則留在單一 `franksky1207/rpg` GitHub 儲存庫，保留原版回退。
+- **狀態：全部未開始**。使用者在後續對話指定「第 N 批」才可執行該批；執行後依 roadmap 回填完成證據與 commit。
+- 此 3D 新計畫不覆蓋本交接檔的任何既有遊戲正式現況；每批操作先重讀 current `main`。
+
 # 0. 本次交接基準
 
 本次交接以 **2026-10-08 current `main`** 的實際程式碼為依據。更新交接檔前重新讀取了本檔，以及本次對話直接修改／依賴的正式 owner 與 regression，包括：`calamitycore.js`、`calamitygm.js`、`calamitygmintegrity.js`、`gmpowerbenchmark.js`、`savemigration.js`、`gmruntimeauthorization.js`、`scriptgrouploader.js`、`gmdevicepreferences.js`、`gmbackground.js`、`combatspeed.js`、相關 Runtime Integrity 測試與 `index.html`。其他既有系統仍以本檔 owner 索引＋current main 為準；**本檔不是 main 的替代品**。
@@ -1216,5 +1225,5 @@ d1cd0a4a5becf753cbd45beb578236780822a1cc
 9. Save Schema current=17；不要因 runtime-only GM authorization／preference／diagnostics 自行升 Schema。
 10. 若 handoff 與 main 衝突，以 main 為準並直接修正 handoff。
 
-目前沒有已核准待施工批次。若要做新優化，先重新檢查 main 再規劃。
+目前新增《文明戰線》3D 全面升級 40 批規劃，詳見 `3D_IMPLEMENTATION_PLAN.md`；**全部尚未施工**。其他新優化仍須依需求重查 main。
 ```
