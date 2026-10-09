@@ -1,3 +1,5 @@
+- **2026-10-09 3D 第 12 批（副本首頁／懸賞／銀河與宇宙一般競技場）**：`3d-test/prototype-engine.js` 共用 `createDungeonScene` 支援副本作戰中心、懸賞戰準備區、一般競技場三類 Babylon 幾何場景。透過既有 `registerDungeonPostRenderHook` 在正式 `dungeon`、`dungeon-bounty` ready、`dungeon-arena` select/ready 頁插入 opt-in 3D 預覽；離頁、rerender、combat/result 立即關閉／釋放。GM 六分類中既有「副本、災厄與特殊演出」新增三個視覺案例，使用相同 scene factory、測試資料僅在 GM session。沒有動正式副本 owner、戰鬥、每日次數、獎勵或存檔。第 13 批承接高維競技場、鏡像與虛空；第 15 批負責戰鬥／結果 3D；第 18 批驗收全頁 L1。手機真機與 GPU 長測仍待後續指定批次，切勿把幾何預覽冒稱最終美術。
+
 **既有正式工程完成基準（2026-10-09 核對）**：Batch7：GM／測試工具正式收尾，7-1～7-5全部完成；第一紀元完整 Target Context 重構（Batch0～6）已完成。以上是既有正式工程歷史完成狀態，不代表 3D 第 12～40 批也已完成；以 main 實際 owner 和 PROJECT_PENDING_STATUS.md 為準。
 
 - **2026-10-09 原始 3D 規格書已入庫**：已確認 `main` 根目錄存在 `《文明戰線》3D 全面升級・完整規劃與施工規格書.docx`（53,209 bytes）。此 Word 為設計歷史參考，不是強制施工清單；現行 `main` 程式與 40 批施工計畫優先。往後應直接讀取根目錄原檔，不再使用 `docs/reference/` 作為有效路徑。
