@@ -352,7 +352,7 @@
     new B.HemisphericLight("dungeon-light",new B.Vector3(0,1,0),scene).intensity=.91;
     const material=(name,rgb,glow=false)=>{
       const m=new B.StandardMaterial(name,scene);
-      (glow?m.emissiveColor:m.diffuseColor)=new B.Color3(...rgb);
+      if(glow)m.emissiveColor=new B.Color3(...rgb);else m.diffuseColor=new B.Color3(...rgb);
       return m;
     };
     const iron=material("dungeon-metal",[.13,.18,.24]);
