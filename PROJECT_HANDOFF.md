@@ -11,6 +11,9 @@
 
 # 《文明戰線》PROJECT HANDOFF
 
+- **2026-10-09 GM 啟動加速調整**：設定頁在 `state.gm` 已授權時先呈現 GM 管理載入區塊，GM deferred group 完成即原區塊注入完整 `gmHtml`，不強制重繪全頁或改存檔；`scriptgrouploader.js` 改於 DOMContentLoaded 排程，而非等待 window load（圖像等資源），仍維持 GM 模組原順序與授權驗證，失敗時提供重試按鈕。自動化／手機時間測量尚待驗收。
+
+
 更新日期：2026-10-09（UTC+8）  
 分支：`main`
 
