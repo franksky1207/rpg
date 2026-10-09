@@ -8,6 +8,7 @@ const assert=require("node:assert/strict");
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html",{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>typeof window.startGalaxyReviewBattle==="function"&&typeof window.openGalaxyReviewMap==="function"&&typeof window.runCombatCore==="function",{timeout:30000});
   const setup=await page.evaluate(()=>{
+   document.getElementById("civilizationAuthGate")?.remove();
    const before=JSON.stringify(state);
    window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
