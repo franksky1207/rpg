@@ -471,5 +471,43 @@
     scene.metadata={civilization3dFrontier:{mode,world,progress,review:args.frontierReview===true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.14.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene});
+
+  /* B15: read-only battlefield, shield and settlement presentation. */
+  function createBattlePresentationScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    const mode=["battle","shield","settlement","encounter"].includes(args.battleVisualKind)?args.battleVisualKind:"battle";
+    scene.clearColor=new B.Color4(.015,.02,.05,1);
+    const camera=new B.ArcRotateCamera("battle-presentation-camera",Math.PI/2.25,Math.PI/2.7,12,new B.Vector3(0,.3,0),scene);
+    camera.lowerRadiusLimit=7;camera.upperRadiusLimit=19;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("battle-presentation-light",new B.Vector3(0,1,0),scene).intensity=.82;
+    const mat=(name,c,emissive=false)=>{const m=new B.StandardMaterial(name,scene);if(emissive)m.emissiveColor=new B.Color3(...c);else m.diffuseColor=new B.Color3(...c);return m;};
+    const metal=mat("battle-platform",[.12,.18,.26]),blue=mat("battle-player",[.15,.72,.95],true);
+    const red=mat("battle-enemy",[.94,.28,.42],true),white=mat("battle-shield",[.85,.96,1],true),gold=mat("battle-reward",[.96,.69,.23],true);
+    const floor=B.MeshBuilder.CreateCylinder("battle-stage",{diameter:9.8,height:.35,tessellation:48},scene);floor.position.y=-.75;floor.material=metal;
+    if(mode==="settlement"){
+      for(let i=0;i<5;i++){
+        const x=(i-2)*1.45,loot=B.MeshBuilder.CreatePolyhedron("battle-loot-"+i,{type:2,size:.4+(i%2)*.18},scene);
+        loot.position.set(x,.4,0);loot.material=i%2?gold:blue;
+      }
+    }else{
+      for(const [i,x,m] of [[0,-2.7,blue],[1,2.7,red]]){
+        const figure=B.MeshBuilder.CreateCapsule("battle-combatant-"+i,{radius:.52,height:2.4,tessellation:16},scene);
+        figure.position.set(x,.65,0);figure.material=m;
+        const hp=Math.max(0,Math.min(1,Number(i?args.enemyHpRatio:args.playerHpRatio) || 0));
+        const bar=B.MeshBuilder.CreateBox("battle-hp-"+i,{width:1.6*Math.max(.025,hp),height:.1,depth:.12},scene);
+        bar.position.set(x,2.4,0);bar.material=m;
+      }
+      if(mode==="shield"||Number(args.shieldRatio)>0){
+        const shield=B.MeshBuilder.CreateSphere("battle-shield-shell",{diameter:3,segments:20},scene);
+        shield.position.set(-2.7,.7,0);shield.scaling.set(.75,1,.8);shield.visibility=.22;shield.material=white;
+      }
+      if(mode==="encounter"){
+        const beacon=B.MeshBuilder.CreateTorus("battle-special-beacon",{diameter:2.1,thickness:.12,tessellation:36},scene);
+        beacon.position.set(2.7,1,0);beacon.material=gold;
+      }
+    }
+    scene.metadata={civilization3dBattlePresentation:{kind:mode,visualOnly:true}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene});
 })(window);
