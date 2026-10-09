@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>文明戰線｜GM 3D 開發測試中心</title>
-<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1&v2=20261009-hide-success-status">
+<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas">
 </head>
 <body>
 <main class="shell">
@@ -16,7 +16,7 @@
 <div id="caseList" class="center-cases" aria-label="測試案例"></div>
 </aside>
 <div class="center-workspace">
-<div class="center-description"><h2 id="caseTitle">載入中…</h2><div id="caseMetadata"></div><p id="caseDetail"></p></div>
+<div class="center-description"><h2 id="caseTitle">載入中…</h2><div id="caseMetadata"></div><p id="caseDetail"></p></div><div class="center-status" id="status" role="status" aria-live="polite" hidden></div>
 <div class="center-fixtures" id="fixturePanel" hidden>
 <label>紀元（展示）<select id="fixtureWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label>
 <label>情境（展示）<select id="fixtureLife"><option value="first">首次遊戲</option><option value="rerun">轉生正式主線</option><option value="review">通關回顧</option></select></label>
@@ -26,10 +26,10 @@
 <section class="stage" aria-label="3D 測試展示區">
 <div id="prototypeHost" class="prototype-host"></div>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
-<div class="status" id="status" role="status" aria-live="polite">準備啟動測試引擎…</div>
+
 </section></div></section>
 <footer><p>GM 測試使用 session 展示資料，不讀取或修改正式玩家存檔。可預覽與部分完成案例已分開標示。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
 </main>
-<script src="./test-center.js?v=20261009-center1&v2=20261009-hide-success-status"></script>
+<script src="./test-center.js?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas"></script>
 </body>
 </html>
