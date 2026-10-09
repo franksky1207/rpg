@@ -1,3 +1,10 @@
+## 2026-10-10｜雙模式前置第 2 批交接（已完成，無程式變更）
+
+- 依 `main` 重新核對 `index.html` 161 一般同步 script、97 deferred（32 GM）、`scriptgrouploader.js` GM 先驗證與 ready、`backgroundpreload.js` 啟動屏障、`3d-test/formal-home.js` 預取 Babylon／場景、`3d-test/test-center.js` GM 入口、`scripts/generate-resource-manifest.py` 指紋生成。**現有快取與 3D 預熱不等於已按文字／3D 模式拆分載入**，正式 index 仍直接載入 3D runtime／appearance／formal-home。
+- 新增 [雙模式資源分層施工準備與測試矩陣](docs/DUAL_MODE_RESOURCE_LAYERING_PREP_2026-10-10.md)；分成 L0 帳號與選模式、L1 共用核心、L2-T 文字介面、L2-3D 首屏、L3 3D 延後場景與模型、L4 GM 授權層。先檢查每支 script 全域符號與初始化副作用，再以可回退的小批遷移；禁止直接大規模搬動同步腳本。保留銀河回顧、異宇宙、離線、GM 與文字遊戲回歸。
+- **完成範圍**：現況盤點、分類與第 17～40 批資源分層指引、測試案例；**未完成**完整 161 檔符號級依賴清冊、登入選模式實作、按模式實際下載分流、正式獨立 3D 模式與瀏覽器／手機效能驗收。僅文件修改，無 JS/CSS/HTML 變動，無需 cache-bust。
+- 兩個雙模式前置批次已留在 `main`；**原 40 批仍第 01～15 批已施工、第 16 批待執行**。繼續遵守修改後自我檢查與同步兩份交接文件。
+
 ## 2026-10-10｜雙模式前置第 1 批交接（已完成，正式 40 批進度不變）
 
 - 已核對現行 `main` 的 3D 第 01～15 批主要正式接點、`index.html`、`3d-test/formal-home.js`、`appearance-snapshot.js`、`runtime.js`、`test-center.js`、`scriptgrouploader.js`。新增 [雙模式架構邊界契約](docs/DUAL_MODE_ARCHITECTURE_BOUNDARY_2026-10-10.md)，明示文字 UI 永久保留、3D 為另一套完整視覺、共用唯一正式 state／戰鬥／裝備／交易／存檔 owner。
