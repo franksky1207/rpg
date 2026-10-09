@@ -47,7 +47,15 @@ function fillAlternateSelectors(){
  alternateSelection.universe=clamp(alternateSelection.universe,(alternateSelection.segment-1)*10+1,alternateSelection.segment*10);
  universe.replaceChildren();for(let i=(alternateSelection.segment-1)*10+1;i<=alternateSelection.segment*10;i++)universe.add(new Option(`U${String(i).padStart(3,"0")}`,String(i)));
  segment.value=String(alternateSelection.segment);universe.value=String(alternateSelection.universe);depth.value=String(alternateSelection.depth);
- const summary=$("alternatePreviewSummary");if(summary)summary.textContent=`第 ${alternateSelection.segment} 區 · U${String(alternateSelection.universe).padStart(3,"0")} · 深度 ${alternateSelection.depth}/5 · 第 ${(alternateSelection.universe-1)*5+alternateSelection.depth} / 1000 層 · 純視覺預覽`;
+ const cultures=window.ALTERNATE_UNIVERSE_CULTURES||[],rows=window.ALTERNATE_UNIVERSE_NAME_CULTURES||[],names=window.ALTERNATE_UNIVERSE_NAMES||[];
+ const selectedCulture=rows[alternateSelection.universe-1]||"",cultureSelect=$("alternateCulture"),cultureUniverse=$("alternateCultureUniverse");
+ if(cultureSelect.options.length!==cultures.length){cultureSelect.replaceChildren();cultures.forEach(c=>cultureSelect.add(new Option(c,c)));}
+ cultureSelect.value=selectedCulture;
+ const members=rows.map((c,i)=>c===selectedCulture?i+1:0).filter(Boolean);
+ cultureUniverse.replaceChildren();members.forEach((number,i)=>cultureUniverse.add(new Option(`${i+1} 階 · U${String(number).padStart(3,"0")} · ${names[number-1]||""}`,String(number))));
+ cultureUniverse.value=String(alternateSelection.universe);
+
+ const summary=$("alternatePreviewSummary");if(summary)summary.textContent=`${selectedCulture} · ${members.indexOf(alternateSelection.universe)+1}/10 階 · ${names[alternateSelection.universe-1]||""} · `+`第 ${alternateSelection.segment} 區 · U${String(alternateSelection.universe).padStart(3,"0")} · 深度 ${alternateSelection.depth}/5 · 第 ${(alternateSelection.universe-1)*5+alternateSelection.depth} / 1000 層 · 純視覺預覽`;
 }
 
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
@@ -192,6 +200,7 @@ function renderInfo(){
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||!(c.kind==="epoch"||c.kind==="dungeon-hub"||c.kind==="dungeon-bounty"||c.kind==="dungeon-arena");
  $("alternateSegmentLabel").hidden=$("alternateUniverseLabel").hidden=$("alternateDepthLabel").hidden=c.kind!=="frontier-alternate";
  $("alternateQuickControls").hidden=c.kind!=="frontier-alternate";
+ $("alternateCultureLabel").hidden=$("alternateCultureUniverseLabel").hidden=c.kind!=="frontier-alternate";
  if(c.kind==="frontier-alternate")fillAlternateSelectors();
  $("fixtureProgress").closest("label").hidden=c.kind==="frontier-alternate"||c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("advanced-")&&!c.kind.startsWith("frontier-");
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
@@ -249,6 +258,14 @@ $("fixtureProgress").onchange=updateFixture;
 $("alternateSegment").onchange=()=>{alternateSelection.segment=clamp($("alternateSegment").value,1,20);alternateSelection.universe=(alternateSelection.segment-1)*10+1;fillAlternateSelectors();start();};
 $("alternateUniverse").onchange=()=>{alternateSelection.universe=clamp($("alternateUniverse").value,1,200);alternateSelection.segment=Math.ceil(alternateSelection.universe/10);fillAlternateSelectors();start();};
 $("alternateDepth").onchange=()=>{alternateSelection.depth=clamp($("alternateDepth").value,1,5);start();};
+$("alternateCulture").onchange=()=>{
+ const culture=$("alternateCulture").value,number=(window.ALTERNATE_UNIVERSE_NAME_CULTURES||[]).findIndex(v=>v===culture)+1;
+ if(number>0){alternateSelection.universe=number;alternateSelection.segment=Math.ceil(number/10);fillAlternateSelectors();start();}
+};
+$("alternateCultureUniverse").onchange=()=>{
+ const number=clamp($("alternateCultureUniverse").value,1,200);
+ alternateSelection.universe=number;alternateSelection.segment=Math.ceil(number/10);fillAlternateSelectors();start();
+};
 function jumpAlternate(universeDelta,depthDelta){
  alternateSelection.universe=clamp(alternateSelection.universe+universeDelta,1,200);
  alternateSelection.segment=Math.ceil(alternateSelection.universe/10);
