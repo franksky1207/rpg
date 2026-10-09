@@ -15,6 +15,7 @@
 - 使用者優先度：**先覆蓋進入遊戲能看到的所有正式介面／子頁面／動態彈窗**，不是先完成 3D 戰鬥。正式遊戲核心、存檔、Target Context、轉生與高速補播規則不得因視覺改造而變動。
 - 素材、程式、GLB、資產登錄表原則留在單一 `franksky1207/rpg` GitHub 儲存庫，保留原版回退。
 - **狀態：第 01 批程式已提交／靜態核對；瀏覽器與手機實測待補。第 02～40 批未開始。** 其他批次只依使用者指定執行。
+- **2026-10-09 追加 GM 同頁測試入口**：GM → 測試 → 3D 場景測試。`gmhubextensions.js` 註冊測試 section；`gm3dprototype.js` 在原有授權 GM lazy group 載入，使用覆蓋層與 `3d-test/?embedded=1` iframe；點「返回原本畫面」或 Esc 只移除覆蓋層，不呼叫主遊戲 `go/render/reload`，保留原頁面 DOM、GM 展開狀態與捲動。`index.html` 已更新 GM JS cache-bust。靜態核對完成、真實瀏覽器與手機操作仍待驗證。
 - 本次新增 `3d-test/index.html`、`3d-test/prototype-engine.js`、`3d-test/prototype.css`，固定 Babylon.js 7.54.3 測試載入；獨立 WebGL 場景、停用與重啟、失敗 fallback 和 dispose，不觸及正式首頁、存檔與戰鬥。測試頁現用外部固定版 CDN，正式使用前仍需將相依檔納回 GitHub。施工 commits：`b5e664268a9fc11bc83679f22d451398f77bec6a`、`23a229628dca1f91fcdf6f15442d7b7c259f35f2`、`a70438a14f8e7c2a7d3b0e122839d635e052c231`；本次沒有完整瀏覽器 E2E / 手機實測或 exact HEAD CI success。
 - 此 3D 新計畫不覆蓋本交接檔的任何既有遊戲正式現況；每批操作先重讀 current `main`。
 
