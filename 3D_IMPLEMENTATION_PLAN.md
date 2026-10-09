@@ -447,6 +447,8 @@
 
 切勿重建 GM 專用假場景：GM 與正式遊戲共用 3D factory 和 Runtime；測試資料僅 session 唯讀隔離，正式狀態和存檔 owner 不變。首輪／轉生／回顧、進度鎖定、WebGL 回退、桌機／手機直橫式是必要測試維度。每批交接回報都要提供 **「GM 路徑」「正式遊戲路徑」「預期看到」「已驗證／待驗證」**。
 
+- **2026-10-09 GM 3D 測試中心基礎架構已實作、前五批回填**：正式 GM 測試選單改稱「3D 測試中心」，`3d-test/index.html`＋`test-center.js`＋`test-center.css` 已建九大分類、搜尋、八筆案例、session 進度／紀元／情境、共用 Babylon scene factory 顯示、WebGL 故障測試及原 GM 入口返回。仍只有 B01～B05 既有的 3D 能力，B04 突破 Modal、B05 正式 3D 選怪及轉生完整 E2E 尚未完成。新增 Chromium 專屬 CI：run 37900894410 通過；其餘批次必須持續擴充 catalog。
+
 ## 7. 新對話可直接複製的指令
 
 ```text
