@@ -25,3 +25,7 @@
 
 /* Status notices must never cover the camera controls after a successful scene load. */
 .center-workspace .status[hidden]{display:none!important}
+
+/* Status is located above the stage and cannot overlap the 3D control bar. */
+.center-workspace .center-status{position:static!important;margin:0 0 10px;padding:9px 12px;border-radius:9px;border:1px solid #466b87;background:#102942;color:#ceeaff;font-size:13px;pointer-events:auto}
+.center-workspace .center-status[hidden]{display:none!important}
