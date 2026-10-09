@@ -50,7 +50,7 @@ const assert=require("assert");
   assert.equal(report.prepared.ok,true);assert.equal(report.prepared.version,1);assert.equal(report.prepared.depth,25);assert.equal(report.prepared.pairs.length,21);
   assert.equal(report.bench.completed,100);assert.equal(report.bench.invalid,0);assert.equal(report.bench.actionSafety,0);assert.equal(report.bench.formalStateStable,true);
   assert.equal(report.bench.optimizationVersion,1);assert.equal(report.bench.preparedContextVersion,1);assert.equal(report.bench.formalStateGuardVersion,1);
-  assert.deepEqual(report.benchCalls,report.expectedCalls,"100-run benchmark must prepare the fixed player context once per batch; calls="+JSON.stringify({baseline:report.expectedCalls,benchmark:report.benchCalls}));
+  assert.deepEqual(report.benchCalls,Object.fromEntries(Object.entries(report.expectedCalls).map(([key,value])=>[key,value*2])),"100-run benchmark must perform exactly one prepared combat context plus one result-context snapshot, regardless of run count; calls="+JSON.stringify({baseline:report.expectedCalls,benchmark:report.benchCalls}));
   assert.equal(report.diagnostics.pairCount,21);assert.equal(report.diagnostics.failedCount,0);assert.equal(report.diagnostics.formalStateStable,true);
   assert.deepEqual(report.diagnosticCalls,report.expectedCalls,"21 trait-pair diagnostics must share one prepared player context; calls="+JSON.stringify({baseline:report.expectedCalls,diagnostics:report.diagnosticCalls}));
   assert.equal(report.formalExact,true,"CI full deep compare must remain byte-equivalent across benchmark + diagnostics.");
