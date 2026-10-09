@@ -1,0 +1,14 @@
+/* Batch 05: galaxy adventure presentation only. Original target/context owners remain unchanged. */
+.map-screen:not(.universe-adventure-screen) .galaxy-3d-controls,
+.prepare-screen .galaxy-3d-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 14px;border:1px solid #40618b;border-radius:14px;background:linear-gradient(115deg,rgba(8,22,45,.94),rgba(14,35,56,.91));box-shadow:inset 0 1px rgba(169,211,255,.12),0 7px 22px rgba(0,0,0,.22)}
+.galaxy-3d-controls .btn{border-color:#4f94c7;min-height:42px}
+.galaxy-3d-controls .muted{flex:1 1 240px;line-height:1.5}
+.map-screen:not(.universe-adventure-screen) .map-card{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(120deg,rgba(9,22,44,.97),rgba(15,36,60,.96));box-shadow:inset 0 1px rgba(170,220,255,.09)}
+.map-screen:not(.universe-adventure-screen) .map-card::before{content:"";position:absolute;z-index:-1;right:-22px;top:-24px;width:95px;height:95px;border-radius:50%;border:1px solid rgba(91,173,236,.3);box-shadow:0 0 0 16px rgba(83,150,226,.04),0 0 30px rgba(46,139,225,.1);pointer-events:none}
+.map-screen:not(.universe-adventure-screen) .map-card.locked{filter:saturate(.55)}
+.map-screen:not(.universe-adventure-screen) .map-card.cleared::before{border-color:rgba(132,225,200,.6);box-shadow:0 0 0 16px rgba(60,192,153,.06)}
+.prepare-screen .enemy-card{position:relative;overflow:hidden;border-color:rgba(82,125,162,.65);background:linear-gradient(115deg,rgba(13,24,42,.97),rgba(12,34,57,.95))}
+.prepare-screen .enemy-card.active{border-color:#75c9ff;box-shadow:inset 0 0 0 1px rgba(103,204,255,.22),0 0 18px rgba(32,158,255,.12)}
+.prepare-screen .enemy-card .enemy-meta{font-variant-numeric:tabular-nums}
+@media(max-width:680px){.galaxy-3d-controls{padding:10px}.galaxy-3d-controls .btn{width:100%}.galaxy-3d-controls .muted{flex-basis:100%;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.map-screen .map-card::before{animation:none!important}}
