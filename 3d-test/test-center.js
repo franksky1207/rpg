@@ -22,6 +22,20 @@ const typeLabel={ready:"可預覽",partial:"部分完成",planned:"未實作"};
 let runtime=null,serial=0,disabled=false,selected="A-01-ENGINE",category="ALL",loading=false;
 let snapshot={world:1,selectedMap:0,regionProgress:1,life:"first"};
 const entry=()=>cases.find(c=>c.id===selected)||cases[0];
+let maximized=false;
+const maximizeButton=$("maximizePreview");
+function setMaximized(value){
+ maximized=!!value;
+ document.body.classList.toggle("gm-3d-maximized",maximized);
+ $("centerWorkspace").classList.toggle("center-maximized",maximized);
+ maximizeButton.setAttribute("aria-pressed",String(maximized));
+ maximizeButton.setAttribute("aria-label",maximized?"還原 3D 預覽":"最大化 3D 預覽");
+ maximizeButton.textContent=maximized?"⛶ 還原預覽":"⛶ 最大化預覽";
+ runtime?.resize();
+ requestAnimationFrame(()=>runtime?.resize());
+}
+maximizeButton.addEventListener("click",()=>setMaximized(!maximized));
+
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function renderCategories(){
   categoryList.replaceChildren();
@@ -106,14 +120,15 @@ $("contextTest").onclick=()=>{
  const ext=gl?.getExtension("WEBGL_lose_context");
  if(ext)ext.loseContext();else {status.hidden=false;status.textContent="此裝置不支援 WebGL 中斷測試擴充。";}
 };
-window.addEventListener("pagehide",safeStop);
+window.addEventListener("pagehide",()=>{setMaximized(false);safeStop();});
 window.addEventListener("keydown",event=>{
+ if(event.key==="Escape"&&maximized){event.preventDefault();event.stopImmediatePropagation();setMaximized(false);return;}
  if(embedded&&event.key==="Escape"){event.preventDefault();try{window.parent?.postMessage({type:"civilization3d:close"},location.origin);}catch(_){}}
 });
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:1,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot})});
+window.Civilization3DTestCenter=Object.freeze({version:1,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 (async()=>{
  try{
