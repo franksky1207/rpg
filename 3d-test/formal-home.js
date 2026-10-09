@@ -119,7 +119,9 @@ async function toggle(route="home",growthKind=null){
   const frontierSnapshot=(()=>{if(!frontier)return {};
     if(activeRoute==="alternateuniverse"){
       const info=global.alternateUniverseProgressionSnapshot?.(formalState)||{};
-      return {frontierKind:"alternate",frontierProgress:Number(info.deepestCleared)||0,world:3};
+      const deepest=Math.max(0,Math.min(1000,Math.floor(Number(info.deepestCleared)||0)));
+      const next=Math.max(1,Math.min(1000,deepest+1));
+      return {frontierKind:"alternate",frontierProgress:deepest,alternateUniverse:Math.ceil(next/5),alternateDepth:(next-1)%5+1,alternateSegment:Math.ceil(next/50),world:3};
     }
     const second=world>=2&&!!document.querySelector("#main .universe-civilization-summary");
     const phase=second?2:1;
