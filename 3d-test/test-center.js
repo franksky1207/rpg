@@ -50,7 +50,10 @@ function renderCategories(){
   for(const [id,title] of [["ALL","全部場景"],...categories]){
     const btn=document.createElement("button");btn.type="button";btn.className="center-category"+(category===id?" active":"");
     btn.setAttribute("aria-pressed",String(category===id));
-    btn.textContent=title;
+    const count=id==="ALL"?cases.length:counts[id];
+    const name=document.createElement("span");name.className="center-category-name";name.textContent=title;
+    const number=document.createElement("span");number.className="center-category-count";number.textContent=String(count);
+    btn.append(name,number);
     btn.onclick=()=>{category=id;renderCategories();renderCases();};
     categoryList.append(btn);
   }
@@ -61,7 +64,8 @@ function renderCases(){
  for(const c of cases.filter(c=>(category==="ALL"||c.cat===category)&&[c.title,c.detail,categories.find(([id])=>id===c.cat)?.[1]].join(" ").toLowerCase().includes(q))){
    const btn=document.createElement("button");btn.type="button";btn.className="center-case"+(selected===c.id?" active":"");
    btn.setAttribute("aria-pressed",String(selected===c.id));
-   btn.textContent=c.title;
+   const label=document.createElement("span");label.className="center-case-label";label.textContent=c.title;
+   btn.append(label);
    btn.onclick=()=>{selected=c.id;renderCases();renderInfo();start();};
    caseList.append(btn);
  }
