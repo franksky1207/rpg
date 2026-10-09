@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 第 05 批實機入口修正：使用者確認是在正式銀河紀元冒險十區列表，不是回顧戰；`worldmapui.js` 的正式 `adventureMapPage()` 原本以 `typeof galaxy3dPreviewControl` 的條件式輸出按鈕，會在跨 script 作用域不可見時靜默省略。現已改為正式地圖 owner 直接輸出按鈕，`index.html` 更新 worldmapui cache-bust；另新增 `tests/runtime/galaxy-3d-button-browser.js` 和獨立 CI `.github/workflows/galaxy-3d-button-smoke.yml`，以 Chromium 真正 render `go('adventure')` 驗證按鈕與正式區域列表。非轉生回顧頁問題，未修改戰鬥或存檔。**
+
 - **第 05 批 CI 補充（2026-10-09）**：GitHub exact-HEAD Runtime Integrity 在 `tests/runtime/js-integrity.js` 的既有 GM script-group loader cache 契約失敗（production `index.html` 已累積 v5～v8 cache token，但舊測試只允許到 v4）；暫時核對完整字串後下一項既有 GM 授權 owner 契約仍失敗。此為跨模組舊測試／正式程式不一致，非第 05 批新 JavaScript 語法失敗；已撤回臨時修改該舊測試的提交內容，未在本批放寬其他 GM 驗收。**Runtime Integrity 未通過；Playwright 瀏覽器 smoke 因前段失敗未執行**。詳見 [CI run 37894390745](https://github.com/franksky1207/rpg/actions/runs/37894390745)、[後續 CI run 37894599615](https://github.com/franksky1207/rpg/actions/runs/37894599615)。
 - **2026-10-09 3D 第 05 批銀河冒險施工**：正式地圖 owner `worldmapui.js` 與準備頁 owner `ui.js` 加入手動「預覽 3D 銀河星圖」，`3d-test/prototype-engine.js` 新增十區域節點／五怪象徵 3D 幾何（只讀正式 WORLD_REGIONS、unlockedMap、selectedMap，按 mapStart 判定大區鎖定），`3d-test/formal-home.js` 將隔離 Canvas 用於冒險頁，切離冒險或進戰鬥自動回退並釋放；`3d-test/galaxy-b05.css` 更新地圖卡／怪物卡科幻視覺與響應式排版；`index.html` 已更新 cache-bust。**正式區域／怪物／進度／鎖定／戰鬥 Target Context／背包返回均沿原版 owner**。本批是 WebGL 星圖預覽與 HTML 原版流程共存，不是全頁 3D 選怪；真機、手機、回顧與不同進度存檔仍待驗，不能標記全面 L1 驗收。詳見 `3D_IMPLEMENTATION_PLAN.md` 第 05 批。
 
