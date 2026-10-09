@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 共用 3D 大小模式**：`3d-test/runtime.js` 新增「放大視窗／還原視窗／關閉」操作（原 ＋／－／視角重置保留），直接切換 host class，不建立新場景／相機，並呼叫 engine.resize；`3d-test/preview-expand.css` 桌機中央寬約 85vw、高 80dvh、手機直式寬 95vw／高 88dvh、橫式矮螢幕 94vw／92dvh，沒有強制旋轉。`3d-test/formal-home.js` 關閉走正式 bridge；`index.html` 已更新快取。Chromium 專屬測試增加 class 與 Canvas/Camera identity 驗證；真機手機、桌機視覺布局仍須人工確認。
+
 - **2026-10-09 3D 相機操作改善**：`3d-test/runtime.js` 共用 3D 預覽新增「＋」「－」「⟲ 重置視角」三控制鈕，並以 `{passive:false}` 於啟用中之 canvas 攔截 wheel 預設頁面捲動，畫布外維持原本滾動；scene 啟動時保存相機初始 radius/alpha/beta，dispose 移除新事件監聽。`index.html` 已更新 cache-bust。`tests/runtime/galaxy-3d-button-browser.js` 增加 mock engine + Chromium DOM 視角控制／wheel event 驗證，獨立 browser smoke workflow 已納入 3D runtime 檔案變更觸發。仍需實際桌機滾輪／手機觸控驗收。
 
 - **2026-10-09 轉生銀河預覽入口補修**：使用者實測確認首輪銀河有入口、轉生重返正式銀河卻無。針對不同 world1 rerun HTML owner，新增正式 `render()` 後的 `civilization3dHomeRouteRendered()` 容錯補入口：只在 `currentWorldPhase()===1` 且正式 `getAdventureEraView()==='galaxy'` 的冒險區域列表補上按鈕，已存在則不重複；回顧世界不補。未更動世界判定與正式戰鬥 owner。 `tests/runtime/galaxy-3d-button-browser.js` 新增首輪銀河／轉生銀河／銀河回顧三情境（測試虛擬紀元路由與 DOM，不冒充真實轉生完整 E2E）。
