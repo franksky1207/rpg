@@ -14,11 +14,12 @@ async function load(){
  })().catch(error=>{loading=null;throw error;});
  return loading;
 }
-let activeRoute="home";
+let activeRoute="home",activeEra="";
 async function toggle(route="home"){
  if(enabled){hide();return;}
  const h=host();if(!h||!global.Civilization3DRuntime)return;
  activeRoute=route;
+ activeEra=route==="adventure"?(global.getAdventureEraView?.()||""):"";
  const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
  try{
   await load();
@@ -28,16 +29,16 @@ async function toggle(route="home"){
   runtime.setQuality("low");
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const era=global.getAdventureEraView?.()||"";
-  const galaxy=activeRoute==="adventure"&&world===1&&era==="galaxy";
+  const galaxy=activeRoute==="adventure"&&((world===1&&era==="galaxy")||((world===2||world===3)&&era==="galaxy-review"));
   const universe=activeRoute==="adventure"&&((world===2&&era==="universe")||(world===3&&era==="universe-review"));
   const create=universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
-  const mapIndex=typeof selectedMap==="number"?selectedMap:0;
+  const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
   const unlockedIndex=Number(formalState?.unlockedMap)||0;
   const regionList=Array.isArray(regions)?regions:[];
   const selectedRegion=regionList.reduce((last,region,i)=>mapIndex>=Number(region.mapStart)?i:last,0);
-  const unlockedRegions=regionList.map(region=>unlockedIndex>=Number(region.mapStart));
+  const unlockedRegions=regionList.map(region=>era==="galaxy-review"||unlockedIndex>=Number(region.mapStart));
   const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
   const highest=typeof global.secondWorldHighestUnlockedBossIndex==="function"?Number(global.secondWorldHighestUnlockedBossIndex()):0;
   const cleared=bosses.filter(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)).length;
@@ -75,6 +76,22 @@ function ensureGalaxyMainlineControl(view){
  controls.append(button,hint);
  regions.before(controls);
 }
+function ensureGalaxyReviewControl(view){
+ if(view!=="adventure")return;
+ const world=Number(global.currentWorldPhase?.()||0),era=global.getAdventureEraView?.();
+ if(!([2,3].includes(world)&&era==="galaxy-review"))return;
+ const screen=document.querySelector("#main .galaxy-review-adventure-screen");
+ if(!screen||screen.querySelector("#civilization3dGalaxyToggle"))return;
+ const list=screen.querySelector(".galaxy-review-region-list");
+ if(!list)return;
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.id="civilization3dGalaxyToggle";button.className="btn";button.type="button";
+ button.setAttribute("aria-pressed","false");button.textContent="預覽 3D 銀河星圖";
+ button.addEventListener("click",()=>toggle("adventure"));
+ const hint=document.createElement("span");hint.className="muted";
+ hint.textContent="銀河回顧星圖僅供觀看；正式回顧挑戰由原本地圖按鈕操作。";
+ controls.append(button,hint);list.before(controls);
+}
 function ensureUniverseControl(view){
  if(view!=="adventure")return;
  const world=Number(global.currentWorldPhase?.()||0),era=global.getAdventureEraView?.();
@@ -94,9 +111,10 @@ function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
   const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
-  if(!((world===1&&era==="galaxy")||(world===2&&era==="universe")||(world===3&&era==="universe-review")))hide();
+  if(era!==activeEra||!((world===1&&era==="galaxy")||([2,3].includes(world)&&era==="galaxy-review")||(world===2&&era==="universe")||(world===3&&era==="universe-review")))hide();
  }
  ensureGalaxyMainlineControl(view);
+ ensureGalaxyReviewControl(view);
  ensureUniverseControl(view);
  syncButton();
 }
