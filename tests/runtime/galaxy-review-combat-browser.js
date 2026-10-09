@@ -33,6 +33,8 @@ const assert=require("node:assert/strict");
     window.clearPreparedFirstWorldTargetContext?.();
     window.prepareFirstWorldTargetContextFromSelection=()=>null;
     window.prepareFirstWorldTargetContext=()=>null;
+    window.setAdventureEraView("galaxy-review");
+    window.openGalaxyReviewMap(0);
    });
    const before=await formalSnapshot();
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
