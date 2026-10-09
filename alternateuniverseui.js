@@ -64,10 +64,11 @@
  function reconcileInitialHome(){
   if(typeof view==="undefined"||view!=="home"||typeof render!=="function")return;
   const main=document.getElementById("main");
-  if(!main||main.querySelector(".alternate-universe-home-entry"))return;
+  if(!main||main.querySelector("[data-alternate-universe-home-entry]"))return;
   const entry=homeEntryHtml();
   if(!entry)return;
   render();
  }
- queueMicrotask(reconcileInitialHome);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",reconcileInitialHome,{once:true});
+ else queueMicrotask(reconcileInitialHome);
 })();
