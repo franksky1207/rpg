@@ -19,10 +19,10 @@ const uiPos=index.indexOf('src="ui.js?');
 assert(authPos>=0&&uiPos>authPos,"GM authorization startup owner must load before ui.js.");
 
 function makeContext(authorized,initialGm){
- const storage=new Map(authorized?[["civilization-war-gm-authorized-v1","1"]]:[]);
+ const storage=new Map(authorized?[["civilization-war-gm-authorized-v2-account-user-a","1"]]:[]);
  const before=[],settlement=[];
  const state={gm:initialGm===true};
- const window={
+ const window={civilizationAuthSession:{user:{id:"user-a"}},
   registerBeforeSaveHook:(id,fn)=>{before.push({id,fn});return true;},
   registerSaveSettlementHook:(id,fn)=>{settlement.push({id,fn});return true;},
   getBeforeSaveHookIds:()=>before.map(x=>x.id),
@@ -53,6 +53,21 @@ assert(authorized.state.gm===true,"Save settlement must restore runtime GM flag.
 const legacy=makeContext(false,true);
 const l=legacy.window.gmReconcileRuntimeAuthorizationAfterLoad(legacy.state);
 assert(l.authorized===false&&l.legacyCleared===true&&legacy.state.gm===false,"Unauthorized legacy save gm=true must be cleared in-memory without a second save owner.");
+
+const legacyDevice=makeContext(false,false);
+legacyDevice.storage.set("civilization-war-gm-authorized-v1","1");
+assert(legacyDevice.window.gmRuntimeAuthorizationAuthorized()===false,"Unscoped legacy GM flag must never authorize an account.");
+legacyDevice.window.civilizationAuthSession={user:{id:"user-b"}};
+assert(legacyDevice.window.gmRuntimeAuthorizationAuthorized()===false,"Different account must fail closed.");
+legacyDevice.window.civilizationAuthSession={user:{id:"user-a"}};
+assert(legacyDevice.window.gmSetRuntimeAuthorization(true)===true,"Explicitly authorized current account should persist.");
+assert(legacyDevice.window.gmRuntimeAuthorizationAuthorized()===true,"Same signed-in account should restore.");
+assert(legacyDevice.storage.has("civilization-war-gm-authorized-v1")===false,"Legacy device-wide grant must retire.");
+legacyDevice.window.civilizationAuthSession={user:{id:"user-b"}};
+assert(legacyDevice.window.gmRuntimeAuthorizationAuthorized()===false,"GM account A cannot authorize B.");
+legacyDevice.window.gmClearCurrentRuntimeAuthorization("user-a");
+legacyDevice.window.civilizationAuthSession={user:{id:"user-a"}};
+assert(legacyDevice.window.gmRuntimeAuthorizationAuthorized()===false,"Signout must revoke current account grant.");
 
 const clean=makeContext(false,false);
 const n=clean.window.gmReconcileRuntimeAuthorizationAfterLoad(clean.state);
