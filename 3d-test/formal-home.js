@@ -4,16 +4,16 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle","civilization3dDungeonToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 八種專精":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):id==="civilization3dDungeonToggle"?(b.dataset.previewLabel||"預覽 3D 副本作戰中心"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle","civilization3dDungeonToggle","civilization3dAdvancedToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 八種專精":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):id==="civilization3dDungeonToggle"?(b.dataset.previewLabel||"預覽 3D 副本作戰中心") :id==="civilization3dAdvancedToggle"?(b.dataset.previewLabel||"預覽 3D 副本"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13";
 async function load(){
- if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createDungeonScene)return;
+ if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createDungeonAdvancedScene)return;
  if(!loading)loading=Promise.all([
    global.BABYLON?.Engine?Promise.resolve():script(BABYLON_SRC),
-   global.Civilization3DPrototype?.createDungeonScene?Promise.resolve():script(SCENE_SRC)
- ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createDungeonScene)throw new Error("3d-modules-unavailable");})
+   global.Civilization3DPrototype?.createDungeonAdvancedScene?Promise.resolve():script(SCENE_SRC)
+ ]).then(()=>{if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createDungeonAdvancedScene)throw new Error("3d-modules-unavailable");})
  .catch(error=>{loading=null;throw error;});
  return loading;
 }
@@ -54,7 +54,8 @@ async function toggle(route="home",growthKind=null){
   const forge=activeRoute==="enhancement";
   const growth=activeRoute==="specialization"||!!activeGrowthKind;
   const dungeon=["dungeon","dungeon-bounty","dungeon-arena"].includes(activeRoute);
-  const create=dungeon?global.Civilization3DPrototype.createDungeonScene:growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const advanced=(activeRoute==="dungeon-arena"&&Number(global.currentWorldPhase?.()||0)===3)||["dungeon-mirror","dungeon-void-mirage"].includes(activeRoute);
+  const create=advanced?global.Civilization3DPrototype.createDungeonAdvancedScene:dungeon?global.Civilization3DPrototype.createDungeonScene:growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
   const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
@@ -94,7 +95,19 @@ async function toggle(route="home",growthKind=null){
     const available=dungeonAvailableModes.filter(Boolean).length;
     return {dungeonKind,dungeonPhase:phase?.phase==="ready"?"ready":"select",dungeonRemaining:Number.isFinite(Number(remaining))?Math.max(0,Number(remaining)):available,dungeonUnlocked:activeRoute==="dungeon"||!!phase,dungeonAvailableModes};
   })();
-  const snapshot=dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const advancedSnapshot=(()=>{if(!advanced)return {};
+    if(activeRoute==="dungeon-arena"){
+      const a=global.getArenaCoreState?.()||{},rt=a.runtime||{};
+      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,advancedUnlocked:true};
+    }
+    if(activeRoute==="dungeon-mirror"){
+      const info=global.mirrorDungeonStatus?.()||{},history=info.history||{};
+      return {advancedKind:"mirror",advancedProgress:Number(history.bestWins)||0,advancedUnlocked:info.unlocked===true};
+    }
+    const progress=global.getVoidMirageProgressSnapshot?.()||global.getVoidMirageRunSnapshot?.()||{};
+    return {advancedKind:"void",advancedProgress:Number(progress.highestCleared??progress.historicalHighest)||0,advancedUnlocked:true};
+  })();
+  const snapshot=advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
@@ -249,6 +262,7 @@ function ensureGrowthPageControls(view){
 }
 function ensureDungeonControl(view){
  if(!["dungeon","dungeon-bounty","dungeon-arena"].includes(view))return;
+ if(view==="dungeon-arena"&&Number(global.currentWorldPhase?.()||0)===3)return;
  const main=document.getElementById("main");
  if(!main||main.querySelector("#civilization3dDungeonToggle"))return;
  const phase=view==="dungeon-bounty"?global.getBountyTestSnapshot?.()?.phase:view==="dungeon-arena"?global.getArenaCoreState?.()?.phase:"select";
@@ -264,8 +278,25 @@ function ensureDungeonControl(view){
  const hint=document.createElement("span");hint.className="muted";hint.textContent="僅供立體觀看；次數、獎勵、鎖定及正式挑戰仍由原頁決定。";
  controls.append(button,hint);shell.prepend(controls);
 }
+function ensureAdvancedDungeonControl(view){
+ if(!["dungeon-arena","dungeon-mirror","dungeon-void-mirage"].includes(view))return;
+ if(view==="dungeon-arena"&&Number(global.currentWorldPhase?.()||0)!==3)return;
+ const main=document.getElementById("main");
+ if(!main||main.querySelector("#civilization3dAdvancedToggle"))return;
+ const arena=global.getArenaCoreState?.();
+ if(view==="dungeon-arena"&&arena?.phase!=="select")return;
+ if(view==="dungeon-void-mirage"&&main.querySelector(".void-combat"))return;
+ const shell=view==="dungeon-arena"?main.querySelector(".w3-arena-shell"):view==="dungeon-mirror"?main.querySelector(".mirror-page"):main.querySelector(".void-shell");
+ if(!shell)return;
+ const label=view==="dungeon-arena"?"預覽 3D 高維競技場":view==="dungeon-mirror"?"預覽 3D 鏡像紀錄":"預覽 3D 虛空樓層";
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.className="btn";button.type="button";button.id="civilization3dAdvancedToggle";
+ button.dataset.previewLabel=label;button.textContent=label;button.setAttribute("aria-pressed","false");button.addEventListener("click",()=>toggle(view));
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="立體展示只讀取目前副本狀態，不修改正式挑戰或獎勵。";
+ controls.append(button,hint);shell.prepend(controls);
+}
 function onRendered(view){
- if(enabled&&["dungeon","dungeon-bounty","dungeon-arena"].includes(view)&&view===activeRoute)hide();
+ if(enabled&&["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage"].includes(view)&&view===activeRoute)hide();
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
   const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
@@ -281,6 +312,7 @@ function onRendered(view){
  ensureGrowthControl(view);
  ensureGrowthPageControls(view);
  ensureDungeonControl(view);
+ ensureAdvancedDungeonControl(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
