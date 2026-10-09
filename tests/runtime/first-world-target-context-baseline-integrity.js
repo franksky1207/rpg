@@ -112,7 +112,7 @@ const assert=require("assert");
   assert.equal(report.rerunTarget.valid.authorized,true);assert.equal(report.rerunTarget.valid.mapIndex,99);assert.equal(report.rerunTarget.valid.enemyIndex,4);
   assert.equal(report.rerunTarget.invalid.valid,false);assert.equal(report.rerunTarget.invalid.authorized,false);
   assert.equal(report.rerunProgress.rerunMultiplier,13);assert.equal(report.rerunProgress.firstRunMultiplier,1);assert.equal(report.rerunProgress.conquestOk,true);assert.equal(report.rerunProgress.arenaCoverage,2);
-  assert.equal(report.review.reviewNormalOk,true);assert.equal(report.review.reviewBossOk,true);assert.equal(report.review.formalStateStable,true);assert.equal(report.review.formalSelectionStable,true);assert.equal(report.review.runtimeVersion,7);assert.equal(report.review.stateGuardVersion,2);
+  assert.equal(report.review.reviewNormalOk,true);assert.equal(report.review.reviewBossOk,true);assert.equal(report.review.formalStateStable,true);assert.equal(report.review.formalSelectionStable,true);assert.equal(report.review.runtimeVersion,8);assert.equal(report.review.stateGuardVersion,2);
   assert.deepEqual(report.runtimeContracts,{continuous:1,minimal:1,fastCatchUp:1,specialPacing:1,specialWorldGuard:1,offlineSample:4,mainRealSample:4,bossStoryPipeline:2,rerunBackfill:2});
   Object.entries(report.sourceContracts).forEach(([name,value])=>assert.equal(value,true,`Baseline source contract failed: ${name}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
