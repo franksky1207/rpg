@@ -371,7 +371,7 @@
     for(let i=0;i<modeTotal;i++){
       const angle=(i-(modeTotal-1)/2)*.46;
       const x=Math.sin(angle)*6.8,z=Math.cos(angle)*2.1;
-      const active=mode==="hub"?i<2||args.dungeonExtraUnlocked===true:modeUnlocked&&count>0;
+      const active=mode==="hub"?(Array.isArray(args.dungeonAvailableModes)?args.dungeonAvailableModes[i]===true:false):modeUnlocked&&count>0;
       const surface=active?(mode==="arena"?purple:mode==="bounty"?gold:i===0?gold:purple):inactive;
       const disk=B.MeshBuilder.CreateCylinder("dungeon-node-base-"+i,{diameter:1.45,height:.25,tessellation:32},scene);
       disk.position.set(x,-.38,z);disk.material=iron;
