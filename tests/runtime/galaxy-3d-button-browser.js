@@ -59,6 +59,28 @@ const assert = require("node:assert/strict");
     });
     for(const entry of matrix)assert.equal(entry.count,entry.expected,entry.name+" incorrect preview button");
     console.log("PASS Galaxy route matrix "+JSON.stringify(matrix));
+    // Real event regression: opening a Galaxy review map must show the enemy selector.
+    const reviewClick=await page.evaluate(()=>{
+      const entered=window.isSecondWorldEntered,phase=window.currentWorldPhase,era=window.getAdventureEraView;
+      const main=document.querySelector("#main"),original=main.innerHTML;
+      try{
+        window.isSecondWorldEntered=()=>true;
+        window.currentWorldPhase=()=>2;
+        window.getAdventureEraView=()=>"galaxy-review";
+        window.go("adventure");
+        const card=main.querySelector(".galaxy-review-action");
+        if(!card)return {button:false,html:main.innerHTML.slice(0,300)};
+        card.click();
+        return {button:true,prepared:!!main.querySelector(".galaxy-review-prepare"),html:main.innerHTML.slice(0,350)};
+      }catch(e){return {button:true,error:String(e),stack:String(e.stack||"")};}
+      finally{
+        window.isSecondWorldEntered=entered;window.currentWorldPhase=phase;window.getAdventureEraView=era;
+        main.innerHTML=original;
+      }
+    });
+    assert.equal(reviewClick.button,true,"No Galaxy review challenge button: "+JSON.stringify(reviewClick));
+    assert.equal(reviewClick.prepared,true,"Galaxy review challenge did not open monster selector: "+JSON.stringify(reviewClick));
+    console.log("PASS Galaxy review challenge click "+JSON.stringify(reviewClick));
     const cameraChecks = await page.evaluate(async()=>{
       const original=window.BABYLON;
       const callbacks=[];
