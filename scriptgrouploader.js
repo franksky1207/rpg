@@ -27,12 +27,12 @@
  function gmAuthorized(){return typeof window.gmRuntimeAuthorizationAuthorized==="function"&&window.gmRuntimeAuthorizationAuthorized()===true;}
  function setGmAuthorized(value){return typeof window.gmSetRuntimeAuthorization==="function"&&window.gmSetRuntimeAuthorization(value===true)===true;}
  function setRuntimeGmFlag(value){return typeof window.gmSetRuntimeAuthorizationFlag==="function"&&window.gmSetRuntimeAuthorizationFlag(value===true)===true;}
- function restoreAuthorizedGmFlagEarly(){if(!gmAuthorized())return false;return setRuntimeGmFlag(true);}
+ function restoreAuthorizedGmFlagEarly(){return setRuntimeGmFlag(gmAuthorized());}
  function gmAuthorizationSnapshot(){
   if(typeof window.gmRuntimeAuthorizationSnapshot==="function")return window.gmRuntimeAuthorizationSnapshot();
-  return Object.freeze({version:GM_AUTHORIZATION_VERSION,scope:"browser-local-runtime",authorized:false,runtimeFlag:false,saveStateAuthoritative:false,key:null});
+  return Object.freeze({version:GM_AUTHORIZATION_VERSION,scope:"account-local-runtime",authorized:false,runtimeFlag:false,saveStateAuthoritative:false,key:null});
  }
- function activationSnapshot(){return Object.freeze({version:ACTIVATION_POLICY_VERSION,behaviorVersion:LOAD_BEHAVIOR_VERSION,story:"post-load-sequenced",gm:"browser-local-authorization-or-password-modal-on-demand",integrity:"diagnostics-explicit-only",autoGroups:Array.from(AUTO_GROUPS),savedGmAuthorized:false,gmAuthorization:gmAuthorizationSnapshot()});}
+ function activationSnapshot(){return Object.freeze({version:ACTIVATION_POLICY_VERSION,behaviorVersion:LOAD_BEHAVIOR_VERSION,story:"post-load-sequenced",gm:"account-local-authorization-or-password-modal-on-demand",integrity:"diagnostics-explicit-only",autoGroups:Array.from(AUTO_GROUPS),savedGmAuthorized:false,gmAuthorization:gmAuthorizationSnapshot()});}
  function snapshot(){const groups={};GROUP_ORDER.forEach(group=>{groups[group]=groupReports.get(group)||Object.freeze({version:VERSION,group,status:"pending",count:declarations(group).length});});return Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,order:Array.from(GROUP_ORDER),autoGroups:Array.from(AUTO_GROUPS),activation:activationSnapshot(),groups:Object.freeze(groups),storyRuntimeIntegrityGroup:"integrity"});}
  async function autoLoad(){for(const group of AUTO_GROUPS){try{await loadGroup(group);}catch(error){console.error(`[ScriptGroupLoader] ${group}`,error);}}}
  function diagnosticsRequested(){try{const params=new URLSearchParams(location.search||"");if(params.get("production")==="1")return false;const explicit=params.get("integrity")==="1"||params.get("diagnostics")==="1",local=location.hostname==="127.0.0.1"||location.hostname==="localhost";return explicit||local;}catch(_){return false;}}
@@ -50,12 +50,14 @@
   }
  }
  async function authorizeGmRuntime(){if(!setGmAuthorized(true))return false;setRuntimeGmFlag(true);return ensureAuthorizedGmRuntime({retry:true});}
- function revokeGmRuntimeAuthorization(){const ok=setGmAuthorized(false);setRuntimeGmFlag(false);return ok;}
+ function revokeGmRuntimeAuthorization(){const ok=typeof window.gmClearCurrentRuntimeAuthorization==="function"?window.gmClearCurrentRuntimeAuthorization():setGmAuthorized(false);setRuntimeGmFlag(false);return ok;}
  function installGmPasswordBridge(){
   const base=window.unlockGM;if(typeof base!=="function")return false;if(base.__gmRuntimeAuthorizationVersion===GM_AUTHORIZATION_VERSION)return true;
   const wrapped=function(){let before=false;try{before=state?.gm===true;}catch(_){ }const result=base.apply(this,arguments);let accepted=false;try{accepted=!before&&state?.gm===true;}catch(_){ }if(accepted)authorizeGmRuntime();return result;};
   wrapped.__gmRuntimeAuthorizationVersion=GM_AUTHORIZATION_VERSION;window.unlockGM=wrapped;return true;
  }
+ window.addEventListener("civilization-auth-ready",()=>{restoreAuthorizedGmFlagEarly();if(gmAuthorized())ensureAuthorizedGmRuntime({retry:true}).catch(error=>console.error("[ScriptGroupLoader] account GM restore",error));});
+ window.addEventListener("civilization-auth-signed-out",()=>{setRuntimeGmFlag(false);});
  function observeGmActivation(){const modal=document.getElementById("passwordModal");if(!modal||typeof MutationObserver!=="function")return;const activate=()=>{const className=String(modal.className||""),visible=className!=="modal"||modal.getAttribute("aria-hidden")==="false"||modal.style.display==="block";if(!visible)return;if(gmAuthorized())ensureAuthorizedGmRuntime({retry:true}).catch(error=>console.error("[ScriptGroupLoader] gm authorized retry",error));else loadGroup("gm").catch(error=>console.error("[ScriptGroupLoader] gm",error));};new MutationObserver(activate).observe(modal,{attributes:true,attributeFilter:["class","style","aria-hidden"]});activate();}
  async function loadDiagnostics(){try{await loadGroup("gm");}catch(error){console.error("[ScriptGroupLoader] gm",error);}try{await loadGroup("integrity");}catch(error){console.error("[ScriptGroupLoader] integrity",error);}}
  function refreshGmStartupSlot(){
@@ -73,6 +75,6 @@
  function schedule(){restoreAuthorizedGmFlagEarly();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",restoreAuthorizedGmFlagEarly,{once:true});const start=()=>setTimeout(()=>{restoreAuthorizedGmFlagEarly();installGmPasswordBridge();autoLoad();ensureAuthorizedGmRuntime();observeGmActivation();if(diagnosticsRequested())loadDiagnostics();},AUTO_START_DELAY_MS);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();}
 
  const namespace=Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,activationPolicyVersion:ACTIVATION_POLICY_VERSION,loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,gmAuthorizationVersion:GM_AUTHORIZATION_VERSION,gmEarlyRuntimeRestoreVersion:GM_EARLY_RUNTIME_RESTORE_VERSION,gmAuthorizedGroupRetryVersion:GM_AUTHORIZED_GROUP_RETRY_VERSION,ensure:loadGroup,restoreAuthorizedGmFlagEarly,ensureAuthorizedGmRuntime,authorizeGmRuntime,revokeGmRuntimeAuthorization,gmAuthorizationSnapshot,snapshot,activationSnapshot});
- window.CivilizationScriptLoader=namespace;window.SCRIPT_GROUP_LOADER_VERSION=VERSION;window.GM_RUNTIME_EARLY_RESTORE_VERSION=GM_EARLY_RUNTIME_RESTORE_VERSION;window.GM_AUTHORIZED_GROUP_RETRY_VERSION=GM_AUTHORIZED_GROUP_RETRY_VERSION;window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2;window.GM_RUNTIME_AUTHORIZATION_VERSION=GM_AUTHORIZATION_VERSION;window.GM_RUNTIME_AUTHORIZATION_SCOPE="browser-local-runtime";window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=typeof window.gmInstallRuntimeAuthorizationSaveBoundary==="function"?window.gmInstallRuntimeAuthorizationSaveBoundary():false;
+ window.CivilizationScriptLoader=namespace;window.SCRIPT_GROUP_LOADER_VERSION=VERSION;window.GM_RUNTIME_EARLY_RESTORE_VERSION=GM_EARLY_RUNTIME_RESTORE_VERSION;window.GM_AUTHORIZED_GROUP_RETRY_VERSION=GM_AUTHORIZED_GROUP_RETRY_VERSION;window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2;window.GM_RUNTIME_AUTHORIZATION_VERSION=GM_AUTHORIZATION_VERSION;window.GM_RUNTIME_AUTHORIZATION_SCOPE="account-local-runtime";window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=typeof window.gmInstallRuntimeAuthorizationSaveBoundary==="function"?window.gmInstallRuntimeAuthorizationSaveBoundary():false;
  window.ensureCivilizationScriptGroup=loadGroup;window.civilizationScriptGroupSnapshot=snapshot;schedule();
 })();
