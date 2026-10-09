@@ -29,7 +29,9 @@ async function toggle(route="home"){
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const galaxy=activeRoute==="adventure"&&world===1;
   const create=galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
-  const snapshot=galaxy?{mapCount:Array.isArray(global.MAPS)?global.MAPS.length:10,selectedMap:typeof selectedMap==="number"?selectedMap:0,unlockedMap:Number(global.state?.unlockedMap)||0,enemyCount:5}:{};
+  const maps=typeof MAPS!=="undefined"?MAPS:global.MAPS;
+  const formalState=typeof state!=="undefined"?state:global.state;
+  const snapshot=galaxy?{mapCount:Array.isArray(maps)?maps.length:10,selectedMap:typeof selectedMap==="number"?selectedMap:0,unlockedMap:Number(formalState?.unlockedMap)||0,enemyCount:5}:{};
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
