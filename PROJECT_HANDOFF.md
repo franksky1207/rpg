@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 GM 3D 狀態文字遮擋再修正**：使用者實機反映前次成功隱藏仍會看到底部文字，且當時 GitHub Pages 已成功部署；此回合將 `#status` DOM **徹底從 `.stage` 搬到 `.center-workspace` 內的 3D 畫面上方**，通知只在 loading／錯誤／WebGL 事件顯示，正常時 hidden；同步 CSS、JS cache bust、GM iframe URL 版本化及 `index.html` cache bust，並新增 DOM 位置瀏覽器回歸斷言。原本只是 hidden 的修法不可視為已驗收。須待 GitHub Pages 部署與使用者桌機／手機再次確認。
+
 - **2026-10-09 GM 3D 狀態列遮擋鏡頭按鈕修正**：`3d-test/test-center.js` 在成功載入後隱藏底部 `#status`，保留載入中／失敗／WebGL 復原顯示；`test-center.css` 新增 `[hidden]` 明確隱藏規則；`3d-test/index.html` 更新 JS/CSS cache-bust。`tests/runtime/gm-3d-test-center-browser.js` 加入成功場景遮擋回歸測試，須待 CI 確認結果。正式遊戲 preview 不受影響。
 
 - **2026-10-09 GM 3D 測試中心基礎架構已實作、前五批回填**：正式 GM 測試選單改稱「3D 測試中心」，`3d-test/index.html`＋`test-center.js`＋`test-center.css` 已建九大分類、搜尋、八筆案例、session 進度／紀元／情境、共用 Babylon scene factory 顯示、WebGL 故障測試及原 GM 入口返回。仍只有 B01～B05 既有的 3D 能力，B04 突破 Modal、B05 正式 3D 選怪及轉生完整 E2E 尚未完成。新增 Chromium 專屬 CI：run 37900894410 通過；其餘批次必須持續擴充 catalog。
