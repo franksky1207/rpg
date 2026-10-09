@@ -44,9 +44,35 @@ async function toggle(route="home"){
   document.body.classList.add("civilization-3d-home-on");
  }catch(error){if(ticket===epoch)hide();}
 }
+function ensureGalaxyMainlineControl(view){
+ if(view!=="adventure")return;
+ const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):NaN;
+ const era=typeof global.getAdventureEraView==="function"?global.getAdventureEraView():world===1?"galaxy":"";
+ if(world!==1||era!=="galaxy")return;
+ const main=document.getElementById("main");
+ if(!main||main.querySelector("#civilization3dGalaxyToggle"))return;
+ const screen=main.querySelector(".map-screen:not(.galaxy-review-adventure-screen):not(.universe-adventure-screen)");
+ const regions=screen?.querySelector(".world-region-list");
+ if(!regions)return;
+ const controls=document.createElement("div");
+ controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");
+ button.id="civilization3dGalaxyToggle";
+ button.className="btn";
+ button.type="button";
+ button.setAttribute("aria-pressed","false");
+ button.textContent="預覽 3D 銀河星圖";
+ button.addEventListener("click",()=>toggle("adventure"));
+ const hint=document.createElement("span");
+ hint.className="muted";
+ hint.textContent="立體預覽不改變正式地圖、怪物或戰鬥選擇。";
+ controls.append(button,hint);
+ regions.before(controls);
+}
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
- else syncButton();
+ ensureGalaxyMainlineControl(view);
+ syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
 global.civilization3dToggleGalaxy=()=>toggle("adventure");
