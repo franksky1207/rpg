@@ -87,7 +87,7 @@
    ["manage","副本管理",lateWindowRenderer("gmDungeonManagementHtml"),{id:"dungeon-manage"}],
    ["test","角色能力測試",lateWindowRenderer("gmPlayerAbilityTestHtml"),{id:"player-ability-test"}],
    ["test","劇情測試",gmStoryTestSectionHtml,{id:"gm-story-test"}],
-   ["test","3D 場景測試",lateWindowRenderer("gm3DPrototypeTestHtml"),{id:"gm-3d-prototype-test"}],
+   ["test","3D 測試中心",lateWindowRenderer("gm3DPrototypeTestHtml"),{id:"gm-3d-prototype-test"}],
   ];
   registrations.forEach(args=>window.registerGmHubSection(...args));
  }
