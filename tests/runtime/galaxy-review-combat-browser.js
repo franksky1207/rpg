@@ -11,7 +11,7 @@ const assert=require("node:assert/strict");
    document.getElementById("civilizationAuthGate")?.remove();
    document.getElementById("gameIntroModal")?.classList.remove("show");
    const before=JSON.stringify(state);
-   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,phase:window.currentWorldPhase,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
+   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,phase:window.currentWorldPhase,prepareSelection:window.prepareFirstWorldTargetContextFromSelection,prepareExplicit:window.prepareFirstWorldTargetContext,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
    window.currentWorldPhase=()=>2;
    // Use the genuine combat core; only its time-based visual playback is accelerated.
@@ -26,7 +26,15 @@ const assert=require("node:assert/strict");
   assert.equal(setup.era,"galaxy-review",JSON.stringify(setup));
   if(!setup.hasPrepare){await page.locator(".galaxy-review-action").first().click();}
   assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(await page.locator(".galaxy-review-prepare .enemy-card").count(),5);assert.equal(await page.locator('button[onclick="startGalaxyReviewBattle()"]').count(),1);
+  const formalSnapshot=()=>page.evaluate(()=>JSON.stringify({exp:state.exp,gold:state.gold,unlockedMap:state.unlockedMap,mapProgress:state.mapProgress,bossProgress:state.bossProgress,equipment:state.equipment,vipPoints:state.vipPoints}));
   for(let n=0;n<2;n++){
+   if(n===1)await page.evaluate(()=>{
+    window.currentWorldPhase=()=>3;
+    window.clearPreparedFirstWorldTargetContext?.();
+    window.prepareFirstWorldTargetContextFromSelection=()=>null;
+    window.prepareFirstWorldTargetContext=()=>null;
+   });
+   const before=await formalSnapshot();
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
    await page.waitForSelector(".galaxy-review-combat",{timeout:10000});
@@ -35,14 +43,14 @@ const assert=require("node:assert/strict");
    assert.equal(inModal.locked,true);
    assert.equal(inModal.source,"galaxy");
    assert.equal(inModal.busy,false);
-   assert.equal(inModal.save,await page.evaluate(()=>window.__reviewBrowserCleanup.before));
+   assert.equal(await formalSnapshot(),before,"Read-only Galaxy review changed formal rewards or progression");
    await page.evaluate(()=>closeBattleResultModal());
    const end=await page.evaluate(()=>({locked:window.isAdventureReviewBattleActive?.(),busy:battleBusy,prepare:!!document.querySelector(".galaxy-review-prepare"),modal:document.querySelector("#battleResultModal")?.classList.contains("show")}));
    assert.equal(end.locked,false);assert.equal(end.busy,false);assert.equal(end.prepare,true);assert.equal(end.modal,false);
   }
   await page.evaluate(()=>{
    const x=window.__reviewBrowserCleanup;
-   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;window.mainBattlePresentationSleep=x.sleep;window.currentWorldPhase=x.phase;
+   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;window.mainBattlePresentationSleep=x.sleep;window.currentWorldPhase=x.phase;window.prepareFirstWorldTargetContextFromSelection=x.prepareSelection;window.prepareFirstWorldTargetContext=x.prepareExplicit;
    view=x.originalView;adventureScreen=x.originalScreen;battleBusy=x.originalBusy;
    window.setAdventureReviewBattleActive?.(false);render();
    delete window.__reviewBrowserCleanup;
