@@ -4,33 +4,33 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>文明戰線｜GM 3D 開發測試中心</title>
-<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas&v4=20261009-maximized">
+<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-visual-center2">
 </head>
 <body>
 <main class="shell">
 <header><div><small>文明戰線 / GM · 3D TEST CENTER</small><h1>3D 開發測試中心</h1></div><a id="backToGame" href="../index.html">返回正式遊戲 ↗</a></header>
 <section class="center-layout" aria-label="GM 3D 測試中心">
 <aside class="center-sidebar" aria-label="3D 案例目錄">
-<label for="caseSearch">搜尋測試案例／批次</label><input id="caseSearch" type="search" placeholder="B05、銀河、Canvas…">
-<div id="categoryList" class="center-categories" aria-label="九大分類"></div>
+<label for="caseSearch">搜尋 3D 場景</label><input id="caseSearch" type="search" placeholder="搜尋主畫面、星圖…">
+<div id="categoryList" class="center-categories" aria-label="3D 場景分類"></div>
 <div id="caseList" class="center-cases" aria-label="測試案例"></div>
 </aside>
 <div class="center-workspace" id="centerWorkspace">
-<div class="center-description"><h2 id="caseTitle">載入中…</h2><div id="caseMetadata"></div><p id="caseDetail"></p></div><div class="center-status" id="status" role="status" aria-live="polite" hidden></div>
+<div class="center-description"><h2 id="caseTitle">載入中…</h2><p id="caseDetail"></p></div><div class="center-status" id="status" role="status" aria-live="polite" hidden></div>
 <div class="center-fixtures" id="fixturePanel" hidden>
 <label>紀元（展示）<select id="fixtureWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label>
-<label>情境（展示）<select id="fixtureLife"><option value="first">首次遊戲</option><option value="rerun">轉生正式主線</option><option value="review">通關回顧</option></select></label>
+
 <label>區域進度 <select id="fixtureProgress"><option value="1">1 / 10 大區</option><option value="2">2 / 10 大區</option><option value="3">3 / 10 大區</option><option value="4">4 / 10 大區</option><option value="5">5 / 10 大區</option><option value="6">6 / 10 大區</option><option value="7">7 / 10 大區</option><option value="8">8 / 10 大區</option><option value="9">9 / 10 大區</option><option value="10">10 / 10 大區</option></select></label>
 <label>聚焦區域 <select id="fixtureSelected"><option value="0">大區 1</option><option value="1">大區 2</option><option value="2">大區 3</option><option value="3">大區 4</option><option value="4">大區 5</option><option value="5">大區 6</option><option value="6">大區 7</option><option value="7">大區 8</option><option value="8">大區 9</option><option value="9">大區 10</option></select></label>
-</div><div id="scenarioLabel" class="center-scenario"></div>
+</div>
 <section class="stage" aria-label="3D 測試展示區">
 <button id="maximizePreview" class="center-maximize-button" type="button" aria-pressed="false" aria-label="最大化 3D 預覽">⛶ 最大化預覽</button>
 <div id="prototypeHost" class="prototype-host"></div>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
 
 </section></div></section>
-<footer><p>GM 測試使用 session 展示資料，不讀取或修改正式玩家存檔。可預覽與部分完成案例已分開標示。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
+<footer><p>選擇場景後可拖曳旋轉、縮放與放大預覽。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button></div></footer>
 </main>
-<script src="./test-center.js?v=20261009-center1&v2=20261009-hide-success-status&v3=20261009-status-outside-canvas&v4=20261009-maximized"></script>
+<script src="./test-center.js?v=20261009-visual-center2"></script>
 </body>
 </html>
