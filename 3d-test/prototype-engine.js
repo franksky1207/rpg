@@ -339,5 +339,60 @@
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);center.rotation.y+=dt*.00022;orbit.rotation.z+=dt*.00008;});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.11.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene});
+
+  /* B12: presentation-only dungeon command center, bounty selection and W1/W2 arena. */
+  function createDungeonScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    const mode=["hub","bounty","arena"].includes(args.dungeonKind)?args.dungeonKind:"hub";
+    const world=Math.max(1,Math.min(2,Number(args.world)||1));
+    const phase=["select","ready"].includes(args.dungeonPhase)?args.dungeonPhase:"select";
+    scene.clearColor=new B.Color4(world===2?.02:.013,.016,world===2?.053:.038,1);
+    const camera=new B.ArcRotateCamera("dungeon-camera",Math.PI/2.18,Math.PI/2.75,mode==="hub"?14.8:13,new B.Vector3(0,.25,0),scene);
+    camera.lowerRadiusLimit=7;camera.upperRadiusLimit=23;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("dungeon-light",new B.Vector3(0,1,0),scene).intensity=.91;
+    const material=(name,rgb,glow=false)=>{
+      const m=new B.StandardMaterial(name,scene);
+      (glow?m.emissiveColor:m.diffuseColor)=new B.Color3(...rgb);
+      return m;
+    };
+    const iron=material("dungeon-metal",[.13,.18,.24]);
+    const floor=material("dungeon-floor",[.075,.1,.16]);
+    const teal=material("dungeon-activated",[.2,.76,.86],true);
+    const purple=material("dungeon-arena",[.68,.42,.94],true);
+    const gold=material("dungeon-bounty",[.86,.61,.24],true);
+    const inactive=material("dungeon-disabled",[.12,.15,.2]);
+    const platform=B.MeshBuilder.CreateCylinder("dungeon-command-platform",{diameter:11,height:.42,tessellation:60},scene);
+    platform.position.y=-.72;platform.material=floor;
+    const base=B.MeshBuilder.CreateTorus("dungeon-command-ring",{diameter:10.4,thickness:.055,tessellation:64},scene);
+    base.rotation.x=Math.PI/2;base.position.y=-.48;base.material=teal;
+    const modeTotal=mode==="hub"?4:mode==="bounty"?5:3;
+    const count=Math.max(0,Math.min(40,Math.floor(Number(args.dungeonRemaining)||0)));
+    const modeUnlocked=args.dungeonUnlocked!==false;
+    for(let i=0;i<modeTotal;i++){
+      const angle=(i-(modeTotal-1)/2)*.46;
+      const x=Math.sin(angle)*6.8,z=Math.cos(angle)*2.1;
+      const active=mode==="hub"?i<2||args.dungeonExtraUnlocked===true:modeUnlocked&&count>0;
+      const surface=active?(mode==="arena"?purple:mode==="bounty"?gold:i===0?gold:purple):inactive;
+      const disk=B.MeshBuilder.CreateCylinder("dungeon-node-base-"+i,{diameter:1.45,height:.25,tessellation:32},scene);
+      disk.position.set(x,-.38,z);disk.material=iron;
+      const column=B.MeshBuilder.CreateBox("dungeon-node-"+i,{width:.7,height:mode==="arena"?2.3:1.35,depth:.65},scene);
+      column.position.set(x,mode==="arena"?.8:.35,z);column.material=surface;
+      const loop=B.MeshBuilder.CreateTorus("dungeon-node-portal-"+i,{diameter:mode==="arena"?2.05:1.42,thickness:.075,tessellation:36},scene);
+      loop.position.set(x,mode==="arena"?1.03:.65,z);loop.material=surface;
+      if(mode==="arena"){loop.rotation.y=Math.PI/2.9;}else{loop.rotation.x=.18;}
+    }
+    if(mode!=="hub"){
+      const core=B.MeshBuilder.CreatePolyhedron("dungeon-center-"+mode,{type:2,size:mode==="arena"?.83:1},scene);
+      core.position.set(0,2.2,-1.1);core.material=mode==="arena"?purple:gold;
+      const hoop=B.MeshBuilder.CreateTorus("dungeon-center-orbit",{diameter:3.15,thickness:.06,tessellation:48},scene);
+      hoop.position.set(0,1.8,-1.1);hoop.rotation.x=Math.PI/2;hoop.material=teal;
+      scene.onBeforeRenderObservable.add(()=>{
+        const dt=Math.min(args.engine.getDeltaTime(),50);core.rotation.y+=dt*.00018;
+        hoop.rotation.z+=dt*.00012;
+      });
+    }
+    scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.12.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene});
 })(window);
