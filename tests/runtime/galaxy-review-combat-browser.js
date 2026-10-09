@@ -11,7 +11,8 @@ const assert=require("node:assert/strict");
    const before=JSON.stringify(state);
    window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
-   window.runCombatCore=(player,enemy,hp)=>({win:true,logs:[],events:[],hp,enemyHp:0,turns:1});
+   // Use the genuine combat core; only its time-based visual playback is accelerated.
+   window.runCombatCore=(player,enemy,hp,options)=>window.__reviewBrowserCleanup.combat(player,enemy,hp,options);
    window.animateStructuredCombatPresentation=async()=>{await new Promise(resolve=>setTimeout(resolve,500));};
    view="adventure";battleBusy=false;window.setAdventureReviewBattleActive?.(false);
    window.openGalaxyReviewMap(0);
