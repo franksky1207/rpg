@@ -8,7 +8,7 @@ const assert=require("node:assert/strict");
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===3,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),7);
-  assert.equal(await page.locator("#caseList .center-case").count(),11);
+  assert.equal(await page.locator("#caseList .center-case").count(),14);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
   assert.equal(await page.locator("#caseMetadata").count(),0);
@@ -16,7 +16,7 @@ const assert=require("node:assert/strict");
   for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
-  // Verify one shared readonly snapshot contract and independent GM test inputs.
+  // B12 visual scenes reuse one factory; tests are presentation-only.\n  await page.locator("#categoryList .center-category").filter({hasText:"副本、災厄與特殊演出"}).click();\n  assert.equal(await page.locator("#caseList .center-case").count(),3);\n  for(const title of ["副本作戰中心","懸賞戰準備區","一般競技場"]){\n    await page.getByRole("button",{name:title}).click();\n    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});\n    assert.equal(await page.locator("#appearanceDetails").isVisible(),false);\n  }\n  assert.equal(await page.locator("#fixtureWorld").isVisible(),true);\n  await page.locator("#fixtureWorld").selectOption("2");\n  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);\n  // Verify one shared readonly snapshot contract and independent GM test inputs.
   await page.locator("#categoryList .center-category").filter({hasText:"玩家、裝備與養成"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),7);
   await page.getByRole("button",{name:"八種專精星環"}).click();
@@ -88,6 +88,6 @@ const assert=require("node:assert/strict");
   assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 6 categories, 11 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  console.log("PASS GM visual center: 6 categories, 14 scenes, no engineering text, mobile maximize/restore",mobile,restore);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
