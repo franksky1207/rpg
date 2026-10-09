@@ -282,13 +282,15 @@ window.startGalaxyReviewBattle=async function(){
   return false;
  }
 };
-window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=6;
+window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=7;
 window.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;
 window.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;
 window.GALAXY_REVIEW_LOCAL_HP_ISOLATION_VERSION=1;
 window.GALAXY_REVIEW_SYNC_STATE_VALIDATION_VERSION=1;
 function adventurePage(){
- if(secondWorldActive()){if(adventureScreen==="review-prepare")return galaxyReviewPreparePage();if(adventureScreen==="review-combat")return galaxyReviewCombatPage();return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');}
+ if(adventureScreen==="review-prepare")return galaxyReviewPreparePage();
+ if(adventureScreen==="review-combat")return galaxyReviewCombatPage();
+ if(secondWorldActive()){return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');}
  if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
 }
 
