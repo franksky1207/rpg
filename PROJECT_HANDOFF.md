@@ -1,3 +1,5 @@
+- **2026-10-10 3D 第15批（戰鬥 HUD、特殊遭遇、結算外觀）**：共用 `3d-test/prototype-engine.js` 增 `createBattlePresentationScene` 四種可旋轉幾何原型：戰場與 HP、護盾、特殊遭遇警示、結算戰利品；`3d-test/formal-home.js` 對正式可識別戰鬥／結果 DOM 提供 opt-in 3D 視覺入口；GM「戰鬥、動畫與特效」新增四項同源預覽，累計 24 項。正式 `combatfx.js`、Fast Catch-up、settlement、HP／盾條、獎勵、死亡與存檔維持原 owner，不由 3D 預覽計算或代替。**交付界線**：這是共用 3D 視覺底座／唯讀原型，並非所有模式正式 HUD 已全數替換或即時 3D HP 同步；第 18 批必須核對每個可見模式、特殊遭遇與結算入口，第 19～40 批逐步完成場景、動畫、模型與實機 GPU 測試。更新相關 HTML cache bust 和 GM Browser 測試；CI 狀態以最新 Actions 為準。
+
 - **2026-10-09 3D 第 14 批**：新增共用 `createFrontierScene`，三種真正 Babylon 幾何視覺場景：銀河／宇宙文明災厄封印、異宇宙前線；正式 `calamity` 與 `alternateuniverse` 非戰鬥介面加入唯讀、按需開關的 3D 預覽。異宇宙獨立 renderPage 會通知同一 3D 橋接，切戰鬥時自動釋放；GM 既有「副本、災厄與特殊演出」增加 3 個視覺場景，總計 20。沒有修改雙紀元災厄門檻／永久 HP、異宇宙層域與失敗規則、戰鬥、收益或存檔。現有正式現身通知繼續有效，幾何預覽非最終模型，CI／實機結果分別核對。
 
 - **2026-10-09 3D 高維副本三入口補修**：高維紀元沒有懸賞戰，正式 `thirdworlddungeonui.js` 會隱藏其副本卡。`createDungeonScene` 現按正式可見副本模式生成 3D 門戶並自動居中，高維只展示高維競技場／虛空／鏡像，銀河與宇宙依正式頁面保留各自入口。GM 副本作戰中心可切三紀元。GM Browser 測試修正字面 `\\n` 導致案例未執行的舊問題。只讀 UI，不改戰鬥／獎勵／次數／存檔。
