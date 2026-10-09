@@ -36,6 +36,8 @@ const assert=require("node:assert/strict");
    });
    const before=await formalSnapshot();
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
+   const beforeClick=await page.evaluate(()=>({view,screen:adventureScreen,era:window.getAdventureEraView?.(),phase:window.currentWorldPhase?.(state),buttons:document.querySelectorAll('button[onclick="startGalaxyReviewBattle()"]').length,content:document.getElementById("main")?.textContent?.slice(0,220)}));
+   assert.equal(beforeClick.buttons,1,JSON.stringify(beforeClick));
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
    await page.waitForSelector(".galaxy-review-combat",{timeout:10000});
    await page.waitForSelector("#battleResultModal.show",{timeout:10000});
