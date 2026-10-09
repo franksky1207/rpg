@@ -47,6 +47,7 @@ function fillAlternateSelectors(){
  alternateSelection.universe=clamp(alternateSelection.universe,(alternateSelection.segment-1)*10+1,alternateSelection.segment*10);
  universe.replaceChildren();for(let i=(alternateSelection.segment-1)*10+1;i<=alternateSelection.segment*10;i++)universe.add(new Option(`U${String(i).padStart(3,"0")}`,String(i)));
  segment.value=String(alternateSelection.segment);universe.value=String(alternateSelection.universe);depth.value=String(alternateSelection.depth);
+ const summary=$("alternatePreviewSummary");if(summary)summary.textContent=`第 ${alternateSelection.segment} 區 · U${String(alternateSelection.universe).padStart(3,"0")} · 深度 ${alternateSelection.depth}/5 · 第 ${(alternateSelection.universe-1)*5+alternateSelection.depth} / 1000 層 · 純視覺預覽`;
 }
 
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
@@ -190,6 +191,7 @@ function renderInfo(){
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||!(c.kind==="epoch"||c.kind==="dungeon-hub"||c.kind==="dungeon-bounty"||c.kind==="dungeon-arena");
  $("alternateSegmentLabel").hidden=$("alternateUniverseLabel").hidden=$("alternateDepthLabel").hidden=c.kind!=="frontier-alternate";
+ $("alternateQuickControls").hidden=c.kind!=="frontier-alternate";
  if(c.kind==="frontier-alternate")fillAlternateSelectors();
  $("fixtureProgress").closest("label").hidden=c.kind==="frontier-alternate"||c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("advanced-")&&!c.kind.startsWith("frontier-");
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
@@ -247,6 +249,16 @@ $("fixtureProgress").onchange=updateFixture;
 $("alternateSegment").onchange=()=>{alternateSelection.segment=clamp($("alternateSegment").value,1,20);alternateSelection.universe=(alternateSelection.segment-1)*10+1;fillAlternateSelectors();start();};
 $("alternateUniverse").onchange=()=>{alternateSelection.universe=clamp($("alternateUniverse").value,1,200);alternateSelection.segment=Math.ceil(alternateSelection.universe/10);fillAlternateSelectors();start();};
 $("alternateDepth").onchange=()=>{alternateSelection.depth=clamp($("alternateDepth").value,1,5);start();};
+function jumpAlternate(universeDelta,depthDelta){
+ alternateSelection.universe=clamp(alternateSelection.universe+universeDelta,1,200);
+ alternateSelection.segment=Math.ceil(alternateSelection.universe/10);
+ alternateSelection.depth=clamp(alternateSelection.depth+depthDelta,1,5);
+ fillAlternateSelectors();start();
+}
+$("alternateUniversePrev").onclick=()=>jumpAlternate(-1,0);
+$("alternateUniverseNext").onclick=()=>jumpAlternate(1,0);
+$("alternateDepthPrev").onclick=()=>jumpAlternate(0,-1);
+$("alternateDepthNext").onclick=()=>jumpAlternate(0,1);
 search.oninput=renderCases;
 toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();};
 $("restart").onclick=()=>{disabled=false;toggle.textContent="停用 3D";start();};
