@@ -89,7 +89,15 @@
   window.startGalaxyReviewBattle=async function(){
    let context=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
    if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state))&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({mode:"review",source:"review-battle-start"},state);
-   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state)&&policyAllows(context,{formalRewardsAllowed:false,formalProgressAllowed:false})))return false;
+   const validReview=ctx=>ctx?.mode==="review"&&ctx.valid===true&&ctx.authorized===true&&currentCheck(ctx,state)&&policyAllows(ctx,{formalRewardsAllowed:false,formalProgressAllowed:false});
+   if(!validReview(context)&&typeof window.prepareFirstWorldTargetContext==="function"){
+    context=window.prepareFirstWorldTargetContext({mode:"review",mapIndex:window.getGalaxyReviewSelectedMap?.(),enemyIndex:window.getGalaxyReviewSelectedEnemy?.(),source:"review-battle-revalidate"},state);
+   }
+   if(!validReview(context)){
+    console.warn("[文明戰線] 銀河紀元回顧目標驗證未通過",window.validateCurrentFirstWorldTargetContext?.(context,state)?.errors||[],{valid:context?.valid,authorized:context?.authorized,mode:context?.mode});
+    alert("銀河回顧目標驗證失敗，請重新選擇怪物後再試。");
+    return false;
+   }
    const originalGetMap=window.getGalaxyReviewSelectedMap;
    const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
    try{
