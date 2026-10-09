@@ -55,7 +55,7 @@ function syncMarkNames(){
  growthControls.querySelectorAll("[data-mark-index]").forEach((input,i)=>{const name=String(names[i]||markNames[i]).slice(0,40);const label=input.closest("label");label.title=name;label.querySelector(".center-growth-field-name").textContent=name;input.setAttribute("aria-label",name+"等級");});
 }
 appearancePanel.querySelector("#appearanceFreeControls").append(growthControls);
-growthControls.onchange=e=>{const el=e.target;if(!(el instanceof HTMLInputElement))return;const low=Number(el.min)||0,high=Number(el.max)||999999999,v=Math.max(low,Math.min(high,Math.floor(Number(el.value)||0)));el.value=String(v);if(el.dataset.specIndex!==undefined)freeAppearance.specializations[Number(el.dataset.specIndex)]=v;else if(el.dataset.markIndex!==undefined)freeAppearance.markLevels[Number(el.dataset.markIndex)]=v;else if(el.dataset.growthSingle)freeAppearance[el.dataset.growthSingle+"Level"]=v;else if(el.dataset.ability)freeAppearance[el.dataset.ability]=v;start();};
+growthControls.onchange=e=>{const el=e.target;if(!(el instanceof HTMLInputElement))return;const low=Number(el.min)||0,high=Number(el.max)||999999999,v=Math.max(low,Math.min(high,Math.floor(Number(el.value)||0)));el.value=String(v);if(el.dataset.specIndex!==undefined)freeAppearance.specializations[Number(el.dataset.specIndex)]=v;else if(el.dataset.markIndex!==undefined)freeAppearance.markLevels[Number(el.dataset.markIndex)]=v;else if(el.dataset.growthSingle)freeAppearance[el.dataset.growthSingle+"Level"]=v;start();};
 
 function requestAppearance(){
  if(!embedded||window.parent===window)return;
