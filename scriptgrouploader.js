@@ -38,10 +38,14 @@
  function diagnosticsRequested(){try{const params=new URLSearchParams(location.search||"");if(params.get("production")==="1")return false;const explicit=params.get("integrity")==="1"||params.get("diagnostics")==="1",local=location.hostname==="127.0.0.1"||location.hostname==="localhost";return explicit||local;}catch(_){return false;}}
  // Concurrent conditional HTTP revalidation reuses unchanged responses while keeping JS execution ordered.
  // Works with ordinary browser HTTP cache; never stores credentials or mutable player data.
+ const GM_DIGEST_KEY="civilization-war-gm-resource-digests-v1";
+ let gmCacheReport=Object.freeze({version:1,checked:0,unchanged:0,changed:0});
+ function gmResourceCacheSnapshot(){return gmCacheReport;}
  async function warmAuthorizedGmScripts(){
-  if(!gmAuthorized())return false;
-  if(typeof fetch!=="function")return false;
+  if(!gmAuthorized()||typeof fetch!=="function")return false;
   const nodes=declarations("gm"),urls=nodes.map(node=>node.dataset.src);
+  let old={};try{old=JSON.parse(localStorage.getItem(GM_DIGEST_KEY)||"{}")||{};}catch(_){}
+  const next={...old},counts={checked:0,unchanged:0,changed:0};
   let index=0;
   const workers=Array.from({length:Math.min(6,urls.length)},async()=>{
    while(index<urls.length){
@@ -49,11 +53,23 @@
     const url=urls[index++];
     const response=await fetch(url,{cache:"no-cache",credentials:"same-origin"});
     if(!response.ok)throw new Error("startup-resource-revalidation-failed");
-    // Drain body to complete cache entry before ordered <script src> evaluation.
-    await response.arrayBuffer();
+    const body=await response.arrayBuffer();
+    // Content digests are descriptive cache metadata, never an authorization source.
+    if(globalThis.crypto?.subtle){
+     const bytes=new Uint8Array(await crypto.subtle.digest("SHA-256",body));
+     const digest=Array.from(bytes,v=>v.toString(16).padStart(2,"0")).join("");
+     const key=new URL(url,document.baseURI).pathname;
+     if(old[key]===digest)counts.unchanged++;else counts.changed++;
+     next[key]=digest;
+    }
+    counts.checked++;
    }
   });
-  await Promise.all(workers);return true;
+  await Promise.all(workers);
+  if(!gmAuthorized())return false;
+  try{localStorage.setItem(GM_DIGEST_KEY,JSON.stringify(next));}catch(_){}
+  gmCacheReport=Object.freeze({version:1,...counts});
+  return true;
  }
  async function ensureAuthorizedGmRuntime(options={}){
   if(!gmAuthorized())return false;
@@ -117,7 +133,7 @@
  (window.CivilizationStartupPreTasks||(window.CivilizationStartupPreTasks=[])).push(["account-resources",bootTask]);
  function schedule(){restoreAuthorizedGmFlagEarly();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",restoreAuthorizedGmFlagEarly,{once:true});const start=()=>setTimeout(()=>{restoreAuthorizedGmFlagEarly();installGmPasswordBridge();autoLoad();if(window.CivilizationStartupCoordinator?.snapshot?.().status==="ready")ensureAuthorizedGmRuntime();observeGmActivation();if(diagnosticsRequested())loadDiagnostics();},AUTO_START_DELAY_MS);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();}
 
- const namespace=Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,activationPolicyVersion:ACTIVATION_POLICY_VERSION,loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,gmAuthorizationVersion:GM_AUTHORIZATION_VERSION,gmEarlyRuntimeRestoreVersion:GM_EARLY_RUNTIME_RESTORE_VERSION,gmAuthorizedGroupRetryVersion:GM_AUTHORIZED_GROUP_RETRY_VERSION,ensure:loadGroup,restoreAuthorizedGmFlagEarly,ensureAuthorizedGmRuntime,authorizeGmRuntime,revokeGmRuntimeAuthorization,gmAuthorizationSnapshot,snapshot,activationSnapshot});
+ const namespace=Object.freeze({version:VERSION,routingVersion:ROUTING_VERSION,activationPolicyVersion:ACTIVATION_POLICY_VERSION,loadBehaviorVersion:LOAD_BEHAVIOR_VERSION,gmAuthorizationVersion:GM_AUTHORIZATION_VERSION,gmEarlyRuntimeRestoreVersion:GM_EARLY_RUNTIME_RESTORE_VERSION,gmAuthorizedGroupRetryVersion:GM_AUTHORIZED_GROUP_RETRY_VERSION,ensure:loadGroup,restoreAuthorizedGmFlagEarly,ensureAuthorizedGmRuntime,authorizeGmRuntime,revokeGmRuntimeAuthorization,gmAuthorizationSnapshot,gmResourceCacheSnapshot,snapshot,activationSnapshot});
  window.CivilizationScriptLoader=namespace;window.SCRIPT_GROUP_LOADER_VERSION=VERSION;window.GM_RUNTIME_EARLY_RESTORE_VERSION=GM_EARLY_RUNTIME_RESTORE_VERSION;window.GM_AUTHORIZED_GROUP_RETRY_VERSION=GM_AUTHORIZED_GROUP_RETRY_VERSION;window.GM_STARTUP_REVALIDATION_VERSION=1;window.SCRIPT_GROUP_ACTIVATION_POLICY_VERSION=ACTIVATION_POLICY_VERSION;window.SCRIPT_GROUP_LOAD_BEHAVIOR_VERSION=LOAD_BEHAVIOR_VERSION;window.SCRIPT_GROUP_GLOBAL_API_CLEANUP_VERSION=GLOBAL_API_CLEANUP_VERSION;window.SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2;window.GM_RUNTIME_AUTHORIZATION_VERSION=GM_AUTHORIZATION_VERSION;window.GM_RUNTIME_AUTHORIZATION_SCOPE="account-local-runtime";window.GM_SAVE_AUTHORIZATION_RETIRED_VERSION=1;window.GM_RUNTIME_SAVE_BOUNDARY_INSTALLED=typeof window.gmInstallRuntimeAuthorizationSaveBoundary==="function"?window.gmInstallRuntimeAuthorizationSaveBoundary():false;
  window.ensureCivilizationScriptGroup=loadGroup;window.civilizationScriptGroupSnapshot=snapshot;schedule();
 })();
