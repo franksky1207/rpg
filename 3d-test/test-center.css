@@ -44,3 +44,11 @@
 .center-workspace.center-maximized .civilization-3d-layout-controls{left:max(8px,env(safe-area-inset-left));top:max(8px,env(safe-area-inset-top))}
 body.gm-3d-maximized{overflow:hidden!important}
 @media(max-width:600px){.center-maximize-button{font-size:13px;min-height:44px;max-width:46vw}.center-workspace.center-maximized .civilization-3d-layout-controls{top:max(60px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left))}}
+
+/* Visual-only GM 3D viewer: empty categories are future placeholders; no internal metadata. */
+.center-fixtures label[hidden]{display:none!important}
+.center-fixtures[hidden],.center-status[hidden]{display:none!important}
+.center-description{padding:10px 14px}
+.center-case{min-height:44px;touch-action:manipulation}
+.center-sidebar{overscroll-behavior:contain}
+html{scroll-behavior:auto!important}
