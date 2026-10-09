@@ -162,14 +162,13 @@
     image.decoding="async";image.src=url;
     if(image.complete&&image.naturalWidth>0)finish(true);
    }));
-   // Retain the legacy 4.5s image timeout, but do not mistake a timeout for readiness.
-   const timeout=criticalJobs.length?setTimeout(()=>{timedOut=true;},CRITICAL_MAX_WAIT_MS):null;
-   try{
-    await Promise.race([Promise.all(criticalJobs),new Promise((_,reject)=>{
-     if(!criticalJobs.length)return;
-     setTimeout(()=>reject(new Error("startup-critical-background-timeout")),CRITICAL_MAX_WAIT_MS);
-    })]);
-   }finally{if(timeout!==null)clearTimeout(timeout);}
+   // A timeout is a failure, never false readiness. Clear the timer after success.
+   let timeoutId=null;
+   const deadline=new Promise((_,reject)=>{
+    if(criticalJobs.length)timeoutId=setTimeout(()=>{timedOut=true;reject(new Error("startup-critical-background-timeout"));},CRITICAL_MAX_WAIT_MS);
+   });
+   try{await Promise.race([Promise.all(criticalJobs),deadline]);}
+   finally{if(timeoutId!==null)clearTimeout(timeoutId);}
    if(failed)throw new Error("startup-critical-background-failed");
    for(const [id,run] of startupTasks){await run();complete();}
    window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:loaded,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
