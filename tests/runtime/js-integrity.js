@@ -27,7 +27,7 @@ assert(loaderRef==="?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-po
 assert(assetRef("compatibilityowners.js")==="?v=20261005-code-cleanup-batch7","Compatibility owner canonical cache token 漂移。");
 assert(!/<script\s+defer\s+fetchpriority="low"\s+data-load-group="(?:gm|story|integrity)"/.test(index),"舊 defer-only 非核心載入方式必須退休。");
 assert(/GROUP_ORDER=Object\.freeze\(\["story","gm","integrity"\]\)/.test(scriptLoader)&&/AUTO_GROUPS=Object\.freeze\(\["story"\]\)/.test(scriptLoader),"Loader 必須只自動載入 Story。");
-assert(/CivilizationScriptLoader=namespace/.test(scriptLoader)&&/ACTIVATION_POLICY_VERSION=3/.test(scriptLoader)&&/LOAD_BEHAVIOR_VERSION=4/.test(scriptLoader),"Batch3 canonical script-loader namespace／版本契約缺失。");
+assert(/CivilizationScriptLoader=namespace/.test(scriptLoader)&&/ACTIVATION_POLICY_VERSION=3/.test(scriptLoader)&&/LOAD_BEHAVIOR_VERSION=5/.test(scriptLoader),"Batch3 canonical script-loader namespace／版本契約缺失。");
 assert(/gm:"browser-local-authorization-or-password-modal-on-demand"/.test(scriptLoader)&&/integrity:"diagnostics-explicit-only"/.test(scriptLoader)&&/story:"post-load-sequenced"/.test(scriptLoader),"Batch3 lazy-load activation policy 錯誤。");
 assert(/GM_AUTHORIZATION_KEY="civilization-war-gm-authorized-v1"/.test(scriptLoader)&&/gmAuthorizationSnapshot/.test(scriptLoader)&&/saveStateAuthoritative:false/.test(scriptLoader),"GM browser-local authorization owner 缺失。");
 assert(/SCRIPT_GROUP_AUTHORIZED_GM_RESTORE_VERSION=2/.test(scriptLoader)&&/GM_RUNTIME_SAVE_BOUNDARY_VERSION=1/.test(scriptLoader)&&/registerBeforeSaveHook/.test(scriptLoader)&&/registerSaveSettlementHook/.test(scriptLoader),"GM runtime/save boundary 契約缺失。");
