@@ -4,7 +4,7 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":id==="civilization3dGrowthPageToggle"?"預覽 3D 養成星環":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11";
@@ -226,7 +226,7 @@ function ensureGrowthPageControls(view){
   if(!page||page.querySelector("#civilization3dGrowthPageToggle"))continue;
   const controls=document.createElement("div");controls.className="galaxy-3d-controls";
   const button=document.createElement("button");button.id="civilization3dGrowthPageToggle";button.className="btn";button.type="button";button.textContent=ctx.label;
-  button.setAttribute("aria-pressed","false");button.onclick=()=>toggle(ctx.route,ctx.kind);
+  button.setAttribute("aria-pressed","false");button.dataset.previewLabel=ctx.label;button.onclick=()=>toggle(ctx.route,ctx.kind);
   const hint=document.createElement("span");hint.className="muted";hint.textContent="唯讀視覺展示，實際養成、資源與確認操作維持原版。";
   controls.append(button,hint);page.prepend(controls);
  }
