@@ -16,7 +16,7 @@ const assert=require("node:assert/strict");
   for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
-  await page.locator("#caseSearch").fill("銀河");
+  await page.locator("#caseSearch").fill("星圖");
   assert.equal(await page.locator("#caseList .center-case").count(),1);
   await page.locator("#caseSearch").fill("");
   await page.getByRole("button",{name:"冒險與宇宙地圖"}).click();
