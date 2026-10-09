@@ -1,7 +1,7 @@
 (function(){
  const sections={manage:[],test:[]};
  const MANAGE_SECTION_ORDER=["gm-data-management","gm-background-battle","gm-mainline-hp-lock","gm-combat-speed","general-manage","vip-manage","spec-manage","enhancement-manage","marks-manage","civilization-manage","dungeon-manage"];
- const TEST_SECTION_ORDER=["player-ability-test","power-benchmark-test","alternate-universe-benchmark-test","player-title-preview","gm-story-test"];
+ const TEST_SECTION_ORDER=["player-ability-test","power-benchmark-test","alternate-universe-benchmark-test","player-title-preview","gm-story-test","gm-3d-prototype-test"];
 
  function sectionHtml(entry){
   let body="";
@@ -87,6 +87,7 @@
    ["manage","副本管理",lateWindowRenderer("gmDungeonManagementHtml"),{id:"dungeon-manage"}],
    ["test","角色能力測試",lateWindowRenderer("gmPlayerAbilityTestHtml"),{id:"player-ability-test"}],
    ["test","劇情測試",gmStoryTestSectionHtml,{id:"gm-story-test"}],
+   ["test","3D 場景測試",lateWindowRenderer("gm3DPrototypeTestHtml"),{id:"gm-3d-prototype-test"}],
   ];
   registrations.forEach(args=>window.registerGmHubSection(...args));
  }
