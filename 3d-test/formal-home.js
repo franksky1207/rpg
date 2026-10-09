@@ -29,9 +29,14 @@ async function toggle(route="home"){
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const galaxy=activeRoute==="adventure"&&world===1;
   const create=galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
-  const maps=typeof MAPS!=="undefined"?MAPS:global.MAPS;
+  const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
-  const snapshot=galaxy?{mapCount:Array.isArray(maps)?maps.length:10,selectedMap:typeof selectedMap==="number"?selectedMap:0,unlockedMap:Number(formalState?.unlockedMap)||0,enemyCount:5}:{};
+  const mapIndex=typeof selectedMap==="number"?selectedMap:0;
+  const unlockedIndex=Number(formalState?.unlockedMap)||0;
+  const regionList=Array.isArray(regions)?regions:[];
+  const selectedRegion=regionList.reduce((last,region,i)=>mapIndex>=Number(region.mapStart)?i:last,0);
+  const unlockedRegions=regionList.map(region=>unlockedIndex>=Number(region.mapStart));
+  const snapshot=galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:{};
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled){hide();return;}
   if(!result.ok){hide();return;}
