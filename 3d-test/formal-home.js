@@ -24,7 +24,7 @@ async function toggle(route="home"){
   await load();
   if(ticket!==epoch||!enabled)return;
   if(runtime){runtime.dispose();runtime=null;}
-  runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
+  runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onClose:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
   runtime.setQuality("low");
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const galaxy=activeRoute==="adventure"&&world===1;
