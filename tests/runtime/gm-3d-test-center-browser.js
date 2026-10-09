@@ -16,7 +16,21 @@ const assert=require("node:assert/strict");
   for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
-  // B12 visual scenes reuse one factory; tests are presentation-only.\n  await page.locator("#categoryList .center-category").filter({hasText:"副本、災厄與特殊演出"}).click();\n  assert.equal(await page.locator("#caseList .center-case").count(),3);\n  for(const title of ["副本作戰中心","懸賞戰準備區","一般競技場"]){\n    await page.getByRole("button",{name:title}).click();\n    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});\n    assert.equal(await page.locator("#appearanceDetails").isVisible(),false);\n  }\n  assert.equal(await page.locator("#fixtureWorld").isVisible(),true);\n  await page.locator("#fixtureWorld").selectOption("2");\n  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);\n  // Verify one shared readonly snapshot contract and independent GM test inputs.
+  // Dungeon previews must be exercised, including world 3 without a bounty portal.
+  await page.locator("#categoryList .center-category").filter({hasText:"副本、災厄與特殊演出"}).click();
+  assert.equal(await page.locator("#caseList .center-case").count(),6);
+  await page.getByRole("button",{name:"副本作戰中心"}).click();
+  assert.equal(await page.locator("#fixtureWorld").isVisible(),true);
+  await page.locator("#fixtureWorld").selectOption("3");
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
+  for(const title of ["副本作戰中心","懸賞戰準備區","一般競技場","高維競技場","鏡像戰紀錄","虛空幻境樓層"]){
+    await page.getByRole("button",{name:title}).click();
+    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
+    assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
+  }
+  await page.locator("#fixtureWorld").selectOption("2");
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
+  // Verify one shared readonly snapshot contract and independent GM test inputs.
   await page.locator("#categoryList .center-category").filter({hasText:"玩家、裝備與養成"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),7);
   await page.getByRole("button",{name:"八種專精星環"}).click();
