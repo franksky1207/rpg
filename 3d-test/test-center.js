@@ -25,7 +25,11 @@ const cases=[
 {id:"C-13-VOID",cat:"special",title:"虛空幻境樓層",kind:"advanced-void",detail:"立體展示虛空幻境的樓層攀升。"},
 {id:"C-14-GALAXY-CALAMITY",cat:"special",title:"銀河文明災厄封印",kind:"frontier-galaxy",detail:"銀河十道災厄封印的立體排列。"},
 {id:"C-14-UNIVERSE-CALAMITY",cat:"special",title:"宇宙文明災厄封印",kind:"frontier-universe",detail:"宇宙十大文明災厄封印的立體排列。"},
-{id:"C-14-ALTERNATE",cat:"special",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"}
+{id:"C-14-ALTERNATE",cat:"special",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"},
+{id:"C-15-BATTLE",cat:"combat",title:"戰場與生命顯示",kind:"battle-battle",detail:"角色與敵人的立體戰場及生命狀態。"},
+{id:"C-15-SHIELD",cat:"combat",title:"護盾防護演出",kind:"battle-shield",detail:"立體防護盾與生命顯示的視覺效果。"},
+{id:"C-15-ENCOUNTER",cat:"combat",title:"特殊遭遇演出",kind:"battle-encounter",detail:"特殊敵人的立體警示演出。"},
+{id:"C-15-SETTLEMENT",cat:"combat",title:"結算與戰利品",kind:"battle-settlement",detail:"戰鬥結束後的立體戰利品視覺。"}
 ];
 const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
@@ -194,7 +198,7 @@ async function start(){
  if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){fail("共用 3D 模組尚未載入。");return;}
  status.hidden=false;status.textContent="正在載入 3D 測試場景…";
  const c=entry(),B=window.Civilization3DPrototype;
- const factory=c.kind.startsWith("frontier-")?B.createFrontierScene:c.kind.startsWith("advanced-")?B.createDungeonAdvancedScene:c.kind.startsWith("dungeon-")?B.createDungeonScene:["specialization","marks","civilization","core"].includes(c.kind)?B.createGrowthScene:c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
+ const factory=c.kind.startsWith("battle-")?B.createBattlePresentationScene:c.kind.startsWith("frontier-")?B.createFrontierScene:c.kind.startsWith("advanced-")?B.createDungeonAdvancedScene:c.kind.startsWith("dungeon-")?B.createDungeonScene:["specialization","marks","civilization","core"].includes(c.kind)?B.createGrowthScene:c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
  if(typeof factory!=="function"){fail("此場景尚未實作。");return;}
  fallback.hidden=true;host.hidden=false;
  runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.hidden=false;status.textContent="WebGL 已復原，可按重新啟動。";}});
@@ -209,7 +213,7 @@ async function start(){
      :c.kind==="marks"?(appearanceMode==="formal"?Object.values(activeVisual.markLevels||{}):freeAppearance.markLevels).slice(0,10).map(v=>Number(v)||0):[],
    growthLevel:Number(c.kind==="civilization"?activeVisual.civilizationLevel:activeVisual.coreLevel)||0
  }:{};
- const visual=c.kind.startsWith("frontier-")?{frontierKind:c.kind==="frontier-alternate"?"alternate":"calamity",frontierProgress:c.kind==="frontier-alternate"?(Number(snapshot.regionProgress)-1)*100:Number(snapshot.regionProgress),world:c.kind==="frontier-galaxy"?1:c.kind==="frontier-universe"?2:3}:c.kind.startsWith("advanced-")?{advancedKind:c.kind.slice(9),advancedStage:Math.min(2,Math.floor((Number(snapshot.regionProgress)-1)/3)),advancedProgress:c.kind==="advanced-void"?(Number(snapshot.regionProgress)-1)*100:c.kind==="advanced-mirror"?(Number(snapshot.regionProgress)-1)*2:0,advancedUnlocked:true}:c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonAvailableModes:[true,true,true,true],dungeonVisibleModes:c.kind==="dungeon-hub"&&Number(snapshot.world)===3?["arena","tower","mirror"]:["bounty","arena","tower","mirror"]}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
+ const visual=c.kind.startsWith("battle-")?{battleVisualKind:c.kind.slice(7),playerHpRatio:.85,enemyHpRatio:.55,shieldRatio:c.kind==="battle-shield"?1:0}:c.kind.startsWith("frontier-")?{frontierKind:c.kind==="frontier-alternate"?"alternate":"calamity",frontierProgress:c.kind==="frontier-alternate"?(Number(snapshot.regionProgress)-1)*100:Number(snapshot.regionProgress),world:c.kind==="frontier-galaxy"?1:c.kind==="frontier-universe"?2:3}:c.kind.startsWith("advanced-")?{advancedKind:c.kind.slice(9),advancedStage:Math.min(2,Math.floor((Number(snapshot.regionProgress)-1)/3)),advancedProgress:c.kind==="advanced-void"?(Number(snapshot.regionProgress)-1)*100:c.kind==="advanced-mirror"?(Number(snapshot.regionProgress)-1)*2:0,advancedUnlocked:true}:c.kind.startsWith("dungeon-")?{dungeonKind:c.kind.slice(8),dungeonPhase:"select",dungeonRemaining:20,dungeonUnlocked:true,dungeonAvailableModes:[true,true,true,true],dungeonVisibleModes:c.kind==="dungeon-hub"&&Number(snapshot.world)===3?["arena","tower","mirror"]:["bounty","arena","tower","mirror"]}:growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
@@ -245,9 +249,9 @@ renderCategories();renderCases();renderInfo();
   await Promise.all([
     window.BABYLON?.Engine?Promise.resolve():script("../vendor/babylonjs/7.54.3/babylon.js"),
     window.Civilization3DRuntime?.create?Promise.resolve():script("./runtime.js?v=20261009-camera-center-v1"),
-    window.Civilization3DPrototype?.createFrontierScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14")
+    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script("./prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14&v7=20261010-b15")
   ]);
-  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createFrontierScene)throw new Error("3D 模組載入不完整。");
+  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createBattlePresentationScene)throw new Error("3D 模組載入不完整。");
   start();
   if(embedded)requestAppearance();
  }catch(error){fail(error.message);}
