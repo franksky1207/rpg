@@ -4,10 +4,10 @@
 let runtime=null,loading=null,enabled=false,epoch=0;
 const host=()=>document.getElementById("civilization3dFormalHost");
 function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host();if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 養成星環":"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b10";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11";
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createForgeScene)return;
  if(!loading)loading=Promise.all([
@@ -52,7 +52,7 @@ async function toggle(route="home"){
   const character=activeRoute==="character";
   const inventory=activeRoute==="inventory";
   const forge=activeRoute==="enhancement";
-  const create=forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
+  const create=growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
   const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
   const formalState=typeof state!=="undefined"?state:global.state;
   const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
@@ -184,6 +184,22 @@ function ensureForgeControl(view){
  const shell=page.querySelector(".enhance-shell");
  if(shell)shell.before(controls);else page.prepend(controls);
 }
+function ensureGrowthControl(view){
+ if(view!=="specialization")return;
+ const page=document.querySelector("#main .function-page")||document.getElementById("main");
+ if(!page||page.querySelector("#civilization3dGrowthToggle"))return;
+ const controls=document.createElement("div");controls.className="galaxy-3d-controls";
+ const button=document.createElement("button");button.id="civilization3dGrowthToggle";button.className="btn";button.type="button";
+ button.textContent="預覽 3D 養成星環";button.setAttribute("aria-pressed","false");
+ button.onclick=()=>toggle("specialization");
+ const select=document.createElement("select");select.id="civilization3dGrowthKind";select.className="btn";
+ for(const [value,label] of [["specialization","八種專精"],["marks","十種印記"],["civilization","文明等級"],["core","界弦核心"]]){
+  const option=document.createElement("option");option.value=value;option.textContent=label;select.append(option);
+ }
+ select.onchange=()=>{if(enabled){hide();toggle("specialization");}};
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="僅觀看正式養成進度；升級、注入與資源消耗仍由原介面處理。";
+ controls.append(button,select,hint);page.prepend(controls);
+}
 function onRendered(view){
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
@@ -197,6 +213,7 @@ function onRendered(view){
  ensureCharacterControl(view);
  ensureInventoryControl(view);
  ensureForgeControl(view);
+ ensureGrowthControl(view);
  syncButton();
 }
 global.civilization3dToggleHome=()=>toggle("home");
@@ -206,6 +223,7 @@ global.civilization3dToggleHigher=()=>toggle("adventure");
 global.civilization3dToggleCharacter=()=>toggle("character");
 global.civilization3dToggleInventory=()=>toggle("inventory");
 global.civilization3dToggleForge=()=>toggle("enhancement");
+global.civilization3dToggleGrowth=()=>toggle("specialization");
 global.civilization3dHomeRouteRendered=onRendered;
 global.CIVILIZATION_3D_HOME_BRIDGE_VERSION=1;
 })(window);
