@@ -1,3 +1,10 @@
+## 2026-10-10｜角色／虛空 3D 預覽重複入口補修
+
+- 使用者手機實測發現角色介面有兩個同效果「預覽 3D 角色」，虛空幻境同時有「預覽 3D 虛空樓層」與「預覽 3D 戰鬥與結算」；後者為共用戰鬥預覽，不是虛空專屬功能，GM 3D 視覺中心保留共用戰鬥／結算預覽即可。
+- 根因：`3d-test/formal-home.js` 的 `ensureCharacterControl` 在 `.character-layout` 裡查按鈕，實際卻以 `screen.before(controls)` 插在其外面，頁面更新後會反覆注入；`ensureBattlePreviewControl` 對 `.void-combat/.void-result` 的通用 DOM 判定，使虛空正式頁出現第二個不必要的預覽。
+- 已改 `ensureCharacterControl` 使用全域唯一 ID 判定，避免重複；`ensureBattlePreviewControl` 遇 `view==="dungeon-void-mirage"` 直接不加第二顆按鈕，保留虛空樓層專屬預覽及 GM 戰鬥／結算專項。修正不改戰鬥、結算、進度、獎勵、存檔、場景 factory 或 GM 測試中心。
+- `index.html` 已更新 `formal-home.js` cache-bust；靜態語法、GitHub main 回讀已核對。手機／桌機真實重新整理與切頁回歸仍需實測。這是第 16 批後的介面補修，不新增正式批號；下一批第 17 批。
+
 ## 2026-10-10｜重整後異宇宙／新紀元／轉生入口首次漏顯示修復
 
 - **根因（main 確認）**：`ui.js` 載入末端執行 `load() → render()`，但 `worldphaseui.js`、`reincarnationui.js` 與 `alternateuniverseui.js` 在 `index.html` 中排在其後。初次 `homePage()` 無法呼叫稍後才註冊的入口函式，導致第三紀元已解鎖異宇宙入口首次消失；任意切頁回主畫面會重繪，所以入口又出現。同一時序也可能影響符合條件的新紀元突破與文明轉生入口。
