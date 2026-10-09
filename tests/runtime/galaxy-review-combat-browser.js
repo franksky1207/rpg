@@ -10,8 +10,9 @@ const assert=require("node:assert/strict");
   const setup=await page.evaluate(()=>{
    document.getElementById("civilizationAuthGate")?.remove();
    const before=JSON.stringify(state);
-   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
+   window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,phase:window.currentWorldPhase,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
    window.isSecondWorldEntered=()=>true;
+   window.currentWorldPhase=()=>2;
    // Use the genuine combat core; only its time-based visual playback is accelerated.
    window.runCombatCore=(player,enemy,hp,options)=>window.__reviewBrowserCleanup.combat(player,enemy,hp,options);
    window.mainBattlePresentationSleep=async()=>{await new Promise(resolve=>setTimeout(resolve,1));};
@@ -38,7 +39,7 @@ const assert=require("node:assert/strict");
   }
   await page.evaluate(()=>{
    const x=window.__reviewBrowserCleanup;
-   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;window.mainBattlePresentationSleep=x.sleep;
+   window.isSecondWorldEntered=x.world;window.runCombatCore=x.combat;window.animateStructuredCombatPresentation=x.presenter;window.mainBattlePresentationSleep=x.sleep;window.currentWorldPhase=x.phase;
    view=x.originalView;adventureScreen=x.originalScreen;battleBusy=x.originalBusy;
    window.setAdventureReviewBattleActive?.(false);render();
    delete window.__reviewBrowserCleanup;
