@@ -87,7 +87,7 @@ const assert = require("node:assert/strict");
       window.__galaxyReviewPointerRestore=()=>{window.isSecondWorldEntered=entered;window.currentWorldPhase=phase;window.getAdventureEraView=era;};
       window.isSecondWorldEntered=()=>true;window.currentWorldPhase=()=>2;window.getAdventureEraView=()=>"galaxy-review";
       window.go("adventure");
-      const button=document.querySelector(".galaxy-review-action"),box=button?.getBoundingClientRect();
+      const button=document.querySelector(".galaxy-review-action");button?.scrollIntoView({block:"center",inline:"center"});const box=button?.getBoundingClientRect();
       const hit=box?document.elementFromPoint(box.x+box.width/2,box.y+box.height/2):null;
       return {hasButton:!!button,hitTag:hit?.tagName,hitClass:hit?.className,contains:!!(hit&&(button===hit||button?.contains(hit))),box:box?{x:box.x,y:box.y,width:box.width,height:box.height}:null};
     });
