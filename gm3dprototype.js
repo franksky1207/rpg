@@ -1,7 +1,7 @@
 /* GM 3D prototype bridge: session-only presentation, no gameplay mutation. */
 (function(){
 "use strict";
-let overlay=null, previousFocus=null, previousOverflow=null, previousScrollX=0,previousScrollY=0;
+let overlay=null, previousFocus=null, previousOverflow=null, previousScrollX=0,previousScrollY=0, previousMainScrollTop=0;
 function allowed(){return typeof state!=="undefined" && state?.gm===true;}
 function close(){
   if(!overlay)return false;
@@ -10,6 +10,7 @@ function close(){
   if(previousOverflow!==null)document.body.style.overflow=previousOverflow;
   previousOverflow=null;
   window.scrollTo(previousScrollX,previousScrollY);
+  const main=document.getElementById("main");if(main)main.scrollTop=previousMainScrollTop;
   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
   previousFocus=null;
   return true;
@@ -20,6 +21,7 @@ function open(){
   previousFocus=document.activeElement;
   previousOverflow=document.body.style.overflow;
   previousScrollX=window.scrollX;previousScrollY=window.scrollY;
+  previousMainScrollTop=document.getElementById("main")?.scrollTop||0;
   const layer=document.createElement("div");
   layer.id="gm3dPrototypeOverlay";
   layer.setAttribute("role","dialog");
@@ -52,6 +54,7 @@ document.addEventListener("keydown",event=>{
     if(document.activeElement===document.body){event.preventDefault();overlay.querySelector("button")?.focus();}
   }
 });
+window.addEventListener("message",event=>{if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow)return;if(event.data?.type==="civilization3d:close")close();});
 window.openGm3DPrototype=open;
 window.closeGm3DPrototype=close;
 window.gm3DPrototypeTestHtml=function(){
