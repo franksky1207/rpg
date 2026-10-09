@@ -3,70 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>文明戰線｜3D 引擎獨立測試</title>
-<link rel="stylesheet" href="./prototype.css?v=20261009-b02">
+<title>文明戰線｜GM 3D 開發測試中心</title>
+<link rel="stylesheet" href="./prototype.css?v=20261009-b02"><link rel="stylesheet" href="./test-center.css?v=20261009-center1">
 </head>
 <body>
 <main class="shell">
-<header><div><small>文明戰線 / PROTOTYPE 01</small><h1>3D 引擎測試平台</h1></div><a id="backToGame" href="../index.html">返回正式遊戲 ↗</a></header>
+<header><div><small>文明戰線 / GM · 3D TEST CENTER</small><h1>3D 開發測試中心</h1></div><a id="backToGame" href="../index.html">返回正式遊戲 ↗</a></header>
+<section class="center-layout" aria-label="GM 3D 測試中心">
+<aside class="center-sidebar" aria-label="3D 案例目錄">
+<label for="caseSearch">搜尋測試案例／批次</label><input id="caseSearch" type="search" placeholder="B05、銀河、Canvas…">
+<div id="categoryList" class="center-categories" aria-label="九大分類"></div>
+<div id="caseList" class="center-cases" aria-label="測試案例"></div>
+</aside>
+<div class="center-workspace">
+<div class="center-description"><h2 id="caseTitle">載入中…</h2><div id="caseMetadata"></div><p id="caseDetail"></p></div>
+<div class="center-fixtures" id="fixturePanel" hidden>
+<label>紀元（展示）<select id="fixtureWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label>
+<label>情境（展示）<select id="fixtureLife"><option value="first">首次遊戲</option><option value="rerun">轉生正式主線</option><option value="review">通關回顧</option></select></label>
+<label>區域進度 <select id="fixtureProgress"><option value="1">1 / 10 大區</option><option value="2">2 / 10 大區</option><option value="3">3 / 10 大區</option><option value="4">4 / 10 大區</option><option value="5">5 / 10 大區</option><option value="6">6 / 10 大區</option><option value="7">7 / 10 大區</option><option value="8">8 / 10 大區</option><option value="9">9 / 10 大區</option><option value="10">10 / 10 大區</option></select></label>
+<label>聚焦區域 <select id="fixtureSelected"><option value="0">大區 1</option><option value="1">大區 2</option><option value="2">大區 3</option><option value="3">大區 4</option><option value="4">大區 5</option><option value="5">大區 6</option><option value="6">大區 7</option><option value="7">大區 8</option><option value="8">大區 9</option><option value="9">大區 10</option></select></label>
+</div><div id="scenarioLabel" class="center-scenario"></div>
 <section class="stage" aria-label="3D 測試展示區">
 <div id="prototypeHost" class="prototype-host"></div>
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
 <div class="status" id="status" role="status" aria-live="polite">準備啟動測試引擎…</div>
-</section>
-<footer><p>本頁使用獨立展示物件及程式，完全不讀取玩家存檔，也不修改正式戰鬥。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
+</section></div></section>
+<footer><p>GM 測試使用 session 展示資料，不讀取或修改正式玩家存檔。可預覽與部分完成案例已分開標示。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
 </main>
-<script>
-(function(){
-"use strict";
-const embedded=new URLSearchParams(location.search).get("embedded")==="1";
-if(embedded)document.getElementById("backToGame").hidden=true;
-const status=document.getElementById("status"),fallback=document.getElementById("fallback");
-const fallbackReason=document.getElementById("fallbackReason"),host=document.getElementById("prototypeHost");
-const toggle=document.getElementById("toggle"),quality=document.getElementById("quality");
-let runtime=null,disabled=false,serial=0;
-function fail(reason){
-  host.hidden=true;fallback.hidden=false;fallbackReason.textContent=reason;
-  status.textContent="3D 安全模式：可隨時返回 GM 測試畫面";
-}
-function stop(){
-  serial++;
-  const previous=runtime;runtime=null;
-  previous?.dispose();
-  host.replaceChildren();
-}
-async function start(){
-  stop();const ticket=serial;
-  if(disabled){fail("3D 已停用；不會影響正式遊戲。");return;}
-  if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){
-    fail("3D 模組尚未載入；請重新啟動或返回正式遊戲。");return;
-  }
-  host.hidden=false;
-  runtime=window.Civilization3DRuntime.create({host,onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.textContent="WebGL 已復原，可按「重新啟動」恢復 3D。";}});
-  runtime.setQuality(quality.value);
-  const result=await runtime.show("prototype-hub",window.Civilization3DPrototype.createScene);
-  if(ticket!==serial)return;
-  if(result.ok){fallback.hidden=true;status.textContent="共用 3D Canvas 運行中 · 可旋轉縮放 · 畫質："+quality.options[quality.selectedIndex].text;}
-  else fail("3D 不可用："+result.reason);
-}
-toggle.addEventListener("click",()=>{
-  disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();
-});
-quality.addEventListener("change",()=>{if(runtime)runtime.setQuality(quality.value);});
-document.getElementById("restart").addEventListener("click",start);
-document.getElementById("contextTest").addEventListener("click",()=>{const canvas=host.querySelector("canvas");const ext=canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")||canvas?.getContext("webgl")?.getExtension("WEBGL_lose_context");if(ext)ext.loseContext();else fail("此裝置不支援 WEBGL_lose_context 測試擴充；可手動停用 3D。");});
-window.addEventListener("pagehide",stop);
-window.addEventListener("keydown",event=>{if(embedded&&event.key==="Escape"){event.preventDefault();try{window.parent?.postMessage({type:"civilization3d:close"} ,location.origin);}catch(_){}}});
-function script(src,next){
-  const el=document.createElement("script");el.src=src;el.onload=next;
-  el.onerror=()=>fail("模組載入失敗，仍可返回正式遊戲。");document.head.appendChild(el);
-}
-script("../vendor/babylonjs/7.54.3/babylon.js",()=>{
-  script("./runtime.js?v=20261009-gapfix1",()=>{
-    script("./prototype-engine.js?v=20261009-b02",start);
-  });
-});
-})();
-</script>
+<script src="./test-center.js?v=20261009-center1"></script>
 </body>
 </html>
