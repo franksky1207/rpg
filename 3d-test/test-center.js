@@ -26,12 +26,22 @@ let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
 let appearanceMode=embedded?"formal":"free",formalAppearance=null;
-const freeAppearance={world:1,level:500,quality:5,enhancement:20,equipped:[true,true,true,true,true]};
-const appearanceKinds=new Set(["character","equipment","forge"]);
+const freeAppearance={world:1,level:500,quality:5,enhancement:20,equipped:[true,true,true,true,true],specializations:Array(8).fill(60),markLevels:Array(10).fill(10),civilizationLevel:10,coreLevel:10,hp:20000,atk:5200,def:2600,crit:27,dodge:21,vip:10,breakthrough:0};
+const appearanceKinds=new Set(["character","equipment","forge","specialization","marks","civilization","core"]);
 const appearancePanel=document.createElement("section");
 appearancePanel.className="center-appearance-panel";
-appearancePanel.innerHTML='<details id="appearanceDetails"><summary id="appearanceSummary">展示設定 · 正式角色外觀</summary><div class="center-appearance-modes"><button type="button" id="appearanceFormal">正式角色外觀</button><button type="button" id="appearanceFree">自由展示模式</button></div><p id="appearanceSource" class="muted"></p><div id="appearanceFreeControls" class="center-appearance-free"><label>展示紀元 <select id="appearanceWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label><label>展示等級 <input id="appearanceLevel" type="number" min="1" max="2000" value="500"></label><label>裝備品質 <select id="appearanceQuality"><option value="0">普通</option><option value="1">精良</option><option value="2">稀有</option><option value="3">史詩</option><option value="4">傳說</option><option value="5" selected>神話</option></select></label><label>強化等級 <input id="appearanceEnhancement" type="number" min="0" max="40" value="20"></label><div class="center-appearance-slots">五槽穿戴：<label><input type="checkbox" data-appearance-slot="0" checked>武器</label><label><input type="checkbox" data-appearance-slot="1" checked>頭盔</label><label><input type="checkbox" data-appearance-slot="2" checked>鎧甲</label><label><input type="checkbox" data-appearance-slot="3" checked>鞋子</label><label><input type="checkbox" data-appearance-slot="4" checked>飾品</label></div></div><button type="button" id="appearanceRefresh">重新同步正式角色</button></details>';
+appearancePanel.innerHTML='<details id="appearanceDetails"><summary id="appearanceSummary">展示資料來源 · 正式角色資料</summary><div class="center-appearance-modes"><button type="button" id="appearanceFormal">正式角色資料</button><button type="button" id="appearanceFree">自訂測試資料</button></div><p id="appearanceSource" class="muted"></p><div id="appearanceFreeControls" class="center-appearance-free"><label>展示紀元 <select id="appearanceWorld"><option value="1">銀河紀元</option><option value="2">宇宙紀元</option><option value="3">高維紀元</option></select></label><label>展示等級 <input id="appearanceLevel" type="number" min="1" max="2000" value="500"></label><label>裝備品質 <select id="appearanceQuality"><option value="0">普通</option><option value="1">精良</option><option value="2">稀有</option><option value="3">史詩</option><option value="4">傳說</option><option value="5" selected>神話</option></select></label><label>強化等級 <input id="appearanceEnhancement" type="number" min="0" max="40" value="20"></label><div class="center-appearance-slots">五槽穿戴：<label><input type="checkbox" data-appearance-slot="0" checked>武器</label><label><input type="checkbox" data-appearance-slot="1" checked>頭盔</label><label><input type="checkbox" data-appearance-slot="2" checked>鎧甲</label><label><input type="checkbox" data-appearance-slot="3" checked>鞋子</label><label><input type="checkbox" data-appearance-slot="4" checked>飾品</label></div></div><button type="button" id="appearanceRefresh">重新同步正式角色</button></details>';
 $("centerWorkspace").querySelector(".center-description").after(appearancePanel);
+const growthControls=document.createElement("div");growthControls.className="center-appearance-free";growthControls.id="growthFreeControls";
+const specKeys=["training","scavenge","appraisal","initiative","combo","penetration","counter","drain"];
+const markNames=["印記一","印記二","印記三","印記四","印記五","印記六","印記七","印記八","印記九","印記十"];
+for(let i=0;i<8;i++){const label=document.createElement("label");label.textContent=["實戰訓練","搜刮技巧","鑑價技巧","先制技巧","連擊技巧","穿透技巧","反擊技巧","汲取技巧"][i];const inp=document.createElement("input");inp.type="number";inp.min="0";inp.max="60";inp.value="60";inp.dataset.specIndex=String(i);label.append(inp);growthControls.append(label);}
+for(let i=0;i<10;i++){const label=document.createElement("label");label.textContent=markNames[i];const inp=document.createElement("input");inp.type="number";inp.min="0";inp.max="10";inp.value="10";inp.dataset.markIndex=String(i);label.append(inp);growthControls.append(label);}
+for(const [kind,text] of [["civilization","文明等級"],["core","界弦核心"]]){const label=document.createElement("label");label.textContent=text;const inp=document.createElement("input");inp.type="number";inp.min="0";inp.max="10";inp.value="10";inp.dataset.growthSingle=kind;label.append(inp);growthControls.append(label);}
+for(const [kind,text,min,max,value] of [["hp","HP",0,999999999,20000],["atk","ATK",0,999999999,5200],["def","DEF",0,999999999,2600],["crit","暴擊",0,100,27],["dodge","閃避",0,100,21],["vip","VIP",0,9999,10],["breakthrough","突破",0,9999,0]]){const label=document.createElement("label");label.textContent=text;const inp=document.createElement("input");inp.type="number";inp.min=String(min);inp.max=String(max);inp.value=String(value);inp.dataset.ability=kind;label.append(inp);growthControls.append(label);}
+appearancePanel.querySelector("#appearanceFreeControls").append(growthControls);
+growthControls.onchange=e=>{const el=e.target;if(!(el instanceof HTMLInputElement))return;const low=Number(el.min)||0,high=Number(el.max)||999999999,v=Math.max(low,Math.min(high,Math.floor(Number(el.value)||0)));el.value=String(v);if(el.dataset.specIndex!==undefined)freeAppearance.specializations[Number(el.dataset.specIndex)]=v;else if(el.dataset.markIndex!==undefined)freeAppearance.markLevels[Number(el.dataset.markIndex)]=v;else if(el.dataset.growthSingle)freeAppearance[el.dataset.growthSingle+"Level"]=v;else if(el.dataset.ability)freeAppearance[el.dataset.ability]=v;start();};
+
 function requestAppearance(){
  if(!embedded||window.parent===window)return;
  window.parent.postMessage({type:"civilization3d:appearance-request"},location.origin);
@@ -40,7 +50,7 @@ function freeVisual(){
  const world=freeAppearance.world;
  const cap=world===1?20:40;
  const level=Math.max(0,Math.min(cap,freeAppearance.enhancement));
- return {world,level:freeAppearance.level,equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map((type,i)=>[type,{present:freeAppearance.equipped[i],quality:freeAppearance.quality,level:freeAppearance.level,world}])),enhancements:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,level])),enhancementCap:cap,enhancementMin:0,inventorySamples:Array.from({length:5},()=>({present:true,quality:freeAppearance.quality}))};
+ return {world,level:freeAppearance.level,equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map((type,i)=>[type,{present:freeAppearance.equipped[i],quality:freeAppearance.quality,level:freeAppearance.level,world}])),enhancements:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,level])),enhancementCap:cap,enhancementMin:0,inventorySamples:Array.from({length:5},()=>({present:true,quality:freeAppearance.quality})),abilities:{hp:freeAppearance.hp,atk:freeAppearance.atk,def:freeAppearance.def,crit:freeAppearance.crit,dodge:freeAppearance.dodge},vip:freeAppearance.vip,breakthrough:freeAppearance.breakthrough,specializations:Object.fromEntries(specKeys.map((k,i)=>[k,freeAppearance.specializations[i]])),markLevels:Object.fromEntries(Array.from({length:10},(_,i)=>[String(i),freeAppearance.markLevels[i]])),civilizationLevel:freeAppearance.civilizationLevel,coreLevel:freeAppearance.coreLevel};
 }
 function visualScene(kind,a){
  const types=["weapon","helmet","armor","shoes","accessory"];
@@ -51,12 +61,14 @@ function visualScene(kind,a){
 function syncAppearancePanel(){
  const relevant=appearanceKinds.has(entry().kind);
  appearancePanel.hidden=!relevant;
- $("appearanceSummary").textContent="展示設定 · "+(appearanceMode==="formal"?"正式角色外觀":"自由展示模式");
+ $("appearanceSummary").textContent="展示資料來源 · "+(appearanceMode==="formal"?"正式角色資料":"自訂測試資料");
  $("appearanceFormal").classList.toggle("active",appearanceMode==="formal");
  $("appearanceFree").classList.toggle("active",appearanceMode==="free");
  $("appearanceFreeControls").hidden=appearanceMode!=="free";
+ appearancePanel.querySelectorAll("#appearanceFreeControls > label, .center-appearance-slots").forEach(el=>el.hidden=!["character","equipment","forge"].includes(entry().kind));
+ growthControls.querySelectorAll("label").forEach(el=>{const inp=el.querySelector("input");el.hidden=!(entry().kind==="specialization"?inp.dataset.specIndex!==undefined:entry().kind==="marks"?inp.dataset.markIndex!==undefined:["civilization","core"].includes(entry().kind)?inp.dataset.growthSingle===entry().kind:entry().kind==="character"?inp.dataset.ability!==undefined:false);});
  $("appearanceRefresh").hidden=appearanceMode!=="formal";
- $("appearanceSource").textContent=appearanceMode==="formal"?(formalAppearance?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][formalAppearance.world-1]+"｜Lv."+formalAppearance.level+"｜VIP"+formalAppearance.vip+"｜唯讀展示":"等待正式角色外觀快照；不會改變遊戲資料。"):"自由展示｜僅影響本次 3D 預覽，不寫入正式角色。";
+ $("appearanceSource").textContent=appearanceMode==="formal"?(formalAppearance?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][formalAppearance.world-1]+"｜Lv."+formalAppearance.level+"｜VIP"+formalAppearance.vip+"｜唯讀展示":"等待正式角色資料同步；不會改變遊戲資料。"):"自由展示｜僅影響本次 3D 預覽，不寫入正式角色。";
 
 }
 $("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();if(formalAppearance)start();else requestAppearance();};
@@ -70,7 +82,7 @@ $("appearanceEnhancement").onchange=e=>{freeAppearance.enhancement=Math.max(0,Ma
 window.addEventListener("message",event=>{
  if(!embedded||event.source!==window.parent||event.origin!==location.origin||event.data?.type!=="civilization3d:appearance-response")return;
  const a=event.data.appearance;
- if(!a||a.source!=="formal"||a.version!==1)return;
+ if(!a||a.source!=="formal"||a.version!==2)return;
  formalAppearance=a;syncAppearancePanel();
  if(appearanceMode==="formal"&&appearanceKinds.has(entry().kind))start();
 });
@@ -134,7 +146,7 @@ function renderInfo(){
  $("fixturePanel").hidden=false;
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||c.kind!=="epoch";
- $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!["specialization","marks","civilization","core"].includes(c.kind);
+ $("fixtureProgress").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher";
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
 function safeStop(){
@@ -164,11 +176,13 @@ async function start(){
  const activeVisual=appearanceMode==="formal"?formalAppearance:freeVisual();
  if(appearanceKinds.has(c.kind)&&!activeVisual){status.hidden=false;status.textContent="等待正式角色外觀快照…";return;}
  const growthKinds=["specialization","marks","civilization","core"];
- const growth= growthKinds.includes(c.kind)?{
-   growthKind:c.kind,growthLevels:Array.from({length:c.kind==="specialization"?8:10},(_,i)=>Math.max(0,Math.min(c.kind==="specialization"?60:10,Math.round((i+1)*progress*(c.kind==="specialization"?60/80:1/10))))),
-   growthLevel:progress
+ const growth= growthKinds.includes(c.kind)&&activeVisual?{
+   growthKind:c.kind,
+   growthLevels:c.kind==="specialization"?specKeys.map((key,i)=>Number(appearanceMode==="formal"?activeVisual.specializations?.[key]:freeAppearance.specializations[i])||0)
+     :c.kind==="marks"?(appearanceMode==="formal"?Object.values(activeVisual.markLevels||{}):freeAppearance.markLevels).slice(0,10).map(v=>Number(v)||0):[],
+   growthLevel:Number(c.kind==="civilization"?activeVisual.civilizationLevel:activeVisual.coreLevel)||0
  }:{};
- const visual=appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):growth;
+ const visual=growthKinds.includes(c.kind)?growth:appearanceKinds.has(c.kind)?visualScene(c.kind,activeVisual):{};
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5,highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
