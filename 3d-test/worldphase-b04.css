@@ -1,0 +1,15 @@
+/* Batch 04: visual-only epoch gateways and shared modal treatment.
+   Does not change the formal unlock or transition owner. */
+.world-phase-home-card{position:relative;isolation:isolate;overflow:hidden;border-color:#426c9a;background:linear-gradient(112deg,#0a1323 0%,#132640 65%,#0b1527 100%);}
+.world-phase-home-card::before{content:"";pointer-events:none;position:absolute;z-index:-1;width:170px;height:170px;right:12%;top:-78px;border:1px solid #75b4e78a;border-radius:50%;box-shadow:0 0 0 18px #76bff10b,0 0 0 34px #69c2fa08,0 0 35px #4bb8ff22;transform:rotate(-23deg);}
+.world-phase-home-card[data-world-phase-target="3"]{border-color:#8271b3;background:linear-gradient(112deg,#130f26,#20204a 65%,#0b1324);}
+.world-phase-home-card[data-world-phase-target="3"]::before{border-color:#c09dff9e;box-shadow:0 0 0 17px #a285f50e,0 0 0 36px #bb8dff0b,0 0 40px #ae75f83a;}
+.world-phase-home-card .world-phase-home-copy,.world-phase-home-card .world-phase-home-actions{position:relative;z-index:1;}
+.world-phase-overlay[data-world-phase-target="2"]{background:radial-gradient(ellipse at 70% 15%,#19426588,transparent 58%),#02050de0;}
+.world-phase-overlay[data-world-phase-target="3"]{background:radial-gradient(ellipse at 68% 15%,#43317e8c,transparent 57%),#03030fe6;}
+.world-phase-overlay[data-world-phase-target] .world-phase-card{border-color:#537ca7;box-shadow:0 24px 80px #000b,0 0 55px #2d75bf2a;}
+.world-phase-overlay[data-world-phase-target="3"] .world-phase-card{border-color:#8973b9;box-shadow:0 24px 80px #000b,0 0 55px #9d6cda26;}
+.world-phase-card .world-phase-modal-actions .btn:focus-visible,.world-phase-home-card .btn:focus-visible{outline:3px solid #d0eaff;outline-offset:3px;}
+.world-phase-overlay .world-phase-card{max-height:calc(100dvh - 2 * max(14px,env(safe-area-inset-top)));overscroll-behavior:contain;}
+@media(max-width:600px){.world-phase-overlay{padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));}.world-phase-home-card::before{right:-45px;opacity:.55}.world-phase-modal-actions{flex-wrap:wrap}.world-phase-modal-actions>.btn{min-width:120px;flex:1}}
+@media(prefers-reduced-motion:reduce){.world-phase-home-card::before{animation:none!important}}
