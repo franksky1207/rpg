@@ -1,0 +1,9 @@
+/* Shared responsive Babylon preview enlargement; no forced orientation. */
+#civilization3dFormalHost.civilization-3d-expanded{position:fixed!important;inset:50% auto auto 50%!important;transform:translate(-50%,-50%)!important;width:min(85vw,1440px)!important;height:min(80dvh,900px)!important;max-height:calc(100dvh - 24px)!important;z-index:20030!important;border-radius:16px!important;box-shadow:0 0 0 100vmax rgba(2,6,16,.84),0 24px 70px rgba(0,0,0,.8)!important}
+#civilization3dFormalHost .civilization-3d-layout-controls{position:absolute;left:10px;top:10px;z-index:6;display:flex;gap:7px;flex-wrap:wrap;max-width:calc(100% - 20px)}
+#civilization3dFormalHost .civilization-3d-layout-button{min-height:40px;padding:7px 12px;border:1px solid #6696c4;border-radius:9px;background:#091b30ed;color:#eaf6ff;font:600 13px system-ui;cursor:pointer;touch-action:manipulation}
+#civilization3dFormalHost .civilization-3d-layout-button:focus-visible{outline:3px solid #a9dcff;outline-offset:2px}
+#civilization3dFormalHost .civilization-3d-root{border-radius:inherit}
+@media (max-width:700px) and (orientation:portrait){#civilization3dFormalHost.civilization-3d-expanded{width:95vw!important;height:88dvh!important;max-height:calc(100dvh - 20px)!important;border-radius:12px!important}}
+@media (max-height:500px) and (orientation:landscape){#civilization3dFormalHost.civilization-3d-expanded{width:94vw!important;height:92dvh!important}}
+@media (max-width:700px){#civilization3dFormalHost .civilization-3d-layout-controls{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left))}#civilization3dFormalHost .civilization-3d-camera-controls{bottom:max(12px,env(safe-area-inset-bottom))!important;right:max(8px,env(safe-area-inset-right))!important}}
