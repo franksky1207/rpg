@@ -9,7 +9,7 @@ function script(src){return new Promise((resolve,reject)=>{const s=document.crea
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createScene)return;
  if(!loading)loading=(async()=>{
-  if(!global.BABYLON?.Engine)await script("https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js");
+  if(!global.BABYLON?.Engine)await script("vendor/babylonjs/7.54.3/babylon.js");
   if(!global.Civilization3DPrototype?.createScene)await script("3d-test/prototype-engine.js?v=20261009-b03");
  })().catch(error=>{loading=null;throw error;});
  return loading;

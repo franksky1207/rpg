@@ -61,7 +61,7 @@ function script(src,next){
   const el=document.createElement("script");el.src=src;el.onload=next;
   el.onerror=()=>fail("模組載入失敗，仍可返回正式遊戲。");document.head.appendChild(el);
 }
-script("https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js",()=>{
+script("../vendor/babylonjs/7.54.3/babylon.js",()=>{
   script("./runtime.js?v=20261009-gapfix1",()=>{
     script("./prototype-engine.js?v=20261009-b02",start);
   });
