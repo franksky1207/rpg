@@ -11,6 +11,8 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **2026-10-09 GM 3D 狀態列遮擋鏡頭按鈕修正**：`3d-test/test-center.js` 在成功載入後隱藏底部 `#status`，保留載入中／失敗／WebGL 復原顯示；`test-center.css` 新增 `[hidden]` 明確隱藏規則；`3d-test/index.html` 更新 JS/CSS cache-bust。`tests/runtime/gm-3d-test-center-browser.js` 加入成功場景遮擋回歸測試，須待 CI 確認結果。正式遊戲 preview 不受影響。
+
 - **2026-10-09 GM 3D 測試中心基礎架構已實作、前五批回填**：正式 GM 測試選單改稱「3D 測試中心」，`3d-test/index.html`＋`test-center.js`＋`test-center.css` 已建九大分類、搜尋、八筆案例、session 進度／紀元／情境、共用 Babylon scene factory 顯示、WebGL 故障測試及原 GM 入口返回。仍只有 B01～B05 既有的 3D 能力，B04 突破 Modal、B05 正式 3D 選怪及轉生完整 E2E 尚未完成。新增 Chromium 專屬 CI：run 37900894410 通過；其餘批次必須持續擴充 catalog。
 
 - **2026-10-09 GM 3D 開發測試中心總目錄已建立（規劃文件，尚非 UI 施工）**：新增 `3D_GM_TEST_CENTER_CATALOG.md`，將第 01～40 批逐一分配到九大分類 A～I，含主次分類、正式／GM 同源場景、fixture、測試 IDs、回歸／裝置矩陣與未來新增分類規範；B01～B05 八個補登測試項目已定義。同步於 `3D_IMPLEMENTATION_PLAN.md` **每一批**新增 GM 同步義務與強制驗收規範。**下一步先升級 `gm3dprototype.js` → `3d-test/index.html` 的 GM 測試中心目錄、場景註冊與 B01～B05 回填，之後再施工 B06**。目錄規劃已入庫，但分類 UI、搜尋、真實案例接入尚未實作，不可標記完成。各批須同步正式預覽與 GM 分類入口，無 GM 對照者不得標記該批全數完成。
