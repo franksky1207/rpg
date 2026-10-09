@@ -1,0 +1,87 @@
+name: Vendor Babylon.js 7.54.3
+on:
+  push:
+    paths:
+      - '.github/workflows/vendor-babylon-7543.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: https://registry.npmjs.org
+      - name: Acquire official UMD package and verify published integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .vendor-download vendor/babylonjs/7.54.3
+          EXPECTED="$(npm view babylonjs@7.54.3 dist.integrity)"
+          npm pack babylonjs@7.54.3 --pack-destination .vendor-download --silent
+          node - "$EXPECTED" <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const expected=process.argv[2].trim();
+          const raw=fs.readFileSync('.vendor-download/babylonjs-7.54.3.tgz');
+          const got='sha512-'+crypto.createHash('sha512').update(raw).digest('base64');
+          if(got!==expected)throw Error('npm dist integrity mismatch');
+          NODE
+          tar -xzf .vendor-download/babylonjs-7.54.3.tgz -C .vendor-download
+          test -s .vendor-download/package/babylon.js
+          grep -Eq 'BABYLON|Babylon' .vendor-download/package/babylon.js
+          cp .vendor-download/package/babylon.js vendor/babylonjs/7.54.3/babylon.js
+          if [ -f .vendor-download/package/LICENSE ]; then
+            cp .vendor-download/package/LICENSE vendor/babylonjs/7.54.3/LICENSE
+          elif [ -f .vendor-download/package/license.md ]; then
+            cp .vendor-download/package/license.md vendor/babylonjs/7.54.3/LICENSE
+          else
+            echo 'Package missing license; aborting' >&2
+            exit 1
+          fi
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const root='vendor/babylonjs/7.54.3/';
+          const pkg=JSON.parse(fs.readFileSync('.vendor-download/package/package.json','utf8'));
+          if(pkg.name!=='babylonjs'||pkg.version!=='7.54.3'||pkg.license!=='Apache-2.0')throw Error('Unexpected npm package metadata');
+          const js=fs.readFileSync(root+'babylon.js'),license=fs.readFileSync(root+'LICENSE');
+          const sha=buf=>crypto.createHash('sha256').update(buf).digest('hex');
+          fs.writeFileSync(root+'SOURCE.md','# Babylon.js 7.54.3 (vendored)\\n\\nSource: https://registry.npmjs.org/babylonjs/-/babylonjs-7.54.3.tgz\\nPackage: babylonjs@7.54.3 (UMD bundle)\\nLicense: Apache-2.0; see LICENSE.\\n\\nVerified npm dist.integrity (SHA-512) during GitHub Actions acquisition.\\n\\nbabylon.js SHA-256: '+sha(js)+'\\nLICENSE SHA-256: '+sha(license)+'\\n');
+          NODE
+      - name: Switch both entrypoints only after assets validated
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [
+            (Path('3d-test/index.html'), 'https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js', '../vendor/babylonjs/7.54.3/babylon.js'),
+            (Path('3d-test/formal-home.js'), 'https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js', 'vendor/babylonjs/7.54.3/babylon.js'),
+          ]
+          for path, old, new in paths:
+              source=path.read_text(encoding='utf-8')
+              if old not in source:
+                  raise RuntimeError(f'Missing expected CDN URL in {path}')
+              path.write_text(source.replace(old,new),encoding='utf-8')
+          index=Path('index.html')
+          source=index.read_text(encoding='utf-8')
+          old='3d-test/formal-home.js?v=20261009-b03&v2=20261009-foundation-close1'
+          if old not in source: raise RuntimeError('Missing formal-home cache-bust anchor')
+          index.write_text(source.replace(old,old+'&v3=20261009-vendor-babylon7543'),encoding='utf-8')
+          PY
+          node --check 3d-test/formal-home.js
+          test -s vendor/babylonjs/7.54.3/babylon.js
+          git diff --check
+      - name: Commit reproducible vendor and loader switch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add vendor/babylonjs/7.54.3/babylon.js vendor/babylonjs/7.54.3/LICENSE vendor/babylonjs/7.54.3/SOURCE.md 3d-test/index.html 3d-test/formal-home.js index.html
+          git commit -m "build(3d): vendor verified Babylon.js 7.54.3 and switch entrypoints"
+          git push origin HEAD:main
