@@ -41,8 +41,26 @@
  const GM_DIGEST_KEY="civilization-war-gm-resource-digests-v1";
  let gmCacheReport=Object.freeze({version:1,checked:0,unchanged:0,changed:0});
  function gmResourceCacheSnapshot(){return gmCacheReport;}
+ async function applyDeployedGmVersions(){
+  if(typeof fetch!=="function")return false;
+  let response=null;
+  try{response=await fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"});}catch(_){return false;}
+  if(!response?.ok)return false;
+  const manifest=await response.json();
+  if(manifest?.schema!==1||typeof manifest.files!=="object")throw new Error("startup-resource-manifest-invalid");
+  for(const node of declarations("gm")){
+   if(node.dataset.loaded==="1")continue;
+   const url=new URL(node.dataset.src,document.baseURI);
+   const digest=manifest.files[url.pathname.slice(new URL(document.baseURI).pathname.lastIndexOf("/")+1)]||manifest.files[url.pathname.split("/").pop()];
+   if(typeof digest!=="string"||!/^[a-f0-9]{24}$/.test(digest))throw new Error("startup-resource-manifest-missing");
+   url.searchParams.set("asset",digest);
+   node.dataset.src=url.pathname+url.search;
+  }
+  return true;
+ }
  async function warmAuthorizedGmScripts(){
   if(!gmAuthorized()||typeof fetch!=="function")return false;
+  await applyDeployedGmVersions();
   const nodes=declarations("gm"),urls=nodes.map(node=>node.dataset.src);
   let old={};try{old=JSON.parse(localStorage.getItem(GM_DIGEST_KEY)||"{}")||{};}catch(_){}
   const next={...old},counts={checked:0,unchanged:0,changed:0};
