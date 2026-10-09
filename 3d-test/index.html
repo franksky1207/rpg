@@ -14,7 +14,7 @@
 <div class="fallback" id="fallback" hidden><h2>已切換為安全模式</h2><p id="fallbackReason">目前環境未啟用 WebGL，仍可返回正式遊戲。</p></div>
 <div class="status" id="status" role="status" aria-live="polite">準備啟動測試引擎…</div>
 </section>
-<footer><p>本頁使用獨立展示物件及程式，完全不讀取玩家存檔，也不修改正式戰鬥。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button></div></footer>
+<footer><p>本頁使用獨立展示物件及程式，完全不讀取玩家存檔，也不修改正式戰鬥。</p><div class="actions"><label for="quality">畫質 <select id="quality"><option value="low">省電</option><option value="medium" selected>平衡</option><option value="high">高畫質</option></select></label><button type="button" id="toggle">停用 3D</button><button type="button" id="restart">重新啟動</button><button type="button" id="contextTest">測試 WebGL 中斷</button></div></footer>
 </main>
 <script>
 (function(){
@@ -52,13 +52,14 @@ toggle.addEventListener("click",()=>{
 });
 quality.addEventListener("change",()=>{if(runtime)runtime.setQuality(quality.value);});
 document.getElementById("restart").addEventListener("click",start);
+document.getElementById("contextTest").addEventListener("click",()=>{const canvas=host.querySelector("canvas");const ext=canvas?.getContext("webgl2")?.getExtension("WEBGL_lose_context")||canvas?.getContext("webgl")?.getExtension("WEBGL_lose_context");if(ext)ext.loseContext();else fail("此裝置不支援 WEBGL_lose_context 測試擴充；可手動停用 3D。");});
 window.addEventListener("pagehide",stop);
 function script(src,next){
   const el=document.createElement("script");el.src=src;el.onload=next;
   el.onerror=()=>fail("模組載入失敗，仍可返回正式遊戲。");document.head.appendChild(el);
 }
 script("https://cdn.jsdelivr.net/npm/babylonjs@7.54.3/babylon.js",()=>{
-  script("./runtime.js?v=20261009-b02",()=>{
+  script("./runtime.js?v=20261009-gapfix1",()=>{
     script("./prototype-engine.js?v=20261009-b02",start);
   });
 });
