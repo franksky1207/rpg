@@ -89,5 +89,17 @@
     });
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.2.0",supported,mount,createScene});
+  function createEpochScene(args){
+    const scene=createScene(args),B=args.BABYLON;
+    const world=Number(args.world)||1;
+    const color=world===3?new B.Color3(.48,.23,.83):world===2?new B.Color3(.1,.52,.68):new B.Color3(.11,.39,.79);
+    scene.clearColor=world===3?new B.Color4(.035,.015,.075,1):world===2?new B.Color4(.01,.035,.055,1):new B.Color4(.015,.026,.065,1);
+    const portal=B.MeshBuilder.CreateTorus("epoch-gateway",{diameter:6,thickness:.12,tessellation:80},scene);
+    portal.rotation.y=Math.PI/3;portal.position.y=.2;
+    const portalMat=new B.StandardMaterial("epoch-gateway-light",scene);
+    portalMat.emissiveColor=color;portal.material=portalMat;
+    scene.onBeforeRenderObservable.add(()=>{portal.rotation.z+=Math.min(args.engine.getDeltaTime(),50)*.00012;});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.4.0",supported,mount,createScene,createEpochScene});
 })(window);
