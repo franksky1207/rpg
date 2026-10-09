@@ -9,12 +9,13 @@
 ---
 
 
-## 3D 全面升級新計畫（2026-10-09，規劃已建立、尚未施工）
+## 3D 全面升級新計畫（2026-10-09，第 01 批獨立原型已提交）
 
 - 唯一完整批次表：[`3D_IMPLEMENTATION_PLAN.md`](3D_IMPLEMENTATION_PLAN.md)，含 **40 批**：A1 全正式介面 18 批 → A2 真 3D 場景 8 批 → B 人物／裝備／怪物 8 批 → C 正式 3D 戰鬥與總驗收 6 批。
 - 使用者優先度：**先覆蓋進入遊戲能看到的所有正式介面／子頁面／動態彈窗**，不是先完成 3D 戰鬥。正式遊戲核心、存檔、Target Context、轉生與高速補播規則不得因視覺改造而變動。
 - 素材、程式、GLB、資產登錄表原則留在單一 `franksky1207/rpg` GitHub 儲存庫，保留原版回退。
-- **狀態：全部未開始**。使用者在後續對話指定「第 N 批」才可執行該批；執行後依 roadmap 回填完成證據與 commit。
+- **狀態：第 01 批程式已提交／靜態核對；瀏覽器與手機實測待補。第 02～40 批未開始。** 其他批次只依使用者指定執行。
+- 本次新增 `3d-test/index.html`、`3d-test/prototype-engine.js`、`3d-test/prototype.css`，固定 Babylon.js 7.54.3 測試載入；獨立 WebGL 場景、停用與重啟、失敗 fallback 和 dispose，不觸及正式首頁、存檔與戰鬥。測試頁現用外部固定版 CDN，正式使用前仍需將相依檔納回 GitHub。施工 commits：`b5e664268a9fc11bc83679f22d451398f77bec6a`、`23a229628dca1f91fcdf6f15442d7b7c259f35f2`、`a70438a14f8e7c2a7d3b0e122839d635e052c231`；本次沒有完整瀏覽器 E2E / 手機實測或 exact HEAD CI success。
 - 此 3D 新計畫不覆蓋本交接檔的任何既有遊戲正式現況；每批操作先重讀 current `main`。
 
 # 0. 本次交接基準
@@ -1225,5 +1226,5 @@ d1cd0a4a5becf753cbd45beb578236780822a1cc
 9. Save Schema current=17；不要因 runtime-only GM authorization／preference／diagnostics 自行升 Schema。
 10. 若 handoff 與 main 衝突，以 main 為準並直接修正 handoff。
 
-目前新增《文明戰線》3D 全面升級 40 批規劃，詳見 `3D_IMPLEMENTATION_PLAN.md`；**全部尚未施工**。其他新優化仍須依需求重查 main。
+目前《文明戰線》3D 全面升級 40 批規劃，詳見 `3D_IMPLEMENTATION_PLAN.md`；**第 01 批獨立原型已提交（瀏覽器實測待補），第 02～40 批未開始**。其他新優化仍須依需求重查 main。
 ```
