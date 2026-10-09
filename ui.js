@@ -99,7 +99,7 @@ function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
  const fn={home:homePage,adventure:adventurePage,storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
- document.getElementById("main").innerHTML=fn();wireSettings();setTimeout(compactMobileDom,0);
+ document.getElementById("main").innerHTML=fn();wireSettings();if(typeof window.civilization3dHomeRouteRendered==="function")window.civilization3dHomeRouteRendered(view);setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
 function homeBackHtml(){return `<div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div>`}
@@ -114,6 +114,7 @@ function homePage(){
  const secondWorldEntry=typeof window.secondWorldHomeEntryHtml==="function"?window.secondWorldHomeEntryHtml():"";
  const third=typeof window.isThirdWorldEntered==="function"&&window.isThirdWorldEntered()===true;
  return `<section class="home-screen">
+  <div class="controls" style="justify-content:flex-end;margin-bottom:10px"><button id="civilization3dHomeToggle" class="btn" type="button" aria-pressed="false" onclick="window.civilization3dToggleHome?.()">預覽 3D 艦橋</button></div>
   <div class="home-title"><h2>文明戰線</h2><div class="muted">打怪、升級、換裝，前往更強的地圖。</div></div>
   ${secondWorldEntry}
   <div class="menu-grid">
