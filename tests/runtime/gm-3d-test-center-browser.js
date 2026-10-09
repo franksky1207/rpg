@@ -11,6 +11,8 @@ const assert=require("node:assert/strict");
   assert.equal(await page.locator("#categoryList .center-category").count(),10);
   assert.equal(await page.locator("#caseList .center-case").count(),8);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
+  assert.equal(await page.locator(".stage #status").count(),0,"Status must never overlay the 3D stage");
+  assert.equal(await page.locator(".center-workspace > #status").count(),1,"Status must live above 3D stage");
   await page.locator("#caseSearch").fill("B05");
   assert.equal(await page.locator("#caseList .center-case").count(),3);
   await page.locator("#caseSearch").fill("");
