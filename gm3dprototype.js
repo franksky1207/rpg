@@ -54,7 +54,14 @@ document.addEventListener("keydown",event=>{
     if(document.activeElement===document.body){event.preventDefault();overlay.querySelector("button")?.focus();}
   }
 });
-window.addEventListener("message",event=>{if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow)return;if(event.data?.type==="civilization3d:close")close();});
+window.addEventListener("message",event=>{
+ if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow||!allowed())return;
+ if(event.data?.type==="civilization3d:close"){close();return;}
+ if(event.data?.type==="civilization3d:appearance-request"){
+  const appearance=window.Civilization3DAppearance?.capture();
+  event.source.postMessage({type:"civilization3d:appearance-response",appearance},event.origin);
+ }
+});
 window.openGm3DPrototype=open;
 window.closeGm3DPrototype=close;
 window.gm3DPrototypeTestHtml=function(){
