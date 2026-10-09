@@ -6,9 +6,9 @@ const assert=require("node:assert/strict");
  const errors=[];page.on("pageerror",e=>errors.push(String(e)));
  try{
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
-  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===2,{timeout:60000});
+  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===3,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),7);
-  assert.equal(await page.locator("#caseList .center-case").count(),7);
+  assert.equal(await page.locator("#caseList .center-case").count(),11);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
   assert.equal(await page.locator("#caseMetadata").count(),0);
@@ -16,9 +16,35 @@ const assert=require("node:assert/strict");
   for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
+  // Verify one shared readonly snapshot contract and independent GM test inputs.
+  await page.getByRole("button",{name:"玩家、裝備與養成"}).click();
+  assert.equal(await page.locator("#caseList .center-case").count(),7);
+  await page.getByRole("button",{name:"八種專精星環"}).click();
+  await page.locator("#appearanceDetails summary").click();
+  await page.locator("#appearanceFree").click();
+  assert.equal(await page.locator("#growthFreeControls [data-spec-index]:visible").count(),8);
+  assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
+  await page.locator('#growthFreeControls [data-spec-index="0"]').fill("17");
+  await page.locator('#growthFreeControls [data-spec-index="0"]').dispatchEvent("change");
+  await page.getByRole("button",{name:"十印記星環"}).click();
+  assert.equal(await page.locator("#growthFreeControls [data-mark-index]:visible").count(),10);
+  await page.locator('#growthFreeControls [data-mark-index="0"]').fill("4");
+  await page.locator('#growthFreeControls [data-mark-index="0"]').dispatchEvent("change");
+  await page.getByRole("button",{name:"文明等級核心"}).click();
+  assert.equal(await page.locator("#growthFreeControls [data-growth-single]:visible").count(),1);
+  await page.getByRole("button",{name:"界弦核心"}).click();
+  assert.equal(await page.locator("#growthFreeControls [data-growth-single]:visible").count(),1);
+  await page.getByRole("button",{name:"角色全身展示"}).click();
+  assert.equal(await page.locator("#growthFreeControls [data-ability]").count(),0);
+  await page.getByRole("button",{name:"八種專精星環"}).click();
+  await page.locator("#appearanceFormal").click();
+  assert.equal(await page.locator("#appearanceFreeControls").isVisible(),false);
+  // Embedded preview without a formal host must wait, not substitute free fixture values.
+  assert.ok((await page.locator("#status").innerText()).includes("等待正式角色"));
   await page.locator("#caseSearch").fill("銀河紀元星圖");
   assert.equal(await page.locator("#caseList .center-case").count(),1);
   await page.locator("#caseSearch").fill("");
+  await page.getByRole("button",{name:"全部場景"}).click();
   await page.getByRole("button",{name:"冒險與宇宙地圖"}).click();
   assert.equal(await page.locator("#caseList .center-case").count(),3);
   await page.getByRole("button",{name:"銀河紀元星圖"}).click();
@@ -61,6 +87,6 @@ const assert=require("node:assert/strict");
   assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 6 categories, 7 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  console.log("PASS GM visual center: 6 categories, 11 scenes, no engineering text, mobile maximize/restore",mobile,restore);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
