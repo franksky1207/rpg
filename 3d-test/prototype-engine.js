@@ -456,6 +456,29 @@
     const complete=make("frontier-complete",[.83,.61,.25],true);
     const ground=B.MeshBuilder.CreateCylinder("frontier-ground",{diameter:10.6,height:.3,tessellation:48},scene);
     ground.position.y=-.7;ground.material=iron;
+    if(mode==="alternate"){
+      const universe=Math.max(1,Math.min(200,Math.floor(Number(args.alternateUniverse)||Math.min(200,Math.floor(progress/5)+1))));
+      const depth=Math.max(1,Math.min(5,Math.floor(Number(args.alternateDepth)||Math.floor(progress%5)+1)));
+      const segment=Math.ceil(universe/10),first=(segment-1)*10+1,selected=universe-first;
+      for(let i=0;i<10;i++){
+        const number=first+i,theta=2*Math.PI*i/10,x=Math.cos(theta)*3.8,z=Math.sin(theta)*3.8;
+        const cleared=progress>=number*5,focused=i===selected;
+        const node=B.MeshBuilder.CreatePolyhedron("alternate-universe-"+number,{type:2,size:focused?.82:cleared?.57:.44},scene);
+        node.position.set(x,focused?.48:.18,z);node.material=focused?active:cleared?complete:sealed;
+        const ring=B.MeshBuilder.CreateTorus("alternate-universe-ring-"+number,{diameter:focused?1.55:1.15,thickness:.05,tessellation:28},scene);
+        ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused?active:cleared?complete:sealed;
+      }
+      for(let i=1;i<=5;i++){
+        const layer=B.MeshBuilder.CreateTorus("alternate-depth-"+i,{diameter:.7+i*.42,thickness:i===depth?.13:.05,tessellation:36},scene);
+        layer.rotation.x=Math.PI/2;layer.position.y=.1+(i-1)*.15;
+        layer.material=i===depth?active:progress>=(universe-1)*5+i?complete:sealed;
+      }
+      const core=B.MeshBuilder.CreatePolyhedron("alternate-selected-core",{type:2,size:1.1},scene);
+      core.position.y=1.15;core.material=active;
+      scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.00016;});
+      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
+      return scene;
+    }
     const count=mode==="calamity"?10:12;
     for(let i=0;i<count;i++){
       const theta=2*Math.PI*i/count,x=Math.cos(theta)*3.75,z=Math.sin(theta)*3.75;
