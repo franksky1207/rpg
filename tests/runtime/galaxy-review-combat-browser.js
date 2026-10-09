@@ -20,7 +20,7 @@ const assert=require("node:assert/strict");
    return {hasPrepare:!!document.querySelector(".galaxy-review-prepare"),hasEnemy:!!document.querySelector(".enemy-card"),hasButton:!!document.querySelector('button[onclick="startGalaxyReviewBattle()"]')};
   });
   if(!setup.hasPrepare){await page.locator(".galaxy-review-action").first().click();}
-  assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(setup.hasEnemy,true);assert.equal(setup.hasButton,true);
+  assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(await page.locator(".galaxy-review-prepare .enemy-card").count(),5);assert.equal(await page.locator('button[onclick="startGalaxyReviewBattle()"]').count(),1);
   for(let n=0;n<2;n++){
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
