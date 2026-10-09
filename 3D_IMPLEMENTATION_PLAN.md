@@ -379,6 +379,15 @@
 - **驗收限制**：本次僅 GitHub 原始檔回讀、靜態檢查與差異核對；無可信的瀏覽器/手機操作、GPU instrumentation 或 current HEAD CI 通過證據，不應標示「四項均完整驗收」。正式戰鬥、state、Save Schema 17、GM 結算未更動。
 - **主要程式 commits**：`7bf64ac4c61a5d5ec801c055bbe46808952a74d2`、`a73bf889bcbe6938e0466365de2c343a019edcf1`、`c447f83351043a0ce6b29319f3e47f8a31bc92bf`、`e46165b6b5bd313fbe35117042137fb7ebd2a0de`、`9faa1c3b1ecd1787491ea8e63e0c370593a2f0bb`。
 
+
+### 2026-10-09｜Babylon.js 7.54.3 官方發行檔本地化：完成
+
+- GitHub Actions `Vendor Babylon.js 7.54.3` 由官方 npm registry 下載 `babylonjs@7.54.3`，先與 npm `dist.integrity`（SHA-512）逐 byte 核對，後確認 package name/version/license。
+- 已存入 `vendor/babylonjs/7.54.3/babylon.js`（6,794,120 bytes）、`LICENSE`、`SOURCE.md`。SHA-256（babylon.js）：`420088fc4c31c22591703ce207c7736f15419faa556b0678d28f71dbf7ea523a`；license hash 與來源載於 SOURCE.md。
+- 正式主畫面預覽 `3d-test/formal-home.js` 和 GM 測試 `3d-test/index.html` 已改本地相對路徑；`index.html` 已刷新 formal-home cache-bust。GitHub Action 的 acquire/verify, switch, commit 步驟均成功，資產與入口已從 current main 回讀。
+- **B01-G1 本地化程式與資產已完成**；保留手動進出、WebGL 中斷、手機／瀏覽器 E2E 和完整 40 批正式 UI 接入之獨立驗收義務。不能把 workflow 及靜態 GitHub 驗證等同裝置測試。
+- 執行證據：[GitHub Actions run 37892987459](https://github.com/franksky1207/rpg/actions/runs/37892987459)；自動 vendor+改路徑 commit `51492689189566b053b3dd3e637d345aa22c34e7`，SOURCE.md 排版修正 `97fd23894de22b077579441716fb8fd15c75b9c0`。
+
 ## 7. 新對話可直接複製的指令
 
 ```text
