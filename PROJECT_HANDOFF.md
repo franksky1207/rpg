@@ -11,6 +11,8 @@
 
 # 《文明戰線》PROJECT HANDOFF
 
+- **2026-10-09 3D 載入效能優化**：正式 3D 橋接於網頁完成後的閒置時段僅預先快取 Babylon.js 7.54.3 與共用 scene factory，不提前建立 WebGL／Canvas／GPU 場景；正式首次點擊改平行載入獨立 JS（並保留失敗重試），GM iframe 測試中心 Babylon.js／runtime／scene factory 改平行載入，GM 與正式頁使用同一共用場景資源 URL 以提高 HTTP 快取重用。保留使用者手動啟動、關閉釋放 GPU、場景與存檔不變。實際首開速度／網路與手機測試尚待量測。
+
 - **2026-10-09 GM 啟動加速調整**：設定頁在 `state.gm` 已授權時先呈現 GM 管理載入區塊，GM deferred group 完成即原區塊注入完整 `gmHtml`，不強制重繪全頁或改存檔；`scriptgrouploader.js` 改於 DOMContentLoaded 排程，而非等待 window load（圖像等資源），仍維持 GM 模組原順序與授權驗證，失敗時提供重試按鈕。自動化／手機時間測量尚待驗收。
 
 
