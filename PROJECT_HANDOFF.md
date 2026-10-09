@@ -11,6 +11,7 @@
 
 ## 3D 全面升級新計畫（2026-10-09，第 01～02 批工程已提交）
 
+- **第 05 批 CI 補充（2026-10-09）**：GitHub exact-HEAD Runtime Integrity 在 `tests/runtime/js-integrity.js` 的既有 GM script-group loader cache 契約失敗（production `index.html` 已累積 v5～v8 cache token，但舊測試只允許到 v4）；暫時核對完整字串後下一項既有 GM 授權 owner 契約仍失敗。此為跨模組舊測試／正式程式不一致，非第 05 批新 JavaScript 語法失敗；已撤回臨時修改該舊測試的提交內容，未在本批放寬其他 GM 驗收。**Runtime Integrity 未通過；Playwright 瀏覽器 smoke 因前段失敗未執行**。詳見 [CI run 37894390745](https://github.com/franksky1207/rpg/actions/runs/37894390745)、[後續 CI run 37894599615](https://github.com/franksky1207/rpg/actions/runs/37894599615)。
 - **2026-10-09 3D 第 05 批銀河冒險施工**：正式地圖 owner `worldmapui.js` 與準備頁 owner `ui.js` 加入手動「預覽 3D 銀河星圖」，`3d-test/prototype-engine.js` 新增十區域節點／五怪象徵 3D 幾何（只讀正式 WORLD_REGIONS、unlockedMap、selectedMap，按 mapStart 判定大區鎖定），`3d-test/formal-home.js` 將隔離 Canvas 用於冒險頁，切離冒險或進戰鬥自動回退並釋放；`3d-test/galaxy-b05.css` 更新地圖卡／怪物卡科幻視覺與響應式排版；`index.html` 已更新 cache-bust。**正式區域／怪物／進度／鎖定／戰鬥 Target Context／背包返回均沿原版 owner**。本批是 WebGL 星圖預覽與 HTML 原版流程共存，不是全頁 3D 選怪；真機、手機、回顧與不同進度存檔仍待驗，不能標記全面 L1 驗收。詳見 `3D_IMPLEMENTATION_PLAN.md` 第 05 批。
 
 - **2026-10-09 3D 第 04 批第一階段已施工**：正式 `worldphaseui.js` 三種既有紀元 overlay 加入只讀 `data-world-phase-target`，CSS `3d-test/worldphase-b04.css` 加入宇宙／高維入口與條件、確認、解鎖通知差異；正式主畫面自選 3D 預覽新增讀取 `currentWorldPhase()` 的實體 portal torus。正式解鎖、轉換與存檔 owner 未改。`index.html` 同步更新 CSS 與 JS cache-bust。**完整導航/全部彈窗 WebGL L1、手機及瀏覽器實測仍待驗收**；第 05 批未開始。詳見 3D 計畫第 04 批。
