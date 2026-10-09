@@ -110,3 +110,7 @@ GM 測試中心是 **同一套 3D 模組的集中驗收入口**，正式畫面�
 **部分實作邊界**：B04 只含紀元 portal 外觀，不在 GM 中模擬正式突破資格、不可逆流程與所有 Modal；C05 怪物只有 5 個立體象徵，沒有可操作的完整怪物模型或正式選怪；I05 是純展示情境標籤，不能取代正式轉生／回顧存檔 E2E。其他 B06～B40 的具體模型、動畫、場景仍未製作，目錄主類別已預留但不能誤判完工。
 
 **測試**：`tests/runtime/gm-3d-test-center-browser.js` 與 `.github/workflows/gm-3d-test-center-browser.yml` 在真正 Chromium 瀏覽器驗證九類、八案例、搜尋篩選、B05 場景切換、session fixture 與手機窄螢幕版面。首輪專屬 CI [run 37900894410](https://github.com/franksky1207/rpg/actions/runs/37900894410) 通過。該 CI 不驗證真實手機 GPU FPS、轉生存檔或完整 3D 戰鬥，仍須人工與後續批次驗收。
+
+## 9. GM 預覽尺寸模式
+
+2026-10-09 GM 3D 測試中心新增「標準／最大化」雙模式：在同一場景舞台右上角切換；最大化填滿內嵌 GM iframe 允許的桌機／直式手機畫面，Esc 還原且不關閉 GM iframe；相機、選取案例、fixture 不重新建立。`3d-test/index.html`、`test-center.js`、`test-center.css`、`tests/runtime/gm-3d-test-center-browser.js` 同步更新，包含手機窄螢幕回歸測試。
