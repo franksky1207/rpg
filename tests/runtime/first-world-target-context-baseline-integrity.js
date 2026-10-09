@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION===1&&window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION===7&&window.GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION===2&&Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)===4&&window.MAINLINE_BOSS_STORY_PIPELINE_VERSION===2&&window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2,{timeout:30000});
+  await page.waitForFunction(()=>window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION===1&&window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION===8&&window.GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION===2&&Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)===4&&window.MAINLINE_BOSS_STORY_PIPELINE_VERSION===2&&window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2,{timeout:30000});
   const report=await page.evaluate(async()=>{
    const deep=value=>JSON.parse(JSON.stringify(value));
    const originalState=deep(state),originalSelections={selectedMap,selectedEnemy,selectedBattleCount,adventureScreen,battleBusy,currentCombatEncounter};
