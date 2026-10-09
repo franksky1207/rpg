@@ -25,6 +25,7 @@ function create(options={}){
     button.style.cssText="min-width:42px;height:42px;padding:0 10px;border:1px solid #6696c4;border-radius:9px;background:#091b30e8;color:#eaf6ff;font:700 22px system-ui;cursor:pointer;touch-action:manipulation";
     controls.appendChild(button);return button;
   });
+  root.appendChild(controls);
   const layoutControls=document.createElement("div");
   layoutControls.className="civilization-3d-layout-controls";
   const expandButton=document.createElement("button");
