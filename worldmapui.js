@@ -86,7 +86,7 @@
     syncRegionOpenState();
     const activeIndex=activeRegionIndex();
     const visible=WORLD_REGIONS.filter(regionUnlocked);
-    return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div><div class="world-region-list">${visible.map(region=>regionHtml(region,activeIndex,WORLD_REGIONS.indexOf(region))).join("")}</div></section>`;
+    return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">冒險地圖</h2><span></span></div>${typeof galaxy3dPreviewControl==="function"?galaxy3dPreviewControl():""}<div class="world-region-list">${visible.map(region=>regionHtml(region,activeIndex,WORLD_REGIONS.indexOf(region))).join("")}</div></section>`;
   };
 
 
