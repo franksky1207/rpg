@@ -81,6 +81,21 @@ const assert = require("node:assert/strict");
     assert.equal(reviewClick.button,true,"No Galaxy review challenge button: "+JSON.stringify(reviewClick));
     assert.equal(reviewClick.prepared,true,"Galaxy review challenge did not open monster selector: "+JSON.stringify(reviewClick));
     console.log("PASS Galaxy review challenge click "+JSON.stringify(reviewClick));
+    // Physical pointer hit test: programmatic click can bypass an overlay.
+    const pointerTest=await page.evaluate(()=>{
+      const entered=window.isSecondWorldEntered,phase=window.currentWorldPhase,era=window.getAdventureEraView;
+      window.__galaxyReviewPointerRestore=()=>{window.isSecondWorldEntered=entered;window.currentWorldPhase=phase;window.getAdventureEraView=era;};
+      window.isSecondWorldEntered=()=>true;window.currentWorldPhase=()=>2;window.getAdventureEraView=()=>"galaxy-review";
+      window.go("adventure");
+      const button=document.querySelector(".galaxy-review-action"),box=button?.getBoundingClientRect();
+      const hit=box?document.elementFromPoint(box.x+box.width/2,box.y+box.height/2):null;
+      return {hasButton:!!button,hitTag:hit?.tagName,hitClass:hit?.className,contains:!!(hit&&(button===hit||button?.contains(hit))),box:box?{x:box.x,y:box.y,width:box.width,height:box.height}:null};
+    });
+    assert.equal(pointerTest.contains,true,"Galaxy review button pointer blocked: "+JSON.stringify(pointerTest));
+    await page.locator(".galaxy-review-action").first().click();
+    assert.equal(await page.locator("#main .galaxy-review-prepare").count(),1,"Physical click failed to open Galaxy review");
+    await page.evaluate(()=>{window.__galaxyReviewPointerRestore?.();delete window.__galaxyReviewPointerRestore;});
+    console.log("PASS Galaxy review physical click "+JSON.stringify(pointerTest));
     const cameraChecks = await page.evaluate(async()=>{
       const original=window.BABYLON;
       const callbacks=[];
