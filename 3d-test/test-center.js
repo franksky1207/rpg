@@ -61,6 +61,7 @@ function safeStop(){
  host.replaceChildren();
 }
 function fail(reason){
+ status.hidden=false;
  fallback.hidden=false;host.hidden=true;fallbackReason.textContent=String(reason);
  status.textContent="3D 安全模式：可重新啟動，或返回 GM";
 }
@@ -69,11 +70,12 @@ async function start(){
  const ticket=serial;
  if(disabled){fail("3D 已停用，不影響正式遊戲。");return;}
  if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){fail("共用 3D 模組尚未載入。");return;}
+ status.hidden=false;status.textContent="正在載入 3D 測試場景…";
  const c=entry(),B=window.Civilization3DPrototype;
  const factory=c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
  if(typeof factory!=="function"){fail("此場景尚未實作。");return;}
  fallback.hidden=true;host.hidden=false;
- runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.textContent="WebGL 已復原，可按重新啟動。";}});
+ runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.hidden=false;status.textContent="WebGL 已復原，可按重新啟動。";}});
  runtime.setQuality(quality.value);
  const progress=Math.max(1,Math.min(10,Number(snapshot.regionProgress)||1));
  const fixture=Object.freeze({world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),enemyCount:5});
@@ -81,7 +83,8 @@ async function start(){
  const result=await current.show(c.id,args=>factory({...args,...fixture}));
  if(ticket!==serial||current!==runtime)return;
  status.textContent=result.ok?"測試案例 "+c.id+" · 共用場景已載入 · 不讀取正式存檔":"3D 不可用："+result.reason;
- if(!result.ok)fail(result.reason);
+ if(result.ok)status.hidden=true;
+ else fail(result.reason);
 }
 function updateFixture(){
  snapshot={world:Number($("fixtureWorld").value),selectedMap:Number($("fixtureSelected").value),regionProgress:Number($("fixtureProgress").value),life:$("fixtureLife").value};
@@ -101,7 +104,7 @@ $("contextTest").onclick=()=>{
  const canvas=host.querySelector("canvas");
  const gl=canvas?.getContext("webgl2")||canvas?.getContext("webgl");
  const ext=gl?.getExtension("WEBGL_lose_context");
- if(ext)ext.loseContext();else status.textContent="此裝置不支援 WebGL 中斷測試擴充。";
+ if(ext)ext.loseContext();else {status.hidden=false;status.textContent="此裝置不支援 WebGL 中斷測試擴充。";}
 };
 window.addEventListener("pagehide",safeStop);
 window.addEventListener("keydown",event=>{
