@@ -424,3 +424,5 @@
 - 2026-10-09：首次建立 40 批規劃。
 - 2026-10-09：第 01 批獨立 3D prototype 程式已提交；瀏覽器／手機與 CI 驗證待補。第 02 批共用 runtime 已施工（實機待驗）；第 03 批預覽接入程式已提交（尚未全驗收），第 04～40 批未開始。
 - 若後續 main 的正式功能新增／刪除，先更新介面覆蓋表與依賴，再調整未開始批次；不要讓這份計畫凌駕實碼。
+
+- **2026-10-09 共用 3D 大小模式**：`3d-test/runtime.js` 新增「放大視窗／還原視窗／關閉」操作（原 ＋／－／視角重置保留），直接切換 host class，不建立新場景／相機，並呼叫 engine.resize；`3d-test/preview-expand.css` 桌機中央寬約 85vw、高 80dvh、手機直式寬 95vw／高 88dvh、橫式矮螢幕 94vw／92dvh，沒有強制旋轉。`3d-test/formal-home.js` 關閉走正式 bridge；`index.html` 已更新快取。Chromium 專屬測試增加 class 與 Canvas/Camera identity 驗證；真機手機、桌機視覺布局仍須人工確認。
