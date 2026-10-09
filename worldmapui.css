@@ -44,5 +44,5 @@
 .galaxy-review-region-list{margin-top:12px}
 .galaxy-review-map-card{cursor:default;position:relative}
 .galaxy-review-map-card:hover{transform:none!important}
-.galaxy-review-action{width:100%;margin-top:10px;opacity:.58}
+.galaxy-review-action{width:100%;margin-top:10px;opacity:1;position:relative;z-index:2;pointer-events:auto;cursor:pointer}
 @media(max-width:760px){.era-view-tabs{gap:6px;margin-bottom:9px}.era-view-tab{min-height:40px;padding:8px 9px;font-size:13px}.galaxy-review-notice{margin-bottom:9px}.galaxy-review-region-list{margin-top:9px}}
