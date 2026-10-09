@@ -1,0 +1,17 @@
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;background:#060c18;color:#e6f3ff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#1b3454,#060c18 70%)}
+.shell{width:min(1180px,100%);margin:auto;padding:clamp(14px,3vw,28px);padding-bottom:max(20px,env(safe-area-inset-bottom))}
+header{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+header small{color:#77d7f8;letter-spacing:.18em}h1{font-size:clamp(24px,4vw,36px);margin:4px 0}
+a{color:#a4eaff;text-decoration:none;border:1px solid #55758d;border-radius:10px;padding:11px 15px}
+.stage{position:relative;min-height:clamp(360px,64vh,720px);border:1px solid #385874;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#183251,#070c1b)}
+canvas{display:block;width:100%;height:clamp(360px,64vh,720px);touch-action:none;outline:none}
+.fallback{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:28px;background:linear-gradient(125deg,#142641,#080d19)}
+.fallback[hidden],canvas[hidden]{display:none}
+.fallback h2{margin:0 0 10px}.fallback p{max-width:480px}
+.status{position:absolute;left:12px;right:12px;bottom:12px;padding:10px 14px;background:#061322dc;border:1px solid #44637e;border-radius:10px;font-size:13px;pointer-events:none}
+footer{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#a4b8c9}
+.actions{display:flex;gap:10px}button{background:#163e65;border:1px solid #6bb4ed;color:#fff;border-radius:10px;padding:11px 16px;cursor:pointer;font-size:15px}
+button:focus-visible,a:focus-visible{outline:3px solid #b8ebff;outline-offset:3px}
+@media(max-width:600px){header{align-items:flex-start}footer{align-items:flex-start}.actions{width:100%}button{flex:1}.status{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
