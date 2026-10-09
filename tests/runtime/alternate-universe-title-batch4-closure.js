@@ -105,7 +105,7 @@ const assert=require("assert");
    };
   });
 
-  assert.deepEqual(report.versions,{title:23,closure:1,gmManage:4,gmPreview:11,benchmark:2});
+  assert.deepEqual(report.versions,{title:24,closure:1,gmManage:4,gmPreview:11,benchmark:2});
   assert.equal(report.defs.length,46,"正式稱號 catalog 必須維持 46 個。");
   assert.ok(report.defs.slice(0,10).every(def=>def.series==="calamity"));
   assert.ok(report.defs.slice(10,20).every(def=>def.series==="universe-calamity"));
