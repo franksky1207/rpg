@@ -171,7 +171,7 @@
 - **狀態**：五槽 3D 預覽已提交，完整 L1／成功失敗動畫及實機尚待完成。
 
 ### 第 11 批｜專精、印記、文明與高維核心
-- **2026-10-09 階段施工**：共用 `createGrowthScene` 新增八專精、十印記、文明等級、界弦核心四種立體能量陳列；正式專精頁提供可關閉的唯讀「養成星環」與四種項目切換，資料從既有 `state.specializations`、`state.marks.entries`、`secondWorld.civilizationLevel`、`thirdWorld.coreLevel` 取得，不執行交易。GM 3D 視覺測試中心新增四項視覺情境，僅以 session fixture 調整進度，不顯示工程診斷。強化／印記／文明／高維核心正式 owner 未變。
+- **2026-10-09 階段施工**：共用 `createGrowthScene` 新增八專精、十印記、文明等級、界弦核心四種立體能量陳列；正式專精頁提供可關閉的唯讀「養成星環」與四種項目切換，資料從既有 `state.specializations`、`state.marks.entries`、`secondWorld.civilizationLevel`、`thirdWorld.coreLevel` 取得，不執行交易。GM 3D 視覺測試中心新增四項視覺情境，僅以 session fixture 調整進度，不顯示工程診斷。正式頁預覽入口同時涵蓋專精頁、銀河／宇宙災厄頁的印記／文明展示，以及高維冒險頁界弦核心；均保持唯讀，原交易按鈕與對話框不變。強化／印記／文明／高維核心正式 owner 未變。
 - **限制**：是共用幾何佔位預覽，並非正式各養成子頁完整 L1，更沒有注入／升級效果動畫；跨紀元、完整路由、手機和 GPU 實機驗收尚待補，依第 18、22、26 批規範追蹤。
 - **GM 視覺預覽責任**：若本批新增可獨立觀察的 3D 場景、模型、動作或特效，需同步更新既有 GM 3D 視覺預覽；無新視覺時不加重複選單。場景只顯示使用者可理解的名稱及畫面參數，內部 ID／批號／技術診斷留在測試與文件。詳見 [3D_GM_TEST_CENTER_CATALOG.md](3D_GM_TEST_CENTER_CATALOG.md)。
 - **施工範圍**：八專精、十印記、宇宙文明等級、界弦核心、注入確認。
