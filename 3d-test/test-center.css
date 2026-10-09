@@ -52,3 +52,40 @@ body.gm-3d-maximized{overflow:hidden!important}
 .center-case{min-height:44px;touch-action:manipulation}
 .center-sidebar{overscroll-behavior:contain}
 html{scroll-behavior:auto!important}
+
+
+/* 2026-10-09 GM visual refresh: align the viewer with Civilization War's charcoal, iron and champagne-gold interface. */
+.center-layout{grid-template-columns:minmax(230px,272px) minmax(0,1fr);gap:20px}
+.center-sidebar{background:linear-gradient(180deg,#1a1d22,#14171c);border:1px solid #5b5345;box-shadow:0 12px 32px #0005;padding:14px;gap:12px;max-height:min(82dvh,960px)}
+.center-sidebar label{color:#e4cb98;font-weight:700;letter-spacing:.02em}
+.center-sidebar input{background:#0f1217;border:1px solid #777365;color:#f0ece4}
+.center-sidebar input::placeholder{color:#8d908f}
+.center-sidebar input:focus-visible,.center-fixtures select:focus-visible{outline:2px solid #d4af66;outline-offset:2px}
+.center-categories{gap:7px}
+.center-categories::before{content:"場景分類";font-size:11px;font-weight:800;letter-spacing:.12em;color:#af9a73;padding:3px 5px}
+.center-category{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:10px 12px;font-size:13px;font-weight:750;letter-spacing:.025em;background:#26231e;border:1px solid #5b4f3b;border-radius:9px;color:#dfcfac;box-shadow:inset 3px 0 0 #786240}
+.center-category:hover{background:#30291f;border-color:#a28b5c}
+.center-category.active{background:linear-gradient(100deg,#483923,#2b261e);border-color:#d0ad63;color:#ffe4a3;box-shadow:inset 4px 0 0 #e3bd72}
+.center-category-count{flex:0 0 auto;min-width:25px;padding:2px 5px;text-align:center;font-size:11px;font-weight:800;border-radius:5px;background:#12151a;color:#c7b897;border:1px solid #5d5648}
+.center-category.active .center-category-count{color:#f5d995;border-color:#9f8454}
+.center-cases{gap:6px;border-top:1px solid #554b3c;padding:12px 0 2px 10px;position:relative}
+.center-cases::before{content:"場景細項";font-size:11px;font-weight:800;letter-spacing:.12em;color:#9da3ab;margin:0 0 4px -5px}
+.center-case{position:relative;min-height:44px;border:1px solid #424a54;background:#171d24;border-radius:7px;padding:10px 12px;font-weight:500;color:#d6d9df;text-align:left;box-shadow:none}
+.center-case::before{content:"";position:absolute;left:-9px;top:50%;width:5px;height:1px;background:#636970}
+.center-case:hover{background:#222831;border-color:#a6a095;color:#faf4e7}
+.center-case.active{background:#2c2923;border-color:#c9a45c;color:#ffe2a3;box-shadow:inset 3px 0 0 #d0ad63}
+.center-case.active::before{background:#d0ad63}
+.center-description{background:linear-gradient(180deg,#20242b,#191d23);border:1px solid #595343;border-radius:12px;padding:15px 18px;margin-bottom:12px}
+.center-description h2{color:#f0d494;letter-spacing:.025em}
+#caseDetail{color:#c5c4bf;font-size:13px}
+.center-fixtures{background:#171b20;border:1px solid #4b4d4e;border-radius:11px;padding:12px;gap:12px;margin:12px 0}
+.center-fixtures label{color:#d7c7a5;font-size:12px;font-weight:650}
+.center-fixtures select{background:#0f141a;color:#eee8dd;border:1px solid #6b6454;border-radius:8px}
+.center-workspace .stage{background:radial-gradient(circle at 50% 42%,#252b34,#080b10 75%);border:1px solid #6b614e;border-radius:14px}
+.center-workspace .center-status{background:#27231b;border:1px solid #827049;color:#f1dba9}
+.center-maximize-button{background:#29251df2;border-color:#a89468;color:#ffe7b5}
+.center-workspace.center-maximized{background:#080a0e}
+.center-workspace .civilization-3d-camera-controls button,.center-workspace .civilization-3d-layout-controls button{background:#26231eea!important;border-color:#877454!important;color:#f7e4bf!important}
+.center-workspace .civilization-3d-camera-controls button:hover,.center-workspace .civilization-3d-layout-controls button:hover{background:#473a28!important}
+@media(max-width:770px){.center-layout{gap:12px}.center-sidebar{max-height:44dvh;padding:12px}.center-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.center-categories::before{grid-column:1/-1}.center-category{font-size:12px}.center-cases{max-height:190px;overflow:auto;padding-left:10px}}
+@media(max-width:480px){.center-sidebar{max-height:46dvh}.center-fixtures{padding:10px}.center-description{padding:12px}.center-workspace .prototype-host{height:min(54dvh,500px)}}
