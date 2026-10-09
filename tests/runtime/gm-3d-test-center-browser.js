@@ -28,6 +28,7 @@ const assert=require("node:assert/strict");
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
   }
+  await page.getByRole("button",{name:"副本作戰中心"}).click();
   await page.locator("#fixtureWorld").selectOption("2");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
   // Verify one shared readonly snapshot contract and independent GM test inputs.
