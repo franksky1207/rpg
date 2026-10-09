@@ -48,6 +48,7 @@ jobs:
         run: |
           set -o pipefail
           node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+          node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-runtime-early-restore-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
