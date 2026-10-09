@@ -101,5 +101,43 @@
     scene.onBeforeRenderObservable.add(()=>{portal.rotation.z+=Math.min(args.engine.getDeltaTime(),50)*.00012;});
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.4.0",supported,mount,createScene,createEpochScene});
+  /* Decorative 3D map. The actual map/monster/target buttons stay in ui.js. */
+  function createGalaxyScene(args){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.004,.014,.044,1);
+    const camera=new B.ArcRotateCamera("galaxy-map-camera",Math.PI/2.15,Math.PI/2.75,14,new B.Vector3(0,0,0),scene);
+    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=21;camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("galaxy-map-ambient",new B.Vector3(0,1,0),scene).intensity=.65;
+    const glowColor=new B.StandardMaterial("galaxy-map-node-light",scene);
+    glowColor.emissiveColor=new B.Color3(.17,.65,1);glowColor.diffuseColor=new B.Color3(.05,.22,.38);
+    const dimColor=new B.StandardMaterial("galaxy-map-locked-light",scene);
+    dimColor.diffuseColor=new B.Color3(.085,.11,.19);
+    const coreColor=new B.StandardMaterial("galaxy-map-core-metal",scene);
+    coreColor.emissiveColor=new B.Color3(.2,.45,.82);
+    const center=B.MeshBuilder.CreateSphere("galaxy-center",{diameter:1.5,segments:24},scene);
+    center.material=coreColor;
+    const points=Math.max(1,Math.min(10,Math.floor(Number(args.mapCount)||10)));
+    const selected=Math.max(0,Math.min(points-1,Math.floor(Number(args.selectedMap)||0)));
+    const unlocked=Math.max(0,Math.min(points-1,Math.floor(Number(args.unlockedMap)||0)));
+    for(let i=0;i<points;i++){
+      const angle=2*Math.PI*i/points;
+      const x=4.2*Math.cos(angle),z=4.2*Math.sin(angle);
+      const node=B.MeshBuilder.CreateSphere("region-"+(i+1),{diameter:i===selected?.92:.55,segments:16},scene);
+      node.position.set(x,Math.sin(angle*3)*.35,z);
+      node.material=i<=unlocked?glowColor:dimColor;
+      const link=B.MeshBuilder.CreateLines("route-"+i,{points:[new B.Vector3(0,0,0),node.position.clone()]},scene);
+      link.color=i<=unlocked?new B.Color3(.15,.52,.73):new B.Color3(.11,.15,.23);
+    }
+    const ring=B.MeshBuilder.CreateTorus("galaxy-course",{diameter:8.4,thickness:.026,tessellation:96},scene);
+    ring.rotation.x=Math.PI/2;ring.material=glowColor;
+    const enemies=Math.min(5,Math.max(0,Math.floor(Number(args.enemyCount)||0)));
+    for(let i=0;i<enemies;i++){
+      const e=B.MeshBuilder.CreatePolyhedron("galaxy-enemy-"+i,{type:1,size:.27+(i===4?.14:0)},scene);
+      e.position.set(-2+i,1.6+Math.sin(i)*.15,-1.6);
+      e.material=i===4?coreColor:glowColor;
+    }
+    scene.onBeforeRenderObservable.add(()=>{ring.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.000035;center.rotation.y+=.0015;});
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.5.0",supported,mount,createScene,createEpochScene,createGalaxyScene});
 })(window);
