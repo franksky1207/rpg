@@ -29,3 +29,18 @@
 /* Status is located above the stage and cannot overlap the 3D control bar. */
 .center-workspace .center-status{position:static!important;margin:0 0 10px;padding:9px 12px;border-radius:9px;border:1px solid #466b87;background:#102942;color:#ceeaff;font-size:13px;pointer-events:auto}
 .center-workspace .center-status[hidden]{display:none!important}
+
+/* GM-only maximum preview: fill iframe viewport; safe in portrait without orientation lock. */
+.center-workspace .stage{position:relative}
+.center-maximize-button{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:12;min-height:44px;padding:9px 13px;background:#0a2444f2;border:1px solid #8dcdf0;border-radius:9px;font-size:14px;touch-action:manipulation}
+.center-workspace .civilization-3d-layout-controls{left:10px;top:10px;right:auto}
+/* GM already owns sizing; hide only Runtime's redundant resize toggle. */
+.center-workspace .civilization-3d-layout-controls button:first-child{display:none}
+.center-workspace.center-maximized{position:fixed!important;inset:0!important;z-index:9999!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;margin:0!important;padding:0!important;background:#060c18}
+.center-workspace.center-maximized>.center-description,.center-workspace.center-maximized>.center-fixtures,.center-workspace.center-maximized>.center-scenario,.center-workspace.center-maximized>.center-status{display:none!important}
+.center-workspace.center-maximized>.stage{height:100dvh!important;min-height:0!important;width:100%!important;max-height:none!important;border:0;border-radius:0;overflow:hidden}
+.center-workspace.center-maximized .prototype-host{height:100%!important;min-height:0!important;width:100%!important;max-height:none!important}
+.center-workspace.center-maximized .civilization-3d-camera-controls{right:max(10px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important}
+.center-workspace.center-maximized .civilization-3d-layout-controls{left:max(8px,env(safe-area-inset-left));top:max(8px,env(safe-area-inset-top))}
+body.gm-3d-maximized{overflow:hidden!important}
+@media(max-width:600px){.center-maximize-button{font-size:13px;min-height:44px;max-width:46vw}.center-workspace.center-maximized .civilization-3d-layout-controls{top:max(60px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left))}}
