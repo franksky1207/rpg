@@ -27,7 +27,8 @@ function capture(){
  const abilities=stats?{hp:finite(stats.hp),atk:finite(stats.atk),def:finite(stats.def),crit:finite(stats.crit),dodge:finite(stats.dodge)}:null;
  const specializations=Object.fromEntries(specs.map(k=>[k,bound(s.specializations?.[k],0,60)]));
  const markLevels=Object.fromEntries(marks.map(k=>[k,bound(s.marks?.entries?.[k]?.level,0,10)]));
- return clone({version:2,source:"formal",abilities,specializations,markLevels,
+ const markNames=marks.map(k=>String(global.markDisplayName?.(k)||k).slice(0,40));
+ return clone({version:2,source:"formal",abilities,specializations,markLevels,markNames,
   civilizationLevel:bound(s.secondWorld?.civilizationLevel,0,10),
   coreLevel:bound(s.thirdWorld?.coreLevel,0,10),world,level:bound(s.level,1,9999),vip:bound(s.vipLevel,0,9999),
   breakthrough:bound(s.breakthrough?.level??s.breakthroughLevel,0,9999),equipment,enhancements,
