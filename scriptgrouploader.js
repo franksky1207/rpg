@@ -146,6 +146,23 @@
   if(!gmAuthorized())return true;
   const ready=await ensureAuthorizedGmRuntime({retry:true,warm:true});
   if(!ready||snapshot().groups.gm.status!=="ready"||typeof window.gmHtml!=="function")throw new Error("startup-optional-scripts-not-ready");
+  // The GM 3D center is permanent: warm its shared engine/scene and own runtime,
+  // while keeping scene/GPU creation exclusively inside an opened preview.
+  try{
+   await window.Civilization3DSharedAssetWarm?.();
+   const response=await fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
+   if(response.ok){
+    const manifest=await response.json();
+    const paths=["3d-test/runtime.js","3d-test/test-center.js","alternateuniversedata.js"];
+    await Promise.all(paths.map(async path=>{
+     const digest=manifest?.files?.[path];
+     if(!/^[0-9a-f]{24}$/.test(String(digest||"")))return;
+     const result=await fetch(path+"?asset="+digest,{cache:"no-cache",credentials:"same-origin"});
+     if(result.ok)await result.arrayBuffer();
+    }));
+   }
+  }catch(error){console.warn("[3D cache] Optional prefetch skipped",error);}
+
   return true;
  };
  (window.CivilizationStartupPreTasks||(window.CivilizationStartupPreTasks=[])).push(["account-resources",bootTask]);
