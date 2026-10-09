@@ -2,7 +2,7 @@ name: Runtime Integrity
 
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
-# W1 target-context optimization 4 exact-head retrigger. 2026-10-09 loader canonical version 5 retrigger.
+# W1 target-context optimization 4 exact-head retrigger. 2026-10-09 deferred GM title regression follow-up.
 on:
   push:
     branches: [main]
