@@ -118,15 +118,15 @@
     center.material=coreColor;
     const points=Math.max(1,Math.min(10,Math.floor(Number(args.mapCount)||10)));
     const selected=Math.max(0,Math.min(points-1,Math.floor(Number(args.selectedMap)||0)));
-    const unlocked=Math.max(0,Math.min(points-1,Math.floor(Number(args.unlockedMap)||0)));
+    const unlockedRegions=Array.isArray(args.unlockedRegions)?args.unlockedRegions:null;
     for(let i=0;i<points;i++){
       const angle=2*Math.PI*i/points;
       const x=4.2*Math.cos(angle),z=4.2*Math.sin(angle);
       const node=B.MeshBuilder.CreateSphere("region-"+(i+1),{diameter:i===selected?.92:.55,segments:16},scene);
       node.position.set(x,Math.sin(angle*3)*.35,z);
-      node.material=i<=unlocked?glowColor:dimColor;
+      node.material=(!unlockedRegions||unlockedRegions[i]===true)?glowColor:dimColor;
       const link=B.MeshBuilder.CreateLines("route-"+i,{points:[new B.Vector3(0,0,0),node.position.clone()]},scene);
-      link.color=i<=unlocked?new B.Color3(.15,.52,.73):new B.Color3(.11,.15,.23);
+      link.color=(!unlockedRegions||unlockedRegions[i]===true)?new B.Color3(.15,.52,.73):new B.Color3(.11,.15,.23);
     }
     const ring=B.MeshBuilder.CreateTorus("galaxy-course",{diameter:8.4,thickness:.026,tessellation:96},scene);
     ring.rotation.x=Math.PI/2;ring.material=glowColor;
