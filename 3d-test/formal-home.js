@@ -132,7 +132,9 @@ async function toggle(route="home",growthKind=null){
     const isResult=!!main?.querySelector(".arena-result-panel,.dungeon-bounty-result-card,.calamity-result-shell,.void-result,.alternate-universe-result");
     const isCombat=!!main?.querySelector(".combat-screen,.combat-arena,.calamity-battle-shell");
     const isSpecial=!!main?.querySelector(".special-encounter,.special-encounter-panel");
-    return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":isCombat?"battle":"shield",playerHpRatio:1,enemyHpRatio:1,shieldRatio:0};
+    const readHp=(id)=>{const node=main?.querySelector(id);const raw=Number.parseFloat(node?.style?.width||"");return Number.isFinite(raw)?Math.max(0,Math.min(1,raw/100)):1;};
+    const shield=!!main?.querySelector(".combat-shield,.shield-bar,.hp-shield,.combat-shield-bar");
+    return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":isCombat?"battle":"shield",playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0};
   })();
   const snapshot=battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
@@ -350,7 +352,7 @@ function ensureBattlePreviewControl(view){
  controls.append(button,hint);anchor.before(controls);
 }
 function onRendered(view){
- if(enabled&&["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage","calamity","alternateuniverse"].includes(view)&&view===activeRoute)hide();
+ if(enabled&&(activeGrowthKind==="battle-preview"||["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage","calamity","alternateuniverse"].includes(view))&&view===activeRoute)hide();
  if(view!==activeRoute&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
   const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
