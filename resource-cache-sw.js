@@ -53,6 +53,50 @@ async function media(request){
  }catch(_){return fetched;} // hashing unavailable: return uncached response
  return fetched;
 }
+// Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
+let preloadJob=null;
+function shouldPreload(p){
+ if(p.startsWith("assets/backgrounds/"))return MEDIA.test(p);
+ if(p.startsWith("audio/assets/era-themes/"))return p.endsWith("-theme-loop.ogg");
+ if(p.startsWith("audio/assets/battle-themes/"))return p.endsWith("-battle-loop.ogg");
+ if(p.startsWith("audio/assets/common-sfx/")){
+  const m=p.match(/\/(normal-attack|critical|dodge|heavy-hit|victory)\/sfx-(\d+)\.ogg$/);
+  if(!m)return false;
+  const n=Number(m[2]);
+  return m[1]==="normal-attack"||m[1]==="critical"?n<=3:m[1]==="dodge"||m[1]==="victory"?n===1:[4,5,29].includes(n);
+ }
+ if(p.startsWith("3d-test/assets/")||p.startsWith("assets/3d/")||p.startsWith("assets/models/"))return MEDIA.test(p);
+ return false;
+}
+async function preloadAssets(report){
+ if(preloadJob)return preloadJob;
+ preloadJob=(async()=>{
+  const entries=known||await refresh();
+  const cache=await caches.open(ACTIVE);
+  const paths=[...entries.keys()].filter(shouldPreload);
+  let done=0,saved=0,failed=0;
+  report({phase:"start",total:paths.length,done,saved,failed});
+  // Run gently behind the home screen; failures are nonfatal and retried next visit.
+  for(const path of paths){
+   const digest=entries.get(path),key=keyFor(path,digest);
+   if(await cache.match(key)){done++;continue;}
+   try{
+    const request=new Request(new URL(path,self.registration.scope),{credentials:"same-origin"});
+    const response=await fetch(request,{cache:"no-store"});
+    if(!response.ok||response.type!=="basic")throw Error("fetch");
+    const data=await response.clone().arrayBuffer();
+    const hash=await crypto.subtle.digest("SHA-256",data);
+    const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
+    if(actual!==digest)throw Error("digest");
+    await cache.put(key,response.clone());saved++;
+   }catch(_){failed++;}
+   done++;
+   if(done%3===0||done===paths.length)report({phase:"progress",total:paths.length,done,saved,failed});
+  }
+  report({phase:"complete",total:paths.length,done,saved,failed});
+ })().finally(()=>preloadJob=null);
+ return preloadJob;
+}
 self.addEventListener("install",event=>{event.waitUntil(self.skipWaiting());});
 self.addEventListener("activate",event=>{event.waitUntil((async()=>{try{await refresh();}catch(_){}await self.clients.claim();})());});
 self.addEventListener("fetch",event=>{
@@ -67,6 +111,7 @@ self.addEventListener("fetch",event=>{
 self.addEventListener("message",event=>{
  const data=event.data||{},port=event.ports&&event.ports[0];
  const respond=msg=>{try{port?.postMessage(msg);}catch(_){}};
+ if(data.type==="CIV_CACHE_PRELOAD")event.waitUntil(preloadAssets(respond).catch(e=>respond({phase:"error",error:String(e)})));
  if(data.type==="CIV_CACHE_REFRESH")event.waitUntil(refresh().then(()=>respond({ok:true,version:manifestTag,count:known.size})).catch(e=>respond({ok:false,error:String(e.message||e)})));
  if(data.type==="CIV_CACHE_STATUS")event.waitUntil(caches.open(ACTIVE).then(async c=>{
   const keys=await c.keys();let bytes=0,measured=0;
