@@ -42,6 +42,7 @@ function previewContext(era,scene){
  if(!item||typeof state==="undefined"||state?.gm!==true)return false;
  stopPreview();
  if(g.CivilizationAudio?.isSilent?.())return false;
+ stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;
  let ok=false;
  if(item.music)ok=g.CivilizationAudio?.preview?.(item.music)===true;
  if(item.ambient){
@@ -123,7 +124,7 @@ function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  return false;
 }
-document.addEventListener("civilization-audio-unlocked",()=>restore());
+document.addEventListener("civilization-audio-unlocked",()=>{if(typeof view!=="undefined")syncView(view,typeof adventureScreen==="string"?adventureScreen:"");restore();});
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopPreview();stopAmbient();activeMusicId=null;}else restore();});
 new MutationObserver(()=>{const silent=prohibited();if(silent){stopPreview();stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
