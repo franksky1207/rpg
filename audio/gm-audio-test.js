@@ -38,10 +38,12 @@ g.gmSoundRecord=result=>{
 };
 g.gmSoundCopyReport=()=>{
  if(!visible())return false;
- const rows=Object.entries(reviews).filter(([,v])=>RESULTS[v?.result]);
  const all=GROUPS.flatMap(gp=>(gp.events?gp.events.map(id=>({key:"event:"+id,label:audio()?.combatCatalog?.[id]?.label||id,context:gp.name})):gp.contexts.map(([id,label])=>({key:"scene:"+id,label,context:gp.name}))));
- const missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]);
- const output=['《文明戰線・GM 音樂音效聆聽回報》','全部項目：'+all.length+'｜已填寫：'+rows.length+'｜尚未填寫：'+missing.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...rows.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt),'【尚未填寫】',...missing.map(x=>x.key+'｜'+x.context+'／'+x.label+'｜尚未填寫')].join('\\n');
+ const keys=new Set(all.map(x=>x.key));
+ const filled=all.filter(x=>RESULTS[reviews[x.key]?.result]),missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]);
+ const legacy=Object.entries(reviews).filter(([key,value])=>!keys.has(key)&&RESULTS[value?.result]);
+ const line=x=>x.key+"｜"+x.context+"／"+x.label;
+ const output=['《文明戰線・GM 音樂音效聆聽回報》','目前正式項目：'+all.length+'｜已填寫：'+filled.length+'｜尚未填寫：'+missing.length+'｜歷史舊分類紀錄：'+legacy.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...filled.map(x=>{const v=reviews[x.key];return line(x)+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt;}),'【尚未填寫】',...missing.map(x=>line(x)+'｜尚未填寫'),'【舊分類保留紀錄（未合併到新情境）】',...legacy.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜記錄 '+v.updatedAt)].join(String.fromCharCode(10));
  const finish=ok=>{const el=document.getElementById("gmSoundReportStatus");if(el)el.textContent=ok?"摘要已複製，請貼回 ChatGPT。":"複製失敗，請允許瀏覽器使用剪貼簿。";};
  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(output).then(()=>finish(true)).catch(()=>finish(false));return true;}
  const el=document.createElement("textarea");el.value=output;el.style.position="fixed";el.style.opacity="0";document.body.appendChild(el);el.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}el.remove();finish(ok);return ok;
@@ -107,7 +109,8 @@ g.gmSoundPlaySelected=()=>{
  if(!visible())return false;
  const row=current();if(!row)return false;
  const context=a03Context();
- const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):context?g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene):row.asset?audio()?.preview(row.asset):false;
+ const mapped=context?g.CivilizationAudioScenes?.resolve?.(context.era,context.scene):null;
+ const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):mapped&&(mapped.music||mapped.ambient)?g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene):row.asset?audio()?.preview(row.asset):false;
  const node=document.getElementById("gmSoundStatus");
  if(node)node.textContent=statusText()+(ok?"｜已送出播放要求，請確認是否有聲音":"｜待素材、靜音或瀏覽器無法播放");
  return !!ok;
@@ -131,5 +134,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=8;
+g.GM_AUDIO_TEST_CATALOG_VERSION=9;
 })(window);
