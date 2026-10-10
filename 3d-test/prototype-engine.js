@@ -280,11 +280,17 @@
   }
 
   /* B08: visual-only full-body character stand-in; no equipment/save mutation. */
+  function configureDisplayCamera(camera,canvas,min,max){
+    camera.lowerRadiusLimit=min;camera.upperRadiusLimit=max;
+    camera.lowerBetaLimit=.25;camera.upperBetaLimit=Math.PI-.3;
+    camera.wheelPrecision=65;camera.pinchPrecision=135;camera.inertia=.76;
+    camera.attachControl(canvas,true);
+  }
   function createCharacterScene(args){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.015,.02,.045,1);
     const camera=new B.ArcRotateCamera("character-camera",Math.PI/2.25,Math.PI/2.5,8.5,new B.Vector3(0,1.05,0),scene);
-    camera.lowerRadiusLimit=5;camera.upperRadiusLimit=13;camera.attachControl(args.canvas,true);
+    configureDisplayCamera(camera,args.canvas,5.5,12);
     new B.HemisphericLight("character-light",new B.Vector3(0,1,0),scene).intensity=.9;
     const metal=new B.StandardMaterial("character-metal",scene);metal.diffuseColor=new B.Color3(.18,.23,.33);
     const glow=new B.StandardMaterial("character-glow",scene);
@@ -313,9 +319,12 @@
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.015,.021,.045,1);
     const camera=new B.ArcRotateCamera("equipment-camera",Math.PI/2.2,Math.PI/2.7,13,new B.Vector3(0,.5,0),scene);
-    camera.lowerRadiusLimit=7;camera.upperRadiusLimit=21;camera.attachControl(args.canvas,true);
+    configureDisplayCamera(camera,args.canvas,10.5,20);
     new B.HemisphericLight("equipment-light",new B.Vector3(0,1,0),scene).intensity=.85;
     const slots=Array.isArray(args.slots)?args.slots.slice(0,5):[];
+    const appearance=args.appearance||{};
+    const world=Math.max(1,Math.min(3,Math.floor(Number(args.world||appearance.world)||1)));
+    const eraTint=world===3?[.66,.32,.95]:world===2?[.15,.7,.83]:[.19,.5,.94];
     const cases=Array.isArray(args.inventorySamples)?args.inventorySamples.slice(0,5):[];
     const color=(item)=>{
       const quality=Math.max(0,Math.min(5,Math.floor(Number(item?.quality)||0)));
@@ -325,18 +334,26 @@
       return mat;
     };
     const base=new B.StandardMaterial("equipment-base",scene);base.diffuseColor=new B.Color3(.11,.16,.27);
+    const accent=new B.StandardMaterial("equipment-era-accent",scene);accent.emissiveColor=new B.Color3(...eraTint).scale(.55);
     for(let i=0;i<5;i++){
       const item=slots[i]||{},x=(i-2)*2.2;
       const pedestal=B.MeshBuilder.CreateCylinder("equipment-slot-base-"+i,{diameter:1.7,height:.26,tessellation:24},scene);
       pedestal.position.set(x,-.55,0);pedestal.material=base;
-      const relic=B.MeshBuilder.CreatePolyhedron("equipment-slot-"+i,{type:i%2?1:2,size:item.present?.56:.28},scene);
-      relic.position.set(x,.45,0);relic.material=color(item);
+      const relic=i===0?B.MeshBuilder.CreateBox("equipment-slot-"+i,{width:item.present?.16:.12,height:item.present?1.75:.45,depth:.17},scene):B.MeshBuilder.CreatePolyhedron("equipment-slot-"+i,{type:i%2?1:2,size:item.present?.56:.28},scene);
+      relic.position.set(x,i===0?.47:.45,0);relic.material=color(item);
+      if(i===0&&item.present){
+        const guard=B.MeshBuilder.CreateBox("equipment-weapon-guard",{width:.78,height:.13,depth:.25},scene);
+        guard.position.set(x,-.19,0);guard.material=accent;
+        const tip=B.MeshBuilder.CreatePolyhedron("equipment-weapon-tip",{type:1,size:.28},scene);
+        tip.position.set(x,1.48,0);tip.material=relic.material;
+      }
       const ring=B.MeshBuilder.CreateTorus("equipment-slot-ring-"+i,{diameter:1.8,thickness:.045,tessellation:32},scene);
       ring.position.set(x,-.37,0);ring.rotation.x=Math.PI/2;ring.material=relic.material;
       const sample=cases[i]||{};
       const sampleMesh=B.MeshBuilder.CreateSphere("equipment-inventory-sample-"+i,{diameter:sample.present?.4:.16,segments:12},scene);
       sampleMesh.position.set(x,-.1,2);sampleMesh.material=color(sample);
     }
+    scene.metadata={civilization3dEquipment:{visualOnly:true,readOnly:true,world,slotCount:5}};
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);scene.meshes.forEach(mesh=>{if(mesh.name.startsWith("equipment-slot-")&&!mesh.name.includes("ring")&&!mesh.name.includes("base"))mesh.rotation.y+=dt*.00012;});});
     return scene;
   }
@@ -711,5 +728,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.20.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.21.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
