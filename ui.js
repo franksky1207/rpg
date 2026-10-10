@@ -331,6 +331,7 @@ function showBattleResult(ctx,defeat=null){
   detail.innerHTML=`${continuous?`<div class="item"><b>完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
  }
  modal.classList.add("show");
+ window.CivilizationAudioScenes?.notify?.("combat-exit");
 }
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
