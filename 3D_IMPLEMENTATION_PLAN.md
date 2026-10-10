@@ -1,3 +1,8 @@
+## 2026-10-11｜音訊小修：移除介面點擊音效與設定保存檢查
+- 使用者實測認為 UI 點擊音效干擾，已從 audio/audio-core.js 全域點擊事件、正式 sfxCategories 與 warmChoices 移除 ui-click；GM 試聽選單也移除對應項。實體舊 085 音檔保留作為素材，不再正式呼叫；其餘普通攻擊、暴擊、閃避、重大打擊、勝利五類維持。
+- 音樂／音效兩項開關及音量依原音訊偏好鍵 civilization.audio.preferences.v1 存在本機 localStorage（重整與重開同一瀏覽器仍可還原）；本次確認初始化會讀取儲存值、setLevel 會立即保存，並讓寫入失敗回報 false／警告、設定介面開關提示不能保存的情況。沒有更動原本音量倍率及 GM 獨立試聽音量。
+- 新增 tests/runtime/audio-settings-persistence-integrity.js 靜態回歸斷言，index.html 對三個更動 JS 更新 cache bust；注意「同一裝置同一瀏覽器」的音效偏好不等於跨裝置雲端同步，真實重新整理驗收仍需使用者測試。未清除或覆寫角色、GM 授權與存檔。
+
 ## 2026-10-11｜智慧載入第 4 批補修：啟動時版本變更提示
 - 新增 resource-cache-client.js checkStartupVersions()，啟動時以 no-store 取得最新已部署 resource-manifest.json，與本裝置上一次**成功啟動**保留的逐檔指紋快照比較；顯示新增／修改／刪除共幾筆資源版本變更。首次開啟無歷史快照不宣稱更新筆數，清單取得失敗不虛報「已是最新版本」。
 - backgroundpreload.js 於現有進度畫面顯示「正在檢查遊戲版本…」「已是最新版本，正在載入遊戲…」「發現 N 個資源版本變更，正在載入遊戲…」等一行提示；不顯示素材分類或檔名。真正完成現有啟動工作後才呼叫 finishStartupVersionCheck() 儲存新的版本快照；失敗則下次仍可再檢查。
