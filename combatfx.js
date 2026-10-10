@@ -1,3 +1,4 @@
+function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(evt.actualDamage)<=0)return false;const damage=Number(evt.actualDamage);return ((evt.target==="enemy"||evt.target==="mirror")&&damage>=Number(p.enemyHp))||(evt.target==="player"&&damage>=Number(p.playerHp))||(evt.actor==="enemy"&&evt.crit===true&&String(result?.e?.kind||result?.enemy?.kind||"").toLowerCase()==="boss");}
 (function(){
  const COMBAT_PRESENTATION_VERSION=3;
  const ACTOR_AWARE_PRESENTATION_VERSION=1;
@@ -304,7 +305,7 @@
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:evt?.type==="attack"&&Number(evt.actualDamage)>0&&(((evt.target==="enemy"||evt.target==="mirror")&&Number(evt.actualDamage)>=p.enemyHp)||(evt.target==="player"&&Number(evt.actualDamage)>=p.playerHp)||(evt.actor==="enemy"&&evt.crit===true&&String(result?.e?.kind||result?.enemy?.kind||"").toLowerCase()==="boss"))});}
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:isMajorCombatAudioImpact(evt,p,result)});}
     if(!evt)continue;
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt);
@@ -428,7 +429,7 @@
    await structuredSleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:evt?.type==="attack"&&Number(evt.actualDamage)>0&&((evt.target==="enemy"&&Number(evt.actualDamage)>=p.enemyHp)||(evt.target==="player"&&Number(evt.actualDamage)>=p.playerHp)||(evt.actor==="enemy"&&evt.crit===true&&String(result?.e?.kind||result?.enemy?.kind||"").toLowerCase()==="boss"))});}if(!evt)continue;
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:isMajorCombatAudioImpact(evt,p,result)});}if(!evt)continue;
     if(evt.type==="firstActor"){await structuredSleep(Math.min(stepDelay,55));continue;}
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
