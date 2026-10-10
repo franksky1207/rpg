@@ -123,22 +123,25 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
  audio.preload="none";audio.loop=false;
  const base=simulation?previewLevels:prefs;
  audio.volume=Math.max(0,Math.min(1,normalizeVolume(track.kind==="ui"?"ui":"battle",base.master,base.battle??prefs.battle)*Math.max(0,Math.min(1,Number(volume)||0))));
- let source=null;
+ let source=null,panNode=null;
  try{
   const mode=g.Civilization3DMode?.current?.();
-  const spatial=position&&mode==="3d-standard";
+  // Cross-origin HTMLMediaElement → Web Audio can output silence without CORS.
+  // Remote candidates stay plain stereo until locally hosted or CORS-enabled.
+  const sameOrigin=track.url?.startsWith("/")||track.url?.startsWith("./")||(!/^https?:\/\//i.test(track.url||""))||(typeof location!=="undefined"&&new URL(track.url,location.href).origin===location.origin);
+  const spatial=position&&mode==="3d-standard"&&sameOrigin;
   const Ctx=g.AudioContext||g.webkitAudioContext;
   if(spatial&&Ctx){
    spatialContext=spatialContext||new Ctx();
    source=spatialContext.createMediaElementSource(audio);
-   const pan=spatialContext.createStereoPanner();
-   pan.pan.value=spatialMetadata(position).pan;
-   source.connect(pan);pan.connect(spatialContext.destination);
+   panNode=spatialContext.createStereoPanner();
+   panNode.pan.value=spatialMetadata(position).pan;
+   source.connect(panNode);panNode.connect(spatialContext.destination);
    if(spatialContext.state==="suspended")spatialContext.resume().catch(()=>{});
   }
  }catch(_){source=null;}
  combatVoices.add(audio);
- const release=()=>{combatVoices.delete(audio);if(source)try{source.disconnect();}catch(_){}};
+ const release=()=>{combatVoices.delete(audio);if(source)try{source.disconnect();panNode?.disconnect();}catch(_){}};
  audio.addEventListener("ended",release,{once:true});audio.addEventListener("error",release,{once:true});
  audio.play().catch(release);return true;
 }
