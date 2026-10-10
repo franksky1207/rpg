@@ -525,6 +525,12 @@ function reconcileDeferredHomeEntries(){
  ].some(([token,selector])=>expected.includes(token)&&!main.querySelector(selector));
  if(missing)render();
 }
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",reconcileDeferredHomeEntries,{once:true});
-else queueMicrotask(reconcileDeferredHomeEntries);
+let deferredHomeReconcileQueued=false;
+window.civilizationRequestHomeEntryReconcile=function(){
+ if(deferredHomeReconcileQueued)return;
+ deferredHomeReconcileQueued=true;
+ queueMicrotask(()=>{deferredHomeReconcileQueued=false;reconcileDeferredHomeEntries();});
+};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",window.civilizationRequestHomeEntryReconcile,{once:true});
+else window.civilizationRequestHomeEntryReconcile();
 window.GALAXY_ADVENTURE_REVIEW_BATTLE_VERSION=2;
