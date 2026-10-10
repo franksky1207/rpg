@@ -222,10 +222,10 @@ function syncAppearancePanel(){
  $("appearanceSource").textContent=appearanceMode==="formal"?(a?"正式角色｜"+["銀河紀元","宇宙紀元","高維紀元"][a.world-1]+"｜Lv."+fmt(a.level)+"｜VIP"+fmt(a.vip)+detail+"｜唯讀展示":(appearanceError?"正式資料同步失敗："+appearanceError:"等待正式角色資料同步；不會改變遊戲資料。")):"自訂測試資料｜僅影響本次 3D 預覽，不寫入正式角色。";
 
 }
-$("appearanceFormal").onclick=()=>{appearanceMode="formal";syncAppearancePanel();start();if(!formalAppearance)requestAppearance();};
+$("appearanceFormal").onclick=()=>{appearanceMode="formal";appearanceError="";syncAppearancePanel();start();if(!formalAppearance)requestAppearance();};
 $("appearanceFree").onclick=()=>{appearanceMode="free";syncAppearancePanel();start();};
-$("appearanceRefresh").onclick=()=>{formalAppearance=null;syncAppearancePanel();requestAppearance();};
-$("appearanceWorld").onchange=e=>{freeAppearance.world=Math.max(1,Math.min(3,Number(e.target.value)||1));equipmentRegion=0;equipmentSet=0;refreshEquipmentSelectors();start();};
+$("appearanceRefresh").onclick=()=>{formalAppearance=null;appearanceError="";syncAppearancePanel();requestAppearance();};
+$("appearanceWorld").onchange=e=>{freeAppearance.world=Math.max(1,Math.min(3,Number(e.target.value)||1));equipmentRegion=0;equipmentSet=0;const stage=$("appearanceStage").value;freeAppearance.enhancement=stage==="max"?(freeAppearance.world===1?20:40):stage==="middle"?(freeAppearance.world===1?10:30):0;refreshEquipmentSelectors();start();};
 $("appearanceRegion").onchange=()=>{equipmentRegion=Number($("appearanceRegion").value)||0;equipmentSet=0;refreshEquipmentSelectors();start();};
 $("appearanceSet").onchange=()=>{equipmentSet=Number($("appearanceSet").value)||0;refreshEquipmentSelectors();start();};
 $("appearanceStage").onchange=()=>{freeAppearance.enhancement=$("appearanceStage").value==="max"?(freeAppearance.world===1?20:40):$("appearanceStage").value==="middle"?(freeAppearance.world===1?10:30):0;start();};
@@ -348,7 +348,7 @@ async function start(){
  runtime.setQuality(quality.value);
  const progress=Math.max(1,Math.min(10,Number(snapshot.regionProgress)||1));
  const activeVisual=appearanceMode==="formal"?formalAppearance:freeVisual();
- if(appearanceKinds.has(c.kind)&&!activeVisual){status.hidden=false;status.textContent="等待正式角色外觀快照…";return;}
+ if(appearanceKinds.has(c.kind)&&!activeVisual){status.hidden=false;status.textContent=appearanceError?"正式角色外觀快照同步失敗："+appearanceError:"等待正式角色外觀快照…";return;}
  const growthKinds=["specialization","marks","civilization","core"];
  const growth= growthKinds.includes(c.kind)&&activeVisual?{
    growthKind:c.kind,
@@ -450,7 +450,7 @@ window.addEventListener("keydown",event=>{
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
  try{
