@@ -1,15 +1,25 @@
 /* Dual presentation modes, batch 17. No changes to formal save/state owners. */
 (function(global){
 "use strict";
-const VERSION=2, PREFIX="civilization-war-presentation-mode-v1:", MODES=Object.freeze(["text","3d"]);
+const VERSION=3, PREFIX="civilization-war-presentation-mode-v1:", MODES=Object.freeze(["text","3d"]);
 const FULL_3D_AVAILABLE=false; // Enable only after the B40 full-mode release gate.
 let accountId="",shownFor="",active="text";
 const safeId=value=>String(value||"").trim();
 const userId=()=>safeId(global.civilizationAuthSession?.user?.id);
 const storageKey=id=>PREFIX+id;
+// Legacy text/3d strings remain supported. New structured values are read-only
+// until the real 3D launch; malformed values never touch formal save data.
+function parsePreference(raw){
+ if(MODES.includes(raw))return raw;
+ if(typeof raw!=="string"||raw.length>256)return null;
+ try{
+  const value=JSON.parse(raw);
+  return value&&typeof value==="object"&&!Array.isArray(value)&&MODES.includes(value.mode)?value.mode:null;
+ }catch(_){return null;}
+}
 function read(id){
  if(!id)return null;
- try{const value=localStorage.getItem(storageKey(id));return MODES.includes(value)?value:null;}catch(_){return null;}
+ try{return parsePreference(localStorage.getItem(storageKey(id)));}catch(_){return null;}
 }
 function persist(id,mode){
  if(!id||!MODES.includes(mode)||mode==="3d"&&!FULL_3D_AVAILABLE)return false;
@@ -22,6 +32,7 @@ function initialSelection(id){
  active="text";
  if(shownFor===id&&document.getElementById("civilizationModeSelector"))return;
  shownFor=id;
+ closeSelector();
  const root=document.createElement("section");root.id="civilizationModeSelector";
  root.setAttribute("role","dialog");root.setAttribute("aria-modal","true");
  root.setAttribute("aria-label","選擇遊戲模式");
@@ -29,6 +40,7 @@ function initialSelection(id){
  root.innerHTML='<div style="width:min(100%,440px);border:1px solid #6486ad;border-radius:15px;background:#111c2c;padding:24px;box-shadow:0 12px 45px #000a"><h2 style="margin:0 0 12px">選擇遊戲模式</h2><p style="line-height:1.6">同一帳號共用角色、裝備、戰鬥規則及存檔。這台裝置會記住你的選擇。</p><button type="button" id="civilizationModeChooseText" class="btn blue" style="width:100%;margin:10px 0">文字模式・進入遊戲</button><button type="button" class="btn" disabled style="width:100%;opacity:.65">3D 模式・開發中</button><p class="muted" style="font-size:13px">3D 完整模式尚未開放，現有介面的 3D 預覽仍可使用。</p></div>';
  document.body.appendChild(root);
  root.querySelector("#civilizationModeChooseText").addEventListener("click",()=>{
+  if(userId()!==id){closeSelector();return;}
   if(!persist(id,"text")){root.querySelector(".muted").textContent="無法儲存模式偏好；本次仍可進入文字模式，下次可能再次詢問。";}
   active="text";closeSelector();
  });
@@ -36,13 +48,25 @@ function initialSelection(id){
 }
 function onSession(){
  const id=userId();
+ if(id!==accountId)closeSelector();
  if(!id){accountId="";shownFor="";active="text";closeSelector();return;}
  if(id!==accountId){accountId=id;shownFor="";}
  initialSelection(id);
 }
+// Future owners register authoritative pending-operation probes here.
+const switchBlockers=new Map();
+function registerSwitchBlocker(id,probe){
+ if(typeof id!=="string"||!id||typeof probe!=="function")return false;
+ switchBlockers.set(id,probe);return true;
+}
+function unregisterSwitchBlocker(id){return switchBlockers.delete(id);}
 function canSwitch(){
  if(document.querySelector(".combat-screen,.void-combat,.calamity-battle-shell,.alternate-universe-combat,.world-phase-overlay.open,.story-overlay.open"))return false;
- if(global.CivilizationStartupCoordinator?.snapshot?.().status==="loading")return false;
+ const startup=global.CivilizationStartupCoordinator?.snapshot?.();
+ if(startup&&startup.status!=="ready")return false;
+ for(const blocker of switchBlockers.values()){
+  try{if(blocker()!==false)return false;}catch(_){return false;}
+ }
  return true;
 }
 function switchMode(mode){
@@ -67,6 +91,6 @@ global.CivilizationPresentationMode=Object.freeze({
  version:VERSION,modeIds:MODES,currentMode:()=>active,isFull3DAvailable:()=>FULL_3D_AVAILABLE,
  canPreview3D:()=>true,shouldWarm3DAtStartup:()=>active==="3d",
  accountPreference:()=>read(userId()),selectMode:switchMode,settingsHtml,
- canSwitch,refresh:onSession
+ canSwitch,registerSwitchBlocker,unregisterSwitchBlocker,refresh:onSession
 });
 })(window);
