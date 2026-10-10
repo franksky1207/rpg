@@ -1,3 +1,11 @@
+## 2026-10-10｜第 19～26 批後整合優化第 3／6 批：三紀元裝備模型映射契約
+- 原正式 40 批編號不變；此批只施工第 5、14、15 項的資料映射前置，不提前聲稱第 27～34 批 GLB 美術已完成。
+- `3d-test/appearance-snapshot.js` 新增純唯讀 `modelDescriptor(type,item,defaultWorld,enhancement)` 與 `modelDescriptors(appearance)`：保留五槽 `type/present/world/name/visualKey/quality/level/enhancement`，空槽明確處理；目前所有物件標明 `assetKind:geometry-fallback`、`assetId:null`、`fallback:procedural-geometry`，直到正式合法 GLB manifest 有權威映射後才可升級，不能從名稱推測不存在的模型 ID。
+- `3d-test/prototype-engine.js` 角色、裝備場景 metadata 接入同一模型映射契約，保留目前幾何模型、原五槽呈現和 GM 自由模式；正式與 GM 使用同一外觀 adapter（若 adapter 不在場則保留安全唯讀 metadata 備援）。210 套、1050 名稱位置沿用舊有正式 owner 與補修規則，不建立 1050 個獨立 GLB。
+- 正式／GM 場景資源 fallback 版號更新、兩處 HTML cache-bust 升至 `20261010-opt3-modelmap`；回歸守門補充映射與降級規則。
+- 只做資料契約和 metadata：未更動角色強度、正式換裝/背包/強化、存檔 schema、GM 授權或美術模型。舊佔位模型保留為 WebGL/GLB 未來載入失敗的安全備援，待第 27～34 批逐步判斷哪些可淘汰。
+- 自我檢查限本次 main 回讀及可執行的 JS 語法解析、靜態守門核對；未取得 Chromium、手機、授權 GM iframe、完整 210 套實機循覽的執行證據。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 2／6 批：3D 載入與快取一致性
 - 保留正式首頁按需載入、GM 獨立 iframe、現有 31 場景與正式角色快照授權界線；未動玩家戰鬥、裝備或存檔。
 - 修正 GM `3d-test/test-center.js` 原本只要任一 manifest 指紋缺失就讓整組 3D 資源回退的問題：現在檢查 schema 與各路徑的 24 位 digest，只針對缺失項使用各自的安全備援；與正式 `3d-test/formal-home.js` 的逐檔 fallback 契約對齊。GM 外觀模組 fallback 改與正式介面一致。
