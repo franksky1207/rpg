@@ -77,3 +77,17 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
  .settings-audio-control{padding:11px}
  .settings-cache-row{align-items:center}
 }
+
+/* 設定頁第 2 批：存檔、帳號、GM 與危險操作分區 */
+.settings-save-section{margin-top:24px;min-width:0}
+.settings-save-section>.settings-section-title{margin-top:0}
+.settings-autosave-row{gap:12px;flex-wrap:wrap}
+.settings-autosave-active{color:#72c982;font-size:14px}
+.settings-cloud-slot,.settings-account-slot{min-width:0}
+.settings-cloud-slot:empty,.settings-account-slot:empty{display:none}
+.settings-cloud-slot .civilization-cloud-save-settings{margin-top:12px;padding-top:14px}
+.settings-account-slot .civilization-account-settings{margin-top:24px;padding-top:18px}
+.settings-gm-section{margin-top:24px;padding-top:18px;border-top:1px solid #303944;min-width:0}
+.settings-gm-section #gmStartupSlot{min-width:0}
+.settings-danger-section{margin-top:28px;border-top:1px solid #604343;padding-top:18px}
+@media(max-width:620px){.settings-save-section,.settings-account-slot,.settings-gm-section{min-width:0}.settings-autosave-row{align-items:center}.settings-cloud-slot .cloud-save-column{padding:12px}.settings-cloud-slot .cloud-save-compare{gap:10px}.settings-danger-section .btn{min-height:44px}}
