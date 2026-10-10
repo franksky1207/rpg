@@ -2,9 +2,43 @@
 (function(global){
 "use strict";
 let runtime=null,loading=null,enabled=false,epoch=0;
+let activeControl=null,activeHost=null;
+const PREVIEW_CONTROL_IDS=["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle","civilization3dDungeonToggle","civilization3dAdvancedToggle","civilization3dFrontierToggle","civilization3dBattleToggle"];
+function uniqueControls(root=document.getElementById("main")){
+ if(!root)return;
+ const seen=new Set();
+ root.querySelectorAll(".galaxy-3d-controls").forEach(control=>{
+  const button=control.querySelector("button");
+  if(!button)return;
+  const token=button.id||button.dataset.chroniclePreview||control.dataset.service3dPreview||control.dataset.service3DPreview;
+  if(!token)return;
+  if(seen.has(token)){control.remove();return;}
+  seen.add(token);
+ });
+}
+function previewButtons(){
+ const main=document.getElementById("main");
+ return main?Array.from(main.querySelectorAll("button")).filter(b=>PREVIEW_CONTROL_IDS.includes(b.id)||b.dataset.chroniclePreview||b.closest("[data-service3d-preview],[data-service-3d-preview]")):[];
+}
+function syncAllPreviewButtons(){
+ for(const button of previewButtons()){
+  if(!button.dataset.previewLabel)button.dataset.previewLabel=button.textContent==="關閉 3D 預覽"?"預覽 3D":button.textContent;
+  const selected=enabled&&button===activeControl;
+  button.textContent=selected?"關閉 3D 預覽":button.dataset.previewLabel;
+  button.setAttribute("aria-pressed",String(selected));
+ }
+}
 const host=(kind)=>document.getElementById(kind==="chronicle-story"?"civilization3dStoryHost":"civilization3dFormalHost");
-function hide(){epoch++;enabled=false;const old=runtime;runtime=null;old?.dispose();const h=host(activeGrowthKind);if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}document.body.classList.remove("civilization-3d-home-on");syncButton();}
-function syncButton(){for(const id of ["civilization3dHomeToggle","civilization3dGalaxyToggle","civilization3dUniverseToggle","civilization3dHigherToggle","civilization3dCharacterToggle","civilization3dInventoryToggle","civilization3dForgeToggle","civilization3dGrowthToggle","civilization3dGrowthPageToggle","civilization3dDungeonToggle","civilization3dAdvancedToggle","civilization3dFrontierToggle","civilization3dBattleToggle"]){const b=document.getElementById(id);if(b){const galaxy=id==="civilization3dGalaxyToggle";b.textContent=enabled?"關閉 3D 預覽":galaxy?"預覽 3D 銀河星圖":id==="civilization3dUniverseToggle"?"預覽 3D 宇宙星圖":id==="civilization3dHigherToggle"?"預覽 3D 高維戰線":id==="civilization3dCharacterToggle"?"預覽 3D 角色":id==="civilization3dInventoryToggle"?"預覽 3D 裝備陳列":id==="civilization3dForgeToggle"?"預覽 3D 強化鍛造台":id==="civilization3dGrowthToggle"?"預覽 3D 八種專精":id==="civilization3dGrowthPageToggle"?(b.dataset.previewLabel||"預覽 3D 養成星環"):id==="civilization3dDungeonToggle"?(b.dataset.previewLabel||"預覽 3D 副本作戰中心") :id==="civilization3dAdvancedToggle"?(b.dataset.previewLabel||"預覽 3D 副本"):id==="civilization3dFrontierToggle"?(b.dataset.previewLabel||"預覽 3D 前線"):id==="civilization3dBattleToggle"?(b.dataset.previewLabel||"預覽 3D 戰鬥場景"):"預覽 3D 艦橋";b.setAttribute("aria-pressed",String(enabled));}}}
+function hide(){
+ epoch++;enabled=false;
+ const old=runtime;runtime=null;old?.dispose();
+ const h=activeHost||host(activeGrowthKind);
+ if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}
+ activeControl=null;activeHost=null;
+ document.body.classList.remove("civilization-3d-home-on");
+ syncAllPreviewButtons();
+}
+function syncButton(){syncAllPreviewButtons();}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14&v7=20261010-b15&v8=20261010-au-3d-b1&v9=20261010-au-3d-b2&v10=20261010-au-cultures&v11=20261010-au-tier-power&v12=20261010-3d-b16-chronicle&v13=20261010-3d-b17b-services";
@@ -69,14 +103,19 @@ function schedule3dPrefetch(){
 if(global.CivilizationPresentationMode?.shouldWarm3DAtStartup?.()===true)schedule3dPrefetch();
 let activeRoute="home",activeEra="",activeGrowthKind=null;
 async function toggle(route="home",growthKind=null){
- if(enabled){hide();return;}
+ const clicked=global.event?.currentTarget?.tagName==="BUTTON"?global.event.currentTarget:null;
+ if(enabled){
+  const same=activeRoute===route&&activeGrowthKind===growthKind&&(!clicked||clicked===activeControl);
+  hide();if(same)return;
+ }
  const h=host(growthKind);if(!h||global.CivilizationPresentationMode?.canPreview3D?.()===false)return;
  activeRoute=route;activeGrowthKind=growthKind;
+ activeControl=clicked||null;activeHost=h;
  activeEra=route==="adventure"?(global.getAdventureEraView?.()||""):"";
  const ticket=++epoch;enabled=true;h.hidden=false;h.setAttribute("aria-hidden","false");h.dataset.threeDFormalMount="loading";syncButton();
  try{
   await load();
-  if(ticket!==epoch||!enabled)return;
+  if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(runtime){runtime.dispose();runtime=null;}
   runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onClose:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
   runtime.setQuality("low");
@@ -178,7 +217,7 @@ async function toggle(route="home",growthKind=null){
   })();
   const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
-  if(ticket!==epoch||!enabled){hide();return;}
+  if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(!result.ok){hide();return;}
   h.dataset.threeDFormalMount="active";
   document.body.classList.add("civilization-3d-home-on");
@@ -452,7 +491,7 @@ function ensureServiceControl(view){
 }
 function onRendered(view){
  if(enabled&&(activeGrowthKind==="battle-preview"||["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage","calamity","alternateuniverse"].includes(view))&&view===activeRoute)hide();
- if(view!==activeRoute&&(enabled||runtime))hide();
+ if((view!==activeRoute||activeHost&&!activeHost.isConnected)&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
   const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
   if(era!==activeEra||!((world===1&&era==="galaxy")||([2,3].includes(world)&&era==="galaxy-review")||(world===2&&era==="universe")||(world===3&&era==="universe-review")||(world===3&&era==="higher-dimensional")))hide();
@@ -472,6 +511,7 @@ function onRendered(view){
  ensureBattlePreviewControl(view);
  ensureChronicleControls(view);
  ensureServiceControl(view);
+ uniqueControls();
  if(view==="settings")queueMicrotask(()=>ensureServiceControl("settings"));
  syncButton();
 }
@@ -488,7 +528,7 @@ if(settingsHost&&typeof MutationObserver==="function"){
    node.id==="civilizationAccountSettings"||node.id==="civilizationCloudSaveSettings"||
    node.id==="gmStartupSlot"||node.querySelector?.("#civilizationAccountSettings,#civilizationCloudSaveSettings,#gmStartupSlot")
   ))))return;
-  ensureServiceControl("settings");
+  ensureServiceControl("settings");uniqueControls();syncAllPreviewButtons();
  });
  observer.observe(settingsHost,{childList:true,subtree:true});
 }
