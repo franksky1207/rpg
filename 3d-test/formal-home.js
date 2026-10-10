@@ -465,7 +465,25 @@ function onRendered(view){
  ensureBattlePreviewControl(view);
  ensureChronicleControls(view);
  ensureServiceControl(view);
+ if(view==="settings")queueMicrotask(()=>ensureServiceControl("settings"));
  syncButton();
+}
+// Account, cloud and authorized GM panels may mount after the first settings render.
+global.addEventListener("civilization-auth-ready",()=>queueMicrotask(()=>ensureServiceControl("settings")));
+global.addEventListener("civilization-script-group-ready",event=>{
+ if(event.detail?.group==="gm")queueMicrotask(()=>ensureServiceControl("settings"));
+});
+const settingsHost=document.getElementById("main");
+if(settingsHost&&typeof MutationObserver==="function"){
+ const observer=new MutationObserver(records=>{
+  if(!document.getElementById("settingsTitle"))return;
+  if(!records.some(record=>Array.from(record.addedNodes).some(node=>node.nodeType===1&&(
+   node.id==="civilizationAccountSettings"||node.id==="civilizationCloudSaveSettings"||
+   node.id==="gmStartupSlot"||node.querySelector?.("#civilizationAccountSettings,#civilizationCloudSaveSettings,#gmStartupSlot")
+  ))))return;
+  ensureServiceControl("settings");
+ });
+ observer.observe(settingsHost,{childList:true,subtree:true});
 }
 global.civilization3dToggleStory=()=>toggle("story","chronicle-story");
 global.civilization3dHideStoryPreview=()=>{if(activeGrowthKind==="chronicle-story"&&enabled)hide();};
