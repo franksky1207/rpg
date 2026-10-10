@@ -122,7 +122,7 @@
  }
  function accountSettingsHtml(){
   const email=escapeHtml(currentSession?.user?.email||"未取得 Email");
-  return `<section id="civilizationAccountSettings" class="civilization-account-settings"><h3>帳號</h3><div class="civilization-account-row"><div><div class="civilization-account-label">目前登入</div><div class="civilization-account-email">${email}</div></div><button type="button" class="btn danger" onclick="civilizationAccountLogout()">登出</button></div><div class="muted civilization-account-note">登出只會結束這台裝置的登入狀態，不會刪除目前本機遊戲進度。</div></section>`;
+  return `<section id="civilizationAccountSettings" class="civilization-account-settings"><h3>帳號管理</h3><div class="civilization-account-row"><div><div class="civilization-account-label">目前登入</div><div class="civilization-account-email">${email}</div></div><button type="button" class="btn danger" onclick="civilizationAccountLogout()">登出</button></div><div class="muted civilization-account-note">登出只會結束這台裝置的登入狀態，不會刪除目前本機遊戲進度。</div></section>`;
  }
  function mountAccountSettings(){
   if(!currentSession)return;
@@ -133,6 +133,7 @@
    mountCloudSave();
    return;
   }
+  const slot=document.getElementById("settingsAccountSlot");
   const title=document.getElementById("settingsTitle");
   if(!title)return;
   const card=title.closest(".card");
@@ -142,7 +143,8 @@
   holder.innerHTML=accountSettingsHtml();
   const section=holder.firstElementChild;
   if(!section)return;
-  if(danger)danger.before(section);else card.appendChild(section);
+  if(slot)slot.appendChild(section);
+  else if(danger)danger.before(section);else card.appendChild(section);
   mountCloudSave();
  }
  function installRenderHook(){
