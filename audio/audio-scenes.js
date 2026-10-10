@@ -4,7 +4,7 @@ const catalog=Object.freeze({
  galaxy:Object.freeze({home:["dark-title",null],explore:["dark-sector","dark-airy"],battle:["galaxy-battle",null],elite:["dark-urgent",null],boss:["boss-orchestra","dark-airy"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
  universe:Object.freeze({home:["dark-title",null],explore:["dark-pulse","dark-airy"],battle:["galaxy-battle",null],boss:["boss-orchestra","dark-pulse"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
  higher:Object.freeze({front:["dark-urgent","dark-airy"],frontStage:["boss-orchestra","dark-airy"],frontReview:["dark-pulse",null],core:[null,null],alternateSelect:["dark-pulse","dark-airy"],alternateBattle:["dark-urgent","dark-airy"],arenaFixed:["dark-urgent",null],arenaAlternate:["dark-pulse",null],record:[null,null]}),
- shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],defeat:[null,null],reincarnation:["dark-transmission",null],inventory:[null,null],equipment:[null,null],enhance:[null,null],expertise:[null,null],mark:[null,null],civilization:[null,null],character:[null,null],story:[null,null],cloud:[null,null],settings:[null,null],account:[null,null],offline:[null,null],shop:[null,null],redeem:[null,null],notice:["dark-hover",null],gm:[null,null]})
+ shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],defeat:[null,null],reincarnation:["dark-transmission",null],inventory:[null,null],equipment:[null,null],enhance:[null,null],expertise:[null,null],mark:[null,null],civilization:[null,null],character:[null,null],story:[null,null],guide:[null,null],cloud:[null,null],settings:[null,null],account:[null,null],offline:[null,null],shop:[null,null],redeem:[null,null],notice:["dark-hover",null],gm:[null,null]})
 });
 let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null,wasSilent=false,previewAmbient=null;
 function phase(){
@@ -63,6 +63,22 @@ function setContext(era,scene,{preview=false}={}){
 function restore(){if(prohibited()){stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;return;}
  if(selected){activeMusicId=null;apply();}}
 function stop(){clearTimeout(returnTimer);returnTimer=null;selected=null;activeMusicId=null;stopAmbient();g.CivilizationAudio?.stopMusic?.();}
+function syncView(viewName,subScreen=""){
+ const name=String(viewName||"");
+ const era=phase();
+ // GM's isolated audio audition must never be driven by the ordinary page.
+ if(document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;
+ if(name==="home")return setContext("shared","main");
+ if(name==="adventure"){
+  if(era==="higher")return setContext("higher","front");
+  return setContext(era,subScreen==="combat"?"battle":"explore");
+ }
+ if(name==="calamity")return era==="higher"?false:setContext(era,"calamity");
+ if(name==="storyrecord")return era==="higher"?setContext("higher","record"):setContext(era,"record");
+ const common={character:"character",enhancement:"enhance",specialization:"expertise",inventory:"inventory",settings:"settings",guide:"guide"};
+ if(common[name])return setContext("shared",common[name]);
+ return false;
+}
 function notify(type,detail={}){
  const era=detail.era||phase();
  if(type==="combat-start"){clearTimeout(returnTimer);returnTimer=null;return setContext(era,era==="higher"?"front":detail.calamity?"calamity":detail.boss?"boss":"battle");}
@@ -79,11 +95,12 @@ function notify(type,detail={}){
  if(type==="reincarnation")return setContext("shared","reincarnation");
  if(type==="main")return setContext("shared","main");
  if(type==="mirror"||type==="void")return setContext("shared",type);
+ if(type==="navigation")return syncView(detail.view,detail.subScreen);
  return false;
 }
 document.addEventListener("civilization-audio-unlocked",()=>restore());
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopPreview();stopAmbient();activeMusicId=null;}else restore();});
 new MutationObserver(()=>{const silent=prohibited();if(silent){stopPreview();stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:2,catalog,phase,resolve,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
+g.CivilizationAudioScenes=Object.freeze({version:3,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
