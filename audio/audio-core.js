@@ -209,13 +209,14 @@ function stopCombat(){
  for(const audio of combatVoices){audio.pause();audio.removeAttribute("src");audio.load();}
  combatVoices.clear();
 }
-function combatEvent(evt,{simulation=false}={}){
+function combatEvent(evt,{simulation=false,major=false}={}){
  if(!evt||typeof evt!=="object")return false;
  // Presentation only: the authoritative combat result has already been decided.
  // Mutually exclusive priority: a critical replaces ordinary attack, never layers with it.
  let category=null;
  if(evt.type==="attack"){
-  if(evt.miss===true||evt.dodged===true||evt.dodge===true||evt.evaded===true)category="dodge";
+  if(major===true&&Number(evt.actualDamage)>0)category="heavy-hit";
+  else if(evt.miss===true||evt.dodged===true||evt.dodge===true||evt.evaded===true)category="dodge";
   else category=evt.crit===true||evt.critical===true?"critical":"normal-attack";
  }else if(evt.type==="dodge"||evt.type==="evade")category="dodge";
  // No invented heavy-hit threshold or automatic Boss classification.
