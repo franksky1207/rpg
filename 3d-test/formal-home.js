@@ -193,7 +193,7 @@ async function toggle(route="home",growthKind=null){
   const advancedSnapshot=(()=>{if(!advanced)return {};
     if(activeRoute==="dungeon-arena"){
       const a=global.getArenaCoreState?.()||{},rt=a.runtime||{};
-      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,higherArenaMode:rt.round?.mode||rt.selectedMode||"fixed",advancedUnlocked:true};
+      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,higherArenaMode:rt.mode||rt.round?.mode||rt.selectedMode||"fixed",advancedUnlocked:true};
     }
     if(activeRoute==="dungeon-mirror"){
       const info=global.mirrorDungeonStatus?.()||{},history=info.history||{};
