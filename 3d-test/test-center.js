@@ -88,6 +88,9 @@ $("scenarioCalamityState").onchange=()=>{calamitySimulation[calWorld()].state=$(
 window.addEventListener("message",event=>{
  if(!embedded||event.source!==window.parent||event.origin!==location.origin||event.data?.type!=="civilization3d:scenario-response")return;
  const data=event.data.snapshot;if(!data||!Array.isArray(data.calamities?.[1])||!Array.isArray(data.calamities?.[2]))return;
+ // Validate the read-only bridge contract; never promote malformed data to formal.
+ if(!data.battle||data.battle.schema!==1||!["active","unavailable"].includes(data.battle.status)||data.battle.source!=="formal-combat")return;
+ if(data.battle.status==="active"&&(!Number.isFinite(data.battle.playerHpRatio)||!Number.isFinite(data.battle.enemyHpRatio)||!Number.isFinite(data.battle.shieldRatio)))return;
  formalScenario=data;renderInfo();if(scenarioMode==="formal"&&scenarioKinds.has(entry().kind))start();
 });
 function sceneCalamityStates(world){
@@ -379,7 +382,7 @@ async function start(){
  if(scenarioKinds.has(c.kind)&&scenarioMode==="formal"){
    if(!formalScenario){status.textContent="等待正式資料同步；不以模擬資料冒充正式狀態。";requestScenario();return;}
    if(c.kind.startsWith("battle-")){
-     if(formalScenario.battle?.battleAvailable!==true){status.textContent="目前沒有進行中的正式戰鬥快照；請切回自由測試查看視覺效果。";return;}
+     if(formalScenario.battle?.status!=="active"||formalScenario.battle?.battleAvailable!==true){status.textContent="目前沒有進行中的正式戰鬥快照；請切回自由測試查看視覺效果。";return;}
      scenarioArgs={...formalScenario.battle};
    }else if(dungeonSceneKey){
      if(c.kind==="dungeon-bounty"&&Number(formalScenario.dungeon?.bounty?.world)===3){status.textContent="高維紀元沒有懸賞戰。";return;}
