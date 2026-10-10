@@ -89,16 +89,78 @@
     });
     return scene;
   }
+  /* Batch 19: distinct command centers, read-only and deliberately low-poly for mobile. */
   function createEpochScene(args){
     const scene=createScene(args),B=args.BABYLON;
-    const world=Number(args.world)||1;
-    const color=world===3?new B.Color3(.48,.23,.83):world===2?new B.Color3(.1,.52,.68):new B.Color3(.11,.39,.79);
-    scene.clearColor=world===3?new B.Color4(.035,.015,.075,1):world===2?new B.Color4(.01,.035,.055,1):new B.Color4(.015,.026,.065,1);
-    const portal=B.MeshBuilder.CreateTorus("epoch-gateway",{diameter:6,thickness:.12,tessellation:80},scene);
-    portal.rotation.y=Math.PI/3;portal.position.y=.2;
-    const portalMat=new B.StandardMaterial("epoch-gateway-light",scene);
-    portalMat.emissiveColor=color;portal.material=portalMat;
-    scene.onBeforeRenderObservable.add(()=>{portal.rotation.z+=Math.min(args.engine.getDeltaTime(),50)*.00012;});
+    const world=[1,2,3].includes(Number(args.world))?Number(args.world):1;
+    const accent=world===3?[.64,.36,.95]:world===2?[.14,.72,.88]:[.20,.48,.89];
+    const metal=new B.StandardMaterial("command-metal",scene);
+    metal.diffuseColor=new B.Color3(.10,.16,.25);
+    metal.specularColor=new B.Color3(.19,.30,.42);
+    const glow=new B.StandardMaterial("command-energy",scene);
+    glow.diffuseColor=new B.Color3(...accent).scale(.22);
+    glow.emissiveColor=new B.Color3(...accent).scale(.8);
+    const bright=new B.StandardMaterial("command-bright",scene);
+    bright.emissiveColor=new B.Color3(...accent);
+    scene.clearColor=world===3?new B.Color4(.019,.010,.045,1):world===2?new B.Color4(.008,.025,.040,1):new B.Color4(.010,.019,.046,1);
+    const createRing=(name,diameter,thickness,height,tilt,material)=>{
+      const ring=B.MeshBuilder.CreateTorus(name,{diameter,thickness,tessellation:world===3?48:40},scene);
+      ring.position.y=height;ring.rotation.x=tilt;ring.material=material;return ring;
+    };
+    const base=B.MeshBuilder.CreateCylinder("command-platform",{diameter:7.4,height:.28,tessellation:48},scene);
+    base.position.y=-1.35;base.material=metal;
+    const rim=createRing("command-platform-rim",7.2,.075,-1.17,Math.PI/2,glow);
+    const portal=createRing("epoch-gateway",world===3?5.2:5.8,.10,.25,world===3?.34:Math.PI/3,bright);
+    portal.rotation.y=Math.PI/3;
+    const orbit=createRing("command-inner-orbit",3.4,.052,-.6,Math.PI/2,glow);
+    const animated=[portal,orbit];
+    if(world===1){
+      const planet=B.MeshBuilder.CreateSphere("galaxy-command-planet",{diameter:2.1,segments:20},scene);
+      planet.position.set(0,.05,0);planet.material=glow;animated.push(planet);
+      for(let i=0;i<4;i++){
+        const angle=i*Math.PI/2,x=Math.cos(angle)*2.4,z=Math.sin(angle)*2.4;
+        const hull=B.MeshBuilder.CreateBox("galaxy-fleet-"+i,{width:.92,height:.17,depth:.28},scene);
+        hull.position.set(x,.52,z);hull.rotation.y=-angle;hull.material=metal;
+        const drive=B.MeshBuilder.CreateSphere("galaxy-drive-"+i,{diameter:.2,segments:8},scene);
+        drive.position.set(x,.52,z);drive.material=bright;
+      }
+      for(let i=0;i<3;i++){
+        const tower=B.MeshBuilder.CreateCylinder("galaxy-orbital-tower-"+i,{diameter:.2,height:.8,tessellation:8},scene);
+        const a=i*Math.PI*2/3;tower.position.set(Math.cos(a)*3,-.72,Math.sin(a)*3);tower.material=glow;
+      }
+    }else if(world===2){
+      const core=B.MeshBuilder.CreatePolyhedron("universe-dark-energy-core",{type:2,size:1.2},scene);
+      core.position.y=.12;core.material=bright;animated.push(core);
+      for(let i=0;i<3;i++){
+        const ring=createRing("universe-dark-energy-ring-"+i,2.5+i*.85,.065,.15,Math.PI*(i+1)/5,glow);
+        ring.rotation.y=i*Math.PI/3;animated.push(ring);
+      }
+      for(let i=0;i<6;i++){
+        const a=2*Math.PI*i/6;
+        const p=B.MeshBuilder.CreatePolyhedron("universe-energy-anchor-"+i,{type:1,size:.31},scene);
+        p.position.set(2.8*Math.cos(a),.25+(i%2)*.42,2.8*Math.sin(a));p.material=i%2?bright:metal;
+      }
+    }else{
+      const core=B.MeshBuilder.CreatePolyhedron("higher-dimensional-core",{type:2,size:1.05},scene);
+      core.position.y=.1;core.material=bright;animated.push(core);
+      for(let i=0;i<3;i++){
+        const frame=B.MeshBuilder.CreateBox("higher-dimensional-frame-"+i,{width:2.3+i*.8,height:2.3+i*.8,depth:.09},scene);
+        frame.position.y=.15;frame.rotation.set(i*.37,i*.55,i*.31);frame.material=i===1?bright:glow;animated.push(frame);
+      }
+      for(let i=0;i<6;i++){
+        const a=i*Math.PI/3;
+        const shard=B.MeshBuilder.CreatePolyhedron("higher-dimensional-shard-"+i,{type:1,size:.35},scene);
+        shard.position.set(Math.cos(a)*2.65,.85*Math.sin(a*2),Math.sin(a)*2.65);
+        shard.rotation.y=a;shard.material=i%2?glow:bright;
+      }
+    }
+    scene.metadata={civilization3dCommand:{world,visualOnly:true,readOnly:true,batch:19}};
+    scene.onBeforeRenderObservable.add(()=>{
+      const dt=Math.min(Math.max(Number(args.engine.getDeltaTime())||0,0),50)*.00012;
+      portal.rotation.z+=dt;
+      orbit.rotation.y-=dt*.65;
+      for(let i=2;i<animated.length;i++)animated[i].rotation.y+=dt*(i%2?-.4:.55);
+    });
     return scene;
   }
   /* Decorative 3D map. The actual map/monster/target buttons stay in ui.js. */
@@ -641,5 +703,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.19.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
