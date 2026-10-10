@@ -56,8 +56,8 @@ function syncView(viewName,subScreen=""){
  const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?mainKind:name;
  if(combat)return setContext(phase(),mode,{combat:true});
  // Re-renders during an active dungeon run must not restart the music.
- if(selected?.tier&&selected.scene===mode)return apply();
- if(selected?.tier&&name===lastCombatView)return apply();
+ if(selected?.tier&&selected.scene===mode&&combat)return apply();
+ if(selected?.tier&&name===lastCombatView&&combat)return apply();
  return setContext(phase(),name+(sub?":"+sub:""));
 }
 function previewContext(era,scene){
