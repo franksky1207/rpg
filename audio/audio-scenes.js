@@ -38,6 +38,9 @@ function apply(){
 }
 function setContext(era,scene,{preview=false,combat=false,tier=null}={}){
  if(preview)return previewContext(era,scene);
+ // Formal battle owns the music until its settlement exits; UI renders cannot override it.
+ if(!combat&&combatLocked&&selected?.tier)return apply();
+ if(combat&&combatLocked&&selected?.tier)return apply();
  const item=resolve(era,scene,{combat,tier});
  if(combat){combatLocked=true;exitSequence++;}
  if(selected?.music===item.music){selected=item;return apply();}
