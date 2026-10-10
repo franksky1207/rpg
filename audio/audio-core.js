@@ -2,6 +2,14 @@
 (function(g){"use strict";
 const KEY="civilization.audio.preferences.v1";
 const tracks=Object.freeze({
+ "dark-sector":{label:"深空區域｜Sector",kind:"music",url:"https://opengameart.org/sites/default/files/sector_0.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-airy":{label:"異質環境｜Airy",kind:"ambient",url:"https://opengameart.org/sites/default/files/airy_0.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-pulse":{label:"未知脈動｜Pulse",kind:"music",url:"https://opengameart.org/sites/default/files/pulse_0.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-urgent":{label:"危險迫近｜Urgent",kind:"music",url:"https://opengameart.org/sites/default/files/urgent_0.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-transmission":{label:"轉換與傳輸｜Transmission",kind:"music",url:"https://opengameart.org/sites/default/files/transmission_1.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-victory":{label:"勝利音樂｜Victory",kind:"notice",url:"https://opengameart.org/sites/default/files/victory_4.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-hover":{label:"介面反饋｜Hover",kind:"ui",url:"https://opengameart.org/sites/default/files/hover_0.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-title":{label:"選單主題｜Title",kind:"music",url:"https://opengameart.org/sites/default/files/title_6.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "galaxy-battle":{label:"銀河／宇宙戰鬥候選｜Space Battle",kind:"music",url:"https://opengameart.org/sites/default/files/space_battle_bpm130_0.ogg",author:"MintoDog",license:"CC0",source:"https://opengameart.org/content/space-battle",sample:true},
  "boss-orchestra":{label:"史詩 Boss 候選｜The Final Battle",kind:"music",url:"https://opengameart.org/sites/default/files/the_final_battle.ogg",author:"skrjablin",license:"CC0",source:"https://opengameart.org/content/the-final-battle",sample:true},
  "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"https://opengameart.org/sites/default/files/laserpew.ogg",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
