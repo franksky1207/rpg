@@ -2,7 +2,7 @@
    Presentation-only; intentionally does not access game state or save. */
 (function(global){
 "use strict";
-const VERSION=3;
+const VERSION=4;
 const QUALITY=Object.freeze({low:{scale:1.6,hardwareScaling:1.6},medium:{scale:1.25,hardwareScaling:1.25},high:{scale:1,hardwareScaling:1}});
 function create(options={}){
   const host=options.host||document.body;
@@ -75,6 +75,10 @@ function create(options={}){
   host.appendChild(root);
   let epoch=0,scene=null,engine=null,disposed=false,reason="",quality="medium",activeId=null,controller=null,contextLost=false;
   const assets=new Map();
+  const assetRefs=new Map();
+  function safelyDisposeAsset(value){try{value?.dispose?.();}catch(err){console.warn("3D asset cleanup failed",err);}}
+  function clearAssetCache(){for(const value of assets.values())safelyDisposeAsset(value);assets.clear();assetRefs.clear();}
+  function releaseAsset(key){const k=String(key),entry=assetRefs.get(k);if(!entry)return false;entry.count--;if(entry.count<=0){assetRefs.delete(k);if(assets.get(k)===entry.value){assets.delete(k);safelyDisposeAsset(entry.value);}}return true;}
   let resizeObserver=null,renderPaused=false;
   const qualityFor=q=>QUALITY[q]||QUALITY.medium;
   function resize(){if(!disposed&&engine&&!contextLost){engine.resize();}}
@@ -88,6 +92,7 @@ function create(options={}){
   }
   function stop(reasonText="disabled"){
     epoch++;abortPending();releaseScene();reason=reasonText;
+    clearAssetCache();
     if(engine){const previous=engine;engine=null;try{previous.stopRenderLoop();}catch(err){console.warn("3D loop stop failed",err);}try{previous.dispose();}catch(err){console.warn("3D engine disposal failed",err);}}
     canvas.hidden=true;root.dataset.state="fallback";
     return {ok:false,reason};
@@ -125,7 +130,7 @@ function create(options={}){
       resize();
       return {ok:true,sceneId:activeId,epoch:ticket};
     }catch(err){
-      if(epoch!==ticket||disposed)return {ok:false,reason:"stale-scene"};
+      if(epoch!==ticket||disposed||signal.aborted)return {ok:false,reason:"stale-scene"};
       const failure=String(err?.message||"scene-failed");
       stop(failure);options.onFallback?.(failure);
       return {ok:false,reason:failure};
@@ -155,11 +160,10 @@ function create(options={}){
     canvas.removeEventListener("wheel",preventCanvasWheel);
     buttons.forEach(button=>button.removeEventListener("click",controlClick));
     root.remove();
-    for(const entry of assets.values()){try{entry?.dispose?.();}catch(err){console.warn("3D asset cleanup failed",err);}}
-    assets.clear();
+    clearAssetCache();
   }
   function onContextLost(event){event.preventDefault();contextLost=true;stop("webgl-context-lost");options.onFallback?.("webgl-context-lost");}
-  function onContextRestored(){contextLost=false;options.onContextRestored?.();}
+  function onContextRestored(){if(disposed)return;contextLost=false;reason="webgl-context-restored";root.dataset.state="idle";options.onContextRestored?.();}
   canvas.addEventListener("webglcontextlost",onContextLost,false);
   canvas.addEventListener("webglcontextrestored",onContextRestored,false);
   global.addEventListener("resize",resize);
@@ -172,9 +176,10 @@ function create(options={}){
   canvas.hidden=true;
   root.dataset.state="idle";
   return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,setExpanded,resize,
-    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,contextLost,renderPaused}),
-    cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assets.has(k)&&assets.get(k)!==value){try{assets.get(k)?.dispose?.();}catch(_){}}assets.set(k,value);return true;},
-    clearAssets:()=>{for(const entry of assets.values()){try{entry?.dispose?.();}catch(_){}}assets.clear();}});
+    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,leasedAssetCount:assetRefs.size,contextLost,renderPaused}),
+    cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assetRefs.has(k))return assets.get(k)===value;if(assets.has(k)&&assets.get(k)!==value)safelyDisposeAsset(assets.get(k));assets.set(k,value);return true;},
+    acquireAsset:(key,factory)=>{if(disposed)return null;const k=String(key);let entry=assetRefs.get(k);if(entry){entry.count++;return entry.value;}const value=assets.has(k)?assets.get(k):typeof factory==="function"?factory():null;if(!value)return null;assets.set(k,value);assetRefs.set(k,{value,count:1});return value;},
+    releaseAsset,clearAssets:clearAssetCache});
 }
 global.Civilization3DRuntime=Object.freeze({VERSION,QUALITY,create});
 })(window);
