@@ -42,7 +42,7 @@ function syncButton(){syncAllPreviewButtons();}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261010-b25-chronicle";
-const RUNTIME_SRC="3d-test/runtime.js?v=20261010-dual-mode-preflight3";
+const RUNTIME_SRC="3d-test/runtime.js?v=20261010-b26-runtime";
 const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-dual-mode-preflight3";
 let resourceVersionPromise=null;
 function resolveSceneResources(){
