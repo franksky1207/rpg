@@ -1,0 +1,42 @@
+name: HTML JS CSS Cache Version Guard
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.js'
+      - '**/*.css'
+      - '**/*.html'
+      - 'tests/runtime/html-cache-version-guard.js'
+      - '.github/workflows/html-cache-version-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cache-version-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Guard self-test
+        run: node tests/runtime/html-cache-version-guard.js --self-test
+      - name: Check main push HTML entrypoint references
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual run: compare HEAD^ with HEAD."
+            BEFORE="$(git rev-parse HEAD^)"
+          fi
+          if ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "No valid previous commit; cannot verify version transitions." >&2
+            exit 1
+          fi
+          node tests/runtime/html-cache-version-guard.js "$BEFORE" "$HEAD_SHA"
