@@ -171,10 +171,11 @@ function settlementKey(prefix,object){
  return String(prefix)+":"+String(settlementObjectIds.get(object));
 }
 
-const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0};
+const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0,skipped:0,playing:0,latencies:[],byCategory:{}};
 const sfxCleanup=new WeakMap(),sfxVoiceOwner=new WeakMap(),gmSfxVoices=new Set();
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
 const sfxCategoryPool={...warmChoices};
+const sfxOutputScale=0.5; // User-approved uniform SFX attenuation, including GM audition.
 const sfxRunToken=new WeakMap();
 function sfxUrl(category,index){return "audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg";}
 function preparedSample(category,index,{retry=false}={}){
@@ -198,7 +199,13 @@ function releasePreparedSfx(){
  for(const slot of preparedSfx.values()){try{slot.audio.pause();slot.audio.removeAttribute("src");slot.audio.load();}catch(_){}}
  preparedSfx.clear();
 }
-function sfxDiagnostics(){return {...sfxTiming,prepared:preparedSfx.size,ready:[...preparedSfx.values()].filter(x=>x.ready).length,active:sfxVoices.size,gmActive:gmSfxVoices.size,failedPrepared:[...preparedSfx.values()].filter(x=>x.failed).length};}
+function sfxDiagnostics(){
+ const timings=sfxTiming.latencies.slice().sort((a,b)=>a-b);
+ const percentile=p=>timings.length?timings[Math.min(timings.length-1,Math.ceil(timings.length*p)-1)]:null;
+ return {requested:sfxTiming.requested,started:sfxTiming.started,playing:sfxTiming.playing,failed:sfxTiming.failed,skipped:sfxTiming.skipped,lastStartMs:sfxTiming.lastStartMs,p50Ms:percentile(.5),p95Ms:percentile(.95),byCategory:Object.fromEntries(Object.entries(sfxTiming.byCategory).map(([k,v])=>[k,{...v}])),prepared:preparedSfx.size,ready:[...preparedSfx.values()].filter(x=>x.ready).length,active:sfxVoices.size,gmActive:gmSfxVoices.size,failedPrepared:[...preparedSfx.values()].filter(x=>x.failed).length};
+}
+function trackSfx(category,status){const d=sfxTiming.byCategory[category]||(sfxTiming.byCategory[category]={requested:0,playing:0,failed:0,skipped:0});d[status]=(d[status]||0)+1;}
+
 function settlementVictory(key,{success=false}={}){
  if(success!==true||typeof key!=="string"||!key||settledVictoryKeys.has(key))return false;
  settledVictoryKeys.add(key);
@@ -236,7 +243,7 @@ function playSfx(category,{simulation=false,volume=1}={}){
  if(simulation&&!(typeof state!=="undefined"&&state?.gm===true))return false;
  if(!simulation&&typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
  const now=Date.now();
- if(!simulation&&now-(sfxLastTime.get(category)||0)<spec.interval)return false;
+ if(!simulation&&now-(sfxLastTime.get(category)||0)<spec.interval){sfxTiming.skipped++;trackSfx(category,"skipped");return false;}
  const sample=pickSfx(category);if(!sample)return false;
  if(!simulation)sfxLastTime.set(category,now);
  const bank=simulation?gmSfxVoices:sfxVoices,isNotice=category==="victory";
@@ -244,8 +251,8 @@ function playSfx(category,{simulation=false,volume=1}={}){
  const categoryVoices=[...bank].filter(x=>x.dataset.sfxCategory===category);
  if(categoryVoices.length>=categoryLimit)releaseSfx(categoryVoices[0]);
  if(bank.size>=bankLimit){
-  const victim=[...bank].find(x=>simulation||x.dataset.sfxCategory!=="victory");
-  if(!victim)return false;
+  const victim=[...bank].find(x=>simulation||x.dataset.sfxCategory!=="victory"&&x.dataset.sfxCategory!=="heavy-hit")||(!isNotice&&category!=="heavy-hit"?null:[...bank].find(x=>simulation||x.dataset.sfxCategory!=="victory"));
+  if(!victim){sfxTiming.skipped++;trackSfx(category,"skipped");return false;}
   releaseSfx(victim);
  }
  let slot=null,a;
@@ -258,13 +265,14 @@ function playSfx(category,{simulation=false,volume=1}={}){
  a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
  if(simulation)a.dataset.gmPreviewVoice="1";else delete a.dataset.gmPreviewVoice;
  const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
- a.volume=Math.max(0,Math.min(1,gain*0.5*Math.max(0,Math.min(1,Number(volume)||0))));
+ a.volume=Math.max(0,Math.min(1,gain*sfxOutputScale*Math.max(0,Math.min(1,Number(volume)||0))));
  bank.add(a);
  const finish=()=>{if(sfxCleanup.get(a)===finish)releaseSfx(a);};
  sfxCleanup.set(a,finish);a.addEventListener("ended",finish);a.addEventListener("error",finish);
- const began=performance.now();sfxTiming.requested++;
- a.play().then(()=>{if(sfxCleanup.get(a)===finish){sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);}}).catch(error=>{
-  if(sfxCleanup.get(a)===finish){sfxTiming.failed++;console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}
+ const began=performance.now();sfxTiming.requested++;trackSfx(category,"requested");
+ a.addEventListener("playing",()=>{if(sfxCleanup.get(a)===finish){sfxTiming.playing++;trackSfx(category,"playing");}},{once:true});
+ a.play().then(()=>{if(sfxCleanup.get(a)===finish){sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);sfxTiming.latencies.push(sfxTiming.lastStartMs);if(sfxTiming.latencies.length>100)sfxTiming.latencies.shift();}}).catch(error=>{
+  if(sfxCleanup.get(a)===finish){sfxTiming.failed++;trackSfx(category,"failed");console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}
  });
  return true;
 }
