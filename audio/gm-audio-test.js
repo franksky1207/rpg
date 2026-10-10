@@ -1,174 +1,27 @@
-/* GM 音樂音效測試中心：依正式場景及狀況呈現；不以施工批次分類。 */
+/* GM era music audition only; legacy review storage stays untouched. */
 (function(g){"use strict";
+const tracks=[["era-galaxy-theme","銀河紀元｜The Fall of Arcana"],["era-universe-theme","宇宙紀元｜Epic Orchestral Fantasy Theme"],["era-higher-theme","高維紀元｜Exploration Theme"]];
+let chosen=0,detail="尚未播放",wasOpen=false;
 const audio=()=>g.CivilizationAudio;
-const permitted=()=>typeof state!=="undefined"&&state?.gm===true;
-const GROUPS=Object.freeze([
- {id:"era-themes",name:"三大紀元・已選主題試聽",contexts:[["era-theme-galaxy","銀河紀元｜The Fall of Arcana","era-galaxy-theme"],["era-theme-universe","宇宙紀元｜Epic Orchestral Fantasy Theme","era-universe-theme"],["era-theme-higher","高維紀元｜Exploration Theme","era-higher-theme"]]},
- {id:"system",name:"主畫面與共用介面",contexts:[["home","主畫面","dark-title"],["character","角色資訊",null],["inventory","背包與裝備",null],["equipment","裝備更換",null],["upgrade","強化與升級提示","dark-hover"],["expertise","專精",null],["mark","印記",null],["civilization","文明等級",null],["shop","交易與出售",null],["redeem","裝備贖回",null],["story","劇情",null],["record","戰線紀錄",null],["cloud","雲端存讀",null],["settings","設定與帳號",null],["offline","離線結算",null],["victory","勝利結算","dark-victory"],["notice","系統通知","dark-hover"]]},
- {id:"galaxy",name:"銀河紀元",contexts:[["galaxy-explore","銀河區域與小區域","dark-sector"],["galaxy-combat","主線普通戰","galaxy-battle"],["galaxy-elite","主線菁英戰","dark-urgent"],["galaxy-boss","主線 Boss 戰","boss-orchestra"],["galaxy-calamity","銀河文明災厄","boss-orchestra"],["galaxy-review","銀河主線回顧","dark-pulse"],["galaxy-arena","銀河競技場","dark-urgent"],["galaxy-bounty","銀河懸賞戰","galaxy-battle"],["galaxy-special","特殊遭遇","dark-urgent"]]},
- {id:"universe",name:"宇宙紀元",contexts:[["universe-explore","宇宙章節與 Boss 選擇","dark-pulse"],["universe-boss","宇宙主線 Boss 戰","boss-orchestra"],["universe-calamity","宇宙文明災厄","boss-orchestra"],["universe-review","宇宙主線回顧","dark-pulse"],["universe-arena","宇宙競技場","dark-urgent"],["universe-bounty","宇宙懸賞戰","galaxy-battle"],["universe-special","特殊遭遇","dark-urgent"]]},
- {id:"higher",name:"高維紀元",contexts:[["higher-front","高維戰線・十名高維存在","dark-urgent"],["higher-stage","高維戰線・階段變化","boss-orchestra"],["higher-review","高維戰線・單場回顧","dark-pulse"],["higher-core","界弦核心",null],["higher-arena-fixed","高維競技場・定相","dark-urgent"],["higher-arena-alternate","高維競技場・異相","dark-pulse"],["alternate","異宇宙・宇宙與深度選擇","dark-pulse"],["alternate-battle","異宇宙・深度戰鬥","dark-urgent"]]},
- {id:"combat",name:"戰鬥事件與技能",events:["attack","critical","dodge","combo","counter","shield","drain","penetration","mark","berserk","victory","defeat"]},
- {id:"monsters",name:"怪物與特殊遭遇",contexts:[["monster-entrance","銀河普通怪登場",null],["elite-entrance","銀河菁英登場",null],["boss-entrance","主線 Boss 登場",null],["special-entrance","特殊遭遇出現",null],["monster-death","怪物擊敗",null]]},
- {id:"dungeons",name:"共用副本與特殊戰鬥",contexts:[["mirror","鏡像戰","boss-orchestra"],["void","虛空幻境","dark-pulse"],["calamity-galaxy","銀河文明災厄","boss-orchestra"],["calamity-universe","宇宙文明災厄","boss-orchestra"],["arena-galaxy","銀河競技場","dark-urgent"],["arena-universe","宇宙競技場","dark-urgent"],["arena-fixed","高維定相競技場","dark-urgent"],["arena-alternate","高維異相競技場","dark-pulse"],["bounty-galaxy","銀河懸賞戰","galaxy-battle"],["bounty-universe","宇宙懸賞戰","galaxy-battle"]]},
- {id:"mix",name:"情境混音測試",contexts:[["mix-calm","探索環境層","dark-airy"],["mix-fight","主線連戰","galaxy-battle"],["mix-tense","高維戰線張力","dark-urgent"],["mix-boss","Boss 戰配樂","boss-orchestra"],["mix-victory","勝利返回","dark-victory"]]}
-]);
-let group="higher",selected="higher-front",wasPresent=false,checking=false,listenMode="single",lastStatus="";
-const REVIEW_KEY="civilization.gm.audio.review.v1";
-const RESULTS={ok:"有聲音，音量正常",low:"有聲音，但太小聲",silent:"沒有聲音",bad:"有聲音，但不適合場景"};
-let reviews={};
-try{const parsed=JSON.parse(localStorage.getItem(REVIEW_KEY)||"{}");if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed))reviews=parsed;}catch(_){}
-function entryKey(row=current()){return row?(row.event?"event:":"scene:")+row.id:null;}
-function reviewStale(row){
- const v=reviews[entryKey(row)];if(!v||!RESULTS[v.result]||!row?.asset)return false;
- const currentUrl=audio()?.tracks?.[row.asset]?.url||null;
- return v.url!==currentUrl;
+const panel=()=>document.querySelector('[data-gm-section="gm-audio-test"]');
+const visible=()=>typeof state!=="undefined"&&state?.gm===true&&!!panel()?.open;
+function html(){
+ const gain=Math.round((audio()?.previewSettings?.().gmVolume??1)*100);
+ return '<div id="gmSoundBody"><p class="muted">只保留三大紀元正式候選主題。循環接縫會從曲尾約 8 秒接回曲頭再播約 8 秒，不必整首等候。舊聆聽紀錄仍保存在本機。</p>'
+ +'<label>紀元主題<br><select class="btn" onchange="gmSoundSelectTheme(this.value)">'+tracks.map(([id,name],i)=>'<option value="'+i+'" '+(i===chosen?'selected':'')+'>'+name+'</option>').join('')+'</select></label>'
+ +'<div class="controls" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn blue" onclick="gmSoundPlayTheme()">▶ 完整循環試聽</button><button class="btn" onclick="gmSoundSeam()">♫ 循環接縫試聽</button><button class="btn" onclick="gmSoundStop()">■ 停止</button></div>'
+ +'<label>試聽音量 <input type="range" min="0" max="100" value="'+gain+'" oninput="gmSoundVolume(this.value/100)"><span id="gmSoundLevel">'+gain+'%</span></label>'
+ +'<p class="muted" id="gmSoundPlaybackDetail" role="status">'+detail+'</p></div>';
 }
-function reviewLabel(row){return reviewStale(row)?"素材已更新・請重新試聽":RESULTS[reviews[entryKey(row)]?.result]||"尚未填寫";}
-function reviewControl(){
- const result=reviewStale(current())?"":reviews[entryKey()]?.result||"";
- const buttons=Object.entries(RESULTS).map(([id,name])=>'<button type="button" class="btn '+(result===id?'blue':'')+'" aria-pressed="'+(result===id)+'" onclick="gmSoundRecord(\''+id+'\')">'+name+'</button>').join('');
- return '<div style="margin-top:12px"><div style="margin-bottom:8px">我的聆聽紀錄：<b id="gmSoundReviewLabel">'+reviewLabel(current())+'</b></div><div class="controls gm-sound-review-actions" style="display:flex;flex-wrap:wrap;gap:8px">'+buttons+'</div><div class="controls" style="margin-top:10px"><button class="btn" type="button" onclick="gmSoundCopyReport()">複製驗收摘要</button></div><div class="muted" id="gmSoundReportStatus" role="status"></div></div>';
-}
-g.gmSoundRecord=result=>{
- if(!visible()||!entryKey())return false;
- const key=entryKey();
- if(!RESULTS[result])delete reviews[key];
- else {
- const row=current(),asset=audio()?.tracks?.[row.asset];
- reviews[key]={result,asset:row.asset||null,url:asset?.url||null,context:groupRow().name,scene:row.label,updatedAt:new Date().toISOString()};
- }
- try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviews));}catch(_){}
- refresh();
- return true;
-};
-g.gmSoundCopyReport=()=>{
- if(!visible())return false;
- const all=GROUPS.flatMap(gp=>(gp.events?gp.events.map(id=>({key:"event:"+id,label:audio()?.combatCatalog?.[id]?.label||id,context:gp.name})):gp.contexts.map(([id,label])=>({key:"scene:"+id,label,context:gp.name}))));
- const keys=new Set(all.map(x=>x.key));
- const stale=all.filter(x=>{const gp=GROUPS.find(y=>y.name===x.context);const row=gp?.contexts?.find(y=>x.key==="scene:"+y[0]);return row?reviewStale({id:row[0],asset:row[2]}):false;});
- const staleKeys=new Set(stale.map(x=>x.key));
- const filled=all.filter(x=>RESULTS[reviews[x.key]?.result]&&!staleKeys.has(x.key)),missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]&&!staleKeys.has(x.key));
- const legacy=Object.entries(reviews).filter(([key,value])=>!keys.has(key)&&RESULTS[value?.result]);
- const line=x=>x.key+"｜"+x.context+"／"+x.label;
- const output=['《文明戰線・GM 音樂音效聆聽回報》','目前正式項目：'+all.length+'｜已填寫：'+filled.length+'｜尚未填寫：'+missing.length+'｜素材更新待重聽：'+stale.length+'｜歷史舊分類紀錄：'+legacy.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...filled.map(x=>{const v=reviews[x.key];return line(x)+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt;}),'【素材更新待重新試聽】',...stale.map(x=>line(x)+'｜原結果 '+RESULTS[reviews[x.key].result]),'【尚未填寫】',...missing.map(x=>line(x)+'｜尚未填寫'),'【舊分類保留紀錄（未合併到新情境）】',...legacy.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜記錄 '+v.updatedAt)].join(String.fromCharCode(10));
- const finish=ok=>{const el=document.getElementById("gmSoundReportStatus");if(el)el.textContent=ok?"摘要已複製，請貼回 ChatGPT。":"複製失敗，請允許瀏覽器使用剪貼簿。";};
- if(navigator.clipboard?.writeText){navigator.clipboard.writeText(output).then(()=>finish(true)).catch(()=>finish(false));return true;}
- const el=document.createElement("textarea");el.value=output;el.style.position="fixed";el.style.opacity="0";document.body.appendChild(el);el.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}el.remove();finish(ok);return ok;
-};
-
-const safe=x=>String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function panel(){return document.querySelector('[data-gm-section="gm-audio-test"]');}
-function visible(){const node=panel();return !!(permitted()&&node?.open&&node.isConnected&&node.getClientRects().length);}
-function groupRow(){return GROUPS.find(x=>x.id===group)||GROUPS[0];}
-function entries(row=groupRow()){
- if(row.events)return row.events.map(id=>{const o=audio()?.combatCatalog?.[id];return {id,label:o?.label||id,asset:o?.asset||null,event:id};});
- return row.contexts.map(([id,label,asset])=>({id,label,asset}));
-}
-function current(){return entries().find(x=>x.id===selected)||entries()[0];}
-function controls(){
- const value=Math.round((audio()?.previewSettings?.().gmVolume??1)*100);
- return '<label style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">試聽音量 <input type="range" min="0" max="100" value="'+value+'" oninput="gmSoundPreviewLevel(this.value/100)"><span id="gmSoundLevel">'+value+'%</span></label>';
-}
-g.gmSoundPreviewLevel=value=>{
- if(!visible()||audio()?.setPreviewVolume?.(value)!==true)return false;
- const label=document.getElementById("gmSoundLevel");
- if(label)label.textContent=Math.round((audio()?.previewSettings?.().gmVolume??1)*100)+"%";
- return true;
-};
-function stateFor(id){
- const status=audio()?.trackStatus?.(id)||"missing";
- return ({ready:"可載入",failed:"無法載入",checking:"檢查中",unchecked:"尚未檢查",missing:"待素材・不可播放"})[status]||"尚未檢查";
-}
-function verifyVisible(){
- if(checking||!visible())return;
- checking=true;
- const ids=entries().map(x=>x.asset).filter(Boolean);
- audio()?.checkTracks?.(ids)?.finally(()=>{checking=false;if(visible())refresh();});
-}
-function content(){
- const rows=entries();
- if(!rows.some(x=>x.id===selected))selected=rows[0]?.id||"";
- return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。場景選單只顯示名稱；音檔能否載入由下方播放狀態單獨提示。聆聽評價只保存在本機，直到複製摘要回報後才進行 GitHub 素材修正。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
- +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
- +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+'（'+safe(reviewLabel(x))+'）</option>').join('')+'</select></label></div>'
- +'<div class="controls" style="margin-top:10px"><button type="button" class="btn '+(listenMode==='single'?'blue':'')+'" onclick="gmSoundSetMode(\'single\')">單一音檔</button><button type="button" class="btn '+(listenMode==='scene'?'blue':'')+'" onclick="gmSoundSetMode(\'scene\')">場景混音</button></div>'
- +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
- +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="gmSoundStopPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
- +'<div class="muted" id="gmSoundPlaybackDetail" style="margin:8px 0" role="status">'+safe(lastStatus||'尚未播放。單一音檔模式只播放清單對應音源；場景混音模式播放正式情境映射。')+'</div>'
- +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
- +reviewControl() +'<p class="muted">目前候選音檔來自 CC0 授權作品，仍使用來源站網址；最終配樂、怪物與武器專屬素材及同源檔案本地化尚待補齊。原始來源與授權登載於 audio/A01_AUDIO_LEDGER.md。</p>';
-}
-function statusText(){
- const entry=current();if(!entry)return "尚無場景資料";
- const asset=audio()?.tracks?.[entry.asset];
- return entry.label+"｜"+(asset?.url?stateFor(entry.asset)+"："+asset.label+"（"+asset.license+"；播放成功前不可視為可用）":"待素材・不可播放：尚無符合品質的音檔");
-}
-function refresh(){const node=document.getElementById("gmSoundBody");if(node)node.innerHTML=content();}
-g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();verifyVisible();};
-g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
-g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
-function a03Context(){
- const row=current();if(!row||row.event)return null;
- const scenes={
- galaxy:{"galaxy-explore":"explore","galaxy-combat":"battle","galaxy-elite":"elite","galaxy-boss":"boss","galaxy-calamity":"calamity","galaxy-review":"review","galaxy-arena":"arena","galaxy-bounty":"bounty","galaxy-special":"special"},
- universe:{"universe-explore":"explore","universe-boss":"boss","universe-calamity":"calamity","universe-review":"review","universe-arena":"arena","universe-bounty":"bounty","universe-special":"special"},
- higher:{"higher-front":"front","higher-stage":"frontStage","higher-review":"frontReview","higher-core":"core","higher-arena-fixed":"arenaFixed","higher-arena-alternate":"arenaAlternate","alternate":"alternateSelect","alternate-battle":"alternateBattle"},
- system:{home:"main",character:"character",inventory:"inventory",equipment:"equipment",upgrade:"enhance",expertise:"expertise",mark:"mark",civilization:"civilization",shop:"shop",redeem:"redeem",story:"story",cloud:"cloud",settings:"settings",offline:"offline",victory:"victory",notice:"notice",record:"record"},
- dungeons:{mirror:"mirror",void:"void","calamity-galaxy":"calamity","calamity-universe":"calamity","arena-galaxy":"arena","arena-universe":"arena","arena-fixed":"arenaFixed","arena-alternate":"arenaAlternate","bounty-galaxy":"bounty","bounty-universe":"bounty"},
- mix:{"mix-calm":["galaxy","explore"],"mix-fight":["galaxy","battle"],"mix-tense":["higher","front"],"mix-boss":["galaxy","boss"],"mix-victory":["shared","victory"]}
- };
- if(group==="mix"){const pair=scenes.mix[row.id];return pair?{era:pair[0],scene:pair[1]}:null;}
- const era=group==="system"?"shared":group==="dungeons"?(row.id.endsWith("-galaxy")?"galaxy":row.id.endsWith("-universe")?"universe":row.id==="arena-fixed"||row.id==="arena-alternate"?"higher":"shared"):group;
- const scene=scenes[group]?.[row.id];return scene?{era,scene}:null;
-}
-
-g.gmSoundSetMode=mode=>{if(!visible())return false;listenMode=mode==="scene"?"scene":"single";g.gmSoundStopPreview();lastStatus="已切換為"+(listenMode==="single"?"單一音檔":"場景混音")+"模式";refresh();return true;};
-g.gmSoundStopPreview=()=>{g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();lastStatus="已停止播放";const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=lastStatus;return true;};
-g.gmSoundPlaySelected=()=>{
- if(!visible())return false;
- const row=current();if(!row)return false;
- g.gmSoundStopPreview();
- const context=a03Context(),mapped=context?g.CivilizationAudioScenes?.resolve?.(context.era,context.scene):null;
- const id=listenMode==="scene"?(mapped?.music||mapped?.ambient):row.asset;
- let ok=false;
- if(row.event){ok=audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true})===true;lastStatus=ok?"戰鬥音效已送出播放要求，請以實際聽感判定":"尚無可播放的戰鬥音效或音訊受限制";}
- else if(listenMode==="scene"&&mapped&&(mapped.music||mapped.ambient)){ok=g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene)===true;lastStatus="場景混音："+(mapped.music||"無配樂")+(mapped.ambient?" ＋ "+mapped.ambient:"（此場景只有單一音源，沒有環境聲）")+"；"+(ok?"已送出播放要求":"無法開始播放");}
- else if(listenMode==="scene"){lastStatus=mapped?"此正式場景尚未配置任何音源":"此測試項目沒有正式場景混音對應，不能以單一音檔冒充混音";}
- else if(id){ok=audio()?.preview?.(id)===true;lastStatus="單一音檔："+id+"；"+(ok?"等待瀏覽器確認實際播放":"未能開始播放");}
- else lastStatus="此項目目前沒有配置音檔";
- const detail=document.getElementById("gmSoundPlaybackDetail");if(detail)detail.textContent=lastStatus;
- const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();
- return ok;
-};
-g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
-function guard(){
- const present=visible();
- if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-front";g.CivilizationAudioScenes?.restore?.();}
- if(!wasPresent&&present)verifyVisible();
- wasPresent=present;
-}
-new MutationObserver(guard).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open","style","hidden","class"]});
-document.addEventListener("toggle",guard,true);
-document.addEventListener("civilization-audio-preview-status",event=>{
- if(!visible())return;
- const d=event.detail||{},row=current();
- const context=a03Context(),mapped=context?g.CivilizationAudioScenes?.resolve?.(context.era,context.scene):null;
- if(d.id!==(listenMode==="scene"?(mapped?.music||mapped?.ambient||row?.asset):row?.asset))return;
- const status=d.status==="playing"?"實際已開始播放":d.status==="volume"?"音量已即時更新":d.status==="failed"?"播放失敗":d.status==="blocked"?"瀏覽器禁止播放":"等待播放";
- lastStatus=(listenMode==="scene"?"場景配樂":"單一音檔")+"｜"+String(d.id||"")+"｜"+status+"｜"+(d.reason||"")+"｜輸出音量："+(Number.isFinite(d.volume)?Math.round(d.volume*100)+"%":"尚未知")+"｜聲道："+(d.channel||"未知");
- const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=lastStatus;
-});
-document.addEventListener("civilization-audio-ambient-preview-status",event=>{
- if(!visible()||listenMode!=="scene")return;
- const context=a03Context(),mapped=context?g.CivilizationAudioScenes?.resolve?.(context.era,context.scene):null;
- if(!mapped?.ambient||mapped.ambient!==event.detail?.id)return;
- const d=event.detail,status=d.status==="playing"?"實際已開始播放":d.status==="volume"?"音量已更新":d.status==="failed"?"播放失敗":"等待播放";
- const node=document.getElementById("gmSoundPlaybackDetail");
- if(node)node.textContent="環境聲："+d.id+"｜"+status+"｜輸出音量："+(Number.isFinite(d.volume)?Math.round(d.volume*100)+"%":"未知")+(d.reason?"｜"+d.reason:"")+"；配樂："+(mapped.music||"無");
-});
-document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
-document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
+function refresh(){const el=document.getElementById("gmSoundBody");if(el)el.outerHTML=html();}
+g.gmSoundSelectTheme=value=>{if(!visible())return false;chosen=Math.max(0,Math.min(2,Number(value)||0));audio()?.stopPreview?.();detail="已切換歌曲，尚未播放";refresh();return true;};
+g.gmSoundVolume=value=>{if(!visible())return false;audio()?.setPreviewVolume?.(value);const e=document.getElementById("gmSoundLevel");if(e)e.textContent=Math.round((audio()?.previewSettings?.().gmVolume??1)*100)+"%";return true;};
+g.gmSoundPlayTheme=()=>{if(!visible())return false;const ok=audio()?.preview?.(tracks[chosen][0])===true;detail=ok?"正在載入完整循環版":"目前無法播放，請確認音樂設定及瀏覽器權限";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return ok;};
+g.gmSoundSeam=()=>{if(!visible())return false;const ok=audio()?.previewSeam?.(tracks[chosen][0],8)===true;detail=ok?"接縫試聽：曲尾 8 秒 → 曲頭 8 秒（結束自動停止）":"目前無法播放接縫試聽";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return ok;};
+g.gmSoundStop=()=>{audio()?.stopPreview?.();detail="已停止播放";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return true;};
+g.gmAudioTestHtml=()=>typeof state!=="undefined"&&state?.gm===true?html():"";
+document.addEventListener("civilization-audio-preview-status",e=>{if(!visible()||e.detail?.id!==tracks[chosen][0])return;const d=e.detail;const label=d.status==="playing"?"播放中":d.status==="failed"?"播放失敗":d.status==="volume"?"音量已更新":d.status==="blocked"?"播放受限制":"載入中";const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=label+"｜輸出音量："+Math.round((d.volume??0)*100)+"%"+(d.reason?"｜"+d.reason:"");});
+new MutationObserver(()=>{const now=visible();if(wasOpen&&!now){audio()?.stopPreview?.();g.CivilizationAudioScenes?.restore?.();}wasOpen=now;}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=16;
+g.GM_AUDIO_TEST_CATALOG_VERSION=17;
 })(window);
