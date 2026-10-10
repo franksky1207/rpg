@@ -1,5 +1,6 @@
-/* GM era music audition only; legacy review storage stays untouched. */
+/* GM era-theme audition only; obsolete review storage cleared. */
 (function(g){"use strict";
+try{localStorage.removeItem("civilization.gm.audio.review.v1");}catch(_){}
 const tracks=[["era-galaxy-theme","銀河紀元｜The Fall of Arcana"],["era-universe-theme","宇宙紀元｜Epic Orchestral Fantasy Theme"],["era-higher-theme","高維紀元｜Exploration Theme"]];
 let chosen=0,detail="尚未播放",wasOpen=false;
 const audio=()=>g.CivilizationAudio;
@@ -7,7 +8,7 @@ const panel=()=>document.querySelector('[data-gm-section="gm-audio-test"]');
 const visible=()=>typeof state!=="undefined"&&state?.gm===true&&!!panel()?.open;
 function html(){
  const gain=Math.round((audio()?.previewSettings?.().gmVolume??1)*100);
- return '<div id="gmSoundBody"><p class="muted">只保留三大紀元正式候選主題。循環接縫會從曲尾約 8 秒接回曲頭再播約 8 秒，不必整首等候。舊聆聽紀錄仍保存在本機。</p>'
+ return '<div id="gmSoundBody"><p class="muted">只保留三大紀元正式候選主題。循環接縫會從曲尾約 8 秒接回曲頭再播約 8 秒，不必整首等候。舊版音效與歷史試聽紀錄均已淘汰。</p>'
  +'<label>紀元主題<br><select class="btn" onchange="gmSoundSelectTheme(this.value)">'+tracks.map(([id,name],i)=>'<option value="'+i+'" '+(i===chosen?'selected':'')+'>'+name+'</option>').join('')+'</select></label>'
  +'<div class="controls" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn blue" onclick="gmSoundPlayTheme()">▶ 完整循環試聽</button><button class="btn" onclick="gmSoundSeam()">♫ 循環接縫試聽</button><button class="btn" onclick="gmSoundStop()">■ 停止</button></div>'
  +'<label>試聽音量 <input type="range" min="0" max="100" value="'+gain+'" oninput="gmSoundVolume(this.value/100)"><span id="gmSoundLevel">'+gain+'%</span></label>'
