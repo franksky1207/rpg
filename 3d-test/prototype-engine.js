@@ -363,7 +363,7 @@
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.025,.021,.022,1);
     const camera=new B.ArcRotateCamera("forge-camera",Math.PI/2.3,Math.PI/2.85,13.7,new B.Vector3(0,.35,0),scene);
-    camera.lowerRadiusLimit=8;camera.upperRadiusLimit=22;camera.attachControl(args.canvas,true);
+    configureDisplayCamera(camera,args.canvas,9,21);
     new B.HemisphericLight("forge-light",new B.Vector3(0,1,0),scene).intensity=.9;
     const iron=new B.StandardMaterial("forge-iron",scene);iron.diffuseColor=new B.Color3(.16,.18,.21);
     const gold=new B.StandardMaterial("forge-gold",scene);gold.emissiveColor=new B.Color3(.7,.46,.16);
@@ -371,6 +371,7 @@
     const blocked=new B.StandardMaterial("forge-blocked",scene);blocked.diffuseColor=new B.Color3(.12,.12,.14);
     const slots=Array.isArray(args.slots)?args.slots.slice(0,5):[];
     const cap=Math.max(1,Math.floor(Number(args.cap)||20));
+    const activeForge=[];
     for(let i=0;i<5;i++){
       const item=slots[i]||{},x=(i-2)*2.18;
       const level=Math.max(0,Math.floor(Number(item.level)||0));
@@ -382,12 +383,16 @@
       anvil.position.set(x,.06,0);anvil.material=mat;
       const energy=B.MeshBuilder.CreatePolyhedron("forge-energy-"+i,{type:2,size:.28+Math.min(level/cap,1)*.26},scene);
       energy.position.set(x,.86,0);energy.material=mat;
+      if(!invalid&&level>0)activeForge.push(energy);
+      const progress=B.MeshBuilder.CreateCylinder("forge-progress-"+i,{diameter:.18,height:.12+Math.min(level/cap,1)*.85,tessellation:10},scene);
+      progress.position.set(x+.63,-.20+(.12+Math.min(level/cap,1)*.85)/2,0);progress.material=mat;
       const ring=B.MeshBuilder.CreateTorus("forge-ring-"+i,{diameter:1.5,thickness:.045,tessellation:32},scene);
       ring.rotation.x=Math.PI/2;ring.position.set(x,-.39,0);ring.material=mat;
     }
     const core=B.MeshBuilder.CreateCylinder("forge-central-core",{diameter:1.1,height:.25,tessellation:36},scene);
     core.position.set(0,-.63,-2.35);core.material=iron;
-    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);for(const mesh of scene.meshes){if(mesh.name.startsWith("forge-energy-"))mesh.rotation.y+=dt*.00015;}});
+    scene.metadata={civilization3dForge:{visualOnly:true,readOnly:true,slotCount:5}};
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(Math.max(Number(args.engine.getDeltaTime())||0,0),50);for(const mesh of activeForge)mesh.rotation.y+=dt*.00015;});
     return scene;
   }
 
@@ -398,7 +403,7 @@
     const palettes={specialization:[.11,.66,.86],marks:[.66,.36,.91],civilization:[.25,.85,.68],core:[.88,.57,.22]};
     const color=palettes[kind];scene.clearColor=new B.Color4(.008,.016,.038,1);
     const camera=new B.ArcRotateCamera("growth-camera",Math.PI/2.3,Math.PI/2.7,kind==="marks"?13:11,new B.Vector3(0,.25,0),scene);
-    camera.lowerRadiusLimit=6;camera.upperRadiusLimit=22;camera.attachControl(args.canvas,true);
+    configureDisplayCamera(camera,args.canvas,7.5,19);
     new B.HemisphericLight("growth-light",new B.Vector3(0,1,0),scene).intensity=.85;
     const metal=new B.StandardMaterial("growth-metal",scene);metal.diffuseColor=new B.Color3(.11,.17,.25);
     const lit=new B.StandardMaterial("growth-active",scene);lit.emissiveColor=new B.Color3(...color);
@@ -418,12 +423,19 @@
       shard.position.set(x,.12+ratio*.45,z);shard.material=ratio>0?lit:dim;
       const halo=B.MeshBuilder.CreateTorus("growth-halo-"+i,{diameter:.88,thickness:.035,tessellation:24},scene);
       halo.position.set(x,-.21,z);halo.rotation.x=Math.PI/2;halo.material=ratio>0?lit:dim;
+      if(ratio>0){
+        const tier=B.MeshBuilder.CreateCylinder("growth-progress-"+i,{diameter:.11,height:.15+ratio*.7,tessellation:8},scene);
+        tier.position.set(x+.48,.05+ratio*.35,z);tier.material=lit;
+      }
     }
     const center=B.MeshBuilder.CreatePolyhedron("growth-center-"+kind,{type:2,size:kind==="core"?1.35:1},scene);
+    const seal=B.MeshBuilder.CreateTorus("growth-seal-"+kind,{diameter:kind==="marks"?3.55:kind==="core"?2.7:3.1,thickness:.075,tessellation:48},scene);
+    seal.position.y=.18;seal.rotation.x=kind==="core"?.42:Math.PI/2;seal.material=lit;
     center.position.y=.68;center.material=lit;
     const orbit=B.MeshBuilder.CreateTorus("growth-orbit",{diameter:4.3,thickness:.038,tessellation:60},scene);
     orbit.position.y=.55;orbit.rotation.x=Math.PI/2;orbit.material=lit;
-    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);center.rotation.y+=dt*.00022;orbit.rotation.z+=dt*.00008;});
+    scene.metadata={civilization3dGrowth:{kind,visualOnly:true,readOnly:true}};
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(Math.max(Number(args.engine.getDeltaTime())||0,0),50);center.rotation.y+=dt*.00022;orbit.rotation.z+=dt*.00008;seal.rotation.y-=dt*.000035;});
     return scene;
   }
 
@@ -728,5 +740,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.21.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.22.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
