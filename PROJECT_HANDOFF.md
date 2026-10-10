@@ -1,3 +1,10 @@
+## 2026-10-10｜正式 3D 第 26 批：A2 Runtime 效能與場景生命週期施工
+- 使用者已確認正式第 25 批實機測試完成。第 26 批本次採保守 Runtime 調整，不改正式遊戲 owner、文字版戰鬥／存檔、GM 授權或 GLB 施工計畫。
+- `3d-test/runtime.js` 升級 VERSION=3：以 ResizeObserver 監聽預覽容器尺寸，處理手機最大化／還原和非視窗尺寸改變；頁面隱藏、pagehide 暫停 WebGL render loop 中的 scene.render，pageshow/visibilitychange 恢復及 resize；場景 async show() 加入 AbortSignal stale check；dispose 時移除新增事件監聽與 ResizeObserver。
+- 正式 `3d-test/formal-home.js` 和 GM `3d-test/test-center.js` 共用新版 Runtime fallback；`index.html` 和 `3d-test/index.html` 更新快取，靜態 guard 新增 Runtime 生命週期及版本守門。31 GM 場景不變；資產映射、模型 LOD 與 GPU 預算的正式模型複測仍留在 27～34 批。
+- 本批僅已完成程式施工與 GitHub main 檔案回讀/靜態守門內容核對，未提供實際 Chromium、手機 GPU 30 分鐘、記憶體 profiler 或 WebGL context loss/restore 通過紀錄；**不可視為 A2 全場景 L2、GPU 無洩漏或第 26 批實機驗收完成**。舊 asset cache `Map` 尚無 GLB refcount，不能冒稱已解決正式模型 GPU cache。
+- 實機驗收請依序測：正式與 GM 切換不同 3D 場景、桌機縮放與頁面捲動、手機直橫轉及最大化還原、分頁背景→恢復、WebGL context loss 回退、連續關開 30 分鐘觀察 GPU/記憶體與畫質、切文字模式且存檔不變。下一個正式施工批次為第 27 批，但應如實保留本批 GPU 長測結果。
+
 ## 2026-10-10｜正式 3D 第 25 批：全息紀錄、劇情與轉生非阻塞預覽
 - 使用者確認第 24 批實機測試完成；正式第 25 批依原 40 批編號施工，不影響補修批次。
 - `3d-test/prototype-engine.js` 的 `createChronicleTransitionScene()` 共用正式及 GM 已有的三個唯讀場景（戰線紀錄／劇情閱讀／文明轉生），加入檔案庫全息索引、資料碎片、書頁視覺線條，以及轉生用環形紀元門與輕量動畫；不新增 GM 重複選單，也不虛構正式劇情文字。metadata 明確標記 `skippable/nonBlocking`；視覺預覽仍由既有 HTML 開關及轉生 owner 控制，動畫不阻擋使用者操作、真正轉生、劇情閱讀、回顧或警示。
