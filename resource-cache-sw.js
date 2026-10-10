@@ -40,7 +40,25 @@ async function media(request){
  if(specified&&specified!==digest)return fetch(request);
  const cache=await caches.open(ACTIVE),key=keyFor(path,digest);
  const saved=await cache.match(key);
- if(saved)return saved;
+ if(saved){
+  const range=request.headers.get("range");
+  if(!range)return saved;
+  // Audio/video elements often request byte ranges. Serve a standards-shaped 206
+  // from the complete local copy rather than returning an invalid full 200 response.
+  const match=/^bytes=(\\d*)-(\\d*)$/.exec(range.trim());
+  if(!match)return fetch(request);
+  try{
+   const body=await saved.arrayBuffer(),size=body.byteLength;
+   const start=match[1]?Number(match[1]):Math.max(0,size-Number(match[2]));
+   const end=match[1]?(match[2]?Number(match[2]):size-1):size-1;
+   if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>=size||start>end)return fetch(request);
+   const last=Math.min(end,size-1),headers=new Headers(saved.headers);
+   headers.set("Content-Range","bytes "+start+"-"+last+"/"+size);
+   headers.set("Content-Length",String(last-start+1));
+   headers.set("Accept-Ranges","bytes");
+   return new Response(body.slice(start,last+1),{status:206,headers});
+  }catch(_){return fetch(request);}
+ }
  const fetched=await fetch(request,{cache:"no-store"});
  if(!fetched.ok||fetched.type!=="basic"||request.headers.has("range"))return fetched;
  // A deployed file can race a manifest update. Never attach stale bytes to a new digest.
