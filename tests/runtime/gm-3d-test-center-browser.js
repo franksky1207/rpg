@@ -8,7 +8,7 @@ const assert=require("node:assert/strict");
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===3,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),7);
-  assert.equal(await page.locator("#caseList .center-case").count(),27);
+  assert.equal(await page.locator("#caseList .center-case").count(),32);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
   assert.equal(await page.locator("#caseMetadata").count(),0);
@@ -18,12 +18,12 @@ const assert=require("node:assert/strict");
   }
   // Dungeon previews must be exercised, including world 3 without a bounty portal.
   await page.locator("#categoryList .center-category").filter({hasText:"副本、災厄與特殊演出"}).click();
-  assert.equal(await page.locator("#caseList .center-case").count(),12);
+  assert.equal(await page.locator("#caseList .center-case").count(),17);
   await page.getByRole("button",{name:"副本作戰中心"}).click();
   assert.equal(await page.locator("#fixtureWorld").isVisible(),true);
   await page.locator("#fixtureWorld").selectOption("3");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
-  for(const title of ["副本作戰中心","懸賞戰準備區","一般競技場","高維競技場","鏡像戰紀錄","虛空幻境樓層","銀河文明災厄封印","宇宙文明災厄封印","異宇宙前線","文明戰線紀錄","文明劇情閱讀","文明轉生"]){
+  for(const title of ["副本作戰中心","懸賞戰準備區","一般競技場","高維競技場","鏡像戰紀錄","虛空幻境樓層","銀河文明災厄封印","宇宙文明災厄封印","異宇宙前線","文明戰線紀錄","文明劇情閱讀","文明轉生","設定中心","遊戲說明","帳號中心","雲端存檔中心","GM 管理中心"]){
     await page.getByRole("button",{name:title}).click();
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
