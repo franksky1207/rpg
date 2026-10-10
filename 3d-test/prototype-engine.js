@@ -609,5 +609,30 @@
     scene.metadata={civilization3dChronicle:{kind,visualOnly:true,readOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene});
+  /* B17-B: visual-only service consoles; account, cloud, and GM tools stay in HTML. */
+  function createServiceConsoleScene(args={}){
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    const kind=["settings","guide","account","cloud","gm"].includes(args.kind)?args.kind:"settings";
+    const hue={settings:[.18,.65,.98],guide:[.72,.54,.96],account:[.18,.87,.75],cloud:[.36,.69,1],gm:[.95,.7,.29]}[kind];
+    scene.clearColor=new B.Color4(.012,.022,.053,1);
+    const camera=new B.ArcRotateCamera("service-camera",Math.PI/2.2,Math.PI/2.65,10,new B.Vector3(0,.25,0),scene);
+    camera.attachControl(args.canvas,true);
+    new B.HemisphericLight("service-ambient",new B.Vector3(0,1,0),scene).intensity=.8;
+    const mat=(name,color,glow=false)=>{const m=new B.StandardMaterial(name,scene);m.diffuseColor=new B.Color3(...color);if(glow)m.emissiveColor=new B.Color3(...color).scale(.45);return m;};
+    const metal=mat("service-metal",[.12,.2,.31]),accent=mat("service-accent",hue,true);
+    const base=B.MeshBuilder.CreateCylinder("service-base",{diameter:7.5,height:.34,tessellation:48},scene);base.position.y=-1.2;base.material=metal;
+    const count=kind==="gm"?5:kind==="cloud"?3:kind==="guide"?4:kind==="account"?2:3;
+    for(let i=0;i<count;i++){
+      const panel=B.MeshBuilder.CreateBox("service-panel-"+i,{width:1.2,height:2,depth:.12},scene);
+      panel.position.set((i-(count-1)/2)*1.35,.15,-.2-Math.abs(i-(count-1)/2)*.2);panel.rotation.y=(i-(count-1)/2)*.13;
+      panel.material=i===Math.floor(count/2)?accent:metal;
+      const sig=B.MeshBuilder.CreateBox("service-signal-"+i,{width:.75,height:.12,depth:.16},scene);
+      sig.position.set(panel.position.x,.5,panel.position.z+.12);sig.material=accent;
+    }
+    const orbit=B.MeshBuilder.CreateTorus("service-orbit",{diameter:6,thickness:.07,tessellation:56},scene);
+    orbit.rotation.x=Math.PI/2;orbit.position.y=-.76;orbit.material=accent;
+    scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
+    return scene;
+  }
+  global.Civilization3DPrototype=Object.freeze({version:"0.15.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
