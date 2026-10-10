@@ -1,3 +1,12 @@
+## 2026-10-10｜三紀元主題啟動優先預載／GM 三首精簡／循環接縫試聽（已施工）
+- 使用者要求音效測試中心**暫時只留三首已選紀元主題**，先全部移除其他舊類別可見 UI，並增加「循環接縫試聽」與啟動優先載入。
+- `audio/gm-audio-test.js` 重整 GM 測試中心，僅三個主題選項：銀河 The Fall of Arcana、宇宙 Epic Orchestral Fantasy Theme、高維 Exploration Theme；提供「完整循環試聽／循環接縫試聽／停止」及單一試聽音量滑桿。舊 73 項試聽評價的 localStorage 資料未刪除，但不再在 GM 畫面顯示舊分類。
+- `audio/audio-core.js` 增加 `previewSeam(trackId,8)`：播放原音檔尾端約 8 秒→回到頭端約 8 秒→停止，仍受 GM 權限／極簡靜音／音量設定限制。以播放器 loadedmetadata／timeupdate／ended 驅動，並非臆造聲波處理。若瀏覽器 seek 時出錯需實機回報。
+- 三首已在 GitHub 本地化：`audio/assets/era-themes/*-theme-loop.ogg`。`audio/audio-core.js` 於 DOMContentLoaded 優先加載當前紀元主題的 rel=preload，首次玩家手勢再次核對紀元；僅預先請求，不能繞過瀏覽器自動播放政策。其他兩首不在初次載入時全部同時搶資源。
+- `audio/audio-scenes.js` 正式一般介面改用該紀元唯一主題曲，常見角色／強化／背包等不同頁面不換曲、同曲不重新開始；高維核心、紀錄等可映射一般頁面亦用主題。**戰鬥原有音樂分類仍維持目前程式，三層共用新戰鬥曲尚未施工**；本次不動正式戰鬥 owner 或公式。
+- `index.html` 已更新音訊三 JS cache-bust，三檔 JS 語法及選曲映射的模擬 PASS。尚無桌機手機真實聆聽、接縫聽感及網路節流下啟動速度驗收。舊素材保留供追溯，不等於在 GM 介面顯示。
+- 注意：現階段跨模式漸入漸出尚未完整施工；`previewSeam` 只是快速檢驗曲尾銜接，不取代真正無縫循環的人耳驗收。主題曲各頁播放必須遵守正常使用者互動解鎖條件。
+
 ## 2026-10-10｜三大紀元指定主題音樂：本地化與循環候選已完成，正式介面尚未切換
 - 使用者選定「03 銀河 The Fall of Arcana（Matthew Pablo, CC BY 3.0）」「09 宇宙 Epic Orchestral Fantasy Theme（Markus Lindner, CC BY 4.0）」「06 高維 Exploration Theme（Cleyton Kauffman, CC0）」。
 - **GitHub Actions 已成功**下載來源、用 ffmpeg 製作 OGG 循環候選、解碼與長度檢查、保留原始音檔與 SHA256，路徑 `audio/assets/era-themes/`，機讀資料 `audio/assets/era-themes/manifest.json`。原始長度銀河 152.059s／宇宙 107.050s／高維 134.400s，循環候選長度銀河 148.059s／宇宙 103.050s／高維 130.400s。工作流程：`.github/workflows/era-theme-localize.yml`（初次長度判斷失敗，修正後第二次成功）。
