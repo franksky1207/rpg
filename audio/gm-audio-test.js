@@ -87,13 +87,26 @@ function statusText(){
  return entry.label+"｜"+(asset?.url?stateFor(entry.asset)+"："+asset.label+"（"+asset.license+"；播放成功前不可視為可用）":"待素材・不可播放：尚無符合品質的音檔");
 }
 function refresh(){const node=document.getElementById("gmSoundBody");if(node)node.innerHTML=content();}
-g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";audio()?.resetPreview();refresh();verifyVisible();};
-g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;audio()?.resetPreview();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
-g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
+g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();verifyVisible();};
+g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
+g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
+function a03Context(){
+ const row=current();if(!row||row.event)return null;
+ const eraMap={galaxy:"galaxy",universe:"universe",higher:"higher"};
+ const era=eraMap[group];
+ if(era){
+  const scenes={galaxy:{"galaxy-explore":"explore","galaxy-combat":"battle","galaxy-boss":"boss","galaxy-review":"review"},universe:{"universe-explore":"explore","universe-combat":"battle","universe-boss":"boss","universe-review":"review"},higher:{"higher-explore":"explore","higher-combat":"battle","higher-boss":"boss","alternate":"alternate"}};
+  return {era,scene:scenes[group]?.[row.id]};
+ }
+ if(group==="dungeons"){const map={bounty:["galaxy","bounty"],arena:["higher","arena"],mirror:["shared","mirror"],void:["shared","void"],calamity:["galaxy","calamity"],"alternate-dungeon":["higher","alternate"]};const found=map[row.id];if(found)return {era:found[0],scene:found[1]};}
+ if(group==="system"&&row.id==="home")return {era:"shared",scene:"main"};
+ return null;
+}
 g.gmSoundPlaySelected=()=>{
  if(!visible())return false;
  const row=current();if(!row)return false;
- const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):row.asset?audio()?.preview(row.asset):false;
+ const context=a03Context();
+ const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):context?g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene):row.asset?audio()?.preview(row.asset):false;
  const node=document.getElementById("gmSoundStatus");
  if(node)node.textContent=statusText()+(ok?"｜已送出播放要求，請確認是否有聲音":"｜待素材、靜音或瀏覽器無法播放");
  return !!ok;
@@ -101,7 +114,7 @@ g.gmSoundPlaySelected=()=>{
 g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
 function guard(){
  const present=visible();
- if(wasPresent&&!present){audio()?.resetPreview();group="higher";selected="higher-explore";}
+ if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-explore";}
  if(!wasPresent&&present)verifyVisible();
  wasPresent=present;
 }
@@ -115,7 +128,7 @@ document.addEventListener("civilization-audio-preview-status",event=>{
  if(node)node.textContent=statusText()+(event.detail.status==="playing"?"｜正在播放":"｜音檔載入或播放失敗（來源可能不可用）");
 });
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
-document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();else if(visible())verifyVisible();});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=6;
+g.GM_AUDIO_TEST_CATALOG_VERSION=7;
 })(window);
