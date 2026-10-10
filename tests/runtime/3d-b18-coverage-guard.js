@@ -32,5 +32,5 @@ assert.ok(policy.includes("PREFIX+id"),"Mode preference must be account-scoped")
 assert.ok(policy.includes("civilization-auth-signed-out"),"Mode must react to signout");
 assert.ok(index.includes("3d-test/mode-foundation.js?"),"Mode policy loaded");
 assert.ok(index.includes("3d-test/formal-home.js?"),"Visual bridge loaded");
-assert.ok(!/<script src="3d-test\\/(runtime|appearance-snapshot)\\.js/.test(index),"3D runtime cannot boot synchronously in text mode");
+assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<script src="3d-test/appearance-snapshot.js'),"3D runtime cannot boot synchronously in text mode");
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
