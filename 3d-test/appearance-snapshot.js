@@ -54,9 +54,9 @@ function capture(){
 }
 function scene(kind,appearance){
  const a=appearance||capture();if(!a)return {};
- if(kind==="character")return {world:a.world,appearance:a};
- if(kind==="equipment")return {world:a.world,slots:SLOTS.map(type=>a.equipment[type]),inventorySamples:a.inventorySamples,appearance:a};
- if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:SLOTS.map(type=>({level:a.enhancements[type],invalid:a.enhancements[type]<a.enhancementMin})),appearance:a};
+ if(kind==="character")return {world:a.world,appearance:a,modelDescriptors:modelDescriptors(a),appearanceSource:a.source==="formal"?"formal":"fixture"};
+ if(kind==="equipment")return {world:a.world,slots:SLOTS.map(type=>a.equipment[type]),inventorySamples:a.inventorySamples,appearance:a,modelDescriptors:modelDescriptors(a),appearanceSource:a.source==="formal"?"formal":"fixture"};
+ if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:SLOTS.map(type=>({level:a.enhancements[type],invalid:a.enhancements[type]<a.enhancementMin})),appearance:a,modelDescriptors:modelDescriptors(a),appearanceSource:a.source==="formal"?"formal":"fixture"};
  return {world:a.world,appearance:a};
 }
 global.Civilization3DAppearance=Object.freeze({version:3,slotIds:SLOTS,capture,scene,modelDescriptor,modelDescriptors});
