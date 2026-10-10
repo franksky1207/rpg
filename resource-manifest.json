@@ -55,6 +55,8 @@
     "assets/backgrounds/inventory-shop/mobile.webp": "248d3f658e14ca45e5f7a2d3",
     "assets/backgrounds/prepare/desktop.webp": "0c1ec1175d6df5f0f5e26c70",
     "assets/backgrounds/prepare/mobile.webp": "d417345ed960a31ab897a288",
+    "audio/audio-core.js": "8187b152467b568cec0b816f",
+    "audio/gm-audio-test.js": "5126eb749a61def4391ce43b",
     "backgroundpreload.css": "a33a76010861b860157438ff",
     "backgroundpreload.js": "3464214b880d55250b5301f6",
     "backgroundprogress.js": "004304bcb4b8541c3d82faf7",
