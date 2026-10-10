@@ -1,3 +1,8 @@
+## 2026-10-10｜音訊 A03 GM 多層情境試聽補充
+- 現有 GM 八分類不變：高維／宇宙／銀河等場景播放按鈕已透過 `CivilizationAudioScenes.previewContext` 試聽配樂＋獨立環境層（目前遠端候選，可能載入失敗），離開、切換場景或頁面時停止試聽音樂與環境。四評價按鈕／本機紀錄／摘要均保留。
+- A03 `combatfx.js` 兩個 eligible event 分支均以大括號包裹場景通知＋A02 戰鬥音效；`firstActor`/`battleEnd` 不觸發。
+- 仍未達完整 A03 Gate：正式 UI 全事件、三紀元專屬素材、實機聆聽、專業混音均尚待後續 A04 與素材補完，禁止誤列全數完成。
+
 ## 2026-10-10｜音訊 A03 情境管理第一階段（程式已施工；素材與全場景映射未結案）
 - 新增 `audio/audio-scenes.js`：唯一三紀元音訊情境表（銀河／宇宙／高維／共用），涵蓋主畫面、探索、戰鬥、Boss、災厄、異宇宙、競技場、懸賞（只在前兩紀元）、鏡像、虛空、轉生、勝利、背包、強化、專精、雲端等情境的音訊映射或待素材空位；不寫正式存檔。
 - 提供 `CivilizationAudioScenes.setContext(era,scene)`、`notify(type,detail)`、`current()`、`restore()`、`stop()`、`catalog` 與文件事件 `civilization-audio-scene`。三紀元僅用同一 `CivilizationAudio` 正式播放 owner。
