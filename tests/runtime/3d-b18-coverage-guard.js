@@ -96,7 +96,7 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  assert.equal(new Set(cases).size,8);
  assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-b24-frontier/);
  const frontier=read("3d-test/prototype-engine.js");
- for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage"]){
+ for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage","higher-dimensional-core-boundary","higher-dimensional-splinter"]){
   assert.ok(frontier.includes(mesh),"B24 frontier visual missing: "+mesh);
  }
  assert.match(read("index.html"),/formal-home\.js\?v=20261010-b24-frontier/);
