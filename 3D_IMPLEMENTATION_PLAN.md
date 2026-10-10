@@ -1,3 +1,10 @@
+## 2026-10-11｜智慧載入第 3 批：狀態提示與本機資源管理
+- 設定頁新增「本機資源管理」：顯示遊戲專屬 Cache Storage 快取的媒體資源筆數與實際測得的近似使用量，附「清除資源」按鈕及明確確認視窗；與「重置遊戲」完全區隔，僅透過 CIV_CACHE_CLEAR 刪除遊戲專屬媒體快取，不影響存檔、登入、GM 權限、localStorage 或 IndexedDB。
+- resource-cache-sw.js CIV_CACHE_STATUS 回報 entries、bytes、measured；若無法讀取容量則不冒稱精確。resource-cache-client.js 增加 updateSettingsStatus、clearWithConfirmation，重新渲染設定頁時重新取得資訊。首次安裝 SW 通常仍需重新整理才有 controller；瀏覽器不支援時提示無法取得。
+- backgroundpreload.js 的現有真實進度維持，顯示「正在載入遊戲資源…」「正在準備遊戲…」「載入完成，即將進入遊戲…」。本批未實作可靠的已更新檔案數／下載數據，故嚴禁虛構「已更新 N 檔」；正式更新數字需等第 4 批整合實際清單／事件後才能顯示。index.html cache-bust 已更新三個修改 JS。
+- **未來必做／不可遺忘**：等《文明戰線》3D 施工完整第 40 批及後續優化全部完成、程式進入穩定期後，**再專案化實作 JS／CSS 持久智慧快取**，包含程式相容版本快照及更新失敗切換驗證。目前開發期優先保證最新已部署 JS／CSS 正確性，不得提前讓 Service Worker 使用長期 cache-first JS／CSS；第 4 批僅確認未來可擴充，暫不啟用。
+- GM 資源已下載後可走相同媒體快取；GM 程式仍按授權按需載入。最後第 4 批必須做桌機／手機、二次載入、版本更新、清除、儲存空間、失敗恢復、音效與3D及角色存檔不受影響的實機驗收。
+
 ## 2026-10-11｜智慧載入優化第 2 批：本機媒體快取核心
 - 新增 resource-cache-sw.js（Service Worker）與 resource-cache-client.js（註冊、status/refresh/clear API），index.html 在正常遊戲載入流程後載入 client。Service Worker 只攔截同來源且被 resource-manifest.json 追蹤的圖片、音樂音效、3D 模型／材質等媒體，JS/CSS 及資源版本清單仍由既有載入及版本策略處理，避免頻繁修改期混用核心程式。
 - 媒體採內容指紋 digest 作為 Cache Storage 專屬快取鍵；先驗證下載位元組的 SHA-256 前 96 位與已部署清單一致才儲存；無清單或下載失敗時不宣稱快取命中。每次新頁面 navigation 背景重新抓取正式已部署清單；更新成功後，保留同版本、清除舊版／已移除檔案快取，遇到清單失敗則保留既有資源，不作破壞性清理。瀏覽器仍可能自行回收資源快取。
