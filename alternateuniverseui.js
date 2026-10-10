@@ -39,7 +39,7 @@
   let attempt=activeAttempt();if(!attempt){const begun=typeof window.beginAlternateUniverseAttempt==="function"?window.beginAlternateUniverseAttempt(snap.nextDepth):{ok:false,reason:"attempt-owner-missing"};if(!begun?.ok){alert(begun?.reason==="depth-locked-for-life"?"本輪此層域已鎖定，完成下一次轉生後可再次挑戰。":"無法建立異宇宙挑戰，請重新整理後再試。");return false;}attempt=activeAttempt();}
   if(!attempt||attempt.depth!==snap.nextDepth)return false;
   const enemy=typeof window.alternateUniverseCurrentAttemptEncounter==="function"?window.alternateUniverseCurrentAttemptEncounter(currentState()):null;const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!enemy||!player){alert("異宇宙戰鬥資料尚未完整載入。");return false;}
-  lastBattleReport=null;battleContext={depth:attempt.depth,attempt,enemy,info:depthInfo(attempt.depth),playerMaxHp:Math.max(1,whole(player.hp,1))};renderPage();
+  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"higher",mode:"alternateBattle"});lastBattleReport=null;battleContext={depth:attempt.depth,attempt,enemy,info:depthInfo(attempt.depth),playerMaxHp:Math.max(1,whole(player.hp,1))};renderPage();
   try{
    const result=typeof window.runAlternateUniverseCombat==="function"?window.runAlternateUniverseCombat({logs:true,preparePresentation:true,startHp:player.hp,playerHealCap:player.hp}):{ok:false};
    if(!result?.ok)throw new Error(result?.reason||"combat-failed");
