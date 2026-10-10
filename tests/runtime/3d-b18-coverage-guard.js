@@ -8,6 +8,17 @@ const ui=read("ui.js");
 const bridge=read("3d-test/formal-home.js");
 const engine=read("3d-test/prototype-engine.js");
 const policy=read("3d-test/mode-foundation.js");
+const gmIndex=read("3d-test/index.html");
+function assertSingleEntryVersion(html,scriptPath){
+ const tag=html.split("\n").filter(line=>line.includes('src="'+scriptPath+'?'));
+ assert.equal(tag.length,1,"Expected exactly one versioned script: "+scriptPath);
+ const match=tag[0].match(new RegExp('src="'+scriptPath.replace(/[.*+?^${}()|[\]\\]/g,"\\const policy=read("3d-test/mode-foundation.js");")+'\\?v=([^"&]+)"'));
+ assert.ok(match,"Missing cache-bust token for "+scriptPath);
+ return match[1];
+}
+const formalEntryVersion=assertSingleEntryVersion(index,"3d-test/formal-home.js");
+const gmEntryVersion=assertSingleEntryVersion(gmIndex,"./test-center.js");
+assert.equal(formalEntryVersion,gmEntryVersion,"Formal and GM entrypoint cache versions must be synchronized");
 const story=read("storyui.js");
 const css=read("story.css");
 for(const file of ["ui.js","storyui.js","3d-test/formal-home.js","3d-test/mode-foundation.js","3d-test/prototype-engine.js","3d-test/runtime.js","3d-test/test-center.js"]){
@@ -33,6 +44,12 @@ assert.ok(gmCenter.includes('return entries.map(([path,url],i)=>'),"GM must fall
 assert.ok(gmCenter.includes('typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)'),"GM manifest digests must be validated");
 assert.ok(gmCenter.includes('20261010-dual-mode-preflight3'),"GM and formal appearance fallbacks must match");
 assert.ok(engine.includes("function visualMaterial("),"3D material construction must expose a shared helper");
+for(const api of ["function mount(","function createScene(","function createEpochScene("]){
+ assert.ok(engine.includes(api),"Legacy 3D entrypoint preserved until consumer audit: "+api);
+}
+for(const api of ["supported,mount,createScene,createEpochScene","createBattlePresentationScene","createChronicleTransitionScene"]){
+ assert.ok(engine.includes(api),"Legacy export compatibility missing: "+api);
+}
 for(const helper of ["function sceneMaterial(","function sceneFillLight(","function applyCameraLimits("])assert.ok(engine.includes(helper),"Opt4 shared scene helper missing: "+helper);
 
 const loader=read("scriptgrouploader.js");
@@ -98,12 +115,12 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  const cases=[...gm.matchAll(/\{id:"[^"]+",cat:"([^"]+)"/g)].map(m=>m[1]);
  assert.equal(cases.length,31);
  assert.equal(new Set(cases).size,8);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt5-snapshot/);
+ assert.equal(gmEntryVersion,formalEntryVersion);
  const frontier=read("3d-test/prototype-engine.js");
  for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage","higher-dimensional-core-boundary","higher-dimensional-splinter"]){
   assert.ok(frontier.includes(mesh),"B24 frontier visual missing: "+mesh);
  }
- assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt5-snapshot/);
+ assert.equal(formalEntryVersion,gmEntryVersion);
  const chronicle=read("3d-test/prototype-engine.js");
  for(const visual of ["chronicle-hologram-index","chronicle-memory-shard","chronicle-glyph","reincarnation-epoch-gate","skippable:true","nonBlocking:true"]){
   assert.ok(chronicle.includes(visual),"B25 chronicle visualization missing: "+visual);
@@ -115,8 +132,8 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  }
  assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
  for(const token of ["acquireAsset:","releaseAsset,clearAssets:clearAssetCache","assetRefs.clear()","signal.aborted","onContextRestored"]){assert.ok(runtime.includes(token),"3D optimization 1 missing: "+token);}
- assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt5-snapshot/);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt5-snapshot/);
+ assert.equal(formalEntryVersion,gmEntryVersion);
+ assert.equal(gmEntryVersion,formalEntryVersion);
  assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
  const mapping=read("3d-test/appearance-snapshot.js");
  for(const field of ["function modelDescriptor(","function modelDescriptors(","assetKind:","geometry-fallback","visualKey","enhancement:bound"]){assert.ok(mapping.includes(field),"Opt3 mapping contract missing: "+field);}
