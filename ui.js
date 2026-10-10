@@ -276,7 +276,7 @@ window.startGalaxyReviewBattle=async function(){
   else window.setGalaxyReviewBattleActive?.(false);
   return true;
  }catch(err){
-  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";render();
+  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.notify?.("combat-exit");render();
   console.error("[文明戰線] 銀河紀元回顧戰失敗",err);
   alert("銀河紀元回顧戰啟動失敗，請重新整理後再試。");
   return false;
