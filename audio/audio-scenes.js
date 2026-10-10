@@ -3,7 +3,7 @@
 (function(g){"use strict";
 const eraTracks=Object.freeze({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"});
 const catalog=Object.freeze(Object.fromEntries(Object.entries(eraTracks).map(([era,id])=>[era,Object.freeze({home:[id,null],explore:[id,null],battle:[id,null],boss:[id,null],front:[id,null]})])));
-let selected=null,previewing=false;
+let selected=null,previewing=false,lastCombatView=null;
 function phase(){
  try{const n=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(n===3)return "higher";if(n===2)return "universe";if(n===1)return "galaxy";}catch(_){}
  const st=typeof state!=="undefined"?state:null;
@@ -40,6 +40,8 @@ function apply(){
 function setContext(era,scene,{preview=false,combat=false,tier=null}={}){
  if(preview)return previewContext(era,scene);
  const item=resolve(era,scene,{combat,tier});
+ if(combat&&typeof view==="string")lastCombatView=view;
+ else if(!combat)lastCombatView=null;
  if(selected?.music===item.music){selected=item;return apply();}
  selected=item;return apply();
 }
@@ -51,9 +53,9 @@ function syncView(viewName,subScreen=""){
   ||(name==="adventure"&&(sub==="combat"||sub==="review-combat"));
  const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?(phase()==="universe"?"boss":"battle"):name;
  if(combat)return setContext(phase(),mode,{combat:true});
- // Render-only navigation is not a combat start. It must not terminate active
- // fighting when the game re-renders the same mode between consecutive battles.
+ // Re-renders during an active dungeon run must not restart the music.
  if(selected?.tier&&selected.scene===mode)return apply();
+ if(selected?.tier&&name===lastCombatView)return apply();
  return setContext(phase(),name+(sub?":"+sub:""));
 }
 function previewContext(era,scene){
