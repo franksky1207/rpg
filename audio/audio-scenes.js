@@ -75,6 +75,7 @@ function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
  if(type==="combat-start"){
+  g.CivilizationAudio?.warmCombatSfx?.();
   exitSequence++;
   if(combatLocked&&selected?.tier)return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
