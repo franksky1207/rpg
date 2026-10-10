@@ -1,3 +1,9 @@
+## 2026-10-10｜3D 五批一致性補修第 2 批：已完成部分施工，殘留風險必須後續處理
+
+- `3d-test/formal-home.js` 的文明災厄 3D 正式資料改讀 `getCivilizationCalamityDefinitions/getCivilizationCalamityStatus` 與 `getSecondWorldCalamityDefinitions/getSecondWorldCalamityStatus`，每個災厄各給 `visible/unlocked/completed/review/remainingPercent`，宇宙可挑戰使用正式 `challengeable`；不再僅靠滿級印記總數或文明等級總數直接決定 10 個節點。`3d-test/prototype-engine.js` 按逐隻資料著色，GM 測試中心使用隔離的十封印 mock fixture。
+- 宇宙星圖目前仍由最高解鎖 Boss 推算畫面聚焦，本批增加 `selectionSource:highest-unlocked-fallback` 明確記錄此為 fallback **不是已修正回顧選取**；正式 `worldmapui.js` 所見紀元與展開狀態 owner 需進一步核對，不能謊稱已解決。異宇宙 200×5/20 文化既有程序式地圖保留，進行中及失敗鎖定狀態待正式 owner adapter。
+- 這一批未改文字遊戲戰鬥或存檔。已執行程式 JS syntax 與 GitHub main 回讀；未有 exact-HEAD CI、手機真機、實際不同玩家進度逐項驗收。未完成項保留於一致性矩陣及後續補修/第24批前 gate，**不得標示補修第2批已完整驗收**。
+
 ## 2026-10-10｜3D 五批一致性補修・第 1 批已施工
 
 - 這是原正式 40 批之外的補修 1～5；完成五批再進行原第 24 批。完整 5 批規格寫入 `3D_IMPLEMENTATION_PLAN.md`，逐場景矩陣放 `docs/3D_PREVIEW_CONSISTENCY_MATRIX.md`。
