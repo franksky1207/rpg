@@ -463,12 +463,13 @@ async function versionedSceneUrls(){
    const digest=manifest.files[path];
    return typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)?url+"?asset="+digest:url;
   };
-  return [
-   version("vendor/babylonjs/7.54.3/babylon.js",fallback[0]),
-   version("3d-test/runtime.js","./runtime.js")=== "./runtime.js"?fallback[1]:version("3d-test/runtime.js","./runtime.js"),
-   version("3d-test/prototype-engine.js","./prototype-engine.js")==="./prototype-engine.js"?fallback[2]:version("3d-test/prototype-engine.js","./prototype-engine.js"),
-   version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")==="./appearance-snapshot.js"?fallback[3]:version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")
+  const entries=[
+   ["vendor/babylonjs/7.54.3/babylon.js","../vendor/babylonjs/7.54.3/babylon.js"],
+   ["3d-test/runtime.js","./runtime.js"],
+   ["3d-test/prototype-engine.js","./prototype-engine.js"],
+   ["3d-test/appearance-snapshot.js","./appearance-snapshot.js"]
   ];
+  return entries.map(([path,url],i)=>{const resolved=version(path,url);return resolved===url?fallback[i]:resolved;});
  }catch(_){return fallback;}
 }
 (async()=>{
