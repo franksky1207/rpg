@@ -2,7 +2,7 @@
    Presentation-only; intentionally does not access game state or save. */
 (function(global){
 "use strict";
-const VERSION=2;
+const VERSION=3;
 const QUALITY=Object.freeze({low:{scale:1.6,hardwareScaling:1.6},medium:{scale:1.25,hardwareScaling:1.25},high:{scale:1,hardwareScaling:1}});
 function create(options={}){
   const host=options.host||document.body;
@@ -75,8 +75,12 @@ function create(options={}){
   host.appendChild(root);
   let epoch=0,scene=null,engine=null,disposed=false,reason="",quality="medium",activeId=null,controller=null,contextLost=false;
   const assets=new Map();
+  let resizeObserver=null,renderPaused=false;
   const qualityFor=q=>QUALITY[q]||QUALITY.medium;
-  function resize(){if(!disposed&&engine){engine.resize();}}
+  function resize(){if(!disposed&&engine&&!contextLost){engine.resize();}}
+  const onVisibility=()=>{renderPaused=document.hidden===true; if(!renderPaused)resize();};
+  const onPageHide=()=>{renderPaused=true;};
+  const onPageShow=()=>{renderPaused=false;resize();};
   function abortPending(){if(controller){controller.abort();controller=null;}}
   function releaseScene(){
     if(scene){try{scene.dispose();}catch(err){console.warn("3D scene disposal failed",err);}scene=null;}
@@ -97,7 +101,7 @@ function create(options={}){
     engine=new global.BABYLON.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true},true);
     engine.setHardwareScalingLevel(qualityFor(quality).hardwareScaling);
     engine.runRenderLoop(()=>{
-      if(disposed||!scene||!scene.activeCamera)return;
+      if(disposed||renderPaused||contextLost||!scene||!scene.activeCamera)return;
       try{scene.render();}catch(err){console.error("3D render failed",err);stop("render-failed");options.onFallback?.("render-failed");}
     });
     return engine;
@@ -111,7 +115,7 @@ function create(options={}){
     try{
       ensureEngine();
       const next=await factory({BABYLON:global.BABYLON,engine,canvas,epoch:ticket,assets,signal,isCurrent:()=>!disposed&&epoch===ticket&&!signal.aborted});
-      if(disposed||epoch!==ticket){next?.dispose?.();return {ok:false,reason:"stale-scene"};}
+      if(disposed||epoch!==ticket||signal.aborted){next?.dispose?.();return {ok:false,reason:"stale-scene"};}
       if(!next||typeof next.render!=="function")throw new Error("invalid-scene");
       if(next.activeCamera&&Number.isFinite(next.activeCamera.radius)){
         const camera=next.activeCamera;
@@ -137,6 +141,10 @@ function create(options={}){
     if(disposed)return;
     disposed=true;stop("disposed");
     global.removeEventListener("resize",resize);
+    document.removeEventListener("visibilitychange",onVisibility);
+    global.removeEventListener("pagehide",onPageHide);
+    global.removeEventListener("pageshow",onPageShow);
+    resizeObserver?.disconnect();resizeObserver=null;
     global.visualViewport?.removeEventListener("resize",resize);
     canvas.removeEventListener("webglcontextlost",onContextLost);
     canvas.removeEventListener("webglcontextrestored",onContextRestored);
@@ -155,11 +163,16 @@ function create(options={}){
   canvas.addEventListener("webglcontextlost",onContextLost,false);
   canvas.addEventListener("webglcontextrestored",onContextRestored,false);
   global.addEventListener("resize",resize);
+  document.addEventListener("visibilitychange",onVisibility);
+  global.addEventListener("pagehide",onPageHide);
+  global.addEventListener("pageshow",onPageShow);
+  renderPaused=document.hidden===true;
+  if(typeof global.ResizeObserver==="function"){resizeObserver=new global.ResizeObserver(()=>resize());resizeObserver.observe(host);}
   global.visualViewport?.addEventListener("resize",resize);
   canvas.hidden=true;
   root.dataset.state="idle";
   return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,setExpanded,resize,
-    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,contextLost}),
+    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,contextLost,renderPaused}),
     cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assets.has(k)&&assets.get(k)!==value){try{assets.get(k)?.dispose?.();}catch(_){}}assets.set(k,value);return true;},
     clearAssets:()=>{for(const entry of assets.values()){try{entry?.dispose?.();}catch(_){}}assets.clear();}});
 }
