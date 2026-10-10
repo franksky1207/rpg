@@ -3,17 +3,7 @@ const assert=require("node:assert/strict");
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const page=await browser.newPage({viewport:{width:390,height:844}});
   const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/";
-  await page.goto(base,{waitUntil:"domcontentloaded",timeout:45000});
-  await page.evaluate(()=>{
-   document.body.replaceChildren();
-   localStorage.removeItem("civilization-war-presentation-mode-v1:opt6-a");
-   localStorage.removeItem("civilization-war-presentation-mode-v1:opt6-b");
-   window.civilizationAuthSession={user:{id:"opt6-a"}};
-   localStorage.setItem("civilization-war-presentation-mode-v1:opt6-a","3d");
-   localStorage.setItem("civilization-war-presentation-mode-v1:opt6-b",JSON.stringify({mode:"text"}));
-  });
   // Test the real mode script in a fresh browsing context, without game save owners.
   const isolated=await browser.newPage({viewport:{width:390,height:844}});
   await isolated.goto(base+"3d-test/",{waitUntil:"domcontentloaded",timeout:45000});
