@@ -2,7 +2,7 @@
 (function(g){"use strict";
 const catalog=Object.freeze({
  galaxy:Object.freeze({home:["dark-title",null],explore:["dark-sector","dark-airy"],battle:["galaxy-battle",null],elite:["dark-urgent",null],boss:["boss-orchestra","dark-airy"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
- universe:Object.freeze({home:["dark-title",null],explore:["dark-pulse","dark-airy"],battle:["galaxy-battle",null],boss:["boss-orchestra","dark-pulse"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
+ universe:Object.freeze({home:["dark-title",null],explore:["dark-pulse","dark-airy"],boss:["boss-orchestra","dark-pulse"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
  higher:Object.freeze({front:["dark-urgent","dark-airy"],frontStage:["boss-orchestra","dark-airy"],frontReview:["dark-pulse",null],core:[null,null],alternateSelect:["dark-pulse","dark-airy"],alternateBattle:["dark-urgent","dark-airy"],arenaFixed:["dark-urgent",null],arenaAlternate:["dark-pulse",null],record:[null,null]}),
  shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],defeat:[null,null],reincarnation:["dark-transmission",null],inventory:[null,null],equipment:[null,null],enhance:[null,null],expertise:[null,null],mark:[null,null],civilization:[null,null],character:[null,null],story:[null,null],guide:[null,null],cloud:[null,null],settings:[null,null],account:[null,null],offline:[null,null],shop:[null,null],redeem:[null,null],notice:["dark-hover",null],gm:[null,null]})
 });
@@ -71,7 +71,8 @@ function syncView(viewName,subScreen=""){
  if(name==="home")return setContext("shared","main");
  if(name==="adventure"){
   if(era==="higher")return setContext("higher","front");
-  return setContext(era,subScreen==="combat"?"battle":"explore");
+  if(subScreen==="review-combat"||subScreen==="review-prepare")return setContext(era,"review");
+  return setContext(era,subScreen==="combat"?(era==="universe"?"boss":"battle"):"explore");
  }
  if(name==="calamity")return era==="higher"?false:setContext(era,"calamity");
  if(name==="storyrecord")return era==="higher"?setContext("higher","record"):setContext(era,"record");
@@ -81,8 +82,32 @@ function syncView(viewName,subScreen=""){
 }
 function notify(type,detail={}){
  const era=detail.era||phase();
- if(type==="combat-start"){clearTimeout(returnTimer);returnTimer=null;return setContext(era,era==="higher"?"front":detail.calamity?"calamity":detail.boss?"boss":"battle");}
- if(type==="combat-end"){clearTimeout(returnTimer);returnTimer=setTimeout(()=>{returnTimer=null;setContext(era,era==="higher"?"front":"explore");},3500);return true;}
+ if(type==="combat-start"){
+  clearTimeout(returnTimer);returnTimer=null;
+  if(era==="higher"){
+   if(selected?.era==="higher"&&["alternateSelect","alternateBattle"].includes(selected.scene))return setContext("higher","alternateBattle");
+   if(selected?.era==="higher"&&["arenaFixed","arenaAlternate"].includes(selected.scene))return true;
+   return setContext("higher","front");
+  }
+  if(selected?.era===era&&["arena","bounty","calamity","review","special"].includes(selected.scene))return true;
+  return setContext(era,era==="universe"?"boss":detail.calamity?"calamity":detail.boss?"boss":"battle");
+ }
+ if(type==="combat-end"){
+  clearTimeout(returnTimer);
+  const last=selected;
+  returnTimer=setTimeout(()=>{
+   returnTimer=null;
+   if(selected!==last)return;
+   if(era==="higher"){
+    if(last?.scene==="alternateBattle")setContext("higher","alternateSelect");
+    else if(last?.scene==="frontStage")setContext("higher","front");
+    return;
+   }
+   if(["arena","bounty","calamity","review","special"].includes(last?.scene))return;
+   setContext(era,"explore");
+  },3500);
+  return true;
+ }
  if(type==="boss")return setContext(era,era==="higher"?"front":"boss");
  if(type==="higher-stage")return setContext("higher","frontStage");
  if(type==="higher-review")return setContext("higher","frontReview");
