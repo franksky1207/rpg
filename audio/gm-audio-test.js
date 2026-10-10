@@ -2,7 +2,7 @@
 (function(g){"use strict";
 try{if(localStorage.getItem("civilization.gm.audio.review.v1")!==null)localStorage.removeItem("civilization.gm.audio.review.v1");}catch(_){}
 const tracks=[["era-galaxy-theme","銀河紀元｜The Fall of Arcana"],["era-universe-theme","宇宙紀元｜Epic Orchestral Fantasy Theme"],["era-higher-theme","高維紀元｜Exploration Theme"],["battle-normal-preview","普通戰鬥｜JRPG Battle Theme"],["battle-medium-preview","中等戰鬥｜Boss Battle"],["battle-high-preview","高等戰鬥｜I\'m Boss Here!"]];
-let chosen=0,detail="尚未播放",wasOpen=false;const cues=[["ui-click","介面點擊｜固定 085"],["normal-attack","普通攻擊｜隨機"],["critical","暴擊｜隨機"],["dodge","閃避｜瞬移"],["heavy-hit","重大打擊｜爆炸音效"],["victory","戰鬥勝利｜號角"]];
+let chosen=0,detail="尚未播放",wasOpen=false;const cues=[["normal-attack","普通攻擊｜隨機"],["critical","暴擊｜隨機"],["dodge","閃避｜瞬移"],["heavy-hit","重大打擊｜爆炸音效"],["victory","戰鬥勝利｜號角"]];
 const audio=()=>g.CivilizationAudio;
 const panel=()=>document.querySelector('[data-gm-section="gm-audio-test"]');
 const visible=()=>typeof state!=="undefined"&&state?.gm===true&&!!panel()?.open;
