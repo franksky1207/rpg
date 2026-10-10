@@ -345,7 +345,8 @@ async function start(){
    if(!formalScenario){status.textContent="等待正式資料同步；不以模擬資料冒充正式狀態。";requestScenario();return;}
    if(dungeonSceneKey){
      if(c.kind==="dungeon-bounty"&&Number(formalScenario.dungeon?.bounty?.world)===3){status.textContent="高維紀元沒有懸賞戰。";return;}
-     scenarioArgs={...(formalScenario.dungeon?.[dungeonSceneKey]||{})};
+     if(!formalScenario.dungeon?.[dungeonSceneKey]){status.textContent="此副本沒有可用的正式資料快照。";return;}
+     scenarioArgs={...formalScenario.dungeon[dungeonSceneKey]};
    }else if(c.kind==="frontier-galaxy"||c.kind==="frontier-universe"){
      const w=c.kind==="frontier-universe"?2:1,rows=formalScenario.calamities[w];
      scenarioArgs={world:w,frontierKind:"calamity",calamitySeals:rows,frontierProgress:rows.filter(x=>x.completed).length};
