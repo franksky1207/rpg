@@ -1,3 +1,10 @@
+## 2026-10-10｜正式設定加入音樂／音效小分區＋GM 循環接縫核查（已施工）
+- 正式 `ui.js`「設定 → 遊戲設定」新增小分區「音樂與音效」：**開啟音樂／開啟音效兩個獨立勾選開關**，以及**音樂音量／音效音量兩個滑桿**（0–100%，調整即生效）。一般玩家設定仍由 `audio/audio-core.js` 原本的獨立 localStorage key `civilization.audio.preferences.v1` 保存，不寫正式 RPG save schema；音樂滑桿同步 music/ambient，音效滑桿同步 battle/ui/notice，保留 GM 獨立試聽滑桿。
+- core 正式音樂與戰鬥／介面短音效分別依 `musicEnabled`、`effectsEnabled` 控制；關閉音樂立刻停止正式配樂並停止環境聲，重新開啟後場景 owner 恢復當前合法配樂；關閉音效停止現有戰鬥短音效並阻擋新的事件。不繞過原先極簡模式及瀏覽器背景靜音。
+- **修正原本 GM 聽到正式背景音樂重疊的根因**：進入 GM 試聽時，audio-core 的 `begin(preview:true)` 先停止正式配樂，不與 GM 試聽疊播；離開 GM 測試中心由 scene owner 恢復。
+- **循環接縫並非僅有文字**：core 現有 `previewSeam` 真正從同一個循環 OGG 播放器跳到曲尾 8 秒，timeupdate 或 ended 實際跳回 0 秒，曲頭 8 秒後停止；本批新增事件 `seam-tail`、`seam`、`seam-done` 供 GM 顯示「已跳至曲尾」「已接回曲頭」「接縫試聽完成」，避免原本只有「載入中」無法判斷。**注意這是播放程式靜態檢查與事件級驗證，並非已用真人耳朵驗收無縫聽感；若 seek 有緩衝延遲仍可能聽出間隙，不能保證毫無聲音落差**。
+- 已更新 `index.html` 的 `ui.js`／3 支音訊 JS cache-bust。四支 JS 語法靜態檢查 PASS。尚待使用者桌機及手機確認開關真實阻擋、即時音量、GM 無背景重疊、曲尾接曲頭訊息與聽感。不改正式戰鬥公式或掉落。
+
 ## 2026-10-10｜三紀元主題啟動優先預載／GM 三首精簡／循環接縫試聽（已施工）
 - 使用者要求音效測試中心**暫時只留三首已選紀元主題**，先全部移除其他舊類別可見 UI，並增加「循環接縫試聽」與啟動優先載入。
 - `audio/gm-audio-test.js` 重整 GM 測試中心，僅三個主題選項：銀河 The Fall of Arcana、宇宙 Epic Orchestral Fantasy Theme、高維 Exploration Theme；提供「完整循環試聽／循環接縫試聽／停止」及單一試聽音量滑桿。舊 73 項試聽評價的 localStorage 資料未刪除，但不再在 GM 畫面顯示舊分類。
