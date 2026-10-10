@@ -62,4 +62,39 @@ assert.ok(policy.includes("civilization-auth-signed-out"),"Mode must react to si
 assert.ok(index.includes("3d-test/mode-foundation.js?"),"Mode policy loaded");
 assert.ok(index.includes("3d-test/formal-home.js?"),"Visual bridge loaded");
 assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<script src="3d-test/appearance-snapshot.js'),"3D runtime cannot boot synchronously in text mode");
+{
+ const gm=read("3d-test/test-center.js"),bridge=read("gm3dprototype.js");
+ const regionFiles=["earth","solar","nearstar","frontier","orion","galactic-frontier","galactic-mid","core-outer","core-war","galactic-unification"];
+ let galacticNames=[];
+ for(const region of regionFiles){
+  const source=read("worldmaps-"+region+".js");
+  const rows=[...source.matchAll(/\{chapter:"([^"]+)",name:"([^"]+)",min:(\d+),max:(\d+),gear:\[([^\]]+)\]/g)];
+  assert.equal(rows.length,10,"Galaxy must expose ten named subregions: "+region);
+  for(const row of rows){
+   const names=[...row[5].matchAll(/"([^"]+)"/g)].map(x=>x[1]);
+   assert.equal(names.length,5,"Galaxy set must have five named slots: "+row[2]);
+   galacticNames.push(...names);
+  }
+ }
+ assert.equal(galacticNames.length,500);
+ assert.equal(new Set(galacticNames).size,500,"Galaxy unique names");
+ const cosmicSets=[...read("secondworlddata.js").matchAll(/"equipment":\s*\{\s*"weapon":\s*"([^"]+)",\s*"helmet":\s*"([^"]+)",\s*"armor":\s*"([^"]+)",\s*"shoes":\s*"([^"]+)",\s*"accessory":\s*"([^"]+)"/g)];
+ assert.equal(cosmicSets.length,100,"Universe 100 Boss x 5");
+ const highSets=[...read("thirdworldloot.js").matchAll(/Object\.freeze\(\{band:(\d+),theme:"([^"]+)",weapon:"([^"]+)",helmet:"([^"]+)",armor:"([^"]+)",shoes:"([^"]+)",accessory:"([^"]+)"\}\)/g)];
+ assert.equal(highSets.length,10,"Higher ten stages x 5");
+ assert.match(bridge,/catalog\[1\]\.length!==10/);
+ assert.match(bridge,/galaxy\.slice\(region\.mapStart,region\.mapEnd\+1\)/);
+ assert.match(bridge,/window\.secondWorldBoss\?\./);
+ assert.match(bridge,/THIRD_WORLD_EQUIPMENT_NAME_ROWS/);
+ assert.match(bridge,/civilization3d:appearance-error/);
+ assert.match(gm,/appearanceMode=embedded\?"formal":"free"/);
+ assert.match(gm,/scenarioMode="formal"/);
+ assert.match(gm,/selectedEquipmentNames:activeEquipmentSet\(\)\?\.names/);
+ assert.ok(!gm.includes('id="appearanceLevel"')&&!gm.includes('id="appearanceEnhancement"'));
+ const cases=[...gm.matchAll(/\{id:"[^"]+",cat:"([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(cases.length,31);
+ assert.equal(new Set(cases).size,8);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-repair5-final/);
+ console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");
+}
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
