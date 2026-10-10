@@ -304,7 +304,7 @@
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);}
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt,{major:evt?.type==="attack"&&Number(evt.actualDamage)>0&&((evt.target==="enemy"&&Number(evt.actualDamage)>=p.enemyHp)||(evt.target==="player"&&Number(evt.actualDamage)>=p.playerHp)||(evt.actor==="enemy"&&evt.crit===true&&String(result?.e?.kind||result?.enemy?.kind||"").toLowerCase()==="boss"))});}
     if(!evt)continue;
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt);
@@ -370,6 +370,7 @@
    syncCombatHpDom();
    if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
    await sleep(endDelay);
+   if(p.active&&result?.win===true)window.CivilizationAudio?.combatEvent?.({type:"victory"});
    return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("combat-end");
@@ -427,7 +428,7 @@
    await structuredSleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);}if(!evt)continue;
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt,{major:evt?.type==="attack"&&Number(evt.actualDamage)>0&&((evt.target==="enemy"&&Number(evt.actualDamage)>=p.enemyHp)||(evt.target==="player"&&Number(evt.actualDamage)>=p.playerHp)||(evt.actor==="enemy"&&evt.crit===true&&String(result?.e?.kind||result?.enemy?.kind||"").toLowerCase()==="boss"))});}if(!evt)continue;
     if(evt.type==="firstActor"){await structuredSleep(Math.min(stepDelay,55));continue;}
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
@@ -462,7 +463,7 @@
     }
     if(evt.type==="battleEnd")break;
    }
-   syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
+   syncCombatHpDom();await structuredSleep(endDelay);if(p.active&&result?.win===true)window.CivilizationAudio?.combatEvent?.({type:"victory"});return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("combat-end");
    structuredPlayback=false;
