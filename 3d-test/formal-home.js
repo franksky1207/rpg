@@ -39,7 +39,15 @@ function hide(){
  syncAllPreviewButtons();
 }
 function syncButton(){syncAllPreviewButtons();}
-function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
+function script(src){
+ return new Promise((resolve,reject)=>{
+  const el=document.createElement("script");
+  el.src=src;
+  el.onload=()=>{el.onload=null;el.onerror=null;resolve();};
+  el.onerror=()=>{el.onload=null;el.onerror=null;el.remove();reject(new Error("3D 模組載入失敗："+src));};
+  document.head.appendChild(el);
+ });
+}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
 const SCENE_SRC="3d-test/prototype-engine.js?v=20261010-b25-chronicle";
 const RUNTIME_SRC="3d-test/runtime.js?v=20261010-opt1-lifecycle";
