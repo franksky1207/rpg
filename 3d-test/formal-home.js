@@ -434,9 +434,16 @@ function ensureServiceControl(view){
   ["gm",main.querySelector("#gmStartupSlot")]
  ]:[["guide",page]];
  for(const [kind,target] of rows){
-  if(!target||target.querySelector('[data-service-3d-preview="'+kind+'"]'))continue;
+  if(!target)continue;
+  // v17 used data-service3d-preview but looked for data-service-3d-preview.
+  // Deduplicate pre-existing DOM nodes as well as all future updates.
+  const existing=Array.from(target.querySelectorAll('[data-service3d-preview="'+kind+'"],[data-service-3d-preview="'+kind+'"]'));
+  if(existing.length){
+   existing.slice(1).forEach(node=>node.remove());
+   continue;
+  }
   if(kind==="gm"&&(typeof global.gmRuntimeAuthorizationAuthorized!=="function"||global.gmRuntimeAuthorizationAuthorized()!==true))continue;
-  const control=document.createElement("div");control.className="galaxy-3d-controls";control.dataset.service3dPreview=kind;
+  const control=document.createElement("div");control.className="galaxy-3d-controls";control.setAttribute("data-service3d-preview",kind);
   const button=document.createElement("button");button.type="button";button.className="btn";button.textContent="預覽 3D "+({settings:"設定中心",guide:"遊戲說明",account:"帳號中心",cloud:"雲端存檔中心",gm:"GM 管理中心"}[kind]);
   button.addEventListener("click",()=>toggle(view,"service-"+kind));
   const hint=document.createElement("span");hint.className="muted";hint.textContent="僅供視覺預覽，全部操作仍由原本介面執行。";
