@@ -1,3 +1,9 @@
+## 2026-10-10｜GM 單滑桿顯示 100% 但初播 27%／拖動後 85%：根因修正
+- 使用者實機反饋：新 GM 單滑桿顯示 100%，但剛開始試聽時診斷仍 27%；拖曳後最高只有 85%，音樂才較可聽。
+- 經 main 程式核查：`begin(id,{preview:true})` 仍使用舊 `normalizeVolume(... previewLevels.master, previewLevels.music)`，所以首次播放以 .7×.45×.85≈27%；後續滑桿 `setPreviewVolume()` 則走 `previewGain()`，其內部又有 music 的 0.85 固定係數造成最高僅 85%。
+- 已統一：**GM 試聽新播放器首次建立、拖曳滑桿更新、切換試聽後，`HTMLAudioElement.volume` 皆直接等於 GM 試聽滑桿的 0～1 值**。環境聲和戰鬥 GM 模擬試聽也採同一數值；正式遊戲音訊分類增益及用戶偏好完全保留不動。100% 即瀏覽器播放器 volume=1，0% 即 volume=0；此百分比是播放器倍率，非喇叭物理聲壓或 LUFS 響度值。
+- 已更新 `index.html` core JS cache-bust。實際 `main` 來源經語法檢查通過，mock Audio 針對 Sector/Pulse/Airy/Hover/Laser 在 100%→40%→100% + resetPreview/切音後共 15 例均精確相符，正式玩家偏好未更動。桌機手機真人聲音須由使用者重新驗收。
+
 ## 2026-10-10｜GM 試聽音量簡化為單一滑桿
 - 使用者確認六種 GM 音量滑桿過於繁瑣，正式 GM 音樂音效測試中心改為僅一個「試聽音量」（預設 100%），選單切換、單音檔／場景混音及停止重播保留此百分比。
 - `audio/audio-core.js` 新增獨立 `gmPreviewVolume`、`setPreviewVolume()`、`previewGain()`，試聽時以一個整體百分比控制音樂、環境層、戰鬥、通知與介面音效。保留不同類型音效的內部相對音量，音樂 0.85、環境聲 0.45 等；不再讓使用者操作多聲道技術參數，且完全不更動正式玩家 `prefs` / localStorage。
