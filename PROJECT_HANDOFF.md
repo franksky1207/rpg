@@ -1,3 +1,9 @@
+## 2026-10-11｜HTML 引用 JS/CSS 快取版本防漏檢查
+- 新增 `.github/workflows/html-cache-version-guard.yml`，main push 及手動啟動時執行 `tests/runtime/html-cache-version-guard.js`；以 Git before/after 提交樹為準，比較所有 HTML 直接 `src`、`href`、`data-src` 載入的 JS/CSS，包含 `index.html`、`3d-test/index.html` 和 GM 延後腳本引用。
+- 若當次提交修改被 HTML 引用的 JS/CSS 而沒有同步更新該 HTML 的引用網址，Action 回報檔案配對並以失敗碼結束。未被 HTML 直接引用的內部程式不強迫修改 index；此檢查只保障**直接 HTML 引用**，JS 動態 import/其他清單另需專項檢查。
+- 此守門是 CI 偵測，未設定分支保護時無法阻止已推入 main 的提交；連續多筆逐檔 GitHub 修改可能造成中間提交紅燈，應以完成批次的整合提交/最終 HEAD 驗收為準，必要時使用一次性多檔提交。與目前 media Service Worker、玩家存檔及 JS/CSS 持久快取設定無關。
+- 本次已將兩個新檔提交 main，回讀確認。GitHub Actions 實際執行結果尚未取得，不宣稱 CI 已成功。
+
 ## 2026-10-11｜設定介面整體精簡・第 2 批
 - 依本次指定的兩批規劃，已完成本機自動存檔／雲端存檔比較集中於「存檔管理」、帳號管理獨立分區、GM 原功能獨立視覺分隔、危險操作置底，並優化桌機／手機的雲端比較欄、Email 長字換行、登出與雲端按鈕觸控尺寸。
 - `ui.js` 保留原 `settingsPage` 與 `wireSettings` 資料/事件，新增 `settingsCloudSaveSlot`、`settingsAccountSlot` 固定掛載點；`supabaseauth.js` 的 `mountAccountSettings` 改優先掛帳號槽、`cloudsave.js` 的 `mount` 改優先掛存檔槽，避免 render 後回到舊順序；保留未來舊結構 fallback。
