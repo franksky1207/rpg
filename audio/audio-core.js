@@ -103,7 +103,7 @@ function begin(id,{preview=false,loop=true}={}){
  el.addEventListener("error",()=>report("failed","音訊媒體錯誤 "+(el.error?.code||"unknown")));
  if(preview)session=el;else {musicFadeSeq++;retireOtherMusicVoices();musicVoices.add(el);music=el;}
  report("requested");
- el.play().catch(error=>{if(active())report("failed",playbackError(error));});
+ el.play().catch(error=>{if(active()){report("failed",playbackError(error));if(!preview)document.dispatchEvent(new CustomEvent("civilization-audio-music-failed",{detail:{id,reason:playbackError(error)}}));}});
  return true;
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
@@ -274,7 +274,7 @@ function runtimeStats(){return {sfxVoices:sfxVoices.size,music:!!music,formalMus
 document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraForAudio()),{once:true});
 document.addEventListener("visibilitychange",update);
 window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
-document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
+document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();if(music&&music.paused&&!musicMuted()&&!document.querySelector('[data-gm-section="gm-audio-test"][open]'))resumeMusic();},{passive:true});
 // Single delegated UI interaction path; keyboard activation uses click as well.
 // Skip disabled controls and GM audition to prevent feedback loops.
 document.addEventListener("click",event=>{
