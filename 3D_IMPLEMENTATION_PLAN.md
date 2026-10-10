@@ -1,3 +1,14 @@
+## 2026-10-11｜全戰鬥模式背景音樂統一整合（按使用者要求，不限副本）
+- 範圍包括銀河／宇宙／高維主線、銀河回顧、懸賞、競技場（含高維固定／變化）、鏡像、虛空、銀河／宇宙災厄、異宇宙與高維 Boss 持續連戰。僅音樂場景的生命週期接線，不更動戰鬥數值、獎勵、存檔、音效或已選 6 首配樂。
+- `audio/audio-scenes.js` 的 `setContext()` 現在將 combatLocked 作為所有來源的共用權威防線：已正式進入戰鬥時，任何非戰鬥 `setContext`（包括自行 renderPage、renderW3 等）以及重複戰鬥 context 都只恢復目前正式戰鬥音樂，不重建／重播、不降回紀元曲。保持 combat-start → battle ownership → 正式 combat-exit 的生命週期，連戰中途 `combat-end` 不切回音樂。
+- `ui.js` 銀河主線正式開戰入口與回顧戰入口明確發出 combat-start；回顧戰正常與異常結束均發出 combat-exit，避免舊 owner 停留。
+- `mirrordungeonrun.js` 的 20 場挑戰啟動時正式發出 combat-start，原結算 combat-exit 保留，失敗 catch 增加退場。20 場中途不重播。
+- `dungeonvoidui.js` 在正式虛空挑戰啟動後就發出 combat-start，不必等非同步 runVoidMirageUiAuto 啟動；原 runner 重複 combat-start 不會重新切曲，最終原 combat-exit 保留。
+- `thirdworldarenaui.js` 的 renderW3 不在戰鬥／場間待續時強制寫入一般 context，整組挑戰 playSelected finally 補上 combat-exit；高維競技場正式入口既有 combat-start 保留。
+- `alternateuniverseui.js` 的 renderPage 不再於戰鬥中直接覆蓋音樂場景，保留挑戰入口 combat-start 及 finally combat-exit。
+- 懸賞、銀河宇宙競技場、兩代災厄、高維主線等已有的正式 combat-start／combat-exit 保留，改由共用 director 防線保障頁面重繪不切曲。既有 `combatfx.js` 每擊不發 combat-start 的規則不變。
+- `index.html` 已對上述六個修改 JS 更新 cache-bust；GitHub main 遠端回讀與六檔 JS 語法均 PASS。用 JS stub 模擬高維競技場明確開始→render setContext→syncView→combat-exit，結果高等戰鬥曲保持至正式退出才恢復高維主題，PASS。其餘多模式真人裝置音效、首次音檔網路載入、手機背景切換仍未實機驗收，不能宣稱聲音全程確定已播放。
+
 ## 2026-10-10｜連續戰鬥停止音樂提早恢復／結算後攻擊音效殘留修正
 - 使用者回報：按下「停止連續戰鬥」應等本場動畫播完並出現結算，卻已提前切回紀元主題；結算後退出仍聽到攻擊類音效。
 - `audio/audio-core.js` 新增 `stopBattleSfx()`：只釋放短音效的 normal-attack／critical／dodge／heavy-hit 與舊 combatVoices；**不停止 notice 類勝利號角、不停止 UI 點擊與背景音樂**。正式 `combat-exit` 才清理，防止勝利音效被一併切斷。
