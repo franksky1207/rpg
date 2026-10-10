@@ -17,7 +17,17 @@ function phase(){
  }catch(_){}
  return "galaxy";
 }
-function resolve(era,scene){const family=catalog[era];if(!family)return null;const pair=family[scene];return pair?{era,scene,music:pair[0],ambient:pair[1]}:null;}
+function resolve(era,scene){
+ const family=catalog[era];if(!family)return null;
+ const pair=family[scene];if(!pair)return null;
+ const basic=new Set(["home","explore","main","character","inventory","equipment","enhance","expertise","mark","civilization","shop","redeem","story","guide","cloud","settings","account","offline","record","core","alternateSelect","frontReview","review"]);
+ if(basic.has(scene)){
+  const actualEra=era==="shared"?phase():era;
+  const theme=({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"})[actualEra];
+  return {era,scene,music:theme||null,ambient:null};
+ }
+ return {era,scene,music:pair[0],ambient:pair[1]};
+}
 function prohibited(){return !!g.CivilizationAudio?.isSilent?.();}
 function ambientVolume(preview=false){if(preview)return g.CivilizationAudio?.previewGain?.("ambient")??0;const p=g.CivilizationAudio?.settings?.();return Math.min(1,Math.max(0,(Number(p?.master)||0)*(Number(p?.ambient??.6)||0)*.75*.55));}
 function stopAmbient(){if(ambient){ambient.pause();ambient.removeAttribute("src");ambient.load();ambient=null;}ambientId=null;}
@@ -30,6 +40,7 @@ function syncAmbient(id){
  ambient=el;ambientId=id;el.play().catch(()=>{if(ambient===el)stopAmbient();});
 }
 function apply(){
+ if(selected?.music?.startsWith("era-"))g.CivilizationAudio?.prioritizeEraTheme?.(selected.era==="shared"?phase():selected.era);
  if(!selected||prohibited()){stopAmbient();if(prohibited())g.CivilizationAudio?.stopMusic?.();return false;}
  if(selected.music!==activeMusicId){g.CivilizationAudio?.stopMusic?.();activeMusicId=selected.music;if(selected.music)g.CivilizationAudio?.playMusic?.(selected.music);}
  syncAmbient(selected.ambient);return true;
@@ -75,16 +86,16 @@ function syncView(viewName,subScreen=""){
  const era=phase();
  // GM's isolated audio audition must never be driven by the ordinary page.
  if(document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;
- if(name==="home")return setContext("shared","main");
+ if(name==="home")return setContext(era,"home");
  if(name==="adventure"){
   if(era==="higher")return setContext("higher","front");
   if(subScreen==="review-combat"||subScreen==="review-prepare")return setContext(era,"review");
   return setContext(era,subScreen==="combat"?(era==="universe"?"boss":"battle"):"explore");
  }
  if(name==="calamity")return era==="higher"?false:setContext(era,"calamity");
- if(name==="storyrecord")return era==="higher"?setContext("higher","record"):setContext(era,"record");
+ if(name==="storyrecord")return setContext(era,"record");
  const common={character:"character",enhancement:"enhance",specialization:"expertise",inventory:"inventory",settings:"settings",guide:"guide"};
- if(common[name])return setContext("shared",common[name]);
+ if(common[name])return setContext(era,common[name]);
  return false;
 }
 function notify(type,detail={}){
