@@ -1,3 +1,10 @@
+## 2026-10-10｜音訊素材全面補完第 1 批：聆聽實測與 CC0 本地化 Gate
+- 使用者《音樂音效001》GM 摘要：73/73 正式情境已填，另 8 筆舊分類；實際「有聲音」的獨立音檔僅 `dark-hover`（太小）、`galaxy-battle`（正常）、`boss-orchestra`（正常）、`laser-preview`（太小）。不得把多個情境共用音檔算成多種聲音，其他七個 SRG774 遠端候選現階段不可視為可聽。沒有設定資產的情境仍是待素材，不要把「沒有聲音」誤視為編碼失效。
+- 源網站 OpenGameArt `https://opengameart.org/content/dark-sci-fi-audio-pack` 明確登載八個 CC0 檔案；已新增 `.github/workflows/audio-localize.yml`，GitHub Actions 自動抓取官方原始連結，使用 ffprobe/ffmpeg 檢查可解碼時間、平均電平、SHA256、長度及來源，成功後才提交 `audio/assets` 與 `manifest.json`。流程不得把播放能力驗證冒充真人聆聽。
+- 本地化成功之前不更改 `audio-core.js` 的現有 URL、不冒充已完成。核對腳本第一次因 runner 缺 `ffprobe` 而失敗，已加入 apt 安裝並重新觸發。若原始站下載／授權／格式驗證仍失敗，必須明確回報，不提交假檔案。
+- 兩個「太小聲」要以本地化後音檔實測原訊號，再做合法的數位增益／限制器處理；單靠 HTML audio.volume 增大無法超過 1.0，禁止宣稱調倍率就解決。
+- 待素材成功入庫後，再逐項改音檔引用、cache bust、QA；GM 原聆聽紀錄保留，更新版本需重新試聽。
+
 ## 2026-10-10｜音訊 A04 跨模式與空間音訊整合（程式施工，實機 Gate 未結案）
 - `audio/audio-core.js` 升級共用聲音 owner：獨立 GM preview 音源完全釋放、播放代次失效防止切換後舊回報、`pagehide` 停止所有聲道並關閉 Web Audio Context。增加 `runtimeStats()` 可讀音樂／GM 試聽／戰鬥音效使用情況，`setListenerPosition({x,y,z})`、`spatialMetadata(position)`、`playSpatial(id,{position,volume,simulation})` 供 3D 模型後續接線。標準文字使用普通立體聲，3D 標準且同源／可安全處理音源才啟用 StereoPanner；第三方候選不強接 WebAudio 以防 CORS 無聲。最大戰鬥音效聲數沿用 3。正式公式與存檔完全不動。
 - `audio/audio-scenes.js` 環境層改尊重主音量／環境音設定，設定更動即生效；隱藏頁與極簡模式停止聲音，回到頁面依目前情境恢復、不重播歷史戰鬥事件；GM 試聽期間不額外重疊正式情境音源。此層目前仍為雙 HTMLAudioElement，不能宣稱已完成真正多軌 Web Audio 混音或交叉淡入淡出。
