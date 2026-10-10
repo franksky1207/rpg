@@ -55,6 +55,7 @@ const assert=require("node:assert/strict");
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
   }
+  await page.locator("#categoryList .center-category").filter({hasText:"文明災厄與異宇宙"}).click();
   await page.getByRole("button",{name:"異宇宙前線"}).click();
   assert.equal(await page.locator("#fixtureProgress").isVisible(),false,"異宇宙不得再沿用十大區");
   for(const id of ["alternateSegment","alternateUniverse","alternateDepth"])assert.equal(await page.locator("#"+id).isVisible(),true);
