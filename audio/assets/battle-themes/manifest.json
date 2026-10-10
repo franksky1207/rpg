@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "status": "technical-validation-only",
+  "themes": {
+    "normal": {
+      "title": "JRPG Battle Theme",
+      "author": "North Fantasy Music",
+      "license": "CC BY 4.0",
+      "source_page": "https://opengameart.org/content/jrpg-battle-theme",
+      "source_url": "https://opengameart.org/sites/default/files/battletheme.wav",
+      "original_file": "normal-original.wav",
+      "original_bytes": 8469188,
+      "original_sha256": "ebda2cf763ae4adbfc6b423095eb03a0718fdbe36e1d599c468eaeebc3e83062",
+      "original_duration_seconds": 48.0,
+      "loop_file": "normal-battle-loop.ogg",
+      "loop_bytes": 910064,
+      "loop_sha256": "19b9d9ac2f550937e421203be404b86659aea0d22397470e68cb30342d96e214",
+      "loop_duration_seconds": 48.0,
+      "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
+      "source_marked_loop": true,
+      "human_loop_auditioned": false,
+      "usage": "GM audition only; not assigned to real battles"
+    },
+    "medium": {
+      "title": "Boss Battle",
+      "author": "tcarisland",
+      "license": "CC BY 4.0",
+      "source_page": "https://opengameart.org/content/boss-battle-5",
+      "source_url": "https://opengameart.org/sites/default/files/boss_battle_3.mp3",
+      "original_file": "medium-original.mp3",
+      "original_bytes": 3456996,
+      "original_sha256": "01dfdd950a927a44b5e64af158808b74fc71a02b89d4f7280bc9344cabb41e4d",
+      "original_duration_seconds": 144.039,
+      "loop_file": "medium-battle-loop.ogg",
+      "loop_bytes": 2689674,
+      "loop_sha256": "e29f78603fe214652d67017d40397f35b4c5808abe7c494bde154295a7a23592",
+      "loop_duration_seconds": 144.039,
+      "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
+      "source_marked_loop": false,
+      "human_loop_auditioned": false,
+      "usage": "GM audition only; not assigned to real battles"
+    },
+    "high": {
+      "title": "I'm Boss Here!",
+      "author": "Fato Shadow",
+      "license": "CC BY 4.0",
+      "source_page": "https://opengameart.org/content/im-boss-here-soundtrack",
+      "source_url": "https://opengameart.org/sites/default/files/fato_shadow_-_im_boss_here.ogg",
+      "original_file": "high-original.ogg",
+      "original_bytes": 1437326,
+      "original_sha256": "dc1d06bd92ef9d43f2ac525dfa667446218f677a153578149703faabf52b9a47",
+      "original_duration_seconds": 71.72,
+      "loop_file": "high-battle-loop.ogg",
+      "loop_bytes": 1370648,
+      "loop_sha256": "1f9d0e6c8e3f689c61b0d6952f909f60bbdf1d1933222cd37b74403c8d57c63f",
+      "loop_duration_seconds": 71.72,
+      "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
+      "source_marked_loop": true,
+      "human_loop_auditioned": false,
+      "usage": "GM audition only; not assigned to real battles"
+    }
+  }
+}
