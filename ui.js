@@ -272,7 +272,7 @@ window.startGalaxyReviewBattle=async function(){
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
   galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show")}
+  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show");if(result.win)window.CivilizationAudio?.settlementVictory?.("galaxy-review:"+String(Date.now()),{success:true});}
   else window.setGalaxyReviewBattleActive?.(false);
   return true;
  }catch(err){
