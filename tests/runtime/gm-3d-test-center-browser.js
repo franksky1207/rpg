@@ -205,6 +205,45 @@ const assert=require("node:assert/strict");
   assert.equal(await page.locator("#appearanceFreeControls").isVisible(),false);
   // Embedded preview without a formal host must wait, not substitute free fixture values.
   await page.waitForFunction(()=>document.querySelector("#status")?.textContent?.includes("等待正式角色"),null,{timeout:10000});
+  // Isolated mock of the authorized bridge payload: assert presentation state only.
+  // This tests the iframe receiver, not permission to access the formal save.
+  const fakeCatalog={};
+  for(const w of [1,2,3])fakeCatalog[w]=Array.from({length:w===3?1:10},(_,r)=>({
+    name:"測試區域"+w+"-"+r,
+    entries:Array.from({length:10},(_,i)=>({name:"測試套組"+w+"-"+r+"-"+i,
+      level:w===3?2000:w===2?505+(r*10+i)*5:r*50+i*5+5,
+      names:["武器","頭盔","鎧甲","鞋子","飾品"].map(x=>x+w+"-"+r+"-"+i)}))
+  }));
+  const appearance={version:2,source:"formal",world:3,level:2000,vip:20,
+    equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,{present:true,name:type+"-正式",quality:5,world:3}])),
+    enhancements:{weapon:40,helmet:40,armor:40,shoes:40,accessory:40},
+    enhancementMin:20,enhancementCap:40,specializations:{},markLevels:{},civilizationLevel:10,coreLevel:10};
+  await page.evaluate(({appearance,catalog})=>window.postMessage({type:"civilization3d:appearance-response",appearance,catalog},location.origin),{appearance,catalog:fakeCatalog});
+  await page.getByRole("button",{name:"角色全身展示"}).click();
+  await page.locator("#appearanceFree").click();
+  assert.deepEqual(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().equipmentCatalogCounts),
+    {galaxy:100,universe:100,higher:10});
+  await page.locator("#appearanceWorld").selectOption("2");
+  assert.equal(await page.locator("#appearanceRegion option").count(),10);
+  await page.locator("#appearanceRegion").selectOption("3");
+  assert.equal(await page.locator("#appearanceSet option").count(),10);
+  await page.locator("#appearanceSet").selectOption("8");
+  assert.deepEqual(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().selectedEquipmentNames),
+    ["武器","頭盔","鎧甲","鞋子","飾品"].map(x=>x+"2-3-8"));
+  await page.locator("#appearanceWorld").selectOption("3");
+  assert.equal(await page.locator("#appearanceRegionLabel").isVisible(),false);
+  assert.equal(await page.locator("#appearanceSet option").count(),10);
+  await page.locator("#appearanceFormal").click();
+  assert.ok((await page.locator("#appearanceFormalNames").innerText()).includes("weapon-正式"),
+    "正式同步必須顯示實穿部位，不得以套組名稱取代");
+  await page.locator("#appearanceFree").click();
+  await page.locator("#appearanceWorld").selectOption("1");
+  assert.equal(await page.locator("#appearanceRegion option").count(),10);
+  await page.locator("#appearanceFormal").click();
+  // Switching data sources must not mutate local game save or selection truth.
+  await page.locator("#appearanceRefresh").click();
+  assert.ok((await page.locator("#appearanceSource").innerText()).includes("等待正式角色資料"));
+
   await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
   await page.locator("#caseSearch").fill("銀河紀元星圖");
   assert.equal(await page.locator("#caseList .center-case").count(),1);
