@@ -645,9 +645,9 @@
         const node=shape("alternate-universe-"+number,size,rowIndex%5);
         node.position.set(x,focused?.5:.18,z);
         node.rotation.y=seed(number)*Math.PI;
-        node.material=focused?accent:cleared?complete:sealed;
+        node.material=focused&&args.alternateLocked===true?sealed:focused&&args.alternateCompleted===true?complete:focused?accent:cleared?complete:sealed;
         const ring=B.MeshBuilder.CreateTorus("alternate-universe-ring-"+number,{diameter:focused?1.55:1.15,thickness:.05,tessellation:24},scene);
-        ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused?accent:cleared?complete:sealed;
+        ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused&&args.alternateLocked===true?sealed:focused&&args.alternateCompleted===true?complete:focused?accent:cleared?complete:sealed;
       }
       // Depth always progresses from stable outer structure to denser, brighter inner pressure.
       for(let i=1;i<=5;i++){
@@ -677,7 +677,7 @@
         satellite.material=depthAccent;
       }
       scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*(.00009+depth*.000022+cultureTier*.000009);});
-      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,universeName:names[universe-1]||"",culture,cultureIndex,cultureTier,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
+      scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,universeName:names[universe-1]||"",culture,cultureIndex,cultureTier,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,locked:args.alternateLocked===true,active:args.alternateActive===true,completed:args.alternateCompleted===true,visualOnly:true}};
       return scene;
     }
     const seals=Array.isArray(args.calamitySeals)?args.calamitySeals.slice(0,10):null;
