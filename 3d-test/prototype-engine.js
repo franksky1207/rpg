@@ -792,29 +792,56 @@
     scene.metadata={civilization3dBattlePresentation:{kind:mode,visualOnly:true}};
     return scene;
   }
-  /* Batch 16: display-only chronicle and reincarnation visual compositions. */
+  /* B25: read-only holographic archive, story and skippable reincarnation preview. */
   function createChronicleTransitionScene(args={}){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     const kind=["record","story","reincarnation"].includes(args.kind)?args.kind:"record";
     scene.clearColor=new B.Color4(.008,.019,.045,1);
-    const camera=new B.ArcRotateCamera("chronicle-camera",Math.PI/2,Math.PI/2.6,9,new B.Vector3(0,0,0),scene);
-    camera.attachControl(args.canvas,true);
+    const camera=new B.ArcRotateCamera("chronicle-camera",Math.PI/2,Math.PI/2.6,10,new B.Vector3(0,0,0),scene);
+    configureDisplayCamera(camera,args.canvas,6,17);
     new B.HemisphericLight("chronicle-fill",new B.Vector3(0,1,0),scene).intensity=.8;
-    const material=(n,c)=>{const m=new B.StandardMaterial(n,scene);m.diffuseColor=new B.Color3(...c);m.emissiveColor=new B.Color3(...c).scale(.35);return m;};
-    const steel=material("chronicle-steel",[.11,.23,.38]),cyan=material("chronicle-cyan",[.13,.72,.89]),gold=material("chronicle-gold",[.84,.61,.24]);
+    const material=(n,c,glow=.35)=>{const m=new B.StandardMaterial(n,scene);m.diffuseColor=new B.Color3(...c);m.emissiveColor=new B.Color3(...c).scale(glow);return m;};
+    const steel=material("chronicle-steel",[.11,.23,.38],.1),cyan=material("chronicle-cyan",[.13,.72,.89],.65),gold=material("chronicle-gold",[.84,.61,.24],.6),dim=material("chronicle-archive-dim",[.09,.25,.31],.18);
     const base=B.MeshBuilder.CreateCylinder("chronicle-base",{diameter:7.5,height:.3,tessellation:48},scene);base.position.y=-1.15;base.material=steel;
+    const pages=[];
     for(let i=0;i<5;i++){
       const slab=B.MeshBuilder.CreateBox("chronicle-page-"+i,{width:1.1,height:1.6,depth:.14},scene);
       slab.position.set((i-2)*1.25,-.1,kind==="story"?Math.abs(i-2)*.32:0);
-      slab.rotation.y=kind==="story"?(i-2)*.18:0;slab.material=i===2?gold:cyan;
+      slab.rotation.y=kind==="story"?(i-2)*.18:0;slab.material=i===2?gold:cyan;pages.push(slab);
+      // Archive pages remain readable as separate silhouettes without invented story text.
+      for(let j=0;j<3;j++){
+        const glyph=B.MeshBuilder.CreateBox("chronicle-glyph-"+i+"-"+j,{width:.7-j*.1,height:.035,depth:.02},scene);
+        glyph.position.set(slab.position.x,-.48+j*.22,slab.position.z+.087);
+        glyph.rotation.y=slab.rotation.y;glyph.material=j===0?gold:dim;
+      }
     }
+    const archive=B.MeshBuilder.CreateTorus("chronicle-hologram-index",{diameter:6.4,thickness:.045,tessellation:56},scene);
+    archive.position.y=-.83;archive.rotation.x=Math.PI/2;archive.material=cyan;
+    const supports=[];
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4;
+      const shard=B.MeshBuilder.CreatePolyhedron("chronicle-memory-shard-"+i,{type:2,size:.18+i%3*.055},scene);
+      shard.position.set(Math.cos(a)*3.55,.45+(i%3)*.32,Math.sin(a)*3.55);
+      shard.rotation.y=a;shard.material=i%2?dim:cyan;supports.push(shard);
+    }
+    let ring=null,core=null,gate=null;
     if(kind==="reincarnation"){
-      const ring=B.MeshBuilder.CreateTorus("reincarnation-cycle",{diameter:5.7,thickness:.12,tessellation:64},scene);
+      ring=B.MeshBuilder.CreateTorus("reincarnation-cycle",{diameter:5.7,thickness:.12,tessellation:64},scene);
       ring.rotation.x=Math.PI/2.8;ring.position.y=.2;ring.material=gold;
-      const core=B.MeshBuilder.CreatePolyhedron("reincarnation-core",{type:2,size:.8},scene);
+      core=B.MeshBuilder.CreatePolyhedron("reincarnation-core",{type:2,size:.8},scene);
       core.position.y=.35;core.material=cyan;
+      gate=B.MeshBuilder.CreateTorus("reincarnation-epoch-gate",{diameter:3.7,thickness:.085,tessellation:48},scene);
+      gate.position.y=.3;gate.rotation.y=Math.PI/2.7;gate.material=cyan;
     }
-    scene.metadata={civilization3dChronicle:{kind,visualOnly:true,readOnly:true}};
+    // A pure presentation loop: no timers, transactions, state writes or blocked controls.
+    scene.onBeforeRenderObservable.add(()=>{
+      const dt=Math.max(0,Math.min(50,Number(args.engine.getDeltaTime())||0));
+      archive.rotation.z+=dt*.000035;
+      for(let i=0;i<supports.length;i++)supports[i].rotation.y+=dt*.00004*(i%2?1:-1);
+      if(kind==="story")pages[2].rotation.y=Math.sin(scene.getEngine().getDeltaTime()*0+archive.rotation.z*2)*.07;
+      if(ring){ring.rotation.y+=dt*.00009;core.rotation.y-=dt*.00017;gate.rotation.z+=dt*.000045;}
+    });
+    scene.metadata={civilization3dChronicle:{kind,visualOnly:true,readOnly:true,skippable:true,nonBlocking:true,source:"visual-only"}};
     return scene;
   }
   /* B17-B: visual-only service consoles; account, cloud, and GM tools stay in HTML. */
@@ -849,5 +876,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.24.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.25.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
