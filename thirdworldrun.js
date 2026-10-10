@@ -165,6 +165,7 @@
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
   const levelAtStart=coreLevel(target),runId=runSerial+1;
+  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"higher",mode:"higher-stage"});
   runtime={runId,active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,vip20Protections:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
   runSerial=runId;
   if(gmBackgroundEnabled())startBackgroundFlow();else stopBackgroundFlow();
