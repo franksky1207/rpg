@@ -370,7 +370,7 @@
    syncCombatHpDom();
    if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
    await sleep(endDelay);
-   if(p.active&&result?.win===true)window.CivilizationAudio?.combatEvent?.({type:"victory"});
+   
    return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("combat-end");
@@ -463,7 +463,7 @@
     }
     if(evt.type==="battleEnd")break;
    }
-   syncCombatHpDom();await structuredSleep(endDelay);if(p.active&&result?.win===true)window.CivilizationAudio?.combatEvent?.({type:"victory"});return window.getCombatPresentationSnapshot();
+   syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("combat-end");
    structuredPlayback=false;
