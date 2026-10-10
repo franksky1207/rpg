@@ -13,7 +13,7 @@ function html(){
  +'<div class="controls" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn blue" onclick="gmSoundPlayTheme()">▶ 完整循環試聽</button><button class="btn" onclick="gmSoundSeam()">♫ 循環接縫試聽</button><button class="btn" onclick="gmSoundStop()">■ 停止</button></div>'
  +'<label>試聽音量 <input type="range" min="0" max="100" value="'+gain+'" oninput="gmSoundVolume(this.value/100)"><span id="gmSoundLevel">'+gain+'%</span></label>'
  +'<div class="controls" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">'+cues.map(([key,name])=>'<button class="btn" type="button" onclick="gmSoundCue(\''+key+'\')">'+name+'</button>').join('')+'</div>'
- +'<p class="muted" id="gmSoundPlaybackDetail" role="status">'+detail+'</p><p class="muted" id="gmSoundPoolState">音效預熱：'+(stats?stats.ready+' / '+stats.prepared+' 已準備｜最近出聲 '+stats.lastStartMs+'ms':'尚未啟用')+'</p></div>';
+ +'<p class="muted" id="gmSoundPlaybackDetail" role="status">'+detail+'</p><p class="muted" id="gmSoundPoolState">音效預熱：'+(stats?stats.ready+' / '+stats.prepared+' 已準備｜請求 '+stats.requested+'｜開始 '+stats.started+'｜失敗 '+stats.failed+'｜略過 '+stats.skipped+'｜啟動中位數 '+(stats.p50Ms??'—')+'ms｜P95 '+(stats.p95Ms??'—')+'ms':'尚未啟用')+'</p></div>';
 }
 function refresh(){const el=document.getElementById("gmSoundBody");if(el)el.outerHTML=html();}
 g.gmSoundSelectTheme=value=>{if(!visible())return false;chosen=Math.max(0,Math.min(tracks.length-1,Number(value)||0));audio()?.stopPreview?.();detail="已切換歌曲，尚未播放";refresh();return true;};
@@ -26,5 +26,5 @@ g.gmAudioTestHtml=()=>typeof state!=="undefined"&&state?.gm===true?html():"";
 document.addEventListener("civilization-audio-preview-status",e=>{if(!visible()||e.detail?.id!==tracks[chosen][0])return;const d=e.detail;const label=({playing:"播放中",failed:"播放失敗",volume:"音量已更新",blocked:"播放受限制","seam-tail":"已跳至曲尾","seam":"已接回曲頭","seam-done":"接縫試聽完成"})[d.status]||"載入中";const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=label+"｜輸出音量："+Math.round((d.volume??0)*100)+"%"+(d.reason?"｜"+d.reason:"");});
 new MutationObserver(()=>{const now=visible();if(wasOpen&&!now){audio()?.stopPreview?.();audio()?.stopGmSfx?.();g.CivilizationAudioScenes?.restore?.();}wasOpen=now;}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=20;
+g.GM_AUDIO_TEST_CATALOG_VERSION=21;
 })(window);
