@@ -1,3 +1,11 @@
+## 2026-10-10｜1～18 批後整合優化第 1 批：GM 視覺中心補齊 17-B 五種場景
+
+- 補回第 17-B 批漏登記的五個**真正共用正式場景工廠**的唯讀 GM 預覽：設定中心（service-settings）、遊戲說明（service-guide）、帳號中心（service-account）、雲端存檔中心（service-cloud）、GM 管理中心（service-gm）；沿用 `createServiceConsoleScene`，不複製或生成獨立假場景。
+- GM 3D 測試中心從 **27 → 32 項**，原 **六大分類不變**；五項列入「副本、災厄與特殊演出」，該分類 **12 → 17 項**。UI 不露出內部 ID／批號，僅顯示友善場景名稱及用途。此處即使選擇「GM 管理中心」，也只是一個幾何預覽，**絕不執行 GM 指令或帳號／雲端操作**。
+- 程式調整：`3d-test/test-center.js` 新增案例和 service-kind factory、唯讀參數；`3d-test/index.html` 更新 cache-bust；`tests/runtime/gm-3d-test-center-browser.js` 更新 32/17 預期及五項場景檢查。
+- 靜態自我檢查：修改 JS 語法解析、GitHub main 回讀、factory/fixture/key 與索引版本可驗證；**沒有取得本次 exact-HEAD CI 或真實 Chromium/WebGL/手機的通過結果**，必須等 Actions 與實機檢查。其餘 5 批整合優化尚未施工，這次不動正式 save、戰鬥、資源清理或帳號／GM 權限。
+- 後續順序：整合優化第 2 批預覽生命週期、第 3 批資源快取、第 4 批場景/快照架構、第 5 批雙模式與舊資料、第 6 批全面回歸。原正式 3D 第 19～40 批數量不變。
+
 ## 2026-10-10｜第 17-B 服務預覽無限重複：桌機實測回歸修正
 
 - **使用者實機證據**：設定、說明、GM、帳號及雲端存檔的「預覽 3D」按鈕各自反覆增加。根因確認：`3d-test/formal-home.js` 實際以 `control.dataset.service3dPreview=kind` 建立 `data-service3d-preview`，但 `ensureServiceControl` 查詢的是不同的 `data-service-3d-preview`；DOM 更新與 MutationObserver 重入時防重複失效。
