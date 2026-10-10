@@ -609,6 +609,17 @@
     const complete=make("frontier-complete",[.83,.61,.25],true);
     const ground=B.MeshBuilder.CreateCylinder("frontier-ground",{diameter:10.6,height:.3,tessellation:48},scene);
     ground.position.y=-.7;ground.material=iron;
+    // B24: bounded dimensional fractures; geometry only, no progress or combat writes.
+    const rift=make("frontier-rift",[.46,.3,.83],true);
+    const fractured=make("frontier-fractured",[.17,.22,.34]);
+    const boundary=B.MeshBuilder.CreateTorus("frontier-dimensional-boundary",{diameter:9.4,thickness:.065,tessellation:56},scene);
+    boundary.rotation.x=Math.PI/2;boundary.position.y=-.46;boundary.material=rift;
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6,r=4.85+(i%3)*.29;
+      const shard=B.MeshBuilder.CreatePolyhedron("frontier-dimensional-fracture-"+i,{type:2,size:.23+(i%4)*.075},scene);
+      shard.position.set(Math.cos(a)*r,.18+(i%4)*.22,Math.sin(a)*r);
+      shard.rotation.set(a*.17,a,.13*i);shard.material=i%3===0?rift:fractured;
+    }
     if(mode==="alternate"){
       // Visual identity is owned by the formal universe culture table, never U-number modulo.
       const universe=Math.max(1,Math.min(200,Math.floor(Number(args.alternateUniverse)||Math.min(200,Math.floor(progress/5)+1))));
@@ -653,6 +664,17 @@
         const ring=B.MeshBuilder.CreateTorus("alternate-universe-ring-"+number,{diameter:focused?1.55:1.15,thickness:.05,tessellation:24},scene);
         ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=focused&&args.alternateLocked===true?sealed:focused&&args.alternateCompleted===true?complete:focused?accent:cleared?complete:sealed;
       }
+      // B24: selected culture breach identity follows the authoritative universe and depth.
+      const breach=B.MeshBuilder.CreateTorus("alternate-dimensional-breach",{diameter:2.25+depth*.25,thickness:.085+depth*.012,tessellation:48},scene);
+      breach.position.set(0,1.15,0);breach.rotation.x=.24+depth*.08;breach.material=depthAccent;
+      const veil=B.MeshBuilder.CreatePolyhedron("alternate-dimensional-heart",{type:2,size:.32+depth*.115},scene);
+      veil.position.set(0,1.18,0);veil.material=accent;
+      for(let i=0;i<Math.min(8,depth+2);i++){
+        const a=2*Math.PI*i/Math.min(8,depth+2);
+        const piece=B.MeshBuilder.CreateBox("alternate-breach-fragment-"+i,{width:.14,height:.34+depth*.08,depth:.2},scene);
+        piece.position.set(Math.cos(a)*(.9+depth*.18),1.2+Math.sin(a*2)*.35,Math.sin(a)*(.9+depth*.18));
+        piece.rotation.y=a;piece.rotation.z=a*.25;piece.material=i%2?rift:depthAccent;
+      }
       // Depth always progresses from stable outer structure to denser, brighter inner pressure.
       for(let i=1;i<=5;i++){
         const cleared=progress>=(universe-1)*5+i,focused=i===depth;
@@ -695,6 +717,14 @@
       const material=reached?complete:open?active:sealed;
       const node=B.MeshBuilder.CreatePolyhedron("frontier-seal-"+i,{type:2,size:reached?.61:open?.53:.43},scene);
       node.position.set(x,.18,z);node.material=visible?material:sealed;
+      // B24: the ten formal seals are monuments rather than abstract progress icons.
+      const monolith=B.MeshBuilder.CreateCylinder("frontier-monolith-"+i,{height:visible?(reached?1.95:open?1.55:1.12):.65,diameterTop:.12,diameterBottom:.55,tessellation:6},scene);
+      monolith.position.set(x,visible?(reached?1.42:open?1.18:.95):.7,z);
+      monolith.rotation.y=theta;monolith.material=visible?material:sealed;
+      if(visible&&(reached||open)){
+        const crown=B.MeshBuilder.CreateTorus("frontier-seal-crown-"+i,{diameter:1.02,thickness:.052,tessellation:24},scene);
+        crown.position.set(x,2.15,z);crown.rotation.x=.18+theta*.06;crown.material=material;
+      }
       const ring=B.MeshBuilder.CreateTorus("frontier-ring-"+i,{diameter:1.25,thickness:.045,tessellation:26},scene);
       ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=visible?material:sealed;
       if(item?.visible!==false&&item){
@@ -707,7 +737,11 @@
     }
     const core=B.MeshBuilder.CreatePolyhedron("frontier-central-core",{type:2,size:1.25},scene);
     core.position.set(0,1,-.2);core.material=active;
-    scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.00016;});
+    const coreCage=B.MeshBuilder.CreateTorus("frontier-giant-core-cage",{diameter:3.65,thickness:.095,tessellation:48},scene);
+    coreCage.position.set(0,1,-.2);coreCage.rotation.x=.55;coreCage.material=rift;
+    const coreHalo=B.MeshBuilder.CreateTorus("frontier-giant-core-halo",{diameter:2.8,thickness:.075,tessellation:48},scene);
+    coreHalo.position.set(0,1,-.2);coreHalo.rotation.y=.5;coreHalo.material=complete;
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);core.rotation.y+=dt*.00016;coreCage.rotation.y+=dt*.000055;coreHalo.rotation.x+=dt*.000035;});
     scene.metadata={civilization3dFrontier:{mode,world,progress,review:args.frontierReview===true,sealStates:seals?seals.map(v=>({...v})):null,visualOnly:true,readOnly:true}};
     return scene;
   }
@@ -806,5 +840,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.23.2",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.24.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
