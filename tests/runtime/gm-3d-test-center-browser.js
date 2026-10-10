@@ -6,8 +6,8 @@ const assert=require("node:assert/strict");
  const errors=[];page.on("pageerror",e=>errors.push(String(e)));
  try{
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
-  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===4,{timeout:60000});
-  assert.equal(await page.locator("#categoryList .center-category").count(),7);
+  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===5,{timeout:60000});
+  assert.equal(await page.locator("#categoryList .center-category").count(),9);
   assert.equal(await page.locator("#caseList .center-case").count(),31);
   assert.equal(await page.locator("#backToGame").isHidden(),true);
   assert.equal(await page.locator(".stage #status").count(),0);
@@ -16,9 +16,14 @@ const assert=require("node:assert/strict");
   for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
    assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
   }
+  // Eight categories and 31 distinct visible scenes, with context-specific controls.
+  for(const [name,count] of [["副本與競技場",5],["文明災厄與異宇宙",3],["文明紀錄與轉生",3],["設定與管理",5]]){
+   await page.locator("#categoryList .center-category").filter({hasText:name}).click();
+   assert.equal(await page.locator("#caseList .center-case").count(),count,name);
+  }
   // Dungeon previews must be exercised, including world 3 without a bounty portal.
-  await page.locator("#categoryList .center-category").filter({hasText:"副本、災厄與特殊演出"}).click();
-  assert.equal(await page.locator("#caseList .center-case").count(),16);
+  await page.locator("#categoryList .center-category").filter({hasText:"副本與競技場"}).click();
+  assert.equal(await page.locator("#caseList .center-case").count(),5);
   await page.getByRole("button",{name:"競技場",exact:true}).click();
   assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
   assert.equal(await page.locator("#dungeonArenaRank").isVisible(),true);
@@ -36,12 +41,16 @@ const assert=require("node:assert/strict");
   await page.locator("#dungeonVoidFloor").selectOption("500");
   await page.getByRole("button",{name:"懸賞戰準備區",exact:true}).click();
   assert.equal(await page.locator("#dungeonBountyTier").isVisible(),true);
-  assert.equal(await page.locator('#fixtureWorld option[value="3"]').isDisabled(),true);
+  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),0);
+  await page.getByRole("button",{name:"競技場",exact:true}).click();
+  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),1,"高維只在不支援的懸賞中移除");
+  await page.getByRole("button",{name:"懸賞戰準備區",exact:true}).click();
+  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),0);
   await page.getByRole("button",{name:"副本作戰中心"}).click();
   assert.equal(await page.locator("#fixtureWorld").isVisible(),true);
   await page.locator("#fixtureWorld").selectOption("3");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
-  for(const title of ["副本作戰中心","懸賞戰準備區","競技場","鏡像戰紀錄","虛空幻境樓層","銀河文明災厄封印","宇宙文明災厄封印","異宇宙前線","文明戰線紀錄","文明劇情閱讀","文明轉生","設定中心","遊戲說明","帳號中心","雲端存檔中心","GM 管理中心"]){
+  for(const title of ["副本作戰中心","懸賞戰準備區","競技場","鏡像戰紀錄","虛空幻境樓層"]){
     await page.getByRole("button",{name:title}).click();
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
