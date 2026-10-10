@@ -40,3 +40,44 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
   .battle-count-title{display:none}.battle-count-panel{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:30;background:#10141a;border-top:1px solid #493f2d;padding:7px 10px 6px}.count-grid{display:grid;grid-template-columns:repeat(var(--battle-count-columns,1),minmax(0,1fr));gap:4px}.count-card{padding:9px 2px;text-align:center;border-radius:9px;white-space:nowrap;font-size:13px}.battle-count-next{margin-top:5px;font-size:11px;line-height:1.2;white-space:nowrap;text-align:center;color:#cdbb90}.prepare-actions{position:fixed;left:0;right:0;bottom:0;z-index:30;height:calc(64px + env(safe-area-inset-bottom));margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:6px;align-items:start;background:#10141a;border-top:1px solid #493f2d;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}.prepare-actions .btn{width:100%;padding:10px 6px;white-space:nowrap;font-size:14px}
   .combat-screen{min-height:calc(100vh - 88px)}.combat-arena{display:grid;grid-template-columns:1fr;grid-template-rows:1fr 44px 1fr;gap:10px;min-height:620px}.combat-vs{font-size:22px}.combatant{min-height:245px;padding:18px}.combatant .bar{height:15px}.combatant.player{grid-row:3}.combatant.enemy{grid-row:1}.combat-vs{grid-row:2}.combatant.player.attacking{animation:playerAttackMobile .32s ease}.combatant.enemy.attacking{animation:enemyAttackMobile .32s ease}.combatant.hit{animation:hitShakeMobile .25s ease}@keyframes playerAttackMobile{0%,100%{transform:translateY(0)}50%{transform:translateY(-32px)}}@keyframes enemyAttackMobile{0%,100%{transform:translateY(0)}50%{transform:translateY(32px)}}@keyframes hitShakeMobile{0%,100%{transform:translateX(0)}30%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
 }
+/* Settings layout batch 1: compact and readable on desktop and phone. */
+.settings-section-title{margin:22px 0 10px}
+.settings-quality-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;padding:8px 0 12px;border-bottom:1px solid #292e36}
+.settings-quality-item{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:42px;font-size:clamp(11px,1.35vw,15px);white-space:nowrap;cursor:pointer}
+.settings-quality-item input{flex:none;margin:0;width:16px;height:16px}
+.settings-help{line-height:1.5;margin-top:7px}
+.settings-keep-row{justify-content:flex-start;padding:10px 0}
+.settings-name-row{align-items:end;gap:12px}
+.settings-name-field{flex:1;min-width:0}
+.settings-name-field label{display:block;margin-bottom:6px}
+.settings-name-field input{width:100%;min-width:0;box-sizing:border-box;padding:10px 11px;border-radius:8px;border:1px solid #424850;background:#0e1217;color:#fff}
+.settings-speed-row{gap:12px}
+.settings-speed-caption{min-width:0;flex:1}
+.settings-speed-options{display:flex;gap:8px;flex-wrap:nowrap}
+.settings-speed-options label.btn{white-space:nowrap;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px}
+.settings-audio-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.settings-audio-control{min-width:0;padding:12px;border:1px solid #343b47;border-radius:10px;background:#121923}
+.settings-audio-enable{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.settings-audio-level{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.settings-audio-level span{white-space:nowrap;font-variant-numeric:tabular-nums}
+.settings-audio-control input[type=range]{display:block;width:100%;min-width:0;margin:0}
+.settings-cache-row{gap:12px}
+.settings-cache-copy{min-width:0;flex:1}
+@media(max-width:600px){
+ .settings-quality-row{gap:2px}
+ .settings-quality-item{gap:3px;font-size:11px;min-height:42px}
+ .settings-quality-item input{width:15px;height:15px}
+ .settings-speed-row{display:block}
+ .settings-speed-caption{margin-bottom:10px}
+ .settings-speed-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .settings-speed-options label.btn{min-width:0;padding:9px 4px;font-size:13px}
+ .settings-name-row{flex-wrap:wrap}
+ .settings-name-row .btn{flex:none}
+ .settings-audio-grid{grid-template-columns:1fr;gap:9px}
+ .settings-audio-control{padding:11px}
+ .settings-cache-row{align-items:center}
+}
+@media(max-width:365px){
+ .settings-quality-row{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:0}
+ .settings-quality-item{font-size:13px}
+}
