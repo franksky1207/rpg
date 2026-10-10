@@ -51,6 +51,12 @@ const calamitySimulation={1:Array.from({length:10},()=>({state:"locked",hp:100,l
 const scenarioPanel=document.createElement("section");scenarioPanel.className="center-appearance-panel";
 scenarioPanel.innerHTML='<details open><summary>展示資料來源 · 自由測試設定</summary><div class="center-appearance-modes"><button id="scenarioFormal" type="button">同步正式資料</button><button id="scenarioFree" type="button">自由測試設定</button></div><p id="scenarioSource" class="muted"></p><div id="scenarioCalamity"><label>選擇文明災厄 <select id="scenarioCalamityIndex"></select></label><label>模擬狀態 <select id="scenarioCalamityState"></select></label><label>剩餘 HP (%) <input id="scenarioCalamityHp" type="number" min="0" max="100" value="100"></label><label>成長等級 <input id="scenarioCalamityLevel" type="number" min="0" max="10" value="0"></label><label>全部封印情境 <select id="scenarioCalamityPreset"><option value="">個別設定</option><option value="locked">全部未解鎖</option><option value="early">前期</option><option value="middle">中期</option><option value="late">接近全破</option><option value="completed">全部完成</option></select></label></div></details>';
 $("centerWorkspace").querySelector(".center-description").after(scenarioPanel);
+const alternateScenarioLabel=document.createElement("label");alternateScenarioLabel.id="scenarioAlternateLabel";alternateScenarioLabel.textContent="異宇宙測試狀態 ";
+const alternateScenarioSelect=document.createElement("select");alternateScenarioSelect.id="scenarioAlternateState";
+for(const [v,t] of [["available","可挑戰"],["active","挑戰中"],["locked","失敗後鎖定"],["completed","已通關"]])alternateScenarioSelect.add(new Option(t,v));
+alternateScenarioLabel.append(alternateScenarioSelect);scenarioPanel.querySelector("details").append(alternateScenarioLabel);
+let alternateScenarioState="available";
+alternateScenarioSelect.onchange=()=>{alternateScenarioState=alternateScenarioSelect.value;start();};
 for(let i=0;i<10;i++)$("scenarioCalamityIndex").add(new Option("第 "+(i+1)+" 隻文明災厄",String(i)));
 function calWorld(){return entry().kind==="frontier-universe"?2:1;}
 function syncCalControls(){
@@ -69,6 +75,7 @@ function syncScenarioPanel(){
  $("scenarioFormal").classList.toggle("active",scenarioMode==="formal");$("scenarioFree").classList.toggle("active",scenarioMode==="free");
  $("scenarioSource").textContent=scenarioMode==="formal"?(formalScenario?"已取得遊戲正式唯讀資料。":"尚未取得正式資料，請在遊戲內 GM 中心同步。"):"本次預覽的模擬設定不會影響正式存檔。";
  for(const id of ["fixtureProgress","fixtureSelected","alternateSegment","alternateUniverse","alternateDepth","alternateCulture","alternateCultureUniverse"])$(id).disabled=scenarioMode==="formal";
+ $("scenarioAlternateLabel").hidden=entry().kind!=="frontier-alternate"||scenarioMode!=="free";
  syncCalControls();
 }
 $("scenarioFormal").onclick=()=>{scenarioMode="formal";syncScenarioPanel();requestScenario();start();};
@@ -320,6 +327,7 @@ async function start(){
  const fixture=Object.freeze(c.kind==="frontier-alternate"?{world:3,universeCount:200,sectorCount:20,depthsPerUniverse:5,selectedUniverse:alternateSelection.universe,selectedDepth:alternateSelection.depth,review:false}:{world:Number(snapshot.world),mapCount:10,selectedMap:Number(snapshot.selectedMap),unlockedRegions:Array.from({length:10},(_,i)=>i<progress),completedRegions:Array.from({length:10},(_,i)=>i<progress-1),enemyCount:5,defeatedBosses:Array.from({length:100},(_,i)=>i<(progress-1)*10),highestUnlockedBossIndex:progress*10-1,clearedBossCount:(progress-1)*10,review:false});
  const scenarioKey=c.kind==="frontier-alternate"?"alternate":c.kind;
  let scenarioArgs={};
+ if(c.kind==="frontier-alternate"&&scenarioMode==="free")scenarioArgs={alternateLocked:alternateScenarioState==="locked",alternateActive:alternateScenarioState==="active",alternateCompleted:alternateScenarioState==="completed"};
  if(scenarioKinds.has(c.kind)&&scenarioMode==="formal"){
    if(!formalScenario){status.textContent="等待正式資料同步；不以模擬資料冒充正式狀態。";requestScenario();return;}
    if(c.kind==="frontier-galaxy"||c.kind==="frontier-universe"){
@@ -387,7 +395,7 @@ window.addEventListener("keydown",event=>{
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,scenarioMode,formalReady:!!formalScenario,calamitySimulation:calamitySimulation[calWorld()].map(v=>({...v})),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:calamitySimulation[calWorld()].map(v=>({...v})),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
  try{
