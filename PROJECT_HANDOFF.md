@@ -1,3 +1,10 @@
+## 2026-10-10｜正式音訊舊播放路徑清退，僅三紀元主題（已施工）
+- 使用者實機發現「主頁→設定→主頁」主題重新從頭播、進入冒險時原本主題中斷，原因是 `audio/audio-scenes.js` 的舊情境表及 `restore()` 無條件重啟同曲，且冒險會切換至 `dark-sector` 等舊曲。**已替換 audio-scenes.js 為只認三首紀元主題的共用 owner**。主頁、設定、背包、冒險及返回同紀元均使用同一音源，不因場景名稱變化重建播放器；只有真的進入不同紀元才換曲。
+- `audio/audio-core.js` 只註冊本地三首 `era-galaxy-theme`、`era-universe-theme`、`era-higher-theme`。**刪除舊 dark-*/galaxy-battle/boss-orchestra/laser-preview 等正式可播放清單**。舊戰鬥及 UI 音效事件暫無已選新素材，現在不播放；新版三首共用戰鬥配樂及六音效仍待下一輪選材，**切勿假裝戰鬥配樂已上線**。程式舊播放接口只保留安全相容外殼，不再有舊音源可供播放。
+- 核心 `playMusic()` 對已在播放的相同 track 不再重開；場景 `restore()` 不再強制清空 activeMusicId。GM 測試中心只剩三首主題，明確呼叫 `localStorage.removeItem("civilization.gm.audio.review.v1")` 清掉既往 GM 73 項聆聽紀錄，不會再顯示那些舊分類。舊音效二進位資產可留存於 repo 歷史但已無播放引用，不得當作正式音源。
+- 不改任何戰鬥公式、目標判定、獎勵、存檔與速度；正式玩家音樂／音效開關和音量維持。`index.html` cache-bust 已更新。
+- **驗證**：三個 JS 語法 PASS；模擬 `home→settings→home→adventure→home→inventory→home` 同紀元只啟動一次播放器、停止零次；三紀元 resolve 均落到正確的本地主題；舊音源 key 在 core 中不存在，舊 GM 分類不可見且舊 review key 刪除。桌機／手機使用者實際聆聽尚待驗收。
+
 ## 2026-10-10｜正式設定加入音樂／音效小分區＋GM 循環接縫核查（已施工）
 - 正式 `ui.js`「設定 → 遊戲設定」新增小分區「音樂與音效」：**開啟音樂／開啟音效兩個獨立勾選開關**，以及**音樂音量／音效音量兩個滑桿**（0–100%，調整即生效）。一般玩家設定仍由 `audio/audio-core.js` 原本的獨立 localStorage key `civilization.audio.preferences.v1` 保存，不寫正式 RPG save schema；音樂滑桿同步 music/ambient，音效滑桿同步 battle/ui/notice，保留 GM 獨立試聽滑桿。
 - core 正式音樂與戰鬥／介面短音效分別依 `musicEnabled`、`effectsEnabled` 控制；關閉音樂立刻停止正式配樂並停止環境聲，重新開啟後場景 owner 恢復當前合法配樂；關閉音效停止現有戰鬥短音效並阻擋新的事件。不繞過原先極簡模式及瀏覽器背景靜音。
