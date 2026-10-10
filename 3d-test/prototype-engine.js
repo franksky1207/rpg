@@ -838,7 +838,7 @@
       const dt=Math.max(0,Math.min(50,Number(args.engine.getDeltaTime())||0));
       archive.rotation.z+=dt*.000035;
       for(let i=0;i<supports.length;i++)supports[i].rotation.y+=dt*.00004*(i%2?1:-1);
-      if(kind==="story")pages[2].rotation.y=Math.sin(scene.getEngine().getDeltaTime()*0+archive.rotation.z*2)*.07;
+      if(kind==="story")pages[2].rotation.y=Math.sin(archive.rotation.z*2)*.07;
       if(ring){ring.rotation.y+=dt*.00009;core.rotation.y-=dt*.00017;gate.rotation.z+=dt*.000045;}
     });
     scene.metadata={civilization3dChronicle:{kind,visualOnly:true,readOnly:true,skippable:true,nonBlocking:true,source:"visual-only"}};
