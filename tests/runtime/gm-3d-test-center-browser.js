@@ -59,6 +59,7 @@ const assert=require("node:assert/strict");
   await page.getByRole("button",{name:"銀河文明災厄封印"}).click();
   assert.equal(await page.locator("#fixtureProgress").isVisible(),false,"文明災厄不得使用十大區控制");
   assert.equal(await page.locator("#scenarioFree").isVisible(),true);
+  await page.locator("#scenarioFree").click();
   assert.equal(await page.locator("#scenarioCalamityIndex").isVisible(),true);
   await page.locator("#scenarioCalamityIndex").selectOption("4");
   await page.locator("#scenarioCalamityState").selectOption("progress");
