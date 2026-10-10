@@ -20,11 +20,11 @@ g.gmSoundSelectTheme=value=>{if(!visible())return false;chosen=Math.max(0,Math.m
 g.gmSoundVolume=value=>{if(!visible())return false;audio()?.setPreviewVolume?.(value);const e=document.getElementById("gmSoundLevel");if(e)e.textContent=Math.round((audio()?.previewSettings?.().gmVolume??1)*100)+"%";return true;};
 g.gmSoundPlayTheme=()=>{if(!visible())return false;const ok=audio()?.preview?.(tracks[chosen][0])===true;detail=ok?"正在載入完整循環版":"目前無法播放，請確認音樂設定及瀏覽器權限";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return ok;};
 g.gmSoundSeam=()=>{if(!visible())return false;const ok=audio()?.previewSeam?.(tracks[chosen][0],8)===true;detail=ok?"接縫試聽：曲尾 8 秒 → 曲頭 8 秒（結束自動停止）":"目前無法播放接縫試聽";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return ok;};
-g.gmSoundStop=()=>{audio()?.stopPreview?.();audio()?.stopSfx?.();detail="已停止播放";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return true;};
+g.gmSoundStop=()=>{audio()?.stopPreview?.();audio()?.stopGmSfx?.();detail="已停止播放";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return true;};
 g.gmSoundCue=key=>{if(!visible()||!cues.some(x=>x[0]===key))return false;const ok=audio()?.playSfx?.(key,{simulation:true})===true;detail=ok?"已送出試聽："+cues.find(x=>x[0]===key)[1]:"尚未播放（可能正在節流或聲音已關閉）";const e=document.getElementById("gmSoundPlaybackDetail");if(e)e.textContent=detail;return ok;};
 g.gmAudioTestHtml=()=>typeof state!=="undefined"&&state?.gm===true?html():"";
 document.addEventListener("civilization-audio-preview-status",e=>{if(!visible()||e.detail?.id!==tracks[chosen][0])return;const d=e.detail;const label=({playing:"播放中",failed:"播放失敗",volume:"音量已更新",blocked:"播放受限制","seam-tail":"已跳至曲尾","seam":"已接回曲頭","seam-done":"接縫試聽完成"})[d.status]||"載入中";const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=label+"｜輸出音量："+Math.round((d.volume??0)*100)+"%"+(d.reason?"｜"+d.reason:"");});
-new MutationObserver(()=>{const now=visible();if(wasOpen&&!now){audio()?.stopPreview?.();audio()?.stopSfx?.();g.CivilizationAudioScenes?.restore?.();}wasOpen=now;}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
+new MutationObserver(()=>{const now=visible();if(wasOpen&&!now){audio()?.stopPreview?.();audio()?.stopGmSfx?.();g.CivilizationAudioScenes?.restore?.();}wasOpen=now;}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=19;
+g.GM_AUDIO_TEST_CATALOG_VERSION=20;
 })(window);
