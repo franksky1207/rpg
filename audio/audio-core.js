@@ -98,6 +98,7 @@ function begin(id,{preview=false,loop=true}={}){
  const item=tracks[id];if(!item){if(preview)previewReport({id,status:"failed",reason:"找不到音檔"});return false;}
  if(prohibited()||(!preview&&musicMuted())){if(preview)previewReport({id,status:"blocked",reason:document.hidden?"分頁在背景":minimal()?"極簡模式禁止播放":"音訊已停用"});return false;}
  if(!unlocked){if(preview)previewReport({id,status:"blocked",reason:"需要先點擊網頁解除瀏覽器播放限制"});return false;}
+ if(preview&&music){music.pause();music.removeAttribute("src");music.load();music=null;}
  const request=preview?++previewRequest:0,previous=preview?session:music;
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
  const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.dataset.trackId=id;
@@ -119,7 +120,7 @@ function previewSeam(id,seconds=8){
  const el=session,windowSeconds=Math.max(3,Math.min(12,Number(seconds)||8));
  let stage=0,started=false,finished=false;
  const active=()=>session===el&&!finished;
- const seekTail=()=>{if(!active()||started||!Number.isFinite(el.duration)||el.duration<windowSeconds*2+2)return;started=true;stage=1;try{el.currentTime=el.duration-windowSeconds;}catch(e){previewReport({id,status:"failed",reason:"無法跳至曲尾"});}};
+ const seekTail=()=>{if(!active()||started||!Number.isFinite(el.duration)||el.duration<windowSeconds*2+2)return;started=true;stage=1;try{el.currentTime=el.duration-windowSeconds;previewReport({id,status:"seam-tail",reason:"開始試聽曲尾 "+windowSeconds+" 秒",volume:el.volume});}catch(e){started=false;previewReport({id,status:"failed",reason:"無法跳至曲尾"});}};
  el.addEventListener("loadedmetadata",seekTail);
  el.addEventListener("durationchange",seekTail);
  el.addEventListener("timeupdate",()=>{
@@ -127,7 +128,7 @@ function previewSeam(id,seconds=8){
   if(stage===1&&el.currentTime>=el.duration-.13){stage=2;el.currentTime=0;previewReport({id,status:"seam",reason:"曲尾已接回曲頭",volume:el.volume});}
   else if(stage===2&&el.currentTime>=windowSeconds){finished=true;stopPreview();previewReport({id,status:"seam-done",reason:"接縫試聽完成",volume:el.volume});}
  });
- el.addEventListener("ended",()=>{if(active()&&stage===1){stage=2;el.currentTime=0;el.play().catch(()=>{});}});
+ el.addEventListener("ended",()=>{if(active()&&stage===1){stage=2;el.currentTime=0;previewReport({id,status:"seam",reason:"已從曲尾銜接回曲頭",volume:el.volume});el.play().catch(()=>{});}});
  if(el.readyState>=1)seekTail();
  return true;
 }
