@@ -1,3 +1,10 @@
+## 2026-10-10｜GM 試聽音量簡化為單一滑桿
+- 使用者確認六種 GM 音量滑桿過於繁瑣，正式 GM 音樂音效測試中心改為僅一個「試聽音量」（預設 100%），選單切換、單音檔／場景混音及停止重播保留此百分比。
+- `audio/audio-core.js` 新增獨立 `gmPreviewVolume`、`setPreviewVolume()`、`previewGain()`，試聽時以一個整體百分比控制音樂、環境層、戰鬥、通知與介面音效。保留不同類型音效的內部相對音量，音樂 0.85、環境聲 0.45 等；不再讓使用者操作多聲道技術參數，且完全不更動正式玩家 `prefs` / localStorage。
+- `audio/audio-scenes.js` GM 混音環境聲同步使用獨立試聽倍率，移動滑桿即時生效。`audio/gm-audio-test.js` 介面六滑桿合一。保留既有試聽模式、播放診斷與聆聽評價。
+- `index.html` 已更新三檔 JS cache-bust；語法測試三檔 PASS。模擬確認 100% 音樂輸出乘分類增益為 85%，正式玩家主音量仍為預設 70%；桌機與手機實際音量、混音仍須真人驗收。
+- Title 主畫面音樂已由使用者評定不合適（噪音感），列為需換素材；本批依使用者「修改」所承接的討論範圍僅改 GM 試聽音量介面，不擅自挑替代音檔。
+
 ## 2026-10-10｜GM 單一音檔／場景混音對應補修
 - 已查核正式 `audio/audio-scenes.js` 的 A03 catalog：銀河探索 Sector+Airy、宇宙選擇 Pulse+Airy、銀河 Boss orchestra+Airy、宇宙 Boss orchestra+Pulse、高維前線 Urgent+Airy 等情境有雙音源；單聲源場景不應假裝混音。
 - 原 `audio/gm-audio-test.js` 的 `mix`「情境混音測試」沒有 `a03Context()` 正式對應，選混音會落回播放 `row.asset`，故等同單一音檔。已明確對應：mix-calm→銀河探索、mix-fight→銀河普通戰、mix-tense→高維前線、mix-boss→銀河 Boss、mix-victory→共用勝利；不更動正式音訊場景映射。
