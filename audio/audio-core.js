@@ -17,6 +17,26 @@ const tracks=Object.freeze({
  "boss-orchestra":{label:"史詩 Boss 候選｜The Final Battle",kind:"music",url:"https://opengameart.org/sites/default/files/the_final_battle.ogg",author:"skrjablin",license:"CC0",source:"https://opengameart.org/content/the-final-battle",sample:true},
  "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"audio/assets/laserpew-balanced2.mp3",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
 });
+/* Warm the currently active era music first; other eras are cached lazily.
+   Browsers may still require the user's first gesture before audible playback. */
+let prioritizedTheme=null;
+function prioritizeEraTheme(era){
+ const id=({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"})[era];
+ if(!id||prioritizedTheme===id)return false;
+ prioritizedTheme=id;
+ const href=tracks[id].url;
+ if(!document.querySelector('link[data-era-theme-preload]')){
+  const link=document.createElement("link");link.rel="preload";link.as="fetch";link.href=href;link.crossOrigin="anonymous";link.setAttribute("data-era-theme-preload","1");document.head.appendChild(link);
+ }else {const link=document.querySelector('link[data-era-theme-preload]');link.href=href;}
+ return true;
+}
+function currentEraForAudio(){
+ try{const p=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(p===3)return "higher";if(p===2)return "universe";}catch(_){}
+ const raw=typeof state!=="undefined"?state:null;
+ if(Number(raw?.worldPhase??raw?.world)===3)return "higher";
+ if(Number(raw?.worldPhase??raw?.world)===2)return "universe";
+ return "galaxy";
+}
 const channels=["master","music","ambient","battle","ui","notice"];
 // Short UI cues need more prominence than long ambient/music beds. True LUFS
 // measurement/limiting requires local audio assets; this is a safe playback gain cap.
@@ -189,8 +209,8 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
 function runtimeStats(){return {music:!!music,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("visibilitychange",update);
 window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
-document.addEventListener("pointerdown",unlock,{passive:true});
-document.addEventListener("keydown",unlock);
+document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
+document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:5,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:6,tracks,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
