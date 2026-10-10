@@ -2,7 +2,7 @@
 (function(g){"use strict";
 const eraTracks=Object.freeze({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"});
 const catalog=Object.freeze(Object.fromEntries(Object.entries(eraTracks).map(([era,id])=>[era,Object.freeze({home:[id,null],explore:[id,null],battle:[id,null],boss:[id,null],front:[id,null]})])));
-let selected=null,previewing=false,combatLocked=false;
+let selected=null,previewing=false,combatLocked=false,exitSequence=0;
 function phase(){
  try{const n=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(n===3)return "higher";if(n===2)return "universe";if(n===1)return "galaxy";}catch(_){}
  const st=typeof state!=="undefined"?state:null;
@@ -39,7 +39,7 @@ function apply(){
 function setContext(era,scene,{preview=false,combat=false,tier=null}={}){
  if(preview)return previewContext(era,scene);
  const item=resolve(era,scene,{combat,tier});
- if(combat)combatLocked=true;
+ if(combat){combatLocked=true;exitSequence++;}
  if(selected?.music===item.music){selected=item;return apply();}
  selected=item;return apply();
 }
@@ -67,20 +67,31 @@ function previewContext(era,scene){
 }
 function stopPreview(){g.CivilizationAudio?.stopPreview?.();previewing=false;}
 function restore(){previewing=false;return apply();}
-function stop(){selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopBattleSfx?.();g.CivilizationAudio?.stopMusic?.();}
+function stop(){exitSequence++;selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopBattleSfx?.();g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
  if(type==="combat-start"){
+  exitSequence++;
   if(combatLocked&&selected?.tier)return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
   return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
  }
  if(type==="combat-end")return true; // An individual fight is not the end of a continuous run.
  if(type==="combat-exit"){
-  // A stop request must not release battle music while its last animation is active.
-  if(g.isCombatPresentationActive?.()===true)return true;
-  g.CivilizationAudio?.stopBattleSfx?.();combatLocked=false;return setContext(era,type);
+  const generation=++exitSequence;
+  const release=()=>{if(generation!==exitSequence)return false;g.CivilizationAudio?.stopBattleSfx?.();combatLocked=false;return setContext(era,type);};
+  if(g.isCombatPresentationActive?.()===true){
+   // Keep the score during the last animated fight, even if the run requests exit early.
+   let attempts=0;
+   const afterAnimation=()=>{
+    if(generation!==exitSequence)return;
+    if(g.isCombatPresentationActive?.()===true){if(++attempts<300)setTimeout(afterAnimation,50);return;}
+    release();
+   };
+   setTimeout(afterAnimation,50);return true;
+  }
+  return release();
  }
  if(type==="explore"||type==="main"||type==="reincarnation"){combatLocked=false;return setContext(era,type);}
  if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
