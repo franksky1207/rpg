@@ -29,6 +29,8 @@ function closeSelector(){document.getElementById("civilizationModeSelector")?.re
 function initialSelection(id){
  const existing=read(id);
  if(existing==="text"||existing==="3d"&&FULL_3D_AVAILABLE){active=existing;closeSelector();return;}
+ // Keep an unreleased/older 3D preference for future migration, but never boot it.
+ if(existing==="3d"&&!FULL_3D_AVAILABLE){active="text";closeSelector();return;}
  active="text";
  if(shownFor===id&&document.getElementById("civilizationModeSelector"))return;
  shownFor=id;
