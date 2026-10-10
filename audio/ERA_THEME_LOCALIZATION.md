@@ -1,3 +1,11 @@
+## 2026-10-10｜三大紀元指定主題音樂：本地化與循環候選已完成，正式介面尚未切換
+- 使用者選定「03 銀河 The Fall of Arcana（Matthew Pablo, CC BY 3.0）」「09 宇宙 Epic Orchestral Fantasy Theme（Markus Lindner, CC BY 4.0）」「06 高維 Exploration Theme（Cleyton Kauffman, CC0）」。
+- **GitHub Actions 已成功**下載來源、用 ffmpeg 製作 OGG 循環候選、解碼與長度檢查、保留原始音檔與 SHA256，路徑 `audio/assets/era-themes/`，機讀資料 `audio/assets/era-themes/manifest.json`。原始長度銀河 152.059s／宇宙 107.050s／高維 134.400s，循環候選長度銀河 148.059s／宇宙 103.050s／高維 130.400s。工作流程：`.github/workflows/era-theme-localize.yml`（初次長度判斷失敗，修正後第二次成功）。
+- `audio/audio-core.js` 註冊三首本地 OGG 試聽音軌；GM `audio/gm-audio-test.js` 新增分類「三大紀元・已選主題試聽」，選「單一音檔」就可播放三首本地循環候選。已更新 `index.html` cache-bust，JS 語法／三首 manifest SHA／GM 對應靜態檢查 PASS。
+- **重要限制**：這一批只本地化並提供試聽入口，沒有改正式玩家所有介面音樂場景映射；仍然是舊版音訊場景邏輯。跨紀元／進戰鬥時的播放器淡入淡出、音樂不重頭播放等**尚未施工**。作者只明說高維原音可無縫循環；本批另外兩首製作頭尾 2 秒 crossfade 的 OGG 候選，**人耳接縫與樂句仍待驗收**。不得把技術解碼通過誤稱自然無縫。
+- **署名**：兩首 CC BY 必須保留作者、曲目、連結、授權與修改（製作循環混音候選）標示，CC0 高維保留來源。細節見 `audio/ERA_THEME_LOCALIZATION.md`。
+- 目前正式戰鬥配樂及其他音效仍按舊版運作，待後續照 `docs/AUDIO_SIMPLIFIED_FINAL_SPEC_2026-10-10.md` 實際整理；本批未碰戰鬥公式、掉落、紀元進度與玩家存檔。
+
 # 三大紀元主題音樂本地化驗收簿（2026-10-10）
 
 > 使用者已明確指定 03／09／06 三首配樂。**本地化不等於音樂切換規則已上線**；正式音訊程式及原有 73 個舊情境目前仍有各種舊配樂，須另批依精簡版規格改造。
