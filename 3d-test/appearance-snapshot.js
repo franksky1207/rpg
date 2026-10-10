@@ -5,6 +5,24 @@ const SLOTS=["weapon","helmet","armor","shoes","accessory"];
 const finite=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
 const bound=(v,low,high)=>Math.max(low,Math.min(high,Math.floor(finite(v,low))));
 const clone=o=>JSON.parse(JSON.stringify(o));
+/* Model mapping contract: names/visualKeys identify appearance, never numeric combat ownership.
+   Geometry remains the explicit safe fallback until a licensed GLB manifest exists. */
+function modelDescriptor(type,item,defaultWorld=1,enhancement=0){
+ const slot=SLOTS.includes(type)?type:"accessory";
+ const present=item?.present===true;
+ const world=bound(item?.world??defaultWorld,1,3);
+ const quality=bound(item?.quality,0,5);
+ const level=bound(item?.level,0,9999);
+ const name=present?String(item?.name||"").slice(0,120):"";
+ const visualKey=present?String(item?.visualKey||name).slice(0,120):"";
+ return Object.freeze({type:slot,present,world,name,visualKey,quality,level,
+  enhancement:bound(enhancement,0,40),assetKind:"geometry-fallback",assetId:null,
+  fallback:"procedural-geometry",source:"read-only-appearance"});
+}
+function modelDescriptors(appearance){
+ const a=appearance||{};
+ return SLOTS.map(type=>modelDescriptor(type,a.equipment?.[type],a.world,a.enhancements?.[type]));
+}
 function capture(){
  const s=typeof state!=="undefined"?state:global.state;
  if(!s||typeof s!=="object")return null;
@@ -41,5 +59,5 @@ function scene(kind,appearance){
  if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:SLOTS.map(type=>({level:a.enhancements[type],invalid:a.enhancements[type]<a.enhancementMin})),appearance:a};
  return {world:a.world,appearance:a};
 }
-global.Civilization3DAppearance=Object.freeze({version:2,slotIds:SLOTS,capture,scene});
+global.Civilization3DAppearance=Object.freeze({version:3,slotIds:SLOTS,capture,scene,modelDescriptor,modelDescriptors});
 })(window);
