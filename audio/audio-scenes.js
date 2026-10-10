@@ -67,7 +67,7 @@ function previewContext(era,scene){
 }
 function stopPreview(){g.CivilizationAudio?.stopPreview?.();previewing=false;}
 function restore(){previewing=false;return apply();}
-function stop(){selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopMusic?.();}
+function stop(){selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopBattleSfx?.();g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
@@ -77,7 +77,7 @@ function notify(type,detail={}){
   return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
  }
  if(type==="combat-end")return true; // An individual fight is not the end of a continuous run.
- if(type==="combat-exit"){combatLocked=false;return setContext(era,type);}
+ if(type==="combat-exit"){g.CivilizationAudio?.stopBattleSfx?.();combatLocked=false;return setContext(era,type);}
  if(type==="explore"||type==="main"||type==="reincarnation"){combatLocked=false;return setContext(era,type);}
  if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
  return setContext(era,type||"home",{combat:detail.active===true});
