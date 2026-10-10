@@ -1,3 +1,10 @@
+## 2026-10-10｜第 19～26 批後整合優化第 3／6 批：外觀映射與幾何降級契約
+- 本次進入 main 時已存在同一批部分前置施工：`appearance-snapshot.js` 的五槽 `modelDescriptor/modelDescriptors`、`prototype-engine.js` 的幾何備援 metadata、三紀元 210 套外觀名稱選取；因此保留既有邏輯，只補跨場景的一致性，不重新製造第二套映射。
+- 共用 `Civilization3DAppearance.scene()` 對 character／equipment／forge 同步提供 `modelDescriptors` 和 `appearanceSource`。正式 capture 為 `formal`，GM 自由展示維持 `fixture`；模型描述含槽位／實穿狀態／紀元／名稱／visualKey／品質／等級／強化與明確 `geometry-fallback`，尚無正式 GLB assetId。
+- 角色場景及五槽裝備場景優先使用上游共用 descriptors；沒有時才走原有 appearance adapter，並在視覺 metadata 標記來源，保持不寫回正式存檔。共用外觀資料的五槽順序維持 weapon／helmet／armor／shoes／accessory，實穿混搭紀元與空槽不強制改裝。
+- 正式與 GM fallback JS 和入口 HTML 版本同步至 `20261010-opt3-sharedmap`；更新 `tests/runtime/3d-b18-coverage-guard.js` 的相關欄位守門與快取斷言。期間遇到 main 併發修改而產生 409 衝突，已重新讀取最新 main 再補缺，不強制覆蓋他人內容。
+- **實際 GLB manifest、角色全身與五槽部件、LOD/貼圖/授權及模型缺件顯示效果**留在正式第 27～34 批；不能將 geometry fallback 或 1,050 名稱位置說成 1,050 個完成模型。須實機驗收正式與 GM 切換、三紀元命名、五槽來源、空裝、手機及 fallback。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 3／6 批：三紀元裝備模型映射契約
 - 原正式 40 批編號不變；此批只施工第 5、14、15 項的資料映射前置，不提前聲稱第 27～34 批 GLB 美術已完成。
 - `3d-test/appearance-snapshot.js` 新增純唯讀 `modelDescriptor(type,item,defaultWorld,enhancement)` 與 `modelDescriptors(appearance)`：保留五槽 `type/present/world/name/visualKey/quality/level/enhancement`，空槽明確處理；目前所有物件標明 `assetKind:geometry-fallback`、`assetId:null`、`fallback:procedural-geometry`，直到正式合法 GLB manifest 有權威映射後才可升級，不能從名稱推測不存在的模型 ID。
