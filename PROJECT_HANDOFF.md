@@ -1,3 +1,9 @@
+## 2026-10-10｜修復戰鬥結束不恢復紀元主題
+- 使用者實機回報：正式戰鬥結束仍停留於戰鬥配樂，未回到當前紀元主題。
+- 根因：`audio/audio-scenes.js` 為防同畫面連戰重播，曾對 `selected.tier`、`lastCombatView` 一律保留戰鬥曲，即使已到結果頁也阻止恢復；另外多數主線／競技場／懸賞／鏡像的正式最終結算沒有送出 `combat-exit`。
+- 修改：移除非戰鬥畫面錯誤的保留條件；`ui.js` `showBattleResult()`、`dungeonarena.js`、`dungeonbounty.js` 進入結果狀態、`mirrordungeonrun.js` 鏡像完成時通知 `CivilizationAudioScenes.notify('combat-exit')`，並更新五支腳本在 `index.html` 的 cache-bust。連續戰鬥中途單場結算仍不主動發出 `combat-exit`。
+- 驗證：五支 JS 語法 PASS；狀態模擬中等戰鬥曲 `battle-medium-preview` → `combat-exit` → `era-galaxy-theme` PASS。未實機覆蓋所有模式，需用戶驗收主線 Boss、連戰、懸賞／競技場、鏡像、災厄等。
+
 ## 2026-10-10｜正式六首配樂整合施工（3 紀元＋3 共用戰鬥）
 - 使用者實聽認可 03 普通 `JRPG Battle Theme`、05 中等 `Boss Battle`、09 高等 `I'm Boss Here!`，要求正式整合。
 - `audio/audio-core.js` 新增 `fadeMusic()`：跨音樂曲目短時間交叉淡入淡出、同曲 `resumeMusic()` 續播（沿用既有播放器），不因 GM 測試中心或一般頁面切換重建。戰鬥音源仍為 GitHub 本地 `audio/assets/battle-themes/*-battle-loop.ogg`；GM 試聽六首維持。
