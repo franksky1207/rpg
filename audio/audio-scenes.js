@@ -12,18 +12,19 @@ function phase(){
 const tiers=Object.freeze({normal:"battle-normal-preview",medium:"battle-medium-preview",high:"battle-high-preview"});
 function tierForScene(scene,detail={}){
  const key=String(scene||"").toLowerCase();
+ const actualEra=detail.era||phase();
  if(/mirror|void/.test(key))return "medium";
  if(/alternate.*battle|arena(?:fixed|alternate)|higher.*(?:combat|stage|battle)|frontstage/.test(key))return "high";
  if(/calamity/.test(key))return "high";
- if(/arena/.test(key))return phase()==="higher"?"high":"medium";
+ if(/arena/.test(key))return actualEra==="higher"?"high":"medium";
  if(/bounty/.test(key))return "normal";
  if(/boss/.test(key))return "medium";
- if(/elite|normal|battle|combat/.test(key))return phase()==="universe"?"medium":phase()==="higher"?"high":"normal";
+ if(/elite|normal|battle|combat/.test(key))return actualEra==="universe"?"medium":actualEra==="higher"?"high":"normal";
  return detail?.tier||null;
 }
 function resolve(era,scene,detail={}){
  const actual=eraTracks[era]?era:phase();
- const tier=detail?.combat===true?(detail.tier||tierForScene(scene,detail)):null;
+ const tier=detail?.combat===true?(detail.tier||tierForScene(scene,{...detail,era:actual})):null;
  return {era:actual,scene:scene||"home",music:tier&&tiers[tier]?tiers[tier]:eraTracks[actual],ambient:null,tier};
 }
 function auditionOpen(){return !!document.querySelector('[data-gm-section="gm-audio-test"][open]');}
@@ -79,7 +80,7 @@ function notify(type,detail={}){
   exitSequence++;
   if(combatLocked&&selected?.tier)return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
-  return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
+  return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,{...detail,era})});
  }
  if(type==="combat-end")return true; // An individual fight is not the end of a continuous run.
  if(type==="combat-exit"){
