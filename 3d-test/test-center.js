@@ -45,7 +45,7 @@ const quality=$("quality"),toggle=$("toggle"),caseList=$("caseList"),categoryLis
 let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
 
-const scenarioKinds=new Set(["galaxy","universe","higher","frontier-galaxy","frontier-universe","frontier-alternate","dungeon-hub","dungeon-bounty","dungeon-arena","advanced-mirror","advanced-void"]);
+const scenarioKinds=new Set(["galaxy","universe","higher","frontier-galaxy","frontier-universe","frontier-alternate","dungeon-hub","dungeon-bounty","dungeon-arena","advanced-mirror","advanced-void","battle-battle","battle-shield","battle-encounter","battle-settlement"]);
 let scenarioMode="free",formalScenario=null;
 const calamitySimulation={1:{selected:0,state:"available"},2:{selected:0,state:"available"}};
 const scenarioPanel=document.createElement("section");scenarioPanel.className="center-appearance-panel";
@@ -343,7 +343,10 @@ async function start(){
  if(c.kind==="frontier-alternate"&&scenarioMode==="free")scenarioArgs={alternateLocked:alternateScenarioState==="locked",alternateActive:alternateScenarioState==="active",alternateCompleted:alternateScenarioState==="completed"};
  if(scenarioKinds.has(c.kind)&&scenarioMode==="formal"){
    if(!formalScenario){status.textContent="等待正式資料同步；不以模擬資料冒充正式狀態。";requestScenario();return;}
-   if(dungeonSceneKey){
+   if(c.kind.startsWith("battle-")){
+     if(formalScenario.battle?.battleAvailable!==true){status.textContent="目前沒有進行中的正式戰鬥快照；請切回自由測試查看視覺效果。";return;}
+     scenarioArgs={...formalScenario.battle};
+   }else if(dungeonSceneKey){
      if(c.kind==="dungeon-bounty"&&Number(formalScenario.dungeon?.bounty?.world)===3){status.textContent="高維紀元沒有懸賞戰。";return;}
      if(!formalScenario.dungeon?.[dungeonSceneKey]){status.textContent="此副本沒有可用的正式資料快照。";return;}
      scenarioArgs={...formalScenario.dungeon[dungeonSceneKey]};
