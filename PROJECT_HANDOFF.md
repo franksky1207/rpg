@@ -1,3 +1,10 @@
+## 2026-10-10｜重大打擊／勝利音效：正式戰鬥視覺事件接入
+- 依使用者指定新增兩類音效時機，不變更任何正式傷害、Boss 能力、掉落與存檔：`combatfx.js` 在普通及鏡像的共用 structured playback 裡，以**已產生的正式 attack.actualDamage 與目前呈現 HP**識別玩家／敵人致命最後一擊；另敵方 `e.kind === "boss"` 的暴擊作強 Boss 重擊演出。偵測僅為唯讀聲音分流，與計算／結算無關。鏡像敵方標識 mirror 亦計入。
+- `CivilizationAudio.combatEvent(evt,{major:true})` 為重大打擊，覆蓋普通／暴擊的同一聲音而不重疊；`attack.crit` 本身仍為暴擊。重大打擊池只抽先前核定的爆炸類候選 04／05／29，來源與實際聽感需再驗證。
+- 普通與鏡像 **structured presentation 已確認 win===true 且播演出完畢** 後觸發 `victory`，不在單純 render／結果頁重繪時觸發。播放最短間距 1.4 秒，長期連戰／極簡／背景頁／Fast Catch-up 遵守核心現有靜音限制。**注意：沒有使用 structured presentation 的 headless 或其他獨立結算 owner 尚未逐一完成勝利映射，不得宣稱全部模式 100% 覆蓋。**
+- JS `audio/audio-core.js`、`combatfx.js` 更新並刷新 `index.html` 的 cache-bust；GitHub latest main 回讀、JS syntax、兩處 bridge 與兩處勝利觸發靜態核對通過。未做授權真機桌機／手機／完整跨模式連戰驗收。
+- 未來改良：正式模式逐個 owner 交叉驗證遊戲勝利事件；遇到沒有動畫或背景回補的正確不播策略；真人比對 Boss 重擊音量、勝利短音效及連勝時音樂不中斷。
+
 ## 2026-10-10｜六種短音效第 3 批：正式呈現橋接與 GM 試聽（部分正式事件待補）
 - 第一批本地化 manifest 位於 `audio/assets/common-sfx/manifest.json`，共 199 個轉換後 OGG：ui-click 100、normal-attack 10、critical 37、dodge 1、heavy-hit 50、victory 1。重大打擊實際播放池只選爆炸類 04／05／29，不將提示音／環境音視作打擊。
 - 第二批既有 `playSfx`／`pickSfx` 音效池。本批 `audio/audio-core.js` 讓 `combatEvent(evt)` 由正式 `combatfx.js` 唯讀呈現事件接入：attack.crit 擇一選暴擊或普通攻擊，dodge 選閃避；不修改 `combatcore.js` 的傷害／判定／存檔。重大打擊只承認獨立 `specialHeavyImpact`／`majorImpact` 呈現事件，不推定 Boss／傷害門檻；victory 類型已有聲音池但所有模式統一的正式勝利結果事件**尚未全面接線**。UI 點擊由單一 document click 代理播放，禁用與 GM 試聽控制不觸發。
