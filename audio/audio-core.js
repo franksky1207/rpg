@@ -68,6 +68,8 @@ function begin(id,{preview=false,loop=true}={}){
  el.play().catch(()=>{if(stamp===token){g.console.warn("Audio unavailable or autoplay restricted",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});return true;
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
+function playMusic(id){return begin(id,{preview:false,loop:true});}
+function stopMusic(){if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){if(session){session.pause();session.src="";session=null;}}
 
 const combatCatalog=Object.freeze({
@@ -110,5 +112,5 @@ document.addEventListener("visibilitychange",update);
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:2,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
+g.CivilizationAudio=Object.freeze({version:2,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
 })(window);
