@@ -23,6 +23,15 @@ for(const type of ["settings","guide","account","cloud","gm"]){
  assert.ok(engine.includes('kind==="'+type+'"')||engine.includes(type+":"),"Missing service visual "+type);
 }
 assert.ok(bridge.includes("gmRuntimeAuthorizationAuthorized"),"GM preview needs runtime authorization");
+const loader=read("scriptgrouploader.js");
+assert.ok(loader.includes("const groupProgress=new Map()"),"GM group must keep live progress for joiners");
+assert.ok(loader.includes("entry.listeners.add(onProgress)"),"Joined callers must receive current GM load progress");
+for(const file of ["3d-test/prototype-engine.js","3d-test/runtime.js","3d-test/appearance-snapshot.js"]){
+ assert.ok(bridge.includes('version("'+file+'"'),"Preview asset must use deployed manifest version: "+file);
+}
+assert.ok(bridge.includes("resourceVersionPromise=null;throw error"),"Failed preview load must allow resource version refresh");
+assert.ok(bridge.includes("allSources.slice(0,2)"),"GM pre-warm must not eagerly load all 3D modules");
+
 assert.ok(bridge.includes("function uniqueControls("),"All formal preview groups must share an idempotent guard");
 assert.ok(bridge.includes("function syncAllPreviewButtons("),"All preview buttons must share state synchronization");
 assert.ok(bridge.includes("activeHost&&!activeHost.isConnected"),"Detached scene hosts must be disposed on route rerender");
