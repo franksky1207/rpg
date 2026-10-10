@@ -680,19 +680,24 @@
       scene.metadata={civilization3dFrontier:{mode,world,progress,segment,universe,universeName:names[universe-1]||"",culture,cultureIndex,cultureTier,depth,firstUniverse:first,lastUniverse:first+9,review:args.frontierReview===true,visualOnly:true}};
       return scene;
     }
+    const seals=Array.isArray(args.calamitySeals)?args.calamitySeals.slice(0,10):null;
     const count=mode==="calamity"?10:12;
     for(let i=0;i<count;i++){
       const theta=2*Math.PI*i/count,x=Math.cos(theta)*3.75,z=Math.sin(theta)*3.75;
-      const reached=mode==="calamity"?i<progress:i<Math.ceil(progress/1000*count);
-      const node=B.MeshBuilder.CreatePolyhedron("frontier-seal-"+i,{type:2,size:reached?.61:.43},scene);
-      node.position.set(x,.18,z);node.material=reached?complete:sealed;
+      const item=mode==="calamity"?seals?.[i]:null;
+      const reached=item?item.completed===true:mode==="calamity"?i<progress:i<Math.ceil(progress/1000*count);
+      const visible=item?item.visible!==false:true;
+      const open=item?item.unlocked===true:false;
+      const material=reached?complete:open?active:sealed;
+      const node=B.MeshBuilder.CreatePolyhedron("frontier-seal-"+i,{type:2,size:reached?.61:open?.53:.43},scene);
+      node.position.set(x,.18,z);node.material=visible?material:sealed;
       const ring=B.MeshBuilder.CreateTorus("frontier-ring-"+i,{diameter:1.25,thickness:.045,tessellation:26},scene);
-      ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=reached?active:sealed;
+      ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=visible?material:sealed;
     }
     const core=B.MeshBuilder.CreatePolyhedron("frontier-central-core",{type:2,size:1.25},scene);
     core.position.set(0,1,-.2);core.material=active;
     scene.onBeforeRenderObservable.add(()=>{core.rotation.y+=Math.min(args.engine.getDeltaTime(),50)*.00016;});
-    scene.metadata={civilization3dFrontier:{mode,world,progress,review:args.frontierReview===true}};
+    scene.metadata={civilization3dFrontier:{mode,world,progress,review:args.frontierReview===true,sealStates:seals?seals.map(v=>({...v})):null,visualOnly:true,readOnly:true}};
     return scene;
   }
 
@@ -790,5 +795,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.23.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.23.2",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
