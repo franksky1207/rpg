@@ -61,14 +61,9 @@
  // ui.js performs its first render before this module is registered. Refresh only
  // the home screen after all synchronous scripts have registered their entry owners.
  // Never touch the save, unlock state, current route or active combat.
- function reconcileInitialHome(){
-  if(typeof view==="undefined"||view!=="home"||typeof render!=="function")return;
-  const main=document.getElementById("main");
-  if(!main||main.querySelector("[data-alternate-universe-home-entry]"))return;
-  const entry=homeEntryHtml();
-  if(!entry)return;
-  render();
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",reconcileInitialHome,{once:true});
- else queueMicrotask(reconcileInitialHome);
+ // The authoritative ui.js home-entry reconciler now owns all late route entries.
+ // Do not render the home independently when this module finishes registering.
+ const requestHomeReconcile=()=>window.civilizationRequestHomeEntryReconcile?.();
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",requestHomeReconcile,{once:true});
+ else queueMicrotask(requestHomeReconcile);
 })();
