@@ -13,7 +13,7 @@
 | 分類 | GM 預覽 | 場景 kind | 正式主要資料來源 | 可見紀元／範圍 | 關鍵狀態及驗收 | 補修批 | 狀態 |
 |---|---|---|---|---|---|---|---|
 | 主畫面與紀元場景 | 三紀元主畫面 | `epoch` | `worldphaseui.js;ui.js` | 1/2/3 | 紀元入口/轉生條件/顯示紀元 | 4 | 待核對／補修 |
-| 冒險與宇宙地圖 | 銀河紀元星圖 | `galaxy` | `worldmapui.js;ui.js` | 1，後續回顧 | 區域/目標/解鎖/回顧 | 2 | 待核對／補修 |
+| 冒險與宇宙地圖 | 銀河紀元星圖 | `galaxy` | `worldmapui.js;ui.js` | 1，後續回顧 | 區域/目標/解鎖/回顧 | 2 | 正式與 GM 狀態回讀仍需逐路由驗收 |
 | 冒險與宇宙地圖 | 宇宙紀元星圖 | `universe` | `worldmapui.js;secondworldmainline.js` | 2，3 可回顧 | 100 Boss、選定區域/已擊敗/可挑戰/回顧 | 2 | 待核對／補修 |
 | 冒險與宇宙地圖 | 高維紀元戰線 | `higher` | `thirdworldui.js` | 3 | 十存在、永久 HP、挑戰中/完成 | 2 | 待核對／補修 |
 | 玩家、裝備與養成 | 角色全身展示 | `character` | `ui.js;playersemanticsui.js;3d-test/appearance-snapshot.js` | 依已進入紀元 | 正式角色、稱號/突破、五槽穿戴 | 4 | 待核對／補修 |
