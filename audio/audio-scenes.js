@@ -32,7 +32,7 @@ function prohibited(){return !!g.CivilizationAudio?.isSilent?.();}
 function ambientVolume(preview=false){if(preview)return g.CivilizationAudio?.previewGain?.("ambient")??0;const p=g.CivilizationAudio?.settings?.();return Math.min(1,Math.max(0,(Number(p?.master)||0)*(Number(p?.ambient??.6)||0)*.75*.55));}
 function stopAmbient(){if(ambient){ambient.pause();ambient.removeAttribute("src");ambient.load();ambient=null;}ambientId=null;}
 function syncAmbient(id){
- if(!id||prohibited()){stopAmbient();return;}
+ if(!id||prohibited()||g.CivilizationAudio?.settings?.().musicEnabled===false){stopAmbient();return;}
  if(ambientId===id&&ambient&&!ambient.paused)return;
  stopAmbient();
  const track=g.CivilizationAudio?.tracks?.[id];if(!track)return;
@@ -145,7 +145,7 @@ document.addEventListener("civilization-audio-unlocked",()=>{if(typeof view!=="u
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopPreview();stopAmbient();activeMusicId=null;}else if(!document.querySelector('[data-gm-section="gm-audio-test"][open]'))restore();});
 document.addEventListener("civilization-audio-preview-volume-changed",()=>{if(previewAmbient){previewAmbient.volume=ambientVolume(true);document.dispatchEvent(new CustomEvent("civilization-audio-ambient-preview-status",{detail:{id:g.CivilizationAudio?.tracks&&Object.entries(g.CivilizationAudio.tracks).find(([id,t])=>t.url===previewAmbient.src)?.[0]||"環境聲",status:"volume",volume:previewAmbient.volume}}));}});
-document.addEventListener("civilization-audio-settings-changed",()=>{if(prohibited()){stopPreview();stopAmbient();activeMusicId=null;return;}if(ambient)ambient.volume=ambientVolume();if(previewAmbient)previewAmbient.volume=ambientVolume(true);});
+document.addEventListener("civilization-audio-settings-changed",e=>{if(prohibited()){stopPreview();stopAmbient();activeMusicId=null;return;}const cfg=g.CivilizationAudio?.settings?.();if(cfg?.musicEnabled===false){stopAmbient();activeMusicId=null;}else if(e.detail?.key==="musicEnabled"&&selected&&!document.querySelector('[data-gm-section="gm-audio-test"][open]')){activeMusicId=null;apply();}if(ambient)ambient.volume=ambientVolume();if(previewAmbient)previewAmbient.volume=ambientVolume(true);});
 new MutationObserver(()=>{const silent=prohibited();if(silent){stopPreview();stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
 g.CivilizationAudioScenes=Object.freeze({version:4,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
