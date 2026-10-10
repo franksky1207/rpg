@@ -12,9 +12,10 @@ const gmIndex=read("3d-test/index.html");
 function assertSingleEntryVersion(html,scriptPath){
  const tag=html.split("\n").filter(line=>line.includes('src="'+scriptPath+'?'));
  assert.equal(tag.length,1,"Expected exactly one versioned script: "+scriptPath);
- const match=tag[0].match(new RegExp('src="'+scriptPath.replace(/[.*+?^${}()|[\]\\]/g,"\\const policy=read("3d-test/mode-foundation.js");")+'\\?v=([^"&]+)"'));
- assert.ok(match,"Missing cache-bust token for "+scriptPath);
- return match[1];
+ const prefix='src="'+scriptPath+'?v=';
+ const version=tag[0].split(prefix)[1]?.split('"')[0];
+ assert.ok(version&&/^[a-zA-Z0-9_-]+$/.test(version),"Missing or invalid cache-bust token for "+scriptPath);
+ return version;
 }
 const formalEntryVersion=assertSingleEntryVersion(index,"3d-test/formal-home.js");
 const gmEntryVersion=assertSingleEntryVersion(gmIndex,"./test-center.js");
