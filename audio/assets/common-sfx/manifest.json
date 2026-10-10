@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "status": "localized-integrated",
-  "note": "Fixed UI click 085 and warm-limited reusable combat SFX; 99 legacy UI assets pending deletion.",
+  "note": "Official UI click pool contains only sfx-085.ogg (Kenney select_007); 99 rejected variants and the original ZIP were removed from the repository. Combat SFX playback uses a small warmed set; other combat assets remain retained for possible future selection.",
   "categories": {
     "ui-click": {
       "choice": "01-B",
@@ -22,8 +22,14 @@
           "sha256": "e53af69f074c2cf4b95bfc86719d42530da440114c416ef7500d378329e31340"
         }
       ],
-      "selection": "unreviewed; not wired into formal playback",
-      "note": "Fixed UI click sound sfx-085.ogg; no random choices."
+      "selection": {
+        "mode": "fixed",
+        "files": [
+          "sfx-085.ogg"
+        ],
+        "user_approved": true
+      },
+      "note": "Exactly one UI click sound sfx-085.ogg. No random UI click selection; 99 other variants and source ZIP were removed."
     },
     "normal-attack": {
       "choice": "02-D",
@@ -788,5 +794,6 @@
       ],
       "selection": "unreviewed; not wired into formal playback"
     }
-  }
+  },
+  "version": 2
 }
