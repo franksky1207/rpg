@@ -164,6 +164,13 @@ function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMu
 const sfxCategories=Object.freeze({"ui-click":{count:1,indices:[85],channel:"ui",interval:65},"normal-attack":{count:10,indices:[1,2,3],channel:"battle",interval:130},"critical":{count:37,indices:[1,2,3],channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:0}});
 const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
 const settledVictoryKeys=new Set();
+const settlementObjectIds=new WeakMap();let nextSettlementObjectId=0;
+function settlementKey(prefix,object){
+ if(!object||(typeof object!=="object"&&typeof object!=="function"))return null;
+ if(!settlementObjectIds.has(object))settlementObjectIds.set(object,++nextSettlementObjectId);
+ return String(prefix)+":"+String(settlementObjectIds.get(object));
+}
+
 const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0};
 const sfxCleanup=new WeakMap();
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
@@ -317,5 +324,5 @@ document.addEventListener("click",event=>{
 
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementKey,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
