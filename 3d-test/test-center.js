@@ -209,12 +209,15 @@ function renderInfo(){
  $("fixturePanel").hidden=!["epoch","galaxy","universe","higher","dungeon-hub","dungeon-bounty","dungeon-arena","advanced-higher-arena","advanced-mirror","advanced-void","frontier-galaxy","frontier-universe","frontier-alternate"].includes(c.kind);
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||!(c.kind==="epoch"||c.kind==="dungeon-hub"||c.kind==="dungeon-bounty"||c.kind==="dungeon-arena");
+ if(c.kind==="dungeon-bounty"&&Number(snapshot.world)===3){snapshot.world=2;$("fixtureWorld").value="2";}
+ for(const o of $("fixtureWorld").options)o.disabled=c.kind==="dungeon-bounty"&&o.value==="3";
  $("alternateSegmentLabel").hidden=$("alternateUniverseLabel").hidden=$("alternateDepthLabel").hidden=c.kind!=="frontier-alternate";
  $("alternateQuickControls").hidden=c.kind!=="frontier-alternate";
  $("alternateCultureLabel").hidden=$("alternateCultureUniverseLabel").hidden=c.kind!=="frontier-alternate";
  if(c.kind==="frontier-alternate")fillAlternateSelectors();
  $("fixtureProgress").closest("label").hidden=c.kind==="frontier-alternate"||c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("frontier-");
  const arena=c.kind==="dungeon-arena",high=arena&&Number(snapshot.world)===3;
+ if(arena)$("caseDetail").textContent=high?"高維競技場：定相或異相，每輪三戰。":"銀河／宇宙競技場：階級、普通／困難／極限位置。";
  for(const [id,show] of [["dungeonArenaRankLabel",arena&&!high],["dungeonArenaPositionLabel",arena&&!high],["dungeonHigherModeLabel",high],["dungeonHigherStageLabel",high],["dungeonBountyTierLabel",c.kind==="dungeon-bounty"],["dungeonMirrorWinsLabel",c.kind==="advanced-mirror"],["dungeonVoidFloorLabel",c.kind==="advanced-void"]])$(id).hidden=!show;
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
@@ -281,7 +284,7 @@ $("fixtureSelected").onchange=updateFixture;
 $("fixtureProgress").onchange=updateFixture;
 const bindDungeon=(id,key,convert=v=>v)=>{$(id).onchange=()=>{dungeonVisual[key]=convert($(id).value);start();};};
 const rankSelect=$("dungeonArenaRank");
-for(let i=1;i<=20;i++){const o=document.createElement("option");o.value=String(i);o.textContent="第 "+i+" 階";rankSelect.append(o);}
+for(let i=1;i<=10;i++){const o=document.createElement("option");o.value=String(i);o.textContent="第 "+i+" 階";rankSelect.append(o);}
 for(let i=0;i<=20;i++){const o=document.createElement("option");o.value=String(i);o.textContent=i+" 勝";$("dungeonMirrorWins").append(o);}
 for(const floor of [0,1,10,50,100,250,500,1000,2000,5000]){const o=document.createElement("option");o.value=String(floor);o.textContent=floor===0?"尚未通關":("第 "+floor+" 層");$("dungeonVoidFloor").append(o);}
 bindDungeon("dungeonArenaRank","arenaRank",Number);
