@@ -207,6 +207,7 @@ const assert=require("node:assert/strict");
   await page.waitForFunction(()=>document.querySelector("#status")?.textContent?.includes("等待正式角色"),null,{timeout:10000});
   // Isolated mock of the authorized bridge payload: assert presentation state only.
   // This tests the iframe receiver, not permission to access the formal save.
+  await page.evaluate(()=>localStorage.setItem("gm_3d_repair5_no_save_write","unchanged"));
   const fakeCatalog={};
   for(const w of [1,2,3])fakeCatalog[w]=Array.from({length:w===3?1:10},(_,r)=>({
     name:"測試區域"+w+"-"+r,
@@ -240,9 +241,15 @@ const assert=require("node:assert/strict");
   await page.locator("#appearanceWorld").selectOption("1");
   assert.equal(await page.locator("#appearanceRegion option").count(),10);
   await page.locator("#appearanceFormal").click();
+  assert.deepEqual(await page.evaluate(()=>{const x=window.Civilization3DTestCenter.getFixture();return [x.appearanceMode,x.formalAppearanceReady];}),["formal",true]);
   // Switching data sources must not mutate local game save or selection truth.
   await page.locator("#appearanceRefresh").click();
   assert.ok((await page.locator("#appearanceSource").innerText()).includes("等待正式角色資料"));
+  assert.equal(await page.evaluate(()=>localStorage.getItem("gm_3d_repair5_no_save_write")),"unchanged");
+  await page.evaluate(()=>window.postMessage({type:"civilization3d:appearance-error",reason:"回歸測試：正式來源不可用"},location.origin));
+  assert.ok((await page.locator("#appearanceSource").innerText()).includes("正式來源不可用"));
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().formalAppearanceReady),false);
+  await page.evaluate(()=>localStorage.removeItem("gm_3d_repair5_no_save_write"));
 
   await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
   await page.locator("#caseSearch").fill("銀河紀元星圖");
