@@ -198,6 +198,7 @@
    loadingStage="載入完成，即將進入遊戲…";updateProgress(done,total);
    const bar=document.getElementById("backgroundPreloadBar"),pct=document.getElementById("backgroundPreloadPercent");
    if(bar)bar.style.width="100%";if(pct)pct.textContent="100%";
+   window.CivilizationResourceCache?.finishStartupVersionCheck?.();
    signalReadyBeforeReveal();finished=true;revealGame();scheduleDeferredPreload(deferred);
    return {...window.BACKGROUND_PRELOAD_REPORT};
   })().catch(error=>{lastFailure=error;showFailure();throw error;}).finally(()=>{running=null;});
