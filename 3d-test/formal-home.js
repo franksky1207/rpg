@@ -217,7 +217,7 @@ async function toggle(route="home",growthKind=null){
       const st=second?global.getSecondWorldCalamityStatus?.(def.id):global.getCivilizationCalamityStatus?.(def.id);
       const completed=second?st?.completed===true:Number(st?.mark?.level)>=10;
       const visible=second?(global.isSecondWorldCalamityVisible?.(def.id)===true):true;
-      const unlocked=second?st?.canChallenge===true||st?.unlocked===true:global.isCivilizationCalamityUnlocked?.(def.id)===true;
+      const unlocked=second?st?.challengeable===true:global.isCivilizationCalamityUnlocked?.(def.id)===true;
       const hp=Number(st?.currentHp),max=Number(st?.maxHp);
       return {visible,unlocked,completed,review:world>phase,remainingPercent:Number.isFinite(hp)&&Number.isFinite(max)&&max>0?Math.max(0,Math.min(100,100*hp/max)):100};
     });
