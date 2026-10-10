@@ -160,6 +160,10 @@ const assert=require("node:assert/strict");
   await page.locator("#fixtureWorld").selectOption("2");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
   await page.locator("#categoryList .center-category").filter({hasText:"戰鬥、動畫與特效"}).click();
+  await page.getByRole("button",{name:"護盾防護演出"}).click();
+  assert.equal(await page.locator("#scenarioFormal").isVisible(),true);
+  await page.locator("#scenarioFree").click();
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"free");
   assert.equal(await page.locator("#caseList .center-case").count(),4);
   for(const title of ["戰場與生命顯示","護盾防護演出","特殊遭遇演出","結算與戰利品"]){
     await page.getByRole("button",{name:title}).click();
