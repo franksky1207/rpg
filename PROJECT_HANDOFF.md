@@ -1,3 +1,12 @@
+## 2026-10-11｜智慧載入與本機快取・第 1 批（版本基礎）
+- 實際 main 稽核：遊戲已有 backgroundpreload.js（首屏背景與延後背景）、scriptgrouploader.js（story/GM/integrity 分組與授權 GM 按需載入）、resource-manifest.json（SHA-256 前 96 位）、GitHub Actions 產生／推送資源清單；目前未啟用 Service Worker/Cache Storage 長期資源庫。
+- scripts/generate-resource-manifest.py 已加入可部署音訊及 3D 二進位資源（ogg/mp3/wav/圖片/glb/gltf/bin/ktx2/basis 等），不納入舊原始 ZIP、備份及玩家存檔；.github/workflows/asset-version-manifest.yml 的 paths 觸發規則同步補齊音訊與 3D 資產異動。更新清單以部署 main 的 GitHub Actions 生成結果為準。
+- tests/runtime/loading-resource-policy-integrity.js 新增基礎檢查：資源清單格式、素材版本涵蓋、main 工作流程、GM 授權與現有按需載入。JS/CSS 改動時仍須更新 index.html cache-bust，第一批未修改遊戲執行 JS/CSS 或現有首次載入行為。
+- 開發期原則：最新已部署版本優先、程式與素材版本核對、不混用已知不相容資源；目前玩家僅一人，不開啟複雜多玩家版本共存；Service Worker／Cache Storage 留待第 2 批，第一批不得聲稱已具有跨次保證快取。
+- GM 模組首次授權後按需載入，往後可同一般資源持久快取；GM 權限仍由既有授權判定，資源快取不是權限憑證。玩家進度／GM 機密資料不進入資源快取。
+- 載入畫面仍保持一條進度條、一行簡單狀態與百分比；有無更新、更新數量必須真實計算，不顯示資源種類，後續第 3 批施工。
+- 待第 2～4 批：實作本機持久化快取、原子版本對應與更新失敗處理、載入進度與手機桌機實機量測。
+
 ## 2026-10-11｜音訊六批優化：第 6 批全模式回歸
 - 新增 tests/audio-regression.test.cjs，可在專案根目錄以 node tests/audio-regression.test.cjs 重複執行。靜態覆蓋 main、bounty、arena、void、mirror、third-world arena、alternate、galaxy calamity、universe calamity 九組正式戰鬥擁有者的開始／退出事件，檢查唯一 UI 085 音檔、GM stopGmSfx 隔離、50% 音效倍率、清單，並以 Node vm 模擬音樂鎖定、連戰 combat-end、結算 combat-exit 及跨紀元配樂分級。
 - 由模擬發現 audio/audio-scenes.js 原 tierForScene 用全域 phase() 判別高維與宇宙一般戰鬥音樂，與事件明確指定的 era 不一致；已改用 detail.era 優先，resolve/notify 均傳入實際 era，避免銀河回顧／跨紀元情境誤用高維等級的戰鬥配樂。index.html 只更新 audio-scenes 版本。
