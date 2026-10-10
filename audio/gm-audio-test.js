@@ -8,12 +8,12 @@ const panel=()=>document.querySelector('[data-gm-section="gm-audio-test"]');
 const visible=()=>typeof state!=="undefined"&&state?.gm===true&&!!panel()?.open;
 function html(){
  const gain=Math.round((audio()?.previewSettings?.().gmVolume??1)*100);
- return '<div id="gmSoundBody"><p class="muted">目前六首正式選定音樂：三大紀元主題＋三種戰鬥音樂；戰鬥音樂已接入正式遊戲。循環接縫會從曲尾約 8 秒接回曲頭再播約 8 秒，不必整首等候。舊版音效與歷史試聽紀錄均已淘汰。</p>'
+ const stats=audio()?.sfxDiagnostics?.();return '<div id="gmSoundBody"><p class="muted">目前六首正式選定音樂：三大紀元主題＋三種戰鬥音樂；戰鬥音樂已接入正式遊戲。循環接縫會從曲尾約 8 秒接回曲頭再播約 8 秒，不必整首等候。舊版音效與歷史試聽紀錄均已淘汰。</p>'
  +'<label>選擇音樂<br><select class="btn" onchange="gmSoundSelectTheme(this.value)">'+tracks.map(([id,name],i)=>'<option value="'+i+'" '+(i===chosen?'selected':'')+'>'+name+'</option>').join('')+'</select></label>'
  +'<div class="controls" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn blue" onclick="gmSoundPlayTheme()">▶ 完整循環試聽</button><button class="btn" onclick="gmSoundSeam()">♫ 循環接縫試聽</button><button class="btn" onclick="gmSoundStop()">■ 停止</button></div>'
  +'<label>試聽音量 <input type="range" min="0" max="100" value="'+gain+'" oninput="gmSoundVolume(this.value/100)"><span id="gmSoundLevel">'+gain+'%</span></label>'
  +'<div class="controls" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">'+cues.map(([key,name])=>'<button class="btn" type="button" onclick="gmSoundCue(\''+key+'\')">'+name+'</button>').join('')+'</div>'
- +'<p class="muted" id="gmSoundPlaybackDetail" role="status">'+detail+'</p></div>';
+ +'<p class="muted" id="gmSoundPlaybackDetail" role="status">'+detail+'</p><p class="muted" id="gmSoundPoolState">音效預熱：'+(stats?stats.ready+' / '+stats.prepared+' 已準備｜最近出聲 '+stats.lastStartMs+'ms':'尚未啟用')+'</p></div>';
 }
 function refresh(){const el=document.getElementById("gmSoundBody");if(el)el.outerHTML=html();}
 g.gmSoundSelectTheme=value=>{if(!visible())return false;chosen=Math.max(0,Math.min(tracks.length-1,Number(value)||0));audio()?.stopPreview?.();detail="已切換歌曲，尚未播放";refresh();return true;};
