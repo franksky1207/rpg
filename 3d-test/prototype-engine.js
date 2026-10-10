@@ -345,7 +345,7 @@
     scene.clearColor=new B.Color4(.015,.021,.045,1);
     const camera=new B.ArcRotateCamera("equipment-camera",Math.PI/2.2,Math.PI/2.7,13,new B.Vector3(0,.5,0),scene);
     configureDisplayCamera(camera,args.canvas,10.5,20);
-    new B.HemisphericLight("equipment-light",new B.Vector3(0,1,0),scene).intensity=.85;
+    sceneFillLight(B,scene,"equipment-light",.85);
     const slots=Array.isArray(args.slots)?args.slots.slice(0,5):[];
     const appearance=args.appearance||{};
     const world=Math.max(1,Math.min(3,Math.floor(Number(args.world||appearance.world)||1)));
@@ -431,7 +431,7 @@
     const color=palettes[kind];scene.clearColor=new B.Color4(.008,.016,.038,1);
     const camera=new B.ArcRotateCamera("growth-camera",Math.PI/2.3,Math.PI/2.7,kind==="marks"?13:11,new B.Vector3(0,.25,0),scene);
     configureDisplayCamera(camera,args.canvas,7.5,19);
-    new B.HemisphericLight("growth-light",new B.Vector3(0,1,0),scene).intensity=.85;
+    sceneFillLight(B,scene,"growth-light",.85);
     const metal=new B.StandardMaterial("growth-metal",scene);metal.diffuseColor=new B.Color3(.11,.17,.25);
     const lit=new B.StandardMaterial("growth-active",scene);lit.emissiveColor=new B.Color3(...color);
     const dim=new B.StandardMaterial("growth-inactive",scene);dim.diffuseColor=new B.Color3(.1,.12,.17);
@@ -477,7 +477,7 @@
     scene.clearColor=new B.Color4(world===3?.015:world===2?.02:.013,.016,world===3?.075:world===2?.053:.038,1);
     const camera=new B.ArcRotateCamera("dungeon-camera",Math.PI/2.18,Math.PI/2.75,mode==="hub"?14.8:13,new B.Vector3(0,.25,0),scene);
     configureDisplayCamera(camera,args.canvas,8.5,21);
-    new B.HemisphericLight("dungeon-light",new B.Vector3(0,1,0),scene).intensity=.91;
+    sceneFillLight(B,scene,"dungeon-light",.91);
     const material=(name,rgb,glow=false)=>{
       const m=new B.StandardMaterial(name,scene);
       if(glow)m.emissiveColor=new B.Color3(...rgb);else m.diffuseColor=new B.Color3(...rgb);
@@ -872,7 +872,7 @@
     scene.clearColor=new B.Color4(.012,.022,.053,1);
     const camera=new B.ArcRotateCamera("service-camera",Math.PI/2.2,Math.PI/2.65,10,new B.Vector3(0,.25,0),scene);
     camera.attachControl(args.canvas,true);
-    new B.HemisphericLight("service-ambient",new B.Vector3(0,1,0),scene).intensity=.8;
+    sceneFillLight(B,scene,"service-ambient",.8);
     const mat=(name,color,glow=false)=>visualMaterial(B,scene,name,color,glow?.45:0);
     const metal=mat("service-metal",[.12,.2,.31]),accent=mat("service-accent",hue,true);
     const base=B.MeshBuilder.CreateCylinder("service-base",{diameter:7.5,height:.34,tessellation:48},scene);base.position.y=-1.2;base.material=metal;
