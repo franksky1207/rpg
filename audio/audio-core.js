@@ -28,7 +28,7 @@ function previewSettings(){return {...previewLevels};}
 function previewLevel(key,value){
  if(!["master","music","battle"].includes(key))return false;
  previewLevels[key]=Math.max(0,Math.min(1,Number(value)||0));
- if(session)session.volume=previewLevels.master*previewLevels[session.dataset.channel] ;
+ if(session)session.volume=previewLevels.master*(previewLevels[session.dataset.channel]??prefs[session.dataset.channel]??0.6);
  return true;
 }
 function resetPreview(){stopCombat();stopPreview();previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle};}
@@ -57,7 +57,7 @@ const combatCatalog=Object.freeze({
  penetration:{label:"穿透",asset:null,status:"awaiting-asset"},
  mark:{label:"印記",asset:null,status:"awaiting-asset"},
  berserk:{label:"狂暴",asset:null,status:"awaiting-asset"},
- victory:{label:"勝利",asset:null,status:"awaiting-asset"},
+ victory:{label:"勝利",asset:"dark-victory",status:"candidate"},
  defeat:{label:"失敗",asset:null,status:"awaiting-asset"}
 });
 let lastCombat=0;
