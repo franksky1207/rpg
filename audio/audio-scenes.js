@@ -6,7 +6,7 @@ const catalog=Object.freeze({
  higher:Object.freeze({home:["dark-title",null],explore:["dark-airy",null],battle:["dark-urgent","dark-airy"],boss:["boss-orchestra","dark-airy"],alternate:["dark-pulse","dark-airy"],calamity:["boss-orchestra","dark-pulse"],arena:["dark-urgent",null]}),
  shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],reincarnation:["dark-transmission",null],inventory:[null,null],enhance:[null,null],expertise:[null,null],cloud:[null,null]})
 });
-let selected=null,ambient=null,ambientId=null,activeMusicId=null;
+let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null;
 function phase(){
  try{
   const raw=typeof state!=="undefined"?state:null;
@@ -40,11 +40,11 @@ function setContext(era,scene,{preview=false}={}){
 }
 function restore(){if(prohibited()){stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;return;}
  if(selected){activeMusicId=null;apply();}}
-function stop(){selected=null;activeMusicId=null;stopAmbient();g.CivilizationAudio?.stopMusic?.();}
+function stop(){clearTimeout(returnTimer);returnTimer=null;selected=null;activeMusicId=null;stopAmbient();g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  const era=detail.era||phase();
- if(type==="combat-start")return setContext(era,detail.boss?"boss":"battle");
- if(type==="combat-end")return setContext(era,"explore");
+ if(type==="combat-start"){clearTimeout(returnTimer);returnTimer=null;return setContext(era,detail.boss?"boss":"battle");}
+ if(type==="combat-end"){clearTimeout(returnTimer);returnTimer=setTimeout(()=>{returnTimer=null;setContext(era,"explore");},3500);return true;}
  if(type==="boss")return setContext(era,"boss");
  if(type==="calamity")return setContext(era,"calamity");
  if(type==="explore")return setContext(era,"explore");
