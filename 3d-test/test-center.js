@@ -80,15 +80,15 @@ function syncScenarioPanel(){
  $("scenarioAlternateLabel").hidden=entry().kind!=="frontier-alternate"||scenarioMode!=="free";
  syncCalControls();
 }
-$("scenarioFormal").onclick=()=>{scenarioMode="formal";syncScenarioPanel();requestScenario();start();};
+$("scenarioFormal").onclick=()=>{scenarioMode="formal";renderInfo();requestScenario();start();};
 $("scenarioRefresh").onclick=()=>{formalScenario=null;syncScenarioPanel();requestScenario();start();};
-$("scenarioFree").onclick=()=>{scenarioMode="free";syncScenarioPanel();start();};
+$("scenarioFree").onclick=()=>{scenarioMode="free";renderInfo();start();};
 $("scenarioCalamityIndex").onchange=()=>{calamitySimulation[calWorld()].selected=Number($("scenarioCalamityIndex").value)||0;syncCalControls();start();};
 $("scenarioCalamityState").onchange=()=>{calamitySimulation[calWorld()].state=$("scenarioCalamityState").value;start();};
 window.addEventListener("message",event=>{
  if(!embedded||event.source!==window.parent||event.origin!==location.origin||event.data?.type!=="civilization3d:scenario-response")return;
  const data=event.data.snapshot;if(!data||!Array.isArray(data.calamities?.[1])||!Array.isArray(data.calamities?.[2]))return;
- formalScenario=data;syncScenarioPanel();if(scenarioMode==="formal"&&scenarioKinds.has(entry().kind))start();
+ formalScenario=data;renderInfo();if(scenarioMode==="formal"&&scenarioKinds.has(entry().kind))start();
 });
 function sceneCalamityStates(world){
  const {selected,state}=calamitySimulation[world];
@@ -282,7 +282,7 @@ function renderInfo(){
  const progressLabel=$("fixtureProgress").closest("label");
  progressLabel.firstChild.textContent=c.kind==="higher"?"高維存在進度 ":"區域進度 ";
  for(const [i,opt] of Array.from($("fixtureProgress").options).entries())opt.textContent=c.kind==="higher"?"第 "+(i+1)+" 位高維存在":" "+(i+1)+" / 10 大區";
- const arena=c.kind==="dungeon-arena",high=arena&&Number(snapshot.world)===3;
+ const arena=c.kind==="dungeon-arena",high=arena&&Number(scenarioMode==="formal"&&formalScenario?.dungeon?.arena?.world||snapshot.world)===3;
  if(arena)$("caseDetail").textContent=high?"高維競技場：定相或異相，每輪三戰。":"銀河／宇宙競技場：階級、普通／困難／極限位置。";
  for(const [id,show] of [["dungeonArenaRankLabel",arena&&!high],["dungeonArenaPositionLabel",arena&&!high],["dungeonHigherModeLabel",high],["dungeonHigherStageLabel",high],["dungeonBountyTierLabel",c.kind==="dungeon-bounty"],["dungeonMirrorWinsLabel",c.kind==="advanced-mirror"],["dungeonVoidFloorLabel",c.kind==="advanced-void"]])$(id).hidden=!show;
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
