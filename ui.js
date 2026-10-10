@@ -413,8 +413,8 @@ function settingsPage(){
 
  ${window.CivilizationPresentationMode?.settingsHtml?.()||""}
  <h3 class="settings-section-title">本機資源管理</h3><div class="setting-row settings-cache-row"><div class="settings-cache-copy"><b>已下載遊戲資源</b><div class="muted" id="localResourceCacheStatus">正在讀取本機資源容量…</div></div><button class="btn" type="button" onclick="window.CivilizationResourceCache?.clearWithConfirmation?.()">清除資源</button></div><div class="muted settings-help">只清除素材快取，不影響角色存檔、帳號及 GM 權限。</div>
- <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
- ${state.gm?`<div id="gmStartupSlot">${typeof gmHtml==="function"?gmHtml():`<div class="gm-hub"><h3>管理／GM 模式</h3><div class="muted" role="status">正在準備 GM 管理功能…</div><div class="controls"><button class="btn blue" type="button" onclick="window.ensureCivilizationScriptGroup?.(\u0027gm\u0027).catch(()=>{})">重新載入 GM 管理</button></div></div>`}</div>`:""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
+ <section class="settings-save-section" aria-labelledby="settingsSaveHeading"><h3 id="settingsSaveHeading" class="settings-section-title">存檔管理</h3><div class="setting-row settings-autosave-row"><span>本機自動存檔</span><strong class="settings-autosave-active">已啟用</strong></div><div id="settingsCloudSaveSlot" class="settings-cloud-slot"></div></section><div id="settingsAccountSlot" class="settings-account-slot"></div>
+ ${state.gm?`<section class="settings-gm-section" aria-label="GM 管理"><div id="gmStartupSlot">${typeof gmHtml==="function"?gmHtml():`<div class="gm-hub"><h3>管理／GM 模式</h3><div class="muted" role="status">正在準備 GM 管理功能…</div><div class="controls"><button class="btn blue" type="button" onclick="window.ensureCivilizationScriptGroup?.(\u0027gm\u0027).catch(()=>{})">重新載入 GM 管理</button></div></div>`}</div></section>`:""}<div class="danger-zone settings-danger-section"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
  return wrapFunctionPage(body);
 }
 function wireSettings(){
