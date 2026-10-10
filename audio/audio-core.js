@@ -161,7 +161,7 @@ function stopPreview(){token++;previewRequest++;if(session){session.pause();sess
 function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
 
-const sfxCategories=Object.freeze({"ui-click":{count:1,indices:[85],channel:"ui",interval:65},"normal-attack":{count:10,indices:[1,2,3],channel:"battle",interval:130},"critical":{count:37,indices:[1,2,3],channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:0}});
+const sfxCategories=Object.freeze({"normal-attack":{count:10,indices:[1,2,3],channel:"battle",interval:130},"critical":{count:37,indices:[1,2,3],channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:0}});
 const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
 const settledVictoryKeys=new Set();
 const settlementObjectIds=new WeakMap();let nextSettlementObjectId=0;
@@ -178,7 +178,7 @@ function shouldSuppressPresentationSfx(simulation=false){
  return ["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true);
 }
 const sfxCleanup=new WeakMap(),sfxVoiceOwner=new WeakMap(),gmSfxVoices=new Set();
-const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
+const warmChoices={"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
 const sfxCategoryPool={...warmChoices};
 const sfxOutputScale=0.5; // User-approved uniform SFX attenuation, including GM audition.
 const sfxVoiceVolume=new WeakMap();
