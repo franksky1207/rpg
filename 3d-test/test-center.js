@@ -260,7 +260,10 @@ function renderInfo(){
  $("alternateQuickControls").hidden=c.kind!=="frontier-alternate";
  $("alternateCultureLabel").hidden=$("alternateCultureUniverseLabel").hidden=c.kind!=="frontier-alternate";
  if(c.kind==="frontier-alternate")fillAlternateSelectors();
- $("fixtureProgress").closest("label").hidden=c.kind==="frontier-alternate"||c.kind!=="galaxy"&&c.kind!=="universe"&&c.kind!=="higher"&&!c.kind.startsWith("frontier-");
+ $("fixtureProgress").closest("label").hidden=!["galaxy","universe","higher"].includes(c.kind);
+ const progressLabel=$("fixtureProgress").closest("label");
+ progressLabel.firstChild.textContent=c.kind==="higher"?"高維存在進度 ":"區域進度 ";
+ for(const [i,opt] of Array.from($("fixtureProgress").options).entries())opt.textContent=c.kind==="higher"?"第 "+(i+1)+" 位高維存在":" "+(i+1)+" / 10 大區";
  const arena=c.kind==="dungeon-arena",high=arena&&Number(snapshot.world)===3;
  if(arena)$("caseDetail").textContent=high?"高維競技場：定相或異相，每輪三戰。":"銀河／宇宙競技場：階級、普通／困難／極限位置。";
  for(const [id,show] of [["dungeonArenaRankLabel",arena&&!high],["dungeonArenaPositionLabel",arena&&!high],["dungeonHigherModeLabel",high],["dungeonHigherStageLabel",high],["dungeonBountyTierLabel",c.kind==="dungeon-bounty"],["dungeonMirrorWinsLabel",c.kind==="advanced-mirror"],["dungeonVoidFloorLabel",c.kind==="advanced-void"]])$(id).hidden=!show;
@@ -325,7 +328,7 @@ async function start(){
    }else scenarioArgs=formalScenario[scenarioKey]||{};
  }
  const current=runtime;
- const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...calamityFixture,...scenarioArgs,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{})}));
+ const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...calamityFixture,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{}),...scenarioArgs}));
  if(ticket!==serial||current!==runtime)return;
  status.textContent=result.ok?"":"3D 場景載入失敗："+result.reason;
  if(result.ok)status.hidden=true;
