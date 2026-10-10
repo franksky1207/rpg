@@ -69,8 +69,8 @@ function begin(id,{preview=false,loop=true}={}){
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
 function playMusic(id){return begin(id,{preview:false,loop:true});}
-function stopMusic(){if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
-function stopPreview(){if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
+function stopPreview(){token++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 
 const combatCatalog=Object.freeze({
  attack:{label:"普通攻擊",asset:"laser-preview",status:"candidate"},
@@ -147,6 +147,7 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
 }
 function runtimeStats(){return {music:!!music,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("visibilitychange",update);
+window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
