@@ -257,6 +257,7 @@
 
   const secondWorldRegionOpenState=Object.create(null);
   let lastSecondWorldActiveRegionId=null;
+  let lastSecondWorldPreviewRegionId=null;
   let secondWorldAdventureFocusPending=false;
 
   function secondWorldRegions(){
@@ -380,12 +381,20 @@
   window.toggleSecondWorldAdventureRegion=function(id){
     syncSecondWorldRegionOpenState();
     secondWorldRegionOpenState[id]=!secondWorldRegionOpenState[id];
+    if(secondWorldRegionOpenState[id])lastSecondWorldPreviewRegionId=id;
+    else if(lastSecondWorldPreviewRegionId===id)lastSecondWorldPreviewRegionId=null;
     render();
   };
 
+  window.getSecondWorld3DPreviewSelectedRegion=function(){
+    const regions=secondWorldRegions();
+    const index=regions.findIndex(row=>row.id===lastSecondWorldPreviewRegionId&&secondWorldRegionOpenState[row.id]===true);
+    return index>=0?index:secondWorldActiveRegionIndex();
+  };
   window.resetSecondWorldAdventureRegionFolds=function(){
     Object.keys(secondWorldRegionOpenState).forEach(key=>delete secondWorldRegionOpenState[key]);
     lastSecondWorldActiveRegionId=null;
+    lastSecondWorldPreviewRegionId=null;
   };
 
   function secondWorldCombatPageHtml(ctx){
