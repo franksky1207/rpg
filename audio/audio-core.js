@@ -69,7 +69,7 @@ function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){mus
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
 function previewGain(_channel){return gmPreviewVolume;}
-function setPreviewVolume(value){gmPreviewVolume=Math.max(0,Math.min(1,Number(value)||0));if(session){const channel=session.dataset.channel||"music";session.volume=previewGain(channel);previewReport({id:session.dataset.trackId||"",status:"volume",volume:session.volume,channel,url:session.src});}for(const voice of combatVoices)if(voice.dataset?.gmPreviewVoice==="1")voice.volume=previewGain("battle");document.dispatchEvent(new CustomEvent("civilization-audio-preview-volume-changed",{detail:{gmVolume:gmPreviewVolume}}));return true;}
+function setPreviewVolume(value){gmPreviewVolume=Math.max(0,Math.min(1,Number(value)||0));if(session){const channel=session.dataset.channel||"music";session.volume=previewGain(channel);previewReport({id:session.dataset.trackId||"",status:"volume",volume:session.volume,channel,url:session.src});}for(const voice of combatVoices)if(voice.dataset?.gmPreviewVoice==="1")voice.volume=previewGain("battle");for(const voice of sfxVoices)if(voice.dataset?.gmPreviewVoice==="1")voice.volume=gmPreviewVolume;document.dispatchEvent(new CustomEvent("civilization-audio-preview-volume-changed",{detail:{gmVolume:gmPreviewVolume}}));return true;}
 function previewLevel(key,value){
  if(!channels.includes(key))return false;
  previewLevels[key]=Math.max(0,Math.min(1,Number(value)||0));
@@ -210,18 +210,18 @@ function stopCombat(){
  combatVoices.clear();
 }
 function combatEvent(evt,{simulation=false}={}){
- if(!evt||effectsMuted()||!unlocked)return false;
- if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
- const type=evt.type==="attack"?(evt.crit?"critical":Number(evt.shieldAbsorbed)>0?"shield":"attack"):evt.type==="mark"?"mark":evt.type;
- const entry=combatCatalog[type];if(!entry?.asset)return false;
- const now=Date.now();if(now-lastCombat<240)return false;lastCombat=now;
- const track=tracks[entry.asset];if(!track)return false;
- const audio=new Audio(track.url);audio.volume=simulation?previewGain("battle"):normalizeVolume("battle",prefs.master,prefs.battle);if(simulation)audio.dataset.gmPreviewVoice="1";
- audio.preload="none";combatVoices.add(audio);
- audio.addEventListener("ended",()=>combatVoices.delete(audio),{once:true});
- audio.addEventListener("error",()=>combatVoices.delete(audio),{once:true});
- if(combatVoices.size>3){const old=combatVoices.values().next().value;old.pause();combatVoices.delete(old);}
- audio.play().catch(()=>combatVoices.delete(audio));return true;
+ if(!evt||typeof evt!=="object")return false;
+ // Presentation only: the authoritative combat result has already been decided.
+ // Mutually exclusive priority: a critical replaces ordinary attack, never layers with it.
+ let category=null;
+ if(evt.type==="attack"){
+  if(evt.miss===true||evt.dodged===true||evt.dodge===true||evt.evaded===true)category="dodge";
+  else category=evt.crit===true||evt.critical===true?"critical":"normal-attack";
+ }else if(evt.type==="dodge"||evt.type==="evade")category="dodge";
+ // No invented heavy-hit threshold or automatic Boss classification.
+ else if(evt.type==="specialHeavyImpact"||evt.type==="majorImpact")category="heavy-hit";
+ else if(evt.type==="victory")category="victory";
+ return category?playSfx(category,{simulation}):false;
 }
 
 function update(){reconcile();}
