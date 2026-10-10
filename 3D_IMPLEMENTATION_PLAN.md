@@ -1,3 +1,10 @@
+## 2026-10-11｜智慧載入優化第 2 批：本機媒體快取核心
+- 新增 resource-cache-sw.js（Service Worker）與 resource-cache-client.js（註冊、status/refresh/clear API），index.html 在正常遊戲載入流程後載入 client。Service Worker 只攔截同來源且被 resource-manifest.json 追蹤的圖片、音樂音效、3D 模型／材質等媒體，JS/CSS 及資源版本清單仍由既有載入及版本策略處理，避免頻繁修改期混用核心程式。
+- 媒體採內容指紋 digest 作為 Cache Storage 專屬快取鍵；先驗證下載位元組的 SHA-256 前 96 位與已部署清單一致才儲存；無清單或下載失敗時不宣稱快取命中。每次新頁面 navigation 背景重新抓取正式已部署清單；更新成功後，保留同版本、清除舊版／已移除檔案快取，遇到清單失敗則保留既有資源，不作破壞性清理。瀏覽器仍可能自行回收資源快取。
+- 具 CIV_CACHE_CLEAR 指令，可僅清除遊戲所管理的專屬媒體快取，不觸碰 localStorage、IndexedDB、帳號、正式角色存檔、GM 授權或瀏覽器其他網站快取；第 3 批再接入設定 UI 與真實容量／進度資訊。
+- 核心腳本若瀏覽器不支援 SW／註冊失敗會使用既有網路載入；第一次載入的頁面通常要到控制權取得後的下次載入才會完整受 SW 快取攔截；不會預先下載全部 GM／紀元素材，GM 按需載入與快取保存相容。
+- 新增 tests/runtime/resource-cache-integrity.js 檢查腳本與基本隔離契約。尚未在真實桌機或手機瀏覽器執行離線、版本競速、內容驗證、容量與跨次快取性能測試；第 4 批須實機驗證。此實作仍非整套 JS/CSS 的原子版本快照，頻繁部署更新時 JS/CSS 正確性仍依既有版本參數與部署時序。
+
 ## 2026-10-11｜智慧載入與本機快取・第 1 批（版本基礎）
 - 實際 main 稽核：遊戲已有 backgroundpreload.js（首屏背景與延後背景）、scriptgrouploader.js（story/GM/integrity 分組與授權 GM 按需載入）、resource-manifest.json（SHA-256 前 96 位）、GitHub Actions 產生／推送資源清單；目前未啟用 Service Worker/Cache Storage 長期資源庫。
 - scripts/generate-resource-manifest.py 已加入可部署音訊及 3D 二進位資源（ogg/mp3/wav/圖片/glb/gltf/bin/ktx2/basis 等），不納入舊原始 ZIP、備份及玩家存檔；.github/workflows/asset-version-manifest.yml 的 paths 觸發規則同步補齊音訊與 3D 資產異動。更新清單以部署 main 的 GitHub Actions 生成結果為準。
