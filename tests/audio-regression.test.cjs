@@ -61,6 +61,7 @@ assert.equal(audio.current().combatLocked,true,"individual fight must not exit c
 audio.notify("combat-exit",{era:"higher"});
 assert.equal(audio.current().combatLocked,false);
 assert.equal(listened.at(-1),"era-higher-theme");
+// Explicit historical era must override the current player era when choosing battle tiers.
 audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit",{era:"galaxy"});
