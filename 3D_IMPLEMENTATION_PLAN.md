@@ -1,3 +1,11 @@
+## 2026-10-10｜1～18 批後整合優化第 4／6 批：首頁啟動、GM 正式外觀快照及場景工具
+
+- **首頁首次渲染**：`ui.js` 建立唯一 `window.civilizationRequestHomeEntryReconcile()`，採微任務合併觸發，仍只在當前為首頁且實際應有入口缺失時執行正式 `render()`。`alternateuniverseui.js` 移除獨立 `reconcileInitialHome()` 再次呼叫 `render()` 的分支，改交由統一協調入口。可減少 DOMContentLoaded 時重覆渲染，不更動異宇宙解鎖、路由、戰鬥與存檔。尚須實測銀河／宇宙／高維入口與轉生後首次刷新。
+- **GM 正式外觀來源**：`3d-test/test-center.js` 在「正式角色資料」且快照 `source==="formal"` 時使用正式 `Civilization3DAppearance.scene(kind,a)` 轉成角色／背包／鍛造場景資料，不再與正式介面各有一份相似轉換；GM 自訂測試角色的既有 `visualScene` 後備仍保留。GM 測試中心透過版號 manifest 延遲載入 `appearance-snapshot.js`，不建立另一份假場景、也不存正式遊戲資料。
+- **共用場景工具**：`3d-test/prototype-engine.js` 新增小型 `visualMaterial` helper，並用於第 17-B 共用服務控制台場景，保留原漫反射／自發光顏色，不修改 Babylon 品質預設或遊戲數值。這是保守的第一步共用重構，不宣稱所有多類場景已全數拆模組；大型 `formal-home.js` 路由仍保留單一入口以避免 19～40 批前期依賴斷裂。
+- **cache-bust 與 guard**：`index.html` 更新 `ui.js` 和 `alternateuniverseui.js` 的快取版本；`3d-test/index.html` 更新 GM 測試中心版號；`tests/runtime/3d-b18-coverage-guard.js` 新增單一首頁協調、正式 GM 外觀來源與共用場景工具防回歸斷言。場景 factory 正式版本由 `resource-manifest.json` 自動取最新內容雜湊。
+- **驗收界線**：已進行修改 JS 語法解析及 Github main 回讀；沒有完成 exact-HEAD GitHub Actions、真實 GM iframe、實際跨紀元重整、手機/WebGL 長時間測試。本批完成指定的保守重構，不表示所有獨立 3D 模式已完成。整合優化第 5 批為雙模式／舊資料安全清理，6 批仍須瀏覽器回歸；正式 3D 第 19～40 批不變。
+
 ## 2026-10-10｜1～18 批後整合優化第 3／6 批：3D 資源版本、GM 載入進度與預熱
 
 - **實作**：`3d-test/formal-home.js` 正式 3D opt-in 預覽統一由 `resource-manifest.json` 取得 Babylon.js、`prototype-engine.js`、`runtime.js`、`appearance-snapshot.js` 四種版本 URL；清單缺值才個別用安全 fallback 版本。移除場景備援 URL 的過長歷史查詢參數；載入失敗清除 `resourceVersionPromise`，允許下一次重新查詢版本（舊成功載入腳本不重複執行）。3D 正式 Runtime/外觀/引擎仍只在玩家點預覽後按需載入，文字版不新增加載。
