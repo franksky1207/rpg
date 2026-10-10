@@ -12,6 +12,7 @@
  const AUTO_START_DELAY_MS=120;
  const groupPromises=new Map();
  const groupReports=new Map();
+ const groupProgress=new Map();
 
  function declaredNodes(){return Array.from(document.querySelectorAll('script[type="application/x-civilization-deferred"][data-load-group][data-src]'));}
  function effectiveGroup(node){const declared=String(node?.dataset?.loadGroup||"").trim().toLowerCase(),src=String(node?.dataset?.src||"").split("?")[0].toLowerCase();if(src==="storyruntimeintegrity.js")return "integrity";return declared;}
@@ -19,10 +20,12 @@
  function report(group,status,extra={}){const row=Object.freeze({version:VERSION,group,status,...extra});groupReports.set(group,row);return row;}
  function loadOne(node){return new Promise((resolve,reject)=>{if(node.dataset.loaded==="1")return resolve(node.dataset.src||"");const script=document.createElement("script");Array.from(node.attributes).forEach(attr=>{if(["type","data-src","data-load-group"].includes(attr.name))return;script.setAttribute(attr.name,attr.value);});script.src=node.dataset.src;script.async=false;script.dataset.loadGroup=effectiveGroup(node);script.onload=()=>{node.dataset.loaded="1";script.dataset.loadState="ready";resolve(script.src);};script.onerror=()=>{script.remove();reject(new Error(`script-group-load-failed:${node.dataset.src||"unknown"}`));};node.after(script);});}
  async function loadGroup(group,onProgress){
-  const key=String(group||"").trim().toLowerCase();if(!GROUP_ORDER.includes(key))throw new Error(`unknown-script-group:${key||"empty"}`);if(groupPromises.has(key))return groupPromises.get(key);
+  const key=String(group||"").trim().toLowerCase();if(!GROUP_ORDER.includes(key))throw new Error(`unknown-script-group:${key||"empty"}`);if(groupPromises.has(key)){if(typeof onProgress==="function"){const entry=groupProgress.get(key);if(entry){entry.listeners.add(onProgress);onProgress(entry.fraction);}else onProgress(1);}return groupPromises.get(key);}
   const nodes=declarations(key),startedAt=Date.now();report(key,"loading",{count:nodes.length,startedAt});let promise=null;
-  promise=(async()=>{const loaded=[];for(const node of nodes){loaded.push(await loadOne(node));if(typeof onProgress==="function")onProgress(loaded.length/Math.max(1,nodes.length));}const done=report(key,"ready",{count:nodes.length,loaded:loaded.length,startedAt,completedAt:Date.now()});try{window.dispatchEvent(new CustomEvent("civilization-script-group-ready",{detail:done}));}catch(_){ }return done;})().catch(error=>{if(groupPromises.get(key)===promise)groupPromises.delete(key);const failed=report(key,"failed",{count:nodes.length,startedAt,completedAt:Date.now(),error:String(error?.message||error),retryable:true});try{window.dispatchEvent(new CustomEvent("civilization-script-group-failed",{detail:failed}));}catch(_){ }throw error;});
-  groupPromises.set(key,promise);return promise;
+  const tracking={fraction:0,listeners:new Set(typeof onProgress==="function"?[onProgress]:[])};groupProgress.set(key,tracking);
+  const notify=value=>{tracking.fraction=value;for(const listener of tracking.listeners){try{listener(value);}catch(error){console.warn("[ScriptGroupLoader] progress observer failed",error);}}};
+  promise=(async()=>{const loaded=[];for(const node of nodes){loaded.push(await loadOne(node));notify(loaded.length/Math.max(1,nodes.length));}notify(1);const done=report(key,"ready",{count:nodes.length,loaded:loaded.length,startedAt,completedAt:Date.now()});try{window.dispatchEvent(new CustomEvent("civilization-script-group-ready",{detail:done}));}catch(_){ }return done;})().catch(error=>{if(groupPromises.get(key)===promise)groupPromises.delete(key);const failed=report(key,"failed",{count:nodes.length,startedAt,completedAt:Date.now(),error:String(error?.message||error),retryable:true});try{window.dispatchEvent(new CustomEvent("civilization-script-group-failed",{detail:failed}));}catch(_){ }throw error;});
+  groupPromises.set(key,promise);promise.finally(()=>{if(groupProgress.get(key)===tracking)groupProgress.delete(key);}).catch(()=>{});return promise;
  }
  function gmAuthorized(){return typeof window.gmRuntimeAuthorizationAuthorized==="function"&&window.gmRuntimeAuthorizationAuthorized()===true;}
  function setGmAuthorized(value){return typeof window.gmSetRuntimeAuthorization==="function"&&window.gmSetRuntimeAuthorization(value===true)===true;}
