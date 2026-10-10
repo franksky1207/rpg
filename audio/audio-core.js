@@ -161,7 +161,7 @@ function stopPreview(){token++;previewRequest++;if(session){session.pause();sess
 function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
 
-const sfxCategories=Object.freeze({"ui-click":{count:100,channel:"ui",interval:65},"normal-attack":{count:10,channel:"battle",interval:130},"critical":{count:37,channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:500}});
+const sfxCategories=Object.freeze({"ui-click":{count:100,channel:"ui",interval:65},"normal-attack":{count:10,channel:"battle",interval:130},"critical":{count:37,channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:1400}});
 const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
 function pickSfx(category){
  const spec=sfxCategories[category];if(!spec)return null;
