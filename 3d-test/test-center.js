@@ -113,6 +113,7 @@ function fillAlternateSelectors(){
 }
 
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
+if(embedded)scenarioMode="formal";
 let appearanceMode=embedded?"formal":"free",formalAppearance=null;
 const freeAppearance={world:1,level:500,quality:5,enhancement:20,equipped:[true,true,true,true,true],specializations:Array(8).fill(60),markLevels:Array(10).fill(10),civilizationLevel:10,coreLevel:10,hp:20000,atk:5200,def:2600,crit:27,dodge:21,vip:10,breakthrough:0};
 const appearanceKinds=new Set(["character","equipment","forge","specialization","marks","civilization","core"]);
