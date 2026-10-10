@@ -1,3 +1,9 @@
+## 2026-10-10｜GM 單一音檔／場景混音對應補修
+- 已查核正式 `audio/audio-scenes.js` 的 A03 catalog：銀河探索 Sector+Airy、宇宙選擇 Pulse+Airy、銀河 Boss orchestra+Airy、宇宙 Boss orchestra+Pulse、高維前線 Urgent+Airy 等情境有雙音源；單聲源場景不應假裝混音。
+- 原 `audio/gm-audio-test.js` 的 `mix`「情境混音測試」沒有 `a03Context()` 正式對應，選混音會落回播放 `row.asset`，故等同單一音檔。已明確對應：mix-calm→銀河探索、mix-fight→銀河普通戰、mix-tense→高維前線、mix-boss→銀河 Boss、mix-victory→共用勝利；不更動正式音訊場景映射。
+- GM 場景混音不再在映射缺失時回退單音檔，無音源／無映射均有明確文字；只有一軌時顯示「此場景只有單一音源，沒有環境聲」。`audio/audio-scenes.js` 為第二層環境聲加入 playing / error / play() rejection / volume 事件，GM 畫面獨立回報環境聲播放狀態及音量。注意：仍須真人聆聽才能驗證雙聲道聽感；非正式素材品質驗收。
+- `index.html` 更新 GM/scene 腳本 cache-bust；保留角色戰鬥數值、正式玩家音量設定、73 項 GM 聆聽紀錄與四評價按鈕。
+
 ## 2026-10-10｜GM 試聽 100% 卻固定 27% 音量修正
 - 根因：`gmSoundPlaySelected()` 每次呼叫 `gmSoundStopPreview()`→`CivilizationAudio.resetPreview()`，舊版 resetPreview 不僅停聲還將 GM master/music/battle 重設預設 .7/.45/.65，故使用者拉滿仍再回到 0.7×0.45×0.85≈27%。此外 GM 只有三滑桿，缺少 ambient/ui/notice 獨立試聽音量，且試聽資料顯示的是舊播放快照。
 - `audio/audio-core.js`：`resetPreview({resetLevels=false})` 預設只停止音源、不重置 GM 音量；GM 試聽音量增加 ambient/ui/notice；`previewLevel` 即時調整現有音源，發布即時音量診斷及 `civilization-audio-preview-volume-changed`；不寫入正式玩家偏好。
