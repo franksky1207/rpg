@@ -5,6 +5,9 @@ const tracks=Object.freeze({
  "era-galaxy-theme":{label:"銀河紀元主題｜The Fall of Arcana",kind:"music",url:"audio/assets/era-themes/galaxy-theme-loop.ogg",author:"Matthew Pablo",license:"CC BY 3.0",source:"https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music",sample:true},
  "era-universe-theme":{label:"宇宙紀元主題｜Epic Orchestral Fantasy Theme",kind:"music",url:"audio/assets/era-themes/universe-theme-loop.ogg",author:"Markus Lindner",license:"CC BY 4.0",source:"https://opengameart.org/content/epic-orchestral-fantasy-theme",sample:true},
  "era-higher-theme":{label:"高維紀元主題｜Exploration Theme",kind:"music",url:"audio/assets/era-themes/higher-theme-loop.ogg",author:"Cleyton Kauffman",license:"CC0",source:"https://opengameart.org/content/exploration-theme",sample:true},
+ "battle-normal-preview":{label:"普通戰鬥｜JRPG Battle Theme",kind:"music",url:"audio/assets/battle-themes/normal-battle-loop.ogg",author:"North Fantasy Music",license:"CC BY 4.0",source:"https://opengameart.org/content/jrpg-battle-theme",sample:true},
+ "battle-medium-preview":{label:"中等戰鬥｜Boss Battle",kind:"music",url:"audio/assets/battle-themes/medium-battle-loop.ogg",author:"tcarisland",license:"CC BY 4.0",source:"https://opengameart.org/content/boss-battle-5",sample:true},
+ "battle-high-preview":{label:"高等戰鬥｜I'm Boss Here!",kind:"music",url:"audio/assets/battle-themes/high-battle-loop.ogg",author:"Fato Shadow",license:"CC BY 4.0",source:"https://opengameart.org/content/im-boss-here-soundtrack",sample:true},
 
 });
 /* Warm the currently active era music first; other eras are cached lazily.
