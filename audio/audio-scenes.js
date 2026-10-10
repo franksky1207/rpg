@@ -6,7 +6,7 @@ const catalog=Object.freeze({
  higher:Object.freeze({home:["dark-title",null],explore:["dark-airy",null],battle:["dark-urgent","dark-airy"],boss:["boss-orchestra","dark-airy"],alternate:["dark-pulse","dark-airy"],calamity:["boss-orchestra","dark-pulse"],arena:["dark-urgent",null]}),
  shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],reincarnation:["dark-transmission",null],inventory:[null,null],enhance:[null,null],expertise:[null,null],cloud:[null,null]})
 });
-let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null;
+let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null,wasSilent=false;
 function phase(){
  try{
   const raw=typeof state!=="undefined"?state:null;
@@ -57,6 +57,6 @@ function notify(type,detail={}){
 document.addEventListener("civilization-audio-unlocked",()=>restore());
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopAmbient();activeMusicId=null;}else restore();});
-new MutationObserver(()=>{if(prohibited()){stopAmbient();activeMusicId=null;}else if(selected&&!ambient&&selected.ambient)restore();}).observe(document.body,{attributes:true,attributeFilter:["class"]});
+new MutationObserver(()=>{const silent=prohibited();if(silent){stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
 g.CivilizationAudioScenes=Object.freeze({version:1,catalog,phase,resolve,setContext,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
