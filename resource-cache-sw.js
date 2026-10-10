@@ -41,10 +41,16 @@ async function media(request){
  const cache=await caches.open(ACTIVE),key=keyFor(path,digest);
  const saved=await cache.match(key);
  if(saved)return saved;
- const fetched=await fetch(request);
- if(fetched.ok&&fetched.type==="basic"&&!request.headers.has("range")){
-  try{await cache.put(key,fetched.clone());}catch(_){}
- }
+ const fetched=await fetch(request,{cache:"no-store"});
+ if(!fetched.ok||fetched.type!=="basic"||request.headers.has("range"))return fetched;
+ // A deployed file can race a manifest update. Never attach stale bytes to a new digest.
+ try{
+  const bytes=await fetched.clone().arrayBuffer();
+  const hash=await crypto.subtle.digest("SHA-256",bytes);
+  const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
+  if(actual!==digest)return Response.error();
+  try{await cache.put(key,fetched.clone());}catch(_){} // quota errors must not block playback
+ }catch(_){return fetched;} // unsupported/oversized resource uses normal network result
  return fetched;
 }
 self.addEventListener("install",event=>{event.waitUntil(self.skipWaiting());});
