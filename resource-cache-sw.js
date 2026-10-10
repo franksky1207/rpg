@@ -68,6 +68,15 @@ self.addEventListener("message",event=>{
  const data=event.data||{},port=event.ports&&event.ports[0];
  const respond=msg=>{try{port?.postMessage(msg);}catch(_){}};
  if(data.type==="CIV_CACHE_REFRESH")event.waitUntil(refresh().then(()=>respond({ok:true,version:manifestTag,count:known.size})).catch(e=>respond({ok:false,error:String(e.message||e)})));
- if(data.type==="CIV_CACHE_STATUS")event.waitUntil(caches.open(ACTIVE).then(async c=>respond({ok:true,version:manifestTag,entries:(await c.keys()).length})).catch(()=>respond({ok:false})));
+ if(data.type==="CIV_CACHE_STATUS")event.waitUntil(caches.open(ACTIVE).then(async c=>{
+  const keys=await c.keys();let bytes=0,measured=0;
+  for(const key of keys){
+   const response=await c.match(key);
+   const length=Number(response?.headers?.get("content-length"));
+   if(Number.isFinite(length)&&length>=0){bytes+=length;measured++;}
+   else if(response){try{bytes+=(await response.blob()).size;measured++;}catch(_){}}
+  }
+  respond({ok:true,version:manifestTag,entries:keys.length,bytes,measured});
+ }).catch(()=>respond({ok:false})));
  if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{await caches.delete(ACTIVE);respond({ok:true});})().catch(()=>respond({ok:false})));
 });
