@@ -154,7 +154,7 @@ async function toggle(route="home",growthKind=null){
   const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
   const highest=typeof global.secondWorldHighestUnlockedBossIndex==="function"?Number(global.secondWorldHighestUnlockedBossIndex()):0;
   const cleared=bosses.filter(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)).length;
-  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,defeatedBosses:bosses.slice(0,100).map(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)),selectedMap:Math.max(0,Math.min(9,Math.floor(highest/10))),review:era==="universe-review"}:{};
+  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,defeatedBosses:bosses.slice(0,100).map(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)),selectedMap:Math.max(0,Math.min(9,Math.floor(highest/10))),selectionSource:"highest-unlocked-fallback",review:era==="universe-review"}:{};
   const defs=Array.isArray(global.THIRD_WORLD_BOSS_DEFINITIONS)?global.THIRD_WORLD_BOSS_DEFINITIONS:[];
   const presences=higher?defs.slice(0,10).map((_,i)=>{
     const p=typeof global.thirdWorldBossProgressSnapshot==="function"?global.thirdWorldBossProgressSnapshot(i,formalState):null;
