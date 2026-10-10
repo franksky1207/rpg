@@ -12,7 +12,7 @@ const GROUPS=Object.freeze([
  {id:"dungeons",name:"副本與特殊戰鬥",contexts:[["bounty","懸賞戰（銀河／宇宙）","galaxy-battle"],["arena","競技場","dark-urgent"],["mirror","鏡像戰","boss-orchestra"],["void","虛空戰","dark-pulse"],["calamity","文明災厄","boss-orchestra"],["alternate-dungeon","異宇宙挑戰","dark-urgent"]]},
  {id:"mix",name:"情境混音測試",contexts:[["mix-calm","寧靜探索","dark-airy"],["mix-fight","一般連戰","galaxy-battle"],["mix-tense","強敵迫近","dark-urgent"],["mix-boss","Boss 戰","boss-orchestra"],["mix-victory","勝利返回","dark-victory"]]}
 ]);
-let group="higher",selected="higher-explore",wasPresent=false;
+let group="higher",selected="higher-explore",wasPresent=false,checking=false;
 const safe=x=>String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function panel(){return document.querySelector('[data-gm-section="gm-audio-test"]');}
 function visible(){const node=panel();return !!(permitted()&&node?.open&&node.isConnected&&node.getClientRects().length);}
@@ -26,12 +26,22 @@ function controls(){
  const p=audio()?.previewSettings()||{master:.7,music:.45,battle:.65};
  return ['master','music','battle'].map(k=>'<label>'+({master:"主音量",music:"音樂",battle:"戰鬥"}[k])+' <input type="range" min="0" max="100" value="'+Math.round((p[k]||0)*100)+'" oninput="CivilizationAudio.previewLevel(\''+k+'\',this.value/100)"></label>').join('');
 }
+function stateFor(id){
+ const status=audio()?.trackStatus?.(id)||"missing";
+ return ({ready:"可載入",failed:"無法載入",checking:"檢查中",unchecked:"尚未檢查",missing:"待素材・不可播放"})[status]||"尚未檢查";
+}
+function verifyVisible(){
+ if(checking||!visible())return;
+ checking=true;
+ const ids=entries().map(x=>x.asset).filter(Boolean);
+ audio()?.checkTracks?.(ids)?.finally(()=>{checking=false;if(visible())refresh();});
+}
 function content(){
  const rows=entries();
  if(!rows.some(x=>x.id===selected))selected=rows[0]?.id||"";
  return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。已設定來源連結的標示「音檔待驗證」，尚未設定的標示「待素材・不可播放」；來源連結不保證實際能播放，亦非各紀元最終配樂。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
  +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
- +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+(audio()?.tracks?.[x.asset]?.url?'（音檔待驗證）':'（待素材・不可播放）')+'</option>').join('')+'</select></label></div>'
+ +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+'（'+stateFor(x.asset)+'）'+'</option>').join('')+'</select></label></div>'
  +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
  +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="CivilizationAudio.resetPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
  +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
@@ -40,10 +50,10 @@ function content(){
 function statusText(){
  const entry=current();if(!entry)return "尚無場景資料";
  const asset=audio()?.tracks?.[entry.asset];
- return entry.label+"｜"+(asset?.url?"音檔待驗證："+asset.label+"（"+asset.license+"；播放成功前不可視為可用）":"待素材・不可播放：尚無符合品質的音檔");
+ return entry.label+"｜"+(asset?.url?stateFor(entry.asset)+"："+asset.label+"（"+asset.license+"；播放成功前不可視為可用）":"待素材・不可播放：尚無符合品質的音檔");
 }
 function refresh(){const node=document.getElementById("gmSoundBody");if(node)node.innerHTML=content();}
-g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";audio()?.resetPreview();refresh();};
+g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";audio()?.resetPreview();refresh();verifyVisible();};
 g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;audio()?.resetPreview();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
 g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
 g.gmSoundPlaySelected=()=>{
@@ -58,6 +68,7 @@ g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':""
 function guard(){
  const present=visible();
  if(wasPresent&&!present){audio()?.resetPreview();group="higher";selected="higher-explore";}
+ if(!wasPresent&&present)verifyVisible();
  wasPresent=present;
 }
 new MutationObserver(guard).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open","style","hidden","class"]});
@@ -69,7 +80,8 @@ document.addEventListener("civilization-audio-preview-status",event=>{
  const node=document.getElementById("gmSoundStatus");
  if(node)node.textContent=statusText()+(event.detail.status==="playing"?"｜正在播放":"｜音檔載入或播放失敗（來源可能不可用）");
 });
-document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();});
+document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=3;
+g.GM_AUDIO_TEST_CATALOG_VERSION=4;
 })(window);
