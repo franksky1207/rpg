@@ -1,3 +1,10 @@
+## 2026-10-10｜音訊 A04 跨模式與空間音訊整合（程式施工，實機 Gate 未結案）
+- `audio/audio-core.js` 升級共用聲音 owner：獨立 GM preview 音源完全釋放、播放代次失效防止切換後舊回報、`pagehide` 停止所有聲道並關閉 Web Audio Context。增加 `runtimeStats()` 可讀音樂／GM 試聽／戰鬥音效使用情況，`setListenerPosition({x,y,z})`、`spatialMetadata(position)`、`playSpatial(id,{position,volume,simulation})` 供 3D 模型後續接線。標準文字使用普通立體聲，3D 標準且同源／可安全處理音源才啟用 StereoPanner；第三方候選不強接 WebAudio 以防 CORS 無聲。最大戰鬥音效聲數沿用 3。正式公式與存檔完全不動。
+- `audio/audio-scenes.js` 環境層改尊重主音量／環境音設定，設定更動即生效；隱藏頁與極簡模式停止聲音，回到頁面依目前情境恢復、不重播歷史戰鬥事件；GM 試聽期間不額外重疊正式情境音源。此層目前仍為雙 HTMLAudioElement，不能宣稱已完成真正多軌 Web Audio 混音或交叉淡入淡出。
+- `audio/gm-audio-test.js` 「停止」按鈕現在真正停止 GM 背景配樂與環境聲雙層；既有四評價按鈕、本機紀錄、舊分類紀錄與完整複製摘要均保留。
+- `index.html` 更新音訊程式 cache-bust。**待完成／無法從 GitHub 靜態檢查代替的事項**：桌機／iOS／Android 的實際聆聽、Safari AudioContext 解鎖差異、3D WebGL context loss 實機降級、所有實際 3D 模型聲源與 listener 綁定、長時間 memory/聲道壓測、正式音檔授權／本地化／LUFS 測量與音量標準化、多軌 crossfade／ducking／區域完整場景事件覆蓋。A04 只能標為「程式基礎施工」，**不得標為全面完成或實機通過**。
+- 後續應依已定順序執行「正式音訊素材全面補完／本地化／響度／聆聽驗收」，不得把 11 個遠端候選宣稱為可靠的正式配樂。
+
 ## 2026-10-10｜A03 正式 UI／音訊情境對齊補修
 - 正式核對文件：`docs/A03_FORMAL_AUDIO_SCENE_AUDIT_2026-10-10.md`。已修復由一般「探索／戰鬥／Boss／災厄」套版三紀元造成的虛構分類：高維改高維戰線、階段變化、回顧、界弦核心、定相／異相競技場、異宇宙選擇／戰鬥，移除高維主線 Boss 雙分類及高維文明災厄；宇宙主線只有 Boss，沒有銀河式普通／菁英類型。
 - `audio/audio-scenes.js` 正式 A03 scene catalog 與 `audio/gm-audio-test.js` 八分類細項同步；`ui.js` 正式 render 導航、`alternateuniverseui.js` 異宇宙、`thirdworldarenaui.js` 高維競技場的音訊只讀接線。通用戰鬥事件不得覆蓋異宇宙、高維競技場及合法副本情境。
