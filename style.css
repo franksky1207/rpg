@@ -77,7 +77,3 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;borde
  .settings-audio-control{padding:11px}
  .settings-cache-row{align-items:center}
 }
-@media(max-width:365px){
- .settings-quality-row{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:0}
- .settings-quality-item{font-size:13px}
-}
