@@ -95,6 +95,11 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  assert.equal(cases.length,31);
  assert.equal(new Set(cases).size,8);
  assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-b24-frontier/);
+ const frontier=read("3d-test/prototype-engine.js");
+ for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage"]){
+  assert.ok(frontier.includes(mesh),"B24 frontier visual missing: "+mesh);
+ }
+ assert.match(read("index.html"),/formal-home\.js\?v=20261010-b24-frontier/);
  console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");
 }
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
