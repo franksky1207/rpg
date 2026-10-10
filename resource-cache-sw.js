@@ -54,7 +54,7 @@ async function media(request){
  return fetched;
 }
 // Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
-let preloadJob=null;
+let preloadJob=null,preloadGeneration=0;
 function shouldPreload(p){
  if(p.startsWith("assets/backgrounds/"))return MEDIA.test(p);
  if(p.startsWith("audio/assets/era-themes/"))return p.endsWith("-theme-loop.ogg");
@@ -70,6 +70,7 @@ function shouldPreload(p){
 }
 async function preloadAssets(report){
  if(preloadJob)return preloadJob;
+ const generation=preloadGeneration;
  preloadJob=(async()=>{
   const entries=known||await refresh();
   const cache=await caches.open(ACTIVE);
@@ -78,6 +79,7 @@ async function preloadAssets(report){
   report({phase:"start",total:paths.length,done,saved,failed});
   // Run gently behind the home screen; failures are nonfatal and retried next visit.
   for(const path of paths){
+   if(generation!==preloadGeneration)break;
    const digest=entries.get(path),key=keyFor(path,digest);
    if(await cache.match(key)){done++;continue;}
    try{
@@ -88,6 +90,7 @@ async function preloadAssets(report){
     const hash=await crypto.subtle.digest("SHA-256",data);
     const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
     if(actual!==digest)throw Error("digest");
+    if(generation!==preloadGeneration)break;
     await cache.put(key,response.clone());saved++;
    }catch(_){failed++;}
    done++;
@@ -124,5 +127,5 @@ self.addEventListener("message",event=>{
   }
   respond({ok:true,version:manifestTag,entries:keys.length,bytes,measured});
  }).catch(()=>respond({ok:false})));
- if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith(PREFIX))await caches.delete(name);respond({ok:true});})().catch(()=>respond({ok:false})));
+ if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{preloadGeneration++;for(const name of await caches.keys())if(name.startsWith(PREFIX))await caches.delete(name);respond({ok:true});})().catch(()=>respond({ok:false})));
 });
