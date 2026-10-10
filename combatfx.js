@@ -372,6 +372,7 @@
    await sleep(endDelay);
    return window.getCombatPresentationSnapshot();
   }finally{
+   window.CivilizationAudioScenes?.notify?.("combat-end");
    structuredPlayback=false;
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
@@ -463,6 +464,7 @@
    }
    syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
   }finally{
+   window.CivilizationAudioScenes?.notify?.("combat-end");
    structuredPlayback=false;
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
   }
