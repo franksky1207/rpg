@@ -1,3 +1,10 @@
+## 2026-10-10｜3D 五批一致性補修第 3 批・副本與戰鬥資料（施工紀錄）
+
+- **沿用第 2 批概念**：GM 預覽以看圖為主。原 31 案例與八分類維持不變；副本中心、懸賞、競技場、鏡像、虛空五個 GM 視覺場景納入「同步正式資料／自由測試設定」。從正式遊戲 GM iframe 開啟預設同步；未拿到正式唯讀快照不得用 GM 模擬資料冒充同步成功。自由模式仍使用既有「類型、階級/難度、定相/異相/三戰、勝場、樓層」等與畫面身份直接有關的選項，**不增加 HP、倍率、獎勵等數值測試操作**。
+- **唯讀正式資料**：在 `gm3dprototype.js` 原有同源／iframe source／GM 授權 gate 下回傳正式 `getArenaCoreState`、`getBountyTestSnapshot`、`mirrorDungeonStatus`、`getVoidMirageProgressSnapshot/getVoidMirageRunSnapshot` 與 `dungeonModeAvailability` 的摘要。高維正式角色不能以宇宙懸賞冒充可用；懸賞的高維下拉選項仍完全移除。原正式數值、戰鬥與存檔 schema 未修改。
+- **正式 3D 補修**：`3d-test/formal-home.js` 的高維競技場 advanced 快照補入 `higherArenaMode`（從 runtime round/selectedMode 讀取，無來源時 fallback fixed）；沒有戰鬥／結算／特殊遭遇畫面時，戰鬥快照回傳 `battleAvailable:false`、`battleVisualKind:unavailable`，不再憑空展示「滿 HP 正常戰鬥」。既有戰鬥 HP 等其他頁面元素仍屬過渡 DOM 推斷，**不是已完成正式戰鬥 owner 的完整 read-only schema**。
+- **自我檢查與後續**：`tests/runtime/gm-3d-test-center-browser.js` 新增五個副本模式來源切換相關斷言，相關入口 JS 快取版本同步更新；未執行真實 Chromium、正式授權 iframe 及手機 WebGL，不能宣稱通過完整第 3 批實機 gate。後續仍須逐種模式比對正式狀態與戰鬥 owner HUD/護盾/結算可靠快照；特別是高維定相/異相模式欄位應以真實 runtime 證據驗收，未知資料不能猜。
+
 ## 2026-10-10｜補修第 2 批 GM 災厄視覺控制精簡（最新有效）
 
 - 銀河／宇宙災厄 GM **自由測試**只保留「選擇第 N 隻文明災厄（1～10）」及「模擬狀況」兩個操作欄位；已移除 HP%、成長等級、全部封印預設情境。
@@ -63,7 +70,7 @@
 |---|---|---|
 | 1 | 八類 31 項；懸賞高維 option 不存在；完善施工規格與矩陣 | 程式與文件已施工；實機及 CI 待驗收 |
 | 2 | GM 正式同步與自由模擬；十災厄獨立狀態、宇宙區域展開焦點、異宇宙狀態 | 程式施工完成；授權 GM iframe／各進度存檔／手機及 CI 實測待驗 |
-| 3 | 副本與戰鬥 | 待開始 |
+| 3 | GM 五副本雙來源及高維競技場模式已施工；正式完整戰鬥 owner 快照未完成 | 程式部分完成；實機/CI 待驗收 |
 | 4 | 裝備、養成、記錄、服務與管理 | 待開始 |
 | 5 | 31 預覽＋正式所有路由／特殊狀態的完整回歸 | 待開始 |
 
