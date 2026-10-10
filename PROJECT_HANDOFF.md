@@ -1,3 +1,9 @@
+## 2026-10-10｜第 19～26 批後整合優化第 4／6 批：場景共用工具保守重構
+- 依原優化清單 6、7、8、19：`3d-test/prototype-engine.js` 新增共用 `sceneMaterial`、`sceneFillLight`、`applyCameraLimits`，既有 `visualMaterial` 與 `configureDisplayCamera` 保持相容轉接；角色、裝備、養成、副本與服務場景部分共用光源工廠，維持既有光照強度及鏡頭操作數值，不更動正式遊戲 owner、戰鬥公式或存檔。
+- 共用 factory 版本更新到 0.26.1；正式與 GM 場景 fallback 及兩份 HTML cache 版本更新為 `20261010-opt4-scene-common`；靜態守門新增共用 helper 存在檢查。GM 31 場景與正式三紀元資料映射不變。
+- **未全面拆分成多個 JS 模組**：本批先建立安全共用抽象，避免下一批在正式模型導入前遭遇同步載入順序與場景行為回歸；實體模組切分視第 27～34 批模型資產分群逐步進行。
+- 自我檢查包括 GitHub 最新 main 回讀、JS 語法/靜態檢查；真實桌機與手機視覺、相機行為、長時間 GPU 量測仍需使用者實機驗收。施工期間曾出現 GitHub 409 版本衝突，已重新讀取 main 後補齊變更，未強制覆蓋新版本。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 3／6 批：外觀映射與幾何降級契約
 - 本次進入 main 時已存在同一批部分前置施工：`appearance-snapshot.js` 的五槽 `modelDescriptor/modelDescriptors`、`prototype-engine.js` 的幾何備援 metadata、三紀元 210 套外觀名稱選取；因此保留既有邏輯，只補跨場景的一致性，不重新製造第二套映射。
 - 共用 `Civilization3DAppearance.scene()` 對 character／equipment／forge 同步提供 `modelDescriptors` 和 `appearanceSource`。正式 capture 為 `formal`，GM 自由展示維持 `fixture`；模型描述含槽位／實穿狀態／紀元／名稱／visualKey／品質／等級／強化與明確 `geometry-fallback`，尚無正式 GLB assetId。
