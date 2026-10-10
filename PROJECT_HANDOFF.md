@@ -1,3 +1,10 @@
+## 2026-10-10｜跨手機桌機 GM 音訊差異補修
+- 使用者驗證：11 個音檔直接網址於桌機全部可播放；在正式 GM 情境試聽內手機 1～4 可聽、桌機 1～4 無聲，5 未找到對應情境，6/8/9/10 可聽、7 Hover 與 11 Laser 太小。
+- `audio/gm-audio-test.js` 新增「單一音檔／場景混音」兩種分明試聽模式，預設單一音檔，避免 GM 選單顯示 Sector 而實際試聽 Pulse 等錯位。保留八大情境分類、四評價按鈕、73 筆新分類／8 舊分類本機紀錄，不自動重寫玩家評價。
+- `audio/audio-core.js` 單一 GM preview 現會透過媒體 `playing` / `error` / `play().catch` 回報實際播放或失敗，列出原因、音檔、聲道、實際音量；播放要求與真正有聲音不再混稱。
+- `.github/workflows/audio-localize.yml` 已成功將原始 laserpew.ogg 本地化，量測平均電平 -34.1 dB；另產出 `laserpew-balanced2.mp3` 及 `hover_0-balanced2.mp3` 兩個提高響度且限制 true peak -2 dB 的新版音檔，保存 SHA-256 與 CC0 來源。正式 `audio/audio-core.js` 已切換兩項本地化音檔，`index.html` cache-bust 同步。
+- 程式／FFmpeg 可解碼不等於桌機與手機真人實機聆聽通過；請分別測單一 Sector／Airy／Pulse／Urgent、切換場景混音、Hover/Laser 音量，再回報實際播放狀態及音量感受。暫不增補無可靠來源的新音檔。
+
 ## 2026-10-10｜正式音訊素材補完第 1 批（音檔已本地化並平衡；真人重聽未完成）
 - 使用者《音樂音效001》回報：73/73 GM 新分類都有紀錄，舊分類 8 筆。僅 4 個唯一音檔實際有聲音：dark-hover、galaxy-battle、boss-orchestra、laser-preview；dark-hover 和 laser-preview 太小聲，另外七個 SRG774 素材先前無聲。
 - GitHub Actions `.github/workflows/audio-localize.yml` 已實際成功：從 OpenGameArt `Dark Sci-Fi Audio Pack` CC0 官方來源取得 sector、airy、pulse、urgent、transmission、victory、hover、title 共 8 筆 MP3 原始檔，使用 ffprobe + ffmpeg 確認可解碼、測量均值與 SHA256；原始檔保留於 `audio/assets/*_*.mp3`，結果保存 `audio/assets/manifest.json`。
