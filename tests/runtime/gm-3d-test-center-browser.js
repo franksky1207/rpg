@@ -126,6 +126,7 @@ const assert=require("node:assert/strict");
   const buttonsRect=await page.locator("#alternateUniverseNext").boundingBox();
   assert.ok(quickRect&&buttonsRect&&quickRect.width<=390&&buttonsRect.x>=0&&buttonsRect.x+buttonsRect.width<=390,"mobile quick controls must fit viewport");
   await page.setViewportSize({width:1280,height:800});
+  await page.locator("#categoryList .center-category").filter({hasText:"副本與競技場"}).click();
   await page.getByRole("button",{name:"副本作戰中心"}).click();
   await page.locator("#fixtureWorld").selectOption("2");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
