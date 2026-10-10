@@ -46,7 +46,7 @@ let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
 
 const scenarioKinds=new Set(["galaxy","universe","higher","frontier-galaxy","frontier-universe","frontier-alternate"]);
-let scenarioMode="free",formalScenario=null,calamitySelected=0;
+let scenarioMode="free",formalScenario=null;
 const calamitySimulation={1:{selected:0,state:"available"},2:{selected:0,state:"available"}};
 const scenarioPanel=document.createElement("section");scenarioPanel.className="center-appearance-panel";
 scenarioPanel.innerHTML='<details open><summary>展示資料來源 · 自由測試設定</summary><div class="center-appearance-modes"><button id="scenarioFormal" type="button">同步正式資料</button><button id="scenarioFree" type="button">自由測試設定</button></div><p id="scenarioSource" class="muted"></p><button id="scenarioRefresh" type="button">重新同步正式資料</button><div id="scenarioCalamity" class="center-scenario-grid"><label>選擇文明災厄 <select id="scenarioCalamityIndex"></select></label><label>模擬狀態 <select id="scenarioCalamityState"></select></label></div></details>';
