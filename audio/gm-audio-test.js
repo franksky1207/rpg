@@ -115,8 +115,10 @@ function a03Context(){
  universe:{"universe-explore":"explore","universe-boss":"boss","universe-calamity":"calamity","universe-review":"review","universe-arena":"arena","universe-bounty":"bounty","universe-special":"special"},
  higher:{"higher-front":"front","higher-stage":"frontStage","higher-review":"frontReview","higher-core":"core","higher-arena-fixed":"arenaFixed","higher-arena-alternate":"arenaAlternate","alternate":"alternateSelect","alternate-battle":"alternateBattle"},
  system:{home:"main",character:"character",inventory:"inventory",equipment:"equipment",upgrade:"enhance",expertise:"expertise",mark:"mark",civilization:"civilization",shop:"shop",redeem:"redeem",story:"story",cloud:"cloud",settings:"settings",offline:"offline",victory:"victory",notice:"notice",record:"record"},
- dungeons:{mirror:"mirror",void:"void","calamity-galaxy":"calamity","calamity-universe":"calamity","arena-galaxy":"arena","arena-universe":"arena","arena-fixed":"arenaFixed","arena-alternate":"arenaAlternate","bounty-galaxy":"bounty","bounty-universe":"bounty"}
+ dungeons:{mirror:"mirror",void:"void","calamity-galaxy":"calamity","calamity-universe":"calamity","arena-galaxy":"arena","arena-universe":"arena","arena-fixed":"arenaFixed","arena-alternate":"arenaAlternate","bounty-galaxy":"bounty","bounty-universe":"bounty"},
+ mix:{"mix-calm":["galaxy","explore"],"mix-fight":["galaxy","battle"],"mix-tense":["higher","front"],"mix-boss":["galaxy","boss"],"mix-victory":["shared","victory"]}
  };
+ if(group==="mix"){const pair=scenes.mix[row.id];return pair?{era:pair[0],scene:pair[1]}:null;}
  const era=group==="system"?"shared":group==="dungeons"?(row.id.endsWith("-galaxy")?"galaxy":row.id.endsWith("-universe")?"universe":row.id==="arena-fixed"||row.id==="arena-alternate"?"higher":"shared"):group;
  const scene=scenes[group]?.[row.id];return scene?{era,scene}:null;
 }
@@ -128,10 +130,11 @@ g.gmSoundPlaySelected=()=>{
  const row=current();if(!row)return false;
  g.gmSoundStopPreview();
  const context=a03Context(),mapped=context?g.CivilizationAudioScenes?.resolve?.(context.era,context.scene):null;
- const id=listenMode==="scene"?(mapped?.music||mapped?.ambient||row.asset):row.asset;
+ const id=listenMode==="scene"?(mapped?.music||mapped?.ambient):row.asset;
  let ok=false;
  if(row.event){ok=audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true})===true;lastStatus=ok?"戰鬥音效已送出播放要求，請以實際聽感判定":"尚無可播放的戰鬥音效或音訊受限制";}
- else if(listenMode==="scene"&&mapped&&(mapped.music||mapped.ambient)){ok=g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene)===true;lastStatus="場景混音："+(mapped.music||"無配樂")+" ＋ "+(mapped.ambient||"無環境聲")+"；"+(ok?"已送出播放要求":"無法開始播放");}
+ else if(listenMode==="scene"&&mapped&&(mapped.music||mapped.ambient)){ok=g.CivilizationAudioScenes?.previewContext?.(context.era,context.scene)===true;lastStatus="場景混音："+(mapped.music||"無配樂")+(mapped.ambient?" ＋ "+mapped.ambient:"（此場景只有單一音源，沒有環境聲）")+"；"+(ok?"已送出播放要求":"無法開始播放");}
+ else if(listenMode==="scene"){lastStatus=mapped?"此正式場景尚未配置任何音源":"此測試項目沒有正式場景混音對應，不能以單一音檔冒充混音";}
  else if(id){ok=audio()?.preview?.(id)===true;lastStatus="單一音檔："+id+"；"+(ok?"等待瀏覽器確認實際播放":"未能開始播放");}
  else lastStatus="此項目目前沒有配置音檔";
  const detail=document.getElementById("gmSoundPlaybackDetail");if(detail)detail.textContent=lastStatus;
@@ -159,5 +162,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=13;
+g.GM_AUDIO_TEST_CATALOG_VERSION=14;
 })(window);
