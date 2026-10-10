@@ -353,7 +353,8 @@
       const sampleMesh=B.MeshBuilder.CreateSphere("equipment-inventory-sample-"+i,{diameter:sample.present?.4:.16,segments:12},scene);
       sampleMesh.position.set(x,-.1,2);sampleMesh.material=color(sample);
     }
-    scene.metadata={civilization3dEquipment:{visualOnly:true,readOnly:true,world,slotCount:5}};
+    scene.metadata={civilization3dEquipment:{visualOnly:true,readOnly:true,world,slotCount:5,
+      slots:slots.map(item=>({present:item?.present===true,world:Number(item?.world)||world,quality:Math.max(0,Math.min(5,Number(item?.quality)||0)),visualKey:String(item?.visualKey||"").slice(0,120)}))}};
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);scene.meshes.forEach(mesh=>{if(mesh.name.startsWith("equipment-slot-")&&!mesh.name.includes("ring")&&!mesh.name.includes("base"))mesh.rotation.y+=dt*.00012;});});
     return scene;
   }
@@ -391,7 +392,8 @@
     }
     const core=B.MeshBuilder.CreateCylinder("forge-central-core",{diameter:1.1,height:.25,tessellation:36},scene);
     core.position.set(0,-.63,-2.35);core.material=iron;
-    scene.metadata={civilization3dForge:{visualOnly:true,readOnly:true,slotCount:5}};
+    scene.metadata={civilization3dForge:{visualOnly:true,readOnly:true,slotCount:5,
+      enhancementCap:cap,levels:slots.map(item=>Math.max(0,Math.floor(Number(item?.level)||0)))}};
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(Math.max(Number(args.engine.getDeltaTime())||0,0),50);for(const mesh of activeForge)mesh.rotation.y+=dt*.00015;});
     return scene;
   }
@@ -434,7 +436,9 @@
     center.position.y=.68;center.material=lit;
     const orbit=B.MeshBuilder.CreateTorus("growth-orbit",{diameter:4.3,thickness:.038,tessellation:60},scene);
     orbit.position.y=.55;orbit.rotation.x=Math.PI/2;orbit.material=lit;
-    scene.metadata={civilization3dGrowth:{kind,visualOnly:true,readOnly:true}};
+    scene.metadata={civilization3dGrowth:{kind,visualOnly:true,readOnly:true,
+      levels:kind==="specialization"||kind==="marks"?values.slice(0,count).map(v=>Math.max(0,Math.min(maximum,Number(v)||0))):[],
+      level:kind==="civilization"||kind==="core"?single:null}};
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(Math.max(Number(args.engine.getDeltaTime())||0,0),50);center.rotation.y+=dt*.00022;orbit.rotation.z+=dt*.00008;seal.rotation.y-=dt*.000035;});
     return scene;
   }
