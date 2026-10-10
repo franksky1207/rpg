@@ -166,6 +166,7 @@
    return true;
   }finally{
    voidUi.running=false;
+   window.CivilizationAudioScenes?.notify?.("combat-exit",{mode:"void"});
    if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
   }
  }
