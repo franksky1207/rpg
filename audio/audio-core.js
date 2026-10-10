@@ -112,10 +112,40 @@ function update(){reconcile();}
 const listener={x:0,y:0,z:0};
 function setListenerPosition(pos={}){for(const axis of ["x","y","z"])if(Number.isFinite(Number(pos[axis])))listener[axis]=Math.max(-1e6,Math.min(1e6,Number(pos[axis])));return {...listener};}
 function spatialMetadata(position={}){const p={};for(const axis of ["x","y","z"])p[axis]=Number.isFinite(Number(position[axis]))?Math.max(-1e6,Math.min(1e6,Number(position[axis]))):0;const dx=p.x-listener.x,dy=p.y-listener.y,dz=p.z-listener.z;const distance=Math.hypot(dx,dy,dz);return {position:p,distance,pan:Math.max(-1,Math.min(1,dx/Math.max(1,Math.abs(dx)+Math.abs(dz))))};}
+// Spatial one-shots share the official battle budget and never affect combat outcomes.
+// Text mode uses centered stereo; 3D standard may supply a world-space position.
+let spatialContext=null;
+function playSpatial(id,{position=null,volume=1,simulation=false}={}){
+ const track=tracks[id];if(!track||prohibited()||!unlocked)return false;
+ if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ if(combatVoices.size>=3){const oldest=combatVoices.values().next().value;if(oldest){oldest.pause();oldest.removeAttribute("src");oldest.load();combatVoices.delete(oldest);}}
+ const audio=new Audio(track.url);
+ audio.preload="none";audio.loop=false;
+ const base=simulation?previewLevels:prefs;
+ audio.volume=Math.max(0,Math.min(1,normalizeVolume(track.kind==="ui"?"ui":"battle",base.master,base.battle??prefs.battle)*Math.max(0,Math.min(1,Number(volume)||0))));
+ let source=null;
+ try{
+  const mode=g.Civilization3DMode?.current?.();
+  const spatial=position&&mode==="3d-standard";
+  const Ctx=g.AudioContext||g.webkitAudioContext;
+  if(spatial&&Ctx){
+   spatialContext=spatialContext||new Ctx();
+   source=spatialContext.createMediaElementSource(audio);
+   const pan=spatialContext.createStereoPanner();
+   pan.pan.value=spatialMetadata(position).pan;
+   source.connect(pan);pan.connect(spatialContext.destination);
+   if(spatialContext.state==="suspended")spatialContext.resume().catch(()=>{});
+  }
+ }catch(_){source=null;}
+ combatVoices.add(audio);
+ const release=()=>{combatVoices.delete(audio);if(source)try{source.disconnect();}catch(_){}};
+ audio.addEventListener("ended",release,{once:true});audio.addEventListener("error",release,{once:true});
+ audio.play().catch(release);return true;
+}
 function runtimeStats(){return {music:!!music,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("visibilitychange",update);
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:3,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:3,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
