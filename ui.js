@@ -411,11 +411,13 @@ function settingsPage(){
  <h4 style="margin:20px 0 10px">音樂與音效</h4>
  ${(()=>{const a=window.CivilizationAudio?.settings?.()||{};return '<div class="setting-row" style="display:flex;gap:12px;flex-wrap:wrap"><label><input type="checkbox" data-audio-toggle="musicEnabled" '+(a.musicEnabled!==false?'checked':'')+'> 開啟音樂</label><label><input type="checkbox" data-audio-toggle="effectsEnabled" '+(a.effectsEnabled!==false?'checked':'')+'> 開啟音效</label></div><div class="setting-row" style="display:flex;gap:14px;flex-wrap:wrap"><label style="flex:1;min-width:150px">音樂音量 <input type="range" data-audio-volume="music" min="0" max="100" step="5" value="'+Math.round((a.music??.45)*100)+'" style="width:100%"><span data-audio-volume-label="music">'+Math.round((a.music??.45)*100)+'%</span></label><label style="flex:1;min-width:150px">音效音量 <input type="range" data-audio-volume="effects" min="0" max="100" step="5" value="'+Math.round((a.battle??.65)*100)+'" style="width:100%"><span data-audio-volume-label="effects">'+Math.round((a.battle??.65)*100)+'%</span></label></div><div class="muted">音樂與音效可各自開關、調整音量；設定會保存在目前裝置，不影響 GM 獨立試聽音量。</div>';})()}
  ${window.CivilizationPresentationMode?.settingsHtml?.()||""}
+ <h3 style="margin-top:22px">本機資源管理</h3><div class="setting-row"><div><div>已下載遊戲資源</div><div class="muted" id="localResourceCacheStatus">正在讀取本機資源容量…</div></div><button class="btn" type="button" onclick="window.CivilizationResourceCache?.clearWithConfirmation?.()">清除資源</button></div><div class="muted">只清除已下載的遊戲圖片、音樂、音效及 3D 素材快取，不會刪除角色進度、存檔、登入與 GM 權限。</div>
  <h3 style="margin-top:22px">遊戲資料</h3><div class="setting-row"><span>本機自動存檔</span><span style="color:#72c982">已啟用</span></div>
  ${state.gm?`<div id="gmStartupSlot">${typeof gmHtml==="function"?gmHtml():`<div class="gm-hub"><h3>管理／GM 模式</h3><div class="muted" role="status">正在準備 GM 管理功能…</div><div class="controls"><button class="btn blue" type="button" onclick="window.ensureCivilizationScriptGroup?.(\u0027gm\u0027).catch(()=>{})">重新載入 GM 管理</button></div></div>`}</div>`:""}<div class="danger-zone"><b>危險操作</b><p class="muted">會清除目前全部遊戲進度。</p><button class="btn danger" onclick="resetGame()">重置遊戲</button></div></div>`;
  return wrapFunctionPage(body);
 }
 function wireSettings(){
+ if(document.getElementById("localResourceCacheStatus"))window.CivilizationResourceCache?.updateSettingsStatus?.();
  const title=document.getElementById("settingsTitle");
  if(title){
   title.onclick=()=>{gmTapCount++;clearTimeout(gmTapTimer);if(gmTapCount>=3){gmTapCount=0;openGMModal();return}gmTapTimer=setTimeout(()=>{gmTapCount=0},1000)};
