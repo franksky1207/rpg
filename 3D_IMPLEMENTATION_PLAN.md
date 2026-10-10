@@ -1,3 +1,9 @@
+## 2026-10-11｜設定介面整體精簡・第 2 批
+- 依本次指定的兩批規劃，已完成本機自動存檔／雲端存檔比較集中於「存檔管理」、帳號管理獨立分區、GM 原功能獨立視覺分隔、危險操作置底，並優化桌機／手機的雲端比較欄、Email 長字換行、登出與雲端按鈕觸控尺寸。
+- `ui.js` 保留原 `settingsPage` 與 `wireSettings` 資料/事件，新增 `settingsCloudSaveSlot`、`settingsAccountSlot` 固定掛載點；`supabaseauth.js` 的 `mountAccountSettings` 改優先掛帳號槽、`cloudsave.js` 的 `mount` 改優先掛存檔槽，避免 render 後回到舊順序；保留未來舊結構 fallback。
+- 只調整顯示/掛載，未更動手動上傳下載、不同帳號上傳阻擋、下載覆蓋確認、版本 migration、離線計時起點、登出操作與 GM 權限或密碼。雲端 `renderOnly` 在操作重新繪製時保留既有狀態訊息，不再因替換節點瞬間丟失。
+- 修改 `ui.js`、`supabaseauth.js`、`cloudsave.js`、`style.css`、`supabaseauth.css`、`cloudsave.css`、`index.html`；相關 JS/CSS cache-bust 更新為 `settingsLayout=20261011-b02`。GitHub main 已回讀關鍵掛載 ID 與原存檔保護判斷。**真實桌機/手機的登入、登出、上傳下載及 GM 操作尚未實機執行，不得宣稱通過**；需驗收長 Email、無雲端存檔、異帳號防上傳、下載取消及覆蓋、反覆 render、GM 延後載入、危險區不誤觸。
+
 ## 2026-10-11｜設定介面整體精簡・第 1 批
 - 核對 main 實際 ui.js、style.css、3d-test/mode-foundation.js 與動態掛載的帳號／雲端存檔模組。本批只改設定頁主體的布局：六品質勾選集中單列、較強裝備自動保留移回自動處理區、角色名稱欄手機自適應、戰鬥速度 1×／1.5× 改成緊湊並列、音樂／音效各自一個控制區且音量標題與百分比在滑桿上方、本機資源管理精簡文字與間距。
 - 保留 QUALITY 六品質的 data-autosell 原索引、keepUpgrade ID、音訊 data-audio-toggle 與 data-audio-volume、戰鬥速度 data-player-combat-speed、清除資源按鈕與 localResourceCacheStatus ID，沿用原 wireSettings 事件與儲存行為；沒有修改戰鬥／裝備規則及帳號／雲端／GM 程式。遊戲模式控制繼續由 3d-test/mode-foundation.js 原有設定產生，未動 3D 預覽與開發中按鈕。
