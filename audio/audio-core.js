@@ -82,7 +82,7 @@ function previewLevel(key,value){
  return true;
 }
 function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
-function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
+function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);refreshFormalSfxVolume();if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
 function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)warmCombatSfx();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
 function previewReport(detail){document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail}));}
@@ -181,6 +181,18 @@ const sfxCleanup=new WeakMap(),sfxVoiceOwner=new WeakMap(),gmSfxVoices=new Set()
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
 const sfxCategoryPool={...warmChoices};
 const sfxOutputScale=0.5; // User-approved uniform SFX attenuation, including GM audition.
+const sfxVoiceVolume=new WeakMap();
+function formalSfxGain(channel,volume=1){
+ const master=prefs.master,level=prefs[channel]??0;
+ return Math.max(0,Math.min(1,master*level*(categoryGain[channel]||1)*sfxOutputScale*volume));
+}
+function refreshFormalSfxVolume(){
+ for(const audio of sfxVoices){
+  const meta=sfxVoiceVolume.get(audio);if(!meta)continue;
+  audio.volume=formalSfxGain(meta.channel,meta.volume);
+ }
+}
+
 const sfxRunToken=new WeakMap();
 function sfxUrl(category,index){return "audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg";}
 function preparedSample(category,index,{retry=false}={}){
@@ -228,7 +240,7 @@ function pickSfx(category){
 }
 function releaseSfx(audio){
  if(!audio)return;
- sfxVoices.delete(audio);gmSfxVoices.delete(audio);
+ sfxVoices.delete(audio);gmSfxVoices.delete(audio);sfxVoiceVolume.delete(audio);
  const cleanup=sfxCleanup.get(audio);
  if(cleanup){audio.removeEventListener("ended",cleanup);audio.removeEventListener("error",cleanup);sfxCleanup.delete(audio);}
  const slot=sfxVoiceOwner.get(audio);sfxVoiceOwner.delete(audio);
@@ -269,8 +281,9 @@ function playSfx(category,{simulation=false,volume=1}={}){
  }
  a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
  if(simulation)a.dataset.gmPreviewVoice="1";else delete a.dataset.gmPreviewVoice;
- const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
- a.volume=Math.max(0,Math.min(1,gain*sfxOutputScale*Math.max(0,Math.min(1,Number(volume)||0))));
+ const requestedVolume=Math.max(0,Math.min(1,Number(volume)||0));
+ if(!simulation)sfxVoiceVolume.set(a,{channel:spec.channel,volume:requestedVolume});
+ a.volume=simulation?Math.max(0,Math.min(1,gmPreviewVolume*sfxOutputScale*requestedVolume)):formalSfxGain(spec.channel,requestedVolume);
  bank.add(a);
  const finish=()=>{if(sfxCleanup.get(a)===finish)releaseSfx(a);};
  sfxCleanup.set(a,finish);a.addEventListener("ended",finish);a.addEventListener("error",finish);
