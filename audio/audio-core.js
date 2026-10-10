@@ -138,31 +138,16 @@ function retireMusicVoice(el){
 function retireOtherMusicVoices(keep=null){
  for(const el of [...musicVoices])if(el!==keep)retireMusicVoice(el);
 }
-function fadeMusic(id,duration=850){
+function fadeMusic(id){
+ // No zero-volume pending state: switch ownership synchronously and play at
+ // the configured level. Previous fading players are all retired first.
  if(!tracks[id]||musicMuted())return false;
  if(music?.dataset?.trackId===id)return resumeMusic();
- const serial=++musicFadeSeq;
+ musicFadeSeq++;
  retireOtherMusicVoices();
- if(music){retireMusicVoice(music);music=null;}
- const el=new Audio(tracks[id].url);
- el.preload="auto";el.loop=true;el.dataset.channel="music";el.dataset.trackId=id;el.volume=0;
- musicVoices.add(el);music=el;
- const active=()=>serial===musicFadeSeq&&music===el;
- el.play().then(()=>{
-  if(!active()){retireMusicVoice(el);return;}
-  const start=performance.now();
-  const step=now=>{
-   if(!active()){retireMusicVoice(el);return;}
-   const progress=Math.min(1,Math.max(0,(now-start)/duration));
-   el.volume=Math.min(1,normalizeVolume("music",prefs.master,prefs.music)*progress);
-   if(progress<1)requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
- }).catch(()=>{
-  if(active())music=null;
-  retireMusicVoice(el);
- });
- return true;
+ if(music)retireMusicVoice(music);
+ music=null;
+ return begin(id,{preview:false,loop:true});
 }
 function playMusic(id){
  if(music?.dataset?.trackId===id)return resumeMusic();
