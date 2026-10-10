@@ -90,7 +90,7 @@ function notify(type,detail={}){
    let attempts=0;
    const afterAnimation=()=>{
     if(generation!==exitSequence)return;
-    if(g.isCombatPresentationActive?.()===true){if(++attempts<300)setTimeout(afterAnimation,50);return;}
+    if(g.isCombatPresentationActive?.()===true){if(++attempts<300){setTimeout(afterAnimation,50);return;}console.warn("[文明戰線] 戰鬥呈現逾時，保留配樂直到正式結算／下一次場景確認");return;}
     release();
    };
    setTimeout(afterAnimation,50);return true;
