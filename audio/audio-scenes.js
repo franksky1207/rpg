@@ -6,7 +6,7 @@ const catalog=Object.freeze({
  higher:Object.freeze({home:["dark-title",null],explore:["dark-airy",null],battle:["dark-urgent","dark-airy"],boss:["boss-orchestra","dark-airy"],alternate:["dark-pulse","dark-airy"],calamity:["boss-orchestra","dark-pulse"],arena:["dark-urgent",null]}),
  shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],reincarnation:["dark-transmission",null],inventory:[null,null],enhance:[null,null],expertise:[null,null],cloud:[null,null]})
 });
-let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null,wasSilent=false;
+let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null,wasSilent=false,previewAmbient=null;
 function phase(){
  try{
   const raw=typeof state!=="undefined"?state:null;
@@ -32,9 +32,30 @@ function apply(){
  if(selected.music!==activeMusicId){g.CivilizationAudio?.stopMusic?.();activeMusicId=selected.music;if(selected.music)g.CivilizationAudio?.playMusic?.(selected.music);}
  syncAmbient(selected.ambient);return true;
 }
+function stopPreview(){
+ if(previewAmbient){previewAmbient.pause();previewAmbient.removeAttribute("src");previewAmbient.load();previewAmbient=null;}
+ g.CivilizationAudio?.stopPreview?.();
+}
+function previewContext(era,scene){
+ const item=resolve(era,scene);
+ if(!item||typeof state==="undefined"||state?.gm!==true)return false;
+ stopPreview();
+ if(g.CivilizationAudio?.isSilent?.())return false;
+ let ok=false;
+ if(item.music)ok=g.CivilizationAudio?.preview?.(item.music)===true;
+ if(item.ambient){
+  const track=g.CivilizationAudio?.tracks?.[item.ambient];
+  if(track){
+   const el=new Audio(track.url);el.loop=true;el.preload="none";el.volume=.14;
+   previewAmbient=el;el.play().catch(()=>{if(previewAmbient===el){el.pause();previewAmbient=null;}});
+   ok=true;
+  }
+ }
+ return ok;
+}
 function setContext(era,scene,{preview=false}={}){
  const item=resolve(era,scene);if(!item)return false;
- if(preview){stopAmbient();if(item.music)return g.CivilizationAudio?.preview?.(item.music)===true;g.CivilizationAudio?.stopPreview?.();return false;}
+ if(preview)return previewContext(era,scene);
  if(selected?.era===era&&selected?.scene===scene)return true;
  selected=item;return apply();
 }
@@ -56,7 +77,7 @@ function notify(type,detail={}){
 }
 document.addEventListener("civilization-audio-unlocked",()=>restore());
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
-document.addEventListener("visibilitychange",()=>{if(document.hidden){stopAmbient();activeMusicId=null;}else restore();});
-new MutationObserver(()=>{const silent=prohibited();if(silent){stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:1,catalog,phase,resolve,setContext,notify,restore,stop,current:()=>selected?{...selected}:null});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){stopPreview();stopAmbient();activeMusicId=null;}else restore();});
+new MutationObserver(()=>{const silent=prohibited();if(silent){stopPreview();stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
+g.CivilizationAudioScenes=Object.freeze({version:1,catalog,phase,resolve,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
