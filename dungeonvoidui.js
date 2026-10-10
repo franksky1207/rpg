@@ -159,6 +159,7 @@
      stopVoidMinimalModeIfOpen();
      voidUi.finalRun=run||(typeof getVoidMirageRunSnapshot==="function"?getVoidMirageRunSnapshot():null);
      voidUi.phase="result";
+     // The Void has no all-clear victory: stopping or dying after clearing floors is not a winning settlement.
      voidUi.floorResult=null;
      render();
     }
