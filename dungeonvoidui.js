@@ -115,6 +115,7 @@
    return false;
   }
   voidUi.running=true;
+  window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"void"});
   try{
    await window.runVoidMirageAuto({
     async onFloorComplete(fr){
