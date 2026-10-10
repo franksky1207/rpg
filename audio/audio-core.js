@@ -64,7 +64,7 @@ const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 const musicMuted=()=>prohibited()||!prefs.musicEnabled;
 const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
-function stop(){musicFadeSeq++;stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function stop(){musicFadeSeq++;stopCombat();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled&&music){music.pause();music.removeAttribute("src");music.load();music=null;}if(!prefs.effectsEnabled)stopCombat();}
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
@@ -91,7 +91,7 @@ function begin(id,{preview=false,loop=true}={}){
  const item=tracks[id];if(!item){if(preview)previewReport({id,status:"failed",reason:"找不到音檔"});return false;}
  if(prohibited()||(!preview&&musicMuted())){if(preview)previewReport({id,status:"blocked",reason:document.hidden?"分頁在背景":minimal()?"極簡模式禁止播放":"音訊已停用"});return false;}
  if(!unlocked){if(preview)previewReport({id,status:"blocked",reason:"需要先點擊網頁解除瀏覽器播放限制"});return false;}
- if(preview&&music){music.pause();}
+ if(preview&&music){musicFadeSeq++;retireOtherMusicVoices(music);music.pause();}
  const request=preview?++previewRequest:0,previous=preview?session:music;
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
  const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.dataset.trackId=id;
@@ -101,7 +101,7 @@ function begin(id,{preview=false,loop=true}={}){
  const report=(status,reason="")=>{if(preview&&active())previewReport({id,status,reason,volume:el.volume,channel:item.kind,url:item.url,readyState:el.readyState,networkState:el.networkState});};
  el.addEventListener("playing",()=>report("playing"));
  el.addEventListener("error",()=>report("failed","音訊媒體錯誤 "+(el.error?.code||"unknown")));
- if(preview)session=el;else music=el;
+ if(preview)session=el;else {musicFadeSeq++;retireOtherMusicVoices();musicVoices.add(el);music=el;}
  report("requested");
  el.play().catch(error=>{if(active())report("failed",playbackError(error));});
  return true;
@@ -126,26 +126,42 @@ function previewSeam(id,seconds=8){
  return true;
 }
 
+/* A single active formal music voice; no overlapping crossfades.
+   An obsolete fade callback must never leave an orphan player sounding. */
 let musicFadeSeq=0;
-function fadeMusic(id,duration=1100){
+const musicVoices=new Set();
+function retireMusicVoice(el){
+ if(!el)return;
+ try{el.pause();el.removeAttribute("src");el.load();}catch(_){}
+ musicVoices.delete(el);
+}
+function retireOtherMusicVoices(keep=null){
+ for(const el of [...musicVoices])if(el!==keep)retireMusicVoice(el);
+}
+function fadeMusic(id,duration=850){
  if(!tracks[id]||musicMuted())return false;
  if(music?.dataset?.trackId===id)return resumeMusic();
  const serial=++musicFadeSeq;
- const old=music;
- const el=new Audio(tracks[id].url);el.preload="auto";el.loop=true;el.dataset.channel="music";el.dataset.trackId=id;
- const target=normalizeVolume("music",prefs.master,prefs.music);
- el.volume=0;
- music=el;
- const start=performance.now();
- const step=now=>{
-  if(serial!==musicFadeSeq)return;
-  const t=Math.min(1,Math.max(0,(now-start)/duration));
-  if(music===el)el.volume=Math.min(1,target*t);
-  if(old)old.volume=Math.max(0,target*(1-t));
-  if(t<1)requestAnimationFrame(step);
-  else if(old){old.pause();old.removeAttribute("src");old.load();}
- };
- el.play().then(()=>requestAnimationFrame(step)).catch(()=>{if(serial!==musicFadeSeq)return;music=old;el.pause();el.removeAttribute("src");el.load();if(old){old.volume=target;old.play().catch(()=>{});}});
+ retireOtherMusicVoices();
+ if(music){retireMusicVoice(music);music=null;}
+ const el=new Audio(tracks[id].url);
+ el.preload="auto";el.loop=true;el.dataset.channel="music";el.dataset.trackId=id;el.volume=0;
+ musicVoices.add(el);music=el;
+ const active=()=>serial===musicFadeSeq&&music===el;
+ el.play().then(()=>{
+  if(!active()){retireMusicVoice(el);return;}
+  const start=performance.now();
+  const step=now=>{
+   if(!active()){retireMusicVoice(el);return;}
+   const progress=Math.min(1,Math.max(0,(now-start)/duration));
+   el.volume=Math.min(1,normalizeVolume("music",prefs.master,prefs.music)*progress);
+   if(progress<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+ }).catch(()=>{
+  if(active())music=null;
+  retireMusicVoice(el);
+ });
  return true;
 }
 function playMusic(id){
@@ -155,9 +171,9 @@ function playMusic(id){
  return begin(id,{preview:false,loop:true});
 }
 function currentMusicId(){return music?.dataset?.trackId||null;}
-function stopMusic(){musicFadeSeq++;token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
+function stopMusic(){musicFadeSeq++;token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
-function resumeMusic(){if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
+function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
 const combatCatalog=Object.freeze({
  attack:{label:"普通攻擊",asset:null,status:"awaiting-asset"},
