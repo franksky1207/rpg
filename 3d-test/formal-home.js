@@ -233,12 +233,12 @@ async function toggle(route="home",growthKind=null){
   })();
   const battleSnapshot=(()=>{if(!battlePreview)return {};
     const owner=global.getCombatPresentationSnapshot?.();
-    if(!owner||!(Number(owner.playerMaxHp)>0)||!(Number(owner.enemyMaxHp)>0)){
-      return {battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true};
+    if(!owner||!(Number(owner.playerMaxHp)>0)||!(Number(owner.enemyMaxHp)>0)||!Number.isFinite(Number(owner.playerHp))||!Number.isFinite(Number(owner.enemyHp))){
+      return {schema:1,status:"unavailable",reason:"no-active-combat",source:"formal-combat",eventType:"presentation-snapshot",battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true,readOnly:true};
     }
     const ratio=(now,max)=>Math.max(0,Math.min(1,Number(now)/Number(max)));
     const playerShield=Math.max(0,Number(owner.playerShield)||0),enemyShield=Math.max(0,Number(owner.enemyShield)||0);
-    return {battleVisualKind:playerShield>0||enemyShield>0?"shield":"battle",
+    return {schema:1,status:"active",source:"formal-combat",eventType:"presentation-snapshot",battleVisualKind:playerShield>0||enemyShield>0?"shield":"battle",
       battleAvailable:true,playerHpRatio:ratio(owner.playerHp,owner.playerMaxHp),
       enemyHpRatio:ratio(owner.enemyHp,owner.enemyMaxHp),
       shieldRatio:Math.max(0,Math.min(1,playerShield/Math.max(1,Number(owner.playerShieldMax)||playerShield))),
