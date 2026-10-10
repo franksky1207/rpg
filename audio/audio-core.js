@@ -192,17 +192,29 @@ function playSfx(category,{simulation=false,volume=1}={}){
  if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
  const now=Date.now();if(now-(sfxLastTime.get(category)||0)<spec.interval)return false;
  const sample=pickSfx(category);sfxLastTime.set(category,now);
- const a=new Audio(sample.url);a.preload="none";a.loop=false;a.dataset.sfxCategory=category;
+ // Short combat sounds must be allowed to load and start before later events reclaim voices.
+ // Preload metadata aggressively; leave victory in its own protected voice budget.
+ const a=new Audio();a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
  if(simulation)a.dataset.gmPreviewVoice="1";
  const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
  a.volume=Math.max(0,Math.min(1,gain*Math.max(0,Math.min(1,Number(volume)||0))));
+ const isNotice=category==="victory";
+ const categoryLimit=isNotice?2:3;
+ const totalLimit=8;
  const owned=[...sfxVoices].filter(x=>x.dataset.sfxCategory===category);
- if(owned.length>=2)releaseSfx(owned[0]);
- while(sfxVoices.size>=3)releaseSfx(sfxVoices.values().next().value);
+ if(owned.length>=categoryLimit)releaseSfx(owned[0]);
+ if(!isNotice){
+  const battleVoices=[...sfxVoices].filter(x=>x.dataset.sfxCategory!=="victory");
+  if(battleVoices.length>=totalLimit-2)releaseSfx(battleVoices[0]);
+ }else{
+  while(sfxVoices.size>=totalLimit)releaseSfx([...sfxVoices].find(x=>x.dataset.sfxCategory!=="victory")||sfxVoices.values().next().value);
+ }
  sfxVoices.add(a);
  a.addEventListener("ended",()=>releaseSfx(a),{once:true});
  a.addEventListener("error",()=>releaseSfx(a),{once:true});
- a.play().catch(()=>releaseSfx(a));return true;
+ a.src=sample.url;
+ a.play().catch(error=>{if(sfxVoices.has(a)){console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}});
+ return true;
 }
 
 const combatCatalog=Object.freeze({
