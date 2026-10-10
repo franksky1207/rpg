@@ -110,6 +110,9 @@ function freeVisual(){
  return {world,level:freeAppearance.level,equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map((type,i)=>[type,{present:freeAppearance.equipped[i],quality:freeAppearance.quality,level:freeAppearance.level,world}])),enhancements:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,level])),enhancementCap:cap,enhancementMin:0,inventorySamples:Array.from({length:5},()=>({present:true,quality:freeAppearance.quality})),abilities:{hp:freeAppearance.hp,atk:freeAppearance.atk,def:freeAppearance.def,crit:freeAppearance.crit,dodge:freeAppearance.dodge},vip:freeAppearance.vip,breakthrough:freeAppearance.breakthrough,specializations:Object.fromEntries(specKeys.map((k,i)=>[k,freeAppearance.specializations[i]])),markLevels:Object.fromEntries(Array.from({length:10},(_,i)=>[String(i),freeAppearance.markLevels[i]])),civilizationLevel:freeAppearance.civilizationLevel,coreLevel:freeAppearance.coreLevel};
 }
 function visualScene(kind,a){
+ if(appearanceMode==="formal"&&a?.source==="formal"&&window.Civilization3DAppearance?.scene){
+  return window.Civilization3DAppearance.scene(kind,a);
+ }
  const types=["weapon","helmet","armor","shoes","accessory"];
  if(kind==="equipment")return {world:a.world,slots:types.map(t=>a.equipment?.[t]||{}),inventorySamples:a.inventorySamples||[],appearance:a};
  if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:types.map(t=>({level:Number(a.enhancements?.[t])||0,invalid:Number(a.enhancements?.[t])<Number(a.enhancementMin)})),appearance:a};
@@ -312,19 +315,21 @@ async function versionedSceneUrls(){
   return [
    version("vendor/babylonjs/7.54.3/babylon.js","../vendor/babylonjs/7.54.3/babylon.js"),
    version("3d-test/runtime.js","./runtime.js"),
-   version("3d-test/prototype-engine.js","./prototype-engine.js")
+   version("3d-test/prototype-engine.js","./prototype-engine.js"),
+   version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")
   ];
  }catch(_){
-  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261009-camera-center-v1","./prototype-engine.js?v=20261010-3d-b17b-services"];
+  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261009-camera-center-v1","./prototype-engine.js?v=20261010-3d-b17b-services","./appearance-snapshot.js?v=20261010-opt4-shared-appearance"];
  }
 }
 (async()=>{
  try{
-  const [engineUrl,runtimeUrl,sceneUrl]=await versionedSceneUrls();
+  const [engineUrl,runtimeUrl,sceneUrl,appearanceUrl]=await versionedSceneUrls();
   await Promise.all([
     window.BABYLON?.Engine?Promise.resolve():script(engineUrl),
     window.Civilization3DRuntime?.create?Promise.resolve():script(runtimeUrl),
-    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl)
+    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl),
+    window.Civilization3DAppearance?.scene?Promise.resolve():script(appearanceUrl)
   ]);
   if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createChronicleTransitionScene)throw new Error("3D 模組載入不完整。");
   start();
