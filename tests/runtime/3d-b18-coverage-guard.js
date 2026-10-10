@@ -23,6 +23,7 @@ for(const type of ["settings","guide","account","cloud","gm"]){
  assert.ok(engine.includes('kind==="'+type+'"')||engine.includes(type+":"),"Missing service visual "+type);
 }
 assert.ok(bridge.includes("gmRuntimeAuthorizationAuthorized"),"GM preview needs runtime authorization");
+assert.ok(bridge.includes('[data-service3d-preview="')&&bridge.includes('control.setAttribute("data-service3d-preview",kind)'),"Service preview DOM attribute and deduplication selector must match");
 assert.ok(bridge.includes('document.getElementById("civilization3dCharacterToggle")'),"No duplicate character preview");
 assert.ok(bridge.includes('if(view==="dungeon-void-mirage")return;'),"No extra void settlement button");
 assert.ok(story.includes('<div class="story-content"><div id="storyBody"'),"Story content and 3D must share grid track");
