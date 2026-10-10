@@ -172,6 +172,11 @@ function settlementKey(prefix,object){
 }
 
 const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0,skipped:0,playing:0,latencies:[],byCategory:{}};
+function shouldSuppressPresentationSfx(simulation=false){
+ if(simulation)return false;
+ if(typeof g.backgroundProgressFastCatchUpActive!=="function")return false;
+ return ["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true);
+}
 const sfxCleanup=new WeakMap(),sfxVoiceOwner=new WeakMap(),gmSfxVoices=new Set();
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
 const sfxCategoryPool={...warmChoices};
@@ -241,7 +246,7 @@ function stopBattleSfx(){
 function playSfx(category,{simulation=false,volume=1}={}){
  const spec=sfxCategories[category];if(!spec||effectsMuted()||!unlocked)return false;
  if(simulation&&!(typeof state!=="undefined"&&state?.gm===true))return false;
- if(!simulation&&typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ if(shouldSuppressPresentationSfx(simulation))return false;
  const now=Date.now();
  if(!simulation&&now-(sfxLastTime.get(category)||0)<spec.interval){sfxTiming.skipped++;trackSfx(category,"skipped");return false;}
  const sample=pickSfx(category);if(!sample)return false;
@@ -277,14 +282,6 @@ function playSfx(category,{simulation=false,volume=1}={}){
  return true;
 }
 
-const combatCatalog=Object.freeze({
- attack:{label:"普通攻擊",asset:null,status:"awaiting-asset"},
- critical:{label:"暴擊",asset:null,status:"awaiting-asset"},
- dodge:{label:"閃避",asset:null,status:"awaiting-asset"},
- victory:{label:"勝利",asset:null,status:"awaiting-asset"}
-
-});
-let lastCombat=0;
 const combatVoices=new Set();
 function stopCombat(){
  for(const audio of combatVoices){audio.pause();audio.removeAttribute("src");audio.load();}
@@ -316,7 +313,7 @@ function spatialMetadata(position={}){const p={};for(const axis of ["x","y","z"]
 let spatialContext=null;
 function playSpatial(id,{position=null,volume=1,simulation=false}={}){
  const track=tracks[id];if(!track||effectsMuted()||!unlocked)return false;
- if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ if(shouldSuppressPresentationSfx(simulation))return false;
  if(combatVoices.size>=3){const oldest=combatVoices.values().next().value;if(oldest){oldest.pause();oldest.removeAttribute("src");oldest.load();combatVoices.delete(oldest);}}
  const audio=new Audio(track.url);
  audio.preload="none";audio.loop=false;
@@ -358,5 +355,5 @@ document.addEventListener("click",event=>{
 
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopGmSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementKey,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopGmSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementKey,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
