@@ -1,3 +1,8 @@
+## 2026-10-11｜音訊六批優化：第 6 批全模式回歸
+- 新增 tests/audio-regression.test.cjs，可在專案根目錄以 node tests/audio-regression.test.cjs 重複執行。靜態覆蓋 main、bounty、arena、void、mirror、third-world arena、alternate、galaxy calamity、universe calamity 九組正式戰鬥擁有者的開始／退出事件，檢查唯一 UI 085 音檔、GM stopGmSfx 隔離、50% 音效倍率、清單，並以 Node vm 模擬音樂鎖定、連戰 combat-end、結算 combat-exit 及跨紀元配樂分級。
+- 由模擬發現 audio/audio-scenes.js 原 tierForScene 用全域 phase() 判別高維與宇宙一般戰鬥音樂，與事件明確指定的 era 不一致；已改用 detail.era 優先，resolve/notify 均傳入實際 era，避免銀河回顧／跨紀元情境誤用高維等級的戰鬥配樂。index.html 只更新 audio-scenes 版本。
+- 遠端回讀 tests/audio-regression.test.cjs、audio-scenes、audio-core JS 語法 PASS；模擬高維競技場不因重複開始／介面重繪而重播、連戰 combat-end 不釋放、正式退場切回紀元、高維角色觸發銀河一般戰鬥選 normal 音樂均 PASS。未在真實桌機／手機瀏覽器執行音訊實播、網路載入性能或全模式遊玩驗收，這些仍需手動檢查。
+
 ## 2026-10-11｜音訊六批優化・第 5 批：素材清單與快取管理
 - 以 GitHub main 真實程式與音效目錄校準三份 manifest：common-sfx manifest 已改為只保留 085 UI 點擊（實體目錄只含 sfx-085.ogg，其他 99 個及舊 ZIP 已刪除）；battle-themes 三首現在正式參與戰鬥播放，而非只限 GM；era-themes 三首亦是正式紀元主題。保留素材作者、來源網址、CC 授權及 SHA 等既有資訊；不冒稱人工已驗證無縫循環。
 - index.html 僅合併 audio/audio-core.js、audio/audio-scenes.js、audio/gm-audio-test.js、combatfx.js 四項累積舊音訊快取參數為各自單一版本號；其他仍在施工的 JS 與其快取參數不動。後續單一檔案異動，只提高該檔版本，不清除玩家整站快取、不迫使重新下載其他未變更檔案。
