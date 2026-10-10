@@ -2,6 +2,9 @@
 (function(g){"use strict";
 const KEY="civilization.audio.preferences.v1";
 const tracks=Object.freeze({
+ "era-galaxy-theme":{label:"銀河紀元主題｜The Fall of Arcana",kind:"music",url:"audio/assets/era-themes/galaxy-theme-loop.ogg",author:"Matthew Pablo",license:"CC BY 3.0",source:"https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music",sample:true},
+ "era-universe-theme":{label:"宇宙紀元主題｜Epic Orchestral Fantasy Theme",kind:"music",url:"audio/assets/era-themes/universe-theme-loop.ogg",author:"Markus Lindner",license:"CC BY 4.0",source:"https://opengameart.org/content/epic-orchestral-fantasy-theme",sample:true},
+ "era-higher-theme":{label:"高維紀元主題｜Exploration Theme",kind:"music",url:"audio/assets/era-themes/higher-theme-loop.ogg",author:"Cleyton Kauffman",license:"CC0",source:"https://opengameart.org/content/exploration-theme",sample:true},
  "dark-sector":{label:"深空區域｜Sector",kind:"music",url:"audio/assets/sector_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "dark-airy":{label:"異質環境｜Airy",kind:"ambient",url:"audio/assets/airy_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "dark-pulse":{label:"未知脈動｜Pulse",kind:"music",url:"audio/assets/pulse_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
