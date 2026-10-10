@@ -40,6 +40,7 @@ function trackStatus(id){return tracks[id]?.url?(availability.get(id)||"unchecke
 async function checkTracks(ids){for(const id of [...new Set(ids)].filter(x=>tracks[x]?.url)){if(document.hidden)break;await probeTrack(id);}return ids.map(id=>[id,trackStatus(id)]);}
 
 const defaults={enabled:true,master:0.7,music:0.45,ambient:0.6,battle:0.65,ui:0.6,notice:0.75};
+let gmPreviewVolume=1;
 let prefs={...defaults},previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice},music=null,session=null,unlocked=false,token=0;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of channels)if(Number.isFinite(saved[key]))prefs[key]=Math.max(0,Math.min(1,saved[key]));if(typeof saved.enabled==="boolean")prefs.enabled=saved.enabled;}catch(_){}
 const minimal=()=>document.body.classList.contains("main-minimal-mode-open")||document.body.classList.contains("civilization-3d-minimal")||g.isMinimalModeOpen?.()===true||g.Civilization3DMode?.current?.()==="3d-minimal";
@@ -48,7 +49,9 @@ function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_)
 function stop(){stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function reconcile(){if(prohibited()){stop();return;}/* No obsolete sounds are replayed. */ }
 function settings(){return {...prefs};}
-function previewSettings(){return {...previewLevels};}
+function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
+function previewGain(channel){return Math.min(1,Math.max(0,gmPreviewVolume*(channel==="music"?.85:channel==="ambient"?.45:channel==="notice"?.75:channel==="battle"?1:1)));}
+function setPreviewVolume(value){gmPreviewVolume=Math.max(0,Math.min(1,Number(value)||0));if(session){const channel=session.dataset.channel||"music";session.volume=previewGain(channel);previewReport({id:session.dataset.trackId||"",status:"volume",volume:session.volume,channel,url:session.src});}for(const voice of combatVoices)if(voice.dataset?.gmPreviewVoice==="1")voice.volume=previewGain("battle");document.dispatchEvent(new CustomEvent("civilization-audio-preview-volume-changed",{detail:{gmVolume:gmPreviewVolume}}));return true;}
 function previewLevel(key,value){
  if(!channels.includes(key))return false;
  previewLevels[key]=Math.max(0,Math.min(1,Number(value)||0));
@@ -116,7 +119,7 @@ function combatEvent(evt,{simulation=false}={}){
  const entry=combatCatalog[type];if(!entry?.asset)return false;
  const now=Date.now();if(now-lastCombat<240)return false;lastCombat=now;
  const track=tracks[entry.asset];if(!track)return false;
- const audio=new Audio(track.url);audio.volume=normalizeVolume("battle",simulation?previewLevels.master:prefs.master,simulation?previewLevels.battle:prefs.battle);
+ const audio=new Audio(track.url);audio.volume=simulation?previewGain("battle"):normalizeVolume("battle",prefs.master,prefs.battle);if(simulation)audio.dataset.gmPreviewVoice="1";
  audio.preload="none";combatVoices.add(audio);
  audio.addEventListener("ended",()=>combatVoices.delete(audio),{once:true});
  audio.addEventListener("error",()=>combatVoices.delete(audio),{once:true});
@@ -138,8 +141,7 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
  if(combatVoices.size>=3){const oldest=combatVoices.values().next().value;if(oldest){oldest.pause();oldest.removeAttribute("src");oldest.load();combatVoices.delete(oldest);}}
  const audio=new Audio(track.url);
  audio.preload="none";audio.loop=false;
- const base=simulation?previewLevels:prefs;
- audio.volume=Math.max(0,Math.min(1,normalizeVolume(track.kind==="ui"?"ui":"battle",base.master,base.battle??prefs.battle)*Math.max(0,Math.min(1,Number(volume)||0))));
+ audio.volume=Math.max(0,Math.min(1,(simulation?previewGain("battle"):normalizeVolume(track.kind==="ui"?"ui":"battle",prefs.master,prefs.battle))*Math.max(0,Math.min(1,Number(volume)||0))));if(simulation)audio.dataset.gmPreviewVoice="1";
  let source=null,panNode=null;
  try{
   const mode=g.Civilization3DMode?.current?.();
@@ -168,5 +170,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:4,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:5,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
