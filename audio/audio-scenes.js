@@ -1,9 +1,8 @@
-/* Simplified era music director. Three local themes only; battles use the era
-   theme until the three shared battle tracks are selected. No legacy sounds. */
+/* One scene music owner: three era themes, three shared battle themes. */
 (function(g){"use strict";
 const eraTracks=Object.freeze({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"});
 const catalog=Object.freeze(Object.fromEntries(Object.entries(eraTracks).map(([era,id])=>[era,Object.freeze({home:[id,null],explore:[id,null],battle:[id,null],boss:[id,null],front:[id,null]})])));
-let selected=null,previewing=false,lastCombatView=null;
+let selected=null,previewing=false,combatLocked=false;
 function phase(){
  try{const n=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(n===3)return "higher";if(n===2)return "universe";if(n===1)return "galaxy";}catch(_){}
  const st=typeof state!=="undefined"?state:null;
@@ -40,8 +39,7 @@ function apply(){
 function setContext(era,scene,{preview=false,combat=false,tier=null}={}){
  if(preview)return previewContext(era,scene);
  const item=resolve(era,scene,{combat,tier});
- if(combat&&typeof view==="string")lastCombatView=view;
- else if(!combat)lastCombatView=null;
+ if(combat)combatLocked=true;
  if(selected?.music===item.music){selected=item;return apply();}
  selected=item;return apply();
 }
@@ -54,10 +52,13 @@ function syncView(viewName,subScreen=""){
  const encounter=typeof currentCombatEncounter!=="undefined"?currentCombatEncounter:null;
  const mainKind=phase()==="universe"||encounter?.kind==="boss"?"boss":"battle";
  const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?mainKind:name;
- if(combat)return setContext(phase(),mode,{combat:true});
- // Re-renders during an active dungeon run must not restart the music.
- if(selected?.tier&&selected.scene===mode&&combat)return apply();
- if(selected?.tier&&name===lastCombatView&&combat)return apply();
+ if(combat){
+  // A render must never downgrade an already owned battle tier.
+  if(combatLocked&&selected?.tier)return apply();
+  return setContext(phase(),mode,{combat:true});
+ }
+ // Dungeon UI frequently renders its parent view while the battle stays active.
+ if(combatLocked&&selected?.tier)return apply();
  return setContext(phase(),name+(sub?":"+sub:""));
 }
 function previewContext(era,scene){
@@ -66,16 +67,18 @@ function previewContext(era,scene){
 }
 function stopPreview(){g.CivilizationAudio?.stopPreview?.();previewing=false;}
 function restore(){previewing=false;return apply();}
-function stop(){selected=null;previewing=false;g.CivilizationAudio?.stopMusic?.();}
+function stop(){selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
  if(type==="combat-start"){
+  if(combatLocked&&selected?.tier)return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
   return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
  }
- if(type==="combat-end")return true; // Settlement, not end of a continuous run.
- if(type==="explore"||type==="main"||type==="reincarnation"||type==="combat-exit")return setContext(era,type);
+ if(type==="combat-end")return true; // An individual fight is not the end of a continuous run.
+ if(type==="combat-exit"){combatLocked=false;return setContext(era,type);}
+ if(type==="explore"||type==="main"||type==="reincarnation"){combatLocked=false;return setContext(era,type);}
  if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
  return setContext(era,type||"home",{combat:detail.active===true});
 }
@@ -86,5 +89,5 @@ document.addEventListener("civilization-audio-settings-changed",e=>{
  if(e.detail?.key==="musicEnabled"&&g.CivilizationAudio?.settings?.().musicEnabled!==false)restore();
 });
 new MutationObserver(()=>{if(!g.CivilizationAudio?.isSilent?.()&&!auditionOpen())restore();}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:6,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
+g.CivilizationAudioScenes=Object.freeze({version:6,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected,combatLocked}:null});
 })(window);
