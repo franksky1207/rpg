@@ -5,17 +5,7 @@ const tracks=Object.freeze({
  "era-galaxy-theme":{label:"銀河紀元主題｜The Fall of Arcana",kind:"music",url:"audio/assets/era-themes/galaxy-theme-loop.ogg",author:"Matthew Pablo",license:"CC BY 3.0",source:"https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music",sample:true},
  "era-universe-theme":{label:"宇宙紀元主題｜Epic Orchestral Fantasy Theme",kind:"music",url:"audio/assets/era-themes/universe-theme-loop.ogg",author:"Markus Lindner",license:"CC BY 4.0",source:"https://opengameart.org/content/epic-orchestral-fantasy-theme",sample:true},
  "era-higher-theme":{label:"高維紀元主題｜Exploration Theme",kind:"music",url:"audio/assets/era-themes/higher-theme-loop.ogg",author:"Cleyton Kauffman",license:"CC0",source:"https://opengameart.org/content/exploration-theme",sample:true},
- "dark-sector":{label:"深空區域｜Sector",kind:"music",url:"audio/assets/sector_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-airy":{label:"異質環境｜Airy",kind:"ambient",url:"audio/assets/airy_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-pulse":{label:"未知脈動｜Pulse",kind:"music",url:"audio/assets/pulse_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-urgent":{label:"危險迫近｜Urgent",kind:"music",url:"audio/assets/urgent_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-transmission":{label:"轉換與傳輸｜Transmission",kind:"music",url:"audio/assets/transmission_1-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-victory":{label:"勝利音樂｜Victory",kind:"notice",url:"audio/assets/victory_4-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-hover":{label:"介面反饋｜Hover",kind:"ui",url:"audio/assets/hover_0-balanced2.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-title":{label:"選單主題｜Title",kind:"music",url:"audio/assets/title_6-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "galaxy-battle":{label:"銀河／宇宙戰鬥候選｜Space Battle",kind:"music",url:"https://opengameart.org/sites/default/files/space_battle_bpm130_0.ogg",author:"MintoDog",license:"CC0",source:"https://opengameart.org/content/space-battle",sample:true},
- "boss-orchestra":{label:"史詩 Boss 候選｜The Final Battle",kind:"music",url:"https://opengameart.org/sites/default/files/the_final_battle.ogg",author:"skrjablin",license:"CC0",source:"https://opengameart.org/content/the-final-battle",sample:true},
- "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"audio/assets/laserpew-balanced2.mp3",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
+
 });
 /* Warm the currently active era music first; other eras are cached lazily.
    Browsers may still require the user's first gesture before audible playback. */
@@ -133,23 +123,21 @@ function previewSeam(id,seconds=8){
  return true;
 }
 
-function playMusic(id){if(musicMuted())return false;return begin(id,{preview:false,loop:true});}
+function playMusic(id){
+ if(music?.dataset?.trackId===id&&!music.paused)return true;
+ if(musicMuted())return false;
+ return begin(id,{preview:false,loop:true});
+}
+function currentMusicId(){return music?.dataset?.trackId||null;}
 function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 
 const combatCatalog=Object.freeze({
- attack:{label:"普通攻擊",asset:"laser-preview",status:"candidate"},
+ attack:{label:"普通攻擊",asset:null,status:"awaiting-asset"},
  critical:{label:"暴擊",asset:null,status:"awaiting-asset"},
  dodge:{label:"閃避",asset:null,status:"awaiting-asset"},
- combo:{label:"連擊",asset:null,status:"awaiting-asset"},
- counter:{label:"反擊",asset:null,status:"awaiting-asset"},
- shield:{label:"護盾承傷",asset:null,status:"awaiting-asset"},
- drain:{label:"汲取",asset:null,status:"awaiting-asset"},
- penetration:{label:"穿透",asset:null,status:"awaiting-asset"},
- mark:{label:"印記",asset:null,status:"awaiting-asset"},
- berserk:{label:"狂暴",asset:null,status:"awaiting-asset"},
- victory:{label:"勝利",asset:"dark-victory",status:"candidate"},
- defeat:{label:"失敗",asset:null,status:"awaiting-asset"}
+ victory:{label:"勝利",asset:null,status:"awaiting-asset"}
+
 });
 let lastCombat=0;
 const combatVoices=new Set();
@@ -216,5 +204,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:7,tracks,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:8,tracks,currentMusicId,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
