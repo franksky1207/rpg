@@ -77,7 +77,11 @@ function notify(type,detail={}){
   return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
  }
  if(type==="combat-end")return true; // An individual fight is not the end of a continuous run.
- if(type==="combat-exit"){g.CivilizationAudio?.stopBattleSfx?.();combatLocked=false;return setContext(era,type);}
+ if(type==="combat-exit"){
+  // A stop request must not release battle music while its last animation is active.
+  if(g.isCombatPresentationActive?.()===true)return true;
+  g.CivilizationAudio?.stopBattleSfx?.();combatLocked=false;return setContext(era,type);
+ }
  if(type==="explore"||type==="main"||type==="reincarnation"){combatLocked=false;return setContext(era,type);}
  if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
  return setContext(era,type||"home",{combat:detail.active===true});
