@@ -1,3 +1,10 @@
+## 2026-10-10｜六種短音效第 3 批：正式呈現橋接與 GM 試聽（部分正式事件待補）
+- 第一批本地化 manifest 位於 `audio/assets/common-sfx/manifest.json`，共 199 個轉換後 OGG：ui-click 100、normal-attack 10、critical 37、dodge 1、heavy-hit 50、victory 1。重大打擊實際播放池只選爆炸類 04／05／29，不將提示音／環境音視作打擊。
+- 第二批既有 `playSfx`／`pickSfx` 音效池。本批 `audio/audio-core.js` 讓 `combatEvent(evt)` 由正式 `combatfx.js` 唯讀呈現事件接入：attack.crit 擇一選暴擊或普通攻擊，dodge 選閃避；不修改 `combatcore.js` 的傷害／判定／存檔。重大打擊只承認獨立 `specialHeavyImpact`／`majorImpact` 呈現事件，不推定 Boss／傷害門檻；victory 類型已有聲音池但所有模式統一的正式勝利結果事件**尚未全面接線**。UI 點擊由單一 document click 代理播放，禁用與 GM 試聽控制不觸發。
+- `audio/gm-audio-test.js` 在六首正式配樂下新增六種短音效的單次 GM 試聽按鈕，共用既有試聽音量；停止或離開試聽中心清掉短音效播放。尚未建立單一檔案選取或真人評價流程。音效試聽＝聲音池可觸發，不能等同真人聽感／正式事件覆蓋率全通過。
+- JS 修改同步更新 `index.html` 的 audio-core／gm-audio-test cache-bust。本輪三檔遠端回讀及 JS 語法檢查 PASS；**未跑真實桌機／手機聲音聆聽、exact-HEAD Chromium／完整跨模式勝利事件／WebGL 空間音效回歸**。新版主規格仍優先，文字模式與 3D 共用音訊 owner，極簡／背景快速補播靜音、GM 權限及正式戰鬥資料不變。
+- 後續：核對所有正式模式的「勝利」權威結算結果、特殊強力攻擊是否真有獨立呈現事件；避免 UI 與普通攻擊過度頻繁；對 199 個素材做聽感篩選與 LUFS 音量平衡；補充裝置長測、播放器排他與舊歷史音訊文件一致性。此批是**程式接線施工**，並非全部驗收封版。
+
 ## 2026-10-10｜緊急修復：戰鬥退場兩首音樂疊播（嚴格單聲道管理）
 - 使用者回報戰鬥結算恢復主題時「兩個音樂混在一起」。根因確認在 `audio/audio-core.js` 先前 `fadeMusic()` 的交叉淡化機制：開始第二次切曲時 `musicFadeSeq` 取消前一次 requestAnimationFrame，但舊 fade 的 `old` Audio 不再由 `music` 追蹤，也沒有被 pause/load，造成孤兒播放器持續出聲。快速轉場、正式結算及恢復尤其容易觸發。
 - 已改為 **正式音樂播放器排他式管理**：`musicVoices` Set 記錄所有由正式播放端建立的 HTMLAudioElement；跨曲切換先退役所有舊實體，確保同時僅有一首正式音樂播放，再讓新曲自 0 漸強（約 850ms）。不再採用會重疊兩首的 crossfade；舊 fade 非同步回呼會依序號檢查並停止已過期實體。音樂關閉及 stopMusic 也清理全部追蹤中的音源。GM 試聽仍只暫停正式音樂，回來原 currentTime 續播。
