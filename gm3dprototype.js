@@ -88,7 +88,20 @@ window.addEventListener("message",event=>{
  const cleared=limited(alternate?.deepestCleared,0,1000),attempt=window.alternateUniverseActiveAttempt?.(st)||null;
  const target=Math.max(1,Math.min(1000,Number(attempt?.depth)||Math.min(1000,cleared+1)));
  const failure=window.alternateUniverseFailureStatus?.(target,st)||null;
+ const arena=window.getArenaCoreState?.()||{};
+ const bounty=window.getBountyTestSnapshot?.()||{};
+ const mirror=window.mirrorDungeonStatus?.()||{};
+ const voidProgress=window.getVoidMirageProgressSnapshot?.()||window.getVoidMirageRunSnapshot?.()||{};
+ const dungeonModes=["bounty","arena","tower","mirror"].filter(key=>window.dungeonModeAvailability?.(key)?.visible!==false&&!(key==="bounty"&&window.currentWorldPhase?.()===3));
+ const dungeonSnapshot={
+   hub:{dungeonKind:"hub",world:window.currentWorldPhase?.()||1,dungeonVisibleModes:dungeonModes,dungeonAvailableModes:dungeonModes.map(()=>true),dungeonUnlocked:true},
+   bounty:{dungeonKind:"bounty",world:window.currentWorldPhase?.()===3?2:window.currentWorldPhase?.()||1,dungeonTier:bounty?.tier?.id||"normal",dungeonPhase:bounty.phase||"select",dungeonRemaining:Math.max(0,Number(window.dailyDungeonStatus?.("bounty")?.remaining)||0),dungeonUnlocked:true},
+   arena:{world:window.currentWorldPhase?.()||1,dungeonKind:"arena",dungeonRank:Number(arena.rank)||1,dungeonPosition:arena.position||"normal",dungeonPhase:arena.phase||"select",dungeonRemaining:Math.max(0,Number(arena.daily?.remaining)||0),advancedKind:"higher-arena",advancedStage:Number(arena.runtime?.round?.stageIndex)||0,advancedProgress:Number(arena.runtime?.finishedRuns)||0,higherArenaMode:arena.runtime?.round?.mode||arena.runtime?.selectedMode||"fixed",advancedUnlocked:true},
+   mirror:{advancedKind:"mirror",advancedProgress:Number(mirror.history?.bestWins)||0,advancedUnlocked:mirror.unlocked===true},
+   void:{advancedKind:"void",advancedProgress:Number(voidProgress.highestCleared??voidProgress.historicalHighest)||0,advancedUnlocked:true}
+ };
  const snapshot={
+   dungeon:dungeonSnapshot,
    galaxy:{world:1,mapCount:regions.length||10,selectedMap:regionIndex,unlockedRegions:regions.map(r=>highest>=Number(r.mapStart)),completedRegions:regions.map((r,i)=>highest>=Number(regions[i+1]?.mapStart||501)),review:false},
    universe:{world:2,highestUnlockedBossIndex:unlocked,clearedBossCount:bosses.filter(b=>window.secondWorldBossKilled?.(b.index)===true).length,defeatedBosses:bosses.slice(0,100).map(b=>window.secondWorldBossKilled?.(b.index)===true),selectedMap:Math.max(0,Math.min(9,Number(window.getSecondWorld3DPreviewSelectedRegion?.()??Math.floor(unlocked/10)))),review:false},
    higher:{world:3,presences:defs.slice(0,10).map((_,i)=>{const v=typeof progressed==="function"?progressed(i,st):null;return {defeated:v?.defeated===true,available:v?.challengeStatus?.allowed===true,remainingPercent:Number(v?.remainingPercent??100)};}),selectedPresence:Math.max(0,defs.findIndex((_,i)=>!progressed?.(i,st)?.defeated))},
