@@ -1,0 +1,90 @@
+name: Localize three era themes and build seamless loops
+on:
+  push:
+    paths:
+      - ".github/workflows/era-theme-localize.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: era-theme-localize
+  cancel-in-progress: false
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install audio utilities
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Download and prepare locally hosted themes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, subprocess, urllib.request, zipfile, io, os, tempfile, pathlib
+          root=pathlib.Path('audio/assets/era-themes');root.mkdir(parents=True,exist_ok=True)
+          tracks=[
+           ('galaxy','https://opengameart.org/sites/default/files/The%20Fall%20of%20Arcana_0.mp3','The Fall of Arcana','Matthew Pablo','CC BY 3.0','https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music'),
+           ('universe','https://opengameart.org/sites/default/files/EpicOrchestralFantasy_1.mp3','Epic Orchestral Fantasy Theme','Markus Lindner (linxiaoma)','CC BY 4.0','https://opengameart.org/content/epic-orchestral-fantasy-theme'),
+           ('higher','https://opengameart.org/sites/default/files/exploration_theme.zip','Exploration Theme','Cleyton Kauffman','CC0','https://opengameart.org/content/exploration-theme')]
+          def run(*args):
+           return subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True).stdout
+          def fetch(url,max_bytes):
+           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':'https://opengameart.org/'})
+           with urllib.request.urlopen(req,timeout=100) as response:
+            data=response.read(max_bytes+1)
+           if len(data)>max_bytes or len(data)<1000 or data[:30].lower().startswith(b'<html'):raise RuntimeError('Invalid download '+url)
+           return data
+          details={}
+          for era,url,title,author,license,page in tracks:
+           original=root/(era+'-original.'+('zip' if era=='higher' else 'mp3'))
+           if not original.exists():original.write_bytes(fetch(url,55*1024*1024))
+           src=original
+           zip_member=None
+           if era=='higher':
+            with zipfile.ZipFile(original) as z:
+             candidates=[i for i in z.infolist() if not i.is_dir() and pathlib.Path(i.filename).suffix.lower() in ('.ogg','.flac','.wav')]
+             if not candidates:raise RuntimeError('No eligible audio in high-era ZIP')
+             candidates.sort(key=lambda i:({'.flac':0,'.wav':1,'.ogg':2}[pathlib.Path(i.filename).suffix.lower()],-i.file_size))
+             chosen=candidates[0];zip_member=chosen.filename
+             src=root/('higher-source'+pathlib.Path(chosen.filename).suffix.lower())
+             if not src.exists():src.write_bytes(z.read(chosen))
+           data=json.loads(run('ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,sample_rate,channels','-of','json',str(src)))
+           seconds=float(data['format']['duration'])
+           if seconds<=8:raise RuntimeError('Audio too short')
+           loop=root/(era+'-theme-loop.ogg')
+           # Omit first/last 2s as separate clips; crossfade the tail into the opening;
+           # loop boundary matches the original contiguous audio at the 2s point.
+           # The output is: source[2..duration-2] + crossfade(source[end-2..end],source[0..2]).
+           if not loop.exists():
+            filt=(f'[0:a]aresample=48000,aformat=channel_layouts=stereo,asplit=3[mid][tail][head];'
+                  f'[mid]atrim=start=2:end={seconds-2:.4f},asetpts=PTS-STARTPTS[m];'
+                  f'[tail]atrim=start={seconds-2:.4f},asetpts=PTS-STARTPTS[t];'
+                  f'[head]atrim=end=2,asetpts=PTS-STARTPTS[h];'
+                  f'[t][h]acrossfade=d=2:c1=tri:c2=tri[x];'
+                  f'[m][x]concat=n=2:v=0:a=1,alimiter=limit=0.96[out]')
+            run('ffmpeg','-nostdin','-v','error','-y','-i',str(src),'-filter_complex',filt,'-map','[out]','-c:a','libvorbis','-q:a','5',str(loop))
+           info=json.loads(run('ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,sample_rate,channels','-of','json',str(loop)))
+           length=float(info['format']['duration'])
+           if abs(length-(seconds-2))>1.0:raise RuntimeError(f'Loop duration mismatch {era}: {length} {seconds}')
+           run('ffmpeg','-nostdin','-v','error','-i',str(loop),'-f','null','-')
+           for item in (original,src,loop):
+            if not item.exists() or item.stat().st_size<1024:raise RuntimeError('Output missing '+str(item))
+           details[era]={'title':title,'author':author,'license':license,'source_page':page,'source_url':url,'source_file':original.name,'source_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'source_bytes':original.stat().st_size,'zip_member':zip_member,'original_duration_seconds':round(seconds,3),'loop_file':loop.name,'loop_sha256':hashlib.sha256(loop.read_bytes()).hexdigest(),'loop_bytes':loop.stat().st_size,'loop_duration_seconds':round(length,3),'loop_method':'2-second head-tail equal-power crossfade; loop boundary at original t=2s; original is retained','human_loop_auditioned':False,'client_fade_on_transition':'pending audio player transition implementation'}
+          (root/'manifest.json').write_text(json.dumps({'version':1,'status':'technical-validation-not-human-audition','themes':details},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+          print('LOCALIZED 3 THEMES')
+          print(json.dumps({k:{'original_duration':v['original_duration_seconds'],'loop_duration':v['loop_duration_seconds'],'loop_bytes':v['loop_bytes']} for k,v in details.items()},indent=2))
+          PY
+      - name: Commit localized sources and loops
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio/assets/era-themes/
+          if ! git diff --cached --quiet; then
+            git commit -m "audio: localize three approved themes, licensed sources and seamless loops"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
