@@ -165,6 +165,7 @@ const sfxCategories=Object.freeze({"ui-click":{count:1,indices:[85],channel:"ui"
 const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
 const settledVictoryKeys=new Set();
 const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0};
+const sfxCleanup=new WeakMap();
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
 function preparedSample(category,index){
  const url="audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg";
@@ -198,6 +199,7 @@ function pickSfx(category){
 }
 function releaseSfx(audio){
  if(!audio)return;sfxVoices.delete(audio);
+ const cleanup=sfxCleanup.get(audio);if(cleanup){audio.removeEventListener("ended",cleanup);audio.removeEventListener("error",cleanup);sfxCleanup.delete(audio);}
  const slot=[...preparedSfx.values()].find(x=>x.audio===audio);if(slot)slot.busy=false;try{audio.pause();audio.currentTime=0;}catch(_){}if(slot)return;try{audio.removeAttribute("src");audio.load();}catch(_){}
 }
 function stopSfx(){for(const a of [...sfxVoices])releaseSfx(a);sfxLastTime.clear();}
@@ -226,11 +228,11 @@ function playSfx(category,{simulation=false,volume=1}={}){
   while(sfxVoices.size>=totalLimit)releaseSfx([...sfxVoices].find(x=>x.dataset.sfxCategory!=="victory")||sfxVoices.values().next().value);
  }
  sfxVoices.add(a);
- a.addEventListener("ended",()=>releaseSfx(a),{once:true});
- a.addEventListener("error",()=>releaseSfx(a),{once:true});
+ const finish=()=>{if(sfxCleanup.get(a)===finish)releaseSfx(a);};
+ sfxCleanup.set(a,finish);a.addEventListener("ended",finish);a.addEventListener("error",finish);
  if(a!==slot.audio)a.src=sample.url;
  const began=performance.now();sfxTiming.requested++;
- a.play().then(()=>{sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);}).catch(error=>{if(sfxVoices.has(a)){sfxTiming.failed++;console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}});
+ a.play().then(()=>{if(sfxCleanup.get(a)===finish){sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);}}).catch(error=>{if(sfxCleanup.get(a)===finish){sfxTiming.failed++;console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}});
  return true;
 }
 
