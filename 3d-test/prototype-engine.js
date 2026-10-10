@@ -610,6 +610,13 @@
     return scene;
   }
   /* B17-B: visual-only service consoles; account, cloud, and GM tools stay in HTML. */
+  // Shared Babylon styling helper for visual-only ceremonial/utility scenes.
+  function visualMaterial(B,scene,name,rgb,glow=0){
+    const material=new B.StandardMaterial(name,scene);
+    material.diffuseColor=new B.Color3(...rgb);
+    if(glow>0)material.emissiveColor=new B.Color3(...rgb).scale(glow);
+    return material;
+  }
   function createServiceConsoleScene(args={}){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     const kind=["settings","guide","account","cloud","gm"].includes(args.kind)?args.kind:"settings";
@@ -618,7 +625,7 @@
     const camera=new B.ArcRotateCamera("service-camera",Math.PI/2.2,Math.PI/2.65,10,new B.Vector3(0,.25,0),scene);
     camera.attachControl(args.canvas,true);
     new B.HemisphericLight("service-ambient",new B.Vector3(0,1,0),scene).intensity=.8;
-    const mat=(name,color,glow=false)=>{const m=new B.StandardMaterial(name,scene);m.diffuseColor=new B.Color3(...color);if(glow)m.emissiveColor=new B.Color3(...color).scale(.45);return m;};
+    const mat=(name,color,glow=false)=>visualMaterial(B,scene,name,color,glow?.45:0);
     const metal=mat("service-metal",[.12,.2,.31]),accent=mat("service-accent",hue,true);
     const base=B.MeshBuilder.CreateCylinder("service-base",{diameter:7.5,height:.34,tessellation:48},scene);base.position.y=-1.2;base.material=metal;
     const count=kind==="gm"?5:kind==="cloud"?3:kind==="guide"?4:kind==="account"?2:3;
