@@ -118,7 +118,7 @@ g.gmSoundPlaySelected=()=>{
 g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
 function guard(){
  const present=visible();
- if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-front";}
+ if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-front";g.CivilizationAudioScenes?.restore?.();}
  if(!wasPresent&&present)verifyVisible();
  wasPresent=present;
 }
