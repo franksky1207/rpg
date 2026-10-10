@@ -1,3 +1,10 @@
+## 2026-10-11｜智慧載入第 4 批：快取正確性與測試收尾
+- 修正 resource-cache-sw.js：每次新版 manifest 完成核對與清理後才設為目前資源來源；遇到 GitHub Pages 部署期間 manifest digest 與下載檔案內容暫不相符時，允許使用正常網路回應但絕不快取為錯誤版本（不再合成 Response.error）；快取容量統計如 Content-Length 缺失則改由 Blob 取得；手動清除範圍限定文明戰線 prefix 的快取，與玩家存檔完全分離。
+- 更新 tests/runtime/resource-cache-integrity.js 的實際第 3 批檔案版本斷言，新增 tests/runtime/resource-cache-behavior.js 的 Service Worker 模擬測試，涵蓋重複命中、版本更新、清理舊版、內容不相符回退、容量計算及手動清除。
+- 重要範圍限制：目前 SW 僅管理 manifest 列出的媒體（聲音、圖片、3D binary）；JS/CSS 仍使用既有 URL 版本與瀏覽器 HTTP 快取，不可宣稱 JS/CSS 已全面原子切換，也未確認手機真實裝置效能與儲存配額。第 3 批 UI 會顯示資源數與容量，無法安全得知的更新檔數不顯示假數據。
+- **正式延後事項**：3D 全面升級第 40 批及後續施工／優化完成後，再開獨立專案加入 JS/CSS 的持久智慧快取、部署版本一致性及故障回退；不要在目前頻繁更新期提前啟用。第 4 批只檢查架構未阻礙擴充。
+- 真實裝置驗收仍待使用者：桌機與手機首次／再訪、變更檔案、斷線、清除後容量與再下載、GM 授權、存檔不受影響；純程式模擬不能代替真機驗收。
+
 ## 2026-10-11｜智慧載入第 3 批：狀態提示與本機資源管理
 - 設定頁新增「本機資源管理」：顯示遊戲專屬 Cache Storage 快取的媒體資源筆數與實際測得的近似使用量，附「清除資源」按鈕及明確確認視窗；與「重置遊戲」完全區隔，僅透過 CIV_CACHE_CLEAR 刪除遊戲專屬媒體快取，不影響存檔、登入、GM 權限、localStorage 或 IndexedDB。
 - resource-cache-sw.js CIV_CACHE_STATUS 回報 entries、bytes、measured；若無法讀取容量則不冒稱精確。resource-cache-client.js 增加 updateSettingsStatus、clearWithConfirmation，重新渲染設定頁時重新取得資訊。首次安裝 SW 通常仍需重新整理才有 controller；瀏覽器不支援時提示無法取得。
