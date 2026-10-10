@@ -156,6 +156,12 @@
    const complete=(amount=1)=>{done=Math.min(total,done+amount);if(attempt===startupAttempt)updateProgress(done,total);};
    updateProgress(0,total);
    await waitForDomReady();complete();
+   loadingStage="正在檢查遊戲版本…";updateProgress(done,total);
+   const versionInfo=await window.CivilizationResourceCache?.checkStartupVersions?.();
+   if(versionInfo?.ok){
+    loadingStage=versionInfo.firstVisit?"正在載入遊戲資源…":versionInfo.changed>0?"發現 "+versionInfo.changed+" 個資源版本變更，正在載入遊戲…":"已是最新版本，正在載入遊戲…";
+   }else loadingStage="正在載入遊戲資源…";
+   updateProgress(done,total);
    if(!document.getElementById("main")||typeof window.render!=="function")throw new Error("startup-main-not-ready");
    complete();
    let loaded=0,failed=0,timedOut=false;
@@ -175,7 +181,10 @@
    try{await Promise.race([Promise.all(criticalJobs),deadline]);}
    finally{if(timeoutId!==null)clearTimeout(timeoutId);}
    if(failed)throw new Error("startup-critical-background-failed");
-   loadingStage="正在準備遊戲…";updateProgress(done,total);
+   if(versionInfo?.ok&&versionInfo.changed>0){
+    loadingStage="資源版本檢查完成，正在準備遊戲…";
+   }else loadingStage="正在準備遊戲…";
+   updateProgress(done,total);
    for(const [id,run] of startupTasks){
     const weight=taskWeight(id);let fraction=0;
     const progress=value=>{
