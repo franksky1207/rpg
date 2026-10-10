@@ -8,11 +8,11 @@ const tracks=Object.freeze({
  "dark-urgent":{label:"危險迫近｜Urgent",kind:"music",url:"audio/assets/urgent_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "dark-transmission":{label:"轉換與傳輸｜Transmission",kind:"music",url:"audio/assets/transmission_1-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "dark-victory":{label:"勝利音樂｜Victory",kind:"notice",url:"audio/assets/victory_4-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
- "dark-hover":{label:"介面反饋｜Hover",kind:"ui",url:"audio/assets/hover_0-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
+ "dark-hover":{label:"介面反饋｜Hover",kind:"ui",url:"audio/assets/hover_0-balanced2.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "dark-title":{label:"選單主題｜Title",kind:"music",url:"audio/assets/title_6-balanced.mp3",author:"SRG774",license:"CC0",source:"https://opengameart.org/content/dark-sci-fi-audio-pack",sample:true},
  "galaxy-battle":{label:"銀河／宇宙戰鬥候選｜Space Battle",kind:"music",url:"https://opengameart.org/sites/default/files/space_battle_bpm130_0.ogg",author:"MintoDog",license:"CC0",source:"https://opengameart.org/content/space-battle",sample:true},
  "boss-orchestra":{label:"史詩 Boss 候選｜The Final Battle",kind:"music",url:"https://opengameart.org/sites/default/files/the_final_battle.ogg",author:"skrjablin",license:"CC0",source:"https://opengameart.org/content/the-final-battle",sample:true},
- "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"https://opengameart.org/sites/default/files/laserpew.ogg",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
+ "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"audio/assets/laserpew-balanced2.mp3",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
 });
 const channels=["master","music","ambient","battle","ui","notice"];
 // Short UI cues need more prominence than long ambient/music beds. True LUFS
