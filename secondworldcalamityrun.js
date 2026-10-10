@@ -129,6 +129,7 @@
   if(checkpoint&&typeof save==="function")save(false);
   stopBackground();
   activeRun.active=false;activeRun.phase="ended";activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
+  window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"universe",mode:"calamity"});
   return runSnapshot();
  }
  function begin(value,mode="continuous"){
