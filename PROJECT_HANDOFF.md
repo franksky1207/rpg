@@ -1,3 +1,17 @@
+## 2026-10-10｜3D 五批一致性補修第 2 批・再次補修（正式／自由雙資料來源）
+
+**狀態：程式施工完成、靜態回讀通過；真實 GM iframe / Chromium / 手機與最新 Actions 尚待驗收。** 不得把靜態檢查當成實機通過。
+
+本次執行：
+1. GM `3d-test/test-center.js` 六類進度型預覽（銀河地圖／宇宙地圖／高維戰線／銀河災厄／宇宙災厄／異宇宙）新增與角色外觀同方向的「同步正式資料／自由測試設定」雙模式。從遊戲內 GM 開啟時預設正式資料；獨立測試中心因沒有正式權威資料預設自由；未取得正式快照顯示等待而不拿 mock 冒充。
+2. `gm3dprototype.js` 在既有 GM allowed + 同源 + 正確 iframe source 閘門下新增 `civilization3d:scenario-request/response`；僅傳最小化的地圖、逐隻災厄、高維十存在與異宇宙唯讀數據，沒有寫入 state/save 或登入資料；提供明確「重新同步正式資料」。
+3. 銀河與宇宙災厄 GM 可自訂第 1～10 隻各自的未解鎖/可挑戰/進行中/完成/回顧，宇宙另可已現身但雙條件未達；各自 HP% 與印記／文明進度，以及全部未解鎖／前期／中期／接近全破／全部完成情境。移除不適用的十大區欄位，正式同步由 `getCivilizationCalamityStatus`、`getSecondWorldCalamityStatus` 等正式 owner 取得。
+4. 異宇宙沿用正式 200 宇宙×5 深度、20 體系；同步最深通關、進行中及失敗鎖定；自由模式可選可挑戰／挑戰中／鎖定／已通關，3D 工廠依狀態顯示。正式選取焦點以進行中的深度優先，否則下一待挑戰深度。
+5. `worldmapui.js` 新增唯讀 `getSecondWorld3DPreviewSelectedRegion()`，在正式玩家展開宇宙區域後讓正式 3D 與 GM 正式同步聚焦該區，無展開紀錄時才回退最高可解鎖進度。銀河回顧維持已存在的選定地圖 getter，高維十存在同步正式持續 HP／可挑戰／完成。
+6. 懸賞戰仍沒有高維 option。GM 八大分類、31 唯一場景不變。正式 3D 場景只展示，不建立新的戰鬥 target、挑戰／結算／存檔程序。相關 JS/CSS 的 cache-bust、對照矩陣與 GM 瀏覽器測試新增雙模式、個別封印、異宇宙狀態斷言。
+
+**殘留驗收**：需實際在已授權 GM iframe 內驗證正式同步與自由模式切換；銀河、宇宙部分進度與全破兩種存檔、宇宙回顧聚焦、W3 持續 HP、異宇宙失敗與進行中、手機輸入面板；檢查 `resource-manifest.json` GitHub Actions 自動內容指紋更新及 Pages 部署。獨立 `/3d-test/` 並無玩家資料，不得顯示虛構的「正式同步已成功」。
+
 ## 2026-10-10｜3D 五批一致性補修第 2 批：已完成部分施工，殘留風險必須後續處理
 
 - `3d-test/formal-home.js` 的文明災厄 3D 正式資料改讀 `getCivilizationCalamityDefinitions/getCivilizationCalamityStatus` 與 `getSecondWorldCalamityDefinitions/getSecondWorldCalamityStatus`，每個災厄各給 `visible/unlocked/completed/review/remainingPercent`，宇宙可挑戰使用正式 `challengeable`；不再僅靠滿級印記總數或文明等級總數直接決定 10 個節點。`3d-test/prototype-engine.js` 按逐隻資料著色，GM 測試中心使用隔離的十封印 mock fixture。
