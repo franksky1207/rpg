@@ -18,9 +18,11 @@ const RESULTS={ok:"有聲音，音量正常",low:"有聲音，但太小聲",sile
 let reviews={};
 try{const parsed=JSON.parse(localStorage.getItem(REVIEW_KEY)||"{}");if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed))reviews=parsed;}catch(_){}
 function entryKey(row=current()){return row?(row.event?"event:":"scene:")+row.id:null;}
+function reviewLabel(row){return RESULTS[reviews[entryKey(row)]?.result]||"尚未填寫";}
 function reviewControl(){
- const key=entryKey(),result=reviews[key]?.result||"";
- return '<div class="controls" style="margin-top:12px;align-items:end"><label>我的聆聽紀錄<br><select class="btn" id="gmSoundReview" onchange="gmSoundRecord(this.value)"><option value="">尚未填寫</option>'+Object.entries(RESULTS).map(([id,name])=>'<option value="'+id+'" '+(id===result?'selected':'')+'>'+name+'</option>').join('')+'</select></label><button class="btn" type="button" onclick="gmSoundCopyReport()">複製驗收摘要</button></div><div class="muted" id="gmSoundReportStatus" role="status"></div>';
+ const result=reviews[entryKey()]?.result||"";
+ const buttons=Object.entries(RESULTS).map(([id,name])=>'<button type="button" class="btn '+(result===id?'blue':'')+'" aria-pressed="'+(result===id)+'" onclick="gmSoundRecord(\''+id+'\')">'+name+'</button>').join('');
+ return '<div style="margin-top:12px"><div style="margin-bottom:8px">我的聆聽紀錄：<b id="gmSoundReviewLabel">'+reviewLabel(current())+'</b></div><div class="controls gm-sound-review-actions" style="display:flex;flex-wrap:wrap;gap:8px">'+buttons+'</div><div class="controls" style="margin-top:10px"><button class="btn" type="button" onclick="gmSoundCopyReport()">複製驗收摘要</button></div><div class="muted" id="gmSoundReportStatus" role="status"></div></div>';
 }
 g.gmSoundRecord=result=>{
  if(!visible()||!entryKey())return false;
@@ -31,12 +33,15 @@ g.gmSoundRecord=result=>{
  reviews[key]={result,asset:row.asset||null,url:asset?.url||null,context:groupRow().name,scene:row.label,updatedAt:new Date().toISOString()};
  }
  try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviews));}catch(_){}
+ refresh();
  return true;
 };
 g.gmSoundCopyReport=()=>{
  if(!visible())return false;
  const rows=Object.entries(reviews).filter(([,v])=>RESULTS[v?.result]);
- const output=['《文明戰線・GM 音樂音效聆聽回報》','紀錄數：'+rows.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。',...rows.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt)].join('\n');
+ const all=GROUPS.flatMap(gp=>(gp.events?gp.events.map(id=>({key:"event:"+id,label:audio()?.combatCatalog?.[id]?.label||id,context:gp.name})):gp.contexts.map(([id,label])=>({key:"scene:"+id,label,context:gp.name}))));
+ const missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]);
+ const output=['《文明戰線・GM 音樂音效聆聽回報》','全部項目：'+all.length+'｜已填寫：'+rows.length+'｜尚未填寫：'+missing.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...rows.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt),'【尚未填寫】',...missing.map(x=>x.key+'｜'+x.context+'／'+x.label+'｜尚未填寫')].join('\\n');
  const finish=ok=>{const el=document.getElementById("gmSoundReportStatus");if(el)el.textContent=ok?"摘要已複製，請貼回 ChatGPT。":"複製失敗，請允許瀏覽器使用剪貼簿。";};
  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(output).then(()=>finish(true)).catch(()=>finish(false));return true;}
  const el=document.createElement("textarea");el.value=output;el.style.position="fixed";el.style.opacity="0";document.body.appendChild(el);el.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}el.remove();finish(ok);return ok;
@@ -70,7 +75,7 @@ function content(){
  if(!rows.some(x=>x.id===selected))selected=rows[0]?.id||"";
  return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。場景選單只顯示名稱；音檔能否載入由下方播放狀態單獨提示。聆聽評價只保存在本機，直到複製摘要回報後才進行 GitHub 素材修正。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
  +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
- +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+'</option>').join('')+'</select></label></div>'
+ +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+'（'+safe(reviewLabel(x))+'）</option>').join('')+'</select></label></div>'
  +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
  +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="CivilizationAudio.resetPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
  +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
@@ -112,5 +117,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=5;
+g.GM_AUDIO_TEST_CATALOG_VERSION=6;
 })(window);
