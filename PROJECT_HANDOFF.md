@@ -1,3 +1,13 @@
+## 2026-10-10｜第 1～18 批後整合優化第 5／6 批：雙模式安全與舊資料相容
+
+- **模式安全修補**：`3d-test/mode-foundation.js` v3 統一以帳號 ID 為選模式視窗生命週期邊界；新帳號登入時移除前帳號殘留 selector；舊視窗點擊事件須確認現在登入 ID 與建構時一致，否則不儲存偏好。正式 3D release gate 依然為 `false`，`canPreview3D` 仍開放 opt-in 視覺預覽。
+- **舊模式資料相容**：保留原 `civilization-war-presentation-mode-v1:<accountId>` key 與純文字 `text`／`3d` 資料；額外唯讀辨識有限大小的 JSON 物件 `{mode:"text"|"3d"}`，錯誤／未知格式不執行指令、不進入 3D。當記錄為尚未開放的 `3d`，本次直接安全運行文字模式，不反覆要求選擇、亦**不覆寫或刪除**原偏好。禁止未登入帳號及無本機儲存權限的持久化切換；偏好無法寫入時選擇頁可暫時進入文字版。登出清理的是執行期 selector，不刪其他帳號偏好。
+- **安全切換**：沿用現有戰鬥／視窗與啟動就緒 gate，新增 `registerSwitchBlocker(id,probe)`／`unregisterSwitchBlocker(id)`，供未來正式雲端交易、背景戰鬥、轉生、離線結算等各 owner 主動註冊尚未完成的操作；目前這些 owner **尚未接入 blocker**，不可宣稱所有操作已完整禁止切換。因完整 3D 尚未上線，此輪仍實際無法選擇 3D。此介面不更動正式 save schema 或雲端流程。
+- **第 14、16 項舊程式／快取盤點**：`index.html` 仍正式引用 `3d-test/mode-foundation.js` 與 `3d-test/formal-home.js`；正式預覽使用 `3d-test/runtime.js`、`appearance-snapshot.js`、`prototype-engine.js` 按需載入；GM 測試中心透過 `3d-test/test-center.js` 及 `3d-test/index.html` 載入同一場景工廠。歷史 cache-bust、GM `civilization-war-gm-resource-digests-v1`、帳號舊偏好都仍有讀取者／相容用途，本批**不刪任何檔案或 localStorage key**，避免誤傷舊瀏覽器或文字模式。正式第三紀元與異宇宙舊存檔處理仍交由既有 normalize／migration owner，3D 層不得修改。
+- **玩家可見資訊**：第 17-B 服務預覽沿用「僅供視覺預覽」友善文字，GM 視覺測試中心繼續不展示內部案例 ID／批號／WebGL 診斷；測試及 Commit 保留工程內容。此輪不加任何新 GM 診斷選單。
+- **已自我檢查**：mode foundation 與 B18 靜態 guard 的 JS 語法與 GitHub main 回讀；執行不連接真實帳號的隔離測試，確認舊 `3d` 偏好安全回退、JSON `text` 可讀、正式 3D gate 禁止、註冊的工作 blocker 生效、無存檔寫入；`index.html` cache-bust 已更新。尚無 exact-HEAD CI、手機／桌機真實換帳號及雲端進行中操作測試證據，應留到第 6 批實機回歸。
+- **進度**：額外整合優化第 5 批已施工，下一批第 6 批；原正式 3D 第 19～40 批維持，正式 3D 不提前開放。
+
 ## 2026-10-10｜1～18 批後整合優化第 4／6 批：首頁啟動、GM 正式外觀快照及場景工具
 
 - **首頁首次渲染**：`ui.js` 建立唯一 `window.civilizationRequestHomeEntryReconcile()`，採微任務合併觸發，仍只在當前為首頁且實際應有入口缺失時執行正式 `render()`。`alternateuniverseui.js` 移除獨立 `reconcileInitialHome()` 再次呼叫 `render()` 的分支，改交由統一協調入口。可減少 DOMContentLoaded 時重覆渲染，不更動異宇宙解鎖、路由、戰鬥與存檔。尚須實測銀河／宇宙／高維入口與轉生後首次刷新。
