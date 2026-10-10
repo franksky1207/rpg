@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "status": "technical-validation-only",
+  "version": 2,
+  "status": "localized-integrated-formal-playback",
   "themes": {
     "normal": {
       "title": "JRPG Battle Theme",
@@ -11,15 +11,15 @@
       "original_file": "normal-original.wav",
       "original_bytes": 8469188,
       "original_sha256": "ebda2cf763ae4adbfc6b423095eb03a0718fdbe36e1d599c468eaeebc3e83062",
-      "original_duration_seconds": 48.0,
+      "original_duration_seconds": 48,
       "loop_file": "normal-battle-loop.ogg",
       "loop_bytes": 910064,
       "loop_sha256": "19b9d9ac2f550937e421203be404b86659aea0d22397470e68cb30342d96e214",
-      "loop_duration_seconds": 48.0,
+      "loop_duration_seconds": 48,
       "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
       "source_marked_loop": true,
       "human_loop_auditioned": false,
-      "usage": "GM audition only; not assigned to real battles"
+      "usage": "Formal normal battle music and GM audition"
     },
     "medium": {
       "title": "Boss Battle",
@@ -38,7 +38,7 @@
       "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
       "source_marked_loop": false,
       "human_loop_auditioned": false,
-      "usage": "GM audition only; not assigned to real battles"
+      "usage": "Formal medium battle music and GM audition"
     },
     "high": {
       "title": "I'm Boss Here!",
@@ -57,7 +57,8 @@
       "loop_strategy": "Source arrangement kept intact; seek/seam test required before claiming seamless looping",
       "source_marked_loop": true,
       "human_loop_auditioned": false,
-      "usage": "GM audition only; not assigned to real battles"
+      "usage": "Formal high battle music and GM audition"
     }
-  }
+  },
+  "note": "All three battle tracks are wired to formal combat by audio/audio-scenes.js and also available for GM audition. Source/loop metadata is retained. Human verification of seamless transitions must not be inferred."
 }
