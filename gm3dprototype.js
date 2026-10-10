@@ -134,14 +134,22 @@ window.addEventListener("message",event=>{
    mirror:{advancedKind:"mirror",advancedProgress:Number(mirror.history?.bestWins)||0,advancedUnlocked:mirror.unlocked===true},
    void:{advancedKind:"void",advancedProgress:Number(voidProgress.highestCleared??voidProgress.historicalHighest)||0,advancedUnlocked:true}
  };
+ // Presentation event contract only: no battle execution or settlement authority.
  const combat=window.getCombatPresentationSnapshot?.()||null;
- const battleSnapshot=combat&&Number(combat.playerMaxHp)>0&&Number(combat.enemyMaxHp)>0?{
-   battleAvailable:true,battleVisualKind:Number(combat.playerShield)>0||Number(combat.enemyShield)>0?"shield":"battle",
-   playerHpRatio:Math.max(0,Math.min(1,Number(combat.playerHp)/Number(combat.playerMaxHp))),
-   enemyHpRatio:Math.max(0,Math.min(1,Number(combat.enemyHp)/Number(combat.enemyMaxHp))),
-   shieldRatio:Math.max(0,Math.min(1,(Number(combat.playerShield)||0)/Math.max(1,Number(combat.playerShieldMax)||1))),
+ const validCombat=combat&&Number(combat.playerMaxHp)>0&&Number(combat.enemyMaxHp)>0&&
+   Number.isFinite(Number(combat.playerHp))&&Number.isFinite(Number(combat.enemyHp));
+ const battleRatio=(value,max)=>Math.max(0,Math.min(1,Number(value)/Number(max)));
+ const playerShield=Math.max(0,Number(combat?.playerShield)||0);
+ const enemyShield=Math.max(0,Number(combat?.enemyShield)||0);
+ const battleSnapshot=validCombat?{
+   schema:1,status:"active",source:"formal-combat",eventType:"presentation-snapshot",
+   battleAvailable:true,battleVisualKind:playerShield>0||enemyShield>0?"shield":"battle",
+   playerHpRatio:battleRatio(combat.playerHp,combat.playerMaxHp),
+   enemyHpRatio:battleRatio(combat.enemyHp,combat.enemyMaxHp),
+   shieldRatio:battleRatio(playerShield,Math.max(1,Number(combat.playerShieldMax)||playerShield)),
    visualOnly:true,readOnly:true
- }:{battleAvailable:false,battleVisualKind:"unavailable",visualOnly:true,readOnly:true};
+ }:{schema:1,status:"unavailable",reason:"no-active-combat",source:"formal-combat",eventType:"presentation-snapshot",
+   battleAvailable:false,battleVisualKind:"unavailable",visualOnly:true,readOnly:true};
  const snapshot={
    battle:battleSnapshot,
    dungeon:dungeonSnapshot,
