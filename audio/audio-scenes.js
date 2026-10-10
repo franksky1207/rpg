@@ -51,7 +51,9 @@ function syncView(viewName,subScreen=""){
  const combat=name==="dungeon-mirror-combat"||name==="dungeon-void-combat"
   ||name==="thirdworld-combat"||name==="third-world-combat"
   ||(name==="adventure"&&(sub==="combat"||sub==="review-combat"));
- const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?(phase()==="universe"?"boss":"battle"):name;
+ const encounter=typeof currentCombatEncounter!=="undefined"?currentCombatEncounter:null;
+ const mainKind=phase()==="universe"||encounter?.kind==="boss"?"boss":"battle";
+ const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?mainKind:name;
  if(combat)return setContext(phase(),mode,{combat:true});
  // Re-renders during an active dungeon run must not restart the music.
  if(selected?.tier&&selected.scene===mode)return apply();
