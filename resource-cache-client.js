@@ -71,7 +71,7 @@ async function startBackgroundPreload(){
  try{
   const reg=registration||await navigator.serviceWorker.ready;
   const worker=navigator.serviceWorker.controller||reg.active;
-  if(!worker)return false;
+  if(!worker){preloading=false;return false;}
   const port=new MessageChannel();
   port.port1.onmessage=event=>{
    const info=event.data||{};
@@ -80,7 +80,7 @@ async function startBackgroundPreload(){
   };
   worker.postMessage({type:"CIV_CACHE_PRELOAD"},[port.port2]);
   return true;
- }catch(_){return false;}finally{if(!SUPPORTED)preloading=false;}
+ }catch(_){preloading=false;return false;}
 }
 function humanBytes(bytes){if(!Number.isFinite(bytes)||bytes<0)return "無法計算";if(bytes<1024)return bytes+" B";if(bytes<1048576)return (bytes/1024).toFixed(1)+" KB";return (bytes/1048576).toFixed(1)+" MB";}
 async function updateSettingsStatus(){
@@ -88,7 +88,7 @@ async function updateSettingsStatus(){
  if(!target)return;
  const result=await readDirectCacheStatus();
  if(!target.isConnected)return;
- target.textContent=result.ok?("已儲存 "+result.entries+" 個資源，約 "+humanBytes(result.bytes)):("快取狀態無法讀取"+(SUPPORTED?"":"（瀏覽器不支援）"));
+ target.textContent=result.ok?("已儲存 "+result.entries+" 個資源，約 "+humanBytes(result.bytes)+(preloading?"（正在背景下載）":"")):("快取狀態無法讀取"+(SUPPORTED?"":"（瀏覽器不支援）"));
 }
 async function clearWithConfirmation(){
  if(!confirm("確定清除已下載的遊戲資源？角色進度、帳號資料與 GM 設定不會刪除。下次進入遊戲將重新下載必要資源。"))return false;
