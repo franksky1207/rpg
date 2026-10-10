@@ -93,7 +93,7 @@ window.addEventListener("message",event=>{
    universe:{world:2,highestUnlockedBossIndex:unlocked,clearedBossCount:bosses.filter(b=>window.secondWorldBossKilled?.(b.index)===true).length,defeatedBosses:bosses.slice(0,100).map(b=>window.secondWorldBossKilled?.(b.index)===true),selectedMap:Math.floor(unlocked/10),review:false},
    higher:{world:3,presences:defs.slice(0,10).map((_,i)=>{const v=typeof progressed==="function"?progressed(i,st):null;return {defeated:v?.defeated===true,available:v?.challengeStatus?.allowed===true,remainingPercent:Number(v?.remainingPercent??100)};}),selectedPresence:Math.max(0,defs.findIndex((_,i)=>!progressed?.(i,st)?.defeated))},
    calamities:{1:cal(1),2:cal(2)},
-   alternate:{world:3,frontierKind:"alternate",frontierProgress:cleared,alternateUniverse:Math.ceil(target/5),alternateDepth:(target-1)%5+1,alternateSegment:Math.ceil(target/50),alternateLocked:failure?.locked===true,alternateActive:!!attempt}
+   alternate:{world:3,frontierKind:"alternate",frontierProgress:cleared,alternateUniverse:Math.ceil(target/5),alternateDepth:(target-1)%5+1,alternateSegment:Math.ceil(target/50),alternateLocked:failure?.locked===true,alternateActive:!!attempt,alternateCompleted:cleared>=target}
  };
  event.source.postMessage({type:"civilization3d:scenario-response",snapshot},event.origin);
  }
