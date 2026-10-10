@@ -58,8 +58,39 @@ window.addEventListener("message",event=>{
  if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow||!allowed())return;
  if(event.data?.type==="civilization3d:close"){close();return;}
  if(event.data?.type==="civilization3d:appearance-request"){
-  const appearance=window.Civilization3DAppearance?.capture();
-  event.source.postMessage({type:"civilization3d:appearance-response",appearance},event.origin);
+  const sender=event.source,origin=event.origin;
+  // Read authoritative formal data; the loader is only invoked when GM requests a snapshot.
+  (async()=>{
+   try{
+    if(!window.Civilization3DAppearance?.capture){
+     const source="3d-test/appearance-snapshot.js";
+     const response=await fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
+     const manifest=response.ok?await response.json():null;
+     const digest=manifest?.files?.[source];
+     const url=source+(/^[a-f0-9]{24}$/.test(String(digest||""))?"?asset="+digest:"?v=20261010-repair4-appearance");
+     await new Promise((resolve,reject)=>{
+      const el=document.createElement("script");el.src=url;el.onload=resolve;el.onerror=()=>reject(new Error("正式外觀模組載入失敗"));document.head.append(el);
+     });
+    }
+    const appearance=window.Civilization3DAppearance?.capture();
+    if(!appearance)throw new Error("正式角色快照尚無可讀取資料");
+    const types=["weapon","helmet","armor","shoes","accessory"];
+    const galaxy=typeof MAPS!=="undefined"&&Array.isArray(MAPS)?MAPS:[];
+    const galGroups=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
+    const cosmic=Array.isArray(window.SECOND_WORLD_REGIONS)?window.SECOND_WORLD_REGIONS:[];
+    const high=Array.isArray(window.THIRD_WORLD_EQUIPMENT_NAME_ROWS)?window.THIRD_WORLD_EQUIPMENT_NAME_ROWS:[];
+    const catalog={
+     1:galGroups.map(region=>({name:String(region.name||""),entries:galaxy.slice(region.mapStart,region.mapEnd+1).map(map=>({name:String(map.name||""),level:Number(map.max)||0,names:types.map((_,i)=>String(map.gear?.[i]||""))}))})),
+     2:cosmic.map(region=>({name:String(region.name||""),entries:Array.from({length:10},(_,i)=>{const boss=window.secondWorldBoss?.(region.firstBossIndex+i);return {name:String(boss?.name||""),level:Number(boss?.level)||0,names:types.map(type=>String(boss?.equipment?.[type]||""))};})})),
+     3:[{name:"高維紀元",entries:high.map((row,i)=>({name:"第 "+(i+1)+" 階段 · "+String(row.theme||""),level:0,names:types.map(type=>String(row[type]||""))}))}]
+    };
+    if(catalog[1].length!==10||catalog[2].length!==10||catalog[3][0].entries.length!==10||[...catalog[1],...catalog[2],...catalog[3]].some(g=>g.entries.length!==10||g.entries.some(e=>e.names.some(n=>!n))))throw new Error("正式裝備區域或名稱資料未完整載入");
+    if(!overlay||!allowed()||overlay.querySelector("iframe")?.contentWindow!==sender)return;
+    sender.postMessage({type:"civilization3d:appearance-response",appearance,catalog},origin);
+   }catch(error){
+    if(overlay&&allowed()&&overlay.querySelector("iframe")?.contentWindow===sender)sender.postMessage({type:"civilization3d:appearance-error",reason:String(error?.message||error)},origin);
+   }
+  })();
  }
  if(event.data?.type==="civilization3d:scenario-request"){
  const st=typeof state!=="undefined"?state:null;
