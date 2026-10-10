@@ -39,9 +39,9 @@ function begin(id,{preview=false,loop=true}={}){
  if(!unlocked)return false;
  const item=tracks[id],stamp=++token;const previous=preview?session:music;
  if(previous){previous.pause();previous.src="";}
- const el=new Audio();el.preload="none";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.volume=preview?previewLevels.master*(previewLevels[item.kind]??prefs[item.kind]):prefs.master*prefs[item.kind];el.addEventListener("error",()=>{if(stamp===token)g.console.warn("Civilization audio source could not load",id);});
+ const el=new Audio();el.preload="none";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.volume=preview?previewLevels.master*(previewLevels[item.kind]??prefs[item.kind]):prefs.master*prefs[item.kind];el.addEventListener("playing",()=>{if(stamp===token&&preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"playing"}}));});el.addEventListener("error",()=>{if(stamp===token){g.console.warn("Civilization audio source could not load",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});
  if(preview)session=el;else music=el;
- el.play().catch(()=>{if(stamp===token)g.console.warn("Audio unavailable or autoplay restricted",id);});return true;
+ el.play().catch(()=>{if(stamp===token){g.console.warn("Audio unavailable or autoplay restricted",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});return true;
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
 function stopPreview(){if(session){session.pause();session.src="";session=null;}}
