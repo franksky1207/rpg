@@ -319,7 +319,7 @@
     platform.position.y=-.4;platform.material=glow;
     const orbit=B.MeshBuilder.CreateTorus("character-aura",{diameter:3.5,thickness:.065,tessellation:72},scene);
     orbit.rotation.x=Math.PI/2;orbit.position.y=-.18;orbit.material=glow;
-    scene.metadata={civilization3dCharacter:{visualOnly:true,readOnly:true,assetKind:"geometry-fallback",fallback:"procedural-geometry",modelDescriptors:global.Civilization3DAppearance?.modelDescriptors?.(args.appearance)||[]}};
+    scene.metadata={civilization3dCharacter:{visualOnly:true,readOnly:true,assetKind:"geometry-fallback",fallback:"procedural-geometry",modelDescriptors:Array.isArray(args.modelDescriptors)?args.modelDescriptors:global.Civilization3DAppearance?.modelDescriptors?.(args.appearance)||[],appearanceSource:args.appearanceSource||"fixture"}};
     scene.onBeforeRenderObservable.add(()=>{orbit.rotation.z+=Math.min(args.engine.getDeltaTime(),50)*.00003;});
     return scene;
   }
@@ -364,7 +364,7 @@
       sampleMesh.position.set(x,-.1,2);sampleMesh.material=color(sample);
     }
     scene.metadata={civilization3dEquipment:{visualOnly:true,readOnly:true,world,slotCount:5,
-      slots:slots.map((item,i)=>global.Civilization3DAppearance?.modelDescriptor?.(["weapon","helmet","armor","shoes","accessory"][i],item,world,args.appearance?.enhancements?.[["weapon","helmet","armor","shoes","accessory"][i]])||{present:item?.present===true,world:Number(item?.world)||world,quality:Math.max(0,Math.min(5,Number(item?.quality)||0)),visualKey:String(item?.visualKey||"").slice(0,120),assetKind:"geometry-fallback"})}};
+      appearanceSource:args.appearanceSource||"fixture",slots:Array.isArray(args.modelDescriptors)?args.modelDescriptors:slots.map((item,i)=>global.Civilization3DAppearance?.modelDescriptor?.(["weapon","helmet","armor","shoes","accessory"][i],item,world,args.appearance?.enhancements?.[["weapon","helmet","armor","shoes","accessory"][i]])||{present:item?.present===true,world:Number(item?.world)||world,quality:Math.max(0,Math.min(5,Number(item?.quality)||0)),visualKey:String(item?.visualKey||"").slice(0,120),assetKind:"geometry-fallback"})}};
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);scene.meshes.forEach(mesh=>{if(mesh.name.startsWith("equipment-slot-")&&!mesh.name.includes("ring")&&!mesh.name.includes("base"))mesh.rotation.y+=dt*.00012;});});
     return scene;
   }
