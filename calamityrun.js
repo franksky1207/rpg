@@ -67,6 +67,7 @@
   activeRun.phase="ended";
   activeRun.endedReason=String(reason||"ended");
   activeRun.endedAt=Date.now();
+  window.CivilizationAudio?.settlementVictory?.("calamity:"+String(activeRun.startedAt),{success:activeRun.wins>0&&["single-complete","title-first-kill","mark-maxed"].includes(activeRun.endedReason)});
   window.CivilizationAudioScenes?.notify?.("combat-exit",{mode:"calamity"});
   return runStatus();
  }
