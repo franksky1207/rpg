@@ -64,7 +64,7 @@ const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 const musicMuted=()=>prohibited()||!prefs.musicEnabled;
 const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
-function stop(){stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function stop(){musicFadeSeq++;stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled&&music){music.pause();music.removeAttribute("src");music.load();music=null;}if(!prefs.effectsEnabled)stopCombat();}
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
@@ -126,13 +126,36 @@ function previewSeam(id,seconds=8){
  return true;
 }
 
+let musicFadeSeq=0;
+function fadeMusic(id,duration=1100){
+ if(!tracks[id]||musicMuted())return false;
+ if(music?.dataset?.trackId===id)return resumeMusic();
+ const serial=++musicFadeSeq;
+ const old=music;
+ const el=new Audio(tracks[id].url);el.preload="auto";el.loop=true;el.dataset.channel="music";el.dataset.trackId=id;
+ const target=normalizeVolume("music",prefs.master,prefs.music);
+ el.volume=0;
+ music=el;
+ const start=performance.now();
+ const step=now=>{
+  if(serial!==musicFadeSeq)return;
+  const t=Math.min(1,Math.max(0,(now-start)/duration));
+  if(music===el)el.volume=Math.min(1,target*t);
+  if(old)old.volume=Math.max(0,target*(1-t));
+  if(t<1)requestAnimationFrame(step);
+  else if(old){old.pause();old.removeAttribute("src");old.load();}
+ };
+ el.play().then(()=>requestAnimationFrame(step)).catch(()=>{if(serial!==musicFadeSeq)return;music=old;el.pause();el.removeAttribute("src");el.load();if(old){old.volume=target;old.play().catch(()=>{});}});
+ return true;
+}
 function playMusic(id){
  if(music?.dataset?.trackId===id)return resumeMusic();
  if(musicMuted())return false;
+ if(music)return fadeMusic(id);
  return begin(id,{preview:false,loop:true});
 }
 function currentMusicId(){return music?.dataset?.trackId||null;}
-function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
+function stopMusic(){musicFadeSeq++;token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function resumeMusic(){if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
@@ -208,5 +231,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:8,tracks,currentMusicId,resumeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:8,tracks,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
