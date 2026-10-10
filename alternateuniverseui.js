@@ -45,7 +45,7 @@
    if(!result?.ok)throw new Error(result?.reason||"combat-failed");
    await presentCombat(result.combat);
    let settlement=null;if(result.settlementReady===true){settlement=typeof window.settleAlternateUniverseCombat==="function"?window.settleAlternateUniverseCombat(result):{ok:false};if(!settlement?.ok)throw new Error(settlement?.reason||"settlement-failed");}
-   lastBattleReport={depth:attempt.depth,traits:Array.from(attempt.traits||[]),result,settlement};return true;
+   lastBattleReport={depth:attempt.depth,traits:Array.from(attempt.traits||[]),result,settlement};if(settlement?.ok===true&&result?.combat?.win===true)window.CivilizationAudio?.settlementVictory?.("alternate:"+String(attempt.attemptId||attempt.depth),{success:true});return true;
   }catch(error){console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。");return false;}
   finally{battleContext=null;window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"higher",mode:"alternateBattle"});renderPage();}
  }
