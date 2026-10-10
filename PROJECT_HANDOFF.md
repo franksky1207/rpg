@@ -1,3 +1,11 @@
+## 2026-10-11 音訊六批優化・第 1 批
+- main 唯一真實來源；本批處理全戰鬥音訊結算識別、一般／鏡像重大打擊音效判定及延遲退場保護。
+- audio-core.js 新增 settlementKey(prefix,object)，使用 WeakMap 對當次結算物件配置穩定識別，不再用 Date.now() 作為主線、銀河回顧、懸賞、競技場與鏡像的結算去重備援。
+- ui.js 主線結算使用 ctx、銀河回顧使用當次 reviewAudioSettlement；懸賞／競技場使用當次 summary；鏡像使用 run 實例。持續挑戰的既有成功規則不變：單場成功或連戰正常完成至額度終點才可能播放勝利聲，手動停止／戰敗不新增勝利聲。
+- combatfx.js 一般與鏡像演出共用 isMajorCombatAudioImpact 判定，仍由既有 combatEvent 分類普通／暴擊／閃避／重大打擊，不改戰鬥計算。
+- audio-scenes.js 長時間動畫逾時時不強制切掉戰鬥音樂，避免預設 15 秒後錯誤退場；保留後續正式退場事件及過期退出通知代次保護。
+- index.html 七個異動 JS 增加 audiofix1=20261011 cache bust；GitHub main 回讀七份 JavaScript 語法 PASS，仍需桌機與手機實機驗收所有模式、連戰停止、結算、聲音不重播與不疊播。
+
 ## 2026-10-11｜全戰鬥模式背景音樂統一整合（按使用者要求，不限副本）
 - 範圍包括銀河／宇宙／高維主線、銀河回顧、懸賞、競技場（含高維固定／變化）、鏡像、虛空、銀河／宇宙災厄、異宇宙與高維 Boss 持續連戰。僅音樂場景的生命週期接線，不更動戰鬥數值、獎勵、存檔、音效或已選 6 首配樂。
 - `audio/audio-scenes.js` 的 `setContext()` 現在將 combatLocked 作為所有來源的共用權威防線：已正式進入戰鬥時，任何非戰鬥 `setContext`（包括自行 renderPage、renderW3 等）以及重複戰鬥 context 都只恢復目前正式戰鬥音樂，不重建／重播、不降回紀元曲。保持 combat-start → battle ownership → 正式 combat-exit 的生命週期，連戰中途 `combat-end` 不切回音樂。
