@@ -1,3 +1,9 @@
+## 2026-10-10｜A03 正式 UI／音訊情境對齊補修
+- 正式核對文件：`docs/A03_FORMAL_AUDIO_SCENE_AUDIT_2026-10-10.md`。已修復由一般「探索／戰鬥／Boss／災厄」套版三紀元造成的虛構分類：高維改高維戰線、階段變化、回顧、界弦核心、定相／異相競技場、異宇宙選擇／戰鬥，移除高維主線 Boss 雙分類及高維文明災厄；宇宙主線只有 Boss，沒有銀河式普通／菁英類型。
+- `audio/audio-scenes.js` 正式 A03 scene catalog 與 `audio/gm-audio-test.js` 八分類細項同步；`ui.js` 正式 render 導航、`alternateuniverseui.js` 異宇宙、`thirdworldarenaui.js` 高維競技場的音訊只讀接線。通用戰鬥事件不得覆蓋異宇宙、高維競技場及合法副本情境。
+- GM 四評價按鈕、`civilization.gm.audio.review.v1` 本機紀錄及摘要複製保留。舊分類已填紀錄單獨列在摘要，不亂映射或刪掉；新分類各項後仍顯示尚未填寫／已填評價。GM 試聽離開時恢復正式背景音樂。
+- `index.html` JS cache bust 已同步；此次沒有改正式戰鬥公式、獎勵、存檔 schema。重要區分：**主要 UI／模式分類已對齊**，不代表所有按鈕／Boss 階段事件百分百 hook，也不代表遠端音檔可聽或響度驗收完成。待辦清單及正式依據見 audit 文件。
+
 ## 2026-10-10｜音訊 A03 GM 多層情境試聽補充
 - 現有 GM 八分類不變：高維／宇宙／銀河等場景播放按鈕已透過 `CivilizationAudioScenes.previewContext` 試聽配樂＋獨立環境層（目前遠端候選，可能載入失敗），離開、切換場景或頁面時停止試聽音樂與環境。四評價按鈕／本機紀錄／摘要均保留。
 - A03 `combatfx.js` 兩個 eligible event 分支均以大括號包裹場景通知＋A02 戰鬥音效；`firstActor`/`battleEnd` 不觸發。
