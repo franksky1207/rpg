@@ -179,6 +179,6 @@ const assert=require("node:assert/strict");
   assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 6 categories, 27 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  console.log("PASS GM visual center: 6 categories, 32 scenes, no engineering text, mobile maximize/restore",mobile,restore);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
