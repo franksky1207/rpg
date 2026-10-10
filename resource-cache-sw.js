@@ -16,9 +16,9 @@ async function refresh(){
   if(doc.schema!==1||doc.algorithm!=="sha256-96"||!doc.files||typeof doc.files!=="object")throw Error("manifest-invalid");
   const entries=new Map(Object.entries(doc.files).filter(([p,h])=>hex(h)&&!p.includes("..")&&!p.startsWith("/")));
   if(!entries.size)throw Error("manifest-empty");
-  known=entries;
   manifestTag=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(JSON.stringify(doc))).then(x=>Array.from(new Uint8Array(x),b=>b.toString(16).padStart(2,"0")).join("").slice(0,16));
   await clean(entries);
+  known=entries;
   return entries;
  })().finally(()=>refreshJob=null);
  return refreshJob;
@@ -48,9 +48,9 @@ async function media(request){
   const bytes=await fetched.clone().arrayBuffer();
   const hash=await crypto.subtle.digest("SHA-256",bytes);
   const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
-  if(actual!==digest)return Response.error();
+  if(actual!==digest)return fetched; // deployment in progress; never cache mismatched bytes
   try{await cache.put(key,fetched.clone());}catch(_){} // quota errors must not block playback
- }catch(_){return fetched;} // unsupported/oversized resource uses normal network result
+ }catch(_){return fetched;} // hashing unavailable: return uncached response
  return fetched;
 }
 self.addEventListener("install",event=>{event.waitUntil(self.skipWaiting());});
@@ -72,11 +72,12 @@ self.addEventListener("message",event=>{
   const keys=await c.keys();let bytes=0,measured=0;
   for(const key of keys){
    const response=await c.match(key);
-   const length=Number(response?.headers?.get("content-length"));
+   const rawLength=response?.headers?.get("content-length");
+   const length=rawLength===null?NaN:Number(rawLength);
    if(Number.isFinite(length)&&length>=0){bytes+=length;measured++;}
    else if(response){try{bytes+=(await response.blob()).size;measured++;}catch(_){}}
   }
   respond({ok:true,version:manifestTag,entries:keys.length,bytes,measured});
  }).catch(()=>respond({ok:false})));
- if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{await caches.delete(ACTIVE);respond({ok:true});})().catch(()=>respond({ok:false})));
+ if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith(PREFIX))await caches.delete(name);respond({ok:true});})().catch(()=>respond({ok:false})));
 });
