@@ -150,6 +150,7 @@
   const finished={...runtime,active:false,paused:false,looping:false,pauseReason:"",stopReason:String(reason||"manual"),pendingEvents:Array.isArray(runtime.pendingEvents)?runtime.pendingEvents.slice():[],recentBattles:Array.isArray(runtime.recentBattles)?runtime.recentBattles.slice():[]};
   const finishedSnapshot=runtimeSnapshot(finished);
   runtime=null;runSerial+=1;stopBackgroundFlow();lastFinishedRuntime=finishedSnapshot;
+  window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"higher",mode:"higher-stage"});
   return finishedSnapshot;
  }
  function startRun(value){
