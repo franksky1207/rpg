@@ -95,7 +95,7 @@ window.addEventListener("message",event=>{
  const dungeonModes=["bounty","arena","tower","mirror"].filter(key=>window.dungeonModeAvailability?.(key)?.visible!==false&&!(key==="bounty"&&window.currentWorldPhase?.()===3));
  const dungeonSnapshot={
    hub:{dungeonKind:"hub",world:window.currentWorldPhase?.()||1,dungeonVisibleModes:dungeonModes,dungeonAvailableModes:dungeonModes.map(()=>true),dungeonUnlocked:true},
-   bounty:{dungeonKind:"bounty",world:window.currentWorldPhase?.()===3?2:window.currentWorldPhase?.()||1,dungeonTier:bounty?.tier?.id||"normal",dungeonPhase:bounty.phase||"select",dungeonRemaining:Math.max(0,Number(window.dailyDungeonStatus?.("bounty")?.remaining)||0),dungeonUnlocked:true},
+   bounty:{dungeonKind:"bounty",world:window.currentWorldPhase?.()||1,unavailable:window.currentWorldPhase?.()===3,dungeonTier:bounty?.tier?.id||"normal",dungeonPhase:bounty.phase||"select",dungeonRemaining:Math.max(0,Number(window.dailyDungeonStatus?.("bounty")?.remaining)||0),dungeonUnlocked:true},
    arena:{world:window.currentWorldPhase?.()||1,dungeonKind:"arena",dungeonRank:Number(arena.rank)||1,dungeonPosition:arena.position||"normal",dungeonPhase:arena.phase||"select",dungeonRemaining:Math.max(0,Number(arena.daily?.remaining)||0),advancedKind:"higher-arena",advancedStage:Number(arena.runtime?.round?.stageIndex)||0,advancedProgress:Number(arena.runtime?.finishedRuns)||0,higherArenaMode:arena.runtime?.round?.mode||arena.runtime?.selectedMode||"fixed",advancedUnlocked:true},
    mirror:{advancedKind:"mirror",advancedProgress:Number(mirror.history?.bestWins)||0,advancedUnlocked:mirror.unlocked===true},
    void:{advancedKind:"void",advancedProgress:Number(voidProgress.highestCleared??voidProgress.historicalHighest)||0,advancedUnlocked:true}
