@@ -459,7 +459,7 @@ function script(src){
 window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
- const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-opt1-lifecycle","./prototype-engine.js?v=20261010-opt3-modelmap","./appearance-snapshot.js?v=20261010-dual-mode-preflight3"];
+ const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-opt1-lifecycle","./prototype-engine.js?v=20261010-opt3-sharedmap","./appearance-snapshot.js?v=20261010-opt3-sharedmap"];
  try{
   const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
   if(!response.ok)throw new Error("manifest-unavailable");
