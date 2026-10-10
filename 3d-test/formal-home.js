@@ -193,7 +193,7 @@ async function toggle(route="home",growthKind=null){
   const advancedSnapshot=(()=>{if(!advanced)return {};
     if(activeRoute==="dungeon-arena"){
       const a=global.getArenaCoreState?.()||{},rt=a.runtime||{};
-      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,advancedUnlocked:true};
+      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,higherArenaMode:rt.round?.mode||rt.selectedMode||"fixed",advancedUnlocked:true};
     }
     if(activeRoute==="dungeon-mirror"){
       const info=global.mirrorDungeonStatus?.()||{},history=info.history||{};
@@ -230,7 +230,9 @@ async function toggle(route="home",growthKind=null){
     const isSpecial=!!main?.querySelector(".special-encounter,.special-encounter-panel");
     const readHp=(id)=>{const node=main?.querySelector(id);const raw=Number.parseFloat(node?.style?.width||"");return Number.isFinite(raw)?Math.max(0,Math.min(1,raw/100)):1;};
     const shield=!!main?.querySelector(".combat-shield,.shield-bar,.hp-shield,.combat-shield-bar");
-    return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":isCombat?"battle":"shield",playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0};
+    // No combat owner snapshot on an idle page: leave the battle visual unavailable rather than inventing full HP.
+    if(!isResult&&!isCombat&&!isSpecial)return {battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true};
+    return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":"battle",battleAvailable:true,playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0,visualOnly:true};
   })();
   const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,completedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
