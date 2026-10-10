@@ -1,3 +1,10 @@
+## 2026-10-10｜三首共用戰鬥配樂已本地化＋GM 六首試聽，正式戰鬥仍未接線
+- 使用者選定普通03 `JRPG Battle Theme`（North Fantasy Music，CC BY 4.0）、中等05 `Boss Battle`（tcarisland，CC BY 4.0）、高等09 `I'm Boss Here!`（Fato Shadow，CC BY 4.0）。
+- 工作流程 `.github/workflows/battle-theme-localize.yml` 已執行成功：`audio/assets/battle-themes/` 保存各原檔、本地 OGG `normal-battle-loop.ogg`／`medium-battle-loop.ogg`／`high-battle-loop.ogg`、SHA256／來源／授權 manifest。經 FFmpeg 解碼確認：普通 48.000 秒、中等 144.039 秒、高等 71.720 秒。原曲轉檔不擅自截剪交叉淡化，循環銜接仍待人耳驗收，不可宣稱完美無縫。
+- `audio/audio-core.js` 新增 `battle-normal-preview`、`battle-medium-preview`、`battle-high-preview` 三筆**僅 GM 試聽**的資源；`audio/gm-audio-test.js` 由三首擴充六首，保留完整循環／曲尾→曲頭接縫／單音量功能；`index.html` 更新兩個 JS cache-bust。
+- 正式 `audio/audio-scenes.js` 完全沒有引用三首戰鬥預覽 ID；**正式戰鬥仍維持當前紀元主題，不要在驗收前連接**。三首來源皆 CC BY 4.0，Credits 必須列作者／作品頁／授權／轉檔與後續調整；高等曲來源作品頁另有請使用者聯絡作者的請求。
+- 靜態自檢：三支 JS 語法 PASS、manifest 三筆齊、GM 三筆對應完整、正式場景未引用戰鬥候選。待桌機／手機實機播放、三首接縫聽感、響度比較與來源署名 UI 補入。
+
 ## 2026-10-10｜全介面同紀元音樂防重播：GM 測試→管理位置續播修正
 - **使用者實機回報**：在 GM 試聽中心切回 GM 管理頁，主題音樂仍從頭播放，顯示上一批「主頁、設定、冒險不中斷」防護不足。
 - 核心根因：`audio/audio-core.js` `begin(id,{preview:true})` 把正式 `music` 物件執行 `pause → removeAttribute('src') → load → null`，導致 GM 退出時即使同紀元，正式曲目播放器與 currentTime 已消失；`audio/audio-scenes.js` `apply()` 僅檢查 currentMusicId，無法對「同曲但暫停」進行續播。
