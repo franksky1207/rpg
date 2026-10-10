@@ -224,17 +224,20 @@ async function toggle(route="home",growthKind=null){
     return {frontierKind:"calamity",frontierProgress:seals.filter(x=>x.completed).length,calamitySeals:seals,world:phase,frontierReview:world>phase};
   })();
   const battleSnapshot=(()=>{if(!battlePreview)return {};
-    const main=document.getElementById("main");
-    const isResult=!!main?.querySelector(".arena-result-panel,.dungeon-bounty-result-card,.calamity-result-shell,.void-result,.alternate-universe-result");
-    const isCombat=!!main?.querySelector(".combat-screen,.combat-arena,.calamity-battle-shell");
-    const isSpecial=!!main?.querySelector(".special-encounter,.special-encounter-panel");
-    const readHp=(id)=>{const node=main?.querySelector(id);const raw=Number.parseFloat(node?.style?.width||"");return Number.isFinite(raw)?Math.max(0,Math.min(1,raw/100)):1;};
-    const shield=!!main?.querySelector(".combat-shield,.shield-bar,.hp-shield,.combat-shield-bar");
-    // No combat owner snapshot on an idle page: leave the battle visual unavailable rather than inventing full HP.
-    if(!isResult&&!isCombat&&!isSpecial)return {battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true};
-    return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":"battle",battleAvailable:true,playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0,visualOnly:true};
+    const owner=global.getCombatPresentationSnapshot?.();
+    if(!owner||!(Number(owner.playerMaxHp)>0)||!(Number(owner.enemyMaxHp)>0)){
+      return {battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true};
+    }
+    const ratio=(now,max)=>Math.max(0,Math.min(1,Number(now)/Number(max)));
+    const playerShield=Math.max(0,Number(owner.playerShield)||0),enemyShield=Math.max(0,Number(owner.enemyShield)||0);
+    return {battleVisualKind:playerShield>0||enemyShield>0?"shield":"battle",
+      battleAvailable:true,playerHpRatio:ratio(owner.playerHp,owner.playerMaxHp),
+      enemyHpRatio:ratio(owner.enemyHp,owner.enemyMaxHp),
+      shieldRatio:Math.max(0,Math.min(1,playerShield/Math.max(1,Number(owner.playerShieldMax)||playerShield))),
+      visualOnly:true,readOnly:true};
   })();
   const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,completedRegions,enemyCount:5}:universeSnapshot;
+  if(battlePreview&&battleSnapshot.battleAvailable!==true){hide();return;}
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(!result.ok){hide();return;}
