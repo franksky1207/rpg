@@ -23,6 +23,12 @@ for(const type of ["settings","guide","account","cloud","gm"]){
  assert.ok(engine.includes('kind==="'+type+'"')||engine.includes(type+":"),"Missing service visual "+type);
 }
 assert.ok(bridge.includes("gmRuntimeAuthorizationAuthorized"),"GM preview needs runtime authorization");
+assert.ok(bridge.includes("function uniqueControls("),"All formal preview groups must share an idempotent guard");
+assert.ok(bridge.includes("function syncAllPreviewButtons("),"All preview buttons must share state synchronization");
+assert.ok(bridge.includes("activeHost&&!activeHost.isConnected"),"Detached scene hosts must be disposed on route rerender");
+assert.ok(bridge.includes("ticket!==epoch||!enabled||!h.isConnected"),"Stale async previews must not attach to detached hosts");
+assert.ok(bridge.includes("activeControl=null;activeHost=null;"),"Preview teardown must clear active control and host");
+assert.ok(bridge.includes("existing.slice(1).forEach(node=>node.remove())"),"Late service mounts must deduplicate existing controls");
 assert.ok(bridge.includes('[data-service3d-preview="')&&bridge.includes('control.setAttribute("data-service3d-preview",kind)'),"Service preview DOM attribute and deduplication selector must match");
 assert.ok(bridge.includes('document.getElementById("civilization3dCharacterToggle")'),"No duplicate character preview");
 assert.ok(bridge.includes('if(view==="dungeon-void-mirage")return;'),"No extra void settlement button");
