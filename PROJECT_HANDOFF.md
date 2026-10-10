@@ -1,3 +1,8 @@
+## 2026-10-11｜音訊六批優化・第 5 批：素材清單與快取管理
+- 以 GitHub main 真實程式與音效目錄校準三份 manifest：common-sfx manifest 已改為只保留 085 UI 點擊（實體目錄只含 sfx-085.ogg，其他 99 個及舊 ZIP 已刪除）；battle-themes 三首現在正式參與戰鬥播放，而非只限 GM；era-themes 三首亦是正式紀元主題。保留素材作者、來源網址、CC 授權及 SHA 等既有資訊；不冒稱人工已驗證無縫循環。
+- index.html 僅合併 audio/audio-core.js、audio/audio-scenes.js、audio/gm-audio-test.js、combatfx.js 四項累積舊音訊快取參數為各自單一版本號；其他仍在施工的 JS 與其快取參數不動。後續單一檔案異動，只提高該檔版本，不清除玩家整站快取、不迫使重新下載其他未變更檔案。
+- GitHub main 回讀三個 JSON、四個 JS 語法 PASS，音效目錄只剩 085 PASS；正式裝置下載命中率、聲音與循環接縫待實機驗收。後續第 6 批負責回歸測試。
+
 ## 2026-10-11 音訊優化第 4 批：舊程式與舊資料清理
 - audio/audio-core.js 移除未使用、標記 awaiting-asset 的 combatCatalog 與 lastCombat；保留 combatVoices/stopCombat/playSpatial 作為 3D 空間音效合約與舊用途，不誤刪未來 3D 入口。
 - 一般 SFX 與空間音效共用 shouldSuppressPresentationSfx(simulation) 判定：Fast Catch-up 的正式遊戲聲音保持靜音；GM 模擬試聽不因遊戲背景補播被限制。既有 effectsMuted() 統一檢查 document.hidden、minimal、總開關；不變更戰鬥公式、主題配樂或 50% 音效倍率。
