@@ -1,0 +1,97 @@
+name: Localize six selected common sound effects
+on:
+  push:
+    paths: [".github/workflows/six-sfx-localize.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: six-sfx-localize
+  cancel-in-progress: false
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install audio tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg p7zip-full
+      - name: Fetch verify and convert six CC0 source packs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,urllib.request,hashlib,subprocess,zipfile,tempfile,json,time,shutil
+          root=pathlib.Path('audio/assets/common-sfx');root.mkdir(parents=True,exist_ok=True)
+          sources=[
+            ('ui-click','Interface Sounds','Kenney','01-B','https://opengameart.org/content/interface-sounds','kenney_interfaceSounds.zip'),
+            ('normal-attack','20 Sword Sound Effects (Attacks)','StarNinjas','02-D','https://opengameart.org/content/20-sword-sound-effects-attacks-and-clashes','sword_-_starninjas_1.zip'),
+            ('critical','37 hits/punches','Independent.nu (submitted by qubodup)','03-B','https://opengameart.org/content/37-hitspunches','independent_nu_ljudbank-hits_and_punches.7z'),
+            ('dodge','Teleport Spell','Ogrebane','04-G','https://opengameart.org/content/teleport-spell','teleport.wav'),
+            ('heavy-hit','50 CC0 Sci-Fi SFX','rubberduck','05-B','https://opengameart.org/content/50-cc0-sci-fi-sfx','sci-fi-sfx.zip'),
+            ('victory','Hyper-Ultra-Fanfare','Zane Little Music','06-C','https://opengameart.org/content/hyper-ultra-fanfare','sboe.wav')]
+          def sh(*args):
+            return subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True).stdout
+          def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+          ledger={}
+          for key,title,author,choice,page,filename in sources:
+            directory=root/key; directory.mkdir(exist_ok=True)
+            original=directory/filename
+            if not original.exists():
+              url='https://opengameart.org/sites/default/files/'+filename
+              err=None
+              for attempt in range(4):
+                try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':'https://opengameart.org/'})
+                  with urllib.request.urlopen(req,timeout=90) as res: payload=res.read(35*1024*1024+1)
+                  if not 100<len(payload)<35*1024*1024 or payload[:32].lower().startswith(b'<html'):raise RuntimeError('Invalid download '+key)
+                  original.write_bytes(payload);break
+                except Exception as e:
+                  err=e
+                  if attempt<3:time.sleep(3*(attempt+1))
+              if not original.exists():raise RuntimeError('Download failed '+key+': '+str(err))
+            with tempfile.TemporaryDirectory() as tmp:
+              dest=pathlib.Path(tmp)
+              if original.suffix=='.zip':
+                with zipfile.ZipFile(original) as z:
+                  members=[i for i in z.infolist() if not i.is_dir() and pathlib.PurePosixPath(i.filename).suffix.lower() in ('.wav','.ogg','.mp3','.flac')]
+                  if not members:raise RuntimeError('No audio in '+filename)
+                  for n,item in enumerate(members):
+                    (dest/('%04d'%n+pathlib.Path(item.filename).suffix.lower())).write_bytes(z.read(item))
+                  names=[item.filename for item in members]
+              elif original.suffix=='.7z':
+                sh('7z','x','-y','-o'+str(dest),str(original))
+                files=sorted(p for p in dest.rglob('*') if p.is_file() and p.suffix.lower() in ('.wav','.ogg','.mp3','.flac'))
+                names=[str(p.relative_to(dest)) for p in files]
+                # Untrusted archives may contain unexpected paths; only files inside temp directory are used.
+              else:
+                files=[original];names=[original.name]
+              if original.suffix=='.zip':files=sorted(dest.glob('*'))
+              if not files:raise RuntimeError('Empty sound pack '+key)
+              items=[]
+              for i,(source,name) in enumerate(zip(files,names),1):
+                # Localized variants are source-preserving full-length conversions. Choice of pool members is batch 2.
+                output=directory/('sfx-%03d.ogg'%i)
+                if not output.exists():
+                  sh('ffmpeg','-nostdin','-v','error','-y','-i',str(source),'-map','0:a:0','-ar','44100','-ac','1','-c:a','libvorbis','-q:a','4',str(output))
+                meta=json.loads(sh('ffprobe','-v','error','-show_entries','format=duration','-of','json',str(output)))
+                duration=float(meta['format']['duration'])
+                if duration<=0 or duration>180:raise RuntimeError('Invalid duration '+str(output))
+                sh('ffmpeg','-nostdin','-v','error','-i',str(output),'-f','null','-')
+                items.append({'source_member':name,'file':output.name,'seconds':round(duration,3),'bytes':output.stat().st_size,'sha256':sha(output)})
+              ledger[key]={'choice':choice,'title':title,'author':author,'license':'CC0','source_page':page,'original_file':filename,'original_url':'https://opengameart.org/sites/default/files/'+filename,'original_bytes':original.stat().st_size,'original_sha256':sha(original),'converted':items,'selection':'unreviewed; not wired into formal playback'}
+              print(key,len(items),'validated',flush=True)
+          (root/'manifest.json').write_text(json.dumps({'schema':1,'status':'localized-not-integrated','note':'All OGG variants are full-length technical conversions. No listening selection, loudness matching, random pool or gameplay wiring is claimed.','categories':ledger},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit verified original assets variants and manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio/assets/common-sfx/
+          if ! git diff --cached --quiet; then
+            git commit -m "audio: localize six CC0 sound effect packs without playback wiring"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
