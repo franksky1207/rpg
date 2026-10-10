@@ -10,9 +10,22 @@ function phase(){
  const p=Number(st?.worldPhase??st?.world);
  return p===3?"higher":p===2?"universe":"galaxy";
 }
-function resolve(era,scene){
+const tiers=Object.freeze({normal:"battle-normal-preview",medium:"battle-medium-preview",high:"battle-high-preview"});
+function tierForScene(scene,detail={}){
+ const key=String(scene||"").toLowerCase();
+ if(/mirror|void/.test(key))return "medium";
+ if(/alternate.*battle|arena(?:fixed|alternate)|higher.*(?:combat|stage|battle)|frontstage/.test(key))return "high";
+ if(/calamity/.test(key))return "high";
+ if(/arena/.test(key))return phase()==="higher"?"high":"medium";
+ if(/bounty/.test(key))return "normal";
+ if(/boss/.test(key))return "medium";
+ if(/elite|normal|battle|combat/.test(key))return phase()==="universe"?"medium":phase()==="higher"?"high":"normal";
+ return detail?.tier||null;
+}
+function resolve(era,scene,detail={}){
  const actual=eraTracks[era]?era:phase();
- return {era:actual,scene:scene||"home",music:eraTracks[actual],ambient:null};
+ const tier=detail?.combat===true?(detail.tier||tierForScene(scene,detail)):null;
+ return {era:actual,scene:scene||"home",music:tier&&tiers[tier]?tiers[tier]:eraTracks[actual],ambient:null,tier};
 }
 function auditionOpen(){return !!document.querySelector('[data-gm-section="gm-audio-test"][open]');}
 function apply(){
@@ -24,14 +37,24 @@ function apply(){
  if(audio?.currentMusicId?.()===id)return audio?.resumeMusic?.()===true;
  return audio?.playMusic?.(id)===true;
 }
-function setContext(era,scene,{preview=false}={}){
+function setContext(era,scene,{preview=false,combat=false,tier=null}={}){
  if(preview)return previewContext(era,scene);
- const item=resolve(era,scene);
+ const item=resolve(era,scene,{combat,tier});
  if(selected?.music===item.music){selected=item;return apply();}
  selected=item;return apply();
 }
 function syncView(viewName,subScreen=""){
- return setContext(phase(),String(viewName||"home")+(subScreen?":"+subScreen:""));
+ const name=String(viewName||"");
+ const sub=String(subScreen||"");
+ const combat=name==="dungeon-mirror-combat"||name==="dungeon-void-combat"
+  ||name==="thirdworld-combat"||name==="third-world-combat"
+  ||(name==="adventure"&&(sub==="combat"||sub==="review-combat"));
+ const mode=name==="dungeon-mirror-combat"?"mirror":name==="dungeon-void-combat"?"void":name==="adventure"&&sub==="combat"?(phase()==="universe"?"boss":"battle"):name;
+ if(combat)return setContext(phase(),mode,{combat:true});
+ // Render-only navigation is not a combat start. It must not terminate active
+ // fighting when the game re-renders the same mode between consecutive battles.
+ if(selected?.tier&&selected.scene===mode)return apply();
+ return setContext(phase(),name+(sub?":"+sub:""));
 }
 function previewContext(era,scene){
  if(typeof state==="undefined"||state?.gm!==true)return false;
@@ -42,8 +65,15 @@ function restore(){previewing=false;return apply();}
 function stop(){selected=null;previewing=false;g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
- // Real combat contexts are retained as labels, but no old battle soundtrack is invoked.
- return setContext(phase(),type||"home");
+ const era=detail.era||phase();
+ if(type==="combat-start"){
+  const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
+  return setContext(era,key,{combat:true,tier:detail.tier||tierForScene(key,detail)});
+ }
+ if(type==="combat-end")return true; // Settlement, not end of a continuous run.
+ if(type==="explore"||type==="main"||type==="reincarnation"||type==="combat-exit")return setContext(era,type);
+ if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
+ return setContext(era,type||"home",{combat:detail.active===true});
 }
 document.addEventListener("civilization-audio-unlocked",()=>{if(typeof view!=="undefined")syncView(view,typeof adventureScreen==="string"?adventureScreen:"");restore();});
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era)setContext(e.detail.era,e.detail.scene);});
@@ -52,5 +82,5 @@ document.addEventListener("civilization-audio-settings-changed",e=>{
  if(e.detail?.key==="musicEnabled"&&g.CivilizationAudio?.settings?.().musicEnabled!==false)restore();
 });
 new MutationObserver(()=>{if(!g.CivilizationAudio?.isSilent?.()&&!auditionOpen())restore();}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:5,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
+g.CivilizationAudioScenes=Object.freeze({version:6,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
