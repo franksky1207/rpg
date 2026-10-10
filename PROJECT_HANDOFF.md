@@ -1,3 +1,9 @@
+## 2026-10-10｜3D 第 22 批：強化與養成場景精修
+
+- `3d-test/prototype-engine.js` 的 `createForgeScene` 新增五槽強化進度幾何柱、依正式快照的靜態成功狀態色及非阻塞能源旋轉；`createGrowthScene` 新增養成節點進度柱、專精/印記/文明/核心封印環及緩速動效。角色/裝備共用的 `configureDisplayCamera` 用於強化與養成鏡頭。這些動畫是純視覺、不預測交易成功或失敗，也不讀寫存檔。
+- 正式 `Civilization3DAppearance.scene` 與原本 `growthState` 仍提供正式唯讀資料；GM 沿用原本五槽鍛造、八專精、十印記、文明等級、界弦核心場景，六分類 32 項不變。
+- 已更新正式/GM index 快取版本與兩份文件；完成 GitHub main 程式語法與回讀核對，尚未取得 exact-HEAD CI、手機 GPU、完整真實帳號實測結果。下一正式批次第 23 批。
+
 ## 2026-10-10｜3D 第 21 批：角色展示、長武器陳列及鏡頭精修
 
 - `3d-test/prototype-engine.js` 新增共用 `configureDisplayCamera`，角色與裝備展示限制可轉角度、縮放範圍、觸控捏合參數及慣性。裝備第一槽長武器由普通多面體改為低面數長形武器、護手與尖端的幾何展示，並加入依紀元差異化的能源色。場景仍為唯讀、非最終 GLB／骨架／模組化換裝。
