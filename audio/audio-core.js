@@ -198,7 +198,7 @@ function pickSfx(category){
 }
 function releaseSfx(audio){
  if(!audio)return;sfxVoices.delete(audio);
- try{audio.pause();audio.currentTime=0;const slot=[...preparedSfx.values()].find(x=>x.audio===audio);if(slot){slot.busy=false;return;}audio.removeAttribute("src");audio.load();}catch(_){}
+ const slot=[...preparedSfx.values()].find(x=>x.audio===audio);if(slot)slot.busy=false;try{audio.pause();audio.currentTime=0;}catch(_){}if(slot)return;try{audio.removeAttribute("src");audio.load();}catch(_){}
 }
 function stopSfx(){for(const a of [...sfxVoices])releaseSfx(a);sfxLastTime.clear();}
 function stopBattleSfx(){for(const a of [...sfxVoices])if(a.dataset.sfxCategory==="normal-attack"||a.dataset.sfxCategory==="critical"||a.dataset.sfxCategory==="dodge"||a.dataset.sfxCategory==="heavy-hit")releaseSfx(a);for(const k of ["normal-attack","critical","dodge","heavy-hit"])sfxLastTime.delete(k);stopCombat();}
