@@ -1,3 +1,9 @@
+## 2026-10-10｜連續戰鬥停止音樂提早恢復／結算後攻擊音效殘留修正
+- 使用者回報：按下「停止連續戰鬥」應等本場動畫播完並出現結算，卻已提前切回紀元主題；結算後退出仍聽到攻擊類音效。
+- `audio/audio-core.js` 新增 `stopBattleSfx()`：只釋放短音效的 normal-attack／critical／dodge／heavy-hit 與舊 combatVoices；**不停止 notice 類勝利號角、不停止 UI 點擊與背景音樂**。正式 `combat-exit` 才清理，防止勝利音效被一併切斷。
+- `audio/audio-scenes.js` 的 `combat-exit` 增加 `isCombatPresentationActive()` 判定：若最後戰鬥動畫仍在播放，延後至呈現層 inactive 才退出音樂（50ms 檢查一次，最多約 15 秒後停止等待，避免無窮輪詢）；以 `exitSequence` 代次取消已過期的退出任務，防止新一場戰鬥開始後舊的延遲退出錯切音樂。音樂與攻擊聲同時清理的時機設為真正退場。動畫正常完成、正式結算才切回所屬紀元主題。
+- `index.html` 已更新 audio-core/audio-scenes 的 cache bust；本輪遠端回讀 JS 語法 PASS，**尚未取得玩家真實裝置操作測試**。應針對主線、懸賞、競技場連戰：按停止後最後一場維持戰鬥曲、結算才恢復；攻擊殘音不跨結算；勝利號角能獨立播完；連續快速按停止與立即重新開始不互相錯切。無損傷害／資源／存檔與原音檔。
+
 ## 2026-10-10｜音樂音效第 0 批緊急修正：戰鬥有音效、配樂消失
 - 根因：`audio/audio-scenes.js` 的 `syncView()` 僅識別部分戰鬥畫面，正式副本在 `combat-start` 後重新 `render()` 會以非戰鬥 view 呼叫 `setContext()`，把已選戰鬥音樂切回紀元主題。更嚴重的是 `combatfx.js` 一般／鏡像每筆事件皆 `notify("combat-start")`，可能反覆覆蓋原本選定的戰鬥 tier。音效由其他播放器播放，與音樂被切曲不是同一件事。
 - 第 0 批修正：`audio/audio-scenes.js` 加 `combatLocked` owner。正式 combat-start 或已知戰鬥畫面選定戰鬥曲後，畫面重繪／子頁同步只能保留並恢復同一音樂；重複 combat-start 在 owner 持有期間不會降級／重播；只有正式 `combat-exit`／明確離開戰鬥的主場景事件才解除。`combat-end`（單場動畫結束）不解除，以支援連續戰鬥。刪除不可達的舊 `lastCombatView` 判斷。
