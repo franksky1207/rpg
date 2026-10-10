@@ -94,23 +94,26 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  const cases=[...gm.matchAll(/\{id:"[^"]+",cat:"([^"]+)"/g)].map(m=>m[1]);
  assert.equal(cases.length,31);
  assert.equal(new Set(cases).size,8);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-b26-runtime/);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt1-lifecycle/);
  const frontier=read("3d-test/prototype-engine.js");
  for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage","higher-dimensional-core-boundary","higher-dimensional-splinter"]){
   assert.ok(frontier.includes(mesh),"B24 frontier visual missing: "+mesh);
  }
- assert.match(read("index.html"),/formal-home\.js\?v=20261010-b26-runtime/);
+ assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt1-lifecycle/);
  const chronicle=read("3d-test/prototype-engine.js");
  for(const visual of ["chronicle-hologram-index","chronicle-memory-shard","chronicle-glyph","reincarnation-epoch-gate","skippable:true","nonBlocking:true"]){
   assert.ok(chronicle.includes(visual),"B25 chronicle visualization missing: "+visual);
  }
  const runtime=read("3d-test/runtime.js");
- assert.match(runtime,/const VERSION=3;/);
+ assert.match(runtime,/const VERSION=4;/);
  for(const safety of ["ResizeObserver","visibilitychange","pagehide","pageshow","renderPaused","signal.aborted","resizeObserver?.disconnect()"]){
   assert.ok(runtime.includes(safety),"B26 runtime safety missing: "+safety);
  }
- assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261010-b26-runtime/);
- assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261010-b26-runtime/);
+ assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
+ for(const token of ["acquireAsset:","releaseAsset,clearAssets:clearAssetCache","assetRefs.clear()","signal.aborted","onContextRestored"]){assert.ok(runtime.includes(token),"3D optimization 1 missing: "+token);}
+ assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt1-lifecycle/);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt1-lifecycle/);
+ assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
  console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");
 }
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
