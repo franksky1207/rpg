@@ -64,8 +64,8 @@ const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 const musicMuted=()=>prohibited()||!prefs.musicEnabled;
 const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
-function stop(){musicFadeSeq++;stopCombat();stopSfx();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
-function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){musicFadeSeq++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}if(!prefs.effectsEnabled){stopCombat();stopSfx();}}
+function stop(){musicFadeSeq++;stopCombat();stopSfx();stopGmSfx();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){musicFadeSeq++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}if(!prefs.effectsEnabled){stopCombat();stopSfx();stopGmSfx();}}
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
 function previewGain(_channel){return gmPreviewVolume;}
@@ -172,74 +172,100 @@ function settlementKey(prefix,object){
 }
 
 const preparedSfx=new Map(),sfxTiming={requested:0,started:0,failed:0,lastStartMs:0};
-const sfxCleanup=new WeakMap();
+const sfxCleanup=new WeakMap(),sfxVoiceOwner=new WeakMap(),gmSfxVoices=new Set();
 const warmChoices={"ui-click":[85],"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
-function preparedSample(category,index){
- const url="audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg";
- if(preparedSfx.has(url))return preparedSfx.get(url);
+const sfxCategoryPool={...warmChoices};
+const sfxRunToken=new WeakMap();
+function sfxUrl(category,index){return "audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg";}
+function preparedSample(category,index,{retry=false}={}){
+ const url=sfxUrl(category,index);let slot=preparedSfx.get(url);
+ if(slot&&(!retry||!slot.failed||slot.busy))return slot;
+ if(slot){try{slot.audio.pause();slot.audio.removeAttribute("src");slot.audio.load();}catch(_){}}
  const audio=new Audio();audio.preload="auto";audio.loop=false;audio.src=url;audio.dataset.sfxCategory=category;
- const slot={audio,busy:false,ready:false};
- audio.addEventListener("loadeddata",()=>slot.ready=true,{once:true});
+ slot={audio,url,busy:false,ready:false,failed:false};
+ const owner=slot;
+ audio.addEventListener("loadeddata",()=>{if(preparedSfx.get(url)===owner){owner.ready=true;owner.failed=false;}});
+ audio.addEventListener("error",()=>{if(preparedSfx.get(url)===owner){owner.failed=true;owner.ready=false;}});
  preparedSfx.set(url,slot);audio.load();return slot;
 }
 function warmCombatSfx(){
- for(const [category,indices] of Object.entries(warmChoices))for(const index of indices)preparedSample(category,index);
+ if(document.hidden||minimal())return false;
+ for(const [category,indices] of Object.entries(warmChoices))for(const index of indices)preparedSample(category,index,{retry:true});
  return true;
 }
-function sfxDiagnostics(){return {...sfxTiming,prepared:preparedSfx.size,ready:[...preparedSfx.values()].filter(x=>x.ready).length,active:sfxVoices.size};}
-
+function releasePreparedSfx(){
+ for(const voice of [...sfxVoices,...gmSfxVoices])releaseSfx(voice);
+ for(const slot of preparedSfx.values()){try{slot.audio.pause();slot.audio.removeAttribute("src");slot.audio.load();}catch(_){}}
+ preparedSfx.clear();
+}
+function sfxDiagnostics(){return {...sfxTiming,prepared:preparedSfx.size,ready:[...preparedSfx.values()].filter(x=>x.ready).length,active:sfxVoices.size,gmActive:gmSfxVoices.size,failedPrepared:[...preparedSfx.values()].filter(x=>x.failed).length};}
 function settlementVictory(key,{success=false}={}){
  if(success!==true||typeof key!=="string"||!key||settledVictoryKeys.has(key))return false;
- // Mark even when muted; reopening the same settlement must never play again.
  settledVictoryKeys.add(key);
  if(settledVictoryKeys.size>128)settledVictoryKeys.delete(settledVictoryKeys.values().next().value);
  return playSfx("victory");
 }
 function pickSfx(category){
  const spec=sfxCategories[category];if(!spec)return null;
- const pool=spec.indices||Array.from({length:spec.count},(_,i)=>i+1);
+ const pool=sfxCategoryPool[category];if(!pool)return null;
  const prior=sfxLastPick.get(category)||0;
  let index=pool[Math.floor(Math.random()*pool.length)];
  if(pool.length>1&&index===prior)index=pool[(pool.indexOf(index)+1)%pool.length];
  sfxLastPick.set(category,index);
- return {category,index,url:"audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg"};
+ return {category,index,url:sfxUrl(category,index)};
 }
 function releaseSfx(audio){
- if(!audio)return;sfxVoices.delete(audio);
- const cleanup=sfxCleanup.get(audio);if(cleanup){audio.removeEventListener("ended",cleanup);audio.removeEventListener("error",cleanup);sfxCleanup.delete(audio);}
- const slot=[...preparedSfx.values()].find(x=>x.audio===audio);if(slot)slot.busy=false;try{audio.pause();audio.currentTime=0;}catch(_){}if(slot)return;try{audio.removeAttribute("src");audio.load();}catch(_){}
+ if(!audio)return;
+ sfxVoices.delete(audio);gmSfxVoices.delete(audio);
+ const cleanup=sfxCleanup.get(audio);
+ if(cleanup){audio.removeEventListener("ended",cleanup);audio.removeEventListener("error",cleanup);sfxCleanup.delete(audio);}
+ const slot=sfxVoiceOwner.get(audio);sfxVoiceOwner.delete(audio);
+ if(slot)slot.busy=false;
+ try{audio.pause();audio.currentTime=0;}catch(_){}
+ if(slot)return;
+ try{audio.removeAttribute("src");audio.load();}catch(_){}
 }
 function stopSfx(){for(const a of [...sfxVoices])releaseSfx(a);sfxLastTime.clear();}
-function stopBattleSfx(){for(const a of [...sfxVoices])if(a.dataset.sfxCategory==="normal-attack"||a.dataset.sfxCategory==="critical"||a.dataset.sfxCategory==="dodge"||a.dataset.sfxCategory==="heavy-hit")releaseSfx(a);for(const k of ["normal-attack","critical","dodge","heavy-hit"])sfxLastTime.delete(k);stopCombat();}
+function stopGmSfx(){for(const a of [...gmSfxVoices])releaseSfx(a);}
+function stopBattleSfx(){
+ for(const a of [...sfxVoices])if(["normal-attack","critical","dodge","heavy-hit"].includes(a.dataset.sfxCategory))releaseSfx(a);
+ for(const k of ["normal-attack","critical","dodge","heavy-hit"])sfxLastTime.delete(k);stopCombat();
+}
 function playSfx(category,{simulation=false,volume=1}={}){
  const spec=sfxCategories[category];if(!spec||effectsMuted()||!unlocked)return false;
  if(simulation&&!(typeof state!=="undefined"&&state?.gm===true))return false;
- if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
- const now=Date.now();if(now-(sfxLastTime.get(category)||0)<spec.interval)return false;
- const sample=pickSfx(category);sfxLastTime.set(category,now);
- // Short combat sounds must be allowed to load and start before later events reclaim voices.
- // Preload metadata aggressively; leave victory in its own protected voice budget.
- const slot=preparedSample(category,sample.index);const a=!slot.busy?slot.audio:new Audio(sample.url);if(a===slot.audio)slot.busy=true;a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
- if(simulation)a.dataset.gmPreviewVoice="1";
+ if(!simulation&&typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ const now=Date.now();
+ if(!simulation&&now-(sfxLastTime.get(category)||0)<spec.interval)return false;
+ const sample=pickSfx(category);if(!sample)return false;
+ if(!simulation)sfxLastTime.set(category,now);
+ const bank=simulation?gmSfxVoices:sfxVoices,isNotice=category==="victory";
+ const categoryLimit=simulation?2:isNotice?2:3,bankLimit=simulation?3:isNotice?8:6;
+ const categoryVoices=[...bank].filter(x=>x.dataset.sfxCategory===category);
+ if(categoryVoices.length>=categoryLimit)releaseSfx(categoryVoices[0]);
+ if(bank.size>=bankLimit){
+  const victim=[...bank].find(x=>simulation||x.dataset.sfxCategory!=="victory");
+  if(!victim)return false;
+  releaseSfx(victim);
+ }
+ let slot=null,a;
+ if(simulation){a=new Audio(sample.url);}
+ else{
+  slot=preparedSample(category,sample.index,{retry:true});
+  if(!slot.busy&&!slot.failed){a=slot.audio;slot.busy=true;sfxVoiceOwner.set(a,slot);}
+  else{a=new Audio(sample.url);}
+ }
+ a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
+ if(simulation)a.dataset.gmPreviewVoice="1";else delete a.dataset.gmPreviewVoice;
  const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
  a.volume=Math.max(0,Math.min(1,gain*0.5*Math.max(0,Math.min(1,Number(volume)||0))));
- const isNotice=category==="victory";
- const categoryLimit=isNotice?2:3;
- const totalLimit=8;
- const owned=[...sfxVoices].filter(x=>x.dataset.sfxCategory===category);
- if(owned.length>=categoryLimit)releaseSfx(owned[0]);
- if(!isNotice){
-  const battleVoices=[...sfxVoices].filter(x=>x.dataset.sfxCategory!=="victory");
-  if(battleVoices.length>=totalLimit-2)releaseSfx(battleVoices[0]);
- }else{
-  while(sfxVoices.size>=totalLimit)releaseSfx([...sfxVoices].find(x=>x.dataset.sfxCategory!=="victory")||sfxVoices.values().next().value);
- }
- sfxVoices.add(a);
+ bank.add(a);
  const finish=()=>{if(sfxCleanup.get(a)===finish)releaseSfx(a);};
  sfxCleanup.set(a,finish);a.addEventListener("ended",finish);a.addEventListener("error",finish);
- if(a!==slot.audio)a.src=sample.url;
  const began=performance.now();sfxTiming.requested++;
- a.play().then(()=>{if(sfxCleanup.get(a)===finish){sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);}}).catch(error=>{if(sfxCleanup.get(a)===finish){sfxTiming.failed++;console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}});
+ a.play().then(()=>{if(sfxCleanup.get(a)===finish){sfxTiming.started++;sfxTiming.lastStartMs=Math.round(performance.now()-began);}}).catch(error=>{
+  if(sfxCleanup.get(a)===finish){sfxTiming.failed++;console.warn("[文明戰線] 音效播放失敗",category,error?.name||error);releaseSfx(a);}
+ });
  return true;
 }
 
@@ -311,8 +337,8 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
 }
 function runtimeStats(){return {sfxVoices:sfxVoices.size,music:!!music,formalMusicVoices:musicVoices.size,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraForAudio()),{once:true});
-document.addEventListener("visibilitychange",update);
-window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
+document.addEventListener("visibilitychange",()=>{update();if(!document.hidden&&unlocked&&prefs.effectsEnabled)warmCombatSfx();});
+window.addEventListener("pagehide",()=>{stop();stopGmSfx();releasePreparedSfx();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();if(music&&music.paused&&!musicMuted()&&!document.querySelector('[data-gm-section="gm-audio-test"][open]'))resumeMusic();},{passive:true});
 // Single delegated UI interaction path; keyboard activation uses click as well.
 // Skip disabled controls and GM audition to prevent feedback loops.
@@ -324,5 +350,5 @@ document.addEventListener("click",event=>{
 
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementKey,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,stopGmSfx,stopBattleSfx,warmCombatSfx,sfxDiagnostics,settlementKey,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
