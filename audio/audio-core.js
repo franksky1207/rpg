@@ -266,6 +266,14 @@ document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraFo
 document.addEventListener("visibilitychange",update);
 window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
+// Single delegated UI interaction path; keyboard activation uses click as well.
+// Skip disabled controls and GM audition to prevent feedback loops.
+document.addEventListener("click",event=>{
+ const node=event.target?.closest?.("button,[role=button],a[href],input[type=checkbox],input[type=radio],select");
+ if(!node||node.disabled||node.getAttribute("aria-disabled")==="true"||node.closest('[data-gm-section="gm-audio-test"]'))return;
+ playSfx("ui-click");
+},{passive:true});
+
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
 g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
