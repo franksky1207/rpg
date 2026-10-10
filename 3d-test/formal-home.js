@@ -549,44 +549,6 @@ if(settingsHost&&typeof MutationObserver==="function"){
  });
  observer.observe(settingsHost,{childList:true,subtree:true});
 }
-// GM read-only 3D preview snapshot bridge. Never mutates state or save.
-global.addEventListener("message",event=>{
- if(event.origin!==global.location.origin||event.source!==document.querySelector('iframe[src*="3d-test/"]')?.contentWindow||event.data?.type!=="civilization3d:scenario-request")return;
- const st=typeof state!=="undefined"?state:null;
- if(!st)return;
- const limited=(value,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(value)||0)));
- const cal=(world)=>{
-   const second=world===2;
-   const defs=second?global.getSecondWorldCalamityDefinitions?.():global.getCivilizationCalamityDefinitions?.();
-   return Array.from({length:10},(_,i)=>{
-    const def=Array.isArray(defs)?defs[i]:null;
-    const a=def?(second?global.getSecondWorldCalamityStatus?.(def.id):global.getCivilizationCalamityStatus?.(def.id)):null;
-    const visible=def?(second?global.isSecondWorldCalamityVisible?.(def.id)===true:true):false;
-    const completed=second?a?.completed===true:Number(a?.mark?.level)>=10;
-    const max=Number(a?.maxHp),current=Number(a?.currentHp);
-    return {visible,unlocked:second?a?.challengeable===true:(def?global.isCivilizationCalamityUnlocked?.(def.id)===true:false),completed,review:false,markLevel:limited(a?.mark?.level,0,10),progressPercent:Math.max(0,Math.min(100,Number(a?.progressPercent)||0)),remainingPercent:Number.isFinite(max)&&max>0&&Number.isFinite(current)?Math.max(0,Math.min(100,100*current/max)):100};
-   });
- };
- const highest=limited(st?.unlockedMap,0,500);
- const regions=typeof WORLD_REGIONS!=="undefined"&&Array.isArray(WORLD_REGIONS)?WORLD_REGIONS:[];
- const regionIndex=regions.reduce((n,r,i)=>highest>=Number(r.mapStart)?i:n,0);
- const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
- const unlocked=limited(global.secondWorldHighestUnlockedBossIndex?.(),0,99);
- const progressed=global.thirdWorldBossProgressSnapshot;
- const defs=Array.isArray(global.THIRD_WORLD_BOSS_DEFINITIONS)?global.THIRD_WORLD_BOSS_DEFINITIONS:[];
- const alternate=global.alternateUniverseProgressionSnapshot?.(st)||null;
- const cleared=limited(alternate?.deepestCleared,0,1000),attempt=global.alternateUniverseActiveAttempt?.(st)||null;
- const target=Math.max(1,Math.min(1000,Number(attempt?.depth)||Math.min(1000,cleared+1)));
- const failure=global.alternateUniverseFailureStatus?.(target,st)||null;
- const snapshot={
-   galaxy:{world:1,mapCount:regions.length||10,selectedMap:regionIndex,unlockedRegions:regions.map(r=>highest>=Number(r.mapStart)),completedRegions:regions.map((r,i)=>highest>=Number(regions[i+1]?.mapStart||501)),review:false},
-   universe:{world:2,highestUnlockedBossIndex:unlocked,clearedBossCount:bosses.filter(b=>global.secondWorldBossKilled?.(b.index)===true).length,defeatedBosses:bosses.slice(0,100).map(b=>global.secondWorldBossKilled?.(b.index)===true),selectedMap:Math.floor(unlocked/10),review:false},
-   higher:{world:3,presences:defs.slice(0,10).map((_,i)=>{const v=typeof progressed==="function"?progressed(i,st):null;return {defeated:v?.defeated===true,available:v?.challengeStatus?.allowed===true,remainingPercent:Number(v?.remainingPercent??100)};}),selectedPresence:Math.max(0,defs.findIndex((_,i)=>!progressed?.(i,st)?.defeated))},
-   calamities:{1:cal(1),2:cal(2)},
-   alternate:{world:3,frontierKind:"alternate",frontierProgress:cleared,alternateUniverse:Math.ceil(target/5),alternateDepth:(target-1)%5+1,alternateSegment:Math.ceil(target/50),alternateLocked:failure?.locked===true,alternateActive:!!attempt}
- };
- event.source.postMessage({type:"civilization3d:scenario-response",snapshot},event.origin);
-});
 global.civilization3dToggleStory=()=>toggle("story","chronicle-story");
 global.civilization3dHideStoryPreview=()=>{if(activeGrowthKind==="chronicle-story"&&enabled)hide();};
 global.civilization3dToggleHome=()=>toggle("home");
