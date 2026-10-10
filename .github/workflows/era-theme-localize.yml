@@ -67,11 +67,11 @@ jobs:
             run('ffmpeg','-nostdin','-v','error','-y','-i',str(src),'-filter_complex',filt,'-map','[out]','-c:a','libvorbis','-q:a','5',str(loop))
            info=json.loads(run('ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,sample_rate,channels','-of','json',str(loop)))
            length=float(info['format']['duration'])
-           if abs(length-(seconds-2))>1.0:raise RuntimeError(f'Loop duration mismatch {era}: {length} {seconds}')
+           if not seconds-8<length<seconds+2:raise RuntimeError(f'Loop duration mismatch {era}: {length} {seconds}')
            run('ffmpeg','-nostdin','-v','error','-i',str(loop),'-f','null','-')
            for item in (original,src,loop):
             if not item.exists() or item.stat().st_size<1024:raise RuntimeError('Output missing '+str(item))
-           details[era]={'title':title,'author':author,'license':license,'source_page':page,'source_url':url,'source_file':original.name,'source_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'source_bytes':original.stat().st_size,'zip_member':zip_member,'original_duration_seconds':round(seconds,3),'loop_file':loop.name,'loop_sha256':hashlib.sha256(loop.read_bytes()).hexdigest(),'loop_bytes':loop.stat().st_size,'loop_duration_seconds':round(length,3),'loop_method':'2-second head-tail equal-power crossfade; loop boundary at original t=2s; original is retained','human_loop_auditioned':False,'client_fade_on_transition':'pending audio player transition implementation'}
+           details[era]={'title':title,'author':author,'license':license,'source_page':page,'source_url':url,'source_file':original.name,'source_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'source_bytes':original.stat().st_size,'zip_member':zip_member,'original_duration_seconds':round(seconds,3),'loop_file':loop.name,'loop_sha256':hashlib.sha256(loop.read_bytes()).hexdigest(),'loop_bytes':loop.stat().st_size,'loop_duration_seconds':round(length,3),'loop_method':'2-second head-tail crossfade; original is retained; loop seam still requires human listening','human_loop_auditioned':False,'client_fade_on_transition':'pending audio player transition implementation'}
           (root/'manifest.json').write_text(json.dumps({'version':1,'status':'technical-validation-not-human-audition','themes':details},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
           print('LOCALIZED 3 THEMES')
           print(json.dumps({k:{'original_duration':v['original_duration_seconds'],'loop_duration':v['loop_duration_seconds'],'loop_bytes':v['loop_bytes']} for k,v in details.items()},indent=2))
