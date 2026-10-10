@@ -258,6 +258,15 @@
     const profiles=Array.isArray(args.presences)?args.presences:[];
     const selected=Math.max(0,Math.min(9,Math.floor(Number(args.selectedPresence)||0)));
     const core=B.MeshBuilder.CreatePolyhedron("higher-dimensional-core",{type:2,size:1.55},scene);core.material=ready;
+    // B24: high-dimensional fractures frame the ten persistent-HP presences.
+    const coreBoundary=B.MeshBuilder.CreateTorus("higher-dimensional-core-boundary",{diameter:4.15,thickness:.085,tessellation:56},scene);
+    coreBoundary.rotation.x=.48;coreBoundary.material=fractured;
+    for(let i=0;i<10;i++){
+      const a=i*Math.PI/5;
+      const splinter=B.MeshBuilder.CreatePolyhedron("higher-dimensional-splinter-"+i,{type:2,size:.23+(i%3)*.09},scene);
+      splinter.position.set(Math.cos(a)*7.05,(i%4)*.34-.3,Math.sin(a)*7.05);
+      splinter.rotation.y=a;splinter.material=i%2?fractured:locked;
+    }
     for(let i=0;i<10;i++){
       const p=profiles[i]||{},angle=2*Math.PI*i/10;
       const x=Math.cos(angle)*5.3,z=Math.sin(angle)*5.3;
@@ -275,7 +284,7 @@
     }
     const orbit=B.MeshBuilder.CreateTorus("higher-dimensional-orbit",{diameter:10.5,thickness:.035,tessellation:80},scene);
     orbit.rotation.x=Math.PI/2;orbit.material=ready;
-    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(50,args.engine.getDeltaTime());core.rotation.y+=dt*.00025;orbit.rotation.z+=dt*.000022;});
+    scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(50,args.engine.getDeltaTime());core.rotation.y+=dt*.00025;orbit.rotation.z+=dt*.000022;coreBoundary.rotation.y-=dt*.000045;});
     return scene;
   }
 
