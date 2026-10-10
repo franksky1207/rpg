@@ -21,6 +21,7 @@ async function register(){
  try{
   registration=await navigator.serviceWorker.register("resource-cache-sw.js",{scope:"./",updateViaCache:"none"});
   updateSettingsStatus().catch(()=>{});
+  setTimeout(()=>startBackgroundPreload().catch(()=>{}),1200);
   return true;
  }catch(error){console.warn("[文明戰線] 資源快取不可用，改用一般網路載入",error);return false;}
 }
@@ -50,11 +51,42 @@ async function checkStartupVersions(){
 }
 function versionReport(){return startupChanges;}
 function finishStartupVersionCheck(){if(!startupChanges?.ok||!pendingVersionFiles)return false;try{localStorage.setItem(VERSION_KEY,JSON.stringify(pendingVersionFiles));pendingVersionFiles=null;return true;}catch(_){return false;}}
+let preloading=false;
+async function readDirectCacheStatus(){
+ if(!("caches" in g))return {ok:false};
+ try{
+  const cache=await caches.open("civilization-resource-v1-media");
+  const keys=await cache.keys();
+  let bytes=0;
+  for(const key of keys){
+   const response=await cache.match(key);
+   if(response){try{bytes+=(await response.blob()).size;}catch(_){}}
+  }
+  return {ok:true,entries:keys.length,bytes};
+ }catch(_){return {ok:false};}
+}
+async function startBackgroundPreload(){
+ if(preloading||!SUPPORTED)return false;
+ preloading=true;
+ try{
+  const reg=registration||await navigator.serviceWorker.ready;
+  const worker=navigator.serviceWorker.controller||reg.active;
+  if(!worker)return false;
+  const port=new MessageChannel();
+  port.port1.onmessage=event=>{
+   const info=event.data||{};
+   if(info.phase==="progress"||info.phase==="complete")updateSettingsStatus().catch(()=>{});
+   if(info.phase==="complete"||info.phase==="error"){preloading=false;port.port1.close();}
+  };
+  worker.postMessage({type:"CIV_CACHE_PRELOAD"},[port.port2]);
+  return true;
+ }catch(_){return false;}finally{if(!SUPPORTED)preloading=false;}
+}
 function humanBytes(bytes){if(!Number.isFinite(bytes)||bytes<0)return "無法計算";if(bytes<1024)return bytes+" B";if(bytes<1048576)return (bytes/1024).toFixed(1)+" KB";return (bytes/1048576).toFixed(1)+" MB";}
 async function updateSettingsStatus(){
  const target=document.getElementById("localResourceCacheStatus");
  if(!target)return;
- const result=await status();
+ const result=await readDirectCacheStatus();
  if(!target.isConnected)return;
  target.textContent=result.ok?("已儲存 "+result.entries+" 個資源，約 "+humanBytes(result.bytes)):("快取狀態無法讀取"+(SUPPORTED?"":"（瀏覽器不支援）"));
 }
@@ -66,9 +98,9 @@ async function clearWithConfirmation(){
  return result.ok===true;
 }
 function clear(){return message("CIV_CACHE_CLEAR");}
-function status(){return message("CIV_CACHE_STATUS");}
+function status(){return readDirectCacheStatus();}
 function refresh(){return message("CIV_CACHE_REFRESH");}
-g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport,finishStartupVersionCheck});
+g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport,finishStartupVersionCheck,startBackgroundPreload});
 if(document.readyState==="complete")setTimeout(register,0);
 else g.addEventListener("load",()=>setTimeout(register,0),{once:true});
 })(window);
