@@ -40,7 +40,7 @@ function trackStatus(id){return tracks[id]?.url?(availability.get(id)||"unchecke
 async function checkTracks(ids){for(const id of [...new Set(ids)].filter(x=>tracks[x]?.url)){if(document.hidden)break;await probeTrack(id);}return ids.map(id=>[id,trackStatus(id)]);}
 
 const defaults={enabled:true,master:0.7,music:0.45,ambient:0.6,battle:0.65,ui:0.6,notice:0.75};
-let prefs={...defaults},previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle},music=null,session=null,unlocked=false,token=0;
+let prefs={...defaults},previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice},music=null,session=null,unlocked=false,token=0;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of channels)if(Number.isFinite(saved[key]))prefs[key]=Math.max(0,Math.min(1,saved[key]));if(typeof saved.enabled==="boolean")prefs.enabled=saved.enabled;}catch(_){}
 const minimal=()=>document.body.classList.contains("main-minimal-mode-open")||document.body.classList.contains("civilization-3d-minimal")||g.isMinimalModeOpen?.()===true||g.Civilization3DMode?.current?.()==="3d-minimal";
 const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
@@ -50,12 +50,17 @@ function reconcile(){if(prohibited()){stop();return;}/* No obsolete sounds are r
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels};}
 function previewLevel(key,value){
- if(!["master","music","battle"].includes(key))return false;
+ if(!channels.includes(key))return false;
  previewLevels[key]=Math.max(0,Math.min(1,Number(value)||0));
- if(session)session.volume=normalizeVolume(session.dataset.channel||"music",previewLevels.master,previewLevels[session.dataset.channel]??prefs[session.dataset.channel]??0.6);
+ if(session){
+  const channel=session.dataset.channel||"music";
+  session.volume=normalizeVolume(channel,previewLevels.master,previewLevels[channel]??prefs[channel]??0.6);
+  previewReport({id:session.dataset.trackId||"",status:"volume",volume:session.volume,channel,url:session.src});
+ }
+ document.dispatchEvent(new CustomEvent("civilization-audio-preview-volume-changed",{detail:{levels:{...previewLevels}}}));
  return true;
 }
-function resetPreview(){stopCombat();stopPreview();previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle};}
+function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
 function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=normalizeVolume(session.dataset.channel||"music",previewLevels.master,previewLevels[session.dataset.channel||"music"]??prefs[session.dataset.channel||"music"]);return true;}
 function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
@@ -67,7 +72,7 @@ function begin(id,{preview=false,loop=true}={}){
  if(!unlocked){if(preview)previewReport({id,status:"blocked",reason:"需要先點擊網頁解除瀏覽器播放限制"});return false;}
  const request=preview?++previewRequest:0,previous=preview?session:music;
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
- const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;
+ const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.dataset.trackId=id;
  const level=preview?(previewLevels[item.kind]??prefs[item.kind]):prefs[item.kind];
  el.volume=normalizeVolume(item.kind,preview?previewLevels.master:prefs.master,level);
  const active=()=>preview?session===el&&previewRequest===request:music===el;
