@@ -1,3 +1,20 @@
+## 2026-10-10｜全戰鬥模式勝利音效：改為最終結算一次（依正式 owner）
+**優先適用於《文明戰線》全部模式。** 在 `combatfx.js` 刪除一般／鏡像 structured presentation 的兩處 `win===true` 每場勝利音效，單場動畫只負責普通攻擊／暴擊／閃避／致命重擊；不得以每怪擊殺播放勝利音效，不能以 1.4s 防抖假裝解決中途連播問題。
+`audio/audio-core.js` 新增 `settlementVictory(key,{success:true})`，僅接受明確成功判定與非空結算 key，已記錄 key 最多 128 組，重繪／重複進入同一結算不能再次播放；播放器保留極簡、背景及 Fast Catch-up 靜音，音樂與聲效設定獨立。失敗、無成功條件、單場中途動畫不播。
+依 main 實際程式碼盤點與接入：
+- 銀河主線／一般戰鬥：`ui.js showBattleResult` 的無 defeat 最終視窗，連續刷怪中途不播；銀河回顧單場成功視窗另接一次。
+- 銀河／宇宙懸賞：`dungeonbounty.js` 只在單場結果或整輪連戰的「daily-limit」成功退出時播；手動停、死亡不播；用本輪 audioRunId 去重。
+- 銀河／宇宙競技場：`dungeonarena.js` 只在三戰全通之後的單場結果，或連戰最後成功到每日額度終點時播；單場每關不播；手動停／死亡不播。
+- 鏡像：`mirrordungeonrun.js` 的全 20 場正式記錄與 VIP 結算成功後，且該輪勝利 >=15 場才播一次；20 場中每場勝利不播。
+- 銀河災厄：`calamityrun.js finish` 在單次成功或首次稱號／印記滿級成功完成整輪時播。宇宙災厄：`secondworldcalamityrun.js finish` 在單次成功／首次稱號／文明完成時播。一般累積戰鬥與手動停止不播。
+- 高維競技場：`thirdworldarenaui.js playSelected finally`，整組正式狀態 complete 且有 fullClears 後播一次；每階段不播。
+- 異宇宙：`alternateuniverseui.js challengeFormal` 的正式 settlement.ok 且 combat.win 才播，不在未結算成功前播。
+- 虛空無限層：`dungeonvoidui.js` 只有突破樓層、死亡或手動退出，沒有全輪勝利判定，因此故意不播 06 勝利音效，保留重大打擊等戰鬥內短音。
+- 高維主線 Boss 無限／持續進度：`thirdworldrun.js` 結束原因包括進度事件／死亡／手動停止，沒有通用全輪勝利判定，所以故意不播 06 勝利音效；待未來明確成功事件時才接。
+- 其他若由正式 owner 另行結算、跳過這些入口的戰鬥（例如無呈現背景快進）仍要依各模式 owner 驗證，不能以靜態檢查宣稱全部實機覆蓋已驗收。
+**代碼防護**：修改 `audio/audio-core.js`、`combatfx.js`、`ui.js`、`dungeonbounty.js`、`dungeonarena.js`、`mirrordungeonrun.js`、`calamityrun.js`、`secondworldcalamityrun.js`、`thirdworldarenaui.js`、`alternateuniverseui.js`；`dungeonvoidui.js`、`thirdworldrun.js` 補充無勝利邊界註解；`index.html` 更新全部涉及 JS 的 cache-bust。原始傷害、模式成功判定、VIP、獎勵、save 與 GM 權限不變。
+**驗收未結**：實際桌機／手機，連續主線 10+ 戰、單場、連續懸賞與競技場（自然結束／手停／死亡）、鏡像 20 場、災厄自動連戰、虛空、高維競技場／高維連戰、異宇宙、同一結果頁反覆開關；檢查只有最後成功結算一次且配樂不重啟。僅完成 JS 靜態語法及來源回讀，不能冒充人耳驗收。
+
 ## 2026-10-10｜重大打擊／勝利音效：正式戰鬥視覺事件接入
 - 依使用者指定新增兩類音效時機，不變更任何正式傷害、Boss 能力、掉落與存檔：`combatfx.js` 在普通及鏡像的共用 structured playback 裡，以**已產生的正式 attack.actualDamage 與目前呈現 HP**識別玩家／敵人致命最後一擊；另敵方 `e.kind === "boss"` 的暴擊作強 Boss 重擊演出。偵測僅為唯讀聲音分流，與計算／結算無關。鏡像敵方標識 mirror 亦計入。
 - `CivilizationAudio.combatEvent(evt,{major:true})` 為重大打擊，覆蓋普通／暴擊的同一聲音而不重疊；`attack.crit` 本身仍為暴擊。重大打擊池只抽先前核定的爆炸類候選 04／05／29，來源與實際聽感需再驗證。
