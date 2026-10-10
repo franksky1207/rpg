@@ -50,7 +50,7 @@
   const mismatch=ownerMismatch();
   const cloud=cloudMeta===undefined?null:cloudMeta;
   const cloudEmpty=cloudMeta===undefined?"正在讀取雲端資訊…":"尚未建立雲端存檔";
-  return `<section id="civilizationCloudSaveSettings" class="civilization-cloud-save-settings"><h3>雲端存檔</h3><div class="muted cloud-save-intro">雲端存檔只會在你按下按鈕時手動傳輸，不會自動同步。</div>${mismatch?`<div class="cloud-save-warning">這台裝置目前的本機存檔屬於另一個登入帳號。為避免誤覆蓋，暫時禁止上傳；你仍可下載目前帳號的雲端存檔來覆蓋本機。</div>`:""}<div class="cloud-save-compare">${rowHtml("本機存檔",local,"尚無本機存檔")}${rowHtml("雲端存檔",cloud,cloudEmpty)}</div><div id="civilizationCloudSaveStatus" class="cloud-save-status" hidden></div><div class="cloud-save-actions"><button id="civilizationCloudUpload" type="button" class="btn blue" onclick="civilizationCloudUpload()" ${mismatch?"disabled":""}>上傳本機存檔</button><button id="civilizationCloudDownload" type="button" class="btn primary" onclick="civilizationCloudDownload()" ${cloudMeta?"":"disabled"}>下載雲端存檔</button></div><div class="muted cloud-save-note">下載雲端存檔會覆蓋這台裝置目前的本機進度；下載時會重設離線計時起點，避免把跨裝置傳輸時間誤算成離線收益。</div></section>`;
+  return `<section id="civilizationCloudSaveSettings" class="civilization-cloud-save-settings"><h3>本機／雲端存檔</h3><div class="muted cloud-save-intro">雲端存檔只會在你按下按鈕時手動傳輸，不會自動同步。</div>${mismatch?`<div class="cloud-save-warning">這台裝置目前的本機存檔屬於另一個登入帳號。為避免誤覆蓋，暫時禁止上傳；你仍可下載目前帳號的雲端存檔來覆蓋本機。</div>`:""}<div class="cloud-save-compare">${rowHtml("本機存檔",local,"尚無本機存檔")}${rowHtml("雲端存檔",cloud,cloudEmpty)}</div><div id="civilizationCloudSaveStatus" class="cloud-save-status" hidden></div><div class="cloud-save-actions"><button id="civilizationCloudUpload" type="button" class="btn blue" onclick="civilizationCloudUpload()" ${mismatch?"disabled":""}>上傳本機存檔</button><button id="civilizationCloudDownload" type="button" class="btn primary" onclick="civilizationCloudDownload()" ${cloudMeta?"":"disabled"}>下載雲端存檔</button></div><div class="muted cloud-save-note">下載雲端存檔會覆蓋這台裝置目前的本機進度；下載時會重設離線計時起點，避免把跨裝置傳輸時間誤算成離線收益。</div></section>`;
  }
  function mount(){
   const account=document.getElementById("civilizationAccountSettings");
@@ -58,13 +58,18 @@
   let section=document.getElementById("civilizationCloudSaveSettings");
   const holder=document.createElement("div");holder.innerHTML=sectionHtml();const fresh=holder.firstElementChild;
   if(!fresh)return;
-  if(section)section.replaceWith(fresh);else account.after(fresh);
+  const slot=document.getElementById("settingsCloudSaveSlot");
+  if(section)section.replaceWith(fresh);else if(slot)slot.appendChild(fresh);else account.after(fresh);
   if(lastMetaUserId!==user().id){cloudMeta=undefined;lastMetaUserId=user().id;renderOnly();refreshMeta();}
  }
  function renderOnly(){
   const section=document.getElementById("civilizationCloudSaveSettings");if(!section)return;
+  const priorStatus=section.querySelector("#civilizationCloudSaveStatus");
+  const message=priorStatus&&!priorStatus.hidden?priorStatus.textContent:"";
+  const type=priorStatus?.dataset.type||"info";
   const holder=document.createElement("div");holder.innerHTML=sectionHtml();const fresh=holder.firstElementChild;if(fresh)section.replaceWith(fresh);
   setBusy(cloudBusy);
+  if(message)setStatus(message,type);
  }
  function setStatus(message,type="info"){
   const el=document.getElementById("civilizationCloudSaveStatus");if(!el)return;
