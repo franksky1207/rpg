@@ -23,6 +23,14 @@ for(const type of ["settings","guide","account","cloud","gm"]){
  assert.ok(engine.includes('kind==="'+type+'"')||engine.includes(type+":"),"Missing service visual "+type);
 }
 assert.ok(bridge.includes("gmRuntimeAuthorizationAuthorized"),"GM preview needs runtime authorization");
+const alternateUi=read("alternateuniverseui.js");
+const gmCenter=read("3d-test/test-center.js");
+assert.ok(ui.includes("civilizationRequestHomeEntryReconcile"),"Late home entry reconciliation must have one owner");
+assert.ok(alternateUi.includes("civilizationRequestHomeEntryReconcile")&&!alternateUi.includes("function reconcileInitialHome("),"Alternate universe must delegate startup reconciliation");
+assert.ok(gmCenter.includes("Civilization3DAppearance.scene(kind,a)"),"Formal GM appearance must reuse production scene adapter");
+assert.ok(gmCenter.includes('version("3d-test/appearance-snapshot.js"'),"GM must load shared appearance adapter with resource manifest");
+assert.ok(engine.includes("function visualMaterial("),"3D material construction must expose a shared helper");
+
 const loader=read("scriptgrouploader.js");
 assert.ok(loader.includes("const groupProgress=new Map()"),"GM group must keep live progress for joiners");
 assert.ok(loader.includes("entry.listeners.add(onProgress)"),"Joined callers must receive current GM load progress");
