@@ -150,10 +150,11 @@ async function toggle(route="home",growthKind=null){
   const regionList=Array.isArray(regions)?regions:[];
   const selectedRegion=regionList.reduce((last,region,i)=>mapIndex>=Number(region.mapStart)?i:last,0);
   const unlockedRegions=regionList.map(region=>era==="galaxy-review"||unlockedIndex>=Number(region.mapStart));
+  const completedRegions=regionList.map((region,i)=>era==="galaxy-review"||unlockedIndex>=(i+1<regionList.length?Number(regionList[i+1].mapStart):101));
   const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
   const highest=typeof global.secondWorldHighestUnlockedBossIndex==="function"?Number(global.secondWorldHighestUnlockedBossIndex()):0;
   const cleared=bosses.filter(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)).length;
-  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,selectedMap:Math.max(0,Math.min(9,Math.floor(highest/10))),review:era==="universe-review"}:{};
+  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,defeatedBosses:bosses.slice(0,100).map(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)),selectedMap:Math.max(0,Math.min(9,Math.floor(highest/10))),review:era==="universe-review"}:{};
   const defs=Array.isArray(global.THIRD_WORLD_BOSS_DEFINITIONS)?global.THIRD_WORLD_BOSS_DEFINITIONS:[];
   const presences=higher?defs.slice(0,10).map((_,i)=>{
     const p=typeof global.thirdWorldBossProgressSnapshot==="function"?global.thirdWorldBossProgressSnapshot(i,formalState):null;
@@ -223,7 +224,7 @@ async function toggle(route="home",growthKind=null){
     const shield=!!main?.querySelector(".combat-shield,.shield-bar,.hp-shield,.combat-shield-bar");
     return {battleVisualKind:isResult?"settlement":isSpecial?"encounter":shield?"shield":isCombat?"battle":"shield",playerHpRatio:readHp("#combatPlayerBar,#voidPlayerBar"),enemyHpRatio:readHp("#combatEnemyBar,#voidEnemyBar"),shieldRatio:shield?1:0};
   })();
-  const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,enemyCount:5}:universeSnapshot;
+  const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,completedRegions,enemyCount:5}:universeSnapshot;
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(!result.ok){hide();return;}
