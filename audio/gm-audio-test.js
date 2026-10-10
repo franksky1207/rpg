@@ -79,7 +79,7 @@ function content(){
  +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
  +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+'（'+safe(reviewLabel(x))+'）</option>').join('')+'</select></label></div>'
  +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
- +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="CivilizationAudio.resetPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
+ +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="gmSoundStopPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
  +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
  +reviewControl() +'<p class="muted">目前候選音檔來自 CC0 授權作品，仍使用來源站網址；最終配樂、怪物與武器專屬素材及同源檔案本地化尚待補齊。原始來源與授權登載於 audio/A01_AUDIO_LEDGER.md。</p>';
 }
@@ -105,6 +105,7 @@ function a03Context(){
  const scene=scenes[group]?.[row.id];return scene?{era,scene}:null;
 }
 
+g.gmSoundStopPreview=()=>{g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();return true;};
 g.gmSoundPlaySelected=()=>{
  if(!visible())return false;
  const row=current();if(!row)return false;
@@ -134,5 +135,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=9;
+g.GM_AUDIO_TEST_CATALOG_VERSION=10;
 })(window);
