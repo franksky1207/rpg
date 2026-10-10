@@ -208,12 +208,12 @@
   }
   const combatEndHp=result.combatEndHp;healAfterRound();
   const roundResult={win:result.win,rewardWorld:bountyState.rewardWorld,rewardLevel:bountyState.rewardLevel,rewardBossIndex:bountyState.rewardBossIndex,rewardExp,expResult,rewardGold,rewardDarkMatter,directDarkEnergy:0,soldGold,soldDarkMatter,soldDarkEnergy,rewardItems,turns:result.turns,combatEndHp};bountyState.result=roundResult;updateSummary(roundResult);battleBusy=false;
-  if(!bountyState.continuous){bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.("bounty:"+String(bountyState.audioRunId),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();return;}
+  if(!bountyState.continuous){bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("bounty",bountyState.summary),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();return;}
   const ds=dailyStatus();
   if(!result.win)bountyState.summary.stopReason="death";else if(bountyState.stopRequested)bountyState.summary.stopReason="manual";else if(ds.remaining<=0)bountyState.summary.stopReason="daily-limit";
-  if(bountyState.summary.stopReason){stopBountyBackground();bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.("bounty:"+String(bountyState.audioRunId),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();return;}
+  if(bountyState.summary.stopReason){stopBountyBackground();bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("bounty",bountyState.summary),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();return;}
   prepareNextBounty();await sleep(battleGapMs());
-  if(!beginBountyRound()){stopBountyBackground();bountyState.summary.stopReason="daily-limit";bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.("bounty:"+String(bountyState.audioRunId),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();}
+  if(!beginBountyRound()){stopBountyBackground();bountyState.summary.stopReason="daily-limit";bountyState.phase="result";window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("bounty",bountyState.summary),{success:result.win===true&&(!bountyState.continuous||bountyState.summary.stopReason==="daily-limit")});window.CivilizationAudioScenes?.notify?.("combat-exit");render();}
  }
  function continuousResultHtml(){
   const ds=dailyStatus(),s=bountyState.summary,isUniverse=bountyState.rewardWorld===2||universePhase();
