@@ -64,8 +64,8 @@ const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 const musicMuted=()=>prohibited()||!prefs.musicEnabled;
 const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
-function stop(){musicFadeSeq++;stopCombat();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
-function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){musicFadeSeq++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}if(!prefs.effectsEnabled)stopCombat();}
+function stop(){musicFadeSeq++;stopCombat();stopSfx();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){musicFadeSeq++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}if(!prefs.effectsEnabled){stopCombat();stopSfx();}}
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
 function previewGain(_channel){return gmPreviewVolume;}
@@ -160,6 +160,41 @@ function stopMusic(){musicFadeSeq++;token++;retireOtherMusicVoices();if(music)re
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
+
+const sfxCategories=Object.freeze({"ui-click":{count:100,channel:"ui",interval:65},"normal-attack":{count:10,channel:"battle",interval:130},"critical":{count:37,channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:500}});
+const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
+function pickSfx(category){
+ const spec=sfxCategories[category];if(!spec)return null;
+ const prior=sfxLastPick.get(category)||0;
+ let index=1+Math.floor(Math.random()*spec.count);
+ if(spec.count>1&&index===prior)index=1+index%spec.count;
+ sfxLastPick.set(category,index);
+ return {category,index,url:"audio/assets/common-sfx/"+category+"/sfx-"+String(index).padStart(3,"0")+".ogg"};
+}
+function releaseSfx(audio){
+ if(!audio)return;sfxVoices.delete(audio);
+ try{audio.pause();audio.removeAttribute("src");audio.load();}catch(_){}
+}
+function stopSfx(){for(const a of [...sfxVoices])releaseSfx(a);sfxLastTime.clear();}
+function playSfx(category,{simulation=false,volume=1}={}){
+ const spec=sfxCategories[category];if(!spec||effectsMuted()||!unlocked)return false;
+ if(simulation&&!(typeof state!=="undefined"&&state?.gm===true))return false;
+ if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ const now=Date.now();if(now-(sfxLastTime.get(category)||0)<spec.interval)return false;
+ const sample=pickSfx(category);sfxLastTime.set(category,now);
+ const a=new Audio(sample.url);a.preload="none";a.loop=false;a.dataset.sfxCategory=category;
+ if(simulation)a.dataset.gmPreviewVoice="1";
+ const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
+ a.volume=Math.max(0,Math.min(1,gain*Math.max(0,Math.min(1,Number(volume)||0))));
+ const owned=[...sfxVoices].filter(x=>x.dataset.sfxCategory===category);
+ if(owned.length>=2)releaseSfx(owned[0]);
+ while(sfxVoices.size>=3)releaseSfx(sfxVoices.values().next().value);
+ sfxVoices.add(a);
+ a.addEventListener("ended",()=>releaseSfx(a),{once:true});
+ a.addEventListener("error",()=>releaseSfx(a),{once:true});
+ a.play().catch(()=>releaseSfx(a));return true;
+}
+
 const combatCatalog=Object.freeze({
  attack:{label:"普通攻擊",asset:null,status:"awaiting-asset"},
  critical:{label:"暴擊",asset:null,status:"awaiting-asset"},
@@ -225,12 +260,12 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
  audio.addEventListener("ended",release,{once:true});audio.addEventListener("error",release,{once:true});
  audio.play().catch(release);return true;
 }
-function runtimeStats(){return {music:!!music,formalMusicVoices:musicVoices.size,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
+function runtimeStats(){return {sfxVoices:sfxVoices.size,music:!!music,formalMusicVoices:musicVoices.size,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraForAudio()),{once:true});
 document.addEventListener("visibilitychange",update);
 window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:9,tracks,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
