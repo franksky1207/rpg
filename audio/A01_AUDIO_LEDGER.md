@@ -1,3 +1,11 @@
+## 2026-10-10｜正式六首配樂整合施工（3 紀元＋3 共用戰鬥）
+- 使用者實聽認可 03 普通 `JRPG Battle Theme`、05 中等 `Boss Battle`、09 高等 `I'm Boss Here!`，要求正式整合。
+- `audio/audio-core.js` 新增 `fadeMusic()`：跨音樂曲目短時間交叉淡入淡出、同曲 `resumeMusic()` 續播（沿用既有播放器），不因 GM 測試中心或一般頁面切換重建。戰鬥音源仍為 GitHub 本地 `audio/assets/battle-themes/*-battle-loop.ogg`；GM 試聽六首維持。
+- `audio/audio-scenes.js` 依據既定音樂分級：普通 `battle-normal-preview`、中等 `battle-medium-preview`、高等 `battle-high-preview`（ID 有 preview 字樣但現在也正式播放）。主線銀河普通與菁英＝普通、銀河／宇宙 Boss＝中等；普通懸賞／中等競技場／高等災厄；鏡像與虛空＝中等；高維十名存在、高維競技場、異宇宙＝高等。普通 UI 保留所在紀元主題。未有充分個別怪分類的特殊遭遇**尚未細分**，不得捏造。回顧主線由實際 encounter.Kind 類型與 render context 選曲。
+- 正式狀態接入：`dungeonarena.js`、`dungeonbounty.js`、`calamityrun.js`、`secondworldcalamityrun.js`、`thirdworldrun.js`、`thirdworldarenaui.js`、`alternateuniverseui.js`、`dungeonvoidui.js`，在通過進入條件並真正開始挑戰時呼叫共用 `CivilizationAudioScenes.notify('combat-start',{...})`；若有明確終止 owner，於終止呼叫 `combat-exit`。鏡像戰與銀河主線戰鬥以正式 combat view 作為配樂進入條件。只播音樂，不寫戰鬥、掉落、任務或存檔。此種額外 UI 音訊通知不改原始戰鬥決策。
+- 多場連戰中 `combat-end` 單場結算事件不換曲；同一模式畫面重繪不重播，同 track 不重建播放器；真正退出或導航至非戰鬥頁面返回當前紀元主題。已更新 `index.html` 10 支受影響 JS 版本。
+- 靜態 JS 語法 10/10 PASS；映射的模擬核對普通懸賞、高等災厄、退出回到紀元主題。**桌機／手機／3D 實機驗收、細部事件是否覆蓋所有次要戰鬥 owner 尚待驗證**；無法宣稱全部驗收已通過。後續應重點實測高維定相異相、異宇宙不同深度、回顧、宇宙 Boss、競技場連打、GM 試聽、背景/極簡。未選定的六種短音效仍維持靜音。
+
 ## 2026-10-10｜三首共用戰鬥配樂已本地化＋GM 六首試聽，正式戰鬥仍未接線
 - 使用者選定普通03 `JRPG Battle Theme`（North Fantasy Music，CC BY 4.0）、中等05 `Boss Battle`（tcarisland，CC BY 4.0）、高等09 `I'm Boss Here!`（Fato Shadow，CC BY 4.0）。
 - 工作流程 `.github/workflows/battle-theme-localize.yml` 已執行成功：`audio/assets/battle-themes/` 保存各原檔、本地 OGG `normal-battle-loop.ogg`／`medium-battle-loop.ogg`／`high-battle-loop.ogg`、SHA256／來源／授權 manifest。經 FFmpeg 解碼確認：普通 48.000 秒、中等 144.039 秒、高等 71.720 秒。原曲轉檔不擅自截剪交叉淡化，循環銜接仍待人耳驗收，不可宣稱完美無縫。
