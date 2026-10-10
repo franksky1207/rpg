@@ -80,7 +80,9 @@ async function load(){
 /* Preload network bytes only; neither WebGL nor GPU resources are created. */
 let sharedWarmPromise=null;
 function warmShared3dAssets(){
- if(!sharedWarmPromise)sharedWarmPromise=resolveSceneResources().then(async sources=>{
+ if(!sharedWarmPromise)sharedWarmPromise=resolveSceneResources().then(async allSources=>{
+  // GM pre-warm only shared Babylon/scene bytes; runtime and appearance remain on demand.
+  const sources=allSources.slice(0,2);
   await Promise.all(sources.map(async src=>{
    const response=await fetch(src,{cache:"no-cache",credentials:"same-origin"});
    if(!response.ok)throw new Error("3d-cache-warm-failed");
