@@ -1,3 +1,10 @@
+## 2026-10-10｜第 19～26 批後整合優化第 1／6 批：資源生命週期（項目 1、2、9）
+- 正式第 26 批多數實機測試已由使用者確認；尚有依賴後續正式 GLB 模型的 GPU/LOD 實測，不可提早標通過。
+- `3d-test/runtime.js` 升為 VERSION 4，保留原 `assets Map` 相容 API，新增 `acquireAsset(key,factory)`／`releaseAsset(key)` 參照計數契約與 `leasedAssetCount` 唯讀檢查資訊；清理、停止、故障時統一處理暫存資產，防止下一次 Engine 啟動沿用已釋放的 GPU 物件。未來 GLB loader 必須配合非同步 abort、執行期資產與場景實例的所有權規範；**此批沒有實際導入 GLB，也不能宣稱已全面驗證 GPU refcount**。
+- 非同步場景失敗且 epoch/AbortSignal 已失效時直接以 stale-scene 返回；WebGL context restored 回覆 idle 狀態而非冒充已恢復先前 scene，仍須使用者/主介面重新啟動預覽，文字模式不受干擾。
+- 正式與 GM fallback runtime URL 及兩側 HTML cache-bust 均改為 `20261010-opt1-lifecycle`；更新 `tests/runtime/3d-b18-coverage-guard.js` 的版號和靜態守門。
+- 已提交並回讀 GitHub main；實際 Chromium、授權 GM iframe、手機 WebGL 故障注入／長時 GPU profiler 尚待執行，不得與程式自我檢查混為一談。下一批整合優化為第 2／6 批（載入器及快取統一），原正式第 27 批編號不變。
+
 ## 2026-10-10｜正式 3D 第 26 批：A2 Runtime 效能與場景生命週期施工
 - 使用者已確認正式第 25 批實機測試完成。第 26 批本次採保守 Runtime 調整，不改正式遊戲 owner、文字版戰鬥／存檔、GM 授權或 GLB 施工計畫。
 - `3d-test/runtime.js` 升級 VERSION=3：以 ResizeObserver 監聽預覽容器尺寸，處理手機最大化／還原和非視窗尺寸改變；頁面隱藏、pagehide 暫停 WebGL render loop 中的 scene.render，pageshow/visibilitychange 恢復及 resize；場景 async show() 加入 AbortSignal stale check；dispose 時移除新增事件監聽與 ResizeObserver。
