@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "status": "technical-validation-not-human-audition",
+  "version": 2,
+  "status": "localized-integrated-formal-playback",
   "themes": {
     "galaxy": {
       "title": "The Fall of Arcana",
@@ -19,7 +19,8 @@
       "loop_duration_seconds": 148.059,
       "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
       "human_loop_auditioned": false,
-      "client_fade_on_transition": "pending audio player transition implementation"
+      "client_fade_on_transition": "Managed by the current audio/audio-core.js player; do not infer an audible fade without verification",
+      "usage": "Official era theme and GM audition"
     },
     "universe": {
       "title": "Epic Orchestral Fantasy Theme",
@@ -38,7 +39,8 @@
       "loop_duration_seconds": 103.05,
       "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
       "human_loop_auditioned": false,
-      "client_fade_on_transition": "pending audio player transition implementation"
+      "client_fade_on_transition": "Managed by the current audio/audio-core.js player; do not infer an audible fade without verification",
+      "usage": "Official era theme and GM audition"
     },
     "higher": {
       "title": "Exploration Theme",
@@ -57,7 +59,9 @@
       "loop_duration_seconds": 130.4,
       "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
       "human_loop_auditioned": false,
-      "client_fade_on_transition": "pending audio player transition implementation"
+      "client_fade_on_transition": "Managed by the current audio/audio-core.js player; do not infer an audible fade without verification",
+      "usage": "Official era theme and GM audition"
     }
-  }
+  },
+  "note": "Three era tracks are active in formal navigation via audio/audio-scenes.js; GM audition remains available. Human listening for loop seams is not asserted."
 }
