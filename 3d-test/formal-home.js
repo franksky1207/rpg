@@ -103,9 +103,10 @@ function schedule3dPrefetch(){
 if(global.CivilizationPresentationMode?.shouldWarm3DAtStartup?.()===true)schedule3dPrefetch();
 let activeRoute="home",activeEra="",activeGrowthKind=null;
 async function toggle(route="home",growthKind=null){
- const clicked=global.event?.currentTarget?.tagName==="BUTTON"?global.event.currentTarget:null;
+ const eventTarget=global.event?.target;
+ const clicked=eventTarget?.closest?.("button")||null;
  if(enabled){
-  const same=activeRoute===route&&activeGrowthKind===growthKind&&(!clicked||clicked===activeControl);
+  const same=activeRoute===route&&activeGrowthKind===growthKind&&(!clicked||!activeControl||clicked===activeControl);
   hide();if(same)return;
  }
  const h=host(growthKind);if(!h||global.CivilizationPresentationMode?.canPreview3D?.()===false)return;
