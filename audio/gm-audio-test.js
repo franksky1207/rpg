@@ -3,6 +3,7 @@
 const audio=()=>g.CivilizationAudio;
 const permitted=()=>typeof state!=="undefined"&&state?.gm===true;
 const GROUPS=Object.freeze([
+ {id:"era-themes",name:"三大紀元・已選主題試聽",contexts:[["era-theme-galaxy","銀河紀元｜The Fall of Arcana","era-galaxy-theme"],["era-theme-universe","宇宙紀元｜Epic Orchestral Fantasy Theme","era-universe-theme"],["era-theme-higher","高維紀元｜Exploration Theme","era-higher-theme"]]},
  {id:"system",name:"主畫面與共用介面",contexts:[["home","主畫面","dark-title"],["character","角色資訊",null],["inventory","背包與裝備",null],["equipment","裝備更換",null],["upgrade","強化與升級提示","dark-hover"],["expertise","專精",null],["mark","印記",null],["civilization","文明等級",null],["shop","交易與出售",null],["redeem","裝備贖回",null],["story","劇情",null],["record","戰線紀錄",null],["cloud","雲端存讀",null],["settings","設定與帳號",null],["offline","離線結算",null],["victory","勝利結算","dark-victory"],["notice","系統通知","dark-hover"]]},
  {id:"galaxy",name:"銀河紀元",contexts:[["galaxy-explore","銀河區域與小區域","dark-sector"],["galaxy-combat","主線普通戰","galaxy-battle"],["galaxy-elite","主線菁英戰","dark-urgent"],["galaxy-boss","主線 Boss 戰","boss-orchestra"],["galaxy-calamity","銀河文明災厄","boss-orchestra"],["galaxy-review","銀河主線回顧","dark-pulse"],["galaxy-arena","銀河競技場","dark-urgent"],["galaxy-bounty","銀河懸賞戰","galaxy-battle"],["galaxy-special","特殊遭遇","dark-urgent"]]},
  {id:"universe",name:"宇宙紀元",contexts:[["universe-explore","宇宙章節與 Boss 選擇","dark-pulse"],["universe-boss","宇宙主線 Boss 戰","boss-orchestra"],["universe-calamity","宇宙文明災厄","boss-orchestra"],["universe-review","宇宙主線回顧","dark-pulse"],["universe-arena","宇宙競技場","dark-urgent"],["universe-bounty","宇宙懸賞戰","galaxy-battle"],["universe-special","特殊遭遇","dark-urgent"]]},
@@ -169,5 +170,5 @@ document.addEventListener("civilization-audio-ambient-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=15;
+g.GM_AUDIO_TEST_CATALOG_VERSION=16;
 })(window);
