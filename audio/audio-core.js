@@ -13,7 +13,7 @@ try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of cha
 const minimal=()=>document.body.classList.contains("main-minimal-mode-open")||document.body.classList.contains("civilization-3d-minimal")||g.isMinimalModeOpen?.()===true||g.Civilization3DMode?.current?.()==="3d-minimal";
 const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
-function stop(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function stop(){stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function reconcile(){if(prohibited()){stop();return;}/* No obsolete sounds are replayed. */ }
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels};}
@@ -23,7 +23,7 @@ function previewLevel(key,value){
  if(session)session.volume=previewLevels.master*previewLevels[session.dataset.channel] ;
  return true;
 }
-function resetPreview(){stopPreview();previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle};}
+function resetPreview(){stopCombat();stopPreview();previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle};}
 function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();if(music)music.volume=prefs.master*prefs.music;if(session)session.volume=previewLevels.master*previewLevels[session.dataset.channel||"music"];return true;}
 function unlock(){unlocked=true;reconcile();}
 function begin(id,{preview=false,loop=true}={}){
@@ -37,10 +37,46 @@ function begin(id,{preview=false,loop=true}={}){
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
 function stopPreview(){if(session){session.pause();session.src="";session=null;}}
+
+const combatCatalog=Object.freeze({
+ attack:{label:"普通攻擊",asset:"laser-preview",status:"candidate"},
+ critical:{label:"暴擊",asset:null,status:"awaiting-asset"},
+ dodge:{label:"閃避",asset:null,status:"awaiting-asset"},
+ combo:{label:"連擊",asset:null,status:"awaiting-asset"},
+ counter:{label:"反擊",asset:null,status:"awaiting-asset"},
+ shield:{label:"護盾承傷",asset:null,status:"awaiting-asset"},
+ drain:{label:"汲取",asset:null,status:"awaiting-asset"},
+ penetration:{label:"穿透",asset:null,status:"awaiting-asset"},
+ mark:{label:"印記",asset:null,status:"awaiting-asset"},
+ berserk:{label:"狂暴",asset:null,status:"awaiting-asset"},
+ victory:{label:"勝利",asset:null,status:"awaiting-asset"},
+ defeat:{label:"失敗",asset:null,status:"awaiting-asset"}
+});
+let lastCombat=0;
+const combatVoices=new Set();
+function stopCombat(){
+ for(const audio of combatVoices){audio.pause();audio.removeAttribute("src");audio.load();}
+ combatVoices.clear();
+}
+function combatEvent(evt,{simulation=false}={}){
+ if(!evt||prohibited()||!unlocked)return false;
+ if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
+ const type=evt.type==="attack"?(evt.crit?"critical":Number(evt.shieldAbsorbed)>0?"shield":"attack"):evt.type==="mark"?"mark":evt.type;
+ const entry=combatCatalog[type];if(!entry?.asset)return false;
+ const now=Date.now();if(now-lastCombat<240)return false;lastCombat=now;
+ const track=tracks[entry.asset];if(!track)return false;
+ const audio=new Audio(track.url);audio.volume=(simulation?previewLevels.master*previewLevels.battle:prefs.master*prefs.battle)*0.75;
+ audio.preload="none";combatVoices.add(audio);
+ audio.addEventListener("ended",()=>combatVoices.delete(audio),{once:true});
+ audio.addEventListener("error",()=>combatVoices.delete(audio),{once:true});
+ if(combatVoices.size>3){const old=combatVoices.values().next().value;old.pause();combatVoices.delete(old);}
+ audio.play().catch(()=>combatVoices.delete(audio));return true;
+}
+
 function update(){reconcile();}
 document.addEventListener("visibilitychange",update);
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:1,tracks,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
+g.CivilizationAudio=Object.freeze({version:1,tracks,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
 })(window);
