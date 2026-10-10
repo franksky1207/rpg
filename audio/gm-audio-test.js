@@ -66,14 +66,13 @@ function entries(row=groupRow()){
 }
 function current(){return entries().find(x=>x.id===selected)||entries()[0];}
 function controls(){
- const p=audio()?.previewSettings()||{master:.7,music:.45,ambient:.6,battle:.65,ui:.6,notice:.75};
- return ["master","music","ambient","battle","ui","notice"].map(k=>'<label>'+({master:"主音量",music:"音樂",ambient:"環境音",battle:"戰鬥音效",ui:"介面音效",notice:"通知音效"}[k])+' <input type="range" min="0" max="100" value="'+Math.round((p[k]??0)*100)+'" oninput="gmSoundPreviewLevel(\''+k+'\',this.value/100)"><span id="gmSoundLevel-'+k+'">'+Math.round((p[k]??0)*100)+'%</span></label>').join('');
+ const value=Math.round((audio()?.previewSettings?.().gmVolume??1)*100);
+ return '<label style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">試聽音量 <input type="range" min="0" max="100" value="'+value+'" oninput="gmSoundPreviewLevel(this.value/100)"><span id="gmSoundLevel">'+value+'%</span></label>';
 }
-g.gmSoundPreviewLevel=(key,value)=>{
- if(!visible())return false;
- if(audio()?.previewLevel?.(key,value)!==true)return false;
- const p=audio()?.previewSettings?.()||{},label=document.getElementById("gmSoundLevel-"+key);
- if(label)label.textContent=Math.round((p[key]??0)*100)+"%";
+g.gmSoundPreviewLevel=value=>{
+ if(!visible()||audio()?.setPreviewVolume?.(value)!==true)return false;
+ const label=document.getElementById("gmSoundLevel");
+ if(label)label.textContent=Math.round((audio()?.previewSettings?.().gmVolume??1)*100)+"%";
  return true;
 };
 function stateFor(id){
@@ -170,5 +169,5 @@ document.addEventListener("civilization-audio-ambient-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=14;
+g.GM_AUDIO_TEST_CATALOG_VERSION=15;
 })(window);
