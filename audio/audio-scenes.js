@@ -19,14 +19,14 @@ function phase(){
 }
 function resolve(era,scene){
  const family=catalog[era];if(!family)return null;
- const pair=family[scene];if(!pair)return null;
+ const pair=family[scene];
  const basic=new Set(["home","explore","main","character","inventory","equipment","enhance","expertise","mark","civilization","shop","redeem","story","guide","cloud","settings","account","offline","record","core","alternateSelect","frontReview","review"]);
  if(basic.has(scene)){
   const actualEra=era==="shared"?phase():era;
   const theme=({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"})[actualEra];
   return {era,scene,music:theme||null,ambient:null};
  }
- return {era,scene,music:pair[0],ambient:pair[1]};
+ return pair?{era,scene,music:pair[0],ambient:pair[1]}:null;
 }
 function prohibited(){return !!g.CivilizationAudio?.isSilent?.();}
 function ambientVolume(preview=false){if(preview)return g.CivilizationAudio?.previewGain?.("ambient")??0;const p=g.CivilizationAudio?.settings?.();return Math.min(1,Math.max(0,(Number(p?.master)||0)*(Number(p?.ambient??.6)||0)*.75*.55));}
