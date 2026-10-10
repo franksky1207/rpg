@@ -1,3 +1,11 @@
+## 2026-10-10｜第 19～26 批後整合優化第 6／6 批：舊入口盤點、測試守門與交接收尾
+- 本批以「保留正式舊模式與玩家存檔」為原則，核對 `3d-test/prototype-engine.js` 的早期 `mount()`、`createScene()`、`createEpochScene()` 及對外 export；因相容性與後續降級用途不直接刪除。既有幾何備援仍供正式 GLB 缺件時使用，正式第 27～34 批導入模型後再逐項盤點可淘汰分支。
+- `tests/runtime/3d-b18-coverage-guard.js` 清理多處重複的 HTML 固定版本字串比對，改為驗證正式 `index.html` 和 GM `3d-test/index.html` 各有且僅有一個帶 `v` 的正確入口，兩者版本一致；同時增加舊 API 保留斷言。避免每批微調入口版本時重複手動更新測試，保留原先資料名稱、31 場景、GM 隔離、生命周期、畫面覆蓋等守門。
+- 自我檢查：遠端 main 重新讀取、回歸測試 JS 語法解析通過、兩入口確實同為 `20261010-opt5-snapshot`、三個舊函式及 export 保留；未更動正式遊戲、任何資源 loader、玩家 save 或 GM 31 場景，故本批無須改正式 HTML cache-bust。
+- **驗收界限**：這是程式及靜態守門整理，不代表已在 exact-HEAD 執行 Node test suite、Chromium、授權 GM iframe、手機 WebGL 或 GPU 30 分鐘驗收。第 26 批僅部分 GPU/LOD 驗收待高品質素材完成後復測。
+- **下一階段唯一有效狀態**：原正式 40 批中的第 1～26 批已具施工成果（但不得一律聲稱全部實機封版）；第 23～24 批間五批一致性補修已施工，使用者已確認第五批實機驗收；本輪六批整合優化皆已有程式/測試/文件提交。下一批是正式第 27 批，正式 GLB／LOD／貼圖／授權／GPU 模型驗收不可借用前期佔位素材數據。
+- **後續不可違反**：main 是唯一程式真實來源；正式戰鬥/結算/離線收益/存檔 owner 不由 3D 接管；GM 31 可視場景、210 套命名／1,050 名稱位置、同步正式與自由 fixture 隔離；完整 3D 模式僅第 40 批決策開放；改 JS/CSS 更新 HTML cache；修改後回讀且嚴格區分靜態／自動／實機證據。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 5／6 批：正式戰鬥呈現與 GM 快照契約
 - 僅調整正式戰鬥的唯讀 3D 呈現快照及 GM iframe 橋接，未修改原戰鬥運算、事件結算、角色存檔、自由測試資料或 GM 授權。
 - `gm3dprototype.js` 與 `3d-test/formal-home.js` 的戰鬥呈現快照統一 `schema:1`、`status:active/unavailable`、`source:formal-combat`、`eventType:presentation-snapshot`；正式 owner 的 HP/護盾資料通過有效性檢查才可呈現，無進行中戰鬥時明確宣告 unavailable。這不是完整的戰鬥事件日誌、傷害觸發器或結算 owner，正式第 35～39 批仍需按主程式補齊事件。
