@@ -98,12 +98,12 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  const cases=[...gm.matchAll(/\{id:"[^"]+",cat:"([^"]+)"/g)].map(m=>m[1]);
  assert.equal(cases.length,31);
  assert.equal(new Set(cases).size,8);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt4-scene-common/);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt5-snapshot/);
  const frontier=read("3d-test/prototype-engine.js");
  for(const mesh of ["frontier-dimensional-boundary","frontier-dimensional-fracture","alternate-dimensional-breach","frontier-monolith","frontier-giant-core-cage","higher-dimensional-core-boundary","higher-dimensional-splinter"]){
   assert.ok(frontier.includes(mesh),"B24 frontier visual missing: "+mesh);
  }
- assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt4-scene-common/);
+ assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt5-snapshot/);
  const chronicle=read("3d-test/prototype-engine.js");
  for(const visual of ["chronicle-hologram-index","chronicle-memory-shard","chronicle-glyph","reincarnation-epoch-gate","skippable:true","nonBlocking:true"]){
   assert.ok(chronicle.includes(visual),"B25 chronicle visualization missing: "+visual);
@@ -115,8 +115,8 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  }
  assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
  for(const token of ["acquireAsset:","releaseAsset,clearAssets:clearAssetCache","assetRefs.clear()","signal.aborted","onContextRestored"]){assert.ok(runtime.includes(token),"3D optimization 1 missing: "+token);}
- assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt4-scene-common/);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt4-scene-common/);
+ assert.match(read("index.html"),/formal-home\.js\?v=20261010-opt5-snapshot/);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-opt5-snapshot/);
  assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
  const mapping=read("3d-test/appearance-snapshot.js");
  for(const field of ["function modelDescriptor(","function modelDescriptors(","assetKind:","geometry-fallback","visualKey","enhancement:bound"]){assert.ok(mapping.includes(field),"Opt3 mapping contract missing: "+field);}
@@ -124,6 +124,11 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  assert.ok(read("3d-test/prototype-engine.js").includes("?.modelDescriptor?.("),"Equipment must expose mapping descriptor");
  for(const field of ["appearanceSource:a.source","modelDescriptors:modelDescriptors(a)"]){assert.ok(mapping.includes(field),"Shared Opt3 appearance scene missing: "+field);}
  assert.ok(read("3d-test/prototype-engine.js").includes('appearanceSource:args.appearanceSource||"fixture"'),"Scene must distinguish formal and fixture visual source");
+ const formalBattle=read("3d-test/formal-home.js"),gmBattle=read("gm3dprototype.js"),gmScenarios=read("3d-test/test-center.js");
+ for(const x of ['status:"active"','status:"unavailable"','source:"formal-combat"','eventType:"presentation-snapshot"']){
+  assert.ok(formalBattle.includes(x)&&gmBattle.includes(x),"Opt5 formal battle contract differs: "+x);
+ }
+ assert.ok(gmScenarios.includes('data.battle.schema!==1')&&gmScenarios.includes('data.battle.source!=="formal-combat"'),"Opt5 formal GM bridge must reject malformed combat snapshots");
  console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");
 }
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
