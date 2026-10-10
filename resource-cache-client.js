@@ -25,7 +25,7 @@ async function register(){
  }catch(error){console.warn("[文明戰線] 資源快取不可用，改用一般網路載入",error);return false;}
 }
 const VERSION_KEY="civilization.resource.versions.checked.v1";
-let startupChanges=null;
+let startupChanges=null, pendingVersionFiles=null;
 async function checkStartupVersions(){
  const report={ok:false,changed:0,firstVisit:false};
  try{
@@ -41,14 +41,15 @@ async function checkStartupVersions(){
   }else{
    report.changed=Object.keys(now).filter(k=>previous[k]!==now[k]).length+Object.keys(previous).filter(k=>!(k in now)).length;
   }
-  // Persist only a successfully fetched, complete deployment listing.
-  try{localStorage.setItem(VERSION_KEY,JSON.stringify(now));}catch(_){}
+  // Keep the new snapshot pending until startup prerequisites actually succeed.
+  pendingVersionFiles=now;
   report.ok=true;
  }catch(error){report.error=String(error?.message||error);}
  startupChanges=Object.freeze(report);
  return startupChanges;
 }
 function versionReport(){return startupChanges;}
+function finishStartupVersionCheck(){if(!startupChanges?.ok||!pendingVersionFiles)return false;try{localStorage.setItem(VERSION_KEY,JSON.stringify(pendingVersionFiles));pendingVersionFiles=null;return true;}catch(_){return false;}}
 function humanBytes(bytes){if(!Number.isFinite(bytes)||bytes<0)return "無法計算";if(bytes<1024)return bytes+" B";if(bytes<1048576)return (bytes/1024).toFixed(1)+" KB";return (bytes/1048576).toFixed(1)+" MB";}
 async function updateSettingsStatus(){
  const target=document.getElementById("localResourceCacheStatus");
@@ -67,7 +68,7 @@ async function clearWithConfirmation(){
 function clear(){return message("CIV_CACHE_CLEAR");}
 function status(){return message("CIV_CACHE_STATUS");}
 function refresh(){return message("CIV_CACHE_REFRESH");}
-g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport});
+g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport,finishStartupVersionCheck});
 if(document.readyState==="complete")setTimeout(register,0);
 else g.addEventListener("load",()=>setTimeout(register,0),{once:true});
 })(window);
