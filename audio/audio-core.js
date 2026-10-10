@@ -207,6 +207,7 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
  audio.play().catch(release);return true;
 }
 function runtimeStats(){return {music:!!music,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
+document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraForAudio()),{once:true});
 document.addEventListener("visibilitychange",update);
 window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
