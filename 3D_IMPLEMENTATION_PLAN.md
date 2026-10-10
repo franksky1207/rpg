@@ -1,3 +1,41 @@
+## 2026-10-10｜Word 原始規格、現行計畫與正式程式交叉核對（補查）
+
+### 檔案身分與核對範圍
+- 使用者上傳 `《文明戰線》3D 全面升級・完整規劃與施工規格書.docx`（53,209 bytes）與 GitHub main 根目錄同名 Word 的 Git blob SHA 均為 `33cd9a2c3792e909a88f16fabff0874f52c60987`，**確定逐位元組相同**。Word 2026-10-09 編製，標示「原始規劃／尚未執行」，不是 2026-10-10 最新狀態。GitHub code search 對其他 Word 檔未取得清單，**不可宣稱已盤點倉庫全部 Word 或其他文件不存在**。
+- 本次重新核對當前 `main`：`3d-test/formal-home.js`、`3d-test/test-center.js`、`3d-test/prototype-engine.js`、`3d-test/appearance-snapshot.js`、`3d-test/index.html`、`dungeonarena.js`、`thirdworldarenaui.js`、`thirdworlddungeonui.js`、`dungeonbounty.js`、`mirrordungeonui.js`、`dungeonvoidui.js`、`calamityui.js`、`secondworldcalamityui.js`、`alternateuniverseui.js` 及現行 40 批規劃/交接。
+- 驗證方法：Word 文件位元組一致性、文件條款對照與靜態源碼核對；**未進行所有視圖 DOM 實機逐頁及 exact-HEAD CI 驗收**。
+
+### Word 中仍有效的原則（留用）
+1. 三紀元「當前視圖／回顧視圖」決定 3D 場景，不能只取玩家所在紀元（Word 第 3 頁）。
+2. 3D 只負責唯讀視覺，正式文字/UI、傷害、戰鬥結果、進度、交易、存檔、離線收益/快速補播都保持原權威（第 3、8、9、11 頁）。
+3. 副本應涵蓋銀河／宇宙競技場、高維競技場、鏡像、虛空、懸賞，各自狀態不同（第 5 頁）；鎖定／可挑戰／完成／回顧／空資料需驗收（第 5、11 頁）。
+4. 正式裝備五槽、裝備外觀依裝備自己來源紀元及名稱，不只依玩家目前世界（第 7、11 頁）。
+5. 各介面 L1/L2/L3 視覺完成度分別註記；每批新舊模式、觸控、回退和來源一致性測試不可省略（第 3、11、12 頁）。
+
+### 被現行 main 取代／不應直接照抄的舊規劃
+1. Word 第 10 頁 A1-01～A1-10 是歷史階段規劃，現在採 `3D_IMPLEMENTATION_PLAN.md` 的 1～40 批，19～23 已施工，24 起待做。不能把 Word 批次直接套用現行號碼。
+2. Word 第 6 頁提議 Canvas 常駐 `#main` 之外／單引擎；目前實作按需 opt-in Preview Runtime、獨立 GM，共用 factory 並安全釋放，這是後續已確認的性能策略，不應為追 Word 硬改引擎。
+3. Word 第 9 頁 Prototype 1.0 的初始「五畫面、假資料」是起點，不代表現在正式預覽和 GM 的完整清單；現在 GM 是 31 項唯讀場景，預覽資料可選正式外觀同步或 GM session fixture。
+4. Word 提議的原型素材預算、Blender 工程、24 怪物家族屬未來資產要求，不代表目前低模 3D 已交付正式 GLB、高品質人物與怪物。
+5. Word 的快照日期為 2026-10-09。正式副本如今有高維紀元、定相/異相競技場及高維無懸賞等後續規則，必須取當前 owner，不能引用 Word 舊簡表推定完整可玩模式。
+
+### 已證實需修正，須納入第 24 批前一致性補修
+- GM 懸賞紀元選單目前高維 option **disabled 但仍存在**，不合「高維沒有懸賞」語義：必須在懸賞項目完全移除，而不是只禁用；其他 GM 項目可以切換高維，不應受連帶影響。
+- GM「副本、災厄與特殊演出」16 項內容過雜，依功能拆四類，總 8 類/31 項，且更新搜索/瀏覽器測試與快取。
+- 正式 `formal-home.js` 的銀河災厄、宇宙災厄 snapshot 分別用滿級印記數及文明等級，無法代表逐隻災厄狀態與宇宙雙條件；需從 `calamityui.js`／`secondworldcalamityui.js` 的正式 status/definition 讀取。
+- 宇宙回顧 3D 的 selectedMap 依 highest unlocked Boss 推算，可能不同於使用者正在看的回顧子視圖；修正前須找到正式 selected owner，不能猜。
+- 高維競技場正式 3D `advancedSnapshot` 缺固定/變動模式（fixed/varied），GM 有同一控制；正式 owner 為 `thirdworldarenaui.js` 等。
+- 正式戰鬥預覽的 shield/HP/結果採 DOM presence/inline width 猜測，必要時落入護盾預設，不等同正式事件快照；先查每種戰鬥模式 actual owner，再動視覺 adapter。
+- 虛空無限樓層不應被 3D 畫成有上限階數；鏡像歷史最高連勝和當日挑戰／結果需分離。GM 目前有限的樓層代表值只是取樣點，不是最高層限制。
+- 異宇宙 3D 已使用 200 宇宙×5 深度、20 文化的區段視覺，**不可再誤判為仍顯示固定十大區**；但尚需核對失敗/冷卻/鎖定/挑戰中狀態。
+- 裝備 3D 目前依現紀元著色低模，正式裝備跨紀元外觀仍須回歸裝備來源 world/name/visualKey，這是尚待 B 階段正式模型的明確差距，而非已完成。
+- 目前是靜態證據清單，無法由此認定所有 31 GM 場景及所有正式子路由已通過真機驗收。
+
+### 執行順序
+A. 下一輪先補 GM 八大分類與懸賞 option 移除，保護原 31 場景和回歸測試。
+B. 然後處理災厄逐隻正式快照與三紀元回顧、戰鬥快照、競技場模式／虛空／鏡像；依正式 owner 加入針對性測試。
+C. 再開始第 24 批的災厄與異宇宙 3D 美術精修。所有修改必須明示完成層級、GitHub SHA、程式檢查、可實測項及剩餘風險。
+
 ## 2026-10-10｜第 23 批後全面一致性審核：後續強制施工規範
 
 本節為規劃與驗收更新；本次不更動正式 3D 場景、遊戲公式、存檔與 GM UI。每一批以當時 main 原文字遊戲 owner 為唯一真實來源，從正式介面與 GM 測試中心兩端逐項核對。3D fixture 不得共用不相干的「十大區進度」，不得將玩家所在紀元誤作回顧來源紀元，也不得以通用 DOM 猜測代替可讀正式快照。GM 用戶選項須僅列真正存在的模式；不存在的紀元選項要移除，不可僅 disabled。
