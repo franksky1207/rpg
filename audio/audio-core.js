@@ -50,7 +50,7 @@ function stop(){stopCombat();token++;if(music){music.pause();music.removeAttribu
 function reconcile(){if(prohibited()){stop();return;}/* No obsolete sounds are replayed. */ }
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
-function previewGain(channel){return Math.min(1,Math.max(0,gmPreviewVolume*(channel==="music"?.85:channel==="ambient"?.45:channel==="notice"?.75:channel==="battle"?1:1)));}
+function previewGain(_channel){return gmPreviewVolume;}
 function setPreviewVolume(value){gmPreviewVolume=Math.max(0,Math.min(1,Number(value)||0));if(session){const channel=session.dataset.channel||"music";session.volume=previewGain(channel);previewReport({id:session.dataset.trackId||"",status:"volume",volume:session.volume,channel,url:session.src});}for(const voice of combatVoices)if(voice.dataset?.gmPreviewVoice==="1")voice.volume=previewGain("battle");document.dispatchEvent(new CustomEvent("civilization-audio-preview-volume-changed",{detail:{gmVolume:gmPreviewVolume}}));return true;}
 function previewLevel(key,value){
  if(!channels.includes(key))return false;
@@ -64,7 +64,7 @@ function previewLevel(key,value){
  return true;
 }
 function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
-function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=normalizeVolume(session.dataset.channel||"music",previewLevels.master,previewLevels[session.dataset.channel||"music"]??prefs[session.dataset.channel||"music"]);return true;}
+function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
 function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
 function previewReport(detail){document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail}));}
@@ -77,7 +77,7 @@ function begin(id,{preview=false,loop=true}={}){
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
  const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.dataset.trackId=id;
  const level=preview?(previewLevels[item.kind]??prefs[item.kind]):prefs[item.kind];
- el.volume=normalizeVolume(item.kind,preview?previewLevels.master:prefs.master,level);
+ el.volume=preview?previewGain(item.kind):normalizeVolume(item.kind,prefs.master,level);
  const active=()=>preview?session===el&&previewRequest===request:music===el;
  const report=(status,reason="")=>{if(preview&&active())previewReport({id,status,reason,volume:el.volume,channel:item.kind,url:item.url,readyState:el.readyState,networkState:el.networkState});};
  el.addEventListener("playing",()=>report("playing"));
