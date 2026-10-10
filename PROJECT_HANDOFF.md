@@ -1,3 +1,9 @@
+## 2026-10-11｜設定介面整體精簡・第 1 批
+- 核對 main 實際 ui.js、style.css、3d-test/mode-foundation.js 與動態掛載的帳號／雲端存檔模組。本批只改設定頁主體的布局：六品質勾選集中單列、較強裝備自動保留移回自動處理區、角色名稱欄手機自適應、戰鬥速度 1×／1.5× 改成緊湊並列、音樂／音效各自一個控制區且音量標題與百分比在滑桿上方、本機資源管理精簡文字與間距。
+- 保留 QUALITY 六品質的 data-autosell 原索引、keepUpgrade ID、音訊 data-audio-toggle 與 data-audio-volume、戰鬥速度 data-player-combat-speed、清除資源按鈕與 localResourceCacheStatus ID，沿用原 wireSettings 事件與儲存行為；沒有修改戰鬥／裝備規則及帳號／雲端／GM 程式。遊戲模式控制繼續由 3d-test/mode-foundation.js 原有設定產生，未動 3D 預覽與開發中按鈕。
+- style.css 新增設定專用 class 與手機響應式樣式，不依賴其他頁面的 setting-row 變更；index.html 的 ui.js 與 style.css 均更新快取版本；加入 tests/runtime/settings-layout-batch1-integrity.js 靜態驗收。手機／桌機真實瀏覽器尚待使用者檢查。
+- 設定第 2 批待執行：帳號區、雲端存檔兩欄和手動同步、GM 區分隔、重置區及整頁收尾；尤其 supabaseauth.js 與 cloudsave.js 為動態掛載，必須保留順序、上傳身分保護及下載覆蓋／離線計時規則。
+
 ## 2026-10-11｜本機資源 0 筆修正：跨紀元背景預載與實際容量
 - 先前 Service Worker 在正式遊戲圖片已載入後才接管，因此曾出現兩台裝置都顯示 0 筆；新增 CIV_CACHE_PRELOAD 背景預載，在遊戲正常進入後快取銀河／宇宙／高維各紀元正式背景、已選定的三紀元配樂與三等級戰鬥循環、現役戰鬥音效，以及資源清單收錄的正式 3D 媒體。排除大型音源原檔、素材壓縮包、廢棄介面點擊聲；未納入 3D 媒體清單的檔案不虛稱完成。
 - 資源每個檔案比對 SHA-256 指紋後才儲存，失敗下次重新嘗試。設定頁容量改為前端直接查 Cache Storage 實際 keys 和 Blob 位元組，下載時顯示「正在背景下載」；音樂 Range 要求可以從已完整快取的資源回傳 206。
