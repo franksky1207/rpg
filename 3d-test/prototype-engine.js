@@ -693,6 +693,13 @@
       node.position.set(x,.18,z);node.material=visible?material:sealed;
       const ring=B.MeshBuilder.CreateTorus("frontier-ring-"+i,{diameter:1.25,thickness:.045,tessellation:26},scene);
       ring.position.set(x,-.38,z);ring.rotation.x=Math.PI/2;ring.material=visible?material:sealed;
+      if(item?.visible!==false&&item){
+        const strength=Math.max(0,Math.min(1,world===1?(Number(item.markLevel)||0)/10:(Number(item.progressPercent)||0)/100));
+        if(strength>0){
+          const levelMark=B.MeshBuilder.CreateCylinder("frontier-seal-progress-"+i,{height:.12+strength*.6,diameter:.16,tessellation:8},scene);
+          levelMark.position.set(x,.65+strength*.3,z);levelMark.material=item.completed?complete:active;
+        }
+      }
     }
     const core=B.MeshBuilder.CreatePolyhedron("frontier-central-core",{type:2,size:1.25},scene);
     core.position.set(0,1,-.2);core.material=active;
