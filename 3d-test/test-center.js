@@ -49,7 +49,7 @@ const scenarioKinds=new Set(["galaxy","universe","higher","frontier-galaxy","fro
 let scenarioMode="free",formalScenario=null,calamitySelected=0;
 const calamitySimulation={1:Array.from({length:10},()=>({state:"locked",hp:100,level:0})),2:Array.from({length:10},()=>({state:"locked",hp:100,level:0}))};
 const scenarioPanel=document.createElement("section");scenarioPanel.className="center-appearance-panel";
-scenarioPanel.innerHTML='<details open><summary>展示資料來源 · 自由測試設定</summary><div class="center-appearance-modes"><button id="scenarioFormal" type="button">同步正式資料</button><button id="scenarioFree" type="button">自由測試設定</button></div><p id="scenarioSource" class="muted"></p><div id="scenarioCalamity"><label>選擇文明災厄 <select id="scenarioCalamityIndex"></select></label><label>模擬狀態 <select id="scenarioCalamityState"></select></label><label>剩餘 HP (%) <input id="scenarioCalamityHp" type="number" min="0" max="100" value="100"></label><label>成長等級 <input id="scenarioCalamityLevel" type="number" min="0" max="10" value="0"></label><label>全部封印情境 <select id="scenarioCalamityPreset"><option value="">個別設定</option><option value="locked">全部未解鎖</option><option value="early">前期</option><option value="middle">中期</option><option value="late">接近全破</option><option value="completed">全部完成</option></select></label></div></details>';
+scenarioPanel.innerHTML='<details open><summary>展示資料來源 · 自由測試設定</summary><div class="center-appearance-modes"><button id="scenarioFormal" type="button">同步正式資料</button><button id="scenarioFree" type="button">自由測試設定</button></div><p id="scenarioSource" class="muted"></p><button id="scenarioRefresh" type="button">重新同步正式資料</button><div id="scenarioCalamity" class="center-scenario-grid"><label>選擇文明災厄 <select id="scenarioCalamityIndex"></select></label><label>模擬狀態 <select id="scenarioCalamityState"></select></label><label>剩餘 HP (%) <input id="scenarioCalamityHp" type="number" min="0" max="100" value="100"></label><label>成長等級 <input id="scenarioCalamityLevel" type="number" min="0" max="10" value="0"></label><label>全部封印情境 <select id="scenarioCalamityPreset"><option value="">個別設定</option><option value="locked">全部未解鎖</option><option value="early">前期</option><option value="middle">中期</option><option value="late">接近全破</option><option value="completed">全部完成</option></select></label></div></details>';
 $("centerWorkspace").querySelector(".center-description").after(scenarioPanel);
 const alternateScenarioLabel=document.createElement("label");alternateScenarioLabel.id="scenarioAlternateLabel";alternateScenarioLabel.textContent="異宇宙測試狀態 ";
 const alternateScenarioSelect=document.createElement("select");alternateScenarioSelect.id="scenarioAlternateState";
@@ -74,11 +74,13 @@ function syncScenarioPanel(){
  scenarioPanel.querySelector("summary").textContent="展示資料來源 · "+(scenarioMode==="formal"?"同步正式資料":"自由測試設定");
  $("scenarioFormal").classList.toggle("active",scenarioMode==="formal");$("scenarioFree").classList.toggle("active",scenarioMode==="free");
  $("scenarioSource").textContent=scenarioMode==="formal"?(formalScenario?"已取得遊戲正式唯讀資料。":"尚未取得正式資料，請在遊戲內 GM 中心同步。"):"本次預覽的模擬設定不會影響正式存檔。";
+ $("scenarioRefresh").hidden=scenarioMode!=="formal";
  for(const id of ["fixtureProgress","fixtureSelected","alternateSegment","alternateUniverse","alternateDepth","alternateCulture","alternateCultureUniverse"])$(id).disabled=scenarioMode==="formal";
  $("scenarioAlternateLabel").hidden=entry().kind!=="frontier-alternate"||scenarioMode!=="free";
  syncCalControls();
 }
 $("scenarioFormal").onclick=()=>{scenarioMode="formal";syncScenarioPanel();requestScenario();start();};
+$("scenarioRefresh").onclick=()=>{formalScenario=null;syncScenarioPanel();requestScenario();start();};
 $("scenarioFree").onclick=()=>{scenarioMode="free";syncScenarioPanel();start();};
 $("scenarioCalamityIndex").onchange=()=>{calamitySelected=Number($("scenarioCalamityIndex").value)||0;syncCalControls();start();};
 $("scenarioCalamityState").onchange=()=>{calamitySimulation[calWorld()][calamitySelected].state=$("scenarioCalamityState").value;start();};
