@@ -11,7 +11,11 @@
       "duration_seconds": 56.895,
       "mean_volume_db": -38.0,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "sector_0-balanced.mp3",
+      "balanced_sha256": "7c388f1140749731d3576a7ce5d69ef377f3d908000f3994f7e3beb23ab3350e",
+      "balanced_bytes": 692829,
+      "target_lufs": -23
     },
     "airy_0.mp3": {
       "source": "https://opengameart.org/sites/default/files/airy_0.mp3",
@@ -23,7 +27,11 @@
       "duration_seconds": 64.0,
       "mean_volume_db": -40.0,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "airy_0-balanced.mp3",
+      "balanced_sha256": "20085c4608cd49a1047006844e10b37f4d9dece850aab28680d1a26869e3e88d",
+      "balanced_bytes": 1056765,
+      "target_lufs": -30
     },
     "pulse_0.mp3": {
       "source": "https://opengameart.org/sites/default/files/pulse_0.mp3",
@@ -35,7 +43,11 @@
       "duration_seconds": 71.131,
       "mean_volume_db": -34.2,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "pulse_0-balanced.mp3",
+      "balanced_sha256": "28ece1b490017f25ee7b811da8e1080bcab19e0b9e0025ffc6a522b8e30f6d1f",
+      "balanced_bytes": 552813,
+      "target_lufs": -23
     },
     "urgent_0.mp3": {
       "source": "https://opengameart.org/sites/default/files/urgent_0.mp3",
@@ -47,7 +59,11 @@
       "duration_seconds": 56.895,
       "mean_volume_db": -44.6,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "urgent_0-balanced.mp3",
+      "balanced_sha256": "100ddd87b1063dc199e6cc94cb75c93db8cb574d6690f8eb900da05ba1336fed",
+      "balanced_bytes": 940269,
+      "target_lufs": -23
     },
     "transmission_1.mp3": {
       "source": "https://opengameart.org/sites/default/files/transmission_1.mp3",
@@ -59,7 +75,11 @@
       "duration_seconds": 94.041,
       "mean_volume_db": -32.7,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "transmission_1-balanced.mp3",
+      "balanced_sha256": "ccff5a79b8ea4a24c3cd9d15eb4320c7b41a67da6d63d96aea480d7cf4c6f919",
+      "balanced_bytes": 1765677,
+      "target_lufs": -23
     },
     "victory_4.mp3": {
       "source": "https://opengameart.org/sites/default/files/victory_4.mp3",
@@ -71,7 +91,11 @@
       "duration_seconds": 5.878,
       "mean_volume_db": -33.6,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "victory_4-balanced.mp3",
+      "balanced_sha256": "c40b132944d1c59b30ce981e2ed9cb7882be713899a8bdbef626e553714b5b4d",
+      "balanced_bytes": 94653,
+      "target_lufs": -16
     },
     "hover_0.mp3": {
       "source": "https://opengameart.org/sites/default/files/hover_0.mp3",
@@ -83,7 +107,11 @@
       "duration_seconds": 1.567,
       "mean_volume_db": -21.9,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "hover_0-balanced.mp3",
+      "balanced_sha256": "264ce9ed9ef4806841c1ef1c0590a6cbe52f4b0f3d12c551044fdd37b0c2b110",
+      "balanced_bytes": 10125,
+      "target_lufs": -16
     },
     "title_6.mp3": {
       "source": "https://opengameart.org/sites/default/files/title_6.mp3",
@@ -95,7 +123,11 @@
       "duration_seconds": 425.613,
       "mean_volume_db": -44.3,
       "signal_checked": true,
-      "human_auditioned": false
+      "human_auditioned": false,
+      "balanced_file": "title_6-balanced.mp3",
+      "balanced_sha256": "f364a0344806eeb510f7d6c600c2b987a1508343e874f628e5557de7995f2265",
+      "balanced_bytes": 8437965,
+      "target_lufs": -23
     }
   }
 }
