@@ -7,6 +7,10 @@ on:
       - '**/*.css'
       - 'index.html'
       - 'assets/backgrounds/**'
+      - 'audio/assets/**'
+      - '3d-test/assets/**'
+      - 'assets/3d/**'
+      - 'assets/models/**'
       - 'vendor/babylonjs/**'
       - 'scripts/generate-resource-manifest.py'
   workflow_dispatch:
