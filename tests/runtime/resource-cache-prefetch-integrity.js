@@ -15,5 +15,5 @@ assert.ok(files.some(x=>x.endsWith("normal-battle-loop.ogg")));
 assert.ok(files.some(x=>x.endsWith("medium-battle-loop.ogg")));
 assert.ok(files.some(x=>x.endsWith("high-battle-loop.ogg")));
 assert.ok(!sw.includes("localStorage")&&!sw.includes("indexedDB"));
-assert.ok(!sw.includes('if(!MEDIA.test(path))return; // JS/CSS')===false);
+assert.ok(sw.includes("if(!MEDIA.test(path))return;"),"JS/CSS remain outside SW media cache");
 console.log("PASS cross-era selected media prefetch, direct cache usage, byte-range support and saved data isolation");
