@@ -76,6 +76,7 @@
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runStatus()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runStatus()};
+  window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"calamity"});
   activeRun={
    active:true,
    mode:validMode(mode),
