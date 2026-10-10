@@ -51,10 +51,10 @@ jobs:
               if duration<0.05:raise RuntimeError('No decodable audio duration: '+name)
               measure=subprocess.run(['ffmpeg','-nostdin','-hide_banner','-i',str(dest),'-af','volumedetect','-f','null','-'],capture_output=True,text=True,check=True)
               import re
-              values=re.findall(r'mean_volume:\\s*(-?[\\d.]+) dB',measure.stderr)
+              values=re.findall(r'mean_volume:\s*(-?[\d.]+) dB',measure.stderr)
               if not values:raise RuntimeError('Unable to measure audio signal: '+name)
               data[name]={'source':base+name,'license':'CC0','author':'SRG774','source_page':'https://opengameart.org/content/dark-sci-fi-audio-pack','bytes':dest.stat().st_size,'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'duration_seconds':round(duration,3),'mean_volume_db':float(values[-1]),'signal_checked':True,'human_auditioned':False}
-          Path('audio/assets/manifest.json').write_text(json.dumps({'version':1,'assets':data},indent=2,ensure_ascii=False)+'\\n',encoding='utf-8')
+          Path('audio/assets/manifest.json').write_text(json.dumps({'version':1,'assets':data},indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
           print('Validated',len(data),'source audio files; user audition still required.')
           PY
       - name: Commit materialized audio only after successful verification
