@@ -3,16 +3,16 @@
 const audio=()=>g.CivilizationAudio;
 const permitted=()=>typeof state!=="undefined"&&state?.gm===true;
 const GROUPS=Object.freeze([
- {id:"system",name:"主畫面與系統",contexts:[["home","主畫面主題曲","dark-title"],["upgrade","強化／升級提示","dark-hover"],["victory","結算勝利","dark-victory"],["notice","一般通知","dark-hover"]]},
- {id:"galaxy",name:"銀河紀元",contexts:[["galaxy-explore","探索與區域環境","dark-sector"],["galaxy-combat","一般戰鬥","galaxy-battle"],["galaxy-boss","Boss／文明災厄","boss-orchestra"],["galaxy-review","銀河回顧","dark-pulse"]]},
- {id:"universe",name:"宇宙紀元",contexts:[["universe-explore","宇宙探索","dark-sector"],["universe-combat","宇宙戰鬥","galaxy-battle"],["universe-boss","Boss／文明災厄","boss-orchestra"],["universe-review","宇宙回顧","dark-pulse"]]},
- {id:"higher",name:"高維紀元",contexts:[["higher-explore","高維探索","dark-airy"],["higher-combat","高維戰鬥","dark-urgent"],["higher-boss","高維 Boss","boss-orchestra"],["alternate","異宇宙／深度","dark-pulse"]]},
- {id:"combat",name:"戰鬥與技能",events:["attack","critical","dodge","combo","counter","shield","drain","penetration","mark","berserk","victory","defeat"]},
- {id:"monsters",name:"怪物與特殊遭遇",contexts:[["monster-entrance","一般怪物登場",null],["elite-entrance","菁英登場",null],["boss-entrance","Boss 登場",null],["special-entrance","特殊怪出現",null],["monster-death","怪物死亡",null]]},
- {id:"dungeons",name:"副本與特殊戰鬥",contexts:[["bounty","懸賞戰（銀河／宇宙）","galaxy-battle"],["arena","競技場","dark-urgent"],["mirror","鏡像戰","boss-orchestra"],["void","虛空戰","dark-pulse"],["calamity","文明災厄","boss-orchestra"],["alternate-dungeon","異宇宙挑戰","dark-urgent"]]},
- {id:"mix",name:"情境混音測試",contexts:[["mix-calm","寧靜探索","dark-airy"],["mix-fight","一般連戰","galaxy-battle"],["mix-tense","強敵迫近","dark-urgent"],["mix-boss","Boss 戰","boss-orchestra"],["mix-victory","勝利返回","dark-victory"]]}
+ {id:"system",name:"主畫面與共用介面",contexts:[["home","主畫面","dark-title"],["character","角色資訊",null],["inventory","背包與裝備",null],["equipment","裝備更換",null],["upgrade","強化與升級提示","dark-hover"],["expertise","專精",null],["mark","印記",null],["civilization","文明等級",null],["shop","交易與出售",null],["redeem","裝備贖回",null],["story","劇情",null],["record","戰線紀錄",null],["cloud","雲端存讀",null],["settings","設定與帳號",null],["offline","離線結算",null],["victory","勝利結算","dark-victory"],["notice","系統通知","dark-hover"]]},
+ {id:"galaxy",name:"銀河紀元",contexts:[["galaxy-explore","銀河區域與小區域","dark-sector"],["galaxy-combat","主線普通戰","galaxy-battle"],["galaxy-elite","主線菁英戰","dark-urgent"],["galaxy-boss","主線 Boss 戰","boss-orchestra"],["galaxy-calamity","銀河文明災厄","boss-orchestra"],["galaxy-review","銀河主線回顧","dark-pulse"],["galaxy-arena","銀河競技場","dark-urgent"],["galaxy-bounty","銀河懸賞戰","galaxy-battle"],["galaxy-special","特殊遭遇","dark-urgent"]]},
+ {id:"universe",name:"宇宙紀元",contexts:[["universe-explore","宇宙章節與 Boss 選擇","dark-pulse"],["universe-boss","宇宙主線 Boss 戰","boss-orchestra"],["universe-calamity","宇宙文明災厄","boss-orchestra"],["universe-review","宇宙主線回顧","dark-pulse"],["universe-arena","宇宙競技場","dark-urgent"],["universe-bounty","宇宙懸賞戰","galaxy-battle"],["universe-special","特殊遭遇","dark-urgent"]]},
+ {id:"higher",name:"高維紀元",contexts:[["higher-front","高維戰線・十名高維存在","dark-urgent"],["higher-stage","高維戰線・階段變化","boss-orchestra"],["higher-review","高維戰線・單場回顧","dark-pulse"],["higher-core","界弦核心",null],["higher-arena-fixed","高維競技場・定相","dark-urgent"],["higher-arena-alternate","高維競技場・異相","dark-pulse"],["alternate","異宇宙・宇宙與深度選擇","dark-pulse"],["alternate-battle","異宇宙・深度戰鬥","dark-urgent"]]},
+ {id:"combat",name:"戰鬥事件與技能",events:["attack","critical","dodge","combo","counter","shield","drain","penetration","mark","berserk","victory","defeat"]},
+ {id:"monsters",name:"怪物與特殊遭遇",contexts:[["monster-entrance","銀河普通怪登場",null],["elite-entrance","銀河菁英登場",null],["boss-entrance","主線 Boss 登場",null],["special-entrance","特殊遭遇出現",null],["monster-death","怪物擊敗",null]]},
+ {id:"dungeons",name:"共用副本與特殊戰鬥",contexts:[["mirror","鏡像戰","boss-orchestra"],["void","虛空幻境","dark-pulse"],["calamity-galaxy","銀河文明災厄","boss-orchestra"],["calamity-universe","宇宙文明災厄","boss-orchestra"],["arena-galaxy","銀河競技場","dark-urgent"],["arena-universe","宇宙競技場","dark-urgent"],["arena-fixed","高維定相競技場","dark-urgent"],["arena-alternate","高維異相競技場","dark-pulse"],["bounty-galaxy","銀河懸賞戰","galaxy-battle"],["bounty-universe","宇宙懸賞戰","galaxy-battle"]]},
+ {id:"mix",name:"情境混音測試",contexts:[["mix-calm","探索環境層","dark-airy"],["mix-fight","主線連戰","galaxy-battle"],["mix-tense","高維戰線張力","dark-urgent"],["mix-boss","Boss 戰配樂","boss-orchestra"],["mix-victory","勝利返回","dark-victory"]]}
 ]);
-let group="higher",selected="higher-explore",wasPresent=false,checking=false;
+let group="higher",selected="higher-front",wasPresent=false,checking=false;
 const REVIEW_KEY="civilization.gm.audio.review.v1";
 const RESULTS={ok:"有聲音，音量正常",low:"有聲音，但太小聲",silent:"沒有聲音",bad:"有聲音，但不適合場景"};
 let reviews={};
@@ -92,16 +92,17 @@ g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.
 g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
 function a03Context(){
  const row=current();if(!row||row.event)return null;
- const eraMap={galaxy:"galaxy",universe:"universe",higher:"higher"};
- const era=eraMap[group];
- if(era){
-  const scenes={galaxy:{"galaxy-explore":"explore","galaxy-combat":"battle","galaxy-boss":"boss","galaxy-review":"review"},universe:{"universe-explore":"explore","universe-combat":"battle","universe-boss":"boss","universe-review":"review"},higher:{"higher-explore":"explore","higher-combat":"battle","higher-boss":"boss","alternate":"alternate"}};
-  return {era,scene:scenes[group]?.[row.id]};
- }
- if(group==="dungeons"){const map={bounty:["galaxy","bounty"],arena:["higher","arena"],mirror:["shared","mirror"],void:["shared","void"],calamity:["galaxy","calamity"],"alternate-dungeon":["higher","alternate"]};const found=map[row.id];if(found)return {era:found[0],scene:found[1]};}
- if(group==="system"&&row.id==="home")return {era:"shared",scene:"main"};
- return null;
+ const scenes={
+ galaxy:{"galaxy-explore":"explore","galaxy-combat":"battle","galaxy-elite":"elite","galaxy-boss":"boss","galaxy-calamity":"calamity","galaxy-review":"review","galaxy-arena":"arena","galaxy-bounty":"bounty","galaxy-special":"special"},
+ universe:{"universe-explore":"explore","universe-boss":"boss","universe-calamity":"calamity","universe-review":"review","universe-arena":"arena","universe-bounty":"bounty","universe-special":"special"},
+ higher:{"higher-front":"front","higher-stage":"frontStage","higher-review":"frontReview","higher-core":"core","higher-arena-fixed":"arenaFixed","higher-arena-alternate":"arenaAlternate","alternate":"alternateSelect","alternate-battle":"alternateBattle"},
+ system:{home:"main",character:"character",inventory:"inventory",equipment:"equipment",upgrade:"enhance",expertise:"expertise",mark:"mark",civilization:"civilization",shop:"shop",redeem:"redeem",story:"story",cloud:"cloud",settings:"settings",offline:"offline",victory:"victory",notice:"notice",record:"record"},
+ dungeons:{mirror:"mirror",void:"void","calamity-galaxy":"calamity","calamity-universe":"calamity","arena-galaxy":"arena","arena-universe":"arena","arena-fixed":"arenaFixed","arena-alternate":"arenaAlternate","bounty-galaxy":"bounty","bounty-universe":"bounty"}
+ };
+ const era=group==="system"?"shared":group==="dungeons"?(row.id.endsWith("-galaxy")?"galaxy":row.id.endsWith("-universe")?"universe":row.id==="arena-fixed"||row.id==="arena-alternate"?"higher":"shared"):group;
+ const scene=scenes[group]?.[row.id];return scene?{era,scene}:null;
 }
+
 g.gmSoundPlaySelected=()=>{
  if(!visible())return false;
  const row=current();if(!row)return false;
@@ -114,7 +115,7 @@ g.gmSoundPlaySelected=()=>{
 g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
 function guard(){
  const present=visible();
- if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-explore";}
+ if(wasPresent&&!present){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();group="higher";selected="higher-front";}
  if(!wasPresent&&present)verifyVisible();
  wasPresent=present;
 }
@@ -130,5 +131,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=7;
+g.GM_AUDIO_TEST_CATALOG_VERSION=8;
 })(window);
