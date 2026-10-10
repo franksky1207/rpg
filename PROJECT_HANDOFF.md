@@ -1,3 +1,10 @@
+## 2026-10-10｜第 19～26 批後整合優化第 5／6 批：正式戰鬥呈現與 GM 快照契約
+- 僅調整正式戰鬥的唯讀 3D 呈現快照及 GM iframe 橋接，未修改原戰鬥運算、事件結算、角色存檔、自由測試資料或 GM 授權。
+- `gm3dprototype.js` 與 `3d-test/formal-home.js` 的戰鬥呈現快照統一 `schema:1`、`status:active/unavailable`、`source:formal-combat`、`eventType:presentation-snapshot`；正式 owner 的 HP/護盾資料通過有效性檢查才可呈現，無進行中戰鬥時明確宣告 unavailable。這不是完整的戰鬥事件日誌、傷害觸發器或結算 owner，正式第 35～39 批仍需按主程式補齊事件。
+- `3d-test/test-center.js` 對正式場景回應新增格式/狀態/有限數值檢查，不允許格式錯誤的資料取代正式快照；自由測試 fixture 仍在獨立流程，不寫回正式遊戲。
+- 更新正式與 GM HTML 快取版本到 `20261010-opt5-snapshot`，並新增 regression guard 檢查兩端呈現契約與 GM 驗證流程。維持 31 個 GM 場景及先前三紀元裝備映射。
+- 本批程式施工與遠端 main 靜態回讀已完成；真實授權 GM iframe、Chromium、手機 WebGL 與實際戰鬥執行流程仍需實機驗收。第 6／6 批將進行舊程式盤點與總回歸，正式第 27～40 批不重編。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 4／6 批：場景共用工具保守重構
 - 依原優化清單 6、7、8、19：`3d-test/prototype-engine.js` 新增共用 `sceneMaterial`、`sceneFillLight`、`applyCameraLimits`，既有 `visualMaterial` 與 `configureDisplayCamera` 保持相容轉接；角色、裝備、養成、副本與服務場景部分共用光源工廠，維持既有光照強度及鏡頭操作數值，不更動正式遊戲 owner、戰鬥公式或存檔。
 - 共用 factory 版本更新到 0.26.1；正式與 GM 場景 fallback 及兩份 HTML cache 版本更新為 `20261010-opt4-scene-common`；靜態守門新增共用 helper 存在檢查。GM 31 場景與正式三紀元資料映射不變。
