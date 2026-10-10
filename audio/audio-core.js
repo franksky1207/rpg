@@ -27,7 +27,7 @@ function begin(id,{preview=false,loop=true}={}){
  if(preview)session=el;else music=el;
  el.play().catch(()=>{if(stamp===token)g.console.warn("Audio unavailable or autoplay restricted",id);});return true;
 }
-function preview(id){if(!g.state?.gm)return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
+function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
 function stopPreview(){if(session){session.pause();session.src="";session=null;}}
 function update(){reconcile();}
 document.addEventListener("visibilitychange",update);
