@@ -62,15 +62,17 @@ async function probeTrack(id){
 function trackStatus(id){return tracks[id]?.url?(availability.get(id)||"unchecked"):"missing";}
 async function checkTracks(ids){for(const id of [...new Set(ids)].filter(x=>tracks[x]?.url)){if(document.hidden)break;await probeTrack(id);}return ids.map(id=>[id,trackStatus(id)]);}
 
-const defaults={enabled:true,master:0.7,music:0.45,ambient:0.6,battle:0.65,ui:0.6,notice:0.75};
+const defaults={enabled:true,musicEnabled:true,effectsEnabled:true,master:0.7,music:0.45,ambient:0.6,battle:0.65,ui:0.6,notice:0.75};
 let gmPreviewVolume=1;
 let prefs={...defaults},previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice},music=null,session=null,unlocked=false,token=0;
-try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of channels)if(Number.isFinite(saved[key]))prefs[key]=Math.max(0,Math.min(1,saved[key]));if(typeof saved.enabled==="boolean")prefs.enabled=saved.enabled;}catch(_){}
+try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of channels)if(Number.isFinite(saved[key]))prefs[key]=Math.max(0,Math.min(1,saved[key]));if(typeof saved.enabled==="boolean")prefs.enabled=saved.enabled;for(const key of ["musicEnabled","effectsEnabled"])if(typeof saved[key]==="boolean")prefs[key]=saved[key];}catch(_){}
 const minimal=()=>document.body.classList.contains("main-minimal-mode-open")||document.body.classList.contains("civilization-3d-minimal")||g.isMinimalModeOpen?.()===true||g.Civilization3DMode?.current?.()==="3d-minimal";
 const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
+const musicMuted=()=>prohibited()||!prefs.musicEnabled;
+const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
 function stop(){stopCombat();token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
-function reconcile(){if(prohibited()){stop();return;}/* No obsolete sounds are replayed. */ }
+function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled&&music){music.pause();music.removeAttribute("src");music.load();music=null;}if(!prefs.effectsEnabled)stopCombat();}
 function settings(){return {...prefs};}
 function previewSettings(){return {...previewLevels,gmVolume:gmPreviewVolume};}
 function previewGain(_channel){return gmPreviewVolume;}
@@ -87,14 +89,14 @@ function previewLevel(key,value){
  return true;
 }
 function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
-function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
+function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
 function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
 function previewReport(detail){document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail}));}
 function playbackError(error){return String(error?.name||"Error")+": "+String(error?.message||error||"未知播放失敗");}
 function begin(id,{preview=false,loop=true}={}){
  const item=tracks[id];if(!item){if(preview)previewReport({id,status:"failed",reason:"找不到音檔"});return false;}
- if(prohibited()){if(preview)previewReport({id,status:"blocked",reason:document.hidden?"分頁在背景":minimal()?"極簡模式禁止播放":"音訊已停用"});return false;}
+ if(prohibited()||(!preview&&musicMuted())){if(preview)previewReport({id,status:"blocked",reason:document.hidden?"分頁在背景":minimal()?"極簡模式禁止播放":"音訊已停用"});return false;}
  if(!unlocked){if(preview)previewReport({id,status:"blocked",reason:"需要先點擊網頁解除瀏覽器播放限制"});return false;}
  const request=preview?++previewRequest:0,previous=preview?session:music;
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
@@ -130,7 +132,7 @@ function previewSeam(id,seconds=8){
  return true;
 }
 
-function playMusic(id){return begin(id,{preview:false,loop:true});}
+function playMusic(id){if(musicMuted())return false;return begin(id,{preview:false,loop:true});}
 function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 
@@ -155,7 +157,7 @@ function stopCombat(){
  combatVoices.clear();
 }
 function combatEvent(evt,{simulation=false}={}){
- if(!evt||prohibited()||!unlocked)return false;
+ if(!evt||effectsMuted()||!unlocked)return false;
  if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
  const type=evt.type==="attack"?(evt.crit?"critical":Number(evt.shieldAbsorbed)>0?"shield":"attack"):evt.type==="mark"?"mark":evt.type;
  const entry=combatCatalog[type];if(!entry?.asset)return false;
@@ -178,7 +180,7 @@ function spatialMetadata(position={}){const p={};for(const axis of ["x","y","z"]
 // Text mode uses centered stereo; 3D standard may supply a world-space position.
 let spatialContext=null;
 function playSpatial(id,{position=null,volume=1,simulation=false}={}){
- const track=tracks[id];if(!track||prohibited()||!unlocked)return false;
+ const track=tracks[id];if(!track||effectsMuted()||!unlocked)return false;
  if(typeof g.backgroundProgressFastCatchUpActive==="function"&&["main","universe","third","void","mirror"].some(k=>g.backgroundProgressFastCatchUpActive(k)===true))return false;
  if(combatVoices.size>=3){const oldest=combatVoices.values().next().value;if(oldest){oldest.pause();oldest.removeAttribute("src");oldest.load();combatVoices.delete(oldest);}}
  const audio=new Audio(track.url);
@@ -213,5 +215,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:6,tracks,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:7,tracks,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
