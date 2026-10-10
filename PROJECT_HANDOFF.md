@@ -1,3 +1,10 @@
+## 2026-10-10｜第 17-B 服務預覽無限重複：桌機實測回歸修正
+
+- **使用者實機證據**：設定、說明、GM、帳號及雲端存檔的「預覽 3D」按鈕各自反覆增加。根因確認：`3d-test/formal-home.js` 實際以 `control.dataset.service3dPreview=kind` 建立 `data-service3d-preview`，但 `ensureServiceControl` 查詢的是不同的 `data-service-3d-preview`；DOM 更新與 MutationObserver 重入時防重複失效。
+- **修正**：統一明確設置 `data-service3d-preview`，查詢兼容兩種既有屬性，若找到多個只保留第一個；五種子頁均共用此唯一性邏輯。保留正式文字設定、雲端傳輸、GM 權限及原 3D 視覺場景，不改 save、戰鬥、雲端與授權 owner。修正 `index.html` cache-bust。
+- **防回歸**：`tests/runtime/3d-b18-coverage-guard.js` 新增 DOM attribute 與查詢屬性一致性斷言，已接入 Runtime Integrity CI。已進行 GitHub main 靜態語法、斷言及版本核對；**最新 exact-HEAD CI 與桌機／手機實機重整後結果仍待確認**。修正後應在設定、遊戲說明、帳號、雲端、GM 各只剩一個對應預覽，重繪也不增加。
+- **進度**：此為第 17-B／18 批暴露的回歸補修，不另增加批次；第 18 批完整實機驗收仍未結案。
+
 ## 2026-10-10｜正式第 18 批 A1 全介面覆蓋檢查（程式施工完成，實機總驗收未結案）
 
 - 新增 `tests/runtime/3d-b18-coverage-guard.js`，由 `.github/workflows/runtime-integrity.yml` 在 main 的 Runtime Integrity 執行；靜態核對正式核心路由、既有各 3D 預覽接點、GM 授權、劇情操作列、角色唯一按鈕、虛空通用結算入口去重、文字版 3D runtime 懶載入與模式 gate。驗收測試檔曾發現一處 regex 語法錯誤，本次已修正並通過 JS 語法解析。
