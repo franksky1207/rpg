@@ -425,7 +425,7 @@ function wireSettings(){
  }
  document.querySelectorAll("[data-autosell]").forEach(el=>el.onchange=()=>{state.settings.autoSell[+el.dataset.autosell]=el.checked;save()});
  document.querySelectorAll("[data-player-combat-speed]").forEach(el=>el.onchange=()=>{if(!el.checked)return;const ok=typeof window.setPlayerCombatSpeed==="function"&&window.setPlayerCombatSpeed(Number(el.dataset.playerCombatSpeed));if(!ok)return alert("戰鬥速度設定失敗。");render();});
- document.querySelectorAll("[data-audio-toggle]").forEach(el=>el.onchange=()=>window.CivilizationAudio?.setLevel?.(el.dataset.audioToggle,el.checked));
+ document.querySelectorAll("[data-audio-toggle]").forEach(el=>el.onchange=()=>{const ok=window.CivilizationAudio?.setLevel?.(el.dataset.audioToggle,el.checked);if(ok===false)alert("此裝置目前無法保存音訊設定，重新開啟後可能恢復原設定。");});
  document.querySelectorAll("[data-audio-volume]").forEach(el=>el.oninput=()=>{const v=Number(el.value)/100;const a=window.CivilizationAudio;if(el.dataset.audioVolume==="music"){a?.setLevel?.("music",v);a?.setLevel?.("ambient",v);}else{for(const channel of ["battle","ui","notice"])a?.setLevel?.(channel,v);}const out=document.querySelector('[data-audio-volume-label="'+el.dataset.audioVolume+'"]');if(out)out.textContent=Math.round(v*100)+"%";});
  const keep=document.getElementById("keepUpgrade");if(keep)keep.onchange=()=>{state.settings.keepUpgrade=keep.checked;save()};
 }
