@@ -18,9 +18,14 @@ const RESULTS={ok:"有聲音，音量正常",low:"有聲音，但太小聲",sile
 let reviews={};
 try{const parsed=JSON.parse(localStorage.getItem(REVIEW_KEY)||"{}");if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed))reviews=parsed;}catch(_){}
 function entryKey(row=current()){return row?(row.event?"event:":"scene:")+row.id:null;}
-function reviewLabel(row){return RESULTS[reviews[entryKey(row)]?.result]||"尚未填寫";}
+function reviewStale(row){
+ const v=reviews[entryKey(row)];if(!v||!RESULTS[v.result]||!row?.asset)return false;
+ const currentUrl=audio()?.tracks?.[row.asset]?.url||null;
+ return v.url!==currentUrl;
+}
+function reviewLabel(row){return reviewStale(row)?"素材已更新・請重新試聽":RESULTS[reviews[entryKey(row)]?.result]||"尚未填寫";}
 function reviewControl(){
- const result=reviews[entryKey()]?.result||"";
+ const result=reviewStale(current())?"":reviews[entryKey()]?.result||"";
  const buttons=Object.entries(RESULTS).map(([id,name])=>'<button type="button" class="btn '+(result===id?'blue':'')+'" aria-pressed="'+(result===id)+'" onclick="gmSoundRecord(\''+id+'\')">'+name+'</button>').join('');
  return '<div style="margin-top:12px"><div style="margin-bottom:8px">我的聆聽紀錄：<b id="gmSoundReviewLabel">'+reviewLabel(current())+'</b></div><div class="controls gm-sound-review-actions" style="display:flex;flex-wrap:wrap;gap:8px">'+buttons+'</div><div class="controls" style="margin-top:10px"><button class="btn" type="button" onclick="gmSoundCopyReport()">複製驗收摘要</button></div><div class="muted" id="gmSoundReportStatus" role="status"></div></div>';
 }
@@ -40,10 +45,12 @@ g.gmSoundCopyReport=()=>{
  if(!visible())return false;
  const all=GROUPS.flatMap(gp=>(gp.events?gp.events.map(id=>({key:"event:"+id,label:audio()?.combatCatalog?.[id]?.label||id,context:gp.name})):gp.contexts.map(([id,label])=>({key:"scene:"+id,label,context:gp.name}))));
  const keys=new Set(all.map(x=>x.key));
- const filled=all.filter(x=>RESULTS[reviews[x.key]?.result]),missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]);
+ const stale=all.filter(x=>{const gp=GROUPS.find(y=>y.name===x.context);const row=gp?.contexts?.find(y=>x.key==="scene:"+y[0]);return row?reviewStale({id:row[0],asset:row[2]}):false;});
+ const staleKeys=new Set(stale.map(x=>x.key));
+ const filled=all.filter(x=>RESULTS[reviews[x.key]?.result]&&!staleKeys.has(x.key)),missing=all.filter(x=>!RESULTS[reviews[x.key]?.result]&&!staleKeys.has(x.key));
  const legacy=Object.entries(reviews).filter(([key,value])=>!keys.has(key)&&RESULTS[value?.result]);
  const line=x=>x.key+"｜"+x.context+"／"+x.label;
- const output=['《文明戰線・GM 音樂音效聆聽回報》','目前正式項目：'+all.length+'｜已填寫：'+filled.length+'｜尚未填寫：'+missing.length+'｜歷史舊分類紀錄：'+legacy.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...filled.map(x=>{const v=reviews[x.key];return line(x)+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt;}),'【尚未填寫】',...missing.map(x=>line(x)+'｜尚未填寫'),'【舊分類保留紀錄（未合併到新情境）】',...legacy.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜記錄 '+v.updatedAt)].join(String.fromCharCode(10));
+ const output=['《文明戰線・GM 音樂音效聆聽回報》','目前正式項目：'+all.length+'｜已填寫：'+filled.length+'｜尚未填寫：'+missing.length+'｜素材更新待重聽：'+stale.length+'｜歷史舊分類紀錄：'+legacy.length,'此摘要為玩家本機聆聽紀錄，尚未同步 GitHub。','【已填寫】',...filled.map(x=>{const v=reviews[x.key];return line(x)+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜URL '+(v.url||'無')+'｜記錄 '+v.updatedAt;}),'【素材更新待重新試聽】',...stale.map(x=>line(x)+'｜原結果 '+RESULTS[reviews[x.key].result]),'【尚未填寫】',...missing.map(x=>line(x)+'｜尚未填寫'),'【舊分類保留紀錄（未合併到新情境）】',...legacy.map(([key,v])=>key+'｜'+v.context+'／'+v.scene+'｜'+RESULTS[v.result]+'｜音檔 '+(v.asset||'無')+'｜記錄 '+v.updatedAt)].join(String.fromCharCode(10));
  const finish=ok=>{const el=document.getElementById("gmSoundReportStatus");if(el)el.textContent=ok?"摘要已複製，請貼回 ChatGPT。":"複製失敗，請允許瀏覽器使用剪貼簿。";};
  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(output).then(()=>finish(true)).catch(()=>finish(false));return true;}
  const el=document.createElement("textarea");el.value=output;el.style.position="fixed";el.style.opacity="0";document.body.appendChild(el);el.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}el.remove();finish(ok);return ok;
@@ -135,5 +142,5 @@ document.addEventListener("civilization-audio-preview-status",event=>{
 document.addEventListener("civilization-audio-availability",()=>{if(visible())refresh();});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){g.CivilizationAudioScenes?.stopPreview?.();audio()?.resetPreview();}else if(visible())verifyVisible();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=10;
+g.GM_AUDIO_TEST_CATALOG_VERSION=11;
 })(window);
