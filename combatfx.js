@@ -304,7 +304,7 @@
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd")window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);}
     if(!evt)continue;
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt);
@@ -427,7 +427,7 @@
    await structuredSleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];
-    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd")window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);if(!evt)continue;
+    if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudioScenes?.notify?.("combat-start");window.CivilizationAudio?.combatEvent?.(evt);}if(!evt)continue;
     if(evt.type==="firstActor"){await structuredSleep(Math.min(stepDelay,55));continue;}
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
