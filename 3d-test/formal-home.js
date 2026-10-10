@@ -492,7 +492,7 @@ function ensureServiceControl(view){
 }
 function onRendered(view){
  if(enabled&&(activeGrowthKind==="battle-preview"||["dungeon","dungeon-bounty","dungeon-arena","dungeon-mirror","dungeon-void-mirage","calamity","alternateuniverse"].includes(view))&&view===activeRoute)hide();
- if((view!==activeRoute||activeHost&&!activeHost.isConnected)&&(enabled||runtime))hide();
+ if((view!==activeRoute||activeHost&&!activeHost.isConnected||activeControl&&!activeControl.isConnected)&&(enabled||runtime))hide();
  if(view==="adventure"&&enabled){
   const world=Number(global.currentWorldPhase?.()||1),era=global.getAdventureEraView?.()||"";
   if(era!==activeEra||!((world===1&&era==="galaxy")||([2,3].includes(world)&&era==="galaxy-review")||(world===2&&era==="universe")||(world===3&&era==="universe-review")||(world===3&&era==="higher-dimensional")))hide();
