@@ -94,7 +94,7 @@ window.addEventListener("message",event=>{
  const voidProgress=window.getVoidMirageProgressSnapshot?.()||window.getVoidMirageRunSnapshot?.()||{};
  const dungeonKeys=["bounty","arena","tower","mirror"];
  const policies=dungeonKeys.map(key=>window.dungeonModeAvailability?.(key)||null);
- const dungeonModes=dungeonKeys.filter((key,i)=>policies[i]?.visible===true&&!(key==="bounty"&&window.currentWorldPhase?.()===3));
+ const dungeonModes=dungeonKeys.filter((key,i)=>policies[i]?.visible!==false&&!(key==="bounty"&&window.currentWorldPhase?.()===3));
  const dungeonAvailability=dungeonModes.map(key=>{const policy=policies[dungeonKeys.indexOf(key)];return policy?.enabled===true||policy?.available===true||policy?.unlocked===true;});
  const dungeonSnapshot={
    hub:{dungeonKind:"hub",world:window.currentWorldPhase?.()||1,dungeonVisibleModes:dungeonModes,dungeonAvailableModes:dungeonAvailability,dungeonUnlocked:true},
