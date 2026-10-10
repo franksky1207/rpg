@@ -1,3 +1,12 @@
+## 2026-10-10｜1～18 批後整合優化第 3／6 批：3D 資源版本、GM 載入進度與預熱
+
+- **實作**：`3d-test/formal-home.js` 正式 3D opt-in 預覽統一由 `resource-manifest.json` 取得 Babylon.js、`prototype-engine.js`、`runtime.js`、`appearance-snapshot.js` 四種版本 URL；清單缺值才個別用安全 fallback 版本。移除場景備援 URL 的過長歷史查詢參數；載入失敗清除 `resourceVersionPromise`，允許下一次重新查詢版本（舊成功載入腳本不重複執行）。3D 正式 Runtime/外觀/引擎仍只在玩家點預覽後按需載入，文字版不新增加載。
+- **GM 資源政策**：共用 `Civilization3DSharedAssetWarm` 仍只預熱 Babylon 與場景資源，runtime／appearance 仍依原流程按需載入。GM 啟動校驗既有資源雜湊及腳本載入不改正式授權／帳號 owner；`scriptgrouploader.js` 為進行中共用 group 增加進度監聽訂閱與目前已載入比例，使另一個呼叫者加入已在進行的 GM 載入時也可收到中間進度，不必等待末尾跳至完成。失敗時清理進度追蹤，下次可重新開始。
+- **進度條**：沿用 `backgroundpreload.js` 的 VERSION=5 真實子工作完成比例與單調顯示；本次未聲稱可推算下載位元組或剩餘時間，亦不修改已有效的啟動就緒契約。
+- **防回歸**：`tests/runtime/3d-b18-coverage-guard.js` 加入資源清單四模組、GM 共用進度、失敗重查與預熱限定斷言，已經 Runtime Integrity workflow 引用；`index.html` 兩支 JS cache-bust 更新。此次未修改角色存檔、雲端、正式遊戲戰鬥、GM 權限或模式 release gate。
+- **舊資料**：歷史查詢參數僅在正式場景備援 URL 精簡，保留原腳本存在與 asset 雜湊回退；既有本機 GM 檔案摘要 key、模式偏好及玩家存檔均不清除。跨版本 manifest 部署時序及既有 GM HTTP 雙階段快取仍需第 6 批真實瀏覽器／效能驗收。
+- **驗收界線**：GitHub main 回讀及 JS 靜態語法／斷言核對，不代表本次已執行全套 exact-head CI、Chromium、手機與 WebGL 故障注入；後者待第 6 批。整合優化第 4 批下一步為首次渲染、外觀快照與場景結構；第 19～40 正式 3D 批次不變。
+
 ## 2026-10-10｜第 1～18 批後整合優化第 2／6 批：正式 3D 預覽生命週期與防重複
 
 - **施工內容**：`3d-test/formal-home.js` 新增正式預覽控制項共用唯一性掃描 `uniqueControls()`，以 ID、文明紀錄的 kind 或服務控制台的 kind 辨識同頁重複控制組並保留第一個；新 `syncAllPreviewButtons()` 將可見預覽按鈕的初始文字、aria-pressed 與開關狀態同步，不再把其他未選取按鈕一起改為「關閉 3D 預覽」。
