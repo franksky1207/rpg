@@ -54,6 +54,7 @@ function notify(type,detail={}){
  if(type==="mirror"||type==="void")return setContext("shared",type);
  return false;
 }
+document.addEventListener("civilization-audio-unlocked",()=>restore());
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopAmbient();activeMusicId=null;}else restore();});
 new MutationObserver(()=>{if(prohibited()){stopAmbient();activeMusicId=null;}else if(selected&&!ambient&&selected.ambient)restore();}).observe(document.body,{attributes:true,attributeFilter:["class"]});
