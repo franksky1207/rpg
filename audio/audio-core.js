@@ -88,7 +88,7 @@ function begin(id,{preview=false,loop=true}={}){
  const item=tracks[id];if(!item){if(preview)previewReport({id,status:"failed",reason:"找不到音檔"});return false;}
  if(prohibited()||(!preview&&musicMuted())){if(preview)previewReport({id,status:"blocked",reason:document.hidden?"分頁在背景":minimal()?"極簡模式禁止播放":"音訊已停用"});return false;}
  if(!unlocked){if(preview)previewReport({id,status:"blocked",reason:"需要先點擊網頁解除瀏覽器播放限制"});return false;}
- if(preview&&music){music.pause();music.removeAttribute("src");music.load();music=null;}
+ if(preview&&music){music.pause();}
  const request=preview?++previewRequest:0,previous=preview?session:music;
  if(previous){previous.pause();previous.removeAttribute("src");previous.load();}
  const el=new Audio();el.preload="auto";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.dataset.trackId=id;
@@ -124,13 +124,14 @@ function previewSeam(id,seconds=8){
 }
 
 function playMusic(id){
- if(music?.dataset?.trackId===id&&!music.paused)return true;
+ if(music?.dataset?.trackId===id)return resumeMusic();
  if(musicMuted())return false;
  return begin(id,{preview:false,loop:true});
 }
 function currentMusicId(){return music?.dataset?.trackId||null;}
 function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
+function resumeMusic(){if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
 const combatCatalog=Object.freeze({
  attack:{label:"普通攻擊",asset:null,status:"awaiting-asset"},
@@ -204,5 +205,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();},{passive:true});
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:8,tracks,currentMusicId,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:8,tracks,currentMusicId,resumeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
