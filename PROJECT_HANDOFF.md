@@ -1,3 +1,9 @@
+## 2026-10-10｜全介面同紀元音樂防重播：GM 測試→管理位置續播修正
+- **使用者實機回報**：在 GM 試聽中心切回 GM 管理頁，主題音樂仍從頭播放，顯示上一批「主頁、設定、冒險不中斷」防護不足。
+- 核心根因：`audio/audio-core.js` `begin(id,{preview:true})` 把正式 `music` 物件執行 `pause → removeAttribute('src') → load → null`，導致 GM 退出時即使同紀元，正式曲目播放器與 currentTime 已消失；`audio/audio-scenes.js` `apply()` 僅檢查 currentMusicId，無法對「同曲但暫停」進行續播。
+- 修正：GM 開始試聽時**只暫停正式 music，不移除 src／不銷毀物件**；新增 `resumeMusic()` 在音樂允許且 GM 試聽頁已關閉時對同一物件恢復 `play()`，保留 currentTime；`playMusic(id)` 同曲走 `resumeMusic()`，不同紀元才建立新音源；`audio-scenes.js apply()` 對同曲呼叫 `resumeMusic()`。因此 GM「測試→管理」、一般「主頁↔設定↔冒險↔角色／背包」、合法非隱藏頁 restore、相同紀元的場景事件皆不應重建同曲播放器。
+- `index.html` 音訊核心及場景版本 cache-bust 已更新。JS 語法 PASS；模擬同紀元 7 個基本頁切換 + GM paused→restore：僅啟動新曲 1 次、stop 0 次，透過續播方法恢復。仍須實機核對 currentTime 沒有歸零、GM 試聽結束後不與正式音樂重疊。無修改正式戰鬥與三首曲目。
+
 ## 2026-10-10｜正式音訊舊播放路徑清退，僅三紀元主題（已施工）
 - 使用者實機發現「主頁→設定→主頁」主題重新從頭播、進入冒險時原本主題中斷，原因是 `audio/audio-scenes.js` 的舊情境表及 `restore()` 無條件重啟同曲，且冒險會切換至 `dark-sector` 等舊曲。**已替換 audio-scenes.js 為只認三首紀元主題的共用 owner**。主頁、設定、背包、冒險及返回同紀元均使用同一音源，不因場景名稱變化重建播放器；只有真的進入不同紀元才換曲。
 - `audio/audio-core.js` 只註冊本地三首 `era-galaxy-theme`、`era-universe-theme`、`era-higher-theme`。**刪除舊 dark-*/galaxy-battle/boss-orchestra/laser-preview 等正式可播放清單**。舊戰鬥及 UI 音效事件暫無已選新素材，現在不播放；新版三首共用戰鬥配樂及六音效仍待下一輪選材，**切勿假裝戰鬥配樂已上線**。程式舊播放接口只保留安全相容外殼，不再有舊音源可供播放。
