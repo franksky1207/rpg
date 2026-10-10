@@ -1,42 +1,68 @@
-/* Independent GM audio preview. Isolated from 3D preview and combat simulation. */
+/* GM 音樂音效測試中心：依正式場景及狀況呈現；不以施工批次分類。 */
 (function(g){"use strict";
-
-const eventControls=()=>{
- const rows=Object.entries(g.CivilizationAudio?.combatCatalog||{});
- const options=rows.map(([id,row])=>'<option value="'+id+'">'+row.label+(row.asset?'（候選音檔）':'（待素材）')+'</option>').join('');
- return '<div style="margin-top:12px;border:1px solid #4a4232;border-radius:10px;padding:12px"><b>A02｜正式戰鬥事件音效測試</b><p class="muted">只模擬音訊，不執行戰鬥、結算或收益。缺乏合法素材者顯示待補，不用蜂鳴聲替代。</p><div class="controls"><label>事件 <select class="btn" id="gmAudioCombatEvent">'+options+'</select></label><button class="btn blue" onclick="gmAudioCombatSample()">▶ 測試事件</button></div><div class="muted" id="gmAudioEventResult" role="status">尚未播放</div></div>';
-};
-const html=()=>{const audio=g.CivilizationAudio;if(!(typeof state!=="undefined"&&state?.gm===true))return "";const p=audio?.previewSettings()||{};const tracks=Object.entries(audio?.tracks||{}).map(([id,item])=>'<option value="'+id+'">'+item.label+'</option>').join("");
-return '<div class="muted gm-hub-note">A01 正式授權音樂與音效候選試聽。與文字、3D 共用同一音訊引擎；極簡模式一律靜音。候選檔案目前採來源站直連，若瀏覽器或來源網站阻擋請勿視為驗收通過。</div><div class="controls"><label>音樂／音效<select class="btn" id="gmAudioTrack">'+tracks+'</select></label><button class="btn blue" onclick="gmAudioPlay()">▶ 試聽</button><button class="btn" onclick="CivilizationAudio.stopPreview()">■ 停止</button></div><div class="controls"><label>主音量 <input type="range" min="0" max="100" value="'+Math.round((p.master||0)*100)+'" oninput="CivilizationAudio.previewLevel(\'master\',this.value/100)"></label><label>音樂 <input type="range" min="0" max="100" value="'+Math.round((p.music||0)*100)+'" oninput="CivilizationAudio.previewLevel(\'music\',this.value/100)"></label><label>戰鬥 <input type="range" min="0" max="100" value="'+Math.round((p.battle||0)*100)+'" oninput="CivilizationAudio.previewLevel(\'battle\',this.value/100)"></label></div><div class="muted">聲音資產本地化、更多音效、正式情境事件與完整混音將於 A01 未結案項目及 A02～A04 持續驗收；試聽不會修改正式戰鬥或存檔。</div>'+eventControls();
-};
-g.gmAudioPlay=()=>panelIsVisible()&&g.CivilizationAudio?.preview(document.getElementById("gmAudioTrack")?.value);
-
-g.gmAudioCombatSample=()=>{
- if(!panelIsVisible())return false;
- const kind=document.getElementById("gmAudioCombatEvent")?.value;
- const evt={type:kind==="critical"||kind==="shield"?"attack":kind,crit:kind==="critical",shieldAbsorbed:kind==="shield"?10:0};
- const ok=g.CivilizationAudio?.combatEvent(evt,{simulation:true})===true;
- const label=document.getElementById("gmAudioEventResult");
- if(label)label.textContent=ok?"已播放候選音效，請確認品質。":"目前沒有已配置的聲音素材，或處於靜音／背景／節流狀態。";
- return ok;
-};
-g.gmAudioTestHtml=html;
-// A preview is valid only while its own GM test panel is visible and expanded.
-// Leaving GM, changing GM tabs, changing game pages, or closing the panel resets it.
-let wasPresent=false;
-function panelIsVisible(){
- const section=document.querySelector('[data-gm-section="gm-audio-test"]');
- return !!(typeof state!=="undefined"&&state?.gm===true&&section?.open&&section.isConnected&&section.getClientRects().length);
+const audio=()=>g.CivilizationAudio;
+const permitted=()=>typeof state!=="undefined"&&state?.gm===true;
+const GROUPS=Object.freeze([
+ {id:"system",name:"主畫面與系統",contexts:[["home","主畫面主題曲","dark-title"],["upgrade","強化／升級提示","dark-hover"],["victory","結算勝利","dark-victory"],["notice","一般通知","dark-hover"]]},
+ {id:"galaxy",name:"銀河紀元",contexts:[["galaxy-explore","探索與區域環境","dark-sector"],["galaxy-combat","一般戰鬥","galaxy-battle"],["galaxy-boss","Boss／文明災厄","boss-orchestra"],["galaxy-review","銀河回顧","dark-pulse"]]},
+ {id:"universe",name:"宇宙紀元",contexts:[["universe-explore","宇宙探索","dark-sector"],["universe-combat","宇宙戰鬥","galaxy-battle"],["universe-boss","Boss／文明災厄","boss-orchestra"],["universe-review","宇宙回顧","dark-pulse"]]},
+ {id:"higher",name:"高維紀元",contexts:[["higher-explore","高維探索","dark-airy"],["higher-combat","高維戰鬥","dark-urgent"],["higher-boss","高維 Boss","boss-orchestra"],["alternate","異宇宙／深度","dark-pulse"]]},
+ {id:"combat",name:"戰鬥與技能",events:["attack","critical","dodge","combo","counter","shield","drain","penetration","mark","berserk","victory","defeat"]},
+ {id:"monsters",name:"怪物與特殊遭遇",contexts:[["monster-entrance","一般怪物登場",null],["elite-entrance","菁英登場",null],["boss-entrance","Boss 登場",null],["special-entrance","特殊怪出現",null],["monster-death","怪物死亡",null]]},
+ {id:"dungeons",name:"副本與特殊戰鬥",contexts:[["bounty","懸賞戰（銀河／宇宙）","galaxy-battle"],["arena","競技場","dark-urgent"],["mirror","鏡像戰","boss-orchestra"],["void","虛空戰","dark-pulse"],["calamity","文明災厄","boss-orchestra"],["alternate-dungeon","異宇宙挑戰","dark-urgent"]]},
+ {id:"mix",name:"情境混音測試",contexts:[["mix-calm","寧靜探索","dark-airy"],["mix-fight","一般連戰","galaxy-battle"],["mix-tense","強敵迫近","dark-urgent"],["mix-boss","Boss 戰","boss-orchestra"],["mix-victory","勝利返回","dark-victory"]]}
+]);
+let group="higher",selected="higher-explore",wasPresent=false;
+const safe=x=>String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function panel(){return document.querySelector('[data-gm-section="gm-audio-test"]');}
+function visible(){const node=panel();return !!(permitted()&&node?.open&&node.isConnected&&node.getClientRects().length);}
+function groupRow(){return GROUPS.find(x=>x.id===group)||GROUPS[0];}
+function entries(row=groupRow()){
+ if(row.events)return row.events.map(id=>{const o=audio()?.combatCatalog?.[id];return {id,label:o?.label||id,asset:o?.asset||null,event:id};});
+ return row.contexts.map(([id,label,asset])=>({id,label,asset}));
 }
+function current(){return entries().find(x=>x.id===selected)||entries()[0];}
+function controls(){
+ const p=audio()?.previewSettings()||{master:.7,music:.45,battle:.65};
+ return ['master','music','battle'].map(k=>'<label>'+({master:"主音量",music:"音樂",battle:"戰鬥"}[k])+' <input type="range" min="0" max="100" value="'+Math.round((p[k]||0)*100)+'" oninput="CivilizationAudio.previewLevel(\''+k+'\',this.value/100)"></label>').join('');
+}
+function content(){
+ const rows=entries();
+ if(!rows.some(x=>x.id===selected))selected=rows[0]?.id||"";
+ return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。候選配樂不是各紀元最終定案音樂；缺少聲音的項目明確顯示「待素材」。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
+ +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
+ +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+(x.asset?'（候選）':'（待素材）')+'</option>').join('')+'</select></label></div>'
+ +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
+ +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="CivilizationAudio.resetPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
+ +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
+ +'<p class="muted">目前候選音檔來自 CC0 授權作品，仍使用來源站網址；最終配樂、怪物與武器專屬素材及同源檔案本地化尚待補齊。原始來源與授權登載於 audio/A01_AUDIO_LEDGER.md。</p>';
+}
+function statusText(){
+ const entry=current();if(!entry)return "尚無場景資料";
+ const asset=audio()?.tracks?.[entry.asset];
+ return entry.label+"｜"+(asset?"候選可試聽："+asset.label+"（"+asset.license+"，尚待音質驗收）":"待素材：尚未指定符合品質的正式音效");
+}
+function refresh(){const node=document.getElementById("gmSoundBody");if(node)node.innerHTML=content();}
+g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";audio()?.resetPreview();refresh();};
+g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;audio()?.resetPreview();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
+g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);selected=list[(index+step+list.length)%list.length]?.id;audio()?.resetPreview();refresh();};
+g.gmSoundPlaySelected=()=>{
+ if(!visible())return false;
+ const row=current();if(!row)return false;
+ const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):row.asset?audio()?.preview(row.asset):false;
+ const node=document.getElementById("gmSoundStatus");
+ if(node)node.textContent=statusText()+(ok?"｜播放要求已送出，請實際聆聽":"｜無可用素材、靜音或播放遭阻擋");
+ return !!ok;
+};
+g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
 function guard(){
- const present=panelIsVisible();
- if(wasPresent&&!present)g.CivilizationAudio?.resetPreview();
+ const present=visible();
+ if(wasPresent&&!present){audio()?.resetPreview();group="higher";selected="higher-explore";}
  wasPresent=present;
 }
-const observer=new MutationObserver(guard);
-observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["open","style","hidden","class"]});
+new MutationObserver(guard).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open","style","hidden","class"]});
 document.addEventListener("toggle",guard,true);
-document.addEventListener("visibilitychange",()=>{if(document.hidden)g.CivilizationAudio?.stopPreview();});
-
-g.registerGmHubSection?.("test","音樂音效測試中心",html,{id:"gm-audio-test"});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();});
+g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
+g.GM_AUDIO_TEST_CATALOG_VERSION=2;
 })(window);
