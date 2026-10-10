@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "status": "technical-validation-not-human-audition",
+  "themes": {
+    "galaxy": {
+      "title": "The Fall of Arcana",
+      "author": "Matthew Pablo",
+      "license": "CC BY 3.0",
+      "source_page": "https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music",
+      "source_url": "https://opengameart.org/sites/default/files/The%20Fall%20of%20Arcana_0.mp3",
+      "source_file": "galaxy-original.mp3",
+      "source_sha256": "414963df30b62553fb7ab571a9280c49adb74da09ee2aa5a44569c626601a078",
+      "source_bytes": 6283056,
+      "zip_member": null,
+      "original_duration_seconds": 152.059,
+      "loop_file": "galaxy-theme-loop.ogg",
+      "loop_sha256": "8bb59fd79ffc67ff2d660bbd24f9856f83f0aaee1020d378f7b582a1abdd47b4",
+      "loop_bytes": 2864574,
+      "loop_duration_seconds": 148.059,
+      "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
+      "human_loop_auditioned": false,
+      "client_fade_on_transition": "pending audio player transition implementation"
+    },
+    "universe": {
+      "title": "Epic Orchestral Fantasy Theme",
+      "author": "Markus Lindner (linxiaoma)",
+      "license": "CC BY 4.0",
+      "source_page": "https://opengameart.org/content/epic-orchestral-fantasy-theme",
+      "source_url": "https://opengameart.org/sites/default/files/EpicOrchestralFantasy_1.mp3",
+      "source_file": "universe-original.mp3",
+      "source_sha256": "2c8f36f8b845ff0baee593be0c3653bae56b32e04592eff40f6e83ec6e4b30b6",
+      "source_bytes": 2569821,
+      "zip_member": null,
+      "original_duration_seconds": 107.05,
+      "loop_file": "universe-theme-loop.ogg",
+      "loop_sha256": "1114e91ca2fd2e522530a9807e9310386016fa157473e1fe782c8c1e716cb583",
+      "loop_bytes": 1877657,
+      "loop_duration_seconds": 103.05,
+      "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
+      "human_loop_auditioned": false,
+      "client_fade_on_transition": "pending audio player transition implementation"
+    },
+    "higher": {
+      "title": "Exploration Theme",
+      "author": "Cleyton Kauffman",
+      "license": "CC0",
+      "source_page": "https://opengameart.org/content/exploration-theme",
+      "source_url": "https://opengameart.org/sites/default/files/exploration_theme.zip",
+      "source_file": "higher-original.zip",
+      "source_sha256": "81601fb33319491973803edeebb5ab5d2d05d943c0accb48ea79e84a9680fa43",
+      "source_bytes": 32456598,
+      "zip_member": "Exploration Theme/Exploration Theme.flac",
+      "original_duration_seconds": 134.4,
+      "loop_file": "higher-theme-loop.ogg",
+      "loop_sha256": "cf5faf3d7224ad2728f7206f9f4deecfd674793d278e1edb825c2e741102ee11",
+      "loop_bytes": 2145794,
+      "loop_duration_seconds": 130.4,
+      "loop_method": "2-second head-tail crossfade; original is retained; loop seam still requires human listening",
+      "human_loop_auditioned": false,
+      "client_fade_on_transition": "pending audio player transition implementation"
+    }
+  }
+}
