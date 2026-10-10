@@ -158,3 +158,13 @@ html{scroll-behavior:auto!important}
 .alternate-quick-controls button:focus-visible{outline:2px solid #d4af66;outline-offset:2px}
 .alternate-preview-summary{grid-column:1/-1;margin:3px 0 0;font-size:12px;line-height:1.5;color:#d9c9a7;text-align:center;overflow-wrap:anywhere}
 @media(max-width:770px){.alternate-quick-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* GM formal/free dungeon-era consistency controls; mobile-first and scene-specific. */
+.center-appearance-panel .center-scenario-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;min-width:0;margin:8px 14px 12px;}
+.center-appearance-panel .center-scenario-grid>label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12px;}
+.center-appearance-panel .center-scenario-grid select,
+.center-appearance-panel .center-scenario-grid input{width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:7px 8px;}
+.center-appearance-panel #scenarioAlternateLabel{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:8px 0 14px;font-size:12px;}
+.center-appearance-panel #scenarioAlternateState{max-width:100%;min-width:0;}
+.center-appearance-panel #scenarioRefresh{margin-bottom:12px;}
+@media(max-width:600px){.center-appearance-panel .center-scenario-grid{grid-template-columns:minmax(0,1fr);}}
