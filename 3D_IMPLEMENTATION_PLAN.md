@@ -1,3 +1,9 @@
+## 2026-10-11 音訊優化第 4 批：舊程式與舊資料清理
+- audio/audio-core.js 移除未使用、標記 awaiting-asset 的 combatCatalog 與 lastCombat；保留 combatVoices/stopCombat/playSpatial 作為 3D 空間音效合約與舊用途，不誤刪未來 3D 入口。
+- 一般 SFX 與空間音效共用 shouldSuppressPresentationSfx(simulation) 判定：Fast Catch-up 的正式遊戲聲音保持靜音；GM 模擬試聽不因遊戲背景補播被限制。既有 effectsMuted() 統一檢查 document.hidden、minimal、總開關；不變更戰鬥公式、主題配樂或 50% 音效倍率。
+- audio/gm-audio-test.js 只在舊 civilization.gm.audio.review.v1 key 存在時刪除，避免每次無條件寫 localStorage，正式玩家存檔不更動。
+- index.html 對上述兩個 JS 更新 audioBatch4=20261011 快取。main 遠端回讀兩個 JS 語法通過，確認舊占位已消失、空間聲源保留、兩處 cache-bust。桌機與手機背景補播、GM 音效試聽及 3D 空間音效仍待實機驗收。
+
 ## 2026-10-11｜音訊優化第 3 批：音效優先權、音量與 GM 統計
 - audio/audio-core.js 保留六類 SFX 的正式 50% 音量統一倍率，085 仍為唯一 UI 點擊檔案。正式聲源不足時，先保護既有勝利及重大打擊聲源，避免普通攻擊搶占關鍵聲音；保留原播放限額與 GM 試聽隔離。
 - 新增 SFX 的請求、完成 play()、playing 事件、失敗、節流／聲源略過次數與最近 100 次 play Promise 啟動延遲中位數、P95；該數值是播放請求到 play Promise 解決的時間，並非精確聲波出聲時間。
