@@ -215,7 +215,7 @@ function playSfx(category,{simulation=false,volume=1}={}){
  const slot=preparedSample(category,sample.index);const a=!slot.busy?slot.audio:new Audio(sample.url);if(a===slot.audio)slot.busy=true;a.preload="auto";a.loop=false;a.dataset.sfxCategory=category;
  if(simulation)a.dataset.gmPreviewVoice="1";
  const gain=simulation?gmPreviewVolume:normalizeVolume(spec.channel,prefs.master,prefs[spec.channel]);
- a.volume=Math.max(0,Math.min(1,gain*Math.max(0,Math.min(1,Number(volume)||0))));
+ a.volume=Math.max(0,Math.min(1,gain*(category==="ui-click"?0.5:1)*Math.max(0,Math.min(1,Number(volume)||0))));
  const isNotice=category==="victory";
  const categoryLimit=isNotice?2:3;
  const totalLimit=8;
