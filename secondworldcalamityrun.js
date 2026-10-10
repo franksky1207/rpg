@@ -137,6 +137,7 @@
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runSnapshot()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runSnapshot()};
+  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"universe",mode:"calamity"});
   activeRun={active:true,mode:mode==="single"?"single":"continuous",phase:"ready",calamityId:d.id,calamityName:d.name,battleCount:0,wins:0,losses:0,trueKills:0,stopRequested:false,reason:"",startedAt:Date.now(),endedAt:null,lastBattle:null};
   return {ok:true,run:runSnapshot()};
  }
