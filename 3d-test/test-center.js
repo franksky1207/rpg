@@ -453,25 +453,23 @@ function script(src){
 window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
+ const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-opt1-lifecycle","./prototype-engine.js?v=20261010-b25-chronicle","./appearance-snapshot.js?v=20261010-dual-mode-preflight3"];
  try{
   const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
-  if(!response.ok)throw new Error("version-file-unavailable");
+  if(!response.ok)throw new Error("manifest-unavailable");
   const manifest=await response.json();
-  if(manifest?.schema!==1||!manifest.files)throw new Error("invalid-version-file");
+  if(manifest?.schema!==1||!manifest.files||typeof manifest.files!=="object")throw new Error("invalid-resource-manifest");
   const version=(path,url)=>{
    const digest=manifest.files[path];
-   if(!/^[a-f0-9]{24}$/.test(String(digest||"")))throw new Error("missing-version");
-   return url+(url.includes("?")?"&":"?")+"asset="+digest;
+   return typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)?url+"?asset="+digest:url;
   };
   return [
-   version("vendor/babylonjs/7.54.3/babylon.js","../vendor/babylonjs/7.54.3/babylon.js"),
-   version("3d-test/runtime.js","./runtime.js"),
-   version("3d-test/prototype-engine.js","./prototype-engine.js"),
-   version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")
+   version("vendor/babylonjs/7.54.3/babylon.js",fallback[0]),
+   version("3d-test/runtime.js","./runtime.js")=== "./runtime.js"?fallback[1]:version("3d-test/runtime.js","./runtime.js"),
+   version("3d-test/prototype-engine.js","./prototype-engine.js")==="./prototype-engine.js"?fallback[2]:version("3d-test/prototype-engine.js","./prototype-engine.js"),
+   version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")==="./appearance-snapshot.js"?fallback[3]:version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")
   ];
- }catch(_){
-  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-opt1-lifecycle","./prototype-engine.js?v=20261010-b25-chronicle","./appearance-snapshot.js?v=20261010-opt4-shared-appearance"];
- }
+ }catch(_){return fallback;}
 }
 (async()=>{
  try{
