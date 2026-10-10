@@ -41,35 +41,40 @@ function hide(){
 function syncButton(){syncAllPreviewButtons();}
 function script(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("load-failed"));document.head.appendChild(s);});}
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261009-b11&v2=20261009-b12&v3=20261009-b12-entry-state&v4=20261009-b13&v5=20261009-b13-higher-hub&v6=20261009-b14&v7=20261010-b15&v8=20261010-au-3d-b1&v9=20261010-au-3d-b2&v10=20261010-au-cultures&v11=20261010-au-tier-power&v12=20261010-3d-b16-chronicle&v13=20261010-3d-b17b-services";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261010-3d-b17b-services";
+const RUNTIME_SRC="3d-test/runtime.js?v=20261010-dual-mode-preflight3";
+const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-dual-mode-preflight3";
 let resourceVersionPromise=null;
-async function resolveSceneResources(){
+function resolveSceneResources(){
  if(!resourceVersionPromise)resourceVersionPromise=fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"})
   .then(response=>{if(!response.ok)throw new Error("manifest-unavailable");return response.json();})
   .then(manifest=>{
    if(manifest?.schema!==1||typeof manifest.files!=="object")throw new Error("invalid-resource-manifest");
-   const version=path=>{
+   const version=(path,fallback)=>{
     const hash=manifest.files[path];
-    return typeof hash==="string"&&/^[0-9a-f]{24}$/.test(hash)?path+(path.includes("?")?"&":"?")+"asset="+hash:path;
+    return typeof hash==="string"&&/^[0-9a-f]{24}$/.test(hash)?path+"?asset="+hash:fallback;
    };
-   return [version(BABYLON_SRC),version("3d-test/prototype-engine.js")];
-  }).catch(()=>[BABYLON_SRC,SCENE_SRC]);
+   return [
+    version(BABYLON_SRC,BABYLON_SRC),
+    version("3d-test/prototype-engine.js",SCENE_SRC),
+    version("3d-test/runtime.js",RUNTIME_SRC),
+    version("3d-test/appearance-snapshot.js",APPEARANCE_SRC)
+   ];
+  }).catch(()=>[BABYLON_SRC,SCENE_SRC,RUNTIME_SRC,APPEARANCE_SRC]);
  return resourceVersionPromise;
 }
-const RUNTIME_SRC="3d-test/runtime.js?v=20261010-dual-mode-preflight3";
-const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-dual-mode-preflight3";
 async function load(){
  if(global.BABYLON?.Engine&&global.Civilization3DPrototype?.createServiceConsoleScene&&global.Civilization3DRuntime?.create&&global.Civilization3DAppearance?.capture)return;
- if(!loading)loading=resolveSceneResources().then(async ([engineUrl,sceneUrl])=>{
+ if(!loading)loading=resolveSceneResources().then(async ([engineUrl,sceneUrl,runtimeUrl,appearanceUrl])=>{
    // Runtime and appearance are needed only after clicking a preview, never for text startup.
    await Promise.all([
-     global.Civilization3DRuntime?.create?Promise.resolve():script(RUNTIME_SRC),
-     global.Civilization3DAppearance?.capture?Promise.resolve():script(APPEARANCE_SRC),
+     global.Civilization3DRuntime?.create?Promise.resolve():script(runtimeUrl),
+     global.Civilization3DAppearance?.capture?Promise.resolve():script(appearanceUrl),
      global.BABYLON?.Engine?Promise.resolve():script(engineUrl),
      global.Civilization3DPrototype?.createServiceConsoleScene?Promise.resolve():script(sceneUrl)
    ]);
    if(!global.BABYLON?.Engine||!global.Civilization3DPrototype?.createServiceConsoleScene||!global.Civilization3DRuntime?.create||!global.Civilization3DAppearance?.capture)throw new Error("3d-modules-unavailable");
- }).catch(error=>{loading=null;throw error;});
+ }).catch(error=>{loading=null;resourceVersionPromise=null;throw error;});
  return loading;
 }
 /* Preload network bytes only; neither WebGL nor GPU resources are created. */
