@@ -21,7 +21,7 @@ function apply(){
  audio?.prioritizeEraTheme?.(selected.era);
  if(audio?.isSilent?.()||audio?.settings?.().musicEnabled===false)return false;
  const id=selected.music;
- if(audio?.currentMusicId?.()===id)return true;
+ if(audio?.currentMusicId?.()===id)return audio?.resumeMusic?.()===true;
  return audio?.playMusic?.(id)===true;
 }
 function setContext(era,scene,{preview=false}={}){
