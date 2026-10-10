@@ -24,6 +24,31 @@ async function register(){
   return true;
  }catch(error){console.warn("[文明戰線] 資源快取不可用，改用一般網路載入",error);return false;}
 }
+const VERSION_KEY="civilization.resource.versions.checked.v1";
+let startupChanges=null;
+async function checkStartupVersions(){
+ const report={ok:false,changed:0,firstVisit:false};
+ try{
+  const response=await fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
+  if(!response.ok)throw Error("version-check-failed");
+  const next=await response.json();
+  if(next.schema!==1||next.algorithm!=="sha256-96"||!next.files||typeof next.files!=="object")throw Error("version-list-invalid");
+  const now=next.files;
+  let previous=null;
+  try{previous=JSON.parse(localStorage.getItem(VERSION_KEY)||"null");}catch(_){}
+  if(!previous||typeof previous!=="object"||Array.isArray(previous)){
+   report.firstVisit=true;
+  }else{
+   report.changed=Object.keys(now).filter(k=>previous[k]!==now[k]).length+Object.keys(previous).filter(k=>!(k in now)).length;
+  }
+  // Persist only a successfully fetched, complete deployment listing.
+  try{localStorage.setItem(VERSION_KEY,JSON.stringify(now));}catch(_){}
+  report.ok=true;
+ }catch(error){report.error=String(error?.message||error);}
+ startupChanges=Object.freeze(report);
+ return startupChanges;
+}
+function versionReport(){return startupChanges;}
 function humanBytes(bytes){if(!Number.isFinite(bytes)||bytes<0)return "無法計算";if(bytes<1024)return bytes+" B";if(bytes<1048576)return (bytes/1024).toFixed(1)+" KB";return (bytes/1048576).toFixed(1)+" MB";}
 async function updateSettingsStatus(){
  const target=document.getElementById("localResourceCacheStatus");
@@ -42,7 +67,7 @@ async function clearWithConfirmation(){
 function clear(){return message("CIV_CACHE_CLEAR");}
 function status(){return message("CIV_CACHE_STATUS");}
 function refresh(){return message("CIV_CACHE_REFRESH");}
-g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation});
+g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport});
 if(document.readyState==="complete")setTimeout(register,0);
 else g.addEventListener("load",()=>setTimeout(register,0),{once:true});
 })(window);
