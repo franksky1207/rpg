@@ -67,6 +67,7 @@
   activeRun.phase="ended";
   activeRun.endedReason=String(reason||"ended");
   activeRun.endedAt=Date.now();
+  window.CivilizationAudioScenes?.notify?.("combat-exit",{mode:"calamity"});
   return runStatus();
  }
  function begin(id,mode="continuous"){
