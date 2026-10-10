@@ -126,7 +126,7 @@
   const enemyScalingStats=equippedStats(),combatStats=playerCombatStats(enemyScalingStats);
   bountyState.rewardWorld=world;bountyState.rewardLevel=rewardLevel;bountyState.rewardBossIndex=universeCtx?.bossIndex??null;
   bountyState.enemy=buildBountyEnemy(bountyState.tier,enemyScalingStats,rewardLevel,{name:previewName,traits:previewTraits});
-  bountyState.phase="combat";bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();Promise.resolve().then(runBountyFight);return true;
+  bountyState.phase="combat";window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"bounty"});bountyState.startHp=state.hp;bountyState.playerMaxHp=combatStats.hp;render();Promise.resolve().then(runBountyFight);return true;
  }
 
  window.BOUNTY_BALANCE_VERSION=2;
