@@ -469,6 +469,9 @@
     const modeTotal=mode==="hub"?visibleModes.length:mode==="bounty"?5:3;
     const count=Math.max(0,Math.min(40,Math.floor(Number(args.dungeonRemaining)||0)));
     const modeUnlocked=args.dungeonUnlocked!==false;
+    const arenaRank=Math.max(1,Math.min(20,Math.floor(Number(args.dungeonRank)||1)));
+    const arenaPosition=["normal","hard","extreme"].includes(args.dungeonPosition)?args.dungeonPosition:"normal";
+    const bountyTier=["normal","high","danger"].includes(args.dungeonTier)?args.dungeonTier:"normal";
     for(let i=0;i<modeTotal;i++){
       const modeKey=mode==="hub"?visibleModes[i]:mode;
       const angle=(i-(modeTotal-1)/2)*.46;
@@ -497,6 +500,17 @@
         banner.position.set(x,1.9,z);banner.material=surface;
       }
     }
+    if(mode==="arena"){
+      const accent=arenaPosition==="extreme"?purple:arenaPosition==="hard"?gold:teal;
+      const rankRing=B.MeshBuilder.CreateTorus("dungeon-arena-rank-ring",{diameter:2.1+arenaRank*.13,thickness:.08,tessellation:48},scene);
+      rankRing.rotation.x=Math.PI/2;rankRing.position.set(0,.1,-1.1);rankRing.material=accent;
+    }else if(mode==="bounty"){
+      const tier=["normal","high","danger"].indexOf(bountyTier);
+      for(let i=0;i<=tier;i++){
+        const mark=B.MeshBuilder.CreatePolyhedron("dungeon-bounty-tier-"+i,{type:1,size:.36},scene);
+        mark.position.set((i-tier/2)*.85,1.65,-1.1);mark.material=tier===2?purple:gold;
+      }
+    }
     if(mode!=="hub"){
       const core=B.MeshBuilder.CreatePolyhedron("dungeon-center-"+mode,{type:2,size:mode==="arena"?.83:1},scene);
       core.position.set(0,2.2,-1.1);core.material=mode==="arena"?purple:gold;
@@ -507,7 +521,7 @@
         hoop.rotation.z+=dt*.00012;
       });
     }
-    scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked,visibleModes}};
+    scene.metadata={civilization3dDungeon:{kind:mode,world,phase,remaining:count,unlocked:modeUnlocked,visibleModes,arenaRank,arenaPosition,bountyTier,visualOnly:true,readOnly:true}};
     return scene;
   }
 
@@ -530,8 +544,8 @@
     const count=kind==="higher-arena"?3:kind==="mirror"?6:8;
     const stage=Math.max(0,Math.floor(Number(args.advancedStage)||0));
     const value=Math.max(0,Math.floor(Number(args.advancedProgress)||0));
-    const maximum=kind==="higher-arena"?3:kind==="mirror"?20:100;
-    const ratio=Math.min(1,value/maximum);
+    const maximum=kind==="higher-arena"?3:kind==="mirror"?20:Math.max(1,value+1);
+    const ratio=kind==="void"?Math.min(1,value/Math.max(100,value+1)):Math.min(1,value/maximum);
     const nodes=[];
     for(let i=0;i<count;i++){
       const theta=2*Math.PI*i/count;
@@ -544,6 +558,14 @@
     }
     const center=B.MeshBuilder.CreatePolyhedron("advanced-dungeon-core-"+kind,{type:2,size:kind==="higher-arena"?1.3:1},scene);
     center.position.y=1.2;center.material=glow;
+    if(kind==="higher-arena"){
+      const varied=args.higherArenaMode==="varied";
+      for(let i=0;i<3;i++){
+        const marker=B.MeshBuilder.CreatePolyhedron("advanced-arena-opponent-"+i,{type:1,size:varied?.34:.26},scene);
+        marker.position.set((i-1)*1.55,1.45,-1.5);
+        marker.material=varied?(i%2?dim:glow):glow;
+      }
+    }
     if(kind==="mirror"){
       const reflection=B.MeshBuilder.CreatePolyhedron("advanced-dungeon-reflection",{type:2,size:1},scene);
       reflection.position.set(0,1.2,-2.1);reflection.material=dim;
@@ -564,7 +586,7 @@
       }
     }
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);center.rotation.y+=dt*.0002;});
-    scene.metadata={civilization3dAdvanced:{kind,progress:value,stage,unlocked:args.advancedUnlocked===true,visualOnly:true,readOnly:true}};
+    scene.metadata={civilization3dAdvanced:{kind,progress:value,stage,higherArenaMode:args.higherArenaMode||"fixed",unlocked:args.advancedUnlocked===true,visualOnly:true,readOnly:true}};
     return scene;
   }
 
@@ -768,5 +790,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.23.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.23.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
