@@ -4,7 +4,6 @@ import hashlib
 import json
 import pathlib
 import re
-import subprocess
 
 root = pathlib.Path(__file__).resolve().parents[1]
 html = (root / "index.html").read_text(encoding="utf-8")
@@ -21,6 +20,16 @@ for file in (root / "assets/backgrounds").rglob("*"):
         paths.add(file.relative_to(root).as_posix())
 for file in (root / "3d-test").glob("*.css"):
     paths.add(file.relative_to(root).as_posix())
+# Include only deployable binary media, not source archives or player saves.
+MEDIA_SUFFIXES = {".ogg", ".mp3", ".wav", ".webp", ".png", ".jpg", ".jpeg",
+                  ".glb", ".gltf", ".bin", ".ktx2", ".basis", ".avif"}
+for directory in ("audio/assets", "3d-test/assets", "assets/3d", "assets/models"):
+    base = root / directory
+    if base.exists():
+        for file in base.rglob("*"):
+            if file.is_file() and file.suffix.lower() in MEDIA_SUFFIXES:
+                paths.add(file.relative_to(root).as_posix())
+# index.html stays network-fresh and is not a cache-first resource.
 
 files = {}
 for path in sorted(paths):
