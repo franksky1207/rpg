@@ -1,6 +1,6 @@
-/* GM era-theme audition only; obsolete review storage cleared. */
+/* GM audio audition; only migrate legacy review storage when it exists. */
 (function(g){"use strict";
-try{localStorage.removeItem("civilization.gm.audio.review.v1");}catch(_){}
+try{if(localStorage.getItem("civilization.gm.audio.review.v1")!==null)localStorage.removeItem("civilization.gm.audio.review.v1");}catch(_){}
 const tracks=[["era-galaxy-theme","銀河紀元｜The Fall of Arcana"],["era-universe-theme","宇宙紀元｜Epic Orchestral Fantasy Theme"],["era-higher-theme","高維紀元｜Exploration Theme"],["battle-normal-preview","普通戰鬥｜JRPG Battle Theme"],["battle-medium-preview","中等戰鬥｜Boss Battle"],["battle-high-preview","高等戰鬥｜I\'m Boss Here!"]];
 let chosen=0,detail="尚未播放",wasOpen=false;const cues=[["ui-click","介面點擊｜固定 085"],["normal-attack","普通攻擊｜隨機"],["critical","暴擊｜隨機"],["dodge","閃避｜瞬移"],["heavy-hit","重大打擊｜爆炸音效"],["victory","戰鬥勝利｜號角"]];
 const audio=()=>g.CivilizationAudio;
@@ -26,5 +26,5 @@ g.gmAudioTestHtml=()=>typeof state!=="undefined"&&state?.gm===true?html():"";
 document.addEventListener("civilization-audio-preview-status",e=>{if(!visible()||e.detail?.id!==tracks[chosen][0])return;const d=e.detail;const label=({playing:"播放中",failed:"播放失敗",volume:"音量已更新",blocked:"播放受限制","seam-tail":"已跳至曲尾","seam":"已接回曲頭","seam-done":"接縫試聽完成"})[d.status]||"載入中";const node=document.getElementById("gmSoundPlaybackDetail");if(node)node.textContent=label+"｜輸出音量："+Math.round((d.volume??0)*100)+"%"+(d.reason?"｜"+d.reason:"");});
 new MutationObserver(()=>{const now=visible();if(wasOpen&&!now){audio()?.stopPreview?.();audio()?.stopGmSfx?.();g.CivilizationAudioScenes?.restore?.();}wasOpen=now;}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=21;
+g.GM_AUDIO_TEST_CATALOG_VERSION=22;
 })(window);
