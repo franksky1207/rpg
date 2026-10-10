@@ -94,7 +94,7 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  const cases=[...gm.matchAll(/\{id:"[^"]+",cat:"([^"]+)"/g)].map(m=>m[1]);
  assert.equal(cases.length,31);
  assert.equal(new Set(cases).size,8);
- assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-repair5-final/);
+ assert.match(read("3d-test/index.html"),/test-center\.js\?v=20261010-b24-frontier/);
  console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");
 }
 console.log("PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.");
