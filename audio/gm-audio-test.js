@@ -29,9 +29,9 @@ function controls(){
 function content(){
  const rows=entries();
  if(!rows.some(x=>x.id===selected))selected=rows[0]?.id||"";
- return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。候選配樂不是各紀元最終定案音樂；缺少聲音的項目明確顯示「待素材」。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
+ return '<div class="muted gm-hub-note">依紀元、場景、事件尋找聲音，無須改變正式角色所在紀元。已設定來源連結的標示「音檔待驗證」，尚未設定的標示「待素材・不可播放」；來源連結不保證實際能播放，亦非各紀元最終配樂。所有極簡模式完全靜音。GM 試聽不更動戰鬥、收益或存檔。</div>'
  +'<div class="controls" style="align-items:end"><label>場景分類<br><select class="btn" id="gmSoundGroup" onchange="gmSoundChooseGroup(this.value)">'+GROUPS.map(x=>'<option value="'+x.id+'" '+(x.id===group?'selected':'')+'>'+safe(x.name)+'</option>').join('')+'</select></label>'
- +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+(x.asset?'（候選）':'（待素材）')+'</option>').join('')+'</select></label></div>'
+ +'<label>場景／狀況<br><select class="btn" id="gmSoundSituation" onchange="gmSoundChooseSituation(this.value)">'+rows.map(x=>'<option value="'+safe(x.id)+'" '+(x.id===selected?'selected':'')+'>'+safe(x.label)+(audio()?.tracks?.[x.asset]?.url?'（音檔待驗證）':'（待素材・不可播放）')+'</option>').join('')+'</select></label></div>'
  +'<div id="gmSoundStatus" class="muted" role="status" style="margin:10px 0">'+statusText()+'</div>'
  +'<div class="controls"><button class="btn blue" type="button" onclick="gmSoundPlaySelected()">▶ 試聽目前情境</button><button class="btn" type="button" onclick="CivilizationAudio.resetPreview()">■ 停止</button><button class="btn" type="button" onclick="gmSoundNext(-1)">◀ 上一項</button><button class="btn" type="button" onclick="gmSoundNext(1)">下一項 ▶</button></div>'
  +'<div class="controls" style="margin-top:10px">'+controls()+'</div>'
@@ -40,18 +40,18 @@ function content(){
 function statusText(){
  const entry=current();if(!entry)return "尚無場景資料";
  const asset=audio()?.tracks?.[entry.asset];
- return entry.label+"｜"+(asset?"候選可試聽："+asset.label+"（"+asset.license+"，尚待音質驗收）":"待素材：尚未指定符合品質的正式音效");
+ return entry.label+"｜"+(asset?.url?"音檔待驗證："+asset.label+"（"+asset.license+"；播放成功前不可視為可用）":"待素材・不可播放：尚無符合品質的音檔");
 }
 function refresh(){const node=document.getElementById("gmSoundBody");if(node)node.innerHTML=content();}
 g.gmSoundChooseGroup=id=>{if(!visible())return;group=GROUPS.some(x=>x.id===id)?id:group;selected=entries()[0]?.id||"";audio()?.resetPreview();refresh();};
 g.gmSoundChooseSituation=id=>{if(!visible())return;selected=entries().some(x=>x.id===id)?id:selected;audio()?.resetPreview();const node=document.getElementById("gmSoundStatus");if(node)node.textContent=statusText();};
-g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);selected=list[(index+step+list.length)%list.length]?.id;audio()?.resetPreview();refresh();};
+g.gmSoundNext=step=>{if(!visible())return;const list=entries(),index=list.findIndex(x=>x.id===selected);if(!list.length)return;selected=list[(index+step+list.length)%list.length]?.id;audio()?.resetPreview();refresh();g.gmSoundPlaySelected();};
 g.gmSoundPlaySelected=()=>{
  if(!visible())return false;
  const row=current();if(!row)return false;
  const ok=row.event?audio()?.combatEvent({type:row.event==="critical"||row.event==="shield"?"attack":row.event,crit:row.event==="critical",shieldAbsorbed:row.event==="shield"?10:0},{simulation:true}):row.asset?audio()?.preview(row.asset):false;
  const node=document.getElementById("gmSoundStatus");
- if(node)node.textContent=statusText()+(ok?"｜播放要求已送出，請實際聆聽":"｜無可用素材、靜音或播放遭阻擋");
+ if(node)node.textContent=statusText()+(ok?"｜已送出播放要求，請確認是否有聲音":"｜待素材、靜音或瀏覽器無法播放");
  return !!ok;
 };
 g.gmAudioTestHtml=()=>permitted()?'<div id="gmSoundBody">'+content()+'</div>':"";
@@ -64,5 +64,5 @@ new MutationObserver(guard).observe(document.body,{subtree:true,childList:true,a
 document.addEventListener("toggle",guard,true);
 document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
-g.GM_AUDIO_TEST_CATALOG_VERSION=2;
+g.GM_AUDIO_TEST_CATALOG_VERSION=3;
 })(window);
