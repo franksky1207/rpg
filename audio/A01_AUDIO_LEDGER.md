@@ -1,3 +1,11 @@
+## 2026-10-10｜正式音訊素材補完第 1 批（音檔已本地化並平衡；真人重聽未完成）
+- 使用者《音樂音效001》回報：73/73 GM 新分類都有紀錄，舊分類 8 筆。僅 4 個唯一音檔實際有聲音：dark-hover、galaxy-battle、boss-orchestra、laser-preview；dark-hover 和 laser-preview 太小聲，另外七個 SRG774 素材先前無聲。
+- GitHub Actions `.github/workflows/audio-localize.yml` 已實際成功：從 OpenGameArt `Dark Sci-Fi Audio Pack` CC0 官方來源取得 sector、airy、pulse、urgent、transmission、victory、hover、title 共 8 筆 MP3 原始檔，使用 ffprobe + ffmpeg 確認可解碼、測量均值與 SHA256；原始檔保留於 `audio/assets/*_*.mp3`，結果保存 `audio/assets/manifest.json`。
+- 原始音訊均值音量普遍低（例如 urgent -44.6 dB、title -44.3 dB、airy -40.0 dB）。已使用 ffmpeg loudnorm（背景配樂目標 -23 LUFS、airy 環境 -30 LUFS、UI/勝利 -16 LUFS，true peak -2 dB）產生 8 筆 `*-balanced.mp3`，保留各來源 SHA256／處理後 SHA256／來源授權／資料長度；**音量平衡≠使用者已確認聽感或場景適配**。
+- `audio/audio-core.js` 八筆 SRG774 MP3 全面改使用同源 `audio/assets/*-balanced.mp3`，另外三個 OGG（galaxy-battle、boss-orchestra、laser-preview）仍暫時遠端，尚待本地化與雷射短聲響度處理。更新 `index.html` cache-bust。
+- `audio/gm-audio-test.js` 使用者舊紀錄保留不刪；當音檔網址更動時提示「素材已更新・請重新試聽」，摘要亦分出「素材更新待重新試聽」，避免拿舊版無聲紀錄說新版已通過。四個評分按鈕照舊，不自動切換。
+- 待辦：手機／桌機真人試聽；三個 OGG 本地化；雷射音效修正；所有缺少實體聲音的情境挑選新高品質合法音樂／音效；完整正式事件接線／響度和記憶體壓測。本次不能宣稱 73 個情境已全部有正式聲音。
+
 ## 2026-10-10｜音訊素材全面補完第 1 批：聆聽實測與 CC0 本地化 Gate
 - 使用者《音樂音效001》GM 摘要：73/73 正式情境已填，另 8 筆舊分類；實際「有聲音」的獨立音檔僅 `dark-hover`（太小）、`galaxy-battle`（正常）、`boss-orchestra`（正常）、`laser-preview`（太小）。不得把多個情境共用音檔算成多種聲音，其他七個 SRG774 遠端候選現階段不可視為可聽。沒有設定資產的情境仍是待素材，不要把「沒有聲音」誤視為編碼失效。
 - 源網站 OpenGameArt `https://opengameart.org/content/dark-sci-fi-audio-pack` 明確登載八個 CC0 檔案；已新增 `.github/workflows/audio-localize.yml`，GitHub Actions 自動抓取官方原始連結，使用 ffprobe/ffmpeg 檢查可解碼時間、平均電平、SHA256、長度及來源，成功後才提交 `audio/assets` 與 `manifest.json`。流程不得把播放能力驗證冒充真人聆聽。
