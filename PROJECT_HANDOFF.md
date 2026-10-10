@@ -1,3 +1,9 @@
+## 2026-10-10｜緊急修復：戰鬥退場兩首音樂疊播（嚴格單聲道管理）
+- 使用者回報戰鬥結算恢復主題時「兩個音樂混在一起」。根因確認在 `audio/audio-core.js` 先前 `fadeMusic()` 的交叉淡化機制：開始第二次切曲時 `musicFadeSeq` 取消前一次 requestAnimationFrame，但舊 fade 的 `old` Audio 不再由 `music` 追蹤，也沒有被 pause/load，造成孤兒播放器持續出聲。快速轉場、正式結算及恢復尤其容易觸發。
+- 已改為 **正式音樂播放器排他式管理**：`musicVoices` Set 記錄所有由正式播放端建立的 HTMLAudioElement；跨曲切換先退役所有舊實體，確保同時僅有一首正式音樂播放，再讓新曲自 0 漸強（約 850ms）。不再採用會重疊兩首的 crossfade；舊 fade 非同步回呼會依序號檢查並停止已過期實體。音樂關閉及 stopMusic 也清理全部追蹤中的音源。GM 試聽仍只暫停正式音樂，回來原 currentTime 續播。
+- JS 語法 PASS，模擬 `銀河主題→中等戰鬥→銀河主題` 快速連續切換，實際 mock Audio 播放中數量 1，追蹤數 1；GM 試聽→返回保持原時間 61s，播放中 1；音樂關閉後播放中 0、追蹤數 0。新增 `runtimeStats().formalMusicVoices` 供內部測試；`index.html` 已更新 `audio/audio-core.js` cache-bust。
+- 尚須使用者真實桌機／手機音效驗收；如果要重新加入兩曲交叉淡化，必須改用互斥的單一 transition owner，且任何取消均釋放全部舊聲源，不能回到孤兒播放器設計。此批**優先防止同時兩曲疊播**，故轉場目前是舊曲立即停、新曲漸強，而不是交叉淡化。
+
 ## 2026-10-10｜修復戰鬥結束不恢復紀元主題
 - 使用者實機回報：正式戰鬥結束仍停留於戰鬥配樂，未回到當前紀元主題。
 - 根因：`audio/audio-scenes.js` 為防同畫面連戰重播，曾對 `selected.tier`、`lastCombatView` 一律保留戰鬥曲，即使已到結果頁也阻止恢復；另外多數主線／競技場／懸賞／鏡像的正式最終結算沒有送出 `combat-exit`。
