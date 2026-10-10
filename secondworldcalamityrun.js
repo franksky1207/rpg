@@ -129,6 +129,7 @@
   if(checkpoint&&typeof save==="function")save(false);
   stopBackground();
   activeRun.active=false;activeRun.phase="ended";activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
+  window.CivilizationAudio?.settlementVictory?.("universe-calamity:"+String(activeRun.startedAt),{success:activeRun.wins>0&&["single-complete","title-first-kill","civilization-complete"].includes(activeRun.reason)});
   window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"universe",mode:"calamity"});
   return runSnapshot();
  }
