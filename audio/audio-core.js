@@ -91,6 +91,25 @@ function begin(id,{preview=false,loop=true}={}){
  return true;
 }
 function preview(id){if(!(typeof state!=="undefined"&&state?.gm===true))return false;return begin(id,{preview:true,loop:tracks[id]?.kind==="music"});}
+function previewSeam(id,seconds=8){
+ if(!(typeof state!=="undefined"&&state?.gm===true)||!tracks[id])return false;
+ const ok=begin(id,{preview:true,loop:false});if(!ok||!session)return false;
+ const el=session,windowSeconds=Math.max(3,Math.min(12,Number(seconds)||8));
+ let stage=0,started=false,finished=false;
+ const active=()=>session===el&&!finished;
+ const seekTail=()=>{if(!active()||started||!Number.isFinite(el.duration)||el.duration<windowSeconds*2+2)return;started=true;stage=1;try{el.currentTime=el.duration-windowSeconds;}catch(e){previewReport({id,status:"failed",reason:"無法跳至曲尾"});}};
+ el.addEventListener("loadedmetadata",seekTail);
+ el.addEventListener("durationchange",seekTail);
+ el.addEventListener("timeupdate",()=>{
+  if(!active()||!started)return;
+  if(stage===1&&el.currentTime>=el.duration-.13){stage=2;el.currentTime=0;previewReport({id,status:"seam",reason:"曲尾已接回曲頭",volume:el.volume});}
+  else if(stage===2&&el.currentTime>=windowSeconds){finished=true;stopPreview();previewReport({id,status:"seam-done",reason:"接縫試聽完成",volume:el.volume});}
+ });
+ el.addEventListener("ended",()=>{if(active()&&stage===1){stage=2;el.currentTime=0;el.play().catch(()=>{});}});
+ if(el.readyState>=1)seekTail();
+ return true;
+}
+
 function playMusic(id){return begin(id,{preview:false,loop:true});}
 function stopMusic(){token++;if(music){music.pause();music.removeAttribute("src");music.load();music=null;}}
 function stopPreview(){token++;previewRequest++;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
@@ -173,5 +192,5 @@ window.addEventListener("pagehide",()=>{stop();if(spatialContext&&spatialContext
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:5,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:5,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
