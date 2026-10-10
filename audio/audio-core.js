@@ -15,6 +15,30 @@ const tracks=Object.freeze({
  "laser-preview":{label:"雷射射擊候選｜Laser Pew",kind:"battle",url:"https://opengameart.org/sites/default/files/laserpew.ogg",author:"sketcherskt",license:"CC0",source:"https://opengameart.org/content/pew-laser-fire-sound",sample:true}
 });
 const channels=["master","music","ambient","battle","ui","notice"];
+// Short UI cues need more prominence than long ambient/music beds. True LUFS
+// measurement/limiting requires local audio assets; this is a safe playback gain cap.
+const categoryGain=Object.freeze({music:0.85,ambient:0.75,battle:1,ui:1.8,notice:1.35});
+const normalizeVolume=(channel,master,level)=>Math.max(0,Math.min(1,master*level*(categoryGain[channel]||1)));
+const availability=new Map();
+async function probeTrack(id){
+ const item=tracks[id];if(!item?.url)return "missing";
+ const existing=availability.get(id);
+ if(existing&&existing!=="checking")return existing;
+ if(document.hidden)return "unchecked";
+ availability.set(id,"checking");
+ return await new Promise(resolve=>{
+  const el=document.createElement("audio");el.preload="metadata";
+  let finished=false;
+  const done=status=>{if(finished)return;finished=true;clearTimeout(timer);el.pause();el.removeAttribute("src");el.load();availability.set(id,status);document.dispatchEvent(new CustomEvent("civilization-audio-availability",{detail:{id,status}}));resolve(status);};
+  const timer=setTimeout(()=>done("failed"),9000);
+  el.addEventListener("loadedmetadata",()=>done("ready"),{once:true});
+  el.addEventListener("error",()=>done("failed"),{once:true});
+  el.src=item.url;el.load();
+ });
+}
+function trackStatus(id){return tracks[id]?.url?(availability.get(id)||"unchecked"):"missing";}
+async function checkTracks(ids){for(const id of [...new Set(ids)].filter(x=>tracks[x]?.url)){if(document.hidden)break;await probeTrack(id);}return ids.map(id=>[id,trackStatus(id)]);}
+
 const defaults={enabled:true,master:0.7,music:0.45,ambient:0.6,battle:0.65,ui:0.6,notice:0.75};
 let prefs={...defaults},previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle},music=null,session=null,unlocked=false,token=0;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");for(const key of channels)if(Number.isFinite(saved[key]))prefs[key]=Math.max(0,Math.min(1,saved[key]));if(typeof saved.enabled==="boolean")prefs.enabled=saved.enabled;}catch(_){}
@@ -28,18 +52,18 @@ function previewSettings(){return {...previewLevels};}
 function previewLevel(key,value){
  if(!["master","music","battle"].includes(key))return false;
  previewLevels[key]=Math.max(0,Math.min(1,Number(value)||0));
- if(session)session.volume=previewLevels.master*(previewLevels[session.dataset.channel]??prefs[session.dataset.channel]??0.6);
+ if(session)session.volume=normalizeVolume(session.dataset.channel||"music",previewLevels.master,previewLevels[session.dataset.channel]??prefs[session.dataset.channel]??0.6);
  return true;
 }
 function resetPreview(){stopCombat();stopPreview();previewLevels={master:defaults.master,music:defaults.music,battle:defaults.battle};}
-function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();if(music)music.volume=prefs.master*prefs.music;if(session)session.volume=previewLevels.master*previewLevels[session.dataset.channel||"music"];return true;}
+function setLevel(key,value){if(!channels.includes(key)&&key!=="enabled")return false;if(key==="enabled")prefs.enabled=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);if(session)session.volume=normalizeVolume(session.dataset.channel||"music",previewLevels.master,previewLevels[session.dataset.channel||"music"]??prefs[session.dataset.channel||"music"]);return true;}
 function unlock(){unlocked=true;reconcile();}
 function begin(id,{preview=false,loop=true}={}){
  if(!tracks[id]||prohibited())return false;
  if(!unlocked)return false;
  const item=tracks[id],stamp=++token;const previous=preview?session:music;
  if(previous){previous.pause();previous.src="";}
- const el=new Audio();el.preload="none";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.volume=preview?previewLevels.master*(previewLevels[item.kind]??prefs[item.kind]):prefs.master*prefs[item.kind];el.addEventListener("playing",()=>{if(stamp===token&&preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"playing"}}));});el.addEventListener("error",()=>{if(stamp===token){g.console.warn("Civilization audio source could not load",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});
+ const el=new Audio();el.preload="none";el.src=item.url;el.loop=!!loop;el.dataset.channel=item.kind;el.volume=preview?normalizeVolume(item.kind,previewLevels.master,previewLevels[item.kind]??prefs[item.kind]):normalizeVolume(item.kind,prefs.master,prefs[item.kind]);el.addEventListener("playing",()=>{if(stamp===token&&preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"playing"}}));});el.addEventListener("error",()=>{if(stamp===token){g.console.warn("Civilization audio source could not load",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});
  if(preview)session=el;else music=el;
  el.play().catch(()=>{if(stamp===token){g.console.warn("Audio unavailable or autoplay restricted",id);if(preview)document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail:{id,status:"failed"}}));}});return true;
 }
@@ -73,7 +97,7 @@ function combatEvent(evt,{simulation=false}={}){
  const entry=combatCatalog[type];if(!entry?.asset)return false;
  const now=Date.now();if(now-lastCombat<240)return false;lastCombat=now;
  const track=tracks[entry.asset];if(!track)return false;
- const audio=new Audio(track.url);audio.volume=(simulation?previewLevels.master*previewLevels.battle:prefs.master*prefs.battle)*0.75;
+ const audio=new Audio(track.url);audio.volume=normalizeVolume("battle",simulation?previewLevels.master:prefs.master,simulation?previewLevels.battle:prefs.battle);
  audio.preload="none";combatVoices.add(audio);
  audio.addEventListener("ended",()=>combatVoices.delete(audio),{once:true});
  audio.addEventListener("error",()=>combatVoices.delete(audio),{once:true});
@@ -86,5 +110,5 @@ document.addEventListener("visibilitychange",update);
 document.addEventListener("pointerdown",unlock,{passive:true});
 document.addEventListener("keydown",unlock);
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:1,tracks,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
+g.CivilizationAudio=Object.freeze({version:2,tracks,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,resetPreview,preview,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked});
 })(window);
