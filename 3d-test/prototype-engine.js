@@ -289,18 +289,33 @@
   }
 
   /* B08: visual-only full-body character stand-in; no equipment/save mutation. */
-  function configureDisplayCamera(camera,canvas,min,max){
+  /* Shared presentation presets; all scene owners retain their own framing. */
+  function sceneMaterial(B,scene,name,rgb,glow=0){
+    const material=new B.StandardMaterial(name,scene);
+    material.diffuseColor=new B.Color3(...rgb);
+    if(glow>0)material.emissiveColor=new B.Color3(...rgb).scale(glow);
+    return material;
+  }
+  function sceneFillLight(B,scene,name,intensity){
+    const light=new B.HemisphericLight(name,new B.Vector3(0,1,0),scene);
+    light.intensity=intensity;
+    return light;
+  }
+  function applyCameraLimits(camera,canvas,min,max){
     camera.lowerRadiusLimit=min;camera.upperRadiusLimit=max;
     camera.lowerBetaLimit=.25;camera.upperBetaLimit=Math.PI-.3;
     camera.wheelPrecision=65;camera.pinchPrecision=135;camera.inertia=.76;
     camera.attachControl(canvas,true);
+  }
+  function configureDisplayCamera(camera,canvas,min,max){
+    applyCameraLimits(camera,canvas,min,max);
   }
   function createCharacterScene(args){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.015,.02,.045,1);
     const camera=new B.ArcRotateCamera("character-camera",Math.PI/2.25,Math.PI/2.5,8.5,new B.Vector3(0,1.05,0),scene);
     configureDisplayCamera(camera,args.canvas,5.5,12);
-    new B.HemisphericLight("character-light",new B.Vector3(0,1,0),scene).intensity=.9;
+    sceneFillLight(B,scene,"character-light",.9);
     const metal=new B.StandardMaterial("character-metal",scene);metal.diffuseColor=new B.Color3(.18,.23,.33);
     const glow=new B.StandardMaterial("character-glow",scene);
     const world=Math.max(1,Math.min(3,Math.floor(Number(args.world)||1)));
@@ -848,10 +863,7 @@
   /* B17-B: visual-only service consoles; account, cloud, and GM tools stay in HTML. */
   // Shared Babylon styling helper for visual-only ceremonial/utility scenes.
   function visualMaterial(B,scene,name,rgb,glow=0){
-    const material=new B.StandardMaterial(name,scene);
-    material.diffuseColor=new B.Color3(...rgb);
-    if(glow>0)material.emissiveColor=new B.Color3(...rgb).scale(glow);
-    return material;
+    return sceneMaterial(B,scene,name,rgb,glow);
   }
   function createServiceConsoleScene(args={}){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
@@ -877,5 +889,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.25.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.26.1",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
