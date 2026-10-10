@@ -161,8 +161,16 @@ function stopPreview(){token++;previewRequest++;if(session){session.pause();sess
 function resumeMusic(){if(music)retireOtherMusicVoices(music);if(!music||musicMuted()||document.querySelector('[data-gm-section="gm-audio-test"][open]'))return false;if(!music.paused)return true;music.play().catch(()=>{});return true;}
 
 
-const sfxCategories=Object.freeze({"ui-click":{count:100,channel:"ui",interval:65},"normal-attack":{count:10,channel:"battle",interval:130},"critical":{count:37,channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:1400}});
+const sfxCategories=Object.freeze({"ui-click":{count:100,channel:"ui",interval:65},"normal-attack":{count:10,channel:"battle",interval:130},"critical":{count:37,channel:"battle",interval:210},"dodge":{count:1,channel:"battle",interval:180},"heavy-hit":{count:50,indices:[4,5,29],channel:"battle",interval:300},"victory":{count:1,channel:"notice",interval:0}});
 const sfxLastPick=new Map(),sfxLastTime=new Map(),sfxVoices=new Set();
+const settledVictoryKeys=new Set();
+function settlementVictory(key,{success=false}={}){
+ if(success!==true||typeof key!=="string"||!key||settledVictoryKeys.has(key))return false;
+ // Mark even when muted; reopening the same settlement must never play again.
+ settledVictoryKeys.add(key);
+ if(settledVictoryKeys.size>128)settledVictoryKeys.delete(settledVictoryKeys.values().next().value);
+ return playSfx("victory");
+}
 function pickSfx(category){
  const spec=sfxCategories[category];if(!spec)return null;
  const pool=spec.indices||Array.from({length:spec.count},(_,i)=>i+1);
@@ -277,5 +285,5 @@ document.addEventListener("click",event=>{
 
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
+g.CivilizationAudio=Object.freeze({version:10,tracks,sfxCategories,pickSfx,playSfx,stopSfx,settlementVictory,currentMusicId,resumeMusic,fadeMusic,prioritizeEraTheme,trackStatus,checkTracks,categoryGain,combatCatalog,combatEvent,settings,setLevel,previewSettings,previewLevel,setPreviewVolume,previewGain,resetPreview,preview,previewSeam,playMusic,stopMusic,stopPreview,stop,update,isSilent:prohibited,isUnlocked:()=>unlocked,setListenerPosition,spatialMetadata,playSpatial,runtimeStats});
 })(window);
