@@ -4,7 +4,7 @@
 /* Internal IDs retained for automated checks; user menu contains visual scenes only. */
 const categories=[
 ["home","主畫面與紀元場景"],["map","冒險與宇宙地圖"],["character","玩家、裝備與養成"],
-["monster","怪物與 Boss 模型"],["combat","戰鬥、動畫與特效"],["special","副本、災厄與特殊演出"]];
+["combat","戰鬥、動畫與特效"],["dungeon","副本與競技場"],["frontier","文明災厄與異宇宙"],["chronicle","文明紀錄與轉生"],["service","設定與管理"]];
 const cases=[
 {id:"B-03-HOME",cat:"home",title:"三紀元主畫面",kind:"epoch",detail:"觀察銀河、宇宙與高維紀元的立體場景。"},
 {id:"C-05-GALAXY-MAP",cat:"map",title:"銀河紀元星圖",kind:"galaxy",detail:"觀察銀河十大區域與怪物象徵，可調整區域進度與聚焦位置。"},
@@ -17,26 +17,26 @@ const cases=[
 {id:"C-11-MARKS",cat:"character",title:"十印記星環",kind:"marks",detail:"十種印記的立體封印節點；不影響正式效果。"},
 {id:"C-11-CIVILIZATION",cat:"character",title:"文明等級核心",kind:"civilization",detail:"文明等級的十階立體光環。"},
 {id:"C-11-CORE",cat:"character",title:"界弦核心",kind:"core",detail:"高維核心的十階立體能量結構。"},
-{id:"C-12-DUNGEON",cat:"special",title:"副本作戰中心",kind:"dungeon-hub",detail:"副本總覽的立體作戰中心與入口。"},
-{id:"C-12-BOUNTY",cat:"special",title:"懸賞戰準備區",kind:"dungeon-bounty",detail:"銀河與宇宙的懸賞任務立體部署台。"},
-{id:"C-12-ARENA",cat:"special",title:"競技場",kind:"dungeon-arena",detail:"銀河／宇宙競技場與高維定相、異相競技場；依紀元切換。"},
-{id:"C-13-MIRROR",cat:"special",title:"鏡像戰紀錄",kind:"advanced-mirror",detail:"觀察鏡像戰的紀錄與立體映照。"},
-{id:"C-13-VOID",cat:"special",title:"虛空幻境樓層",kind:"advanced-void",detail:"立體展示虛空幻境的樓層攀升。"},
-{id:"C-14-GALAXY-CALAMITY",cat:"special",title:"銀河文明災厄封印",kind:"frontier-galaxy",detail:"銀河十道災厄封印的立體排列。"},
-{id:"C-14-UNIVERSE-CALAMITY",cat:"special",title:"宇宙文明災厄封印",kind:"frontier-universe",detail:"宇宙十大文明災厄封印的立體排列。"},
-{id:"C-14-ALTERNATE",cat:"special",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"},
+{id:"C-12-DUNGEON",cat:"dungeon",title:"副本作戰中心",kind:"dungeon-hub",detail:"副本總覽的立體作戰中心與入口。"},
+{id:"C-12-BOUNTY",cat:"dungeon",title:"懸賞戰準備區",kind:"dungeon-bounty",detail:"銀河與宇宙的懸賞任務立體部署台。"},
+{id:"C-12-ARENA",cat:"dungeon",title:"競技場",kind:"dungeon-arena",detail:"銀河／宇宙競技場與高維定相、異相競技場；依紀元切換。"},
+{id:"C-13-MIRROR",cat:"dungeon",title:"鏡像戰紀錄",kind:"advanced-mirror",detail:"觀察鏡像戰的紀錄與立體映照。"},
+{id:"C-13-VOID",cat:"dungeon",title:"虛空幻境樓層",kind:"advanced-void",detail:"立體展示虛空幻境的樓層攀升。"},
+{id:"C-14-GALAXY-CALAMITY",cat:"frontier",title:"銀河文明災厄封印",kind:"frontier-galaxy",detail:"銀河十道災厄封印的立體排列。"},
+{id:"C-14-UNIVERSE-CALAMITY",cat:"frontier",title:"宇宙文明災厄封印",kind:"frontier-universe",detail:"宇宙十大文明災厄封印的立體排列。"},
+{id:"C-14-ALTERNATE",cat:"frontier",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"},
 {id:"C-15-BATTLE",cat:"combat",title:"戰場與生命顯示",kind:"battle-battle",detail:"角色與敵人的立體戰場及生命狀態。"},
 {id:"C-15-SHIELD",cat:"combat",title:"護盾防護演出",kind:"battle-shield",detail:"立體防護盾與生命顯示的視覺效果。"},
 {id:"C-15-ENCOUNTER",cat:"combat",title:"特殊遭遇演出",kind:"battle-encounter",detail:"特殊敵人的立體警示演出。"},
 {id:"C-15-SETTLEMENT",cat:"combat",title:"結算與戰利品",kind:"battle-settlement",detail:"戰鬥結束後的立體戰利品視覺。"},
-{id:"C-16-CHRONICLE",cat:"special",title:"文明戰線紀錄",kind:"chronicle-record",detail:"展示三紀元歷史紀錄的立體視覺，不變更回顧進度。"},
-{id:"C-16-STORY",cat:"special",title:"文明劇情閱讀",kind:"chronicle-story",detail:"劇情文字與立體歷史書頁的視覺組合，劇情播放仍由正式介面處理。"},
-{id:"C-16-REINCARNATION",cat:"special",title:"文明轉生",kind:"chronicle-reincarnation",detail:"文明輪迴立體象徵，正式轉生條件、確認及不可逆交易不受影響。"},
-{id:"C-17-SETTINGS",cat:"special",title:"設定中心",kind:"service-settings",detail:"設定介面的立體控制台；原設定項目仍由正式頁面操作。"},
-{id:"C-17-GUIDE",cat:"special",title:"遊戲說明",kind:"service-guide",detail:"說明頁面的立體視覺；玩法文字與規則仍以正式內容為準。"},
-{id:"C-17-ACCOUNT",cat:"special",title:"帳號中心",kind:"service-account",detail:"帳號立體視覺展示；不執行登入登出。"},
-{id:"C-17-CLOUD",cat:"special",title:"雲端存檔中心",kind:"service-cloud",detail:"雲端存檔立體視覺；不執行資料上傳或下載。"},
-{id:"C-17-GM",cat:"special",title:"GM 管理中心",kind:"service-gm",detail:"管理中心的立體視覺，不執行管理或資料修改。"} 
+{id:"C-16-CHRONICLE",cat:"chronicle",title:"文明戰線紀錄",kind:"chronicle-record",detail:"展示三紀元歷史紀錄的立體視覺，不變更回顧進度。"},
+{id:"C-16-STORY",cat:"chronicle",title:"文明劇情閱讀",kind:"chronicle-story",detail:"劇情文字與立體歷史書頁的視覺組合，劇情播放仍由正式介面處理。"},
+{id:"C-16-REINCARNATION",cat:"chronicle",title:"文明轉生",kind:"chronicle-reincarnation",detail:"文明輪迴立體象徵，正式轉生條件、確認及不可逆交易不受影響。"},
+{id:"C-17-SETTINGS",cat:"service",title:"設定中心",kind:"service-settings",detail:"設定介面的立體控制台；原設定項目仍由正式頁面操作。"},
+{id:"C-17-GUIDE",cat:"service",title:"遊戲說明",kind:"service-guide",detail:"說明頁面的立體視覺；玩法文字與規則仍以正式內容為準。"},
+{id:"C-17-ACCOUNT",cat:"service",title:"帳號中心",kind:"service-account",detail:"帳號立體視覺展示；不執行登入登出。"},
+{id:"C-17-CLOUD",cat:"service",title:"雲端存檔中心",kind:"service-cloud",detail:"雲端存檔立體視覺；不執行資料上傳或下載。"},
+{id:"C-17-GM",cat:"service",title:"GM 管理中心",kind:"service-gm",detail:"管理中心的立體視覺，不執行管理或資料修改。"} 
 ];
 const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
@@ -210,7 +210,13 @@ function renderInfo(){
  syncAppearancePanel();
  $("fixtureWorld").closest("label").hidden=appearanceKinds.has(c.kind)||!(c.kind==="epoch"||c.kind==="dungeon-hub"||c.kind==="dungeon-bounty"||c.kind==="dungeon-arena");
  if(c.kind==="dungeon-bounty"&&Number(snapshot.world)===3){snapshot.world=2;$("fixtureWorld").value="2";}
- for(const o of $("fixtureWorld").options)o.disabled=c.kind==="dungeon-bounty"&&o.value==="3";
+ const worldSelect=$("fixtureWorld");
+ const higherOption=worldSelect.querySelector('option[value="3"]');
+ if(c.kind==="dungeon-bounty"){
+   if(higherOption)higherOption.remove();
+ }else if(!higherOption){
+   const opt=document.createElement("option");opt.value="3";opt.textContent="高維紀元";worldSelect.append(opt);
+ }
  $("alternateSegmentLabel").hidden=$("alternateUniverseLabel").hidden=$("alternateDepthLabel").hidden=c.kind!=="frontier-alternate";
  $("alternateQuickControls").hidden=c.kind!=="frontier-alternate";
  $("alternateCultureLabel").hidden=$("alternateCultureUniverseLabel").hidden=c.kind!=="frontier-alternate";
@@ -327,7 +333,7 @@ window.addEventListener("keydown",event=>{
 function script(src){
  return new Promise((resolve,reject)=>{const el=document.createElement("script");el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error("模組載入失敗："+src));document.head.append(el);});
 }
-window.Civilization3DTestCenter=Object.freeze({version:4,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
  try{
