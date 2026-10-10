@@ -1,14 +1,15 @@
 /* A03 single scene director: no progress/save writes; same audio core for text and 3D. */
 (function(g){"use strict";
 const catalog=Object.freeze({
- galaxy:Object.freeze({home:["dark-title",null],explore:["dark-sector","dark-airy"],battle:["galaxy-battle",null],boss:["boss-orchestra","dark-airy"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null]}),
- universe:Object.freeze({home:["dark-title",null],explore:["dark-pulse","dark-airy"],battle:["galaxy-battle",null],boss:["boss-orchestra","dark-pulse"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null]}),
- higher:Object.freeze({home:["dark-title",null],explore:["dark-airy",null],battle:["dark-urgent","dark-airy"],boss:["boss-orchestra","dark-airy"],alternate:["dark-pulse","dark-airy"],calamity:["boss-orchestra","dark-pulse"],arena:["dark-urgent",null]}),
- shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],reincarnation:["dark-transmission",null],inventory:[null,null],enhance:[null,null],expertise:[null,null],cloud:[null,null]})
+ galaxy:Object.freeze({home:["dark-title",null],explore:["dark-sector","dark-airy"],battle:["galaxy-battle",null],elite:["dark-urgent",null],boss:["boss-orchestra","dark-airy"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
+ universe:Object.freeze({home:["dark-title",null],explore:["dark-pulse","dark-airy"],battle:["galaxy-battle",null],boss:["boss-orchestra","dark-pulse"],calamity:["boss-orchestra","dark-pulse"],review:["dark-pulse",null],arena:["dark-urgent",null],bounty:["galaxy-battle",null],special:["dark-urgent",null],record:[null,null]}),
+ higher:Object.freeze({front:["dark-urgent","dark-airy"],frontStage:["boss-orchestra","dark-airy"],frontReview:["dark-pulse",null],core:[null,null],alternateSelect:["dark-pulse","dark-airy"],alternateBattle:["dark-urgent","dark-airy"],arenaFixed:["dark-urgent",null],arenaAlternate:["dark-pulse",null],record:[null,null]}),
+ shared:Object.freeze({main:["dark-title",null],mirror:["boss-orchestra",null],void:["dark-pulse","dark-airy"],victory:["dark-victory",null],defeat:[null,null],reincarnation:["dark-transmission",null],inventory:[null,null],equipment:[null,null],enhance:[null,null],expertise:[null,null],mark:[null,null],civilization:[null,null],character:[null,null],story:[null,null],cloud:[null,null],settings:[null,null],account:[null,null],offline:[null,null],shop:[null,null],redeem:[null,null],notice:["dark-hover",null],gm:[null,null]})
 });
 let selected=null,ambient=null,ambientId=null,activeMusicId=null,returnTimer=null,wasSilent=false,previewAmbient=null;
 function phase(){
  try{
+  if(typeof g.currentWorldPhase==="function"){const index=Number(g.currentWorldPhase(typeof state!=="undefined"?state:null));if(index===3)return "higher";if(index===2)return "universe";if(index===1)return "galaxy";}
   const raw=typeof state!=="undefined"?state:null;
   const world=Number(raw?.worldPhase??raw?.world??0);
   if(world===3||raw?.thirdWorld?.unlocked===true)return "higher";
@@ -16,7 +17,7 @@ function phase(){
  }catch(_){}
  return "galaxy";
 }
-function resolve(era,scene){const family=catalog[era]||catalog.shared;const pair=family[scene];return pair?{era,scene,music:pair[0],ambient:pair[1]}:null;}
+function resolve(era,scene){const family=catalog[era];if(!family)return null;const pair=family[scene];return pair?{era,scene,music:pair[0],ambient:pair[1]}:null;}
 function prohibited(){return !!g.CivilizationAudio?.isSilent?.();}
 function stopAmbient(){if(ambient){ambient.pause();ambient.removeAttribute("src");ambient.load();ambient=null;}ambientId=null;}
 function syncAmbient(id){
@@ -64,12 +65,17 @@ function restore(){if(prohibited()){stopAmbient();g.CivilizationAudio?.stopMusic
 function stop(){clearTimeout(returnTimer);returnTimer=null;selected=null;activeMusicId=null;stopAmbient();g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  const era=detail.era||phase();
- if(type==="combat-start"){clearTimeout(returnTimer);returnTimer=null;return setContext(era,detail.boss?"boss":"battle");}
- if(type==="combat-end"){clearTimeout(returnTimer);returnTimer=setTimeout(()=>{returnTimer=null;setContext(era,"explore");},3500);return true;}
- if(type==="boss")return setContext(era,"boss");
- if(type==="calamity")return setContext(era,"calamity");
- if(type==="explore")return setContext(era,"explore");
- if(type==="alternate")return setContext("higher","alternate");
+ if(type==="combat-start"){clearTimeout(returnTimer);returnTimer=null;return setContext(era,era==="higher"?"front":detail.calamity?"calamity":detail.boss?"boss":"battle");}
+ if(type==="combat-end"){clearTimeout(returnTimer);returnTimer=setTimeout(()=>{returnTimer=null;setContext(era,era==="higher"?"front":"explore");},3500);return true;}
+ if(type==="boss")return setContext(era,era==="higher"?"front":"boss");
+ if(type==="higher-stage")return setContext("higher","frontStage");
+ if(type==="higher-review")return setContext("higher","frontReview");
+ if(type==="higher-core")return setContext("higher","core");
+ if(type==="arena-fixed")return setContext("higher","arenaFixed");
+ if(type==="arena-alternate")return setContext("higher","arenaAlternate");
+ if(type==="calamity")return era==="higher"?false:setContext(era,"calamity");
+ if(type==="explore")return setContext(era,era==="higher"?"front":"explore");
+ if(type==="alternate")return setContext("higher","alternateBattle");
  if(type==="reincarnation")return setContext("shared","reincarnation");
  if(type==="main")return setContext("shared","main");
  if(type==="mirror"||type==="void")return setContext("shared",type);
@@ -79,5 +85,5 @@ document.addEventListener("civilization-audio-unlocked",()=>restore());
 document.addEventListener("civilization-audio-scene",e=>{if(e.detail?.type)notify(e.detail.type,e.detail);else if(e.detail?.era&&e.detail?.scene)setContext(e.detail.era,e.detail.scene);});
 document.addEventListener("visibilitychange",()=>{if(document.hidden){stopPreview();stopAmbient();activeMusicId=null;}else restore();});
 new MutationObserver(()=>{const silent=prohibited();if(silent){stopPreview();stopAmbient();g.CivilizationAudio?.stopMusic?.();activeMusicId=null;}else if(wasSilent&&selected)restore();wasSilent=silent;}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:1,catalog,phase,resolve,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
+g.CivilizationAudioScenes=Object.freeze({version:2,catalog,phase,resolve,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected}:null});
 })(window);
