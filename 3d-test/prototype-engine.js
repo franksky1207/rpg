@@ -168,7 +168,7 @@
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.004,.014,.044,1);
     const camera=new B.ArcRotateCamera("galaxy-map-camera",Math.PI/2.15,Math.PI/2.75,14,new B.Vector3(0,0,0),scene);
-    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=21;camera.attachControl(args.canvas,true);
+    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=21;camera.wheelPrecision=65;camera.pinchPrecision=120;camera.inertia=.78;camera.attachControl(args.canvas,true);
     new B.HemisphericLight("galaxy-map-ambient",new B.Vector3(0,1,0),scene).intensity=.65;
     const glowColor=new B.StandardMaterial("galaxy-map-node-light",scene);
     glowColor.emissiveColor=new B.Color3(.17,.65,1);glowColor.diffuseColor=new B.Color3(.05,.22,.38);
@@ -181,12 +181,15 @@
     const points=Math.max(1,Math.min(10,Math.floor(Number(args.mapCount)||10)));
     const selected=Math.max(0,Math.min(points-1,Math.floor(Number(args.selectedMap)||0)));
     const unlockedRegions=Array.isArray(args.unlockedRegions)?args.unlockedRegions:null;
+    const completedRegions=Array.isArray(args.completedRegions)?args.completedRegions:[];
+    const completedMat=new B.StandardMaterial("galaxy-completed",scene);completedMat.emissiveColor=new B.Color3(.12,.77,.64);
     for(let i=0;i<points;i++){
       const angle=2*Math.PI*i/points;
       const x=4.2*Math.cos(angle),z=4.2*Math.sin(angle);
       const node=B.MeshBuilder.CreateSphere("region-"+(i+1),{diameter:i===selected?.92:.55,segments:16},scene);
       node.position.set(x,Math.sin(angle*3)*.35,z);
-      node.material=(!unlockedRegions||unlockedRegions[i]===true)?glowColor:dimColor;
+      node.material=completedRegions[i]===true?completedMat:(!unlockedRegions||unlockedRegions[i]===true)?glowColor:dimColor;
+      if(i===selected){const halo=B.MeshBuilder.CreateTorus("galaxy-focus-"+i,{diameter:1.28,thickness:.065,tessellation:28},scene);halo.position.copyFrom(node.position);halo.rotation.x=Math.PI/2;halo.material=coreColor;}
       const link=B.MeshBuilder.CreateLines("route-"+i,{points:[new B.Vector3(0,0,0),node.position.clone()]},scene);
       link.color=(!unlockedRegions||unlockedRegions[i]===true)?new B.Color3(.15,.52,.73):new B.Color3(.11,.15,.23);
     }
@@ -207,7 +210,7 @@
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.014,.009,.038,1);
     const camera=new B.ArcRotateCamera("universe-camera",Math.PI/2.2,Math.PI/2.9,20,new B.Vector3(0,0,0),scene);
-    camera.lowerRadiusLimit=11;camera.upperRadiusLimit=30;camera.attachControl(args.canvas,true);
+    camera.lowerRadiusLimit=11;camera.upperRadiusLimit=30;camera.wheelPrecision=85;camera.pinchPrecision=150;camera.inertia=.8;camera.attachControl(args.canvas,true);
     new B.HemisphericLight("universe-light",new B.Vector3(0,1,0),scene).intensity=.7;
     const lit=new B.StandardMaterial("universe-lit",scene);lit.emissiveColor=new B.Color3(.24,.52,.96);
     const won=new B.StandardMaterial("universe-won",scene);won.emissiveColor=new B.Color3(.1,.76,.65);
@@ -217,18 +220,22 @@
     const highest=Math.max(0,Math.min(99,Math.floor(Number(args.highestUnlockedBossIndex)||0)));
     const selected=Math.max(0,Math.min(9,Math.floor(Number(args.selectedMap)||0)));
     const review=args.review===true;
+    const defeated=Array.isArray(args.defeatedBosses)?args.defeatedBosses:null;
+    const bossCleared=index=>defeated?defeated[index]===true:index<progress;
+    const regionCleared=index=>Array.from({length:10},(_,j)=>index*10+j).every(bossCleared);
     const core=B.MeshBuilder.CreatePolyhedron("universe-core",{type:2,size:1.1},scene);core.material=lit;
     for(let i=0;i<10;i++){
       const a=Math.PI*2*i/10,x=Math.cos(a)*6.4,z=Math.sin(a)*6.4;
       const node=B.MeshBuilder.CreateSphere("universe-region-"+(i+1),{diameter:i===selected?1:.7,segments:14},scene);
-      node.position.set(x,.25*Math.sin(a*3),z);node.material=i*10+9<progress?won:review||i*10<=highest?lit:dim;
+      node.position.set(x,.25*Math.sin(a*3),z);node.material=regionCleared(i)?won:review||i*10<=highest?lit:dim;
+      if(i===selected){const focus=B.MeshBuilder.CreateTorus("universe-focus-"+i,{diameter:1.45,thickness:.07,tessellation:28},scene);focus.position.copyFrom(node.position);focus.rotation.x=Math.PI/2;focus.material=lit;}
       const line=B.MeshBuilder.CreateLines("universe-link-"+i,{points:[new B.Vector3(0,0,0),node.position.clone()]},scene);
       line.color=review||i*10<=highest?new B.Color3(.22,.44,.72):new B.Color3(.1,.1,.17);
       for(let j=0;j<10;j++){
         const t=Math.PI*2*j/10,index=i*10+j;
         const marker=B.MeshBuilder.CreatePolyhedron("universe-boss-"+(index+1),{type:1,size:.13},scene);
         marker.position.set(x+Math.cos(t)*1.27,.5+Math.sin(t*2)*.17,z+Math.sin(t)*1.27);
-        marker.material=index<progress?won:review||index<=highest?bossMat:dim;
+        marker.material=bossCleared(index)?won:review||index<=highest?bossMat:dim;
       }
     }
     const orbit=B.MeshBuilder.CreateTorus("universe-orbit",{diameter:12.8,thickness:.045,tessellation:96},scene);
@@ -242,7 +249,7 @@
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.025,.01,.055,1);
     const camera=new B.ArcRotateCamera("higher-dimensional-camera",Math.PI/2.2,Math.PI/2.8,17,new B.Vector3(0,0,0),scene);
-    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=27;camera.attachControl(args.canvas,true);
+    camera.lowerRadiusLimit=9;camera.upperRadiusLimit=27;camera.wheelPrecision=75;camera.pinchPrecision=130;camera.inertia=.8;camera.attachControl(args.canvas,true);
     new B.HemisphericLight("higher-dimensional-ambient",new B.Vector3(0,1,0),scene).intensity=.7;
     const ready=new B.StandardMaterial("higher-ready",scene);ready.emissiveColor=new B.Color3(.53,.29,.95);
     const cleared=new B.StandardMaterial("higher-cleared",scene);cleared.emissiveColor=new B.Color3(.16,.78,.7);
@@ -262,6 +269,7 @@
       pillar.material=completed?cleared:!available?locked:remaining<100?fractured:ready;
       const base=B.MeshBuilder.CreateTorus("higher-presence-base-"+i,{diameter:1.15,thickness:.05,tessellation:30},scene);
       base.position.set(x,-.7,z);base.rotation.x=Math.PI/2;base.material=pillar.material;
+      if(i===selected){const halo=B.MeshBuilder.CreateTorus("higher-focus-"+i,{diameter:1.52,thickness:.08,tessellation:30},scene);halo.position.set(x,-.66,z);halo.rotation.x=Math.PI/2;halo.material=ready;}
       const route=B.MeshBuilder.CreateLines("higher-route-"+i,{points:[new B.Vector3(0,0,0),new B.Vector3(x,-.65,z)]},scene);
       route.color=available?new B.Color3(.4,.2,.64):new B.Color3(.12,.1,.2);
     }
@@ -703,5 +711,5 @@
     scene.metadata={civilization3dService:{kind,readOnly:true,visualOnly:true}};
     return scene;
   }
-  global.Civilization3DPrototype=Object.freeze({version:"0.19.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
+  global.Civilization3DPrototype=Object.freeze({version:"0.20.0",supported,mount,createScene,createEpochScene,createGalaxyScene,createUniverseScene,createHigherDimensionalScene,createCharacterScene,createEquipmentScene,createForgeScene,createGrowthScene,createDungeonScene,createDungeonAdvancedScene,createFrontierScene,createBattlePresentationScene,createChronicleTransitionScene,createServiceConsoleScene});
 })(window);
