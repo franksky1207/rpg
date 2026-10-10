@@ -1,3 +1,10 @@
+## 2026-10-10｜GM 試聽 100% 卻固定 27% 音量修正
+- 根因：`gmSoundPlaySelected()` 每次呼叫 `gmSoundStopPreview()`→`CivilizationAudio.resetPreview()`，舊版 resetPreview 不僅停聲還將 GM master/music/battle 重設預設 .7/.45/.65，故使用者拉滿仍再回到 0.7×0.45×0.85≈27%。此外 GM 只有三滑桿，缺少 ambient/ui/notice 獨立試聽音量，且試聽資料顯示的是舊播放快照。
+- `audio/audio-core.js`：`resetPreview({resetLevels=false})` 預設只停止音源、不重置 GM 音量；GM 試聽音量增加 ambient/ui/notice；`previewLevel` 即時調整現有音源，發布即時音量診斷及 `civilization-audio-preview-volume-changed`；不寫入正式玩家偏好。
+- `audio/audio-scenes.js`：GM 環境聲依試聽專用 master/ambient 設定，滑桿移動立即更新，原正式音量設定不受影響。
+- `audio/gm-audio-test.js`：六個滑桿主／音樂／環境／戰鬥／介面／通知，可見百分比即時更新，診斷不再固定在舊音量。保留單一／混音試聽、四評價、舊 GM 聆聽紀錄。
+- `index.html` JS cache-bust 已更新；mock 執行檢查：GM master=100%、music=100%，經 resetPreview 後音樂仍以 85% 係數播放，而非 27%；三支 JS 語法 PASS。此 85% 包含分類設計 gain .85，不等於聲音實測響度；手機桌機真人驗收仍待。
+
 ## 2026-10-10｜跨手機桌機 GM 音訊差異補修
 - 使用者驗證：11 個音檔直接網址於桌機全部可播放；在正式 GM 情境試聽內手機 1～4 可聽、桌機 1～4 無聲，5 未找到對應情境，6/8/9/10 可聽、7 Hover 與 11 Laser 太小。
 - `audio/gm-audio-test.js` 新增「單一音檔／場景混音」兩種分明試聽模式，預設單一音檔，避免 GM 選單顯示 Sector 而實際試聽 Pulse 等錯位。保留八大情境分類、四評價按鈕、73 筆新分類／8 舊分類本機紀錄，不自動重寫玩家評價。
