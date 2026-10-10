@@ -108,10 +108,10 @@
       "mean_volume_db": -21.9,
       "signal_checked": true,
       "human_auditioned": false,
-      "balanced_file": "hover_0-balanced.mp3",
-      "balanced_sha256": "264ce9ed9ef4806841c1ef1c0590a6cbe52f4b0f3d12c551044fdd37b0c2b110",
-      "balanced_bytes": 10125,
-      "target_lufs": -16
+      "balanced_file": "hover_0-balanced2.mp3",
+      "balanced_sha256": "e4aff3afae945122bb3a48d026d4412ab86eda911b0c9acf37c923daa584c4fe",
+      "balanced_bytes": 10341,
+      "target_lufs": -13
     },
     "title_6.mp3": {
       "source": "https://opengameart.org/sites/default/files/title_6.mp3",
@@ -128,6 +128,22 @@
       "balanced_sha256": "f364a0344806eeb510f7d6c600c2b987a1508343e874f628e5557de7995f2265",
       "balanced_bytes": 8437965,
       "target_lufs": -23
+    },
+    "laserpew.ogg": {
+      "source": "https://opengameart.org/sites/default/files/laserpew.ogg",
+      "license": "CC0",
+      "author": "sketcherskt",
+      "source_page": "https://opengameart.org/content/pew-laser-fire-sound",
+      "bytes": 11428,
+      "sha256": "1d1a6cd804d38b6b3e1f76adad607ca653feca3a9312332739ed034f0b65dbc5",
+      "duration_seconds": 0.453,
+      "mean_volume_db": -34.1,
+      "signal_checked": true,
+      "human_auditioned": false,
+      "balanced_file": "laserpew-balanced2.mp3",
+      "balanced_sha256": "6f076246f16418946cf6135b9bb6f64f4132431f65d5ffad7b71b1103f4efc31",
+      "balanced_bytes": 8109,
+      "target_lufs": -13
     }
   }
 }
