@@ -168,3 +168,9 @@ html{scroll-behavior:auto!important}
 .center-appearance-panel #scenarioAlternateState{max-width:100%;min-width:0;}
 .center-appearance-panel #scenarioRefresh{margin-bottom:12px;}
 @media(max-width:600px){.center-appearance-panel .center-scenario-grid{grid-template-columns:minmax(0,1fr);}}
+
+/* Compact five-piece label row; visual scene remains the focal point. */
+.center-appearance-names{display:flex;flex-wrap:wrap;gap:5px 13px;align-items:center;grid-column:1/-1;margin:5px 14px 12px;font-size:12px;line-height:1.6;color:#e1d4b6;min-width:0}
+.center-appearance-names span{white-space:normal;overflow-wrap:anywhere}
+.center-appearance-panel .center-appearance-free>label select{width:100%;min-width:0;max-width:100%}
+.center-appearance-panel .center-appearance-free>label[hidden],.center-appearance-panel .center-appearance-names[hidden]{display:none!important}
