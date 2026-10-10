@@ -19,7 +19,7 @@ function phase(){
 }
 function resolve(era,scene){const family=catalog[era];if(!family)return null;const pair=family[scene];return pair?{era,scene,music:pair[0],ambient:pair[1]}:null;}
 function prohibited(){return !!g.CivilizationAudio?.isSilent?.();}
-function ambientVolume(preview=false){const p=preview?g.CivilizationAudio?.previewSettings?.():g.CivilizationAudio?.settings?.();return Math.min(1,Math.max(0,(Number(p?.master)||0)*(Number(p?.ambient??.6)||0)*.75*(preview?1:.55)));}
+function ambientVolume(preview=false){if(preview)return g.CivilizationAudio?.previewGain?.("ambient")??0;const p=g.CivilizationAudio?.settings?.();return Math.min(1,Math.max(0,(Number(p?.master)||0)*(Number(p?.ambient??.6)||0)*.75*.55));}
 function stopAmbient(){if(ambient){ambient.pause();ambient.removeAttribute("src");ambient.load();ambient=null;}ambientId=null;}
 function syncAmbient(id){
  if(!id||prohibited()){stopAmbient();return;}
