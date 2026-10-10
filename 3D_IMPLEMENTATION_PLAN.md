@@ -1,3 +1,10 @@
+## 2026-10-10｜第 1～18 批後整合優化第 2／6 批：正式 3D 預覽生命週期與防重複
+
+- **施工內容**：`3d-test/formal-home.js` 新增正式預覽控制項共用唯一性掃描 `uniqueControls()`，以 ID、文明紀錄的 kind 或服務控制台的 kind 辨識同頁重複控制組並保留第一個；新 `syncAllPreviewButtons()` 將可見預覽按鈕的初始文字、aria-pressed 與開關狀態同步，不再把其他未選取按鈕一起改為「關閉 3D 預覽」。
+- **生命週期**：加入 `activeControl`／`activeHost` 追蹤，關閉時 `dispose()` scene、移除 Canvas，清空宿主／控制狀態；開啟途中使用 `epoch` 加 `host.isConnected` 防止非同步 3D 資源完成後掛載到已切頁 DOM；相同路由重新產生 DOM 而使原控制項離線時關閉舊預覽；保持 Babylon.js/runtime 按需載入與 GM 中心分離。服務控制台的延遲掛載仍由現有 scoped 監聽處理，新增共用去重。
+- **自我檢查**：`tests/runtime/3d-b18-coverage-guard.js` 增加上述防回歸條件，`index.html` 已 cache-bust；程式語法與 main 回讀另行核對。本批不動正式角色存檔、GM 授權、戰鬥、雲端或世界突破。
+- **界限**：此次為狀態及 DOM 生命周期強化，沒有本次 exact-HEAD CI／真實手機、桌機與 WebGL context lost 故障注入之通過證據。需於整合優化第 6 批追加實際瀏覽器壓力測試；第 3 批下一步為資源載入、快取與進度。原正式 3D 19～40 批尚未開始。
+
 ## 2026-10-10｜1～18 批後整合優化第 1 批：GM 視覺中心補齊 17-B 五種場景
 
 - 補回第 17-B 批漏登記的五個**真正共用正式場景工廠**的唯讀 GM 預覽：設定中心（service-settings）、遊戲說明（service-guide）、帳號中心（service-account）、雲端存檔中心（service-cloud）、GM 管理中心（service-gm）；沿用 `createServiceConsoleScene`，不複製或生成獨立假場景。
