@@ -53,6 +53,11 @@ assert.ok(story.includes('<div class="story-content"><div id="storyBody"'),"Stor
 assert.ok(css.includes(".story-content{min-height:0"),"Story footer regression guard");
 assert.ok(policy.includes("FULL_3D_AVAILABLE=false"),"Unfinished 3D must stay gated");
 assert.ok(policy.includes("PREFIX+id"),"Mode preference must be account-scoped");
+assert.ok(policy.includes("function parsePreference(raw)"),"Legacy mode preference compatibility must be preserved");
+assert.ok(policy.includes("if(id!==accountId)closeSelector()"),"Mode selector must clear the previous account overlay");
+assert.ok(policy.includes("if(userId()!==id)"),"Stale mode selector must not write another account preference");
+assert.ok(policy.includes('existing==="3d"&&!FULL_3D_AVAILABLE'),"Unreleased old 3D preference must safely fall back to text");
+assert.ok(policy.includes("registerSwitchBlocker")&&policy.includes("unregisterSwitchBlocker"),"Future pending-operation owners need a safe switching gate");
 assert.ok(policy.includes("civilization-auth-signed-out"),"Mode must react to signout");
 assert.ok(index.includes("3d-test/mode-foundation.js?"),"Mode policy loaded");
 assert.ok(index.includes("3d-test/formal-home.js?"),"Visual bridge loaded");
