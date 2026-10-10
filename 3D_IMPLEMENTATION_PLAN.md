@@ -1,3 +1,11 @@
+## 2026-10-10｜第 19～26 批後整合優化第 2／6 批：3D 載入與快取一致性
+- 保留正式首頁按需載入、GM 獨立 iframe、現有 31 場景與正式角色快照授權界線；未動玩家戰鬥、裝備或存檔。
+- 修正 GM `3d-test/test-center.js` 原本只要任一 manifest 指紋缺失就讓整組 3D 資源回退的問題：現在檢查 schema 與各路徑的 24 位 digest，只針對缺失項使用各自的安全備援；與正式 `3d-test/formal-home.js` 的逐檔 fallback 契約對齊。GM 外觀模組 fallback 改與正式介面一致。
+- 正式及 GM 的動態 script loader 清理 load/error callback，失敗時移除 script 元素，避免失敗節點積累；仍於使用者開啟需要的 3D 預覽時載入。
+- HTML 入口 `index.html`、`3d-test/index.html` 的變更檔快取參數更新至 `20261010-opt2-loader`；`tests/runtime/3d-b18-coverage-guard.js` 更新 manifest 部分缺值守門及 cache 斷言，保留 Runtime 第 1 批 4 版防護。
+- 本批**未拆出共同載入器模組**，因為正式首頁與 GM iframe 載入時機和環境不同；改以相同逐檔驗證契約和靜態守門減少分歧。後續若要完全抽成一個 shared JS 模組，須先確保文字模式零阻塞與 GM iframe 同源／授權隔離。
+- 完成程度：GitHub main 已更新；本批尚未獲得實際 Chromium、Pages 部署與手機 WebGL 測試結果，不可宣稱通過。下一批為額外整合優化第 3／6 批（外觀模型映射與舊幾何降級），正式第 27 批不重編。
+
 ## 2026-10-10｜第 19～26 批後整合優化第 1／6 批：資源生命週期（項目 1、2、9）
 - 正式第 26 批多數實機測試已由使用者確認；尚有依賴後續正式 GLB 模型的 GPU/LOD 實測，不可提早標通過。
 - `3d-test/runtime.js` 升為 VERSION 4，保留原 `assets Map` 相容 API，新增 `acquireAsset(key,factory)`／`releaseAsset(key)` 參照計數契約與 `leasedAssetCount` 唯讀檢查資訊；清理、停止、故障時統一處理暫存資產，防止下一次 Engine 啟動沿用已釋放的 GPU 物件。未來 GLB loader 必須配合非同步 abort、執行期資產與場景實例的所有權規範；**此批沒有實際導入 GLB，也不能宣稱已全面驗證 GPU refcount**。
