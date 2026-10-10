@@ -1,3 +1,10 @@
+## 2026-10-10｜正式 3D 第 19 批：三紀元指揮中心場景精修
+
+- `3d-test/prototype-engine.js` 的 `createEpochScene` 已改為依 `world` 共用單一正式/GM 場景工廠：銀河軍事艦隊和軌道塔、宇宙暗能量核心與能量環、高維幾何框架及碎片，另有各紀元獨立色系、背景與低多邊形配置。
+- 仍為唯讀幾何視覺；不影響正式紀元進度、遊戲主畫面操作、戰鬥、GM 權限、存檔或文字模式。GM 沿用原『三紀元主畫面』場景，總場景數仍 32、六分類不變。
+- `index.html` 與 `3d-test/index.html` 版本接點更新；`resource-manifest.json` 的 prototype-engine 資源摘要同步核對。第 19 批程式施工已提交；實際手機 GPU 長測、跨紀元真實帳號、exact-HEAD CI 尚須確認，不可視為完整 3D 模式或第 26／40 批驗收完成。
+- 下一正式批次為第 20 批；每批仍須 fresh-read main、自我檢查與更新兩份計畫/交接文件。
+
 ## 2026-10-10｜第 1～18 批後整合優化第 6／6 批：真實瀏覽器回歸、B19～40 施工規範
 
 - **新實作**：`.github/workflows/runtime-integrity.yml` 的 Chromium smoke 新增 `tests/runtime/gm-3d-test-center-browser.js` 與 `tests/runtime/3d-mode-browser-regression.js`，不再僅跑 3D 靜態覆蓋檢查。GM 測試中心實際巡覽 32 個場景、主要控制/手機最大化及還原；GM 測試報告舊的 27 項字樣同步更正為 32 項。
