@@ -62,6 +62,13 @@ function guard(){
 }
 new MutationObserver(guard).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open","style","hidden","class"]});
 document.addEventListener("toggle",guard,true);
+document.addEventListener("civilization-audio-preview-status",event=>{
+ if(!visible())return;
+ const entry=current();
+ if(entry?.asset!==event.detail?.id)return;
+ const node=document.getElementById("gmSoundStatus");
+ if(node)node.textContent=statusText()+(event.detail.status==="playing"?"｜正在播放":"｜音檔載入或播放失敗（來源可能不可用）");
+});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)audio()?.resetPreview();});
 g.registerGmHubSection?.("test","音樂音效測試中心",g.gmAudioTestHtml,{id:"gm-audio-test"});
 g.GM_AUDIO_TEST_CATALOG_VERSION=3;
