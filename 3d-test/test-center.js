@@ -470,7 +470,7 @@ async function versionedSceneUrls(){
    version("3d-test/appearance-snapshot.js","./appearance-snapshot.js")
   ];
  }catch(_){
-  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261009-camera-center-v1","./prototype-engine.js?v=20261010-b25-chronicle","./appearance-snapshot.js?v=20261010-opt4-shared-appearance"];
+  return ["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-b26-runtime","./prototype-engine.js?v=20261010-b25-chronicle","./appearance-snapshot.js?v=20261010-opt4-shared-appearance"];
  }
 }
 (async()=>{
