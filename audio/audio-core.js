@@ -63,7 +63,7 @@ const minimal=()=>document.body.classList.contains("main-minimal-mode-open")||do
 const prohibited=()=>minimal()||document.hidden||!prefs.enabled;
 const musicMuted=()=>prohibited()||!prefs.musicEnabled;
 const effectsMuted=()=>prohibited()||!prefs.effectsEnabled;
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(_){}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(prefs));return true;}catch(error){console.warn("[文明戰線] 音訊設定無法保存在此裝置",error);return false;}}
 function stop(){musicFadeSeq++;stopCombat();stopSfx();stopGmSfx();token++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;if(session){session.pause();session.removeAttribute("src");session.load();session=null;}}
 function reconcile(){if(prohibited()){stop();return;}if(!prefs.musicEnabled){musicFadeSeq++;retireOtherMusicVoices();if(music)retireMusicVoice(music);music=null;}if(!prefs.effectsEnabled){stopCombat();stopSfx();stopGmSfx();}}
 function settings(){return {...prefs};}
@@ -82,7 +82,7 @@ function previewLevel(key,value){
  return true;
 }
 function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
-function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);refreshFormalSfxVolume();if(session)session.volume=previewGain(session.dataset.channel||"music");return true;}
+function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));const persisted=persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);refreshFormalSfxVolume();if(session)session.volume=previewGain(session.dataset.channel||"music");return persisted;}
 function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)warmCombatSfx();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
 function previewReport(detail){document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail}));}
@@ -358,13 +358,7 @@ document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraFo
 document.addEventListener("visibilitychange",()=>{update();if(!document.hidden&&unlocked&&prefs.effectsEnabled)warmCombatSfx();});
 window.addEventListener("pagehide",()=>{stop();stopGmSfx();releasePreparedSfx();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();if(music&&music.paused&&!musicMuted()&&!document.querySelector('[data-gm-section="gm-audio-test"][open]'))resumeMusic();},{passive:true});
-// Single delegated UI interaction path; keyboard activation uses click as well.
-// Skip disabled controls and GM audition to prevent feedback loops.
-document.addEventListener("click",event=>{
- const node=event.target?.closest?.("button,[role=button],a[href],input[type=checkbox],input[type=radio],select");
- if(!node||node.disabled||node.getAttribute("aria-disabled")==="true"||node.closest('[data-gm-section="gm-audio-test"]'))return;
- playSfx("ui-click");
-},{passive:true});
+// UI interaction clicks are intentionally silent; combat sound effects remain enabled.
 
 document.addEventListener("keydown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();});
 new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:["class"]});
