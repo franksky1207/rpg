@@ -211,9 +211,17 @@ async function toggle(route="home",growthKind=null){
     }
     const second=world>=2&&!!document.querySelector("#main .universe-civilization-summary");
     const phase=second?2:1;
-    const count=second?Number(formalState?.secondWorld?.civilizationLevel)||0:
-      Object.values(formalState?.marks?.entries||{}).filter(row=>Number(row?.level)>=10).length;
-    return {frontierKind:"calamity",frontierProgress:count,world:phase,frontierReview:world>phase};
+    const defs=second?(global.getSecondWorldCalamityDefinitions?.()||[]):(global.getCivilizationCalamityDefinitions?.()||[]);
+    const seals=Array.from({length:10},(_,i)=>{
+      const def=defs[i];if(!def)return {visible:false,unlocked:false,completed:false,review:false,remainingPercent:100};
+      const st=second?global.getSecondWorldCalamityStatus?.(def.id):global.getCivilizationCalamityStatus?.(def.id);
+      const completed=second?st?.completed===true:Number(st?.mark?.level)>=10;
+      const visible=second?(global.isSecondWorldCalamityVisible?.(def.id)===true):true;
+      const unlocked=second?st?.canChallenge===true||st?.unlocked===true:global.isCivilizationCalamityUnlocked?.(def.id)===true;
+      const hp=Number(st?.currentHp),max=Number(st?.maxHp);
+      return {visible,unlocked,completed,review:world>phase,remainingPercent:Number.isFinite(hp)&&Number.isFinite(max)&&max>0?Math.max(0,Math.min(100,100*hp/max)):100};
+    });
+    return {frontierKind:"calamity",frontierProgress:seals.filter(x=>x.completed).length,calamitySeals:seals,world:phase,frontierReview:world>phase};
   })();
   const battleSnapshot=(()=>{if(!battlePreview)return {};
     const main=document.getElementById("main");
