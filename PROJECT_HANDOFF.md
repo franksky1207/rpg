@@ -1,3 +1,9 @@
+## 2026-10-11｜智慧載入第 4 批補修：啟動時版本變更提示
+- 新增 resource-cache-client.js checkStartupVersions()，啟動時以 no-store 取得最新已部署 resource-manifest.json，與本裝置上一次**成功啟動**保留的逐檔指紋快照比較；顯示新增／修改／刪除共幾筆資源版本變更。首次開啟無歷史快照不宣稱更新筆數，清單取得失敗不虛報「已是最新版本」。
+- backgroundpreload.js 於現有進度畫面顯示「正在檢查遊戲版本…」「已是最新版本，正在載入遊戲…」「發現 N 個資源版本變更，正在載入遊戲…」等一行提示；不顯示素材分類或檔名。真正完成現有啟動工作後才呼叫 finishStartupVersionCheck() 儲存新的版本快照；失敗則下次仍可再檢查。
+- **數字定義很重要**：N 為與上次成功啟動比較的「資源清單指紋變更數」，不是此次完成下載數。未進入的關卡、GM、3D 素材不應為了顯示 N/N 而強制下載；目前無可靠逐檔下載完成統計，不得把變更數冒充下載進度。現有百分比仍為原本的啟動步驟／必要資源進度。這次補修不改動 SW 媒體快取、玩家存檔及 GM 權限，JS/CSS 持久快取仍等 3D 第 40 批及後續優化完成後再做。
+- 修改檔：resource-cache-client.js、backgroundpreload.js、index.html。後續仍需要真實桌機與手機驗收訊息顯示、版本部署先後、首次使用、異常網路與重新整理的情況。
+
 ## 2026-10-11｜智慧載入第 4 批：快取正確性與測試收尾
 - 修正 resource-cache-sw.js：每次新版 manifest 完成核對與清理後才設為目前資源來源；遇到 GitHub Pages 部署期間 manifest digest 與下載檔案內容暫不相符時，允許使用正常網路回應但絕不快取為錯誤版本（不再合成 Response.error）；快取容量統計如 Content-Length 缺失則改由 Blob 取得；手動清除範圍限定文明戰線 prefix 的快取，與玩家存檔完全分離。
 - 更新 tests/runtime/resource-cache-integrity.js 的實際第 3 批檔案版本斷言，新增 tests/runtime/resource-cache-behavior.js 的 Service Worker 模擬測試，涵蓋重複命中、版本更新、清理舊版、內容不相符回退、容量計算及手動清除。
