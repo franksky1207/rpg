@@ -1,3 +1,10 @@
+## 2026-10-10｜第 1～18 批後整合優化第 6／6 批：真實瀏覽器回歸、B19～40 施工規範
+
+- **新實作**：`.github/workflows/runtime-integrity.yml` 的 Chromium smoke 新增 `tests/runtime/gm-3d-test-center-browser.js` 與 `tests/runtime/3d-mode-browser-regression.js`，不再僅跑 3D 靜態覆蓋檢查。GM 測試中心實際巡覽 32 個場景、主要控制/手機最大化及還原；GM 測試報告舊的 27 項字樣同步更正為 32 項。
+- **模式實測**：新的 Playwright 瀏覽器測試在隔離測試用帳號資料中驗證 legacy `3d` 偏好暫回文字、結構化 `text` 讀取、換帳號、工作 blocker、未開放 3D 禁止切換，以及新帳號模式視窗重複 auth-ready 仍唯一、選文字後關閉且本機偏好正確；不對真實玩家帳號做存檔寫入。
+- **後續規範**：新增 `docs/3D_BATCH19_40_ACCEPTANCE_RULES.md`，定義正式 owner/存檔安全、3D factory/GM 共享快照、cache-bust、手機畫面、WebGL fallback、測試及每批交接要求。原正式第 19～40 批編號不變，GM 3D 測試中心永久保留。
+- **驗收界限**：本次將瀏覽器測試**接入 CI**並核對語法/引用，不代表工具本身已在這個對話中完成最新 exact-HEAD 的 GitHub Actions 執行或實機全綠。第 18 批缺少的實際真實帳號／特定紀元進度、手機裝置與完整 WebGL 故障注入仍需另行實測。六批整合優化的**程式施工**結束，不能等同完整版 3D 已上線。
+
 ## 2026-10-10｜第 1～18 批後整合優化第 5／6 批：雙模式安全與舊資料相容
 
 - **模式安全修補**：`3d-test/mode-foundation.js` v3 統一以帳號 ID 為選模式視窗生命週期邊界；新帳號登入時移除前帳號殘留 selector；舊視窗點擊事件須確認現在登入 ID 與建構時一致，否則不儲存偏好。正式 3D release gate 依然為 `false`，`canPreview3D` 仍開放 opt-in 視覺預覽。
