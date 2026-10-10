@@ -1,3 +1,11 @@
+## 2026-10-10｜音樂音效第 0 批緊急修正：戰鬥有音效、配樂消失
+- 根因：`audio/audio-scenes.js` 的 `syncView()` 僅識別部分戰鬥畫面，正式副本在 `combat-start` 後重新 `render()` 會以非戰鬥 view 呼叫 `setContext()`，把已選戰鬥音樂切回紀元主題。更嚴重的是 `combatfx.js` 一般／鏡像每筆事件皆 `notify("combat-start")`，可能反覆覆蓋原本選定的戰鬥 tier。音效由其他播放器播放，與音樂被切曲不是同一件事。
+- 第 0 批修正：`audio/audio-scenes.js` 加 `combatLocked` owner。正式 combat-start 或已知戰鬥畫面選定戰鬥曲後，畫面重繪／子頁同步只能保留並恢復同一音樂；重複 combat-start 在 owner 持有期間不會降級／重播；只有正式 `combat-exit`／明確離開戰鬥的主場景事件才解除。`combat-end`（單場動畫結束）不解除，以支援連續戰鬥。刪除不可達的舊 `lastCombatView` 判斷。
+- `combatfx.js` 刪除一般／鏡像逐攻擊事件上重送 combat-start 的兩處呼叫，保留唯讀 `combatEvent` 的普通攻擊／暴擊／閃避／重大打擊觸發。
+- `audio/audio-core.js` 正式配樂播放遭瀏覽器拒絕時發出 `civilization-audio-music-failed` 可觀察事件；在玩家下一次手勢時，僅對目前已存在、暫停且允許播放的同一首 music 進行 `resumeMusic()`，不建立第二個播放器。既有 musicVoices 單一正式音源互斥、GM audition 與極簡靜音仍保留。
+- `index.html` 對三個更動 JS 添加 cache-bust。本輪 GitHub main 遠端回讀、三個 JS 語法 PASS，並在 stub 場景驗證懸賞 combat-start → dungeon-bounty render → combat-exit 分別是戰鬥 normal → 同首 normal → 銀河主題（PASS）。
+- **尚未做實機聲音驗收**，特別需驗證銀河與宇宙主線、懸賞／競技場／災厄、鏡像／虛空／高維／異宇宙、GM 試聽返回，以及連戰／手機鎖屏返回；觀察同時最多一首正式音樂。這批沒有修改戰鬥公式、存檔、結算、音效音檔或 GM 權限。
+
 ## 2026-10-10｜全戰鬥模式勝利音效：改為最終結算一次（依正式 owner）
 **優先適用於《文明戰線》全部模式。** 在 `combatfx.js` 刪除一般／鏡像 structured presentation 的兩處 `win===true` 每場勝利音效，單場動畫只負責普通攻擊／暴擊／閃避／致命重擊；不得以每怪擊殺播放勝利音效，不能以 1.4s 防抖假裝解決中途連播問題。
 `audio/audio-core.js` 新增 `settlementVictory(key,{success:true})`，僅接受明確成功判定與非空結算 key，已記錄 key 最多 128 組，重繪／重複進入同一結算不能再次播放；播放器保留極簡、背景及 Fast Catch-up 靜音，音樂與聲效設定獨立。失敗、無成功條件、單場中途動畫不播。
