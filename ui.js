@@ -263,6 +263,7 @@ window.startGalaxyReviewBattle=async function(){
  if(!preview){alert("無法建立回顧戰敵人。");return false;}
  const e={...preview,traits:Array.isArray(preview.traits)?preview.traits.slice():[]};
  const ps=playerCombatStats(),startHp=ps.hp,before=JSON.stringify(state);
+ const reviewAudioSettlement={};
  battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";window.CivilizationAudioScenes?.notify?.("combat-start",{mode:e?.kind==="boss"?"boss":"battle"});render();
  try{
   const result=combatOwner(ps,e,startHp,{mainlineLogs:true});
@@ -272,7 +273,7 @@ window.startGalaxyReviewBattle=async function(){
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
   galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.notify?.("combat-exit");render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show");if(result.win)window.CivilizationAudio?.settlementVictory?.("galaxy-review:"+String(Date.now()),{success:true});}
+  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show");if(result.win)window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("galaxy-review",reviewAudioSettlement),{success:true});}
   else window.setGalaxyReviewBattleActive?.(false);
   return true;
  }catch(err){
@@ -331,7 +332,7 @@ function showBattleResult(ctx,defeat=null){
   detail.innerHTML=`${continuous?`<div class="item"><b>完成 ${Math.max(0,Math.floor(Number(ctx?.wins)||0))} 場</b></div>`:""}<div class="stats" style="margin-top:10px"><div class="stat">EXP<b>+${ctx.totalXp}</b></div><div class="stat">金幣<b>+${ctx.totalGold}</b></div></div>${dropListHtml(ctx.items)}`;
  }
  modal.classList.add("show");
- if(!defeat)window.CivilizationAudio?.settlementVictory?.("main:"+String(ctx?.runId??ctx?.startedAt??Date.now()),{success:true});
+ if(!defeat)window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("main",ctx),{success:true});
  window.CivilizationAudioScenes?.notify?.("combat-exit");
 }
 function closeBattleResultModal(){
