@@ -64,13 +64,14 @@
   return Array.from(current);
  }
  let lastProgress=0;
+ let loadingStage="正在載入遊戲資源…";
  function updateProgress(done,total){
   const value=Math.max(lastProgress,total?Math.min(99,Math.floor(done/total*100)):0);
   lastProgress=value;
   const text=document.getElementById("backgroundPreloadStatus");
   const bar=document.getElementById("backgroundPreloadBar");
   const percent=document.getElementById("backgroundPreloadPercent");
-  if(text)text.textContent="正在載入遊戲資源…";
+  if(text)text.textContent=loadingStage;
   if(percent)percent.textContent=value+"%";
   if(bar)bar.style.width=value+"%";
  }
@@ -141,7 +142,7 @@
   running=(async()=>{
    const retry=document.getElementById("backgroundPreloadRetry");
    if(retry)retry.hidden=true;
-   lastFailure=null;
+   lastFailure=null;loadingStage="正在載入遊戲資源…";
    const urls=collectActiveBackgroundUrls();
    const critical=collectCurrentSceneBackgroundUrls(urls),criticalSet=new Set(critical);
    const deferred=urls.filter(url=>!criticalSet.has(url));
@@ -174,6 +175,7 @@
    try{await Promise.race([Promise.all(criticalJobs),deadline]);}
    finally{if(timeoutId!==null)clearTimeout(timeoutId);}
    if(failed)throw new Error("startup-critical-background-failed");
+   loadingStage="正在準備遊戲…";updateProgress(done,total);
    for(const [id,run] of startupTasks){
     const weight=taskWeight(id);let fraction=0;
     const progress=value=>{
@@ -184,6 +186,7 @@
     await run(progress);progress(1);
    }
    window.BACKGROUND_PRELOAD_REPORT={version:VERSION,total:urls.length,criticalTotal:critical.length,criticalLoaded:loaded,criticalTimedOut:timedOut,deferredTotal:deferred.length,deferredLoaded:0,deferredComplete:deferred.length===0};
+   loadingStage="載入完成，即將進入遊戲…";updateProgress(done,total);
    const bar=document.getElementById("backgroundPreloadBar"),pct=document.getElementById("backgroundPreloadPercent");
    if(bar)bar.style.width="100%";if(pct)pct.textContent="100%";
    signalReadyBeforeReveal();finished=true;revealGame();scheduleDeferredPreload(deferred);
