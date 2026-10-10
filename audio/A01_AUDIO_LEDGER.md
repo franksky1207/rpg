@@ -1,3 +1,10 @@
+## 2026-10-10｜三首共用戰鬥配樂已本地化＋GM 六首試聽，正式戰鬥仍未接線
+- 使用者選定普通03 `JRPG Battle Theme`（North Fantasy Music，CC BY 4.0）、中等05 `Boss Battle`（tcarisland，CC BY 4.0）、高等09 `I'm Boss Here!`（Fato Shadow，CC BY 4.0）。
+- 工作流程 `.github/workflows/battle-theme-localize.yml` 已執行成功：`audio/assets/battle-themes/` 保存各原檔、本地 OGG `normal-battle-loop.ogg`／`medium-battle-loop.ogg`／`high-battle-loop.ogg`、SHA256／來源／授權 manifest。經 FFmpeg 解碼確認：普通 48.000 秒、中等 144.039 秒、高等 71.720 秒。原曲轉檔不擅自截剪交叉淡化，循環銜接仍待人耳驗收，不可宣稱完美無縫。
+- `audio/audio-core.js` 新增 `battle-normal-preview`、`battle-medium-preview`、`battle-high-preview` 三筆**僅 GM 試聽**的資源；`audio/gm-audio-test.js` 由三首擴充六首，保留完整循環／曲尾→曲頭接縫／單音量功能；`index.html` 更新兩個 JS cache-bust。
+- 正式 `audio/audio-scenes.js` 完全沒有引用三首戰鬥預覽 ID；**正式戰鬥仍維持當前紀元主題，不要在驗收前連接**。三首來源皆 CC BY 4.0，Credits 必須列作者／作品頁／授權／轉檔與後續調整；高等曲來源作品頁另有請使用者聯絡作者的請求。
+- 靜態自檢：三支 JS 語法 PASS、manifest 三筆齊、GM 三筆對應完整、正式場景未引用戰鬥候選。待桌機／手機實機播放、三首接縫聽感、響度比較與來源署名 UI 補入。
+
 ## 2026-10-10｜正式音訊舊播放路徑清退，僅三紀元主題（已施工）
 - 使用者實機發現「主頁→設定→主頁」主題重新從頭播、進入冒險時原本主題中斷，原因是 `audio/audio-scenes.js` 的舊情境表及 `restore()` 無條件重啟同曲，且冒險會切換至 `dark-sector` 等舊曲。**已替換 audio-scenes.js 為只認三首紀元主題的共用 owner**。主頁、設定、背包、冒險及返回同紀元均使用同一音源，不因場景名稱變化重建播放器；只有真的進入不同紀元才換曲。
 - `audio/audio-core.js` 只註冊本地三首 `era-galaxy-theme`、`era-universe-theme`、`era-higher-theme`。**刪除舊 dark-*/galaxy-battle/boss-orchestra/laser-preview 等正式可播放清單**。舊戰鬥及 UI 音效事件暫無已選新素材，現在不播放；新版三首共用戰鬥配樂及六音效仍待下一輪選材，**切勿假裝戰鬥配樂已上線**。程式舊播放接口只保留安全相容外殼，不再有舊音源可供播放。
