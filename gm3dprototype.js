@@ -103,7 +103,16 @@ window.addEventListener("message",event=>{
    mirror:{advancedKind:"mirror",advancedProgress:Number(mirror.history?.bestWins)||0,advancedUnlocked:mirror.unlocked===true},
    void:{advancedKind:"void",advancedProgress:Number(voidProgress.highestCleared??voidProgress.historicalHighest)||0,advancedUnlocked:true}
  };
+ const combat=window.getCombatPresentationSnapshot?.()||null;
+ const battleSnapshot=combat&&Number(combat.playerMaxHp)>0&&Number(combat.enemyMaxHp)>0?{
+   battleAvailable:true,battleVisualKind:Number(combat.playerShield)>0||Number(combat.enemyShield)>0?"shield":"battle",
+   playerHpRatio:Math.max(0,Math.min(1,Number(combat.playerHp)/Number(combat.playerMaxHp))),
+   enemyHpRatio:Math.max(0,Math.min(1,Number(combat.enemyHp)/Number(combat.enemyMaxHp))),
+   shieldRatio:Math.max(0,Math.min(1,(Number(combat.playerShield)||0)/Math.max(1,Number(combat.playerShieldMax)||1))),
+   visualOnly:true,readOnly:true
+ }:{battleAvailable:false,battleVisualKind:"unavailable",visualOnly:true,readOnly:true};
  const snapshot={
+   battle:battleSnapshot,
    dungeon:dungeonSnapshot,
    galaxy:{world:1,mapCount:regions.length||10,selectedMap:regionIndex,unlockedRegions:regions.map(r=>highest>=Number(r.mapStart)),completedRegions:regions.map((r,i)=>highest>=Number(regions[i+1]?.mapStart||501)),review:false},
    universe:{world:2,highestUnlockedBossIndex:unlocked,clearedBossCount:bosses.filter(b=>window.secondWorldBossKilled?.(b.index)===true).length,defeatedBosses:bosses.slice(0,100).map(b=>window.secondWorldBossKilled?.(b.index)===true),selectedMap:Math.max(0,Math.min(9,Number(window.getSecondWorld3DPreviewSelectedRegion?.()??Math.floor(unlocked/10)))),review:false},
