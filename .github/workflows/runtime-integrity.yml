@@ -65,6 +65,7 @@ jobs:
       - name: Verify resource cache behavior and current audio contract
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
+          node tests/runtime/3d-batch28-preflight.cjs
           node tests/runtime/resource-cache-integrity.js
           node tests/runtime/resource-cache-behavior.js
           node tests/runtime/resource-cache-prefetch-integrity.js
