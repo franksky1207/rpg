@@ -32,6 +32,7 @@ jobs:
           node tests/audio-lifecycle.test.cjs
           node tests/audio-regression.test.cjs
           node tests/runtime/3d-asset-registry-integrity.cjs
+          node tests/runtime/3d-batch28-preflight.cjs
       - name: Install isolated Chromium
         run: |
           npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
