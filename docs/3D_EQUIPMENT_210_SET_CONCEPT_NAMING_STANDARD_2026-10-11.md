@@ -13,15 +13,15 @@ development/3d-source/equipment/
   concepts/
     galaxy/g007-ancient-tech-ruins/
       concept-notes.md
-      overview-front-side-back.png      # 使用者批准後才入庫
-      equipment-five-slots.png           # 使用者批准後才入庫
+      overview-front-side-back.webp      # 使用者批准後才入庫
+      equipment-five-slots.webp           # 使用者批准後才入庫
     universe/u001-<slug>/
     higher/h01-<slug>/
   ancient-ruins-v1/                       # 已存在第 28-C Blender / 原資產來源，暫不搬動
 ```
 
 - 目錄只用英文小寫 `a-z0-9-`，固定序號與紀元前綴，避免手機檔案系統與 URL 問題；slug 可讀、但身份以固定序號與程式 index 決定。
-- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.png`、`equipment-five-slots.png` 這組一致檔名，方便 Codex 批次掃描。不要求現在建立另外 209 個空目錄。
+- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。不要求現在建立另外 209 個空目錄。
 - 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，只有使用者認可的兩張主圖採標準檔名。
 - 圖片是美術參考，不等於可直接推導的 Blender 準確尺度、左右對稱、權重、LOD 或 GLB 交付。先由使用者美術確認，再讓 Codex 做幾何和 rig 驗證。
 - 所有原始概念圖、`.blend` 與驗收圖片保留 GitHub 開發目錄，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
