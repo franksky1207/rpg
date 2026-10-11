@@ -2,7 +2,7 @@
 (function(g){"use strict";
 const eraTracks=Object.freeze({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"});
 const catalog=Object.freeze(Object.fromEntries(Object.entries(eraTracks).map(([era,id])=>[era,Object.freeze({home:[id,null],explore:[id,null],battle:[id,null],boss:[id,null],front:[id,null]})])));
-let selected=null,previewing=false,combatLocked=false,exitSequence=0,activeRunId=null,runSerial=0;
+let selected=null,previewing=false,combatLocked=false,exitSequence=0,activeRunId=null,runSerial=0,pendingExit=false;
 function phase(){
  try{const n=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(n===3)return "higher";if(n===2)return "universe";if(n===1)return "galaxy";}catch(_){}
  const st=typeof state!=="undefined"?state:null;
@@ -68,7 +68,7 @@ function previewContext(era,scene){
 }
 function stopPreview(){g.CivilizationAudio?.stopPreview?.();previewing=false;}
 function restore(){previewing=false;return apply();}
-function stop(){exitSequence++;activeRunId=null;selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopBattleSfx?.();g.CivilizationAudio?.stopMusic?.();}
+function stop(){exitSequence++;activeRunId=null;pendingExit=false;selected=null;previewing=false;combatLocked=false;g.CivilizationAudio?.stopBattleSfx?.();g.CivilizationAudio?.stopMusic?.();}
 function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
@@ -77,11 +77,11 @@ function notify(type,detail={}){
   // Existing callers may start each round of a continuous run. Preserve the
   // active score for identical unlabelled rounds; explicit IDs can replace it.
   const requested=detail.runId==null?null:String(detail.runId);
-  if(combatLocked&&selected?.tier&&(requested===null||requested===activeRunId))return apply();
+  if(combatLocked&&selected?.tier&&!pendingExit&&(requested===null||requested===activeRunId))return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
   const nextTier=detail.tier||tierForScene(key,{...detail,era});
   activeRunId=requested||"legacy-"+(++runSerial);
-  combatLocked=false;
+  pendingExit=false;combatLocked=false;
   return setContext(era,key,{combat:true,tier:nextTier});
  }
  if(type==="combat-end")return true; // Each completed round is not a run exit.
@@ -89,10 +89,11 @@ function notify(type,detail={}){
   if(!combatLocked)return false; // Duplicate or late exit: never reacquire.
   if(detail.runId!=null&&String(detail.runId)!==activeRunId)return false;
   const generation=++exitSequence,runAtExit=activeRunId;
+  pendingExit=true;
   const release=()=>{
    if(generation!==exitSequence||!combatLocked||activeRunId!==runAtExit)return false;
    g.CivilizationAudio?.stopBattleSfx?.();
-   combatLocked=false;activeRunId=null;
+   combatLocked=false;activeRunId=null;pendingExit=false;
    // Read the actual current era at RELEASE, not the era captured at start.
    return setContext(phase(),"combat-settled");
   };
@@ -110,7 +111,7 @@ function notify(type,detail={}){
   }
   return release();
  }
- if(type==="explore"||type==="main"||type==="reincarnation"){exitSequence++;combatLocked=false;activeRunId=null;return setContext(phase(),type);}
+ if(type==="explore"||type==="main"||type==="reincarnation"){exitSequence++;combatLocked=false;activeRunId=null;pendingExit=false;return setContext(phase(),type);}
  if(["mirror","void","calamity","arena-fixed","arena-alternate","alternate"].includes(type))return setContext(era,type,{combat:detail.active===true});
  return setContext(era,type||"home",{combat:detail.active===true});
 }
@@ -121,5 +122,5 @@ document.addEventListener("civilization-audio-settings-changed",e=>{
  if(e.detail?.key==="musicEnabled"&&g.CivilizationAudio?.settings?.().musicEnabled!==false)restore();
 });
 new MutationObserver(()=>{if(!g.CivilizationAudio?.isSilent?.()&&!auditionOpen())restore();}).observe(document.body,{attributes:true,attributeFilter:["class"]});
-g.CivilizationAudioScenes=Object.freeze({version:7,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected,combatLocked,activeRunId}:null});
+g.CivilizationAudioScenes=Object.freeze({version:7,catalog,phase,resolve,syncView,setContext,previewContext,stopPreview,notify,restore,stop,current:()=>selected?{...selected,combatLocked,activeRunId,pendingExit}:null});
 })(window);
