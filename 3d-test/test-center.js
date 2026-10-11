@@ -86,6 +86,9 @@ $("scenarioFree").onclick=()=>{scenarioMode="free";renderInfo();start();};
 $("scenarioCalamityIndex").onchange=()=>{calamitySimulation[calWorld()].selected=Number($("scenarioCalamityIndex").value)||0;syncCalControls();start();};
 $("scenarioCalamityState").onchange=()=>{calamitySimulation[calWorld()].state=$("scenarioCalamityState").value;start();};
 window.addEventListener("message",event=>{
+ if(embedded&&event.source===window.parent&&event.origin===location.origin&&event.data?.type==="civilization3d:scenario-error"){
+  formalScenario=null;status.hidden=false;status.textContent="正式資料快照同步失敗："+String(event.data.reason||"來源不可用");return;
+ }
  if(!embedded||event.source!==window.parent||event.origin!==location.origin||event.data?.type!=="civilization3d:scenario-response")return;
  const data=event.data.snapshot;if(!data||!Array.isArray(data.calamities?.[1])||!Array.isArray(data.calamities?.[2]))return;
  // Validate the read-only bridge contract; never promote malformed data to formal.
@@ -390,8 +393,10 @@ async function start(){
      scenarioArgs={...formalScenario.dungeon[dungeonSceneKey]};
    }else if(c.kind==="frontier-galaxy"||c.kind==="frontier-universe"){
      const w=c.kind==="frontier-universe"?2:1,rows=formalScenario.calamities[w];
+     if(rows.every(row=>row.status==="unavailable")){status.textContent="此災厄沒有可用的正式資料快照。";return;}
      scenarioArgs={world:w,frontierKind:"calamity",calamitySeals:rows,frontierProgress:rows.filter(x=>x.completed).length};
    }else scenarioArgs=formalScenario[scenarioKey]||{};
+   if(scenarioArgs.status==="unavailable"){status.textContent="此場景沒有可用的正式資料快照。";return;}
  }
  const current=runtime;
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...calamityFixture,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{}),...scenarioArgs}));

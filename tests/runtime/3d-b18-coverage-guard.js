@@ -106,10 +106,12 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  assert.equal(cosmicSets.length,100,"Universe 100 Boss x 5");
  const highSets=[...read("thirdworldloot.js").matchAll(/Object\.freeze\(\{band:(\d+),theme:"([^"]+)",weapon:"([^"]+)",helmet:"([^"]+)",armor:"([^"]+)",shoes:"([^"]+)",accessory:"([^"]+)"\}\)/g)];
  assert.equal(highSets.length,10,"Higher ten stages x 5");
- assert.match(bridge,/catalog\[1\]\.length!==10/);
- assert.match(bridge,/galaxy\.slice\(region\.mapStart,region\.mapEnd\+1\)/);
- assert.match(bridge,/window\.secondWorldBoss\?\./);
- assert.match(bridge,/THIRD_WORLD_EQUIPMENT_NAME_ROWS/);
+ const snapshots=read("3d-test/formal-snapshots.js");
+ assert.match(bridge,/Civilization3DFormalSnapshots.equipmentCatalog\(\)/,"GM must delegate catalog authority");
+ assert.match(snapshots,/catalog\[1\]\.length!==10/);
+ assert.match(snapshots,/galaxy\.slice\(region\.mapStart,region\.mapEnd\+1\)/);
+ assert.match(snapshots,/global\.secondWorldBoss\?\./);
+ assert.match(snapshots,/THIRD_WORLD_EQUIPMENT_NAME_ROWS/);
  assert.match(bridge,/civilization3d:appearance-error/);
  assert.match(gm,/appearanceMode=embedded\?"formal":"free"/);
  assert.match(gm,/scenarioMode="formal"/);
@@ -145,8 +147,10 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  for(const field of ["appearanceSource:a.source","modelDescriptors:modelDescriptors(a)"]){assert.ok(mapping.includes(field),"Shared Opt3 appearance scene missing: "+field);}
  assert.ok(read("3d-test/prototype-engine.js").includes('appearanceSource:args.appearanceSource||"fixture"'),"Scene must distinguish formal and fixture visual source");
  const formalBattle=read("3d-test/formal-home.js"),gmBattle=read("gm3dprototype.js"),gmScenarios=read("3d-test/test-center.js");
+ assert.ok(formalBattle.includes("data.battle()")&&gmBattle.includes("Civilization3DFormalSnapshots.scenario()"),"Both bridges must use the shared formal snapshot contract");
+ assert.ok(index.includes('3d-test/formal-snapshots.js?v='),"Shared snapshot contract must be loaded before preview use");
  for(const x of ['status:"active"','status:"unavailable"','source:"formal-combat"','eventType:"presentation-snapshot"']){
-  assert.ok(formalBattle.includes(x)&&gmBattle.includes(x),"Opt5 formal battle contract differs: "+x);
+  assert.ok(read("3d-test/formal-snapshots.js").includes(x),"Shared formal battle contract missing: "+x);
  }
  assert.ok(gmScenarios.includes('data.battle.schema!==1')&&gmScenarios.includes('data.battle.source!=="formal-combat"'),"Opt5 formal GM bridge must reject malformed combat snapshots");
  console.log("PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.");

@@ -151,101 +151,28 @@ async function toggle(route="home",growthKind=null){
   const dungeon=["dungeon","dungeon-bounty","dungeon-arena"].includes(activeRoute);
   const advanced=(activeRoute==="dungeon-arena"&&Number(global.currentWorldPhase?.()||0)===3)||["dungeon-mirror","dungeon-void-mirage"].includes(activeRoute);
   const create=servicePreview?global.Civilization3DPrototype.createServiceConsoleScene:chroniclePreview?global.Civilization3DPrototype.createChronicleTransitionScene:battlePreview?global.Civilization3DPrototype.createBattlePresentationScene:frontier?global.Civilization3DPrototype.createFrontierScene:advanced?global.Civilization3DPrototype.createDungeonAdvancedScene:dungeon?global.Civilization3DPrototype.createDungeonScene:growth?global.Civilization3DPrototype.createGrowthScene:forge?global.Civilization3DPrototype.createForgeScene:inventory?global.Civilization3DPrototype.createEquipmentScene:character?global.Civilization3DPrototype.createCharacterScene:higher?global.Civilization3DPrototype.createHigherDimensionalScene:universe?global.Civilization3DPrototype.createUniverseScene:galaxy?global.Civilization3DPrototype.createGalaxyScene:(global.Civilization3DPrototype.createEpochScene||global.Civilization3DPrototype.createScene);
-  const regions=typeof WORLD_REGIONS!=="undefined"?WORLD_REGIONS:global.WORLD_REGIONS;
-  const formalState=typeof state!=="undefined"?state:global.state;
-  const mapIndex=galaxy&&era==="galaxy-review"&&typeof global.getGalaxyReviewSelectedMap==="function"?Number(global.getGalaxyReviewSelectedMap()):(typeof selectedMap==="number"?selectedMap:0);
-  const unlockedIndex=Number(formalState?.unlockedMap)||0;
-  const regionList=Array.isArray(regions)?regions:[];
-  const selectedRegion=regionList.reduce((last,region,i)=>mapIndex>=Number(region.mapStart)?i:last,0);
-  const unlockedRegions=regionList.map(region=>era==="galaxy-review"||unlockedIndex>=Number(region.mapStart));
-  const completedRegions=regionList.map((region,i)=>era==="galaxy-review"||unlockedIndex>=(i+1<regionList.length?Number(regionList[i+1].mapStart):101));
-  const bosses=Array.isArray(global.SECOND_WORLD_BOSSES)?global.SECOND_WORLD_BOSSES:[];
-  const highest=typeof global.secondWorldHighestUnlockedBossIndex==="function"?Number(global.secondWorldHighestUnlockedBossIndex()):0;
-  const cleared=bosses.filter(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)).length;
-  const universeSnapshot=universe?{highestUnlockedBossIndex:highest,clearedBossCount:cleared,defeatedBosses:bosses.slice(0,100).map(b=>typeof global.secondWorldBossKilled==="function"&&global.secondWorldBossKilled(b.index)),selectedMap:Math.max(0,Math.min(9,Number(global.getSecondWorld3DPreviewSelectedRegion?.()??Math.floor(highest/10)))),selectionSource:typeof global.getSecondWorld3DPreviewSelectedRegion==="function"?"formal-region-view":"highest-unlocked-fallback",review:era==="universe-review"}:{};
-  const defs=Array.isArray(global.THIRD_WORLD_BOSS_DEFINITIONS)?global.THIRD_WORLD_BOSS_DEFINITIONS:[];
-  const presences=higher?defs.slice(0,10).map((_,i)=>{
-    const p=typeof global.thirdWorldBossProgressSnapshot==="function"?global.thirdWorldBossProgressSnapshot(i,formalState):null;
-    return {defeated:p?.defeated===true,available:p?.challengeStatus?.allowed===true,remainingPercent:Number(p?.remainingPercent??100)};
-  }):[];
-  const higherSnapshot=higher?{presences,selectedPresence:Math.max(0,presences.findIndex(p=>!p.defeated))}:{};
-  const appearance=global.Civilization3DAppearance?.capture();
-  const growthState=growth?{
-    growthKind:"specialization",
-    growthLevels:(Array.isArray(global.SPECIALIZATION_KEYS)?global.SPECIALIZATION_KEYS:[]).map(key=>Math.max(0,Math.min(60,Number(formalState?.specializations?.[key])||0))),
-    marks:(Array.isArray(global.MARK_KEYS)?global.MARK_KEYS:[]).map(key=>Math.max(0,Math.min(10,Number(formalState?.marks?.entries?.[key]?.level)||0))),
-    civilizationLevel:Math.max(0,Math.min(10,Number(formalState?.secondWorld?.civilizationLevel)||0)),
-    coreLevel:Math.max(0,Math.min(10,Number(formalState?.thirdWorld?.coreLevel)||0))
-  }:{};
-  if(growth){
-    const choice=activeGrowthKind||"specialization";
-    growthState.growthKind=choice;
-    growthState.growthLevels=choice==="marks"?growthState.marks:growthState.growthLevels;
-    growthState.growthLevel=choice==="civilization"?growthState.civilizationLevel:growthState.coreLevel;
-  }
-  const dungeonSnapshot=(()=>{if(!dungeon)return {};
-    const phase=activeRoute==="dungeon-arena"?global.getArenaCoreState?.():activeRoute==="dungeon-bounty"?global.getBountyTestSnapshot?.():null;
-    const dungeonKind=activeRoute==="dungeon-arena"?"arena":activeRoute==="dungeon-bounty"?"bounty":"hub";
-    const remaining=phase?.daily?.remaining;
-    const dungeonModeKeys=["bounty","arena","tower","mirror"];
-    const dungeonVisibleModes=activeRoute==="dungeon"?dungeonModeKeys.filter(key=>{
-      const policy=global.dungeonModeAvailability?.(key);
-      if(policy?.visible===false)return false;
+  const data=global.Civilization3DFormalSnapshots;
+  if(!data)throw new Error("正式唯讀快照模組尚未載入");
+  const galaxySnapshot=galaxy?data.galaxy({review:era==="galaxy-review",mapIndex:era==="galaxy-review"?global.getGalaxyReviewSelectedMap?.():(typeof selectedMap==="number"?selectedMap:0)}):{};
+  const universeSnapshot=universe?data.universe({review:era==="universe-review"}):{};
+  const higherSnapshot=higher?data.higher():{};
+  const appearance=character||inventory||forge?data.appearance():null;
+  const growthState=growth?data.growth(activeGrowthKind||"specialization"):{};
+  const dungeonSnapshot=dungeon?data.dungeon(activeRoute==="dungeon-arena"?"arena":activeRoute==="dungeon-bounty"?"bounty":"hub"):{};
+  // Keep current DOM presentation filtering here; controller/DOM separation is T1-B.
+  if(activeRoute==="dungeon"&&dungeonSnapshot.status!=="unavailable"){
+    dungeonSnapshot.dungeonVisibleModes=dungeonSnapshot.dungeonVisibleModes.filter(key=>{
       const card=document.querySelector("#main .dungeon-mode-"+key);
       return !!card&&!card.hidden&&card.dataset.dungeonPolicyHidden!=="1"&&getComputedStyle(card).display!=="none";
-    }):[];
-    const dungeonAvailableModes=activeRoute==="dungeon"?dungeonModeKeys.map(key=>dungeonVisibleModes.includes(key)&&!!document.querySelector("#main .dungeon-mode-"+key+" .dungeon-entry-btn:not(:disabled)")):[];
-    const available=dungeonAvailableModes.filter(Boolean).length;
-    return {dungeonKind,dungeonPhase:phase?.phase==="ready"?"ready":"select",dungeonRemaining:Number.isFinite(Number(remaining))?Math.max(0,Number(remaining)):available,dungeonUnlocked:activeRoute==="dungeon"||!!phase,dungeonAvailableModes,dungeonVisibleModes};
-  })();
-  const advancedSnapshot=(()=>{if(!advanced)return {};
-    if(activeRoute==="dungeon-arena"){
-      const a=global.getArenaCoreState?.()||{},rt=a.runtime||{};
-      return {advancedKind:"higher-arena",advancedStage:Number(rt.round?.stageIndex)||0,advancedProgress:Number(rt.finishedRuns)||0,higherArenaMode:rt.mode||rt.round?.mode||rt.selectedMode||"fixed",advancedUnlocked:true};
-    }
-    if(activeRoute==="dungeon-mirror"){
-      const info=global.mirrorDungeonStatus?.()||{},history=info.history||{};
-      return {advancedKind:"mirror",advancedProgress:Number(history.bestWins)||0,advancedUnlocked:info.unlocked===true};
-    }
-    const progress=global.getVoidMirageProgressSnapshot?.()||global.getVoidMirageRunSnapshot?.()||{};
-    return {advancedKind:"void",advancedProgress:Number(progress.highestCleared??progress.historicalHighest)||0,advancedUnlocked:true};
-  })();
-  const frontierSnapshot=(()=>{if(!frontier)return {};
-    if(activeRoute==="alternateuniverse"){
-      const info=global.alternateUniverseProgressionSnapshot?.(formalState)||{};
-      const deepest=Math.max(0,Math.min(1000,Math.floor(Number(info.deepestCleared)||0)));
-      const next=Math.max(1,Math.min(1000,deepest+1));
-      return {frontierKind:"alternate",frontierProgress:deepest,alternateUniverse:Math.ceil(next/5),alternateDepth:(next-1)%5+1,alternateSegment:Math.ceil(next/50),world:3};
-    }
-    const second=world>=2&&!!document.querySelector("#main .universe-civilization-summary");
-    const phase=second?2:1;
-    const defs=second?(global.getSecondWorldCalamityDefinitions?.()||[]):(global.getCivilizationCalamityDefinitions?.()||[]);
-    const seals=Array.from({length:10},(_,i)=>{
-      const def=defs[i];if(!def)return {visible:false,unlocked:false,completed:false,review:false,remainingPercent:100};
-      const st=second?global.getSecondWorldCalamityStatus?.(def.id):global.getCivilizationCalamityStatus?.(def.id);
-      const completed=second?st?.completed===true:Number(st?.mark?.level)>=10;
-      const visible=second?(global.isSecondWorldCalamityVisible?.(def.id)===true):true;
-      const unlocked=second?st?.challengeable===true:global.isCivilizationCalamityUnlocked?.(def.id)===true;
-      const hp=Number(st?.currentHp),max=Number(st?.maxHp);
-      return {visible,unlocked,completed,review:world>phase,remainingPercent:Number.isFinite(hp)&&Number.isFinite(max)&&max>0?Math.max(0,Math.min(100,100*hp/max)):100};
     });
-    return {frontierKind:"calamity",frontierProgress:seals.filter(x=>x.completed).length,calamitySeals:seals,world:phase,frontierReview:world>phase};
-  })();
-  const battleSnapshot=(()=>{if(!battlePreview)return {};
-    const owner=global.getCombatPresentationSnapshot?.();
-    if(!owner||!(Number(owner.playerMaxHp)>0)||!(Number(owner.enemyMaxHp)>0)||!Number.isFinite(Number(owner.playerHp))||!Number.isFinite(Number(owner.enemyHp))){
-      return {schema:1,status:"unavailable",reason:"no-active-combat",source:"formal-combat",eventType:"presentation-snapshot",battleVisualKind:"unavailable",battleAvailable:false,visualOnly:true,readOnly:true};
-    }
-    const ratio=(now,max)=>Math.max(0,Math.min(1,Number(now)/Number(max)));
-    const playerShield=Math.max(0,Number(owner.playerShield)||0),enemyShield=Math.max(0,Number(owner.enemyShield)||0);
-    return {schema:1,status:"active",source:"formal-combat",eventType:"presentation-snapshot",battleVisualKind:playerShield>0||enemyShield>0?"shield":"battle",
-      battleAvailable:true,playerHpRatio:ratio(owner.playerHp,owner.playerMaxHp),
-      enemyHpRatio:ratio(owner.enemyHp,owner.enemyMaxHp),
-      shieldRatio:Math.max(0,Math.min(1,playerShield/Math.max(1,Number(owner.playerShieldMax)||playerShield))),
-      visualOnly:true,readOnly:true};
-  })();
-  const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?{mapCount:regionList.length||10,selectedMap:selectedRegion,unlockedRegions,completedRegions,enemyCount:5}:universeSnapshot;
-  if(battlePreview&&battleSnapshot.battleAvailable!==true){hide();return;}
+    dungeonSnapshot.dungeonAvailableModes=["bounty","arena","tower","mirror"].map(key=>dungeonSnapshot.dungeonVisibleModes.includes(key)&&!!document.querySelector("#main .dungeon-mode-"+key+" .dungeon-entry-btn:not(:disabled)"));
+    dungeonSnapshot.dungeonRemaining=dungeonSnapshot.dungeonAvailableModes.filter(Boolean).length;
+  }
+  const advancedSnapshot=advanced?data.dungeon(activeRoute==="dungeon-arena"?"arena":activeRoute==="dungeon-mirror"?"mirror":"void"):{};
+  const frontierSnapshot=frontier?(activeRoute==="alternateuniverse"?data.alternate():data.calamity(world>=2&&!!document.querySelector("#main .universe-civilization-summary")?2:1,{review:world>(document.querySelector("#main .universe-civilization-summary")?2:1)})):{};
+  const battleSnapshot=battlePreview?data.battle():{};
+  const snapshot=servicePreview?{kind:activeGrowthKind.slice(8),visualOnly:true}:chroniclePreview?{kind:activeGrowthKind==="chronicle-reincarnation"?"reincarnation":activeGrowthKind==="chronicle-story"?"story":"record",visualOnly:true}:battlePreview?battleSnapshot:frontier?frontierSnapshot:advanced?advancedSnapshot:dungeon?dungeonSnapshot:growth?growthState:forge||inventory||character?global.Civilization3DAppearance?.scene(forge?"forge":inventory?"equipment":"character",appearance)||{}:higher?higherSnapshot:galaxy?galaxySnapshot:universeSnapshot;
+  if(snapshot.status==="unavailable"||battlePreview&&battleSnapshot.battleAvailable!==true){hide();return;}
   const result=await runtime.show("preview-"+activeRoute+"-era-"+world,args=>create({...args,world,...snapshot}));
   if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(!result.ok){hide();return;}
@@ -449,15 +376,13 @@ function ensureFrontierControl(view){
  button.addEventListener("click",()=>toggle(view));
  const hint=document.createElement("span");hint.className="muted";hint.textContent="立體預覽僅反映既有進度，不更動挑戰門檻、血量或獎勵。";
  if(view==="alternateuniverse"){
-  const formal=typeof state!=="undefined"?state:global.state;
-  const progress=global.alternateUniverseProgressionSnapshot?.(formal)||{};
-  const deepest=Math.max(0,Math.min(1000,Math.floor(Number(progress.deepestCleared)||0)));
-  const next=Math.max(1,Math.min(1000,deepest+1));
-  const universe=Math.ceil(next/5),depth=(next-1)%5+1,segment=Math.ceil(universe/10);
+  const progress=global.Civilization3DFormalSnapshots?.alternate()||{};
+  const deepest=progress.historicalCompletedDepth||0;
+  const universe=progress.alternateUniverse,depth=progress.alternateDepth;
   const info=document.createElement("span");info.className="muted civilization-3d-alternate-progress";
   const details=global.alternateUniverseUniverseInfo?.(universe),members=(global.ALTERNATE_UNIVERSE_NAME_CULTURES||[]).map((c,i)=>c===details?.culture?i+1:0).filter(Boolean);
   const tier=members.indexOf(universe)+1;
-  info.textContent=`${details?.culture||"異宇宙"} · ${details?.name||"U"+String(universe).padStart(3,"0")} · 體系內第 ${Math.max(1,tier)}/10 階 · ${global.ALTERNATE_UNIVERSE_DEPTH_LABELS?.[depth-1]||"深度 "+depth} · 已通過 ${deepest}/1000 層（僅預覽）`;
+  info.textContent=progress.status==="available"?`${details?.culture||"異宇宙"} · ${details?.name||"U"+String(universe).padStart(3,"0")} · 體系內第 ${Math.max(1,tier)}/10 階 · ${global.ALTERNATE_UNIVERSE_DEPTH_LABELS?.[depth-1]||"深度 "+depth} · 已通過 ${deepest}/1000 層（僅預覽）`:"尚無可用的正式異宇宙挑戰焦點。";
   controls.append(button,info);
  }else controls.append(button,hint);
  shell.prepend(controls);
