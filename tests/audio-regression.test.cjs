@@ -65,5 +65,17 @@ assert.equal(listened.at(-1),"era-higher-theme");
 audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit",{era:"galaxy"});
-assert.equal(listened.at(-1),"era-galaxy-theme");
+assert.equal(listened.at(-1),"era-higher-theme","settled battle must restore the actual current era");
+// Mainline settlement keeps adventureScreen='combat' behind the result modal.
+audio.notify("combat-start",{era:"galaxy",mode:"boss"});
+audio.notify("combat-exit");
+audio.syncView("adventure","combat");
+assert.equal(audio.current().combatLocked,false,"stale combat UI must never reacquire an exited run");
+assert.equal(listened.at(-1),"era-higher-theme","settlement must restore current era");
+audio.notify("combat-start",{era:"galaxy",mode:"battle",runId:"new-run"});
+assert.equal(listened.at(-1),"battle-normal-preview","next battle selects its own tier");
+audio.notify("combat-exit",{runId:"stale-run"});
+assert.equal(audio.current().combatLocked,true,"late exit must not clear a new run");
+audio.notify("combat-exit",{runId:"new-run"});
+assert.equal(audio.current().combatLocked,false);
 console.log("Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.");
