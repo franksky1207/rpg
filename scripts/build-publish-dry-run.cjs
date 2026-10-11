@@ -32,7 +32,7 @@ const report={schema:2,stage:"dry-run",deploy:false,output:path.basename(dest),t
  officialSfxFiles:plan.audio.sfx.length,officialAudioFiles:tracks.length,officialAudio:plan.audio,
  trackedBytes,artifactBytes,savedBytes:trackedBytes-artifactBytes,excludedBytes:plan.excluded.reduce((s,p)=>s+p.bytes,0),excludedCount:plan.excluded.length,
  excluded:plan.excluded,retainedSourceReferences:plan.retained,missingDirectRefs:missing,referenceCount:scan.refs.length,
- fingerprintCount:Object.keys(manifest.files).length,inventory,
+ fingerprintCount:Object.keys(manifest.files).length,inventory,registeredAssets:plan.registeredAssets,
  notes:["Actual output files measured after manifest regeneration, not a static estimate.","Git history and live Pages artifact are not measured by this report.","Dynamic concatenation is additionally exercised by Stage 4 browser validation."]};
 fs.writeFileSync(path.join(root,"publish-stage3-report.json"),JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({artifactMB:artifactBytes/1e6,savedMB:report.savedBytes/1e6,files:inventory.length,excluded:report.excludedCount,missingRefs:missing.length,music:report.officialMusic,sfxFiles:report.officialSfxFiles,backgrounds:report.officialBackgrounds},null,2));

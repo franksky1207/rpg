@@ -119,7 +119,7 @@ function create(options={}){
     releaseScene();
     try{
       ensureEngine();
-      const next=await factory({BABYLON:global.BABYLON,engine,canvas,epoch:ticket,assets,signal,isCurrent:()=>!disposed&&epoch===ticket&&!signal.aborted});
+      const next=await factory({BABYLON:global.BABYLON,engine,canvas,epoch:ticket,assets,signal,quality,isCurrent:()=>!disposed&&epoch===ticket&&!signal.aborted});
       if(disposed||epoch!==ticket||signal.aborted){next?.dispose?.();return {ok:false,reason:"stale-scene"};}
       if(!next||typeof next.render!=="function")throw new Error("invalid-scene");
       if(next.activeCamera&&Number.isFinite(next.activeCamera.radius)){
@@ -127,6 +127,7 @@ function create(options={}){
         camera.metadata={...(camera.metadata||{}),civilization3dInitialCamera:{radius:camera.radius,alpha:camera.alpha,beta:camera.beta}};
       }
       controller=null;scene=next;activeId=String(id);canvas.hidden=false;root.dataset.state="active";
+      root.dataset.characterAssetKind=scene.metadata?.civilization3dCharacter?.assetKind||'';
       resize();
       return {ok:true,sceneId:activeId,epoch:ticket};
     }catch(err){
@@ -176,7 +177,7 @@ function create(options={}){
   canvas.hidden=true;
   root.dataset.state="idle";
   return Object.freeze({version:VERSION,root,canvas,show,stop,dispose,setQuality,setExpanded,resize,
-    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,leasedAssetCount:assetRefs.size,contextLost,renderPaused}),
+    getSnapshot:()=>Object.freeze({disposed,epoch,activeId,quality,hasEngine:!!engine,hasScene:!!scene,reason,assetCount:assets.size,leasedAssetCount:assetRefs.size,contextLost,renderPaused,character:scene?.metadata?.civilization3dCharacter||null}),
     cacheAsset:(key,value)=>{if(disposed)return false;const k=String(key);if(assetRefs.has(k))return assets.get(k)===value;if(assets.has(k)&&assets.get(k)!==value)safelyDisposeAsset(assets.get(k));assets.set(k,value);return true;},
     acquireAsset:(key,factory)=>{if(disposed)return null;const k=String(key);let entry=assetRefs.get(k);if(entry){entry.count++;return entry.value;}const value=assets.has(k)?assets.get(k):typeof factory==="function"?factory():null;if(!value)return null;assets.set(k,value);assetRefs.set(k,{value,count:1});return value;},
     releaseAsset,clearAssets:clearAssetCache});

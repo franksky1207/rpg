@@ -25,6 +25,11 @@ for file in (root / "3d-test").glob("*.js"):
 # The worker is fetched network-fresh (updateViaCache=none), but still needs a
 # fingerprint for startup version diagnostics and candidate integrity checks.
 paths.add("resource-cache-sw.js")
+if (root / 'assets/3d/asset-registry.json').is_file():
+    paths.add('assets/3d/asset-registry.json')
+    registry = json.loads((root / 'assets/3d/asset-registry.json').read_text(encoding='utf-8'))
+    for asset in registry['assets']:
+        paths.add(asset['path'])
 # Include only deployable binary media, not source archives or player saves.
 MEDIA_SUFFIXES = {".ogg", ".mp3", ".wav", ".webp", ".png", ".jpg", ".jpeg",
                   ".glb", ".gltf", ".bin", ".ktx2", ".basis", ".avif"}

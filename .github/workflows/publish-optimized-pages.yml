@@ -30,9 +30,10 @@ jobs:
           node tests/runtime/resource-cache-behavior.js
           node tests/runtime/resource-cache-prefetch-integrity.js
           node tests/audio-regression.test.cjs
+          node tests/runtime/3d-asset-registry-integrity.cjs
       - name: Install isolated Chromium
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
           npx playwright install --with-deps chromium
       - name: Verify optimized website in browser
         shell: bash
@@ -55,6 +56,8 @@ jobs:
           node tests/runtime/save-load-pipeline-integrity.js
           node tests/runtime/galaxy-3d-button-browser.js
           node tests/runtime/publish-candidate-browser.js
+          node tests/runtime/3d-glb-validation.cjs
+          node tests/runtime/3d-player-assets-browser.js
       - name: Verify exact 32 backgrounds, 17 audio, zero missing and release size
         shell: bash
         run: |
@@ -78,6 +81,7 @@ jobs:
           path: |
             publish-stage3-report.json
             publish-stage4-browser-report.json
+            3d-player-browser-report.json
           if-no-files-found: warn
   deploy:
     if: github.ref == 'refs/heads/main'

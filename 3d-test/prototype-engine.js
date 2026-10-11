@@ -310,7 +310,39 @@
   function configureDisplayCamera(camera,canvas,min,max){
     applyCameraLimits(camera,canvas,min,max);
   }
-  function createCharacterScene(args){
+  const characterBase=new URL('../',document.currentScript.src);
+  let characterModuleJob=null;
+  async function characterModule(){
+    if(global.Civilization3DCharacterAssets)return global.Civilization3DCharacterAssets;
+    if(!characterModuleJob)characterModuleJob=(async()=>{
+      const url=new URL('3d-test/character-assets.js',characterBase);
+      try{const manifest=await (await fetch(new URL('resource-manifest.json',characterBase),{cache:'no-store'})).json();const h=manifest.files?.['3d-test/character-assets.js'];if(/^[a-f0-9]{24}$/.test(h))url.searchParams.set('asset',h);}catch(_){}
+      await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url.href;s.onload=resolve;s.onerror=()=>{s.remove();reject(Error('人物展示模組無法載入'));};document.head.appendChild(s);});
+      if(!global.Civilization3DCharacterAssets)throw Error('人物展示模組不完整');
+      return global.Civilization3DCharacterAssets;
+    })().catch(e=>{characterModuleJob=null;throw e;});
+    return characterModuleJob;
+  }
+  async function createCharacterScene(args){
+    let module;
+    try{module=await characterModule();}catch(error){const fallback=createCharacterFallback(args);fallback.metadata.civilization3dCharacter.failure=String(error.message);return fallback;}
+    const B=args.BABYLON,scene=new B.Scene(args.engine);
+    scene.clearColor=new B.Color4(.015,.022,.038,1);
+    const camera=new B.ArcRotateCamera('character-camera',Math.PI/2.25,Math.PI/2.3,3.4,new B.Vector3(0,.96,0),scene);
+    configureDisplayCamera(camera,args.canvas,2.2,5.5);
+    sceneFillLight(B,scene,'character-fill',.75);
+    const light=new B.DirectionalLight('character-key',new B.Vector3(-.4,-1,.7),scene);light.intensity=2;
+    const rim=new B.PointLight('character-rim',new B.Vector3(1,2,1),scene);rim.diffuse=new B.Color3(.2,.6,1);rim.intensity=4;
+    const platform=B.MeshBuilder.CreateCylinder('character-platform',{height:.04,diameter:1.25,tessellation:48},scene);platform.position.y=-.02;
+    platform.material=sceneMaterial(B,scene,'character-platform-material',[.055,.1,.15]);
+    scene.metadata={civilization3dCharacter:{visualOnly:true,readOnly:true,assetKind:'loading',world:Number(args.world)||1,modelDescriptors:Array.isArray(args.modelDescriptors)?args.modelDescriptors:[],appearanceSource:args.appearanceSource||"fixture"}};
+    const result=await module.attach(scene,args);
+    if(result.ok)return scene;
+    scene.dispose();
+    if(result.cancelled)throw Error('preview-cancelled');
+    const fallback=createCharacterFallback(args);fallback.metadata.civilization3dCharacter.failure=result.reason;return fallback;
+  }
+  function createCharacterFallback(args){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.015,.02,.045,1);
     const camera=new B.ArcRotateCamera("character-camera",Math.PI/2.25,Math.PI/2.5,8.5,new B.Vector3(0,1.05,0),scene);

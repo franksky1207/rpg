@@ -1,0 +1,29 @@
+{
+  "heightMetres": 1.9,
+  "bones": 53,
+  "slots": {
+    "weapon": "socket.weapon.R",
+    "helmet": "socket.helmet",
+    "armor": "socket.armor",
+    "shoes": "socket.shoes.L",
+    "accessory": "socket.accessory.back"
+  },
+  "lod": {
+    "low": {
+      "vertices": 3672,
+      "triangles": 7204,
+      "bytes": 519184
+    },
+    "medium": {
+      "vertices": 13510,
+      "triangles": 26864,
+      "bytes": 1285168
+    },
+    "high": {
+      "vertices": 53822,
+      "triangles": 107456,
+      "bytes": 4013496
+    }
+  },
+  "artStatus": "technical-art-study-awaiting-human-art-acceptance"
+}

@@ -33,7 +33,7 @@ function hide(){
  epoch++;enabled=false;
  const old=runtime;runtime=null;old?.dispose();
  const h=activeHost||host(activeGrowthKind);
- if(h){h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}
+ if(h){h.querySelector('[data-character-fallback-notice]')?.remove();h.hidden=true;h.setAttribute("aria-hidden","true");h.dataset.threeDFormalMount="inactive";}
  activeControl=null;activeHost=null;
  document.body.classList.remove("civilization-3d-home-on");
  syncAllPreviewButtons();
@@ -49,8 +49,8 @@ function script(src){
  });
 }
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261010-opt4-scene-common";
-const RUNTIME_SRC="3d-test/runtime.js?v=20261010-opt1-lifecycle";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261011-b27-player-v1";
+const RUNTIME_SRC="3d-test/runtime.js?v=20261011-b27-player-v1";
 const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-opt3-sharedmap";
 let resourceVersionPromise=null;
 function resolveSceneResources(){
@@ -134,7 +134,7 @@ async function toggle(route="home",growthKind=null){
   if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(runtime){runtime.dispose();runtime=null;}
   runtime=global.Civilization3DRuntime.create({host:h,onFallback:()=>hide(),onClose:()=>hide(),onContextRestored:()=>{if(enabled)hide();}});
-  runtime.setQuality("low");
+  runtime.setQuality(matchMedia('(max-width: 700px)').matches?'low':'medium');
   const world=typeof global.currentWorldPhase==="function"?Number(global.currentWorldPhase()):1;
   const era=global.getAdventureEraView?.()||"";
   const galaxy=activeRoute==="adventure"&&((world===1&&era==="galaxy")||((world===2||world===3)&&era==="galaxy-review"));
@@ -250,6 +250,10 @@ async function toggle(route="home",growthKind=null){
   if(ticket!==epoch||!enabled||!h.isConnected){if(ticket===epoch)hide();return;}
   if(!result.ok){hide();return;}
   h.dataset.threeDFormalMount="active";
+  const model=runtime.getSnapshot().character;
+  if(model?.assetKind==='geometry-fallback'){
+   const notice=document.createElement('p');notice.className='muted';notice.dataset.characterFallbackNotice='1';notice.setAttribute('role','status');notice.textContent='人物資源暫時無法使用，正在顯示替代外觀。';h.appendChild(notice);
+  }
   document.body.classList.add("civilization-3d-home-on");
  }catch(error){if(ticket===epoch)hide();}
 }
@@ -330,7 +334,7 @@ function ensureCharacterControl(view){
  const button=document.createElement("button");button.id="civilization3dCharacterToggle";button.className="btn";button.type="button";
  button.setAttribute("aria-pressed","false");button.textContent="預覽 3D 角色";
  button.addEventListener("click",()=>toggle("character"));
- const hint=document.createElement("span");hint.className="muted";hint.textContent="立體角色為展示佔位；能力、穿戴、稱號與突破以正式頁面為準。";
+ const hint=document.createElement("span");hint.className="muted";hint.textContent="人物基座預覽；裝備造型仍在製作，能力與穿戴以正式頁面為準。";
  controls.append(button,hint);screen.before(controls);
 }
 function ensureInventoryControl(view){

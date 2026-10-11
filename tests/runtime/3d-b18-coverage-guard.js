@@ -133,11 +133,11 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  for(const safety of ["ResizeObserver","visibilitychange","pagehide","pageshow","renderPaused","signal.aborted","resizeObserver?.disconnect()"]){
   assert.ok(runtime.includes(safety),"B26 runtime safety missing: "+safety);
  }
- assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
+ assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261011-b27-player-v1/);
  for(const token of ["acquireAsset:","releaseAsset,clearAssets:clearAssetCache","assetRefs.clear()","signal.aborted","onContextRestored"]){assert.ok(runtime.includes(token),"3D optimization 1 missing: "+token);}
  assert.equal(formalEntryVersion,gmEntryVersion);
  assert.equal(gmEntryVersion,formalEntryVersion);
- assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261010-opt1-lifecycle/);
+ assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261011-b27-player-v1/);
  const mapping=read("3d-test/appearance-snapshot.js");
  for(const field of ["function modelDescriptor(","function modelDescriptors(","assetKind:","geometry-fallback","visualKey","enhancement:bound"]){assert.ok(mapping.includes(field),"Opt3 mapping contract missing: "+field);}
  assert.ok(read("3d-test/prototype-engine.js").includes("modelDescriptors:Array.isArray(args.modelDescriptors)"),"Character must expose mapping descriptor");

@@ -10,7 +10,7 @@ const cases=[
 {id:"C-05-GALAXY-MAP",cat:"map",title:"銀河紀元星圖",kind:"galaxy",detail:"觀察銀河十大區域與怪物象徵，可調整區域進度與聚焦位置。"},
 {id:"C-06-UNIVERSE-MAP",cat:"map",title:"宇宙紀元星圖",kind:"universe",detail:"觀察宇宙十大區域與一百名 Boss 的立體分布。"},
 {id:"C-07-HIGHER",cat:"map",title:"高維紀元戰線",kind:"higher",detail:"觀察十名高維存在與持續生命狀態的立體象徵。"},
-{id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看三紀元角色的立體全身展示雛形。"},
+{id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看人物基座；裝備造型仍在製作，正式與自由資料相互隔離。"},
 {id:"C-09-EQUIPMENT",cat:"character",title:"五槽裝備陳列",kind:"equipment",detail:"查看五個穿戴槽及背包裝備的立體展示雛形。"},
 {id:"C-10-FORGE",cat:"character",title:"強化鍛造台",kind:"forge",detail:"五個裝備欄位的強化進度立體展示，實際強化仍由正式系統處理。"},
 {id:"C-11-SPECIALIZATION",cat:"character",title:"八種專精星環",kind:"specialization",detail:"八種專精的立體能量節點；僅展示進度。"},
@@ -397,7 +397,11 @@ async function start(){
  const result=await current.show(c.id,args=>factory({...args,...fixture,...visual,...calamityFixture,...(c.kind==="higher"?{presences:Array.from({length:10},(_,i)=>({defeated:i<progress-1,available:true,remainingPercent:i===progress-1?50:100})),selectedPresence:Math.min(9,progress-1)}:{}),...scenarioArgs}));
  if(ticket!==serial||current!==runtime)return;
  status.textContent=result.ok?"":"3D 場景載入失敗："+result.reason;
- if(result.ok)status.hidden=true;
+ if(result.ok){
+  const model=current.getSnapshot().character;
+  status.hidden=model?.assetKind!=='geometry-fallback';
+  if(!status.hidden)status.textContent='人物資源暫時無法使用，正在顯示替代外觀。';
+ }
  else fail(result.reason);
 }
 function updateFixture(){
@@ -444,7 +448,7 @@ $("alternateDepthNext").onclick=()=>jumpAlternate(0,1);
 search.oninput=renderCases;
 toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();};
 $("restart").onclick=()=>{disabled=false;toggle.textContent="停用 3D";start();};
-quality.onchange=()=>runtime?.setQuality(quality.value);
+quality.onchange=()=>start();
 window.addEventListener("pagehide",()=>{setMaximized(false);safeStop();});
 window.addEventListener("keydown",event=>{
  if(event.key==="Escape"&&maximized){event.preventDefault();event.stopImmediatePropagation();setMaximized(false);return;}
@@ -462,7 +466,7 @@ function script(src){
 window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
- const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261010-opt1-lifecycle","./prototype-engine.js?v=20261010-opt4-scene-common","./appearance-snapshot.js?v=20261010-opt3-sharedmap"];
+ const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261011-b27-player-v1","./prototype-engine.js?v=20261011-b27-player-v1","./appearance-snapshot.js?v=20261010-opt3-sharedmap"];
  try{
   const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
   if(!response.ok)throw new Error("manifest-unavailable");

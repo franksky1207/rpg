@@ -84,7 +84,8 @@ function shouldPreload(p){
   const n=Number(m[2]);
   return m[1]==="normal-attack"||m[1]==="critical"?n<=3:m[1]==="dodge"||m[1]==="victory"?n===1:[4,5,29].includes(n);
  }
- if(p.startsWith("3d-test/assets/")||p.startsWith("assets/3d/")||p.startsWith("assets/models/"))return MEDIA.test(p);
+ // New models are cached only after a scene requests them. Manifest membership
+ // never grants global preloading; retain exactly the existing 49 selected media.
  return false;
 }
 async function preloadAssets(report){

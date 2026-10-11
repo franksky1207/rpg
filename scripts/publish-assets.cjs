@@ -4,6 +4,7 @@ const fs=require("node:fs"),path=require("node:path"),cp=require("node:child_pro
 const RESOURCE=/\.(?:html|js|css|json|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
 const FINGERPRINT=/\.(?:js|css|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
 const digest=bytes=>crypto.createHash("sha256").update(bytes).digest("hex").slice(0,24);
+const {inspectRegistry}=require('./asset-registry.cjs');
 function audioSelection(root){
  const core=fs.readFileSync(path.join(root,"audio/audio-core.js"),"utf8");
  const match=core.match(/const warmChoices=(\{[^;]+\});/);
@@ -56,12 +57,15 @@ function inspect(root){
  }
  const audio=audioSelection(root),selected=new Set(audio.files),sizes=new Map(files.map(p=>[p,fs.statSync(path.join(root,p)).size]));
  for(const file of selected)if(!sizes.has(file))throw Error("Missing official audio: "+file);
+ const registered=inspectRegistry(root,new Set(files)),registeredPaths=new Set(registered.paths);
  const category=p=>{
   if(p.startsWith("."))return "development";
   if(/^(?:\.github|docs|tests|scripts|development)\//.test(p))return "development";
   if(p.startsWith("assets/backgrounds-source/"))return "source";
+  if(p.startsWith('assets/3d/')&&!registeredPaths.has(p))return 'unregistered-3d-source';
   if(p.startsWith("audio/assets/")&&!selected.has(p))return "unused-audio-or-source";
   if(/\.(?:md|docx|blend[12]?|psd|psb|kra|xcf|flac|7z|zip)$/i.test(p)&&!p.startsWith("vendor/"))return "development-or-source";
+  if(!RESOURCE.test(p)&&!/^vendor\/.*\/(?:LICENSE|SOURCE\.md)$/.test(p))return 'unknown-source-format';
   return "runtime";
  };
  const keep=new Set(files.filter(p=>category(p)==="runtime")),retained=[];
@@ -70,13 +74,16 @@ function inspect(root){
  for(;;){
   scan=references(root,[...keep],files);
   let added=false;
-  for(const ref of scan.refs)if(sizes.has(ref.path)&&!keep.has(ref.path)){keep.add(ref.path);retained.push(ref);added=true;}
+  for(const ref of scan.refs)if(sizes.has(ref.path)&&!keep.has(ref.path)){
+   if(/unregistered-3d-source|unknown-source-format/.test(category(ref.path))||/\.(?:blend[12]?|fbx|exr|psd|tiff?|usd[acz]?|sbsar)$/i.test(ref.path))throw Error('Runtime references forbidden source: '+ref.path);
+   keep.add(ref.path);retained.push(ref);added=true;
+  }
   if(!added)break;
  }
  const missing=scan.refs.filter(r=>!sizes.has(r.path));
  const backgrounds=[...keep].filter(p=>/^assets\/backgrounds\/.*\.webp$/.test(p));
  if(backgrounds.length!==32)throw Error("Expected 32 runtime WebP backgrounds; got "+backgrounds.length);
- return {files,keep:[...keep].sort(),excluded:files.filter(p=>!keep.has(p)).map(p=>({path:p,bytes:sizes.get(p),category:category(p)})),sizes,audio,backgrounds,missing,retained,unresolved:scan.unresolved,references:scan.refs};
+ return {files,keep:[...keep].sort(),excluded:files.filter(p=>!keep.has(p)).map(p=>({path:p,bytes:sizes.get(p),category:category(p)})),sizes,audio,backgrounds,missing,retained,unresolved:scan.unresolved,references:scan.refs,registeredAssets:registered.entries};
 }
 function walk(root){
  const files=[];
@@ -89,6 +96,6 @@ function walk(root){
  return files.sort();
 }
 function manifest(root,files){
- return {schema:1,algorithm:"sha256-96",files:Object.fromEntries(files.filter(p=>FINGERPRINT.test(p)).map(p=>[p,digest(fs.readFileSync(path.join(root,p)))]))};
+ return {schema:1,algorithm:"sha256-96",files:Object.fromEntries(files.filter(p=>FINGERPRINT.test(p)||p==='assets/3d/asset-registry.json').map(p=>[p,digest(fs.readFileSync(path.join(root,p)))]))};
 }
 module.exports={inspect,references,walk,manifest,digest};

@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "version": "player-foundation-v1-b27",
+  "rigContract": "cw.humanoid.rig.v1",
+  "artStatus": "technical-art-study-awaiting-human-art-acceptance",
+  "coordinates": {
+    "unit": "metre",
+    "height": 1.9,
+    "gltf": "right-handed +Y up +Z forward",
+    "source": "Blender +Z up -Y forward",
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "rotation": "socket-local quaternion; equipment pivot matches socket origin"
+  },
+  "slots": {
+    "weapon": "socket.weapon.R",
+    "helmet": "socket.helmet",
+    "armor": "socket.armor",
+    "shoes": "socket.shoes.L",
+    "accessory": "socket.accessory.back"
+  },
+  "player": {
+    "low": "player.foundation.v1.low",
+    "medium": "player.foundation.v1.medium",
+    "high": "player.foundation.v1.high"
+  },
+  "assets": [
+    {
+      "id": "babylon.gltf-loader.v7.54.3",
+      "path": "vendor/babylonjs/7.54.3/babylonjs.loaders.min.js",
+      "sha256": "02a6782cf71693218165ae87b114697a74b9cb081c8123e3fcc310e159598d6c",
+      "bytes": 288275,
+      "type": "decoder",
+      "quality": "shared",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-decoder"
+      ],
+      "lod": "shared",
+      "source": {
+        "path": "vendor/babylonjs/7.54.3/SOURCE.md",
+        "sha256": "5412109c4dc5b8eb857d7f6733aa598b95914bf8ede4cf31d854d2c8c7417af4"
+      },
+      "license": "Apache-2.0",
+      "dependencies": [],
+      "preload": false,
+      "fallback": "procedural-geometry"
+    },
+    {
+      "id": "player.foundation.v1.low",
+      "path": "assets/3d/characters/player-v1/player-low.glb",
+      "sha256": "4a4cd0d2ab17ed20cd9c6d458b7d24ea4870c011ac3e0a7c77cb2fa96c1a59df",
+      "bytes": 519184,
+      "type": "character",
+      "quality": "low",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "low",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36cf3e5d117888a4844bca07f68ee7bfb941e8bb7ba70bad53a7b730eb50e6ae"
+      },
+      "license": "CC0-1.0; original generated geometry and woven atlas",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 7204,
+        "vertices": 3672,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 1,
+        "textureDimensions": [
+          512,
+          512
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.medium",
+      "path": "assets/3d/characters/player-v1/player-medium.glb",
+      "sha256": "9cef345373e4d49ba60ed72c5569ccab500db427d5f5ea0dc67b16e95c95ed05",
+      "bytes": 1285168,
+      "type": "character",
+      "quality": "medium",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "medium",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36cf3e5d117888a4844bca07f68ee7bfb941e8bb7ba70bad53a7b730eb50e6ae"
+      },
+      "license": "CC0-1.0; original generated geometry and woven atlas",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 26864,
+        "vertices": 16129,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 1,
+        "textureDimensions": [
+          512,
+          512
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.high",
+      "path": "assets/3d/characters/player-v1/player-high.glb",
+      "sha256": "6ce26a2a93e4e50c699ad29200775e21e123e4a9fc6578c0e1dd657bfbae37ba",
+      "bytes": 4013496,
+      "type": "character",
+      "quality": "high",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "high",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36cf3e5d117888a4844bca07f68ee7bfb941e8bb7ba70bad53a7b730eb50e6ae"
+      },
+      "license": "CC0-1.0; original generated geometry and woven atlas",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 107456,
+        "vertices": 59297,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 1,
+        "textureDimensions": [
+          512,
+          512
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    }
+  ]
+}

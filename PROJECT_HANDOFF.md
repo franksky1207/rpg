@@ -1,3 +1,10 @@
+## 2026-10-11｜第 27 批人物資產技術基礎（部分完成，未正式美術封版）
+- 起始 main：`fbaaa9d1f84045542d58fe418501172dce44c0a6`。已建立真實可編輯 `.blend`、53-bone skin／五槽掛點、三個真 GLB LOD、本地解碼器、顯式 asset registry 與發布閉包；正式「角色→預覽 3D 角色」及 GM「玩家、裝備與養成→角色全身展示」共用 readonly 資產技術，八類／31 案例保持不變。
+- **高品質人物美術尚未完成；第 27 批未正式封版。** 目前為技術美術研究基座，面部、手指、肩髖接縫及科幻面板／貼圖仍需修整。真骨架 GLB／CI 通過不等於美術或真機通過；五槽實際換裝、紀元專屬裝備、完整動畫與第 28～40 批未施工。
+- 詳細來源、授權、掛點、已執行測試、真機待驗與容量見 `docs/3D_BATCH27_TECHNICAL_ACCEPTANCE_2026-10-11.md`、`docs/3D_BATCH27_MEASUREMENTS_2026-10-11.json`。模型按需載入，不加入原 49 媒體全站預載；原始 Blender／atlas／工具留 GitHub、不進 Pages；原有 32 背景／17 音訊保持。
+- 保留 geometry fallback 與文字回退，正式能力／裝備仍讀既有 owner；不修改戰鬥、成長、存檔／雲端、GM 授權或音訊規則，不解鎖完整版 3D。首次候選與再進下載、GPU 釋放代理值已實測，登入／GM 測試使用隔離 fixture，真手機／美術／實際帳號仍待驗。
+- 最新基準 Pages 已使用既有 Optimized Pages workflow（舊 Stage 4「未切換」為歷史記錄）。本次保持 source 設定，提交後以 exact HEAD Actions 與既有 deploy workflow 結果判定網站更新，不能引用舊綠燈。
+
 ## 2026-10-11｜3D 第 27～40 批「原始檔／發布檔」雙軌完整規劃與 Codex 協作（新基準）
 - **優先閱讀** `docs/3D_BATCH27_40_SOURCE_VS_PUBLISH_MASTER_PLAN_2026-10-11.md`。承接舊版 `docs/3D_AUDIO_AND_BATCH27_40_MASTER_PLAN_2026-10-10.md`、本檔與 `3D_IMPLEMENTATION_PLAN.md` 的正式功能、美術、音效和驗收要求，不得降低 1,050 裝備位置對照、三紀元/高維/異宇宙 200×5、全正式頁及模式覆蓋。
 - **新規則**：Blender 原始工程、high-poly、貼圖母件、錄音源和授權台帳完整留在 GitHub 的開發檔區；玩家 GitHub Pages 只發布經依賴核對的 GLB／貼圖／動畫／正式音檔與必需 JS/CSS。使用現有 `scripts/publish-assets.cjs`、`scripts/build-publish-dry-run.cjs`、`.github/workflows/publish-optimized-pages.yml` 的 Actions 發布，不可只搬資料夾就假定不發布。基線 Pages 約 27.57 MB（2026-10-11），新增正式高畫質 3D 容量隨批實測且按需下載、手機 LOD/資源釋放；規劃門檻見新文件，屬內部目標非 GitHub 官方法規。
