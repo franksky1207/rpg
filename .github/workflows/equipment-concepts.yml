@@ -5,6 +5,7 @@ on:
     paths:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
+      - 'scripts/equipment-concept-batches.py'
       - 'tests/equipment-concepts/**'
       - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
@@ -19,6 +20,7 @@ on:
     paths:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
+      - 'scripts/equipment-concept-batches.py'
       - 'tests/equipment-concepts/**'
       - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
@@ -44,6 +46,10 @@ jobs:
         run: python3 scripts/equipment-concepts.py validate
       - name: Test preservation and failure detection in isolated copies
         run: python3 -m unittest discover -s tests/equipment-concepts -v
+      - name: Check resumable batches and index drift
+        run: |
+          python3 scripts/equipment-concept-batches.py status
+          python3 scripts/equipment-concept-batches.py plan --batch G02
       - name: Require repeatable generation without tracked changes
         run: |
           python3 scripts/equipment-concepts.py generate
