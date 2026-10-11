@@ -1,0 +1,1012 @@
+{
+  "date": "2026-10-11 Asia/Taipei",
+  "baseCommit": "993ec3823997281f3445888848cc25c7b56b244f",
+  "status": "awaiting-user-art-acceptance",
+  "before": {
+    "sourceBytes": 1491612,
+    "lod": {
+      "low": {
+        "vertices": 3672,
+        "triangles": 7204,
+        "bytes": 519184
+      },
+      "medium": {
+        "vertices": 13510,
+        "triangles": 26864,
+        "bytes": 1285168
+      },
+      "high": {
+        "vertices": 53822,
+        "triangles": 107456,
+        "bytes": 4013496
+      }
+    },
+    "publishedBytes": 33698840
+  },
+  "after": {
+    "heightMetres": 1.9,
+    "bones": 53,
+    "slots": {
+      "weapon": "socket.weapon.R",
+      "helmet": "socket.helmet",
+      "armor": "socket.armor",
+      "shoes": "socket.shoes.L",
+      "accessory": "socket.accessory.back"
+    },
+    "lod": {
+      "low": {
+        "vertices": 4234,
+        "triangles": 8480,
+        "bytes": 809780,
+        "ratio": 0.05
+      },
+      "medium": {
+        "vertices": 13564,
+        "triangles": 27140,
+        "bytes": 1746540,
+        "ratio": 0.16
+      },
+      "high": {
+        "vertices": 54277,
+        "triangles": 108566,
+        "bytes": 5068184,
+        "ratio": 0.64
+      }
+    },
+    "artStatus": "human-sci-fi-art-revision-awaiting-user-acceptance",
+    "sourceVertices": 84812,
+    "sourceBytes": 18361504,
+    "lodPolicy": "soft garment-boundary importance; prioritize head and hands"
+  },
+  "sourceFiles": {
+    "development/3d-source/characters/player-v1/README.md": {
+      "bytes": 3698,
+      "sha256": "4031dab5ec2ed9b2f0a5b7177ac5c94b49314f8ef60c23afbc798e8f56388031"
+    },
+    "development/3d-source/characters/player-v1/build_player.py": {
+      "bytes": 18464,
+      "sha256": "dc1b8a3035520f05c2ff13f9a4b02eff075a34bcf3492d7f4ff15004aa68a99f"
+    },
+    "development/3d-source/characters/player-v1/export-measurements.json": {
+      "bytes": 787,
+      "sha256": "64989dcac0fa6dd785f1fa59554002ea21ded0bb7f199f606f85b84775fe7830"
+    },
+    "development/3d-source/characters/player-v1/export_lods.py": {
+      "bytes": 2230,
+      "sha256": "027a0dda20648e6b01bd00a52371f159590e9142b529f69e2ad27111e95efcee"
+    },
+    "development/3d-source/characters/player-v1/face-atlas.png": {
+      "bytes": 172160,
+      "sha256": "f2541c2369074ad7a5c5fc30dc660aa051ac83a43230c17427d22cdf64ba0d4f"
+    },
+    "development/3d-source/characters/player-v1/lod_surface.py": {
+      "bytes": 1295,
+      "sha256": "827490e6291fe4e6991567f4446f7dae9ff278ba70268cc33b462db885a3f02c"
+    },
+    "development/3d-source/characters/player-v1/player-foundation.blend": {
+      "bytes": 18361504,
+      "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+    },
+    "development/3d-source/characters/player-v1/render_review.py": {
+      "bytes": 4890,
+      "sha256": "28e3dddc7634994f541110aed3f34a2d8f775e59d6370738d7cacaf6d8229cab"
+    },
+    "development/3d-source/characters/player-v1/socket-diff.json": {
+      "bytes": 8729,
+      "sha256": "b05378f791be44ea3b349d2ed4610a8b0c820ead5e2cf0ec930caef875f0efc9"
+    },
+    "development/3d-source/characters/player-v1/source-validation.json": {
+      "bytes": 1384,
+      "sha256": "899cc175f3db82e98f850603c0906bea03f9b417476311d43c97c82822ef7e2e"
+    },
+    "development/3d-source/characters/player-v1/validate_source.py": {
+      "bytes": 4966,
+      "sha256": "43c60233fce2c50756db641e13ec6a8f1094f168ee38c1c254ae862b846b7219"
+    },
+    "development/3d-source/characters/player-v1/woven-atlas.png": {
+      "bytes": 96160,
+      "sha256": "e0760cec1ba56aaeda0e8f72183def516efa09b673a8ab5ead37b4bd5c4b1874"
+    }
+  },
+  "publishedAssets": [
+    {
+      "id": "babylon.gltf-loader.v7.54.3",
+      "path": "vendor/babylonjs/7.54.3/babylonjs.loaders.min.js",
+      "sha256": "02a6782cf71693218165ae87b114697a74b9cb081c8123e3fcc310e159598d6c",
+      "bytes": 288275,
+      "type": "decoder",
+      "quality": "shared",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-decoder"
+      ],
+      "lod": "shared",
+      "source": {
+        "path": "vendor/babylonjs/7.54.3/SOURCE.md",
+        "sha256": "5412109c4dc5b8eb857d7f6733aa598b95914bf8ede4cf31d854d2c8c7417af4"
+      },
+      "license": "Apache-2.0",
+      "dependencies": [],
+      "preload": false,
+      "fallback": "procedural-geometry"
+    },
+    {
+      "id": "player.foundation.v1.low",
+      "path": "assets/3d/characters/player-v1/player-low.glb",
+      "sha256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986",
+      "bytes": 809780,
+      "type": "character",
+      "quality": "low",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "low",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 8480,
+        "vertices": 7263,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.medium",
+      "path": "assets/3d/characters/player-v1/player-medium.glb",
+      "sha256": "dd9bddffa79ecaea5b16458300c660c3d711a7cc7df10c5790bf93634ea9169c",
+      "bytes": 1746540,
+      "type": "character",
+      "quality": "medium",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "medium",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 27140,
+        "vertices": 20150,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.high",
+      "path": "assets/3d/characters/player-v1/player-high.glb",
+      "sha256": "20172ca2c7a1b70e6243c33dc282ffb82c5c847eb3f2506d6e90e3ae7615e411",
+      "bytes": 5068184,
+      "type": "character",
+      "quality": "high",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "high",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 108566,
+        "vertices": 64416,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    }
+  ],
+  "sourceValidation": {
+    "passed": true,
+    "bones": 53,
+    "vertices": 84812,
+    "height": 1.9,
+    "maxPoseMovementMetres": 0.018199592719995123,
+    "sockets": {
+      "weapon": "socket.weapon.R",
+      "helmet": "socket.helmet",
+      "armor": "socket.armor",
+      "shoes": "socket.shoes.L",
+      "accessory": "socket.accessory.back"
+    },
+    "jointPoses": [
+      {
+        "bone": "forearm.L",
+        "degrees": 80,
+        "movementMetres": 0.6210875745157409,
+        "maxEdgeStretch": 1.7691200821859947,
+        "severeCompressedEdges": 0
+      },
+      {
+        "bone": "shin.L",
+        "degrees": 75,
+        "movementMetres": 0.740279363566963,
+        "maxEdgeStretch": 2.4540164712149033,
+        "severeCompressedEdges": 0
+      },
+      {
+        "bone": "upper_arm.L",
+        "degrees": 45,
+        "movementMetres": 0.5979897403895474,
+        "maxEdgeStretch": 3.124852849655719,
+        "severeCompressedEdges": 0
+      },
+      {
+        "bone": "thigh.L",
+        "degrees": 50,
+        "movementMetres": 0.8546982801403048,
+        "maxEdgeStretch": 1.8283068157418896,
+        "severeCompressedEdges": 0
+      },
+      {
+        "bone": "index_02.L",
+        "degrees": 55,
+        "movementMetres": 0.06101120215730231,
+        "maxEdgeStretch": 2.9947134962458097,
+        "severeCompressedEdges": 0
+      }
+    ],
+    "closedManifold": true,
+    "lowReexportBytes": 809780,
+    "lowReexportSHA256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986"
+  },
+  "socketContractUnchanged": true,
+  "browser": {
+    "commit": null,
+    "url": "http://127.0.0.1:4184/",
+    "auth": "isolated SDK session fixture; no real account or cloud save operations",
+    "pageErrors": [],
+    "cases": [
+      "native pointer rotation, actual zoom controls and reset",
+      "formal readonly source, real PBR/skin animation, 10 reopens, mobile low LOD, landscape, actual context loss and release",
+      "authorized GM iframe formal capture, free fixture, three eras, high LOD, source isolation and close",
+      "failed GLB explicit geometry fallback"
+    ],
+    "homeAtReadyTransferredBytes": 5307489,
+    "homeTransferredBytes": 12198809,
+    "characterFirstReadyMs": 1425,
+    "nativeJointPoses": [
+      {
+        "bone": "forearm.L",
+        "degrees": 80,
+        "maxMovement": 0.6210872557604555,
+        "finite": true
+      },
+      {
+        "bone": "shin.L",
+        "degrees": 75,
+        "maxMovement": 0.7394008647300007,
+        "finite": true
+      },
+      {
+        "bone": "upper_arm.L",
+        "degrees": 45,
+        "maxMovement": 0.597989548048779,
+        "finite": true
+      },
+      {
+        "bone": "thigh.L",
+        "degrees": 50,
+        "maxMovement": 0.8534406201752671,
+        "finite": true
+      },
+      {
+        "bone": "index_02.L",
+        "degrees": 55,
+        "maxMovement": 0.061011145492915524,
+        "finite": true
+      }
+    ],
+    "characterFirstTransferredBytes": 8968196,
+    "characterFirst": {
+      "downloads": 2,
+      "downloadedBytes": 2034815,
+      "containers": 1,
+      "failures": 0,
+      "cachedBuffers": 2,
+      "cachedBytes": 2034815,
+      "pending": 0
+    },
+    "characterHotReadyMs": 1099,
+    "characterHotTransferredBytes": 0,
+    "mobile": {
+      "visualOnly": true,
+      "readOnly": true,
+      "assetKind": "skinned-glb",
+      "world": 1,
+      "modelDescriptors": [
+        {
+          "type": "weapon",
+          "present": true,
+          "world": 1,
+          "name": "破門短刃",
+          "visualKey": "破門短刃",
+          "quality": 0,
+          "level": 1,
+          "enhancement": 0,
+          "assetKind": "geometry-fallback",
+          "assetId": null,
+          "fallback": "procedural-geometry",
+          "source": "read-only-appearance"
+        },
+        {
+          "type": "helmet",
+          "present": true,
+          "world": 1,
+          "name": "巷戰防護盔",
+          "visualKey": "巷戰防護盔",
+          "quality": 0,
+          "level": 1,
+          "enhancement": 0,
+          "assetKind": "geometry-fallback",
+          "assetId": null,
+          "fallback": "procedural-geometry",
+          "source": "read-only-appearance"
+        },
+        {
+          "type": "armor",
+          "present": true,
+          "world": 1,
+          "name": "城防插板甲",
+          "visualKey": "城防插板甲",
+          "quality": 0,
+          "level": 1,
+          "enhancement": 0,
+          "assetKind": "geometry-fallback",
+          "assetId": null,
+          "fallback": "procedural-geometry",
+          "source": "read-only-appearance"
+        },
+        {
+          "type": "shoes",
+          "present": true,
+          "world": 1,
+          "name": "街區突進靴",
+          "visualKey": "街區突進靴",
+          "quality": 0,
+          "level": 1,
+          "enhancement": 0,
+          "assetKind": "geometry-fallback",
+          "assetId": null,
+          "fallback": "procedural-geometry",
+          "source": "read-only-appearance"
+        },
+        {
+          "type": "accessory",
+          "present": true,
+          "world": 1,
+          "name": "戰場識別牌",
+          "visualKey": "戰場識別牌",
+          "quality": 0,
+          "level": 1,
+          "enhancement": 0,
+          "assetKind": "geometry-fallback",
+          "assetId": null,
+          "fallback": "procedural-geometry",
+          "source": "read-only-appearance"
+        }
+      ],
+      "appearanceSource": "formal",
+      "assetId": "player.foundation.v1.low",
+      "sha256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986",
+      "quality": "low",
+      "artStatus": "human-sci-fi-art-revision-awaiting-user-acceptance",
+      "rigContract": "cw.humanoid.rig.v1",
+      "sockets": {
+        "weapon": "socket.weapon.R",
+        "helmet": "socket.helmet",
+        "armor": "socket.armor",
+        "shoes": "socket.shoes.L",
+        "accessory": "socket.accessory.back"
+      },
+      "bones": 53,
+      "meshCount": 5,
+      "animationGroups": 1
+    },
+    "released": {
+      "assets": {
+        "downloads": 3,
+        "downloadedBytes": 2844595,
+        "containers": 0,
+        "failures": 0,
+        "cachedBuffers": 2,
+        "cachedBytes": 2556320,
+        "pending": 0
+      },
+      "engines": 0,
+      "jsHeapUsedBytes": 56387802
+    },
+    "passed": true
+  },
+  "performance": {
+    "environment": "Chromium 154 SwiftShader; isolated SDK fixture; same production UI/loader; baseline assets verified from 993ec382; timings are single runs, not device benchmarks",
+    "comparisons": [
+      {
+        "revision": "before",
+        "coldMs": 1314,
+        "hotMs": 1076,
+        "cold": {
+          "downloads": 2,
+          "downloadedBytes": 1573443,
+          "containers": 1,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 1573443,
+          "pending": 0
+        },
+        "hot": {
+          "downloads": 2,
+          "downloadedBytes": 1573443,
+          "containers": 1,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 1573443,
+          "pending": 0
+        },
+        "gpu": {
+          "meshes": 6,
+          "vertices": 16327,
+          "indices": 81168,
+          "textures": [
+            {
+              "width": 256,
+              "height": 256
+            },
+            {
+              "width": 216,
+              "height": 1
+            },
+            {
+              "width": 512,
+              "height": 512
+            }
+          ],
+          "materials": 6,
+          "jsHeapUsedBytes": 36382506
+        },
+        "released": {
+          "engines": 0,
+          "downloads": 2,
+          "downloadedBytes": 1573443,
+          "containers": 0,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 1573443,
+          "pending": 0
+        }
+      },
+      {
+        "revision": "after",
+        "coldMs": 1286,
+        "hotMs": 1157,
+        "cold": {
+          "downloads": 2,
+          "downloadedBytes": 2034815,
+          "containers": 1,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 2034815,
+          "pending": 0
+        },
+        "hot": {
+          "downloads": 2,
+          "downloadedBytes": 2034815,
+          "containers": 1,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 2034815,
+          "pending": 0
+        },
+        "gpu": {
+          "meshes": 6,
+          "vertices": 20348,
+          "indices": 81996,
+          "textures": [
+            {
+              "width": 256,
+              "height": 256
+            },
+            {
+              "width": 216,
+              "height": 1
+            },
+            {
+              "width": 512,
+              "height": 512
+            },
+            {
+              "width": 1024,
+              "height": 1024
+            }
+          ],
+          "materials": 6,
+          "jsHeapUsedBytes": 45438479
+        },
+        "released": {
+          "engines": 0,
+          "downloads": 2,
+          "downloadedBytes": 2034815,
+          "containers": 0,
+          "failures": 0,
+          "cachedBuffers": 2,
+          "cachedBytes": 2034815,
+          "pending": 0
+        }
+      }
+    ]
+  },
+  "regressionChecks": [
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/3d-b18-coverage-guard.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-runtime-early-restore-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-data-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-attempt-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-combat-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-failure-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-progression-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-ui-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-batch4-3-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-old-save-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/resource-cache-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/resource-cache-behavior.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/resource-cache-prefetch-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/audio-lifecycle.test.cjs",
+      "exit": 0
+    },
+    {
+      "test": "tests/audio-regression.test.cjs",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/3d-asset-registry-integrity.cjs",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/3d-glb-validation.cjs",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/post-reincarnation-cleanup-batch1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/story/reincarnation-three-era-batch4-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/recent-optimization-batch4-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/calamity-shared-ui-policy-opt-batch3.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/publish-build-regression.cjs",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/audio-lifecycle-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-startup-preload-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-first-render-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/code-cleanup-batch7-lazy-loading.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/galaxy-review-combat-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-baseline-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-owner-batch1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-ui-batch2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-combat-batch3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-continuous-batch4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-final-batch6-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-optimization-1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-optimization-2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-optimization-3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/first-world-target-context-optimization-4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-entry-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-world1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-world2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-world3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-batch5-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-rerun-batch5-e2e-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-overlevel-batch6-1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/player-batch-upgrades-batch6-2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-batch6-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/breakthrough-core-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/breakthrough-final-damage-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-breakthrough-management-batch7-1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-character-breakthrough-batch7-2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-alternate-universe-benchmark-batch7-4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/alternate-universe-title-batch4-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-batch7-closure.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/batch7-post-optimization-1-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/batch7-post-optimization-3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/batch7-post-optimization-4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-reset-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-carryover-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/equipment-world-semantics-batch2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-ui-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-opt-batch2-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-opt-batch3-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/reincarnation-opt-batch4-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/newstate-browser-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/browser-smoke.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/startup-readiness-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/gm-3d-test-center-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/3d-mode-browser-regression.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/galaxy-3d-button-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/publish-candidate-browser.js",
+      "exit": 0
+    },
+    {
+      "test": "tests/runtime/3d-player-assets-browser.js",
+      "exit": 0
+    }
+  ],
+  "publish": {
+    "trackedCount": 722,
+    "trackedBytes": 252762083,
+    "artifactCount": 366,
+    "artifactBytes": 35506198,
+    "savedBytes": 217255885,
+    "excludedCount": 358,
+    "officialBackgrounds": 32,
+    "officialAudioFiles": 17
+  },
+  "limits": [
+    "No human art acceptance yet",
+    "No physical iPhone/Android/GPU/FPS/30-minute test",
+    "Single-run software-GPU timing; not performance improvement claim",
+    "Auth is isolated SDK fixture; no real cloud writes",
+    "Exact commit and GitHub Actions outcomes attached in final delivery"
+  ]
+}

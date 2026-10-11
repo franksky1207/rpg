@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "bones": 53,
+  "vertices": 84812,
+  "height": 1.9,
+  "maxPoseMovementMetres": 0.018199592719995123,
+  "sockets": {
+    "weapon": "socket.weapon.R",
+    "helmet": "socket.helmet",
+    "armor": "socket.armor",
+    "shoes": "socket.shoes.L",
+    "accessory": "socket.accessory.back"
+  },
+  "jointPoses": [
+    {
+      "bone": "forearm.L",
+      "degrees": 80,
+      "movementMetres": 0.6210875745157409,
+      "maxEdgeStretch": 1.7691200821859947,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "shin.L",
+      "degrees": 75,
+      "movementMetres": 0.740279363566963,
+      "maxEdgeStretch": 2.4540164712149033,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "upper_arm.L",
+      "degrees": 45,
+      "movementMetres": 0.5979897403895474,
+      "maxEdgeStretch": 3.124852849655719,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "thigh.L",
+      "degrees": 50,
+      "movementMetres": 0.8546982801403048,
+      "maxEdgeStretch": 1.8283068157418896,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "index_02.L",
+      "degrees": 55,
+      "movementMetres": 0.06101120215730231,
+      "maxEdgeStretch": 2.9947134962458097,
+      "severeCompressedEdges": 0
+    }
+  ],
+  "closedManifold": true,
+  "lowReexportBytes": 809780,
+  "lowReexportSHA256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986"
+}

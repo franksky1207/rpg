@@ -1,3 +1,10 @@
+## 2026-10-11｜第 27 批人物美術補修（等待使用者外觀確認）
+- 起始 main `993ec3823997281f3445888848cc25c7b56b244f`；真人比例貼身科幻戰鬥服，連續肩／髖／掌部、實際顱顎／五官 atlas、布料與柔性分片，取消機械肩殼與固定胸甲。沒有開始第 28～40 批，不能自行美術封版。
+- 53 骨骼及九個掛點的父子／座標／local matrix 與舊版相同；來源保留 head/torso/legs/feet/back 遮蔽屬性，未實作換裝。Blender／glTF 共用線性四權重，肘膝肩髖指變形及完整再匯出已驗證。
+- 詳見 [美術補修驗收](docs/3D_BATCH27_ART_REPAIR_ACCEPTANCE_2026-10-11.md)、[測量 JSON](docs/3D_BATCH27_ART_REPAIR_MEASUREMENTS_2026-10-11.json) 及 `development/3d-source/characters/player-v1/review/` 真實四面／近景／LOD／姿勢／正式與 GM 展示圖；Git history 保留起始舊來源。
+- 新 low/medium/high 約 0.81/1.75/5.07 MB；實際精簡成品約 35.51 MB。Blender／原始 atlas／渲染／測試報告只留 GitHub；49 媒體預載、32 背景、17 音訊及既有智慧下載不變。
+- 正式角色／GM 共用資產與 readonly owner；只調人物光照、engine fallback／正式與 GM HTML cache token、registry／manifest。未變更正式公式、音訊、存檔／雲端、GM 設定或 Pages source。真機 GPU／手機及外觀等待使用者確認；CI 按最終提交 SHA 核對。
+
 ## 2026-10-11｜全戰鬥音樂唯一正式 owner 與原生播放驗收
 - 以最新 main `7f57531dda638d2fa1d37355e2ba9ac9c2214157` 承接，先隔離分支施工。根因與完整驗收見 [COMBAT_MUSIC_UNIFIED_ACCEPTANCE_2026-10-11.md](docs/COMBAT_MUSIC_UNIFIED_ACCEPTANCE_2026-10-11.md)。
 - Scenes V8 的 startRun/endRun token 是正式音樂 owner；syncView／setContext 不能自行取得戰鬥 lock，無 token／舊 token 退出不取消新輪。真正銀河 battlepipeline／宇宙主線及所有模式接正式事件，finally 清理，結果 DOM 與演出旗標不決定正式退出。回顧依來源紀元選曲、依有效分頁還原主題。

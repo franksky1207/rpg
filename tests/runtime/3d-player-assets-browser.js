@@ -1,7 +1,7 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
 const base=new URL('./',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html');
-const report={auth:'isolated SDK session fixture; no real account or cloud save operations',pageErrors:[],cases:[]};
+const report={commit:process.env.GITHUB_SHA||null,url:base.href,auth:'isolated SDK session fixture; no real account or cloud save operations',pageErrors:[],cases:[]};
 const sdk=`window.supabase={createClient(){return{auth:{onAuthStateChange(){return{data:{subscription:{unsubscribe(){}}}}},async getSession(){return{data:{session:{user:{id:'batch27-preview-test'}}},error:null}}},from(){return{select(){return this},eq(){return this},single(){return Promise.resolve({data:null,error:null})}}}}}};`;
 const metadata=page=>page.evaluate(()=>BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter)?.metadata.civilization3dCharacter);
 const waitModel=(page,quality,source=null,world=null)=>page.waitForFunction(q=>{
@@ -42,8 +42,8 @@ async function finishIntro(page){
   await page.locator('#civilizationModeChooseText').click();
   await finishIntro(page);console.log('PASS actual intro completed');
   assert.equal(modelRequests,0,'text startup must not request any GLB');report.homeTransferredBytes=transferred;
-  await page.evaluate(()=>go('character'));console.log('Character UI entered');const truth=await identity(page);const before=transferred;console.log('Readonly truth captured');
-  await page.locator('#civilization3dCharacterToggle').click();console.log('Character UI preview clicked');await waitModel(page,'medium');console.log('PASS medium GLB loaded');
+  await page.evaluate(()=>go('character'));console.log('Character UI entered');const truth=await identity(page);const before=transferred;const coldStarted=Date.now();console.log('Readonly truth captured');
+  await page.locator('#civilization3dCharacterToggle').click();console.log('Character UI preview clicked');await waitModel(page,'medium');console.log('PASS medium GLB loaded');report.characterFirstReadyMs=Date.now()-coldStarted;
   const model=await metadata(page);assert.equal(model.appearanceSource,'formal');assert.equal(model.assetId,'player.foundation.v1.medium');assert.equal(model.bones,53);assert.equal(Object.keys(model.sockets).length,5);
   assert.equal(model.modelDescriptors.length,5,'retain authoritative equipped descriptors, including empty slots');
   await page.waitForFunction(()=>{
@@ -57,14 +57,43 @@ async function finishIntro(page){
    group.goToFrame(15);s.render();mesh.skeleton.prepare();const next=Array.from(mesh.skeleton.getTransformMatrices(mesh));group.play(true);
    return {moved:first.some((v,i)=>Math.abs(v-next[i])>.0001),pbr:s.materials.filter(m=>m instanceof BABYLON.PBRMaterial).length,textures:s.textures.filter(t=>t.getSize().width===512).length};
   });
-  assert.equal(loaded.moved,true,'animation must deform the real skeleton');assert.equal(loaded.pbr,5);assert.ok(loaded.textures>=1);
+  assert.equal(loaded.moved,true,'animation must deform the real skeleton');assert.equal(loaded.pbr,5);assert.ok(loaded.textures>=1);assert.ok(await page.evaluate(()=>BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).some(s=>s.textures.some(t=>t.getSize().width===1024))),'original facial atlas must be ready');
+  report.nativeJointPoses=await page.evaluate(()=>{
+   const s=BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter?.assetKind==='skinned-glb');
+   const meshes=s.meshes.filter(m=>m.skeleton&&m.getTotalVertices()>0),group=s.animationGroups[0];group.pause();group.goToFrame(0);s.render();meshes[0].skeleton.prepare();
+   const rest=meshes.map(m=>Array.from(m.getPositionData(true)));const result=[];
+   for(const [name,degrees] of [['forearm.L',80],['shin.L',75],['upper_arm.L',45],['thigh.L',50],['index_02.L',55]]){
+    const node=s.getTransformNodeByName(name);if(!node?.rotationQuaternion)throw Error('Missing actual joint node '+name);
+    const original=node.rotationQuaternion.clone();node.rotationQuaternion=original.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X,degrees*Math.PI/180));
+    s.render();meshes[0].skeleton.prepare();let maxMovement=0,finite=true;
+    for(let j=0;j<meshes.length;j++){const posed=meshes[j].getPositionData(true),before=rest[j];finite=finite&&posed.every(Number.isFinite);for(let i=0;i<before.length;i+=3)maxMovement=Math.max(maxMovement,Math.hypot(posed[i]-before[i],posed[i+1]-before[i+1],posed[i+2]-before[i+2]));}
+    result.push({bone:name,degrees,maxMovement,finite});node.rotationQuaternion=original;s.render();meshes[0].skeleton.prepare();
+   }
+   group.play(true);return result;
+  });
+  for(const pose of report.nativeJointPoses){assert.equal(pose.finite,true);assert.ok(pose.maxMovement>.001&&pose.maxMovement<2,JSON.stringify(pose));}
+  console.log('PASS native Babylon elbow/knee/shoulder/hip/finger skin deformation');
   console.log('PASS deforming skeleton/PBR');report.characterFirstTransferredBytes=transferred-before;report.characterFirst=await page.evaluate(()=>Civilization3DCharacterAssets.snapshot());
   await page.locator('#civilization3dFormalHost').screenshot({path:'/tmp/rpg-b27-character-desktop.png',timeout:60000});
+  await page.locator('#civilization3dFormalHost').getByRole('button',{name:'放大 3D 預覽',exact:true}).click();
+  await page.locator('#civilization3dFormalHost').screenshot({path:'/tmp/rpg-b27-art-formal-max.png',timeout:60000});
+  await page.locator('#civilization3dFormalHost').getByRole('button',{name:'還原 3D 預覽',exact:true}).click();
+  const cameraBefore=await page.evaluate(()=>BABYLON.EngineStore.Instances[0].scenes[0].activeCamera.alpha);
+  const canvasBox=await page.locator('#civilization3dFormalHost canvas').boundingBox();assert.ok(canvasBox);
+  await page.mouse.move(canvasBox.x+canvasBox.width*.6,canvasBox.y+canvasBox.height*.45);await page.mouse.down();
+  await page.mouse.move(canvasBox.x+canvasBox.width*.6+45,canvasBox.y+canvasBox.height*.45+12,{steps:6});await page.mouse.up();
+  await page.waitForFunction(alpha=>Math.abs(BABYLON.EngineStore.Instances[0].scenes[0].activeCamera.alpha-alpha)>.01,cameraBefore);
+  const radiusBefore=await page.evaluate(()=>BABYLON.EngineStore.Instances[0].scenes[0].activeCamera.radius);
+  await page.locator('#civilization3dFormalHost').getByRole('button',{name:'放大鏡頭',exact:true}).click();
+  await page.waitForFunction(radius=>BABYLON.EngineStore.Instances[0].scenes[0].activeCamera.radius<radius-.01,radiusBefore);
+  await page.locator('#civilization3dFormalHost').getByRole('button',{name:'縮小鏡頭',exact:true}).click();
+  await page.locator('#civilization3dFormalHost').getByRole('button',{name:'重置視角',exact:true}).click();
+  report.cases.push('native pointer rotation, actual zoom controls and reset');
   await page.locator('#civilization3dFormalHost').getByRole('button',{name:'關閉 3D 預覽',exact:true}).click();
   assert.equal(await page.evaluate(()=>Civilization3DCharacterAssets.snapshot().containers),0);
-  const hotBefore=transferred,hotRequests=modelRequests;
+  const hotBefore=transferred,hotRequests=modelRequests,hotStarted=Date.now();
   await page.locator('#civilization3dCharacterToggle').click();await waitModel(page,'medium');
-  report.characterHotTransferredBytes=transferred-hotBefore;assert.equal(modelRequests,hotRequests,'same-page reopen must reuse verified CPU bytes');
+  report.characterHotReadyMs=Date.now()-hotStarted;report.characterHotTransferredBytes=transferred-hotBefore;assert.equal(modelRequests,hotRequests,'same-page reopen must reuse verified CPU bytes');
   await page.evaluate(()=>civilization3dToggleCharacter());
   for(let i=0;i<10;i++){await page.evaluate(()=>civilization3dToggleCharacter());await waitModel(page,'medium');await page.evaluate(()=>civilization3dToggleCharacter());assert.equal(await page.evaluate(()=>Civilization3DCharacterAssets.snapshot().containers),0);}
   await page.setViewportSize({width:390,height:844});await page.locator('#civilization3dCharacterToggle').click();await waitModel(page,'low');
@@ -96,6 +125,9 @@ async function finishIntro(page){
   await frame.locator('#appearanceDetails summary').click();await frame.locator('#appearanceFree').click();await waitModel(frame,'medium','fixture');assert.equal((await metadata(frame)).appearanceSource,'fixture');
   for(const world of ['1','2','3']){await frame.locator('#appearanceWorld').selectOption(world);await waitModel(frame,'medium','fixture',world);}
   await frame.locator('#quality').selectOption('high');await waitModel(frame,'high');assert.equal((await metadata(frame)).assetId,'player.foundation.v1.high');
+  await frame.locator('#maximizePreview').click();
+  await frame.locator('canvas').first().screenshot({path:'/tmp/rpg-b27-gm-art-high.png',timeout:60000});
+  await frame.locator('#maximizePreview').click();
   await frame.locator('#appearanceFormal').click();await waitModel(frame,'high','formal');assert.equal((await metadata(frame)).appearanceSource,'formal');assert.equal(await identity(gm),gmTruth);
   await gm.locator('#gm3dPrototypeOverlay').getByRole('button',{name:'← 返回原本畫面',exact:true}).click();assert.equal(await gm.locator('#gm3dPrototypeOverlay').count(),0);
   report.cases.push('authorized GM iframe formal capture, free fixture, three eras, high LOD, source isolation and close');await gmContext.close();

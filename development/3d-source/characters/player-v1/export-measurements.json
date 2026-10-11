@@ -10,20 +10,26 @@
   },
   "lod": {
     "low": {
-      "vertices": 3672,
-      "triangles": 7204,
-      "bytes": 519184
+      "vertices": 4234,
+      "triangles": 8480,
+      "bytes": 809780,
+      "ratio": 0.05
     },
     "medium": {
-      "vertices": 13510,
-      "triangles": 26864,
-      "bytes": 1285168
+      "vertices": 13564,
+      "triangles": 27140,
+      "bytes": 1746540,
+      "ratio": 0.16
     },
     "high": {
-      "vertices": 53822,
-      "triangles": 107456,
-      "bytes": 4013496
+      "vertices": 54277,
+      "triangles": 108566,
+      "bytes": 5068184,
+      "ratio": 0.64
     }
   },
-  "artStatus": "technical-art-study-awaiting-human-art-acceptance"
+  "artStatus": "human-sci-fi-art-revision-awaiting-user-acceptance",
+  "sourceVertices": 84812,
+  "sourceBytes": 18361504,
+  "lodPolicy": "soft garment-boundary importance; prioritize head and hands"
 }

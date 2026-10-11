@@ -8,9 +8,11 @@ const registry=result.registry,source=registry.assets.find(a=>a.type==='characte
 assert.ok(fs.readFileSync(path.join(root,source)).subarray(0,7).equals(Buffer.from('BLENDER')),'real Blender source header');
 for(const a of result.entries.filter(a=>a.type==='character')){
  const bytes=fs.readFileSync(path.join(root,a.path)),doc=glb(bytes,a.id);
- assert.equal(doc.skins[0].joints.length,53);assert.equal(doc.materials.length,5);assert.equal(doc.images.length,1);
+ assert.equal(doc.skins[0].joints.length,53);assert.equal(doc.materials.length,5);assert.equal(doc.images.length,2);
  assert.ok(doc.nodes.some(n=>n.name==='middle_03.L'));assert.ok(doc.nodes.some(n=>n.name==='thumb_03.R'));
  const binOffset=20+bytes.readUInt32LE(12)+8,bin=bytes.subarray(binOffset);
+ assert.deepEqual(a.metrics.textureDimensions,[[512,512],[1024,1024]],'actual embedded textile and facial atlas dimensions');
+ assert.ok(doc.meshes[0].primitives.some(p=>'COLOR_0' in p.attributes),'continuous tailoring must survive GLB export');
  const accessor=(index)=>{const a=doc.accessors[index],v=doc.bufferViews[a.bufferView];return {a,v,offset:(v.byteOffset||0)+(a.byteOffset||0)};};
  for(const p of doc.meshes[0].primitives){
   assert.ok('JOINTS_0' in p.attributes&&'WEIGHTS_0' in p.attributes);

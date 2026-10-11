@@ -330,9 +330,9 @@
     scene.clearColor=new B.Color4(.015,.022,.038,1);
     const camera=new B.ArcRotateCamera('character-camera',Math.PI/2.25,Math.PI/2.3,3.4,new B.Vector3(0,.96,0),scene);
     configureDisplayCamera(camera,args.canvas,2.2,5.5);
-    sceneFillLight(B,scene,'character-fill',.75);
-    const light=new B.DirectionalLight('character-key',new B.Vector3(-.4,-1,.7),scene);light.intensity=2;
-    const rim=new B.PointLight('character-rim',new B.Vector3(1,2,1),scene);rim.diffuse=new B.Color3(.2,.6,1);rim.intensity=4;
+    const fill=sceneFillLight(B,scene,'character-fill',1.05);fill.groundColor=new B.Color3(.20,.23,.27);
+    const light=new B.DirectionalLight('character-key',new B.Vector3(-.35,-.8,-.9),scene);light.intensity=2.4;
+    const rim=new B.PointLight('character-rim',new B.Vector3(-1.1,1.6,-.8),scene);rim.diffuse=new B.Color3(.40,.65,.85);rim.intensity=1.6;
     const platform=B.MeshBuilder.CreateCylinder('character-platform',{height:.04,diameter:1.25,tessellation:48},scene);platform.position.y=-.02;
     platform.material=sceneMaterial(B,scene,'character-platform-material',[.055,.1,.15]);
     scene.metadata={civilization3dCharacter:{visualOnly:true,readOnly:true,assetKind:'loading',world:Number(args.world)||1,modelDescriptors:Array.isArray(args.modelDescriptors)?args.modelDescriptors:[],appearanceSource:args.appearanceSource||"fixture"}};

@@ -80,7 +80,7 @@
 | 冒險與宇宙地圖 | 銀河紀元星圖 | `galaxy` | `worldmapui.js;ui.js` | 1，後續回顧 | 區域/目標/解鎖/回顧 | 2 | 雙模式/唯讀來源已施工；瀏覽器實測待驗 |
 | 冒險與宇宙地圖 | 宇宙紀元星圖 | `universe` | `worldmapui.js;secondworldmainline.js` | 2，3 可回顧 | 100 Boss、選定區域/已擊敗/可挑戰/回顧 | 2 | 雙模式/唯讀來源已施工；瀏覽器實測待驗 |
 | 冒險與宇宙地圖 | 高維紀元戰線 | `higher` | `thirdworldui.js` | 3 | 十存在、永久 HP、挑戰中/完成 | 2 | 雙模式/唯讀來源已施工；瀏覽器實測待驗 |
-| 玩家、裝備與養成 | 角色全身展示 | `character` | `ui.js;playersemanticsui.js;3d-test/appearance-snapshot.js` | 依已進入紀元 | 正式角色、稱號/突破、五槽穿戴 | 4 | 待核對／補修 |
+| 玩家、裝備與養成 | 角色全身展示 | `character` | `ui.js;playersemanticsui.js;3d-test/appearance-snapshot.js` | 依已進入紀元 | 正式角色、稱號/突破、五槽穿戴 | 4 | B27 美術補修正式／GM readonly、三紀元／LOD 自動驗證通過；外觀與真機待使用者確認 |
 | 玩家、裝備與養成 | 五槽裝備陳列 | `equipment` | `ui.js;inventoryfocus.js;3d-test/appearance-snapshot.js` | 1/2/3 | 裝備世界/品質/穿戴/背包/鎖定 | 4 | 待核對／補修 |
 | 玩家、裝備與養成 | 強化鍛造台 | `forge` | `enhancementui.js;enhancementcore.js` | 依正式強化規則 | 五裝備強化/上限/不可交易預覽 | 4 | 待核對／補修 |
 | 玩家、裝備與養成 | 八種專精星環 | `specialization` | `specialization.js` | 按正式可見頁 | 八專精各級數/上限 | 4 | 待核對／補修 |

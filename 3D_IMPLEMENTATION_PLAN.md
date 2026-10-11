@@ -1,3 +1,10 @@
+## 2026-10-11｜第 27 批人物美術補修（等待使用者外觀確認）
+- 起始 main `993ec3823997281f3445888848cc25c7b56b244f`；真人比例貼身科幻戰鬥服，連續肩／髖／掌部、實際顱顎／五官 atlas、布料與柔性分片，取消機械肩殼與固定胸甲。沒有開始第 28～40 批，不能自行美術封版。
+- 53 骨骼及九個掛點的父子／座標／local matrix 與舊版相同；來源保留 head/torso/legs/feet/back 遮蔽屬性，未實作換裝。Blender／glTF 共用線性四權重，肘膝肩髖指變形及完整再匯出已驗證。
+- 詳見 [美術補修驗收](docs/3D_BATCH27_ART_REPAIR_ACCEPTANCE_2026-10-11.md)、[測量 JSON](docs/3D_BATCH27_ART_REPAIR_MEASUREMENTS_2026-10-11.json) 及 `development/3d-source/characters/player-v1/review/` 真實四面／近景／LOD／姿勢／正式與 GM 展示圖；Git history 保留起始舊來源。
+- 新 low/medium/high 約 0.81/1.75/5.07 MB；實際精簡成品約 35.51 MB。Blender／原始 atlas／渲染／測試報告只留 GitHub；49 媒體預載、32 背景、17 音訊及既有智慧下載不變。
+- 正式角色／GM 共用資產與 readonly owner；只調人物光照、engine fallback／正式與 GM HTML cache token、registry／manifest。未變更正式公式、音訊、存檔／雲端、GM 設定或 Pages source。真機 GPU／手機及外觀等待使用者確認；CI 按最終提交 SHA 核對。
+
 ## 2026-10-11｜第 27 批人物資產技術基礎（部分完成，未正式美術封版）
 - 起始 main：`fbaaa9d1f84045542d58fe418501172dce44c0a6`。已建立真實可編輯 `.blend`、53-bone skin／五槽掛點、三個真 GLB LOD、本地解碼器、顯式 asset registry 與發布閉包；正式「角色→預覽 3D 角色」及 GM「玩家、裝備與養成→角色全身展示」共用 readonly 資產技術，八類／31 案例保持不變。
 - **高品質人物美術尚未完成；第 27 批未正式封版。** 目前為技術美術研究基座，面部、手指、肩髖接縫及科幻面板／貼圖仍需修整。真骨架 GLB／CI 通過不等於美術或真機通過；五槽實際換裝、紀元專屬裝備、完整動畫與第 28～40 批未施工。

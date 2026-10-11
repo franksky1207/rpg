@@ -1,15 +1,27 @@
-# 玩家人形基座 v1／第 27 批
+# 玩家真人科幻戰鬥服基座 v1／第 27 批美術補修
 
-狀態：可編輯、可變形的原創技術美術研究模型；**尚待正式高品質美術驗收，不能宣稱第 27 批正式美術封版**。它不是既有球／柱／方塊替代人形；採獨立 quad surface、53 個骨架關節、四權重混合、五種 PBR 材質和完整五指。仍需專業角色美術修整面部、肩／髖接縫、手指輪廓及更精緻的板件／貼圖。
+狀態：`human-sci-fi-art-revision-awaiting-user-acceptance`。真人比例、連續蒙皮表面的美術修正版；**等待使用者看實際渲染及正式網站後確認，未自行正式美術封版**。沒有開始第 28～40 批。起始 main `993ec3823997281f3445888848cc25c7b56b244f` 中的舊 `.blend`／生成器／GLB 完整留在 Git history，沒有建立第二套遊戲來源。
 
-來源：本目錄 build_player.py 原創網格／織物 atlas，無下載人物或第三方幾何。工程、產生器及織物圖公開使用 CC0-1.0（https://creativecommons.org/publicdomain/zero/1.0/）；Babylon loader 另外使用 Apache-2.0。
+約 1.9 m、成年約八頭身；原創解剖截面經 voxel 重拓樸接合肩／髖／掌部，原始工程保留可編輯 quad 表面、UV、五種 PBR、53 個骨架、四權重線性混合、掛點和呼吸相容 Action。頭部使用實際顱骨／下顎／鼻樑輪廓及原創 1024 PNG 五官／髮際 atlas；512 織物 atlas 與連續頂點顏色表現贴身服裝分片、柔性關節及低調科技縫線。不固定頭盔、胸甲、背包或正式裝備。
 
-用 Blender 4.3.2 開啟 player-foundation.blend，可直接編輯 quad mesh、UV、材料節點、Armature、vertex groups 和 socket empties；CW_Idle_Breathing_Compatibility 是變形相容測試，不冒充第 31 批完整動畫。
+公尺、Z up、-Y forward、足底原點；glTF +Y up、+Z forward、scale 1。53 骨架的名称／父子／head／tail及全部掛點 local matrix **與起始提交相同**。裝備 pivot／socket-local quaternion 契約保持，不另改角色身份或智慧下載。五槽換裝、專屬裝備及完整動作仍留第 28～31 批。
 
-重建：在 repository root 執行 `blender -b --python development/3d-source/characters/player-v1/build_player.py`，再執行 `node scripts/update-3d-registry.cjs`。低／中／高版分別採原始表面／一級／二級 subdivision；同骨架和掛點，不使用 Draco／Basis／外部貼圖。512×512 PNG 直接嵌入 GLB。先驗證、更新 manifest，再建候選。
+`region.head/torso/legs/feet/back` 為來源網格的 POINT Boolean attributes（不是骨架權重），僅規劃後續遮蔽。頭盔只遮 head、胸甲遮 torso、腿件遮 legs、鞋子遮 feet；背部飾品僅有覆蓋布片時局部遮 back，不能整片刪除軀幹。後續使用套件的覆蓋範圍與同 rig 貼身替代件避免穿模，不在本批實作執行時隱藏。
 
-Blender 使用公尺、Z 向上、-Y 正面、原點在足底中心；glTF 匯出轉成 Y 向上、+Z 正面。固定縮放 1，掛點為骨骼子 Empty；裝備原點對 socket 局部原點，旋轉使用局部四元數，不直接硬改人物 root。五槽以發布 asset-registry.json.slots 為契約，另提供左右手、雙鞋、背部、胸口受擊／root 特效錨點。
+原創網格、atlas、生成器使用 CC0-1.0：https://creativecommons.org/publicdomain/zero/1.0/ 。無下載角色／借用 IP／遠端素材；本地 Babylon loader 另為 Apache-2.0。
 
-基座飛行服的面板不是任何正式裝備名稱／數值。五槽換裝、三紀元不同正式裝備美術與 1,050 位置模型映射留給第 28～30 批；正式外觀仍讀 appearance-snapshot.js，不生成第二套角色身份。
+```sh
+# Blender 4.3.2；在 repository root。重建會更新 tracked 來源及 GLB。
+blender -b --python-exit-code 1 --python development/3d-source/characters/player-v1/build_player.py
+blender -b development/3d-source/characters/player-v1/player-foundation.blend --python-exit-code 1 --python development/3d-source/characters/player-v1/validate_source.py
+blender -b development/3d-source/characters/player-v1/player-foundation.blend --python-exit-code 1 --python development/3d-source/characters/player-v1/render_review.py -- --output /tmp/player-review --samples 48
+# 已有手工編輯的工程可直接匯出，避免重建覆蓋雕刻：
+blender -b development/3d-source/characters/player-v1/player-foundation.blend --python-exit-code 1 --python development/3d-source/characters/player-v1/export_lods.py
+node scripts/update-3d-registry.cjs
+python3 scripts/generate-resource-manifest.py > resource-manifest.json
+node scripts/build-publish-dry-run.cjs
+```
 
-`.blend`、織物源圖、此說明、生成與檢查腳本／報表只留 GitHub 開發來源，玩家端只取 registry 的三個 GLB 與本地解碼器。高版仍需桌機效能／美術接受；真手機須驗低版，Playwright viewport 不代表實機。
+三種 LOD 由相同雕刻表面，以服裝邊界／頭部／手部重要性遮罩真正簡化為 5%／16%／64% 幾何，維持五材質、兩張嵌入 PNG、53 joints 及標準掛點；不使用 Draco／Basis／外部貼圖。來源檢查包含封閉 manifold、法線、四權重、骨架、呼吸與肘／膝／肩／髖／指的變形及 low 精確再匯出。Blender 線性蒙皮與 glTF 相同；未開啟 dual-quaternion 冒充發布變形。
+
+`review/` 為實際 Cycles 渲染與正式／GM browser 證據，只保留 GitHub。`render_review.py` 可重現四面、三近景、LOD 比較、遊戲光照及關節姿勢；配套 Blender 沒有 OIDN，使用原生 CPU 48 samples，不以不存在的 denoiser 產生成功記錄。玩家發布只包含 registry 登錄 GLB、既有本地解碼器及必要程式；原始工程、atlas、渲染、工具與報告全部排除。

@@ -8,3 +8,4 @@ runtime-integrity-report.txt
 story-*-report.txt
 3d-player-browser-report.json
 audio-lifecycle-browser-report.json
+__pycache__/
