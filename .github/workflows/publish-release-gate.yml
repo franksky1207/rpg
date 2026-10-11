@@ -1,0 +1,48 @@
+name: Publish Release Gate (Stage 4)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build isolated publish candidate
+        run: |
+          set -euo pipefail
+          node scripts/publish-asset-audit.cjs
+          node scripts/build-publish-dry-run.cjs
+      - name: Install Chromium for isolated browser tests
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Smoke the isolated website (never deploy to Pages)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/rpg-stage4-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          export RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html
+          node tests/runtime/browser-smoke.js
+          node tests/runtime/startup-readiness-browser.js
+          node tests/runtime/gm-3d-test-center-browser.js
+          node tests/runtime/3d-mode-browser-regression.js
+      - name: Upload dry-run audit and web server logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage4-release-gate-audit
+          path: |
+            publish-stage3-report.json
+            /tmp/rpg-stage4-server.log
+          if-no-files-found: warn
