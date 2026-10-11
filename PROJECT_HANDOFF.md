@@ -1,3 +1,10 @@
+## 2026-10-12｜混合式轉型 T1-B：共用載入與正式 DOM／會話分離
+- 起始 main `a89d5e6fe8dd4783720dcffb0eb72b9651c7e40c`，工作目錄乾淨；latest fetch／API 無新提交，T1-A 共用正式快照與接線仍在。起始 SHA 十個 Actions 均 success；真機／特殊遭遇／結算資料缺口保留。
+- 程式提交 `b2e7b946615f62a9703ef628c1d32426ddeb2a91`：新增 `shared-loader.js` 與 `formal-dom.js`，原 `formal-home.js` 留場景會話及公開轉接；正式／GM 同用必要 API 與逐場景工廠檢查，移除 Service／Battle／Chronicle 作完整性哨兵。GM 外觀請求與正式同 document 去重；原 31 案、預覽按鈕／工廠、Runtime、GLB、快照、音訊及存檔 owner 保留。
+- [T1-B 實作／驗收與回復](docs/3D_HYBRID_T1B_ACCEPTANCE_2026-10-12.md)、[49 個具名指令與本機證據](docs/3D_HYBRID_T1B_TEST_EVIDENCE_2026-10-12.json)：10 loader＋15 snapshot 契約、388 JS、桌機／手機正式十入口、38 DOM fixture、GM 各31真場景、人物／五槽／三LOD、50原生音訊案與384成品HTTP／SHA均通過。初期字體環境失敗已用隔離標準字體重跑，未改期待值。
+- 本機驗收完成；最新提交的 exact-HEAD CI／Pages 和真手機／真帳號／長期 GPU 仍須獨立核對；不宣稱效能改善。回復時整批 revert（HTML／manifest／新增模組一起），不改玩家資料。
+- **T1-C、T2～T5 全未施工**；本批結束停止。原第27～40批規格／模型／概念圖不改寫。
+
 ## 2026-10-12｜混合式轉型 T1-A：共用正式唯讀快照（程式與本機驗收完成，待最終 CI／真機）
 - 本批已獲使用者授權，以 `4ae7793a13e49b14229da48fcb249aa9b1c7c198` 為起始 main；新增 `3d-test/formal-snapshots.js`，正式預覽與 GM 同源授權橋接共用地圖、災厄、副本、異宇宙、戰鬥 HP／盾及正式裝備身份解析。外觀仍由 `Civilization3DAppearance.capture()` 提供；回傳值深複製，沒有新增存檔、雲端、事件或音訊 owner。
 - 銀河完成規則採正式 `worldmapui.js` 的區域末 Boss／進度超過 `mapEnd`；異宇宙分開目前活動、下一挑戰與歷史完成。特殊遭遇／結算尚無權威快照，明確 unavailable。GM 自由 fixture、授權及 iframe 同源檢查保持。

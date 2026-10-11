@@ -1,0 +1,276 @@
+{
+  "baseline": "a89d5e6fe8dd4783720dcffb0eb72b9651c7e40c",
+  "implementationCommit": "b2e7b946615f62a9703ef628c1d32426ddeb2a91",
+  "nonBrowserCommands": [
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-b18-coverage-guard.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-manifest-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/docs-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-global-writers.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/newstate-save-owner-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-runtime-early-restore-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-batch28-preflight.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/audio-lifecycle.test.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/audio-regression.test.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-glb-validation.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-data-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-attempt-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-combat-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-failure-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-progression-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-ui-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-batch4-3-regression.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-old-save-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-schema17-compatibility-matrix.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-level-migration-regression.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node scripts/publish-asset-audit.cjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/html-cache-version-guard.js --self-test",
+      "passed": true
+    },
+    {
+      "command": "python3 -B scripts/equipment-concepts.py validate",
+      "passed": true
+    }
+  ],
+  "browserCommands": [
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-preview-dom-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-gm-loader-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-3d-test-center-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-player-assets-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-assets-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-mode-browser-regression.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/startup-readiness-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-startup-preload-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-first-render-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/code-cleanup-batch7-lazy-loading.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/galaxy-3d-button-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-load-pipeline-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/publish-candidate-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/audio-lifecycle-browser.js",
+      "passed": true
+    }
+  ],
+  "browserEnvironment": {
+    "engine": "Playwright 1.55 Chromium 140 / SwiftShader",
+    "fontConfig": "isolated TTF/OTF directories; default environment WOFF2 selection produced blank text",
+    "viewports": [
+      [
+        1280,
+        800
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "releaseUrl": "http://127.0.0.1:4173/.publish-stage3/index.html"
+  },
+  "checks": {
+    "sharedLoaderUnitTests": 10,
+    "formalSnapshotUnitTests": 15,
+    "syntaxJsFiles": 388,
+    "domFixtureConfigurations": 38,
+    "gmCategories": 8,
+    "gmScenesPerViewport": 31,
+    "gltfValidatedFiles": 18,
+    "audioLifecycleUnitCases": 20,
+    "audioRegressionOwners": 9,
+    "audioNativeBrowserCases": 50,
+    "sourceManifestFiles": 489,
+    "publishedHttpShaFiles": 384
+  },
+  "release": {
+    "artifactCount": 384,
+    "artifactBytes": 36456413,
+    "officialBackgrounds": 32,
+    "officialMusic": 6,
+    "officialSfxFiles": 11,
+    "officialAudioFiles": 17
+  },
+  "playerMetrics": {
+    "characterFirstReadyMs": 3067,
+    "characterHotReadyMs": 2213,
+    "characterHotTransferredBytes": 0,
+    "released": {
+      "assets": {
+        "downloads": 3,
+        "downloadedBytes": 2724647,
+        "containers": 0,
+        "equipmentContainers": 0,
+        "failures": 0,
+        "cacheLimitBuffers": 8,
+        "cacheLimitBytes": 16777216,
+        "cachedBuffers": 3,
+        "cachedBytes": 2724647,
+        "pending": 0
+      },
+      "engines": 0,
+      "jsHeapUsedBytes": 60300000
+    }
+  },
+  "gmStartupSampleMs": {
+    "cold": 1987,
+    "warm": 1734,
+    "checked": 33,
+    "unchanged": 33,
+    "changed": 0
+  },
+  "performanceClaim": "No before/after speed improvement claimed; software GPU / single sample only.",
+  "unverified": [
+    "real iPhone / Safari / hardware GPU / weak network and long thermal test",
+    "real account / production cloud transactions",
+    "all true unlocked progression states and final art approval",
+    "new exact-HEAD Actions / deployed Pages pending after push"
+  ]
+}
