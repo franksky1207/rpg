@@ -1,6 +1,11 @@
 name: Publish Release Gate (Stage 4)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-release-gate.yml'
+      - 'scripts/build-publish-dry-run.cjs'
 permissions:
   contents: read
 jobs:
