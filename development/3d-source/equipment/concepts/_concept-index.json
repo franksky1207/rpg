@@ -45,10 +45,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 218994,
+          "sha256": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 235752,
+          "sha256": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -90,10 +105,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 261866,
+          "sha256": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 274886,
+          "sha256": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -135,10 +165,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g003-underground-military",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1496,
+          "height": 1051,
+          "bytes": 221198,
+          "sha256": "035df705ff62e46722740ad02dc5f888f88ad7bf9102a3288b678b31c7828525"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 229566,
+          "sha256": "b3aeb221c3164b7d914748a4094aa71a3c9a258f47a7a18398a8ae1f9bcfc480"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -180,10 +225,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1494,
+          "height": 1052,
+          "bytes": 239094,
+          "sha256": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1494,
+          "height": 1052,
+          "bytes": 315710,
+          "sha256": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -225,10 +285,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1494,
+          "height": 1052,
+          "bytes": 228040,
+          "sha256": "f3cfb23f7b04d5edd8d1d06aa59a302b9cf0ff15323077e17c68685b7691f055"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1495,
+          "height": 1052,
+          "bytes": 269020,
+          "sha256": "902c80ac9d20bca96397916c34a7080a4a408e19da0f02f4c76e88b07c06e940"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"

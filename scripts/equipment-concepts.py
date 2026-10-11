@@ -169,6 +169,8 @@ def image_info(file):
 def statuses(root, row):
     directory = root / row['directory']
     images = [image_info(directory / name) for name in IMAGES if (directory / name).is_file()]
+    if len(images) == 2 and images[0]['sha256'] == images[1]['sha256']:
+        fail(f'{row["id"]}: two concept images must differ')
     if row['id'] == 'g007':
         for name, expected in G007_HASHES.items():
             file = directory / name

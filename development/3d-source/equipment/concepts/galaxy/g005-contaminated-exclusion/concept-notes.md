@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,9 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## 2026-10-11｜G001～G005 概念圖試跑（待使用者確認）
+
+- 待確認的美術方向：圓弧隔離護板、橡膠密封接縫、雙側濾罐與紅色樣本偵測模組；防化輪廓。
+- 兩張標準 WebP 為實際影像生成器產出的概念設計稿，非 Blender／GLB 或正式遊戲畫面。全遮臉，鞋子成對，五槽獨立拆解；入庫僅待審，不代表批准。
+- 圖片尺寸、容量與 SHA 由總索引依實際檔案衍生。精確結構、跨視圖接縫及掛點尺寸仍須後續建模前確認。

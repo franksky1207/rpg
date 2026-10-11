@@ -8,11 +8,11 @@
 
 | ID / notes 目錄 | 正式區域／Boss／階數 | 等級 | 武器 | 頭盔 | 鎧甲 | 鞋子 | 飾品 | 概念／批准／模型 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [G001](../development/3d-source/equipment/concepts/galaxy/g001-fallen-city/concept-notes.md) | 地球戰爭 → 城市淪陷區 | Lv.1～5（區域範圍） | 破門短刃 | 巷戰防護盔 | 城防插板甲 | 街區突進靴 | 戰場識別牌 | not-generated / false / not-started |
-| [G002](../development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/concept-notes.md) | 地球戰爭 → 郊區防衛線 | Lv.6～10（區域範圍） | 壕溝軍刀 | 哨戒戰盔 | 防線重甲 | 越野作戰靴 | 前線測距儀 | not-generated / false / not-started |
-| [G003](../development/3d-source/equipment/concepts/galaxy/g003-underground-military/concept-notes.md) | 地球戰爭 → 地下軍事設施 | Lv.11～15（區域範圍） | 試作振動刃 | 地堡密封盔 | 實驗型護甲 | 封鎖區戰靴 | 軍規解碼器 | not-generated / false / not-started |
-| [G004](../development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/concept-notes.md) | 地球戰爭 → 荒漠戰區 | Lv.16～20（區域範圍） | 沙暴斬刀 | 防砂戰術盔 | 沙地複合甲 | 荒漠疾行靴 | 熱源追獵器 | not-generated / false / not-started |
-| [G005](../development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/concept-notes.md) | 地球戰爭 → 污染禁區 | Lv.21～25（區域範圍） | 蝕毒軍刃 | 全罩防化面盔 | 生化隔離甲 | 污染區封閉靴 | 異變偵測器 | not-generated / false / not-started |
+| [G001](../development/3d-source/equipment/concepts/galaxy/g001-fallen-city/concept-notes.md) | 地球戰爭 → 城市淪陷區 | Lv.1～5（區域範圍） | 破門短刃 | 巷戰防護盔 | 城防插板甲 | 街區突進靴 | 戰場識別牌 | images-present-awaiting-user-review / false / not-started |
+| [G002](../development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/concept-notes.md) | 地球戰爭 → 郊區防衛線 | Lv.6～10（區域範圍） | 壕溝軍刀 | 哨戒戰盔 | 防線重甲 | 越野作戰靴 | 前線測距儀 | images-present-awaiting-user-review / false / not-started |
+| [G003](../development/3d-source/equipment/concepts/galaxy/g003-underground-military/concept-notes.md) | 地球戰爭 → 地下軍事設施 | Lv.11～15（區域範圍） | 試作振動刃 | 地堡密封盔 | 實驗型護甲 | 封鎖區戰靴 | 軍規解碼器 | images-present-awaiting-user-review / false / not-started |
+| [G004](../development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/concept-notes.md) | 地球戰爭 → 荒漠戰區 | Lv.16～20（區域範圍） | 沙暴斬刀 | 防砂戰術盔 | 沙地複合甲 | 荒漠疾行靴 | 熱源追獵器 | images-present-awaiting-user-review / false / not-started |
+| [G005](../development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/concept-notes.md) | 地球戰爭 → 污染禁區 | Lv.21～25（區域範圍） | 蝕毒軍刃 | 全罩防化面盔 | 生化隔離甲 | 污染區封閉靴 | 異變偵測器 | images-present-awaiting-user-review / false / not-started |
 | [G006](../development/3d-source/equipment/concepts/galaxy/g006-polar-front/concept-notes.md) | 地球戰爭 → 極地戰線 | Lv.26～30（區域範圍） | 霜鋼長刃 | 極寒封閉盔 | 冰原保溫甲 | 雪地抓地靴 | 熱源定位器 | not-generated / false / not-started |
 | [G007](../development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/concept-notes.md) | 地球戰爭 → 古代科技遺址 | Lv.31～35（區域範圍） | 古代光刃 | 遺物守衛盔 | 自律護衛甲 | 遺跡浮行靴 | 古文明鑰印 | images-present-awaiting-user-review / false / existing-model-concept-alignment-unverified |
 | [G008](../development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/concept-notes.md) | 地球戰爭 → 火山兵器基地 | Lv.36～40（區域範圍） | 熔蝕重刃 | 高熱隔離盔 | 熔核耐熱甲 | 熱區推進靴 | 反應爐調節器 | not-generated / false / not-started |

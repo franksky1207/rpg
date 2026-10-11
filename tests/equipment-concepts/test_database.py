@@ -41,7 +41,12 @@ class DatabaseTests(unittest.TestCase):
         rows=self.run_db()
         self.assertEqual([sum(r['epoch']==e for r in rows) for e in ('galaxy','universe','higher')],[100,100,10])
         self.assertEqual(sum(len(r['equipmentNames']) for r in rows),1050)
-        self.assertEqual(sum(bool(r['images']) for r in rows),1)
+        for row in rows:
+            expected=[m.image_info(self.root/row['directory']/name) for name in m.IMAGES
+                      if (self.root/row['directory']/name).is_file()]
+            self.assertEqual(row['images'],expected)
+            self.assertEqual(row['conceptStatus'], 'images-present-awaiting-user-review' if len(expected)==2
+                             else 'partial-images' if expected else 'not-generated')
         self.assertFalse(any(r['conceptApproved'] for r in rows))
         self.assertEqual(rows[6]['regionOrBoss'],'地球戰爭 → 古代科技遺址')
         self.assertEqual(rows[6]['modelStatus'],'existing-model-concept-alignment-unverified')
@@ -76,7 +81,7 @@ class DatabaseTests(unittest.TestCase):
         note=self.note();note.write_text(note.read_text().replace('| 破門短刃 |','| 假名稱 |',1))
         with self.assertRaisesRegex(ValueError,'missing/stale notes'):self.run_db()
     def test_wrong_missing_image_status_rejected(self):
-        self.mutate_index(lambda d:d['sets'][0].update(conceptStatus='approved',conceptApproved=True))
+        self.mutate_index(lambda d:d['sets'][5].update(conceptStatus='approved',conceptApproved=True))
         with self.assertRaisesRegex(ValueError,'Index differs'):self.run_db()
     def test_g007_tampering_rejected_without_writes(self):
         file=self.note('g007').parent/m.IMAGES[0]
@@ -86,6 +91,12 @@ class DatabaseTests(unittest.TestCase):
     def test_corrupt_webp_rejected(self):
         file=self.note().parent/m.IMAGES[0];file.write_bytes(b'RIFF-not-an-image')
         with self.assertRaisesRegex(ValueError,'Invalid WebP'):self.run_db()
+    def test_identical_concept_images_rejected_without_writes(self):
+        directory=self.note().parent
+        shutil.copyfile(directory/m.IMAGES[0],directory/m.IMAGES[1])
+        before=self.snapshot()
+        with self.assertRaisesRegex(ValueError,'two concept images must differ'):self.run_db(True)
+        self.assertEqual(before,self.snapshot())
     def test_real_image_dimensions_bytes(self):
         info=m.image_info(self.note('g007').parent/m.IMAGES[0])
         self.assertEqual((info['width'],info['height'],info['bytes']),(1491,1055,224974))
