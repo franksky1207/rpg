@@ -1,0 +1,28 @@
+name: Publication Dry Run (Stage 3)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-publish-dry-run.cjs'
+      - '.github/workflows/publish-dry-run.yml'
+      - 'docs/PUBLISH_ASSET_STAGE3_2026-10-11.md'
+permissions:
+  contents: read
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build offline website candidate (no deployment)
+        run: node scripts/build-publish-dry-run.cjs
+      - name: Upload size and dependency report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stage3-publish-size-report
+          path: publish-stage3-report.json
+          if-no-files-found: warn
