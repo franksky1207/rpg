@@ -71,6 +71,8 @@ assert.equal(listened.at(-1),"era-higher-theme","settled battle must restore the
 audio.syncView("home");
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,true,"galaxy combat view must acquire battle theme");
+audio.notify("combat-start",{era:"galaxy",mode:"boss"});
+assert.equal(listened.at(-1),"battle-medium-preview","explicit Boss battle overrides legacy screen entry");
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit");
 audio.syncView("adventure","combat");
