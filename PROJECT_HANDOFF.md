@@ -1,3 +1,8 @@
+## 2026-10-11｜3D 第 28-A 批：五槽技術契約完成（尚未產生裝備 GLB）
+- 已在最新 main 核對第 27 批人物 53 骨骼、九掛點與低中高 LOD，確認正式五槽 snapshot、幾何備援、資產 registry 和前置安全接口。完整可執行施工界線見 [28-A 技術契約](docs/3D_BATCH28A_TECHNICAL_CONTRACT_2026-10-11.md)；風險前置規範見 [28 批風險封鎖](docs/3D_BATCH28_PREFLIGHT_RISK_LOCK_2026-10-11.md)。
+- 第 28-A 僅固定五槽 asset identity、掛點與骨架不變、rigid/skinned 區分、雙鞋/頭甲遮蔽、readonly 正式與 GM、按需載入/回退、測試及分工。已有 `resolveEquipment()`／`equipmentSession()` 為前置接口，但尚未把真正裝備模型掛到正式人物；`asset-registry.json` 還沒有裝備 GLB。
+- 第 28-B 仍須完成真實 GLB runtime loader/掛裝、依實際 GLB mesh 分區遮蔽和 rig joint 對照；第 28-C 才開始 Blender 五槽模型/LOD 的集中製作。28-A 不改遊戲公式、玩家存檔、音樂、SW、Pages 或已接受的第 27 批人物模型。Actions／真實 iPhone GPU 尚待實際驗收。
+
 ## 2026-10-11｜第 27 批第三階段快速精修（待使用者外觀確認）
 - 以 main `894babdbc484176c6a71aaf2d689283db9445f00` 延續真人科幻基座，局部放大頭顱／縮頸、降低高領、加強既有五官圖，同一 idle clip 改自然垂臂／微彎手指及輕呼吸；人物專用正背燈光／初始手機鏡頭。修正 GLB 臉部重複頂點染色與領口 UV 重複髮色。
 - 來源拓樸、所有 skin weights 與 53 骨骼 rest 契約不變，九掛點最大浮點差 <1e-6；五材質與 512/1024 atlas 不增成本，LOD 面數相同、合計約 7.44 MB（原 7.62）。沒有重建 loader／快取／GM／發布架構，不改音訊、公式或存檔，不開始第 28～40 批。
