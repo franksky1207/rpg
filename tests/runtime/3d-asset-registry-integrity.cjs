@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),asse
 const {inspectRegistry,glb}=require('../../scripts/asset-registry.cjs');
 const policy=require('../../scripts/publish-assets.cjs');
 const root=path.resolve(__dirname,'../..'),files=new Set(cp.execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean));
-const result=inspectRegistry(root,files);assert.equal(result.entries.length,4);
+const result=inspectRegistry(root,files);assert.ok(result.entries.length>=4);assert.equal(result.entries.filter(a=>a.type==='character').length,3);assert.equal(result.entries.filter(a=>a.type==='decoder').length,1);
 const registry=result.registry,source=registry.assets.find(a=>a.type==='character').source.path;
 assert.ok(fs.readFileSync(path.join(root,source)).subarray(0,7).equals(Buffer.from('BLENDER')),'real Blender source header');
 for(const a of result.entries.filter(a=>a.type==='character')){
