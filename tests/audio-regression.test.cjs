@@ -78,4 +78,35 @@ audio.notify("combat-exit",{runId:"stale-run"});
 assert.equal(audio.current().combatLocked,true,"late exit must not clear a new run");
 audio.notify("combat-exit",{runId:"new-run"});
 assert.equal(audio.current().combatLocked,false);
+
+// Deferred animation release may arrive after the next formal run starts.
+const scheduled=[],deferredTracks=[];
+const delayed={
+ document:{querySelector:()=>null,addEventListener(){},body:{},hidden:false},
+ MutationObserver:class{observe(){}},
+ state:{worldPhase:1},view:"adventure",adventureScreen:"combat",
+ setTimeout(fn){scheduled.push(fn);},console,window:null,
+ isCombatPresentationActive:()=>true
+};
+delayed.CivilizationAudio={
+ settings:()=>({musicEnabled:true}),isSilent:()=>false,prioritizeEraTheme(){},
+ playMusic(id){deferredTracks.push(id);this.id=id;return true;},
+ currentMusicId(){return this.id||null;},resumeMusic(){return true;},
+ stopBattleSfx(){},warmCombatSfx(){}
+};
+delayed.window=delayed;vm.createContext(delayed);
+vm.runInContext(source("audio/audio-scenes.js"),delayed);
+const d=delayed.CivilizationAudioScenes;
+d.notify("combat-start",{era:"galaxy",mode:"battle",runId:"old"});
+d.notify("combat-exit",{runId:"old"});
+assert.equal(d.current().pendingExit,true);
+d.notify("combat-start",{era:"galaxy",mode:"boss",runId:"new"});
+assert.equal(deferredTracks.at(-1),"battle-medium-preview","new battle must replace pending old soundtrack");
+scheduled.splice(0).forEach(fn=>fn());
+assert.equal(d.current().combatLocked,true,"stale animation callback must not release new run");
+assert.equal(deferredTracks.at(-1),"battle-medium-preview");
+delayed.isCombatPresentationActive=()=>false;
+d.notify("combat-exit",{runId:"new"});
+assert.equal(d.current().combatLocked,false);
+assert.equal(deferredTracks.at(-1),"era-galaxy-theme");
 console.log("Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.");
