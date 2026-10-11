@@ -43,7 +43,9 @@ assert.ok(gmCenter.includes("Civilization3DAppearance.scene(kind,a)"),"Formal GM
 assert.ok(gmCenter.includes('"3d-test/appearance-snapshot.js","./appearance-snapshot.js"'),"GM must load shared appearance adapter with resource manifest");
 assert.ok(gmCenter.includes('return entries.map(([path,url],i)=>'),"GM must fall back per missing digest, not revert the entire resource set");
 assert.ok(gmCenter.includes('typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)'),"GM manifest digests must be validated");
-assert.ok(gmCenter.includes('20261010-dual-mode-preflight3'),"GM and formal appearance fallbacks must match");
+const formalAppearanceFallback=bridge.match(/const APPEARANCE_SRC="3d-test\/appearance-snapshot\.js\?v=([^"]+)"/)?.[1];
+const gmAppearanceFallback=gmCenter.match(/"\.\/appearance-snapshot\.js\?v=([^"]+)"/)?.[1];
+assert.ok(formalAppearanceFallback&&gmAppearanceFallback&&formalAppearanceFallback===gmAppearanceFallback,"GM and formal appearance fallbacks must match");
 assert.ok(engine.includes("function visualMaterial("),"3D material construction must expose a shared helper");
 for(const api of ["function mount(","function createScene(","function createEpochScene("]){
  assert.ok(engine.includes(api),"Legacy 3D entrypoint preserved until consumer audit: "+api);
