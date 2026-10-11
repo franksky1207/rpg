@@ -57,6 +57,7 @@ async function attach(scene,args){
   for(const [slot,name] of Object.entries(doc.slots)){const node=nodes.find(n=>n.name===name);if(!node)throw Error('人物掛點缺少');sockets[slot]=node.name;}
   container.addAllToScene();stats.containers++;counted=true;
   container.animationGroups[0].start(true,1);
+  await prepareEquipment(scene,args,doc,quality,nodes);
   scene.onDisposeObservable.addOnce(()=>{container.dispose();if(counted){stats.containers--;counted=false;}});
   scene.metadata.civilization3dCharacter={...scene.metadata.civilization3dCharacter,
    assetKind:'skinned-glb',assetId:asset.id,sha256:asset.sha256,quality,artStatus:doc.artStatus,
@@ -93,7 +94,7 @@ function equipmentSession(scene){
    }
    if(disposed||scene.isDisposed||mine!==generation)return false;
    for(const slot of [...owned.keys()])if(!desired.has(slot)||staged.has(slot))release(slot);
-   for(const [slot,entry] of staged){owned.set(slot,entry);}
+   for(const [slot,entry] of staged){entry.commit?.();owned.set(slot,entry);}
    staged.clear();
    return true;
   }finally{for(const e of staged.values())try{e.dispose();}catch(_){}}
