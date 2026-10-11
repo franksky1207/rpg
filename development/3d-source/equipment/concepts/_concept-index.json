@@ -661,10 +661,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 282330,
+          "sha256": "1a5e4e177883cceda4627fdfbfa418c59cbb9b214501e278b8621d470207fac7"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 281700,
+          "sha256": "296bbbb102119d0de525db63f763d93579e170158d2222e588a3b00d299d9788"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -706,10 +721,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 208768,
+          "sha256": "8e4c7b13915f7d56fba3a647d5ff043f95117fc506478d8022441049383fcd47"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 231800,
+          "sha256": "f02e690f1836f93237803e591d40f45910781c55a1b9f6bb7ff4ab77d64cd666"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -751,10 +781,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 350862,
+          "sha256": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 331162,
+          "sha256": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -796,10 +841,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 311356,
+          "sha256": "b366a95b47b1bc1ab55c0b4231df1a05d93ab0d4bcd07e04e4a03b784deec3f2"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 309736,
+          "sha256": "956fb7158385058f3686ae6c15415bf928c0763b910eb784533d633093786078"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -841,10 +901,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 377854,
+          "sha256": "7db6a6860becdb4dc6d1f8279579691a5eca87a78b620f56211821ea4a18cc94"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 387978,
+          "sha256": "1d0659d71c414eeab43211f45a037ea56c9b3a5e188dda2dd2616f5f5f98397d"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -886,10 +961,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 244882,
+          "sha256": "7239b312b4e3e5ba525d67f779154bf051817cf6832a25c93e7c4d9dcaf60cb6"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 293564,
+          "sha256": "b5eb3b7779615ce5f11771f8a4091174def09ba3a6bba021a65d68d5d9cba9a1"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -931,10 +1021,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 330288,
+          "sha256": "5588161b8b19f02fb84180a566d76c641ef2249531a6e2861c66f0538617a125"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 336194,
+          "sha256": "60a670dcf3ea92bba37724a62cc59f48d369d3581bce8ee61bce0be83d973e41"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -976,10 +1081,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 260864,
+          "sha256": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 273190,
+          "sha256": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -1021,10 +1141,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 229056,
+          "sha256": "2877d42e51da3bbb8f18db21a964711dc2fa4eb01d90bd4eb94432aaee588968"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 253668,
+          "sha256": "317aa6e5702152e0e9fe8ac4915d1d3418a86bf9eac11fad90c86ef7a0afae1f"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -1066,10 +1201,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1492,
+          "height": 1054,
+          "bytes": 329654,
+          "sha256": "be74681baa90b1cd1eaa80bab2777f8bfe1fe0a2f1a234c3182c1b11b0605d9c"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 312418,
+          "sha256": "ad91922ed12174edd81e2071a4682915b14370c269ebdadba50a5191ce0d86e0"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"

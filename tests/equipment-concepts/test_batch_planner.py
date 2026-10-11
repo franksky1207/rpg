@@ -24,11 +24,21 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(groups[0]["status"],"images-ready-awaiting-review")
     def test_next_batch_is_safe_to_resume(self):
         group=planner.plan(batch="g02")[0]
-        self.assertEqual((group["range"],group["imagesMissing"]),("g011..g020",20))
+        self.assertEqual(group["range"],"g011..g020")
+        self.assertEqual(len(group["sets"]),10)
+        catalog=json.loads((ROOT/planner.BASE/"_concept-index.json").read_text())["sets"]
+        missing=0
         for row in group["sets"]:
-            self.assertEqual(row["present"],[])
-            self.assertEqual(row["missing"],list(planner.IMAGES))
+            present=[name for name in planner.IMAGES if (ROOT/row["directory"]/name).is_file()]
+            absent=[name for name in planner.IMAGES if name not in present]
+            self.assertEqual(row["present"],present)
+            self.assertEqual(row["missing"],absent)
+            self.assertFalse(set(row["present"]) & set(row["missing"]))
             self.assertEqual(len(row["equipmentNames"]),5)
+            self.assertEqual(row["equipmentNames"],next(r["equipmentNames"] for r in catalog if r["id"]==row["id"]))
+            missing+=len(absent)
+        self.assertEqual(group["imagesMissing"],missing)
+        self.assertEqual(group["imagesPresent"],20-missing)
     def test_actual_first_batch_is_not_redrawn(self):
         group=planner.plan(batch="G01")[0]
         self.assertFalse(any(row["missing"] for row in group["sets"]))

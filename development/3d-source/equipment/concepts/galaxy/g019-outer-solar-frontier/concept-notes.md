@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,10 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. B01 概念候選（人工補充；尚待確認）
+
+- 本次視覺方向：深空分叉保溫長衣、長程推進靴、切界刃與獨立航標天線。
+- 兩張候選已入庫，但未獲使用者批准；正式狀態由 A 節及索引衍生。
+- 圖冊、來源核對、容量／SHA 與修圖紀錄見 [B01 報告](../../../../../../docs/3D_EQUIPMENT_CONCEPT_B01_G011_G020_2026-10-11.md)。
+- 圖面小字不作正式名稱依據；裝備尺度、掛點與混搭可行性尚未進行模型驗證。
