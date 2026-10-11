@@ -1,3 +1,9 @@
+## 2026-10-11｜3D 第 27～40 批「原始檔／發布檔」雙軌完整規劃與 Codex 協作（新基準）
+- **優先閱讀** `docs/3D_BATCH27_40_SOURCE_VS_PUBLISH_MASTER_PLAN_2026-10-11.md`。承接舊版 `docs/3D_AUDIO_AND_BATCH27_40_MASTER_PLAN_2026-10-10.md`、本檔與 `3D_IMPLEMENTATION_PLAN.md` 的正式功能、美術、音效和驗收要求，不得降低 1,050 裝備位置對照、三紀元/高維/異宇宙 200×5、全正式頁及模式覆蓋。
+- **新規則**：Blender 原始工程、high-poly、貼圖母件、錄音源和授權台帳完整留在 GitHub 的開發檔區；玩家 GitHub Pages 只發布經依賴核對的 GLB／貼圖／動畫／正式音檔與必需 JS/CSS。使用現有 `scripts/publish-assets.cjs`、`scripts/build-publish-dry-run.cjs`、`.github/workflows/publish-optimized-pages.yml` 的 Actions 發布，不可只搬資料夾就假定不發布。基線 Pages 約 27.57 MB（2026-10-11），新增正式高畫質 3D 容量隨批實測且按需下載、手機 LOD/資源釋放；規劃門檻見新文件，屬內部目標非 GitHub 官方法規。
+- **Codex 主動討論規則（使用者明確要求）**：遇到大量檔案／模型產生與轉檔／大規模身份映射／多輪 CI 修復／數十個以上回歸與長測等較適合大量執行的工作，**先主動和使用者討論是否改由 Codex 承接**，說清本聊天與 Codex 的效率與限制；普通小修直接處理。選擇 Codex 時給一份可複製的完整 prompt，包含 main 實際檔案、source/publish 成果、測試、安全規則、回退與提交；Codex 完工後應回到 GitHub 獨立核對。不可未經要求聲稱已交 Codex 或私自切換工具。
+- 後續每批仍須尊重「先討論不改；修改/執行可改 main」、main 唯一真實來源、JS/CSS cache-bust、完整 GitHub Actions、GM 測試中心整合、四項固定回報與玩家真機驗收。此項只更新規劃文件與交接，**不代表第 27～40 批開始施工**。
+
 ## 2026-10-11｜發布容量第 4 階段全面修復與自動驗收（正式 Pages 未切換）
 - 以 `f4a4e13662f2ac804ba4402ccdf31796d1876f3d` 承接 main；實際 Pages API 確認 `build_type=legacy`、`source=main:/`，保留原發布來源。
 - 已讀取 Stage 4／GM／銀河 3D 的實際失敗日誌：3D mode 網址錯誤串接 `index.html3d-test/`、GM postMessage 讀取競速、銀河測試在按需 runtime 尚未載入就呼叫 create。沿用已存在的 GM 測試中心網址與競技場精確匹配修正，沒有回退正確修改。
