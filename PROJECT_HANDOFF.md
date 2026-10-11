@@ -1,3 +1,7 @@
+## 2026-10-11｜發布容量第 4 階段：安全驗收關卡（尚未切換正式網站）
+- 新增 `.github/workflows/publish-release-gate.yml`，使用第 3 階段的精簡乾跑包啟動 Chromium browser smoke、啟動流程、GM 3D 測試中心及 3D mode regression，並上傳容量報告。詳情見 `docs/PUBLISH_ASSET_STAGE4_2026-10-11.md`。
+- **嚴格禁止在 CI、實機、帳號雲端、音訊、Pages source/回退路徑均未驗收前切換正式 Pages**。目前只能確認檔案提交，無法確認 Actions 成功或實機通過；正式網站保持原部署方式。不得說「第 4 階段已全部完成並發布」。
+
 ## 2026-10-11｜發布容量優化第 3 階段：精簡網站乾跑（未切換 Pages）
 - 新增 `scripts/build-publish-dry-run.cjs`、`.github/workflows/publish-dry-run.yml` 與 `docs/PUBLISH_ASSET_STAGE3_2026-10-11.md`。僅產生獨立 `.publish-stage3/` 測試成品與容量 JSON，**完全不會部署到正式網站**。
 - 正式背景 32 張 WebP；正式音樂 6 首，戰鬥音效為 5 種「類別」，但正式播放池實際使用 11 個音效 OGG，合計 **17 個需要打包的音訊實體檔**。以正式 `audio/audio-core.js` 為準，不能因「11 種聲音」就只打包 11 個檔案。
