@@ -1,3 +1,8 @@
+## 2026-10-11｜3D 大批量產第 2 批：批次進度與續跑安全
+- 新增 `scripts/equipment-concept-batches.py`（只讀），由正式索引及每套圖片檔案推導 G01～G10／U01～U10／H01 共 21 批的張數、待審／批准與缺圖。執行 `python3 scripts/equipment-concept-batches.py status` 或 `plan --batch G02` 查接續清單（G02 對應 G011～G020）。
+- 工具遇到索引／實際圖片不符會停止，列出已有圖供保護而不是覆蓋。續跑須先 validate、生成前檢查路徑、生成後跑 generate／validate／unittest、再次 generate 零差異；無新真實進度台帳。
+- 新增 `tests/equipment-concepts/test_batch_planner.py`，且專用 CI 已串接。流程說明見 [資料庫維護](docs/3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)。本批未修改任何正式名稱、已入庫 WebP、模型、遊戲或資產發布策略。
+
 ## 2026-10-11｜3D 大批量產第 1 批：文件治理與美術方向
 - 新增 [3D 資產跨批次量產總規範](docs/3D_ASSET_PRODUCTION_MASTER_RULES.md)及[210 套裝備三紀元美術方向](docs/3D_EQUIPMENT_ART_DIRECTION.md)，固定正式來源、十套批次、待審／批准／模型隔離、重跑續做、風格多樣性、圖片 WebP 與開發／發布隔離。
 - 現有 [概念圖 SOP](docs/3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)及[210 套命名規範](docs/3D_EQUIPMENT_210_SET_CONCEPT_NAMING_STANDARD_2026-10-11.md)加入新文件入口。進度只從程式正式來源、檔案／批准證據及 `_concept-index.json` 腳本衍生，**不另造人工同步進度表**。
