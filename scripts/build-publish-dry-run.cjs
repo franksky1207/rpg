@@ -30,7 +30,6 @@ const totals={trackedBytes:files.reduce((a,p)=>a+bytes(p),0),selectedBytes:keep.
 if(fs.existsSync(dest))fs.rmSync(dest,{recursive:true,force:true});
 fs.mkdirSync(dest,{recursive:true});
 for(const p of keep){const out=path.join(dest,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.copyFileSync(path.join(root,p),out);}
-const manifestScript=path.join(root,"scripts/generate-resource-manifest.py");
 
 // Existing manifest generator is source-root-relative; it would scan the unfiltered tree.
 // Instead preserve only fingerprint entries for files present in the dry-run artifact.
@@ -43,7 +42,7 @@ const refs=[];
 for(const p of keep.filter(x=>x.endsWith(".html")||x.endsWith(".css"))){
  const data=fs.readFileSync(path.join(dest,p),"utf8");
  const pattern=p.endsWith(".html")?/(?:src|href|data-src)=["']([^"'?#]+)[^"']*["']/g:/url\(\s*["']?([^)'"]+)["']?\s*\)/g;
- for(const m of data.matchAll(pattern)){const u=m[1].split(/[?#]/)[0];if(!u||/^(?:https?:|data:|\/\/|#)/.test(u))continue;const f=path.posix.normalize(path.posix.join(path.posix.dirname(p),u));if(f.startsWith("../"))continue;if(!fs.existsSync(path.join(dest,f)))refs.push({from:p,missing:f});}
+ for(const m of data.matchAll(pattern)){const u=m[1].split(/[?#]/)[0];if(!u||/^(?:https?:|data:|\/\/|#|mailto:|javascript:)/.test(u)||!(/\.(?:html|js|css|json|png|webp|jpg|jpeg|svg|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|avif)$/i.test(u)))continue;const f=path.posix.normalize(path.posix.join(path.posix.dirname(p),u));if(f.startsWith("../"))continue;if(!fs.existsSync(path.join(dest,f)))refs.push({from:p,missing:f});}
 }
 report.missingDirectRefs=refs;
 const out=path.join(root,"publish-stage3-report.json");
