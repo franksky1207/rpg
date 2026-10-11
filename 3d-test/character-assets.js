@@ -70,6 +70,39 @@ async function attach(scene,args){
  }
 }
 
+
+async function prepareEquipment(scene,args,doc,quality,nodes){
+ const resolver=global.Civilization3DAppearance?.resolveEquipment;
+ if(!doc.equipment||typeof resolver!=='function')return;
+ const selected=resolver(args.modelDescriptors||[],doc,quality);
+ const session=equipmentSession(scene),found=new Map(nodes.map(n=>[n.name,n]));
+ const equipped=[];
+ const status={};
+ async function load(d){
+  const a=doc.assets.find(a=>a.id===d.assetId&&a.type==='equipment'&&a.slot===d.type&&a.quality===quality&&a.sha256===d.sha256);
+  const parent=found.get(doc.slots[d.type]);
+  if(!a||a.mount!=='rigid'||a.rigContract!==doc.rigContract||!parent)throw Error('equipment-contract');
+  const data=await verified(a);
+  const file=new File([data],a.path.split('/').pop(),{type:'model/gltf-binary'});
+  const box=await global.BABYLON.SceneLoader.LoadAssetContainerAsync('file:',file,scene,undefined,'.glb');
+  if(scene.isDisposed||args.signal?.aborted||args.isCurrent?.()===false){box.dispose();throw Error('preview-cancelled');}
+  if(box.skeletons.length||!box.meshes.some(m=>m.getTotalVertices()>0)){box.dispose();throw Error('equipment-invalid');}
+  const roots=box.rootNodes?.length?box.rootNodes:box.meshes.filter(m=>!m.parent);
+  return {dispose:()=>box.dispose(),commit:()=>{box.addAllToScene();for(const n of roots)n.parent=parent;}};
+ }
+ for(const d of selected){
+  if(!d.present){status[d.type]='empty';continue;}
+  if(!d.assetId){status[d.type]='geometry-fallback';continue;}
+  try{
+   if(await session.update([...equipped,d],load)){equipped.push(d);status[d.type]='mounted';}
+  }catch(_){status[d.type]='fallback';}
+ }
+ if(!scene.isDisposed)scene.metadata.civilization3dCharacter={
+  ...scene.metadata.civilization3dCharacter,equipmentStatus:status,
+  hidePolicy:'no-hide-without-verified-region-mesh'
+ };
+}
+
 /* Equipment update owner is per scene, never global/player state.
    A stale completion is disposed rather than committed. */
 function equipmentSession(scene){
