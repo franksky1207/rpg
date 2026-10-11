@@ -23,6 +23,24 @@ function modelDescriptors(appearance){
  const a=appearance||{};
  return SLOTS.map(type=>modelDescriptor(type,a.equipment?.[type],a.world,a.enhancements?.[type]));
 }
+
+/* Batch 28 preflight: resolve only explicit approved registry identities.
+   Never infer model paths or mutate the formal inventory. */
+function resolveEquipment(descriptors,registry,quality='medium'){
+ const allowed=['low','medium','high'];
+ const lod=allowed.includes(quality)?quality:'medium';
+ const entries=Array.isArray(registry?.assets)?registry.assets:[];
+ return SLOTS.map((slot,i)=>{
+  const descriptor=Array.isArray(descriptors)?descriptors.find(x=>x?.type===slot):null;
+  const d=descriptor||{type:slot,present:false};
+  const mapping=registry?.equipment?.[slot];
+  const id=mapping?.[lod];
+  const asset=entries.find(a=>a.id===id&&a.type==='equipment'&&a.slot===slot&&a.quality===lod&&a.preload===false);
+  if(!d.present)return Object.freeze({...d,type:slot,present:false,assetId:null,assetKind:'none',fallback:null});
+  if(!asset)return Object.freeze({...d,type:slot,assetId:null,assetKind:'geometry-fallback',fallback:'procedural-geometry'});
+  return Object.freeze({...d,type:slot,assetId:asset.id,assetKind:'equipment-glb',sha256:asset.sha256,mount:asset.mount,fallback:'procedural-geometry'});
+ });
+}
 function capture(){
  const s=typeof state!=="undefined"?state:global.state;
  if(!s||typeof s!=="object")return null;
@@ -59,5 +77,5 @@ function scene(kind,appearance){
  if(kind==="forge")return {world:a.world,cap:a.enhancementCap,slots:SLOTS.map(type=>({level:a.enhancements[type],invalid:a.enhancements[type]<a.enhancementMin})),appearance:a,modelDescriptors:modelDescriptors(a),appearanceSource:a.source==="formal"?"formal":"fixture"};
  return {world:a.world,appearance:a};
 }
-global.Civilization3DAppearance=Object.freeze({version:3,slotIds:SLOTS,capture,scene,modelDescriptor,modelDescriptors});
+global.Civilization3DAppearance=Object.freeze({version:3,slotIds:SLOTS,capture,scene,modelDescriptor,modelDescriptors,resolveEquipment});
 })(window);
