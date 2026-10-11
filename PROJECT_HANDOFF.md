@@ -1,3 +1,7 @@
+## 2026-10-11｜三紀元全部 helmet 頭部裝備：穿戴時不露臉（正式規則）
+- 已正式寫入 [頭部裝備不露臉規則](docs/3D_HELMET_FULL_FACE_VISUAL_RULE_2026-10-11.md)：銀河 100、宇宙 100、高維 10，合計 210 個頭部裝備名稱位置。穿戴時不得直接看見人物五官；卸裝必須恢復第 27 批人物臉部。冠、冕、環、視域、法眼等**不必做成傳統鋼盔**，可採能量遮面、懸浮感知與高維遮蔽，但同樣不露臉。
+- 第 28-C 首套選「古代科技遺址」五件正式裝備（古代光刃、遺物守衛盔、自律護衛甲、遺跡浮行靴、古文明鑰印）；「遺物守衛盔」必須完整遮臉，不能開面罩露臉。規則已入 GitHub；第 28-C Blender/GLB 與實際遮蔽尚未執行，不能宣稱驗收完成。
+
 ## 2026-10-11｜3D 第 28-B 批：五槽真實 GLB 載入接口（有條件完成）
 - 最新實作及尚待 Blender 模型的限制見 [第 28-B 驗收說明](docs/3D_BATCH28B_RUNTIME_INTEGRATION_2026-10-11.md)。正式 `createCharacterScene` 沿用人物 GLB loader，`character-assets.js` 補五槽 `prepareEquipment()`，只接明確登錄、SHA 正確且 rig/slot/LOD 相容的 rigid GLB，使用場景專屬 `equipmentSession` 控制取消與 GPU 容器釋放；GM 正式角色亦沿用場景工廠。
 - 目前 registry **沒有裝備 GLB**，真正五槽蒙皮、mask mesh 分段與穿模尚無實際素材，不能宣稱完成上身。未驗證 skinned bind 一律安全拒絕，人物遮蔽保持原狀。現階段即時熱切接口和裝備陳列轉正式 GLB 尚待後續整合。
