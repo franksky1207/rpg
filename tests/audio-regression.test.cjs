@@ -66,20 +66,19 @@ audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit",{era:"galaxy"});
 assert.equal(listened.at(-1),"era-higher-theme","settled battle must restore the actual current era");
-// Galaxy mainline can enter combat through a view transition.
-ctx.state.worldPhase=1; After settlement
+// Galaxy mainline can enter combat through a view transition. After settlement
 // the same DOM must not start the soundtrack again.
+ctx.state.worldPhase=1;
 audio.syncView("home");
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,true,"galaxy combat view must acquire battle theme");
+assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-start",{era:"galaxy",mode:"boss"});
 assert.equal(listened.at(-1),"battle-medium-preview","explicit Boss battle overrides legacy screen entry");
-assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit");
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,false,"settlement modal must not relock");
 assert.equal(listened.at(-1),"era-galaxy-theme");
-// Mainline settlement keeps adventureScreen='combat' behind the result modal.
 audio.notify("combat-start",{era:"galaxy",mode:"boss"});
 audio.notify("combat-exit");
 audio.syncView("adventure","combat");
@@ -91,7 +90,6 @@ audio.notify("combat-exit",{runId:"stale-run"});
 assert.equal(audio.current().combatLocked,true,"late exit must not clear a new run");
 audio.notify("combat-exit",{runId:"new-run"});
 assert.equal(audio.current().combatLocked,false);
-
 // Deferred animation release may arrive after the next formal run starts.
 const scheduled=[],deferredTracks=[];
 const delayed={
