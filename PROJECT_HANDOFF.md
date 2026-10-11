@@ -1,3 +1,8 @@
+## 2026-10-11｜發布容量優化第 3 階段：精簡網站乾跑（未切換 Pages）
+- 新增 `scripts/build-publish-dry-run.cjs`、`.github/workflows/publish-dry-run.yml` 與 `docs/PUBLISH_ASSET_STAGE3_2026-10-11.md`。僅產生獨立 `.publish-stage3/` 測試成品與容量 JSON，**完全不會部署到正式網站**。
+- 正式背景 32 張 WebP；正式音樂 6 首，戰鬥音效為 5 種「類別」，但正式播放池實際使用 11 個音效 OGG，合計 **17 個需要打包的音訊實體檔**。以正式 `audio/audio-core.js` 為準，不能因「11 種聲音」就只打包 11 個檔案。
+- GitHub main 檔案樹靜態預估精簡候選約 28.23 MB，**尚未實測 Actions artifact**；正式發布方式、完整瀏覽器驗收及切換均留給第 4 階段。
+
 ## 2026-10-11｜發布容量優化第 2 階段：目錄規範與候選清單稽核
 - 已新增 [`docs/PUBLISH_ASSET_PLAN_STAGE2_2026-10-11.md`](docs/PUBLISH_ASSET_PLAN_STAGE2_2026-10-11.md)、`scripts/publish-asset-audit.cjs`、`.github/workflows/publish-asset-audit.yml`：正式與開發素材目錄政策、保守的「預計保留/排除候選」分類、缺少 HTML/CSS 直接引用檔案報錯、容量統計及 GitHub Actions 報表。
 - **未搬移素材、未改 Pages 發布來源、未改正式遊戲或玩家存檔。** 這是只稽核不部署的第 2 階段；程式建檔及語法靜態檢查已完成，但 GitHub Actions 是否通過尚待取得執行結果。模擬集合大小不能稱為正式 Pages artifact。
