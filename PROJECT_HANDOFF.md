@@ -1,3 +1,8 @@
+## 2026-10-11｜3D 大批量產第 1 批：文件治理與美術方向
+- 新增 [3D 資產跨批次量產總規範](docs/3D_ASSET_PRODUCTION_MASTER_RULES.md)及[210 套裝備三紀元美術方向](docs/3D_EQUIPMENT_ART_DIRECTION.md)，固定正式來源、十套批次、待審／批准／模型隔離、重跑續做、風格多樣性、圖片 WebP 與開發／發布隔離。
+- 現有 [概念圖 SOP](docs/3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)及[210 套命名規範](docs/3D_EQUIPMENT_210_SET_CONCEPT_NAMING_STANDARD_2026-10-11.md)加入新文件入口。進度只從程式正式來源、檔案／批准證據及 `_concept-index.json` 腳本衍生，**不另造人工同步進度表**。
+- 本批僅文件施工，沒有執行新的產圖、修改 GLB／Blender／JS／CSS、正式發布或批准任何套裝。下一批才由 Codex 處理批次進度／續跑的程式自動化。
+
 ## 2026-10-11｜概念圖批次 A：補齊 G006／G008／G009／G010（待審）
 - 八張真實 WebP 已生成；[正式五槽、圖片與核對紀錄](docs/3D_EQUIPMENT_CONCEPT_BATCH_A_2026-10-11.md)。G009 拆解側視經兩次局部修正；保留 G001～G005 與 G007 全部原檔。
 - G001～G010 共 20 張圖，全部待使用者審閱、批准數零；其餘 200 套尚無圖。本批四套未建模或整合；未改遊戲、模型、快取或發布資產。
