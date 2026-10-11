@@ -1,3 +1,8 @@
+## 2026-10-11｜發布容量優化第 2 階段：目錄規範與候選清單稽核
+- 已新增 [`docs/PUBLISH_ASSET_PLAN_STAGE2_2026-10-11.md`](docs/PUBLISH_ASSET_PLAN_STAGE2_2026-10-11.md)、`scripts/publish-asset-audit.cjs`、`.github/workflows/publish-asset-audit.yml`：正式與開發素材目錄政策、保守的「預計保留/排除候選」分類、缺少 HTML/CSS 直接引用檔案報錯、容量統計及 GitHub Actions 報表。
+- **未搬移素材、未改 Pages 發布來源、未改正式遊戲或玩家存檔。** 這是只稽核不部署的第 2 階段；程式建檔及語法靜態檢查已完成，但 GitHub Actions 是否通過尚待取得執行結果。模擬集合大小不能稱為正式 Pages artifact。
+- 第 3 階段才製作獨立乾跑測試產物、補動態依賴檢查及量測容量，第 4 階段實機驗收後才允許正式切換。
+
 ## 2026-10-11｜發布容量優化第 1 階段（只盤點，不切換發布）
 - 已對 GitHub main 完整檔案樹盤點：664 個 blob，共 215,366,091 bytes（215.37 MB）；主要包含音訊 118.08 MB、原始背景 PNG 80.07 MB、正式 WebP 背景 4.53 MB、Babylon vendor 6.80 MB。
 - 詳細分類、開發素材排除候選、應保留資產、尚未驗證項目及第 2 階段工作，見 [`docs/PUBLISH_ASSET_INVENTORY_STAGE1_2026-10-11.md`](docs/PUBLISH_ASSET_INVENTORY_STAGE1_2026-10-11.md)。
