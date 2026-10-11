@@ -1,3 +1,8 @@
+## 2026-10-11｜發布容量優化第 1 階段（只盤點，不切換發布）
+- 已對 GitHub main 完整檔案樹盤點：664 個 blob，共 215,366,091 bytes（215.37 MB）；主要包含音訊 118.08 MB、原始背景 PNG 80.07 MB、正式 WebP 背景 4.53 MB、Babylon vendor 6.80 MB。
+- 詳細分類、開發素材排除候選、應保留資產、尚未驗證項目及第 2 階段工作，見 [`docs/PUBLISH_ASSET_INVENTORY_STAGE1_2026-10-11.md`](docs/PUBLISH_ASSET_INVENTORY_STAGE1_2026-10-11.md)。
+- 本階段**只新增文件**。未測量 Pages 實際發布產物，亦未修改 JS/CSS/HTML、音樂圖片、Service Worker、部署方式、GitHub Pages 設定及角色存檔。後續不得將 215 MB 等同 Pages 網站大小，更不能未查證即排除整個 audio/assets 或 GM 資料。
+
 ## 2026-10-11｜HTML 引用 JS/CSS 快取版本防漏檢查
 - 新增 `.github/workflows/html-cache-version-guard.yml`，main push 及手動啟動時執行 `tests/runtime/html-cache-version-guard.js`；以 Git before/after 提交樹為準，比較所有 HTML 直接 `src`、`href`、`data-src` 載入的 JS/CSS，包含 `index.html`、`3d-test/index.html` 和 GM 延後腳本引用。
 - 若當次提交修改被 HTML 引用的 JS/CSS 而沒有同步更新該 HTML 的引用網址，Action 回報檔案配對並以失敗碼結束。未被 HTML 直接引用的內部程式不強迫修改 index；此檢查只保障**直接 HTML 引用**，JS 動態 import/其他清單另需專項檢查。
