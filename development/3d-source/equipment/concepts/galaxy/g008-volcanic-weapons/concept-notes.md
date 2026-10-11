@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,10 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## 2026-10-11｜概念圖批次 A（待審）
+
+- 待確認的美術方向：熔核耐熱甲採厚重陶瓷分層與隔熱間隙；寬厚熱刃、封閉隔熱面甲、脚踝推進器與環形三輻反應爐調節器表達高熱作業。
+- 兩張標準 WebP 為實際影像生成器產出的概念設計，不是 Blender／GLB／正式遊戲畫面；未批准、未建模、未整合。
+- 容量、尺寸與 SHA 由總索引依檔案衍生；全遮臉、五槽拆解與成對鞋子已目視檢查。精確接縫、護頸歸槽、跨視角尺寸及掛點尺度仍須建模前確認。
+- 本批結果与審閱入口：[批次 A 報告](../../../../../../docs/3D_EQUIPMENT_CONCEPT_BATCH_A_2026-10-11.md)。

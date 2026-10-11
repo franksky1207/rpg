@@ -345,10 +345,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g006-polar-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 248964,
+          "sha256": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277736,
+          "sha256": "1d84fa4d7c284f4266eb6cff0dddbcdb9f6eb35aedf5322f1786859a751601ce"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -466,10 +481,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 298646,
+          "sha256": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 321186,
+          "sha256": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -511,10 +541,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g009-global-command",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 239930,
+          "sha256": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 220084,
+          "sha256": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"
@@ -556,10 +601,25 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 295298,
+          "sha256": "407f2d57cb6b074e4f2d9f550121fc2710fcfde43dad8913b354cccb8929e6f8"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 294518,
+          "sha256": "c5684aae47af5123f8b19940b6b2915b5aeb4b2cce01aac71a2496f246dc53ce"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
       "lastUpdated": "2026-10-11"

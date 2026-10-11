@@ -81,7 +81,7 @@ class DatabaseTests(unittest.TestCase):
         note=self.note();note.write_text(note.read_text().replace('| 破門短刃 |','| 假名稱 |',1))
         with self.assertRaisesRegex(ValueError,'missing/stale notes'):self.run_db()
     def test_wrong_missing_image_status_rejected(self):
-        self.mutate_index(lambda d:d['sets'][5].update(conceptStatus='approved',conceptApproved=True))
+        self.mutate_index(lambda d:next(r for r in d['sets'] if not r['images']).update(conceptStatus='approved',conceptApproved=True))
         with self.assertRaisesRegex(ValueError,'Index differs'):self.run_db()
     def test_g007_tampering_rejected_without_writes(self):
         file=self.note('g007').parent/m.IMAGES[0]

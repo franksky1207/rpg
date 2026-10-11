@@ -21,7 +21,7 @@ development/3d-source/equipment/
 ```
 
 - 目錄只用英文小寫 `a-z0-9-`，固定序號與紀元前綴，避免手機檔案系統與 URL 問題；slug 可讀、但身份以固定序號與程式 index 決定。
-- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。目前 210 套目錄與 notes 均已建立，G001～G005 與 G007 已有兩張待審概念圖。
+- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。目前 210 套目錄與 notes 均已建立，G001～G010 均已有兩張待審概念圖。
 - 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，兩張待使用者審核的正式候選圖採標準檔名；批准另需明確證據。
 - 圖片是美術參考，不等於可直接推導的 Blender 準確尺度、左右對稱、權重、LOD 或 GLB 交付。先由使用者美術確認，再讓 Codex 做幾何和 rig 驗證。
 - 概念參考 WebP 與必要的 `.blend`／驗收素材置於 GitHub 開發目錄；高容量原始無損概念圖可外部封存，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
@@ -29,4 +29,4 @@ development/3d-source/equipment/
 
 ## 目前狀態與批次 SOP
 
-現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)、[維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)及[批次概念美術流程](3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)。G007 兩張 WebP 已存在，**尚待使用者批准**；G001～G005 試跑兩圖亦已入庫待審，其餘 204 套尚未製圖。**入庫待審與批准是不同狀態**，固定 ID／sourceKey 為身份，英文 slug 僅為標籤。
+現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)、[維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)及[批次概念美術流程](3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)。G007 兩張 WebP 已存在，**尚待使用者批准**；G001～G010 的試跑與批次 A 兩圖均已入庫待審，其餘 200 套尚未製圖。**入庫待審與批准是不同狀態**，固定 ID／sourceKey 為身份，英文 slug 僅為標籤。
