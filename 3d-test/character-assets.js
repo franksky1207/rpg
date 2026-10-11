@@ -68,5 +68,37 @@ async function attach(scene,args){
   return {ok:false,cancelled:!current(),reason:String(error.message||error)};
  }
 }
-global.Civilization3DCharacterAssets=Object.freeze({attach,snapshot:()=>({...stats,cachedBuffers:bytes.size,cachedBytes:[...bytes.values()].reduce((s,b)=>s+b.byteLength,0),pending:inflight.size}),clearBytes:()=>bytes.clear()});
+
+/* Equipment update owner is per scene, never global/player state.
+   A stale completion is disposed rather than committed. */
+function equipmentSession(scene){
+ let generation=0,disposed=false;
+ const owned=new Map();
+ const release=(slot)=>{const entry=owned.get(slot);owned.delete(slot);try{entry?.dispose?.();}catch(_){}};
+ const dispose=()=>{if(disposed)return;disposed=true;generation++;for(const slot of [...owned.keys()])release(slot);};
+ scene.onDisposeObservable?.addOnce(dispose);
+ async function update(descriptors,loader){
+  const mine=++generation;
+  const desired=new Map((Array.isArray(descriptors)?descriptors:[]).filter(d=>d?.present&&d?.assetId).map(d=>[d.type,d]));
+  const staged=new Map();
+  try{
+   for(const [slot,d] of desired){
+    if(disposed||scene.isDisposed||mine!==generation)break;
+    const old=owned.get(slot);
+    if(old?.assetId===d.assetId&&old?.sha256===d.sha256)continue;
+    const loaded=await loader(d);
+    if(!loaded||typeof loaded.dispose!=='function')throw Error('Invalid equipment container');
+    if(disposed||scene.isDisposed||mine!==generation){loaded.dispose();break;}
+    staged.set(slot,{...loaded,assetId:d.assetId,sha256:d.sha256});
+   }
+   if(disposed||scene.isDisposed||mine!==generation)return false;
+   for(const slot of [...owned.keys()])if(!desired.has(slot)||staged.has(slot))release(slot);
+   for(const [slot,entry] of staged){owned.set(slot,entry);}
+   staged.clear();
+   return true;
+  }finally{for(const e of staged.values())try{e.dispose();}catch(_){}}
+ }
+ return Object.freeze({update,dispose,snapshot:()=>({generation,disposed,slots:[...owned.keys()]})});
+}
+global.Civilization3DCharacterAssets=Object.freeze({equipmentSession,attach,snapshot:()=>({...stats,cachedBuffers:bytes.size,cachedBytes:[...bytes.values()].reduce((s,b)=>s+b.byteLength,0),pending:inflight.size}),clearBytes:()=>bytes.clear()});
 })(window);
