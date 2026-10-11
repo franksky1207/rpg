@@ -1,7 +1,7 @@
 const fs=require("fs");
 const path=require("path");
 // Permanent regression: save() global writes are restricted to the engine base, canonical Save Hook Core, and the audited Offline checkpoint compatibility wrapper.
-function walk(dir){const out=[];for(const e of fs.readdirSync(dir,{withFileTypes:true})){if([".git","node_modules","tests"].includes(e.name))continue;const p=path.join(dir,e.name);if(e.isDirectory())out.push(...walk(p));else if(e.isFile()&&e.name.endsWith(".js"))out.push(p.replace(/^\.\//,""));}return out;}
+function walk(dir){const out=[];for(const e of fs.readdirSync(dir,{withFileTypes:true})){if([".git","node_modules","tests"].includes(e.name)||e.name.startsWith(".publish-stage"))continue;const p=path.join(dir,e.name);if(e.isDirectory())out.push(...walk(p));else if(e.isFile()&&e.name.endsWith(".js"))out.push(p.replace(/^\.\//,""));}return out;}
 const allowed=new Set(["engine.js","savehookcore.js","offlineprogress.js"]);
 const patterns=[/\bwindow\.save\s*=/g,/\bglobalThis\.save\s*=/g,/\bfunction\s+save\s*\(/g,/\btry\s*\{\s*save\s*=/g];
 const hits=[];

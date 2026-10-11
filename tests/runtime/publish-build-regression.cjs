@@ -1,0 +1,31 @@
+"use strict";
+const fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process"),assert=require("node:assert/strict");
+const policy=require("../../scripts/publish-assets.cjs");
+const root=fs.mkdtempSync(path.join(os.tmpdir(),"rpg-publish-policy-"));
+const write=(p,s="fixture")=>{fs.mkdirSync(path.dirname(path.join(root,p)),{recursive:true});fs.writeFileSync(path.join(root,p),s);};
+try{
+ cp.execFileSync("git",["init","-q",root]);
+ const pools={"normal-attack":[1,2,3],critical:[1,2,3],dodge:[1],"heavy-hit":[4,5,29],victory:[1]};
+ const music=["era-themes/galaxy-theme-loop.ogg","era-themes/universe-theme-loop.ogg","era-themes/higher-theme-loop.ogg","battle-themes/normal-battle-loop.ogg","battle-themes/medium-battle-loop.ogg","battle-themes/high-battle-loop.ogg"].map(p=>"audio/assets/"+p);
+ write("audio/audio-core.js",`const warmChoices=${JSON.stringify(pools)};const tracks=[${music.map(p=>`{url:"${p}"}`).join(",")}];`);
+ for(const file of music)write(file);
+ for(const [kind,indices] of Object.entries(pools))for(const n of indices)write(`audio/assets/common-sfx/${kind}/sfx-${String(n).padStart(3,"0")}.ogg`);
+ for(let i=0;i<32;i++)write(`assets/backgrounds/${i}.webp`);
+ write("index.html",'<script src="core.js?v=1"></script><script data-src="lazy.js?v=1"></script><link href="style.css?v=1"><script src="development/needed.js?v=1"></script>');
+ write("core.js",'fetch("config.json");const url="audio/assets/custom-selected.ogg";');
+ write("lazy.js");write("development/needed.js",'const more="assets/models/part.bin";');write("assets/models/part.bin");
+ write("audio/assets/custom-selected.ogg");write("audio/assets/not-used.ogg");write("config.json","{}");
+ write("style.css",'body { background: url("assets/backgrounds/0.webp") }');write("docs/development.md");
+ cp.execFileSync("git",["-C",root,"add","."]);
+ const first=policy.inspect(root);
+ assert.equal(first.missing.length,0);assert.ok(first.keep.includes("lazy.js"));
+ assert.ok(first.keep.includes("development/needed.js"),"referenced development candidate must be retained");
+ assert.ok(first.keep.includes("assets/models/part.bin"));assert.ok(first.keep.includes("audio/assets/custom-selected.ogg"),"additional real dependency must be retained");
+ assert.ok(!first.keep.includes("audio/assets/not-used.ogg"));assert.ok(!first.keep.includes("docs/development.md"));
+ write("core.js",'fetch("missing.json");');
+ assert.ok(policy.inspect(root).missing.some(x=>x.path==="missing.json"),"missing dynamic literal request must fail");
+ const before=policy.manifest(root,first.keep).files["core.js"];write("core.js",'fetch("config.json");');
+ assert.notEqual(policy.manifest(root,first.keep).files["core.js"],before,"fingerprints must reflect current copied bytes");
+ fs.unlinkSync(path.join(root,music[0]));assert.throws(()=>policy.inspect(root),/Tracked source missing/);
+ console.log("PASS publish policy: lazy/JS/CSS closure, reference retention, exclusions, missing sources and fresh fingerprints");
+}finally{fs.rmSync(root,{recursive:true,force:true});}

@@ -3,10 +3,11 @@ const assert=require("node:assert/strict");
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/";
+  const base=new URL("./",process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/").href;
   // Test the real mode script in a fresh browsing context, without game save owners.
   const isolated=await browser.newPage({viewport:{width:390,height:844}});
   await isolated.goto(base+"3d-test/",{waitUntil:"domcontentloaded",timeout:45000});
+  await isolated.waitForFunction(()=>window.Civilization3DTestCenter?.version===5,null,{timeout:45000});
   await isolated.evaluate(()=>{
    document.body.replaceChildren();
    window.civilizationAuthSession={user:{id:"opt6-a"}};

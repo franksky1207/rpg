@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'resource-manifest.json'
       - '**/*.js'
       - '**/*.css'
       - '**/*.html'
@@ -12,7 +13,7 @@ on:
       - 'vendor/**'
       - '3d-test/**'
       - 'development/**'
-      - 'scripts/publish-asset-audit.cjs'
+      - 'scripts/*.cjs'
       - '.github/workflows/publish-asset-audit.yml'
   workflow_dispatch:
 permissions:
@@ -27,7 +28,7 @@ jobs:
           node-version: '24'
       - name: Audit candidate publish whitelist and missing direct resources
         run: |
-          node scripts/publish-asset-audit.cjs
+          set -euo pipefail
           node scripts/publish-asset-audit.cjs --json > publish-asset-audit.json
       - uses: actions/upload-artifact@v4
         if: always()

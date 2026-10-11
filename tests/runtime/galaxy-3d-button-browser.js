@@ -99,6 +99,11 @@ const assert = require("node:assert/strict");
     assert.equal(await page.locator("#main .galaxy-review-prepare").count(),1,"Physical click failed to open Galaxy review");
     await page.evaluate(()=>{window.__galaxyReviewPointerRestore?.();delete window.__galaxyReviewPointerRestore;});
     console.log("PASS Galaxy review physical click "+JSON.stringify(pointerTest));
+    // Runtime is intentionally lazy. Open the formal preview through its owner
+    // before testing its camera controls; text startup must not eagerly load it.
+    await page.evaluate(async()=>{window.go("home");await window.civilization3dToggleHome();});
+    await page.waitForFunction(()=>typeof window.Civilization3DRuntime?.create==="function",null,{timeout:45000});
+    await page.evaluate(()=>window.civilization3dToggleHome());
     const cameraChecks = await page.evaluate(async()=>{
       const original=window.BABYLON;
       const callbacks=[];

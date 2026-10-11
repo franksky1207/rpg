@@ -45,10 +45,11 @@ async function media(request){
   if(!range)return saved;
   // Audio/video elements often request byte ranges. Serve a standards-shaped 206
   // from the complete local copy rather than returning an invalid full 200 response.
-  const match=/^bytes=(\\d*)-(\\d*)$/.exec(range.trim());
+  const match=/^bytes=(\d*)-(\d*)$/.exec(range.trim());
   if(!match)return fetch(request);
   try{
    const body=await saved.arrayBuffer(),size=body.byteLength;
+   if(!match[1]&&(!match[2]||Number(match[2])===0))return fetch(request);
    const start=match[1]?Number(match[1]):Math.max(0,size-Number(match[2]));
    const end=match[1]?(match[2]?Number(match[2]):size-1):size-1;
    if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>=size||start>end)return fetch(request);

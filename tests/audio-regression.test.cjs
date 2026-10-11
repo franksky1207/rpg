@@ -15,13 +15,13 @@ for(const [mode,file] of Object.entries(files)){
  assert.match(s,/notify\?\.\("combat-exit"/,mode+" must exit combat audio");
 }
 const core=source("audio/audio-core.js");
-assert.match(core,/"ui-click":\{count:1,indices:\[85\]/);
+assert.doesNotMatch(core,/"ui-click":\{count:/,"cancelled UI click must not be registered");
 assert.match(core,/sfxOutputScale=0\.5/);
 assert.match(core,/function stopGmSfx\(/);
 assert.match(core,/function warmCombatSfx\(/);
 assert.match(core,/function sfxDiagnostics\(/);
 const gm=source("audio/gm-audio-test.js");
-assert.match(gm,/介面點擊｜固定 085/);
+assert.doesNotMatch(gm,/介面點擊｜固定 085/,"cancelled UI click must not be in GM audition");
 assert.match(gm,/stopGmSfx/);
 assert.doesNotMatch(gm,/audio\(\)\?\.stopSfx/);
 const filesUi=fs.readdirSync(path.join(root,"audio/assets/common-sfx/ui-click")).filter(x=>x.endsWith(".ogg"));
@@ -66,4 +66,4 @@ audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit",{era:"galaxy"});
 assert.equal(listened.at(-1),"era-galaxy-theme");
-console.log("Audio regression PASS: 9 formal owners; 085 only; GM isolation; 50% SFX; scene ownership/settlement.");
+console.log("Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.");

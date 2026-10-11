@@ -6,7 +6,15 @@ const handlers={},urls=new Map(),net=[];
 let manifestFiles={};
 const scope="https://example.test/rpg/";
 const sha=s=>createHash("sha256").update(s).digest("hex").slice(0,24);
-const get=u=>typeof u==="string"?u:u.url;
+const get=u=>typeof u==="string"?u:u.url||u.href;
+// Node-created Responses are synthetic ('default'); real same-origin fetches
+// are 'basic'. Keep this property through clone, as browser Responses do.
+function basic(response){
+ Object.defineProperty(response,"type",{value:"basic"});
+ const clone=response.clone.bind(response);
+ response.clone=()=>basic(clone());
+ return response;
+}
 const cache={
  async keys(){return [...urls.keys()].map(u=>new Request(u));},
  async match(u){return urls.get(get(u))?.clone();},
@@ -21,13 +29,13 @@ const caches={
 async function fetchMock(req){
  const url=get(req);net.push(url);
  if(url.endsWith("resource-manifest.json"))return new Response(JSON.stringify({schema:1,algorithm:"sha256-96",files:manifestFiles}),{status:200,headers:{"content-type":"application/json"}});
- if(url.includes("theme.ogg"))return new Response("sound-data",{status:200});
+ if(url.includes("theme.ogg"))return basic(new Response("sound-data",{status:200}));
  return new Response("missing",{status:404});
 }
 const self={registration:{scope},addEventListener(k,v){handlers[k]=v;},skipWaiting:async()=>{},clients:{claim:async()=>{}}};
-vm.runInNewContext(fs.readFileSync("resource-cache-sw.js","utf8"),{self,URL,Request,Response,TextEncoder,crypto:webcrypto,caches,fetch:fetchMock,console,Map,Set,Uint8Array});
+vm.runInNewContext(fs.readFileSync("resource-cache-sw.js","utf8"),{self,URL,Request,Response,Headers,TextEncoder,crypto:webcrypto,caches,fetch:fetchMock,console,Map,Set,Uint8Array});
 async function activate(){let p;handlers.activate({waitUntil(q){p=q;}});await p;}
-async function requestMedia(){let p;handlers.fetch({request:new Request(scope+"theme.ogg"),respondWith(q){p=q;},waitUntil(){}});return p;}
+async function requestMedia(range){let p;handlers.fetch({request:new Request(scope+"theme.ogg",{headers:range?{range}:{}}),respondWith(q){p=q;},waitUntil(){}});return p;}
 async function message(type){let promise,resolve;const returned=new Promise(r=>resolve=r);handlers.message({data:{type},ports:[{postMessage(x){resolve(x);}}],waitUntil(q){promise=q;}});await promise;return returned;}
 (async()=>{
  manifestFiles={"theme.ogg":sha("sound-data")};
@@ -37,6 +45,13 @@ async function message(type){let promise,resolve;const returned=new Promise(r=>r
  const first=net.length;
  assert.equal((await requestMedia()).status,200);
  assert.equal(net.length,first,"unchanged resource must reuse persistent cache");
+ for(const [range,body,header] of [["bytes=2-5","und-","bytes 2-5/10"],["bytes=7-","ata","bytes 7-9/10"],["bytes=-4","data","bytes 6-9/10"]]){
+  const response=await requestMedia(range);
+  assert.equal(response.status,206,range);
+  assert.equal(response.headers.get("content-range"),header);
+  assert.equal(await response.text(),body);
+ }
+ assert.equal(net.length,first,"cached byte ranges must not request network");
  let status=await message("CIV_CACHE_STATUS");
  assert.equal(status.entries,1);
  assert.equal(status.bytes,10,"missing content-length must use blob size");

@@ -20,6 +20,11 @@ for file in (root / "assets/backgrounds").rglob("*"):
         paths.add(file.relative_to(root).as_posix())
 for file in (root / "3d-test").glob("*.css"):
     paths.add(file.relative_to(root).as_posix())
+for file in (root / "3d-test").glob("*.js"):
+    paths.add(file.relative_to(root).as_posix())
+# The worker is fetched network-fresh (updateViaCache=none), but still needs a
+# fingerprint for startup version diagnostics and candidate integrity checks.
+paths.add("resource-cache-sw.js")
 # Include only deployable binary media, not source archives or player saves.
 MEDIA_SUFFIXES = {".ogg", ".mp3", ".wav", ".webp", ".png", ".jpg", ".jpeg",
                   ".glb", ".gltf", ".bin", ".ktx2", ".basis", ".avif"}

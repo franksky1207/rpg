@@ -44,7 +44,7 @@ const assert=require('assert');
    state=makeW1(1);openWorldPhaseConfirmation(2);
    const rerunTransition=document.getElementById('worldPhaseConfirmModal')?.textContent||'';closeWorldPhaseConfirmation();
    window.secondWorldEntryRequirements=originalSecondWorldEntryRequirements;
-   out.speedUi={firstSettingsHidden:!firstSettings.includes('combat-speed-setting'),rerunSettingsVisible:rerunSettings.includes('combat-speed-setting')&&rerunSettings.includes('1.5×'),rerunCombat15:rerunCombat.includes('data-combat-speed-badge="1"')&&rerunCombat.includes('1.5×'),sharedRenderer2:sharedRenderer2.includes('data-combat-speed-badge="1"')&&sharedRenderer2.includes('2×'),rerunContinuousBadge,firstTransitionUnlock:firstTransition.includes('1.5× 戰鬥速度'),rerunTransitionUnlock:rerunTransition.includes('1.5× 戰鬥速度')};
+   out.speedUi={firstSettingsHidden:!firstSettings.includes('data-player-combat-speed='),rerunSettingsVisible:rerunSettings.includes('data-player-combat-speed="1.5"')&&rerunSettings.includes('1.5×'),rerunCombat15:rerunCombat.includes('data-combat-speed-badge="1"')&&rerunCombat.includes('1.5×'),sharedRenderer2:sharedRenderer2.includes('data-combat-speed-badge="1"')&&sharedRenderer2.includes('2×'),rerunContinuousBadge,firstTransitionUnlock:firstTransition.includes('1.5× 戰鬥速度'),rerunTransitionUnlock:rerunTransition.includes('1.5× 戰鬥速度')};
 
    state=makeW2(0);
    out.w2First={context:secondWorldReincarnationRerunContext(state),boss0:canChallengeSecondWorldBoss(0,state),boss99:canChallengeSecondWorldBoss(99,state)};

@@ -1,3 +1,10 @@
+## 2026-10-11｜發布容量第 4 階段全面修復與自動驗收（正式 Pages 未切換）
+- 以 `f4a4e13662f2ac804ba4402ccdf31796d1876f3d` 承接 main；實際 Pages API 確認 `build_type=legacy`、`source=main:/`，保留原發布來源。
+- 已讀取 Stage 4／GM／銀河 3D 的實際失敗日誌：3D mode 網址錯誤串接 `index.html3d-test/`、GM postMessage 讀取競速、銀河測試在按需 runtime 尚未載入就呼叫 create。沿用已存在的 GM 測試中心網址與競技場精確匹配修正，沒有回退正確修改。
+- 統一 audit/build 依賴政策，從正式 audio-core 取得 6 首音樂＋11 個 SFX 實體池；保留 32 WebP、正式 JS/CSS、GM、帳號／雲端、vendor 引擎與授權、3D 動態模組。引用到的排除候選強制保留；缺檔必須失敗。原始素材全留在 GitHub。
+- 成品逐檔重新算指紋、測量輸出檔案位元組；新 Stage 4 browser 測試核對所有成品 HTTP bytes／hash、17 音檔解碼、桌機／手機尺寸設定頁、49 媒體快取、206 Range、清除與存檔隔離。修復 SW Range 正規式；修正 Node Response/URL 測試替身及已取消點擊聲的舊斷言。
+- 報告與人工驗收步驟見 `docs/PUBLISH_ASSET_STAGE4_2026-10-11.md`。不得把自動化／手機 viewport 當成真人聽感、真機 GPU 或隔離帳號雲端驗收；全部通過且使用者同意前，仍禁止切換正式 Pages。
+
 ## 2026-10-11｜發布容量第 4 階段：安全驗收關卡（尚未切換正式網站）
 - 新增 `.github/workflows/publish-release-gate.yml`，使用第 3 階段的精簡乾跑包啟動 Chromium browser smoke、啟動流程、GM 3D 測試中心及 3D mode regression，並上傳容量報告。詳情見 `docs/PUBLISH_ASSET_STAGE4_2026-10-11.md`。
 - **嚴格禁止在 CI、實機、帳號雲端、音訊、Pages source/回退路徑均未驗收前切換正式 Pages**。目前只能確認檔案提交，無法確認 Actions 成功或實機通過；正式網站保持原部署方式。不得說「第 4 階段已全部完成並發布」。
