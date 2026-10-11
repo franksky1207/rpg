@@ -91,7 +91,8 @@ const assert=require('assert');
 
   assert.equal(report.enhW1First.steps,3);assert.equal(report.enhW1Rerun.steps,3);assert.deepEqual(report.enhW1First.levelsAfter,report.enhW1Rerun.levelsAfter);assert.equal(report.enhButtonW1,true);assert.equal(report.enhW1Exec.ok,true);assert.equal(report.enhW1Exec.transaction.saved,true);assert.deepEqual(Object.values(report.enhW1After.levels),[13,13,13,12,12]);assert.deepEqual({basic:report.enhW1After.basic,advanced:report.enhW1After.advanced},{basic:1025,advanced:5});
 
-  assert.equal(report.enhW2First.steps,3);assert.equal(report.enhW2Rerun.steps,3);assert.deepEqual(report.enhW2First.levelsAfter,report.enhW2Rerun.levelsAfter);assert.equal(report.enhButtonW2,true);assert.equal(report.enhW2Exec.ok,true);assert.equal(report.enhW2Exec.transaction.saved,true);assert.deepEqual(Object.values(report.enhW2After.levels),[21,21,21,20,20]);assert.deepEqual({darkMatter:report.enhW2After.darkMatter,darkEnergy:report.enhW2After.darkEnergy},{darkMatter:10000,darkEnergy:50});
+  // Current main cost v2: three upgrades at 200 dark energy, 950 - 600 = 350.
+  assert.equal(report.enhW2First.steps,3);assert.equal(report.enhW2Rerun.steps,3);assert.deepEqual(report.enhW2First.levelsAfter,report.enhW2Rerun.levelsAfter);assert.equal(report.enhButtonW2,true);assert.equal(report.enhW2Exec.ok,true);assert.equal(report.enhW2Exec.transaction.saved,true);assert.deepEqual(Object.values(report.enhW2After.levels),[21,21,21,20,20]);assert.deepEqual({darkMatter:report.enhW2After.darkMatter,darkEnergy:report.enhW2After.darkEnergy},{darkMatter:10000,darkEnergy:350});
 
   assert.equal(report.specButtonW3,false);assert.equal(report.enhButtonW3,false);assert.equal(report.enhW3Preview.available,false);assert.equal(report.enhW3Preview.reason,'phase-locked');
   assert.equal(report.singleSave.result.ok,true);assert.equal(report.singleSave.result.transaction.saved,true);assert.equal(report.singleSave.saveCalls,1);

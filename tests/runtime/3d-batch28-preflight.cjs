@@ -41,7 +41,7 @@ function boot(file,extra={}){
  const runtime=fs.readFileSync(path.join(root,'3d-test/character-assets.js'),'utf8');
  assert.match(runtime,/async function prepareEquipment\(/,'real equipment mounting entrypoint');
  assert.match(runtime,/verified\(a\)/,'registered SHA verified bytes');
- assert.match(runtime,/a\.mount!=='rigid'/,'skinned equipment cannot silently bind incorrect joints');
+ assert.match(runtime,/equipment-skin-bind/,'skinned equipment must verify names, order and bind matrices before rebinding');
  assert.match(runtime,/no-hide-without-verified-region-mesh/,'base mesh remains visible before segmentation');
  assert.match(runtime,/equipmentSession\(scene\)/,'per-scene lifecycle');
  console.log('PASS Batch28 preflight: five-slot resolver, missing/empty LOD fallback, stale async disposal, unequip, scene close');

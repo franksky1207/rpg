@@ -324,6 +324,7 @@
     return characterModuleJob;
   }
   async function createCharacterScene(args){
+    args={...args,modelDescriptors:args.modelDescriptors||global.Civilization3DAppearance?.modelDescriptors(args.appearance)||[]};
     let module;
     try{module=await characterModule();}catch(error){const fallback=createCharacterFallback(args);fallback.metadata.civilization3dCharacter.failure=String(error.message);return fallback;}
     const B=args.BABYLON,scene=new B.Scene(args.engine);
@@ -373,7 +374,7 @@
   }
 
   /* B09: five equipment pedestals, strictly read-only inventory/equipped visual data. */
-  function createEquipmentScene(args){
+  async function createEquipmentScene(args){
     const B=args.BABYLON,scene=new B.Scene(args.engine);
     scene.clearColor=new B.Color4(.015,.021,.045,1);
     const camera=new B.ArcRotateCamera("equipment-camera",Math.PI/2.2,Math.PI/2.7,13,new B.Vector3(0,.5,0),scene);
@@ -384,6 +385,7 @@
     const world=Math.max(1,Math.min(3,Math.floor(Number(args.world||appearance.world)||1)));
     const eraTint=world===3?[.66,.32,.95]:world===2?[.15,.7,.83]:[.19,.5,.94];
     const cases=Array.isArray(args.inventorySamples)?args.inventorySamples.slice(0,5):[];
+    const anchors=[];
     const color=(item)=>{
       const quality=Math.max(0,Math.min(5,Math.floor(Number(item?.quality)||0)));
       const shades=[[.13,.23,.37],[.22,.44,.58],[.22,.64,.48],[.58,.4,.8],[.84,.61,.25],[.93,.36,.53]];
@@ -398,12 +400,12 @@
       const pedestal=B.MeshBuilder.CreateCylinder("equipment-slot-base-"+i,{diameter:1.7,height:.26,tessellation:24},scene);
       pedestal.position.set(x,-.55,0);pedestal.material=base;
       const relic=i===0?B.MeshBuilder.CreateBox("equipment-slot-"+i,{width:item.present?.16:.12,height:item.present?1.75:.45,depth:.17},scene):B.MeshBuilder.CreatePolyhedron("equipment-slot-"+i,{type:i%2?1:2,size:item.present?.56:.28},scene);
-      relic.position.set(x,i===0?.47:.45,0);relic.material=color(item);
+      relic.position.set(x,i===0?.47:.45,0);relic.material=color(item);anchors[i]=[relic];
       if(i===0&&item.present){
         const guard=B.MeshBuilder.CreateBox("equipment-weapon-guard",{width:.78,height:.13,depth:.25},scene);
-        guard.position.set(x,-.19,0);guard.material=accent;
+        guard.position.set(x,-.19,0);guard.material=accent;anchors[i].push(guard);
         const tip=B.MeshBuilder.CreatePolyhedron("equipment-weapon-tip",{type:1,size:.28},scene);
-        tip.position.set(x,1.48,0);tip.material=relic.material;
+        tip.position.set(x,1.48,0);tip.material=relic.material;anchors[i].push(tip);
       }
       const ring=B.MeshBuilder.CreateTorus("equipment-slot-ring-"+i,{diameter:1.8,thickness:.045,tessellation:32},scene);
       ring.position.set(x,-.37,0);ring.rotation.x=Math.PI/2;ring.material=relic.material;
@@ -413,6 +415,7 @@
     }
     scene.metadata={civilization3dEquipment:{visualOnly:true,readOnly:true,world,slotCount:5,
       appearanceSource:args.appearanceSource||"fixture",slots:Array.isArray(args.modelDescriptors)?args.modelDescriptors:slots.map((item,i)=>global.Civilization3DAppearance?.modelDescriptor?.(["weapon","helmet","armor","shoes","accessory"][i],item,world,args.appearance?.enhancements?.[["weapon","helmet","armor","shoes","accessory"][i]])||{present:item?.present===true,world:Number(item?.world)||world,quality:Math.max(0,Math.min(5,Number(item?.quality)||0)),visualKey:String(item?.visualKey||"").slice(0,120),assetKind:"geometry-fallback"})}};
+    try{const module=await characterModule();await module.displayEquipment(scene,{...args,modelDescriptors:scene.metadata.civilization3dEquipment.slots},anchors);}catch(_){}
     scene.onBeforeRenderObservable.add(()=>{const dt=Math.min(args.engine.getDeltaTime(),50);scene.meshes.forEach(mesh=>{if(mesh.name.startsWith("equipment-slot-")&&!mesh.name.includes("ring")&&!mesh.name.includes("base"))mesh.rotation.y+=dt*.00012;});});
     return scene;
   }

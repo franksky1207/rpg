@@ -20,5 +20,14 @@ const doc={schema:1,version:'player-foundation-v1-b27-fast-r3',rigContract:'cw.h
  player:Object.fromEntries(['low','medium','high'].map(q=>[q,'player.foundation.v1.'+q])),
  assets:[entry('babylon.gltf-loader.v7.54.3','vendor/babylonjs/7.54.3/babylonjs.loaders.min.js','shared','decoder','Apache-2.0','vendor/babylonjs/7.54.3/SOURCE.md',[]),
   ...['low','medium','high'].map(q=>entry('player.foundation.v1.'+q,'assets/3d/characters/player-v1/player-'+q+'.glb',q,'character','CC0-1.0; original anatomy, textile and face atlases',source,['babylon.gltf-loader.v7.54.3']))]};
-fs.writeFileSync(path.join(root,'assets/3d/asset-registry.json'),JSON.stringify(doc,null,2)+'\n');
+const registryFile=path.join(root,'assets/3d/asset-registry.json');
+if(fs.existsSync(registryFile)){
+ const prior=JSON.parse(fs.readFileSync(registryFile));
+ if(prior.equipment){
+  for(const [q,map] of Object.entries(prior.occlusion||{}))if(doc.assets.find(a=>a.id===doc.player[q])?.sha256!==map.characterSHA256)throw Error('Character changed: regenerate equipment coverage before writing registry');
+  Object.assign(doc,{version:prior.version,equipment:prior.equipment,equipmentFamilies:prior.equipmentFamilies,occlusion:prior.occlusion,equipmentArtStatus:prior.equipmentArtStatus});
+  doc.assets.push(...prior.assets.filter(a=>a.type==='equipment'));
+ }
+}
+fs.writeFileSync(registryFile,JSON.stringify(doc,null,2)+'\n');
 console.log('Updated registry from actual source and GLB bytes');

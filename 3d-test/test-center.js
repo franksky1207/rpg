@@ -10,8 +10,8 @@ const cases=[
 {id:"C-05-GALAXY-MAP",cat:"map",title:"銀河紀元星圖",kind:"galaxy",detail:"觀察銀河十大區域與怪物象徵，可調整區域進度與聚焦位置。"},
 {id:"C-06-UNIVERSE-MAP",cat:"map",title:"宇宙紀元星圖",kind:"universe",detail:"觀察宇宙十大區域與一百名 Boss 的立體分布。"},
 {id:"C-07-HIGHER",cat:"map",title:"高維紀元戰線",kind:"higher",detail:"觀察十名高維存在與持續生命狀態的立體象徵。"},
-{id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看人物基座；裝備造型仍在製作，正式與自由資料相互隔離。"},
-{id:"C-09-EQUIPMENT",cat:"character",title:"五槽裝備陳列",kind:"equipment",detail:"查看五個穿戴槽及背包裝備的立體展示雛形。"},
+{id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看正式人物與已製作的裝備；正式與自由資料相互隔離。"},
+{id:"C-09-EQUIPMENT",cat:"character",title:"五槽裝備陳列",kind:"equipment",detail:"查看五個穿戴槽；古代科技遺址已採用正式模型，其他裝備保留替代外觀。"},
 {id:"C-10-FORGE",cat:"character",title:"強化鍛造台",kind:"forge",detail:"五個裝備欄位的強化進度立體展示，實際強化仍由正式系統處理。"},
 {id:"C-11-SPECIALIZATION",cat:"character",title:"八種專精星環",kind:"specialization",detail:"八種專精的立體能量節點；僅展示進度。"},
 {id:"C-11-MARKS",cat:"character",title:"十印記星環",kind:"marks",detail:"十種印記的立體封印節點；不影響正式效果。"},
@@ -466,7 +466,7 @@ function script(src){
 window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 async function versionedSceneUrls(){
- const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261011-b27-player-v1","./prototype-engine.js?v=20261011-b27-fast-r3","./appearance-snapshot.js?v=20261010-opt3-sharedmap"];
+ const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261011-b27-player-v1","./prototype-engine.js?v=20261011-b28c-ruins-v1","./appearance-snapshot.js?v=20261011-b28c-ruins-v1"];
  try{
   const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
   if(!response.ok)throw new Error("manifest-unavailable");

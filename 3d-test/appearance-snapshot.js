@@ -33,9 +33,9 @@ function resolveEquipment(descriptors,registry,quality='medium'){
  return SLOTS.map((slot,i)=>{
   const descriptor=Array.isArray(descriptors)?descriptors.find(x=>x?.type===slot):null;
   const d=descriptor||{type:slot,present:false};
-  const mapping=registry?.equipment?.[slot];
-  const id=mapping?.[lod];
-  const asset=entries.find(a=>a.id===id&&a.type==='equipment'&&a.slot===slot&&a.quality===lod&&a.preload===false);
+  const mappings=[registry?.equipment,...Object.values(registry?.equipmentFamilies||{})];
+  const ids=mappings.map(f=>f?.[slot]?.[lod]).filter(Boolean);
+  const asset=entries.find(a=>ids.includes(a.id)&&a.type==='equipment'&&a.slot===slot&&a.quality===lod&&a.preload===false&&(!a.names||(a.names.includes(d.name)&&a.identity?.world===d.world)));
   if(!d.present)return Object.freeze({...d,type:slot,present:false,assetId:null,assetKind:'none',fallback:null});
   if(!asset)return Object.freeze({...d,type:slot,assetId:null,assetKind:'geometry-fallback',fallback:'procedural-geometry'});
   return Object.freeze({...d,type:slot,assetId:asset.id,assetKind:'equipment-glb',sha256:asset.sha256,mount:asset.mount,fallback:'procedural-geometry'});

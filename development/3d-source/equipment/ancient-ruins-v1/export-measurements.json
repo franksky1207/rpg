@@ -1,0 +1,62 @@
+{
+  "weapon.low": {
+    "bytes": 14908,
+    "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe"
+  },
+  "helmet.low": {
+    "bytes": 61060,
+    "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd"
+  },
+  "armor.low": {
+    "bytes": 104348,
+    "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b"
+  },
+  "shoes.low": {
+    "bytes": 94728,
+    "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87"
+  },
+  "accessory.low": {
+    "bytes": 8040,
+    "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b"
+  },
+  "weapon.medium": {
+    "bytes": 18700,
+    "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b"
+  },
+  "helmet.medium": {
+    "bytes": 75540,
+    "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097"
+  },
+  "armor.medium": {
+    "bytes": 128620,
+    "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18"
+  },
+  "shoes.medium": {
+    "bytes": 118412,
+    "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4"
+  },
+  "accessory.medium": {
+    "bytes": 9912,
+    "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4"
+  },
+  "weapon.high": {
+    "bytes": 20504,
+    "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a"
+  },
+  "helmet.high": {
+    "bytes": 82280,
+    "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810"
+  },
+  "armor.high": {
+    "bytes": 147012,
+    "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d"
+  },
+  "shoes.high": {
+    "bytes": 133348,
+    "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c"
+  },
+  "accessory.high": {
+    "bytes": 11448,
+    "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d"
+  }
+}

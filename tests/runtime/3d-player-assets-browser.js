@@ -124,7 +124,7 @@ async function finishIntro(page){
   const lost=await page.evaluate(()=>{const e=BABYLON.EngineStore.Instances[0],ext=e?._gl?.getExtension('WEBGL_lose_context');if(!ext)return false;ext.loseContext();return true;});assert.equal(lost,true,'software WebGL must expose context loss for this test');
   await page.waitForFunction(()=>document.querySelector('#civilization3dFormalHost')?.hidden===true);
   assert.equal(await page.evaluate(()=>Civilization3DCharacterAssets.snapshot().containers),0);assert.equal(await identity(page),truth);
-  report.released=await page.evaluate(()=>({assets:Civilization3DCharacterAssets.snapshot(),engines:BABYLON.EngineStore.Instances.length,jsHeapUsedBytes:performance.memory?.usedJSHeapSize||null}));assert.equal(report.released.engines,0);assert.ok(report.released.assets.cachedBuffers<=2);
+  report.released=await page.evaluate(()=>({assets:Civilization3DCharacterAssets.snapshot(),engines:BABYLON.EngineStore.Instances.length,jsHeapUsedBytes:performance.memory?.usedJSHeapSize||null}));assert.equal(report.released.engines,0);assert.ok(report.released.assets.cachedBuffers<=8&&report.released.assets.cachedBytes<=16*1024*1024);
   report.cases.push('formal readonly source, real PBR/skin animation, 10 reopens, mobile low LOD, landscape, actual context loss and release');
   await context.close();
 

@@ -1,0 +1,177 @@
+{
+  "passed": true,
+  "bones": 53,
+  "sockets": 9,
+  "unchangedPlayerSHA256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410",
+  "poses": [
+    {
+      "bone": "head",
+      "degrees": 25,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.000075968033,
+          "minEdgeRatio": 0.9999878581999825,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999932998084254,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000004170327657,
+          "minEdgeRatio": 0.9999997566714531,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "upper_arm.L",
+      "degrees": 35,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999905373055485,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000004170327657,
+          "minEdgeRatio": 0.9999997566714531,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "forearm.L",
+      "degrees": 70,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000170031373572,
+          "minEdgeRatio": 0.9999922541080556,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000004170327657,
+          "minEdgeRatio": 0.9999997566714531,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "spine_01",
+      "degrees": 15,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.000020015706683,
+          "minEdgeRatio": 0.9999624614762366,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000508733577436,
+          "minEdgeRatio": 0.9999880427193574,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000004170327657,
+          "minEdgeRatio": 0.9999997566714531,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "thigh.L",
+      "degrees": 35,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999879170385311,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.000006471627031,
+          "minEdgeRatio": 0.999991784715706,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "shin.L",
+      "degrees": 60,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999932998084254,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000084219157692,
+          "minEdgeRatio": 0.9999952846395772,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "foot.L",
+      "degrees": 20,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999932998084254,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000016748483809,
+          "minEdgeRatio": 0.9999992919906204,
+          "vertices": 704
+        }
+      }
+    },
+    {
+      "bone": "hand.R",
+      "degrees": 15,
+      "meshes": {
+        "helmet": {
+          "maxEdgeRatio": 1.0,
+          "minEdgeRatio": 1.0,
+          "vertices": 364
+        },
+        "armor": {
+          "maxEdgeRatio": 1.0000115741417257,
+          "minEdgeRatio": 0.9999932998084254,
+          "vertices": 780
+        },
+        "shoes": {
+          "maxEdgeRatio": 1.0000004170327657,
+          "minEdgeRatio": 0.9999997566714531,
+          "vertices": 704
+        }
+      }
+    }
+  ],
+  "collisionScope": "visual ordinary-pose evidence; no claim of exhaustive attack cloth collision"
+}

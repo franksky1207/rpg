@@ -1,3 +1,5 @@
+> 28-C 接續狀態：第一套正式 15 GLB、嚴格 joint/rest/inverse-bind 重綁與局部可恢復遮蔽已施工。下文為本批當時的歷史限制；最新實跑與待驗見 [28-C 驗收](3D_BATCH28C_IMPLEMENTATION_ACCEPTANCE_2026-10-11.md)。
+
 # 《文明戰線》第 28-B 批：正式角色五槽 GLB 接口（2026-10-11）
 
 ## 實作與界線

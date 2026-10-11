@@ -1,0 +1,19 @@
+{
+  "baselineCommit": "76351e0967aa35adab3e9707f020b0dea26afbfc",
+  "baselineArtifactBytes": 35330335,
+  "artifactBytes": 36454816,
+  "artifactFiles": 381,
+  "trackedBytes": 288283128,
+  "excludedBytes": 251819529,
+  "savedBytes": 251828312,
+  "sourceBlendBytes": 18710308,
+  "equipmentSourceAndReviewBytes": 22766403,
+  "equipmentLODBytes": {
+    "low": 283084,
+    "medium": 351184,
+    "high": 394592
+  },
+  "backgrounds": 32,
+  "audioFiles": 17,
+  "mediaPreload": 49
+}

@@ -65,6 +65,7 @@ jobs:
       - name: Verify resource cache behavior and current audio contract
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
+          node tests/runtime/3d-equipment-contract.cjs
           node tests/runtime/3d-batch28-preflight.cjs
           node tests/runtime/resource-cache-integrity.js
           node tests/runtime/resource-cache-behavior.js
@@ -95,6 +96,7 @@ jobs:
           node tests/runtime/3d-mode-browser-regression.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-player-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -178,6 +180,7 @@ jobs:
           path: |
             runtime-integrity-report.txt
             3d-player-browser-report.json
+            3d-equipment-browser-report.json
             audio-lifecycle-browser-report.json
           if-no-files-found: ignore
           retention-days: 1

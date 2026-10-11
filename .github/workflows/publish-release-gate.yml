@@ -39,6 +39,7 @@ jobs:
           node tests/audio-lifecycle.test.cjs
           node tests/audio-regression.test.cjs
           node tests/runtime/3d-asset-registry-integrity.cjs
+          node tests/runtime/3d-equipment-contract.cjs
           node tests/runtime/3d-batch28-preflight.cjs
       - name: Install Chromium for isolated browser tests
         run: |
@@ -68,6 +69,7 @@ jobs:
           node tests/runtime/publish-candidate-browser.js
           node tests/runtime/3d-glb-validation.cjs
           node tests/runtime/3d-player-assets-browser.js
+          node tests/runtime/3d-equipment-assets-browser.js
       - name: Upload dry-run audit and web server logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -77,6 +79,7 @@ jobs:
             publish-stage3-report.json
             publish-stage4-browser-report.json
             3d-player-browser-report.json
+            3d-equipment-browser-report.json
             audio-lifecycle-browser-report.json
             /tmp/rpg-stage4-server.log
           if-no-files-found: warn

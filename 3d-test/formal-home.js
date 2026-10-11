@@ -49,9 +49,9 @@ function script(src){
  });
 }
 const BABYLON_SRC="vendor/babylonjs/7.54.3/babylon.js";
-const SCENE_SRC="3d-test/prototype-engine.js?v=20261011-b27-fast-r3";
+const SCENE_SRC="3d-test/prototype-engine.js?v=20261011-b28c-ruins-v1";
 const RUNTIME_SRC="3d-test/runtime.js?v=20261011-b27-player-v1";
-const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261010-opt3-sharedmap";
+const APPEARANCE_SRC="3d-test/appearance-snapshot.js?v=20261011-b28c-ruins-v1";
 let resourceVersionPromise=null;
 function resolveSceneResources(){
  if(!resourceVersionPromise)resourceVersionPromise=fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"})

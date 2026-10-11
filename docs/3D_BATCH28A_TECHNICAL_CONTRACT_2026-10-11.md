@@ -1,3 +1,5 @@
+> 28-C 接續狀態：第一套正式 15 GLB、嚴格 joint/rest/inverse-bind 重綁與局部可恢復遮蔽已施工。下文為本批當時的歷史限制；最新實跑與待驗見 [28-C 驗收](3D_BATCH28C_IMPLEMENTATION_ACCEPTANCE_2026-10-11.md)。
+
 # 《文明戰線》3D 第 28-A 批｜正式五槽模型技術契約與資產規格
 
 施工日：2026-10-11（Asia/Taipei）。核對起點 main `d46b03cf0a73d3c226b9933d24dc25d84dd8fd06`；**每次施工仍以當下 main 為準**。本批只完成施工規格與現況查核，不宣稱五槽 GLB、Runtime 遮蔽或正式人物掛裝已完成。參照 `docs/3D_BATCH28_PREFLIGHT_RISK_LOCK_2026-10-11.md` 與第 27 批三階段驗收文件。
