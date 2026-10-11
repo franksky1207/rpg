@@ -66,7 +66,8 @@ audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit",{era:"galaxy"});
 assert.equal(listened.at(-1),"era-higher-theme","settled battle must restore the actual current era");
-// Galaxy mainline can enter combat through a view transition. After settlement
+// Galaxy mainline can enter combat through a view transition.
+ctx.state.worldPhase=1; After settlement
 // the same DOM must not start the soundtrack again.
 audio.syncView("home");
 audio.syncView("adventure","combat");
@@ -77,13 +78,13 @@ assert.equal(listened.at(-1),"battle-normal-preview");
 audio.notify("combat-exit");
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,false,"settlement modal must not relock");
-assert.equal(listened.at(-1),"era-higher-theme");
+assert.equal(listened.at(-1),"era-galaxy-theme");
 // Mainline settlement keeps adventureScreen='combat' behind the result modal.
 audio.notify("combat-start",{era:"galaxy",mode:"boss"});
 audio.notify("combat-exit");
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,false,"stale combat UI must never reacquire an exited run");
-assert.equal(listened.at(-1),"era-higher-theme","settlement must restore current era");
+assert.equal(listened.at(-1),"era-galaxy-theme","settlement must restore current era");
 audio.notify("combat-start",{era:"galaxy",mode:"battle",runId:"new-run"});
 assert.equal(listened.at(-1),"battle-normal-preview","next battle selects its own tier");
 audio.notify("combat-exit",{runId:"stale-run"});
