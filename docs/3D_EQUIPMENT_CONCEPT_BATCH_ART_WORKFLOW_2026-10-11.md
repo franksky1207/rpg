@@ -1,5 +1,5 @@
 # 《文明戰線》210 套裝備｜概念圖分批生成、入庫、審核與建模交接 SOP
-日期：2026-10-11。狀態：正式作業流程；**不代表任何套裝已取得美術批准**。資料真實來源為 GitHub `main`，正式身份與五槽名稱由 `scripts/equipment-concepts.py`／`_concept-index.json` 對應程式 owner；美術構想不可改正式名稱。
+日期：2026-10-11。共同約束：[跨資產量產總規範](3D_ASSET_PRODUCTION_MASTER_RULES.md)、[三紀元裝備美術方向](3D_EQUIPMENT_ART_DIRECTION.md)。狀態：正式作業流程；**不代表任何套裝已取得美術批准**。資料真實來源為 GitHub `main`，正式身份與五槽名稱由 `scripts/equipment-concepts.py`／`_concept-index.json` 對應程式 owner；美術構想不可改正式名稱。
 
 ## 0. 工作切分與責任
 - **ChatGPT／可用的影像生成器**：按正式名稱產生精緻角色三視圖與五槽拆解概念圖。若 Codex 環境無圖片生成服務，不能假稱 Codex 自行繪圖；可先由 ChatGPT 生成，再交給 Codex 做整理、壓縮、驗證、入庫。
