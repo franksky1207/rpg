@@ -25,7 +25,7 @@
 
 ## 概念圖入庫（目前尚未上傳）
 概念圖經使用者確認後再存入本目錄，標準檔名：
-- `overview-front-side-back.png`：同一套設定的正側背三視圖與材質。
-- `equipment-five-slots.png`：五件單品拆解與結構參考。
+- `overview-front-side-back.webp`：同一套設定的正側背三視圖與材質。
+- `equipment-five-slots.webp`：五件單品拆解與結構參考。
 
 **注意：這兩個 PNG 目前尚不存在，不得假稱已入庫或已通過美術驗收。** 後續 Codex 須檢查圖片存在，先對比現有 v1 Blender/GLB，再依確認圖重製；不可把 AI 概念圖自動視為尺寸精確的工程圖，須校正各視角一致性及第 27 批骨架/掛點。
