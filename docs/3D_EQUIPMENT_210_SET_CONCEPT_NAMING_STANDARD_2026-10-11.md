@@ -30,3 +30,7 @@ development/3d-source/equipment/
 ## 目前狀態與批次 SOP
 
 現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)、[維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)及[批次概念美術流程](3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)。G007 兩張 WebP 已存在，**尚待使用者批准**；G001～G010 的試跑與批次 A 兩圖均已入庫待審，其餘 200 套尚未製圖。**入庫待審與批准是不同狀態**，固定 ID／sourceKey 為身份，英文 slug 僅為標籤。
+
+## 跨批次入口
+- 後續裝備量產須同時遵守 [跨資產量產總規範](3D_ASSET_PRODUCTION_MASTER_RULES.md)及[三紀元裝備美術方向](3D_EQUIPMENT_ART_DIRECTION.md)。
+- 各批進度以正式資料 owner、現有圖片檔及腳本衍生 `_concept-index.json` 為準，不新增需人工同步的第二份真實狀態。已生成、待審、批准、建模需分開判斷。
