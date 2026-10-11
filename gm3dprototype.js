@@ -62,16 +62,7 @@ window.addEventListener("message",event=>{
   // Read authoritative formal data; the loader is only invoked when GM requests a snapshot.
   (async()=>{
    try{
-    if(!window.Civilization3DAppearance?.capture){
-     const source="3d-test/appearance-snapshot.js";
-     const response=await fetch("resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
-     const manifest=response.ok?await response.json():null;
-     const digest=manifest?.files?.[source];
-     const url=source+(/^[a-f0-9]{24}$/.test(String(digest||""))?"?asset="+digest:"?v=20261010-repair4-appearance");
-     await new Promise((resolve,reject)=>{
-      const el=document.createElement("script");el.src=url;el.onload=resolve;el.onerror=()=>reject(new Error("正式外觀模組載入失敗"));document.head.append(el);
-     });
-    }
+    await window.Civilization3DLoader.ensure("appearance");
     const appearance=window.Civilization3DFormalSnapshots?.appearance();
     if(!appearance)throw new Error("正式角色快照尚無可讀取資料");
     const catalog=window.Civilization3DFormalSnapshots.equipmentCatalog();

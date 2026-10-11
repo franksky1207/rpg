@@ -343,12 +343,15 @@ async function start(){
  safeStop();
  const ticket=serial;
  if(disabled){fail("3D 已停用，不影響正式遊戲。");return;}
- if(!window.Civilization3DRuntime||!window.Civilization3DPrototype){fail("共用 3D 模組尚未載入。");return;}
+ if(!["engine","scenes","runtime","appearance"].every(kind=>window.Civilization3DLoader.ready(kind))){
+  try{await window.Civilization3DLoader.load();}catch(error){if(ticket===serial)fail(error.message);return;}
+ }
+ if(ticket!==serial)return;
  status.hidden=false;status.textContent="正在載入 3D 測試場景…";
  const c=entry(),B=window.Civilization3DPrototype;
  const effectiveWorld=scenarioMode==="formal"&&formalScenario?.dungeon?.arena&&entry().kind==="dungeon-arena"?Number(formalScenario.dungeon.arena.world):Number(snapshot.world);
  const factory=c.kind==="dungeon-arena"&&effectiveWorld===3?B.createDungeonAdvancedScene:c.kind.startsWith("service-")?B.createServiceConsoleScene:c.kind.startsWith("chronicle-")?B.createChronicleTransitionScene:c.kind.startsWith("battle-")?B.createBattlePresentationScene:c.kind.startsWith("frontier-")?B.createFrontierScene:c.kind.startsWith("advanced-")?B.createDungeonAdvancedScene:c.kind.startsWith("dungeon-")?B.createDungeonScene:["specialization","marks","civilization","core"].includes(c.kind)?B.createGrowthScene:c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
- if(typeof factory!=="function"){fail("此場景尚未實作。");return;}
+ try{window.Civilization3DLoader.requireFactory(factory);}catch(error){fail(error.message);return;}
  fallback.hidden=true;host.hidden=false;
  runtime=window.Civilization3DRuntime.create({host,onClose:()=>{disabled=true;toggle.textContent="啟用 3D";start();},onFallback:reason=>fail("3D 場景失敗："+reason),onContextRestored:()=>{status.hidden=false;status.textContent="WebGL 已復原，可按重新啟動。";}});
  runtime.setQuality(quality.value);
@@ -459,47 +462,11 @@ window.addEventListener("keydown",event=>{
  if(event.key==="Escape"&&maximized){event.preventDefault();event.stopImmediatePropagation();setMaximized(false);return;}
  if(embedded&&event.key==="Escape"){event.preventDefault();try{window.parent?.postMessage({type:"civilization3d:close"},location.origin);}catch(_){}}
 });
-function script(src){
- return new Promise((resolve,reject)=>{
-  const el=document.createElement("script");
-  el.src=src;
-  el.onload=()=>{el.onload=null;el.onerror=null;resolve();};
-  el.onerror=()=>{el.onload=null;el.onerror=null;el.remove();reject(new Error("3D 模組載入失敗："+src));};
-  document.head.appendChild(el);
- });
-}
 window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
-async function versionedSceneUrls(){
- const fallback=["../vendor/babylonjs/7.54.3/babylon.js","./runtime.js?v=20261011-b27-player-v1","./prototype-engine.js?v=20261011-b28c-ruins-v1","./appearance-snapshot.js?v=20261011-b28c-ruins-v1"];
- try{
-  const response=await fetch("../resource-manifest.json",{cache:"no-store",credentials:"same-origin"});
-  if(!response.ok)throw new Error("manifest-unavailable");
-  const manifest=await response.json();
-  if(manifest?.schema!==1||!manifest.files||typeof manifest.files!=="object")throw new Error("invalid-resource-manifest");
-  const version=(path,url)=>{
-   const digest=manifest.files[path];
-   return typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)?url+"?asset="+digest:url;
-  };
-  const entries=[
-   ["vendor/babylonjs/7.54.3/babylon.js","../vendor/babylonjs/7.54.3/babylon.js"],
-   ["3d-test/runtime.js","./runtime.js"],
-   ["3d-test/prototype-engine.js","./prototype-engine.js"],
-   ["3d-test/appearance-snapshot.js","./appearance-snapshot.js"]
-  ];
-  return entries.map(([path,url],i)=>{const resolved=version(path,url);return resolved===url?fallback[i]:resolved;});
- }catch(_){return fallback;}
-}
 (async()=>{
  try{
-  const [engineUrl,runtimeUrl,sceneUrl,appearanceUrl]=await versionedSceneUrls();
-  await Promise.all([
-    window.BABYLON?.Engine?Promise.resolve():script(engineUrl),
-    window.Civilization3DRuntime?.create?Promise.resolve():script(runtimeUrl),
-    window.Civilization3DPrototype?.createBattlePresentationScene?Promise.resolve():script(sceneUrl),
-    window.Civilization3DAppearance?.scene?Promise.resolve():script(appearanceUrl)
-  ]);
-  if(!window.BABYLON?.Engine||!window.Civilization3DRuntime?.create||!window.Civilization3DPrototype?.createChronicleTransitionScene)throw new Error("3D 模組載入不完整。");
+  await window.Civilization3DLoader.load();
   start();
   if(embedded)requestAppearance();
  }catch(error){fail(error.message);}

@@ -54,7 +54,39 @@ async function finishIntro(page){
     },null,{timeout:60000});
     await page.locator("#civilization3dFormalHost").getByRole("button",{name:"關閉 3D 預覽",exact:true}).click({timeout:60000});
     assert.equal(await page.evaluate(()=>JSON.stringify(state)),before,"Preview wrote formal state: "+route);
+    await button.click();
+    await page.waitForFunction(()=>document.getElementById("civilization3dFormalHost")?.dataset.threeDFormalMount==="active");
+    assert.equal(await page.evaluate(()=>document.querySelectorAll("#civilization3dFormalHost canvas").length),1);
+    await page.locator("#civilization3dFormalHost").getByRole("button",{name:"關閉 3D 預覽",exact:true}).click();
+    assert.equal(await page.evaluate(()=>BABYLON.EngineStore.Instances.length),0,"GPU engine retained after close: "+route);
+
    }
+   // Hold an old factory result across a route change; Runtime must dispose it.
+   await page.evaluate(()=>{
+    go("home");const original=Civilization3DPrototype;
+    window.__oldFactory=original;
+    window.Civilization3DPrototype={...original,createEpochScene:async args=>{await new Promise(resolve=>window.__releaseOldScene=resolve);return original.createEpochScene(args);}};
+    civilization3dToggleHome();
+   });
+   await page.waitForFunction(()=>typeof window.__releaseOldScene==="function");
+   await page.evaluate(()=>{go("character");Civilization3DPrototype=__oldFactory;civilization3dToggleCharacter();});
+   await page.waitForFunction(()=>document.getElementById("civilization3dFormalHost")?.dataset.threeDFormalMount==="active");
+   await page.evaluate(()=>__releaseOldScene());
+   await page.waitForFunction(()=>BABYLON.EngineStore.Instances.length===1);
+   assert.equal(await page.evaluate(()=>document.querySelectorAll("#civilization3dFormalHost canvas").length),1);
+   // A missing decoration fails only its own scene and produces a visible notice.
+   await page.evaluate(()=>{go("settings");Civilization3DPrototype={...__oldFactory,createServiceConsoleScene:undefined};});
+   await page.locator('#main [data-service3d-preview="settings"] button').click();
+   await page.waitForFunction(()=>document.getElementById("civilization3dFormalHost")?.dataset.threeDPreviewError==="scene-capability-missing");
+   assert.equal(await page.locator('[data-three-d-preview-error-notice]').count(),1);
+   await page.evaluate(()=>{go("character");civilization3dToggleCharacter();});
+   await page.waitForFunction(()=>document.getElementById("civilization3dFormalHost")?.dataset.threeDFormalMount==="active");
+   await page.evaluate(()=>document.querySelector("#civilization3dFormalHost canvas").dispatchEvent(new Event("webglcontextlost",{cancelable:true})));
+   await page.waitForFunction(()=>BABYLON.EngineStore.Instances.length===0);
+   await page.evaluate(()=>civilization3dToggleCharacter());
+   await page.waitForFunction(()=>document.getElementById("civilization3dFormalHost")?.dataset.threeDFormalMount==="active");
+   await page.locator("#civilization3dFormalHost").getByRole("button",{name:"關閉 3D 預覽",exact:true}).click();
+   await page.evaluate(()=>{Civilization3DPrototype=__oldFactory;go("settings");});
    const before=await page.evaluate(()=>JSON.stringify(state));
    const direct=await page.evaluate(()=>Civilization3DFormalSnapshots.scenario());
    assert.equal(await page.evaluate(()=>JSON.stringify(state)),before,"Shared owner reads wrote formal state");

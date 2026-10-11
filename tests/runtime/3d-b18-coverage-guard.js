@@ -5,7 +5,10 @@ const root=path.resolve(__dirname,"../..");
 const read=file=>fs.readFileSync(path.join(root,file),"utf8");
 const index=read("index.html");
 const ui=read("ui.js");
-const bridge=read("3d-test/formal-home.js");
+const controller=read("3d-test/formal-home.js");
+const dom=read("3d-test/formal-dom.js");
+const sharedLoader=read("3d-test/shared-loader.js");
+const bridge=controller+dom+sharedLoader;
 const engine=read("3d-test/prototype-engine.js");
 const policy=read("3d-test/mode-foundation.js");
 const gmIndex=read("3d-test/index.html");
@@ -20,6 +23,11 @@ function assertSingleEntryVersion(html,scriptPath){
 const formalEntryVersion=assertSingleEntryVersion(index,"3d-test/formal-home.js");
 const gmEntryVersion=assertSingleEntryVersion(gmIndex,"./test-center.js");
 assert.equal(formalEntryVersion,gmEntryVersion,"Formal and GM entrypoint cache versions must be synchronized");
+assert.equal(assertSingleEntryVersion(index,"3d-test/shared-loader.js"),assertSingleEntryVersion(gmIndex,"./shared-loader.js"),"Both documents use the same shared loader version");
+assert.ok(index.indexOf('src="3d-test/shared-loader.js')<index.indexOf('src="3d-test/formal-home.js')&&index.indexOf('src="3d-test/formal-dom.js')<index.indexOf('src="3d-test/formal-home.js'),"Controller dependencies must precede its entry");
+assert.ok(gmIndex.indexOf('src="./shared-loader.js')<gmIndex.indexOf('src="./test-center.js'),"Standalone GM must include the loader before starting");
+assert.ok(!/\bfetch\(/.test(controller)&&!/\bfetch\(/.test(dom),"Formal DOM/session layers cannot own network loading");
+
 const story=read("storyui.js");
 const css=read("story.css");
 for(const file of ["ui.js","storyui.js","3d-test/formal-home.js","3d-test/mode-foundation.js","3d-test/prototype-engine.js","3d-test/runtime.js","3d-test/test-center.js"]){
@@ -40,12 +48,10 @@ const gmCenter=read("3d-test/test-center.js");
 assert.ok(ui.includes("civilizationRequestHomeEntryReconcile"),"Late home entry reconciliation must have one owner");
 assert.ok(alternateUi.includes("civilizationRequestHomeEntryReconcile")&&!alternateUi.includes("function reconcileInitialHome("),"Alternate universe must delegate startup reconciliation");
 assert.ok(gmCenter.includes("Civilization3DAppearance.scene(kind,a)"),"Formal GM appearance must reuse production scene adapter");
-assert.ok(gmCenter.includes('"3d-test/appearance-snapshot.js","./appearance-snapshot.js"'),"GM must load shared appearance adapter with resource manifest");
-assert.ok(gmCenter.includes('return entries.map(([path,url],i)=>'),"GM must fall back per missing digest, not revert the entire resource set");
-assert.ok(gmCenter.includes('typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)'),"GM manifest digests must be validated");
-const formalAppearanceFallback=bridge.match(/const APPEARANCE_SRC="3d-test\/appearance-snapshot\.js\?v=([^"]+)"/)?.[1];
-const gmAppearanceFallback=gmCenter.match(/"\.\/appearance-snapshot\.js\?v=([^"]+)"/)?.[1];
-assert.ok(formalAppearanceFallback&&gmAppearanceFallback&&formalAppearanceFallback===gmAppearanceFallback,"GM and formal appearance fallbacks must match");
+assert.ok(gmCenter.includes("Civilization3DLoader.load()"),"GM uses the shared manifest loader");
+assert.ok(read("gm3dprototype.js").includes('Civilization3DLoader.ensure("appearance")'),"GM snapshot and formal load deduplicate appearance");
+assert.ok(sharedLoader.includes('"3d-test/appearance-snapshot.js","20261011-b28c-ruins-v1"'),"Shared appearance fallback retained");
+assert.ok(sharedLoader.includes('typeof digest==="string"&&/^[a-f0-9]{24}$/.test(digest)'),"Per-file digests must be validated");
 assert.ok(engine.includes("function visualMaterial("),"3D material construction must expose a shared helper");
 for(const api of ["function mount(","function createScene(","function createEpochScene("]){
  assert.ok(engine.includes(api),"Legacy 3D entrypoint preserved until consumer audit: "+api);
@@ -59,10 +65,10 @@ const loader=read("scriptgrouploader.js");
 assert.ok(loader.includes("const groupProgress=new Map()"),"GM group must keep live progress for joiners");
 assert.ok(loader.includes("entry.listeners.add(onProgress)"),"Joined callers must receive current GM load progress");
 for(const file of ["3d-test/prototype-engine.js","3d-test/runtime.js","3d-test/appearance-snapshot.js"]){
- assert.ok(bridge.includes('version("'+file+'"'),"Preview asset must use deployed manifest version: "+file);
+ assert.ok(sharedLoader.includes('"'+file+'"'),"Preview asset must use deployed manifest version: "+file);
 }
-assert.ok(bridge.includes("resourceVersionPromise=null;throw error"),"Failed preview load must allow resource version refresh");
-assert.ok(bridge.includes("allSources.slice(0,2)"),"GM pre-warm must not eagerly load all 3D modules");
+assert.ok(sharedLoader.includes("resourceVersionPromise=null;throw error"),"Failed preview load must allow resource version refresh");
+assert.ok(sharedLoader.includes("const sources=[urls.engine,urls.scenes]"),"GM pre-warm must not eagerly load all 3D modules");
 
 assert.ok(bridge.includes("function uniqueControls("),"All formal preview groups must share an idempotent guard");
 assert.ok(bridge.includes("function syncAllPreviewButtons("),"All preview buttons must share state synchronization");
@@ -135,11 +141,11 @@ assert.ok(!index.includes('<script src="3d-test/runtime.js')&&!index.includes('<
  for(const safety of ["ResizeObserver","visibilitychange","pagehide","pageshow","renderPaused","signal.aborted","resizeObserver?.disconnect()"]){
   assert.ok(runtime.includes(safety),"B26 runtime safety missing: "+safety);
  }
- assert.match(read("3d-test/formal-home.js"),/runtime\.js\?v=20261011-b27-player-v1/);
+ assert.match(sharedLoader,/"3d-test\/runtime.js","20261011-b27-player-v1"/);
  for(const token of ["acquireAsset:","releaseAsset,clearAssets:clearAssetCache","assetRefs.clear()","signal.aborted","onContextRestored"]){assert.ok(runtime.includes(token),"3D optimization 1 missing: "+token);}
  assert.equal(formalEntryVersion,gmEntryVersion);
  assert.equal(gmEntryVersion,formalEntryVersion);
- assert.match(read("3d-test/test-center.js"),/runtime\.js\?v=20261011-b27-player-v1/);
+ assert.ok(read("3d-test/index.html").includes("./shared-loader.js?v="));
  const mapping=read("3d-test/appearance-snapshot.js");
  for(const field of ["function modelDescriptor(","function modelDescriptors(","assetKind:","geometry-fallback","visualKey","enhancement:bound"]){assert.ok(mapping.includes(field),"Opt3 mapping contract missing: "+field);}
  assert.ok(read("3d-test/prototype-engine.js").includes("modelDescriptors:Array.isArray(args.modelDescriptors)"),"Character must expose mapping descriptor");
