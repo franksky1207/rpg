@@ -78,3 +78,11 @@ python3 -m unittest discover -s tests/equipment-concepts -v
 ## 本次實測與尚待工作
 
 本機實際生成／驗證 100／100／10、210 唯一 ID／sourceKey／目錄、1,050 正式名稱位置；再生成零差異。21 項 unittest 通過，G007 原圖雜湊保持，實際 WebP 解碼成功。其餘概念圖生成、210 套使用者美術驗收、依圖建模、LOD／遊戲整合均不是本次完成項目。
+
+## 批次狀態與中斷續跑（2026-10-11）
+- **單一真實來源**仍為正式 owner + 目錄實際圖片 + `_concept-index.json`，不得人工維護另一份進度真相。
+- `python3 scripts/equipment-concept-batches.py status`：只讀彙總 G01～G10、U01～U10、H01 共 21 批，顯示每批已存在／缺少的圖片張數與批准套數。
+- `python3 scripts/equipment-concept-batches.py plan --batch G02`：列出 G011～G020 **僅缺少的圖片**、全部五槽正式名稱與既有圖片保護清單。Codex 須依此清單產圖，不能因重跑而覆蓋已存在圖片。
+- 批次中斷後：先重新取得最新 main，跑 `python3 scripts/equipment-concepts.py validate`，再跑 `plan --batch <批號>`；若索引和圖片存在狀態不符，先停止調查，而非靜默覆蓋。產圖完成後跑 generate、validate、unittest、Docs Integrity 與 Publish Asset Audit；再執行 generate 必須零差異。
+- `plan` 是**防誤操作的只讀工作清單**，不是檔案寫入鎖；執行圖片寫入的 Codex 仍須在每張寫檔前再次檢查路徑不存在，並避免在過時分支覆寫 main。工具不會擅自批准或修改圖片。
+- 專用 CI `.github/workflows/equipment-concepts.yml` 含批次狀態／續跑檢查及 `tests/equipment-concepts/test_batch_planner.py`，與正式資料庫測試一起執行。
