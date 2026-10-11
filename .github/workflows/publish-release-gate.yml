@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/publish-release-gate.yml'
       - 'scripts/build-publish-dry-run.cjs'
+      - 'tests/runtime/gm-3d-test-center-browser.js'
+      - 'tests/runtime/3d-mode-browser-regression.js'
 permissions:
   contents: read
 jobs:
