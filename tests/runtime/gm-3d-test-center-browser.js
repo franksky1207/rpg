@@ -56,7 +56,7 @@ const assert=require("node:assert/strict");
   await page.locator("#fixtureWorld").selectOption("3");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
   for(const title of ["副本作戰中心","懸賞戰準備區","競技場","鏡像戰紀錄","虛空幻境樓層"]){
-    await page.getByRole("button",{name:title}).click();
+    await page.locator("#caseList").getByRole("button",{name:title,exact:true}).click();
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
   }
