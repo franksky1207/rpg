@@ -1,3 +1,9 @@
+## 2026-10-11｜210 套正式裝備概念資料庫（僅開發資料）
+- 起始 main `c2a92794342027b5fc68fef8abbc75612a49974b`；正式 owner 實讀為銀河 100 地圖／宇宙 100 Boss／高維 10 HP 名稱階，共 210 套、1,050 槽位。保留宇宙原有「主機同步環」兩筆映射，沒有改名。
+- [210 套總索引](docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md)與 [維護／證據規格](docs/3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)；各套開發目錄有獨立 notes。`scripts/equipment-concepts.py` 只重建標記內正式資料，人工美術與原圖保留；專用 CI 查來源一致性、負向測試與重跑零差異。
+- G007 兩張 **WebP 已實際入庫**（1491×1055、224974／201726 bytes），原始 SHA 不變；下方命名規範交接與舊 notes 的「尚未上傳／PNG」為歷史狀態。僅 G007 有兩圖、其餘 209 套未生成；全部未批准。28-C v1 模型存在不代表已依概念圖重製或美術封版。
+- 本次未生成圖片、改 Blender／GLB、正式遊戲、數值、存檔、音訊、Service Worker 或 Pages 政策。後續先由使用者確認各套概念，再進建模／技術驗收。
+
 ## 2026-10-11｜210 套裝備概念素材命名規範與 G007 資料夾
 - 概念素材統一依正式 index 管理：`development/3d-source/equipment/concepts/galaxy/g001～g100-<slug>/`、`universe/u001～u100-<slug>/`、`higher/h01～h10-<slug>/`；完整規範見 [210 套命名標準](docs/3D_EQUIPMENT_210_SET_CONCEPT_NAMING_STANDARD_2026-10-11.md)。固定索引作為身份，slug 只是方便閱讀，不能改正式名稱。
 - 已建立銀河第七套 `concepts/galaxy/g007-ancient-tech-ruins/concept-notes.md`（古代科技遺址 Lv.31～35）；兩張概念圖標準檔名 `overview-front-side-back.png`、`equipment-five-slots.png`，**圖片目前尚未上傳**，不能宣稱已在 repo。這只建立目錄規格，不改第 28-C v1 Blender/GLB 或正式遊戲。

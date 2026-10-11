@@ -27,5 +27,9 @@ development/3d-source/equipment/
 - 所有原始概念圖、`.blend` 與驗收圖片保留 GitHub 開發目錄，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
 - 若主遊戲改了套裝名稱、順序或正式來源，先依最新 main 核對並修正 note；不得透過資料夾名稱覆寫正式遊戲資料。
 
-## 首套狀態
+## 首套狀態（歷史描述；現況見後補）
 已建立 `development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/concept-notes.md`；概念圖片尚待保存與上傳，後續須查實際存在再動工。
+
+## 210 套資料庫建立後補
+
+現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)與 [維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)。G007 標準兩張 WebP 已存在，原圖完整保留；尚無明確使用者批准紀錄，因此不能依上方「批准後才入庫」文字反推已批准。其餘 209 套圖片未生成。固定 ID／sourceKey 為身份，英文 slug 僅為標籤。

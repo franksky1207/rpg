@@ -1,0 +1,50 @@
+name: Equipment Concept Database
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'development/3d-source/equipment/concepts/**'
+      - 'scripts/equipment-concepts.py'
+      - 'tests/equipment-concepts/**'
+      - 'docs/3D_EQUIPMENT_210_SET_*'
+      - 'data.js'
+      - 'engine.js'
+      - 'worldmaps-*.js'
+      - 'secondworlddata.js'
+      - 'secondworldrewards.js'
+      - 'thirdworlddata.js'
+      - 'thirdworldloot.js'
+      - 'assets/3d/asset-registry.json'
+  pull_request:
+    paths:
+      - 'development/3d-source/equipment/concepts/**'
+      - 'scripts/equipment-concepts.py'
+      - 'tests/equipment-concepts/**'
+      - 'docs/3D_EQUIPMENT_210_SET_*'
+      - 'data.js'
+      - 'engine.js'
+      - 'worldmaps-*.js'
+      - 'secondworlddata.js'
+      - 'secondworldrewards.js'
+      - 'thirdworlddata.js'
+      - 'thirdworldloot.js'
+      - 'assets/3d/asset-registry.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate formal identities, notes, images and statuses
+        run: python3 scripts/equipment-concepts.py validate
+      - name: Test preservation and failure detection in isolated copies
+        run: python3 -m unittest discover -s tests/equipment-concepts -v
+      - name: Require repeatable generation without tracked changes
+        run: |
+          python3 scripts/equipment-concepts.py generate
+          git diff --exit-code -- development/3d-source/equipment/concepts docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md
