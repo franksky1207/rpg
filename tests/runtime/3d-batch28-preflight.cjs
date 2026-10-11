@@ -38,5 +38,11 @@ function boot(file,extra={}){
  assert.equal(session.snapshot().slots.length,0);
  close();assert.equal(session.snapshot().disposed,true);
  assert.equal(await session.update([{type:'weapon',present:true,assetId:'late'}],async()=>{throw Error('closed scene must not load');}),false);
+ const runtime=fs.readFileSync(path.join(root,'3d-test/character-assets.js'),'utf8');
+ assert.match(runtime,/async function prepareEquipment\(/,'real equipment mounting entrypoint');
+ assert.match(runtime,/verified\(a\)/,'registered SHA verified bytes');
+ assert.match(runtime,/a\.mount!=='rigid'/,'skinned equipment cannot silently bind incorrect joints');
+ assert.match(runtime,/no-hide-without-verified-region-mesh/,'base mesh remains visible before segmentation');
+ assert.match(runtime,/equipmentSession\(scene\)/,'per-scene lifecycle');
  console.log('PASS Batch28 preflight: five-slot resolver, missing/empty LOD fallback, stale async disposal, unequip, scene close');
 })().catch(error=>{console.error(error);process.exitCode=1;});
