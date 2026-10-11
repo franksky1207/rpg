@@ -13,23 +13,20 @@ development/3d-source/equipment/
   concepts/
     galaxy/g007-ancient-tech-ruins/
       concept-notes.md
-      overview-front-side-back.webp      # 使用者批准後才入庫
-      equipment-five-slots.webp           # 使用者批准後才入庫
+      overview-front-side-back.webp      # 完成生成後可入庫待審
+      equipment-five-slots.webp          # 完成生成後可入庫待審
     universe/u001-<slug>/
     higher/h01-<slug>/
   ancient-ruins-v1/                       # 已存在第 28-C Blender / 原資產來源，暫不搬動
 ```
 
 - 目錄只用英文小寫 `a-z0-9-`，固定序號與紀元前綴，避免手機檔案系統與 URL 問題；slug 可讀、但身份以固定序號與程式 index 決定。
-- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。不要求現在建立另外 209 個空目錄。
-- 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，只有使用者認可的兩張主圖採標準檔名。
+- 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。目前 210 套目錄與 notes 均已建立，只有 G007 已有兩張概念圖。
+- 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，兩張待使用者審核的正式候選圖採標準檔名；批准另需明確證據。
 - 圖片是美術參考，不等於可直接推導的 Blender 準確尺度、左右對稱、權重、LOD 或 GLB 交付。先由使用者美術確認，再讓 Codex 做幾何和 rig 驗證。
-- 所有原始概念圖、`.blend` 與驗收圖片保留 GitHub 開發目錄，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
+- 概念參考 WebP 與必要的 `.blend`／驗收素材置於 GitHub 開發目錄；高容量原始無損概念圖可外部封存，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
 - 若主遊戲改了套裝名稱、順序或正式來源，先依最新 main 核對並修正 note；不得透過資料夾名稱覆寫正式遊戲資料。
 
-## 首套狀態（歷史描述；現況見後補）
-已建立 `development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/concept-notes.md`；概念圖片尚待保存與上傳，後續須查實際存在再動工。
+## 目前狀態與批次 SOP
 
-## 210 套資料庫建立後補
-
-現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)與 [維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)。G007 標準兩張 WebP 已存在，原圖完整保留；尚無明確使用者批准紀錄，因此不能依上方「批准後才入庫」文字反推已批准。其餘 209 套圖片未生成。固定 ID／sourceKey 為身份，英文 slug 僅為標籤。
+現已建立全部 210 套目錄與 notes；詳見 [總索引](3D_EQUIPMENT_210_SET_MASTER_INDEX.md)、[維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)及[批次概念美術流程](3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md)。G007 兩張 WebP 已存在，**尚待使用者批准**；其餘 209 套尚未製圖。**入庫待審與批准是不同狀態**，固定 ID／sourceKey 為身份，英文 slug 僅為標籤。
