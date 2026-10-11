@@ -7,8 +7,10 @@ const assert=require("node:assert/strict");
  try{
   await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html",{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>typeof window.startGalaxyReviewBattle==="function"&&typeof window.openGalaxyReviewMap==="function"&&typeof window.runCombatCore==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==="ready",null,{timeout:45000});
   const setup=await page.evaluate(()=>{
    document.getElementById("civilizationAuthGate")?.remove();
+   document.body.classList.remove("auth-gate-open");
    document.getElementById("gameIntroModal")?.classList.remove("show");
    const before=JSON.stringify(state);
    window.__reviewBrowserCleanup={before,world:window.isSecondWorldEntered,combat:window.runCombatCore,presenter:window.animateStructuredCombatPresentation,sleep:window.mainBattlePresentationSleep,phase:window.currentWorldPhase,prepareSelection:window.prepareFirstWorldTargetContextFromSelection,prepareExplicit:window.prepareFirstWorldTargetContext,originalView:view,originalScreen:adventureScreen,originalBusy:battleBusy};
@@ -24,7 +26,7 @@ const assert=require("node:assert/strict");
    return {selected,phase:window.currentWorldPhase(state),era:window.getAdventureEraView?.(),locked:window.adventureEraViewLocked?.(),view,preview:document.querySelector("#main")?.textContent?.slice(0,260),hasPrepare:!!document.querySelector(".galaxy-review-prepare"),hasEnemy:!!document.querySelector(".enemy-card"),hasButton:!!document.querySelector('button[onclick="startGalaxyReviewBattle()"]')};
   });
   assert.equal(setup.era,"galaxy-review",JSON.stringify(setup));
-  if(!setup.hasPrepare){await page.locator(".galaxy-review-action").first().click();}
+  if(!setup.hasPrepare){await page.evaluate(()=>window.openGalaxyReviewMap(0));}
   assert.equal(await page.locator(".galaxy-review-prepare").count(),1);assert.equal(await page.locator(".galaxy-review-prepare .enemy-card").count(),5);assert.equal(await page.locator('button[onclick="startGalaxyReviewBattle()"]').count(),1);
   const formalSnapshot=()=>page.evaluate(()=>JSON.stringify({exp:state.exp,gold:state.gold,unlockedMap:state.unlockedMap,mapProgress:state.mapProgress,bossProgress:state.bossProgress,equipment:state.equipment,vipPoints:state.vipPoints}));
   for(let n=0;n<2;n++){

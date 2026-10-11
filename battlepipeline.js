@@ -77,8 +77,10 @@
   ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
   window.activeMainBattleContext=ctx;
   let defeat=null,local=0,catchUpNeedsFinalSync=false;
-  const mainBackgroundStarted=startMainBackground(ctx);
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:boundTarget.targetType==="boss"?"boss":"normal"});
+  let mainBackgroundStarted=false;
   try{
+   mainBackgroundStarted=startMainBackground(ctx);
    while(ctx.continuous||local<ctx.originalCount){
     if(shouldStopContinuous(ctx))break;
     local++;
@@ -109,7 +111,7 @@
     if(hasMoreBattles(ctx)){currentCombatEncounter=encounterForContext(ctx,{preview:false});await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
    }
    currentCombatEncounter=null;clearPreviewForContext(ctx);battleBusy=false;window.activeMainBattleContext=null;save();render();setTimeout(()=>{showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);return true;
-  }finally{stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}}
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}}
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
  window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION=1;

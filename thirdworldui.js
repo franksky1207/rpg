@@ -184,6 +184,7 @@
   const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!player)return false;
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.prepareCombatPresentation!=="function"||typeof window.animateStructuredCombatPresentation!=="function")return false;
   if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"higher-dimensional");
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"higher",mode:"higher-stage"});
   try{
    const result=window.runThirdWorldBossCombat(index,{review:true,preparePresentation:true,logs:true,startHp:player.hp,playerHealCap:player.hp});
    if(result?.ok!==true||result?.review!==true||result?.formalSettlementEligible===true)throw new Error(result?.reason||"高維回顧建立失敗。");
@@ -199,7 +200,7 @@
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-review-error");
    if(typeof window.render==="function")window.render();
    alert("高維回顧發生錯誤，正式進度未受影響。");return false;
-  }
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.closeThirdWorldReviewResultModal=closeReviewResult;
  window.isThirdWorldReviewBattleActive=function(){return !!reviewContext;};

@@ -190,17 +190,21 @@
  }
 
  async function runSingleUi(){
-  const result=window.runCivilizationCalamitySingle?.(ui.selectedId);
+  const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
+  try{
+  const result=window.runCivilizationCalamitySingle?.(ui.selectedId,{audioRunId});
   if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始文明災厄挑戰。";render();return;}
   ui.lastBattle=result.result;ui.finalRun=result.run;ui.displayBattleNumber=1;
   primeDisplay(result.result);render();
   await animateBattle(result);
   ui.running=false;ui.phase="result";resetDisplay();render();window.queuePendingPlayerTitleNotice?.();
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
 
  async function runContinuousUi(){
+  const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
-   await window.runCivilizationCalamityContinuous(ui.selectedId,{
+   await window.runCivilizationCalamityContinuous(ui.selectedId,{audioRunId,
     async onBattleComplete(battle){
      ui.lastBattle=battle.result;
      ui.finalRun=battle.run;
@@ -245,7 +249,7 @@
    });
   }catch(error){
    stopMinimalIfOpen();ui.running=false;ui.phase="result";ui.message=String(error?.message||error);render();
-  }
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
 
  window.startCivilizationCalamityUI=function(id,mode="single"){

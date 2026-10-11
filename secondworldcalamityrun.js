@@ -1,4 +1,5 @@
 (function(){
+ let audioRunId=null,audioManagedByCaller=false;
  const VERSION=1;
  const SETTLEMENT_VERSION=1;
  const CONTINUOUS_VERSION=3;
@@ -130,16 +131,17 @@
   stopBackground();
   activeRun.active=false;activeRun.phase="ended";activeRun.reason=String(reason||"ended");activeRun.endedAt=Date.now();
   window.CivilizationAudio?.settlementVictory?.("universe-calamity:"+String(activeRun.startedAt),{success:activeRun.wins>0&&["single-complete","title-first-kill","civilization-complete"].includes(activeRun.reason)});
-  window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"universe",mode:"calamity"});
+  if(!audioManagedByCaller){window.CivilizationAudioScenes?.endRun?.(audioRunId);audioRunId=null;}
   return runSnapshot();
  }
- function begin(value,mode="continuous"){
+ function begin(value,mode="continuous",options={}){
   const d=def(value);if(!d)return {ok:false,reason:"unknown-calamity",run:runSnapshot()};
   if(!(typeof window.canChallengeSecondWorldCalamity==="function"&&window.canChallengeSecondWorldCalamity(d.id)))return {ok:false,reason:"locked",run:runSnapshot()};
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runSnapshot()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runSnapshot()};
-  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"universe",mode:"calamity"});
+  audioManagedByCaller=options.audioRunId!=null;
+  audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"calamity",runId:options.audioRunId});
   activeRun={active:true,mode:mode==="single"?"single":"continuous",phase:"ready",calamityId:d.id,calamityName:d.name,battleCount:0,wins:0,losses:0,trueKills:0,stopRequested:false,reason:"",startedAt:Date.now(),endedAt:null,lastBattle:null};
   return {ok:true,run:runSnapshot()};
  }
@@ -173,9 +175,11 @@
   return {ok:true,ended:false,result,run:runSnapshot(),battleNumber:activeRun.battleCount};
  }
  async function continuous(value,options={}){
-  if(!activeRun?.active){const started=begin(value,"continuous");if(!started.ok)return started;}
+  if(!activeRun?.active){const started=begin(value,"continuous",options);if(!started.ok)return started;}
   const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
+  const runAudioId=audioRunId;
+  try{
   startBackground();
   while(activeRun?.active){
    const infra=runInfra();
@@ -193,10 +197,11 @@
    if(!fastCatchUp())await new Promise(resolve=>setTimeout(resolve,0));
   }
   const run=runSnapshot();if(onEnd)await onEnd(run);return {ok:true,ended:true,reason:run?.reason||"ended",run};
+  }catch(error){if(audioRunId===runAudioId)finish("error");else window.CivilizationAudioScenes?.endRun?.(runAudioId);throw error;}
  }
  function single(value,options={}){
-  const started=begin(value,"single");if(!started.ok)return started;
-  return fightNext(options);
+  const started=begin(value,"single",options);if(!started.ok)return started;
+  try{return fightNext(options);}catch(error){finish("error");throw error;}
  }
  function stop(){
   if(!activeRun?.active)return {ok:false,reason:"no-active-run",run:runSnapshot()};
@@ -213,6 +218,7 @@
   activeRun.reason="pagehide";
   activeRun.endedAt=Date.now();
   stopBackground();
+  window.CivilizationAudioScenes?.endRun?.(audioRunId);audioRunId=null;
  }
  function subscribeSharedLifecycle(){
   const infra=runInfra();

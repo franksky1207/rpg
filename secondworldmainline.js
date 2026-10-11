@@ -177,6 +177,7 @@
   const encounter=typeof window.secondWorldBossEncounter==="function"?window.secondWorldBossEncounter(index):null;if(!encounter)return false;
   const ctx=createContext(index,boss,false,true);ctx.currentEncounter=encounter;ctx.reviewPlayerMaxHp=Math.max(1,Number(player.hp)||1);ctx.reviewPlayerStartHp=ctx.reviewPlayerMaxHp;publishContext(ctx);
   busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(true,"universe");
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"boss"});
   let combat=null,reviewResultQueued=false;
   try{
    if(typeof render==="function")render();
@@ -188,6 +189,7 @@
    return true;
   }catch(error){console.error("[文明戰線] 宇宙紀元回顧失敗",error);alert("宇宙紀元回顧發生錯誤，正式進度未受影響。");return false;}
   finally{
+   window.CivilizationAudioScenes?.endRun?.(audioRunId);
    ctx.currentEncounter=null;ctx.presenting=false;
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("second-world-review-finalize");
    if(!reviewResultQueued&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
@@ -204,8 +206,10 @@
 
   const ctx=createContext(index,boss,continuous);publishContext(ctx);
   busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;
-  ctx.backgroundStarted=startBackgroundFlow(ctx);
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"boss"});
+  ctx.backgroundStarted=false;
   try{
+   ctx.backgroundStarted=startBackgroundFlow(ctx);
    do{
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
     await waitForForegroundIfBackgroundDisabled(ctx);
@@ -288,6 +292,7 @@
    }
    return true;
   }finally{
+   window.CivilizationAudioScenes?.endRun?.(audioRunId);
    ctx.currentEncounter=null;ctx.presenting=false;
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("second-world-mainline-finalize");
    stopBackgroundFlow(ctx.backgroundStarted);

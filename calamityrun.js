@@ -1,4 +1,5 @@
 (function(){
+ let audioRunId=null,audioManagedByCaller=false;
  const CALAMITY_RUN_VERSION=1;
  const CALAMITY_CONTINUOUS_RULE_VERSION=6;
  const GLOBAL_MUTEX_VERSION=1;
@@ -68,17 +69,18 @@
   activeRun.endedReason=String(reason||"ended");
   activeRun.endedAt=Date.now();
   window.CivilizationAudio?.settlementVictory?.("calamity:"+String(activeRun.startedAt),{success:activeRun.wins>0&&["single-complete","title-first-kill","mark-maxed"].includes(activeRun.endedReason)});
-  window.CivilizationAudioScenes?.notify?.("combat-exit",{mode:"calamity"});
+  if(!audioManagedByCaller){window.CivilizationAudioScenes?.endRun?.(audioRunId);audioRunId=null;}
   return runStatus();
  }
- function begin(id,mode="continuous"){
+ function begin(id,mode="continuous",options={}){
   const def=definition(id);
   if(!def)return {ok:false,reason:"unknown-calamity",run:runStatus()};
   if(typeof window.isCivilizationCalamityUnlocked!=="function"||!window.isCivilizationCalamityUnlocked(def.id))return {ok:false,reason:"locked",calamityId:def.id,run:runStatus()};
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runStatus()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runStatus()};
-  window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"calamity"});
+  audioManagedByCaller=options.audioRunId!=null;
+  audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:"calamity",runId:options.audioRunId});
   activeRun={
    active:true,
    mode:validMode(mode),
@@ -175,7 +177,7 @@
  async function runContinuous(id,options={}){
   const requestedId=String(id||"");
   if(!activeRun?.active){
-   const started=begin(requestedId,"continuous");
+   const started=begin(requestedId,"continuous",options);
    if(!started.ok)return started;
   }
   if(activeRun.mode!=="continuous")return {ok:false,reason:"not-continuous",run:runStatus()};
@@ -183,6 +185,8 @@
 
   const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
+  const runAudioId=audioRunId;
+  try{
   startBackground();
   while(activeRun?.active){
    if(activeRun.stopRequested&&activeRun.phase!=="fighting"){
@@ -219,12 +223,13 @@
   const ended=runStatus();
   if(onEnd)await onEnd(ended);
   return {ok:true,ended:true,reason:ended?.endedReason||"ended",run:ended};
+  }catch(error){if(audioRunId===runAudioId)finish("error");else window.CivilizationAudioScenes?.endRun?.(runAudioId);throw error;}
  }
 
  function runSingle(id,options={}){
-  const started=begin(id,"single");
+  const started=begin(id,"single",options);
   if(!started.ok)return started;
-  return fightNext(options);
+  try{return fightNext(options);}catch(error){finish("error");throw error;}
  }
 
  function stopForPageHide(){
@@ -236,6 +241,7 @@
   activeRun.endedReason="pagehide";
   activeRun.endedAt=Date.now();
   stopBackground();
+  window.CivilizationAudioScenes?.endRun?.(audioRunId);audioRunId=null;
  }
  function subscribeSharedLifecycle(){
   const infra=runInfra();

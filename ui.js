@@ -264,20 +264,21 @@ window.startGalaxyReviewBattle=async function(){
  const e={...preview,traits:Array.isArray(preview.traits)?preview.traits.slice():[]};
  const ps=playerCombatStats(),startHp=ps.hp,before=JSON.stringify(state);
  const reviewAudioSettlement={};
- battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";window.CivilizationAudioScenes?.notify?.("combat-start",{mode:e?.kind==="boss"?"boss":"battle"});render();
+ battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:e?.kind==="boss"?"boss":"normal"});
  try{
+  render();
   const result=combatOwner(ps,e,startHp,{mainlineLogs:true});
   if(!result||typeof result.win!=="boolean")throw new Error("銀河回顧戰鬥結果無效。");
   if(JSON.stringify(state)!==before)throw new Error("銀河紀元回顧戰不應修改正式 state。");
   const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};
   await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
-  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.notify?.("combat-exit");render();
+  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.endRun?.(audioRunId);render();
   const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
   if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show");if(result.win)window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("galaxy-review",reviewAudioSettlement),{success:true});}
   else window.setGalaxyReviewBattleActive?.(false);
   return true;
  }catch(err){
-  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.notify?.("combat-exit");render();
+  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.endRun?.(audioRunId);render();
   console.error("[文明戰線] 銀河紀元回顧戰失敗",err);
   alert("銀河紀元回顧戰啟動失敗，請重新整理後再試。");
   return false;
@@ -305,7 +306,7 @@ function startBattles(){
 function beginCombat(count){
  combatRound=1;combatTotal=count;
  if(typeof getPreviewEncounter==="function")currentCombatEncounter=getPreviewEncounter(selectedMap,selectedEnemy);
- adventureScreen="combat";window.CivilizationAudioScenes?.notify?.("combat-start",{mode:currentCombatEncounter?.kind==="boss"?"boss":"battle"});render();runBattles(count);
+ adventureScreen="combat";render();runBattles(count);
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function animateFight(r,startPlayerHp,playerMax,enemyMax,roundText=""){
@@ -333,7 +334,7 @@ function showBattleResult(ctx,defeat=null){
  }
  modal.classList.add("show");
  if(!defeat)window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("main",ctx),{success:true});
- window.CivilizationAudioScenes?.notify?.("combat-exit");
+
 }
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");

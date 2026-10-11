@@ -29,6 +29,7 @@ jobs:
           node scripts/build-publish-dry-run.cjs
           node tests/runtime/resource-cache-behavior.js
           node tests/runtime/resource-cache-prefetch-integrity.js
+          node tests/audio-lifecycle.test.cjs
           node tests/audio-regression.test.cjs
           node tests/runtime/3d-asset-registry-integrity.cjs
       - name: Install isolated Chromium
@@ -49,6 +50,7 @@ jobs:
           curl -fsS http://127.0.0.1:4173/index.html >/dev/null
           export SMOKE_URL=http://127.0.0.1:4173/index.html
           export RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html
+          node tests/runtime/audio-lifecycle-browser.js
           node tests/runtime/browser-smoke.js
           node tests/runtime/startup-readiness-browser.js
           node tests/runtime/gm-3d-test-center-browser.js
@@ -82,6 +84,7 @@ jobs:
             publish-stage3-report.json
             publish-stage4-browser-report.json
             3d-player-browser-report.json
+            audio-lifecycle-browser-report.json
           if-no-files-found: warn
   deploy:
     if: github.ref == 'refs/heads/main'

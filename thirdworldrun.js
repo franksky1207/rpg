@@ -151,7 +151,7 @@
   const finishedSnapshot=runtimeSnapshot(finished);
   runtime=null;runSerial+=1;stopBackgroundFlow();lastFinishedRuntime=finishedSnapshot;
   // Infinite high-era progression has no generic victory settlement: progress and deaths are not all-clear.
-  window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"higher",mode:"higher-stage"});
+  window.CivilizationAudioScenes?.notify?.("combat-exit",{era:"higher",mode:"higher-stage",runId:"higher-main:"+finished.runId});
   return finishedSnapshot;
  }
  function startRun(value){
@@ -167,7 +167,7 @@
   const status=window.thirdWorldChallengeStatus(index,target);
   if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:runtimeSnapshot()});
   const levelAtStart=coreLevel(target),runId=runSerial+1;
-  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"higher",mode:"higher-stage"});
+  window.CivilizationAudioScenes?.notify?.("combat-start",{era:"higher",mode:"higher-stage",runId:"higher-main:"+runId});
   runtime={runId,active:true,paused:false,looping:false,bossIndex:index,deaths:0,battles:0,vip20Protections:0,startedAt:Date.now(),coreLevelAtStart:levelAtStart,perDeathSuppressionPointsAtStart:suppressionPerDeathPoints(levelAtStart),pauseReason:"",stopReason:"",pendingEvents:[],recentBattles:[],lastBattleSummary:null};
   runSerial=runId;
   if(gmBackgroundEnabled())startBackgroundFlow();else stopBackgroundFlow();

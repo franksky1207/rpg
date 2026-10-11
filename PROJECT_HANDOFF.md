@@ -1,3 +1,9 @@
+## 2026-10-11｜全戰鬥音樂唯一正式 owner 與原生播放驗收
+- 以最新 main `7f57531dda638d2fa1d37355e2ba9ac9c2214157` 承接，先隔離分支施工。根因與完整驗收見 [COMBAT_MUSIC_UNIFIED_ACCEPTANCE_2026-10-11.md](docs/COMBAT_MUSIC_UNIFIED_ACCEPTANCE_2026-10-11.md)。
+- Scenes V8 的 startRun/endRun token 是正式音樂 owner；syncView／setContext 不能自行取得戰鬥 lock，無 token／舊 token 退出不取消新輪。真正銀河 battlepipeline／宇宙主線及所有模式接正式事件，finally 清理，結果 DOM 與演出旗標不決定正式退出。回顧依來源紀元選曲、依有效分頁還原主題。
+- VM 20 項＋原生 browser 完整流程驗收加入 Runtime／Stage 4／optimized Pages gates；17 OGG、32 WebP、49 media preload／fingerprint／Range／存檔與 Batch 27 3D 資產保留。正式公式／玩家資料／GM 設定沒有變更，沿用既有 Pages source。
+- 本機 93 個不同關聯檢查及必要重跑；完整結果由工作流程 artifact／本次交付回報提供。手機實機聽感、OS 背景／權限及正式帳號／雲端僅由玩家確認；不將合約模擬冒充真實玩法。
+
 ## 2026-10-11｜第 27 批人物資產技術基礎（部分完成，未正式美術封版）
 - 起始 main：`fbaaa9d1f84045542d58fe418501172dce44c0a6`。已建立真實可編輯 `.blend`、53-bone skin／五槽掛點、三個真 GLB LOD、本地解碼器、顯式 asset registry 與發布閉包；正式「角色→預覽 3D 角色」及 GM「玩家、裝備與養成→角色全身展示」共用 readonly 資產技術，八類／31 案例保持不變。
 - **高品質人物美術尚未完成；第 27 批未正式封版。** 目前為技術美術研究基座，面部、手指、肩髖接縫及科幻面板／貼圖仍需修整。真骨架 GLB／CI 通過不等於美術或真機通過；五槽實際換裝、紀元專屬裝備、完整動畫與第 28～40 批未施工。

@@ -7,3 +7,4 @@ runtime-integrity-report.txt
 *-browser-report.txt
 story-*-report.txt
 3d-player-browser-report.json
+audio-lifecycle-browser-report.json

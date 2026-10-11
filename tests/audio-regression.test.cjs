@@ -11,8 +11,8 @@ const files={
 const source=name=>fs.readFileSync(path.join(root,name),"utf8");
 for(const [mode,file] of Object.entries(files)){
  const s=source(file);
- assert.match(s,/notify\?\.\("combat-start"/,mode+" must start combat audio");
- assert.match(s,/notify\?\.\("combat-exit"/,mode+" must exit combat audio");
+ assert.match(s,/(?:notify\?\.\("combat-start"|startRun\?\.)/,mode+" must start combat audio");
+ assert.match(s,/(?:notify\?\.\("combat-exit"|endRun\?\.)/,mode+" must exit combat audio");
 }
 const core=source("audio/audio-core.js");
 assert.doesNotMatch(core,/"ui-click":\{count:/,"cancelled UI click must not be registered");
@@ -58,29 +58,29 @@ assert.equal(listened.length,count,"renders/duplicate starts must never restart 
 assert.equal(audio.current().combatLocked,true);
 audio.notify("combat-end");
 assert.equal(audio.current().combatLocked,true,"individual fight must not exit continuous music");
-audio.notify("combat-exit",{era:"higher"});
+audio.endRun(audio.current().activeRunId,{era:"higher"});
 assert.equal(audio.current().combatLocked,false);
 assert.equal(listened.at(-1),"era-higher-theme");
 // Explicit historical era must override the current player era when choosing battle tiers.
 audio.notify("combat-start",{era:"galaxy",mode:"battle"});
 assert.equal(listened.at(-1),"battle-normal-preview");
-audio.notify("combat-exit",{era:"galaxy"});
+audio.endRun(audio.current().activeRunId,{era:"galaxy"});
 assert.equal(listened.at(-1),"era-higher-theme","settled battle must restore the actual current era");
 // Galaxy mainline can enter combat through a view transition. After settlement
 // the same DOM must not start the soundtrack again.
 ctx.state.worldPhase=1;
 audio.syncView("home");
 audio.syncView("adventure","combat");
-assert.equal(audio.current().combatLocked,true,"galaxy combat view must acquire battle theme");
-assert.equal(listened.at(-1),"battle-normal-preview");
+assert.equal(audio.current().combatLocked,false,"view must not acquire formal ownership");
+assert.equal(listened.at(-1),"era-galaxy-theme");
 audio.notify("combat-start",{era:"galaxy",mode:"boss"});
 assert.equal(listened.at(-1),"battle-medium-preview","explicit Boss battle overrides legacy screen entry");
-audio.notify("combat-exit");
+audio.endRun(audio.current().activeRunId);
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,false,"settlement modal must not relock");
 assert.equal(listened.at(-1),"era-galaxy-theme");
 audio.notify("combat-start",{era:"galaxy",mode:"boss"});
-audio.notify("combat-exit");
+audio.endRun(audio.current().activeRunId);
 audio.syncView("adventure","combat");
 assert.equal(audio.current().combatLocked,false,"stale combat UI must never reacquire an exited run");
 assert.equal(listened.at(-1),"era-galaxy-theme","settlement must restore current era");
@@ -110,7 +110,8 @@ vm.runInContext(source("audio/audio-scenes.js"),delayed);
 const d=delayed.CivilizationAudioScenes;
 d.notify("combat-start",{era:"galaxy",mode:"battle",runId:"old"});
 d.notify("combat-exit",{runId:"old"});
-assert.equal(d.current().pendingExit,true);
+assert.equal(d.current().pendingExit,false,"formal exit must complete without presentation polling");
+assert.equal(d.current().combatLocked,false);
 d.notify("combat-start",{era:"galaxy",mode:"boss",runId:"new"});
 assert.equal(deferredTracks.at(-1),"battle-medium-preview","new battle must replace pending old soundtrack");
 scheduled.splice(0).forEach(fn=>fn());

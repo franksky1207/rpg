@@ -115,7 +115,7 @@
    return false;
   }
   voidUi.running=true;
-  window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"void"});
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({mode:"void"});
   try{
    await window.runVoidMirageAuto({
     async onFloorComplete(fr){
@@ -167,7 +167,7 @@
    return true;
   }finally{
    voidUi.running=false;
-   window.CivilizationAudioScenes?.notify?.("combat-exit",{mode:"void"});
+   window.CivilizationAudioScenes?.endRun?.(audioRunId);
    if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
   }
  }
@@ -185,7 +185,7 @@
   const allowBackground=typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;
   if(allowBackground&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
   else if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
-  voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};window.CivilizationAudioScenes?.notify?.("combat-start",{mode:"void"});render();
+  voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
   if(allowBackground&&typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
  };
  window.claimVoidMirageRewardUI=function(){

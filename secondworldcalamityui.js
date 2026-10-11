@@ -221,12 +221,17 @@
   }catch(e){}
  }
  async function single(){
-  const res=window.runSecondWorldCalamitySingle?.(ui.selectedId);
+  const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
+  try{
+  const res=window.runSecondWorldCalamitySingle?.(ui.selectedId,{audioRunId});
   if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始此文明災厄挑戰。";render();return;}
   ui.lastBattle=res.result;ui.finalRun=res.run;ui.displayBattleNumber=1;primeDisplay(res.result);render();await animate(res.result);ui.running=false;ui.phase="result";ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-single");
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
  async function continuous(){
-  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{
+  const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
+  try{
+  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{audioRunId,
    async onBattleComplete(step){
     ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
     const policy=step?.presentationPolicy||null;
@@ -256,6 +261,7 @@
    async onEnd(run){ui.finalRun=run;}
   });
   ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-continuous");
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
  function ensureNotice(){
   let modal=document.getElementById("secondWorldCalamityAppearanceModal");if(modal)return modal;
@@ -295,13 +301,14 @@
   const st=galaxyStatus(def),formalEnemy=st?.enemy||window.buildCivilizationCalamityEnemy?.(def.id);if(!formalEnemy||typeof window.runCombatCore!=="function")return false;
   const enemy={...formalEnemy,hp:Math.max(1,Number(st?.maxHp)||Number(formalEnemy.hp)||1)},p=window.playerCombatStats?.();if(!p)return false;
   reviewSelectedId=def.id;reviewBattle={phase:"combat",enemy,enemyHp:enemy.hp,playerHp:p.hp};state.hp=p.hp;render();
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:"calamity"});
   try{
    const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true});
    reviewBattle.enemyHp=combat.enemyHp;reviewBattle.playerHp=combat.hp;
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"galaxy-calamity-review-end"});
    state.hp=p.hp;reviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
    render();showReviewResultModal("銀河紀元",combat);return true;
-  }catch(error){state.hp=p.hp;reviewBattle=null;render();throw error}
+  }catch(error){state.hp=p.hp;reviewBattle=null;render();throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.startUniverseCalamityReview=async function(id){
   if(!thirdWorldReviewOnly()||ui.running||reviewBattle?.phase==="combat"||universeReviewBattle?.phase==="combat")return false;
@@ -310,13 +317,14 @@
   const st=status(def.id),enemy={...formalEnemy,hp:Math.max(1,Number(st?.maxHp)||Number(formalEnemy.hp)||1)},p=window.playerCombatStats?.();if(!p)return false;
   const multiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,state,civilizationLevel:state.secondWorld?.civilizationLevel}):1;
   universeReviewSelectedId=def.id;universeReviewBattle={phase:"combat",enemy,enemyHp:enemy.hp,playerHp:p.hp};state.hp=p.hp;render();
+  const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"calamity"});
   try{
    const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true,playerFinalDamageMultiplier:multiplier});
    universeReviewBattle.enemyHp=combat.enemyHp;universeReviewBattle.playerHp=combat.hp;
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"universe-calamity-review-end"});
    state.hp=p.hp;universeReviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
    render();showReviewResultModal("宇宙紀元",combat);return true;
-  }catch(error){state.hp=p.hp;universeReviewBattle=null;render();throw error}
+  }catch(error){state.hp=p.hp;universeReviewBattle=null;render();throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   if(thirdWorldReviewOnly())return false;
