@@ -1,0 +1,37 @@
+name: Publish Asset Audit (Stage 2)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '**/*.js'
+      - '**/*.css'
+      - '**/*.html'
+      - 'assets/**'
+      - 'audio/**'
+      - 'vendor/**'
+      - '3d-test/**'
+      - 'development/**'
+      - 'scripts/publish-asset-audit.cjs'
+      - '.github/workflows/publish-asset-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Audit candidate publish whitelist and missing direct resources
+        run: |
+          node scripts/publish-asset-audit.cjs
+          node scripts/publish-asset-audit.cjs --json > publish-asset-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publish-asset-audit
+          path: publish-asset-audit.json
+          if-no-files-found: ignore
