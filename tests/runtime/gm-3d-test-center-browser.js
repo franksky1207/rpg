@@ -5,7 +5,9 @@ const assert=require("node:assert/strict");
  const page=await browser.newPage({viewport:{width:1280,height:800}});
  const errors=[];page.on("pageerror",e=>errors.push(String(e)));
  try{
-  await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/3d-test/?embedded=1",{waitUntil:"domcontentloaded",timeout:45000});
+  const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
+  const centerUrl=new URL("3d-test/?embedded=1",base).href;
+  await page.goto(centerUrl,{waitUntil:"domcontentloaded",timeout:45000});
   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===5,{timeout:60000});
   assert.equal(await page.locator("#categoryList .center-category").count(),9);
   assert.equal(await page.locator("#caseList .center-case").count(),31);
