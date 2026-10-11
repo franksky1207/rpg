@@ -33,10 +33,27 @@ function inspectRegistry(root,available){
   visit(a.id);
   if(a.path.endsWith('.glb')){
    const doc=glb(fs.readFileSync(path.join(root,a.path)),a.id);
-   if(!doc.skins?.length||!doc.meshes?.length||!doc.materials?.length||!doc.animations?.length)throw Error('Rig/material/animation missing: '+a.id);
+   if(!doc.meshes?.length||!doc.materials?.length)throw Error('Mesh/material missing: '+a.id);
+   if(a.type==='character'){
+    if(!doc.skins?.length||doc.skins[0].joints.length!==53||!doc.animations?.length)throw Error('Rig/material/animation missing: '+a.id);
+    for(const name of Object.values(registry.slots))if(!doc.nodes.some(n=>n.name===name))throw Error('Missing socket '+name);
+   }else if(a.type==='equipment'){
+    if(!['weapon','helmet','armor','shoes','accessory'].includes(a.slot)||!['rigid','skinned'].includes(a.mount)||a.rigContract!=='cw.humanoid.rig.v1')throw Error('Equipment mounting contract invalid: '+a.id);
+    if(a.mount==='skinned'&&(!doc.skins?.length||!doc.skins[0].joints?.length))throw Error('Equipment skin missing: '+a.id);
+    if(a.mount==='rigid'&&doc.skins?.length)throw Error('Rigid equipment must not include skin: '+a.id);
+   }else throw Error('Unsupported GLB asset type: '+a.id);
    for(const row of [...(doc.images||[]),...(doc.buffers||[])])if(row.uri)throw Error('External GLB dependency must be embedded: '+a.id);
    if((doc.extensionsRequired||[]).some(x=>/compression|draco|basisu/i.test(x)))throw Error('Unverified GLB codec: '+a.id);
-   for(const name of Object.values(registry.slots))if(!doc.nodes.some(n=>n.name===name))throw Error('Missing socket '+name);
+  }
+ }
+ if(registry.equipment!==undefined){
+  if(!registry.equipment||typeof registry.equipment!=='object'||Array.isArray(registry.equipment))throw Error('Invalid equipment mapping');
+  for(const [slot,mapping] of Object.entries(registry.equipment)){
+   if(!['weapon','helmet','armor','shoes','accessory'].includes(slot)||!mapping||typeof mapping!=='object')throw Error('Invalid equipment slot mapping');
+   for(const [quality,id] of Object.entries(mapping)){
+    const asset=entries.get(id);
+    if(!['low','medium','high'].includes(quality)||!asset||asset.type!=='equipment'||asset.slot!==slot||asset.quality!==quality)throw Error('Invalid equipment LOD mapping: '+slot+'/'+quality);
+   }
   }
  }
  for(const quality of ['low','medium','high']){
