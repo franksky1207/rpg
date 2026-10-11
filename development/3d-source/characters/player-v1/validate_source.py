@@ -42,21 +42,23 @@ for name in ['region.head','region.torso','region.legs','region.feet','region.ba
 # Exercise elbow/knee/shoulder/hip independently. Report geometric strain,
 # with a guard against explosive deformation or collapsed skin faces.
 bpy.context.scene.frame_set(1);rest=evaluated();pose_reports=[]
-for bone_name,degrees in [('forearm.L',80),('shin.L',75),('upper_arm.L',45),('thigh.L',50),('index_02.L',55)]:
-    p=rig.pose.bones[bone_name];p.rotation_mode='XYZ';p.rotation_euler.x=math.radians(degrees);bpy.context.view_layer.update();posed=evaluated()
+for bone_name,degrees in [('forearm.L',80),('shin.L',75),('upper_arm.L',45),('thigh.L',50),('index_02.L',55),('head',25),('neck',15)]:
+    p=rig.pose.bones[bone_name];p.rotation_mode='XYZ';original=p.rotation_euler.copy();p.rotation_euler.x+=math.radians(degrees);bpy.context.view_layer.update();posed=evaluated()
     assert all(math.isfinite(x) for v in posed for x in v)
     moved=max((a-b).length for a,b in zip(rest,posed));assert moved>.001
     ratios=[(posed[e.vertices[0]]-posed[e.vertices[1]]).length/max((rest[e.vertices[0]]-rest[e.vertices[1]]).length,1e-6) for e in body.data.edges]
     assert max(ratios)<6,'explosive edge stretching'
     pose_reports.append({'bone':bone_name,'degrees':degrees,'movementMetres':moved,'maxEdgeStretch':max(ratios),'severeCompressedEdges':sum(r<.05 for r in ratios)})
-    p.rotation_euler.x=0;bpy.context.view_layer.update()
+    p.rotation_euler=original;bpy.context.view_layer.update()
 bpy.context.scene.frame_set(1);bpy.ops.object.select_all(action='DESELECT');body.select_set(True);rig.select_set(True)
 for o in bpy.data.objects:
     if o.type=='EMPTY':o.select_set(True)
 lod=configure_lod(body,.05)
 bpy.context.view_layer.objects.active=body;bpy.ops.object.modifier_move_up(modifier=lod.name)
 output='/tmp/rpg-player-reexport.glb'
-bpy.ops.export_scene.gltf(filepath=output,export_format='GLB',use_selection=True,export_apply=True,export_extras=True,export_animations=True,export_skins=True,export_yup=True,export_all_influences=False,export_force_sampling=False)
+bpy.ops.export_scene.gltf(filepath=output,export_format='GLB',use_selection=True,export_apply=True,export_extras=True,export_animations=True,export_skins=True,export_yup=True,export_all_influences=False,export_force_sampling=False,export_all_vertex_colors=False)
+from export_lods import neutralize_face_tint
+neutralize_face_tint(pathlib.Path(output))
 source=pathlib.Path(bpy.data.filepath).parents[4]/'assets/3d/characters/player-v1/player-low.glb'
 assert pathlib.Path(output).read_bytes()==source.read_bytes(),'re-export must match committed low GLB'
 report={'passed':True,'bones':53,'vertices':len(body.data.vertices),'height':1.9,'maxPoseMovementMetres':movement,'sockets':slots,'jointPoses':pose_reports,'closedManifold':True,'lowReexportBytes':pathlib.Path(output).stat().st_size,'lowReexportSHA256':hashlib.sha256(pathlib.Path(output).read_bytes()).hexdigest()}

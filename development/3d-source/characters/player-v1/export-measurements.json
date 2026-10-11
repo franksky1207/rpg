@@ -12,24 +12,24 @@
     "low": {
       "vertices": 4234,
       "triangles": 8480,
-      "bytes": 809780,
+      "bytes": 741596,
       "ratio": 0.05
     },
     "medium": {
       "vertices": 13564,
       "triangles": 27140,
-      "bytes": 1746540,
+      "bytes": 1694776,
       "ratio": 0.16
     },
     "high": {
       "vertices": 54277,
       "triangles": 108566,
-      "bytes": 5068184,
+      "bytes": 5006948,
       "ratio": 0.64
     }
   },
-  "artStatus": "human-sci-fi-art-revision-awaiting-user-acceptance",
+  "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
   "sourceVertices": 84812,
-  "sourceBytes": 18361504,
+  "sourceBytes": 18322424,
   "lodPolicy": "soft garment-boundary importance; prioritize head and hands"
 }

@@ -25,3 +25,9 @@ node scripts/build-publish-dry-run.cjs
 三種 LOD 由相同雕刻表面，以服裝邊界／頭部／手部重要性遮罩真正簡化為 5%／16%／64% 幾何，維持五材質、兩張嵌入 PNG、53 joints 及標準掛點；不使用 Draco／Basis／外部貼圖。來源檢查包含封閉 manifold、法線、四權重、骨架、呼吸與肘／膝／肩／髖／指的變形及 low 精確再匯出。Blender 線性蒙皮與 glTF 相同；未開啟 dual-quaternion 冒充發布變形。
 
 `review/` 為實際 Cycles 渲染與正式／GM browser 證據，只保留 GitHub。`render_review.py` 可重現四面、三近景、LOD 比較、遊戲光照及關節姿勢；配套 Blender 沒有 OIDN，使用原生 CPU 48 samples，不以不存在的 denoiser 產生成功記錄。玩家發布只包含 registry 登錄 GLB、既有本地解碼器及必要程式；原始工程、atlas、渲染、工具與報告全部排除。
+
+## 第三階段快速精修
+
+`refine_player.py` 直接精修前版 `.blend` 的既有表面、atlas 和同一 idle 動畫；建置程式也呼叫同一函式，可重製。原拓樸／權重／rest rig 不改。`export_lods.py` 只將獨立臉部 COLOR_0 accessor 寫為中性 1，修正 glTF 必然乘色而 Blender 臉部不讀頂點色的不一致；來源 cloth 色保留，三 GLB 有逐值測試與 Khronos 驗證。
+
+新圖在 `review-fast/`，含前版與精修後手機畫面；原 `review/` 保留上輪證據。詳見 `docs/3D_BATCH27_FAST_POLISH_ACCEPTANCE_2026-10-11.md`。仍等待使用者外觀確認，不自行封版。

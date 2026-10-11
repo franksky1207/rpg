@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "player-foundation-v1-b27-art-r2",
+  "version": "player-foundation-v1-b27-fast-r3",
   "rigContract": "cw.humanoid.rig.v1",
-  "artStatus": "human-sci-fi-art-revision-awaiting-user-acceptance",
+  "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
   "coordinates": {
     "unit": "metre",
     "height": 1.9,
@@ -23,7 +23,7 @@
     "accessory": "socket.accessory.back"
   },
   "sourceRevision": {
-    "baseCommit": "993ec3823997281f3445888848cc25c7b56b244f",
+    "baseCommit": "894babdbc484176c6a71aaf2d689283db9445f00",
     "socketChanges": "none; same local transforms and 53-bone rig",
     "hideRegions": [
       "region.head",
@@ -68,8 +68,8 @@
     {
       "id": "player.foundation.v1.low",
       "path": "assets/3d/characters/player-v1/player-low.glb",
-      "sha256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986",
-      "bytes": 809780,
+      "sha256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f",
+      "bytes": 741596,
       "type": "character",
       "quality": "low",
       "epochs": [
@@ -84,7 +84,7 @@
       "lod": "low",
       "source": {
         "path": "development/3d-source/characters/player-v1/player-foundation.blend",
-        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
       },
       "license": "CC0-1.0; original anatomy, textile and face atlases",
       "dependencies": [
@@ -94,7 +94,7 @@
       "fallback": "procedural-geometry",
       "metrics": {
         "triangles": 8480,
-        "vertices": 7263,
+        "vertices": 7125,
         "joints": 53,
         "materials": 5,
         "embeddedImages": 2,
@@ -116,8 +116,8 @@
     {
       "id": "player.foundation.v1.medium",
       "path": "assets/3d/characters/player-v1/player-medium.glb",
-      "sha256": "dd9bddffa79ecaea5b16458300c660c3d711a7cc7df10c5790bf93634ea9169c",
-      "bytes": 1746540,
+      "sha256": "a88dbfcb0245833ddb7c9c09cc9fa434699c415916641e5a07b2e8ed50318842",
+      "bytes": 1694776,
       "type": "character",
       "quality": "medium",
       "epochs": [
@@ -132,7 +132,7 @@
       "lod": "medium",
       "source": {
         "path": "development/3d-source/characters/player-v1/player-foundation.blend",
-        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
       },
       "license": "CC0-1.0; original anatomy, textile and face atlases",
       "dependencies": [
@@ -142,7 +142,7 @@
       "fallback": "procedural-geometry",
       "metrics": {
         "triangles": 27140,
-        "vertices": 20150,
+        "vertices": 20268,
         "joints": 53,
         "materials": 5,
         "embeddedImages": 2,
@@ -164,8 +164,8 @@
     {
       "id": "player.foundation.v1.high",
       "path": "assets/3d/characters/player-v1/player-high.glb",
-      "sha256": "20172ca2c7a1b70e6243c33dc282ffb82c5c847eb3f2506d6e90e3ae7615e411",
-      "bytes": 5068184,
+      "sha256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5",
+      "bytes": 5006948,
       "type": "character",
       "quality": "high",
       "epochs": [
@@ -180,7 +180,7 @@
       "lod": "high",
       "source": {
         "path": "development/3d-source/characters/player-v1/player-foundation.blend",
-        "sha256": "d8d22b33aa186e391137eeb5c015815dadcfdf94714e0e252bc51615a74ed1e7"
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
       },
       "license": "CC0-1.0; original anatomy, textile and face atlases",
       "dependencies": [
@@ -190,7 +190,7 @@
       "fallback": "procedural-geometry",
       "metrics": {
         "triangles": 108566,
-        "vertices": 64416,
+        "vertices": 64386,
         "joints": 53,
         "materials": 5,
         "embeddedImages": 2,

@@ -262,6 +262,8 @@ bpy.context.scene.frame_start=1;bpy.context.scene.frame_end=61;bpy.context.scene
 for frame,angle in [(1,0),(16,.028),(31,0),(46,-.028),(61,0)]:
     p=rig.pose.bones['spine_02'];p.rotation_mode='XYZ';p.rotation_euler.x=angle;p.keyframe_insert('rotation_euler',frame=frame)
 rig.animation_data.action.name='CW_Idle_Breathing_Compatibility';bpy.context.scene.frame_set(1)
+from refine_player import apply_refinement
+apply_refinement(SOURCE,rig,body)
 # Region attributes are source-only masks and never contaminate skin weights.
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'player-foundation.blend'))
 from export_lods import export_lods

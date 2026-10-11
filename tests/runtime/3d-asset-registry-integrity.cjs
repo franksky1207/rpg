@@ -13,6 +13,13 @@ for(const a of result.entries.filter(a=>a.type==='character')){
  const binOffset=20+bytes.readUInt32LE(12)+8,bin=bytes.subarray(binOffset);
  assert.deepEqual(a.metrics.textureDimensions,[[512,512],[1024,1024]],'actual embedded textile and facial atlas dimensions');
  assert.ok(doc.meshes[0].primitives.some(p=>'COLOR_0' in p.attributes),'continuous tailoring must survive GLB export');
+ const skinPrimitives=doc.meshes.flatMap(m=>m.primitives).filter(p=>doc.materials[p.material].name==='CW_Head_NaturalSkin');
+ assert.ok(skinPrimitives.length>0);
+ for(const p of skinPrimitives){
+  const a=doc.accessors[p.attributes.COLOR_0],v=doc.bufferViews[a.bufferView];assert.equal(a.componentType,5126);
+  const n=a.type==='VEC3'?3:4,offset=(v.byteOffset||0)+(a.byteOffset||0);
+  for(let i=0;i<a.count;i++)for(let k=0;k<n;k++)assert.equal(bin.readFloatLE(offset+i*(v.byteStride||n*4)+k*4),1,'face atlas must have neutral vertex colour, without garment tint');
+ }
  const accessor=(index)=>{const a=doc.accessors[index],v=doc.bufferViews[a.bufferView];return {a,v,offset:(v.byteOffset||0)+(a.byteOffset||0)};};
  for(const p of doc.meshes[0].primitives){
   assert.ok('JOINTS_0' in p.attributes&&'WEIGHTS_0' in p.attributes);

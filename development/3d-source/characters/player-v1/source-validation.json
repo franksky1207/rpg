@@ -3,7 +3,7 @@
   "bones": 53,
   "vertices": 84812,
   "height": 1.9,
-  "maxPoseMovementMetres": 0.018199592719995123,
+  "maxPoseMovementMetres": 0.005200040957757417,
   "sockets": {
     "weapon": "socket.weapon.R",
     "helmet": "socket.helmet",
@@ -15,40 +15,54 @@
     {
       "bone": "forearm.L",
       "degrees": 80,
-      "movementMetres": 0.6210875745157409,
-      "maxEdgeStretch": 1.7691200821859947,
+      "movementMetres": 0.6177605958991459,
+      "maxEdgeStretch": 1.7412924305159703,
       "severeCompressedEdges": 0
     },
     {
       "bone": "shin.L",
       "degrees": 75,
-      "movementMetres": 0.740279363566963,
+      "movementMetres": 0.7402969014699383,
       "maxEdgeStretch": 2.4540164712149033,
       "severeCompressedEdges": 0
     },
     {
       "bone": "upper_arm.L",
       "degrees": 45,
-      "movementMetres": 0.5979897403895474,
-      "maxEdgeStretch": 3.124852849655719,
+      "movementMetres": 0.5932268422868008,
+      "maxEdgeStretch": 2.668829533414838,
       "severeCompressedEdges": 0
     },
     {
       "bone": "thigh.L",
       "degrees": 50,
-      "movementMetres": 0.8546982801403048,
+      "movementMetres": 0.8546913222836798,
       "maxEdgeStretch": 1.8283068157418896,
       "severeCompressedEdges": 0
     },
     {
       "bone": "index_02.L",
       "degrees": 55,
-      "movementMetres": 0.06101120215730231,
-      "maxEdgeStretch": 2.9947134962458097,
+      "movementMetres": 0.06095837030701591,
+      "maxEdgeStretch": 3.163363284265903,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "head",
+      "degrees": 25,
+      "movementMetres": 0.09090353805011646,
+      "maxEdgeStretch": 2.2124625321912457,
+      "severeCompressedEdges": 0
+    },
+    {
+      "bone": "neck",
+      "degrees": 15,
+      "movementMetres": 0.08353811534299548,
+      "maxEdgeStretch": 2.08451063885391,
       "severeCompressedEdges": 0
     }
   ],
   "closedManifold": true,
-  "lowReexportBytes": 809780,
-  "lowReexportSHA256": "9c465c8595a65c0fa05a634677e95c74c79b446aef2f9a2442199b232f9c1986"
+  "lowReexportBytes": 741596,
+  "lowReexportSHA256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f"
 }

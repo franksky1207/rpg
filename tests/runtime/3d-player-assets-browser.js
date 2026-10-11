@@ -9,6 +9,23 @@ const waitModel=(page,quality,source=null,world=null)=>page.waitForFunction(q=>{
  const m=s?.metadata.civilization3dCharacter;
  return m&&m.quality===q.quality&&(!q.source||m.appearanceSource===q.source)&&(!q.world||m.world===Number(q.world));
 },{quality,source,world},{timeout:60000});
+async function captureViews(page,label){
+ const camera=await page.evaluate(()=>{const c=BABYLON.EngineStore.Instances[0].scenes[0].activeCamera;return {alpha:c.alpha,beta:c.beta};});
+ for(const [name,alpha] of [['front',Math.PI/2],['side',0],['back',-Math.PI/2]]){
+  await page.evaluate(a=>{const s=BABYLON.EngineStore.Instances[0].scenes[0];s.activeCamera.alpha=a;s.activeCamera.beta=Math.PI/2.15;s.render();},alpha);
+  if(label==='mobile'&&name==='front'){
+   const clear=await page.evaluate(()=>{
+    const s=BABYLON.EngineStore.Instances[0].scenes[0],e=s.getEngine(),c=s.activeCamera,canvas=e.getRenderingCanvas(),box=canvas.getBoundingClientRect();
+    const head=s.getTransformNodeByName('head').getAbsolutePosition().add(new BABYLON.Vector3(0,.07,.08));
+    const p=BABYLON.Vector3.Project(head,BABYLON.Matrix.Identity(),s.getTransformMatrix(),c.viewport.toGlobal(e.getRenderWidth(),e.getRenderHeight()));
+    const x=box.left+p.x/e.getRenderWidth()*box.width,y=box.top+p.y/e.getRenderHeight()*box.height;
+    return Array.from(document.querySelectorAll('#civilization3dFormalHost .civilization-3d-layout-button')).every(b=>{const r=b.getBoundingClientRect();return x<r.left||x>r.right||y<r.top||y>r.bottom;});
+   });assert.equal(clear,true,'actual projected mobile face must not be covered by preview controls');
+  }
+  await page.locator('#civilization3dFormalHost').screenshot({path:'/tmp/rpg-b27-fast-'+label+'-'+name+'.png',timeout:60000});
+ }
+ await page.evaluate(c=>{const s=BABYLON.EngineStore.Instances[0].scenes[0];s.activeCamera.alpha=c.alpha;s.activeCamera.beta=c.beta;s.render();},camera);
+}
 const identity=page=>page.evaluate(()=>JSON.stringify({level:state.level,vip:state.vipLevel,equipment:state.equipment,inventory:state.inventory,enhancement:state.enhancement,second:state.secondWorld,third:state.thirdWorld,reincarnation:state.reincarnation,gm:state.gm,audio:localStorage.getItem('civilization.audio.preferences.v1')}));
 async function finishIntro(page){
  await page.locator('#civilizationStoryModal.open').waitFor({state:'visible',timeout:60000});
@@ -62,7 +79,7 @@ async function finishIntro(page){
    const s=BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter?.assetKind==='skinned-glb');
    const meshes=s.meshes.filter(m=>m.skeleton&&m.getTotalVertices()>0),group=s.animationGroups[0];group.pause();group.goToFrame(0);s.render();meshes[0].skeleton.prepare();
    const rest=meshes.map(m=>Array.from(m.getPositionData(true)));const result=[];
-   for(const [name,degrees] of [['forearm.L',80],['shin.L',75],['upper_arm.L',45],['thigh.L',50],['index_02.L',55]]){
+   for(const [name,degrees] of [['forearm.L',80],['shin.L',75],['upper_arm.L',45],['thigh.L',50],['index_02.L',55],['head',25],['neck',15]]){
     const node=s.getTransformNodeByName(name);if(!node?.rotationQuaternion)throw Error('Missing actual joint node '+name);
     const original=node.rotationQuaternion.clone();node.rotationQuaternion=original.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X,degrees*Math.PI/180));
     s.render();meshes[0].skeleton.prepare();let maxMovement=0,finite=true;
@@ -78,6 +95,7 @@ async function finishIntro(page){
   await page.locator('#civilization3dFormalHost').getByRole('button',{name:'放大 3D 預覽',exact:true}).click();
   await page.locator('#civilization3dFormalHost').screenshot({path:'/tmp/rpg-b27-art-formal-max.png',timeout:60000});
   await page.locator('#civilization3dFormalHost').getByRole('button',{name:'還原 3D 預覽',exact:true}).click();
+  await captureViews(page,'desktop');
   const cameraBefore=await page.evaluate(()=>BABYLON.EngineStore.Instances[0].scenes[0].activeCamera.alpha);
   const canvasBox=await page.locator('#civilization3dFormalHost canvas').boundingBox();assert.ok(canvasBox);
   await page.mouse.move(canvasBox.x+canvasBox.width*.6,canvasBox.y+canvasBox.height*.45);await page.mouse.down();
@@ -101,6 +119,7 @@ async function finishIntro(page){
   await page.locator('#civilization3dFormalHost').getByRole('button',{name:'放大 3D 預覽',exact:true}).click();
   await page.locator('#civilization3dFormalHost').getByRole('button',{name:'還原 3D 預覽',exact:true}).click();
   await page.locator('#civilization3dFormalHost').screenshot({path:'/tmp/rpg-b27-character-mobile.png',timeout:60000});
+  await captureViews(page,'mobile');
   await page.setViewportSize({width:844,height:390});assert.equal(await page.locator('#civilization3dFormalHost canvas').count(),1);
   const lost=await page.evaluate(()=>{const e=BABYLON.EngineStore.Instances[0],ext=e?._gl?.getExtension('WEBGL_lose_context');if(!ext)return false;ext.loseContext();return true;});assert.equal(lost,true,'software WebGL must expose context loss for this test');
   await page.waitForFunction(()=>document.querySelector('#civilization3dFormalHost')?.hidden===true);

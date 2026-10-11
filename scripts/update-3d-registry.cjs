@@ -14,9 +14,9 @@ const entry=(id,p,quality,type,license,sourcePath,dependencies)=>{
  }
  return a;
 };
-const doc={schema:1,version:'player-foundation-v1-b27-art-r2',rigContract:'cw.humanoid.rig.v1',artStatus:'human-sci-fi-art-revision-awaiting-user-acceptance',
+const doc={schema:1,version:'player-foundation-v1-b27-fast-r3',rigContract:'cw.humanoid.rig.v1',artStatus:'human-sci-fi-final-polish-awaiting-user-acceptance',
  coordinates:{unit:'metre',height:1.9,gltf:'right-handed +Y up +Z forward',source:'Blender +Z up -Y forward',scale:[1,1,1],rotation:'socket-local quaternion; equipment pivot matches socket origin'},slots,
- sourceRevision:{baseCommit:'993ec3823997281f3445888848cc25c7b56b244f',socketChanges:'none; same local transforms and 53-bone rig',hideRegions:['region.head','region.torso','region.legs','region.feet','region.back'],hidePolicy:'source masks only; equipment hiding deferred to batches 28-30'},
+ sourceRevision:{baseCommit:'894babdbc484176c6a71aaf2d689283db9445f00',socketChanges:'none; same local transforms and 53-bone rig',hideRegions:['region.head','region.torso','region.legs','region.feet','region.back'],hidePolicy:'source masks only; equipment hiding deferred to batches 28-30'},
  player:Object.fromEntries(['low','medium','high'].map(q=>[q,'player.foundation.v1.'+q])),
  assets:[entry('babylon.gltf-loader.v7.54.3','vendor/babylonjs/7.54.3/babylonjs.loaders.min.js','shared','decoder','Apache-2.0','vendor/babylonjs/7.54.3/SOURCE.md',[]),
   ...['low','medium','high'].map(q=>entry('player.foundation.v1.'+q,'assets/3d/characters/player-v1/player-'+q+'.glb',q,'character','CC0-1.0; original anatomy, textile and face atlases',source,['babylon.gltf-loader.v7.54.3']))]};
