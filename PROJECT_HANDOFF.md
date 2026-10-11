@@ -1,3 +1,8 @@
+## 2026-10-11｜3D 第 28-B 批：五槽真實 GLB 載入接口（有條件完成）
+- 最新實作及尚待 Blender 模型的限制見 [第 28-B 驗收說明](docs/3D_BATCH28B_RUNTIME_INTEGRATION_2026-10-11.md)。正式 `createCharacterScene` 沿用人物 GLB loader，`character-assets.js` 補五槽 `prepareEquipment()`，只接明確登錄、SHA 正確且 rig/slot/LOD 相容的 rigid GLB，使用場景專屬 `equipmentSession` 控制取消與 GPU 容器釋放；GM 正式角色亦沿用場景工廠。
+- 目前 registry **沒有裝備 GLB**，真正五槽蒙皮、mask mesh 分段與穿模尚無實際素材，不能宣稱完成上身。未驗證 skinned bind 一律安全拒絕，人物遮蔽保持原狀。現階段即時熱切接口和裝備陳列轉正式 GLB 尚待後續整合。
+- 已更新五槽前置測試與資源指紋，保留音樂/戰鬥/存檔/雲端/GM/既有智慧下載。最新 Actions／Pages／iPhone GPU 尚待獨立實測，必須以最終 main SHA 為準。
+
 ## 2026-10-11｜3D 第 28-A 批：五槽技術契約完成（尚未產生裝備 GLB）
 - 已在最新 main 核對第 27 批人物 53 骨骼、九掛點與低中高 LOD，確認正式五槽 snapshot、幾何備援、資產 registry 和前置安全接口。完整可執行施工界線見 [28-A 技術契約](docs/3D_BATCH28A_TECHNICAL_CONTRACT_2026-10-11.md)；風險前置規範見 [28 批風險封鎖](docs/3D_BATCH28_PREFLIGHT_RISK_LOCK_2026-10-11.md)。
 - 第 28-A 僅固定五槽 asset identity、掛點與骨架不變、rigid/skinned 區分、雙鞋/頭甲遮蔽、readonly 正式與 GM、按需載入/回退、測試及分工。已有 `resolveEquipment()`／`equipmentSession()` 為前置接口，但尚未把真正裝備模型掛到正式人物；`asset-registry.json` 還沒有裝備 GLB。
