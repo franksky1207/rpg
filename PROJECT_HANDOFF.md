@@ -1,3 +1,7 @@
+## 2026-10-11｜210 套裝備概念素材命名規範與 G007 資料夾
+- 概念素材統一依正式 index 管理：`development/3d-source/equipment/concepts/galaxy/g001～g100-<slug>/`、`universe/u001～u100-<slug>/`、`higher/h01～h10-<slug>/`；完整規範見 [210 套命名標準](docs/3D_EQUIPMENT_210_SET_CONCEPT_NAMING_STANDARD_2026-10-11.md)。固定索引作為身份，slug 只是方便閱讀，不能改正式名稱。
+- 已建立銀河第七套 `concepts/galaxy/g007-ancient-tech-ruins/concept-notes.md`（古代科技遺址 Lv.31～35）；兩張概念圖標準檔名 `overview-front-side-back.png`、`equipment-five-slots.png`，**圖片目前尚未上傳**，不能宣稱已在 repo。這只建立目錄規格，不改第 28-C v1 Blender/GLB 或正式遊戲。
+
 ## 2026-10-11｜3D 第 28-C 批：古代科技遺址第一套正式可穿戴五槽
 - 以最新 main `76351e0967aa35adab3e9707f020b0dea26afbfc` 承接；完成古代光刃、遺物守衛盔、自律護衛甲、遺跡浮行靴、古文明鑰印的可編輯 Blender 與 15 個真 GLB，僅此一套，非 1,050 模型全面完成。
 - 沿用 28-B 正式 attach/resolver/session；rigid 武器／背飾、53-bone 同 joint/rest/inverse-bind 的 skinned 頭盔／分件鎧甲／成對雙靴。人物原始工程、三 LOD、53 骨骼與九掛點完全保持；未改音樂、公式、物品／掉落／雲端／GM 權限。
