@@ -2,7 +2,7 @@
 (function(g){"use strict";
 const eraTracks=Object.freeze({galaxy:"era-galaxy-theme",universe:"era-universe-theme",higher:"era-higher-theme"});
 const catalog=Object.freeze(Object.fromEntries(Object.entries(eraTracks).map(([era,id])=>[era,Object.freeze({home:[id,null],explore:[id,null],battle:[id,null],boss:[id,null],front:[id,null]})])));
-let selected=null,previewing=false,combatLocked=false,exitSequence=0,activeRunId=null,runSerial=0,pendingExit=false,combatViewSettled=false;
+let selected=null,previewing=false,combatLocked=false,exitSequence=0,activeRunId=null,runSerial=0,pendingExit=false,combatViewSettled=false,implicitCombatEntry=false;
 function phase(){
  try{const n=Number(g.currentWorldPhase?.(typeof state!=="undefined"?state:null));if(n===3)return "higher";if(n===2)return "universe";if(n===1)return "galaxy";}catch(_){}
  const st=typeof state!=="undefined"?state:null;
@@ -62,7 +62,7 @@ function syncView(viewName,subScreen=""){
  if(combat){
   // Legacy mainline/review routes can enter combat via a view transition.
   // Restore their music only before formal settlement, never behind a result modal.
-  if(!combatViewSettled)return setContext(phase(),mode,{combat:true});
+  if(!combatViewSettled){implicitCombatEntry=true;return setContext(phase(),mode,{combat:true});}
   return setContext(phase(),"combat-settled");
  }
  combatViewSettled=false;
@@ -83,11 +83,11 @@ function notify(type,detail={}){
   // Existing callers may start each round of a continuous run. Preserve the
   // active score for identical unlabelled rounds; explicit IDs can replace it.
   const requested=detail.runId==null?null:String(detail.runId);
-  if(combatLocked&&selected?.tier&&!pendingExit&&(requested===null||requested===activeRunId))return apply();
+  if(combatLocked&&selected?.tier&&!pendingExit&&!implicitCombatEntry&&(requested===null||requested===activeRunId))return apply();
   const key=detail.mode||detail.scene||detail.kind||((detail.boss||era==="universe")?"boss":"battle");
   const nextTier=detail.tier||tierForScene(key,{...detail,era});
   activeRunId=requested||"legacy-"+(++runSerial);
-  pendingExit=false;combatViewSettled=false;combatLocked=false;
+  pendingExit=false;combatViewSettled=false;implicitCombatEntry=false;combatLocked=false;
   return setContext(era,key,{combat:true,tier:nextTier});
  }
  if(type==="combat-end")return true; // Each completed round is not a run exit.
@@ -99,7 +99,7 @@ function notify(type,detail={}){
   const release=()=>{
    if(generation!==exitSequence||!combatLocked||activeRunId!==runAtExit)return false;
    g.CivilizationAudio?.stopBattleSfx?.();
-   combatLocked=false;activeRunId=null;pendingExit=false;combatViewSettled=true;
+   combatLocked=false;activeRunId=null;pendingExit=false;combatViewSettled=true;implicitCombatEntry=false;
    // Read the actual current era at RELEASE, not the era captured at start.
    return setContext(phase(),"combat-settled");
   };
