@@ -2,8 +2,8 @@
   "schema": "cw.t2b2.repair-tier-atlas",
   "version": 1,
   "masterMetadata": "enemies/elite/atlases/atlas.json",
-  "masterSHA": "e03f1849894ffc56557efab37db3d4350a7ae04ae62c570a3ecbbfe8e732beb0",
-  "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
+  "masterSHA": "a2771bb62daae05572ad4b0aaadde8f3a2d6c3863b2c1a887dcab1b2a81e25a3",
+  "sourceSHA": "b0ccb402aaa885b890785ec9acfda9221536a72b60ecf0aa3c5e96efe5b113b4",
   "scale": 0.75,
   "sourcePixelBudget": 192,
   "rows": [

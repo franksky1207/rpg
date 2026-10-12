@@ -1,0 +1,1106 @@
+[
+  {
+    "actor": "normal",
+    "kind": "source",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 2.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.7799999713897705,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": [
+              "Image Texture:Color"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "original-panel-roughness-linear-r2",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              0.0470588281750679,
+              0.0470588281750679,
+              0.0470588281750679,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actor": "normal",
+    "kind": "glb",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.03125,
+              0.75,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 1.600000023841858,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.0,
+            "links": [
+              "Math:Value"
+            ]
+          },
+          "Roughness": {
+            "value": 0.5,
+            "links": [
+              "Separate Color:Green"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "panel-roughness-linear",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              1.0,
+              0.0470588281750679,
+              1.0,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actor": "elite",
+    "kind": "source",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 2.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.7799999713897705,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": [
+              "Image Texture:Color"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "original-panel-roughness-linear-r2",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              0.0470588281750679,
+              0.0470588281750679,
+              0.0470588281750679,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actor": "elite",
+    "kind": "glb",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.03125,
+              0.75,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 1.600000023841858,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.0,
+            "links": [
+              "Math:Value"
+            ]
+          },
+          "Roughness": {
+            "value": 0.5,
+            "links": [
+              "Separate Color:Green"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "panel-roughness-linear",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              1.0,
+              0.0470588281750679,
+              1.0,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actor": "boss",
+    "kind": "source",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 2.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.7799999713897705,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": [
+              "Image Texture:Color"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "original-panel-roughness-linear-r2",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              0.0470588281750679,
+              0.0470588281750679,
+              0.0470588281750679,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actor": "boss",
+    "kind": "glb",
+    "materials": [
+      {
+        "name": "Relic_Ceramic_Joints",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.024000000208616257,
+              0.03700000047683716,
+              0.054999999701976776,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.6000000238418579,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Copper_Edges",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.44999998807907104,
+              0.25,
+              0.08500000089406967,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.800000011920929,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.3799999952316284,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Cyan_Optics",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.02500000037252903,
+              0.6000000238418579,
+              0.800000011920929,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.30000001192092896,
+            "links": []
+          },
+          "Roughness": {
+            "value": 0.25,
+            "links": []
+          },
+          "Emission Color": {
+            "value": [
+              0.03125,
+              0.75,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 1.600000023841858,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": []
+      },
+      {
+        "name": "Relic_Forged_Panels",
+        "inputs": {
+          "Base Color": {
+            "value": [
+              0.28999999165534973,
+              0.36000001430511475,
+              0.41999998688697815,
+              1.0
+            ],
+            "links": []
+          },
+          "Metallic": {
+            "value": 0.0,
+            "links": [
+              "Math:Value"
+            ]
+          },
+          "Roughness": {
+            "value": 0.5,
+            "links": [
+              "Separate Color:Green"
+            ]
+          },
+          "Emission Color": {
+            "value": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "links": []
+          },
+          "Emission Strength": {
+            "value": 0.0,
+            "links": []
+          },
+          "IOR": {
+            "value": 1.5,
+            "links": []
+          }
+        },
+        "textures": [
+          {
+            "name": "panel-roughness-linear",
+            "colorSpace": "Non-Color",
+            "firstRGBA": [
+              1.0,
+              0.0470588281750679,
+              1.0,
+              1.0
+            ],
+            "size": [
+              64,
+              64
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

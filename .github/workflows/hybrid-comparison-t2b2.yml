@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -31,6 +33,7 @@ jobs:
           python development/hybrid-comparison/t2b2-v1/tools/inventory.py --check
           python development/hybrid-comparison/t2b2-v1/tools/verify_pixels.py
           python development/hybrid-comparison/t2b2-v1/tools/verify_repair.py
+          python development/hybrid-comparison/t2b2-v1/tools/verify_r2.py
           node tests/runtime/hybrid-comparison-art-contract.cjs
           node scripts/hybrid-comparison-fixtures.cjs --check
           node tests/runtime/hybrid-comparison-playback-contract.cjs

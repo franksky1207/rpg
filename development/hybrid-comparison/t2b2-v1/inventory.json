@@ -18,8 +18,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 8461,
-      "sha256": "54e172feafb2b2eebf96a1693cb933a28e7d176aa224e9f0275c7b2481499d5f",
+      "bytes": 9321,
+      "sha256": "beb2fcd08b587c048452886d40920923820d805efac6693e2ad7e1563685db76",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -27,7 +27,7 @@
     {
       "path": "atlas-index.json",
       "bytes": 1375,
-      "sha256": "554b1abb20d0be327ff989fe76d2cc9061729a172eb122da60a713420f402766",
+      "sha256": "a29b1874c5b5f1d906d22d26bdc6517310a5c9835731eb388788e8eed6f9b724",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -35,7 +35,7 @@
     {
       "path": "enemies/boss/atlases/atlas.json",
       "bytes": 92822,
-      "sha256": "ee431d294229a4125d2bf10d244d333a02edc27d7bff74b8ffbdfe10648295e4",
+      "sha256": "6a26e8419f4b46fabe43a0bcdca37e0e3a22b82da64c7a3c758c3126127c7c7d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -50,8 +50,8 @@
     },
     {
       "path": "enemies/boss/atlases/attack-enemy.png",
-      "bytes": 463549,
-      "sha256": "2d11442135fea2b40e6ca7e0480024c2e4951dbd8435a729f314ac457bed6913",
+      "bytes": 464023,
+      "sha256": "5499f9334710b37046c43d0954eae39941323e15e4745088f690c88d033cc224",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -66,8 +66,8 @@
     },
     {
       "path": "enemies/boss/atlases/defeat-enemy.png",
-      "bytes": 523127,
-      "sha256": "3d6951dbcd393d12ab8e105740a7e41a313f55d97fc309ed39c869565f7feaef",
+      "bytes": 523893,
+      "sha256": "d81abccf41f94fd701ba90494bdb1a42d486311e94c36cb8ac24f5367f47feeb",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -82,8 +82,8 @@
     },
     {
       "path": "enemies/boss/atlases/dodge-enemy.png",
-      "bytes": 529122,
-      "sha256": "aa0b0c0ff928cb8957cd7f069dab6bf33b2a06cc88abb5ea707661e72a842c9c",
+      "bytes": 529273,
+      "sha256": "dd89447778f1634c677e2898b8896485d0cf8d975986a5a402802b1fd50349ef",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -98,8 +98,8 @@
     },
     {
       "path": "enemies/boss/atlases/hit-enemy.png",
-      "bytes": 512684,
-      "sha256": "25d5297586bf970891ba24ca031acd4ce2d5d47aa59dbdbab166b6f9973a6bd6",
+      "bytes": 513150,
+      "sha256": "34f930a80c671a6319764754885d76421bed19eb07e79769b000a492a1e1e3c7",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -114,8 +114,8 @@
     },
     {
       "path": "enemies/boss/atlases/idle-enemy.png",
-      "bytes": 400969,
-      "sha256": "ddd0b7ec60e76781122c74237d6d157e2a16ebc27d3c2ca945c275884b30f6eb",
+      "bytes": 402108,
+      "sha256": "d5fe6357309fcb7570d23c062723afbec680d67fe1ce5c1832505fc5dacabe93",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -130,16 +130,16 @@
     },
     {
       "path": "enemies/boss/atlases/return-enemy.png",
-      "bytes": 492130,
-      "sha256": "e6b16e58576764fccfa0bf1318e7efe4e26e6ee2dc8ea19714ccaf7e2d2d9656",
+      "bytes": 492276,
+      "sha256": "e7c9e175ba790da81da6a91969b4265e7c6c72090916f1d97d7ab48243adf94f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "enemies/boss/candidate.glb",
-      "bytes": 383512,
-      "sha256": "4bdc98e901aa576cc4d0231b91f1a8d28a386c6ebc26ab37cafccb3dfdc0e495",
+      "bytes": 383416,
+      "sha256": "0864517604250abbc1da96280c0fe9dd834e649147f5102c10674b97f5c8a4f4",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false,
@@ -198,8 +198,8 @@
     },
     {
       "path": "enemies/boss/source.blend",
-      "bytes": 141839,
-      "sha256": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
+      "bytes": 141718,
+      "sha256": "ab25475aa995c04dd250f7c09c934b50d8de148c775c7d0d33b25099cad31fa8",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -207,7 +207,7 @@
     {
       "path": "enemies/elite/atlases/atlas.json",
       "bytes": 92385,
-      "sha256": "e03f1849894ffc56557efab37db3d4350a7ae04ae62c570a3ecbbfe8e732beb0",
+      "sha256": "a2771bb62daae05572ad4b0aaadde8f3a2d6c3863b2c1a887dcab1b2a81e25a3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -222,8 +222,8 @@
     },
     {
       "path": "enemies/elite/atlases/attack-enemy.png",
-      "bytes": 457326,
-      "sha256": "aee2d54264bfe47aa53dd754a88cf8a0db01bba7c28cb36c6376bea14287562a",
+      "bytes": 457692,
+      "sha256": "b43ab8deba20fc49bc8f21c4400013b8c1ffb4d94283073f67ce37d7e9a454bf",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -238,8 +238,8 @@
     },
     {
       "path": "enemies/elite/atlases/defeat-enemy.png",
-      "bytes": 402043,
-      "sha256": "f1f5281bbc4d8e2e30d6ce2cc1e21de6eb63f0544acaf7797090e349499eb6f2",
+      "bytes": 402080,
+      "sha256": "be64694f0a6915b87593cf5ca336ba824a6cafbe6e8bcb228aa54e707e921fe5",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -254,8 +254,8 @@
     },
     {
       "path": "enemies/elite/atlases/dodge-enemy.png",
-      "bytes": 503904,
-      "sha256": "852d565b145b53392d3f7c298dd2881ef75f0c0b5cb634398b7d07d7103892dc",
+      "bytes": 503901,
+      "sha256": "21400285e19b9d714f759989b20a74668c6f8262c0c27bed6fe7a49013592d43",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -270,8 +270,8 @@
     },
     {
       "path": "enemies/elite/atlases/hit-enemy.png",
-      "bytes": 456654,
-      "sha256": "8daeac5f7a156f4b5f836ca195ab7443535809c9945195267dc19b341062800a",
+      "bytes": 457345,
+      "sha256": "071d3b4d914f0684f018984f28578adc197a6b15224b72e3afa5e181279186d5",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -286,8 +286,8 @@
     },
     {
       "path": "enemies/elite/atlases/idle-enemy.png",
-      "bytes": 322432,
-      "sha256": "f476360edd8f651cd21fa62c2dc6c9bd87031d5fdbba613c6681feed9627ba05",
+      "bytes": 322469,
+      "sha256": "8045bd51383fa287a3e08483acb9a9d93fd6317e111a596bcd5d39323b2a4c62",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -302,16 +302,16 @@
     },
     {
       "path": "enemies/elite/atlases/return-enemy.png",
-      "bytes": 480006,
-      "sha256": "9dd53e151b9ab7a199ca1a850bbaf99908ad0aef0b322528cf0f2139b770b026",
+      "bytes": 480479,
+      "sha256": "fb1936aabc2061aaa8422044d4b995f8389564d83426b28030f81c7ea1c975d7",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "enemies/elite/candidate.glb",
-      "bytes": 382400,
-      "sha256": "4ef0ba15a1c7624df5383356ea3dd3b3dc030b0302461195f5f18c81a40f3539",
+      "bytes": 382300,
+      "sha256": "de2fc6a6791fa3e7b027bbd9f00037e724d92d0ed917099a1fa7752964a4680a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false,
@@ -370,8 +370,8 @@
     },
     {
       "path": "enemies/elite/source.blend",
-      "bytes": 145064,
-      "sha256": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
+      "bytes": 145595,
+      "sha256": "b0ccb402aaa885b890785ec9acfda9221536a72b60ecf0aa3c5e96efe5b113b4",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -379,7 +379,7 @@
     {
       "path": "enemies/normal/atlases/atlas.json",
       "bytes": 91854,
-      "sha256": "40d47f01288ffde28c0956d4083811da15eb5a7c7faea8b2728107e3de9f770c",
+      "sha256": "96e0e456509a3fdda543fcf2254bde6534bbbc71d037263469b048c18da0547a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -394,8 +394,8 @@
     },
     {
       "path": "enemies/normal/atlases/attack-enemy.png",
-      "bytes": 349203,
-      "sha256": "a4cf83871bb268246ad54bcb88803e2528f3673ab3a9988afef0a1f5191b3fb2",
+      "bytes": 349345,
+      "sha256": "032a91eaa756e70f3e163266ba8a23f5673967ecaee6732b0d04db14b1333fd5",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -410,8 +410,8 @@
     },
     {
       "path": "enemies/normal/atlases/defeat-enemy.png",
-      "bytes": 303573,
-      "sha256": "c5f5c643a2cda08d5f1ba5cbf0255d0bcb098fc192578cfae0a9b0188ac56977",
+      "bytes": 303883,
+      "sha256": "759d9e403a961cb1fb1f47f593299a202ede53f19c2f8d74191a2de8a0b7ff7f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -426,8 +426,8 @@
     },
     {
       "path": "enemies/normal/atlases/dodge-enemy.png",
-      "bytes": 391884,
-      "sha256": "17225c84ab00f0b7d869f85a41e161a227f76d72d52098f298bd1a35552b9285",
+      "bytes": 392073,
+      "sha256": "1900ef99d729643ba012a022c8aaf271ad630a05c7ed6e43f740e0357258e51b",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -442,8 +442,8 @@
     },
     {
       "path": "enemies/normal/atlases/hit-enemy.png",
-      "bytes": 343801,
-      "sha256": "5a95c501988c2897dd70fd18ff1261df4b487064796f000c1c904b64466af8e3",
+      "bytes": 344026,
+      "sha256": "1ab5000efb7d40143add9ee5914a85048dcd33732f8a366d73c1b0c1dd8372d3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -458,8 +458,8 @@
     },
     {
       "path": "enemies/normal/atlases/idle-enemy.png",
-      "bytes": 239517,
-      "sha256": "203dc60a376be10405a8c6f7ad779d280d782eac75575d869a4b5d5d158d7fc0",
+      "bytes": 239720,
+      "sha256": "e8f3a35a2a9573c6acd3db2afebd36b75395a0c0e5823addcb6cf2e235d8db7a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -474,16 +474,16 @@
     },
     {
       "path": "enemies/normal/atlases/return-enemy.png",
-      "bytes": 363285,
-      "sha256": "43208981b0e3321539a618dd553cc2a7e1e47c4e2955832e1ae54be202be484b",
+      "bytes": 363206,
+      "sha256": "681385b390a57e5a19753666597af4f8bb6cd1d80b7633ed8dae619584e4495d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "enemies/normal/candidate.glb",
-      "bytes": 358296,
-      "sha256": "e45a6a9d2135100fe172a9e7ec5a821761f18c337a39f2f34c60b29518830bcb",
+      "bytes": 358196,
+      "sha256": "17e60c1a1f6075502d12cfaa6aac1e2d617a749bc90ee7eaa091f8eb9d301d81",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false,
@@ -542,8 +542,8 @@
     },
     {
       "path": "enemies/normal/source.blend",
-      "bytes": 143359,
-      "sha256": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
+      "bytes": 142478,
+      "sha256": "ce3a8cbcd09456917199e14f886b9966b4774a0b359b93fe93522269703baa0f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3523,7 +3523,7 @@
     {
       "path": "repair-r1/quality-tiers.json",
       "bytes": 117032,
-      "sha256": "df86f68f43822a281c4e94b050671eb83b35e5f02257f6b9fcbcd0c8619bab9a",
+      "sha256": "91488b6f9e05b3507a39e67df56b10b22b0f6352c8d1adad39e6058c8db41145",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3531,7 +3531,7 @@
     {
       "path": "repair-r1/resource-cost-comparison.json",
       "bytes": 312756,
-      "sha256": "3f7f2240be0476784b3457702456bc50641c5064a47c2ab95412bc4cde11fb0c",
+      "sha256": "04e2513bb3556e77bcd09c84c5b48ecc44441a879ea83311c6e7c5d901c120c2",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3611,7 +3611,7 @@
     {
       "path": "repair-r1/tiers/low/boss/atlas.json",
       "bytes": 88877,
-      "sha256": "ce78cd340f87e4bdf69fda5bb8ee1a9a1f3d9ed6af61cbea2a72f9f53f60540c",
+      "sha256": "3cac29f494c9a55d91f16f924761c225713da37197bc1dba9db1e9835c229f2f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3626,8 +3626,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/attack-enemy.png",
-      "bytes": 140241,
-      "sha256": "1aec69a4dc49514248d96aaa88607eb1a16c29ed0d1c32eb0e13314855c9db1e",
+      "bytes": 140145,
+      "sha256": "381a0d3d5355481055c3d8474d39bbc4805261f7fcf42903eec5c2d73e9a49bc",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3642,8 +3642,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/defeat-enemy.png",
-      "bytes": 158949,
-      "sha256": "14c926f26d69d578a63b7c72cf843a50b2f7a9feef8e39d111922c6203e5b264",
+      "bytes": 158996,
+      "sha256": "f710ad1724a8ae4ecd4dbec660a871b9a5df0f11653ed096e425e1e1983f7ae6",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3658,8 +3658,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/dodge-enemy.png",
-      "bytes": 161708,
-      "sha256": "435e0681d5022c2bca86f78c9f0678e8199785edd89041474c776858a7e9dfe4",
+      "bytes": 161513,
+      "sha256": "8f4a9adfd3ba41b3436511bec534f0c45ce3c91b3b2a27eee6bf4c1c431e6e6e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3674,8 +3674,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/hit-enemy.png",
-      "bytes": 155842,
-      "sha256": "401d7546fdce4075ca29c188df08f37e24e93aab7d5a2ca482708d693e38eeaa",
+      "bytes": 155819,
+      "sha256": "190a9dbd47de8eef988c1033e49de63994d603f41a2a81d3cdbdd74690f0b384",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3690,8 +3690,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/idle-enemy.png",
-      "bytes": 126826,
-      "sha256": "ddf8c5f04d213ea95d6c56add012154ab9be5e1d3af88b0623164d111f65f55f",
+      "bytes": 127025,
+      "sha256": "9068a15fbd7f165734a1820238759a1d34d0259092f7f84ae1f2428526d64787",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3706,8 +3706,8 @@
     },
     {
       "path": "repair-r1/tiers/low/boss/return-enemy.png",
-      "bytes": 153800,
-      "sha256": "7770aab0fdbebaa9c6edc1f6093cbb02a57270a83e9ff4eda1101e66bc35e0ff",
+      "bytes": 153642,
+      "sha256": "552a5753aafe6083ebb4e75359892f47afffbffb385f6e4eb59d5035c42426d2",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3715,7 +3715,7 @@
     {
       "path": "repair-r1/tiers/low/elite/atlas.json",
       "bytes": 89185,
-      "sha256": "94f25f4debbc97f3d232f8cc1dd12bcfd06da5942ffb91cb988148020af4aa52",
+      "sha256": "a03f6403ee64ecd67612c42dbe0b88b268583908d99ce32e3f897833056d9805",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3730,8 +3730,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/attack-enemy.png",
-      "bytes": 139073,
-      "sha256": "4c5dbfc1854cd891fe55f5c25e6377d56869ef0a52a981aada199144ad9c4fb2",
+      "bytes": 139347,
+      "sha256": "2672af9a6ab0d65f6b5e6e9063a26386861e4acc7f2be4f968754c25c24bbe31",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3746,8 +3746,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/defeat-enemy.png",
-      "bytes": 122752,
-      "sha256": "a2d8c685b9744fb42f095aeb8a0610397400847f37a9a84af41221dd4227882a",
+      "bytes": 122760,
+      "sha256": "35143ef8d708070ff388089b529a68fbd486eeef695bd92546d691757f20f6df",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3762,8 +3762,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/dodge-enemy.png",
-      "bytes": 157084,
-      "sha256": "d0e6f0d332d4669974c129cacf6f141e9b9a495207faeaee750fb0a304ad0fac",
+      "bytes": 156994,
+      "sha256": "36469a76edd927e59308218fd6f6539caacdf9363e768523bd47f686faa487f6",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3778,8 +3778,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/hit-enemy.png",
-      "bytes": 139269,
-      "sha256": "751a154d4cca61cdcd4b00fe0d6a3f21d9f604c9a9b5c7aa2ae01664044a4719",
+      "bytes": 139338,
+      "sha256": "5ab8969b983e29e2eafcfafdac8e1093f6ec9ff4358eaa4c1e4fb4ba7fbd86aa",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3794,8 +3794,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/idle-enemy.png",
-      "bytes": 103792,
-      "sha256": "1ab74e50f56c4004dcf2001c136fbfd8af4767b256f121c6c5cc4757913b746d",
+      "bytes": 103894,
+      "sha256": "dc2dbf85b2df5159eaa6ab2ae24f840b92df4cd41c4f8e1ec3ceaddf0343d6fd",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3810,8 +3810,8 @@
     },
     {
       "path": "repair-r1/tiers/low/elite/return-enemy.png",
-      "bytes": 144869,
-      "sha256": "723d00197a42683b6384bb79f90b8b37fbb82596385650a5b3ebf1ed0bcc8269",
+      "bytes": 144899,
+      "sha256": "5285968548e3219dd97e2e70f546f23ef8748b9a5b302eebb03918ba6d63640e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3819,7 +3819,7 @@
     {
       "path": "repair-r1/tiers/low/normal/atlas.json",
       "bytes": 88690,
-      "sha256": "8ca0883fb52d8777c3bddd302e3e77bd9272c54ff9fd628f517321b143a30006",
+      "sha256": "c00e8efce28610f65f8821441d7346875fc9f1b5f321d1a1b14b06e57eabfb69",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3834,8 +3834,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/attack-enemy.png",
-      "bytes": 108059,
-      "sha256": "0e29a3fd90594b80c5af10257b1277df2a351d43be4ed7d360511bde33c454ac",
+      "bytes": 107915,
+      "sha256": "6a9a71f3636eca364a960a6cf51579983d5451a366b29b9ca7874d0269ad93ab",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3850,8 +3850,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/defeat-enemy.png",
-      "bytes": 94001,
-      "sha256": "b7ac9d72d8b4b69aaff53dc5aaa1df611b06afb3c0aca4589f489b50ad8414db",
+      "bytes": 94138,
+      "sha256": "ca5be104ae65ac7d6ac55c3dc522fbe4a1606d00bceab944640c90c986edd8c8",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3866,8 +3866,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/dodge-enemy.png",
-      "bytes": 120401,
-      "sha256": "69ee764754949b41c980f818755b822630d555a1c46864242d387bc12ea4c039",
+      "bytes": 120431,
+      "sha256": "2b016b71583c8a24943fb4dabdf9dc6e70395d85de2b90130167f191f827b808",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3882,8 +3882,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/hit-enemy.png",
-      "bytes": 104609,
-      "sha256": "903522035c2cc3a37d295ed4c0539863324ddd5d14da4610ae79a80120a6b33e",
+      "bytes": 104525,
+      "sha256": "f7ffb7cc000d6f5794dad86e40ddfd83bd87bf9866063f8faaae642ced6fa922",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3898,8 +3898,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/idle-enemy.png",
-      "bytes": 75903,
-      "sha256": "20614d89929506cbc3a208a0621e59c29c56563768917e1c7b7eb28e85ad3a50",
+      "bytes": 76074,
+      "sha256": "a517ee975d2a8680b4c7d7ac6919302cba39362e4500a43ab195025ad4c2123f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -3914,8 +3914,8 @@
     },
     {
       "path": "repair-r1/tiers/low/normal/return-enemy.png",
-      "bytes": 110771,
-      "sha256": "3f59bac6b2bc2a0d4f51afe55e5136f1ad5bc38a95563faf460997f428d1b32e",
+      "bytes": 110768,
+      "sha256": "c4e666ba03cfa59ca4c083b8b1e93a89221199b4ef4163d5be022c1dc4ec68f1",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4891,7 +4891,7 @@
     {
       "path": "repair-r1/tiers/medium/boss/atlas.json",
       "bytes": 89296,
-      "sha256": "f55836ca4eccbcecf39715676825296dfa7f5397c4ae84a7b0d78a9c8c188c94",
+      "sha256": "407cf8d8b2c5c0167905de21537b9e0b58d83243b3097b30ac3e7534c332acf4",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4906,8 +4906,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/attack-enemy.png",
-      "bytes": 282321,
-      "sha256": "eb909a40fede8eb86dad2113f590a830931ced79eb391d1e676b5edda3455d52",
+      "bytes": 282456,
+      "sha256": "e4ebbdb3180ed8b63dc042175f42c1edc959c6503d08d8d3e8ec5de6fc33a4a3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4922,8 +4922,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/defeat-enemy.png",
-      "bytes": 324283,
-      "sha256": "60e87aa4fe85e6c8bf51c1d300efb99050b78bb60cc80dcb89e7ec5c526a753f",
+      "bytes": 324592,
+      "sha256": "b11a7da24b9113031e981a6818664297004c08e35cee8a3d0d6f14e12a51b002",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4938,8 +4938,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/dodge-enemy.png",
-      "bytes": 323268,
-      "sha256": "73d0b0a56840268481bf3f4d29f5ba510487a9aad479f4d84e4b03b2369174d4",
+      "bytes": 323533,
+      "sha256": "f722afc4b13fb0db2ce59c02c2722fbfc9359ee39329a884e13ea1c30963fc2e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4954,8 +4954,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/hit-enemy.png",
-      "bytes": 316005,
-      "sha256": "e0176081d55a6573f57b315d65283a470e3ead2d60a792b15e1f30534088e8a3",
+      "bytes": 316055,
+      "sha256": "6ead43b39ae3c8aeed9599a7acdbca2b03b1f54cededbc7f59953de2f79c5974",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4970,8 +4970,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/idle-enemy.png",
-      "bytes": 252884,
-      "sha256": "be1d2d9588720b3d2168bd3dc2d122292dc6df6dbdc81c1a751a88731b00a013",
+      "bytes": 253797,
+      "sha256": "9c4faa23681771006d799acd356e92a887ead71b2d74697e71eac76ceea38bdd",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4986,8 +4986,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/boss/return-enemy.png",
-      "bytes": 305332,
-      "sha256": "b4eaf7d2f4dceae4c72c0c2329091e2b8e746daa581adb20e2db7915a9a7e78c",
+      "bytes": 305408,
+      "sha256": "1c93e81b0f26299f73997fffea838dc214d3355fd2a3c431c1a0ed15cf82f58d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -4995,7 +4995,7 @@
     {
       "path": "repair-r1/tiers/medium/elite/atlas.json",
       "bytes": 89193,
-      "sha256": "19596b33812bce2cc536bf5e2747f9d6ac1bfaf108e5d167092d676ae25254ce",
+      "sha256": "ac7a8f96240db3c1153b740ccf4bce426320f05eececbbe0ed65deb4a318f425",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5010,8 +5010,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/attack-enemy.png",
-      "bytes": 277538,
-      "sha256": "b669e09482fe5ad2ef998ede548d460d212bc94a69d3864974900a82cd3c0861",
+      "bytes": 278035,
+      "sha256": "f209bfe47956e9696eaa8ab1f6fc3680658b99e1f667dbdabb77998214b4e8de",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5026,8 +5026,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/defeat-enemy.png",
-      "bytes": 242488,
-      "sha256": "339a86b38dc2f6e7a14070dd834bb56d5b1d80096b515cd924f3346242ab39c5",
+      "bytes": 242494,
+      "sha256": "32920702bd0c16c911e4eb9c18f7a49e0d5b3363232dbdcb54de396cc6f1b585",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5042,8 +5042,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/dodge-enemy.png",
-      "bytes": 310622,
-      "sha256": "f344a52a5028ef470020167d3ec1712a3debd6d603a3d539b1318fee2f9e6dbb",
+      "bytes": 310530,
+      "sha256": "2a8bb3894bf23b05d6c05436656d147e8e02c09fd9a1a7fad3c35c0fbfa2f60c",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5058,8 +5058,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/hit-enemy.png",
-      "bytes": 273403,
-      "sha256": "69dc5f538002c1a960ec8abb466f269aa490633d1e91eb35f91e294f73398762",
+      "bytes": 273622,
+      "sha256": "90160b461125962fbec5bb4899987ac417228718f5b432ec9f268593fa4246bb",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5074,8 +5074,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/idle-enemy.png",
-      "bytes": 201971,
-      "sha256": "cb7fe8506535e6e8ef45bd82bf9109aa8c5f0327a3de597d86dc07978503fbba",
+      "bytes": 202421,
+      "sha256": "34c07a26df9be05d8e9b064f58b28c11e5c8075c8571b8ebb220201b0d237c4c",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5090,8 +5090,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/elite/return-enemy.png",
-      "bytes": 289302,
-      "sha256": "b5ea52b4990472136ec079c2156ec6358f988aac2abfbb89f459fb7a770a0a03",
+      "bytes": 289792,
+      "sha256": "da62e0dc17ab3164085114006b4e67a6ba7a0f971e05c2190ff840de9e61dfaf",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5099,7 +5099,7 @@
     {
       "path": "repair-r1/tiers/medium/normal/atlas.json",
       "bytes": 89039,
-      "sha256": "dc8f176d220e3bf8dca4d42606d0102823cec81bfdbdf6a904a4d96de6081cbf",
+      "sha256": "6dbf84f6c437d10dcf7523960302486123d005487f59c63560fe98aa4dd9e568",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5114,8 +5114,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/attack-enemy.png",
-      "bytes": 217135,
-      "sha256": "f2d2aaf96e5861fc02154166f03f839b7134c89b7dab637df072857019e96af6",
+      "bytes": 216998,
+      "sha256": "9e8103b656d851b43c98d5b556dd6ba30b5084e39690f9f7a97901273480072e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5130,8 +5130,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/defeat-enemy.png",
-      "bytes": 185666,
-      "sha256": "1d7c6bb31138e8b5fc510c9626c9f13193094899a0707396b69426e633661686",
+      "bytes": 185787,
+      "sha256": "de661c4d8303fc9456219052f655d4851d29625ffe8bdae8d716170b79525390",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5146,8 +5146,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/dodge-enemy.png",
-      "bytes": 240953,
-      "sha256": "f305fcc7d8a35805c8e332a30ab0061467821a55c538e77876f46ed32190f7b8",
+      "bytes": 240970,
+      "sha256": "02ee0095f7092156b25a18b100414327e935b7a0d6b401633a3017921ca0023c",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5162,8 +5162,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/hit-enemy.png",
-      "bytes": 209663,
-      "sha256": "f6efb4643ca737e11933785db4a00d803143cd1987c564e8d8891be7ef8b995b",
+      "bytes": 209928,
+      "sha256": "117d2aac419c9e20e16443d27b274f224523f3708a05e9c65079dd724723201d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5178,8 +5178,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/idle-enemy.png",
-      "bytes": 148366,
-      "sha256": "2b8becafa01194995632428c6ed53fc3e024660440f38ef9a1457bdd74e63c19",
+      "bytes": 148456,
+      "sha256": "7be03ac9463e59b596a22a0e15b6740d9c74da9dae1bacc8d604ec3982d97897",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -5194,8 +5194,8 @@
     },
     {
       "path": "repair-r1/tiers/medium/normal/return-enemy.png",
-      "bytes": 222867,
-      "sha256": "cb3abbed5f896fca9f8f3d6c461fa19f9f7d2ce449e5e0b768c6f3de4a27a633",
+      "bytes": 222786,
+      "sha256": "fee3ec342209a400f5e3959bb5466f5ed4d0b6e3482a116e8b3ad53a211c7b1f",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6169,17 +6169,1745 @@
       "publish": false
     },
     {
+      "path": "repair-r2/b3-prerequisites.json",
+      "bytes": 3291,
+      "sha256": "c08a87a394c085820b9cfb2ce30523cb2436f6fd098f330fa1f2482105167b7d",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/color-difference.json",
+      "bytes": 249350,
+      "sha256": "5f2b5f92d34f6003e3cead34f88745e853b8f45a643a8034f910aa17ed7a6d94",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/color-material-only.json",
+      "bytes": 203169,
+      "sha256": "c1515a11c16fc70778f111b523efe66c7822997324be32cfc6ac40b0f04101ce",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/contact-localization.json",
+      "bytes": 950066,
+      "sha256": "eccb0a302f35ab53cbfa743a6b4279976e4c5a19f45637e518c9c6ec938957ee",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/display-reference.json",
+      "bytes": 5663,
+      "sha256": "43af1e85dc4707668371096d319419f43e58157b220bae47ec3aaad4e0731285",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/geometry-after.json",
+      "bytes": 348490,
+      "sha256": "61cb0777072aba7553195a570c85f3c6821a9c81a62fac8638e2200c6938e060",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/loader-time-ranges.json",
+      "bytes": 104329,
+      "sha256": "0c0959504fa017dfd929e55cf0753944d8488cc8e633b99783f65b9d2fa71f1a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/material-after.json",
+      "bytes": 24344,
+      "sha256": "d27e4b877f26f397efb973d28cb3d1b4f8959ac9cfe042b455f2bb0689ace6f0",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/material-before.json",
+      "bytes": 24305,
+      "sha256": "24f555bf1ea90514619384d6882a3cfb2db9c3be3f7192c9675061c193ba310e",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/material-repair.json",
+      "bytes": 2115,
+      "sha256": "fe4f5a8c0e279cecd779e0bc5694cbfbbd0dd3d095322f87e08c7ebab44da689",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-attack-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-attack-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-attack-9-agx.png",
+      "bytes": 21602,
+      "sha256": "c0107621f9c1d1d8f90a603d0b1979ef5ba5df498a7fe9846ca1dcf4ffe822db",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-defeat-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-defeat-21-agx.png",
+      "bytes": 21593,
+      "sha256": "f608fa1fca8ca10e53d06a26b08fa61cc57feabaf5e7978a7b36de6a640ac9bc",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-defeat-9-agx.png",
+      "bytes": 23453,
+      "sha256": "105a9fa5cf42865f3c25367a1c7fbe0478aba41437e532dbbf88f7d599b39842",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-dodge-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-dodge-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-dodge-9-agx.png",
+      "bytes": 23743,
+      "sha256": "b58d970636b7fa95b155a334cae63b201b7bf7f1f29da208a32c0bfcbc4c7daa",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-hit-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-hit-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-hit-9-agx.png",
+      "bytes": 22929,
+      "sha256": "ed508094ab2147c794bda15c3208815f3eefe7a7f4f7e4c7041b4c49fe2e6536",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-idle-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-idle-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-idle-9-agx.png",
+      "bytes": 22525,
+      "sha256": "f56e6df5c79cde7047828dd98cd56c0788d27d797b1d6556d949f1c1490156b1",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-return-0-agx.png",
+      "bytes": 21602,
+      "sha256": "c0107621f9c1d1d8f90a603d0b1979ef5ba5df498a7fe9846ca1dcf4ffe822db",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-return-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/boss-return-9-agx.png",
+      "bytes": 22517,
+      "sha256": "288524471b9c0575f09308d5ec90d77914a0667ac42da5dcf4a9b5fff0ba580d",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-attack-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-attack-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-attack-9-agx.png",
+      "bytes": 21847,
+      "sha256": "0f8a5cfa37757d994a9adf39bf022408b07585771611434c19836cd59f46ebe4",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-defeat-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-defeat-21-agx.png",
+      "bytes": 16179,
+      "sha256": "f5fdc169a200254fcb470914b6d0065245d210f97f6e8ebfd4c4bb8ebac2ebbd",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-defeat-9-agx.png",
+      "bytes": 22992,
+      "sha256": "847f27a45e9b5cf459eeac487c4327b158034341a71550a66e6756c54661fcfb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-dodge-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-dodge-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-dodge-9-agx.png",
+      "bytes": 23180,
+      "sha256": "3da8535ac9d2a54c92f2e1f8cac7ad63725b078fb9a03ca628fd7ac8473db855",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-hit-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-hit-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-hit-9-agx.png",
+      "bytes": 23119,
+      "sha256": "7d0dc8da0a74904b30dbaa00e835dda1878f74cea60532071a202182814e526b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-idle-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-idle-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-idle-9-agx.png",
+      "bytes": 23626,
+      "sha256": "871f4808fb5047ba7c04501eeb4a935238affb588262a71081335661962ead65",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-return-0-agx.png",
+      "bytes": 21964,
+      "sha256": "7db19e0c2168b84a17c2776d834fb398e43c7b1915e51c53b5e1c7b4e10908e5",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-return-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/elite-return-9-agx.png",
+      "bytes": 23088,
+      "sha256": "f8baeb5104f96ad2f27a692ba646aa0e9acecbf0fb857a8d6a12fb58e545f313",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-attack-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-attack-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-attack-9-agx.png",
+      "bytes": 17744,
+      "sha256": "ae598b25b8f4830ef2f2c66655b6b946ac0173a863d9d9901bd098b68e3ae362",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-defeat-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-defeat-21-agx.png",
+      "bytes": 13399,
+      "sha256": "92d6b9b2a586251d8aaee87d28f5af4c2ab4bdc461c2b82f587dc839bdbf0601",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-defeat-9-agx.png",
+      "bytes": 16693,
+      "sha256": "460b1121af818a74a585f1fdf67ea323f463cd467c2d2b3c8020ed028dbe8601",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-dodge-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-dodge-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-dodge-9-agx.png",
+      "bytes": 17117,
+      "sha256": "75cffba6b5ef6692fa49dab03ec868ef269a593a220855b15b059a9bcebb6408",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-hit-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-hit-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-hit-9-agx.png",
+      "bytes": 17529,
+      "sha256": "2807dc0a5825b56351878a5ded58c19d4f3b3b71cb6b92f1be30afd2985f3048",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-idle-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-idle-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-idle-9-agx.png",
+      "bytes": 17248,
+      "sha256": "82fd3263d72c8e0bc38870cb50edd074e9b0b4b322c500dc5df4f8c1484cbf60",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-return-0-agx.png",
+      "bytes": 16856,
+      "sha256": "0e92f0eb096ddcf9c69880e12171ace28a97ce13d80f114701562e2d620fc5a0",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-return-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/normal-return-9-agx.png",
+      "bytes": 16533,
+      "sha256": "d08225e81d32155b8b3370ecc37eaaa083fea92fab1d3240344be70d5c0ae538",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native/report.json",
+      "bytes": 14541,
+      "sha256": "0664baf51c4a7e1f2a137c215792123aab655886c4239c23ec16bb08c87bef51",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-attack-0-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-attack-21-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-attack-9-agx.png",
+      "bytes": 22056,
+      "sha256": "c4e6e154dfe9ea70af1f72db48a3245194773139c9553c014f803dd2bbff41c1",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-defeat-0-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-defeat-21-agx.png",
+      "bytes": 21719,
+      "sha256": "a4280e66120ba59207d95d0e72d57142bfa9468c978ec1fdbf86dfecb1f0ef50",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-defeat-9-agx.png",
+      "bytes": 23917,
+      "sha256": "da3ae2434184ffd81217e6aa596d6a472a4ef193ab48ec3427c981f2930bd362",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-dodge-0-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-dodge-21-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-dodge-9-agx.png",
+      "bytes": 24260,
+      "sha256": "6e3d0f6f0cb6dd901a83ed1c191393dd5ddddb71938ae53e64a4207abdd61e1e",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-hit-0-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-hit-21-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-hit-9-agx.png",
+      "bytes": 23054,
+      "sha256": "824c569bd355bada8b0f0017aa8bdb3636f10d194e42b63d16e630dab8a1251b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-idle-0-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-idle-21-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-idle-9-agx.png",
+      "bytes": 22738,
+      "sha256": "4495d8776baab3710529c325d00d7e3ae4d7a4525217a54f9c4b11fc952466a5",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-return-0-agx.png",
+      "bytes": 22056,
+      "sha256": "c4e6e154dfe9ea70af1f72db48a3245194773139c9553c014f803dd2bbff41c1",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-return-21-agx.png",
+      "bytes": 22796,
+      "sha256": "5b5a1434bc4d903ae886b7916579c056c4c604ea5bde772ea4253d9addb96bbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/boss-return-9-agx.png",
+      "bytes": 22650,
+      "sha256": "a6ba4e51ef18e623fb7909f1d7df3d02197fa145625f718b0d111533d5ab8ede",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-attack-0-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-attack-21-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-attack-9-agx.png",
+      "bytes": 21982,
+      "sha256": "2e859d0afb88a0af0ea1632ce6c072f1abb56892007f392217340baf62017323",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-defeat-0-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-defeat-21-agx.png",
+      "bytes": 15976,
+      "sha256": "a37da38df387ea83d281429eed044d89f5ee67801c5502645a12d0256baf2dfe",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-defeat-9-agx.png",
+      "bytes": 22965,
+      "sha256": "4b8faeb7a80b8b722baad08236c6c35b8b984285cbc0b04259d635b4584e9a05",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-dodge-0-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-dodge-21-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-dodge-9-agx.png",
+      "bytes": 23626,
+      "sha256": "4ab005e6b671e4112e3fd38273e0351ecc8d8f82094706ba4e8bb83a855435ff",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-hit-0-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-hit-21-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-hit-9-agx.png",
+      "bytes": 23311,
+      "sha256": "040ea87a96df78a130c35436c93f3939a6bae6aa66f6a5c0e239bef6ca5727fe",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-idle-0-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-idle-21-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-idle-9-agx.png",
+      "bytes": 23551,
+      "sha256": "7a36a2e6ae964cf81ea8455bf6ce6002a4c29aa6f01a92e4dd3bf836d587ad65",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-return-0-agx.png",
+      "bytes": 21928,
+      "sha256": "55762615c4920e4e375d19eaa8371654b272c1428ef89ec778e419ef16a7f24c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-return-21-agx.png",
+      "bytes": 23635,
+      "sha256": "afa853d98a676e837da75ac99e767c3c3ee807f479acdde2ac4f0a3d5f16123c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/elite-return-9-agx.png",
+      "bytes": 23240,
+      "sha256": "9d85ac9d496a0dac7facebd32566e9ede2120646d3d2b0c1aa1b6cc2aa299959",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-attack-0-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-attack-21-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-attack-9-agx.png",
+      "bytes": 17823,
+      "sha256": "f0b181834330017e0ad9bbf9fe31896bdb523e326150be2ff4c770f0a5c87984",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-defeat-0-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-defeat-21-agx.png",
+      "bytes": 13362,
+      "sha256": "dfee5356b5cf1242f3ff042fab0357334ae7a2df04df429ad8f7ebb051288ceb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-defeat-9-agx.png",
+      "bytes": 16920,
+      "sha256": "ec21a3264b2d0971f2976fe1c6e1c8ce988a11da5368fd83ba01b9bfd32300b3",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-dodge-0-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-dodge-21-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-dodge-9-agx.png",
+      "bytes": 17212,
+      "sha256": "7fbb401a692d6aa287bd872024e1bef7aeedb5faf33ba684586eb15156d2bca8",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-hit-0-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-hit-21-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-hit-9-agx.png",
+      "bytes": 17412,
+      "sha256": "1c7235c98686300f0d997371d8f24e6775490435bb4c214a61c61363c82b0e5a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-idle-0-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-idle-21-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-idle-9-agx.png",
+      "bytes": 17314,
+      "sha256": "b3870fcb695e23b564448a27ad9f58e1e35571a7d18c76aba41e457385d69d35",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-return-0-agx.png",
+      "bytes": 16924,
+      "sha256": "b64fc9f139fb76c9b8756ff908cca70bfff07aa384a767dd44da30337ac5d5f2",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-return-21-agx.png",
+      "bytes": 17584,
+      "sha256": "cff5bb1c17ad9c9ea904260f55f8a68d9342e6bc674380539bbc17a6e6942b89",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/normal-return-9-agx.png",
+      "bytes": 16742,
+      "sha256": "d530a7b10a2b075a5d6ff9ddbba2c8bab2adac2189ef0a6f988c6e0cf68eb04f",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-aligned-r1/report.json",
+      "bytes": 14541,
+      "sha256": "41a3b2d3ed2e5a51af8607df0ef922a5e57ac7eaec121e106e264391b15f2637",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-attack-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-attack-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-attack-9-agx.png",
+      "bytes": 21392,
+      "sha256": "e315f2d1af54e54dc09cd3768850c274b81a9cf14ef7f4c79ca53c49dac4fbf2",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-defeat-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-defeat-21-agx.png",
+      "bytes": 21593,
+      "sha256": "f608fa1fca8ca10e53d06a26b08fa61cc57feabaf5e7978a7b36de6a640ac9bc",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-defeat-9-agx.png",
+      "bytes": 23776,
+      "sha256": "adbca38b7b868b4edf8e089f16387171faaaf8b95be02b56ff2e95841c707d3a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-dodge-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-dodge-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-dodge-9-agx.png",
+      "bytes": 23758,
+      "sha256": "c1896568a4f0e59873f454bb2b0c6aaf5baaf31f9fb36517308cf59bbb60b851",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-hit-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-hit-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-hit-9-agx.png",
+      "bytes": 23232,
+      "sha256": "28dffe1ba63ecdbf1abfae6d40f48dc6f634a446bc278d443ef2d690a6887ab1",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-idle-0-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-idle-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-idle-9-agx.png",
+      "bytes": 22659,
+      "sha256": "70dd43ad62e546f218f8b301c65f5f61b6d34c7548667428946d4f7fd9bca646",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-return-0-agx.png",
+      "bytes": 21602,
+      "sha256": "c0107621f9c1d1d8f90a603d0b1979ef5ba5df498a7fe9846ca1dcf4ffe822db",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-return-21-agx.png",
+      "bytes": 22808,
+      "sha256": "86483e21d576bbe962f908f22f6f9a4aa5bedd506f42411f9ef75a76d1e784c7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/boss-return-9-agx.png",
+      "bytes": 22543,
+      "sha256": "c88913a4f3285d46e40e4dc0ab3bac22da1d6c100969f1658f46ae9db5011188",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-attack-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-attack-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-attack-9-agx.png",
+      "bytes": 22237,
+      "sha256": "756147d14de5a21784c603bade039c8e196203576e8cb87fa2908d599c693da8",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-defeat-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-defeat-21-agx.png",
+      "bytes": 16179,
+      "sha256": "f5fdc169a200254fcb470914b6d0065245d210f97f6e8ebfd4c4bb8ebac2ebbd",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-defeat-9-agx.png",
+      "bytes": 23212,
+      "sha256": "e7ce66083c3364076534be5a349ec369c6c3519e38b2107259201dceec5860c0",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-dodge-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-dodge-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-dodge-9-agx.png",
+      "bytes": 22571,
+      "sha256": "95d5b636922a692d2ab10156f8a4ec73b6f5c91e9cf5173ee63495d8e488d592",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-hit-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-hit-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-hit-9-agx.png",
+      "bytes": 23109,
+      "sha256": "c8e4b70b37c085587aa18928662cd783170f89a4f2e7c8a7eda998012e3462cc",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-idle-0-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-idle-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-idle-9-agx.png",
+      "bytes": 23585,
+      "sha256": "4f53e19a6f01cd8a84bedfec9e684b5dad06da8c974792aea5237dc7ab803789",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-return-0-agx.png",
+      "bytes": 21964,
+      "sha256": "7db19e0c2168b84a17c2776d834fb398e43c7b1915e51c53b5e1c7b4e10908e5",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-return-21-agx.png",
+      "bytes": 23822,
+      "sha256": "853a77c040b9c68623f80bffa7cd7d106b771d3a16e1b8bf94257f53894f8801",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/elite-return-9-agx.png",
+      "bytes": 23017,
+      "sha256": "baf3e24ccb167e5e8f22307f2b56af66e7ef9bacf8b5cfeab6738f2715b7f1ab",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-attack-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-attack-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-attack-9-agx.png",
+      "bytes": 17915,
+      "sha256": "33fb752178d22e195274eb1e85d0dfe373433133b87c0ca0fae4109fa10e3870",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-defeat-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-defeat-21-agx.png",
+      "bytes": 13399,
+      "sha256": "92d6b9b2a586251d8aaee87d28f5af4c2ab4bdc461c2b82f587dc839bdbf0601",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-defeat-9-agx.png",
+      "bytes": 16941,
+      "sha256": "2f99c49f3b305173aa51716cc12a7e732d5fc7ad5274bb251186df0ca686858e",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-dodge-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-dodge-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-dodge-9-agx.png",
+      "bytes": 16839,
+      "sha256": "d942374ea8a35d5d34c4f58374be717e34e3638fd953b77641e99804ac650b56",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-hit-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-hit-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-hit-9-agx.png",
+      "bytes": 17240,
+      "sha256": "82c1fef6d4e4dc10026ce8cb4cec38b45f362bd83c29cabba5f97a8244260519",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-idle-0-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-idle-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-idle-9-agx.png",
+      "bytes": 17356,
+      "sha256": "061aafe4c43f730cbfc5916989477d49b272de6b4eed89177b8d88ec4be30dbe",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-return-0-agx.png",
+      "bytes": 16856,
+      "sha256": "0e92f0eb096ddcf9c69880e12171ace28a97ce13d80f114701562e2d620fc5a0",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-return-21-agx.png",
+      "bytes": 17629,
+      "sha256": "a731d292b3d23596c8dbc8443a663544259e706c422ad17272ce155ad4f43281",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/normal-return-9-agx.png",
+      "bytes": 16479,
+      "sha256": "38f45bf9b329be5acd1ac25453ba6f9ff3579643a94ede7cfcf9d591a3caafb6",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/native-material-only/report.json",
+      "bytes": 9305,
+      "sha256": "d655c5fd046f02092906025df93259006dd91235ec21fef8427bc8ff99045043",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/panel-roughness-linear.png",
+      "bytes": 975,
+      "sha256": "272932077d1c355dbae557d807d4a15b09e008810b26981290efc2d60cfefd0b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-attack-10-back.png",
+      "bytes": 50290,
+      "sha256": "a01e4401a81718b1d2b73bf7904c2b5e7e81c1aa2dffeff0468756c6d2f84a4f",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-attack-10-front.png",
+      "bytes": 51545,
+      "sha256": "1fe8b77982216bbf7d61181d9f28e51496fb31ece75c2a10193ade5f5c20f1ae",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-attack-10-side.png",
+      "bytes": 45588,
+      "sha256": "51f7efb28b8d1ba760db7200cd167c359031c76f2993fcb8b004783b2270b64a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-defeat-10-back.png",
+      "bytes": 50322,
+      "sha256": "1ac71263f26791c96e50f45c5b93a6d76cdde2aca395d987e23e2bb6ddb617e8",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-defeat-10-front.png",
+      "bytes": 50695,
+      "sha256": "bfaeacbeb2af3d5d104e6e1a401c1fed71795567a5fa2027a208e58f2bfce23b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-defeat-10-side.png",
+      "bytes": 46087,
+      "sha256": "2d8042e9ae1580ae5591af76aa1c3aca0bf28177bc79df195eb81c3131d873ce",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-dodge-10-back.png",
+      "bytes": 50235,
+      "sha256": "f5dba58f50c449a5b7c1f8f5b2bf8971ee27eed22c17ed1c5bed457afc6a4faa",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-dodge-10-front.png",
+      "bytes": 50951,
+      "sha256": "a348db6d2ed29f436ce69eb3355d6a4447b7c6a6f274199cb142bade7ec62118",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-dodge-10-side.png",
+      "bytes": 47006,
+      "sha256": "a3b6f674419f12ca8271675c1ff42203f81faff7f3ddaa069cd2b4879307be9c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-hit-7-back.png",
+      "bytes": 49457,
+      "sha256": "24706d7fbb0bf2cc275cfb6a2420545891249c9d7f84ea1b65051f1c3b0be943",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-hit-7-front.png",
+      "bytes": 50446,
+      "sha256": "d7beaec781d7db59f3e2bef2b52b26e5b4a86104a485839c0b658cb697ea05e3",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-hit-7-side.png",
+      "bytes": 47025,
+      "sha256": "8055505297feaf54cc8a0d811d4d83c4b49861f9efdfb73e6029f6b4f21a4994",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-idle-10-back.png",
+      "bytes": 50582,
+      "sha256": "c9ae5044b92fba06f66f87628d2ad85fcfcb6e7a4be8f754ba3319ea41307d4c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-idle-10-front.png",
+      "bytes": 51595,
+      "sha256": "399c1655b07a927429fe428d59ff7d1bb45a18d7c11b5bb8185393ff081db960",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-idle-10-side.png",
+      "bytes": 45108,
+      "sha256": "c87ab132249c629caf27eec1e9c93cc4f4ebba00852795e7e78d2a58415d410b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-return-1-back.png",
+      "bytes": 50290,
+      "sha256": "02b8c14793e639b76c3ad88aa92d901bd1fbd6f00d7b7694bd1cfed5e3787c31",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-return-1-front.png",
+      "bytes": 51545,
+      "sha256": "697a9ac4f992f2498473f7343841a0a26ff84b8e71062ad2e7f5c9dc63c01b1b",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/r2-unchanged-player-return-1-side.png",
+      "bytes": 45588,
+      "sha256": "12559b666b00fe0807003e8c13438197369507c2a0215a1d943f9ad2edb16928",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/pose-views/samples.json",
+      "bytes": 5470,
+      "sha256": "53fc9a45a5e9aa41ec846cd0ea9fa027d8b2dcd5db2240db2bd961033bf3ec5c",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-0.png",
+      "bytes": 287,
+      "sha256": "ebee394e41386893e365bab36916668522c516e325de348f1a7a593998e75687",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-1.png",
+      "bytes": 279,
+      "sha256": "d2a0a74ec6a2b9ff163d06b4c6df358cb649a501a208980986f1605ffc07b83f",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-10.png",
+      "bytes": 282,
+      "sha256": "74bcb838511ec733306823317b2d32a79a82d422f71cd02b67739d795bf1f0cb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-11.png",
+      "bytes": 281,
+      "sha256": "6e1b6dc5ece135a25c95f5ce23468617e5411d39996d9a7a60339bd92f9a5cbb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-12.png",
+      "bytes": 282,
+      "sha256": "5a51c1f385c53f326ce2a74f7317350fc64b9186717cd7a912f3a2b1cd77bc37",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-13.png",
+      "bytes": 282,
+      "sha256": "c5b8f6013b98c002f81758d8d51488eb368ca923a91d76ba45d802662e2f8582",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-14.png",
+      "bytes": 282,
+      "sha256": "b68e2cd8a506b967feed5843013aac0bbde96ca707bbf808482b6ee18b12fe0a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-2.png",
+      "bytes": 279,
+      "sha256": "fd61c61f394eaff040d3c5a64f36876173cb09a4b629e01e135e54811fb74ef2",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-3.png",
+      "bytes": 279,
+      "sha256": "74d0f72964dfee6610ba27f435164af9b9a091e6f28aa54da3a620d64a43d955",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-4.png",
+      "bytes": 278,
+      "sha256": "3ad68a59037f9f2eb70f20ce2fd6d1157c1131157b41146362472ad953809548",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-5.png",
+      "bytes": 279,
+      "sha256": "3238dd60bd9b8e4fc41b47a901ac30824b6b6c24da71714f510bdbc4e6e61fd1",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-6.png",
+      "bytes": 279,
+      "sha256": "189be5effd55f8c02cf9603a91c5241817e0dcd71202aa6dcf176cce6add1d9a",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-7.png",
+      "bytes": 279,
+      "sha256": "8a085851e5c3b069ede8bd83869f9ea8f382387d3c6f52e18640fef26d188cda",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-8.png",
+      "bytes": 278,
+      "sha256": "531d5980fe7ebad6c39ff3b66af6f37098f82433d153ee122b7e984a392818ba",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/reference-9.png",
+      "bytes": 273,
+      "sha256": "85f7fc7310a1235c2caf57807b20f6d7c60a31d3b95633ca99fc5a002790e929",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/rejected-pose-study.json",
+      "bytes": 1400,
+      "sha256": "21c307f74f024173b80ac03e5338ee8be6ae82f1bcb47adbba59ae9cf1211c82",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/revision.json",
+      "bytes": 296009,
+      "sha256": "509870cc33d0bac7c0913348196a83e95537032304791ec0d9d998f47e8fe6ec",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/roundtrip-difference.json",
+      "bytes": 13564,
+      "sha256": "406c68273262b2c2562aadbce9b280115c0eb0ed4ecce25a76de1d5c7fb97ec2",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/same-frame-material-only.png",
+      "bytes": 1036601,
+      "sha256": "6f07c695da66a3fda0fa995a8e8982c6d9f0dff439e3ad044982e45611bb34a7",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/same-frame-r1-r2.png",
+      "bytes": 1036502,
+      "sha256": "1e9ea758b981cdf34f1cb168ae6edc641a845ac9a5abb78fe55437b952714df2",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "repair-r2/timing-probe.json",
+      "bytes": 10450,
+      "sha256": "21b66b77d62dcf249842185ef4e0e00846328847c9e4f3ed8029985190af6e2d",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
       "path": "review/blender-qc.json",
       "bytes": 419526,
-      "sha256": "a4f25ba96f94c8478e0e3136fb9383c01784b8baf41e6285a90712b7d6161805",
+      "sha256": "3699a2e3199080ba536eaeea625b8186f6b01515ab29513fd58fc91d3b7042d4",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/boss-motion-contact.png",
-      "bytes": 515165,
-      "sha256": "d623fc6b0736d9183bc9c373850293f63ae9729db94cc8e6c705dc2bdd370758",
+      "bytes": 515487,
+      "sha256": "87a932addcc1cedfc3a6c5c9cb0f23e90e5a203d3c926224018864de81f24dcf",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6187,7 +7915,7 @@
     {
       "path": "review/boss-pose-samples.json",
       "bytes": 1119436,
-      "sha256": "83676d4fda3e842319feaf48724c1ae54153ed133bfa1bd16dd103d7edc533d6",
+      "sha256": "04beb3a8f05509f5f981263f7bd673ab9df8da0713b4dbf40329b3fae9956702",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6250,8 +7978,8 @@
     },
     {
       "path": "review/elite-motion-contact.png",
-      "bytes": 474399,
-      "sha256": "3f294fb236cf0652d121845d5b335a37c049ffcb458c5d975a88f95bd5cab418",
+      "bytes": 474697,
+      "sha256": "836444d93048a477ce8acf47353a4b516ace470e38791bf8188bddeb7dce7834",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6259,151 +7987,151 @@
     {
       "path": "review/elite-pose-samples.json",
       "bytes": 844973,
-      "sha256": "9e4e3f24f5e894a836f55d0917178e5630c87892f5d1b3d2aacc39999910cb0e",
+      "sha256": "9255787b87e28c178a2e1bbd501c9f2bca40e4e33b97766d61706ac5ae5ac193",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/attack-00.png",
-      "bytes": 58295,
-      "sha256": "71e0bc2c48ffca16c9860907991d26d87517f0cafcfa635dd1201b44592b038f",
+      "bytes": 58341,
+      "sha256": "281fedcd18e945544dd25009f3f28550e70f34a31adb44af1a8eb276058163d5",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/attack-09.png",
-      "bytes": 57010,
-      "sha256": "1a8c1a8b890c0b25c8102eb6deffe35ad9f5c4415da1245f3de4fcae5bb665a7",
+      "bytes": 57280,
+      "sha256": "9a16feb7cad45b663070cba90fb15630294b40461ba2b74ed808787c832526b5",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/attack-21.png",
-      "bytes": 58295,
-      "sha256": "37c593fb3ced6cc3bbd9195c21f66a02df86ee53cd05cc468ba3cc85f10f20f5",
+      "bytes": 58341,
+      "sha256": "3dd3286c13b8edce4406f71e1f8451a649a18b4699ed7cb8cc91b24b9b4dbc3a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/defeat-00.png",
-      "bytes": 58295,
-      "sha256": "425957a6393e4e08a39dcc11b7bec2966ea1ce2126313f16835135f372327114",
+      "bytes": 58341,
+      "sha256": "7654c73eb314b32f508eba3b7cee8866200b10a3f98db0832f3c9eca09698dc7",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/defeat-09.png",
-      "bytes": 59591,
-      "sha256": "6d02294c0a70f89c48744a918b95a260641beb11fcd5dc867ab66cac76e97a6c",
+      "bytes": 59851,
+      "sha256": "18a791af4055800e750d3c647a7a5e43e95c5175341dbefbe13d8670f11a580e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/defeat-21.png",
-      "bytes": 55829,
-      "sha256": "eeb8ef1072ce4048a980f155ee1d044140555638e19aa448932ad6cdc7d6582a",
+      "bytes": 55856,
+      "sha256": "bc0158e66d2817f681cdbfd615373eb79609e136754b83eacd09b714e787be53",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/dodge-00.png",
-      "bytes": 58295,
-      "sha256": "23a10fee5343dcdb07134a13dc6dbb593add1936ce7966f5d460d65667270dda",
+      "bytes": 58341,
+      "sha256": "fdb832705503e26898ff6e31df413fbaa6132934fa87dfaa18d22eae1659ee4e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/dodge-09.png",
-      "bytes": 59174,
-      "sha256": "4498c7894e107dd990e2f78fd767077cd1f6a6c27e85393afd0e8a23caca5de0",
+      "bytes": 59848,
+      "sha256": "516e0528dd5c6449b1b659e96c06861e1186d897304ae484a9f0fa9511dcd734",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/dodge-21.png",
-      "bytes": 58295,
-      "sha256": "528c9bef6f0c4d05009d9bf24bb7dd42e777c8d2beeb8413f9cf489b57b630d4",
+      "bytes": 58341,
+      "sha256": "a3fd52f808de8eb708ac8d400dcff5aa49fa44ef1577d15738b147cf2258f00b",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/hit-00.png",
-      "bytes": 58295,
-      "sha256": "5f4c412ac5027c2c7b8ae7bff2bc9fc41d1523b4ac88f5600602dc1361e9acbe",
+      "bytes": 58341,
+      "sha256": "64d6372f8fabf6debbe9ad1ca0fdf3b643d208efb325fe6de8c49039f8cba692",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/hit-09.png",
-      "bytes": 58215,
-      "sha256": "cdff18ac1b5c6f88aa9cb14bb4f1e94294412781a8c29584bb169e262e7c4d6a",
+      "bytes": 58528,
+      "sha256": "e7785cc01a0d594adab907a13e8f2d5b9225f2b88362fdb5a7d71caba12aa776",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/hit-21.png",
-      "bytes": 58295,
-      "sha256": "185b2a917d468b0cb2311b56a5b2fd42de4933b442bea7a5d156dd77819302bf",
+      "bytes": 58341,
+      "sha256": "9122d6748553c6e5edf2679bf946503f5415fb07a27dcbf100cf194a1966627b",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/idle-00.png",
-      "bytes": 58295,
-      "sha256": "c4a506730faa18726a91bc73d3eb810f210abf26d735a48d22d22458f1617716",
+      "bytes": 58341,
+      "sha256": "1ab73105fcceb9e3ef97d075dce0c688c58379ba8255b1554b036ce048081d01",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/idle-09.png",
-      "bytes": 57740,
-      "sha256": "b5251581e2dea63fee5ccc31b96d376cc565ef4b7b061b5928d0cf04a40c3fea",
+      "bytes": 57943,
+      "sha256": "e4091ff70a88272cdf4a31f2ee3c27e08b3b698aeece9c9c48cb99284fa4bbe3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/idle-21.png",
-      "bytes": 58295,
-      "sha256": "7a759580c62aa49f5a325d2d17810ddcba1f4a821e13473955cf05bb9d3cfc63",
+      "bytes": 58341,
+      "sha256": "416ea42c32ab0553f732f1b376b04ab76de5097c262bdc4da976c0789a189595",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/return-00.png",
-      "bytes": 57005,
-      "sha256": "44b2988db8f8fae60e3226a94282304037b6126da1e7dbf209bff882d8d7b9a4",
+      "bytes": 57279,
+      "sha256": "198ac86c1d374b3dd5bae9e90d4e7bd3c83ba4465fd93d993baf2d0a44672664",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/return-09.png",
-      "bytes": 57340,
-      "sha256": "202b8ae2b29dfb9e11bd2a1f6979f71755b8de5f6ed55db5482cb75b3659d504",
+      "bytes": 57489,
+      "sha256": "e65407c1c0253303034409caa5f6ec883010289d976bde551c09eb5709d92e1b",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/boss/return-21.png",
-      "bytes": 58295,
-      "sha256": "dc3ef0207140dbeea42453a1c983f89c0e6b7f8dd32392cc996eb8dc453a0435",
+      "bytes": 58341,
+      "sha256": "a6df42ed7c143aa6870cf89f6ea80dcb2c39bc1ea14adbb568f100aed37497ce",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6411,151 +8139,151 @@
     {
       "path": "review/glb-roundtrip/boss/samples.json",
       "bytes": 3417,
-      "sha256": "3aab5a40ca6a8cbb579065467bf96994a170a65d9c51f725292e741ea2a649ac",
+      "sha256": "eb6012f3df57c7f9d67dd6cfe9b1ed96b622a4d5f70957a3a988bda66264ae79",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/attack-00.png",
-      "bytes": 57332,
-      "sha256": "80550575f82c06190b039e744432f221e54006ffa18585e27adf9e0e54983260",
+      "bytes": 57312,
+      "sha256": "071933a31eed7b04913c3d039b0b21eb2547ce775547828f94736401c08881c6",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/attack-09.png",
-      "bytes": 56003,
-      "sha256": "46ddef9c43ea2b238288912aa6c0a2f6b3489ca0a62c912f588e4e568a3ae435",
+      "bytes": 55987,
+      "sha256": "16456c4360dba83e5868e3e6efbb0741246d1ed72455380a7d085cd6b277963a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/attack-21.png",
-      "bytes": 57332,
-      "sha256": "f21beb8f245861a29bccb391bed1317fab12ddc2e758428b800b337125b76423",
+      "bytes": 57312,
+      "sha256": "9d92ad9d2c32ec0ff9698151607ad2dabeb49d904e3b298e540cc5d3833f96e6",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/defeat-00.png",
-      "bytes": 57332,
-      "sha256": "7551a8889be9a7f8453484e624a61856854e5abfa3a99c236efbbe61b499020a",
+      "bytes": 57312,
+      "sha256": "1e3612488a348b46fdae7e5280d7bfc71d7a7cafd847dca73bfa34d783a8e559",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/defeat-09.png",
-      "bytes": 56918,
-      "sha256": "2fce64cd233ee4bd293d5c12cbee5b17fce99460aff238006f33458dd86a9987",
+      "bytes": 56901,
+      "sha256": "bd831fd9c6e74287a590210b128f70854a30a946004fbd36cfea2493e1bf2328",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/defeat-21.png",
-      "bytes": 47369,
-      "sha256": "fbe1ec917b5bdee50daa783d5616cc45f11db0b0e0e9c212ccc3ae86ed9e66d5",
+      "bytes": 47505,
+      "sha256": "20b0fc0896e5fe1a8d2fca1e2088e1b516b1493c25731bd0ab5a1d36a64ed512",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/dodge-00.png",
-      "bytes": 57332,
-      "sha256": "db394d3a373c1b954be2bd37ef0dc84c0ea238ae03f7f88d6b27ebec9eed1a36",
+      "bytes": 57312,
+      "sha256": "369351817dc516f21275c85691c9081c22b17ee1ce1bf9b19646f776005be7d3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/dodge-09.png",
-      "bytes": 56038,
-      "sha256": "7331a0b4cc4b8b0d890f6584c2a72f54451a47c7bb689dee1ae2122cc0710da7",
+      "bytes": 56140,
+      "sha256": "535554ded6f3ef00fd15b407b78b96c1550a20981a8307626241234c0478be0d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/dodge-21.png",
-      "bytes": 57332,
-      "sha256": "59ccb889378ce8a4fa1ecb34b6d3e495c6a9041e7a339d0280a0fb9f21ae2d06",
+      "bytes": 57312,
+      "sha256": "81e82e2e4a7c9e9cd19eb12a1cd8f74130d8650f1a77059e4fb76867efcf60ef",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/hit-00.png",
-      "bytes": 57332,
-      "sha256": "4bf4304e3758d6af2f2afec0b045d8bc4fbf5164c7c5d818a213f5171eca707d",
+      "bytes": 57312,
+      "sha256": "b0e0afb253f97d2b23fb12b00c585a055642295d7043b272050a6bab9b872310",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/hit-09.png",
-      "bytes": 56633,
-      "sha256": "ea3e95476a046094145656c5a6c3efd12b1d2e28f4aa23a2a71fbaf0941fd983",
+      "bytes": 56716,
+      "sha256": "3a25e3c9e4d1beafabfdd9a4b52207abcf3c4c0bb43da33b5f938b73c255ce01",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/hit-21.png",
-      "bytes": 57332,
-      "sha256": "92ef7751337110c0d1613af138713cb7cc6bb2a7924c4224b0c3154e0ec24261",
+      "bytes": 57312,
+      "sha256": "d6a4a65a5c71e76c6988da6ec4ab452fd1d9f5a452e09cb186ecb636929e1914",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/idle-00.png",
-      "bytes": 57332,
-      "sha256": "af4e31f776a86b7bfcbfbfa531beb8a825fc66984ace7ea13687a495669a4164",
+      "bytes": 57312,
+      "sha256": "50f39a8591cc143c9dbeb1cbfbe47d658f8e2e76be76b87671fb679f1145471e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/idle-09.png",
-      "bytes": 57302,
-      "sha256": "5f6620eb6a31873e9ba6582ef0f029eac40ab79140426627f6e95fa631224376",
+      "bytes": 57345,
+      "sha256": "25c25757de4e6dfdd659305a67a43f255ac1f9fcc84e5ed055c4f7fa7a898486",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/idle-21.png",
-      "bytes": 57332,
-      "sha256": "3524809c2f6775603abe383a739b39c0189ad0f771f2e6d6b4f91c57b2c09fe0",
+      "bytes": 57312,
+      "sha256": "75aa585fb3074c3b200cf10387882f018fd4c636937351e08d6f9906e1f7a895",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/return-00.png",
-      "bytes": 55402,
-      "sha256": "2baffee1d5a15c84b8f133d594671ad6837c1b3e73f535764f4b3d649f640e0b",
+      "bytes": 55445,
+      "sha256": "0a7b3eaa34d5b5aad4e4fca73b69a889bc5d2afc9fb9b5386a1132073332eb63",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/return-09.png",
-      "bytes": 56100,
-      "sha256": "9af3e777ee50e77602ec0606cf19238fd27ca3a12dbbb2672f6f92dccbf3a4e4",
+      "bytes": 56039,
+      "sha256": "9ecb17147b45c60f4a8f54aafa28705544ca3fe3034636dea15b9836204484b8",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/elite/return-21.png",
-      "bytes": 57332,
-      "sha256": "549de92ba2bf926d487c55739d7ab46c6663f527fb01f3ffb3fb4a2f425b43e1",
+      "bytes": 57312,
+      "sha256": "80342d8245bb6180e91634379c6af774ee8a1bdcf470676404f091bbaf3e92aa",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6563,151 +8291,151 @@
     {
       "path": "review/glb-roundtrip/elite/samples.json",
       "bytes": 3418,
-      "sha256": "38bb5ac5b04f673d605d8b4c91c1325d6b595b00d987fa3631f464de11941824",
+      "sha256": "3564109eaedec2535be7dca4a35d1a38f719b9454353290291381151b7cada79",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/attack-00.png",
-      "bytes": 52594,
-      "sha256": "e12d03c4f5459c72b36bc99a73f210b47e4ba781d876ae8dbf5e10eaa9de6371",
+      "bytes": 52598,
+      "sha256": "1cda2ee22d8e0df949a63f3399d80498251aa50e70d00a065195f4b8cdbd078d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/attack-09.png",
-      "bytes": 52486,
-      "sha256": "a2a287e1eab37dac340cd59326d894713e155212bc09ad9b3dd62d1ad953a1df",
+      "bytes": 52545,
+      "sha256": "8942d482f95183a5bb01f4b7fc66c20d052c65c1e89d5c0d949d39981cc6681e",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/attack-21.png",
-      "bytes": 52594,
-      "sha256": "8c5a2614a7aba3a22a6c7b58877b917c71875cbd16c4a6bbac67eba013b30e9b",
+      "bytes": 52598,
+      "sha256": "81578b953530693599a8605624edde8ebfefbaf72bf35d5762c2e99a1c2b6db4",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/defeat-00.png",
-      "bytes": 52594,
-      "sha256": "267cc21c10672cbe741b9a0f007f98e6a7704f2b7086f6e881bf4134777be76f",
+      "bytes": 52598,
+      "sha256": "3663911551ed33d8b5d4f998a2759158c6a673848be6c559da980aab4d2b6d4c",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/defeat-09.png",
-      "bytes": 51723,
-      "sha256": "fb5a0f059d979bc99e13c90ccebe2f0189fdf238ad256e86a5dfcebe638e7aac",
+      "bytes": 51647,
+      "sha256": "1c1624ab29edd37448d3f991955a89ad031dfd58a83139afc880a756744347fa",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/defeat-21.png",
-      "bytes": 44719,
-      "sha256": "0e970b963586a2411a6d0241445c9df7bc2f9a0ee822ca1c1156802550a194e3",
+      "bytes": 44805,
+      "sha256": "172a975cf0c85af28c417bbfa1284301ffb00540d7cc9e9e66b9647b96ef2356",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/dodge-00.png",
-      "bytes": 52594,
-      "sha256": "f7433a1c31e9ed872f52a4088b8e65c1cb6f29c45c9cab1ad91c3070bf034304",
+      "bytes": 52598,
+      "sha256": "5a76c03af152d58c7975e974e4c61533032577ac6b286e63f68136f387226908",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/dodge-09.png",
-      "bytes": 51723,
-      "sha256": "56f38484e34ac8477b0dcc8e2587889c86d65a189d444e76fabe523c08d85043",
+      "bytes": 51629,
+      "sha256": "db4120bf46bd30d39407cc29216b9b041f39ae546a6eb5900b33015ac2b1573d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/dodge-21.png",
-      "bytes": 52594,
-      "sha256": "b40df22d2d04d87d55a01955ea93e25bf665c21a880cd973a56be283e96f6ecb",
+      "bytes": 52598,
+      "sha256": "58577263c70e15cf91e0beaa99b9091d4dbb394a08b8f045ea101416b61c89ad",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/hit-00.png",
-      "bytes": 52594,
-      "sha256": "66df7bae5a6a3716a3da8a818d9ea309186d94d57b6a855d14dac0f826c7b648",
+      "bytes": 52598,
+      "sha256": "4ac1f12b7f6c709e3596cf95db19f23f25c6f83f4516505e72cdab87fa6480e3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/hit-09.png",
-      "bytes": 52168,
-      "sha256": "c0061f10babace58c0d67a9ce80405bc7a22f864f475c6757de72b05ee631a1d",
+      "bytes": 52201,
+      "sha256": "a986d36f60c23e2bb4c256887cd8237fd933f31a65a65877e092422d00265d7d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/hit-21.png",
-      "bytes": 52594,
-      "sha256": "f60a0a31ef155e9129130afb41e1fb74137a37756dfe023caf8565415ffc7f6c",
+      "bytes": 52598,
+      "sha256": "bd443864f518edcb6cff1c8e13d2a69586150e2d842af4f17cd6069e7dc02ddb",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/idle-00.png",
-      "bytes": 52594,
-      "sha256": "8e6f381cd6d5e23004541f450be6c0962a71c1840c6a5d2084ac237bf959ce1b",
+      "bytes": 52598,
+      "sha256": "c302aeb07c25a85287e9c11a099c83425c1e9aed8dd94a432ca797cac6c53b54",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/idle-09.png",
-      "bytes": 52527,
-      "sha256": "a756646bade2561fc3fff642f941c70bd719217ea4719a308710997f8e1e57bd",
+      "bytes": 52639,
+      "sha256": "3ed8e9c823eabe5b777ab49dbc28c22452818e0f413d894a783e495986acc948",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/idle-21.png",
-      "bytes": 52594,
-      "sha256": "bdbcb4f56aa1df8f8599f6111345601bc592032b2363cd516ce3708de80dd99e",
+      "bytes": 52598,
+      "sha256": "31163d7b8d4aa5d21f82ba3ec9a787a7cdc367598ddfb3fa34ef396e1cea9b48",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/return-00.png",
-      "bytes": 51375,
-      "sha256": "6f2c6783e21681cf2e976ea6bd59ef3371630dcb3d0cdb5257369b635d3f6fe6",
+      "bytes": 51440,
+      "sha256": "7e6caac44cb616a50b119e4018452b9d2998b55317bc917de0340a34c688795d",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/return-09.png",
-      "bytes": 51132,
-      "sha256": "1b145115017dd10923ecfe3caf10f6799c4c1293195a003455c79de1dc76aac2",
+      "bytes": 51105,
+      "sha256": "415f8d3c0691a37f62f87d1564d0a7fd30702d9b327bc7facc284ca3f4040724",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/glb-roundtrip/normal/return-21.png",
-      "bytes": 52594,
-      "sha256": "bccc3638e6c79e2930ecb95c67b2a3022001cc5c9ebbae408063b9a1f543819c",
+      "bytes": 52598,
+      "sha256": "fd7ded8466dfd87309fbff9acc6d3bd2f109249e6b4660fd8a45d4a139aa1d4a",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6715,7 +8443,7 @@
     {
       "path": "review/glb-roundtrip/normal/samples.json",
       "bytes": 3419,
-      "sha256": "bd1d0a453d6205e4660728e2dd775a1b90778ea811d155f712a8a95584842379",
+      "sha256": "e1b2256bc3c42eaf9b6e38a8496074589b48ad1be50ed65f7e8db26657294120",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6882,8 +8610,8 @@
     },
     {
       "path": "review/normal-motion-contact.png",
-      "bytes": 369169,
-      "sha256": "f81ca08ff2e966347161587aa50cc3fb84c2dfa130434472114bae6c005a4270",
+      "bytes": 369257,
+      "sha256": "fc24d6819b2cb67dec2fc4ef046a07faa8bd0d93e83e1e40ff294d6699a0e85c",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6891,7 +8619,7 @@
     {
       "path": "review/normal-pose-samples.json",
       "bytes": 834366,
-      "sha256": "92ce9aae13bb41ce24555c5b9f44f7bd5a890aac37f823f04a52610fa06fd8ae",
+      "sha256": "22938a5f2e8f5d1e096747aeb8bdd841159fe7e4ee8d7ed0f560c98ddae779bd",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6923,15 +8651,15 @@
     {
       "path": "review/reproduction.json",
       "bytes": 1368,
-      "sha256": "ba9fd02899889e68197d7e455d45b818f0f47104588339ed734ee9295e4e1b7e",
+      "sha256": "601c75e2797201250d43bbc730400147060b57c63901559c7c80c3e588ae3515",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
     },
     {
       "path": "review/source-vs-glb-pixels.json",
-      "bytes": 13591,
-      "sha256": "080d46c399c0b4b9216ff2c70535f84ae043270573ccde3c9753f7aff7f0b8ec",
+      "bytes": 13564,
+      "sha256": "406c68273262b2c2562aadbce9b280115c0eb0ed4ecce25a76de1d5c7fb97ec2",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -6946,8 +8674,8 @@
     },
     {
       "path": "review.html",
-      "bytes": 7522,
-      "sha256": "9d531867057e167a5f024371fac75b2076b3c48982ee4ad711ac754d74eef80f",
+      "bytes": 8746,
+      "sha256": "a86ac2eae5ae9fb39e4704b7b226863d2db60a9179ad7abcd0090033e8f82790",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -7209,6 +8937,62 @@
       "publish": false
     },
     {
+      "path": "tools/repair_r2_color_report.py",
+      "bytes": 5133,
+      "sha256": "07f0e74897e9d5001c66011c8392bb7b3ac9d453345bf20f0f72015369270038",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_contact_probe.py",
+      "bytes": 4657,
+      "sha256": "18aa4f2182e6eedb1a5462e36046460966e90506c9f467cc8dc2081bc57e5e55",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_material_probe.py",
+      "bytes": 1262,
+      "sha256": "6f52dd728a776a8d55f8235375a5e2efb9755fcc1b17c4cc7158cd277aaf85bb",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_materials.py",
+      "bytes": 2361,
+      "sha256": "5e69cdeaa7aef00440a1d3497108cda9b65c19828878c72a52497746ab6bdaf0",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_pose_study.py",
+      "bytes": 1317,
+      "sha256": "6d2727335922bbbd9213cf6ea2fc877e3530f9cc4a6814fbe7a448058761c829",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_pose_views.py",
+      "bytes": 1961,
+      "sha256": "73c6afa6b336e591538904e954ed4cf85529c89c4b1fc07f2933f96956c5cc47",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
+      "path": "tools/repair_r2_roundtrip_report.py",
+      "bytes": 1589,
+      "sha256": "2020a3854a0af763ad0bbec38b19d2964175b3647a4bce42ea9864f8bd06d2c9",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
       "path": "tools/repair_resource_costs.py",
       "bytes": 2624,
       "sha256": "4452651d757e221a3d4911f334caf39167f711bcba05eda24202da63826f0254",
@@ -7265,6 +9049,14 @@
       "publish": false
     },
     {
+      "path": "tools/verify_r2.py",
+      "bytes": 5227,
+      "sha256": "c0cd94f9d682417d5caba3108b33fda80895ee7395c342affb56ceb34c0b1276",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
       "path": "tools/verify_repair.py",
       "bytes": 5226,
       "sha256": "0d0bb25b288a61d162675d18b463cd33db4a67bdd0e2559ef34a416ccd8847d8",
@@ -7281,6 +9073,6 @@
       "publish": false
     }
   ],
-  "totalBytes": 82394324,
+  "totalBytes": 91072004,
   "largestFileBytes": 6229173
 }

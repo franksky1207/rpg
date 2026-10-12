@@ -1,0 +1,437 @@
+{
+  "rows": [
+    {
+      "actor": "normal",
+      "action": "idle",
+      "nativeTick": 0,
+      "bestSourceTick": 2,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9967094438960185
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9963756177924218,
+      "bestIoU": 0.9967056498105749
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "nativeTick": 21,
+      "bestSourceTick": 2,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9967094438960185
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "nativeTick": 9,
+      "bestSourceTick": 10,
+      "requestedIoU": 0.927317880794702,
+      "bestIoU": 0.9465034378668455
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "nativeTick": 0,
+      "bestSourceTick": 20,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9963815789473685
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.954327320867119,
+      "bestIoU": 0.9627329192546584
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "nativeTick": 21,
+      "bestSourceTick": 20,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9963815789473685
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9211312137712981,
+      "bestIoU": 0.9410178025534975
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9974838245866283,
+      "bestIoU": 0.9974838245866283
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9618360886387619,
+      "bestIoU": 0.9734290843806104
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9952318316343308,
+      "bestIoU": 0.9952318316343308
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9192988258640649,
+      "bestIoU": 0.9323807941518525
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9989944695827049,
+      "bestIoU": 0.9989944695827049
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9968671679197995,
+      "bestIoU": 0.9968675604560832
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "nativeTick": 9,
+      "bestSourceTick": 10,
+      "requestedIoU": 0.9369369369369369,
+      "bestIoU": 0.9544617004474861
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9543090638930164,
+      "bestIoU": 0.9669307179680624
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.941371095817893,
+      "bestIoU": 0.9532963313929876
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9974011763096704,
+      "bestIoU": 0.9974011763096704
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9708216022523676,
+      "bestIoU": 0.9760300596009329
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9971188776149317,
+      "bestIoU": 0.9971188776149317
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9305162005667118,
+      "bestIoU": 0.9468137862633276
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9982824427480916,
+      "bestIoU": 0.9982824427480916
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9949411913494373,
+      "bestIoU": 0.9960769425461908
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "nativeTick": 9,
+      "bestSourceTick": 10,
+      "requestedIoU": 0.904330312185297,
+      "bestIoU": 0.9339550332141032
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "nativeTick": 9,
+      "bestSourceTick": 2,
+      "requestedIoU": 0.9054323594978294,
+      "bestIoU": 0.9907350969157626
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "nativeTick": 9,
+      "bestSourceTick": 5,
+      "requestedIoU": 0.9809000835621344,
+      "bestIoU": 0.9953062943795884
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "nativeTick": 21,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9978765759787658,
+      "bestIoU": 0.9978765759787658
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9788071065989847,
+      "bestIoU": 0.980484693877551
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "nativeTick": 0,
+      "bestSourceTick": 0,
+      "requestedIoU": 0.9967504061992251,
+      "bestIoU": 0.9967504061992251
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "nativeTick": 9,
+      "bestSourceTick": 8,
+      "requestedIoU": 0.9026144537047608,
+      "bestIoU": 0.9249655805415328
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "nativeTick": 21,
+      "bestSourceTick": 21,
+      "requestedIoU": 0.9958999589995899,
+      "bestIoU": 0.9958999589995899
+    }
+  ],
+  "method": "actual native alpha compared to all 22 source alpha frames; identifies possible sampling offset, never replaces the requested frame"
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "cw.t2b3.prerequisites-r2",
+  "rows": [
+    {
+      "class": "A",
+      "item": "三敵 scalar 材質與原幾何／動畫保護",
+      "status": "verified",
+      "evidence": "4096 roughness texels match GLB G; all original geometry/animation accessors exact; 53/9/3LOD/formal15 unchanged"
+    },
+    {
+      "class": "A",
+      "item": "共同顯示基準與時間取樣",
+      "status": "verified",
+      "evidence": "15 actual linear reference renders max AgX error 0.002783561 < 1/255; source clipStart 1/30s explicitly sampled; native silhouette IoU min 0.995231832"
+    },
+    {
+      "class": "A",
+      "item": "來源／Fixture／B1／正式核心／五槽及發布隔離",
+      "status": "verified-with-local-regressions",
+      "evidence": "original source lock, unchanged player, 32 subsets+mixed+empty, six clips, tiers/fallback/cues, no production files modified; see r2 test evidence"
+    },
+    {
+      "class": "B",
+      "item": "人工美術／Boss重量感／自然度與遮臉",
+      "status": "pending-user-art-approval",
+      "reason": "主觀批准須由使用者檢視真圖／動作；不由技術綠燈封版"
+    },
+    {
+      "class": "B",
+      "item": "真 iOS／Android FPS、GPU記憶體／溫度與30分鐘長測",
+      "status": "not-run",
+      "reason": "B3/B4/T2-C後續責任；SwiftShader／viewport不是實機，不要求B2提前完成"
+    },
+    {
+      "class": "B",
+      "item": "完整 B1 舞台／HUD安全區／換裝與取消的Renderer整合",
+      "status": "not-run",
+      "reason": "B3才接入；本批保存固定鏡頭／姿勢，不施工Renderer"
+    },
+    {
+      "class": "B",
+      "item": "G006 真正可穿戴模型與最終美術",
+      "status": "unavailable-with-explicit-text-fallback",
+      "reason": "文字降級契約可用，不冒充G007；正式比較須清楚顯示缺材範圍"
+    },
+    {
+      "class": "C",
+      "item": "native 材質／光影公平性",
+      "status": "failed",
+      "reason": "同正確時間與同源鏡頭：r1 0.214275032 -> r2 0.214556724；非等效陰影與近場area/IBL反射仍存在，source/GLB Cycles roundtrip max RMSE 0.049489593亦待拆解",
+      "minimumFollowup": "先以一敵固定idle、材質ID／法線／粗糙度pass拆解source-reimport殘差；再以有限面燈白／灰／金屬球、等效陰影確認能量與反射方向，通過後才重測三敵六動作。不要重新設計敵人或改曝光去配分數"
+    },
+    {
+      "class": "C",
+      "item": "肩甲與護手／劍首不合理接觸",
+      "status": "unresolved",
+      "reason": "attack10/return1 shoulder vertex141 upper_arm.R against clavicle.R 49.604mm nearest-surface risk；hit7 weapon vertex54是guard不是grip，19.831mm；grip-finger contact需保留但guard/pommel尚未批准",
+      "minimumFollowup": "只製作隔離候選肩甲的關節掛載／局部修型及護手／劍首微調，保留正式15GLB和body53骨拓樸權重；三LOD映射与source/A层/B-C绑定同步，再做全132帧部件级BVH+ray及近距離姿勢驗收。角度單變量±20度已測仍未清除，不再盲目重做整套動畫"
+    }
+  ],
+  "blockingCCount": 2,
+  "recommendB3": false,
+  "B3Started": false,
+  "artApproved": false,
+  "physicalDeviceVerified": false
+}

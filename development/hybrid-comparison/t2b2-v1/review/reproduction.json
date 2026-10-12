@@ -6,19 +6,19 @@
       "actor": "normal",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "e45a6a9d2135100fe172a9e7ec5a821761f18c337a39f2f34c60b29518830bcb"
+      "sha256": "17e60c1a1f6075502d12cfaa6aac1e2d617a749bc90ee7eaa091f8eb9d301d81"
     },
     {
       "actor": "elite",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "4ef0ba15a1c7624df5383356ea3dd3b3dc030b0302461195f5f18c81a40f3539"
+      "sha256": "de2fc6a6791fa3e7b027bbd9f00037e724d92d0ed917099a1fa7752964a4680a"
     },
     {
       "actor": "boss",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "4bdc98e901aa576cc4d0231b91f1a8d28a386c6ebc26ab37cafccb3dfdc0e495"
+      "sha256": "0864517604250abbc1da96280c0fe9dd834e649147f5102c10674b97f5c8a4f4"
     },
     {
       "actor": "player",

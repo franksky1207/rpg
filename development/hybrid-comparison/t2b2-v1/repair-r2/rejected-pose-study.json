@@ -1,0 +1,77 @@
+[
+  {
+    "axis": 0,
+    "degrees": -20,
+    "signedNearestMaxMetres": 0.04139728471636772
+  },
+  {
+    "axis": 0,
+    "degrees": -10,
+    "signedNearestMaxMetres": 0.04725320637226105
+  },
+  {
+    "axis": 0,
+    "degrees": 0,
+    "signedNearestMaxMetres": 0.04960421472787857
+  },
+  {
+    "axis": 0,
+    "degrees": 10,
+    "signedNearestMaxMetres": 0.0554683655500412
+  },
+  {
+    "axis": 0,
+    "degrees": 20,
+    "signedNearestMaxMetres": 0.05959337204694748
+  },
+  {
+    "axis": 1,
+    "degrees": -20,
+    "signedNearestMaxMetres": 0.05393873155117035
+  },
+  {
+    "axis": 1,
+    "degrees": -10,
+    "signedNearestMaxMetres": 0.056596510112285614
+  },
+  {
+    "axis": 1,
+    "degrees": 0,
+    "signedNearestMaxMetres": 0.04960421472787857
+  },
+  {
+    "axis": 1,
+    "degrees": 10,
+    "signedNearestMaxMetres": 0.050448354333639145
+  },
+  {
+    "axis": 1,
+    "degrees": 20,
+    "signedNearestMaxMetres": 0.0472935251891613
+  },
+  {
+    "axis": 2,
+    "degrees": -20,
+    "signedNearestMaxMetres": 0.03654903173446655
+  },
+  {
+    "axis": 2,
+    "degrees": -10,
+    "signedNearestMaxMetres": 0.040853969752788544
+  },
+  {
+    "axis": 2,
+    "degrees": 0,
+    "signedNearestMaxMetres": 0.04960421472787857
+  },
+  {
+    "axis": 2,
+    "degrees": 10,
+    "signedNearestMaxMetres": 0.0501105971634388
+  },
+  {
+    "axis": 2,
+    "degrees": 20,
+    "signedNearestMaxMetres": 0.06084304302930832
+  }
+]

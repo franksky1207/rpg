@@ -9,7 +9,7 @@
   "actors": {
     "normal": {
       "metadata": "enemies/normal/atlases/atlas.json",
-      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
+      "sourceSHA": "ce3a8cbcd09456917199e14f886b9966b4774a0b359b93fe93522269703baa0f",
       "actions": 6,
       "layers": 1,
       "framesPerLayer": 132,
@@ -17,7 +17,7 @@
     },
     "elite": {
       "metadata": "enemies/elite/atlases/atlas.json",
-      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
+      "sourceSHA": "b0ccb402aaa885b890785ec9acfda9221536a72b60ecf0aa3c5e96efe5b113b4",
       "actions": 6,
       "layers": 1,
       "framesPerLayer": 132,
@@ -25,7 +25,7 @@
     },
     "boss": {
       "metadata": "enemies/boss/atlases/atlas.json",
-      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
+      "sourceSHA": "ab25475aa995c04dd250f7c09c934b50d8de148c775c7d0d33b25099cad31fa8",
       "actions": 6,
       "layers": 1,
       "framesPerLayer": 132,

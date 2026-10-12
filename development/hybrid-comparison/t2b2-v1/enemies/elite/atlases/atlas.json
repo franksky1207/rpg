@@ -1,7 +1,7 @@
 {
   "schema": "cw.t2b2.actor-atlases",
   "version": 1,
-  "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
+  "sourceSHA": "b0ccb402aaa885b890785ec9acfda9221536a72b60ecf0aa3c5e96efe5b113b4",
   "camera": {
     "yawDegrees": 35,
     "pitchDegrees": 15,
@@ -76,11 +76,11 @@
       "mipmap": false,
       "rgba": "idle-enemy.png",
       "depth": "idle-enemy-depth.png",
-      "encodedBytes": 322432,
+      "encodedBytes": 322469,
       "decodedRGBABytes": 1846320,
       "depthEncodedBytes": 155986,
       "decodedDepthBytes": 923160,
-      "sha256": "f476360edd8f651cd21fa62c2dc6c9bd87031d5fdbba613c6681feed9627ba05",
+      "sha256": "8045bd51383fa287a3e08483acb9a9d93fd6317e111a596bcd5d39323b2a4c62",
       "depthSHA256": "976b7c2ec7abe1e506aec882772edc70fd249a957683f5b250c4680d432ed2ac",
       "frames": [
         {
@@ -836,11 +836,11 @@
       "mipmap": false,
       "rgba": "attack-enemy.png",
       "depth": "attack-enemy-depth.png",
-      "encodedBytes": 457326,
+      "encodedBytes": 457692,
       "decodedRGBABytes": 2350656,
       "depthEncodedBytes": 196619,
       "decodedDepthBytes": 1175328,
-      "sha256": "aee2d54264bfe47aa53dd754a88cf8a0db01bba7c28cb36c6376bea14287562a",
+      "sha256": "b43ab8deba20fc49bc8f21c4400013b8c1ffb4d94283073f67ce37d7e9a454bf",
       "depthSHA256": "805c458fa7f4a1861b1c9cc8cf8f6d027cc8110fbe347b1beb643e7d32a0745b",
       "frames": [
         {
@@ -1596,11 +1596,11 @@
       "mipmap": false,
       "rgba": "hit-enemy.png",
       "depth": "hit-enemy-depth.png",
-      "encodedBytes": 456654,
+      "encodedBytes": 457345,
       "decodedRGBABytes": 1965488,
       "depthEncodedBytes": 201534,
       "decodedDepthBytes": 982744,
-      "sha256": "8daeac5f7a156f4b5f836ca195ab7443535809c9945195267dc19b341062800a",
+      "sha256": "071d3b4d914f0684f018984f28578adc197a6b15224b72e3afa5e181279186d5",
       "depthSHA256": "ea01e4dee86d3a57164b68df92f3213181efca5ecc0e90c443a2fd7c058e03c2",
       "frames": [
         {
@@ -2356,11 +2356,11 @@
       "mipmap": false,
       "rgba": "dodge-enemy.png",
       "depth": "dodge-enemy-depth.png",
-      "encodedBytes": 503904,
+      "encodedBytes": 503901,
       "decodedRGBABytes": 2261616,
       "depthEncodedBytes": 238572,
       "decodedDepthBytes": 1130808,
-      "sha256": "852d565b145b53392d3f7c298dd2881ef75f0c0b5cb634398b7d07d7103892dc",
+      "sha256": "21400285e19b9d714f759989b20a74668c6f8262c0c27bed6fe7a49013592d43",
       "depthSHA256": "56cd92b07231e18792bbf99f87470f4ecb276fdaea4be1aacdbfb5269056c199",
       "frames": [
         {
@@ -3116,11 +3116,11 @@
       "mipmap": false,
       "rgba": "return-enemy.png",
       "depth": "return-enemy-depth.png",
-      "encodedBytes": 480006,
+      "encodedBytes": 480479,
       "decodedRGBABytes": 2186240,
       "depthEncodedBytes": 223756,
       "decodedDepthBytes": 1093120,
-      "sha256": "9dd53e151b9ab7a199ca1a850bbaf99908ad0aef0b322528cf0f2139b770b026",
+      "sha256": "fb1936aabc2061aaa8422044d4b995f8389564d83426b28030f81c7ea1c975d7",
       "depthSHA256": "0f66a3286f2e52dbdd5760811f735316280078c7cb25dd57bb0818114ae37f14",
       "frames": [
         {
@@ -3876,11 +3876,11 @@
       "mipmap": false,
       "rgba": "defeat-enemy.png",
       "depth": "defeat-enemy-depth.png",
-      "encodedBytes": 402043,
+      "encodedBytes": 402080,
       "decodedRGBABytes": 2279424,
       "depthEncodedBytes": 178302,
       "decodedDepthBytes": 1139712,
-      "sha256": "f1f5281bbc4d8e2e30d6ce2cc1e21de6eb63f0544acaf7797090e349499eb6f2",
+      "sha256": "be64694f0a6915b87593cf5ca336ba824a6cafbe6e8bcb228aa54e707e921fe5",
       "depthSHA256": "58fd8f39b8f5b61296bec4712b157c2f7e7c638cb088e6e06b5fce290b90c031",
       "frames": [
         {
