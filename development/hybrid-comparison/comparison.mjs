@@ -52,7 +52,10 @@ async function visualPlay(method){
  const id=playback.id;ensureRenderer(id);
  // Asset preparation belongs to this offline UI. It never waits in formal combat.
  while(!disposed&&playback.id===id&&rendererState==='loading')await bindingTask;
- if(!disposed&&playback.id===id&&!playback.hidden)playback.play();
+ if(!disposed&&playback.id===id&&!playback.hidden){
+  if(rendererState==='ready')playback.play();
+  else if(rendererState==='failed')status('畫面載入失敗：'+(rendererFailure||'未知錯誤')+'；不啟動無畫面的播放。請重新選擇外觀或畫質後重試。',true);
+ }
 }
 
 function choose(){if(!pack||loading||disposed)return;try{const picked=selection();const input=selectInput(pack,picked);playback.select(input,picked);if(document.hidden)playback.visibility(true);$('equipment').replaceChildren(...input.equipment.map((d,i)=>{const li=document.createElement('li');li.dataset.slot=d.type;li.dataset.kind=d.assetKind;li.textContent=slotNames[i]+'｜'+(!d.present?'空槽':d.name+'｜'+(d.assetKind==='equipment-glb'?'G007 實際候選外觀':'fallback：unavailable，顯示原始裸頭（非裝備外觀）'))+'｜LOD '+input.lod;return li;}));}catch(error){status('資料無法使用：'+error.message,true);}}
