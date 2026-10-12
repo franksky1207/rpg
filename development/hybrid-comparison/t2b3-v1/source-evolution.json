@@ -1,0 +1,23 @@
+{
+  "schema": "cw.t2b3.authorized-b1-evolution",
+  "baselineHEAD": "e094f4e8704a808c94551acd9226c2982c67c537",
+  "authorization": "user explicitly authorized complete B3 integration into existing B1 page; HTML/CSS/UI and source actor-defeated 700ms visual step evolve; original ownership/cancellation/fixture/formal sources retained",
+  "files": {
+    "development/hybrid-comparison/index.html": {
+      "beforeSHA256": "ebdddb9eefe6884da3f97ac77f5cbdf94eb90d3cfaa34afe52c6f2cdb3a1f2c3",
+      "afterSHA256": "88d9dfaf67c1b5e6e88a5bf3cc680ca69b3adf49136aad5c36e907de72e6e027"
+    },
+    "development/hybrid-comparison/comparison.css": {
+      "beforeSHA256": "12f4d5aac6234986dc43ec211c1caa852d1fb4300f2ddd9a51b5317a6770becb",
+      "afterSHA256": "b24ca3c8072d3775d44ba3885e64df908b0da5e4e84bc7368852610f61e4f961"
+    },
+    "development/hybrid-comparison/comparison.mjs": {
+      "beforeSHA256": "51ae3f952198e0e0f2ef0c3b7e3093e537e64c3bf55d42a306b31d8b3559a1e0",
+      "afterSHA256": "be9cfd9bbaa8a957634fb322572186c052a87c25b4446da8c8383f90b7eb4a56"
+    },
+    "development/hybrid-comparison/playback.mjs": {
+      "beforeSHA256": "04fcdce1348fe7fd9d54661e1202b054a6f77d963244b1740e51aef757f359ed",
+      "afterSHA256": "3f0d65d95414d49a17f9db08c7bc756e589a1a9555c57540026e1f8063916e74"
+    }
+  }
+}

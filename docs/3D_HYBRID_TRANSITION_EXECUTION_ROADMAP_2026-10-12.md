@@ -1,3 +1,10 @@
+## 2026-10-12｜T2-B3完整隔離戰鬥展示（正式公平選型未完成）
+- 開工fetch最新main `e094f4e8704a808c94551acd9226c2982c67c537`／乾淨／十項exact-HEAD Actions成功。依本次使用者明確授權，B2兩項C保留，但允許B3開發展示；原r2失敗表與數據沒有改成通過。
+- [B3驗收](3D_HYBRID_T2B3_ACCEPTANCE_2026-10-12.md)／[機器證據](3D_HYBRID_T2B3_TEST_EVIDENCE_2026-10-12.json)。沿用同一development比較頁與B1播放所有權，A分層圖集、B即時玩家＋圖集敵人、C即時玩家與敵人；共用舞台／HUD／接地影／傷害／合法cue，三敵六動作、32子集合／混穿／空槽、三tier、播放／暫停／繼續／重播／停止。
+- B1取消／所有權與Fixture adapter、T2-A Fixture不變；原owner clock新增既有死亡事件700ms視覺步驟，與HTML／CSS／UI四檔授權演進並保存before/after SHA。原正式runtime、G007十五GLB、53骨9掛點三LOD、1050槽、音訊／存檔、Manifest／SW／發布策略均不改；新候選僅development／publish=false。
+- 本機實際browser與原回歸結果列於機器證據；SwiftShader／viewport不是實機或GPU效能驗收。B2 native光影公平性及肩甲／護手／劍首仍C，人工美術未批准、真手機／GPU長測未驗，不能使用B3畫面選A/B/C胜者。
+- Repo root啟動HTTP後開 `/development/hybrid-comparison/index.html`，正式Pages沒有新入口、不新增玩家下載。回復 `git revert <本批T2-B3提交>`，保留先前r2與玩家資料。最終HEAD／Actions由push後核對並在回報列出，running不當success。**本批提交後停止，未施工B4／T2-C／T3～T5。**
+
 ## 2026-10-12｜T2-B2第二次補修r2（技術檢查通過；2項C阻塞仍未過）
 - 最新main核對 `0d7c2307f9e50af2d97dd45c59b650c1d787a4b7`／乾淨／十項exact-HEAD Actions success；隔離素材與檢驗提交 `b3a5ab9f5f0607f965f2ed51bbf66e7056b4cd91`。最終交接HEAD與Actions由push後獨立核對，running不當success。
 - [r2驗收](3D_HYBRID_T2B2_REPAIR_R2_ACCEPTANCE_2026-10-12.md)／[r2機器證據](3D_HYBRID_T2B2_REPAIR_R2_TEST_EVIDENCE_2026-10-12.json)／[B3前置A-B-C判定](3D_HYBRID_T2B3_PREREQUISITES_R2_2026-10-12.md)。三敵sRGB粗糙度改為相同物理值的Non-Color scalar、源稿/GLB/圖集/三tier同步；幾何動畫accessor逐byte不變，玩家源＋三GLB與正式G00715不變。

@@ -10,7 +10,8 @@ function timeline(input){
   if(e.type==='combat-action'&&e.data.sourceType!=='combatSafety'){
    const p=input.controls.presentationScript;
    rows.push({phase:'prepare',ms:p.prepareMs,ref:e},{phase:'approach',ms:p.impactAtMs-p.prepareMs,ref:e},{phase:'strike',ms:100,ref:e},{phase:'known-effect',ms:p.oneKnownActionMs-p.impactAtMs-100-p.returnMs,source:e,ref:e},{phase:'return',ms:p.returnMs,ref:e},{phase:'idle',ms:0});
-  }else rows.push({phase:e.type==='outcome'?'outcome':e.type==='actor-defeated'?'known-effect':'idle',ms:0,source:e,ref:e});
+  }else if(e.type==='actor-defeated')rows.push({phase:'defeat',ms:700,source:e,ref:e});
+  else rows.push({phase:e.type==='outcome'?'outcome':'idle',ms:0,source:e,ref:e});
  }
  rows.push({phase:'closed',ms:0});if(rows.length>256||rows.some(r=>r.ms<0))throw Error('Invalid bounded offline timeline');return rows;
 }

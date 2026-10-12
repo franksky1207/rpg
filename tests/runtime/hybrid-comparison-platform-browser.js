@@ -1,6 +1,9 @@
 'use strict';
 const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const base=process.env.HYBRID_COMPARISON_URL||'http://127.0.0.1:4173/development/hybrid-comparison/index.html';
+// Preserve original B1 control-only assertions on the same page; full rendering
+// is independently exercised by the mandatory B3 browser suite.
+const platformBase=new URL(base);platformBase.searchParams.set('renderer','none');
 const b=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/owner-fixtures.json'));
 const digest=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const viewports=[{width:1280,height:720},{width:1440,height:1080},{width:390,height:844},{width:360,height:800},{width:844,height:390}];
@@ -16,7 +19,7 @@ const viewports=[{width:1280,height:720},{width:1440,height:1080},{width:390,hei
    Object.defineProperty(window,'state',{configurable:true,get:blocked,set:blocked});
   });
   page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>requests.push(r.url()));
-  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.CivilizationHybridComparisonDev?.diagnostics().loaded,{timeout:30000});
+  await page.goto(platformBase.href,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.CivilizationHybridComparisonDev?.diagnostics().loaded,{timeout:30000});
   assert.equal(await page.locator('#variant option').count(),33);assert.equal(await page.locator('#case option').count(),5);assert.equal(await page.locator('#lod option').count(),3);
   const layout=await page.evaluate(()=>{
    const box=id=>{const r=document.getElementById(id).getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom};};
@@ -67,7 +70,7 @@ const viewports=[{width:1280,height:720},{width:1440,height:1080},{width:390,hei
  // Negative JSON/source/retry and overlapping source loads in a fresh browser context.
  const context=await browser.newContext(),page=await context.newPage();let corrupt=true;
  await context.route('**/t2a-v1/owner-fixtures.json',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(corrupt?{...b,version:2}:b)}));
- await page.goto(base);await page.waitForFunction(()=>document.getElementById('status').dataset.error==='true');assert.equal(await page.locator('#play').isEnabled(),false);assert.equal(await page.evaluate(()=>CivilizationHybridComparisonDev.input()),null);corrupt=false;await page.click('#retry');await page.waitForFunction(()=>CivilizationHybridComparisonDev.diagnostics().loaded);
+ await page.goto(platformBase.href);await page.waitForFunction(()=>document.getElementById('status').dataset.error==='true');assert.equal(await page.locator('#play').isEnabled(),false);assert.equal(await page.evaluate(()=>CivilizationHybridComparisonDev.input()),null);corrupt=false;await page.click('#retry');await page.waitForFunction(()=>CivilizationHybridComparisonDev.diagnostics().loaded);
  await context.unroute('**/t2a-v1/owner-fixtures.json');let changed=true;
  await context.route('**/combat-events.js',route=>changed?route.fulfill({contentType:'text/javascript',body:'changed-source'}):route.continue());
  await page.evaluate(()=>CivilizationHybridComparisonDev.reload());await page.waitForFunction(()=>document.getElementById('status').dataset.error==='true');assert.match(await page.locator('#status').innerText(),/Source SHA changed/);assert.equal(await page.evaluate(()=>CivilizationHybridComparisonDev.input()),null);changed=false;await page.click('#retry');await page.waitForFunction(()=>CivilizationHybridComparisonDev.diagnostics().loaded);

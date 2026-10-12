@@ -1,0 +1,168 @@
+{
+  "physicalGPU": false,
+  "tests": [
+    "late asset cannot mount stale B over current A",
+    "100 superseding selections: one pending factory and final A only",
+    "corrupt verified asset rejected visibly; subsequent valid selection recovers",
+    "actual source crit/counter/combo/drain painted and captured for A/B/C",
+    "original actor-defeated event plays moving full-source defeat on A/B/C owner clock",
+    "actual A/B/C feedback uses identical original event reference",
+    "cancel pending actual native shader readiness: GPU freed and A can finish before stale promise resolves"
+  ],
+  "captures": [
+    {
+      "scheme": "A",
+      "type": "crit",
+      "caseId": "normal-baseline",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "A",
+      "type": "counter",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "A",
+      "type": "combo",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "A",
+      "type": "drain",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "B",
+      "type": "crit",
+      "caseId": "normal-baseline",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "B",
+      "type": "counter",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "B",
+      "type": "combo",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "B",
+      "type": "drain",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "C",
+      "type": "crit",
+      "caseId": "normal-baseline",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "C",
+      "type": "counter",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "C",
+      "type": "combo",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    },
+    {
+      "scheme": "C",
+      "type": "drain",
+      "caseId": "elite-effects-owner-input",
+      "variant": "g007-subset-31",
+      "tier": "medium",
+      "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+      "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+      "role": "enemy",
+      "phase": "known-effect",
+      "paused": true
+    }
+  ],
+  "pageErrors": [],
+  "finalResources": {
+    "factories": 0,
+    "renderers": 0,
+    "engines": 0,
+    "rafs": 0,
+    "maxFactories": 1,
+    "created": 18,
+    "disposed": 18
+  }
+}

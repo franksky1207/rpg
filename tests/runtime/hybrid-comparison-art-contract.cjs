@@ -5,7 +5,7 @@ const root='development/hybrid-comparison/t2b2-v1',json=p=>JSON.parse(fs.readFil
 const lock=json(root+'/source-lock.json'),fixture=json('development/hybrid-comparison/t2a-v1/owner-fixtures.json');
 const doc=p=>{const b=fs.readFileSync(p);return JSON.parse(b.subarray(20,20+b.readUInt32LE(12)));};
 (async()=>{
- for(const [p,h] of Object.entries(lock.sources))assert.equal(sha(fs.readFileSync(p)),h,'Protected source '+p);
+ for(const [p,h] of Object.entries(lock.sources))require('../../development/hybrid-comparison/t2b3-v1/source-version.cjs')(p,h);
  assert.equal(lock.fixtureSHA,fixture.sha256);assert.deepEqual(lock.representatives,fixture.representatives);
  for(const kind of ['normal','elite','boss']){const design=json(`${root}/enemies/${kind}/design.json`);assert.deepEqual(design.identity,fixture.representatives.find(r=>r.kind===kind));assert.equal(design.identity.formalId,null);assert.match(design.status,/pending/);}
  let n=0;const inventory=json(root+'/inventory.json');

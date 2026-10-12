@@ -1,0 +1,7 @@
+PASS candidate GLB actions/rig/zero Khronos errors and warnings enemies/boss/candidate.glb 2648
+PASS candidate GLB actions/rig/zero Khronos errors and warnings enemies/elite/candidate.glb 2848
+PASS candidate GLB actions/rig/zero Khronos errors and warnings enemies/normal/candidate.glb 2680
+PASS candidate GLB actions/rig/zero Khronos errors and warnings player/candidate-high.glb 108566
+PASS candidate GLB actions/rig/zero Khronos errors and warnings player/candidate-low.glb 8480
+PASS candidate GLB actions/rig/zero Khronos errors and warnings player/candidate-medium.glb 27140
+PASS six candidates, formal IDs/sources, original fixture/runtime isolation, 383 copied sources exclude development (385 generated artifact files verified separately)

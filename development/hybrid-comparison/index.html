@@ -4,19 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>文明戰線｜隔離戰鬥比較 T2-B1</title>
-<link rel="stylesheet" href="comparison.css?v=20261012-t2b1-v1">
-<script type="module" src="comparison.mjs?v=20261012-t2b1-v1"></script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' blob:; img-src 'self' blob: data:; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="t2b3-v1/icon.svg">
+<title>文明戰線｜隔離戰鬥比較 T2-B3</title>
+<link rel="stylesheet" href="comparison.css?v=20261012-t2b3-v1">
+<script type="module" src="comparison.mjs?v=20261012-t2b3-v1"></script>
 </head>
 <body>
 <main>
-<header><p class="eyebrow">開發 Fixture · 無帳號 · 靜音 · 無收益</p><h1>戰鬥同場比較｜技術平台</h1><p>Renderer 尚未完成；玩家／敵人動畫未接入，現在不能評分畫質或 FPS。</p></header>
+<header><p class="eyebrow">開發 Fixture · 無帳號 · 靜音 · 無收益</p><h1>戰鬥同場比較｜A／B／C 開發展示</h1><p>已接入同源候選與六動作；native 材質／光影公平性、肩甲／護手／劍首風險仍未解，人工美術未批准。此畫面不能作正式選型或 FPS 證據。</p></header>
 <section class="panel selectors" aria-label="比較設定">
 <label>方案<select id="scheme"><option value="A">A｜純 2D</option><option value="B">B｜即時玩家＋預渲染敵人</option><option value="C">C｜即時玩家＋即時敵人</option></select></label>
 <label>戰鬥 Fixture<select id="case"><option value="normal-baseline">普通怪基準戰</option><option value="elite-baseline">菁英怪基準戰</option><option value="boss-baseline">Boss 基準戰</option><option value="boss-player-defeat">Boss 擊敗玩家</option><option value="elite-effects-owner-input">菁英特殊效果（隔離能力輸入）</option></select></label>
 <label>五槽外觀<select id="variant"></select></label>
-<label>LOD 資料<select id="lod"><option value="low">低</option><option value="medium" selected>中</option><option value="high">高</option></select></label>
+<label>LOD／圖集 tier<select id="lod"><option value="low">低</option><option value="medium" selected>中</option><option value="high">高</option></select></label>
 </section>
 <section class="panel stage" aria-label="共同戰鬥舞台">
 <div class="hud" id="hud"><div><strong id="player-name">T2-A 隔離比較玩家</strong><p id="player-hp">HP 未載入</p><progress id="player-bar" max="1" value="1" aria-label="玩家 HP"></progress><p id="player-shield">護盾未知</p></div><div><strong id="enemy-name">尚未載入</strong><p id="enemy-type">正式來源待驗證</p><p id="enemy-hp">HP 未載入</p><progress id="enemy-bar" max="1" value="1" aria-label="敵人 HP"></progress><p id="enemy-shield">護盾未知</p></div></div>
@@ -33,9 +34,11 @@
 <section class="panel playback-controls" aria-label="播放控制">
 <button id="play" disabled>播放</button><button id="pause" disabled>暫停</button><button id="resume" disabled>繼續</button><button id="replay" disabled>重新播放</button><button id="stop" disabled>停止／取消</button>
 </section>
+<section class="panel" id="inspection-controls" aria-label="純視覺動作檢視"><label>動作檢視（不新增事件）<select id="inspection"><option value="source">正式來源 Fixture 動作</option><option value="idle">idle</option><option value="attack">attack</option><option value="hit">hit</option><option value="dodge">dodge</option><option value="return">return</option><option value="defeat">defeat</option></select></label><label>逐格檢視 0～700ms<input id="sample-time" type="range" min="0" max="700" step="1" value="300" disabled></label><p id="sample-label">純視覺取樣 300 ms（不產生事件）</p></section>
+<p id="renderer-status" role="status">正在準備實際候選素材…</p>
 <p id="status" role="status" aria-live="polite">正在驗證 Fixture、Case 與來源 SHA…</p><button id="retry" hidden>重新驗證資料</button>
-<section class="panel"><h2>五槽資料｜未接入角色 Renderer</h2><ul id="equipment"></ul><p>人物能力是隔離數值輸入，不代表正式存檔；「菁英特殊效果」的能力是測試輸入，不是該怪物既有技能。</p><p>G006 混穿頭盔缺 GLB 會明確標示 fallback；已登錄的 G007 模型也尚未在此渲染。</p></section>
+<section class="panel"><h2>五槽外觀｜獨立混穿／空槽</h2><ul id="equipment"></ul><p>人物能力是隔離數值輸入，不代表正式存檔；「菁英特殊效果」的能力是測試輸入，不是該怪物既有技能。</p><p>G006 頭盔 unavailable：顯示原始裸頭（非裝備外觀），不拿 G007 冒充。G007 五槽依同一來源實際渲染。</p></section>
 <details class="panel" id="diagnostics"><summary>開發診斷：SHA／來源／播放會話</summary><pre id="diagnostic-text"></pre></details>
-<footer>本頁僅供開發伺服器。正式玩家網站與 GM 八類／31 案例維持原樣。攻擊動畫與三方案美術交後續子批。</footer>
+<footer>本頁僅供開發伺服器。正式玩家網站與 GM 八類／31 案例維持原樣。本批只完成開發展示；B2已知問題保留，真機／GPU長測及正式公平選型仍待後續授權。</footer>
 </main>
 </body></html>

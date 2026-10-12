@@ -1,0 +1,638 @@
+{
+  "schema": "cw.t2b3.complete-display-evidence",
+  "version": 1,
+  "baselineMainHEAD": "e094f4e8704a808c94551acd9226c2982c67c537",
+  "finalMainHEAD": "Resolve git rev-parse HEAD after this single B3 commit; exact-HEAD Actions are checked after push and reported separately, never inferred from local tests",
+  "baselineExactHEADActions": [
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Asset Version Manifest",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327267"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Hybrid Comparison T2-B2 Assets",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327259"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Hybrid Comparison T2-B1",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327315"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Publish Asset Audit (Stage 2)",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327190"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "HTML JS CSS Cache Version Guard",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327287"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Publication Dry Run (Stage 3)",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327357"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Hybrid Comparison T2-A",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327361"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Publish Release Gate (Stage 4)",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327304"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Publish Optimized GitHub Pages",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327330"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "e094f4e8704a808c94551acd9226c2982c67c537",
+      "name": "Runtime Integrity",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/38232327321"
+    }
+  ],
+  "technicalDisplayPassed": true,
+  "formalFairSelectionComplete": false,
+  "B4Started": false,
+  "T2CStarted": false,
+  "winner": null,
+  "commands": [
+    {
+      "command": "node tests/runtime/hybrid-comparison-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-00.log",
+      "passed": true,
+      "logSHA256": "bb36954941c668171da67b723ed0dfef2aa715d61d6285f85191138d3daa6d66"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-playback-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-01.log",
+      "passed": true,
+      "logSHA256": "ee87241fc95a85f2ee01d056e5aa1cc30bad9c35597cb0daeaab249ae93bc85f"
+    },
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-02.log",
+      "passed": true,
+      "logSHA256": "dc2b90becc5cf54057019cce885c46b4385cc533cb1c841e9721e03ffec0d05b"
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-03.log",
+      "passed": true,
+      "logSHA256": "3d5066dd7420d548966d17f74dd7a081ec63b73bc4ee174f58f9de2005073d3c"
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-04.log",
+      "passed": true,
+      "logSHA256": "8adeb5257cf8ba56a73ae61c0f4631676f04d5a3cde0dbf9bb3f4b2f792305e0"
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-05.log",
+      "passed": true,
+      "logSHA256": "8a5c8301760934cae28ef420cd1faf66f315b1461d71441c4e60c55ec671103f"
+    },
+    {
+      "command": "node scripts/hybrid-comparison-fixtures.cjs --check",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-06.log",
+      "passed": true,
+      "logSHA256": "66edcb450dae6f143004266e6161323aa807ff11871ebef1133f1dfffb9b2f4a"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-07.log",
+      "passed": true,
+      "logSHA256": "88da357386c9d1efeb15cae7135f33f48ad461fe2096aab6bd72b75a85e57fad"
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-08.log",
+      "passed": true,
+      "logSHA256": "7ecd5828899081850e58c0953e82ef3c6771af218ffd268608f995cede0de264"
+    },
+    {
+      "command": "node tests/runtime/3d-glb-validation.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-09.log",
+      "passed": true,
+      "logSHA256": "a1034c16f3c03c91ea9560b38c265610d6f267aee2870239c1682b9ecbf20c1f"
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-10.log",
+      "passed": true,
+      "logSHA256": "93af3be78cd5cbda224cf3aa85e57c6b5a245a576ae38104e938161e82527767"
+    },
+    {
+      "command": "node tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-11.log",
+      "passed": true,
+      "logSHA256": "1571002ee9dc5a514dc642ee684df8bb4e8912272a84e31811b8e9ba282693ed"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-12.log",
+      "passed": true,
+      "logSHA256": "622fb4f0197b526b6b9092d1a41766de4795fa9936b269f62f350693402ed06d"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-13.log",
+      "passed": true,
+      "logSHA256": "85c3bd0aa22f3454f9d0f32ba293305010b8e57f734b58f6cfbbd816f26e0306"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-14.log",
+      "passed": true,
+      "logSHA256": "1cb63497c3ceef3db9ad16d9e57cd09db67d64317dab032b0e6ec3eaf076e7d2"
+    },
+    {
+      "command": "node tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-15.log",
+      "passed": true,
+      "logSHA256": "769e325c63c2cc6e244b3b0863f4a69090cc6d284270d49fd9135fa9448ab3de"
+    },
+    {
+      "command": "node tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-16.log",
+      "passed": true,
+      "logSHA256": "b1c1397e9c24a6210104680701227356631ce7c8cba1a4a4a9330e48e30d6bfe"
+    },
+    {
+      "command": "node tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-17.log",
+      "passed": true,
+      "logSHA256": "baade4417559142830e54e870083fd43ba3711fd12e693df0a8df06bb23221cd"
+    },
+    {
+      "command": "node tests/audio-lifecycle.test.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-18.log",
+      "passed": true,
+      "logSHA256": "0d5261db4facb666877b650f1d58273f67f6a2bdae9031abeefd2bd68f82fa75"
+    },
+    {
+      "command": "node tests/audio-regression.test.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-19.log",
+      "passed": true,
+      "logSHA256": "c14303dd40f5179d221cb743d8515472dae28e2c9843d34f88a469d24d1fec05"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-platform-browser.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-20.log",
+      "passed": true,
+      "logSHA256": "762aa83c3f4cb8a9a33851a91c403fcb380f653f78440b442150b92802575b2a"
+    },
+    {
+      "command": "node tests/runtime/gm-3d-test-center-browser.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-21.log",
+      "passed": true,
+      "logSHA256": "df3907c61347fc1e83d2402d88525eeaa241ece8454c5cc5b8e7fcb749250494"
+    },
+    {
+      "command": "node tests/runtime/3d-player-assets-browser.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-22.log",
+      "passed": true,
+      "logSHA256": "9e644aaf7cbad4981bfd7589e9f2208f485e6cd3311a8ff90807d66283ebd505"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-assets-browser.js",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-23.log",
+      "passed": true,
+      "logSHA256": "35c08c0e129efce8d3fb230229bb2dcefc8ffc639907b3162b399d09cb5386cd"
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-24.log",
+      "passed": true,
+      "logSHA256": "45f2ef8e3973874c1057023f60a80b8bab52492a59efcfa687865964e95ea3bb"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "exitCode": 0,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/regression-25.log",
+      "passed": true,
+      "logSHA256": "118d99d1adf38bc1151ced39b62c3b7d325045d3b2d687f97a5ac47edb94b4be"
+    },
+    {
+      "command": "blender --background --threads 2 --python development/hybrid-comparison/t2b3-v1/verify-source.py",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/blender-source.log",
+      "logSHA256": "03d0943ff4d840376ef140ba2bb901c52d52eb5ba0521b0d9fcbbb2fb0bcd6d4",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-contract.cjs",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/renderer-contract.log",
+      "logSHA256": "2392b75ba9dd540bc29cd27995f11187896e0f0aca6f0a2b4e7e2d4ed4c25466",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-playback-contract.cjs",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/playback.log",
+      "logSHA256": "f7a204ba17769787e0baa174b27722654dfa214d0e31edf94cd78f6743c29474",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/renderer-browser.log",
+      "logSHA256": "fd150fa3f95d1e5166d9fbc7ce34937f059ec02817e52275eef7a7aa6ad470fb",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-comparison-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/comparison-browser.log",
+      "logSHA256": "816549b2e15dd56d56774fee10b4ca4d4f8ccbb3a330ccd69a7d6cd092faa702",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-platform-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/platform-final.log",
+      "logSHA256": "762aa83c3f4cb8a9a33851a91c403fcb380f653f78440b442150b92802575b2a",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-art-contract.cjs",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/art-contract.log",
+      "logSHA256": "c4e0d80b16b40aa1bfe32e463708fa60bf300b9c48846f8425ddf423ee46ecc5",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-art-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/art-browser.log",
+      "logSHA256": "dcb5010f4e64609a9a06dce48ddb94546b7d8986222cf9dcc47c11fe3f9a44aa",
+      "visualGatePassed": null
+    },
+    {
+      "command": "node tests/runtime/audio-lifecycle-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/audio-browser.log",
+      "logSHA256": "fefbbe1de0beff1af54d0e3a001a71f52cc30f55096998317341fa74fc937b8f",
+      "visualGatePassed": null
+    },
+    {
+      "command": "RUNTIME_SMOKE_URL=http://127.0.0.1:4180/index.html node tests/runtime/publish-candidate-browser.js",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/publish-http.log",
+      "logSHA256": "c400fcc6f6177521e2010072685513108f2d226c40d55e5a0f55bd994b345af8",
+      "visualGatePassed": null
+    },
+    {
+      "command": "python development/hybrid-comparison/t2b2-v1/tools/verify_pixels.py",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/pixels.log",
+      "logSHA256": "1255a2c6f81633a19a138031c55971781480fae93c37e0a87a580252dda14c95",
+      "visualGatePassed": null
+    },
+    {
+      "command": "python development/hybrid-comparison/t2b2-v1/tools/verify_repair.py",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/repair.log",
+      "logSHA256": "95d4f19a3a03e5935c3f5913717bd096c74062bf00bf579f4de566add33de45b",
+      "visualGatePassed": null
+    },
+    {
+      "command": "python development/hybrid-comparison/t2b2-v1/tools/verify_r2.py",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/r2.log",
+      "logSHA256": "54669a199fe379fe089bc52f4eb1732908b8804eb4674948569f90923363a201",
+      "visualGatePassed": false
+    },
+    {
+      "command": "python development/hybrid-comparison/t2b2-v1/tools/inventory.py --check",
+      "exitCode": 0,
+      "passed": true,
+      "log": "development/hybrid-comparison/t2b3-v1/evidence/logs/inventory.log",
+      "logSHA256": "d618b780e6aaa083738d289b4a082b0dcb33bf156920515c30619dc7d76a4a4a",
+      "visualGatePassed": null
+    },
+    {
+      "command": "python development/hybrid-comparison/t2b3-v1/inventory.py --check",
+      "exitCode": 0,
+      "passed": true,
+      "stdout": "135 files / 12227229 bytes excluding inventory; SHA/bytes/license exact"
+    }
+  ],
+  "browserEnvironment": {
+    "node": "24.19.0",
+    "chromium": "system Chromium with SwiftShader",
+    "physicalHardwareVerified": false,
+    "viewportSimulationOnly": true,
+    "Blender": "4.3.2",
+    "NODE_PATH": "gltf-validator and playwright installed outside repository",
+    "chromiumHook": "local tests use system executable /usr/bin/chromium; GitHub uses playwright installed Chromium",
+    "chromiumVersion": "Chromium 154.0.8037.57 (Debian trixie)"
+  },
+  "coverage": {
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        1440,
+        1080
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        360,
+        800
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "actualPairedActorSamples": 810,
+    "clipSampleTimesMs": [
+      0,
+      300,
+      700
+    ],
+    "full22SampleContract": true,
+    "actualAppearanceCases": 99,
+    "qualityCases": 9,
+    "baseClips": [
+      "idle",
+      "attack",
+      "hit",
+      "dodge",
+      "return",
+      "defeat"
+    ],
+    "actualCueCaptures": [
+      {
+        "scheme": "A",
+        "type": "crit",
+        "caseId": "normal-baseline",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "A",
+        "type": "counter",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "A",
+        "type": "combo",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "A",
+        "type": "drain",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "B",
+        "type": "crit",
+        "caseId": "normal-baseline",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "B",
+        "type": "counter",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "B",
+        "type": "combo",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "B",
+        "type": "drain",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "C",
+        "type": "crit",
+        "caseId": "normal-baseline",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-1:2",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "C",
+        "type": "counter",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:3",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "C",
+        "type": "combo",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:5",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      },
+      {
+        "scheme": "C",
+        "type": "drain",
+        "caseId": "elite-effects-owner-input",
+        "variant": "g007-subset-31",
+        "tier": "medium",
+        "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+        "sourceEventId": "combat-v1-t2a-isolated-v1-5:13",
+        "role": "enemy",
+        "phase": "known-effect",
+        "paused": true
+      }
+    ],
+    "actualBlenderSources": 4,
+    "articulatedSourceClips": 24,
+    "originalB2BrowserGLBCandidates": 6,
+    "originalB2ActualClipSamples": 108,
+    "originalB2EquipmentBinds": 99,
+    "formalCoreComparisons": 576,
+    "mirrorComparisons": 48,
+    "GMCases": 31,
+    "audioCases": 50,
+    "publishHTTPVerifiedResponses": 385,
+    "publishArtifactBytes": 36482365,
+    "maxPendingFactory": 1,
+    "finalResources": {
+      "factories": 0,
+      "renderers": 0,
+      "engines": 0,
+      "rafs": 0,
+      "maxFactories": 1,
+      "created": 18,
+      "disposed": 18
+    },
+    "staticReviewActualDecodedImagesPerViewport": 57,
+    "staticReviewViewports": [
+      1280,
+      390
+    ],
+    "sourceOriginSeconds": 0.03333333333333333,
+    "authoredClipDurationMs": 700
+  },
+  "gates": {
+    "nativeMaterialLightingFairness": "FAILED / original B2 C retained; ACES vs AgX, lighting/IBL/shadow residual. No new B3 RMSE measurement or parity claim",
+    "geometryContact": "FAILED / original B2 C retained: shoulder49.604mm guard19.831mm pommel19.474mm nearest-surface proxies, not penetration depths",
+    "humanArtApproval": "NOT APPROVED",
+    "physicalMobileGPU": "NOT VERIFIED",
+    "B4Performance": "NOT MEASURED",
+    "formalSelection": "NOT PERFORMED"
+  },
+  "sourcePreservation": {
+    "originalB2BinaryAndFailureEvidence": "byte-identical to e094f4e8 except necessary inventory tool/ledger evolution, verified in renderer contract",
+    "fixtureSHA256": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+    "B1Evolution": "exact before/after SHA for four authorized B1 files; Playback only adds original actor-defeated 700ms visual step; owner/cancel/Fixture preserved",
+    "sourceEvolutionSHA256": "160ff4d69b24e13ce605cd2411c053760a4283a8cbfb968873a6acfef1cdbb28",
+    "B2InventorySHA256": "da5f7e932c2e6c514a4acff22d4af3f08cbe7a0536b91590f17de19d5b577b93",
+    "B3ManifestSHA256": "c2bd45b96e3026929df5a3d85275910c732c476145f03734fbf9b329394cec1e",
+    "B3InventorySHA256": "5f646a1de9da1eab7e58feb34a4b173685056a3becfa72bc3dc2820f4d409fb2",
+    "B3Files": 135,
+    "B3BytesExcludingInventory": 12227229,
+    "B3References": 548,
+    "productionRuntimeAndPublication": "unchanged; dry-run excludes entire development tree, no forced player downloads"
+  },
+  "review": "development/hybrid-comparison/t2b3-v1/review.html",
+  "rollback": "git revert <single T2-B3 commit>; retain prior r2 and player saves/caches",
+  "knownRejectedAttempts": [
+    "initial native CSP data-texture rejection fixed only in isolated page; failed setup retained outside original B2 evidence",
+    "browser fixed-delay/screenshot phase polling missed frozen frame or first source event; replaced with actual frame acknowledgement and source subscription capture, assertions retained",
+    "one local command used an incorrect NODE_PATH; rerun with installed dependency path, no source modification"
+  ]
+}

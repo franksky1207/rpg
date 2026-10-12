@@ -5,7 +5,14 @@
   "fixtureSHA": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
   "formalIds": "unavailable/null; paths are development asset locators, never formal IDs",
   "scope": "B2 original art, offline baking and QC only; no A/B/C renderer",
-  "sourcesUnchanged": true,
+  "sourcesUnchanged": false,
+  "originalSourceHistoryVerified": true,
+  "authorizedB3B1Evolution": [
+    "development/hybrid-comparison/comparison.css",
+    "development/hybrid-comparison/comparison.mjs",
+    "development/hybrid-comparison/index.html",
+    "development/hybrid-comparison/playback.mjs"
+  ],
   "userArtApproval": false,
   "files": [
     {
@@ -8874,8 +8881,8 @@
     },
     {
       "path": "tools/inventory.py",
-      "bytes": 2613,
-      "sha256": "975e311e99212f21b6ecca2dacc3c5327e1d6d09ce195043b33d6fd81b6895a5",
+      "bytes": 3504,
+      "sha256": "b2645035cb6da7c7b85f3d96cf70343ae148506b7c8c130915165cda9461ced8",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -9089,6 +9096,6 @@
       "publish": false
     }
   ],
-  "totalBytes": 91091254,
+  "totalBytes": 91092145,
   "largestFileBytes": 6229173
 }

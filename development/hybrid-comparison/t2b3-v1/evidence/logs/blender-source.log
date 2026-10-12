@@ -1,0 +1,8 @@
+PASS read-only actual Blender four source rigs / 24 articulated clips / exact frame 1..22: [{"actor": "player", "bones": 53, "clips": ["idle", "attack", "hit", "dodge", "return", "defeat"], "sourceSHA256": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a"}, {"actor": "normal", "bones": 12, "clips": ["idle", "attack", "hit", "dodge", "return", "defeat"], "sourceSHA256": "ce3a8cbcd09456917199e14f886b9966b4774a0b359b93fe93522269703baa0f"}, {"actor": "elite", "bones": 12, "clips": ["idle", "attack", "hit", "dodge", "return", "defeat"], "sourceSHA256": "b0ccb402aaa885b890785ec9acfda9221536a72b60ecf0aa3c5e96efe5b113b4"}, {"actor": "boss", "bones": 15, "clips": ["idle", "attack", "hit", "dodge", "return", "defeat"], "sourceSHA256": "ab25475aa995c04dd250f7c09c934b50d8de148c775c7d0d33b25099cad31fa8"}]
+Blender 4.3.2
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/player/animation-source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/normal/source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/elite/source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/boss/source.blend"
+
+Blender quit

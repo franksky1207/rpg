@@ -1,0 +1,69 @@
+name: Hybrid Comparison T2-B3 Renderers
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'development/hybrid-comparison/**'
+      - 'tests/runtime/hybrid-comparison-*'
+      - 'docs/3D_HYBRID_T2B3*'
+      - 'docs/3D_HYBRID_TRANSITION_EXECUTION_ROADMAP_2026-10-12.md'
+      - 'PROJECT_HANDOFF.md'
+      - '.github/workflows/hybrid-comparison-t2b3.yml'
+  workflow_dispatch:
+jobs:
+  isolated-renderer-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install validation dependencies
+        run: |
+          npm install --no-save gltf-validator@2.0.0-dev.3.10 playwright@1.55.0
+          python -m pip install Pillow==11.1.0 numpy==2.2.3
+          npx playwright install --with-deps chromium
+      - name: Verify source versions, original fixtures and renderer contracts
+        run: |
+          python development/hybrid-comparison/t2b2-v1/tools/inventory.py --check
+          python development/hybrid-comparison/t2b3-v1/inventory.py --check
+          node tests/runtime/hybrid-comparison-renderer-contract.cjs
+          node tests/runtime/hybrid-comparison-playback-contract.cjs
+          node tests/runtime/hybrid-comparison-contract.cjs
+          node tests/runtime/hybrid-comparison-art-contract.cjs
+          node scripts/hybrid-comparison-fixtures.cjs --check
+      - name: Verify real A/B/C displays and original B1 controls
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/t2b3-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/development/hybrid-comparison/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/hybrid-comparison-renderer-browser.js
+          node tests/runtime/hybrid-comparison-renderer-comparison-browser.js
+          node tests/runtime/hybrid-comparison-platform-browser.js
+      - name: Verify development never enters player publication
+        run: |
+          node scripts/build-publish-dry-run.cjs
+          node tests/runtime/publish-build-regression.cjs
+          test ! -e .publish-stage3/development/hybrid-comparison
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: t2b3-actual-display-and-cancellation-evidence
+          path: |
+            /tmp/t2b3-browser
+            /tmp/t2b3-browser-report.json
+            /tmp/t2b3-comparison-browser-report.json
+            /tmp/t2b3-http.log
+            hybrid-comparison-platform-browser-report.json
+          if-no-files-found: warn

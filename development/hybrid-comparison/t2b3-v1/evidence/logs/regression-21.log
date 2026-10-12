@@ -1,0 +1,13 @@
+PASS GM visual center: 8 categories plus all, 31 scenes, no engineering text, mobile maximize/restore {
+  maximized: true,
+  stageWidth: 390,
+  stageHeight: 844,
+  buttonWithin: true,
+  controlsWithin: true
+} {
+  maximized: false,
+  top: 172.796875,
+  bottom: 630.546875,
+  viewHeight: 844,
+  scrollY: 931
+}
