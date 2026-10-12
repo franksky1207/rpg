@@ -1,3 +1,14 @@
+## 2026-10-12｜混合式 T2-B2：共用美術／必要動畫候選（技術驗證完成；美術 Gate 未全過）
+- 起始最新 main `10ef9222427050eadf42b8f61b4d153da7b049b6`，乾淨／無其他提交／無舊B2；前批九個exact-HEAD Actions全success。73原source（18GLB、Rig、Blender、Fixture/B1/發布等）byte/SHA不變，原fixture `5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99` 未重生。
+- 資產／工具提交 `507f0385c303742a18afc9a7f9da809c12505d3b`；[詳細B2驗收／未過Gate](docs/3D_HYBRID_T2B2_ACCEPTANCE_2026-10-12.md)、[機器證據／57筆實際通過指令](docs/3D_HYBRID_T2B2_TEST_EVIDENCE_2026-10-12.json)。最終main為後續交接提交，push後獨立核對完整SHA／Actions，不自引用hash。
+- `development/hybrid-comparison/t2b2-v1/`：三敵各真Blender/UV/PBR/原創貼圖/骨架/六clip、同源A/B透明RGBA深度圖集及C GLB；正式來源仍古代科技遺址MAPS[6]敵0/3/4的遺址守衛機Lv31／遠古戰爭機甲Lv34／遺址中樞核心Lv35，formalId=null，不造技能。新玩家相容53骨／9掛點／三LOD與原G007十五檔bind，原網格／權重／source逐值不變。
+- idle/attack/hit/dodge/return/defeat各700ms，22取樣含端點／30fps，GLB起點1/30s須扣clipStart；78layer-action/1716RGBA及同數depth。A五槽＋五保守身體patch真獨立動態層，32子集合有32不同像素，另混穿／空槽與G006缺材，不用32套合成素材。共用原創背景分層/接地影/8格impact，無音訊／傷害／HP來源。
+- 六候選Khronos0error/0warning、保存源再export逐byte一致、234獨立RGBA/depth樣本逐pixel一致；三敵54source/GLB對照IoU≥.99986955，RGB差異仍列Gate。Blender144姿勢sample接地無負值，原rig/weights真比對。新五viewport真圖像解碼，六nativeGLB/108clip/三LOD99裝備選擇、非空GPU pixels與owned scenes回零；SwiftShader不是實機／FPS證據。
+- 原T1ABC/T2A/B1共88契約、core576完整State／鏡像48、B1五尺寸500操作、GM每尺寸31、原18GLB與角色五槽browser／音訊29＋17成品解碼／save/cache通過。實際成品仍385檔/36482365bytes、385HTTP/SHA與490source Manifest一致；新開發306檔清冊容量46773880bytes（清冊另計），**全排除正式發布**。正式index/runtime/manifest/SW/下載/音訊/帳號不變，沒有新玩家入口或GM第32案。
+- **B2不可標全面驗收完成**：肩甲／背飾仍有signed-nearest穿模風險（hit背飾proxy最高約.146m，非精確體積判定）、材質/light顏色差異、動作方向／重量感／Boss／遮臉需人工批准；G006真模型/通用fallback、A低中專屬atlas、獨立crit/combo/counter/drain未製作。真手機／GPU／OS背景／30分鐘／FPS/記憶體/B1舞台美術safe-area未驗，不把technical/pixels當美術或效能完成。
+- repo root `python3 -m http.server 4173 --bind 127.0.0.1`；開 `/development/hybrid-comparison/t2b2-v1/review.html`，手機用HTTPS開發轉送。圖冊真source/GLB渲染與動作候選；B1仍占位，沒有A/B/C Renderer。源工程手改後用reexport，建置器預設拒覆蓋。
+- **本批停止；B3/B4、T2-C、T3～T5未施工／未選勝者**。下一步先處理B2未過Gate、另行授權才B3按名稱／SHA/elapsed/讀取取消接B1接口，不重生Fixture／不改Rig/Owner。回復revert最終交接／證據，再revert507f0385，只移除隔離候選，不清存檔或cache。
+
 ## 2026-10-12｜混合式轉型 T2-B1：可操作隔離比較頁／共用舞台／安全播放（本機驗收完成）
 - 起始main `e28ef6cbca2d818074e4cb441340efa03ad5a007`，乾淨／無新提交；T2-A六個exact-HEAD Actions均success。fixture `--check`成功，原SHA `5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99`與所有來源不變，沒有重生資料。真手機／OS背景／GPU／真帳號Gate保留。
 - 程式完成HEAD `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`。[B1施工／驗收](docs/3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)、[實测與未驗證據](docs/3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)。入口 `development/hybrid-comparison/index.html`：A/B/C、五case、33外觀／三LOD、共用HUD與層／足點、播放/暫停/繼續/重播/取消，僅明示技術占位，沒有真正Renderer／攻擊動畫／敵人美術。

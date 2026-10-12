@@ -27,9 +27,9 @@
 | T1-B 預覽載入與控制器解耦 | **程式／本機驗收完成；本批 CI／真機待核對** | 程式 `b2e7b946615f62a9703ef628c1d32426ddeb2a91`，[T1-B 驗收](3D_HYBRID_T1B_ACCEPTANCE_2026-10-12.md)／[49 個具名指令與證據](3D_HYBRID_T1B_TEST_EVIDENCE_2026-10-12.json)；不得自動進 T1-C |
 | T1-C 戰鬥事件唯讀轉接基礎 | **程式／本機驗收完成；exact-HEAD CI／真機待核對** | 程式 `e74b9d3a47417b6e1d9dad74e1804b7455d328ed`，[T1-C 覆蓋與驗收](3D_HYBRID_T1C_ACCEPTANCE_2026-10-12.md)／[實測證據](3D_HYBRID_T1C_TEST_EVIDENCE_2026-10-12.json)；partial／unavailable 明示，不自動進 T2-A |
 | T2-A 同場對照規格與事件 fixture | **規格／資料／本機驗收完成；exact-HEAD CI待核對** | 提交 `8e13fb19582dd8217044a28189b71008ca171f68`，[比較規格](3D_HYBRID_T2A_COMPARISON_SPEC_2026-10-12.md)／[驗收矩陣](3D_HYBRID_T2A_ACCEPTANCE_MATRIX_2026-10-12.md)／[證據](3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)；沒有Renderer／選型，另行授權T2-B |
-| T2-B 最小對照原型（隔離） | **僅B1程式／本機完成；B2～B4未施工** | 三方案Renderer／美術／量測沒有完成，依下列子批Gate續接 |
-| T2-B1 隔離入口／共用舞台／播放控制 | **程式／本機驗收完成；exact-HEAD CI待核對** | `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，[B1驗收](3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)；技术占位，無GPU/FPS驗收 |
-| T2-B2 共用美術與必要動作 | 未施工 | 另行授權；A五槽層、三敵同源／B圖集／C GLB、相容玩家attack；不覆寫原骨架裝備 |
+| T2-B 最小對照原型（隔離） | **B1完成、B2候選／技術驗證完成但美術Gate未全過；B3/B4未施工** | 尚無三方案Renderer／效能選型，先核B2未過Gate |
+| T2-B1 隔離入口／共用舞台／播放控制 | **程式／本機完成；B2開工核main10ef9222九個CI均success；真機待驗** | `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，[B1驗收](3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)；技术占位，無GPU/FPS驗收 |
+| T2-B2 共用美術與必要動作 | **候選／本機結構再製完成；美術／穿模／材質／真機Gate未全通過** | `507f0385c303742a18afc9a7f9da809c12505d3b`，[B2驗收](3D_HYBRID_T2B2_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B2_TEST_EVIDENCE_2026-10-12.json)；不自動B3、不能稱全面批准 |
 | T2-B3 A/B/C Renderer接入 | 未施工 | B1接口與B2素材，input/SHA/舞台／事件公平一致、完整硬性Gate |
 | T2-B4 觀測／故障與原型收尾 | 未施工 | 冷熱/100次/長測與回退實數據；真GPU不可由B1mock宣稱 |
 | T2-C 桌機／手機量測及選型 Gate | 待驗收 | 未過 Gate 不量產模型、不覆蓋舊正式規格 |
@@ -120,7 +120,7 @@
 3. 使用者說「先討論／先列」：只討論，不修改；說「執行／修改」才可在該批授權範圍內施工。Codex 完工後回 GitHub 獨立核對。
 4. 每次完成要把新狀態、commit SHA、已跑／未跑驗收與下一子批回寫至本檔和 `PROJECT_HANDOFF.md`（由該次施工明確授權時更新）；不得以對話記憶替代 main。
 5. 若舊文件與新路線圖衝突：在正式選型 Gate 前，舊正式施工規格仍有效；本檔只決定轉型工作優先順序及測試方向，不授權破壞性變更。
-6. 可授權的下一子批依最新main狀態台帳與本批記錄判定；建立文件時的T1-A優先序是歷史狀態。目前T2-B1已獲新授權並完成隔離平台／本機驗收，本批停止；T2-B2及其後須另行授權與前置Gate，不能自動啟動。
+6. 可授權的下一子批依最新main狀態台帳與本批記錄判定；建立文件時的T1-A優先序是歷史狀態。目前T2-B2已獲新授權並完成共用候選／本機結構再製，未過美術／穿模Gate仍保留；本批停止，B3及其後須另授權與前置Gate，不能自動啟動。
 
 ## T1-C 施工／驗收更新（2026-10-12）
 
@@ -149,3 +149,32 @@ T2-A定義「如何比較」，沒有定案勝者。**T2-B、T2-C、T3～T5全�
 隔離開發頁已可選A/B/C、五case、33外觀/三LOD並播放/暫停/繼續/重播/取消；共用固定構圖/HUD/占位框，root Stage不是完成美術。來源SHA與Case驗證、immutable input、scope/generation/Abort、晚到factory與載入隔離、背景final checkpoint與頁面返回重開均有證據。16新契約與T2-A/T1ABC共88通過，990 input比對，五尺寸500次操作／控制器100次；原GM31／人物／五槽／音訊／save/cache／385發布HTTP SHA通過。
 
 正式runtime與T2-A工具/資料/HTML/manifest/SW/資產均不改，玩家成品byte數不變、開發檔排除。沒有新WebGL/動畫/美術/FPS或GPU回收測試，真手機／OS背景／硬體仍待驗。**B2/B3/B4、T2-C、T3～T5全未施工**，原27～40規格保持。下一項先核CI與B1實機限制，再另行授權B2美術／必要相容動作，不自動開工。回復整批revert交接/證據＋程式，保留玩家資料。
+
+
+## T2-B2 施工／驗收更新（2026-10-12）
+
+起始main `10ef9222427050eadf42b8f61b4d153da7b049b6`，乾淨、無新提交／舊B2；
+前批九個exact-HEAD CI均success。候選與工具HEAD `507f0385c303742a18afc9a7f9da809c12505d3b`，
+最終交接提交與CI由push後GitHub/main與交付回報核對，不宣稱執行中CI已成功。
+
+三敵真Blender／UV／PBR／原創貼圖／六關節動作與同源A/B atlas／C GLB；
+原名／Lv31/34/35／MAPS[6]敵0/3/4不變、formalId=null。玩家新動畫稿三LOD、
+原53骨9掛點與G00715bind及原網格／權重／源檔不變；A五槽獨立RGBA/depth與
+保守body patches、32穿卸＋混穿缺材。共用原創分層背景／陰影／impact，
+700ms／22取樣含端點，不能把computed當settlement或建立新音訊Owner。
+
+73來源鎖與fixture byte不變，六GLB零error/warning與精確再匯出、234對獨立
+再render pixels一致、78layer-action/1716RGBA和depth解碼與動作真實性通過。
+原88核心契約／576core/48mirror State結果、GM每尺寸31、角色五槽/LOD、
+音訊/save/cache／385成品HTTP SHA通過；成品仍36482365bytes，開發全排除。
+五viewport圖冊與native六候選/108clip/99裝備bind/owned scene釋放有證據，
+不當物理GPU／FPS／B1真stage美術驗收。
+
+**本批只是候選／技術驗證完成，B2全面Gate未過**：肩甲／背飾表面穿模風險、
+native材質／光照差異、動作重量／方向／Boss與使用者藝術批准待驗；G006真
+fallback美術、A低中專屬atlas、獨立效果clip未交付；真裝置／長測／FPS／
+新美術safe-area與完整Renderer故障驗收沒有施工。詳見B2報告／證據。
+
+本批停止，原27～40正式規格保持有效；B3/B4/T2-C/T3～T5未施工，無勝者。
+先修/審B2 Gate，另授權B3才按immutable來源/clipStart/取消接口接Renderer。
+回復revert交接／證據及507f0385，不清玩家資料或快取。
