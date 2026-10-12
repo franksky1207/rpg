@@ -1,3 +1,8 @@
+## 2026-10-13｜T2-B4 使用者桌機／手機操作回報
+- 使用者依照隔離 2.5D B 方案測試頁五項清單回報「全部正常」：首次播放、連續重播三次、普通／菁英／Boss 切換、裝備與低／中／高畫質切換、手機播放／切換／停止。
+- 這是**使用者操作體驗通過**，不是效能量測或全裝置矩陣證據：真硬體 FPS、RAM、發熱、30 分鐘長測、OS 背景與 WebGL context-loss 故障注入仍未提供實測；B2 美術／穿模批准亦不因此解除。
+- 回報當下 exact HEAD `4658c90364d72507a88fda04fcfbb1412421c287`：T2-A／B1／B2／Runtime Integrity success；T2-B3 Renderers in_progress；GitHub Pages in_progress。不得把 in_progress 記為通過。待程式端 CI 完成後再判定 T2-B4 收尾，T2-C 以更完整真機 Gate 接續。
+
 ## 2026-10-13｜T2-B4 效能／穩定性與 B3 瀏覽器測試收尾（CI 待核對）
 - 正式路線已選 B（玩家即時 3D、敵人同源預渲染 atlas）；不重新選 A/B/C。此次仍只有隔離開發展示，不接正式戰鬥，不動公式／音訊／存檔／雲端／發布資產。
 - 已累積 24 MiB SHA verified bytes 暖快取、已驗證 manifest 單頁重用、32 MiB RGBA／PNG16 depth 解碼 LRU、renderer 準備 ms／LRU 命中／資源數量診斷、失敗不空播和按播放重試。B3 原有 100 次切換／過期工廠取消／GPU 釋放，另加 B 三次實際重播與快取命中／釋放檢驗。
