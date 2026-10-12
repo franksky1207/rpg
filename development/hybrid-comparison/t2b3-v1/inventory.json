@@ -934,8 +934,8 @@
     },
     {
       "path": "source-version.cjs",
-      "bytes": 1274,
-      "sha256": "d8fc9b3b48ae6d6918bef8309dd00f25cec04e69cccbddd30a61833891761f8e",
+      "bytes": 1924,
+      "sha256": "7beab241645616eb1b10eafa6f0303e8831e6c6649b195eb277d886fea67eaf9",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -954,5 +954,5 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     }
   ],
-  "totalBytes": 12230051
+  "totalBytes": 12230701
 }
