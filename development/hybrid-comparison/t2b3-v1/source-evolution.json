@@ -5,7 +5,7 @@
   "files": {
     "development/hybrid-comparison/index.html": {
       "beforeSHA256": "ebdddb9eefe6884da3f97ac77f5cbdf94eb90d3cfaa34afe52c6f2cdb3a1f2c3",
-      "afterSHA256": "3cb30bb24ba55b4c3ba914f05d6dddbb62b6397eb445ea6787a460356eb7437c"
+      "afterSHA256": "a2d2736425c8de324f1655f31e24ab5a7c9063e3be6e63de8e9d375e20847b93"
     },
     "development/hybrid-comparison/comparison.css": {
       "beforeSHA256": "12f4d5aac6234986dc43ec211c1caa852d1fb4300f2ddd9a51b5317a6770becb",
@@ -13,7 +13,7 @@
     },
     "development/hybrid-comparison/comparison.mjs": {
       "beforeSHA256": "51ae3f952198e0e0f2ef0c3b7e3093e537e64c3bf55d42a306b31d8b3559a1e0",
-      "afterSHA256": "bfed451157f9555a555cf63a683233cf4fa2910105a07f475d957dd7ecffd97b"
+      "afterSHA256": "1a89d979cccb1e9c9f321d2e6e7cae9a3bdeacab03d5a58793158a090683409c"
     },
     "development/hybrid-comparison/playback.mjs": {
       "beforeSHA256": "04fcdce1348fe7fd9d54661e1202b054a6f77d963244b1740e51aef757f359ed",
