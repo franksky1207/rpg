@@ -56,6 +56,7 @@ jobs:
           node tests/runtime/combat-events-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-integration.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-shared-loader-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t3a-hybrid-policy.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
