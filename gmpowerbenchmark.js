@@ -351,7 +351,7 @@
   let total=0,hits=0,min=Infinity,max=0,crits=0,critDamage=0,normalHits=0,normalDamage=0,combos=0,comboDamage=0,penetrations=0,ignores=0,initiativeHits=0,initiativeDamage=0,drains=0;
   await runBatched(runs,()=>{
    const e={name:"輸出木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:0,def:targetDef,crit:0,dodge:0};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{visualContext:{mode:"gm-benchmark",world:benchmarkWorld(),owner:"gmpowerbenchmark.js",fixture:true,enemyName:e.name},logs:false,maxTurns:1,skipEnemyAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    (result.events||[]).forEach(ev=>{
     if(ev.type==="combo"){combos++;return;}
     if(ev.type==="drain"){drains++;return;}
@@ -386,7 +386,7 @@
   let totalTurns=0,totalLoss=0,landed=0,min=Infinity,max=0,dodges=0,crits=0,shield=0,absorptions=0,counters=0,backlash=0,indomitable=0,capped=0;
   await runBatched(runs,()=>{
    const e={name:"承傷木樁",level:whole(base&&base.level,1),kind:String(base&&base.kind||"normal"),hp:dummyHp,atk:targetAtk,def:Math.max(0,num(base&&base.def,0)),crit:Math.max(0,num(base&&base.crit,0)),dodge:Math.max(0,num(base&&base.dodge,0))};
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{visualContext:{mode:"gm-benchmark",world:benchmarkWorld(),owner:"gmpowerbenchmark.js",fixture:true,enemyName:e.name},logs:false,maxTurns:10000,skipPlayerAction:true,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    totalTurns+=result.turns;if(result.hp>0)capped++;
    (result.events||[]).forEach(ev=>{
     if(ev.type==="dodge"&&ev.target==="player"){dodges++;return;}
@@ -435,7 +435,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{visualContext:{mode:"gm-benchmark",world:benchmarkWorld(),owner:"gmpowerbenchmark.js",fixture:true,enemyName:e.name},logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}
@@ -541,7 +541,7 @@
    if(!e)return;
    enemyHp+=Math.max(0,num(e.hp,0));enemyAtk+=Math.max(0,num(e.atk,0));enemyDef+=Math.max(0,num(e.def,0));enemyCrit+=Math.max(0,num(e.crit,0));enemyDodge+=Math.max(0,num(e.dodge,0));
    (Array.isArray(e.traits)?e.traits:[]).forEach(k=>{traits[k]=(traits[k]||0)+1;});
-   const result=window.runCombatCore(player,e,player.hp,{logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
+   const result=window.runCombatCore(player,e,player.hp,{visualContext:{mode:"gm-benchmark",world:benchmarkWorld(),owner:"gmpowerbenchmark.js",fixture:true,enemyName:e.name},logs:false,preparePresentation:false,useTestSpecializations:true,useTestMarks:true,markLevels:s.marks,playerFinalDamageMultiplier:Number(s.finalDamageMultiplier)||1});
    const turns=Math.max(0,whole(result.turns,0));totalTurns+=turns;minTurns=Math.min(minTurns,turns);maxTurns=Math.max(maxTurns,turns);
    if(result.win){wins++;winHpPct+=player.hp>0?Math.max(0,num(result.hp,0))/player.hp*100:0;}
    else{losses++;lossEnemyHpPct+=result.enemyMaxHp>0?Math.max(0,num(result.enemyHp,0))/result.enemyMaxHp*100:0;}

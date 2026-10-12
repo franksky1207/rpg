@@ -209,6 +209,7 @@
    rewardsPending:false,equipmentPending:false,progressionPending:false,saved:true
   };
   const storyFramework=typeof window.civilizationStoryProgress?.consumeThirdWorldSettlement==="function"?window.civilizationStoryProgress.consumeThirdWorldSettlement(settlement,{queue:true}):freeze({version:STORY_FRAMEWORK_BRIDGE_VERSION,accepted:false,reason:"story-owner-missing",queuedStoryId:null,presentationDeferred:true});
+  window.CivilizationCombatEvents?.settlement?.(basis,"thirdworldprogress.js",{committed:true,xp:settlement.xp,dimensionalStrings:settlement.dimensionalStrings,effectivePermanentDamage:settlement.effectivePermanentDamage,items:settlement.items});
   return freeze({...settlement,storyFramework});
  }
  function validate(){

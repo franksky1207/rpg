@@ -94,6 +94,7 @@
   const world=voidMirageCombatWorld(state);
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world,state}):1;
   const combat=runCombatCore(runPlayerStats(),enemy,state.hp,{
+   visualContext:{mode:"void",world,owner:"dungeonvoid.js",location:String(enemy.floor),playerName:state.playerName},
    logs:options.logs===false?false:true,
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier:civilizationMultiplier

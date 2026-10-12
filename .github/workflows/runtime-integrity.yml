@@ -9,6 +9,8 @@ on:
     paths:
       - '**/*.js'
       - 'tests/runtime/3d-formal-snapshots-contract.cjs'
+      - 'tests/runtime/combat-events-contract.cjs'
+      - 'tests/runtime/combat-events-integration.cjs'
       - 'index.html'
       - 'alternateuniverse.css'
       - 'adventureuipolish.css'
@@ -51,6 +53,8 @@ jobs:
           node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
           node tests/runtime/3d-b18-coverage-guard.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-formal-snapshots-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/combat-events-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/combat-events-integration.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-shared-loader-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -93,7 +97,8 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
             sleep 0.25
           done
-          node tests/runtime/audio-lifecycle-browser.js
+          node tests/runtime/combat-events-browser.js
+          node tests/runtime/combat-events-owner-browser.js
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-formal-snapshots-browser.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -188,5 +193,7 @@ jobs:
             3d-player-browser-report.json
             3d-equipment-browser-report.json
             audio-lifecycle-browser-report.json
+            combat-events-browser-report.json
+            combat-events-owner-browser-report.json
           if-no-files-found: ignore
           retention-days: 1

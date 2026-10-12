@@ -94,7 +94,7 @@ function renderNav(){
  if(top)top.innerHTML="";
  if(bottom)bottom.innerHTML="";
 }
-function go(v){inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}if(v==="inventory"&&typeof window.requestInventoryEntryFocus==="function")window.requestInventoryEntryFocus();view=v;render();if(v==="inventory"&&typeof window.applyInventoryFocus==="function")window.applyInventoryFocus()}
+function go(v){if(v!==view)window.CivilizationCombatEvents?.cancel?.("formal","page-switch");inventoryReturnContext=null;if(v==="adventure"){adventureScreen="maps";if(secondWorldActive()&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();}if(v==="storyrecord"&&typeof window.prepareStoryRecordEntry==="function")window.prepareStoryRecordEntry();if(v==="calamity"){if(secondWorldActive()){if(typeof window.prepareSecondWorldCivilizationCalamityEntry==="function")window.prepareSecondWorldCivilizationCalamityEntry();}else if(typeof window.prepareCivilizationCalamityEntry==="function")window.prepareCivilizationCalamityEntry();}if(v==="inventory"&&typeof window.requestInventoryEntryFocus==="function")window.requestInventoryEntryFocus();view=v;render();if(v==="inventory"&&typeof window.applyInventoryFocus==="function")window.applyInventoryFocus()}
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
@@ -267,7 +267,7 @@ window.startGalaxyReviewBattle=async function(){
  battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:e?.kind==="boss"?"boss":"normal"});
  try{
   render();
-  const result=combatOwner(ps,e,startHp,{mainlineLogs:true});
+  const result=combatOwner(ps,e,startHp,{mainlineLogs:true,visualContext:{mode:"review",world:1,owner:"ui.js",variant:e.kind,location:mapIdx+":"+reviewEnemy,playerName:state.playerName}});
   if(!result||typeof result.win!=="boolean")throw new Error("銀河回顧戰鬥結果無效。");
   if(JSON.stringify(state)!==before)throw new Error("銀河紀元回顧戰不應修改正式 state。");
   const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};

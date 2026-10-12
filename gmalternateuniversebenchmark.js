@@ -98,7 +98,7 @@
   const pair=traits?canonicalPair(traits?.[0],traits?.[1]):rollPair(rng),ctx=prepared.ctx,enemy=enemyFromBase(prepared.baseEnemy,pair);
   if(!pair||!enemy)return {ok:false,reason:"enemy-context-missing"};
   if(typeof window.runWorldCombatCore!=="function")return {ok:false,reason:"world-combat-owner-missing"};
-  const resolved=window.runWorldCombatCore(ctx.player,enemy,ctx.player.hp,{world:ctx.world,state:typeof state!=="undefined"?state:null,civilizationLevel:ctx.civilizationLevel,breakthroughLevel:ctx.breakthroughLevel,logs:false,rng,useTestSpecializations:true,useTestMarks:true,playerHealCap:ctx.player.hp,maxActions:200000,maxActionsPerChain:1024});
+  const resolved=window.runWorldCombatCore(ctx.player,enemy,ctx.player.hp,{visualContext:{mode:"gm-benchmark",world:ctx.world,owner:"gmalternateuniversebenchmark.js",fixture:true,enemyName:enemy.name},world:ctx.world,state:typeof state!=="undefined"?state:null,civilizationLevel:ctx.civilizationLevel,breakthroughLevel:ctx.breakthroughLevel,logs:false,rng,useTestSpecializations:true,useTestMarks:true,playerHealCap:ctx.player.hp,maxActions:200000,maxActionsPerChain:1024});
   const combat=resolved?.combat;
   if(!combat||typeof combat!=="object")return {ok:false,reason:"combat-result-missing"};
   const events=Array.isArray(combat.events)?combat.events:[];

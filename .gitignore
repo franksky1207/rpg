@@ -10,3 +10,5 @@ story-*-report.txt
 audio-lifecycle-browser-report.json
 __pycache__/
 3d-equipment-browser-report.json
+combat-events-browser-report.json
+combat-events-owner-browser-report.json

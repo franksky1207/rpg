@@ -166,6 +166,8 @@
    actionCount,maxActions,maxActionsPerChain,actionBudgetReached,chainBudgetReached,
    markState:{useTest:useTestMarks,levels:{...markLevels},shield:Math.max(0,runtime.player.shield),indomitableActivated:runtime.player.indomitableActivated,indomitableUsed:runtime.player.indomitableUsed,battleSpiritActivated:runtime.player.battleSpiritActivated,battleSpiritLayer:runtime.player.battleSpiritLayer,revengeReady:runtime.player.revengeReady},
    actorState:{player:{...runtime.player},enemy:{...runtime.enemy}},playerAbilityProfile:playerAbility,enemyAbilityProfile:enemyAbility,e:enemy};
+  if(options.visualContext)window.CivilizationCombatEvents?.observeStandard?.(result,options.visualContext);
+  if(options.visualContext&&(options.preparePresentation===false||options.logs===false))window.CivilizationCombatEvents?.presentationSkipped?.(result,"owner-headless");
   if(options.preparePresentation!==false&&typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);
   return result;
  };
@@ -185,7 +187,7 @@
   const playerLevelBefore=Math.max(1,Math.floor(Number(state.level)||1));
   const ps=playerCombatStats();
   const gmMainlineHpLock=typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world1-mainline")===true;
-  const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true,lockPlayerFullHp:gmMainlineHpLock});
+  const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true,lockPlayerFullHp:gmMainlineHpLock,visualContext:{mode:"main",world:1,owner:"combatcore.js",variant:e.kind,location:mapIdx+":"+eIdx,playerName:state.playerName}});
   state.hp=combat.hp;
   const combatEndHp=state.hp;
   const logs=combat.logs;
@@ -198,7 +200,8 @@
     logs.push(`Boss 再挑戰已鎖定：需再擊敗本地圖菁英怪 10 隻。`);
    }
    const penalty=applyDeathPenalty(logs);
-   save(false);
+   const bridgeSaved=save(false);
+   if(bridgeSaved===true)window.CivilizationCombatEvents?.settlement?.(combat,"combatcore.js",{committed:true});
    return {ok:true,win:false,logs,events:combat.events,e,penalty,combatEndHp,turns:combat.turns,firstBossKill:false,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId:null};
   }
 
@@ -246,7 +249,8 @@
   if(firstBossKill&&window.civilizationStoryProgress?.queueBossStory)pendingStoryId=window.civilizationStoryProgress.queueBossStory(mapIdx);
   let result={ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns,firstBossKill,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId};
   if(typeof window.applyWorld1OnlineOverlevelReward==="function")result=window.applyWorld1OnlineOverlevelReward(result,playerLevelBefore,state,{persist:false})||result;
-  save(false);
+  const bridgeSaved=save(false);
+  if(bridgeSaved===true)window.CivilizationCombatEvents?.settlement?.(combat,"combatcore.js",{committed:true,xp:result.xp,gold:result.gold,items:result.items});
   return result;
  };
  window.fightOnce=fightOnce;

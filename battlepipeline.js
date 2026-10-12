@@ -91,6 +91,7 @@
     if(!suppressPresentation){adventureScreen="combat";render();if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});}
     const psBefore=playerCombatStats(),startPlayerHp=state.hp;
     const r=fightOnce(mapIndex,enemyIndex,encounter);
+    if(suppressPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(r,"fast-catch-up");
     if(!r.ok){if(typeof realBattleTiming?.unsubscribe==="function")realBattleTiming.unsubscribe();alert(r.reason);break;}
     const roundLabel=ctx.continuous?`連續戰鬥・第 ${combatRound} 場`:ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"";
     if(!suppressPresentation)await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);

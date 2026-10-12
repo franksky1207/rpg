@@ -48,7 +48,7 @@
   if(forceWorld3Civilization&&typeof originalCombat==="function"){
    window.runCombatCore=function(player,enemy,startHp,options={}){
     const multiplier=testCivilizationMultiplier(3);
-    return originalCombat(player,enemy,startHp,{...(options&&typeof options==="object"?options:{}),playerFinalDamageMultiplier:multiplier});
+    return originalCombat(player,enemy,startHp,{...(options&&typeof options==="object"?options:{}),visualContext:options.visualContext?{...options.visualContext,world:modeWorld}:undefined,playerFinalDamageMultiplier:multiplier});
    };
   }
   try{return await base(...args);}finally{

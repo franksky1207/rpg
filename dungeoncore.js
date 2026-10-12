@@ -6,7 +6,7 @@
   const explicitWorld=options.world==null?null:(Number(options.world)===2?2:1);
   const world=explicitWorld||(typeof window.isSecondWorldEntered==="function"&&window.isSecondWorldEntered(state)===true?2:1);
   if(typeof window.runWorldCombatCore!=="function")return {win:false,invalid:true,reason:"world-combat-adapter-missing",logs:[],events:[],e:enemy,combatEndHp:state.hp,turns:0};
-  const resolved=window.runWorldCombatCore(playerCombatStats(),enemy,state.hp,{world,state});
+  const resolved=window.runWorldCombatCore(playerCombatStats(),enemy,state.hp,{world,state,visualContext:{mode:"bounty",world,owner:"dungeoncore.js",variant:"bounty",playerName:state.playerName}});
   const combat=resolved.combat;
   const combatEndHp=combat.hp;
   state.hp=combatEndHp;

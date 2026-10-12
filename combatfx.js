@@ -84,6 +84,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    });
   }finally{syncingHp=false;}
   syncCombatShieldDom();
+  window.CivilizationCombatEvents?.updatePresentation?.(window.getCombatPresentationSnapshot?.(),null);
  }
  window.syncCombatPresentationPlayerHp=syncCombatHpDom;
  window.syncCombatPresentationHp=syncCombatHpDom;
@@ -99,6 +100,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  window.clearCombatPresentation=function(reason="clear"){
   if(!presentation)return null;
   const cleared={token:presentation.token,reason};
+  window.CivilizationCombatEvents?.endPresentation?.(presentation.token,reason);
   presentation.active=false;
   presentation=null;
   document.querySelectorAll(".combat-shield-bar").forEach(el=>el.remove());
@@ -297,6 +299,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   p.screen=combatScreen()||p.screen||null;
   const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
   const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
+  window.CivilizationCombatEvents?.setPacing?.(p.token,pacing);
   structuredPlayback=true;
   ensureCombatExtras();
   syncCombatHpDom();
@@ -375,6 +378,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("presentation-end");
+   window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
@@ -415,6 +419,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   const mirrorWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="mirror"&&evt.mark==="ward"&&evt.action==="activate");
   const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(mirrorWard?.shield)||0));
   presentation={active:true,token:++presentationSerial,mode:"mirror",screen:combatScreen()||null,events,index:0,playerHp:maxHp,playerMaxHp:maxHp,enemyHp:maxHp,enemyMaxHp:maxHp,playerShield,playerShieldMax:playerShield,enemyShield,enemyShieldMax:enemyShield};
+  window.CivilizationCombatEvents?.bindPresentation?.(result,window.getCombatPresentationSnapshot());
   if(combatScreen())ensureCombatExtras();
   return window.getCombatPresentationSnapshot();
  };
@@ -424,6 +429,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   p.screen=combatScreen()||p.screen||null;
   const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
   const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
+  window.CivilizationCombatEvents?.setPacing?.(p.token,pacing);
   structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();
   try{
    await structuredSleep(openingDelay);
@@ -467,6 +473,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("presentation-end");
+   window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
    if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
   }
@@ -486,6 +493,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   const enemyWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="enemy"&&evt.mark==="ward"&&evt.action==="activate");
   const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(enemyWard?.shield)||0));
   presentation={active:true,token:++presentationSerial,mode:"standard",screen:combatScreen()||null,events,index:0,playerHp:playerStartHp,playerMaxHp,enemyHp:enemyStartHp,enemyMaxHp,playerShield,playerShieldMax:playerShield,enemyShield,enemyShieldMax:enemyShield,lockPlayerFullHp};
+  window.CivilizationCombatEvents?.bindPresentation?.(result,window.getCombatPresentationSnapshot());
   if(combatScreen())ensureCombatExtras();
   return window.getCombatPresentationSnapshot();
  };

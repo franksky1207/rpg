@@ -222,6 +222,7 @@
     if(adventureEraView===next)return true;
     if(adventureEraViewLocked())return false;
     if(next!=="universe"&&typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
+    window.CivilizationCombatEvents?.cancel?.("formal","era-switch");
     adventureEraView=next;
     render();
     return true;

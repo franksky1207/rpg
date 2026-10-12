@@ -61,6 +61,7 @@
   const targetState=options.state&&typeof options.state==="object"?options.state:state;
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel}):1;
   const combat=window.runCombatCore(p,e,Math.max(1,Number(p.hp)||1),{
+   visualContext:{mode:"calamity",world:2,owner:"secondworldcalamityrun.js",location:d.id,playerName:targetState?.playerName},
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,

@@ -120,6 +120,22 @@ const { chromium } = require("playwright"),
     await page.evaluate(() =>
       window.ensureCivilizationScriptGroup("integrity"),
     );
+    if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")await page.evaluate(()=>{
+      const bridge=window.CivilizationCombatEvents;if(bridge?.version!==1)throw Error("T1-C Bridge missing");
+      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0};
+      window.__combatEventDispose=[];
+      window.__combatEventDispose.push(bridge.subscribe(event=>{
+       const proof=window.__combatEventEvidence;
+       if(!bridge.validateEvent(event))proof.invalid++;
+       const key=event.mode+":"+event.world+":"+(event.data?.context?.variant||"");proof.modes[key]=(proof.modes[key]||0)+1;
+       proof.types[event.type]=(proof.types[event.type]||0)+1;
+       if(event.type==="settlement")proof.settlements.push(event.eventId);
+       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);
+      }));
+      window.__combatEventDispose.push(bridge.subscribe(()=>{throw Error("injected renderer throw");}));
+      window.__combatEventDispose.push(bridge.subscribe(()=>Promise.reject(Error("injected renderer rejection"))));
+      window.__combatEventDispose.push(bridge.subscribe(()=>new Promise(()=>{})));
+    });
     await page.evaluate(() => {
       document.getElementById("civilizationAuthGate")?.remove();
       document.getElementById("gameIntroModal")?.classList.remove("show");
@@ -821,6 +837,8 @@ const { chromium } = require("playwright"),
     });
     record({ case: "actual main missing result modal/cleanup", passed: true });
     // Reload into a newly saved disposable character; first battle uses the genuine entry.
+    let combatProofBeforeReload=null;
+    if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")combatProofBeforeReload=await page.evaluate(()=>window.__combatEventEvidence);
     const traceBeforeReload = await page.evaluate(() => window.__audioTrace);
     const reincarnation = await page.evaluate(() => {
       state = newState();
@@ -840,6 +858,7 @@ const { chromium } = require("playwright"),
       case: "actual higher-to-galaxy reincarnation/local backup transaction",
       passed: true,
     });
+    if(combatProofBeforeReload)await page.addInitScript(proof=>{window.__savedCombatEventEvidence=proof;},combatProofBeforeReload);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForFunction(
       () =>
@@ -852,6 +871,22 @@ const { chromium } = require("playwright"),
     await page.evaluate(() =>
       window.ensureCivilizationScriptGroup("integrity"),
     );
+    if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")await page.evaluate(()=>{
+      const bridge=window.CivilizationCombatEvents;if(bridge?.version!==1)throw Error("T1-C Bridge missing");
+      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0};
+      window.__combatEventDispose=[];
+      window.__combatEventDispose.push(bridge.subscribe(event=>{
+       const proof=window.__combatEventEvidence;
+       if(!bridge.validateEvent(event))proof.invalid++;
+       const key=event.mode+":"+event.world+":"+(event.data?.context?.variant||"");proof.modes[key]=(proof.modes[key]||0)+1;
+       proof.types[event.type]=(proof.types[event.type]||0)+1;
+       if(event.type==="settlement")proof.settlements.push(event.eventId);
+       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);
+      }));
+      window.__combatEventDispose.push(bridge.subscribe(()=>{throw Error("injected renderer throw");}));
+      window.__combatEventDispose.push(bridge.subscribe(()=>Promise.reject(Error("injected renderer rejection"))));
+      window.__combatEventDispose.push(bridge.subscribe(()=>new Promise(()=>{})));
+    });
     await page.evaluate(() => {
       document.getElementById("civilizationAuthGate")?.remove();
       document.getElementById("gameIntroModal")?.classList.remove("show");
@@ -915,6 +950,16 @@ const { chromium } = require("playwright"),
     record({ case: "actual post-reincarnation galaxy Boss", passed: true });
     assert.deepEqual(errors, []);
     assert.deepEqual(missing, []);
+    if(process.env.COMBAT_EVENT_ACCEPTANCE==="1"){
+     // The old page's collection is saved before the real reload below; no delta replay.
+     const proof=await page.evaluate(()=>window.__savedCombatEventEvidence||window.__combatEventEvidence);
+     assert.ok(proof,"Combat proof missing");assert.equal(proof.invalid,0);
+     for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate","review"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
+     assert.equal(new Set(proof.settlements).size,proof.settlements.length,"Settlement event delivered twice");
+     assert.ok(proof.maxQueue<=32*4);
+     fs.writeFileSync("combat-events-browser-report.json",JSON.stringify({passed:true,actualAudioCases:results.length,proof},null,2)+"\n");
+     console.log("PASS T1-C actual mode observations / hostile consumers / native audio",proof);
+    }
     const trace = traceBeforeReload.concat(
       await page.evaluate(() => window.__audioTrace),
     );

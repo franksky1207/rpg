@@ -226,6 +226,7 @@
     if(showPresentation&&typeof render==="function")render();
 
     const combat=window.runSecondWorldBossCombat(index,{startHp:state.hp,encounter,logs:showPresentation,preparePresentation:showPresentation});
+    if(!showPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(combat,"background-or-fast-catch-up");
     ctx.lastCombat=combat;
     if(!combat?.ok){ctx.currentEncounter=null;ctx.stopReason="error";alert(combat?.reason||"戰鬥啟動失敗。");break;}
     const catchUpPolicy=fastCatchUp?catchUpStep():null;
@@ -242,6 +243,7 @@
      state.hp=Math.max(0,Math.floor(Number(combat.hp)||0));
      const settled=window.settleSecondWorldBossVictory(index);
      if(!settled.ok){ctx.stopReason="error";alert(settled.reason||"戰鬥結算失敗。");break;}
+     window.CivilizationCombatEvents?.settlement?.(combat,"secondworldmainline.js",{committed:true,xp:settled.xp,darkMatter:settled.darkMatter,darkEnergy:settled.darkEnergy,items:settled.items});
      accumulate(ctx,settled);
      const appeared=settled.firstKill===true&&typeof window.getSecondWorldCalamityForBoss==="function"?window.getSecondWorldCalamityForBoss(index):null;
      if(appeared&&typeof window.queueSecondWorldCalamityAppearanceNotice==="function")window.queueSecondWorldCalamityAppearanceNotice(appeared);

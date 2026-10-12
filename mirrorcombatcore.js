@@ -258,7 +258,7 @@
   }
   const winner=sides.player.hp>0?"player":"mirror",loser=other(winner);
   events.push({type:"battleEnd",winner,loser,turns});pushLog(`${sides[winner].name}獲勝。`);
-  return {
+  const result={
    win:winner==="player",winner,firstActor,turns,
    playerHp:Math.max(0,sides.player.hp),mirrorHp:Math.max(0,sides.mirror.hp),maxHp:stats.hp,
    logs:logs||[],events,snapshot:snap,
@@ -268,6 +268,8 @@
     mirror:{shield:Math.max(0,sides.mirror.shield),indomitableActivated:sides.mirror.indomitableActivated,indomitableUsed:sides.mirror.indomitableUsed,battleSpiritActivated:sides.mirror.battleSpiritActivated,battleSpiritLayer:sides.mirror.battleSpiritLayer,revengeReady:sides.mirror.revengeReady}
    }
   };
+  if(options.visualContext)window.CivilizationCombatEvents?.observeMirror?.(result,options.visualContext);
+  return result;
  };
  window.MIRROR_COMBAT_CORE_VERSION=MIRROR_COMBAT_CORE_VERSION;
  window.MIRROR_COMBAT_WORLD_PHASE_VERSION=MIRROR_WORLD_PHASE_VERSION;

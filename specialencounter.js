@@ -179,6 +179,7 @@
    await specialFlowSleep(specialBattleReadyDelay());
   }
   const startHp=state.hp,r=specialFight(enemy,world);
+  if(suppressPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(r,"special-fast-catch-up");
   if(!suppressPresentation)await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
   const result={win:r.win,world,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){

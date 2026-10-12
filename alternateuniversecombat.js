@@ -31,10 +31,13 @@
   const playerMaxHp=Math.max(1,numberOr(player.hp,1));
   const startHp=options.startHp==null?Math.max(0,numberOr(target.hp,playerMaxHp)):Math.max(0,numberOr(options.startHp,playerMaxHp));
   const world=currentWorld(target);
-  const resolved=window.runWorldCombatCore(player,enemy,startHp,{world,state:target,civilizationLevel:options.civilizationLevel,breakthroughLevel:options.breakthroughLevel,logs:options.logs!==false,rng:typeof options.rng==="function"?options.rng:undefined,useTestSpecializations:options.useTestSpecializations===true,useTestMarks:options.useTestMarks===true,markLevels:options.markLevels||null,maxTurns:Math.max(0,whole(options.maxTurns,0)),maxActions:options.maxActions,maxActionsPerChain:options.maxActionsPerChain,preparePresentation:options.preparePresentation===true,playerHealCap:options.playerHealCap==null?playerMaxHp:Math.max(1,Math.min(playerMaxHp,numberOr(options.playerHealCap,playerMaxHp)))});
+  const resolved=window.runWorldCombatCore(player,enemy,startHp,{world,state:target,visualContext:{mode:"alternate",world,owner:"alternateuniversecombat.js",location:String(depth),variant:attemptId,playerName:target.playerName,fixture:options.useTestSpecializations===true},civilizationLevel:options.civilizationLevel,breakthroughLevel:options.breakthroughLevel,logs:options.logs!==false,rng:typeof options.rng==="function"?options.rng:undefined,useTestSpecializations:options.useTestSpecializations===true,useTestMarks:options.useTestMarks===true,markLevels:options.markLevels||null,maxTurns:Math.max(0,whole(options.maxTurns,0)),maxActions:options.maxActions,maxActionsPerChain:options.maxActionsPerChain,preparePresentation:options.preparePresentation===true,playerHealCap:options.playerHealCap==null?playerMaxHp:Math.max(1,Math.min(playerMaxHp,numberOr(options.playerHealCap,playerMaxHp)))});
   const combat=resolved?.combat;if(!combat||typeof combat!=="object")return fail("combat-result-missing",{depth});
   const basis=createBasis({world,depth,attemptId,traits,playerStartHp:startHp,enemyStartHp:enemy.hp,combat});
-  return Object.freeze({ok:true,version:ALTERNATE_UNIVERSE_COMBAT_VERSION,adapterVersion:ALTERNATE_UNIVERSE_COMBAT_ADAPTER_VERSION,world,depth,attemptId,traits:Object.freeze(traits.slice()),enemy:freezeClone(enemy),playerFinalDamageMultiplier:Number(resolved.playerFinalDamageMultiplier)||1,combat:freezeClone(combat),settlementBasis:basis,settlementReady:basis.formalSettlementEligible});
+  const output=Object.freeze({ok:true,version:ALTERNATE_UNIVERSE_COMBAT_VERSION,adapterVersion:ALTERNATE_UNIVERSE_COMBAT_ADAPTER_VERSION,world,depth,attemptId,traits:Object.freeze(traits.slice()),enemy:freezeClone(enemy),playerFinalDamageMultiplier:Number(resolved.playerFinalDamageMultiplier)||1,combat:freezeClone(combat),settlementBasis:basis,settlementReady:basis.formalSettlementEligible});
+  window.CivilizationCombatEvents?.associate?.(output,combat);
+  window.CivilizationCombatEvents?.associate?.(output.combat,combat);
+  return output;
  }
  function basisFromResult(result){const basis=result?.authority===SETTLEMENT_AUTHORITY?result:result?.settlementBasis;if(!basis||typeof basis!=="object"||basis.authority!==SETTLEMENT_AUTHORITY||Number(basis.version)!==ALTERNATE_UNIVERSE_COMBAT_SETTLEMENT_VERSION)return null;return basis;}
  function settleAlternateUniverseCombat(result){
@@ -44,6 +47,7 @@
   const live=window.alternateUniverseActiveAttempt(currentState());if(!live)return fail("active-attempt-missing",{depth:basis.depth,attemptId:basis.attemptId});
   if(live.attemptId!==basis.attemptId||live.depth!==basis.depth)return fail("attempt-settlement-mismatch",{depth:basis.depth,attemptId:basis.attemptId,liveAttemptId:live.attemptId,liveDepth:live.depth});
   const settled=window.settleAlternateUniverseAttempt(basis.outcome,{attemptId:basis.attemptId});if(!settled?.ok)return fail(settled?.reason||"attempt-settlement-failed",{depth:basis.depth,attemptId:basis.attemptId,attemptSettlement:settled||null});
+  window.CivilizationCombatEvents?.settlement?.(result,"alternateuniversecombat.js",{committed:true,depth:basis.depth});
   return Object.freeze({ok:true,depth:basis.depth,attemptId:basis.attemptId,outcome:basis.outcome,combatCompleted:true,win:basis.win===true,settlement:settled});
  }
  function runAndSettleAlternateUniverseCombat(options={}){const result=runAlternateUniverseCombat(options);if(!result.ok||result.settlementReady!==true)return Object.freeze({ok:result.ok===true,combatResult:result,settled:false,settlement:null});const settlement=settleAlternateUniverseCombat(result);return Object.freeze({ok:settlement.ok===true,combatResult:result,settled:settlement.ok===true,settlement});}

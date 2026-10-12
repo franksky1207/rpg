@@ -70,6 +70,7 @@
   const explicitHpLock=options.lockPlayerFullHp===true;
   const lockPlayerFullHp=explicitHpLock||formalMainlineHpLockActive();
   const combat=runCombatCore(playerCombatStats(),enemy,state.hp,{
+   visualContext:{mode:"special",world,owner:"specialcore.js",variant:"special",playerName:targetState?.playerName},
    playerFinalDamageMultiplier:civilizationMultiplier,
    lockPlayerFullHp
   });

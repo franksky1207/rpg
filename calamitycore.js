@@ -138,6 +138,7 @@
   if(typeof window.formalPlayerFinalDamageMultiplier!=="function")throw new Error("Formal player final damage owner is required for Civilization Calamity.");
   const playerFinalDamageMultiplier=window.formalPlayerFinalDamageMultiplier({world:1,state});
   const combat=window.runCombatCore(player,e,player.hp,{
+   visualContext:{mode:"calamity",world:1,owner:"calamitycore.js",location:def.id,playerName:state.playerName},
    logs:options.logs===false?false:true,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,
