@@ -9,6 +9,8 @@ on:
     paths:
       - '**/*.js'
       - 'tests/runtime/3d-formal-snapshots-contract.cjs'
+      - 'tests/runtime/t3a-hybrid-policy.cjs'
+      - '3d-test/t3a-hybrid-policy.js'
       - 'tests/runtime/combat-events-contract.cjs'
       - 'tests/runtime/combat-events-integration.cjs'
       - 'index.html'
