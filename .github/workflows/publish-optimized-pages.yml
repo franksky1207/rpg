@@ -81,6 +81,18 @@ jobs:
           if(!(r.artifactBytes>0&&r.artifactBytes<800000000))throw Error('release size limit or invalid report');
           console.log('Verified optimized Pages bytes:',r.artifactBytes);
           NODE
+      # Optional browser-only preview lives under a separate URL path; the official
+      # candidate, game manifest and release acceptance were finalized above.
+      - name: Stage SHA-verified B3 visual preview separately
+        run: node scripts/stage-hybrid-preview.cjs
+      - name: Check preview entry and production homepage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s .publish-stage3/development/hybrid-comparison/index.html
+          test -s .publish-stage3/development/hybrid-comparison/t2b3-v1/manifest.json
+          test -s .publish-stage3/index.html
+          test ! -e .publish-stage3/development/hybrid-comparison/t2b2-v1/player/animation-source.blend
       - uses: actions/configure-pages@v5
       - name: Upload only validated site to GitHub Pages
         uses: actions/upload-pages-artifact@v4
