@@ -1,5 +1,5 @@
 import {isVerifiedInput} from '../fixture-input.mjs?v=20261012-t2b1-v1';
-import {Assets,ART} from './assets.mjs?v=20261012-t2b4-cache1';
+import {Assets,ART} from './assets.mjs?v=20261012-t2b4-cache2';
 import {AtlasActor} from './atlas.mjs?v=20261012-t2b3-v1';
 import {NativeActor} from './native.mjs?v=20261012-t2b3-v1';
 import {project,placement,selectedLayers} from './contract.mjs?v=20261012-t2b3-v1';
