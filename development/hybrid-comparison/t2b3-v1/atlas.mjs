@@ -1,5 +1,26 @@
 import {atlasFolder} from './assets.mjs?v=20261012-t2b3-v1';
 import {CLIPS,GRID} from './contract.mjs?v=20261012-t2b3-v1';
+// Development-only LRU of fully decoded atlas pages. Never retains WebGL resources.
+const DECODED_LIMIT=32*1024*1024, decodedPages=new Map();
+let decodedBytes=0, decodedHits=0;
+export const decodedAtlasStats=()=>Object.freeze({entries:decodedPages.size,bytes:decodedBytes,limit:DECODED_LIMIT,hits:decodedHits});
+function getDecoded(key){
+ const page=decodedPages.get(key);
+ if(!page)return null;
+ decodedPages.delete(key);decodedPages.set(key,page);decodedHits++;
+ return page;
+}
+function keepDecoded(key,page){
+ const bytes=page.rgba.byteLength+page.depth.byteLength;
+ if(bytes>DECODED_LIMIT)return;
+ const old=decodedPages.get(key);
+ if(old){decodedBytes-=old.rgba.byteLength+old.depth.byteLength;decodedPages.delete(key);}
+ decodedPages.set(key,page);decodedBytes+=bytes;
+ while(decodedBytes>DECODED_LIMIT){
+  const first=decodedPages.keys().next().value,evicted=decodedPages.get(first);
+  decodedBytes-=evicted.rgba.byteLength+evicted.depth.byteLength;decodedPages.delete(first);
+ }
+}
 // Lossless PNG16 grayscale depth; browser canvas alone would truncate to 8 bits.
 export async function decodeDepth(bytes){
  const a=new Uint8Array(bytes),v=new DataView(bytes);if(a.slice(0,8).join(',')!=='137,80,78,71,13,10,26,10')throw Error('Bad PNG depth signature');let width,height,parts=[];
@@ -13,7 +34,24 @@ export class AtlasActor{
  constructor(assets,actor,tier,layers){this.assets=assets;this.actor=actor;this.tier=tier;this.layers=layers;this.pages=[];this.canvas=document.createElement('canvas');this.canvas.width=this.canvas.height=GRID[tier];this.ctx=this.canvas.getContext('2d');this.lastKey=null;this.closed=false;}
  async init(){const folder=atlasFolder(this.actor,this.tier);this.meta=await this.assets.json(folder+'atlas.json');const masterFolder=atlasFolder(this.actor,'high');this.master=this.tier==='high'?this.meta:await this.assets.json(masterFolder+'atlas.json');this.pivot=this.master.pivotPixels.map(v=>v/256);
  // Bounded batches limit transient decode objects and abort promptly.
- for(const action of CLIPS)for(const layer of this.layers){this.assets.signal.throwIfAborted();const row=this.meta.rows.find(r=>r.action===action&&r.layer===layer);if(!row||row.frameCount!==22||row.durationMs!==700)throw Error('Missing actual atlas action/layer');const bitmap=await this.assets.bitmap(folder+row.rgba);try{const canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(bitmap,0,0);const rgba=c.getImageData(0,0,canvas.width,canvas.height).data;const depth=await decodeDepth(await this.assets.bytes(folder+row.depth));if(depth.width!==canvas.width||depth.height!==canvas.height)throw Error('Depth/RGBA dimensions mismatch');this.pages.push({row,rgba,depth:depth.data,width:canvas.width});}finally{bitmap.close();}}
+ for(const action of CLIPS)for(const layer of this.layers){this.assets.signal.throwIfAborted();const row=this.meta.rows.find(r=>r.action===action&&r.layer===layer);if(!row||row.frameCount!==22||row.durationMs!==700)throw Error('Missing actual atlas action/layer');const key=folder+row.rgba+'|'+row.depth;
+  let page=getDecoded(key);
+  if(!page){
+   const bitmap=await this.assets.bitmap(folder+row.rgba);
+   try{
+    const canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;
+    const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(bitmap,0,0);
+    const rgba=c.getImageData(0,0,canvas.width,canvas.height).data;
+    const depth=await decodeDepth(await this.assets.bytes(folder+row.depth));
+    if(depth.width!==canvas.width||depth.height!==canvas.height)throw Error('Depth/RGBA dimensions mismatch');
+    page={rgba,depth:depth.data,width:canvas.width};
+    this.assets.signal.throwIfAborted();
+    if(this.closed)throw Error('Atlas actor disposed');
+    keepDecoded(key,page);
+   }finally{bitmap.close();}
+  }
+  this.assets.signal.throwIfAborted();if(this.closed)throw Error('Atlas actor disposed');
+  this.pages.push({row,...page});}
  return this;
  }
  draw({clip,tick}){const key=clip+':'+tick;if(key===this.lastKey)return this.canvas;this.lastKey=key;const n=this.canvas.width,output=this.ctx.createImageData(n,n),pixels=output.data,pages=this.pages.filter(p=>p.row.action===clip),coverage=[];
