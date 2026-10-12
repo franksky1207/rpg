@@ -935,7 +935,7 @@
     {
       "path": "source-version.cjs",
       "bytes": 1924,
-      "sha256": "7beab241645616eb1b10eafa6f0303e8831e6c6649b195eb277d886fea67eaf9",
+      "sha256": "a357ea948845da9a1d5b4ac8f4f138e4d354014e60f12cce775e987ee7f8f37d",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
