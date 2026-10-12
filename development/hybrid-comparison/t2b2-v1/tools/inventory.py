@@ -30,6 +30,7 @@ def collect():
   assert hashlib.sha256(previous).hexdigest()==h,('Original B1 history lock',s)
   evolved.append(s)
 
+ evolved.sort() # order remains the locked B1/B3 source-path order
  rows=[]
  for p in sorted(HERE.rglob('*')):
   if not p.is_file() or p.name=='inventory.json' or '__pycache__' in p.parts or p.suffix in ['.pyc','.blend1']:continue
