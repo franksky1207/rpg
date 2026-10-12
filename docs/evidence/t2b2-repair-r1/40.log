@@ -1,0 +1,7 @@
+COLOR QC normal false
+COLOR QC normal true
+COLOR QC elite false
+COLOR QC elite true
+COLOR QC boss false
+COLOR QC boss true
+PASS 108 actual same-frame native renders, source camera/light/AgX correction, pixels await difference analysis

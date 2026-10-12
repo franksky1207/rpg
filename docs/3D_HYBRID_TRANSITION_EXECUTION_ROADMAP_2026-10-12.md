@@ -1,3 +1,12 @@
+## 2026-10-12｜T2-B2補修r1（候選已提交；阻塞Gate仍未過）
+- 最新main重新fetch基準`eff0a6becf4f9dbf3d90c33df157aef13a98f355`，起始乾淨/十個exact-HEAD Actions success，提交前remote仍同SHA；資產/工具`42182d61d0e3b7963f81198e087d94ce5d5687f7`。最終交接HEAD與CI在push後獨立核對。
+- [補修驗收](3D_HYBRID_T2B2_REPAIR_ACCEPTANCE_2026-10-12.md)／[機器證據](3D_HYBRID_T2B2_REPAIR_TEST_EVIDENCE_2026-10-12.json)。玩家六動作/固定足點+3mm/連續握柄、三敵重量/蓄勢、四源.blend/六GLB/母圖集同步；原53骨9掛點/三LOD/拓樸權重/G00715/210套1050槽/73來源/Fixture/B1/正式runtime全部保留。
+- 528實際源姿勢最低點≥0、六GLB零error/warning、234獨立pixel再製、4356穿卸/六動作真組裝、23圖五viewport解碼/108 native samples/99 bind、原88/core576/mirror48/GM31/音訊29+50+17/save-cache/385成品HTTP SHA通過。SwiftShader與viewport不是實機。
+- A low/medium由同母圖可再製降採樣，實記各tier/file bytes與decoded估算；G006明示unavailable文字降級，不冒用G007；crit/combo/counter/drain合法六動作+原創cue，不造技能/HP/事件。未接B3。
+- **全面B2未過：肩甲約49.6mm/握柄19.8mm風險仍在，native色差RMSE校準反而增加；人工美術/Boss/遮臉未批准，真手機/GPU及B3舞台/HUD未驗。現在不應直接安全進B3。** 參見真實前後/側背面/1024細節及同畫格並排圖。
+- 所有新素材development/publish=false；成品仍385檔/36482365bytes，無新正式入口/下載/播放器，無正式cache-bust改動。Git保存前版307檔SHA/bytes，恢復revert本交接與`42182d61d0e3b7963f81198e087d94ce5d5687f7`，不清玩家資料/cache。
+- 本批停止，B3/B4/T2-C未施工，不選勝者；下一步仍是B2阻塞修復/人工檢視，而非自動Renderer整合。
+
 # 《文明戰線》3D／2.5D／2D 混合架構轉型・執行總路線圖
 
 建立：2026-10-12。**本檔為轉型工作包的排序與交接依據，不是原第 1～40 批正式施工規格的替代品。** 每批須由使用者逐次明確下達執行；「下一步」僅表示提供當下應執行工作的完整指令，不表示自動開始改程式。

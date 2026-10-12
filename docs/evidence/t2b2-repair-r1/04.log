@@ -1,0 +1,34 @@
+✔ versioned schema and bounded limits, unavailable without an owner (4.003684ms)
+✔ same-battle ordering, official identities and raw crit flags never inferred (4.911228ms)
+✔ missing owner context and unsupported W3 bounty are rejected (0.840576ms)
+✔ nonfinite HP/shields and event numeric values are rejected, not coerced (11.527775ms)
+✔ duplicate source result cannot create a second battle or settlement (1.886306ms)
+✔ read-only consumer data, raw results and caller State never share references (2.992574ms)
+✔ no renderer cannot change the authoritative result (1.032861ms)
+✔ throw and rejected Promise are isolated from producer and other consumers (5.02728ms)
+✔ permanently slow consumer has one in-flight callback and a finite queue (279.830943ms)
+✔ high volume source history is honestly partial, never another full combat log (6.227228ms)
+✔ fresh battle IDs are monotonic and no old delta reaches a new session (2.339077ms)
+✔ old presentation token and late committed result cannot overwrite new battle (0.981836ms)
+✔ presentation snapshots carry real before/after without synthesizing attack history (2.319257ms)
+✔ background flood omits intermediate actions and foreground only supplies a snapshot (225.640158ms)
+✔ duplicate subscriptions, AbortSignal and repeated disposal retain no listeners (44.854555ms)
+✔ re-subscription gives a marked checkpoint, not a replayed settlement/audio (2.414499ms)
+✔ formal and GM fixture computations have isolated lanes (1.783983ms)
+✔ explicit cancellation rejects late events; pagehide releases consumers (1.401237ms)
+✔ mirror actor vocabulary and explicit battleEnd remain authoritative (2.88129ms)
+✔ reward details remain unavailable until an explicit successful commit (1.027573ms)
+✔ caller-assigned duplicate battle IDs are rejected; producer IDs remain private (0.570115ms)
+✔ pacing comes only from the existing owner and never creates an awaited timer (0.955066ms)
+✔ unknown owner or unhooked reward source cannot claim authoritative events (3.020115ms)
+✔ headless and foreground checkpoints cannot freeze owner settlement bookkeeping (1.021955ms)
+✔ schema validation rejects corrupted event identity and nonfinite payloads (1.771235ms)
+✔ playback end aborts old delivery and rejects late presentation updates (1.81567ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 623.99961

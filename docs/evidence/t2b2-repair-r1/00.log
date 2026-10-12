@@ -1,0 +1,26 @@
+PASS comparison inputs: 330 identical A/B/C comparisons
+✔ versioned fixture validates, no transactions, limited partial Bridge history (36.212807ms)
+✔ existing official owners reproducibly regenerate every byte in two isolated VMs (106.905283ms)
+✔ three actual identities and stable source locators do not invent formal IDs (23.330636ms)
+✔ A/B/C receive byte-identical frozen events, appearance and final values for all cases and 33 variants (19091.906298ms)
+✔ mutation, bad versions, forged commitment, Infinity, drops and invented IDs are rejected (130.617805ms)
+✔ attack damage/critical/dodge/effects are official core events, HP history stays unavailable (0.280686ms)
+✔ known death differs from action-safety incomplete result (0.158966ms)
+✔ 32 G007 subsets include all empty/all worn; mixed missing asset stays fallback, three LODs (0.326083ms)
+✔ actual rig/GLB/license and animations audited; idle never called attack (0.170462ms)
+✔ numeric player input is isolated, not fabricated saved G007 combat stats (1.934908ms)
+✔ pure visual script cannot impersonate authoritative effects/damage/settlement (0.535334ms)
+✔ controls version fixes scene/tempo/viewports/run-order for every scheme without selecting winner (0.27658ms)
+✔ measurement template has no fake FPS/GPU or observed values (0.577526ms)
+✔ synthetic frame math stays synthetic; missing/invalid observations cannot pass (5.072287ms)
+✔ no runtime import, cache-bust or manifest references to development fixtures/helpers (1.202953ms)
+✔ actual publication selection rejects fixture/helper/docs and retains existing 3D/Bridge (886.401477ms)
+✔ four comparison documents and all local Markdown links resolve (0.576875ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20381.338116
