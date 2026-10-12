@@ -286,3 +286,10 @@ fallback美術、A低中專屬atlas、獨立效果clip未交付；真裝置／�
 - 此判定結果顯示 `canCommit=false`、`canCreateCombatEvents=false`，不得傳入正式戰鬥事件計算／存檔 owner。正式 `3d-test/mode-foundation.js` 中 `FULL_3D_AVAILABLE=false` **保持不變**；本次不解鎖舊 3D 按鈕、不啟動畫面展示或 T3-B 正式跨玩法接線。
 - 新增 `tests/runtime/t3a-hybrid-policy.cjs` 覆蓋舊偏好、三品質、安全降級、唯讀與無事件／結算權限。尚需將測試納入自動 CI 並取得新 HEAD 成功證據，及在 T3-A 後續工項處理正式設定 UI、切換時機與所有權防護。
 - 此項完成並不代表 T3-A 全部完成，更不代表 T3-B/C。美工未封版、真機量測及完整玩法回歸 Gate 按原規範保留。
+
+
+## T3-A 相容層修補與重新驗證（2026-10-13）
+- 在最新 `main` 發現 T3-A 首批程式已存在：正式頁載入 `3d-test/t3a-hybrid-policy.js`、舊模式／三品質唯讀降級映射，`tests/runtime/t3a-hybrid-policy.cjs` 已被 `.github/workflows/runtime-integrity.yml` 納入。正式 `FULL_3D_AVAILABLE=false`，尚未開放玩家切換、正式 Renderer 接線及跨玩法 T3-B。
+- 針對 HEAD `f61d0da335aac4e6e7425a393d5666a91a8fc4c8` 的 B3 Actions **確認 failure**，Job `115049663064` 指向 B2 inventory SHA 實際 `4a1f64bb446326185381b0f1259961a92f4edf58709b94bb32b5ca1a3469efb4`、manifest 舊值 `da5f7e932c2e6c514a4acff22d4af3f08cbe7a0536b91590f17de19d5b577b93`。根因是 T3-A 正式 HTML 授權後 B2 inventory 變更，B3 上游鎖未同步；非戰鬥計算失敗。
+- 已將 `t2b3-v1/manifest.json` B2 SHA、`assets.mjs` manifest SHA 與 `inventory.json` 逐檔 SHA／bytes 鏈修正，最新清冊提交 `165f80a429f8c677ce6ff32b5ea3e05a60836ce5`；修正前後保留 `publish=false`、原有 source lock 與正式戰鬥 Owner，不刪任何美術。新 exact HEAD Actions 需等結果核准，不能以提交即等於全部 success。
+- 已重新建立 T3-A 自動監控：發現 CI failures 則讀日誌並修正、全部應跑 Gate 成功再告知。**本紀錄不冒稱 T3-A 已全面完成**；正式設定 UI、切換持有者、模式可用性仍待更深度驗證與後續接線。
