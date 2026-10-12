@@ -1,3 +1,11 @@
+## 2026-10-12｜混合式轉型 T1-C：正式戰鬥事件唯讀橋接（程式／本機驗收完成）
+- 起始 main `89333ee746dc856eeb0e1349a58a8bfd046793c9`，工作目錄乾淨、無新提交；T1-A／T1-B 接線保留，起始 exact-HEAD 十個 Actions success。程式施工結束 HEAD `e74b9d3a47417b6e1d9dad74e1804b7455d328ed`；最終 main 為本交接／證據提交，提交後須獨立核對該 HEAD 的 Actions／Pages。
+- 新增輕量 `CivilizationCombatEvents` v1，正式／GM fixture 分 lane，原標準／鏡像結果與 combatfx HP／盾／節奏唯讀投影。每場私有 ID／seq、26 契約／負向驗證；不 await consumer，throw／reject／永不完成隔離，每訂閱32佇列／最多16訂閱，256 action 上限與 partial／snapshot-only 明示；跨頁／切紀元／播放結束取消舊 delivery，重訂閱不重播獎勵／聲音。
+- [T1-C 完整模式覆蓋、逐檔修改與回復](docs/3D_HYBRID_T1C_ACCEPTANCE_2026-10-12.md)、[逐指令與實測證據](docs/3D_HYBRID_T1C_TEST_EVIDENCE_2026-10-12.json)。三紀元主線、懸賞、競技場／高維六 stage、鏡像、虛空、災厄、異宇宙、特殊遭遇、合法回顧與GM基準有明確 source；詳細獎勵只接已成功提交的主線／鏡像整輪／AU深度，其餘 unavailable。其他GM離線模擬器未偽裝正式事件。
+- 26契約＋4整合；標準核心576次／鏡像48次完整結果不變，實際高維六 stage／特殊兩世界有無Bridge的完整 State 一致。桌機／手機各1000AU深度身分fixture；原50玩法／音訊、T1-A15／T1-B10、正式入口／GM各31、人物／G007五槽／三LOD／GLB18、385成品HTTP／SHA均通過。四訂閱queue實測最高127≤128；沒有效能改善宣稱。
+- 真iOS／Android／音效GPU硬體、長期背景節流／連戰、真帳號雲端寫入、全部AU勝利／traits及高維鏡像／虛空長流程未驗。本批畫面維持原2D／文字／3D預覽，未製作2.5D Renderer。原公式、結算、音訊、存檔與模型規格保留。
+- exact-HEAD CI／Pages 在本交接提交後查核，仍執行即待確認。回復須整批revert程式與證據提交，不清玩家資料／快取。**T2～T5全未施工；本批停止**。T2-A需本批CI／實機Gate與另行授權，fixture須尊重computed/committed、partial/dropped及音訊邊界。
+
 ## 2026-10-12｜混合式轉型 T1-B：共用載入與正式 DOM／會話分離
 - 起始 main `a89d5e6fe8dd4783720dcffb0eb72b9651c7e40c`，工作目錄乾淨；latest fetch／API 無新提交，T1-A 共用正式快照與接線仍在。起始 SHA 十個 Actions 均 success；真機／特殊遭遇／結算資料缺口保留。
 - 程式提交 `b2e7b946615f62a9703ef628c1d32426ddeb2a91`：新增 `shared-loader.js` 與 `formal-dom.js`，原 `formal-home.js` 留場景會話及公開轉接；正式／GM 同用必要 API 與逐場景工廠檢查，移除 Service／Battle／Chronicle 作完整性哨兵。GM 外觀請求與正式同 document 去重；原 31 案、預覽按鈕／工廠、Runtime、GLB、快照、音訊及存檔 owner 保留。

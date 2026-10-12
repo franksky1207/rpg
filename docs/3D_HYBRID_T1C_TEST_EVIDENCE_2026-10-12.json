@@ -1,0 +1,788 @@
+{
+  "baseline": "89333ee746dc856eeb0e1349a58a8bfd046793c9",
+  "implementationCommit": "e74b9d3a47417b6e1d9dad74e1804b7455d328ed",
+  "nonBrowserCommands": [
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "log": "/tmp/t1c-final-3d-formal-snapshots-contract.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "log": "/tmp/t1c-final-3d-shared-loader-contract.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-b18-coverage-guard.js",
+      "log": "/tmp/t1c-final-3d-b18-coverage-guard.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-manifest-integrity.js",
+      "log": "/tmp/t1c-manifest-final.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-global-writers.js",
+      "log": "/tmp/t1c-final-save-global-writers.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/newstate-save-owner-integrity.js",
+      "log": "/tmp/t1c-final-newstate-save-owner-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-runtime-early-restore-integrity.js",
+      "log": "/tmp/t1c-final-gm-runtime-early-restore-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "log": "/tmp/t1c-final-gm-runtime-auth-preferences-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-data-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-data-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-attempt-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-attempt-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-combat-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-combat-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-failure-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-failure-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-progression-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-progression-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-ui-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-ui-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-batch4-3-regression.js",
+      "log": "/tmp/t1c-final-alternate-universe-batch4-3-regression.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-old-save-integrity.js",
+      "log": "/tmp/t1c-final-alternate-universe-old-save-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "log": "/tmp/t1c-final-calamity-shared-terminal-fast-catchup-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "log": "/tmp/t1c-final-calamity-terminal-dynamic-opt-batch2.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/calamity-shared-ui-policy-opt-batch3.js",
+      "log": "/tmp/t1c-final-calamity-shared-ui-policy-opt-batch3.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-mainline-hp-lock-integrity.js",
+      "log": "/tmp/t1c-final-gm-mainline-hp-lock-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-alternate-universe-benchmark-batch7-4-integrity.js",
+      "log": "/tmp/t1c-final-gm-alternate-universe-benchmark-batch7-4-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-schema17-compatibility-matrix.js",
+      "log": "/tmp/t1c-final-save-schema17-compatibility-matrix.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-level-migration-regression.js",
+      "log": "/tmp/t1c-final-save-level-migration-regression.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/audio-lifecycle.test.cjs",
+      "log": "/tmp/t1c-final-audio-lifecycle.test.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/audio-regression.test.cjs",
+      "log": "/tmp/t1c-final-audio-regression.test.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-integrity.js",
+      "log": "/tmp/t1c-final-resource-cache-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "log": "/tmp/t1c-final-resource-cache-behavior.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+      "log": "/tmp/t1c-final-resource-cache-prefetch-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "log": "/tmp/t1c-final-3d-equipment-contract.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-batch28-preflight.cjs",
+      "log": "/tmp/t1c-final-3d-batch28-preflight.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "log": "/tmp/t1c-final-3d-asset-registry-integrity.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-glb-validation.cjs",
+      "log": "/tmp/t1c-final-3d-glb-validation.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "log": "/tmp/t1c-unit-final.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "log": "/tmp/t1c-integration-final.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "log": "/tmp/t1c-syntax-final.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/special-fast-catchup-integrity.js",
+      "log": "/tmp/t1c-final-special-fast-catchup-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "log": "/tmp/t1c-final-thirdworld-rerun-settlement-stage-regression.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "log": "/tmp/t1c-extra-publish-build-regression.cjs.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-save-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-save-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-transaction-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-transaction-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-dungeon-access-batch6-4-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-rerun-world1-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-rerun-world1-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-rerun-world2-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-rerun-world2-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/reincarnation-rerun-world3-integrity.js",
+      "log": "/tmp/t1c-extra-reincarnation-rerun-world3-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/first-world-target-context-continuous-batch4-integrity.js",
+      "log": "/tmp/t1c-extra-first-world-target-context-continuous-batch4-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js",
+      "log": "/tmp/t1c-extra-first-world-target-context-offline-rerun-review-batch5-integrity.js.log",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "log": "/tmp/t1c-extra-offline-sample-provenance-opt4-integrity.js.log",
+      "passed": true
+    }
+  ],
+  "browserCommands": [
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-preview-dom-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-gm-loader-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-3d-test-center-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-mode-browser-regression.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/startup-readiness-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-startup-preload-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/gm-first-render-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/code-cleanup-batch7-lazy-loading.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/galaxy-3d-button-browser.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/save-load-pipeline-integrity.js",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/3d-player-assets-browser.js",
+      "passed": true,
+      "log": "/tmp/t1c-player-browser.log"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-assets-browser.js",
+      "passed": true,
+      "log": "/tmp/t1c-equipment-browser.log"
+    },
+    {
+      "command": "node tests/runtime/combat-events-browser.js",
+      "passed": true,
+      "log": "/tmp/t1c-events-browser-final.log"
+    },
+    {
+      "command": "node tests/runtime/combat-events-owner-browser.js",
+      "passed": true,
+      "log": "/tmp/t1c-owner-browser-final.log"
+    },
+    {
+      "command": "node tests/runtime/publish-candidate-browser.js",
+      "passed": true,
+      "log": "/tmp/t1c-candidate-browser.log"
+    },
+    {
+      "command": "node tests/runtime/browser-smoke.js",
+      "passed": true,
+      "log": "/tmp/t1c-browser-smoke.log"
+    }
+  ],
+  "buildCommands": [
+    {
+      "command": "python3 scripts/generate-resource-manifest.py > resource-manifest.json",
+      "passed": true
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "passed": true
+    },
+    {
+      "command": "git diff --check",
+      "passed": true
+    },
+    {
+      "command": "git diff --exit-code 89333ee7 -- assets vendor 3d-test audio",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "contractTests": 26,
+    "integrationTests": 4,
+    "standardCoreParityComparisons": 576,
+    "mirrorCoreParityComparisons": 48,
+    "jsFiles": 391,
+    "sourceFingerprints": 490,
+    "productionHTMLVersionsVerified": 25,
+    "bridgeBytes": 19370,
+    "bridgeFingerprint": "587437946de2825287ab168d",
+    "artifactFiles": 385,
+    "artifactBytes": 36482365,
+    "HTTPResponsesVerified": 385,
+    "nativeGameplayAudioCases": 50
+  },
+  "eventBrowser": {
+    "passed": true,
+    "actualAudioCases": 50,
+    "proof": {
+      "modes": {
+        "calamity:1:": 13,
+        "main:1:normal": 6,
+        "main:1:": 172,
+        "main:1:elite": 1,
+        "main:1:boss": 2,
+        "main:2:boss": 1,
+        "main:2:": 14,
+        "main:3:": 2,
+        "bounty:1:bounty": 1,
+        "bounty:1:": 15,
+        "arena:1:normal": 3,
+        "arena:1:": 70,
+        "mirror:1:": 1121,
+        "void:1:": 8,
+        "calamity:2:": 15,
+        "arena:3:fixed": 2,
+        "arena:3:": 51,
+        "alternate:3:au-0-1-7135d89b-5f7c-40f9-a55b-8248048c66d6": 1,
+        "alternate:3:": 12,
+        "review:1:boss": 1,
+        "review:1:": 304,
+        "review:3:": 4,
+        "review:2:boss": 1,
+        "review:2:": 27,
+        "review:1:calamity": 1,
+        "review:2:calamity": 1,
+        "bounty:2:bounty": 1,
+        "bounty:2:": 11,
+        "arena:2:normal": 2,
+        "arena:2:": 55,
+        "mirror:2:": 1106,
+        "void:2:": 10
+      },
+      "types": {
+        "snapshot": 1891,
+        "battle-start": 67,
+        "combat-action": 856,
+        "actor-defeated": 67,
+        "outcome": 66,
+        "settlement": 12,
+        "presentation-ended": 70,
+        "presentation-skipped": 1,
+        "cancelled": 4
+      },
+      "invalid": 0,
+      "settlements": [
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-12:11",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-13:21",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-14:23",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-15:11",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-16:21",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-17:7",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-20:7",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-44:57",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-50:17",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-78:57",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-80:6",
+        "combat-v1-cdcd8a90-6473-4a31-83af-c3c9bf9c3564-81:6"
+      ],
+      "maxQueue": 127
+    }
+  },
+  "ownerBrowser": {
+    "passed": true,
+    "reports": [
+      {
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        },
+        "comparisons": [
+          {
+            "mode": "fixed",
+            "stages": [
+              0,
+              1,
+              2
+            ],
+            "completeStateEqual": true
+          },
+          {
+            "mode": "varied",
+            "stages": [
+              0,
+              1,
+              2
+            ],
+            "completeStateEqual": true
+          }
+        ],
+        "specialComparisons": [
+          {
+            "world": 1,
+            "completeStateEqual": true,
+            "encounterObserved": true
+          },
+          {
+            "world": 2,
+            "completeStateEqual": true,
+            "encounterObserved": true
+          }
+        ],
+        "alternateIdentityFixtures": 1000,
+        "uniqueBattles": 1000,
+        "bounded": true,
+        "subscribersAfterDispose": 0,
+        "observedEventCounts": {
+          "battle-start": 6,
+          "combat-action": 162,
+          "actor-defeated": 6,
+          "outcome": 6,
+          "snapshot": 6
+        },
+        "stageStarts": [
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-12",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "0",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-13",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "1",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-14",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "2",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-15",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "0",
+            "variant": "varied"
+          },
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-16",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "1",
+            "variant": "varied"
+          },
+          {
+            "id": "combat-v1-5473c590-1395-4e3e-bf89-7bedf317bc87-17",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "2",
+            "variant": "varied"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "comparisons": [
+          {
+            "mode": "fixed",
+            "stages": [
+              0,
+              1,
+              2
+            ],
+            "completeStateEqual": true
+          },
+          {
+            "mode": "varied",
+            "stages": [
+              0,
+              1,
+              2
+            ],
+            "completeStateEqual": true
+          }
+        ],
+        "specialComparisons": [
+          {
+            "world": 1,
+            "completeStateEqual": true,
+            "encounterObserved": true
+          },
+          {
+            "world": 2,
+            "completeStateEqual": true,
+            "encounterObserved": true
+          }
+        ],
+        "alternateIdentityFixtures": 1000,
+        "uniqueBattles": 1000,
+        "bounded": true,
+        "subscribersAfterDispose": 0,
+        "observedEventCounts": {
+          "battle-start": 6,
+          "combat-action": 162,
+          "actor-defeated": 6,
+          "outcome": 6,
+          "snapshot": 6
+        },
+        "stageStarts": [
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-12",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "0",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-13",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "1",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-14",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "2",
+            "variant": "fixed"
+          },
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-15",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "0",
+            "variant": "varied"
+          },
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-16",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "1",
+            "variant": "varied"
+          },
+          {
+            "id": "combat-v1-1471bb0b-b6ea-43a8-af0b-8a125e635bf5-17",
+            "type": "battle-start",
+            "mode": "arena",
+            "world": 3,
+            "location": "2",
+            "variant": "varied"
+          }
+        ]
+      }
+    ]
+  },
+  "artifactBrowser": {
+    "artifactBytes": 36482365,
+    "files": 385,
+    "verifiedResponses": 385,
+    "audio": [
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/galaxy-theme-loop.ogg",
+        "duration": 148.058792
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/universe-theme-loop.ogg",
+        "duration": 93.66325
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/higher-theme-loop.ogg",
+        "duration": 107.067396
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/normal-battle-loop.ogg",
+        "duration": 45.283604
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/medium-battle-loop.ogg",
+        "duration": 134.261708
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/high-battle-loop.ogg",
+        "duration": 68.300292
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-001.ogg",
+        "duration": 0.543719
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-002.ogg",
+        "duration": 0.774512
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-003.ogg",
+        "duration": 0.513311
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-001.ogg",
+        "duration": 0.657664
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-002.ogg",
+        "duration": 0.833673
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-003.ogg",
+        "duration": 0.702041
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/dodge/sfx-001.ogg",
+        "duration": 1.306417
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-004.ogg",
+        "duration": 1.048549
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-005.ogg",
+        "duration": 0.907075
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-029.ogg",
+        "duration": 0.680272
+      },
+      {
+        "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/victory/sfx-001.ogg",
+        "duration": 5.701497
+      }
+    ],
+    "viewports": [
+      {
+        "width": 1280,
+        "height": 800
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "missing": [],
+    "pageErrors": [],
+    "initialTransferredBytes": 5445455,
+    "cache": {
+      "preload": {
+        "phase": "complete",
+        "total": 49,
+        "done": 49,
+        "saved": 49,
+        "failed": 0
+      },
+      "status": {
+        "ok": true,
+        "version": "a024efeeb352096d",
+        "entries": 49,
+        "bytes": 16575038,
+        "measured": 49
+      },
+      "range": {
+        "status": 206,
+        "header": "bytes 2-5/2864574",
+        "bytes": 4
+      },
+      "clear": {
+        "ok": true
+      },
+      "after": {
+        "ok": true,
+        "version": "a024efeeb352096d",
+        "entries": 0,
+        "bytes": 0,
+        "measured": 0
+      },
+      "preserved": true
+    },
+    "passed": true
+  },
+  "resolvedFailures": [
+    {
+      "failure": "AU combat HTML exact cache-bust expectation",
+      "resolution": "Updated exact reference to actual T1-C version; all other original assertions retained."
+    },
+    {
+      "failure": "Arena random starting equipment and special random damage differ between independent fixtures",
+      "resolution": "Same seedState and isolated deterministic RNG; entire State and output comparison retained."
+    },
+    {
+      "failure": "Rapid synchronous fixture stage replacement omitted old battle-start before collector drained",
+      "resolution": "Test-only microtask flush; production owners gain no wait."
+    },
+    {
+      "failure": "AU enemy name absent at official owner",
+      "resolution": "Projection remains null/unavailable; test checks that actual absence."
+    },
+    {
+      "failure": "Checkpoint freeze could freeze internal pending settlement bookkeeping",
+      "resolution": "Deep-copy consumer projections; headless/background settlement negative test added."
+    },
+    {
+      "failure": "Attempted nonexistent publish-policy-regression.cjs command",
+      "resolution": "Ran existing publish-build-regression.cjs successfully."
+    },
+    {
+      "failure": "Temporary cache audit expected events parameter even for a brand-new module",
+      "resolution": "New module has actual v=20261012-t1c-v1; audit validates both version forms without changing product."
+    }
+  ],
+  "environment": {
+    "browser": "Chromium 1.55 / SwiftShader",
+    "fixtureAccountsOnly": true,
+    "fontconfig": "isolated standard TTF/OTF configuration",
+    "candidateURL": "http://127.0.0.1:4173/.publish-stage3/index.html",
+    "performanceImprovementClaim": false
+  },
+  "unverified": [
+    "physical iOS/Android/audio/GPU",
+    "long-duration real OS background throttling/continuous runs",
+    "real account/cloud writes/reward ledger",
+    "1000 AU full wins/all traits",
+    "full high-world mirror/void long-run UI"
+  ],
+  "exactHEADActions": "pending final push; independently check GitHub final main SHA",
+  "endingImplementationHEAD": "e74b9d3a47417b6e1d9dad74e1804b7455d328ed",
+  "finalMainHEAD": "evidence/handoff commit whose parent is implementationCommit; query GitHub main after push"
+}
