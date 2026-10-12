@@ -1,0 +1,7 @@
+PASS isolated controls/data/HUD/100 cycles/release { width: 1280, height: 720 }
+PASS isolated controls/data/HUD/100 cycles/release { width: 1440, height: 1080 }
+PASS isolated controls/data/HUD/100 cycles/release { width: 390, height: 844 }
+PASS isolated controls/data/HUD/100 cycles/release { width: 360, height: 800 }
+PASS isolated controls/data/HUD/100 cycles/release { width: 844, height: 390 }
+PASS actual page navigation/back/reopen lifecycle
+PASS malformed Fixture/source rejection, retry and stale loading isolation

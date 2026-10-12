@@ -1,0 +1,10 @@
+PASS actual intro completed
+Character UI entered
+Readonly truth captured
+Character UI preview clicked
+PASS medium GLB loaded
+Checking PBR/animation readiness
+PASS native Babylon elbow/knee/shoulder/hip/finger skin deformation
+PASS deforming skeleton/PBR
+PASS GM intro completed
+PASS Batch 27 actual skinned GLB, formal/GM sources, LOD, on-demand reuse, animation, context loss, fallback and release

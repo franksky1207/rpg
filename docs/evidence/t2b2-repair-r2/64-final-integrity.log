@@ -1,0 +1,4 @@
+PASS exact three-enemy geometry/animation accessors unchanged; all 4096 scalar texels matched GLB G
+PASS reference mapping, actual per-region metrics, 132 contact samples, 18 visible poses, unchanged player candidates
+VISUAL GATE FAILED: native parity and shoulder/grip approval remain C; no safe-B3 recommendation
+PASS B2 inventory and original source locks 1100 91072004 bytes

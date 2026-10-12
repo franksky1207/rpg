@@ -4,7 +4,7 @@
 const {execFileSync}=require('node:child_process');
 const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('node:assert/strict');
 const base='http://127.0.0.1:4173/',art=base+'development/hybrid-comparison/t2b2-v1/',root='development/hybrid-comparison/t2b2-v1';
-const contract=JSON.parse(fs.readFileSync(root+'/repair-r1/color-source-contract.json'));
+const contract=JSON.parse(fs.readFileSync(root+'/repair-r2/color-source-contract.json'));
 const output=root+'/repair-r2/native-aligned-r1';fs.mkdirSync(output,{recursive:true});
 (async()=>{const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try{const page=await browser.newPage();page.on('console',m=>{if(m.type()==='error'||m.text().startsWith('COLOR QC'))console.log(m.text());});await page.route('**/__color_qc__.html',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><title>Offline color QC</title>'}));await page.route('**/__local_agx_lut__.png',r=>r.fulfill({contentType:'image/png',body:fs.readFileSync('/tmp/t2b2-color-lut/blender-agx-log-lut.png')}));for(const actor of ['normal','elite','boss'])await page.route('**/__baseline_'+actor+'.glb',r=>r.fulfill({contentType:'model/gltf-binary',body:execFileSync('git',['show','0d7c2307f9e50af2d97dd45c59b650c1d787a4b7:'+root+'/enemies/'+actor+'/candidate.glb'],{maxBuffer:4*1024*1024})}));await page.goto(base+'__color_qc__.html');

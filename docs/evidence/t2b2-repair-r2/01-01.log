@@ -1,0 +1,28 @@
+✔ browser adapter verifies pinned bundle, all source/Case SHA, schema and identities (51.140162ms)
+✔ controls SHA and missing source reader fail; data cancellation cannot become verified (7.335682ms)
+PASS 990 scheme data comparisons
+✔ A/B/C, five cases, 33 appearances, three LODs receive identical readonly values (327.810307ms)
+✔ unverified input, unknown case/variant/scheme/LOD fail (3.541062ms)
+✔ real controls complete required state machine without Renderer, keep source IDs once (9.0799ms)
+✔ pause holds phase/HP, resume finishes remaining duration and completed play opens a new session (13.369542ms)
+✔ no per-action HP inference; unknown start shield never becomes zero before outcome (118.67966ms)
+✔ true death and action-limit interruption differ, no fabricated settlement (76.214497ms)
+✔ rapid stop/replay/scheme/case/appearance/LOD switching keeps at most one timer and no old source (374.663709ms)
+✔ background discards remaining visual actions; foreground only checkpoint without source replay (2.775398ms)
+✔ background before playback preserves ready snapshot (1.498352ms)
+Comparison consumer failed renderer throw
+Comparison consumer failed renderer reject
+✔ throw/reject/never consumer do not block clock, one in-flight and latest pending only across sessions (670.196666ms)
+✔ late promise cannot commit old display; delivery signal/isCurrent expires and newest checkpoint arrives (8.213524ms)
+✔ subscription dedup/abort/dispose and scene-owned cleanup release exactly once (2.421451ms)
+Comparison Renderer unavailable factory reject
+✔ stale Renderer factory resource auto-disposes, rejected factory can retry without stopping playback (19.054295ms)
+✔ never-completing Renderer factory bounded to one; controller still completes (6.483648ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1700.000938

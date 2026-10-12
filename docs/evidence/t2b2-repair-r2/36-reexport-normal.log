@@ -1,0 +1,129 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+09:12:10 | INFO: Starting glTF 2.0 export
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+09:12:10 | INFO: Extracting primitive: Suspended_Reactor_Cage
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Chest_Recess
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Reactor_Louvre_0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Reactor_Louvre_1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Reactor_Louvre_2
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Reactor_Louvre_3
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Optic_Head
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Single_Inset_Optic
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_arm.L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_arm.L0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_arm.L1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_claw.L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_claw.L0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_claw.L1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_leg.L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_leg.L0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_leg.L1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_ankle.L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_ankle.L0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_ankle.L1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Broad_Contact_Foot_L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Sentinel_Shield_L
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Pincer_L-1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Pincer_L1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_arm.R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_arm.R0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_arm.R1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_claw.R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_claw.R0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_claw.R1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_leg.R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_leg.R0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_leg.R1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Articulated_Housing_ankle.R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_ankle.R0
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Joint_Seal_ankle.R1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Broad_Contact_Foot_R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Sentinel_Shield_R
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Pincer_R-1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Extracting primitive: Pincer_R1
+09:12:10 | INFO: Primitives created: 1
+09:12:10 | INFO: Finished glTF 2.0 export in 0.4584360122680664 s
+
+PASS exported saved source without rewriting source
+Blender 4.3.2
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/normal/source.blend"
+
+Blender quit

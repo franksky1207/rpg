@@ -1,3 +1,12 @@
+## 2026-10-12｜T2-B2第二次補修r2（技術檢查通過；2項C阻塞仍未過）
+- 最新main核對 `0d7c2307f9e50af2d97dd45c59b650c1d787a4b7`／乾淨／十項exact-HEAD Actions success；隔離素材與檢驗提交 `b3a5ab9f5f0607f965f2ed51bbf66e7056b4cd91`。最終交接HEAD與Actions由push後獨立核對，running不當success。
+- [r2驗收](docs/3D_HYBRID_T2B2_REPAIR_R2_ACCEPTANCE_2026-10-12.md)／[r2機器證據](docs/3D_HYBRID_T2B2_REPAIR_R2_TEST_EVIDENCE_2026-10-12.json)／[B3前置A-B-C判定](docs/3D_HYBRID_T2B3_PREREQUISITES_R2_2026-10-12.md)。三敵sRGB粗糙度改為相同物理值的Non-Color scalar、源稿/GLB/圖集/三tier同步；幾何動畫accessor逐byte不變，玩家源＋三GLB與正式G00715不變。
+- 修正native載入器補零格造成的取樣偏差，最差IoU約.9026→.9952；同正確時間r1/r2 RMSE `.214275032→.214556724`仍惡化。原`.216187248`為歷史錯誤group-range方法，不能混比宣稱改善；失敗圖片與逐敵/動作/亮暗區域數據保留。共同AgX色票最大誤差.002784<1/255，但不代表PBR/陰影公平。
+- 132格實際幾何定位：肩甲vertex141 upper_arm.R對clavicle.R約49.604mm；weapon vertex54是護手（不是grip）19.831mm，劍首對前臂19.474mm。原數值不下修，不冒稱精確穿透深度；沒有採用會破壞握姿的未驗證姿勢。
+- 原回歸／GM31／音訊／385成品HTTP SHA／來源鎖與Fixture通過，全部素材development/publish=false；沒有正式runtime、Pages策略、下載／播放器改動。人工美術未批准、真手機/GPU未驗、B3未整合分開記錄。
+- **C仍有native光影公平性與肩甲/護手/劍首，不能建議進B3。** 人工美術／真機FPS／GPU長測／完整HUD屬B類後續正式比較責任，不要求B2提前完成。最小後續是單敵材質/法線/照明校準及局部候選肩甲/護手修型，不重製整套敵人/動畫。
+- 回復revert本交接與`b3a5ab9f5f0607f965f2ed51bbf66e7056b4cd91`，保留玩家資料與cache；前版全876檔SHA/bytes及Git版本可追溯。**本次停止，B3/B4/T2-C未施工，不選A/B/C勝者。**
+
 ## 2026-10-12｜T2-B2補修r1（候選已提交；阻塞Gate仍未過）
 - 最新main重新fetch基準`eff0a6becf4f9dbf3d90c33df157aef13a98f355`，起始乾淨/十個exact-HEAD Actions success，提交前remote仍同SHA；資產/工具`42182d61d0e3b7963f81198e087d94ce5d5687f7`。最終交接HEAD與CI在push後獨立核對。
 - [補修驗收](docs/3D_HYBRID_T2B2_REPAIR_ACCEPTANCE_2026-10-12.md)／[機器證據](docs/3D_HYBRID_T2B2_REPAIR_TEST_EVIDENCE_2026-10-12.json)。玩家六動作/固定足點+3mm/連續握柄、三敵重量/蓄勢、四源.blend/六GLB/母圖集同步；原53骨9掛點/三LOD/拓樸權重/G00715/210套1050槽/73來源/Fixture/B1/正式runtime全部保留。

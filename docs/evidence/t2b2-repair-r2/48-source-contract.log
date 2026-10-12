@@ -1,0 +1,8 @@
+PASS actual four saved-source camera/light/display values match r1 exactly; current source SHA recorded
+Blender 4.3.2
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/normal/source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/elite/source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/boss/source.blend"
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/player/animation-source.blend"
+
+Blender quit

@@ -1,0 +1,21 @@
+PASS audio: actual galaxy ordinary
+PASS audio: actual galaxy elite
+PASS audio: actual galaxy Boss
+PASS audio: actual galaxy ordinary
+PASS audio: actual galaxy Boss
+PASS audio: actual galaxy continuous two rounds/manual stop
+PASS audio: actual universe Boss single
+PASS audio: actual higher run/start/battle/manual stop
+PASS audio: actual galaxy bounty single
+PASS audio: actual galaxy arena single
+PASS audio: actual galaxy mirror 15 rounds/settlement
+PASS audio: actual galaxy void/manual exit
+PASS audio: actual galaxy calamity/single
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'era-universe-theme'
+- 'battle-high-preview'
+
+    at playing (/workspace/rpg/tests/runtime/audio-lifecycle-browser.js:95:12)
+    at async /workspace/rpg/tests/runtime/audio-lifecycle-browser.js:466:5

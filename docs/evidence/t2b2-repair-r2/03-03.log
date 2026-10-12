@@ -1,0 +1,18 @@
+✔ text startup does not fetch, evaluate 3D, or create GPU resources (2.22472ms)
+✔ concurrent formal/GM loads and appearance requests deduplicate each module (2.514931ms)
+✔ partial failure retains successful APIs and retries only failed module (1.843645ms)
+✔ missing engine API fails closed and allows retry (1.508508ms)
+✔ missing Runtime API fails closed and allows retry (1.271055ms)
+✔ absence of service, battle, chronicle factories does not invalidate shared modules (1.017009ms)
+✔ manifest versions use correct document base and validated per-file fallback (1.140322ms)
+✔ manifest unavailable retains fallback and can refresh next time (1.225978ms)
+✔ GM warm deduplicates and fetches only Babylon/scene bytes (1.217436ms)
+✔ GM warm failure retries instead of retaining a rejected Promise (1.090698ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25.253682

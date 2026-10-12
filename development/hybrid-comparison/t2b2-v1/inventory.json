@@ -6193,6 +6193,14 @@
       "publish": false
     },
     {
+      "path": "repair-r2/color-source-contract.json",
+      "bytes": 16932,
+      "sha256": "2452a4d40734ad966073ffc5aa06c9694a80911b701e0517cf263c7281466a67",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
       "path": "repair-r2/contact-localization.json",
       "bytes": 950066,
       "sha256": "eccb0a302f35ab53cbfa743a6b4279976e4c5a19f45637e518c9c6ec938957ee",
@@ -8993,6 +9001,14 @@
       "publish": false
     },
     {
+      "path": "tools/repair_r2_source_contract.py",
+      "bytes": 1943,
+      "sha256": "b64cf6ec8140ba1f2ab3c97a84413a86542527927e01dcae9727d478bf3504e5",
+      "license": "CC0-1.0 original or derivative of existing CC0 reference",
+      "status": "prototype-pending-user-approval",
+      "publish": false
+    },
+    {
       "path": "tools/repair_resource_costs.py",
       "bytes": 2624,
       "sha256": "4452651d757e221a3d4911f334caf39167f711bcba05eda24202da63826f0254",
@@ -9050,8 +9066,8 @@
     },
     {
       "path": "tools/verify_r2.py",
-      "bytes": 5227,
-      "sha256": "c0cd94f9d682417d5caba3108b33fda80895ee7395c342affb56ceb34c0b1276",
+      "bytes": 5602,
+      "sha256": "bd60db95967e2f164a3d3cab0cb80b81fa222dc69c4b79eed6c095f241ebec74",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -9073,6 +9089,6 @@
       "publish": false
     }
   ],
-  "totalBytes": 91072004,
+  "totalBytes": 91091254,
   "largestFileBytes": 6229173
 }

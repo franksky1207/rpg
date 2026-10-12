@@ -9,6 +9,10 @@ def glb(b):
 def accessor(d,b,a):
  v=d['bufferViews'][a['bufferView']];start=v.get('byteOffset',0)+a.get('byteOffset',0);size={5126:4,5125:4,5123:2,5121:1,5122:2,5120:1}[a['componentType']]*{'SCALAR':1,'VEC2':2,'VEC3':3,'VEC4':4,'MAT4':16}[a['type']];stride=v.get('byteStride',size)
  return b''.join(b[start+i*stride:start+i*stride+size] for i in range(a['count']))
+sourceContract=json.loads((out/'color-source-contract.json').read_text());assert sourceContract['actualSavedBlenderRead'] and sourceContract['sourceLightAndDisplayValuesExactR1']
+for actor,desc in sourceContract['actors'].items():
+ source=HERE/'player/animation-source.blend' if actor=='player' else HERE/'enemies'/actor/'source.blend'
+ assert desc['sourceSHA']==sha(source)
 rep=json.loads((out/'material-repair.json').read_text());image=np.asarray(Image.open(out/'panel-roughness-linear.png').convert('RGBA'))
 oldImage=np.asarray(Image.open(io.BytesIO(subprocess.check_output(['git','show',base+':development/hybrid-comparison/t2b2-v1/textures/original-panel-roughness.png'],cwd=HERE))).convert('RGBA'))[:,:,0]/255
 expected=np.where(oldImage<=.04045,oldImage/12.92,((oldImage+.055)/1.055)**2.4)

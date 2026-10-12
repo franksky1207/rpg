@@ -1,0 +1,10 @@
+LOCATED idle 22
+LOCATED attack 22
+LOCATED hit 22
+LOCATED dodge 22
+LOCATED return 22
+LOCATED defeat 22
+Blender 4.3.2
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/player/animation-source.blend"
+
+Blender quit

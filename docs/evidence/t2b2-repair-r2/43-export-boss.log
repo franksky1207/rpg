@@ -1,0 +1,123 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+08:47:46 | INFO: Starting glTF 2.0 export
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | WARNING: Armature must be the parent of skinned meshArmature is selected by its name, but may be false in case of instances
+08:47:46 | INFO: Extracting primitive: Core_Pressure_Vessel
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_outrigger.0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_outrigger.0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_piston.0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_piston.0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Foundation_Claw_0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Crown_Swept_Petal_0
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_00
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_01
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_02
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_outrigger.1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_outrigger.1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_piston.1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_piston.1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Foundation_Claw_1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Crown_Swept_Petal_1
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_10
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_11
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_12
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_outrigger.2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_outrigger.2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_piston.2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Hydraulic_Ram_piston.2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Foundation_Claw_2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Crown_Swept_Petal_2
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_20
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_21
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Segmented_Field_Band_22
+08:47:46 | INFO: Primitives created: 1
+08:47:46 | INFO: Extracting primitive: Loadbearing_outrigger.3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Hydraulic_Ram_outrigger.3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Loadbearing_piston.3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Hydraulic_Ram_piston.3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Foundation_Claw_3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Crown_Swept_Petal_3
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Segmented_Field_Band_30
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Segmented_Field_Band_31
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Segmented_Field_Band_32
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Extracting primitive: Reactor_Exposed_Lens
+08:47:47 | INFO: Primitives created: 1
+08:47:47 | INFO: Finished glTF 2.0 export in 0.5924863815307617 s
+
+PASS exported saved source without rewriting source
+Blender 4.3.2
+Read blend: "/workspace/rpg/development/hybrid-comparison/t2b2-v1/enemies/boss/source.blend"
+
+Blender quit
