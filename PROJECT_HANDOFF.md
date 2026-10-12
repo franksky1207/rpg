@@ -1,3 +1,13 @@
+## 2026-10-12｜混合式轉型 T2-B1：可操作隔離比較頁／共用舞台／安全播放（本機驗收完成）
+- 起始main `e28ef6cbca2d818074e4cb441340efa03ad5a007`，乾淨／無新提交；T2-A六個exact-HEAD Actions均success。fixture `--check`成功，原SHA `5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99`與所有來源不變，沒有重生資料。真手機／OS背景／GPU／真帳號Gate保留。
+- 程式完成HEAD `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`。[B1施工／驗收](docs/3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)、[實测與未驗證據](docs/3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)。入口 `development/hybrid-comparison/index.html`：A/B/C、五case、33外觀／三LOD、共用HUD與層／足點、播放/暫停/繼續/重播/取消，僅明示技術占位，沒有真正Renderer／攻擊動畫／敵人美術。
+- browser Adapter核bundle/controls/case/13來源SHA、不執行來源JS；弱集合核准immutable input，scheme不進共用資料。原battleId/seq/eventId/source保持，private realm/instance/generation控制離線播放；最多1 timer、16 consumer、每個1 in-flight＋1 latest pending、1未完成factory。session與動畫signal分離、晚到factory釋放、背景直接final checkpoint不補事件／音效，BFCache返回重新驗證重開。
+- 16新契約＋T2-A/T1ABC共88；990 A/B/C資料一致，五viewport各100次=500操作循環、unit100次，source fail/retry/late、真導航返回通過。正式核心576／鏡像48不變；原GM每尺寸31／玩家53骨9掛點／G007五槽三LOD原browser與GLB18、音訊29契約與17解碼、save/cache通過。392JS＋三mjs語法、490sourceSHA、385成品HTTP/SHA通過，成品仍36482365bytes。
+- 正式runtime/index/manifest/模型/音訊/GM/SW及T2-A fixture/工具byte不變；開發全部排除發布，沒有新玩家下載／入口／GM第32案。本頁不登入、不讀真玩家Storage/State、無Audio/Cloud/戰鬥計算或結算。unknown shield保留未知、中間HP不推算、effects動作上限不當死亡。錯誤與取消有可重試／清理證據。
+- 桌機repo root啟動`python3 -m http.server 4173 --bind 127.0.0.1`，開`http://127.0.0.1:4173/development/hybrid-comparison/index.html`；手機用HTTPS開發轉發或localhost轉送（普通LAN HTTP可能無crypto.subtle，不跳SHA）。正式網站畫面維持原樣。
+- final main為後續交接提交，CI提交後核對。GPU/新Renderer/FPS/長效能未驗，visibility為模擬＋真導航；原50native音訊本批未重跑，引用起始CI＋源碼不變並實跑29契約/17解碼。本機手機占位文字與dodge target已修正，未放寬斷言。
+- **B1本機完成；T2-B2/B3/B4、T2-C、T3～T5未施工，本批停止**。下一步另授權B2原創/合法A五槽層／三敵同源美術與動作／相容玩家attack，保留原骨架GLB；B3接Renderer，B4才量測，T2-C才選型。回復revert本批交接／證據＋程式（開發頁/模組/CSS/tests/workflow一起），不清正式資料或Cache。
+
 ## 2026-10-12｜混合式轉型 T2-A：公平比較規格與隔離事件 fixture（本機驗收完成）
 - 起始main／HEAD `754acf702325f0a136d21a5948b45807ea5db4f2`，工作目錄乾淨，無其他新提交；T1-A/B/C原接線仍在，起始九個exact-HEAD Actions全部success（含Runtime／Stage4／Pages）。真手機／硬體／長背景／真帳號Gate仍待驗，不因CI成功而勾選。本批已獲新的T2-A隔離規格／工具授權。
 - 規格／工具／資料提交 `8e13fb19582dd8217044a28189b71008ca171f68`；新增[比較規格](docs/3D_HYBRID_T2A_COMPARISON_SPEC_2026-10-12.md)、[fixture契約](docs/3D_HYBRID_T2A_FIXTURE_CONTRACT_2026-10-12.md)、[38項驗收矩陣](docs/3D_HYBRID_T2A_ACCEPTANCE_MATRIX_2026-10-12.md)、[T2-B分四小批藍圖](docs/3D_HYBRID_T2A_T2B_IMPLEMENTATION_BLUEPRINT_2026-10-12.md)及[實測證據](docs/3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)。比較A純2D五槽分層、B即時玩家＋預渲染敵、C即時玩家＋即時敵；同fixture/SHA/外觀/鏡頭/舞台/節奏/VFXbudget/冷熱条件，不預設勝者。

@@ -27,7 +27,11 @@
 | T1-B 預覽載入與控制器解耦 | **程式／本機驗收完成；本批 CI／真機待核對** | 程式 `b2e7b946615f62a9703ef628c1d32426ddeb2a91`，[T1-B 驗收](3D_HYBRID_T1B_ACCEPTANCE_2026-10-12.md)／[49 個具名指令與證據](3D_HYBRID_T1B_TEST_EVIDENCE_2026-10-12.json)；不得自動進 T1-C |
 | T1-C 戰鬥事件唯讀轉接基礎 | **程式／本機驗收完成；exact-HEAD CI／真機待核對** | 程式 `e74b9d3a47417b6e1d9dad74e1804b7455d328ed`，[T1-C 覆蓋與驗收](3D_HYBRID_T1C_ACCEPTANCE_2026-10-12.md)／[實測證據](3D_HYBRID_T1C_TEST_EVIDENCE_2026-10-12.json)；partial／unavailable 明示，不自動進 T2-A |
 | T2-A 同場對照規格與事件 fixture | **規格／資料／本機驗收完成；exact-HEAD CI待核對** | 提交 `8e13fb19582dd8217044a28189b71008ca171f68`，[比較規格](3D_HYBRID_T2A_COMPARISON_SPEC_2026-10-12.md)／[驗收矩陣](3D_HYBRID_T2A_ACCEPTANCE_MATRIX_2026-10-12.md)／[證據](3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)；沒有Renderer／選型，另行授權T2-B |
-| T2-B 最小對照原型（隔離） | 待施工 | 使用現有玩家／G007，普通／菁英／Boss 各一 |
+| T2-B 最小對照原型（隔離） | **僅B1程式／本機完成；B2～B4未施工** | 三方案Renderer／美術／量測沒有完成，依下列子批Gate續接 |
+| T2-B1 隔離入口／共用舞台／播放控制 | **程式／本機驗收完成；exact-HEAD CI待核對** | `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，[B1驗收](3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)；技术占位，無GPU/FPS驗收 |
+| T2-B2 共用美術與必要動作 | 未施工 | 另行授權；A五槽層、三敵同源／B圖集／C GLB、相容玩家attack；不覆寫原骨架裝備 |
+| T2-B3 A/B/C Renderer接入 | 未施工 | B1接口與B2素材，input/SHA/舞台／事件公平一致、完整硬性Gate |
+| T2-B4 觀測／故障與原型收尾 | 未施工 | 冷熱/100次/長測與回退實數據；真GPU不可由B1mock宣稱 |
 | T2-C 桌機／手機量測及選型 Gate | 待驗收 | 未過 Gate 不量產模型、不覆蓋舊正式規格 |
 | T3-A 混合模式／品質與舊偏好相容 | 待施工 | 須先通過 T2-C 並由使用者明確選型 |
 | T3-B 正式戰鬥與玩法轉接 | 待施工 | 全正式 owner 一致、跨紀元合法模式完整 |
@@ -116,7 +120,7 @@
 3. 使用者說「先討論／先列」：只討論，不修改；說「執行／修改」才可在該批授權範圍內施工。Codex 完工後回 GitHub 獨立核對。
 4. 每次完成要把新狀態、commit SHA、已跑／未跑驗收與下一子批回寫至本檔和 `PROJECT_HANDOFF.md`（由該次施工明確授權時更新）；不得以對話記憶替代 main。
 5. 若舊文件與新路線圖衝突：在正式選型 Gate 前，舊正式施工規格仍有效；本檔只決定轉型工作優先順序及測試方向，不授權破壞性變更。
-6. 可授權的下一子批依最新main狀態台帳與本批記錄判定；建立文件時的T1-A優先序是歷史狀態。目前T2-A已獲授權並完成規格／隔離資料，本批停止；T2-B須另行授權與前置Gate，不能自動啟動。
+6. 可授權的下一子批依最新main狀態台帳與本批記錄判定；建立文件時的T1-A優先序是歷史狀態。目前T2-B1已獲新授權並完成隔離平台／本機驗收，本批停止；T2-B2及其後須另行授權與前置Gate，不能自動啟動。
 
 ## T1-C 施工／驗收更新（2026-10-12）
 
@@ -136,3 +140,12 @@
 17新契約及T1-A/B/C核心共72通過，330 A/B/C一致比對、576標準core／48鏡像結果比較；391JS、490sourceSHA、385成品HTTP/SHA與發布排除通過。runtime/index/manifest／模型／音訊byte不變，無新玩家下載；成品容量與起始相同，不宣稱效能改善。人物僅idle，A五槽動畫／玩家attack與三敵同源模型／B圖集／C GLB未製作；所有prototype畫質／FPS／GPU／工時／真機都not-run。
 
 T2-A定義「如何比較」，沒有定案勝者。**T2-B、T2-C、T3～T5全未施工**，原27～40規格不變，本批停止。下一項核對本批exact-HEAD CI與素材／未驗Gate，再由使用者另授權T2-B1；T2-C才真硬體／選型。回復整批revert新增規格／資料／工具與交接，保存玩家State／快取。
+
+
+## T2-B1 施工／驗收更新（2026-10-12）
+
+起始main `e28ef6cbca2d818074e4cb441340efa03ad5a007`，乾淨、無新提交，六個exact-HEAD Actions success。原T2-A資料與來源SHA全部一致、未重生；程式結束HEAD `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，final main為後續交接／證據提交，該HEAD CI獨立核對。
+
+隔離開發頁已可選A/B/C、五case、33外觀/三LOD並播放/暫停/繼續/重播/取消；共用固定構圖/HUD/占位框，root Stage不是完成美術。來源SHA與Case驗證、immutable input、scope/generation/Abort、晚到factory與載入隔離、背景final checkpoint與頁面返回重開均有證據。16新契約與T2-A/T1ABC共88通過，990 input比對，五尺寸500次操作／控制器100次；原GM31／人物／五槽／音訊／save/cache／385發布HTTP SHA通過。
+
+正式runtime與T2-A工具/資料/HTML/manifest/SW/資產均不改，玩家成品byte數不變、開發檔排除。沒有新WebGL/動畫/美術/FPS或GPU回收測試，真手機／OS背景／硬體仍待驗。**B2/B3/B4、T2-C、T3～T5全未施工**，原27～40規格保持。下一項先核CI與B1實機限制，再另行授權B2美術／必要相容動作，不自動開工。回復整批revert交接/證據＋程式，保留玩家資料。
