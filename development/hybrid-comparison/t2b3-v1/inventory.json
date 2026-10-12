@@ -24,8 +24,8 @@
     },
     {
       "path": "assets.mjs",
-      "bytes": 2429,
-      "sha256": "0e9a122f59e05026e208f666214a90eb37ac152258df6e4daa634d28dc55d0c7",
+      "bytes": 3721,
+      "sha256": "adea000119961e5296c70214614bd1d1a02669483a8f92c7d40fc3e5cca7ee73",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -914,7 +914,7 @@
     {
       "path": "renderer.mjs",
       "bytes": 7286,
-      "sha256": "46073eacf9ea3c556d33f3db2fa8a912c4e6b93c8d8b7cbef57f25b1f9834270",
+      "sha256": "ce4b6fd3e30ed3d2cbb2799fad39a6360bc63f9f1f1d1c448f88ecc287f8cbfa",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -954,5 +954,5 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     }
   ],
-  "totalBytes": 12227232
+  "totalBytes": 12228524
 }
