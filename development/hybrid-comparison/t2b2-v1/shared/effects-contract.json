@@ -1,0 +1,21 @@
+{
+  "schema": "cw.t2b2.shared-art",
+  "version": 1,
+  "license": "CC0-1.0-original",
+  "status": "prototype-pending-user-art-approval",
+  "backgroundLayers": [
+    "background",
+    "midground",
+    "foreground"
+  ],
+  "vfxFrames": 8,
+  "vfxFPS": 30,
+  "authority": "none; no HP, damage, audio or reward",
+  "budget": {
+    "maxImpactSprites": 1,
+    "maxShadowSpritesPerActor": 1,
+    "maxOpacity": 0.65
+  },
+  "stagePlacement": "B3 must crop/stretch same source layers into locked controls UV; no actor or HUD encoded in background",
+  "shadow": "contact-shadow.png original ellipse, follows actor foot; no baked attack outcome"
+}

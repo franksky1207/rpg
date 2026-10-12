@@ -1,0 +1,387 @@
+{
+  "schema": "cw.t2b2.source-vs-glb-pixels",
+  "version": 1,
+  "method": "actual saved-source Cycles32 vs real reimported candidate GLB Cycles32; same camera/30fps sample tick; alpha>.5 silhouette and shared opaque RGB RMSE; no FPS/quality score",
+  "rows": [
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04950238309206843
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04564645727410168
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.050438083618210776
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0399458852744454
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04454741030740704
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04249542324403333
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.045078152666267086
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.06275610569704149
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.055123118303648994
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04534682384633695
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05607698171383753
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04897420892949909
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.048118232838623314
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 9,
+      "silhouetteIoU": 0.9998695538742499,
+      "sharedOpaqueRGB_RMSE": 0.054732621343481204
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.049169076427404104
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.06356417261637282
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05302277653168153
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.054098784781350884
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05373281623252917
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05671034221378232
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05409837169242929
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05162806559547682
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 0,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 9,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.05751058834290033
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 21,
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.04826550795394889
+    }
+  ],
+  "minSilhouetteIoU": 0.9998695538742499,
+  "maxRGB_RMSE": 0.06356417261637282
+}

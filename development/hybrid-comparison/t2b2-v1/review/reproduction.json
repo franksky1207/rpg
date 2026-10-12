@@ -1,0 +1,46 @@
+{
+  "schema": "cw.t2b2.reproduction",
+  "version": 1,
+  "GLBs": [
+    {
+      "actor": "normal",
+      "file": "candidate.glb",
+      "exactBytes": true,
+      "sha256": "d63b126cb0eef3e64c5d09c49e01db2883bf876e65680c200fabb5d18722c1c4"
+    },
+    {
+      "actor": "elite",
+      "file": "candidate.glb",
+      "exactBytes": true,
+      "sha256": "9b3a1c4eef040d6730abb2b215553544caada1596e5cc1b6754be5fe88e1fd8f"
+    },
+    {
+      "actor": "boss",
+      "file": "candidate.glb",
+      "exactBytes": true,
+      "sha256": "fa740613ed56d81d6848cc9076b18bb7503f68100b50d068b4dbefbd8cddce50"
+    },
+    {
+      "actor": "player",
+      "file": "candidate-low.glb",
+      "exactBytes": true,
+      "sha256": "717cd639519c2baa91a89bc29bdf7d4060936ba9231fc7993504a3ef5378b2a7"
+    },
+    {
+      "actor": "player",
+      "file": "candidate-medium.glb",
+      "exactBytes": true,
+      "sha256": "cbb08d02b5cd8ea0502b92ae8ab51179de6ae037d02416845c32eafd7da76521"
+    },
+    {
+      "actor": "player",
+      "file": "candidate-high.glb",
+      "exactBytes": true,
+      "sha256": "67b985396fe552ca1befcb15e2262d378256d0dee7d36dbb1a263350c8ec66a4"
+    }
+  ],
+  "independentFrameSamples": 234,
+  "colorAndDepthExact": true,
+  "BlenderVersion": "4.3.2",
+  "scope": "saved source->GLB and Cycles 32 samples->atlas; .blend container byte determinism on reconstruct not claimed"
+}

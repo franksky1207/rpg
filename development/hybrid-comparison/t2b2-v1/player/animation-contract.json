@@ -1,0 +1,57 @@
+{
+  "schema": "cw.t2b2.player-animation",
+  "version": 1,
+  "status": "prototype-pending-art-and-extreme-pose-approval",
+  "rigContract": "cw.humanoid.rig.v1",
+  "bones": 53,
+  "sockets": [
+    "fx.hit.chest",
+    "fx.root",
+    "socket.accessory.back",
+    "socket.armor",
+    "socket.helmet",
+    "socket.shoes.L",
+    "socket.shoes.R",
+    "socket.weapon.L",
+    "socket.weapon.R"
+  ],
+  "originalEquipment": "15 accepted GLBs remain unchanged; no equipment embedded in candidate",
+  "actions": [
+    "idle",
+    "attack",
+    "hit",
+    "dodge",
+    "return",
+    "defeat"
+  ],
+  "durationMs": 700,
+  "fps": 30,
+  "authoring": "new local joint poses, not idle rename or rigid whole-model rotation",
+  "sourceSHA": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec",
+  "rigContractSHA": "8428e8e2c5524bf62b41959966674e5c68b7996c6556d92f4496691df9e92419",
+  "lod": {
+    "low": {
+      "bytes": 995696,
+      "sha256": "717cd639519c2baa91a89bc29bdf7d4060936ba9231fc7993504a3ef5378b2a7",
+      "ratio": 0.05
+    },
+    "medium": {
+      "bytes": 1949792,
+      "sha256": "cbb08d02b5cd8ea0502b92ae8ab51179de6ae037d02416845c32eafd7da76521",
+      "ratio": 0.16
+    },
+    "high": {
+      "bytes": 5261964,
+      "sha256": "67b985396fe552ca1befcb15e2262d378256d0dee7d36dbb1a263350c8ec66a4",
+      "ratio": 0.64
+    }
+  },
+  "camera": {
+    "yawDegrees": 35,
+    "mirrorForPlayer": true,
+    "pitchDegrees": 15
+  },
+  "defeatAuthority": "visual asset only; requires confirmed HP zero in B3; no death on action-budget stop",
+  "candidateSourceSHA256": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+  "poseQC": "review/blender-qc.json; collision/art approval still pending"
+}

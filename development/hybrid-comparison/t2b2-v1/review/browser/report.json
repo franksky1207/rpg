@@ -1,0 +1,96 @@
+[
+  {
+    "viewport": [
+      1280,
+      720
+    ],
+    "realImagesDecoded": 8,
+    "noOverflow": true
+  },
+  {
+    "viewport": [
+      1440,
+      1080
+    ],
+    "realImagesDecoded": 8,
+    "noOverflow": true
+  },
+  {
+    "viewport": [
+      390,
+      844
+    ],
+    "realImagesDecoded": 8,
+    "noOverflow": true
+  },
+  {
+    "viewport": [
+      360,
+      800
+    ],
+    "realImagesDecoded": 8,
+    "noOverflow": true
+  },
+  {
+    "viewport": [
+      844,
+      390
+    ],
+    "realImagesDecoded": 8,
+    "noOverflow": true
+  },
+  {
+    "results": [
+      {
+        "actor": "normal",
+        "samples": 18,
+        "variants": 0,
+        "actualG007BindsChecked": false,
+        "foregroundPixels": 12638,
+        "actualScreenshotBytes": 28527
+      },
+      {
+        "actor": "elite",
+        "samples": 18,
+        "variants": 0,
+        "actualG007BindsChecked": false,
+        "foregroundPixels": 31639,
+        "actualScreenshotBytes": 47684
+      },
+      {
+        "actor": "boss",
+        "samples": 18,
+        "variants": 0,
+        "actualG007BindsChecked": false,
+        "foregroundPixels": 49530,
+        "actualScreenshotBytes": 57840
+      },
+      {
+        "actor": "player-low",
+        "samples": 18,
+        "variants": 33,
+        "actualG007BindsChecked": true,
+        "foregroundPixels": 10067,
+        "actualScreenshotBytes": 25326
+      },
+      {
+        "actor": "player-medium",
+        "samples": 18,
+        "variants": 33,
+        "actualG007BindsChecked": true,
+        "foregroundPixels": 10084,
+        "actualScreenshotBytes": 25588
+      },
+      {
+        "actor": "player-high",
+        "samples": 18,
+        "variants": 33,
+        "actualG007BindsChecked": true,
+        "foregroundPixels": 10096,
+        "actualScreenshotBytes": 25815
+      }
+    ],
+    "ownedScenesRemaining": 0,
+    "hardware": "headless Chromium SwiftShader; not physical GPU/performance evidence"
+  }
+]

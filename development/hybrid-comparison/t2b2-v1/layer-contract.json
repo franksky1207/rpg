@@ -1,0 +1,28 @@
+{
+  "schema": "cw.t2b2.independent-player-layers",
+  "version": 1,
+  "scope": "development-only-prototype-pending",
+  "playerIdentity": "T2-A isolated test player; never a real account",
+  "rig": "cw.humanoid.rig.v1",
+  "bones": 53,
+  "sockets": 9,
+  "sourceGeometry": "unchanged accepted player and G007 source meshes; high-reference atlas, three candidate GLB LODs",
+  "slots": {
+    "weapon": {"name": "古代光刃", "mount": "socket.weapon.R", "bodyPatch": null},
+    "helmet": {"name": "遺物守衛盔", "mount": "skinned-head", "bodyPatch": "body-helmet"},
+    "armor": {"name": "自律護衛甲", "mount": "skinned-articulated-plates", "bodyPatch": "body-armor"},
+    "shoes": {"name": "遺跡浮行靴", "mount": "skinned-foot.L-and-foot.R", "bodyPatch": "body-shoes"},
+    "accessory": {"name": "古文明鑰印", "mount": "socket.accessory.back", "bodyPatch": "body-accessory"}
+  },
+  "bodyLayers": ["body-base", "body-helmet", "body-armor", "body-shoes", "body-accessory"],
+  "assembly": "Select body-base, remove only conservative body patches for actually available selected slots, add selected independent slot pixels. Sort visible fragments by per-pixel depth (near first), then alpha composite. Never use a global painter order for moving weapons or feet.",
+  "alignment": "Each atlas frame trim is an original 256x256 source rectangle. Place frame using its pivot, which may lie outside the trim; trim origins must not be discarded. Original ground pivot is in actor metadata. Depth is normalized linear camera distance: 6+8*u metres; transparent depth 65535.",
+  "frameTiming": "22 samples at ticks 0..21, 30fps, inclusive 700ms endpoint. GLB B2 tracks start at 1/30s, end at 22/30s; elapsed is sampleTime minus clipStart. Do not add initial GLB offset or extra endpoint hold to the common 700ms clock.",
+  "camera": {"projection": "orthographic", "yawDegrees": 35, "pitchDegrees": 15, "enemyFaces": "screen-left", "playerFaces": "screen-right", "playerMirrorView": true, "gltfCoordinates": "right-handed +Y up +Z forward; convert baked Blender x,y,z to x,z,-y"},
+  "scale": "Use the same locked controls actor-height ratio and original-frame projection for all schemes; never normalize each trimmed slot to actor height. Portrait Boss cap and HUD remain mandatory.",
+  "quality": "A uses the same high-reference art and visible silhouette; quality tiers must control common visible pixel budget. Three 3D candidate LODs retain original rig/G007 binds. Low/medium-specific A re-bakes are not delivered or claimed.",
+  "fallback": {"identity": "極寒封閉盔", "formalModel": "unavailable", "rule": "Mixed fixture remains geometry-fallback metadata; do not render G007 as G006. Offline QC shows uncovered base plus unavailable diagnostic. B3 must use an explicitly generic approved common fallback or text-only degradation; no completed G006 visual claim.", "empty": "No slot pixels; restore corresponding original body patch"},
+  "effectAliases": "Six real base clips only. Known crit/counter can use the attack pose plus a shared visual cue; known combo requires source-driven repeats. Drain has no dedicated clip. Do not create source events, infer HP or claim new formal skills.",
+  "gates": ["user art approval pending", "armor/accessory signed-surface penetration risk review pending", "native shader/material light parity adjustment pending", "B3 Renderer integration not started", "B4 performance and real hardware not measured"],
+  "audio": "none; all sources silent; no audio ownership"
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "cw.t2b2.enemy-design",
+  "version": 1,
+  "identity": {
+    "fixtureKey": "earth-map6-enemy3",
+    "formalId": null,
+    "formalIdAvailability": "unavailable",
+    "name": "遠古戰爭機甲",
+    "world": 1,
+    "regionId": "earth",
+    "regionName": "地球戰爭",
+    "mapIndex": 6,
+    "mapName": "古代科技遺址",
+    "enemyIndex": 3,
+    "level": 34,
+    "kind": "elite",
+    "style": "tank",
+    "source": {
+      "file": "worldmaps-earth.js",
+      "expression": "EARTH_MAPS[6].enemies[3]",
+      "locator": "MAPS[6].enemies[3]"
+    },
+    "modelAvailability": "unavailable",
+    "atlasAvailability": "unavailable",
+    "unlock": "isolated level35, map6 unlocked, prior kills10 and boss not locked; no real account touched"
+  },
+  "license": "CC0-1.0-original-model-texture-and-animation",
+  "status": "prototype-pending-user-art-approval",
+  "formalSkills": "unavailable; poses are visual responses only",
+  "heightMetres": 2.5,
+  "actions": [
+    "idle",
+    "attack",
+    "hit",
+    "dodge",
+    "return",
+    "defeat"
+  ],
+  "fps": 30,
+  "durationMs": 700,
+  "camera": {
+    "yawDegrees": 35,
+    "pitchDegrees": 15,
+    "faces": "screen-left",
+    "projection": "orthographic"
+  },
+  "source": "development/hybrid-comparison/t2b2-v1/enemies/elite/source.blend"
+}

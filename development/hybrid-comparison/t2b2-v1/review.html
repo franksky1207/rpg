@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; media-src 'none'; object-src 'none'; base-uri 'none'"><title>T2-B2 共用資產待審圖冊</title>
+<style>body{margin:0;background:#111a27;color:#e1edf7;font:16px/1.6 system-ui;padding:24px max(16px,env(safe-area-inset-right));max-width:1280px;margin:auto}h1{font-size:25px}a{color:#9edcfa}section{margin:32px 0;border-top:1px solid #436177;padding-top:16px}img{display:block;width:100%;height:auto;background:#121a25}p{max-width:85ch}code{overflow-wrap:anywhere}ul{padding-left:24px}</style></head><body>
+<h1>T2-B2 共用美術與動作資產・待審</h1>
+<p>以下是實際 Blender／GLB 渲染，包含原創機械模型與關節動作，全部為開發候選，尚未獲美術批准。圖冊只展示資產檢驗，沒有接入 A／B／C Renderer、正式戰鬥、音訊或帳號。</p>
+<p>每行依序為 idle、attack、hit、dodge、return、defeat，每動作取 0／4／9／14／21 影格。六動作各 22 個取樣（含 700 ms 端點，不延長播放）、30 fps、700 ms。這是共同視覺節奏，不是正式遊戲速度或新技能。</p>
+<p><a href="../index.html">返回 B1 技術比較頁</a>（仍為技術占位，B3 尚未接入）｜<a href="inventory.json">逐檔 SHA／容量／面數清冊</a>｜<a href="review/blender-qc.json">極端姿勢與穿模風險探針</a>｜<a href="atlas-index.json">圖集索引</a></p>
+<section><h2>普通：遺址守衛機 Lv.31</h2><p>狹長巡守輪廓、內嵌光學感測、雙爪及前臂護板。正式來源 MAPS[6].enemies[0]；正式 ID unavailable。</p><img src="review/normal-motion-contact.png" alt="遺址守衛機六種關節動作實際渲染"></section>
+<section><h2>菁英：遠古戰爭機甲 Lv.34</h2><p>更寬胸腔、層疊肩甲與重型前臂，保持不同於普通怪的量體。正式來源 MAPS[6].enemies[3]；未捏造技能。</p><img src="review/elite-motion-contact.png" alt="遠古戰爭機甲六種動作實際渲染"></section>
+<section><h2>Boss：遺址中樞核心 Lv.35</h2><p>四足承重支架、液壓關節、反應爐與可展合冠瓣。正式來源 MAPS[6].enemies[4]；冠瓣動作是視覺演出，不是新增正式技能。</p><img src="review/boss-motion-contact.png" alt="遺址中樞核心六種動作實際渲染"></section>
+<section><h2>玩家候選・G007 五槽極端姿勢</h2><p>原 53 骨、九掛點與五槽幾何未改；另存六種關節動作及三 LOD GLB。請特別看手掌握柄、肩肘／膝踝、頭盔、鞋子與背飾。候選不等於穿模全面驗收；表面探針與人工美術 Gate 保留。</p><img src="review/player-motion-contact.png" alt="G007玩家六種動作、實際獨立層深度組裝"></section>
+<section><h2>32 子集合＋一混穿／缺素材示例</h2><p>以下僅為檢驗 contact sheet，供 Renderer 使用的素材仍是獨立五槽層，不是 32 張整套合成資產。末項 G006 頭盔尚無真模型：保留原裸頭與明示 unavailable，不能冒用 G007 頭盔。B3 必須顯示缺素材提示並沿正式回退。</p><img src="review/player-33-independent-subsets.png" alt="獨立五槽組裝32穿卸及混穿空槽檢驗"></section>
+<section><h2>共用原創背景層</h2><p>分開保留後景、地面中景與前景，沒有 HUD、怪物、HP 或方案專屬效果。B3 依鎖定安全區同樣裁切與配置。</p><img src="shared/background.png" alt="原創遺址後景"><img src="shared/midground.png" alt="原創地面中景"><img src="shared/foreground.png" alt="原創前景"></section>
+<p>桌機與手機均可透過 localhost 或 HTTPS 開發轉送開啟；此頁、原始工程與資產不在正式 GitHub Pages 成品。真手機、動作觀感、Boss 壓迫感及使用者批准仍待驗。</p>
+</body></html>

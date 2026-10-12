@@ -1,0 +1,156 @@
+{
+  "schema": "cw.t2b2.glb-roundtrip",
+  "version": 1,
+  "glbSHA": "9b3a1c4eef040d6730abb2b215553544caada1596e5cc1b6754be5fe88e1fd8f",
+  "actor": "elite",
+  "quality": "high",
+  "rows": [
+    {
+      "action": "idle",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_idle_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "idle",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_idle_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "idle",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_idle_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "attack",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_attack_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "attack",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_attack_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "attack",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_attack_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "hit",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_hit_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "hit",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_hit_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "hit",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_hit_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "dodge",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_dodge_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "dodge",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_dodge_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "dodge",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_dodge_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "return",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_return_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "return",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_return_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "return",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_return_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "defeat",
+      "frame": 0,
+      "timeMs": 0.0,
+      "importFrame": 1.0,
+      "importAction": "B2_defeat_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "defeat",
+      "frame": 9,
+      "timeMs": 300.0,
+      "importFrame": 10.0,
+      "importAction": "B2_defeat_B2_Enemy_Rig",
+      "joints": 12
+    },
+    {
+      "action": "defeat",
+      "frame": 21,
+      "timeMs": 700.0,
+      "importFrame": 22.0,
+      "importAction": "B2_defeat_B2_Enemy_Rig",
+      "joints": 12
+    }
+  ],
+  "playerEquipment": "not embedded; separate original 15 GLBs, verified by browser tests",
+  "sameCamera": true,
+  "sameSourceAction": true
+}

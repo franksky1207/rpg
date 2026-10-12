@@ -1,0 +1,43 @@
+{
+  "schema": "cw.t2b2.atlas-index",
+  "version": 1,
+  "status": "prototype-pending-user-approval",
+  "mipmap": false,
+  "colorSpace": "sRGB straight-alpha RGBA8, transparent RGB zero",
+  "padding": 2,
+  "sampling": "linear; no mipmap; frame interior UV only",
+  "actors": {
+    "normal": {
+      "metadata": "enemies/normal/atlases/atlas.json",
+      "sourceSHA": "782db36a457d53ba3cecd8ae1a9f118fc0b5b4fe853c1dd2d6fa94cc3a52abe7",
+      "actions": 6,
+      "layers": 1,
+      "framesPerLayer": 132,
+      "bakeEngine": "Cycles CPU 32 samples"
+    },
+    "elite": {
+      "metadata": "enemies/elite/atlases/atlas.json",
+      "sourceSHA": "7e2f565ec269f1be6e2fb2b3433ab480ad17ac007c8c811d27d45aa331a59180",
+      "actions": 6,
+      "layers": 1,
+      "framesPerLayer": 132,
+      "bakeEngine": "Cycles CPU 32 samples"
+    },
+    "boss": {
+      "metadata": "enemies/boss/atlases/atlas.json",
+      "sourceSHA": "8cdeca2a9286943af2632872ff63417798e8da125c854ef6aae1c06283e508af",
+      "actions": 6,
+      "layers": 1,
+      "framesPerLayer": 132,
+      "bakeEngine": "Cycles CPU 32 samples"
+    },
+    "player": {
+      "metadata": "player/atlases/atlas.json",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "actions": 6,
+      "layers": 10,
+      "framesPerLayer": 132,
+      "bakeEngine": "Cycles CPU 32 samples"
+    }
+  }
+}

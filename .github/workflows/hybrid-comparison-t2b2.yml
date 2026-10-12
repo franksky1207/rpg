@@ -1,0 +1,61 @@
+name: Hybrid Comparison T2-B2 Assets
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'development/hybrid-comparison/**'
+      - 'tests/runtime/hybrid-comparison-art*'
+      - 'docs/3D_HYBRID_T2B2*'
+      - 'PROJECT_HANDOFF.md'
+      - 'docs/3D_HYBRID_TRANSITION_EXECUTION_ROADMAP_2026-10-12.md'
+      - '.github/workflows/hybrid-comparison-t2b2.yml'
+  workflow_dispatch:
+jobs:
+  asset-contract-and-publication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install validation dependencies
+        run: |
+          npm install --no-save gltf-validator@2.0.0-dev.3.10 playwright@1.55.0
+          python -m pip install Pillow==11.1.0 numpy==2.2.3
+          npx playwright install --with-deps chromium
+      - name: Verify original source locks and actual binary pixels
+        run: |
+          python development/hybrid-comparison/t2b2-v1/tools/inventory.py --check
+          python development/hybrid-comparison/t2b2-v1/tools/verify_pixels.py
+          node tests/runtime/hybrid-comparison-art-contract.cjs
+          node scripts/hybrid-comparison-fixtures.cjs --check
+          node tests/runtime/hybrid-comparison-playback-contract.cjs
+          node tests/runtime/combat-events-integration.cjs
+      - name: Verify lean production closure excludes all candidate art
+        run: |
+          node scripts/build-publish-dry-run.cjs
+          node tests/runtime/publish-build-regression.cjs
+          test ! -e .publish-stage3/development/hybrid-comparison/t2b2-v1
+      - name: Inspect actual images, candidates and original equipment in browser
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/t2b2-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/development/hybrid-comparison/t2b2-v1/review.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/hybrid-comparison-art-browser.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: t2b2-assets-and-browser-evidence
+          path: |
+            /tmp/t2b2-browser
+            /tmp/t2b2-browser-report.json
+            /tmp/t2b2-http.log
+          if-no-files-found: warn

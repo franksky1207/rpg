@@ -1,0 +1,503 @@
+{
+  "schema": "cw.t2b2.offline-layer-qc",
+  "version": 1,
+  "variants": [
+    {
+      "variantId": "g007-subset-0",
+      "selectedLayers": [],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "eb5d1435ad1f3ff3358b11f7e442f7b2f3e73ec796becff442ff43d33ff9bd55"
+    },
+    {
+      "variantId": "g007-subset-1",
+      "selectedLayers": [
+        "weapon"
+      ],
+      "emptySlots": [
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "ab3ea31f1d2628f350fce552ce520430fad2d7127020d6b3ef0fd0cb16080053"
+    },
+    {
+      "variantId": "g007-subset-2",
+      "selectedLayers": [
+        "helmet"
+      ],
+      "emptySlots": [
+        "weapon",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "e5b92fb6ebcfaf601083180a34912d5872728d72a99ec1a9c025a2410f3f2707"
+    },
+    {
+      "variantId": "g007-subset-3",
+      "selectedLayers": [
+        "weapon",
+        "helmet"
+      ],
+      "emptySlots": [
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "1d777b67b500ed32052f1c98ad93655405df68020283c5316b125de1e8695269"
+    },
+    {
+      "variantId": "g007-subset-4",
+      "selectedLayers": [
+        "armor"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "208b19c1eb2ac76b69d9a976d47324b1c9492dafc3be9d3dc4fc0fbe794ef1d1"
+    },
+    {
+      "variantId": "g007-subset-5",
+      "selectedLayers": [
+        "weapon",
+        "armor"
+      ],
+      "emptySlots": [
+        "helmet",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "3b18ef2b06b7c1e7895644accd6166e39ff6475847c741164f5016e9615c8d50"
+    },
+    {
+      "variantId": "g007-subset-6",
+      "selectedLayers": [
+        "helmet",
+        "armor"
+      ],
+      "emptySlots": [
+        "weapon",
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "7ea936cf4cffeab6303bf11133d8f61194c9b92be1ae58499ccd4adb37f76961"
+    },
+    {
+      "variantId": "g007-subset-7",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "armor"
+      ],
+      "emptySlots": [
+        "shoes",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "8ea0c3553cc517ad6029c970d883ff6cadad56cf423a93278c219c09e88b58d8"
+    },
+    {
+      "variantId": "g007-subset-8",
+      "selectedLayers": [
+        "shoes"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "ff6ef11f817642415c3016976deeba069f2957d09e851e31141c2c658b6c9023"
+    },
+    {
+      "variantId": "g007-subset-9",
+      "selectedLayers": [
+        "weapon",
+        "shoes"
+      ],
+      "emptySlots": [
+        "helmet",
+        "armor",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "65b9d1c53ebd75332861971f5fab475dc9339aaff1b8c6fb747b6c2875783c9a"
+    },
+    {
+      "variantId": "g007-subset-10",
+      "selectedLayers": [
+        "helmet",
+        "shoes"
+      ],
+      "emptySlots": [
+        "weapon",
+        "armor",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "025ee8bc8fba7f22c9c9252ed9b154e89740d1cae519d56ef3c2cff237cd9552"
+    },
+    {
+      "variantId": "g007-subset-11",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "shoes"
+      ],
+      "emptySlots": [
+        "armor",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "318d88f9e0b1d465bc6bd8f2909035d5faa5f64d6f7ffe03b2f847305625587b"
+    },
+    {
+      "variantId": "g007-subset-12",
+      "selectedLayers": [
+        "armor",
+        "shoes"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "6b006ac45a49e0d40a0b4b32efa7585904eba47339b79b6944c9729cd178a888"
+    },
+    {
+      "variantId": "g007-subset-13",
+      "selectedLayers": [
+        "weapon",
+        "armor",
+        "shoes"
+      ],
+      "emptySlots": [
+        "helmet",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "d0927ff3beb30d25241b33f7a76cbe5d584a1c51394f27ababbc0b26ec8ae278"
+    },
+    {
+      "variantId": "g007-subset-14",
+      "selectedLayers": [
+        "helmet",
+        "armor",
+        "shoes"
+      ],
+      "emptySlots": [
+        "weapon",
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "7c64102fcd1d35d17aaa5cbe576d47d07b2344824e7fb6aed27089a70268e413"
+    },
+    {
+      "variantId": "g007-subset-15",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes"
+      ],
+      "emptySlots": [
+        "accessory"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "ab08ca8a5b5d3016f29987866140ae941d1998cad85696848999a364660fab97"
+    },
+    {
+      "variantId": "g007-subset-16",
+      "selectedLayers": [
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "25abb28a5fa2926b7c233b9c8ec702bd7e0a398cac8e95c311c16dc80a89dc5f"
+    },
+    {
+      "variantId": "g007-subset-17",
+      "selectedLayers": [
+        "weapon",
+        "accessory"
+      ],
+      "emptySlots": [
+        "helmet",
+        "armor",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "b2c2ea2cc7685defc1eafa7fc830e3c1d325b90ed53e6aa6daa8e87338e5fc2b"
+    },
+    {
+      "variantId": "g007-subset-18",
+      "selectedLayers": [
+        "helmet",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "armor",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "b666b0ddd57ab183eed9990480055bf6a7f34af1fd298feb605dee68dc3d3ed5"
+    },
+    {
+      "variantId": "g007-subset-19",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "accessory"
+      ],
+      "emptySlots": [
+        "armor",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "b386167d8e5efa24365a46a7a442cff93b39d7aba7025673f21260da43f60388"
+    },
+    {
+      "variantId": "g007-subset-20",
+      "selectedLayers": [
+        "armor",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "62c7c1ebe3ec745abc5848d6d7883d1c3aa96c2d5a8209e89f6160e80fa6b060"
+    },
+    {
+      "variantId": "g007-subset-21",
+      "selectedLayers": [
+        "weapon",
+        "armor",
+        "accessory"
+      ],
+      "emptySlots": [
+        "helmet",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "0cc64c6572cddc6ffb58615857974c00eca59bbf32f41e6040fd3f47a74ec214"
+    },
+    {
+      "variantId": "g007-subset-22",
+      "selectedLayers": [
+        "helmet",
+        "armor",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "c0f3619edd0d4a5aaed243db7105b2723059d27d4475c001f3178f791f1ffb7e"
+    },
+    {
+      "variantId": "g007-subset-23",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "armor",
+        "accessory"
+      ],
+      "emptySlots": [
+        "shoes"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "7e301275681c0e4c94552f098723c0a7d06aec957c617c9a1ea786ada2cd042a"
+    },
+    {
+      "variantId": "g007-subset-24",
+      "selectedLayers": [
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet",
+        "armor"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "44a1eaac92d310fa9ef3944ee0707c55d199245f691608ec53ed3a80c63c6a4d"
+    },
+    {
+      "variantId": "g007-subset-25",
+      "selectedLayers": [
+        "weapon",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "helmet",
+        "armor"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "45bb94d705684a8b53161f18bbcd08965c7a5895bfc1f7039c5c8a8252ffb918"
+    },
+    {
+      "variantId": "g007-subset-26",
+      "selectedLayers": [
+        "helmet",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "armor"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "c1423f14d601f43bc8b0ab0ccc1ed4dd9546b36b77a1df93e7b00e1fba7e18f3"
+    },
+    {
+      "variantId": "g007-subset-27",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "armor"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "2891ef9c5903a606d0c3a180a6f5bf99cb36dc396c080020e4d3b4348a5951a8"
+    },
+    {
+      "variantId": "g007-subset-28",
+      "selectedLayers": [
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon",
+        "helmet"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "dd7a9ebc978398ec4bd97cc6025d1bfca6e4aa039dfed2df5958564a712ec623"
+    },
+    {
+      "variantId": "g007-subset-29",
+      "selectedLayers": [
+        "weapon",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "helmet"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "d8f7001f113bc4450a5edb5d330cdfe403a8ec1e15dae49a6112b65950f8a9ea"
+    },
+    {
+      "variantId": "g007-subset-30",
+      "selectedLayers": [
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [
+        "weapon"
+      ],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "1c71b3417d87e0a2c5eabf90a2a038c179b567bc3d17bb9276f6b3a94015184f"
+    },
+    {
+      "variantId": "g007-subset-31",
+      "selectedLayers": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "emptySlots": [],
+      "unavailableSlots": [],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "e1051ddfbccffba18c9c7fa504b58117e5cf8d456988802df42d2d3918cd70f2"
+    },
+    {
+      "variantId": "mixed-g006-g007-empty-accessory",
+      "selectedLayers": [
+        "weapon",
+        "armor",
+        "shoes"
+      ],
+      "emptySlots": [
+        "accessory"
+      ],
+      "unavailableSlots": [
+        "helmet"
+      ],
+      "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
+      "pixelSHA256": "d0927ff3beb30d25241b33f7a76cbe5d584a1c51394f27ababbc0b26ec8ae278"
+    }
+  ],
+  "composedBy": "offline depth compositing only; no B3 Renderer",
+  "all32DifferentPixels": true,
+  "sourceFramesUnchanged": true
+}
